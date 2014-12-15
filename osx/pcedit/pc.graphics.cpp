@@ -134,7 +134,7 @@ void init_main_buttons()
 //	name_rect.bottom = pc_info_rect.top  + 15;
 //	name_rect.top = pc_info_rect.top;
 	
-//	if (name_rect.right == name_rect.left) {
+//	if(name_rect.right == name_rect.left) {
 //		SysBeep(50); SysBeep(50);
 //		}
 	//Initialize pc_race_rect
@@ -148,7 +148,7 @@ void init_main_buttons()
 	info_area_rect.left = pc_info_rect.left;
 	info_area_rect.right = pc_race_rect.right;
 	info_area_rect.bottom = pc_info_rect.bottom;
-/*	if (name_rect.right == name_rect.left) {
+/*	if(name_rect.right == name_rect.left) {
 		SysBeep(50);
 	} */
 	
@@ -163,7 +163,7 @@ void init_main_buttons()
 	skill_rect.right = pc_race_rect.right;
 	skill_rect.bottom = skill_rect.top + 12;
 	
-	//if (name_rect.right == name_rect.left) {
+	//if(name_rect.right == name_rect.left) {
 	//	SysBeep(50); SysBeep(50);
 	//}
 	//Initialize skills_rect
@@ -172,7 +172,7 @@ void init_main_buttons()
 	base_rect.right = name_rect.right - 1;
 	base_rect.bottom = base_rect.top + (pc_info_rect.bottom - skill_rect.bottom)/30;
 	
-	for (i = 0; i < 19; i++) {
+	for(i = 0; i < 19; i++) {
 		pc_skills_rect[i] = base_rect;
 		pc_skills_rect[i].offset((i / 10) * ((name_rect.right)-(name_rect.left)), (i % 10) * (pc_info_rect.bottom - name_rect.bottom)/30);
 	}
@@ -187,7 +187,7 @@ void init_main_buttons()
 	base_rect.left = status_rect.left + 1;
 	base_rect.right = name_rect.right - 1;
 	base_rect.bottom = base_rect.top + (pc_info_rect.bottom - status_rect.bottom)/15;
-	for (i = 0; i < 10; i++) {
+	for(i = 0; i < 10; i++) {
 		pc_status_rect[i] = base_rect;
 		pc_status_rect[i].offset((i / 5) * ((name_rect.right)-(name_rect.left)), (i % 5) * (pc_info_rect.bottom - status_rect.bottom)/15);
 	}
@@ -201,7 +201,7 @@ void init_main_buttons()
 	base_rect.left = traits_rect.left + 1;
 	base_rect.right = name_rect.right - 1;
 	base_rect.bottom = base_rect.top + 10;
-	for (i = 0; i < 16; i++) {
+	for(i = 0; i < 16; i++) {
 		pc_traits_rect[i] = base_rect;
 		pc_traits_rect[i].offset((i / 8) * ((name_rect.right)-(name_rect.left)), (i % 8) * 9);
 	}
@@ -211,11 +211,11 @@ void init_main_buttons()
 	item_string_rects[0][0].left = pc_info_rect.left + (pc_info_rect.right - pc_info_rect.left)/2;
 	item_string_rects[0][0].right = pc_info_rect.right;
 	item_string_rects[0][0].bottom = item_string_rects[0][0].top + 12;
-	for (i = 1; i < 24; i++) {
+	for(i = 1; i < 24; i++) {
 		item_string_rects[i][0] = item_string_rects[0][0];
 		item_string_rects[i][0].offset(0,13 * i);
 	}
-	for (i = 0; i < 24; i++) {
+	for(i = 0; i < 24; i++) {
 		item_string_rects[i][1] = item_string_rects[i][0];
 		item_string_rects[i][1].right -= 14;
 		item_string_rects[i][1].left = item_string_rects[i][1].right - 14;
@@ -365,17 +365,17 @@ void draw_items()
 		frame_dlog_rect(mainPtr,pc_race_rect); // draw the frame
 		return; // If PC is dead, it has no items
 	}
-	for (i = 0; i < 24; i++) // Loop through items and draw each
-		if (univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) { // i.e. does item exist
+	for(i = 0; i < 24; i++) // Loop through items and draw each
+		if(univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) { // i.e. does item exist
 			strcpy((char *) to_draw, "");
-			if (!univ.party[current_active_pc].items[i].ident)
+			if(!univ.party[current_active_pc].items[i].ident)
 				sprintf((char *) to_draw, "%d. %s  ",i + 1,univ.party[current_active_pc].items[i].name.c_str());
-			else if (univ.party[current_active_pc].items[i].charges > 0)
+			else if(univ.party[current_active_pc].items[i].charges > 0)
 				sprintf((char *) to_draw, "%d. %s (%d)",i + 1,univ.party[current_active_pc].items[i].full_name.c_str(),
 						univ.party[current_active_pc].items[i].charges);
 			else sprintf((char *) to_draw, "%d. %s ",i + 1,univ.party[current_active_pc].items[i].full_name.c_str());
 			
-			//if (i % 2 == 0)
+			//if(i % 2 == 0)
 			//	sprintf((char *) to_draw, "%d %d %d %d",
 			//		pc_info_rect.left,pc_info_rect.right,pc_info_rect.top,pc_info_rect.bottom);
 			//else sprintf((char *) to_draw, "%d %d %d %d",
@@ -415,12 +415,12 @@ void display_party()
 	else {
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 14;
-		if (!party_in_scen)
+		if(!party_in_scen)
 			win_draw_string(mainPtr,from_rect,"Party not in a scenario.",eTextMode::WRAP,style);
 		else
 			win_draw_string(mainPtr,from_rect,"Party is in a scenario (day " + std::to_string(1 + univ.party.age / 3700) + ").",eTextMode::WRAP,style);
-		for (i = 0; i < 6; i++) {
-			if (i == current_active_pc) // active pc is drawn in blue
+		for(i = 0; i < 6; i++) {
+			if(i == current_active_pc) // active pc is drawn in blue
 				fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Blue);
 			else fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Black);
 			
@@ -453,7 +453,7 @@ void display_party()
 				style.font = FONT_BOLD;
 				style.pointSize = 10;
 				
-				if (i == current_active_pc){
+				if(i == current_active_pc){
 					sprintf((char *) to_draw, "%-.18s  ", (char *) univ.party[i].name.c_str());
 					if( (univ.party[i].name.length()) > 12)
 						style.pointSize = 8;
@@ -462,10 +462,10 @@ void display_party()
 					style.pointSize = 10;
 					
 				}
-				switch (univ.party[i].main_status) {
+				switch(univ.party[i].main_status) {
 						// draw statistics
 					case eMainStatus::ALIVE:
-						if (i == current_active_pc) {
+						if(i == current_active_pc) {
 							//Draw in race
 							if(univ.party[i].race == eRace::HUMAN)
 								win_draw_string(mainPtr,pc_race_rect,"Human   ",eTextMode::CENTRE,style);
@@ -611,83 +611,83 @@ void display_party()
 							style.lineHeight = 9;
 							
 							cur_rect=0;
-							if (univ.party[i].traits[eTrait::TOUGHNESS])
+							if(univ.party[i].traits[eTrait::TOUGHNESS])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Toughness",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::MAGICALLY_APT])
+							if(univ.party[i].traits[eTrait::MAGICALLY_APT])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Apt",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::AMBIDEXTROUS])
+							if(univ.party[i].traits[eTrait::AMBIDEXTROUS])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Ambidextrous",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::NIMBLE])
+							if(univ.party[i].traits[eTrait::NIMBLE])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Nimble Fingers",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::CAVE_LORE])
+							if(univ.party[i].traits[eTrait::CAVE_LORE])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Cave Lore",eTextMode::WRAP,style);
 									cur_rect++;
 								}
 							
-							if (univ.party[i].traits[eTrait::WOODSMAN])
+							if(univ.party[i].traits[eTrait::WOODSMAN])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Woodsman",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::GOOD_CONST])
+							if(univ.party[i].traits[eTrait::GOOD_CONST])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Good Constitution",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::HIGHLY_ALERT])
+							if(univ.party[i].traits[eTrait::HIGHLY_ALERT])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Highly Alert",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::STRENGTH])
+							if(univ.party[i].traits[eTrait::STRENGTH])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Exceptional Str.",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::RECUPERATION])
+							if(univ.party[i].traits[eTrait::RECUPERATION])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Recuperation",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::SLUGGISH])
+							if(univ.party[i].traits[eTrait::SLUGGISH])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Sluggish",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::MAGICALLY_INEPT])
+							if(univ.party[i].traits[eTrait::MAGICALLY_INEPT])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Magically Inept",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::FRAIL])
+							if(univ.party[i].traits[eTrait::FRAIL])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Frail",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::CHRONIC_DISEASE])
+							if(univ.party[i].traits[eTrait::CHRONIC_DISEASE])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Chronic Disease",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::BAD_BACK])
+							if(univ.party[i].traits[eTrait::BAD_BACK])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Bad Back",eTextMode::WRAP,style);
 									cur_rect++;
 								}
-							if (univ.party[i].traits[eTrait::PACIFIST])
+							if(univ.party[i].traits[eTrait::PACIFIST])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Pacifist",eTextMode::WRAP,style);
 									cur_rect++;
@@ -806,7 +806,7 @@ void display_party()
 //	GrafPtr cur_port;
 //	RGBColor	store_color;
 //
-//	if (main_win == 2) {
+//	if(main_win == 2) {
 //		GetBackColor(&store_color);
 //		BackColor(whiteColor);
 //		}
@@ -817,10 +817,10 @@ void display_party()
 //	test1 = GetPortPixMap(src_gworld);
 //
 //	LockPixels(test1);
-//	if (main_win == 0) {
+//	if(main_win == 0) {
 //		test2 = GetPortPixMap(targ_gworld);
 //		LockPixels(test2);
-//		if (masked == 1)
+//		if(masked == 1)
 //			CopyBits ( (BitMap *) *test1 ,
 //					(BitMap *) *test2 ,
 //					&src_rect, &targ_rect,
@@ -832,7 +832,7 @@ void display_party()
 //		UnlockPixels(test2);
 //		}
 //		else {
-//		if (masked == 1)
+//		if(masked == 1)
 //			CopyBits ( (BitMap *) *test1 ,
 //					store_dest ,
 //					&src_rect, &targ_rect,
@@ -844,7 +844,7 @@ void display_party()
 //			}
 //	UnlockPixels(test1);
 //
-//	if (main_win == 2)
+//	if(main_win == 2)
 //		RGBBackColor(&store_color);
 //}
 
@@ -854,7 +854,7 @@ void display_party()
 //	short total_width = 0,i,len;
 //	char p_str[256];
 //
-//	for (i = 0; i < 257; i++)
+//	for(i = 0; i < 257; i++)
 //		text_len[i]= 0;
 //
 //	strcpy((char *) p_str,str);
@@ -862,8 +862,8 @@ void display_party()
 //	MeasureText(256,p_str,text_len);
 //	len = strlen((char *)str);
 //
-//	for (i = 0; i < 257; i++)
-//		if ((text_len[i] > total_width) && (i <= len))
+//	for(i = 0; i < 257; i++)
+//		if((text_len[i] > total_width) && (i <= len))
 //			total_width = text_len[i];
 //	return total_width;
 //}
@@ -895,11 +895,11 @@ void display_party()
 //	strcpy((char *) p_str,(char *) str);
 //	strcpy((char *) c_str,(char *) str);
 //	c2pstr((char*) p_str);
-//	for (i = 0; i < 257; i++)
+//	for(i = 0; i < 257; i++)
 //		text_len[i]= 0;
 //	MeasureText(256,p_str,text_len);
 //	str_len = (short) strlen((char *)str);
-//	if (str_len == 0) {
+//	if(str_len == 0) {
 //		return;
 //	}
 //	GetPort(&old_port);
@@ -914,21 +914,21 @@ void display_party()
 //	//ClipRect(&dest_rect);
 //	dest_rect.bottom -= 5;
 //
-//	for (i = 0; i < 257; i++)
-//		if ((text_len[i] > total_width) && (i <= str_len))
+//	for(i = 0; i < 257; i++)
+//		if((text_len[i] > total_width) && (i <= str_len))
 //			total_width = text_len[i];
-//	if ((mode == 0) && (total_width < dest_rect.right - dest_rect.left))
+//	if((mode == 0) && (total_width < dest_rect.right - dest_rect.left))
 //		mode = 2;
-//	for (i = 0; i < 257; i++)
-//		if ((i <= str_len) && (c_str[i] == '|') && (mode == 2))
+//	for(i = 0; i < 257; i++)
+//		if((i <= str_len) && (c_str[i] == '|') && (mode == 2))
 //			mode = 0;
 //
-//	switch (mode) {
+//	switch(mode) {
 //		case 0:
 //			MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
-//			for (i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) {
-//				if (((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))  && (last_word_break > last_line_break)) || (c_str[i] == '|')) {
-//				  	if (c_str[i] == '|') {
+//			for(i = 0;text_len[i] != text_len[i + 1], i < str_len;i++) {
+//				if(((text_len[i] - text_len[last_line_break] > (dest_rect.right - dest_rect.left - 6))  && (last_word_break > last_line_break)) || (c_str[i] == '|')) {
+//				  	if(c_str[i] == '|') {
 //				  		c_str[i] = ' ';
 //				  		force_skip = true;
 //					}
@@ -940,23 +940,23 @@ void display_party()
 //					on_what_line++;
 //					MoveTo(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + line_height * on_what_line + adjust_y + 9);
 //					last_line_break = last_word_break;
-//					if (force_skip) {
+//					if(force_skip) {
 //						force_skip = false;
 //						i++;
 //						last_line_break++;
 //						last_word_break++;
 //					}
 //				}
-//				if (c_str[i] == ' ')
+//				if(c_str[i] == ' ')
 //					last_word_break = i + 1;
-//				//if (on_what_line == LINES_IN_TEXT_WIN - 1)
+//				//if(on_what_line == LINES_IN_TEXT_WIN - 1)
 //				//	i = 10000;
 //			}
-//			if (i - last_line_break > 1) {
+//			if(i - last_line_break > 1) {
 //				strcpy((char *)str_to_draw,(char *)null_s);
 //				strncpy ((char *) str_to_draw,(char *) c_str + last_line_break,(size_t) (i - last_line_break));
 //				sprintf((char *)str_to_draw2," %s",str_to_draw);
-//				if (strlen((char *) str_to_draw2) > 3) {
+//				if(strlen((char *) str_to_draw2) > 3) {
 //					str_to_draw2[0] = (char) strlen((char *)str_to_draw);
 //					DrawString(str_to_draw2);
 //				}
@@ -988,7 +988,7 @@ void display_party()
 //	short i;
 //	bool had1 = false, had2 = false;
 //
-//	switch (item_hit) {
+//	switch(item_hit) {
 //		case 1:
 //			toast_dialog();
 //			break;
@@ -1012,12 +1012,12 @@ void record_display_strings(){}
 //	store_str2a = str2a;
 //	store_str2b = str2b;
 //
-//	if ((str1a <= 0) || (str1b <= 0))
+//	if((str1a <= 0) || (str1b <= 0))
 //		return;
 //	store_which_string_dlog = 970;
-//	if (strlen(title) > 0)
+//	if(strlen(title) > 0)
 //		store_which_string_dlog += 2;
-//	if ((str2a > 0) && (str2b > 0))
+//	if((str2a > 0) && (str2b > 0))
 //		store_which_string_dlog++;
 //	cd_create_dialog_parent_num(store_which_string_dlog,parent_num);
 //
@@ -1027,14 +1027,14 @@ void record_display_strings(){}
 //
 //	get_str(text,str1a,str1b);
 //	csit(store_which_string_dlog,4,(char *) text);
-//	if ((str2a > 0) && (str2b > 0)) {
+//	if((str2a > 0) && (str2b > 0)) {
 //		get_str(text,str2a,str2b);
 //		csit(store_which_string_dlog,5,(char *) text);
 //		}
-//	if (strlen(title) > 0)
+//	if(strlen(title) > 0)
 //		csit(store_which_string_dlog,6,title);
 //	csp(store_which_string_dlog,3,graphic_num,graphic_type);
-//	if (sound_num >= 0)
+//	if(sound_num >= 0)
 //		play_sound(sound_num);
 //
 //	item_hit = cd_run_dialog();

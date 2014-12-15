@@ -184,7 +184,7 @@ void Mouse_Pressed()
 	bool try_to_end;
 	
 	try_to_end = handle_action(event);
-	if (try_to_end)
+	if(try_to_end)
 		All_Done = verify_restore_quit(false);
 }
 
@@ -193,7 +193,7 @@ void handle_apple_menu(int item_hit)
 	//char desk_acc_name[256];
 	//short desk_acc_num;
 	
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1:
 			cChoiceDlog("about-pced.xml").show();
 			break;
@@ -208,7 +208,7 @@ void handle_file_menu(int item_hit)
 {
 	fs::path file;
 	
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1://save
 			save_party(file_in_mem);
 			break;
@@ -262,7 +262,7 @@ void handle_extra_menu(int item_hit)
 			break;
 			
 		case 4:
-			if (univ.party.is_split() > 0) {
+			if(univ.party.is_split() > 0) {
 				cChoiceDlog("reunite-first.xml").show();
 				break;
 			}
@@ -271,13 +271,13 @@ void handle_extra_menu(int item_hit)
 			break;
 			
 		case 5:
-			if (univ.party.is_split() == 0) {
+			if(univ.party.is_split() == 0) {
 				cChoiceDlog("not-split.xml").show();
 				break;
 			}
 			cChoiceDlog("reunited.xml").show();
 			univ.town.p_loc = univ.party.left_at();
-			for (i = 0; i < 6; i++)
+			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status >= eMainStatus::SPLIT)
 					univ.party[i].main_status -= eMainStatus::SPLIT;
 			break;
@@ -285,29 +285,29 @@ void handle_extra_menu(int item_hit)
 			
 		case 6:
 			display_strings(20,7);
-			for (i = 0; i < 4; i++)
+			for(i = 0; i < 4; i++)
 				univ.party.creature_save[i].which_town = 200;
 			break;
 		case 8: // damage
 			display_strings(1,15);
-			for (i = 0; i < 6; i++)
+			for(i = 0; i < 6; i++)
 				univ.party[i].cur_health = univ.party[i].max_health;
 			break;
 		case 9: // spell pts
 			display_strings(2,15);
-			for (i = 0; i < 6; i++)
+			for(i = 0; i < 6; i++)
 				univ.party[i].cur_sp = univ.party[i].max_sp;
 			break;
 		case 10: // raise dead
 			display_strings(3,15);
-			for (i = 0; i < 6; i++)
+			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::DEAD || univ.party[i].main_status == eMainStatus::DUST ||
 						univ.party[i].main_status == eMainStatus::STONE)
 					univ.party[i].main_status = eMainStatus::ALIVE;
 			break;
 		case 11: // conditions
 			display_strings(4,15);
-			for (i = 0; i < 6; i++) {
+			for(i = 0; i < 6; i++) {
 				univ.party[i].status[eStatus::POISON] = 0;
 				if(univ.party[i].status[eStatus::HASTE_SLOW] < 0)
 					univ.party[i].status[eStatus::HASTE_SLOW] = 0;
@@ -321,7 +321,7 @@ void handle_extra_menu(int item_hit)
 			break;
 			
 		case 13:
-			if (!party_in_scen) {
+			if(!party_in_scen) {
 				display_strings(25,15);
 				break;
 			}
@@ -347,7 +347,7 @@ void handle_edit_menu(int item_hit)
 			break;
 		case 2: // all property
 			display_strings(6,7);
-			for (i = 0; i < 30; i++) {
+			for(i = 0; i < 30; i++) {
 				univ.party.boats[i].property = false;
 				univ.party.horses[i].property = false;
 			}
@@ -356,25 +356,25 @@ void handle_edit_menu(int item_hit)
 			edit_day();
 			break;
 		case 6: // ouit maps
-			if (!party_in_scen) {
+			if(!party_in_scen) {
 				display_strings(25,15);
 				break;
 			}
 			display_strings(13,15);
-			for (i = 0; i < 100; i++)
-				for (j = 0; j < 6; j++)
-					for (k = 0; k < 48; k++)
+			for(i = 0; i < 100; i++)
+				for(j = 0; j < 6; j++)
+					for(k = 0; k < 48; k++)
 						univ.out_maps[i][j][k] = 255;
 			break;
 		case 7: // town maps
-			if (!party_in_scen) {
+			if(!party_in_scen) {
 				display_strings(25,15);
 				break;
 			}
 			display_strings(14,15);
-			for (i = 0; i < 200; i++)
-				for (j = 0; j < 8; j++)
-					for (k = 0; k < 64; k++)
+			for(i = 0; i < 200; i++)
+				for(j = 0; j < 8; j++)
+					for(k = 0; k < 64; k++)
 						univ.town_maps[i][j][k] = 255;
 			break;
 		case 9:
@@ -408,7 +408,7 @@ void handle_edit_menu(int item_hit)
 //	i.charges = (short) s_item.charges;
 //	i.type = (short) s_item.type;
 //	i.graphic_num = (short) s_item.graphic_num;
-//	if (i.graphic_num >= 25)
+//	if(i.graphic_num >= 25)
 //		i.graphic_num += 20;
 //	i.ability = (short) s_item.real_abil;
 //	i.type_flag = (short) s_item.type_flag;
@@ -420,16 +420,16 @@ void handle_edit_menu(int item_hit)
 //	strcpy((char *)i.full_name,(char *)s_item.full_name);
 //	strcpy((char *)i.name,(char *)s_item.name);
 //
-//	if (i.charges > 0)
+//	if(i.charges > 0)
 //		temp_val = i.value * i.charges;
 //		else temp_val = i.value;
-//	if (temp_val >= 15)
+//	if(temp_val >= 15)
 //		i.treas_class = 1;
-//	if (temp_val >= 100)
+//	if(temp_val >= 100)
 //		i.treas_class = 2;
-//	if (temp_val >= 900)
+//	if(temp_val >= 900)
 //		i.treas_class = 3;
-//	if (temp_val >= 2400)
+//	if(temp_val >= 2400)
 //		i.treas_class = 4;
 //
 //	i.magic_use_type = s_item.magic_use_type;
@@ -437,11 +437,11 @@ void handle_edit_menu(int item_hit)
 //	i.reserved1 = 0;
 //	i.reserved2 = 0;
 //	i.item_properties = 0;
-//	if (s_item.identified)
+//	if(s_item.identified)
 //		i.item_properties = i.item_properties | 1;
-//	if ((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
+//	if((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
 //		i.item_properties = i.item_properties | 16;
-//	if (s_item.magic)
+//	if(s_item.magic)
 //		i.item_properties = i.item_properties | 4;
 //
 //	return i;
@@ -477,9 +477,9 @@ bool verify_restore_quit(bool mode)
 		return true;
 	cChoiceDlog verify(mode ? "save-open.xml" : "save-quit.xml", {"save", "quit", "cancel"});
 	choice = verify.show();
-	if (choice == "cancel")
+	if(choice == "cancel")
 		return false;
-	if (choice == "quit")
+	if(choice == "quit")
 		return true;
 	save_party(file_in_mem);
 	return true;
@@ -497,12 +497,12 @@ bool verify_restore_quit(bool mode)
 //
 //	dummy_item_hit = 0;
 //
-//	switch (event->what) {
+//	switch(event->what) {
 //		case updateEvt:
 //			w = GetDialogWindow(hDlg);
 //			updateRgn = NewRgn();
 //			GetWindowRegion(w, kWindowUpdateRgn, updateRgn);
-//			if (EmptyRgn(updateRgn)) {
+//			if(EmptyRgn(updateRgn)) {
 //				return true;
 //			}
 //			BeginUpdate(GetDialogWindow(hDlg));
@@ -515,7 +515,7 @@ bool verify_restore_quit(bool mode)
 //		case keyDown:
 //			chr = event->message & charCodeMask;
 //			chr2 = (char) ((event->message & keyCodeMask) >> 8);
-//			switch (chr2) {
+//			switch(chr2) {
 //				case 126: chr = 22; break;
 //				case 124: chr = 21; break;
 //				case 123: chr = 20; break;
@@ -538,7 +538,7 @@ bool verify_restore_quit(bool mode)
 //
 //		default: wind_hit = -1; break;
 //	}
-//	switch (wind_hit) {
+//	switch(wind_hit) {
 //		case -1: break;
 //
 //		case 917: edit_day_event_filter(item_hit); break;

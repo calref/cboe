@@ -15,7 +15,7 @@ short get_ran (short times,short  min,short  max){
 	
 	if(max < min) max = min;
 	
-	for (i = 1; i < times + 1; i++) {
+	for(i = 1; i < times + 1; i++) {
 		store = rand();
 		to_ret += min + (store % (max - min + 1));//min + (((store + 32767) * (max - min + 1)) / 65536);
 	}
@@ -32,21 +32,21 @@ short s_sqrt(short val)
 }
 
 short max(short a,short b){
-	if (a > b)
+	if(a > b)
 		return a;
 	else return b;
 }
 
 short min(short a,short b){
-	if (a < b)
+	if(a < b)
 		return a;
 	else return b;
 }
 
 short minmax(short min,short max,short k){
-	if (k < min)
+	if(k < min)
 		return min;
-	if (k > max)
+	if(k > max)
 		return max;
 	return k;
 }

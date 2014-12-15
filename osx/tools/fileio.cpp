@@ -90,23 +90,23 @@ bool load_scenario(fs::path file_to_load, bool skip_strings){
 	
 	len = (long) sizeof(scenario_header_flags);
 	
-	if (fread(&scenario.format, len, 1, file_id) < 1){
+	if(fread(&scenario.format, len, 1, file_id) < 1){
 		fclose(file_id);
 		oopsError(11, 0, 0);
 		return false;
 	}
 	
-	if ((scenario.format.flag1 == 10) && (scenario.format.flag2 == 20) &&
+	if((scenario.format.flag1 == 10) && (scenario.format.flag2 == 20) &&
 		(scenario.format.flag3 == 30) && (scenario.format.flag4 == 40)) {
 	  	cur_scen_is_mac = true;
 	  	file_ok = true;
 	}
-	else if ((scenario.format.flag1 == 20) && (scenario.format.flag2 == 40) &&
+	else if((scenario.format.flag1 == 20) && (scenario.format.flag2 == 40) &&
 		(scenario.format.flag3 == 60) && (scenario.format.flag4 == 80)) {
 	  	cur_scen_is_mac = false;
 	  	file_ok = true;
 	}
-	if (!file_ok) {
+	if(!file_ok) {
 		fclose(file_id);
 		giveError("This is not a legitimate Blades of Exile scenario.");
 		return false;
@@ -133,7 +133,7 @@ bool load_scenario(fs::path file_to_load, bool skip_strings){
 	
 	if(!skip_strings) {
 		// TODO: Consider skipping the fread and assignment when len is 0
-		for (i = 0; i < 270; i++) {
+		for(i = 0; i < 270; i++) {
 			len = (long) (scenario.scen_str_len[i]);
 			n = fread(&(scenario.scen_strs(i)), len, 1, file_id);
 			scenario.scen_strs(i)[len] = 0;
@@ -158,14 +158,14 @@ static long get_town_offset(short which_town){
 	len_to_jump = sizeof(scenario_header_flags);
 	len_to_jump += sizeof(legacy::scenario_data_type);
 	len_to_jump += sizeof(legacy::scen_item_data_type);
-	for (i = 0; i < 300; i++)
+	for(i = 0; i < 300; i++)
 		len_to_jump += (long) scenario.scen_str_len[i];
 	store = 0;
-	for (i = 0; i < 100; i++)
-		for (j = 0; j < 2; j++)
+	for(i = 0; i < 100; i++)
+		for(j = 0; j < 2; j++)
 			store += (long) (scenario.out_data_size[i][j]);
-	for (i = 0; i < which_town; i++)
-		for (j = 0; j < 5; j++)
+	for(i = 0; i < which_town; i++)
+		for(j = 0; j < 5; j++)
 			store += (long) (scenario.town_data_size[i][j]);
 	len_to_jump += store;
 	
@@ -181,7 +181,7 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 	legacy::ave_tr_type ave_t;
 	legacy::tiny_tr_type tiny_t;
 	
-	if (which_town != minmax(0,scenario.num_towns - 1,which_town)) {
+	if(which_town != minmax(0,scenario.num_towns - 1,which_town)) {
 		// This should never be reached from the scenario editor,
 		// because it does its own range checking before calling load_town.
 		giveError("The scenario tried to place you into a non-existant town.");
@@ -212,7 +212,7 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 	port_town(&store_town);
 	
 	if(the_town != NULL) delete the_town;
-	switch (scenario.town_size[which_town]) {
+	switch(scenario.town_size[which_town]) {
 		case 0:
 			len = sizeof(legacy::big_tr_type);
 			n = fread(&t_d, len, 1, file_id);
@@ -241,7 +241,7 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 			break;
 	}
 	
-	for (i = 0; i < 140; i++) {
+	for(i = 0; i < 140; i++) {
 		len = (long) (the_town->strlens[i]);
 		n = fread(&(the_town->town_strs(i)), len, 1, file_id);
 		the_town->town_strs(i)[len] = 0;
@@ -257,7 +257,7 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 	port_talk_nodes(&store_talk);
 	the_town->talking = store_talk;
 	
-	for (i = 0; i < 170; i++) {
+	for(i = 0; i < 170; i++) {
 		len = (long) (the_town->talking.strlens[i]);
 		n = fread(&(the_town->talking.talk_strs[i]), len, 1, file_id);
 		the_town->talking.talk_strs[i][len] = 0;
@@ -298,7 +298,7 @@ static bool load_town_talk_v1(short which_town) {
 	legacy::town_record_type store_town;
 	legacy::talking_record_type store_talk;
 	
-	if (which_town != minmax(0,scenario.num_towns - 1,which_town)) {
+	if(which_town != minmax(0,scenario.num_towns - 1,which_town)) {
 		// This should never be reached from the scenario editor,
 		// because it does its own range checking before calling load_town.
 		giveError("The scenario tried to place you into a non-existant town.");
@@ -328,7 +328,7 @@ static bool load_town_talk_v1(short which_town) {
 	}
 	port_town(&store_town);
 	
-	switch (scenario.town_size[which_town]) {
+	switch(scenario.town_size[which_town]) {
 		case 0:
 			len =  sizeof(legacy::big_tr_type);
 			break;
@@ -341,7 +341,7 @@ static bool load_town_talk_v1(short which_town) {
 	}
 	
 	n = fseek(file_id, len, SEEK_CUR);
-	for (i = 0; i < 140; i++) {
+	for(i = 0; i < 140; i++) {
 		len = (long) (store_town.strlens[i]);
 		fseek(file_id, len, SEEK_CUR);
 	}
@@ -357,7 +357,7 @@ static bool load_town_talk_v1(short which_town) {
 	cSpeech& the_talk = univ.town.cur_talk();
 	the_talk = store_talk;
 	
-	for (i = 0; i < 170; i++) {
+	for(i = 0; i < 170; i++) {
 		len = (long) (the_talk.strlens[i]);
 		n = fread(&(the_talk.talk_strs[i]), len, 1, file_id);
 		the_talk.talk_strs[i][len] = 0;
@@ -408,7 +408,7 @@ bool load_town_str(short which_town, short which_str, char* str){
 	}
 	port_town(&store_town);
 	
-	switch (scenario.town_size[which_town]) {
+	switch(scenario.town_size[which_town]) {
 		case 0:
 			len =  sizeof(legacy::big_tr_type);
 			break;
@@ -421,7 +421,7 @@ bool load_town_str(short which_town, short which_str, char* str){
 	}
 	
 	n = fseek(file_id, len, SEEK_CUR);
-	for (i = 0; i < 140; i++) {
+	for(i = 0; i < 140; i++) {
 		len = (long) (univ.town->strlens[i]);
 		if(i == which_str){
 			n = fread(str, len, 1, file_id);
@@ -466,7 +466,7 @@ bool load_town_str(short which_town, cTown*& t){
 	}
 	port_town(&store_town);
 	
-	switch (scenario.town_size[which_town]) {
+	switch(scenario.town_size[which_town]) {
 		case 0:
 			len =  sizeof(legacy::big_tr_type);
 			break;
@@ -479,7 +479,7 @@ bool load_town_str(short which_town, cTown*& t){
 	}
 	
 	n = fseek(file_id, len, SEEK_CUR);
-	for (i = 0; i < 140; i++) {
+	for(i = 0; i < 140; i++) {
 		len = (long) (t->strlens[i]);
 		n = fread(&(t->town_strs(i)), len, 1, file_id);
 		t->town_strs(i)[len] = 0;
@@ -501,11 +501,11 @@ static long get_outdoors_offset(location& which_out){
 	len_to_jump = sizeof(scenario_header_flags);
 	len_to_jump += sizeof(legacy::scenario_data_type);
 	len_to_jump += sizeof(legacy::scen_item_data_type);
-	for (i = 0; i < 300; i++)
+	for(i = 0; i < 300; i++)
 		len_to_jump += (long) scenario.scen_str_len[i];
 	store = 0;
-	for (i = 0; i < out_sec_num; i++)
-		for (j = 0; j < 2; j++)
+	for(i = 0; i < out_sec_num; i++)
+		for(j = 0; j < 2; j++)
 			store += (long) (scenario.out_data_size[i][j]);
 	len_to_jump += store;
 	
@@ -518,7 +518,7 @@ static bool load_outdoors_v1(location which_out,cOutdoors& the_out){
 	long len,len_to_jump;
 	legacy::outdoor_record_type store_out;
 	
-	if ((which_out.x != minmax(0,scenario.out_width - 1,which_out.x)) ||
+	if((which_out.x != minmax(0,scenario.out_width - 1,which_out.x)) ||
 		(which_out.y != minmax(0,scenario.out_height - 1,which_out.y))) {
 		the_out = cOutdoors();
 		return true;
@@ -550,7 +550,7 @@ static bool load_outdoors_v1(location which_out,cOutdoors& the_out){
 	the_out.y = which_out.y;
 	port_out(&store_out);
 	the_out = store_out;
-	for (i = 0; i < 108; i++) {
+	for(i = 0; i < 108; i++) {
 		len = (long) (the_out.strlens[i]);
 		n = fread(&(the_out.out_strs(i)), len, 1, file_id);
 		the_out.out_strs(i)[len] = 0;
@@ -610,22 +610,22 @@ bool load_outdoors(location which_out, short mode, ter_num_t borders[4][50]){
 	
 	switch(mode) {
 	case 1:
-		for (j = 0; j < 48; j++) {
+		for(j = 0; j < 48; j++) {
 			borders[0][j] = store_out.terrain[j][47];
 		}
 		break;
 	case 2:
-		for (j = 0; j < 48; j++) {
+		for(j = 0; j < 48; j++) {
 			borders[1][j] = store_out.terrain[0][j];
 		}
 		break;
 	case 3:
-		for (j = 0; j < 48; j++) {
+		for(j = 0; j < 48; j++) {
 			borders[2][j] = store_out.terrain[j][0];
 		}
 		break;
 	case 4:
-		for (j = 0; j < 48; j++) {
+		for(j = 0; j < 48; j++) {
 			borders[3][j] = store_out.terrain[47][j];
 		}
 		break;
@@ -660,9 +660,9 @@ bool load_outdoor_str(location which_out, short which_str, char* str){
 	// TODO: len was never assigned at all, is this the correct value?
 	len = sizeof(store_out);
 	n = fread(&store_out, len, 1, file_id);
-	for (i = 0; i < 120; i++) {
+	for(i = 0; i < 120; i++) {
 		len = (long) (store_out.strlens[i]);
-		if (i == which_str) {
+		if(i == which_str) {
 			n = fread(str, len, 1, file_id);
 			str[len] = 0;
 		}
@@ -729,12 +729,12 @@ void load_spec_graphics()
 	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
 	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
 	
-	for (i = 0; i < NUM_MONST_SHEETS; i++){
+	for(i = 0; i < NUM_MONST_SHEETS; i++){
 		std::ostringstream sout;
 		sout << "monst" << i + 1;
 		monst_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
 	}
-	for (i = 0; i < NUM_TER_SHEETS; i++){
+	for(i = 0; i < NUM_TER_SHEETS; i++){
 		std::ostringstream sout;
 		sout << "ter" << i + 1;
 		terrain_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
@@ -895,7 +895,7 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 	fin.read((char*)&store_party, len);
 	if(must_port) port_party(&store_party);
 	party_ptr = (char*) &store_party;
-	for (count = 0; count < store_len; count++)
+	for(count = 0; count < store_len; count++)
 		party_ptr[count] ^= 0x5C;	
 	
 	// LOAD SETUP
@@ -904,16 +904,16 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 	
 	// LOAD PCS
 	store_len = (long) sizeof(legacy::pc_record_type);
-	for (int i = 0; i < 6; i++) {
+	for(int i = 0; i < 6; i++) {
 		len = store_len;
 		fin.read((char*)&store_pc[i], len);
 		if(must_port) port_pc(&store_pc[i]);
 		pc_ptr = (char*) &store_pc[i];
-		for (count = 0; count < store_len; count++)
+		for(count = 0; count < store_len; count++)
 			pc_ptr[count] ^= 0x6B;	
 	}
 	
-	if (in_scen) {
+	if(in_scen) {
 		
 		// LOAD OUTDOOR MAP
 		len = (long) sizeof(legacy::out_info_type);
@@ -922,7 +922,7 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 		if(univ.town.loaded()) univ.town.unload();
 		
 		// LOAD TOWN 
-		if (town_restore) {
+		if(town_restore) {
 			len = (long) sizeof(legacy::current_town_type);
 			fin.read((char*)&store_c_town, len);
 			if(must_port) port_c_town(&store_c_town);
@@ -936,13 +936,13 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 		}else univ.town.num = 200;
 		
 		// LOAD STORED ITEMS
-		for (int i = 0; i < 3; i++) {
+		for(int i = 0; i < 3; i++) {
 			len = (long) sizeof(legacy::stored_items_list_type);
 			fin.read((char*)&stored_items[i], len);
 		}
 		
 		// LOAD SAVED MAPS
-		if (maps_there) {
+		if(maps_there) {
 			len = (long) sizeof(legacy::stored_town_maps_type);
 			fin.read((char*)&town_maps, len);
 			

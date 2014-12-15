@@ -224,7 +224,7 @@ static short get_small_icon(ter_num_t ter){
 			icon = 30;
 			break;
 		case eTerSpec::UNLOCKABLE:
-			if (scenario.ter_types[ter].flag2.u >= 5)
+			if(scenario.ter_types[ter].flag2.u >= 5)
 				icon = (scenario.ter_types[ter].flag2.u == 10) ? 32 : 31;
 			else icon = 30;
 			break;
@@ -277,29 +277,29 @@ static short get_small_icon(ter_num_t ter){
 
 void Set_up_win () {
 	short i,j;
-	for (i = 0; i < 70; i++){
+	for(i = 0; i < 70; i++){
 		palette_buttons_from[i] = palette_button_base;
 		palette_buttons_from[i].offset((i%10) * 25, (i/10) * 17);
 		palette_buttons_from[i].right++;
 	}
-	for (i = 0; i < 10; i++)
-		for (j = 0; j < 6; j++) {
+	for(i = 0; i < 10; i++)
+		for(j = 0; j < 6; j++) {
 			palette_buttons[i][j] = palette_button_base;
 			palette_buttons[i][j].offset(i * 25, j * 17);
-			if (i == 10 || !good_palette_buttons[1][j][i+1])
+			if(i == 10 || !good_palette_buttons[1][j][i+1])
 				palette_buttons[i][j].right++;
 		}
-	for (i = 0; i < 10; i++)
-		for (j = /*2*/0; j < 6; j++)
+	for(i = 0; i < 10; i++)
+		for(j = /*2*/0; j < 6; j++)
 			palette_buttons[i][j].offset(0,3);
-	for (i = 0; i < 10; i++)
-		for (j = /*3*/0; j < 6; j++)
+	for(i = 0; i < 10; i++)
+		for(j = /*3*/0; j < 6; j++)
 			palette_buttons[i][j].offset(0,3);
-	for (i = 0; i < 10; i++)
-		for (j = /*4*/0; j < 6; j++)
+	for(i = 0; i < 10; i++)
+		for(j = /*4*/0; j < 6; j++)
 			palette_buttons[i][j].offset(0,3);
 	
-	for (i = 0; i < NLS; i++) {
+	for(i = 0; i < NLS; i++) {
 		left_buttons[i][0] = left_button_base;
 		left_buttons[i][0].offset(0,i * 16);
 		left_buttons[i][1] = left_buttons[i][0];
@@ -312,7 +312,7 @@ void Set_up_win () {
 	right_button_base.top = RIGHT_AREA_UL_Y + 1;
 	right_button_base.bottom = right_button_base.top + 12;
 	right_button_base.right = right_button_base.left + RIGHT_AREA_WIDTH - 20;
-	for (i = 0; i < NRSONPAGE; i++) {
+	for(i = 0; i < NRSONPAGE; i++) {
 		right_buttons[i] = right_button_base;
 		right_buttons[i].offset(0,i * 12);
 	}
@@ -341,20 +341,20 @@ void run_startup_g() {
 
 void load_graphics(){
 	int i;
-	//for (i = 0; i < NUM_BUTTONS; i++)
-	//	for (j = 0; j < 2; j++)
+	//for(i = 0; i < NUM_BUTTONS; i++)
+	//	for(j = 0; j < 2; j++)
 	//		dlg_buttons_gworld[i][j] = load_pict(2000 + (2 * i) + j); // move to dlogtool
-//	for (i = 0; i < 14; i++)
+//	for(i = 0; i < 14; i++)
 //	    bg[i] = GetPixPat (128 + i);
-//	for (i = 0; i < 25; i++)
+//	for(i = 0; i < 25; i++)
 //	    map_pat[i] = GetPixPat (200 + i);
 	
-	for (i = 0; i < 11; i++){
+	for(i = 0; i < 11; i++){
 		std::ostringstream sout;
 		sout << "monst" << i + 1;
 		monst_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
 	}
-	for (i = 0; i < 7; i++){
+	for(i = 0; i < 7; i++){
 		std::ostringstream sout;
 		sout << "ter" << i + 1;
 		terrain_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
@@ -389,7 +389,7 @@ void redraw_screen() {
 	RECT windRect(mainPtr);
 	tileImage(mainPtr,windRect,bg[20]);
 	draw_main_screen();
-	if (overall_mode < MODE_MAIN_SCREEN);
+	if(overall_mode < MODE_MAIN_SCREEN);
 	draw_terrain();
 	mainPtr.display();
 }
@@ -399,13 +399,13 @@ void draw_main_screen() {
 	
 	
 	// draw left buttons (always active)
-	//for (i = 0; i < NLS; i++) {
+	//for(i = 0; i < NLS; i++) {
 	//	draw_lb_slot(i);
 	//}
 	draw_lb();
 	
 	// draw right buttons (only when not editing terrain)
-	if (overall_mode >= MODE_MAIN_SCREEN) {
+	if(overall_mode >= MODE_MAIN_SCREEN) {
 		draw_rect.left = RIGHT_AREA_UL_X;
 		draw_rect.top = RIGHT_AREA_UL_Y;
 		draw_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 16;
@@ -420,7 +420,7 @@ void draw_main_screen() {
 	}
 	
 	// draw terrain palette
-	if ((overall_mode < MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES)) {
+	if((overall_mode < MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES)) {
 		//draw_rect = terrain_buttons_rect;
 		//OffsetRect(&draw_rect,RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
 		//rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,
@@ -437,7 +437,7 @@ void draw_lb() {
 	
 	temp_rect.right = RIGHT_AREA_UL_X - 2;
 	tileImage(mainPtr,temp_rect,bg[20]);
-	for (i = 0; i < NLS; i++)
+	for(i = 0; i < NLS; i++)
 		draw_lb_slot(i,0);
 }
 
@@ -446,24 +446,24 @@ void draw_lb_slot (short which,short mode)  {
 	RECT text_rect,from_rect;
 	
  	tileImage(mainPtr,left_buttons[which][0],bg[20]);
-	if (left_button_status[which] == 0)
+	if(left_button_status[which] == 0)
 		return;
 	text_rect = left_buttons[which][0];
-	if (left_button_status[which] >= 10) {
+	if(left_button_status[which] >= 10) {
 		text_rect.left += 18;
 		from_rect = blue_button_from;
-		if (mode > 0)
+		if(mode > 0)
 			from_rect.offset(from_rect.right - from_rect.left,0);
 		rect_draw_some_item(editor_mixed,from_rect,left_buttons[which][1],(location){0,0});
 	}
-	if (left_button_status[which] % 10 == 3)
+	if(left_button_status[which] % 10 == 3)
 		text_rect.left += 16;
 	TextStyle style;
-	if (left_button_status[which] % 10 == 2) {
+	if(left_button_status[which] % 10 == 2) {
 		style.pointSize = 14;
 	}
 	else text_rect.offset(0,2);
-	if (mode > 0)
+	if(mode > 0)
 		style.colour = sf::Color::Blue;
 	style.lineHeight = 12;
 	win_draw_string(mainPtr,text_rect,strings_ls[which],eTextMode::WRAP,style);
@@ -473,7 +473,7 @@ void draw_rb() {
 	short i,pos;
 	
  	pos = right_sbar->getPosition();
-	for (i = pos; i < pos + NRSONPAGE; i++)
+	for(i = pos; i < pos + NRSONPAGE; i++)
 		draw_rb_slot(i,0);
 }
 
@@ -483,16 +483,16 @@ void draw_rb_slot (short which,short mode)  {
  	short pos;
  	
  	pos = right_sbar->getPosition();
-	if ((which < pos) || (which >= pos + NRSONPAGE))
+	if((which < pos) || (which >= pos + NRSONPAGE))
 		return;
 	
  	tileImage(mainPtr,right_buttons[which - pos],bg[17]);
-	if (right_button_status[which] == 0)
+	if(right_button_status[which] == 0)
 		return;
 	text_rect = right_buttons[which - pos];
 	
 	TextStyle style;
-	if (mode > 0)
+	if(mode > 0)
 		style.colour = sf::Color::Red;
 	style.lineHeight = 12;
 	win_draw_string(mainPtr,text_rect,(char *)strings_rs[which],eTextMode::WRAP,style);
@@ -511,16 +511,16 @@ void set_up_terrain_buttons() {
 	// first make terrain buttons
 	switch(draw_mode){
 		case DRAW_TERRAIN:
-			for (i = 0; i < 256; i++) {
+			for(i = 0; i < 256; i++) {
 				ter_from = ter_from_base;
 				pic = scenario.ter_types[i].picture;
-				if (pic >= 1000) {
+				if(pic >= 1000) {
 					sf::Texture* source_gworld;
 					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic % 1000);
 					rect_draw_some_item(*source_gworld,
 										ter_from,terrain_buttons_gworld,terrain_rects[i]);
 				}
-				else if (pic < 400)	{
+				else if(pic < 400)	{
 					pic = pic % 50;
 					ter_from.offset(28 * (pic % 10), 36 * (pic / 10));
 					rect_draw_some_item(terrain_gworld[scenario.ter_types[i].picture/50],
@@ -537,18 +537,18 @@ void set_up_terrain_buttons() {
 					
 				}
 				small_i = get_small_icon(i);
-//				if (i == 82)
+//				if(i == 82)
 //					small_i = 3;
-//				if (i == 83)
+//				if(i == 83)
 //					small_i = 2;
-//				if ((i == 7) || (i == 10) || (i == 13) || (i == 16))
+//				if((i == 7) || (i == 10) || (i == 13) || (i == 16))
 //					small_i = 23;
 				tiny_from = base_small_button_from;
 				tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
 				tiny_to = terrain_rects[i];
 				tiny_to.top = tiny_to.bottom - 7;
 				tiny_to.left = tiny_to.right - 7;
-				if (small_i > 0 && small_i < 255)
+				if(small_i > 0 && small_i < 255)
 					rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to);
 			}
 			break;
@@ -558,10 +558,10 @@ void set_up_terrain_buttons() {
 			break;
 	}
 	
-	if (overall_mode < MODE_MAIN_SCREEN) {
+	if(overall_mode < MODE_MAIN_SCREEN) {
 //		palette_to.left = 5;
 //		palette_to.top = terrain_rects[255].bottom + 5;
-//		if (editing_town) {
+//		if(editing_town) {
 //			palette_from.bottom = palette_buttons[0][5].bottom;
 //			palette_from.right = palette_buttons[7][5].right;
 //			}
@@ -606,28 +606,28 @@ void draw_terrain(){
 	RECT source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
 	RECT boat_rect = {0,0,36,28};
 	
-	if (overall_mode >= MODE_MAIN_SCREEN)
+	if(overall_mode >= MODE_MAIN_SCREEN)
 		return;
 	
-	if (cur_viewing_mode == 0) {
+	if(cur_viewing_mode == 0) {
 		tileImage(ter_draw_gworld,terrain_rect,bg[17]);
 		frame_rect(ter_draw_gworld, terrain_rect, sf::Color::Black);
-		for (q = 0; q < 9; q++)
-			for (r = 0; r < 9; r++)
+		for(q = 0; q < 9; q++)
+			for(r = 0; r < 9; r++)
 			{
 				where_draw.x = q;
 				where_draw.y = r;
-				if (editing_town) {
+				if(editing_town) {
 					t_to_draw = town->terrain(cen_x + q - 4,cen_y + r - 4);
 				}
 				else {
-					if (cen_x + q - 4 == -1)
+					if(cen_x + q - 4 == -1)
 						t_to_draw = borders[3][cen_y + r - 4];
-					else if (cen_x + q - 4 == 48)
+					else if(cen_x + q - 4 == 48)
 						t_to_draw = borders[1][cen_y + r - 4];
-					else if (cen_y + r - 4 == -1)
+					else if(cen_y + r - 4 == -1)
 						t_to_draw = borders[0][cen_x + q - 4];
-					else if (cen_y + r - 4 == 48)
+					else if(cen_y + r - 4 == 48)
 						t_to_draw = borders[2][cen_x + q - 4];
 					else t_to_draw = current_terrain.terrain[cen_x + q - 4][cen_y + r - 4];
 				}
@@ -643,7 +643,7 @@ void draw_terrain(){
 				tiny_to.offset(28 * q, 36 * r);
 				
 				// draw start icon, if starting point
-				if ((editing_town) &&
+				if((editing_town) &&
 					(cur_town == scenario.which_town_start) && (scenario.where_start.x == cen_x + q - 4)
 					&& (scenario.where_start.y == cen_y + r - 4)) {
 					from_rect = start_button_from;
@@ -652,7 +652,7 @@ void draw_terrain(){
 					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect);
 					tiny_to.offset(0,-7);
 				}
-				if (!editing_town
+				if(!editing_town
 					&& (scenario.out_sec_start.x == cur_out.x)
 					&& (scenario.out_sec_start.y == cur_out.y)
 					&& (scenario.out_start.x == cen_x + q - 4)
@@ -666,28 +666,28 @@ void draw_terrain(){
 				small_i = get_small_icon(t_to_draw);
 				tiny_from = base_small_button_from;
 				tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
-				if (small_i > 0) {
+				if(small_i > 0) {
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 					tiny_to.offset(0,-7);
 				}
 				
-				if (is_special(cen_x + q - 4,cen_y + r - 4)) {
+				if(is_special(cen_x + q - 4,cen_y + r - 4)) {
 					tiny_from = base_small_button_from;
 					tiny_from.offset(7 * (7),7 * (0));
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 					tiny_to.offset(0,-7);
 				}
-				if ((t_to_draw == 7) || (t_to_draw == 10) || (t_to_draw == 13) || (t_to_draw == 16)) {
+				if((t_to_draw == 7) || (t_to_draw == 10) || (t_to_draw == 13) || (t_to_draw == 16)) {
 					tiny_from = base_small_button_from;
 					tiny_from.offset(7 * (3),7 * (2));
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 					tiny_to.offset(0,-7);
 				}
-				//if (is_s_d(cen_x + q - 4,cen_y + r - 4)) {
+				//if(is_s_d(cen_x + q - 4,cen_y + r - 4)) {
 				//}
-				if (!editing_town) {
-					for (i = 0; i < 4; i++)
-						if ((cen_x + q - 4 == current_terrain.wandering_locs[i].x) &&
+				if(!editing_town) {
+					for(i = 0; i < 4; i++)
+						if((cen_x + q - 4 == current_terrain.wandering_locs[i].x) &&
 							(cen_y + r - 4 == current_terrain.wandering_locs[i].y)) {
 							tiny_from = base_small_button_from;
 							tiny_from.offset(7 * (2),7 * (1));
@@ -698,33 +698,33 @@ void draw_terrain(){
 					
 				}
 				
-				if (editing_town) {
-					for (i = 0; i < 30; i++) {
-						if ((scenario.boats[i].which_town == cur_town) &&
+				if(editing_town) {
+					for(i = 0; i < 30; i++) {
+						if((scenario.boats[i].which_town == cur_town) &&
 							(scenario.boats[i].loc.x == cen_x + q - 4) &&
 							(scenario.boats[i].loc.y == cen_y + r - 4))
 							Draw_Some_Item(vehicle_gworld,boat_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 						
 					}
-					for (i = 0; i < 30; i++) {
+					for(i = 0; i < 30; i++) {
 						source_rect = boat_rect;
 						source_rect.offset(0,36);
-						if ((scenario.horses[i].which_town == cur_town) &&
+						if((scenario.horses[i].which_town == cur_town) &&
 							(scenario.horses[i].loc.x == cen_x + q - 4) &&
 							(scenario.horses[i].loc.y == cen_y + r - 4))
 							Draw_Some_Item(vehicle_gworld,source_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 						
 					}
-					for (i = 0; i < 4; i++)
-						if ((cen_x + q - 4 == town->start_locs[i].x) &&
+					for(i = 0; i < 4; i++)
+						if((cen_x + q - 4 == town->start_locs[i].x) &&
 							(cen_y + r - 4 == town->start_locs[i].y)) {
 							tiny_from = base_small_button_from;
 							tiny_from.offset(7 * (6 + i),7 * (1));
 							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 							tiny_to.offset(0,-7);
 						}
-					for (i = 0; i < 4; i++)
-						if ((cen_x + q - 4 == town->wandering_locs[i].x) &&
+					for(i = 0; i < 4; i++)
+						if((cen_x + q - 4 == town->wandering_locs[i].x) &&
 							(cen_y + r - 4 == town->wandering_locs[i].y)) {
 							tiny_from = base_small_button_from;
 							tiny_from.offset(7 * (2),7 * (1));
@@ -732,57 +732,57 @@ void draw_terrain(){
 							tiny_to.offset(0,-7);
 							i = 4;
 						}
-					if (is_web(cen_x + q - 4,cen_y + r - 4)) {
+					if(is_web(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(5,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					if (is_crate(cen_x + q - 4,cen_y + r - 4)) {
+					if(is_crate(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(6,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					if (is_barrel(cen_x + q - 4,cen_y + r - 4)) {
+					if(is_barrel(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(7,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					if (is_fire_barrier(cen_x + q - 4,cen_y + r - 4)) {
+					if(is_fire_barrier(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(0,2);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					if (is_quickfire(cen_x + q - 4,cen_y + r - 4)) {
+					if(is_quickfire(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(7,1);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					if (is_force_barrier(cen_x + q - 4,cen_y + r - 4)) {
+					if(is_force_barrier(cen_x + q - 4,cen_y + r - 4)) {
 						from_rect = calc_rect(2,2);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					for (i = 0; i < 8; i++)
-						if (is_sfx(cen_x + q - 4,cen_y + r - 4,i)) {
+					for(i = 0; i < 8; i++)
+						if(is_sfx(cen_x + q - 4,cen_y + r - 4,i)) {
 							from_rect = calc_rect(i,3);
 							Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 						}
-					for (x = 0; x < town->max_items(); x++)
-						if ((cen_x + q - 4 == town->preset_items[x].loc.x) &&
+					for(x = 0; x < town->max_items(); x++)
+						if((cen_x + q - 4 == town->preset_items[x].loc.x) &&
 							(cen_y + r - 4 == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
 						}
-					for (x = 0; x < town->max_monst(); x++)
-						if ((cen_x + q - 4 == town->creatures(x).start_loc.x) &&
+					for(x = 0; x < town->max_monst(); x++)
+						if((cen_x + q - 4 == town->creatures(x).start_loc.x) &&
 							(cen_y + r - 4 == town->creatures(x).start_loc.y) && (town->creatures(x).number != 0)) {
 						}
 					
 				}
 			}
-		if (editing_town) {
+		if(editing_town) {
 			draw_monsts();
 			draw_items();
 		}
 		
 		clip_rect(ter_draw_gworld,clipping_rect);
 		
-		if (editing_town) {
+		if(editing_town) {
 			// draw info rects
-			for (i = 0; i < 16; i++)
-				if (town->room_rect(i).left > 0) {
+			for(i = 0; i < 16; i++)
+				if(town->room_rect(i).left > 0) {
 					draw_rect.left = 22 + 28 * (town->room_rect(i).left - cen_x + 4);
 					draw_rect.right = 22 + 28 * (town->room_rect(i).right - cen_x + 4);
 					draw_rect.top = 24 + 36 * (town->room_rect(i).top - cen_y + 4);
@@ -796,10 +796,10 @@ void draw_terrain(){
 			draw_rect.bottom = 25 + 36 * (town->in_town_rect.bottom - cen_y + 4);
 			frame_rect(ter_draw_gworld, draw_rect, sf::Color::White);
 		}
-		if (!editing_town) {
+		if(!editing_town) {
 			// draw info rects
-			for (i = 0; i < 8; i++)
-				if (current_terrain.info_rect[i].left > 0) {
+			for(i = 0; i < 8; i++)
+				if(current_terrain.info_rect[i].left > 0) {
 					draw_rect.left = 22 + 28 * (current_terrain.info_rect[i].left - cen_x + 4);
 					draw_rect.right = 22 + 28 * (current_terrain.info_rect[i].right - cen_x + 4);
 					draw_rect.top = 24 + 36 * (current_terrain.info_rect[i].top - cen_y + 4);
@@ -810,19 +810,19 @@ void draw_terrain(){
 		clip_rect(ter_draw_gworld, terrain_rect);
 		
 		small_any_drawn = false;
-		//if (cur_viewing_mode == 0)
+		//if(cur_viewing_mode == 0)
 		//	draw_frames();
 	}
 	
-	if (cur_viewing_mode == 1) {
-		if (!small_any_drawn) {
+	if(cur_viewing_mode == 1) {
+		if(!small_any_drawn) {
 		 	tileImage(ter_draw_gworld, terrain_rect,bg[17]);
 			frame_rect(ter_draw_gworld, terrain_rect, sf::Color::Black);
 		}
-		for (q = 0; q < (editing_town ? town->max_dim() : 48); q++)
-			for (r = 0; r < (editing_town ? town->max_dim() : 48); r++) {
+		for(q = 0; q < (editing_town ? town->max_dim() : 48); q++)
+			for(r = 0; r < (editing_town ? town->max_dim() : 48); r++) {
 				t_to_draw = editing_town ? town->terrain(q,r) : current_terrain.terrain[q][r];
-				if (!small_what_drawn[q][r] != t_to_draw || small_any_drawn) {
+				if(!small_what_drawn[q][r] != t_to_draw || small_any_drawn) {
 					draw_one_tiny_terrain_spot(q,r,t_to_draw);
 					small_what_drawn[q][r] = t_to_draw;
 				}
@@ -842,16 +842,16 @@ void draw_monsts() {
 	RECT source_rect;
 	location where_draw,store_loc;
 	
-	for (i = 0; i < town->max_monst(); i++)
-		if (town->creatures(i).number != 0) {
+	for(i = 0; i < town->max_monst(); i++)
+		if(town->creatures(i).number != 0) {
 			where_draw.x = town->creatures(i).start_loc.x - cen_x + 4;
 			where_draw.y = town->creatures(i).start_loc.y - cen_y + 4;
 			width = scenario.scen_monsters[town->creatures(i).number].x_width;
 			height = scenario.scen_monsters[town->creatures(i).number].y_width;
 			
-			for (k = 0; k < width * height; k++) {
+			for(k = 0; k < width * height; k++) {
 				store_loc = where_draw;
-				if ((where_draw.x == minmax(0,8,where_draw.x)) &&
+				if((where_draw.x == minmax(0,8,where_draw.x)) &&
 					(where_draw.y == minmax(0,8,where_draw.y)) &&
 					(scenario.scen_monsters[town->creatures(i).number].picture_num >= 1000)) {
 					graf_pos_ref(from_gworld, source_rect) = spec_scen_g.find_graphic((scenario.scen_monsters[town->creatures(i).number].picture_num + k) % 1000);
@@ -859,7 +859,7 @@ void draw_monsts() {
 					store_loc.y += k / width;
 					Draw_Some_Item(*from_gworld, source_rect, ter_draw_gworld, store_loc, sf::BlendAlpha);
 				}
-				else if (scenario.scen_monsters[town->creatures(i).number].picture_num < 1000) {
+				else if(scenario.scen_monsters[town->creatures(i).number].picture_num < 1000) {
 					m_start_pic = m_pic_index[scenario.scen_monsters[town->creatures(i).number].picture_num].i + k;
 					from_gworld = &monst_gworld[m_start_pic / 20];
 					m_start_pic = m_start_pic % 20;
@@ -878,7 +878,7 @@ void draw_monsts() {
 RECT get_item_template_rect (short type_wanted) {
 	RECT store_rect;
 	
-	if (type_wanted < 45) {
+	if(type_wanted < 45) {
 		store_rect.top = (type_wanted / 5) * BITMAP_HEIGHT;
 		store_rect.bottom = store_rect.top + BITMAP_HEIGHT;
 		store_rect.left = (type_wanted % 5) * BITMAP_WIDTH;
@@ -900,16 +900,16 @@ void draw_items() {
 	location where_draw;
 	short pic_num;
 	
-	for (i = 0; i < town->max_items(); i++) {
-		if (town->preset_items[i].code >= 0) {
+	for(i = 0; i < town->max_items(); i++) {
+		if(town->preset_items[i].code >= 0) {
 			where_draw.x = town->preset_items[i].loc.x - cen_x + 4;
 			where_draw.y = town->preset_items[i].loc.y - cen_y + 4;
 			pic_num = scenario.scen_items[town->preset_items[i].code].graphic_num;
-			if ((where_draw.x >= 0) && (where_draw.x <= 8) &&
+			if((where_draw.x >= 0) && (where_draw.x <= 8) &&
 				(where_draw.y >= 0) && (where_draw.y <= 8))  {
 				
 				// TODO: Item pics start at 1000 now instead of 150
-				if (pic_num >= 150) {
+				if(pic_num >= 150) {
 					sf::Texture* source_gworld;
 					graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(pic_num - 150);
 					dest_rect = calc_rect(where_draw.x,where_draw.y);
@@ -919,7 +919,7 @@ void draw_items() {
 					source_rect = get_item_template_rect(pic_num);
 					dest_rect = calc_rect(where_draw.x,where_draw.y);
 					dest_rect.offset(8,8);
-					if (pic_num >= 45) {
+					if(pic_num >= 45) {
 						dest_rect.top += 9;
 						dest_rect.bottom -= 9;
 						dest_rect.left += 5;
@@ -936,8 +936,8 @@ void draw_items() {
 
 void force_tiny_redraw() {
 //	short q,r;
-//	for (q = 0; q < 8; q++)
-//		for (r = 0; r < 64; r++)
+//	for(q = 0; q < 8; q++)
+//		for(r = 0; r < 64; r++)
 //			ter_changed[q][r] = 255;
 	
 }
@@ -953,7 +953,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	sf::Texture* source_gworld;
 	
 	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
-//	if (picture_wanted >= 1000) {
+//	if(picture_wanted >= 1000) {
 //		terrain_to_draw = 90;
 //		picture_wanted = 74;
 //	}
@@ -964,7 +964,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	if(picture_wanted >= 1000 && spec_scen_g) {
 		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 	}
-	else if (picture_wanted >= 400)	{
+	else if(picture_wanted >= 400)	{
 		source_gworld = &anim_gworld;
 		picture_wanted -= 400;
 		source_rect.left = 112 * (picture_wanted / 5);
@@ -993,7 +993,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	where_draw.x = (char) i;
 	where_draw.y = (char) j;
 	dest_rect.offset(8 + 4 * i,8 + 4 * j);
-	switch (picture_wanted) {
+	switch(picture_wanted) {
 			
 		case 0: case 1: case 73: case 72:
 			tileImage(ter_draw_gworld, dest_rect,map_pat[0]);
@@ -1003,22 +1003,22 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 			break;
 			
 		default:
-			if ((picture_wanted < 170) && (map_pats[picture_wanted] > 0)) {
+			if((picture_wanted < 170) && (map_pats[picture_wanted] > 0)) {
 				tileImage(ter_draw_gworld, dest_rect,map_pat[map_pats[picture_wanted]]);
 			}
-			else if (picture_wanted >= 1000)	{
+			else if(picture_wanted >= 1000)	{
 				graf_pos_ref(source_gworld, from_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 				rect_draw_some_item(*source_gworld, from_rect, ter_draw_gworld, dest_rect);
 			}
-			else if (picture_wanted >= 400)	{
+			else if(picture_wanted >= 400)	{
 				source_gworld = &anim_gworld;
 				picture_wanted -= 400;
-				if (picture_wanted == 0) tileImage(ter_draw_gworld, dest_rect,map_pat[13]);
-				else if (picture_wanted == 4) tileImage(ter_draw_gworld, dest_rect,map_pat[21]);
-				else if (picture_wanted == 7) tileImage(ter_draw_gworld, dest_rect,map_pat[20]);
-				else if (picture_wanted == 8) tileImage(ter_draw_gworld, dest_rect,map_pat[19]);
-				else if (picture_wanted == 9) tileImage(ter_draw_gworld, dest_rect,map_pat[20]);
-				else if (picture_wanted == 10) tileImage(ter_draw_gworld, dest_rect,map_pat[19]);
+				if(picture_wanted == 0) tileImage(ter_draw_gworld, dest_rect,map_pat[13]);
+				else if(picture_wanted == 4) tileImage(ter_draw_gworld, dest_rect,map_pat[21]);
+				else if(picture_wanted == 7) tileImage(ter_draw_gworld, dest_rect,map_pat[20]);
+				else if(picture_wanted == 8) tileImage(ter_draw_gworld, dest_rect,map_pat[19]);
+				else if(picture_wanted == 9) tileImage(ter_draw_gworld, dest_rect,map_pat[20]);
+				else if(picture_wanted == 10) tileImage(ter_draw_gworld, dest_rect,map_pat[19]);
 				else {
 					//source_rect.left = 112 * (picture_wanted / 5);
 					//source_rect.right = source_rect.left + 28;
@@ -1045,7 +1045,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 void Draw_Some_Item(sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& /*targ_gworld*/,location target,sf::BlendMode mode) {
 	RECT	destrec;
 	
-	if ((target.x < 0) || (target.x > 8) || (target.y < 0) || (target.y > 8))
+	if((target.x < 0) || (target.x > 8) || (target.y < 0) || (target.y > 8))
 		return;
 	destrec.left = 8 + BITMAP_WIDTH * target.x;
 	destrec.right = destrec.left + BITMAP_WIDTH;
@@ -1065,7 +1065,7 @@ RECT get_template_rect (unsigned short type_wanted) {
 	short picture_wanted;
 	
 	picture_wanted = scenario.ter_types[type_wanted].picture;
-	if (picture_wanted >= 1000)
+	if(picture_wanted >= 1000)
 		picture_wanted = 0;
 	picture_wanted = picture_wanted % 50;
 	store_rect.top = 0 + (picture_wanted / 10) * BITMAP_HEIGHT;
@@ -1081,8 +1081,8 @@ void draw_frames() {
 	location which_pt;
 	RECT draw_rect;
 	
-	for (q = 0; q < 9; q++) {
-		for (r = 0; r < 9; r++)
+	for(q = 0; q < 9; q++) {
+		for(r = 0; r < 9; r++)
 		{
 			which_pt.x = cen_x + q - 4;
 			which_pt.y = cen_y + r - 4;
@@ -1090,14 +1090,14 @@ void draw_frames() {
 			draw_rect.bottom = 58 + r * 36;
 			draw_rect.left = 23 + q * 28;
 			draw_rect.right = 50 + q * 28;
-			for (i = 0; i < 4; i++)
-				if ((which_pt.x == town->wandering_locs[i].x) &&
+			for(i = 0; i < 4; i++)
+				if((which_pt.x == town->wandering_locs[i].x) &&
 					(which_pt.y == town->wandering_locs[i].y)) {
 					
 					frame_rect(ter_draw_gworld, draw_rect, sf::Color::Red);
 				}
-			for (i = 0; i < 4; i++)
-				if ((which_pt.x == town->start_locs[i].x) &&
+			for(i = 0; i < 4; i++)
+				if((which_pt.x == town->start_locs[i].x) &&
 					(which_pt.y == town->start_locs[i].y)) {
 					frame_rect(ter_draw_gworld, draw_rect, sf::Color::Magenta);
 				}
@@ -1136,7 +1136,7 @@ void place_location() {
 	location moveTo(5 ,terrain_rects[255].top + 26);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
-	if (overall_mode < MODE_MAIN_SCREEN)
+	if(overall_mode < MODE_MAIN_SCREEN)
 		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 	else {
 		//MoveTo(5 ,terrain_rects[255].top + 28);
@@ -1158,7 +1158,7 @@ void place_location() {
 	erase_rect.bottom = RIGHT_AREA_HEIGHT + 6;
 	tileImage(terrain_buttons_gworld, erase_rect,bg[17]);
 	
-	if (overall_mode < MODE_MAIN_SCREEN) {
+	if(overall_mode < MODE_MAIN_SCREEN) {
 		moveTo = location(5,terrain_rects[255].bottom + 129);
 		draw_rect = text_rect;
 		draw_rect.offset(moveTo);
@@ -1175,14 +1175,14 @@ void place_location() {
 	draw_rect.right = draw_rect.left + 28;
 	picture_wanted = scenario.ter_types[current_terrain_type].picture;
 	
-	if (overall_mode < MODE_MAIN_SCREEN) {
-		if (picture_wanted >= 1000)	{
+	if(overall_mode < MODE_MAIN_SCREEN) {
+		if(picture_wanted >= 1000)	{
 			sf::Texture* source_gworld;
 			graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 			rect_draw_some_item(*source_gworld,
 								source_rect,terrain_buttons_gworld,draw_rect);
 		}
-		else if (picture_wanted >= 400)	{
+		else if(picture_wanted >= 400)	{
 			picture_wanted -= 400;
 			source_rect.left = 112 * (picture_wanted / 5);
 			source_rect.right = source_rect.left + 28;
@@ -1201,7 +1201,7 @@ void place_location() {
 		tiny_to.left = tiny_to.right - 7;
 		RECT tiny_from = base_small_button_from;
 		tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
-		if (small_i > 0 && small_i < 255)
+		if(small_i > 0 && small_i < 255)
 			rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to);
 	}
 	
@@ -1226,7 +1226,7 @@ void place_just_location() {
 	location moveTo(5 ,terrain_rects[255].top + 26);
 	draw_rect = {0,0,12,100};
 	draw_rect.offset(moveTo);
-	if (overall_mode < MODE_MAIN_SCREEN)
+	if(overall_mode < MODE_MAIN_SCREEN)
 		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 	else {
 		//MoveTo(5 ,terrain_rects[255].top + 28);
@@ -1246,7 +1246,7 @@ void place_just_location() {
 
 void set_string(const char *string,const char *string2) {
 	strcpy((char *)current_string,string);
-//	if (strlen(string2) == 0)
+//	if(strlen(string2) == 0)
 //		current_string2[0] = 0;
 //	else
 //		sprintf((char *)current_string2,"Bob");
@@ -1272,13 +1272,13 @@ void draw_cur_string() {
 bool is_special(short i,short j) {
 	short k;
 	
-	if (editing_town)
-		for (k = 0; k < 50; k++)
-			if ((town->special_locs[k].x == i) && (town->special_locs[k].y == j))
+	if(editing_town)
+		for(k = 0; k < 50; k++)
+			if((town->special_locs[k].x == i) && (town->special_locs[k].y == j))
 				return true;
-	if (!editing_town)
-		for (k = 0; k < 18; k++)
-			if ((current_terrain.special_locs[k].x == i) && (current_terrain.special_locs[k].y == j))
+	if(!editing_town)
+		for(k = 0; k < 18; k++)
+			if((current_terrain.special_locs[k].x == i) && (current_terrain.special_locs[k].y == j))
 				return true;
 	
 	return false;
@@ -1303,8 +1303,8 @@ bool is_spot(short i,short j){
 bool is_field_type(short i,short j,short field_type) {
 	unsigned short k;
 	
-	for (k = 0; k < town->preset_fields.size(); k++)
-		if ((town->preset_fields[k].type == field_type) &&
+	for(k = 0; k < town->preset_fields.size(); k++)
+		if((town->preset_fields[k].type == field_type) &&
 			(town->preset_fields[k].loc.x == i) &&
 			(town->preset_fields[k].loc.y == j))
 			return true;
@@ -1314,10 +1314,10 @@ bool is_field_type(short i,short j,short field_type) {
 void make_field_type(short i,short j,short field_type) {
 	unsigned short k;
 	
-	if (is_field_type(i,j,field_type))
+	if(is_field_type(i,j,field_type))
 		return;
-	for (k = 0; k < town->preset_fields.size(); k++)
-		if (town->preset_fields[k].type == 0) {
+	for(k = 0; k < town->preset_fields.size(); k++)
+		if(town->preset_fields[k].type == 0) {
 			town->preset_fields[k].loc.x = i;
 			town->preset_fields[k].loc.y = j;
 			town->preset_fields[k].type = field_type;
@@ -1335,8 +1335,8 @@ void make_field_type(short i,short j,short field_type) {
 void take_field_type(short i,short j,short field_type) {
 	unsigned short k;
 	
-	for (k = 0; k < town->preset_fields.size(); k++)
-		if ((town->preset_fields[k].type == field_type) &&
+	for(k = 0; k < town->preset_fields.size(); k++)
+		if((town->preset_fields[k].type == field_type) &&
 			(town->preset_fields[k].loc.x == i) &&
 			(town->preset_fields[k].loc.y == j)) {
 			town->preset_fields[k].type = 0;
@@ -1419,36 +1419,36 @@ void take_quickfire(short i,short j) {
 }
 
 bool container_there(location l) {
-	if (!editing_town)
+	if(!editing_town)
 		return false;
 	if(scenario.ter_types[town->terrain(l.x,l.y)].special == eTerSpec::IS_A_CONTAINER)
 		return true;
-	if (is_barrel(l.x,l.y))
+	if(is_barrel(l.x,l.y))
 		return true;
-	if (is_crate(l.x,l.y))
+	if(is_crate(l.x,l.y))
 		return true;
 	return 0;
 }
 
 //void get_str(const char* str,short i, short j)
 //{
-//	if (i == -1) {
+//	if(i == -1) {
 //		strcpy((char *) str,data_store->scen_item_list.monst_names[j]);
 //		return;
 //	}
-//	if (i == -2) {
+//	if(i == -2) {
 //		strcpy((char *) str,data_store->scen_item_list.scen_items[j].full_name);
 //		return;
 //	}
-//	if (i == -3) {
+//	if(i == -3) {
 //		strcpy((char *) str,buttons[available_dlog_buttons[j]].str);
 //		return;
 //	}
-//	if (i == -4) {
+//	if(i == -4) {
 //		strcpy((char *) str,data_store->scen_item_list.ter_names[j]);
 //		return;
 //	}
-//	if (i == -5) {
+//	if(i == -5) {
 //		get_str(str,40,j * 7 + 1);
 //		return;
 //	}

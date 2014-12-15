@@ -150,7 +150,7 @@ void update_item_menu() {
 	
 	for(j = 0; j < 5; j++) {
 		[item_menu[j] removeAllItems];
-		for (i = 0; i < 80; i++) {
+		for(i = 0; i < 80; i++) {
 			NSString* title = [NSString stringWithCString: scenario.scen_items[i + j * 80].full_name.c_str() encoding: NSASCIIStringEncoding];
 			NSMenuItem* newItem = [item_menu[j] addItemWithTitle: title action: @selector(itemMenu:) keyEquivalent:@""];
 			[newItem setTarget: targ];

@@ -64,17 +64,17 @@ bool handle_action(sf::Event event)
 	
 	the_point = {event.mouseButton.x, event.mouseButton.y};
 	
-	if (!file_in_mem)
+	if(!file_in_mem)
 		return false;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if((the_point.in(pc_area_buttons[i][0])) &&
 		   (univ.party[i].main_status != eMainStatus::ABSENT)) {
 			do_button_action(0,i);
 			current_active_pc = i;
 			redraw_screen();
 		}
-	for (i = 0; i < 5; i++)
+	for(i = 0; i < 5; i++)
 		if((the_point.in(edit_rect[i][0])) &&
 		   (univ.party[current_active_pc].main_status != eMainStatus::ABSENT)) {
 			do_button_action(0,i + 10);
@@ -97,13 +97,13 @@ bool handle_action(sf::Event event)
 					break;
 			}
 		}
-	for (i = 0; i < 24; i++)
+	for(i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][1])) && // drop item
 		   univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
 			flash_rect(item_string_rects[i][1]);
 			take_item(current_active_pc,i);
 		}
-	for (i = 0; i < 24; i++)
+	for(i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][2])) && // identify item
 		   univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
 			flash_rect(item_string_rects[i][2]);
@@ -147,7 +147,7 @@ void edit_gold_or_food(short which_to_edit)
 	
 	dlog.run();
 	int dialog_answer = minmax(0,25000,dlog.getResult<long long>());
-	if (which_to_edit == 0)
+	if(which_to_edit == 0)
 		univ.party.gold = dialog_answer;
 	else
 		univ.party.food = dialog_answer;
@@ -177,21 +177,21 @@ void combine_things(short pc_num)
 {
 	short i,j,test;
 	
-	for (i = 0; i < 24; i++) {
+	for(i = 0; i < 24; i++) {
 		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM &&
 		   (univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].ident)) {
-			for (j = i + 1; j < 24; j++)
+			for(j = i + 1; j < 24; j++)
 				if(univ.party[pc_num].items[j].variety != eItemType::NO_ITEM &&
 				   (univ.party[pc_num].items[j].type_flag == univ.party[pc_num].items[i].type_flag)
 				   && (univ.party[pc_num].items[j].ident)) {
 					//					add_string_to_buf("(items combined)");
 					test = (short) (univ.party[pc_num].items[i].charges) + (short) (univ.party[pc_num].items[j].charges);
-					if (test > 125) {
+					if(test > 125) {
 						univ.party[pc_num].items[i].charges = 125;
 						//						ASB("Can have at most 125 of any item.");
 					}
 					else univ.party[pc_num].items[i].charges += univ.party[pc_num].items[j].charges;
-				 	if (univ.party[pc_num].equip[j]) {
+				 	if(univ.party[pc_num].equip[j]) {
 				 		univ.party[pc_num].equip[i] = true;
 				 		univ.party[pc_num].equip[j] = false;
 					}
@@ -207,9 +207,9 @@ bool give_to_pc(short pc_num,cItemRec item, short /*print_result*/)
 {
 	short free_space;
 	
-	if (item.variety == eItemType::NO_ITEM)
+	if(item.variety == eItemType::NO_ITEM)
 		return true;
-	if ((free_space = pc_has_space(pc_num)) == 24  || univ.party[pc_num].main_status != eMainStatus::ALIVE)
+	if((free_space = pc_has_space(pc_num)) == 24  || univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return false;
 	else {
 		univ.party[pc_num].items[free_space] = item;
@@ -223,8 +223,8 @@ bool give_to_party(cItemRec item,short print_result)
 {
 	short i = 0;
 	
-	while (i < 6) {
-		if (give_to_pc(i,item,print_result))
+	while(i < 6) {
+		if(give_to_pc(i,item,print_result))
 			return true;
 		i++;
 	}
@@ -238,7 +238,7 @@ void give_gold(short amount,bool /*print_result*/)
 
 bool take_gold(short amount,bool /*print_result*/)
 {
-	if (univ.party.gold < amount)
+	if(univ.party.gold < amount)
 		return false;
 	univ.party.gold = univ.party.gold - amount;
 	return true;
@@ -248,8 +248,8 @@ short pc_has_space(short pc_num)
 {
 	short i = 0;
 	
-	while (i < 24) {
-		if (univ.party[pc_num].items[i].variety == eItemType::NO_ITEM)
+	while(i < 24) {
+		if(univ.party[pc_num].items[i].variety == eItemType::NO_ITEM)
 			return i;
 		i++;
 	}
@@ -268,7 +268,7 @@ void take_item(short pc_num,short which_item)
 	if(univ.party[pc_num].weap_poisoned > which_item && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0)
 		univ.party[pc_num].weap_poisoned--;
 	
-	for (i = which_item; i < 23; i++) {
+	for(i = which_item; i < 23; i++) {
 		univ.party[pc_num].items[i] = univ.party[pc_num].items[i + 1];
 		univ.party[pc_num].equip[i] = univ.party[pc_num].equip[i + 1];
 	}

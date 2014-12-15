@@ -613,7 +613,7 @@ void cPict::drawPresetTer(short num, RECT to_rect){
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_TER, num / 50);
 	num = num % 50;
 	RECT from_rect = calc_rect(num % 10, num / 10);
-	if (to_rect.right - to_rect.left > 28) 
+	if(to_rect.right - to_rect.left > 28) 
 		to_rect.inset(4,0);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
 }
@@ -622,7 +622,7 @@ void cPict::drawPresetTerAnim(short num, RECT to_rect){
 	RECT from_rect = calc_rect(4 * (num / 5) + animFrame % 4, num % 5);
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_TER_ANIM);
 	printf("Getting animated terrain graphic %i from sheet 20", num);
-	if (to_rect.right - to_rect.left > 28) {
+	if(to_rect.right - to_rect.left > 28) {
 		to_rect.inset(4,0);
 		to_rect.right = to_rect.left + 28;
 	}
@@ -776,7 +776,7 @@ void cPict::drawPresetItem(short num, RECT to_rect){
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	std::shared_ptr<sf::Texture> from_gw;
 	RECT from_rect = {0,0,18,18};
-	if (num < 55) {
+	if(num < 55) {
 		from_gw = getSheet(SHEET_ITEM);
 		from_rect = calc_rect(num % 5, num / 5);
 	}else{

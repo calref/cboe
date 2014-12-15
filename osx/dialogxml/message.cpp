@@ -112,7 +112,7 @@ void cTextMsg::draw(){
 			draw_color.b = 256 - draw_color.b;
 		}
 		style.colour = draw_color;
-		if (to_rect.bottom - to_rect.top < 20) { // essentially, it's a single line
+		if(to_rect.bottom - to_rect.top < 20) { // essentially, it's a single line
 			style.lineHeight = 12;
 			to_rect.left += 3;
 			win_draw_string(*inWindow,to_rect,lbl,eTextMode::LEFT_BOTTOM,style);

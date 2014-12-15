@@ -205,7 +205,7 @@ bool cControl::handleClick(location){
 			depressed = frame.contains(e.mouseMove.x, e.mouseMove.y);
 		}
 	}
-	if (play_sounds) {
+	if(play_sounds) {
 		if(typeid(this) == typeid(cLed*))
 			play_sound(34);
 		else play_sound(37);

@@ -161,7 +161,7 @@ namespace ticpp
 		{
 			std::stringstream convert;
 			convert << value;
-			if ( convert.fail() )
+			if( convert.fail() )
 			{
 				TICPPTHROW( "Could not convert value to text" );
 			}
@@ -185,7 +185,7 @@ namespace ticpp
 			std::istringstream val( temp );
 			val >> *out;
 
-			if ( val.fail() )
+			if( val.fail() )
 			{
 				TICPPTHROW( "Could not convert \"" << temp << "\" to target type" );
 			}
@@ -241,12 +241,12 @@ namespace ticpp
 			std::ostringstream full_message;
 			#ifndef TICPP_NO_RTTI
 			TiXmlNode* node = dynamic_cast< TiXmlNode* >( GetBasePointer() );
-			if ( node != 0 )
+			if( node != 0 )
 			{
 				TiXmlDocument* doc = node->GetDocument();
-				if ( doc != 0 )
+				if( doc != 0 )
 				{
-					if ( doc->Error() )
+					if( doc->Error() )
 					{
 						full_message 	<< "\nDescription: " << doc->ErrorDesc()
 										<< "\nFile: " << (strlen( doc->Value() ) > 0 ? doc->Value() : "<unnamed-file>") 
@@ -282,7 +282,7 @@ namespace ticpp
 
 		void ValidatePointer() const
 		{
-			if ( m_impRC->IsNull() )
+			if( m_impRC->IsNull() )
 			{
 				TICPPTHROW( "Internal TiXml Pointer is NULL" );
 			}
@@ -758,7 +758,7 @@ namespace ticpp
 			for( Node* child = FirstChild( value, false ); child; child = child->NextSibling( value, false ) )
 			{
 				*first = dynamic_cast< T* >( child );
-				if ( 0 != *first )
+				if( 0 != *first )
 				{
 					return;
 				}
@@ -783,7 +783,7 @@ namespace ticpp
 			Node* sibling = NextSibling( value, false );
 			*next = dynamic_cast< T* >( sibling );
 
-			while ( ( 0 != sibling ) && ( 0 == *next ) )
+			while( ( 0 != sibling ) && ( 0 == *next ) )
 			{
 				sibling = sibling->NextSibling( value, false );
 				*next = dynamic_cast< T* >( sibling );
@@ -803,7 +803,7 @@ namespace ticpp
 			Node* sibling = PreviousSibling( value, false );
 			*previous = dynamic_cast< T* >( sibling );
 
-			while ( ( 0 != sibling ) && ( 0 == *previous ) )
+			while( ( 0 != sibling ) && ( 0 == *previous ) )
 			{
 				sibling = sibling->PreviousSibling( value, false );
 				*previous = dynamic_cast< T* >( sibling );
@@ -908,7 +908,7 @@ namespace ticpp
 			T* To() const
 		{
 			T* pointer = dynamic_cast< T* >( this );
-			if ( 0 == pointer )
+			if( 0 == pointer )
 			{
 				std::string thisType = typeid( this ).name();
 				std::string targetType = typeid( T ).name();
@@ -1029,26 +1029,26 @@ namespace ticpp
 	TinyXML++ introduces iterators:
 	@code
 	ticpp::Iterator< ticpp::Node > child;
-	for ( child = child.begin( parent ); child != child.end(); child++ )
+	for( child = child.begin( parent ); child != child.end(); child++ )
 	@endcode
 
 	Iterators have the added advantage of filtering by type:
 	@code
 	// Only iterates through Comment nodes
 	ticpp::Iterator< ticpp::Comment > child;
-	for ( child = child.begin( parent ); child != child.end(); child++ )
+	for( child = child.begin( parent ); child != child.end(); child++ )
 	@endcode
 
 	@code
 	// Only iterates through Element nodes with value "ElementValue"
 	ticpp::Iterator< ticpp::Element > child( "ElementValue" );
-	for ( child = child.begin( parent ); child != child.end(); child++ )
+	for( child = child.begin( parent ); child != child.end(); child++ )
 	@endcode
 
 	Finally, Iterators also work with Attributes
 	@code
 	ticpp::Iterator< ticpp::Attribute > attribute;
-	for ( attribute = attribute.begin( element ); attribute != attribute.end(); attribute++ )
+	for( attribute = attribute.begin( element ); attribute != attribute.end(); attribute++ )
 	@endcode
 	*/
 	template < class T = Node >
@@ -1066,7 +1066,7 @@ namespace ticpp
 		@return The first child of type T.
 		@code
 		ticpp::Iterator< ticpp::Node > child;
-		for ( child = child.begin( parent ); child != child.end(); child++ )
+		for( child = child.begin( parent ); child != child.end(); child++ )
 		@endcode
 		*/
 		T* begin( const Node* parent ) const
@@ -1081,7 +1081,7 @@ namespace ticpp
 		@return NULL
 		@code
 		ticpp::Iterator< ticpp::Node > child;
-		for ( child = child.begin( parent ); child != child.end(); child++ )
+		for( child = child.begin( parent ); child != child.end(); child++ )
 		@endcode
 		*/
 		T* end() const
@@ -1094,7 +1094,7 @@ namespace ticpp
 		@code
 		// Only iterates through Element nodes with value "ElementValue"
 		ticpp::Iterator< ticpp::Element > child( "ElementValue" );
-		for ( child = child.begin( parent ); child != child.end(); child++ )
+		for( child = child.begin( parent ); child != child.end(); child++ )
 		@endcode
 		*/
 		Iterator( const std::string& value = "" )
@@ -1171,11 +1171,11 @@ namespace ticpp
 		/** Compares internal pointer */
 		bool operator!=( const T* p ) const
 		{
-			if ( m_p == p )
+			if( m_p == p )
 			{
 				return false;
 			}
-			if ( 0 == m_p || 0 == p )
+			if( 0 == m_p || 0 == p )
 			{
 				return true;
 			}
@@ -1191,11 +1191,11 @@ namespace ticpp
 		/** Compares internal pointer* */
 		bool operator==( T* p ) const
 		{
-			if ( m_p == p )
+			if( m_p == p )
 			{
 				return true;
 			}
-			if ( 0 == m_p || 0 == p )
+			if( 0 == m_p || 0 == p )
 			{
 				return false;
 			}
@@ -1261,7 +1261,7 @@ namespace ticpp
 		NodeImp( T* tiXmlPointer )
 		{
 			// Check for NULL pointers
-			if ( 0 == tiXmlPointer )
+			if( 0 == tiXmlPointer )
 			{
 				#ifdef TICPP_NO_RTTI
 					TICPPTHROW( "Can not create TinyXML objext" );
@@ -1522,7 +1522,7 @@ namespace ticpp
 			for( Attribute* child = FirstAttribute( false ); child; child = child->Next( false ) )
 			{
 				*first = dynamic_cast< Attribute* >( child );
-				if ( 0 != *first )
+				if( 0 != *first )
 				{
 					return;
 				}
@@ -1559,9 +1559,9 @@ namespace ticpp
 		{
 			// Get the element's text value as a std::string
 			std::string temp;
-			if ( !GetTextImp( &temp ) )
+			if( !GetTextImp( &temp ) )
 			{
-				if ( throwIfNotFound )
+				if( throwIfNotFound )
 				{
 					TICPPTHROW( "Text does not exists in the current element" );
 				}
@@ -1585,7 +1585,7 @@ namespace ticpp
 		{
 			// Get the element's text value as a std::string
 			std::string temp;
-			if ( !GetTextImp( &temp ) )
+			if( !GetTextImp( &temp ) )
 			{
 				return defaultValue;
 			}
@@ -1612,7 +1612,7 @@ namespace ticpp
 		{
 			// Get the element's text value as a std::string
 			std::string temp;
-			if ( !GetTextImp( &temp ) )
+			if( !GetTextImp( &temp ) )
 			{
 				// The text value does not exist - set value to the default
 				*value = defaultValue;
@@ -1643,9 +1643,9 @@ namespace ticpp
 		{
 			// Get the element's text value as a std::string
 			std::string temp;
-			if ( !GetTextImp( &temp ) )
+			if( !GetTextImp( &temp ) )
 			{
-				if ( throwIfNotFound )
+				if( throwIfNotFound )
 				{
 					TICPPTHROW( "Text does not exists in the current element" );
 				}
@@ -1672,13 +1672,13 @@ namespace ticpp
 			ValidatePointer();
 			std::string temp = ToString( value );
 
-			if ( m_tiXmlPointer->NoChildren() )
+			if( m_tiXmlPointer->NoChildren() )
 			{
 				m_tiXmlPointer->LinkEndChild( new TiXmlText( temp ) );
 			}
 			else
 			{
-				if ( 0 == m_tiXmlPointer->GetText() )
+				if( 0 == m_tiXmlPointer->GetText() )
 				{
 					m_tiXmlPointer->InsertBeforeChild( m_tiXmlPointer->FirstChild(), TiXmlText( temp ) );
 				}
@@ -1706,7 +1706,7 @@ namespace ticpp
 		{
 			// Get the attribute's value as a std::string
 			std::string temp;
-			if ( !GetAttributeImp( name, &temp ) )
+			if( !GetAttributeImp( name, &temp ) )
 			{
 				// The attribute does not exist - set value to the default
 				*value = defaultValue;
@@ -1742,9 +1742,9 @@ namespace ticpp
 			// Get the attribute's value as a std::string
 			std::string temp;
 			T value;
-			if ( !GetAttributeImp( name, &temp ) )
+			if( !GetAttributeImp( name, &temp ) )
 			{
-				if ( throwIfNotFound )
+				if( throwIfNotFound )
 				{
 					TICPPTHROW( "Attribute does not exist" );
 				}
@@ -1774,9 +1774,9 @@ namespace ticpp
 		{
 			// Get the attribute's value as a std::string
 			std::string temp;
-			if ( !GetAttributeImp( name, &temp ) )
+			if( !GetAttributeImp( name, &temp ) )
 			{
-				if ( throwIfNotFound )
+				if( throwIfNotFound )
 				{
 					TICPPTHROW( "Attribute does not exist" );
 				}

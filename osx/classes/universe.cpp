@@ -472,7 +472,7 @@ bool cCurTown::set_fire_barr(char x, char y, bool b){
 	if(b){ // If certain things are on the space, there's no room for a barrier.
 		if(is_barrel(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_crate(x,y))
 			return false;
-		if (is_antimagic(x,y) && get_ran(1,0,3) < 3)
+		if(is_antimagic(x,y) && get_ran(1,0,3) < 3)
 			return false;
 		fields[x][y]  |=  8192L;
 		// Cancel out fields
@@ -494,7 +494,7 @@ bool cCurTown::set_force_barr(char x, char y, bool b){
 	if(b){ // If certain things are on the space, there's no room for a barrier.
 		if(is_fire_barr(x,y) || is_barrel(x,y) || is_quickfire(x,y) || is_crate(x,y))
 			return false;
-		if (is_antimagic(x,y) && get_ran(1,0,2) < 2)
+		if(is_antimagic(x,y) && get_ran(1,0,2) < 2)
 			return false;
 		fields[x][y]  |=  16384L;
 		// Cancel out fields
@@ -520,9 +520,9 @@ bool cCurTown::set_quickfire(char x, char y, bool b){
 		// TODO: Isn't it a little odd that BLOCK_MOVE_AND_SHOOT isn't included here?
 		if(scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 			return false;
-		if (is_antimagic(x,y) && get_ran(1,0,1) == 0)
+		if(is_antimagic(x,y) && get_ran(1,0,1) == 0)
 			return false;
-		if (is_force_barr(x,y) || is_fire_barr(x,y))
+		if(is_force_barr(x,y) || is_fire_barr(x,y))
 			return false;
 		quickfire_present = true;
 		fields[x][y]  |=  32768L;
@@ -881,15 +881,15 @@ short cUniverse::difficulty_adjust() {
 	
 	if(!scenario.adjust_diff) return 1;
 	
-	for (short i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(party[i].main_status == eMainStatus::ALIVE)
 			party_level += party[i].level;
 	
-	if ((scenario.difficulty <= 0) && (party_level >= 60))
+	if((scenario.difficulty <= 0) && (party_level >= 60))
 		adj++;
-	if ((scenario.difficulty <= 1) && (party_level >= 130))
+	if((scenario.difficulty <= 1) && (party_level >= 130))
 		adj++;
-	if ((scenario.difficulty <= 2) && (party_level >= 210))
+	if((scenario.difficulty <= 2) && (party_level >= 210))
 		adj++;
 	
 	return adj;
@@ -897,8 +897,8 @@ short cUniverse::difficulty_adjust() {
 
 short cCurTown::countMonsters(){
 	short to_ret = 0;
-	for (short i = 0; i < record->max_monst(); i++)
-		if (monst[i].active > 0)
+	for(short i = 0; i < record->max_monst(); i++)
+		if(monst[i].active > 0)
 			to_ret++;
 	return to_ret;
 }

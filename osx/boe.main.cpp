@@ -174,13 +174,13 @@ int main(int /*argc*/, char* argv[]) {
 		
 		init_spell_menus();
 		
-//		if (overall_mode == MODE_STARTUP)
+//		if(overall_mode == MODE_STARTUP)
 //			overall_mode = MODE_OUTDOORS;
 		mainPtr.display();
 		
-		if (!game_run_before)
+		if(!game_run_before)
 			cChoiceDlog("welcome.xml").show();
-		else if (give_intro_hint)
+		else if(give_intro_hint)
 			tip_of_day();
 		game_run_before = true;
 		
@@ -190,7 +190,7 @@ int main(int /*argc*/, char* argv[]) {
 		menu_activate();
 		
 		restore_cursor();
-		while (!All_Done)
+		while(!All_Done)
 			Handle_One_Event();
 		
 		close_program();
@@ -233,9 +233,9 @@ void Initialize(void)
 	srand(time(NULL));
 	
 //	stored_key = open_pref_file();
-//	if (stored_key == -100) {
+//	if(stored_key == -100) {
 //		stored_key = open_pref_file();
-//		if (stored_key == -100) {
+//		if(stored_key == -100) {
 //			Alert(983,NULL);
 //			ExitToShell();
 //		}
@@ -298,11 +298,11 @@ void Handle_One_Event()
 		mainPtr.display();
 		return;
 	}
-	switch (event.type)
+	switch(event.type)
 	{
 		case sf::Event::KeyPressed:
 			if(flushingInput) return;
-			if (!(event.key.*systemKey))
+			if(!(event.key.*systemKey))
 				handle_keystroke(event);
 			
 			break;
@@ -343,24 +343,24 @@ void Handle_One_Event()
 				All_Done = true;
 				break;
 			}
-			if (overall_mode > MODE_TOWN){
+			if(overall_mode > MODE_TOWN){
 				std::string choice = cChoiceDlog("quit-confirm-nosave.xml", {"quit", "cancel"}).show();
-				if (choice == "cancel")
+				if(choice == "cancel")
 					break;
 			}
 			else {
 				std::string choice = cChoiceDlog("quit-confirm-save.xml", {"save", "quit", "cancel"}).show();
-				if (choice == "cancel")
+				if(choice == "cancel")
 					break;
-				if (choice == "save")
+				if(choice == "save")
 					save_party(univ.file);
 			}
 			All_Done = true;
 			// TODO: Handle closing of mini-map
 #if 0
 			else {
-				for (i = 0; i < 18; i++)
-					if ((the_window == GetDialogWindow(modeless_dialogs[i])) && (modeless_exists[i])) {
+				for(i = 0; i < 18; i++)
+					if((the_window == GetDialogWindow(modeless_dialogs[i])) && (modeless_exists[i])) {
 						//CloseDialog(modeless_dialogs[i]);
 						HideWindow(GetDialogWindow(modeless_dialogs[i]));
 						modeless_exists[i] = false;
@@ -397,7 +397,7 @@ static void handleUpdateWhileScrolling(volatile bool& doneScrolling, int refresh
 // TODO: Pass the event object around instead of keeping a global one
 void Mouse_Pressed()
 {
-	if (had_text_freeze > 0) {
+	if(had_text_freeze > 0) {
 		had_text_freeze--;
 		return;
 	}
@@ -440,7 +440,7 @@ void close_program()
 void handle_apple_menu(int item_hit)
 {
 	
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1:
 			cChoiceDlog("about-boe.xml").show();
 			break;
@@ -456,7 +456,7 @@ void handle_file_menu(int item_hit)
 	std::string choice;
 	short i;
 	
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1:
 			do_load();
 			break;
@@ -469,9 +469,9 @@ void handle_file_menu(int item_hit)
 		case 4:
 			if(overall_mode != MODE_STARTUP) {
 				choice = cChoiceDlog("restart-game.xml",{"okay","cancel"}).show();
-				if (choice == "cancel")
+				if(choice == "cancel")
 					return;
-				for (i = 0; i < 6; i++)
+				for(i = 0; i < 6; i++)
 					univ.party[i].main_status = eMainStatus::ABSENT;
 				party_in_memory = false;
 				reload_startup();
@@ -500,16 +500,16 @@ void handle_file_menu(int item_hit)
 				All_Done = true;
 				break;
 			}
-			if (overall_mode > MODE_TOWN) {
+			if(overall_mode > MODE_TOWN) {
 				choice = cChoiceDlog("quit-confirm-nosave.xml",{"quit","cancel"}).show();
-				if (choice == "cancel")
+				if(choice == "cancel")
 					return;
 			}
 			else {
 				choice = cChoiceDlog("quit-confirm-save.xml",{"quit","save","cancel"}).show();
-				if (choice == "cancel")
+				if(choice == "cancel")
 					break;
-				if (choice == "save")
+				if(choice == "save")
 					save_party(univ.file);
 			}
 			All_Done = true;
@@ -521,24 +521,24 @@ void handle_options_menu(int item_hit)
 {
 	short choice,i;
 	
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1:
 			choice = char_select_pc(0,0,"New graphic for who?");
-			if (choice < 6)
+			if(choice < 6)
 				pick_pc_graphic(choice,1,NULL);
 			draw_terrain();
 			break;
 			
 		case 4:
-			if (!prime_time()) {
+			if(!prime_time()) {
 				ASB("Finish what you're doing first.");
 				print_buf();
 			}
 			else {
 				choice = char_select_pc(0,0,"Delete who?");
-				if (choice < 6) {
+				if(choice < 6) {
 					std::string confirm = cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show();
-					if (confirm == "yes")
+					if(confirm == "yes")
 						kill_pc(choice,eMainStatus::ABSENT);
 				}
 				draw_terrain();
@@ -548,7 +548,7 @@ void handle_options_menu(int item_hit)
 			
 		case 2:
 			choice = select_pc(0,0);
-			if (choice < 6)
+			if(choice < 6)
 				pick_pc_name(choice,NULL);
 			put_pc_screen();
 			put_item_screen(stat_window,0);
@@ -556,19 +556,19 @@ void handle_options_menu(int item_hit)
 			
 			
 		case 3:
-			if (!(is_town())) {
+			if(!(is_town())) {
 				add_string_to_buf("Add PC: Town mode only.");
 				print_buf();
 				break;
 			}
-			for (i = 0; i < 6; i++)
+			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ABSENT)
 					i = 20;
-			if (i == 6) {
+			if(i == 6) {
 				ASB("Add PC: You already have 6 PCs.");
 				print_buf();
 			}
-			if (univ.town.num == scenario.which_town_start) {
+			if(univ.town.num == scenario.which_town_start) {
 				give_help(56,0);
 				create_pc(6,NULL);
 			}
@@ -588,7 +588,7 @@ void handle_options_menu(int item_hit)
 		//	journal();
 		//	break;////
 		case 6:
-			if (overall_mode == MODE_TALKING) {
+			if(overall_mode == MODE_TALKING) {
 				ASB("Talking notes: Can't read while talking.");
 				print_buf();
 				return;
@@ -608,7 +608,7 @@ void handle_options_menu(int item_hit)
 void handle_help_menu(int item_hit)
 {
 	std::string dialogToShow;
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1: dialogToShow = "help-outdoor.xml"; break;
 		case 2: dialogToShow = "help-town.xml"; break;
 		case 3: dialogToShow = "help-combat.xml"; break;
@@ -622,7 +622,7 @@ void handle_help_menu(int item_hit)
 }
 void handle_library_menu(int item_hit)
 {
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1: display_spells(eSkill::MAGE_SPELLS,100,0);
 			break;
 		case 2: display_spells(eSkill::PRIEST_SPELLS,100,0);
@@ -644,7 +644,7 @@ void handle_library_menu(int item_hit)
 void handle_actions_menu(int item_hit)
 {
 	sf::Event dummyEvent = {sf::Event::KeyPressed};
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1:
 			dummyEvent.key.code = sf::Keyboard::A;
 			dummyEvent.key.shift = true;
@@ -655,7 +655,7 @@ void handle_actions_menu(int item_hit)
 			handle_keystroke(dummyEvent);
 			break;
 		case 3:
-			if (!prime_time()) {
+			if(!prime_time()) {
 				ASB("Finish what you're doing first.");
 				print_buf();
 			}
@@ -677,8 +677,8 @@ void handle_monster_info_menu(int item_hit)
 //void load_cursors()
 //{
 //	short i,j;
-//	for (i = 0; i < 3; i++)
-//		for (j = 0; j < 3; j++)
+//	for(i = 0; i < 3; i++)
+//		for(j = 0; j < 3; j++)
 //			arrow_curs[i][j] = GetCursor(100 + (i - 1) + 10 * (j - 1));
 //	sword_curs = GetCursor(120);
 //
@@ -746,12 +746,12 @@ void change_cursor(location where_curs)
 		cursor_needed = sword_curs;
 	else cursor_needed = get_mode_cursor();
 	
-	if ((overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) && world_screen.contains(where_curs)){
+	if((overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) && world_screen.contains(where_curs)){
 		cursor_direction = get_cur_direction(where_curs);
 		cursor_needed = arrow_curs[cursor_direction.y + 1][cursor_direction.x + 1];
 	}
 	
-	if (cursor_needed != current_cursor)
+	if(cursor_needed != current_cursor)
 		set_cursor(cursor_needed);
 }
 
@@ -770,12 +770,12 @@ void move_sound(ter_num_t ter,short step){
 		on_swamp = true;
 	}else on_swamp = false;
 	
-	if (!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {// is on boat ?
+	if(!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {// is on boat ?
 		if(spec == eTerSpec::TOWN_ENTRANCE)
 			return;
 		play_sound(48); //play boat sound
 	}
-	else if (!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {//// is on horse ?
+	else if(!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {//// is on horse ?
 		play_sound(85); //so play horse sound
 	}
 	else switch(scenario.ter_types[ter].step_sound){
@@ -791,7 +791,7 @@ void move_sound(ter_num_t ter,short step){
 			play_sound(17); // big splash
 			break;
 		default: //safety footsteps valve
-			if (step % 2 == 0) //footsteps alternate sound
+			if(step % 2 == 0) //footsteps alternate sound
 				play_sound(49);
 			else play_sound(50);
 	}
@@ -844,7 +844,7 @@ void pause(short length)
 	redraw_screen(REFRESH_NONE);
 	mainPtr.display();
 	
-	if (give_delays == 0)
+	if(give_delays == 0)
 		sf::sleep(time_in_ticks(len));
 }
 
@@ -852,7 +852,7 @@ void pause(short length)
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
 bool sd_legit(short a, short b)
 {
-	if ((minmax(0,299,a) == a) && (minmax(0,9,b) == b))
+	if((minmax(0,299,a) == a) && (minmax(0,9,b) == b))
 		return true;
 	return false;
 }

@@ -1235,7 +1235,7 @@ std::string cDialog::process_keystroke(cKey keyHit){
 		if(iter->second->isVisible() && iter->second->isClickable() && iter->second->getAttachedKey() == keyHit){
 			iter->second->setActive(true);
 			draw();
-			if (play_sounds) {
+			if(play_sounds) {
 				if(typeid(iter->second) == typeid(cLed*))
 					play_sound(34);
 				else play_sound(37);

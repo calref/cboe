@@ -65,7 +65,7 @@ void save_scenario() {
 //	legacy::ave_tr_type ave_t;
 //	legacy::tiny_tr_type tiny_t;
 //
-//	/*if (!check_p(user_given_password)) {
+//	/*if(!check_p(user_given_password)) {
 //		fancy_choice_dialog(868,0);
 //		return;
 //		}
@@ -77,15 +77,15 @@ void save_scenario() {
 //	FSMakeFSSpec(file_to_load.vRefNum,file_to_load.parID,"Blades scenario temp",&dummy_file);
 //	FSpDelete(&dummy_file);
 //	error = FSpCreate(&dummy_file,'blx!','BETM',reply.keyScript);
-//	if ((error != 0) && (error != dupFNErr)) {
-//				if (error != 0) {oops_error(11);}
+//	if((error != 0) && (error != dupFNErr)) {
+//				if(error != 0) {oops_error(11);}
 //				return;
 //				}
-//	if ((error = FSpOpenDF(&dummy_file,3,&dummy_f)) != 0) {
+//	if((error = FSpOpenDF(&dummy_file,3,&dummy_f)) != 0) {
 //		oops_error(12);
 //		return;
 //		}
-//	if ((error = FSpOpenDF(&to_load,3,&scen_f)) != 0) {
+//	if((error = FSpOpenDF(&to_load,3,&scen_f)) != 0) {
 //		oops_error(13);
 //		return;
 //		}
@@ -93,7 +93,7 @@ void save_scenario() {
 //	// Now we need to set up a buffer for moving the data over to the dummy
 //	//buffer = (char *) NewPtr(buf_len);
 //	buffer = new char[100000];
-//	if (buffer == NULL) {
+//	if(buffer == NULL) {
 //		FSClose(scen_f);
 //		FSClose(dummy_f);
 //		oops_error(14);
@@ -113,7 +113,7 @@ void save_scenario() {
 //					+ (long) (scenario.town_data_size[cur_town][4]);
 //	scen_ptr_move = sizeof(legacy::scenario_data_type); // 41942
 //	scen_ptr_move += sizeof(scen_item_data_type); // 39200
-//	for (i = 0; i < 270; i++)  // scenario strings
+//	for(i = 0; i < 270; i++)  // scenario strings
 //		scen_ptr_move += scenario.scen_str_len[i];
 //
 //
@@ -121,32 +121,32 @@ void save_scenario() {
 //	// We're finally set up. Let's first set up the new scenario field
 //	// We need the new info for the current town and outdoors, which may have been changed
 //	scenario.town_data_size[cur_town][0] = sizeof(legacy::town_record_type); // 3506
-//	if (scenario.town_size[cur_town] == 0)
+//	if(scenario.town_size[cur_town] == 0)
 //		scenario.town_data_size[cur_town][0] += sizeof(legacy::big_tr_type); // 6056
-//	else if (scenario.town_size[cur_town] == 1)
+//	else if(scenario.town_size[cur_town] == 1)
 //		scenario.town_data_size[cur_town][0] += sizeof(legacy::ave_tr_type); // 3600
 //	else scenario.town_data_size[cur_town][0] += sizeof(legacy::tiny_tr_type); // 1940
 //	scenario.town_data_size[cur_town][1] = 0;
-//	for (i = 0; i < 60; i++)
+//	for(i = 0; i < 60; i++)
 //		scenario.town_data_size[cur_town][1] += strlen(data_store->town_strs[i]);
 //	scenario.town_data_size[cur_town][2] = 0;
-//	for (i = 60; i < 140; i++)
+//	for(i = 60; i < 140; i++)
 //		scenario.town_data_size[cur_town][2] += strlen(data_store->town_strs[i]);
 //	scenario.town_data_size[cur_town][3] = sizeof(legacy::talking_record_type);
-//	for (i = 0; i < 80; i++)
+//	for(i = 0; i < 80; i++)
 //		scenario.town_data_size[cur_town][3] += strlen(data_store->talk_strs[i]);
 //	scenario.town_data_size[cur_town][4] = 0;
-//	for (i = 80; i < 170; i++)
+//	for(i = 80; i < 170; i++)
 //		scenario.town_data_size[cur_town][4] += strlen(data_store->talk_strs[i]);
 //
 //	scenario.out_data_size[out_num][0] = sizeof(legacy::outdoor_record_type); // 4146
 //	scenario.out_data_size[out_num][1] = 0;
-//	for (i = 0; i < 120; i++)
+//	for(i = 0; i < 120; i++)
 //		scenario.out_data_size[out_num][1] += strlen(data_store->out_strs[i]);
 //
-//	for (i = 0; i < 300; i++)
+//	for(i = 0; i < 300; i++)
 //		scenario.scen_str_len[i] = 0;
-//	for (i = 0; i < 270; i++)
+//	for(i = 0; i < 270; i++)
 //		scenario.scen_str_len[i] = strlen(data_store->scen_strs[i]);
 //	scenario.last_town_edited = cur_town;
 //	scenario.last_out_edited = cur_out;
@@ -173,18 +173,18 @@ void save_scenario() {
 //	return;
 //
 //	len = sizeof(legacy::scenario_data_type); // scenario data; 41942
-//	if ((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
+//	if((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
 //		SysBeep(2); FSClose(scen_f); FSClose(dummy_f);oops_error(15);
 //		return;
 //		}
 //	len = sizeof(scen_item_data_type); // item data; 39200
-//	if ((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_item_list))) != 0) {
+//	if((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_item_list))) != 0) {
 //		SysBeep(2); FSClose(scen_f); FSClose(dummy_f);oops_error(16);
 //		return;
 //		}
-//	for (i = 0; i < 270; i++) { // scenario strings
+//	for(i = 0; i < 270; i++) { // scenario strings
 //		len = (long) scenario.scen_str_len[i];
-//		if ((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_strs[i]))) != 0) {
+//		if((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_strs[i]))) != 0) {
 //			SysBeep(2); FSClose(scen_f); FSClose(dummy_f);oops_error(17);
 //			return;
 //			}
@@ -194,18 +194,18 @@ void save_scenario() {
 //
 //	// OK ... scenario written. Now outdoors.
 //	num_outdoors = scenario.out_width * scenario.out_height;
-//	for (i = 0; i < num_outdoors; i++)
-//		if (i == out_num) {
+//	for(i = 0; i < num_outdoors; i++)
+//		if(i == out_num) {
 //			// write outdoors
-//			for (j = 0; j < 180; j++)
+//			for(j = 0; j < 180; j++)
 //				current_terrain.strlens[j] = 0;
-//			for (j = 0; j < 120; j++)
+//			for(j = 0; j < 120; j++)
 //				current_terrain.strlens[j] = strlen(data_store->out_strs[j]);
 //			len = sizeof(legacy::outdoor_record_type); // 4146
 //			error = FSWrite(dummy_f, &len, (char *) &current_terrain);
-//			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(18);}
+//			if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(18);}
 //
-//			for (j = 0; j < 120; j++) {
+//			for(j = 0; j < 120; j++) {
 //				len = (long) current_terrain.strlens[j];
 //				FSWrite(dummy_f, &len, (char *) &(data_store->out_strs[j]));
 //				}
@@ -217,42 +217,42 @@ void save_scenario() {
 //				error = FSRead(scen_f, &len, buffer);
 //				dummy_out_ptr = (legacy::outdoor_record_type *) buffer;
 //				port_out(dummy_out_ptr);
-//				if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(19);}
-//				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {
+//				if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(19);}
+//				if((error = FSWrite(dummy_f, &len, buffer)) != 0) {
 //					SysBeep(2); FSClose(scen_f); FSClose(dummy_f);oops_error(20);
 //					return;
 //					}
 //				}
 //
 //	// now, finally, write towns.
-//	for (k = 0; k < scenario.num_towns; k++)
-//		if (k == cur_town) {
-//			for (i = 0; i < 180; i++)
+//	for(k = 0; k < scenario.num_towns; k++)
+//		if(k == cur_town) {
+//			for(i = 0; i < 180; i++)
 //				town->strlens[i] = 0;
-//			for (i = 0; i < 140; i++)
+//			for(i = 0; i < 140; i++)
 //				town->strlens[i] = strlen(data_store->town_strs[i]);
 //
 //			// write towns
 //			len = sizeof(legacy::town_record_type); // 3506
 //			error = FSWrite(dummy_f, &len, (char *) &town);
-//			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(21);}
+//			if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(21);}
 //
-//			switch (scenario.town_size[cur_town]) {
+//			switch(scenario.town_size[cur_town]) {
 //				case 0:
 //					len = sizeof(legacy::big_tr_type); // 6056
 //					FSWrite(dummy_f, &len, (char *) &t_d);
 //					break;
 //
 //				case 1:
-//					for (i = 0; i < 48; i++)
-//						for (j = 0; j < 48; j++) {
+//					for(i = 0; i < 48; i++)
+//						for(j = 0; j < 48; j++) {
 //							ave_t.terrain[i][j] = town->terrain(i,j);
 //							ave_t.lighting[i / 8][j] = town->lighting(i / 8,j);
 //						}
-//					for (i = 0; i < 16; i++) {
+//					for(i = 0; i < 16; i++) {
 //						//ave_t.room_rect[i] = town->room_rect(i);
 //					}
-//					for (i = 0; i < 40; i++) {
+//					for(i = 0; i < 40; i++) {
 //						//ave_t.creatures[i] = town->creatures(i);
 //					}
 //					len = sizeof(legacy::ave_tr_type); // 3600
@@ -261,34 +261,34 @@ void save_scenario() {
 //
 //
 //					case 2:
-//					for (i = 0; i < 32; i++)
-//						for (j = 0; j < 32; j++) {
+//					for(i = 0; i < 32; i++)
+//						for(j = 0; j < 32; j++) {
 //							tiny_t.terrain[i][j] = town->terrain(i,j);
 //							tiny_t.lighting[i / 8][j] = town->lighting(i / 8,j);
 //						}
-//					for (i = 0; i < 16; i++) {
+//					for(i = 0; i < 16; i++) {
 //						tiny_t.room_rect[i] = town->room_rect(i);
 //					}
-//					for (i = 0; i < 30; i++) {
+//					for(i = 0; i < 30; i++) {
 //						//tiny_t.creatures[i] = town->creatures(i);
 //					}
 //					len = sizeof(legacy::tiny_tr_type); // 1940
 //					FSWrite(dummy_f, &len, (char *) &tiny_t);
 //					break;
 //			}
-//			for (j = 0; j < 140; j++) {
+//			for(j = 0; j < 140; j++) {
 //				len = (long) town->strlens[j];
 //				FSWrite(dummy_f, &len, (char *) &(data_store->town_strs[j]));
 //			}
 //
-//			for (i = 0; i < 200; i++)
+//			for(i = 0; i < 200; i++)
 //				talking.strlens[i] = 0;
-//			for (i = 0; i < 170; i++)
+//			for(i = 0; i < 170; i++)
 //				talking.strlens[i] = strlen(data_store->talk_strs[i]);
 //			len = sizeof(legacy::talking_record_type); // 1400
 //			error = FSWrite(dummy_f, &len, (char *) &talking);
-//			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(22);}
-//			for (j = 0; j < 170; j++) {
+//			if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(22);}
+//			for(j = 0; j < 170; j++) {
 //				len = (long) talking.strlens[j];
 //				FSWrite(dummy_f, &len, (char *) &(data_store->talk_strs[j]));
 //			}
@@ -299,48 +299,48 @@ void save_scenario() {
 //
 //			len = (long) (sizeof(legacy::town_record_type)); // 3506
 //			error = FSRead(scen_f, &len, buffer);
-//			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
+//			if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
 //			dummy_town_ptr = (legacy::town_record_type *) buffer;
 //			port_town(dummy_town_ptr);
-//			if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
+//			if((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
 //
-//			if (scenario.town_size[k] == 0)
+//			if(scenario.town_size[k] == 0)
 //				len = (long) ( sizeof(legacy::big_tr_type)); // 6056
-//			else if (scenario.town_size[k] == 1)
+//			else if(scenario.town_size[k] == 1)
 //				len = (long) ( sizeof(legacy::ave_tr_type)); // 3600
 //			else len = (long) ( sizeof(legacy::tiny_tr_type)); // 1940
 //			error = FSRead(scen_f, &len, buffer);
-//			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
+//			if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
 //			port_dummy_t_d(scenario.town_size[k],buffer);
-//			if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
+//			if((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
 //
 //			len = (long) (scenario.town_data_size[k][1])
 //			+ (long) (scenario.town_data_size[k][2]);
 //			error = FSRead(scen_f, &len, buffer);
-//			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
-//			if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
+//			if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
+//			if((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
 //
 //			len = (long) (scenario.town_data_size[k][3]);
 //			error = FSRead(scen_f, &len, buffer);
-//			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
+//			if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
 //			dummy_talk_ptr = (legacy::talking_record_type *) buffer;
 //			port_talk_nodes(dummy_talk_ptr);
-//			if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
+//			if((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
 //			len = (long) (scenario.town_data_size[k][4]);
 //			error = FSRead(scen_f, &len, buffer);
-//			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
-//			if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
+//			if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(24);}
+//			if((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(23);return;}
 //		}
 //
 //	change_made = false;
 //	// now, everything is moved over. Delete the original, and rename the dummy
 //	error = FSClose(scen_f);
-//	if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(25);}
+//	if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(25);}
 //	cur_scen_is_mac = true;
 //	error = FSClose(dummy_f);
-//	if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(26);}
+//	if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(26);}
 //	error = FSpExchangeFiles(&to_load,&dummy_file);
-//	if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(27);}
+//	if(error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(27);}
 //	DisposePtr(buffer);
 //	FSMakeFSSpec(file_to_load.vRefNum,file_to_load.parID,"Blades scenario temp",&dummy_file);
 //	FSpDelete(&dummy_file);
@@ -352,28 +352,28 @@ void augment_terrain(location to_create) {
 	location to_load;
 	short i,j;
 	
-	for (i = 0 ; i < 4; i++)
-		for (j = 0 ; j < 50; j++)
+	for(i = 0 ; i < 4; i++)
+		for(j = 0 ; j < 50; j++)
 			borders[i][j] = 90;
 	
 	to_load = to_create;
-	if (to_create.y > 0) {
+	if(to_create.y > 0) {
 		to_load.y--;
 		load_outdoors(to_load, 1, borders);
 	}
 	to_load = to_create;
-	if (to_create.y < scenario.out_height - 1) {
+	if(to_create.y < scenario.out_height - 1) {
 		to_load.y++;
 		load_outdoors(to_load, 3, borders);
 	}
 	
 	to_load = to_create;
-	if (to_create.x < scenario.out_width - 1) {
+	if(to_create.x < scenario.out_width - 1) {
 		to_load.x++;
 		load_outdoors(to_load, 2, borders);
 	}
 	to_load = to_create;
-	if (to_create.x > 0) {
+	if(to_create.x > 0) {
 		to_load.x--;
 		load_outdoors(to_load, 4, borders);
 	}
@@ -406,12 +406,12 @@ void create_basic_scenario() {
 //	FSMakeFSSpec(start_volume,start_dir,"::::Blades of Exile Base",&dummy_file);
 //	FSpDelete(&dummy_file);
 //	error = FSpCreate(&dummy_file,'blx!','BETM',reply.keyScript);
-//	if ((error != 0) && (error != dupFNErr)) {
+//	if((error != 0) && (error != dupFNErr)) {
 //				//add_string_to_buf("Save: Couldn't create file.         ");
 //				SysBeep(2);
 //				return;
 //				}
-//	if ((error = FSpOpenDF(&dummy_file,3,&dummy_f)) != 0) {
+//	if((error = FSpOpenDF(&dummy_file,3,&dummy_f)) != 0) {
 //		SysBeep(2);
 //		return;
 //		}
@@ -419,7 +419,7 @@ void create_basic_scenario() {
 //
 //	// Now we need to set up a buffer for moving the data over to the dummy
 //	buffer = (char *) NewPtr(buf_len);
-//	if (buffer == NULL) {
+//	if(buffer == NULL) {
 //		SysBeep(2); FSClose(dummy_f);
 //		return;
 //		}
@@ -435,33 +435,33 @@ void create_basic_scenario() {
 //	// We're finally set up. Let's first set up the new scenario field
 //	// We need the new info for the current town and outdoors, which may have been changed
 //	scenario.town_data_size[cur_town][0] = sizeof(legacy::town_record_type);
-//	if (scenario.town_size[cur_town] == 0)
+//	if(scenario.town_size[cur_town] == 0)
 //		scenario.town_data_size[cur_town][0] += sizeof(legacy::big_tr_type);
-//		else if (scenario.town_size[cur_town] == 1)
+//		else if(scenario.town_size[cur_town] == 1)
 //			scenario.town_data_size[cur_town][0] += sizeof(legacy::ave_tr_type);
 //			else scenario.town_data_size[cur_town][0] += sizeof(legacy::tiny_tr_type);
 //	scenario.town_data_size[cur_town][1] = 0;
-//	for (i = 0; i < 60; i++)
+//	for(i = 0; i < 60; i++)
 //		scenario.town_data_size[cur_town][1] += strlen(data_store->town_strs[i]);
 //	scenario.town_data_size[cur_town][2] = 0;
-//	for (i = 60; i < 140; i++)
+//	for(i = 60; i < 140; i++)
 //		scenario.town_data_size[cur_town][2] += strlen(data_store->town_strs[i]);
 //	scenario.town_data_size[cur_town][3] = sizeof(legacy::talking_record_type);
-//	for (i = 0; i < 80; i++)
+//	for(i = 0; i < 80; i++)
 //		scenario.town_data_size[cur_town][3] += strlen(data_store->talk_strs[i]);
 //	scenario.town_data_size[cur_town][4] = 0;
-//	for (i = 80; i < 170; i++)
+//	for(i = 80; i < 170; i++)
 //		scenario.town_data_size[cur_town][4] += strlen(data_store->talk_strs[i]);
 //
 //	out_num = cur_out.y * scenario.out_width + cur_out.x;
 //	scenario.out_data_size[out_num][0] = sizeof(legacy::outdoor_record_type);
 //	scenario.out_data_size[out_num][1] = 0;
-//	for (i = 0; i < 120; i++)
+//	for(i = 0; i < 120; i++)
 //		scenario.out_data_size[out_num][1] += strlen(data_store->out_strs[i]);
 //
-//	for (i = 0; i < 300; i++)
+//	for(i = 0; i < 300; i++)
 //		scenario.scen_str_len[i] = 0;
-//	for (i = 0; i < 270; i++)
+//	for(i = 0; i < 270; i++)
 //		scenario.scen_str_len[i] = strlen(data_store->scen_strs[i]);
 //	scenario.last_town_edited = cur_town;
 //	scenario.last_out_edited = cur_out;
@@ -472,18 +472,18 @@ void create_basic_scenario() {
 //	scenario.format.flag3 = 30;
 //	scenario.format.flag4 = 40; /// these mean made on mac
 //	len = sizeof(legacy::scenario_data_type); // scenario data
-//	if ((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
+//	if((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
 //		SysBeep(2); FSClose(dummy_f);
 //		return;
 //		}
 //	len = sizeof(scen_item_data_type); // item data
-//	if ((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_item_list))) != 0) {
+//	if((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_item_list))) != 0) {
 //		SysBeep(2); FSClose(dummy_f);
 //		return;
 //		}
-//	for (i = 0; i < 270; i++) { // scenario strings
+//	for(i = 0; i < 270; i++) { // scenario strings
 //		len = (long) scenario.scen_str_len[i];
-//		if ((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_strs[i]))) != 0) {
+//		if((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_strs[i]))) != 0) {
 //			SysBeep(2); FSClose(dummy_f);
 //			return;
 //			}
@@ -491,50 +491,50 @@ void create_basic_scenario() {
 //
 //	// OK ... scenario written. Now outdoors.
 //	num_outdoors = scenario.out_width * scenario.out_height;
-//	for (i = 0; i < num_outdoors; i++)
-//		if (i == out_num) {
+//	for(i = 0; i < num_outdoors; i++)
+//		if(i == out_num) {
 //			// write outdoors
-//			for (j = 0; j < 180; j++)
+//			for(j = 0; j < 180; j++)
 //				current_terrain.strlens[j] = 0;
-//			for (j = 0; j < 120; j++)
+//			for(j = 0; j < 120; j++)
 //				current_terrain.strlens[j] = strlen(data_store->out_strs[j]);
 //			len = sizeof(legacy::outdoor_record_type);
 //			FSWrite(dummy_f, &len, (char *) &current_terrain);
 //
-//			for (j = 0; j < 120; j++) {
+//			for(j = 0; j < 120; j++) {
 //				len = (long) current_terrain.strlens[j];
 //				FSWrite(dummy_f, &len, (char *) &(data_store->out_strs[j]));
 //				}
 //			}
 //
 //	// now, finally, write towns.
-//	for (k = 0; k < scenario.num_towns; k++)
-//		if (k == cur_town) {
-//			for (i = 0; i < 180; i++)
+//	for(k = 0; k < scenario.num_towns; k++)
+//		if(k == cur_town) {
+//			for(i = 0; i < 180; i++)
 //				town->strlens[i] = 0;
-//			for (i = 0; i < 140; i++)
+//			for(i = 0; i < 140; i++)
 //				town->strlens[i] = strlen(data_store->town_strs[i]);
 //
 //			// write towns
 //			len = sizeof(legacy::town_record_type);
 //			FSWrite(dummy_f, &len, (char *) &town);
 //
-//			switch (scenario.town_size[cur_town]) {
+//			switch(scenario.town_size[cur_town]) {
 //				case 0:
 //					len = sizeof(legacy::big_tr_type);
 //					FSWrite(dummy_f, &len, (char *) &t_d);
 //					break;
 //
 //				case 1:
-//					for (i = 0; i < 48; i++)
-//						for (j = 0; j < 48; j++) {
+//					for(i = 0; i < 48; i++)
+//						for(j = 0; j < 48; j++) {
 //							ave_t.terrain[i][j] = town->terrain(i,j);
 //							ave_t.lighting[i / 8][j] = town->lighting(i / 8,j);
 //							}
-//					for (i = 0; i < 16; i++) {
+//					for(i = 0; i < 16; i++) {
 //						ave_t.room_rect[i] = town->room_rect(i);
 //						}
-//					for (i = 0; i < 40; i++) {
+//					for(i = 0; i < 40; i++) {
 //						//ave_t.creatures[i] = town->creatures(i);
 //						}
 //					len = sizeof(legacy::ave_tr_type);
@@ -543,33 +543,33 @@ void create_basic_scenario() {
 //
 //
 //				case 2:
-//					for (i = 0; i < 32; i++)
-//						for (j = 0; j < 32; j++) {
+//					for(i = 0; i < 32; i++)
+//						for(j = 0; j < 32; j++) {
 //							tiny_t.terrain[i][j] = town->terrain(i,j);
 //							tiny_t.lighting[i / 8][j] = town->lighting(i / 8,j);
 //							}
-//					for (i = 0; i < 16; i++) {
+//					for(i = 0; i < 16; i++) {
 //						tiny_t.room_rect[i] = town->room_rect(i);
 //						}
-//					for (i = 0; i < 30; i++) {
+//					for(i = 0; i < 30; i++) {
 //						//tiny_t.creatures[i] = town->creatures(i);
 //						}
 //					len = sizeof(legacy::tiny_tr_type);
 //					FSWrite(dummy_f, &len, (char *) &tiny_t);
 //					break;
 //				}
-//			for (j = 0; j < 140; j++) {
+//			for(j = 0; j < 140; j++) {
 //				len = (long) town->strlens[j];
 //				FSWrite(dummy_f, &len, (char *) &(data_store->town_strs[j]));
 //				}
 //
-//			for (i = 0; i < 200; i++)
+//			for(i = 0; i < 200; i++)
 //				talking.strlens[i] = 0;
-//			for (i = 0; i < 170; i++)
+//			for(i = 0; i < 170; i++)
 //				talking.strlens[i] = strlen(data_store->talk_strs[i]);
 //			len = sizeof(legacy::talking_record_type);
 //			FSWrite(dummy_f, &len, (char *) &talking);
-//			for (j = 0; j < 170; j++) {
+//			for(j = 0; j < 170; j++) {
 //				len = (long) talking.strlens[j];
 //				FSWrite(dummy_f, &len, (char *) &(data_store->talk_strs[j]));
 //				}
@@ -599,42 +599,42 @@ void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 //	legacy::talking_record_type talking;
 //	legacy::scenario_data_type *temp_scenario;
 //
-//	if ((error = FSpOpenDF(&temp_file_to_load,1,&file_id)) != 0) {
+//	if((error = FSpOpenDF(&temp_file_to_load,1,&file_id)) != 0) {
 //		oops_error(42);	return;
 //		}
 //
 //	buffer = new char[100000];
-//	if (buffer == NULL) {
+//	if(buffer == NULL) {
 //		oops_error(41);
 //		return;
 //	}
 //	scenario_header_flags temp_vers;
 //	len = (long) sizeof(scenario_header_flags);
-//	if ((error = FSRead(file_id, &len, &temp_vers)) != 0){
+//	if((error = FSRead(file_id, &len, &temp_vers)) != 0){
 //		FSClose(file_id); oops_error(43); return;
 //	}
 //
-//	if ((temp_vers.flag1 == 10) && (temp_vers.flag2 == 20) &&
+//	if((temp_vers.flag1 == 10) && (temp_vers.flag2 == 20) &&
 //		(temp_vers.flag3 == 30)  && (temp_vers.flag4 == 40)) {
 //	  	file_ok = true;
 //	}
-//	if (!file_ok) {
+//	if(!file_ok) {
 //		FSClose(file_id); give_error("This is not a legitimate Blades of Exile scenario.","",0); return;
 //		DisposePtr(buffer); FSClose(file_id); give_error("This is not a legitimate Blades of Exile scenario. If it is a scenario, note that it needs to have been saved by the Macintosh scenario editor.","",0); return;
 //	}
-//	if (which_town >= temp_vers.num_towns) {
+//	if(which_town >= temp_vers.num_towns) {
 //		give_error("Oops ... the selected scenario doesn't have enough towns. The town you selected doesn't exist inside this scenario.","",0);
 //		DisposePtr(buffer);	FSClose(file_id);
 //		return;
 //	}
 //
 //	len = (long) sizeof(legacy::scenario_data_type);
-//	if ((error = FSRead(file_id, &len, buffer)) != 0){
+//	if((error = FSRead(file_id, &len, buffer)) != 0){
 //		FSClose(file_id); oops_error(43); return;
 //	}
 //	temp_scenario = (legacy::scenario_data_type *) buffer;
 //
-//	if (temp_scenario->town_size[which_town] != scenario.town_size[cur_town]) {
+//	if(temp_scenario->town_size[which_town] != scenario.town_size[cur_town]) {
 //		give_error("Oops ... the town in the selected scenario and the current town are different sizes. Import failed.","",0);
 //		DisposePtr(buffer);	FSClose(file_id);
 //		return;
@@ -642,13 +642,13 @@ void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 //
 //
 ////	// Now check password
-////	if (!import_check_p(0)) {
+////	if(!import_check_p(0)) {
 ////		import_user_given_password = enter_password();
-////		if (!import_check_p(import_user_given_password)) {
+////		if(!import_check_p(import_user_given_password)) {
 ////			fancy_choice_dialog(868,0);
-////			if (overall_mode != 61) {
+////			if(overall_mode != 61) {
 ////				import_user_given_password = enter_password();
-////				if (!import_check_p(import_user_given_password))
+////				if(!import_check_p(import_user_given_password))
 ////					ExitToShell();
 ////				}
 ////				else return;
@@ -657,24 +657,24 @@ void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 //
 //	len_to_jump = sizeof(legacy::scenario_data_type);
 //	len_to_jump += sizeof(scen_item_data_type);
-//	for (i = 0; i < 300; i++)
+//	for(i = 0; i < 300; i++)
 //		len_to_jump += (long) temp_scenario->scen_str_len[i];
 //	store = 0;
-//	for (i = 0; i < 100; i++)
-//		for (j = 0; j < 2; j++)
+//	for(i = 0; i < 100; i++)
+//		for(j = 0; j < 2; j++)
 //			store += (long) (temp_scenario->out_data_size[i][j]);
-//	for (i = 0; i < which_town; i++)
-//		for (j = 0; j < 5; j++)
+//	for(i = 0; i < which_town; i++)
+//		for(j = 0; j < 5; j++)
 //			store += (long) (temp_scenario->town_data_size[i][j]);
 //	len_to_jump += store;
 //	error = SetFPos (file_id, 1, len_to_jump);
-//	if (error != 0) {FSClose(file_id);oops_error(44);}
+//	if(error != 0) {FSClose(file_id);oops_error(44);}
 //
 //	len = sizeof(legacy::town_record_type);
 //	error = FSRead(file_id, &len , (char *) &town);
-//	if (error != 0) {FSClose(file_id);oops_error(45);}
+//	if(error != 0) {FSClose(file_id);oops_error(45);}
 //
-//	switch (temp_scenario->town_size[which_town]) {
+//	switch(temp_scenario->town_size[which_town]) {
 //		case 0:
 //			len =  sizeof(legacy::big_tr_type);
 //			FSRead(file_id, &len, (char *) &t_d);
@@ -683,18 +683,18 @@ void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 //		case 1:
 //				len = sizeof(legacy::ave_tr_type);
 //				FSRead(file_id, &len, (char *) &ave_t);
-//				for (i = 0; i < 48; i++)
-//					for (j = 0; j < 48; j++) {
+//				for(i = 0; i < 48; i++)
+//					for(j = 0; j < 48; j++) {
 //						town->terrain(i,j) = ave_t.terrain[i][j];
 //						town->lighting(i / 8,j) = ave_t.lighting[i / 8][j];
 //						}
-//				for (i = 0; i < 16; i++) {
+//				for(i = 0; i < 16; i++) {
 //					town->room_rect(i) = ave_t.room_rect[i];
 //					}
-//				for (i = 0; i < 40; i++) {
+//				for(i = 0; i < 40; i++) {
 //					//town->creatures(i) = ave_t.creatures[i];
 //					}
-//				for (i = 40; i < 60; i++) {
+//				for(i = 40; i < 60; i++) {
 //					town->creatures(i).number = 0;
 //					}
 //			break;
@@ -702,24 +702,24 @@ void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 //		case 2:
 //			len = sizeof(legacy::tiny_tr_type);
 //			FSRead(file_id,&len , (char *) &tiny_t);
-//			for (i = 0; i < 32; i++)
-//				for (j = 0; j < 32; j++) {
+//			for(i = 0; i < 32; i++)
+//				for(j = 0; j < 32; j++) {
 //					town->terrain(i,j) = tiny_t.terrain[i][j];
 //					town->lighting(i / 8,j) = tiny_t.lighting[i / 8][j];
 //					}
-//			for (i = 0; i < 16; i++) {
+//			for(i = 0; i < 16; i++) {
 //				town->room_rect(i) = tiny_t.room_rect[i];
 //				}
-//			for (i = 0; i < 30; i++) {
+//			for(i = 0; i < 30; i++) {
 //				//town->creatures(i) = tiny_t.creatures[i];
 //				}
-//			for (i = 30; i < 60; i++) {
+//			for(i = 30; i < 60; i++) {
 //				town->creatures(i).number = 0;
 //				}
 //			break;
 //		}
 //
-//	for (i = 0; i < 140; i++) {
+//	for(i = 0; i < 140; i++) {
 //		len = (long) (town->strlens[i]);
 //		FSRead(file_id, &len, (char *) &(town->town_strs(i)));
 //		town->town_strs(i)[len] = 0;
@@ -727,9 +727,9 @@ void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 //
 //	len = sizeof(legacy::talking_record_type);
 //	error = FSRead(file_id, &len , (char *) &talking);
-//	if (error != 0) {FSClose(file_id);oops_error(46);}
+//	if(error != 0) {FSClose(file_id);oops_error(46);}
 //
-//	for (i = 0; i < 170; i++) {
+//	for(i = 0; i < 170; i++) {
 //		len = (long) (talking.strlens[i]);
 //		FSRead(file_id, &len, (char *) &(town->talking.talk_strs[i]));
 //		town->talking.talk_strs[i][len] = 0;
@@ -737,7 +737,7 @@ void import_town(short /*which_town*/,fs::path /*temp_file_to_load*/) {
 //
 //	town->talking = talking;
 //	error = FSClose(file_id);
-//	if (error != 0) {FSClose(file_id);oops_error(47);}
+//	if(error != 0) {FSClose(file_id);oops_error(47);}
 //	DisposePtr(buffer);
 }
 
@@ -761,23 +761,23 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 //	// Step 1 - load scenario file from scenario base. It contains all the monsters and
 //	// items done up properly!
 //	error = FSMakeFSSpec(start_volume,start_dir,"::::Blades of Exile Base",&temp_file_to_load);
-//	if (error != 0) {oops_error(80);}
+//	if(error != 0) {oops_error(80);}
 //
-//	if ((error = FSpOpenDF(&temp_file_to_load,1,&file_id)) != 0) {
+//	if((error = FSpOpenDF(&temp_file_to_load,1,&file_id)) != 0) {
 //		give_error("Could not find the file 'Blades of Exile Base', which needs to be in the Scenario Editor folder. If you no longer have it, you need to redownload Blades of Exile.","",0);
 //		oops_error(81);	return;
 //		}
 //
 //	len = (long) sizeof(legacy::scenario_data_type);
-//	if ((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
+//	if((error = FSRead(file_id, &len, (char *) &scenario)) != 0){
 //		FSClose(file_id); oops_error(82); return;
 //		}
 //
 //	len = sizeof(scen_item_data_type); // item data
-//	if ((error = FSRead(file_id, &len, (char *) &(data_store->scen_item_list))) != 0){
+//	if((error = FSRead(file_id, &len, (char *) &(data_store->scen_item_list))) != 0){
 //		FSClose(file_id); oops_error(83); return;
 //		}
-//	for (i = 0; i < 270; i++) {
+//	for(i = 0; i < 270; i++) {
 //		len = (long) (scenario.scen_str_len[i]);
 //		FSRead(file_id, &len, (char *) &(data_store->scen_strs[i]));
 //		data_store->scen_strs[i][len] = 0;
@@ -795,11 +795,11 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 //	FSMakeFSSpec(file_to_load.vRefNum,file_to_load.parID,newname,&dummy_file);
 //	FSpDelete(&dummy_file);
 //	error = FSpCreate(&dummy_file,'blx!','BETM',smSystemScript);
-//	if ((error != 0) && (error != dupFNErr)) {
+//	if((error != 0) && (error != dupFNErr)) {
 //				oops_error(1);
 //				return;
 //				}
-//	if ((error = FSpOpenDF(&dummy_file,3,&dummy_f)) != 0) {
+//	if((error = FSpOpenDF(&dummy_file,3,&dummy_f)) != 0) {
 //		oops_error(2);
 //		return;
 //		}
@@ -820,35 +820,35 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 //	// We're finally set up. Let's first set up the new scenario field
 //	// We need the new info for the current town and outdoors, which may have been changed
 //	scenario.town_data_size[cur_town][0] = sizeof(legacy::town_record_type);
-//	if (scenario.town_size[cur_town] == 0)
+//	if(scenario.town_size[cur_town] == 0)
 //		scenario.town_data_size[cur_town][0] += sizeof(legacy::big_tr_type);
-//		else if (scenario.town_size[cur_town] == 1)
+//		else if(scenario.town_size[cur_town] == 1)
 //			scenario.town_data_size[cur_town][0] += sizeof(legacy::ave_tr_type);
 //			else scenario.town_data_size[cur_town][0] += sizeof(legacy::tiny_tr_type);
 //	scenario.town_data_size[cur_town][1] = 0;
-//	for (i = 0; i < 60; i++)
+//	for(i = 0; i < 60; i++)
 //		scenario.town_data_size[cur_town][1] += strlen(data_store->town_strs[i]);
 //	scenario.town_data_size[cur_town][2] = 0;
-//	for (i = 60; i < 140; i++)
+//	for(i = 60; i < 140; i++)
 //		scenario.town_data_size[cur_town][2] += strlen(data_store->town_strs[i]);
 //	scenario.town_data_size[cur_town][3] = sizeof(legacy::talking_record_type);
-//	for (i = 0; i < 80; i++)
+//	for(i = 0; i < 80; i++)
 //		scenario.town_data_size[cur_town][3] += strlen(data_store->talk_strs[i]);
 //	scenario.town_data_size[cur_town][4] = 0;
-//	for (i = 80; i < 170; i++)
+//	for(i = 80; i < 170; i++)
 //		scenario.town_data_size[cur_town][4] += strlen(data_store->talk_strs[i]);
 //
 //	num_outdoors = scenario.out_width * scenario.out_height;
-//	for (i = 0; i < num_outdoors; i++) {
+//	for(i = 0; i < num_outdoors; i++) {
 //		scenario.out_data_size[i][0] = sizeof(legacy::outdoor_record_type);
 //		scenario.out_data_size[i][1] = 0;
-//		for (j = 0; j < 120; j++)
+//		for(j = 0; j < 120; j++)
 //			scenario.out_data_size[i][1] += strlen(data_store->out_strs[j]);
 //		}
 //
-//	for (i = 0; i < 300; i++)
+//	for(i = 0; i < 300; i++)
 //		scenario.scen_str_len[i] = 0;
-//	for (i = 0; i < 270; i++)
+//	for(i = 0; i < 270; i++)
 //		scenario.scen_str_len[i] = strlen(data_store->scen_strs[i]);
 //	scenario.last_town_edited = cur_town;
 //	scenario.last_out_edited = cur_out;
@@ -870,22 +870,22 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 //
 //	len = sizeof(legacy::scenario_data_type); // scenario data
 //	scen_ptr_move += len;
-//	if ((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
+//	if((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
 //		FSClose(dummy_f);
 //				oops_error(3);
 //		return;
 //		}
 //	len = sizeof(scen_item_data_type); // item data
 //	scen_ptr_move += len;
-//	if ((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_item_list))) != 0) {
+//	if((error = FSWrite(dummy_f, &len, (char *) &(data_store->scen_item_list))) != 0) {
 // 		FSClose(dummy_f);
 //		oops_error(4);
 //		return;
 //		}
-//	for (i = 0; i < 270; i++) { // scenario strings
+//	for(i = 0; i < 270; i++) { // scenario strings
 //		len = (long) scenario.scen_str_len[i];
 //		scen_ptr_move += len;
-//		if ((error = FSWrite(dummy_f, &len, (char *) &(scenario.scen_strs(i)))) != 0) {
+//		if((error = FSWrite(dummy_f, &len, (char *) &(scenario.scen_strs(i)))) != 0) {
 //			FSClose(dummy_f);oops_error(5);
 //			return;
 //			}
@@ -894,24 +894,24 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 //
 //	// OK ... scenario written. Now outdoors.
 //	num_outdoors = scenario.out_width * scenario.out_height;
-//	for (i = 0; i < num_outdoors; i++)
+//	for(i = 0; i < num_outdoors; i++)
 //		{
 //			loc.x = i % scenario.out_width;
 //			loc.y = i / scenario.out_width;
 //
-//			for (x = 0; x < 48; x++)
-//				for (y = 0; y < 48; y++) {
+//			for(x = 0; x < 48; x++)
+//				for(y = 0; y < 48; y++) {
 //					current_terrain.terrain[x][y] = (use_grass > 0) ? 2 : 0;
 //
-//					if ((x < 4) && (loc.x == 0))
+//					if((x < 4) && (loc.x == 0))
 //						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
-//					if ((y < 4) && (loc.y == 0))
+//					if((y < 4) && (loc.y == 0))
 //						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
-//					if ((x > 43) && (loc.x == scenario.out_width - 1))
+//					if((x > 43) && (loc.x == scenario.out_width - 1))
 //						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
-//					if ((y > 43) && (loc.y == scenario.out_height - 1))
+//					if((y > 43) && (loc.y == scenario.out_height - 1))
 //						current_terrain.terrain[x][y] = (use_grass > 0) ? 22 : 5;
-//					if ((i == 0) && (making_warriors_grove > 0)) {
+//					if((i == 0) && (making_warriors_grove > 0)) {
 //						current_terrain.terrain[24][24] = (use_grass > 0) ? 234 : 232;
 //						current_terrain.exit_locs[0].x = 24;
 //						current_terrain.exit_locs[0].y = 24;
@@ -921,18 +921,18 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 //					}
 //
 //			// write outdoors
-//			for (j = 0; j < 180; j++)
+//			for(j = 0; j < 180; j++)
 //				current_terrain.strlens[j] = 0;
-//			for (j = 0; j < 120; j++)
+//			for(j = 0; j < 120; j++)
 //				current_terrain.strlens[j] = strlen(current_terrain.out_strs(j));
 //			len = sizeof(legacy::outdoor_record_type);
 //			error = FSWrite(dummy_f, &len, (char *) &current_terrain);
-//			if (error != 0) {FSClose(dummy_f);oops_error(6);}
+//			if(error != 0) {FSClose(dummy_f);oops_error(6);}
 //
-//			for (j = 0; j < 120; j++) {
+//			for(j = 0; j < 120; j++) {
 //				len = (long) current_terrain.strlens[j];
 //				error = FSWrite(dummy_f, &len, (char *) &(current_terrain.out_strs(j)));
-//				if (error != 0) {
+//				if(error != 0) {
 //					FSClose(dummy_f);
 //					oops_error(7);
 //				}
@@ -941,34 +941,34 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 //
 //
 //	// now, finally, write towns.
-//	for (k = 0; k < scenario.num_towns; k++)
+//	for(k = 0; k < scenario.num_towns; k++)
 //		{
-//			for (i = 0; i < 180; i++)
+//			for(i = 0; i < 180; i++)
 //				town->strlens[i] = 0;
-//			for (i = 0; i < 140; i++)
+//			for(i = 0; i < 140; i++)
 //				town->strlens[i] = strlen(town->town_strs[i]);
 //
 //			// write towns
 //			len = sizeof(legacy::town_record_type);
 //			error = FSWrite(dummy_f, &len, (char *) &town);
-//			if (error != 0) {FSClose(dummy_f);oops_error(8);}
+//			if(error != 0) {FSClose(dummy_f);oops_error(8);}
 //
-//			switch (scenario.town_size[cur_town]) {
+//			switch(scenario.town_size[cur_town]) {
 //				case 0:
 //					len = sizeof(legacy::big_tr_type);
 //					FSWrite(dummy_f, &len, (char *) &t_d);
 //					break;
 //
 //				case 1:
-//					for (i = 0; i < 48; i++)
-//						for (j = 0; j < 48; j++) {
+//					for(i = 0; i < 48; i++)
+//						for(j = 0; j < 48; j++) {
 //							ave_t.terrain[i][j] = town->terrain(i,j);
 //							ave_t.lighting[i / 8][j] = town->lighting(i / 8,j);
 //							}
-//					for (i = 0; i < 16; i++) {
+//					for(i = 0; i < 16; i++) {
 //						ave_t.room_rect[i] = town->room_rect(i);
 //						}
-//					for (i = 0; i < 40; i++) {
+//					for(i = 0; i < 40; i++) {
 //						//ave_t.creatures[i] = town->creatures(i);
 //						}
 //					len = sizeof(legacy::ave_tr_type);
@@ -977,34 +977,34 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 //
 //
 //				case 2:
-//					for (i = 0; i < 32; i++)
-//						for (j = 0; j < 32; j++) {
+//					for(i = 0; i < 32; i++)
+//						for(j = 0; j < 32; j++) {
 //							tiny_t.terrain[i][j] = town->terrain(i,j);
 //							tiny_t.lighting[i / 8][j] = town->lighting(i / 8,j);
 //							}
-//					for (i = 0; i < 16; i++) {
+//					for(i = 0; i < 16; i++) {
 //						tiny_t.room_rect[i] = town->room_rect(i);
 //						}
-//					for (i = 0; i < 30; i++) {
+//					for(i = 0; i < 30; i++) {
 //						//tiny_t.creatures[i] = town->creatures(i);
 //						}
 //					len = sizeof(legacy::tiny_tr_type);
 //					FSWrite(dummy_f, &len, (char *) &tiny_t);
 //					break;
 //				}
-//			for (j = 0; j < 140; j++) {
+//			for(j = 0; j < 140; j++) {
 //				len = (long) town->strlens[j];
 //				FSWrite(dummy_f, &len, (char *) &(town->town_strs[j]));
 //				}
 //
-//			for (i = 0; i < 200; i++)
+//			for(i = 0; i < 200; i++)
 //				talking.strlens[i] = 0;
-//			for (i = 0; i < 170; i++)
+//			for(i = 0; i < 170; i++)
 //				talking.strlens[i] = strlen(town->talk_strs[i]);
 //			len = sizeof(legacy::talking_record_type);
 //			error = FSWrite(dummy_f, &len, (char *) &talking);
-//			if (error != 0) {FSClose(dummy_f);oops_error(9);}
-//			for (j = 0; j < 170; j++) {
+//			if(error != 0) {FSClose(dummy_f);oops_error(9);}
+//			for(j = 0; j < 170; j++) {
 //				len = (long) talking.strlens[j];
 //				FSWrite(dummy_f, &len, (char *) &(town->talk_strs[j]));
 //				}
@@ -1015,7 +1015,7 @@ void make_new_scenario(std::string /*file_name*/,short /*out_width*/,short /*out
 //	change_made = true;
 //	// now, everything is moved over. Delete the original, and rename the dummy
 //	error = FSClose(dummy_f);
-//	if (error != 0) {FSClose(dummy_f);oops_error(10);}
+//	if(error != 0) {FSClose(dummy_f);oops_error(10);}
 //	file_to_load = dummy_file;
 	giveError("Scenario not created; creation is currently disabled.");
 }
@@ -1047,12 +1047,12 @@ void scen_text_dump(){
 		if(scenario.scen_strs(i)[0] != '*')
 			fout << "  Message " << i << ": " << scenario.scen_strs(i) << endl;
 	fout << endl << "Outdoor Sections Text:" << endl << endl;
-	for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
-		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
+	for(out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
+		for(out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
 			fout << "  Section (x = " << (short)out_sec.x << ", y = " << (short)out_sec.y << "):" << endl;
 			load_outdoors(out_sec,current_terrain);
-			for (i = 0; i < 108; i++)
-				if (current_terrain.out_strs(i)[0] != '*')
+			for(i = 0; i < 108; i++)
+				if(current_terrain.out_strs(i)[0] != '*')
 					fout << "    Message " << i << ": " << current_terrain.out_strs(i) << endl;
 			fout << endl;
 		}
@@ -1060,23 +1060,23 @@ void scen_text_dump(){
 	load_outdoors(cur_out,current_terrain);
 	augment_terrain(cur_out);
 	fout << "Town Text:" << endl << endl;
-	for (short j = 0; j < scenario.num_towns; j++) {
+	for(short j = 0; j < scenario.num_towns; j++) {
 		fout << "  Town " << j << ':' << endl;
 		fout << "  Town Messages:" << endl;
 		load_town(j,town);
-		for (i = 0; i < 135; i++)
-			if (town->town_strs(i)[0] != '*')
+		for(i = 0; i < 135; i++)
+			if(town->town_strs(i)[0] != '*')
 				fout << "    Message " << i << ": " << town->town_strs(i) << endl;
 		fout << endl << "  Town Dialogue:" << endl;
-		for (i = 0; i < 10; i++) {
+		for(i = 0; i < 10; i++) {
 			fout << "    Personality " << i << " (" << town->talking.talk_strs[i] << "): " << endl;
 			fout << "    look: " << town->talking.talk_strs[i + 10] << endl;
 			fout << "    name: " << town->talking.talk_strs[i + 20] << endl;
 			fout << "    job: " << town->talking.talk_strs[i + 30] << endl;
 			fout << "    confused: " << town->talking.talk_strs[i + 160] << endl;
 		}
-		for (i = 40; i < 160; i++)
-			if (strlen((char *) (town->talking.talk_strs[i])) > 0)
+		for(i = 40; i < 160; i++)
+			if(strlen((char *) (town->talking.talk_strs[i])) > 0)
 				fout << "    Node " << i << ": " << town->talking.talk_strs[i] << endl;
 		fout << endl;
 	}

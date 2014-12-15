@@ -91,16 +91,16 @@ cTown::cTown(short){
 	
 	town_chop_time = -1;
 	town_chop_key = -1;
-	for (i = 0; i < 4; i++) {
+	for(i = 0; i < 4; i++) {
 		wandering[i] = d_wan;
 		wandering_locs[i] = d_loc;
 	}
-	for (i = 0; i < 50; i++) {
+	for(i = 0; i < 50; i++) {
 		special_locs[i] = d_loc;
 		spec_id[i] = 0;
 	}
 	lighting_type = LIGHT_NORMAL;
-	for (i = 0; i < 4; i++) {
+	for(i = 0; i < 4; i++) {
 		start_locs[i] = d_loc;
 		exit_specs[i] = -1;
 		exit_locs[i].x = -1;
@@ -119,22 +119,22 @@ cTown::cTown(short){
 	in_town_rect.bottom = s - 4;
 	in_town_rect.left = 3;
 	in_town_rect.right = s - 4;
-	for (i = 0; i < 64; i++) 
+	for(i = 0; i < 64; i++) 
 		preset_items[i] = null_item;
 	max_num_monst = 30000;
-//	for (i = 0; i < 50; i++) 
+//	for(i = 0; i < 50; i++) 
 //		preset_fields[i].type = 0;
 	spec_on_entry = -1;
 	spec_on_entry_if_dead = -1;
-	for (i = 0; i < 15; i++) {
+	for(i = 0; i < 15; i++) {
 		sign_locs[i] = d_loc;
 		sign_locs[i].x = 100;
 	}	
-	for (i = 0; i < 8; i++) {
+	for(i = 0; i < 8; i++) {
 		timer_spec_times[i] = 0;
 		timer_specs[i] = -1;
 	}	
-	for (i = 0; i < 100; i++) {
+	for(i = 0; i < 100; i++) {
 		specials[i] = cSpecial();
 	}
 	difficulty = 0;
@@ -178,8 +178,8 @@ cTown::cField& cTown::cField::operator = (legacy::preset_field_type old){
 }
 
 bool cTown::cWandering::isNull(){
-	for (short i = 0;i < 4;i++)
-		if (monst[i] != 0)
+	for(short i = 0;i < 4;i++)
+		if(monst[i] != 0)
 			return false;
 	return true;
 }

@@ -96,7 +96,7 @@ bool town_specials(short which,short /*t_num*/)
 	
 	l = univ.town->special_locs[which];
 	spec_id = univ.town->spec_id[which];
-	if (spec_id < 0)
+	if(spec_id < 0)
 		return true;
 	
 	// call special
@@ -117,16 +117,16 @@ bool handle_wandering_specials (short /*which*/,short mode)
 	// (It's either that or univ.party.p_loc.)
 	short s1 = 0,s2 = 0,s3 = 0;
 	
-	if ((mode == 0) && (store_wandering_special.spec_on_meet >= 0)) { // When encountering
+	if((mode == 0) && (store_wandering_special.spec_on_meet >= 0)) { // When encountering
 		run_special(eSpecCtx::OUTDOOR_ENC,1,store_wandering_special.spec_on_meet,univ.party.loc_in_sec,&s1,&s2,&s3);
-		if (s1 > 0)
+		if(s1 > 0)
 			return false;
 	}
 	
-	if ((mode == 1) && (store_wandering_special.spec_on_win >= 0))  {// After defeating
+	if((mode == 1) && (store_wandering_special.spec_on_win >= 0))  {// After defeating
 		run_special(eSpecCtx::WIN_ENCOUNTER,1,store_wandering_special.spec_on_win,univ.party.loc_in_sec,&s1,&s2,&s3);
 	}
-	if ((mode == 2) && (store_wandering_special.spec_on_flee >= 0))  {// After fleeing like a buncha girly men
+	if((mode == 2) && (store_wandering_special.spec_on_flee >= 0))  {// After fleeing like a buncha girly men
 		run_special(eSpecCtx::FLEE_ENCOUNTER,1,store_wandering_special.spec_on_flee,univ.party.loc_in_sec,&s1,&s2,&s3);
 	}
 	return true;
@@ -151,7 +151,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 	*spec_num = -1;
 	*forced = false;
 	
-	switch (mode) {
+	switch(mode) {
 		case eSpecCtx::OUT_MOVE:
 			ter = univ.out[where_check.x][where_check.y];
 			from_loc = univ.party.p_loc;
@@ -178,7 +178,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 	
 	// TODO: Why not support conveyors outdoors, too?
 	if(mode != eSpecCtx::OUT_MOVE && ter_special == eTerSpec::CONVEYOR) {
-		if (
+		if(
 			((ter_flag3.u == DIR_N) && (where_check.y > from_loc.y)) ||
 			((ter_flag3.u == DIR_E) && (where_check.x < from_loc.x)) ||
 			((ter_flag3.u == DIR_S) && (where_check.y < from_loc.y)) ||
@@ -191,15 +191,15 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 	if(mode == eSpecCtx::OUT_MOVE) {
 		out_where = global_to_local(where_check);
 		
-		for (i = 0; i < 18; i++)
-			if (out_where == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_locs[i]) {
+		for(i = 0; i < 18; i++)
+			if(out_where == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_locs[i]) {
 				*spec_num = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_id[i];
-				if ((*spec_num >= 0) &&
+				if((*spec_num >= 0) &&
 					univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].specials[*spec_num].type == eSpecType::SECRET_PASSAGE)
 					*forced = true;
 				// call special
 				run_special(mode,1,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_id[i],out_where,&s1,&s2,&s3);
-				if (s1 > 0)
+				if(s1 > 0)
 					can_enter = false;
 				erase_out_specials();
 				put_pc_screen();
@@ -207,7 +207,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			}
 	}
 	
-	if ((is_combat()) && (univ.town.is_spot(where_check.x, where_check.y) ||
+	if((is_combat()) && (univ.town.is_spot(where_check.x, where_check.y) ||
 						  (scenario.ter_types[coord_to_ter(where_check.x, where_check.y)].trim_type == eTrimType::CITY))) {
 		ASB("Move: Can't trigger this special in combat.");
 		return false; // TODO: Maybe replace eTrimType::CITY check with a blockage == clear/special && is_special() check?
@@ -215,7 +215,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 	
 	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
 	   && (univ.town.is_special(where_check.x,where_check.y))) {
-		if (univ.town.is_force_barr(where_check.x,where_check.y)) {
+		if(univ.town.is_force_barr(where_check.x,where_check.y)) {
 			add_string_to_buf("  Magic barrier!               ");
 			return false;
 		}
@@ -223,8 +223,8 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			add_string_to_buf("  Force cage!");
 			return false;
 		}
-		for (i = 0; i < 50; i++)
-			if (where_check == univ.town->special_locs[i]) {
+		for(i = 0; i < 50; i++)
+			if(where_check == univ.town->special_locs[i]) {
 				if(univ.town->specials[univ.town->spec_id[i]].type == eSpecType::SECRET_PASSAGE) {
 					*forced = true;
 				}
@@ -238,7 +238,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				if(runSpecial) {
 					give_help(54,0);
 					run_special(mode,2,univ.town->spec_id[i],where_check,&s1,&s2,&s3);
-					if (s1 > 0)
+					if(s1 > 0)
 						can_enter = false;
 				}
 			}
@@ -252,17 +252,17 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		can_enter = false;
 	}
 	
-	if (!can_enter)
+	if(!can_enter)
 		return false;
 	
-	if ((!is_out()) && (overall_mode < MODE_TALKING)) {
+	if((!is_out()) && (overall_mode < MODE_TALKING)) {
 		check_fields(where_check,mode,which_pc);
 		
-		if (univ.town.is_web(where_check.x,where_check.y)) {
+		if(univ.town.is_web(where_check.x,where_check.y)) {
 			add_string_to_buf("  Webs!               ");
 			if(mode != eSpecCtx::COMBAT_MOVE) {
 				suppress_stat_screen = true;
-				for (i = 0; i < 6; i++) {
+				for(i = 0; i < 6; i++) {
 					r1 = get_ran(1,2,3);
 					web_pc(i,r1);
 				}
@@ -272,32 +272,32 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			else web_pc(current_pc,get_ran(1,2,3));
 			univ.town.set_web(where_check.x,where_check.y,false);
 		}
-		if (univ.town.is_force_barr(where_check.x,where_check.y)) {
+		if(univ.town.is_force_barr(where_check.x,where_check.y)) {
 			add_string_to_buf("  Magic barrier!               ");
 			can_enter = false;
 		}
-		if (univ.town.is_force_cage(where_check.x,where_check.y)) {
+		if(univ.town.is_force_cage(where_check.x,where_check.y)) {
 			add_string_to_buf("  Force cage!               ");
 			can_enter = false;
 		}
-		if (univ.town.is_crate(where_check.x,where_check.y)) {
+		if(univ.town.is_crate(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the crate.");
 			to_loc = push_loc(from_loc,where_check);
 			univ.town.set_crate((short) where_check.x,(short) where_check.y,false);
-			if (to_loc.x > 0)
+			if(to_loc.x > 0)
 				univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
-			for (i = 0; i < NUM_TOWN_ITEMS; i++)
+			for(i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
 		}
-		if (univ.town.is_barrel(where_check.x,where_check.y)) {
+		if(univ.town.is_barrel(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the barrel.");
 			to_loc = push_loc(from_loc,where_check);
 			univ.town.set_barrel((short) where_check.x,(short) where_check.y,false);
-			if (to_loc.x > 0)
+			if(to_loc.x > 0)
 				univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,false);
-			for (i = 0; i < NUM_TOWN_ITEMS; i++)
+			for(i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
@@ -311,10 +311,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		}
 	}
 	
-	switch (ter_special) {
+	switch(ter_special) {
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			alter_space(where_check.x,where_check.y,ter_flag1.u);
-			if (ter_flag2.u < 200) {
+			if(ter_flag2.u < 200) {
 				play_sound(-1 * ter_flag2.u);
 			}
 			give_help(47,65);
@@ -337,7 +337,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				case DAMAGE_FIRE:
 					add_string_to_buf("  It's hot!");
 					pic_type = 0;
-					if (PSD[SDF_PARTY_FIREWALK] > 0) {
+					if(PSD[SDF_PARTY_FIREWALK] > 0) {
 						add_string_to_buf("  It doesn't affect you.");
 						r1 = -1;
 					}
@@ -387,9 +387,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				break;
 			//one_sound(17);
 			if(mode == eSpecCtx::COMBAT_MOVE) i = which_pc; else i = 0;
-			for ( ; i < 6; i++)
+			for( ; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
-					if (get_ran(1,1,100) <= ter_flag2.u) {
+					if(get_ran(1,1,100) <= ter_flag2.u) {
 						switch((eStatus)ter_flag3.u){
 							case eStatus::POISONED_WEAPON: // TODO: Do something here
 								if(get_ran(1,1,100) > 60) add_string_to_buf("It's eerie here...");
@@ -455,13 +455,13 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			else if(ter_flag2.u == 1 && (mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1)))
 				spec_type = 2;
 			run_special(mode,spec_type,ter_flag1.u,where_check,&s1,&s2,&s3);
-			if (s1 > 0)
+			if(s1 > 0)
 				can_enter = false;
 			break;
 		}
 			// Locked doors
 		case eTerSpec::UNLOCKABLE:
-			if (is_combat()) {  // No lockpicking in combat
+			if(is_combat()) {  // No lockpicking in combat
 				add_string_to_buf("  Can't enter: It's locked.");
 				break;
 			}
@@ -470,10 +470,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			choice = cChoiceDlog("locked-door-action.xml",{"leave","pick","bash"}).show();
 			
 			can_enter = false;
-			if (choice == "leave")
+			if(choice == "leave")
 				break;
-			if ((door_pc = select_pc(1,0)) < 6) {
-				if (choice == "pick")
+			if((door_pc = select_pc(1,0)) < 6) {
+				if(choice == "pick")
 					pick_lock(where_check,door_pc);
 				else bash_door(where_check,door_pc);
 			}
@@ -481,9 +481,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 	}
 	
 	// Action may change terrain, so update what's been seen
-	if (is_town())
+	if(is_town())
 		update_explored(univ.town.p_loc);
-	if (is_combat())
+	if(is_combat())
 		update_explored(univ.party[current_pc].combat_pos);
 	
 	return can_enter;
@@ -499,66 +499,66 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc)
 		printf("Note: Improper mode passed to check_fields: %d\n", (int)mode);
 		return;
 	}
-	if (is_out())
+	if(is_out())
 		return;
-	if (is_town())
+	if(is_town())
 		fast_bang = 1;
-	if (univ.town.is_fire_wall(where_check.x,where_check.y)) {
+	if(univ.town.is_fire_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Fire wall!               ");
 		r1 = get_ran(1,1,6) + 1;
 		// TODO: Is this commented code important?
-//		if (mode < 2)
+//		if(mode < 2)
 //			hit_party(r1,1);
-		if (mode == eSpecCtx::COMBAT_MOVE)
+		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
-		if (overall_mode < MODE_COMBAT)
+		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
-	if (univ.town.is_force_wall(where_check.x,where_check.y)) {
+	if(univ.town.is_force_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Force wall!               ");
 		r1 = get_ran(2,1,6);
-//		if (mode < 2)
+//		if(mode < 2)
 //			hit_party(r1,3);
-		if (mode == eSpecCtx::COMBAT_MOVE)
+		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
-		if (overall_mode < MODE_COMBAT)
+		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
 	}
-	if (univ.town.is_ice_wall(where_check.x,where_check.y)) {
+	if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Ice wall!               ");
 		r1 = get_ran(2,1,6);
-//		if (mode < 2)
+//		if(mode < 2)
 //			hit_party(r1,5);
-		if (mode == eSpecCtx::COMBAT_MOVE)
+		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_COLD,eRace::UNKNOWN,0);
-		if (overall_mode < MODE_COMBAT)
+		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,4,r1,7);
 	}
-	if (univ.town.is_blade_wall(where_check.x,where_check.y)) {
+	if(univ.town.is_blade_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Blade wall!               ");
 		r1 = get_ran(4,1,8);
-//		if (mode < 2)
+//		if(mode < 2)
 //			hit_party(r1,0);
-		if (mode == eSpecCtx::COMBAT_MOVE)
+		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
-		if (overall_mode < MODE_COMBAT)
+		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,3,r1,2);
 	}
-	if (univ.town.is_quickfire(where_check.x,where_check.y)) {
+	if(univ.town.is_quickfire(where_check.x,where_check.y)) {
 		add_string_to_buf("  Quickfire!               ");
 		r1 = get_ran(2,1,8);
-//		if (mode < 2)
+//		if(mode < 2)
 //			hit_party(r1,1);
-		if (mode == eSpecCtx::COMBAT_MOVE)
+		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
-		if (overall_mode < MODE_COMBAT)
+		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
-	if (univ.town.is_scloud(where_check.x,where_check.y)) {
+	if(univ.town.is_scloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Stinking cloud!               ");
-		if (mode != eSpecCtx::COMBAT_MOVE) {
+		if(mode != eSpecCtx::COMBAT_MOVE) {
 			suppress_stat_screen = true;
-			for (i = 0; i < 6; i++) {
+			for(i = 0; i < 6; i++) {
 				r1 = get_ran(1,2,3);
 				curse_pc(i,r1);
 			}
@@ -567,11 +567,11 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc)
 		}
 		else curse_pc(current_pc,get_ran(1,2,3));
 	}
-	if (univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
+	if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Sleep cloud!               ");
-		if (mode != eSpecCtx::COMBAT_MOVE) {
+		if(mode != eSpecCtx::COMBAT_MOVE) {
 			suppress_stat_screen = true;
-			for (i = 0; i < 6; i++) {
+			for(i = 0; i < 6; i++) {
 				sleep_pc(i,3,eStatus::ASLEEP,0);
 			}
 			suppress_stat_screen = false;
@@ -579,14 +579,14 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc)
 		}
 		else sleep_pc(current_pc,3,eStatus::ASLEEP,0);
 	}
-	if (univ.town.is_fire_barr(where_check.x,where_check.y)) {
+	if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		add_string_to_buf("  Magic barrier!               ");
 		r1 = get_ran(2,1,10);
-		if (mode != eSpecCtx::COMBAT_MOVE)
+		if(mode != eSpecCtx::COMBAT_MOVE)
 			hit_party(r1,DAMAGE_MAGIC);
-		if (mode == eSpecCtx::COMBAT_MOVE)
+		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
-		if (overall_mode < MODE_COMBAT)
+		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
 	}
 	if(univ.town.is_force_cage(where_check.x,where_check.y)) {
@@ -621,49 +621,49 @@ void use_item(short pc,short item)
 	level = univ.party[pc].items[item].item_level;
 	
 	item_use_code = abil_chart[abil];
-	if (item_use_code >= 10) {
+	if(item_use_code >= 10) {
 		item_use_code -= 10;
 		inept_ok = true;
 	}
 	
-	if (is_out())
+	if(is_out())
 		user_loc = univ.party.p_loc;
-	if (is_town())
+	if(is_town())
 		user_loc = univ.town.p_loc;
-	if (is_combat())
+	if(is_combat())
 		user_loc = univ.party[current_pc].combat_pos;
 	
-	if (item_use_code == 0) {
+	if(item_use_code == 0) {
 		add_string_to_buf("Use: Can't use this item.       ");
 		take_charge = false;
 	}
-	if (univ.party[pc].traits[eTrait::MAGICALLY_INEPT] && !inept_ok){
+	if(univ.party[pc].traits[eTrait::MAGICALLY_INEPT] && !inept_ok){
 		add_string_to_buf("Use: Can't - magically inept.       ");
 		take_charge = false;
 	}
 	
 	// 0 - can't use 1 - combat only 2 - town only 3 - town & combat only  4 - everywhere  5 - outdoor
-	if (take_charge) {
+	if(take_charge) {
 		if(overall_mode == MODE_OUTDOORS && item_use_code < 4) {
 			add_string_to_buf("Use: Not while outdoors.         ");
 			take_charge = false;
 		}
 		// TODO: Almost all of these look wrong!
-		if ((overall_mode == MODE_TOWN) && (item_use_code == 1)) {
+		if((overall_mode == MODE_TOWN) && (item_use_code == 1)) {
 			add_string_to_buf("Use: Not while in town.         ");
 			take_charge = false;
 		}
-		if ((overall_mode == MODE_COMBAT) && (item_use_code == 2)) {
+		if((overall_mode == MODE_COMBAT) && (item_use_code == 2)) {
 			add_string_to_buf("Use: Not in combat.         ");
 			take_charge = false;
 		}
-		if ((overall_mode != MODE_OUTDOORS) && (item_use_code == 5)){
+		if((overall_mode != MODE_OUTDOORS) && (item_use_code == 5)){
 			add_string_to_buf("Use: Only outdoors.           ");
 			take_charge = false;
 		}
 	}
-	if (take_charge) {
-		if (!univ.party[pc].items[item].ident)
+	if(take_charge) {
+		if(!univ.party[pc].items[item].ident)
 			sprintf((char *) to_draw, "Use: %s",univ.party[pc].items[item].name.c_str());
 		else sprintf((char *) to_draw, "Use: %s",univ.party[pc].items[item].full_name.c_str());
 		add_string_to_buf((char *) to_draw);
@@ -675,90 +675,90 @@ void use_item(short pc,short item)
 		store_item_spell_level = str * 2 + 1;
 		type = univ.party[pc].items[item].magic_use_type;
 		
-		switch (abil) {
+		switch(abil) {
 			case eItemAbil::POISON_WEAPON: // poison weapon
 				take_charge = poison_weapon(pc,str,0);
 				break;
 			case eItemAbil::BLESS_CURSE:
 				play_sound(4);
 				which_stat = eStatus::BLESS_CURSE;
-				if (type % 2 == 1) {
+				if(type % 2 == 1) {
 					ASB("  You feel awkward.");
 					str = str * -1;
 				}else ASB("  You feel blessed.");
-				if (type > 1)
+				if(type > 1)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::HASTE_SLOW:
 				play_sound(75);
 				which_stat = eStatus::HASTE_SLOW;
-				if (type % 2 == 1) {
+				if(type % 2 == 1) {
 					ASB("  You feel sluggish.");
 					str = str * -1;
 				}else ASB("  You feel speedy.");
-				if (type > 1)
+				if(type > 1)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::AFFECT_INVULN:
 				play_sound(68);
 				which_stat = eStatus::INVULNERABLE;
-				if (type % 2 == 1) {
+				if(type % 2 == 1) {
 					ASB("  You feel odd.");
 					str = str * -1;
 				}else ASB("  You feel protected.");
-				if (type > 1)
+				if(type > 1)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::AFFECT_MAGIC_RES:
 				play_sound(51);
 				which_stat = eStatus::MAGIC_RESISTANCE;
-				if (type % 2 == 1) {
+				if(type % 2 == 1) {
 					ASB("  You feel odd.");
 					str = str * -1;
 				}else ASB("  You feel protected.");
-				if (type > 1)
+				if(type > 1)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::AFFECT_WEB:
 				which_stat = eStatus::WEBS;
-				if (type % 2 == 1)
+				if(type % 2 == 1)
 					ASB("  You feel sticky.");
 				else {
 					ASB("  Your skin tingles.");
 					str = str * -1;
 				}
-				if (type > 1)
+				if(type > 1)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::AFFECT_SANCTUARY:
 				play_sound(43);
 				which_stat = eStatus::INVISIBLE;
-				if (type % 2 == 1) {
+				if(type % 2 == 1) {
 					ASB("  You feel exposed.");
 					str = str * -1;
 				}else ASB("  You feel obscure.");
-				if (type > 1)
+				if(type > 1)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::AFFECT_MARTYRS_SHIELD:
 				play_sound(43);
 				which_stat = eStatus::MARTYRS_SHIELD;
-				if (type % 2 == 1) {
+				if(type % 2 == 1) {
 					ASB("  You feel dull.");
 					str = str * -1;
 				}else ASB("  You start to glow slightly.");
-				if (type > 1)
+				if(type > 1)
 					affect_party(which_stat,str);
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::AFFECT_POISON:
-				switch (type) {
+				switch(type) {
 					case 0:
 						ASB("  You feel better.");
 						cure_pc(pc,str);
@@ -778,7 +778,7 @@ void use_item(short pc,short item)
 				}
 				break;
 			case eItemAbil::AFFECT_DISEASE:
-				switch (type) {
+				switch(type) {
 					case 0:
 						ASB("  You feel healthy.");
 						affect_pc(pc,eStatus::DISEASE,-1 * str);
@@ -793,13 +793,13 @@ void use_item(short pc,short item)
 						break;
 					case 3:
 						ASB("  You all feel sick.");
-						for (i = 0; i < 6; i++)
+						for(i = 0; i < 6; i++)
 							disease_pc(i,str);
 						break;
 				}
 				break;
 			case eItemAbil::AFFECT_DUMBFOUND:
-				switch (type) {
+				switch(type) {
 					case 0:
 						ASB("  You feel clear headed.");
 						affect_pc(pc,eStatus::DUMB,-1 * str);
@@ -814,13 +814,13 @@ void use_item(short pc,short item)
 						break;
 					case 3:
 						ASB("  You all feel confused.");
-						for (i = 0; i < 6; i++)
+						for(i = 0; i < 6; i++)
 							dumbfound_pc(i,str);
 						break;
 				}
 				break;
 			case eItemAbil::AFFECT_SLEEP:
-				switch (type) {
+				switch(type) {
 					case 0:
 						ASB("  You feel alert.");
 						affect_pc(pc,eStatus::ASLEEP,-1 * str);
@@ -835,13 +835,13 @@ void use_item(short pc,short item)
 						break;
 					case 3:
 						ASB("  You all feel very tired.");
-						for (i = 0; i < 6; i++)
+						for(i = 0; i < 6; i++)
 							sleep_pc(i,str + 1,eStatus::ASLEEP,200);
 						break;
 				}
 				break;
 			case eItemAbil::AFFECT_PARALYSIS:
-				switch (type) {
+				switch(type) {
 					case 0:
 						ASB("  You find it easier to move.");
 						affect_pc(pc,eStatus::PARALYZED,-1 * str * 100);
@@ -856,13 +856,13 @@ void use_item(short pc,short item)
 						break;
 					case 3:
 						ASB("  You all feel very stiff.");
-						for (i = 0; i < 6; i++)
+						for(i = 0; i < 6; i++)
 							sleep_pc(i,str * 20 + 10,eStatus::PARALYZED,200);
 						break;
 				}
 				break;
 			case eItemAbil::AFFECT_ACID:
-				switch (type) {
+				switch(type) {
 					case 0:
 						ASB("  Your skin tingles pleasantly.");
 						affect_pc(pc,eStatus::ACID,-1 * str);
@@ -877,13 +877,13 @@ void use_item(short pc,short item)
 						break;
 					case 3:
 						ASB("  Everyone's skin burns!");
-						for (i = 0; i < 6; i++)
+						for(i = 0; i < 6; i++)
 							acid_pc(i,str);
 						break;
 				}
 				break;
 			case eItemAbil::BLISS:
-				switch (type) {
+				switch(type) {
 					case 0: case 1:
 						ASB("  You feel wonderful!");
 						heal_pc(pc,str * 20);
@@ -891,7 +891,7 @@ void use_item(short pc,short item)
 						break;
 					case 2: case 3:
 						ASB("  Everyone feels wonderful!");
-						for (i = 0; i < 6; i++) {
+						for(i = 0; i < 6; i++) {
 							heal_pc(i,str * 20);
 							affect_pc(i,eStatus::BLESS_CURSE,str);
 						}
@@ -899,7 +899,7 @@ void use_item(short pc,short item)
 				}
 				break;
 			case eItemAbil::AFFECT_EXPERIENCE:
-				switch (type) {
+				switch(type) {
 					case 0:
 						ASB("  You feel much smarter.");
 						award_xp(pc,str * 5);
@@ -914,14 +914,14 @@ void use_item(short pc,short item)
 						break;
 					case 3:
 						ASB("  You all feel forgetful.");
-						for (i = 0; i < 6; i++)
+						for(i = 0; i < 6; i++)
 							drain_pc(i,str * 5);
 						break;
 				}
 				break;
 			case eItemAbil::AFFECT_SKILL_POINTS:
 				play_sound(68);
-				switch (type) {
+				switch(type) {
 					case 0:
 						ASB("  You feel much smarter.");
 						univ.party[pc].skill_pts += str;
@@ -932,18 +932,18 @@ void use_item(short pc,short item)
 						break;
 					case 2:
 						ASB("  You all feel much smarter.");
-						for (i = 0; i < 6; i++)
+						for(i = 0; i < 6; i++)
 							univ.party[i].skill_pts += str;
 						break;
 					case 3:
 						ASB("  You all feel forgetful.");
-						for (i = 0; i < 6; i++)
+						for(i = 0; i < 6; i++)
 							univ.party[i].skill_pts = max(0,univ.party[i].skill_pts - str);
 						break;
 				}
 				break;
 			case eItemAbil::AFFECT_HEALTH:
-				switch (type) {
+				switch(type) {
 					case 0:
 						ASB("  You feel better.");
 						heal_pc(pc,str * 20);
@@ -963,7 +963,7 @@ void use_item(short pc,short item)
 				}
 				break;
 			case eItemAbil::AFFECT_SPELL_POINTS:
-				switch (type) {
+				switch(type) {
 					case 0:
 						ASB("  You feel energized.");
 						restore_sp_pc(pc,str * 5);
@@ -978,13 +978,13 @@ void use_item(short pc,short item)
 						break;
 					case 3:
 						ASB("  You all feel drained.");
-						for (i = 0; i < 6; i++)
+						for(i = 0; i < 6; i++)
 							univ.party[i].cur_sp = max(0,univ.party[i].cur_sp - str * 5);
 						break;
 				}
 				break;
 			case eItemAbil::DOOM:
-				switch (type) {
+				switch(type) {
 					case 0: case 1:
 						ASB("  You feel terrible.");
 						drain_pc(pc,str * 5);
@@ -994,7 +994,7 @@ void use_item(short pc,short item)
 						break;
 					case 2: case 3:
 						ASB("  You all feel terrible.");
-						for (i = 0; i < 6; i++) {
+						for(i = 0; i < 6; i++) {
 							drain_pc(i,str * 5);
 							damage_pc(i,20 * str,DAMAGE_UNBLOCKABLE,eRace::HUMAN,0);
 							disease_pc(i,2 * str);
@@ -1016,15 +1016,15 @@ void use_item(short pc,short item)
 				PSD[SDF_PARTY_FIREWALK] += 2 * str;
 				break;
 			case eItemAbil::FLYING:
-				if (PSD[SDF_PARTY_FLIGHT] > 0) {
+				if(PSD[SDF_PARTY_FLIGHT] > 0) {
 					add_string_to_buf("  Not while already flying.          ");
 					take_charge = false;
 					break;
 				}
-				if (univ.party.in_boat >= 0) {
+				if(univ.party.in_boat >= 0) {
 					add_string_to_buf("  Leave boat first.             ");
 					take_charge = false;
-				} else if (univ.party.in_horse >= 0) {
+				} else if(univ.party.in_horse >= 0) {
 					add_string_to_buf("  Leave horse first.             ");
 					take_charge = false;
 				} else {
@@ -1033,7 +1033,7 @@ void use_item(short pc,short item)
 				}
 				break;
 			case eItemAbil::MAJOR_HEALING:
-				switch (type) {
+				switch(type) {
 					case 0: case 1:
 						ASB("  You feel wonderful.");
 						heal_pc(pc,200);
@@ -1090,13 +1090,13 @@ void use_item(short pc,short item)
 				start_spell_targeting(eSpell::RAVAGE_SPIRIT, true);
 				break;
 			case eItemAbil::SUMMONING:
-				if (!summon_monster(str,user_loc,50,2))
+				if(!summon_monster(str,user_loc,50,2))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::MASS_SUMMONING:
 				r1 = get_ran(6,1,4);
-				for (i = 0; i < get_ran(1,3,5); i++) // TODO: Why recalculate the random number for each loop iteration?
-					if (!summon_monster(str,user_loc,r1,2))
+				for(i = 0; i < get_ran(1,3,5); i++) // TODO: Why recalculate the random number for each loop iteration?
+					if(!summon_monster(str,user_loc,r1,2))
 						add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::ACID_SPRAY:
@@ -1137,8 +1137,8 @@ void use_item(short pc,short item)
 				break;
 			case eItemAbil::MASS_CHARM:
 				ASB("It throbs, and emits odd rays.");
-				for (i = 0; i < univ.town->max_monst(); i++) {
-					if ((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
+				for(i = 0; i < univ.town->max_monst(); i++) {
+					if((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
 						&& (dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= 8)
 						&& (can_see_light(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 						which_m = &univ.town.monst[i];
@@ -1147,13 +1147,13 @@ void use_item(short pc,short item)
 				}
 				break;
 			case eItemAbil::MAGIC_MAP:
-				if (univ.town->defy_scrying || univ.town->defy_mapping) {
+				if(univ.town->defy_scrying || univ.town->defy_mapping) {
 					add_string_to_buf("  It doesn't work.");
 					break;
 				}
 				add_string_to_buf("  You have a vision.            ");
-				for (i = 0; i < univ.town->max_dim(); i++)
-					for (j = 0; j < univ.town->max_dim(); j++)
+				for(i = 0; i < univ.town->max_dim(); i++)
+					for(j = 0; j < univ.town->max_dim(); j++)
 						make_explored(i,j);
 				clear_map();
 				break;
@@ -1179,9 +1179,9 @@ void use_item(short pc,short item)
 	}
 	
 	put_pc_screen();
-	if ((take_charge) && (univ.party[pc].items[item].charges > 0))
+	if((take_charge) && (univ.party[pc].items[item].charges > 0))
 		remove_charge(pc,item);
-	if (!take_charge) {
+	if(!take_charge) {
 		draw_terrain(0);
 		put_item_screen(stat_window,0);
 	}
@@ -1199,42 +1199,42 @@ bool use_space(location where)
 	
 	add_string_to_buf("Use...");
 	
-	if (univ.town.is_web(where.x,where.y)) {
+	if(univ.town.is_web(where.x,where.y)) {
 		add_string_to_buf("  You clear the webs.");
 		univ.town.set_web(where.x,where.y,false);
 		return true;
 	}
-	if (univ.town.is_crate(where.x,where.y)) {
+	if(univ.town.is_crate(where.x,where.y)) {
 		to_loc = push_loc(from_loc,where);
-		if (from_loc == to_loc) {
+		if(from_loc == to_loc) {
 			add_string_to_buf("  Can't push crate.");
 			return false;
 		}
 		add_string_to_buf("  You push the crate.");
 		univ.town.set_crate((short) where.x,(short) where.y,false);
 		univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
-		for (i = 0; i < NUM_TOWN_ITEMS; i++)
+		for(i = 0; i < NUM_TOWN_ITEMS; i++)
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
 			   && (univ.town.items[i].contained))
 			 	univ.town.items[i].item_loc = to_loc;
 	}
-	if (univ.town.is_barrel(where.x,where.y)) {
+	if(univ.town.is_barrel(where.x,where.y)) {
 		to_loc = push_loc(from_loc,where);
-		if (from_loc == to_loc) {
+		if(from_loc == to_loc) {
 			add_string_to_buf("  Can't push barrel.");
 			return false;
 		}
 		add_string_to_buf("  You push the barrel.");
 		univ.town.set_barrel((short) where.x,(short) where.y,false);
 		univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,true);
-		for (i = 0; i < NUM_TOWN_ITEMS; i++)
+		for(i = 0; i < NUM_TOWN_ITEMS; i++)
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
 			   && (univ.town.items[i].contained))
 			 	univ.town.items[i].item_loc = to_loc;
 	}
-	if (univ.town.is_block(where.x,where.y)) {
+	if(univ.town.is_block(where.x,where.y)) {
 		to_loc = push_loc(from_loc,where);
-		if (from_loc == to_loc) {
+		if(from_loc == to_loc) {
 			add_string_to_buf("  Can't push block.");
 			return false;
 		}
@@ -1244,7 +1244,7 @@ bool use_space(location where)
 	}
 	
 	if(scenario.ter_types[ter].special == eTerSpec::CHANGE_WHEN_USED) {
-		if (where == from_loc) {
+		if(where == from_loc) {
 			add_string_to_buf("  Not while on space.");
 			return false;
 		}
@@ -1277,40 +1277,40 @@ bool adj_town_look(location where)
 	bool can_open = true,item_there = false,got_special = false;
 	short i = 0,s1 = 0, s2 = 0, s3 = 0;
 	
-	for (i = 0; i < NUM_TOWN_ITEMS; i++)
+	for(i = 0; i < NUM_TOWN_ITEMS; i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM && (univ.town.items[i].contained) &&
 		   (where == univ.town.items[i].item_loc))
 			item_there = true;
 	
 	terrain = univ.town->terrain(where.x,where.y);
-	if (univ.town.is_special(where.x,where.y)) {// && (get_blockage(terrain) > 0)) {
-		if (!adjacent(univ.town.p_loc,where))
+	if(univ.town.is_special(where.x,where.y)) {// && (get_blockage(terrain) > 0)) {
+		if(!adjacent(univ.town.p_loc,where))
 			add_string_to_buf("  Not close enough to search.");
 		else {
-			for (i = 0; i < 50; i++)
-				if (where == univ.town->special_locs[i]) {
-					if (get_blockage(univ.town->terrain(where.x,where.y)) > 0) {
+			for(i = 0; i < 50; i++)
+				if(where == univ.town->special_locs[i]) {
+					if(get_blockage(univ.town->terrain(where.x,where.y)) > 0) {
 						// tell party you find something, if looking at a space they can't step in
 						add_string_to_buf("  Search: You find something!          ");
 					}
 					//call special can_open = town_specials(i,univ.town.town_num);
 					
 					run_special(eSpecCtx::TOWN_LOOK,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
-					if (s1 > 0)
+					if(s1 > 0)
 						can_open = false;
 					got_special = true;
 				}
 			put_item_screen(stat_window,0);
 		}
 	}
-	if (is_container(where) && item_there && can_open) {
+	if(is_container(where) && item_there && can_open) {
 		get_item(where,6,true);
 	}else if(scenario.ter_types[terrain].special == eTerSpec::CHANGE_WHEN_USED ||
 			 scenario.ter_types[terrain].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
 		add_string_to_buf("  (Use this space to do something");
 		add_string_to_buf("  with it.)");
 	}else{
-		if (!got_special)
+		if(!got_special)
 			add_string_to_buf("  Search: You don't find anything.          ");
 		return false;
 	}
@@ -1323,15 +1323,15 @@ void PSOE(short which_special,unsigned char *stuff_done_val,short where_put)
 {
 	short i,j,graphic_num = 0;
 	
-	if (stuff_done_val != NULL) {
-		if (*stuff_done_val > 0)
+	if(stuff_done_val != NULL) {
+		if(*stuff_done_val > 0)
 			return;
 		else *stuff_done_val = 20;
 	}
-	for (i = 0; i < 18; i++)
-		if (univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_id[i] == where_put) {
-			for (j = 0; j < 7; j++)
-				if (univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].monst[j] > 0) {
+	for(i = 0; i < 18; i++)
+		if(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_id[i] == where_put) {
+			for(j = 0; j < 7; j++)
+				if(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].monst[j] > 0) {
 					graphic_num = 400 + get_monst_picnum(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].monst[j]);
 					j = 7;
 				}
@@ -1339,7 +1339,7 @@ void PSOE(short which_special,unsigned char *stuff_done_val,short where_put)
 			////	"Encounter!",57, graphic_num, 0);
 			draw_terrain(0);
 			pause(15);
-			//if (univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].spec_code == 0)
+			//if(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].spec_code == 0)
 			//	univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].spec_code = 1;
 			//place_outd_wand_monst(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_locs[i],
 			//	univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special]);
@@ -1371,7 +1371,7 @@ void teleport_party(short x,short y,short mode)
 	if(mode == 0 || mode == 2) fadeOut = true;
 	if(mode == 0 || mode == 3) fadeIn = true;
 	
-	if (is_combat())
+	if(is_combat())
 		mode = 1;
 	
 	l = univ.town.p_loc;
@@ -1379,7 +1379,7 @@ void teleport_party(short x,short y,short mode)
 	
 	if(fadeOut) {
 		start_missile_anim();
-		for (i = 0; i < 9; i++)
+		for(i = 0; i < 9; i++)
 			add_explosion(l,-1,1,1,0,0);
 		do_explosion_anim(5,1);
 		can_draw_pcs = false;
@@ -1387,7 +1387,7 @@ void teleport_party(short x,short y,short mode)
 		end_missile_anim();
 	}
 	center.x = x; center.y = y;
-	if (is_combat()) {
+	if(is_combat()) {
 		univ.party[current_pc].combat_pos.x = x;
 		univ.party[current_pc].combat_pos.y = y;
 	}
@@ -1399,7 +1399,7 @@ void teleport_party(short x,short y,short mode)
 	
 	if(fadeIn) {
 		start_missile_anim();
-		for (i = 0; i < 14; i++)
+		for(i = 0; i < 14; i++)
 			add_explosion(center,-1,1,1,0,0);
 		do_explosion_anim(5,1);
 	}
@@ -1419,7 +1419,7 @@ void fade_party()
 	
 	l = univ.town.p_loc;
 	start_missile_anim();
-	for (i = 0; i < 14; i++)
+	for(i = 0; i < 14; i++)
 		add_explosion(l,-1,1,1,0,0);
 	do_explosion_anim(5,1);
 	univ.town.p_loc.x = 100;
@@ -1432,7 +1432,7 @@ void change_level(short town_num,short x,short y)
 {
 	location l(x,y);
 	
-	if ((town_num < 0) || (town_num >= scenario.num_towns)) {
+	if((town_num < 0) || (town_num >= scenario.num_towns)) {
 		giveError("The scenario special encounter tried to put you into a town that doesn't exist.");
 		return;
 	}
@@ -1461,18 +1461,18 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	
 	//print_num(which_m,(short)univ.town.monst[which_m].m_loc.x,(short)univ.town.monst[which_m].m_loc.y);
 	
-	if (univ.town.monst[which_m].active == 0) return false;
+	if(univ.town.monst[which_m].active == 0) return false;
 	
 	//sound_type = dam_type / 100;
 	//dam_type = dam_type % 100;
 	
-	if (dam_type >= DAMAGE_MARKED) { // note: MARKED here actually means NO_PRINT
+	if(dam_type >= DAMAGE_MARKED) { // note: MARKED here actually means NO_PRINT
 		do_print = false;
 		dam_type -= DAMAGE_MARKED;
 	}
 	
-	if (sound_type == 0) {
-		if ((dam_type == 1) || (dam_type == 4) )
+	if(sound_type == 0) {
+		if((dam_type == 1) || (dam_type == 4) )
 			sound_type = 5;
 		if 	(dam_type == 5)
 			sound_type = 7;
@@ -1486,33 +1486,33 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	victim = &univ.town.monst[which_m];
 	resist = victim->immunities;
 	
-	if (dam_type == 3) {
-		if (resist & 1)
+	if(dam_type == 3) {
+		if(resist & 1)
 			how_much = how_much / 2;
-		if (resist & 2)
+		if(resist & 2)
 			how_much = 0;
 	}
-	if (dam_type == 1) {
-		if (resist & 4)
+	if(dam_type == 1) {
+		if(resist & 4)
 			how_much = how_much / 2;
-		if (resist & 8)
+		if(resist & 8)
 			how_much = 0;
 	}
-	if (dam_type == 5) {
-		if (resist & 16)
+	if(dam_type == 5) {
+		if(resist & 16)
 			how_much = how_much / 2;
-		if (resist & 32)
+		if(resist & 32)
 			how_much = 0;
 	}
-	if (dam_type == 2) {
-		if (resist & 64)
+	if(dam_type == 2) {
+		if(resist & 64)
 			how_much = how_much / 2;
-		if (resist & 128)
+		if(resist & 128)
 			how_much = 0;
 	}
 	
 	// Absorb damage?
-	if (((dam_type == 1) || (dam_type == 3) || (dam_type == 5))
+	if(((dam_type == 1) || (dam_type == 3) || (dam_type == 5))
 		&& (victim->spec_skill == 26)) {
 		if(32767 - victim->health > how_much)
 			victim->health = 32767;
@@ -1522,36 +1522,36 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	}
 	
 	// Saving throw
-	if (((dam_type == 1) || (dam_type == 5)) && (get_ran(1,0,20) <= victim->level))
+	if(((dam_type == 1) || (dam_type == 5)) && (get_ran(1,0,20) <= victim->level))
 		how_much /= 2;
-	if ((dam_type == 3) && (get_ran(1,0,24) <= victim->level))
+	if((dam_type == 3) && (get_ran(1,0,24) <= victim->level))
 		how_much /= 2;
 	
 	// Invulnerable?
-	if (victim->spec_skill == 36)
+	if(victim->spec_skill == 36)
 		how_much = how_much / 10;
 	
 	
 	r1 = get_ran(1,0,(victim->armor * 5) / 4);
 	r1 += victim->level / 4;
-	if (dam_type == 0)
+	if(dam_type == 0)
 		how_much -= r1;
 	
-	if (boom_anim_active) {
-		if (how_much < 0)
+	if(boom_anim_active) {
+		if(how_much < 0)
 			how_much = 0;
 		monst_marked_damage[which_m] += how_much;
 		add_explosion(victim->cur_loc,how_much,0,(dam_type > 2) ? 2 : 0,14 * (victim->x_width - 1),18 * (victim->y_width - 1));
 		// Note: Windows version printed an "undamaged" message here if applicable, but I don't think that's right.
-		if (how_much == 0)
+		if(how_much == 0)
 			return false;
 		else return true;
 	}
 	
-	if (how_much <= 0) {
-		if (is_combat())
+	if(how_much <= 0) {
+		if(is_combat())
 			monst_spell_note(victim->number,7);
-		if ((how_much <= 0) && ((dam_type == DAMAGE_WEAPON) || (dam_type == DAMAGE_UNDEAD) || (dam_type == DAMAGE_DEMON))) {
+		if((how_much <= 0) && ((dam_type == DAMAGE_WEAPON) || (dam_type == DAMAGE_UNDEAD) || (dam_type == DAMAGE_DEMON))) {
 			draw_terrain(2);
 			play_sound(2);
 		}
@@ -1560,18 +1560,18 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		return false;
 	}
 	
-	if (do_print)
+	if(do_print)
 		monst_damaged_mes(which_m,how_much,how_much_spec);
 	victim->health = victim->health - how_much - how_much_spec;
 	
-	if (in_scen_debug)
+	if(in_scen_debug)
 		victim->health = -1;
 	
 	// splitting monsters
-	if ((victim->spec_skill == 12) && (victim->health > 0)){
+	if((victim->spec_skill == 12) && (victim->health > 0)){
 		where_put = find_clear_spot(victim->cur_loc,1);
-		if (where_put.x > 0)
-			if ((which_spot = place_monster(victim->number,where_put)) < 90) {
+		if(where_put.x > 0)
+			if((which_spot = place_monster(victim->number,where_put)) < 90) {
 				// TODO: Why so many assignments? Windows only assigns health and monst_start (start_loc I assume)
 				univ.town.monst[which_spot].health = victim->health;
 				univ.town.monst[which_spot].number = victim->number;
@@ -1592,7 +1592,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 				monst_spell_note(victim->number,27);
 			}
 	}
-	if (who_hit < 7)
+	if(who_hit < 7)
 		univ.party.total_dam_done += how_much + how_much_spec;
 	
 	// Monster damages. Make it hostile.
@@ -1600,35 +1600,35 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	
 	// TODO: This looks like the reason Windows split the boom_space function in two.
 	// It doesn't exactly make sense though, since in its version, boom_space is only called for how_much_spec.
-	if (dam_type != 9) { // note special damage only gamed in hand-to-hand, not during animation
-		if (party_can_see_monst(which_m)) {
+	if(dam_type != 9) { // note special damage only gamed in hand-to-hand, not during animation
+		if(party_can_see_monst(which_m)) {
 			boom_space(victim->cur_loc,100,boom_gr[dam_type],how_much,sound_type);
-			if (how_much_spec > 0)
+			if(how_much_spec > 0)
 				boom_space(victim->cur_loc,100,51,how_much_spec,5);
 		}
 		else {
 			boom_space(victim->cur_loc,overall_mode, boom_gr[dam_type],how_much,sound_type);
-			if (how_much_spec > 0)
+			if(how_much_spec > 0)
 				boom_space(victim->cur_loc,overall_mode,51,how_much_spec,5);
 		}
 	}
 	
-	if (victim->health < 0) {
+	if(victim->health < 0) {
 		monst_killed_mes(which_m);
 		kill_monst(victim,who_hit);
 	}
 	else {
-		if (how_much > 0)
+		if(how_much > 0)
 			victim->morale = victim->morale - 1;
-		if (how_much > 5)
+		if(how_much > 5)
 			victim->morale = victim->morale - 1;
-		if (how_much > 10)
+		if(how_much > 10)
 			victim->morale = victim->morale - 1;
-		if (how_much > 20)
+		if(how_much > 20)
 			victim->morale = victim->morale - 2;
 	}
 	
-	if ((victim->attitude % 2 != 1) && (who_hit < 7) &&
+	if((victim->attitude % 2 != 1) && (who_hit < 7) &&
 		((processing_fields && !monsters_going) || (processing_fields && !PSD[SDF_HOSTILES_PRESENT]))) {
 		add_string_to_buf("Damaged an innocent.           ");
 		victim->attitude = 1;
@@ -1645,10 +1645,10 @@ void kill_monst(cCreature *which_m,short who_killed)
 	
 	if(isHumanoid(which_m->m_type)) {
 		// TODO: Uh, don't hardcode these!
-		if (( which_m->number == 38) ||
+		if(( which_m->number == 38) ||
 			( which_m->number == 39))
 			i = 4;
-		else if ( which_m->number == 45)
+		else if( which_m->number == 45)
 			i = 0;
 		else i = get_ran(1,0,1);
 		play_sound(29 + i);
@@ -1662,21 +1662,21 @@ void kill_monst(cCreature *which_m,short who_killed)
 	}
 	
 	// Special killing effects
-	if (sd_legit(which_m->spec1,which_m->spec2))
+	if(sd_legit(which_m->spec1,which_m->spec2))
 		PSD[which_m->spec1][which_m->spec2] = 1;
 	
-	if (which_m->special_on_kill >= 0)
+	if(which_m->special_on_kill >= 0)
 		run_special(eSpecCtx::KILL_MONST,2,which_m->special_on_kill,which_m->cur_loc,&s1,&s2,&s3);
-	if (which_m->radiate_1 == 15)
+	if(which_m->radiate_1 == 15)
 		run_special(eSpecCtx::KILL_MONST,0,which_m->radiate_2,which_m->cur_loc,&s1,&s2,&s3);
 	
-	if ((!in_scen_debug) && ((which_m->summoned >= 100) || (which_m->summoned == 0))) { // no xp for party-summoned monsters
+	if((!in_scen_debug) && ((which_m->summoned >= 100) || (which_m->summoned == 0))) { // no xp for party-summoned monsters
 		xp = which_m->level * 2;
-		if (who_killed < 6)
+		if(who_killed < 6)
 			award_xp(who_killed,xp);
-		else if (who_killed == 6)
+		else if(who_killed == 6)
 			award_party_xp(xp / 6 + 1);
-		if (who_killed < 7) {
+		if(who_killed < 7) {
 			univ.party.total_m_killed++;
 			i = max((xp / 6),1);
 			award_party_xp(i);
@@ -1685,12 +1685,12 @@ void kill_monst(cCreature *which_m,short who_killed)
 		place_glands(l,which_m->number);
 		
 	}
-	if ((!in_scen_debug) && (which_m->summoned == 0))
+	if((!in_scen_debug) && (which_m->summoned == 0))
 		place_treasure(which_m->cur_loc, which_m->level / 2, which_m->treasure, 0);
 	
 	i = which_m->cur_loc.x;
 	j = which_m->cur_loc.y;
-	switch (which_m->m_type) {
+	switch(which_m->m_type) {
 		case eRace::DEMON:
 			univ.town.set_ash(i,j,true);
 			break;
@@ -1711,7 +1711,7 @@ void kill_monst(cCreature *which_m,short who_killed)
 	
 	
 	// TODO: Check that this function is not called when a monster kills a monster, since that would lead to false incrementing of the stats.
-	if (((is_town()) || (which_combat_type == 1)) && (which_m->summoned == 0)) {
+	if(((is_town()) || (which_combat_type == 1)) && (which_m->summoned == 0)) {
 		univ.party.m_killed[univ.town.num]++;
 	}
 	
@@ -1731,56 +1731,56 @@ void push_things()////
 	ter_num_t ter;
 	location l;
 	
-	if (is_out()) // TODO: Make these work outdoors
+	if(is_out()) // TODO: Make these work outdoors
 		return;
-	if (!belt_present)
+	if(!belt_present)
 		return;
 	
-	for (i = 0; i < univ.town->max_monst(); i++)
-		if (univ.town.monst[i].active > 0) {
+	for(i = 0; i < univ.town->max_monst(); i++)
+		if(univ.town.monst[i].active > 0) {
 			l = univ.town.monst[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
+			switch(scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 				case DIR_N: l.y--; break;
 				case DIR_E: l.x++; break;
 				case DIR_S: l.y++; break;
 				case DIR_W: l.x--; break;
 			}
-			if (l != univ.town.monst[i].cur_loc) {
+			if(l != univ.town.monst[i].cur_loc) {
 				univ.town.monst[i].cur_loc = l;
-				if ((point_onscreen(center,univ.town.monst[i].cur_loc)) ||
+				if((point_onscreen(center,univ.town.monst[i].cur_loc)) ||
 					(point_onscreen(center,l)))
 					redraw = true;
 			}
 		}
-	for (i = 0; i < NUM_TOWN_ITEMS; i++)
+	for(i = 0; i < NUM_TOWN_ITEMS; i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
 			l = univ.town.items[i].item_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
+			switch(scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 				case DIR_N: l.y--; break;
 				case DIR_E: l.x++; break;
 				case DIR_S: l.y++; break;
 				case DIR_W: l.x--; break;
 			}
-			if (l != univ.town.items[i].item_loc) {
+			if(l != univ.town.items[i].item_loc) {
 				univ.town.items[i].item_loc = l;
-				if ((point_onscreen(center,univ.town.items[i].item_loc)) ||
+				if((point_onscreen(center,univ.town.items[i].item_loc)) ||
 					(point_onscreen(center,l)))
 					redraw = true;
 			}
 		}
 	
-	if (is_town()) {
+	if(is_town()) {
 		ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		l = univ.town.p_loc;
-		switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
+		switch(scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 			case DIR_N: l.y--; break;
 			case DIR_E: l.x++; break;
 			case DIR_S: l.y++; break;
 			case DIR_W: l.x--; break;
 		}
-		if (l != univ.town.p_loc) {
+		if(l != univ.town.p_loc) {
 			ASB("You get pushed.");
 			if(scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
 				draw_terrain(0);
@@ -1789,37 +1789,37 @@ void push_things()////
 			update_explored(l);
 			ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 			draw_map(true);
-			if (univ.town.is_barrel(univ.town.p_loc.x,univ.town.p_loc.y)) {
+			if(univ.town.is_barrel(univ.town.p_loc.x,univ.town.p_loc.y)) {
 				univ.town.set_barrel(univ.town.p_loc.x,univ.town.p_loc.y,false);
 				ASB("You smash the barrel.");
 			}
-			if (univ.town.is_crate(univ.town.p_loc.x,univ.town.p_loc.y)) {
+			if(univ.town.is_crate(univ.town.p_loc.x,univ.town.p_loc.y)) {
 				univ.town.set_crate(univ.town.p_loc.x,univ.town.p_loc.y,false);
 				ASB("You smash the crate.");
 			}
-			if (univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
+			if(univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
 				ASB("You crash into the block.");
 				hit_party(get_ran(1, 1, 6), DAMAGE_WEAPON);
 			}
-			for (k = 0; k < NUM_TOWN_ITEMS; k++)
+			for(k = 0; k < NUM_TOWN_ITEMS; k++)
 				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
 				   && (univ.town.items[k].item_loc == univ.town.p_loc))
 					univ.town.items[k].contained = false;
 			redraw = true;
 		}
 	}
-	if (is_combat()) {
-		for (i = 0; i < 6; i++)
+	if(is_combat()) {
+		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				ter = univ.town->terrain(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y);
 				l = univ.party[i].combat_pos;
-				switch (scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
+				switch(scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 					case DIR_N: l.y--; break;
 					case DIR_E: l.x++; break;
 					case DIR_S: l.y++; break;
 					case DIR_W: l.x--; break;
 				}
-				if (l != univ.party[i].combat_pos) {
+				if(l != univ.party[i].combat_pos) {
 					ASB("Someone gets pushed.");
 					ter = univ.town->terrain(l.x,l.y);
 					if(scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
@@ -1827,19 +1827,19 @@ void push_things()////
 					univ.party[i].combat_pos = l;
 					update_explored(l);
 					draw_map(true);
-					if (univ.town.is_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
+					if(univ.town.is_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
 						univ.town.set_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y,false);
 						ASB("You smash the barrel.");
 					}
-					if (univ.town.is_crate(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
+					if(univ.town.is_crate(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
 						univ.town.set_crate(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y,false);
 						ASB("You smash the crate.");
 					}
-					if (univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
+					if(univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
 						ASB("You crash into the block.");
 						damage_pc(i,get_ran(1, 1, 6), DAMAGE_WEAPON,eRace::UNKNOWN,0);
 					}
-					for (k = 0; k < NUM_TOWN_ITEMS; k++)
+					for(k = 0; k < NUM_TOWN_ITEMS; k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
 						   && (univ.town.items[k].item_loc == univ.party[i].combat_pos))
 							univ.town.items[k].contained = false;
@@ -1847,7 +1847,7 @@ void push_things()////
 				}
 			}
 	}
-	if (redraw) {
+	if(redraw) {
 		print_buf();
 		draw_terrain(0);
 	}
@@ -1879,7 +1879,7 @@ void special_increase_age(long length, bool queue)
 			}
 	}
 	univ.party.age = current_age;
-	for (i = 0; i < 20; i++)
+	for(i = 0; i < 20; i++)
 		if(scenario.scenario_timer_times[i] > 0) {
 			short time = scenario.scenario_timer_times[i];
 			for(unsigned long j = age_before; j <= current_age; j++)
@@ -1890,12 +1890,12 @@ void special_increase_age(long length, bool queue)
 					} else run_special(eSpecCtx::SCEN_TIMER,0,scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);
 				}
 			stat_area = true;
-			if (s3 > 0)
+			if(s3 > 0)
 				redraw = true;
 		}
 	univ.party.age = current_age;
-	for (i = 0; i < univ.party.party_event_timers.size(); i++) {
-		if (univ.party.party_event_timers[i].time <= length) {
+	for(i = 0; i < univ.party.party_event_timers.size(); i++) {
+		if(univ.party.party_event_timers[i].time <= length) {
 			univ.party.age = age_before + univ.party.party_event_timers[i].time;
 			short which_type = univ.party.party_event_timers[i].global_or_town == 0 ? 0 : 2;
 			if(queue)
@@ -1903,16 +1903,16 @@ void special_increase_age(long length, bool queue)
 			else run_special(eSpecCtx::PARTY_TIMER,which_type,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
 			univ.party.party_event_timers[i].time = 0;
 			stat_area = true;
-			if (s3 > 0)
+			if(s3 > 0)
 				redraw = true;
 		} else univ.party.party_event_timers[i].time -= length;
 	}
 	univ.party.age = current_age;
-	if (stat_area) {
+	if(stat_area) {
 		put_pc_screen();
 		put_item_screen(stat_window,0);
 	}
-	if (redraw)
+	if(redraw)
 		draw_terrain(0);
 }
 
@@ -1975,7 +1975,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 	next_spec_type = which_type;
 	current_pc_picked_in_spec_enc = -1;
 	store_special_loc = spec_loc;
-	if (end_scenario) {
+	if(end_scenario) {
 		special_in_progress = false;
 		return;
 	}
@@ -1987,7 +1987,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 	PSD[SDF_SPEC_LOC_X] = spec_loc.x;
 	PSD[SDF_SPEC_LOC_Y] = spec_loc.y;
 	
-	while (next_spec >= 0) {
+	while(next_spec >= 0) {
 		
 		cur_spec = next_spec;
 		cur_spec_type = next_spec_type;
@@ -2051,7 +2051,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 			next_spec = -1;
 		}
 	}
-	if (is_out())
+	if(is_out())
 		erase_out_specials();
 	else erase_specials();
 	special_in_progress = false;
@@ -2069,22 +2069,22 @@ cSpecial get_node(short cur_spec,short cur_spec_type)
 	
 	dummy_node = scenario.scen_specials[0];
 	dummy_node.type = eSpecType::ERROR;
-	if (cur_spec_type == 0) {
-		if (cur_spec != minmax(0,255,cur_spec)) {
+	if(cur_spec_type == 0) {
+		if(cur_spec != minmax(0,255,cur_spec)) {
 			giveError("The scenario called a scenario special node out of range.");
 			return dummy_node;
 		}
 		return scenario.scen_specials[cur_spec];
 	}
-	if (cur_spec_type == 1) {
-		if (cur_spec != minmax(0,59,cur_spec)) {
+	if(cur_spec_type == 1) {
+		if(cur_spec != minmax(0,59,cur_spec)) {
 			giveError("The scenario called an outdoor special node out of range.");
 			return dummy_node;
 		}
 		return univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].specials[cur_spec];
 	}
-	if (cur_spec_type == 2) {
-		if (cur_spec != minmax(0,99,cur_spec)) {
+	if(cur_spec_type == 2) {
+		if(cur_spec != minmax(0,99,cur_spec)) {
 			giveError("The scenario called a town special node out of range.");
 			return dummy_node;
 		}
@@ -2106,7 +2106,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
 	
-	switch (cur_node.type) {
+	switch(cur_node.type) {
 		case eSpecType::NONE: break; // null spec
 		case eSpecType::SET_SDF:
 			check_mess = true; setsd(cur_node.sd1,cur_node.sd2,cur_node.ex1a);
@@ -2122,9 +2122,9 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::DISPLAY_SM_MSG:
 			get_strs(str1,str2, cur_spec_type,cur_node.m1 + mess_adj[cur_spec_type],
 					 cur_node.m2 + mess_adj[cur_spec_type]);
-			if (cur_node.m1 >= 0)
+			if(cur_node.m1 >= 0)
 				ASB(str1.c_str(), 4);
-			if (cur_node.m2 >= 0)
+			if(cur_node.m2 >= 0)
 				ASB(str2.c_str(), 4);
 			break;
 		case eSpecType::FLIP_SDF:
@@ -2134,7 +2134,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::CANT_ENTER:
 			check_mess = true;
 			if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE) {
-				if (spec.ex1a != 0)
+				if(spec.ex1a != 0)
 					*a = 1;
 				else *a = 0;
 			}
@@ -2153,28 +2153,28 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::CHANGE_HORSE_OWNER:
 			check_mess = true;
-			if (spec.ex1a != minmax(0,29,spec.ex1a))
+			if(spec.ex1a != minmax(0,29,spec.ex1a))
 				giveError("Horse out of range.");
 			else univ.party.horses[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case eSpecType::CHANGE_BOAT_OWNER:
 			check_mess = true;
-			if (spec.ex1a != minmax(0,29,spec.ex1a))
+			if(spec.ex1a != minmax(0,29,spec.ex1a))
 				giveError("Boat out of range.");
 			else univ.party.boats[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case eSpecType::SET_TOWN_VISIBILITY:
 			check_mess = true;
-			if (spec.ex1a != minmax(0,scenario.num_towns - 1,spec.ex1a))
+			if(spec.ex1a != minmax(0,scenario.num_towns - 1,spec.ex1a))
 				giveError("Town out of range.");
 			else univ.party.can_find_town[spec.ex1a] = spec.ex2a;
 			*redraw = true;
 			break;
 		case eSpecType::MAJOR_EVENT_OCCURRED:
 			check_mess = true;
-			if (spec.ex1a != minmax(1,10,spec.ex1a))
+			if(spec.ex1a != minmax(1,10,spec.ex1a))
 				giveError("Event code out of range.");
-			else if (univ.party.key_times[spec.ex1a] == 30000)
+			else if(univ.party.key_times[spec.ex1a] == 30000)
 				univ.party.key_times[spec.ex1a] = calc_day();
 			break;
 		case eSpecType::FORCED_GIVE:
@@ -2183,11 +2183,11 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::BUY_ITEMS_OF_TYPE:
-			for (i = 0; i < 144; i++)
-				if (party_check_class(spec.ex1a,0))
+			for(i = 0; i < 144; i++)
+				if(party_check_class(spec.ex1a,0))
 					store_val++;
-			if (store_val == 0) {
-				if ( spec.ex1b >= 0)
+			if(store_val == 0) {
+				if( spec.ex1b >= 0)
 					*next_spec = spec.ex1b;
 			}
 			else {
@@ -2199,12 +2199,12 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*next_spec_type = 0;
 			break;
 		case eSpecType::SET_SDF_ROW:
-			if (spec.sd1 != minmax(0,299,spec.sd1))
+			if(spec.sd1 != minmax(0,299,spec.sd1))
 				giveError("Stuff Done flag out of range.");
-			else for (i = 0; i < 10; i++) PSD[spec.sd1][i] = spec.ex1a;
+			else for(i = 0; i < 10; i++) PSD[spec.sd1][i] = spec.ex1a;
 			break;
 		case eSpecType::COPY_SDF:
-			if (!sd_legit(spec.sd1,spec.sd2) || !sd_legit(spec.ex1a,spec.ex1b))
+			if(!sd_legit(spec.sd1,spec.sd2) || !sd_legit(spec.ex1a,spec.ex1b))
 				giveError("Stuff Done flag out of range.");
 			else PSD[spec.sd1][spec.sd2] = PSD[spec.ex1a][spec.ex1b];
 			break;
@@ -2256,7 +2256,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			
 			short rand;
 			// Automatically fix the range in case some idiot puts it in backwards, or the same (WHY)
-			if (cur_node.ex1a == cur_node.ex1b) {
+			if(cur_node.ex1a == cur_node.ex1b) {
 				rand = cur_node.ex1b;
 			} else {
 				rand = get_ran(1,
@@ -2319,7 +2319,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 	}
-	if (check_mess) {
+	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
@@ -2336,11 +2336,11 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
  spec = cur_node;
  *next_spec = cur_node.jumpto;
  
- switch (cur_node.type) {
+ switch(cur_node.type) {
  case :
  break;
  }
- if (check_mess) {
+ if(check_mess) {
  handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
  }
  }
@@ -2361,15 +2361,15 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
-	if ((sd_legit(spec.sd1,spec.sd2)) && (PSD[spec.sd1][spec.sd2] == 250)) {
+	if((sd_legit(spec.sd1,spec.sd2)) && (PSD[spec.sd1][spec.sd2] == 250)) {
 		*next_spec = -1;
 		return;
 	}
-	switch (cur_node.type) {
+	switch(cur_node.type) {
 		case eSpecType::ONCE_GIVE_ITEM:
 			if(!forced_give(spec.ex1a,eItemAbil::NONE)) {
 				set_sd = false;
-				if ( spec.ex2b >= 0)
+				if( spec.ex2b >= 0)
 					*next_spec = spec.ex2b;
 			}
 			else {
@@ -2378,14 +2378,14 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::ONCE_GIVE_SPEC_ITEM:
-			if (spec.ex1a != minmax(0,49,spec.ex1a)) {
+			if(spec.ex1a != minmax(0,49,spec.ex1a)) {
 				giveError("Special item is out of range.");
 				set_sd = false;
 			}
 			else {
 				univ.party.spec_items[spec.ex1a] = (spec.ex1b == 0) ? 1 : 0;
 			}
-			if (stat_window == 6)
+			if(stat_window == 6)
 				set_stat_window(6);
 			*redraw = 1;
 			break;
@@ -2400,89 +2400,89 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::ONCE_DIALOG_TERRAIN:
 		case eSpecType::ONCE_DIALOG_MONSTER:
 			check_mess = false;
-			if (spec.m1 < 0)
+			if(spec.m1 < 0)
 				break;
-			for (i = 0; i < 3; i++)
+			for(i = 0; i < 3; i++)
 				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
 						 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
-			if (spec.m2 > 0)
+			if(spec.m2 > 0)
 			{buttons[0] = 1; buttons[1] = spec.ex1a; buttons[2] = spec.ex2a;
-				if ((spec.ex1a >= 0) || (spec.ex2a >= 0)) buttons[0] = 20; }
-			if (spec.m2 <= 0) {buttons[0] = spec.ex1a;buttons[1] = spec.ex2a;}
-			if ((buttons[0] < 0) && (buttons[1] < 0)) {
+				if((spec.ex1a >= 0) || (spec.ex2a >= 0)) buttons[0] = 20; }
+			if(spec.m2 <= 0) {buttons[0] = spec.ex1a;buttons[1] = spec.ex2a;}
+			if((buttons[0] < 0) && (buttons[1] < 0)) {
 				giveError("Dialog box ended up with no buttons.");
 				break;
 			}
-			switch (cur_node.type) {
+			switch(cur_node.type) {
 				case eSpecType::ONCE_DIALOG:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_DLOG,buttons) ;
+					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_DLOG,buttons) ;
 					else i = custom_choice_dialog(strs,spec.pic, PIC_DLOG,buttons) ; break;
 				case eSpecType::ONCE_DIALOG_TERRAIN:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_TER,buttons) ;
+					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_TER,buttons) ;
 					else i = custom_choice_dialog(strs,spec.pic,PIC_TER,buttons) ; break;
 				case eSpecType::ONCE_DIALOG_MONSTER:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_MONST,buttons) ;
+					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_MONST,buttons) ;
 					else i = custom_choice_dialog(strs,spec.pic, get_monst_pictype(spec.pic),buttons) ; break;
 			}
-			if (spec.m2 > 0) {
-				if (i == 1) {
-					if ((spec.ex1a >= 0) || (spec.ex2a >= 0)) {
+			if(spec.m2 > 0) {
+				if(i == 1) {
+					if((spec.ex1a >= 0) || (spec.ex2a >= 0)) {
 						set_sd = false;
 					}
 				}
-				if (i == 2) *next_spec = spec.ex1b;
-				if (i == 3) *next_spec = spec.ex2b;
+				if(i == 2) *next_spec = spec.ex1b;
+				if(i == 3) *next_spec = spec.ex2b;
 			}
 			else {
-				if (i == 1) *next_spec = spec.ex1b;
-				if (i == 2) *next_spec = spec.ex2b;
+				if(i == 1) *next_spec = spec.ex1b;
+				if(i == 2) *next_spec = spec.ex2b;
 			}
 			break;
 		case eSpecType::ONCE_GIVE_ITEM_DIALOG:
 		case eSpecType::ONCE_GIVE_ITEM_TERRAIN:
 		case eSpecType::ONCE_GIVE_ITEM_MONSTER:
 			check_mess = false;
-			if (spec.m1 < 0)
+			if(spec.m1 < 0)
 				break;
-			for (i = 0; i < 3; i++)
+			for(i = 0; i < 3; i++)
 				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
 						 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1  + spec_str_offset[cur_spec_type]);
 			buttons[0] = 20; buttons[1] = 19;
 			//i = custom_choice_dialog(strs,spec.pic,buttons) ;
-			switch (cur_node.type) {
+			switch(cur_node.type) {
 				case eSpecType::ONCE_GIVE_ITEM_DIALOG:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_DLOG,buttons) ;
+					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_DLOG,buttons) ;
 					else i = custom_choice_dialog(strs,spec.pic,PIC_DLOG,buttons) ; break;
 				case eSpecType::ONCE_GIVE_ITEM_TERRAIN:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_TER,buttons) ;
+					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_TER,buttons) ;
 					else i = custom_choice_dialog(strs,spec.pic,PIC_TER,buttons) ; break;
 				case eSpecType::ONCE_GIVE_ITEM_MONSTER:
-					if (spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_MONST,buttons) ;
+					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_MONST,buttons) ;
 					else i = custom_choice_dialog(strs,spec.pic,get_monst_pictype(spec.pic),buttons) ; break;
 			}
-			if (i == 1) {set_sd = false; *next_spec = -1;}
+			if(i == 1) {set_sd = false; *next_spec = -1;}
 			else {
 				store_i = get_stored_item(spec.ex1a);
-				if ((spec.ex1a >= 0) && (!give_to_party(store_i,true))) {
+				if((spec.ex1a >= 0) && (!give_to_party(store_i,true))) {
 					set_sd = false; *next_spec = -1;
 				}
 				else {
 					give_gold(spec.ex1b,true);
 					give_food(spec.ex2a,true);
-					if ((spec.m2 >= 0) && (spec.m2 < 50)) {
-						if (univ.party.spec_items[spec.m2] == 0)
+					if((spec.m2 >= 0) && (spec.m2 < 50)) {
+						if(univ.party.spec_items[spec.m2] == 0)
 							ASB("You get a special item.");
 						univ.party.spec_items[spec.m2] = 1;
 						*redraw = true;
-						if (stat_window == 6)
+						if(stat_window == 6)
 							set_stat_window(6);
 					}
-					if (spec.ex2b >= 0) *next_spec = spec.ex2b;
+					if(spec.ex2b >= 0) *next_spec = spec.ex2b;
 				}
 			}
 			break;
 		case eSpecType::ONCE_OUT_ENCOUNTER:
-			if (spec.ex1a != minmax(0,3,spec.ex1a)) {
+			if(spec.ex1a != minmax(0,3,spec.ex1a)) {
 				giveError("Special outdoor enc. is out of range. Must be 0-3.");
 				set_sd = false;
 			}
@@ -2497,7 +2497,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::ONCE_TRAP:
 			check_mess = false;
-			if ((spec.m1 >= 0) || (spec.m2 >= 0)) {
+			if((spec.m1 >= 0) || (spec.m2 >= 0)) {
 				get_strs(strs[0],strs[1],
 						 cur_spec_type,
 						 spec.m1 + ((spec.m1 >= 0) ? spec_str_offset[cur_spec_type] : 0),
@@ -2508,21 +2508,21 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				// TODO: Make custom_choice_dialog return string?
 			}
 			else i = cChoiceDlog("basic-trap.xml",{"yes","no"}).show() == "no";
-			if (i == 1) {set_sd = false; *next_spec = -1; *a = 1;}
+			if(i == 1) {set_sd = false; *next_spec = -1; *a = 1;}
 			else {
-				if (is_combat())
+				if(is_combat())
 					j = run_trap(current_pc,(eTrapType)spec.ex1a,spec.ex1b,spec.ex2a);
 				else j = run_trap(7,(eTrapType)spec.ex1a,spec.ex1b,spec.ex2a);
-				if (j == 0) {
+				if(j == 0) {
 					*a = 1; set_sd = false;
 				}
 			}
 			break;
 	}
-	if (check_mess) {
+	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
-	if ((set_sd) && (sd_legit(spec.sd1,spec.sd2)))
+	if((set_sd) && (sd_legit(spec.sd1,spec.sd2)))
 		PSD[spec.sd1][spec.sd2] = 250;
 	
 }
@@ -2543,27 +2543,27 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		pc = current_pc_picked_in_spec_enc;
 	if(pc == 6) pc = -1;
 	
-	switch (cur_node.type) {
+	switch(cur_node.type) {
 		case eSpecType::SELECT_PC:
 			check_mess = false;
 			// If this <= 0, pick PC normally
 			// TODO: I think this is for compatibility with old scenarios? If so, remove it and just convert data on load.
 			// (Actually, I think the only compatibility thing is that it's <= instead of ==)
-			if (spec.ex2a <= 0) {
+			if(spec.ex2a <= 0) {
 				
-				if (spec.ex1a == 2)
+				if(spec.ex1a == 2)
 					current_pc_picked_in_spec_enc = -1;
-				else if (spec.ex1a == 1) {
+				else if(spec.ex1a == 1) {
 					i = select_pc(0,0);
-					if (i != 6)
+					if(i != 6)
 						current_pc_picked_in_spec_enc = i;
 				}
-				else if (spec.ex1a == 0) {
+				else if(spec.ex1a == 0) {
 					i = select_pc(1,0);
-					if (i != 6)
+					if(i != 6)
 						current_pc_picked_in_spec_enc = i;
 				}
-				if (i == 6)// && (spec.ex1b >= 0))
+				if(i == 6)// && (spec.ex1b >= 0))
 					*next_spec = spec.ex1b;
 				
 			}
@@ -2578,11 +2578,11 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				// Pick random PC (from *i)
 				// TODO: What if spec.ex1a == 2?
 				
-				if (spec.ex1a == 0) {
+				if(spec.ex1a == 0) {
 					short pc_alive = 0;
-					while (pc_alive == 0) {
+					while(pc_alive == 0) {
 						i = get_ran(1,0,5);
-						if (univ.party[i].main_status == eMainStatus::ALIVE)
+						if(univ.party[i].main_status == eMainStatus::ALIVE)
 							pc_alive = 1;
 					}
 					current_pc_picked_in_spec_enc = i;
@@ -2597,7 +2597,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		{
 			r1 = get_ran(spec.ex1a,1,spec.ex1b) + spec.ex2a;
 			eDamageType dam_type = (eDamageType) spec.ex2b;
-			if (pc < 0) {
+			if(pc < 0) {
 				if(spec.pic == 1 && overall_mode == MODE_COMBAT)
 					damage_pc(current_pc,r1,dam_type,eRace::UNKNOWN,0); // was HUMAN
 				else hit_party(r1,dam_type);
@@ -2607,58 +2607,58 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		}
 		case eSpecType::AFFECT_HP:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i))
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i))
 						univ.party[i].cur_health = minmax(0,univ.party[i].max_health,
 														  univ.party[i].cur_health + spec.ex1a * (spec.ex1b ? -1: 1));
 			}
 			else {
 				univ.town.monst[spec.ex2a].health = minmax(0, univ.town.monst[spec.ex2a].m_health,
 					univ.town.monst[spec.ex2a].health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-				if (spec.ex1b == 0)
+				if(spec.ex1b == 0)
 					monst_spell_note(univ.town.monst[spec.ex2a].number,41);
 				else
 					monst_spell_note(univ.town.monst[spec.ex2a].number,42);
 			}
 			break;
 		case eSpecType::AFFECT_SP:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i))
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i))
 						univ.party[i].cur_sp = minmax(0, univ.party[i].max_sp,
 							univ.party[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
 				univ.town.monst[spec.ex2a].mp = minmax(0, univ.town.monst[spec.ex2a].max_mp,
 					univ.town.monst[spec.ex2a].mp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-				if (spec.ex1b == 0)
+				if(spec.ex1b == 0)
 					monst_spell_note(univ.town.monst[spec.ex2a].number,43);
 				else
 					monst_spell_note(univ.town.monst[spec.ex2a].number,44);
 			}
 			break;
 		case eSpecType::AFFECT_XP:
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i)) {
-					if (spec.ex1b == 0) award_xp(i,spec.ex1a); else drain_pc(i,spec.ex1a);
+			for(i = 0; i < 6; i++)
+				if((pc < 0) || (pc == i)) {
+					if(spec.ex1b == 0) award_xp(i,spec.ex1a); else drain_pc(i,spec.ex1a);
 				}
 			break;
 		case eSpecType::AFFECT_SKILL_PTS:
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
+			for(i = 0; i < 6; i++)
+				if((pc < 0) || (pc == i))
 					univ.party[i].skill_pts = minmax(0,	100,
 						univ.party[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_DEADNESS:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i)) {
-						if (spec.ex1b == 0) {
-							if ((univ.party[i].main_status > eMainStatus::ABSENT) && (univ.party[i].main_status < eMainStatus::SPLIT))
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i)) {
+						if(spec.ex1b == 0) {
+							if((univ.party[i].main_status > eMainStatus::ABSENT) && (univ.party[i].main_status < eMainStatus::SPLIT))
 								univ.party[i].main_status = eMainStatus::ALIVE;
 						}
-						else if (univ.party[i].main_status == eMainStatus::ABSENT);
+						else if(univ.party[i].main_status == eMainStatus::ABSENT);
 						else switch(spec.ex1a){
 								// When passed to kill_pc, the SPLIT party status actually means "no saving throw".
 							case 0:
@@ -2673,178 +2673,178 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			else {
 				// Kill monster
-				if ((univ.town.monst[spec.ex2a].active > 0) && (spec.ex1b > 0)) {
+				if((univ.town.monst[spec.ex2a].active > 0) && (spec.ex1b > 0)) {
 					// If dead/dust actually kill, if stone just erase
-					if (spec.ex1a < 2) {
+					if(spec.ex1a < 2) {
 						kill_monst(&univ.town.monst[spec.ex2a],7);
 						monst_spell_note(univ.town.monst[spec.ex2a].number,46);
 					}
 					univ.town.monst[spec.ex2a].active = 0;
 				}
 				// Bring back to life
-				if ((univ.town.monst[spec.ex2a].active == 0) && (spec.ex1b == 0)) {
+				if((univ.town.monst[spec.ex2a].active == 0) && (spec.ex1b == 0)) {
 					univ.town.monst[spec.ex2a].active = 1;
 					monst_spell_note(univ.town.monst[spec.ex2a].number,45);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_POISON:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i)) {
-						if (spec.ex1b == 0) {
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i)) {
+						if(spec.ex1b == 0) {
 							cure_pc(i,spec.ex1a);
 						}
 						else poison_pc(i,spec.ex1a);
 					}
 			}
 			else {
-				if (univ.town.monst[spec.ex2a].active > 0) {
+				if(univ.town.monst[spec.ex2a].active > 0) {
 					short alvl = spec.ex1a;
-					if (spec.ex1b == 0)
+					if(spec.ex1b == 0)
 						alvl = -1*alvl;
 					poison_monst(&univ.town.monst[spec.ex2a],alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_SPEED:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i)) {
-						if (spec.ex1b == 0) {
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i)) {
+						if(spec.ex1b == 0) {
 							slow_pc(i,-spec.ex1a);
 						}
 						else slow_pc(i,spec.ex1a);
 					}
 			}
 			else {
-				if (univ.town.monst[spec.ex2a].active > 0) {
+				if(univ.town.monst[spec.ex2a].active > 0) {
 					short alvl = spec.ex1a;
-					if (spec.ex1b == 0)
+					if(spec.ex1b == 0)
 						alvl = -1*alvl;
 					slow_monst(&univ.town.monst[spec.ex2a],alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_INVULN:
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
+			for(i = 0; i < 6; i++)
+				if((pc < 0) || (pc == i))
 					affect_pc(i,eStatus::INVULNERABLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_MAGIC_RES:
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
+			for(i = 0; i < 6; i++)
+				if((pc < 0) || (pc == i))
 					affect_pc(i,eStatus::MAGIC_RESISTANCE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_WEBS:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i))
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i))
 						affect_pc(i,eStatus::WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
-				if (univ.town.monst[spec.ex2a].active > 0) {
+				if(univ.town.monst[spec.ex2a].active > 0) {
 					short alvl = spec.ex1a;
-					if (spec.ex1b == 0)
+					if(spec.ex1b == 0)
 						alvl = -1*alvl;
 					web_monst(&univ.town.monst[spec.ex2a],alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_DISEASE:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i))
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i))
 						affect_pc(i,eStatus::DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
 			}
 			else {
-				if (univ.town.monst[spec.ex2a].active > 0) {
+				if(univ.town.monst[spec.ex2a].active > 0) {
 					short alvl = spec.ex1a;
-					if (spec.ex1b == 0)
+					if(spec.ex1b == 0)
 						alvl = -1*alvl;
 					disease_monst(&univ.town.monst[spec.ex2a],alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_SANCTUARY:
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
+			for(i = 0; i < 6; i++)
+				if((pc < 0) || (pc == i))
 					affect_pc(i,eStatus::INVISIBLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_CURSE_BLESS:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i))
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i))
 						affect_pc(i,eStatus::BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
-				if (univ.town.monst[spec.ex2a].active > 0) {
+				if(univ.town.monst[spec.ex2a].active > 0) {
 					short alvl = spec.ex1a;
-					if (spec.ex1b == 0)
+					if(spec.ex1b == 0)
 						alvl = -1*alvl;
 					curse_monst(&univ.town.monst[spec.ex2a],alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_DUMBFOUND:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i))
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i))
 						affect_pc(i,eStatus::DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
 			}
 			else {
-				if (univ.town.monst[spec.ex2a].active > 0) {
+				if(univ.town.monst[spec.ex2a].active > 0) {
 					short alvl = spec.ex1a;
-					if (spec.ex1b == 0)
+					if(spec.ex1b == 0)
 						alvl = -1*alvl;
 					dumbfound_monst(&univ.town.monst[spec.ex2a],alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_SLEEP:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i)) {
-						if (spec.ex1b == 0) {
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i)) {
+						if(spec.ex1b == 0) {
 							affect_pc(i,eStatus::ASLEEP,-1 * spec.ex1a);
 						}
 						else sleep_pc(i,spec.ex1a,eStatus::ASLEEP,10);
 					}
 			}
 			else {
-				if (univ.town.monst[spec.ex2a].active > 0) {
+				if(univ.town.monst[spec.ex2a].active > 0) {
 					short alvl = spec.ex1a;
-					if (spec.ex1b == 0)
+					if(spec.ex1b == 0)
 						alvl = -1*alvl;
 					charm_monst(&univ.town.monst[spec.ex2a],0,eStatus::ASLEEP,alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_PARALYSIS:
-			if (spec.ex2a < 0) {
-				for (i = 0; i < 6; i++)
-					if ((pc < 0) || (pc == i)) {
-						if (spec.ex1b == 0) {
+			if(spec.ex2a < 0) {
+				for(i = 0; i < 6; i++)
+					if((pc < 0) || (pc == i)) {
+						if(spec.ex1b == 0) {
 							affect_pc(i,eStatus::PARALYZED,-1 * spec.ex1a);
 						}
 						else sleep_pc(i,spec.ex1a,eStatus::PARALYZED,10);
 					}
 			}
 			else {
-				if (univ.town.monst[spec.ex2a].active > 0) {
+				if(univ.town.monst[spec.ex2a].active > 0) {
 					short alvl = spec.ex1a;
-					if (spec.ex1b == 0)
+					if(spec.ex1b == 0)
 						alvl = -1*alvl;
 					charm_monst(&univ.town.monst[spec.ex2a],0,eStatus::PARALYZED,alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_STAT:
-			if (spec.ex2a != minmax(0,20,spec.ex2a)) {
+			if(spec.ex2a != minmax(0,20,spec.ex2a)) {
 				giveError("Skill is out of range.");
 				break;
 			}
-			for (i = 0; i < 6; i++)
+			for(i = 0; i < 6; i++)
 				if((pc < 0 || pc == i) && get_ran(1,1,100) < spec.pic) {
 					eSkill skill = eSkill(spec.ex2a);
 					int adj = spec.ex1a * (spec.ex1b != 0 ? -1: 1);
@@ -2856,39 +2856,39 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			break;
 		case eSpecType::AFFECT_MAGE_SPELL:
-			if (spec.ex1a != minmax(0,61,spec.ex1a)) {
+			if(spec.ex1a != minmax(0,61,spec.ex1a)) {
 				giveError("Mage spell is out of range (0 - 61). See docs.");
 				break;
 			}
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
+			for(i = 0; i < 6; i++)
+				if((pc < 0) || (pc == i))
 					univ.party[i].mage_spells[spec.ex1a] = spec.ex1b;
 			break;
 		case eSpecType::AFFECT_PRIEST_SPELL:
-			if (spec.ex1a != minmax(0,61,spec.ex1a)) {
+			if(spec.ex1a != minmax(0,61,spec.ex1a)) {
 				giveError("Priest spell is out of range (0 - 61). See docs.");
 				break;
 			}
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
+			for(i = 0; i < 6; i++)
+				if((pc < 0) || (pc == i))
 					univ.party[i].priest_spells[spec.ex1a] = spec.ex1b;
 			break;
 		case eSpecType::AFFECT_GOLD:
-			if (spec.ex1b == 0)
+			if(spec.ex1b == 0)
 				give_gold(spec.ex1a,true);
-			else if (univ.party.gold < spec.ex1a)
+			else if(univ.party.gold < spec.ex1a)
 				univ.party.gold = 0;
 			else take_gold(spec.ex1a,false);
 			break;
 		case eSpecType::AFFECT_FOOD:
-			if (spec.ex1b == 0)
+			if(spec.ex1b == 0)
 				give_food(spec.ex1a,true);
-			else if (univ.party.food < spec.ex1a)
+			else if(univ.party.food < spec.ex1a)
 				univ.party.food = 0;
 			else take_food(spec.ex1a,false);
 			break;
 		case eSpecType::AFFECT_ALCHEMY:
-			if (spec.ex1a != minmax(0,19,spec.ex1a)) {
+			if(spec.ex1a != minmax(0,19,spec.ex1a)) {
 				giveError("Alchemy is out of range.");
 				break;
 			}
@@ -2905,9 +2905,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			PSD[SDF_PARTY_FIREWALK] = r1;
 			break;
 		case eSpecType::AFFECT_FLIGHT:
-			if (univ.party.in_boat >= 0)
+			if(univ.party.in_boat >= 0)
 				add_string_to_buf("  Can't fly when on a boat. ");
-			else if (univ.party.in_horse >= 0)////
+			else if(univ.party.in_horse >= 0)////
 				add_string_to_buf("  Can't fly when on a horse.  ");
 			else {
 				r1 = (short) PSD[SDF_PARTY_FLIGHT];
@@ -2916,7 +2916,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 	}
-	if (check_mess) {
+	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
@@ -2934,93 +2934,93 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
 	
-	switch (cur_node.type) {
+	switch(cur_node.type) {
 		case eSpecType::IF_SDF:
-			if (sd_legit(spec.sd1,spec.sd2)) {
-				if ((spec.ex1a >= 0) && (PSD[spec.sd1][spec.sd2] >= spec.ex1a))
+			if(sd_legit(spec.sd1,spec.sd2)) {
+				if((spec.ex1a >= 0) && (PSD[spec.sd1][spec.sd2] >= spec.ex1a))
 					*next_spec = spec.ex1b;
-				else if ((spec.ex2a >= 0) && (PSD[spec.sd1][spec.sd2] < spec.ex2a))
+				else if((spec.ex2a >= 0) && (PSD[spec.sd1][spec.sd2] < spec.ex2a))
 					*next_spec = spec.ex2b;
 			}
 			break;
 		case eSpecType::IF_TOWN_NUM:
-			if (((is_town()) || (is_combat())) && (univ.town.num == spec.ex1a))
+			if(((is_town()) || (is_combat())) && (univ.town.num == spec.ex1a))
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_RANDOM:
-			if (get_ran(1,1,100) < spec.ex1a)
+			if(get_ran(1,1,100) < spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_HAVE_SPECIAL_ITEM:
-			if (spec.ex1a != minmax(0,49,spec.ex1a)) {
+			if(spec.ex1a != minmax(0,49,spec.ex1a)) {
 				giveError("Special item is out of range.");
 			}
-			else if (univ.party.spec_items[spec.ex1a] > 0)
+			else if(univ.party.spec_items[spec.ex1a] > 0)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_SDF_COMPARE:
-			if ((sd_legit(spec.sd1,spec.sd2)) && (sd_legit(spec.ex1a,spec.ex1b))) {
-				if (PSD[spec.ex1a][spec.ex1b] < PSD[spec.sd1][spec.sd2])
+			if((sd_legit(spec.sd1,spec.sd2)) && (sd_legit(spec.ex1a,spec.ex1b))) {
+				if(PSD[spec.ex1a][spec.ex1b] < PSD[spec.sd1][spec.sd2])
 					*next_spec = spec.ex2b;
 			}
 			else giveError("A Stuff Done flag is out of range.");
 			break;
 		case eSpecType::IF_TOWN_TER_TYPE:
-			if (((is_town()) || (is_combat())) && (univ.town->terrain(spec.ex1a,spec.ex1b) == spec.ex2a))
+			if(((is_town()) || (is_combat())) && (univ.town->terrain(spec.ex1a,spec.ex1b) == spec.ex2a))
 				*next_spec = spec.ex2b;
 			break;
 		case eSpecType::IF_OUT_TER_TYPE:
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			l = local_to_global(l);
-			if ((is_out()) && (univ.out[l.x][l.y] == spec.ex2a))
+			if((is_out()) && (univ.out[l.x][l.y] == spec.ex2a))
 				*next_spec = spec.ex2b;
 			break;
 		case eSpecType::IF_HAS_GOLD:
-			if (univ.party.gold >= spec.ex1a)
+			if(univ.party.gold >= spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_HAS_FOOD:
-			if (univ.party.food >= spec.ex1a)
+			if(univ.party.food >= spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_ITEM_CLASS_ON_SPACE:
-			if (is_out())
+			if(is_out())
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
-			for (i = 0; i < NUM_TOWN_ITEMS; i++)
+			for(i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == (unsigned)spec.ex2a
 				   && (l == univ.town.items[i].item_loc))
 					*next_spec = spec.ex2b;
 			break;
 		case eSpecType::IF_HAVE_ITEM_CLASS:
-			if (party_check_class(spec.ex1a,1))
+			if(party_check_class(spec.ex1a,1))
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_EQUIP_ITEM_CLASS:
-			for (i = 0; i < 6; i++)
+			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
-					for (j = 0; j < 24; j++)
+					for(j = 0; j < 24; j++)
 						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
 						   && (univ.party[i].equip[j]))
 							*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_HAS_GOLD_AND_TAKE:
-			if (univ.party.gold >= spec.ex1a) {
+			if(univ.party.gold >= spec.ex1a) {
 				take_gold(spec.ex1a,true);
 				*next_spec = spec.ex1b;
 			}
 			break;
 		case eSpecType::IF_HAS_FOOD_AND_TAKE:
-			if (univ.party.food >= spec.ex1a) {
+			if(univ.party.food >= spec.ex1a) {
 				take_food(spec.ex1a,true);
 				*next_spec = spec.ex1b;
 			}
 			break;
 		case eSpecType::IF_ITEM_CLASS_ON_SPACE_AND_TAKE:
-			if (is_out())
+			if(is_out())
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
-			for (i = 0; i < NUM_TOWN_ITEMS; i++)
+			for(i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == (unsigned)spec.ex2a
 				   && (l == univ.town.items[i].item_loc)) {
 					*next_spec = spec.ex2b;
@@ -3029,13 +3029,13 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			break;
 		case eSpecType::IF_HAVE_ITEM_CLASS_AND_TAKE:
-			if (party_check_class(spec.ex1a,0))
+			if(party_check_class(spec.ex1a,0))
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_EQUIP_ITEM_CLASS_AND_TAKE:
-			for (i = 0; i < 6; i++)
+			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
-					for (j = 0; j < 24; j++)
+					for(j = 0; j < 24; j++)
 						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
 						   && (univ.party[i].equip[j])) {
 							*next_spec = spec.ex1b;
@@ -3044,19 +3044,19 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						}
 			break;
 		case eSpecType::IF_DAY_REACHED:
-			if (calc_day() >= spec.ex1a)
+			if(calc_day() >= spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_OBJECTS:
 			if(spec.ex1a == 0) {
-				for (j = 0; j < univ.town->max_dim(); j++)
-					for (k = 0; k < univ.town->max_dim(); k++)
-						if (univ.town.is_barrel(j,k))
+				for(j = 0; j < univ.town->max_dim(); j++)
+					for(k = 0; k < univ.town->max_dim(); k++)
+						if(univ.town.is_barrel(j,k))
 							*next_spec = spec.ex1b;
 			} else if(spec.ex1a == 1) {
-				for (j = 0; j < univ.town->max_dim(); j++)
-					for (k = 0; k < univ.town->max_dim(); k++)
-						if (univ.town.is_crate(j,k))
+				for(j = 0; j < univ.town->max_dim(); j++)
+					for(k = 0; k < univ.town->max_dim(); k++)
+						if(univ.town.is_crate(j,k))
 							*next_spec = spec.ex1b;
 			}
 			// TODO: Are there other object types to account for?
@@ -3064,17 +3064,17 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			// TODO: Allow requiring a minimum and maximum number of objects
 			break;
 		case eSpecType::IF_PARTY_SIZE:
-			if (spec.ex2a < 1) {
-				if (party_size(spec.ex2b) == spec.ex1a)
+			if(spec.ex2a < 1) {
+				if(party_size(spec.ex2b) == spec.ex1a)
 					*next_spec = spec.ex1b;
 			}
 			else {
-				if (party_size(spec.ex2b) >= spec.ex1a)
+				if(party_size(spec.ex2b) >= spec.ex1a)
 					*next_spec = spec.ex1b;
 			}
 			break;
 		case eSpecType::IF_EVENT_OCCURRED:
-			if (day_reached(spec.ex1a,spec.ex1b))
+			if(day_reached(spec.ex1a,spec.ex1b))
 				*next_spec = spec.ex2b;
 			break;
 		case eSpecType::IF_SPECIES:
@@ -3084,7 +3084,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			i = 0;
 			j = min(spec.ex2a,party_size(true));
-			if (j < 1)
+			if(j < 1)
 				j = 1;
 			i = race_present(eRace(spec.ex1a));
 			if(spec.ex2b == -2 && i <= j) *next_spec = spec.ex1b;
@@ -3099,7 +3099,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			}
 			j = min(spec.ex2a,party_size(true));
-			if (j < 1)
+			if(j < 1)
 				j = 1;
 			i = trait_present((eTrait)spec.ex1a);
 			if(spec.ex2b == -2 && i <= j) *next_spec = spec.ex1b;
@@ -3141,15 +3141,15 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			j = 1; k = 1;
 			spec.pic = minmax(0,50,spec.pic);
 			get_strs(str1,str2,0,spec.ex1a,spec.ex2a);
-			for (i = 0; i < spec.pic;i++) {
-				if ((spec.ex1a < 0) || (str3[i] != str1[i]))
+			for(i = 0; i < spec.pic;i++) {
+				if((spec.ex1a < 0) || (str3[i] != str1[i]))
 					j = 0;
-				if ((spec.ex2a < 0) || (str3[i] != str2[i]))
+				if((spec.ex2a < 0) || (str3[i] != str2[i]))
 					k = 0;
 			}
-			if (j == 1)
+			if(j == 1)
 				*next_spec = spec.ex1b;
-			else if (k == 1)
+			else if(k == 1)
 				*next_spec = spec.ex2b;
 			break;
 		/* This is a little complicated.
@@ -3209,8 +3209,8 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(j == 3) *next_spec = spec.pictype;
 			break;
 		case eSpecType::IF_SDF_EQ:
-			if (sd_legit(spec.sd1,spec.sd2)) {
-				if (PSD[spec.sd1][spec.sd2] == spec.ex1a)
+			if(sd_legit(spec.sd1,spec.sd2)) {
+				if(PSD[spec.sd1][spec.sd2] == spec.ex1a)
 					*next_spec = spec.ex1b;
 			}
 			break;
@@ -3331,7 +3331,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(j >= 0) *a = j;
 			break;
 	}
-	if (check_mess) {
+	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
@@ -3370,9 +3370,9 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	
 	l.x = spec.ex1a; l.y = spec.ex1b;
 	
-	if (is_out())
+	if(is_out())
 		return;
-	switch (cur_node.type) {
+	switch(cur_node.type) {
 		case eSpecType::MAKE_TOWN_HOSTILE:
 			set_town_attitude(spec.ex1a,spec.ex1b,spec.ex2a);
 			break;
@@ -3382,10 +3382,10 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			draw_map(true);
 			break;
 		case eSpecType::TOWN_SWAP_TER:
-			if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a){
+			if(coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a){
 				set_terrain(l,spec.ex2b);
 			}
-			else if (coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2b){
+			else if(coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2b){
 				set_terrain(l,spec.ex2a);
 			}
 			*redraw = 1;
@@ -3398,7 +3398,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			draw_map(true);
 			break;
 		case eSpecType::TOWN_MOVE_PARTY:
-			if (is_combat()) {
+			if(is_combat()) {
 				ASB("Not while in combat.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
@@ -3447,21 +3447,21 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_PLACE_MONST:
-			if (spec.ex2a > 0)
+			if(spec.ex2a > 0)
 				forced_place_monster(spec.ex2a,l);
 			else place_monster(spec.ex2a,l);
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_DESTROY_MONST:
-			for (i = 0; i < univ.town->max_monst(); i++)
-				if (univ.town.monst[i].number == spec.ex1a) {
+			for(i = 0; i < univ.town->max_monst(); i++)
+				if(univ.town.monst[i].number == spec.ex1a) {
 					univ.town.monst[i].active = 0;
 				}
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_NUKE_MONSTS:
-			for (i = 0; i < univ.town->max_monst(); i++)
-				if ((univ.town.monst[i].active > 0) &&
+			for(i = 0; i < univ.town->max_monst(); i++)
+				if((univ.town.monst[i].active > 0) &&
 					(((spec.ex1a == 0) && (1 == 1)) ||
 					 ((spec.ex1a == 1) && (univ.town.monst[i].attitude % 2 == 0)) ||
 					 ((spec.ex1a == 2) && (univ.town.monst[i].attitude % 2 == 1)))){
@@ -3477,12 +3477,12 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = -1;
 			}
 			else {
-				if (handle_lever(store_special_loc) > 0)
+				if(handle_lever(store_special_loc) > 0)
 					*next_spec = spec.ex1b;
 			}
 			break;
 		case eSpecType::TOWN_GENERIC_PORTAL:
-			if (is_combat()) {
+			if(is_combat()) {
 				ASB("Not while in combat.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
@@ -3515,7 +3515,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = -1;
 				check_mess = false;
 			}
-			else if (spec.ex2c != 2 && spec.ex2c != 3 && which_mode != eSpecCtx::TOWN_MOVE) {
+			else if(spec.ex2c != 2 && spec.ex2c != 3 && which_mode != eSpecCtx::TOWN_MOVE) {
 				ASB("Can't change level now.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
@@ -3524,14 +3524,14 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			else {
 				*a = 1;
-				if (spec.ex2b < 0) spec.ex2b = 0;
-				if ((spec.ex2b >= 8) || (cChoiceDlog(stairDlogs[spec.ex2b],{"climb","leave"}).show() == "climb"))
+				if(spec.ex2b < 0) spec.ex2b = 0;
+				if((spec.ex2b >= 8) || (cChoiceDlog(stairDlogs[spec.ex2b],{"climb","leave"}).show() == "climb"))
 					change_level(spec.ex2a,l.x,l.y);
 			}
 			break;
 		case eSpecType::TOWN_LEVER:
 			check_mess = false;
-			if (spec.m1 < 0)
+			if(spec.m1 < 0)
 				break;
 			if(which_mode != eSpecCtx::OUT_MOVE && which_mode != eSpecCtx::TOWN_MOVE && which_mode != eSpecCtx::COMBAT_MOVE
 			   && which_mode != eSpecCtx::OUT_LOOK && which_mode != eSpecCtx::TOWN_LOOK) {
@@ -3540,13 +3540,13 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = -1;
 			}
 			else {
-				for (i = 0; i < 3; i++)
+				for(i = 0; i < 3; i++)
 					get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
 							 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 				buttons[0] = 9; buttons[1] = 35;
 				// TODO: Handle custom pictures?
 				i = custom_choice_dialog(strs,spec.pic,PIC_TER,buttons);
-				if (i == 1) {*next_spec = -1;}
+				if(i == 1) {*next_spec = -1;}
 				else {
 					ter = coord_to_ter(store_special_loc.x,store_special_loc.y);
 					set_terrain(store_special_loc,scenario.ter_types[ter].trans_to_what);
@@ -3556,9 +3556,9 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_PORTAL:
 			check_mess = false;
-			if (spec.m1 < 0)
+			if(spec.m1 < 0)
 				break;
-			if (is_combat()) {
+			if(is_combat()) {
 				ASB("Not while in combat.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
@@ -3573,13 +3573,13 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				check_mess = false;
 			}
 			else {
-				for (i = 0; i < 3; i++)
+				for(i = 0; i < 3; i++)
 					get_strs(strs[i * 2],strs[i * 2 + 1]
 							 ,cur_spec_type,spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 				buttons[0] = 9; buttons[1] = 8;
 				// TODO: Wait, wait, aren't you supposed to be able to pick which picture to show?
 				i = custom_choice_dialog(strs,22,PIC_DLOG,buttons);
-				if (i == 1) {
+				if(i == 1) {
 					*next_spec = -1;
 					if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 						*a = 1;
@@ -3594,7 +3594,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_STAIR:
 			check_mess = false;
-			if ((spec.m1 < 0) && (spec.ex2b != 1))
+			if((spec.m1 < 0) && (spec.ex2b != 1))
 				break;
 			if(spec.ex2c != 1 && spec.ex2c != 2 && is_combat()) {
 				ASB("Can't change level in combat.");
@@ -3611,18 +3611,18 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				check_mess = false;
 			}
 			else {
-				if (spec.m1 >= 0) {
-					for (i = 0; i < 3; i++)
+				if(spec.m1 >= 0) {
+					for(i = 0; i < 3; i++)
 						get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
 								 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
 					buttons[0] = 20; buttons[1] = 24;
 				}
-				if (spec.ex2b == 1)
+				if(spec.ex2b == 1)
 					i = 2;
 				// TODO: Wait, wait, don't you get to choose the picture to show?
 				else i = custom_choice_dialog(strs,19,PIC_DLOG,buttons) ;
 				*a = 1;
-				if (i == 1) {
+				if(i == 1) {
 					*next_spec = -1;
 					if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 						*a = 1;
@@ -3664,7 +3664,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::TOWN_SPLIT_PARTY:
 			if(which_mode == eSpecCtx::TALK)
 				break;
-			if (is_combat()) {
+			if(is_combat()) {
 				ASB("Not while in combat.");
 				if((which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE) < 3)
 					*a = 1;
@@ -3672,7 +3672,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				check_mess = false;
 				break;
 			}
-			if (univ.party.is_split() > 0) {
+			if(univ.party.is_split() > 0) {
 				ASB("Party is already split.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
@@ -3683,7 +3683,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			r1 = char_select_pc(1,0,"Which character goes?");
 			if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 				*a = 1;
-			if (r1 != 6) {
+			if(r1 != 6) {
 				current_pc = r1;
 				*next_spec = -1;
 				ASB(univ.party.start_split(spec.ex1a,spec.ex1b,spec.ex2a,r1));
@@ -3693,7 +3693,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else check_mess = false;
 			break;
 		case eSpecType::TOWN_REUNITE_PARTY:
-			if (is_combat()) {
+			if(is_combat()) {
 				ASB("Not while in combat.");
 				break;
 			}
@@ -3716,8 +3716,8 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				draw_terrain();
 			}
 			// Change party light level
-			if (spec.ex2a > 0) {
-				if (spec.ex2b == 0)
+			if(spec.ex2a > 0) {
+				if(spec.ex2b == 0)
 					increase_light(spec.ex2a);
 				else increase_light(-spec.ex2a);
 			}
@@ -3734,7 +3734,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			univ.town.monst[spec.ex1a].attitude = spec.ex1b;
 			break;
 	}
-	if (check_mess) {
+	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
@@ -3751,57 +3751,57 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
 	
-	if (is_out())
+	if(is_out())
 		return;
 	
 	*redraw = 1;
-	for (i = spec.ex1b;i <= spec.ex2b;i++)
-		for (j = spec.ex1a; j <= spec.ex2a; j++) {
+	for(i = spec.ex1b;i <= spec.ex2b;i++)
+		for(j = spec.ex1a; j <= spec.ex2a; j++) {
 			l.x = i; l.y = j;
-			switch (cur_node.type) {
+			switch(cur_node.type) {
 				case eSpecType::RECT_PLACE_FIRE:
-					if (get_ran(1,1,100) <= spec.sd1 )
+					if(get_ran(1,1,100) <= spec.sd1 )
 						univ.town.set_fire_wall(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_FORCE:
-					if (get_ran(1,1,100) <= spec.sd1 )
+					if(get_ran(1,1,100) <= spec.sd1 )
 						univ.town.set_force_wall(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_ICE:
-					if (get_ran(1,1,100) <= spec.sd1 )
+					if(get_ran(1,1,100) <= spec.sd1 )
 						univ.town.set_ice_wall(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_BLADE:
-					if (get_ran(1,1,100) <= spec.sd1 )
+					if(get_ran(1,1,100) <= spec.sd1 )
 						univ.town.set_blade_wall(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_SCLOUD:
-					if (get_ran(1,1,100) <= spec.sd1 )
+					if(get_ran(1,1,100) <= spec.sd1 )
 						univ.town.set_scloud(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_SLEEP:
-					if (get_ran(1,1,100) <= spec.sd1 )
+					if(get_ran(1,1,100) <= spec.sd1 )
 						univ.town.set_sleep_cloud(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_QUICKFIRE:
-					if (get_ran(1,1,100) <= spec.sd1 )
+					if(get_ran(1,1,100) <= spec.sd1 )
 						univ.town.set_quickfire(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_FIRE_BARR:
-					if (get_ran(1,1,100) <= spec.sd1 )
+					if(get_ran(1,1,100) <= spec.sd1 )
 						univ.town.set_fire_barr(i,j,true);
 					break;
 				case eSpecType::RECT_PLACE_FORCE_BARR:
-					if (get_ran(1,1,100) <= spec.sd1 )
+					if(get_ran(1,1,100) <= spec.sd1 )
 						univ.town.set_force_barr(i,j,true);
 					break;
 				case eSpecType::RECT_CLEANSE:
-					if (spec.sd1 == 0)
+					if(spec.sd1 == 0)
 						dispel_fields(i,j,1);
 					else dispel_fields(i,j,2);
 					break;
 				case eSpecType::RECT_PLACE_SFX:
-					if (get_ran(1,1,100) <= spec.sd1 )
+					if(get_ran(1,1,100) <= spec.sd1 )
 						switch(spec.sd2) {
 							case 0: univ.town.set_sm_blood(i,j,true); break;
 							case 1: univ.town.set_med_blood(i,j,true); break;
@@ -3815,42 +3815,42 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						}
 					break;
 				case eSpecType::RECT_PLACE_OBJECT:
-					if (get_ran(1,1,100) <= spec.sd1 ) {
-						if (spec.sd2 == 0)
+					if(get_ran(1,1,100) <= spec.sd1 ) {
+						if(spec.sd2 == 0)
 							univ.town.set_web(i,j,true);
-						if (spec.sd2 == 1)
+						if(spec.sd2 == 1)
 							univ.town.set_barrel(i,j,true);
-						if (spec.sd2 == 2)
+						if(spec.sd2 == 2)
 							univ.town.set_crate(i,j,true);
 					}
 					break;
 				case eSpecType::RECT_MOVE_ITEMS:
-					for (k = 0; k < NUM_TOWN_ITEMS; k++)
+					for(k = 0; k < NUM_TOWN_ITEMS; k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
 							univ.town.items[k].item_loc.x = spec.sd1;
 							univ.town.items[k].item_loc.y = spec.sd2;
 						}
 					break;
 				case eSpecType::RECT_DESTROY_ITEMS:
-					for (k = 0; k < NUM_TOWN_ITEMS; k++)
+					for(k = 0; k < NUM_TOWN_ITEMS; k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
 							univ.town.items[k].variety = eItemType::NO_ITEM;
 						}
 					break;
 				case eSpecType::RECT_CHANGE_TER:
-					if (get_ran(1,1,100) <= spec.sd2){
+					if(get_ran(1,1,100) <= spec.sd2){
 						set_terrain(l,spec.sd1);
 						*redraw = true;
 						draw_map(true);
 					}
 					break;
 				case eSpecType::RECT_SWAP_TER:
-					if (coord_to_ter(i,j) == spec.sd1){
+					if(coord_to_ter(i,j) == spec.sd1){
 						set_terrain(l,spec.sd2);
 						*redraw = true;
 						draw_map(true);
 					}
-					else if (coord_to_ter(i,j) == spec.sd2){
+					else if(coord_to_ter(i,j) == spec.sd2){
 						set_terrain(l,spec.sd1);
 						*redraw = true;
 						draw_map(true);
@@ -3872,7 +3872,7 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					break;
 				case eSpecType::RECT_UNLOCK:
 					ter = coord_to_ter(i,j);
-					if (scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
+					if(scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
 						set_terrain(l,scenario.ter_types[ter].flag1.u);
 						*redraw = true;
 						draw_map(true);
@@ -3880,7 +3880,7 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 			}
 		}
-	if (check_mess) {
+	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
@@ -3896,9 +3896,9 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
 	
-	if (!is_out()) return;
+	if(!is_out()) return;
 	
-	switch (cur_node.type) {
+	switch(cur_node.type) {
 		case eSpecType::OUT_MAKE_WANDER:
 			create_wand_monst();
 			*redraw = 1;
@@ -3913,7 +3913,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = true;
 			break;
 		case eSpecType::OUT_PLACE_ENCOUNTER:
-			if (spec.ex1a != minmax(0,3,spec.ex1a)) {
+			if(spec.ex1a != minmax(0,3,spec.ex1a)) {
 				giveError("Special outdoor enc. is out of range. Must be 0-3.");
 				//set_sd = false;
 			}
@@ -3932,12 +3932,12 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::OUT_STORE:
 			get_strs(str1,str2,1,spec.m1 + 10,-1);
-			if (spec.ex2a >= 40)
+			if(spec.ex2a >= 40)
 				spec.ex2a = 39;
-			if (spec.ex2a < 1)
+			if(spec.ex2a < 1)
 				spec.ex2a = 1;
 			spec.ex2b = minmax(0,6,spec.ex2b);
-			switch (spec.ex1b) {
+			switch(spec.ex1b) {
 				case 0: start_shop_mode(0,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1.c_str()); break;
 				case 1: start_shop_mode(10,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1.c_str()); break;
 				case 2: start_shop_mode(11,spec.ex1a,spec.ex1a + spec.ex2a - 1 ,spec.ex2b,str1.c_str()); break;
@@ -3948,14 +3948,14 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 	}
 	
-	if (check_mess) {
+	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
 }
 
 void setsd(short a,short b,short val)
 {
-	if (!sd_legit(a,b)) {
+	if(!sd_legit(a,b)) {
 		giveError("The scenario attempted to change an out of range Stuff Done flag.");
 		return;
 	}
@@ -3980,7 +3980,7 @@ void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,s
 	short label1 = -1,label2 = -1,label1b = -1,label2b = -1;
 	short mess_adj[3] = {160,10,0};
 	
-	if ((mess1 < 0) && (mess2 < 0))
+	if((mess1 < 0) && (mess2 < 0))
 		return;
 	if(which_mode == eSpecCtx::TALK) {
 		*a = mess1 + ((mess1 >= 0) ? mess_adj[cur_type] : 0);
@@ -3989,12 +3989,12 @@ void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,s
 	}
 	get_strs(str1,str2, cur_type, mess1 + ((mess1 >= 0) ? mess_adj[cur_type] : 0),
 			 mess2 + ((mess2 >= 0) ? mess_adj[cur_type] : 0)) ;
-	if (mess1 >= 0) {
+	if(mess1 >= 0) {
 		label1 = mess1 + mess_adj[cur_type];
 		label1b = (is_out()) ? (univ.party.outdoor_corner.x + univ.party.i_w_c.x) +
 		scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) : univ.town.num;
 	}
-	if (mess2 >= 0) {
+	if(mess2 >= 0) {
 		label2 = mess2 + mess_adj[cur_type];
 		label2b = (is_out()) ? (univ.party.outdoor_corner.x + univ.party.i_w_c.x) +
 		scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) : univ.town.num;
@@ -4012,30 +4012,30 @@ void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str
 {
 	short num_strs[3] = {260,108,135};
 	
-	if (((which_str1 >= 0) && (which_str1 != minmax(0,num_strs[cur_type],which_str1))) ||
+	if(((which_str1 >= 0) && (which_str1 != minmax(0,num_strs[cur_type],which_str1))) ||
 		((which_str2 >= 0) && (which_str2 != minmax(0,num_strs[cur_type],which_str2)))) {
 		giveError("The scenario attempted to access a message out of range.");
 		return;
 	}
-	switch (cur_type) {
+	switch(cur_type) {
 		case 0:
-			if (which_str1 >= 0)
+			if(which_str1 >= 0)
 				str1 = scenario.scen_strs(which_str1);
-			if (which_str2 >= 0)
+			if(which_str2 >= 0)
 				str2 = scenario.scen_strs(which_str2);
 			break;
 		case 1:
-			if (which_str1 >= 0)
+			if(which_str1 >= 0)
 				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str1,(char *) str1);
 				str1 = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(which_str1);
-			if (which_str2 >= 0)
+			if(which_str2 >= 0)
 				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str2,(char *) str2);
 				str2 = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_strs(which_str2);
 			break;
 		case 2:
-			if (which_str1 >= 0)
+			if(which_str1 >= 0)
 				str1 = univ.town->spec_strs[which_str1];
-			if (which_str2 >= 0)
+			if(which_str2 >= 0)
 				str2 = univ.town->spec_strs[which_str2];
 			break;
 	}

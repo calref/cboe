@@ -180,11 +180,11 @@ class TiXmlString
 	// find a char in a string from an offset. Return TiXmlString::npos if not found
 	size_type find (char tofind, size_type offset) const
 	{
-		if (offset >= length()) return npos;
+		if(offset >= length()) return npos;
 
-		for (const char* p = c_str() + offset; *p != '\0'; ++p)
+		for(const char* p = c_str() + offset; *p != '\0'; ++p)
 		{
-		   if (*p == tofind) return static_cast< size_type >( p - c_str() );
+		   if(*p == tofind) return static_cast< size_type >( p - c_str() );
 		}
 		return npos;
 	}
@@ -230,7 +230,7 @@ class TiXmlString
 
 	void init(size_type sz, size_type cap)
 	{
-		if (cap)
+		if(cap)
 		{
 			// Lee: the original form:
 			//	rep_ = static_cast<Rep*>(operator new(sizeof(Rep) + cap));
@@ -252,7 +252,7 @@ class TiXmlString
 
 	void quit()
 	{
-		if (rep_ != &nullrep_)
+		if(rep_ != &nullrep_)
 		{
 			// The rep_ is really an array of ints. (see the allocator, above).
 			// Cast it back before delete, so the compiler won't incorrectly call destructors.

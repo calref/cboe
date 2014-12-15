@@ -32,7 +32,7 @@ cItemRec get_stored_item(short which)
 {
 	cItemRec s_item;
 	
-	if ((which >= 400) || (which < 0)) {
+	if((which >= 400) || (which < 0)) {
 		s_item = cItemRec();
 		return s_item;
 	}
@@ -47,12 +47,12 @@ cItemRec get_food()
 //		{11,0, 0,0,0,0,0,0, 62,0,0,0,0, 0, 0,0, {0,0},"Food", "Food",0,0,0,0};
 	food.graphic_num += get_ran(1,0,2);
 	food.item_level = get_ran(1,5,10);
-	if (get_ran(1,0,9) == 5)
+	if(get_ran(1,0,9) == 5)
 		food.graphic_num = 113;
-	if (get_ran(1,0,9) == 5)
+	if(get_ran(1,0,9) == 5)
 		food.graphic_num = 114;
 	// food doesn't always appear
-	if (get_ran(1,0,2) != 1)
+	if(get_ran(1,0,2) != 1)
 		food.variety = eItemType::NO_ITEM;
 	
 	return food;
@@ -64,17 +64,17 @@ cItemRec pull_item_of_type(unsigned int loot_max,short min_val,short max_val,eIt
 	cItemRec temp_i;
 	
 	// occasionally get nice item
-	if (get_ran(1,0,160) == 80) {
+	if(get_ran(1,0,160) == 80) {
 		loot_max += 2;
 		max_val += 2000;
 	}
-	for (i = 0; i < 80; i++) {
+	for(i = 0; i < 80; i++) {
 		j = get_ran(1,0,399);
 		temp_i = get_stored_item(j);
 		if(temp_i.variety == eItemType::NO_ITEM) continue;
-		if ((temp_i.variety == t1) || (temp_i.variety == t2) || (temp_i.variety == t3)) {
+		if((temp_i.variety == t1) || (temp_i.variety == t2) || (temp_i.variety == t3)) {
 			val = (temp_i.charges > 0) ? temp_i.charges * temp_i.value : temp_i.value;
-			if ((val >= min_val) && (val <= max_val) && (temp_i.treas_class != 0) &&
+			if((val >= min_val) && (val <= max_val) && (temp_i.treas_class != 0) &&
 				(temp_i.treas_class <= loot_max))
 				return temp_i;
 		}
@@ -86,7 +86,7 @@ cItemRec pull_item_of_type(unsigned int loot_max,short min_val,short max_val,eIt
 cItemRec get_weapon(short loot) {
 	cItemRec weapon;
 	
-	if (loot == 0)
+	if(loot == 0)
 		return cItemRec();
 	weapon = pull_item_of_type(loot,loot_min[loot],loot_max[loot],eItemType::ONE_HANDED,eItemType::TWO_HANDED);
 	
@@ -98,7 +98,7 @@ cItemRec get_armor(short loot) {
 	short r1;
 	cItemRec armor;
 	
-	if (loot == 0)
+	if(loot == 0)
 		return cItemRec();
 	r1 = get_ran(1,(loot - 1) * 5 + 124,142);
 	
@@ -134,7 +134,7 @@ cItemRec get_potion(short loot)
 {
 	cItemRec p;
 	
-	if (get_ran(1,0,80) < 20 * (4 - loot))
+	if(get_ran(1,0,80) < 20 * (4 - loot))
 		p = pull_item_of_type(loot,loot_min[loot],loot_max[loot] / 2,eItemType::POTION);
 	else p = pull_item_of_type(loot,loot_min[loot],loot_max[loot],eItemType::POTION);
 	
@@ -148,7 +148,7 @@ cItemRec get_scroll(short loot)
 
 cItemRec get_missile(short loot)
 {
-	if (get_ran(1,0,2) < 2)
+	if(get_ran(1,0,2) < 2)
 		return pull_item_of_type(loot,loot_min[loot],loot_max[loot],eItemType::ARROW,eItemType::THROWN_MISSILE,eItemType::BOW);
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],eItemType::CROSSBOW,eItemType::BOLTS,eItemType::MISSILE_NO_AMMO);
 	

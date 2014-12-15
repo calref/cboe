@@ -46,7 +46,7 @@ short which;
 	
 	where = get_spec_loc(which);
 	
-	switch (which) {
+	switch(which) {
 		case 1:
 			break;
 			
@@ -61,7 +61,7 @@ short which;
 
 void activate_monster_enc(short enc_num,std::string list,short str,short strsnd,short *flip_bit)
 {
-	if (*flip_bit == 0) {
+	if(*flip_bit == 0) {
 		cStrDlog display_enc_string(get_str(list,str),"","",8,PIC_DLOG);
 		display_enc_string.setSound(strsnd);
 		display_enc_string.show();
@@ -80,49 +80,49 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 	short trap_odds[30] = {5,30,35,42,48, 55,63,69,75,77,
 		78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99};
 	
-	if (pc_num > 7) { // Debug
+	if(pc_num > 7) { // Debug
 		beep();
 		ASB("TRAP ERROR! REPORT!");
 		return true;
 	}
 	
-	if (pc_num == 7) {
+	if(pc_num == 7) {
 		pc_num = select_pc(1,0);
-		if (pc_num == 6)
+		if(pc_num == 6)
 			return false;
 	}
 	
 	
 	num_hits += trap_level;
 	
-	if (trap_type == TRAP_RANDOM)
+	if(trap_type == TRAP_RANDOM)
 		trap_type = (eTrapType) get_ran(1,1,4);
-	if (trap_type == TRAP_FALSE_ALARM)
+	if(trap_type == TRAP_FALSE_ALARM)
 		return true;
 	
-	if (pc_num < 6) {
+	if(pc_num < 6) {
 		i = stat_adj(pc_num,eSkill::DEXTERITY);
-		if ((i_level = get_prot_level(pc_num,eItemAbil::THIEVING)) > 0)
+		if((i_level = get_prot_level(pc_num,eItemAbil::THIEVING)) > 0)
 			i = i + i_level / 2;
 		skill = minmax(0,20,univ.party[pc_num].skills[eSkill::DISARM_TRAPS] +
 					   + univ.party[pc_num].skills[eSkill::LUCK] / 2 + 1 - univ.town.difficulty + 2 * i);
 		
 		r1 = get_ran(1,1,100) + diff;
 		// Nimble?
-		if (univ.party[pc_num].traits[eTrait::NIMBLE])
+		if(univ.party[pc_num].traits[eTrait::NIMBLE])
 			r1 -= 6;
 		
 		
-		if (r1 < trap_odds[skill]) {
+		if(r1 < trap_odds[skill]) {
 			add_string_to_buf("  Trap disarmed.            ");
 			return true;
 		}
 		else add_string_to_buf("  Disarm failed.          ");
 	}
 	
-	switch (trap_type) {
+	switch(trap_type) {
 		case TRAP_BLADE:
-			for (i = 0; i < num_hits; i++) {
+			for(i = 0; i < num_hits; i++) {
 				add_string_to_buf("  A knife flies out!              ");
 				r1 = get_ran(2 + univ.town.difficulty / 14,1,10);
 				damage_pc(pc_num,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
@@ -145,7 +145,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff)
 			break;
 			
 		case TRAP_EXPLOSION:
-			for (i = 0; i < num_hits; i++) {
+			for(i = 0; i < num_hits; i++) {
 				add_string_to_buf("  There is an explosion.        ");
 				r1 = get_ran(3 + univ.town.difficulty / 13,1,8);
 				hit_party(r1,DAMAGE_FIRE);
@@ -209,8 +209,8 @@ location get_spec_loc(short which)
 	location where;
 	short i;
 	
-	for (i = 0; i < 50; i++)
-		if (univ.town->spec_id[i] == which)
+	for(i = 0; i < 50; i++)
+		if(univ.town->spec_id[i] == which)
 			return univ.town->special_locs[i];
 	return where;
 }

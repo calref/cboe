@@ -164,8 +164,8 @@ void init_party(short mode)
 	univ.party.age = 0;
 	univ.party.gold = 200;
 	univ.party.food = 100;
-	for (i = 0; i < 310; i++)
-		for (j = 0; j < 10; j++)
+	for(i = 0; i < 310; i++)
+		for(j = 0; j < 10; j++)
 			PSD[i][j] = 0;
 	univ.party.light_level = 0;
 	univ.party.outdoor_corner.x = 7;
@@ -176,29 +176,29 @@ void init_party(short mode)
 	univ.party.loc_in_sec.y = 36;
 	univ.party.p_loc.x = 84;
 	univ.party.p_loc.y = 84;
-	for (i = 0; i < 30; i++)
+	for(i = 0; i < 30; i++)
 		univ.party.boats[i] = null_boat;
-	for (i = 0; i < 30; i++)
+	for(i = 0; i < 30; i++)
 		univ.party.horses[i] = null_horse;
 	univ.party.in_boat = -1;
 	univ.party.in_horse = -1;
-	for (i = 0; i < 4; i++)
+	for(i = 0; i < 4; i++)
 		univ.party.creature_save[i].which_town = 200;
-	for (i = 0; i < 10; i++)
+	for(i = 0; i < 10; i++)
 		univ.party.out_c[i].exists = false;
-	for (i = 0; i < 5; i++)
-		for (j = 0; j < 10; j++)
+	for(i = 0; i < 5; i++)
+		for(j = 0; j < 10; j++)
 			univ.party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
-	for (i = 0; i < 4; i++)
+	for(i = 0; i < 4; i++)
 		univ.party.imprisoned_monst[i] = 0;
-	for (i = 0; i < 256; i++)
+	for(i = 0; i < 256; i++)
 		univ.party.m_seen[i] = univ.party.m_noted[i] = 0;
-//	for (i = 0; i < 50; i++)
+//	for(i = 0; i < 50; i++)
 //		univ.party.journal_str[i] = -1;
-//	for (i = 0; i < 140; i++)
-//		for (j = 0; j < 2; j++)
+//	for(i = 0; i < 140; i++)
+//		for(j = 0; j < 2; j++)
 //			univ.party.special_notes_str[i][j] = 0;
-//	for (i = 0; i < 120; i++)
+//	for(i = 0; i < 120; i++)
 //		univ.party.talk_save[i].personality = -1;
 	univ.party.journal.clear();
 	univ.party.special_notes.clear();
@@ -210,21 +210,21 @@ void init_party(short mode)
 	univ.party.total_dam_taken = 0;
 	univ.party.direction = 0;
 	univ.party.at_which_save_slot = 0;
-	for (i = 0; i < 20; i++)
+	for(i = 0; i < 20; i++)
 		univ.party.alchemy[i] = 0;
-	for (i = 0; i < 200; i++)
+	for(i = 0; i < 200; i++)
 		univ.party.can_find_town[i] = 0;
-	for (i = 0; i < 20; i++)
+	for(i = 0; i < 20; i++)
 		univ.party.key_times[i] = 30000;
 	univ.party.party_event_timers.clear();
-	for (i = 0; i < 50; i++)
+	for(i = 0; i < 50; i++)
 		univ.party.spec_items[i] = 0;
-	for (i = 0; i < 200; i++)
+	for(i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;
 	univ.party.scen_name = "";
 	
-	for (i = 0; i < 200; i++)
-		for (j = 0; j < 8; j++)
+	for(i = 0; i < 200; i++)
+		for(j = 0; j < 8; j++)
 			univ.party.item_taken[i][j] = 0;
 	
 	// Zero out campaign flags and pointers
@@ -234,7 +234,7 @@ void init_party(short mode)
 	
 	refresh_store_items();
 	
-	for (i = 0; i < 6; i++) {
+	for(i = 0; i < 6; i++) {
 		switch(mode){
 			case 0:
 				univ.party[i] = cPlayer('dflt',i);
@@ -248,24 +248,24 @@ void init_party(short mode)
 		}
 	}
 	
-	for (i = 0; i < 96; i++)
-		for (j = 0; j < 96; j++)
+	for(i = 0; i < 96; i++)
+		for(j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = 0;
 	
 	
-	for (i = 0; i < 3;i++)
-		for (j = 0; j < NUM_TOWN_ITEMS; j++) {
+	for(i = 0; i < 3;i++)
+		for(j = 0; j < NUM_TOWN_ITEMS; j++) {
 			univ.party.stored_items[i][j] = cItemRec();
 		}
 	
-	for (i = 0; i < 200; i++)
-		for (j = 0; j < 8; j++)
-			for (k = 0; k < 64; k++)
+	for(i = 0; i < 200; i++)
+		for(j = 0; j < 8; j++)
+			for(k = 0; k < 64; k++)
 				univ.town_maps[i][j][k] = 0;
 	
-	for (i = 0; i < 100; i++)
-		for (k = 0; k < 6; k++)
-			for (l = 0; l < 48; l++)
+	for(i = 0; i < 100; i++)
+		for(k = 0; k < 6; k++)
+			for(l = 0; l < 48; l++)
 				univ.out_maps[i][k][l] = 0;
 	
 	// Default is save maps
@@ -290,8 +290,8 @@ void init_party_scen_data()
 	
 	univ.party.age = 0;
 	store_help = PSD[SDF_NO_INSTANT_HELP];
-	for (i = 0; i < 310; i++)
-		for (j = 0; j < 10; j++)
+	for(i = 0; i < 310; i++)
+		for(j = 0; j < 10; j++)
 			PSD[i][j] = 0;
 	PSD[SDF_NO_INSTANT_HELP] = store_help;
 	univ.party.light_level = 0;
@@ -303,19 +303,19 @@ void init_party_scen_data()
 	univ.party.loc_in_sec.y = scenario.out_start.y;
 	univ.party.p_loc.x = scenario.out_start.x;
 	univ.party.p_loc.y = scenario.out_start.y;
-	for (i = 0; i < 30; i++)
+	for(i = 0; i < 30; i++)
 		univ.party.boats[i] = scenario.boats[i];
-	for (i = 0; i < 30; i++)
+	for(i = 0; i < 30; i++)
 		univ.party.horses[i] = scenario.horses[i];
-	for (i = 0; i < 30; i++) {
-		if ((scenario.boats[i].which_town >= 0) && (scenario.boats[i].loc.x >= 0)) {
-			if (!univ.party.boats[i].exists) {
+	for(i = 0; i < 30; i++) {
+		if((scenario.boats[i].which_town >= 0) && (scenario.boats[i].loc.x >= 0)) {
+			if(!univ.party.boats[i].exists) {
 				univ.party.boats[i] = scenario.boats[i];
 				univ.party.boats[i].exists = true;
 			}
 		}
-		if ((scenario.horses[i].which_town >= 0) && (scenario.horses[i].loc.x >= 0)) {
-			if (!univ.party.horses[i].exists) {
+		if((scenario.horses[i].which_town >= 0) && (scenario.horses[i].loc.x >= 0)) {
+			if(!univ.party.horses[i].exists) {
 				univ.party.horses[i] = scenario.horses[i];
 				univ.party.horses[i].exists = true;
 			}
@@ -323,23 +323,23 @@ void init_party_scen_data()
 	}
 	univ.party.in_boat = -1;
 	univ.party.in_horse = -1;
-	for (i = 0; i < 4; i++)
+	for(i = 0; i < 4; i++)
 		univ.party.creature_save[i].which_town = 200;
-	for (i = 0; i < 10; i++)
+	for(i = 0; i < 10; i++)
 		univ.party.out_c[i].exists = false;
-	for (i = 0; i < 5; i++)
-		for (j = 0; j < 10; j++)
+	for(i = 0; i < 5; i++)
+		for(j = 0; j < 10; j++)
 			univ.party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
-	for (i = 0; i < 4; i++)
+	for(i = 0; i < 4; i++)
 		univ.party.imprisoned_monst[i] = 0;
-	for (i = 0; i < 256; i++)
+	for(i = 0; i < 256; i++)
 		univ.party.m_seen[i] = univ.party.m_noted[i] = 0;
-//	for (i = 0; i < 50; i++)
+//	for(i = 0; i < 50; i++)
 //		univ.party.journal_str[i] = -1;
-//	for (i = 0; i < 140; i++)
-//		for (j = 0; j < 2; j++)
+//	for(i = 0; i < 140; i++)
+//		for(j = 0; j < 2; j++)
 //			univ.party.special_notes_str[i][j] = 0;
-//	for (i = 0; i < 120; i++)
+//	for(i = 0; i < 120; i++)
 //		univ.party.talk_save[i].personality = -1;
 	// TODO: The journal at least should persist across scenarios; the special and talk notes, maybe, maybe not
 	univ.party.special_notes.clear();
@@ -347,56 +347,56 @@ void init_party_scen_data()
 	
 	univ.party.direction = 0;
 	univ.party.at_which_save_slot = 0;
-	for (i = 0; i < 200; i++)
+	for(i = 0; i < 200; i++)
 		univ.party.can_find_town[i] = 1 - scenario.town_hidden[i];
-	for (i = 0; i < 20; i++)
+	for(i = 0; i < 20; i++)
 	 	univ.party.key_times[i] = 30000;
 	univ.party.party_event_timers.clear();
-	for (i = 0; i < 50; i++)
+	for(i = 0; i < 50; i++)
 		univ.party.spec_items[i] = (scenario.special_items[i].flags >= 10) ? 1 : 0;
 	
-	for (i = 0; i < 200; i++)
+	for(i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;
 	
-	for (i = 0; i < 200; i++)
-		for (j = 0; j < 8; j++)
+	for(i = 0; i < 200; i++)
+		for(j = 0; j < 8; j++)
 			univ.party.item_taken[i][j] = 0;
 	
 	
 	refresh_store_items();
 	
-	for (i = 0; i < 96; i++)
-		for (j = 0; j < 96; j++)
+	for(i = 0; i < 96; i++)
+		for(j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = 0;
 	
-	for (i = 0; i < 3;i++)
-		for (j = 0; j < NUM_TOWN_ITEMS; j++)
-			if (univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
+	for(i = 0; i < 3;i++)
+		for(j = 0; j < NUM_TOWN_ITEMS; j++)
+			if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
 				stored_item = true;
-	if (stored_item)
+	if(stored_item)
 		if(cChoiceDlog("keep-stored-items.xml", {"yes", "no"}).show() == "yes") {
 			std::vector<cItemRec*> saved_item_refs;
-			for (i = 0; i < 3;i++)
-				for (j = 0; j < NUM_TOWN_ITEMS; j++)
-					if (univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
+			for(i = 0; i < 3;i++)
+				for(j = 0; j < NUM_TOWN_ITEMS; j++)
+					if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
 						saved_item_refs.push_back(&univ.party.stored_items[i][j]);
 			short pc = 0;
 			while(univ.party[pc].main_status != eMainStatus::ALIVE && pc < 6) pc++;
 			show_get_items("Choose stored items to keep:", saved_item_refs, pc, true);
 		}
-	for (i = 0; i < 3;i++)
-		for (j = 0; j < NUM_TOWN_ITEMS; j++) {
+	for(i = 0; i < 3;i++)
+		for(j = 0; j < NUM_TOWN_ITEMS; j++) {
 			univ.party.stored_items[i][j] = cItemRec();
 		}
 	
-	for (i = 0; i < 200; i++)
-		for (j = 0; j < 8; j++)
-			for (k = 0; k < 64; k++)
+	for(i = 0; i < 200; i++)
+		for(j = 0; j < 8; j++)
+			for(k = 0; k < 64; k++)
 				univ.town_maps[i][j][k] = 0;
 	
-	for (i = 0; i < 100; i++)
-		for (k = 0; k < 6; k++)
-			for (l = 0; l < 48; l++)
+	for(i = 0; i < 100; i++)
+		for(k = 0; k < 6; k++)
+			for(l = 0; l < 48; l++)
 				univ.out_maps[i][k][l] = 0;
 	
 }
@@ -411,34 +411,34 @@ void put_party_in_scen(std::string scen_name)
 	std::array<short, 3> buttons = {-1,-1,-1};
 	bool item_took = false;
 	
-	for (j = 0; j < 6; j++) {
+	for(j = 0; j < 6; j++) {
 		univ.party[i].status.clear();
 		if(isSplit(univ.party[j].main_status))
 			univ.party[j].main_status -= eMainStatus::SPLIT;
 		univ.party[j].cur_health = univ.party[j].max_health;
  		univ.party[j].cur_sp = univ.party[j].max_sp;
 	}
-	for (j = 0; j < 6; j++)
-	 	for (i = 23; i >= 0; i--) {
+	for(j = 0; j < 6; j++)
+	 	for(i = 23; i >= 0; i--) {
 			univ.party[j].items[i].special_class = 0;
 			// TODO: Don't take items just because they have a special graphic
-			if (univ.party[j].items[i].graphic_num >= 150) {
+			if(univ.party[j].items[i].graphic_num >= 150) {
 				take_item(j,i + 30); // strip away special items
 				item_took = true;
 			}
-			if (univ.party[j].items[i].ability == eItemAbil::SUMMONING) {
+			if(univ.party[j].items[i].ability == eItemAbil::SUMMONING) {
 				take_item(j,i + 30); // strip away summoning items
 				item_took = true;
 			}
-			if (univ.party[j].items[i].ability == eItemAbil::MASS_SUMMONING) {
+			if(univ.party[j].items[i].ability == eItemAbil::MASS_SUMMONING) {
 				take_item(j,i + 30); // strip away summoning items
 				item_took = true;
 			}
 		}
-	if (item_took)
+	if(item_took)
 		cChoiceDlog("removed-special-items.xml").show();
 	univ.party.age = 0;
-	for (i = 0; i < 200; i++)
+	for(i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;
 	univ.party.party_event_timers.clear();
 	
@@ -446,7 +446,7 @@ void put_party_in_scen(std::string scen_name)
 	path = progDir/"Blades of Exile Scenarios";
 	path /= scen_name;
 	std::cout<<"Searching for scenario at:\n"<<path<<'\n';
-	if (!load_scenario(path))
+	if(!load_scenario(path))
 		return;
 	
 	init_party_scen_data();
@@ -478,9 +478,9 @@ void put_party_in_scen(std::string scen_name)
 	
 	// Throw up intro dialog
 	buttons[0] = 1;
-	for (j = 0; j < 6; j++)
-		if (strlen(	scenario.scen_strs(4 + j)) > 0) {
-			for (i = 0; i < 6; i++)
+	for(j = 0; j < 6; j++)
+		if(strlen(	scenario.scen_strs(4 + j)) > 0) {
+			for(i = 0; i < 6; i++)
 				strs[i] = scenario.scen_strs(4 + i);
 			custom_choice_dialog(strs,scenario.intro_pic,PIC_SCEN,buttons) ;
 			j = 6;
@@ -488,7 +488,7 @@ void put_party_in_scen(std::string scen_name)
 	give_help(1,2);
 	
 	// this is kludgy, put here to prevent problems
-	for (i = 0; i < 50; i++)
+	for(i = 0; i < 50; i++)
 		univ.party.spec_items[i] = (scenario.special_items[i].flags >= 10) ? 1 : 0;
 	
 	// Compatibility flags
@@ -508,12 +508,12 @@ bool create_pc(short spot,cDialog* parent)
 {
 	bool still_ok = true;
 	
-	if (spot == 6) {
-		for (spot = 0; spot < 6; spot++)
+	if(spot == 6) {
+		for(spot = 0; spot < 6; spot++)
 			if(univ.party[spot].main_status == eMainStatus::ABSENT)
 				break;
 	}
-	if (spot == 6)
+	if(spot == 6)
 		return false;
 	
 	univ.party[spot] = cPlayer();
@@ -521,20 +521,20 @@ bool create_pc(short spot,cDialog* parent)
 	pick_race_abil(&univ.party[spot],0);
 	
 	// TODO: Not sure if these initial draws are needed
-//	if (parent != NULL)
+//	if(parent != NULL)
 //		cd_initial_draw(989);
 	
 	still_ok = spend_xp(spot,0,parent);
-	if (!still_ok)
+	if(!still_ok)
 		return false;
 	univ.party[spot].cur_health = univ.party[spot].max_health;
 	univ.party[spot].cur_sp = univ.party[spot].max_sp;
-//	if (parent != NULL)
+//	if(parent != NULL)
 //		cd_initial_draw(989);
 	
 	pick_pc_graphic(spot,0,parent);
 	
-//	if (parent != NULL)
+//	if(parent != NULL)
 //		cd_initial_draw(989);
 	pick_pc_name(spot,parent);
 	
@@ -549,9 +549,9 @@ bool create_pc(short spot,cDialog* parent)
 		univ.party[spot].equip[1] = true;
 		
 		// Do stat adjs for selected race.
-		if (univ.party[spot].race == eRace::NEPHIL)
+		if(univ.party[spot].race == eRace::NEPHIL)
 			univ.party[spot].skills[eSkill::DEXTERITY] += 2;
-		if (univ.party[spot].race == eRace::SLITH) {
+		if(univ.party[spot].race == eRace::SLITH) {
 			univ.party[spot].skills[eSkill::STRENGTH] += 2;
 			univ.party[spot].skills[eSkill::INTELLIGENCE] += 1;
 		}
@@ -566,7 +566,7 @@ bool create_pc(short spot,cDialog* parent)
 
 bool take_sp(short pc_num,short amt)
 {
-	if (univ.party[pc_num].cur_sp < amt)
+	if(univ.party[pc_num].cur_sp < amt)
 		return false;
 	univ.party[pc_num].cur_sp -= amt;
 	return true;
@@ -577,12 +577,12 @@ bool take_sp(short pc_num,short amt)
 
 void heal_pc(short pc_num,short amt)
 {
-	if (univ.party[pc_num].cur_health > univ.party[pc_num].max_health)
+	if(univ.party[pc_num].cur_health > univ.party[pc_num].max_health)
 		return;
 	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return;
 	univ.party[pc_num].cur_health += amt;
-	if (univ.party[pc_num].cur_health > univ.party[pc_num].max_health)
+	if(univ.party[pc_num].cur_health > univ.party[pc_num].max_health)
 		univ.party[pc_num].cur_health = univ.party[pc_num].max_health;
 	
 }
@@ -591,7 +591,7 @@ void heal_party(short amt)
 {
 	short i;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			heal_pc(i,amt);
 }
@@ -610,7 +610,7 @@ void cure_party(short amt)
 {
 	short i;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			cure_pc(i,amt);
 	
@@ -629,7 +629,7 @@ void curse_pc(short which_pc,short how_much)
 		add_string_to_buf((char *) c_line);
 	}
 	put_pc_screen();
-	if (how_much < 0)
+	if(how_much < 0)
 		give_help(59,0);
 }
 
@@ -640,13 +640,13 @@ void dumbfound_pc(short which_pc,short how_much)
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	r1 = get_ran(1,0,90);
-	if (pc_has_abil_equip(which_pc,eItemAbil::WILL) < 24) {
+	if(pc_has_abil_equip(which_pc,eItemAbil::WILL) < 24) {
 		add_string_to_buf("  Ring of Will glows.");
 		r1 -= 10;
 	}
-	if (r1 < univ.party[which_pc].level)
+	if(r1 < univ.party[which_pc].level)
 		how_much -= 2;
-	if (how_much <= 0) {
+	if(how_much <= 0) {
 		sprintf ((char *) c_line, "  %s saved.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		return;
@@ -668,14 +668,14 @@ void disease_pc(short which_pc,short how_much)
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	r1 = get_ran(1,1,100);
-	if (r1 < univ.party[which_pc].level * 2)
+	if(r1 < univ.party[which_pc].level * 2)
 		how_much -= 2;
-	if (how_much <= 0) {
+	if(how_much <= 0) {
 		sprintf ((char *) c_line, "  %s saved.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		return;
 	}
-	if ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_DISEASE)) > 0)
+	if((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_DISEASE)) > 0)
 		how_much -= level / 2;
 	if(univ.party[which_pc].traits[eTrait::FRAIL] && how_much > 1)
 		how_much++;
@@ -697,24 +697,24 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust)
 	short r1,level;
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
-	if (how_much == 0)
+	if(how_much == 0)
 		return;
 	// TODO: Uh, what if an invalid status is passed in?
 	// --> Currently, you'd get that status effect, but with a "paralyzed" message, sound, and quick-help
 	if(what_type == eStatus::ASLEEP || what_type == eStatus::PARALYZED) { ////
-		if ((level = get_prot_level(which_pc,eItemAbil::WILL)) > 0)
+		if((level = get_prot_level(which_pc,eItemAbil::WILL)) > 0)
 			how_much -= level / 2;
-		if ((level = get_prot_level(which_pc,eItemAbil::FREE_ACTION)) > 0)
+		if((level = get_prot_level(which_pc,eItemAbil::FREE_ACTION)) > 0)
 			how_much -= (what_type == eStatus::ASLEEP) ? level : level * 300;
 		
 	}
 	
 	r1 = get_ran(1,1,100) + adjust;
-	if (r1 < 30 + univ.party[which_pc].level * 2)
+	if(r1 < 30 + univ.party[which_pc].level * 2)
 		how_much = -1;
 	if(what_type == eStatus::ASLEEP && (univ.party[which_pc].traits[eTrait::HIGHLY_ALERT] || univ.party[which_pc].status[eStatus::ASLEEP] < 0))
 		how_much = -1;
-	if (how_much <= 0) {
+	if(how_much <= 0) {
 		sprintf ((char *) c_line, "  %s resisted.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		return;
@@ -745,13 +745,13 @@ void slow_pc(short which_pc,short how_much)////
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		
 		univ.party[which_pc].status[eStatus::HASTE_SLOW] = minmax(-8,8,univ.party[which_pc].status[eStatus::HASTE_SLOW] - how_much);
-		if (how_much < 0)
+		if(how_much < 0)
 			sprintf ((char *) c_line, "  %s hasted.",(char *) univ.party[which_pc].name.c_str());
 		else sprintf ((char *) c_line, "  %s slowed.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 	}
 	put_pc_screen();
-	if (how_much < 0)
+	if(how_much < 0)
 		give_help(35,0);
 }
 
@@ -773,7 +773,7 @@ void acid_pc(short which_pc,short how_much)
 {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
-	if (pc_has_abil_equip(which_pc,eItemAbil::ACID_PROTECTION) < 24) {
+	if(pc_has_abil_equip(which_pc,eItemAbil::ACID_PROTECTION) < 24) {
 		sprintf ((char *) c_line, "  %s resists acid.",(char *) univ.party[which_pc].name.c_str());
 		add_string_to_buf((char *) c_line);
 		return;
@@ -795,8 +795,8 @@ void increase_light(short amt)
 	univ.party.light_level += amt;
 	if(univ.party.light_level < 0)
 		univ.party.light_level = 0;
-	if (is_combat()) {
-		for (i = 0; i < 6; i++)
+	if(is_combat()) {
+		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				update_explored(univ.party[i].combat_pos);
 			}
@@ -810,10 +810,10 @@ void increase_light(short amt)
 
 void restore_sp_pc(short pc_num,short amt)
 {
-	if (univ.party[pc_num].cur_sp > univ.party[pc_num].max_sp)
+	if(univ.party[pc_num].cur_sp > univ.party[pc_num].max_sp)
 		return;
 	univ.party[pc_num].cur_sp += amt;
-	if (univ.party[pc_num].cur_sp > univ.party[pc_num].max_sp)
+	if(univ.party[pc_num].cur_sp > univ.party[pc_num].max_sp)
 		univ.party[pc_num].cur_sp = univ.party[pc_num].max_sp;
 }
 
@@ -821,7 +821,7 @@ void restore_sp_party(short amt)
 {
 	short i;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			restore_sp_pc(i,amt);
 }
@@ -830,7 +830,7 @@ void award_party_xp(short amt)
 {
 	short i;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			award_xp(i,amt);
 }
@@ -842,17 +842,17 @@ void award_xp(short pc_num,short amt)
 		150,120,100,90,80,70,60,50,50,50,
 		45,40,40,40,40,35,30,25,23,20,
 		15,15,15,15,15,15,15,15,15,15};
-	if (univ.party[pc_num].level > 49) {
+	if(univ.party[pc_num].level > 49) {
 		univ.party[pc_num].level = 50;
 		return;
 	}
-	if (amt > 200) { // debug
+	if(amt > 200) { // debug
 		beep();
 		ASB("Oops! Too much xp!");
 		ASB("Report this!");
 		return;
 	}
-	if (amt < 0) { // debug
+	if(amt < 0) { // debug
 		beep();
 		ASB("Oops! Negative xp!");
 		ASB("Report this!");
@@ -861,15 +861,15 @@ void award_xp(short pc_num,short amt)
 	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return;
 	
-	if (univ.party[pc_num].level >= 40)
+	if(univ.party[pc_num].level >= 40)
 		adjust = 15;
 	else adjust = xp_percent[univ.party[pc_num].level / 2];
 	
-	if ((amt > 0) && (univ.party[pc_num].level > 7)) {
-		if (get_ran(1,1,100) < xp_percent[univ.party[pc_num].level / 2])
+	if((amt > 0) && (univ.party[pc_num].level > 7)) {
+		if(get_ran(1,1,100) < xp_percent[univ.party[pc_num].level / 2])
 			amt--;
 	}
-	if (amt <= 0)
+	if(amt <= 0)
 		return;
 	
 	
@@ -880,19 +880,19 @@ void award_xp(short pc_num,short amt)
 	
 	
 	
-//	if (univ.party[pc_num].experience < 0) {
+//	if(univ.party[pc_num].experience < 0) {
 //		SysBeep(50); SysBeep(50);
 //		ASB("Oops! Xp became negative somehow!");
 //		ASB("Report this!");
 //		univ.party[pc_num].experience = univ.party[pc_num].level * (univ.party[pc_num].get_tnl()) - 1;
 //		return;
 //		}
-	if (univ.party[pc_num].experience > 15000) {
+	if(univ.party[pc_num].experience > 15000) {
 		univ.party[pc_num].experience = 15000;
 		return;
 	}
 	
-	while (univ.party[pc_num].experience >= (univ.party[pc_num].level * (univ.party[pc_num].get_tnl()))) {
+	while(univ.party[pc_num].experience >= (univ.party[pc_num].level * (univ.party[pc_num].get_tnl()))) {
 		play_sound(7);
 		univ.party[pc_num].level++;
 		sprintf ((char *) c_line, "  %s is level %d!  ",(char *) univ.party[pc_num].name.c_str(),univ.party[pc_num].level);
@@ -900,13 +900,13 @@ void award_xp(short pc_num,short amt)
 		univ.party[pc_num].skill_pts += (univ.party[pc_num].level < 20) ? 5 : 4;
 		add_hp = (univ.party[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[univ.party[pc_num].skills[eSkill::STRENGTH]]
 			: max (skill_bonus[univ.party[pc_num].skills[eSkill::STRENGTH]],0);
-		if (add_hp < 0)
+		if(add_hp < 0)
 			add_hp = 0;
 		univ.party[pc_num].max_health += add_hp;
-		if (univ.party[pc_num].max_health > 250)
+		if(univ.party[pc_num].max_health > 250)
 			univ.party[pc_num].max_health = 250;
 		univ.party[pc_num].cur_health += add_hp;
-		if (univ.party[pc_num].cur_health > 250)
+		if(univ.party[pc_num].cur_health > 250)
 			univ.party[pc_num].cur_health = 250;
 		put_pc_screen();
 		
@@ -976,12 +976,12 @@ bool poison_weapon( short pc_num, short how_much,short safe)
 		40,72,81,85,88,89,90,
 		91,92,93,94,94,95,95,96,97,98,100,100,100,100};
 	
-	for (i = 0; i < 24; i++)
-		if ((univ.party[pc_num].equip[i]) && (is_weapon(pc_num,i))) {
+	for(i = 0; i < 24; i++)
+		if((univ.party[pc_num].equip[i]) && (is_weapon(pc_num,i))) {
 			weap = i;
 			i = 30;
 		}
-	if (weap == 24) {
+	if(weap == 24) {
 		add_string_to_buf("  No weapon equipped.       ");
 		return false;
 	}
@@ -990,18 +990,18 @@ bool poison_weapon( short pc_num, short how_much,short safe)
 		add_string_to_buf("  You poison your weapon.       ");
 		r1 = get_ran(1,1,100);
 		// Nimble?
-		if (univ.party[pc_num].traits[eTrait::NIMBLE])
+		if(univ.party[pc_num].traits[eTrait::NIMBLE])
 			r1 -= 6;
-		if ((r1 > p_chance[univ.party[pc_num].skills[eSkill::POISON]]) && (safe == 0)) {
+		if((r1 > p_chance[univ.party[pc_num].skills[eSkill::POISON]]) && (safe == 0)) {
 			add_string_to_buf("  Poison put on badly.         ");
 			p_level = p_level / 2;
 			r1 = get_ran(1,1,100);
-			if (r1 > p_chance[univ.party[pc_num].skills[eSkill::POISON]] + 10) {
+			if(r1 > p_chance[univ.party[pc_num].skills[eSkill::POISON]] + 10) {
 				add_string_to_buf("  You nick yourself.          ");
 				univ.party[pc_num].status[eStatus::POISON] += p_level;
 			}
 		}
-		if (safe != 1)
+		if(safe != 1)
 			play_sound(55);
 		univ.party[pc_num].weap_poisoned = weap;
 		max (univ.party[pc_num].status[eStatus::POISON], p_level);
@@ -1013,7 +1013,7 @@ bool poison_weapon( short pc_num, short how_much,short safe)
 bool is_weapon(short pc_num,short item)
 {
 	// TODO: Uh, why aren't bows, crossbows, thrown missiles, no-ammo missiles included? (There's probably a reason though.)
-	if ((univ.party[pc_num].items[item].variety  == eItemType::ONE_HANDED) ||
+	if((univ.party[pc_num].items[item].variety  == eItemType::ONE_HANDED) ||
 		(univ.party[pc_num].items[item].variety  == eItemType::TWO_HANDED) ||
 		(univ.party[pc_num].items[item].variety  == eItemType::ARROW) ||
 		(univ.party[pc_num].items[item].variety  == eItemType::BOLTS))
@@ -1027,15 +1027,15 @@ void cast_spell(eSkill type)
 {
 	eSpell spell;
 	
-	if ((is_town()) && (univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y))) {
+	if((is_town()) && (univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y))) {
 		add_string_to_buf("  Not in antimagic field.");
 		return;
 	}
 	
-	if (!spell_forced)
+	if(!spell_forced)
 		spell = pick_spell(6, type);
 	else {
-		if (!repeat_cast_ok(type))
+		if(!repeat_cast_ok(type))
 			return;
 		spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	}
@@ -1056,13 +1056,13 @@ bool repeat_cast_ok(eSkill type)
 	eSpellSelect store_select;
 	eSpell what_spell;
 	
-	if (overall_mode == MODE_COMBAT)
+	if(overall_mode == MODE_COMBAT)
 		who_would_cast = current_pc;
-	else if (overall_mode < MODE_TALK_TOWN)
+	else if(overall_mode < MODE_TALK_TOWN)
 		who_would_cast = pc_casting;
 	else return false;
 	
-	if (is_combat())
+	if(is_combat())
 		what_spell = univ.party[who_would_cast].last_cast[type];
 	else what_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	
@@ -1097,30 +1097,30 @@ void give_party_spell(short which) ////
 	bool sound_done = false;
 	char str[60];
 	
-	if ((which < 0) || (which > 161) || ((which > 61) && (which < 100))) {
+	if((which < 0) || (which > 161) || ((which > 61) && (which < 100))) {
 		giveError("The scenario has tried to give you a non-existant spell.");
 		return;}
 	
-	if (which < 100)
-		for (i = 0; i < 6; i++)
-			if (!univ.party[i].mage_spells[which]) {
+	if(which < 100)
+		for(i = 0; i < 6; i++)
+			if(!univ.party[i].mage_spells[which]) {
 				univ.party[i].mage_spells[which] = true;
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
 				give_help(41,0);
-				if (!sound_done) {
+				if(!sound_done) {
 					sound_done = true;
 					play_sound(62);
 				};
 			}
-	if (which >= 100)
-		for (i = 0; i < 6; i++)
-			if (!univ.party[i].priest_spells[which - 100]) {
+	if(which >= 100)
+		for(i = 0; i < 6; i++)
+			if(!univ.party[i].priest_spells[which - 100]) {
 				univ.party[i].priest_spells[which - 100] = true;
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
 				give_help(41,0);
-				if (!sound_done) {
+				if(!sound_done) {
 					sound_done = true;
 					play_sound(62);
 				}
@@ -1139,7 +1139,7 @@ void do_mage_spell(short pc_num,eSpell spell_num)
 	
 	adj = stat_adj(who_cast,eSkill::INTELLIGENCE);
 	
-	switch (spell_num) {
+	switch(spell_num) {
 		case eSpell::LIGHT:
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			increase_light(50);
@@ -1148,64 +1148,64 @@ void do_mage_spell(short pc_num,eSpell spell_num)
 		case eSpell::IDENTIFY:
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			ASB("All of your items are identified.");
-			for (i = 0; i < 6; i++)
-				for (j = 0; j < 24; j++)
+			for(i = 0; i < 6; i++)
+				for(j = 0; j < 24; j++)
 					univ.party[i].items[j].ident = true;
 			break;
 			
 		case eSpell::TRUE_SIGHT:
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			for (where.x = 0; where.x < 64; where.x++)
-				for (where.y = 0; where.y < 64; where.y++)
-					if (dist(where,univ.town.p_loc) <= 2)
+			for(where.x = 0; where.x < 64; where.x++)
+				for(where.y = 0; where.y < 64; where.y++)
+					if(dist(where,univ.town.p_loc) <= 2)
 						make_explored(where.x,where.y);
 			clear_map();
 			break;
 			
 		case eSpell::SUMMON_BEAST:
 			r1 = get_summon_monster(1);
-			if (r1 < 0) break;
+			if(r1 < 0) break;
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(3,1,4) + adj;
-			if (!summon_monster(r1,where,store,2))
+			if(!summon_monster(r1,where,store,2))
 				add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_WEAK:
 			store = univ.party[who_cast].level / 5 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,2);
 			j = minmax(1,7,store);
 			r1 = get_summon_monster(1); ////
-			if (r1 < 0) break;
+			if(r1 < 0) break;
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(4,1,4) + adj;
-			for (i = 0; i < j; i++)
-				if (!summon_monster(r1,where,store,2))
+			for(i = 0; i < j; i++)
+				if(!summon_monster(r1,where,store,2))
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON:
 			store = univ.party[who_cast].level / 7 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,1);
 			j = minmax(1,6,store);
 			r1 = get_summon_monster(2); ////
-			if (r1 < 0) break;
+			if(r1 < 0) break;
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(5,1,4) + adj;
-			for (i = 0; i < j; i++)
-				if (!summon_monster(r1,where,store,2))
+			for(i = 0; i < j; i++)
+				if(!summon_monster(r1,where,store,2))
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_MAJOR:
 			store = univ.party[who_cast].level / 10 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,1);
 			j = minmax(1,5,store);
 			r1 = get_summon_monster(3); ////
-			if (r1 < 0) break;
+			if(r1 < 0) break;
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(7,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
-			for (i = 0; i < j; i++)
-				if (!summon_monster(r1,where,store,2))
+			for(i = 0; i < j; i++)
+				if(!summon_monster(r1,where,store,2))
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::DEMON:
 			store = get_ran(5,1,4) + 2 * stat_adj(who_cast,eSkill::INTELLIGENCE);
-			if (!summon_monster(85,where,store,2))
+			if(!summon_monster(85,where,store,2))
 				add_string_to_buf("  Summon failed.");
 			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
@@ -1223,17 +1223,17 @@ void do_mage_spell(short pc_num,eSpell spell_num)
 			
 		case eSpell::MAGIC_MAP:
 			item = pc_has_abil(pc_num,eItemAbil::SAPPHIRE);
-			if (item == 24)
+			if(item == 24)
 				add_string_to_buf("  You need a sapphire.        ");
-			else if (univ.town->defy_scrying || univ.town->defy_mapping)
+			else if(univ.town->defy_scrying || univ.town->defy_mapping)
 				add_string_to_buf("  The spell fails.                ");
 			else {
 				remove_charge(pc_num,item);
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 				add_string_to_buf("  As the sapphire dissolves,       ");
 				add_string_to_buf("  you have a vision.               ");
-				for (i = 0; i < 64; i++)
-					for (j = 0; j < 64; j++)
+				for(i = 0; i < 64; i++)
+					for(j = 0; j < 64; j++)
 						make_explored(i,j);
 				clear_map();
 			}
@@ -1260,13 +1260,13 @@ void do_mage_spell(short pc_num,eSpell spell_num)
 			break;
 			
 		case eSpell::FLIGHT:
-			if (PSD[SDF_PARTY_FLIGHT] > 0) {
+			if(PSD[SDF_PARTY_FLIGHT] > 0) {
 				add_string_to_buf("  Not while already flying.          ");
 				return;
 			}
-			if (univ.party.in_boat >= 0)
+			if(univ.party.in_boat >= 0)
 				add_string_to_buf("  Leave boat first.             ");
-			else if (univ.party.in_horse >= 0) ////
+			else if(univ.party.in_horse >= 0) ////
 				add_string_to_buf("  Leave horse first.             ");
 			else {
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
@@ -1277,11 +1277,11 @@ void do_mage_spell(short pc_num,eSpell spell_num)
 			
 		case eSpell::RESIST_MAGIC: case eSpell::PROTECTION:
 			target = store_spell_target;
-			if (target < 6)
+			if(target < 6)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			if(spell_num == eSpell::PROTECTION && target < 6) {
 				univ.party[target].status[eStatus::INVULNERABLE] += 2 + stat_adj(pc_num,eSkill::INTELLIGENCE) + get_ran(2,1,2);
-				for (i = 0; i < 6; i++)
+				for(i = 0; i < 6; i++)
 					if(univ.party[i].main_status == eMainStatus::ALIVE) {
 						univ.party[i].status[eStatus::MAGIC_RESISTANCE] += 4 + univ.party[pc_num].level / 3 + stat_adj(pc_num,eSkill::INTELLIGENCE);
 					}
@@ -1312,16 +1312,16 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 	current_spell_range = 8;
 	store_priest = spell_num;
 	
-	switch (spell_num) {
+	switch(spell_num) {
 		case eSpell::LOCATION:
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			
-			if (is_town()) {
+			if(is_town()) {
 				loc = (overall_mode == MODE_OUTDOORS) ? univ.party.p_loc : univ.town.p_loc;
 				sprintf ((char *) c_line, "  You're at: x %d  y %d.",
 						 (short) loc.x, (short) loc.y);
 			}
-			if (is_out()) {
+			if(is_out()) {
 				loc = (overall_mode == MODE_OUTDOORS) ? univ.party.p_loc : univ.town.p_loc;
 				x = loc.x; y = loc.y;
 				x += 48 * univ.party.outdoor_corner.x; y += 48 * univ.party.outdoor_corner.y;
@@ -1335,7 +1335,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = univ.party[pc_num].level / 3 + 2 * stat_adj(who_cast,eSkill::INTELLIGENCE) + get_ran(2,1,4);
 			r1 = max(0,store);
-			if (spell_num == eSpell::MANNA_MINOR)
+			if(spell_num == eSpell::MANNA_MINOR)
 				r1 = r1 / 3;
 			sprintf ((char *) c_line, "  You gain %d food.   ",r1);
 			add_string_to_buf((char *) c_line);
@@ -1356,34 +1356,34 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 			
 		case eSpell::SUMMON_SPIRIT:
 			store = stat_adj(who_cast,eSkill::INTELLIGENCE);
-			if (!summon_monster(125,where,get_ran(2,1,4) + store,2))
+			if(!summon_monster(125,where,get_ran(2,1,4) + store,2))
 				add_string_to_buf("  Summon failed.");
 			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 		case eSpell::STICKS_TO_SNAKES:
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			r1 = univ.party[who_cast].level / 6 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,1);
-			for (i = 0; i < r1; i++) {
+			for(i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
 				store = get_ran(2,1,5) + stat_adj(who_cast,eSkill::INTELLIGENCE);
-				if (!summon_monster((r2 == 1) ? 100 : 99,where,store,2 ))
+				if(!summon_monster((r2 == 1) ? 100 : 99,where,store,2 ))
 					add_string_to_buf("  Summon failed.");
 			}
 			break;
 		case eSpell::SUMMON_HOST:
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(2,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
-			if (!summon_monster(126,where,store,2))
+			if(!summon_monster(126,where,store,2))
 				add_string_to_buf("  Summon failed.");
-			for (i = 0; i < 4; i++)	{
+			for(i = 0; i < 4; i++)	{
 				store = get_ran(2,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
-				if (!summon_monster(125,where,store,2))
+				if(!summon_monster(125,where,store,2))
 					add_string_to_buf("  Summon failed.");
 			}
 			break;
 		case eSpell::SUMMON_GUARDIAN:
 			store = get_ran(6,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
-			if (!summon_monster(122,where,store,2))
+			if(!summon_monster(122,where,store,2))
 				add_string_to_buf("  Summon failed.");
 			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
@@ -1415,22 +1415,22 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 		case eSpell::SHATTER:
 			add_string_to_buf("  You send out a burst of energy. ");
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			for (loc.x = where.x - 1;loc.x < where.x + 2; loc.x++)
-				for (loc.y = where.y - 1;loc.y < where.y + 2; loc.y++)
+			for(loc.x = where.x - 1;loc.x < where.x + 2; loc.x++)
+				for(loc.y = where.y - 1;loc.y < where.y + 2; loc.y++)
 					crumble_wall(loc);
 			update_explored(univ.town.p_loc);
 			break;
 			
 		case eSpell::WORD_RECALL:
-			if (overall_mode > MODE_OUTDOORS) {
+			if(overall_mode > MODE_OUTDOORS) {
 				add_string_to_buf("  Can only cast outdoors. ");
 				return;
 			}
-			if (univ.party.in_boat >= 0) {
+			if(univ.party.in_boat >= 0) {
 				add_string_to_buf("  Not while in boat. ");
 				return;
 			}
-			if (univ.party.in_horse >= 0) {////
+			if(univ.party.in_horse >= 0) {////
 				add_string_to_buf("  Not while on horseback. ");
 				return;
 			}
@@ -1452,7 +1452,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 		case eSpell::RESTORE_MIND: case eSpell::CLEANSE: case eSpell::AWAKEN: case eSpell::PARALYSIS_CURE:
 //			target = select_pc(11,0);
 			target = store_spell_target;
-			if (target < 6) {
+			if(target < 6) {
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 				switch(spell_num) {
 					case eSpell::HEAL_MINOR: case eSpell::HEAL: case eSpell::HEAL_MAJOR:
@@ -1523,7 +1523,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 		case eSpell::CURSE_REMOVE: case eSpell::SANCTUARY: case eSpell::SYMBIOSIS: case eSpell::MARTYRS_SHIELD:
 			target = store_spell_target;
 			
-			if (target < 6) {
+			if(target < 6) {
 				if(spell_num == eSpell::SYMBIOSIS && target == pc_num) {
 					add_string_to_buf("  Can't cast on self.");
 					return;
@@ -1544,12 +1544,12 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 					store_victim_health = univ.party[target].cur_health;
 					store_caster_health = univ.party[pc_num].cur_health;
 					targ_damaged = univ.party[target].max_health - univ.party[target].cur_health;
-					while ((targ_damaged > 0) && (univ.party[pc_num].cur_health > 0)) {
+					while((targ_damaged > 0) && (univ.party[pc_num].cur_health > 0)) {
 						univ.party[target].cur_health++;
 						r1 = get_ran(1,1,100) + univ.party[pc_num].level / 2 + 3 * adj;
-						if (r1 < 100)
+						if(r1 < 100)
 							univ.party[pc_num].cur_health--;
-						if (r1 < 50)
+						if(r1 < 50)
 							move_to_zero(univ.party[pc_num].cur_health);
 						targ_damaged = univ.party[target].max_health - univ.party[target].cur_health;
 					}
@@ -1574,10 +1574,10 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 					}
 					else sprintf ((char *) c_line,"  Wasn't stoned.              ");
 				} else if(spell_num == eSpell::CURSE_REMOVE) {
-					for (i = 0; i < 24; i++)
-						if (univ.party[target].items[i].cursed){
+					for(i = 0; i < 24; i++)
+						if(univ.party[target].items[i].cursed){
 							r1 = get_ran(1,0,200) - 10 * stat_adj(pc_num,eSkill::INTELLIGENCE);
-							if (r1 < 60) {
+							if(r1 < 60) {
 								univ.party[target].items[i].cursed = univ.party[target].items[i].unsellable = false;
 							}
 						}
@@ -1586,7 +1586,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 				} else {
 					
 					if(!PSD[SDF_RESURRECT_NO_BALM]) {
-						if ((item = pc_has_abil(pc_num,eItemAbil::RESSURECTION_BALM)) == 24) {
+						if((item = pc_has_abil(pc_num,eItemAbil::RESSURECTION_BALM)) == 24) {
 							add_string_to_buf("  Need resurrection balm.        ");
 							break;
 						}
@@ -1594,7 +1594,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 					}
 					if(spell_num == eSpell::RAISE_DEAD) {
 						if(univ.party[target].main_status == eMainStatus::DEAD)
-							if (get_ran(1,1,univ.party[pc_num].level / 2) == 1) {
+							if(get_ran(1,1,univ.party[pc_num].level / 2) == 1) {
 								sprintf ((char *) c_line, "  %s now dust.                          ",
 										 (char *) univ.party[target].name.c_str());
 								play_sound(5);
@@ -1602,7 +1602,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 							}
 							else {
 								univ.party[target].main_status = eMainStatus::ALIVE;
-								for (i = 0; i < 3; i++)
+								for(i = 0; i < 3; i++)
 									if(get_ran(1,0,2) < 2) {
 										eSkill skill = eSkill(i);
 										univ.party[target].skills[skill] -= (univ.party[target].skills[skill] > 1) ? 1 : 0;
@@ -1614,10 +1614,10 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 							}
 							else sprintf ((char *) c_line,"  Didn't work.              ");
 						
-					} else if (spell_num == eSpell::RESURRECT) {
-						if (univ.party[target].main_status != eMainStatus::ALIVE) {
+					} else if(spell_num == eSpell::RESURRECT) {
+						if(univ.party[target].main_status != eMainStatus::ALIVE) {
 							univ.party[target].main_status = eMainStatus::ALIVE;
-							for (i = 0; i < 3; i++)
+							for(i = 0; i < 3; i++)
 								if(get_ran(1,0,2) < 1) {
 									eSkill skill = eSkill(i);
 									univ.party[target].skills[skill] -= (univ.party[target].skills[skill] > 1) ? 1 : 0;
@@ -1664,13 +1664,13 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 			
 		case eSpell::SANCTUARY_MASS: case eSpell::CLEANSE_MAJOR: case eSpell::HYPERACTIVITY:
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			switch (spell_num) {
+			switch(spell_num) {
 				case eSpell::SANCTUARY_MASS: add_string_to_buf("  Party hidden.");break;
 				case eSpell::CLEANSE_MAJOR: add_string_to_buf("  Party cleansed.");break;
 				case eSpell::HYPERACTIVITY: add_string_to_buf("  Party is now really, REALLY awake.");break;
 			}
 			
-			for (i = 0; i < 6; i++)
+			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if(spell_num == eSpell::SANCTUARY_MASS) {
 						store = get_ran(0,1,3) + univ.party[pc_num].level / 6 + stat_adj(pc_num,eSkill::INTELLIGENCE);
@@ -1698,7 +1698,7 @@ void cast_town_spell(location where) ////
 	location loc;
 	ter_num_t ter;
 	
-	if ((where.x <= univ.town->in_town_rect.left) ||
+	if((where.x <= univ.town->in_town_rect.left) ||
 		(where.x >= univ.town->in_town_rect.right) ||
 		(where.y <= univ.town->in_town_rect.top) ||
 		(where.y >= univ.town->in_town_rect.bottom)) {
@@ -1717,12 +1717,12 @@ void cast_town_spell(location where) ////
 	if(adjust <= 4 && !cast_spell_on_space(where, town_spell))
 		return; // The special node intercepted and cancelled regular spell behaviour.
 	
-	if (adjust > 4)
+	if(adjust > 4)
 		add_string_to_buf("  Can't see target.       ");
-	else switch (town_spell) {
+	else switch(town_spell) {
 		case eSpell::SCRY_MONSTER: case eSpell::CAPTURE_SOUL:
 			targ = monst_there(where);
-			if (targ < univ.town->max_monst()) {
+			if(targ < univ.town->max_monst()) {
 				if(town_spell == eSpell::SCRY_MONSTER) {
 					univ.party.m_noted[univ.town.monst[targ].number] = true;
 					adjust_monst_menu();
@@ -1749,7 +1749,7 @@ void cast_town_spell(location where) ////
 				break;
 			}
 			univ.town.set_fire_barr(where.x,where.y,true);
-			if (univ.town.is_fire_barr(where.x,where.y))
+			if(univ.town.is_fire_barr(where.x,where.y))
 				add_string_to_buf("  You create the barrier.              ");
 			else add_string_to_buf("  Failed.");
 			break;
@@ -1759,21 +1759,21 @@ void cast_town_spell(location where) ////
 				break;
 			}
 			univ.town.set_force_barr(where.x,where.y,true);
-			if (univ.town.is_force_barr(where.x,where.y))
+			if(univ.town.is_force_barr(where.x,where.y))
 				add_string_to_buf("  You create the barrier.              ");
 			else add_string_to_buf("  Failed.");
 			break;
 		case eSpell::QUICKFIRE:
 			univ.town.set_quickfire(where.x,where.y,true);
-			if (univ.town.is_quickfire(where.x,where.y))
+			if(univ.town.is_quickfire(where.x,where.y))
 				add_string_to_buf("  You create quickfire.              ");
 			else add_string_to_buf("  Failed.");
 			break;
 			
 		case eSpell::ANTIMAGIC:
 			add_string_to_buf("  You create an antimagic cloud.              ");
-			for (loc.x = 0; loc.x < univ.town->max_dim(); loc.x++)
-				for (loc.y = 0; loc.y < univ.town->max_dim(); loc.y++)
+			for(loc.x = 0; loc.x < univ.town->max_dim(); loc.x++)
+				for(loc.y = 0; loc.y < univ.town->max_dim(); loc.y++)
 					if(dist(where,loc) <= 2 && can_see(where,loc,sight_obscurity) < 5 &&
 					   ((abs(loc.x - where.x) < 2) || (abs(loc.y - where.y) < 2)))
 						univ.town.set_antimagic(loc.x,loc.y,true);
@@ -1786,13 +1786,13 @@ void cast_town_spell(location where) ////
 		case eSpell::UNLOCK:
 			// TODO: Is the unlock spell supposed to have a max range?
 			if(scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
-				if (scenario.ter_types[ter].flag2.u == 10)
+				if(scenario.ter_types[ter].flag2.u == 10)
 					r1 = 10000;
 				else{
 					r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,eSkill::INTELLIGENCE) + 5 * univ.town.difficulty;
 					r1 += scenario.ter_types[ter].flag2.u * 7;
 				}
-				if (r1 < (135 - combat_percent[min(19,univ.party[who_cast].level)])) {
+				if(r1 < (135 - combat_percent[min(19,univ.party[who_cast].level)])) {
 					add_string_to_buf("  Door unlocked.                 ");
 					play_sound(9);
 					univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1.u;
@@ -1806,11 +1806,11 @@ void cast_town_spell(location where) ////
 			break;
 			
 		case eSpell::DISPEL_BARRIER:
-			if ((univ.town.is_fire_barr(where.x,where.y)) || (univ.town.is_force_barr(where.x,where.y))) {
+			if((univ.town.is_fire_barr(where.x,where.y)) || (univ.town.is_force_barr(where.x,where.y))) {
 				r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,eSkill::INTELLIGENCE) + 5 * (univ.town.difficulty / 10);
-				if (univ.town.is_fire_barr(where.x,where.y))
+				if(univ.town.is_fire_barr(where.x,where.y))
 					r1 -= 8;
-				if (r1 < (120 - combat_percent[min(19,univ.party[who_cast].level)])) {
+				if(r1 < (120 - combat_percent[min(19,univ.party[who_cast].level)])) {
 					add_string_to_buf("  Barrier broken.                 ");
 					univ.town.set_fire_barr(where.x,where.y,false);
 					univ.town.set_force_barr(where.x,where.y,false);
@@ -1839,8 +1839,8 @@ bool cast_spell_on_space(location where, eSpell spell)
 {
 	short i,s1 = 0,s2 = 0,s3 = 0;
 	
-	for (i = 0; i < 50; i++)
-		if (where == univ.town->special_locs[i]) {
+	for(i = 0; i < 50; i++)
+		if(where == univ.town->special_locs[i]) {
 			if(univ.town->specials[univ.town->spec_id[i]].type == eSpecType::IF_CONTEXT)
 				run_special(eSpecCtx::TARGET,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
 			if(s3) redraw_terrain();
@@ -1855,7 +1855,7 @@ void crumble_wall(location where) // TODO: Add something like this to the spread
 {
 	ter_num_t ter;
 	
-	if (loc_off_act_area(where))
+	if(loc_off_act_area(where))
 		return;
 	ter = univ.town->terrain(where.x,where.y);
 	if(scenario.ter_types[ter].special == eTerSpec::CRUMBLING && scenario.ter_types[ter].flag3.u < 2) {
@@ -1871,9 +1871,9 @@ void do_mindduel(short pc_num,cCreature *monst)
 	short i = 0,adjust,r1,r2,balance = 0;
 	
 	adjust = (univ.party[pc_num].level + univ.party[pc_num].skills[eSkill::INTELLIGENCE]) / 2 - monst->level * 2;
-	if ((i = get_prot_level(pc_num,eItemAbil::WILL)) > 0)
+	if((i = get_prot_level(pc_num,eItemAbil::WILL)) > 0)
 		adjust += i * 5;
-	if (monst->attitude % 2 != 1)
+	if(monst->attitude % 2 != 1)
 		make_town_hostile();
 	monst->attitude = 1;
 	
@@ -1884,16 +1884,16 @@ void do_mindduel(short pc_num,cCreature *monst)
 		r1 += 5 * (monst->status[eStatus::DUMB] - univ.party[pc_num].status[eStatus::DUMB]);
 		r1 += 5 * balance;
 		r2 = get_ran(1,1,6);
-		if (r1 < 30) {
+		if(r1 < 30) {
 			sprintf((char *)c_line, "  %s is drained %d.",univ.party[pc_num].name.c_str(),r2);
 			add_string_to_buf((char *) c_line);
 			monst->mp += r2;
 			balance++;
-			if (univ.party[pc_num].cur_sp == 0) {
+			if(univ.party[pc_num].cur_sp == 0) {
 				univ.party[pc_num].status[eStatus::DUMB] += 2;
 				sprintf((char *) c_line,"  %s is dumbfounded.",univ.party[pc_num].name.c_str());
 				add_string_to_buf((char *) c_line);
-				if (univ.party[pc_num].status[eStatus::DUMB] > 7) {
+				if(univ.party[pc_num].status[eStatus::DUMB] > 7) {
 					sprintf((char *) c_line,"  %s is killed!",univ.party[pc_num].name.c_str());
 					add_string_to_buf((char *) c_line);
 					kill_pc(pc_num,eMainStatus::DEAD);
@@ -1904,15 +1904,15 @@ void do_mindduel(short pc_num,cCreature *monst)
 				univ.party[pc_num].cur_sp = max(0,univ.party[pc_num].cur_sp - r2);
 			}
 		}
-		if (r1 > 70) {
+		if(r1 > 70) {
 			sprintf((char *)c_line, "  %s drains %d.",univ.party[pc_num].name.c_str(),r2);
 			add_string_to_buf((char *) c_line);
 			univ.party[pc_num].cur_sp += r2;
 			balance--;
-			if (monst->mp == 0) {
+			if(monst->mp == 0) {
 				monst->status[eStatus::DUMB] += 2;
 				monst_spell_note(monst->number,22);
-				if (monst->status[eStatus::DUMB] > 7) {
+				if(monst->status[eStatus::DUMB] > 7) {
 					kill_monst(monst,pc_num);
 				}
 				
@@ -1933,32 +1933,32 @@ void dispel_fields(short i,short j,short mode)
 {
 	short r1;
 	
-	if (mode == 2) {
+	if(mode == 2) {
 		univ.town.set_fire_barr(i,j,false);
 		univ.town.set_force_barr(i,j,false);
 		univ.town.set_barrel(i,j,false);
 		univ.town.set_crate(i,j,false);
 		univ.town.set_web(i,j,false);
 	}
-	if (mode >= 1)
+	if(mode >= 1)
 		mode = -10;
 	univ.town.set_fire_wall(i,j,false);
 	univ.town.set_force_wall(i,j,false);
 	univ.town.set_scloud(i,j,false);
 	r1 = get_ran(1,1,6) + mode;
-	if (r1 <= 1)
+	if(r1 <= 1)
 		univ.town.set_web(i,j,false);
 	r1 = get_ran(1,1,6) + mode;
-	if (r1 < 6)
+	if(r1 < 6)
 		univ.town.set_ice_wall(i,j,false);
 	r1 = get_ran(1,1,6) + mode;
-	if (r1 < 5)
+	if(r1 < 5)
 		univ.town.set_sleep_cloud(i,j,false);
 	r1 = get_ran(1,1,8) + mode;
-	if (r1 <= 1)
+	if(r1 <= 1)
 		univ.town.set_quickfire(i,j,false);
 	r1 = get_ran(1,1,7) + mode;
-	if (r1 < 5)
+	if(r1 < 5)
 		univ.town.set_blade_wall(i,j,false);
 	r1 = get_ran(1,1,12) + mode;
 	if(r1 < 3)
@@ -2000,11 +2000,11 @@ bool pc_can_cast_spell(short pc_num,eSpell spell_num)
 		return false; // From Windows version. It does kinda make sense, though this function shouldn't even be called in these modes.
 	if(!isMage(spell_num) && !isPriest(spell_num))
 		return false;
-	if (univ.party[pc_num].skills[type] < level)
+	if(univ.party[pc_num].skills[type] < level)
 		return false;
 	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return false;
-	if (univ.party[pc_num].cur_sp < (*spell_num).cost)
+	if(univ.party[pc_num].cur_sp < (*spell_num).cost)
 		return false;
 	// TODO: Maybe get rid of the casts here?
 	if(type == eSkill::MAGE_SPELLS && !univ.party[pc_num].mage_spells[int(spell_num)])
@@ -2036,7 +2036,7 @@ static void draw_caster_buttons(cDialog& me, const eSkill store_situation) {
 	for(i = 0; i < 6; i++) {
 		std::string id = "caster" + boost::lexical_cast<std::string>(i + 1);
 		if(!can_choose_caster) {
-			if (i == pc_casting) {
+			if(i == pc_casting) {
 				me[id].show();
 			}
 			else {
@@ -2069,7 +2069,7 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation, const sho
 		for(int i = 0; i < 6; i++) {
 			std::string id = "target" + boost::lexical_cast<std::string>(i + 1);
 			// TODO: Make this thing an enum
-			switch ((*cSpell::fromNum(store_situation,store_spell)).need_select) {
+			switch((*cSpell::fromNum(store_situation,store_spell)).need_select) {
 				case SELECT_NO:
 					me[id].hide();
 					break;
@@ -2139,11 +2139,11 @@ static void draw_spell_pc_info(cDialog& me)
 {
 	short i;
 	
-	for (i = 0; i < 6; i++) {
+	for(i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["pc" + n].setText(univ.party[i].name);
-			//if (pc_casting == i)
+			//if(pc_casting == i)
 			//	cd_text_frame(1098,24 + store_spell_target,11);
 			//else cd_text_frame(1098,24 + store_spell_target,1);
 			
@@ -2165,7 +2165,7 @@ static void put_pc_caster_buttons(cDialog& me)
 	for(i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(me["caster" + n].isVisible()) {
-			if (i == pc_casting)
+			if(i == pc_casting)
 				me["pc" + n].setColour(sf::Color::Red);
 			else me["pc" + n].setColour(me.getDefTextClr());
 		}
@@ -2174,12 +2174,12 @@ static void put_pc_caster_buttons(cDialog& me)
 
 static void put_pc_target_buttons(cDialog& me, short& store_last_target_darkened) {
 	
-	if (store_spell_target < 6) {
+	if(store_spell_target < 6) {
 		std::string n = boost::lexical_cast<std::string>(store_spell_target + 1);
 		me["hp" + n].setColour(sf::Color::Red);
 		me["sp" + n].setColour(sf::Color::Red);
 	}
-	if ((store_last_target_darkened < 6) && (store_last_target_darkened != store_spell_target)) {
+	if((store_last_target_darkened < 6) && (store_last_target_darkened != store_spell_target)) {
 		std::string n = boost::lexical_cast<std::string>(store_last_target_darkened + 1);
 		me["hp" + n].setColour(me.getDefTextClr());
 		me["sp" + n].setColour(me.getDefTextClr());
@@ -2191,12 +2191,12 @@ static void put_pc_target_buttons(cDialog& me, short& store_last_target_darkened
 static void put_spell_led_buttons(cDialog& me, const eSkill store_situation,const short store_spell) {
 	short i,spell_for_this_button;
 	
-	for (i = 0; i < 38; i++) {
+	for(i = 0; i < 38; i++) {
 		spell_for_this_button = (on_which_spell_page == 0) ? i : spell_index[i];
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 		cLed& led = dynamic_cast<cLed&>(me[id]);
 		
-		if (spell_for_this_button < 90) {
+		if(spell_for_this_button < 90) {
 			eSpell spell = cSpell::fromNum(store_situation, spell_for_this_button);
 			if(store_spell == spell_for_this_button) {
 				led.setState(led_green);
@@ -2216,22 +2216,22 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 	short i;
 	char add_text[256];
 	
-	if (on_which_spell_page == 0) {
+	if(on_which_spell_page == 0) {
 		me["col1"].setText("Level 1:");
 		me["col2"].setText("Level 2:");
 		me["col3"].setText("Level 3:");
 		me["col4"].setText("Level 4:");
-		for (i = 0; i < 38; i++) {
+		for(i = 0; i < 38; i++) {
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 			auto& names = (store_situation == eSkill::MAGE_SPELLS ? mage_s_name : priest_s_name);
 			if((*cSpell::fromNum(store_situation,i)).cost < 0) { // Simulacrum, which has a variable cost
 				sprintf((char *) add_text,"%s (?)", names[i]);
 			} else sprintf((char *) add_text,"%s (%d)", names[i], (*cSpell::fromNum(store_situation,i)).cost);
-			//for (j = 0; j < 30; i++)
-			//	if (add_text[j] == '&')
+			//for(j = 0; j < 30; i++)
+			//	if(add_text[j] == '&')
 			//		add_text[j] = (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i);
 			me[id].setText(add_text);
-			if (spell_index[i] == 90)
+			if(spell_index[i] == 90)
 				me[id].show();
 		}
 	}
@@ -2240,10 +2240,10 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col2"].setText("Level 6:");
 		me["col3"].setText("Level 7:");
 		me["col4"].setText("");
-		for (i = 0; i < 38; i++) {
+		for(i = 0; i < 38; i++) {
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 			auto& names = (store_situation == eSkill::MAGE_SPELLS ? mage_s_name : priest_s_name);
-			if (spell_index[i] < 90) {
+			if(spell_index[i] < 90) {
 				sprintf(add_text, "%s (%d)", names[spell_index[i]], (*cSpell::fromNum(store_situation,i)).cost);
 				me[id].setText(add_text);
 			}
@@ -2258,7 +2258,7 @@ static bool pick_spell_caster(cDialog& me, std::string id, const eSkill store_si
 	if(me[id].isVisible()) {
 		pc_casting = item_hit;
 		if(!pc_can_cast_spell(pc_casting,cSpell::fromNum(store_situation,store_spell))) {
-			if (store_situation == eSkill::MAGE_SPELLS)
+			if(store_situation == eSkill::MAGE_SPELLS)
 				store_spell = 70;
 			else store_spell = 70;
 			store_spell_target = 6;
@@ -2322,7 +2322,7 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 		draw_spell_info(me, store_situation, store_spell);
 		put_spell_led_buttons(me, store_situation, store_spell);
 		
-		if (store_spell_target < 6) {
+		if(store_spell_target < 6) {
 			std::string targ = "target" + boost::lexical_cast<std::string>(store_spell_target + 1);
 			if(!me[targ].isVisible()) {
 				store_spell_target = 6;
@@ -2332,7 +2332,7 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 		}
 		// Cute trick now... if a target is needed, caster can always be picked
 		std::string targ = "target" + boost::lexical_cast<std::string>(pc_casting + 1);
-		if ((store_spell_target == 6) && me[targ].isVisible()) {
+		if((store_spell_target == 6) && me[targ].isVisible()) {
 			me["feedback"].setText(choose_target);
 			draw_spell_info(me, store_situation, store_spell);
 			play_sound(45); // formerly force_play_sound
@@ -2347,9 +2347,9 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 }
 
 static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_store_target, const short& store_spell, const eSkill store_situation) {
-	if (spell_toast) {
+	if(spell_toast) {
 		store_spell_target = store_store_target ;
-		if (store_situation == eSkill::MAGE_SPELLS)
+		if(store_situation == eSkill::MAGE_SPELLS)
 			store_last_cast_mage = pc_casting;
 		else store_last_cast_priest = pc_casting;
 		me.toast(false);
@@ -2379,7 +2379,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 		me.setResult<short>(store_spell);
 		return true;
 	}
-	if (store_spell_target == 6) {
+	if(store_spell_target == 6) {
 		add_string_to_buf("Cast: Need to select target.");
 		store_spell_target = store_store_target ;
 		me.toast(false);
@@ -2409,19 +2409,19 @@ eSpell pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 	can_choose_caster = (pc_num < 6) ? false : true;
 	
 	pc_casting = type == eSkill::MAGE_SPELLS ? store_last_cast_mage : store_last_cast_priest;
-	if (pc_casting == 6)
+	if(pc_casting == 6)
 		pc_casting = current_pc;
 	
-	if (pc_num == 6) { // See if can keep same caster
+	if(pc_num == 6) { // See if can keep same caster
 		can_choose_caster = true;
 		if(!pc_can_cast_spell(pc_casting,type)) {
 			int i;
 			for(i = 0; i < 6; i++)
-				if (pc_can_cast_spell(i,type)) {
+				if(pc_can_cast_spell(i,type)) {
 					pc_casting = i;
 					i = 500;
 				}
-			if (i == 6) {
+			if(i == 6) {
 				add_string_to_buf("Cast: Nobody can.");
 				return eSpell::NONE;
 			}
@@ -2432,13 +2432,13 @@ eSpell pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 		pc_casting = pc_num;
 	}
 	
-	if (!can_choose_caster) {
+	if(!can_choose_caster) {
 		if(univ.party[pc_num].skills[type] == 0) {
 			if(type == eSkill::MAGE_SPELLS) add_string_to_buf("Cast: No mage skill.");
 			else add_string_to_buf("Cast: No priest skill.");
 			return eSpell::NONE;
 		}
-		if (univ.party[pc_casting].cur_sp == 0) {
+		if(univ.party[pc_casting].cur_sp == 0) {
 			add_string_to_buf("Cast: No spell points.");
 			return eSpell::NONE;
 		}
@@ -2446,7 +2446,7 @@ eSpell pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 	}
 	
 	// If in combat, make the spell being cast this PCs most recent spell
-	if (is_combat()) {
+	if(is_combat()) {
 		if(type == eSkill::MAGE_SPELLS)
 			store_spell = univ.party[pc_casting].last_cast[eSkill::MAGE_SPELLS];
 		else store_spell = univ.party[pc_casting].last_cast[eSkill::PRIEST_SPELLS];
@@ -2490,7 +2490,7 @@ eSpell pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 	for(int i = 0; i < 38; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 		cKey key;
-		if (i > 25)
+		if(i > 25)
 			key = {false, static_cast<unsigned char>('a' + i - 26), mod_shift};
 		else key = {false, static_cast<unsigned char>('a' + i), mod_none};
 		cLed& led = dynamic_cast<cLed&>(castSpell[id]);
@@ -2508,7 +2508,7 @@ eSpell pick_spell(short pc_num,eSkill type)  // 70 - no spell OW spell num
 	draw_caster_buttons(castSpell, type);
 	put_spell_led_buttons(castSpell, type, former_spell);
 	
-	if (univ.party.help_received[7] == 0) {
+	if(univ.party.help_received[7] == 0) {
 		// TODO: Not sure if this initial draw is needed
 //		cd_initial_draw(1098);
 		give_help(7,8,castSpell);
@@ -2536,17 +2536,17 @@ short stat_adj(short pc_num,eSkill which) {
 	if(which == eSkill::INTELLIGENCE) {
 		if(univ.party[pc_num].traits[eTrait::MAGICALLY_APT])
 			tr++;
-		if (pc_has_abil_equip(pc_num,eItemAbil::INTELLIGENCE) < 24)
+		if(pc_has_abil_equip(pc_num,eItemAbil::INTELLIGENCE) < 24)
 			tr++;
 	}
 	if(which == eSkill::STRENGTH) {
 		if(univ.party[pc_num].traits[eTrait::STRENGTH])
 			tr++;
-		if (pc_has_abil_equip(pc_num,eItemAbil::STRENGTH) < 24)
+		if(pc_has_abil_equip(pc_num,eItemAbil::STRENGTH) < 24)
 			tr++;
 	}
 	if(which == eSkill::DEXTERITY) {
-		if (pc_has_abil_equip(pc_num,eItemAbil::DEXTERITY) < 24)
+		if(pc_has_abil_equip(pc_num,eItemAbil::DEXTERITY) < 24)
 			tr++;
 	}
 	return tr;
@@ -2610,17 +2610,17 @@ void do_alchemy() ////
 	};
 	
 	pc_num = select_pc(1,0);
-	if (pc_num == 6)
+	if(pc_num == 6)
 		return;
 	
 	which_p = alch_choice(pc_num);
-	if (which_p < 20) {
-		if (pc_has_space(pc_num) == 24) {
+	if(which_p < 20) {
+		if(pc_has_space(pc_num) == 24) {
 			add_string_to_buf("Alchemy: Can't carry another item.");
 			return;
 		}
 		// TODO: Spread this out a bit, since there seems to be a chance of which_item2 not being initialized.
-		if (((which_item = pc_has_abil(pc_num,ingred1_needed[which_p])) == 24) ||
+		if(((which_item = pc_has_abil(pc_num,ingred1_needed[which_p])) == 24) ||
 			(ingred2_needed[which_p] != eItemAbil::NONE && (which_item2 = pc_has_abil(pc_num,ingred2_needed[which_p])) == 24)) {
 			add_string_to_buf("Alchemy: Don't have ingredients.");
 			return;
@@ -2631,7 +2631,7 @@ void do_alchemy() ////
 			remove_charge(pc_num,which_item2);
 		
 		r1 = get_ran(1,1,100);
-		if (r1 < fail_chance[univ.party[pc_num].skills[eSkill::ALCHEMY] - difficulty[which_p]]) {
+		if(r1 < fail_chance[univ.party[pc_num].skills[eSkill::ALCHEMY] - difficulty[which_p]]) {
 			add_string_to_buf("Alchemy: Failed.               ");
 			r1 = get_ran(1,0,1);
 			play_sound(41 );
@@ -2640,16 +2640,16 @@ void do_alchemy() ////
 			store_i.value = potion_val[which_p];
 			store_i.ability_strength = potion_strs[which_p];
 			store_i.ability = (eItemAbil) potion_abils[which_p];
-			if (which_p == 8)
+			if(which_p == 8)
 				store_i.magic_use_type = 2;
 			store_i.full_name = alch_names_short[which_p];
-			if (univ.party[pc_num].skills[eSkill::ALCHEMY] - difficulty[which_p] >= 5)
+			if(univ.party[pc_num].skills[eSkill::ALCHEMY] - difficulty[which_p] >= 5)
 				store_i.charges++;
-			if (univ.party[pc_num].skills[eSkill::ALCHEMY] - difficulty[which_p] >= 11)
+			if(univ.party[pc_num].skills[eSkill::ALCHEMY] - difficulty[which_p] >= 11)
 				store_i.charges++;
-			if (store_i.variety == eItemType::POTION)
+			if(store_i.variety == eItemType::POTION)
 				store_i.graphic_num += get_ran(1,0,2);
-			if (!give_to_pc(pc_num,store_i,0)) {
+			if(!give_to_pc(pc_num,store_i,0)) {
 				ASB("No room in inventory.");
 				ASB("  Potion placed on floor.");
 				place_item(store_i,univ.town.p_loc,true);
@@ -2688,7 +2688,7 @@ short alch_choice(short pc_num)
 	
 	cDialog chooseAlchemy("pick-potion.xml");
 	chooseAlchemy.attachClickHandlers(alch_choice_event_filter, {"cancel", "help"});
-	for (i = 0; i < 20; i++) {
+	for(i = 0; i < 20; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		chooseAlchemy["label" + n].setText(alch_names[i]);
 		chooseAlchemy["potion" + n].attachClickHandler(alch_choice_event_filter);
@@ -2698,7 +2698,7 @@ short alch_choice(short pc_num)
 	sprintf((char *) get_text, "%s (skill %d)",
 			univ.party[pc_num].name.c_str(),univ.party[pc_num].skills[eSkill::ALCHEMY]);
 	chooseAlchemy["mixer"].setText(get_text);
-	if (univ.party.help_received[20] == 0) {
+	if(univ.party.help_received[20] == 0) {
 		// TODO: I'm not sure if the initial draw is needed
 //		cd_initial_draw(1047);
 		give_help(20,21,chooseAlchemy);
@@ -2719,7 +2719,7 @@ bool pick_pc_graphic(short pc_num,short mode,cDialog* parent)
 	
 	make_cursor_sword();
 	
-	if (!pc_gworld_loaded) {
+	if(!pc_gworld_loaded) {
 		munch_pc_graphic = true;
 		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 	}
@@ -2779,9 +2779,9 @@ m_num_t pick_trapped_monst()
 	
 	cChoiceDlog soulCrystal("soul-crystal.xml",{"cancel","pick1","pick2","pick3","pick4"});
 	
-	for (i = 0; i < 4; i++) {
+	for(i = 0; i < 4; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if (univ.party.imprisoned_monst[i] == 0) {
+		if(univ.party.imprisoned_monst[i] == 0) {
 			soulCrystal->getControl("pick" + n).hide();
 		}
 		else {
@@ -2803,7 +2803,7 @@ m_num_t pick_trapped_monst()
 
 bool flying()
 {
-	if (PSD[SDF_PARTY_FLIGHT] == 0)
+	if(PSD[SDF_PARTY_FLIGHT] == 0)
 		return false;
 	else return true;
 }
@@ -2823,7 +2823,7 @@ void poison_pc(short which_pc,short how_much)
 		if(univ.party[which_pc].traits[eTrait::FRAIL] && how_much == 1 && get_ran(1,0,1) == 0)
 			how_much++;
 		
-		if (how_much > 0) {
+		if(how_much > 0) {
 			univ.party[which_pc].status[eStatus::POISON] = min(univ.party[which_pc].status[eStatus::POISON] + how_much,8);
 			sprintf ((char *) c_line, "  %s poisoned.",
 					 (char *) univ.party[which_pc].name.c_str());
@@ -2839,7 +2839,7 @@ void poison_party(short how_much)
 {
 	short i;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		poison_pc(i,how_much);
 }
 void affect_pc(short which_pc,eStatus type,short how_much)////
@@ -2860,7 +2860,7 @@ void affect_party(eStatus type,short how_much)
 {
 	short i;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			univ.party[i].status[type] = minmax (-8,8,univ.party[i].status[type] + how_much);
 	put_pc_screen();
@@ -2879,8 +2879,8 @@ void hit_party(short how_much,eDamageType damage_type)
 	short i;
 	bool dummy;
 	
-	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == eMainStatus::ALIVE)
+	for(i = 0; i < 6; i++)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			dummy = damage_pc(i,how_much,damage_type,eRace::UNKNOWN,0);
 //			dummy = damage_pc(i,how_much,damage_type + 30);
 	put_pc_screen();
@@ -2891,8 +2891,8 @@ void slay_party(eMainStatus mode)
 	short i;
 	
 	boom_anim_active = false;
-	for (i = 0; i < 6; i++)
-		if (univ.party[i].main_status == eMainStatus::ALIVE)
+	for(i = 0; i < 6; i++)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			univ.party[i].main_status = mode;
 	put_pc_screen();
 }
@@ -2913,13 +2913,13 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	//sound_type = damage_type / 100;
 	//damage_type = damage_type % 100;
 	
-	if (damage_type >= DAMAGE_NO_PRINT) {
+	if(damage_type >= DAMAGE_NO_PRINT) {
 		do_print = false;
 		damage_type -= DAMAGE_NO_PRINT;
 	}
 	
-	if (sound_type == 0) {
-		if ((damage_type == 1) || (damage_type == 4) )
+	if(sound_type == 0) {
+		if((damage_type == 1) || (damage_type == 4) )
 			sound_type = 5;
 		if 	(damage_type == 3)
 			sound_type = 12;
@@ -2930,32 +2930,32 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	}
 	
 	// armor
-	if ((damage_type == 0) || (damage_type == 6) ||(damage_type == 7)) {
+	if((damage_type == 0) || (damage_type == 6) ||(damage_type == 7)) {
 		how_much -= minmax(-5,5,univ.party[which_pc].status[eStatus::BLESS_CURSE]);
-		for (i = 0; i < 24; i++)
-			if ((univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) && (univ.party[which_pc].equip[i])) {
+		for(i = 0; i < 24; i++)
+			if((univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) && (univ.party[which_pc].equip[i])) {
 				if(isArmourType(univ.party[which_pc].items[i].variety)) {
 					r1 = get_ran(1,1,univ.party[which_pc].items[i].item_level);
 					how_much -= r1;
 					
 					// bonus for magical items
-					if (univ.party[which_pc].items[i].bonus > 0) {
+					if(univ.party[which_pc].items[i].bonus > 0) {
 						r1 = get_ran(1,1,univ.party[which_pc].items[i].bonus);
 						how_much -= r1;
 						how_much -= univ.party[which_pc].items[i].bonus / 2;
 					}
-					if (univ.party[which_pc].items[i].bonus < 0) {
+					if(univ.party[which_pc].items[i].bonus < 0) {
 						how_much = how_much - univ.party[which_pc].items[i].bonus;
 					}
 					r1 = get_ran(1,1,100);
-					if (r1 < hit_chance[univ.party[which_pc].skills[eSkill::DEFENSE]] - 20)
+					if(r1 < hit_chance[univ.party[which_pc].skills[eSkill::DEFENSE]] - 20)
 						how_much -= 1;
 				}
-				if (univ.party[which_pc].items[i].protection > 0) {
+				if(univ.party[which_pc].items[i].protection > 0) {
 					r1 = get_ran(1,1,univ.party[which_pc].items[i].protection);
 					how_much -= r1;
 				}
-				if (univ.party[which_pc].items[i].protection < 0) {
+				if(univ.party[which_pc].items[i].protection < 0) {
 					r1 = get_ran(1,1,-1 * univ.party[which_pc].items[i].protection);
 					how_much += r1;
 				}
@@ -2963,33 +2963,33 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	}
 	
 	// parry
-	if ((damage_type < 2) && (univ.party[which_pc].parry < 100))
+	if((damage_type < 2) && (univ.party[which_pc].parry < 100))
 		how_much -= univ.party[which_pc].parry / 4;
 	
 	
-	if (damage_type != 10) {
-		if (PSD[SDF_EASY_MODE] > 0)
+	if(damage_type != 10) {
+		if(PSD[SDF_EASY_MODE] > 0)
 			how_much -= 3;
 		// toughness
 		if(univ.party[which_pc].traits[eTrait::TOUGHNESS])
 			how_much--;
 		// luck
-		if (get_ran(1,1,100) < 2 * (hit_chance[univ.party[which_pc].skills[eSkill::LUCK]] - 20))
+		if(get_ran(1,1,100) < 2 * (hit_chance[univ.party[which_pc].skills[eSkill::LUCK]] - 20))
 			how_much -= 1;
 	}
 	
-	if ((damage_type == DAMAGE_WEAPON) && ((level = get_prot_level(which_pc,eItemAbil::PROTECTION)) > 0))
+	if((damage_type == DAMAGE_WEAPON) && ((level = get_prot_level(which_pc,eItemAbil::PROTECTION)) > 0))
 		how_much = how_much - level;
-	if ((damage_type == DAMAGE_UNDEAD) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_UNDEAD)) > 0))
+	if((damage_type == DAMAGE_UNDEAD) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_UNDEAD)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((damage_type == DAMAGE_DEMON) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_DEMONS)) > 0))
+	if((damage_type == DAMAGE_DEMON) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_DEMONS)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == eRace::HUMANOID) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_HUMANOIDS)) > 0))
+	if((type_of_attacker == eRace::HUMANOID) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_HUMANOIDS)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	// TODO: Should sliths be counted as reptiles?
-	if ((type_of_attacker == eRace::REPTILE) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_REPTILES)) > 0))
+	if((type_of_attacker == eRace::REPTILE) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_REPTILES)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if ((type_of_attacker == eRace::GIANT) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_GIANTS)) > 0))
+	if((type_of_attacker == eRace::GIANT) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_GIANTS)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	
@@ -3002,7 +3002,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// Mag. res helps w. fire and cold
-	if (((damage_type == 1) || (damage_type == 5)) &&
+	if(((damage_type == 1) || (damage_type == 5)) &&
 		univ.party[which_pc].status[eStatus::MAGIC_RESISTANCE] > 0)
 		how_much = how_much / 2;
 	
@@ -3019,23 +3019,23 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	   && ((level = get_prot_level(which_pc,eItemAbil::FULL_PROTECTION)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
-	if (boom_anim_active) {
-		if (how_much < 0)
+	if(boom_anim_active) {
+		if(how_much < 0)
 			how_much = 0;
 		univ.party[which_pc].marked_damage += how_much;
-		if (is_town())
+		if(is_town())
 			add_explosion(univ.town.p_loc,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
 		else add_explosion(univ.party[which_pc].combat_pos,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
 		//sprintf ((char *) c_line, "  %s takes %d. ",(char *) univ.party[which_pc].name, how_much);
-		//if (do_print)
+		//if(do_print)
 		//	add_string_to_buf((char *) c_line);
-		if (how_much == 0)
+		if(how_much == 0)
 			return false;
 		else return true;
 	}
 	
-	if (how_much <= 0) {
-		if ((damage_type == 0) || (damage_type == 6) || (damage_type == 7))
+	if(how_much <= 0) {
+		if((damage_type == 0) || (damage_type == 6) || (damage_type == 7))
 			play_sound(2);
 		add_string_to_buf ("  No damage.");
 		return false;
@@ -3046,12 +3046,12 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 			univ.party[which_pc].status[eStatus::ASLEEP]--;
 		
 		sprintf ((char *) c_line, "  %s takes %d. ",(char *) univ.party[which_pc].name.c_str(), how_much);
-		if (do_print)
+		if(do_print)
 			add_string_to_buf((char *) c_line);
-		if (damage_type != 10) {
-			if (is_combat())
+		if(damage_type != 10) {
+			if(is_combat())
 				boom_space(univ.party[which_pc].combat_pos,overall_mode,boom_gr[damage_type],how_much,sound_type);
-			else if (is_town())
+			else if(is_town())
 				boom_space(univ.town.p_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
 			else boom_space(univ.town.p_loc,100,boom_gr[damage_type],how_much,sound_type);
 		}
@@ -3061,12 +3061,12 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	
 	univ.party.total_dam_taken += how_much;
 	
-	if (univ.party[which_pc].cur_health >= how_much)
+	if(univ.party[which_pc].cur_health >= how_much)
 		univ.party[which_pc].cur_health = univ.party[which_pc].cur_health - how_much;
-	else if (univ.party[which_pc].cur_health > 0)
+	else if(univ.party[which_pc].cur_health > 0)
 		univ.party[which_pc].cur_health = 0;
 	else // Check if PC can die
-		if (how_much > 25) {
+		if(how_much > 25) {
 			sprintf ((char *) c_line, "  %s is obliterated.  ",(char *) univ.party[which_pc].name.c_str());
 			add_string_to_buf((char *) c_line);
 			kill_pc(which_pc, eMainStatus::DUST);
@@ -3102,10 +3102,10 @@ void kill_pc(short which_pc,eMainStatus type)
 		univ.party[which_pc].cur_health = 0;
 	}
 	else if(i == 24 || type == eMainStatus::ABSENT) {
-		if (combat_active_pc == which_pc)
+		if(combat_active_pc == which_pc)
 			combat_active_pc = 6;
 		
-		for (i = 0; i < 24; i++)
+		for(i = 0; i < 24; i++)
 			univ.party[which_pc].equip[i] = false;
 		
 		item_loc = (overall_mode >= MODE_COMBAT) ? univ.party[which_pc].combat_pos : univ.town.p_loc;
@@ -3115,9 +3115,9 @@ void kill_pc(short which_pc,eMainStatus type)
 		else if(type == eMainStatus::DUST)
 			univ.town.set_ash(item_loc.x,item_loc.y,true);
 		
-		if (overall_mode != MODE_OUTDOORS)
-			for (i = 0; i < 24; i++)
-				if (univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) {
+		if(overall_mode != MODE_OUTDOORS)
+			for(i = 0; i < 24; i++)
+				if(univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) {
 					dummy = place_item(univ.party[which_pc].items[i],item_loc,true);
 					univ.party[which_pc].items[i].variety = eItemType::NO_ITEM;
 				}
@@ -3141,7 +3141,7 @@ void set_pc_moves()
 {
 	short i,r,i_level;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status != eMainStatus::ALIVE)
 			univ.party[i].ap = 0;
 		else {
@@ -3158,7 +3158,7 @@ void set_pc_moves()
 				univ.party[i].ap = 0;
 			else { // do webs
 				univ.party[i].ap = max(0,univ.party[i].ap - univ.party[i].status[eStatus::WEBS] / 2);
-				if (univ.party[i].ap == 0) {
+				if(univ.party[i].ap == 0) {
 					sprintf((char *) c_line,"%s must clean webs.",univ.party[i].name.c_str());
 					add_string_to_buf((char *) c_line);
 					univ.party[i].status[eStatus::WEBS] = max(0,univ.party[i].status[eStatus::WEBS] - 3);
@@ -3182,7 +3182,7 @@ void take_ap(short num)
 
 short trait_present(eTrait which_trait) {
 	short i,ret = 0;
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[which_trait] > 0)
 			ret += 1;
 	return ret;
@@ -3190,7 +3190,7 @@ short trait_present(eTrait which_trait) {
 
 short race_present(eRace which_race) {
 	short i,ret = 0;
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].race == which_race)
 			ret += 1;
 	return ret;
@@ -3205,13 +3205,13 @@ short wilderness_lore_present() {
 
 short party_size(bool only_living) {
 	short num_pcs = 0;
-	for (short i = 0; i < 6; i++) {
-		if (!only_living) {
-			if (univ.party[i].main_status != eMainStatus::ABSENT)
+	for(short i = 0; i < 6; i++) {
+		if(!only_living) {
+			if(univ.party[i].main_status != eMainStatus::ABSENT)
 				num_pcs++;
 		}
 		else {
-			if (univ.party[i].main_status == eMainStatus::ALIVE)
+			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				num_pcs++;		
 		}
 	}

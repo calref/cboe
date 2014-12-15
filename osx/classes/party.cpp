@@ -692,11 +692,11 @@ std::string cParty::start_split(short a,short b,snd_num_t noise,short who) {
 	univ.town.p_loc.x = a;
 	univ.town.p_loc.y = b;
 	// TODO: This looks like it won't work.
-	for (i = 0; i < 6; i++)
-		if (!stuff_done[304][who])
+	for(i = 0; i < 6; i++)
+		if(!stuff_done[304][who])
 			adven[i].main_status += eMainStatus::SPLIT;
 	// TODO: Uh, why play sound 10 instead of the one passed in?
-	if (noise > 0)
+	if(noise > 0)
 		play_sound(10);
 	return "";
 }
@@ -704,16 +704,16 @@ std::string cParty::start_split(short a,short b,snd_num_t noise,short who) {
 std::string cParty::end_split(snd_num_t noise) {
 	short i;
 	
-	if (!is_split())
+	if(!is_split())
 		return "Party already together!";
 	univ.town.p_loc = left_at();
 	univ.town.num = left_in();
-	for (i = 0; i < 6; i++){
+	for(i = 0; i < 6; i++){
 		if(isSplit(univ.party[i].main_status))
 			univ.party[i].main_status -= eMainStatus::SPLIT;
 		stuff_done[304][i] = true;
 	}
-	if (noise > 0)
+	if(noise > 0)
 		play_sound(10);	
 	return "You are reunited.";
 }

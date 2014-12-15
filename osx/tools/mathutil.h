@@ -21,9 +21,9 @@ sf::Time time_in_ticks(int ticks);
 
 template<typename T>
 inline void move_to_zero(T& val){
-	if (val < 0)
+	if(val < 0)
 		val++;
-	if (val > 0)
+	if(val > 0)
 		val--;
 }
 

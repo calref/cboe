@@ -92,12 +92,12 @@ cPlayer::cPlayer(){
  	experience = 0; 
 	skill_pts = 60; 
 	level = 1;
-	for (i = 0; i < 24; i++)
+	for(i = 0; i < 24; i++)
 		items[i] = cItemRec();
-	for (i = 0; i < 24; i++)
+	for(i = 0; i < 24; i++)
 		equip[i] = false;
 	
- 	for (i = 0; i < 62; i++) {
+ 	for(i = 0; i < 62; i++) {
 		priest_spells[i] = (i < 30) ? true : false;
 		mage_spells[i] = (i < 30) ? true : false;
 	}
@@ -113,7 +113,7 @@ cPlayer::cPlayer(long key,short slot){
 	short i;
 	main_status = eMainStatus::ALIVE;
 	if(key == 'dbug'){
-		switch (slot) {
+		switch(slot) {
 			case 0:
 				name = "Gunther";
 				break;
@@ -136,7 +136,7 @@ cPlayer::cPlayer(long key,short slot){
 		skills[eSkill::STRENGTH] = 20;
 		skills[eSkill::DEXTERITY] = 20;
 		skills[eSkill::INTELLIGENCE] = 20;
-		for (i = 3; i < 19; i++) {
+		for(i = 3; i < 19; i++) {
 			eSkill skill = eSkill(i);
 			skills[skill] = 8;
 		}
@@ -147,12 +147,12 @@ cPlayer::cPlayer(long key,short slot){
 		experience = 0; 
 		skill_pts = 60; 
 		level = 1;
-		for (i = 0; i < 24; i++)
+		for(i = 0; i < 24; i++)
 			items[i] = cItemRec();
-		for (i = 0; i < 24; i++)
+		for(i = 0; i < 24; i++)
 			equip[i] = false;
 		
-		for (i = 0; i < 62; i++) {
+		for(i = 0; i < 62; i++) {
 			priest_spells[i] = true;
 			mage_spells[i] = true;
 		}
@@ -160,7 +160,7 @@ cPlayer::cPlayer(long key,short slot){
 		which_graphic = slot + 4;		// 4, 5, 6, 7,  8,  9
 		weap_poisoned = 24; // was 16, as an E2 relic
 		
-		for (i = 0; i < 10; i++) {
+		for(i = 0; i < 10; i++) {
 			eTrait trait = eTrait(i);
 			traits[trait] = true;
 		}		
@@ -212,7 +212,7 @@ cPlayer::cPlayer(long key,short slot){
 		};
 		
 		main_status = eMainStatus::ALIVE;
-		switch (slot) {
+		switch(slot) {
 			case 0:
 				name = "Jenneke";
 				break;
@@ -234,7 +234,7 @@ cPlayer::cPlayer(long key,short slot){
 				
 		}
 		
-		for (i = 0; i < 19; i++) {
+		for(i = 0; i < 19; i++) {
 			eSkill skill = eSkill(i);
 			skills[skill] = pc_stats[slot][skill];
 		}
@@ -244,17 +244,17 @@ cPlayer::cPlayer(long key,short slot){
 		skill_pts = 0; 
 		level = 1;
 		
-		for (i = 0; i < 24; i++)
+		for(i = 0; i < 24; i++)
 			items[i] = cItemRec();
-		for (i = 0; i < 24; i++)
+		for(i = 0; i < 24; i++)
 			equip[i] = false;
 		cur_sp = pc_sp[slot]; 
 		max_sp = pc_sp[slot]; 
-		for (i = 0; i < 62; i++) {
+		for(i = 0; i < 62; i++) {
 			priest_spells[i] = (i < 30) ? true : false;
 			mage_spells[i] = (i < 30) ? true : false;
 		}
-		for (i = 0; i < 15; i++) {
+		for(i = 0; i < 15; i++) {
 			eTrait trait = eTrait(i);
 			traits[trait] = pc_t[slot].count(trait);
 			//advan[i] = false;

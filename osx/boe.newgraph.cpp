@@ -146,33 +146,33 @@ void apply_unseen_mask()
 	short i,j,k,l;
 	bool need_bother = false;
 	
-	if (PSD[SDF_NO_FRILLS] > 0)
+	if(PSD[SDF_NO_FRILLS] > 0)
 		return;
 	
-	if ((is_combat()) && (which_combat_type == 0))
+	if((is_combat()) && (which_combat_type == 0))
 		return;
-	if (!(is_out()) && (univ.town->lighting_type > 0))
+	if(!(is_out()) && (univ.town->lighting_type > 0))
 		return;
 	
-	for (i = 0; i < 11; i++)
-		for (j = 0; j < 11; j++)
-			if (unexplored_area[i + 1][j + 1] == 1)
+	for(i = 0; i < 11; i++)
+		for(j = 0; j < 11; j++)
+			if(unexplored_area[i + 1][j + 1] == 1)
 				need_bother = true;
-	if (!need_bother)
+	if(!need_bother)
 		return;
 	
-	for (i = 0; i < 11; i++)
-		for (j = 0; j < 11; j++)
-			if (unexplored_area[i + 1][j + 1] == 1) {
+	for(i = 0; i < 11; i++)
+		for(j = 0; j < 11; j++)
+			if(unexplored_area[i + 1][j + 1] == 1) {
 				
 				to_rect = base_rect;
 				to_rect.offset(-28 + i * 28,-36 + 36 * j);
 				to_rect |= big_to;
 				tileImage(mainPtr, to_rect, bw_pats[3], sf::BlendAlpha);
 				//PaintRoundRect(&to_rect,4,4);
-				for (k = i - 2; k < i + 1; k++)
-					for (l = j - 2; l < j + 1; l++)
-						if ((k >= 0) && (l >= 0) && (k < 9) && (l < 9) && ((k != i - 1) || (l != j - 1)))
+				for(k = i - 2; k < i + 1; k++)
+					for(l = j - 2; l < j + 1; l++)
+						if((k >= 0) && (l >= 0) && (k < 9) && (l < 9) && ((k != i - 1) || (l != j - 1)))
 							terrain_there[k][l] = -1;
 				
 			}
@@ -185,11 +185,11 @@ void apply_light_mask(bool onWindow)
 	RECT big_to = {13,13,337,265};
 	short i,j;
 	bool is_dark = false,same_mask = true;
-	if (PSD[SDF_NO_FRILLS] > 0)
+	if(PSD[SDF_NO_FRILLS] > 0)
 		return;
-	if (is_out())
+	if(is_out())
 		return;
-	if (univ.town->lighting_type == 0)
+	if(univ.town->lighting_type == 0)
 		return;
 	
 	if(onWindow) {
@@ -199,68 +199,68 @@ void apply_light_mask(bool onWindow)
 	}
 	
 	// Process the light array
-	for (i = 2; i < 11; i++)
-		for (j = 2; j < 11; j++)
-			if (light_area[i][j] == 0) is_dark = true;
-	if (!is_dark) {
-		for (i = 2; i < 11; i++)
-			for (j = 2; j < 11; j++)
+	for(i = 2; i < 11; i++)
+		for(j = 2; j < 11; j++)
+			if(light_area[i][j] == 0) is_dark = true;
+	if(!is_dark) {
+		for(i = 2; i < 11; i++)
+			for(j = 2; j < 11; j++)
 				last_light_mask[i][j] = 0;
 		return;
 	}
-	for (i = 1; i < 12; i++)
-		for (j = 1; j < 12; j++)
-			if ((light_area[i - 1][j - 1] >= 1) && (light_area[i + 1][j - 1] >= 1) &&
+	for(i = 1; i < 12; i++)
+		for(j = 1; j < 12; j++)
+			if((light_area[i - 1][j - 1] >= 1) && (light_area[i + 1][j - 1] >= 1) &&
 				(light_area[i - 1][j] >= 1) && (light_area[i + 1][j] >= 1) &&
 				(light_area[i - 1][j + 1] >= 1) && (light_area[i + 1][j + 1] >= 1) &&
 				(light_area[i][j - 1] >= 1) && (light_area[i][j + 1] >= 1)) {
 				light_area[i][j] = 2;
 			}
-	for (i = 1; i < 12; i++)
-		for (j = 1; j < 12; j++)
-			if ((light_area[i - 1][j - 1] >= 2) && (light_area[i + 1][j - 1] >= 2) &&
+	for(i = 1; i < 12; i++)
+		for(j = 1; j < 12; j++)
+			if((light_area[i - 1][j - 1] >= 2) && (light_area[i + 1][j - 1] >= 2) &&
 				(light_area[i - 1][j] >= 2) && (light_area[i + 1][j] >= 2) &&
 				(light_area[i - 1][j + 1] >= 2) && (light_area[i + 1][j + 1] >= 2) &&
 				(light_area[i][j - 1] >= 2) && (light_area[i][j + 1] >= 2)) {
 				light_area[i][j] = 3;
 			}
 	
-	for (i = 2; i < 11; i++)
-		for (j = 2; j < 11; j++) {
-			if (light_area[i][j] == 1)
+	for(i = 2; i < 11; i++)
+		for(j = 2; j < 11; j++) {
+			if(light_area[i][j] == 1)
 				terrain_there[i - 2][j - 2] = -1;
 		}
-	for (i = 0; i < 13; i++)
-		for (j = 0; j < 13; j++)
-			if (last_light_mask[i][j] != light_area[i][j])
+	for(i = 0; i < 13; i++)
+		for(j = 0; j < 13; j++)
+			if(last_light_mask[i][j] != light_area[i][j])
 				same_mask = false;
 	
-	if (same_mask) {
+	if(same_mask) {
 		return;
 	}
 	dark_mask_region.clear();
 	dark_mask_region.addRect(big_to);
-	for (i = 0; i < 13; i++)
-		for (j = 0; j < 13; j++)
+	for(i = 0; i < 13; i++)
+		for(j = 0; j < 13; j++)
 			last_light_mask[i][j] = light_area[i][j];
-	for (i = 1; i < 12; i++)
-		for (j = 1; j < 12; j++) {
-			if (light_area[i][j] == 2) {
+	for(i = 1; i < 12; i++)
+		for(j = 1; j < 12; j++) {
+			if(light_area[i][j] == 2) {
 				int xOffset = 13 + 28 * (i - 3), yOffset = 13 + 36 * (j - 3);
 				Region oval_region;
 				oval_region.addEllipse(temp);
 				oval_region.offset(xOffset, yOffset);
 				dark_mask_region -= oval_region;
 			}
-			if (light_area[i][j] == 3) {
+			if(light_area[i][j] == 3) {
 				paint_rect = base_rect;
 				paint_rect.offset(13 + 28 * (i - 2),13 + 36 * (j - 2));
 				Region temp_rect_rgn;
 				temp_rect_rgn.addRect(paint_rect);
 				dark_mask_region -= temp_rect_rgn;
-				if (light_area[i + 1][j] == 3) light_area[i + 1][j] = 0;
-				if (light_area[i + 1][j + 1] == 3) light_area[i + 1][j + 1] = 0;
-				if (light_area[i][j + 1] == 3) light_area[i][j + 1] = 0;
+				if(light_area[i + 1][j] == 3) light_area[i + 1][j] = 0;
+				if(light_area[i + 1][j + 1] == 3) light_area[i + 1][j + 1] = 0;
+				if(light_area[i][j + 1] == 3) light_area[i][j + 1] = 0;
 			}
 		}
 	
@@ -272,16 +272,16 @@ void start_missile_anim()
 {
 	short i;
 	
-	if (boom_anim_active)
+	if(boom_anim_active)
 		return;
 	boom_anim_active = true;
-	for (i = 0; i < 30; i++) {
+	for(i = 0; i < 30; i++) {
 		store_missiles[i].missile_type = -1;
 		store_booms[i].boom_type = -1;
 	}
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		univ.party[i].marked_damage = 0;
-	for (i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town->max_monst(); i++)
 		monst_marked_damage[i] = 0;
 	have_missile = false;
 	have_boom = false;
@@ -296,16 +296,16 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 {
 	short i;
 	
-	if (!boom_anim_active)
+	if(!boom_anim_active)
 		return;
-	if (PSD[SDF_NO_FRILLS] > 0)
+	if(PSD[SDF_NO_FRILLS] > 0)
 		return;
 	// lose redundant missiles
-	for (i = 0; i < 30; i++)
-		if ((store_missiles[i].missile_type >= 0) && (dest == store_missiles[i].dest))
+	for(i = 0; i < 30; i++)
+		if((store_missiles[i].missile_type >= 0) && (dest == store_missiles[i].dest))
 			return;
-	for (i = 0; i < 30; i++)
-		if (store_missiles[i].missile_type < 0) {
+	for(i = 0; i < 30; i++)
+		if(store_missiles[i].missile_type < 0) {
 			have_missile = true;
 			store_missiles[i].dest = dest;
 			store_missiles[i].missile_type =missile_type;
@@ -318,7 +318,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 
 void run_a_missile(location from,location fire_to,short miss_type,short path,short sound_num,short x_adj,short y_adj,short len)
 {
-//	if ((cartoon_happening) && (anim_step < 140))
+//	if((cartoon_happening) && (anim_step < 140))
 //		return;
 	start_missile_anim();
 	add_missile(fire_to,miss_type,path, x_adj, y_adj);
@@ -329,9 +329,9 @@ void run_a_missile(location from,location fire_to,short miss_type,short path,sho
 void run_a_boom(location boom_where,short type,short x_adj,short y_adj)////
 {
 	
-//	if ((cartoon_happening) && (anim_step < 140))
+//	if((cartoon_happening) && (anim_step < 140))
 //		return;
-	if ((type < 0) || (type > 2))
+	if((type < 0) || (type > 2))
 		return;
 	start_missile_anim();
 	add_explosion(boom_where,-1,0,type, x_adj, y_adj);
@@ -344,7 +344,7 @@ void mondo_boom(location l,short type)
 	short i;
 	
 	start_missile_anim();
-	for (i = 0; i < 12; i++)
+	for(i = 0; i < 12; i++)
 		add_explosion(l,-1,1,type,0,0);
 	do_explosion_anim(5,0);
 	
@@ -355,20 +355,20 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 {
 	short i;
 	
-	if (PSD[SDF_NO_FRILLS] > 0)
+	if(PSD[SDF_NO_FRILLS] > 0)
 		return;
-	if (!boom_anim_active)
+	if(!boom_anim_active)
 		return;
 	// lose redundant explosions
-	for (i = 0; i < 30; i++)
-		if ((store_booms[i].boom_type >= 0) && (dest == store_booms[i].dest)
+	for(i = 0; i < 30; i++)
+		if((store_booms[i].boom_type >= 0) && (dest == store_booms[i].dest)
 			&& (place_type == 0)) {
-			if (val_to_place > 0)
+			if(val_to_place > 0)
 				store_booms[i].val_to_place = val_to_place;
 			return;
 		}
-	for (i = 0; i < 30; i++)
-		if (store_booms[i].boom_type < 0) {
+	for(i = 0; i < 30; i++)
+		if(store_booms[i].boom_type < 0) {
 			have_boom = true;
 			store_booms[i].offset = (i == 0) ? 0 : -1 * get_ran(1,0,2);
 			store_booms[i].dest = dest;
@@ -394,15 +394,15 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	location current_terrain_ul;
 	sf::RenderTexture temp_gworld;
 	
-	if (!have_missile || !boom_anim_active) {
+	if(!have_missile || !boom_anim_active) {
 		boom_anim_active = false;
 		return;
 	}
 	
-	for (i = 0; i < 30; i++)
-		if (store_missiles[i].missile_type >= 0)
+	for(i = 0; i < 30; i++)
+		if(store_missiles[i].missile_type >= 0)
 			i = 50;
-	if (i == 30)
+	if(i == 30)
 		return;
 	
 	// initialize general data
@@ -430,21 +430,21 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	
 	
 	// init missile paths
-	for (i = 0; i < 30; i++) {
+	for(i = 0; i < 30; i++) {
 		store_erase_rect[i] = RECT();
-		if ((store_missiles[i].missile_type >= 0) && (missile_origin == store_missiles[i].dest))
+		if((store_missiles[i].missile_type >= 0) && (missile_origin == store_missiles[i].dest))
 			store_missiles[i].missile_type = -1;
 	}
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
 	start_point.x = 13 + 14 + 28 * (short) (missile_origin.x - screen_ul.x);
 	start_point.y = 13 + 18 + 36 * (short) (missile_origin.y - screen_ul.y);
-	for (i = 0; i < 30; i++)
-		if (store_missiles[i].missile_type >= 0) {
+	for(i = 0; i < 30; i++)
+		if(store_missiles[i].missile_type >= 0) {
 			finish_point[i].x = 1 + 13 + 14 + store_missiles[i].x_adj + 28 * (short) (store_missiles[i].dest.x - screen_ul.x);
 			finish_point[i].y = 1 + 13 + 18 + store_missiles[i].y_adj + 36 * (short) (store_missiles[i].dest.y - screen_ul.y);
 			// note ... +1 at beginning is put in to prevent infinite slope
 			
-			if (store_missiles[i].missile_type < 7) {
+			if(store_missiles[i].missile_type < 7) {
 				store_missile_dir = get_missile_direction(start_point,finish_point[i]);
 				missile_origin_rect[i] = missile_origin_base;
 				missile_origin_rect[i].offset(18 * store_missile_dir,18 * store_missiles[i].missile_type);
@@ -466,16 +466,16 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 	
 	
 	// Now, at last, launch missile
-	for (t = 0; t < num_steps; t++) {
-		for (i = 0; i < 30; i++)
-			if (store_missiles[i].missile_type >= 0) {
+	for(t = 0; t < num_steps; t++) {
+		for(i = 0; i < 30; i++)
+			if(store_missiles[i].missile_type >= 0) {
 				// Where place?
 				temp_rect = missile_origin_base;
 				temp_rect.offset(-8 + x2[i] + (x1[i] * t) / num_steps,
 								 -8 + y2[i] + (y1[i] * t) / num_steps);
 				
 				// now adjust for different paths
-				if (store_missiles[i].path_type == 1)
+				if(store_missiles[i].path_type == 1)
 					temp_rect.offset(0, -1 * (t * (num_steps - t)) / 100);
 				
 				missile_place_rect[i] = temp_rect | active_area_rect;
@@ -485,14 +485,14 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 									temp_gworld,missile_place_rect[i]);
 				// Now put in missile
 				from_rect = missile_origin_rect[i];
-				if (store_missiles[i].missile_type >= 7)
+				if(store_missiles[i].missile_type >= 7)
 					from_rect.offset(18 * (t % 8),0);
 				rect_draw_some_item(missiles_gworld,from_rect,
 									temp_gworld,temp_rect,sf::BlendAlpha);
 			}
 		// Now draw all missiles to screen
-		for (i = 0; i < 30; i++)
-			if (store_missiles[i].missile_type >= 0) {
+		for(i = 0; i < 30; i++)
+			if(store_missiles[i].missile_type >= 0) {
 				to_rect = store_erase_rect[i];
 				to_rect.offset(current_terrain_ul);
 				rect_draw_some_item(terrain_screen_gworld.getTexture(),store_erase_rect[i],to_rect,ul);
@@ -503,13 +503,13 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num)
 				rect_draw_some_item(temp_gworld.getTexture(),missile_place_rect[i],to_rect,ul);
 			}
 		mainPtr.display();
-		if ((PSD[SDF_GAME_SPEED] == 3) || ((PSD[SDF_GAME_SPEED] == 1) && (t % 4 == 0)) ||
+		if((PSD[SDF_GAME_SPEED] == 3) || ((PSD[SDF_GAME_SPEED] == 1) && (t % 4 == 0)) ||
 			((PSD[SDF_GAME_SPEED] == 2) && (t % 3 == 0)))
 			sf::sleep(time_in_ticks(1));
 	}
 	
 	// Exit gracefully, and clean up screen
-	for (i = 0; i < 30; i++)
+	for(i = 0; i < 30; i++)
 		store_missiles[i].missile_type = -1;
 	
 	to_rect = RECT(terrain_screen_gworld);
@@ -527,21 +527,21 @@ short get_missile_direction(location origin_point,location the_point)
 	the_point.x +=  149 - origin_point.x;
 	the_point.y +=  185 - origin_point.y;
 	
-	if ((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
+	if((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
 		& (the_point.y <= (-1 * ((the_point.x * 34) / 10) + 663)))
 		store_dir.x--;
-	if ((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
+	if((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
 		& (the_point.y >= (-1 * ((the_point.x * 34) / 10) + 721)))
 		store_dir.x++;
 	
-	if ((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
+	if((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
 		& (the_point.y <= (-1 * (the_point.x / 2) + 249)))
 		store_dir.y--;
-	if ((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
+	if((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
 		& (the_point.y >= (-1 * (the_point.x / 2) + 268)))
 		store_dir.y++;
 	
-	switch (store_dir.y) {
+	switch(store_dir.y) {
 		case 0:
 			dir = 4 - 2 * (store_dir.x); break;
 		case -1:
@@ -567,15 +567,15 @@ void do_explosion_anim(short /*sound_num*/,short special_draw)
 	sf::RenderTexture temp_gworld;
 	short boom_type_sound[3] = {5,10,53};
 	
-	if (!have_boom || !boom_anim_active) {
+	if(!have_boom || !boom_anim_active) {
 		boom_anim_active = false;
 		return;
 	}
 	
-	for (i = 0; i < 30; i++)
-		if (store_booms[i].boom_type >= 0)
+	for(i = 0; i < 30; i++)
+		if(store_booms[i].boom_type >= 0)
 			i = 50;
-	if (i == 30)
+	if(i == 30)
 		return;
 	
 	// initialize general data
@@ -587,7 +587,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw)
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
-	if (special_draw != 2) {
+	if(special_draw != 2) {
 		to_rect = RECT(terrain_screen_gworld);
 		RECT oldRect = to_rect;
 		to_rect.offset(current_terrain_ul);
@@ -608,14 +608,14 @@ void do_explosion_anim(short /*sound_num*/,short special_draw)
 	
 	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
-	for (i = 0; i < 30; i++)
-		if ((store_booms[i].boom_type >= 0)  && (special_draw < 2)) {
+	for(i = 0; i < 30; i++)
+		if((store_booms[i].boom_type >= 0)  && (special_draw < 2)) {
 			cur_boom_type = store_booms[i].boom_type;
 			explode_place_rect[i] = base_rect;
 			explode_place_rect[i].offset(13 + 28 * (store_booms[i].dest.x - screen_ul.x) + store_booms[i].x_adj,
 										 13 + 36 * (store_booms[i].dest.y - screen_ul.y) + store_booms[i].y_adj);
 			
-			if ((store_booms[i].place_type == 1) && (special_draw < 2)) {
+			if((store_booms[i].place_type == 1) && (special_draw < 2)) {
 				temp_val = get_ran(1,0,50) - 25;
 				temp_val2 = get_ran(1,0,50) - 25;
 				explode_place_rect[i].offset(temp_val,temp_val2);
@@ -625,40 +625,40 @@ void do_explosion_anim(short /*sound_num*/,short special_draw)
 			RECT tempRect2;
 			tempRect2 = RECT(terrain_screen_gworld);
 			temp_rect = explode_place_rect[i] | tempRect2;
-			if (temp_rect == explode_place_rect[i]) {
+			if(temp_rect == explode_place_rect[i]) {
 				store_booms[i].boom_type = -1;
 			}
 			
 		}
-		else if (special_draw < 2)
+		else if(special_draw < 2)
 			explode_place_rect[i] = RECT();
 	
 	//play_sound(-1 * sound_num);
-	if (special_draw < 2)
+	if(special_draw < 2)
 		play_sound(-1 * boom_type_sound[cur_boom_type]);
 	
 	// Now, at last, do explosion
-	for (t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
+	for(t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
 		// First, lay terrain in temporary graphic area;
-		for (i = 0; i < 30; i++)
-			if (store_booms[i].boom_type >= 0)
+		for(i = 0; i < 30; i++)
+			if(store_booms[i].boom_type >= 0)
 				rect_draw_some_item(terrain_screen_gworld.getTexture(),explode_place_rect[i],
 									temp_gworld,explode_place_rect[i]);
 		
 		// Now put in explosions
-		for (i = 0; i < 30; i++)
-			if (store_booms[i].boom_type >= 0) {
-				if ((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
+		for(i = 0; i < 30; i++)
+			if(store_booms[i].boom_type >= 0) {
+				if((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 					from_rect = base_rect;
 					from_rect.offset(28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
 					rect_draw_some_item(boom_gworld,from_rect,
 										temp_gworld,explode_place_rect[i],sf::BlendAlpha);
 					
-					if (store_booms[i].val_to_place > 0) {
+					if(store_booms[i].val_to_place > 0) {
 						text_rect = explode_place_rect[i];
 						text_rect.top += 4;
 						text_rect.left -= 10;
-						if (store_booms[i].val_to_place < 10)
+						if(store_booms[i].val_to_place < 10)
 							text_rect.left += 8;
 						sprintf(str,"%d",store_booms[i].val_to_place);
 						style.colour = sf::Color::White;
@@ -670,20 +670,20 @@ void do_explosion_anim(short /*sound_num*/,short special_draw)
 				}
 			}
 		// Now draw all missiles to screen
-		for (i = 0; i < 30; i++)
-			if (store_booms[i].boom_type >= 0) {
+		for(i = 0; i < 30; i++)
+			if(store_booms[i].boom_type >= 0) {
 				to_rect = explode_place_rect[i];
 				to_rect.offset(current_terrain_ul);
 				rect_draw_some_item(temp_gworld.getTexture(),explode_place_rect[i],to_rect,ul);
 			}
-		//if (((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
+		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
 		mainPtr.display();
 		sf::sleep(time_in_ticks(2 * (1 + PSD[SDF_GAME_SPEED])));
 	}
 	
 	// Exit gracefully, and clean up screen
-	for (i = 0; i < 30; i++)
-		if (special_draw != 1)
+	for(i = 0; i < 30; i++)
+		if(special_draw != 1)
 			store_booms[i].boom_type = -1;
 	
 	//to_rect = terrain_screen_gworld->portRect;
@@ -709,7 +709,7 @@ void click_shop_rect(RECT area_rect)
 	
 	draw_shop_graphics(1,area_rect);
 	mainPtr.display();
-	if (play_sounds)
+	if(play_sounds)
 		play_sound(37);
 	else sf::sleep(time_in_ticks(5));
 	draw_shop_graphics(0,area_rect);
@@ -719,7 +719,7 @@ void click_shop_rect(RECT area_rect)
 static graf_pos calc_item_rect(int num,RECT& to_rect) {
 	RECT from_rect = {0,0,18,18};
 	sf::Texture *from_gw = &tiny_obj_gworld;
-	if (num < 55) {
+	if(num < 55) {
 		from_gw = &items_gworld;
 		from_rect = calc_rect(num % 5, num / 5);
 	}else{
@@ -757,7 +757,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 		"Expensive","Exorbitant","Utterly Ridiculous"};
 	cItemRec base_item;
 	
-	if (overall_mode != 21) {
+	if(overall_mode != 21) {
 		return;
 	}
 	
@@ -767,7 +767,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	style.pointSize = 18;
 	
 	talk_gworld.setActive();
-	if (pressed) {
+	if(pressed) {
 		clip_rect(talk_gworld, clip_area_rect);
 	}
 	
@@ -779,7 +779,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	frame_rect(talk_gworld, shop_frame, sf::Color::Black);
 	
 	// Place store icon
-	if (!pressed) {
+	if(!pressed) {
 		i = faces[store_shop_type];
 		RECT from_rect = {0,0,32,32};
 		from_rect.offset(32 * (i % 10),32 * (i / 10));
@@ -801,7 +801,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	style.pointSize = 12;
 	
 	style.colour = c[3];
-	switch (store_shop_type) {
+	switch(store_shop_type) {
 		case 3: sprintf(cur_name,"Healing for %s.",univ.party[current_pc].name.c_str()); break;
 		case 10: sprintf(cur_name,"Mage Spells for %s.",univ.party[current_pc].name.c_str());break;
 		case 11: sprintf(cur_name,"Priest Spells for %s.",univ.party[current_pc].name.c_str()); break;
@@ -824,20 +824,20 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	rect_draw_some_item(dlg_buttons_gworld[11][pressed],help_from,talk_gworld,shop_done_rect);
 #endif
 	
-	if (pressed)
+	if(pressed)
 		style.colour = c[4];
 	else style.colour = sf::Color::Black;
 	
 	// Place all the items
-	for (i = 0; i < 8; i++) {
+	for(i = 0; i < 8; i++) {
 		current_pos = i + shop_sbar->getPosition();
-		if (store_shop_items[current_pos] < 0)
+		if(store_shop_items[current_pos] < 0)
 			break; // theoretically, this shouldn't happen
 		cur_cost = store_shop_costs[current_pos];
 		what_chosen = store_shop_items[current_pos];
 		RECT from_rect, to_rect = shopping_rects[i][2];
 		sf::Texture* from_gw;
-		switch (what_chosen / 100) {
+		switch(what_chosen / 100) {
 			case 0: case 1: case 2: case 3: case 4:
 				base_item = get_stored_item(what_chosen);
 				base_item.ident = true;
@@ -903,7 +903,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 		win_draw_string(talk_gworld,shopping_rects[i][4],cur_name,eTextMode::WRAP,style);
 		style.pointSize = 10;
 		win_draw_string(talk_gworld,shopping_rects[i][5],cur_info_str,eTextMode::WRAP,style);
-		if ((store_shop_type != 3) && (store_shop_type != 4))
+		if((store_shop_type != 3) && (store_shop_type != 4))
 			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][6],pressed ? sf::BlendNone : sf::BlendAlpha);
 		
 	}
@@ -915,7 +915,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect)
 	win_draw_string(talk_gworld,bottom_help_rects[0],cur_name,eTextMode::WRAP,style);
 	win_draw_string(talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",eTextMode::WRAP,style);
 	win_draw_string(talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",eTextMode::WRAP,style);
-	if ((store_shop_type != 3) && (store_shop_type != 4))
+	if((store_shop_type != 3) && (store_shop_type != 4))
 		win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",eTextMode::WRAP,style);
 	
 	undo_clip(talk_gworld);
@@ -933,7 +933,7 @@ void refresh_shopping()
 	RECT to_rect;
 	short i;
 	
-	for (i = 0; i < 4; i++) {
+	for(i = 0; i < 4; i++) {
 		to_rect = from_rects[i];
 		to_rect.offset(5,5);
 		rect_draw_some_item(talk_gworld.getTexture(),from_rects[i],to_rect,ul);
@@ -946,14 +946,14 @@ static void place_talk_face() {
 	face_rect.offset(ul);
 	mainPtr.setActive();
 	short face_to_draw = scenario.scen_monsters[store_monst_type].default_facial_pic;
-	if (store_talk_face_pic >= 0)
+	if(store_talk_face_pic >= 0)
 		face_to_draw = store_talk_face_pic;
-	if (store_talk_face_pic >= 1000) {
+	if(store_talk_face_pic >= 1000) {
 		cPict::drawAt(mainPtr, face_rect, store_talk_face_pic, PIC_CUSTOM_TALK, false);
 	}
 	else {
 		short i = get_monst_picnum(store_monst_type);
-		if (face_to_draw <= 0)
+		if(face_to_draw <= 0)
 			cPict::drawAt(mainPtr, face_rect, i, get_monst_pictype(store_monst_type), false);
 		else cPict::drawAt(mainPtr, face_rect, face_to_draw, PIC_TALK, false);
 	}
@@ -995,7 +995,7 @@ cItemRec store_mage_spells(short which_s)
 	
 	std::string str;
 	
-	if (which_s != minmax(0,61,which_s))
+	if(which_s != minmax(0,61,which_s))
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = cost[which_s];
@@ -1019,7 +1019,7 @@ cItemRec store_priest_spells(short which_s)
 	};
 	std::string str;
 	
-	if (which_s != minmax(0,61,which_s))
+	if(which_s != minmax(0,61,which_s))
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = cost[which_s];
@@ -1038,7 +1038,7 @@ cItemRec store_alchemy(short which_s)
 	};
 	std::string str;
 	
-	if (which_s != minmax(0,19,which_s))
+	if(which_s != minmax(0,19,which_s))
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = val[which_s];
@@ -1049,26 +1049,26 @@ cItemRec store_alchemy(short which_s)
 
 void get_item_interesting_string(cItemRec item,char *message)
 {
-	if (item.property) {
+	if(item.property) {
 		strcpy(message,"Not yours.");
 		return;
 	}
-	if (!item.ident) {
+	if(!item.ident) {
 		strcpy(message,"");
 		return;
 	}
-	if (item.cursed) {
+	if(item.cursed) {
 		strcpy(message,"Cursed item.");
 		return;
 	}
-	switch (item.variety) {
+	switch(item.variety) {
 		case eItemType::ONE_HANDED:
 		case eItemType::TWO_HANDED:
 		case eItemType::ARROW:
 		case eItemType::THROWN_MISSILE:
 		case eItemType::BOLTS:
 		case eItemType::MISSILE_NO_AMMO:
-			if (item.bonus != 0)
+			if(item.bonus != 0)
 				sprintf(message,"Damage: 1-%d + %d.",item.item_level,item.bonus);
 			else sprintf(message,"Damage: 1-%d.",item.item_level);
 			break;
@@ -1096,11 +1096,11 @@ void get_item_interesting_string(cItemRec item,char *message)
 			break;
 		default:
 			strcpy(message,"");
-			if (item.charges > 0)
+			if(item.charges > 0)
 				sprintf(message,"Uses: %d",item.charges);
 			break;
 	}
-	if (item.charges > 0)
+	if(item.charges > 0)
 		sprintf(message,"Uses: %d",item.charges);
 }
 
@@ -1127,7 +1127,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	style.font = FONT_DUNGEON;
 	style.pointSize = 18;
 	
-	if (c_rect.right > 0) {
+	if(c_rect.right > 0) {
 		mainPtr.setActive();
 		c_rect.offset(talk_area_rect.topLeft());
 		c_rect.offset(ul);
@@ -1170,7 +1170,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	};
 	
 	// Place buttons at bottom.
-	if (color == 0)
+	if(color == 0)
 		style.colour = c[5];
 	else style.colour = c[6];
 	for(i = 0; i < 9; i++) {

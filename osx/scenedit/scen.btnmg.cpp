@@ -47,7 +47,7 @@ extern std::shared_ptr<cScrollbar> right_sbar;
 
 void init_lb() {
 	short i;
-	for (i = 0; i < NLS; i++) {
+	for(i = 0; i < NLS; i++) {
 		left_button_status[i] = 0;
 		strcpy((char *) strings_ls[i], "");
 	}
@@ -55,7 +55,7 @@ void init_lb() {
 
 void reset_lb() {
 	short i;
-	for (i = 0; i < NLS; i++) {
+	for(i = 0; i < NLS; i++) {
 		left_button_status[i] = 0;
 		draw_lb_slot(i,0);
 	}
@@ -66,20 +66,20 @@ void reset_lb() {
 void set_lb(short slot, short mode, const char *label, short do_draw)  {
 	short i;
 	
-	if (slot < 0) {
-		for (i = 0; i < NLS; i++)
-			if (left_button_status[i] == 0) {
+	if(slot < 0) {
+		for(i = 0; i < NLS; i++)
+			if(left_button_status[i] == 0) {
 				slot = i;
 				i = NLS + 5000;
 			}
-		if (i < NLS + 5000)
+		if(i < NLS + 5000)
 			return;
 	}
 	left_button_status[slot] = mode;
 	//sprintf((char *)strings_ls[slot], "%-39.39s", label);
 	sprintf((char *)strings_ls[slot], "%-50.50s", label);
 	strings_ls[slot][39] = 0;
-	if (do_draw > 0)
+	if(do_draw > 0)
 		draw_lb_slot(slot,0);
 	
 }
@@ -90,7 +90,7 @@ void init_rb() {
 	short i;
 	
 	right_sbar->setPosition(0);
-	for (i = 0; i < NRS; i++) {
+	for(i = 0; i < NRS; i++) {
 		right_button_status[i] = 0;
 		strcpy((char *) strings_rs[i], "");
 	}
@@ -99,7 +99,7 @@ void init_rb() {
 void reset_rb() {
 	short i;
 	
-	for (i = 0; i < NRS; i++) {
+	for(i = 0; i < NRS; i++) {
 		right_button_status[i] = 0;
 	}
 	draw_rb();
@@ -112,28 +112,28 @@ void reset_rb() {
 void set_rb(short slot, short mode, const char *label, short do_draw) {
 	short i;
 	
-	if (slot < 0) {
-		for (i = 0; i < NRS; i++)
-			if (right_button_status[i] == 0) {
+	if(slot < 0) {
+		for(i = 0; i < NRS; i++)
+			if(right_button_status[i] == 0) {
 				slot = i;
 				i = NRS + 5000;
 			}
-		if (i < NRS + 5000)
+		if(i < NRS + 5000)
 			return;
 	}
 	right_button_status[slot] = mode;
 	//sprintf((char *)strings_rs[slot], "%-39.39s", label);
 	sprintf((char *)strings_rs[slot], "%s", label);
 	strings_rs[slot][39] = 0;
-	for (i = 0; i < 39; i++)
-		if (strings_rs[slot][i] == '|')
+	for(i = 0; i < 39; i++)
+		if(strings_rs[slot][i] == '|')
 			strings_rs[slot][i] = ' ';
-	if (do_draw > 0)
+	if(do_draw > 0)
 		draw_rb_slot(slot,0);
-	/*for (i = 0; i < NRS; i++)
-		if (right_button_status[i] != 0)
+	/*for(i = 0; i < NRS; i++)
+		if(right_button_status[i] != 0)
 			highest_used = i;
-	if (highest_used < NRSONPAGE - 1) {
+	if(highest_used < NRSONPAGE - 1) {
 		SetControlMaximum(right_sbar,0);
 		current_rs_top = 0;
 	}

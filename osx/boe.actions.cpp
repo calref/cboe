@@ -145,7 +145,7 @@ void init_screen_locs() ////
 	RECT startup_base = {279,5,327,306};
 	RECT shop_base = {63,12,99,267};
 	
-	for (i = 0; i < 7; i++)
+	for(i = 0; i < 7; i++)
 		shopping_rects[0][i] = shop_base;
 	shopping_rects[0][SHOPRECT_ACTIVE_AREA].right -= 35;
 	shopping_rects[0][SHOPRECT_GRAPHIC].right = shopping_rects[0][SHOPRECT_GRAPHIC].left + 28;
@@ -159,14 +159,14 @@ void init_screen_locs() ////
 	shopping_rects[0][SHOPRECT_ITEM_HELP].bottom -= 21;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].right -= 19;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].left = shopping_rects[0][SHOPRECT_ITEM_HELP].right - 14;
-	for (i = 1; i < 8; i++)
-		for (j = 0; j < 7; j++) {
+	for(i = 1; i < 8; i++)
+		for(j = 0; j < 7; j++) {
 			shopping_rects[i][j] = shopping_rects[0][j];
 			shopping_rects[i][j].offset(0,i * 36);
 		}
 	
 	
-	for (i = 0; i < 6; i++) {
+	for(i = 0; i < 6; i++) {
 		startup_button[i] = startup_base;
 		startup_button[i].offset(301 * (i / 3)  - 18,48 * (i % 3));
 	}
@@ -175,17 +175,17 @@ void init_screen_locs() ////
 	startup_top.left = 5;
 	startup_top.right = startup_button[STARTBTN_JOIN].right;
 	
-	for (i = 0; i < 200; i++)
-		for (j = 0; j < 8; j++)
-			for (k = 0; k < 64; k++)////
+	for(i = 0; i < 200; i++)
+		for(j = 0; j < 8; j++)
+			for(k = 0; k < 64; k++)////
 				univ.town_maps[i][j][k] = 0;
 	
-	for (i = 0; i < 100; i++)
-		for (k = 0; k < 6; k++)
-			for (l = 0; l < 48; l++)
+	for(i = 0; i < 100; i++)
+		for(k = 0; k < 6; k++)
+			for(l = 0; l < 48; l++)
 				univ.out_maps[i][k][l] = 0;
 	
-	for (i = 0; i < 7; i++) {
+	for(i = 0; i < 7; i++) {
 		bottom_buttons[i].top = 383;
 		bottom_buttons[i].bottom = 420;
 		bottom_buttons[i].left = 5 + (i * 37);
@@ -195,13 +195,13 @@ void init_screen_locs() ////
 		//FrameRect (&bottom_buttons[i]);
 	}
 	
-	for (i = 0; i < 5; i++) {
+	for(i = 0; i < 5; i++) {
 		combat_buttons[i] = bottom_buttons[i];
 	}
 	town_buttons[7] = bottom_buttons[6];
 	town_buttons[5] = medium_buttons[0];
 	town_buttons[6] = medium_buttons[1];
-	for (i = 5; i < 9; i++) {
+	for(i = 5; i < 9; i++) {
 		combat_buttons[i] = medium_buttons[i - 5];
 	}
 	
@@ -225,13 +225,13 @@ void init_screen_locs() ////
 	item_buttons[0][ITEMBTN_SPEC] = item_buttons[0][ITEMBTN_NAME];
 	item_buttons[0][ITEMBTN_SPEC].left = 173;
 	item_buttons[0][ITEMBTN_SPEC].right = 232;
-	for (i = 1; i < 8; i++)
-		for (j = 0; j < 6; j++) {
+	for(i = 1; i < 8; i++)
+		for(j = 0; j < 6; j++) {
 			item_buttons[i][j] = item_buttons[0][j];
 			item_buttons[i][j].offset(0,13 * i);
 		}
 	
-/*	for (i = 0; i < 8; i++) {
+/*	for(i = 0; i < 8; i++) {
 		item_screen_button_rects[i] = bottom_base;
 		OffsetRect(&item_screen_button_rects[i],10 + i * 29,126);
 	}
@@ -261,8 +261,8 @@ void init_screen_locs() ////
 	pc_buttons[0][PCBTN_TRADE] = pc_buttons[0][PCBTN_NAME];
 	pc_buttons[0][PCBTN_TRADE].left = 253;
 	pc_buttons[0][PCBTN_TRADE].right = 262;
-	for (i = 1; i < 6; i++)
-		for (j = 0; j < 5; j++) {
+	for(i = 1; i < 6; i++)
+		for(j = 0; j < 5; j++) {
 			pc_buttons[i][j] = pc_buttons[0][j];
 			pc_buttons[i][j].offset(0,13 * i);
 		}
@@ -283,7 +283,7 @@ void init_screen_locs() ////
 
 bool prime_time()
 {
-	if ((overall_mode < MODE_TALK_TOWN) || (overall_mode == MODE_COMBAT))
+	if((overall_mode < MODE_TALK_TOWN) || (overall_mode == MODE_COMBAT))
 		return true;
 	return false;
 }
@@ -959,12 +959,12 @@ bool handle_action(sf::Event event) {
 	// Now split off the extra stuff, like talking and shopping.
 	if(overall_mode == MODE_TALKING) {
 		handle_talk_event(the_point);
-		if (overall_mode != MODE_TALKING)
+		if(overall_mode != MODE_TALKING)
 			return false;
 	}
 	if(overall_mode == MODE_SHOPPING) {
 		handle_shop_event(the_point);
-		if (overall_mode != MODE_SHOPPING)
+		if(overall_mode != MODE_SHOPPING)
 			return false;
 	}
 	
@@ -977,7 +977,7 @@ bool handle_action(sf::Event event) {
 			for(int i = 0; i < 7; i++)
 				if(the_point.in(bottom_buttons[i])) {
 					button_hit = i;
-					if (!spell_forced)
+					if(!spell_forced)
 						main_button_click(bottom_buttons[i]);
 				}
 			break;
@@ -988,7 +988,7 @@ bool handle_action(sf::Event event) {
 			for(int i = 0; i < 8; i++)
 				if(the_point.in(town_buttons[i])) {
 					button_hit = i;
-					if (!spell_forced)
+					if(!spell_forced)
 						main_button_click(town_buttons[i]);
 				}
 			break;
@@ -1001,7 +1001,7 @@ bool handle_action(sf::Event event) {
 			for(int i = 0; i < 9; i++)
 				if(the_point.in(combat_buttons[i])) {
 					button_hit = i;
-					if (!spell_forced)
+					if(!spell_forced)
 						main_button_click(combat_buttons[i]);
 				}
 			break;
@@ -1105,8 +1105,8 @@ bool handle_action(sf::Event event) {
 	
 	// I think this was for a "click to continue" option in the transcript.
 	// Or it might be a relic of Exile II room descriptions displayed in the transcript.
-/*	if (overall_mode == 30) /// I don't know what this is for.
-		if (PtInRect(the_point, &text_panel_rect)) {
+/*	if(overall_mode == 30) /// I don't know what this is for.
+		if(PtInRect(the_point, &text_panel_rect)) {
 			through_sending();
 			restore_mode();
 			print_buf();
@@ -1128,7 +1128,7 @@ bool handle_action(sf::Event event) {
 		
 		// Moving/pausing
 		if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
-			if ((i == 4) & (j == 4)) handle_pause(did_something, need_redraw);
+			if((i == 4) & (j == 4)) handle_pause(did_something, need_redraw);
 			else {
 				cur_direction = get_cur_direction(the_point);
 				destination.x += cur_direction.x;
@@ -1263,9 +1263,9 @@ bool handle_action(sf::Event event) {
 							give_pc_info(i);
 							break;
 						case 4: // trade places
-							if (!prime_time())
+							if(!prime_time())
 								add_string_to_buf("Trade places: Finish what you're doing first.");
-							else if (is_combat())
+							else if(is_combat())
 								add_string_to_buf("Trade places: Can't do this in combat.");
 							else {
 								switch_pc(i);
@@ -1283,7 +1283,7 @@ bool handle_action(sf::Event event) {
 	}
 	
 	// Process clicks in item stats area
-	if (the_point.in(item_area_rect)) {
+	if(the_point.in(item_area_rect)) {
 		point_in_area = the_point;
 		point_in_area.x -= ITEM_WIN_UL_X;
 		point_in_area.y -= ITEM_WIN_UL_Y;
@@ -1314,7 +1314,7 @@ bool handle_action(sf::Event event) {
 				for(int j = 0; j < 6; j++)
 					if(item_area_button_active[i][j] > 0 && point_in_area.in(item_buttons[i][j])) {
 						item_buttons[i][j].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-						// if ((j > 0) || (stat_screen_mode < 2)) // TODO: <-- Windows version has this check - why?
+						// if((j > 0) || (stat_screen_mode < 2)) // TODO: <-- Windows version has this check - why?
 						arrow_button_click(item_buttons[i][j]);
 						item_buttons[i][j].offset(-ITEM_WIN_UL_X,-ITEM_WIN_UL_Y);
 						
@@ -1338,7 +1338,7 @@ bool handle_action(sf::Event event) {
 								} else handle_drop_item(item_hit, need_redraw);
 								break;
 							case 4: // info
-								if (stat_window == 6)
+								if(stat_window == 6)
 									put_spec_item_info(spec_item_array[item_hit]);
 								else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
 								break;
@@ -1419,7 +1419,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 		} else {
 			if(need_redraw) {
 				draw_terrain();
-				if ((combat_active_pc == 6) || (univ.party[combat_active_pc].ap > 0))
+				if((combat_active_pc == 6) || (univ.party[combat_active_pc].ap > 0))
 					need_redraw = false;
 			}
 			//pause(2);
@@ -1464,7 +1464,7 @@ bool someone_awake()
 {
 	short i;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE &&
 		   univ.party[i].status[eStatus::ASLEEP] <= 0 && univ.party[i].status[eStatus::PARALYZED] <= 0)
 			return true;
@@ -1490,19 +1490,19 @@ void handle_menu_spell(eSpell spell_picked)
 		store_mage = spell_picked;
 	else store_priest = spell_picked;
 	if(spell_type == eSkill::MAGE_SPELLS && (*spell_picked).need_select != SELECT_NO) {
-		if ((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 0 : 1,0,"Cast spell on who?")) == 6)
+		if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 0 : 1,0,"Cast spell on who?")) == 6)
 			return;
 	}
 	else {
 		if(spell_type == eSkill::PRIEST_SPELLS && (*spell_picked).need_select != SELECT_NO)
-			if ((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 0 : 1,0,"Cast spell on who?")) == 6)
+			if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 0 : 1,0,"Cast spell on who?")) == 6)
 				return;
 	}
-/*	if ((is_combat()) && (((spell_type == 0) && (refer_mage[spell_picked] > 0)) ||
+/*	if((is_combat()) && (((spell_type == 0) && (refer_mage[spell_picked] > 0)) ||
 						  ((spell_type == 1) && (refer_priest[spell_picked] > 0)))){
-		if ((spell_type == 0) && (mage_need_select[spell_picked] > 0))
+		if((spell_type == 0) && (mage_need_select[spell_picked] > 0))
 			store_spell_target = char_select_pc(2 - mage_need_select[spell_picked],0,"Cast spell on who?");
-		else if ((spell_type == 1) && (priest_need_select[spell_picked] > 0))
+		else if((spell_type == 1) && (priest_need_select[spell_picked] > 0))
 			store_spell_target = char_select_pc(2 - priest_need_select[spell_picked],0,"Cast spell on who?");
 	}
 	else {
@@ -1527,7 +1527,7 @@ void initiate_outdoor_combat(short i)
 	draw_terrain();
 	
 	// Is combat too easy?
-	if ((party_total_level() > ((out_enc_lev_tot(i) * 5) / 3) ) && (out_enc_lev_tot(i) < 200)
+	if((party_total_level() > ((out_enc_lev_tot(i) * 5) / 3) ) && (out_enc_lev_tot(i) < 200)
 		&& (univ.party.out_c[i].what_monst.cant_flee % 10 != 1)) {
 		add_string_to_buf("Combat: Monsters fled!           ");
 		univ.party.out_c[i].exists = false;
@@ -1540,11 +1540,11 @@ void initiate_outdoor_combat(short i)
 	
 	univ.party.out_c[i].exists = false;
 	
-	for (m = 0; m < 6; m++)
+	for(m = 0; m < 6; m++)
 		if(univ.party[m].main_status == eMainStatus::ALIVE)
 			to_place = univ.party[m].combat_pos;
-	for (m = 0; m < 6; m++)
-		for (n = 0; n < 24; n++)
+	for(m = 0; m < 6; m++)
+		for(n = 0; n < 24; n++)
 			if(univ.party[m].main_status != eMainStatus::ALIVE && univ.party[m].items[n].variety != eItemType::NO_ITEM) {
 				place_item(univ.party[m].items[n],to_place,true);
 				univ.party[m].items[n].variety = eItemType::NO_ITEM;
@@ -1612,13 +1612,13 @@ bool handle_keystroke(sf::Event& event){
 	}
 	
 	sf::Event pass_event = {sf::Event::MouseButtonPressed};
-	if (overall_mode == MODE_TALKING) {
-		if (chr2 == kb::Escape)
+	if(overall_mode == MODE_TALKING) {
+		if(chr2 == kb::Escape)
 			chr2 = kb::D;
-		if (chr2 == kb::Space)
+		if(chr2 == kb::Space)
 			chr2 = kb::G;
-		for (i = 0; i < 9; i++)
-			if (chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
+		for(i = 0; i < 9; i++)
+			if(chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
 				int j = talk_end_forced ? i - 5 : i;
 				pass_point.x = talk_words[j].rect.left + 9 + ul.x;
 				pass_point.y = talk_words[j].rect.top + 9 + ul.y;
@@ -1627,16 +1627,16 @@ bool handle_keystroke(sf::Event& event){
 				are_done = handle_action(pass_event);
 			}
 	}
-	else if (overall_mode == MODE_SHOPPING) { // shopping keystrokes
-		if (chr2 == kb::Escape) {
+	else if(overall_mode == MODE_SHOPPING) { // shopping keystrokes
+		if(chr2 == kb::Escape) {
 			pass_point.x = 222 + ul.x;
 			pass_point.y = 398 + ul.y;
 			pass_event.mouseButton.x = pass_point.x;
 			pass_event.mouseButton.y = pass_point.y;
 			are_done = handle_action(pass_event);
 		}
-		for (i = 0; i < 8; i++)
-			if (chr2 == shop_chars[i]) {
+		for(i = 0; i < 8; i++)
+			if(chr2 == shop_chars[i]) {
 				pass_point.x = shopping_rects[i][1].left + 9 + ul.x;
 				pass_point.y = shopping_rects[i][1].top + 9 + ul.y;
 				pass_event.mouseButton.x = pass_point.x;
@@ -1644,9 +1644,9 @@ bool handle_keystroke(sf::Event& event){
 				are_done = handle_action(pass_event);
 			}
 	} else {
-		for (i = 0; i < 10; i++)
-			if (chr2 == keypad[i]) {
-				if (i == 0) {
+		for(i = 0; i < 10; i++)
+			if(chr2 == keypad[i]) {
+				if(i == 0) {
 					chr2 = kb::Z;
 				}
 				else {
@@ -1683,19 +1683,19 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case '?':
-			if (overall_mode == MODE_SHOPPING) {
+			if(overall_mode == MODE_SHOPPING) {
 				univ.party.help_received[26] = 0;
 				give_help(226,27);
 				break;
 			}
-			if (overall_mode == MODE_TALKING) {
+			if(overall_mode == MODE_TALKING) {
 				univ.party.help_received[5] = 0;
 				give_help(205,6);
 				break;
 			}
-			if (is_out()) cChoiceDlog("help-outdoor.xml").show();
-			if (is_town()) cChoiceDlog("help-town.xml").show();
-			if (is_combat()) cChoiceDlog("help-combat.xml").show();
+			if(is_out()) cChoiceDlog("help-outdoor.xml").show();
+			if(is_town()) cChoiceDlog("help-town.xml").show();
+			if(is_combat()) cChoiceDlog("help-combat.xml").show();
 			break;
 			
 		case '1': case '2': case '3': case '4': case '5': case '6':
@@ -1715,7 +1715,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case ' ':
-			if (overall_mode == MODE_FANCY_TARGET) { // cast multi-target spell, set # targets to 0 so that
+			if(overall_mode == MODE_FANCY_TARGET) { // cast multi-target spell, set # targets to 0 so that
 				// space clicked doesn't matter
 				num_targets_left = 0;
 				pass_point = terrain_click[5];
@@ -1723,13 +1723,13 @@ bool handle_keystroke(sf::Event& event){
 				pass_event.mouseButton.y = pass_point.y + ul.y;
 				are_done = handle_action(pass_event);
 			}
-			if (overall_mode == MODE_SPELL_TARGET)
+			if(overall_mode == MODE_SPELL_TARGET)
 				spell_cast_hit_return();
 			break;
 			
 			
 		case 'D':
-			if (in_scen_debug) {
+			if(in_scen_debug) {
 				in_scen_debug = false;
 				ASB("Debug mode OFF.");
 			} else {
@@ -1739,7 +1739,7 @@ bool handle_keystroke(sf::Event& event){
 			print_buf();
 			break;
 		case 'z':
-			if (((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT)) {
+			if(((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT)) {
 				set_stat_window(current_pc);
 				put_item_screen(stat_window,0);
 			} else {
@@ -1752,14 +1752,14 @@ bool handle_keystroke(sf::Event& event){
 			if(!in_scen_debug) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
-			for (i = 0; i < 6; i++) {
+			for(i = 0; i < 6; i++) {
 				univ.party[i].main_status = eMainStatus::ALIVE;
 				univ.party[i].cur_health = univ.party[i].max_health;
 				univ.party[i].cur_sp = 100;
 			}
 			award_party_xp(25);
-			for (i = 0; i < 6; i++)
-				for (j = 0; j < 62; j++) {
+			for(i = 0; i < 6; i++)
+				for(j = 0; j < 62; j++) {
 					univ.party[i].priest_spells[j] = 1;
 					univ.party[i].mage_spells[j] = 1;
 				}
@@ -1787,11 +1787,11 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'C':
 			if(!in_scen_debug) break;
-			for (i = 0; i < 6; i++) {
+			for(i = 0; i < 6; i++) {
 				univ.party[i].status[eStatus::POISON] = 0;
 				if(univ.party[i].status[eStatus::BLESS_CURSE] < 0)
 					univ.party[i].status[eStatus::BLESS_CURSE] = 0;
-				if (univ.party[i].status[eStatus::HASTE_SLOW] < 0)
+				if(univ.party[i].status[eStatus::HASTE_SLOW] < 0)
 					univ.party[i].status[eStatus::HASTE_SLOW] = 0;
 				univ.party[i].status[eStatus::WEBS] = 0;
 				univ.party[i].status[eStatus::DISEASE] = 0;
@@ -1843,7 +1843,7 @@ bool handle_keystroke(sf::Event& event){
 			if(!in_scen_debug) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
-			for (i = 0; i < 6; i++) {
+			for(i = 0; i < 6; i++) {
 				if(isDead(univ.party[i].main_status))
 					univ.party[i].main_status = eMainStatus::ALIVE;
 			}
@@ -1855,12 +1855,12 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'K':
-			if (!in_scen_debug) break;
-			for (i = 0; i < univ.town->max_monst(); i++) {
-				if ((is_combat()) && (univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1))
+			if(!in_scen_debug) break;
+			for(i = 0; i < univ.town->max_monst(); i++) {
+				if((is_combat()) && (univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1))
 					univ.town.monst[i].active = 0;
 				
-				if ((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)
+				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)
 					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 10) )
 					damage_monst(i, 7,1000,0, DAMAGE_UNBLOCKABLE,0);
 			}
@@ -1877,10 +1877,10 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'O':
 			if(!in_scen_debug) break;
-			if (is_town()) {
+			if(is_town()) {
 				sout << "Debug:  You're at x " << (short) univ.town.p_loc.x << ", y " << (short) univ.town.p_loc.y
 				<< " in town " << univ.town.num << '.';
-			} else if (is_out()) {
+			} else if(is_out()) {
 				short x = univ.party.p_loc.x;
 				short y = univ.party.p_loc.y;
 				x += 48 * univ.party.outdoor_corner.x;
@@ -1904,13 +1904,13 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'Q':
 			if(!in_scen_debug) break;
-			if (overall_mode == MODE_OUTDOORS) {
-				for (i = 0; i < 96; i++)
-					for (j = 0; j < 96; j++)
+			if(overall_mode == MODE_OUTDOORS) {
+				for(i = 0; i < 96; i++)
+					for(j = 0; j < 96; j++)
 						make_explored(i,j);
 			} else {
-				for (i = 0; i < 64; i++)
-					for (j = 0; j < 64; j++)
+				for(i = 0; i < 64; i++)
+					for(j = 0; j < 64; j++)
 						make_explored(i,j);
 			}
 			clear_map();
@@ -1920,11 +1920,11 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'R':
 			if(!in_scen_debug) break;
-			if (univ.party.in_boat >= 0) {
+			if(univ.party.in_boat >= 0) {
 				add_string_to_buf("  Not while in boat. ");
 				break;
 			}
-			if (univ.party.in_horse >= 0) {
+			if(univ.party.in_horse >= 0) {
 				add_string_to_buf("  Not while on horse. ");
 				break;
 			}
@@ -1939,7 +1939,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'S': // TODO: Create a dedicated dialog for this.
-			if (!in_scen_debug) break;
+			if(!in_scen_debug) break;
             i = get_num_response(0,299,"Enter SDF Part A");
             if(i >= 0 && i < 300){
 				j = get_num_response(0,49,"Enter SDF Part B");
@@ -1961,9 +1961,9 @@ bool handle_keystroke(sf::Event& event){
 			sout << "Enter Town Number (between 0 and " << scenario.num_towns - 1 << ')';
             i = get_num_response(0, scenario.num_towns - 1, "Enter Town Number");
             if(i >= 0 && i < scenario.num_towns ){
-            	if (univ.party.direction == 0) find_direction_from = 2;
-				else if (univ.party.direction == 4) find_direction_from = 0;
-				else if (univ.party.direction < 4) find_direction_from = 3;
+            	if(univ.party.direction == 0) find_direction_from = 2;
+				else if(univ.party.direction == 4) find_direction_from = 0;
+				else if(univ.party.direction < 4) find_direction_from = 3;
 				else find_direction_from = 1;
 				start_town_mode(i, find_direction_from);
 			}
@@ -1984,7 +1984,7 @@ bool handle_keystroke(sf::Event& event){
 //			break;
 		case '<':
 			//break;
-			if (!in_scen_debug) break;
+			if(!in_scen_debug) break;
 			ASB("Debug: Increase age.");
 			ASB("  It is now 1 day later.");
 			print_buf();
@@ -1996,7 +1996,7 @@ bool handle_keystroke(sf::Event& event){
 			ASB("DEBUG: Towns have short memory.");
 			ASB("Your deeds have been forgotten.");
 			print_buf();
-			for (i = 0; i < 4; i++)
+			for(i = 0; i < 4; i++)
 				univ.party.creature_save[i].which_town = 200;
 			break;
 		case '/':
@@ -2025,7 +2025,7 @@ bool handle_keystroke(sf::Event& event){
 			print_buf();
 			break;
 		case 'a':
-			if (overall_mode < MODE_TALK_TOWN) {
+			if(overall_mode < MODE_TALK_TOWN) {
 				pass_point.x = (overall_mode == MODE_OUTDOORS) ? 170 : 221;
 				pass_point.y = 405;
 				pass_event.mouseButton.x = pass_point.x + ul.x;
@@ -2035,7 +2035,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'u':
-			if (overall_mode == MODE_TOWN || overall_mode == MODE_USE_TOWN) {
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_USE_TOWN) {
 				pass_point.x = 220;
 				pass_point.y = 388;
 				pass_event.mouseButton.x = pass_point.x + ul.x;
@@ -2054,7 +2054,7 @@ bool handle_keystroke(sf::Event& event){
 			}
 			
 		case 's': case 'x': case 'e':
-			if ((overall_mode == MODE_COMBAT) ||
+			if((overall_mode == MODE_COMBAT) ||
 				((overall_mode == MODE_FIRING)  && (chr == 's')) ||
 				((overall_mode == MODE_THROWING)  && (chr == 's')) ) {
 				pass_point.x = (chr == 's') ? 205 : 240;
@@ -2075,21 +2075,21 @@ bool handle_keystroke(sf::Event& event){
 			}
 			if(chr == 'f' && (overall_mode == MODE_FIRING || overall_mode == MODE_THROWING || chr == 't')) // cancel missile
 				j = 6;
-			if ((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
-				switch (chr) {
+			if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
+				switch(chr) {
 					case 'M': spell_forced = true; j = 0; break;
 					case 'm': j = 0; break;
 					case 'P': spell_forced = true; j = 1; break;
 					case 'p': j = 1; break;
 					case 'l': j = 2; break;
-					case 'r': if (overall_mode != MODE_OUTDOORS) return false;
+					case 'r': if(overall_mode != MODE_OUTDOORS) return false;
 						j = 3;
 						break;
-					case 't': if (overall_mode == MODE_TOWN)
+					case 't': if(overall_mode == MODE_TOWN)
 						j = 3;
 					else return false;
 						break;
-					case 'A':if (overall_mode == MODE_TOWN) {
+					case 'A':if(overall_mode == MODE_TOWN) {
 						// TODO: Uh, what about ul.y?
 						pass_point.x = 1000 + ul.x;
 						pass_event.mouseButton.x = pass_point.x;
@@ -2102,9 +2102,9 @@ bool handle_keystroke(sf::Event& event){
 						return false;
 					}
 						break;
-					case 'w':if (overall_mode == MODE_COMBAT)
+					case 'w':if(overall_mode == MODE_COMBAT)
 						j = 5;
-					else if (overall_mode == MODE_TOWN) {
+					else if(overall_mode == MODE_TOWN) {
 						// TODO: Uh, what about ul.y?
 						pass_point.x = 1001 + ul.x;
 						pass_event.mouseButton.x = pass_point.x;
@@ -2117,18 +2117,18 @@ bool handle_keystroke(sf::Event& event){
 						return false;
 					}
 						break;
-					case 'd': if (overall_mode != MODE_COMBAT) return false;
+					case 'd': if(overall_mode != MODE_COMBAT) return false;
 						j = 3;
 						break;
-					case 'g': if (overall_mode == MODE_OUTDOORS) return false;
+					case 'g': if(overall_mode == MODE_OUTDOORS) return false;
 						j = 4;
 						break;
-					case 'f': if (overall_mode != MODE_TOWN) return false;
+					case 'f': if(overall_mode != MODE_TOWN) return false;
 						j = 6;
 						break;
 				}
 			}
-			if (j < 50) {
+			if(j < 50) {
 				pass_point.x = bottom_buttons[j].left + 5;
 				pass_point.y = bottom_buttons[j].top + 5;
 				pass_event.mouseButton.x = pass_point.x + ul.x;
@@ -2159,9 +2159,9 @@ void post_load()
 	
 	reset_item_max();
 	
-	if (overall_mode == MODE_OUTDOORS)
+	if(overall_mode == MODE_OUTDOORS)
 		update_explored(univ.party.p_loc);
-//	if (overall_mode == MODE_TOWN) {
+//	if(overall_mode == MODE_TOWN) {
 //		make_town_trim(0);
 //		}
 //	make_out_trim();
@@ -2186,7 +2186,7 @@ void post_load()
 void do_save(short mode)
 //mode; // 0 - normal  1 - save as
 {
-	if (overall_mode > MODE_TOWN) {
+	if(overall_mode > MODE_TOWN) {
 		add_string_to_buf("Save: Only while outdoors, or in         ");
 		add_string_to_buf("  town and not looking/casting.          ");
 		print_buf();
@@ -2270,42 +2270,42 @@ void increase_age()////
 	
 	// Increase age, adjust light level & stealth
 	store_day = calc_day();
-	if (is_out()) {
-		if (univ.party.in_horse < 0)
+	if(is_out()) {
+		if(univ.party.in_horse < 0)
 			univ.party.age -= univ.party.age % 10;
 		else univ.party.age -= univ.party.age % 5;
 		univ.party.age += 5;
-		if (univ.party.in_horse < 0)
+		if(univ.party.in_horse < 0)
 			univ.party.age += 5;
 		
 	}
 	else univ.party.age++;
-	if (calc_day() != store_day) { // Day changed, so check for interesting stuff.
+	if(calc_day() != store_day) { // Day changed, so check for interesting stuff.
 		update_stat = true;
 	}
 	
 	move_to_zero(univ.party.light_level);
 	
-//	if (PSD[128][9] == 1)
+//	if(PSD[128][9] == 1)
 //		clear_map();
 	
 	// decrease monster present counter
 	move_to_zero(PSD[SDF_HOSTILES_PRESENT]);
 	
 	// Party spell effects
-	if (PSD[SDF_PARTY_STEALTHY] == 1) {reset_text_bar();
+	if(PSD[SDF_PARTY_STEALTHY] == 1) {reset_text_bar();
 		add_string_to_buf("Your footsteps grow louder.      "); }
 	move_to_zero(PSD[SDF_PARTY_STEALTHY]);
-	if (PSD[SDF_PARTY_DETECT_LIFE] == 1) {reset_text_bar();
+	if(PSD[SDF_PARTY_DETECT_LIFE] == 1) {reset_text_bar();
 		add_string_to_buf("You stop detecting monsters.      ");}
 	move_to_zero(PSD[SDF_PARTY_DETECT_LIFE]);
-	if (PSD[SDF_PARTY_FIREWALK] == 1) {reset_text_bar();
+	if(PSD[SDF_PARTY_FIREWALK] == 1) {reset_text_bar();
 		add_string_to_buf("Your feet stop glowing.      ");}
 	move_to_zero(PSD[SDF_PARTY_FIREWALK]);
 	
-	if (PSD[SDF_PARTY_FLIGHT] == 2)
+	if(PSD[SDF_PARTY_FLIGHT] == 2)
 		add_string_to_buf("You are starting to descend.");
-	if (PSD[SDF_PARTY_FLIGHT] == 1) {
+	if(PSD[SDF_PARTY_FLIGHT] == 1) {
 		if(blocksMove(scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage)) {
 			add_string_to_buf("  You plummet to your deaths.                  ");
 			slay_party(eMainStatus::DEAD);
@@ -2321,7 +2321,7 @@ void increase_age()////
 	if(overall_mode > MODE_OUTDOORS && univ.town->lighting_type >= LIGHT_DRAINS) {
 		increase_light(-9);
 		if(univ.town->lighting_type == LIGHT_NONE) {
-			if (univ.party.light_level > 0)
+			if(univ.party.light_level > 0)
 				ASB("Your light is drained.");
 			univ.party.light_level = 0;
 		}
@@ -2334,26 +2334,26 @@ void increase_age()////
 		cStrDlog display_enc_string("Missing String: Radioactivity", "", "", 8, PIC_DLOG);
 		display_enc_string.setSound(3);
 		display_enc_string.show();
-		for (i = 0; i < 6; i++)
+		for(i = 0; i < 6; i++)
 			disease_pc(i,2);
 	}
 	
 	
 	// Plants and magic shops
-	if (univ.party.age % 4000 == 0) {
+	if(univ.party.age % 4000 == 0) {
 		//SysBeep(2);
 		//ASB("DEBUG: Stuff replaced.");
 		refresh_store_items();
-		//for (i = 0; i < 10; i++)
+		//for(i = 0; i < 10; i++)
 		//	PSD[302][i] = 0;
-		//for (i = 0; i < 10; i++)
+		//for(i = 0; i < 10; i++)
 		//	PSD[301][i] = 0;
-		//for (i = 0; i < 10; i++)
+		//for(i = 0; i < 10; i++)
 		////	PSD[300][i] = 0;
 	}
 	
 	// Protection, etc.
-	for (i = 0; i < 6; i++) { // Process some status things, and check if stats updated
+	for(i = 0; i < 6; i++) { // Process some status things, and check if stats updated
 		
 		if(univ.party[i].status[eStatus::INVULNERABLE] == 1 || univ.party[i].status[eStatus::MAGIC_RESISTANCE] == 1
 		   || univ.party[i].status[eStatus::INVISIBLE] == 1 || univ.party[i].status[eStatus::MARTYRS_SHIELD] == 1
@@ -2373,18 +2373,18 @@ void increase_age()////
 	}
 	
 	// Food
-	if ((univ.party.age % 1000 == 0) && (overall_mode < MODE_COMBAT)) {
-		for (i = 0; i < 6; i++)
+	if((univ.party.age % 1000 == 0) && (overall_mode < MODE_COMBAT)) {
+		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				how_many_short++;
 		how_many_short = take_food (how_many_short,false);
-		if (how_many_short > 0) {
+		if(how_many_short > 0) {
 			add_string_to_buf("Starving! ");
 			play_sound(66);
 			r1 = get_ran(3,1,6);
 			hit_party(r1,DAMAGE_UNBLOCKABLE);
 			update_stat = true;
-			if (overall_mode < MODE_COMBAT)
+			if(overall_mode < MODE_COMBAT)
 				boom_space(univ.party.p_loc,overall_mode,0,r1,0);
 		}
 		else {
@@ -2395,23 +2395,23 @@ void increase_age()////
 	}
 	
 	// Poison, acid, disease damage
-	for (i = 0; i < 6; i++) // Poison
+	for(i = 0; i < 6; i++) // Poison
 		if(univ.party[i].status[eStatus::POISON] > 0) {
 			i = 6;
-			if (((overall_mode == MODE_OUTDOORS) && (univ.party.age % 50 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 20 == 0))) {
+			if(((overall_mode == MODE_OUTDOORS) && (univ.party.age % 50 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 20 == 0))) {
 				update_stat = true;
 				do_poison();
 			}
 		}
-	for (i = 0; i < 6; i++) // Disease
+	for(i = 0; i < 6; i++) // Disease
 		if(univ.party[i].status[eStatus::DISEASE] > 0) {
 			i = 6;
-			if (((overall_mode == MODE_OUTDOORS) && (univ.party.age % 100 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 25 == 0))) {
+			if(((overall_mode == MODE_OUTDOORS) && (univ.party.age % 100 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 25 == 0))) {
 				update_stat = true;
 				handle_disease();
 			}
 		}
-	for (i = 0; i < 6; i++) // Acid
+	for(i = 0; i < 6; i++) // Acid
 		if(univ.party[i].status[eStatus::ACID] > 0) {
 			i = 6;
 			update_stat = true;
@@ -2419,33 +2419,33 @@ void increase_age()////
 		}
 	
 	// Healing and restoration of spell pts.
-	if (is_out()) {
-		if (univ.party.age % 100 == 0) {
-			for (i = 0; i < 6; i++)
+	if(is_out()) {
+		if(univ.party.age % 100 == 0) {
+			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health < univ.party[i].max_health)
 					update_stat = true;
 			heal_party(2);
 		}
 	}
 	else {
-		if (univ.party.age % 50 == 0) {
-			for (i = 0; i < 6; i++)
+		if(univ.party.age % 50 == 0) {
+			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health < univ.party[i].max_health)
 					update_stat = true;
 			heal_party(1);
 		}
 	}
-	if (is_out()) {
-		if (univ.party.age % 80 == 0) {
-			for (i = 0; i < 6; i++)
+	if(is_out()) {
+		if(univ.party.age % 80 == 0) {
+			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp < univ.party[i].max_sp)
 					update_stat = true;
 			restore_sp_party(2);
 		}
 	}
 	else {
-		if (univ.party.age % 40 == 0) {
-			for (i = 0; i < 6; i++)
+		if(univ.party.age % 40 == 0) {
+			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp < univ.party[i].max_sp)
 					update_stat = true;
 			restore_sp_party(1);
@@ -2453,7 +2453,7 @@ void increase_age()////
 	}
 	
 	// Recuperation and chronic disease disads
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if(univ.party[i].traits[eTrait::RECUPERATION] > 0 && get_ran(1,0,10) == 1 && univ.party[i].cur_health < univ.party[i].max_health) {
 				heal_pc(i,2);
@@ -2468,8 +2468,8 @@ void increase_age()////
 	
 	
 	// Blessing, slowed,etc.
-	if (univ.party.age % 4 == 0)
-		for (i = 0; i < 6; i++) {
+	if(univ.party.age % 4 == 0)
+		for(i = 0; i < 6; i++) {
 			if(univ.party[i].status[eStatus::BLESS_CURSE] != 0 || univ.party[i].status[eStatus::HASTE_SLOW] != 0)
 				update_stat = true;
 			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
@@ -2478,9 +2478,9 @@ void increase_age()////
 			   && (univ.party[i].cur_health < univ.party[i].max_health)
 			   && ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
 				j = get_ran(1,0,univ.party[i].items[item].ability_strength / 3);
-				if (univ.party[i].items[item].ability_strength / 3 == 0)
+				if(univ.party[i].items[item].ability_strength / 3 == 0)
 					j = get_ran(1,0,1);
-				if (is_out()) j = j * 4;
+				if(is_out()) j = j * 4;
 				heal_pc(i,j);
 				update_stat = true;
 			}
@@ -2489,10 +2489,10 @@ void increase_age()////
 	dump_gold(1);
 	
 	special_increase_age();
-	//if (!debug_on)
+	//if(!debug_on)
 	push_things();
 	
-	if (is_town()) {
+	if(is_town()) {
 		process_fields();
 	}
 	
@@ -2502,7 +2502,7 @@ void increase_age()////
 	current_switch = 6;
 	
 	// If a change, draw stat screen
-	if (update_stat)
+	if(update_stat)
 		put_pc_screen();
 	adjust_spell_menus();
 }
@@ -2512,13 +2512,13 @@ void handle_hunting() {
 	short i,pic;
 	ter_num_t ter;
 	
-	if (!is_out())
+	if(!is_out())
 		return;
 	
 	// TODO: Resupport this!
 	ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
 	pic = scenario.ter_types[ter].picture;
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[eTrait::CAVE_LORE] && get_ran(1,0,12) == 5
 		   && (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
 			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
@@ -2526,8 +2526,8 @@ void handle_hunting() {
 			add_string_to_buf((char *)str);
 			put_pc_screen();
 		}
-	for (i = 0; i < 6; i++)
-		if (
+	for(i = 0; i < 6; i++)
+		if(
 			univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[eTrait::WOODSMAN] && get_ran(1,0,12) == 5
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
 			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
@@ -2543,15 +2543,15 @@ void switch_pc(short which)
 {
 	cPlayer store_pc;
 	
-	if (current_switch < 6) {
-		if (current_switch != which) {
+	if(current_switch < 6) {
+		if(current_switch != which) {
 			add_string_to_buf("Switch: OK.");
 			store_pc = univ.party[which];
 			univ.party[which] = univ.party[current_switch];
 			univ.party[current_switch] = store_pc;
-			if (current_pc == current_switch)
+			if(current_pc == current_switch)
 				current_pc = which;
-			else if (current_pc == which)
+			else if(current_pc == which)
 				current_pc = current_switch;
 			set_stat_window(current_pc);
 		} else ASB("Switch: Not with self.");
@@ -2568,7 +2568,7 @@ void drop_pc(short which)
 	std::string choice;
 	
 	choice = cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show();
-	if (choice == "no") {
+	if(choice == "no") {
 		add_string_to_buf("Delete PC: Cancelled.           ");
 		return;
 	}
@@ -2598,7 +2598,7 @@ void handle_death()
 		else if(choice == "load") {
 			fs::path file_to_load = nav_get_party();
 			if(!file_to_load.empty()) load_party(file_to_load);
-			if (!party_toast()) {
+			if(!party_toast()) {
 				if(overall_mode != MODE_STARTUP)
 					post_load(), finish_load_party();
             	return;
@@ -2630,24 +2630,24 @@ void start_new_game()
 	else if(kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl)) init_party(2);
 	else init_party(0);
 	
-	//while (!creation_done) {
+	//while(!creation_done) {
 	edit_party();
-	/*	if ((i > 0) || !in_startup_mode)
+	/*	if((i > 0) || !in_startup_mode)
 			creation_done = true;
-		if ((i == 0) && !in_startup_mode)
+		if((i == 0) && !in_startup_mode)
 			return;
 	} */
 
 	// if no PCs left, forget it
-	for (i = 0 ; i < 6; i++)
+	for(i = 0 ; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			i = 100;
-	if (i == 6)
+	if(i == 6)
 		return;
 	
 	
 	// everyone gets a weapon
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			int raceCode = (int) univ.party[i].race;
 			univ.party[i].items[0] = start_items[raceCode * 2];
@@ -2656,12 +2656,12 @@ void start_new_game()
 			univ.party[i].equip[1] = true;
 		}
 	// PCs get adjustments
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			// Do stat adjs for selected race.
-			if (univ.party[i].race == eRace::NEPHIL)
+			if(univ.party[i].race == eRace::NEPHIL)
 				univ.party[i].skills[eSkill::DEXTERITY] += 2;
-			if (univ.party[i].race == eRace::SLITH) {
+			if(univ.party[i].race == eRace::SLITH) {
 				univ.party[i].skills[eSkill::STRENGTH] += 2;
 				univ.party[i].skills[eSkill::INTELLIGENCE] += 1;
 			}
@@ -2684,17 +2684,17 @@ location get_cur_direction(location the_point)
 	the_point.x += 5;
 	the_point.y += 5;
 	
-	if ((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
+	if((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
 		& (the_point.y <= (-1 * ((the_point.x * 34) / 10) + 663)))
 		store_dir.x--;
-	if ((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
+	if((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
 		& (the_point.y >= (-1 * ((the_point.x * 34) / 10) + 721)))
 		store_dir.x++;
 	
-	if ((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
+	if((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
 		& (the_point.y <= (-1 * (the_point.x / 2) + 249)))
 		store_dir.y--;
-	if ((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
+	if((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
 		& (the_point.y >= (-1 * (the_point.x / 2) + 268)))
 		store_dir.y++;
 	
@@ -2757,9 +2757,9 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		}
 		draw_terrain();
 		print_buf();
-		if ((wilderness_lore_present() > 0) && (get_ran(1,0,1) == 0))
+		if((wilderness_lore_present() > 0) && (get_ran(1,0,1) == 0))
 			add_string_to_buf("  (No supplies lost.)");
-		else if (univ.party.food > 1800){
+		else if(univ.party.food > 1800){
 			add_string_to_buf("  (Many supplies lost.)");
 			univ.party.food -= 50;
 		}
@@ -2796,15 +2796,15 @@ bool outd_move_party(location destination,bool forced)
 	ter_num_t ter;
 	
 	keep_going = check_special_terrain(destination,eSpecCtx::OUT_MOVE,0,&spec_num,&check_f);
-	if (check_f)
+	if(check_f)
 		forced = true;
-	if (in_scen_debug && ghost_mode)
+	if(in_scen_debug && ghost_mode)
 		forced = true;
-	if (spec_num == 50)
+	if(spec_num == 50)
 		forced = true;
 	
 	// If not blocked and not put in town by a special, process move
-	if (keep_going && overall_mode == MODE_OUTDOORS) {
+	if(keep_going && overall_mode == MODE_OUTDOORS) {
 		
 		real_dest.x = destination.x - univ.party.p_loc.x;
 		real_dest.y = destination.y - univ.party.p_loc.y;
@@ -2816,51 +2816,51 @@ bool outd_move_party(location destination,bool forced)
 		store_iwc = univ.party.i_w_c;
 		
 		// Check if party moves into new sector
-		if ((destination.x < 6) && (univ.party.outdoor_corner.x > 0))
+		if((destination.x < 6) && (univ.party.outdoor_corner.x > 0))
 			shift_universe_left();
-		if ((destination.x > 90) && (univ.party.outdoor_corner.x < scenario.out_width - 1))
+		if((destination.x > 90) && (univ.party.outdoor_corner.x < scenario.out_width - 1))
 			shift_universe_right();
-		if ((destination.y < 6)  && (univ.party.outdoor_corner.y > 0)) {
+		if((destination.y < 6)  && (univ.party.outdoor_corner.y > 0)) {
 			shift_universe_up();
 		}
-		else if ((destination.y > 90)  && (univ.party.outdoor_corner.y < scenario.out_height - 1))
+		else if((destination.y > 90)  && (univ.party.outdoor_corner.y < scenario.out_height - 1))
 			shift_universe_down();
 		// Now stop from going off the world's edge
 		real_dest.x = univ.party.p_loc.x + real_dest.x;
 		real_dest.y =univ. party.p_loc.y + real_dest.y;
-		if ((real_dest.x < 1 /*4*/) && (univ.party.outdoor_corner.x <= 0)) {
+		if((real_dest.x < 1 /*4*/) && (univ.party.outdoor_corner.x <= 0)) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
-		if (((real_dest.x > 94 /*92*/) && (univ.party.outdoor_corner.x >= scenario.out_width - 2)) ||
+		if(((real_dest.x > 94 /*92*/) && (univ.party.outdoor_corner.x >= scenario.out_width - 2)) ||
 			((real_dest.x > 46 /*44*/) && (univ.party.outdoor_corner.x >= scenario.out_width - 1))) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
-		if ((real_dest.y < 1 /*4*/)  && (univ.party.outdoor_corner.y <= 0)) {
+		if((real_dest.y < 1 /*4*/)  && (univ.party.outdoor_corner.y <= 0)) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
-		else if (((real_dest.y > 94 /*92*/)  && (univ.party.outdoor_corner.y >= scenario.out_height - 2)) ||
+		else if(((real_dest.y > 94 /*92*/)  && (univ.party.outdoor_corner.y >= scenario.out_height - 2)) ||
 				 ((real_dest.y > 46 /*44*/)  && (univ.party.outdoor_corner.y >= scenario.out_height - 1))) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
 		
-//		if ((store_corner.x != party.outdoor_corner.x) || (store_corner.y != party.outdoor_corner.y) ||
+//		if((store_corner.x != party.outdoor_corner.x) || (store_corner.y != party.outdoor_corner.y) ||
 //			(store_iwc.x != party.i_w_c.x) || (store_iwc.y != party.i_w_c.y))
 //			clear_map();
 		
 		
 		
-//		if (forced)
-//			for (i = 0; i < 10; i++)
-//				if (same_point(destination,party.out_c[i].m_loc))
+//		if(forced)
+//			for(i = 0; i < 10; i++)
+//				if(same_point(destination,party.out_c[i].m_loc))
 //					party.out_c[i].exists = false;
 		
 		ter = univ.out[real_dest.x][real_dest.y];
-		if (univ.party.in_boat >= 0) {
-			if (!outd_is_blocked(real_dest) //&& !outd_is_special(real_dest)
+		if(univ.party.in_boat >= 0) {
+			if(!outd_is_blocked(real_dest) //&& !outd_is_special(real_dest)
 				// not in towns
 				&& (!scenario.ter_types[ter].boat_over
 					|| ((real_dest.x != univ.party.p_loc.x) && (real_dest.y != univ.party.p_loc.y)))
@@ -2868,10 +2868,10 @@ bool outd_move_party(location destination,bool forced)
 				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
 			}
-			else if (((real_dest.x != univ.party.p_loc.x) && (real_dest.y != univ.party.p_loc.y))
+			else if(((real_dest.x != univ.party.p_loc.x) && (real_dest.y != univ.party.p_loc.y))
 					 || (!forced && (out_boat_there(destination) < 30)))
 				return false;
-			else if (!outd_is_blocked(real_dest)
+			else if(!outd_is_blocked(real_dest)
 					 && scenario.ter_types[ter].boat_over
 					 && scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 				// TODO: It kinda looks like there should be a check for eTerSpec::BRIDGE here?
@@ -2883,12 +2883,12 @@ bool outd_move_party(location destination,bool forced)
 					univ.party.in_boat = -1;
 				}
 			}
-			else if (scenario.ter_types[ter].boat_over)
+			else if(scenario.ter_types[ter].boat_over)
 				forced = true;
 		}
 		
-		if (((boat_num = out_boat_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
-			if (flying()) {
+		if(((boat_num = out_boat_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
+			if(flying()) {
 				add_string_to_buf("You land first.                 ");
 				PSD[SDF_PARTY_FLIGHT] = 0;
 			}
@@ -2902,14 +2902,14 @@ bool outd_move_party(location destination,bool forced)
 			univ.party.i_w_c.y = (univ.party.p_loc.y > 48) ? 1 : 0;
 			univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
 			
-			if ((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
+			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
 				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
 				clear_map();
 			
 			return true;
 		}
-		else if (((horse_num = out_horse_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
-			if (flying()) {
+		else if(((horse_num = out_horse_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
+			if(flying()) {
 				add_string_to_buf("Land before mounting horses.");
 				return false;
 			}
@@ -2925,13 +2925,13 @@ bool outd_move_party(location destination,bool forced)
 			univ.party.i_w_c.y = (univ.party.p_loc.y > 48) ? 1 : 0;
 			univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
 			
-			if ((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
+			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
 				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
 				clear_map();
 			
 			return true;
 		}
-		else if (!outd_is_blocked(real_dest) || forced
+		else if(!outd_is_blocked(real_dest) || forced
 				 // Check if can fly over
 				 || (flying() && scenario.ter_types[ter].fly_over)) {
 			if(univ.party.in_horse >= 0) {
@@ -2962,10 +2962,10 @@ bool outd_move_party(location destination,bool forced)
 			move_sound(univ.out[real_dest.x][real_dest.y],num_out_moves);
 			num_out_moves++;
 			
-			if (univ.party.in_boat >= 0) { // Waterfall!!!
+			if(univ.party.in_boat >= 0) { // Waterfall!!!
 				run_waterfalls(1);
 			}
-			if (univ.party.in_horse >= 0) {
+			if(univ.party.in_horse >= 0) {
 				univ.party.horses[univ.party.in_horse].which_town = 200;
 				univ.party.horses[univ.party.in_horse].loc_in_sec = univ.party.loc_in_sec;
 				univ.party.horses[univ.party.in_horse].loc = univ.party.p_loc;
@@ -2974,7 +2974,7 @@ bool outd_move_party(location destination,bool forced)
 				
 			}
 			
-			if ((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
+			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
 				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
 				clear_map();
 			
@@ -3001,12 +3001,12 @@ bool town_move_party(location destination,short forced)////
 		return false;
 	}
 	
-	if (in_scen_debug && ghost_mode)
+	if(in_scen_debug && ghost_mode)
 		forced = true;
 	
 	// remove if not registered
 	/*
-	if ((scenario.out_width != 3) || (scenario.out_height != 3) ||
+	if((scenario.out_width != 3) || (scenario.out_height != 3) ||
 		(scenario.num_towns != 21) || (scenario.town_size[3] != 1) || (scenario.town_size[9] != 0)) {
 		ASB("Blades of Exile must be registered");
 		ASB("before you can play scenarios besides");
@@ -3016,47 +3016,47 @@ bool town_move_party(location destination,short forced)////
 	}
 	*/
 	
-	if (monst_there(destination) > univ.town->max_monst())
+	if(monst_there(destination) > univ.town->max_monst())
 		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,0,&spec_num,&check_f);
-	if (check_f)
+	if(check_f)
 		forced = true;
 	
-	if (spec_num == 50)
+	if(spec_num == 50)
 		forced = true;
 	ter = univ.town->terrain(destination.x,destination.y);
 	
-	if (keep_going) {
-		if (univ.party.in_boat >= 0) {
-			if ((!is_blocked(destination)) && (!is_special(destination))
+	if(keep_going) {
+		if(univ.party.in_boat >= 0) {
+			if((!is_blocked(destination)) && (!is_special(destination))
 				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert
 				&& ( (!scenario.ter_types[ter].boat_over)
 					|| ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y)))) {
 					add_string_to_buf("You leave the boat.             ");
 					univ.party.in_boat = -1;
 				}
-			else if ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y))
+			else if((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y))
 				return false;
 			// Crossing bridge: land or go through
 			else if(!is_blocked(destination) && scenario.ter_types[ter].boat_over && scenario.ter_types[ter].special == eTerSpec::BRIDGE) {
 				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
 					forced = true;
-				else if (!is_blocked(destination)) {
+				else if(!is_blocked(destination)) {
 					add_string_to_buf("You leave the boat.             ");
 					univ.party.in_boat = -1;
 				}
 			}
 			// boat in destination
-			else if (town_boat_there(destination) < 30) {
+			else if(town_boat_there(destination) < 30) {
 				add_string_to_buf("  Boat there already.             ");
 				return false;
 			}
 			// water or lava
-			else if (scenario.ter_types[ter].boat_over)
+			else if(scenario.ter_types[ter].boat_over)
 				forced = true;
 		}
 		
-		if (((boat_there = town_boat_there(destination)) < 30) && (univ.party.in_boat < 0)) {
-			if (univ.party.boats[boat_there].property) {
+		if(((boat_there = town_boat_there(destination)) < 30) && (univ.party.in_boat < 0)) {
+			if(univ.party.boats[boat_there].property) {
 				add_string_to_buf("  Not your boat.             ");
 				return false;
 			}
@@ -3070,8 +3070,8 @@ bool town_move_party(location destination,short forced)////
 			
 			return true;
 		}
-		else if (((horse_there = town_horse_there(destination)) < 30) && (univ.party.in_horse < 0)) {
-			if (univ.party.horses[horse_there].property) {
+		else if(((horse_there = town_horse_there(destination)) < 30) && (univ.party.in_horse < 0)) {
+			if(univ.party.horses[horse_there].property) {
 				add_string_to_buf("  Not your horses.             ");
 				return false;
 			}
@@ -3086,17 +3086,17 @@ bool town_move_party(location destination,short forced)////
 			
 			return true;
 		}
-		else if (!is_blocked(destination) || forced) {
-			if (univ.party.in_horse >= 0) {
+		else if(!is_blocked(destination) || forced) {
+			if(univ.party.in_horse >= 0) {
 				if(scenario.ter_types[ter].special == eTerSpec::DAMAGING) {
 					ASB("Your horses quite sensibly refuse.");
 					return false;
 				}
-				if (scenario.ter_types[ter].block_horse) {
+				if(scenario.ter_types[ter].block_horse) {
 					ASB("You can't take horses there!");
 					return false;
 				}
-				if ((univ.town->lighting_type > 0) && (get_ran(1,0,1) == 0)) {
+				if((univ.town->lighting_type > 0) && (get_ran(1,0,1) == 0)) {
 					ASB("The darkness spooks your horses.");
 					return false;
 				}
@@ -3110,11 +3110,11 @@ bool town_move_party(location destination,short forced)////
 			
 			move_sound(univ.town->terrain(destination.x,destination.y),(short) univ.party.age);
 			
-			if (univ.party.in_boat >= 0) {
+			if(univ.party.in_boat >= 0) {
 				// Waterfall!!!
 				run_waterfalls(0);
 			}
-			if (univ.party.in_horse >= 0) {
+			if(univ.party.in_horse >= 0) {
 				univ.party.horses[univ.party.in_horse].loc = univ.town.p_loc;
 				univ.party.horses[univ.party.in_horse].which_town = univ.town.num;
 			}
@@ -3122,7 +3122,7 @@ bool town_move_party(location destination,short forced)////
 			return true;
 		}
 		else {
-			if (is_door(destination))
+			if(is_door(destination))
 				sprintf ((char *) create_line, "Door locked: %s               ",dir_string[set_direction(univ.town.p_loc, destination)]);
 			else sprintf ((char *) create_line, "Blocked: %s               ",dir_string[set_direction(univ.town.p_loc, destination)]);
 			add_string_to_buf((char *) create_line);
@@ -3138,7 +3138,7 @@ bool someone_poisoned()
 {
 	short i;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && (univ.party[i].status[eStatus::POISON] > 0))
 			return true;
 	return false;
@@ -3148,8 +3148,8 @@ short nearest_monster()
 {
 	short i = 100,j,s;
 	
-	for (j = 0; j < 10; j++)
-		if (univ.party.out_c[j].exists) {
+	for(j = 0; j < 10; j++)
+		if(univ.party.out_c[j].exists) {
 			s = dist(univ.party.p_loc,univ.party.out_c[j].m_loc);
 			i = min(i,s);
 		}
@@ -3173,14 +3173,14 @@ short count_walls(location loc) // TODO: Generalize this function
 	short answer = 0;
 	short k = 0;
 	
-	for (k = 0; k < 31 ; k++) {
-		if (univ.out[loc.x + 1][loc.y] == walls[k])
+	for(k = 0; k < 31 ; k++) {
+		if(univ.out[loc.x + 1][loc.y] == walls[k])
 			answer++;
-		if (univ.out[loc.x - 1][loc.y] == walls[k])
+		if(univ.out[loc.x - 1][loc.y] == walls[k])
 			answer++;
-		if (univ.out[loc.x][loc.y + 1] == walls[k])
+		if(univ.out[loc.x][loc.y + 1] == walls[k])
 			answer++;
-		if (univ.out[loc.x][loc.y - 1] == walls[k])
+		if(univ.out[loc.x][loc.y - 1] == walls[k])
 			answer++;
 	}
 	return answer;

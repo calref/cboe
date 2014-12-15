@@ -54,7 +54,7 @@ void init_scenario() {
 	scenario.difficulty = 0;
 	scenario.intro_pic = 0;
 	scenario.default_ground = 1;
-	for (i = 0; i < 200; i++) {
+	for(i = 0; i < 200; i++) {
 		scenario.town_size[i] = 1;
 		scenario.town_hidden[i] = 0;
 		scenario.town_data_size[i][0] = 0;
@@ -70,51 +70,51 @@ void init_scenario() {
 	scenario.out_sec_start.y = 0;
 	scenario.out_start = scenario.where_start;
 	scenario.which_town_start = 0;
-	for (i = 0; i < 10; i++) {
+	for(i = 0; i < 10; i++) {
 		scenario.town_to_add_to[i] = -1;
 		scenario.flag_to_add_to_town[i][0] = 0;
 		scenario.flag_to_add_to_town[i][1] = 0;
 	}
-	for (i = 0; i < 100; i++) {
+	for(i = 0; i < 100; i++) {
 		scenario.out_data_size[i][0] = 0;
 		scenario.out_data_size[i][1] = 0;
 	}
-	for (i = 0; i < 3; i++) {
+	for(i = 0; i < 3; i++) {
 		scenario.store_item_rects[i] = dummy_rect;
 		scenario.store_item_towns[i] = -1;
 	}
-	for (i = 0; i < 50; i++) {
+	for(i = 0; i < 50; i++) {
 		scenario.special_items[i].flags = 0;
 		scenario.special_items[i].special = -1;
 	}
 	scenario.rating = 0;
 	scenario.uses_custom_graphics = 0;
-	for (i = 0; i < 256; i++) {
+	for(i = 0; i < 256; i++) {
 		scenario.scen_monsters[i] = cMonster();
 	}
-	for (i = 0; i < 30; i++) {
+	for(i = 0; i < 30; i++) {
 		scenario.boats[i] = null_boat;
 		scenario.horses[i] = null_horse;
 	}
-	for (i = 0; i < 256; i++) {
+	for(i = 0; i < 256; i++) {
 		scenario.ter_types[i] = cTerrain();
 		
 		scenario.scen_specials[i] = null_spec_node;
 	}
-	for (i = 0; i < 20; i++) {
+	for(i = 0; i < 20; i++) {
 		scenario.scenario_timer_times[i] = 0;
 		scenario.scenario_timer_specs[i] = -1;
 	}
-	for (i = 0; i < 10; i++) {
+	for(i = 0; i < 10; i++) {
 		scenario.storage_shortcuts[i] = null_item_s;
 	}
 	scenario.last_out_edited.x = 0;
 	scenario.last_out_edited.y = 0;
 	scenario.last_town_edited = 0;
-	for (i = 0; i < 400; i++) {
+	for(i = 0; i < 400; i++) {
 		scenario.scen_items[i] = cItemRec();
 	}
-	for (i = 0; i < 270; i++) {
+	for(i = 0; i < 270; i++) {
 		temp_str = get_str("scen-default",i + 1);
 		sprintf((char *)scenario.scen_strs(i), "%s", temp_str.c_str());
 		scenario.scen_str_len[i] = strlen(scenario.scen_strs(i));
@@ -136,14 +136,14 @@ static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	store_ter.special = (eTerSpec) boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["prop"]).getSelected().substr(4));
 	/*
 	i = CDGN(813,6);
-	if ((store_ter.special < 2) || (store_ter.special > 6)) {
-		if (cre(i,0,256,"First special flag must be from 0 to 255.","",813)) return false;
+	if((store_ter.special < 2) || (store_ter.special > 6)) {
+		if(cre(i,0,256,"First special flag must be from 0 to 255.","",813)) return false;
 	}
 	else if(store_ter.special == eTerSpec::DAMAGING) {
-		if (cre(i,0,256,"First special flag must be from 0 to 100.","",813)) return false;
+		if(cre(i,0,256,"First special flag must be from 0 to 100.","",813)) return false;
 	}
 	else if(store_ter.special == eTerSpec::DANGEROUS) {
-		if (cre(i,0,256,"First special flag must be from 0 to 8.","",813)) return false;
+		if(cre(i,0,256,"First special flag must be from 0 to 8.","",813)) return false;
 	}
 	*/
 	if(store_ter.special == eTerSpec::NONE)
@@ -158,15 +158,15 @@ static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	
 	/*
 	if(store_ter.special == eTerSpec::TOWN_ENTRANCE) {
-		if (cre(i,0,256,"Second special flag must be from 0 to 200.","",813)) return false;
+		if(cre(i,0,256,"Second special flag must be from 0 to 200.","",813)) return false;
 	}
 	else if(store_ter.special == eTerSpec::DAMAGING || store_ter.special == eTerSpec::DANGEROUS) {
-		if (cre(i,0,256,"Second special flag must be from 0 to 100.","",813)) return false;
+		if(cre(i,0,256,"Second special flag must be from 0 to 100.","",813)) return false;
 	}
 	*/
 	
 	/*
-	if (cre(i,0,255,"Transform To What must be from 0 to 255.","",813)) return false;
+	if(cre(i,0,255,"Transform To What must be from 0 to 255.","",813)) return false;
 	*/
 	store_ter.trans_to_what = me["trans"].getTextAsNum();
 	store_ter.fly_over = dynamic_cast<cLed&>(me["flight"]).getState() == led_red;
@@ -174,7 +174,7 @@ static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	store_ter.block_horse = dynamic_cast<cLed&>(me["horse"]).getState();
 	store_ter.light_radius = me["light"].getTextAsNum();
 	/*
-	 if (cre(store_ter.light_radius,0,8,"Light radius must be from 0 to 8.","",813)) return false;
+	 if(cre(store_ter.light_radius,0,8,"Light radius must be from 0 to 8.","",813)) return false;
 	 */
 	
 	std::string sound = dynamic_cast<cLedGroup&>(me["sound"]).getSelected();
@@ -442,7 +442,7 @@ static void put_monst_info_in_dlog(cDialog& me, m_num_t which_monst) {
 	char str[256];
 	cMonster& store_monst = scenario.scen_monsters[which_monst];
 	
-	if (store_monst.picture_num < 1000)
+	if(store_monst.picture_num < 1000)
 		dynamic_cast<cPict&>(me["icon"]).setPict(store_monst.picture_num,PIC_MONST);
 	else {
 		ePicType type_g = PIC_CUSTOM_MONST;
@@ -510,27 +510,27 @@ static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& 
 	if(!losing) return true;
 	if(check_range(me, id, losing, 0, 4999, "Monster pic")) {
 		// later check pic num for error, and assign widths if custom
-		if (store_monst.picture_num >= 1000) {
-			if ((store_monst.picture_num >= 1000) && (store_monst.picture_num < 2000)) {
+		if(store_monst.picture_num >= 1000) {
+			if((store_monst.picture_num >= 1000) && (store_monst.picture_num < 2000)) {
 				store_monst.x_width = 1;
 				store_monst.y_width = 1;
 			}
-			if ((store_monst.picture_num >= 2000) && (store_monst.picture_num < 3000)) {
+			if((store_monst.picture_num >= 2000) && (store_monst.picture_num < 3000)) {
 				store_monst.x_width = 2;
 				store_monst.y_width = 1;
 			}
-			if ((store_monst.picture_num >= 3000) && (store_monst.picture_num < 4000)) {
+			if((store_monst.picture_num >= 3000) && (store_monst.picture_num < 4000)) {
 				store_monst.x_width = 1;
 				store_monst.y_width = 2;
 			}
-			if ((store_monst.picture_num >= 4000) && (store_monst.picture_num < 5000)) {
+			if((store_monst.picture_num >= 4000) && (store_monst.picture_num < 5000)) {
 				store_monst.x_width = 2;
 				store_monst.y_width = 2;
 			}
 		}
 		else {
 			// TODO: Update this with new value if more monster pictures are added later
-			if (cre(store_monst.picture_num,0,200,"Non-customized monster pic must be from 0 to 200.","",&me) > 0) return false;
+			if(cre(store_monst.picture_num,0,200,"Non-customized monster pic must be from 0 to 200.","",&me) > 0) return false;
 			store_monst.x_width = m_pic_index[store_monst.picture_num].x;
 			store_monst.y_width = m_pic_index[store_monst.picture_num].y;
 			
@@ -580,7 +580,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 	} else if(item_hit == "abils") {
 		if(!save_monst_info(me,store_monst)) return false;
 		temp_monst = edit_monst_abil(store_monst,which_monst);
-		if (temp_monst.level < 255)
+		if(temp_monst.level < 255)
 			store_monst = temp_monst;
 		put_monst_info_in_dlog(me,which_monst);
 	} else if(item_hit == "left") {
@@ -601,7 +601,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 	} else if(item_hit == "picktype") {
 		if(!save_monst_info(me,store_monst)) return false;
 		i = choose_text_res("monster-abilities",150,167,int(store_monst.m_type) + 150,&me,"Choose Monster Type:");
-		if (i >= 0) {
+		if(i >= 0) {
 			i -= 150;
 			store_monst.m_type = (eRace) i;
 			put_monst_info_in_dlog(me,which_monst);
@@ -609,21 +609,21 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 	} else if(item_hit == "picktype1") {
 		if(!save_monst_info(me,store_monst)) return false;
 		i = choose_text_res("monster-abilities",130,139,store_monst.a[0].type + 130,&me,"Choose Attack 1 Type:");
-		if (i >= 0) {
+		if(i >= 0) {
 			store_monst.a[0].type = i - 130;
 			put_monst_info_in_dlog(me,which_monst);
 		}
 	} else if(item_hit == "picktype2") {
 		if(!save_monst_info(me,store_monst)) return false;
 		i = choose_text_res("monster-abilities",130,139,store_monst.a[1].type + 130,&me,"Choose Attack 2 & 3 Type:");
-		if (i >= 0) {
+		if(i >= 0) {
 			store_monst.a[1].type = store_monst.a[2].type = i - 130;
 			put_monst_info_in_dlog(me,which_monst);
 		}
 	} else if(item_hit == "picktype3") {
 		if(!save_monst_info(me,store_monst)) return false;
 		i = choose_text_res("monster-abilities",130,139,store_monst.a[2].type + 130,&me,"Choose Attack 3 Type:");
-		if (i >= 0) {
+		if(i >= 0) {
 			store_monst.a[2].type = i - 130;
 			put_monst_info_in_dlog(me,which_monst);
 		}
@@ -740,14 +740,14 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonst
 	} else if(item_hit == "abils") {
 		if(!save_monst_abils(me, store_monst)) return true;
 		i = choose_text_res("monster-abilities", 1, 38, store_monst.spec_skill + 1, &me, "Choose Monster Ability:");
-		if (i >= 0) {
+		if(i >= 0) {
 			store_monst.spec_skill = i - 1;
 			put_monst_abils_in_dlog(me, store_monst, which_monst);
 		}
 	} else if(item_hit == "radiate") {
 		if(!save_monst_abils(me, store_monst)) return true;
 		i = choose_text_res("monster-abilities", 50, 65, store_monst.radiate_1 + 50, &me, "Choose Radiation Ability:");
-		if (i >= 0) {
+		if(i >= 0) {
 			store_monst.radiate_1 = i - 50;
 			put_monst_abils_in_dlog(me, store_monst, which_monst);
 		}
@@ -954,11 +954,11 @@ static bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) 
 	store_item.weight = me["weight"].getTextAsNum();
 	store_item.special_class = me["class"].getTextAsNum();
 	
-	if ((store_item.type_flag > 0) && (store_item.charges == 0)) {
+	if((store_item.type_flag > 0) && (store_item.charges == 0)) {
 		giveError("If the Type Flag is greater than 0, the Charges must also be greater than 0.","",&me);
 		return false;
 	}
-	if (store_item.variety == eItemType::UNUSED1 || store_item.variety == eItemType::UNUSED2) {
+	if(store_item.variety == eItemType::UNUSED1 || store_item.variety == eItemType::UNUSED2) {
 		giveError("The Unused item varieties are reserved for later expansions, and can't be used now.","",&me);
 		return false;
 	}
@@ -982,13 +982,13 @@ static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem
 	} else if(item_hit == "prev") {
 		if(!save_item_info(me, store_item, store_which_item)) return true;
 		store_which_item--;
-		if (store_which_item < 0) store_which_item = 399;
+		if(store_which_item < 0) store_which_item = 399;
 		store_item = scenario.scen_items[store_which_item];
 		put_item_info_in_dlog(me, store_item, store_which_item);
 	} else if(item_hit == "next") {
 		if(!save_item_info(me, store_item, store_which_item)) return true;
 		store_which_item++;
-		if (store_which_item > 399) store_which_item = 0;
+		if(store_which_item > 399) store_which_item = 0;
 		store_item = scenario.scen_items[store_which_item];
 		put_item_info_in_dlog(me, store_item, store_which_item);
 	} else if(item_hit == "choospic") {
@@ -1248,7 +1248,7 @@ void edit_spec_item(short which_item) {
 static void put_save_rects_in_dlog(cDialog& me) {
 	short i;
 	
-	for (i = 0; i < 3; i++) {
+	for(i = 0; i < 3; i++) {
 		std::string id = std::to_string(i + 1);
 		me["top" + id].setTextToNum(scenario.store_item_rects[i].top);
 		me["left" + id].setTextToNum(scenario.store_item_rects[i].left);
@@ -1262,19 +1262,19 @@ static void put_save_rects_in_dlog(cDialog& me) {
 static bool save_save_rects(cDialog& me) {
 	short i;
 	
-	for (i = 0; i < 3; i++) {
+	for(i = 0; i < 3; i++) {
 		std::string id = std::to_string(i + 1);
 		scenario.store_item_rects[i].top = me["top" + id].getTextAsNum();
 		scenario.store_item_rects[i].left = me["left" + id].getTextAsNum();
 		scenario.store_item_rects[i].bottom = me["bottom" + id].getTextAsNum();
 		scenario.store_item_rects[i].right = me["right" + id].getTextAsNum();
 		scenario.store_item_towns[i] = me["town" + id].getTextAsNum();
-		if ((scenario.store_item_towns[i] < -1) || (scenario.store_item_towns[i] >= 200)) {
+		if((scenario.store_item_towns[i] < -1) || (scenario.store_item_towns[i] >= 200)) {
 			giveError("Towns must be in 0 to 200 range (or -1 for no save items rectangle).","",&me);
 			return false;
 		}
 	}
-	if (((scenario.store_item_towns[0] == scenario.store_item_towns[1]) &&
+	if(((scenario.store_item_towns[0] == scenario.store_item_towns[1]) &&
 		 (scenario.store_item_towns[0] >= 0) && (scenario.store_item_towns[1] >= 0))
 		||
 		((scenario.store_item_towns[2] == scenario.store_item_towns[1]) &&
@@ -1313,7 +1313,7 @@ void edit_save_rects() {
 static bool save_vehicles(cDialog& me, cVehicle* vehicles, const short page) {
 	short i;
 	
-	for (i = 0; i < 6; i++) {
+	for(i = 0; i < 6; i++) {
 		std::string id = std::to_string(i + 1);
 		vehicles[6 * page + i].which_town = me["town" + id].getTextAsNum();
 		if(cre(vehicles[6 * page + i].which_town,
@@ -1332,7 +1332,7 @@ static bool save_vehicles(cDialog& me, cVehicle* vehicles, const short page) {
 static void put_vehicles_in_dlog(cDialog& me, cVehicle* vehicles, const short page) {
 	short i;
 	
-	for (i = 0; i < 6; i++) {
+	for(i = 0; i < 6; i++) {
 		std::string id = std::to_string(i + 1);
 		me["num" + id].setTextToNum(6 * page + i);
 		me["town" + id].setTextToNum(vehicles[6 * page + i].which_town);
@@ -1388,16 +1388,16 @@ void edit_boats() {
 static bool save_add_town(cDialog& me) {
 	short i;
 	
-	for (i = 0; i < 10; i++) {
+	for(i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		scenario.town_to_add_to[i] = me["town" + id].getTextAsNum();
-		if (cre(scenario.town_to_add_to[i],
+		if(cre(scenario.town_to_add_to[i],
 				-1,199,"Town number must be from 0 to 199 (or -1 for no effect).","",&me)) return false;
 		scenario.flag_to_add_to_town[i][0] = me["flag" + id + "-x"].getTextAsNum();
-		if (cre(scenario.flag_to_add_to_town[i][0],
+		if(cre(scenario.flag_to_add_to_town[i][0],
 				0,299,"First part of flag must be from 0 to 299.","",&me)) return false;
 		scenario.flag_to_add_to_town[i][1] = me["flag" + id + "-y"].getTextAsNum();
-		if (cre(scenario.flag_to_add_to_town[i][1],
+		if(cre(scenario.flag_to_add_to_town[i][1],
 				0,9,"Second part of flag must be from 0 to 9.","",&me)) return false;
 	}
 	return true;
@@ -1406,7 +1406,7 @@ static bool save_add_town(cDialog& me) {
 static void put_add_town_in_dlog(cDialog& me) {
 	short i;
 	
-	for (i = 0; i < 10; i++) {
+	for(i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		me["town" + id].setTextToNum(scenario.town_to_add_to[i]);
 		me["flag" + id + "-x"].setTextToNum(scenario.flag_to_add_to_town[i][0]);
@@ -1438,9 +1438,9 @@ static bool save_item_placement(cDialog& me, cScenario::cItemStorage& store_stor
 	
 	store_storage.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
 	store_storage.ter_type = me["ter"].getTextAsNum();
-	if (cre(store_storage.ter_type,
+	if(cre(store_storage.ter_type,
 			-1,255,"Terrain Type must be from 0 to 255 (or -1 for No Shortcut).","",&me)) return false;
-	for (i = 0; i < 10; i++) {
+	for(i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		store_storage.item_num[i] = me["item" + id].getTextAsNum();
 		if(cre(store_storage.item_num[i],
@@ -1459,7 +1459,7 @@ static void put_item_placement_in_dlog(cDialog& me, const cScenario::cItemStorag
 	me["num"].setTextToNum(cur_shortcut);
 	dynamic_cast<cLed&>(me["owned"]).setState(store_storage.property ? led_red : led_off);
 	me["ter"].setTextToNum(store_storage.ter_type);
-	for (i = 0; i < 10; i++) {
+	for(i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		me["item" + id].setTextToNum(store_storage.item_num[i]);
 		me["odds" + id].setTextToNum(store_storage.item_odds[i]);
@@ -1477,13 +1477,13 @@ static bool edit_item_placement_event_filter(cDialog& me, std::string item_hit, 
 	} else if(item_hit == "left") {
 		if(!save_item_placement(me, store_storage, cur_shortcut)) return true;
 		cur_shortcut--;
-		if (cur_shortcut < 0) cur_shortcut = 9;
+		if(cur_shortcut < 0) cur_shortcut = 9;
 		store_storage = scenario.storage_shortcuts[cur_shortcut];
 		put_item_placement_in_dlog(me, store_storage, cur_shortcut);
 	} else if(item_hit == "right") {
 		if(!save_item_placement(me, store_storage, cur_shortcut)) return true;
 		cur_shortcut++;
-		if (cur_shortcut > 9) cur_shortcut = 0;
+		if(cur_shortcut > 9) cur_shortcut = 0;
 		store_storage = scenario.storage_shortcuts[cur_shortcut];
 		put_item_placement_in_dlog(me, store_storage, cur_shortcut);
 	} else if(item_hit == "choose-ter") {
@@ -1578,16 +1578,16 @@ static bool edit_make_scen_1_event_filter(cDialog& me, std::string, eKeyMod) {
 	
 	std::string str = me["file"].getText();
 	j = str.length();
-	if (j == 0) {
+	if(j == 0) {
 		giveError("You've left the file name empty.","",&me);
 		return true;
 	}
-	if (j > 50) {
+	if(j > 50) {
 		giveError("The file name can be at most 50 characters long.","",&me);
 		return true;
 	}
-	for (i = 0; i < j; i++)
-		if ((str[i] < 97) || (str[i] > 122)) {
+	for(i = 0; i < j; i++)
+		if((str[i] < 97) || (str[i] > 122)) {
 			giveError("The file name must consist of only lower case letters.","",&me);
 			return true;
 		}
@@ -1615,17 +1615,17 @@ static bool edit_make_scen_2_event_filter(cDialog& me, std::string, eKeyMod) {
 	short i,j,k;
 	
 	i = me["out-w"].getTextAsNum();
-	if (cre(i, 1,50,"Outdoors width must be between 1 and 50.","",&me)) return true;
+	if(cre(i, 1,50,"Outdoors width must be between 1 and 50.","",&me)) return true;
 	j = me["out-h"].getTextAsNum();
-	if (cre(j, 1,50,"Outdoors height must be between 1 and 50.","",&me)) return true;
-	if (cre(i * j, 1,100,"The total number of outdoor sections (width times height) must be between 1 and 100.","",&me)) return true;
+	if(cre(j, 1,50,"Outdoors height must be between 1 and 50.","",&me)) return true;
+	if(cre(i * j, 1,100,"The total number of outdoor sections (width times height) must be between 1 and 100.","",&me)) return true;
 	i = me["town_s"].getTextAsNum();
 	j = me["town_m"].getTextAsNum();
 	k = me["town_l"].getTextAsNum();
-	if (cre(i, 0,200,"Number of small towns must be between 0 and 200.","",&me)) return true;
-	if (cre(j, 1,200,"Number of medium towns must be between 1 and 200. The first town (Town 0) must always be of medium size.","",&me)) return true;
-	if (cre(k, 0,200,"Number of large towns must be between 0 and 200.","",&me)) return true;
-	if (cre(i + j + k, 1,200,"The total number of towns must be from 1 to 200 (you must have at least 1 town).","",&me)) return true;
+	if(cre(i, 0,200,"Number of small towns must be between 0 and 200.","",&me)) return true;
+	if(cre(j, 1,200,"Number of medium towns must be between 1 and 200. The first town (Town 0) must always be of medium size.","",&me)) return true;
+	if(cre(k, 0,200,"Number of large towns must be between 0 and 200.","",&me)) return true;
+	if(cre(i + j + k, 1,200,"The total number of towns must be from 1 to 200 (you must have at least 1 town).","",&me)) return true;
 	
 	me.toast(true);
 	return true;
@@ -1669,8 +1669,8 @@ bool build_scenario() {
 	if(!default_town) {
 		init_town(1);
 		if(!grass)
-			for (i = 0; i < 48; i++)
-				for (j = 0; j < 48; j++)
+			for(i = 0; i < 48; i++)
+				for(j = 0; j < 48; j++)
 					town->terrain(i,j) = 0;
 	} else {
 		fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
@@ -1733,17 +1733,17 @@ void set_starting_loc_filter (short item_hit) {
 	char str[256];
 	short i,j,k;
 	
-	switch (item_hit) {
+	switch(item_hit) {
 		case 5:
 			i = CDGN(805,2);
 			j = CDGN(805,3);
 			k = CDGN(805,4);
-			if ((i < 0) || (i >= scenario.num_towns)) {
+			if((i < 0) || (i >= scenario.num_towns)) {
 				sprintf((char *) str,"The starting town must be from 0 to %d.",scenario.num_towns - 1);
 				give_error((char *) str,"",805);
 				break;
 			}
-			if ((j < 0) || (j >= max_dim[scenario.town_size[i]] - 1) ||
+			if((j < 0) || (j >= max_dim[scenario.town_size[i]] - 1) ||
 				(k < 0) || (k >= max_dim[scenario.town_size[i]] - 1)) {
 				give_error("This coordinate is not inside the bounds of the town.","",805);
 				break;
@@ -1782,15 +1782,15 @@ bool save_scenario_events() {
 #if 0
 	short i;
 	
-	for (i = 0; i < 10; i++) {
+	for(i = 0; i < 10; i++) {
 		scenario.scenario_timer_times[i] = CDGN(811,2 + i);
-		if ((scenario.scenario_timer_times[i] > 0) &&
+		if((scenario.scenario_timer_times[i] > 0) &&
 			(scenario.scenario_timer_times[i] % 10 != 0)) {
 			give_error("All scenario event times must be multiples of 10 (e.g. 100, 150, 1000, etc.).","",811);
 			return false;
 		}
 		scenario.scenario_timer_specs[i] = CDGN(811,12 + i);
-		if (cre(scenario.scenario_timer_specs[i],-1,255,"The scenario special nodes must be between 0 at 255 (or -1 for no special)."
+		if(cre(scenario.scenario_timer_specs[i],-1,255,"The scenario special nodes must be between 0 at 255 (or -1 for no special)."
 				,"",811)) return false;
 	}
 #endif
@@ -1801,7 +1801,7 @@ void put_scenario_events_in_dlog() {
 #if 0
 	short i;
 	
-	for (i = 0; i < 10; i++) {
+	for(i = 0; i < 10; i++) {
 		CDSN(811,2 + i,scenario.scenario_timer_times[i]);
 		CDSN(811,12 + i,scenario.scenario_timer_specs[i]);
 	}
@@ -1812,19 +1812,19 @@ void edit_scenario_events_event_filter (short item_hit) {
 #if 0
 	short spec;
 	
-	switch (item_hit) {
+	switch(item_hit) {
 		case 22:
-			if (save_scenario_events())
+			if(save_scenario_events())
 				toast_dialog();
 			break;
 		default:
-			if ((item_hit >= 30) && (item_hit <= 39)) {
-				if (!save_scenario_events())
+			if((item_hit >= 30) && (item_hit <= 39)) {
+				if(!save_scenario_events())
 					break;
 				spec = CDGN(811,item_hit - 30 + 12);
-				if ((spec < 0) || (spec > 255)) {
+				if((spec < 0) || (spec > 255)) {
 					spec = get_fresh_spec(0);
-					if (spec < 0) {
+					if(spec < 0) {
 						give_error("You can't create a new scenario special encounter because there are no more free special nodes.",
 								   "To free a special node, set its type to No Special and set its Jump To special to -1.",811);
 						break;
@@ -1832,7 +1832,7 @@ void edit_scenario_events_event_filter (short item_hit) {
 					CDSN(811,item_hit - 30 + 12,spec);
 				}
 				edit_spec_enc(spec,0,811);
-				if ((spec >= 0) && (spec < 256) && (scenario.scen_specials[spec].pic < 0))
+				if((spec >= 0) && (spec < 256) && (scenario.scen_specials[spec].pic < 0))
 					CDSN(811,item_hit - 30 + 12,-1);
 			}
 			break;

@@ -36,7 +36,7 @@ std::vector<pic_num_t> lgdlog_pics = {0,72};
 
 //cre = check range error
 bool cre(short val,short min,short max,const char *text1,const char *text2,cDialog* parent) {
-	if ((val < min) || (val > max)) {
+	if((val < min) || (val > max)) {
 		giveError(text1,text2,parent);
 		return true;
 	}
@@ -177,26 +177,26 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 	short num_strs[3] = {260,108,140};
 	
 	std::string newVal = me["text"].getText();
-	if (str_mode == 0)
+	if(str_mode == 0)
 		strcpy(scenario.scen_strs(which_str), newVal.c_str());
-	if (str_mode == 1)
+	if(str_mode == 1)
 		strcpy(current_terrain.out_strs(which_str), newVal.c_str());
-	if (str_mode == 2)
+	if(str_mode == 2)
 		strcpy(town->town_strs(which_str), newVal.c_str());
 	if(item_hit == "okay") me.toast(true);
 	else if(item_hit == "left" || item_hit == "right") {
 		if(item_hit[0] == 'l')
 			which_str--;
 		else which_str++;
-		if (which_str < 0) which_str = num_strs[str_mode] - 1;
-		if (which_str >= num_strs[str_mode]) which_str = 0;
+		if(which_str < 0) which_str = num_strs[str_mode] - 1;
+		if(which_str >= num_strs[str_mode]) which_str = 0;
 	}
 	me["num"].setTextToNum(which_str);
-	if (str_mode == 0)
+	if(str_mode == 0)
 		me["text"].setText(scenario.scen_strs(which_str));
-	if (str_mode)
+	if(str_mode)
 		me["text"].setText(current_terrain.out_strs(which_str));
-	if (str_mode == 2)
+	if(str_mode == 2)
 		me["text"].setText(town->town_strs(which_str));
 	return true;
 }
@@ -258,7 +258,7 @@ static bool save_spec_enc(cDialog& me, short which_mode, short which_node) {
 	store_spec_node.m1 = me["msg1"].getTextAsNum();
 	store_spec_node.m2 = me["msg2"].getTextAsNum();
 	store_spec_node.pic = me["pict"].getTextAsNum();
-	if (store_spec_node.pic < 0)
+	if(store_spec_node.pic < 0)
 		store_spec_node.pic = 0;
 	store_spec_node.ex1a = me["x1a"].getTextAsNum();
 	store_spec_node.ex1b = me["x1b"].getTextAsNum();
@@ -267,9 +267,9 @@ static bool save_spec_enc(cDialog& me, short which_mode, short which_node) {
 	store_spec_node.jumpto = me["jump"].getTextAsNum();
 	
 	if((*store_spec_node.type).sdf_label == 1) {
-		if (cre(store_spec_node.sd1,-1,299,"The first part of a Stuff Done flag must be from 0 to 299 (or -1 if the Stuff Done flag is ignored.",
+		if(cre(store_spec_node.sd1,-1,299,"The first part of a Stuff Done flag must be from 0 to 299 (or -1 if the Stuff Done flag is ignored.",
 				"",&me) > 0) return false;
-		if (cre(store_spec_node.sd2,-1,9,"The second part of a Stuff Done flag must be from 0 to 9 (or -1 if the Stuff Done flag is ignored.",
+		if(cre(store_spec_node.sd2,-1,9,"The second part of a Stuff Done flag must be from 0 to 9 (or -1 if the Stuff Done flag is ignored.",
 				"",&me) > 0) return false;
 	}
 	
@@ -436,7 +436,7 @@ static void put_spec_enc_in_dlog(cDialog& me, short which_node) {
 	else me["x2b-edit"].hide();
 	
 	me["jump"].setTextToNum(store_spec_node.jumpto);
-	switch ((*store_spec_node.type).jmp_label) {
+	switch((*store_spec_node.type).jmp_label) {
 		case 0:
 			me["jump-lbl"].setText("Special to Jump To");
 			break;
@@ -484,7 +484,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			spec = me["x2b"].getTextAsNum();
 		else if(item_hit == "jump-edit")
 			spec = me["jump"].getTextAsNum();
-		if ((spec < 0) || (spec >= num_specs[which_mode])) {
+		if((spec < 0) || (spec >= num_specs[which_mode])) {
 			spec = -1;
 			//CDSN(822,8,-1)
 			// TODO: Generalize this situation of a node jumping to a scenario node
@@ -493,7 +493,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			else if(item_hit == "jump-edit" && store_spec_node.type == eSpecType::CALL_GLOBAL)
 				spec = get_fresh_spec(0);
 			else spec = get_fresh_spec(which_mode);
-			if (spec < 0) {
+			if(spec < 0) {
 				giveError("You can't create a new special encounter because there are no more free special nodes.",
 						  "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
 				return true;
@@ -505,11 +505,11 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			else if(item_hit == "jump-edit")
 				me["jump"].setTextToNum(spec);
 			/*
-			if (item_hit == 43)
+			if(item_hit == 43)
 				store_spec_node.ex1b = spec;
-			if (item_hit == 44)
+			if(item_hit == 44)
 				store_spec_node.ex2b = spec;
-			if (item_hit == 45)
+			if(item_hit == 45)
 				store_spec_node.jumpto = spec;
 			*/
 		}
@@ -522,7 +522,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		else node_to_change_to = which_mode * 1000 + spec;
 		last_node.push(which_mode * 1000 + which_node);
 	} else if(item_hit == "x1a-edit") {
-		switch (store_spec_node.type) {
+		switch(store_spec_node.type) {
 			case eSpecType::FORCED_GIVE:
 			case eSpecType::ONCE_GIVE_ITEM:
 			case eSpecType::ONCE_GIVE_ITEM_DIALOG:
@@ -545,7 +545,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		store_spec_node.ex1a = i;
 		me["x1a"].setTextToNum(store_spec_node.ex1a);
 	} else if(item_hit == "x2a-edit") {
-		switch (store_spec_node.type) {
+		switch(store_spec_node.type) {
 			case eSpecType::FORCED_GIVE:
 			case eSpecType::ONCE_GIVE_ITEM:
 			case eSpecType::TOWN_PLACE_ITEM:
@@ -576,13 +576,13 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 	} else if(item_hit == "msg2-edit") { // TODO: What about msg1-edit?
 		if(save_spec_enc(me, which_mode, which_node))
 			return true;
-		if (((*store_spec_node.type).msg_label == 2) ||
+		if(((*store_spec_node.type).msg_label == 2) ||
 			((*store_spec_node.type).msg_label == 4) ||
 			((*store_spec_node.type).msg_label == 5)) {
 			edit_dialog_text(which_mode,&store_spec_node.m1,&me);
 			put_spec_enc_in_dlog(me, which_node);
 		}
-		else if (((*store_spec_node.type).msg_label == 1) ||
+		else if(((*store_spec_node.type).msg_label == 1) ||
 				 ((*store_spec_node.type).msg_label == 3)) {
 			edit_spec_text(which_mode,&store_spec_node.m1,
 						   &store_spec_node.m2,&me);
@@ -592,7 +592,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		if(save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = -1;
-		switch ((*store_spec_node.type).pic_label) {
+		switch((*store_spec_node.type).pic_label) {
 			case 1:
 				i = choose_graphic(store_spec_node.pic,PIC_DLOG,&me);
 				break;
@@ -612,7 +612,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			return true;
 		// TODO: I wonder if this can all be achieved without casts... if not, at least check getNodeCategory to ensure validity.
 		i = choose_text_res("special-node-names",1,28,int(store_spec_node.type) + 1,&me,"Choose General Use Special:");
-		if (i >= 0) {
+		if(i >= 0) {
 			store_spec_node.type = eSpecType(i - 1);
 		}
 		put_spec_enc_in_dlog(me, which_node);
@@ -620,7 +620,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		if(save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = choose_text_res("special-node-names",51,64,int(store_spec_node.type) + 1,&me,"Choose One-Shot Special:");
-		if (i >= 0) {
+		if(i >= 0) {
 			store_spec_node.type = eSpecType(i - 1);
 			store_spec_node.sd1 = -1;
 			store_spec_node.sd2 = -1;
@@ -632,13 +632,13 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		if(save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = choose_text_res("special-node-names",81,107,int(store_spec_node.type) + 1,&me,"Choose Affect Party Special:");
-		if (i >= 0) store_spec_node.type = eSpecType(i - 1);
+		if(i >= 0) store_spec_node.type = eSpecType(i - 1);
 		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "ifthen") {
 		if(save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = choose_text_res("special-node-names",131,156,int(store_spec_node.type) + 1,&me,"Choose If-Then Special:");
-		if (i >= 0) {
+		if(i >= 0) {
 			store_spec_node.type = eSpecType(i - 1);
 		}
 		put_spec_enc_in_dlog(me, which_node);
@@ -646,31 +646,31 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		if(save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = choose_text_res("special-node-names",171,219,int(store_spec_node.type) + 1,&me,"Choose Town Special:");
-		if (i >= 0) store_spec_node.type = eSpecType(i - 1);
+		if(i >= 0) store_spec_node.type = eSpecType(i - 1);
 		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "out") {
 		if(save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = choose_text_res("special-node-names",226,230,int(store_spec_node.type) + 1,&me,"Choose Outdoor Special:");
-		if (i >= 0) store_spec_node.type = eSpecType(i - 1);
+		if(i >= 0) store_spec_node.type = eSpecType(i - 1);
 		put_spec_enc_in_dlog(me, which_node);
 	}
-	/*if ((item_hit >= 37) && (item_hit <= 42)) {
-		if (cd_get_active(822,43) == 0)
+	/*if((item_hit >= 37) && (item_hit <= 42)) {
+		if(cd_get_active(822,43) == 0)
 			CDSN(822,8,0);
-		if (cd_get_active(822,44) == 0)
+		if(cd_get_active(822,44) == 0)
 			CDSN(822,10,0);
 	}*/// Might be useful, but I forget what I was thinking when I added it.
-	if (node_to_change_to >= 0) {
+	if(node_to_change_to >= 0) {
 		which_mode = node_to_change_to / 1000;
 		which_node = node_to_change_to % 1000;
-		if (which_mode == 0)
+		if(which_mode == 0)
 			store_spec_node = scenario.scen_specials[which_node];
-		if (which_mode == 1)
+		if(which_mode == 1)
 			store_spec_node = current_terrain.specials[which_node];
-		if (which_mode == 2)
+		if(which_mode == 2)
 			store_spec_node = town->specials[which_node];
-		if (store_spec_node.pic < 0)
+		if(store_spec_node.pic < 0)
 			store_spec_node.pic = 0;
 		put_spec_enc_in_dlog(me, which_node);
 	}
@@ -685,13 +685,13 @@ void edit_spec_enc(short which_node,short mode) {
 	// Clear the "nodes edited" stack; should already be clear, but just make sure
 	while(!last_node.empty()) last_node.pop();
 	//last_node[0] = store_which_mode * 1000 + store_which_node;
-	if (mode == 0)
+	if(mode == 0)
 		store_spec_node = scenario.scen_specials[which_node];
-	if (mode == 1)
+	if(mode == 1)
 		store_spec_node = current_terrain.specials[which_node];
-	if (mode == 2)
+	if(mode == 2)
 		store_spec_node = town->specials[which_node];
-	if (store_spec_node.pic < 0)
+	if(store_spec_node.pic < 0)
 		store_spec_node.pic = 0;
 	
 	cDialog special("edit-special-node.xml");
@@ -711,12 +711,12 @@ short get_fresh_spec(short which_mode) {
 	short i;
 	cSpecial store_node;
 	
-	for (i = 0; i < num_specs[which_mode]; i++) {
-		if (which_mode == 0)
+	for(i = 0; i < num_specs[which_mode]; i++) {
+		if(which_mode == 0)
 			store_node = scenario.scen_specials[i];
-		if (which_mode == 1)
+		if(which_mode == 1)
 			store_node = current_terrain.specials[i];
-		if (which_mode == 2)
+		if(which_mode == 2)
 			store_node = town->specials[i];
 		if(store_node.type == eSpecType::NONE && store_node.jumpto == -1 && store_node.pic == -1)
 			return i;
@@ -735,30 +735,30 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 			if(*str1 < 0) {
 				switch(spec_str_mode) {
 					case 0:
-						for (i = 160; i < 260; i++)
+						for(i = 160; i < 260; i++)
 							// TODO: This could overwrite a string if it's unlucky enough to start with *
-							if (scenario.scen_strs(i)[0] == '*') {
+							if(scenario.scen_strs(i)[0] == '*') {
 								*str1 = i - 160;
 								i = 500;
 							}
 						break;
 					case 1:
-						for (i = 10; i < 100; i++)
-							if (current_terrain.out_strs(i)[0] == '*') {
+						for(i = 10; i < 100; i++)
+							if(current_terrain.out_strs(i)[0] == '*') {
 								*str1 = i - 10;
 								i = 500;
 							}
 						break;
 					case 2:
-						for (i = 20; i < 120; i++)
-							if (town->town_strs(i)[0] == '*') {
+						for(i = 20; i < 120; i++)
+							if(town->town_strs(i)[0] == '*') {
 								*str1 = i - 20;
 								i = 500;
 							}
 						break;
 						
 				}
-				if (i < 500) {
+				if(i < 500) {
 					giveError("There are no more free message slots.",
 							  "To free up some slots, go into Edit Town/Out/Scenario Text to clear some messages.", &me);
 					return true;
@@ -783,29 +783,29 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 			if(*str2 < 0) {
 				switch(spec_str_mode) {
 					case 0:
-						for (i = 160; i < 260; i++)
-							if (scenario.scen_strs(i)[0] == '*') {
+						for(i = 160; i < 260; i++)
+							if(scenario.scen_strs(i)[0] == '*') {
 								*str2 = i - 160;
 								i = 500;
 							}
 						break;
 					case 1:
-						for (i = 10; i < 100; i++)
-							if (current_terrain.out_strs(i)[0] == '*') {
+						for(i = 10; i < 100; i++)
+							if(current_terrain.out_strs(i)[0] == '*') {
 								*str2 = i - 10;
 								i = 500;
 							}
 						break;
 					case 2:
-						for (i = 20; i < 120; i++)
-							if (town->town_strs(i)[0] == '*') {
+						for(i = 20; i < 120; i++)
+							if(town->town_strs(i)[0] == '*') {
 								*str2 = i - 20;
 								i = 500;
 							}
 						break;
 						
 				}
-				if (i < 500) {
+				if(i < 500) {
 					giveError("There are no more free message slots.",
 							  "To free up some slots, go into Edit Town/Out/Scenario Text to clear some messages.", &me);
 					return true;
@@ -838,24 +838,24 @@ void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent) {
 	cDialog edit("edit-special-text.xml", parent);
 	edit.attachClickHandlers(std::bind(edit_spec_text_event_filter, _1, _2, mode, str1, str1), {"okay", "cancel"});
 	
-	if (*str1 >= num_s_strs[mode])
+	if(*str1 >= num_s_strs[mode])
 		*str1 = -1;
-	if (*str1 >= 0){
-		if (mode == 0)
+	if(*str1 >= 0){
+		if(mode == 0)
 			edit["str1"].setText(scenario.scen_strs(*str1 + 160));
-		if (mode == 1)
+		if(mode == 1)
 			edit["str1"].setText(current_terrain.out_strs(*str1 + 10));
-		if (mode == 2)
+		if(mode == 2)
 			edit["str1"].setText(town->town_strs(*str1 + 20));
 	}
-	if (*str2 >= num_s_strs[mode])
+	if(*str2 >= num_s_strs[mode])
 		*str2 = -1;
-	if (*str2 >= 0){
-		if (mode == 0)
+	if(*str2 >= 0){
+		if(mode == 0)
 			edit["str2"].setText(scenario.scen_strs(*str2 + 160));
-		if (mode == 1)
+		if(mode == 1)
 			edit["str2"].setText(current_terrain.out_strs(*str2 + 10));
-		if (mode == 2)
+		if(mode == 2)
 			edit["str2"].setText(town->town_strs(*str2 + 20));
 	}
 	edit.run();
@@ -866,11 +866,11 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, sho
 	short i;
 	
 	if(item_hit == "okay") {
-		for (i = 0; i < 6; i++) {
+		for(i = 0; i < 6; i++) {
 			std::string id = "str" + std::to_string(i + 1);
 			str = me[id].getText();
 			if(i == 0 && str.empty()) break;
-			switch (spec_str_mode) {
+			switch(spec_str_mode) {
 				case 0:
 					strcpy(scenario.scen_strs(*str1 + 160 + i),str.c_str());
 					break;
@@ -892,42 +892,42 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 	short i,j;
 	short num_s_strs[3] = {100,90,100};
 	
-	if (*str1 >= num_s_strs[mode] - 6)
+	if(*str1 >= num_s_strs[mode] - 6)
 		*str1 = -1;
 	// first, assign the 6 strs for the dialog.
-	if (*str1 < 0) {
+	if(*str1 < 0) {
 		switch(mode) {
 			case 0:
-				for (i = 160; i < 260 - 6; i++) {
-					for (j = i; j < i + 6; j++)
-						if (scenario.scen_strs(j)[0] != '*') {
+				for(i = 160; i < 260 - 6; i++) {
+					for(j = i; j < i + 6; j++)
+						if(scenario.scen_strs(j)[0] != '*') {
 							j = 500;
 						}
-					if (j < 500) {
+					if(j < 500) {
 						*str1 = i - 160;
 						i = 500;
 					}
 				}
 				break;
 			case 1:
-				for (i = 10; i < 100 - 6; i++) {
-					for (j = i; j < i + 6; j++)
-						if (current_terrain.out_strs(j)[0] != '*') {
+				for(i = 10; i < 100 - 6; i++) {
+					for(j = i; j < i + 6; j++)
+						if(current_terrain.out_strs(j)[0] != '*') {
 							j = 500;
 						}
-					if (j < 500) {
+					if(j < 500) {
 						*str1 = i - 10;
 						i = 500;
 					}
 				}
 				break;
 			case 2:
-				for (i = 20; i < 120 - 6; i++) {
-					for (j = i; j < i + 6; j++)
-						if (town->town_strs(j)[0] != '*') {
+				for(i = 20; i < 120 - 6; i++) {
+					for(j = i; j < i + 6; j++)
+						if(town->town_strs(j)[0] != '*') {
 							j = 500;
 						}
-					if (j < 500) {
+					if(j < 500) {
 						*str1 = i - 20;
 						i = 500;
 					}
@@ -935,8 +935,8 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 				break;
 				
 		}
-		if (*str1 >= 0)
-			for (i = *str1; i < *str1 + 6; i++) {
+		if(*str1 >= 0)
+			for(i = *str1; i < *str1 + 6; i++) {
 				switch(mode) {
 					case 0:
 						strcpy(scenario.scen_strs(160 + i),"");
@@ -950,7 +950,7 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 				}
 			}
 	}
-	if (*str1 < 0) {
+	if(*str1 < 0) {
 		giveError("To create a dialog, you need 6 consecutive unused messages. To free up 6 messages, select Edit Out/Town/Scenario Text from the menus.","",parent);
 		return;
 	}
@@ -959,14 +959,14 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 	cDialog edit("edit-dialog-text.xml",parent);
 	edit.attachClickHandlers(std::bind(edit_dialog_text_event_filter, _1, _2, mode, str1), {"okay", "cancel"});
 	
-	if (*str1 >= 0){
-		for (i = 0; i < 6; i++) {
+	if(*str1 >= 0){
+		for(i = 0; i < 6; i++) {
 			std::string id = "str" + std::to_string(i + 1);
-			if (mode == 0)
+			if(mode == 0)
 				edit[id].setText(scenario.scen_strs(*str1 + 160 + i));
-			if (mode == 1)
+			if(mode == 1)
 				edit[id].setText(current_terrain.out_strs(*str1 + 10 + i));
-			if (mode == 2)
+			if(mode == 2)
 				edit[id].setText(town->town_strs(*str1 + 20 + i));
 		}
 	}
@@ -1007,7 +1007,7 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 	
 	if(item_hit == "okay") {
 		scenario.intro_pic = me["picnum"].getTextAsNum();
-		if (scenario.intro_pic > 29) {
+		if(scenario.intro_pic > 29) {
 			giveError("Intro picture number is out of range.","",&me);
 			return true;
 		}

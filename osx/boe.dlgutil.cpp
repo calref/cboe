@@ -135,10 +135,10 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 	
 	// This would be a place to hide the text box, if I add it.
 	
-	if (shop_max < shop_min)
+	if(shop_max < shop_min)
 		shop_max = shop_min; ////
 	store_cost_mult = cost_adj;
-	if (store_cost_mult > 6)
+	if(store_cost_mult > 6)
 		store_cost_mult = 6;
 	store_shop_type = shop_type;
 	store_shop_min = shop_min;
@@ -179,16 +179,16 @@ void end_shop_mode()
 	// This would be a place to show the text box, if I add it (and if this is not an outdoor shop).
 	
 	shop_sbar->hide();
-	if (store_pre_shop_mode == 20) {
+	if(store_pre_shop_mode == 20) {
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
 		place_talk_str("You conclude your business.", "", 0, dummy_rect);
 		update_last_talk(TALK_BUSINESS);
 	}
 	
 	overall_mode = store_pre_shop_mode;
-	if (overall_mode == MODE_TALK_TOWN)
+	if(overall_mode == MODE_TALK_TOWN)
 		overall_mode = MODE_TOWN;
-	if (overall_mode == MODE_TOWN) {
+	if(overall_mode == MODE_TOWN) {
 		center = univ.town.p_loc;
 		update_explored(center);
 	}
@@ -207,25 +207,25 @@ void handle_shop_event(location p)
 	p.x -= 5;
 	p.y -= 5;
 	
-	if (p.in(talk_help_rect)) {
+	if(p.in(talk_help_rect)) {
 		click_shop_rect(talk_help_rect);
 		univ.party.help_received[26] = 0;
 		give_help(26,27);
 		return;
 	}
-	if (p.in(shop_done_rect)) {
+	if(p.in(shop_done_rect)) {
 		click_shop_rect(shop_done_rect);
 		end_shop_mode();
 		return;
 	}
 	
-	for (i = 0; i < 8; i++) {
+	for(i = 0; i < 8; i++) {
 		store_what_picked = i;
-		if ((p.in(shopping_rects[i][1])) && (store_shop_items[store_what_picked] >= 0)) {
+		if((p.in(shopping_rects[i][1])) && (store_shop_items[store_what_picked] >= 0)) {
 			click_shop_rect(shopping_rects[i][1]);
 			handle_sale(store_shop_items[store_what_picked],store_shop_costs[store_what_picked]);
 		}
-		if ((p.in(shopping_rects[i][6])) && (store_shop_items[store_what_picked] >= 0)
+		if((p.in(shopping_rects[i][6])) && (store_shop_items[store_what_picked] >= 0)
 			&& (store_shop_type != 3) && (store_shop_type != 4)){
 			click_shop_rect(shopping_rects[i][6]);
 			handle_info_request(store_shop_items[store_what_picked]);
@@ -239,12 +239,12 @@ void handle_sale(short what_chosen,short cost)
 	short what_magic_shop,what_magic_shop_item,i;
 	RECT dummy_rect = {0,0,0,0};
 	
-	switch (what_chosen / 100) {
+	switch(what_chosen / 100) {
 		case 0: case 1: case 2: case 3: case 4:
 			base_item = get_stored_item(what_chosen);
 			base_item.ident = true;
 			//cost = (base_item.charges == 0) ? base_item.value : base_item.value * base_item.charges;
-			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
+			switch(pc_ok_to_buy(current_pc,cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,true); break;
 				case 2: ASB("Can't carry any more items."); break;
 				case 3: ASB("Not enough cash."); break;
@@ -254,9 +254,9 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 5:
 			base_item = store_alchemy(what_chosen - 500);
-			if (univ.party.alchemy[base_item.item_level])
+			if(univ.party.alchemy[base_item.item_level])
 				ASB("You already know that recipe.");
-			else if (!take_gold(cost,false))
+			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
 				play_sound(62);
@@ -266,7 +266,7 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 6:
 			//base_item = food_types[what_chosen - 600];
-			//if (!take_gold(cost,false))
+			//if(!take_gold(cost,false))
 			//	ASB("Not enough gold.");
 			//else {
 			//	play_sound(-38); ASB("You buy food.");
@@ -275,12 +275,12 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 7:
 			what_chosen -= 700;
-			if (!take_gold(cost,false))
+			if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
 				ASB("You pay the healer.");
 				play_sound(68);
-				switch (what_chosen) {
+				switch(what_chosen) {
 					case 0:
 						univ.party[current_pc].cur_health = univ.party[current_pc].max_health;
 						break;
@@ -294,8 +294,8 @@ void handle_sale(short what_chosen,short cost)
 						univ.party[current_pc].status[eStatus::PARALYZED] = 0;
 						break;
 					case 4:
-						for (i = 0; i < 24; i++)
-							if ((univ.party[current_pc].equip[i]) &&
+						for(i = 0; i < 24; i++)
+							if((univ.party[current_pc].equip[i]) &&
 								(univ.party[current_pc].items[i].cursed))
 								univ.party[current_pc].items[i].cursed = univ.party[current_pc].items[i].unsellable = false;
 						break;
@@ -310,14 +310,14 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 8:
 			base_item = store_mage_spells(what_chosen - 800 - 30);
-			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
+			if((base_item.item_level < 0) || (base_item.item_level > 61)) {
 				beep();
 				giveError("Error: The scenario tried to sell you an invalid mage spell!");
 				break;
 			}
-			if (univ.party[current_pc].mage_spells[base_item.item_level])
+			if(univ.party[current_pc].mage_spells[base_item.item_level])
 				ASB("You already have this spell.");
-			else if (!take_gold(cost,false))
+			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
 				play_sound(62);
@@ -328,14 +328,14 @@ void handle_sale(short what_chosen,short cost)
 			break;
 		case 9:
 			base_item = store_priest_spells(what_chosen - 900 - 30);
-			if ((base_item.item_level < 0) || (base_item.item_level > 61)) {
+			if((base_item.item_level < 0) || (base_item.item_level > 61)) {
 				beep();
 				giveError("Error: The scenario tried to sell you an invalid priest spell!");
 				break;
 			}
-			if (univ.party[current_pc].priest_spells[base_item.item_level])
+			if(univ.party[current_pc].priest_spells[base_item.item_level])
 				ASB("You already have this spell.");
-			else if (!take_gold(cost,false))
+			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
 				play_sound(62);
@@ -349,7 +349,7 @@ void handle_sale(short what_chosen,short cost)
 			what_magic_shop_item = what_chosen % 1000;
 			base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
 			base_item.ident = true;
-			switch (pc_ok_to_buy(current_pc,cost,base_item)) {
+			switch(pc_ok_to_buy(current_pc,cost,base_item)) {
 				case 1: play_sound(-38); give_to_pc(current_pc,base_item,true);
 					univ.party.magic_store_items[what_magic_shop][what_magic_shop_item].variety = eItemType::NO_ITEM;
 					break;
@@ -361,7 +361,7 @@ void handle_sale(short what_chosen,short cost)
 	}
 	set_up_shop_array();
 	
-	if (overall_mode != MODE_SHOPPING) {
+	if(overall_mode != MODE_SHOPPING) {
 		beep();
 		ASB("Shop error 1. Report This!");
 	}
@@ -377,7 +377,7 @@ void handle_info_request(short what_chosen)
 	cItemRec base_item;
 	short what_magic_shop,what_magic_shop_item;
 	
-	switch (what_chosen / 100) {
+	switch(what_chosen / 100) {
 		case 0: case 1: case 2: case 3: case 4:
 			base_item = get_stored_item(what_chosen);
 			base_item.ident = true;
@@ -412,11 +412,11 @@ void set_up_shop_array()
 	cItemRec store_i;
 	long store_l;
 	
-	for (i = 0; i < 30; i++)
+	for(i = 0; i < 30; i++)
 		store_shop_items[i] = -1;
-	switch (store_shop_type) {
+	switch(store_shop_type) {
 		case 0: case 1: case 2:
-			for (i = store_shop_min; i < store_shop_max + 1; i++) {
+			for(i = store_shop_min; i < store_shop_max + 1; i++) {
 				store_shop_items[shop_pos] = i;
 				store_i = get_stored_item(store_shop_items[shop_pos]);
 				store_shop_costs[shop_pos] = (store_i.charges == 0) ?
@@ -425,35 +425,35 @@ void set_up_shop_array()
 			}
 			break;
 		case 3:
-			if (univ.party[current_pc].cur_health < univ.party[current_pc].max_health) {
+			if(univ.party[current_pc].cur_health < univ.party[current_pc].max_health) {
 				store_shop_items[shop_pos] = 700;
 				store_shop_costs[shop_pos] = heal_costs[0];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].status[eStatus::POISON] > 0) {
+			if(univ.party[current_pc].status[eStatus::POISON] > 0) {
 				store_shop_items[shop_pos] = 701;
 				store_shop_costs[shop_pos] = heal_costs[1];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].status[eStatus::DISEASE] > 0) {
+			if(univ.party[current_pc].status[eStatus::DISEASE] > 0) {
 				store_shop_items[shop_pos] = 702;
 				store_shop_costs[shop_pos] = heal_costs[2];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].status[eStatus::PARALYZED] > 0) {
+			if(univ.party[current_pc].status[eStatus::PARALYZED] > 0) {
 				store_shop_items[shop_pos] = 703;
 				store_shop_costs[shop_pos] = heal_costs[3];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].status[eStatus::DUMB] > 0) {
+			if(univ.party[current_pc].status[eStatus::DUMB] > 0) {
 				store_shop_items[shop_pos] = 708;
 				store_shop_costs[shop_pos] = heal_costs[8];
 				shop_pos++;
 			}
-			for (i = 0; i < 24; i++)
-				if ((univ.party[current_pc].equip[i]) && (univ.party[current_pc].items[i].cursed))
+			for(i = 0; i < 24; i++)
+				if((univ.party[current_pc].equip[i]) && (univ.party[current_pc].items[i].cursed))
 					cursed_item = true;
-			if (cursed_item) {
+			if(cursed_item) {
 				store_shop_items[shop_pos] = 704;
 				store_shop_costs[shop_pos] = heal_costs[4];
 				shop_pos++;
@@ -468,22 +468,22 @@ void set_up_shop_array()
 				store_shop_costs[shop_pos] = heal_costs[6];
 				shop_pos++;
 			}
-			if (univ.party[current_pc].main_status == eMainStatus::DUST){
+			if(univ.party[current_pc].main_status == eMainStatus::DUST){
 				store_shop_items[shop_pos] = 707;
 				store_shop_costs[shop_pos] = heal_costs[7];
 				shop_pos++;
 			}
 			break;
 		case 4:
-			//for (i = store_shop_min; i < store_shop_max + 1; i++) {
+			//for(i = store_shop_min; i < store_shop_max + 1; i++) {
 			//	store_shop_items[shop_pos] = 600 + i;
 			//	store_shop_costs[shop_pos] = food_types[i].value;
 			//	shop_pos++;
 			//}
 			break;
 		case 5: case 6: case 7: case 8: case 9:
-			for (i = 0; i < 10; i++)
-				if (univ.party.magic_store_items[store_shop_type - 5][i].variety != eItemType::NO_ITEM) {
+			for(i = 0; i < 10; i++)
+				if(univ.party.magic_store_items[store_shop_type - 5][i].variety != eItemType::NO_ITEM) {
 					store_shop_items[shop_pos] = (store_shop_type - 4) * 1000 + i;
 					store_i = univ.party.magic_store_items[store_shop_type - 5][i];
 					store_shop_costs[shop_pos] = (store_i.charges == 0) ?
@@ -492,8 +492,8 @@ void set_up_shop_array()
 				}
 			break;
 		case 10:
-			for (i = store_shop_min; i < store_shop_max + 1; i++)
-				if (i == minmax(0,31,i)) {
+			for(i = store_shop_min; i < store_shop_max + 1; i++)
+				if(i == minmax(0,31,i)) {
 					store_i = store_mage_spells(i);
 					store_shop_costs[shop_pos] = store_i.value;
 					store_shop_items[shop_pos] = 800 + i;
@@ -501,8 +501,8 @@ void set_up_shop_array()
 				}
 			break;
 		case 11:
-			for (i = store_shop_min; i < store_shop_max + 1; i++)
-				if (i == minmax(0,31,i)) {
+			for(i = store_shop_min; i < store_shop_max + 1; i++)
+				if(i == minmax(0,31,i)) {
 					store_i = store_priest_spells(i);
 					store_shop_costs[shop_pos] = store_i.value;
 					store_shop_items[shop_pos] = 900 + i;
@@ -510,8 +510,8 @@ void set_up_shop_array()
 				}
 			break;
 		case 12:
-			for (i = store_shop_min; i < store_shop_max + 1; i++)
-				if (i == minmax(0,19,i)) {
+			for(i = store_shop_min; i < store_shop_max + 1; i++)
+				if(i == minmax(0,19,i)) {
 					store_i = store_alchemy(i);
 					store_shop_costs[shop_pos] = store_i.value;
 					store_shop_items[shop_pos] = 500 + i;
@@ -519,8 +519,8 @@ void set_up_shop_array()
 				}
 			break;
 	}
-	for (i = 0; i < 30; i++)
-		if (store_shop_items[i] >= 0) {
+	for(i = 0; i < 30; i++)
+		if(store_shop_items[i] >= 0) {
 			store_l = store_shop_costs[i];
 			store_l = (store_l * cost_mult[store_cost_mult]) / 10;
 			store_shop_costs[i] = (short) store_l;
@@ -575,9 +575,9 @@ void end_talk_mode()
 {
 	// This would be where to hide the text box, if I add it.
 	overall_mode = store_pre_talk_mode;
-	if (overall_mode == MODE_TALK_TOWN)
+	if(overall_mode == MODE_TALK_TOWN)
 		overall_mode = MODE_TOWN;
-	if (overall_mode == MODE_TOWN) {
+	if(overall_mode == MODE_TOWN) {
 		center = univ.town.p_loc;
 		update_explored(center);
 	}
@@ -600,7 +600,7 @@ void handle_talk_event(location p)
 	p.x -= 5;
 	p.y -= 5;
 	
-	if (p.in(talk_help_rect)) {
+	if(p.in(talk_help_rect)) {
 		univ.party.help_received[5] = 0;
 		give_help(5,6);
 		return;
@@ -662,7 +662,7 @@ void handle_talk_event(location p)
 			if(which_talk_entry == -1) goto SPECIAL_DUNNO;
 			break;
 		case TALK_RECORD:
-			if (strnum1 <= 0) {
+			if(strnum1 <= 0) {
 				beep();
 				return;
 			}
@@ -720,7 +720,7 @@ void handle_talk_event(location p)
 		case 0:
 			break;
 		case 1:
-			if (PSD[a][b] > c) {
+			if(PSD[a][b] > c) {
 				strnum1 = strnum2;
 				place_string1 = place_string2;
 			}
@@ -731,7 +731,7 @@ void handle_talk_event(location p)
 			PSD[a][b] = 1;
 			break;
 		case 3:
-			if (univ.party.gold < a) {
+			if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				place_string1 = place_string2;
 			}
@@ -748,7 +748,7 @@ void handle_talk_event(location p)
 			place_string2 = "";
 			break;
 		case 4:
-			if (day_reached((unsigned char) a,0)) {
+			if(day_reached((unsigned char) a,0)) {
 				strnum1 = strnum2;
 				place_string1 = place_string2;
 			}
@@ -756,7 +756,7 @@ void handle_talk_event(location p)
 			strnum2 = 0;
 			break;
 		case 5:
-			if (day_reached((unsigned char) a,(unsigned char) b)) {
+			if(day_reached((unsigned char) a,(unsigned char) b)) {
 				strnum1 = strnum2;
 				place_string1 = place_string2;
 			}
@@ -764,7 +764,7 @@ void handle_talk_event(location p)
 			strnum2 = 0;
 			break;
 		case 6:
-			if (univ.town.num != a) {
+			if(univ.town.num != a) {
 				strnum1 = strnum2;
 				place_string1 = place_string2;
 			}
@@ -778,7 +778,7 @@ void handle_talk_event(location p)
 			strnum1 = -1;
 			return;
 		case 8:
-			if ((get_pc = char_select_pc(1,0,"Train who?")) < 6) {
+			if((get_pc = char_select_pc(1,0,"Train who?")) < 6) {
 				strnum1 = -1;
 				spend_xp(get_pc,1, NULL);
 			}
@@ -824,7 +824,7 @@ void handle_talk_event(location p)
 			give_help(ttype - 16 + 44,0);
 			break;
 		case 18:
-			if (univ.party.gold < a) {
+			if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				place_string1 = place_string2;
 			}
@@ -837,18 +837,18 @@ void handle_talk_event(location p)
 			strnum2 = 0;
 			break;
 		case 19:
-			if ((sd_legit(b,c)) && (PSD[b][c] == d)) {
+			if((sd_legit(b,c)) && (PSD[b][c] == d)) {
 				place_string1 = "You've already learned that.";
 				strnum1 = -1;
 			}
-			else if (univ.party.gold < a) {
+			else if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				place_string1 + place_string2;
 			}
 			else {
 				univ.party.gold -= a;
 				put_pc_screen();
-				if (sd_legit(b,c))
+				if(sd_legit(b,c))
 					PSD[b][c] = d;
 				else giveError("Invalid Stuff Done flag called in conversation.");
 			}
@@ -856,7 +856,7 @@ void handle_talk_event(location p)
 			place_string2 = "";
 			break;
 		case 20:
-			if (univ.party.gold < a) {
+			if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
 				place_string1 = place_string2;
@@ -864,8 +864,8 @@ void handle_talk_event(location p)
 				break;
 			}
 			else {
-				for (i = b; i <= b + c; i++)
-					if ((i >= 0) && (i < 30) && (univ.party.boats[i].property)) {
+				for(i = b; i <= b + c; i++)
+					if((i >= 0) && (i < 30) && (univ.party.boats[i].property)) {
 						univ.party.gold -= a;
 						put_pc_screen();
 						univ.party.boats[i].property = false;
@@ -873,7 +873,7 @@ void handle_talk_event(location p)
 						strnum2 = 0;
 						i = 1000;
 					}
-				if (i >= 1000)
+				if(i >= 1000)
 					break;
 			}
 			place_string1 = "There are no boats left.";
@@ -882,7 +882,7 @@ void handle_talk_event(location p)
 			strnum2 = -1;
 			break;
 		case 21:
-			if (univ.party.gold < a) {
+			if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
 				place_string1 = place_string2;
@@ -890,8 +890,8 @@ void handle_talk_event(location p)
 				break;
 			}
 			else {
-				for (i = b; i <= b + c; i++)
-					if ((i >= 0) && (i < 30) && (univ.party.horses[i].property)) {
+				for(i = b; i <= b + c; i++)
+					if((i >= 0) && (i < 30) && (univ.party.horses[i].property)) {
 						univ.party.gold -= a;
 						put_pc_screen();
 						univ.party.horses[i].property = false;
@@ -899,7 +899,7 @@ void handle_talk_event(location p)
 						strnum2 = 0;
 						i = 1000;
 					}
-				if (i >= 1000)
+				if(i >= 1000)
 					break;
 			}
 			place_string1 = "There are no horses left.";
@@ -908,11 +908,11 @@ void handle_talk_event(location p)
 			strnum2 = -1;
 			break;
 		case 22:
-			if (univ.party.spec_items[a] > 0) {
+			if(univ.party.spec_items[a] > 0) {
 				place_string1 = "You already have it.";
 				strnum1 = -1;
 			}
-			else if (univ.party.gold < b) {
+			else if(univ.party.gold < b) {
 				place_string1 = place_string2;
 				strnum1 = strnum2;
 			}
@@ -930,10 +930,10 @@ void handle_talk_event(location p)
 			strnum1 = -1;
 			return;
 		case 24:
-			if (univ.party.can_find_town[b] > 0) {
+			if(univ.party.can_find_town[b] > 0) {
 				// TODO: Uh, is something supposed to happen here?
 			}
-			else if (univ.party.gold < a) {
+			else if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				place_string1 = place_string2;
 			}
@@ -961,7 +961,7 @@ void handle_talk_event(location p)
 			// TODO: Any reason not to call something like kill_monst?
 			univ.town.monst[store_m_num].active = 0;
 			// Special killing effects
-			if (sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2))
+			if(sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2))
 				PSD[univ.town.monst[store_m_num].spec1][univ.town.monst[store_m_num].spec2] = 1;
 			talk_end_forced = true;
 			break;
@@ -969,30 +969,30 @@ void handle_talk_event(location p)
 		case 29: // town special
 			run_special(eSpecCtx::TALK,2,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
-			if ((s1 >= 0) || (s2 >= 0)) {
+			if((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
 				place_string1 = "";
 				place_string2 = "";
 			}
 			get_strs(place_string1,place_string2,2,s1,s2);
-			if (s1 >= 0) strnum1 = 2000 + s1;
-			if (s2 >= 0) strnum2 = 2000 + s2;
+			if(s1 >= 0) strnum1 = 2000 + s1;
+			if(s2 >= 0) strnum2 = 2000 + s2;
 			put_pc_screen();
 			put_item_screen(stat_window,0);
 			break;
 		case 30: // scen special
 			run_special(eSpecCtx::TALK,0,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
-			if ((s1 >= 0) || (s2 >= 0)) {
+			if((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
 				place_string1 = "";
 				place_string2 = "";
 			}
 			get_strs(place_string1,place_string2,0,s1,s2);
-			if (s1 >= 0) strnum1 = 3000 + s1;
-			if (s2 >= 0) strnum2 = 3000 + s2;
+			if(s1 >= 0) strnum1 = 3000 + s1;
+			if(s2 >= 0) strnum2 = 3000 + s2;
 			put_pc_screen();
 			put_item_screen(stat_window,0);
 			break;
@@ -1023,7 +1023,7 @@ void do_sign(short town_num, short which_sign, short sign_type)
 	store_sign_mode = sign_type;
 	pict.setPict(scenario.ter_types[sign_type].picture);
 	
-	if (town_num >= 200) {
+	if(town_num >= 200) {
 		town_num -= 200;
 		//load_outdoor_str(loc(town_num % scenario.out_width, town_num / scenario.out_width),which_sign + 100,(char *) sign_text);
 		strcpy((char*)sign_text,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_strs[which_sign]);
@@ -1103,8 +1103,8 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod)
 		did_cancel = true;
 	}
 	
-	if (done_yet) {
-		if (!did_cancel) {
+	if(done_yet) {
+		if(!did_cancel) {
 			std::string cur_display_mode = dynamic_cast<cLedGroup&>(me["display"]).getSelected();
 			// TODO: Make an enum for the display mode
 			if(cur_display_mode == "mid") display_mode = 0;
@@ -1141,7 +1141,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod)
 			else if(speed == "snail")
 				PSD[SDF_GAME_SPEED] = 3;
 			if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red) {
-				for (i = 0; i < 120; i++)
+				for(i = 0; i < 120; i++)
 					univ.party.help_received[i] = 0;
 				reset_help = true;
 			}
@@ -1208,7 +1208,7 @@ void pick_preferences()
 			break;
 	}
 	
-	if (univ.party.help_received[55] == 0) {
+	if(univ.party.help_received[55] == 0) {
 		// TODO: Not sure if this bit is needed?
 //		cd_initial_draw(1099);
 		give_help(55,0,prefsDlog);
@@ -1226,7 +1226,7 @@ static void put_party_stats(cDialog& me)
 	short i;
 	
 	
-	for (i = 0; i < 6; i++) {
+	for(i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["name" + n].setText(univ.party[i].name);
@@ -1307,7 +1307,7 @@ void edit_party()
 	
 	make_cursor_sword();
 	
-	if (!pc_gworld_loaded) {
+	if(!pc_gworld_loaded) {
 		munch_pc_graphic = true;
 		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 	}
@@ -1326,7 +1326,7 @@ void edit_party()
 	pcDialog.attachClickHandlers(edit_party_event_filter, buttons);
 	
 	put_party_stats(pcDialog);
-	if (univ.party.help_received[22] == 0) {
+	if(univ.party.help_received[22] == 0) {
 		// TODO: Not sure if this is needed
 		//		cd_initial_draw(989);
 		give_help(22,23,pcDialog);
@@ -1348,7 +1348,7 @@ static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 		me.toast(true);
 	} else if(item_hit == "next") {
 		store_tip_page_on++;
-		if (store_tip_page_on == NUM_HINTS)
+		if(store_tip_page_on == NUM_HINTS)
 			store_tip_page_on = 0;
 		place_str = get_str("tips",50 + store_tip_page_on);
 		me["tip"].setText(place_str);
@@ -1391,7 +1391,7 @@ static void put_scen_info(cDialog& me)
 		sout.str("");
 		sout << i + 1;
 		std::string n = sout.str();
-		if (scen_headers.size() > (store_scen_page_on * 3 + i) && scen_headers.data(store_scen_page_on * 3 + i).flag1 != 0) {
+		if(scen_headers.size() > (store_scen_page_on * 3 + i) && scen_headers.data(store_scen_page_on * 3 + i).flag1 != 0) {
 			me["pic" + n].show();
 			dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers.data(store_scen_page_on * 3 + i).intro_pic);
 			sout.str("");
@@ -1420,12 +1420,12 @@ static static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, e
 		me.setResult<short>(-1);
 		me.toast(false);
 	} else if(item_hit == "next") {
-		if (store_scen_page_on == 0)
+		if(store_scen_page_on == 0)
 			store_scen_page_on = (store_num_scen - 1) / 3;
 		else store_scen_page_on--;
 		put_scen_info(me);
 	} else if(item_hit == "prev") {
-		if (store_scen_page_on == (store_num_scen - 1) / 3)
+		if(store_scen_page_on == (store_num_scen - 1) / 3)
 			store_scen_page_on = 0;
 		else store_scen_page_on++;
 		put_scen_info(me);
@@ -1443,12 +1443,12 @@ short pick_a_scen()
 	build_scen_headers();
 	
 	store_num_scen = scen_headers.size();
-//	for (i = 0; i < 25; i++)
-//		if (scen_headers[i].flag1 != 0)
+//	for(i = 0; i < 25; i++)
+//		if(scen_headers[i].flag1 != 0)
 //			store_num_scen++;
 	store_scen_page_on = 0;
 	
-	if (store_num_scen == 0) {
+	if(store_num_scen == 0) {
 		cChoiceDlog("no-scenarios.xml").show();
 		return -1;
 	}
@@ -1459,7 +1459,7 @@ short pick_a_scen()
 	
 	put_scen_info(pickScen);
 	
-	if (store_num_scen <= 3) {
+	if(store_num_scen <= 3) {
 		pickScen["next"].hide();
 		pickScen["prev"].hide();
 	}
@@ -1483,7 +1483,7 @@ short pick_prefab_scen()
 //void give_password_filter (short item_hit)
 //{
 //
-//	switch (item_hit) {
+//	switch(item_hit) {
 //		default:
 //
 //			toast_dialog();
@@ -1518,19 +1518,19 @@ short pick_prefab_scen()
 //	short i;
 //	long val = 0,pow[6] = {1,10,100,1000,9999,99999};
 //
-//	for (i = 0; i < 6; i++) {
-//		if (str[i] == 0)
+//	for(i = 0; i < 6; i++) {
+//		if(str[i] == 0)
 //			i = 6;
 //			else {
-//				if ((str[i] >= 65) && (str[i] <= 90))
+//				if((str[i] >= 65) && (str[i] <= 90))
 //					pwd[i] = str[i] + 32;
-//				else if ((str[i] >= 48) && (str[i] <= 57))
+//				else if((str[i] >= 48) && (str[i] <= 57))
 //					pwd[i] = str[i] + 49;
-//				else if ((str[i] >= 97) && (str[i] <= 122))
+//				else if((str[i] >= 97) && (str[i] <= 122))
 //					pwd[i] = str[i];
 //				}
 //		}
-//	for (i = 0; i < 6; i++)
+//	for(i = 0; i < 6; i++)
 //		val = val + pow[i] * (long) (pwd[i] - 97);
 //	val = val % 30000;
 //	return (short) val;

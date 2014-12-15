@@ -95,7 +95,7 @@ unsigned char cItemRec::rec_treas_class() const {
 
 short cItemRec::item_weight() const {
 	short n = charges, w = weight;
-	if (variety == eItemType::NO_ITEM)
+	if(variety == eItemType::NO_ITEM)
 		return 0;
 	if(charges > 0){
 		if((variety == eItemType::ARROW) || (variety == eItemType::THROWN_MISSILE) || (variety == eItemType::POTION) || (variety == eItemType::BOLTS))

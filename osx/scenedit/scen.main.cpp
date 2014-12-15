@@ -128,7 +128,7 @@ int main(int, char* argv[]) {
 	check_for_intel();
 	redraw_screen();
 	
-	while (!All_Done)
+	while(!All_Done)
 		Handle_One_Event();
 	
 	close_program();
@@ -186,7 +186,7 @@ void Handle_One_Event() {
 	
 	if(!mainPtr.waitEvent(event)) return;
 	
-	switch (event.type)
+	switch(event.type)
 	{
 		case sf::Event::KeyPressed:
 			if(!(event.key.*systemKey))
@@ -217,7 +217,7 @@ void Handle_Update() {
 }
 
 void handle_apple_menu(int item_hit) {
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1:
 			cChoiceDlog("about-scened.xml").show();
 			break;
@@ -226,7 +226,7 @@ void handle_apple_menu(int item_hit) {
 
 void handle_file_menu(int item_hit) {
 	fs::path file_to_load;
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1: // open
 			file_to_load = nav_get_scenario();
 			if(!file_to_load.empty() && load_scenario(file_to_load)) {
@@ -265,17 +265,17 @@ void handle_scenario_menu(int item_hit) {
 	short i;
 	fs::path file;
 	
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1: // Create new town
-			if (change_made) {
+			if(change_made) {
 				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
 			}
-			if (scenario.num_towns >= 200) {
+			if(scenario.num_towns >= 200) {
 				giveError("You have reached the limit of 200 towns you can have in one scenario.");
 				return;
 			}
-			if (new_town(scenario.num_towns))
+			if(new_town(scenario.num_towns))
 				set_up_main_screen();
 			break;
 		case 3: // Scenario Details
@@ -288,7 +288,7 @@ void handle_scenario_menu(int item_hit) {
 			set_starting_loc();
 			break;
 		case 6: // Change Password
-//			if (check_p(user_given_password)) {
+//			if(check_p(user_given_password)) {
 //				user_given_password = get_password();
 //				given_password = true;
 //			}
@@ -303,12 +303,12 @@ void handle_scenario_menu(int item_hit) {
 			start_string_editing(0,0);
 			break;
 		case 11: // Import Town
-			if (change_made) {
+			if(change_made) {
 				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
 			}
 			i = pick_import_town(0,file);
-			if (i >= 0) {
+			if(i >= 0) {
 				import_town(i,file);
 				change_made = true;
 				redraw_screen();
@@ -333,19 +333,19 @@ void handle_scenario_menu(int item_hit) {
 			edit_item_placement();
 			break;
 		case 18: // Delete Last Town
-			if (change_made) {
+			if(change_made) {
 				giveError("You need to save the changes made to your scenario before you can delete a town.");
 				return;
 			}
-			if (scenario.num_towns == 1) {
+			if(scenario.num_towns == 1) {
 				giveError("You can't delete the last town in a scenario. All scenarios must have at least 1 town.");
 				return;
 			}
-			if (scenario.num_towns - 1 == cur_town) {
+			if(scenario.num_towns - 1 == cur_town) {
 				giveError("You can't delete the last town in a scenario while you're working on it. Load a different town, and try this again.");
 				return;
 			}
-			if (scenario.num_towns - 1 == scenario.which_town_start) {
+			if(scenario.num_towns - 1 == scenario.which_town_start) {
 				giveError("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.");
 				return;
 			}
@@ -362,7 +362,7 @@ void handle_scenario_menu(int item_hit) {
 			redraw_screen();
 			break;
 	}
-	if ((item_hit != 18) && (item_hit != 19))
+	if((item_hit != 18) && (item_hit != 19))
 		change_made = true;
 }
 
@@ -370,7 +370,7 @@ void handle_town_menu(int item_hit) {
 	short i;
 	
 	change_made = true;
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1:
 			edit_town_details();
 			break;
@@ -398,7 +398,7 @@ void handle_town_menu(int item_hit) {
 			place_items_in_town();
 			break; // add random
 		case 9:
-			for (i = 0; i < 64; i++)
+			for(i = 0; i < 64; i++)
 				town->preset_items[i].property = 0;
 			cChoiceDlog("set-not-owned.xml").show();
 			draw_terrain();
@@ -406,7 +406,7 @@ void handle_town_menu(int item_hit) {
 		case 10:
 			if(cChoiceDlog("clear-items-confirm.xml", {"okay", "cancel"}).show() == "cancel")
 				break;
-			for (i = 0; i < 64; i++)
+			for(i = 0; i < 64; i++)
 				town->preset_items[i].code = -1;
 			draw_terrain();
 			break; // clear all items
@@ -428,7 +428,7 @@ void handle_town_menu(int item_hit) {
 }
 void handle_outdoor_menu(int item_hit) {
 	change_made = true;
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1:
 			outdoor_details();
 			break;
@@ -463,7 +463,7 @@ void handle_outdoor_menu(int item_hit) {
 }
 
 void handle_help_menu(int item_hit) {
-	switch (item_hit) {
+	switch(item_hit) {
 		case 1:
 			cChoiceDlog("help-editing.xml").show();
 			break; // started
@@ -480,7 +480,7 @@ void handle_help_menu(int item_hit) {
 }
 
 void handle_item_menu(int item_hit) {
-	if (scenario.scen_items[item_hit].variety == eItemType::NO_ITEM) {
+	if(scenario.scen_items[item_hit].variety == eItemType::NO_ITEM) {
 		giveError("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.");
 		return;
 	}

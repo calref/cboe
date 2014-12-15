@@ -149,28 +149,28 @@ cOutdoors::cOutdoors(){
 	rectangle d_rect;
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	
-	for (i = 0; i < 48; i++)
-		for (j = 0; j < 48; j++) {
+	for(i = 0; i < 48; i++)
+		for(j = 0; j < 48; j++) {
 			terrain[i][j] = 5; // formerly 0
 		}
 	
-	for (i = 0; i < 18; i++) {
+	for(i = 0; i < 18; i++) {
 		special_locs[i] = d_loc;
 		special_id[i] = 0;
 	}
-	for (i = 0; i < 8; i++) {
+	for(i = 0; i < 8; i++) {
 		exit_locs[i] = d_loc;
 		exit_dests[i] = 0;
 		sign_locs[i] = d_loc;
 		sign_locs[i].x = 100;
 		info_rect[i] = d_rect;
 	}
-	for (i = 0; i < 4; i++) {
+	for(i = 0; i < 4; i++) {
 		wandering[i] = d_monst;
 		wandering_locs[i] = locs[i];
 		special_enc[i] = d_monst;
 	}
-	for (i = 0; i < 60; i++) {
+	for(i = 0; i < 60; i++) {
 		specials[i] = cSpecial();
 	}
 	
@@ -250,8 +250,8 @@ void cOutdoors::cWandering::readFrom(std::istream& file){
 }
 
 bool cOutdoors::cWandering::isNull(){
-	for (short i = 0; i < 7; i++)
-		if (monst[i] != 0)
+	for(short i = 0; i < 7; i++)
+		if(monst[i] != 0)
 			return false;
 	return true;
 }

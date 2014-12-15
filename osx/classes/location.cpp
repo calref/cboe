@@ -10,7 +10,7 @@
 #include "mathutil.h"
 
 bool operator == (location p1,location p2){
-	if ((p1.x == p2.x) & (p1.y == p2.y))
+	if((p1.x == p2.x) & (p1.y == p2.y))
 		return true;
 	else return false;
 }

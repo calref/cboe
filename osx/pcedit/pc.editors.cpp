@@ -121,7 +121,7 @@ short char_select_pc(short active_only,short free_inv_only,const char *title)
 	
 	selectPc["title"].setText(title);
 	
-	for (i = 0; i < 6; i++) {
+	for(i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party[i].main_status == eMainStatus::ABSENT ||
 		   (active_only && univ.party[i].main_status > eMainStatus::ALIVE) ||
@@ -144,7 +144,7 @@ short char_select_pc(short active_only,short free_inv_only,const char *title)
 short select_pc(short active_only,short free_inv_only)
 //active_only;  // 0 - no  1 - yes   2 - disarm trap
 {
-	if (active_only == 2)
+	if(active_only == 2)
 		return char_select_pc(active_only,free_inv_only,"Trap! Who will disarm?");
 	else return char_select_pc(active_only,free_inv_only,"Select a character:");
 }
@@ -153,7 +153,7 @@ static short party_total_level()
 {
 	short i,j = 0;
 	
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			j += univ.party[i].level;
 	return j;
@@ -162,10 +162,10 @@ static short party_total_level()
 static void put_pc_spells(cDialog& me, const short store_trait_mode) {
 	short i;
 	
-	for (i = 0; i < 62; i++) {
+	for(i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 		cLed& cur = dynamic_cast<cLed&>(me[id]);
-		if (((store_trait_mode == 0) && univ.party[which_pc_displayed].mage_spells[i]) ||
+		if(((store_trait_mode == 0) && univ.party[which_pc_displayed].mage_spells[i]) ||
 			((store_trait_mode == 1) && univ.party[which_pc_displayed].priest_spells[i]))
 			cur.setState(led_red);
 		else cur.setState(led_off);
@@ -202,7 +202,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	std::string label_str;
 	
 	if(univ.party[pc_num].main_status == eMainStatus::ABSENT) {
-		for (pc_num = 0; pc_num < 6; pc_num++)
+		for(pc_num = 0; pc_num < 6; pc_num++)
 			if(univ.party[pc_num].main_status == eMainStatus::ALIVE)
 				break;
 	}
@@ -213,7 +213,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	cDialog pcInfo("pc-spell-info.xml", parent);
 	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
 	
-	for (i = 0; i < 62; i++) {
+	for(i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 		label_str = get_str((mode == 0) ? "mage-spells" : "priest-spells",i * 2 + 1);
 		pcInfo[id].setText(label_str);
@@ -231,12 +231,12 @@ static void display_traits_graphics(cDialog& me)
 	
 	std::string race = "race" + boost::lexical_cast<std::string>(int(store_pc->race) + 1);
 	dynamic_cast<cLedGroup&>(me["race"]).setSelected(race);
-	for (i = 0; i < 10; i++) {
+	for(i = 0; i < 10; i++) {
 		std::string id = "good" + boost::lexical_cast<std::string>(i + 1);
 		eTrait trait = eTrait(i);
 		dynamic_cast<cLed&>(me[id]).setState((store_pc->traits[trait] > 0) ? led_red : led_off);
 	}
-	for (i = 0; i < 5; i++) {
+	for(i = 0; i < 5; i++) {
 		// TODO: Pacifist
 		std::string id = "bad" + boost::lexical_cast<std::string>(i + 1);
 		eTrait trait = eTrait(i + 10);
@@ -304,7 +304,7 @@ void pick_race_abil(cPlayer *pc,short mode)
 	pickAbil.attachFocusHandlers(led_selector, {"good6", "good7", "good8", "good9", "good10"});
 	
 	display_traits_graphics(pickAbil);
-	if (mode == 1)
+	if(mode == 1)
 		pickAbil["info"].setText(start_str1);
 	else pickAbil["info"].setText(start_str2);
 	
@@ -335,7 +335,7 @@ void display_alchemy(bool allowEdit)
 		if(!allowEdit)
 			showAlch->getControl(id).attachClickHandler(&cLed::noAction);
 		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));
-		if (univ.party.alchemy[i] > 0)
+		if(univ.party.alchemy[i] > 0)
 			led.setState(led_red);
 		else led.setState(led_off);
 	}
@@ -363,7 +363,7 @@ static void do_xp_keep(short pc_num,short mode,std::map<eSkill,short>& store_ski
 	univ.party[pc_num].max_health = store_h;
 	univ.party[pc_num].cur_sp += store_sp - univ.party[pc_num].max_sp;
 	univ.party[pc_num].max_sp = store_sp;
-	if (mode == 1)
+	if(mode == 1)
 		univ.party.gold = store_g;
 	univ.party[pc_num].skill_pts = store_skp;
 	
@@ -373,10 +373,10 @@ static void draw_xp_skills(cDialog& me,std::map<eSkill,short>& store_skills)
 {
 	short i;
 	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
-	for (i = 0; i < 19; i++) {
+	for(i = 0; i < 19; i++) {
 		cControl& cur = me[skill_ids[i]];
 		eSkill skill = eSkill(i);
-		if ((store_skp >= skill_cost[skill]) && (store_g >= skill_g_cost[skill]))
+		if((store_skp >= skill_cost[skill]) && (store_g >= skill_g_cost[skill]))
 			cur.setColour(sf::Color::Red);
 		else cur.setColour(me.getDefTextClr());
 		cur.setTextToNum(store_skills[skill]);
@@ -384,11 +384,11 @@ static void draw_xp_skills(cDialog& me,std::map<eSkill,short>& store_skills)
 	
 	cControl& sp = me["sp"];
 	cControl& hp = me["hp"];
-	if ((store_skp >= 1) && (store_g >= 10))
+	if((store_skp >= 1) && (store_g >= 10))
 		hp.setColour(sf::Color::Red);
 	else hp.setColour(me.getDefTextClr());
 	hp.setTextToNum(store_h);
-	if ((store_skp >= 1) && (store_g >= 15))
+	if((store_skp >= 1) && (store_g >= 15))
 		sp.setColour(sf::Color::Red);
 	else sp.setColour(me.getDefTextClr());
 	sp.setTextToNum(store_sp);
@@ -407,7 +407,7 @@ static void do_xp_draw(cDialog& me,std::map<eSkill,short>& store_skills) {
 	
 	mode = store_train_mode;
 	pc_num = store_train_pc;
-	if (mode == 0) {
+	if(mode == 0) {
 		if(univ.party[pc_num].main_status == eMainStatus::ALIVE)
 			sprintf((char *) get_text, "%s",(char *) univ.party[pc_num].name.c_str());
 		else sprintf((char *) get_text, "New PC");
@@ -453,29 +453,29 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,std::map<
 		talk_done = true;
 	} else if(item_hit == "left") {
 		// TODO: Try not forcing a commit when using the arrows?
-		if (mode != 0) {
+		if(mode != 0) {
 			do_xp_keep(pc_num,mode,store_skills);
 			do {
 				pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-			} while (univ.party[pc_num].main_status != eMainStatus::ALIVE);
+			} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
 			store_train_pc = pc_num;
 			do_xp_draw(me,store_skills);
 		} else
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 	} else if(item_hit == "right") {
 		// TODO: If they don't work in mode 0, why are they visible?
-		if (mode != 0) {
+		if(mode != 0) {
 			do_xp_keep(pc_num,mode,store_skills);
 			do {
 				pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-			} while (univ.party[pc_num].main_status != eMainStatus::ALIVE);
+			} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
 			store_train_pc = pc_num;
 			do_xp_draw(me,store_skills);
 		} else
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 	}
 	store_train_pc = pc_num;
-	if (talk_done) {
+	if(talk_done) {
 		me.toast(item_hit == "keep");
 	}
 	return true;
@@ -488,7 +488,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 			cStrDlog aboutHP(get_str("help",63),"","About Health",24,PIC_DLOG,&me);
 			aboutHP.setSound(57);
 			aboutHP.show();
-		} else if (((store_h >= 250) && (item_hit[3] == 'p')) ||
+		} else if(((store_h >= 250) && (item_hit[3] == 'p')) ||
 				   ((store_h == univ.party[pc_num].max_health) && (item_hit[3] == 'm') && (mode == 1)) ||
 				   ((store_h == 6) && (item_hit[3] == 'm') && (mode == 0)))
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
@@ -498,8 +498,8 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 			store_skp += 1;
 		}
 		else {
-			if ((store_g < 10) || (store_skp < 1)) {
-//				if (store_g < 10)
+			if((store_g < 10) || (store_skp < 1)) {
+//				if(store_g < 10)
 //					give_help(24,0,me);
 //				else give_help(25,0,me);
 			}
@@ -519,7 +519,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 			cStrDlog aboutSP(get_str("help",64),"","About Spell Points",24,PIC_DLOG,&me);
 			aboutSP.setSound(57);
 			aboutSP.show();
-		} else if (((store_sp >= 150) && (item_hit[3] == 'p')) ||
+		} else if(((store_sp >= 150) && (item_hit[3] == 'p')) ||
 				   ((store_sp == univ.party[pc_num].max_sp) && (item_hit[3] == 'm') && (mode == 1)) ||
 				   ((store_sp == 0) && (item_hit[3] == 'm') && (mode == 0)))
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
@@ -529,8 +529,8 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 			store_skp += 1;
 		}
 		else {
-			if ((store_g < 15) || (store_skp < 1)) {
-//				if (store_g < 15)
+			if((store_g < 15) || (store_skp < 1)) {
+//				if(store_g < 15)
 //					give_help(24,0,me);
 //				else give_help(25,0,me);
 			}
@@ -577,8 +577,8 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					store_skp += skill_cost[which_skill];
 				}
 				else {
-					if ((store_g < skill_g_cost[which_skill]) || (store_skp < skill_cost[which_skill])) {
-//						if (store_g < skill_g_cost[which_skill])
+					if((store_g < skill_g_cost[which_skill]) || (store_skp < skill_cost[which_skill])) {
+//						if(store_g < skill_g_cost[which_skill])
 //							give_help(24,0,me);
 //						else give_help(25,0,me);
 					}
@@ -615,7 +615,7 @@ bool spend_xp(short pc_num, short mode, cDialog* parent)
 	xpDlog.addLabelFor("sp","Spell Pts. (1/15)",LABEL_LEFT,75,true);
 	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(skills));
 	std::string minus = "-m", plus = "-p";
-	for (i = 54; i < 73; i++) {
+	for(i = 54; i < 73; i++) {
 		std::ostringstream sout;
 		eSkill skill = eSkill(i - 54);
 		sout << get_str("skills",1 + 2 * (i - 54)) << ' ' << '(';
@@ -629,7 +629,7 @@ bool spend_xp(short pc_num, short mode, cDialog* parent)
 	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(skills)),{"keep","cancel","left","right","help"});
 	xpDlog.attachClickHandlers(spend_xp_filter,{"sp-m","sp-p","hp-m","hp-p"});
 	
-	if (univ.party.help_received[10] == 0) {
+	if(univ.party.help_received[10] == 0) {
 		// TODO: Is an initial draw even needed?
 //		cd_initial_draw(1010);
 //		give_help(10,11,xpDlog);

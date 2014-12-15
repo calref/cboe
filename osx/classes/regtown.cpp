@@ -34,8 +34,8 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 			if(is_free) unused_special_slots.push_back(i);
 		}
 	}
-	for (i = 0; i < 32; i++)
-		for (j = 0; j < 32; j++) {
+	for(i = 0; i < 32; i++)
+		for(j = 0; j < 32; j++) {
 			_terrain[i][j] = old.terrain[i][j];
 			_lighting[i / 8][j] = old.lighting[i / 8][j];
 			if(scenario.ter_types[_terrain[i][j]].i == 3000) { // marker to indicate it used to be a special spot
@@ -71,13 +71,13 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 				}
 			}
 		}
-	for (i = 0; i < 16; i++) {
+	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = old.room_rect[i].top;
 		_room_rect[i].left = old.room_rect[i].left;
 		_room_rect[i].bottom = old.room_rect[i].bottom;
 		_room_rect[i].right = old.room_rect[i].right;
 	}
-	for (i = 0; i < 30; i++) {
+	for(i = 0; i < 30; i++) {
 //		_creatures[i].number = old.creatures[i].number;
 //		_creatures[i].start_attitude = old.creatures[i].start_attitude;
 //		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
@@ -114,8 +114,8 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 			if(is_free) unused_special_slots.push_back(i);
 		}
 	}
-	for (i = 0; i < 48; i++)
-		for (j = 0; j < 48; j++) {
+	for(i = 0; i < 48; i++)
+		for(j = 0; j < 48; j++) {
 			_terrain[i][j] = old.terrain[i][j];
 			_lighting[i / 8][j] = old.lighting[i / 8][j];
 			if(scenario.ter_types[_terrain[i][j]].i == 3000) { // marker to indicate it used to be a special spot
@@ -151,13 +151,13 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 				}
 			}
 		}
-	for (i = 0; i < 16; i++) {
+	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = old.room_rect[i].top;
 		_room_rect[i].left = old.room_rect[i].left;
 		_room_rect[i].bottom = old.room_rect[i].bottom;
 		_room_rect[i].right = old.room_rect[i].right;
 	}
-	for (i = 0; i < 40; i++) {
+	for(i = 0; i < 40; i++) {
 //		_creatures[i].number = old.creatures[i].number;
 //		_creatures[i].start_attitude = old.creatures[i].start_attitude;
 //		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
@@ -194,8 +194,8 @@ void cBigTown::append(legacy::big_tr_type& old, int town_num){
 			if(is_free) unused_special_slots.push_back(i);
 		}
 	}
-	for (i = 0; i < 64; i++)
-		for (j = 0; j < 64; j++) {
+	for(i = 0; i < 64; i++)
+		for(j = 0; j < 64; j++) {
 			_terrain[i][j] = old.terrain[i][j];
 			_lighting[i / 8][j] = old.lighting[i / 8][j];
 			if(scenario.ter_types[_terrain[i][j]].i == 3000) { // marker to indicate it used to be a special spot
@@ -231,13 +231,13 @@ void cBigTown::append(legacy::big_tr_type& old, int town_num){
 				}
 			}
 		}
-	for (i = 0; i < 16; i++) {
+	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = old.room_rect[i].top;
 		_room_rect[i].left = old.room_rect[i].left;
 		_room_rect[i].bottom = old.room_rect[i].bottom;
 		_room_rect[i].right = old.room_rect[i].right;
 	}
-	for (i = 0; i < 60; i++) {
+	for(i = 0; i < 60; i++) {
 //		_creatures[i].number = old.creatures[i].number;
 //		_creatures[i].start_attitude = old.creatures[i].start_attitude;
 //		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
@@ -334,13 +334,13 @@ cBigTown::cBigTown(){
 	int i;
 	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
 	RECT d_rect = {0,0,0,0};
-	for (i = 0; i < 16; i++) {
+	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
 		_room_rect[i].left = d_rect.left;
 		_room_rect[i].bottom = d_rect.bottom;
 		_room_rect[i].right = d_rect.right;
 	}
-	for (i = 0; i < 60; i++) {
+	for(i = 0; i < 60; i++) {
 		_creatures[i] = dummy_creature;
 	}
 }
@@ -349,13 +349,13 @@ cMedTown::cMedTown(){
 	int i;
 	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
 	RECT d_rect = {0,0,0,0};
-	for (i = 0; i < 16; i++) {
+	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
 		_room_rect[i].left = d_rect.left;
 		_room_rect[i].bottom = d_rect.bottom;
 		_room_rect[i].right = d_rect.right;
 	}
-	for (i = 0; i < 40; i++) {
+	for(i = 0; i < 40; i++) {
 		_creatures[i] = dummy_creature;
 	}
 }
@@ -364,13 +364,13 @@ cTinyTown::cTinyTown(){
 	int i;
 	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
 	RECT d_rect = {0,0,0,0};
-	for (i = 0; i < 16; i++) {
+	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
 		_room_rect[i].left = d_rect.left;
 		_room_rect[i].bottom = d_rect.bottom;
 		_room_rect[i].right = d_rect.right;
 	}
-	for (i = 0; i < 30; i++) {
+	for(i = 0; i < 30; i++) {
 		_creatures[i] = dummy_creature;
 	}
 }

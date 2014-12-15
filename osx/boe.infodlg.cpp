@@ -84,7 +84,7 @@ static void put_spell_info(cDialog& me, eSkill display_mode) {
 	else store_text << (*spell).level << "/?";
 	me["cost"].setText(store_text.str());
 	
-	if (ran == 0) {
+	if(ran == 0) {
 		me["range"].setText("");
 	}
 	else me["range"].setTextToNum(ran);
@@ -117,7 +117,7 @@ void display_spells(eSkill mode,short force_spell,cDialog* parent)
 //short force_spell; // if 100, ignore
 {
 	using namespace std::placeholders;
-	if (force_spell < 100) {
+	if(force_spell < 100) {
 		if(mode == eSkill::MAGE_SPELLS)
 			mage_spell_pos = force_spell;
 		else priest_spell_pos = force_spell;
@@ -176,7 +176,7 @@ void display_skills(eSkill force_skill,cDialog* parent)
 {
 	if(force_skill != eSkill::INVALID)
 		skill_pos = int(force_skill);
-	if (skill_pos < 0)
+	if(skill_pos < 0)
 		skill_pos = 0;
 	if(skill_pos > 18)
 		skill_pos = 18;
@@ -196,7 +196,7 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 	std::string desc_str;
 	
 	cPict& pic = dynamic_cast<cPict&>(me["pic"]);
-	if (s_i.graphic_num >= 1000) // was 150
+	if(s_i.graphic_num >= 1000) // was 150
 		pic.setPict(s_i.graphic_num - 1000, PIC_CUSTOM_ITEM);
 	else pic.setPict(s_i.graphic_num, PIC_ITEM);
 	
@@ -221,7 +221,7 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 	me["lvl"].setText("");
 	me["abil"].setText("");
 	
-	if (!s_i.ident) {
+	if(!s_i.ident) {
 		me["name"].setText(s_i.name.c_str());
 		return;
 	}
@@ -233,7 +233,7 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 	me["val"].setTextToNum((s_i.charges > 0) ? s_i.value * s_i.charges : s_i.value);
 	
 	if(s_i.ability != eItemAbil::NONE) {
-		if (s_i.concealed) {
+		if(s_i.concealed) {
 			me["abil"].setText("???");
 		} else {
 			// TODO: More descriptive ability descriptions, taking into account potential variation
@@ -241,15 +241,15 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 			me["abil"].setText(desc_str.c_str());
 		}
 	}
-	if (s_i.charges > 0)
+	if(s_i.charges > 0)
 		me["use"].setTextToNum(s_i.charges);
-	if (s_i.protection > 0)
+	if(s_i.protection > 0)
 		me["def"].setTextToNum(s_i.protection);
 	
-	switch (s_i.variety) {
+	switch(s_i.variety) {
 		case eItemType::ONE_HANDED:
 		case eItemType::TWO_HANDED:
-			switch (s_i.type) {
+			switch(s_i.type) {
 				case eSkill::EDGED_WEAPONS:
 					sprintf((char *) store_text, "Edged weapon");
 					break;
@@ -311,13 +311,13 @@ static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, cIte
 	} else if(item_hit == "left") {
 		do {
 			item = (item == 0) ? 23 : item - 1;
-		} while (univ.party[pc_num].items[item].variety == eItemType::NO_ITEM);
+		} while(univ.party[pc_num].items[item].variety == eItemType::NO_ITEM);
 		store_i = univ.party[pc_num].items[item];
 		put_item_info(me,item);
 	} else if(item_hit == "right") {
 		do {
 			item = (item == 23) ? 0 : item + 1;
-		} while (univ.party[pc_num].items[item].variety == eItemType::NO_ITEM);
+		} while(univ.party[pc_num].items[item].variety == eItemType::NO_ITEM);
 		store_i = univ.party[pc_num].items[item];
 		put_item_info(me,item);
 	}
@@ -328,7 +328,7 @@ void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent)
 {
 	using namespace std::placeholders;
 	cItemRec store_i;
-	if (pc_num == 6)
+	if(pc_num == 6)
 		store_i = si;
 	else store_i = univ.party[pc_num].items[item];
 	make_cursor_sword();
@@ -443,21 +443,21 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreat
 	if(item_hit == "done") {
 		me.toast(true);
 	} else if(item_hit == "left") {
-		if (position == 0) {
-			for (i = 255; on_monst_menu[i] < 0 && i > 0; i--)
+		if(position == 0) {
+			for(i = 255; on_monst_menu[i] < 0 && i > 0; i--)
 				dummy++;
 			position = i;
 		}
 		else position--;
 		
-		if (on_monst_menu[position] < 0)
+		if(on_monst_menu[position] < 0)
 			position = 0;
 		store_m.number = on_monst_menu[position];
 		store_m = store_m; // to fill in fields that wouldn't otherwise be filled in; replaces return_monster_template
 		put_monst_info(me, store_m);
 	} else if(item_hit == "right") {
 		position++;
-		if (on_monst_menu[position] < 0)
+		if(on_monst_menu[position] < 0)
 			position = 0;
 		store_m.number = on_monst_menu[position];
 		store_m = store_m; // no, this is not redundant
@@ -475,7 +475,7 @@ void display_monst(short array_pos,cCreature *which_m,short mode)
 	position = array_pos;
 	full_roster = false;
 	cCreature store_m;
-	if (mode == 1) {
+	if(mode == 1) {
 		full_roster = true;
 		store_m = cCreature();
 		store_m.number = on_monst_menu[array_pos];
@@ -494,7 +494,7 @@ void display_monst(short array_pos,cCreature *which_m,short mode)
 	monstInfo.attachClickHandlers(event_filter, {"immune1", "immune2", "immune3", "immune4"});
 	monstInfo.attachClickHandlers(event_filter, {"immune5", "immune6", "immune7", "immune8"});
 	
-	if (!full_roster) {
+	if(!full_roster) {
 		monstInfo["left"].hide();
 		monstInfo["right"].hide();
 	}
@@ -586,7 +586,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 			univ.party[pc].cur_sp,univ.party[pc].max_sp);
 	me["sp"].setText(str);
 	
-	for (i = 0; i < 19; i++) {
+	for(i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
 		me[skill_ids[i]].setTextToNum(univ.party[pc].skills[skill]);
 	}
@@ -601,17 +601,17 @@ static void display_pc_info(cDialog& me, const short pc) {
 	dynamic_cast<cPict&>(me["pic"]).setPict(univ.party[pc].which_graphic,PIC_PC); // TODO: Was adding 800 needed, or a relic?
 	
 	// Fight bonuses
-	for (i = 0; i < 24; i++)
-		if ((univ.party[pc].items[i].variety == eItemType::ONE_HANDED || univ.party[pc].items[i].variety == eItemType::TWO_HANDED) &&
+	for(i = 0; i < 24; i++)
+		if((univ.party[pc].items[i].variety == eItemType::ONE_HANDED || univ.party[pc].items[i].variety == eItemType::TWO_HANDED) &&
 			(univ.party[pc].equip[i])) {
-			if (weap1 == 24)
+			if(weap1 == 24)
 				weap1 = i;
 			else weap2 = i;
 		}
 	
 	hit_adj = stat_adj(pc,eSkill::DEXTERITY) * 5 - (total_encumberance(pc)) * 5
 		+ 5 * minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
-	if (!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2 < 24)
+	if(!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2 < 24)
 		hit_adj -= 25;
 	
 	dam_adj = stat_adj(pc,eSkill::STRENGTH) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
@@ -628,12 +628,12 @@ static void display_pc_info(cDialog& me, const short pc) {
 	me["weap1b"].setText("");
 	me["weap2a"].setText("No weapon.");
 	me["weap2b"].setText("");
-	if (weap1 < 24) {
-		if (!univ.party[pc].items[weap1].ident)
+	if(weap1 < 24) {
+		if(!univ.party[pc].items[weap1].ident)
 			me["weap1a"].setText("Not identified.");
 		else {
 			// TODO: What's with always putting the percent sign in front?
-			if (hit_adj + 5 * univ.party[pc].items[weap1].bonus < 0)
+			if(hit_adj + 5 * univ.party[pc].items[weap1].bonus < 0)
 				sprintf(to_draw,"Penalty to hit: %%%d",hit_adj + 5 * univ.party[pc].items[weap1].bonus);
 			else sprintf(to_draw,"Bonus to hit: +%%%d",hit_adj + 5 * univ.party[pc].items[weap1].bonus);
 			me["weap1a"].setText(to_draw);
@@ -643,11 +643,11 @@ static void display_pc_info(cDialog& me, const short pc) {
 			
 		}
 	}
-	if (weap2 < 24) {
-		if (!univ.party[pc].items[weap2].ident)
+	if(weap2 < 24) {
+		if(!univ.party[pc].items[weap2].ident)
 			me["weap2a"].setText("Not identified.");
 		else {
-			if (hit_adj + 5 * univ.party[pc].items[weap2].bonus < 0)
+			if(hit_adj + 5 * univ.party[pc].items[weap2].bonus < 0)
 				sprintf(to_draw,"Penalty to hit: %%%d",hit_adj + 5 * univ.party[pc].items[weap2].bonus);
 			else sprintf(to_draw,"Bonus to hit: +%%%d",hit_adj + 5 * univ.party[pc].items[weap2].bonus);
 			me["weap2a"].setText(to_draw);
@@ -696,7 +696,7 @@ void give_pc_info(short pc_num)
 	pcInfo.attachClickHandlers(std::bind(give_pc_info_event_filter, _1, _2, std::ref(pc_num)), {"done", "left", "right"});
 	pcInfo.attachClickHandlers(give_pc_extra_info, {"seemage", "seepriest", "trait", "alch"});
 	
-	for (i = 0; i < 19; i++) {
+	for(i = 0; i < 19; i++) {
 		std::string lbl= "lbl" + boost::lexical_cast<std::string>(i + 1);
 		str = get_str("skills",1 + i * 2);
 		pcInfo[lbl].setText(str);
@@ -714,11 +714,11 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 	
 	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
-		if (store_page_on == 0)
+		if(store_page_on == 0)
 			store_page_on = (store_num_i - 1) / 3;
 		else store_page_on--;
 	} else if(item_hit == "right") {
-		if (store_page_on == (store_num_i - 1) / 3)
+		if(store_page_on == (store_num_i - 1) / 3)
 			store_page_on = 0;
 		else store_page_on++;
 	} else if(item_hit.substr(0,3) == "del") {
@@ -728,10 +728,10 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 		iter += which_to_delete;
 		univ.party.special_notes.erase(iter);
 	}
-	for (i = 0; i < 3; i++) {
+	for(i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if (univ.party.special_notes.size() > i) {
-			switch (univ.party.special_notes[i].str_num / 1000) {
+		if(univ.party.special_notes.size() > i) {
+			switch(univ.party.special_notes[i].str_num / 1000) {
 				case 0:
 					place_str = scenario.scen_strs(univ.party.special_notes[i].str_num % 1000); break;
 				case 1:
@@ -751,10 +751,10 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 		else me["del" + n].hide();
 	}
 	// TODO: What's this second loop for?
-	for (i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
+	for(i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if (univ.party.special_notes.size() > i) {
-			switch (univ.party.special_notes[i].str_num / 1000) {
+		if(univ.party.special_notes.size() > i) {
+			switch(univ.party.special_notes[i].str_num / 1000) {
 				case 0:
 					place_str = scenario.scen_strs(univ.party.special_notes[i].str_num % 1000); break;
 				case 1:
@@ -787,11 +787,11 @@ void adventure_notes()
 	char place_str[256];
 	
 	store_num_i = 0;
-	//for (i = 0; i < 140; i++)
-	//	if (univ.party.special_notes_str[i][0] > 0)
+	//for(i = 0; i < 140; i++)
+	//	if(univ.party.special_notes_str[i][0] > 0)
 	store_num_i = univ.party.special_notes.size(); //i + 1;
 	store_page_on = 0;
-	if (store_num_i == 0) {
+	if(store_num_i == 0) {
 		ASB("Nothing in your journal.");
 		print_buf();
 		return;
@@ -802,10 +802,10 @@ void adventure_notes()
 	cDialog encNotes("adventure-notes.xml");
 	encNotes.attachClickHandlers(adventure_notes_event_filter, {"done", "left", "rigth", "del1", "del2", "del3"});
 	
-	for (i = 0; i < 3; i++) {
+	for(i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if (univ.party.special_notes.size() > i) {
-			switch (univ.party.special_notes[i].str_num / 1000) {
+		if(univ.party.special_notes.size() > i) {
+			switch(univ.party.special_notes[i].str_num / 1000) {
 				case 0:
 					strcpy((char *) place_str,scenario.scen_strs(univ.party.special_notes[i].str_num % 1000)); break;
 				case 1:
@@ -821,7 +821,7 @@ void adventure_notes()
 		}
 		else encNotes["del" + n].hide();
 	}
-	if (store_num_i <= 3) {
+	if(store_num_i <= 3) {
 		encNotes["left"].hide();
 		encNotes["right"].hide();
 	}
@@ -834,7 +834,7 @@ static void put_talk(cDialog& me)
 	short personality;
 	char place_str[256];
 	
-	if ((personality = univ.party.talk_save[store_page_on].personality) >= 0) {
+	if((personality = univ.party.talk_save[store_page_on].personality) >= 0) {
 		load_town_talk(personality / 10);
 		
 		// TODO: Use cached strings instead of loading them
@@ -843,8 +843,8 @@ static void put_talk(cDialog& me)
 		
 		me["who"].setText(univ.town.cur_talk().talk_strs[personality % 10]);
 		
-		if (univ.party.talk_save[store_page_on].str_num1 >= 1000) {
-			if (univ.party.talk_save[store_page_on].str_num1 >= 3000)
+		if(univ.party.talk_save[store_page_on].str_num1 >= 1000) {
+			if(univ.party.talk_save[store_page_on].str_num1 >= 3000)
 				me["str1"].setText(scenario.scen_strs(univ.party.talk_save[store_page_on].str_num1 - 3000));
 			else {
 				load_town_str(univ.party.talk_save[store_page_on].town_num,
@@ -852,11 +852,11 @@ static void put_talk(cDialog& me)
 				me["str1"].setText(place_str);
 			}
 		}
-		else if (univ.party.talk_save[store_page_on].str_num1 > 0)
+		else if(univ.party.talk_save[store_page_on].str_num1 > 0)
 			me["str1"].setText(univ.town.cur_talk().talk_strs[univ.party.talk_save[store_page_on].str_num1]);
 		
-		if (univ.party.talk_save[store_page_on].str_num2 >= 1000) {
-			if (univ.party.talk_save[store_page_on].str_num2 >= 3000)
+		if(univ.party.talk_save[store_page_on].str_num2 >= 1000) {
+			if(univ.party.talk_save[store_page_on].str_num2 >= 3000)
 				me["str2"].setText(scenario.scen_strs(univ.party.talk_save[store_page_on].str_num2 - 3000 + 160));
 			else {
 				load_town_str(univ.party.talk_save[store_page_on].town_num,
@@ -864,7 +864,7 @@ static void put_talk(cDialog& me)
 				me["str2"].setText(place_str);
 			}
 		}
-		else if (univ.party.talk_save[store_page_on].str_num2 > 0)
+		else if(univ.party.talk_save[store_page_on].str_num2 > 0)
 			me["str2"].setText(univ.town.cur_talk().talk_strs[univ.party.talk_save[store_page_on].str_num2]);
 	}
 }
@@ -872,11 +872,11 @@ static void put_talk(cDialog& me)
 static bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
-		if (store_page_on == 0)
+		if(store_page_on == 0)
 			store_page_on = store_num_i - 1;
 		else store_page_on--;
 	} else if(item_hit == "right") {
-		if (store_page_on == store_num_i - 1)
+		if(store_page_on == store_num_i - 1)
 			store_page_on = 0;
 		else store_page_on++;
 	} else if(item_hit == "del") {
@@ -893,11 +893,11 @@ void talk_notes()
 	short i;
 	
 	store_num_i = 0;
-	for (i = 0; i < 120; i++)
-		if (univ.party.talk_save[i].personality != -1)
+	for(i = 0; i < 120; i++)
+		if(univ.party.talk_save[i].personality != -1)
 			store_num_i = i + 1;
 	store_page_on = 0;
-	if (store_num_i == 0) {
+	if(store_num_i == 0) {
 		ASB("Nothing in your talk journal.");
 		print_buf();
 		return;
@@ -909,7 +909,7 @@ void talk_notes()
 	talkNotes.attachClickHandlers(talk_notes_event_filter, {"done", "left", "right", "del"});
 	
 	put_talk(talkNotes);
-	if (store_num_i == 1) {
+	if(store_num_i == 1) {
 		talkNotes["left"].hide();
 		talkNotes["right"].hide();
 	}
@@ -923,17 +923,17 @@ static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	
 	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
-		if (store_page_on == 0)
+		if(store_page_on == 0)
 			store_page_on = (store_num_i - 1) / 3;
 		else store_page_on--;
 	} else if(item_hit == "right") {
-		if (store_page_on == (store_num_i - 1) / 3)
+		if(store_page_on == (store_num_i - 1) / 3)
 			store_page_on = 0;
 		else store_page_on++;
 	}
-	for (i = 0; i < 3; i++) {
+	for(i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if ((long)univ.party.journal.size() > i + (store_page_on * 3)) {
+		if((long)univ.party.journal.size() > i + (store_page_on * 3)) {
 			me["str" + n].setText(scenario.scen_strs(univ.party.journal[i].str_num + 10));
 			sprintf((char *)place_str,"Day: %d",univ.party.journal[i].day);
 			me["day" + n].setText(place_str);
@@ -953,8 +953,8 @@ void journal()
 	char place_str[256];
 	
 	store_num_i = 0;
-	//for (i = 0; i < 120; i++)
-	//if (univ.party.journal[i].str_num > 0)
+	//for(i = 0; i < 120; i++)
+	//if(univ.party.journal[i].str_num > 0)
 	store_num_i = univ.party.journal.size();//i + 1;
 	store_page_on = 0;
 	
@@ -963,8 +963,8 @@ void journal()
 	cDialog journal("event-journal.xml");
 	journal.attachClickHandlers(journal_event_filter, {"done", "left", "right"});
 	
-	for (i = 0; i < 3; i++) {
-		if (univ.party.journal.size() > i) {
+	for(i = 0; i < 3; i++) {
+		if(univ.party.journal.size() > i) {
 			// TODO: Use the cached strings instead of looking them up
 			std::string n = boost::lexical_cast<std::string>(i + 1);
 			journal["str" + n].setText(scenario.scen_strs(univ.party.journal[i].str_num + 10));
@@ -972,7 +972,7 @@ void journal()
 			journal["day" + n].setText(place_str);
 		}
 	}
-	if (store_num_i <= 3) {
+	if(store_num_i <= 3) {
 		journal["left"].hide();
 		journal["right"].hide();
 	}
@@ -991,19 +991,19 @@ static void give_help(short help1,short help2,cDialog* parent)
 	bool help_forced = false;
 	std::string str1,str2;
 	
-	if (help1 >= 200) {
+	if(help1 >= 200) {
 		help_forced = true;
 		help1 -= 200;
 	}
-	if ((PSD[SDF_NO_INSTANT_HELP] > 0) && !help_forced)
+	if((PSD[SDF_NO_INSTANT_HELP] > 0) && !help_forced)
 		return;
-	if (univ.party.help_received[help1] > 0)
+	if(univ.party.help_received[help1] > 0)
 		return;
-	//if (help1 >= 20)
+	//if(help1 >= 20)
 	univ.party.help_received[help1] = 1;
 	append_iarray_pref("ReceivedHelp", help1);
 	str1 = get_str("help",help1);
-	if (help2 > 0)
+	if(help2 > 0)
 		str2 = get_str("help",help2);
 	cStrDlog display_strings(str1,str2,"Instant Help",24,PIC_DLOG, parent);
 	display_strings.setSound(57);

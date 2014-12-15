@@ -50,15 +50,15 @@ bool handle_startup_press(location the_point)
 	the_point.x -= ul.x;
 	the_point.y -= ul.y;
 	
-	for (i = 0; i < 5; i++)
-		if (the_point.in(startup_button[i])) {
+	for(i = 0; i < 5; i++)
+		if(the_point.in(startup_button[i])) {
 			draw_start_button(i,5);
 			mainPtr.display(); // TODO: I suspect this won't work
-			if (play_sounds)
+			if(play_sounds)
 				play_sound(37);
 			else sf::sleep(time_in_ticks(5));
 			draw_start_button(i,0);
-			switch (i) {
+			switch(i) {
 				case STARTBTN_LOAD:
 					do_load();
 					break;
@@ -77,15 +77,15 @@ bool handle_startup_press(location the_point)
 					break;
 					
 				case STARTBTN_JOIN: // regular scen
-					if (!party_in_memory) {
+					if(!party_in_memory) {
 						cChoiceDlog("need-party.xml").show();
 						break;
 					}
 					scen = pick_prefab_scen();
-					if (scen < 0)
+					if(scen < 0)
 						break;
 					
-					switch (scen) {
+					switch(scen) {
 						case 0: scen_name = "valleydy.exs"; break;
 							// if not reg, rub out
 						case 1: scen_name = "stealth.exs"; break;
@@ -96,7 +96,7 @@ bool handle_startup_press(location the_point)
 					break;
 					
 				case STARTBTN_CUSTOM: // custom
-					if (!party_in_memory) {
+					if(!party_in_memory) {
 						cChoiceDlog("need-party.xml").show();
 						break;
 					}
@@ -104,7 +104,7 @@ bool handle_startup_press(location the_point)
 					
 					scen = pick_a_scen();
 					if(scen < 0) break;
-					if (scen_headers.data(scen).prog_make_ver[0] >= 2) {
+					if(scen_headers.data(scen).prog_make_ver[0] >= 2) {
 						cChoiceDlog("scen-version-mismatch.xml").show();
 						break;
 					}
