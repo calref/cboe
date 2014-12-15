@@ -691,9 +691,11 @@ std::string cParty::start_split(short a,short b,snd_num_t noise,short who) {
 	stuff_done[304][8] = univ.town.num;
 	univ.town.p_loc.x = a;
 	univ.town.p_loc.y = b;
+	// TODO: This looks like it won't work.
 	for (i = 0; i < 6; i++)
 		if (!stuff_done[304][who])
 			adven[i].main_status += eMainStatus::SPLIT;
+	// TODO: Uh, why play sound 10 instead of the one passed in?
 	if (noise > 0)
 		play_sound(10);
 	return "";

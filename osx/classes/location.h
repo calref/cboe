@@ -81,6 +81,7 @@ bool operator == (location p1,location p2);
 bool operator != (location p1,location p2);
 bool operator == (rectangle r1, rectangle r2);
 bool operator != (rectangle r1, rectangle r2);
+// TODO: This isn't a union, because it returns a rectangle.
 rectangle operator|(rectangle one, rectangle two);
 rectangle rectunion(rectangle one, rectangle two);
 short dist(location p1,location p2);

@@ -133,6 +133,8 @@ void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_ad
 {
 	RECT area_rect;
 	
+	// This would be a place to hide the text box, if I add it.
+	
 	if (shop_max < shop_min)
 		shop_max = shop_min; ////
 	store_cost_mult = cost_adj;
@@ -173,6 +175,8 @@ static void update_last_talk(int new_node) {
 void end_shop_mode()
 {
 	RECT dummy_rect = {0,0,0,0};
+	
+	// This would be a place to show the text box, if I add it (and if this is not an outdoor shop).
 	
 	shop_sbar->hide();
 	if (store_pre_shop_mode == 20) {
@@ -538,6 +542,8 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	area_rect = talk_area_rect;
 	talk_gworld.create(area_rect.width(), area_rect.height());
 	
+	// This would be the place to show the text box, if I add it.
+	
 	// first make sure relevant talk strs are loaded in
 	load_town_talk(personality / 10);
 	
@@ -567,6 +573,7 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 
 void end_talk_mode()
 {
+	// This would be where to hide the text box, if I add it.
 	overall_mode = store_pre_talk_mode;
 	if (overall_mode == MODE_TALK_TOWN)
 		overall_mode = MODE_TOWN;
@@ -924,6 +931,7 @@ void handle_talk_event(location p)
 			return;
 		case 24:
 			if (univ.party.can_find_town[b] > 0) {
+				// TODO: Uh, is something supposed to happen here?
 			}
 			else if (univ.party.gold < a) {
 				strnum1 = strnum2;
@@ -950,6 +958,7 @@ void handle_talk_event(location p)
 			talk_end_forced = true;
 			break;
 		case 28:
+			// TODO: Any reason not to call something like kill_monst?
 			univ.town.monst[store_m_num].active = 0;
 			// Special killing effects
 			if (sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2) == true)
@@ -1116,6 +1125,13 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod)
 			PSD[SDF_NO_SHORE_FRILLS] = dynamic_cast<cLed&>(me["noshore"]).getState() != led_off;
 			show_startup_splash = dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off;
 			std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
+			/* TODO: Should I add these additional preferences from Windows?
+			party.stuff_done[SDF_NO_TARGET_LINE] = cd_get_led(1099,50);
+			party.stuff_done[SDF_LESS_SOUND] = cd_get_led(1099,52);
+			party.stuff_done[SDF_FASTER_BOOM_SPACES] = cd_get_led(1099,56);
+			party.stuff_done[SDF_ASK_ABOUT_TEXT_BOX] = cd_get_led(1099,60);
+			*/
+			// TODO: NO_SOUNDS and NO_MAPS preferences are stored in two different places
 			if(speed == "fast")
 				PSD[SDF_GAME_SPEED] = 0;
 			else if(speed == "med")

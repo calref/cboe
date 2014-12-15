@@ -103,6 +103,7 @@ location ul = {28,10};
 short display_mode = 0; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
 long stored_key;
 short pixel_depth,old_depth = 8;
+// TODO: Enumify stat_screen_mode
 short current_ground = 0,stat_screen_mode = 0;
 short anim_step = -1;
 
@@ -572,6 +573,8 @@ void handle_options_menu(int item_hit)
 				create_pc(6,NULL);
 			}
 			else {
+				// TODO: Allow additional towns to specify that you can make new characters in them
+				// (Otherwise, certain scenarios where you can't return to the start town would prevent you from creating new characters in the scenario.)
 				add_string_to_buf("Add PC: You can only make new");
 				add_string_to_buf("  characters in the town you ");
 				add_string_to_buf("  started in.");
@@ -615,6 +618,7 @@ void handle_help_menu(int item_hit)
 	}
 	if(!dialogToShow.empty())
 		cChoiceDlog(dialogToShow).show();
+	// TODO: Windows version has an option to bring up Windows help for the game; should we have something equivalent for Mac?
 }
 void handle_library_menu(int item_hit)
 {

@@ -1542,6 +1542,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 			how_much = 0;
 		monst_marked_damage[which_m] += how_much;
 		add_explosion(victim->cur_loc,how_much,0,(dam_type > 2) ? 2 : 0,14 * (victim->x_width - 1),18 * (victim->y_width - 1));
+		// Note: Windows version printed an "undamaged" message here if applicable, but I don't think that's right.
 		if (how_much == 0)
 			return false;
 		else return true;
@@ -1571,6 +1572,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		where_put = find_clear_spot(victim->cur_loc,1);
 		if (where_put.x > 0)
 			if ((which_spot = place_monster(victim->number,where_put)) < 90) {
+				// TODO: Why so many assignments? Windows only assigns health and monst_start (start_loc I assume)
 				univ.town.monst[which_spot].health = victim->health;
 				univ.town.monst[which_spot].number = victim->number;
 				univ.town.monst[which_spot].start_attitude = victim->start_attitude;
@@ -1596,7 +1598,8 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	// Monster damages. Make it hostile.
 	victim->active = 2;
 	
-	
+	// TODO: This looks like the reason Windows split the boom_space function in two.
+	// It doesn't exactly make sense though, since in its version, boom_space is only called for how_much_spec.
 	if (dam_type != 9) { // note special damage only gamed in hand-to-hand, not during animation
 		if (party_can_see_monst(which_m) == true) {
 			boom_space(victim->cur_loc,100,boom_gr[dam_type],how_much,sound_type);
@@ -1641,6 +1644,7 @@ void kill_monst(cCreature *which_m,short who_killed)
 	location l;
 	
 	if(isHumanoid(which_m->m_type)) {
+		// TODO: Uh, don't hardcode these!
 			if (( which_m->number == 38) ||
 				( which_m->number == 39))
 				i = 4;
@@ -1706,7 +1710,7 @@ void kill_monst(cCreature *which_m,short who_killed)
 	}
 	
 	
-	
+	// TODO: Check that this function is not called when a monster kills a monster, since that would lead to false incrementing of the stats.
 	if (((is_town()) || (which_combat_type == 1)) && (which_m->summoned == 0)) {
 		univ.party.m_killed[univ.town.num]++;
 	}
@@ -2138,6 +2142,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::CHANGE_TIME:
 			check_mess = true;
 			univ.party.age += spec.ex1a;
+			// TODO: Should this trigger special events, timers, etc?
 			break;
 		case eSpecType::SCEN_TIMER_START:
 			check_mess = true;
@@ -2568,6 +2573,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				// Honour the request for alive PCs only.
 				if(spec.ex1a == 1 || univ.party[pc].main_status == eMainStatus::ALIVE)
 					current_pc_picked_in_spec_enc = pc;
+				// TODO: If >= 100, select a specific monster
 			} else {
 				// Pick random PC (from *i)
 				// TODO: What if spec.ex1a == 2?
@@ -2597,6 +2603,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				else hit_party(r1,dam_type);
 			}
 			else damage_pc(pc,r1,dam_type,eRace::UNKNOWN,0);
+			// TODO: Extend to affect monsters too
 			break;
 		}
 		case eSpecType::AFFECT_HP:

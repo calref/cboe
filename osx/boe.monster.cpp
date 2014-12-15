@@ -1088,6 +1088,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 				return true;
 			else return false;
 			break;
+			// TODO: Should it check any other terrain specials?
 	}
 	
 	// Action may change terrain, so update what's been seen
@@ -1105,6 +1106,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 
 void forced_place_monster(m_num_t which,location where)
 {
+	// TODO: Windows version has logic to destroy unimportant monsters to make room, but the real issue here is the non-dynamic nature of the monster array, so a better fix would be to use an std::vector in cPopulation... and then this function wouldn't even be needed.
 	bool free_spot = false;
 	short i = 0,r1;
 	

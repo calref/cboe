@@ -432,6 +432,7 @@ void draw_startup_stats()
 	pc_rect.top = pc_rect.bottom - 25;
 	pc_rect.left = pc_rect.right - 300;
 	// TODO: Should replace this with a more appropriate copyright string
+	// Windows replaced it with "That is not dead which can eternally lie..." - I don't think that's quite appropriate though.
 	win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",eTextMode::WRAP,style,ul);
 }
 
@@ -440,6 +441,7 @@ void draw_startup_stats()
 void draw_start_button(short which_position,short which_button)
 {
 	RECT from_rect,to_rect;
+	// TODO: Change third button (Windows calls it "Support and Downloads")
 	const char *button_labels[] = {"Load Game","Make New Party","How To Order",
 		"Start Scenario","Custom Scenario","Quit"};
 	// The 0..65535 version of the blue component was 14472; the commented version was 43144431
@@ -476,6 +478,7 @@ void main_button_click(RECT button_rect)
 	button_rect.offset(ul);
 	mainPtr.setActive();
 	clip_rect(mainPtr, button_rect);
+	// TODO: Mini-event loop so that the click doesn't happen until releasing the mouse button
 	
 	draw_buttons(1);
 	mainPtr.display();
@@ -491,6 +494,7 @@ void arrow_button_click(RECT button_rect)
 	button_rect.offset(ul);
 	mainPtr.setActive();
 	clip_rect(mainPtr, button_rect);
+	// TODO: Mini-event loop so that the click doesn't happen until releasing the mouse button
 	
 	refresh_stat_areas(1);
 	mainPtr.display();
@@ -1088,6 +1092,7 @@ void place_trim(short q,short r,location where,ter_num_t ter_type)
 			at_bot = true;
 	}
 	else {
+	// TODO: Shouldn't we subtract one here?
 		if (where.x == univ.town->max_dim())
 			at_right = true;
 		if (where.y == univ.town->max_dim())
@@ -1188,6 +1193,10 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter)
 //which_trim is 3 -> drawing wall trim -> might shift down if ground is grass
 //short which_mode;  // 0 top 1 bottom 2 left 3 right 4 up left 5 up right 6 down right 7 down left
 {
+	/* TODO: Windows has a check for frills being enabled:
+	if ((frills_on == false) || (((current_ground == 2) || (current_ground == 36)) && (PSD[SDF_COMPATIBILITY_FULL_TRIMS] == 0)))
+	    return;
+	*/
 	// which_trim
 	// 0 - left, 1 - right, 2 - top, 3 - bottom, 4 - tl, 5 - tr, 6 - bl, 7 - br
 	// 8 - wall tl, 9 - wall tr, 10 - wall bl, 11 - wall br
@@ -1418,6 +1427,7 @@ void place_road(short q,short r,location where, bool here)
 		eTrimType trim = scenario.ter_types[ref].trim_type;
 		if (where.y > 0)
 			ter = coord_to_ter(where.x,where.y - 1);
+		// TODO: ter could be uninitialized here!
 		eTrimType vertTrim = scenario.ter_types[ter].trim_type;
 		if ((where.y == 0) || connect_roads(ter))
 			vert = can_build_roads_on(ref);

@@ -1631,6 +1631,7 @@ bool combat_next_step()
 	pick_next_pc();
 	if (current_pc != store_pc)
 		to_return = true;
+	// TODO: Windows version checks for overall_mode being MODE_OUTDOORS or MODE_TOWN - that's not necessary, right?
 	center = univ.party[current_pc].combat_pos;
 	//if (ensure_redraw == true)
 	//	draw_terrain(0);
@@ -1809,6 +1810,7 @@ void do_monster_turn()
 		// See if hostile monster notices party, during combat
 		if ((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1) && (overall_mode == MODE_COMBAT)) {
 			r1 = get_ran(1,1,100); // Check if see PCs first
+			// TODO: Hang on, isn't stealth supposed to get better as you level up?
 			r1 += (PSD[SDF_PARTY_STEALTHY] > 0) ? 45 : 0;
 			r1 += can_see_light(cur_monst->cur_loc,closest_pc_loc(cur_monst->cur_loc),sight_obscurity) * 10;
 			if (r1 < 50)
@@ -2737,6 +2739,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			}
 		}
 		else {
+		// TODO: This might be relevant to the AFFECT_DEADNESS special when used on monsters
 			monst_spell_note(m_target->number,9);
 			r1 = get_ran(1,0,20) + m_target->level / 4 + m_target->status[eStatus::BLESS_CURSE];
 			if ((r1 > 14) || (m_target->immunities & 2))
@@ -4054,6 +4057,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type)///
 // Slightly kludgy way to only damage PCs in space)
 void hit_pcs_in_space(location target,short dam,eDamageType type,short report,short hit_all)
 {
+// TODO: Looks like this no longer does what it claims.
 	//short store_active[T_M],i;
 	
 	//for (i = 0; i < T_M; i++) {
@@ -4909,6 +4913,7 @@ void process_fields()
 
 void scloud_space(short m,short n)
 {
+// TODO: Is it correct for these to not affect monsters?
 	location target;
 	//cPopulation::cCreature;
 	short i;

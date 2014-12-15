@@ -2001,6 +2001,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 		case '/':
 			if(!in_scen_debug) break;
+			// TODO: Make a dialog for this instead of flooding the transcript
 			ASB("Debug hot keys");
 			ASB("  B  Leave town");
 			ASB("  C  Get cleaned up");
@@ -2604,6 +2605,7 @@ void handle_death()
 			}
 		}
 		else if(choice == "new") {
+			// TODO: Windows version dumps to main screen without creating a party; which is better?
 			start_new_game();
 			return;
 		}

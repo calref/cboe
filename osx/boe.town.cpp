@@ -453,6 +453,7 @@ void start_town_mode(short which_town, short entry_dir)
 										univ.town.items[j].item_level = univ.town->preset_items[i].ability;
 									break;
 								default: //leave other type alone
+									// TODO: Could resupport this "forcing an ability" thing...
 									break;
 		 					}
 		 				}
@@ -554,6 +555,7 @@ void start_town_mode(short which_town, short entry_dir)
 	reset_item_max();
 	town_force = 200;
 	// TODO: One problem with this - it paints the terrain after the town entry dialog is dismissed
+	// ... except it actually doesn't, because the town enter special is only queued, not run immediately.
 	draw_terrain(1);
 }
 

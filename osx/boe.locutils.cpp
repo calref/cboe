@@ -178,6 +178,7 @@ location get_cur_loc()
 	}
 }
 
+// TODO: Don't hardcode this!
 bool is_lava(short x,short y)////
 {
 	ter_num_t ter;
@@ -272,10 +273,12 @@ void update_explored(location dest)
 		univ.out.out_e[dest.x][dest.y] = 2;
 		for (look.x = shortdest.x - 4; look.x < shortdest.x + 5; look.x++)
 			for (look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
-				
+				// TODO: Windows had an extra check, is this needed?
+				//if ((look.x == minmax(0,95,(int)look.x)) && (look.y == minmax(0,95,(int)look.y))) {
 				if (univ.out.out_e[look.x][look.y] == 0)
 					if(can_see_light(shortdest, look, sight_obscurity) < 5)
 						univ.out.out_e[look.x][look.y] = 1;
+				//}
 			}
 		
 		

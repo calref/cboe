@@ -64,6 +64,7 @@ public:
 		short node_to_call;
 	};
 	// formerly party_record_type
+	// TODO: Should we make age a long long?
 	unsigned long age;
 	unsigned short gold;
 	unsigned short food;
