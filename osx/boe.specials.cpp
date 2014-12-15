@@ -214,7 +214,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 	}
 	
 	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
-		&& (univ.town.is_special(where_check.x,where_check.y))) {
+	   && (univ.town.is_special(where_check.x,where_check.y))) {
 		if (univ.town.is_force_barr(where_check.x,where_check.y)) {
 			add_string_to_buf("  Magic barrier!               ");
 			return false;
@@ -288,7 +288,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-					&& (univ.town.items[i].contained))
+				   && (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
 		}
 		if (univ.town.is_barrel(where_check.x,where_check.y)) {
@@ -299,7 +299,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,false);
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-					&& (univ.town.items[i].contained))
+				   && (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
 		}
 		if(univ.town.is_block(where_check.x,where_check.y)) {
@@ -1048,7 +1048,7 @@ void use_item(short pc,short item)
 				break;
 			case eItemAbil::CALL_SPECIAL:
 				// TODO: Should this have its own separate eSpecCtx?
-				run_special(eSpecCtx::USE_SPEC_ITEM,0,str,user_loc,&sp[0],&sp[1],&sp[2]);	
+				run_special(eSpecCtx::USE_SPEC_ITEM,0,str,user_loc,&sp[0],&sp[1],&sp[2]);
 				break;
 				
 				
@@ -1215,7 +1215,7 @@ bool use_space(location where)
 		univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
-				&& (univ.town.items[i].contained))
+			   && (univ.town.items[i].contained))
 			 	univ.town.items[i].item_loc = to_loc;
 	}
 	if (univ.town.is_barrel(where.x,where.y)) {
@@ -1229,7 +1229,7 @@ bool use_space(location where)
 		univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,true);
 		for (i = 0; i < NUM_TOWN_ITEMS; i++)
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
-				&& (univ.town.items[i].contained))
+			   && (univ.town.items[i].contained))
 			 	univ.town.items[i].item_loc = to_loc;
 	}
 	if (univ.town.is_block(where.x,where.y)) {
@@ -1279,7 +1279,7 @@ bool adj_town_look(location where)
 	
 	for (i = 0; i < NUM_TOWN_ITEMS; i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM && (univ.town.items[i].contained) &&
-			(where == univ.town.items[i].item_loc))
+		   (where == univ.town.items[i].item_loc))
 			item_there = true;
 	
 	terrain = univ.town->terrain(where.x,where.y);
@@ -1645,13 +1645,13 @@ void kill_monst(cCreature *which_m,short who_killed)
 	
 	if(isHumanoid(which_m->m_type)) {
 		// TODO: Uh, don't hardcode these!
-			if (( which_m->number == 38) ||
-				( which_m->number == 39))
-				i = 4;
-			else if ( which_m->number == 45)
-				i = 0;
-			else i = get_ran(1,0,1);
-			play_sound(29 + i);
+		if (( which_m->number == 38) ||
+			( which_m->number == 39))
+			i = 4;
+		else if ( which_m->number == 45)
+			i = 0;
+		else i = get_ran(1,0,1);
+		play_sound(29 + i);
 	} else switch(which_m->m_type) {
 		case eRace::GIANT: play_sound(29); break;
 			// TODO: Should sliths be considered reptiles too? Check original bladbase.
@@ -1803,7 +1803,7 @@ void push_things()////
 			}
 			for (k = 0; k < NUM_TOWN_ITEMS; k++)
 				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
-					&& (univ.town.items[k].item_loc == univ.town.p_loc))
+				   && (univ.town.items[k].item_loc == univ.town.p_loc))
 					univ.town.items[k].contained = false;
 			redraw = true;
 		}
@@ -1841,7 +1841,7 @@ void push_things()////
 					}
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
-							&& (univ.town.items[k].item_loc == univ.party[i].combat_pos))
+						   && (univ.town.items[k].item_loc == univ.party[i].combat_pos))
 							univ.town.items[k].contained = false;
 					redraw = true;
 				}
@@ -2017,31 +2017,31 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 			return;
 		}
 		switch(getNodeCategory(cur_node.type)) {
-		case eSpecCat::GENERAL:
-			general_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
-			break;
-		case eSpecCat::ONCE:
-			oneshot_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
-			break;
-		case eSpecCat::AFFECT:
-			affect_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
-			break;
-		case eSpecCat::IF_THEN:
-			ifthen_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
-			break;
-		case eSpecCat::TOWN:
-			townmode_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
-			break;
-		case eSpecCat::RECT:
-			rect_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
-			break;
-		case eSpecCat::OUTDOOR:
-			outdoor_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
-			break;
-		case eSpecCat::INVALID:
-			// TODO: Should it print some kind of error message?
-			special_in_progress = false;
-			return;
+			case eSpecCat::GENERAL:
+				general_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
+				break;
+			case eSpecCat::ONCE:
+				oneshot_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
+				break;
+			case eSpecCat::AFFECT:
+				affect_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
+				break;
+			case eSpecCat::IF_THEN:
+				ifthen_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
+				break;
+			case eSpecCat::TOWN:
+				townmode_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
+				break;
+			case eSpecCat::RECT:
+				rect_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
+				break;
+			case eSpecCat::OUTDOOR:
+				outdoor_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
+				break;
+			case eSpecCat::INVALID:
+				// TODO: Should it print some kind of error message?
+				special_in_progress = false;
+				return;
 		}
 		
 		num_nodes++;
@@ -2253,7 +2253,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::SDF_RANDOM:
 			check_mess = true;
-
+			
 			short rand;
 			// Automatically fix the range in case some idiot puts it in backwards, or the same (WHY)
 			if (cur_node.ex1a == cur_node.ex1b) {
@@ -2551,20 +2551,20 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			// (Actually, I think the only compatibility thing is that it's <= instead of ==)
 			if (spec.ex2a <= 0) {
 				
-			if (spec.ex1a == 2)
-				current_pc_picked_in_spec_enc = -1;
-			else if (spec.ex1a == 1) {
-				i = select_pc(0,0);
-				if (i != 6)
-					current_pc_picked_in_spec_enc = i;
-			}
-			else if (spec.ex1a == 0) {
-				i = select_pc(1,0);
-				if (i != 6)
-					current_pc_picked_in_spec_enc = i;
-			}
-			if (i == 6)// && (spec.ex1b >= 0))
-				*next_spec = spec.ex1b;
+				if (spec.ex1a == 2)
+					current_pc_picked_in_spec_enc = -1;
+				else if (spec.ex1a == 1) {
+					i = select_pc(0,0);
+					if (i != 6)
+						current_pc_picked_in_spec_enc = i;
+				}
+				else if (spec.ex1a == 0) {
+					i = select_pc(1,0);
+					if (i != 6)
+						current_pc_picked_in_spec_enc = i;
+				}
+				if (i == 6)// && (spec.ex1b >= 0))
+					*next_spec = spec.ex1b;
 				
 			}
 			else if(spec.ex2a > 10 || spec.ex2a <= 16) {
@@ -2608,14 +2608,14 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		}
 		case eSpecType::AFFECT_HP:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
-					univ.party[i].cur_health = minmax(0,univ.party[i].max_health,
-													  univ.party[i].cur_health + spec.ex1a * (spec.ex1b ? -1: 1));
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i))
+						univ.party[i].cur_health = minmax(0,univ.party[i].max_health,
+														  univ.party[i].cur_health + spec.ex1a * (spec.ex1b ? -1: 1));
 			}
 			else {
 				univ.town.monst[spec.ex2a].health = minmax(0, univ.town.monst[spec.ex2a].m_health,
-																  univ.town.monst[spec.ex2a].health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					univ.town.monst[spec.ex2a].health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 				if (spec.ex1b == 0)
 					monst_spell_note(univ.town.monst[spec.ex2a].number,41);
 				else
@@ -2624,14 +2624,14 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_SP:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
-					univ.party[i].cur_sp = minmax(0, univ.party[i].max_sp,
-												  univ.party[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i))
+						univ.party[i].cur_sp = minmax(0, univ.party[i].max_sp,
+							univ.party[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
 				univ.town.monst[spec.ex2a].mp = minmax(0, univ.town.monst[spec.ex2a].max_mp,
-															  univ.town.monst[spec.ex2a].mp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					univ.town.monst[spec.ex2a].mp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 				if (spec.ex1b == 0)
 					monst_spell_note(univ.town.monst[spec.ex2a].number,43);
 				else
@@ -2648,28 +2648,28 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			for (i = 0; i < 6; i++)
 				if ((pc < 0) || (pc == i))
 					univ.party[i].skill_pts = minmax(0,	100,
-													 univ.party[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+						univ.party[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_DEADNESS:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i)) {
-					if (spec.ex1b == 0) {
-						if ((univ.party[i].main_status > eMainStatus::ABSENT) && (univ.party[i].main_status < eMainStatus::SPLIT))
-							univ.party[i].main_status = eMainStatus::ALIVE;
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i)) {
+						if (spec.ex1b == 0) {
+							if ((univ.party[i].main_status > eMainStatus::ABSENT) && (univ.party[i].main_status < eMainStatus::SPLIT))
+								univ.party[i].main_status = eMainStatus::ALIVE;
+						}
+						else if (univ.party[i].main_status == eMainStatus::ABSENT);
+						else switch(spec.ex1a){
+								// When passed to kill_pc, the SPLIT party status actually means "no saving throw".
+							case 0:
+								kill_pc(i,eMainStatus::SPLIT_DEAD);
+							case 1:
+								kill_pc(i,eMainStatus::SPLIT_DUST);
+							case 2:
+								kill_pc(i,eMainStatus::SPLIT_STONE);
+						}
 					}
-					else if (univ.party[i].main_status == eMainStatus::ABSENT);
-					else switch(spec.ex1a){
-							// When passed to kill_pc, the SPLIT party status actually means "no saving throw".
-						case 0:
-							kill_pc(i,eMainStatus::SPLIT_DEAD);
-						case 1:
-							kill_pc(i,eMainStatus::SPLIT_DUST);
-						case 2:
-							kill_pc(i,eMainStatus::SPLIT_STONE);
-					}
-				}
-			*redraw = 1;
+				*redraw = 1;
 			}
 			else {
 				// Kill monster
@@ -2690,13 +2690,13 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_POISON:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i)) {
-					if (spec.ex1b == 0) {
-						cure_pc(i,spec.ex1a);
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i)) {
+						if (spec.ex1b == 0) {
+							cure_pc(i,spec.ex1a);
+						}
+						else poison_pc(i,spec.ex1a);
 					}
-					else poison_pc(i,spec.ex1a);
-				}
 			}
 			else {
 				if (univ.town.monst[spec.ex2a].active > 0) {
@@ -2709,13 +2709,13 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_SPEED:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i)) {
-					if (spec.ex1b == 0) {
-						slow_pc(i,-spec.ex1a);
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i)) {
+						if (spec.ex1b == 0) {
+							slow_pc(i,-spec.ex1a);
+						}
+						else slow_pc(i,spec.ex1a);
 					}
-					else slow_pc(i,spec.ex1a);
-				}
 			}
 			else {
 				if (univ.town.monst[spec.ex2a].active > 0) {
@@ -2738,9 +2738,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_WEBS:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
-					affect_pc(i,eStatus::WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i))
+						affect_pc(i,eStatus::WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
 				if (univ.town.monst[spec.ex2a].active > 0) {
@@ -2753,9 +2753,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_DISEASE:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
-					affect_pc(i,eStatus::DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i))
+						affect_pc(i,eStatus::DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
 			}
 			else {
 				if (univ.town.monst[spec.ex2a].active > 0) {
@@ -2773,9 +2773,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_CURSE_BLESS:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
-					affect_pc(i,eStatus::BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i))
+						affect_pc(i,eStatus::BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
 				if (univ.town.monst[spec.ex2a].active > 0) {
@@ -2788,9 +2788,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_DUMBFOUND:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i))
-					affect_pc(i,eStatus::DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i))
+						affect_pc(i,eStatus::DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
 			}
 			else {
 				if (univ.town.monst[spec.ex2a].active > 0) {
@@ -2803,13 +2803,13 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_SLEEP:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i)) {
-					if (spec.ex1b == 0) {
-						affect_pc(i,eStatus::ASLEEP,-1 * spec.ex1a);
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i)) {
+						if (spec.ex1b == 0) {
+							affect_pc(i,eStatus::ASLEEP,-1 * spec.ex1a);
+						}
+						else sleep_pc(i,spec.ex1a,eStatus::ASLEEP,10);
 					}
-					else sleep_pc(i,spec.ex1a,eStatus::ASLEEP,10);
-				}
 			}
 			else {
 				if (univ.town.monst[spec.ex2a].active > 0) {
@@ -2822,13 +2822,13 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_PARALYSIS:
 			if (spec.ex2a < 0) {
-			for (i = 0; i < 6; i++)
-				if ((pc < 0) || (pc == i)) {
-					if (spec.ex1b == 0) {
-						affect_pc(i,eStatus::PARALYZED,-1 * spec.ex1a);
+				for (i = 0; i < 6; i++)
+					if ((pc < 0) || (pc == i)) {
+						if (spec.ex1b == 0) {
+							affect_pc(i,eStatus::PARALYZED,-1 * spec.ex1a);
+						}
+						else sleep_pc(i,spec.ex1a,eStatus::PARALYZED,10);
 					}
-					else sleep_pc(i,spec.ex1a,eStatus::PARALYZED,10);
-				}
 			}
 			else {
 				if (univ.town.monst[spec.ex2a].active > 0) {
@@ -2989,7 +2989,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == (unsigned)spec.ex2a
-					&& (l == univ.town.items[i].item_loc))
+				   && (l == univ.town.items[i].item_loc))
 					*next_spec = spec.ex2b;
 			break;
 		case eSpecType::IF_HAVE_ITEM_CLASS:
@@ -3001,7 +3001,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					for (j = 0; j < 24; j++)
 						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
-							&& (univ.party[i].equip[j]))
+						   && (univ.party[i].equip[j]))
 							*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_HAS_GOLD_AND_TAKE:
@@ -3022,7 +3022,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == (unsigned)spec.ex2a
-					&& (l == univ.town.items[i].item_loc)) {
+				   && (l == univ.town.items[i].item_loc)) {
 					*next_spec = spec.ex2b;
 					*redraw = 1;
 					univ.town.items[i].variety = eItemType::NO_ITEM;
@@ -3037,7 +3037,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					for (j = 0; j < 24; j++)
 						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
-							&& (univ.party[i].equip[j])) {
+						   && (univ.party[i].equip[j])) {
 							*next_spec = spec.ex1b;
 							*redraw = 1;
 							take_item(i,j);
@@ -3049,15 +3049,15 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_OBJECTS:
 			if(spec.ex1a == 0) {
-			for (j = 0; j < univ.town->max_dim(); j++)
-				for (k = 0; k < univ.town->max_dim(); k++)
-					if (univ.town.is_barrel(j,k))
-						*next_spec = spec.ex1b;
+				for (j = 0; j < univ.town->max_dim(); j++)
+					for (k = 0; k < univ.town->max_dim(); k++)
+						if (univ.town.is_barrel(j,k))
+							*next_spec = spec.ex1b;
 			} else if(spec.ex1a == 1) {
-			for (j = 0; j < univ.town->max_dim(); j++)
-				for (k = 0; k < univ.town->max_dim(); k++)
-					if (univ.town.is_crate(j,k))
-						*next_spec = spec.ex1b;
+				for (j = 0; j < univ.town->max_dim(); j++)
+					for (k = 0; k < univ.town->max_dim(); k++)
+						if (univ.town.is_crate(j,k))
+							*next_spec = spec.ex1b;
 			}
 			// TODO: Are there other object types to account for?
 			// TODO: Allow restricting to a specific rect
@@ -3733,7 +3733,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			univ.town.monst[spec.ex1a].attitude = spec.ex1b;
 			break;
-}
+	}
 	if (check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}

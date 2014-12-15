@@ -591,12 +591,12 @@ location end_town_mode(short switching_level,location destination)  // returns n
 			if (scenario.store_item_towns[j] == univ.town.num) {
 				for (i = 0; i < NUM_TOWN_ITEMS; i++)
 					if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].is_special == 0 &&
-						((univ.town.items[i].item_loc.x >= scenario.store_item_rects[j].left) &&
-						 (univ.town.items[i].item_loc.x <= scenario.store_item_rects[j].right) &&
-						 (univ.town.items[i].item_loc.y >= scenario.store_item_rects[j].top) &&
-						 (univ.town.items[i].item_loc.y <= scenario.store_item_rects[j].bottom)) ) {
-							univ.party.stored_items[j][i] = univ.town.items[i];
-						}
+							((univ.town.items[i].item_loc.x >= scenario.store_item_rects[j].left) &&
+							(univ.town.items[i].item_loc.x <= scenario.store_item_rects[j].right) &&
+							(univ.town.items[i].item_loc.y >= scenario.store_item_rects[j].top) &&
+							(univ.town.items[i].item_loc.y <= scenario.store_item_rects[j].bottom)) ) {
+						univ.party.stored_items[j][i] = univ.town.items[i];
+					}
 				 	else univ.party.stored_items[j][i].variety = eItemType::NO_ITEM;
 			}
 		
@@ -810,7 +810,7 @@ void place_party(short direction)
 		check_loc.y -= y_adj;
 		pos_locs[i] = check_loc;
 		if(!is_blocked(check_loc) && !is_special(check_loc) && sight_obscurity(check_loc.x,check_loc.y) == 0
-			&& can_see_light(univ.town.p_loc,check_loc,combat_obscurity) < 1 && !loc_off_act_area(check_loc)) {
+		   && can_see_light(univ.town.p_loc,check_loc,combat_obscurity) < 1 && !loc_off_act_area(check_loc)) {
 			spot_ok[i] = true;
 			how_many_ok += (i > 1) ? 1 : 0;
 		}
@@ -1236,8 +1236,8 @@ void erase_out_specials()
 			if (quadrant_legal(i,j)) {
 				for(short k = 0; k < 18; k++) {
 					if(i < 8 && univ.out.outdoors[i][j].exit_dests[k] >= 0 &&
-						(univ.out.outdoors[i][j].exit_locs[k].x == minmax(0,47,univ.out.outdoors[i][j].exit_locs[k].x)) &&
-						(univ.out.outdoors[i][j].exit_locs[k].y == minmax(0,47,univ.out.outdoors[i][j].exit_locs[k].y))) {
+					   (univ.out.outdoors[i][j].exit_locs[k].x == minmax(0,47,univ.out.outdoors[i][j].exit_locs[k].x)) &&
+					   (univ.out.outdoors[i][j].exit_locs[k].y == minmax(0,47,univ.out.outdoors[i][j].exit_locs[k].y))) {
 						if (univ.party.can_find_town[univ.out.outdoors[i][j].exit_dests[k]] == 0) {
 							univ.out[48 * i + univ.out.outdoors[i][j].exit_locs[k].x][48 * j + univ.out.outdoors[i][j].exit_locs[k].y] =
 							scenario.ter_types[univ.out.outdoors[i][j].terrain[univ.out.outdoors[i][j].exit_locs[k].x][univ.out.outdoors[i][j].exit_locs[k].y]].flag1.u;
@@ -1255,14 +1255,14 @@ void erase_out_specials()
 					sd1 = sn.sd1; sd2 = sn.sd2;
 					if ((sd_legit(sd1,sd2)) && (PSD[sd1][sd2] == 250)) {
 						where = univ.out.outdoors[i][j].special_locs[k];
-							if ((where.x > 48) || (where.y > 48)
-								|| (where.x < 0) || (where.y < 0)) {
-								beep();
-								add_string_to_buf("Outdoor section corrupt. Problem fixed.");
-								univ.out.outdoors[i][j].special_id[k] = -1; // TODO: Again, was there a reason for commenting this out?
-							}
-							
-							univ.out.outdoors[i][j].special_spot[where.x][where.y] = false;
+						if ((where.x > 48) || (where.y > 48)
+							|| (where.x < 0) || (where.y < 0)) {
+							beep();
+							add_string_to_buf("Outdoor section corrupt. Problem fixed.");
+							univ.out.outdoors[i][j].special_id[k] = -1; // TODO: Again, was there a reason for commenting this out?
+						}
+						
+						univ.out.outdoors[i][j].special_spot[where.x][where.y] = false;
 					}
 				}
 			}
@@ -1580,7 +1580,7 @@ bool is_door(location destination)
 {
 	
 	if(scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::UNLOCKABLE ||
-		scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::CHANGE_WHEN_STEP_ON)
+	   scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::CHANGE_WHEN_STEP_ON)
 		return true;
 	return false;
 }

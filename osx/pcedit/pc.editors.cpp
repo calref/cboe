@@ -11,7 +11,7 @@
 #include "winutil.h"
 #include <boost/lexical_cast.hpp>
 
-/* 
+/*
  * These three are not declared in any included header.
  * Instead they are declared in pc.actions.h, which is not
  * included here because it contains additional functions that
@@ -124,8 +124,8 @@ short char_select_pc(short active_only,short free_inv_only,const char *title)
 	for (i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party[i].main_status == eMainStatus::ABSENT ||
-			(active_only && univ.party[i].main_status > eMainStatus::ALIVE) ||
-			(free_inv_only == 1 && pc_has_space(i) == 24) || univ.party[i].main_status == eMainStatus::FLED) {
+		   (active_only && univ.party[i].main_status > eMainStatus::ALIVE) ||
+		   (free_inv_only == 1 && pc_has_space(i) == 24) || univ.party[i].main_status == eMainStatus::FLED) {
 			selectPc["pick" + n].hide();
 		}
 		// TODO: Wouldn't this lead to blank name fields for non-active characters if those characters are allowed?

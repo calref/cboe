@@ -197,9 +197,9 @@ void draw_monsters() ////
 						}
 						if (picture_wanted < 1000) {
 							for (k = 0; k < width * height; k++) {
-							// TODO: Windows special-cases the bear and drake, whose graphics are split between two columns/sheets. Is this necessary?
-							// It really doesn't look necessary to me, since each quadrant of the graphic is fetched separately. 
-							// Technically what they do is always pass 0 as the final argument to get_monster_template_rect, instead of passing k; they also hardcode the sheet to look on (4 for drake, 5 for bear).
+								// TODO: Windows special-cases the bear and drake, whose graphics are split between two columns/sheets. Is this necessary?
+								// It really doesn't look necessary to me, since each quadrant of the graphic is fetched separately.
+								// Technically what they do is always pass 0 as the final argument to get_monster_template_rect, instead of passing k; they also hardcode the sheet to look on (4 for drake, 5 for bear).
 								pic_num_t this_monst = univ.party.out_c[i].what_monst.get(j,true,&cMonster::picture_num);
 								source_rect = get_monster_template_rect(this_monst,(univ.party.out_c[i].direction < 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
@@ -342,7 +342,7 @@ void draw_pcs(location center,short mode)
 	for (i = 0; i < 6; i++)
 		if (univ.party[i].main_status == eMainStatus::ALIVE)
 			if(point_onscreen(center, univ.party[i].combat_pos) &&
-				(/*cartoon_happening ||*/ party_can_see(univ.party[i].combat_pos) < 6)){
+			   (/*cartoon_happening ||*/ party_can_see(univ.party[i].combat_pos) < 6)){
 				where_draw.x = univ.party[i].combat_pos.x - center.x + 4;
 				where_draw.y = univ.party[i].combat_pos.y - center.y + 4;
 				source_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
@@ -365,20 +365,20 @@ void draw_pcs(location center,short mode)
 					frame_roundrect(mainPtr, active_pc_rect, 8, sf::Color::Magenta);
 				}
 			}
-			
-			// Draw current pc on top
-			if(point_onscreen(center, univ.party[current_pc].combat_pos) && univ.party[current_pc].main_status == eMainStatus::ALIVE) {
-				where_draw.x = univ.party[current_pc].combat_pos.x - center.x + 4;
-				where_draw.y = univ.party[current_pc].combat_pos.y - center.y + 4;
-				source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[current_pc].which_graphic % 8);
-				if(univ.party[current_pc].dir >= 4)
-					source_rect.offset(28,0);
-				if (combat_posing_monster == current_pc)
-					source_rect.offset(0,288);
-				
-				if (mode == 0)
-					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0);
-			}
+	
+	// Draw current pc on top
+	if(point_onscreen(center, univ.party[current_pc].combat_pos) && univ.party[current_pc].main_status == eMainStatus::ALIVE) {
+		where_draw.x = univ.party[current_pc].combat_pos.x - center.x + 4;
+		where_draw.y = univ.party[current_pc].combat_pos.y - center.y + 4;
+		source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[current_pc].which_graphic % 8);
+		if(univ.party[current_pc].dir >= 4)
+			source_rect.offset(28,0);
+		if (combat_posing_monster == current_pc)
+			source_rect.offset(0,288);
+		
+		if (mode == 0)
+			Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0);
+	}
 }
 
 void draw_items(location where){

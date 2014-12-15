@@ -329,7 +329,7 @@ void put_item_screen(short screen_num,short suppress_buttons)
 						sout << univ.party[pc].items[i_num].full_name << ' ';
 						// TODO: Why are bashing weapons excluded from this?
 						if(univ.party[pc].items[i_num].charges > 0 && univ.party[pc].items[i_num].type != eSkill::BASHING_WEAPONS
-							&& (stat_screen_mode <= 1))
+						   && (stat_screen_mode <= 1))
 							sout << '(' << int(univ.party[pc].items[i_num].charges) << ')';
 					}
 					dest_rect.left -= 2;
@@ -400,7 +400,7 @@ void place_buy_button(short position,short pc_num,short item_num)
 			break;
 		case 3: // sell weapons
 			if (isWeaponType(univ.party[pc_num].items[item_num].variety) &&
-				 (!univ.party[pc_num].equip[item_num]) &&
+				(!univ.party[pc_num].equip[item_num]) &&
 				(univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
 				(!univ.party[pc_num].items[item_num].unsellable)) {
 				item_area_button_active[position][5] = true;
@@ -409,9 +409,9 @@ void place_buy_button(short position,short pc_num,short item_num)
 			break;
 		case 4: // sell armor
 			if(isArmourType(univ.party[pc_num].items[item_num].variety) &&
-				(!univ.party[pc_num].equip[item_num]) &&
-				(univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
-				(!univ.party[pc_num].items[item_num].unsellable)) {
+			   (!univ.party[pc_num].equip[item_num]) &&
+			   (univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
+			   (!univ.party[pc_num].items[item_num].unsellable)) {
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 			}
@@ -636,14 +636,14 @@ void draw_pc_effects(short pc) {
 	short right_limit = 250;
 	short name_width;
 	
-		TextStyle style;
-		name_width = string_length(univ.party[pc].name, style);
-		right_limit = pc_buttons[0][1].left - 5;
-		//dest_rect.left = pc_buttons[i][1].left - 16;
-		dest_rect.left = name_width + 33;
-		dest_rect.right = dest_rect.left + 12;
-		dest_rect.top += pc * 13;
-		dest_rect.bottom += pc * 13;
+	TextStyle style;
+	name_width = string_length(univ.party[pc].name, style);
+	right_limit = pc_buttons[0][1].left - 5;
+	//dest_rect.left = pc_buttons[i][1].left - 16;
+	dest_rect.left = name_width + 33;
+	dest_rect.right = dest_rect.left + 12;
+	dest_rect.top += pc * 13;
+	dest_rect.bottom += pc * 13;
 	
 	if(exceptSplit(univ.party[pc].main_status) != eMainStatus::ALIVE)
 		return;
@@ -770,7 +770,7 @@ short do_look(location space)
 	if (overall_mode == MODE_LOOK_COMBAT)
 		for (i = 0; i < 6; i++)
 			if(space == univ.party[i].combat_pos && univ.party[i].main_status == eMainStatus::ALIVE
-				&& (is_lit) && (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5)) {
+			   && (is_lit) && (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5)) {
 				msg = "    " + univ.party[i].name;
 				add_string_to_buf(msg);
 			}
@@ -875,7 +875,7 @@ short do_look(location space)
 		
 		for (i = 0; i < NUM_TOWN_ITEMS; i++) {
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && space == univ.town.items[i].item_loc
-				&& (is_lit)) {
+			   && (is_lit)) {
 				if(univ.town.items[i].variety == eItemType::GOLD)
 					gold_here = true;
 				else if(univ.town.items[i].variety == eItemType::FOOD)
@@ -891,7 +891,7 @@ short do_look(location space)
 			add_string_to_buf("    Many items");
 		else for (i = 0; i < NUM_TOWN_ITEMS; i++) {
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].variety != eItemType::GOLD && univ.town.items[i].variety != eItemType::FOOD &&
-				(space == univ.town.items[i].item_loc) && (!univ.town.items[i].contained)) {
+			   (space == univ.town.items[i].item_loc) && (!univ.town.items[i].contained)) {
 				if (univ.town.items[i].ident)
 					msg = "    " + univ.town.items[i].full_name;
 				else msg = "    " + univ.town.items[i].name;

@@ -1092,7 +1092,7 @@ void place_trim(short q,short r,location where,ter_num_t ter_type)
 			at_bot = true;
 	}
 	else {
-	// TODO: Shouldn't we subtract one here?
+		// TODO: Shouldn't we subtract one here?
 		if (where.x == univ.town->max_dim())
 			at_right = true;
 		if (where.y == univ.town->max_dim())

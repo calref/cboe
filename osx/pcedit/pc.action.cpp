@@ -5,10 +5,10 @@
 #include "pc.global.h"
 #include "classes.h"
 #include "pc.editors.h"
-#include "pc.fileio.h" 
+#include "pc.fileio.h"
 #include "pc.action.h"
 #include "graphtool.h"
-#include "soundtool.h" 
+#include "soundtool.h"
 #include "mathutil.h"
 #include "dlogutil.h"
 #include <boost/lexical_cast.hpp>
@@ -42,17 +42,17 @@ short which_pc_displayed,store_pc_trait_mode,store_which_to_edit;
 extern short current_active_pc;
 char empty_string[256] = "                                                ";
 extern RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 extern RECT pc_info_rect;
 extern RECT name_rect;
 
 extern RECT pc_race_rect;
-extern RECT edit_rect[5][2]; 
+extern RECT edit_rect[5][2];
 
 
 
 //extern RECT pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-//extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+//extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 bool handle_action(sf::Event event)
 //short mode; // ignore,
 {
@@ -61,22 +61,22 @@ bool handle_action(sf::Event event)
 	location the_point;
 	
 	bool to_return = false;
-
+	
 	the_point = {event.mouseButton.x, event.mouseButton.y};
-
-	if (!file_in_mem) 
+	
+	if (!file_in_mem)
 		return false;
-		
+	
 	for (i = 0; i < 6; i++)
 		if((the_point.in(pc_area_buttons[i][0])) &&
-			(univ.party[i].main_status != eMainStatus::ABSENT)) {
+		   (univ.party[i].main_status != eMainStatus::ABSENT)) {
 			do_button_action(0,i);
 			current_active_pc = i;
 			redraw_screen();
-			}
+		}
 	for (i = 0; i < 5; i++)
 		if((the_point.in(edit_rect[i][0])) &&
-			(univ.party[current_active_pc].main_status != eMainStatus::ABSENT)) {
+		   (univ.party[current_active_pc].main_status != eMainStatus::ABSENT)) {
 			do_button_action(0,i + 10);
 			switch(i) {
 				case 0:
@@ -85,13 +85,13 @@ bool handle_action(sf::Event event)
 				case 1:
 			 		display_pc(current_active_pc,1,NULL);
 					break;
-				case 2: 
+				case 2:
 					pick_race_abil(&univ.party[current_active_pc],0);
 					break;
-				case 3: 
+				case 3:
 					spend_xp(current_active_pc,1,NULL);
 					break;
-				case 4: 
+				case 4:
 					edit_xp(&univ.party[current_active_pc]);
 					
 					break;
@@ -99,16 +99,16 @@ bool handle_action(sf::Event event)
 		}
 	for (i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][1])) && // drop item
-			univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
-				flash_rect(item_string_rects[i][1]);
-				take_item(current_active_pc,i);
-				}
+		   univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
+			flash_rect(item_string_rects[i][1]);
+			take_item(current_active_pc,i);
+		}
 	for (i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][2])) && // identify item
-			univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
-				flash_rect(item_string_rects[i][2]);
-				univ.party[current_active_pc].items[i].ident = true;
-				}
+		   univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
+			flash_rect(item_string_rects[i][2]);
+			univ.party[current_active_pc].items[i].ident = true;
+		}
 	
 	return to_return;
 }
@@ -132,11 +132,11 @@ static bool get_num_event_filter(cDialog& me, std::string id, eKeyMod)
 void edit_gold_or_food(short which_to_edit)
 //0 - gold 1 - food
 {
-
+	
 	location view_loc;
-
+	
 	store_which_to_edit = which_to_edit;
-
+	
 	make_cursor_sword();
 	cDialog dlog("get-num.xml");
 	dlog["okay"].attachClickHandler(get_num_event_filter);
@@ -155,15 +155,15 @@ void edit_gold_or_food(short which_to_edit)
 
 void edit_day()
 {
-
+	
 	location view_loc;
-
-
+	
+	
 	make_cursor_sword();
 	
 	cDialog dlog("edit-day.xml");
 	dlog["okay"].attachClickHandler(get_num_event_filter);
-		
+	
 	dlog["number"].setTextToNum(((univ.party.age) / 3700) + 1);
 	
 	dlog.run();
@@ -179,11 +179,11 @@ void combine_things(short pc_num)
 	
 	for (i = 0; i < 24; i++) {
 		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM &&
-			(univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].ident)) {
+		   (univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].ident)) {
 			for (j = i + 1; j < 24; j++)
 				if(univ.party[pc_num].items[j].variety != eItemType::NO_ITEM &&
-					(univ.party[pc_num].items[j].type_flag == univ.party[pc_num].items[i].type_flag)
-					&& (univ.party[pc_num].items[j].ident)) {
+				   (univ.party[pc_num].items[j].type_flag == univ.party[pc_num].items[i].type_flag)
+				   && (univ.party[pc_num].items[j].ident)) {
 					//					add_string_to_buf("(items combined)");
 					test = (short) (univ.party[pc_num].items[i].charges) + (short) (univ.party[pc_num].items[j].charges);
 					if (test > 125) {
@@ -280,12 +280,12 @@ void take_item(short pc_num,short which_item)
 void edit_xp(cPlayer *pc)
 {
 	location view_loc;
-
+	
 	make_cursor_sword();
 	
 	cDialog dlog("edit-xp.xml");
 	dlog["okay"].attachClickHandler(get_num_event_filter);
-		
+	
 	dlog["number"].setTextToNum(pc->experience);
 	dlog["perlevel"].setTextToNum(pc->get_tnl());
 	

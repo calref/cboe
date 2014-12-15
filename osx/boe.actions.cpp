@@ -1177,7 +1177,7 @@ bool handle_action(sf::Event event) {
 		
 		// Targeting a space
 		else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING ||
-		   overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) {
+				overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) {
 			destination.x += i - 4;
 			destination.y += j - 4;
 			handle_target_space(destination, did_something, need_redraw, need_reprint);
@@ -1405,59 +1405,59 @@ bool handle_action(sf::Event event) {
 }
 
 void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
-		draw_map(true); // TODO: Might be possible to only do this in certain circumstances?
-		play_ambient_sound();
-		
-		if(is_combat() && overall_mode != MODE_LOOK_COMBAT) {
-			if(no_pcs_left()) {
-				end_combat();
-				if(which_combat_type == 0) {
-					end_town_mode(0,univ.party.p_loc);
-					add_string_to_buf("Fled the combat.        ");
-					handle_wandering_specials(0,2);
-				}
-			} else {
-				if(need_redraw) {
-					draw_terrain();
-					if ((combat_active_pc == 6) || (univ.party[combat_active_pc].ap > 0))
-						need_redraw = false;
-				}
-				//pause(2);
-				short store_cur_pc = current_pc;
-				if(combat_next_step())
-					need_redraw = true;
+	draw_map(true); // TODO: Might be possible to only do this in certain circumstances?
+	play_ambient_sound();
+	
+	if(is_combat() && overall_mode != MODE_LOOK_COMBAT) {
+		if(no_pcs_left()) {
+			end_combat();
+			if(which_combat_type == 0) {
+				end_town_mode(0,univ.party.p_loc);
+				add_string_to_buf("Fled the combat.        ");
+				handle_wandering_specials(0,2);
 			}
 		} else {
-			increase_age();
-			if(!is_out() || (is_out() && univ.party.age % 10 == 0)) // no monst move if party outdoors and on horse
-				do_monsters();
-			if(overall_mode != MODE_OUTDOORS)
-				do_monster_turn();
-			// Wand monsts
-			if(overall_mode == MODE_OUTDOORS && !party_toast() && univ.party.age % 10 == 0) {
-				if(get_ran(1,1,70 + PSD[SDF_LESS_WANDER_ENC] * 200) == 10)
-					create_wand_monst();
-				for(int i = 0; i < 10; i++)
-					if(univ.party.out_c[i].exists)
-						if((adjacent(univ.party.p_loc,univ.party.out_c[i].m_loc) || univ.party.out_c[i].what_monst.cant_flee >= 10)
-						   && univ.party.in_boat < 0 && !flying()) {
-							store_wandering_special = univ.party.out_c[i].what_monst;
-							if(handle_wandering_specials(0,0))
-								initiate_outdoor_combat(i);
-							univ.party.out_c[i].exists = false;
-							
-							// Get rid of excess keyclicks
-							flushingInput = true;
-							
-							need_reprint = false;
-							i = 20;
-						}
+			if(need_redraw) {
+				draw_terrain();
+				if ((combat_active_pc == 6) || (univ.party[combat_active_pc].ap > 0))
+					need_redraw = false;
 			}
-			if(overall_mode == MODE_TOWN) {
-				if(get_ran(1,1,160 - univ.town.difficulty + PSD[SDF_LESS_WANDER_ENC] * 200) == 2)
-					create_wand_monst();
-			}
+			//pause(2);
+			short store_cur_pc = current_pc;
+			if(combat_next_step())
+				need_redraw = true;
 		}
+	} else {
+		increase_age();
+		if(!is_out() || (is_out() && univ.party.age % 10 == 0)) // no monst move if party outdoors and on horse
+			do_monsters();
+		if(overall_mode != MODE_OUTDOORS)
+			do_monster_turn();
+		// Wand monsts
+		if(overall_mode == MODE_OUTDOORS && !party_toast() && univ.party.age % 10 == 0) {
+			if(get_ran(1,1,70 + PSD[SDF_LESS_WANDER_ENC] * 200) == 10)
+				create_wand_monst();
+			for(int i = 0; i < 10; i++)
+				if(univ.party.out_c[i].exists)
+					if((adjacent(univ.party.p_loc,univ.party.out_c[i].m_loc) || univ.party.out_c[i].what_monst.cant_flee >= 10)
+					   && univ.party.in_boat < 0 && !flying()) {
+						store_wandering_special = univ.party.out_c[i].what_monst;
+						if(handle_wandering_specials(0,0))
+							initiate_outdoor_combat(i);
+						univ.party.out_c[i].exists = false;
+						
+						// Get rid of excess keyclicks
+						flushingInput = true;
+						
+						need_reprint = false;
+						i = 20;
+					}
+		}
+		if(overall_mode == MODE_TOWN) {
+			if(get_ran(1,1,160 - univ.town.difficulty + PSD[SDF_LESS_WANDER_ENC] * 200) == 2)
+				create_wand_monst();
+		}
+	}
 }
 
 bool someone_awake()
@@ -1581,7 +1581,7 @@ bool handle_keystroke(sf::Event& event){
 	
 	if(overall_mode == MODE_STARTUP)
 		return false;
-
+	
 	obscureCursor();
 	
 	// DEBUG
@@ -2350,14 +2350,14 @@ void increase_age()////
 		//	PSD[301][i] = 0;
 		//for (i = 0; i < 10; i++)
 		////	PSD[300][i] = 0;
-		}
-		
+	}
+	
 	// Protection, etc.
 	for (i = 0; i < 6; i++) { // Process some status things, and check if stats updated
 		
 		if(univ.party[i].status[eStatus::INVULNERABLE] == 1 || univ.party[i].status[eStatus::MAGIC_RESISTANCE] == 1
-			|| univ.party[i].status[eStatus::INVISIBLE] == 1 || univ.party[i].status[eStatus::MARTYRS_SHIELD] == 1
-			|| univ.party[i].status[eStatus::ASLEEP] == 1 || univ.party[i].status[eStatus::PARALYZED] == 1)
+		   || univ.party[i].status[eStatus::INVISIBLE] == 1 || univ.party[i].status[eStatus::MARTYRS_SHIELD] == 1
+		   || univ.party[i].status[eStatus::ASLEEP] == 1 || univ.party[i].status[eStatus::PARALYZED] == 1)
 			update_stat = true;
 		move_to_zero(univ.party[i].status[eStatus::INVULNERABLE]);
 		move_to_zero(univ.party[i].status[eStatus::MAGIC_RESISTANCE]);
@@ -2475,8 +2475,8 @@ void increase_age()////
 			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
 			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
 			if((item = pc_has_abil_equip(i,eItemAbil::REGENERATE)) < 24
-				&& (univ.party[i].cur_health < univ.party[i].max_health)
-				&& ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
+			   && (univ.party[i].cur_health < univ.party[i].max_health)
+			   && ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
 				j = get_ran(1,0,univ.party[i].items[item].ability_strength / 3);
 				if (univ.party[i].items[item].ability_strength / 3 == 0)
 					j = get_ran(1,0,1);
@@ -2520,7 +2520,7 @@ void handle_hunting() {
 	pic = scenario.ter_types[ter].picture;
 	for (i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[eTrait::CAVE_LORE] && get_ran(1,0,12) == 5
-			&& (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
+		   && (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
 			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);
 			add_string_to_buf((char *)str);
@@ -2934,52 +2934,52 @@ bool outd_move_party(location destination,bool forced)
 		else if (!outd_is_blocked(real_dest) || forced
 				 // Check if can fly over
 				 || (flying() && scenario.ter_types[ter].fly_over)) {
-						 if(univ.party.in_horse >= 0) {
-					 if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
-							 ASB("Your horses quite sensibly refuse.");
-							 return false;
-						 }
-						 if(scenario.ter_types[ter].block_horse) {
-						 	ASB("You can't take horses there!");
-						 	return false;
-						 }
-					 }
-					 univ.party.direction = set_direction(univ.party.p_loc, destination);
-					 
-					 // TODO: But I though you automatically landed when entering?
-					 if(flying() && scenario.ter_types[ter].special == eTerSpec::TOWN_ENTRANCE) {
-						 add_string_to_buf("Moved: You have to land first.               ");
-						 return false;
-					 }
-					 
-					 
-					 univ.party.p_loc = real_dest;
-					 univ.party.i_w_c.x = (univ.party.p_loc.x > 47) ? 1 : 0;
-					 univ.party.i_w_c.y = (univ.party.p_loc.y > 47) ? 1 : 0;
-					 univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
-					 sprintf (create_line, "Moved: %s",dir_string[univ.party.direction]);//, univ.party.p_loc.x, univ.party.p_loc.y, univ.party.loc_in_sec.x, univ.party.loc_in_sec.y);
-					 add_string_to_buf(create_line);
-					 move_sound(univ.out[real_dest.x][real_dest.y],num_out_moves);
-					 num_out_moves++;
-					 
-					 if (univ.party.in_boat >= 0) { // Waterfall!!!
-						 run_waterfalls(1);
-					 }
-					 if (univ.party.in_horse >= 0) {
-						 univ.party.horses[univ.party.in_horse].which_town = 200;
-						 univ.party.horses[univ.party.in_horse].loc_in_sec = univ.party.loc_in_sec;
-						 univ.party.horses[univ.party.in_horse].loc = univ.party.p_loc;
-						 univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
-						 univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
-						 
-					 }
-					 
-					 if ((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
-						 (store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
-						 clear_map();
-					 
-					 return true;
-				 }
+			if(univ.party.in_horse >= 0) {
+				if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
+					ASB("Your horses quite sensibly refuse.");
+					return false;
+				}
+				if(scenario.ter_types[ter].block_horse) {
+					ASB("You can't take horses there!");
+					return false;
+				}
+			}
+			univ.party.direction = set_direction(univ.party.p_loc, destination);
+			
+			// TODO: But I though you automatically landed when entering?
+			if(flying() && scenario.ter_types[ter].special == eTerSpec::TOWN_ENTRANCE) {
+				add_string_to_buf("Moved: You have to land first.               ");
+				return false;
+			}
+			
+			
+			univ.party.p_loc = real_dest;
+			univ.party.i_w_c.x = (univ.party.p_loc.x > 47) ? 1 : 0;
+			univ.party.i_w_c.y = (univ.party.p_loc.y > 47) ? 1 : 0;
+			univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
+			sprintf (create_line, "Moved: %s",dir_string[univ.party.direction]);//, univ.party.p_loc.x, univ.party.p_loc.y, univ.party.loc_in_sec.x, univ.party.loc_in_sec.y);
+			add_string_to_buf(create_line);
+			move_sound(univ.out[real_dest.x][real_dest.y],num_out_moves);
+			num_out_moves++;
+			
+			if (univ.party.in_boat >= 0) { // Waterfall!!!
+				run_waterfalls(1);
+			}
+			if (univ.party.in_horse >= 0) {
+				univ.party.horses[univ.party.in_horse].which_town = 200;
+				univ.party.horses[univ.party.in_horse].loc_in_sec = univ.party.loc_in_sec;
+				univ.party.horses[univ.party.in_horse].loc = univ.party.p_loc;
+				univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+				univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
+				
+			}
+			
+			if ((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
+				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
+				clear_map();
+			
+			return true;
+		}
 		else {
  			sprintf ((char *) create_line, "Blocked: %s",dir_string[set_direction(univ.party.p_loc, destination)]);
  			add_string_to_buf((char *) create_line);

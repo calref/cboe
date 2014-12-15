@@ -72,7 +72,7 @@ cScenario scenario;
 //piles_of_stuff_dumping_type *data_store;
 RECT right_sbar_rect;
 
-// 
+//
 //	Main body of program Exileedit
 //
 
@@ -82,7 +82,7 @@ int main(int, char* argv[]) {
 	//outdoor_record_type dummy_outdoor, *store2;
 	
 	
-	//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));	
+	//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));
 	init_current_terrain();
 	//create_file();
 	//ExitToShell();
@@ -118,9 +118,9 @@ int main(int, char* argv[]) {
 	
 	//update_item_menu();
 	
-	//	to_create = get_town_to_edit();
+//	to_create = get_town_to_edit();
 	
-	//	load_terrain(to_create);
+//	load_terrain(to_create);
 	
 	//	modify_lists();
 	set_up_start_screen();
@@ -128,14 +128,14 @@ int main(int, char* argv[]) {
 	check_for_intel();
 	redraw_screen();
 	
-	while (!All_Done) 
+	while (!All_Done)
 		Handle_One_Event();
 	
 	close_program();
 	return 0;
 }
 
-// 
+//
 //	Initialize everything for the program, make sure we can run
 //
 
@@ -156,7 +156,7 @@ void Initialize(void) {
 	srand(time(NULL));
 	
 	//
-	//	Make a new window for drawing in, and it must be a color window.  
+	//	Make a new window for drawing in, and it must be a color window.
 	//	The window is full screen size, made smaller to make it more visible.
 	//
 	sf::VideoMode mode = sf::VideoMode::getDesktopMode();
@@ -228,19 +228,19 @@ void handle_file_menu(int item_hit) {
 	fs::path file_to_load;
 	switch (item_hit) {
 		case 1: // open
-				file_to_load = nav_get_scenario();
-				if(!file_to_load.empty() && load_scenario(file_to_load)) {
-					if(load_town(scenario.last_town_edited,town))
-						cur_town = scenario.last_town_edited;
-					if(load_outdoors(scenario.last_out_edited,current_terrain)){
-						cur_out = scenario.last_out_edited;
-						augment_terrain(cur_out);
-					}
-					overall_mode = MODE_MAIN_SCREEN;
-					change_made = false;
-					update_item_menu();
-					set_up_main_screen();
+			file_to_load = nav_get_scenario();
+			if(!file_to_load.empty() && load_scenario(file_to_load)) {
+				if(load_town(scenario.last_town_edited,town))
+					cur_town = scenario.last_town_edited;
+				if(load_outdoors(scenario.last_out_edited,current_terrain)){
+					cur_out = scenario.last_out_edited;
+					augment_terrain(cur_out);
 				}
+				overall_mode = MODE_MAIN_SCREEN;
+				change_made = false;
+				update_item_menu();
+				set_up_main_screen();
+			}
 			break;
 		case 2: // save
 			town->set_up_lights();

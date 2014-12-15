@@ -130,16 +130,16 @@ void set_rb(short slot, short mode, const char *label, short do_draw) {
 			strings_rs[slot][i] = ' ';
 	if (do_draw > 0)
 		draw_rb_slot(slot,0);
-	/*	for (i = 0; i < NRS; i++) 
-	 if (right_button_status[i] != 0)
-	 highest_used = i;
-	 if (highest_used < NRSONPAGE - 1) {
-	 SetControlMaximum(right_sbar,0);
-	 current_rs_top = 0;
-	 }
-	 else {
-	 SetControlMaximum(right_sbar,highest_used - NRSONPAGE - 1);
-	 //SetControlValue(right_sbar,new_setting);
-	 }*/
+	/*for (i = 0; i < NRS; i++)
+		if (right_button_status[i] != 0)
+			highest_used = i;
+	if (highest_used < NRSONPAGE - 1) {
+		SetControlMaximum(right_sbar,0);
+		current_rs_top = 0;
+	}
+	else {
+		SetControlMaximum(right_sbar,highest_used - NRSONPAGE - 1);
+		//SetControlValue(right_sbar,new_setting);
+	}*/
 }
 

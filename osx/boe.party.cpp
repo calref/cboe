@@ -1076,12 +1076,12 @@ bool repeat_cast_ok(eSkill type)
 		return false;
 	}
 	if(store_select == SELECT_ANY &&
-		isAbsent(univ.party[store_spell_target].main_status)) {
-			add_string_to_buf("Repeat cast: No target stored.");
-			return false;
-		}
+			isAbsent(univ.party[store_spell_target].main_status)) {
+		add_string_to_buf("Repeat cast: No target stored.");
+		return false;
+	}
 	if(store_select == SELECT_ACTIVE &&
-		univ.party[store_spell_target].main_status != eMainStatus::ALIVE) {
+	   univ.party[store_spell_target].main_status != eMainStatus::ALIVE) {
 		add_string_to_buf("Repeat cast: No target stored.");
 		return false;
 	}
@@ -1584,26 +1584,41 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 					play_sound(52);
 					sprintf ((char *) c_line,"  Your items glow.     ");
 				} else {
-				
-				if(!PSD[SDF_RESURRECT_NO_BALM]) {
-					if ((item = pc_has_abil(pc_num,eItemAbil::RESSURECTION_BALM)) == 24) {
-						add_string_to_buf("  Need resurrection balm.        ");
-						break;
-					}
-					else take_item(pc_num,item);
-				}
-				if(spell_num == eSpell::RAISE_DEAD) {
-					if(univ.party[target].main_status == eMainStatus::DEAD)
-						if (get_ran(1,1,univ.party[pc_num].level / 2) == 1) {
-							sprintf ((char *) c_line, "  %s now dust.                          ",
-									 (char *) univ.party[target].name.c_str());
-							play_sound(5);
-							univ.party[target].main_status = eMainStatus::DUST;
+					
+					if(!PSD[SDF_RESURRECT_NO_BALM]) {
+						if ((item = pc_has_abil(pc_num,eItemAbil::RESSURECTION_BALM)) == 24) {
+							add_string_to_buf("  Need resurrection balm.        ");
+							break;
 						}
-						else {
+						else take_item(pc_num,item);
+					}
+					if(spell_num == eSpell::RAISE_DEAD) {
+						if(univ.party[target].main_status == eMainStatus::DEAD)
+							if (get_ran(1,1,univ.party[pc_num].level / 2) == 1) {
+								sprintf ((char *) c_line, "  %s now dust.                          ",
+										 (char *) univ.party[target].name.c_str());
+								play_sound(5);
+								univ.party[target].main_status = eMainStatus::DUST;
+							}
+							else {
+								univ.party[target].main_status = eMainStatus::ALIVE;
+								for (i = 0; i < 3; i++)
+									if(get_ran(1,0,2) < 2) {
+										eSkill skill = eSkill(i);
+										univ.party[target].skills[skill] -= (univ.party[target].skills[skill] > 1) ? 1 : 0;
+									}
+								univ.party[target].cur_health = 1;
+								sprintf ((char *) c_line, "  %s raised.                          ",
+										 (char *) univ.party[target].name.c_str());
+								play_sound(52);
+							}
+							else sprintf ((char *) c_line,"  Didn't work.              ");
+						
+					} else if (spell_num == eSpell::RESURRECT) {
+						if (univ.party[target].main_status != eMainStatus::ALIVE) {
 							univ.party[target].main_status = eMainStatus::ALIVE;
 							for (i = 0; i < 3; i++)
-								if(get_ran(1,0,2) < 2) {
+								if(get_ran(1,0,2) < 1) {
 									eSkill skill = eSkill(i);
 									univ.party[target].skills[skill] -= (univ.party[target].skills[skill] > 1) ? 1 : 0;
 								}
@@ -1612,23 +1627,8 @@ void do_priest_spell(short pc_num,eSpell spell_num) ////
 									 (char *) univ.party[target].name.c_str());
 							play_sound(52);
 						}
-						else sprintf ((char *) c_line,"  Didn't work.              ");
-					
-				} else if (spell_num == eSpell::RESURRECT) {
-					if (univ.party[target].main_status != eMainStatus::ALIVE) {
-						univ.party[target].main_status = eMainStatus::ALIVE;
-						for (i = 0; i < 3; i++)
-							if(get_ran(1,0,2) < 1) {
-								eSkill skill = eSkill(i);
-								univ.party[target].skills[skill] -= (univ.party[target].skills[skill] > 1) ? 1 : 0;
-							}
-						univ.party[target].cur_health = 1;
-						sprintf ((char *) c_line, "  %s raised.",
-								 (char *) univ.party[target].name.c_str());
-						play_sound(52);
+						else sprintf ((char *) c_line,"  Was OK.              ");
 					}
-					else sprintf ((char *) c_line,"  Was OK.              ");
-				}
 				}
 				add_string_to_buf((char *) c_line);
 				put_pc_screen();
@@ -1775,7 +1775,7 @@ void cast_town_spell(location where) ////
 			for (loc.x = 0; loc.x < univ.town->max_dim(); loc.x++)
 				for (loc.y = 0; loc.y < univ.town->max_dim(); loc.y++)
 					if(dist(where,loc) <= 2 && can_see(where,loc,sight_obscurity) < 5 &&
-						((abs(loc.x - where.x) < 2) || (abs(loc.y - where.y) < 2)))
+					   ((abs(loc.x - where.x) < 2) || (abs(loc.y - where.y) < 2)))
 						univ.town.set_antimagic(loc.x,loc.y,true);
 			break;
 			
@@ -1969,7 +1969,7 @@ bool pc_can_cast_spell(short pc_num,eSkill type) {
 	short store_w_cast;
 	
 	if(type == eSkill::MAGE_SPELLS && !pc_can_cast_spell(pc_num, eSpell::LIGHT))
-	   return false;
+		return false;
 	if(type == eSkill::PRIEST_SPELLS && !pc_can_cast_spell(pc_num, eSpell::BLESS_MINOR))
 		return false;
 	
@@ -2020,11 +2020,11 @@ bool pc_can_cast_spell(short pc_num,eSpell spell_num)
 	
 	store_w_cast = (*spell_num).when_cast;
 	if(is_out() && WHEN_OUTDOORS &~ store_w_cast)
-			return false;
+		return false;
 	if(is_town() && WHEN_TOWN &~ store_w_cast)
-			return false;
+		return false;
 	if(is_combat() &&  WHEN_COMBAT &~ store_w_cast)
-			return false;
+		return false;
 	return true;
 }
 
@@ -2225,7 +2225,7 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 			auto& names = (store_situation == eSkill::MAGE_SPELLS ? mage_s_name : priest_s_name);
 			if((*cSpell::fromNum(store_situation,i)).cost < 0) { // Simulacrum, which has a variable cost
-					sprintf((char *) add_text,"%s (?)", names[i]);
+				sprintf((char *) add_text,"%s (?)", names[i]);
 			} else sprintf((char *) add_text,"%s (%d)", names[i], (*cSpell::fromNum(store_situation,i)).cost);
 			//for (j = 0; j < 30; i++)
 			//	if (add_text[j] == '&')
@@ -3016,7 +3016,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	
 	// major resistance
 	if((damage_type == DAMAGE_FIRE || damage_type == DAMAGE_POISON || damage_type == DAMAGE_MAGIC || damage_type == DAMAGE_COLD)
-		&& ((level = get_prot_level(which_pc,eItemAbil::FULL_PROTECTION)) > 0))
+	   && ((level = get_prot_level(which_pc,eItemAbil::FULL_PROTECTION)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	if (boom_anim_active) {

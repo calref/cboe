@@ -172,4 +172,4 @@ cItemRec get_necklace(short loot)
 {
 	return pull_item_of_type(loot,loot_min[loot],loot_max[loot],eItemType::NECKLACE);
 	
-} 
+}

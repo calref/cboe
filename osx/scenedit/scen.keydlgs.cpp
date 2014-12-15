@@ -39,7 +39,7 @@ bool cre(short val,short min,short max,const char *text1,const char *text2,cDial
 	if ((val < min) || (val > max)) {
 		giveError(text1,text2,parent);
 		return true;
-	}		
+	}
 	return false;
 }
 
@@ -185,11 +185,11 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 		strcpy(town->town_strs(which_str), newVal.c_str());
 	if(item_hit == "okay") me.toast(true);
 	else if(item_hit == "left" || item_hit == "right") {
-			if(item_hit[0] == 'l')
-				which_str--;
-			else which_str++;
-			if (which_str < 0) which_str = num_strs[str_mode] - 1;
-			if (which_str >= num_strs[str_mode]) which_str = 0;
+		if(item_hit[0] == 'l')
+			which_str--;
+		else which_str++;
+		if (which_str < 0) which_str = num_strs[str_mode] - 1;
+		if (which_str >= num_strs[str_mode]) which_str = 0;
 	}
 	me["num"].setTextToNum(which_str);
 	if (str_mode == 0)
@@ -224,12 +224,12 @@ static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, short
 		me.setResult(true);
 		me.toast(true);
 		std::string str = me["area"].getText();
-			if(str_mode == 0)
-				sprintf(current_terrain.out_strs(which_str + 1),"%-29.29s",str.c_str());
-			else sprintf(town->town_strs(which_str + 1),"%-29.29s",str.c_str());
+		if(str_mode == 0)
+			sprintf(current_terrain.out_strs(which_str + 1),"%-29.29s",str.c_str());
+		else sprintf(town->town_strs(which_str + 1),"%-29.29s",str.c_str());
 	} else if(item_hit == "cancel") {
-			me.setResult(false);
-			me.toast(false);
+		me.setResult(false);
+		me.toast(false);
 	}
 	return true;
 }
@@ -332,7 +332,7 @@ static void put_spec_enc_in_dlog(cDialog& me, short which_node) {
 			me["sdf1-lbl"].setText("Chance of placing (0 - 100)");
 			me["sdf2-lbl"].setText("0 - web, 1 - barrel, 2 - crate");
 			break;
-	}	
+	}
 	
 	me["msg1"].setTextToNum(store_spec_node.m1);
 	me["msg2"].setTextToNum(store_spec_node.m2);
@@ -470,197 +470,197 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		}
 	} else if(item_hit == "cancel") {
 		if(!last_node.empty()) {
-				giveError("You can't cancel out of making a special until you're back at the beginning of the special chain.",
-						   "Press the Go Back button until it disappears.",&me);
+			giveError("You can't cancel out of making a special until you're back at the beginning of the special chain.",
+					  "Press the Go Back button until it disappears.",&me);
 			return true;
-			}
+		}
 		me.toast(false);
 	} else if(me[item_hit].getText() == "Create/Edit") {
-			if(!save_spec_enc(me, which_mode, which_node))
-				return true;
-			if(item_hit == "x1b-edit")
-				spec = me["x1b"].getTextAsNum();
-			else if(item_hit == "x2b-edit")
-				spec = me["x2b"].getTextAsNum();
-			else if(item_hit == "jump-edit")
-				spec = me["jump"].getTextAsNum();
-			if ((spec < 0) || (spec >= num_specs[which_mode])) {
-				spec = -1;
-				//CDSN(822,8,-1)
-				// TODO: Generalize this situation of a node jumping to a scenario node
-				if(item_hit == "x1b-edit" && store_spec_node.type == eSpecType::SCEN_TIMER_START)
-					spec = get_fresh_spec(0);
-				else if(item_hit == "jump-edit" && store_spec_node.type == eSpecType::CALL_GLOBAL)
-					spec = get_fresh_spec(0);
-				else spec = get_fresh_spec(which_mode);
-				if (spec < 0) {
-					giveError("You can't create a new special encounter because there are no more free special nodes.",
-							   "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
-					return true;
-				}
-				if(item_hit == "x1b-edit")
-					me["x1b"].setTextToNum(spec);
-				else if(item_hit == "x2b-edit")
-					me["x2b"].setTextToNum(spec);
-				else if(item_hit == "jump-edit")
-					me["jump"].setTextToNum(spec);
-				/*
-				 if (item_hit == 43)
-				 store_spec_node.ex1b = spec;
-				 if (item_hit == 44)
-				 store_spec_node.ex2b = spec;
-				 if (item_hit == 45)
-				 store_spec_node.jumpto = spec;
-				 */
-			}
-			if(!save_spec_enc(me, which_mode, which_node))
-				return true;
+		if(!save_spec_enc(me, which_mode, which_node))
+			return true;
+		if(item_hit == "x1b-edit")
+			spec = me["x1b"].getTextAsNum();
+		else if(item_hit == "x2b-edit")
+			spec = me["x2b"].getTextAsNum();
+		else if(item_hit == "jump-edit")
+			spec = me["jump"].getTextAsNum();
+		if ((spec < 0) || (spec >= num_specs[which_mode])) {
+			spec = -1;
+			//CDSN(822,8,-1)
+			// TODO: Generalize this situation of a node jumping to a scenario node
 			if(item_hit == "x1b-edit" && store_spec_node.type == eSpecType::SCEN_TIMER_START)
-				node_to_change_to = spec;
+				spec = get_fresh_spec(0);
 			else if(item_hit == "jump-edit" && store_spec_node.type == eSpecType::CALL_GLOBAL)
-				node_to_change_to = spec;
-			else node_to_change_to = which_mode * 1000 + spec;
+				spec = get_fresh_spec(0);
+			else spec = get_fresh_spec(which_mode);
+			if (spec < 0) {
+				giveError("You can't create a new special encounter because there are no more free special nodes.",
+						  "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
+				return true;
+			}
+			if(item_hit == "x1b-edit")
+				me["x1b"].setTextToNum(spec);
+			else if(item_hit == "x2b-edit")
+				me["x2b"].setTextToNum(spec);
+			else if(item_hit == "jump-edit")
+				me["jump"].setTextToNum(spec);
+			/*
+			if (item_hit == 43)
+				store_spec_node.ex1b = spec;
+			if (item_hit == 44)
+				store_spec_node.ex2b = spec;
+			if (item_hit == 45)
+				store_spec_node.jumpto = spec;
+			*/
+		}
+		if(!save_spec_enc(me, which_mode, which_node))
+			return true;
+		if(item_hit == "x1b-edit" && store_spec_node.type == eSpecType::SCEN_TIMER_START)
+			node_to_change_to = spec;
+		else if(item_hit == "jump-edit" && store_spec_node.type == eSpecType::CALL_GLOBAL)
+			node_to_change_to = spec;
+		else node_to_change_to = which_mode * 1000 + spec;
 		last_node.push(which_mode * 1000 + which_node);
 	} else if(item_hit == "x1a-edit") {
-			switch (store_spec_node.type) {
-				case eSpecType::FORCED_GIVE:
-				case eSpecType::ONCE_GIVE_ITEM:
-				case eSpecType::ONCE_GIVE_ITEM_DIALOG:
-				case eSpecType::ONCE_GIVE_ITEM_TERRAIN:
-				case eSpecType::ONCE_GIVE_ITEM_MONSTER:
-					i = choose_text(STRT_ITEM,store_spec_node.ex1a,&me,"Give which item?");
-					break;
-				case eSpecType::OUT_STORE:
-					i = choose_text(STRT_ITEM,store_spec_node.ex1a,&me,"First item in store?");
-					break;
-				case eSpecType::ONCE_DIALOG:
-				case eSpecType::ONCE_DIALOG_TERRAIN:
-				case eSpecType::ONCE_DIALOG_MONSTER:
-					i = choose_text(STRT_BUTTON,store_spec_node.ex1a,&me,"Which button label?");
-					break;
-				case eSpecType::TOWN_DESTROY_MONST:
-					i = choose_text(STRT_MONST,store_spec_node.ex1a,&me,"Choose Which Monster:");
-					break;
-			}
-			store_spec_node.ex1a = i;
+		switch (store_spec_node.type) {
+			case eSpecType::FORCED_GIVE:
+			case eSpecType::ONCE_GIVE_ITEM:
+			case eSpecType::ONCE_GIVE_ITEM_DIALOG:
+			case eSpecType::ONCE_GIVE_ITEM_TERRAIN:
+			case eSpecType::ONCE_GIVE_ITEM_MONSTER:
+				i = choose_text(STRT_ITEM,store_spec_node.ex1a,&me,"Give which item?");
+				break;
+			case eSpecType::OUT_STORE:
+				i = choose_text(STRT_ITEM,store_spec_node.ex1a,&me,"First item in store?");
+				break;
+			case eSpecType::ONCE_DIALOG:
+			case eSpecType::ONCE_DIALOG_TERRAIN:
+			case eSpecType::ONCE_DIALOG_MONSTER:
+				i = choose_text(STRT_BUTTON,store_spec_node.ex1a,&me,"Which button label?");
+				break;
+			case eSpecType::TOWN_DESTROY_MONST:
+				i = choose_text(STRT_MONST,store_spec_node.ex1a,&me,"Choose Which Monster:");
+				break;
+		}
+		store_spec_node.ex1a = i;
 		me["x1a"].setTextToNum(store_spec_node.ex1a);
 	} else if(item_hit == "x2a-edit") {
-			switch (store_spec_node.type) {
-				case eSpecType::FORCED_GIVE:
-				case eSpecType::ONCE_GIVE_ITEM:
-				case eSpecType::TOWN_PLACE_ITEM:
-				case eSpecType::OUT_STORE: // TODO: This isn't right - it should be "number of items" or some such
-					i = choose_text(STRT_ITEM,store_spec_node.ex2a,&me,"Give which item?");
-					break;
-				case eSpecType::ONCE_DIALOG:
-				case eSpecType::ONCE_DIALOG_TERRAIN:
-				case eSpecType::ONCE_DIALOG_MONSTER:
-				case eSpecType::ONCE_GIVE_ITEM_DIALOG:
-				case eSpecType::ONCE_GIVE_ITEM_TERRAIN:
-				case eSpecType::ONCE_GIVE_ITEM_MONSTER:
-					i = choose_text(STRT_BUTTON,store_spec_node.ex2a,&me,"Which button label?");
-					break;
-				case eSpecType::TOWN_PLACE_MONST:
-					i = choose_text(STRT_MONST,store_spec_node.ex2a,&me,"Choose Which Monster:");
-					break;
-				case eSpecType::IF_TOWN_TER_TYPE:
-				case eSpecType::IF_OUT_TER_TYPE:
-				case eSpecType::TOWN_CHANGE_TER:
-				case eSpecType::TOWN_SWAP_TER:
-				case eSpecType::OUT_CHANGE_TER:
-					i = choose_text(STRT_TER,store_spec_node.ex2a,&me,"Which Terrain?");
-					break;
-			}
-			store_spec_node.ex2a = i;
+		switch (store_spec_node.type) {
+			case eSpecType::FORCED_GIVE:
+			case eSpecType::ONCE_GIVE_ITEM:
+			case eSpecType::TOWN_PLACE_ITEM:
+			case eSpecType::OUT_STORE: // TODO: This isn't right - it should be "number of items" or some such
+				i = choose_text(STRT_ITEM,store_spec_node.ex2a,&me,"Give which item?");
+				break;
+			case eSpecType::ONCE_DIALOG:
+			case eSpecType::ONCE_DIALOG_TERRAIN:
+			case eSpecType::ONCE_DIALOG_MONSTER:
+			case eSpecType::ONCE_GIVE_ITEM_DIALOG:
+			case eSpecType::ONCE_GIVE_ITEM_TERRAIN:
+			case eSpecType::ONCE_GIVE_ITEM_MONSTER:
+				i = choose_text(STRT_BUTTON,store_spec_node.ex2a,&me,"Which button label?");
+				break;
+			case eSpecType::TOWN_PLACE_MONST:
+				i = choose_text(STRT_MONST,store_spec_node.ex2a,&me,"Choose Which Monster:");
+				break;
+			case eSpecType::IF_TOWN_TER_TYPE:
+			case eSpecType::IF_OUT_TER_TYPE:
+			case eSpecType::TOWN_CHANGE_TER:
+			case eSpecType::TOWN_SWAP_TER:
+			case eSpecType::OUT_CHANGE_TER:
+				i = choose_text(STRT_TER,store_spec_node.ex2a,&me,"Which Terrain?");
+				break;
+		}
+		store_spec_node.ex2a = i;
 		me["x2a"].setTextToNum(store_spec_node.ex2a);
 	} else if(item_hit == "msg2-edit") { // TODO: What about msg1-edit?
-			if(save_spec_enc(me, which_mode, which_node))
-				return true;
-			if (((*store_spec_node.type).msg_label == 2) ||
-				((*store_spec_node.type).msg_label == 4) ||
-				((*store_spec_node.type).msg_label == 5)) {
-				edit_dialog_text(which_mode,&store_spec_node.m1,&me);
-				put_spec_enc_in_dlog(me, which_node);
-			}
-			else if (((*store_spec_node.type).msg_label == 1) ||
-					 ((*store_spec_node.type).msg_label == 3)) {
-				edit_spec_text(which_mode,&store_spec_node.m1,
-							   &store_spec_node.m2,&me);
-				put_spec_enc_in_dlog(me, which_node);
-			}
+		if(save_spec_enc(me, which_mode, which_node))
+			return true;
+		if (((*store_spec_node.type).msg_label == 2) ||
+			((*store_spec_node.type).msg_label == 4) ||
+			((*store_spec_node.type).msg_label == 5)) {
+			edit_dialog_text(which_mode,&store_spec_node.m1,&me);
+			put_spec_enc_in_dlog(me, which_node);
+		}
+		else if (((*store_spec_node.type).msg_label == 1) ||
+				 ((*store_spec_node.type).msg_label == 3)) {
+			edit_spec_text(which_mode,&store_spec_node.m1,
+						   &store_spec_node.m2,&me);
+			put_spec_enc_in_dlog(me, which_node);
+		}
 	} else if(item_hit == "pict-edit") {
-			if(save_spec_enc(me, which_mode, which_node))
-				return true;
-			i = -1;
-			switch ((*store_spec_node.type).pic_label) {
-				case 1:
-					i = choose_graphic(store_spec_node.pic,PIC_DLOG,&me);
-					break;
-				case 2:
-					i = choose_graphic(store_spec_node.pic,PIC_TER,&me);
-					break;
-				case 3:
-					i = choose_graphic(store_spec_node.pic,PIC_MONST,&me);
-					break;
-			}
-			if(i != NO_PIC) {
-				store_spec_node.pic = i;
-				put_spec_enc_in_dlog(me, which_node);
-			}
+		if(save_spec_enc(me, which_mode, which_node))
+			return true;
+		i = -1;
+		switch ((*store_spec_node.type).pic_label) {
+			case 1:
+				i = choose_graphic(store_spec_node.pic,PIC_DLOG,&me);
+				break;
+			case 2:
+				i = choose_graphic(store_spec_node.pic,PIC_TER,&me);
+				break;
+			case 3:
+				i = choose_graphic(store_spec_node.pic,PIC_MONST,&me);
+				break;
+		}
+		if(i != NO_PIC) {
+			store_spec_node.pic = i;
+			put_spec_enc_in_dlog(me, which_node);
+		}
 	} else if(item_hit == "general") {
-			if(save_spec_enc(me, which_mode, which_node))
-				return true;
+		if(save_spec_enc(me, which_mode, which_node))
+			return true;
 		// TODO: I wonder if this can all be achieved without casts... if not, at least check getNodeCategory to ensure validity.
 		i = choose_text_res("special-node-names",1,28,int(store_spec_node.type) + 1,&me,"Choose General Use Special:");
-			if (i >= 0) {
-				store_spec_node.type = eSpecType(i - 1);
-			}
-			put_spec_enc_in_dlog(me, which_node);
+		if (i >= 0) {
+			store_spec_node.type = eSpecType(i - 1);
+		}
+		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "oneshot") {
-			if(save_spec_enc(me, which_mode, which_node))
-				return true;
-			i = choose_text_res("special-node-names",51,64,int(store_spec_node.type) + 1,&me,"Choose One-Shot Special:");
-			if (i >= 0) {
-				store_spec_node.type = eSpecType(i - 1);
-				store_spec_node.sd1 = -1;
-				store_spec_node.sd2 = -1;
-				if(store_spec_node.type == eSpecType::ONCE_DIALOG || store_spec_node.type == eSpecType::ONCE_DIALOG_TERRAIN || store_spec_node.type == eSpecType::ONCE_DIALOG_MONSTER)
-					store_spec_node.m2 = 1;
-			}
-			put_spec_enc_in_dlog(me, which_node);
+		if(save_spec_enc(me, which_mode, which_node))
+			return true;
+		i = choose_text_res("special-node-names",51,64,int(store_spec_node.type) + 1,&me,"Choose One-Shot Special:");
+		if (i >= 0) {
+			store_spec_node.type = eSpecType(i - 1);
+			store_spec_node.sd1 = -1;
+			store_spec_node.sd2 = -1;
+			if(store_spec_node.type == eSpecType::ONCE_DIALOG || store_spec_node.type == eSpecType::ONCE_DIALOG_TERRAIN || store_spec_node.type == eSpecType::ONCE_DIALOG_MONSTER)
+				store_spec_node.m2 = 1;
+		}
+		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "affectpc") {
-			if(save_spec_enc(me, which_mode, which_node))
-				return true;
-			i = choose_text_res("special-node-names",81,107,int(store_spec_node.type) + 1,&me,"Choose Affect Party Special:");
-			if (i >= 0) store_spec_node.type = eSpecType(i - 1);
-			put_spec_enc_in_dlog(me, which_node);
+		if(save_spec_enc(me, which_mode, which_node))
+			return true;
+		i = choose_text_res("special-node-names",81,107,int(store_spec_node.type) + 1,&me,"Choose Affect Party Special:");
+		if (i >= 0) store_spec_node.type = eSpecType(i - 1);
+		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "ifthen") {
-			if(save_spec_enc(me, which_mode, which_node))
-				return true;
-			i = choose_text_res("special-node-names",131,156,int(store_spec_node.type) + 1,&me,"Choose If-Then Special:");
-			if (i >= 0) {
-				store_spec_node.type = eSpecType(i - 1);
-			}
-			put_spec_enc_in_dlog(me, which_node);
+		if(save_spec_enc(me, which_mode, which_node))
+			return true;
+		i = choose_text_res("special-node-names",131,156,int(store_spec_node.type) + 1,&me,"Choose If-Then Special:");
+		if (i >= 0) {
+			store_spec_node.type = eSpecType(i - 1);
+		}
+		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "town") {
-			if(save_spec_enc(me, which_mode, which_node))
-				return true;
-			i = choose_text_res("special-node-names",171,219,int(store_spec_node.type) + 1,&me,"Choose Town Special:");
-			if (i >= 0) store_spec_node.type = eSpecType(i - 1);
-			put_spec_enc_in_dlog(me, which_node);
+		if(save_spec_enc(me, which_mode, which_node))
+			return true;
+		i = choose_text_res("special-node-names",171,219,int(store_spec_node.type) + 1,&me,"Choose Town Special:");
+		if (i >= 0) store_spec_node.type = eSpecType(i - 1);
+		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "out") {
-			if(save_spec_enc(me, which_mode, which_node))
-				return true;
-			i = choose_text_res("special-node-names",226,230,int(store_spec_node.type) + 1,&me,"Choose Outdoor Special:");
-			if (i >= 0) store_spec_node.type = eSpecType(i - 1);
-			put_spec_enc_in_dlog(me, which_node);
+		if(save_spec_enc(me, which_mode, which_node))
+			return true;
+		i = choose_text_res("special-node-names",226,230,int(store_spec_node.type) + 1,&me,"Choose Outdoor Special:");
+		if (i >= 0) store_spec_node.type = eSpecType(i - 1);
+		put_spec_enc_in_dlog(me, which_node);
 	}
 	/*if ((item_hit >= 37) && (item_hit <= 42)) {
-	 if (cd_get_active(822,43) == 0)
-	 CDSN(822,8,0);
-	 if (cd_get_active(822,44) == 0)
-	 CDSN(822,10,0);
-	 }*/ // Might be useful, but I forget what I was thinking when I added it.
+		if (cd_get_active(822,43) == 0)
+			CDSN(822,8,0);
+		if (cd_get_active(822,44) == 0)
+			CDSN(822,10,0);
+	}*/// Might be useful, but I forget what I was thinking when I added it.
 	if (node_to_change_to >= 0) {
 		which_mode = node_to_change_to / 1000;
 		which_node = node_to_change_to % 1000;
@@ -679,7 +679,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 
 // mode - 0 scen 1 - out 2 - town
 void edit_spec_enc(short which_node,short mode) {
-// ignore parent in Mac version
+	// ignore parent in Mac version
 	using namespace std::placeholders;
 	
 	// Clear the "nodes edited" stack; should already be clear, but just make sure
@@ -760,7 +760,7 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 				}
 				if (i < 500) {
 					giveError("There are no more free message slots.",
-							   "To free up some slots, go into Edit Town/Out/Scenario Text to clear some messages.", &me);
+							  "To free up some slots, go into Edit Town/Out/Scenario Text to clear some messages.", &me);
 					return true;
 				}
 			}
@@ -807,7 +807,7 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 				}
 				if (i < 500) {
 					giveError("There are no more free message slots.",
-							   "To free up some slots, go into Edit Town/Out/Scenario Text to clear some messages.", &me);
+							  "To free up some slots, go into Edit Town/Out/Scenario Text to clear some messages.", &me);
 					return true;
 				}
 			}
@@ -866,22 +866,22 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, sho
 	short i;
 	
 	if(item_hit == "okay") {
-			for (i = 0; i < 6; i++) {
-				std::string id = "str" + std::to_string(i + 1);
-				str = me[id].getText();
-				if(i == 0 && str.empty()) break;
-				switch (spec_str_mode) {
-					case 0:
-						strcpy(scenario.scen_strs(*str1 + 160 + i),str.c_str());
-						break;
-					case 1:
-						strcpy(current_terrain.out_strs(*str1 + 10 + i),str.c_str());
-						break;
-					case 2:
-						strcpy(town->town_strs(*str1 + 20 + i),str.c_str());
-						break;
-				}
+		for (i = 0; i < 6; i++) {
+			std::string id = "str" + std::to_string(i + 1);
+			str = me[id].getText();
+			if(i == 0 && str.empty()) break;
+			switch (spec_str_mode) {
+				case 0:
+					strcpy(scenario.scen_strs(*str1 + 160 + i),str.c_str());
+					break;
+				case 1:
+					strcpy(current_terrain.out_strs(*str1 + 10 + i),str.c_str());
+					break;
+				case 2:
+					strcpy(town->town_strs(*str1 + 20 + i),str.c_str());
+					break;
 			}
+		}
 		me.toast(true);
 	} else me.toast(false);
 	return true;
@@ -947,7 +947,7 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 					case 2:
 						strcpy(town->town_strs(20 + i),"");
 						break;
-				}			
+				}
 			}
 	}
 	if (*str1 < 0) {
@@ -1007,10 +1007,10 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 	
 	if(item_hit == "okay") {
 		scenario.intro_pic = me["picnum"].getTextAsNum();
-			if (scenario.intro_pic > 29) {
-				giveError("Intro picture number is out of range.","",&me);
-				return true;
-			}
+		if (scenario.intro_pic > 29) {
+			giveError("Intro picture number is out of range.","",&me);
+			return true;
+		}
 		for(i = 0; i < 6; i++) {
 			std::string id = "str" + std::to_string(i + 1);
 			strcpy(scenario.scen_strs(4 + i), me[id].getText().c_str());
@@ -1019,12 +1019,12 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 	} else if(item_hit == "cancel") {
 		me.toast(false);
 	} else if(item_hit == "choose") {
-			pic_num_t pic = me["picnum"].getTextAsNum();
-			i = choose_graphic(pic,PIC_SCEN,&me);
-			if(i != NO_PIC) {
-				me["picnum"].setTextToNum(i);
-				dynamic_cast<cPict&>(me["pic"]).setPict(i);
-			}
+		pic_num_t pic = me["picnum"].getTextAsNum();
+		i = choose_graphic(pic,PIC_SCEN,&me);
+		if(i != NO_PIC) {
+			me["picnum"].setTextToNum(i);
+			dynamic_cast<cPict&>(me["pic"]).setPict(i);
+		}
 	}
 	return true;
 }

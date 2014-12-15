@@ -649,10 +649,10 @@ location push_loc(location from_where,location to_where)
 		return loc_to_try;
 	}
 	if(sight_obscurity(loc_to_try.x,loc_to_try.y) > 0 ||
-	    scenario.ter_types[univ.town->terrain(loc_to_try.x,loc_to_try.y)].blockage != eTerObstruct::CLEAR ||
-		(loc_off_act_area(loc_to_try)) ||
-		(monst_there(loc_to_try) < 90) ||
-		(pc_there(loc_to_try) < 6))
+	   scenario.ter_types[univ.town->terrain(loc_to_try.x,loc_to_try.y)].blockage != eTerObstruct::CLEAR ||
+	   (loc_off_act_area(loc_to_try)) ||
+	   (monst_there(loc_to_try) < 90) ||
+	   (pc_there(loc_to_try) < 6))
 		return from_where;
 	else return loc_to_try;
 }

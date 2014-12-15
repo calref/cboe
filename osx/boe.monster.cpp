@@ -111,11 +111,11 @@ void create_wand_monst()
 									  univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering[r1],0);
 		}
 	} else if(!univ.town->wandering[r1].isNull() && univ.town.countMonsters() <= 50
-		&& univ.party.m_killed[univ.town.num] < univ.town->max_num_monst) {
+			  && univ.party.m_killed[univ.town.num] < univ.town->max_num_monst) {
 		// won't place wandering if more than 50 monsters
 		r2 = get_ran(1,0,3);
 		while(point_onscreen(univ.town->wandering_locs[r2],univ.town.p_loc) &&
-			   !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
+			  !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
 			r2 = get_ran(1,0,3);
 		for(i = 0; i < 4; i++) {
 			if(univ.town->wandering[r1].monst[i] != 0) { // place a monster
@@ -246,7 +246,7 @@ void do_monsters()
 	if (overall_mode == MODE_TOWN)
 		for (i = 0; i < univ.town->max_monst(); i++)
 			if(univ.town.monst[i].active != 0 && univ.town.monst[i].status[eStatus::ASLEEP] <= 0
-				&& univ.town.monst[i].status[eStatus::PARALYZED] <= 0) {
+			   && univ.town.monst[i].status[eStatus::PARALYZED] <= 0) {
 				// have to pick targets
 				if (univ.town.monst[i].active == 1)
 					target = 6;
@@ -472,7 +472,7 @@ short monst_pick_target_pc(short m_num,cCreature *which_m)////
 	// First pick any visible, nearby PC
 	r1 = get_ran(1,0,5);
 	while(num_tries < 6 && (univ.party[r1].main_status != eMainStatus::ALIVE ||
-							   !monst_can_see(m_num,univ.party[r1].combat_pos))) {
+			!monst_can_see(m_num,univ.party[r1].combat_pos))) {
 		r1 = get_ran(1,0,5);
 		num_tries++;
 	}
@@ -482,8 +482,8 @@ short monst_pick_target_pc(short m_num,cCreature *which_m)////
 	// Then, see if target can be replaced with someone nice and close
 	r1 = get_ran(1,0,5);
 	while(num_tries < 6 && (univ.party[r1].main_status != eMainStatus::ALIVE ||
-							   (dist(which_m->cur_loc,univ.party[r1].combat_pos) > 4) ||
-							   !monst_can_see(m_num,univ.party[r1].combat_pos))) {
+			(dist(which_m->cur_loc,univ.party[r1].combat_pos) > 4) ||
+			!monst_can_see(m_num,univ.party[r1].combat_pos))) {
 		r1 = get_ran(1,0,5);
 		num_tries++;
 	}
@@ -572,7 +572,7 @@ short switch_target_to_adjacent(short which_m,short orig_target)
 	if (is_combat())
 		for (i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[i].combat_pos,which_m) &&
-				(get_encumberance(i) < 2))
+			   (get_encumberance(i) < 2))
 		 		return i;
 	
 	// Check for a nice, adjacent, friendly monster and maybe attack
@@ -918,7 +918,7 @@ void monst_inflict_fields(short which_monst)
 					(univ.town.is_barrel(where_check.x,where_check.y)) )
 					for (k = 0; k < NUM_TOWN_ITEMS; k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
-							&& (univ.town.items[k].item_loc == where_check))
+						   && (univ.town.items[k].item_loc == where_check))
 							univ.town.items[k].contained = false;
 				univ.town.set_crate(where_check.x,where_check.y,false);
 				univ.town.set_barrel(where_check.x,where_check.y,false);
@@ -1033,7 +1033,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 				univ.town.set_crate((short) to_loc.x,(short) to_loc.y, true);
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-					&& (univ.town.items[i].contained))
+				   && (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
 		}
 	}
@@ -1047,7 +1047,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 				univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,true);
 			for (i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-					&& (univ.town.items[i].contained))
+				   && (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
 			
 		}
@@ -1166,7 +1166,7 @@ void slow_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::HASTE_SLOW] = minmax(-8,8, which_m->status[eStatus::HASTE_SLOW] - how_much);
-	if (how_much >= 0)	
+	if (how_much >= 0)
 		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
 	else
 		monst_spell_note(which_m->number,35);
@@ -1176,7 +1176,7 @@ void curse_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::BLESS_CURSE] = minmax(-8,8, which_m->status[eStatus::BLESS_CURSE] - how_much);
-	if (how_much >= 0)	
+	if (how_much >= 0)
 		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
 	else
 		monst_spell_note(which_m->number,36);
@@ -1186,7 +1186,7 @@ void web_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::WEBS] = minmax(-8,8, which_m->status[eStatus::WEBS] + how_much);
-	if (how_much >= 0)	
+	if (how_much >= 0)
 		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
 	else
 		monst_spell_note(which_m->number,37);
@@ -1207,10 +1207,10 @@ void disease_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::DISEASE] = minmax(-8,8, which_m->status[eStatus::DISEASE] + how_much);
-	if (how_much >= 0)	
+	if (how_much >= 0)
 		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
 	else
-		monst_spell_note(which_m->number,38);	
+		monst_spell_note(which_m->number,38);
 	
 }
 
@@ -1218,10 +1218,10 @@ void dumbfound_monst(cCreature *which_m,short how_much)
 {
 	magic_adjust(which_m,&how_much);
 	which_m->status[eStatus::DUMB] = minmax(-8,8, which_m->status[eStatus::DUMB] + how_much);
-	if (how_much >= 0)	
+	if (how_much >= 0)
 		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
 	else
-		monst_spell_note(which_m->number,39);	
+		monst_spell_note(which_m->number,39);
 	
 }
 

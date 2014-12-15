@@ -134,7 +134,7 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overl
 		return true;
 	}
 	if(!allow_overload && item.item_weight() >
-		amount_pc_can_carry(pc_num) - pc_carry_weight(pc_num)) {
+	   amount_pc_can_carry(pc_num) - pc_carry_weight(pc_num)) {
 	  	if (print_result) {
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 			ASB("Item too heavy to carry.");
@@ -235,7 +235,7 @@ short get_prot_level(short pc_num,eItemAbil abil) {
 	
 	for (i = 0; i < 24; i++)
 		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM && (univ.party[pc_num].items[i].ability == abil)
-			&& (univ.party[pc_num].equip[i]))
+		   && (univ.party[pc_num].equip[i]))
 			return univ.party[pc_num].items[i].ability_strength;
 	return -1;
 	
@@ -245,7 +245,7 @@ short pc_has_abil_equip(short pc_num,eItemAbil abil) {
 	short i = 0;
 	
 	while((univ.party[pc_num].items[i].variety == eItemType::NO_ITEM || univ.party[pc_num].items[i].ability != abil
-			|| !univ.party[pc_num].equip[i]) && (i < 24))
+		   || !univ.party[pc_num].equip[i]) && (i < 24))
 		i++;
 	return i;
 	
@@ -255,7 +255,7 @@ short pc_has_abil(short pc_num,eItemAbil abil) {
 	short i = 0;
 	
 	while((univ.party[pc_num].items[i].variety == eItemType::NO_ITEM || univ.party[pc_num].items[i].ability != abil
-			) && (i < 24))
+		   ) && (i < 24))
 		i++;
 	return i;
 }
@@ -378,7 +378,7 @@ short pc_ok_to_buy(short pc_num,short cost,cItemRec item) ////
 	if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
 		for (i = 0; i < 24; i++)
 			if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM && univ.party[pc_num].items[i].type_flag == item.type_flag
-				&& (univ.party[pc_num].items[i].charges > 123))
+			   && (univ.party[pc_num].items[i].charges > 123))
 				return 5;
 		
 		if (pc_has_space(pc_num) == 24)
@@ -726,11 +726,11 @@ void combine_things(short pc_num)
 	
 	for (i = 0; i < 24; i++) {
 		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM &&
-			(univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].ident)) {
+		   (univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].ident)) {
 			for (j = i + 1; j < 24; j++)
 				if(univ.party[pc_num].items[j].variety != eItemType::NO_ITEM &&
-					(univ.party[pc_num].items[j].type_flag == univ.party[pc_num].items[i].type_flag)
-					&& (univ.party[pc_num].items[j].ident)) {
+				   (univ.party[pc_num].items[j].type_flag == univ.party[pc_num].items[i].type_flag)
+				   && (univ.party[pc_num].items[j].ident)) {
 					add_string_to_buf("(items combined)");
 					test = (short) (univ.party[pc_num].items[i].charges) + (short) (univ.party[pc_num].items[j].charges);
 					if (test > 125) {
@@ -860,14 +860,14 @@ void set_town_attitude(short lo,short hi,short att) {
 			// If made hostile, make mobile
 			if (att == 1 || att == 3) {
 				
-			univ.town.monst[i].mobility = 1;
-			// If a "guard", give a power boost
-			if (scenario.scen_monsters[num].spec_skill == 37) {
-				univ.town.monst[i].active = 2;
-				univ.town.monst[i].health *= 3;
-				univ.town.monst[i].status[eStatus::HASTE_SLOW] = 8;
-				univ.town.monst[i].status[eStatus::BLESS_CURSE] = 8;
-			}
+				univ.town.monst[i].mobility = 1;
+				// If a "guard", give a power boost
+				if (scenario.scen_monsters[num].spec_skill == 37) {
+					univ.town.monst[i].active = 2;
+					univ.town.monst[i].health *= 3;
+					univ.town.monst[i].status[eStatus::HASTE_SLOW] = 8;
+					univ.town.monst[i].status[eStatus::BLESS_CURSE] = 8;
+				}
 				
 			}
 		}
@@ -890,7 +890,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	
 	// First make sure all arrays for who can get stuff are in order.
 	if(current_getting_pc < 6 && (univ.party[current_getting_pc].main_status != eMainStatus::ALIVE
-									 || (pc_has_space(current_getting_pc) == 24))) {
+			|| (pc_has_space(current_getting_pc) == 24))) {
 	 	current_getting_pc = 6;
 	 	
 	}
@@ -900,7 +900,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		sout << "pc" << i + 1;
 		std::string id = sout.str();
 		if(univ.party[i].main_status == eMainStatus::ALIVE && pc_has_space(i) < 24
-			&& ((!is_combat()) || (current_pc == i))) {
+		   && ((!is_combat()) || (current_pc == i))) {
 			if (current_getting_pc == 6)
 				current_getting_pc = i;
 			me[id].show();
@@ -919,7 +919,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		me["up"].hide();
 	else me["up"].show();
 	if(first_item_shown > item_array.size() - 7 ||
-		item_array.size() <= 8)
+	   item_array.size() <= 8)
 		me["down"].hide();
 	else me["down"].show();
 	
@@ -1084,7 +1084,7 @@ bool display_item(location from_loc,short pc_num,short mode, bool check_containe
 bool show_get_items(std::string titleText, std::vector<cItemRec*>& itemRefs, short pc_getting, bool overload) {
 	using namespace std::placeholders;
 	size_t first_item = 0;
-
+	
 	if (!pc_gworld_loaded)
 		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 	
@@ -1448,7 +1448,7 @@ void refresh_store_items()
 		for (j = 0; j < 10; j++) {
 			univ.party.magic_store_items[i][j] = return_treasure(loot_index[j]);
 			if(univ.party.magic_store_items[i][j].variety == eItemType::GOLD ||
-				univ.party.magic_store_items[i][j].variety == eItemType::FOOD)
+			   univ.party.magic_store_items[i][j].variety == eItemType::FOOD)
 				univ.party.magic_store_items[i][j] = cItemRec();
 			univ.party.magic_store_items[i][j].ident = true;
 		}

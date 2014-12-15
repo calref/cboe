@@ -32,7 +32,7 @@ typedef struct {
 	char expl[96][96];
 }	out_info_type;
 
-char *party_encryptor;	
+char *party_encryptor;
 
 std::string last_load_file = "Blades of Exile Save";
 
@@ -62,14 +62,14 @@ void remove_party_from_scen()
 	load_base_item_defs();
 }
 
-/* 
+/*
  * XXX This was referenced but not defined, so I copied the implementation
  * from blxfileio.c. Need to check that it's OK.
  */
 short init_data(short flag)
 {
 	long k = 0;
-
+	
 	k = (long) flag;
 	k = k * k;
 	jl = jl * jl + 84 + k;
@@ -81,7 +81,7 @@ short init_data(short flag)
 	k = k * 82;
 	k = k % 10000;
 	k = k + 10000;
-
+	
 	return (short) k;
 }
 

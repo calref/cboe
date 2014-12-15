@@ -4,11 +4,11 @@
 #include <cstring>
 #include "pc.global.h"
 #include "classes.h"
-#include "pc.graphics.h" 
-#include "pc.editors.h" 
-#include "pc.action.h" 
-#include "pc.fileio.h" 
-#include "soundtool.h" 
+#include "pc.graphics.h"
+#include "pc.editors.h"
+#include "pc.action.h"
+#include "pc.fileio.h"
+#include "soundtool.h"
 #include "graphtool.h"
 #include "boe.consts.h"
 #include "dlogutil.h"
@@ -20,7 +20,7 @@
 cUniverse univ;
 
 RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 - 
+RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 RECT pc_info_rect; // Frame that holds a pc's basic info and items
 RECT name_rect; //Holds pc name inside pc_info_rect
 RECT info_area_rect;
@@ -95,7 +95,7 @@ char start_name[256];
 
 cScenario scenario;
 
-// 
+//
 //	Main body of program Exile
 //
 
@@ -111,18 +111,18 @@ int main(int /*argc*/, char* argv[]) {
 	init_snd_tool();
 	
 	set_up_apple_events();
-		
+	
 	cDialog::init();
 	redraw_screen();
 	
 	while(!All_Done)
 		Handle_One_Event();
-      return 0;
+	return 0;
 }
 
 
 
-// 
+//
 //	Initialize everything for the program, make sure we can run
 //
 
@@ -131,7 +131,7 @@ void Initialize(void)
 {
 	
 	check_for_intel();
-
+	
 	//
 	//	To make the Random sequences truly random, we need to make the seed start
 	//	at a different number.  An easy way to do this is to put the current time
@@ -142,9 +142,9 @@ void Initialize(void)
 	//GetDateTime(&randSeed);
     //  SetQDGlobalsRandomSeed((long)randSeed);
 	srand(time(NULL));
-
+	
 	//
-	//	Make a new window for drawing in, and it must be a color window.  
+	//	Make a new window for drawing in, and it must be a color window.
 	//	The window is full screen size, made smaller to make it more visible.
 	//
 	// Size and style obtained from WIND resource #128
@@ -157,15 +157,15 @@ void Handle_One_Event()
 	
 	init_main_buttons();
 	redraw_screen();
-
+	
 	switch(event.type){
 		case sf::Event::KeyPressed:
 			break;
-		
+			
 		case sf::Event::MouseButtonPressed:
 			Mouse_Pressed();
 			break;
-		
+			
 		case sf::Event::GainedFocus:
 			set_cursor(sword_curs);
 			break;
@@ -176,16 +176,16 @@ void Handle_One_Event()
 			
 		default:
 			break;
-		}
+	}
 }
 
 void Mouse_Pressed()
 {
 	bool try_to_end;
-		
+	
 	try_to_end = handle_action(event);
-					if (try_to_end)
-						All_Done = verify_restore_quit(false);
+	if (try_to_end)
+		All_Done = verify_restore_quit(false);
 }
 
 void handle_apple_menu(int item_hit)
@@ -201,7 +201,7 @@ void handle_apple_menu(int item_hit)
 			//GetItem (apple_menu,item_hit,desk_acc_name);
 			//desk_acc_num = OpenDeskAcc(desk_acc_name);
 			break;
-		}
+	}
 }
 
 void handle_file_menu(int item_hit)
@@ -213,7 +213,7 @@ void handle_file_menu(int item_hit)
 			save_party(file_in_mem);
 			break;
 		case 2://save as
-				file = nav_put_party();
+			file = nav_put_party();
 			if(!file.empty()) save_party(file);
 			break;
 		case 3://open
@@ -235,7 +235,7 @@ void handle_file_menu(int item_hit)
 		case 7://quit
 			All_Done = verify_restore_quit(false);
 			break;
-		}
+	}
 }
 
 static void display_strings(short nstr, pic_num_t pic) {
@@ -255,26 +255,26 @@ void handle_extra_menu(int item_hit)
 	}
 	switch(item_hit) {
 		case 1:
-				edit_gold_or_food(0);
-		break;
+			edit_gold_or_food(0);
+			break;
 		case 2:
-				edit_gold_or_food(1);
-		break;
-		
+			edit_gold_or_food(1);
+			break;
+			
 		case 4:
 			if (univ.party.is_split() > 0) {
 				cChoiceDlog("reunite-first.xml").show();
 				break;
-				}
+			}
 			cChoiceDlog("leave-town.xml").show();
 			leave_town();
 			break;
-	
+			
 		case 5:
 			if (univ.party.is_split() == 0) {
 				cChoiceDlog("not-split.xml").show();
 				break;
-				}
+			}
 			cChoiceDlog("reunited.xml").show();
 			univ.town.p_loc = univ.party.left_at();
 			for (i = 0; i < 6; i++)
@@ -282,7 +282,7 @@ void handle_extra_menu(int item_hit)
 					univ.party[i].main_status -= eMainStatus::SPLIT;
 			break;
 			
-
+			
 		case 6:
 			display_strings(20,7);
 			for (i = 0; i < 4; i++)
@@ -302,8 +302,8 @@ void handle_extra_menu(int item_hit)
 			display_strings(3,15);
 			for (i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::DEAD || univ.party[i].main_status == eMainStatus::DUST ||
-					univ.party[i].main_status == eMainStatus::STONE)
-						univ.party[i].main_status = eMainStatus::ALIVE;
+						univ.party[i].main_status == eMainStatus::STONE)
+					univ.party[i].main_status = eMainStatus::ALIVE;
 			break;
 		case 11: // conditions
 			display_strings(4,15);
@@ -336,21 +336,21 @@ void handle_extra_menu(int item_hit)
 void handle_edit_menu(int item_hit)
 {
 	short i,j,k;
-
+	
 	if(file_in_mem.empty()) {
 		display_strings(5,7);
 		return;
-		}
+	}
 	switch(item_hit) {
 		case 1:
-			 display_alchemy(true);
+			display_alchemy(true);
 			break;
 		case 2: // all property
 			display_strings(6,7);
 			for (i = 0; i < 30; i++) {
 				univ.party.boats[i].property = false;
 				univ.party.horses[i].property = false;
-				}
+			}
 			break;
 		case 4: // edit day
 			edit_day();
@@ -359,7 +359,7 @@ void handle_edit_menu(int item_hit)
 			if (!party_in_scen) {
 				display_strings(25,15);
 				break;
-				}
+			}
 			display_strings(13,15);
 			for (i = 0; i < 100; i++)
 				for (j = 0; j < 6; j++)
@@ -370,36 +370,36 @@ void handle_edit_menu(int item_hit)
 			if (!party_in_scen) {
 				display_strings(25,15);
 				break;
-				}
+			}
 			display_strings(14,15);
 			for (i = 0; i < 200; i++)
 				for (j = 0; j < 8; j++)
 					for (k = 0; k < 64; k++)
 						univ.town_maps[i][j][k] = 255;
 			break;
-				case 9:
-					display_pc(current_active_pc,0,0);
-					break;
-				case 10:
-			 		display_pc(current_active_pc,1,0);
-					break;
-				case 11: 
-					pick_race_abil(&univ.party[current_active_pc],0);
-					break;
-				case 12: 
-					spend_xp(current_active_pc,1,0);
-					break;
-				case 13: 
-					edit_xp(&univ.party[current_active_pc]);
-					break;
-		}
+		case 9:
+			display_pc(current_active_pc,0,0);
+			break;
+		case 10:
+			display_pc(current_active_pc,1,0);
+			break;
+		case 11:
+			pick_race_abil(&univ.party[current_active_pc],0);
+			break;
+		case 12:
+			spend_xp(current_active_pc,1,0);
+			break;
+		case 13:
+			edit_xp(&univ.party[current_active_pc]);
+			break;
+	}
 }
 
 //item_record_type convert_item (short_item_record_type s_item) {
 //	item_record_type i;
 //	location l = {0,0};
 //	short temp_val;
-//	
+//
 //	i.variety = (short) s_item.variety;
 //	i.item_level = (short) s_item.item_level;
 //	i.awkward = (short) s_item.awkward;
@@ -431,7 +431,7 @@ void handle_edit_menu(int item_hit)
 //		i.treas_class = 3;
 //	if (temp_val >= 2400)
 //		i.treas_class = 4;
-//		
+//
 //	i.magic_use_type = s_item.magic_use_type;
 //	i.ability_strength = s_item.ability_strength;
 //	i.reserved1 = 0;
@@ -455,7 +455,7 @@ void handle_item_menu(int item_hit)
 	if(file_in_mem.empty()) {
 		display_strings(5,7);
 		return;
-		}
+	}
 	store_i = scenario.scen_items[item_hit];
 	store_i.ident = true;
 	give_to_pc(current_active_pc,store_i,false);
@@ -472,7 +472,7 @@ bool verify_restore_quit(bool mode)
 //short mode; // 0 - quit  1- restore
 {
 	std::string choice;
-
+	
 	if(file_in_mem.empty())
 		return true;
 	cChoiceDlog verify(mode ? "save-open.xml" : "save-quit.xml", {"save", "quit", "cancel"});
@@ -484,9 +484,9 @@ bool verify_restore_quit(bool mode)
 	save_party(file_in_mem);
 	return true;
 }
- 
+
 //pascal bool cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit)
-//{	
+//{
 //	char chr,chr2;
 //	short the_type,wind_hit,item_hit;
 //	Handle the_handle = NULL;
@@ -494,9 +494,9 @@ bool verify_restore_quit(bool mode)
 //	location the_point;
 //	CWindowPtr w;
 //	RgnHandle updateRgn;
-//	
+//
 //	dummy_item_hit = 0;
-//	
+//
 //	switch (event->what) {
 //		case updateEvt:
 //			w = GetDialogWindow(hDlg);
@@ -511,7 +511,7 @@ bool verify_restore_quit(bool mode)
 //			DrawDialog(hDlg);
 //			return true;
 //			break;
-//		
+//
 //		case keyDown:
 //			chr = event->message & charCodeMask;
 //			chr2 = (char) ((event->message & keyCodeMask) >> 8);
@@ -529,10 +529,10 @@ bool verify_restore_quit(bool mode)
 //
 //			wind_hit = cd_process_keystroke(hDlg,chr,&item_hit);
 //			break;
-//	
+//
 //		case mouseDown:
 //			the_point = event->where;
-//			GlobalToLocal(&the_point);	
+//			GlobalToLocal(&the_point);
 //			wind_hit = cd_process_click(hDlg,the_point, event->modifiers,&item_hit);
 //			break;
 //
