@@ -47,7 +47,7 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 				// Try to fix specials that could be triggered while in a boat
 				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
 				int found_spec = -1;
-				for(int k = 0; i < 50; k++) {
+				for(int k = 0; k < 50; k++) {
 					if(i == special_locs[k].x && j == special_locs[k].y) {
 						found_spec = k;
 						break;
@@ -207,7 +207,7 @@ void cBigTown::append(legacy::big_tr_type& old, int town_num){
 				// Try to fix specials that could be triggered while in a boat
 				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
 				int found_spec = -1;
-				for(int k = 0; i < 50; k++) {
+				for(int k = 0; k < 50; k++) {
 					if(i == special_locs[k].x && j == special_locs[k].y) {
 						found_spec = k;
 						break;
