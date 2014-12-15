@@ -138,6 +138,7 @@ short monst_place_count = 0; // 1 - standard place	2 - place last
 RECT shopping_rects[8][7];
 std::queue<pending_special_type> special_queue;
 bool end_scenario = false;
+bool current_bash_is_bash = false;
 
 void init_screen_locs() ////
 {
@@ -630,6 +631,27 @@ static void handle_use_space(location destination, bool& did_something, bool& ne
 	put_item_screen(stat_window,0);
 }
 
+static void handle_bash_pick(location destination, bool& did_something, bool& need_redraw, bool isBash) {
+	if(!adjacent(destination,univ.town.p_loc))
+		add_string_to_buf("  Must be adjacent.              ");
+	else {
+		short pc = char_select_pc(true, false, isBash ? "Who will bash?" : "Who will pick the lock?");
+		if(pc == 6) {
+			add_string_to_buf("  Cancelled");
+			overall_mode = MODE_TOWN;
+			need_redraw = true;
+			return;
+		}
+		if(isBash) bash_door(destination, pc);
+		else pick_lock(destination, pc);
+	}
+	did_something = true;
+	overall_mode = MODE_TOWN;
+	need_redraw = true;
+	put_pc_screen();
+	put_item_screen(stat_window,0);
+}
+
 static void handle_switch_pc(short which_pc) {
 	char str[256];
 	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING)
@@ -961,10 +983,8 @@ bool handle_action(sf::Event event) {
 				}
 			break;
 			
-			// TODO: The inclusion of DROP in this and the following case may be incorrect.
-		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE_TOWN: case MODE_LOOK_TOWN: case MODE_DROP_TOWN:
-			// I think 5 is "town drop"
-//			cur_loc = c_town.p_loc;
+		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE_TOWN: case MODE_LOOK_TOWN:
+		case MODE_DROP_TOWN: case MODE_BASH_TOWN:
 			cur_loc = center;
 			for(int i = 0; i < 8; i++)
 				if(the_point.in(town_buttons[i])) {
@@ -1177,6 +1197,13 @@ bool handle_action(sf::Event event) {
 			destination.y += j - 4;
 			handle_use_space(destination, did_something, need_redraw);
 		}
+		
+		// Bashing/lockpicking
+		else if(overall_mode == MODE_BASH_TOWN) {
+			destination.x += i - 4;
+			destination.y += j - 4;
+			handle_bash_pick(destination, did_something, need_redraw, current_bash_is_bash);
+		}
 	}
 	// MARK: End: click in terrain
 	
@@ -1332,6 +1359,17 @@ bool handle_action(sf::Event event) {
 	// MARK: Fake clicks (alchemy, town rest)
 	if(the_point.x == 1000) handle_alchemy(need_redraw, need_reprint);
 	if(the_point.x == 1001) handle_town_wait(need_redraw, need_reprint);
+	if(the_point.x == 1002 || the_point.x == 1003) {
+		if(overall_mode == MODE_BASH_TOWN) {
+			add_string_to_buf("  Cancelled.");
+			overall_mode = MODE_TOWN;
+		} else {
+			overall_mode = MODE_BASH_TOWN;
+			current_bash_is_bash = the_point.x == 1002;
+			add_string_to_buf(the_point.x == 1002 ? "Bash Door: Select a space." : "Pick Lock: Select a space.");
+		}
+		need_reprint = true;
+	}
 	
  	// MARK: If in combat and pc delayed, jump forward a step
  	if(pc_delayed) {
@@ -1996,15 +2034,24 @@ bool handle_keystroke(sf::Event& event){
 			}
 			break;
 			
-		case 'b': case 'u': case 'L':
-			if (overall_mode == MODE_TOWN) {
-				pass_point.x = (chr == 'u') ? 220 : 205;
-				pass_point.y = (chr == 'L') ? 405 : 388;
+		case 'u':
+			if (overall_mode == MODE_TOWN || overall_mode == MODE_USE_TOWN) {
+				pass_point.x = 220;
+				pass_point.y = 388;
 				pass_event.mouseButton.x = pass_point.x + ul.x;
 				pass_event.mouseButton.y = pass_point.y + ul.y;
 				are_done = handle_action(pass_event);
 			}
 			break;
+			
+		case 'b': case 'L':
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_BASH_TOWN) {
+				pass_point.x = chr == 'b' ? 1002 : 1003;
+				pass_point.y = 0;
+				pass_event.mouseButton.x = pass_point.x + ul.x;
+				pass_event.mouseButton.y = pass_point.y + ul.y;
+				are_done = handle_action(pass_event);
+			}
 			
 		case 's': case 'x': case 'e':
 			if ((overall_mode == MODE_COMBAT) ||
