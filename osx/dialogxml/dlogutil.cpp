@@ -422,43 +422,12 @@ void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cB
 }
 
 void cThreeChoice::init_pict(pic_num_t pic){
-	RECT pic_rect;
-	switch(type){
-		case PIC_DLOG:
-		case PIC_CUSTOM_DLOG:
-			pic_rect = {0,0,36,36};
-			break;
-		case PIC_TALK:
-		case PIC_CUSTOM_TALK:
-		case PIC_SCEN:
-		case PIC_CUSTOM_SCEN:
-			pic_rect = {0,0,32,32};
-			break;
-		case PIC_MISSILE:
-		case PIC_CUSTOM_MISSILE:
-			pic_rect = {0,0,18,18};
-			break;
-		case PIC_DLOG_LG:
-		case PIC_CUSTOM_DLOG_LG:
-			pic_rect = {0,0,72,72};
-			break;
-		case PIC_SCEN_LG:
-			pic_rect = {0,0,64,64};
-			break;
-		case PIC_TER_MAP:
-		case PIC_CUSTOM_TER_MAP:
-			pic_rect = {0,0,24,24};
-			break;
-		case PIC_STATUS:
-			pic_rect = {0,0,12,12};
-		default:
-			pic_rect = {0,0,28,36};
-	}
-	pic_rect.offset(8,8);
 	cDialog* me = operator->();
 	cPict* pic_ctrl = new cPict(*me);
+	pic_ctrl->setBounds({8,8,8,8});
 	pic_ctrl->setPict(pic,type);
-	me->add(pic_ctrl, pic_rect, "pict");
+	pic_ctrl->recalcRect();
+	me->add(pic_ctrl, pic_ctrl->getBounds(), "pict");
 }
 
 std::string cThreeChoice::show(){

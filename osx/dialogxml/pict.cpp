@@ -109,7 +109,7 @@ sf::Color cPict::getColour() throw(xUnsupportedProp) {
 void cPict::setPict(pic_num_t num, ePicType type){
 	picNum = num;
 	picType = type;
-	switch(picType){
+	switch(picType + PIC_PRESET){
 		case PIC_DLOG:
 			frame.right = frame.left + 36;
 			frame.bottom = frame.top + 36;
