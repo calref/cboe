@@ -33,7 +33,6 @@ bool monst_can_see(short m_num,location l);
 bool party_can_see_monst(short m_num);
 bool can_see_monst(location l,short m_num);
 bool outd_is_blocked(location to_check);
-bool special_which_blocks_monst(location to_check);
 bool is_special(location to_check);
 bool outd_is_special(location to_check);
 bool impassable(ter_num_t terrain_to_check);

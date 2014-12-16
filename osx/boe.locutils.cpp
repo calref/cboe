@@ -453,18 +453,10 @@ bool outd_is_blocked(location to_check) {
 	return false;
 }
 
-bool special_which_blocks_monst(location to_check) {
-	if(scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].blockage == eTerObstruct::BLOCK_MONSTERS)
-		return true;
-	else return false;
-}
-
 // Checks if space is a special that prevents movement into or placement of a PC on
 bool is_special(location to_check) {
 	ter_num_t which_ter;
 	
-	if(!special_which_blocks_monst(to_check))
-		return false;
 	which_ter = coord_to_ter(to_check.x,to_check.y);
 	if(scenario.ter_types[which_ter].blockage == eTerObstruct::BLOCK_MONSTERS)
 		return true;
