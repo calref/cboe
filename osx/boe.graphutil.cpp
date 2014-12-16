@@ -310,12 +310,12 @@ void play_see_monster_str(unsigned short m, location monst_loc) {
 	spec = scenario.scen_monsters[m].see_spec;
 	// First display strings, if any
 	if(str1 || str2) {
+		short where1 = is_out() ? univ.party.i_w_c.x : univ.town.num;
+		short where2 = is_out() ? univ.party.i_w_c.y : univ.town.num;
+		std::string placename = is_out() ? univ.out.outdoors[where1][where2].out_name : univ.town->town_name;
 		cStrDlog display_strings(str1 ? scenario.monst_strs[str1] : "", str2 ? scenario.monst_strs[str2] : "", "", pic, type, NULL);
 		display_strings.setSound(snd);
-		display_strings.setRecordHandler(cStringRecorder()
-										 .string1(NOTE_MONST, m, 0)
-										 .string2(NOTE_MONST, m, 1)
-										 );
+		display_strings.setRecordHandler(cStringRecorder(NOTE_MONST).string1(str1).string2(str2).from(where1,where2).at(placename));
 		display_strings.show();
 	}
 	// Then run the special, if any

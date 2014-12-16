@@ -66,7 +66,6 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 	journal.reserve(50);
 	for(i = 0; i < 50; i++){
 		cJournal j;
-		j.str_num = old.journal_str[i];
 		j.day = old.journal_day[i];
 		journal.push_back(j);
 //		journal[i].str_num = old.journal_str[i];
@@ -76,8 +75,9 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 	special_notes.reserve(140);
 	for(i = 0; i < 140; i++){
 		cEncNote n;
-		n.str_num = old.special_notes_str[i][0];
-		n.where = old.special_notes_str[i][1];
+		// TODO: Fix up this conversion by looking up the required strings.
+//		n.str_num = old.special_notes_str[i][0];
+//		n.where = old.special_notes_str[i][1];
 		special_notes.push_back(n);
 //		special_notes[i].str_num = old.special_notes_str[i][0];
 //		special_notes[i].where = old.special_notes_str[i][1];
@@ -85,7 +85,8 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 	talk_save.reserve(120);
 	for(i = 0; i < 120; i++){
 		cConvers t;
-		t = old.talk_save[i];
+		// TODO: Fix up this conversion by looking up the required strings.
+//		t = old.talk_save[i];
 		talk_save.push_back(t);
 //		talk_save[i] = old.talk_save[i];
 		help_received[i] = old.help_received[i];
@@ -121,10 +122,11 @@ void cParty::append(legacy::setup_save_type& old){
 }
 
 cParty::cConvers& cParty::cConvers::operator = (legacy::talk_save_type old){
-	personality = old.personality;
-	town_num = old.town_num;
-	str_num1 = old.str1;
-	str_num2 = old.str2;
+	// TODO: Fix up this conversion by looking up the required strings.
+//	personality = old.personality;
+//	town_num = old.town_num;
+//	str_num1 = old.str1;
+//	str_num2 = old.str2;
 	return *this;
 }
 
@@ -149,53 +151,46 @@ void cParty::add_pc(cPlayer new_pc){
 		}
 }
 
-bool cParty::has_talk_save(short who, short where, short str1, short str2){
-	cConvers match = {who, where, str1, str2};
-	if(std::find(talk_save.begin(), talk_save.end(), match) != talk_save.end())
+bool cParty::save_talk(const std::string& who, const std::string& where, const std::string& str1, const std::string& str2){
+	if(talk_save.size() == talk_save.max_size()) return false; // This is extremely unlikely
+	cConvers talk;
+	talk.who_said = who;
+	talk.in_town = where;
+	talk.the_str1 = str1;
+	talk.the_str2 = str2;
+	talk.in_scen = scen_name;
+	if(std::find(talk_save.begin(), talk_save.end(), talk) == talk_save.end()) {
+		talk_save.push_back(talk);
 		return true;
+	}
 	return false;
 }
 
-bool cParty::save_talk(short who, unsigned char where, short str1, short str2){
-	if(talk_save.size() == talk_save.max_size()) return false; // This is extremely unlikely
-	cConvers talk;
-	talk.personality = who;
-	talk.town_num = where;
-	talk.str_num1 = str1;
-	talk.str_num2 = str2;
-	talk.in_scen = scen_name;
-	// TODO: locate the strings and store them in the record.
-	if(std::find(talk_save.begin(), talk_save.end(), talk) == talk_save.end()) {
-		talk_save.push_back(talk);
-	}
-	return true;
-}
-
-bool cParty::add_to_journal(short event, short day){
+bool cParty::add_to_journal(const std::string& event, short day){
 	if(journal.size() == journal.max_size()) return false; // Practically impossible
 	cJournal entry;
-	entry.str_num = event;
 	entry.day = day;
+	entry.the_str = event;
 	entry.in_scen = scen_name;
-	// TODO: locate the strings and store them in the record.
 	if(std::find(journal.begin(), journal.end(), entry) == journal.end()) {
 		journal.push_back(entry);
+		return true;
 	}
-	return true;
+	return false;
 }
 
-bool cParty::record(eEncNoteType type, short what, short where){
+bool cParty::record(eEncNoteType type, const std::string& what, const std::string& where){
 	if(special_notes.size() == special_notes.max_size()) return false; // Never happen
 	cEncNote note;
 	note.type = type;
-	note.str_num = what;
+	note.the_str = what;
 	note.where = where;
 	note.in_scen = scen_name;
-	// TODO: locate the strings and store them in the record.
 	if(std::find(special_notes.begin(), special_notes.end(), note) == special_notes.end()) {
 		special_notes.push_back(note);
+		return true;
 	}
-	return true;
+	return false;
 }
 
 bool cParty::start_timer(short time, short node, short type){
@@ -273,36 +268,7 @@ void cParty::writeTo(std::ostream& file){
 		if(graphicUsed[i])
 			file << "GRAPHIC " << i << '\n';
 	for(auto iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
-		std::string campaign_id = iter->first;
-		if(campaign_id.find_first_of(' ') != std::string::npos || campaign_id[0] == '"' || campaign_id[0] == '\'') {
-			// The string contains spaces or starts with a quote, so quote it.
-			// We may have to escape quotes or backslashes.
-			int apos = 0, quot = 0, bslash = 0;
-			std::for_each(campaign_id.begin(), campaign_id.end(), [&apos,&quot,&bslash](char c) {
-				if(c == '\'') apos++;
-				if(c == '"') quot++;
-				if(c == '\\') bslash++;
-			});
-			char quote_c;
-			// Surround it in whichever quote character appears fewer times.
-			if(quot < apos) quote_c = '"';
-			else quote_c = '\'';
-			// Let's create this string to initially have the required size.
-			std::string temp;
-			size_t quoted_len = campaign_id.length() + std::min(quot,apos) + bslash + 2;
-			temp.reserve(quoted_len);
-			temp += quote_c;
-			for(size_t i = 0; i < campaign_id.length(); i++) {
-				if(campaign_id[i] == quote_c) {
-					temp += '\\';
-					temp += quote_c;
-				} else if(campaign_id[i] == '\\')
-					temp += "\\\\";
-				else temp += campaign_id[i];
-			}
-			temp += quote_c;
-			campaign_id.swap(temp);
-		}
+		std::string campaign_id = maybe_quote_string(iter->first);
 		// Okay, we have the campaign ID in a state such that reading it back in will restore the original ID.
 		// Now output any flags that are set for this campaign.
 		for(unsigned int i = 0; i < 25; i++)
@@ -379,27 +345,24 @@ void cParty::writeTo(std::ostream& file){
 	if(journal.size() > 0) {
 		file << '\f';
 		for(cJournal& entry : journal) {
-			file << "JOURNAL " << entry.str_num << ' ' << entry.day << ' ' << maybe_quote_string(entry.in_scen) << '\n';
-			// TODO: Save the actual string, if the player has asked us to
+			file << "JOURNAL " << entry.day << ' ' << maybe_quote_string(entry.in_scen) << '\n' << entry.the_str << '\n';
 			file << '\f';
 		}
 	}
 	if(special_notes.size() > 0) {
 		file << '\f';
 		for(cEncNote& note : special_notes) {
-			file << "ENCNOTE " << note.type << ' ' << note.str_num << ' ' << note.where << '\n';
-			// TODO: Save the actual strings, if the player has asked us to
+			file << "ENCNOTE " << note.type << ' ' << maybe_quote_string(note.where) << '\n' << note.the_str << '\n';
 			file << '\f';
 		}
 	}
 	if(talk_save.size() > 0) {
 		file << '\f';
 		for(cConvers& note : talk_save) {
-			file << "TALKNOTE " << note.str_num1 << ' ' << note.str_num2 << '\n';
-			file << "WHO " << note.personality << '\n';
-			file << "WHERE " << note.town_num << ' ' << note.in_scen << '\n';
-			file << "-\n";
-			// TODO: Save the actual strings and names, if the player has asked us to
+			file << "TALKNOTE";
+			file << "WHO " << maybe_quote_string(note.who_said) << '\n';
+			file << "WHERE " << maybe_quote_string(note.in_town) << ' ' << maybe_quote_string(note.in_scen) << '\n';
+			file << "-\n" << note.the_str1 << '\n' << note.the_str2 << '\n';
 			file << '\f';
 		}
 	}
@@ -585,31 +548,30 @@ void cParty::readFrom(std::istream& file){
 			summons.push_back(monst);
 		} else if(cur == "JOURNAL") {
 			cJournal entry;
-			bin >> entry.str_num >> entry.day;
+			bin >> entry.day;
 			entry.in_scen = read_maybe_quoted_string(bin);
+			bin >> std::skipws;
 			getline(bin, entry.the_str);
 		} else if(cur == "ENCNOTE") {
 			cEncNote note;
-			bin >> note.type >> note.str_num >> note.where;
-			getline(bin, note.the_str1);
-			getline(bin, note.the_str2);
+			bin >> note.type;
+			note.where = read_maybe_quoted_string(bin);
+			bin >> std::skipws;
+			getline(bin, note.the_str);
 		} else if(cur == "TALKNOTE") {
 			cConvers note;
-			bin >> note.str_num1 >> note.str_num2;
 			while(bin) {
 				getline(bin, cur);
 				std::istringstream sin(cur);
 				sin >> cur;
 				if(cur == "WHO")
-					sin >> note.personality;
+					note.who_said = read_maybe_quoted_string(bin);
 				else if(cur == "WHERE") {
-					sin >> note.town_num;
+					note.in_town = read_maybe_quoted_string(bin);
 					note.in_scen = read_maybe_quoted_string(sin);
-				} else if(cur == "NAMES") {
-					note.in_town = read_maybe_quoted_string(sin);
-					note.who_said = read_maybe_quoted_string(sin);
 				} else if(cur == "-") break;
 			}
+			bin >> std::skipws;
 			getline(bin, note.the_str1);
 			getline(bin, note.the_str2);
 		}
@@ -731,16 +693,16 @@ short cParty::pc_present(){
 }
 
 bool operator==(const cParty::cConvers& one, const cParty::cConvers& two) {
-	if(one.personality != two.personality) return false;
-	if(one.town_num != two.town_num) return false;
-	if(one.str_num1 != two.str_num1) return false;
-	if(one.str_num2 != two.str_num2) return false;
+	if(one.who_said != two.who_said) return false;
+	if(one.in_town != two.in_town) return false;
+	if(one.the_str1 != two.the_str1) return false;
+	if(one.the_str2 != two.the_str2) return false;
 	if(one.in_scen != two.in_scen) return false;
 	return true;
 }
 
 bool operator==(const cParty::cJournal& one, const cParty::cJournal& two) {
-	if(one.str_num != two.str_num) return false;
+	if(one.the_str != two.the_str) return false;
 	// TODO: Should I compare the day as well?
 	if(one.in_scen != two.in_scen) return false;
 	return true;
@@ -748,7 +710,7 @@ bool operator==(const cParty::cJournal& one, const cParty::cJournal& two) {
 
 bool operator==(const cParty::cEncNote& one, const cParty::cEncNote& two) {
 	if(one.type != two.type) return false;
-	if(one.str_num != two.str_num) return false;
+	if(one.the_str != two.the_str) return false;
 	if(one.where != two.where) return false;
 	if(one.in_scen != two.in_scen) return false;
 	return true;

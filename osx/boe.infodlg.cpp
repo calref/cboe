@@ -700,8 +700,6 @@ void give_pc_info(short pc_num) {
 
 static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	unsigned short i;
-	std::string place_str;
-	char temp_str[256];
 	
 	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
@@ -722,23 +720,7 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 	for(i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party.special_notes.size() > i) {
-			switch(univ.party.special_notes[i].str_num / 1000) {
-				case 0:
-					// TODO: Should we subtract 160 here?
-					place_str = scenario.spec_strs[univ.party.special_notes[i].str_num % 1000];
-					break;
-				case 1:
-					load_outdoor_str(loc(univ.party.special_notes[i].where % scenario.out_width,
-										 univ.party.special_notes[i].where / scenario.out_width),univ.party.special_notes[i].str_num % 1000,temp_str);
-					place_str = temp_str;
-					break;
-				case 2:
-					load_town_str(univ.party.special_notes[i].where,univ.party.special_notes[i].str_num,temp_str);
-					place_str = temp_str;
-					break;
-			}
-			
-			me["str" + n].setText(place_str);
+			me["str" + n].setText(univ.party.special_notes[i].the_str);
 			me["del" + n].show();
 		}
 		else me["del" + n].hide();
@@ -747,24 +729,7 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 	for(i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party.special_notes.size() > i) {
-			switch(univ.party.special_notes[i].str_num / 1000) {
-				case 0:
-					// TODO: Should we subtract 160 here?
-					place_str = scenario.spec_strs[univ.party.special_notes[i].str_num % 1000];
-					break;
-				case 1:
-					load_outdoor_str(loc(univ.party.special_notes[i].where % scenario.out_width,
-										 univ.party.special_notes[i].where / scenario.out_width), univ.party.special_notes[i].str_num % 1000,temp_str);
-					place_str = temp_str;
-					break;
-				case 2:
-					load_town_str(univ.party.special_notes[i].where,univ.party.special_notes[i].str_num % 1000,temp_str);
-					place_str = temp_str;
-					break;
-			}
-			
-			
-			me["str" + n].setText(place_str);
+			me["str" + n].setText(univ.party.special_notes[i].the_str);
 			me["del" + n].show();
 		}
 		else {
@@ -778,8 +743,6 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 void adventure_notes() {
 	
 	unsigned short i;
-	std::string place_str;
-	char temp_str[256];
 	
 	store_num_i = 0;
 	//for(i = 0; i < 140; i++)
@@ -800,23 +763,7 @@ void adventure_notes() {
 	for(i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party.special_notes.size() > i) {
-			switch(univ.party.special_notes[i].str_num / 1000) {
-				case 0:
-					// TODO: Should we subtract 160 here?
-					place_str = scenario.spec_strs[univ.party.special_notes[i].str_num % 1000];
-					break;
-				case 1:
-					load_outdoor_str(loc(univ.party.special_notes[i].where % scenario.out_width,
-										 univ.party.special_notes[i].where / scenario.out_width), univ.party.special_notes[i].str_num % 1000, temp_str);
-					place_str = temp_str;
-					break;
-				case 2:
-					load_town_str(univ.party.special_notes[i].where,univ.party.special_notes[i].str_num % 1000,temp_str);
-					place_str = temp_str;
-					break;
-			}
-			
-			encNotes["str" + n].setText(place_str);
+			encNotes["str" + n].setText(univ.party.special_notes[i].the_str);
 			encNotes["del" + n].show();
 		}
 		else encNotes["del" + n].hide();
@@ -830,42 +777,11 @@ void adventure_notes() {
 }
 
 static void put_talk(cDialog& me) {
-	short personality;
-	char place_str[256];
-	
-	if((personality = univ.party.talk_save[store_page_on].personality) >= 0) {
-		load_town_talk(personality / 10);
-		
-		// TODO: Use cached strings instead of loading them
-		load_town_str(univ.party.talk_save[store_page_on].town_num,0,(char *) place_str);
-		me["loc"].setText(place_str);
-		
-		me["who"].setText(univ.town.cur_talk().talk_strs[personality % 10]);
-		
-		// TODO: Should we alter the scenario strings by 160 or not?
-		if(univ.party.talk_save[store_page_on].str_num1 >= 1000) {
-			if(univ.party.talk_save[store_page_on].str_num1 >= 3000)
-				me["str1"].setText(scenario.spec_strs[univ.party.talk_save[store_page_on].str_num1 - 3000]);
-			else {
-				load_town_str(univ.party.talk_save[store_page_on].town_num,
-							  univ.party.talk_save[store_page_on].str_num1 - 2000 ,(char *) place_str);
-				me["str1"].setText(place_str);
-			}
-		}
-		else if(univ.party.talk_save[store_page_on].str_num1 > 0)
-			me["str1"].setText(univ.town.cur_talk().talk_strs[univ.party.talk_save[store_page_on].str_num1]);
-		
-		if(univ.party.talk_save[store_page_on].str_num2 >= 1000) {
-			if(univ.party.talk_save[store_page_on].str_num2 >= 3000)
-				me["str2"].setText(scenario.spec_strs[univ.party.talk_save[store_page_on].str_num2 - 3000 + 160]);
-			else {
-				load_town_str(univ.party.talk_save[store_page_on].town_num,
-							  univ.party.talk_save[store_page_on].str_num2 - 2000/* + 20*/,(char *) place_str);
-				me["str2"].setText(place_str);
-			}
-		}
-		else if(univ.party.talk_save[store_page_on].str_num2 > 0)
-			me["str2"].setText(univ.town.cur_talk().talk_strs[univ.party.talk_save[store_page_on].str_num2]);
+	if(univ.party.talk_save[store_page_on].filled) {
+		me["loc"].setText(univ.party.talk_save[store_page_on].in_town);
+		me["who"].setText(univ.party.talk_save[store_page_on].who_said);
+		me["str1"].setText(univ.party.talk_save[store_page_on].the_str1);
+		me["str2"].setText(univ.party.talk_save[store_page_on].the_str2);
 	}
 }
 
@@ -880,8 +796,8 @@ static bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 			store_page_on = 0;
 		else store_page_on++;
 	} else if(item_hit == "del") {
-		// TODO: Actually remove it rather than setting it to -1
-		univ.party.talk_save[store_page_on].personality = -1;
+		// TODO: Actually remove it rather than filled to false
+		univ.party.talk_save[store_page_on].filled = false;
 	}
 	put_talk(me);
 	return true;
@@ -893,7 +809,7 @@ void talk_notes() {
 	
 	store_num_i = 0;
 	for(i = 0; i < 120; i++)
-		if(univ.party.talk_save[i].personality != -1)
+		if(univ.party.talk_save[i].filled)
 			store_num_i = i + 1;
 	store_page_on = 0;
 	if(store_num_i == 0) {
@@ -933,7 +849,7 @@ static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	for(i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if((long)univ.party.journal.size() > i + (store_page_on * 3)) {
-			me["str" + n].setText(scenario.journal_strs[univ.party.journal[i].str_num]);
+			me["str" + n].setText(univ.party.journal[i].the_str);
 			sprintf((char *)place_str,"Day: %d",univ.party.journal[i].day);
 			me["day" + n].setText(place_str);
 		}
@@ -963,9 +879,8 @@ void journal() {
 	
 	for(i = 0; i < 3; i++) {
 		if(univ.party.journal.size() > i) {
-			// TODO: Use the cached strings instead of looking them up
 			std::string n = boost::lexical_cast<std::string>(i + 1);
-			journal["str" + n].setText(scenario.journal_strs[univ.party.journal[i].str_num]);
+			journal["str" + n].setText(univ.party.journal[i].the_str);
 			sprintf((char *)place_str,"Day: %d",univ.party.journal[i].day);
 			journal["day" + n].setText(place_str);
 		}
@@ -978,7 +893,7 @@ void journal() {
 	journal.run();
 }
 void add_to_journal(short event) {
-	if(univ.party.add_to_journal(event, calc_day()))
+	if(univ.party.add_to_journal(scenario.journal_strs[event], calc_day()))
 		ASB("Something was added to your journal.");
 }
 
@@ -1027,8 +942,27 @@ void put_spec_item_info (short which_i) {
 // Callback for recording encounter strings
 void cStringRecorder::operator()(cDialog& me) {
 	play_sound(0);
-	if(univ.party.record(str1type, label1, label1b))
+	std::string str1, str2;
+	switch(type) {
+		case NOTE_SCEN:
+			str1 = scenario.spec_strs[label1];
+			str2 = scenario.spec_strs[label2];
+			break;
+		case NOTE_TOWN:
+			str1 = univ.town->spec_strs[label1];
+			str2 = univ.town->spec_strs[label2];
+			break;
+		case NOTE_OUT:
+			str1 = univ.out.outdoors[label1b][label2b].spec_strs[label1];
+			str2 = univ.out.outdoors[label1b][label2b].spec_strs[label2];
+			break;
+		case NOTE_MONST:
+			str1 = scenario.monst_strs[label1];
+			str2 = scenario.monst_strs[label2];
+			break;
+	}
+	if(univ.party.record(type, str1, location))
 		give_help(58,0,&me);
-	univ.party.record(str2type, label2, label2b);
+	univ.party.record(type, str2, location);
 }
 

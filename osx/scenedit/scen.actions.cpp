@@ -3349,7 +3349,7 @@ void start_dialogue_editing(short restoring) {
 	}
 	for(i = 0; i < 10; i++) {
 		sprintf((char *) str,"Personality %d - %s",i + cur_town * 10,
-				(char *) town->talking.talk_strs[i]);
+				town->talking.people[i].title.c_str());
 		set_rb(i,13000 + i,(char *) str,0);
 	}
 	for(i = 0; i < 60; i++) {

@@ -284,8 +284,23 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 	
 	for(i = 0; i < 170; i++) {
 		len = (long) (the_town->talking.strlens[i]);
-		n = fread(&(the_town->talking.talk_strs[i]), len, 1, file_id);
-		the_town->talking.talk_strs[i][len] = 0;
+		n = fread(temp_str, len, 1, file_id);
+		temp_str[len] = 0;
+		if(i >= 0 && i < 10)
+			the_town->talking.people[i].title = temp_str;
+		else if(i >= 10 && i < 20)
+			the_town->talking.people[i-10].look = temp_str;
+		else if(i >= 20 && i < 30)
+			the_town->talking.people[i-20].name = temp_str;
+		else if(i >= 30 && i < 40)
+			the_town->talking.people[i-30].job = temp_str;
+		else if(i >= 160)
+			the_town->talking.people[i-160].dunno = temp_str;
+		else {
+			if(i % 2 == 0)
+				the_town->talking.talk_nodes[(i-40)/2].str1 = temp_str;
+			else the_town->talking.talk_nodes[(i-40)/2].str2 = temp_str;
+		}
 	}
 	
 	n = fclose(file_id);
@@ -317,6 +332,7 @@ bool load_town(short which_town, cTown*& the_town) {
 
 static bool load_town_talk_v1(short which_town) {
 	if(univ.town.prep_talk(which_town)) return true;
+	char temp_str[256];
 	
 	short i,n;
 	long len,len_to_jump = 0;
@@ -384,8 +400,22 @@ static bool load_town_talk_v1(short which_town) {
 	
 	for(i = 0; i < 170; i++) {
 		len = (long) (the_talk.strlens[i]);
-		n = fread(&(the_talk.talk_strs[i]), len, 1, file_id);
-		the_talk.talk_strs[i][len] = 0;
+		n = fread(temp_str, len, 1, file_id);
+		temp_str[len] = 0;
+		if(i >= 0 && i < 10)
+			the_talk.people[i].title = temp_str;
+		else if(i >= 10 && i < 20)
+			the_talk.people[i-10].look = temp_str;
+		else if(i >= 20 && i < 30)
+			the_talk.people[i-20].name = temp_str;
+		else if(i >= 30 && i < 40)
+			the_talk.people[i-30].job = temp_str;
+		else if(i >= 160)
+			the_talk.people[i-160].dunno = temp_str;
+		else {
+			if(i % 2 == 0) the_talk.talk_nodes[(i-40)/2].str1 = temp_str;
+			else the_talk.talk_nodes[(i-40)/2].str2 = temp_str;
+		}
 	}
 	
 	n = fclose(file_id);
@@ -1003,6 +1033,8 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 	
 	fin.close();
 	
+	// TODO: Need to convert after loading the scenario in order to look up saved strings.
+	// However, for that to work, the entire scenario (all towns and sections) would need to be in memory.
 	univ.party = store_party;
 	univ.party.append(store_setup);
 	univ.party.void_pcs();
@@ -1033,6 +1065,7 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 	}
 	
 	// Compatibility flags
+	// TODO: Pretty sure I did this elsewhere, so probably don't need it here
 	if(in_scen && scenario.format.prog_make_ver[0] < 2){
 		univ.party.stuff_done[305][8] = 1;
 	} else {
@@ -1228,6 +1261,7 @@ bool save_party(fs::path dest_file) {
 
 std::string read_maybe_quoted_string(std::istream& from) {
 	std::string result;
+	from >> std::skipws;
 	if(from.peek() == '"' ||  from.peek() == '\'') {
 		char delim = from.get();
 		getline(from, result, delim);
@@ -1243,20 +1277,35 @@ std::string read_maybe_quoted_string(std::istream& from) {
 }
 
 std::string maybe_quote_string(std::string which) {
-	if(which.find(' ') == std::string::npos && which.find('\t') == std::string::npos)
-		return which;
-	if(which.find('\'') == std::string::npos)
-		return '\'' + which + '\'';
-	if(which.find('"') == std::string::npos)
-		return '"' + which + '"';
-	std::ostringstream fmt;
-	std::string part;
-	fmt << '"';
-	for(char c : which) {
-		if(c == '"') fmt << R"(\")";
-		else fmt.put(c);
+	if(which.find_first_of(' ') != std::string::npos || which[0] == '"' || which[0] == '\'') {
+		// The string contains spaces or starts with a quote, so quote it.
+		// We may have to escape quotes or backslashes.
+		int apos = 0, quot = 0, bslash = 0;
+		std::for_each(which.begin(), which.end(), [&apos,&quot,&bslash](char c) {
+			if(c == '\'') apos++;
+			if(c == '"') quot++;
+			if(c == '\\') bslash++;
+		});
+		char quote_c;
+		// Surround it in whichever quote character appears fewer times.
+		if(quot < apos) quote_c = '"';
+		else quote_c = '\'';
+		// Let's create this string to initially have the required size.
+		std::string temp;
+		size_t quoted_len = which.length() + std::min(quot,apos) + bslash + 2;
+		temp.reserve(quoted_len);
+		temp += quote_c;
+		for(size_t i = 0; i < which.length(); i++) {
+			if(which[i] == quote_c) {
+				temp += '\\';
+				temp += quote_c;
+			} else if(which[i] == '\\')
+				temp += R"(\\)";
+			else temp += which[i];
+		}
+		temp += quote_c;
+		which.swap(temp);
 	}
-	fmt << '"';
-	return fmt.str();
+	return which;
 }
 

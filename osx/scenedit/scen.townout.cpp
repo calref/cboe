@@ -74,11 +74,13 @@ void init_town(short size) {
 	
 	for(i = 0; i < 200; i++)
 		town->talking.strlens[i] = 0;
-	for(i = 0; i < 170; i++)
-		if(i < 10)
-			strcpy(town->talking.talk_strs[i],"Unused");
-		else strcpy(town->talking.talk_strs[i],"");
-	
+	for(i = 0; i < 10; i++) {
+		town->talking.people[i].title = "Unused";
+		town->talking.people[i].look = "";
+		town->talking.people[i].name = "";
+		town->talking.people[i].job = "";
+		town->talking.people[i].dunno = "";
+	}
 	for(i = 0; i < 60; i++) {
 		town->talking.talk_nodes[i].personality = -1;
 		town->talking.talk_nodes[i].type = 0;
@@ -86,6 +88,8 @@ void init_town(short size) {
 		town->talking.talk_nodes[i].extras[1] = 0;
 		town->talking.talk_nodes[i].extras[2] = 0;
 		town->talking.talk_nodes[i].extras[3] = -1;
+		town->talking.talk_nodes[i].str1 = "";
+		town->talking.talk_nodes[i].str2 = "";
 		for(j = 0; j < 4; j++) {
 			town->talking.talk_nodes[i].link1[j] = 'x';
 			town->talking.talk_nodes[i].link2[j] = 'x';

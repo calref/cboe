@@ -71,6 +71,7 @@ short store_tip_page_on = 0;
 // Talking vars
 eGameMode store_pre_talk_mode;
 short store_personality,store_personality_graphic,shop_identify_cost;
+std::string save_talk_str1, save_talk_str2;
 sf::RenderTexture talk_gworld;
 bool talk_end_forced;
 RECT talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
@@ -544,7 +545,7 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	store_responses();
 	
 	// Dredge up critter's name
-	title_string = std::string(univ.town.cur_talk().talk_strs[personality % 10]) + ":";
+	title_string = std::string(univ.town.cur_talk().people[personality % 10].title) + ":";
 	
 	store_pre_talk_mode = overall_mode;
 	overall_mode = MODE_TALKING;
@@ -553,7 +554,7 @@ void start_talk_mode(short m_num,short personality,m_num_t monst_type,short stor
 	current_talk_node = TALK_LOOK;
 	
 	// Bring up and place first strings.
-	place_string1 = univ.town.cur_talk().talk_strs[personality % 10 + 10];
+	place_string1 = univ.town.cur_talk().people[personality % 10].look;
 	strnum1 = personality % 10 + 10;
 	strnum2 = 0;
 	
@@ -584,7 +585,6 @@ void end_talk_mode() {
 void handle_talk_event(location p) {
 	short i,get_pc,s1 = -1,s2 = -1,s3 = -1;
 	char asked[4];
-	std::string place_string1, place_string2;
 	
 	short a,b,c,d,ttype;
 	
@@ -611,9 +611,9 @@ void handle_talk_event(location p) {
 	switch(which_talk_entry) {
 		case TALK_DUNNO:
 		SPECIAL_DUNNO:
-			place_string1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 160];
-			if(place_string1.length() < 2) place_string1 = "You get no response.";
-			place_talk_str(place_string1, "", 0, dummy_rect);
+			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].dunno;
+			if(save_talk_str1.length() < 2) save_talk_str1 = "You get no response.";
+			place_talk_str(save_talk_str1, "", 0, dummy_rect);
 			update_last_talk(TALK_DUNNO);
 			return;
 		case TALK_BUSINESS: // This one only reachable via "go back".
@@ -622,20 +622,20 @@ void handle_talk_event(location p) {
 			return;
 		case TALK_LOOK:
 		SPECIAL_LOOK:
-			place_string1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 10];
-			place_talk_str(place_string1, "", 0, dummy_rect);
+			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].look;
+			place_talk_str(save_talk_str1, "", 0, dummy_rect);
 			update_last_talk(TALK_LOOK);
 			return;
 		case TALK_NAME:
 		SPECIAL_NAME:
-			place_string1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 20];
-			place_talk_str(place_string1, "", 0, dummy_rect);
+			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].name;
+			place_talk_str(save_talk_str1, "", 0, dummy_rect);
 			update_last_talk(TALK_NAME);
 			return;
 		case TALK_JOB:
 		SPECIAL_JOB:
-			place_string1 = univ.town.cur_talk().talk_strs[store_personality % 10 + 30];
-			place_talk_str(place_string1, "", 0, dummy_rect);
+			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].job;
+			place_talk_str(save_talk_str1, "", 0, dummy_rect);
 			update_last_talk(TALK_JOB);
 			return;
 		case TALK_BUY:
@@ -657,20 +657,11 @@ void handle_talk_event(location p) {
 				beep();
 				return;
 			}
-			if(univ.party.has_talk_save(store_personality, univ.town.num, strnum1, strnum2)){
-				ASB("This is already saved.");
-				print_buf();
-				return;
-			} else {
+			if(univ.party.save_talk(univ.town->talking.people[store_personality].title, univ.town->town_name, save_talk_str1, save_talk_str2)) {
 				give_help(57,0);
 				play_sound(0);
-				bool success = univ.party.save_talk(store_personality,univ.town.num,strnum1,strnum2);
-				if(success){
-					ASB("Noted in journal.");
-				} else {
-					ASB("No more room in talking journal.");
-				}
-			}
+				ASB("Noted in journal.");
+			} else ASB("This is already saved.");
 			print_buf();
 			return;
 		case TALK_DONE:
@@ -680,8 +671,8 @@ void handle_talk_event(location p) {
 		case TALK_BACK: // only if there's nothing to go back to
 			return; // so, there's nothing to do here
 		case TALK_ASK: // ask about
-			place_string1 = get_text_response("Ask about what?", 8);
-			strncpy(asked, place_string1.c_str(), 4);
+			save_talk_str1 = get_text_response("Ask about what?", 8);
+			strncpy(asked, save_talk_str1.c_str(), 4);
 			if(strncmp(asked, "name", 4) == 0) goto SPECIAL_NAME;
 			if(strncmp(asked, "look", 4) == 0) goto SPECIAL_LOOK;
 			if(strncmp(asked, "job", 3) == 0)  goto SPECIAL_JOB;
@@ -701,8 +692,8 @@ void handle_talk_event(location p) {
 	c = univ.town.cur_talk().talk_nodes[which_talk_entry].extras[2];
 	d = univ.town.cur_talk().talk_nodes[which_talk_entry].extras[3];
 	
-	place_string1 = univ.town.cur_talk().talk_strs[40 + which_talk_entry * 2];
-	place_string2 = univ.town.cur_talk().talk_strs[40 + which_talk_entry * 2 + 1];
+	save_talk_str1 = univ.town.cur_talk().talk_nodes[which_talk_entry].str1;
+	save_talk_str2 = univ.town.cur_talk().talk_nodes[which_talk_entry].str2;
 	
 	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
@@ -713,9 +704,9 @@ void handle_talk_event(location p) {
 		case 1:
 			if(PSD[a][b] > c) {
 				strnum1 = strnum2;
-				place_string1 = place_string2;
+				save_talk_str1 = save_talk_str2;
 			}
-			place_string2 = "";
+			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
 		case 2:
@@ -724,7 +715,7 @@ void handle_talk_event(location p) {
 		case 3:
 			if(univ.party.gold < a) {
 				strnum1 = strnum2;
-				place_string1 = place_string2;
+				save_talk_str1 = save_talk_str2;
 			}
 			else {
 				talk_end_forced = true;
@@ -736,36 +727,35 @@ void handle_talk_event(location p) {
 				center = univ.town.p_loc;
 			}
 			strnum2 = 0;
-			place_string2 = "";
+			save_talk_str2 = "";
 			break;
 		case 4:
 			if(day_reached((unsigned char) a,0)) {
 				strnum1 = strnum2;
-				place_string1 = place_string2;
+				save_talk_str1 = save_talk_str2;
 			}
-			place_string2 = "";
+			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
 		case 5:
 			if(day_reached((unsigned char) a,(unsigned char) b)) {
 				strnum1 = strnum2;
-				place_string1 = place_string2;
+				save_talk_str1 = save_talk_str2;
 			}
-			place_string2 = "";
+			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
 		case 6:
 			if(univ.town.num != a) {
 				strnum1 = strnum2;
-				place_string1 = place_string2;
+				save_talk_str1 = save_talk_str2;
 			}
-			place_string2 = "";
+			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
 		case 7:
 			c = minmax(1,30,c);
-			start_shop_mode(2,b,
-							b + c - 1,a,place_string1.c_str());
+			start_shop_mode(2,b,b + c - 1,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
 		case 8:
@@ -773,19 +763,18 @@ void handle_talk_event(location p) {
 				strnum1 = -1;
 				spend_xp(get_pc,1, NULL);
 			}
-			place_string1 = "You conclude your training.";
+			save_talk_str1 = "You conclude your training.";
 			return;
 			
 		case 9: case 10: case 11:
 			c = minmax(1,30,c);
-			start_shop_mode(ttype + 1,b,
-							b + c - 1,a,place_string1.c_str());
+			start_shop_mode(ttype + 1,b,b + c - 1,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
 		case 12: //healer
 			// TODO: extra1 and extra2 are actually never used! So remove them.
 			start_shop_mode(3,univ.town.monst[store_m_num].extra1,
-							univ.town.monst[store_m_num].extra2,a,place_string1.c_str());
+							univ.town.monst[store_m_num].extra2,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
 			break;
@@ -817,24 +806,24 @@ void handle_talk_event(location p) {
 		case 18:
 			if(univ.party.gold < a) {
 				strnum1 = strnum2;
-				place_string1 = place_string2;
+				save_talk_str1 = save_talk_str2;
 			}
 			else {
 				univ.party.gold -= a;
 				put_pc_screen();
 				
 			}
-			place_string2 = "";
+			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
 		case 19:
 			if((sd_legit(b,c)) && (PSD[b][c] == d)) {
-				place_string1 = "You've already learned that.";
+				save_talk_str1 = "You've already learned that.";
 				strnum1 = -1;
 			}
 			else if(univ.party.gold < a) {
 				strnum1 = strnum2;
-				place_string1 + place_string2;
+				save_talk_str1 + save_talk_str2;
 			}
 			else {
 				univ.party.gold -= a;
@@ -844,14 +833,14 @@ void handle_talk_event(location p) {
 				else giveError("Invalid Stuff Done flag called in conversation.");
 			}
 			strnum2 = 0;
-			place_string2 = "";
+			save_talk_str2 = "";
 			break;
 		case 20:
 			if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
-				place_string1 = place_string2;
-				place_string2 = "";
+				save_talk_str1 = save_talk_str2;
+				save_talk_str2 = "";
 				break;
 			}
 			else {
@@ -860,15 +849,15 @@ void handle_talk_event(location p) {
 						univ.party.gold -= a;
 						put_pc_screen();
 						univ.party.boats[i].property = false;
-						place_string2 = "";
+						save_talk_str2 = "";
 						strnum2 = 0;
 						i = 1000;
 					}
 				if(i >= 1000)
 					break;
 			}
-			place_string1 = "There are no boats left.";
-			place_string2 = "";
+			save_talk_str1 = "There are no boats left.";
+			save_talk_str2 = "";
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
@@ -876,8 +865,8 @@ void handle_talk_event(location p) {
 			if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
-				place_string1 = place_string2;
-				place_string2 = "";
+				save_talk_str1 = save_talk_str2;
+				save_talk_str2 = "";
 				break;
 			}
 			else {
@@ -886,25 +875,25 @@ void handle_talk_event(location p) {
 						univ.party.gold -= a;
 						put_pc_screen();
 						univ.party.horses[i].property = false;
-						place_string2 = "";
+						save_talk_str2 = "";
 						strnum2 = 0;
 						i = 1000;
 					}
 				if(i >= 1000)
 					break;
 			}
-			place_string1 = "There are no horses left.";
-			place_string2 = "";
+			save_talk_str1 = "There are no horses left.";
+			save_talk_str2 = "";
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
 		case 22:
 			if(univ.party.spec_items[a] > 0) {
-				place_string1 = "You already have it.";
+				save_talk_str1 = "You already have it.";
 				strnum1 = -1;
 			}
 			else if(univ.party.gold < b) {
-				place_string1 = place_string2;
+				save_talk_str1 = save_talk_str2;
 				strnum1 = strnum2;
 			}
 			else {
@@ -913,11 +902,11 @@ void handle_talk_event(location p) {
 				univ.party.spec_items[a] = 1;
 			}
 			strnum2 = 0;
-			place_string2 = "";
+			save_talk_str2 = "";
 			break;
 		case 23:
 			start_shop_mode(5 + b,0,
-							9,a,place_string1.c_str());
+							9,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
 		case 24:
@@ -926,7 +915,7 @@ void handle_talk_event(location p) {
 			}
 			else if(univ.party.gold < a) {
 				strnum1 = strnum2;
-				place_string1 = place_string2;
+				save_talk_str1 = save_talk_str2;
 			}
 			else {
 				univ.party.gold -= a;
@@ -934,7 +923,7 @@ void handle_talk_event(location p) {
 				univ.party.can_find_town[b] = 1;
 			}
 			strnum2 = 0;
-			place_string2 = "";
+			save_talk_str2 = "";
 			break;
 		case 25:
 			talk_end_forced = true;
@@ -963,10 +952,10 @@ void handle_talk_event(location p) {
 			if((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				place_string1 = "";
-				place_string2 = "";
+				save_talk_str1 = "";
+				save_talk_str2 = "";
 			}
-			get_strs(place_string1,place_string2,2,s1,s2);
+			get_strs(save_talk_str1,save_talk_str2,2,s1,s2);
 			if(s1 >= 0) strnum1 = 2000 + s1;
 			if(s2 >= 0) strnum2 = 2000 + s2;
 			put_pc_screen();
@@ -978,10 +967,10 @@ void handle_talk_event(location p) {
 			if((s1 >= 0) || (s2 >= 0)) {
 				strnum1 = -1;
 				strnum2 = -1;
-				place_string1 = "";
-				place_string2 = "";
+				save_talk_str1 = "";
+				save_talk_str2 = "";
 			}
-			get_strs(place_string1,place_string2,0,s1,s2);
+			get_strs(save_talk_str1,save_talk_str2,0,s1,s2);
 			if(s1 >= 0) strnum1 = 3000 + s1;
 			if(s2 >= 0) strnum2 = 3000 + s2;
 			put_pc_screen();
@@ -989,7 +978,7 @@ void handle_talk_event(location p) {
 			break;
 	}
 	
-	place_talk_str(place_string1,place_string2,0,dummy_rect);
+	place_talk_str(save_talk_str1,save_talk_str2,0,dummy_rect);
 }
 
 void store_responses() {

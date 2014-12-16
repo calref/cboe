@@ -38,24 +38,20 @@ class cParty {
 public:
 	class cConvers { // conversation; formerly talk_save_type
 	public:
-		short personality;
-		short town_num;
-		short str_num1, str_num2;
-		std::string who_said, in_town, the_str1, the_str2, in_scen; // the actual strings; not always saved, like maps
+		bool filled = false;
+		std::string who_said, in_town, the_str1, the_str2, in_scen;
 		
 		cConvers& operator = (legacy::talk_save_type old);
 	};
 	class cJournal {
 	public:
-		unsigned short str_num;
 		unsigned short day;
-		std::string the_str, in_scen; // the actual strings; not always saved, like maps
+		std::string the_str, in_scen;
 	};
 	class cEncNote {
 	public:
 		eEncNoteType type;
-		unsigned short str_num, where;
-		std::string the_str1, the_str2, in_scen; // the actual strings; not always saved, like maps
+		std::string the_str, where, in_scen;
 	};
 	class cTimer {
 	public:
@@ -132,10 +128,9 @@ public:
 	void add_pc(legacy::pc_record_type old);
 	void add_pc(cPlayer new_pc);
 	void void_pcs();
-	bool has_talk_save(short who, short where, short str1, short str2);
-	bool save_talk(short who, unsigned char where, short str1, short str2);
-	bool add_to_journal(short event, short day);
-	bool record(eEncNoteType type, short what, short where);
+	bool save_talk(const std::string& who, const std::string& where, const std::string& str1, const std::string& str2);
+	bool add_to_journal(const std::string& event, short day);
+	bool record(eEncNoteType type, const std::string& what, const std::string& where);
 	bool start_timer(short time, short node, short type);
 	cPlayer& operator[](unsigned short n);
 	void writeTo(std::ostream& file);

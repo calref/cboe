@@ -1105,15 +1105,18 @@ void scen_text_dump(){
 				fout << "    Sign " << i << ": " << town->sign_strs[i] << endl;
 		fout << endl << "  Town Dialogue:" << endl;
 		for(i = 0; i < 10; i++) {
-			fout << "    Personality " << i << " (" << town->talking.talk_strs[i] << "): " << endl;
-			fout << "    look: " << town->talking.talk_strs[i + 10] << endl;
-			fout << "    name: " << town->talking.talk_strs[i + 20] << endl;
-			fout << "    job: " << town->talking.talk_strs[i + 30] << endl;
-			fout << "    confused: " << town->talking.talk_strs[i + 160] << endl;
+			fout << "    Personality " << j + i << " (" << town->talking.people[i].title << "): " << endl;
+			fout << "    look: " << town->talking.people[i].look << endl;
+			fout << "    name: " << town->talking.people[i].name << endl;
+			fout << "    job: " << town->talking.people[i].job << endl;
+			fout << "    confused: " << town->talking.people[i].dunno << endl;
 		}
-		for(i = 40; i < 160; i++)
-			if(strlen((char *) (town->talking.talk_strs[i])) > 0)
-				fout << "    Node " << i << ": " << town->talking.talk_strs[i] << endl;
+		for(i = 0; i < 60; i++) {
+			if(town->talking.talk_nodes[i].str1.length() > 0)
+				fout << "    Node " << i << "a: " << town->talking.talk_nodes[i].str1 << endl;
+			if(town->talking.talk_nodes[i].str2.length() > 0)
+				fout << "    Node " << i << "b: " << town->talking.talk_nodes[i].str2 << endl;
+		}
 		fout << endl;
 	}
 	fout.close();
