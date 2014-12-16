@@ -64,7 +64,6 @@ short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
 extern std::map<eSkill,short> skill_max;
 location store_special_loc;
 bool special_in_progress = false;
-short spec_str_offset[3] = {160,10,0};
 
 //// Pretty much all of this is new for BoE
 
@@ -2381,8 +2380,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.m1 < 0)
 				break;
 			for(i = 0; i < 3; i++)
-				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
-						 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
+				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type, spec.m1 + i * 2,spec.m1 + i * 2 + 1);
 			if(spec.m2 > 0) {
 				buttons[0] = 1;
 				buttons[1] = spec.ex1a;
@@ -2427,8 +2425,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.m1 < 0)
 				break;
 			for(i = 0; i < 3; i++)
-				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
-						 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1  + spec_str_offset[cur_spec_type]);
+				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type, spec.m1 + i * 2,spec.m1 + i * 2 + 1);
 			buttons[0] = 20; buttons[1] = 19;
 			//i = custom_choice_dialog(strs,spec.pic,buttons) ;
 			switch(cur_node.type) {
@@ -2480,10 +2477,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::ONCE_TRAP:
 			check_mess = false;
 			if((spec.m1 >= 0) || (spec.m2 >= 0)) {
-				get_strs(strs[0],strs[1],
-						 cur_spec_type,
-						 spec.m1 + ((spec.m1 >= 0) ? spec_str_offset[cur_spec_type] : 0),
-						 spec.m2 + ((spec.m2 >= 0) ? spec_str_offset[cur_spec_type] : 0));
+				get_strs(strs[0],strs[1], cur_spec_type, spec.m1, spec.m2);
 				buttons[0] = 3; buttons[1] = 2;
 				// TODO: Why not allow a choice of dialog picture?
 				i = custom_choice_dialog(strs,27,PIC_DLOG,buttons);
@@ -3518,8 +3512,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			else {
 				for(i = 0; i < 3; i++)
-					get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
-							 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
+					get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type, spec.m1 + i * 2 ,spec.m1 + i * 2 + 1);
 				buttons[0] = 9; buttons[1] = 35;
 				// TODO: Handle custom pictures?
 				i = custom_choice_dialog(strs,spec.pic,PIC_TER,buttons);
@@ -3551,8 +3544,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			else {
 				for(i = 0; i < 3; i++)
-					get_strs(strs[i * 2],strs[i * 2 + 1]
-							 ,cur_spec_type,spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
+					get_strs(strs[i * 2],strs[i * 2 + 1], cur_spec_type,spec.m1 + i * 2, spec.m1 + i * 2 + 1);
 				buttons[0] = 9; buttons[1] = 8;
 				// TODO: Wait, wait, aren't you supposed to be able to pick which picture to show?
 				i = custom_choice_dialog(strs,22,PIC_DLOG,buttons);
@@ -3590,8 +3582,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else {
 				if(spec.m1 >= 0) {
 					for(i = 0; i < 3; i++)
-						get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type,
-								 spec.m1 + i * 2 + spec_str_offset[cur_spec_type],spec.m1 + i * 2 + 1 + spec_str_offset[cur_spec_type]);
+						get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type, spec.m1 + i * 2, spec.m1 + i * 2 + 1);
 					buttons[0] = 20; buttons[1] = 24;
 				}
 				if(spec.ex2b == 1)
