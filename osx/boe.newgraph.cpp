@@ -139,8 +139,6 @@ RECT explode_place_rect[30];
 char last_light_mask[13][13];
 
 void apply_unseen_mask() {
-	// TODO: This is causing major lag and not even working properly
-	return;
 	RECT base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
 	short i,j,k,l;
 	bool need_bother = false;
@@ -167,7 +165,7 @@ void apply_unseen_mask() {
 				to_rect = base_rect;
 				to_rect.offset(-28 + i * 28,-36 + 36 * j);
 				to_rect |= big_to;
-				tileImage(mainPtr, to_rect, bw_pats[3], sf::BlendAlpha);
+				tileImage(terrain_screen_gworld, to_rect, bw_pats[3], sf::BlendAlpha);
 				//PaintRoundRect(&to_rect,4,4);
 				for(k = i - 2; k < i + 1; k++)
 					for(l = j - 2; l < j + 1; l++)

@@ -30,7 +30,7 @@ RECT map_pat_rects[30];
 RECT bw_rects[6];
 tessel_ref_t bg[21];
 tessel_ref_t map_pat[30];
-tessel_ref_t bw_pat[6];
+tessel_ref_t bw_pats[6];
 sf::Texture bg_gworld;
 bool use_win_graphics = false;
 sf::Shader maskShader;
@@ -1196,7 +1196,7 @@ static void register_main_patterns() {
 	for(int i = 0; i < 30; i++) {
 		if(i < 21) {
 			if(i < 6) {
-				bw_pat[i] = prepareForTiling(bg_gworld, bw_rects[i]);
+				bw_pats[i] = prepareForTiling(bg_gworld, bw_rects[i]);
 			}
 			bg[i] = prepareForTiling(bg_gworld, bg_rects[i]);
 		}
