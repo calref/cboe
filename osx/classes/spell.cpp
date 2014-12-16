@@ -113,9 +113,9 @@ cSpell M_CLOUD_SLEEP = cSpell(eSpell::CLOUD_SLEEP).asType(eSkill::MAGE_SPELLS).a
 cSpell M_UNLOCK = cSpell(eSpell::UNLOCK).asType(eSkill::MAGE_SPELLS).asLevel(3)
 	.withCost(3).when(WHEN_TOWN).finish();
 cSpell M_HASTE = cSpell(eSpell::HASTE).asType(eSkill::MAGE_SPELLS).asLevel(3)
-	.withCost(3).withRefer(REFER_IMMED).when(WHEN_COMBAT).finish();
+	.withCost(3).needsSelect().withRefer(REFER_IMMED).when(WHEN_COMBAT).finish();
 cSpell M_FIREBALL = cSpell(eSpell::FIREBALL).asType(eSkill::MAGE_SPELLS).asLevel(3)
-	.withRange(12).withCost(5).needsSelect().withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
+	.withRange(12).withCost(5).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell M_LIGHT_LONG = cSpell(eSpell::LIGHT_LONG).asType(eSkill::MAGE_SPELLS).asLevel(3)
 	.withCost(3).when(WHEN_COMBAT).when(WHEN_TOWN).when(WHEN_OUTDOORS).finish();
 // TODO: ^ Is it right for long light to be castable outdoors?
@@ -361,3 +361,9 @@ cSpell S_DISPEL_FIELD = cSpell(eSpell::DISPEL_FIELD)
 	.withRange(10).finish();
 cSpell S_MOVE_MOUNTAINS_MASS = cSpell(eSpell::MOVE_MOUNTAINS_MASS)
 	.withRange(8).finish();
+// TODO: These two have a range of 10 only because all monster spells do (monster spells ignore official spell range)
+// They should perhaps have better ranges assigned at some point.
+cSpell S_WRACK = cSpell(eSpell::WRACK).asLevel(1)
+	.withRange(10).finish();
+cSpell S_UNHOLY_RAVAGING = cSpell(eSpell::UNHOLY_RAVAGING).asLevel(6)
+	.withRange(10).finish();

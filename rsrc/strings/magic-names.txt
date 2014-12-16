@@ -62,7 +62,7 @@ Quickfire
 Death Arrows
 Strengthen Target
 Summon Rat
-Sphere of Ice
+Sphere of Frost
 Goo Bomb
 Foul Vapours
 Sleep Bomb
