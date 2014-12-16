@@ -1299,7 +1299,7 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 			last++;
 		}
 		if(is_dup) {
-			int lastCount = 0;
+			int lastCount = 1;
 			if(num_pos > 0)
 				sscanf(text_buffer[prev_pointer].line + num_pos, "%d", &lastCount);
 			
