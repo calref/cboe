@@ -1,126 +1,64 @@
-Light
 Creates a weak light.
-Spark
 Fires a weak bolt of electricity at an enemy.
-Minor Haste
 Makes the selected PC move faster for a while. All haste spells take effect at the beginning of the next round.
-Strength
 Makes the selected PC more skilled for a short time. Works like the priest spell 'Bless.'
-Scare
 Decreases the morale of the victim. Casting this on a weak foe will make the foe flee. Even if the monster doesn't flee, later castings have a higher chance of success.
-Flame Cloud
 This spell fills the selected space with a short-lasting wall of fire.
-Identify
 This draining spell identifies all the unidentified items being held by your characters.
-Scry Monster
 This spell is cast during combat. When cast, you receive information about the monster you target: current health, spell points, morale, etc.
-Goo
 This spell covers the target with sticky goo, slowing it down and interfering with its attacks.
-True Sight
 This spell lets you see everything in a short radius around you, even spaces blocked off by walls. It's useful for finding secret passages, for example.
-Minor Poison
 Poisons the target creature. This does a fair amount of damage, but it takes time to happen.
-Flame
 Fires a decent-sized bolt of flame at the target. The damage done increases with the level of the caster.
-Slow
 Makes the victim get half its usual number of actions for a while.
-Dumbfound
 Makes the victim incompetent: easier to hit, easier to damage, and less able to attack you.
-Envenom 
 This spell puts poison on the weapon of the selected PC, with no chance of failure or accidental poisoning.
-Stinking Cloud
 When cast, a 3x3 area you select becomes filled with choking gasses. Anyone entering will have far less effective attacks for a short time. The gas will slowly fade on its own.
-Summon Beast
 This spell summons one low-level, non-magical monster to fight on your side. It disappears after a short time.
-Conflagration
 This spell makes the air in a radius 2 circle burst into flames, charring anyone inside the cloud. After creation, the cloud will rapidly fade.
-Dispel Fields
 This spell dispels magical fields in the selected area. It removes blade walls, ice walls, and similar fields. Note, however, that the spell doesn't work on Fire and Force Barriers.
-Sleep Cloud
 This spell creates a small cloud of sleep gas. There is a chance that anyone passing through the cloud will fall asleep (note that some creatures, like slimes, never sleep).
-Unlock Doors
 Some doors are magically locked, and others are just hard to open. This spell can unlock them. However, it isn't guaranteed to succeed, and won't work on all doors.
-Haste 
 Makes the selected PC get twice the usual number of actions for a long time. All haste spells take effect at the beginning of the next round.
-Fireball
 Fires a powerful ball of flame, which affects the target space and every adjacent space. The damage done increases with the level of the caster.
-Long Light
 Like the first level light spell, but much more effective.
-Fear
-Like scare, but much more powerful. 
-Wall of Force
+Like scare, but much more powerful.
 This powerful spell creates a line of force walls, which are like fire walls but more damaging and lasting. Hitting the space bar while targeting makes the wall rotate.
-Weak Summoning
 When cast, a group of monsters appears and attacks all enemies of the caster. The number of monsters depends on the level of the caster. After a time, they disappear.
-Flame Arrows
 This spell is like flame, but the caster gets to select several targets. The number of missiles increases with the level of the caster. If you don't want to use all the missiles, hit the space bar to cast the spell.
-Web
 This spell covers a large circle with icky webs, slowing down everyone inside. The webs last until torn down.
-Resist Magic
 You can cast this spell on another PC to make him/her resistant to magical damage and effects. Note this does not help against damage from fire or cold.
-Poison
 This makes poison run thick in the veins of the target. Repeated castings will have a devastating effect.
-Ice Bolt
 Slams the target with a heavy, pointed bolt of ice. Effective against monsters who are resistant to fire. Damage increases as the level of the caster increases.
-Slow Group
 Makes all monsters within a 12 space radius move at half speed for a time.
-Magic Map
 When cast in town, this powerful spell gives you a vision - your map will show you the entire area. However, to cast this spell you need a sapphire.
-Capture Soul
 This spell stores a target monster in your mind, so that it may later be created with the Simulacrum spell.
-Simulacrum
 This spell summons a monster you have memorized using Capture Soul. The cost depends on the level of the monster being summoned.
-Venom Arrows
 This spell is similar to Flame Arrows, except that your targets are poisoned.
-Wall of Ice
 This spell is similar to Wall of Force, except that it creates an ice wall. Ice walls do as much damage as force walls, but last a lot longer.
-Stealth
 This powerful spell makes monsters less likely to see you for a time (duration depends on your level). Try casting it before walking through a room crowded with monsters.
-Major Haste
 Gives the entire party double its actions (duration depends on the level of the caster). All haste spells take effect at the beginning of the next round.
-Fire Storm
 This spell is like fireball, but does more damage, and affects all creatures within two spaces of the space you target. Be careful not to fry your party!
-Dispel Barrier
 This spell has a chance (increasing with level) of destroying magical barriers. Some barriers are harder to dispel than others; some cannot be dispelled. Some barriers can be	walked through.
-Fire Barrier
 This spell creates a single fire barrier at the target space. Fire barriers are damaging and permanent.
-Summoning
 This spell is like Minor Summoning, but summons more powerful monsters.
-Shockstorm
 This spell creates a large sphere of force walls.
-Spray Fields
 This spell creates a large number of small fields of a random sort, each of which may be individually targeted. The number of fields increases with the level of the caster.
-Major Poison
 This spell makes the targeted monster very poisoned. This spell does a huge amount of damage, but it takes time to take effect.
-Group Fear
 When cast, the caster begins to radiate a horrible aura of fear. All monsters within 12 spaces lose a lot of morale. This spell gains effectiveness rapidly with the level of the caster.
-Kill
 The deadly Kill spell deals a devastating blow to one target you select.
-Paralyze
 This spell affects several monsters - the number affected increases with your level and intelligence. Whoever you cast this on will be immobilized for a very long time. Powerful monsters might resist this spell.
-Daemon
 This dangerous spell summons a beast from the netherworld to fight at your side.
-Antimagic Cloud
 This spell creates a spherical field, from which no spells may be cast and in which no spells may be targeted. After creation, it slowly fades.
-Mindduel
 When cast on a magic-using enemy, the two creatures get in a mental battle, absorbing spell points from each other. The loser may end up dumbfounded or killed. Requires a Smoky Crystal to cast.
-Flight
 When cast outdoors, the party can fly for a short time.
-Shockwave
 This spell sends a wave of force out from the caster, damaging 	everyone nearby. The farther someone is from the caster, the more damage is taken, out to a radius of 10. Don't cast in towns.
-Major Blessing
 When cast, the entire party is blessed and hasted, and has their weapons	mildly poisoned.
-Mass Paralysis
 When cast, every monsters within a small radius of the caster will become paralyzed for quite some time. There is a chance they might resist the spell.
-Protection
 One of the most powerful spells in the mage's repertoire. It makes the whole party temporarily magic resistant, and makes one PC you select immune to ALL damage for a short time.
-Major Summoning
 This spell works like Summoning, but brings forth much more powerful creatures.
-Force Barrier
 This spell creates an impenetrable, permanent barrier. Be careful not to trap yourself.
-Quickfire
 Devastating beyond words, this spell creates a space of quickfire, which will sweep over the area killing everyone and everything.
-Death Arrows
 This spell is like the previous Arrow spells, but strikes each target with a kill spell. The number of arrows increases with the level of the caster.
 
 

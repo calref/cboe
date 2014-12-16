@@ -212,7 +212,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	
 	for(i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-		label_str = get_str((mode == 0) ? "mage-spells" : "priest-spells",i * 2 + 1);
+		label_str = get_str("magic-names", i + (mode == 0 ? 1 : 101));
 		pcInfo[id].setText(label_str);
 	}
 	put_pc_spells(pcInfo, mode);
@@ -306,14 +306,11 @@ void pick_race_abil(cPlayer *pc,short mode) {
 	pickAbil.run();
 }
 
-const char* alch_names[20] = {
-	"Weak Curing Potion (1)","Weak Healing Potion (1)","Weak Poison (1)",
-	"Weak Speed Potion (3)","Medium Poison (3)",
-	"Medium Heal Potion (4)","Strong Curing (5)","Medium Speed Potion (5)",
-	"Graymold Salve (7)","Weak Energy Potion (9)",
-	"Potion of Clarity (9)","Strong Poison (10)","Strong Heal Potion (12)","Killer Poison (12)",
-	"Resurrection Balm (9)","Medium Energy Ptn. (14)","Knowledge Brew (19)"	,
-	"Strong Strength (10)","Bliss (16)","Strong Power (20)"
+short alch_difficulty[20] = {
+	1,1,1,3,3,
+	4,5,5,7,9,
+	9,10,12,12,9,
+	14,19,10,16,20
 };
 
 void display_alchemy(bool allowEdit) {
@@ -325,7 +322,10 @@ void display_alchemy(bool allowEdit) {
 	
 	for(i = 0; i < 20; i++) {
 		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);
-		showAlch->addLabelFor(id, alch_names[i], LABEL_LEFT, 83, true);
+		std::string name = get_str("magic-names", i + 200) + " (";
+		name += std::to_string(alch_difficulty[i]);
+		name += ')';
+		showAlch->addLabelFor(id, name, LABEL_LEFT, 83, true);
 		if(!allowEdit)
 			showAlch->getControl(id).attachClickHandler(&cLed::noAction);
 		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));

@@ -69,15 +69,16 @@ unsigned short cur_entry;
 
 static void put_spell_info(cDialog& me, eSkill display_mode) {
 	std::ostringstream store_text;
-	short pos,ran;
+	short pos,ran,spell_num;
 	std::string res;
 	
 	pos = display_mode == eSkill::MAGE_SPELLS ? mage_spell_pos : priest_spell_pos;
 	res = display_mode == eSkill::MAGE_SPELLS ? "mage-spells" : "priest-spells";
+	spell_num = display_mode == eSkill::MAGE_SPELLS ? (pos + 1) : (pos + 101);
 	eSpell spell = cSpell::fromNum(display_mode, pos);
 	ran = (*spell).range;
 	
-	me["name"].setText(get_str(res, pos * 2 + 1));
+	me["name"].setText(get_str("magic-names", spell_num));
 	
 	if((*spell).cost >= 0)
 		store_text << (*spell).level << "/" << (*spell).cost;
@@ -89,7 +90,7 @@ static void put_spell_info(cDialog& me, eSkill display_mode) {
 	}
 	else me["range"].setTextToNum(ran);
 	
-	me["desc"].setText(get_str(res, pos * 2 + 2));
+	me["desc"].setText(get_str(res, pos + 1));
 	me["when"].setText(get_str("spell-times", (*spell).when_cast));
 }
 

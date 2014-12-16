@@ -41,46 +41,6 @@
 extern short skill_bonus[21];
 
 // TODO: Use magic-names.txt instead of these arrays
-const char *mage_s_name[62] = {
-	"Light","Spark","Minor Haste","Strength","Scare",
-	"Flame Cloud","Identify","Scry Monster","Goo","True Sight",
-	"Minor Poison","Flame","Slow","Dumbfound","Envenom",
-	"Stinking Cloud","Summon Beast","Conflagration","Dispel Field","Sleep Cloud",
-	"Unlock","Haste","Fireball","Long Light","Fear",
-	"Wall of Force","Weak Summoning","Flame Arrows","Web","Resist Magic",
-	"Poison","Ice Bolt","Slow Group","Magic Map",
-	"Capture Soul","Simulacrum","Venom Arrows","Wall of Ice",
-	"Stealth","Major Haste","Fire Storm","D. Barrier",
-	"Fire Barrier","Summoning","Shockstorm","Spray Fields",
-	"Major Poison","Group Fear","Kill","Paralysis",
-	"Daemon","Antimagic Cloud","MindDuel","Flight",
-	"Shockwave","M. Blessing","Mass Paralysis","Protection",
-	"Major Summon","Force Barrier","Quickfire","Death Arrows"};
-const char *priest_s_name[62] = {
-	"Minor Bless","Minor Heal","Weaken Poison","Turn Undead","Location",
-	"Sanctuary","Symbiosis","Minor Manna","Ritual - Sanctify","Stumble",
-	"Bless","Cure Poison","Curse","Light","Wound",
-	"Summon Spirit","Move Mountains","Charm Foe","Disease","Awaken",
-	"Heal","Light Heal All","Holy Scourge","Detect Life","Cure Paralysis",
-	"Manna","Forcefield","Cure Disease","Restore Mind","Smite",
-	"Cure Party","Curse All","Dispel Undead","Remove Curse",
-	"Sticks to Snakes","Martyr's Shield","Cleanse","Firewalk",
-	"Bless Party","Major Heal","Raise Dead","Flamestrike",
-	"Mass Sanctuary","Summon Host","Shatter","Dispel Fields",
-	"Heal All","Revive","Hyperactivity","Destone",
-	"Guardian","Mass Charm","Protective Circle","Pestilence",
-	"Revive All","Ravage Spirit","Resurrect","Divine Thud",
-	"Avatar","Wall of Blades","Word of Recall","Major Cleansing"};
-extern const char* alch_names[20];
-const char *alch_names_short[20] = {
-	"Weak Curing Potion","Weak Healing Potion","Weak Poison",
-	"Weak Speed Potion","Medium Poison",
-	"Medium Heal Potion","Strong Curing","Medium Speed Potion",
-	"Graymold Salve","Weak Energy Potion",
-	"Potion of Clarity","Strong Poison","Strong Heal Potion","Killer Poison",
-	"Resurrection Bal","Medium Energy Ptn.","Knowledge Brew"	,
-	"Strong Strength","Bliss","Strong Power"
-};
 bool get_mage[30] = {1,1,1,1,1,1,0,1,1,0, 1,1,1,1,1,1,0,0,1,1, 1,1,1,1,1,0,0,0,1,1};
 bool get_priest[30] = {1,1,1,1,1,1,0,0,0,1, 1,1,1,1,1,0,0,0,1,1, 1,0,1,1,0,0,0,1,0,0};
 short combat_percent[20] = {
@@ -2186,10 +2146,10 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col4"].setText("Level 4:");
 		for(i = 0; i < 38; i++) {
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-			auto& names = (store_situation == eSkill::MAGE_SPELLS ? mage_s_name : priest_s_name);
+			std::string name = get_str("magic-names", i + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
 			if((*cSpell::fromNum(store_situation,i)).cost < 0) { // Simulacrum, which has a variable cost
-				sprintf((char *) add_text,"%s (?)", names[i]);
-			} else sprintf((char *) add_text,"%s (%d)", names[i], (*cSpell::fromNum(store_situation,i)).cost);
+				sprintf((char *) add_text,"%s (?)", name.c_str());
+			} else sprintf((char *) add_text,"%s (%d)", name.c_str(), (*cSpell::fromNum(store_situation,i)).cost);
 			//for(j = 0; j < 30; i++)
 			//	if(add_text[j] == '&')
 			//		add_text[j] = (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i);
@@ -2205,9 +2165,9 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col4"].setText("");
 		for(i = 0; i < 38; i++) {
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-			auto& names = (store_situation == eSkill::MAGE_SPELLS ? mage_s_name : priest_s_name);
+			std::string name = get_str("magic-names", spell_index[i] + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
 			if(spell_index[i] < 90) {
-				sprintf(add_text, "%s (%d)", names[spell_index[i]], (*cSpell::fromNum(store_situation,i)).cost);
+				sprintf(add_text, "%s (%d)", name.c_str(), (*cSpell::fromNum(store_situation,i)).cost);
 				me[id].setText(add_text);
 			}
 			else me[id].hide();
@@ -2485,8 +2445,8 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 //short which; // 0 - mage  1 - priest
 void print_spell_cast(eSpell spell,eSkill which) {
 	short spell_num = (which == eSkill::PRIEST_SPELLS ? int(spell) - 100 : int(spell));
-	sprintf ((char *) c_line, "Spell: %s                  ",
-			 (which == eSkill::MAGE_SPELLS) ? (char *) mage_s_name[spell_num] : (char *) priest_s_name[spell_num]);
+	std::string name = get_str("magic-names", spell_num + (which == eSkill::MAGE_SPELLS ? 1 : 101));
+	sprintf ((char *) c_line, "Spell: %s                  ", name.c_str());
 	add_string_to_buf((char *) c_line);
 }
 
@@ -2520,6 +2480,8 @@ void start_town_targeting(eSpell s_num,short who_c,bool freebie) {
 	spell_freebie = freebie;
 }
 
+extern short alch_difficulty[20];
+
 void do_alchemy() {
 	static const eItemAbil ingred1_needed[20] = {
 		eItemAbil::HOLLY,eItemAbil::COMFREY,eItemAbil::HOLLY,eItemAbil::COMFREY,eItemAbil::WORMGRASS,
@@ -2532,12 +2494,6 @@ void do_alchemy() {
 		eItemAbil::NONE,eItemAbil::NONE,eItemAbil::NETTLE,eItemAbil::NONE,eItemAbil::ASPTONGUE,
 		eItemAbil::HOLLY,eItemAbil::NONE,eItemAbil::COMFREY,eItemAbil::NONE,eItemAbil::NONE,
 		eItemAbil::ASPTONGUE,eItemAbil::EMBERF,eItemAbil::EMBERF,eItemAbil::ASPTONGUE,eItemAbil::EMBERF,
-	};
-	static const short difficulty[20] = {
-		1,1,1,3,3,
-		4,5,5,7,9,
-		9,10,12,12,9,
-		14,19,10,16,20
 	};
 	static const short fail_chance[20] = {
 		50,40,30,20,10,
@@ -2591,7 +2547,7 @@ void do_alchemy() {
 			remove_charge(pc_num,which_item2);
 		
 		r1 = get_ran(1,1,100);
-		if(r1 < fail_chance[univ.party[pc_num].skills[eSkill::ALCHEMY] - difficulty[which_p]]) {
+		if(r1 < fail_chance[univ.party[pc_num].skills[eSkill::ALCHEMY] - alch_difficulty[which_p]]) {
 			add_string_to_buf("Alchemy: Failed.               ");
 			r1 = get_ran(1,0,1);
 			play_sound(41 );
@@ -2602,10 +2558,10 @@ void do_alchemy() {
 			store_i.ability = (eItemAbil) potion_abils[which_p];
 			if(which_p == 8)
 				store_i.magic_use_type = 2;
-			store_i.full_name = alch_names_short[which_p];
-			if(univ.party[pc_num].skills[eSkill::ALCHEMY] - difficulty[which_p] >= 5)
+			store_i.full_name = get_str("magic-names", which_p + 200);
+			if(univ.party[pc_num].skills[eSkill::ALCHEMY] - alch_difficulty[which_p] >= 5)
 				store_i.charges++;
-			if(univ.party[pc_num].skills[eSkill::ALCHEMY] - difficulty[which_p] >= 11)
+			if(univ.party[pc_num].skills[eSkill::ALCHEMY] - alch_difficulty[which_p] >= 11)
 				store_i.charges++;
 			if(store_i.variety == eItemType::POTION)
 				store_i.graphic_num += get_ran(1,0,2);
@@ -2649,7 +2605,7 @@ short alch_choice(short pc_num) {
 	chooseAlchemy.attachClickHandlers(alch_choice_event_filter, {"cancel", "help"});
 	for(i = 0; i < 20; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		chooseAlchemy["label" + n].setText(alch_names[i]);
+		chooseAlchemy["label" + n].setText(get_str("magic-names", i + 200));
 		chooseAlchemy["potion" + n].attachClickHandler(alch_choice_event_filter);
 		if(univ.party[pc_num].skills[eSkill::ALCHEMY] < difficulty[i] || univ.party.alchemy[i] == 0)
 			chooseAlchemy["potion" + n].hide();

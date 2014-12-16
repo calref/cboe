@@ -16,9 +16,9 @@ Envenom
 Stinking Cloud
 Summon Beast
 Conflagration
-Dispel Field
+Dispel Fields
 Sleep Cloud
-Unlock
+Unlock Door
 Haste
 Fireball
 Long Light
@@ -197,23 +197,23 @@ Major Cleansing
 
 
 
-Weak Curing
-Weak Healing
+Weak Curing Potion
+Weak Healing Potion
 Weak Poison
-Weak Speed
+Weak Speed Potion
 Medium Poison
-Medium Healing
-Strong Curing
-Medium Speed
+Medium Healing Potion
+Strong Curing Potion
+Medium Speed Potion
 Graymold Salve
-Weak Power
+Weak Power Potion
 Potion of Clarity
 Strong Poison
-Strong Healing
+Strong Healing Potion
 Killer Poison
 Resurrection Balm
-Medium Power
+Medium Power Potion
 Knowledge Brew
-Strong Strength
-Bliss
-Strong Power
+Strong Strength Potion
+Potion of Bliss
+Strong Power Potion

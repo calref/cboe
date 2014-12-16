@@ -19,8 +19,6 @@
 
 extern short on_spell_menu[2][62];
 extern short on_monst_menu[256];
-extern const char* mage_s_name[62];
-extern const char* priest_s_name[62];
 extern bool party_in_memory;
 extern short current_pc;
 extern cUniverse univ;
@@ -199,9 +197,10 @@ void adjust_spell_menus() {
 		for(i = 0; i < 62; i++)
 			if(on_spell_menu[0][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[0][i]);
+				std::string name = get_str("magic-names", i + 1);
 				if((*spell).cost >= 0)
-					sprintf(spell_name," L%d - %s, C %d",(*spell).level, mage_s_name[on_spell_menu[0][i]], (*spell).cost);
-				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, mage_s_name[on_spell_menu[0][i]]);
+					sprintf(spell_name," L%d - %s, C %d",(*spell).level, name.c_str(), (*spell).cost);
+				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, name.c_str());
 				NSString* str = [NSString stringWithUTF8String: spell_name];
 				NSMenuItem* newItem = [spell_menu addItemWithTitle: str action: @selector(spellMenu:) keyEquivalent: @""];
 				[newItem setTarget: targ];
@@ -232,9 +231,10 @@ void adjust_spell_menus() {
 		for(i = 0; i < 62; i++)
 			if(on_spell_menu[1][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
+				std::string name = get_str("magic-names", i + 101);
 				if((*spell).cost >= 0)
-					sprintf(spell_name," L%d - %s, C %d",(*spell).level, priest_s_name[on_spell_menu[1][i]], (*spell).cost);
-				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, priest_s_name[on_spell_menu[1][i]]);
+					sprintf(spell_name," L%d - %s, C %d",(*spell).level, name.c_str(), (*spell).cost);
+				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, name.c_str());
 				NSString* str = [NSString stringWithUTF8String: spell_name];
 				NSMenuItem* newItem = [spell_menu addItemWithTitle: str action: @selector(spellMenu:) keyEquivalent: @""];
 				[newItem setTarget: targ];
