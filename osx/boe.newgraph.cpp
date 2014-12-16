@@ -1006,7 +1006,7 @@ cItemRec store_priest_spells(short which_s) {
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = cost[which_s];
-	str = get_str("magic-names",which_s + 70);
+	str = get_str("magic-names",which_s + 101);
 	spell.full_name = str.c_str();
 	return spell;
 }
@@ -1024,7 +1024,7 @@ cItemRec store_alchemy(short which_s) {
 		which_s = 0;
 	spell.item_level = which_s;
 	spell.value = val[which_s];
-	str = get_str("magic-names",which_s + 100);
+	str = get_str("magic-names",which_s + 200);
 	spell.full_name = str.c_str();
 	return spell;
 }
