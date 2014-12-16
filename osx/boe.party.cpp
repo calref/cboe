@@ -1934,10 +1934,10 @@ void dispel_fields(short i,short j,short mode) {
 bool pc_can_cast_spell(short pc_num,eSkill type) {
 	short store_w_cast;
 	
-	if(type == eSkill::MAGE_SPELLS && !pc_can_cast_spell(pc_num, eSpell::LIGHT))
-		return false;
-	if(type == eSkill::PRIEST_SPELLS && !pc_can_cast_spell(pc_num, eSpell::BLESS_MINOR))
-		return false;
+	if(type == eSkill::MAGE_SPELLS && pc_can_cast_spell(pc_num, eSpell::LIGHT))
+		return true;
+	if(type == eSkill::PRIEST_SPELLS && pc_can_cast_spell(pc_num, eSpell::HEAL_MINOR))
+		return true;
 	
 	// If they can't cast the most basic level 1 spell, let's just make sure they can't cast any spells.
 	// Find a spell they definitely know, and see if they can cast that.
