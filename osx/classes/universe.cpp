@@ -96,8 +96,8 @@ void cCurTown::append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc
 			tmp_misc_i = old_misc_i[i][j];
 			tmp_sfx <<= 16;
 			tmp_misc_i <<= 8;
-			fields[i][j] |= tmp_sfx;
-			fields[i][j] |= tmp_misc_i;
+			fields[i][j] = tmp_sfx;
+			fields[i][j] = tmp_misc_i;
 		}
 }
 
@@ -191,12 +191,15 @@ bool cCurTown::is_block(char x, char y) const{ // currently unused
 }
 
 bool cCurTown::is_spot(char x, char y) const{
-	return special_spot[x][y];
+	return fields[x][y] & SPECIAL_SPOT;
 }
 
 bool cCurTown::is_special(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & SPECIAL_SPACE;
+	for(int i = 0; i < 50; i++)
+		if(x == record->special_locs[i].x && y == record->special_locs[i].y)
+			return true;
+	return false;
 }
 
 bool cCurTown::is_web(char x, char y) const{
@@ -412,14 +415,8 @@ bool cCurTown::set_block(char x, char y, bool b){ // currently unused
 
 bool cCurTown::set_spot(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	special_spot[x][y] = b;
-	return true;
-}
-
-bool cCurTown::set_special(char x, char y, bool b){
-	if(x > record->max_dim() || y > record->max_dim()) return false;
-	if(b) fields[x][y] |=  SPECIAL_SPACE;
-	else  fields[x][y] &= ~SPECIAL_SPACE;
+	if(b) fields[x][y] |=  SPECIAL_SPOT;
+	else  fields[x][y] &= ~SPECIAL_SPOT;
 	return true;
 }
 
@@ -720,21 +717,6 @@ bool cCurTown::set_force_cage(char x, char y, bool b){
 //		trim[x][y] |= bit;
 //	}else trim[x][y] &= ~bit;
 //}
-
-unsigned char cCurTown::explored(char x,char y) const{
-	if(x > record->max_dim() || y > record->max_dim()) return 0;
-	return fields[x][y] & 0x000000FF;
-}
-
-unsigned char cCurTown::misc_i(char x, char y) const{
-	if(x > record->max_dim() || y > record->max_dim()) return 0;
-	return (fields[x][y] & 0x0000FF00) >> 8;
-}
-
-unsigned char cCurTown::sfx(char x, char y) const{
-	if(x > record->max_dim() || y > record->max_dim()) return 0;
-	return (fields[x][y] & 0x00FF0000) >> 16;
-}
 
 // TODO: This seems to be wrong; impassable implies "blocks movement", which two other blockages also do
 bool cCurTown::is_impassable(short i,short  j) {

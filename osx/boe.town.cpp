@@ -277,10 +277,11 @@ void start_town_mode(short which_town, short entry_dir) {
 			
 			for(j = 0; j < univ.town->max_dim(); j++)
 				for(k = 0; k < univ.town->max_dim(); k++) { // now load in saved setup,
-					// except that barrels and crates restore to orig locs
-					temp = univ.party.setup[i][j][k] & 231;
-					temp <<= 8;
-					univ.town.fields[j][k] = (univ.town.fields[j][k] & 24) | temp;//setup_save.setup[i][j][k];
+					// except that pushable things restore to orig locs
+					temp = univ.party.setup[i][j][k] << 8;
+					temp &= OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK;
+					univ.town.fields[j][k] &= ~(OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK);
+					univ.town.fields[j][k] |= temp;
 				}
 		}
 	
@@ -570,14 +571,14 @@ location end_town_mode(short switching_level,location destination) { // returns 
 				univ.party.creature_save[i] = univ.town.monst;
 				for(j = 0; j < univ.town->max_dim(); j++)
 					for(k = 0; k < univ.town->max_dim(); k++)
-						univ.party.setup[i][j][k] = univ.town.misc_i(j,k);
+						univ.party.setup[i][j][k] = (univ.town.fields[j][k] & 0xff00) >> 8;
 				data_saved = true;
 			}
 		if(!data_saved) {
 			univ.party.creature_save[univ.party.at_which_save_slot] = univ.town.monst;
 			for(j = 0; j < univ.town->max_dim(); j++)
 				for(k = 0; k < univ.town->max_dim(); k++)
-					univ.party.setup[univ.party.at_which_save_slot][j][k] = univ.town.misc_i(j,k);
+					univ.party.setup[univ.party.at_which_save_slot][j][k] = (univ.town.fields[j][k] & 0xff00) >> 8;
 			univ.party.at_which_save_slot = (univ.party.at_which_save_slot == 3) ? 0 : univ.party.at_which_save_slot + 1;
 		}
 		
@@ -1199,7 +1200,6 @@ void erase_specials() {
 //					case 212: univ.town->terrain(where.x,where.y) = 36; break;
 //				}
 				univ.town.set_spot(where.x,where.y,false);
-				univ.town.set_special(where.x,where.y,false);
 			}
 		}
 		

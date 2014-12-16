@@ -184,10 +184,6 @@ void init_town(){ // formerly part of load_town
 			univ.town.fields[i][j] = 0;
 			//univ.out.sfx[i][j] = 0;
 		}
-	for(i = 0; i < 50; i++)
-		if(univ.town->special_locs[i].x < 100){
-			univ.town.set_special(univ.town->special_locs[i].x,univ.town->special_locs[i].y,true);
-		}
 	for(i = 0; i < univ.town->preset_fields.size(); i++) {
 		switch(univ.town->preset_fields[i].type){
 			case 1: // currently unused

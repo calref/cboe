@@ -50,17 +50,11 @@ public:
 	
 	//ter_num_t template_terrain[64][64];
 	unsigned long fields[64][64];
-	bool special_spot[64][64];
-//	unsigned char trim[64][64]; // transient
 	
 	void append(legacy::current_town_type& old,short which_size);
 	void append(legacy::town_item_list& old);
 	void append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
 	void append(legacy::big_tr_type& old);
-	
-	__declspec(deprecated) unsigned char explored(char x,char y) const;
-	__declspec(deprecated) unsigned char misc_i(char x, char y) const;
-	__declspec(deprecated) unsigned char sfx(char x, char y) const;
 	
 	cTown* operator -> ();
 	cCurTown();
@@ -108,7 +102,6 @@ public:
 	bool set_sleep_cloud(char x, char y, bool b);
 	bool set_block(char x, char y, bool b); // currently unused
 	bool set_spot(char x, char y, bool b);
-	bool set_special(char x, char y, bool b);
 	bool set_web(char x, char y, bool b);
 	bool set_crate(char x, char y, bool b);
 	bool set_barrel(char x, char y, bool b);
@@ -138,9 +131,6 @@ public:
 	ter_num_t out[96][96];
 	unsigned char out_e[96][96];
 	cOutdoors outdoors[2][2];
-	
-	//unsigned char sfx[64][64];
-	//unsigned char misc_i[64][64];
 	
 	void append(legacy::out_info_type& old);
 	

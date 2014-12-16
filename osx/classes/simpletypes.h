@@ -801,14 +801,16 @@ enum eFieldType {
 	WALL_ICE = 5,
 	WALL_BLADES = 6,
 	CLOUD_SLEEP = 7,
+	// Begin fields saved in town setup
 	OBJECT_BLOCK = 8,
-	SPECIAL_SPACE = 9, // Don't allow monsters or combat PC placement
+	SPECIAL_SPOT = 9, // Space contains a white special spot
 	FIELD_WEB = 10,
 	OBJECT_CRATE = 11,
 	OBJECT_BARREL = 12,
 	BARRIER_FIRE = 13,
 	BARRIER_FORCE = 14,
 	FIELD_QUICKFIRE = 15,
+	// End fields saved in town setup
 	SFX_SMALL_BLOOD = 16,
 	SFX_MEDIUM_BLOOD = 17,
 	SFX_LARGE_BLOOD = 18,
@@ -818,7 +820,6 @@ enum eFieldType {
 	SFX_BONES = 22,
 	SFX_RUBBLE = 23,
 	BARRIER_CAGE = 24,
-	SPECIAL_SPOT = 25,
 	// From here on are special values that don't index anything.
 	// Thus, they start at 32.
 	FIELD_DISPEL = 32, // Dispel field
