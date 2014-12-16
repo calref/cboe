@@ -3511,7 +3511,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				play_sound(24);
 				monst_spell_note(caster->number,26);
 				caster->health = caster->m_health;
-				caster->status[eStatus::MARTYRS_SHIELD] = 8;
+				caster->status[eStatus::BLESS_CURSE] = 8;
 				caster->status[eStatus::POISON] = 0;
 				caster->status[eStatus::HASTE_SLOW] = 8;
 				caster->status[eStatus::WEBS] = 0;
