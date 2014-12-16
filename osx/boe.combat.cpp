@@ -3692,7 +3692,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 	bool monster_hit = false;
 	
 	
-	if(type != FIELD_NONE)
+	if(type != 0)
 		modify_pattern(&pat,type);
 	
 	
@@ -3966,7 +3966,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 }
 
 void place_spell_pattern(effect_pat_type pat,location center,short who_hit) {
-	place_spell_pattern(pat, center, FIELD_NONE, who_hit);
+	place_spell_pattern(pat, center, 0, who_hit);
 }
 
 void place_spell_pattern(effect_pat_type pat,location center,eFieldType type,short who_hit) {
@@ -4491,15 +4491,15 @@ bool combat_cast_priest_spell() {
 	char c_line[60];
 	cCreature *which_m;
 	effect_pat_type protect_pat = {{
-		{0,4,4,4,4,4,4,4,0},
-		{4,8,8,8,8,8,8,8,4},
-		{4,8,9,9,9,9,9,8,4},
-		{4,8,9,6,6,6,9,8,4},
-		{4,8,9,6,6,6,9,8,4},
-		{4,8,9,6,6,6,9,8,4},
-		{4,8,9,9,9,9,9,8,4},
-		{4,8,8,8,8,8,8,8,4},
-		{0,4,4,4,4,4,4,4,0}}};
+		{0,1,1,1,1,1,1,1,0},
+		{1,5,5,5,5,5,5,5,1},
+		{1,5,6,6,6,6,6,5,1},
+		{1,5,6,3,3,3,6,5,1},
+		{1,5,6,3,3,3,6,5,1},
+		{1,5,6,3,3,3,6,5,1},
+		{1,5,6,6,6,6,6,5,1},
+		{1,5,5,5,5,5,5,5,1},
+		{0,1,1,1,1,1,1,1,0}}};
 	
 	if(univ.town.is_antimagic(univ.party[current_pc].combat_pos.x,univ.party[current_pc].combat_pos.y)) {
 		add_string_to_buf("  Not in antimagic field.");

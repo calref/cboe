@@ -147,47 +147,47 @@ cCurTown::~cCurTown() {
 
 bool cCurTown::is_explored(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 1L;
+	return fields[x][y] & SPECIAL_EXPLORED;
 }
 
 bool cCurTown::is_force_wall(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 2L;
+	return fields[x][y] & WALL_FORCE;
 }
 
 bool cCurTown::is_fire_wall(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 4L;
+	return fields[x][y] & WALL_FIRE;
 }
 
 bool cCurTown::is_antimagic(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 8L;
+	return fields[x][y] & FIELD_ANTIMAGIC;
 }
 
 bool cCurTown::is_scloud(char x, char y) const{ // stinking cloud
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 16L;
+	return fields[x][y] & CLOUD_STINK;
 }
 
 bool cCurTown::is_ice_wall(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 32L;
+	return fields[x][y] & WALL_ICE;
 }
 
 bool cCurTown::is_blade_wall(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 64L;
+	return fields[x][y] & WALL_BLADES;
 }
 
 bool cCurTown::is_sleep_cloud(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 128L;
+	return fields[x][y] & CLOUD_SLEEP;
 }
 
 bool cCurTown::is_block(char x, char y) const{ // currently unused
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 256L;
+	return fields[x][y] & OBJECT_BLOCK;
 }
 
 bool cCurTown::is_spot(char x, char y) const{
@@ -196,93 +196,88 @@ bool cCurTown::is_spot(char x, char y) const{
 
 bool cCurTown::is_special(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 512L;
+	return fields[x][y] & SPECIAL_SPACE;
 }
 
 bool cCurTown::is_web(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 1024L;
+	return fields[x][y] & FIELD_WEB;
 }
 
 bool cCurTown::is_crate(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 2048L;
+	return fields[x][y] & OBJECT_CRATE;
 }
 
 bool cCurTown::is_barrel(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 4096L;
+	return fields[x][y] & OBJECT_BARREL;
 }
 
 bool cCurTown::is_fire_barr(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 8192L;
+	return fields[x][y] & BARRIER_FIRE;
 }
 
 bool cCurTown::is_force_barr(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 16384L;
+	return fields[x][y] & BARRIER_FORCE;
 }
 
 bool cCurTown::is_quickfire(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 32768L;
+	return fields[x][y] & FIELD_QUICKFIRE;
 }
 
 bool cCurTown::is_sm_blood(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 65536L;
+	return fields[x][y] & SFX_SMALL_BLOOD;
 }
 
 bool cCurTown::is_med_blood(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 131072L;
+	return fields[x][y] & SFX_MEDIUM_BLOOD;
 }
 
 bool cCurTown::is_lg_blood(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 262144L;
+	return fields[x][y] & SFX_LARGE_BLOOD;
 }
 
 bool cCurTown::is_sm_slime(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 524288L;
+	return fields[x][y] & SFX_SMALL_SLIME;
 }
 
 bool cCurTown::is_lg_slime(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 1048576L;
+	return fields[x][y] & SFX_LARGE_SLIME;
 }
 
 bool cCurTown::is_ash(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 2097152L;
+	return fields[x][y] & SFX_ASH;
 }
 
 bool cCurTown::is_bones(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 4194304L;
+	return fields[x][y] & SFX_BONES;
 }
 
 bool cCurTown::is_rubble(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 8388608L;
+	return fields[x][y] & SFX_RUBBLE;
 }
 
 bool cCurTown::is_force_cage(char x, char y) const{
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	return fields[x][y] & 16777216L;
+	return fields[x][y] & BARRIER_CAGE;
 }
-
-//bool cCurTown::is_trim(char x, char y, char t){
-//	unsigned char bit = 1 << t;
-//	return trim[x][y] & bit;
-//}
 
 bool cCurTown::set_explored(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	if(b) fields[x][y] |=  1L;
-	else  fields[x][y] &= ~1L;
+	if(b) fields[x][y] |=  SPECIAL_EXPLORED;
+	else  fields[x][y] &= ~SPECIAL_EXPLORED;
 	return true;
 }
 
@@ -295,11 +290,11 @@ bool cCurTown::set_force_wall(char x, char y, bool b){
 			return false;
 		if(is_crate(x,y) || is_barrel(x,y) || is_fire_barr(x,y) || is_force_barr(x,y))
 			return false;
-		fields[x][y]  |=  2L;
 		set_web(x,y,false);
 		set_fire_wall(x,y,false);
+		fields[x][y]  |=  WALL_FORCE;
 	}
-	else fields[x][y] &= ~2L;
+	else fields[x][y] &= ~WALL_FORCE;
 	return true;
 }
 
@@ -314,11 +309,11 @@ bool cCurTown::set_fire_wall(char x, char y, bool b){
 			return false;
 		if(is_web(x,y) || is_scloud(x,y) || is_sleep_cloud(x,y))
 			return false;
-		fields[x][y]  |=  4L;
 		set_web(x,y,false);
 		set_fire_wall(x,y,false);
+		fields[x][y]  |=  WALL_FIRE;
 	}
-	else fields[x][y] &= ~4L;
+	else fields[x][y] &= ~WALL_FIRE;
 	return true;
 }
 
@@ -329,7 +324,6 @@ bool cCurTown::set_antimagic(char x, char y, bool b){
 			return false;
 		if(is_quickfire(x,y) || is_force_wall(x,y) || is_fire_wall(x,y))
 			return false;
-		fields[x][y]  |=  8L;
 		set_force_wall(x,y,false);
 		set_fire_wall(x,y,false);
 		set_antimagic(x,y,false);
@@ -337,8 +331,9 @@ bool cCurTown::set_antimagic(char x, char y, bool b){
 		set_ice_wall(x,y,false);
 		set_blade_wall(x,y,false);
 		set_sleep_cloud(x,y,false);
+		fields[x][y]  |=  FIELD_ANTIMAGIC;
 	}
-	else fields[x][y] &= ~8L;
+	else fields[x][y] &= ~FIELD_ANTIMAGIC;
 	return true;
 }
 
@@ -353,9 +348,9 @@ bool cCurTown::set_scloud(char x, char y, bool b){ // stinking cloud
 			return false;
 		if(is_fire_barr(x,y) || is_force_barr(x,y))
 			return false;
-		fields[x][y]  |=  16L;
+		fields[x][y]  |=  CLOUD_STINK;
 	}
-	else fields[x][y] &= ~16L;
+	else fields[x][y] &= ~CLOUD_STINK;
 	return true;
 }
 
@@ -370,11 +365,11 @@ bool cCurTown::set_ice_wall(char x, char y, bool b){
 			return false;
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y))
 			return false;
-		fields[x][y]  |=  32L;
 		set_fire_wall(x,y,false);
 		set_scloud(x,y,false);
+		fields[x][y]  |=  WALL_ICE;
 	}
-	else fields[x][y] &= ~32L;
+	else fields[x][y] &= ~WALL_ICE;
 	return true;
 }
 
@@ -385,11 +380,11 @@ bool cCurTown::set_blade_wall(char x, char y, bool b){
 			return false;
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_antimagic(x,y))
 			return false;
-		fields[x][y]  |=  64L;
 		set_force_wall(x,y,false);
 		set_fire_wall(x,y,false);
+		fields[x][y]  |=  WALL_BLADES;
 	}
-	else fields[x][y] &= ~64L;
+	else fields[x][y] &= ~WALL_BLADES;
 	return true;
 }
 
@@ -400,18 +395,18 @@ bool cCurTown::set_sleep_cloud(char x, char y, bool b){
 			return false;
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_antimagic(x,y))
 			return false;
-		fields[x][y]  |=  128L;
 		set_force_wall(x,y,false);
 		set_fire_wall(x,y,false);
+		fields[x][y]  |=  CLOUD_SLEEP;
 	}
-	else fields[x][y] &= ~128L;
+	else fields[x][y] &= ~CLOUD_SLEEP;
 	return true;
 }
 
 bool cCurTown::set_block(char x, char y, bool b){ // currently unused
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	if(b) fields[x][y] |=  256L;
-	else  fields[x][y] &= ~256L;
+	if(b) fields[x][y] |=  OBJECT_BLOCK;
+	else  fields[x][y] &= ~OBJECT_BLOCK;
 	return true;
 }
 
@@ -423,8 +418,8 @@ bool cCurTown::set_spot(char x, char y, bool b){
 
 bool cCurTown::set_special(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	if(b) fields[x][y] |=  512L;
-	else  fields[x][y] &= ~512L;
+	if(b) fields[x][y] |=  SPECIAL_SPACE;
+	else  fields[x][y] &= ~SPECIAL_SPACE;
 	return true;
 }
 
@@ -439,9 +434,9 @@ bool cCurTown::set_web(char x, char y, bool b){
 			return false;
 		if(is_ice_wall(x, y) || is_blade_wall(x,y) || is_sleep_cloud(x,y))
 			return false;
-		fields[x][y]  |=  1024L;
+		fields[x][y]  |=  FIELD_WEB;
 	}
-	else fields[x][y] &= ~1024L;
+	else fields[x][y] &= ~FIELD_WEB;
 	return true;
 }
 
@@ -450,9 +445,9 @@ bool cCurTown::set_crate(char x, char y, bool b){
 	if(b){ // If certain things are on the space, there's no room for a crate.
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_barrel(x,y))
 			return false;
-		fields[x][y]  |=  2048L;
+		fields[x][y]  |=  OBJECT_CRATE;
 	}
-	else fields[x][y] &= ~2048L;
+	else fields[x][y] &= ~OBJECT_CRATE;
 	return true;
 }
 
@@ -461,9 +456,9 @@ bool cCurTown::set_barrel(char x, char y, bool b){
 	if(b){ // If certain things are on the space, there's no room for a crate.
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_crate(x,y))
 			return false;
-		fields[x][y]  |=  4096L;
+		fields[x][y]  |=  OBJECT_BARREL;
 	}
-	else fields[x][y] &= ~4096L;
+	else fields[x][y] &= ~OBJECT_BARREL;
 	return true;
 }
 
@@ -474,7 +469,6 @@ bool cCurTown::set_fire_barr(char x, char y, bool b){
 			return false;
 		if(is_antimagic(x,y) && get_ran(1,0,3) < 3)
 			return false;
-		fields[x][y]  |=  8192L;
 		// Cancel out fields
 		set_web(x,y,false);
 		set_force_wall(x,y,false);
@@ -484,8 +478,9 @@ bool cCurTown::set_fire_barr(char x, char y, bool b){
 		set_ice_wall(x,y,false);
 		set_blade_wall(x,y,false);
 		set_sleep_cloud(x,y,false);
+		fields[x][y]  |=  BARRIER_FIRE;
 	}
-	else fields[x][y] &= ~8192L;
+	else fields[x][y] &= ~BARRIER_FIRE;
 	return true;
 }
 
@@ -496,7 +491,6 @@ bool cCurTown::set_force_barr(char x, char y, bool b){
 			return false;
 		if(is_antimagic(x,y) && get_ran(1,0,2) < 2)
 			return false;
-		fields[x][y]  |=  16384L;
 		// Cancel out fields
 		set_web(x,y,false);
 		set_force_wall(x,y,false);
@@ -506,8 +500,9 @@ bool cCurTown::set_force_barr(char x, char y, bool b){
 		set_ice_wall(x,y,false);
 		set_blade_wall(x,y,false);
 		set_sleep_cloud(x,y,false);
+		fields[x][y]  |=  BARRIER_FORCE;
 	}
-	else fields[x][y] &= ~16384L;
+	else fields[x][y] &= ~BARRIER_FORCE;
 	return true;
 }
 
@@ -525,7 +520,6 @@ bool cCurTown::set_quickfire(char x, char y, bool b){
 		if(is_force_barr(x,y) || is_fire_barr(x,y))
 			return false;
 		quickfire_present = true;
-		fields[x][y]  |=  32768L;
 		set_force_wall(x,y,false);
 		set_fire_wall(x,y,false);
 		set_antimagic(x,y,false);
@@ -538,8 +532,9 @@ bool cCurTown::set_quickfire(char x, char y, bool b){
 		set_barrel(x,y,false);
 		set_force_barr(x,y,false);
 		set_fire_barr(x,y,false);
+		fields[x][y]  |=  FIELD_QUICKFIRE;
 	}
-	else fields[x][y] &= ~32768;
+	else fields[x][y] &= ~FIELD_QUICKFIRE;
 	return true;
 }
 
@@ -557,14 +552,14 @@ bool cCurTown::set_sm_blood(char x, char y, bool b){
 		if(!free_for_sfx(x,y)) return false;
 		if(is_med_blood(x,y) || is_lg_blood(x,y))
 			return false;
-		fields[x][y]  |=  65536L;
 		set_sm_slime(x,y,false);
 		set_lg_slime(x,y,false);
 		set_ash(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
+		fields[x][y]  |=  SFX_SMALL_BLOOD;
 	}
-	else fields[x][y] &= ~65536L;
+	else fields[x][y] &= ~SFX_SMALL_BLOOD;
 	return true;
 }
 
@@ -574,15 +569,15 @@ bool cCurTown::set_med_blood(char x, char y, bool b){
 		if(!free_for_sfx(x,y)) return false;
 		if(is_lg_blood(x,y))
 			return false;
-		fields[x][y] |=  131072L;
 		set_sm_blood(x,y,false);
 		set_sm_slime(x,y,false);
 		set_lg_slime(x,y,false);
 		set_ash(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
+		fields[x][y]  |=  SFX_MEDIUM_BLOOD;
 	}
-	else fields[x][y] &= ~131072L;
+	else fields[x][y] &= ~SFX_MEDIUM_BLOOD;
 	return true;
 }
 
@@ -590,7 +585,6 @@ bool cCurTown::set_lg_blood(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
-		fields[x][y] |=  262144L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
 		set_sm_slime(x,y,false);
@@ -598,8 +592,9 @@ bool cCurTown::set_lg_blood(char x, char y, bool b){
 		set_ash(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
+		fields[x][y]  |=  SFX_LARGE_BLOOD;
 	}
-	else fields[x][y] &= ~262144L;
+	else fields[x][y] &= ~SFX_LARGE_BLOOD;
 	return true;
 }
 
@@ -608,15 +603,15 @@ bool cCurTown::set_sm_slime(char x, char y, bool b){
 		if(!free_for_sfx(x,y)) return false;
 		if(is_lg_slime(x,y))
 			return false;
-		fields[x][y] |=  524288L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
 		set_lg_blood(x,y,false);
 		set_ash(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
+		fields[x][y]  |=  SFX_SMALL_SLIME;
 	}
-	else fields[x][y] &= ~524288L;
+	else fields[x][y] &= ~SFX_SMALL_SLIME;
 	return true;
 }
 
@@ -624,7 +619,6 @@ bool cCurTown::set_lg_slime(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
-		fields[x][y] |=  1048576L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
 		set_lg_blood(x,y,false);
@@ -632,8 +626,9 @@ bool cCurTown::set_lg_slime(char x, char y, bool b){
 		set_ash(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
+		fields[x][y]  |=  SFX_LARGE_SLIME;
 	}
-	else fields[x][y] &= ~1048576L;
+	else fields[x][y] &= ~SFX_LARGE_SLIME;
 	return true;
 }
 
@@ -641,7 +636,6 @@ bool cCurTown::set_ash(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
-		fields[x][y] |=  2097152L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
 		set_lg_blood(x,y,false);
@@ -649,8 +643,9 @@ bool cCurTown::set_ash(char x, char y, bool b){
 		set_lg_slime(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
+		fields[x][y]  |=  SFX_ASH;
 	}
-	else fields[x][y] &= ~2097152L;
+	else fields[x][y] &= ~SFX_ASH;
 	return true;
 }
 
@@ -658,7 +653,6 @@ bool cCurTown::set_bones(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
-		fields[x][y] |=  4194304L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
 		set_lg_blood(x,y,false);
@@ -666,8 +660,9 @@ bool cCurTown::set_bones(char x, char y, bool b){
 		set_lg_slime(x,y,false);
 		set_ash(x,y,false);
 		set_rubble(x,y,false);
+		fields[x][y]  |=  SFX_BONES;
 	}
-	else fields[x][y] &= ~4194304L;
+	else fields[x][y] &= ~SFX_BONES;
 	return true;
 }
 
@@ -675,7 +670,6 @@ bool cCurTown::set_rubble(char x, char y, bool b){
 	if(x > record->max_dim() || y > record->max_dim()) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
-		fields[x][y] |=  8388608L;
 		set_sm_blood(x,y,false);
 		set_med_blood(x,y,false);
 		set_lg_blood(x,y,false);
@@ -683,8 +677,9 @@ bool cCurTown::set_rubble(char x, char y, bool b){
 		set_lg_slime(x,y,false);
 		set_ash(x,y,false);
 		set_bones(x,y,false);
+		fields[x][y]  |=  SFX_RUBBLE;
 	}
-	else fields[x][y] &= ~8388608L;
+	else fields[x][y] &= ~SFX_RUBBLE;
 	return true;
 }
 
@@ -692,8 +687,8 @@ bool cCurTown::set_force_cage(char x, char y, bool b){
 	// TODO: Consider whether placing a forcecage should erase anything already present, or fail due to something already present
 	// TODO: Also consider checking for forcecage in some of the other placement functions.
 	if(x > record->max_dim() || y > record->max_dim()) return false;
-	if(b) fields[x][y] |=  16777216L;
-	else  fields[x][y] &= ~16777216L;
+	if(b) fields[x][y] |=  BARRIER_CAGE;
+	else  fields[x][y] &= ~BARRIER_CAGE;
 	return true;
 }
 
