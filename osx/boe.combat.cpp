@@ -74,25 +74,6 @@ short hit_chance[51] = {
 	,99,99,99,99,99,99,99,99,99,99,
 	99,99,99,99,99,99,99,99,99,99};
 
-short monst_mage_spell[55] = {
-	1,1,1,1,1,1,2,2,2,2,
-	2,2,3,3,3,3,3,4,4,4,
-	4,4,4,5,5,5,5,5,4,4,
-	6,6,6,6,7,7,7,7,7,8,
-	8,8,8,8,9,9,9,10,10,10,
-	11,11,11,12,12};
-short monst_cleric_spell[55] = {
-	1,1,1,1,1,1,1,1,2,2,
-	2,2,2,3,3,3,11,11,11,4,
-	4,4,4,5,5,5,11,11,6,6,
-	6,6,6,6,7,7,7,7,7,7,
-	8,8,8,8,8,7,7,7,7,7,
-	7,9,9,10,10};
-short monst_mage_cost[27] = {1,1,1,1,2, 2,2,2,2,4, 2,4,4,3,4, 4,4,5,5,5, 5,6,6,6,7, 7,7};
-short monst_mage_area_effect[27] = {0,0,0,0,0, 0,0,0,1,0, 1,1,0,1,0, 0,0,0,1,0, 1,0,0,0,0, 0,0};
-short monst_priest_cost[26] = {1,1,1,1,2, 2,2,4,2,3, 3,3,4,4,4, 5,5,5,10,6, 6,10,8,8,8, 8};
-short monst_priest_area_effect[26] = {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,1,0,0, 0,0,0,0,0, 1};
-
 extern short boom_gr[8];
 
 const char *d_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
@@ -2929,27 +2910,63 @@ bool monst_breathe(cCreature *caster,location targ_space,short dam_type) {
 }
 
 bool monst_cast_mage(cCreature *caster,short targ) {
-	short r1,j,spell,i,level,target_levels,friend_levels_near,x;
+	short r1,j,i,level,target_levels,friend_levels_near,x;
 	bool acted = false;
 	location target,vict_loc,ashes_loc,l;
 	cCreature *affected;
-	short caster_array[7][18] = {
-		{1,1,1,2,2, 2,1,3,4,4, 1,1,1,2,2, 2,3,4},
-		{5,5,5,6,7, 8,9,10,11,11, 2,2,2,5,7, 10,10,5},
-		{5,5,2,9,11, 12,12,12,14,13, 13,12,12,2,2, 2,2,2},
-		{15,15,16,17,17, 5,12,12,13,13, 17,17,16,17,16, 2,2,2},
-		{15,18,19,19,20, 20,21,21,16,17, 18,18,18,18,19, 19,19,20},
-		{23,23,22,22,21, 21,20,24,19,18, 18,18,18,18,18, 23,23,19},
-		{23,23,24,25,26, 27,19,22,19,18, 18,18,18,18,26, 24,24,23}};
-	short emer_spells[7][4] = {
-		{2,0,0,5},
-		{2,10,11,7},
-		{2,13,12,13},
-		{2,13,12,13},
-		{18,20,19,18},
-		{18,24,19,24},
-		{18,26,19,27}};
-	
+	const eSpell caster_array[7][18] = {
+		{
+			eSpell::SPARK, eSpell::SPARK, eSpell::SPARK, eSpell::HASTE_MINOR, eSpell::HASTE_MINOR,
+			eSpell::HASTE_MINOR, eSpell::SPARK, eSpell::STRENGTH, eSpell::CLOUD_FLAME, eSpell::CLOUD_FLAME,
+			eSpell::SPARK, eSpell::SPARK, eSpell::SPARK, eSpell::HASTE_MINOR, eSpell::HASTE_MINOR,
+			eSpell::HASTE_MINOR, eSpell::STRENGTH, eSpell::CLOUD_FLAME,
+		}, {
+			eSpell::FLAME, eSpell::FLAME, eSpell::FLAME, eSpell::POISON_MINOR, eSpell::SLOW,
+			eSpell::DUMBFOUND, eSpell::CLOUD_STINK, eSpell::SUMMON_BEAST, eSpell::CONFLAGRATION, eSpell::CONFLAGRATION,
+			eSpell::HASTE_MINOR, eSpell::HASTE_MINOR, eSpell::HASTE_MINOR, eSpell::FLAME, eSpell::SLOW,
+			eSpell::SUMMON_BEAST, eSpell::SUMMON_BEAST, eSpell::FLAME,
+		}, {
+			eSpell::FLAME, eSpell::FLAME, eSpell::HASTE_MINOR, eSpell::CLOUD_STINK, eSpell::CONFLAGRATION,
+			eSpell::FIREBALL, eSpell::FIREBALL, eSpell::FIREBALL, eSpell::WEB, eSpell::SUMMON_WEAK,
+			eSpell::SUMMON_WEAK, eSpell::FIREBALL, eSpell::FIREBALL, eSpell::HASTE_MINOR, eSpell::HASTE_MINOR,
+			eSpell::HASTE_MINOR, eSpell::HASTE_MINOR, eSpell::HASTE_MINOR,
+		}, {
+			eSpell::POISON, eSpell::POISON, eSpell::ICE_BOLT, eSpell::SLOW_GROUP, eSpell::SLOW_GROUP,
+			eSpell::FLAME, eSpell::FIREBALL, eSpell::FIREBALL, eSpell::SUMMON_WEAK, eSpell::SUMMON_WEAK,
+			eSpell::SLOW_GROUP, eSpell::SLOW_GROUP, eSpell::ICE_BOLT, eSpell::SLOW_GROUP, eSpell::ICE_BOLT,
+			eSpell::HASTE_MINOR, eSpell::HASTE_MINOR, eSpell::HASTE_MINOR,
+		}, {
+			eSpell::POISON, eSpell::HASTE_MAJOR, eSpell::FIRESTORM, eSpell::FIRESTORM, eSpell::SUMMON,
+			eSpell::SUMMON, eSpell::SHOCKSTORM, eSpell::SHOCKSTORM, eSpell::ICE_BOLT, eSpell::SLOW_GROUP,
+			eSpell::HASTE_MAJOR, eSpell::HASTE_MAJOR, eSpell::HASTE_MAJOR, eSpell::HASTE_MAJOR, eSpell::FIRESTORM,
+			eSpell::FIRESTORM, eSpell::FIRESTORM, eSpell::SUMMON,
+		}, {
+			eSpell::KILL, eSpell::KILL, eSpell::POISON_MAJOR, eSpell::POISON_MAJOR, eSpell::SHOCKSTORM,
+			eSpell::SHOCKSTORM, eSpell::SUMMON, eSpell::DEMON, eSpell::FIRESTORM, eSpell::HASTE_MAJOR,
+			eSpell::HASTE_MAJOR, eSpell::HASTE_MAJOR, eSpell::HASTE_MAJOR, eSpell::HASTE_MAJOR, eSpell::HASTE_MAJOR,
+			eSpell::KILL, eSpell::KILL, eSpell::FIRESTORM,
+		}, {
+			eSpell::KILL, eSpell::KILL, eSpell::DEMON, eSpell::BLESS_MAJOR, eSpell::SUMMON_MAJOR,
+			eSpell::SHOCKWAVE, eSpell::FIRESTORM, eSpell::POISON_MAJOR, eSpell::FIRESTORM, eSpell::HASTE_MAJOR,
+			eSpell::HASTE_MAJOR, eSpell::HASTE_MAJOR, eSpell::HASTE_MAJOR, eSpell::HASTE_MAJOR, eSpell::SUMMON_MAJOR,
+			eSpell::DEMON, eSpell::DEMON, eSpell::KILL,
+		},
+	};
+	// 0 - cast when slowed, 1 - don't have enough friends, 2 - lots of clustered enemies, 3 - low on health
+	// TODO: In column 3, level 1 monsters shouldn't have flame (a level 2 spell), and level 5 monsters shouldn't use haste.
+	// (The latter is because column 3 is also used if they're already hasted.)
+	eSpell emer_spells[7][4] = {
+		{eSpell::HASTE_MINOR, eSpell::NONE, eSpell::NONE, eSpell::FLAME},
+		{eSpell::HASTE_MINOR, eSpell::SUMMON_BEAST, eSpell::CONFLAGRATION, eSpell::SLOW},
+		{eSpell::HASTE_MINOR, eSpell::SUMMON_WEAK, eSpell::FIREBALL, eSpell::SUMMON_WEAK},
+		{eSpell::HASTE_MINOR, eSpell::SUMMON_WEAK, eSpell::FIREBALL, eSpell::SUMMON_WEAK},
+		{eSpell::HASTE_MAJOR, eSpell::SUMMON, eSpell::FIRESTORM, eSpell::HASTE_MAJOR},
+		{eSpell::HASTE_MAJOR, eSpell::DEMON, eSpell::FIRESTORM, eSpell::DEMON},
+		{eSpell::HASTE_MAJOR, eSpell::SUMMON_MAJOR, eSpell::FIRESTORM, eSpell::SHOCKWAVE},
+	};
+	std::set<eSpell> area_effects = {
+		eSpell::CLOUD_STINK, eSpell::CONFLAGRATION, eSpell::FIREBALL, eSpell::WEB, eSpell::FIRESTORM, eSpell::SHOCKSTORM,
+	};
 	
 	if(univ.town.is_antimagic(caster->cur_loc.x,caster->cur_loc.y)) {
 		return false;
@@ -2960,6 +2977,8 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 	if((targ >= 100) && (univ.town.monst[targ - 100].active == 0))
 		return false;
 	
+	eSpell spell;
+	
 	level = max(1,caster->mu - caster->status[eStatus::DUMB]) - 1;
 	
 	target = find_fireball_loc(caster->cur_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
@@ -2968,11 +2987,11 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 	if((caster->health * 4 < caster->m_health) && (get_ran(1,0,10) < 9))
 		spell = emer_spells[level][3];
 	else if(((caster->status[eStatus::HASTE_SLOW] < 0 && get_ran(1,0,10) < 7) ||
-			 (caster->status[eStatus::HASTE_SLOW] == 0 && get_ran(1,0,10) < 5)) && emer_spells[level][0] != 0)
+			 (caster->status[eStatus::HASTE_SLOW] == 0 && get_ran(1,0,10) < 5)) && emer_spells[level][0] != eSpell::NONE)
 		spell = emer_spells[level][0];
-	else if((friend_levels_near <= -10) && (get_ran(1,0,10) < 7) && (emer_spells[level][1] != 0))
+	else if(friend_levels_near <= -10 && get_ran(1,0,10) < 7 && emer_spells[level][1] != eSpell::NONE)
 		spell = emer_spells[level][1];
-	else if((target_levels > 50) && (get_ran(1,0,10) < 7) && (emer_spells[level][2] != 0))
+	else if(target_levels > 50 && get_ran(1,0,10) < 7 && emer_spells[level][2] != eSpell::NONE)
 		spell = emer_spells[level][2];
 	else {
 		r1 = get_ran(1,0,17);
@@ -2980,110 +2999,110 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 	}
 	
 	// Hastes happen often now, but don't cast them redundantly
-	if(caster->status[eStatus::HASTE_SLOW] > 0 && (spell == 2 || spell == 18))
+	if(caster->status[eStatus::HASTE_SLOW] > 0 && (spell == eSpell::HASTE_MINOR || spell == eSpell::HASTE_MAJOR))
 		spell = emer_spells[level][3];
 	
 	
-	// Anything prventing spell?
-	if((target.x > 64) && (monst_mage_area_effect[spell - 1] > 0)) {
+	// Anything preventing spell?
+	if(target.x > 64 && area_effects.count(spell) > 0) {
 		r1 = get_ran(1,0,9);
 		spell = caster_array[level][r1];
-		if((target.x > 64) && (monst_mage_area_effect[spell - 1] > 0))
+		if(target.x > 64 && area_effects.count(spell) > 0)
 			return false;
 	}
-	if(monst_mage_area_effect[spell - 1] > 0) {
+	if(area_effects.count(spell) > 0) {
 		targ = 6;
 	}
 	
 	if(targ < 6) {
 		vict_loc = (is_combat()) ? univ.party[targ].combat_pos : univ.town.p_loc;
-		if(is_town())
-			vict_loc = target = univ.town.p_loc;
 	}
 	if(targ >= 100)
 		vict_loc = univ.town.monst[targ - 100].cur_loc;
-	if((targ == 6) && (univ.town.is_antimagic(target.x,target.y)))
-		return false;
 	
 	// check antimagic
+	if(targ == 6 && univ.town.is_antimagic(target.x,target.y))
+		return false;
 	if(is_combat())
-		if((targ < 6) && (univ.town.is_antimagic(univ.party[targ].combat_pos.x,univ.party[targ].combat_pos.y)))
+		if(targ < 6 && univ.town.is_antimagic(univ.party[targ].combat_pos.x,univ.party[targ].combat_pos.y))
 			return false;
 	if(is_town())
-		if((targ < 6) && (univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y)))
+		if(targ < 6 && univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y))
 			return false;
-	if((targ >= 100) && (univ.town.is_antimagic(univ.town.monst[targ - 100].cur_loc.x,
-												 univ.town.monst[targ - 100].cur_loc.y)))
+	if(targ >= 100 && univ.town.is_antimagic(univ.town.monst[targ - 100].cur_loc.x, univ.town.monst[targ - 100].cur_loc.y))
 		return false;
 	
-	
 	// How about shockwave? Good idea?
-	if((spell == 27) && (caster->attitude % 2 != 1))
-		spell = 26;
-	if((spell == 27) && (caster->attitude % 2 == 1) && (count_levels(caster->cur_loc,10) < 45))
-		spell = 26;
+	if(spell == eSpell::SHOCKWAVE && caster->attitude % 2 != 1)
+		spell = eSpell::SUMMON_MAJOR;
+	if(spell == eSpell::SHOCKWAVE && caster->attitude % 2 == 1 && count_levels(caster->cur_loc,10) < 45)
+		spell = eSpell::SUMMON_MAJOR;
 	
 //	sprintf((char *)create_line,"m att %d trg %d trg2 x%dy%d spl %d mp %d tl:%d ",caster->attitude,targ,
 //		(short)target.x,(short)target.y,spell,caster->mp,target_levels);
 //	add_string_to_buf((char *) create_line);
 	
 	l = caster->cur_loc;
-	if((caster->direction < 4) && (caster->x_width > 1))
+	if(caster->direction < 4 && caster->x_width > 1)
 		l.x++;
 	
-	if(caster->mp >= monst_mage_cost[spell - 1]) {
-		monst_cast_spell_note(caster->number,spell,0);
+	short cost = (*spell).level;
+	if(spell == eSpell::SUMMON_BEAST || spell == eSpell::FIREBALL || spell == eSpell::SUMMON_WEAK)
+		cost = 4;
+	
+	if(caster->mp >= cost) {
+		monst_cast_spell_note(caster->number,spell);
 		acted = true;
-		caster->mp -= monst_mage_cost[spell - 1];
+		caster->mp -= cost;
 		
 		draw_terrain(2);
 		switch(spell) {
-			case 1: // spark
+			case eSpell::SPARK:
 				run_a_missile(l,vict_loc,6,1,11,0,0,80);
 				r1 = get_ran(2,1,4);
 				damage_target(targ,r1,DAMAGE_FIRE);
 				break;
-			case 2: // minor haste
+			case eSpell::HASTE_MINOR:
 				play_sound(25);
 				caster->status[eStatus::HASTE_SLOW] += 2;
 				break;
-			case 3: // strength
+			case eSpell::STRENGTH:
 				play_sound(25);
 				caster->status[eStatus::BLESS_CURSE] += 3;
 				break;
-			case 4: // flame cloud
+			case eSpell::CLOUD_FLAME:
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
 				place_spell_pattern(single,vict_loc,WALL_FIRE,7);
 				break;
-			case 5: // flame
+			case eSpell::FLAME:
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
 				start_missile_anim();
 				r1 = get_ran(caster->level,1,4);
 				damage_target(targ,r1,DAMAGE_FIRE);
 				break;
-			case 6: // minor poison
+			case eSpell::POISON_MINOR:
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
 				if(targ < 6)
 					poison_pc(targ,2 + get_ran(1,0,1));
 				else poison_monst(&univ.town.monst[targ - 100],2 + get_ran(1,0,1));
 				break;
-			case 7: // slow
+			case eSpell::SLOW:
 				run_a_missile(l,vict_loc,15,0,25,0,0,80);
 				if(targ < 6)
 					slow_pc(targ,2 + caster->level / 2);
 				else slow_monst(&univ.town.monst[targ - 100],2 + caster->level / 2);
 				break;
-			case 8: // dumbfound
+			case eSpell::DUMBFOUND:
 				run_a_missile(l,vict_loc,14,0,25,0,0,80);
 				if(targ < 6)
 					dumbfound_pc(targ,2);
 				else dumbfound_monst(&univ.town.monst[targ - 100],2);
 				break;
-			case 9: // scloud
+			case eSpell::CLOUD_STINK:
 				run_a_missile(l,target,0,0,25,0,0,80);
 				place_spell_pattern(square,target,CLOUD_STINK,7);
 				break;
-			case 10: // summon beast
+			case eSpell::SUMMON_BEAST:
 				r1 = get_summon_monster(1);
 				if(r1 == 0)
 					break;
@@ -3094,11 +3113,11 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				summon_monster(r1,caster->cur_loc,
 							   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
 				break;
-			case 11: // conflagration
+			case eSpell::CONFLAGRATION:
 				run_a_missile(l,target,13,1,25,0,0,80);
 				place_spell_pattern(rad2,target,WALL_FIRE,7);
 				break;
-			case 12: // fireball
+			case eSpell::FIREBALL:
 				r1 = 1 + (caster->level * 3) / 4;
 				if(r1 > 29) r1 = 29;
 				run_a_missile(l,target,2,1,11,0,0,80);
@@ -3106,21 +3125,21 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				place_spell_pattern(square,target,DAMAGE_FIRE,r1,7);
 				ashes_loc = target;
 				break;
-			case 13: case 20: case 26:// summon
+			case eSpell::SUMMON_WEAK: case eSpell::SUMMON: case eSpell::SUMMON_MAJOR:
 				play_sound(25);
-				if(spell == 13) {
+				if(spell == eSpell::SUMMON_WEAK) {
 					r1 = get_summon_monster(1);
 					if(r1 == 0)
 						break;
 					j = get_ran(2,1,3) + 1;
 				}
-				if(spell == 20) {
+				if(spell == eSpell::SUMMON) {
 					r1 = get_summon_monster(2);
 					if(r1 == 0)
 						break;
 					j = get_ran(2,1,2) + 1;
 				}
-				if(spell == 26) {
+				if(spell == eSpell::SUMMON_MAJOR) {
 					r1 = get_summon_monster(3);
 					if(r1 == 0)
 						break;
@@ -3136,24 +3155,24 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 						add_string_to_buf("  Summon failed."); i = j;}
 				}
 				break;
-			case 14: // web
+			case eSpell::WEB:
 				play_sound(25);
 				place_spell_pattern(rad2,target,FIELD_WEB,7);
 				break;
-			case 15: // poison
+			case eSpell::POISON:
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
 				x = get_ran(1,0,3);
 				if(targ < 6)
 					poison_pc(targ,4 + x);
 				else poison_monst(&univ.town.monst[targ - 100],4 + x);
 				break;
-			case 16: // ice bolt
+			case eSpell::ICE_BOLT:
 				run_a_missile(l,vict_loc,6,1,11,0,0,80);
 				r1 = get_ran(5 + (caster->level / 5),1,8);
 				start_missile_anim();
 				damage_target(targ,r1,DAMAGE_COLD);
 				break;
-			case 17: // slow gp
+			case eSpell::SLOW_GROUP:
 				play_sound(25);
 				if(caster->attitude % 2 == 1)
 					for(i = 0; i < 6; i++)
@@ -3168,7 +3187,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 						slow_monst(&univ.town.monst[i],2 + caster->level / 4);
 				}
 				break;
-			case 18: // major haste
+			case eSpell::HASTE_MAJOR:
 				play_sound(25);
 				for(i = 0; i < univ.town->max_monst(); i++)
 					if((monst_near(i,caster->cur_loc,8,0)) &&
@@ -3178,7 +3197,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 					}
 				play_sound(4);
 				break;
-			case 19: // firestorm
+			case eSpell::FIRESTORM:
 				run_a_missile(l,target,2,1,11,0,0,80);
 				r1 = 1 + (caster->level * 3) / 4 + 3;
 				if(r1 > 29) r1 = 29;
@@ -3186,28 +3205,24 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				place_spell_pattern(rad2,target,DAMAGE_FIRE,r1,7);
 				ashes_loc = target;
 				break;
-				
-				
-				
-				
-			case 21: // shockstorm
+			case eSpell::SHOCKSTORM:
 				run_a_missile(l,target,6,1,11,0,0,80);
 				place_spell_pattern(rad2,target,WALL_FORCE,7);
 				break;
-			case 22: // m. poison
+			case eSpell::POISON_MAJOR:
 				run_a_missile(l,vict_loc,11,1,11,0,0,80);
 				x = get_ran(1,1,2);
 				if(targ < 6)
 					poison_pc(targ,6 + x);
 				else poison_monst(&univ.town.monst[targ - 100],6 + x);
 				break;
-			case 23: // kill!!!
+			case eSpell::KILL:
 				run_a_missile(l,vict_loc,9,1,11,0,0,80);
 				r1 = 35 + get_ran(3,1,10);
 				start_missile_anim();
 				damage_target(targ,r1,DAMAGE_MAGIC);
 				break;
-			case 24: // daemon
+			case eSpell::DEMON:
 				x = get_ran(3,1,4);
 				play_sound(25);
 				play_sound(-61);
@@ -3216,7 +3231,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				summon_monster(85,caster->cur_loc,
 							   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
 				break;
-			case 25: // major bless
+			case eSpell::BLESS_MAJOR:
 				play_sound(25);
 				for(i = 0; i < univ.town->max_monst(); i++)
 					if((monst_near(i,caster->cur_loc,8,0)) &&
@@ -3232,7 +3247,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 					}
 				play_sound(4);
 				break;
-			case 27: // shockwave
+			case eSpell::SHOCKWAVE:
 				do_shockwave(caster->cur_loc);
 				break;
 		}
@@ -3249,26 +3264,45 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 }
 
 bool monst_cast_priest(cCreature *caster,short targ) {
-	short r1,r2,spell,i,x,level,target_levels,friend_levels_near;
+	short r1,r2,i,x,level,target_levels,friend_levels_near;
 	bool acted = false;
 	location target,vict_loc,l;
 	cCreature *affected;
-	short caster_array[7][10] = {
-		{1,1,1,1,3,3,3,4,4,4},
-		{5,5,6,6,7,7,8,8,8,9},
-		{9,6,6,8,11,12,12,5,5,12},
-		{12,12,13,13,14,9,9,14,14,15},
-		{19,18,13,19,15,18,18,19,16,18},
-		{22,18,16,19,18,18,21,22,23,23},
-		{26,26,25,24,26,22,24,22,26,25}};
-	short emer_spells[7][4] = {
-		{0,1,0,2},
-		{0,8,0,2},
-		{0,8,0,10},
-		{0,14,0,10},
-		{0,19,18,17},
-		{0,19,18,20},
-		{25,25,26,24}};
+	eSpell caster_array[7][10] = {
+		{
+			eSpell::BLESS_MINOR, eSpell::BLESS_MINOR, eSpell::BLESS_MINOR, eSpell::BLESS_MINOR, eSpell::WRACK,
+			eSpell::WRACK, eSpell::WRACK, eSpell::GOO, eSpell::GOO, eSpell::GOO,
+		}, {
+			eSpell::BLESS, eSpell::BLESS, eSpell::CURSE, eSpell::CURSE, eSpell::WOUND,
+			eSpell::WOUND, eSpell::SUMMON_SPIRIT, eSpell::SUMMON_SPIRIT, eSpell::SUMMON_SPIRIT, eSpell::DISEASE,
+		}, {
+			eSpell::DISEASE, eSpell::CURSE, eSpell::CURSE, eSpell::SUMMON_SPIRIT, eSpell::HOLY_SCOURGE,
+			eSpell::SMITE, eSpell::SMITE, eSpell::BLESS, eSpell::BLESS, eSpell::SMITE,
+		}, {
+			eSpell::SMITE, eSpell::SMITE, eSpell::CURSE_ALL, eSpell::CURSE_ALL, eSpell::STICKS_TO_SNAKES,
+			eSpell::DISEASE, eSpell::DISEASE, eSpell::STICKS_TO_SNAKES, eSpell::STICKS_TO_SNAKES, eSpell::MARTYRS_SHIELD,
+		}, {
+			eSpell::SUMMON_HOST, eSpell::FLAMESTRIKE, eSpell::CURSE_ALL, eSpell::SUMMON_HOST, eSpell::MARTYRS_SHIELD,
+			eSpell::FLAMESTRIKE, eSpell::FLAMESTRIKE, eSpell::SUMMON_HOST, eSpell::BLESS_PARTY, eSpell::FLAMESTRIKE,
+		}, {
+			eSpell::SUMMON_GUARDIAN, eSpell::FLAMESTRIKE, eSpell::BLESS_PARTY, eSpell::SUMMON_HOST, eSpell::FLAMESTRIKE,
+			eSpell::FLAMESTRIKE, eSpell::UNHOLY_RAVAGING, eSpell::SUMMON_GUARDIAN, eSpell::PESTILENCE, eSpell::PESTILENCE,
+		}, {
+			eSpell::DIVINE_THUD, eSpell::DIVINE_THUD, eSpell::AVATAR, eSpell::REVIVE_ALL, eSpell::DIVINE_THUD,
+			eSpell::SUMMON_GUARDIAN, eSpell::REVIVE_ALL, eSpell::SUMMON_GUARDIAN, eSpell::DIVINE_THUD, eSpell::AVATAR,
+		},
+	};
+	// 0 - cast when slowed, 1 - don't have enough friends, 2 - lots of clustered enemies, 3 - low on health
+	eSpell emer_spells[7][4] = {
+		{eSpell::NONE, eSpell::BLESS_MINOR, eSpell::NONE, eSpell::HEAL_MINOR},
+		{eSpell::NONE, eSpell::SUMMON_SPIRIT, eSpell::NONE, eSpell::HEAL_MINOR},
+		{eSpell::NONE, eSpell::SUMMON_SPIRIT, eSpell::NONE, eSpell::HEAL},
+		{eSpell::NONE, eSpell::STICKS_TO_SNAKES, eSpell::NONE, eSpell::HEAL},
+		{eSpell::NONE, eSpell::SUMMON_HOST, eSpell::FLAMESTRIKE, eSpell::HEAL_MAJOR},
+		{eSpell::NONE, eSpell::SUMMON_HOST, eSpell::FLAMESTRIKE, eSpell::HEAL_ALL},
+		{eSpell::AVATAR, eSpell::AVATAR, eSpell::DIVINE_THUD, eSpell::REVIVE_ALL},
+	};
+	std::set<eSpell> area_effects = {eSpell::FLAMESTRIKE, eSpell::DIVINE_THUD};
 	location ashes_loc;
 	
 	
@@ -3281,43 +3315,42 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 	}
 	level = max(1,caster->cl - caster->status[eStatus::DUMB]) - 1;
 	
+	eSpell spell;
+	
 	target = find_fireball_loc(caster->cur_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
 	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->cur_loc,3) : -1 * count_levels(caster->cur_loc,3);
 	
 	if((caster->health * 4 < caster->m_health) && (get_ran(1,0,10) < 9))
 		spell = emer_spells[level][3];
-	else if(caster->status[eStatus::HASTE_SLOW] < 0 && get_ran(1,0,10) < 7 && emer_spells[level][0] != 0)
+	else if(caster->status[eStatus::HASTE_SLOW] < 0 && get_ran(1,0,10) < 7 && emer_spells[level][0] != eSpell::NONE)
 		spell = emer_spells[level][0];
-	else if((friend_levels_near <= -10) && (get_ran(1,0,10) < 7) && (emer_spells[level][1] != 0))
+	else if(friend_levels_near <= -10 && get_ran(1,0,10) < 7 && emer_spells[level][1] != eSpell::NONE)
 		spell = emer_spells[level][1];
-	else if((target_levels > 50 < 0) && (get_ran(1,0,10) < 7) && (emer_spells[level][2] != 0))
+	else if(target_levels > 50 && get_ran(1,0,10) < 7 && emer_spells[level][2] != eSpell::NONE)
 		spell = emer_spells[level][2];
 	else {
 		r1 = get_ran(1,0,9);
 		spell = caster_array[level][r1];
 	}
 	
-	
-	
 	// Anything preventing spell?
-	if((target.x > 64) && (monst_priest_area_effect[spell - 1] > 0))  {
+	if(target.x > 64 && area_effects.count(spell) > 0)  {
 		r1 = get_ran(1,0,9);
 		spell = caster_array[level][r1];
-		if((target.x > 64) && (monst_priest_area_effect[spell - 1] > 0))
+		if(target.x > 64 && area_effects.count(spell) > 0)
 			return false;
 	}
-	if(monst_priest_area_effect[spell - 1] > 0)
+	if(area_effects.count(spell) > 0)
 		targ = 6;
 	if(targ < 6)
 		vict_loc = (is_town()) ? univ.town.p_loc : univ.party[targ].combat_pos;
 	if(targ >= 100)
 		vict_loc = univ.town.monst[targ - 100].cur_loc;
-	if((targ == 6) && (univ.town.is_antimagic(target.x,target.y)))
+	if(targ == 6 && univ.town.is_antimagic(target.x,target.y))
 		return false;
-	if((targ < 6) && (univ.town.is_antimagic(univ.party[targ].combat_pos.x,univ.party[targ].combat_pos.y)))
+	if(targ < 6 && univ.town.is_antimagic(univ.party[targ].combat_pos.x,univ.party[targ].combat_pos.y))
 		return false;
-	if((targ >= 100) && (univ.town.is_antimagic(univ.town.monst[targ - 100].cur_loc.x,
-												 univ.town.monst[targ - 100].cur_loc.y)))
+	if(targ >= 100 && univ.town.is_antimagic(univ.town.monst[targ - 100].cur_loc.x,univ.town.monst[targ - 100].cur_loc.y))
 		return false;
 	
 	
@@ -3326,64 +3359,72 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 //	add_string_to_buf((char *) create_line);
 	
 	// snuff heals if unwounded
-	if((caster->health == caster->m_health) &&
-		((spell == 17) || (spell == 20)))
-	 	spell--;
+	if(caster->health == caster->m_health) {
+		// TODO: Should probably check minor heal but not heal all.
+		if(spell == eSpell::HEAL_MAJOR) spell = eSpell::BLESS_PARTY;
+		if(spell == eSpell::HEAL_ALL) spell = eSpell::SUMMON_HOST;
+	}
 	
 	l = caster->cur_loc;
 	if((caster->direction < 4) && (caster->x_width > 1))
 		l.x++;
 	
-	if(caster->mp >= monst_priest_cost[spell - 1]) {
-		monst_cast_spell_note(caster->number,spell,1);
+	short cost = (*spell).level;
+	if(spell == eSpell::SUMMON_SPIRIT || spell == eSpell::PESTILENCE || cost == 7)
+		cost = 8;
+	if(spell == eSpell::SUMMON_GUARDIAN || spell == eSpell::SUMMON_HOST)
+		cost = 10;
+	
+	if(caster->mp >= cost) {
+		monst_cast_spell_note(caster->number,spell);
 		acted = true;
-		caster->mp -= monst_priest_cost[spell - 1];
+		caster->mp -= cost;
 		draw_terrain(2);
 		switch(spell) {
-			case 3: // wrack
+			case eSpell::WRACK:
 				run_a_missile(l,vict_loc,8,0,24,0,0,80);
 				r1 = get_ran(2,1,4);
 				start_missile_anim();
 				damage_target(targ,r1,DAMAGE_UNBLOCKABLE);
 				break;
-			case 4: // stumble
+			case eSpell::GOO:
 				play_sound(24);
 				place_spell_pattern(single,vict_loc,FIELD_WEB,7);
 				break;
-			case 1: case 5: // Blesses
+			case eSpell::BLESS_MINOR: case eSpell::BLESS:
 				play_sound(24);
-				caster->status[eStatus::BLESS_CURSE] = min(8,caster->status[eStatus::BLESS_CURSE] + ((spell == 1) ? 3 : 5));
+				caster->status[eStatus::BLESS_CURSE] = min(8,caster->status[eStatus::BLESS_CURSE] + (spell == eSpell::BLESS ? 5 : 3));
 				play_sound(4);
 				break;
-			case 6: // curse
+			case eSpell::CURSE:
 				run_a_missile(l,vict_loc,8,0,24,0,0,80);
 				x = get_ran(1,0,1);
 				if(targ < 6)
 					curse_pc(targ,2 + x);
 				else curse_monst(&univ.town.monst[targ - 100],2 + x);
 				break;
-			case 7: // wound
+			case eSpell::WOUND:
 				run_a_missile(l,vict_loc,8,0,24,0,0,80);
 				r1 = get_ran(2,1,6) + 2;
 				start_missile_anim();
 				damage_target(targ,r1,DAMAGE_MAGIC);
 				break;
-			case 8: case 22: // summon spirit,summon guardian
+			case eSpell::SUMMON_SPIRIT: case eSpell::SUMMON_GUARDIAN:
 				play_sound(24);
 				play_sound(-61);
 				
 				x =  get_ran(3,1,4);
-				summon_monster(((spell == 8) ? 125 : 122),caster->cur_loc,
+				summon_monster(spell == eSpell::SUMMON_SPIRIT ? 125 : 122,caster->cur_loc,
 							   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
 				break;
-			case 9: // disease
+			case eSpell::DISEASE:
 				run_a_missile(l,vict_loc,11,0,24,0,0,80);
 				x = get_ran(1,0,2);
 				if(targ < 6)
 					disease_pc(targ,2 + x);
 				else disease_monst(&univ.town.monst[targ - 100],2 + x);
 				break;
-			case 11: // holy scourge
+			case eSpell::HOLY_SCOURGE:
 				run_a_missile(l,vict_loc,15,0,24,0,0,80);
 				if(targ < 6) {
 					r1 = get_ran(1,0,2);
@@ -3398,13 +3439,13 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 					curse_monst(&univ.town.monst[targ - 100],r1);
 				}
 				break;
-			case 12: // smite
+			case eSpell::SMITE:
 				run_a_missile(l,vict_loc,6,0,24,0,0,80);
 				r1 = get_ran(4,1,6) + 2;
 				start_missile_anim();
 				damage_target(targ,r1,DAMAGE_COLD);
 				break;
-			case 14: // sticks to snakes
+			case eSpell::STICKS_TO_SNAKES: // sticks to snakes
 				play_sound(24);
 				r1 = get_ran(1,1,4) + 2;
 				for(i = 0; i < r1; i++) {
@@ -3415,11 +3456,11 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 								   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
 				}
 				break;
-			case 15: // martyr's shield
+			case eSpell::MARTYRS_SHIELD: // martyr's shield
 				play_sound(24);
 				caster->status[eStatus::MARTYRS_SHIELD] = min(10,caster->status[eStatus::MARTYRS_SHIELD] + 5);
 				break;
-			case 19: // summon host
+			case eSpell::SUMMON_HOST: // summon host
 				play_sound(24);
 				x = get_ran(3,1,4) + 1;
 				play_sound(-61);
@@ -3432,17 +3473,16 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 						i = 4;
 				}
 				break;
-				
-			case 13: case 23: // holy scourge,curse all,pestilence
+			case eSpell::CURSE_ALL: case eSpell::PESTILENCE:
 				play_sound(24);
 				r1 = get_ran(2,0,2);
 				r2 = get_ran(1,0,2);
 				if(caster->attitude % 2 == 1)
 					for(i = 0; i < 6; i++)
 						if(pc_near(i,caster->cur_loc,8)) {
-							if(spell == 13)
+							if(spell == eSpell::CURSE_ALL)
 								curse_pc(i,2 + r1);
-							if(spell == 23)
+							if(spell == eSpell::PESTILENCE)
 								disease_pc(i,2 + r2);
 						}
 				for(i = 0; i < univ.town->max_monst(); i++) {
@@ -3451,25 +3491,25 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 						 ((univ.town.monst[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
 						 ((univ.town.monst[i].attitude % 2 == 1) && (caster->attitude != univ.town.monst[i].attitude)))
 						&& (dist(caster->cur_loc,univ.town.monst[i].cur_loc) <= 7)) {
-						if(spell == 13)
+						if(spell == eSpell::CURSE_ALL)
 							curse_monst(&univ.town.monst[i],2 + r1);
-						if(spell == 23)
+						if(spell == eSpell::PESTILENCE)
 							disease_monst(&univ.town.monst[i],2 + r2);
 					}
 				}
 				break;
 				
-			case 2: case 10: case 17: case 20: // heals
+			case eSpell::HEAL_MINOR: case eSpell::HEAL: case eSpell::HEAL_MAJOR: case eSpell::HEAL_ALL:
 				play_sound(24);
 				switch(spell) {
-					case 2: r1 = get_ran(2,1,4) + 2; break;
-					case 10: r1 = get_ran(3,1,6); break;
-					case 17: r1 = get_ran(5,1,6) + 3; break;
-					case 20: r1 = 50; break;
+					case eSpell::HEAL_MINOR: r1 = get_ran(2,1,4) + 2; break;
+					case eSpell::HEAL: r1 = get_ran(3,1,6); break;
+					case eSpell::HEAL_MAJOR: r1 = get_ran(5,1,6) + 3; break;
+					case eSpell::HEAL_ALL: r1 = 50; break;
 				}
 				caster->health = min(caster->health + r1, caster->m_health);
 				break;
-			case 16: case 24:// bless all,revive all
+			case eSpell::BLESS_PARTY: case eSpell::REVIVE_ALL:
 				play_sound(24);
 				// TODO: What's r2 for here? Should it be used for Revive All?
 				r1 =  get_ran(2,1,4); r2 = get_ran(3,1,6);
@@ -3477,23 +3517,21 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
-						if(spell == 16)
+						if(spell == eSpell::BLESS_PARTY)
 							affected->status[eStatus::BLESS_CURSE] = min(8,affected->status[eStatus::BLESS_CURSE] + r1);
-						if(spell == 24)
+						if(spell == eSpell::REVIVE_ALL)
 							affected->health += r1;
 					}
 				play_sound(4);
 				break;
-			case 18: // Flamestrike
+			case eSpell::FLAMESTRIKE:
 				run_a_missile(l,target,2,0,11,0,0,80);
 				r1 = 2 + caster->level / 2 + 2;
 				start_missile_anim();
 				place_spell_pattern(square,target,DAMAGE_FIRE,r1,7);
 				ashes_loc = target;
 				break;
-				
-				
-			case 21: // holy ravaging
+			case eSpell::UNHOLY_RAVAGING:
 				run_a_missile(l,vict_loc,14,0,53,0,0,80);
 				r1 = get_ran(4,1,8);
 				r2 = get_ran(1,0,2);
@@ -3507,7 +3545,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 					poison_monst(&univ.town.monst[targ - 100],5 + r2);
 				}
 				break;
-			case 25: // avatar
+			case eSpell::AVATAR:
 				play_sound(24);
 				monst_spell_note(caster->number,26);
 				caster->health = caster->m_health;
@@ -3519,7 +3557,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				caster->status[eStatus::DUMB] = 0;
 				caster->status[eStatus::MARTYRS_SHIELD] = 8;
 				break;
-			case 26: // divine thud
+			case eSpell::DIVINE_THUD:
 				run_a_missile(l,target,9,0,11,0,0,80);
 				r1 = (caster->level * 3) / 4 + 5;
 				if(r1 > 29) r1 = 29;

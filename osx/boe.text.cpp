@@ -17,21 +17,6 @@
 #include "scrollbar.h"
 #include "restypes.hpp"
 
-const char *m_mage_sp[] = {
-	"Spark","Minor Haste","Strength","Flame Cloud","Flame",
-	"Minor Poison","Slow","Dumbfound","Stinking Cloud","Summon Beast",
-	"Conflagration","Fireball","Weak Summoning","Web","Poison",
-	"Ice Bolt","Slow Group","Major Haste","Firestorm","Summoning",
-	"Shockstorm","Major Poison","Kill","Daemon","Major Blessing",
-	"Major Summoning","Shockwave"};
-const char *m_priest_sp[] = {
-	"Minor Bless","Light Heal","Wrack","Stumble","Bless",
-	"Curse","Wound","Summon Spirit","Disease","Heal",
-	"Holy Scourge","Smite","Curse All","Sticks to Snakes","Martyr's Shield",
-	"Bless All","Major Heal","Flamestrike","Summon Host","Heal All",
-	"Unholy Ravaging","Summon Guardian","Pestilence","Revive All","Avatar",
-	"Divine Thud"};
-
 typedef struct {
 	char line[50];
 } buf_line;
@@ -1180,11 +1165,12 @@ void monst_spell_note(m_num_t number,short which_mess) {
 }
 
 //short type; // 0 - mage 1- priest
-void monst_cast_spell_note(m_num_t number,short spell,short type) {
+void monst_cast_spell_note(m_num_t number,eSpell spell) {
+	short spell_num = short(spell);
 	std::string msg = get_m_name(number);
 	msg += " casts:";
 	add_string_to_buf((char *) msg.c_str());
-	msg = (type == 1) ? m_priest_sp[spell - 1] : m_mage_sp[spell - 1];
+	msg = get_str("magic-names", spell_num);
 	msg = "  " + msg;
 	add_string_to_buf((char *) msg.c_str());
 }

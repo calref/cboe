@@ -60,17 +60,17 @@ Major Summoning
 Force Barrier
 Quickfire
 Death Arrows
-
-
-
-
-
-
-
-
-
-
-
+Strengthen Target
+Summon Rat
+Sphere of Ice
+Goo Bomb
+Foul Vapours
+Sleep Bomb
+Acid Spray
+Paralyze Beam
+Mass Sleep
+Ravage Enemies
+Aura of Blades
 
 
 
@@ -136,7 +136,7 @@ Sticks to Snakes
 Martyr's Shield
 Cleanse
 Firewalk
-Bless Party
+Bless All
 Major Heal
 Raise Dead
 Flamestrike
@@ -160,10 +160,10 @@ Avatar
 Wall of Blades
 Word of Recall
 Major Cleansing
-
-
-
-
+Dispel Field
+Distance Shatter
+Wrack
+Unholy Ravaging
 
 
 

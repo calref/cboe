@@ -965,6 +965,8 @@ enum class eSpell {
 	// Special spells
 	DISPEL_FIELD = 162,
 	MOVE_MOUNTAINS_MASS = 163,
+	WRACK = 164,
+	UNHOLY_RAVAGING = 165,
 };
 
 inline bool isMage(eSpell spell) {

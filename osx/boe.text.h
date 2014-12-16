@@ -26,7 +26,7 @@ void print_monst_attacks(m_num_t m_type,short target);
 void damaged_message(short damage,short type);
 std::string print_monster_going(m_num_t m_num,short ap);
 void monst_spell_note(m_num_t number,short which_mess);
-void monst_cast_spell_note(m_num_t number,short spell,short type);
+void monst_cast_spell_note(m_num_t number,eSpell spell);
 void monst_breathe_note(m_num_t number);
 void monst_damaged_mes(short which_m,short how_much,short how_much_spec);
 void monst_killed_mes(short which_m);
