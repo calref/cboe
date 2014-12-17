@@ -49,6 +49,7 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	std::pair<std::string,cPict*> p;
 	Iterator<Attribute> attr;
 	std::string name;
+	ePicType type;
 	bool wide = false, tall = false, custom = false;
 	bool foundTop = false, foundLeft = false, foundType = false, foundNum = false; // required attributes
 	RECT frame;
@@ -62,38 +63,43 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			std::string val;
 			foundType = true;
 			attr->GetValue(&val);
-			pic_num_t wasPic = p.second->getPicNum();
 			if(val == "blank"){
-				p.second->setPict(-1, PIC_TER);
+				p.second->setPict(cPict::BLANK, PIC_TER);
+				foundNum = true;
+				continue;
 			}else if(val == "ter")
-				p.second->setPict(wasPic, PIC_TER);
+				type = PIC_TER;
 			else if(val == "teranim")
-				p.second->setPict(wasPic, PIC_TER_ANIM);
+				type = PIC_TER_ANIM;
 			else if(val == "monst")
-				p.second->setPict(wasPic, PIC_MONST);
+				type = PIC_MONST;
 			else if(val == "dlog")
-				p.second->setPict(wasPic, PIC_DLOG);
+				type = PIC_DLOG;
 			else if(val == "talk")
-				p.second->setPict(wasPic, PIC_TALK);
+				type = PIC_TALK;
 			else if(val == "scen")
-				p.second->setPict(wasPic, PIC_SCEN);
+				type = PIC_SCEN;
 			else if(val == "item")
-				p.second->setPict(wasPic, PIC_ITEM);
+				type = PIC_ITEM;
 			else if(val == "pc")
-				p.second->setPict(wasPic, PIC_PC);
+				type = PIC_PC;
 			else if(val == "field")
-				p.second->setPict(wasPic, PIC_FIELD);
+				type = PIC_FIELD;
 			else if(val == "boom")
-				p.second->setPict(wasPic, PIC_BOOM);
+				type = PIC_BOOM;
 			else if(val == "missile")
-				p.second->setPict(wasPic, PIC_MISSILE);
+				type = PIC_MISSILE;
 			else if(val == "full")
-				p.second->setPict(wasPic, PIC_FULL);
+				type = PIC_FULL;
 			else if(val == "map")
-				p.second->setPict(wasPic, PIC_TER_MAP);
+				type = PIC_TER_MAP;
 			else if(val == "status")
-				p.second->setPict(wasPic, PIC_STATUS);
+				type = PIC_STATUS;
 			else throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
+			if(foundNum) {
+				pic_num_t wasPic = p.second->getPicNum();
+				p.second->setPict(wasPic, type);
+			}
 		}else if(name == "custom"){
 			std::string val;
 			attr->GetValue(&val);
@@ -117,7 +123,8 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 		}else if(name == "num"){
 			pic_num_t newPic;
 			attr->GetValue(&newPic), foundNum = true;
-			p.second->setPict(newPic);
+			if(foundType) p.second->setPict(newPic, type);
+			else p.second->setPict(newPic);
 		}else if(name == "top"){
 			attr->GetValue(&frame.top), foundTop = true;
 		}else if(name == "left"){

@@ -17,6 +17,7 @@
 
 extern sf::Texture bg_gworld;
 extern cCustomGraphics spec_scen_g;
+const pic_num_t cPict::BLANK = std::numeric_limits<pic_num_t>::max();
 
 void cPict::init(){
 	drawPict()[PIC_TER] = &cPict::drawPresetTer;
@@ -109,51 +110,15 @@ sf::Color cPict::getColour() throw(xUnsupportedProp) {
 void cPict::setPict(pic_num_t num, ePicType type){
 	picNum = num;
 	picType = type;
-	switch(picType + PIC_PRESET){
-		case PIC_DLOG:
-			frame.right = frame.left + 36;
-			frame.bottom = frame.top + 36;
-			break;
-		case PIC_DLOG_LG:
-			frame.right = frame.left + 72;
-			frame.bottom = frame.top + 72;
-			break;
-		case PIC_SCEN:
-		case PIC_TALK:
-			frame.right = frame.left + 32;
-			frame.bottom = frame.top + 32;
-			break;
-		case PIC_SCEN_LG:
-			frame.right = frame.left + 64;
-			frame.bottom = frame.top + 64;
-			break;
-		case PIC_MISSILE:
-			frame.right = frame.left + 18;
-			frame.bottom = frame.top + 18;
-			break;
-		case PIC_TER_MAP:
-			frame.right = frame.left + 24;
-			frame.bottom = frame.top + 24;
-			break;
-		case PIC_STATUS:
-			frame.right = frame.left + 12;
-			frame.bottom = frame.top + 12;
-			break;
-		case PIC_MONST:
-			if(picNum < 1000) {
-				if(m_pic_index[num].x == 2) picType += PIC_WIDE;
-				if(m_pic_index[num].y == 2) picType += PIC_TALL;
-			}
-			// Intentional fallthrough
-		default:
-			frame.right = frame.left + 28;
-			frame.bottom = frame.top + 36;
-			break;
+	if(picType == PIC_MONST && picNum < 1000) {
+		if(m_pic_index[num].x == 2) picType += PIC_WIDE;
+		if(m_pic_index[num].y == 2) picType += PIC_TALL;
 	}
-	if(picNum >= 1000) {
+	if(picType != PIC_FULL && picNum >= 1000) {
 		picNum -= 1000;
 		picType += PIC_CUSTOM;
 	}
+	recalcRect();
 }
 
 void cPict::setPict(pic_num_t num) {
@@ -599,7 +564,7 @@ void cPict::draw(){
 		tileImage(*inWindow,rect,bg[parent->getBg()]);
 		return;
 	}
-	if(picNum < 0) { // Just fill with black
+	if(picNum == BLANK) { // Just fill with black
 		fill_rect(*inWindow, rect, sf::Color::Black);
 		return;
 	}

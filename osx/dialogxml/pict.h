@@ -117,16 +117,14 @@ public:
 	sf::Color getColour() throw(xUnsupportedProp);
 	/// @copydoc setPict(pic_num_t)
 	/// @param type The type of the new icon
-	/// @note If you change to a type with a different bounding rect,
-	/// you will need to separately update the bounding rect.
-	/// (The bounding rect is mostly ignored when drawing, so if the icon is opaque, the control is not clickable,
-	/// and there is no frame, you can usually safely skip this step.)
+	/// @note Calling this function automatically adjusts the bounding rect so that the picture fits perfectly.
+	/// It does not change the control's position.
 	///
 	/// This function applies a few automatic adjustments to its input:
 	///
 	/// - If type is PIC_MONST, it automatically looks up the chosen icon to determine
 	/// whether it should apply the tall or wide modifiers.
-	/// - If num is 1000 or greater, it automatically subtracts 1000 and applies the custom modifier.
+	/// - If num is 1000 or greater and type is not PIC_FULL, it automatically subtracts 1000 and applies the custom modifier.
 	void setPict(pic_num_t num, ePicType type);
 	/// Set the pict's icon.
 	/// @param num The new icon index.
@@ -158,12 +156,15 @@ public:
 	/// @param type_g The type of icon to draw.
 	/// @param framed Whether to draw a frame around the icon.
 	static void drawAt(sf::RenderWindow& win, RECT dest, pic_num_t which_g, ePicType type_g, bool framed);
+	/// A convenience constant that can be passed as the pic number to setPict(pic_num_t num).
+	/// It sets the icon to nothing, showing as just black.
+	static const pic_num_t BLANK;
 	cPict& operator=(cPict& other) = delete;
 	cPict(cPict& other) = delete;
 private:
 	static std::shared_ptr<sf::Texture> getSheet(eSheetType type, size_t n = 0);
 	static short animFrame;
-	short picNum;
+	pic_num_t picNum;
 	ePicType picType;
 	bool clickable, drawFramed;
 	void drawPresetTer(short num, RECT to_rect);
