@@ -13,7 +13,7 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent);
 short choose_text_res(std::string res_list,short first_t,short last_t,unsigned short cur_choice,cDialog* parent,const char *title);
 short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent,const char* title);
 void edit_text_str(short which_str,short mode);
-void edit_spec_enc(short which_node,short mode);
+bool edit_spec_enc(short which_node,short mode,cDialog* parent);
 short get_fresh_spec(short which_mode);
 void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent);
 void edit_dialog_text(short mode,short *str1,cDialog* parent);

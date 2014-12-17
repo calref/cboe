@@ -489,6 +489,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 	if(item_hit == "okay") {
 		if(save_spec_enc(me, which_mode, which_node))
 			me.toast(true);
+		me.setResult(true);
 	} else if(item_hit == "back") {
 		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
@@ -503,6 +504,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			return true;
 		}
 		me.toast(false);
+		me.setResult(false);
 	} else if(me[item_hit].getText() == "Create/Edit") {
 		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
@@ -706,7 +708,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 }
 
 // mode - 0 scen 1 - out 2 - town
-void edit_spec_enc(short which_node,short mode) {
+bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	// ignore parent in Mac version
 	using namespace std::placeholders;
 	
@@ -722,7 +724,7 @@ void edit_spec_enc(short which_node,short mode) {
 	if(store_spec_node.pic < 0)
 		store_spec_node.pic = 0;
 	
-	cDialog special("edit-special-node.xml");
+	cDialog special("edit-special-node.xml",parent);
 	auto callback = std::bind(edit_spec_enc_event_filter, _1, _2, std::ref(mode), std::ref(which_node));
 	special.attachClickHandlers(callback, {"okay", "cancel", "back"});
 	special.attachClickHandlers(callback, {"general", "oneshot", "affectpc", "ifthen", "town", "out"});
@@ -733,6 +735,7 @@ void edit_spec_enc(short which_node,short mode) {
 	put_spec_enc_in_dlog(special, which_node);
 	
 	special.run();
+	return special.getResult<bool>();
 }
 
 short get_fresh_spec(short which_mode) {

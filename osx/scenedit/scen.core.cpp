@@ -1233,7 +1233,7 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string item_hit, cSpec
 			}
 			me["spec"].setTextToNum(spec);
 		}
-		edit_spec_enc(spec,0);
+		edit_spec_enc(spec,0,&me);
 		if(spec >= 0 && spec < 256 && scenario.scen_specials[spec].pic < 0)
 			me["spec"].setTextToNum(-1);
 		save_spec_item(me, store_item, which_item);
@@ -1736,130 +1736,97 @@ bool build_scenario() {
 	return false;
 }
 
-void set_starting_loc_filter (short item_hit) {
-#if 0
-	char str[256];
-	short i,j,k;
-	
-	switch(item_hit) {
-		case 5:
-			i = CDGN(805,2);
-			j = CDGN(805,3);
-			k = CDGN(805,4);
-			if((i < 0) || (i >= scenario.num_towns)) {
-				sprintf((char *) str,"The starting town must be from 0 to %d.",scenario.num_towns - 1);
-				give_error((char *) str,"",805);
-				break;
-			}
-			if((j < 0) || (j >= max_dim[scenario.town_size[i]] - 1) ||
-				(k < 0) || (k >= max_dim[scenario.town_size[i]] - 1)) {
-				give_error("This coordinate is not inside the bounds of the town.","",805);
-				break;
-			}
-			scenario.which_town_start = i;
-			scenario.where_start.x = j;
-			scenario.where_start.y = k;
-			toast_dialog();
-			break;
-		case 12:
-			toast_dialog();
-			break;
+static bool check_location_bounds(cDialog& me, std::string id, bool losing) {
+	if(!losing) return true;
+	// TODO: Use town->max_dim() instead of max_dim[town_size]
+	// (Requires all towns to be in memory though.)
+	short town_num = me["town-num"].getTextAsNum();
+	short dim = me[id].getTextAsNum();
+	if(dim < 0 || dim >= max_dim[scenario.town_size[town_num]]) {
+		giveError("This coordinate is not inside the bounds of the town.");
+		return false;
 	}
-#endif
-}
-
-void set_starting_loc() {
-#if 0
-	// ignore parent in Mac version
-	short town_strs_hit;
-	
-	cd_create_dialog_parent_num(805,0);
-	
-	CDSN(805,2,scenario.which_town_start);
-	CDSN(805,3,scenario.where_start.x);
-	CDSN(805,4,scenario.where_start.y);
-	
-	town_strs_hit = cd_run_dialog();
-	
-	
-	cd_kill_dialog(805);
-#endif
-}
-
-bool save_scenario_events() {
-#if 0
-	short i;
-	
-	for(i = 0; i < 10; i++) {
-		scenario.scenario_timer_times[i] = CDGN(811,2 + i);
-		if((scenario.scenario_timer_times[i] > 0) &&
-			(scenario.scenario_timer_times[i] % 10 != 0)) {
-			give_error("All scenario event times must be multiples of 10 (e.g. 100, 150, 1000, etc.).","",811);
-			return false;
-		}
-		scenario.scenario_timer_specs[i] = CDGN(811,12 + i);
-		if(cre(scenario.scenario_timer_specs[i],-1,255,"The scenario special nodes must be between 0 at 255 (or -1 for no special)."
-				,"",811)) return false;
-	}
-#endif
 	return true;
 }
 
-void put_scenario_events_in_dlog() {
-#if 0
-	short i;
-	
-	for(i = 0; i < 10; i++) {
-		CDSN(811,2 + i,scenario.scenario_timer_times[i]);
-		CDSN(811,12 + i,scenario.scenario_timer_specs[i]);
+static bool set_starting_loc_filter(cDialog& me, std::string, eKeyMod) {
+	if(me.toast(true)) {
+		scenario.which_town_start = me["town-num"].getTextAsNum();
+		scenario.where_start.x = me["town-x"].getTextAsNum();
+		scenario.where_start.y = me["town-y"].getTextAsNum();
 	}
-#endif
+	return true;
 }
 
-void edit_scenario_events_event_filter (short item_hit) {
-#if 0
-	short spec;
+void set_starting_loc() {
+	using namespace std::placeholders;
+	// ignore parent in Mac version
 	
-	switch(item_hit) {
-		case 22:
-			if(save_scenario_events())
-				toast_dialog();
-			break;
-		default:
-			if((item_hit >= 30) && (item_hit <= 39)) {
-				if(!save_scenario_events())
-					break;
-				spec = CDGN(811,item_hit - 30 + 12);
-				if((spec < 0) || (spec > 255)) {
-					spec = get_fresh_spec(0);
-					if(spec < 0) {
-						give_error("You can't create a new scenario special encounter because there are no more free special nodes.",
-								   "To free a special node, set its type to No Special and set its Jump To special to -1.",811);
-						break;
-					}
-					CDSN(811,item_hit - 30 + 12,spec);
-				}
-				edit_spec_enc(spec,0,811);
-				if((spec >= 0) && (spec < 256) && (scenario.scen_specials[spec].pic < 0))
-					CDSN(811,item_hit - 30 + 12,-1);
-			}
-			break;
+	cDialog loc_dlg("set-start-loc.xml");
+	loc_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &loc_dlg, false));
+	loc_dlg["okay"].attachClickHandler(set_starting_loc_filter);
+	loc_dlg["town-num"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.num_towns - 1, "The starting town"));
+	loc_dlg.attachFocusHandlers(check_location_bounds, {"town-x", "town-y"});
+	
+	loc_dlg["town-num"].setTextToNum(scenario.which_town_start);
+	loc_dlg["town-x"].setTextToNum(scenario.where_start.x);
+	loc_dlg["town-y"].setTextToNum(scenario.where_start.y);
+	
+	loc_dlg.run();
+}
+
+static bool save_scenario_events(cDialog& me, std::string, eKeyMod) {
+	short i;
+	
+	if(!me.toast(true)) return true;
+	
+	for(i = 0; i < 10; i++) {
+		std::string id = std::to_string(i + 1);
+		scenario.scenario_timer_times[i] = me["time" + id].getTextAsNum();
+		scenario.scenario_timer_specs[i] = me["node" + id].getTextAsNum();
 	}
-#endif
+	return true;
+}
+
+static bool check_scenario_timer_time(cDialog& me, std::string id, bool losing) {
+	if(!losing) return true;
+	int val = me[id].getTextAsNum();
+	if(val > 0 && val % 10 != 0) {
+		giveError("All scenario event times must be multiples of 10 (e.g. 100, 150, 1000, etc.).");
+		return false;
+	}
+	return true;
+}
+
+static bool edit_scenario_events_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+	short spec = me[item_hit].getTextAsNum();
+	if(spec < 0 || spec > 255) {
+		spec = get_fresh_spec(0);
+		if(spec < 0) {
+			giveError("You can't create a new scenario special encounter because there are no more free special nodes.",
+					   "To free a special node, set its type to No Special and set its Jump To special to -1.");
+			return true;
+		}
+	}
+	if(edit_spec_enc(spec,0,&me))
+		me[item_hit].setTextToNum(spec);
+	return true;
 }
 
 void edit_scenario_events() {
-#if 0
-	// ignore parent in Mac version
-	short advanced_town_hit;
+	using namespace std::placeholders;
 	
+	cDialog evt_dlg("edit-scenario-events.xml");
+	evt_dlg["okay"].attachClickHandler(save_scenario_events);
+	for(int i = 0; i < 10; i++) {
+		std::string id = std::to_string(i + 1);
+		evt_dlg["time" + id].attachFocusHandler(check_scenario_timer_time);
+		evt_dlg["node" + id].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 255, "The scenario special node", "-1 for no special"));
+		evt_dlg["edit" + id].attachClickHandler(edit_scenario_events_event_filter);
+		evt_dlg["time" + id].setTextToNum(scenario.scenario_timer_times[i]);
+		evt_dlg["node" + id].setTextToNum(scenario.scenario_timer_specs[i]);
+	}
 	
-	cd_create_dialog_parent_num(811,0);
-	
-	put_scenario_events_in_dlog();
-	
-	advanced_town_hit = cd_run_dialog();
-	
-	cd_kill_dialog(811);
-#endif
+	evt_dlg.run();
 }
+

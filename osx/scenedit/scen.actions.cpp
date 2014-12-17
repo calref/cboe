@@ -321,7 +321,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						if(option_hit) {
 							scenario.scen_specials[j] = null_spec_node;
 						}
-						else edit_spec_enc(j,0);
+						else edit_spec_enc(j,0,nullptr);
 						//get_str(s2,22,scenario.scen_specials[j].type + 1);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
 						//set_rb(j,4000 + j,(char *) str,0);
@@ -331,7 +331,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						if(option_hit) {
 							current_terrain.specials[j] = null_spec_node;
 						}
-						else edit_spec_enc(j,1);
+						else edit_spec_enc(j,1,nullptr);
 						//get_str(s2,22,current_terrain.specials[j].type + 1);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
 						//set_rb(j,5000 + j,(char *) str,0);
@@ -341,7 +341,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						if(option_hit) {
 							town->specials[j] = null_spec_node;
 						}
-						else edit_spec_enc(j,2);
+						else edit_spec_enc(j,2,nullptr);
 						//get_str(s2,22,town.specials[j].type + 1);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
 						//set_rb(j,6000 + j,(char *) str,0);
@@ -2860,7 +2860,7 @@ void place_edit_special(location loc) {
 	if(editing_town) {
 		for(i = 0; i < 50; i++)
 			if((town->special_locs[i].x == loc.x) && (town->special_locs[i].y == loc.y)) {
-				edit_spec_enc(town->spec_id[i],2);
+				edit_spec_enc(town->spec_id[i],2,nullptr);
 				i = 500;
 			}
 		if(i < 500) { // new special
@@ -2873,7 +2873,7 @@ void place_edit_special(location loc) {
 				if(town->special_locs[i].x == 100) {
 					town->special_locs[i] = loc;
 					town->spec_id[i] = spec;
-					edit_spec_enc(spec,2);
+					edit_spec_enc(spec,2,nullptr);
 					
 					if(town->specials[spec].pic < 0)
 						town->special_locs[i].x = 100;
@@ -2893,7 +2893,7 @@ void place_edit_special(location loc) {
 		}
 		for(i = 0; i < 18; i++)
 			if((current_terrain.special_locs[i].x == loc.x) && (current_terrain.special_locs[i].y == loc.y)) {
-				edit_spec_enc(current_terrain.special_id[i],1);
+				edit_spec_enc(current_terrain.special_id[i],1,nullptr);
 				i = 500;
 			}
 		if(i < 500) { // new special
@@ -2906,7 +2906,7 @@ void place_edit_special(location loc) {
 				if(current_terrain.special_locs[i].x == 100) {
 					current_terrain.special_locs[i] = loc;
 					current_terrain.special_id[i] = spec;
-					edit_spec_enc(spec,1);
+					edit_spec_enc(spec,1,nullptr);
 					
 					if(current_terrain.specials[spec].pic < 0)
 						current_terrain.special_locs[i].x = 100;

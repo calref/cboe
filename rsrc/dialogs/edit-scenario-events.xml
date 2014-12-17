@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<!-- OK button -->
+	<field name='time1' top='133' left='130' width='67' height='16'/>
+	<field name='time2' top='161' left='130' width='67' height='16'/>
+	<field name='time3' top='189' left='130' width='67' height='16'/>
+	<field name='time4' top='217' left='130' width='67' height='16'/>
+	<field name='time5' top='245' left='130' width='67' height='16'/>
+	<field name='time6' top='273' left='130' width='67' height='16'/>
+	<field name='time7' top='301' left='130' width='67' height='16'/>
+	<field name='time8' top='329' left='130' width='67' height='16'/>
+	<field name='time9' top='357' left='130' width='67' height='16'/>
+	<field name='time10' top='385' left='130' width='67' height='16'/>
+	<field name='node1' top='133' left='270' width='39' height='16'/>
+	<field name='node2' top='161' left='270' width='39' height='16'/>
+	<field name='node3' top='189' left='270' width='39' height='16'/>
+	<field name='node4' top='217' left='270' width='39' height='16'/>
+	<field name='node5' top='245' left='270' width='39' height='16'/>
+	<field name='node6' top='273' left='270' width='39' height='16'/>
+	<field name='node7' top='301' left='270' width='39' height='16'/>
+	<field name='node8' top='329' left='270' width='39' height='16'/>
+	<field name='node9' top='357' left='270' width='39' height='16'/>
+	<field name='node10' top='385' left='270' width='39' height='16'/>
+	<button name='okay' type='regular' top='383' left='431'>OK</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='256' height='17'>Scenario event timers</text>
+	<text top='25' left='50' width='438' height='55'>
+		At certain time intervals, you can have a scenario special node be called.
+		Enter below the number of moves between each calling of the special node, and the number of the node to call.
+		Press the Create/Edit button to make a new special.
+	</text>
+	<text top='81' left='50' width='439' height='14'>
+		For more information on how this works, see the documentation.
+	</text>
+	<text top='97' left='102' width='135' height='28'>Number of moves between each call.</text>
+	<text top='97' left='239' width='131' height='28'>Scenario special node to call.</text>
+	<text top='246' left='2' width='119' height='106'>
+		Note: If you leave the time between calls at 0, no special node is called.
+		Don’t have special nodes called too often ... it slows the game down.
+	</text>
+	<button name='edit1' type='large' top='131' left='324'>Create/Edit</button>
+	<button name='edit2' type='large' top='159' left='324'>Create/Edit</button>
+	<button name='edit3' type='large' top='187' left='324'>Create/Edit</button>
+	<button name='edit4' type='large' top='215' left='324'>Create/Edit</button>
+	<button name='edit5' type='large' top='243' left='324'>Create/Edit</button>
+	<button name='edit6' type='large' top='271' left='324'>Create/Edit</button>
+	<button name='edit7' type='large' top='299' left='324'>Create/Edit</button>
+	<button name='edit8' type='large' top='327' left='324'>Create/Edit</button>
+	<button name='edit9' type='large' top='355' left='324'>Create/Edit</button>
+	<button name='edit10' type='large' top='383' left='324'>Create/Edit</button>
+	<text top='353' left='2' width='119' height='52'>
+		Also, the time between events must be a multiple of 10.
+	</text>
+</dialog>
