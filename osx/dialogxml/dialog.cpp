@@ -9,6 +9,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <boost/type_traits/is_pointer.hpp>
+#include <boost/iterator/iterator_facade.hpp>
 #include "dialog.h"
 #include "graphtool.h"
 #include "soundtool.h"
@@ -161,13 +162,38 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	return p;
 }
 
-// A predicate for stripping out whitespace other than spaces
-static bool isAllowableCharacter(char c) {
-	if(c == '\n') return false;
-	if(c == '\r') return false;
-	if(c == '\t') return false;
-	return true;
-}
+class dlogStringFilter : public boost::iterator_facade<dlogStringFilter, string::value_type, forward_iterator_tag, string::value_type> {
+	friend class boost::iterator_core_access;
+	using value_type = std::string::value_type;
+	using iter_type = std::string::iterator;
+	bool found_nl;
+	iter_type base;
+	bool equal(const dlogStringFilter& other) const {
+		return base == other.base;
+	}
+	value_type dereference() const {
+		if(found_nl) return ' ';
+		return *base;
+	}
+	void increment() {
+		if(found_nl) {
+			found_nl = false;
+			return;
+		}
+		base++;
+		while(*base == '\t' || *base == '\n' || *base == '\r') {
+			found_nl = found_nl || *base != '\t';
+			base++;
+		}
+	}
+public:
+	// TODO: This currently assumes that a string's end() iterator can be dereferenced (presumably to produce a null terminator).
+	// This is a poor assumption (though it seems to work in practice).
+	dlogStringFilter(iter_type base) : found_nl(false), base(base) {
+		if(*base == '\t' || *base == '\n' || *base == '\r')
+			increment();
+	}
+};
 
 template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 	pair<string,cTextMsg*> p;
@@ -252,8 +278,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 		// TODO: De-magic the | character
 		if(type == TiXmlNode::ELEMENT && val == "br") content += '|'; // because vertical bar is replaced by a newline when drawing strings
 		else if(type == TiXmlNode::TEXT)
-			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
-			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
+			copy(dlogStringFilter(val.begin()), dlogStringFilter(val.end()), std::inserter(content, content.end()));
 		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
 			throw xBadVal("text",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
@@ -451,8 +476,7 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 			if(content.length() > 0) throw xBadVal("button",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
 //			p.second->labelWithKey = true;
 		}else if(type == TiXmlNode::TEXT)
-			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
-			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
+			copy(dlogStringFilter(val.begin()), dlogStringFilter(val.end()), std::inserter(content, content.end()));
 		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
 			throw xBadVal("text",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
@@ -607,8 +631,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 		int type = node->Type();
 		node->GetValue(&val);
 		if(type == TiXmlNode::TEXT)
-			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
-			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
+			copy(dlogStringFilter(val.begin()), dlogStringFilter(val.end()), std::inserter(content, content.end()));
 		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
 			throw xBadVal("text",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
@@ -708,8 +731,7 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 		int type = node->Type();
 		node->GetValue(&val);
 		if(type == TiXmlNode::TEXT)
-			// TODO: One small problem with this: newlines should be replaced by a space instead of being removed altogether. Or something like that.
-			copy_if(val.begin(), val.end(), std::inserter(content, content.end()), isAllowableCharacter);
+			copy(dlogStringFilter(val.begin()), dlogStringFilter(val.end()), std::inserter(content, content.end()));
 		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
 			throw xBadVal("text",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);

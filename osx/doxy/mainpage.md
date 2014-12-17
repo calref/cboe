@@ -271,10 +271,9 @@ Whitespace
 
 Whitespace collapse rules within Dialog XML elements are a little weird.
 All tabs are stripped out, and then runs of newlines are replaced with a
-single space, but runs of spaces are left as-is.
-
-Note: Currently, the runs of newlines are simply removed rather than
-replaced with a space. This needs to be fixed.
+single space, but runs of spaces are left as-is. Thus, you can use spaces
+to do things like forcing indentation, while tabs can serve to indent
+the XML itself.
 
 Implementing a Dialog
 =====================
