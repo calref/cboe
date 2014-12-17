@@ -25,11 +25,11 @@ std::string cControl::getText(){
 	return lbl;
 }
 
-RECT cControl::getBounds() {
+rectangle cControl::getBounds() {
 	return frame;
 }
 
-void cControl::setBounds(RECT newFrame) {
+void cControl::setBounds(rectangle newFrame) {
 	frame = newFrame;
 }
 
@@ -277,7 +277,7 @@ bool cControl::triggerFocusHandler(cDialog&, std::string, bool){
 void cControl::drawFrame(short amt, bool med_or_lt){
 	// dk_gray had a 0..65535 component of 12287, and med_gray had a 0..65535 component of 24574
 	static sf::Color lt_gray = {224,224,224},dk_gray = {48,48,48},med_gray = {96,96,96};
-	RECT rect = frame, ul_rect;
+	rectangle rect = frame, ul_rect;
 	
 	inWindow->setActive();
 	

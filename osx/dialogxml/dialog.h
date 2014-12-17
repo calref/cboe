@@ -68,7 +68,7 @@ public:
 	/// @param key A key to be used to look up the control later.
 	/// @return false if the key is used, true if the control was added.
 	/// @note This function is intended for internal use, which is why it takes a control pointer instead of a unique key.
-	bool add(cControl* what, RECT ctrl_frame, std::string key);
+	bool add(cControl* what, rectangle ctrl_frame, std::string key);
 	/// Remove a control from the dialog.
 	/// @param key The control's unique key.
 	/// @return true if the key existed and the control was removed, false if the key did not exist
@@ -164,7 +164,7 @@ public:
 	void attachFocusHandlers(std::function<bool(cDialog&,std::string,bool)> handler, std::vector<std::string> controls);
 	/// Get the bounding rect of the dialog.
 	/// @return The dialog's bounding rect.
-	RECT getBounds() {return winRect;}
+	rectangle getBounds() {return winRect;}
 	/// Sets whether to animate graphics in dialogs.
 	static bool doAnimations;
 	cDialog& operator=(cDialog& other) = delete;
@@ -174,7 +174,7 @@ private:
 	std::string process_keystroke(cKey keyHit);
 	std::string process_click(location where);
 	bool dialogNotToast;
-	RECT winRect;
+	rectangle winRect;
 	std::string defaultButton;
 	boost::any result;
 	std::string fname;

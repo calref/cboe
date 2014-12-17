@@ -6,10 +6,10 @@
 
 struct word_rect_t {
 	std::string word;
-	RECT rect;
+	rectangle rect;
 	int node = -1;
 	sf::Color on, off;
-	word_rect_t(std::string w, RECT r) : word(w), rect(r) {}
+	word_rect_t(std::string w, rectangle r) : word(w), rect(r) {}
 	word_rect_t() {}
 };
 
@@ -55,14 +55,14 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj);
 void do_missile_anim(short num_steps,location missile_origin,short sound_num) ;
 void do_explosion_anim(short sound_num,short expand);
-void click_shop_rect(RECT area_rect);
-void draw_shop_graphics(bool pressed,RECT clip_area_rect);
+void click_shop_rect(rectangle area_rect);
+void draw_shop_graphics(bool pressed,rectangle clip_area_rect);
 void refresh_shopping();
 cItemRec store_mage_spells(short which_s) ;
 cItemRec store_priest_spells(short which_s);
 cItemRec store_alchemy(short which_s);
 void get_item_interesting_string(cItemRec item,char *message);
 void click_talk_rect(word_rect_t word);
-void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,RECT c_rect);
+void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,rectangle c_rect);
 short scan_for_response(const char *str);
 void refresh_talking();

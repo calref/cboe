@@ -46,19 +46,19 @@ class Region {
 	void setStencil(sf::RenderWindow& where);
 	friend void clip_region(sf::RenderWindow& where, Region& region);
 public:
-	void addEllipse(RECT frame);
-	void addRect(RECT rect);
+	void addEllipse(rectangle frame);
+	void addRect(rectangle rect);
 	void clear();
 	void offset(int x, int y);
 	void offset(location off);
 	Region& operator-=(Region& other);
-	RECT getEnclosingRect();
+	rectangle getEnclosingRect();
 };
 
 typedef unsigned short pic_num_t;
 static const pic_num_t NO_PIC = std::numeric_limits<pic_num_t>::max();
-using graf_pos = std::pair<sf::Texture*,RECT>;
-using graf_pos_ref = std::pair<sf::Texture*&,RECT&>;
+using graf_pos = std::pair<sf::Texture*,rectangle>;
+using graf_pos_ref = std::pair<sf::Texture*&,rectangle&>;
 using hilite_t = std::pair<size_t,size_t>;
 
 struct cCustomGraphics {
@@ -100,34 +100,34 @@ enum class eTextMode {
 };
 
 void init_graph_tool();
-void rect_draw_some_item(sf::RenderTarget& targ_gworld,RECT targ_rect);
-void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::BlendMode mode = sf::BlendNone);
-void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,RECT targ_rect,location offset,sf::BlendMode mode = sf::BlendNone);
-void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,const sf::Texture& mask_gworld,RECT mask_rect,sf::RenderTarget& targ_gworld,RECT targ_rect);
+void rect_draw_some_item(sf::RenderTarget& targ_gworld,rectangle targ_rect);
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode = sf::BlendNone);
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,rectangle targ_rect,location offset,sf::BlendMode mode = sf::BlendNone);
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const sf::Texture& mask_gworld,rectangle mask_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect);
 
-std::vector<RECT> draw_string_hilite(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
-std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
-void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,eTextMode mode,TextStyle style, location offset = {0,0});
+std::vector<rectangle> draw_string_hilite(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
+std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
+void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style, location offset = {0,0});
 short string_length(std::string str, TextStyle style);
 //OSStatus flip_pict(OSType domain, OSType type, short id, void *ptr, UInt32 size, bool isNative, void *refcon);
 //void draw_terrain();
-RECT calc_rect(short i, short j);
+rectangle calc_rect(short i, short j);
 void setActiveRenderTarget(sf::RenderTarget& where);
 void flushTessels(sf::Texture& alteredImg);
-tessel_ref_t prepareForTiling(sf::Texture& srcImg, RECT srcRect);
-void tileImage(sf::RenderTarget& target, RECT area, tessel_ref_t tessel, sf::BlendMode mode = sf::BlendNone);
+tessel_ref_t prepareForTiling(sf::Texture& srcImg, rectangle srcRect);
+void tileImage(sf::RenderTarget& target, rectangle area, tessel_ref_t tessel, sf::BlendMode mode = sf::BlendNone);
 void tileImage(sf::RenderWindow& target, Region& rgn, tessel_ref_t tessel, sf::BlendMode mode = sf::BlendNone);
-void fill_rect(sf::RenderTarget& target, RECT rect, sf::Color colour);
-void frame_rect(sf::RenderTarget& target, RECT rect, sf::Color colour);
-void fill_circle(sf::RenderTarget& target, RECT rect, sf::Color colour);
-void frame_circle(sf::RenderTarget& target, RECT rect, sf::Color colour);
-void fill_roundrect(sf::RenderTarget& target, RECT rect, int rad, sf::Color colour);
-void frame_roundrect(sf::RenderTarget& target, RECT rect, int rad, sf::Color colour);
+void fill_rect(sf::RenderTarget& target, rectangle rect, sf::Color colour);
+void frame_rect(sf::RenderTarget& target, rectangle rect, sf::Color colour);
+void fill_circle(sf::RenderTarget& target, rectangle rect, sf::Color colour);
+void frame_circle(sf::RenderTarget& target, rectangle rect, sf::Color colour);
+void fill_roundrect(sf::RenderTarget& target, rectangle rect, int rad, sf::Color colour);
+void frame_roundrect(sf::RenderTarget& target, rectangle rect, int rad, sf::Color colour);
 void fill_region(sf::RenderWindow& target, Region& region, sf::Color colour);
 void frame_region(sf::RenderWindow& target, Region& region, sf::Color colour);
 void draw_line(sf::RenderTarget& target, location from, location to, int thickness, sf::Color colour, sf::BlendMode mode = sf::BlendNone);
 
-void clip_rect(sf::RenderTarget& where, RECT rect);
+void clip_rect(sf::RenderTarget& where, rectangle rect);
 void clip_region(sf::RenderWindow& where, Region& region);
 void undo_clip(sf::RenderTarget& where);
 

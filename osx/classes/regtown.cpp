@@ -333,7 +333,7 @@ unsigned char& cBigTown::lighting(size_t i, size_t r){
 cBigTown::cBigTown(){
 	int i;
 	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
-	RECT d_rect = {0,0,0,0};
+	rectangle d_rect = {0,0,0,0};
 	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
 		_room_rect[i].left = d_rect.left;
@@ -348,7 +348,7 @@ cBigTown::cBigTown(){
 cMedTown::cMedTown(){
 	int i;
 	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
-	RECT d_rect = {0,0,0,0};
+	rectangle d_rect = {0,0,0,0};
 	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
 		_room_rect[i].left = d_rect.left;
@@ -363,7 +363,7 @@ cMedTown::cMedTown(){
 cTinyTown::cTinyTown(){
 	int i;
 	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
-	RECT d_rect = {0,0,0,0};
+	rectangle d_rect = {0,0,0,0};
 	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
 		_room_rect[i].left = d_rect.left;

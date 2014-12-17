@@ -42,9 +42,9 @@ bool first_startup_update = true;
 bool diff_depth_ok = false,first_sound_played = false,spell_forced = false,startup_loaded = false;
 bool save_maps = true,party_in_memory = false;
 std::shared_ptr<cScrollbar> text_sbar, item_sbar, shop_sbar;
-RECT sbar_rect = {283,546,421,562};
-RECT shop_sbar_rect = {67,258,357,274};
-RECT item_sbar_rect = {146,546,253,562};
+rectangle sbar_rect = {283,546,421,562};
+rectangle shop_sbar_rect = {67,258,357,274};
+rectangle item_sbar_rect = {146,546,253,562};
 bool bgm_on = false,bgm_init = false;
 //short dialog_answer;
 location store_anim_ul;
@@ -95,7 +95,7 @@ bool monsters_going = false,boom_anim_active = false;
 short give_delays = 0;
 
 sf::RenderWindow mini_map;
-//RECT d_rects[80];
+//rectangle d_rects[80];
 ////short d_rect_index[80];
 //short town_size[3] = {64,48,32};
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
@@ -721,7 +721,7 @@ static cursor_type get_mode_cursor(){
 void change_cursor(location where_curs) {
 	cursor_type cursor_needed;
 	location cursor_direction;
-	RECT world_screen = {23, 23, 346, 274};
+	rectangle world_screen = {23, 23, 346, 274};
 	
 	where_curs.x -= ul.x;
 	where_curs.y -= ul.y;

@@ -36,40 +36,40 @@
 #include "cursors.h"
 #include "spell.hpp"
 
-RECT bottom_buttons[7];
-RECT town_buttons[10];
-RECT combat_buttons[9];
-RECT world_screen = {23, 23, 346, 274};
-// TODO: The duplication of RECT here shouldn't be necessary...
-RECT item_screen_button_rects[9] = {
-	RECT{125,10,141,28},RECT{125,40,141,58},RECT{125,68,141,86},RECT{125,98,141,116},RECT{125,126,141,144},RECT{125,156,141,174},
-	RECT{126,176,141,211},
-	RECT{126,213,141,248},
-	RECT{127,251,140,267}};
+rectangle bottom_buttons[7];
+rectangle town_buttons[10];
+rectangle combat_buttons[9];
+rectangle world_screen = {23, 23, 346, 274};
+// TODO: The duplication of rectangle here shouldn't be necessary...
+rectangle item_screen_button_rects[9] = {
+	rectangle{125,10,141,28},rectangle{125,40,141,58},rectangle{125,68,141,86},rectangle{125,98,141,116},rectangle{125,126,141,144},rectangle{125,156,141,174},
+	rectangle{126,176,141,211},
+	rectangle{126,213,141,248},
+	rectangle{127,251,140,267}};
 
-RECT border_rect[4] = {RECT{5, 5, 15, 283}, RECT{5, 5, 355, 15},
-	RECT{345, 5, 355, 283}, RECT{5, 273, 355, 283}};
-RECT medium_buttons[4] = {RECT{383,190,401,225}, RECT{402, 190, 420, 225},
-	RECT{383, 227, 401, 263}, RECT{402, 227,420, 263}}; ;
+rectangle border_rect[4] = {rectangle{5, 5, 15, 283}, rectangle{5, 5, 355, 15},
+	rectangle{345, 5, 355, 283}, rectangle{5, 273, 355, 283}};
+rectangle medium_buttons[4] = {rectangle{383,190,401,225}, rectangle{402, 190, 420, 225},
+	rectangle{383, 227, 401, 263}, rectangle{402, 227,420, 263}}; ;
 
-RECT item_buttons[8][6];
+rectangle item_buttons[8][6];
 // name, use, give, drip, info, sell/id
-RECT pc_buttons[6][5];
+rectangle pc_buttons[6][5];
 // name, hp, sp, info, trade
 short num_chirps_played = 0;
 
-extern RECT startup_button[6];
+extern rectangle startup_button[6];
 extern bool flushingInput;
 bool ghost_mode;
-RECT startup_top;
+rectangle startup_top;
 
-// TODO: The duplication of RECT here shouldn't be necessary...
+// TODO: The duplication of rectangle here shouldn't be necessary...
 cItemRec start_items[6] = {cItemRec('nife'),cItemRec('buck'),cItemRec('bow '),cItemRec('arrw'),cItemRec('pole'),cItemRec('helm')};
 bool item_area_button_active[8][6];
 bool pc_area_button_active[6][5];
 short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
 
-RECT pc_help_button,pc_area_rect,item_area_rect;
+rectangle pc_help_button,pc_area_rect,item_area_rect;
 
 short current_terrain_type = 0,num_out_moves = 0;
 short door_pc,store_drop_item;
@@ -134,15 +134,15 @@ short monst_place_count = 0; // 1 - standard place	2 - place last
 
 // 0 - whole area, 1 - active area 2 - graphic 3 - item name
 // 4 - item cost 5 - item extra str  6 - item help button
-RECT shopping_rects[8][7];
+rectangle shopping_rects[8][7];
 std::queue<pending_special_type> special_queue;
 bool end_scenario = false;
 bool current_bash_is_bash = false;
 
 void init_screen_locs() {
 	short i,j,k,l;
-	RECT startup_base = {279,5,327,306};
-	RECT shop_base = {63,12,99,267};
+	rectangle startup_base = {279,5,327,306};
+	rectangle shop_base = {63,12,99,267};
 	
 	for(i = 0; i < 7; i++)
 		shopping_rects[0][i] = shop_base;

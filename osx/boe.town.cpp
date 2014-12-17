@@ -109,8 +109,8 @@ short town_force = 200,store_which_shop,store_min,store_max,store_shop,store_sel
 short sell_offset = 0;
 location town_force_loc;
 bool shop_button_active[12];
-RECT map_title_rect = {3,50,15,300};
-RECT map_bar_rect = {15,50,27,300};
+rectangle map_title_rect = {3,50,15,300};
+rectangle map_bar_rect = {15,50,27,300};
 unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 
 void force_town_enter(short which_town,location where_start) {
@@ -1263,7 +1263,7 @@ short get_town_spec_id(location where) {
 
 // TODO: I don't think we need this
 void clear_map() {
-	RECT map_world_rect(map_gworld);
+	rectangle map_world_rect(map_gworld);
 	
 //	if(!map_visible) {
 //		return;
@@ -1277,22 +1277,22 @@ void clear_map() {
 void draw_map(bool need_refresh) {
 	if(!map_visible) return;
 	short i,j,pic,pic2;
-	RECT the_rect,map_world_rect = {0,0,384,384};
+	rectangle the_rect,map_world_rect = {0,0,384,384};
 	location where;
 	location kludge;
-	RECT draw_rect,orig_draw_rect = {0,0,6,6},ter_temp_from;
-	RECT	dlogpicrect = {6,6,42,42};
+	rectangle draw_rect,orig_draw_rect = {0,0,6,6},ter_temp_from;
+	rectangle	dlogpicrect = {6,6,42,42};
 	bool draw_pcs = true,out_mode;
-	RECT view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
+	rectangle view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
 	redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // Rectangle visible in view screen
 	
-	RECT area_to_draw_from,area_to_draw_on = {29,47,269,287};
+	rectangle area_to_draw_from,area_to_draw_on = {29,47,269,287};
 	short small_adj = 0;
 	ter_num_t what_ter,what_ter2;
 	bool draw_surroundings = false,expl,expl2;
 	short total_size = 48; // if full redraw, use this to figure out everything
-	RECT area_to_put_on_map_rect;
-	RECT custom_from;
+	rectangle area_to_put_on_map_rect;
+	rectangle custom_from;
 	short town_type = scenario.town_size[univ.town.num];
 	
 	draw_surroundings = true;
@@ -1480,7 +1480,7 @@ void draw_map(bool need_refresh) {
 	style.font = FONT_BOLD;
 	style.pointSize = 10;;
 	
-	the_rect = RECT(mini_map);
+	the_rect = rectangle(mini_map);
 	tileImage(mini_map, the_rect,bg[4]);
 	cPict theGraphic(mini_map);
 	theGraphic.setBounds(dlogpicrect);
@@ -1568,8 +1568,8 @@ bool is_door(location destination) {
 void display_map() {
 	// Show the automap if it's not already visible
 	if(map_visible) return;
-	RECT the_rect;
-	RECT	dlogpicrect = {6,6,42,42};
+	rectangle the_rect;
+	rectangle	dlogpicrect = {6,6,42,42};
 	
 	mini_map.setVisible(true);
 	map_visible = true;

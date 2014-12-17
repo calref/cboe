@@ -11,14 +11,14 @@
 #include "scrollbar.h"
 
 //extern piles_of_stuff_dumping_type *data_store;
-extern RECT right_sbar_rect;
+extern rectangle right_sbar_rect;
 
 
 
-RECT left_button[NLS];
-extern RECT right_buttons[NRSONPAGE];
-RECT right_scrollbar_rect;
-RECT right_area_rect;
+rectangle left_button[NLS];
+extern rectangle right_buttons[NRSONPAGE];
+rectangle right_scrollbar_rect;
+rectangle right_area_rect;
 extern short current_rs_top;
 char strings_ls[NLS][40];
 char strings_rs[NRS][40];

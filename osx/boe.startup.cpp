@@ -39,7 +39,7 @@ extern eGameMode overall_mode;
 
 //void start_game();
 
-RECT startup_button[6];
+rectangle startup_button[6];
 
 // TODO: Always returns false, so make it void
 bool handle_startup_press(location the_point) {

@@ -22,7 +22,7 @@
 #include "dlogutil.h"
 
 extern sf::RenderWindow mainPtr;
-extern RECT	windRect;
+extern rectangle	windRect;
 extern short stat_window,give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range;
@@ -74,8 +74,8 @@ extern bool can_draw_pcs;
 extern cScenario scenario;
 extern cCustomGraphics spec_scen_g;
 
-// TODO: The duplication of RECT here shouldn't be necessary...
-RECT boat_rects[4] = {RECT{0,0,36,28}, RECT{0,28,36,56},RECT{0,56,36,84},RECT{0,84,36,112}};
+// TODO: The duplication of rectangle here shouldn't be necessary...
+rectangle boat_rects[4] = {rectangle{0,0,36,28}, rectangle{0,28,36,56},rectangle{0,56,36,84},rectangle{0,84,36,112}};
 bool gave_no_g_error = false;
 eAmbientSound ambient_sound;
 
@@ -83,8 +83,8 @@ eAmbientSound ambient_sound;
 // if terrain_to_draw is -1, do black
 // if terrain_to_draw >= 10000, force to draw graphic which is terrain_to_draw - 10000
 void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
-	RECT where_draw;
-	RECT source_rect;
+	rectangle where_draw;
+	rectangle source_rect;
 	sf::Texture* source_gworld;
 	short anim_type = 0;
 	location l;
@@ -152,16 +152,16 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 void draw_monsters() {
 	short i,j = 0,k;
 	short width,height;
-	RECT source_rect,to_rect;
+	rectangle source_rect,to_rect;
 	location where_draw,store_loc;
 	short picture_wanted;
 	ter_num_t ter;
-	// TODO: The duplication of RECT here shouldn't be necessary...
-	RECT monst_rects[4][4] = {
-		{RECT{0,0,36,28}},
-		{RECT{0,7,18,21},RECT{18,7,36,21}},
-		{RECT{9,0,27,14},RECT{9,14,27,28}},
-		{RECT{0,0,18,14},RECT{0,14,18,28},RECT{18,0,36,14},RECT{18,14,36,28}}
+	// TODO: The duplication of rectangle here shouldn't be necessary...
+	rectangle monst_rects[4][4] = {
+		{rectangle{0,0,36,28}},
+		{rectangle{0,7,18,21},rectangle{18,7,36,21}},
+		{rectangle{9,0,27,14},rectangle{9,14,27,28}},
+		{rectangle{0,0,18,14},rectangle{0,14,18,28},rectangle{18,0,36,14},rectangle{18,14,36,28}}
 	};
 	
 	if(is_out())
@@ -327,7 +327,7 @@ void play_see_monster_str(unsigned short m, location monst_loc) {
 //short mode; // 0 - put pcs in gworld  1 - only rectangle around active pc
 void draw_pcs(location center,short mode) {
 	short i;
-	RECT source_rect,active_pc_rect;
+	rectangle source_rect,active_pc_rect;
 	location where_draw;
 	
 	if(party_toast())
@@ -380,7 +380,7 @@ void draw_pcs(location center,short mode) {
 void draw_items(location where){
 	if(!point_onscreen(center,where)) return;
 	location where_draw(4 + where.x - center.x, 4 + where.y - center.y);
-	RECT from_rect, to_rect;
+	rectangle from_rect, to_rect;
 	if(supressing_some_spaces && (where != ok_space[0]) && (where != ok_space[1]) && (where != ok_space[2]) && (where != ok_space[3]))
 		return;
 	for(int i = 0; i < NUM_TOWN_ITEMS; i++) {
@@ -409,7 +409,7 @@ void draw_items(location where){
 
 void draw_outd_boats(location center) {
 	location where_draw;
-	RECT source_rect;
+	rectangle source_rect;
 	short i;
 	
 	for(i = 0; i < 30; i++)
@@ -438,7 +438,7 @@ void draw_outd_boats(location center) {
 
 void draw_town_boat(location center) {
 	location where_draw;
-	RECT source_rect;
+	rectangle source_rect;
 	short i;
 	
 	for(i = 0; i < 30; i++)
@@ -530,7 +530,7 @@ void draw_fields(location where){
 }
 
 void draw_party_symbol(location center) {
-	RECT source_rect;
+	rectangle source_rect;
 	location target(4,4);
 	short i = 0;
 	
@@ -573,8 +573,8 @@ void draw_party_symbol(location center) {
 // Give the position of the monster graphic in the picture resource
 // Will store monsters the same in Exile's II and III
 //short mode; // 0 - left  1 - right  2 - both
-RECT get_monster_rect (unsigned short type_wanted,short mode) {
-	RECT store_rect;
+rectangle get_monster_rect (unsigned short type_wanted,short mode) {
+	rectangle store_rect;
 	short i;
 	
 	i = (short) type_wanted;
@@ -589,8 +589,8 @@ RECT get_monster_rect (unsigned short type_wanted,short mode) {
 
 // Give the position of the monster graphic in the template in memory
 //mode; // 0 - left  1 - right  +10 - combat mode
-RECT get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_part) {
-	RECT store_rect = {0,0,36,28};
+rectangle get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_part) {
+	rectangle store_rect = {0,0,36,28};
 	short adj = 0;
 	
 	if(mode >= 10) {
@@ -605,8 +605,8 @@ RECT get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_
 
 // Returns rect for drawing an item, if num < 25, rect is in big item template,
 // otherwise in small item template
-RECT get_item_template_rect (short type_wanted) {
-	RECT store_rect;
+rectangle get_item_template_rect (short type_wanted) {
+	rectangle store_rect;
 	
 	if(type_wanted < 45) {
 		store_rect.top = (type_wanted / 5) * BITMAP_HEIGHT;

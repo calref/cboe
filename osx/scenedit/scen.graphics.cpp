@@ -46,12 +46,12 @@ extern bool editing_town;
 //extern short max_dim[3];
 //extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
-extern RECT world_screen;
+extern rectangle world_screen;
 extern sf::Texture bg_gworld;
-extern RECT left_button[NLS];
-extern RECT right_buttons[NRSONPAGE];
-extern RECT right_scrollbar_rect;
-extern RECT right_area_rect;
+extern rectangle left_button[NLS];
+extern rectangle right_buttons[NRSONPAGE];
+extern rectangle right_scrollbar_rect;
+extern rectangle right_area_rect;
 extern ter_num_t borders[4][50];
 extern std::shared_ptr<cScrollbar> right_sbar;
 
@@ -89,22 +89,22 @@ sf::Texture pc_gworld;
 extern tessel_ref_t map_pat[];
 
 // begin new stuff
-RECT blue_button_from = {120,91,134,107};
-RECT start_button_from = {120,70,127,91};
-RECT base_small_button_from = {120,0,127,7};
-extern RECT palette_buttons[10][6];
-extern RECT palette_buttons_from[71];
+rectangle blue_button_from = {120,91,134,107};
+rectangle start_button_from = {120,70,127,91};
+rectangle base_small_button_from = {120,0,127,7};
+extern rectangle palette_buttons[10][6];
+extern rectangle palette_buttons_from[71];
 extern short town_buttons[6][10], out_buttons[6][10];
 extern bool good_palette_buttons[2][6][10];
-RECT palette_button_base = {0,0,18,25};
-RECT terrain_buttons_rect = {0,0,410,294};
-extern RECT left_buttons[NLS][2]; // 0 - whole, 1 - blue button
-RECT left_button_base = {5,5,21,200};
-RECT right_button_base = {RIGHT_AREA_UL_Y,RIGHT_AREA_UL_X,17,RIGHT_AREA_UL_Y};
-RECT terrain_rect = {0,0,340,272};
+rectangle palette_button_base = {0,0,18,25};
+rectangle terrain_buttons_rect = {0,0,410,294};
+extern rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
+rectangle left_button_base = {5,5,21,200};
+rectangle right_button_base = {RIGHT_AREA_UL_Y,RIGHT_AREA_UL_X,17,RIGHT_AREA_UL_Y};
+rectangle terrain_rect = {0,0,340,272};
 char current_string[256] = "";
 char current_string2[256] = "";
-extern RECT terrain_rects[256];
+extern rectangle terrain_rects[256];
 extern char strings_ls[NLS][40];
 extern char strings_rs[NRS][40];
 
@@ -320,7 +320,7 @@ void Set_up_win () {
 }
 
 void run_startup_g() {
-	RECT pict_rect = {0,0,480,640}, dest_rect;
+	rectangle pict_rect = {0,0,480,640}, dest_rect;
 	sf::Texture pict_to_draw;
 	dest_rect = pict_rect;
 	
@@ -386,7 +386,7 @@ void load_main_screen() {
 }
 
 void redraw_screen() {
-	RECT windRect(mainPtr);
+	rectangle windRect(mainPtr);
 	tileImage(mainPtr,windRect,bg[20]);
 	draw_main_screen();
 	if(overall_mode < MODE_MAIN_SCREEN);
@@ -395,7 +395,7 @@ void redraw_screen() {
 }
 
 void draw_main_screen() {
-	RECT draw_rect;
+	rectangle draw_rect;
 	
 	
 	// draw left buttons (always active)
@@ -432,7 +432,7 @@ void draw_main_screen() {
 }
 
 void draw_lb() {
-	RECT temp_rect(mainPtr);
+	rectangle temp_rect(mainPtr);
 	short i;
 	
 	temp_rect.right = RIGHT_AREA_UL_X - 2;
@@ -443,7 +443,7 @@ void draw_lb() {
 
 // mode 0 normal 1 click
 void draw_lb_slot (short which,short mode)  {
-	RECT text_rect,from_rect;
+	rectangle text_rect,from_rect;
 	
  	tileImage(mainPtr,left_buttons[which][0],bg[20]);
 	if(left_button_status[which] == 0)
@@ -479,7 +479,7 @@ void draw_rb() {
 
 // mode 0 normal 1 pressed
 void draw_rb_slot (short which,short mode)  {
-	RECT text_rect;
+	rectangle text_rect;
  	short pos;
  	
  	pos = right_sbar->getPosition();
@@ -500,10 +500,10 @@ void draw_rb_slot (short which,short mode)  {
 
 void set_up_terrain_buttons() {
 	short i,j,pic,small_i;
-	RECT ter_from,ter_from_base = {0,0,36,28};
-	RECT tiny_from,tiny_to;
+	rectangle ter_from,ter_from_base = {0,0,36,28};
+	rectangle tiny_from,tiny_to;
 	
-	RECT palette_from,palette_to = palette_button_base;
+	rectangle palette_from,palette_to = palette_button_base;
 	
 	tileImage(terrain_buttons_gworld,terrain_buttons_rect,bg[17]);
 	frame_rect(terrain_buttons_gworld, terrain_buttons_rect, sf::Color::Black);
@@ -601,10 +601,10 @@ void set_up_terrain_buttons() {
 void draw_terrain(){
 	short q,r,x,i,small_i;
 	location which_pt,where_draw;
-	RECT draw_rect,clipping_rect = {8,8,332,260};
+	rectangle draw_rect,clipping_rect = {8,8,332,260};
 	unsigned char t_to_draw;
-	RECT source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
-	RECT boat_rect = {0,0,36,28};
+	rectangle source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
+	rectangle boat_rect = {0,0,36,28};
 	
 	if(overall_mode >= MODE_MAIN_SCREEN)
 		return;
@@ -838,7 +838,7 @@ void draw_terrain(){
 void draw_monsts() {
 	short i,k,width,height,m_start_pic;
 	sf::Texture* from_gworld;
-	RECT source_rect;
+	rectangle source_rect;
 	location where_draw,store_loc;
 	
 	for(i = 0; i < town->max_monst(); i++)
@@ -873,9 +873,9 @@ void draw_monsts() {
 
 // Returns rect for drawing an item, if num < 25, rect is in big item template,
 // otherwise in small item template
-// TODO: I have another function that does the same thing but also returns the texture containing the item along with the RECT
-RECT get_item_template_rect (short type_wanted) {
-	RECT store_rect;
+// TODO: I have another function that does the same thing but also returns the texture containing the item along with the rectangle
+rectangle get_item_template_rect (short type_wanted) {
+	rectangle store_rect;
 	
 	if(type_wanted < 45) {
 		store_rect.top = (type_wanted / 5) * BITMAP_HEIGHT;
@@ -895,7 +895,7 @@ RECT get_item_template_rect (short type_wanted) {
 
 void draw_items() {
 	short i;
-	RECT source_rect,dest_rect;
+	rectangle source_rect,dest_rect;
 	location where_draw;
 	short pic_num;
 	
@@ -947,7 +947,7 @@ void redraw_selected_ter() {
 
 void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	location where_draw;
-	RECT source_rect;
+	rectangle source_rect;
 	short picture_wanted;
 	sf::Texture* source_gworld;
 	
@@ -983,7 +983,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	
 	location where_draw;
 	// TODO: Update for new 12x12 map graphics, rather than 4x4
-	RECT dest_rect = {0,0,4,4},from_rect = {0,0,4,4};
+	rectangle dest_rect = {0,0,4,4},from_rect = {0,0,4,4};
 	short picture_wanted;
 	sf::Texture* source_gworld;
 	
@@ -1041,8 +1041,8 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
  object is ptr. to bitmap to be drawn, and masking is for Copybits. */
 // TODO: Wait, why is targ_gworld unused?
-void Draw_Some_Item(sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& /*targ_gworld*/,location target,sf::BlendMode mode) {
-	RECT	destrec;
+void Draw_Some_Item(sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& /*targ_gworld*/,location target,sf::BlendMode mode) {
+	rectangle	destrec;
 	
 	if((target.x < 0) || (target.x > 8) || (target.y < 0) || (target.y > 8))
 		return;
@@ -1057,10 +1057,10 @@ void Draw_Some_Item(sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& /*ta
 	rect_draw_some_item(src_gworld,src_rect,ter_draw_gworld,destrec,mode);
 }
 
-/* Input terrain currently trying to draw. Get back RECT in terrain template containing
- desired pixmap, or RECT to darkness if desired map not present */
-RECT get_template_rect (unsigned short type_wanted) {
-	RECT store_rect;
+/* Input terrain currently trying to draw. Get back rectangle in terrain template containing
+ desired pixmap, or rectangle to darkness if desired map not present */
+rectangle get_template_rect (unsigned short type_wanted) {
+	rectangle store_rect;
 	short picture_wanted;
 	
 	picture_wanted = scenario.ter_types[type_wanted].picture;
@@ -1078,7 +1078,7 @@ RECT get_template_rect (unsigned short type_wanted) {
 void draw_frames() {
 	char q,r,i;
 	location which_pt;
-	RECT draw_rect;
+	rectangle draw_rect;
 	
 	for(q = 0; q < 9; q++) {
 		for(r = 0; r < 9; r++) {
@@ -1109,8 +1109,8 @@ void draw_frames() {
 
 void place_location() {
 	char draw_str[256];
-	RECT draw_rect,source_rect,erase_rect;
-	RECT text_rect = {0,0,12,100};
+	rectangle draw_rect,source_rect,erase_rect;
+	rectangle text_rect = {0,0,12,100};
 	short picture_wanted;
 	
 	/*
@@ -1194,10 +1194,10 @@ void place_location() {
 								terrain_buttons_gworld,draw_rect);
 		}
 		short small_i = get_small_icon(current_terrain_type);
-		RECT tiny_to = draw_rect;
+		rectangle tiny_to = draw_rect;
 		tiny_to.top = tiny_to.bottom - 7;
 		tiny_to.left = tiny_to.right - 7;
-		RECT tiny_from = base_small_button_from;
+		rectangle tiny_from = base_small_button_from;
 		tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
 		if(small_i > 0 && small_i < 255)
 			rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to);
@@ -1212,7 +1212,7 @@ void place_location() {
 // klugde for speed ...exactly like place location above, but just writes location
 void place_just_location() {
 	char draw_str[256];
-	RECT from_rect,draw_rect,erase_rect;
+	rectangle from_rect,draw_rect,erase_rect;
 	
 	erase_rect.left = terrain_rects[255].left + 17;
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
@@ -1253,7 +1253,7 @@ void set_string(const char *string,const char *string2) {
 
 /*
 void draw_cur_string() {
-	RECT from_rect,draw_rect;
+	rectangle from_rect,draw_rect;
 	
 	from_rect = terrain_buttons_rect;
 	from_rect.top = from_rect.bottom - 40;

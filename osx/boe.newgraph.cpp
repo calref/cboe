@@ -44,7 +44,7 @@ short monsters_faces[190] = {
 	23,0,0,0,0,0,0,0,23,23,
 	0,0,0,55,23,36,31,0,0,0};
 extern location ul;
-extern RECT	windRect;
+extern rectangle	windRect;
 extern long anim_ticks;
 extern tessel_ref_t bg[];
 extern sf::RenderWindow mainPtr;
@@ -56,7 +56,7 @@ extern sf::Texture tiny_obj_gworld, items_gworld, talkfaces_gworld;
 extern sf::RenderTexture terrain_screen_gworld;
 //extern party_record_type party;
 extern sf::Texture bg_gworld;
-extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect;
+extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern location center;
 extern short monst_marked_damage[60];
@@ -81,7 +81,7 @@ extern short store_personality,store_personality_graphic,current_pc;
 extern sf::RenderTexture talk_gworld;
 extern bool talk_end_forced;
 extern std::string old_str1,old_str2,one_back1,one_back2;
-extern RECT talk_area_rect, word_place_rect,talk_help_rect;
+extern rectangle talk_area_rect, word_place_rect,talk_help_rect;
 extern std::string title_string;
 extern m_num_t store_monst_type;
 std::vector<word_rect_t> talk_words;
@@ -91,11 +91,11 @@ extern short store_shop_items[30],store_shop_costs[30];
 extern short store_shop_type,store_shop_min,store_shop_max,store_cost_mult;
 extern eGameMode store_pre_shop_mode;
 extern char store_store_name[256];
-extern RECT shopping_rects[8][7];
-extern RECT bottom_help_rects[4];
-extern RECT shop_name_str;
-extern RECT shop_frame ;
-extern RECT shop_done_rect;
+extern rectangle shopping_rects[8][7];
+extern rectangle bottom_help_rects[4];
+extern rectangle shop_name_str;
+extern rectangle shop_frame ;
+extern rectangle shop_done_rect;
 //extern item_record_type food_types[15];
 extern char *heal_types[];
 extern short heal_costs[8];
@@ -117,7 +117,7 @@ typedef struct {
 store_missile_type store_missiles[30];
 store_boom_type store_booms[30];
 bool have_missile,have_boom;
-RECT explode_place_rect[30];
+rectangle explode_place_rect[30];
 
 
 // Animation vars
@@ -139,7 +139,7 @@ RECT explode_place_rect[30];
 char last_light_mask[13][13];
 
 void apply_unseen_mask() {
-	RECT base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
+	rectangle base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
 	short i,j,k,l;
 	bool need_bother = false;
 	
@@ -177,8 +177,8 @@ void apply_unseen_mask() {
 
 void apply_light_mask(bool onWindow) {
 	static Region dark_mask_region;
-	RECT temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
-	RECT big_to = {13,13,337,265};
+	rectangle temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
+	rectangle big_to = {13,13,337,265};
 	short i,j;
 	bool is_dark = false,same_mask = true;
 	if(PSD[SDF_NO_FRILLS] > 0)
@@ -372,13 +372,13 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 
 void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	// TODO: Get rid of temp_rect, at least
-	RECT temp_rect,missile_origin_base = {1,1,17,17},active_area_rect,to_rect,from_rect;
+	rectangle temp_rect,missile_origin_base = {1,1,17,17},active_area_rect,to_rect,from_rect;
 	short i,store_missile_dir;
 	location start_point,finish_point[30];
 	location screen_ul;
 	
 	short x1[30],x2[30],y1[30],y2[30],t; // for path paramaterization
-	RECT missile_place_rect[30],missile_origin_rect[30],store_erase_rect[30];
+	rectangle missile_place_rect[30],missile_origin_rect[30],store_erase_rect[30];
 	location current_terrain_ul;
 	sf::RenderTexture temp_gworld;
 	
@@ -402,13 +402,13 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
-	to_rect = RECT(terrain_screen_gworld);
-	RECT oldBounds = to_rect;
+	to_rect = rectangle(terrain_screen_gworld);
+	rectangle oldBounds = to_rect;
 	to_rect.offset(current_terrain_ul);
 	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,to_rect,ul);
 	
 	// create and clip temporary anim template
-	temp_rect = RECT(terrain_screen_gworld);
+	temp_rect = rectangle(terrain_screen_gworld);
 	active_area_rect = temp_rect;
 	active_area_rect.inset(13,13);
 	temp_gworld.create(temp_rect.width(), temp_rect.height());
@@ -419,7 +419,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	// init missile paths
 	for(i = 0; i < 30; i++) {
-		store_erase_rect[i] = RECT();
+		store_erase_rect[i] = rectangle();
 		if((store_missiles[i].missile_type >= 0) && (missile_origin == store_missiles[i].dest))
 			store_missiles[i].missile_type = -1;
 	}
@@ -448,7 +448,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 			y1[i] = finish_point[i].y - start_point.y;
 			y2[i] = start_point.y;
 		}
-		else missile_place_rect[i] = RECT();
+		else missile_place_rect[i] = rectangle();
 	
 	play_sound(-1 * sound_num);
 	
@@ -500,8 +500,8 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	for(i = 0; i < 30; i++)
 		store_missiles[i].missile_type = -1;
 	
-	to_rect = RECT(terrain_screen_gworld);
-	RECT oldRect = to_rect;
+	to_rect = rectangle(terrain_screen_gworld);
+	rectangle oldRect = to_rect;
 	to_rect.offset(current_terrain_ul);
 	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,to_rect,ul);
 }
@@ -542,8 +542,8 @@ short get_missile_direction(location origin_point,location the_point) {
 // sound_num currently ignored
 // special_draw - 0 normal 1 - first half 2 - second half
 void do_explosion_anim(short /*sound_num*/,short special_draw) {
-	RECT temp_rect,active_area_rect,to_rect,from_rect;
-	RECT base_rect = {0,0,36,28},text_rect;
+	rectangle temp_rect,active_area_rect,to_rect,from_rect;
+	rectangle base_rect = {0,0,36,28},text_rect;
 	char str[60];
 	short i,temp_val,temp_val2;
 	location screen_ul;
@@ -574,14 +574,14 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	if(special_draw != 2) {
-		to_rect = RECT(terrain_screen_gworld);
-		RECT oldRect = to_rect;
+		to_rect = rectangle(terrain_screen_gworld);
+		rectangle oldRect = to_rect;
 		to_rect.offset(current_terrain_ul);
 		rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,to_rect,ul);
 	}
 	
 	// create and clip temporary anim template
-	temp_rect = RECT(terrain_screen_gworld);
+	temp_rect = rectangle(terrain_screen_gworld);
 	active_area_rect = temp_rect;
 	active_area_rect.inset(13,13);
 	TextStyle style;
@@ -608,8 +608,8 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 			}
 			
 			// eliminate stuff that's too gone.
-			RECT tempRect2;
-			tempRect2 = RECT(terrain_screen_gworld);
+			rectangle tempRect2;
+			tempRect2 = rectangle(terrain_screen_gworld);
 			temp_rect = explode_place_rect[i] | tempRect2;
 			if(temp_rect == explode_place_rect[i]) {
 				store_booms[i].boom_type = -1;
@@ -617,7 +617,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 			
 		}
 		else if(special_draw < 2)
-			explode_place_rect[i] = RECT();
+			explode_place_rect[i] = rectangle();
 	
 	//play_sound(-1 * sound_num);
 	if(special_draw < 2)
@@ -690,7 +690,7 @@ shop_type:
 11 - priest spells
 12 alchemy
 */
-void click_shop_rect(RECT area_rect) {
+void click_shop_rect(rectangle area_rect) {
 	
 	draw_shop_graphics(1,area_rect);
 	mainPtr.display();
@@ -701,8 +701,8 @@ void click_shop_rect(RECT area_rect) {
 	
 }
 
-static graf_pos calc_item_rect(int num,RECT& to_rect) {
-	RECT from_rect = {0,0,18,18};
+static graf_pos calc_item_rect(int num,rectangle& to_rect) {
+	rectangle from_rect = {0,0,18,18};
 	sf::Texture *from_gw = &tiny_obj_gworld;
 	if(num < 55) {
 		from_gw = &items_gworld;
@@ -715,12 +715,12 @@ static graf_pos calc_item_rect(int num,RECT& to_rect) {
 }
 
 // mode 1 - drawing dark for button press
-void draw_shop_graphics(bool pressed,RECT clip_area_rect) {
-	RECT area_rect,item_info_from = {11,42,24,56};
+void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
+	rectangle area_rect,item_info_from = {11,42,24,56};
 	
-	RECT face_rect = {6,6,38,38};
-	RECT title_rect = {15,48,42,260};
-	RECT dest_rect,help_from = {85,36,101,54};
+	rectangle face_rect = {6,6,38,38};
+	rectangle title_rect = {15,48,42,260};
+	rectangle dest_rect,help_from = {85,36,101,54};
 	short faces[13] = {1,1,1,42,43, 1,1,1,1,1, 44,44,44};
 	
 	short i,what_chosen;
@@ -730,7 +730,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect) {
 	// TODO: The Windows version appears to use completely different colours?
 	sf::Color c[7] = {sf::Color{0,0,0},sf::Color{0,0,128},sf::Color{0,0,57},sf::Color{0,0,104},sf::Color{0,0,232},
 		sf::Color{0,160,0},sf::Color{0,96,0}};
-	RECT shopper_name = {44,6,56,260};
+	rectangle shopper_name = {44,6,56,260};
 	short current_pos;
 	
 	short cur_cost,what_magic_shop,what_magic_shop_item;
@@ -755,7 +755,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect) {
 		clip_rect(talk_gworld, clip_area_rect);
 	}
 	
-	area_rect = RECT(talk_gworld);
+	area_rect = rectangle(talk_gworld);
 	frame_rect(talk_gworld, area_rect, sf::Color::Black);
 	area_rect.inset(1,1);
 	tileImage(talk_gworld, area_rect,bg[12]);
@@ -765,7 +765,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect) {
 	// Place store icon
 	if(!pressed) {
 		i = faces[store_shop_type];
-		RECT from_rect = {0,0,32,32};
+		rectangle from_rect = {0,0,32,32};
 		from_rect.offset(32 * (i % 10),32 * (i / 10));
 		rect_draw_some_item(talkfaces_gworld, from_rect, talk_gworld, face_rect);
 	}
@@ -798,11 +798,11 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect) {
 	// Place help and done buttons
 	// TODO: Reimplement these with a cButton
 #if 0
-	help_from = RECT(dlg_buttons_gworld[3][0]); // help
+	help_from = rectangle(dlg_buttons_gworld[3][0]); // help
 	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
 	rect_draw_some_item(dlg_buttons_gworld[3][pressed],help_from,talk_gworld,talk_help_rect);
-	help_from = RECT(dlg_buttons_gworld[11][0]); // done
+	help_from = rectangle(dlg_buttons_gworld[11][0]); // done
 	//talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
 	//talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
 	rect_draw_some_item(dlg_buttons_gworld[11][pressed],help_from,talk_gworld,shop_done_rect);
@@ -819,7 +819,7 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect) {
 			break; // theoretically, this shouldn't happen
 		cur_cost = store_shop_costs[current_pos];
 		what_chosen = store_shop_items[current_pos];
-		RECT from_rect, to_rect = shopping_rects[i][2];
+		rectangle from_rect, to_rect = shopping_rects[i][2];
 		sf::Texture* from_gw;
 		switch(what_chosen / 100) {
 			case 0: case 1: case 2: case 3: case 4:
@@ -911,9 +911,9 @@ void draw_shop_graphics(bool pressed,RECT clip_area_rect) {
 }
 
 void refresh_shopping() {
-	// TODO: The duplication of RECT here shouldn't be necessary...
-	RECT from_rects[4] = {RECT{0,0,62,279},RECT{62,0,352,253},RECT{62,269,352,279},RECT{352,0,415,279}};
-	RECT to_rect;
+	// TODO: The duplication of rectangle here shouldn't be necessary...
+	rectangle from_rects[4] = {rectangle{0,0,62,279},rectangle{62,0,352,253},rectangle{62,269,352,279},rectangle{352,0,415,279}};
+	rectangle to_rect;
 	short i;
 	
 	for(i = 0; i < 4; i++) {
@@ -924,7 +924,7 @@ void refresh_shopping() {
 }
 
 static void place_talk_face() {
-	RECT face_rect = {6,6,38,38};
+	rectangle face_rect = {6,6,38,38};
 	face_rect.offset(talk_area_rect.topLeft());
 	face_rect.offset(ul);
 	mainPtr.setActive();
@@ -943,7 +943,7 @@ static void place_talk_face() {
 }
 
 void click_talk_rect(word_rect_t word) {
-	RECT talkRect(talk_gworld), wordRect(word.rect);
+	rectangle talkRect(talk_gworld), wordRect(word.rect);
 	mainPtr.setActive();
 	rect_draw_some_item(talk_gworld.getTexture(),talkRect,talk_area_rect,ul);
 	wordRect.offset(talk_area_rect.topLeft());
@@ -1084,11 +1084,11 @@ void get_item_interesting_string(cItemRec item,char *message) {
 }
 
 // color 0 - regular  1 - darker
-void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,RECT c_rect) {
-	RECT area_rect;
+void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,rectangle c_rect) {
+	rectangle area_rect;
 	
-	RECT title_rect = {19,48,42,260};
-	RECT dest_rect,help_from = {46,60,59,76};
+	rectangle title_rect = {19,48,42,260};
+	rectangle dest_rect,help_from = {46,60,59,76};
 	sf::Text str_to_draw;
 	
 	short i;
@@ -1112,7 +1112,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		clip_rect(mainPtr, c_rect);
 	}
 	
-	area_rect = RECT(talk_gworld);
+	area_rect = rectangle(talk_gworld);
 	frame_rect(talk_gworld, area_rect, sf::Color::Black);
 	area_rect.inset(1,1);
 	tileImage(talk_gworld, area_rect,bg[12]);
@@ -1134,11 +1134,11 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	win_draw_string(talk_gworld,dest_rect,title_string,eTextMode::LEFT_TOP,style);
 	
 	talk_words.clear();
-	static const RECT preset_rects[9] = {
-		RECT{366,4,386,54}, RECT{366,70,386,130}, RECT{366,136,386,186},
-		RECT{389,4,409,54}, RECT{389,70,409,120}, RECT{389,121,409,186},
-		RECT{389,210,409,270}, RECT{366,190,386,270},
-		RECT{343,4,363,134},
+	static const rectangle preset_rects[9] = {
+		rectangle{366,4,386,54}, rectangle{366,70,386,130}, rectangle{366,136,386,186},
+		rectangle{389,4,409,54}, rectangle{389,70,409,120}, rectangle{389,121,409,186},
+		rectangle{389,210,409,270}, rectangle{366,190,386,270},
+		rectangle{343,4,363,134},
 	};
 	static const char*const preset_words[9] = {
 		"Look", "Name", "Job",
@@ -1168,7 +1168,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 				case 8: preset_word.node = TALK_ASK; break;
 			}
 			talk_words.push_back(preset_word);
-			RECT draw_rect = preset_word.rect;
+			rectangle draw_rect = preset_word.rect;
 			win_draw_string(talk_gworld,draw_rect,preset_word.word,eTextMode::LEFT_TOP,style);
 		}
 	}
@@ -1195,7 +1195,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
-	std::vector<RECT> word_rects = draw_string_hilite(talk_gworld, dest_rect, str, style, hilites, color ? c[1] : c[7]);
+	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld, dest_rect, str, style, hilites, color ? c[1] : c[7]);
 	
 	if(!talk_end_forced) {
 		// Now build the list of word rects
@@ -1210,7 +1210,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
-	RECT oldRect(talk_gworld);
+	rectangle oldRect(talk_gworld);
 	undo_clip(talk_gworld);
 	talk_gworld.display();
 	
@@ -1222,7 +1222,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 }
 
 void refresh_talking() {
-	RECT tempRect(talk_gworld);
+	rectangle tempRect(talk_gworld);
 	rect_draw_some_item(talk_gworld.getTexture(),tempRect,talk_area_rect,ul);
 	place_talk_face();
 }

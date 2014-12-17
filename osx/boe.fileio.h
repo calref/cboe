@@ -11,7 +11,7 @@ namespace fs = boost::filesystem; // TODO: Centralize this alias!
 //void load_file();
 //void save_file(short mode);
 void finish_load_party();
-void change_rect_terrain(RECT r,ter_num_t terrain_type,short probability,bool hollow);
+void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bool hollow);
 void swap_val(unsigned char *val,short a,short b);
 void change_val_4 (unsigned char *val,short a,short b,short c,short d);
 void change_val (unsigned char *val,short a,short b);
@@ -61,8 +61,8 @@ __declspec(deprecated) void init_town();
 //void port_out(outdoor_record_type *out);
 //void flip_spec_node(cSpecial *spec);
 //void flip_short(short *s);
-//void flip_rect(RECT *s);
+//void flip_rect(rectangle *s);
 
-  void alter_rect(RECT *r);
+  void alter_rect(rectangle *r);
 
 #endif

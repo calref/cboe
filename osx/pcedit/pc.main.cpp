@@ -19,20 +19,20 @@
 
 cUniverse univ;
 
-RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
-RECT pc_info_rect; // Frame that holds a pc's basic info and items
-RECT name_rect; //Holds pc name inside pc_info_rect
-RECT info_area_rect;
-RECT hp_sp_rect;   // Holds hit points and spells points for pc
-RECT skill_rect;	// Holds "Skills:" string
-RECT pc_skills_rect[19]; //Holds current pc's  skill levels
-RECT status_rect;  //Holds the string "Status:"
-RECT pc_status_rect[10]; //Holds first 8 effects on pc
-RECT traits_rect; //Holds the string "Traits:"
-RECT pc_traits_rect[16]; //Holds pc traits
-RECT pc_race_rect; //Holds current pc's race
-RECT edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
+rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
+rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
+rectangle pc_info_rect; // Frame that holds a pc's basic info and items
+rectangle name_rect; //Holds pc name inside pc_info_rect
+rectangle info_area_rect;
+rectangle hp_sp_rect;   // Holds hit points and spells points for pc
+rectangle skill_rect;	// Holds "Skills:" string
+rectangle pc_skills_rect[19]; //Holds current pc's  skill levels
+rectangle status_rect;  //Holds the string "Status:"
+rectangle pc_status_rect[10]; //Holds first 8 effects on pc
+rectangle traits_rect; //Holds the string "Traits:"
+rectangle pc_traits_rect[16]; //Holds pc traits
+rectangle pc_race_rect; //Holds current pc's race
+rectangle edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
 
 short current_active_pc = 0;
 //short dialog_answer;
@@ -479,7 +479,7 @@ bool verify_restore_quit(bool mode) {
 //	char chr,chr2;
 //	short the_type,wind_hit,item_hit;
 //	Handle the_handle = NULL;
-//	RECT the_rect,button_rect;
+//	rectangle the_rect,button_rect;
 //	location the_point;
 //	CWindowPtr w;
 //	RgnHandle updateRgn;

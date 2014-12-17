@@ -20,7 +20,7 @@ cScrollbar::cScrollbar(sf::RenderWindow& parent) : cControl(CTRL_SCROLL, parent)
 
 void cScrollbar::init() {
 	scroll_gw.loadFromImage(*ResMgr::get<ImageRsrc>("dlogscroll"));
-	RECT bar_rect = {0,48,16,64};
+	rectangle bar_rect = {0,48,16,64};
 	bar_tessel[0] = prepareForTiling(scroll_gw, bar_rect);
 	bar_rect.offset(0,16);
 	bar_tessel[1] = prepareForTiling(scroll_gw, bar_rect);
@@ -74,7 +74,7 @@ bool cScrollbar::handleClick(location where) {
 	inWindow->setActive();
 	depressed = true;
 	int bar_height = frame.height() - 32;
-	RECT thumbRect = frame;
+	rectangle thumbRect = frame;
 	thumbRect.top += 16 + pos * (bar_height - 16) / max;
 	thumbRect.height() = 16;
 	if(where.y < frame.top + 16)
@@ -154,10 +154,10 @@ sf::Color cScrollbar::getColour() throw(xUnsupportedProp) {
 
 void cScrollbar::draw() {
 	if(!isVisible()) return;
-	static const RECT up_rect = {0,0,16,16}, down_rect = {0,16,16,32}, thumb_rect = {0,32,16,48};
+	static const rectangle up_rect = {0,0,16,16}, down_rect = {0,16,16,32}, thumb_rect = {0,32,16,48};
 	int bar_height = frame.height() - 32;
 	inWindow->setActive();
-	RECT draw_rect = frame, from_rect = up_rect;
+	rectangle draw_rect = frame, from_rect = up_rect;
 	draw_rect.height() = 16;
 	if(depressed && pressedPart == PART_UP)
 		from_rect.offset(0,16);

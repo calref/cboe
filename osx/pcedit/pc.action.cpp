@@ -41,18 +41,18 @@ extern bool diff_depth_ok;
 short which_pc_displayed,store_pc_trait_mode,store_which_to_edit;
 extern short current_active_pc;
 char empty_string[256] = "                                                ";
-extern RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
-extern RECT pc_info_rect;
-extern RECT name_rect;
+extern rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
+extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
+extern rectangle pc_info_rect;
+extern rectangle name_rect;
 
-extern RECT pc_race_rect;
-extern RECT edit_rect[5][2];
+extern rectangle pc_race_rect;
+extern rectangle edit_rect[5][2];
 
 
 
-//extern RECT pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-//extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
+//extern rectangle pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
+//extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 //short mode; // ignore,
 bool handle_action(sf::Event event) {
 	short i;
@@ -112,7 +112,7 @@ bool handle_action(sf::Event event) {
 	return to_return;
 }
 
-void flash_rect(RECT /*to_flash*/) {
+void flash_rect(rectangle /*to_flash*/) {
 	
 	// TODO: Think of a good way to do this
 	//InvertRect (&to_flash);

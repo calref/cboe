@@ -109,12 +109,12 @@ cTextField::~cTextField(){}
 void cTextField::draw(){
 	static const sf::Color hiliteClr = {127,127,127}, ipClr = {92, 92, 92};
 	inWindow->setActive();
-	RECT outline = frame;
+	rectangle outline = frame;
 	outline.inset(-2,-2);
 	fill_rect(*inWindow, outline, sf::Color::White);
 	frame_rect(*inWindow, outline, sf::Color::Black);
 	std::string contents = getText();
-	RECT rect = frame;
+	rectangle rect = frame;
 	rect.inset(2,2);
 	TextStyle style;
 	style.font = FONT_PLAIN;
@@ -132,7 +132,7 @@ void cTextField::draw(){
 		std::string dummy_str = contents + "  ";
 		if(tmp_hilite.first >= tmp_hilite.second)
 			tmp_hilite.second = tmp_hilite.first + 1;
-		std::vector<RECT> rects = draw_string_hilite(*inWindow, rect, dummy_str, style, {tmp_hilite}, {0,0,0});
+		std::vector<rectangle> rects = draw_string_hilite(*inWindow, rect, dummy_str, style, {tmp_hilite}, {0,0,0});
 		if(!rects.empty()) {
 			// We only care about the first and last rects. Furthermore, we only really need one point
 			location ip_pos = rects[0].centre(), sp_pos = rects[rects.size() - 1].centre();
@@ -172,7 +172,7 @@ void cTextField::draw(){
 		ip_offset = string_length(pre_ip, style);
 		if(ip_timer.getElapsedTime().asMilliseconds() < 500) {
 //			printf("Blink on (%d); ", ip_timer.getElapsedTime().asMilliseconds());
-			RECT ipRect = {0, 0, 15, 1};
+			rectangle ipRect = {0, 0, 15, 1};
 			if(iSnippet >= 0)
 				ipRect.offset(snippets[iSnippet].at.x + ip_offset, snippets[iSnippet].at.y + 1);
 			else ipRect.offset(frame.topLeft()), ipRect.offset(3,2);

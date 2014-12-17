@@ -25,9 +25,9 @@
 
 using boost::math::constants::pi;
 
-RECT bg_rects[21];
-RECT map_pat_rects[30];
-RECT bw_rects[6];
+rectangle bg_rects[21];
+rectangle map_pat_rects[30];
+rectangle bw_rects[6];
 tessel_ref_t bg[21];
 tessel_ref_t map_pat[30];
 tessel_ref_t bw_pats[6];
@@ -91,7 +91,7 @@ void init_graph_tool(){
 		bg_rects[pat_i[i]] = {0,0,64,64};
 		bg_rects[pat_i[i]].offset(64 * pat_offs[i].x,64 * pat_offs[i].y);
 	}
-	RECT tmp_rect = bg_rects[19];
+	rectangle tmp_rect = bg_rects[19];
 	tmp_rect.offset(0, 64);
 	bg_rects[0] = bg_rects[1] = bg_rects[18] = map_pat_rects[7] = tmp_rect;
 	bg_rects[0].right -= 32;
@@ -131,17 +131,17 @@ void init_graph_tool(){
 	register_main_patterns();
 }
 
-static void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::RenderStates mode);
+static void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode);
 
-void rect_draw_some_item(sf::RenderTarget& targ_gworld,RECT targ_rect) {
+void rect_draw_some_item(sf::RenderTarget& targ_gworld,rectangle targ_rect) {
 	fill_rect(targ_gworld, targ_rect, sf::Color::Black);
 }
 
-void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::BlendMode mode){
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode){
 	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_rect, sf::RenderStates(mode));
 }
 
-void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderTarget& targ_gworld,RECT targ_rect,sf::RenderStates mode) {
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode) {
 	setActiveRenderTarget(targ_gworld);
 	sf::Sprite tile(src_gworld, src_rect);
 	tile.setPosition(targ_rect.left, targ_rect.top);
@@ -152,15 +152,15 @@ void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,sf::RenderT
 	targ_gworld.draw(tile, mode);
 }
 
-void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,RECT targ_rect,location offset, sf::BlendMode mode) {
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,rectangle targ_rect,location offset, sf::BlendMode mode) {
 	targ_rect.offset(offset);
 	rect_draw_some_item(src_gworld,src_rect,mainPtr,targ_rect,mode);
 }
 
-void rect_draw_some_item(const sf::Texture& src_gworld,RECT src_rect,const sf::Texture& mask_gworld,RECT mask_rect,sf::RenderTarget& targ_gworld,RECT targ_rect) {
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const sf::Texture& mask_gworld,rectangle mask_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect) {
 	sf::RenderTexture src;
 	src.create(src_rect.width(), src_rect.height());
-	RECT dest_rect = src_rect;
+	rectangle dest_rect = src_rect;
 	dest_rect.offset(-dest_rect.left,-dest_rect.top);
 	rect_draw_some_item(src_gworld, src_rect, src, dest_rect);
 	src.display();
@@ -208,13 +208,13 @@ struct text_params_t {
 	std::vector<hilite_t> hilite_ranges;
 	sf::Color hilite_fg, hilite_bg = sf::Color::Transparent;
 	enum {RECTS, SNIPPETS} returnType;
-	std::vector<RECT> returnRects;
+	std::vector<rectangle> returnRects;
 	std::vector<snippet_t> snippets;
 };
 
-void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,text_params_t& options);
+void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,text_params_t& options);
 
-void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,eTextMode mode,TextStyle style, location offset) {
+void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style, location offset) {
 	text_params_t params;
 	params.mode = mode;
 	params.style = style;
@@ -222,7 +222,7 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 	win_draw_string(dest_window, dest_rect, str, params);
 }
 
-std::vector<RECT> draw_string_hilite(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr) {
+std::vector<rectangle> draw_string_hilite(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr) {
 	text_params_t params;
 	params.mode = eTextMode::WRAP;
 	params.hilite_ranges = hilites;
@@ -233,7 +233,7 @@ std::vector<RECT> draw_string_hilite(sf::RenderTarget& dest_window,RECT dest_rec
 	return params.returnRects;
 }
 
-std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr) {
+std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr) {
 	text_params_t params;
 	params.mode = eTextMode::WRAP;
 	params.showBreaks = true;
@@ -284,7 +284,7 @@ static void push_snippets(size_t start, size_t end, text_params_t& options, size
 	} while(start < upper_bound);
 }
 
-void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string str,text_params_t& options) {
+void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,text_params_t& options) {
 	if(str.empty()) return; // Nothing to do!
 	short line_height = options.style.lineHeight;
 	sf::Text str_to_draw;
@@ -366,7 +366,7 @@ void win_draw_string(sf::RenderTarget& dest_window,RECT dest_rect,std::string st
 		str_to_draw.setString(snippet.text);
 		str_to_draw.setPosition(snippet.at);
 		if(snippet.hilited) {
-			RECT bounds = str_to_draw.getGlobalBounds();
+			rectangle bounds = str_to_draw.getGlobalBounds();
 			// Adjust so that drawing the same text to
 			// the same rect is positioned exactly right
 			bounds.left = snippet.at.x - 1;
@@ -395,10 +395,10 @@ short string_length(std::string str, TextStyle style){
 void draw_terrain(){
 	short q,r,x,y,i,small_i;
 	location which_pt,where_draw;
-	RECT draw_rect,clipping_rect = {8,8,332,260};	
+	rectangle draw_rect,clipping_rect = {8,8,332,260};	
 	unsigned char t_to_draw;
-	RECT source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
-	RECT boat_rect[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
+	rectangle source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
+	rectangle boat_rect[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
 	
 	if(overall_mode >= 60)
 		return;
@@ -646,8 +646,8 @@ void draw_terrain(){
 	rect_draw_some_item(ter_draw_gworld,terrain_rect,ter_draw_gworld,world_screen,0,1);
 }*/
 
-RECT calc_rect(short i, short j){
-	RECT base_rect = {0,0,36,28};
+rectangle calc_rect(short i, short j){
+	rectangle base_rect = {0,0,36,28};
 	
 	base_rect.offset(i * 28, j * 36);
 	return base_rect;
@@ -657,7 +657,7 @@ graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	short sheet = which_rect / 100;
 	if(is_old) sheet = 0;
 	else which_rect %= 100;
-	RECT store_rect = {0,0,36,28};
+	rectangle store_rect = {0,0,36,28};
 	
 	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
 	return std::make_pair(party ? this->party : &sheets[sheet],store_rect);
@@ -666,12 +666,12 @@ graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 size_t cCustomGraphics::count() {
 	if(sheets == NULL) return 0;
 	else if(is_old) {
-		RECT bounds(sheets[0]);
+		rectangle bounds(sheets[0]);
 		if(bounds.width() < 280) return bounds.width() / 28;
 		return bounds.height() / 36;
 	} else {
 		size_t count = 100 * (numSheets - 1);
-		RECT bounds(sheets[numSheets - 1]);
+		rectangle bounds(sheets[numSheets - 1]);
 		if(bounds.width() < 280) count += bounds.width() / 28;
 		else count += bounds.height() / 36;
 		return count;
@@ -1003,56 +1003,56 @@ static void frame_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y
 	target.draw(shape);
 }
 
-void fill_rect(sf::RenderTarget& target, RECT rect, sf::Color colour) {
+void fill_rect(sf::RenderTarget& target, rectangle rect, sf::Color colour) {
 	sf::RectangleShape fill(sf::Vector2f(rect.width(), rect.height()));
 	fill_shape(target, fill, rect.left, rect.top, colour);
 }
 
-void frame_rect(sf::RenderTarget& target, RECT rect, sf::Color colour) {
+void frame_rect(sf::RenderTarget& target, rectangle rect, sf::Color colour) {
 	sf::RectangleShape frame(sf::Vector2f(rect.width(), rect.height()));
 	frame_shape(target, frame, rect.left, rect.top, colour);
 }
 
-void fill_roundrect(sf::RenderTarget& target, RECT rect, int rad, sf::Color colour) {
+void fill_roundrect(sf::RenderTarget& target, rectangle rect, int rad, sf::Color colour) {
 	RoundRect fill(sf::Vector2f(rect.width(), rect.height()), rad);
 	fill_shape(target, fill, rect.left, rect.top, colour);
 }
 
-void frame_roundrect(sf::RenderTarget& target, RECT rect, int rad, sf::Color colour) {
+void frame_roundrect(sf::RenderTarget& target, rectangle rect, int rad, sf::Color colour) {
 	RoundRect frame(sf::Vector2f(rect.width(), rect.height()), rad);
 	frame_shape(target, frame, rect.left, rect.top, colour);
 }
 
-void fill_circle(sf::RenderTarget& target, RECT rect, sf::Color colour) {
+void fill_circle(sf::RenderTarget& target, rectangle rect, sf::Color colour) {
 	Ellipse fill(sf::Vector2f(rect.width(), rect.height()));
 	fill_shape(target, fill, rect.left, rect.top, colour);
 }
 
-void frame_circle(sf::RenderTarget& target, RECT rect, sf::Color colour) {
+void frame_circle(sf::RenderTarget& target, rectangle rect, sf::Color colour) {
 	Ellipse frame(sf::Vector2f(rect.width(), rect.height()));
 	frame_shape(target, frame, rect.left, rect.top, colour);
 }
 
 void fill_region(sf::RenderWindow& target, Region& region, sf::Color colour) {
 	clip_region(target, region);
-	fill_rect(target, RECT(target), colour);
+	fill_rect(target, rectangle(target), colour);
 	undo_clip(target);
 }
 
 void frame_region(sf::RenderWindow& target, Region& region, sf::Color colour) {
 	// TODO: Uh, actually, this won't do what it says. Eh, I'll fix it if I ever use it.
 	clip_region(target, region);
-	frame_rect(target, RECT(target), colour);
+	frame_rect(target, rectangle(target), colour);
 	undo_clip(target);
 }
 
-void Region::addEllipse(RECT frame) {
+void Region::addEllipse(rectangle frame) {
 	Ellipse* ellipse = new Ellipse(sf::Vector2f(frame.width(), frame.height()));
 	ellipse->setFillColor(sf::Color::Black);
 	shapes.push_back(std::shared_ptr<sf::Shape>(ellipse));
 }
 
-void Region::addRect(RECT rect){
+void Region::addRect(rectangle rect){
 	sf::RectangleShape* frame = new sf::RectangleShape(sf::Vector2f(rect.width(), rect.height()));
 	frame->setPosition(rect.left, rect.top);
 	frame->setFillColor(sf::Color::Black);
@@ -1073,11 +1073,11 @@ void Region::offset(location off) {
 	offset(off.x, off.y);
 }
 
-RECT Region::getEnclosingRect() {
-	if(shapes.empty()) return RECT();
-	RECT bounds = shapes[0]->getGlobalBounds();
+rectangle Region::getEnclosingRect() {
+	if(shapes.empty()) return rectangle();
+	rectangle bounds = shapes[0]->getGlobalBounds();
 	for(size_t i = 0; i < shapes.size(); i++) {
-		RECT shapeRect = shapes[i]->getGlobalBounds();
+		rectangle shapeRect = shapes[i]->getGlobalBounds();
 		if(shapeRect.top < bounds.top) bounds.top = shapeRect.top;
 		if(shapeRect.left < bounds.left) bounds.top = shapeRect.top;
 		if(shapeRect.bottom > bounds.bottom) bounds.top = shapeRect.top;
@@ -1110,12 +1110,12 @@ void Region::setStencil(sf::RenderWindow& where) {
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 }
 
-void clip_rect(sf::RenderTarget& where, RECT rect) {
-	rect |= RECT(where); // Make sure we don't draw out of bounds
+void clip_rect(sf::RenderTarget& where, rectangle rect) {
+	rect |= rectangle(where); // Make sure we don't draw out of bounds
 	// TODO: Make sure this works for the scissor test...
 	setActiveRenderTarget(where);
 	glEnable(GL_SCISSOR_TEST);
-	glScissor(rect.left, RECT(where).height() - rect.bottom, rect.width(), rect.height());
+	glScissor(rect.left, rectangle(where).height() - rect.bottom, rect.width(), rect.height());
 }
 
 void clip_region(sf::RenderWindow& where, Region& region) {
@@ -1151,7 +1151,7 @@ Region& Region::operator-=(Region& other) {
 struct tessel_t {
 	sf::RenderTexture* tessel;
 	sf::Texture* img;
-	RECT srcRect;
+	rectangle srcRect;
 };
 
 bool operator==(const tessel_ref_t& a, const tessel_ref_t& b) {
@@ -1167,13 +1167,13 @@ template<> struct std::hash<tessel_ref_t> {
 std::unordered_map<tessel_ref_t, tessel_t> tiling_reservoir;
 static int tessel_index = 0;
 
-tessel_ref_t prepareForTiling(sf::Texture& srcImg, RECT srcRect) {
+tessel_ref_t prepareForTiling(sf::Texture& srcImg, rectangle srcRect) {
 	tessel_ref_t ref = {tessel_index++};
 	tiling_reservoir[ref].img = &srcImg;
 	tiling_reservoir[ref].srcRect = srcRect;
 	tiling_reservoir[ref].tessel = new sf::RenderTexture;
 	tiling_reservoir[ref].tessel->create(srcRect.width(), srcRect.height());
-	RECT tesselRect(*tiling_reservoir[ref].tessel);
+	rectangle tesselRect(*tiling_reservoir[ref].tessel);
 	rect_draw_some_item(srcImg, srcRect, *tiling_reservoir[ref].tessel, tesselRect);
 	tiling_reservoir[ref].tessel->display();
 	tiling_reservoir[ref].tessel->setRepeated(true);
@@ -1204,15 +1204,15 @@ static void register_main_patterns() {
 	}
 }
 
-void tileImage(sf::RenderTarget& target, RECT area, tessel_ref_t tessel, sf::BlendMode mode) {
+void tileImage(sf::RenderTarget& target, rectangle area, tessel_ref_t tessel, sf::BlendMode mode) {
 	// First, set up a dictionary of all textures ever tiled.
 	// The key type is a pair<Texture*,rectangle>.
 	// The value type is a Texture.
 	tessel_t& tesselInfo = tiling_reservoir[tessel];
-	RECT clipArea = area;
+	rectangle clipArea = area;
 	area.left -= area.left % tesselInfo.srcRect.width();
 	area.top -= area.top % tesselInfo.srcRect.height();
-	area |= RECT(target); // Make sure we don't draw out of bounds
+	area |= rectangle(target); // Make sure we don't draw out of bounds
 	
 	sf::RectangleShape tesselShape(sf::Vector2f(area.width(),area.height()));
 	tesselShape.setTexture(&tesselInfo.tessel->getTexture());

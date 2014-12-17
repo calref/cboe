@@ -70,7 +70,7 @@ void ding();
 
 cScenario scenario;
 //piles_of_stuff_dumping_type *data_store;
-RECT right_sbar_rect;
+rectangle right_sbar_rect;
 
 //
 //	Main body of program Exileedit
@@ -160,7 +160,7 @@ void Initialize(void) {
 	//	The window is full screen size, made smaller to make it more visible.
 	//
 	sf::VideoMode mode = sf::VideoMode::getDesktopMode();
-	RECT windRect;
+	rectangle windRect;
 	windRect.width() = mode.width;
 	windRect.height() = mode.height;
 	

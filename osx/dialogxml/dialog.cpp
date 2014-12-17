@@ -52,7 +52,7 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	ePicType type;
 	bool wide = false, tall = false, custom = false;
 	bool foundTop = false, foundLeft = false, foundType = false, foundNum = false; // required attributes
-	RECT frame;
+	rectangle frame;
 	int width = 0, height = 0;
 	p.second = new cPict(*this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
@@ -209,7 +209,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 	string name;
 	int width = 0, height = 0;
 	bool foundTop = false, foundLeft = false; // top and left are required attributes
-	RECT frame;
+	rectangle frame;
 	p.second = new cTextMsg(*this);
 	if(bg == BG_DARK) p.second->setColour(sf::Color::White);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
@@ -357,7 +357,7 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 	bool foundKey = false;
 	std::string keyMod, keyMain;
 	int keyModRow, keyModCol, keyMainRow, keyMainCol;
-	RECT frame;
+	rectangle frame;
 	p.second = new cButton(this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
@@ -561,7 +561,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 	string name;
 	int width = 0, height = 0;
 	bool foundTop = false, foundLeft = false; // requireds
-	RECT frame;
+	rectangle frame;
 	p.second = new cLed(this);
 	if(bg == BG_DARK) p.second->setColour(sf::Color::White);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
@@ -697,7 +697,7 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 	string name;
 	int width = 0, height = 0;
 	bool foundTop = false, foundLeft = false; // requireds
-	RECT frame;
+	rectangle frame;
 	p.second = new cTextField(this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
@@ -881,7 +881,7 @@ void cDialog::loadFromFile(std::string path){
 	dialogNotToast = true;
 	if(bg == BG_DARK) defTextClr = sf::Color::White;
 	// now calculate window rect
-	winRect = RECT();
+	winRect = rectangle();
 	recalcRect();
 	ctrlIter iter = controls.begin();
 	currentFocus = "";
@@ -898,7 +898,7 @@ void cDialog::recalcRect(){
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
 		printf("%s \"%s\"\n",typeid(*(iter->second)).name(),iter->first.c_str());
-		RECT frame = iter->second->getBounds();
+		rectangle frame = iter->second->getBounds();
 		if(frame.right > winRect.right)
 			winRect.right = frame.right;
 		if(frame.bottom > winRect.bottom)
@@ -925,7 +925,7 @@ cDialog::~cDialog(){
 	win.close();
 }
 
-bool cDialog::add(cControl* what, RECT ctrl_frame, std::string key){
+bool cDialog::add(cControl* what, rectangle ctrl_frame, std::string key){
 	// First make sure the key is not already present.
 	// If it is, we can't add the control, so return false.
 	if(controls.find(key) != controls.end()) return false;
@@ -1215,7 +1215,7 @@ void cDialog::attachFocusHandlers(focus_callback_t handler, std::vector<std::str
 bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, short offset, bool bold) {
 	cControl& ctrl = this->getControl(key);
 	key += "-label";
-	RECT labelRect = ctrl.getBounds();
+	rectangle labelRect = ctrl.getBounds();
 	switch(where) {
 		case LABEL_LEFT:
 			labelRect.right = labelRect.left;

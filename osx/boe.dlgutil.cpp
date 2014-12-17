@@ -43,7 +43,7 @@ extern eGameMode overall_mode;
 //extern party_record_type party;
 extern bool play_sounds,give_intro_hint,show_startup_splash,changed_display_mode;
 extern sf::RenderWindow mainPtr;
-extern RECT d_rects[80];
+extern rectangle d_rects[80];
 extern short d_rect_index[80];
 extern short display_mode,stat_screen_mode,current_pc;
 extern long register_flag;
@@ -74,11 +74,11 @@ short store_personality,store_personality_graphic,shop_identify_cost;
 std::string save_talk_str1, save_talk_str2;
 sf::RenderTexture talk_gworld;
 bool talk_end_forced;
-RECT talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
+rectangle talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
 std::string title_string;
 m_num_t store_monst_type;
 short store_m_num;
-RECT dummy_rect = {0,0,0,0};
+rectangle dummy_rect = {0,0,0,0};
 //hold_responses store_resp[83];
 short strnum1,strnum2,oldstrnum1,oldstrnum2;
 short store_talk_face_pic;//,cur_town_talk_loaded = -1;
@@ -101,12 +101,12 @@ eGameMode store_pre_shop_mode;
 char store_store_name[256];
 // 0 - whole area, 1 - active area 2 - graphic 3 - item name
 // 4 - item cost 5 - item extra str  6 - item help button
-extern RECT shopping_rects[8][7];
-// TODO: The duplication of RECT here shouldn't be necessary...
-RECT bottom_help_rects[4] = {RECT{356,6,368,250},RECT{374,6,386,270},RECT{386,6,398,250},RECT{398,6,410,250}};
-RECT shop_name_str = {44,6,56,200};
-RECT shop_frame = {62,10,352,269};
-RECT shop_done_rect = {388,212,411,275};
+extern rectangle shopping_rects[8][7];
+// TODO: The duplication of rectangle here shouldn't be necessary...
+rectangle bottom_help_rects[4] = {rectangle{356,6,368,250},rectangle{374,6,386,270},rectangle{386,6,398,250},rectangle{398,6,410,250}};
+rectangle shop_name_str = {44,6,56,200};
+rectangle shop_frame = {62,10,352,269};
+rectangle shop_done_rect = {388,212,411,275};
 
 extern short store_shop_type;
 
@@ -131,7 +131,7 @@ shop_type:
 12 alchemy
 */
 void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_adj,const char* store_name) {
-	RECT area_rect;
+	rectangle area_rect;
 	
 	// This would be a place to hide the text box, if I add it.
 	
@@ -173,7 +173,7 @@ static void update_last_talk(int new_node) {
 }
 
 void end_shop_mode() {
-	RECT dummy_rect = {0,0,0,0};
+	rectangle dummy_rect = {0,0,0,0};
 	
 	// This would be a place to show the text box, if I add it (and if this is not an outdoor shop).
 	
@@ -234,7 +234,7 @@ void handle_shop_event(location p) {
 void handle_sale(short what_chosen,short cost) {
 	cItemRec base_item;
 	short what_magic_shop,what_magic_shop_item,i;
-	RECT dummy_rect = {0,0,0,0};
+	rectangle dummy_rect = {0,0,0,0};
 	
 	switch(what_chosen / 100) {
 		case 0: case 1: case 2: case 3: case 4:
@@ -525,7 +525,7 @@ void set_up_shop_array() {
 }
 
 void start_talk_mode(short m_num,short personality,m_num_t monst_type,short store_face_pic) {
-	RECT area_rect;
+	rectangle area_rect;
 	std::string place_string1;
 	
 	store_personality = personality;

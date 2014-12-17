@@ -96,7 +96,7 @@ bool cTextMsg::isClickable(){
 }
 
 void cTextMsg::draw(){
-	RECT to_rect = frame;
+	rectangle to_rect = frame;
 	
 	inWindow->setActive();
 	

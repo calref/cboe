@@ -30,24 +30,24 @@ bool printing_long = false;
 char c_str[256] = "";
 bool save_mess_given = false;
 
-RECT status_panel_clip_rect = {11, 299, 175, 495},item_panel_clip_rect = {11,297,175,463};
+rectangle status_panel_clip_rect = {11, 299, 175, 495},item_panel_clip_rect = {11,297,175,463};
 
-// TODO: The duplication of RECT here shouldn't be necessary...
-RECT item_buttons_from[7] = {
-	RECT{11,0,24,14},RECT{11,14,24,28},RECT{11,28,24,42},RECT{11,42,24,56},
-	RECT{24,0,36,30},RECT{24,30,36,60},RECT{36,0,48,30}};
+// TODO: The duplication of rectangle here shouldn't be necessary...
+rectangle item_buttons_from[7] = {
+	rectangle{11,0,24,14},rectangle{11,14,24,28},rectangle{11,28,24,42},rectangle{11,42,24,56},
+	rectangle{24,0,36,30},rectangle{24,30,36,60},rectangle{36,0,48,30}};
 
 eGameMode store_mode;
 
 extern short had_text_freeze,stat_screen_mode;
 
 // graphics globals
-extern RECT status_panel_rect,status_panel_title_rect;
-extern RECT	text_panel_rect;
+extern rectangle status_panel_rect,status_panel_title_rect;
+extern rectangle	text_panel_rect;
 extern short which_combat_type,stat_window;
 extern eGameMode overall_mode;
 extern sf::RenderWindow mainPtr;
-extern RECT more_info_button;
+extern rectangle more_info_button;
 extern short which_item_page[6];
 //extern CursHandle sword_curs;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar;
@@ -74,13 +74,13 @@ extern short terrain_there[9][9];
 //extern big_tr_type t_d;
 extern location ul;
 extern bool play_sounds,suppress_stat_screen;
-extern RECT item_buttons[8][6];
+extern rectangle item_buttons[8][6];
 // name, use, give, drip, info, sell/id
-extern RECT pc_buttons[6][5];
+extern rectangle pc_buttons[6][5];
 // name, hp, sp, info, trade
 extern bool item_area_button_active[8][6];
 extern bool pc_area_button_active[6][5];
-extern RECT item_screen_button_rects[9];
+extern rectangle item_screen_button_rects[9];
 extern short spec_item_array[60];
 extern std::map<eItemAbil, short> abil_chart;
 // combat globals
@@ -95,15 +95,15 @@ extern location ok_space[4];
 extern sf::Texture bg_gworld;
 
 // Draws the pc area in upper right
-//void win_draw_string(WindowPtr dest_window,RECT dest_rect,char *str,short mode,short line_height)
+//void win_draw_string(WindowPtr dest_window,rectangle dest_rect,char *str,short mode,short line_height)
 void put_pc_screen() {
 	char to_draw[256];
 	short i = 0,j;
-	RECT erase_rect = {17,2,98,269},to_draw_rect,from_rect;
-	// TODO: The duplication of RECT here shouldn't be necessary...
-	RECT small_erase_rects[3] = {RECT{101,34,114,76},RECT{101,106,114,147},RECT{101,174,114,201}};
-	RECT bottom_bar_rect = {99,0,116,271};
-	RECT info_from = {0,1,12,13};
+	rectangle erase_rect = {17,2,98,269},to_draw_rect,from_rect;
+	// TODO: The duplication of rectangle here shouldn't be necessary...
+	rectangle small_erase_rects[3] = {rectangle{101,34,114,76},rectangle{101,106,114,147},rectangle{101,174,114,201}};
+	rectangle bottom_bar_rect = {99,0,116,271};
+	rectangle info_from = {0,1,12,13};
 	
 	pc_stats_gworld.setActive();
 	
@@ -222,8 +222,8 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 	std::ostringstream sout;
 	short i_num,item_offset;
 	short i = 0,j,pc;
-	RECT erase_rect = {17,2,122,255},dest_rect;
-	RECT upper_frame_rect = {3,3,15,268};
+	rectangle erase_rect = {17,2,122,255},dest_rect;
+	rectangle upper_frame_rect = {3,3,15,268};
 	
 	item_stats_gworld.setActive();
 	
@@ -355,9 +355,9 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 }
 
 void place_buy_button(short position,short pc_num,short item_num) {
-	RECT dest_rect,source_rect;
-	// TODO: The duplication of RECT here shouldn't be necessary...
-	RECT button_sources[3] = {RECT{24,0,36,30},RECT{36,0,48,30},RECT{48,0,60,30}};
+	rectangle dest_rect,source_rect;
+	// TODO: The duplication of rectangle here shouldn't be necessary...
+	rectangle button_sources[3] = {rectangle{24,0,36,30},rectangle{36,0,48,30},rectangle{48,0,60,30}};
 	short val_to_place;
 	char store_str[60];
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
@@ -436,7 +436,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 // shortcuts - if which_button_to_put is 10, all 4 buttons now
 //				if which_button_to_put is 11, just right 2
 void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val) {
-	RECT from_rect = {0,0,18,18},to_rect;
+	rectangle from_rect = {0,0,18,18},to_rect;
 	
 	if(which_button_position == 0) { // this means put little item graphic, extra val is which_graphic
 		item_area_button_active[which_slot][which_button_position] = true;
@@ -478,15 +478,15 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 	}
 }
-//RECT get_custom_rect (short which_rect) {
-//	RECT store_rect = {0,0,36,28};
+//rectangle get_custom_rect (short which_rect) {
+//	rectangle store_rect = {0,0,36,28};
 //
 //	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
 //	return store_rect;
 //}
 void place_item_bottom_buttons() {
-	RECT pc_from_rect = {0,0,36,28},but_from_rect = {30,60,46,78},to_rect;
-	RECT spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76};
+	rectangle pc_from_rect = {0,0,36,28},but_from_rect = {30,60,46,78},to_rect;
+	rectangle spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76};
 	// TODO: What about when the buttons are pressed?
 	short i;
 	
@@ -554,12 +554,12 @@ short first_active_pc() {
 void refresh_stat_areas(short mode) {
 	short i;
 	sf::BlendMode x;
-	// TODO: The duplication of RECT here shouldn't be necessary...
-	RECT dest_rect,parts_of_area_to_draw[3] = {RECT{0,0,17,271},RECT{16,0,123,256},RECT{123,0,144,271}};
+	// TODO: The duplication of rectangle here shouldn't be necessary...
+	rectangle dest_rect,parts_of_area_to_draw[3] = {rectangle{0,0,17,271},rectangle{16,0,123,256},rectangle{123,0,144,271}};
 	
 	//x = mode * 10;
-	dest_rect = RECT(pc_stats_gworld);
-	RECT oldRect = dest_rect;
+	dest_rect = rectangle(pc_stats_gworld);
+	rectangle oldRect = dest_rect;
 	dest_rect.offset(PC_WIN_UL_X,PC_WIN_UL_Y);
 	if(mode == 1) x = sf::BlendAdd;
 	else x = sf::BlendNone;
@@ -569,7 +569,7 @@ void refresh_stat_areas(short mode) {
 		dest_rect.offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 		rect_draw_some_item(item_stats_gworld.getTexture(), parts_of_area_to_draw[i], dest_rect,ul, x);
 	}
-	dest_rect = RECT(text_area_gworld);
+	dest_rect = rectangle(text_area_gworld);
 	oldRect = dest_rect;
 	dest_rect.offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
 	rect_draw_some_item(text_area_gworld.getTexture(),oldRect, dest_rect,ul, x);
@@ -589,25 +589,25 @@ short total_encumberance(short pc_num) {
 	return store;
 }
 
-RECT get_stat_effect_rect(eStatus which_effect) {
+rectangle get_stat_effect_rect(eStatus which_effect) {
 	int code = (int) which_effect;
-	RECT base = {0,0,12,12};
+	rectangle base = {0,0,12,12};
 	base.offset(12 * (code % 3), 12 * (code / 3));
 	return base;
 }
 
 void draw_pc_effects(short pc) {
 	// TODO: Calculate these rects from scratch instead of hard-coding them. (use above function)
-	// TODO: The duplication of RECT here shouldn't be necessary...
-	RECT source_rects[18] = {
-		RECT{00,0,12,12},RECT{00,12,12,24},RECT{00,24,12,36},
-		RECT{12,0,24,12},RECT{12,12,24,24},RECT{12,24,24,36},
-		RECT{24,0,36,12},RECT{24,12,36,24},RECT{24,24,36,36},
-		RECT{36,0,47,12},RECT{36,12,47,24},RECT{36,24,47,36},
-		RECT{47,0,60,12},RECT{47,12,60,24},RECT{47,24,60,36},
-		RECT{60,0,72,12},RECT{60,12,72,24},RECT{60,24,72,36}
+	// TODO: The duplication of rectangle here shouldn't be necessary...
+	rectangle source_rects[18] = {
+		rectangle{00,0,12,12},rectangle{00,12,12,24},rectangle{00,24,12,36},
+		rectangle{12,0,24,12},rectangle{12,12,24,24},rectangle{12,24,24,36},
+		rectangle{24,0,36,12},rectangle{24,12,36,24},rectangle{24,24,36,36},
+		rectangle{36,0,47,12},rectangle{36,12,47,24},rectangle{36,24,47,36},
+		rectangle{47,0,60,12},rectangle{47,12,60,24},rectangle{47,24,60,36},
+		rectangle{60,0,72,12},rectangle{60,12,72,24},rectangle{60,24,72,36}
 	};
-	RECT dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};
+	rectangle dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};
 	short right_limit = 250;
 	short name_width;
 	
@@ -1320,7 +1320,7 @@ void print_buf () {
 	short line_to_print;
 	short start_print_point;
 	bool end_loop = false;
-	RECT store_text_rect,dest_rect,erase_rect = {2,2,136,255};
+	rectangle store_text_rect,dest_rect,erase_rect = {2,2,136,255};
 	
 	text_area_gworld.setActive();
 	
@@ -1374,8 +1374,8 @@ void through_sending() {
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
  object is ptr. to bitmap to be drawn, and masking is for Copybits. */
-void Draw_Some_Item (sf::Texture& src_gworld, RECT src_rect, sf::RenderTarget& targ_gworld,location target, char masked, short main_win) {
-	RECT	destrec = {0,0,36,28};
+void Draw_Some_Item (sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld,location target, char masked, short main_win) {
+	rectangle	destrec = {0,0,36,28};
 	
 	if((target.x < 0) || (target.y < 0) || (target.x > 8) || (target.y > 8))
 		return;
@@ -1399,8 +1399,8 @@ void Draw_Some_Item (sf::Texture& src_gworld, RECT src_rect, sf::RenderTarget& t
 }
 
 // TODO: This seems to duplicate logic found in graphtool to get a rect from a picture index
-RECT coord_to_rect(short i,short j) {
-	RECT to_return;
+rectangle coord_to_rect(short i,short j) {
+	rectangle to_return;
 	
 	to_return.left = 13 + BITMAP_WIDTH * i;
 	to_return.right = to_return.left + BITMAP_WIDTH;

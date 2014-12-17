@@ -23,9 +23,9 @@
 #include "scen.btnmg.h"
 
 extern char current_string[256];
-RECT world_screen;
+rectangle world_screen;
 // border rects order: top, left, bottom, right //
-RECT border_rect[4];
+rectangle border_rect[4];
 short current_block_edited = 0;
 short current_terrain_type = 0;
 short safety = 0;
@@ -56,7 +56,7 @@ cTown::cItem store_place_item = {loc(),-1,0,0,0,0,0};
 
 short flood_count = 0;
 
-RECT terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
+rectangle terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
 
 
 extern short cen_x, cen_y, cur_town;
@@ -78,12 +78,12 @@ bool small_any_drawn = false;
 //extern cSpeech talking;
 extern bool change_made;
 
-RECT left_buttons[NLS][2]; // 0 - whole, 1 - blue button
+rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
 short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
 short right_button_status[NRS];
-RECT right_buttons[NRSONPAGE];
-RECT palette_buttons_from[71];
-RECT palette_buttons[10][6];
+rectangle right_buttons[NRSONPAGE];
+rectangle palette_buttons_from[71];
+rectangle palette_buttons[10][6];
 short current_rs_top = 0;
 
 short out_buttons[6][10] = {
@@ -120,7 +120,7 @@ bool monst_on_space(location loc,short m_num);
 void init_current_terrain() {
 //	short i,j;
 //	location d_loc(0,0);
-//	RECT d_rect = {0,0,0,0};
+//	rectangle d_rect = {0,0,0,0};
 //	cTown::cWandering d_wan = {0,0,0,0};
 //	cTown::cCreature dummy_creature = {0,0,loc(),0,0,0,0,0,0,0};
 //	//city_ter_rect_type dummy_ter_rect = {{0,0,0,0},0,0};
@@ -154,7 +154,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 	location cur_point,cur_point2;
 	short right_top,right_hit;
 	eScenMode old_mode;
-	RECT temp_rect;
+	rectangle temp_rect;
 	//printf("Handling click at {v = %i,h = %i}\n",the_point.v,the_point.h);
 	//GlobalToLocal(&the_point);
 	if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt))
@@ -1270,7 +1270,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 }
 
 
-void flash_rect(RECT /*to_flash*/) {
+void flash_rect(rectangle /*to_flash*/) {
 	// TODO: Determine a good way to do this
 //	InvertRect (&to_flash);
 	play_sound(37);

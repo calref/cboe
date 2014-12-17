@@ -75,8 +75,6 @@ struct rectangle {
 	}
 };
 
-using RECT = rectangle; // TODO: A temporary measure, eventually I'll actually replace RECT with rectangle everywhere
-
 bool operator == (location p1,location p2);
 bool operator != (location p1,location p2);
 bool operator == (rectangle r1, rectangle r2);

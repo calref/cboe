@@ -47,8 +47,8 @@ extern location spell_targets[8];
 extern short display_mode;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern sf::Texture bg_gworld;
-extern RECT sbar_rect,item_sbar_rect,shop_sbar_rect,startup_top;
-extern RECT talk_area_rect, word_place_rect;
+extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect,startup_top;
+extern rectangle talk_area_rect, word_place_rect;
 extern tessel_ref_t map_pat[];
 extern location store_anim_ul;
 extern long register_flag;
@@ -63,7 +63,7 @@ bool map_visible = false;
 extern bool show_startup_splash;
 
 //***********************
-RECT		menuBarRect;
+rectangle		menuBarRect;
 short		menuBarHeight;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
 
@@ -77,18 +77,18 @@ long anim_ticks = 0;
 
 // 0 - terrain   1 - buttons   2 - pc stats
 // 3 - item stats   4 - text bar   5 - text area (not right)
-// TODO: The duplication of RECT here shouldn't be necessary...
-RECT win_from_rects[6] = {RECT{0,0,351,279},RECT{0,0,37,258},RECT{0,0,115,288},RECT{0,0,143,288},RECT{0,0,21,279},RECT{0,0,0,288}};
-RECT win_to_rects[6] = {RECT{5,5,356,284},RECT{383,5,420,263},RECT{0,0,116,271},RECT{0,0,144,271},RECT{358,5,379,284},RECT{0,0,138,256}};
+// TODO: The duplication of rectangle here shouldn't be necessary...
+rectangle win_from_rects[6] = {rectangle{0,0,351,279},rectangle{0,0,37,258},rectangle{0,0,115,288},rectangle{0,0,143,288},rectangle{0,0,21,279},rectangle{0,0,0,288}};
+rectangle win_to_rects[6] = {rectangle{5,5,356,284},rectangle{383,5,420,263},rectangle{0,0,116,271},rectangle{0,0,144,271},rectangle{358,5,379,284},rectangle{0,0,138,256}};
 
 // 0 - title  1 - button  2 - credits  3 - base button
-RECT startup_from[4] = {RECT{0,0,274,602},RECT{274,0,322,301},RECT{0,301,67,579},RECT{274,301,314,341}}; ////
-extern RECT startup_button[6];
+rectangle startup_from[4] = {rectangle{0,0,274,602},rectangle{274,0,322,301},rectangle{0,301,67,579},rectangle{274,301,314,341}}; ////
+extern rectangle startup_button[6];
 
-//	RECT trim_rects[8] = {{0,0,5,28},{31,0,36,28},{0,0,36,5},{0,24,36,28},
+//	rectangle trim_rects[8] = {{0,0,5,28},{31,0,36,28},{0,0,36,5},{0,24,36,28},
 //						{0,0,5,5},{0,24,5,28},{31,24,36,28},{31,0,36,5}};
 
-RECT	top_left_rec = {0,0,36,28};
+rectangle	top_left_rec = {0,0,36,28};
 short which_graphic_index[6] = {50,50,50,50,50,50};
 
 char combat_graphics[5] = {28,29,36,79,2};
@@ -136,18 +136,18 @@ bool has_run_anim = false,currently_loading_graphics = false;
 //short anim_step = 0;
 //short overall_anim_step = 0;
 
-RECT main_win_rect = {0,0,410,250};
-RECT main_win2_source_rect = {0,0,410,265};
-RECT main_win2_rect = {0,250,410,515};
+rectangle main_win_rect = {0,0,410,250};
+rectangle main_win2_source_rect = {0,0,410,265};
+rectangle main_win2_rect = {0,250,410,515};
 
-RECT tiny_world_1_source_rect = {0,0,190,145},
+rectangle tiny_world_1_source_rect = {0,0,190,145},
 tiny_world_1_rect = {195,242,385,475};
 
-RECT share_mess_source_rect = {0,0,59,120},
+rectangle share_mess_source_rect = {0,0,59,120},
 share_mess_rect = {120,384,179,504};
-//RECT start_buttons_source_rect = {0,0,180,180},
+//rectangle start_buttons_source_rect = {0,0,180,180},
 //	start_buttons_rect = {224,30,405,210};
-RECT start_buttons_source_rect = {0,0,186,190},
+rectangle start_buttons_source_rect = {0,0,186,190},
 start_buttons_rect = {214,30,400,220};
 
 // Array to store which spots have been seen. Time-saver for drawing fields
@@ -164,7 +164,7 @@ location ok_space[4] = {loc(),loc(),loc(),loc()};
 sf::Image hold_pict;
 
 void adjust_window_mode() {
-	RECT r;
+	rectangle r;
 	sf::ContextSettings winSettings;
 	winSettings.stencilBits = 1;
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
@@ -174,12 +174,12 @@ void adjust_window_mode() {
 		ul.x = 14; ul.y = 2;
 		mainPtr.create(sf::VideoMode(605,430,32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
 		mainPtr.setPosition({(desktop.width - 605) / 2, (desktop.height - 430) / 2});
-		r = RECT(mainPtr);
+		r = rectangle(mainPtr);
 	}
 	else {
 		mainPtr.create(desktop, "Blades of Exile", sf::Style::None, winSettings);
 		mainPtr.setPosition({0,0});
-		RECT windRect(mainPtr);
+		rectangle windRect(mainPtr);
 		switch(display_mode) {
 			case 0: ul.x = (windRect.right - 560) / 2; ul.y = (windRect.bottom - 422) / 2 + 14; break;
 			case 1:	ul.x = 10; ul.y = 28; break;
@@ -203,9 +203,9 @@ void plop_fancy_startup() {
 	sf::Event event;
 	short i,j;
 	
-	RECT whole_window,from_rect;
-	RECT logo_from = {0,0,350,350};
-	RECT intro_from = {0,0,480,640};
+	rectangle whole_window,from_rect;
+	rectangle logo_from = {0,0,350,350};
+	rectangle intro_from = {0,0,480,640};
 	
 	if(display_mode != 5) {
 		hideMenuBar();
@@ -222,10 +222,10 @@ void plop_fancy_startup() {
 	win_to_rects[2].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
 	win_to_rects[3].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 	
-	whole_window = RECT(mainPtr);
+	whole_window = rectangle(mainPtr);
 	logo_from.offset((whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
 	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("spidlogo"));
-	from_rect = RECT(pict_to_draw);
+	from_rect = rectangle(pict_to_draw);
 	// TODO: Looping 10 times here is a bit of a hack; fix it
 	for(int k = 0; k < 10; k++) {
 		make_cursor_watch();
@@ -248,7 +248,7 @@ void plop_fancy_startup() {
 		mainPtr.clear(sf::Color::Black);
 		intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
 		pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("startsplash"));
-		from_rect = RECT(pict_to_draw);
+		from_rect = rectangle(pict_to_draw);
 		rect_draw_some_item(pict_to_draw, from_rect, mainPtr, intro_from);
 	} else delay = 60;
 	delay = time_in_ticks(delay).asMilliseconds();
@@ -281,8 +281,8 @@ void next_animation_step() {}
 
 
 void draw_startup(short but_type) {
-	RECT to_rect;
-	RECT r1 = {-1000,-1000,5,1000},r2 = {-1000,-1000,1000,5},r3 = {418,-1000,2000,1000},
+	rectangle to_rect;
+	rectangle r1 = {-1000,-1000,5,1000},r2 = {-1000,-1000,1000,5},r3 = {418,-1000,2000,1000},
 	r4 = {-1000,579,1000,2500};
 	short i;
 	
@@ -307,8 +307,8 @@ void draw_startup(short but_type) {
 
 void draw_startup_anim(bool advance) {
 	static short startup_anim_pos = 43; // was a global variable, but since it's only used in this function I moved it here
-	RECT anim_to = {4,1,44,276},anim_from;
-	RECT anim_size = {0,0,48,301};
+	rectangle anim_to = {4,1,44,276},anim_from;
+	rectangle anim_size = {0,0,48,301};
 	
 	anim_from = anim_to;
 	anim_from.offset(-1,-4 + startup_anim_pos);
@@ -319,7 +319,7 @@ void draw_startup_anim(bool advance) {
 }
 
 void draw_startup_stats() {
-	RECT from_rect,to_rect,party_to = {0,0,36,28},pc_rect,frame_rect;
+	rectangle from_rect,to_rect,party_to = {0,0,36,28},pc_rect,frame_rect;
 	short i;
 	char str[256];
 	
@@ -431,7 +431,7 @@ void draw_startup_stats() {
 
 
 void draw_start_button(short which_position,short which_button) {
-	RECT from_rect,to_rect;
+	rectangle from_rect,to_rect;
 	// TODO: Change third button (Windows calls it "Support and Downloads")
 	const char *button_labels[] = {"Load Game","Make New Party","How To Order",
 		"Start Scenario","Custom Scenario","Quit"};
@@ -464,7 +464,7 @@ void draw_start_button(short which_position,short which_button) {
 	win_draw_string(mainPtr,to_rect,button_labels[which_position],eTextMode::CENTRE,style,ul);
 }
 
-void main_button_click(RECT button_rect) {
+void main_button_click(rectangle button_rect) {
 	button_rect.offset(ul);
 	mainPtr.setActive();
 	clip_rect(mainPtr, button_rect);
@@ -479,7 +479,7 @@ void main_button_click(RECT button_rect) {
 	undo_clip(mainPtr);
 }
 
-void arrow_button_click(RECT button_rect) {
+void arrow_button_click(rectangle button_rect) {
 	button_rect.offset(ul);
 	mainPtr.setActive();
 	clip_rect(mainPtr, button_rect);
@@ -523,17 +523,17 @@ void end_startup() {
 static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
 	sf::Texture temp_gworld;
 	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>(imgName));
-	RECT texrect(temp_gworld);
+	rectangle texrect(temp_gworld);
 	tex.create(texrect.width(), texrect.height());
 	rect_draw_some_item(temp_gworld, texrect, tex, texrect, sf::BlendNone);
 }
 
 // This loads the graphics at the top of the game.
 void Set_up_win () {
-	RECT temp_rect = {0,0,0,280},map_world_rect;
-	RECT map_rect = {0,0,384,384};
-	RECT pc_rect = {0,0,216,113};
-	RECT r;
+	rectangle temp_rect = {0,0,0,280},map_world_rect;
+	rectangle map_rect = {0,0,384,384};
+	rectangle pc_rect = {0,0,216,113};
+	rectangle r;
 	
 	// TODO: I think this is a relic of the Exile III demo screen at the main menu; we don't actually need to load it until the function below
 	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
@@ -544,7 +544,7 @@ void Set_up_win () {
 		play_sound(2,3);
 		exit(1);
 	} else {
-		map_world_rect = RECT(map_gworld);
+		map_world_rect = rectangle(map_gworld);
 		fill_rect(map_gworld, map_world_rect, sf::Color::White);
 	}
 	
@@ -630,12 +630,12 @@ void put_background() {
 			bg_pict = bg[8];
 		else bg_pict = bg[13];
 	}
-	tileImage(mainPtr, RECT(mainPtr), bg_pict);
+	tileImage(mainPtr, rectangle(mainPtr), bg_pict);
 }
 
 //mode; // 0 - regular   1 - button action
 void draw_buttons(short mode) {
-	RECT	source_rect = {0,0,37,258}, dest_rec;	bool spec_draw = false;
+	rectangle	source_rect = {0,0,37,258}, dest_rec;	bool spec_draw = false;
 	
 	if(mode == 1) {
 		spec_draw = true;
@@ -739,7 +739,7 @@ void put_text_bar(std::string str) {
 	style.font = FONT_BOLD;
 	style.pointSize = 12;
 	style.lineHeight = 12;
-	RECT to_rect = RECT(text_bar_gworld);
+	rectangle to_rect = rectangle(text_bar_gworld);
 	// TODO: Not sure what the line height should be, so I just picked something
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
@@ -1180,19 +1180,19 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	// 50 - walkway bl, 51 - walkway tl, 52 - walkway tr, 53 - walkway br
 	// 54 - walkway top, 55 - walkway right, 56 - walkway bottom, 57 - walkway left
 	// 58 - lone walkway
-	RECT from_rect = {0,0,36,28},to_rect,mask_rect;
+	rectangle from_rect = {0,0,36,28},to_rect,mask_rect;
 	sf::Texture* from_gworld;
-	// TODO: The duplication of RECT here shouldn't be necessary...
-	static RECT trim_rects[] = {
-		RECT{0,0,36,14}, RECT{0,0,36,14},
-		RECT{0,0,18,28}, RECT{0,0,18,28},
-		RECT{0,0,18,14}, RECT{0,0,18,14}, RECT{0,0,18,14}, RECT{0,0,18,14},
-		RECT{0,0,18,14}, RECT{0,0,18,14}, RECT{0,0,18,14}, RECT{0,0,18,14},
+	// TODO: The duplication of rectangle here shouldn't be necessary...
+	static rectangle trim_rects[] = {
+		rectangle{0,0,36,14}, rectangle{0,0,36,14},
+		rectangle{0,0,18,28}, rectangle{0,0,18,28},
+		rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14},
+		rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14},
 	};
-	static RECT walkway_rects[] = {
-		RECT{0,0,36,28}, RECT{0,0,36,28}, RECT{0,0,36,28}, RECT{0,0,36,28},
-		RECT{0,0,36,28}, RECT{0,0,36,28}, RECT{0,0,36,28}, RECT{0,0,36,28},
-		RECT{0,0,36,28},
+	static rectangle walkway_rects[] = {
+		rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28},
+		rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28},
+		rectangle{0,0,36,28},
 	};
 	static bool inited = false;
 	if(!inited){
@@ -1339,23 +1339,23 @@ static bool connect_roads(ter_num_t ter){
 void place_road(short q,short r,location where, bool here) {
 	location draw_loc;
 	ter_num_t ter;
-	RECT to_rect;
-	//RECT road_rects[2] = {{76,112,80,125},{72,144,90,148}}; // 0 - rl partial  1 - ud partial
-	// TODO: The duplication of RECT here shouldn't be necessary...
-	static const RECT road_rects[4] = {
-		RECT{4,112,8,125},	// horizontal partial
-		RECT{0,144,18,148},	// vertical partial
-		RECT{0,112,4,140},	// horizontal full
-		RECT{0,140,36,144},	// vertical full
+	rectangle to_rect;
+	//rectangle road_rects[2] = {{76,112,80,125},{72,144,90,148}}; // 0 - rl partial  1 - ud partial
+	// TODO: The duplication of rectangle here shouldn't be necessary...
+	static const rectangle road_rects[4] = {
+		rectangle{4,112,8,125},	// horizontal partial
+		rectangle{0,144,18,148},	// vertical partial
+		rectangle{0,112,4,140},	// horizontal full
+		rectangle{0,140,36,144},	// vertical full
 	};
-	//RECT road_dest_rects[4] = {{0,12,18,16},{16,15,20,28},{18,12,36,16},{16,0,20,13}}; // top right bottom left
-	static const RECT road_dest_rects[6] = {
-		RECT{0,12,18,16},	// top
-		RECT{16,15,20,28},	// right
-		RECT{18,12,36,16},	// bottom
-		RECT{16,0,20,13},	// left
-		RECT{0,12,36,16},	// top + bottom
-		RECT{16,0,20,28},	// right + left
+	//rectangle road_dest_rects[4] = {{0,12,18,16},{16,15,20,28},{18,12,36,16},{16,0,20,13}}; // top right bottom left
+	static const rectangle road_dest_rects[6] = {
+		rectangle{0,12,18,16},	// top
+		rectangle{16,15,20,28},	// right
+		rectangle{18,12,36,16},	// bottom
+		rectangle{16,0,20,13},	// left
+		rectangle{0,12,36,16},	// top + bottom
+		rectangle{16,0,20,28},	// right + left
 	};
 	draw_loc.x = q;
 	draw_loc.y = r;
@@ -1470,7 +1470,7 @@ void draw_rest_screen() {
 // 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 void boom_space(location where,short mode,short type,short damage,short sound) {
 	location where_draw(4,4);
-	RECT source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
+	rectangle source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
 	short del_len;
 	char dam_str[20];
 	short x_adj = 0,y_adj = 0,which_m;
@@ -1564,15 +1564,15 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 
 
 void draw_pointing_arrows() {
-	// TODO: The duplication of RECT here shouldn't be necessary...
-	RECT sources[4] = {
-		RECT{352,28,360,36}, // up
-		RECT{352,10,360,18}, // left
-		RECT{352,01,360,9}, // down
-		RECT{352,19,360,27}  // right
+	// TODO: The duplication of rectangle here shouldn't be necessary...
+	rectangle sources[4] = {
+		rectangle{352,28,360,36}, // up
+		rectangle{352,10,360,18}, // left
+		rectangle{352,01,360,9}, // down
+		rectangle{352,19,360,27}  // right
 	};
-	RECT dests[8] = {RECT{7,100,15,108},RECT{7,170,15,178},RECT{140,7,148,15},RECT{212,7,220,15},
-		RECT{346,100,354,108},RECT{346,170,354,178},RECT{140,274,148,282},RECT{212,274,220,282}};
+	rectangle dests[8] = {rectangle{7,100,15,108},rectangle{7,170,15,178},rectangle{140,7,148,15},rectangle{212,7,220,15},
+		rectangle{346,100,354,108},rectangle{346,170,354,178},rectangle{140,274,148,282},rectangle{212,274,220,282}};
 	short i;
 	
 	if((monsters_going) || /*(overall_mode <= MODE_TOWN) ||*/ (overall_mode <= MODE_COMBAT)
@@ -1585,7 +1585,7 @@ void draw_pointing_arrows() {
 }
 
 void redraw_terrain() {
-	RECT to_rect;
+	rectangle to_rect;
 	
 	to_rect = win_to_rects[0];
 	rect_draw_some_item(terrain_screen_gworld.getTexture(), win_from_rects[0], to_rect,ul);
@@ -1600,7 +1600,7 @@ void redraw_terrain() {
 
 
 void draw_targets(location center) {
-	RECT source_rect = {74,36,85,47},dest_rect;
+	rectangle source_rect = {74,36,85,47},dest_rect;
 	short i = 0;
 	
 	if(party_toast())
@@ -1618,7 +1618,7 @@ void draw_targets(location center) {
 //mode;  // 0 - red   1 - green
 void frame_space(location where,short mode,short width,short height) {
 	location where_put;
-	RECT to_frame;
+	rectangle to_frame;
 	
 	if(!point_onscreen(center,where))
 		return;
@@ -1637,7 +1637,7 @@ void frame_space(location where,short mode,short width,short height) {
 
 
 void erase_spot(short i,short j) {
-	RECT to_erase;
+	rectangle to_erase;
 	
 	to_erase = coord_to_rect(i,j);
 	fill_rect(mainPtr, to_erase, sf::Color::Black);
@@ -1647,9 +1647,9 @@ void erase_spot(short i,short j) {
 void draw_targeting_line(location where_curs) {
 	location which_space,store_loc;
 	short i,j,k,l;
-	RECT redraw_rect,redraw_rect2,terrain_rect = {0,0,351,279},target_rect;
+	rectangle redraw_rect,redraw_rect2,terrain_rect = {0,0,351,279},target_rect;
 	location from_loc;
-	RECT on_screen_terrain_area = {23, 23, 346, 274};
+	rectangle on_screen_terrain_area = {23, 23, 346, 274};
 	
 	if(overall_mode >= MODE_COMBAT)
 		from_loc = univ.party[current_pc].combat_pos;
@@ -1708,7 +1708,7 @@ void draw_targeting_line(location where_curs) {
 								const char chr[2] = {static_cast<char>(num_targets_left + '0')};
 								int x = ((target_rect.left + target_rect.right) / 2) - 3;
 								int y = (target_rect.top + target_rect.bottom) / 2;
-								win_draw_string(mainPtr, RECT(y, x, y + 12, x + 12), chr, eTextMode::CENTRE, style);
+								win_draw_string(mainPtr, rectangle(y, x, y + 12, x + 12), chr, eTextMode::CENTRE, style);
 							}
 							
 						}
@@ -1731,8 +1731,8 @@ bool party_toast() {
 	return true;
 }
 
-void redraw_partial_terrain(RECT redraw_rect) {
-	RECT from_rect;
+void redraw_partial_terrain(rectangle redraw_rect) {
+	rectangle from_rect;
 	
 	from_rect = redraw_rect;
 	from_rect.offset(-ul.x,-ul.y);

@@ -31,22 +31,22 @@ sf::Texture title_gworld,pc_gworld,dlogpics_gworld;
 sf::Texture buttons_gworld,invenbtn_gworld,status_gworld;
 //GWorldPtr race_dark,train_dark,items_dark,spells_dark;
 //GWorldPtr race_light,train_light,items_light,spells_light;
-RECT whole_win_rect = {0,0,440,590};
-RECT title_from = {0,0,70,380};
-extern RECT pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
-extern RECT pc_info_rect; // Frame that holds a pc's basic info and items
-extern RECT name_rect;
-extern RECT pc_race_rect;
-extern RECT info_area_rect;
-extern RECT hp_sp_rect;
-extern RECT skill_rect;
-extern RECT pc_skills_rect[19];
-extern RECT status_rect;
-extern RECT pc_status_rect[10];
-extern RECT traits_rect;
-extern RECT pc_traits_rect[16];
-extern RECT edit_rect[5][2];
+rectangle whole_win_rect = {0,0,440,590};
+rectangle title_from = {0,0,70,380};
+extern rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
+extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
+extern rectangle pc_info_rect; // Frame that holds a pc's basic info and items
+extern rectangle name_rect;
+extern rectangle pc_race_rect;
+extern rectangle info_area_rect;
+extern rectangle hp_sp_rect;
+extern rectangle skill_rect;
+extern rectangle pc_skills_rect[19];
+extern rectangle status_rect;
+extern rectangle pc_status_rect[10];
+extern rectangle traits_rect;
+extern rectangle pc_traits_rect[16];
+extern rectangle edit_rect[5][2];
 
 short store_str1a;
 short store_str1b;
@@ -54,8 +54,8 @@ short store_str2a;
 short store_str2b;
 short store_which_string_dlog;
 short store_page_on,store_num_i;
-// TODO: The duplication of RECT here shouldn't be necessary...
-RECT ed_buttons_from[2] = {RECT{0,0,57,57},RECT{0,57,57,114}};
+// TODO: The duplication of rectangle here shouldn't be necessary...
+rectangle ed_buttons_from[2] = {rectangle{0,0,57,57},rectangle{0,57,57,114}};
 short current_pressed_button = -1;
 sf::Texture spec_scen_g; // not actually needed; just here to silence compiler because it's reference in fileio.h
 // (actually, it WILL be needed eventually; the same is true about most of the rest of these.)
@@ -68,7 +68,7 @@ void init_main_buttons() {
 	short i;
 	int	indent = 0, indent2 = 0;
 	
-	RECT base_rect;
+	rectangle base_rect;
 	
 	//whole_win_rect = mainPtr->portRect;
 	//Initialize pc_info_rect in center
@@ -244,7 +244,7 @@ void redraw_screen() {
 	mainPtr.display();
 }
 
-static void frame_dlog_rect(sf::RenderWindow& target, RECT rect) {
+static void frame_dlog_rect(sf::RenderWindow& target, rectangle rect) {
 	cTextMsg text(target);
 	text.setFormat(TXT_FRAME, true);
 	text.setFormat(TXT_FRAMESTYLE, 1);
@@ -253,12 +253,12 @@ static void frame_dlog_rect(sf::RenderWindow& target, RECT rect) {
 }
 
 void draw_main_screen() {
-	RECT	source_rect, dest_rec,dest_rect;
-	RECT reg_rect;
+	rectangle	source_rect, dest_rec,dest_rect;
+	rectangle reg_rect;
 	
 	tileImage(mainPtr,whole_win_rect,bg[12]); // fill whole window with background texture
 	dest_rec = source_rect = title_from; // initializes, to draw title
-	// title_from is a RECT constant
+	// title_from is a rectangle constant
 	dest_rec.offset(20,0);
 	
 	rect_draw_some_item(title_gworld,source_rect,mainPtr,dest_rec,sf::BlendAlpha);
@@ -329,13 +329,13 @@ void do_button_action(short /*which_pc*/,short which_button) {
 	redraw_screen();
 }
 
-//extern RECT pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-//extern RECT item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
+//extern rectangle pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
+//extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 void draw_items() {
 	short i;
 	char to_draw[256];
-	RECT d_from = {12,28,24,42},i_from = {12,42,24,56},dest_rect;
+	rectangle d_from = {12,28,24,42},i_from = {12,42,24,56},dest_rect;
 	
 	if(file_in_mem.empty())  // save file loaded
 		return;
@@ -394,7 +394,7 @@ void draw_items() {
 void display_party() {
 	short i,k,string_num, cur_rect=0;
 	char to_draw[256], skill_value[256];
-	RECT from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
+	rectangle from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
 	
 	TextStyle style;
 	style.lineHeight = 10;
@@ -779,19 +779,19 @@ void display_party() {
 		style.colour = sf::Color::Black;
 		
 		// TODO: Maybe find a better place to print this
-		RECT dest_rect = title_from;
+		rectangle dest_rect = title_from;
 		dest_rect.offset(100,60);
 		sprintf(to_draw, " Gold: %d       Food: %d ",(short) univ.party.gold, (short) univ.party.food);
 		win_draw_string(mainPtr,dest_rect,to_draw,eTextMode::WRAP,style);
 	}
 }
 
-//void rect_draw_some_item (GWorldPtr	src_gworld, RECT	src_rect, GWorldPtr	targ_gworld,RECT targ_rect,
+//void rect_draw_some_item (GWorldPtr	src_gworld, rectangle	src_rect, GWorldPtr	targ_gworld,rectangle targ_rect,
 //char masked,short main_win)
 ////char	 masked; // if 10 - make AddOver
 ////short   main_win; // if 2, drawing onto dialog
 //{
-//	RECT	destrec;
+//	rectangle	destrec;
 //	PixMapHandle	test1, test2;
 //	const BitMap *store_dest;
 //	GrafPtr cur_port;
@@ -859,7 +859,7 @@ void display_party() {
 //	return total_width;
 //}
 
-//void char_win_draw_string(GrafPtr dest_window,RECT dest_rect,char *str,short mode,short line_height)
+//void char_win_draw_string(GrafPtr dest_window,rectangle dest_rect,char *str,short mode,short line_height)
 //{
 //	char store_s[256];
 //	strcpy((char *) store_s,str);
@@ -869,7 +869,7 @@ void display_party() {
 //// mode: 0 - align up and left, 1 - center on one line
 //// str is a c string, 256 characters
 //// uses current font
-//void win_draw_string(GrafPtr dest_window,RECT dest_rect,Str255 str,short mode,short line_height)
+//void win_draw_string(GrafPtr dest_window,rectangle dest_rect,Str255 str,short mode,short line_height)
 //{
 //	GrafPtr old_port;
 //	const char* p_str,str_to_draw,str_to_draw2,c_str;

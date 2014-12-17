@@ -329,7 +329,7 @@ cThreeChoice::cThreeChoice
 
 void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned short left){
 	TextStyle style;
-	RECT cur_text_rect = {2, left, 0, 0};
+	rectangle cur_text_rect = {2, left, 0, 0};
 	size_t total_len = 0, str_width, str_height;
 	for(unsigned int i = 0; i < strings.size(); i++) 
 		total_len += string_length(strings[i], style);
@@ -356,7 +356,7 @@ void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned shor
 
 void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cBasicButtonType btn3){
 	using namespace std::placeholders;
-	RECT cur_btn_rect = {buttons_top,0,0,buttons_right};
+	rectangle cur_btn_rect = {buttons_top,0,0,buttons_right};
 	if(btn1) btns[0] = btn1;
 	if(btn2) btns[1] = btn2;
 	if(btn3) btns[2] = btn3;

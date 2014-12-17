@@ -153,10 +153,10 @@ public:
 	virtual std::string getText();
 	/// Get the bounding rect of this control.
 	/// @return The control's bounding rect.
-	RECT getBounds();
+	rectangle getBounds();
 	/// Set the bounding rect of this control.
 	/// @param newBounds The new bounding rect.
-	void setBounds(RECT newBounds);
+	void setBounds(rectangle newBounds);
 	/// Set the position of this control.
 	/// @param to The new position.
 	void relocate(location to);
@@ -231,7 +231,7 @@ protected:
 	/// Whether the control is visible
 	bool visible, depressed = false; ///< Whether the control is depressed; only applicable for clickable controls
 	/// The control's bounding rect.
-	RECT frame;
+	rectangle frame;
 	/// The control's frame style.
 	int frameStyle;
 	/// The control's attached key.

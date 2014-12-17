@@ -85,7 +85,7 @@ private:
 	bool wrapLabel;
 	bool labelWithKey;
 	std::string fromList;
-	static RECT btnRects[13][2];
+	static rectangle btnRects[13][2];
 protected:
 	/// The index in buttons of the texture for each button type.
 	static size_t btnGW[14];
@@ -129,7 +129,7 @@ private:
 	eFont textFont;
 	sf::Color color;
 	short textSize;
-	static RECT ledRects[3][2];
+	static rectangle ledRects[3][2];
 	focus_callback_t onFocus;
 };
 

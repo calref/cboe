@@ -51,7 +51,7 @@ bool cButton::isClickable(){
 }
 
 void cButton::draw(){
-	RECT from_rect, to_rect;
+	rectangle from_rect, to_rect;
 	
 	inWindow->setActive();
 	
@@ -124,7 +124,7 @@ size_t cButton::btnGW[14] = {
 };
 
 sf::Texture cButton::buttons[7];
-RECT cButton::btnRects[13][2];
+rectangle cButton::btnRects[13][2];
 
 void cButton::init(){
 	static const char*const buttonFiles[7] = {
@@ -168,10 +168,10 @@ void cButton::init(){
 	btnRects[BTN_PUSH][1].offset(30,0);
 }
 
-RECT cLed::ledRects[3][2];
+rectangle cLed::ledRects[3][2];
 
 void cLed::init(){
-	RECT baseLed = {0,0,10,14};
+	rectangle baseLed = {0,0,10,14};
 	for(int i = 0; i < 3; i++)
 		for(int j = 0; j < 2; j++){
 			ledRects[i][j] = baseLed;
@@ -234,7 +234,7 @@ short cLed::getFormat(eFormat prop) throw(xUnsupportedProp){
 }
 
 void cLed::draw(){
-	RECT from_rect, to_rect;
+	rectangle from_rect, to_rect;
 	
 	inWindow->setActive();
 	
@@ -275,7 +275,7 @@ void cLedGroup::recalcRect(){
 	ledIter iter = choices.begin();
 	frame = {INT_MAX, INT_MAX, 0, 0};
 	while(iter != choices.end()){
-		RECT otherFrame = iter->second->getBounds();
+		rectangle otherFrame = iter->second->getBounds();
 		if(otherFrame.right > frame.right)
 			frame.right = otherFrame.right;
 		if(otherFrame.bottom > frame.bottom)

@@ -36,7 +36,7 @@ extern eGameMode overall_mode;
 //extern town_item_list	univ.town.items;
 extern sf::RenderWindow mainPtr;
 extern bool boom_anim_active;
-extern RECT d_rects[80];
+extern rectangle d_rects[80];
 extern short d_rect_index[80];
 //extern big_tr_type t_d;
 
@@ -1123,9 +1123,9 @@ void custom_pic_dialog(std::string title, pic_num_t bigpic) {
 	map.setPict(bigpic, PIC_CUSTOM_FULL);
 	// Now we need to adjust the size to ensure that everything fits correctly.
 	map.recalcRect();
-	RECT mapBounds = map.getBounds();
-	RECT btnBounds = okay.getBounds();
-	RECT txtBounds = text.getBounds();
+	rectangle mapBounds = map.getBounds();
+	rectangle btnBounds = okay.getBounds();
+	rectangle txtBounds = text.getBounds();
 	btnBounds.offset(-btnBounds.left, -btnBounds.top);
 	btnBounds.offset(mapBounds.right - btnBounds.width(), mapBounds.bottom + 10);
 	okay.setBounds(btnBounds);
