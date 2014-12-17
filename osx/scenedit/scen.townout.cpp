@@ -9,6 +9,7 @@
 #include "scen.fileio.h"
 #include "mathutil.h"
 #include "button.h"
+#include "dlogutil.h"
 
 extern short cen_x, cen_y, overall_mode;//,user_given_password;
 extern bool mouse_button_held,editing_town;
@@ -29,8 +30,6 @@ extern location cur_out;
 
 cCreature store_placed_monst,store_placed_monst2;
 short store_which_placed_monst;
-cTown::cItem store_placed_item;
-short store_which_placed_item,store_which_sign;
 short str_do_delete[16];
 short a,b,c;
 short store_which_out_wand,store_out_wand_mode;
@@ -261,111 +260,78 @@ cCreature edit_placed_monst_adv(cCreature monst_record, cDialog& parent) {
 	return store_placed_monst2;
 }
 
-void put_placed_item_in_dlog() {
+static void put_placed_item_in_dlog(cDialog& me, const cTown::cItem& store_placed_item, const short store_which_placed_item) {
 	char str[256];
-	short i;
-#if 0
-	cdsin(836,17,store_which_placed_item);
-	sprintf((char *) str,"X = %d, Y = %d",store_placed_item.loc.x,store_placed_item.loc.y);
-	csit(836,22,(char *) str);
-	csit(836,15,scenario.scen_items[store_placed_item.code].full_name.c_str());
-	CDSN(836,2,store_placed_item.ability);
+	me["num"].setTextToNum(store_which_placed_item);
+	sprintf(str,"X = %d, Y = %d",store_placed_item.loc.x,store_placed_item.loc.y);
+	me["loc"].setText(str);
+	me["name"].setText(scenario.scen_items[store_placed_item.code].full_name);
+	me["charges"].setTextToNum(store_placed_item.ability);
 	if(store_placed_item.always_there)
-		cd_set_led(836,12,1);
-	else cd_set_led(836,12,0);
+		dynamic_cast<cLed&>(me["always"]).setState(led_red);
 	if(store_placed_item.property)
-		cd_set_led(836,13,1);
-	else cd_set_led(836,13,0);
+		dynamic_cast<cLed&>(me["owned"]).setState(led_red);
 	if(store_placed_item.contained)
-		cd_set_led(836,14,1);
-	else cd_set_led(836,14,0);
+		dynamic_cast<cLed&>(me["contained"]).setState(led_red);
 	
-	i = scenario.scen_items[store_placed_item.code].graphic_num;
-	if(i >= 1000) // was 1000, then was 150
-	 	csp(836,4,i % 1000,PICT_CUSTOM + PICT_ITEM);
-	else csp(836,4,/*1800 + */i,PICT_ITEM);
-#endif
+	dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_items[store_placed_item.code].graphic_num, PIC_ITEM);
 }
 
-bool get_placed_item_in_dlog() {
-	short i;
-#if 0
-	store_placed_item.ability = CDGN(836,2);
-	if((store_placed_item.ability < -1) || (store_placed_item.ability > 2500)) {
-		give_error("Number of charges/amount of gold or food must be from 0 to 2500."
-				   ,"If an item with charges (not gold or food) leave this at -1 for the item to have the default number of charges.",836);
+static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& store_placed_item, const short store_which_placed_item) {
+	if(!me.toast(true)) return true;
+	
+	store_placed_item.ability = me["charges"].getTextAsNum();
+	if(store_placed_item.ability < -1 || store_placed_item.ability > 2500) {
+		giveError("Number of charges/amount of gold or food must be from 0 to 2500.",
+				   "If an item with charges (not gold or food) leave this at -1 for the item to have the default number of charges.",&me);
+		return true;
+	}
+	
+	eItemType type = scenario.scen_items[store_placed_item.code].variety;
+	if(store_placed_item.ability == 0 && (type == eItemType::GOLD || type == eItemType::FOOD)) {
+		giveError("You must assign gold or food an amount of at least 1.","",&me);
 		return false;
 	}
-	i = scenario.scen_items[store_placed_item.code].variety;
-	if((store_placed_item.ability == 0) && ((i == 3) || (i == 11))) {
-		give_error("You must assign gold or food an amount of at least 1.","",836);
-		return false;
-	}
-	store_placed_item.always_there = cd_get_led(836,12);
-	store_placed_item.property = cd_get_led(836,13);
-	store_placed_item.contained = cd_get_led(836,14);
+	
+	store_placed_item.always_there = dynamic_cast<cLed&>(me["always"]).getState() != led_off;
+	store_placed_item.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
+	store_placed_item.contained = dynamic_cast<cLed&>(me["contained"]).getState() != led_off;
 	
 	town->preset_items[store_which_placed_item] = store_placed_item;
-#endif
 	return true;
 }
 
-void edit_placed_item_event_filter (short item_hit) {
-	short i;
-	cCreature store_m;
-#if 0
-	switch(item_hit) {
-		case 3:
-			if(!get_placed_item_in_dlog())
-				break;
-			toast_dialog();
-			break;
-		case 20:
-			toast_dialog();
-			break;
-		case 18:
-			i = choose_text_res(-2,0,399,store_placed_item.code,836,"Place which item?");
-			if(i >= 0) {
-				store_placed_item.code = i;
-				put_placed_item_in_dlog();
-			}
-			break;
-		default:
-			for(i = 12; i <= 14; i++)
-				cd_flip_led(836,i,item_hit);
-			break;
+static bool edit_placed_item_event_filter(cDialog& me, cTown::cItem& store_placed_item, const short store_which_placed_item) {
+	short i = choose_text(STRT_ITEM, store_placed_item.code, &me, "Place which item?");
+	if(i >= 0) {
+		store_placed_item.code = i;
+		put_placed_item_in_dlog(me, store_placed_item, store_which_placed_item);
 	}
-#endif
+	return true;
 }
 
 void edit_placed_item(short which_i) {
-#if 0
+	using namespace std::placeholders;
 	short item_hit;
 	
-	store_placed_item = town->preset_items[which_i];
-	store_which_placed_item = which_i;
+	cTown::cItem placed_item = town->preset_items[which_i];
 	
-	cd_create_dialog_parent_num(836,0);
+	cDialog item_dlg("edit-placed-item.xml");
+	item_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &item_dlg, false));
+	item_dlg["okay"].attachClickHandler(std::bind(get_placed_item_in_dlog, _1, std::ref(placed_item), which_i));
+	item_dlg["choose"].attachClickHandler(std::bind(edit_placed_item_event_filter, _1, std::ref(placed_item), which_i));
 	
-	cd_activate_item(836,19,0);
-	put_placed_item_in_dlog();
+	put_placed_item_in_dlog(item_dlg, placed_item, which_i);
 	
-	item_hit = cd_run_dialog();
-	
-	cd_kill_dialog(836);
-#endif
+	item_dlg.run();
 }
 
-void edit_sign_event_filter (short item_hit) {
-#if 0
-	switch(item_hit) {
-		case 9: case 4:
-			if(!editing_town)
-				CDGT(831,2,current_terrain.out_strs(100 + store_which_sign));
-			else CDGT(831,2,town->town_strs(120 + store_which_sign));
-			if(item_hit == 9)
-				toast_dialog();
-			else {
+static bool edit_sign_event_filter(cDialog& me, short which_sign) {
+	if(!me.toast(true)) return true;
+	if(editing_town)
+		town->sign_strs[which_sign] = me["text"].getText();
+	else current_terrain.sign_strs[which_sign] = me["text"].getText();
+#if 0 // TODO: Apparently there used to be left/right buttons on this dialog.
 				if(item_hit == 3)
 					store_which_sign--;
 				else store_which_sign++;
@@ -373,45 +339,31 @@ void edit_sign_event_filter (short item_hit) {
 					store_which_sign = (editing_town) ? 14 : 7;
 				if(store_which_sign > (editing_town) ? 14 : 7)
 					store_which_sign = 0;
-			}
-			break;
-		case 3:
-			toast_dialog();
-			break;
-	}
-	cdsin(831,5,store_which_sign);
-	if(!editing_town)
-		CDST(831,2,current_terrain.out_strs(100 + store_which_sign));
-	else CDST(831,2,town->town_strs(120 + store_which_sign));
 #endif
+	return true;
 }
 
 void edit_sign(short which_sign,short picture) {
-#if 0
+	using namespace std::placeholders;
 	short item_hit;
 	location view_loc;
 	
-	store_which_sign = which_sign;
+	cDialog sign_dlg("edit-sign.xml");
+	sign_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &sign_dlg, false));
+	sign_dlg["okay"].attachClickHandler(std::bind(edit_sign_event_filter, _1, which_sign));
+	cPict& icon = dynamic_cast<cPict&>(sign_dlg["pic"]);
+	if(picture >= 400 && picture < 1000)
+		icon.setPict(picture, PIC_TER_ANIM);
+	else if(picture >= 2000)
+		icon.setPict(picture - 2000, PIC_CUSTOM_TER_ANIM);
+	else icon.setPict(picture, PIC_TER); // automatically adjusts for custom graphics
 	
-	cd_create_dialog_parent_num(831,0);
-	
-	if(picture >= 1000)
-		csp(831,6,picture % 1000,PICT_CUSTOM + PICT_TER);
-	else if(picture >= 400)
-		csp(831,6,picture - 400,PICT_TER_ANIM);
-	else csp(831,6,picture,PICT_TER);
-	
-	cdsin(831,5,store_which_sign);
+	sign_dlg["num"].setTextToNum(which_sign);
 	if(!editing_town)
-		CDST(831,2,current_terrain.out_strs(100 + store_which_sign));
-	else CDST(831,2,town->town_strs(120 + store_which_sign));
-	//cd_activate_item(831,3,0);
-	//cd_activate_item(831,4,0);
+		sign_dlg["text"].setText(current_terrain.sign_strs[which_sign]);
+	else sign_dlg["text"].setText(town->sign_strs[which_sign]);
 	
-	item_hit = cd_run_dialog();
-	
-	cd_kill_dialog(831);
-#endif
+	sign_dlg.run();
 }
 
 bool save_out_strs() {
