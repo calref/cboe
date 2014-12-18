@@ -101,6 +101,7 @@ cScenario scenario;
 
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
 int main(int /*argc*/, char* argv[]) {
+	try {
 	init_menubar();
 	init_directories(argv[0]);
 	Initialize();
@@ -117,7 +118,17 @@ int main(int /*argc*/, char* argv[]) {
 	
 	while(!All_Done)
 		Handle_One_Event();
-	return 0;
+		return 0;
+	} catch(std::exception& x) {
+		giveError(x.what());
+		throw;
+	} catch(std::string& x) {
+		giveError(x);
+		throw;
+	} catch(...) {
+		giveError("An unknown error occurred!");
+		throw;
+	}
 }
 
 

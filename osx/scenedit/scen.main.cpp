@@ -78,6 +78,7 @@ rectangle right_sbar_rect;
 
 //Changed to ISO C specified argument and return type.
 int main(int, char* argv[]) {
+	try {
 	init_menubar();
 	//outdoor_record_type dummy_outdoor, *store2;
 	
@@ -132,7 +133,17 @@ int main(int, char* argv[]) {
 		Handle_One_Event();
 	
 	close_program();
-	return 0;
+		return 0;
+	} catch(std::exception& x) {
+		giveError(x.what());
+		throw;
+	} catch(std::string& x) {
+		giveError(x);
+		throw;
+	} catch(...) {
+		giveError("An unknown error occurred!");
+		throw;
+	}
 }
 
 //
