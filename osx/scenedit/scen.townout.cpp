@@ -8,9 +8,11 @@
 #include "scen.townout.h"
 #include "scen.keydlgs.h"
 #include "scen.fileio.h"
+#include "scen.core.h"
 #include "mathutil.h"
 #include "button.h"
 #include "dlogutil.h"
+#include "winutil.h"
 
 extern short cen_x, cen_y, overall_mode;//,user_given_password;
 extern bool mouse_button_held,editing_town;
@@ -31,9 +33,6 @@ extern location cur_out;
 
 cCreature store_placed_monst,store_placed_monst2;
 short store_which_placed_monst;
-short a,b,c;
-short store_which_out_wand,store_out_wand_mode;
-cOutdoors::cWandering store_out_wand;
 
 const char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears","",
 	"Unused","Unused","Unused","Unused","Unused"};
@@ -432,287 +431,209 @@ void edit_roomdescs(bool town) {
 	room_dlg.run();
 }
 
-short store_which_town_dlg;
-void pick_town_num_event_filter (short item_hit) {
-#if 0
-	switch(item_hit) {
-		case 3:
-			dialog_answer = CDGN(store_which_town_dlg,2);
-			if((dialog_answer < 0) || (dialog_answer >= scenario.num_towns)) {
-				give_error("This number is out of the correct range. (0 to the number of towns minus 1)","",store_which_town_dlg);
-				break;
-			}
-			toast_dialog();
-			break;
-		case 4:
-			dialog_answer = -1;
-			toast_dialog();
-			break;
-			
-	}
-#endif
-}
-
-short pick_town_num(short which_dlog,short def) {
-#if 0
-	// ignore parent in Mac version
-	short town_strs_hit;
-	char temp_str[256],str2[256];
-	
-	store_which_town_dlg = which_dlog;
-	
-	cd_create_dialog_parent_num(store_which_town_dlg,0);
-	
-	CDSN(store_which_town_dlg,2,def);
-	cd_get_item_text(store_which_town_dlg,7,(char *) temp_str);
-	sprintf((char *) str2,"%s (0 - %d)",(char *) temp_str,scenario.num_towns - 1);
-	csit(store_which_town_dlg,7,(char *) str2);
-	
-	town_strs_hit = cd_run_dialog();
-	
-	cd_kill_dialog(store_which_town_dlg);
-#endif
-	return 0;//dialog_answer;
-}
-
-void change_ter_event_filter (short item_hit) {
-	short i;
-#if 0
-	switch(item_hit) {
-		case 5:
-			a = CDGN(857,2);
-			b = CDGN(857,3);
-			c = CDGN(857,4);
-			if(cre(a,0,255,"Both terrain types must be from 0 to 255.","",857)) break;
-			if(cre(b,0,255,"Both terrain types must be from 0 to 255.","",857)) break;
-			if(cre(c,0,100,"The Chance must be from 0 to 100.","",857)) break;
-			
-			toast_dialog();
-			break;
-		case 6:
-			a = -1;
-			b = -1;
-			c = -1;
-			toast_dialog();
-			break;
-		case 10: case 11:
-			i = CDGN(857,item_hit - 8);
-			i = choose_text_res(-4,0,255,i,857,"Which Terrain?");
-			if(i >= 0)
-				CDSN(857,item_hit - 8,i);
-			break;
-	}
-#endif
-}
-
-void change_ter(short *change_from,short *change_to,short *chance) {
-	// ignore parent in Mac version
-	short town_strs_hit;
-#if 0
-	cd_create_dialog_parent_num(857,0);
-	
-	CDSN(857,2,0);
-	CDSN(857,3,0);
-	CDSN(857,4,100);
-	
-	town_strs_hit = cd_run_dialog();
-	
-	*change_from = a;
-	*change_to = b;
-	*chance = c;
-	
-	cd_kill_dialog(857);
-#endif
-}
-
-void outdoor_details_event_filter (short item_hit) {
-#if 0
-	char str[256];
-	
-	switch(item_hit) {
-		case 3:
-			CDGT(851,2,(char *) str);
-			str[29] = 0;
-			sprintf(current_terrain.out_strs(0),"%s",(char *) str);
-			toast_dialog();
-			break;
-			
-	}
-#endif
-}
-
-void outdoor_details() {
-#if 0
-	// ignore parent in Mac version
-	short town_strs_hit;
-	char temp_str[256];
-	
-	
-	cd_create_dialog_parent_num(851,0);
-	
-	CDST(851,2,current_terrain.out_strs(0));
-	sprintf((char *) temp_str,"X = %d, Y = %d",cur_out.x,cur_out.y);
-	csit(851,8,(char *) temp_str);
-	
-	town_strs_hit = cd_run_dialog();
-	
-	cd_kill_dialog(851);
-#endif
-}
-
-void put_out_wand_in_dlog() {
-#if 0
-	char str[256];
-	short i;
-	
-	cdsin(852,45,store_which_out_wand);
-	for(i = 0; i < 7; i++)
-		if(store_out_wand.monst[i] == 0)
-			csit(852, i + 7, "Empty");
-		else {
-			strcpy((char*)str,(char*)scenario.scen_monsters[store_out_wand.monst[i]].m_name.c_str());
-			csit(852,i + 7,(char *) str);
-		}
-	for(i = 0; i < 3; i++)
-		if(store_out_wand.friendly[i] == 0)
-			csit(852, i + 7 + 7, "Empty");
-		else {
-			strcpy((char*)str,(char*)scenario.scen_monsters[store_out_wand.friendly[i]].m_name.c_str());
-			csit(852,i + 7 + 7,(char *) str);
-		}
-	if(store_out_wand.cant_flee % 10 == 1)
-		cd_set_led(852,51,1);
-	else cd_set_led(852,51,0);
-	if(store_out_wand.cant_flee >= 10)
-		cd_set_led(852,53,1);
-	else cd_set_led(852,53,0);
-	CDSN(852,2,store_out_wand.spec_on_meet);
-	CDSN(852,3,store_out_wand.spec_on_win);
-	CDSN(852,4,store_out_wand.spec_on_flee);
-	CDSN(852,5,store_out_wand.end_spec1);
-	CDSN(852,6,store_out_wand.end_spec2);
-#endif
-}
-
-bool get_out_wand_in_dlog() {
-#if 0
-	store_out_wand.spec_on_meet = CDGN(852,2);
-	store_out_wand.spec_on_win = CDGN(852,3);
-	store_out_wand.spec_on_flee = CDGN(852,4);
-	store_out_wand.end_spec1 = CDGN(852,5);
-	store_out_wand.end_spec2 = CDGN(852,6);
-	if(cre(store_out_wand.end_spec1,
-			-1,299,"First part of Stuff Done flag must be from 0 to 299 (or -1 if it's not used).","",852)) return false;
-	if(cre(store_out_wand.end_spec2,
-			-1,9,"Second part of Stuff Done flag must be from 0 to 9 (or -1 if it's not used).","",852)) return false;
-	if(cre(store_out_wand.spec_on_meet,
-			-1,59,"Outdoor Special Nodes run from 0 to 59 (or -1 if not used).","",852)) return false;
-	if(cre(store_out_wand.spec_on_win,
-			-1,59,"Outdoor Special Nodes run from 0 to 59 (or -1 if not used).","",852)) return false;
-	if(cre(store_out_wand.spec_on_flee,
-			-1,59,"Outdoor Special Nodes run from 0 to 59 (or -1 if not used).","",852)) return false;
-	
-	store_out_wand.cant_flee = 0;
-	if(cd_get_led(852,53) > 0)
-		store_out_wand.cant_flee += 10;
-	if(cd_get_led(852,51) > 0)
-		store_out_wand.cant_flee += 1;
-	
-	if(store_out_wand_mode == 0)
-		current_terrain.wandering[store_which_out_wand] = store_out_wand;
-	else current_terrain.special_enc[store_which_out_wand] = store_out_wand;
-#endif
+static bool save_town_num(cDialog& me, std::string, eKeyMod) {
+	if(me.toast(true)) me.setResult<short>(me["town"].getTextAsNum());
 	return true;
 }
 
-void edit_out_wand_event_filter (short item_hit) {
-	short i,spec;
-	cCreature store_m;
-#if 0
-	switch(item_hit) {
-		case 17:
-			if(!get_out_wand_in_dlog())
-				break;
-			toast_dialog();
+short pick_town_num(std::string which_dlog,short def) {
+	using namespace std::placeholders;
+	
+	cDialog town_dlg(which_dlog);
+	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
+	town_dlg["okay"].attachClickHandler(save_town_num);
+	town_dlg["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.num_towns - 1, "Town number"));
+	
+	town_dlg["town"].setTextToNum(def);
+	std::string prompt = town_dlg["prompt"].getText();
+	prompt += " (0 - " + std::to_string(scenario.num_towns - 1) + ')';
+	town_dlg["prompt"].setText(prompt);
+	
+	town_dlg.setResult<short>(-1);
+	town_dlg.run();
+	
+	return town_dlg.getResult<short>();
+}
+
+static bool change_ter_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+	std::string fld = item_hit.substr(7);
+	short i = me[fld].getTextAsNum();
+	i = choose_text(STRT_TER, i, &me, "Which Terrain?");
+	if(i >= 0) me[fld].setTextToNum(i);
+	return true;
+}
+
+static bool save_ter_change(cDialog& me, std::string, eKeyMod) {
+	me.setResult(me.toast(true));
+	return true;
+}
+
+bool change_ter(short& change_from,short& change_to,short& chance) {
+	using namespace std::placeholders;
+	cDialog chg_dlg("change-terrain.xml");
+	chg_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &chg_dlg, false));
+	chg_dlg["okay"].attachClickHandler(save_ter_change);
+	chg_dlg["chance"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "The chance"));
+	chg_dlg.attachClickHandlers(change_ter_event_filter, {"choose-from", "choose-to"});
+	chg_dlg.attachFocusHandlers(std::bind(check_range, _1, _2, _3, 0, 255, "Both terrain types"), {"from", "to"});
+	
+	chg_dlg.setResult(false);
+	chg_dlg.run();
+	
+	change_from = chg_dlg["from"].getTextAsNum();
+	change_to = chg_dlg["to"].getTextAsNum();
+	chance = chg_dlg["chance"].getTextAsNum();
+	return chg_dlg.getResult<bool>();
+}
+
+static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
+	if(!me.toast(true)) return true;
+	current_terrain.out_name = me["name"].getText();
+	return true;
+}
+
+void outdoor_details() {
+	char temp_str[256];
+	
+	cDialog out_dlg("edit-outdoor-details.xml");
+	out_dlg["okay"].attachClickHandler(outdoor_details_event_filter);
+	snprintf(temp_str,256,"X = %d, Y = %d",cur_out.x,cur_out.y);
+	out_dlg["loc"].setText(temp_str);
+	out_dlg["name"].setText(current_terrain.out_name);
+	
+	out_dlg.run();
+}
+
+void put_out_wand_in_dlog(cDialog& me, short which_out_wand, const cOutdoors::cWandering& store_out_wand) {
+	char str[256];
+	short i;
+	
+	me["num"].setTextToNum(which_out_wand);
+	for(i = 0; i < 7; i++) {
+		std::string id = "foe" + std::to_string(i + 1);
+		if(store_out_wand.monst[i] == 0)
+			me[id].setText("Empty");
+		// TODO: Wait a second, if 0 is no monster, does that mean it's impossible to use monster 0? Should 1 be subtracted here?
+		else me[id].setText(scenario.scen_monsters[store_out_wand.monst[i]].m_name);
+	}
+	for(i = 0; i < 3; i++) {
+		std::string id = "ally" + std::to_string(i + 1);
+		if(store_out_wand.friendly[i] == 0)
+			me[id].setText("Empty");
+		// TODO: Wait a second, if 0 is no monster, does that mean it's impossible to use monster 0? Should 1 be subtracted here?
+		else me[id].setText(scenario.scen_monsters[store_out_wand.friendly[i]].m_name);
+	}
+	dynamic_cast<cLed&>(me["no-flee"]).setState(store_out_wand.cant_flee % 10 == 1 ? led_red : led_off);
+	dynamic_cast<cLed&>(me["forced"]).setState(store_out_wand.cant_flee >= 10 ? led_red : led_off);
+	me["onmeet"].setTextToNum(store_out_wand.spec_on_meet);
+	me["onwin"].setTextToNum(store_out_wand.spec_on_win);
+	me["onflee"].setTextToNum(store_out_wand.spec_on_flee);
+	me["endx"].setTextToNum(store_out_wand.end_spec1);
+	me["endy"].setTextToNum(store_out_wand.end_spec2);
+}
+
+void save_out_wand(cDialog& me, short store_which_out_wand, cOutdoors::cWandering& store_out_wand, short mode) {
+	store_out_wand.spec_on_meet = me["onmeet"].getTextAsNum();
+	store_out_wand.spec_on_win = me["onwin"].getTextAsNum();
+	store_out_wand.spec_on_flee = me["onflee"].getTextAsNum();
+	store_out_wand.end_spec1 = me["endx"].getTextAsNum();
+	store_out_wand.end_spec2 = me["endy"].getTextAsNum();
+	
+	store_out_wand.cant_flee = 0;
+	if(dynamic_cast<cLed&>(me["forced"]).getState() != led_off)
+		store_out_wand.cant_flee += 10;
+	if(dynamic_cast<cLed&>(me["no-flee"]).getState() != led_off)
+		store_out_wand.cant_flee += 1;
+	
+	switch(mode) {
+		case 0:
+			current_terrain.wandering[store_which_out_wand] = store_out_wand;
 			break;
-		case 18:
-			toast_dialog();
-			break;
-		case 19:
-			if(!get_out_wand_in_dlog()) break;
-			store_which_out_wand--;
-			if(store_which_out_wand < 0) store_which_out_wand = 3;
-			store_out_wand = (store_out_wand_mode == 0) ?
-				current_terrain.wandering[store_which_out_wand] : current_terrain.special_enc[store_which_out_wand];
-			put_out_wand_in_dlog();
-			break;
-		case 20:
-			if(!get_out_wand_in_dlog()) break;
-			store_which_out_wand++;
-			if(store_which_out_wand > 3) store_which_out_wand = 0;
-			store_out_wand = (store_out_wand_mode == 0) ?
-				current_terrain.wandering[store_which_out_wand] : current_terrain.special_enc[store_which_out_wand];
-			put_out_wand_in_dlog();
-			break;
-		case 31: case 32: case 33:
-			if(!get_out_wand_in_dlog())
-				break;
-			spec = CDGN(852,item_hit - 29);
-			if((spec < 0) || (spec >= 60)) {
-				spec = get_fresh_spec(1);
-				if(spec < 0) {
-					give_error("You can't create a new special encounter because there are no more free special nodes.",
-							   "To free a special node, set its type to No Special and set its Jump To special to -1.",852);
-					break;
-				}
-				CDSN(852,item_hit - 29,spec);
-			}
-			edit_spec_enc(spec,1,852);
-			if((spec >= 0) && (spec < 60) && (current_terrain.specials[spec].pic < 0))
-				CDSN(852,item_hit - 29,-1);
-			if(!get_out_wand_in_dlog())
-				break;
-			break;
-		default:
-			if(!get_out_wand_in_dlog())
-				break;
-			cd_flip_led(852,51,item_hit);
-			cd_flip_led(852,53,item_hit);
-			if((item_hit >= 21) && (item_hit <= 27)) {
-				i = choose_text_res(-1,0,255,store_out_wand.monst[item_hit - 21],852,"Choose Which Monster:");
-				if(i >= 0) store_out_wand.monst[item_hit - 21] = i;
-				put_out_wand_in_dlog();
-			}
-			if((item_hit >= 28) && (item_hit <= 30)) {
-				i = choose_text_res(-1,0,255,store_out_wand.friendly[item_hit - 28],852,"Choose Which Monster:");
-				if(i >= 0) store_out_wand.friendly[item_hit - 28] = i;
-				put_out_wand_in_dlog();
-			}
+		case 1:
+			current_terrain.special_enc[store_which_out_wand] = store_out_wand;
 			break;
 	}
-#endif
+}
+
+static bool edit_out_wand_event_filter(cDialog& me, std::string item_hit, short& store_which_out_wand, cOutdoors::cWandering& store_out_wand, short mode) {
+	if(!me.toast(true)) return true;
+	save_out_wand(me, store_which_out_wand, store_out_wand, mode);
+	short i,spec;
+	cCreature store_m;
+	if(item_hit == "left") {
+		me.untoast();
+			store_which_out_wand--;
+			if(store_which_out_wand < 0) store_which_out_wand = 3;
+			store_out_wand = (mode == 0) ? current_terrain.wandering[store_which_out_wand] : current_terrain.special_enc[store_which_out_wand];
+			put_out_wand_in_dlog(me, store_which_out_wand, store_out_wand);
+	} else if(item_hit == "right") {
+		me.untoast();
+			store_which_out_wand++;
+			if(store_which_out_wand > 3) store_which_out_wand = 0;
+			store_out_wand = (mode == 0) ? current_terrain.wandering[store_which_out_wand] : current_terrain.special_enc[store_which_out_wand];
+			put_out_wand_in_dlog(me, store_which_out_wand, store_out_wand);
+	}
+	return true;
+}
+
+static bool edit_out_wand_spec(cDialog& me, std::string item_hit, short which_out_wand, cOutdoors::cWandering store_out_wand) {
+	if(!me.toast(true)) return true;
+	me.untoast();
+	save_out_wand(me, which_out_wand, store_out_wand, 100);
+	std::string fld = "on" + item_hit.substr(5);
+	short spec = me[fld].getTextAsNum();
+	if(spec < 0 || spec >= 60) {
+		spec = get_fresh_spec(1);
+		if(spec < 0) {
+			giveError("You can't create a new special encounter because there are no more free special nodes.",
+					  "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
+			return true;
+		}
+	}
+	if(edit_spec_enc(spec,1,&me))
+		me[fld].setTextToNum(spec);
+	return true;
+}
+
+static bool edit_out_wand_monst(cDialog& me, std::string item_hit, short which_out_wand, cOutdoors::cWandering store_out_wand) {
+	if(!me.toast(true)) return true;
+	save_out_wand(me, which_out_wand, store_out_wand, 100);
+	std::string fld = item_hit.substr(7);
+	short i;
+	if(fld[0] == 'f') {
+		i = choose_text(STRT_MONST,store_out_wand.monst[fld[3] - '0'],&me,"Choose Which Monster:");
+		if(i >= 0) store_out_wand.monst[fld[3] - '0'] = i;
+	} else if(fld[0] == 'a') {
+		i = choose_text(STRT_MONST,store_out_wand.friendly[fld[4] - '0'],&me,"Choose Which Monster:");
+		if(i >= 0) store_out_wand.friendly[fld[4] - '0'] = i;
+	}
+	me[fld].setText(scenario.scen_monsters[i].m_name);
+	return true;
 }
 
 // mode 0 - wandering 1 - special
 void edit_out_wand(short mode) {
-#if 0
-	short item_hit;
+	using namespace std::placeholders;
 	
-	store_which_out_wand = 0;
-	store_out_wand_mode = mode;
-	store_out_wand = (store_out_wand_mode == 0) ? current_terrain.wandering[0] : current_terrain.special_enc[0];
+	short which_out_wand = 0;
+	cOutdoors::cWandering store_out_wand = (mode == 0) ? current_terrain.wandering[0] : current_terrain.special_enc[0];
 	
-	cd_create_dialog_parent_num(852,0);
+	cDialog wand_dlg("edit-outdoor-encounter.xml");
+	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
+	
+	wand_dlg["endx"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 299, "First part of Stuff Done flag", "-1 if not used"));
+	wand_dlg["endy"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 9, "Second part of Stuff Done flag", "-1 if not used"));
+	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_event_filter, _1, _2, std::ref(which_out_wand), std::ref(store_out_wand), mode), {"okay", "left", "right"});
+	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_spec, _1, _2, which_out_wand, std::ref(store_out_wand)), {"edit-meet", "edit-win", "edit-flee"});
+	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_monst, _1, _2, which_out_wand, std::ref(store_out_wand)), {"choose-foe1", "choose-foe2", "choose-foe3", "choose-foe4", "choose-foe5", "choose-foe6", "choose-foe7", "choose-ally1", "choose-ally2", "choose-ally3"});
+	wand_dlg.attachFocusHandlers(std::bind(check_range_msg, _1, _2, _3, -1, 59, "Outdoor Special Node", "-1 if not used"), {"onmeet", "onwin", "onflee"});
 	
 	if(mode == 1)
-		csit(852,47,"Outdoor Special Encounter:");
+		wand_dlg["title"].setText("Outdoor Special Encounter:");
 	
-	put_out_wand_in_dlog();
+	put_out_wand_in_dlog(wand_dlg, which_out_wand, store_out_wand);
 	
-	item_hit = cd_run_dialog();
-	
-	cd_kill_dialog(852);
-#endif
+	wand_dlg.run();
 }
 
 bool save_town_details() {
@@ -1317,63 +1238,55 @@ void edit_talk_node(short which_node,short parent_num) {
 #endif
 }
 
-void pick_out_event_filter (short item_hit) {
-	char temp_str[256];
-#if 0
-	switch(item_hit) {
-		case 2:
-			dialog_answer = store_cur_loc.x * 100 + store_cur_loc.y;
-			toast_dialog();
-			break;
-		case 3:
-			dialog_answer = -1;
-			toast_dialog();
-			break;
-		case 12:
-			if(store_cur_loc.x == 0) SysBeep(20);
-			else store_cur_loc.x--;
-			break;
-		case 13:
-			if(store_cur_loc.x >= scenario.out_width - 1) SysBeep(20);
-			else store_cur_loc.x++;
-			break;
-		case 14:
-			if(store_cur_loc.y == 0) SysBeep(20);
-			else store_cur_loc.y--;
-			break;
-		case 15:
-			if(store_cur_loc.y >= scenario.out_height - 1) SysBeep(20);
-			else store_cur_loc.y++;
-			break;
-	}
-	sprintf((char *) temp_str,"X = %d",store_cur_loc.x);
-	csit(854,8,(char *) temp_str);
-	sprintf((char *) temp_str,"Y = %d",store_cur_loc.y);
-	csit(854,11,(char *) temp_str);
-#endif
+static void put_out_loc_in_dlog(cDialog& me, location cur_loc) {
+	std::ostringstream str("X = ");
+	str << cur_loc.x;
+	me["x"].setText(str.str());
+	str.str("Y = ");
+	str << cur_loc.y;
+	me["y"].setText(str.str());
 }
 
-short pick_out(location default_loc) {
-	// ignore parent in Mac version
-	short basic_dlog_hit;
-	char temp_str[256];
-#if 0
-	store_cur_loc = default_loc;
+static bool pick_out_event_filter(cDialog& me, std::string item_hit, location& cur_loc) {
+	if(item_hit == "xminus") {
+		if(cur_loc.x == 0) beep();
+		else cur_loc.x--;
+	} else if(item_hit == "xplus") {
+		if(cur_loc.x >= scenario.out_width - 1) beep();
+		else cur_loc.x++;
+	} else if(item_hit == "yminus") {
+		if(cur_loc.y == 0) beep();
+		else cur_loc.y--;
+	} else if(item_hit == "yplus") {
+		if(cur_loc.y >= scenario.out_height - 1) beep();
+		else cur_loc.y++;
+	}
+	put_out_loc_in_dlog(me, cur_loc);
+	return true;
+}
+
+static bool finish_pick_out(cDialog& me, bool okay, location& cur_loc, location orig_loc) {
+	if(me.toast(okay)) {
+		if(!okay) cur_loc = orig_loc;
+	}
+	return true;
+}
+
+location pick_out(location default_loc) {
+	using namespace std::placeholders;
+	location prev_loc = default_loc;
 	
-	cd_create_dialog_parent_num(854,0);
+	cDialog out_dlg("select-sector.xml");
+	out_dlg["okay"].attachClickHandler(std::bind(finish_pick_out, _1, true, std::ref(default_loc), prev_loc));
+	out_dlg["cancel"].attachClickHandler(std::bind(finish_pick_out, _1, false, std::ref(default_loc), prev_loc));
+	out_dlg.attachClickHandlers(std::bind(pick_out_event_filter, _1, _2, std::ref(default_loc)), {"xplus", "xminus", "yplus", "yminus"});
 	
-	cdsin(854,7,scenario.out_width);
-	cdsin(854,10,scenario.out_height);
-	sprintf((char *) temp_str,"X = %d",store_cur_loc.x);
-	csit(854,8,(char *) temp_str);
-	sprintf((char *) temp_str,"Y = %d",store_cur_loc.y);
-	csit(854,11,(char *) temp_str);
+	out_dlg["width"].setTextToNum(scenario.out_width);
+	out_dlg["height"].setTextToNum(scenario.out_height);
+	put_out_loc_in_dlog(out_dlg, default_loc);
 	
-	basic_dlog_hit = cd_run_dialog();
-	
-	cd_kill_dialog(854);
-#endif
-	return 0;//dialog_answer;
+	out_dlg.run();
+	return default_loc;
 }
 
 void new_town_event_filter (short item_hit) {

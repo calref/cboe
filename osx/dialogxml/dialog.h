@@ -134,9 +134,15 @@ public:
 	/// Close the dialog.
 	/// @param triggerFocus true to allow the focus handler of the currently focused text field to prevent the dialog from closing
 	/// @return true unless the currently focused field prevented the dialog from closing
+	/// @note The dialog is not actually closed immediately;
+	/// instead, a flag is set that triggers the event loop to end and the dialog to close.
 	///
 	/// Generally, you would pass true in a handler for an OK button and false in a handler for a Cancel button.
 	bool toast(bool triggerFocus);
+	/// Reopen the dialog after closing it.
+	/// This is meant to be called from within an event handler to reverse a previous call to toast();
+	/// if you're already out of the dialog's event loop, you should instead call run() to reopen it.
+	void untoast();
 	/// Get a reference to a control.
 	/// @param id The unique key of the control.
 	/// @throw std::invalid_argument if the control does not exist.

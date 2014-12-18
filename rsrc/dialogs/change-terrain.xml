@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<!-- OK button -->
+	<field name='from' type='uint' top='99' left='205' width='64' height='17'>0</field>
+	<field name='to' type='uint' top='125' left='205' width='64' height='17'>0</field>
+	<field name='chance' type='uint' top='151' left='205' width='64' height='17'>100</field>
+	<button name='okay' type='regular' top='177' left='280'>OK</button>
+	<button name='cancel' type='regular' top='177' left='214' def-key='esc'>Cancel</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='167' height='17'>Change Terrain Randomly</text>
+	<text top='25' left='50' width='286' height='67'>
+		Select a terrain type and another terrain type to turn it into.
+		Also give a percentage chance of changing it (0 - 100).
+		Automatic corrections (like adjusting cave walls) will not be made to these changes.
+	</text>
+	<button name='choose-from' type='regular' top='97' left='275'>Choose</button>
+	<button name='choose-to' type='regular' top='123' left='275'>Choose</button>
+	<text top='101' left='7' width='164' height='13'>Change this terrain type:</text>
+	<text top='127' left='7' width='164' height='13'>To this terrain type:</text>
+	<text top='153' left='7' width='193' height='13'>Chance of changing: (0 - 100)</text>
+</dialog>

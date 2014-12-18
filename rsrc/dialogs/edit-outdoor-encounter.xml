@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<!-- OK button -->
+	<field name='onmeet' top='216' left='361' width='46' height='16'/>
+	<field name='onwin' top='259' left='361' width='46' height='16'/>
+	<field name='onflee' top='302' left='361' width='46' height='16'/>
+	<field name='endx' top='336' left='460' width='39' height='16'/>
+	<field name='endy' top='336' left='508' width='39' height='16'/>
+	<text name='foe1' framed='true' top='135' left='129' width='145' height='14'/>
+	<text name='foe2' framed='true' top='159' left='129' width='145' height='14'/>
+	<text name='foe3' framed='true' top='183' left='129' width='145' height='14'/>
+	<text name='foe4' framed='true' top='207' left='129' width='145' height='14'/>
+	<text name='foe5' framed='true' top='231' left='129' width='145' height='14'/>
+	<text name='foe6' framed='true' top='255' left='129' width='145' height='14'/>
+	<text name='foe7' framed='true' top='279' left='129' width='145' height='14'/>
+	<text name='ally1' framed='true' top='303' left='129' width='145' height='14'/>
+	<text name='ally2' framed='true' top='327' left='129' width='145' height='14'/>
+	<text name='ally3' framed='true' top='351' left='129' width='145' height='14'/>
+	<button name='okay' type='regular' top='370' left='489'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='370' left='423'>Cancel</button>
+	<button name='left' type='left' def-key='left' top='370' left='11'/>
+	<button name='right' type='right' def-key='right' top='370' left='74'/>
+	<button name='choose-foe1' type='regular' top='130' left='280'>Choose</button>
+	<button name='choose-foe2' type='regular' top='154' left='280'>Choose</button>
+	<button name='choose-foe3' type='regular' top='178' left='280'>Choose</button>
+	<button name='choose-foe4' type='regular' top='202' left='280'>Choose</button>
+	<button name='choose-foe5' type='regular' top='226' left='280'>Choose</button>
+	<button name='choose-foe6' type='regular' top='250' left='280'>Choose</button>
+	<button name='choose-foe7' type='regular' top='274' left='280'>Choose</button>
+	<button name='choose-ally1' type='regular' top='298' left='280'>Choose</button>
+	<button name='choose-ally2' type='regular' top='322' left='280'>Choose</button>
+	<button name='choose-ally3' type='regular' top='346' left='280'>Choose</button>
+	<button name='edit-meet' type='large' top='213' left='412'>Create/Edit</button>
+	<button name='edit-win' type='large' top='256' left='412'>Create/Edit</button>
+	<button name='edit-flee' type='large' top='298' left='412'>Create/Edit</button>
+	<text top='135' left='11' width='113' height='14'>Hostile (15-30)</text>
+	<text top='159' left='11' width='113' height='14'>Hostile (7-10)</text>
+	<text top='183' left='11' width='113' height='14'>Hostile (4-6)</text>
+	<text top='207' left='11' width='113' height='14'>Hostile (3-5)</text>
+	<text top='231' left='11' width='113' height='14'>Hostile (2-3)</text>
+	<text top='255' left='11' width='113' height='14'>Hostile (1-2)</text>
+	<text top='279' left='11' width='113' height='14'>Hostile (1)</text>
+	<text top='303' left='11' width='113' height='14'>Friendly (7-10)</text>
+	<text top='327' left='11' width='113' height='14'>Friendly (2-4)</text>
+	<text top='351' left='11' width='113' height='14'>Friendly (1)</text>
+	<text top='97' left='50' width='127' height='14'>Encounter number:</text>
+	<text name='num' top='97' left='180' width='35' height='14'/>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text name='title' size='large' top='6' left='50' width='191' height='15'>Outdoor Wandering Encounter:</text>
+	<text top='22' left='50' width='502' height='17'>
+		Enter the characteristics for this outdoor encounter.
+		There are four different wandering and special encounter slots.
+		To edit the others, use the arrow buttons.
+	</text>
+	<text top='53' left='50' width='502' height='39'>
+		Each encounter contains 10 monster slots, 7 hostile to the party and 3 friendly.
+		To place monsters in an encounter, press the Choose button by one of the slots.
+		For more information on how this works, see the documentation.
+	</text>
+	<!--
+	 TODO: Put these LED labels in the LED elements
+	 -->
+	<text top='102' left='349' width='154' height='14'>Monsters can't flee party</text>
+	<led name='no-flee' top='102' left='522'/>
+	<text top='117' left='350' width='170' height='27'>Encounter is forced<br/>(Party fights it right away)</text>
+	<led name='forced' top='117' left='522'/>
+	<text size='large' top='114' left='11' width='191' height='17'>Monsters in encounter:</text>
+	<text size='large' top='152' left='350' width='191' height='17'>Advanced encounter traits:</text>
+	<text top='197' left='352' width='194' height='14'>Special called when enc. starts</text>
+	<text top='240' left='352' width='194' height='14'>Special called when party winds</text>
+	<text top='283' left='352' width='194' height='14'>Special called if party flees</text>
+	<text top='326' left='352' width='103' height='33'>Stuff done flag to eliminate encounter</text>
+	<text top='168' left='364' width='170' height='27'>Note: Ignore these if you aren’t sure what they do.</text>
+</dialog>

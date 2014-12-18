@@ -238,12 +238,11 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							if(!save_check("save-section-confirm.xml"))
 								break;
 						}
-						x = pick_out(cur_out);
-						if(x >= 0) {
-							spot_hit.x = x / 100;
-							spot_hit.y = x % 100;
+						spot_hit = pick_out(cur_out);
+						if(spot_hit != cur_out) {
 							if(load_outdoors(spot_hit,current_terrain)){
 								augment_terrain(spot_hit);
+								cur_out = spot_hit;
 								set_up_main_screen();
 							}
 						}
@@ -258,7 +257,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							if(!save_check("save-section-confirm.xml"))
 								break;
 						}
-						x = pick_town_num(855,cur_town);
+						x = pick_town_num("select-town-edit.xml",cur_town);
 						if(x >= 0 && load_town(x,town)){
 							cur_town = x;
 							set_up_main_screen();
@@ -1295,8 +1294,7 @@ void swap_terrain() {
 	short a,b,c,i,j;
 	ter_num_t ter;
 	
-	change_ter(&a,&b,&c);
-	if(a < 0) return;
+	if(!change_ter(a,b,c)) return;
 	
 	for(i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
 		for(j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
@@ -3007,13 +3005,13 @@ void town_entry(location spot_hit) {
 	y = -2;
 	for(x = 0; x < 8; x++)
 		if((current_terrain.exit_locs[x].x == spot_hit.x) && (current_terrain.exit_locs[x].y == spot_hit.y)) {
-			y = pick_town_num(856,current_terrain.exit_dests[x]);
+			y = pick_town_num("select-town-enter.xml",current_terrain.exit_dests[x]);
 			if(y >= 0) current_terrain.exit_dests[x] = y;
 		}
 	if(y == -2) {
 		for(x = 0; x < 8; x++)
 			if(current_terrain.exit_locs[x].x == 100) {
-				y = pick_town_num(856,0);
+				y = pick_town_num("select-town-enter.xml",0);
 				if(y >= 0) {
 					current_terrain.exit_dests[x] = y;
 					current_terrain.exit_locs[x] = spot_hit;

@@ -1184,6 +1184,10 @@ bool cDialog::toast(bool triggerFocus){
 	return true;
 }
 
+void cDialog::untoast() {
+	dialogNotToast = true;
+}
+
 bool cDialog::setFocus(cTextField* newFocus, bool force) {
 	// TODO: Should check that there IS a currently focused field (which might not be the case if there are no fields at all).
 	if(!force) {

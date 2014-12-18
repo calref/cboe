@@ -214,7 +214,7 @@ static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 }
 
 // TODO: It would probably be good to use these for other dialogs, instead of the monolithic event filters
-static bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name,std::string xtra){
+bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name,std::string xtra){
 	if(!losing) return true;
 	cTextField& fld_ctrl = dynamic_cast<cTextField&>(me[id]);
 	long n = fld_ctrl.getTextAsNum();
@@ -228,12 +228,12 @@ static bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,
 	return true;
 }
 
-static bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name) {
+bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name) {
 	return check_range_msg(me, id, losing, min_val, max_val, fld_name, "");
 }
 
 // TODO: I have two functions that do this. (The other one is choose_graphic.)
-static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::string pic_fld, pic_num_t modifier){
+bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::string pic_fld, pic_num_t modifier){
 	pic_num_t cur_sel = 0;
 	if(result_fld != ""){
 		cControl& fld_ctrl = parent[result_fld];
@@ -258,7 +258,7 @@ static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld,
 	return true;
 }
 
-static bool pick_string(std::string from_file, cDialog& parent, std::string result_fld, std::string str_fld){
+bool pick_string(std::string from_file, cDialog& parent, std::string result_fld, std::string str_fld){
 	size_t cur_sel = 0;
 	if(result_fld != ""){
 		cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);

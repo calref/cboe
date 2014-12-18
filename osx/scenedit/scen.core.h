@@ -1,4 +1,6 @@
 
+class cDialog;
+
 __declspec(deprecated) void init_scenario();
 short edit_ter_type(ter_num_t which_ter);
 short edit_monst_type(short which_monst);
@@ -18,3 +20,6 @@ bool build_scenario();
 void set_starting_loc();
 void edit_boats();
 
+bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name,std::string xtra);
+bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name);
+bool pick_string(std::string from_file, cDialog& parent, std::string result_fld, std::string str_fld);
