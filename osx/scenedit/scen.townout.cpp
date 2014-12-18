@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+#include <boost/lexical_cast.hpp>
 #include "scen.global.h"
 #include "classes.h"
 #include "graphtool.h"
@@ -30,7 +31,6 @@ extern location cur_out;
 
 cCreature store_placed_monst,store_placed_monst2;
 short store_which_placed_monst;
-short str_do_delete[16];
 short a,b,c;
 short store_which_out_wand,store_out_wand_mode;
 cOutdoors::cWandering store_out_wand;
@@ -312,7 +312,6 @@ static bool edit_placed_item_event_filter(cDialog& me, cTown::cItem& store_place
 
 void edit_placed_item(short which_i) {
 	using namespace std::placeholders;
-	short item_hit;
 	
 	cTown::cItem placed_item = town->preset_items[which_i];
 	
@@ -345,7 +344,6 @@ static bool edit_sign_event_filter(cDialog& me, short which_sign) {
 
 void edit_sign(short which_sign,short picture) {
 	using namespace std::placeholders;
-	short item_hit;
 	location view_loc;
 	
 	cDialog sign_dlg("edit-sign.xml");
@@ -366,149 +364,73 @@ void edit_sign(short which_sign,short picture) {
 	sign_dlg.run();
 }
 
-bool save_out_strs() {
-#if 0
-	char str[256];
-	short i;
-	
-	for(i = 0; i < 8; i++) {
-		CDGT(850,2 + i,(char *) str);
-		sprintf((char *)current_terrain.out_strs(i + 1),"%-29.29s",str);
-		if(str_do_delete[i] > 0)
-			current_terrain.info_rect[i].right = 0;
+static bool save_roomdescs(cDialog& me, bool isTown, bool str_do_delete[]) {
+	if(!me.toast(true)) return true;
+	int numDescs = isTown ? 16 : 8;
+	for(int i = 0; i < numDescs; i++) {
+		std::string id = "desc" + std::to_string(i + 1);
+		if(isTown) {
+			town->rect_names[i] = me[id].getText().substr(0,30);
+			if(str_do_delete[i])
+				town->room_rect(i).right = 0;
+		} else {
+			current_terrain.rect_names[i] = me[id].getText().substr(0,30);
+			if(str_do_delete[i])
+				current_terrain.info_rect[i].right = 0;
+		}
 	}
-#endif
 	return true;
 }
 
-void put_out_strs_in_dlog() {
-	char str[256];
-	short i;
-#if 0
-	for(i = 0; i < 8; i++) {
-		if((current_terrain.info_rect[i].right == 0) || (str_do_delete[i] > 0)) {
-			sprintf((char *) str,"Not yet placed.");
-			cd_activate_item(850,25 + i,0);
+static void put_roomdescs_in_dlog(cDialog& me, bool isTown, bool str_do_delete[]) {
+	int numDescs = isTown ? 16 : 8;
+	for(int i = 0; i < numDescs; i++) {
+		std::string id = std::to_string(i + 1);
+		std::ostringstream str;
+		bool active = true;
+		if(isTown && town->room_rect(i).right == 0) active = false;
+		if(!isTown && current_terrain.info_rect[i].right == 0) active = false;
+		if(str_do_delete[i]) active = false;
+		if(!active) {
+			str << "Not yet placed.";
+			me["del" + id].hide();
+		} else if(isTown) {
+			me["desc" + id].setText(town->rect_names[i]);
+			str << "X = " << town->room_rect(i).left << ", Y = " << town->room_rect(i).top;
+		} else {
+			me["desc" + id].setText(current_terrain.rect_names[i]);
+			str << "X = " << current_terrain.info_rect[i].left << ", Y = " << current_terrain.info_rect[i].top;
 		}
-		else sprintf((char *) str,"X = %d, Y = %d",current_terrain.info_rect[i].left,
-					 current_terrain.info_rect[i].top);
-		csit(850,13 + i,(char *) str);
-		CDST(850,2 + i,current_terrain.out_strs(i + 1));
+		me["rect" + id].setText(str.str());
 	}
-#endif
 }
 
-void edit_out_strs_event_filter (short item_hit) {
-#if 0
-	switch(item_hit) {
-		case 10:
-			if(save_out_strs())
-				toast_dialog();
-			break;
-		case 11:
-			toast_dialog();
-			break;
-		default:
-			if((item_hit >= 25) && (item_hit <= 32)) {
-				//sprintf((char *)data_store->out_strs[item_hit - 25 + 1],"");
-				CDST(850,2 + item_hit - 25,"");
-				str_do_delete[item_hit - 25] = 1;
-				put_out_strs_in_dlog();
-			}
-			break;
-	}
-#endif
-}
-
-void edit_out_strs() {
-#if 0
-	// ignore parent in Mac version
-	short out_strs_hit,i;
-	
-	for(i = 0; i < 8; i++)
-		str_do_delete[i] = 0;
-	
-	cd_create_dialog_parent_num(850,0);
-	
-	put_out_strs_in_dlog();
-	
-	out_strs_hit = cd_run_dialog();
-	
-	cd_kill_dialog(850);
-#endif
-}
-
-
-bool save_town_strs() {
-	char str[256];
-	short i;
-#if 0
-	for(i = 0; i < 16; i++) {
-		CDGT(839,2 + i,(char *) str);
-		sprintf((char *)town->town_strs(i + 1),"%-29.29s",str);
-		if(str_do_delete[i] > 0)
-			town->room_rect(i).right = 0;
-	}
-#endif
+static bool delete_roomdesc(cDialog& me, std::string id, bool isTown, bool str_do_delete[]) {
+	int item_hit = boost::lexical_cast<int>(id.substr(3));
+	me["desc" + id.substr(3)].setText("");
+	str_do_delete[item_hit - 1] = true;
+	put_roomdescs_in_dlog(me, isTown, str_do_delete);
 	return true;
 }
 
-void put_town_strs_in_dlog() {
-	char str[256];
-	short i;
-#if 0
-	for(i = 0; i < 16; i++) {
-		if((town->room_rect(i).right == 0) || (str_do_delete[i] > 0)) {
-			sprintf((char *) str,"Not yet placed.");
-			cd_activate_item(839,41 + i,0);
-		}
-		else sprintf((char *) str,"X = %d, Y = %d",town->room_rect(i).left,
-					 town->room_rect(i).top);
-		csit(839,21 + i,(char *) str);
-		CDST(839,2 + i,town->town_strs(i + 1));
+void edit_roomdescs(bool town) {
+	using namespace std::placeholders;
+	bool str_do_delete[16] = {0};
+	int numDescs = town ? 16 : 8;
+	
+	cDialog room_dlg(town ? "edit-town-roomdescs.xml" : "edit-out-roomdescs.xml");
+	room_dlg["okay"].attachClickHandler(std::bind(save_roomdescs, _1, town, str_do_delete));
+	room_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &room_dlg, false));
+	for(int i = 0; i < numDescs; i++) {
+		std::string id = std::to_string(i + 1);
+		room_dlg["del" + id].attachClickHandler(std::bind(delete_roomdesc, _1, _2, town, str_do_delete));
+//		room_dlg["str" + id].attachFocusHandler(check_roomdesc_len);
 	}
-#endif
+	
+	put_roomdescs_in_dlog(room_dlg, town, str_do_delete);
+	
+	room_dlg.run();
 }
-
-void edit_town_strs_event_filter (short item_hit) {
-#if 0
-	switch(item_hit) {
-		case 18:
-			if(save_town_strs())
-				toast_dialog();
-			break;
-		case 19:
-			toast_dialog();
-			break;
-		default:
-			if((item_hit >= 41) && (item_hit <= 56)) {
-				//sprintf((char *)data_store->town_strs[item_hit - 41 + 1],"");
-				CDST(839,2 + item_hit - 41,"");
-				str_do_delete[item_hit - 41] = 1;
-				put_town_strs_in_dlog();
-			}
-			break;
-	}
-#endif
-}
-
-void edit_town_strs() {
-	// ignore parent in Mac version
-	short town_strs_hit,i;
-#if 0
-	for(i = 0; i < 16; i++)
-		str_do_delete[i] = 0;
-	
-	cd_create_dialog_parent_num(839,0);
-	
-	put_town_strs_in_dlog();
-	
-	town_strs_hit = cd_run_dialog();
-	
-	cd_kill_dialog(839);
-#endif
-}
-
 
 short store_which_town_dlg;
 void pick_town_num_event_filter (short item_hit) {

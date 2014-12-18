@@ -391,7 +391,7 @@ void handle_town_menu(int item_hit) {
 			unfrill_terrain();
 			break;
 		case 6:
-			edit_town_strs();
+			edit_roomdescs(true);
 			break;
 		case 8:
 			if(cChoiceDlog("add-random-items.xml", {"okay", "cancel"}).show() == "cancel")
@@ -450,7 +450,7 @@ void handle_outdoor_menu(int item_hit) {
 			unfrill_terrain();
 			break;
 		case 6:
-			edit_out_strs();
+			edit_roomdescs(false);
 			break;
 		case 8:
 			overall_mode = MODE_SET_OUT_START;
