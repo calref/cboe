@@ -1394,71 +1394,71 @@ void draw_map(bool need_refresh) {
 		
 		for(where.x= area_to_put_on_map_rect.left; where.x < area_to_put_on_map_rect.right; where.x++)
 			for(where.y= area_to_put_on_map_rect.top; where.y < area_to_put_on_map_rect.bottom; where.y++) {
-					draw_rect = orig_draw_rect;
-					draw_rect.offset(6 * where.x + small_adj, 6 * where.y + small_adj);
-					
-					if(out_mode)
-						what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-					else what_ter = univ.town->terrain(where.x,where.y);
-					
-					ter_temp_from = base_source_rect;
-					
-					if(out_mode)
-						expl = univ.out.out_e[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-					else expl = is_explored(where.x,where.y);
-					
-					if(expl != 0) {
-						pic = scenario.ter_types[what_ter].map_pic;
-						bool drawLargeIcon = false;
-						if(pic == NO_PIC) {
-							pic = scenario.ter_types[what_ter].picture;
-							drawLargeIcon = true;
-						}
-						if(pic >= 1000) {
-							if(spec_scen_g) {
-								//print_nums(0,99,pic);
-								pic = pic % 1000;
-								sf::Texture* src_gw;
-								if(drawLargeIcon) {
-									graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
-									rect_draw_some_item(*src_gw,custom_from,map_gworld,draw_rect);
-								} else {
-									graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic % 1000);
-									custom_from.right = custom_from.left + 12;
-									custom_from.bottom = custom_from.top + 12;
-									pic /= 1000; pic--;
-									custom_from.offset((pic / 3) * 12, (pic % 3) * 12);
-									rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
-								}
-							}
-						} else if(drawLargeIcon) {
-							if(pic >= 960) {
-								custom_from = calc_rect(4 * ((pic - 960) / 5),(pic - 960) % 5);
-								rect_draw_some_item(anim_gworld, custom_from, map_gworld, draw_rect);
+				draw_rect = orig_draw_rect;
+				draw_rect.offset(6 * where.x + small_adj, 6 * where.y + small_adj);
+				
+				if(out_mode)
+					what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
+				else what_ter = univ.town->terrain(where.x,where.y);
+				
+				ter_temp_from = base_source_rect;
+				
+				if(out_mode)
+					expl = univ.out.out_e[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
+				else expl = is_explored(where.x,where.y);
+				
+				if(expl != 0) {
+					pic = scenario.ter_types[what_ter].map_pic;
+					bool drawLargeIcon = false;
+					if(pic == NO_PIC) {
+						pic = scenario.ter_types[what_ter].picture;
+						drawLargeIcon = true;
+					}
+					if(pic >= 1000) {
+						if(spec_scen_g) {
+							//print_nums(0,99,pic);
+							pic = pic % 1000;
+							sf::Texture* src_gw;
+							if(drawLargeIcon) {
+								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
+								rect_draw_some_item(*src_gw,custom_from,map_gworld,draw_rect);
 							} else {
-								sf::Texture* src_gw = &terrain_gworld[pic / 50];
-								pic %= 50;
-								custom_from = calc_rect(pic % 10, pic / 10);
+								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic % 1000);
+								custom_from.right = custom_from.left + 12;
+								custom_from.bottom = custom_from.top + 12;
+								pic /= 1000; pic--;
+								custom_from.offset((pic / 3) * 12, (pic % 3) * 12);
 								rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
 							}
-						} else switch(pic >= 960 ? anim_map_pats[pic - 960] : map_pats[pic]) {
-							case 0: case 10: case 11:
-								if(scenario.ter_types[what_ter].picture < 960)
-									ter_temp_from.offset(12 * (scenario.ter_types[what_ter].picture % 20),
-														 12 * (scenario.ter_types[what_ter].picture / 20));
-								else ter_temp_from.offset(12 * 20,
-														  12 * (scenario.ter_types[what_ter].picture - 960));
-								rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
-								break;
-								
-							default:
-								if(((pic >= 960) ? anim_map_pats[pic - 960] : map_pats[pic]) < 30) {
-									tileImage(map_gworld, draw_rect,map_pat[((pic >= 960) ? anim_map_pats[pic - 960] : map_pats[pic]) - 1]);
-									break;
-								}
-								break;
 						}
+					} else if(drawLargeIcon) {
+						if(pic >= 960) {
+							custom_from = calc_rect(4 * ((pic - 960) / 5),(pic - 960) % 5);
+							rect_draw_some_item(anim_gworld, custom_from, map_gworld, draw_rect);
+						} else {
+							sf::Texture* src_gw = &terrain_gworld[pic / 50];
+							pic %= 50;
+							custom_from = calc_rect(pic % 10, pic / 10);
+							rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
+						}
+					} else switch(pic >= 960 ? anim_map_pats[pic - 960] : map_pats[pic]) {
+						case 0: case 10: case 11:
+							if(scenario.ter_types[what_ter].picture < 960)
+								ter_temp_from.offset(12 * (scenario.ter_types[what_ter].picture % 20),
+													 12 * (scenario.ter_types[what_ter].picture / 20));
+							else ter_temp_from.offset(12 * 20,
+													  12 * (scenario.ter_types[what_ter].picture - 960));
+							rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
+							break;
+							
+						default:
+							if(((pic >= 960) ? anim_map_pats[pic - 960] : map_pats[pic]) < 30) {
+								tileImage(map_gworld, draw_rect,map_pat[((pic >= 960) ? anim_map_pats[pic - 960] : map_pats[pic]) - 1]);
+								break;
+							}
+							break;
 					}
+				}
 			}
 		
 		map_gworld.display();

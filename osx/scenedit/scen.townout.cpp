@@ -283,7 +283,7 @@ static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& store_placed_item
 	store_placed_item.ability = me["charges"].getTextAsNum();
 	if(store_placed_item.ability < -1 || store_placed_item.ability > 2500) {
 		giveError("Number of charges/amount of gold or food must be from 0 to 2500.",
-				   "If an item with charges (not gold or food) leave this at -1 for the item to have the default number of charges.",&me);
+				  "If an item with charges (not gold or food) leave this at -1 for the item to have the default number of charges.",&me);
 		return true;
 	}
 	
@@ -331,13 +331,13 @@ static bool edit_sign_event_filter(cDialog& me, short which_sign) {
 		town->sign_strs[which_sign] = me["text"].getText();
 	else current_terrain.sign_strs[which_sign] = me["text"].getText();
 #if 0 // TODO: Apparently there used to be left/right buttons on this dialog.
-				if(item_hit == 3)
-					store_which_sign--;
-				else store_which_sign++;
-				if(store_which_sign < 0)
-					store_which_sign = (editing_town) ? 14 : 7;
-				if(store_which_sign > (editing_town) ? 14 : 7)
-					store_which_sign = 0;
+	if(item_hit == 3)
+		store_which_sign--;
+	else store_which_sign++;
+	if(store_which_sign < 0)
+		store_which_sign = (editing_town) ? 14 : 7;
+	if(store_which_sign > (editing_town) ? 14 : 7)
+		store_which_sign = 0;
 #endif
 	return true;
 }

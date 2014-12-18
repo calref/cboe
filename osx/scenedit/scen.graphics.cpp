@@ -815,8 +815,8 @@ void draw_terrain(){
 	}
 	
 	else {
-		 	tileImage(ter_draw_gworld, terrain_rect,bg[17]);
-			frame_rect(ter_draw_gworld, terrain_rect, sf::Color::Black);
+		tileImage(ter_draw_gworld, terrain_rect,bg[17]);
+		frame_rect(ter_draw_gworld, terrain_rect, sf::Color::Black);
 		// Width available:  64 4x4 tiles, 42 6x6 tiles, or 21 12x12 tiles -- 256 pixels
 		// Height available: 81 4x4 tiles, 54 6x6 tiles, or 27 12x12 tiles -- 324 pixels
 		short size = mini_map_scales[cur_viewing_mode - 1];
@@ -833,8 +833,8 @@ void draw_terrain(){
 		for(q = xMin; q < xMax; q++)
 			for(r = yMin; r < yMax; r++) {
 				t_to_draw = editing_town ? town->terrain(q,r) : current_terrain.terrain[q][r];
-					draw_one_tiny_terrain_spot(q-xMin,r-yMin,t_to_draw,size);
-					small_what_drawn[q][r] = t_to_draw;
+				draw_one_tiny_terrain_spot(q-xMin,r-yMin,t_to_draw,size);
+				small_what_drawn[q][r] = t_to_draw;
 			}
 		small_any_drawn = true;
 	}
