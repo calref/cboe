@@ -180,8 +180,6 @@ void Initialize(void) {
 }
 
 void Handle_One_Event() {
-	short chr,chr2;
-	
 	Handle_Update();
 	
 	if(!mainPtr.waitEvent(event)) return;
@@ -189,7 +187,7 @@ void Handle_One_Event() {
 	switch(event.type) {
 		case sf::Event::KeyPressed:
 			if(!(event.key.*systemKey))
-				handle_keystroke(chr,chr2,event);
+				handle_keystroke(event);
 			break;
 			
 		case sf::Event::MouseButtonPressed:

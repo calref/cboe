@@ -1321,21 +1321,24 @@ void set_new_terrain(ter_num_t selected_terrain) {
 	set_string((char*)current_string,(char*)scenario.ter_types[current_terrain_type].name.c_str());
 }
 
-void handle_keystroke(char chr,char chr2,sf::Event event) {
-	char keypad[10] = {82,83,84,85,86,87,88,89,91,92};
-//	location terrain_click[10] = {{150,185},{120,215},{150,215},{180,215},
-//							{120,185},{150,185},{180,185},
-//								{120,155},{150,155},{180,155}};
+void handle_keystroke(sf::Event event) {
+	using kb = sf::Keyboard;
+	using Key = sf::Keyboard::Key;
+	
+	Key keypad[10] = {kb::Numpad0,kb::Numpad1,kb::Numpad2,kb::Numpad3,kb::Numpad4,kb::Numpad5,kb::Numpad6,kb::Numpad7,kb::Numpad8,kb::Numpad9};
 	// TODO: The repetition of location shouldn't be needed here!
 	location terrain_click[10] = {location{0,0},		// 0
-		location{353,10},location{353,150},location{353,270},	// 1 2 3
-		location{190,10},location{190,150},location{190,270},	// 4 5 6
-		location{21, 10},location{21, 150},location{21,270},	// 7 8 9
+		location{6,356}, location{140,356}, location{270,356},
+		location{6,190}, location{140,190}, location{270,190},
+		location{6,24}, location{140,20}, location{270,24},
 	};
 	location pass_point;
+	Key chr2 = event.key.code;
+	char chr;
 	short i,j,store_ter;
 	bool are_done;
 	
+	obscureCursor();
 	
 	if(overall_mode >= MODE_MAIN_SCREEN)
 		return;
@@ -1355,6 +1358,7 @@ void handle_keystroke(char chr,char chr2,sf::Event event) {
 		}
 	
 	store_ter = current_terrain_type;
+	chr = keyToChar(chr2, event.key.shift);
 	
 	switch(chr) {
 			/*
