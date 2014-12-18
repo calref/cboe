@@ -58,6 +58,7 @@ extern std::shared_ptr<cScrollbar> right_sbar;
 extern bool left_buttons_active,right_buttons_active;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
 extern short right_button_status[NRS];
+short mini_map_scales[3] = {12, 6, 4};
 //extern unsigned char m_pic_index[200];
 // TODO: What is this for?
 //extern btn_t buttons[];
@@ -520,14 +521,14 @@ void set_up_terrain_buttons() {
 					rect_draw_some_item(*source_gworld,
 										ter_from,terrain_buttons_gworld,terrain_rects[i]);
 				}
-				else if(pic < 400)	{
+				else if(pic < 960)	{
 					pic = pic % 50;
 					ter_from.offset(28 * (pic % 10), 36 * (pic / 10));
 					rect_draw_some_item(terrain_gworld[scenario.ter_types[i].picture/50],
 										ter_from,terrain_buttons_gworld,terrain_rects[i]);
 				}
 				else {
-					pic = pic % 50;
+					pic = (pic - 560) % 50;
 					ter_from.left = 112 * (pic / 5);
 					ter_from.right = ter_from.left + 28;
 					ter_from.top = 36 * (pic % 5);
@@ -813,18 +814,27 @@ void draw_terrain(){
 		//	draw_frames();
 	}
 	
-	if(cur_viewing_mode == 1) {
-		if(!small_any_drawn) {
+	else {
 		 	tileImage(ter_draw_gworld, terrain_rect,bg[17]);
 			frame_rect(ter_draw_gworld, terrain_rect, sf::Color::Black);
-		}
-		for(q = 0; q < (editing_town ? town->max_dim() : 48); q++)
-			for(r = 0; r < (editing_town ? town->max_dim() : 48); r++) {
+		// Width available:  64 4x4 tiles, 42 6x6 tiles, or 21 12x12 tiles -- 256 pixels
+		// Height available: 81 4x4 tiles, 54 6x6 tiles, or 27 12x12 tiles -- 324 pixels
+		short size = mini_map_scales[cur_viewing_mode - 1];
+		int xMin = 0, yMin = 0, xMax = (editing_town ? town->max_dim() : 48), yMax = xMax;
+		if(cen_x + 5 > 256 / size) {
+			xMin = cen_x + 5 - (256 / size);
+			xMax = cen_x + 5;
+		} else xMax = std::min(xMax, 256 / size);
+		if(cen_y + 5 > 324 / size) {
+			yMin = cen_y + 5 - (324 / size);
+			yMax = cen_y + 5;
+		} else yMax = std::min(yMax, 324 / size);
+		printf("Drawing map for x = %d...%d and y = %d...%d\n", xMin, xMax, yMin, yMax);
+		for(q = xMin; q < xMax; q++)
+			for(r = yMin; r < yMax; r++) {
 				t_to_draw = editing_town ? town->terrain(q,r) : current_terrain.terrain[q][r];
-				if(!small_what_drawn[q][r] != t_to_draw || small_any_drawn) {
-					draw_one_tiny_terrain_spot(q,r,t_to_draw);
+					draw_one_tiny_terrain_spot(q-xMin,r-yMin,t_to_draw,size);
 					small_what_drawn[q][r] = t_to_draw;
-				}
 			}
 		small_any_drawn = true;
 	}
@@ -963,9 +973,9 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	if(picture_wanted >= 1000 && spec_scen_g) {
 		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 	}
-	else if(picture_wanted >= 400)	{
+	else if(picture_wanted >= 960)	{
 		source_gworld = &anim_gworld;
-		picture_wanted -= 400;
+		picture_wanted -= 960;
 		source_rect.left = 112 * (picture_wanted / 5);
 		source_rect.right = source_rect.left + 28;
 		source_rect.top = 36 * (picture_wanted % 5);
@@ -979,20 +989,37 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	Draw_Some_Item(*source_gworld, source_rect, ter_draw_gworld, where_draw);
 }
 
-void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
+void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size) {
 	
 	location where_draw;
 	// TODO: Update for new 12x12 map graphics, rather than 4x4
-	rectangle dest_rect = {0,0,4,4},from_rect = {0,0,4,4};
+	rectangle dest_rect = {0,0,size,size},from_rect = {0,0,12,12};
 	short picture_wanted;
+	bool drawLargeIcon = false;
 	sf::Texture* source_gworld;
 	
-	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
+	picture_wanted = scenario.ter_types[terrain_to_draw].map_pic;
+	if(picture_wanted == NO_PIC) {
+		drawLargeIcon = true;
+		picture_wanted = scenario.ter_types[terrain_to_draw].picture;
+	}
 	
 	where_draw.x = (char) i;
 	where_draw.y = (char) j;
-	dest_rect.offset(8 + 4 * i,8 + 4 * j);
-	switch(picture_wanted) {
+	dest_rect.offset(8 + size * i,8 + size * j);
+	if(drawLargeIcon) {
+		if(picture_wanted >= 1000)	{
+			graf_pos_ref(source_gworld, from_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
+		} else if(picture_wanted >= 960) {
+			source_gworld = &anim_gworld;
+			from_rect = calc_rect(4 * ((picture_wanted - 960) / 5),(picture_wanted - 960) % 5);
+		} else {
+			source_gworld = &terrain_gworld[picture_wanted / 50];
+			picture_wanted %= 50;
+			from_rect = calc_rect(picture_wanted % 10, picture_wanted / 10);
+		}
+		rect_draw_some_item(*source_gworld, from_rect, ter_draw_gworld, dest_rect);
+	} else switch(picture_wanted) {
 			
 		case 0: case 1: case 73: case 72:
 			tileImage(ter_draw_gworld, dest_rect,map_pat[0]);
@@ -1006,12 +1033,16 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 				tileImage(ter_draw_gworld, dest_rect,map_pat[map_pats[picture_wanted]]);
 			}
 			else if(picture_wanted >= 1000)	{
-				graf_pos_ref(source_gworld, from_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
-				rect_draw_some_item(*source_gworld, from_rect, ter_draw_gworld, dest_rect);
+				sf::Texture* from_gw;
+				graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
+				from_rect.right = from_rect.left + 12;
+				from_rect.bottom = from_rect.top + 12;
+				picture_wanted /= 1000; picture_wanted--;
+				from_rect.offset((picture_wanted / 3) * 12, (picture_wanted % 3) * 12);
+				rect_draw_some_item(*from_gw, from_rect, ter_draw_gworld, dest_rect);
 			}
-			else if(picture_wanted >= 400)	{
-				source_gworld = &anim_gworld;
-				picture_wanted -= 400;
+			else if(picture_wanted >= 960)	{
+				picture_wanted -= 960;
 				if(picture_wanted == 0) tileImage(ter_draw_gworld, dest_rect,map_pat[13]);
 				else if(picture_wanted == 4) tileImage(ter_draw_gworld, dest_rect,map_pat[21]);
 				else if(picture_wanted == 7) tileImage(ter_draw_gworld, dest_rect,map_pat[20]);
@@ -1023,7 +1054,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 					//source_rect.right = source_rect.left + 28;
 					//source_rect.top = 36 * (picture_wanted % 5);
 					//source_rect.bottom = source_rect.top + 36;
-					from_rect.offset((picture_wanted / 5) * 24 + 1,(picture_wanted % 5) * 6 + 1 + 156);
+					from_rect.offset(12 * 20, (picture_wanted - 960) * 12);
 					rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
 					//rect_draw_some_item(source_gworld, source_rect, ter_draw_gworld, dest_rect, 0, 0);
 				}
@@ -1031,7 +1062,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 			else {
 				//source_rect = get_template_rect(terrain_to_draw);
 				//source_gworld = terrain_gworld[picture_wanted / 50];
-				from_rect.offset((picture_wanted % 10) * 6 + 1,(picture_wanted / 10) * 6 + 1);
+				from_rect.offset((picture_wanted % 20) * 12,(picture_wanted / 20) * 12);
 				rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
 			}
 			break;
@@ -1180,8 +1211,8 @@ void place_location() {
 			rect_draw_some_item(*source_gworld,
 								source_rect,terrain_buttons_gworld,draw_rect);
 		}
-		else if(picture_wanted >= 400)	{
-			picture_wanted -= 400;
+		else if(picture_wanted >= 960)	{
+			picture_wanted -= 960;
 			source_rect.left = 112 * (picture_wanted / 5);
 			source_rect.right = source_rect.left + 28;
 			source_rect.top = 36 * (picture_wanted % 5);

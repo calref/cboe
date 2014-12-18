@@ -106,6 +106,7 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 		ground_type = ground[picture - 140];
 		trim_type = (eTrimType) trims[picture - 140];
 		trim_ter = trim_ters[picture - 140];
+		picture += 560;
 	}else{
 		combat_arena = 1;
 		ground_type = 255;
@@ -135,7 +136,7 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 				special = eTerSpec::BED;
 				flag1.s = 230;
 				flag2.u = flag3.u = 0;
-			}else if((picture >= 61 && picture <= 66) || picture == 401 || picture == 402){
+			}else if((picture >= 61 && picture <= 66) || picture == 961 || picture == 962){
 				special = eTerSpec::BRIDGE;
 				flag1.u = flag2.u = flag3.u = 0;
 				break;
@@ -350,6 +351,8 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 			picture = 137;
 			break;
 	};
+	if(picture < 1000) map_pic = picture;
+	else map_pic = NO_PIC;
 	return *this;
 }
 

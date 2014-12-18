@@ -63,7 +63,8 @@ extern location golem_m_locs[16];
 extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
-extern sf::Texture bg_gworld;
+extern sf::Texture anim_gworld;
+extern sf::Texture terrain_gworld[NUM_TER_SHEETS];
 extern cCustomGraphics spec_scen_g;
 bool need_map_full_refresh = true,forcing_map_button_redraw = false;
 extern sf::RenderTexture map_gworld;
@@ -111,7 +112,6 @@ location town_force_loc;
 bool shop_button_active[12];
 rectangle map_title_rect = {3,50,15,300};
 rectangle map_bar_rect = {15,50,27,300};
-unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 
 void force_town_enter(short which_town,location where_start) {
 	town_force = which_town;
@@ -1276,11 +1276,12 @@ void clear_map() {
 
 void draw_map(bool need_refresh) {
 	if(!map_visible) return;
-	short i,j,pic,pic2;
+	short i,j;
+	pic_num_t pic;
 	rectangle the_rect,map_world_rect = {0,0,384,384};
 	location where;
 	location kludge;
-	rectangle draw_rect,orig_draw_rect = {0,0,6,6},ter_temp_from;
+	rectangle draw_rect,orig_draw_rect = {0,0,6,6},ter_temp_from,base_source_rect = {0,0,12,12};
 	rectangle	dlogpicrect = {6,6,42,42};
 	bool draw_pcs = true,out_mode;
 	rectangle view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
@@ -1288,21 +1289,14 @@ void draw_map(bool need_refresh) {
 	
 	rectangle area_to_draw_from,area_to_draw_on = {29,47,269,287};
 	short small_adj = 0;
-	ter_num_t what_ter,what_ter2;
-	bool draw_surroundings = false,expl,expl2;
+	ter_num_t what_ter;
+	bool draw_surroundings = false,expl;
 	short total_size = 48; // if full redraw, use this to figure out everything
 	rectangle area_to_put_on_map_rect;
 	rectangle custom_from;
 	short town_type = scenario.town_size[univ.town.num];
 	
 	draw_surroundings = true;
-	
-	if(need_refresh) {
-		for(i = 0; i < 8; i++)
-			for(j = 0; j < 64; j++)
-				map_graphic_placed[i][j] = 0;
-		// TODO: I suspect we don't need to save this info
-	}
 	
 	town_map_adj.x = 0;
 	town_map_adj.y = 0;
@@ -1399,8 +1393,7 @@ void draw_map(bool need_refresh) {
 		area_to_put_on_map_rect.right = area_to_put_on_map_rect.bottom = total_size;
 		
 		for(where.x= area_to_put_on_map_rect.left; where.x < area_to_put_on_map_rect.right; where.x++)
-			for(where.y= area_to_put_on_map_rect.top; where.y < area_to_put_on_map_rect.bottom; where.y++)
-				if((map_graphic_placed[where.x / 8][where.y] & (unsigned char)(s_pow(2,where.x % 8))) == 0) {
+			for(where.y= area_to_put_on_map_rect.top; where.y < area_to_put_on_map_rect.bottom; where.y++) {
 					draw_rect = orig_draw_rect;
 					draw_rect.offset(6 * where.x + small_adj, 6 * where.y + small_adj);
 					
@@ -1408,67 +1401,65 @@ void draw_map(bool need_refresh) {
 						what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
 					else what_ter = univ.town->terrain(where.x,where.y);
 					
-					ter_temp_from = orig_draw_rect;
+					ter_temp_from = base_source_rect;
 					
 					if(out_mode)
 						expl = univ.out.out_e[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
 					else expl = is_explored(where.x,where.y);
 					
 					if(expl != 0) {
-						map_graphic_placed[where.x / 8][where.y] =
-						map_graphic_placed[where.x / 8][where.y] | (unsigned char)(s_pow(2,where.x % 8));
-						pic = scenario.ter_types[what_ter].picture;
+						pic = scenario.ter_types[what_ter].map_pic;
+						bool drawLargeIcon = false;
+						if(pic == NO_PIC) {
+							pic = scenario.ter_types[what_ter].picture;
+							drawLargeIcon = true;
+						}
 						if(pic >= 1000) {
 							if(spec_scen_g) {
 								//print_nums(0,99,pic);
 								pic = pic % 1000;
 								sf::Texture* src_gw;
-								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
-								custom_from.offset(-13,-13);
-								rect_draw_some_item(*src_gw,custom_from,map_gworld,draw_rect);
+								if(drawLargeIcon) {
+									graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
+									rect_draw_some_item(*src_gw,custom_from,map_gworld,draw_rect);
+								} else {
+									graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic % 1000);
+									custom_from.right = custom_from.left + 12;
+									custom_from.bottom = custom_from.top + 12;
+									pic /= 1000; pic--;
+									custom_from.offset((pic / 3) * 12, (pic % 3) * 12);
+									rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
+								}
 							}
-						}
-						else switch((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) {
+						} else if(drawLargeIcon) {
+							if(pic >= 960) {
+								custom_from = calc_rect(4 * ((pic - 960) / 5),(pic - 960) % 5);
+								rect_draw_some_item(anim_gworld, custom_from, map_gworld, draw_rect);
+							} else {
+								sf::Texture* src_gw = &terrain_gworld[pic / 50];
+								pic %= 50;
+								custom_from = calc_rect(pic % 10, pic / 10);
+								rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
+							}
+						} else switch(pic >= 960 ? anim_map_pats[pic - 960] : map_pats[pic]) {
 							case 0: case 10: case 11:
-								if(scenario.ter_types[what_ter].picture < 400)
-									ter_temp_from.offset(6 * (scenario.ter_types[what_ter].picture % 10),
-														 6 * (scenario.ter_types[what_ter].picture / 10));
-								else ter_temp_from.offset(24 * ((scenario.ter_types[what_ter].picture - 400) / 5),
-														  6 * ((scenario.ter_types[what_ter].picture - 400) % 5) + 156);
+								if(scenario.ter_types[what_ter].picture < 960)
+									ter_temp_from.offset(12 * (scenario.ter_types[what_ter].picture % 20),
+														 12 * (scenario.ter_types[what_ter].picture / 20));
+								else ter_temp_from.offset(12 * 20,
+														  12 * (scenario.ter_types[what_ter].picture - 960));
 								rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
 								break;
 								
 							default:
-								if(((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) < 30) {
-									// Try a little optimization
-									if((pic < 400) && (where.x < area_to_put_on_map_rect.right - 1)) {
-										if(out_mode)
-											what_ter2 = univ.out[(where.x + 1)+ 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-										else what_ter2 = univ.town->terrain(where.x + 1,where.y);
-										if(out_mode)
-											expl2 = univ.out.out_e[(where.x + 1) + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-										else expl2 = is_explored(where.x + 1,where.y);
-										pic2 = scenario.ter_types[what_ter2].picture;
-										if((map_pats[pic2] == map_pats[pic]) && (expl2 != 0)) {
-											draw_rect.right += 6;
-											kludge = where; kludge.x++; // I don't know why I need to
-											// do this, but it seems I do
-											map_graphic_placed[kludge.x / 8][kludge.y] =
-											map_graphic_placed[kludge.x / 8][kludge.y] | (unsigned char)(s_pow(2,kludge.x % 8));
-										}
-									}
-									tileImage(mini_map, draw_rect,map_pat[((pic >= 400) ? anim_map_pats[pic - 400] : map_pats[pic]) - 1]);
+								if(((pic >= 960) ? anim_map_pats[pic - 960] : map_pats[pic]) < 30) {
+									tileImage(map_gworld, draw_rect,map_pat[((pic >= 960) ? anim_map_pats[pic - 960] : map_pats[pic]) - 1]);
 									break;
 								}
-								//OffsetRect(&ter_temp_from,
-								//	24 * ((map_pats[pic] - 30) / 5),
-								//	138 + 6 * ((map_pats[pic] - 30) % 5));
-								//rect_draw_some_item(small_ter_gworld,ter_temp_from,
-								//	map_gworld,draw_rect,0,0);
 								break;
 						}
 					}
-				}
+			}
 		
 		map_gworld.display();
 	}
@@ -1521,8 +1512,6 @@ void draw_map(bool need_refresh) {
 								draw_rect.right = draw_rect.left + 6;
 								draw_rect.bottom = draw_rect.top + 6;
 								
-								map_graphic_placed[where.x / 8][where.y] =
-								map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
 								fill_rect(mini_map, draw_rect, sf::Color::Green);
 								frame_circle(mini_map, draw_rect, sf::Color::Blue);
 							}
@@ -1538,8 +1527,6 @@ void draw_map(bool need_refresh) {
 				//}
 				draw_rect.right = draw_rect.left + 6;
 				draw_rect.bottom = draw_rect.top + 6;
-				map_graphic_placed[where.x / 8][where.y] =
-				map_graphic_placed[where.x / 8][where.y] & ~((unsigned char)(s_pow(2,where.x % 8)));
 				fill_rect(mini_map, draw_rect, sf::Color::Red);
 				frame_circle(mini_map, draw_rect, sf::Color::Black);
 				

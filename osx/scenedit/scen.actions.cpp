@@ -23,6 +23,7 @@
 #include "scen.btnmg.h"
 
 extern char current_string[256];
+extern short mini_map_scales[3];
 rectangle world_screen;
 // border rects order: top, left, bottom, right //
 rectangle border_rect[4];
@@ -434,11 +435,21 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				spot_hit.x = -1;
 		}
 		else {
-			
-			i = (the_point.x - TER_RECT_UL_X - 8) / 4;
-			j = (the_point.y - TER_RECT_UL_Y - 8) / 4;
-			spot_hit.x = i;
-			spot_hit.y = j;
+			short scale = mini_map_scales[cur_viewing_mode - 1];
+			i = (the_point.x - TER_RECT_UL_X - 8) / scale;
+			j = (the_point.y - TER_RECT_UL_Y - 8) / scale;
+			if(scale > 4) {
+				short dim = editing_town ? town->max_dim() : 48;
+				if(cen_x + 5 > 256 / scale)
+					spot_hit.x = cen_x + 5 - 256/scale + i;
+				else spot_hit.x = i;
+				if(cen_y + 5 > 324 / scale)
+					spot_hit.y = cen_y + 5 - 324/scale + j;
+				else spot_hit.y = j;
+			} else {
+				spot_hit.x = i;
+				spot_hit.y = j;
+			}
 		}
 		
 		if((mouse_button_held) && (spot_hit.x == last_spot_hit.x) &&
@@ -1027,7 +1038,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							else set_string("Fill rectangle (solid)","Select upper left corner");
 							break;
 						case 100: // switch view
-							cur_viewing_mode = 1 - cur_viewing_mode;
+							cur_viewing_mode = (cur_viewing_mode + 1) % 4;
 							need_redraw = true;
 							break;
 						case 101:

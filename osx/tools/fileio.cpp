@@ -816,7 +816,7 @@ void load_spec_graphics() {
 	talkfaces_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("talkportraits"));
 	pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 	vehicle_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("vehicle"));
-	small_ter_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("mapOLD")); // TODO: Should use the new map graphics instead
+	small_ter_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("termap"));
 	// TODO: Scenario icons ...
 }
 

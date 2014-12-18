@@ -352,7 +352,7 @@ void edit_sign(short which_sign,short picture) {
 	sign_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &sign_dlg, false));
 	sign_dlg["okay"].attachClickHandler(std::bind(edit_sign_event_filter, _1, which_sign));
 	cPict& icon = dynamic_cast<cPict&>(sign_dlg["pic"]);
-	if(picture >= 400 && picture < 1000)
+	if(picture >= 960 && picture < 1000)
 		icon.setPict(picture, PIC_TER_ANIM);
 	else if(picture >= 2000)
 		icon.setPict(picture - 2000, PIC_CUSTOM_TER_ANIM);

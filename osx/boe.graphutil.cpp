@@ -123,10 +123,10 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(scenario.ter_types[terrain_to_draw].picture - 1000);
 		terrain_there[i][j] = -1;
 	}
-	else if(scenario.ter_types[terrain_to_draw].picture >= 400) { // animated
+	else if(scenario.ter_types[terrain_to_draw].picture >= 960) { // animated
 		source_gworld = &anim_gworld;
 		terrain_to_draw = scenario.ter_types[terrain_to_draw].picture;
-		source_rect = calc_rect(4 * ((terrain_to_draw - 400) / 5) + (anim_ticks % 4),(terrain_to_draw - 400) % 5);
+		source_rect = calc_rect(4 * ((terrain_to_draw - 960) / 5) + (anim_ticks % 4),(terrain_to_draw - 960) % 5);
 		terrain_there[i][j] = -1;
 		anim_type = 0;
 	}

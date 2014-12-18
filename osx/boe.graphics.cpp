@@ -1232,13 +1232,13 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 //	if((which_trim == 3) && (current_ground == 2)) // trim corner walls with grass instead of cave floor
 //		OffsetRect(&from_rect,0,36);
 	unsigned short pic = scenario.ter_types[ground_ter].picture;
-	if(pic < 400){
+	if(pic < 960){
 		from_gworld = &terrain_gworld[pic / 50];
 		pic %= 50;
 		from_rect.offset(28 * (pic % 10), 36 * (pic / 10));
 	}else if(pic < 1000){
 		from_gworld = &anim_gworld;
-		pic %= 400;
+		pic -= 960;
 		from_rect.offset(112 * (pic / 5),36 * (pic % 5));
 	}else{
 		pic %= 1000;

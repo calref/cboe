@@ -22,7 +22,6 @@ extern eGameMode overall_mode;
 //extern cOutdoors outdoors[2][2];
 //extern unsigned char out[96][96], out_e[96][96];
 extern location center;
-extern unsigned char map_graphic_placed[8][64]; // keeps track of what's been filled on map
 extern cScenario scenario;
 extern cUniverse univ;
 
@@ -638,9 +637,6 @@ void alter_space(short i,short j,ter_num_t ter) {
 	
 	l.x = i;
 	l.y = j;
-	map_graphic_placed[i / 8][j] = 0;
-//	map_graphic_placed[i / 8][j] =
-//		map_graphic_placed[i / 8][j] & ~((unsigned char)(s_pow(2,i % 8)));
 	
 	if(is_out()) {
 		l = local_to_global(l);

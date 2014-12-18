@@ -312,10 +312,10 @@ static void fill_ter_info(cDialog& me, short ter){
 	{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["graphic"]);
 		pic_num_t pic = ter_type.picture;
-		if(pic < 400)
+		if(pic < 960)
 			pic_ctrl.setPict(pic, PIC_TER);
 		else if(pic < 1000)
-			pic_ctrl.setPict(pic % 400, PIC_TER_ANIM);
+			pic_ctrl.setPict(pic - 960, PIC_TER_ANIM);
 		else if(pic < 2000)
 			pic_ctrl.setPict(pic % 1000, PIC_CUSTOM_TER);
 		else
@@ -430,7 +430,7 @@ short edit_ter_type(ter_num_t which_ter) {
 	// Attach handlers
 	ter_dlg["pict"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,2999,"terrain graphic"));
 	ter_dlg["pickpict"].attachClickHandler(std::bind(pick_picture,PIC_TER,_1,"pict","graphic",0));
-	ter_dlg["pickanim"].attachClickHandler(std::bind(pick_picture,PIC_TER_ANIM,_1,"pict","graphic",400));
+	ter_dlg["pickanim"].attachClickHandler(std::bind(pick_picture,PIC_TER_ANIM,_1,"pict","graphic",960));
 	ter_dlg["light"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,255,"light radius"));
 	ter_dlg["trans"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,65535,"\"transform to what?\""));
 	ter_dlg["ground"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,255,"ground type"));

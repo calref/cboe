@@ -115,7 +115,8 @@ void cPict::setPict(pic_num_t num, ePicType type){
 		if(m_pic_index[num].y == 2) picType += PIC_TALL;
 	}
 	if(picType != PIC_FULL && picNum >= 1000) {
-		picNum -= 1000;
+		if(picType != PIC_CUSTOM_TER_MAP)
+			picNum -= 1000;
 		picType += PIC_CUSTOM;
 	}
 	recalcRect();
@@ -447,6 +448,10 @@ void cPict::recalcRect() {
 			bounds.height() = 64;
 			break;
 		case PIC_TER_MAP: case PIC_CUSTOM_TER_MAP:
+			// These are 12x12, but in the dialog we scale them up.
+			bounds.width() = 24;
+			bounds.height() = 24;
+			break;
 		case PIC_STATUS:
 			bounds.width() = 12;
 			bounds.height() = 12;
@@ -805,7 +810,9 @@ void cPict::drawPresetTerMap(short num, rectangle to_rect){
 	// TODO: Should probably fill black somewhere in here...?
 	to_rect.right = to_rect.left + 24;
 	to_rect.bottom = to_rect.top + 24;
-	from_rect.offset(12 * (num % 10), 12 * (num / 10));
+	if(num >= 960)
+		from_rect.offset(12 * 20, 12 * (num - 960));
+	else from_rect.offset(12 * (num % 20), 12 * (num / 20));
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
 }
 
@@ -989,7 +996,7 @@ void cPict::drawCustomMissile(short num, rectangle to_rect){
 void cPict::drawCustomTerMap(short num, rectangle to_rect){
 	rectangle from_rect;
 	sf::Texture* from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num % 1000);
 	from_rect.right = from_rect.left + 12;
 	from_rect.bottom = from_rect.top + 12;
 	num /= 1000; num--;
