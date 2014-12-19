@@ -3060,7 +3060,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 			case eSpell::SPARK:
 				run_a_missile(l,vict_loc,6,1,11,0,0,80);
 				r1 = get_ran(2,1,4);
-				damage_target(targ,r1,DAMAGE_FIRE);
+				damage_target(targ,r1,DAMAGE_MAGIC);
 				break;
 			case eSpell::HASTE_MINOR:
 				play_sound(25);
@@ -3077,14 +3077,14 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 			case eSpell::FLAME:
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
 				start_missile_anim();
-				r1 = get_ran(caster->level,1,4);
+				r1 = get_ran(min(15,caster->level),1,4);
 				damage_target(targ,r1,DAMAGE_FIRE);
 				break;
 			case eSpell::POISON_MINOR:
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
 				if(targ < 6)
-					poison_pc(targ,2 + get_ran(1,0,1));
-				else poison_monst(&univ.town.monst[targ - 100],2 + get_ran(1,0,1));
+					poison_pc(targ,2 + get_ran(1,0,caster->level / 2));
+				else poison_monst(&univ.town.monst[targ - 100],2 + get_ran(1,0,caster->level / 2));
 				break;
 			case eSpell::SLOW:
 				run_a_missile(l,vict_loc,15,0,25,0,0,80);
@@ -3161,7 +3161,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::POISON:
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
-				x = get_ran(1,0,3);
+				x = get_ran(1,0,caster->level / 2);
 				if(targ < 6)
 					poison_pc(targ,4 + x);
 				else poison_monst(&univ.town.monst[targ - 100],4 + x);
@@ -3407,7 +3407,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				run_a_missile(l,vict_loc,8,0,24,0,0,80);
 				r1 = get_ran(2,1,6) + 2;
 				start_missile_anim();
-				damage_target(targ,r1,DAMAGE_MAGIC);
+				damage_target(targ,r1,DAMAGE_UNBLOCKABLE);
 				break;
 			case eSpell::SUMMON_SPIRIT: case eSpell::SUMMON_GUARDIAN:
 				play_sound(24);
