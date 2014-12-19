@@ -489,6 +489,7 @@ bool change_ter(short& change_from,short& change_to,short& chance) {
 static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
 	current_terrain.out_name = me["name"].getText();
+	current_terrain.comment = me["comment"].getText();
 	return true;
 }
 
@@ -499,13 +500,13 @@ void outdoor_details() {
 	out_dlg["okay"].attachClickHandler(outdoor_details_event_filter);
 	snprintf(temp_str,256,"X = %d, Y = %d",cur_out.x,cur_out.y);
 	out_dlg["loc"].setText(temp_str);
+	out_dlg["comment"].setText(current_terrain.comment);
 	out_dlg["name"].setText(current_terrain.out_name);
 	
 	out_dlg.run();
 }
 
-void put_out_wand_in_dlog(cDialog& me, short which_out_wand, const cOutdoors::cWandering& store_out_wand) {
-	char str[256];
+static void put_out_wand_in_dlog(cDialog& me, short which_out_wand, const cOutdoors::cWandering& store_out_wand) {
 	short i;
 	
 	me["num"].setTextToNum(which_out_wand);

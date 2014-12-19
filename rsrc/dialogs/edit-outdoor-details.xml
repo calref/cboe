@@ -3,10 +3,14 @@
 <dialog skin='light' defbtn='okay' debug='true'>
 	<!-- OK button -->
 	<field name='name' top='51' left='162' width='151' height='16'/>
-	<button name='okay' type='regular' top='74' left='254'>OK</button>
+	<button name='okay' type='regular' top='176' left='354'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Outdoors Details</text>
 	<text top='53' left='50' width='101' height='14'>Section name:</text>
 	<text top='29' left='50' width='87' height='14'>Coordinates:</text>
 	<text name='loc' top='29' left='142' width='127' height='14'/>
+	<text top='85' left='50' width='101' height='90'>Comment:<br/><br/>
+		You can put useful notes for yourself here. It's not used by the game for anything.
+	</text>
+	<field name='comment' top='83' left='162' width='251' height='80'/>
 </dialog>
