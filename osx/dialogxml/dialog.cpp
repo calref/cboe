@@ -32,6 +32,7 @@ extern sf::Texture bg_gworld;
 extern bool play_sounds;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
+cDialog* cDialog::topWindow = nullptr;
 
 static std::string generateRandomString(){
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
@@ -942,12 +943,21 @@ bool cDialog::remove(std::string key){
 	return true;
 }
 
+bool cDialog::sendInput(cKey key) {
+	if(topWindow == nullptr) return false;
+	std::string field = topWindow->currentFocus;
+	if(field.empty()) return true;
+	dynamic_cast<cTextField*>(topWindow->controls[field])->handleInput(key);
+	return true;
+}
+
 void cDialog::run(){
+	cDialog* formerTop = topWindow;
 	cursor_type former_curs = current_cursor;
 	set_cursor(sword_curs);
 	using kb = sf::Keyboard;
 	kb::Key k;
-	cKey key;
+	cKey key, pendingKey;
 	sf::Event currentEvent;
 	std::string itemHit = "";
 	dialogNotToast = true;
@@ -1011,6 +1021,10 @@ void cDialog::run(){
 						key.spec = true;
 						key.k = key_tab;
 						break;
+					case kb::Insert:
+						key.spec = true;
+						key.k = key_insert;
+						break;
 					case kb::F1:
 						key.spec = true;
 						key.k = key_help;
@@ -1031,7 +1045,6 @@ void cDialog::run(){
 						key.spec = true;
 						key.k = key_pgdn;
 						break;
-					// TODO: Add cases for key_tab and key_help and others
 					case kb::LShift:
 					case kb::RShift:
 					case kb::LAlt:
@@ -1042,54 +1055,40 @@ void cDialog::run(){
 					case kb::RSystem:
 						continue;
 					default:
-						// TODO: Should probably only support system or control depending on OS
 						key.spec = false;
-						if(currentEvent.key.system || currentEvent.key.control) {
-							if(k == kb::C) {
-								key.spec = true;
-								key.k = key_copy;
-							} else if(k == kb::X) {
-								key.spec = true;
-								key.k = key_cut;
-							} else if(k == kb::V) {
-								key.spec = true;
-								key.k = key_paste;
-							} else if(k == kb::A) {
-								key.spec = true;
-								key.k = key_selectall;
-							}
-							if(key.spec) break;
-						}
-						key.c = keyToChar(k, currentEvent.key.shift);
+						key.c = keyToChar(k, false);
 						break;
 				}
 				key.mod = mod_none;
-				if(currentEvent.key.control || currentEvent.key.system) {
-					if(key.spec){
-						if(key.k == key_left) key.k = key_home;
-						else if(key.k == key_right) key.k = key_end;
-						else if(key.k == key_up) key.k = key_pgup;
-						else if(key.k == key_down) key.k = key_pgdn;
-						else if(key.k == key_copy || key.k == key_cut);
-						else if(key.k == key_paste || key.k == key_selectall);
-						else key.mod += mod_ctrl;
-					}else key.mod += mod_ctrl;
-				}
+				if(currentEvent.key.*systemKey)
+					key.mod += mod_ctrl;
 				if(currentEvent.key.shift) key.mod += mod_shift;
 				if(currentEvent.key.alt) key.mod += mod_alt;
-				itemHit = process_keystroke(key); // TODO: This should be a separate check from the fields thing?
-				if(itemHit.empty()) break;
-				where = controls[itemHit]->getBounds().centre();
-				if(controls[itemHit]->getType() == CTRL_FIELD){
-					if(key.spec && key.k == key_tab){
-						// Could use key.mod, but this is slightly easier.
-						if(currentEvent.key.shift)
-							handleTabOrder(itemHit, tabOrder.rbegin(), tabOrder.rend());
-						else handleTabOrder(itemHit, tabOrder.begin(), tabOrder.end());
-					} else if(!key.spec || key.k != key_enter || mod_contains(key.mod, mod_alt)) {
-						dynamic_cast<cTextField*>(controls[itemHit])->handleInput(key);
-						itemHit = "";
-					}
+				itemHit = process_keystroke(key);
+				if(!itemHit.empty())
+					where = controls[itemHit]->getBounds().centre();
+				// Now check for focused fields.
+				if(currentFocus.empty()) break;
+				// If it's a tab, handle tab order
+				if(key.spec && key.k == key_tab){
+					// Could use key.mod, but this is slightly easier.
+					if(currentEvent.key.shift)
+						handleTabOrder(currentFocus, tabOrder.rbegin(), tabOrder.rend());
+					else handleTabOrder(currentFocus, tabOrder.begin(), tabOrder.end());
+				} else {
+					// If it's a character key, and the system key (control/command) is not pressed,
+					// we have an upcoming TextEntered event which contains more information.
+					// Otherwise, handle it right away. But never handle enter or escape.
+					if((key.spec && key.k != key_enter && key.k != key_esc) || mod_contains(key.mod, mod_ctrl))
+						dynamic_cast<cTextField*>(controls[currentFocus])->handleInput(key);
+					pendingKey = key;
+					if(key.k != key_enter && key.k != key_esc) itemHit = "";
+				}
+				break;
+			case sf::Event::TextEntered:
+				if(!pendingKey.spec && !currentFocus.empty()) {
+					pendingKey.c = currentEvent.text.unicode;
+					dynamic_cast<cTextField*>(controls[currentFocus])->handleInput(pendingKey);
 				}
 				break;
 			case sf::Event::MouseButtonPressed:
@@ -1124,9 +1123,11 @@ void cDialog::run(){
 		itemHit.clear();
 	}
 	win.setVisible(false);
+	// TODO: The introduction of the static topWindow means I may be able to use this instead of parent->win; do I still need parent?
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);
 	while(parentWin->pollEvent(currentEvent));
 	set_cursor(former_curs);
+	topWindow = formerTop;
 }
 
 template<typename Iter> void cDialog::handleTabOrder(string& itemHit, Iter begin, Iter end) {
@@ -1144,8 +1145,6 @@ template<typename Iter> void cDialog::handleTabOrder(string& itemHit, Iter begin
 		if(iter->second->getType() == CTRL_FIELD){
 			if(iter->second->triggerFocusHandler(*this,iter->first,false)){
 				currentFocus = iter->first;
-			} else {
-				itemHit = "";
 			}
 			break;
 		}
@@ -1261,10 +1260,6 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 std::string cDialog::process_keystroke(cKey keyHit){
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
-		if(iter->second->getType() == CTRL_FIELD && iter->second->isVisible() && dynamic_cast<cTextField*>(iter->second)->hasFocus()) {
-			if(!keyHit.spec || (keyHit.k != key_esc && keyHit.k != key_help))
-				return iter->first;
-		}
 		if(iter->second->isVisible() && iter->second->isClickable() && iter->second->getAttachedKey() == keyHit){
 			iter->second->setActive(true);
 			draw();

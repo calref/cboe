@@ -13,6 +13,7 @@
 #include "dialog.h"
 #include "dlogutil.h"
 #include "graphtool.h"
+#include "winutil.h"
 
 void cTextField::attachClickHandler(click_callback_t) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(false);
@@ -185,10 +186,97 @@ void cTextField::draw(){
 	undo_clip(*inWindow);
 }
 
+static cKey divineFunction(cKey key) {
+	/* Summary of platform-dependent navigation/edit keys:
+	 Function	|		Mac			|	Windows
+	 -----------+-------------------+-------------
+	 Home		|	Home, Cmd-Left	|	Home
+	 End		|	End, Cmd-Right	|	End
+	 PgUp		|	PgUp, Alt-Up	|	PgUp
+	 PgDn		|	PgDn, Alt-Down	|	PgDn
+	 To Top		|	Cmd-Up, Cmd-Home|	Ctrl-Up, Ctrl-Home
+	 To Bottom	| Cmd-Down, Cmd-End	|	Ctrl-Down, Ctrl-End
+	 Word Left	|		Alt-Left	|	Ctrl-Left
+	 Word Right	|		Alt-Right	|	Ctrl-Right
+	 Word Del	|		Alt-Delete	|	Ctrl-Delete
+	 Word Back	|	Alt-Backspace	|	Ctrl-Backspace
+	 -----------+-------------------+----------------------
+	 Cut		| Cmd-X, Shift-Del	|	Ctrl-X, Shift-Del
+	 Copy		|	Cmd-C, Cmd-Ins	|	Ctrl-C, Ctrl-Ins
+	 Paste		| Cmd-V, Shift-Ins	|	Ctrl-V, Shift-Ins
+	 Select All	|		Cmd-A		|	Ctrl-A
+	 Undo		|		Cmd-Z		|	Ctrl-Z
+	 Redo		| Cmd-Y, Shift-Cmd-Z|	Ctrl-Y, Shift-Ctrl-Z
+	 This is done to more closely emulate native Mac behaviour.
+	 The Insert and Shift-Delete combos are included to more closely emulate
+	 native Windows behaviour.
+	 */
+	if(!key.spec) {
+		if(mod_contains(key.mod, mod_ctrl)) {
+			if(key.c == 'c') {
+				key.spec = true;
+				key.k = key_copy;
+			} else if(key.c == 'x') {
+				key.spec = true;
+				key.k = key_cut;
+			} else if(key.c == 'v') {
+				key.spec = true;
+				key.k = key_paste;
+			} else if(key.c == 'a') {
+				key.spec = true;
+				key.k = key_selectall;
+			} else if(key.c == 'z') {
+				key.spec = true;
+				if(mod_contains(key.mod, mod_shift)) {
+					key.k = key_redo;
+					key.mod -= mod_shift;
+				} else key.k = key_undo;
+			} else if(key.c == 'y') {
+				key.spec = true;
+				key.k = key_redo;
+			}
+		}
+		if(key.spec) key.mod -= mod_ctrl;
+	} else {
+		eSpecKey former = key.k;
+		if(mod_contains(key.mod, mod_ctrl)) {
+#ifdef __APPLE__
+			if(key.k == key_left) key.k = key_home;
+			else if(key.k == key_right) key.k = key_end;
+#else
+			if(key.k == key_left) key.k = key_word_left;
+			else if(key.k == key_right) key.k = key_word_right;
+#endif
+			else if(key.k == key_up) key.k = key_top;
+			else if(key.k == key_down) key.k = key_bottom;
+			else if(key.k == key_home) key.k = key_top;
+			else if(key.k == key_end) key.k = key_bottom;
+			else if(key.k == key_insert) key.k = key_copy;
+#ifndef __APPLE__
+			else if(key.k == key_del) key.k = key_word_del;
+			else if(key.k == key_bsp) key.k = key_word_bsp;
+#else
+		} else if(mod_contains(key.mod, mod_alt)) {
+			if(key.k == key_up) key.k = key_pgup;
+			else if(key.k == key_down) key.k = key_pgdn;
+			else if(key.k == key_left) key.k = key_word_left;
+			else if(key.k == key_right) key.k = key_word_right;
+			else if(key.k == key_del) key.k = key_word_del;
+			else if(key.k == key_bsp) key.k = key_word_bsp;
+#endif
+		} else if(mod_contains(key.mod, mod_shift)) {
+			if(key.k == key_insert) key.k = key_paste;
+			else if(key.k == key_del) key.k = key_cut;
+		}
+		if(key.k != former) key.mod -= mod_ctrl;
+	}
+	return key;
+}
+
 void cTextField::handleInput(cKey key) {
 	bool select = mod_contains(key.mod, mod_shift);
-	bool word = mod_contains(key.mod, mod_alt) || mod_contains(key.mod, mod_ctrl);
 	bool haveSelection = insertionPoint != selectionPoint;
+	key = divineFunction(key);
 	size_t new_ip;
 	std::string contents = getText();
 	if(!key.spec) {
@@ -199,18 +287,18 @@ void cTextField::handleInput(cKey key) {
 			handleInput(deleteKey);
 			contents = getText();
 		}
-		contents.insert(contents.begin() + insertionPoint, key.c);
+		contents.insert(contents.begin() + insertionPoint, char(key.c));
 		selectionPoint = ++insertionPoint;
 	} else switch(key.k) {
 			// TODO: Implement all the other special keys
-		case key_left:
+		case key_left: case key_word_left:
 			if(haveSelection && !select) {
 				selectionPoint = insertionPoint = std::min(selectionPoint,insertionPoint);
 				break;
 			}
 			new_ip = select ? selectionPoint : insertionPoint;
 			if(new_ip == 0) break;
-			if(word) {
+			if(key.k == key_word_left) {
 				new_ip--;
 				while(new_ip > 0 && contents[new_ip - 1] != ' ')
 					new_ip--;
@@ -218,14 +306,14 @@ void cTextField::handleInput(cKey key) {
 			(select ? selectionPoint : insertionPoint) = new_ip;
 			if(!select) selectionPoint = insertionPoint;
 			break;
-		case key_right:
+		case key_right: case key_word_right:
 			if(haveSelection && !select) {
 				selectionPoint = insertionPoint = std::max(selectionPoint,insertionPoint);
 				break;
 			}
 			new_ip = select ? selectionPoint : insertionPoint;
 			if(new_ip == contents.length()) break;
-			if(word) {
+			if(key.k == key_word_right) {
 				new_ip++;
 				while(new_ip < contents.length() && contents[new_ip + 1] != ' ')
 					new_ip++;
@@ -236,18 +324,15 @@ void cTextField::handleInput(cKey key) {
 		case key_up:
 		case key_down:
 			break;
-		case key_enter:
-			key.spec = false;
-			key.c = '\n';
-			handleInput(key);
-			break;
-		case key_bsp:
+		case key_bsp: case key_word_bsp:
 			if(haveSelection) {
+				if(key.k == key_word_bsp)
+					handleInput({true, key_word_right, mod_shift});
 				auto begin = contents.begin() + std::min(selectionPoint, insertionPoint);
 				auto end = contents.begin() + std::max(selectionPoint, insertionPoint);
 				auto result = contents.erase(begin, end);
 				selectionPoint = insertionPoint = result - contents.begin();
-			} else if(word) {
+			} else if(key.k == key_word_bsp) {
 				cKey selectKey = key;
 				selectKey.k = key_left;
 				handleInput(selectKey);
@@ -259,13 +344,15 @@ void cTextField::handleInput(cKey key) {
 				selectionPoint = --insertionPoint;
 			}
 			break;
-		case key_del:
+		case key_del: case key_word_del:
 			if(haveSelection) {
+				if(key.k == key_word_del)
+					handleInput({true, key_word_left, mod_shift});
 				auto begin = contents.begin() + std::min(selectionPoint, insertionPoint);
 				auto end = contents.begin() + std::max(selectionPoint, insertionPoint);
 				auto result = contents.erase(begin, end);
 				selectionPoint = insertionPoint = result - contents.begin();
-			} else if(word) {
+			} else if(key.k == key_word_del) {
 				cKey selectKey = key;
 				selectKey.k = key_left;
 				handleInput(selectKey);
@@ -276,21 +363,52 @@ void cTextField::handleInput(cKey key) {
 				contents.erase(insertionPoint,1);
 			}
 			break;
+		case key_top:
+			if(select) selectionPoint = 0;
+			else insertionPoint = 0;
+			break;
+		case key_bottom:
+			if(select) selectionPoint = contents.length();
+			else insertionPoint = contents.length();
+			break;
 		case key_end:
 		case key_home:
 		case key_pgup:
 		case key_pgdn:
+			break;
 		case key_copy:
 		case key_cut:
+			set_clipboard(contents.substr(std::min(insertionPoint,selectionPoint), abs(insertionPoint - selectionPoint)));
+			if(key.k == key_cut) {
+				cKey deleteKey = key;
+				deleteKey.k = key_bsp;
+				handleInput(deleteKey);
+				contents = getText();
+			}
+			break;
 		case key_paste:
+			if(!get_clipboard().empty()) {
+				cKey deleteKey = {true, key_bsp, mod_none};
+				handleInput(deleteKey);
+				contents = getText();
+				std::string toInsert = get_clipboard();
+				contents.insert(insertionPoint, toInsert);
+				insertionPoint += toInsert.length();
+				selectionPoint = insertionPoint;
+			}
+			break;
+		case key_undo:
+		case key_redo:
 			break;
 		case key_selectall:
 			selectionPoint = 0;
 			insertionPoint = contents.length();
 			break;
+			// These keys have no function in this context.
 		case key_esc:
 		case key_tab:
 		case key_help:
+		case key_insert:
 			break;
 	}
 	setText(contents);

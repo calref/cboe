@@ -38,11 +38,9 @@ enum eKeyMod {
 enum eSpecKey {
 	key_left, key_right, key_up, key_down,
 	key_esc, key_enter, key_tab, key_help, // key_help should bind to the help key on Mac and the F1 key on Windows
-	key_bsp, key_del, key_home, key_end, key_pgup, key_pgdn, // TODO: Implement these
-	key_copy, key_cut, key_paste, key_selectall
-	// TODO: On Mac, command-left should trigger key_home; command-right should trigger key_end;
-	// command-up should trigger key_pgup; and command-down should trigger key_pgdn.
-	// This is in addition to the home, end, pgup, pgdn keys triggering these.
+	key_bsp, key_del, key_home, key_end, key_pgup, key_pgdn, key_top, key_bottom, key_insert,
+	key_copy, key_cut, key_paste, key_selectall, key_undo, key_redo,
+	key_word_left, key_word_right, key_word_bsp, key_word_del,
 };
 
 /// Represents a keypress.
@@ -51,7 +49,7 @@ struct cKey {
 	bool spec;
 	union {
 		/// The character that has been typed.
-		unsigned char c;
+		wchar_t c;
 		/// The special key that was pressed.
 		eSpecKey k;
 	};

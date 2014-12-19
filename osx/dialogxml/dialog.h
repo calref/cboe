@@ -47,6 +47,7 @@ class cDialog {
 	void loadFromFile(std::string path);
 	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
+	static cDialog* topWindow; // Tracks the frontmost dialog.
 public:
 	/// Performs essential startup initialization. Generally should not be called directly.
 	static void init();
@@ -171,6 +172,10 @@ public:
 	/// Get the bounding rect of the dialog.
 	/// @return The dialog's bounding rect.
 	rectangle getBounds() {return winRect;}
+	/// Send keyboard input to the frontmost dialog.
+	/// Currently, only text edit fields will respond to this.
+	/// @return true if there was a dialog opened to send to.
+	static bool sendInput(cKey key);
 	/// Sets whether to animate graphics in dialogs.
 	static bool doAnimations;
 	cDialog& operator=(cDialog& other) = delete;

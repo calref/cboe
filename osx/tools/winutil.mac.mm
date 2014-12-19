@@ -67,6 +67,22 @@ char keyToChar(sf::Keyboard::Key key, bool isShift) {
 		case kb::Return: return '\n';
 		case kb::BackSpace: return '\b';
 		case kb::Delete: return '\x7f';
+		case kb::Numpad0: return '0';
+		case kb::Numpad1: return '1';
+		case kb::Numpad2: return '2';
+		case kb::Numpad3: return '3';
+		case kb::Numpad4: return '4';
+		case kb::Numpad5: return '5';
+		case kb::Numpad6: return '6';
+		case kb::Numpad7: return '7';
+		case kb::Numpad8: return '8';
+		case kb::Numpad9: return '9';
+			// TODO: Should have Equal here, but SFML doesn't distinguish between normal and keybad equal :/
+			// Ditto for the decimal point.
+		case kb::Divide: return '/';
+		case kb::Multiply: return '*';
+		case kb::Subtract: return '-';
+		case kb::Add: return '+';
 		default: break;
 	}
 	return 0;
@@ -104,6 +120,25 @@ ModalSession::~ModalSession() {
 void ModalSession::pumpEvents() {
 	NSModalSession nsHandle = (NSModalSession)session;
 	[[NSApplication sharedApplication] runModalSession: nsHandle];
+}
+
+void set_clipboard(std::string text) {
+	NSString* str = [[NSString stringWithUTF8String: text.c_str()] stringByReplacingOccurrencesOfString: @"|" withString: @"\n"];
+	NSArray* contents = [NSArray arrayWithObject: str];
+	NSPasteboard* pb = [NSPasteboard generalPasteboard];
+	[pb clearContents];
+	[pb writeObjects: contents];
+}
+
+std::string get_clipboard() {
+	NSPasteboard* pb = [NSPasteboard generalPasteboard];
+	NSDictionary* options = [NSDictionary dictionary];
+	NSArray* types = [NSArray arrayWithObject: [NSString class]];
+	if(![pb canReadObjectForClasses: types options: options])
+		return "";
+	NSArray* contents = [pb readObjectsForClasses: types options: options];
+	NSString* str = [contents objectAtIndex: 0];
+	return [[str stringByReplacingOccurrencesOfString: @"\n" withString: @"|"] cStringUsingEncoding: NSUTF8StringEncoding];
 }
 
 void beep() {

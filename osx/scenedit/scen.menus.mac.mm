@@ -169,6 +169,7 @@ void update_item_menu() {
 
 void handle_apple_menu(int item_hit);
 void handle_file_menu(int item_hit);
+void handle_edit_menu(int item_hit);
 void handle_scenario_menu(int item_hit);
 void handle_town_menu(int item_hit);
 void handle_outdoor_menu(int item_hit);
@@ -186,8 +187,11 @@ void handle_monst_menu(int item_hit);
 }
 
 // TODO: Implement edit menu (much work to be done here!)
+// TODO: Fix edit menu being disabled while a modal dialog is onscreen.
+// This means setting autoenable to false for the Edit menu and finding a
+// way to make the menuitems work instead of just doing nothing.
 -(void) editMenu:(id) sender {
-	(void) sender; // Suppress "unused parameter" warning
+	handle_edit_menu([[sender representedObject] intValue]);
 }
 
 -(void) scenMenu:(id) sender {

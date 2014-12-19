@@ -26,6 +26,12 @@ fs::path nav_put_party(fs::path def = "");
 fs::path nav_get_scenario();
 fs::path nav_put_scenario(fs::path def = "");
 
+// Deal with text snippets in the clipboard.
+// If the clipboard contains something other than text,
+// get_clipboard should return an empty string.
+void set_clipboard(std::string text);
+std::string get_clipboard();
+
 void beep();
 
 class ModalSession {

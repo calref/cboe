@@ -58,6 +58,7 @@ void Handle_Update();
 void handle_menu_choice(long choice);
 void handle_apple_menu(int item_hit);
 void handle_file_menu(int item_hit);
+void handle_edit_menu(int item_hit);
 void handle_scenario_menu(int item_hit);
 void handle_town_menu(int item_hit);
 void handle_outdoor_menu(int item_hit);
@@ -266,6 +267,25 @@ void handle_file_menu(int item_hit) {
 				break;
 			All_Done = true;
 			break;
+	}
+}
+
+void handle_edit_menu(int item_hit) {
+	// Currently, this merely passes appropriate input to the frontmost dialog.
+	// TODO: Handle edit menu operations when no dialog is onscreen.
+	cKey key = {true};
+	switch(item_hit) {
+		case 1: key.k = key_undo; break;
+		case 2: key.k = key_redo; break;
+		case 4: key.k = key_cut; break;
+		case 5: key.k = key_copy; break;
+		case 6: key.k = key_paste; break;
+		case 7: key.k = key_del; break;
+		case 8: key.k = key_selectall; break;
+	}
+	if(!cDialog::sendInput(key)) {
+		// Handle non-dialog edit operations here.
+		switch(key.k) {}
 	}
 }
 
