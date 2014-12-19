@@ -2350,41 +2350,16 @@ void monster_attack_pc(short who_att,short target) {
 					}
 					
 					// Petrification touch
-					if((attacker->spec_skill == 30)
-						&& (pc_has_abil_equip(target,eItemAbil::PROTECT_FROM_PETRIFY) == 24)
-						&& (get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[eStatus::BLESS_CURSE]) <= 14) {
+					if(attacker->spec_skill == 30) {
 						add_string_to_buf("  Petrifying touch!");
 						print_buf();
-						kill_pc(target,eMainStatus::STONE); // petrified, duh!
+						petrify_pc(target,attacker->level / 4);
 					}
-#if 0				// TODO: This is *i's version of the petrification touch ability.
-					// It seems better in some ways, like printing a message when you resist,
-					// but its calculation is very different, so I'm not sure what to with it.
-					// Note, his version has also been incorporated into monster_attack_monster.
-					
-					// Petrify target
-					if(attacker->spec_skill == 30)	{
-						add_string_to_buf("  Petrification touch!                ");
-						r1 = max(0,(get_ran(1,0,100) - univ.party[target].level + 0.5*attacker->level));
-						// Equip petrify protection?
-						if(pc_has_abil_equip(target,eItemAbil:PROTECT_FROM_PETRIFY) < 24)
-							r1 = 0;
-						// Check if petrified.
-						if(r1 > 60) {
-							kill_pc(target,eMainStatus::STONE);
-							add_string_to_buf("    Turned to stone! ");
-							play_sound(43);
-						}
-						else {
-							add_string_to_buf("    Resists! ");
-						}
-					}
-#endif
 					
 					// Undead xp drain
 					if(((attacker->spec_skill == 16) || (attacker->spec_skill == 17))
 						&& (pc_has_abil_equip(target,eItemAbil::LIFE_SAVING) == 24)) {
-						// TODO: Uh, wait a second. These two abilities have an identical effect? That doesn't seem right!
+						// Note: spec_skill 17 (Icy+Draining Touch) also enters another if block further down.
 						add_string_to_buf("  Drains life!                 ");
 						drain_pc(target,(attacker->level * 3) / 2);
 						put_pc_screen();
@@ -2556,17 +2531,7 @@ void monster_attack_monster(short who_att,short attackee) {
 					// Petrify target
 					if(attacker->spec_skill == 30)	{
 						add_string_to_buf("  Petrification touch!                ");
-						r1 = max(0,(get_ran(1,0,100) - target->level + 0.5*attacker->level));
-						// Check if petrified.
-						if((r1 < 60) || (target->immunities & 2)) {
-							add_string_to_buf("    Resists! ");
-						}
-						else {
-							kill_monst(target,7);
-							add_string_to_buf("    Turned to stone! ");
-							play_sound(43);
-							
-						}
+						petrify_monst(target, attacker->level / 4);
 					}
 					
 					// Acid touch
@@ -2692,29 +2657,12 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		if(target < 100) { // on PC
 			sprintf (create_line, "  Gazes at %s.                  ",univ.party[target].name.c_str());
 			add_string_to_buf(create_line);
-			r1 = get_ran(1,0,20) + univ.party[target].level / 4 + univ.party[target].status[eStatus::BLESS_CURSE];
-			if(pc_has_abil_equip(target,eItemAbil::PROTECT_FROM_PETRIFY) < 24)
-				r1 = 20;
-			if(r1 > 14) {
-				sprintf (create_line, "  %s resists.                  ",univ.party[target].name.c_str());
-				add_string_to_buf(create_line);
-			}
-			else {
-				sprintf (create_line, "  %s is turned to stone.                  ",univ.party[target].name.c_str());
-				add_string_to_buf(create_line);
-				kill_pc(target,eMainStatus::STONE);
-			}
+			petrify_pc(target, univ.town.monst[i].level / 4);
 		}
 		else {
 			// TODO: This might be relevant to the AFFECT_DEADNESS special when used on monsters
 			monst_spell_note(m_target->number,9);
-			r1 = get_ran(1,0,20) + m_target->level / 4 + m_target->status[eStatus::BLESS_CURSE];
-			if((r1 > 14) || (m_target->immunities & 2))
-				monst_spell_note(m_target->number,10);
-			else {
-				monst_spell_note(m_target->number,8);
-				kill_monst(m_target,7);
-			}
+			petrify_monst(m_target, univ.town.monst[i].level / 4);
 		}
 	}
 	else if(level == 9) { /// Drain sp

@@ -2988,6 +2988,25 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	return true;
 }
 
+void petrify_pc(short which_pc, short strength) {
+	std::ostringstream create_line;
+	short r1 = get_ran(1,0,20);
+	r1 += univ.party[which_pc].level / 4;
+	r1 += univ.party[which_pc].status[eStatus::BLESS_CURSE];
+	r1 -= strength;
+	
+	if(pc_has_abil_equip(which_pc,eItemAbil::PROTECT_FROM_PETRIFY) < 24)
+		r1 = 20;
+	
+	if(r1 > 14) {
+		create_line << "  " << univ.party[which_pc].name << "resists.";
+	} else {
+		create_line << "  " << univ.party[which_pc].name << "is turned to stone.";
+		kill_pc(which_pc,eMainStatus::STONE);
+	}
+	add_string_to_buf(create_line.str());
+}
+
 void kill_pc(short which_pc,eMainStatus type) {
 	short i = 24;
 	bool dummy,no_save = false;

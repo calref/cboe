@@ -1158,6 +1158,8 @@ void monst_spell_note(m_num_t number,short which_mess) {
 		case 50:
 			msg = "  " + msg + " breaks force cage.";
 			break;
+		case 51:
+			msg = "  " + msg + " is obliterated!";
 	}
 	
 	if(which_mess > 0)

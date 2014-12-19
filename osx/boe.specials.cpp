@@ -1622,7 +1622,22 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	return true;
 }
 
-void kill_monst(cCreature *which_m,short who_killed) {
+void petrify_monst(cCreature* m_target, short strength) {
+	monst_spell_note(m_target->number,9);
+	short r1 = get_ran(1,0,20);
+	r1 += m_target->level / 4;
+	r1 += m_target->status[eStatus::BLESS_CURSE];
+	r1 -= strength;
+	
+	if(r1 > 14 || m_target->immunities & 2)
+		monst_spell_note(m_target->number,10);
+	else {
+		monst_spell_note(m_target->number,8);
+		kill_monst(m_target,7);
+	}
+}
+
+void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 	short xp,i,j,s1,s2,s3;
 	location l;
 	
@@ -1673,7 +1688,10 @@ void kill_monst(cCreature *which_m,short who_killed) {
 	
 	i = which_m->cur_loc.x;
 	j = which_m->cur_loc.y;
-	switch(which_m->m_type) {
+	if(type == eMainStatus::DUST)
+		univ.town.set_ash(i,j,true);
+	else if(type == eMainStatus::ABSENT || type == eMainStatus::STONE);
+	else switch(which_m->m_type) {
 		case eRace::DEMON:
 			univ.town.set_ash(i,j,true);
 			break;
@@ -2636,27 +2654,43 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						else switch(spec.ex1a){
 								// When passed to kill_pc, the SPLIT party status actually means "no saving throw".
 							case 0:
-								kill_pc(i,eMainStatus::SPLIT_DEAD);
+								kill_pc(i,spec.ex1c > 0 ? eMainStatus::DEAD : eMainStatus::SPLIT_DEAD);
+								break;
 							case 1:
-								kill_pc(i,eMainStatus::SPLIT_DUST);
+								kill_pc(i,spec.ex1c > 0 ? eMainStatus::DUST : eMainStatus::SPLIT_DUST);
+								break;
 							case 2:
-								kill_pc(i,eMainStatus::SPLIT_STONE);
+								if(spec.ex1c > 0)
+									petrify_pc(i,spec.ex1c);
+								else kill_pc(i,eMainStatus::SPLIT_STONE);
+								break;
 						}
 					}
 				*redraw = 1;
-			}
-			else {
+			} else {
 				// Kill monster
-				if((univ.town.monst[spec.ex2a].active > 0) && (spec.ex1b > 0)) {
-					// If dead/dust actually kill, if stone just erase
-					if(spec.ex1a < 2) {
-						kill_monst(&univ.town.monst[spec.ex2a],7);
-						monst_spell_note(univ.town.monst[spec.ex2a].number,46);
+				if(univ.town.monst[spec.ex2a].active > 0 && spec.ex1b > 0) {
+					switch(spec.ex1a) {
+						case 0:
+							monst_spell_note(univ.town.monst[spec.ex2a].number,46);
+							kill_monst(&univ.town.monst[spec.ex2a],7,eMainStatus::DEAD);
+							break;
+						case 1:
+							monst_spell_note(univ.town.monst[spec.ex2a].number,51);
+							kill_monst(&univ.town.monst[spec.ex2a],7,eMainStatus::DUST);
+							break;
+						case 2:
+							if(spec.ex1c > 0)
+								petrify_monst(&univ.town.monst[spec.ex2a], spec.ex1c);
+							else {
+								monst_spell_note(univ.town.monst[spec.ex2a].number,8);
+								kill_monst(&univ.town.monst[spec.ex2a],7,eMainStatus::STONE);
+							}
+							break;
 					}
-					univ.town.monst[spec.ex2a].active = 0;
 				}
 				// Bring back to life
-				if((univ.town.monst[spec.ex2a].active == 0) && (spec.ex1b == 0)) {
+				else if(univ.town.monst[spec.ex2a].active == 0 && spec.ex1b == 0) {
 					univ.town.monst[spec.ex2a].active = 1;
 					monst_spell_note(univ.town.monst[spec.ex2a].number,45);
 				}
