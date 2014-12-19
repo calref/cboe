@@ -963,7 +963,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 		}
 		if(need_redraw) {
 			draw_terrain();
-			place_just_location();
+			place_location();
 			need_redraw = false;
 		}
 	}

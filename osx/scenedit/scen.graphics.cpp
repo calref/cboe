@@ -1162,7 +1162,7 @@ void place_location() {
 	tileImage(terrain_buttons_gworld, erase_rect,bg[17]);
 	
 	//MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
-	location moveTo(5 ,terrain_rects[255].top + 26);
+	location moveTo(5 ,terrain_rects[255].top + 15);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
 	if(overall_mode < MODE_MAIN_SCREEN)
@@ -1175,7 +1175,7 @@ void place_location() {
 	style.lineHeight = 12;
 	win_draw_string(terrain_buttons_gworld, draw_rect, draw_str, eTextMode::LEFT_TOP, style);
 	
-	moveTo = location(260 ,terrain_rects[255].top + 26);
+	moveTo = location(260 ,terrain_rects[255].top + 15);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
 	sprintf((char*)draw_str,"%i",current_terrain_type);
@@ -1188,11 +1188,11 @@ void place_location() {
 	tileImage(terrain_buttons_gworld, erase_rect,bg[17]);
 	
 	if(overall_mode < MODE_MAIN_SCREEN) {
-		moveTo = location(5,terrain_rects[255].bottom + 129);
+		moveTo = location(5,terrain_rects[255].bottom + 118);
 		draw_rect = text_rect;
 		draw_rect.offset(moveTo);
 		win_draw_string(terrain_buttons_gworld, draw_rect, current_string, eTextMode::LEFT_TOP, style);
-		moveTo = location(RIGHT_AREA_WIDTH / 2,terrain_rects[255].bottom + 129);
+		moveTo = location(RIGHT_AREA_WIDTH / 2,terrain_rects[255].bottom + 118);
 		draw_rect = text_rect;
 		draw_rect.offset(moveTo);
 		win_draw_string(terrain_buttons_gworld, draw_rect, current_string2, eTextMode::LEFT_TOP, style);
@@ -1238,39 +1238,6 @@ void place_location() {
 	draw_rect = terrain_buttons_rect;
 	draw_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
 	rect_draw_some_item(terrain_buttons_gworld.getTexture(),terrain_buttons_rect,mainPtr,draw_rect);
-}
-
-// klugde for speed ...exactly like place location above, but just writes location
-void place_just_location() {
-	char draw_str[256];
-	rectangle from_rect,draw_rect,erase_rect;
-	
-	erase_rect.left = terrain_rects[255].left + 17;
-	erase_rect.right = RIGHT_AREA_WIDTH - 1;
-	erase_rect.top = terrain_rects[255].top + 12 - 9;
-	erase_rect.bottom = erase_rect.top + 12;
-	tileImage(terrain_buttons_gworld, erase_rect,bg[17]);
-	
-	//MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
-	location moveTo(5 ,terrain_rects[255].top + 26);
-	draw_rect = {0,0,12,100};
-	draw_rect.offset(moveTo);
-	if(overall_mode < MODE_MAIN_SCREEN)
-		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
-	else {
-		//MoveTo(5 ,terrain_rects[255].top + 28);
-		sprintf((char *) draw_str,"Click terrain to edit. ");
-	}
-	TextStyle style;
-	style.lineHeight = 12;
-	win_draw_string(terrain_buttons_gworld, draw_rect, draw_str, eTextMode::LEFT_TOP, style);
-	
-	from_rect = terrain_buttons_rect;
-	from_rect.top = erase_rect.top;
-	from_rect.bottom = erase_rect.bottom;
-	draw_rect = from_rect;
-	draw_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
-	rect_draw_some_item(terrain_buttons_gworld.getTexture(),from_rect,mainPtr,draw_rect);
 }
 
 void set_string(const char *string,const char *string2) {

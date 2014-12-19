@@ -21,7 +21,6 @@ void Draw_Some_Item(sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget&
 rectangle get_template_rect (unsigned short type_wanted);
 void draw_frames();
 void place_location();
-void place_just_location();
 void set_string(const char *string,const char *string2);
 bool is_special(short i,short j);
 void take_special(short i,short j);
