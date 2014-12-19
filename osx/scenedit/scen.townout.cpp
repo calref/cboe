@@ -533,7 +533,7 @@ static void put_out_wand_in_dlog(cDialog& me, short which_out_wand, const cOutdo
 	me["endy"].setTextToNum(store_out_wand.end_spec2);
 }
 
-void save_out_wand(cDialog& me, short store_which_out_wand, cOutdoors::cWandering& store_out_wand, short mode) {
+static void save_out_wand(cDialog& me, short store_which_out_wand, cOutdoors::cWandering& store_out_wand, short mode) {
 	store_out_wand.spec_on_meet = me["onmeet"].getTextAsNum();
 	store_out_wand.spec_on_win = me["onwin"].getTextAsNum();
 	store_out_wand.spec_on_flee = me["onflee"].getTextAsNum();
@@ -559,7 +559,6 @@ void save_out_wand(cDialog& me, short store_which_out_wand, cOutdoors::cWanderin
 static bool edit_out_wand_event_filter(cDialog& me, std::string item_hit, short& store_which_out_wand, cOutdoors::cWandering& store_out_wand, short mode) {
 	if(!me.toast(true)) return true;
 	save_out_wand(me, store_which_out_wand, store_out_wand, mode);
-	short i,spec;
 	cCreature store_m;
 	if(item_hit == "left") {
 		me.untoast();
@@ -637,263 +636,198 @@ void edit_out_wand(short mode) {
 	wand_dlg.run();
 }
 
-bool save_town_details() {
-#if 0
-	char str[256];
-	
-	CDGT(832,2,(char *) str);
-	sprintf(town->town_strs(0),"%-29.29s",str);
-	town->town_chop_time = CDGN(832,3);
-	if(cre(town->town_chop_time,-1,10000,"The day the town becomes abandoned must be from 0 to 10000 (or -1 if it doesn't)."
-			,"",832)) return false;
-	town->town_chop_key = CDGN(832,4);
-	if(cre(town->town_chop_key,-1,10,"The event which prevents the town from becoming abandoned must be from 1 to 10 (-1 or 0 for none)."
-			,"",832)) return false;
-	town->lighting_type = cd_get_led_range(832,19,22);
-	town->max_num_monst = CDGN(832,5);
-	town->difficulty = CDGN(832,6);
-	if(cre(town->difficulty,0,10,"The town difficulty must be between 0 (easiest) and 10 (hardest)."
-			,"",832)) return false;
-#endif
+static bool save_town_details(cDialog& me, std::string, eKeyMod) {
+	if(!me.toast(true)) return true;
+	town->town_name = me["name"].getText();
+	town->town_chop_time = me["chop"].getTextAsNum();
+	town->town_chop_key = me["key"].getTextAsNum();
+	town->max_num_monst = me["population"].getTextAsNum();
+	town->difficulty = me["difficulty"].getTextAsNum();
+	std::string lighting = dynamic_cast<cLedGroup&>(me["lighting"]).getSelected();
+	if(lighting == "lit") town->lighting_type = LIGHT_NORMAL;
+	else if(lighting == "dark") town->lighting_type = LIGHT_DARK;
+	else if(lighting == "drains") town->lighting_type = LIGHT_DRAINS;
+	else if(lighting == "no-light") town->lighting_type = LIGHT_NONE;
 	return true;
 }
 
-void put_town_details_in_dlog() {
-#if 0
-	CDST(832,2,town->town_strs(0));
-	CDSN(832,3,town->town_chop_time);
-	CDSN(832,4,town->town_chop_key);
-	cd_set_led_range(832,19,22,town->lighting_type);
-	CDSN(832,5,town->max_num_monst);
-	CDSN(832,6,town->difficulty);
-#endif
-}
-
-void edit_town_details_event_filter (short item_hit) {
-#if 0
-	switch(item_hit) {
-		case 7:
-			if(save_town_details())
-				toast_dialog();
-			break;
-		default:
-			cd_hit_led_range(832,19,22,item_hit);
-			break;
+static void put_town_details_in_dlog(cDialog& me) {
+	me["name"].setText(town->town_name);
+	me["chop"].setTextToNum(town->town_chop_time);
+	me["key"].setTextToNum(town->town_chop_key);
+	me["population"].setTextToNum(town->max_num_monst);
+	me["difficulty"].setTextToNum(town->difficulty);
+	cLedGroup& lighting = dynamic_cast<cLedGroup&>(me["lighting"]);
+	switch(town->lighting_type) {
+		case LIGHT_NORMAL: lighting.setSelected("lit"); break;
+		case LIGHT_DARK: lighting.setSelected("dark"); break;
+		case LIGHT_DRAINS: lighting.setSelected("drains"); break;
+		case LIGHT_NONE: lighting.setSelected("no-light"); break;
 	}
-#endif
 }
 
 void edit_town_details() {
-	// ignore parent in Mac version
-	short town_details_hit;
-#if 0
-	cd_create_dialog_parent_num(832,0);
+	using namespace std::placeholders;
+	cDialog town_dlg("edit-town-details.xml");
+	town_dlg["okay"].attachClickHandler(save_town_details);
+	town_dlg["chop"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10000, "The day the town becomes abandoned", "-1 if it doesn't"));
+	town_dlg["key"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10, "The event which prevents the town from becoming abandoned", "-1 or 0 for none"));
+	town_dlg["difficulty"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, 0, 10, "The town difficulty", "0 - easiest, 10 - hardest"));
 	
-	put_town_details_in_dlog();
+	put_town_details_in_dlog(town_dlg);
 	
-	town_details_hit = cd_run_dialog();
-	cd_kill_dialog(832);
-#endif
+	town_dlg.run();
 }
 
-bool save_town_events() {
-	short i;
-#if 0
-	for(i = 0; i < 8; i++) {
-		town->timer_spec_times[i] = CDGN(833,2 + i);
-		town->timer_specs[i] = CDGN(833,10 + i);
-		if(cre(town->timer_specs[i],-1,99,"The town special nodes must be between 0 at 99 (or -1 for no special)."
-				,"",833)) return false;
+static bool save_town_events(cDialog& me, std::string, eKeyMod) {
+	if(!me.toast(true)) return true;
+	for(int i = 0; i < 8; i++) {
+		std::string id = std::to_string(i + 1);
+		town->timer_spec_times[i] = me["time" + id].getTextAsNum();
+		town->timer_specs[i] = me["spec" + id].getTextAsNum();
 	}
-#endif
 	return true;
 }
 
-void put_town_events_in_dlog() {
+static void put_town_events_in_dlog(cDialog& me) {
 	short i;
-#if 0
 	for(i = 0; i < 8; i++) {
-		CDSN(833,2 + i,town->timer_spec_times[i]);
-		CDSN(833,10 + i,town->timer_specs[i]);
+		std::string id = std::to_string(i + 1);
+		me["time" + id].setTextToNum(town->timer_spec_times[i]);
+		me["spec" + id].setTextToNum(town->timer_specs[i]);
 	}
-#endif
 }
 
-void edit_town_events_event_filter (short item_hit) {
-	short spec;
-#if 0
-	switch(item_hit) {
-		case 18:
-			if(save_town_events())
-				toast_dialog();
-			break;
-		default:
-			if((item_hit >= 26) && (item_hit <= 33)) {
-				if(!save_town_events())
-					break;
-				spec = CDGN(833,item_hit - 26 + 10);
-				if((spec < 0) || (spec > 99)) {
-					spec = get_fresh_spec(2);
-					if(spec < 0) {
-						give_error("You can't create a new special encounter because there are no more free special nodes.",
-								   "To free a special node, set its type to No Special and set its Jump To special to -1.",833);
-						break;
-					}
-					CDSN(833,item_hit - 26 + 10,spec);
-				}
-				edit_spec_enc(spec,2,833);
-				if((spec >= 0) && (spec < 100) && (town->specials[spec].pic < 0))
-					CDSN(833,item_hit - 26 + 10,-1);
-			}
-			break;
+static bool edit_town_events_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+	std::string id = item_hit.substr(4);
+	short spec = me["spec" + id].getTextAsNum();
+	if(spec < 0 || spec > 99) {
+		spec = get_fresh_spec(2);
+		if(spec < 0) {
+			giveError("You can't create a new special encounter because there are no more free special nodes.",
+					   "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
+			return true;
+		}
 	}
-#endif
+	if(edit_spec_enc(spec,2,&me))
+		me["spec" + id].setTextToNum(spec);
+	return true;
 }
 
 void edit_town_events() {
-	// ignore parent in Mac version
-	short advanced_town_hit;
-#if 0
+	using namespace std::placeholders;
 	
-	cd_create_dialog_parent_num(833,0);
+	cDialog evt_dlg("edit-town-events.xml");
+	evt_dlg["okay"].attachClickHandler(save_town_events);
+	evt_dlg.attachClickHandlers(edit_town_events_event_filter, {"edit1", "edit2", "edit3", "edit4", "edit5", "edit6", "edit7", "edit8"});
+	evt_dlg.attachFocusHandlers(std::bind(check_range_msg, _1, _2, _3, -1, 99, "The town special node", "-1 for no special"), {"spec1", "spec2", "spec3", "spec4", "spec5", "spec6", "spec7", "spec8"});
 	
-	put_town_events_in_dlog();
+	put_town_events_in_dlog(evt_dlg);
 	
-	advanced_town_hit = cd_run_dialog();
-	
-	cd_kill_dialog(833);
-#endif
+	evt_dlg.run();
 }
 
-bool save_advanced_town() {
-	short i;
-#if 0
-	for(i = 0; i < 4; i++) {
-		town->exit_specs[i] = CDGN(834,2 + i);
-		if(cre(town->exit_specs[i],-1,99,"The town exit specials must be between 0 at 99 (or -1 for no special)."
-				,"",834)) return false;
-		town->exit_locs[i].x = CDGN(834,8 + i * 2);
-		if(cre(town->exit_locs[i].x,-1,47,"The town exit coordinates must be from 0 to 47 (or -1 if you want them ignored)."
-				,"",834)) return false;
-		town->exit_locs[i].y = CDGN(834,9 + i * 2);
-		if(cre(town->exit_locs[i].y,-1,47,"The town exit coordinates must be from 0 to 47 (or -1 if you want them ignored)."
-				,"",834)) return false;
+static bool save_advanced_town(cDialog& me, std::string, eKeyMod) {
+	if(!me.toast(true)) return true;
+	for(int i = 0; i < 4; i++) {
+		std::string id = std::to_string(i + 1);
+		town->exit_specs[i] = me["onexit" + id].getTextAsNum();
+		town->exit_locs[i].x = me["exit" + id + "-x"].getTextAsNum();
+		town->exit_locs[i].y = me["exit" + id + "-y"].getTextAsNum();
 	}
-	town->spec_on_entry = CDGN(834,6);
-	town->spec_on_entry_if_dead = CDGN(834,7);
-	if(cre(town->spec_on_entry,-1,99,"The town entry specials must be from 0 to 99 (or -1 for no special)."
-			,"",834)) return false;
-	if(cre(town->spec_on_entry_if_dead,-1,99,"The town entry specials must be from 0 to 99 (or -1 for no special)."
-			,"",834)) return false;
-	scenario.town_hidden[cur_town] = cd_get_led(834,37);
-#endif
+	town->spec_on_entry = me["onenter"].getTextAsNum();
+	town->spec_on_entry_if_dead = me["onenterdead"].getTextAsNum();
+	scenario.town_hidden[cur_town] = dynamic_cast<cLed&>(me["hidden"]).getState() != led_off;
 	return true;
 }
 
-void put_advanced_town_in_dlog() {
+static void put_advanced_town_in_dlog(cDialog& me) {
 	short i;
-#if 0
 	for(i = 0; i < 4; i++) {
-		CDSN(834,2 + i,town->exit_specs[i]);
-		CDSN(834,8 + i * 2,town->exit_locs[i].x);
-		CDSN(834,9 + i * 2,town->exit_locs[i].y);
+		std::string id = std::to_string(i + 1);
+		me["onexit" + id].setTextToNum(town->exit_specs[i]);
+		me["exit" + id + "-x"].setTextToNum(town->exit_locs[i].x);
+		me["exit" + id + "-y"].setTextToNum(town->exit_locs[i].y);
 	}
-	CDSN(834,6,town->spec_on_entry);
-	CDSN(834,7,town->spec_on_entry_if_dead);
-	cd_set_led(834,37,scenario.town_hidden[cur_town]);
-#endif
-}
-
-void edit_advanced_town_event_filter (short item_hit) {
-#if 0
-	switch(item_hit) {
-		case 16:
-			if(save_advanced_town())
-				toast_dialog();
-			break;
-		case 17:
-			toast_dialog();
-			break;
-		case 37:
-			cd_flip_led(834,37,item_hit);
-			break;
-	}
-#endif
+	me["onenter"].setTextToNum(town->spec_on_entry);
+	me["onenterdead"].setTextToNum(town->spec_on_entry_if_dead);
+	dynamic_cast<cLed&>(me["hidden"]).setState(scenario.town_hidden[cur_town] ? led_red : led_off);
 }
 
 void edit_advanced_town() {
-	// ignore parent in Mac version
-	short advanced_town_hit;
-#if 0
+	using namespace std::placeholders;
 	
-	cd_create_dialog_parent_num(834,0);
+	cDialog town_dlg("edit-town-advanced.xml");
+	town_dlg["okay"].attachClickHandler(save_advanced_town);
+	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
+	auto loc_check = std::bind(check_range_msg, _1, _2, _3, -1, 47, "The town exit coordinates", "-1 if you want them ignored");
+	auto spec_check = std::bind(check_range_msg, _1, _2, _3, -1, 99, _4, "-1 for no special");
+	town_dlg.attachFocusHandlers(std::bind(spec_check, _1, _2, _3, "The town exit special"), {"onexit1", "onexit2", "onexit3", "onexit4"});
+	town_dlg.attachFocusHandlers(std::bind(spec_check, _1, _2, _3, "Thw town entry special"), {"onenter", "onenterdead"});
+	town_dlg.attachFocusHandlers(loc_check, {"exit1-x", "exit2-x", "exit3-x", "exit4-x"});
+	town_dlg.attachFocusHandlers(loc_check, {"exit1-y", "exit2-y", "exit3-y", "exit4-y"});
 	
-	put_advanced_town_in_dlog();
+	put_advanced_town_in_dlog(town_dlg);
 	
-	advanced_town_hit = cd_run_dialog();
-	
-	cd_kill_dialog(834);
-#endif
+	town_dlg.run();
 }
 
-bool save_town_wand() {
-	short i,j;
-#if 0
-	for(i = 0; i < 4; i++)
-		for(j = 0; j < 4; j++) {
-			town->wandering[i].monst[j] = CDGN(835,2 + i * 4 + j);
-			if(cre(town->wandering[i].monst[j],0,255,"Wandering monsters must all be from 0 to 255 (0 means no monster)."
-					,"",835)) return false;
+static bool save_town_wand(cDialog& me, std::string, eKeyMod) {
+	if(!me.toast(true)) return true;
+	for(int i = 0; i < 4; i++) {
+		std::string base_id = "group" + std::to_string(i + 1) + "-monst";
+		for(int j = 0; j < 4; j++) {
+			std::string id = base_id + std::to_string(j + 1);
+			town->wandering[i].monst[j] = me[id].getTextAsNum();
 		}
-#endif
+	}
 	return true;
 }
 
-void put_town_wand_in_dlog() {
-	short i,j;
-#if 0
-	for(i = 0; i < 4; i++)
-		for(j = 0; j < 4; j++) {
-			CDSN(835,2 + i * 4 + j,town->wandering[i].monst[j]);
+static void put_town_wand_in_dlog(cDialog& me) {
+	for(int i = 0; i < 4; i++) {
+		std::string base_id = "group" + std::to_string(i + 1) + "-monst";
+		for(int j = 0; j < 4; j++) {
+			std::string id = base_id + std::to_string(j + 1);
+			me[id].setTextToNum(town->wandering[i].monst[j]);
 		}
-#endif
+	}
 }
 
-void edit_town_wand_event_filter (short item_hit) {
-	short i,j;
-#if 0
-	switch(item_hit) {
-		case 18:
-			if(save_town_wand())
-				toast_dialog();
-			break;
-		case 27: case 28: case 29: case 30:
-			for(i = 0; i < 4; i++) {
-				j = choose_text_res(-1,0,255,town->wandering[item_hit - 27].monst[i],835,"Choose Which Monster:");
-				if(j < 0)
-					i = 5;
-				else {
-					CDSN(835,2 + (item_hit - 27) * 4 + i,j);
-				}
-			}
-			break;
+static bool edit_town_wand_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+	static const char*const titles[4] = {
+		"Choose First Monster: (1 appears)",
+		"Choose Second Monster: (1 appears)",
+		"Choose Third Monster: (1 appears)",
+		"Choose Fourth Monster: (1-2 appears)",
+	};
+	short group = item_hit[6] - '0';
+	std::string base_id = "group" + std::to_string(group) + "-monst";
+	for(int i = 0; i < 4; i++) {
+		std::string id = base_id + std::to_string(i + 1);
+		short n = choose_text(STRT_MONST, town->wandering[group].monst[i], &me, titles[i]);
+		if(n == town->wandering[group].monst[i]) break;
+		me[id].setTextToNum(n);
 	}
-#endif
+	return true;
 }
 
 void edit_town_wand() {
-	// ignore parent in Mac version
-	short town_wand_hit;
-#if 0
+	using namespace std::placeholders;
 	
-	cd_create_dialog_parent_num(835,0);
+	cDialog wand_dlg("edit-town-wandering.xml");
+	wand_dlg["okay"].attachClickHandler(save_town_wand);
+	auto check_monst = std::bind(check_range_msg, _1, _2, _3, 0, 255, "Wandering monsters", "0 means no monster");
+	// Just go through and attach the same focus handler to ALL text fields.
+	// There's 16 of them, so this is kinda the easiest way to do it.
+	wand_dlg.forEach([&check_monst](std::string, cControl& ctrl) {
+		if(ctrl.getType() == CTRL_FIELD)
+			ctrl.attachFocusHandler(check_monst);
+	});
 	
-	put_town_wand_in_dlog();
+	put_town_wand_in_dlog(wand_dlg);
 	
-	town_wand_hit = cd_run_dialog();
-	
-	cd_kill_dialog(835);
-#endif
+	wand_dlg.run();
 }
 
 bool save_basic_dlog() {

@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<!-- OK button -->
+	<field name='time1' top='122' left='146' width='67' height='16'/>
+	<field name='time2' top='150' left='146' width='67' height='16'/>
+	<field name='time3' top='178' left='146' width='67' height='16'/>
+	<field name='time4' top='206' left='146' width='67' height='16'/>
+	<field name='time5' top='234' left='146' width='67' height='16'/>
+	<field name='time6' top='262' left='146' width='67' height='16'/>
+	<field name='time7' top='290' left='146' width='67' height='16'/>
+	<field name='time8' top='318' left='146' width='67' height='16'/>
+	<field name='spec1' top='122' left='270' width='39' height='16'/>
+	<field name='spec2' top='150' left='270' width='39' height='16'/>
+	<field name='spec3' top='178' left='270' width='39' height='16'/>
+	<field name='spec4' top='206' left='270' width='39' height='16'/>
+	<field name='spec5' top='234' left='270' width='39' height='16'/>
+	<field name='spec6' top='262' left='270' width='39' height='16'/>
+	<field name='spec7' top='290' left='270' width='39' height='16'/>
+	<field name='spec8' top='318' left='270' width='39' height='16'/>
+	<button name='okay' type='regular' top='317' left='431'>OK</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='256' height='17'>Town event timers</text>
+	<text top='25' left='50' width='439' height='40'>
+		At certain time intervals, you can have a town special node be called.
+		Enter below the number of moves between each calling of the special node, and the number of the node to call.
+	</text>
+	<text top='68' left='50' width='439' height='14'>For more information on how this works, see the documentation.</text>
+	<text top='88' left='123' width='120' height='28'>Number of moves between each call.</text>
+	<text top='88' left='244' width='118' height='25'>Town special node to call.</text>
+	<text top='216' left='4' width='106' height='120'>
+		Note: If you leave the time between calls at 0, no special node is called.
+		Don’t have special nodes called too often ... it slows the game down.
+	</text>
+	<button name='edit1' type='large' top='119' left='325'>Create/Edit</button>
+	<button name='edit2' type='large' top='147' left='325'>Create/Edit</button>
+	<button name='edit3' type='large' top='174' left='325'>Create/Edit</button>
+	<button name='edit4' type='large' top='203' left='325'>Create/Edit</button>
+	<button name='edit5' type='large' top='231' left='325'>Create/Edit</button>
+	<button name='edit6' type='large' top='258' left='325'>Create/Edit</button>
+	<button name='edit7' type='large' top='287' left='325'>Create/Edit</button>
+	<button name='edit8' type='large' top='315' left='325'>Create/Edit</button>
+</dialog>

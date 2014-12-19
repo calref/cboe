@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<!-- OK button -->
+	<field name='onexit1' top='77' left='308' width='67' height='16'/>
+	<field name='onexit2' top='105' left='308' width='67' height='16'/>
+	<field name='onexit3' top='77' left='440' width='67' height='16'/>
+	<field name='onexit4' top='105' left='440' width='67' height='16'/>
+	<field name='onenter' top='142' left='405' width='67' height='16'/>
+	<field name='onenterdead' top='170' left='405' width='67' height='16'/>
+	<field name='exit1-x' top='231' left='323' width='39' height='16'/>
+	<field name='exit1-y' top='231' left='371' width='39' height='16'/>
+	<field name='exit2-x' top='258' left='323' width='39' height='16'/>
+	<field name='exit2-y' top='258' left='371' width='39' height='16'/>
+	<field name='exit3-x' top='285' left='323' width='39' height='16'/>
+	<field name='exit3-y' top='285' left='371' width='39' height='16'/>
+	<field name='exit4-x' top='312' left='323' width='39' height='16'/>
+	<field name='exit4-y' top='312' left='371' width='39' height='16'/>
+	<button name='okay' type='regular' top='367' left='452'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='367' left='386'>Cancel</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='256' height='17'>Advanced town details</text>
+	<text top='25' left='50' width='439' height='40'>
+		You can use this window to edit some of the more esoteric details for each town,
+		such as specials called when entering or leaving town.
+		All of these options are decribed in the documentation chapter on town editing.
+	</text>
+	<text top='207' left='50' width='197' height='64'>
+		Exit town location:
+		(these are the locations the party ends up at outdoors if they leave in the given direction.
+		Leave at -1 for the regular location to be used.)
+	</text>
+	<text top='134' left='50' width='202' height='66'>
+		Town entry special node:
+		(Enter the number of the town special node to call if the party enters the town when it’s still alive, and/or when it’s been abandoned.)
+	</text>
+	<text top='68' left='50' width='197' height='64'>
+		Exit town specials:
+		(These are the numbers of the town special nodes to call when the party tries to leave town in the given direction.)
+	</text>
+	<text top='143' left='259' width='137' height='15'>Still alive</text>
+	<text top='170' left='259' width='137' height='15'>Been abandoned</text>
+	<text top='77' left='250' width='49' height='15'>Top</text>
+	<text top='105' left='251' width='49' height='15'>Left</text>
+	<text top='77' left='381' width='53' height='15'>Bottom</text>
+	<text top='105' left='382' width='49' height='15'>Right</text>
+	<text top='232' left='257' width='49' height='15'>Top</text>
+	<text top='259' left='258' width='49' height='15'>Left</text>
+	<text top='285' left='258' width='53' height='15'>Bottom</text>
+	<text top='313' left='259' width='49' height='15'>Right</text>
+	<text top='207' left='331' width='35' height='15'>X</text>
+	<text top='207' left='379' width='40' height='15'>Y</text>
+	<!--
+	 TODO: Move this LED label into the LED element.
+	 -->
+	<text top='336' left='50' width='320' height='27'>
+		Town hidden?
+		(This town cannot be seen until it’s made visible with a special encounter.)
+	</text>
+	<led name='hidden' top='342' left='373'/>
+</dialog>
