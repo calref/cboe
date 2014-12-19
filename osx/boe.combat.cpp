@@ -3064,11 +3064,11 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::HASTE_MINOR:
 				play_sound(25);
-				caster->status[eStatus::HASTE_SLOW] += 2;
+				slow_monst(caster, -2);
 				break;
 			case eSpell::STRENGTH:
 				play_sound(25);
-				caster->status[eStatus::BLESS_CURSE] += 3;
+				curse_monst(caster, -3);
 				break;
 			case eSpell::CLOUD_FLAME:
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
@@ -3193,7 +3193,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
-						affected->status[eStatus::HASTE_SLOW] += 3;
+						slow_monst(affected, -3);
 					}
 				play_sound(4);
 				break;
@@ -3239,7 +3239,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 						affected = &univ.town.monst[i];
 						affected->health += get_ran(2,1,10);
 						r1 = get_ran(3,1,4);
-						affected->status[eStatus::BLESS_CURSE] = min(8,affected->status[eStatus::BLESS_CURSE] + r1);
+						curse_monst(affected, -r1);
 						affected->status[eStatus::WEBS] = 0;
 						if(affected->status[eStatus::HASTE_SLOW] < 0)
 							affected->status[eStatus::HASTE_SLOW] = 0;
@@ -3393,7 +3393,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				break;
 			case eSpell::BLESS_MINOR: case eSpell::BLESS:
 				play_sound(24);
-				caster->status[eStatus::BLESS_CURSE] = min(8,caster->status[eStatus::BLESS_CURSE] + (spell == eSpell::BLESS ? 5 : 3));
+				curse_monst(caster, -(spell == eSpell::BLESS ? 5 : 3));
 				play_sound(4);
 				break;
 			case eSpell::CURSE:
@@ -3518,7 +3518,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
 						if(spell == eSpell::BLESS_PARTY)
-							affected->status[eStatus::BLESS_CURSE] = min(8,affected->status[eStatus::BLESS_CURSE] + r1);
+							curse_monst(affected, -r1);
 						if(spell == eSpell::REVIVE_ALL)
 							affected->health += r1;
 					}
@@ -4374,19 +4374,19 @@ bool combat_cast_mage_spell() {
 							case eSpell::STRENGTH:
 								sprintf (c_line, "  %s stronger.                     ",
 										 univ.party[target].name.c_str());
-								univ.party[target].status[eStatus::BLESS_CURSE] = univ.party[target].status[eStatus::BLESS_CURSE] + 3;
+								curse_pc(target, -3);
 								store_m_type = 8;
 								break;
 							case eSpell::RESIST_MAGIC:
 								sprintf (c_line, "  %s resistant.                     ",
 										 univ.party[target].name.c_str());
-								univ.party[target].status[eStatus::MAGIC_RESISTANCE] = univ.party[target].status[eStatus::MAGIC_RESISTANCE] + 5 + bonus;
+								univ.party[target].status[eStatus::MAGIC_RESISTANCE] += 5 + bonus;
 								store_m_type = 15;
 								break;
 								
 							default:
 								i = (spell_num == eSpell::HASTE_MINOR) ? 2 : max(2,univ.party[current_pc].level / 2 + bonus);
-								univ.party[target].status[eStatus::HASTE_SLOW] = min(8, univ.party[target].status[eStatus::HASTE_SLOW] + i);
+								slow_pc(target, -i);
 								sprintf (c_line, "  %s hasted.                       ",
 										 univ.party[target].name.c_str());
 								store_m_type = 8;
@@ -4404,10 +4404,10 @@ bool combat_cast_mage_spell() {
 					
 					for(i = 0; i < 6; i++)
 						if(univ.party[i].main_status == eMainStatus::ALIVE) {
-							univ.party[i].status[eStatus::HASTE_SLOW] = min(8, univ.party[i].status[eStatus::HASTE_SLOW] + ((spell_num == eSpell::HASTE_MAJOR) ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
+							slow_pc(i, -(spell_num == eSpell::HASTE_MAJOR ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
 							if(spell_num == eSpell::BLESS_MAJOR) {
 								poison_weapon(i,2,1);
-								univ.party[i].status[eStatus::BLESS_CURSE] += 4;
+								curse_pc(i, -4);
 								add_missile(univ.party[i].combat_pos,14,0,0,0);
 							}
 							else add_missile(univ.party[i].combat_pos,8,0,0,0);
@@ -4553,11 +4553,7 @@ bool combat_cast_priest_spell() {
 					if(target < 6) {
 						store_sound = 4;
 						univ.party[current_pc].cur_sp -= (*spell_num).cost;
-						univ.party[target].status[eStatus::BLESS_CURSE] += (spell_num == eSpell::BLESS_MINOR) ? 2 :
-						max(2,(univ.party[current_pc].level * 3) / 4 + 1 + bonus);
-						sprintf ((char *) c_line, "  %s blessed.              ",
-								 (char *) univ.party[target].name.c_str());
-						add_string_to_buf((char *) c_line);
+						curse_pc(target,-(spell_num==eSpell::BLESS_MINOR ? 2 : max(2,(univ.party[current_pc].level * 3) / 4 + 1 + bonus)));
 						add_missile(univ.party[target].combat_pos,8,0,0,0);
 					}
 					break;
@@ -4566,11 +4562,9 @@ bool combat_cast_priest_spell() {
 					univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					for(i = 0; i < 6; i++)
 						if(univ.party[i].main_status == eMainStatus::ALIVE) {
-							univ.party[i].status[eStatus::BLESS_CURSE] += univ.party[current_pc].level / 3;
+							curse_pc(i, -(univ.party[current_pc].level / 3));
 							add_missile(univ.party[i].combat_pos,8,0,0,0);
 						}
-					sprintf ((char *) c_line, "  Party blessed.                    ");
-					add_string_to_buf((char *) c_line);
 					store_sound = 4;
 					break;
 					

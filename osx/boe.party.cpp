@@ -574,13 +574,16 @@ void curse_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[eStatus::BLESS_CURSE] = minmax(-8,8,univ.party[which_pc].status[eStatus::BLESS_CURSE] - how_much);
 		if(how_much < 0)
-			sprintf ((char *) c_line, "  %s blessed.",(char *) univ.party[which_pc].name.c_str());
-		else sprintf ((char *) c_line, "  %s cursed.",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+			sprintf(c_line, "  %s blessed.", univ.party[which_pc].name.c_str());
+		else if(how_much > 0)
+			sprintf(c_line, "  %s cursed.", univ.party[which_pc].name.c_str());
+		if(how_much != 0) add_string_to_buf(c_line);
 	}
 	put_pc_screen();
-	if(how_much < 0)
+	if(how_much > 0)
 		give_help(59,0);
+	else if(how_much > 0)
+		give_help(34,0);
 }
 
 void dumbfound_pc(short which_pc,short how_much) {
@@ -692,13 +695,13 @@ void slow_pc(short which_pc,short how_much) {
 		
 		univ.party[which_pc].status[eStatus::HASTE_SLOW] = minmax(-8,8,univ.party[which_pc].status[eStatus::HASTE_SLOW] - how_much);
 		if(how_much < 0)
-			sprintf ((char *) c_line, "  %s hasted.",(char *) univ.party[which_pc].name.c_str());
-		else sprintf ((char *) c_line, "  %s slowed.",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+			sprintf (c_line, "  %s hasted.", univ.party[which_pc].name.c_str());
+		else if(how_much > 0)
+			sprintf(c_line, "  %s slowed.", univ.party[which_pc].name.c_str());
+		if(how_much != 0) add_string_to_buf(c_line);
 	}
 	put_pc_screen();
-	if(how_much < 0)
-		give_help(35,0);
+	give_help(35,0);
 }
 
 void web_pc(short which_pc,short how_much) {
