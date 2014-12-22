@@ -131,7 +131,12 @@ public:
 	/// @return true if the focus changed; if it returns false, it could mean either that the control did not exist in the dialog
 	/// or that one of the focus handlers prevented the focus change.
 	/// @note This function is intended for internal use, which is why it takes a control pointer instead of a unique key.
+	/// @note If a null pointer is passed, the focus will be cleared. This means that tabbing between fields will no longer work,
+	/// though clicking a field to focus it should still work.
 	bool setFocus(cTextField* newFocus, bool force = false);
+	/// Get the currently focused text field.
+	/// @return A pointer to the currently focused field.
+	cTextField* getFocus();
 	/// Close the dialog.
 	/// @param triggerFocus true to allow the focus handler of the currently focused text field to prevent the dialog from closing
 	/// @return true unless the currently focused field prevented the dialog from closing

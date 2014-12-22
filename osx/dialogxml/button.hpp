@@ -111,6 +111,8 @@ public:
 	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
+	storage_t store();
+	void restore(storage_t to);
 	/// Create a new LED button.
 	/// @param parent The parent dialog.
 	explicit cLed(cDialog* parent);
@@ -175,6 +177,8 @@ public:
 	void attachFocusHandler(focus_callback_t f) throw();
 	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
+	storage_t store();
+	void restore(storage_t to);
 	/// Add a new LED to this group.
 	/// @param ctrl A pointer to the LED, which should already be constructed.
 	/// @param key A key to be used to look up the LED later.

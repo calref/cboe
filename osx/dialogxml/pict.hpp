@@ -115,6 +115,8 @@ public:
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
 	sf::Color getColour() throw(xUnsupportedProp);
+	storage_t store();
+	void restore(storage_t to);
 	/// @copydoc setPict(pic_num_t)
 	/// @param type The type of the new icon
 	/// @note Calling this function automatically adjusts the bounding rect so that the picture fits perfectly.

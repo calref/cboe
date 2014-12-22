@@ -20,6 +20,7 @@ using namespace ticpp;
 #include "field.hpp"
 #include "message.hpp"
 #include "scrollbar.hpp"
+#include "stack.hpp"
 #include "winutil.h"
 #include "mathutil.h"
 #include "cursors.h"
@@ -754,6 +755,68 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 	return p;
 }
 
+// Note: This specialization must come last because it requires the other specializations
+template<> pair<string,cStack*> cDialog::parse(Element& who /*stack*/) {
+	pair<string, cStack*> p;
+	Iterator<Attribute> attr;
+	Iterator<Element> node;
+	string name;
+	p.second = new cStack(*this);
+	for(attr = attr.begin(&who); attr != attr.end(); attr++) {
+		attr->GetName(&name);
+		if(name == "name")
+			attr->GetValue(&p.first);
+		else if(name == "pages") {
+			size_t val;
+			attr->GetValue(&val);
+			p.second->setPageCount(val);
+		} else throw xBadAttr("stack",name,attr->Row(),attr->Column(),fname);
+	}
+	vector<string> stack;
+	for(node = node.begin(&who); node != node.end(); node++) {
+		string val;
+		int type = node->Type();
+		node->GetValue(&val);
+		if(type == TiXmlNode::ELEMENT) {
+			if(val == "field") {
+				auto field = parse<cTextField>(*node);
+				controls.insert(field);
+				stack.push_back(field.first);
+				tabOrder.push_back(field);
+			} else if(val == "text") {
+				auto text = parse<cTextMsg>(*node);
+				controls.insert(text);
+				stack.push_back(text.first);
+			} else if(val == "pict") {
+				auto pict = parse<cPict>(*node);
+				controls.insert(pict);
+				stack.push_back(pict.first);
+			} else if(val == "button") {
+				auto button = parse<cButton>(*node);
+				controls.insert(button);
+				stack.push_back(button.first);
+			} else if(val == "led") {
+				auto led = parse<cLed>(*node);
+				controls.insert(led);
+				stack.push_back(led.first);
+			} else if(val == "group") {
+				auto group = parse<cLedGroup>(*node);
+				controls.insert(group);
+				stack.push_back(group.first);
+			} else throw xBadNode(val,node->Row(),node->Column(),fname);
+		} else if(type != TiXmlNode::COMMENT)
+			throw xBadVal("stack",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
+	}
+	p.second->controls = stack;
+	p.second->recalcRect();
+	if(p.first == ""){
+		do{
+			p.first = generateRandomString();
+		}while(controls.find(p.first) != controls.end());
+	}
+	return p;
+}
+
 cDialog::cDialog(cDialog* p) : parent(p) {}
 
 cDialog::cDialog(std::string path, cDialog* p) : parent(p) {
@@ -826,7 +889,12 @@ void cDialog::loadFromFile(std::string path){
 				controls.insert(parse<cLed>(*node));
 			else if(type == "group")
 				controls.insert(parse<cLedGroup>(*node));
-			else throw xBadNode(type,node->Row(),node->Column(),fname);
+			else if(type == "stack") {
+				auto parsed = parse<cStack>(*node);
+				controls.insert(parsed);
+				// Now, if it contains any fields, their tab order must be accounted for
+				parsed.second->fillTabOrder(specificTabs, reverseTabs);
+			} else throw xBadNode(type,node->Row(),node->Column(),fname);
 		}
 		// Sort by tab order
 		// First, fill any gaps that might have been left, using ones that had no specific tab order
@@ -1192,6 +1260,10 @@ bool cDialog::setFocus(cTextField* newFocus, bool force) {
 	if(!force) {
 		if(!this->getControl(currentFocus).triggerFocusHandler(*this, currentFocus, true)) return false;
 	}
+	if(newFocus == nullptr) {
+		currentFocus = "";
+		return true;
+	}
 	auto iter = find_if(controls.begin(), controls.end(), [newFocus](std::pair<const std::string, cControl*> p){
 		return p.second == newFocus;
 	});
@@ -1199,6 +1271,12 @@ bool cDialog::setFocus(cTextField* newFocus, bool force) {
 	if(!force && !newFocus->triggerFocusHandler(*this, iter->first, false)) return false;
 	currentFocus = iter->first;
 	return true;
+}
+
+cTextField* cDialog::getFocus() {
+	auto iter = controls.find(currentFocus);
+	if(iter == controls.end()) return nullptr;
+	return dynamic_cast<cTextField*>(iter->second);
 }
 
 void cDialog::attachClickHandlers(click_callback_t handler, std::vector<std::string> controls) {
@@ -1437,11 +1515,6 @@ cControl& cDialog::getControl(std::string id) {
 				cLedGroup* tmp = (cLedGroup*) (iter->second);
 				return tmp->operator[](id);
 			}catch(std::invalid_argument) {}
-		}else if(iter->second->getType() == CTRL_STACK){ // TODO: Implement stacks
-//			try{
-//			cStack* tmp = (cStack*) (iter->second);
-//			return tmp->operator[](id);
-//			}catch(std::invalid_argument) {}
 		}
 		iter++;
 	}

@@ -413,3 +413,18 @@ void cTextField::handleInput(cKey key) {
 	}
 	setText(contents);
 }
+
+cControl::storage_t cTextField::store() {
+	storage_t storage = cControl::store();
+	storage["fld-ip"] = insertionPoint;
+	storage["fld-sp"] = selectionPoint;
+	return storage;
+}
+
+void cTextField::restore(storage_t to) {
+	cControl::restore(to);
+	if(to.find("fld-ip") != to.end())
+		insertionPoint = boost::any_cast<int>(to["fld-ip"]);
+	if(to.find("fld-sp") != to.end())
+		selectionPoint = boost::any_cast<int>(to["fld-sp"]);
+}

@@ -255,6 +255,18 @@ void cLed::draw(){
 	}
 }
 
+cControl::storage_t cLed::store() {
+	storage_t storage = cButton::store();
+	storage["led-state"] = getState();
+	return storage;
+}
+
+void cLed::restore(storage_t to) {
+	cButton::restore(to);
+	if(to.find("led-state") != to.end())
+		setState(boost::any_cast<eLedState>(to["led-state"]));
+}
+
 cLedGroup::cLedGroup(cDialog* parent) :
 	cControl(CTRL_GROUP,*parent),
 	fromList("none") {}
@@ -307,6 +319,8 @@ eLedState cLed::getState(){
 
 void cLedGroup::addChoice(cLed* ctrl, std::string key) {
 	choices[key] = ctrl;
+	if(ctrl->getState() != led_off)
+		setSelected(key);
 }
 
 bool cLedGroup::handleClick(location where) {
@@ -475,4 +489,16 @@ void cButton::setBtnType(eBtnType newType){
 
 eBtnType cButton::getBtnType(){
 	return type;
+}
+
+cControl::storage_t cLedGroup::store() {
+	storage_t storage = cControl::store();
+	storage["led-select"] = getSelected();
+	return storage;
+}
+
+void cLedGroup::restore(storage_t to) {
+	cControl::restore(to);
+	if(to.find("led-select") != to.end())
+		setSelected(boost::any_cast<std::string>(to["led-select"]));
 }

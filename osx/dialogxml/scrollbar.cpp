@@ -187,3 +187,15 @@ void cScrollbar::draw() {
 		from_rect.offset(0,16);
 	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
 }
+
+cControl::storage_t cScrollbar::store() {
+	storage_t storage = cControl::store();
+	storage["scroll-pos"] = pos;
+	return storage;
+}
+
+void cScrollbar::restore(storage_t to) {
+	cControl::restore(to);
+	if(to.find("scroll-pos") != to.end())
+		pos = boost::any_cast<int>(to["scroll-pos"]);
+}

@@ -40,6 +40,8 @@ public:
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
+	storage_t store();
+	void restore(storage_t to);
 	/// Get the current input type of the field.
 	/// @return The input type.
 	eFldType getInputType();

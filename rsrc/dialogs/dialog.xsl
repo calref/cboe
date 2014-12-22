@@ -23,7 +23,7 @@
 	<xsl:attribute name='class'>dark</xsl:attribute>
 </xsl:if>
 <div class='dialog'>
-<xsl:for-each select='dialog/pict'>
+<xsl:for-each select='dialog/pict | dialog/stack/pict'>
 	<div>
 	<xsl:attribute name='class'>
 		pict
@@ -66,7 +66,7 @@
 	</div>
 </xsl:for-each>
 
-<xsl:for-each select='dialog/button'>
+<xsl:for-each select='dialog/button | dialog/stack/button'>
 	<div>
 	<xsl:attribute name='class'>
 		button <xsl:value-of select='./@type'/>
@@ -88,7 +88,7 @@
 	</div>
 </xsl:for-each>
 
-<xsl:for-each select='dialog/led'>
+<xsl:for-each select='dialog/led | dialog/stack/led'>
 	<div>
 	<xsl:attribute name='class'>
 		led 
@@ -117,7 +117,7 @@
 	</div>
 </xsl:for-each>
 
-<xsl:for-each select='dialog/group/led'>
+<xsl:for-each select='dialog/group/led | dialog/stack/group/led'>
 	<div>
 	<xsl:attribute name='class'>
 		led 
@@ -147,7 +147,7 @@
 	</div>
 </xsl:for-each>
 
-<xsl:for-each select='dialog/text'>
+<xsl:for-each select='dialog/text | dialog/stack/text'>
 	<div>
 	<xsl:attribute name='class'>
 		text
@@ -180,7 +180,7 @@
 	</div>
 </xsl:for-each>
 
-<xsl:for-each select='dialog/field'>
+<xsl:for-each select='dialog/field | dialog/stack/field'>
 	<div class='tfield'>
 	<xsl:attribute name='style'>
 		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;

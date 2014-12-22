@@ -1119,3 +1119,18 @@ void cPict::drawAt(sf::RenderWindow& win, rectangle dest, pic_num_t which_g, ePi
 	pic.setFormat(TXT_FRAME, framed);
 	pic.draw();
 }
+
+cControl::storage_t cPict::store() {
+	storage_t storage = cControl::store();
+	storage["pic-num"] = picNum;
+	storage["pic-type"] = picType;
+	return storage;
+}
+
+void cPict::restore(storage_t to) {
+	cControl::restore(to);
+	if(to.find("pic-num") != to.end())
+		picNum = boost::any_cast<pic_num_t>(to["pic-num"]);
+	if(to.find("pic-type") != to.end())
+		picType = boost::any_cast<ePicType>(to["pic-type"]);
+}

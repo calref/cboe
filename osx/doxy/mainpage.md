@@ -209,8 +209,13 @@ integer that is unique in the dialog.
 The `<stack>` tag
 -----------------
 
-The `<stack>` tag is currently unimplemented. Trying to load a dialog
-that contains it will crash the game.
+The `<stack>` tag groups elements that represent a single entry in an array.
+It can contain any elements except for nested `<stack>` elements.
+
+The `<stack>` tag accepts the following attributes:
+
+* `pages` - The initial number of pages in the stack. This can also be
+set programmatically.
 
 Keyboard Shortcuts
 ------------------

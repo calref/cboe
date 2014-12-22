@@ -13,6 +13,7 @@
 #include "button.hpp"
 #include "dlogutil.hpp"
 #include "winutil.h"
+#include "stack.hpp"
 
 extern short cen_x, cen_y, overall_mode;//,user_given_password;
 extern bool mouse_button_held,editing_town;
@@ -575,6 +576,11 @@ static bool save_town_details(cDialog& me, std::string, eKeyMod) {
 	else if(lighting == "dark") town->lighting_type = LIGHT_DARK;
 	else if(lighting == "drains") town->lighting_type = LIGHT_DRAINS;
 	else if(lighting == "no-light") town->lighting_type = LIGHT_NONE;
+	cStack& comments = dynamic_cast<cStack&>(me["cmt"]);
+	for(int i = 0; i < 3; i++) {
+		comments.setPage(i);
+		town->comment[i] = comments["comment"].getText();
+	}
 	return true;
 }
 
@@ -591,6 +597,11 @@ static void put_town_details_in_dlog(cDialog& me) {
 		case LIGHT_DRAINS: lighting.setSelected("drains"); break;
 		case LIGHT_NONE: lighting.setSelected("no-light"); break;
 	}
+	cStack& comments = dynamic_cast<cStack&>(me["cmt"]);
+	for(int i = 2; i >= 0; i--) {
+		comments.setPage(i);
+		comments["comment"].setText(town->comment[i]);
+	}
 }
 
 void edit_town_details() {
@@ -600,6 +611,12 @@ void edit_town_details() {
 	town_dlg["chop"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10000, "The day the town becomes abandoned", "-1 if it doesn't"));
 	town_dlg["key"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10, "The event which prevents the town from becoming abandoned", "-1 or 0 for none"));
 	town_dlg["difficulty"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, 0, 10, "The town difficulty", "0 - easiest, 10 - hardest"));
+	town_dlg["pick-cmt"].attachFocusHandler([](cDialog& me, std::string id, bool losing) -> bool {
+		if(losing) return true;
+		int i = dynamic_cast<cLedGroup&>(me[id]).getSelected()[3] - '0' - 1;
+		dynamic_cast<cStack&>(me["cmt"]).setPage(i);
+		return true;
+	});
 	
 	put_town_details_in_dlog(town_dlg);
 	

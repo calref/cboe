@@ -315,3 +315,14 @@ bool cControl::hasKey(){
 	if(key.spec) return true;
 	return key.c != 0;
 }
+
+cControl::storage_t cControl::store() {
+	storage_t storage;
+	storage["text"] = lbl;
+	return storage;
+}
+
+void cControl::restore(storage_t to) {
+	if(to.find("text") != to.end())
+		lbl = boost::any_cast<std::string>(to["text"]);
+}

@@ -47,6 +47,8 @@ public:
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
 	sf::Color getColour() throw(xUnsupportedProp);
+	storage_t store();
+	void restore(storage_t to);
 	bool isClickable();
 	/// Get the scrollbar thumb's current position.
 	/// @return The current position.

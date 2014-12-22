@@ -17,6 +17,7 @@
 #include <string>
 #include <exception>
 #include <functional>
+#include <boost/any.hpp>
 #include "dialog.hpp"
 
 #include "location.h"
@@ -44,7 +45,7 @@ enum eControlType {
 	CTRL_FIELD,	///< An edit text field
 	CTRL_TEXT,	///< A static text object
 	CTRL_GROUP,	///< A LED radiobutton-like group
-	CTRL_STACK,	///< A group of controls that display pages (not implemented yet)
+	CTRL_STACK,	///< A group of controls that represents one element in an array
 	CTRL_SCROLL,///< A scrollbar
 };
 
@@ -87,6 +88,7 @@ public:
 /// a keyboard event is received that should trigger the control.
 class cControl {
 public:
+	using storage_t = std::map<std::string, boost::any>;
 	/// Attach a keyboard shortcut to a control. Pressing the keyboard shortcut is equivalent to clicking the control.
 	/// @param key The desired keyboard shortcut.
 	void attachKey(cKey key);
@@ -204,6 +206,12 @@ public:
 	/// The practical effect of this is that hiding or showing this control automatically hides or shows the label as well.
 	/// @param label A pointer to the control that acts as a label.
 	void setLabelCtrl(cControl* label);
+	/// Get a view of the control's current state.
+	/// @return A map of string keys to boost::any values, representing the control's state.
+	virtual storage_t store();
+	/// Restore the control to a previous state.
+	/// @param to A state previously returned from store()
+	virtual void restore(storage_t to);
 	/// Create a new control attached to an arbitrary window, rather than a dialog.
 	/// @param t The type of the control.
 	/// @param p The parent window.

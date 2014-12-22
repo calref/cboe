@@ -266,6 +266,7 @@
         <xs:element ref="group"/>
       </xs:choice>
       <xs:attribute name="name" type="xs:ID"/>
+      <xs:attribute name="pages" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="dialog">
