@@ -371,15 +371,14 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 
 void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	// TODO: Get rid of temp_rect, at least
-	rectangle temp_rect,missile_origin_base = {1,1,17,17},active_area_rect,to_rect,from_rect;
+	rectangle temp_rect, missile_origin_base = {1,1,17,17},to_rect,from_rect;
 	short i,store_missile_dir;
 	location start_point,finish_point[30];
 	location screen_ul;
 	
 	short x1[30],x2[30],y1[30],y2[30],t; // for path paramaterization
-	rectangle missile_place_rect[30],missile_origin_rect[30],store_erase_rect[30];
+	rectangle missile_place_rect[30],missile_origin_rect[30];
 	location current_terrain_ul;
-	sf::RenderTexture temp_gworld;
 	
 	if(!have_missile || !boom_anim_active) {
 		boom_anim_active = false;
@@ -406,19 +405,11 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	to_rect.offset(current_terrain_ul);
 	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,to_rect,ul);
 	
-	// create and clip temporary anim template
-	temp_rect = rectangle(terrain_screen_gworld);
-	active_area_rect = temp_rect;
-	active_area_rect.inset(13,13);
-	temp_gworld.create(temp_rect.width(), temp_rect.height());
-	temp_gworld.setActive();
-	clip_rect(temp_gworld, active_area_rect);
 	mainPtr.setActive();
 	
 	
 	// init missile paths
 	for(i = 0; i < 30; i++) {
-		store_erase_rect[i] = rectangle();
 		if((store_missiles[i].missile_type >= 0) && (missile_origin == store_missiles[i].dest))
 			store_missiles[i].missile_type = -1;
 	}
@@ -454,40 +445,28 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	// Now, at last, launch missile
 	for(t = 0; t < num_steps; t++) {
+		draw_terrain();
 		for(i = 0; i < 30; i++)
 			if(store_missiles[i].missile_type >= 0) {
 				// Where place?
 				temp_rect = missile_origin_base;
 				temp_rect.offset(-8 + x2[i] + (x1[i] * t) / num_steps,
 								 -8 + y2[i] + (y1[i] * t) / num_steps);
+				temp_rect.offset(ul);
+				temp_rect.offset(current_terrain_ul);
 				
 				// now adjust for different paths
 				if(store_missiles[i].path_type == 1)
 					temp_rect.offset(0, -1 * (t * (num_steps - t)) / 100);
 				
-				missile_place_rect[i] = temp_rect | active_area_rect;
+				missile_place_rect[i] = temp_rect;
 				
-				// Now put terrain in temporary;
-				rect_draw_some_item(terrain_screen_gworld.getTexture(),missile_place_rect[i],
-									temp_gworld,missile_place_rect[i]);
 				// Now put in missile
 				from_rect = missile_origin_rect[i];
 				if(store_missiles[i].missile_type >= 7)
 					from_rect.offset(18 * (t % 8),0);
 				rect_draw_some_item(missiles_gworld,from_rect,
-									temp_gworld,temp_rect,sf::BlendAlpha);
-			}
-		// Now draw all missiles to screen
-		for(i = 0; i < 30; i++)
-			if(store_missiles[i].missile_type >= 0) {
-				to_rect = store_erase_rect[i];
-				to_rect.offset(current_terrain_ul);
-				rect_draw_some_item(terrain_screen_gworld.getTexture(),store_erase_rect[i],to_rect,ul);
-				
-				to_rect = missile_place_rect[i];
-				store_erase_rect[i] = to_rect;
-				to_rect.offset(current_terrain_ul);
-				rect_draw_some_item(temp_gworld.getTexture(),missile_place_rect[i],to_rect,ul);
+									mainPtr,temp_rect,sf::BlendAlpha);
 			}
 		mainPtr.display();
 		if((PSD[SDF_GAME_SPEED] == 3) || ((PSD[SDF_GAME_SPEED] == 1) && (t % 4 == 0)) ||
@@ -541,7 +520,7 @@ short get_missile_direction(location origin_point,location the_point) {
 // sound_num currently ignored
 // special_draw - 0 normal 1 - first half 2 - second half
 void do_explosion_anim(short /*sound_num*/,short special_draw) {
-	rectangle temp_rect,active_area_rect,to_rect,from_rect;
+	rectangle active_area_rect,to_rect,from_rect;
 	rectangle base_rect = {0,0,36,28},text_rect;
 	char str[60];
 	short i,temp_val,temp_val2;
@@ -549,7 +528,6 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 	
 	short t,cur_boom_type = 0;
 	location current_terrain_ul;
-	sf::RenderTexture temp_gworld;
 	short boom_type_sound[3] = {5,10,53};
 	
 	if(!have_boom || !boom_anim_active) {
@@ -579,16 +557,9 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 		rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,to_rect,ul);
 	}
 	
-	// create and clip temporary anim template
-	temp_rect = rectangle(terrain_screen_gworld);
-	active_area_rect = temp_rect;
-	active_area_rect.inset(13,13);
 	TextStyle style;
 	style.font = FONT_BOLD;
 	style.pointSize = 10;
-	temp_gworld.create(temp_rect.width(), temp_rect.height());
-	temp_gworld.setActive();
-	clip_rect(temp_gworld, active_area_rect);
 	mainPtr.setActive();
 	
 	// init missile paths
@@ -599,21 +570,14 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 			explode_place_rect[i] = base_rect;
 			explode_place_rect[i].offset(13 + 28 * (store_booms[i].dest.x - screen_ul.x) + store_booms[i].x_adj,
 										 13 + 36 * (store_booms[i].dest.y - screen_ul.y) + store_booms[i].y_adj);
+			explode_place_rect[i].offset(ul);
+			explode_place_rect[i].offset(current_terrain_ul);
 			
 			if((store_booms[i].place_type == 1) && (special_draw < 2)) {
 				temp_val = get_ran(1,0,50) - 25;
 				temp_val2 = get_ran(1,0,50) - 25;
 				explode_place_rect[i].offset(temp_val,temp_val2);
 			}
-			
-			// eliminate stuff that's too gone.
-			rectangle tempRect2;
-			tempRect2 = rectangle(terrain_screen_gworld);
-			temp_rect = explode_place_rect[i] | tempRect2;
-			if(temp_rect == explode_place_rect[i]) {
-				store_booms[i].boom_type = -1;
-			}
-			
 		}
 		else if(special_draw < 2)
 			explode_place_rect[i] = rectangle();
@@ -624,11 +588,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 	
 	// Now, at last, do explosion
 	for(t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
-		// First, lay terrain in temporary graphic area;
-		for(i = 0; i < 30; i++)
-			if(store_booms[i].boom_type >= 0)
-				rect_draw_some_item(terrain_screen_gworld.getTexture(),explode_place_rect[i],
-									temp_gworld,explode_place_rect[i]);
+		draw_terrain();
 		
 		// Now put in explosions
 		for(i = 0; i < 30; i++)
@@ -637,7 +597,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 					from_rect = base_rect;
 					from_rect.offset(28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
 					rect_draw_some_item(boom_gworld,from_rect,
-										temp_gworld,explode_place_rect[i],sf::BlendAlpha);
+										mainPtr,explode_place_rect[i],sf::BlendAlpha);
 					
 					if(store_booms[i].val_to_place > 0) {
 						text_rect = explode_place_rect[i];
@@ -648,18 +608,11 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 						sprintf(str,"%d",store_booms[i].val_to_place);
 						style.colour = sf::Color::White;
 						style.lineHeight = 12;
-						win_draw_string(temp_gworld,text_rect,str,eTextMode::CENTRE,style);
+						win_draw_string(mainPtr,text_rect,str,eTextMode::CENTRE,style);
 						style.colour = sf::Color::Black;
 						mainPtr.setActive();
 					}
 				}
-			}
-		// Now draw all missiles to screen
-		for(i = 0; i < 30; i++)
-			if(store_booms[i].boom_type >= 0) {
-				to_rect = explode_place_rect[i];
-				to_rect.offset(current_terrain_ul);
-				rect_draw_some_item(temp_gworld.getTexture(),explode_place_rect[i],to_rect,ul);
 			}
 		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
 		mainPtr.display();
