@@ -28,14 +28,14 @@
 #include "boe.main.h"
 #include "graphtool.h"
 #include "mathutil.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "winutil.h"
 #include "fileio.h"
 #include "boe.menus.h"
 #include "restypes.hpp"
 #include <array>
 #include <boost/lexical_cast.hpp>
-#include "button.h"
+#include "button.hpp"
 #include "spell.hpp"
 
 extern short skill_bonus[21];

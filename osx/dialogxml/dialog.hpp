@@ -20,7 +20,7 @@
 #include <exception>
 
 #include "ticpp.h"
-#include "dialog.keys.h"
+#include "dialog.keys.hpp"
 #include "location.h"
 #include <boost/any.hpp>
 

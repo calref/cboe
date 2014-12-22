@@ -10,16 +10,16 @@
 #include <stdexcept>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/iterator/iterator_facade.hpp>
-#include "dialog.h"
+#include "dialog.hpp"
 #include "graphtool.h"
 #include "soundtool.h"
 using namespace std;
 using namespace ticpp;
-#include "pict.h"
-#include "button.h"
-#include "field.h"
-#include "message.h"
-#include "scrollbar.h"
+#include "pict.hpp"
+#include "button.hpp"
+#include "field.hpp"
+#include "message.hpp"
+#include "scrollbar.hpp"
 #include "winutil.h"
 #include "mathutil.h"
 #include "cursors.h"

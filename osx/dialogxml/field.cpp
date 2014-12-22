@@ -6,12 +6,12 @@
  *
  */
 
-#include "field.h"
+#include "field.hpp"
 #include <sstream>
 #include <map>
 #include <boost/lexical_cast.hpp>
-#include "dialog.h"
-#include "dlogutil.h"
+#include "dialog.hpp"
+#include "dlogutil.hpp"
 #include "graphtool.h"
 #include "winutil.h"
 

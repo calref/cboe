@@ -12,11 +12,11 @@
 #include "mathutil.h"
 #include "boe.consts.h" // TODO: Put these constants in a global file
 
-#include "dialog.h"
+#include "dialog.hpp"
 
 #include "scen.core.h"
 #include "scen.townout.h"
-#include "scrollbar.h"
+#include "scrollbar.hpp"
 #include "restypes.hpp"
 
 void load_main_screen();

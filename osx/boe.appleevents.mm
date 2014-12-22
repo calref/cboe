@@ -11,7 +11,7 @@
 #include <algorithm>
 #include "fileio.h"
 #include "boe.global.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "universe.h"
 
 extern void finish_load_party();

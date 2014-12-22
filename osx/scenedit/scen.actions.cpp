@@ -17,8 +17,8 @@
 //#include "scen.locutils.h"
 #include "winutil.h"
 #include "cursors.h"
-#include "scrollbar.h"
-#include "dlogutil.h"
+#include "scrollbar.hpp"
+#include "dlogutil.hpp"
 
 #include "scen.btnmg.h"
 

@@ -8,7 +8,7 @@
 #include "scen.graphics.h"
 #include <cmath>
 #include "scen.btnmg.h"
-#include "scrollbar.h"
+#include "scrollbar.hpp"
 
 //extern piles_of_stuff_dumping_type *data_store;
 extern rectangle right_sbar_rect;

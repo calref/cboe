@@ -10,7 +10,7 @@
 #include "soundtool.h"
 #include "pc.editors.h"
 #include "mathutil.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "restypes.hpp"
 #include "fileio.h"
 

@@ -19,7 +19,7 @@
 #include "soundtool.h"
 #include "graphtool.h"
 #include "mathutil.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern rectangle	windRect;

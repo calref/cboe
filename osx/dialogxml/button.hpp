@@ -17,7 +17,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "control.h"
+#include "control.hpp"
 #include "graphtool.h" // for eFont
 
 /// A button type.

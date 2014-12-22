@@ -12,7 +12,7 @@
 /// @file
 /// Scrollbar-related classes and types.
 
-#include "control.h"
+#include "control.hpp"
 #include "graphtool.h"
 
 /// A simple vertical scrollbar.

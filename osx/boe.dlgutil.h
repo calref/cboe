@@ -1,7 +1,7 @@
 
 #ifndef BOE_GAME_DLGUTIL_H
 
-#include "dialog.h"
+#include "dialog.hpp"
 #include "simpletypes.h"
 
 void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_adj,const char* store_name);

@@ -19,7 +19,7 @@
 #include "soundtool.h"
 #include "mathutil.h"
 #include "graphtool.h"
-#include "scrollbar.h"
+#include "scrollbar.hpp"
 #include <memory>
 #include "location.h"
 

@@ -8,7 +8,7 @@
 #include "scen.graphics.h"
 #include "scen.keydlgs.h"
 #include "scen.core.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "restypes.hpp"
 
 extern short cen_x, cen_y/*, overall_mode*/;

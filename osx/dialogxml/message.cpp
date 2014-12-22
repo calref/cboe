@@ -6,10 +6,10 @@
  *
  */
 
-#include "message.h"
+#include "message.hpp"
 #include "graphtool.h"
 #include "mathutil.h"
-#include "dialog.h"
+#include "dialog.hpp"
 
 extern sf::Texture bg_gworld;
 

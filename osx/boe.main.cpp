@@ -24,8 +24,8 @@
 #include "graphtool.h"
 #include "mathutil.h"
 #include "fileio.h"
-#include "dlogutil.h"
-#include "scrollbar.h"
+#include "dlogutil.hpp"
+#include "scrollbar.hpp"
 #include "boe.menus.h"
 #include "cursors.h"
 

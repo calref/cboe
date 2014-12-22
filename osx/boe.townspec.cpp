@@ -17,7 +17,7 @@
 #include "boe.townspec.h"
 #include "soundtool.h"
 #include "mathutil.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "winutil.h"
 
 extern eGameMode overall_mode;

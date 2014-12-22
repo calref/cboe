@@ -26,7 +26,7 @@
 #include "mathutil.h"
 #include "boe.main.h"
 #include "graphtool.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "fileio.h"
 #include "winutil.h"
 

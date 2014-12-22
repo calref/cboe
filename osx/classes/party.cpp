@@ -12,7 +12,7 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "classes.h"
 #include "oldstructs.h"
 #include "fileio.h"

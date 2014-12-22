@@ -19,7 +19,7 @@
 #include "graphtool.h"
 #include "soundtool.h"
 #include "mathutil.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "fileio.h"
 #include "porting.h" // only needed for one little flip_short call, though...
 #include <boost/filesystem.hpp>

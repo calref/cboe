@@ -27,7 +27,7 @@
 #include "boe.dlgutil.h"
 #include "mathutil.h"
 #include "boe.main.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "fileio.h"
 #include <array>
 

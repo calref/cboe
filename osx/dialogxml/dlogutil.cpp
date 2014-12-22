@@ -12,14 +12,14 @@
 
 #include <functional>
 #include <boost/lexical_cast.hpp>
-#include "dialog.h"
-#include "dlogutil.h"
+#include "dialog.hpp"
+#include "dlogutil.hpp"
 #include "mathutil.h"
 #include <array>
-#include "message.h"
+#include "message.hpp"
 
 // TODO: This should probably be a source file instead of a header
-#include "dlogutil.buttons.h" // must be included here and only here
+#include "dlogutil.buttons.hpp" // must be included here and only here
 
 const size_t cPictChoice::per_page = 36;
 

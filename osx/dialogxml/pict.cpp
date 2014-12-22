@@ -6,13 +6,13 @@
  *
  */
 
-#include "pict.h"
+#include "pict.hpp"
 #include <vector>
 #include <map>
 #include <stdexcept>
 
 #include "graphtool.h"
-#include "dialog.h"
+#include "dialog.hpp"
 #include "restypes.hpp"
 
 extern sf::Texture bg_gworld;

@@ -4,10 +4,10 @@
 #include "classes.h"
 #include "pc.editors.h"
 #include "graphtool.h"
-#include "dialog.h"
-#include "control.h"
-#include "button.h"
-#include "dlogutil.h"
+#include "dialog.hpp"
+#include "control.hpp"
+#include "button.hpp"
+#include "dlogutil.hpp"
 #include "winutil.h"
 #include <boost/lexical_cast.hpp>
 

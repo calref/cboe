@@ -13,7 +13,7 @@
 /// Field-related classes and types.
 
 #include <string>
-#include "control.h"
+#include "control.hpp"
 
 /// The field's expected input type.
 enum eFldType {

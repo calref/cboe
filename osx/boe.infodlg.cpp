@@ -20,7 +20,7 @@
 #include "boe.fileio.h"
 #include "boe.main.h"
 #include "mathutil.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "fileio.h"
 #include "restypes.hpp"
 #include <boost/lexical_cast.hpp>

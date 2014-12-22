@@ -23,7 +23,7 @@
 #include "boe.dlgutil.h"
 #include "boe.infodlg.h"
 
-#include "scrollbar.h"
+#include "scrollbar.hpp"
 
 #include "restypes.hpp"
 #include "boe.menus.h"

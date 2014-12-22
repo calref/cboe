@@ -14,7 +14,7 @@
 #include "mathutil.h"
 #include "graphtool.h"
 //#include "soundtool.h"
-#include "scrollbar.h"
+#include "scrollbar.hpp"
 #include "restypes.hpp"
 
 typedef struct {

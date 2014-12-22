@@ -11,7 +11,7 @@
 #include <fstream>
 #include <boost/filesystem/operations.hpp>
 
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "gzstream.h"
 
 #include "classes.h"

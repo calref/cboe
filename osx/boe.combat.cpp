@@ -21,7 +21,7 @@
 #include "boe.graphutil.h"
 #include "boe.main.h"
 #include "mathutil.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "boe.menus.h"
 #include "spell.hpp"
 

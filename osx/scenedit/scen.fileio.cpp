@@ -10,7 +10,7 @@
 #include "mathutil.h"
 #include "oldstructs.h"
 #include "fileio.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 
 #import <fstream>
 using std::endl;

@@ -16,7 +16,7 @@
 #include <cstdint>
 #include <memory>
 
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "porting.h"
 #include "location.h"
 

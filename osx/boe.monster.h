@@ -1,5 +1,5 @@
 
-#include "pict.h"
+#include "pict.hpp"
 
 //cMonster return_monster_template(m_num_t store);
 //short difficulty_adjust();

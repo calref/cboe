@@ -7,12 +7,12 @@
  *
  */
 
-#include "button.h"
+#include "button.hpp"
 #include <vector>
 #include <map>
 #include <stdexcept>
 
-#include "dialog.h"
+#include "dialog.hpp"
 #include "graphtool.h"
 
 #include <cmath>

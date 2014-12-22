@@ -11,7 +11,7 @@
 #include "soundtool.h"
 #include "graphtool.h"
 #include "boe.consts.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "fileio.h"
 #include "pc.menus.h"
 #include "winutil.h"

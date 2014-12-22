@@ -2,7 +2,7 @@
 #ifndef BOE_GAME_GRAPHUTIL_H
 #define BOE_GAME_GRAPHUTIL_H
 
-#include "pict.h"
+#include "pict.hpp"
 #include "location.h"
 #include "simpletypes.h"
 

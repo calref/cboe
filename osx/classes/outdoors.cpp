@@ -11,7 +11,7 @@
 #include <map>
 #include <sstream>
 
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "classes.h"
 #include "oldstructs.h"
 

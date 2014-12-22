@@ -1,6 +1,6 @@
 
-#include "dialog.h"
-#include "pict.h"
+#include "dialog.hpp"
+#include "pict.hpp"
 
 void sort_pc_items(short pc_num);
 bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overload = false);

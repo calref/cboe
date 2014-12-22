@@ -10,8 +10,8 @@
 #include "scen.fileio.h"
 #include "scen.core.h"
 #include "mathutil.h"
-#include "button.h"
-#include "dlogutil.h"
+#include "button.hpp"
+#include "dlogutil.hpp"
 #include "winutil.h"
 
 extern short cen_x, cen_y, overall_mode;//,user_given_password;

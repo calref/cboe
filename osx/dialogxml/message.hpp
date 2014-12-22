@@ -15,7 +15,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <string>
-#include "control.h"
+#include "control.hpp"
 #include "graphtool.h" // for eFont
 
 /// A simple static text message.

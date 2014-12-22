@@ -6,11 +6,11 @@
  *
  */
 
-#include "control.h"
+#include "control.hpp"
 #include <sstream>
-#include "dialog.h"
+#include "dialog.hpp"
 #include "soundtool.h"
-#include "button.h"
+#include "button.hpp"
 #include "graphtool.h"
 #include "restypes.hpp"
 #include "mathutil.h"

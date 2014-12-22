@@ -6,7 +6,7 @@
 //
 //
 
-#include "scrollbar.h"
+#include "scrollbar.hpp"
 #include "restypes.hpp"
 #include "graphtool.h"
 #include "mathutil.h"

@@ -10,7 +10,7 @@
 #include "graphtool.h"
 #include "soundtool.h"
 #include "mathutil.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include <boost/lexical_cast.hpp>
 
 /* Adventure globals */

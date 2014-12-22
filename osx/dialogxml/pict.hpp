@@ -17,7 +17,7 @@
 #include <vector>
 #include <map>
 #include "graphtool.h" // for pic_num_t
-#include "control.h"
+#include "control.hpp"
 
 /// Specifies an icon type.
 enum ePicType {

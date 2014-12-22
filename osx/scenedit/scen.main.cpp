@@ -15,10 +15,10 @@
 #include "scen.keydlgs.h"
 #include "mathutil.h"
 #include "fileio.h"
-#include "scrollbar.h"
+#include "scrollbar.hpp"
 #include "winutil.h"
 #include "cursors.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "scen.menus.h"
 
 /* Globals */

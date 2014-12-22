@@ -17,9 +17,9 @@
 #include <functional>
 #include "graphtool.h" // for pic_num_t
 #include "soundtool.h" // for snd_num_t
-#include "pict.h"
-#include "dialog.h"
-#include "button.h"
+#include "pict.hpp"
+#include "dialog.hpp"
+#include "button.hpp"
 #include <boost/optional.hpp>
 
 /// The signature of a record handler for cStrDlog.

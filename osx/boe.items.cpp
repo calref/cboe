@@ -22,9 +22,9 @@
 #include "boe.main.h"
 #include "graphtool.h"
 #include "mathutil.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "restypes.hpp"
-#include "message.h"
+#include "message.hpp"
 #include <array>
 #include <boost/lexical_cast.hpp>
 #include "winutil.h"

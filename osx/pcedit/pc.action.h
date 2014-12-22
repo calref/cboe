@@ -1,6 +1,6 @@
 
 #include <SFML/Window/Event.hpp>
-#include "dialog.h"
+#include "dialog.hpp"
 
 bool handle_action(sf::Event event);
 void flash_rect(rectangle to_flash);

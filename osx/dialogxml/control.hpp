@@ -17,7 +17,7 @@
 #include <string>
 #include <exception>
 #include <functional>
-#include "dialog.h"
+#include "dialog.hpp"
 
 #include "location.h"
 

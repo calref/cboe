@@ -1,6 +1,6 @@
 
 #include <string>
-#include "pict.h" // for ePicType
+#include "pict.hpp" // for ePicType
 class cDialog;
 
 enum eStrType {STRT_MONST, STRT_ITEM, STRT_TER, STRT_BUTTON};

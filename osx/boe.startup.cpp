@@ -17,7 +17,7 @@
 #include "boe.party.h"
 #include "soundtool.h"
 #include "fileio.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "winutil.h"
 #include "boe.menus.h"
 #include "mathutil.h"

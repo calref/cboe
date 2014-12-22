@@ -25,13 +25,13 @@
 #include "boe.infodlg.h"
 #include "graphtool.h"
 #include "mathutil.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "winutil.h"
 #include "fileio.h"
 #include "restypes.hpp"
-#include "scrollbar.h"
-#include "button.h"
-#include "pict.h"
+#include "scrollbar.hpp"
+#include "button.hpp"
+#include "pict.hpp"
 #include <boost/lexical_cast.hpp>
 #include "prefs.hpp"
 #define	NUM_HINTS	30

@@ -8,9 +8,9 @@
 #include "pc.action.h"
 #include "soundtool.h"
 #include "graphtool.h"
-#include "dlogutil.h"
+#include "dlogutil.hpp"
 #include "restypes.hpp"
-#include "message.h"
+#include "message.hpp"
 #include "mathutil.h"
 
 extern cUniverse univ;

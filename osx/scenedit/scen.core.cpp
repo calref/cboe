@@ -13,10 +13,10 @@
 #include "scen.fileio.h"
 #include "scen.actions.h"
 #include "scen.menus.h"
-#include "dialog.h"
-#include "dlogutil.h"
+#include "dialog.hpp"
+#include "dlogutil.hpp"
 #include "fileio.h"
-#include "field.h"
+#include "field.hpp"
 #include "restypes.hpp"
 
 extern short cen_x, cen_y,/* overall_mode,*/cur_town;
