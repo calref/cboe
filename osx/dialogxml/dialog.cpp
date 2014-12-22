@@ -272,7 +272,7 @@ template<> pair<string,cTextMsg*> cDialog::parse(Element& who /*text*/){
 			attr->GetValue(&height);
 //		}else if(name == "fromlist"){
 //			attr->GetValue(&p.second->fromList);
-		}else throw xBadAttr("pict",name,attr->Row(),attr->Column(),fname);
+		}else throw xBadAttr("text",name,attr->Row(),attr->Column(),fname);
 	}
 	if(!foundTop) throw xMissingAttr("text","top",who.Row(),who.Column(),fname);
 	if(!foundLeft) throw xMissingAttr("text","left",who.Row(),who.Column(),fname);
@@ -488,7 +488,7 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 			copy(dlogStringFilter(val.begin()), dlogStringFilter(val.end()), std::inserter(content, content.end()));
 		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
-			throw xBadVal("text",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
+			throw xBadVal("button",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
@@ -619,7 +619,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 			attr->GetValue(&width);
 		}else if(name == "height"){
 			attr->GetValue(&height);
-		}else throw xBadAttr("button",name,attr->Row(),attr->Column(),fname);
+		}else throw xBadAttr("led",name,attr->Row(),attr->Column(),fname);
 	}
 	if(!foundTop) throw xMissingAttr("led","top",who.Row(),who.Column(),fname);
 	if(!foundLeft) throw xMissingAttr("led","left",who.Row(),who.Column(),fname);
@@ -643,7 +643,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 			copy(dlogStringFilter(val.begin()), dlogStringFilter(val.end()), std::inserter(content, content.end()));
 		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
-			throw xBadVal("text",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
+			throw xBadVal("led",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
@@ -667,9 +667,8 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 			attr->GetValue(&p.first);
 //		else if(name == "fromlist")
 //			attr->GetValue(&p.second->fromList);
-		else throw xBadAttr("button",name,attr->Row(),attr->Column(),fname);
+		else throw xBadAttr("group",name,attr->Row(),attr->Column(),fname);
 	}
-	string content;
 	for(node = node.begin(&who); node != node.end(); node++){
 		string val;
 		int type = node->Type();
@@ -679,10 +678,9 @@ template<> pair<string,cLedGroup*> cDialog::parse(Element& who /*group*/){
 			p.second->addChoice(led.second, led.first);
 		}else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
-			throw xBadVal("text",xBadVal::CONTENT, content + val,node->Row(),node->Column(),fname);
+			throw xBadVal("group",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
 		}
 	}
-	p.second->setText(content);
 	p.second->recalcRect();
 	if(p.first == ""){
 		do{
@@ -727,7 +725,7 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 			attr->GetValue(&height);
 		}else if(name == "tab-order"){
 			attr->GetValue(&p.second->tabOrder);
-		}else throw xBadAttr("button",name,attr->Row(),attr->Column(),fname);
+		}else throw xBadAttr("field",name,attr->Row(),attr->Column(),fname);
 	}
 	if(!foundTop) throw xMissingAttr("field","top",attr->Row(),attr->Column(),fname);
 	if(!foundLeft) throw xMissingAttr("field","left",attr->Row(),attr->Column(),fname);
@@ -743,7 +741,7 @@ template<> pair<string,cTextField*> cDialog::parse(Element& who /*field*/){
 			copy(dlogStringFilter(val.begin()), dlogStringFilter(val.end()), std::inserter(content, content.end()));
 		else if(type != TiXmlNode::COMMENT) {
 			val = '<' + val + '>';
-			throw xBadVal("text",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
+			throw xBadVal("field",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
 		}
 	}
 	p.second->setText(content);
