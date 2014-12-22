@@ -14,7 +14,7 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-cSpeech& cSpeech::operator = (legacy::talking_record_type& old){
+void cSpeech::append(legacy::talking_record_type& old){
 	int i,j;
 	for(i = 0; i < 200; i++)
 		strlens[i] = old.strlens[i];
@@ -33,5 +33,4 @@ cSpeech& cSpeech::operator = (legacy::talking_record_type& old){
 				break;
 		}
 	}
-	return *this;
 }

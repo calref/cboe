@@ -53,7 +53,6 @@ extern bool fast_bang;
 extern short store_current_pc;
 //extern location monster_targs[60];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
-extern cScenario scenario;
 extern short spell_caster, missile_firer,current_monst_tactic;
 char create_line[60];
 eSpell spell_being_cast;
@@ -4270,7 +4269,7 @@ bool combat_cast_mage_spell() {
 			store_sum_monst = pick_trapped_monst();
 			if(store_sum_monst == 0)
 				return false;
-			get_monst = scenario.scen_monsters[store_sum_monst];
+			get_monst = univ.scenario.scen_monsters[store_sum_monst];
 			if(store_sp < get_monst.level) {
 				add_string_to_buf("Cast: Not enough spell points.        ");
 				return false;

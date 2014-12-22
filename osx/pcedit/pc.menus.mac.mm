@@ -9,7 +9,7 @@
 #include "pc.menus.h"
 #include <Cocoa/Cocoa.h>
 #include "item.h"
-#include "scenario.h"
+#include "universe.h"
 
 #ifndef __APPLE__
 #error pc.menus.mm is Mac-specific code; try compiling pc.menus.win.cpp instead
@@ -23,7 +23,7 @@ extern void handle_extra_menu(int item_hit);
 extern void handle_edit_menu(int item_hit);
 extern void handle_item_menu(int item_hit);
 
-extern cScenario scenario;
+extern cUniverse univ;
 extern fs::path file_in_mem;
 extern bool scen_items_loaded;
 MenuHandle menu_bar_handle;
@@ -90,7 +90,7 @@ void menu_activate() {
 
 void update_item_menu() {
 	id targ = [[file_menu itemAtIndex: 0] target];
-	cItemRec(& item_list)[400] = scenario.scen_items;
+	cItemRec(& item_list)[400] = univ.scenario.scen_items;
 	for(int j = 0; j < 4; j++){
 		[items_menu[j] removeAllItems];
 		if(!scen_items_loaded) {
@@ -154,7 +154,7 @@ void update_item_menu() {
 }
 
 -(cItemRec&) item {
-	return scenario.scen_items[self->itemID];
+	return univ.scenario.scen_items[self->itemID];
 }
 
 @end

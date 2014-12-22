@@ -668,6 +668,7 @@
 		915E09081A316D89008BDF00 /* map_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = map_parse.cpp; sourceTree = "<group>"; };
 		9179A45E1A42986200FEF872 /* graphics.exd */ = {isa = PBXFileReference; lastKnownFileType = folder; path = graphics.exd; sourceTree = "<group>"; };
 		9179A45F1A42988200FEF872 /* sounds.exa */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds.exa; sourceTree = "<group>"; };
+		9179A4621A47D4E200FEF872 /* vector2d.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vector2d.hpp; sourceTree = "<group>"; };
 		917B573F100B956C0096C978 /* undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = undo.h; sourceTree = "<group>"; };
 		918D59A718EA513900735B66 /* dialog.keys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dialog.keys.h; sourceTree = "<group>"; };
 		919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = boe.appleevents.mm; sourceTree = "<group>"; };
@@ -1011,6 +1012,7 @@
 				91EC480E18FBAA8700BB1E86 /* prefs.hpp */,
 				91B3F10E0F9779D000BF5B67 /* soundtool.h */,
 				91BFA3D91902ADD5001686E4 /* tarball.hpp */,
+				9179A4621A47D4E200FEF872 /* vector2d.hpp */,
 				91F06E8F1A2EBEE70038E902 /* special_parse.hpp */,
 				917B573F100B956C0096C978 /* undo.h */,
 				919145FE18E63B41005CF3A4 /* winutil.h */,

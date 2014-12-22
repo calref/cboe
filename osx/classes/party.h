@@ -34,6 +34,8 @@ struct campaign_flag_type{
 	unsigned char idx[25][25];
 };
 
+class cUniverse;
+
 class cParty {
 public:
 	class cConvers { // conversation; formerly talk_save_type
@@ -99,6 +101,7 @@ public:
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	std::string scen_name;
 private:
+	cUniverse& univ;
 	cPlayer adven[6];
 public:
 	unsigned short setup[4][64][64]; // formerly setup_save_type
@@ -120,7 +123,7 @@ public:
 	
 	unsigned char& cpn_flag(unsigned int x, unsigned int y, std::string id = "");
 	
-	cParty& operator = (legacy::party_record_type& old);
+	void append(legacy::party_record_type& old);
 	void append(legacy::big_tr_type& old);
 	void append(legacy::stored_items_list_type& old,short which_list);
 	void append(legacy::setup_save_type& old);
@@ -133,7 +136,8 @@ public:
 	bool record(eEncNoteType type, const std::string& what, const std::string& where);
 	bool start_timer(short time, short node, short type);
 	cPlayer& operator[](unsigned short n);
-	void writeTo(std::ostream& file);
+	const cPlayer& operator[](unsigned short n) const;
+	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 	
 	std::string start_split(short a, short b, snd_num_t noise, short who);
@@ -148,6 +152,7 @@ public:
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
 	typedef std::vector<cTimer>::iterator timerIter;
+	cParty(cUniverse& univ, long party_preset = 'dflt');
 	// TODO: Remove this in favour of cParty constructor
 	friend void init_party(short);
 };

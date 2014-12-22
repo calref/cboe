@@ -23,6 +23,9 @@ namespace legacy {
 	struct creature_start_type;
 };
 
+class cScenario;
+class cUniverse;
+
 /* Attack Types */
 
 #define MONSTER_ATTACK_SWINGS		0
@@ -140,9 +143,9 @@ public:
 	std::string getAbil1Name();
 	std::string getAbil2Name();
 	bool hasAbil(eMonstAbil what, unsigned char* x1 = NULL, unsigned char* x2 = NULL);
-	cMonster& operator = (legacy::monster_record_type& old);
+	void append(legacy::monster_record_type& old);
 	cMonster();
-	void writeTo(std::ostream& file);
+	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 };
 
@@ -175,19 +178,17 @@ public:
 	cCreature();
 	cCreature(int num);
 	
-	cCreature& operator = (legacy::creature_data_type old);
-	cCreature& operator = (legacy::creature_start_type old);
-	cCreature& operator = (const cCreature& other);
-	//cCreature& operator = (const cMonster& other);
-	void writeTo(std::ostream& file);
+	void append(legacy::creature_data_type old);
+	void append(legacy::creature_start_type old);
+	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 };
 
-std::ostream& operator << (std::ostream& out, eStatus& e);
+std::ostream& operator << (std::ostream& out, eStatus e);
 std::istream& operator >> (std::istream& in, eStatus& e);
-std::ostream& operator << (std::ostream& out, eRace& e);
+std::ostream& operator << (std::ostream& out, eRace e);
 std::istream& operator >> (std::istream& in, eRace& e);
-std::ostream& operator << (std::ostream& out, eMonstAbil& e);
+std::ostream& operator << (std::ostream& out, eMonstAbil e);
 std::istream& operator >> (std::istream& in, eMonstAbil& e);
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att);
 #endif

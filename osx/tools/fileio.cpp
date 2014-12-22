@@ -24,13 +24,24 @@
 #include "tarball.hpp"
 
 bool cur_scen_is_mac =  true, mac_is_intel;
-extern cScenario scenario;
 extern sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
 extern sf::Texture dlogpics_gworld,monst_gworld[],terrain_gworld[],anim_gworld,talkfaces_gworld,pc_gworld;
 extern sf::Texture status_gworld, vehicle_gworld, small_ter_gworld;
 extern cCustomGraphics spec_scen_g;
-extern cUniverse univ;
 fs::path progDir, tempDir;
+
+void load_spec_graphics(fs::path scen_file);
+// Load old scenarios (town talk is handled by the town loading function)
+static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario);
+static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, cScenario& scenario);
+static bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy::scenario_data_type& scenario);
+// Load new scenarios
+static bool load_outdoors(fs::path out_base, location which_out, cOutdoors& the_out);
+static bool load_town(fs::path town_base, short which_town, cTown*& the_town);
+static bool load_town_talk(fs::path town_base, short which_town, cSpeech& the_talk);
+// Load saved games
+static bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool must_port);
+static bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there);
 
 #include <stdexcept>
 
@@ -73,7 +84,13 @@ void check_for_intel() {
 	mac_is_intel = endian.c;
 }
 
-bool load_scenario(fs::path file_to_load, bool skip_strings){
+bool load_scenario(fs::path file_to_load, cScenario& scenario) {
+	scenario = cScenario();
+	// TODO: Implement checking to determine whether it's old or new
+	return load_scenario_v1(file_to_load, scenario);
+}
+
+bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	short i,n;
 	bool file_ok = false;
 	long len;
@@ -129,10 +146,9 @@ bool load_scenario(fs::path file_to_load, bool skip_strings){
 		return false;
 	}
 	port_item_list(item_data);
-	scenario = *temp_scenario;
+	scenario.append(*temp_scenario);
 	scenario.append(*item_data);
 	
-	if(!skip_strings) {
 		// TODO: Consider skipping the fread and assignment when len is 0
 		for(i = 0; i < 270; i++) {
 			len = (long) (temp_scenario->scen_str_len[i]);
@@ -153,20 +169,40 @@ bool load_scenario(fs::path file_to_load, bool skip_strings){
 			} else if(i >= 260) continue; // These were never ever used, for some reason.
 			else scenario.spec_strs[i-160] = temp_str;
 		}
-	}
 	
 	fclose(file_id);
 	
 	scenario.ter_types[23].fly_over = false;
-	delete temp_scenario;
-	delete item_data;
 	
 	scenario.scen_file = file_to_load;
-	load_spec_graphics();
+	load_spec_graphics(scenario.scen_file);
+	
+	// Now load all the outdoor sectors
+	scenario.outdoors.resize(scenario.out_width, scenario.out_height);
+	for(int x = 0; x < scenario.out_width; x++) {
+		for(int y = 0; y < scenario.out_height; y++) {
+			scenario.outdoors[x][y] = new cOutdoors(scenario);
+			load_outdoors_v1(scenario.scen_file, loc(x,y), *scenario.outdoors[x][y], scenario);
+		}
+	}
+	
+	// Then load all the towns
+	scenario.towns.resize(scenario.num_towns);
+	for(int i = 0; i < scenario.num_towns; i++) {
+		switch(scenario.town_size[i]) {
+			case 0: scenario.towns[i] = new cBigTown(scenario); break;
+			case 1: scenario.towns[i] = new cMedTown(scenario); break;
+			case 2: scenario.towns[i] = new cTinyTown(scenario); break;
+		}
+		load_town_v1(scenario.scen_file, i, *scenario.towns[i], *temp_scenario);
+	}
+	
+	delete temp_scenario;
+	delete item_data;
 	return true;
 }
 
-static long get_town_offset(short which_town){
+static long get_town_offset(short which_town, legacy::scenario_data_type& scenario){
 	int i,j;
 	long len_to_jump,store;
 	
@@ -187,7 +223,7 @@ static long get_town_offset(short which_town){
 	return len_to_jump;
 }
 
-static bool load_town_v1(short which_town, cTown*& the_town) {
+bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy::scenario_data_type& scenario) {
 	short i,n;
 	long len,len_to_jump = 0;
 	char temp_str[256];
@@ -197,20 +233,13 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 	legacy::ave_tr_type ave_t;
 	legacy::tiny_tr_type tiny_t;
 	
-	if(which_town != minmax(0,scenario.num_towns - 1,which_town)) {
-		// This should never be reached from the scenario editor,
-		// because it does its own range checking before calling load_town.
-		giveError("The scenario tried to place you into a non-existant town.");
-		return false;
-	}
-	
-	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
+	FILE* file_id = fopen(scen_file.c_str(), "rb");
 	if(file_id == NULL) {
 		oopsError(14, 0, 0);
 		return false;
 	}
 	
-	len_to_jump = get_town_offset(which_town);
+	len_to_jump = get_town_offset(which_town, scenario);
 	n = fseek(file_id, len_to_jump, SEEK_SET);
 	if(n != 0) {
 		fclose(file_id);
@@ -227,33 +256,29 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 	}
 	port_town(&store_town);
 	
-	if(the_town != NULL) delete the_town;
 	switch(scenario.town_size[which_town]) {
 		case 0:
 			len = sizeof(legacy::big_tr_type);
 			n = fread(&t_d, len, 1, file_id);
 			port_t_d(&t_d);
-			the_town = new cBigTown;
-			*the_town = store_town;
-			the_town->append(t_d, which_town);
+			the_town.append(store_town);
+			the_town.append(t_d, which_town);
 			break;
 			
 		case 1:
 			len = sizeof(legacy::ave_tr_type);
 			n = fread(&ave_t, len, 1, file_id);
 			port_ave_t(&ave_t);
-			the_town = new cMedTown;
-			*the_town = store_town;
-			the_town->append(ave_t, which_town);
+			the_town.append(store_town);
+			the_town.append(ave_t, which_town);
 			break;
 			
 		case 2:
 			len = sizeof(legacy::tiny_tr_type);
 			n = fread(&tiny_t, len, 1, file_id);
 			port_tiny_t(&tiny_t);
-			the_town = new cTinyTown;
-			*the_town = store_town;
-			the_town->append(tiny_t, which_town);
+			the_town.append(store_town);
+			the_town.append(tiny_t, which_town);
 			break;
 	}
 	
@@ -261,15 +286,15 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 		len = (long) (store_town.strlens[i]);
 		n = fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) the_town->town_name = temp_str;
+		if(i == 0) the_town.town_name = temp_str;
 		else if(i >= 1 && i < 17)
-			the_town->rect_names[i-1] = temp_str;
+			the_town.rect_names[i-1] = temp_str;
 		else if(i >= 17 && i < 20)
-			the_town->comment[i-17] = temp_str;
+			the_town.comment[i-17] = temp_str;
 		else if(i >= 20 && i < 120)
-			the_town->spec_strs[i-20] = temp_str;
+			the_town.spec_strs[i-20] = temp_str;
 		else if(i >= 120 && i < 140)
-			the_town->sign_strs[i-120] = temp_str;
+			the_town.sign_strs[i-120] = temp_str;
 	}
 	
 	len = sizeof(legacy::talking_record_type);
@@ -280,26 +305,26 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 		return false;
 	}
 	port_talk_nodes(&store_talk);
-	the_town->talking = store_talk;
+	the_town.talking.append(store_talk);
 	
 	for(i = 0; i < 170; i++) {
-		len = (long) (the_town->talking.strlens[i]);
+		len = (long) (the_town.talking.strlens[i]);
 		n = fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
 		if(i >= 0 && i < 10)
-			the_town->talking.people[i].title = temp_str;
+			the_town.talking.people[i].title = temp_str;
 		else if(i >= 10 && i < 20)
-			the_town->talking.people[i-10].look = temp_str;
+			the_town.talking.people[i-10].look = temp_str;
 		else if(i >= 20 && i < 30)
-			the_town->talking.people[i-20].name = temp_str;
+			the_town.talking.people[i-20].name = temp_str;
 		else if(i >= 30 && i < 40)
-			the_town->talking.people[i-30].job = temp_str;
+			the_town.talking.people[i-30].job = temp_str;
 		else if(i >= 160)
-			the_town->talking.people[i-160].dunno = temp_str;
+			the_town.talking.people[i-160].dunno = temp_str;
 		else {
 			if(i % 2 == 0)
-				the_town->talking.talk_nodes[(i-40)/2].str1 = temp_str;
-			else the_town->talking.talk_nodes[(i-40)/2].str2 = temp_str;
+				the_town.talking.talk_nodes[(i-40)/2].str1 = temp_str;
+			else the_town.talking.talk_nodes[(i-40)/2].str2 = temp_str;
 		}
 	}
 	
@@ -311,9 +336,9 @@ static bool load_town_v1(short which_town, cTown*& the_town) {
 	return true;
 }
 
-bool load_town(short which_town, cTown*& the_town) {
-	if(scenario.is_legacy) return load_town_v1(which_town, the_town);
-	fs::path town_base = scenario.scen_file/"towns";
+bool load_town(fs::path town_base, short which_town, cTown*& the_town) {
+	// TODO: This stuff goes in load_scenario() now
+//	fs::path town_base = scenario.scen_file/"towns";
 	std::string base_fname = "t" + std::to_string(which_town), fname;
 	// TODO: Implement all this.
 	// First load the main town data.
@@ -326,239 +351,17 @@ bool load_town(short which_town, cTown*& the_town) {
 	// Load the town's special encounter strings
 	fname = base_fname + ".txt";
 	// And finally, load the town's dialogue nodes.
-	load_town_talk(which_town);
+	load_town_talk(town_base, which_town, the_town->talking);
 	return false;
 }
 
-static bool load_town_talk_v1(short which_town) {
-	if(univ.town.prep_talk(which_town)) return true;
-	char temp_str[256];
-	
-	short i,n;
-	long len,len_to_jump = 0;
-	legacy::town_record_type store_town;
-	legacy::talking_record_type store_talk;
-	
-	if(which_town != minmax(0,scenario.num_towns - 1,which_town)) {
-		// This should never be reached from the scenario editor,
-		// because it does its own range checking before calling load_town.
-		giveError("The scenario tried to place you into a non-existant town.");
-		return false;
-	}
-	
-	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
-	if(file_id == NULL) {
-		oopsError(19, 0, 0);
-		return false;
-	}
-	
-	len_to_jump = get_town_offset(which_town);
-	n = fseek(file_id, len_to_jump, SEEK_SET);
-	if(n != 0) {
-		fclose(file_id);
-		oopsError(20, 0, 0);
-		return false;
-	}
-	
-	len = sizeof(legacy::town_record_type);
-	n = fread(&store_town, len, 1, file_id);
-	if(n < 1) {
-		fclose(file_id);
-		oopsError(21, 0, 0);
-		return false;
-	}
-	port_town(&store_town);
-	
-	switch(scenario.town_size[which_town]) {
-		case 0:
-			len =  sizeof(legacy::big_tr_type);
-			break;
-		case 1:
-			len = sizeof(legacy::ave_tr_type);
-			break;
-		case 2:
-			len = sizeof(legacy::tiny_tr_type);
-			break;
-	}
-	
-	n = fseek(file_id, len, SEEK_CUR);
-	for(i = 0; i < 140; i++) {
-		len = (long) (store_town.strlens[i]);
-		fseek(file_id, len, SEEK_CUR);
-	}
-	
-	len = sizeof(legacy::talking_record_type);
-	n = fread(&store_talk, len, 1, file_id);
-	if(n < 1) {
-		fclose(file_id);
-		oopsError(22, 0, 0);
-		return false;
-	}
-	port_talk_nodes(&store_talk);
-	cSpeech& the_talk = univ.town.cur_talk();
-	the_talk = store_talk;
-	
-	for(i = 0; i < 170; i++) {
-		len = (long) (the_talk.strlens[i]);
-		n = fread(temp_str, len, 1, file_id);
-		temp_str[len] = 0;
-		if(i >= 0 && i < 10)
-			the_talk.people[i].title = temp_str;
-		else if(i >= 10 && i < 20)
-			the_talk.people[i-10].look = temp_str;
-		else if(i >= 20 && i < 30)
-			the_talk.people[i-20].name = temp_str;
-		else if(i >= 30 && i < 40)
-			the_talk.people[i-30].job = temp_str;
-		else if(i >= 160)
-			the_talk.people[i-160].dunno = temp_str;
-		else {
-			if(i % 2 == 0) the_talk.talk_nodes[(i-40)/2].str1 = temp_str;
-			else the_talk.talk_nodes[(i-40)/2].str2 = temp_str;
-		}
-	}
-	
-	n = fclose(file_id);
-	if(n != 0) {
-		oopsError(23, 0, 0);
-	}
-	
-	return true;
-}
-
-bool load_town_talk(short which_town) {
-	if(scenario.is_legacy) return load_town_talk_v1(which_town);
-	fs::path town_base = scenario.scen_file/"towns";
+bool load_town_talk(fs::path town_base, short which_town, cSpeech& the_talk) {
 	// TODO: Implement this.
 	std::string fname = "t" + std::to_string(which_town) + "talk.xml";
 	return false;
 }
 
-bool load_town_str(short which_town, short which_str, char* str){
-	short i,n;
-	long len,len_to_jump = 0;
-	legacy::town_record_type store_town;
-
-	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
-	if(file_id == NULL) {
-		oopsError(24, 0, 0);
-		return false;
-	}
-	
-	len_to_jump = get_town_offset(which_town);
-	n = fseek(file_id, len_to_jump, SEEK_SET);
-	if(n < 1) {
-		fclose(file_id);
-		oopsError(25, 0, 0);
-		return false;
-	}
-	
-	len = sizeof(legacy::town_record_type);
-	
-	n = fread(&store_town, len, 1, file_id);
-	if(len < 1) {
-		fclose(file_id);
-		oopsError(26, 0, 0);
-		return false;
-	}
-	port_town(&store_town);
-	
-	switch(scenario.town_size[which_town]) {
-		case 0:
-			len =  sizeof(legacy::big_tr_type);
-			break;
-		case 1:
-			len = sizeof(legacy::ave_tr_type);
-			break;
-		case 2:
-			len = sizeof(legacy::tiny_tr_type);
-			break;
-	}
-	
-	n = fseek(file_id, len, SEEK_CUR);
-	for(i = 0; i < 140; i++) {
-		len = (long) (univ.town->strlens[i]);
-		if(i == which_str){
-			n = fread(str, len, 1, file_id);
-			str[len] = 0;
-		}
-		else fseek(file_id, len, SEEK_CUR);
-	}
-	
-	n = fclose(file_id);
-	if(n != 0) {
-		oopsError(27, 0, 0);
-	}
-	
-	return true;
-}
-
-bool load_town_str(short which_town, cTown*& t){
-	short i,n;
-	long len,len_to_jump = 0;
-	char temp_str[256];
-	legacy::town_record_type store_town;
-	
-	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
-	if(file_id == NULL) {
-		oopsError(28, 0, 0);
-		return false;
-	}
-	
-	len_to_jump = get_town_offset(which_town);
-	n = fseek(file_id, len_to_jump, SEEK_SET);
-	if(n != 0) {
-		fclose(file_id);
-		oopsError(29, 0, 0);
-		return false;
-	}
-	
-	len = sizeof(legacy::town_record_type);
-	n = fread(&store_town, len, 1, file_id);
-	if(n < 1) {
-		fclose(file_id);
-		oopsError(30, 0, 0);
-		return false;
-	}
-	port_town(&store_town);
-	
-	switch(scenario.town_size[which_town]) {
-		case 0:
-			len =  sizeof(legacy::big_tr_type);
-			break;
-		case 1:
-			len = sizeof(legacy::ave_tr_type);
-			break;
-		case 2:
-			len = sizeof(legacy::tiny_tr_type);
-			break;
-	}
-	
-	n = fseek(file_id, len, SEEK_CUR);
-	for(i = 0; i < 140; i++) {
-		len = (long) (t->strlens[i]);
-		n = fread(temp_str, len, 1, file_id);
-		temp_str[len] = 0;
-		if(i == 0) t->town_name = temp_str;
-		else if(i >= 1 && i < 17)
-			t->rect_names[i-1] = temp_str;
-		else if(i >= 17 && i < 20)
-			t->comment[i-17] = temp_str;
-		else if(i >= 20 && i < 120)
-			t->spec_strs[i-20] = temp_str;
-		else if(i >= 120 && i < 140)
-			t->sign_strs[i-120] = temp_str;
-	}
-	
-	n = fclose(file_id);
-	if(n != 0) {
-		oopsError(31, 0, 0);
-	}
-	
-	return true;
-}
-
-static long get_outdoors_offset(location& which_out){
+static long get_outdoors_offset(location& which_out, cScenario& scenario){
 	int i,j,out_sec_num;
 	long len_to_jump,store;
 	out_sec_num = scenario.out_width * which_out.y + which_out.x;
@@ -578,25 +381,19 @@ static long get_outdoors_offset(location& which_out){
 }
 
 //mode -> 0 - primary load  1 - add to top  2 - right  3 - bottom  4 - left
-static bool load_outdoors_v1(location which_out,cOutdoors& the_out){
+bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, cScenario& scenario){
 	short i,n;
 	long len,len_to_jump;
 	char temp_str[256];
 	legacy::outdoor_record_type store_out;
 	
-	if((which_out.x != minmax(0,scenario.out_width - 1,which_out.x)) ||
-		(which_out.y != minmax(0,scenario.out_height - 1,which_out.y))) {
-		the_out = cOutdoors();
-		return true;
-	}
-	
-	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
+	FILE* file_id = fopen(scen_file.c_str(), "rb");
 	if(file_id == NULL) {
 		oopsError(32, 0, 0);
 		return false;
 	}
 	
-	len_to_jump = get_outdoors_offset(which_out);
+	len_to_jump = get_outdoors_offset(which_out, scenario);
 	n = fseek(file_id, len_to_jump, SEEK_SET);
 	if(n != 0) {
 		fclose(file_id);
@@ -615,7 +412,7 @@ static bool load_outdoors_v1(location which_out,cOutdoors& the_out){
 	the_out.x = which_out.x;
 	the_out.y = which_out.y;
 	port_out(&store_out);
-	the_out = store_out;
+	the_out.append(store_out, scenario);
 	for(i = 0; i < 108; i++) {
 		len = (long) (store_out.strlens[i]);
 		n = fread(temp_str, len, 1, file_id);
@@ -636,16 +433,16 @@ static bool load_outdoors_v1(location which_out,cOutdoors& the_out){
 	return true;
 }
 
-bool load_outdoors(location which_out,cOutdoors& the_out) {
-	if(scenario.is_legacy) return load_outdoors_v1(which_out, the_out);
-	fs::path town_base = scenario.scen_file/"outdoors";
+bool load_outdoors(fs::path out_base, location which_out,cOutdoors& the_out) {
+	// TODO: This bit goes in load_scenario() now
+//	fs::path town_base = scenario.scen_file/"outdoors";
 	std::string base_fname = "tut" + std::to_string(which_out.x) + "~" + std::to_string(which_out.y), fname;
 	// TODO: Implement all this.
 	// First load the main sector data.
 	fname = base_fname + ".xml";
 	// Next, load in the sector map.
 	fname = base_fname + ".map";
-	map_data map = load_map(town_base/fname);
+	map_data map = load_map(out_base/fname);
 	// Then load the sector's special nodes.
 	fname = base_fname + ".spec";
 	// Load the sector's special encounter strings
@@ -653,111 +450,14 @@ bool load_outdoors(location which_out,cOutdoors& the_out) {
 	return false;
 }
 
-bool load_outdoors(location which_out, short mode, ter_num_t borders[4][50]){
-	short j,n;
-	long len,len_to_jump;
-	legacy::outdoor_record_type store_out;
-	
-	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
-	if(file_id == NULL) {
-		oopsError(36, 0, 0);
-		return false;
-	}
-	
-	len_to_jump = get_outdoors_offset(which_out);
-	
-	n = fseek(file_id, len_to_jump, SEEK_SET);
-	if(n != 0) {
-		fclose(file_id);
-		oopsError(37, 0, 0);
-		return false;
-	}
-	
-	len = sizeof(legacy::outdoor_record_type);
-	n = fread(&store_out, len, 1, file_id);
-	if(n < 1) {
-		fclose(file_id);
-		oopsError(38, 0, 0);
-		return false;
-	}
-	
-	switch(mode) {
-	case 1:
-		for(j = 0; j < 48; j++) {
-			borders[0][j] = store_out.terrain[j][47];
-		}
-		break;
-	case 2:
-		for(j = 0; j < 48; j++) {
-			borders[1][j] = store_out.terrain[0][j];
-		}
-		break;
-	case 3:
-		for(j = 0; j < 48; j++) {
-			borders[2][j] = store_out.terrain[j][0];
-		}
-		break;
-	case 4:
-		for(j = 0; j < 48; j++) {
-			borders[3][j] = store_out.terrain[47][j];
-		}
-		break;
-	}
-	
-	n = fclose(file_id);
-	if(n != 0) {
-		oopsError(39, 0, 0);
-	}
-	return true;
-}
-
-bool load_outdoor_str(location which_out, short which_str, char* str){
-	short i,n;
-	long len,len_to_jump;
-	char temp_str[256];
-	legacy::outdoor_record_type store_out;
-	
-	FILE* file_id = fopen(scenario.scen_file.c_str(), "rb");
-	if(file_id == NULL) {
-		oopsError(40, 0, 0);
-		return false;
-	}
-	
-	len_to_jump = get_outdoors_offset(which_out);
-	n = fseek(file_id, len_to_jump, SEEK_SET);
-	if(n != 0) {
-		fclose(file_id);
-		oopsError(41, 0, 0);
-		return false;
-	}
-	
-	// TODO: len was never assigned at all, is this the correct value?
-	len = sizeof(store_out);
-	n = fread(&store_out, len, 1, file_id);
-	for(i = 0; i < 120; i++) {
-		len = (long) (store_out.strlens[i]);
-		if(i == which_str) {
-			n = fread(str, len, 1, file_id);
-			str[len] = 0;
-		}
-		else fseek(file_id, len, SEEK_CUR);
-	}
-	
-	n = fclose(file_id);
-	if(n != 0) {
-		oopsError(42, 0, 0);
-	}
-	return true;
-}
-
 #ifdef __APPLE__
 bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store);
 #endif
 
-void load_spec_graphics() {
+void load_spec_graphics(fs::path scen_file) {
 	static const char*const noGraphics = "The game will still work without the custom graphics, but some things will not look right.";
 	short i;
-	fs::path path(scenario.scen_file);
+	fs::path path(scen_file);
 	printf("Loading scenario graphics... (%s)\n",path.c_str());
 	// Tried path.replace_extension, but that only deleted the extension, so I have to do it manually
 	std::string filename = path.stem().string();
@@ -792,6 +492,7 @@ void load_spec_graphics() {
 		}
 	}//else{}
 	
+	// TODO: This should really reload ALL textures...
 	// Now load regular graphics
 	items_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("objects"));
 	tiny_obj_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("tinyobj"));
@@ -820,10 +521,7 @@ void load_spec_graphics() {
 	// TODO: Scenario icons ...
 }
 
-
-bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port);
-bool load_party_v2(fs::path file_to_load, bool town_restore, bool in_scen, bool maps_there);
-bool load_party(fs::path file_to_load){
+bool load_party(fs::path file_to_load, cUniverse& univ){
 	bool town_restore = false;
 	bool maps_there = false;
 	bool in_scen = false;
@@ -930,11 +628,11 @@ bool load_party(fs::path file_to_load){
 	fclose(file_id);
 	switch(format){
 		case old_mac:
-			return load_party_v1(file_to_load, town_restore, in_scen, maps_there, mac_is_intel);
+			return load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, mac_is_intel);
 		case old_win:
-			return load_party_v1(file_to_load, town_restore, in_scen, maps_there, !mac_is_intel);
+			return load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, !mac_is_intel);
 		case new_oboe:
-			return load_party_v2(file_to_load, town_restore, in_scen, maps_there);
+			return load_party_v2(file_to_load, univ, town_restore, in_scen, maps_there);
 		case unknown:
 			cChoiceDlog("not-save-game.xml").show();
 			return false;
@@ -943,7 +641,7 @@ bool load_party(fs::path file_to_load){
 	return true;
 }
 
-bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool maps_there, bool must_port){
+bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool must_port){
 	std::ifstream fin(file_to_load.c_str(), std::ios_base::binary);
 	fin.seekg(3*sizeof(short),std::ios_base::beg); // skip the header, which is 6 bytes in the old format
 	
@@ -992,8 +690,6 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 		len = (long) sizeof(legacy::out_info_type);
 		fin.read((char*)&store_out_info, len);
 		
-		if(univ.town.loaded()) univ.town.unload();
-		
 		// LOAD TOWN 
 		if(town_restore) {
 			len = (long) sizeof(legacy::current_town_type);
@@ -1035,7 +731,7 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 	
 	// TODO: Need to convert after loading the scenario in order to look up saved strings.
 	// However, for that to work, the entire scenario (all towns and sections) would need to be in memory.
-	univ.party = store_party;
+	univ.party.append(store_party);
 	univ.party.append(store_setup);
 	univ.party.void_pcs();
 	for(int i = 0; i < 6; i++)
@@ -1043,7 +739,7 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 	if(in_scen){
 		univ.out.append(store_out_info);
 		if(town_restore){
-			univ.town.append(store_c_town,scenario.town_size[univ.town.num]);
+			univ.town.append(store_c_town);
 			univ.town.append(t_d);
 			univ.town.append(t_i);
 		}
@@ -1057,7 +753,7 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 		fs::path path;
 		path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
 
-		if(!load_scenario(path))
+		if(!load_scenario(path, univ.scenario))
 			return false;
 		univ.file = path;
 	}else{
@@ -1066,7 +762,7 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 	
 	// Compatibility flags
 	// TODO: Pretty sure I did this elsewhere, so probably don't need it here
-	if(in_scen && scenario.format.prog_make_ver[0] < 2){
+	if(in_scen && univ.scenario.format.prog_make_ver[0] < 2){
 		univ.party.stuff_done[305][8] = 1;
 	} else {
 		univ.party.stuff_done[305][8] = 0;
@@ -1075,7 +771,7 @@ bool load_party_v1(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 	return true;
 }
 
-bool load_party_v2(fs::path file_to_load, bool town_restore, bool in_scen, bool maps_there){
+bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there){
 	if(!fs::exists(tempDir)) fs::create_directories(tempDir);
 	fs::path tempPath = tempDir/"loadtemp.exg";
 	
@@ -1176,7 +872,7 @@ bool load_party_v2(fs::path file_to_load, bool town_restore, bool in_scen, bool 
 }
 
 //mode;  // 0 - normal  1 - save as
-bool save_party(fs::path dest_file) {
+bool save_party(fs::path dest_file, const cUniverse& univ) {
 	if(!fs::exists(tempDir)) fs::create_directories(tempDir);
 	
 	bool in_scen = univ.party.scen_name != "";

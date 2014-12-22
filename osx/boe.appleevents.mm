@@ -76,7 +76,7 @@ void set_up_apple_events() {
 	std::copy(msg.get(), msg.get() + len, std::inserter(fileName, fileName.begin()));
 	
 	ae_loading = true;
-	load_party(fileName);
+	load_party(fileName, univ);
 	finish_load_party();
 	ae_loading = false;
 	
@@ -99,7 +99,7 @@ void set_up_apple_events() {
 		std::string choice = cChoiceDlog("quit-confirm-save.xml", {"save", "quit", "cancel"}).show();
 		if(choice == "cancel") return; // TODO: Need to make sure the quit is actually cancelled here
 		if(choice == "save")
-			save_party(univ.file);
+			save_party(univ.file, univ);
 	} else {
 		std::string choice = cChoiceDlog("quit-confirm-nosave.xml", {"quit", "cancel"}).show();
 		if(choice == "cancel") return; // TODO: Need to make sure the quit is actually cancelled here

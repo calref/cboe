@@ -71,7 +71,6 @@ extern char unexplored_area[13][13];
 extern tessel_ref_t bw_pats[6];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern short store_talk_face_pic;
-extern cScenario scenario;
 extern cUniverse univ;
 //extern talking_record_type talking;
 
@@ -928,7 +927,7 @@ static void place_talk_face() {
 	face_rect.offset(talk_area_rect.topLeft());
 	face_rect.offset(ul);
 	mainPtr.setActive();
-	short face_to_draw = scenario.scen_monsters[store_monst_type].default_facial_pic;
+	short face_to_draw = univ.scenario.scen_monsters[store_monst_type].default_facial_pic;
 	if(store_talk_face_pic >= 0)
 		face_to_draw = store_talk_face_pic;
 	if(store_talk_face_pic >= 1000) {

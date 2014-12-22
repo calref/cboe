@@ -17,6 +17,7 @@
 #include "town.h"
 #include "talking.h"
 #include "simpletypes.h"
+#include "scenario.h"
 
 namespace fs = boost::filesystem; // TODO: Centralize this namespace alias?
 
@@ -30,13 +31,13 @@ namespace legacy {
 };
 
 class cCurTown {
-	cSpeech* curTalk = NULL;
-	bool talkNeedsDeleting = false;
 	short cur_talk_loaded = -1;
 	bool free_for_sfx(short x, short y);
+	cUniverse& univ;
+	cTown* arena;
+	cTown*const record() const;
 public:
 	bool quickfire_present = false, belt_present = false;
-	cTown* record;
 	// formerly current_town_type
 	short num; // 200 if outdoors (my addition)
 	short difficulty;
@@ -51,15 +52,13 @@ public:
 	//ter_num_t template_terrain[64][64];
 	unsigned long fields[64][64];
 	
-	void append(legacy::current_town_type& old,short which_size);
+	void append(legacy::current_town_type& old);
 	void append(legacy::town_item_list& old);
 	void append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
 	void append(legacy::big_tr_type& old);
 	
 	cTown* operator -> ();
-	cCurTown();
-	bool loaded() const;
-	void unload();
+	explicit cCurTown(cUniverse& univ);
 	short countMonsters();
 	cSpeech& cur_talk(); // Get the currently loaded speech
 	bool prep_talk(short which); // Prepare for loading specified speech, returning true if already loaded
@@ -119,25 +118,27 @@ public:
 	bool set_force_cage(char x, char y, bool b);
 //	bool set_trim(char x, char y, char t, bool b);
 	bool is_impassable(short x, short y);
-	void writeTo(std::ostream& file);
+	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 	
 	~cCurTown();
 };
 
 class cCurOut {
+	cUniverse& univ;
 public:
 	char expl[96][96]; // formerly out_info_type
 	ter_num_t out[96][96];
 	unsigned char out_e[96][96];
-	cOutdoors outdoors[2][2];
 	
 	void append(legacy::out_info_type& old);
 	
 	ter_num_t(& operator [] (size_t i))[96];
 	ter_num_t& operator [] (location loc);
-	void writeTo(std::ostream& file);
+	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
+	cOutdoors* operator->();
+	explicit cCurOut(cUniverse& univ);
 };
 
 enum eAmbientSound {
@@ -149,6 +150,7 @@ enum eAmbientSound {
 
 class cUniverse{
 public:
+	cScenario scenario;
 	cParty party;
 	cCurTown town;
 	char town_maps[200][8][64]; // formerly stored_town_maps_type
@@ -159,7 +161,8 @@ public:
 	
 	void append(legacy::stored_town_maps_type& old);
 	void append(legacy::stored_outdoor_maps_type& old);
-	short difficulty_adjust();
+	short difficulty_adjust() const;
+	explicit cUniverse(long party_type = 'dflt');
 };
 
 #endif

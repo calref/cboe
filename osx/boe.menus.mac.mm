@@ -11,7 +11,6 @@
 #include <Cocoa/Cocoa.h>
 #include <array>
 #include "universe.h"
-#include "scenario.h"
 #include "boe.party.h"
 #include "boe.infodlg.h"
 #include "boe.consts.h"
@@ -22,7 +21,6 @@ extern short on_monst_menu[256];
 extern bool party_in_memory;
 extern short current_pc;
 extern cUniverse univ;
-extern cScenario scenario;
 extern eGameMode overall_mode;
 
 #ifndef __APPLE__
@@ -90,11 +88,11 @@ void adjust_monst_menu() {
 	}
 	for(i = 0; i < 256; i++) {
 		if(on_monst_menu[i] >= 0) {
-			std::string monst_name = scenario.scen_monsters[on_monst_menu[i]].m_name;
+			std::string monst_name = univ.scenario.scen_monsters[on_monst_menu[i]].m_name;
 			NSString* str = [NSString stringWithUTF8String: monst_name.c_str()];
 			NSMenuItem* newItem = [monst_menu addItemWithTitle: str action: @selector(monstMenu:) keyEquivalent: @""];
 			[newItem setTarget: targ];
-			[newItem setRepresentedObject: [MonsterWrapper withMonster: scenario.scen_monsters[on_monst_menu[i]]]];
+			[newItem setRepresentedObject: [MonsterWrapper withMonster: univ.scenario.scen_monsters[on_monst_menu[i]]]];
 		}
 	}
 }

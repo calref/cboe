@@ -24,7 +24,10 @@ namespace legacy {
 	struct outdoor_creature_type;
 };
 
+class cScenario;
+
 class cOutdoors {
+	cScenario& scenario;
 public:
 	class cWandering { // formerly out_wandering_type
 	public:
@@ -34,10 +37,10 @@ public:
 		short end_spec1,end_spec2;
 		
 		bool isNull();
-		cWandering& operator = (legacy::out_wandering_type old);
-		void writeTo(std::ostream& file, std::string prefix = "");
+		void append(legacy::out_wandering_type old);
+		void writeTo(std::ostream& file, std::string prefix = "") const;
 		void readFrom(std::istream& sin);
-		template<class type> type get(m_num_t who,bool hostile,type cMonster::* what);
+		cWandering();
 	};
 	class cCreature { // formerly outdoor_creature_type
 	public:
@@ -46,7 +49,7 @@ public:
 		cWandering what_monst;
 		location which_sector,m_loc,home_sector; // home_sector is the sector it was spawned in
 		
-		cCreature& operator = (legacy::outdoor_creature_type old);
+		void append(legacy::outdoor_creature_type old);
 	};
 	short x,y; // Used while loading legacy scenarios.
 	ter_num_t terrain[48][48];
@@ -70,8 +73,8 @@ public:
 	std::array<std::string,8> sign_strs;
 	bool special_spot[48][48];
 	
-	cOutdoors();
-	cOutdoors& operator = (legacy::outdoor_record_type& old);
+	explicit cOutdoors(cScenario& scenario, bool init_strings = false);
+	void append(legacy::outdoor_record_type& old, const cScenario& scenario);
 };
 
 #endif

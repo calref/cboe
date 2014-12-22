@@ -35,8 +35,8 @@ public:
 	cPersonality people[10];
 	cNode talk_nodes[60];
 	
-	cSpeech& operator = (legacy::talking_record_type& old);
-	void writeTo(std::ostream& file);
+	void append(legacy::talking_record_type& old);
+	void writeTo(std::ostream& file) const;
 };
 
 #endif

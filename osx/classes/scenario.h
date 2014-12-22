@@ -19,6 +19,7 @@
 #include "special.h"
 #include "outdoors.h"
 #include "town.h"
+#include "vector2d.hpp"
 
 namespace fs = boost::filesystem; // TODO: Centralize this namespace alias?
 
@@ -44,6 +45,8 @@ public:
 		cItemStorage();
 		cItemStorage& operator = (legacy::item_storage_shortcut_type& old);
 	};
+	cScenario& operator=(const cScenario& other) = default;
+	void destroy_terrain();
 public:
 	//unsigned char flag1, flag2, flag3, flag4;
 	unsigned char num_towns;
@@ -104,12 +107,18 @@ public:
 	char : 7;
 	bool is_legacy;
 	fs::path scen_file; // transient
-	cOutdoors* outdoors;
-	cTown* towns;
+	vector2d<cOutdoors*> outdoors;
+	std::vector<cTown*> towns;
+	template<typename Town> void addTown() {towns.push_back(new Town(*this, true));}
 	
-	cScenario& operator = (legacy::scenario_data_type& old);
+	void append(legacy::scenario_data_type& old);
 	void append(legacy::scen_item_data_type& old);
-	void writeTo(std::ostream& file);
+	void writeTo(std::ostream& file) const;
+	
+	cScenario& operator=(cScenario&& other);
+	cScenario(cScenario&) = delete;
+	explicit cScenario(bool init_strings = false);
+	~cScenario();
 };
 
 // OBoE Current Version

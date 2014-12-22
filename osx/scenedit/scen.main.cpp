@@ -21,8 +21,6 @@
 #include "dlogutil.h"
 #include "scen.menus.h"
 
-cUniverse univ; // not needed; just to silence the compiler
-
 /* Globals */
 bool  All_Done = false; // delete play_sounds
 sf::Event event;
@@ -35,14 +33,11 @@ short cen_x, cen_y;
 eScenMode overall_mode = MODE_INTRO_SCREEN;
 std::shared_ptr<cScrollbar> right_sbar;
 short mode_count = 0;
-cOutdoors current_terrain;
+cOutdoors* current_terrain;
 //cSpeech talking;
 //short given_password;
 //short user_given_password = -1;
 short pixel_depth,old_depth = 8;
-
-ter_num_t border1 = 90, border2 = 90; // kludgy thing ... leave right here, before borders
-ter_num_t borders[4][50];
 
 bool change_made = false;
 
@@ -106,9 +101,6 @@ int main(int, char* argv[]) {
 	run_startup_g();
 	init_lb();
 	init_rb();
-	init_town(1);
-	init_out();
-	init_scenario();
 	
 	make_cursor_sword();
 	
@@ -238,13 +230,11 @@ void handle_file_menu(int item_hit) {
 	switch(item_hit) {
 		case 1: // open
 			file_to_load = nav_get_scenario();
-			if(!file_to_load.empty() && load_scenario(file_to_load)) {
-				if(load_town(scenario.last_town_edited,town))
-					cur_town = scenario.last_town_edited;
-				if(load_outdoors(scenario.last_out_edited,current_terrain)){
-					cur_out = scenario.last_out_edited;
-					augment_terrain(cur_out);
-				}
+			if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
+				cur_town = scenario.last_town_edited;
+				town = scenario.towns[cur_town];
+				cur_out = scenario.last_out_edited;
+				current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 				overall_mode = MODE_MAIN_SCREEN;
 				change_made = false;
 				update_item_menu();
@@ -560,7 +550,6 @@ void Mouse_Pressed() {
 }
 
 void close_program() {
-	if(town != NULL) delete town;
 }
 
 // TODO: Remove this function and replace it with beep() or play_sound() everywhere.

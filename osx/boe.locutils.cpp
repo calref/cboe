@@ -22,7 +22,6 @@ extern eGameMode overall_mode;
 //extern cOutdoors outdoors[2][2];
 //extern unsigned char out[96][96], out_e[96][96];
 extern location center;
-extern cScenario scenario;
 extern cUniverse univ;
 
 location light_locs[40];
@@ -172,7 +171,7 @@ bool is_lava(short x,short y) {
 	ter_num_t ter;
 	
 	ter = coord_to_ter(x,y);
-	if(scenario.ter_types[ter].picture == 404)
+	if(univ.scenario.ter_types[ter].picture == 964)
 		return true;
 	else return false;
 }
@@ -214,7 +213,7 @@ short sight_obscurity(short x,short y) {
 }
 
 short combat_obscurity(short x, short y) {
-	if(blocksMove(scenario.ter_types[coord_to_ter(x,y)].blockage)) return 5;
+	if(blocksMove(univ.scenario.ter_types[coord_to_ter(x,y)].blockage)) return 5;
 	if(is_lava(x,y)) return 5;
 	return sight_obscurity(x,y);
 }
@@ -238,7 +237,7 @@ bool is_container(location loc) {
 	if((univ.town.is_barrel(loc.x,loc.y)) || (univ.town.is_crate(loc.x,loc.y)))
 		return true;
 	ter = coord_to_ter(loc.x,loc.y);
-	if(scenario.ter_types[ter].special == eTerSpec::IS_A_CONTAINER)
+	if(univ.scenario.ter_types[ter].special == eTerSpec::IS_A_CONTAINER)
 		return true;
 	return false;
 }
@@ -300,7 +299,7 @@ bool is_blocked(location to_check) {
 	
 	if((is_town()) || (is_combat())) {
 		ter = univ.town->terrain(to_check.x,to_check.y);
-		gr = scenario.ter_types[ter].picture;
+		gr = univ.scenario.ter_types[ter].picture;
 		
 		////
 		// Terrain blocking?
@@ -311,7 +310,7 @@ bool is_blocked(location to_check) {
 		// Keep away from marked specials during combat
 		if((is_combat()) && univ.town.is_spot(to_check.x, to_check.y))
 			return true;
-		if((is_combat()) && (scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].trim_type == eTrimType::CITY))
+		if((is_combat()) && (univ.scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].trim_type == eTrimType::CITY))
 			return true; // TODO: Maybe replace eTrimType::CITY with a blockage == clear/special && is_special() check
 		// Note: The purpose of the above check is to avoid portals.
 		
@@ -457,14 +456,14 @@ bool is_special(location to_check) {
 	ter_num_t which_ter;
 	
 	which_ter = coord_to_ter(to_check.x,to_check.y);
-	if(scenario.ter_types[which_ter].blockage == eTerObstruct::BLOCK_MONSTERS)
+	if(univ.scenario.ter_types[which_ter].blockage == eTerObstruct::BLOCK_MONSTERS)
 		return true;
 	else return false;
 }
 
 bool outd_is_special(location to_check) {
 	if(overall_mode == MODE_OUTDOORS) {
-		if(scenario.ter_types[univ.out[to_check.x][to_check.y]].blockage == eTerObstruct::BLOCK_MONSTERS) {
+		if(univ.scenario.ter_types[univ.out[to_check.x][to_check.y]].blockage == eTerObstruct::BLOCK_MONSTERS) {
 			return true;
 		}
 		else return false;
@@ -473,7 +472,7 @@ bool outd_is_special(location to_check) {
 }
 
 bool impassable(ter_num_t terrain_to_check) {
-	if(blocksMove(scenario.ter_types[terrain_to_check].blockage))
+	if(blocksMove(univ.scenario.ter_types[terrain_to_check].blockage))
 		return true;
 	else return false;
 }
@@ -485,10 +484,10 @@ short get_blockage(ter_num_t terrain_type) {
 	// little kludgy in here for pits
 	if((terrain_type == 90) && (is_combat()) && (which_combat_type == 0))
 		return 5;
-	if(scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT ||
-	   scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_SIGHT)
+	if(univ.scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT ||
+	   univ.scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_SIGHT)
 		return 5;
-	else if(scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
+	else if(univ.scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
 		return 1;
 	else {
 		return 0;
@@ -606,7 +605,7 @@ location push_loc(location from_where,location to_where) {
 		return loc_to_try;
 	}
 	if(sight_obscurity(loc_to_try.x,loc_to_try.y) > 0 ||
-	   scenario.ter_types[univ.town->terrain(loc_to_try.x,loc_to_try.y)].blockage != eTerObstruct::CLEAR ||
+	   univ.scenario.ter_types[univ.town->terrain(loc_to_try.x,loc_to_try.y)].blockage != eTerObstruct::CLEAR ||
 	   (loc_off_act_area(loc_to_try)) ||
 	   (monst_there(loc_to_try) < 90) ||
 	   (pc_there(loc_to_try) < 6))
@@ -620,7 +619,7 @@ bool spot_impassable(short i,short  j) {
 	ter_num_t ter;
 	
 	ter = coord_to_ter(i,j);
-	if(scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
+	if(univ.scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 		return true;
 	else return false;
 }
@@ -641,11 +640,11 @@ void alter_space(short i,short j,ter_num_t ter) {
 	if(is_out()) {
 		l = local_to_global(l);
 		univ.out[l.x][l.y] = ter;
-		univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].terrain[i][j] = ter;
+		univ.out->terrain[i][j] = ter;
 	}
 	else {
 		univ.town->terrain(i,j) = ter;
-		if(scenario.ter_types[univ.town->terrain(i,j)].special == eTerSpec::CONVEYOR)
+		if(univ.scenario.ter_types[univ.town->terrain(i,j)].special == eTerSpec::CONVEYOR)
 			univ.town.belt_present = true;
 	}
 }

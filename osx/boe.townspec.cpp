@@ -30,7 +30,6 @@ extern location center;
 //extern town_item_list	t_i;
 //extern big_tr_type t_d;
 extern sf::RenderWindow mainPtr;
-extern cScenario scenario;
 extern cUniverse univ;
 char answer[256];
 
@@ -223,6 +222,6 @@ short handle_lever(location w) {
 }
 
 void switch_lever(location w) {
-	alter_space(w.x,w.y,scenario.ter_types[univ.town->terrain(w.x,w.y)].trans_to_what);
+	alter_space(w.x,w.y,univ.scenario.ter_types[univ.town->terrain(w.x,w.y)].trans_to_what);
 }
 

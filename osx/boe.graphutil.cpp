@@ -71,7 +71,6 @@ extern short monster_index[21];
 extern bool supressing_some_spaces;
 extern location ok_space[4];
 extern bool can_draw_pcs;
-extern cScenario scenario;
 extern cCustomGraphics spec_scen_g;
 
 // TODO: The duplication of rectangle here shouldn't be necessary...
@@ -114,26 +113,26 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
 		anim_type = -1;
 	}
-	else if(scenario.ter_types[terrain_to_draw].picture >= 2000) { // custom
-		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(scenario.ter_types[terrain_to_draw].picture - 2000 + (anim_ticks % 4));
+	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 2000) { // custom
+		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 2000 + (anim_ticks % 4));
 		anim_type = 0;
 		terrain_there[i][j] = -1;
 	}
-	else if(scenario.ter_types[terrain_to_draw].picture >= 1000) { // custom
-		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(scenario.ter_types[terrain_to_draw].picture - 1000);
+	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 1000) { // custom
+		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 1000);
 		terrain_there[i][j] = -1;
 	}
-	else if(scenario.ter_types[terrain_to_draw].picture >= 960) { // animated
+	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 960) { // animated
 		source_gworld = &anim_gworld;
-		terrain_to_draw = scenario.ter_types[terrain_to_draw].picture;
+		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
 		source_rect = calc_rect(4 * ((terrain_to_draw - 960) / 5) + (anim_ticks % 4),(terrain_to_draw - 960) % 5);
 		terrain_there[i][j] = -1;
 		anim_type = 0;
 	}
 	else {
-		if(terrain_there[i][j] == scenario.ter_types[terrain_to_draw].picture) return;
-		terrain_there[i][j] = scenario.ter_types[terrain_to_draw].picture;
-		terrain_to_draw = scenario.ter_types[terrain_to_draw].picture;
+		if(terrain_there[i][j] == univ.scenario.ter_types[terrain_to_draw].picture) return;
+		terrain_there[i][j] = univ.scenario.ter_types[terrain_to_draw].picture;
+		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
 		source_gworld = &terrain_gworld[terrain_to_draw / 50];
  		terrain_there[i][j] = terrain_to_draw;
 		terrain_to_draw %= 50;
@@ -197,7 +196,8 @@ void draw_monsters() {
 								// TODO: Windows special-cases the bear and drake, whose graphics are split between two columns/sheets. Is this necessary?
 								// It really doesn't look necessary to me, since each quadrant of the graphic is fetched separately.
 								// Technically what they do is always pass 0 as the final argument to get_monster_template_rect, instead of passing k; they also hardcode the sheet to look on (4 for drake, 5 for bear).
-								pic_num_t this_monst = univ.party.out_c[i].what_monst.get(j,true,&cMonster::picture_num);
+								m_num_t m_num = univ.party.out_c[i].what_monst.monst[j];
+								pic_num_t this_monst = univ.scenario.scen_monsters[m_num].picture_num;
 								source_rect = get_monster_template_rect(this_monst,(univ.party.out_c[i].direction < 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
@@ -229,11 +229,11 @@ void draw_monsters() {
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							// in bed?
 							if((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								scenario.ter_types[ter].special == eTerSpec::BED &&
+								univ.scenario.ter_types[ter].special == eTerSpec::BED &&
 								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1)) ////
-								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u);
+								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1.u);
 							else Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
 						if(univ.town.monst[i].picture_num < 1000) {
@@ -243,11 +243,11 @@ void draw_monsters() {
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							// in bed?
 							if((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								(scenario.ter_types[ter].special == eTerSpec::BED) &&
+								(univ.scenario.ter_types[ter].special == eTerSpec::BED) &&
 								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1)) ////
-								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u);
+								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1.u);
 							else Draw_Some_Item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
 					}
@@ -273,11 +273,11 @@ void draw_monsters() {
 																						 + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							if((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								scenario.ter_types[ter].special == eTerSpec::BED &&
+								univ.scenario.ter_types[ter].special == eTerSpec::BED &&
 								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1))
-								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u); ////
+								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1.u);
 							else Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
 						if(univ.town.monst[i].picture_num < 1000) {
@@ -287,11 +287,11 @@ void draw_monsters() {
 																	,k);
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							if((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								scenario.ter_types[ter].special == eTerSpec::BED &&
+								univ.scenario.ter_types[ter].special == eTerSpec::BED &&
 								isHumanoid(univ.town.monst[i].m_type)
 								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
 								(width == 1) && (height == 1))
-								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + scenario.ter_types[ter].flag1.u); ////
+								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1.u);
 							else Draw_Some_Item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
 					}
@@ -302,18 +302,18 @@ void draw_monsters() {
 void play_see_monster_str(unsigned short m, location monst_loc) {
 	short str1, str2, pic, snd, spec;
 	ePicType type;
-	str1 = scenario.scen_monsters[m].see_str1;
-	str2 = scenario.scen_monsters[m].see_str2;
-	pic = scenario.scen_monsters[m].picture_num;
+	str1 = univ.scenario.scen_monsters[m].see_str1;
+	str2 = univ.scenario.scen_monsters[m].see_str2;
+	pic = univ.scenario.scen_monsters[m].picture_num;
 	type =  get_monst_pictype(m);
-	snd = scenario.scen_monsters[m].see_sound;
-	spec = scenario.scen_monsters[m].see_spec;
+	snd = univ.scenario.scen_monsters[m].see_sound;
+	spec = univ.scenario.scen_monsters[m].see_spec;
 	// First display strings, if any
-	if(str1 || str2) {
-		short where1 = is_out() ? univ.party.i_w_c.x : univ.town.num;
-		short where2 = is_out() ? univ.party.i_w_c.y : univ.town.num;
-		std::string placename = is_out() ? univ.out.outdoors[where1][where2].out_name : univ.town->town_name;
-		cStrDlog display_strings(str1 ? scenario.monst_strs[str1] : "", str2 ? scenario.monst_strs[str2] : "", "", pic, type, NULL);
+	if((str1 >= 0 && str1 < 100) || (str2 >= 0 && str2 < 100)) {
+		short where1 = is_out() ? univ.party.outdoor_corner.x + univ.party.i_w_c.x : univ.town.num;
+		short where2 = is_out() ? univ.party.outdoor_corner.y + univ.party.i_w_c.y : univ.town.num;
+		std::string placename = is_out() ? univ.out->out_name : univ.town->town_name;
+		cStrDlog display_strings(str1 ? univ.scenario.monst_strs[str1] : "", str2 ? univ.scenario.monst_strs[str2] : "", "", pic, type, NULL);
 		display_strings.setSound(snd);
 		display_strings.setRecordHandler(cStringRecorder(NOTE_MONST).string1(str1).string2(str2).from(where1,where2).at(placename));
 		display_strings.show();
@@ -475,7 +475,7 @@ void draw_fields(location where){
 	location where_draw(4 + where.x - center.x, 4 + where.y - center.y);
 	if(is_out()){
 		where = global_to_local(where);
-		if(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_spot[where.x][where.y])
+		if(univ.out->special_spot[where.x][where.y])
 			Draw_Some_Item(fields_gworld,calc_rect(4,0),terrain_screen_gworld,where_draw,1,0);
 		return;
 	}
@@ -552,8 +552,8 @@ void draw_party_symbol(location center) {
 			source_rect.offset(28,0);
 		ter_num_t ter = is_out() ? univ.out[univ.party.p_loc.x][univ.party.p_loc.y] : univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		// now wedge in bed graphic
-		if(is_town() && scenario.ter_types[ter].special == eTerSpec::BED)
-			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + scenario.ter_types[ter].flag1.u);
+		if(is_town() && univ.scenario.ter_types[ter].special == eTerSpec::BED)
+			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + univ.scenario.ter_types[ter].flag1.u);
 		else Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 	}
 	else if(univ.party.in_boat >= 0) {
@@ -629,14 +629,14 @@ bool is_fluid(ter_num_t ter_type) {
 //	if(((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
 //		return true;
 //	return false;
-	return scenario.ter_types[ter_type].trim_type == eTrimType::FRILLS;
+	return univ.scenario.ter_types[ter_type].trim_type == eTrimType::FRILLS;
 }
 
 // Is this a beach that gets shore plopped down next to it?
 bool is_shore(ter_num_t ter_type) {
 	if(is_fluid(ter_type))
 		return false;
-	if(scenario.ter_types[ter_type].trim_type == eTrimType::WATERFALL)
+	if(univ.scenario.ter_types[ter_type].trim_type == eTrimType::WATERFALL)
 		return false;
 //	if(ter_type == 77)
 //		return false;
@@ -653,7 +653,7 @@ bool is_shore(ter_num_t ter_type) {
 
 // These two functions used to determine wall round-cornering
 bool is_wall(ter_num_t ter_type) {
-	return scenario.ter_types[ter_type].trim_type == eTrimType::WALL;
+	return univ.scenario.ter_types[ter_type].trim_type == eTrimType::WALL;
 //	short pic;
 //
 //	pic = scenario.ter_types[ter_type].picture;
@@ -664,9 +664,9 @@ bool is_wall(ter_num_t ter_type) {
 //	return false;
 }
 bool is_ground(ter_num_t ter_type) {
-	if(scenario.ter_types[ter_type].trim_type == eTrimType::WALL)
+	if(univ.scenario.ter_types[ter_type].trim_type == eTrimType::WALL)
 		return false;
-	if(scenario.ter_types[ter_type].block_horse)
+	if(univ.scenario.ter_types[ter_type].block_horse)
 		return false;
 //	if(scenario.ter_types[ter_type].trim_type == eTrimType::WALKWAY)
 //		return false;
@@ -758,7 +758,7 @@ void check_if_monst_seen(unsigned short m_num, location at) {
 		play_see_monster_str(m_num, at);
 	}
 	// Make the monster vocalize if applicable
-	snd_num_t sound = scenario.scen_monsters[m_num].ambient_sound;
+	snd_num_t sound = univ.scenario.scen_monsters[m_num].ambient_sound;
 	if(get_ran(1,1,100) < 10) play_sound(-sound);
 }
 

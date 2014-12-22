@@ -49,7 +49,6 @@ extern eSpell spell_being_cast, town_spell;
 extern sf::RenderWindow mini_map;
 extern bool fast_bang,end_scenario;
 //extern short town_size[3];
-extern cScenario scenario;
 extern cUniverse univ;
 extern std::queue<pending_special_type> special_queue;
 //extern piles_of_stuff_dumping_type *data_store;
@@ -166,11 +165,11 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			printf("Note: Improper mode passed to check_special_terrain: %d\n", (int)mode);
 			return false;
 	}
-	ter_special = scenario.ter_types[ter].special;
-	ter_flag1 = scenario.ter_types[ter].flag1;
-	ter_flag2 = scenario.ter_types[ter].flag2;
-	ter_flag3 = scenario.ter_types[ter].flag3;
-	ter_pic = scenario.ter_types[ter].picture;
+	ter_special = univ.scenario.ter_types[ter].special;
+	ter_flag1 = univ.scenario.ter_types[ter].flag1;
+	ter_flag2 = univ.scenario.ter_types[ter].flag2;
+	ter_flag3 = univ.scenario.ter_types[ter].flag3;
+	ter_pic = univ.scenario.ter_types[ter].picture;
 	
 	// TODO: Why not support conveyors outdoors, too?
 	if(mode != eSpecCtx::OUT_MOVE && ter_special == eTerSpec::CONVEYOR) {
@@ -188,13 +187,13 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		out_where = global_to_local(where_check);
 		
 		for(i = 0; i < 18; i++)
-			if(out_where == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_locs[i]) {
-				*spec_num = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_id[i];
+			if(out_where == univ.out->special_locs[i]) {
+				*spec_num = univ.out->special_id[i];
 				if((*spec_num >= 0) &&
-					univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].specials[*spec_num].type == eSpecType::SECRET_PASSAGE)
+					univ.out->specials[*spec_num].type == eSpecType::SECRET_PASSAGE)
 					*forced = true;
 				// call special
-				run_special(mode,1,univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_id[i],out_where,&s1,&s2,&s3);
+				run_special(mode,1,univ.out->special_id[i],out_where,&s1,&s2,&s3);
 				if(s1 > 0)
 					can_enter = false;
 				erase_out_specials();
@@ -204,7 +203,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 	}
 	
 	if((is_combat()) && (univ.town.is_spot(where_check.x, where_check.y) ||
-						  (scenario.ter_types[coord_to_ter(where_check.x, where_check.y)].trim_type == eTrimType::CITY))) {
+						  (univ.scenario.ter_types[coord_to_ter(where_check.x, where_check.y)].trim_type == eTrimType::CITY))) {
 		ASB("Move: Can't trigger this special in combat.");
 		return false; // TODO: Maybe replace eTrimType::CITY check with a blockage == clear/special && is_special() check?
 	}
@@ -229,7 +228,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				if(!is_blocked(where_check)) runSpecial = true;
 				if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
 				if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
-				if(!PSD[SDF_NO_BOAT_SPECIALS] && univ.party.in_boat >= 0 && scenario.ter_types[ter].boat_over)
+				if(!PSD[SDF_NO_BOAT_SPECIALS] && univ.party.in_boat >= 0 && univ.scenario.ter_types[ter].boat_over)
 					runSpecial = true;
 				if(runSpecial) {
 					give_help(54,0);
@@ -314,7 +313,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				play_sound(-1 * ter_flag2.u);
 			}
 			give_help(47,65);
-			if(blocksMove(scenario.ter_types[ter].blockage))
+			if(blocksMove(univ.scenario.ter_types[ter].blockage))
 				can_enter = false;
 			break;
 		case eTerSpec::DAMAGING:
@@ -595,7 +594,7 @@ void use_spec_item(short item) {
 	short i,j,k;
 	location null_loc;
 	
-	run_special(eSpecCtx::USE_SPEC_ITEM,0,scenario.special_items[item].special,univ.party.p_loc,&i,&j,&k);
+	run_special(eSpecCtx::USE_SPEC_ITEM,0,univ.scenario.special_items[item].special,univ.party.p_loc,&i,&j,&k);
 	
 }
 
@@ -1234,24 +1233,24 @@ bool use_space(location where) {
 		univ.town.set_block((short) to_loc.x,(short) to_loc.y,true);
 	}
 	
-	if(scenario.ter_types[ter].special == eTerSpec::CHANGE_WHEN_USED) {
+	if(univ.scenario.ter_types[ter].special == eTerSpec::CHANGE_WHEN_USED) {
 		if(where == from_loc) {
 			add_string_to_buf("  Not while on space.");
 			return false;
 		}
 		add_string_to_buf("  OK.");
-		alter_space(where.x,where.y,scenario.ter_types[ter].flag1.u);
-		play_sound(scenario.ter_types[ter].flag2.u);
+		alter_space(where.x,where.y,univ.scenario.ter_types[ter].flag1.u);
+		play_sound(univ.scenario.ter_types[ter].flag2.u);
 		return true;
-	} else if(scenario.ter_types[ter].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
+	} else if(univ.scenario.ter_types[ter].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
 		short spec_type = 0;
-		if(scenario.ter_types[ter].flag2.u == 3){
+		if(univ.scenario.ter_types[ter].flag2.u == 3){
 			if((is_town() || (is_combat() && which_combat_type == 1))) spec_type = 2; else spec_type = 1;
-		}else if(scenario.ter_types[ter].flag2.u == 1 && (is_town() || (is_combat() && which_combat_type == 1)))
+		}else if(univ.scenario.ter_types[ter].flag2.u == 1 && (is_town() || (is_combat() && which_combat_type == 1)))
 			spec_type = 2;
-		else if(scenario.ter_types[ter].flag2.u == 2 && (is_out() || (is_combat() && which_combat_type == 1)))
+		else if(univ.scenario.ter_types[ter].flag2.u == 2 && (is_out() || (is_combat() && which_combat_type == 1)))
 			spec_type = 1;
-		run_special(eSpecCtx::USE_SPACE,spec_type,scenario.ter_types[ter].flag1.u,where,&i,&i,&i);
+		run_special(eSpecCtx::USE_SPACE,spec_type,univ.scenario.ter_types[ter].flag1.u,where,&i,&i,&i);
 		return true;
 	}
 	add_string_to_buf("  Nothing to use.");
@@ -1295,8 +1294,8 @@ bool adj_town_look(location where) {
 	}
 	if(is_container(where) && item_there && can_open) {
 		get_item(where,6,true);
-	}else if(scenario.ter_types[terrain].special == eTerSpec::CHANGE_WHEN_USED ||
-			 scenario.ter_types[terrain].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
+	}else if(univ.scenario.ter_types[terrain].special == eTerSpec::CHANGE_WHEN_USED ||
+			 univ.scenario.ter_types[terrain].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
 		add_string_to_buf("  (Use this space to do something");
 		add_string_to_buf("  with it.)");
 	}else{
@@ -1318,10 +1317,10 @@ void PSOE(short which_special,unsigned char *stuff_done_val,short where_put) {
 		else *stuff_done_val = 20;
 	}
 	for(i = 0; i < 18; i++)
-		if(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_id[i] == where_put) {
+		if(univ.out->special_id[i] == where_put) {
 			for(j = 0; j < 7; j++)
-				if(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].monst[j] > 0) {
-					graphic_num = 400 + get_monst_picnum(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].monst[j]);
+				if(univ.out->special_enc[which_special].monst[j] > 0) {
+					graphic_num = get_monst_picnum(univ.out->special_enc[which_special].monst[j]);
 					j = 7;
 				}
 			//display_strings( str1a, str1b, str2a, str2b,
@@ -1417,7 +1416,7 @@ void fade_party() {
 void change_level(short town_num,short x,short y) {
 	location l(x,y);
 	
-	if((town_num < 0) || (town_num >= scenario.num_towns)) {
+	if((town_num < 0) || (town_num >= univ.scenario.num_towns)) {
 		giveError("The scenario special encounter tried to put you into a town that doesn't exist.");
 		return;
 	}
@@ -1740,7 +1739,7 @@ void push_things() {
 		if(univ.town.monst[i].active > 0) {
 			l = univ.town.monst[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch(scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
+			switch(univ.scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 				case DIR_N: l.y--; break;
 				case DIR_E: l.x++; break;
 				case DIR_S: l.y++; break;
@@ -1757,7 +1756,7 @@ void push_things() {
 		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
 			l = univ.town.items[i].item_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch(scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
+			switch(univ.scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 				case DIR_N: l.y--; break;
 				case DIR_E: l.x++; break;
 				case DIR_S: l.y++; break;
@@ -1774,7 +1773,7 @@ void push_things() {
 	if(is_town()) {
 		ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		l = univ.town.p_loc;
-		switch(scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
+		switch(univ.scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 			case DIR_N: l.y--; break;
 			case DIR_E: l.x++; break;
 			case DIR_S: l.y++; break;
@@ -1782,7 +1781,7 @@ void push_things() {
 		}
 		if(l != univ.town.p_loc) {
 			ASB("You get pushed.");
-			if(scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
+			if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
 				draw_terrain(0);
 			center = l;
 			univ.town.p_loc = l;
@@ -1813,7 +1812,7 @@ void push_things() {
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				ter = univ.town->terrain(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y);
 				l = univ.party[i].combat_pos;
-				switch(scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
+				switch(univ.scenario.ter_types[ter].flag1.u) { // TODO: Implement the other 4 possible directions
 					case DIR_N: l.y--; break;
 					case DIR_E: l.x++; break;
 					case DIR_S: l.y++; break;
@@ -1822,7 +1821,7 @@ void push_things() {
 				if(l != univ.party[i].combat_pos) {
 					ASB("Someone gets pushed.");
 					ter = univ.town->terrain(l.x,l.y);
-					if(scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
+					if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
 						draw_terrain(0);
 					univ.party[i].combat_pos = l;
 					update_explored(l);
@@ -1879,14 +1878,14 @@ void special_increase_age(long length, bool queue) {
 	}
 	univ.party.age = current_age;
 	for(i = 0; i < 20; i++)
-		if(scenario.scenario_timer_times[i] > 0) {
-			short time = scenario.scenario_timer_times[i];
+		if(univ.scenario.scenario_timer_times[i] > 0) {
+			short time = univ.scenario.scenario_timer_times[i];
 			for(unsigned long j = age_before; j <= current_age; j++)
 				if(j % time == 0) {
 					if(queue) {
 						univ.party.age = j;
-						queue_special(eSpecCtx::SCEN_TIMER, 0, scenario.scenario_timer_specs[i], null_loc);
-					} else run_special(eSpecCtx::SCEN_TIMER,0,scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);
+						queue_special(eSpecCtx::SCEN_TIMER, 0, univ.scenario.scenario_timer_specs[i], null_loc);
+					} else run_special(eSpecCtx::SCEN_TIMER,0,univ.scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);
 				}
 			stat_area = true;
 			if(s3 > 0)
@@ -2064,21 +2063,21 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 cSpecial get_node(short cur_spec,short cur_spec_type) {
 	cSpecial dummy_node;
 	
-	dummy_node = scenario.scen_specials[0];
+	dummy_node = univ.scenario.scen_specials[0];
 	dummy_node.type = eSpecType::ERROR;
 	if(cur_spec_type == 0) {
 		if(cur_spec != minmax(0,255,cur_spec)) {
 			giveError("The scenario called a scenario special node out of range.");
 			return dummy_node;
 		}
-		return scenario.scen_specials[cur_spec];
+		return univ.scenario.scen_specials[cur_spec];
 	}
 	if(cur_spec_type == 1) {
 		if(cur_spec != minmax(0,59,cur_spec)) {
 			giveError("The scenario called an outdoor special node out of range.");
 			return dummy_node;
 		}
-		return univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].specials[cur_spec];
+		return univ.out->specials[cur_spec];
 	}
 	if(cur_spec_type == 2) {
 		if(cur_spec != minmax(0,99,cur_spec)) {
@@ -2161,7 +2160,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::SET_TOWN_VISIBILITY:
 			check_mess = true;
-			if(spec.ex1a != minmax(0,scenario.num_towns - 1,spec.ex1a))
+			if(spec.ex1a != minmax(0,univ.scenario.num_towns - 1,spec.ex1a))
 				giveError("Town out of range.");
 			else univ.party.can_find_town[spec.ex1a] = spec.ex2a;
 			*redraw = true;
@@ -2485,8 +2484,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			else {
 				l = global_to_local(univ.party.p_loc);
-				place_outd_wand_monst(l,
-									  univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[spec.ex1a],true);
+				place_outd_wand_monst(l, univ.out->special_enc[spec.ex1a],true);
 			}
 			break;
 		case eSpecType::ONCE_TOWN_ENCOUNTER:
@@ -3346,9 +3344,9 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 void set_terrain(location l, ter_num_t terrain_type) {
 	ter_num_t former = univ.town->terrain(l.x,l.y);
 	univ.town->terrain(l.x,l.y) = terrain_type;
-	if(scenario.ter_types[terrain_type].special == eTerSpec::CONVEYOR)
+	if(univ.scenario.ter_types[terrain_type].special == eTerSpec::CONVEYOR)
 		belt_present = true;
-	if(scenario.ter_types[former].light_radius != scenario.ter_types[terrain_type].light_radius)
+	if(univ.scenario.ter_types[former].light_radius != univ.scenario.ter_types[terrain_type].light_radius)
 		univ.town->set_up_lights();
 }
 
@@ -3398,7 +3396,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_TRANS_TER:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			set_terrain(l,scenario.ter_types[ter].trans_to_what);
+			set_terrain(l,univ.scenario.ter_types[ter].trans_to_what);
 			*redraw = 1;
 			draw_map(true);
 			break;
@@ -3432,14 +3430,14 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_LOCK_SPACE:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if(scenario.ter_types[ter].special == eTerSpec::LOCKABLE)
-				set_terrain(l,scenario.ter_types[ter].flag1.u);
+			if(univ.scenario.ter_types[ter].special == eTerSpec::LOCKABLE)
+				set_terrain(l,univ.scenario.ter_types[ter].flag1.u);
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_UNLOCK_SPACE:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if(scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE)
-				set_terrain(l,scenario.ter_types[ter].flag1.u);
+			if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE)
+				set_terrain(l,univ.scenario.ter_types[ter].flag1.u);
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_SFX_BURST: // TODO: Add a "random offset" mode
@@ -3553,7 +3551,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(i == 1) {*next_spec = -1;}
 				else {
 					ter = coord_to_ter(store_special_loc.x,store_special_loc.y);
-					set_terrain(store_special_loc,scenario.ter_types[ter].trans_to_what);
+					set_terrain(store_special_loc,univ.scenario.ter_types[ter].trans_to_what);
 					*next_spec = spec.ex1b;
 				}
 			}
@@ -3860,22 +3858,22 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					break;
 				case eSpecType::RECT_TRANS_TER:
 					ter = coord_to_ter(i,j);
-					set_terrain(l,scenario.ter_types[ter].trans_to_what);
+					set_terrain(l,univ.scenario.ter_types[ter].trans_to_what);
 					*redraw = true;
 					draw_map(true);
 					break;
 				case eSpecType::RECT_LOCK:
 					ter = coord_to_ter(i,j);
-					if(scenario.ter_types[ter].special == eTerSpec::LOCKABLE){
-						set_terrain(l,scenario.ter_types[ter].flag1.u);
+					if(univ.scenario.ter_types[ter].special == eTerSpec::LOCKABLE){
+						set_terrain(l,univ.scenario.ter_types[ter].flag1.u);
 						*redraw = true;
 						draw_map(true);
 					}
 					break;
 				case eSpecType::RECT_UNLOCK:
 					ter = coord_to_ter(i,j);
-					if(scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
-						set_terrain(l,scenario.ter_types[ter].flag1.u);
+					if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
+						set_terrain(l,univ.scenario.ter_types[ter].flag1.u);
 						*redraw = true;
 						draw_map(true);
 						break;
@@ -3906,7 +3904,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case eSpecType::OUT_CHANGE_TER:
-			univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].terrain[spec.ex1a][spec.ex1b] = spec.ex2a;
+			univ.out->terrain[spec.ex1a][spec.ex1b] = spec.ex2a;
 			l.x = spec.ex1a;
 			l.y = spec.ex1b;
 			l = local_to_global(l);
@@ -3921,8 +3919,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			else {
 				l = global_to_local(univ.party.p_loc);
-				place_outd_wand_monst(l,
-									  univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[spec.ex1a],true);
+				place_outd_wand_monst(l, univ.out->special_enc[spec.ex1a],true);
 				check_mess = true;
 			}
 			break;
@@ -3987,10 +3984,10 @@ void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,s
 		return;
 	}
 	get_strs(str1, str2, cur_type, mess1, mess2);
-	where1 = is_out() ? univ.party.i_w_c.x : univ.town.num;
-	where2 = is_out() ? univ.party.i_w_c.y : univ.town.num;
-	std::string placename = is_out() ? univ.out.outdoors[where1][where2].out_name : univ.town->town_name;
-	cStrDlog display_strings(str1.c_str(), str2.c_str(),"",scenario.intro_pic,PIC_SCEN,0);
+	where1 = is_out() ? univ.party.outdoor_corner.x + univ.party.i_w_c.x : univ.town.num;
+	where2 = is_out() ? univ.party.outdoor_corner.y + univ.party.i_w_c.y : univ.town.num;
+	std::string placename = is_out() ? univ.out->out_name : univ.town->town_name;
+	cStrDlog display_strings(str1.c_str(), str2.c_str(),"",univ.scenario.intro_pic,PIC_SCEN,0);
 	display_strings.setSound(57);
 	display_strings.setRecordHandler(cStringRecorder(note_type).string1(mess1).string2(mess2).from(where1,where2).at(placename));
 	display_strings.show();
@@ -4007,17 +4004,17 @@ void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str
 	switch(cur_type) {
 		case 0:
 			if(which_str1 >= 0)
-				str1 = scenario.spec_strs[which_str1];
+				str1 = univ.scenario.spec_strs[which_str1];
 			if(which_str2 >= 0)
-				str2 = scenario.spec_strs[which_str2];
+				str2 = univ.scenario.spec_strs[which_str2];
 			break;
 		case 1:
 			if(which_str1 >= 0)
 				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str1,(char *) str1);
-				str1 = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].spec_strs[which_str1];
+				str1 = univ.out->spec_strs[which_str1];
 			if(which_str2 >= 0)
 				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str2,(char *) str2);
-				str2 = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].spec_strs[which_str2];
+				str2 = univ.out->spec_strs[which_str2];
 			break;
 		case 2:
 			if(which_str1 >= 0)
@@ -4035,7 +4032,7 @@ void set_campaign_flag(short sdf_a, short sdf_b, short cpf_a, short cpf_b, short
 	// get_send = true: Retrieve value from Campaign Flag and put in SDF
 	try {
 		if(str >= 0) {
-			std::string cp_id = scenario.spec_strs[str];
+			std::string cp_id = univ.scenario.spec_strs[str];
 			if(get_send)
 				univ.party.stuff_done[sdf_a][sdf_b] = univ.party.cpn_flag(cpf_a, cpf_b, cp_id);
 			else

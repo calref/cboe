@@ -84,10 +84,5 @@ short init_data(short flag) {
 
 void load_base_item_defs(){
 	fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
-	scen_items_loaded = load_scenario(basePath, true);
-}
-
-bool load_scen_item_defs(std::string scen_name){
-	fs::path scenPath = progDir/"Blades of Exile Scenarios"/scen_name;
-	return load_scenario(scenPath, true);
+	scen_items_loaded = load_scenario(basePath, univ.scenario);
 }

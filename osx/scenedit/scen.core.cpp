@@ -23,6 +23,7 @@ extern short cen_x, cen_y,/* overall_mode,*/cur_town;
 extern bool mouse_button_held;
 extern short cur_viewing_mode;
 extern cTown* town;
+extern cOutdoors* current_terrain;
 extern short max_dim[3];
 extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
@@ -32,107 +33,6 @@ extern cSpeech null_talk_node;
 //extern piles_of_stuff_dumping_type *data_store;
 extern location cur_out;
 extern short start_volume, start_dir;
-
-void init_scenario() {
-	short i;
-	rectangle dummy_rect;
-	std::string temp_str;
-	cVehicle null_boat;// = {{0,0},{0,0},{0,0},-1,false,false};
-	cVehicle null_horse;// = {{0,0},{0,0},{0,0},-1,false,false};
-	cScenario::cItemStorage null_item_s;// ={-1,{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},{0,0,0,0,0,0,0,0,0,0},0};
-	
-	scenario.format.ver[0] = 1;
-	scenario.format.ver[1] = 0;
-	scenario.format.ver[2] = 0;
-	scenario.format.min_run_ver = 1;
-	scenario.format.prog_make_ver[0] = 1;
-	scenario.format.prog_make_ver[1] = 0;
-	scenario.format.prog_make_ver[2] = 0;
-	scenario.num_towns = 1;
-	scenario.out_width = 1;
-	scenario.out_height = 1;
-	scenario.difficulty = 0;
-	scenario.intro_pic = 0;
-	scenario.default_ground = 1;
-	for(i = 0; i < 200; i++) {
-		scenario.town_size[i] = 1;
-		scenario.town_hidden[i] = 0;
-		scenario.town_data_size[i][0] = 0;
-		scenario.town_data_size[i][1] = 0;
-		scenario.town_data_size[i][2] = 0;
-		scenario.town_data_size[i][3] = 0;
-		scenario.town_data_size[i][4] = 0;
-	}
-	scenario.intro_mess_len = 0;
-	scenario.where_start.x = 24;
-	scenario.where_start.y = 24;
-	scenario.out_sec_start.x = 0;
-	scenario.out_sec_start.y = 0;
-	scenario.out_start = scenario.where_start;
-	scenario.which_town_start = 0;
-	for(i = 0; i < 10; i++) {
-		scenario.town_to_add_to[i] = -1;
-		scenario.flag_to_add_to_town[i][0] = 0;
-		scenario.flag_to_add_to_town[i][1] = 0;
-	}
-	for(i = 0; i < 100; i++) {
-		scenario.out_data_size[i][0] = 0;
-		scenario.out_data_size[i][1] = 0;
-	}
-	for(i = 0; i < 3; i++) {
-		scenario.store_item_rects[i] = dummy_rect;
-		scenario.store_item_towns[i] = -1;
-	}
-	for(i = 0; i < 50; i++) {
-		scenario.special_items[i].flags = 0;
-		scenario.special_items[i].special = -1;
-	}
-	scenario.rating = 0;
-	scenario.uses_custom_graphics = 0;
-	for(i = 0; i < 256; i++) {
-		scenario.scen_monsters[i] = cMonster();
-	}
-	for(i = 0; i < 30; i++) {
-		scenario.boats[i] = null_boat;
-		scenario.horses[i] = null_horse;
-	}
-	for(i = 0; i < 256; i++) {
-		scenario.ter_types[i] = cTerrain();
-		
-		scenario.scen_specials[i] = null_spec_node;
-	}
-	for(i = 0; i < 20; i++) {
-		scenario.scenario_timer_times[i] = 0;
-		scenario.scenario_timer_specs[i] = -1;
-	}
-	for(i = 0; i < 10; i++) {
-		scenario.storage_shortcuts[i] = null_item_s;
-	}
-	scenario.last_out_edited.x = 0;
-	scenario.last_out_edited.y = 0;
-	scenario.last_town_edited = 0;
-	for(i = 0; i < 400; i++) {
-		scenario.scen_items[i] = cItemRec();
-	}
-	for(i = 0; i < 270; i++) {
-		temp_str = get_str("scen-default",i + 1);
-		if(i == 0) scenario.scen_name = temp_str;
-		else if(i == 1 || i == 2)
-			scenario.who_wrote[i-1] = temp_str;
-		else if(i == 3)
-			scenario.contact_info = temp_str;
-		else if(i >= 4 && i < 10)
-			scenario.intro_strs[i-4] = temp_str;
-		else if(i >= 10 && i < 60)
-			scenario.journal_strs[i-10] = temp_str;
-		else if(i >= 60 && i < 160) {
-			if(i % 2 == 0) scenario.special_items[(i-60)/2].name = temp_str;
-			else scenario.special_items[(i-60)/2].descr = temp_str;
-		} else if(i >= 260) continue; // These were never ever used, for some reason.
-		else scenario.spec_strs[i-160] = temp_str;
-		scenario.scen_str_len[i] = temp_str.length();
-	}
-}
 
 static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	
@@ -1670,12 +1570,10 @@ bool build_scenario() {
 	filename += ".boes";
 	if(!edit_make_scen_2(width, height, large, med, small, default_town))
 		return false;
-	town = new cMedTown;
-	init_out();
-	init_scenario();
+	scenario = cScenario(true);
 	scenario.scen_name = title;
 	if(!default_town) {
-		init_town(1);
+		scenario.addTown<cMedTown>();
 		if(!grass)
 			for(i = 0; i < 48; i++)
 				for(j = 0; j < 48; j++)
@@ -1690,13 +1588,11 @@ bool build_scenario() {
 	
 	make_new_scenario(filename,width,height,default_town,grass);
 	
-	// now make sure correct outdoors is in memory, because we're going to be saving scenarios
-	// for a while
 	overall_mode = MODE_MAIN_SCREEN;
+	
 	cur_out.x = 0;
 	cur_out.y = 0;
-	// TODO: Not quite sure if this is actually necessary; if so, need to check what to pass as 2nd param
-//	load_outdoors(cur_out,0);
+	current_terrain = scenario.outdoors[0][0];
 	
 	// TODO: Append i+1 to each town name
 	for(i = 0; i < large; i++) {
@@ -1705,7 +1601,7 @@ bool build_scenario() {
 		scenario.town_size[which_town] = 0;
 		scenario.town_hidden[which_town] = 0;
 		cur_town = which_town;
-		init_town(0);
+		scenario.addTown<cBigTown>();
 		town->town_name = "Large town";
 		save_scenario();
 	}
@@ -1715,7 +1611,7 @@ bool build_scenario() {
 		scenario.town_size[which_town] = 1;
 		scenario.town_hidden[which_town] = 0;
 		cur_town = which_town;
-		init_town(1);
+		scenario.addTown<cMedTown>();
 		town->town_name = "Medium town";
 		save_scenario();
 	}
@@ -1725,13 +1621,12 @@ bool build_scenario() {
 		scenario.town_size[which_town] = 2;
 		scenario.town_hidden[which_town] = 0;
 		cur_town = which_town;
-		init_town(2);
+		scenario.addTown<cTinyTown>();
 		town->town_name = "Small town";
 		save_scenario();
 	}
-	if(load_town(0, town)) cur_town = 0;
 	cur_town = 0;
-	augment_terrain(cur_out);
+	town = scenario.towns[0];
 	update_item_menu();
 	return false;
 }

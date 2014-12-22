@@ -10,13 +10,12 @@
 #include "boe.itemdata.h"
 #include "mathutil.h"
 //extern piles_of_stuff_dumping_type *data_store;
-extern cScenario scenario;
-
 
 //item_record_type convert_item (short_item_record_type s_item);
 
 short loot_min[5] = {0,0,5,50,400};
 short loot_max[5] = {3,8,40,800,4000};
+extern cUniverse univ;
 
 //// whole file
 //item_record_type	return_dummy_item()
@@ -36,7 +35,7 @@ cItemRec get_stored_item(short which) {
 		return s_item;
 	}
 	
-	s_item = scenario.scen_items[which];
+	s_item = univ.scenario.scen_items[which];
 	return s_item;
 }
 

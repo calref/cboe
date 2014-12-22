@@ -50,17 +50,17 @@ public:
 	location combat_pos;
 	short marked_damage, dir, parry, last_attacked;
 	
-	cPlayer& operator = (legacy::pc_record_type old);
+	void append(legacy::pc_record_type old);
 	cPlayer();
 	cPlayer(long key,short slot);
 	short get_tnl();
-	void writeTo(std::ostream& file);
+	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 };
 
 void operator += (eMainStatus& stat, eMainStatus othr);
 void operator -= (eMainStatus& stat, eMainStatus othr);
-std::ostream& operator << (std::ostream& out, eMainStatus& e);
+std::ostream& operator << (std::ostream& out, eMainStatus e);
 std::istream& operator >> (std::istream& in, eMainStatus& e);
 
 #endif

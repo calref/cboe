@@ -14,7 +14,7 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-cMonster& cMonster::operator = (legacy::monster_record_type& old){
+void cMonster::append(legacy::monster_record_type& old){
 	level = old.level;
 	//m_name = old.m_name;
 	m_health = old.m_health;
@@ -48,11 +48,12 @@ cMonster& cMonster::operator = (legacy::monster_record_type& old){
 	picture_num = old.picture_num;
 	if(picture_num == 122) picture_num = 119;
 	see_spec = -1;
-	return *this;
 }
 
 cMonster::cMonster(){
 	// TODO: Fill in
+	see_str1 = -1;
+	see_str2 = -1;
 	see_spec = -1;
 }
 
@@ -73,7 +74,7 @@ cCreature::cCreature(int num) : cCreature() {
 	number = num;
 }
 
-cCreature& cCreature::operator = (legacy::creature_start_type old){
+void cCreature::append(legacy::creature_start_type old){
 	number = old.number;
 	start_attitude = old.start_attitude;
 	start_loc.x = old.start_loc.x;
@@ -90,16 +91,15 @@ cCreature& cCreature::operator = (legacy::creature_start_type old){
 	personality = old.personality;
 	special_on_kill = old.special_on_kill;
 	facial_pic = old.facial_pic;
-	return *this;
 }
 
-cCreature& cCreature::operator = (legacy::creature_data_type old){
+void cCreature::append(legacy::creature_data_type old){
 	active = old.active;
 	attitude = old.attitude;
 	number = old.number;
 	cur_loc.x = old.m_loc.x;
 	cur_loc.y = old.m_loc.y;
-	*this = old.m_d;
+	cMonster::append(old.m_d);
 	mobility = old.mobile;
 	summoned = old.summoned;
 	number = old.monst_start.number;
@@ -127,7 +127,6 @@ cCreature& cCreature::operator = (legacy::creature_data_type old){
 	for(int i = 0; i < 15; i++)
 		status[(eStatus) i] = old.m_d.status[i];
 	direction = old.m_d.direction;
-	return *this;
 }
 
 cMonster::cAttack::operator int() const {
@@ -145,7 +144,7 @@ std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att) {
 	return out;
 }
 
-std::ostream& operator << (std::ostream& out, eStatus& e){
+std::ostream& operator << (std::ostream& out, eStatus e){
 	return out << (int) e;
 }
 
@@ -159,7 +158,7 @@ std::istream& operator >> (std::istream& in, eStatus& e){
 	return in;
 }
 
-std::ostream& operator << (std::ostream& out, eRace& e){
+std::ostream& operator << (std::ostream& out, eRace e){
 	return out << (int) e;
 }
 
@@ -170,47 +169,6 @@ std::istream& operator >> (std::istream& in, eRace& e){
 		e = (eRace) i;
 	else e = eRace::HUMAN;
 	return in;
-}
-
-extern cUniverse univ;
-extern cScenario scenario;
-// TODO: Any setup where "x = x" does something is probably a bad idea...
-cCreature& cCreature::operator = (const cCreature& other){ // replaces return_monster_template() from boe.monsters.cpp
-	id = other.id;
-	number = other.number;
-	start_attitude = other.start_attitude;
-	start_loc = other.start_loc;
-	mobility = other.mobility;
-	time_flag = other.time_flag;
-	extra1 = other.extra1;
-	extra2 = other.extra2;
-	spec1 = other.spec1;
-	spec2 = other.spec2;
-	spec_enc_code = other.spec_enc_code;
-	time_code = other.time_code;
-	monster_time = other.monster_time;
-	personality = other.personality;
-	special_on_kill = other.special_on_kill;
-	facial_pic = other.facial_pic;
-	*this = scenario.scen_monsters[number];
-	active = 1; // TODO: Is this right?
-	if(spec_skill == 11) picture_num = 0;
-	m_health /= (univ.party.stuff_done[306][7]) ? 2 : 1;
-	m_health *= univ.difficulty_adjust();
-	health = m_health;
-	ap = 0;
-	if((mu > 0 || cl > 0))
-		max_mp = mp = 12 * level;
-	else max_mp = mp = 0;
-	m_morale = 10 * level;
-	if(level >= 20) m_morale += 10 * (level - 20);
-	morale = m_morale;
-	direction = 0;
-	status.clear();
-	attitude = start_attitude; // TODO: Is this right?
-	cur_loc = start_loc;
-	target = 6; // No target
-	return *this;
 }
 
 cMonster::cAbility::operator std::string(){
@@ -360,7 +318,8 @@ cMonster::cAbility::operator std::string(){
 			sout << "Steals gold when hits";
 			break;
 		case MONST_SUMMON_ONE:
-			sout << "Summons " << scenario.scen_monsters[extra1].m_name << "s (" << extra2 <<"% chance)";
+			// TODO: Store the name of the summoned monster in the class so it can be used here.
+//			sout << "Summons " << univ.scenario.scen_monsters[extra1].m_name << "s (" << extra2 <<"% chance)";
 			break;
 		case MONST_SUMMON_TYPE:
 			sout << "Summons ";
@@ -499,7 +458,7 @@ bool cMonster::hasAbil(eMonstAbil what, unsigned char* x1, unsigned char* x2){
 	return false;
 }
 
-void cMonster::writeTo(std::ostream& /*file*/) {
+void cMonster::writeTo(std::ostream& /*file*/) const {
 	// TODO: Implement this (low priority since only used for exported summons)
 }
 
@@ -507,7 +466,7 @@ void cMonster::readFrom(std::istream& /*file*/) {
 	// TODO: Implement this (low priority since only used for exported summons)
 }
 
-void cCreature::writeTo(std::ostream& file) {
+void cCreature::writeTo(std::ostream& file) const {
 	file << "MONSTER " << number << '\n';
 	file << "ATTITUDE " << attitude << '\n';
 	file << "STARTATT " << unsigned(start_attitude) << '\n';
@@ -529,8 +488,8 @@ void cCreature::writeTo(std::ostream& file) {
 	file << "TARGLOC " << targ_loc.x << ' ' << targ_loc.y << '\n';
 	for(int i = 0; i < 15; i++) {
 		eStatus stat = (eStatus) i;
-		if(status[stat] != 0)
-			file << "STATUS " << i << ' ' << status[stat] << '\n';
+		if(status.at(stat) != 0)
+			file << "STATUS " << i << ' ' << status.at(stat) << '\n';
 	}
 	file << "CURHP " << health << '\n';
 	file << "CURSP " << mp << '\n';
@@ -545,10 +504,9 @@ void cCreature::readFrom(std::istream& file) {
 		printf("Parsing line in town.txt: %s\n", cur.c_str());
 		std::istringstream line(cur);
 		line >> cur;
-		if(cur == "MONSTER") {
+		if(cur == "MONSTER")
 			line >> number;
-			*this = cCreature(number);
-		} else if(cur == "ATTITUDE")
+		else if(cur == "ATTITUDE")
 			line >> attitude;
 		else if(cur == "STARTATT") {
 			unsigned int i;

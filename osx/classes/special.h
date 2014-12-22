@@ -34,8 +34,8 @@ public:
 	short jumpto;
 	
 	cSpecial();
-	cSpecial& operator = (legacy::special_node_type& old);
-	void writeTo(std::ostream& file);
+	void append(legacy::special_node_type& old);
+	void writeTo(std::ostream& file) const;
 };
 
 struct pending_special_type {

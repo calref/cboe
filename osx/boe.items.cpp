@@ -45,7 +45,6 @@ extern bool map_visible,diff_depth_ok;
 extern sf::RenderWindow mini_map;
 //extern short town_size[3];
 extern sf::Texture pc_gworld;
-extern cScenario scenario;
 extern cUniverse univ;
 
 const std::multiset<eItemType> equippable = {
@@ -836,7 +835,7 @@ void set_town_attitude(short lo,short hi,short att) {
 				
 				univ.town.monst[i].mobility = 1;
 				// If a "guard", give a power boost
-				if(scenario.scen_monsters[num].spec_skill == 37) {
+				if(univ.scenario.scen_monsters[num].spec_skill == 37) {
 					univ.town.monst[i].active = 2;
 					univ.town.monst[i].health *= 3;
 					univ.town.monst[i].status[eStatus::HASTE_SLOW] = 8;
@@ -1212,7 +1211,7 @@ void place_glands(location where,m_num_t m_type) {
 	cItemRec store_i;
 	cMonster monst;
 	
-	monst = scenario.scen_monsters[m_type];
+	monst = univ.scenario.scen_monsters[m_type];
 	
 	if((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,1,100) < monst.corpse_item_chance)) {
 		store_i = get_stored_item(monst.corpse_item);

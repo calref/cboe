@@ -51,8 +51,6 @@ bool load_scenario_header(fs::path filename/*,short header_entry*/);
 //short get_buf_ptr(short flag);
 //bool check_p (short pword);
 
-__declspec(deprecated) void init_town();
-
 //void port_talk_nodes();
 //void port_town();
 //void port_t_d();

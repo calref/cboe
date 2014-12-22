@@ -93,8 +93,6 @@ extern fs::path progDir;
 short specials_res_id;
 char start_name[256];
 
-cScenario scenario;
-
 //
 //	Main body of program Exile
 //
@@ -216,22 +214,20 @@ void handle_file_menu(int item_hit) {
 	
 	switch(item_hit) {
 		case 1://save
-			save_party(file_in_mem);
+			save_party(file_in_mem, univ);
 			break;
 		case 2://save as
 			file = nav_put_party();
-			if(!file.empty()) save_party(file);
+			if(!file.empty()) save_party(file, univ);
 			break;
 		case 3://open
 			if(verify_restore_quit(true)){
 				file = nav_get_party();
 				if(!file.empty()) {
-					if(load_party(file)) {
+					if(load_party(file, univ)) {
 						file_in_mem = file;
 						party_in_scen = !univ.party.scen_name.empty();
-						if(party_in_scen && load_scen_item_defs(univ.party.scen_name))
-							scen_items_loaded = true;
-						else load_base_item_defs();
+						if(!party_in_scen) load_base_item_defs();
 						update_item_menu();
 					}
 				}
@@ -459,7 +455,7 @@ void handle_item_menu(int item_hit) {
 		display_strings(5,7);
 		return;
 	}
-	store_i = scenario.scen_items[item_hit];
+	store_i = univ.scenario.scen_items[item_hit];
 	store_i.ident = true;
 	give_to_pc(current_active_pc,store_i,false);
 }
@@ -482,7 +478,7 @@ bool verify_restore_quit(bool mode) {
 		return false;
 	if(choice == "quit")
 		return true;
-	save_party(file_in_mem);
+	save_party(file_in_mem, univ);
 	return true;
 }
 

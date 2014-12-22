@@ -71,7 +71,7 @@ extern ter_num_t template_terrain[64][64];
 extern cItemRec item_list[400];
 extern cScenario scenario;
 extern std::shared_ptr<cScrollbar> right_sbar;
-extern cOutdoors current_terrain;
+extern cOutdoors* current_terrain;
 extern location cur_out;
 extern sf::RenderWindow mainPtr;
 //extern piles_of_stuff_dumping_type *data_store;
@@ -106,7 +106,6 @@ short town_buttons[6][10] = {
 
 cCreature last_placed_monst;
 
-cSpecial null_spec_node;// = {0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 cSpeech::cNode null_talk_node = {0,0,{120,120,120,120},{120,120,120,120},{0,0,0,0}};
 
 rectangle working_rect;
@@ -184,13 +183,11 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						
 					case 4: // edit
 						fs::path file_to_load = nav_get_scenario();
-						if(!file_to_load.empty() && load_scenario(file_to_load)) {
-							if(load_town(scenario.last_town_edited,town))
-								cur_town = scenario.last_town_edited;
-							if(load_outdoors(scenario.last_out_edited,current_terrain)){
-								cur_out = scenario.last_out_edited;
-								augment_terrain(cur_out);
-							}
+						if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
+							cur_town = scenario.last_town_edited;
+							town = scenario.towns[cur_town];
+							cur_out = scenario.last_out_edited;
+							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 							overall_mode = MODE_MAIN_SCREEN;
 							set_up_main_screen();
 							update_item_menu();
@@ -240,11 +237,9 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						}
 						spot_hit = pick_out(cur_out);
 						if(spot_hit != cur_out) {
-							if(load_outdoors(spot_hit,current_terrain)){
-								augment_terrain(spot_hit);
-								cur_out = spot_hit;
-								set_up_main_screen();
-							}
+							cur_out = spot_hit;
+							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
+							set_up_main_screen();
 						}
 						break;
 					case 12: // edit outdoors
@@ -258,8 +253,9 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 								break;
 						}
 						x = pick_town_num("select-town-edit.xml",cur_town);
-						if(x >= 0 && load_town(x,town)){
+						if(x >= 0){
 							cur_town = x;
+							town = scenario.towns[cur_town];
 							set_up_main_screen();
 						}
 						break;
@@ -319,7 +315,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 					case 4:
 						if(option_hit) {
-							scenario.scen_specials[j] = null_spec_node;
+							scenario.scen_specials[j] = cSpecial();
 						}
 						else edit_spec_enc(j,0,nullptr);
 						//get_str(s2,22,scenario.scen_specials[j].type + 1);
@@ -329,7 +325,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 					case 5:
 						if(option_hit) {
-							current_terrain.specials[j] = null_spec_node;
+							current_terrain->specials[j] = cSpecial();
 						}
 						else edit_spec_enc(j,1,nullptr);
 						//get_str(s2,22,current_terrain.specials[j].type + 1);
@@ -339,7 +335,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 					case 6:
 						if(option_hit) {
-							town->specials[j] = null_spec_node;
+							town->specials[j] = cSpecial();
 						}
 						else edit_spec_enc(j,2,nullptr);
 						//get_str(s2,22,town.specials[j].type + 1);
@@ -361,7 +357,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					case 8:
 						if(option_hit) {
 							s2 = get_str("outdoor-default", j + 11);
-							current_terrain.spec_strs[j] = s2;
+							current_terrain->spec_strs[j] = s2;
 						}
 						else edit_text_str(j,1);
 						//sprintf((char *) str,"%d - %-30.30s",j,(char *) data_store->out_strs[j]);
@@ -403,7 +399,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					case 14:
 						if(option_hit) {
 							s2 = get_str("outdoor-default", j + 101);
-							current_terrain.spec_strs[j] = s2;
+							current_terrain->spec_strs[j] = s2;
 						}
 						else edit_text_str(j,4);
 						start_string_editing(4,1);
@@ -515,11 +511,11 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					}
 					else {
 						for(x = 0; x < 8; x++)
-							if(current_terrain.info_rect[x].right == 0) {
-								current_terrain.info_rect[x] = working_rect;
-								current_terrain.rect_names[x] = "";
+							if(current_terrain->info_rect[x].right == 0) {
+								current_terrain->info_rect[x] = working_rect;
+								current_terrain->rect_names[x] = "";
 								if(!edit_area_rect_str(x,0))
-									current_terrain.info_rect[x].right = 0;
+									current_terrain->info_rect[x].right = 0;
 								x = 500;
 							}
 						
@@ -534,8 +530,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				if(mouse_button_held)
 					break;
 				if(!editing_town) {
-					current_terrain.wandering_locs[mode_count - 1].x = spot_hit.x;
-					current_terrain.wandering_locs[mode_count - 1].y = spot_hit.y;
+					current_terrain->wandering_locs[mode_count - 1].x = spot_hit.x;
+					current_terrain->wandering_locs[mode_count - 1].y = spot_hit.y;
 				}
 				if(editing_town) {
 					town->wandering_locs[mode_count - 1].x = spot_hit.x;
@@ -721,7 +717,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				break;
 			case MODE_TOGGLE_SPECIAL_DOT:
 				if(!editing_town){
-					current_terrain.special_spot[spot_hit.x][spot_hit.y] = !current_terrain.special_spot[spot_hit.x][spot_hit.y];
+					current_terrain->special_spot[spot_hit.x][spot_hit.y] = !current_terrain->special_spot[spot_hit.x][spot_hit.y];
 					overall_mode = MODE_DRAWING;
 					break;
 				}
@@ -748,7 +744,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 			case MODE_EYEDROPPER:
 				if(editing_town)
 					set_new_terrain(town->terrain(spot_hit.x,spot_hit.y));
-				else set_new_terrain(current_terrain.terrain[spot_hit.x][spot_hit.y]);
+				else set_new_terrain(current_terrain->terrain[spot_hit.x][spot_hit.y]);
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
@@ -782,8 +778,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				}
 				if(!editing_town) {
 					for(x = 0; x < 8; x++)
-						if((current_terrain.sign_locs[x].x == spot_hit.x) && (current_terrain.sign_locs[x].y == spot_hit.y)) {
-							edit_sign(x,scenario.ter_types[current_terrain.terrain[spot_hit.x][spot_hit.y]].picture);
+						if((current_terrain->sign_locs[x].x == spot_hit.x) && (current_terrain->sign_locs[x].y == spot_hit.y)) {
+							edit_sign(x,scenario.ter_types[current_terrain->terrain[spot_hit.x][spot_hit.y]].picture);
 							x = 30;
 						}
 					if(x == 8) {
@@ -817,8 +813,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				}
 				if(!editing_town) {
 					for(x = 0; x < 18; x++)
-						if((current_terrain.special_locs[x].x == spot_hit.x) && (current_terrain.special_locs[x].y == spot_hit.y)) {
-							copied_spec = current_terrain.special_id[x];
+						if((current_terrain->special_locs[x].x == spot_hit.x) && (current_terrain->special_locs[x].y == spot_hit.y)) {
+							copied_spec = current_terrain->special_id[x];
 							x = 500;
 						}
 				}
@@ -846,9 +842,9 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 					}
 					for(x = 0; x < 18; x++)
-						if(current_terrain.special_locs[x].x == 100) {
-							current_terrain.special_locs[x] = spot_hit;
-							current_terrain.special_id[x] = copied_spec ;
+						if(current_terrain->special_locs[x].x == 100) {
+							current_terrain->special_locs[x] = spot_hit;
+							current_terrain->special_id[x] = copied_spec;
 							x = 500;
 						}
 				}
@@ -869,8 +865,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				}
 				if(!editing_town) {
 					for(x = 0; x < 18; x++)
-						if((current_terrain.special_locs[x].x == spot_hit.x) && (current_terrain.special_locs[x].y == spot_hit.y)) {
-							current_terrain.special_locs[x].x = 100;
+						if((current_terrain->special_locs[x].x == spot_hit.x) && (current_terrain->special_locs[x].y == spot_hit.y)) {
+							current_terrain->special_locs[x].x = 100;
 							x = 500;
 						}
 				}
@@ -1298,11 +1294,11 @@ void swap_terrain() {
 	
 	for(i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
 		for(j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
-			ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+			ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 			if((ter == a) && (get_ran(1,1,100) <= c)) {
 				if(editing_town)
 					town->terrain(i,j) = b;
-				else current_terrain.terrain[i][j] = b;
+				else current_terrain->terrain[i][j] = b;
 			}
 		}
 	
@@ -1507,7 +1503,7 @@ bool is_wall(short i,short j) {
 	bool answer = false;
 	short pic;
 	
-	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
 	
 	if((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
@@ -1537,7 +1533,7 @@ bool is_correctable_wall(short i,short j) {
 	bool answer = false;
 	short k;
 	
-	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 	if((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return false;
 	if(!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
@@ -1554,7 +1550,7 @@ bool is_mountain(short i,short j) {
 	short pic;
 	ter_num_t ter;
 	
-	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
 	if((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return true;
@@ -1576,7 +1572,7 @@ bool is_hill(short i,short j) {
 	short pic;
 	ter_num_t ter;
 	
-	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
 	if((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return true;
@@ -1606,7 +1602,7 @@ bool is_erasable_water(short i,short j) {
 	short pic;
 	ter_num_t ter;
 	
-	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
 	if((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return false;
@@ -1623,7 +1619,7 @@ bool is_water(short i,short j) {
 	short pic;
 	ter_num_t ter;
 	
-	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
 	if((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return true;
@@ -1640,7 +1636,7 @@ bool is_correctable_water(short i,short j) {
 	short pic;
 	ter_num_t ter;
 	
-	ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+	ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 	pic = scenario.ter_types[ter].picture;
 	if((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
 		return false;
@@ -1663,7 +1659,7 @@ void shy_change_circle_terrain(location center,short radius,ter_num_t terrain_ty
 		for(j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
 			l.x = i;
 			l.y = j;
-			ter = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+			ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 			if((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability)
 				&& (ter < 5))
 				set_terrain(l,terrain_type);
@@ -1727,7 +1723,7 @@ void frill_up_terrain() {
 	
 	for(i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
 		for(j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
-			terrain_type = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+			terrain_type = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 			
 			if((terrain_type == 2) && (get_ran(1,1,20) < 3))
 				terrain_type = 3;
@@ -1739,7 +1735,7 @@ void frill_up_terrain() {
 				terrain_type = 37;
 			if(editing_town)
 				town->terrain(i,j) = terrain_type;
-			else current_terrain.terrain[i][j] = terrain_type;
+			else current_terrain->terrain[i][j] = terrain_type;
 		}
 	draw_terrain();
 }
@@ -1750,7 +1746,7 @@ void unfrill_terrain() {
 	
 	for(i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
 		for(j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
-			terrain_type = (editing_town) ? town->terrain(i,j) : current_terrain.terrain[i][j];
+			terrain_type = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 			if(terrain_type == 3)
 				terrain_type = 2;
 			if(terrain_type == 4)
@@ -1761,7 +1757,7 @@ void unfrill_terrain() {
 				terrain_type = 36;
 			if(editing_town)
 				town->terrain(i,j) = terrain_type;
-			else current_terrain.terrain[i][j] = terrain_type;
+			else current_terrain->terrain[i][j] = terrain_type;
 		}
 	draw_terrain();
 }
@@ -1786,7 +1782,7 @@ ter_num_t get_ground_from_ter(ter_num_t ter){
 
 bool terrain_matches(unsigned char x, unsigned char y, ter_num_t ter){
 	ter_num_t ter2;
-	if(editing_town) ter2 = town->terrain(x,y); else ter2 = current_terrain.terrain[x][y];
+	if(editing_town) ter2 = town->terrain(x,y); else ter2 = current_terrain->terrain[x][y];
 	if(ter2 == ter) return true;
 	if(scenario.ter_types[ter2].ground_type != scenario.ter_types[ter].ground_type)
 		return false;
@@ -1823,7 +1819,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	
 	if(editing_town)
 		town->terrain(i,j) = terrain_type;
-	else current_terrain.terrain[i][j] = terrain_type;
+	else current_terrain->terrain[i][j] = terrain_type;
 	l2 = l;
 	
 	// Large objects (eg rubble)
@@ -1837,7 +1833,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 			for(j = 0; j < obj_dim.y; j++){
 				if(editing_town)
 					town->terrain(l2.x + i,l2.y + j) = find_object_part(q,i,j,terrain_type);
-				else current_terrain.terrain[l2.x + i][l2.y + j] = find_object_part(q,i,j,terrain_type);
+				else current_terrain->terrain[l2.x + i][l2.y + j] = find_object_part(q,i,j,terrain_type);
 			}
 	}
 	
@@ -1876,11 +1872,11 @@ void set_terrain(location l,ter_num_t terrain_type) {
 				else {
 					l2.x = i;
 					l2.y = j;
-					ter = (editing_town) ? town->terrain(l2.x,l2.y) : current_terrain.terrain[l2.x][l2.y];
+					ter = editing_town ? town->terrain(l2.x,l2.y) : current_terrain->terrain[l2.x][l2.y];
 					if((!is_mountain(l2.x,l2.y)) && (ter < 5)) {
 						if(editing_town)
 							town->terrain(l2.x,l2.y) = 36;
-						else current_terrain.terrain[l2.x][l2.y] = 36;
+						else current_terrain->terrain[l2.x][l2.y] = 36;
 					}
 				}
 	 		}
@@ -1938,26 +1934,26 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		}
 		for(i = 0; i < 8; i++)
 			if(which_sign < 0) {
-				if((current_terrain.sign_locs[i].x == l.x) && (current_terrain.sign_locs[i].y == l.y))
+				if((current_terrain->sign_locs[i].x == l.x) && (current_terrain->sign_locs[i].y == l.y))
 					which_sign = i;
 			}
 		for(i = 0; i < 8; i++)
 			if(which_sign < 0) {
-				if(current_terrain.sign_locs[i].x == 100)
+				if(current_terrain->sign_locs[i].x == 100)
 					which_sign = i;
 				else {
-					ter = current_terrain.terrain[current_terrain.sign_locs[i].x][current_terrain.sign_locs[i].y];
+					ter = current_terrain->terrain[current_terrain->sign_locs[i].x][current_terrain->sign_locs[i].y];
 					if(scenario.ter_types[ter].special != eTerSpec::IS_A_SIGN)
 						which_sign = i;
 				}
 			}
 		if(which_sign >= 0) {
-			current_terrain.sign_locs[which_sign] = l;
+			current_terrain->sign_locs[which_sign] = l;
 			edit_sign(which_sign,scenario.ter_types[terrain_type].picture);
 			sign_error_received = false;
 		}
 		else {
-			current_terrain.terrain[l.x][l.y] = current_ground;
+			current_terrain->terrain[l.x][l.y] = current_ground;
 			if(!sign_error_received) {
 				giveError("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.");
 				sign_error_received = true;
@@ -2369,21 +2365,21 @@ bool out_fix_rubble(location l) {
 	
 	if((l.x < 0) || (l.y > 47) || (l.y < 0) || (l.y > 47))
 		return false;
-	terrain_type = current_terrain.terrain[l.x][l.y];
-	if((terrain_type == 85) && (current_terrain.terrain[l.x + 1][l.y] != 86)) {
-		current_terrain.terrain[l.x][l.y] = 0;
+	terrain_type = current_terrain->terrain[l.x][l.y];
+	if((terrain_type == 85) && (current_terrain->terrain[l.x + 1][l.y] != 86)) {
+		current_terrain->terrain[l.x][l.y] = 0;
 		return true;
 	}
-	if((terrain_type == 86) && (current_terrain.terrain[l.x - 1][l.y] != 85)) {
-		current_terrain.terrain[l.x][l.y] = 0;
+	if((terrain_type == 86) && (current_terrain->terrain[l.x - 1][l.y] != 85)) {
+		current_terrain->terrain[l.x][l.y] = 0;
 		return true;
 	}
-	if((terrain_type == 88) && (current_terrain.terrain[l.x + 1][l.y] != 89)) {
-		current_terrain.terrain[l.x][l.y] = 2;
+	if((terrain_type == 88) && (current_terrain->terrain[l.x + 1][l.y] != 89)) {
+		current_terrain->terrain[l.x][l.y] = 2;
 		return true;
 	}
-	if((terrain_type == 89) && (current_terrain.terrain[l.x - 1][l.y] != 88)) {
-		current_terrain.terrain[l.x][l.y] = 2;
+	if((terrain_type == 89) && (current_terrain->terrain[l.x - 1][l.y] != 88)) {
+		current_terrain->terrain[l.x][l.y] = 2;
 		return true;
 	}
 	return false;
@@ -2398,7 +2394,7 @@ bool out_fix_cave(location l) {
 		return false;
 	i = l.x;
 	j = l.y;
-	store_ter = current_terrain.terrain[l.x][l.y];
+	store_ter = current_terrain->terrain[l.x][l.y];
 	
 	if(is_correctable_wall(i,j)) {
 		if(((l.x == 0) || (l.x == 47)) && ((l.y == 0) || (l.y == 47)))
@@ -2471,10 +2467,10 @@ bool out_fix_cave(location l) {
 			}
 		}
 		ter_to_fix += 3;
-		current_terrain.terrain[i][j] = ter_to_fix;
+		current_terrain->terrain[i][j] = ter_to_fix;
 	}
 	
-	if(store_ter == current_terrain.terrain[l.x][l.y])
+	if(store_ter == current_terrain->terrain[l.x][l.y])
 		return false;
 	else return true;
 	
@@ -2490,7 +2486,7 @@ bool out_fix_mountain(location l) {
 		return false;
 	i = l.x;
 	j = l.y;
-	store_ter = current_terrain.terrain[l.x][l.y];
+	store_ter = current_terrain->terrain[l.x][l.y];
 	
 	if((store_ter >= 22) &&
 		(store_ter <= 35) && (store_ter != 23)) {
@@ -2563,10 +2559,10 @@ bool out_fix_mountain(location l) {
 				
 			}
 		}
-		current_terrain.terrain[i][j] = ter_to_fix;
+		current_terrain->terrain[i][j] = ter_to_fix;
 	}
 	
-	if(store_ter == current_terrain.terrain[l.x][l.y])
+	if(store_ter == current_terrain->terrain[l.x][l.y])
 		return false;
 	else return true;
 	
@@ -2581,10 +2577,10 @@ bool out_fix_hill(location l) {
 		return false;
 	i = l.x;
 	j = l.y;
-	store_ter = current_terrain.terrain[l.x][l.y];
+	store_ter = current_terrain->terrain[l.x][l.y];
 	
-	if((current_terrain.terrain[l.x][l.y] >= 36) &&
-		(current_terrain.terrain[l.x][l.y] <= 49) ) {
+	if((current_terrain->terrain[l.x][l.y] >= 36) &&
+		(current_terrain->terrain[l.x][l.y] <= 49) ) {
 		if(((l.x == 0) || (l.x == 47)) && ((l.y == 0) || (l.y == 47)))
 			ter_to_fix = 22;
 		else if((l.x == 0) || (l.x == 47)) {
@@ -2657,11 +2653,11 @@ bool out_fix_hill(location l) {
 		ter_to_fix += 14;
 		//if((ter_to_fix == 36) && (get_ran(1,0,15) == 5))
 		//	ter_to_fix++;
-		if((current_terrain.terrain[i][j] != 37) || (ter_to_fix != 36))
-			current_terrain.terrain[i][j] = ter_to_fix;
+		if((current_terrain->terrain[i][j] != 37) || (ter_to_fix != 36))
+			current_terrain->terrain[i][j] = ter_to_fix;
 	}
 	
-	if(store_ter == current_terrain.terrain[l.x][l.y])
+	if(store_ter == current_terrain->terrain[l.x][l.y])
 		return false;
 	else return true;
 	
@@ -2676,7 +2672,7 @@ bool out_fix_water(location l) {
 		return false;
 	i = l.x;
 	j = l.y;
-	store_ter = current_terrain.terrain[l.x][l.y];
+	store_ter = current_terrain->terrain[l.x][l.y];
 	
 	if(is_correctable_water(l.x,l.y)) {
 		if(((l.x == 0) || (l.x == 47)) && ((l.y == 0) || (l.y == 47)))
@@ -2751,10 +2747,10 @@ bool out_fix_water(location l) {
 		ter_to_fix += 27;
 		if(ter_to_fix == 49)
 			ter_to_fix++;
-		current_terrain.terrain[i][j] = ter_to_fix;
+		current_terrain->terrain[i][j] = ter_to_fix;
 	}
 	
-	if(store_ter == current_terrain.terrain[l.x][l.y])
+	if(store_ter == current_terrain->terrain[l.x][l.y])
 		return false;
 	else return true;
 	
@@ -2905,8 +2901,8 @@ void place_edit_special(location loc) {
 			return;
 		}
 		for(i = 0; i < 18; i++)
-			if((current_terrain.special_locs[i].x == loc.x) && (current_terrain.special_locs[i].y == loc.y)) {
-				edit_spec_enc(current_terrain.special_id[i],1,nullptr);
+			if((current_terrain->special_locs[i].x == loc.x) && (current_terrain->special_locs[i].y == loc.y)) {
+				edit_spec_enc(current_terrain->special_id[i],1,nullptr);
 				i = 500;
 			}
 		if(i < 500) { // new special
@@ -2916,13 +2912,13 @@ void place_edit_special(location loc) {
 				return;
 			}
 			for(i = 0; i < 18; i++)
-				if(current_terrain.special_locs[i].x == 100) {
-					current_terrain.special_locs[i] = loc;
-					current_terrain.special_id[i] = spec;
+				if(current_terrain->special_locs[i].x == 100) {
+					current_terrain->special_locs[i] = loc;
+					current_terrain->special_id[i] = spec;
 					edit_spec_enc(spec,1,nullptr);
 					
-					if(current_terrain.specials[spec].pic < 0)
-						current_terrain.special_locs[i].x = 100;
+					if(current_terrain->specials[spec].pic < 0)
+						current_terrain->special_locs[i].x = 100;
 					i = 500;
 				}
 			if(i < 500) {
@@ -2964,18 +2960,18 @@ void set_special(location spot_hit) {
 			return;
 		}
 		for(x = 0; x < 18; x++)
-			if((current_terrain.special_locs[x].x == spot_hit.x) && (current_terrain.special_locs[x].y == spot_hit.y)) {
-				y = edit_special_num(1,current_terrain.special_id[x]);
-				if(y >= 0) current_terrain.special_id[x] = y;
+			if((current_terrain->special_locs[x].x == spot_hit.x) && (current_terrain->special_locs[x].y == spot_hit.y)) {
+				y = edit_special_num(1,current_terrain->special_id[x]);
+				if(y >= 0) current_terrain->special_id[x] = y;
 				x = 500;
 			}
 		if(x < 500) {
 			for(x = 0; x < 18; x++)
-				if(current_terrain.special_locs[x].x == 100) {
-					y = edit_special_num(1,current_terrain.special_id[x]);
+				if(current_terrain->special_locs[x].x == 100) {
+					y = edit_special_num(1,current_terrain->special_id[x]);
 					if(y >= 0) {
-						current_terrain.special_locs[x] = spot_hit;
-						current_terrain.special_id[x] = y;
+						current_terrain->special_locs[x] = spot_hit;
+						current_terrain->special_id[x] = y;
 					}
 					x = 500;
 				}
@@ -2990,31 +2986,31 @@ void town_entry(location spot_hit) {
 	short x,y;
 	ter_num_t ter;
 	
-	ter = current_terrain.terrain[spot_hit.x][spot_hit.y];
+	ter = current_terrain->terrain[spot_hit.x][spot_hit.y];
 	if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 		giveError("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.");
 		return;
 	}
 	// clean up old town entrys
 	for(x = 0; x < 8; x++)
-		if(current_terrain.exit_locs[x].x < 100) {
-			ter = current_terrain.terrain[current_terrain.exit_locs[x].x][current_terrain.exit_locs[x].y];
+		if(current_terrain->exit_locs[x].x < 100) {
+			ter = current_terrain->terrain[current_terrain->exit_locs[x].x][current_terrain->exit_locs[x].y];
 			if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE)
-				current_terrain.exit_locs[x].x = 100;
+				current_terrain->exit_locs[x].x = 100;
 		}
 	y = -2;
 	for(x = 0; x < 8; x++)
-		if((current_terrain.exit_locs[x].x == spot_hit.x) && (current_terrain.exit_locs[x].y == spot_hit.y)) {
-			y = pick_town_num("select-town-enter.xml",current_terrain.exit_dests[x]);
-			if(y >= 0) current_terrain.exit_dests[x] = y;
+		if((current_terrain->exit_locs[x].x == spot_hit.x) && (current_terrain->exit_locs[x].y == spot_hit.y)) {
+			y = pick_town_num("select-town-enter.xml",current_terrain->exit_dests[x]);
+			if(y >= 0) current_terrain->exit_dests[x] = y;
 		}
 	if(y == -2) {
 		for(x = 0; x < 8; x++)
-			if(current_terrain.exit_locs[x].x == 100) {
+			if(current_terrain->exit_locs[x].x == 100) {
 				y = pick_town_num("select-town-enter.xml",0);
 				if(y >= 0) {
-					current_terrain.exit_dests[x] = y;
-					current_terrain.exit_locs[x] = spot_hit;
+					current_terrain->exit_dests[x] = y;
+					current_terrain->exit_locs[x] = spot_hit;
 				}
 				x = 500;
 			}
@@ -3117,7 +3113,7 @@ void start_out_edit() {
 	reset_lb();
 	sprintf(message,"Editing outdoors (%d,%d)",cur_out.x,cur_out.y);
 	set_lb(0,2,message,0);
-	set_lb(NLS - 3,1,current_terrain.out_name.c_str(),0);
+	set_lb(NLS - 3,1,current_terrain->out_name.c_str(),0);
 	set_lb(NLS - 2,1,"(Click border to scroll view.)",0);
 	set_lb(NLS - 1,11,"Back to Main Menu",0);
 	overall_mode = MODE_DRAWING;
@@ -3132,9 +3128,9 @@ void start_out_edit() {
 	copied_spec = -1;
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++)
-			if(current_terrain.terrain[i][j] == 0)
+			if(current_terrain->terrain[i][j] == 0)
 				current_ground = 0;
-			else if(current_terrain.terrain[i][j] == 2)
+			else if(current_terrain->terrain[i][j] == 2)
 				current_ground = 2;
 }
 
@@ -3264,7 +3260,7 @@ void start_string_editing(short mode,short just_redo_text) {
 				set_rb(i,7000 + i,(char *) str,0);
 				break;
 			case 1:
-				sprintf((char *) str,"%d - %-30.30s",i,current_terrain.spec_strs[i].c_str());
+				sprintf((char *) str,"%d - %-30.30s",i,current_terrain->spec_strs[i].c_str());
 				set_rb(i,8000 + i,(char *) str,0);
 				break;
 			case 2:
@@ -3276,7 +3272,7 @@ void start_string_editing(short mode,short just_redo_text) {
 				set_rb(i,11000 + i,str,0);
 				break;
 			case 4: // TODO: This is currently inaccessible - add menu option?
-				sprintf((char *) str,"%d - %-30.30s",i,current_terrain.sign_strs[i].c_str());
+				sprintf((char *) str,"%d - %-30.30s",i,current_terrain->sign_strs[i].c_str());
 				set_rb(i,14000 + i,str,0);
 				break;
 			case 5: // TODO: This is currently inaccessible - add menu option?
@@ -3323,7 +3319,7 @@ void start_special_editing(short mode,short just_redo_text) {
 				set_rb(i,4000 + i,(char *) str,0);
 				break;
 			case 1:
-				s2 = get_str("special-node-names",int(current_terrain.specials[i].type) + 1);
+				s2 = get_str("special-node-names",int(current_terrain->specials[i].type) + 1);
 				sprintf((char *) str,"%d - %-30.30s",i,s2.c_str());
 				set_rb(i,5000 + i,(char *) str,0);
 				break;
@@ -3408,7 +3404,7 @@ ter_num_t coord_to_ter(short x,short y) {
 	
 	if(editing_town)
 		what_terrain = town->terrain(x,y);
-	else what_terrain = current_terrain.terrain[x][y];
+	else what_terrain = current_terrain->terrain[x][y];
 	
 	return what_terrain;
 }

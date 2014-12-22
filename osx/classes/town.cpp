@@ -14,11 +14,11 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-void cTown::append(legacy::big_tr_type&, int town_num){}
-void cTown::append(legacy::ave_tr_type&, int town_num){}
-void cTown::append(legacy::tiny_tr_type&, int town_num){}
+void cTown::append(legacy::big_tr_type&, int){}
+void cTown::append(legacy::ave_tr_type&, int){}
+void cTown::append(legacy::tiny_tr_type&, int){}
 
-cTown& cTown::operator = (legacy::town_record_type& old){
+void cTown::append(legacy::town_record_type& old){
 	int i;
 	town_chop_time = old.town_chop_time;
 	town_chop_key = old.town_chop_key;
@@ -74,16 +74,13 @@ cTown& cTown::operator = (legacy::town_record_type& old){
 	for(i = 0; i < 180; i++)
 		strlens[i] = old.strlens[i];
 	for(i = 0; i < 100; i++)
-		specials[i] = old.specials[i];
+		specials[i].append(old.specials[i]);
 	difficulty = old.difficulty;
 	strong_barriers = defy_scrying = defy_mapping = false;
-	return *this;
 }
 
-cTown::cTown(){}
-
 short max_dim[3] = {64,48,32};
-cTown::cTown(short){
+cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	short i,s;
 	location d_loc(100,0);
 	cTown::cWandering d_wan = {0,0,0,0};
@@ -139,6 +136,45 @@ cTown::cTown(short){
 	}
 	difficulty = 0;
 	strong_barriers = defy_scrying = defy_mapping = false;
+	for(i = 0; i < 60; i++) {
+		talking.talk_nodes[i].personality = -1;
+		talking.talk_nodes[i].type = 0;
+		talking.talk_nodes[i].extras[0] = 0;
+		talking.talk_nodes[i].extras[1] = 0;
+		talking.talk_nodes[i].extras[2] = 0;
+		talking.talk_nodes[i].extras[3] = -1;
+		talking.talk_nodes[i].str1 = "";
+		talking.talk_nodes[i].str2 = "";
+		for(int j = 0; j < 4; j++) {
+			talking.talk_nodes[i].link1[j] = 'x';
+			talking.talk_nodes[i].link2[j] = 'x';
+		}
+	}
+	if(!init_strings) return;
+	std::string temp_str;
+	for(i = 0; i < 180; i++) {
+		temp_str = get_str("town-default",i + 1);
+		if(i == 0) town_name = temp_str;
+		else if(i >= 1 && i < 17)
+			rect_names[i-1] = temp_str;
+		else if(i >= 17 && i < 20)
+			comment[i-17] = temp_str;
+		else if(i >= 20 && i < 120)
+			spec_strs[i-20] = temp_str;
+		else if(i >= 120 && i < 140)
+			sign_strs[i-120] = temp_str;
+		strlens[i] = temp_str.length();
+	}
+	
+	for(i = 0; i < 200; i++)
+		talking.strlens[i] = 0;
+	for(i = 0; i < 10; i++) {
+		talking.people[i].title = "Unused";
+		talking.people[i].look = "";
+		talking.people[i].name = "";
+		talking.people[i].job = "";
+		talking.people[i].dunno = "";
+	}
 }
 
 cTown::cWandering& cTown::cWandering::operator = (legacy::wandering_type old){

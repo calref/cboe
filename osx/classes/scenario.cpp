@@ -14,6 +14,93 @@
 #include "classes.h"
 #include "oldstructs.h"
 
+cScenario::~cScenario() {
+	destroy_terrain();
+}
+
+void cScenario::destroy_terrain() {
+	// Nuke towns
+	if(!towns.empty()) {
+		for(size_t i = 0; i < towns.size(); i++) {
+			if(towns[i] != nullptr) delete towns[i];
+			towns[i] = nullptr;
+		}
+	}
+	if(!outdoors.empty()){
+		for(size_t i = 0; i < outdoors.width(); i++) {
+			for(size_t j = 0; j < outdoors.height(); j++) {
+				if(outdoors[i][j] != nullptr) delete outdoors[i][j];
+				outdoors[i][j] = nullptr;
+			}
+		}
+	}
+}
+
+cScenario& cScenario::operator=(cScenario&& other) {
+	// If self-assignment, do nothing.
+	if(this == &other) return *this;
+	// First, free any held pointers.
+	destroy_terrain();
+	// Resize the outdoors to ensure the assigned outdoors fits
+	outdoors.resize(other.outdoors.width(), other.outdoors.height());
+	// Then forward to the default assignment operator.
+	// Use const_cast to ensure the right overload is selected.
+	return *this = const_cast<const cScenario&>(other);
+}
+
+cScenario::cScenario(bool init_strings) {
+	short i;
+	std::string temp_str;
+	
+	format.ver[0] = 1;
+	format.min_run_ver = 1;
+	format.prog_make_ver[0] = 1;
+	num_towns = 1;
+	out_width = 1;
+	out_height = 1;
+	default_ground = 1;
+	for(i = 0; i < 200; i++) {
+		town_size[i] = 1;
+	}
+	where_start.x = 24;
+	where_start.y = 24;
+	out_start = where_start;
+	for(i = 0; i < 10; i++) {
+		town_to_add_to[i] = -1;
+	}
+	for(i = 0; i < 3; i++) {
+		store_item_towns[i] = -1;
+	}
+	for(i = 0; i < 50; i++) {
+		special_items[i].special = -1;
+	}
+	for(i = 0; i < 20; i++) {
+		scenario_timer_specs[i] = -1;
+	}
+	for(i = 0; i < 400; i++) {
+		scen_items[i] = cItemRec();
+	}
+	if(!init_strings) return;
+	for(i = 0; i < 270; i++) {
+		temp_str = get_str("scen-default",i + 1);
+		if(i == 0) scen_name = temp_str;
+		else if(i == 1 || i == 2)
+			who_wrote[i-1] = temp_str;
+		else if(i == 3)
+			contact_info = temp_str;
+		else if(i >= 4 && i < 10)
+			intro_strs[i-4] = temp_str;
+		else if(i >= 10 && i < 60)
+			journal_strs[i-10] = temp_str;
+		else if(i >= 60 && i < 160) {
+			if(i % 2 == 0) special_items[(i-60)/2].name = temp_str;
+			else special_items[(i-60)/2].descr = temp_str;
+		} else if(i >= 260) continue; // These were never ever used, for some reason.
+		else spec_strs[i-160] = temp_str;
+		scen_str_len[i] = temp_str.length();
+	}
+}
+
 cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 	for(int i = 0; i < 10; i++)
 		item_num[i] = -1;
@@ -23,7 +110,7 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 
 //{-1,{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},{0,0,0,0,0,0,0,0,0,0},0}
 
-cScenario& cScenario::operator = (legacy::scenario_data_type& old){
+void cScenario::append(legacy::scenario_data_type& old){
 	is_legacy = true;
 	int i,j;
 //	for(i = 0; i < 3; i++) format.ver[i] = old.ver[i];
@@ -77,18 +164,18 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
 	flag_f = old.flag_f;
-	for(i = 0; i < 256; i++) scen_monsters[i] = old.scen_monsters[i];
-	for(i = 0; i < 30; i++) boats[i] = old.scen_boats[i];
-	for(i = 0; i < 30; i++) horses[i] = old.scen_horses[i];
+	for(i = 0; i < 256; i++) scen_monsters[i].append(old.scen_monsters[i]);
+	for(i = 0; i < 30; i++) boats[i].append(old.scen_boats[i]);
+	for(i = 0; i < 30; i++) horses[i].append(old.scen_horses[i]);
 	flag_g = old.flag_g;
 	for(i = 0; i < 256; i++){
 		ter_types[i].i = i;
-		ter_types[i] = old.ter_types[i];
+		ter_types[i].append(old.ter_types[i]);
 	}
 	for(i = 0; i < 20; i++) scenario_timer_times[i] = old.scenario_timer_times[i];
 	for(i = 0; i < 20; i++) scenario_timer_specs[i] = old.scenario_timer_specs[i];
 	flag_h = old.flag_h;
-	for(i = 0; i < 256; i++) scen_specials[i] = old.scen_specials[i];
+	for(i = 0; i < 256; i++) scen_specials[i].append(old.scen_specials[i]);
 	for(i = 0; i < 10; i++) storage_shortcuts[i] = old.storage_shortcuts[i];
 	flag_d = old.flag_d;
 	for(i = 0; i < 300; i++) scen_str_len[i] = old.scen_str_len[i];
@@ -97,7 +184,6 @@ cScenario& cScenario::operator = (legacy::scenario_data_type& old){
 	last_out_edited.y = old.last_out_edited.y;
 	last_town_edited = old.last_town_edited;
 	adjust_diff = true;
-	return *this;
 }
 
 cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_storage_shortcut_type& old){
@@ -111,7 +197,7 @@ cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_stora
 void cScenario::append(legacy::scen_item_data_type& old){
 	short i;
 	for(i = 0; i < 400; i++)
-		scen_items[i] = old.scen_items[i];
+		scen_items[i].append(old.scen_items[i]);
 	for(i = 0; i < 256; i++)
 		scen_monsters[i].m_name = old.monst_names[i];
 	for(i = 0; i < 256; i++)

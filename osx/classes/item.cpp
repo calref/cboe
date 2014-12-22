@@ -294,7 +294,7 @@ cItemRec::cItemRec(long preset){
 	}
 }
 
-cItemRec& cItemRec::operator = (legacy::item_record_type& old){
+void cItemRec::append(legacy::item_record_type& old){
 	variety = (eItemType) old.variety;
 	item_level = old.item_level;
 	awkward = old.awkward;
@@ -334,10 +334,9 @@ cItemRec& cItemRec::operator = (legacy::item_record_type& old){
 	unsellable = old.item_properties & 16;
 	reserved1 = old.reserved1;
 	reserved2 = old.reserved2;
-	return *this;
 }
 
-void cItemRec::writeTo(std::ostream& file, std::string prefix){
+void cItemRec::writeTo(std::ostream& file, std::string prefix) const {
 	file << prefix << "VARIETY " << variety << '\n';
 	file << prefix << "LEVEL " << item_level << '\n';
 	file << prefix << "AWKWARD " << awkward << '\n';
@@ -410,15 +409,15 @@ void cItemRec::readFrom(std::istream& sin){
 	}
 }
 
-std::ostream& operator << (std::ostream& out, eSkill& e){
+std::ostream& operator << (std::ostream& out, eSkill e){
 	return out << (int) e;
 }
 
-std::ostream& operator << (std::ostream& out, eItemType& e){
+std::ostream& operator << (std::ostream& out, eItemType e){
 	return out << (int) e;
 }
 
-std::ostream& operator << (std::ostream& out, eItemAbil& e){
+std::ostream& operator << (std::ostream& out, eItemAbil e){
 	return out << (int) e;
 }
 

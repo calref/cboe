@@ -47,11 +47,12 @@ public:
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
-	short max_dim();
-	short max_monst();
-	short max_items();
+	short max_dim() const;
+	short max_monst() const;
+	short max_items() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
+	explicit cBigTemplTown(cScenario& scenario, bool init_strings = false);
 };
 
 class cMedTemplTown : public cMedTown, cTemplTown {
@@ -65,11 +66,12 @@ public:
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
-	short max_dim();
-	short max_monst();
-	short max_items();
+	short max_dim() const;
+	short max_monst() const;
+	short max_items() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
+	explicit cMedTemplTown(cScenario& scenario, bool init_strings = false);
 };
 
 class cTinyTemplTown : public cTinyTown, cTemplTown {
@@ -83,11 +85,12 @@ public:
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
-	short max_dim();
-	short max_monst();
-	short max_items();
+	short max_dim() const;
+	short max_monst() const;
+	short max_items() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
+	explicit cTinyTemplTown(cScenario& scenario, bool init_strings = false);
 };
 
 // City blocks - I want to figure out how to use these sometime.

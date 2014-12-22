@@ -17,7 +17,32 @@
 #include "oldstructs.h"
 #include "fileio.h"
 
-cParty& cParty::operator = (legacy::party_record_type& old){
+cParty::cParty(cUniverse& univ, long party_preset) : univ(univ) {
+	gold = 200;
+	food = 100;
+	// Note: These starting position values were in the original code and so are included here.
+	// However, I suspect they're relics of Exile III that are soon overwritten.
+	outdoor_corner.x = 7;
+	outdoor_corner.y = 8;
+	i_w_c.x = 1;
+	i_w_c.y = 1;
+	loc_in_sec.x = 36;
+	loc_in_sec.y = 36;
+	p_loc.x = 84;
+	p_loc.y = 84;
+	in_boat = -1;
+	in_horse = -1;
+	for(int i = 0; i < 5; i++)
+		for(int j = 0; j < 10; j++)
+			magic_store_items[i][j].variety = eItemType::NO_ITEM;
+	// Original code set all key times 30000. I felt this was more appropriate.
+	std::fill(key_times, key_times + 20, std::numeric_limits<short>::max());
+	
+	for(int i = 0; i < 6; i++)
+		adven[i] = cPlayer(party_preset, i);
+}
+
+void cParty::append(legacy::party_record_type& old){
 	int i,j;
 	age = old.age;
 	gold = old.gold;
@@ -39,8 +64,8 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 	loc_in_sec.y = old.loc_in_sec.y;
 	party_event_timers.reserve(30);
 	for(i = 0; i < 30; i++){
-		boats[i] = old.boats[i];
-		horses[i] = old.horses[i];
+		boats[i].append(old.boats[i]);
+		horses[i].append(old.horses[i]);
 		cTimer t;
 		t.time = old.party_event_timers[i];
 		t.global_or_town = old.global_or_town[i];
@@ -51,15 +76,15 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 //		party_event_timers[i].node_to_call = old.node_to_call[i];
 	}
 	for(i = 0; i < 4; i++){
-		creature_save[i] = old.creature_save[i];
+		creature_save[i].append(old.creature_save[i]);
 		imprisoned_monst[i] = old.imprisoned_monst[i];
 	}
 	in_boat = old.in_boat;
 	in_horse = old.in_horse;
 	for(i = 0; i < 10; i++){
-		out_c[i] = old.out_c[i];
+		out_c[i].append(old.out_c[i]);
 		for(j = 0; j < 5; j++)
-			magic_store_items[j][i] = old.magic_store_items[j][i];
+			magic_store_items[j][i].append(old.magic_store_items[j][i]);
 	}
 	for(i = 0; i < 256; i++)
 		m_noted[i] = old.m_seen[i];
@@ -106,12 +131,11 @@ cParty& cParty::operator = (legacy::party_record_type& old){
 	total_xp_gained = old.total_xp_gained;
 	total_dam_taken = old.total_dam_taken;
 	scen_name = old.scen_name;
-	return *this;
 }
 
 void cParty::append(legacy::stored_items_list_type& old,short which_list){
 	for(int i = 0; i < 115; i++)
-		stored_items[which_list][i] = old.items[i];
+		stored_items[which_list][i].append(old.items[i]);
 }
 
 void cParty::append(legacy::setup_save_type& old){
@@ -133,7 +157,7 @@ cParty::cConvers& cParty::cConvers::operator = (legacy::talk_save_type old){
 void cParty::add_pc(legacy::pc_record_type old){
 	for(int i = 0; i < 6; i++)
 		if(adven[i].main_status == eMainStatus::ABSENT){
-			adven[i] = old;
+			adven[i].append(old);
 			break;
 		}
 }
@@ -203,7 +227,7 @@ bool cParty::start_timer(short time, short node, short type){
 	return(true);
 }
 
-void cParty::writeTo(std::ostream& file){
+void cParty::writeTo(std::ostream& file) const {
 	file << "CREATEVERSION" << OBOE_CURRENT_VERSION << '\n';
 	file << "AGE " << age << '\n';
 	file << "GOLD " << gold << '\n';
@@ -337,28 +361,28 @@ void cParty::writeTo(std::ostream& file){
 	if(summons.size() > 0) {
 		file << '\f';
 		file << "SUMMON" << '\n';
-		for(cMonster& monst : summons) {
+		for(const cMonster& monst : summons) {
 			monst.writeTo(file);
 			file << '\f';
 		}
 	}
 	if(journal.size() > 0) {
 		file << '\f';
-		for(cJournal& entry : journal) {
+		for(const cJournal& entry : journal) {
 			file << "JOURNAL " << entry.day << ' ' << maybe_quote_string(entry.in_scen) << '\n' << entry.the_str << '\n';
 			file << '\f';
 		}
 	}
 	if(special_notes.size() > 0) {
 		file << '\f';
-		for(cEncNote& note : special_notes) {
+		for(const cEncNote& note : special_notes) {
 			file << "ENCNOTE " << note.type << ' ' << maybe_quote_string(note.where) << '\n' << note.the_str << '\n';
 			file << '\f';
 		}
 	}
 	if(talk_save.size() > 0) {
 		file << '\f';
-		for(cConvers& note : talk_save) {
+		for(const cConvers& note : talk_save) {
 			file << "TALKNOTE";
 			file << "WHO " << maybe_quote_string(note.who_said) << '\n';
 			file << "WHERE " << maybe_quote_string(note.in_town) << ' ' << maybe_quote_string(note.in_scen) << '\n';
@@ -586,6 +610,13 @@ cPlayer& cParty::operator[](unsigned short n){
 	return adven[n];
 }
 
+const cPlayer& cParty::operator[](unsigned short n) const{
+	if(n > 6) throw std::out_of_range("Attempt to access a player that doesn't exist.");
+	else if(n == 6)
+		return adven[0]; // TODO: PC #6 should never be accessed, but bounds checking is rarely done, so this is a quick fix.
+	return adven[n];
+}
+
 // Note that the pointer functions take the pointer with its negative sign stripped off!
 void cParty::set_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy){
 	// This function is not used for setting the reserved pointers
@@ -614,8 +645,8 @@ unsigned char cParty::get_ptr(unsigned short p){
 }
 
 unsigned char& cParty::cpn_flag(unsigned int x, unsigned int y, std::string id) {
-	if(id.empty()) id = scenario.campaign_id;
-	if(id.empty()) id = scenario.scen_name;
+	if(id.empty()) id = univ.scenario.campaign_id;
+	if(id.empty()) id = univ.scenario.scen_name;
 	if(x >= 25 || y >= 25) throw std::range_error("Attempted to access a campaign flag out of range (0..25)");
 	return campaign_flags[id].idx[x][y];
 }

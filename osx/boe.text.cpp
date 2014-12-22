@@ -57,7 +57,6 @@ extern short dest_personalities[40];
 extern location source_locs[6];
 extern location dest_locs[40] ;
 //extern piles_of_stuff_dumping_type *data_store;
-extern cScenario scenario;
 
 extern sf::Texture tiny_obj_gworld,invenbtn_gworld,status_gworld;
 extern cCustomGraphics spec_scen_g;
@@ -258,10 +257,10 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 				i_num = i + item_offset;
 				if(spec_item_array[i_num] >= 0) {
 					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
-					win_draw_string(item_stats_gworld,item_buttons[i][0],scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
+					win_draw_string(item_stats_gworld,item_buttons[i][0],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
 					
 					place_item_button(3,i,4,0);
-					if((scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
+					if((univ.scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
 						&& (!(is_combat())))
 						place_item_button(0,i,3,0);
 				}
@@ -951,7 +950,7 @@ std::string get_m_name(m_num_t num) {
 	
 	////
 	//strcpy((char *) str,(char *) scenario.scen_monsters[num].m_name);
-	return scenario.scen_monsters[num].m_name;
+	return univ.scenario.scen_monsters[num].m_name;
 }
 std::string get_ter_name(ter_num_t num) {
 	std::string store_name = "Pit";
@@ -960,7 +959,7 @@ std::string get_ter_name(ter_num_t num) {
 	if((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))));
 	//sprintf((char *) store_name,"Pit");
 	else {
-		store_name = scenario.ter_types[num].name;
+		store_name = univ.scenario.ter_types[num].name;
 	}
 	return store_name;
 }

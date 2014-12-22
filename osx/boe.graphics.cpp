@@ -55,7 +55,6 @@ extern long register_flag;
 extern long ed_flag,ed_key;
 extern bool fast_bang;
 extern tessel_ref_t bg[];
-extern cScenario scenario;
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
 extern sf::RenderWindow mini_map;
@@ -681,17 +680,17 @@ void draw_text_bar(short mode) {
 		remember_tiny_text = 500;
 	if(is_out()) {
 		for(i = 0; i < 8; i++)
-			if(loc.in(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].info_rect[i])) {
+			if(loc.in(univ.out->info_rect[i])) {
 				if((remember_tiny_text == i) && (mode == 0))
 					return;
 				else {
-					put_text_bar(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].rect_names[i]);
+					put_text_bar(univ.out->rect_names[i]);
 					remember_tiny_text = i;
 					return;
 				}
 			} // TODO: I'm pretty sure this brace location is correct, but must verify it
 		if(remember_tiny_text != 50 + univ.party.i_w_c.x + univ.party.i_w_c.y) {
-			put_text_bar(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].out_name);
+			put_text_bar(univ.out->out_name);
 			remember_tiny_text = 50 + univ.party.i_w_c.x + univ.party.i_w_c.y;
 		}
 	}
@@ -778,16 +777,16 @@ bool is_nature(char x, char y, unsigned char ground_t) {
 	ter_num_t ter_type;
 	
 	ter_type = coord_to_ter((short) x,(short) y);
-	return ground_t == scenario.ter_types[ter_type].ground_type;
+	return ground_t == univ.scenario.ter_types[ter_type].ground_type;
 }
 
 ter_num_t get_ground_from_ter(ter_num_t ter){
-	return get_ter_from_ground(scenario.ter_types[ter].ground_type);
+	return get_ter_from_ground(univ.scenario.ter_types[ter].ground_type);
 }
 
 ter_num_t get_ter_from_ground(unsigned char ground){
 	for(int i = 0; i < 256; i++)
-		if(scenario.ter_types[i].ground_type == ground)
+		if(univ.scenario.ter_types[i].ground_type == ground)
 			return i;
 	return 0;
 }
@@ -918,12 +917,12 @@ void draw_terrain(short	mode) {
 			if((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
 				if(is_combat()) anim_ticks = 0;
 				
-				eTrimType trim = scenario.ter_types[spec_terrain].trim_type;
+				eTrimType trim = univ.scenario.ter_types[spec_terrain].trim_type;
 				
 				// Finally, draw this terrain spot
 				if(trim == eTrimType::WALKWAY){
 					int trim = -1;
-					unsigned char ground_t = scenario.ter_types[spec_terrain].trim_ter;
+					unsigned char ground_t = univ.scenario.ter_types[spec_terrain].trim_ter;
 					ter_num_t ground_ter = get_ter_from_ground(ground_t);
 					if(!loc_off_act_area(where_draw)) {
 						if(is_nature(where_draw.x - 1,where_draw.y,ground_t)){ // check left
@@ -1037,8 +1036,8 @@ void draw_terrain(short	mode) {
 
 
 static ter_num_t get_ground_for_shore(ter_num_t ter){
-	if(scenario.ter_types[ter].block_horse) return current_ground;
-	else if(blocksMove(scenario.ter_types[ter].blockage)) return current_ground;
+	if(univ.scenario.ter_types[ter].block_horse) return current_ground;
+	else if(blocksMove(univ.scenario.ter_types[ter].blockage)) return current_ground;
 	else return ter;
 }
 
@@ -1231,7 +1230,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 //
 //	if((which_trim == 3) && (current_ground == 2)) // trim corner walls with grass instead of cave floor
 //		OffsetRect(&from_rect,0,36);
-	unsigned short pic = scenario.ter_types[ground_ter].picture;
+	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
 	if(pic < 960){
 		from_gworld = &terrain_gworld[pic / 50];
 		pic %= 50;
@@ -1272,9 +1271,9 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 
 
 bool extend_road_terrain(ter_num_t ter) {
-	eTrimType trim = scenario.ter_types[ter].trim_type;
-	eTerSpec spec = scenario.ter_types[ter].special;
-	ter_num_t flag = scenario.ter_types[ter].flag1.u;
+	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
+	eTerSpec spec = univ.scenario.ter_types[ter].special;
+	ter_num_t flag = univ.scenario.ter_types[ter].flag1.u;
 	if(trim == eTrimType::ROAD || trim == eTrimType::CITY || trim == eTrimType::WALKWAY)
 		return true;
 	if(spec == eTerSpec::BRIDGE)
@@ -1283,7 +1282,7 @@ bool extend_road_terrain(ter_num_t ter) {
 		return true; // cave entrance, most likely
 	if(spec == eTerSpec::UNLOCKABLE || spec == eTerSpec::CHANGE_WHEN_STEP_ON)
 		return true; // closed door, possibly locked; or closed portcullis
-	if(spec == eTerSpec::CHANGE_WHEN_USED && scenario.ter_types[flag].special == eTerSpec::CHANGE_WHEN_STEP_ON && scenario.ter_types[flag].flag1.u == ter)
+	if(spec == eTerSpec::CHANGE_WHEN_USED && univ.scenario.ter_types[flag].special == eTerSpec::CHANGE_WHEN_STEP_ON && univ.scenario.ter_types[flag].flag1.u == ter)
 		return true; // open door (I think) TODO: Verify this works
 	if(spec == eTerSpec::LOCKABLE)
 		return true; // open portcullis (most likely)
@@ -1292,19 +1291,19 @@ bool extend_road_terrain(ter_num_t ter) {
 
 static bool can_build_roads_on(ter_num_t ter) {
 	if(impassable(ter)) return false;
-	if(scenario.ter_types[ter].special == eTerSpec::BRIDGE) return false;
+	if(univ.scenario.ter_types[ter].special == eTerSpec::BRIDGE) return false;
 	return true;
 }
 
 static bool superextend_road_terrain(int x, int y) {
 	// Connect road to trim?
 	ter_num_t ter = coord_to_ter(x,y);
-	eTrimType trim = scenario.ter_types[ter].trim_type;
+	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
 	if(trim == eTrimType::N || trim == eTrimType::S) {
 		ter_num_t up = coord_to_ter(x,y-1);
 		ter_num_t down = coord_to_ter(x,y+1);
-		eTrimType trimUp = scenario.ter_types[up].trim_type;
-		eTrimType trimDn = scenario.ter_types[down].trim_type;
+		eTrimType trimUp = univ.scenario.ter_types[up].trim_type;
+		eTrimType trimDn = univ.scenario.ter_types[down].trim_type;
 		if((trimUp == eTrimType::ROAD || trimUp == eTrimType::CITY) && (trimDn == eTrimType::ROAD || trimDn == eTrimType::CITY))
 			return can_build_roads_on(ter);
 		if((trimUp == eTrimType::ROAD || trimUp == eTrimType::CITY) && trim == eTrimType::N && trimDn == eTrimType::S)
@@ -1314,8 +1313,8 @@ static bool superextend_road_terrain(int x, int y) {
 	} else if(trim == eTrimType::E || trim == eTrimType::W) {
 		ter_num_t left = coord_to_ter(x-1,y);
 		ter_num_t right = coord_to_ter(x+1,y);
-		eTrimType trimLeft = scenario.ter_types[left].trim_type;
-		eTrimType trimRight = scenario.ter_types[right].trim_type;
+		eTrimType trimLeft = univ.scenario.ter_types[left].trim_type;
+		eTrimType trimRight = univ.scenario.ter_types[right].trim_type;
 		if((trimLeft == eTrimType::ROAD || trimLeft == eTrimType::CITY) && (trimRight == eTrimType::ROAD || trimRight == eTrimType::CITY))
 			return can_build_roads_on(ter);
 		if((trimLeft == eTrimType::ROAD || trimLeft == eTrimType::CITY) && trim == eTrimType::W && trimRight == eTrimType::E)
@@ -1327,8 +1326,8 @@ static bool superextend_road_terrain(int x, int y) {
 }
 
 static bool connect_roads(ter_num_t ter){
-	eTrimType trim = scenario.ter_types[ter].trim_type;
-	eTerSpec spec = scenario.ter_types[ter].special;
+	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
+	eTerSpec spec = univ.scenario.ter_types[ter].special;
 	if(trim == eTrimType::ROAD || trim == eTrimType::CITY)
 		return true;
 	if(spec == eTerSpec::TOWN_ENTRANCE && trim != eTrimType::NONE)
@@ -1399,11 +1398,11 @@ void place_road(short q,short r,location where, bool here) {
 	}else{
 		ter_num_t ref = coord_to_ter(where.x,where.y);
 		bool horz = false, vert = false;
-		eTrimType trim = scenario.ter_types[ref].trim_type;
+		eTrimType trim = univ.scenario.ter_types[ref].trim_type;
 		if(where.y > 0)
 			ter = coord_to_ter(where.x,where.y - 1);
 		// TODO: ter could be uninitialized here!
-		eTrimType vertTrim = scenario.ter_types[ter].trim_type;
+		eTrimType vertTrim = univ.scenario.ter_types[ter].trim_type;
 		if((where.y == 0) || connect_roads(ter))
 			vert = can_build_roads_on(ref);
 		else if((vertTrim == eTrimType::S && trim == eTrimType::N) || (vertTrim == eTrimType::N && trim == eTrimType::S))
@@ -1411,7 +1410,7 @@ void place_road(short q,short r,location where, bool here) {
 		
 		if(((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim() - 1)))
 			ter = coord_to_ter(where.x + 1,where.y);
-		eTrimType horzTrim = scenario.ter_types[ter].trim_type;
+		eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
 		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1))
 			|| connect_roads(ter))
 			horz = can_build_roads_on(ref);
@@ -1421,7 +1420,7 @@ void place_road(short q,short r,location where, bool here) {
 		if(vert){
 			if(((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim() - 1)))
 				ter = coord_to_ter(where.x,where.y + 1);
-			eTrimType vertTrim = scenario.ter_types[ter].trim_type;
+			eTrimType vertTrim = univ.scenario.ter_types[ter].trim_type;
 			if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1))
 				|| connect_roads(ter))
 				vert = can_build_roads_on(ref);
@@ -1433,7 +1432,7 @@ void place_road(short q,short r,location where, bool here) {
 		if(horz){
 			if(where.x > 0)
 				ter = coord_to_ter(where.x - 1,where.y);
-			eTrimType horzTrim = scenario.ter_types[ter].trim_type;
+			eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
 			if((where.x == 0) || connect_roads(ter))
 				horz = can_build_roads_on(ref);
 			else if((horzTrim == eTrimType::W && trim == eTrimType::E) || (horzTrim == eTrimType::E && trim == eTrimType::W))

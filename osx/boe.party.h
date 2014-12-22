@@ -3,8 +3,6 @@
 #define BOE_GAME_PARTY_H
 
 class cDialog;
-__declspec(deprecated) void init_party(short mode);
-__declspec(deprecated) void init_party_scen_data();
 void make_boats();
 bool create_pc(short spot,cDialog* parent_num);
 bool take_sp(short pc_num,short amt);

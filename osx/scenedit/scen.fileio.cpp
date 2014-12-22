@@ -24,8 +24,7 @@ extern short cur_town;//overall_mode,given_password,user_given_password;
 extern location cur_out;
 //extern piles_of_stuff_dumping_type *data_store;
 //extern cSpeech talking;
-extern cOutdoors current_terrain;
-extern ter_num_t borders[4][50];
+extern cOutdoors* current_terrain;
 extern bool change_made;
 extern cCustomGraphics spec_scen_g;
 extern bool mac_is_intel;
@@ -347,39 +346,6 @@ void save_scenario() {
 //
 	giveError("Sorry, scenario saving is currently disabled.");
 }
-
-void augment_terrain(location to_create) {
-	location to_load;
-	short i,j;
-	
-	for(i = 0 ; i < 4; i++)
-		for(j = 0 ; j < 50; j++)
-			borders[i][j] = 90;
-	
-	to_load = to_create;
-	if(to_create.y > 0) {
-		to_load.y--;
-		load_outdoors(to_load, 1, borders);
-	}
-	to_load = to_create;
-	if(to_create.y < scenario.out_height - 1) {
-		to_load.y++;
-		load_outdoors(to_load, 3, borders);
-	}
-	
-	to_load = to_create;
-	if(to_create.x < scenario.out_width - 1) {
-		to_load.x++;
-		load_outdoors(to_load, 2, borders);
-	}
-	to_load = to_create;
-	if(to_create.x > 0) {
-		to_load.x--;
-		load_outdoors(to_load, 4, borders);
-	}
-}
-
-
 
 void create_basic_scenario() {
 //	short i,j,k,num_outdoors;
@@ -1065,61 +1031,56 @@ void scen_text_dump(){
 	for(out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
 		for(out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
 			fout << "  Section (x = " << (short)out_sec.x << ", y = " << (short)out_sec.y << "):" << endl;
-			load_outdoors(out_sec,current_terrain);
-			fout << "    Name: " << current_terrain.out_name;
-			fout << "    Comment: " << current_terrain.comment;
+			fout << "    Name: " << scenario.outdoors[out_sec.x][out_sec.y]->out_name;
+			fout << "    Comment: " << scenario.outdoors[out_sec.x][out_sec.y]->comment;
 			for(i = 0; i < 8; i++)
-				if(current_terrain.rect_names[i][0] != '*')
-					fout << "    Area Rectangle " << i << ": " << current_terrain.rect_names[i] << endl;
+				if(scenario.outdoors[out_sec.x][out_sec.y]->rect_names[i][0] != '*')
+					fout << "    Area Rectangle " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->rect_names[i] << endl;
 			for(i = 0; i < 90; i++)
-				if(current_terrain.spec_strs[i][0] != '*')
-					fout << "    Message " << i << ": " << current_terrain.spec_strs[i] << endl;
+				if(scenario.outdoors[out_sec.x][out_sec.y]->spec_strs[i][0] != '*')
+					fout << "    Message " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->spec_strs[i] << endl;
 			for(i = 0; i < 8; i++)
-				if(current_terrain.sign_strs[i][0] != '*')
-					fout << "    Sign " << i << ": " << current_terrain.sign_strs[i] << endl;
+				if(scenario.outdoors[out_sec.x][out_sec.y]->sign_strs[i][0] != '*')
+					fout << "    Sign " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->sign_strs[i] << endl;
 			fout << endl;
 		}
 	}
-	load_outdoors(cur_out,current_terrain);
-	augment_terrain(cur_out);
 	fout << "Town Text:" << endl << endl;
 	for(short j = 0; j < scenario.num_towns; j++) {
 		fout << "  Town " << j << ':' << endl;
 		fout << "  Town Messages:" << endl;
-		load_town(j,town);
-		fout << "    Name: " << town->town_name << endl;
+		fout << "    Name: " << scenario.towns[i]->town_name << endl;
 		for(i = 0; i < 16; i++)
-			if(town->rect_names[i][0] != '*')
-				fout << "    Area Rectangle " << i << ": " << town->rect_names[i] << endl;
-		fout << "    Name: " << town->town_name << endl;
+			if(scenario.towns[i]->rect_names[i][0] != '*')
+				fout << "    Area Rectangle " << i << ": " << scenario.towns[i]->rect_names[i] << endl;
+		fout << "    Name: " << scenario.towns[i]->town_name << endl;
 		for(i = 0; i < 3; i++)
-			if(town->comment[i][0] != '*')
-				fout << "    Comment " << i << ": " << town->comment[i] << endl;
-		fout << "    Name: " << town->town_name << endl;
+			if(scenario.towns[i]->comment[i][0] != '*')
+				fout << "    Comment " << i << ": " << scenario.towns[i]->comment[i] << endl;
+		fout << "    Name: " << scenario.towns[i]->town_name << endl;
 		for(i = 0; i < 100; i++)
-			if(town->spec_strs[i][0] != '*')
-				fout << "    Message " << i << ": " << town->spec_strs[i] << endl;
-		fout << "    Name: " << town->town_name << endl;
+			if(scenario.towns[i]->spec_strs[i][0] != '*')
+				fout << "    Message " << i << ": " << scenario.towns[i]->spec_strs[i] << endl;
+		fout << "    Name: " << scenario.towns[i]->town_name << endl;
 		for(i = 0; i < 20; i++)
-			if(town->sign_strs[i][0] != '*')
-				fout << "    Sign " << i << ": " << town->sign_strs[i] << endl;
+			if(scenario.towns[i]->sign_strs[i][0] != '*')
+				fout << "    Sign " << i << ": " << scenario.towns[i]->sign_strs[i] << endl;
 		fout << endl << "  Town Dialogue:" << endl;
 		for(i = 0; i < 10; i++) {
-			fout << "    Personality " << j + i << " (" << town->talking.people[i].title << "): " << endl;
-			fout << "    look: " << town->talking.people[i].look << endl;
-			fout << "    name: " << town->talking.people[i].name << endl;
-			fout << "    job: " << town->talking.people[i].job << endl;
-			fout << "    confused: " << town->talking.people[i].dunno << endl;
+			fout << "    Personality " << j + i << " (" << scenario.towns[i]->talking.people[i].title << "): " << endl;
+			fout << "    look: " << scenario.towns[i]->talking.people[i].look << endl;
+			fout << "    name: " << scenario.towns[i]->talking.people[i].name << endl;
+			fout << "    job: " << scenario.towns[i]->talking.people[i].job << endl;
+			fout << "    confused: " << scenario.towns[i]->talking.people[i].dunno << endl;
 		}
 		for(i = 0; i < 60; i++) {
-			if(town->talking.talk_nodes[i].str1.length() > 0)
-				fout << "    Node " << i << "a: " << town->talking.talk_nodes[i].str1 << endl;
-			if(town->talking.talk_nodes[i].str2.length() > 0)
-				fout << "    Node " << i << "b: " << town->talking.talk_nodes[i].str2 << endl;
+			if(scenario.towns[i]->talking.talk_nodes[i].str1.length() > 0)
+				fout << "    Node " << i << "a: " << scenario.towns[i]->talking.talk_nodes[i].str1 << endl;
+			if(scenario.towns[i]->talking.talk_nodes[i].str2.length() > 0)
+				fout << "    Node " << i << "b: " << scenario.towns[i]->talking.talk_nodes[i].str2 << endl;
 		}
 		fout << endl;
 	}
 	fout.close();
-	load_town(cur_town,town);
 }
 

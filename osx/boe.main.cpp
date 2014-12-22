@@ -48,7 +48,6 @@ rectangle item_sbar_rect = {146,546,253,562};
 bool bgm_on = false,bgm_init = false;
 //short dialog_answer;
 location store_anim_ul;
-cScenario scenario;
 cUniverse univ;
 //piles_of_stuff_dumping_type *data_store;
 //talking_record_type talking;
@@ -334,7 +333,7 @@ void Handle_One_Event() {
 					if(choice == "save") {
 						fs::path file = nav_put_party();
 						if(!file.empty()) break;
-						save_party(file);
+						save_party(file, univ);
 					}
 				}
 				All_Done = true;
@@ -350,7 +349,7 @@ void Handle_One_Event() {
 				if(choice == "cancel")
 					break;
 				if(choice == "save")
-					save_party(univ.file);
+					save_party(univ.file, univ);
 			}
 			All_Done = true;
 			// TODO: Handle closing of mini-map
@@ -428,7 +427,6 @@ void Mouse_Pressed() {
 void close_program() {
 	// TODO: Ultimately we would like to have cleanup happen automatically, negating the need for this function
 	//end_music();
-	if(univ.town.loaded()) univ.town.unload();
 }
 
 void handle_apple_menu(int item_hit) {
@@ -486,7 +484,7 @@ void handle_file_menu(int item_hit) {
 					if(choice == "save") {
 						fs::path file = nav_put_party();
 						if(!file.empty()) break;
-						save_party(file);
+						save_party(file, univ);
 					}
 				}
 				All_Done = true;
@@ -502,7 +500,7 @@ void handle_file_menu(int item_hit) {
 				if(choice == "cancel")
 					break;
 				if(choice == "save")
-					save_party(univ.file);
+					save_party(univ.file, univ);
 			}
 			All_Done = true;
 			break;
@@ -559,7 +557,7 @@ void handle_options_menu(int item_hit) {
 				ASB("Add PC: You already have 6 PCs.");
 				print_buf();
 			}
-			if(univ.town.num == scenario.which_town_start) {
+			if(univ.town.num == univ.scenario.which_town_start) {
 				give_help(56,0);
 				create_pc(6,NULL);
 			}
@@ -744,9 +742,9 @@ void move_sound(ter_num_t ter,short step){
 	short pic,snd;
 	eTerSpec spec;
 	
-	pic = scenario.ter_types[ter].picture;
-	spec = scenario.ter_types[ter].special;
-	snd = scenario.ter_types[ter].step_sound;
+	pic = univ.scenario.ter_types[ter].picture;
+	spec = univ.scenario.ter_types[ter].special;
+	snd = univ.scenario.ter_types[ter].step_sound;
 	
 	//if on swamp don't play squish sound : BoE legacy behavior, can be removed safely
 	if(snd == 4 && !flying() && univ.party.in_boat == 0){
@@ -762,7 +760,7 @@ void move_sound(ter_num_t ter,short step){
 	else if(!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {//// is on horse ?
 		play_sound(85); //so play horse sound
 	}
-	else switch(scenario.ter_types[ter].step_sound){
+	else switch(univ.scenario.ter_types[ter].step_sound){
 		case 1:
 			play_sound(55); //squish
 			break;

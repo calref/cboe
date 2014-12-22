@@ -30,7 +30,7 @@ cSpecial::cSpecial(){
 	jumpto = -1;
 }
 
-cSpecial& cSpecial::operator = (legacy::special_node_type& old){
+void cSpecial::append(legacy::special_node_type& old){
 	type = (eSpecType)old.type;
 	sd1 = old.sd1;
 	sd2 = old.sd2;
@@ -117,7 +117,6 @@ cSpecial& cSpecial::operator = (legacy::special_node_type& old){
 			type = eSpecType::TOWN_SET_ATTITUDE;
 			break;
 	}
-	return *this;
 }
 
 std::ostream& operator << (std::ostream& out, eSpecType& e) {

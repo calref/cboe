@@ -33,8 +33,6 @@ extern short hit_chance[21];
 extern location center;
 extern short boom_gr[8],futzing;
 extern bool processing_fields,monsters_going;
-//extern town_item_list	univ.town;
-extern cScenario scenario;
 extern cUniverse univ;
 
 
@@ -89,7 +87,7 @@ short out_enc_lev_tot(short which) {
 	
 	for(i = 0; i < 7; i++)
 		if(univ.party.out_c[which].what_monst.monst[i] != 0)
-			count += scenario.scen_monsters[univ.party.out_c[which].what_monst.monst[i]].level * num[i];
+			count += univ.scenario.scen_monsters[univ.party.out_c[which].what_monst.monst[i]].level * num[i];
 	return count;
 }
 
@@ -99,14 +97,12 @@ void create_wand_monst() {
 	
 	r1 = get_ran(1,0,3);
 	if(overall_mode == MODE_OUTDOORS) {
-		if(!univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering[r1].isNull()) {
+		if(!univ.out->wandering[r1].isNull()) {
 			r2 = get_ran(1,0,3);
-			while((point_onscreen(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering_locs[r2],
-								   global_to_local(univ.party.p_loc))) && (num_tries++ < 100))
+			while(point_onscreen(univ.out->wandering_locs[r2], global_to_local(univ.party.p_loc)) && num_tries++ < 100)
 				r2 = get_ran(1,0,3);
-			if(!is_blocked(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering_locs[r2]))
-				place_outd_wand_monst(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering_locs[r2],
-									  univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].wandering[r1],0);
+			if(!is_blocked(univ.out->wandering_locs[r2]))
+				place_outd_wand_monst(univ.out->wandering_locs[r2], univ.out->wandering[r1],0);
 		}
 	} else if(!univ.town->wandering[r1].isNull() && univ.town.countMonsters() <= 50
 			  && univ.party.m_killed[univ.town.num] < univ.town->max_num_monst) {
@@ -180,12 +176,12 @@ location get_monst_head(short m_num) {
 }
 
 short get_monst_picnum(m_num_t monst) {
-	return scenario.scen_monsters[monst].picture_num;
+	return univ.scenario.scen_monsters[monst].picture_num;
 }
 
 ePicType get_monst_pictype(m_num_t monst) {
 	ePicType type = PIC_MONST;
-	short n = scenario.scen_monsters[monst].picture_num;
+	short n = univ.scenario.scen_monsters[monst].picture_num;
 	if(n >= 1000){
 		type += PIC_CUSTOM;
 		switch(n / 1000){
@@ -209,8 +205,8 @@ ePicType get_monst_pictype(m_num_t monst) {
 
 void get_monst_dims(m_num_t monst,short *width, short *height) {
 	
-	*width = scenario.scen_monsters[monst].x_width;
-	*height = scenario.scen_monsters[monst].y_width;
+	*width = univ.scenario.scen_monsters[monst].x_width;
+	*height = univ.scenario.scen_monsters[monst].y_width;
 }
 
 // Used to set up monsters for outdoor wandering encounters.
@@ -220,7 +216,7 @@ void set_up_monst(short mode,m_num_t m_num) {
 	
 	for(which = 0; which < univ.town->max_monst(); which++)
 		if(univ.town.monst[which].active == 0) {
-			univ.town.monst[which] = cCreature(m_num);
+			univ.town.monst.assign(which, cCreature(m_num), univ.scenario.scen_monsters[m_num], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 			univ.town.monst[which].active = 2;
 			univ.town.monst[which].summoned = 0;
 			univ.town.monst[which].attitude = mode + 1;
@@ -920,8 +916,8 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	ter = univ.town->terrain(where_check.x,where_check.y);
 	////
 	which_m = &univ.town.monst[which_monst];
-	ter_abil = scenario.ter_types[ter].special;
-	ter_flag = scenario.ter_types[ter].flag3.u;
+	ter_abil = univ.scenario.ter_types[ter].special;
+	ter_flag = univ.scenario.ter_types[ter].flag3.u;
 	
 	if(mode > 0 && ter_abil == eTerSpec::CONVEYOR) {
 		if(
@@ -1025,7 +1021,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		}
 	}
 	if(monster_placid(which_monst) && // monsters don't hop into bed when things are calm
-		scenario.ter_types[ter].special == eTerSpec::BED)
+		univ.scenario.ter_types[ter].special == eTerSpec::BED)
 		can_enter = false;
 	if(mode == 1 && univ.town.is_spot(where_check.x, where_check.y))
 		can_enter = false;
@@ -1042,10 +1038,10 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			can_enter = false;
 			if(!(monster_placid(which_monst))) {
-				univ.town->terrain(where_check.x,where_check.y) = scenario.ter_types[ter].flag1.u;
+				univ.town->terrain(where_check.x,where_check.y) = univ.scenario.ter_types[ter].flag1.u;
 				do_look = true;
 				if(point_onscreen(center,where_check))
-					play_sound(scenario.ter_types[ter].flag2.u);
+					play_sound(univ.scenario.ter_types[ter].flag2.u);
 			}
 			break;
 			
@@ -1271,10 +1267,9 @@ short place_monster(m_num_t which,location where) {
 	}
 	
 	if(i < univ.town->max_monst()) {
-		univ.town.monst[i].number = which;
-		univ.town.monst[i] = cCreature();
-		static_cast<cMonster&>(univ.town.monst[i]) = scenario.scen_monsters[which];
-		univ.town.monst[i].attitude = scenario.scen_monsters[which].default_attitude;
+		univ.town.monst.assign(i, cCreature(which), univ.scenario.scen_monsters[which], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+		static_cast<cMonster&>(univ.town.monst[i]) = univ.scenario.scen_monsters[which];
+		univ.town.monst[i].attitude = univ.scenario.scen_monsters[which].default_attitude;
 		if(univ.town.monst[i].attitude % 2 == 0)
 			univ.town.monst[i].attitude = 1;
 		univ.town.monst[i].mobility = 1;
@@ -1351,7 +1346,8 @@ void activate_monsters(short code,short /*attitude*/) {
 		return;
 	for(i = 0; i < univ.town->max_monst(); i++)
 		if(univ.town.monst[i].spec_enc_code == code) {
-			univ.town.monst[i] = univ.town->creatures(i);
+			cCreature& monst = univ.town->creatures(i);
+			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 			univ.town.monst[i].spec_enc_code = 0;
 			univ.town.monst[i].active = 2; // TODO: Can thes be commented out? \/
 			//univ.town.monst[i].attitude = univ.town->creatures(i).start_attitude;
@@ -1385,7 +1381,7 @@ m_num_t get_summon_monster(short summon_class) {
 	
 	for(i = 0; i < 200; i++) {
 		j = get_ran(1,0,255);
-		if(scenario.scen_monsters[j].summon_type == summon_class) {
+		if(univ.scenario.scen_monsters[j].summon_type == summon_class) {
 			return j;
 		}
 	}

@@ -34,11 +34,11 @@ public:
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
-	short max_dim();
-	short max_monst();
-	short max_items();
+	short max_dim() const;
+	short max_monst() const;
+	short max_items() const;
 	
-	cBigTown();
+	explicit cBigTown(cScenario& scenario, bool init_strings = false);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 };
@@ -55,11 +55,11 @@ public:
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
-	short max_dim();
-	short max_monst();
-	short max_items();
+	short max_dim() const;
+	short max_monst() const;
+	short max_items() const;
 	
-	cMedTown();
+	explicit cMedTown(cScenario& scenario, bool init_strings = false);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 };
@@ -76,11 +76,11 @@ public:
 	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
-	short max_dim();
-	short max_monst();
-	short max_items();
+	short max_dim() const;
+	short max_monst() const;
+	short max_items() const;
 	
-	cTinyTown();
+	explicit cTinyTown(cScenario& scenario, bool init_strings = false);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 };

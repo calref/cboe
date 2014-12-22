@@ -27,9 +27,3 @@
 #include "creatlist.h"
 #include "party.h"
 #include "universe.h"
-
-extern cScenario scenario;
-template<class type> type cOutdoors::cWandering::get(m_num_t who,bool hostile,type cMonster::* what){
-	if(hostile) return scenario.scen_monsters[monst[who]].*what;
-	return scenario.scen_monsters[friendly[who]].*what;
-}

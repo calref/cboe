@@ -16,8 +16,6 @@
 #include "oldstructs.h"
 #include "fileio.h"
 
-extern cScenario scenario;
-
 void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 	int i,j;
 	cField the_field;
@@ -78,23 +76,7 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 		_room_rect[i].right = old.room_rect[i].right;
 	}
 	for(i = 0; i < 30; i++) {
-//		_creatures[i].number = old.creatures[i].number;
-//		_creatures[i].start_attitude = old.creatures[i].start_attitude;
-//		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
-//		_creatures[i].start_loc.y = old.creatures[i].start_loc.y;
-//		_creatures[i].mobile = old.creatures[i].mobile;
-//		_creatures[i].time_flag = old.creatures[i].time_flag;
-//		_creatures[i].extra1 = old.creatures[i].extra1;
-//		_creatures[i].extra2 = old.creatures[i].extra2;
-//		_creatures[i].spec1 = old.creatures[i].spec1;
-//		_creatures[i].spec2 = old.creatures[i].spec2;
-//		_creatures[i].spec_enc_code = old.creatures[i].spec_enc_code;
-//		_creatures[i].time_code = old.creatures[i].time_code;
-//		_creatures[i].monster_time = old.creatures[i].monster_time;
-//		_creatures[i].personality = old.creatures[i].personality;
-//		_creatures[i].special_on_kill = old.creatures[i].special_on_kill;
-//		_creatures[i].facial_pic = old.creatures[i].facial_pic;
-		_creatures[i] = old.creatures[i];
+		_creatures[i].append(old.creatures[i]);
 	}
 }
 
@@ -158,27 +140,11 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 		_room_rect[i].right = old.room_rect[i].right;
 	}
 	for(i = 0; i < 40; i++) {
-//		_creatures[i].number = old.creatures[i].number;
-//		_creatures[i].start_attitude = old.creatures[i].start_attitude;
-//		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
-//		_creatures[i].start_loc.y = old.creatures[i].start_loc.y;
-//		_creatures[i].mobile = old.creatures[i].mobile;
-//		_creatures[i].time_flag = old.creatures[i].time_flag;
-//		_creatures[i].extra1 = old.creatures[i].extra1;
-//		_creatures[i].extra2 = old.creatures[i].extra2;
-//		_creatures[i].spec1 = old.creatures[i].spec1;
-//		_creatures[i].spec2 = old.creatures[i].spec2;
-//		_creatures[i].spec_enc_code = old.creatures[i].spec_enc_code;
-//		_creatures[i].time_code = old.creatures[i].time_code;
-//		_creatures[i].monster_time = old.creatures[i].monster_time;
-//		_creatures[i].personality = old.creatures[i].personality;
-//		_creatures[i].special_on_kill = old.creatures[i].special_on_kill;
-//		_creatures[i].facial_pic = old.creatures[i].facial_pic;
-		_creatures[i] = old.creatures[i];
+		_creatures[i].append(old.creatures[i]);
 	}
 }
 
-void cBigTown::append(legacy::big_tr_type& old, int town_num){
+void cBigTown::append(legacy::big_tr_type& old, int town_numo){
 	int i,j;
 	cField the_field;
 	the_field.type = 2;
@@ -225,7 +191,7 @@ void cBigTown::append(legacy::big_tr_type& old, int town_num){
 						spec_id[found_spec] = use_slot;
 					} else {
 						std::stringstream sout;
-						sout << "In town " << town_num << " at (" << i << ',' << j << "); special node ID " << spec_id[found_spec];
+						sout << "In town " << town_numo << " at (" << i << ',' << j << "); special node ID " << spec_id[found_spec];
 						giveError("Warning: A special node was found that could be triggered from in a boat, which is probably not what the designer intended. An attempt to fix this has failed because there were not enough unused special nodes.", sout.str());
 					}
 				}
@@ -238,23 +204,7 @@ void cBigTown::append(legacy::big_tr_type& old, int town_num){
 		_room_rect[i].right = old.room_rect[i].right;
 	}
 	for(i = 0; i < 60; i++) {
-//		_creatures[i].number = old.creatures[i].number;
-//		_creatures[i].start_attitude = old.creatures[i].start_attitude;
-//		_creatures[i].start_loc.x = old.creatures[i].start_loc.x;
-//		_creatures[i].start_loc.y = old.creatures[i].start_loc.y;
-//		_creatures[i].mobile = old.creatures[i].mobile;
-//		_creatures[i].time_flag = old.creatures[i].time_flag;
-//		_creatures[i].extra1 = old.creatures[i].extra1;
-//		_creatures[i].extra2 = old.creatures[i].extra2;
-//		_creatures[i].spec1 = old.creatures[i].spec1;
-//		_creatures[i].spec2 = old.creatures[i].spec2;
-//		_creatures[i].spec_enc_code = old.creatures[i].spec_enc_code;
-//		_creatures[i].time_code = old.creatures[i].time_code;
-//		_creatures[i].monster_time = old.creatures[i].monster_time;
-//		_creatures[i].personality = old.creatures[i].personality;
-//		_creatures[i].special_on_kill = old.creatures[i].special_on_kill;
-//		_creatures[i].facial_pic = old.creatures[i].facial_pic;
-		_creatures[i] = old.creatures[i];
+		_creatures[i].append(old.creatures[i]);
 	}
 }
 
@@ -330,9 +280,8 @@ unsigned char& cBigTown::lighting(size_t i, size_t r){
 	return _lighting[i][r];
 }
 
-cBigTown::cBigTown(){
+cBigTown::cBigTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
 	int i;
-	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
 	rectangle d_rect = {0,0,0,0};
 	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
@@ -340,14 +289,15 @@ cBigTown::cBigTown(){
 		_room_rect[i].bottom = d_rect.bottom;
 		_room_rect[i].right = d_rect.right;
 	}
-	for(i = 0; i < 60; i++) {
-		_creatures[i] = dummy_creature;
-	}
+	for(i = 0; i < max_dim(); i++)
+		for(int j = 0; j < max_dim(); j++) {
+			terrain(i,j) = scenario.default_ground * 2;
+			lighting(i / 8,j) = 0;
+		}
 }
 
-cMedTown::cMedTown(){
+cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
 	int i;
-	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
 	rectangle d_rect = {0,0,0,0};
 	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
@@ -355,14 +305,15 @@ cMedTown::cMedTown(){
 		_room_rect[i].bottom = d_rect.bottom;
 		_room_rect[i].right = d_rect.right;
 	}
-	for(i = 0; i < 40; i++) {
-		_creatures[i] = dummy_creature;
-	}
+	for(i = 0; i < max_dim(); i++)
+		for(int j = 0; j < max_dim(); j++) {
+			terrain(i,j) = scenario.default_ground * 2;
+			lighting(i / 8,j) = 0;
+		}
 }
 
-cTinyTown::cTinyTown(){
+cTinyTown::cTinyTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
 	int i;
-	cCreature dummy_creature;// = {0,0,loc(),0,0,0,0,0,0,0};
 	rectangle d_rect = {0,0,0,0};
 	for(i = 0; i < 16; i++) {
 		_room_rect[i].top = d_rect.top;
@@ -370,43 +321,45 @@ cTinyTown::cTinyTown(){
 		_room_rect[i].bottom = d_rect.bottom;
 		_room_rect[i].right = d_rect.right;
 	}
-	for(i = 0; i < 30; i++) {
-		_creatures[i] = dummy_creature;
-	}
+	for(i = 0; i < max_dim(); i++)
+		for(int j = 0; j < max_dim(); j++) {
+			terrain(i,j) = scenario.default_ground * 2;
+			lighting(i / 8,j) = 0;
+		}
 }
 
-short cBigTown::max_dim(){
+short cBigTown::max_dim() const {
 	return 64;
 }
 
-short cMedTown::max_dim(){
+short cMedTown::max_dim() const {
 	return 48;
 }
 
-short cTinyTown::max_dim(){
+short cTinyTown::max_dim() const {
 	return 32;
 }
 
-short cBigTown::max_monst(){
+short cBigTown::max_monst() const {
 	return 60;
 }
 
-short cMedTown::max_monst(){
+short cMedTown::max_monst() const {
 	return 40;
 }
 
-short cTinyTown::max_monst(){
+short cTinyTown::max_monst() const {
 	return 30;
 }
 
-short cBigTown::max_items(){
+short cBigTown::max_items() const {
 	return 64;
 }
 
-short cMedTown::max_items(){
+short cMedTown::max_items() const {
 	return 64;
 }
 
-short cTinyTown::max_items(){
+short cTinyTown::max_items() const {
 	return 64;
 }

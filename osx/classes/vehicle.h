@@ -29,9 +29,9 @@ public:
 	bool property;
 	
 	cVehicle();
-	cVehicle& operator = (legacy::horse_record_type& old);
-	cVehicle& operator = (legacy::boat_record_type& old);
-	void writeTo(std::ostream& file);
+	void append(legacy::horse_record_type& old);
+	void append(legacy::boat_record_type& old);
+	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 };
 

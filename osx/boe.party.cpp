@@ -90,7 +90,6 @@ extern short current_ground;
 extern short monst_marked_damage[60];
 extern location golem_m_locs[16];
 //extern town_item_list t_i;
-extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
 extern sf::Texture pc_gworld;
@@ -111,132 +110,6 @@ short store_graphic_pc_num ;
 short store_graphic_mode ;
 short store_pc_graphic;
 
-//mode; // 0 - prefab 1 - regular 2 - debug
-// Note: mode 1 is never used
-void init_party(short mode) {
-	// TODO: Remove in favour of cParty constructor.
-	short i,j,k,l;
-	
-	cVehicle null_boat;// = {{0,0},{0,0},{0,0},200,false};
-	cVehicle null_horse;// = {{0,0},{0,0},{0,0},200,false};
-	
-	univ.party.age = 0;
-	univ.party.gold = 200;
-	univ.party.food = 100;
-	for(i = 0; i < 310; i++)
-		for(j = 0; j < 10; j++)
-			PSD[i][j] = 0;
-	univ.party.light_level = 0;
-	univ.party.outdoor_corner.x = 7;
-	univ.party.outdoor_corner.y = 8;
-	univ.party.i_w_c.x = 1;
-	univ.party.i_w_c.y = 1;
-	univ.party.loc_in_sec.x = 36;
-	univ.party.loc_in_sec.y = 36;
-	univ.party.p_loc.x = 84;
-	univ.party.p_loc.y = 84;
-	for(i = 0; i < 30; i++)
-		univ.party.boats[i] = null_boat;
-	for(i = 0; i < 30; i++)
-		univ.party.horses[i] = null_horse;
-	univ.party.in_boat = -1;
-	univ.party.in_horse = -1;
-	for(i = 0; i < 4; i++)
-		univ.party.creature_save[i].which_town = 200;
-	for(i = 0; i < 10; i++)
-		univ.party.out_c[i].exists = false;
-	for(i = 0; i < 5; i++)
-		for(j = 0; j < 10; j++)
-			univ.party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
-	for(i = 0; i < 4; i++)
-		univ.party.imprisoned_monst[i] = 0;
-	for(i = 0; i < 256; i++)
-		univ.party.m_seen[i] = univ.party.m_noted[i] = 0;
-//	for(i = 0; i < 50; i++)
-//		univ.party.journal_str[i] = -1;
-//	for(i = 0; i < 140; i++)
-//		for(j = 0; j < 2; j++)
-//			univ.party.special_notes_str[i][j] = 0;
-//	for(i = 0; i < 120; i++)
-//		univ.party.talk_save[i].personality = -1;
-	univ.party.journal.clear();
-	univ.party.special_notes.clear();
-	univ.party.talk_save.clear();
-	
-	univ.party.total_m_killed = 0;
-	univ.party.total_dam_done = 0;
-	univ.party.total_xp_gained = 0;
-	univ.party.total_dam_taken = 0;
-	univ.party.direction = 0;
-	univ.party.at_which_save_slot = 0;
-	for(i = 0; i < 20; i++)
-		univ.party.alchemy[i] = 0;
-	for(i = 0; i < 200; i++)
-		univ.party.can_find_town[i] = 0;
-	for(i = 0; i < 20; i++)
-		univ.party.key_times[i] = 30000;
-	univ.party.party_event_timers.clear();
-	for(i = 0; i < 50; i++)
-		univ.party.spec_items[i] = 0;
-	for(i = 0; i < 200; i++)
-		univ.party.m_killed[i] = 0;
-	univ.party.scen_name = "";
-	
-	for(i = 0; i < 200; i++)
-		for(j = 0; j < 8; j++)
-			univ.party.item_taken[i][j] = 0;
-	
-	// Zero out campaign flags and pointers
-	univ.party.campaign_flags.clear();
-	univ.party.pointers.clear();
-	
-	
-	refresh_store_items();
-	
-	for(i = 0; i < 6; i++) {
-		switch(mode){
-			case 0:
-				univ.party[i] = cPlayer('dflt',i);
-				break;
-			case 1:
-				univ.party[i] = cPlayer();
-				break;
-			case 2:
-				univ.party[i] = cPlayer('dbug',i);
-				break;
-		}
-	}
-	
-	for(i = 0; i < 96; i++)
-		for(j = 0; j < 96; j++)
-			univ.out.out_e[i][j] = 0;
-	
-	
-	for(i = 0; i < 3;i++)
-		for(j = 0; j < NUM_TOWN_ITEMS; j++) {
-			univ.party.stored_items[i][j] = cItemRec();
-		}
-	
-	for(i = 0; i < 200; i++)
-		for(j = 0; j < 8; j++)
-			for(k = 0; k < 64; k++)
-				univ.town_maps[i][j][k] = 0;
-	
-	for(i = 0; i < 100; i++)
-		for(k = 0; k < 6; k++)
-			for(l = 0; l < 48; l++)
-				univ.out_maps[i][k][l] = 0;
-	
-	// Default is save maps
-	PSD[SDF_NO_MAPS] = 0;
-	save_maps = true;
-	
-	
-	// NOT DEBUG
-	build_outdoors();
-	
-}
-
 // This is only called after a scenario is loaded and the party is put into it.
 // Until that time, the party scen vals are uninited
 // Then, it inits the party properly for starting the scenario based
@@ -253,28 +126,28 @@ void init_party_scen_data() {
 			PSD[i][j] = 0;
 	PSD[SDF_NO_INSTANT_HELP] = store_help;
 	univ.party.light_level = 0;
-	univ.party.outdoor_corner.x = scenario.out_sec_start.x;
-	univ.party.outdoor_corner.y = scenario.out_sec_start.y;
+	univ.party.outdoor_corner.x = univ.scenario.out_sec_start.x;
+	univ.party.outdoor_corner.y = univ.scenario.out_sec_start.y;
 	univ.party.i_w_c.x = 0;
 	univ.party.i_w_c.y = 0;
-	univ.party.loc_in_sec.x = scenario.out_start.x;
-	univ.party.loc_in_sec.y = scenario.out_start.y;
-	univ.party.p_loc.x = scenario.out_start.x;
-	univ.party.p_loc.y = scenario.out_start.y;
+	univ.party.loc_in_sec.x = univ.scenario.out_start.x;
+	univ.party.loc_in_sec.y = univ.scenario.out_start.y;
+	univ.party.p_loc.x = univ.scenario.out_start.x;
+	univ.party.p_loc.y = univ.scenario.out_start.y;
 	for(i = 0; i < 30; i++)
-		univ.party.boats[i] = scenario.boats[i];
+		univ.party.boats[i] = univ.scenario.boats[i];
 	for(i = 0; i < 30; i++)
-		univ.party.horses[i] = scenario.horses[i];
+		univ.party.horses[i] = univ.scenario.horses[i];
 	for(i = 0; i < 30; i++) {
-		if((scenario.boats[i].which_town >= 0) && (scenario.boats[i].loc.x >= 0)) {
+		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
 			if(!univ.party.boats[i].exists) {
-				univ.party.boats[i] = scenario.boats[i];
+				univ.party.boats[i] = univ.scenario.boats[i];
 				univ.party.boats[i].exists = true;
 			}
 		}
-		if((scenario.horses[i].which_town >= 0) && (scenario.horses[i].loc.x >= 0)) {
+		if(univ.scenario.horses[i].which_town >= 0 && univ.scenario.horses[i].loc.x >= 0) {
 			if(!univ.party.horses[i].exists) {
-				univ.party.horses[i] = scenario.horses[i];
+				univ.party.horses[i] = univ.scenario.horses[i];
 				univ.party.horses[i].exists = true;
 			}
 		}
@@ -306,12 +179,12 @@ void init_party_scen_data() {
 	univ.party.direction = 0;
 	univ.party.at_which_save_slot = 0;
 	for(i = 0; i < 200; i++)
-		univ.party.can_find_town[i] = 1 - scenario.town_hidden[i];
+		univ.party.can_find_town[i] = !univ.scenario.town_hidden[i];
 	for(i = 0; i < 20; i++)
 	 	univ.party.key_times[i] = 30000;
 	univ.party.party_event_timers.clear();
 	for(i = 0; i < 50; i++)
-		univ.party.spec_items[i] = (scenario.special_items[i].flags >= 10) ? 1 : 0;
+		univ.party.spec_items[i] = (univ.scenario.special_items[i].flags >= 10) ? 1 : 0;
 	
 	for(i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;
@@ -403,7 +276,7 @@ void put_party_in_scen(std::string scen_name) {
 	path = progDir/"Blades of Exile Scenarios";
 	path /= scen_name;
 	std::cout<<"Searching for scenario at:\n"<<path<<'\n';
-	if(!load_scenario(path))
+	if(!load_scenario(path, univ.scenario))
 		return;
 	
 	init_party_scen_data();
@@ -413,19 +286,15 @@ void put_party_in_scen(std::string scen_name) {
 	// graphics wise
 	end_startup();
 	
-	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
-	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
-	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
-	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
 	stat_screen_mode = 0;
 	build_outdoors();
 	erase_out_specials();
 	
 	current_pc = first_active_pc();
-	force_town_enter(scenario.which_town_start,scenario.where_start);
-	start_town_mode(scenario.which_town_start,9);
-	center = scenario.where_start;
-	update_explored(scenario.where_start);
+	force_town_enter(univ.scenario.which_town_start,univ.scenario.where_start);
+	start_town_mode(univ.scenario.which_town_start,9);
+	center = univ.scenario.where_start;
+	update_explored(univ.scenario.where_start);
 	overall_mode = MODE_TOWN;
 	redraw_screen(REFRESH_ALL);
 	mainPtr.display(); // TODO: Maybe display() should be called in redraw_screen()?
@@ -436,20 +305,20 @@ void put_party_in_scen(std::string scen_name) {
 	// Throw up intro dialog
 	buttons[0] = 1;
 	for(j = 0; j < 6; j++)
-		if(!scenario.intro_strs[j].empty()) {
+		if(!univ.scenario.intro_strs[j].empty()) {
 			for(i = 0; i < 6; i++)
-				strs[i] = scenario.intro_strs[i];
-			custom_choice_dialog(strs,scenario.intro_pic,PIC_SCEN,buttons) ;
+				strs[i] = univ.scenario.intro_strs[i];
+			custom_choice_dialog(strs,univ.scenario.intro_pic,PIC_SCEN,buttons) ;
 			j = 6;
 		}
 	give_help(1,2);
 	
 	// this is kludgy, put here to prevent problems
 	for(i = 0; i < 50; i++)
-		univ.party.spec_items[i] = (scenario.special_items[i].flags >= 10) ? 1 : 0;
+		univ.party.spec_items[i] = (univ.scenario.special_items[i].flags >= 10) ? 1 : 0;
 	
 	// Compatibility flags
-	if(scenario.format.prog_make_ver[0] < 2){
+	if(univ.scenario.format.prog_make_ver[0] < 2){
 		PSD[SDF_RESURRECT_NO_BALM] = 1;
 		PSD[SDF_NO_BOAT_SPECIALS] = 1;
 		PSD[SDF_TIMERS_DURING_REST] = 0;
@@ -1370,11 +1239,11 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			}
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			add_string_to_buf("  You are moved... ");
-			force_town_enter(scenario.which_town_start,scenario.where_start);
-			start_town_mode(scenario.which_town_start,9);
-			position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
-						   scenario.out_start.x,scenario.out_start.y);
-			center = univ.town.p_loc = scenario.where_start;
+			force_town_enter(univ.scenario.which_town_start,univ.scenario.where_start);
+			start_town_mode(univ.scenario.which_town_start,9);
+			position_party(univ.scenario.out_sec_start.x,univ.scenario.out_sec_start.y,
+						   univ.scenario.out_start.x,univ.scenario.out_start.y);
+			center = univ.town.p_loc = univ.scenario.where_start;
 //			overall_mode = MODE_OUTDOORS;
 //			center = univ.party.p_loc;
 //			update_explored(univ.party.p_loc);
@@ -1718,17 +1587,17 @@ void cast_town_spell(location where) {
 			
 		case eSpell::UNLOCK:
 			// TODO: Is the unlock spell supposed to have a max range?
-			if(scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
-				if(scenario.ter_types[ter].flag2.u == 10)
+			if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
+				if(univ.scenario.ter_types[ter].flag2.u == 10)
 					r1 = 10000;
 				else{
 					r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,eSkill::INTELLIGENCE) + 5 * univ.town.difficulty;
-					r1 += scenario.ter_types[ter].flag2.u * 7;
+					r1 += univ.scenario.ter_types[ter].flag2.u * 7;
 				}
 				if(r1 < (135 - combat_percent[min(19,univ.party[who_cast].level)])) {
 					add_string_to_buf("  Door unlocked.                 ");
 					play_sound(9);
-					univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1.u;
+					univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1.u;
 				}
 				else {
 					play_sound(41);
@@ -1789,9 +1658,9 @@ void crumble_wall(location where) { // TODO: Add something like this to the spre
 	if(loc_off_act_area(where))
 		return;
 	ter = univ.town->terrain(where.x,where.y);
-	if(scenario.ter_types[ter].special == eTerSpec::CRUMBLING && scenario.ter_types[ter].flag3.u < 2) {
+	if(univ.scenario.ter_types[ter].special == eTerSpec::CRUMBLING && univ.scenario.ter_types[ter].flag3.u < 2) {
 		play_sound(60);
-		univ.town->terrain(where.x,where.y) = scenario.ter_types[ter].flag1.u;
+		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1.u;
 		add_string_to_buf("  Barrier crumbles.");
 	}
 	
@@ -2702,7 +2571,7 @@ m_num_t pick_trapped_monst() {
 		else {
 			sp = get_m_name(univ.party.imprisoned_monst[i]);
 			soulCrystal->getControl("slot" + n).setText(sp);
-			get_monst = scenario.scen_monsters[univ.party.imprisoned_monst[i]];
+			get_monst = univ.scenario.scen_monsters[univ.party.imprisoned_monst[i]];
 			soulCrystal->getControl("lvl" + n).setTextToNum(get_monst.level);
 		}
 	}

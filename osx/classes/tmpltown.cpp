@@ -37,14 +37,14 @@ unsigned char& cBigTemplTown::lighting(size_t i, size_t r){
 	return _lighting[i][r];
 }
 
-short cBigTemplTown::max_dim(){
+short cBigTemplTown::max_dim() const {
 	return 0; // not sure what they are yet.
 }
 
-short cBigTemplTown::max_monst(){
+short cBigTemplTown::max_monst() const {
 	return 30;
 }
 
-short cBigTemplTown::max_items(){
+short cBigTemplTown::max_items() const {
 	return 64;
 }

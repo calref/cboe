@@ -1,9 +1,5 @@
 
 void save_scenario();
-//void load_scenario();
-void augment_terrain(location to_create);
-//void load_outdoors(location which_out,short mode);
-//void load_town(short which_town);
 void import_town(short which_town,fs::path temp_file_to_load);
 void create_basic_scenario();
 void make_new_scenario(std::string file_name,short out_width,short out_height,bool making_warriors_grove,

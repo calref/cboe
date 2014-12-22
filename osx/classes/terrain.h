@@ -46,8 +46,8 @@ public:
 	pic_num_t map_pic;
 	unsigned short i; // for temporary use in porting
 	
-	cTerrain& operator = (legacy::terrain_type_type& old);
-	void writeTo(std::ostream& file);
+	void append(legacy::terrain_type_type& old);
+	void writeTo(std::ostream& file) const;
 };
 
 std::ostream& operator << (std::ostream& out, eTerSpec& e);

@@ -31,7 +31,7 @@ short find_index_spot();
 bool is_s_d();
 void sort_specials();
 
-extern cOutdoors current_terrain;
+extern cOutdoors* current_terrain;
 extern sf::RenderWindow mainPtr;
 extern cTown* current_town;
 extern short cen_x, cen_y,current_terrain_type,cur_town;
@@ -52,7 +52,6 @@ extern rectangle left_button[NLS];
 extern rectangle right_buttons[NRSONPAGE];
 extern rectangle right_scrollbar_rect;
 extern rectangle right_area_rect;
-extern ter_num_t borders[4][50];
 extern std::shared_ptr<cScrollbar> right_sbar;
 
 extern bool left_buttons_active,right_buttons_active;
@@ -621,15 +620,26 @@ void draw_terrain(){
 					t_to_draw = town->terrain(cen_x + q - 4,cen_y + r - 4);
 				}
 				else {
-					if(cen_x + q - 4 == -1)
-						t_to_draw = borders[3][cen_y + r - 4];
-					else if(cen_x + q - 4 == 48)
-						t_to_draw = borders[1][cen_y + r - 4];
-					else if(cen_y + r - 4 == -1)
-						t_to_draw = borders[0][cen_x + q - 4];
-					else if(cen_y + r - 4 == 48)
-						t_to_draw = borders[2][cen_x + q - 4];
-					else t_to_draw = current_terrain.terrain[cen_x + q - 4][cen_y + r - 4];
+					short ter_x = cen_x + q - 4, ter_y = cen_y + r - 4;
+					if(ter_x == -1 && ter_y == -1 && cur_out.x > 0 && cur_out.y > 0)
+						t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y - 1]->terrain[47][47];
+					else if(ter_x == -1 && ter_y == 48 && cur_out.x > 0 && cur_out.y < scenario.out_height - 1)
+						t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y + 1]->terrain[47][0];
+					else if(ter_x == 48 && ter_y == -1 && cur_out.x < scenario.out_width - 1 && cur_out.y > 0)
+						t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y - 1]->terrain[0][47];
+					else if(ter_x == 48 && ter_y == 48 && cur_out.x < scenario.out_width - 1 && cur_out.y < scenario.out_height - 1)
+						t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y + 1]->terrain[0][0];
+					else if(ter_x == -1 && ter_y >= 0 && ter_y < 48 && cur_out.x > 0)
+						t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y]->terrain[47][ter_y];
+					else if(ter_y == -1 && ter_x >= 0 && ter_x < 48 && cur_out.y > 0)
+						t_to_draw = scenario.outdoors[cur_out.x][cur_out.y - 1]->terrain[ter_x][47];
+					else if(ter_x == 48 && ter_y >= 0 && ter_y < 48 && cur_out.x < scenario.out_width - 1)
+						t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y]->terrain[0][ter_y];
+					else if(ter_y == 48 && ter_x >= 0 && ter_x < 48 && cur_out.y < scenario.out_height - 1)
+						t_to_draw = scenario.outdoors[cur_out.x][cur_out.y + 1]->terrain[ter_x][0];
+					else if(ter_x == -1 || ter_x == 48 || ter_y == -1 || ter_y == 48)
+						t_to_draw = 90;
+					else t_to_draw = current_terrain->terrain[ter_x][ter_y];
 				}
 				draw_one_terrain_spot(q,r,t_to_draw);
 				
@@ -687,8 +697,8 @@ void draw_terrain(){
 				//}
 				if(!editing_town) {
 					for(i = 0; i < 4; i++)
-						if((cen_x + q - 4 == current_terrain.wandering_locs[i].x) &&
-							(cen_y + r - 4 == current_terrain.wandering_locs[i].y)) {
+						if((cen_x + q - 4 == current_terrain->wandering_locs[i].x) &&
+							(cen_y + r - 4 == current_terrain->wandering_locs[i].y)) {
 							tiny_from = base_small_button_from;
 							tiny_from.offset(7 * (2),7 * (1));
 							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
@@ -799,11 +809,11 @@ void draw_terrain(){
 		if(!editing_town) {
 			// draw info rects
 			for(i = 0; i < 8; i++)
-				if(current_terrain.info_rect[i].left > 0) {
-					draw_rect.left = 22 + 28 * (current_terrain.info_rect[i].left - cen_x + 4);
-					draw_rect.right = 22 + 28 * (current_terrain.info_rect[i].right - cen_x + 4);
-					draw_rect.top = 24 + 36 * (current_terrain.info_rect[i].top - cen_y + 4);
-					draw_rect.bottom = 24 + 36 * (current_terrain.info_rect[i].bottom - cen_y + 4);
+				if(current_terrain->info_rect[i].left > 0) {
+					draw_rect.left = 22 + 28 * (current_terrain->info_rect[i].left - cen_x + 4);
+					draw_rect.right = 22 + 28 * (current_terrain->info_rect[i].right - cen_x + 4);
+					draw_rect.top = 24 + 36 * (current_terrain->info_rect[i].top - cen_y + 4);
+					draw_rect.bottom = 24 + 36 * (current_terrain->info_rect[i].bottom - cen_y + 4);
 					frame_rect(ter_draw_gworld, draw_rect, sf::Color::Red);
 				}
 		}
@@ -832,7 +842,7 @@ void draw_terrain(){
 		printf("Drawing map for x = %d...%d and y = %d...%d\n", xMin, xMax, yMin, yMax);
 		for(q = xMin; q < xMax; q++)
 			for(r = yMin; r < yMax; r++) {
-				t_to_draw = editing_town ? town->terrain(q,r) : current_terrain.terrain[q][r];
+				t_to_draw = editing_town ? town->terrain(q,r) : current_terrain->terrain[q][r];
 				draw_one_tiny_terrain_spot(q-xMin,r-yMin,t_to_draw,size);
 				small_what_drawn[q][r] = t_to_draw;
 			}
@@ -1274,7 +1284,7 @@ bool is_special(short i,short j) {
 				return true;
 	if(!editing_town)
 		for(k = 0; k < 18; k++)
-			if((current_terrain.special_locs[k].x == i) && (current_terrain.special_locs[k].y == j))
+			if((current_terrain->special_locs[k].x == i) && (current_terrain->special_locs[k].y == j))
 				return true;
 	
 	return false;
@@ -1292,7 +1302,7 @@ void sort_specials() {
 bool is_spot(short i,short j){
 	if(editing_town)
 		return is_field_type(i,j,2);
-	else return current_terrain.special_spot[i][j];
+	else return current_terrain->special_spot[i][j];
 	return false;
 }
 

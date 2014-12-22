@@ -38,7 +38,6 @@ extern bool map_visible;
 extern sf::RenderWindow mini_map;
 extern short which_combat_type;
 extern short cur_town_talk_loaded;
-extern cScenario scenario;
 extern cUniverse univ;
 cScenarioList scen_headers;
 extern bool mac_is_intel;
@@ -94,7 +93,7 @@ void finish_load_party(){
 	path = progDir/"Blades of Exile Scenarios";
 	path /= univ.party.scen_name;
 	std::cout<<"Searching for scenario at:\n"<<path<<'\n';
-	if(!load_scenario(path))
+	if(!load_scenario(path, univ.scenario))
 		return;
 	
 	// Saved creatures may not have had their monster attributes saved
@@ -104,23 +103,18 @@ void finish_load_party(){
 		for(int j = 0; j < 60; j++) {
 			int number = univ.party.creature_save[i][j].number;
 			cMonster& monst = univ.party.creature_save[i][j];
-			monst = scenario.scen_monsters[number];
+			monst = univ.scenario.scen_monsters[number];
 		}
 	}
 	for(int j = 0; j < 60; j++) {
 		int number = univ.town.monst[j].number;
 		cMonster& monst = univ.town.monst[j];
-		monst = scenario.scen_monsters[number];
+		monst = univ.scenario.scen_monsters[number];
 	}
 	
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise
 	end_startup();
-	
-	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
-	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
-	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
-	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
 	
 	//end_anim();
 	overall_mode = town_restore ? MODE_TOWN : MODE_OUTDOORS;
@@ -128,14 +122,10 @@ void finish_load_party(){
 	build_outdoors();
 	erase_out_specials();
 	
-	
 	if(!town_restore) {
 		center = univ.party.p_loc;
 	}
 	else {
-		load_town(univ.town.num,univ.town.record);
-		load_town_str(univ.town.num,univ.town.record);
-		
 		for(int i = 0; i < univ.town->max_monst(); i++){
 			univ.town.monst[i].targ_loc.x = 0;
 			univ.town.monst[i].targ_loc.y = 0;
@@ -146,7 +136,7 @@ void finish_load_party(){
 			for(int k = 0; k < univ.town->max_dim(); k++) {
 				if(univ.town.is_quickfire(j,k))
 					univ.town.quickfire_present = true;
-				if(scenario.ter_types[univ.town->terrain(j,k)].special == eTerSpec::CONVEYOR)
+				if(univ.scenario.ter_types[univ.town->terrain(j,k)].special == eTerSpec::CONVEYOR)
 					univ.town.belt_present = true;
 			}
 		center = univ.town.p_loc;
@@ -250,10 +240,6 @@ void shift_universe_left() {
 	univ.party.outdoor_corner.x--;
 	univ.party.i_w_c.x++;
 	univ.party.p_loc.x += 48;
-	univ.out.outdoors[1][0] = univ.out.outdoors[0][0];
-	univ.out.outdoors[1][1] = univ.out.outdoors[0][1];
-//	outdoor_text[1][0] = outdoor_text[0][0];
-//	outdoor_text[1][1] = outdoor_text[0][1];
 	
 	for(i = 48; i < 96; i++)
 		for(j = 0; j < 96; j++)
@@ -270,8 +256,6 @@ void shift_universe_left() {
 			univ.party.out_c[i].m_loc.x += 48;
 	}
 	
-	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
-	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
 	build_outdoors();
 	restore_cursor();
 	
@@ -285,10 +269,6 @@ void shift_universe_right() {
 	univ.party.outdoor_corner.x++;
 	univ.party.i_w_c.x--;
 	univ.party.p_loc.x -= 48;
-	univ.out.outdoors[0][0] = univ.out.outdoors[1][0];
-	univ.out.outdoors[0][1] = univ.out.outdoors[1][1];
-//	outdoor_text[0][0] = outdoor_text[1][0];
-//	outdoor_text[0][1] = outdoor_text[1][1];
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = univ.out.out_e[i + 48][j];
@@ -303,8 +283,6 @@ void shift_universe_right() {
 		if(univ.party.out_c[i].exists)
 			univ.party.out_c[i].m_loc.x -= 48;
 	}
-	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
-	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	build_outdoors();
 	restore_cursor();
 	
@@ -318,11 +296,7 @@ void shift_universe_up() {
 	univ.party.outdoor_corner.y--;
 	univ.party.i_w_c.y++;
 	univ.party.p_loc.y += 48;
-	univ.out.outdoors[0][1] = univ.out.outdoors[0][0];
-	univ.out.outdoors[1][1] = univ.out.outdoors[1][0];
 	
-//	outdoor_text[0][1] = outdoor_text[0][0];
-//	outdoor_text[1][1] = outdoor_text[1][0];
 	for(i = 0; i < 96; i++)
 		for(j = 48; j < 96; j++)
 			univ.out.out_e[i][j] = univ.out.out_e[i][j - 48];
@@ -336,8 +310,6 @@ void shift_universe_up() {
 		if(univ.party.out_c[i].exists)
 			univ.party.out_c[i].m_loc.y += 48;
 	}
-	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
-	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
 	
 	build_outdoors();
 	restore_cursor();
@@ -353,11 +325,7 @@ void shift_universe_down() {
 	univ.party.outdoor_corner.y++;
 	univ.party.i_w_c.y--;
 	univ.party.p_loc.y = univ.party.p_loc.y - 48;
-	univ.out.outdoors[0][0] = univ.out.outdoors[0][1];
-	univ.out.outdoors[1][0] = univ.out.outdoors[1][1];
 	
-//	outdoor_text[0][0] = outdoor_text[0][1];
-//	outdoor_text[1][0] = outdoor_text[1][1];
 	for(i = 0; i < 96; i++)
 		for(j = 0; j < 48; j++)
 			univ.out.out_e[i][j] = univ.out.out_e[i][j + 48];
@@ -371,8 +339,6 @@ void shift_universe_down() {
 		if(univ.party.out_c[i].exists)
 			univ.party.out_c[i].m_loc.y = univ.party.out_c[i].m_loc.y - 48;
 	}
-	load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
-	load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
 	
 	build_outdoors();
 	restore_cursor();
@@ -384,7 +350,7 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) {
 	short i,j;
 	
 	if((pc_pos_x != minmax(0,47,pc_pos_x)) || (pc_pos_y != minmax(0,47,pc_pos_y)) ||
-		(out_x != minmax(0,scenario.out_width - 1,out_x)) || (out_y != minmax(0,scenario.out_height - 1,out_y))) {
+		(out_x != minmax(0,univ.scenario.out_width - 1,out_x)) || (out_y != minmax(0,univ.scenario.out_height - 1,out_y))) {
 		giveError("The scenario has tried to place you in an out of bounds outdoor location.");
 		return;
 	}
@@ -397,10 +363,6 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) {
 	if((univ.party.outdoor_corner.x != out_x) || (univ.party.outdoor_corner.y != out_y)) {
 		univ.party.outdoor_corner.x = out_x;
 		univ.party.outdoor_corner.y = out_y;
-		load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1),univ.out.outdoors[1][1]);
-		load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1),univ.out.outdoors[0][1]);
-		load_outdoors(loc(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y),univ.out.outdoors[1][0]);
-		load_outdoors(loc(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y),univ.out.outdoors[0][0]);
 	}
 	univ.party.i_w_c.x = (univ.party.p_loc.x > 47) ? 1 : 0;
 	univ.party.i_w_c.y = (univ.party.p_loc.y > 47) ? 1 : 0;
@@ -414,13 +376,16 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) {
 
 
 void build_outdoors() {
-	short i,j;
+	short i,j,x = univ.party.outdoor_corner.x,y=univ.party.outdoor_corner.y;
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++) {
-			univ.out[i][j] = univ.out.outdoors[0][0].terrain[i][j];
-			univ.out[48 + i][j] = univ.out.outdoors[1][0].terrain[i][j];
-			univ.out[i][48 + j] = univ.out.outdoors[0][1].terrain[i][j];
-			univ.out[48 + i][48 + j] = univ.out.outdoors[1][1].terrain[i][j];
+			univ.out[i][j] = univ.scenario.outdoors[x][y]->terrain[i][j];
+			if(x + 1 < univ.scenario.out_width)
+				univ.out[48 + i][j] = univ.scenario.outdoors[x+1][y]->terrain[i][j];
+			if(y + 1 < univ.scenario.out_height)
+				univ.out[i][48 + j] = univ.scenario.outdoors[x][y+1]->terrain[i][j];
+			if(x + 1 < univ.scenario.out_width && y + 1 < univ.scenario.out_height)
+				univ.out[48 + i][48 + j] = univ.scenario.outdoors[x+1][y+1]->terrain[i][j];
 		}
 	
 	fix_boats();
@@ -441,7 +406,7 @@ void build_outdoors() {
 short onm(char x_sector,char y_sector) {
 	short i;
 	
-	i = y_sector * scenario.out_width + x_sector;
+	i = y_sector * univ.scenario.out_width + x_sector;
 	return i;
 }
 
@@ -455,26 +420,26 @@ void save_outdoor_maps() {
 		for(j = 0; j < 48; j++) {
 			if(univ.out.out_e[i][j] > 0)
 				univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] =
-				univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] |
-				(char) (s_pow(2,i % 8));
-			if(univ.party.outdoor_corner.x + 1 < scenario.out_width) {
+					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] |
+						(char) (s_pow(2,i % 8));
+			if(univ.party.outdoor_corner.x + 1 < univ.scenario.out_width) {
 				if(univ.out.out_e[i + 48][j] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] =
-					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] |
-					(char) (s_pow(2,i % 8));
+						univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] |
+							(char) (s_pow(2,i % 8));
 			}
-			if(univ.party.outdoor_corner.y + 1 < scenario.out_height) {
+			if(univ.party.outdoor_corner.y + 1 < univ.scenario.out_height) {
 				if(univ.out.out_e[i][j + 48] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] =
-					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] |
-					(char) (s_pow(2,i % 8));
+						univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] |
+							(char) (s_pow(2,i % 8));
 			}
-			if((univ.party.outdoor_corner.y + 1 < scenario.out_height) &&
-				(univ.party.outdoor_corner.x + 1 < scenario.out_width)) {
+			if((univ.party.outdoor_corner.y + 1 < univ.scenario.out_height) &&
+				(univ.party.outdoor_corner.x + 1 < univ.scenario.out_width)) {
 				if(univ.out.out_e[i + 48][j + 48] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] =
-					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] |
-					(char) (s_pow(2,i % 8));
+						univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] |
+							(char) (s_pow(2,i % 8));
 			}
 		}
 }
@@ -488,20 +453,20 @@ void add_outdoor_maps() { // This takes the existing outdoor map info and supple
 				((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] &
 				  (char) (s_pow(2,i % 8))) != 0))
 			 	univ.out.out_e[i][j] = 1;
-			if(univ.party.outdoor_corner.x + 1 < scenario.out_width) {
+			if(univ.party.outdoor_corner.x + 1 < univ.scenario.out_width) {
 				if((univ.out.out_e[i + 48][j] == 0) &&
 					((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] &
 					  (char) (s_pow(2,i % 8))) != 0))
 				 	univ.out.out_e[i + 48][j] = 1;
 			}
-			if(univ.party.outdoor_corner.y + 1 < scenario.out_height) {
+			if(univ.party.outdoor_corner.y + 1 < univ.scenario.out_height) {
 				if((univ.out.out_e[i][j + 48] == 0) &&
 					((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] &
 					  (char) (s_pow(2,i % 8))) != 0))
 				 	univ.out.out_e[i][j + 48] = 1;
 			}
-			if((univ.party.outdoor_corner.y + 1 < scenario.out_height) &&
-				(univ.party.outdoor_corner.x + 1 < scenario.out_width)) {
+			if((univ.party.outdoor_corner.y + 1 < univ.scenario.out_height) &&
+				(univ.party.outdoor_corner.x + 1 < univ.scenario.out_width)) {
 				if((univ.out.out_e[i + 48][j + 48] == 0) &&
 					((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] &
 					  (char) (s_pow(2,i % 8))) != 0))
@@ -631,12 +596,13 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 	
 	// So file is OK, so load in string data and close it.
 	fclose(file_id);
-	load_scenario(file);
+	cScenario temp_scenario;
+	load_scenario(file, temp_scenario);
 	
 	scen_header_str_type scen_strs;
-	scen_strs.name = scenario.scen_name;
-	scen_strs.who1 = scenario.who_wrote[0];
-	scen_strs.who2 = scenario.who_wrote[1];
+	scen_strs.name = temp_scenario.scen_name;
+	scen_strs.who1 = temp_scenario.who_wrote[0];
+	scen_strs.who2 = temp_scenario.who_wrote[1];
 	std::string curScenarioName(file.filename().string());
 	scen_strs.file = curScenarioName;
 	

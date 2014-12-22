@@ -26,8 +26,7 @@ extern cScenario scenario;
 extern cSpecial null_spec_node;
 extern cSpeech::cNode null_talk_node;
 //extern piles_of_stuff_dumping_type *data_store;
-extern cOutdoors current_terrain;
-extern ter_num_t borders[4][50];
+extern cOutdoors* current_terrain;
 extern location cur_out;
 //extern cSpeech talking;
 
@@ -43,78 +42,6 @@ const char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 -
 short store_which_talk_node,last_talk_node[60];
 cSpeech::cNode store_talk_node;
 location store_cur_loc;
-
-void init_town(short size) {
-	short i,j;
-	std::string temp_str;
-	if(size == 0) town = new cBigTown;
-	else if(size == 1) town = new cMedTown;
-	else if(size == 2) town = new cTinyTown;
-	else return;
-	for(i = 0; i < 180; i++) {
-		temp_str = get_str("town-default",i + 1);
-		if(i == 0) town->town_name = temp_str;
-		else if(i >= 1 && i < 17)
-			town->rect_names[i-1] = temp_str;
-		else if(i >= 17 && i < 20)
-			town->comment[i-17] = temp_str;
-		else if(i >= 20 && i < 120)
-			town->spec_strs[i-20] = temp_str;
-		else if(i >= 120 && i < 140)
-			town->sign_strs[i-120] = temp_str;
-		town->strlens[i] = temp_str.length();
-	}
-	for(i = 0; i < town->max_dim(); i++)
-		for(j = 0; j < town->max_dim(); j++) {
-			town->terrain(i,j) = scenario.default_ground * 2;
-			town->lighting(i / 8,j) = 0;
-		}
-	
-	for(i = 0; i < 200; i++)
-		town->talking.strlens[i] = 0;
-	for(i = 0; i < 10; i++) {
-		town->talking.people[i].title = "Unused";
-		town->talking.people[i].look = "";
-		town->talking.people[i].name = "";
-		town->talking.people[i].job = "";
-		town->talking.people[i].dunno = "";
-	}
-	for(i = 0; i < 60; i++) {
-		town->talking.talk_nodes[i].personality = -1;
-		town->talking.talk_nodes[i].type = 0;
-		town->talking.talk_nodes[i].extras[0] = 0;
-		town->talking.talk_nodes[i].extras[1] = 0;
-		town->talking.talk_nodes[i].extras[2] = 0;
-		town->talking.talk_nodes[i].extras[3] = -1;
-		town->talking.talk_nodes[i].str1 = "";
-		town->talking.talk_nodes[i].str2 = "";
-		for(j = 0; j < 4; j++) {
-			town->talking.talk_nodes[i].link1[j] = 'x';
-			town->talking.talk_nodes[i].link2[j] = 'x';
-		}
-	}
-}
-
-void init_out() {
-	short i,j;
-	std::string temp_str;
-	
-	for(i = 0; i < 4; i++)
-		for(j = 0; j < 50; j++)
-			borders[i][j] = 90;
-	
-	for(i = 0; i < 120; i++) {
-		temp_str = get_str("outdoor-default",i + 1);
-		if(i == 0) current_terrain.out_name = temp_str;
-		else if(i == 9) current_terrain.comment = temp_str;
-		else if(i < 9) current_terrain.rect_names[i-1] = temp_str;
-		else if(i >= 10 && i < 100)
-			current_terrain.spec_strs[i-10] = temp_str;
-		else if(i >= 100 && i < 108)
-			current_terrain.sign_strs[i-100] = temp_str;
-		current_terrain.strlens[i] = temp_str.length();
-	}
-}
 
 static void put_placed_monst_in_dlog(cDialog& me) {
 	me["num"].setTextToNum(store_which_placed_monst);
@@ -328,7 +255,7 @@ static bool edit_sign_event_filter(cDialog& me, short which_sign) {
 	if(!me.toast(true)) return true;
 	if(editing_town)
 		town->sign_strs[which_sign] = me["text"].getText();
-	else current_terrain.sign_strs[which_sign] = me["text"].getText();
+	else current_terrain->sign_strs[which_sign] = me["text"].getText();
 #if 0 // TODO: Apparently there used to be left/right buttons on this dialog.
 	if(item_hit == 3)
 		store_which_sign--;
@@ -357,7 +284,7 @@ void edit_sign(short which_sign,short picture) {
 	
 	sign_dlg["num"].setTextToNum(which_sign);
 	if(!editing_town)
-		sign_dlg["text"].setText(current_terrain.sign_strs[which_sign]);
+		sign_dlg["text"].setText(current_terrain->sign_strs[which_sign]);
 	else sign_dlg["text"].setText(town->sign_strs[which_sign]);
 	
 	sign_dlg.run();
@@ -373,9 +300,9 @@ static bool save_roomdescs(cDialog& me, bool isTown, bool str_do_delete[]) {
 			if(str_do_delete[i])
 				town->room_rect(i).right = 0;
 		} else {
-			current_terrain.rect_names[i] = me[id].getText().substr(0,30);
+			current_terrain->rect_names[i] = me[id].getText().substr(0,30);
 			if(str_do_delete[i])
-				current_terrain.info_rect[i].right = 0;
+				current_terrain->info_rect[i].right = 0;
 		}
 	}
 	return true;
@@ -388,7 +315,7 @@ static void put_roomdescs_in_dlog(cDialog& me, bool isTown, bool str_do_delete[]
 		std::ostringstream str;
 		bool active = true;
 		if(isTown && town->room_rect(i).right == 0) active = false;
-		if(!isTown && current_terrain.info_rect[i].right == 0) active = false;
+		if(!isTown && current_terrain->info_rect[i].right == 0) active = false;
 		if(str_do_delete[i]) active = false;
 		if(!active) {
 			str << "Not yet placed.";
@@ -397,8 +324,8 @@ static void put_roomdescs_in_dlog(cDialog& me, bool isTown, bool str_do_delete[]
 			me["desc" + id].setText(town->rect_names[i]);
 			str << "X = " << town->room_rect(i).left << ", Y = " << town->room_rect(i).top;
 		} else {
-			me["desc" + id].setText(current_terrain.rect_names[i]);
-			str << "X = " << current_terrain.info_rect[i].left << ", Y = " << current_terrain.info_rect[i].top;
+			me["desc" + id].setText(current_terrain->rect_names[i]);
+			str << "X = " << current_terrain->info_rect[i].left << ", Y = " << current_terrain->info_rect[i].top;
 		}
 		me["rect" + id].setText(str.str());
 	}
@@ -488,8 +415,8 @@ bool change_ter(short& change_from,short& change_to,short& chance) {
 
 static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
-	current_terrain.out_name = me["name"].getText();
-	current_terrain.comment = me["comment"].getText();
+	current_terrain->out_name = me["name"].getText();
+	current_terrain->comment = me["comment"].getText();
 	return true;
 }
 
@@ -500,8 +427,8 @@ void outdoor_details() {
 	out_dlg["okay"].attachClickHandler(outdoor_details_event_filter);
 	snprintf(temp_str,256,"X = %d, Y = %d",cur_out.x,cur_out.y);
 	out_dlg["loc"].setText(temp_str);
-	out_dlg["comment"].setText(current_terrain.comment);
-	out_dlg["name"].setText(current_terrain.out_name);
+	out_dlg["comment"].setText(current_terrain->comment);
+	out_dlg["name"].setText(current_terrain->out_name);
 	
 	out_dlg.run();
 }
@@ -548,10 +475,10 @@ static void save_out_wand(cDialog& me, short store_which_out_wand, cOutdoors::cW
 	
 	switch(mode) {
 		case 0:
-			current_terrain.wandering[store_which_out_wand] = store_out_wand;
+			current_terrain->wandering[store_which_out_wand] = store_out_wand;
 			break;
 		case 1:
-			current_terrain.special_enc[store_which_out_wand] = store_out_wand;
+			current_terrain->special_enc[store_which_out_wand] = store_out_wand;
 			break;
 	}
 }
@@ -564,13 +491,13 @@ static bool edit_out_wand_event_filter(cDialog& me, std::string item_hit, short&
 		me.untoast();
 			store_which_out_wand--;
 			if(store_which_out_wand < 0) store_which_out_wand = 3;
-			store_out_wand = (mode == 0) ? current_terrain.wandering[store_which_out_wand] : current_terrain.special_enc[store_which_out_wand];
+			store_out_wand = (mode == 0) ? current_terrain->wandering[store_which_out_wand] : current_terrain->special_enc[store_which_out_wand];
 			put_out_wand_in_dlog(me, store_which_out_wand, store_out_wand);
 	} else if(item_hit == "right") {
 		me.untoast();
 			store_which_out_wand++;
 			if(store_which_out_wand > 3) store_which_out_wand = 0;
-			store_out_wand = (mode == 0) ? current_terrain.wandering[store_which_out_wand] : current_terrain.special_enc[store_which_out_wand];
+			store_out_wand = (mode == 0) ? current_terrain->wandering[store_which_out_wand] : current_terrain->special_enc[store_which_out_wand];
 			put_out_wand_in_dlog(me, store_which_out_wand, store_out_wand);
 	}
 	return true;
@@ -616,7 +543,7 @@ void edit_out_wand(short mode) {
 	using namespace std::placeholders;
 	
 	short which_out_wand = 0;
-	cOutdoors::cWandering store_out_wand = (mode == 0) ? current_terrain.wandering[0] : current_terrain.special_enc[0];
+	cOutdoors::cWandering store_out_wand = (mode == 0) ? current_terrain->wandering[0] : current_terrain->special_enc[0];
 	
 	cDialog wand_dlg("edit-outdoor-encounter.xml");
 	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));

@@ -36,7 +36,11 @@ enum eLighting {
 	LIGHT_NONE = 3,
 };
 
+class cScenario;
+
 class cTown { // formerly town_record_type
+protected:
+	cScenario& scenario;
 public:
 //	class cCreature { // formerly creature_start_type
 //	public:
@@ -120,15 +124,14 @@ public:
 	virtual rectangle& room_rect(size_t i) = 0;
 	virtual cCreature& creatures(size_t i) = 0;
 	virtual unsigned char& lighting(size_t i, size_t r) = 0;
-	virtual short max_dim() = 0;
-	virtual short max_monst() = 0;
-	virtual short max_items() = 0;
+	virtual short max_dim() const = 0;
+	virtual short max_monst() const = 0;
+	virtual short max_items() const = 0;
 	void set_up_lights();
 	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
 	
-	cTown();
-	cTown(short size);
-	cTown& operator = (legacy::town_record_type& old);
+	explicit cTown(cScenario& scenario, bool init_strings = false);
+	void append(legacy::town_record_type& old);
 	virtual void writeTerrainTo(std::ostream& file) = 0;
 	virtual void readTerrainFrom(std::istream& file) = 0;
 };

@@ -15,7 +15,7 @@
 #include "oldstructs.h"
 #include "boe.consts.h" // TODO: Put these constants in a global file
 
-cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
+void cTerrain::append(legacy::terrain_type_type& old){
 	static const short arenas[274] = {
 		1, 1, 0, 0, 0, 1, 1, 1, 1, 1,			//  0 - grassy field
 		1, 1, 1, 1, 1, 1, 1, 1, 2, 2,			//  1 - ordinary cave
@@ -353,7 +353,6 @@ cTerrain& cTerrain::operator = (legacy::terrain_type_type& old){
 	};
 	if(picture < 1000) map_pic = picture;
 	else map_pic = NO_PIC;
-	return *this;
 }
 
 std::ostream& operator << (std::ostream& out, eTerSpec& e){

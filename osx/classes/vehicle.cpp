@@ -27,7 +27,7 @@ cVehicle::cVehicle() :
 		sector.x = 0; sector.y = 0;
 }
 
-cVehicle& cVehicle::operator = (legacy::horse_record_type& old){
+void cVehicle::append(legacy::horse_record_type& old){
 	which_town = old.which_town;
 	exists = old.exists;
 	property = old.property;
@@ -37,10 +37,9 @@ cVehicle& cVehicle::operator = (legacy::horse_record_type& old){
 	loc_in_sec.y = old.horse_loc_in_sec.y;
 	sector.x = old.horse_sector.x;
 	sector.y = old.horse_sector.y;
-	return *this;
 }
 
-cVehicle& cVehicle::operator = (legacy::boat_record_type& old){
+void cVehicle::append(legacy::boat_record_type& old){
 	which_town = old.which_town;
 	exists = old.exists;
 	property = old.property;
@@ -50,10 +49,9 @@ cVehicle& cVehicle::operator = (legacy::boat_record_type& old){
 	loc_in_sec.y = old.boat_loc_in_sec.y;
 	sector.x = old.boat_sector.x;
 	sector.y = old.boat_sector.y;
-	return *this;
 }
 
-void cVehicle::writeTo(std::ostream& file) {
+void cVehicle::writeTo(std::ostream& file) const {
 	file << "LOCATION " << loc.x << ' ' << loc.y << '\n';
 	file << "LOCINSECTOR " << loc_in_sec.x << ' ' << loc_in_sec.y << '\n';
 	file << "SECTOR " << sector.x << ' ' << sector.y << '\n';

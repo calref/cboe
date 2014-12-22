@@ -101,7 +101,6 @@ extern eSpell store_mage, store_priest;
 //extern town_item_list	t_i; // shouldn't be here
 //extern unsigned char misc_i[64][64];
 extern short spec_item_array[60];
-extern cScenario scenario;
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
 extern std::vector<word_rect_t> talk_words;
@@ -345,7 +344,7 @@ static void handle_rest(bool& need_redraw, bool& need_reprint) {
 		add_string_to_buf("Rest: Not enough food.            ");
 	else if(nearest_monster() <= 3)
 		add_string_to_buf("Rest: Monster too close.            ");
-	else if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS)
+	else if(univ.scenario.ter_types[ter].special == eTerSpec::DAMAGING || univ.scenario.ter_types[ter].special == eTerSpec::DANGEROUS)
 		add_string_to_buf("Rest: It's dangerous here.");
 	else if(flying())
 		add_string_to_buf("Rest: Not while flying.           ");
@@ -453,9 +452,9 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 				}
 			} else if(overall_mode == MODE_LOOK_OUTDOORS) {
 				for(int k = 0; k < 8; k++) {
-					if(destination == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_locs[k]) {
+					if(destination == univ.out->sign_locs[k]) {
 						need_reprint = true;
-						if(adjacent(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].sign_locs[k],univ.party.loc_in_sec))
+						if(adjacent(univ.out->sign_locs[k],univ.party.loc_in_sec))
 							do_sign(200 + get_outdoor_num(),k,ter_looked_at);
 						else add_string_to_buf("  Too far away to read sign.      ");
 					}
@@ -506,7 +505,7 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 		} else need_redraw = true;
 		
 		ter_num_t storage = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
-		if(scenario.ter_types[storage].special == eTerSpec::TOWN_ENTRANCE) {
+		if(univ.scenario.ter_types[storage].special == eTerSpec::TOWN_ENTRANCE) {
 			short find_direction_from;
 			if(univ.party.direction == 0) find_direction_from = 2;
 			else if(univ.party.direction == 4) find_direction_from = 0;
@@ -514,10 +513,10 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 			else find_direction_from = 1;
 			
 			for(int i = 0; i < 8; i++)
-				if(univ.party.loc_in_sec == univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].exit_locs[i]) {
-					short which_t = univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].exit_dests[i];
+				if(univ.party.loc_in_sec == univ.out->exit_locs[i]) {
+					short which_t = univ.out->exit_dests[i];
 					if(which_t >= 0)
-						start_town_mode(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].exit_dests[i], find_direction_from);
+						start_town_mode(univ.out->exit_dests[i], find_direction_from);
 					if(is_town()) {
 						need_redraw = false;
 						i = 8;
@@ -547,7 +546,7 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 					if(!univ.town.monst[i].summoned)
 						small_talk = -univ.town.monst[i].personality;
 					std::string str = "No response.";
-					if(small_talk > 1000) str = scenario.spec_strs[small_talk - 1000];
+					if(small_talk > 1000) str = univ.scenario.spec_strs[small_talk - 1000];
 					// TODO: Come up with a set of pre-cooked responses.
 					add_string_to_buf("Talk: " + str, 4);
 				} else {
@@ -902,7 +901,7 @@ static void handle_victory() {reload_startup();
 	if(cChoiceDlog("congrats-save.xml",{"cancel","save"}).show() == "save"){
 		// TODO: Wait, this shouldn't be a "save as" action, should it? It should save without asking for a location.
 		fs::path file = nav_put_party();
-		if(!file.empty()) save_party(file);
+		if(!file.empty()) save_party(file, univ);
 	}
 }
 
@@ -1051,7 +1050,7 @@ bool handle_action(sf::Event event) {
 				
 			case 5:
 				if(overall_mode == MODE_OUTDOORS) {
-					save_party(univ.file);
+					save_party(univ.file, univ);
 					need_redraw = true;
 					current_switch = 6;
 					break;
@@ -1922,11 +1921,11 @@ bool handle_keystroke(sf::Event& event){
 				add_string_to_buf("  Not while on horse. ");
 				break;
 			}
-			force_town_enter(scenario.which_town_start,scenario.where_start);
-			start_town_mode(scenario.which_town_start,9);
-			position_party(scenario.out_sec_start.x,scenario.out_sec_start.y,
-						   scenario.out_start.x,scenario.out_start.y);
-			center = univ.town.p_loc = scenario.where_start;
+			force_town_enter(univ.scenario.which_town_start,univ.scenario.where_start);
+			start_town_mode(univ.scenario.which_town_start,9);
+			position_party(univ.scenario.out_sec_start.x,univ.scenario.out_sec_start.y,
+						   univ.scenario.out_start.x,univ.scenario.out_start.y);
+			center = univ.town.p_loc = univ.scenario.where_start;
 			redraw_screen(REFRESH_ALL);
 			add_string_to_buf("Debug:  You return to the start.");
 			print_buf();
@@ -1952,9 +1951,9 @@ bool handle_keystroke(sf::Event& event){
 		case 'T':
 			if(!in_scen_debug) break;
 			short find_direction_from;
-			sout << "Enter Town Number (between 0 and " << scenario.num_towns - 1 << ')';
-            i = get_num_response(0, scenario.num_towns - 1, "Enter Town Number");
-            if(i >= 0 && i < scenario.num_towns ){
+			sout << "Enter Town Number (between 0 and " << univ.scenario.num_towns - 1 << ')';
+            i = get_num_response(0, univ.scenario.num_towns - 1, "Enter Town Number");
+            if(i >= 0 && i < univ.scenario.num_towns) {
             	if(univ.party.direction == 0) find_direction_from = 2;
 				else if(univ.party.direction == 4) find_direction_from = 0;
 				else if(univ.party.direction < 4) find_direction_from = 3;
@@ -2137,9 +2136,9 @@ bool handle_keystroke(sf::Event& event){
 
 void do_load() {
 	fs::path file_to_load = nav_get_party();
-	if(!file_to_load.empty())
-		if(!load_party(file_to_load))
-			return;
+	if(file_to_load.empty()) return;
+	if(!load_party(file_to_load, univ))
+		return;
 	finish_load_party();
 	if(overall_mode != MODE_STARTUP)
 		post_load();
@@ -2187,7 +2186,7 @@ void do_save(short mode) {
 	if(mode == 1) file = nav_put_party(file);
 	if(!file.empty()) {
 		univ.file = file;
-		save_party(univ.file);
+		save_party(univ.file, univ);
 	}
 	
 	
@@ -2296,7 +2295,7 @@ void increase_age() {
 	if(PSD[SDF_PARTY_FLIGHT] == 2)
 		add_string_to_buf("You are starting to descend.");
 	if(PSD[SDF_PARTY_FLIGHT] == 1) {
-		if(blocksMove(scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage)) {
+		if(blocksMove(univ.scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage)) {
 			add_string_to_buf("  You plummet to your deaths.                  ");
 			slay_party(eMainStatus::DEAD);
 			print_buf();
@@ -2507,7 +2506,7 @@ void handle_hunting() {
 	
 	// TODO: Resupport this!
 	ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
-	pic = scenario.ter_types[ter].picture;
+	pic = univ.scenario.ter_types[ter].picture;
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[eTrait::CAVE_LORE] && get_ran(1,0,12) == 5
 		   && (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
@@ -2584,7 +2583,7 @@ void handle_death() {
 		}
 		else if(choice == "load") {
 			fs::path file_to_load = nav_get_party();
-			if(!file_to_load.empty()) load_party(file_to_load);
+			if(!file_to_load.empty()) load_party(file_to_load, univ);
 			if(!party_toast()) {
 				if(overall_mode != MODE_STARTUP)
 					post_load(), finish_load_party();
@@ -2610,19 +2609,32 @@ void start_new_game() {
 		return;
 	
 	//which = choice - 1;
+	// Destroy the universe
+	univ.~cUniverse();
+	
+	long party_type = 'dflt';
 	
 //	display_intro();
-	if(kb::isKeyPressed(kb::LSystem) || kb::isKeyPressed(kb::RSystem)) init_party(2); // if command key held down, create debug party
-	else if(kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl)) init_party(2);
-	else init_party(0);
+	// If system key held down, create debug party
+#ifdef __APPLE__
+	if(kb::isKeyPressed(kb::LSystem) || kb::isKeyPressed(kb::RSystem))
+#else
+	if(kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl))
+#endif
+		party_type = 'dbug';
 	
-	//while(!creation_done) {
+	// And now, reconstruct the universe.
+	new(&univ) cUniverse(party_type);
+	
+	// Default is save maps
+	PSD[SDF_NO_MAPS] = 0;
+	save_maps = true;
+	
+	// The original code called build_outdoors here, but they're not even in a scenario, so I removed it.
+	// It was probably a relic of Exile III.
+	// (It also refreshed stores... with uninitialized items.)
+	
 	edit_party();
-	/*	if((i > 0) || !in_startup_mode)
-			creation_done = true;
-		if((i == 0) && !in_startup_mode)
-			return;
-	} */
 
 	// if no PCs left, forget it
 	for(i = 0 ; i < 6; i++)
@@ -2656,7 +2668,7 @@ void start_new_game() {
 			univ.party[i].cur_sp = univ.party[i].max_sp;
 		}
 	fs::path file = nav_put_party();
-	if(!file.empty()) save_party(file);
+	if(!file.empty()) save_party(file, univ);
 	party_in_memory = true;
 	
 	party_in_memory = true;
@@ -2691,12 +2703,12 @@ static eDirection find_waterfall(short x, short y, short mode){
 	bool to_dir[8];
 	for(eDirection i = DIR_N; i < DIR_HERE; i++){
 		if(mode == 0){
-			to_dir[i] = scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special == eTerSpec::WATERFALL;
+			to_dir[i] = univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special == eTerSpec::WATERFALL;
 			//printf("%i\n",scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1);
-			if(scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1.u != i) to_dir[i] = false;
+			if(univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1.u != i) to_dir[i] = false;
 		}else{
-			to_dir[i] = scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special == eTerSpec::WATERFALL;
-			if(scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].flag1.u != i) to_dir[i] = false;
+			to_dir[i] = univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special == eTerSpec::WATERFALL;
+			if(univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].flag1.u != i) to_dir[i] = false;
 		}
 	}
 	short count = 0;
@@ -2802,12 +2814,12 @@ bool outd_move_party(location destination,bool forced) {
 		// Check if party moves into new sector
 		if((destination.x < 6) && (univ.party.outdoor_corner.x > 0))
 			shift_universe_left();
-		if((destination.x > 90) && (univ.party.outdoor_corner.x < scenario.out_width - 1))
+		if(destination.x > 90 && univ.party.outdoor_corner.x < univ.scenario.out_width - 1)
 			shift_universe_right();
 		if((destination.y < 6)  && (univ.party.outdoor_corner.y > 0)) {
 			shift_universe_up();
 		}
-		else if((destination.y > 90)  && (univ.party.outdoor_corner.y < scenario.out_height - 1))
+		else if(destination.y > 90 && univ.party.outdoor_corner.y < univ.scenario.out_height - 1)
 			shift_universe_down();
 		// Now stop from going off the world's edge
 		real_dest.x = univ.party.p_loc.x + real_dest.x;
@@ -2816,8 +2828,8 @@ bool outd_move_party(location destination,bool forced) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
-		if(((real_dest.x > 94 /*92*/) && (univ.party.outdoor_corner.x >= scenario.out_width - 2)) ||
-			((real_dest.x > 46 /*44*/) && (univ.party.outdoor_corner.x >= scenario.out_width - 1))) {
+		if((real_dest.x > 94 /*92*/ && univ.party.outdoor_corner.x >= univ.scenario.out_width - 2) ||
+			(real_dest.x > 46 /*44*/ && univ.party.outdoor_corner.x >= univ.scenario.out_width - 1)) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
@@ -2825,8 +2837,8 @@ bool outd_move_party(location destination,bool forced) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
-		else if(((real_dest.y > 94 /*92*/)  && (univ.party.outdoor_corner.y >= scenario.out_height - 2)) ||
-				 ((real_dest.y > 46 /*44*/)  && (univ.party.outdoor_corner.y >= scenario.out_height - 1))) {
+		else if((real_dest.y > 94 /*92*/ && univ.party.outdoor_corner.y >= univ.scenario.out_height - 2) ||
+				 (real_dest.y > 46 /*44*/ && univ.party.outdoor_corner.y >= univ.scenario.out_height - 1)) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
@@ -2846,9 +2858,9 @@ bool outd_move_party(location destination,bool forced) {
 		if(univ.party.in_boat >= 0) {
 			if(!outd_is_blocked(real_dest) //&& !outd_is_special(real_dest)
 				// not in towns
-				&& (!scenario.ter_types[ter].boat_over
+				&& (!univ.scenario.ter_types[ter].boat_over
 					|| ((real_dest.x != univ.party.p_loc.x) && (real_dest.y != univ.party.p_loc.y)))
-				&& scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
+				&& univ.scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
 			}
@@ -2856,8 +2868,8 @@ bool outd_move_party(location destination,bool forced) {
 					 || (!forced && (out_boat_there(destination) < 30)))
 				return false;
 			else if(!outd_is_blocked(real_dest)
-					 && scenario.ter_types[ter].boat_over
-					 && scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
+					 && univ.scenario.ter_types[ter].boat_over
+					 && univ.scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 				// TODO: It kinda looks like there should be a check for eTerSpec::BRIDGE here?
 				// Note: Maybe not though, since this is where boating over lava was once hard-coded...?
 				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
@@ -2867,7 +2879,7 @@ bool outd_move_party(location destination,bool forced) {
 					univ.party.in_boat = -1;
 				}
 			}
-			else if(scenario.ter_types[ter].boat_over)
+			else if(univ.scenario.ter_types[ter].boat_over)
 				forced = true;
 		}
 		
@@ -2917,13 +2929,13 @@ bool outd_move_party(location destination,bool forced) {
 		}
 		else if(!outd_is_blocked(real_dest) || forced
 				 // Check if can fly over
-				 || (flying() && scenario.ter_types[ter].fly_over)) {
+				 || (flying() && univ.scenario.ter_types[ter].fly_over)) {
 			if(univ.party.in_horse >= 0) {
-				if(scenario.ter_types[ter].special == eTerSpec::DAMAGING || scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
+				if(univ.scenario.ter_types[ter].special == eTerSpec::DAMAGING || univ.scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
 					ASB("Your horses quite sensibly refuse.");
 					return false;
 				}
-				if(scenario.ter_types[ter].block_horse) {
+				if(univ.scenario.ter_types[ter].block_horse) {
 					ASB("You can't take horses there!");
 					return false;
 				}
@@ -2931,7 +2943,7 @@ bool outd_move_party(location destination,bool forced) {
 			univ.party.direction = set_direction(univ.party.p_loc, destination);
 			
 			// TODO: But I though you automatically landed when entering?
-			if(flying() && scenario.ter_types[ter].special == eTerSpec::TOWN_ENTRANCE) {
+			if(flying() && univ.scenario.ter_types[ter].special == eTerSpec::TOWN_ENTRANCE) {
 				add_string_to_buf("Moved: You have to land first.               ");
 				return false;
 			}
@@ -3012,7 +3024,7 @@ bool town_move_party(location destination,short forced) {
 		if(univ.party.in_boat >= 0) {
 			if((!is_blocked(destination)) && (!is_special(destination))
 				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert
-				&& ( (!scenario.ter_types[ter].boat_over)
+				&& (!univ.scenario.ter_types[ter].boat_over
 					|| ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y)))) {
 					add_string_to_buf("You leave the boat.             ");
 					univ.party.in_boat = -1;
@@ -3020,7 +3032,7 @@ bool town_move_party(location destination,short forced) {
 			else if((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y))
 				return false;
 			// Crossing bridge: land or go through
-			else if(!is_blocked(destination) && scenario.ter_types[ter].boat_over && scenario.ter_types[ter].special == eTerSpec::BRIDGE) {
+			else if(!is_blocked(destination) && univ.scenario.ter_types[ter].boat_over && univ.scenario.ter_types[ter].special == eTerSpec::BRIDGE) {
 				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
 					forced = true;
 				else if(!is_blocked(destination)) {
@@ -3034,7 +3046,7 @@ bool town_move_party(location destination,short forced) {
 				return false;
 			}
 			// water or lava
-			else if(scenario.ter_types[ter].boat_over)
+			else if(univ.scenario.ter_types[ter].boat_over)
 				forced = true;
 		}
 		
@@ -3071,11 +3083,11 @@ bool town_move_party(location destination,short forced) {
 		}
 		else if(!is_blocked(destination) || forced) {
 			if(univ.party.in_horse >= 0) {
-				if(scenario.ter_types[ter].special == eTerSpec::DAMAGING) {
+				if(univ.scenario.ter_types[ter].special == eTerSpec::DAMAGING || univ.scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
 					ASB("Your horses quite sensibly refuse.");
 					return false;
 				}
-				if(scenario.ter_types[ter].block_horse) {
+				if(univ.scenario.ter_types[ter].block_horse) {
 					ASB("You can't take horses there!");
 					return false;
 				}
@@ -3142,7 +3154,7 @@ void setup_outdoors(location where) {
 }
 
 short get_outdoor_num() {
-	return (scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) + univ.party.outdoor_corner.x + univ.party.i_w_c.x);
+	return (univ.scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) + univ.party.outdoor_corner.x + univ.party.i_w_c.x);
 }
 
 short count_walls(location loc) { // TODO: Generalize this function
@@ -3166,7 +3178,7 @@ short count_walls(location loc) { // TODO: Generalize this function
 
 bool is_sign(ter_num_t ter) {
 	
-	if(scenario.ter_types[ter].special == eTerSpec::IS_A_SIGN)
+	if(univ.scenario.ter_types[ter].special == eTerSpec::IS_A_SIGN)
 		return true;
 	return false;
 }

@@ -15,9 +15,7 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-extern cScenario scenario;
-
-cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
+void cOutdoors::append(legacy::outdoor_record_type& old, const cScenario& scenario){
 	int i,j;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
@@ -130,23 +128,25 @@ cOutdoors& cOutdoors::operator = (legacy::outdoor_record_type& old){
 //		special_enc[i].end_spec1 = old.special_enc[i].end_spec1;
 //		wandering[i].end_spec2 = old.wandering[i].end_spec2;
 //		special_enc[i].end_spec2 = old.special_enc[i].end_spec2;
-		wandering[i] = old.wandering[i];
-		special_enc[i] = old.special_enc[i];
+		wandering[i].append(old.wandering[i]);
+		special_enc[i].append(old.special_enc[i]);
 		wandering_locs[i].x = old.wandering_locs[i].x;
 		wandering_locs[i].y = old.wandering_locs[i].y;
 	}
 	for(i = 0; i < 180; i++)
 		strlens[i] = old.strlens[i];
 	for(i = 0; i < 60; i++)
-		specials[i] = old.specials[i];
-	return *this;
+		specials[i].append(old.specials[i]);
 }
 
-cOutdoors::cOutdoors(){
+cOutdoors::cWandering::cWandering() {
+	spec_on_meet = spec_on_win = spec_on_flee = -1;
+	end_spec1 = end_spec2 = -1;
+}
+
+cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	short i,j;
-	location d_loc(100,0);
-	cOutdoors::cWandering d_monst = {{0,0,0,0,0,0,0},{0,0,0},-1,-1,-1,0,-1,-1};
-	rectangle d_rect;
+	location d_loc(100,0);;
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	
 	for(i = 0; i < 48; i++)
@@ -156,27 +156,31 @@ cOutdoors::cOutdoors(){
 	
 	for(i = 0; i < 18; i++) {
 		special_locs[i] = d_loc;
-		special_id[i] = 0;
 	}
 	for(i = 0; i < 8; i++) {
 		exit_locs[i] = d_loc;
-		exit_dests[i] = 0;
 		sign_locs[i] = d_loc;
 		sign_locs[i].x = 100;
-		info_rect[i] = d_rect;
 	}
 	for(i = 0; i < 4; i++) {
-		wandering[i] = d_monst;
 		wandering_locs[i] = locs[i];
-		special_enc[i] = d_monst;
 	}
-	for(i = 0; i < 60; i++) {
-		specials[i] = cSpecial();
+	if(!init_strings) return;
+	std::string temp_str;
+	for(i = 0; i < 120; i++) {
+		temp_str = get_str("outdoor-default",i + 1);
+		if(i == 0) out_name = temp_str;
+		else if(i == 9) comment = temp_str;
+		else if(i < 9) rect_names[i-1] = temp_str;
+		else if(i >= 10 && i < 100)
+			spec_strs[i-10] = temp_str;
+		else if(i >= 100 && i < 108)
+			sign_strs[i-100] = temp_str;
+		strlens[i] = temp_str.length();
 	}
-	
 }
 
-cOutdoors::cWandering& cOutdoors::cWandering::operator = (legacy::out_wandering_type old){
+void cOutdoors::cWandering::append(legacy::out_wandering_type old){
 	for(int i = 0; i < 7; i++)
 		monst[i] = old.monst[i];
 	for(int j = 0; j < 3; j++)
@@ -187,21 +191,19 @@ cOutdoors::cWandering& cOutdoors::cWandering::operator = (legacy::out_wandering_
 	cant_flee = old.cant_flee;
 	end_spec1 = old.end_spec1;
 	end_spec2 = old.end_spec2;
-	return *this;
 }
 
-cOutdoors::cCreature& cOutdoors::cCreature::operator = (legacy::outdoor_creature_type old){
+void cOutdoors::cCreature::append(legacy::outdoor_creature_type old){
 	exists = old.exists;
 	direction = old.direction;
-	what_monst = old.what_monst;
+	what_monst.append(old.what_monst);
 	which_sector.x = old.which_sector.x;
 	which_sector.y = old.which_sector.y;
 	m_loc.x = old.m_loc.x;
 	m_loc.y = old.m_loc.y;
-	return *this;
 }
 
-void cOutdoors::cWandering::writeTo(std::ostream& file, std::string prefix){
+void cOutdoors::cWandering::writeTo(std::ostream& file, std::string prefix) const {
 	for(int i = 0; i < 7; i++)
 		file << prefix << "HOSTILE " << i << ' ' << monst[i] << '\n';
 	for(int i = 0; i < 3; i++)

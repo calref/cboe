@@ -15,7 +15,7 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-cPlayer& cPlayer::operator = (legacy::pc_record_type old){
+void cPlayer::append(legacy::pc_record_type old){
 	int i;
 	main_status = (eMainStatus) old.main_status;
 	name = old.name;
@@ -38,7 +38,7 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 		traits[trait] = old.traits[i];
 	}
 	for(i = 0; i < 24; i++){
-		items[i] = old.items[i];
+		items[i].append(old.items[i]);
 		equip[i] = old.equip[i];
 	}
 	for(i = 0; i < 62; i++){
@@ -50,7 +50,6 @@ cPlayer& cPlayer::operator = (legacy::pc_record_type old){
 	race = (eRace) old.race;
 	//exp_adj = old.exp_adj;
 	direction = old.direction;
-	return *this;
 }
 
 short cPlayer::get_tnl(){
@@ -282,15 +281,15 @@ void operator -= (eMainStatus& stat, eMainStatus othr){
 		stat = (eMainStatus) (-10 + (int)othr);
 }
 
-void cPlayer::writeTo(std::ostream& file){
+void cPlayer::writeTo(std::ostream& file) const {
 	file << "STATUS -1 " << main_status << '\n';
 	file << "NAME " << name << '\n';
 	file << "SKILL 19 " << max_health << '\n';
 	file << "SKILL 20 " << max_sp << '\n';
 	for(int i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
-		if(skills[skill] > 0)
-			file << "SKILL " << i << ' ' << skills[skill] << '\n';
+		if(skills.at(skill) > 0)
+			file << "SKILL " << i << ' ' << skills.at(skill) << '\n';
 	}
 	file << "HEALTH " << cur_health << '\n';
 	file << "MANA " << cur_sp << '\n';
@@ -299,8 +298,8 @@ void cPlayer::writeTo(std::ostream& file){
 	file << "LEVEL " << level << '\n';
 	for(int i = 0; i < 15; i++) {
 		eStatus stat = (eStatus) i;
-		if(status[stat] != 0)
-			file << "STATUS " << i << ' ' << status[stat] << '\n';
+		if(status.at(stat) != 0)
+			file << "STATUS " << i << ' ' << status.at(stat) << '\n';
 	}
 	for(int i = 0; i < 24; i++)
 		if(equip[i])
@@ -313,7 +312,7 @@ void cPlayer::writeTo(std::ostream& file){
 			file << "PRIEST " << i << '\n';
 	for(int i = 0; i < 62; i++) {
 		eTrait trait = eTrait(i);
-		if(traits[trait])
+		if(traits.at(trait))
 			file << "TRAIT " << i << '\n';
 	}
 	file << "ICON " <<  which_graphic << '\n';
@@ -419,7 +418,7 @@ void cPlayer::readFrom(std::istream& file){
 	}
 }
 
-std::ostream& operator << (std::ostream& out, eMainStatus& e){
+std::ostream& operator << (std::ostream& out, eMainStatus e){
 	return out << (int) e;
 }
 

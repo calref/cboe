@@ -53,7 +53,6 @@ location source_locs[6] = {loc(2,9),loc(0,6),loc(3,6),loc(3,4),loc(6,2),loc(0,0)
 //extern current_town_type univ.town;
 extern location dest_locs[40] ;
 extern char *alch_names[];
-extern cScenario scenario;
 extern cUniverse univ;
 
 // Displaying string vars
@@ -434,32 +433,31 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 
 
 static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreature& store_m) {
-	short i,dummy = 0;
+	// This is a bit hacky; keep a cPopulation here to handle the full roster; it's treated like a rotating buffer.
+	static cPopulation roster;
+	short i;
 	
-	if(item_hit == "done") {
-		me.toast(true);
-	} else if(item_hit == "left") {
+	if(item_hit == "left") {
 		if(position == 0) {
-			for(i = 255; on_monst_menu[i] < 0 && i > 0; i--)
-				dummy++;
+			for(i = 255; on_monst_menu[i] < 0 && i > 0; i--);
 			position = i;
 		}
 		else position--;
 		
 		if(on_monst_menu[position] < 0)
 			position = 0;
-		store_m.number = on_monst_menu[position];
-		store_m = store_m; // to fill in fields that wouldn't otherwise be filled in; replaces return_monster_template
-		put_monst_info(me, store_m);
 	} else if(item_hit == "right") {
 		position++;
 		if(on_monst_menu[position] < 0)
 			position = 0;
-		store_m.number = on_monst_menu[position];
-		store_m = store_m; // no, this is not redundant
-		// TODO: It may not be redudndant, but it looks pretty stupid; change it
-		put_monst_info(me, store_m);
+	} else if(item_hit != "none")
+		return true; // Means an immunity LED was hit
+	
+	if(roster[position % 60].number != on_monst_menu[position]) {
+		cMonster& monst = univ.scenario.scen_monsters[on_monst_menu[position]];
+		roster.assign(position % 60, cCreature(on_monst_menu[position]), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 	}
+	put_monst_info(me, store_m);
 	return true;
 }
 
@@ -470,26 +468,23 @@ void display_monst(short array_pos,cCreature *which_m,short mode) {
 	position = array_pos;
 	full_roster = false;
 	cCreature store_m;
-	if(mode == 1) {
-		full_roster = true;
-		store_m = cCreature();
-		store_m.number = on_monst_menu[array_pos];
-		store_m = store_m; // yes, this DOES do something
-	}
-	else {
-		store_m = *which_m;
-	}
+	if(mode == 1) full_roster = true;
+	else store_m = *which_m;
 	
 	make_cursor_sword();
 	
 	cDialog monstInfo("monster-info.xml");
 	auto event_filter = std::bind(display_monst_event_filter, _1, _2,std::ref(store_m));
-	monstInfo.attachClickHandlers(event_filter, {"done", "left", "right"});
+	monstInfo["done"].attachClickHandler(std::bind(&cDialog::toast, &monstInfo, true));
+	monstInfo.attachClickHandlers(event_filter, {"left", "right"});
 	// Also add the click handler to the LEDs to suppress normal LED behaviour
 	monstInfo.attachClickHandlers(event_filter, {"immune1", "immune2", "immune3", "immune4"});
 	monstInfo.attachClickHandlers(event_filter, {"immune5", "immune6", "immune7", "immune8"});
 	
-	if(!full_roster) {
+	if(full_roster) {
+		// This is a bit hacky - call event handler with dummy ID to ensure the monster details are correctly populated.
+		display_monst_event_filter(monstInfo, "none", store_m);
+	} else {
 		monstInfo["left"].hide();
 		monstInfo["right"].hide();
 	}
@@ -893,8 +888,9 @@ void journal() {
 	
 	journal.run();
 }
+
 void add_to_journal(short event) {
-	if(univ.party.add_to_journal(scenario.journal_strs[event], calc_day()))
+	if(univ.party.add_to_journal(univ.scenario.journal_strs[event], calc_day()))
 		ASB("Something was added to your journal.");
 }
 
@@ -931,8 +927,8 @@ void give_help(short help1, short help2, cDialog& parent) {
 }
 
 void put_spec_item_info (short which_i) {
-	cStrDlog display_strings(scenario.special_items[which_i].descr,"",
-							 scenario.special_items[which_i].name,scenario.intro_pic,PIC_SCEN);
+	cStrDlog display_strings(univ.scenario.special_items[which_i].descr,"",
+							 univ.scenario.special_items[which_i].name,univ.scenario.intro_pic,PIC_SCEN);
 	display_strings.setSound(57);
 	display_strings.show();
 	//item_name = get_str(6,1 + which_i * 2);
@@ -946,20 +942,20 @@ void cStringRecorder::operator()(cDialog& me) {
 	std::string str1, str2;
 	switch(type) {
 		case NOTE_SCEN:
-			str1 = scenario.spec_strs[label1];
-			str2 = scenario.spec_strs[label2];
+			str1 = univ.scenario.spec_strs[label1];
+			str2 = univ.scenario.spec_strs[label2];
 			break;
 		case NOTE_TOWN:
 			str1 = univ.town->spec_strs[label1];
 			str2 = univ.town->spec_strs[label2];
 			break;
 		case NOTE_OUT:
-			str1 = univ.out.outdoors[label1b][label2b].spec_strs[label1];
-			str2 = univ.out.outdoors[label1b][label2b].spec_strs[label2];
+			str1 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label1];
+			str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
 			break;
 		case NOTE_MONST:
-			str1 = scenario.monst_strs[label1];
-			str2 = scenario.monst_strs[label2];
+			str1 = univ.scenario.monst_strs[label1];
+			str2 = univ.scenario.monst_strs[label2];
 			break;
 	}
 	if(univ.party.record(type, str1, location))

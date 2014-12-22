@@ -1,7 +1,6 @@
 
 class cDialog;
 
-__declspec(deprecated) void init_scenario();
 short edit_ter_type(ter_num_t which_ter);
 short edit_monst_type(short which_monst);
 cMonster edit_monst_abil(cMonster starting_record,short parent_num);
