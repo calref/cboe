@@ -91,6 +91,65 @@ cTown* cCurTown::operator -> (){
 	return record();
 }
 
+void cCurTown::place_preset_fields() {
+	// Initialize barriers, etc. Note non-sfx gets forgotten if this is a town recently visited.
+	for(int i = 0; i < 64; i++)
+		for(int j = 0; j < 64; j++) {
+			fields[i][j] = 0;
+		}
+	for(size_t i = 0; i < record()->preset_fields.size(); i++) {
+		switch(record()->preset_fields[i].type){
+			case 1: // currently unused
+				univ.town.set_block(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 2:
+				set_spot(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 3:
+				set_web(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 4:
+				set_crate(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 5:
+				set_barrel(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 6:
+				set_fire_barr(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 7:
+				set_force_barr(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 8:
+				set_quickfire(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 14:
+				set_sm_blood(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 15:
+				set_med_blood(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 16:
+				set_lg_blood(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 17:
+				set_sm_slime(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 18:
+				set_lg_slime(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 19:
+				set_ash(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 20:
+				set_bones(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case 21:
+				set_rubble(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+		}
+	}
+}
 
 cSpeech& cCurTown::cur_talk() {
 	// Make sure we actually have a valid speech stored

@@ -63,6 +63,7 @@ public:
 	cSpeech& cur_talk(); // Get the currently loaded speech
 	bool prep_talk(short which); // Prepare for loading specified speech, returning true if already loaded
 	void prep_arena(); // Set up for a combat arena
+	void place_preset_fields();
 	
 	bool is_explored(char x, char y) const;
 	bool is_force_wall(char x, char y) const;

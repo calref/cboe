@@ -178,7 +178,8 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 //	}
 	
-	
+	// TODO: This means cleared webs reappear, for example. Is that right?
+	univ.town.place_preset_fields();
 	
 	univ.town.belt_present = false;
 	// Set up map, using stored map
