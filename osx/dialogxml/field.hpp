@@ -14,6 +14,7 @@
 
 #include <string>
 #include "control.hpp"
+#include "graphtool.h"
 
 /// The field's expected input type.
 enum eFldType {
@@ -66,6 +67,7 @@ public:
 	/// This field is only used by cDialog during the loading process. Changing it will have no effect.
 	long tabOrder = 0;
 private:
+	void set_ip(location clickLoc, int cTextField::* insertionPoint);
 	eFldType field_type;
 	focus_callback_t onFocus;
 	bool haveFocus;
@@ -74,5 +76,6 @@ private:
 	sf::Color color;
 	bool ip_visible;
 	sf::Clock ip_timer;
+	std::vector<snippet_t> snippets;
 };
 #endif

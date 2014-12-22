@@ -9,6 +9,7 @@
 #include "field.hpp"
 #include <sstream>
 #include <map>
+#include <numeric>
 #include <boost/lexical_cast.hpp>
 #include "dialog.hpp"
 #include "dlogutil.hpp"
@@ -57,11 +58,61 @@ bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFoc
 	return passed;
 }
 
-bool cTextField::handleClick(location) {
+void cTextField::set_ip(location clickLoc, int cTextField::* insertionPoint) {
+	TextStyle style;
+	style.font = FONT_PLAIN;
+	style.pointSize = 12;
+	style.colour = sf::Color::Black;
+	style.lineHeight = 16;
+	size_t foundSnippet = snippets.size();
+	// Find snippet clicked.
+	for(size_t i = 0; i < snippets.size(); i++) {
+		short h, w = string_length(snippets[i].text, style, &h);
+		rectangle snipRect;
+		snipRect.top = snippets[i].at.y;
+		snipRect.left = snippets[i].at.x;
+		snipRect.width() = w;
+		snipRect.height() = h;
+		if(snipRect.contains(clickLoc)) {
+			foundSnippet = i;
+			break;
+		}
+	}
+	if(foundSnippet < snippets.size()) {
+		sf::Text snippet;
+		style.applyTo(snippet);
+		snippet.setString(snippets[foundSnippet].text);
+		snippet.setPosition(snippets[foundSnippet].at);
+		size_t charClicked = snippets[foundSnippet].text.length();
+		// Find character clicked. By now we know the Y position is okay, so just check X.
+		for(size_t i = 0; i < snippets[foundSnippet].text.length(); i++) {
+			if(clickLoc.x > snippet.findCharacterPos(i).x) charClicked = i;
+			else break;
+		}
+		if(charClicked < snippets[foundSnippet].text.length()) {
+			size_t pre_ip = std::accumulate(snippets.begin(), snippets.begin() + foundSnippet, 0, [](size_t sum, snippet_t& next) -> size_t {
+				return sum + next.text.length();
+			});
+			int left = snippet.findCharacterPos(charClicked).x;
+			int right;
+			if(charClicked + 1 == snippets[foundSnippet].text.length())
+				right = rectangle(snippet.getGlobalBounds()).right;
+			else right = snippet.findCharacterPos(charClicked + 1).x;
+			left = clickLoc.x - left;
+			right -= clickLoc.x;
+			if(left < right) this->*insertionPoint = pre_ip + charClicked;
+			else this->*insertionPoint = pre_ip + charClicked + 1;
+		}
+	}
+}
+
+bool cTextField::handleClick(location clickLoc) {
 	// TODO: Set the insertion point, handle selection, etc
-	if(haveFocus) return true;
-	if(parent && !parent->setFocus(this)) return true;
+	if(!haveFocus && parent && !parent->setFocus(this)) return true;
 	haveFocus = true;
+	redraw(); // This ensures the snippets array is populated.
+	set_ip(clickLoc, &cTextField::insertionPoint);
+	selectionPoint = insertionPoint;
 	return true;
 }
 
@@ -157,7 +208,7 @@ void cTextField::draw(){
 	}
 	clip_rect(*inWindow, frame);
 	if(haveFocus) {
-		std::vector<snippet_t> snippets = draw_string_sel(*inWindow, rect, contents, style, {hilite}, hiliteClr);
+		snippets = draw_string_sel(*inWindow, rect, contents, style, {hilite}, hiliteClr);
 		int iSnippet = -1, sum = 0;
 		ip_offset = insertionPoint;
 		for(size_t i = 0; i < snippets.size(); i++) {
