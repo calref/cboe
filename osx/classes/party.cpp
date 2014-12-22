@@ -89,31 +89,25 @@ void cParty::append(legacy::party_record_type& old){
 	for(i = 0; i < 256; i++)
 		m_noted[i] = old.m_seen[i];
 	journal.reserve(50);
-	for(i = 0; i < 50; i++){
-		cJournal j;
-		j.day = old.journal_day[i];
-		journal.push_back(j);
-//		journal[i].str_num = old.journal_str[i];
-//		journal[i].day = old.journal_day[i];
-		spec_items[i] = old.spec_items[i];
-	}
+	// The journal wasn't used before, so let's not bother converting it
+//	for(i = 0; i < 50; i++){
+//		cJournal j;
+//		j.day = old.journal_day[i];
+//		journal.push_back(j);
+//		spec_items[i] = old.spec_items[i];
+//	}
 	special_notes.reserve(140);
 	for(i = 0; i < 140; i++){
+		if(old.special_notes_str[i][0] <= 0) continue;
 		cEncNote n;
-		// TODO: Fix up this conversion by looking up the required strings.
-//		n.str_num = old.special_notes_str[i][0];
-//		n.where = old.special_notes_str[i][1];
+		n.append(old.special_notes_str[i], univ.scenario);
 		special_notes.push_back(n);
-//		special_notes[i].str_num = old.special_notes_str[i][0];
-//		special_notes[i].where = old.special_notes_str[i][1];
 	}
 	talk_save.reserve(120);
 	for(i = 0; i < 120; i++){
 		cConvers t;
-		// TODO: Fix up this conversion by looking up the required strings.
-//		t = old.talk_save[i];
+		t.append(old.talk_save[i], univ.scenario);
 		talk_save.push_back(t);
-//		talk_save[i] = old.talk_save[i];
 		help_received[i] = old.help_received[i];
 	}
 	direction = old.direction;
@@ -145,13 +139,33 @@ void cParty::append(legacy::setup_save_type& old){
 				setup[n][i][j] = old.setup[n][i][j];
 }
 
-cParty::cConvers& cParty::cConvers::operator = (legacy::talk_save_type old){
-	// TODO: Fix up this conversion by looking up the required strings.
-//	personality = old.personality;
-//	town_num = old.town_num;
-//	str_num1 = old.str1;
-//	str_num2 = old.str2;
-	return *this;
+void cParty::cConvers::append(legacy::talk_save_type old, const cScenario& scenario){
+	who_said = scenario.towns[old.personality / 10]->talking.people[old.personality % 10].title;
+	in_town = scenario.towns[old.town_num]->town_name;
+	the_str1 = scenario.towns[old.personality / 10]->spec_strs[old.str1];
+	the_str2 = scenario.towns[old.personality / 10]->spec_strs[old.str2];
+}
+
+void cParty::cEncNote::append(int16_t(& old)[2], const cScenario& scenario) {
+	in_scen = scenario.scen_name;
+	// TODO: Need to verify that I have the correct offsets here.
+	switch(old[0] / 1000) {
+		case 0:
+			the_str = scenario.spec_strs[old[0] - 160];
+			where = scenario.scen_name; // Best we can do here; the actual location is long forgotten
+			type = NOTE_SCEN;
+			break;
+		case 1:
+			the_str = scenario.outdoors[old[1] % scenario.out_width][old[1] / scenario.out_width]->spec_strs[old[0] - 1010];
+			where = scenario.outdoors[old[1] % scenario.out_width][old[1] / scenario.out_width]->out_name;
+			type = NOTE_OUT;
+			break;
+		case 2:
+			the_str = scenario.towns[old[1]]->spec_strs[old[0] - 2020];
+			where = scenario.towns[old[1]]->town_name;
+			type= NOTE_TOWN;
+			break;
+	}
 }
 
 void cParty::add_pc(legacy::pc_record_type old){

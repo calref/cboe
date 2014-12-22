@@ -729,8 +729,17 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	
 	fin.close();
 	
-	// TODO: Need to convert after loading the scenario in order to look up saved strings.
-	// However, for that to work, the entire scenario (all towns and sections) would need to be in memory.
+	if(in_scen){
+		fs::path path;
+		path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
+		
+		if(!load_scenario(path, univ.scenario))
+			return false;
+		univ.file = path;
+	}else{
+		univ.party.scen_name = "";
+	}
+	
 	univ.party.append(store_party);
 	univ.party.append(store_setup);
 	univ.party.void_pcs();
@@ -748,16 +757,6 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		univ.append(town_maps);
 		univ.append(o_maps);
 		univ.town.append(sfx, misc_i);
-	}
-	if(in_scen){
-		fs::path path;
-		path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
-
-		if(!load_scenario(path, univ.scenario))
-			return false;
-		univ.file = path;
-	}else{
-		univ.party.scen_name = "";
 	}
 	
 	// Compatibility flags

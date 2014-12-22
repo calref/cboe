@@ -43,7 +43,7 @@ public:
 		bool filled = false;
 		std::string who_said, in_town, the_str1, the_str2, in_scen;
 		
-		cConvers& operator = (legacy::talk_save_type old);
+		void append(legacy::talk_save_type old, const cScenario& scenario);
 	};
 	class cJournal {
 	public:
@@ -54,6 +54,8 @@ public:
 	public:
 		eEncNoteType type;
 		std::string the_str, where, in_scen;
+		
+		void append(int16_t(& old)[2], const cScenario& scenario);
 	};
 	class cTimer {
 	public:
