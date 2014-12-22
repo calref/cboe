@@ -111,8 +111,9 @@ bool cTextField::handleClick(location clickLoc) {
 	if(!haveFocus && parent && !parent->setFocus(this)) return true;
 	haveFocus = true;
 	redraw(); // This ensures the snippets array is populated.
-	set_ip(clickLoc, &cTextField::insertionPoint);
-	selectionPoint = insertionPoint;
+	bool is_shift = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
+	set_ip(clickLoc, is_shift ? &cTextField::selectionPoint : &cTextField::insertionPoint);
+	if(!is_shift) selectionPoint = insertionPoint;
 	return true;
 }
 
