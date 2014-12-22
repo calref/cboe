@@ -73,7 +73,7 @@ enum ePicTypeMod {
 	PIC_TALL = 40,		///< If applied to any derivative of PIC_MONST, makes the y-dimension 2 instead of 1.
 	PIC_LARGE = PIC_WIDE + PIC_TALL, ///< A combination of PIC_WIDE and PIC_TALL.
 	PIC_CUSTOM = 100,	///< If applied to any customizable graphic, makes it custom instead of preset.
-	PIC_PARTY = 200,	///< If applies to any exportable graphic, makes it exported instead of preset.
+	PIC_PARTY = 200,	///< If applied to any exportable graphic, makes it exported instead of preset.
 };
 
 /// Specifies a graphics sheet that icons are drawn from.
@@ -86,7 +86,7 @@ enum eSheetType {
 	SHEET_SCEN,		///< The preset scenario icons sheet, scenpics.png
 	SHEET_SCEN_LG,	///< The large scenario icons sheet, bigscenpics.png
 	SHEET_ITEM,		///< The preset large items sheet, objects.png
-	SHEET_TINY_ITEM,///< The small itesm sheet, tinyobj.png
+	SHEET_TINY_ITEM,///< The small items sheet, tinyobj.png
 	SHEET_PC,		///< The PC graphics sheet, pcs.png
 	SHEET_FIELD,	///< The fields and objects sheet, fields.png
 	SHEET_BOOM,		///< The special effects sheet, booms.png
