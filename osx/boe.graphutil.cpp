@@ -255,7 +255,7 @@ void draw_monsters() {
 	if(is_combat()) {
 		for(i = 0; i < univ.town->max_monst(); i++)
 			if((univ.town.monst[i].active != 0) && (univ.town.monst[i].spec_skill != 11))
-				if(point_onscreen(center,univ.town.monst[i].cur_loc) || party_can_see_monst(i)) {
+				if(point_onscreen(center,univ.town.monst[i].cur_loc) && party_can_see_monst(i)) {
 					check_if_monst_seen(univ.town.monst[i].number,univ.town.monst[i].cur_loc);
 					where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
 					where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
