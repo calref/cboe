@@ -19,7 +19,7 @@
 void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 	int i,j;
 	cField the_field;
-	the_field.type = 2;
+	the_field.type = SPECIAL_SPOT;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
 	for(i = 0; i < 100; i++) {
@@ -83,7 +83,7 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 	int i,j;
 	cField the_field;
-	the_field.type = 2;
+	the_field.type = SPECIAL_SPOT;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
 	for(i = 0; i < 100; i++) {
@@ -147,7 +147,7 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 void cBigTown::append(legacy::big_tr_type& old, int town_numo){
 	int i,j;
 	cField the_field;
-	the_field.type = 2;
+	the_field.type = SPECIAL_SPOT;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
 	for(i = 0; i < 100; i++) {

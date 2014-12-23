@@ -119,8 +119,6 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	for(i = 0; i < 64; i++) 
 		preset_items[i] = null_item;
 	max_num_monst = 30000;
-//	for(i = 0; i < 50; i++) 
-//		preset_fields[i].type = 0;
 	spec_on_entry = -1;
 	spec_on_entry_if_dead = -1;
 	for(i = 0; i < 15; i++) {
@@ -198,7 +196,22 @@ void cTown::cItem::append(legacy::preset_item_type old){
 void cTown::cField::append(legacy::preset_field_type old){
 	loc.x = old.field_loc.x;
 	loc.y = old.field_loc.y;
-	type = old.field_type;
+	switch(old.field_type) {
+		case 3: type = FIELD_WEB; break;
+		case 4: type = OBJECT_CRATE; break;
+		case 5: type = OBJECT_BARREL; break;
+		case 6: type = BARRIER_FIRE; break;
+		case 7: type = BARRIER_FORCE; break;
+		case 8: type = FIELD_QUICKFIRE; break;
+		case 14: type = SFX_SMALL_BLOOD; break;
+		case 15: type = SFX_MEDIUM_BLOOD; break;
+		case 16: type = SFX_LARGE_BLOOD; break;
+		case 17: type = SFX_SMALL_SLIME; break;
+		case 18: type = SFX_LARGE_SLIME; break;
+		case 19: type = SFX_ASH; break;
+		case 20: type = SFX_BONES; break;
+		case 21: type = SFX_RUBBLE; break;
+	}
 }
 
 bool cTown::cWandering::isNull(){

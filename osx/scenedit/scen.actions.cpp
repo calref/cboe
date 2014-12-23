@@ -692,27 +692,35 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_WEB:
-				make_web(spot_hit.x,spot_hit.y);
+				make_field_type(spot_hit.x,spot_hit.y,FIELD_WEB);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_CRATE:
-				make_crate(spot_hit.x,spot_hit.y);
+				make_field_type(spot_hit.x,spot_hit.y,OBJECT_CRATE);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_BARREL:
-				make_barrel(spot_hit.x,spot_hit.y);
+				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BARREL);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_FIRE_BARRIER:
-				make_fire_barrier(spot_hit.x,spot_hit.y);
+				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FIRE);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_FORCE_BARRIER:
-				make_force_barrier(spot_hit.x,spot_hit.y);
+				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FORCE);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_QUICKFIRE:
-				make_quickfire(spot_hit.x,spot_hit.y);
+				make_field_type(spot_hit.x,spot_hit.y,FIELD_QUICKFIRE);
+				overall_mode = MODE_DRAWING;
+				break;
+			case MODE_PLACE_STONE_BLOCK:
+				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BLOCK);
+				overall_mode = MODE_DRAWING;
+				break;
+			case MODE_PLACE_FORCECAGE:
+				make_field_type(spot_hit.x,spot_hit.y,BARRIER_CAGE);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_TOGGLE_SPECIAL_DOT:
@@ -721,24 +729,17 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					overall_mode = MODE_DRAWING;
 					break;
 				}
-				make_field_type(spot_hit.x, spot_hit.y, 2);
+				make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_CLEAR_FIELDS:
-				take_quickfire(spot_hit.x,spot_hit.y);
-				take_force_barrier(spot_hit.x,spot_hit.y);
-				take_fire_barrier(spot_hit.x,spot_hit.y);
-				take_barrel(spot_hit.x,spot_hit.y);
-				take_crate(spot_hit.x,spot_hit.y);
-				take_web(spot_hit.x,spot_hit.y);
-				take_field_type(spot_hit.x, spot_hit.y, 2);
-				for(i = 0; i < 8; i++)
-					take_sfx(spot_hit.x,spot_hit.y,i);
+				for(int i = 8; i <= BARRIER_CAGE; i++)
+					take_field_type(spot_hit.x,spot_hit.y, eFieldType(i));
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_SFX:
-				make_sfx(spot_hit.x,spot_hit.y,mode_count);
+				make_field_type(spot_hit.x,spot_hit.y,eFieldType(SFX_SMALL_BLOOD + mode_count));
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_EYEDROPPER:
@@ -915,8 +916,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_SET_TOWN_START: // TODO: Implement this
-				break;
-			case MODE_PLACE_STONE_BLOCK: // TODO: Implement this
 				break;
 			case MODE_INTRO_SCREEN:
 			case MODE_EDIT_TYPES:

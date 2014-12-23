@@ -99,52 +99,55 @@ void cCurTown::place_preset_fields() {
 		}
 	for(size_t i = 0; i < record()->preset_fields.size(); i++) {
 		switch(record()->preset_fields[i].type){
-			case 1: // currently unused
+			case OBJECT_BLOCK:
 				univ.town.set_block(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 2:
+			case SPECIAL_SPOT:
 				set_spot(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 3:
+			case FIELD_WEB:
 				set_web(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 4:
+			case OBJECT_CRATE:
 				set_crate(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 5:
+			case OBJECT_BARREL:
 				set_barrel(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 6:
+			case BARRIER_FIRE:
 				set_fire_barr(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 7:
+			case BARRIER_FORCE:
 				set_force_barr(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 8:
+			case BARRIER_CAGE:
+				set_force_cage(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case FIELD_QUICKFIRE:
 				set_quickfire(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 14:
+			case SFX_SMALL_BLOOD:
 				set_sm_blood(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 15:
+			case SFX_MEDIUM_BLOOD:
 				set_med_blood(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 16:
+			case SFX_LARGE_BLOOD:
 				set_lg_blood(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 17:
+			case SFX_SMALL_SLIME:
 				set_sm_slime(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 18:
+			case SFX_LARGE_SLIME:
 				set_lg_slime(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 19:
+			case SFX_ASH:
 				set_ash(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 20:
+			case SFX_BONES:
 				set_bones(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
-			case 21:
+			case SFX_RUBBLE:
 				set_rubble(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
 		}

@@ -742,35 +742,45 @@ void draw_terrain(){
 							tiny_to.offset(0,-7);
 							i = 4;
 						}
-					if(is_web(cen_x + q - 4,cen_y + r - 4)) {
+					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_WEB)) {
 						from_rect = calc_rect(5,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					if(is_crate(cen_x + q - 4,cen_y + r - 4)) {
+					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_CRATE)) {
 						from_rect = calc_rect(6,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					if(is_barrel(cen_x + q - 4,cen_y + r - 4)) {
+					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_BARREL)) {
 						from_rect = calc_rect(7,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					if(is_fire_barrier(cen_x + q - 4,cen_y + r - 4)) {
-						from_rect = calc_rect(0,2);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FIRE)) {
+						from_rect = calc_rect(8,4);
+						Draw_Some_Item(anim_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					if(is_quickfire(cen_x + q - 4,cen_y + r - 4)) {
+					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_QUICKFIRE)) {
 						from_rect = calc_rect(7,1);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					if(is_force_barrier(cen_x + q - 4,cen_y + r - 4)) {
-						from_rect = calc_rect(2,2);
+					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FORCE)) {
+						from_rect = calc_rect(10,4);
+						Draw_Some_Item(anim_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+					}
+					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_BLOCK)) {
+						from_rect = calc_rect(3,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 					}
-					for(i = 0; i < 8; i++)
-						if(is_sfx(cen_x + q - 4,cen_y + r - 4,i)) {
+					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_CAGE)) {
+						from_rect = calc_rect(0,0);
+						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+					}
+					for(i = 0; i < 8; i++) {
+						eFieldType sfx = eFieldType(SFX_SMALL_BLOOD + i);
+						if(is_field_type(cen_x + q - 4,cen_y + r - 4,sfx)) {
 							from_rect = calc_rect(i,3);
 							Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 						}
+					}
 					for(x = 0; x < town->max_items(); x++)
 						if((cen_x + q - 4 == town->preset_items[x].loc.x) &&
 							(cen_y + r - 4 == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
@@ -1290,23 +1300,17 @@ bool is_special(short i,short j) {
 	return false;
 }
 
-void take_special(short /*i*/,short /*j*/) {
-}
-
-void make_special(short /*i*/,short /*j*/) {
-}
-
 void sort_specials() {
 }
 
 bool is_spot(short i,short j){
 	if(editing_town)
-		return is_field_type(i,j,2);
+		return is_field_type(i,j,SPECIAL_SPOT);
 	else return current_terrain->special_spot[i][j];
 	return false;
 }
 
-bool is_field_type(short i,short j,short field_type) {
+bool is_field_type(short i,short j,eFieldType field_type) {
 	unsigned short k;
 	
 	for(k = 0; k < town->preset_fields.size(); k++)
@@ -1317,7 +1321,7 @@ bool is_field_type(short i,short j,short field_type) {
 	return false;
 }
 
-void make_field_type(short i,short j,short field_type) {
+void make_field_type(short i,short j,eFieldType field_type) {
 	unsigned short k;
 	
 	if(is_field_type(i,j,field_type))
@@ -1338,90 +1342,16 @@ void make_field_type(short i,short j,short field_type) {
 }
 
 
-void take_field_type(short i,short j,short field_type) {
+void take_field_type(short i,short j,eFieldType field_type) {
 	unsigned short k;
 	
 	for(k = 0; k < town->preset_fields.size(); k++)
 		if((town->preset_fields[k].type == field_type) &&
 			(town->preset_fields[k].loc.x == i) &&
 			(town->preset_fields[k].loc.y == j)) {
-			town->preset_fields[k].type = 0;
+			town->preset_fields[k].type = FIELD_DISPEL;
 			return;
 		}
-}
-
-bool is_web(short i,short j) {
-	return is_field_type(i,j,3);
-	
-}
-void make_web(short i,short j) {
-	make_field_type(i,j,3);
-}
-void take_web(short i,short j) {
-	take_field_type(i,j,3);
-}
-
-bool is_crate(short i,short j) {
-	return is_field_type(i,j,4);
-}
-void make_crate(short i,short j) {
-	make_field_type(i,j,4);
-	
-}
-void take_crate(short i,short j) {
-	take_field_type(i,j,4);
-}
-
-bool is_barrel(short i,short j) {
-	return is_field_type(i,j,5);
-}
-void make_barrel(short i,short j) {
-	make_field_type(i,j,5);
-}
-void take_barrel(short i,short j) {
-	take_field_type(i,j,5);
-}
-
-bool is_fire_barrier(short i,short j) {
-	return is_field_type(i,j,6);
-}
-void make_fire_barrier(short i,short j) {
-	make_field_type(i,j,6);
-}
-void take_fire_barrier(short i,short j) {
-	take_field_type(i,j,6);
-}
-
-bool is_force_barrier(short i,short j) {
-	return is_field_type(i,j,7);
-}
-void make_force_barrier(short i,short j) {
-	make_field_type(i,j,7);
-}
-void take_force_barrier(short i,short j) {
-	take_field_type(i,j,7);
-	
-}
-
-bool is_sfx(short i,short j,short type) {
-	return is_field_type(i,j,type + 14);
-}
-void make_sfx(short i,short j,short type) {
-	make_field_type(i,j,type + 14);
-}
-void take_sfx(short i,short j,short type) {
-	take_field_type(i,j,type + 14);
-}
-
-
-bool is_quickfire(short i,short j) {
-	return is_field_type(i,j,8);
-}
-void make_quickfire(short i,short j) {
-	make_field_type(i,j,8);
-}
-void take_quickfire(short i,short j) {
-	take_field_type(i,j,8);
 }
 
 bool container_there(location l) {
@@ -1429,9 +1359,9 @@ bool container_there(location l) {
 		return false;
 	if(scenario.ter_types[town->terrain(l.x,l.y)].special == eTerSpec::IS_A_CONTAINER)
 		return true;
-	if(is_barrel(l.x,l.y))
+	if(is_field_type(l.x,l.y, OBJECT_BARREL))
 		return true;
-	if(is_crate(l.x,l.y))
+	if(is_field_type(l.x,l.y, OBJECT_CRATE))
 		return true;
 	return 0;
 }

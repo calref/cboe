@@ -75,9 +75,10 @@ public:
 	class cField { // formerly preset_field_type
 	public:
 		location loc;
-		short type;
+		eFieldType type;
 		
 		void append(legacy::preset_field_type old);
+		cField() : type(FIELD_DISPEL) {}
 	};
 	short town_chop_time,town_chop_key;
 	cWandering wandering[4];
