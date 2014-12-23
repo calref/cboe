@@ -604,7 +604,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		store_spec_node.ex2a = i;
 		me["x2a"].setTextToNum(store_spec_node.ex2a);
 	} else if(item_hit == "msg2-edit") { // TODO: What about msg1-edit?
-		if(save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
 		if(((*store_spec_node.type).msg_label == 2) ||
 			((*store_spec_node.type).msg_label == 4) ||
@@ -619,7 +619,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			put_spec_enc_in_dlog(me, which_node);
 		}
 	} else if(item_hit == "pict-edit") {
-		if(save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = -1;
 		switch((*store_spec_node.type).pic_label) {
@@ -638,7 +638,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			put_spec_enc_in_dlog(me, which_node);
 		}
 	} else if(item_hit == "general") {
-		if(save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
 		// TODO: I wonder if this can all be achieved without casts... if not, at least check getNodeCategory to ensure validity.
 		i = choose_text_res("special-node-names",1,28,int(store_spec_node.type) + 1,&me,"Choose General Use Special:");
@@ -647,7 +647,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		}
 		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "oneshot") {
-		if(save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = choose_text_res("special-node-names",51,64,int(store_spec_node.type) + 1,&me,"Choose One-Shot Special:");
 		if(i >= 0) {
@@ -659,13 +659,13 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		}
 		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "affectpc") {
-		if(save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = choose_text_res("special-node-names",81,107,int(store_spec_node.type) + 1,&me,"Choose Affect Party Special:");
 		if(i >= 0) store_spec_node.type = eSpecType(i - 1);
 		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "ifthen") {
-		if(save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = choose_text_res("special-node-names",131,156,int(store_spec_node.type) + 1,&me,"Choose If-Then Special:");
 		if(i >= 0) {
@@ -673,13 +673,13 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		}
 		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "town") {
-		if(save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = choose_text_res("special-node-names",171,219,int(store_spec_node.type) + 1,&me,"Choose Town Special:");
 		if(i >= 0) store_spec_node.type = eSpecType(i - 1);
 		put_spec_enc_in_dlog(me, which_node);
 	} else if(item_hit == "out") {
-		if(save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node))
 			return true;
 		i = choose_text_res("special-node-names",226,230,int(store_spec_node.type) + 1,&me,"Choose Outdoor Special:");
 		if(i >= 0) store_spec_node.type = eSpecType(i - 1);
