@@ -28,7 +28,7 @@ void cTown::append(legacy::town_record_type& old){
 		exit_locs[i].x = old.exit_locs[i].x;
 		exit_locs[i].y = old.exit_locs[i].y;
 		exit_specs[i] = old.exit_specs[i];
-		wandering[i] = old.wandering[i];
+		wandering[i].append(old.wandering[i]);
 	}
 	preset_fields.clear();
 	preset_fields.reserve(50);
@@ -40,7 +40,7 @@ void cTown::append(legacy::town_record_type& old){
 //		preset_fields[i].loc.y = old.preset_fields[i].field_loc.y;
 //		preset_fields[i].type = old.preset_fields[i].field_type;
 		cField temp;
-		temp = old.preset_fields[i];
+		temp.append(old.preset_fields[i]);
 		preset_fields.push_back(temp);
 	}
 	for(i = 0; i < 15; i++){
@@ -61,7 +61,7 @@ void cTown::append(legacy::town_record_type& old){
 //		preset_items[i].always_there = old.preset_items[i].always_there;
 //		preset_items[i].property = old.preset_items[i].property;
 //		preset_items[i].contained = old.preset_items[i].contained;
-		preset_items[i] = old.preset_items[i];
+		preset_items[i].append(old.preset_items[i]);
 	}
 	max_num_monst = old.max_num_monst;
 	spec_on_entry = old.spec_on_entry;
@@ -177,15 +177,14 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	}
 }
 
-cTown::cWandering& cTown::cWandering::operator = (legacy::wandering_type old){
+void cTown::cWandering::append(legacy::wandering_type old){
 	monst[0] = old.monst[0];
 	monst[1] = old.monst[1];
 	monst[2] = old.monst[2];
 	monst[3] = old.monst[3];
-	return *this;
 }
 
-cTown::cItem& cTown::cItem::operator = (legacy::preset_item_type old){
+void cTown::cItem::append(legacy::preset_item_type old){
 	loc.x = old.item_loc.x;
 	loc.y = old.item_loc.y;
 	code = old.item_code;
@@ -194,14 +193,12 @@ cTown::cItem& cTown::cItem::operator = (legacy::preset_item_type old){
 	always_there = old.always_there;
 	property = old.property;
 	contained = old.contained;
-	return *this;
 }
 
-cTown::cField& cTown::cField::operator = (legacy::preset_field_type old){
+void cTown::cField::append(legacy::preset_field_type old){
 	loc.x = old.field_loc.x;
 	loc.y = old.field_loc.y;
 	type = old.field_type;
-	return *this;
 }
 
 bool cTown::cWandering::isNull(){

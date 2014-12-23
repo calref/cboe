@@ -62,7 +62,7 @@ public:
 		m_num_t monst[4];
 		
 		bool isNull();
-		cWandering& operator = (legacy::wandering_type old);
+		void append(legacy::wandering_type old);
 	};
 	class cItem { // formerly preset_item_type
 	public:
@@ -70,14 +70,14 @@ public:
 		short code,ability;
 		unsigned char charges,always_there,property,contained;
 		
-		cItem& operator = (legacy::preset_item_type old);
+		void append(legacy::preset_item_type old);
 	};
 	class cField { // formerly preset_field_type
 	public:
 		location loc;
 		short type;
 		
-		cField& operator = (legacy::preset_field_type old);
+		void append(legacy::preset_field_type old);
 	};
 	short town_chop_time,town_chop_key;
 	cWandering wandering[4];
