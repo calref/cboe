@@ -2421,6 +2421,8 @@ void monster_attack_pc(short who_att,short target) {
 				add_string_to_buf((char *) create_line);
 				play_sound(2);
 			}
+			mainPtr.display();
+			sf::sleep(time_in_ticks(2));
 			combat_posing_monster = -1;
 			draw_terrain(2);
 			combat_posing_monster = 100 + who_att;

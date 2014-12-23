@@ -268,9 +268,10 @@ void draw_monsters() {
 						// customize?
 						if(univ.town.monst[i].picture_num >= 1000) {
 							sf::Texture* src_gw;
-							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic((univ.town.monst[i].picture_num % 1000) +
-																						 k + ((univ.town.monst[i].direction < 4) ? 0 : width * height)
-																						 + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
+							pic_num_t need_pic = (univ.town.monst[i].picture_num % 1000) + k;
+							if(univ.town.monst[i].direction >= 4) need_pic += width * height;
+							if(combat_posing_monster == i + 100) need_pic += (2 * width * height);
+							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(need_pic);
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							if((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 								univ.scenario.ter_types[ter].special == eTerSpec::BED &&
@@ -282,9 +283,9 @@ void draw_monsters() {
 						}
 						if(univ.town.monst[i].picture_num < 1000) {
 							pic_num_t this_monst = univ.town.monst[i].picture_num;
-							source_rect = get_monster_template_rect(this_monst,
-																	((univ.town.monst[i].direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0)
-																	,k);
+							int pic_mode = (univ.town.monst[i].direction) < 4 ? 0 : 1;
+							pic_mode += (combat_posing_monster == i + 100) ? 10 : 0;
+							source_rect = get_monster_template_rect(this_monst, pic_mode, k);
 							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
 							if((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
 								univ.scenario.ter_types[ter].special == eTerSpec::BED &&
