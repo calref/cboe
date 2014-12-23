@@ -25,9 +25,6 @@ extern cSpeech null_talk_node;
 //extern piles_of_stuff_dumping_type *data_store;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
-
-std::stack<short> last_node;
-cSpecial store_spec_node;
 short num_specs[3] = {256,60,100};
 
 std::vector<pic_num_t> field_pics = {2,3,5,6,7,8,9,10,11,12,13,14,15,16,24,25,26,27,28,29,30,31};
@@ -280,7 +277,7 @@ bool edit_area_rect_str(short which_str,short mode) {
 
 // MARK: Special node dialog
 
-static bool save_spec_enc(cDialog& me, short which_mode, short which_node) {
+static bool save_spec_enc(cDialog& me, short which_mode, short which_node, cSpecial& store_spec_node) {
 	store_spec_node.sd1 = me["sdf1"].getTextAsNum();
 	store_spec_node.sd2 = me["sdf2"].getTextAsNum();
 	store_spec_node.m1 = me["msg1"].getTextAsNum();
@@ -310,7 +307,7 @@ static bool save_spec_enc(cDialog& me, short which_mode, short which_node) {
 	return true;
 }
 
-static void put_spec_enc_in_dlog(cDialog& me, short which_node) {
+static void put_spec_enc_in_dlog(cDialog& me, short which_node, cSpecial& store_spec_node, std::stack<short>& last_node) {
 	std::string str;
 	
 	me["num"].setTextToNum(which_node);
@@ -483,15 +480,15 @@ static void put_spec_enc_in_dlog(cDialog& me, short which_node) {
 	}
 }
 
-static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short& which_mode, short& which_node) {
+static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short& which_mode, short& which_node, cSpecial& store_spec_node, std::stack<short>& last_node) {
 	short i,node_to_change_to = -1,spec;
 	
 	if(item_hit == "okay") {
-		if(save_spec_enc(me, which_mode, which_node))
+		if(save_spec_enc(me, which_mode, which_node, store_spec_node))
 			me.toast(true);
 		me.setResult(true);
 	} else if(item_hit == "back") {
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		if(!last_node.empty()) {
 			node_to_change_to = last_node.top();
@@ -506,7 +503,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		me.toast(false);
 		me.setResult(false);
 	} else if(me[item_hit].getText() == "Create/Edit") {
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		if(item_hit == "x1b-edit")
 			spec = me["x1b"].getTextAsNum();
@@ -543,7 +540,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 				store_spec_node.jumpto = spec;
 			*/
 		}
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		if(item_hit == "x1b-edit" && store_spec_node.type == eSpecType::SCEN_TIMER_START)
 			node_to_change_to = spec;
@@ -604,22 +601,22 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		store_spec_node.ex2a = i;
 		me["x2a"].setTextToNum(store_spec_node.ex2a);
 	} else if(item_hit == "msg2-edit") { // TODO: What about msg1-edit?
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		if(((*store_spec_node.type).msg_label == 2) ||
 			((*store_spec_node.type).msg_label == 4) ||
 			((*store_spec_node.type).msg_label == 5)) {
 			edit_dialog_text(which_mode,&store_spec_node.m1,&me);
-			put_spec_enc_in_dlog(me, which_node);
+			put_spec_enc_in_dlog(me, which_node, store_spec_node, last_node);
 		}
 		else if(((*store_spec_node.type).msg_label == 1) ||
 				 ((*store_spec_node.type).msg_label == 3)) {
 			edit_spec_text(which_mode,&store_spec_node.m1,
 						   &store_spec_node.m2,&me);
-			put_spec_enc_in_dlog(me, which_node);
+			put_spec_enc_in_dlog(me, which_node, store_spec_node, last_node);
 		}
 	} else if(item_hit == "pict-edit") {
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		i = -1;
 		switch((*store_spec_node.type).pic_label) {
@@ -635,19 +632,19 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 		}
 		if(i != NO_PIC) {
 			store_spec_node.pic = i;
-			put_spec_enc_in_dlog(me, which_node);
+			put_spec_enc_in_dlog(me, which_node, store_spec_node, last_node);
 		}
 	} else if(item_hit == "general") {
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		// TODO: I wonder if this can all be achieved without casts... if not, at least check getNodeCategory to ensure validity.
 		i = choose_text_res("special-node-names",1,28,int(store_spec_node.type) + 1,&me,"Choose General Use Special:");
 		if(i >= 0) {
 			store_spec_node.type = eSpecType(i - 1);
 		}
-		put_spec_enc_in_dlog(me, which_node);
+		put_spec_enc_in_dlog(me, which_node, store_spec_node, last_node);
 	} else if(item_hit == "oneshot") {
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		i = choose_text_res("special-node-names",51,64,int(store_spec_node.type) + 1,&me,"Choose One-Shot Special:");
 		if(i >= 0) {
@@ -657,33 +654,33 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			if(store_spec_node.type == eSpecType::ONCE_DIALOG || store_spec_node.type == eSpecType::ONCE_DIALOG_TERRAIN || store_spec_node.type == eSpecType::ONCE_DIALOG_MONSTER)
 				store_spec_node.m2 = 1;
 		}
-		put_spec_enc_in_dlog(me, which_node);
+		put_spec_enc_in_dlog(me, which_node, store_spec_node, last_node);
 	} else if(item_hit == "affectpc") {
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		i = choose_text_res("special-node-names",81,107,int(store_spec_node.type) + 1,&me,"Choose Affect Party Special:");
 		if(i >= 0) store_spec_node.type = eSpecType(i - 1);
-		put_spec_enc_in_dlog(me, which_node);
+		put_spec_enc_in_dlog(me, which_node, store_spec_node, last_node);
 	} else if(item_hit == "ifthen") {
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		i = choose_text_res("special-node-names",131,156,int(store_spec_node.type) + 1,&me,"Choose If-Then Special:");
 		if(i >= 0) {
 			store_spec_node.type = eSpecType(i - 1);
 		}
-		put_spec_enc_in_dlog(me, which_node);
+		put_spec_enc_in_dlog(me, which_node, store_spec_node, last_node);
 	} else if(item_hit == "town") {
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		i = choose_text_res("special-node-names",171,219,int(store_spec_node.type) + 1,&me,"Choose Town Special:");
 		if(i >= 0) store_spec_node.type = eSpecType(i - 1);
-		put_spec_enc_in_dlog(me, which_node);
+		put_spec_enc_in_dlog(me, which_node, store_spec_node, last_node);
 	} else if(item_hit == "out") {
-		if(!save_spec_enc(me, which_mode, which_node))
+		if(!save_spec_enc(me, which_mode, which_node, store_spec_node))
 			return true;
 		i = choose_text_res("special-node-names",226,230,int(store_spec_node.type) + 1,&me,"Choose Outdoor Special:");
 		if(i >= 0) store_spec_node.type = eSpecType(i - 1);
-		put_spec_enc_in_dlog(me, which_node);
+		put_spec_enc_in_dlog(me, which_node, store_spec_node, last_node);
 	}
 	/*if((item_hit >= 37) && (item_hit <= 42)) {
 		if(cd_get_active(822,43) == 0)
@@ -702,7 +699,7 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 			store_spec_node = town->specials[which_node];
 		if(store_spec_node.pic < 0)
 			store_spec_node.pic = 0;
-		put_spec_enc_in_dlog(me, which_node);
+		put_spec_enc_in_dlog(me, which_node, store_spec_node, last_node);
 	}
 	return true;
 }
@@ -711,10 +708,9 @@ static bool edit_spec_enc_event_filter(cDialog& me, std::string item_hit, short&
 bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	// ignore parent in Mac version
 	using namespace std::placeholders;
+	cSpecial store_spec_node;
+	std::stack<short> last_node;
 	
-	// Clear the "nodes edited" stack; should already be clear, but just make sure
-	while(!last_node.empty()) last_node.pop();
-	//last_node[0] = store_which_mode * 1000 + store_which_node;
 	if(mode == 0)
 		store_spec_node = scenario.scen_specials[which_node];
 	if(mode == 1)
@@ -725,14 +721,14 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		store_spec_node.pic = 0;
 	
 	cDialog special("edit-special-node.xml",parent);
-	auto callback = std::bind(edit_spec_enc_event_filter, _1, _2, std::ref(mode), std::ref(which_node));
+	auto callback = std::bind(edit_spec_enc_event_filter, _1, _2, std::ref(mode), std::ref(which_node), std::ref(store_spec_node), std::ref(last_node));
 	special.attachClickHandlers(callback, {"okay", "cancel", "back"});
 	special.attachClickHandlers(callback, {"general", "oneshot", "affectpc", "ifthen", "town", "out"});
 	special.attachClickHandlers(callback, {"x1a-edit", "x1b-edit", "x2a-edit", "x2b-edit"});
 	special.attachClickHandlers(callback, {"msg1-edit", "msg2-edit", "pict-edit", "jump-edit"});
 	
 	special["back"].hide();
-	put_spec_enc_in_dlog(special, which_node);
+	put_spec_enc_in_dlog(special, which_node, store_spec_node, last_node);
 	
 	special.run();
 	return special.getResult<bool>();
