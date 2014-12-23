@@ -2927,6 +2927,20 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 }
 
+static bool isValidField(int fld, bool allowSpecial) {
+	if(fld <= SPECIAL_EXPLORED)
+		return false;
+	if(fld == SPECIAL_SPOT)
+		return false;
+	if(fld >= WALL_FORCE && fld <= BARRIER_CAGE)
+		return true;
+	if(!allowSpecial)
+		return false;
+	if(fld == FIELD_DISPEL || fld == FIELD_SMASH)
+		return true;
+	return false;
+}
+
 // TODO: What was next_spec_type for? Is it still needed?
 void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw) {
@@ -3052,18 +3066,49 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(calc_day() >= spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
-		case eSpecType::IF_OBJECTS:
-			if(spec.ex1a == 0) {
-				for(j = 0; j < univ.town->max_dim(); j++)
-					for(k = 0; k < univ.town->max_dim(); k++)
-						if(univ.town.is_barrel(j,k))
-							*next_spec = spec.ex1b;
-			} else if(spec.ex1a == 1) {
-				for(j = 0; j < univ.town->max_dim(); j++)
-					for(k = 0; k < univ.town->max_dim(); k++)
-						if(univ.town.is_crate(j,k))
-							*next_spec = spec.ex1b;
+		case eSpecType::IF_FIELDS:
+			if(!isValidField(spec.ex1a, false)) {
+				giveError("Scenario tried to check for invalid field type (1...24)");
+				break;
 			}
+			i = 0;
+			for(j = 0; j < univ.town->max_dim(); j++)
+				for(k = 0; k < univ.town->max_dim(); k++) {
+					switch(eFieldType(spec.ex1a)) {
+						// These values are not allowed
+						case SPECIAL_EXPLORED: case SPECIAL_SPOT: case FIELD_DISPEL: case FIELD_SMASH: break;
+						// Walls
+						case WALL_FIRE: i += univ.town.is_fire_wall(i,j); break;
+						case WALL_FORCE: i += univ.town.is_force_wall(i,j); break;
+						case WALL_ICE: i += univ.town.is_ice_wall(i,j); break;
+						case WALL_BLADES: i += univ.town.is_blade_wall(i,j); break;
+						// Clouds
+						case CLOUD_STINK: i += univ.town.is_scloud(i,j); break;
+						case CLOUD_SLEEP: i += univ.town.is_sleep_cloud(i,j); break;
+						// Advanced
+						case FIELD_QUICKFIRE: i += univ.town.is_quickfire(i,j); break;
+						case FIELD_ANTIMAGIC: i += univ.town.is_antimagic(i,j); break;
+						case BARRIER_FIRE: i += univ.town.is_fire_barr(i,j); break;
+						case BARRIER_FORCE: i += univ.town.is_force_barr(i,j); break;
+						case BARRIER_CAGE: i += univ.town.is_force_cage(i,j); break;
+						// Objects
+						case FIELD_WEB: i += univ.town.is_web(i,j); break;
+						case OBJECT_BARREL: i += univ.town.is_barrel(i,j); break;
+						case OBJECT_CRATE: i += univ.town.is_crate(i,j); break;
+						case OBJECT_BLOCK: i += univ.town.is_block(i,j); break;
+						// Sfx
+						case SFX_SMALL_BLOOD: i += univ.town.is_sm_blood(i,j); break;
+						case SFX_MEDIUM_BLOOD: i += univ.town.is_med_blood(i,j); break;
+						case SFX_LARGE_BLOOD: i += univ.town.is_lg_blood(i,j); break;
+						case SFX_SMALL_SLIME: i += univ.town.is_sm_slime(i,j); break;
+						case SFX_LARGE_SLIME: i += univ.town.is_lg_slime(i,j); break;
+						case SFX_ASH: i += univ.town.is_ash(i,j); break;
+						case SFX_BONES: i += univ.town.is_bones(i,j); break;
+						case SFX_RUBBLE: i += univ.town.is_rubble(i,j); break;
+					}
+				}
+			if(i > 0)
+				*next_spec = spec.ex1b;
 			// TODO: Are there other object types to account for?
 			// TODO: Allow restricting to a specific rect
 			// TODO: Allow requiring a minimum and maximum number of objects
@@ -3759,70 +3804,52 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		for(j = spec.ex1a; j <= spec.ex2a; j++) {
 			l.x = i; l.y = j;
 			switch(cur_node.type) {
-				case eSpecType::RECT_PLACE_FIRE:
-					if(get_ran(1,1,100) <= spec.sd1 )
-						univ.town.set_fire_wall(i,j,true);
-					break;
-				case eSpecType::RECT_PLACE_FORCE:
-					if(get_ran(1,1,100) <= spec.sd1 )
-						univ.town.set_force_wall(i,j,true);
-					break;
-				case eSpecType::RECT_PLACE_ICE:
-					if(get_ran(1,1,100) <= spec.sd1 )
-						univ.town.set_ice_wall(i,j,true);
-					break;
-				case eSpecType::RECT_PLACE_BLADE:
-					if(get_ran(1,1,100) <= spec.sd1 )
-						univ.town.set_blade_wall(i,j,true);
-					break;
-				case eSpecType::RECT_PLACE_SCLOUD:
-					if(get_ran(1,1,100) <= spec.sd1 )
-						univ.town.set_scloud(i,j,true);
-					break;
-				case eSpecType::RECT_PLACE_SLEEP:
-					if(get_ran(1,1,100) <= spec.sd1 )
-						univ.town.set_sleep_cloud(i,j,true);
-					break;
-				case eSpecType::RECT_PLACE_QUICKFIRE:
-					if(get_ran(1,1,100) <= spec.sd1 )
-						univ.town.set_quickfire(i,j,true);
-					break;
-				case eSpecType::RECT_PLACE_FIRE_BARR:
-					if(get_ran(1,1,100) <= spec.sd1 )
-						univ.town.set_fire_barr(i,j,true);
-					break;
-				case eSpecType::RECT_PLACE_FORCE_BARR:
-					if(get_ran(1,1,100) <= spec.sd1 )
-						univ.town.set_force_barr(i,j,true);
-					break;
-				case eSpecType::RECT_CLEANSE:
-					if(spec.sd1 == 0)
-						dispel_fields(i,j,1);
-					else dispel_fields(i,j,2);
-					break;
-				case eSpecType::RECT_PLACE_SFX:
-					if(get_ran(1,1,100) <= spec.sd1 )
-						switch(spec.sd2) {
-							case 0: univ.town.set_sm_blood(i,j,true); break;
-							case 1: univ.town.set_med_blood(i,j,true); break;
-							case 2: univ.town.set_lg_blood(i,j,true); break;
-							case 3: univ.town.set_sm_slime(i,j,true); break;
-							case 4: univ.town.set_lg_slime(i,j,true); break;
-							case 5: univ.town.set_ash(i,j,true); break;
-							case 6: univ.town.set_bones(i,j,true); break;
-							case 7: univ.town.set_rubble(i,j,true); break;
-							default: giveError("Invalid sfx type (0...7)");
-						}
-					break;
-				case eSpecType::RECT_PLACE_OBJECT:
-					if(get_ran(1,1,100) <= spec.sd1 ) {
-						if(spec.sd2 == 0)
-							univ.town.set_web(i,j,true);
-						if(spec.sd2 == 1)
-							univ.town.set_barrel(i,j,true);
-						if(spec.sd2 == 2)
-							univ.town.set_crate(i,j,true);
+				case eSpecType::RECT_PLACE_FIELD:
+					if(!isValidField(spec.sd2, true)) {
+						giveError("Scenario tried to place an invalid field type (1...24)");
+						goto END; // Break out of the switch AND both loops, but still handle messages
 					}
+					if(spec.sd2 == FIELD_DISPEL || get_ran(1,1,100) <= spec.sd1)
+						switch(eFieldType(spec.sd2)) {
+							// These values are not allowed.
+							case SPECIAL_EXPLORED: case SPECIAL_SPOT: break;
+							// Walls
+							case WALL_FIRE: univ.town.set_fire_wall(i,j,true); break;
+							case WALL_FORCE: univ.town.set_force_wall(i,j,true); break;
+							case WALL_ICE: univ.town.set_ice_wall(i,j,true); break;
+							case WALL_BLADES: univ.town.set_blade_wall(i,j,true); break;
+							// Clouds
+							case CLOUD_STINK: univ.town.set_scloud(i,j,true); break;
+							case CLOUD_SLEEP: univ.town.set_sleep_cloud(i,j,true); break;
+							// Advanced
+							case FIELD_QUICKFIRE: univ.town.set_quickfire(i,j,true); break;
+							case FIELD_ANTIMAGIC: univ.town.set_antimagic(i,j,true); break;
+							case BARRIER_FIRE: univ.town.set_fire_barr(i,j,true); break;
+							case BARRIER_FORCE: univ.town.set_force_barr(i,j,true); break;
+							case BARRIER_CAGE: univ.town.set_force_cage(i,j,true); break;
+							// Cleanse
+							case FIELD_DISPEL:
+								if(spec.sd1 == 0)
+									dispel_fields(i,j,1);
+								else dispel_fields(i,j,2);
+								break;
+							// Objects
+							case FIELD_WEB: univ.town.set_web(i,j,true); break;
+							case OBJECT_BARREL: univ.town.set_barrel(i,j,true); break;
+							case OBJECT_CRATE: univ.town.set_crate(i,j,true); break;
+							case OBJECT_BLOCK: univ.town.set_block(i,j,true); break;
+							// Sfx
+							case SFX_SMALL_BLOOD: univ.town.set_sm_blood(i,j,true); break;
+							case SFX_MEDIUM_BLOOD: univ.town.set_med_blood(i,j,true); break;
+							case SFX_LARGE_BLOOD: univ.town.set_lg_blood(i,j,true); break;
+							case SFX_SMALL_SLIME: univ.town.set_sm_slime(i,j,true); break;
+							case SFX_LARGE_SLIME: univ.town.set_lg_slime(i,j,true); break;
+							case SFX_ASH: univ.town.set_ash(i,j,true); break;
+							case SFX_BONES: univ.town.set_bones(i,j,true); break;
+							case SFX_RUBBLE: univ.town.set_rubble(i,j,true); break;
+							// Special value: Move Mountains!
+							case FIELD_SMASH: crumble_wall(loc(i,j)); break;
+						}
 					break;
 				case eSpecType::RECT_MOVE_ITEMS:
 					for(k = 0; k < NUM_TOWN_ITEMS; k++)
@@ -3880,6 +3907,7 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 			}
 		}
+END:
 	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}

@@ -72,8 +72,8 @@ void cSpecial::append(legacy::special_node_type& old){
 			ex1b = 1; // Meaning give spell, not take
 			break;
 		case 148: case 149: // if barrels or crates
-			type = eSpecType::IF_OBJECTS;
-			ex1a = old.type - 148;
+			type = eSpecType::IF_FIELDS;
+			ex1a = old.type == 148 ? OBJECT_BARREL : OBJECT_CRATE;
 			break;
 		case 151: case 152: // if has cave lore or woodsman
 			type = eSpecType::IF_TRAIT;
@@ -97,6 +97,59 @@ void cSpecial::append(legacy::special_node_type& old){
 		case 229: // Outdoor store - fix spell IDs
 			if(ex1b == 1 || ex1b == 2)
 				ex1a += 30;
+			break;
+			// Place fields (twelve individual node types were collapsed into one)
+		case 200:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 = WALL_FIRE;
+			break;
+		case 201:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 = WALL_FORCE;
+			break;
+		case 202:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 = WALL_ICE;
+			break;
+		case 203:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 = WALL_BLADES;
+			break;
+		case 204:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 = CLOUD_STINK;
+			break;
+		case 205:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 = CLOUD_SLEEP;
+			break;
+		case 206:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 = FIELD_QUICKFIRE;
+			break;
+		case 207:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 = BARRIER_FIRE;
+			break;
+		case 208:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 = BARRIER_FORCE;
+			break;
+		case 209:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 = FIELD_DISPEL;
+			break;
+		case 210:
+			type = eSpecType::RECT_PLACE_FIELD;
+			sd2 += SFX_SMALL_BLOOD;
+			break;
+		case 211:
+			type = eSpecType::RECT_PLACE_FIELD;
+			switch(old.sd2) {
+				case 0: sd2 = FIELD_WEB; break;
+				case 1: sd2 = OBJECT_BARREL; break;
+				case 2: sd2 = OBJECT_CRATE; break;
+			}
 			break;
 			// These are ones that were added in the Windows version but only recently added to the Mac version.
 		case 28:
@@ -257,7 +310,7 @@ const std::map<eSpecType, node_properties_t> allNodeProps = {
 	{eSpecType::IF_HAVE_ITEM_CLASS_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
 	{eSpecType::IF_EQUIP_ITEM_CLASS_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
 	{eSpecType::IF_DAY_REACHED, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_OBJECTS, {ex1b_ch = true,jmp_lbl = 3}},
+	{eSpecType::IF_FIELDS, {ex1b_ch = true,jmp_lbl = 3}},
 	{eSpecType::IF_EVENT_OCCURRED, {ex1b_ch = true,jmp_lbl = 3}},
 	{eSpecType::IF_SPECIES, {ex1b_ch = true,jmp_lbl = 3}},
 	{eSpecType::IF_TRAIT, {ex1b_ch = true,jmp_lbl = 3}},
@@ -291,18 +344,7 @@ const std::map<eSpecType, node_properties_t> allNodeProps = {
 	{eSpecType::TOWN_SPLIT_PARTY, {msg_lbl = 1}},
 	{eSpecType::TOWN_REUNITE_PARTY, {msg_lbl = 1}},
 	{eSpecType::TOWN_TIMER_START, {ex1b_ch = true,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_FIRE, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_FORCE, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_ICE, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_BLADE, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_SCLOUD, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_SLEEP, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_QUICKFIRE, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_FIRE_BARR, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_FORCE_BARR, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_CLEANSE, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_SFX, {sdf_lbl = 7,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_OBJECT, {sdf_lbl = 8,msg_lbl = 1}},
+	{eSpecType::RECT_PLACE_FIELD, {sdf_lbl = 2,msg_lbl = 1}},
 	{eSpecType::RECT_MOVE_ITEMS, {sdf_lbl = 4,msg_lbl = 1}},
 	{eSpecType::RECT_DESTROY_ITEMS, {msg_lbl = 1}},
 	{eSpecType::RECT_CHANGE_TER, {sdf_lbl = 5,msg_lbl = 1}},
