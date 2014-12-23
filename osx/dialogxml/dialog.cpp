@@ -135,6 +135,11 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			attr->GetValue(&width);
 		}else if(name == "height"){
 			attr->GetValue(&height);
+		}else if(name == "framed"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true") p.second->setFormat(TXT_FRAME, true);
+			else p.second->setFormat(TXT_FRAME, false);
 		}else throw xBadAttr("pict",name,attr->Row(),attr->Column(),fname);
 	}
 	if(!foundType) throw xMissingAttr("pict","type",who.Row(),who.Column(),fname);
