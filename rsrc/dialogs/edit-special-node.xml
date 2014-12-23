@@ -4,19 +4,6 @@
 	<!--
 	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
 	 -->
-	<field name='sdf1' top='120' left='254' width='51' height='16'/>
-	<field name='sdf2' top='120' left='510' width='51' height='16'/>
-	<field name='msg1' top='163' left='270' width='51' height='16'/>
-	<field name='msg2' top='187' left='270' width='51' height='16'/>
-	<field name='pict' top='211' left='270' width='51' height='16'/>
-	<field name='x1a' top='253' left='270' width='51' height='16'/>
-	<field name='x1b' top='277' left='270' width='51' height='16'/>
-	<field name='x2a' top='322' left='270' width='51' height='16'/>
-	<field name='x2b' top='346' left='270' width='51' height='16'/>
-	<field name='jump' top='375' left='291' width='52' height='15'/>
-	<button name='okay' type='regular' top='398' left='522'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='398' left='456'>Cancel</button>
-	<button name='back' type='large' top='401' left='10'>Go Back</button>
 	<text name='num' top='8' left='314' width='38' height='14'/>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='158' height='16'>Edit Special Node</text>
@@ -25,35 +12,68 @@
 		Enter properties for this special encounter node.
 		For a detailed description of how this window works, see the documentation.
 	</text>
-	<text name='sdf1-lbl' framed='true' top='121' left='22' width='220' height='15'/>
-	<text name='sdf2-lbl' framed='true' top='121' left='317' width='176' height='16'/>
-	<text name='msg1-lbl' framed='true' top='164' left='22' width='238' height='15'/>
-	<text name='msg2-lbl' framed='true' top='188' left='22' width='238' height='15'/>
-	<text name='pict-lbl' framed='true' top='212' left='22' width='238' height='15'/>
-	<text name='x1a-lbl' framed='true' top='254' left='22' width='238' height='15'/>
-	<text name='x1b-lbl' framed='true' top='278' left='22' width='238' height='15'/>
-	<text name='type' framed='true' top='28' left='214' width='187' height='16'/>
-	<text name='x2a-lbl' framed='true' top='322' left='22' width='238' height='15'/>
-	<text name='x2b-lbl' framed='true' top='347' left='22' width='238' height='15'/>
-	<text name='jump-lbl' framed='true' top='376' left='99' width='182' height='14'/>
-	<text size='large' top='28' left='50' width='158' height='16'>Special Type:</text>
-	<text size='large' top='102' left='8' width='158' height='16'>Stuff Done Flags:</text>
-	<text size='large' top='141' left='8' width='176' height='16'>Message1, Message2, Pict:</text>
-	<text size='large' top='233' left='8' width='158' height='16'>Extra 1a and 1b:</text>
-	<text size='large' top='300' left='8' width='158' height='16'>Extra 2a and 2b:</text>
-	<text size='large' top='375' left='8' width='87' height='16'>Jump To:</text>
+	
 	<button name='general' type='large' top='49' left='102'>General</button>
 	<button name='oneshot' type='large' top='73' left='102'>One Shots</button>
 	<button name='affectpc' type='large' top='49' left='229'>Affect PCs</button>
 	<button name='ifthen' type='large' top='73' left='229'>If-Thens</button>
 	<button name='town' type='large' top='49' left='356'>Town Specs</button>
 	<button name='out' type='large' top='73' left='356'>Out Specs</button>
-	<button name='x1b-edit' type='large' top='274' left='330'>Create/Edit</button>
-	<button name='x2b-edit' type='large' top='344' left='330'>Create/Edit</button>
-	<button name='jump-edit' type='large' top='372' left='349'>Create/Edit</button>
-	<button name='pict-edit' type='large' top='209' left='329'>Choose</button>
-	<button name='x1a-edit' type='large' top='250' left='330'>Choose</button>
-	<button name='x2a-edit' type='large' top='319' left='330'>Choose</button>
-	<button name='msg2-edit' type='large' top='185' left='329'>Create/Edit</button>
+	
+	
+	<text size='large' top='28' left='50' width='158' height='16'>Special Type:</text>
+	<text name='type' framed='true' top='28' left='214' width='187' height='16'/>
+	
+	
+	<text size='large' top='102' left='8' width='158' height='16'>Stuff Done Flags:</text>
+	<text name='sdf1-lbl' framed='true' top='121' left='22' width='220' height='15'/>
+	<field name='sdf1' top='120' left='254' width='51' height='16'/>
+	
+	<text name='sdf2-lbl' framed='true' top='121' left='317' width='176' height='16'/>
+	<field name='sdf2' top='120' left='510' width='51' height='16'/>
+	
+	
+	<text size='large' top='141' left='8' width='176' height='16'>Message, Pict:</text>
+	<text name='msg1-lbl' framed='true' top='164' left='22' width='238' height='15'/>
+	<field name='msg1' top='163' left='270' width='51' height='16'/>
 	<button name='msg1-edit' type='large' top='161' left='329'>Create/Edit</button>
+	
+	<text name='msg2-lbl' framed='true' top='188' left='22' width='238' height='15'/>
+	<field name='msg2' top='187' left='270' width='51' height='16'/>
+	<button name='msg2-edit' type='large' top='185' left='329'>Create/Edit</button>
+	
+	<text name='pict-lbl' framed='true' top='212' left='22' width='238' height='15'/>
+	<field name='pict' top='211' left='270' width='51' height='16'/>
+	<button name='pict-edit' type='large' top='209' left='329'>Choose</button>
+	
+	
+	<text size='large' top='233' left='8' width='158' height='16'>Extra 1:</text>
+	<text name='x1a-lbl' framed='true' top='254' left='22' width='238' height='15'/>
+	<field name='x1a' top='253' left='270' width='51' height='16'/>
+	<button name='x1a-edit' type='large' top='250' left='330'>Choose</button>
+	
+	<text name='x1b-lbl' framed='true' top='278' left='22' width='238' height='15'/>
+	<field name='x1b' top='277' left='270' width='51' height='16'/>
+	<button name='x1b-edit' type='large' top='274' left='330'>Create/Edit</button>
+	
+	
+	<text size='large' top='300' left='8' width='158' height='16'>Extra 2:</text>
+	<text name='x2a-lbl' framed='true' top='322' left='22' width='238' height='15'/>
+	<field name='x2a' top='322' left='270' width='51' height='16'/>
+	<button name='x2a-edit' type='large' top='319' left='330'>Choose</button>
+	
+	<text name='x2b-lbl' framed='true' top='347' left='22' width='238' height='15'/>
+	<field name='x2b' top='346' left='270' width='51' height='16'/>
+	<button name='x2b-edit' type='large' top='344' left='330'>Create/Edit</button>
+	
+	
+	<text size='large' top='375' left='8' width='87' height='16'>Jump To:</text>
+	<text name='jump-lbl' framed='true' top='376' left='99' width='182' height='14'/>
+	<field name='jump' top='375' left='291' width='52' height='15'/>
+	<button name='jump-edit' type='large' top='372' left='349'>Create/Edit</button>
+	
+	
+	<button name='okay' type='regular' top='398' left='522'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='398' left='456'>Cancel</button>
+	<button name='back' type='large' top='401' left='10'>Go Back</button>
 </dialog>
