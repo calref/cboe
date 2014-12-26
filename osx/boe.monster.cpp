@@ -970,6 +970,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	}
 	if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		if((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->mu * 10 + which_m->cl * 4))) {
+			// TODO: Are these barrier sounds right?
 			play_sound(60);
 			monst_spell_note(which_monst, 49);
 			univ.town.set_fire_barr(where_check.x,where_check.y,false);
@@ -1236,6 +1237,7 @@ void record_monst(cCreature *which_m) {
 	if((which_m->x_width > 1) || (which_m->y_width > 1)) {
 		ASB("Capture Soul: Monster is too big.");
 	}
+	// TODO: Are these two sounds right?
 	else if((r1 > charm_odds[which_m->level / 2]) || (which_m->spec_skill == 12)
 			 || which_m->m_type == eRace::IMPORTANT) {
 		monst_spell_note(which_m->number,10);

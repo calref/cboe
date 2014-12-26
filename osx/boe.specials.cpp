@@ -682,6 +682,7 @@ void use_item(short pc,short item) {
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::HASTE_SLOW:
+				// TODO: Is this the right sound?
 				play_sound(75);
 				which_stat = eStatus::HASTE_SLOW;
 				if(type % 2 == 1) {
@@ -693,6 +694,7 @@ void use_item(short pc,short item) {
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::AFFECT_INVULN:
+				// TODO: Is this the right sound?
 				play_sound(68);
 				which_stat = eStatus::INVULNERABLE;
 				if(type % 2 == 1) {
@@ -704,6 +706,7 @@ void use_item(short pc,short item) {
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::AFFECT_MAGIC_RES:
+				// TODO: Is this the right sound?
 				play_sound(51);
 				which_stat = eStatus::MAGIC_RESISTANCE;
 				if(type % 2 == 1) {
@@ -727,6 +730,7 @@ void use_item(short pc,short item) {
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::AFFECT_SANCTUARY:
+				// TODO: Is this the right sound?
 				play_sound(43);
 				which_stat = eStatus::INVISIBLE;
 				if(type % 2 == 1) {
@@ -738,6 +742,7 @@ void use_item(short pc,short item) {
 				else affect_pc(pc,which_stat,str);
 				break;
 			case eItemAbil::AFFECT_MARTYRS_SHIELD:
+				// TODO: Is this the right sound?
 				play_sound(43);
 				which_stat = eStatus::MARTYRS_SHIELD;
 				if(type % 2 == 1) {
@@ -911,6 +916,7 @@ void use_item(short pc,short item) {
 				}
 				break;
 			case eItemAbil::AFFECT_SKILL_POINTS:
+				// TODO: Is this the right sound?
 				play_sound(68);
 				switch(type) {
 					case 0:
@@ -1351,6 +1357,7 @@ void out_move_party(char x,char y) {
 
 // mode - 0=full teleport flash 1=no teleport flash 2=only fade flash 3=only arrival flash
 void teleport_party(short x,short y,short mode) {
+	// TODO: Teleport sound? (Sound 10)
 	short i;
 	location l;
 	bool fadeIn = false, fadeOut = false;
@@ -3572,6 +3579,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				check_mess = false;
 			}
 			else {
+				// TODO: This is missing some additions that the non-generic stair has
 				*a = 1;
 				if(spec.ex2b < 0) spec.ex2b = 0;
 				if((spec.ex2b >= 8) || (cChoiceDlog(stairDlogs[spec.ex2b],{"climb","leave"}).show() == "climb"))

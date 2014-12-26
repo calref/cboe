@@ -255,6 +255,7 @@ void handle_sale(short what_chosen,short cost) {
 			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
+				// TODO: This seems like the wrong sound
 				play_sound(62);
 				ASB("You buy an alchemical recipe.");
 				univ.party.alchemy[base_item.item_level] = true;
@@ -316,6 +317,7 @@ void handle_sale(short what_chosen,short cost) {
 			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
+				// TODO: This seems like the wrong sound
 				play_sound(62);
 				ASB("You buy a spell.");
 				univ.party[current_pc].mage_spells[base_item.item_level] = true;
@@ -334,6 +336,7 @@ void handle_sale(short what_chosen,short cost) {
 			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
+				// TODO: This seems like the wrong sound
 				play_sound(62);
 				ASB("You buy a spell.");
 				univ.party[current_pc].priest_spells[base_item.item_level] = true;

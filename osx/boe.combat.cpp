@@ -2638,6 +2638,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		web_space(targ_space.x,targ_space.y);
 	}
 	else if(level == 23) { // paral
+		// TODO: This sound doesn't seem right?
 		play_sound(51);
 		if(target < 100) { // on PC
 			sprintf (create_line, "  Fires ray at %s.                  ",univ.party[target].name.c_str());
@@ -4694,6 +4695,7 @@ static void process_force_cage(location loc, short i) {
 		short m = i - 100;
 		cCreature& which_m = univ.town.monst[m];
 		if(which_m.attitude % 2 == 1 && get_ran(1,1,100) < which_m.mu * 10 + which_m.cl * 4 + 5) {
+			// TODO: This sound is not right
 			play_sound(60);
 			monst_spell_note(m, 50);
 			univ.town.set_force_cage(loc.x,loc.y,false);

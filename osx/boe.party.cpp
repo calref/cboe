@@ -906,6 +906,7 @@ void give_party_spell(short which) {
 		giveError("The scenario has tried to give you a non-existant spell.");
 		return;}
 	
+	// TODO: This seems like the wrong sounds
 	if(which < 100)
 		for(i = 0; i < 6; i++)
 			if(!univ.party[i].mage_spells[which]) {
@@ -1659,6 +1660,7 @@ void crumble_wall(location where) { // TODO: Add something like this to the spre
 		return;
 	ter = univ.town->terrain(where.x,where.y);
 	if(univ.scenario.ter_types[ter].special == eTerSpec::CRUMBLING && univ.scenario.ter_types[ter].flag3.u < 2) {
+		// TODO: This seems like the wrong sound
 		play_sound(60);
 		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1.u;
 		add_string_to_buf("  Barrier crumbles.");

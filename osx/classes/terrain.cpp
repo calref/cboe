@@ -240,7 +240,7 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			break;
 		case 22:
 			special = eTerSpec::CHANGE_WHEN_USED;
-			flag2.u = 3;
+			flag2.u = 59;
 			flag3.u = 0;
 			break;
 		case 23:
