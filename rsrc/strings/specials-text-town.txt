@@ -1,0 +1,448 @@
+Town Attitude
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+First monster to affect (-1 for all)
+Last monster to affect (-1 for all)
+Unused
+New Attitude
+Unused
+Unused
+Special to Jump To
+--------------------
+Change Terrain
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Terrain to change to
+Unused
+Unused
+Special to Jump To
+--------------------
+Swap Terrain
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Swap this terrain ...
+With this terrain ...
+Unused
+Special to Jump To
+--------------------
+Transform Terrain
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Move Party
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+0 - Just move, 1 - Teleport
+Unused
+Unused
+Special to Jump To
+--------------------
+Hit Space
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Damage to inflict (0 .. 1000)
+Type of damage (for list, see docs.)
+Unused
+Special to Jump To
+--------------------
+Explosion on Space
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Radius of explosion
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Damage to inflict (0 .. 1000)
+Type of damage (for list, see docs.)
+Unused
+Special to Jump To
+--------------------
+Lock Space
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Unlock Space
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Do sfx Burst
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+0 - fire, 1 - elec., 2 - telep.
+Unused
+Unused
+Special to Jump To
+--------------------
+Make Wandering Monster
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Place a Monster
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space to place
+Y coordinate of space to place
+Unused
+Number of creature to place
+0 - don't force, 1 - force
+Unused
+Special to Jump To
+--------------------
+Destroy Monster
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Type of creature to remove
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Destroy All Monsters
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+0 - all, 1 - friendly, 2 - hostile
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Generic Lever
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If Pulled, call this special ...
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Generic Portal
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+X coordinate to telep. to
+Y coordinate to telep. to
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Generic Button
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If Pushed, call this special ...
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Generic Stairway
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+X coordinate to go to
+Y coordinate to go to
+Unused
+Number of town to place party in
+What text? (0 - up, 1 - down)
+Trigger Limitations
+Special to Jump To
+--------------------
+Lever
+Unused
+Unused
+Number of first message in dialog
+Unused
+Unused
+Terrain Picture number
+Unused
+Unused
+If Pulled, call this special ...
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Portal
+Unused
+Unused
+Number of first message in dialog
+Unused
+Unused
+Dialog Picture number
+Unused
+X coordinate to telep. to
+Y coordinate to telep. to
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Stairway
+Unused
+Unused
+Number of first message in dialog
+Unused
+Unused
+Unused
+Unused
+X coordinate to place at
+Y coordinate to place at
+Unused
+Number of town to place party in
+If 1, always change level.
+Trigger Limitations
+Special to Jump To
+--------------------
+Relocate Outdoors
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of outdoor section
+Y coordinate of outdoor section
+Unused
+X coordinate inside section 
+Y coordinate inside section 
+Unused
+Special to Jump To
+--------------------
+Place Item
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate to place at
+Y coordinate to place at
+Unused
+Item to place
+Unused
+Unused
+Special to Jump To
+--------------------
+Split Party
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate to place lone PC at
+Y coordinate to place lone PC at
+Unused
+0 - no telep. noise, 1 - play telep. noise
+Unused
+Unused
+Special to Jump To
+--------------------
+Reunite Party
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+0 - no sound, 1 - teleport sound
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Start General Timer
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Number of moves until event
+Call this special when time runs out ...
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Change Lighting
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+New town lighting type (0 .. 3)
+Unused
+Unused
+Party light level
+0 - increase, 1 - drain
+Unused
+Special to Jump To
+--------------------
+Set Monster Attitude
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Which monster
+New attitude
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------

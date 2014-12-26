@@ -10,6 +10,7 @@
 #define BOE_DATA_SPECIAL_H
 
 #include <iosfwd>
+#include <string>
 #include "simpletypes.h"
 #include "location.h"
 
@@ -47,8 +48,17 @@ struct pending_special_type {
 };
 
 struct node_properties_t {
-	bool ex1a_choose, ex1b_choose, ex1c_choose, ex2a_choose, ex2b_choose, ex2c_choose;
-	short sdf_label, msg_label, pic_label, jmp_label;
+	eSpecType self;
+	std::string opcode() const;
+	std::string name() const, descr() const;
+	std::string sdf1_lbl() const, sdf2_lbl() const, sdf1_hlp() const, sdf2_hlp() const;
+	std::string msg1_lbl() const, msg2_lbl() const, msg3_lbl() const, msg1_hlp() const, msg2_hlp() const, msg3_hlp() const;
+	std::string pic_lbl() const, pt_lbl() const, pic_hlp() const, pt_hlp() const;
+	std::string ex1a_lbl() const, ex1b_lbl() const, ex1c_lbl() const, ex1a_hlp() const, ex1b_hlp() const, ex1c_hlp() const;
+	std::string ex2a_lbl() const, ex2b_lbl() const, ex2c_lbl() const, ex2a_hlp() const, ex2b_hlp() const, ex2c_hlp() const;
+	std::string jmp_lbl() const, jmp_hlp() const;
+	char m1_btn, m2_btn, m3_btn, p_btn, pt_btn;
+	char x1a_btn, x1b_btn, x1c_btn, x2a_btn, x2b_btn, x2c_btn;
 	node_properties_t() {}
 	node_properties_t(std::initializer_list<std::function<void(node_properties_t)>>);
 };

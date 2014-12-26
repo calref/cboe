@@ -37,6 +37,7 @@ public:
 	eSpellSelect need_select;
 	eSkill type;
 	int when_cast;
+	std::string name() const;
 	static eSpell fromNum(eSkill type, int num);
 };
 

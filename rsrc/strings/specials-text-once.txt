@@ -1,0 +1,224 @@
+Give Item
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Item to give
+Amount of gold to give
+Unused
+Amount of food to give
+Special if item not given
+Unused
+Special to Jump To
+--------------------
+Give Special Item
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Num. of spec. item to give (0 .. 49)
+0 - give item, 1 - take away
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+One-Time Do Nothing
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+One-Time and Set
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+One-Time Text Message
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Display Dialog (Dialog pic)
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Number of first message in dialog
+1 - add 'Leave'/'OK' button, else no
+Unused
+Dialog Picture number
+Unused
+Label of 2nd button (-1 - no button)
+Special if button 2 pressed
+Unused
+Label of 3rd button (-1 - no button)
+Special if button 3 pressed
+Unused
+Special if OK/Leave picked
+--------------------
+Display Dialog (Terrain pic)
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Number of first message in dialog
+1 - add 'Leave'/'OK' button, else no
+Unused
+Terrain Picture number
+Unused
+Label of 2nd button (-1 - no button)
+Special if button 2 pressed
+Unused
+Label of 3rd button (-1 - no button)
+Special if button 3 pressed
+Unused
+Special if OK/Leave picked
+--------------------
+Display Dialog (Monster pic)
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Number of first message in dialog
+1 - add 'Leave'/'OK' button, else no
+Unused
+Monster Picture number
+Unused
+Label of 2nd button (-1 - no button)
+Special if button 2 pressed
+Unused
+Label of 3rd button (-1 - no button)
+Special if button 3 pressed
+Unused
+Special if OK/Leave picked
+--------------------
+Give Item (Dialog pic)
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Number of first message in dialog
+Num. of spec. item to give (-1 none)
+Unused
+Dialog Picture number
+Unused
+Item to give
+Amount of gold to give
+Unused
+Amount of food to give
+Special if item IS taken
+Unused
+Special to Jump To
+--------------------
+Give Item (Terrain pic)
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Number of first message in dialog
+Num. of spec. item to give (-1 none)
+Unused
+Terrain Picture number
+Unused
+Item to give
+Amount of gold to give
+Unused
+Amount of food to give
+Special if item IS taken
+Unused
+Special to Jump To
+--------------------
+Give Item (Monster pic)
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Number of first message in dialog
+Num. of spec. item to give (-1 none)
+Unused
+Monster Picture number
+Unused
+Item to give
+Amount of gold to give
+Unused
+Amount of food to give
+Special if item IS taken
+Unused
+Special to Jump To
+--------------------
+One-Time Place Outdoor Enc.
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Special outdoor enc. to place (0 .. 3)
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+One-Time Place Town Enc.
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Spec. enc. code to activate (0 .. 10)
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Trap
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Type of trap
+Trap severity (0 .. 3)
+Unused
+Penalty (0 .. 100, higher is harder)
+Unused
+Unused
+Special after trap finished
+--------------------

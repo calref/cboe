@@ -2272,6 +2272,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::SDF_ADD: case eSpecType::SDF_DIFF:
 		case eSpecType::SDF_TIMES: case eSpecType::SDF_POWER:
 		case eSpecType::SDF_DIVIDE:
+			check_mess = true;
 			i = spec.ex1b == -1 ? spec.ex1a : PSD[spec.ex1a][spec.ex1b];
 			j = spec.ex2b == -1 ? spec.ex2a : PSD[spec.ex2a][spec.ex2b];
 			switch(spec.type) {

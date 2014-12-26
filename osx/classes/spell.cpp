@@ -7,6 +7,7 @@
 //
 
 #include "spell.hpp"
+#include "graphtool.h" // for get_str
 
 std::map<eSpell,cSpell> cSpell::dictionary;
 
@@ -53,6 +54,10 @@ const cSpell& cSpell::finish() {
 	dictionary[num] = *this;
 	return *this;
 }
+
+std::string cSpell::name() const {
+	return get_str("magic-names", int(num) + 1);
+};
 
 const cSpell& operator*(eSpell spell_num) {
 	return cSpell::dictionary[spell_num];

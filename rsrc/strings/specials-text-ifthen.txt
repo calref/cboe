@@ -1,0 +1,448 @@
+Stuff Done Flag?
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Unused
+Unused
+Unused
+Unused
+Unused
+If at least this value ...
+Call this special ...
+Unused
+If less than this ...
+Call this special ...
+Unused
+Otherwise call this special
+--------------------
+Town Number?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If in this town ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+Random Number?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If random # (1 - 100) less than ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+Have Special Item?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If has spec. item ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+Stuff Done Compare?
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Unused
+Unused
+Unused
+Unused
+Unused
+Stuff Done flag 2 Part A
+Stuff Done flag 2 Part B
+Unused
+Unused
+Call this special if 2nd flag lower ...
+Unused
+Otherwise call this special
+--------------------
+Terrain this type? (town)
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+If space is this terrain type ...
+Call this special ...
+Unused
+Otherwise call this special
+--------------------
+Terrain this type? (out)
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+If space is this terrain type ...
+Call this special ...
+Unused
+Otherwise call this special
+--------------------
+Has gold?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If party has this much gold ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+Has food?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If party has this much food ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+Item Class on Space?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+If item of this class on space ...
+Call this special ...
+Unused
+Otherwise call this special
+--------------------
+Have Item With Class?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If has item of this special class ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+Equipped Item With Class?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If has equipped item of this special ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+Has Gold? (+ take)
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If party has this much gold ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+Has Food? (+ take)
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If party has this much food ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+Item Class on Space? (+ take)
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+If item of this class on space ...
+Call this special ...
+Unused
+Otherwise call this special
+--------------------
+Have Item W. Class? (+ take)
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If has item of this special class ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+Equip Item W. Class? (+ take)
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If has equipped item of this class ...
+Call this special ...
+Unused
+Unused
+eUnused
+Unused
+Otherwise call this special
+--------------------
+Day Reached?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If this day has been reached ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+If Fields?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Field Type
+If any fields, call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+If Party Size?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If party size sufficient, call this special ...
+Unused
+0 - Exact size, 1 - Minimum size
+Required size
+Unused
+Otherwise call this special
+--------------------
+Special Thing Happened?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If this day has been reached ...
+And this event didn't happen before it ...
+Unused
+Unused
+Call this special ...
+Unused
+Otherwise call this special
+--------------------
+If Species Present?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Required species (0 - human, 1 - nephil, 2 - slith)
+If enough of species present, call this special ...
+Unused
+Required number of species
+Comparison method (-2 - <=, -1 - <, 0 - =, 1 - >, 2 - >=)
+Unused
+Otherwise call this special
+--------------------
+If Have Trait?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Required trait (0 - human, 1 - nephil, 2 - slith)
+If enough of trait present, call this special ...
+Unused
+Required number of trait
+Comparison method (-2 - <=, -1 - <, 0 - =, 1 - >, 2 - >=)
+Unused
+Otherwise call this special
+--------------------
+Has Enough of Statistic?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+If the party has this much of the stat ...
+Call this special ...
+Unused
+Which statistic
+Check mode (0 - cumulative, 1 - average, 2 - minimum, 3 - maximum)
+Unused
+Otherwise call this special
+--------------------
+Text Response?
+Unused
+Unused
+Scenario string containing prompt text
+Unused
+Unused
+Number of letters to match
+Unused
+Number of a SCENARIO special message
+If answer matches, call this special ...
+Unused
+Number of a SCENARIO special message
+If answer matches, call this special ...
+Unused
+Otherwise call this special
+--------------------
+Stuff Done Equal?
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Unused
+Unused
+Unused
+Unused
+Unused
+If flag has this value ...
+Call this special ...
+Unused
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+If Context?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Which context (0 .. 18 or 100 .. 102)
+0 - can enter, 1 - no enter
+If context matches, call this special ...
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+If Numeric Response?
+Unused
+Unused
+Scenario string containing prompt text
+Minimum allowed response
+Maximum allowed response
+Comparison Mode (0 - in range, 1 - not in range, 2 - simple)
+If tests 1 and 2 both pass, call this special ...
+Range lower bound (or value to compare to)
+Range upper bound (or comparison method -2 .. 2)
+If test 1 passes but test 2 fails, call this special ...
+Range lower bound (or value to compare to)
+Range upper bound (or comparison method -2 .. 2)
+If test 2 passes but test 1 fails, call this special ...
+Otherwise call this special
+--------------------

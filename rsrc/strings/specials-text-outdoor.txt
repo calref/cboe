@@ -1,0 +1,80 @@
+Make Outdoor Wandering
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Change Out Terrain
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Terrain to change to
+Unused
+Unused
+Special to Jump To
+--------------------
+Place Outdoor Encounter
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Number of special encounter (0 .. 3)
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Outdoor Move Party
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Outdoor Store
+Unused
+Unused
+Name of Store
+Unused
+Unused
+Unused
+Unused
+Number of first item in store
+Store type (see docs. for list)
+Unused
+Number of items in store (1 .. 40)
+Cost adjust (0 .. 6, lower = cheaper)
+Unused
+Special to Jump To
+--------------------

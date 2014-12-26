@@ -1,0 +1,304 @@
+Place Fields/Objects/Sfx
+Chance of placing (0 - 100)
+Which field type
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Move Items
+X of space to move to
+Y of space to move to
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Destroy Items
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Change Rectange Terrain
+Terrain to change to
+Chance of changing (0 - 100)
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Swap Rectangle Terrain
+Switch this ter. type
+with this ter. type
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Transform Rectangle Terrain
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Lock Rectangle
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------
+Unlock Rectangle
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
+Unused
+Special to Jump To
+--------------------

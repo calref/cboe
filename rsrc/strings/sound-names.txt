@@ -1,0 +1,100 @@
+Lock Target / Noted in Journal
+Cancel Target Lock
+Edged/Bashing Miss
+Near-death Cough
+Bless
+Fire Explosion
+Eat Food
+Gain Level
+Alchemy Brewing
+Unlock Click
+Teleport
+Launch Magic Missile
+Fire Arrow
+Party Death
+Throw Missile
+Shop Purchase
+Enter Town
+Footstep Splash
+Enter Combat/Monster Alert
+Polearm Miss
+Resting Yawn
+Death
+Intro Jingle
+Outdoor Encounter
+Priest Spell
+Mage Spell
+Gremlin Steals Food
+Snuffling Growl
+Waterfall
+Human/Giant Death
+Human Death
+Beast Death 1
+Beast Death 2
+Goblin/Other Death
+LED Click
+Spider says "Hi"
+Spider says "Hello"
+Button Click
+Buy Item
+Get Gold
+End Shopping
+Action Failure
+Acid Hit
+Petrify
+Breathe
+"On whom?"
+Monster alert growl
+Footstep Crunch
+Row Boat
+Footstep 1
+Footstep 2
+Enchant Weapon
+Generic Spell Sound 1
+Magic Explosion
+Fear
+Poison Squish
+Drink
+Information Ding
+Open Door
+Close Door
+Fire Damage
+Summoning
+Get Food
+Ouch
+Spit
+Fear
+Starvation
+Monster alert "Huh?"
+Generic Spell Sound 2
+Small Sword Hit
+Large Sword Hit
+Polearm Hit
+Bashing Hit
+Flame Hit
+Launch Fireball
+Cold Hit/Haste/Slow
+Bird 1
+Bird 2
+Drip 1
+Drip 2
+Dog Bark
+Cat Meow
+Sheep Bleet
+Cow Moo
+Horse Whinny
+Footstep Horse
+Claw Hit
+Bite Hit
+Slime Hit
+Zap Hit
+Paralysis
+Bird 3
+Chicken Bawk
+End Combat
+Lever Click
+Enter Dungeon
+Sleep
+Normal Ouch
+Missile Hit
+No Sound

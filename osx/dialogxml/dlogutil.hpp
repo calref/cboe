@@ -167,6 +167,7 @@ class cStringChoice {
 	std::vector<std::string> strings;
 	size_t page, cur;
 	cLedGroup* leds;
+	std::function<void(cStringChoice&,int)> select_handler;
 public:
 	/// Initializes a dialog from a list of strings.
 	/// @param strs A list of all strings in the dialog.
@@ -180,6 +181,9 @@ public:
 	/// @param parent Optionally, a parent dialog.
 	/// @note Currently, only vector iterators are supported.
 	cStringChoice(std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end, std::string title, cDialog* parent = NULL);
+	/// Attach a handler to be called when the selected item changes.
+	/// @param f A function that takes a reference to the dialog and the index of the newly selected item.
+	void attachSelectHandler(std::function<void(cStringChoice&,int)> f);
 	/// Reference the cDialog powering this choice dialog, perhaps to customize details of it.
 	/// @return A pointer to the dialog.
 	cDialog* operator->();
@@ -205,6 +209,7 @@ class cPictChoice {
 	std::vector<std::pair<pic_num_t,ePicType>> picts;
 	size_t page, cur;
 	cLedGroup* leds;
+	std::function<void(cPictChoice&,int)> select_handler;
 public:
 	/// Initializes a dialog from a list of icons.
 	/// @param pics A list of all icons in the dialog.
@@ -227,13 +232,15 @@ public:
 	/// @param t The type of icons to show; all icons are assumed to be of the same type.
 	/// @param parent Optionally, a parent dialog.
 	cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* parent = NULL);
+	/// Attach a handler to be called when the selected item changes.
+	/// @param f A function that takes a reference to the dialog and the index of the newly selected item.
+	void attachSelectHandler(std::function<void(cPictChoice&,int)> f);
 	/// Reference the cDialog powering this choice dialog, perhaps to customize details of it.
 	/// @return A pointer to the dialog.
 	cDialog* operator->();
 	/// Show the dialog.
 	/// @param cur_sel The index of the icon that should be initially selected when the dialog is shown.
 	/// @return false if the user clicked Cancel, true otherwise.
-	/// @note If for some reason an icon appears twice in the list, there's no way to determine which of the two was selected.
 	bool show(size_t cur_sel);
 	/// Get the chosen icon.
 	/// @return The number of the chosen icon.
@@ -241,6 +248,9 @@ public:
 	/// Get the chosen icon.
 	/// @return The type of the chosen icon.
 	ePicType getPicChosenType();
+	/// Get the index of the selected icon in the original list.
+	/// @return The index
+	size_t getSelected();
 };
 #endif
 

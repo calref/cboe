@@ -1,0 +1,544 @@
+No Special
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Set Flag
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Value to change to
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Increment Flag
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Increase/Decrease by
+0 - increase, 1 - decrease
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Display Message
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Secret Passage
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Display Small Message
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Flip Flag
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Set SDF to Random
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Minimum value
+Maximum value
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Addition
+Result Stuff Done Flag Part A
+Result Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+First SDF part A, or first number
+First SDF part B, or -1 to for literal number
+Unused
+Second SDF part A, or second number
+Second SDF part B, or -1 for literal number
+Unused
+Special to Jump To
+--------------------
+Subtraction
+Result Stuff Done Flag Part A
+Result Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+First SDF part A, or first number
+First SDF part B, or -1 to for literal number
+Unused
+Second SDF part A, or second number
+Second SDF part B, or -1 for literal number
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+--------------------
+Can't Enter
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+0 - can enter, 1 - no enter
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Change Time
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Number of moves to set forward
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Start General Timer
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Number of moves to set the timer
+Special to call when timer runs out
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Play a Sound
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Which sound
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Change Horse Possession
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Horse to set (0 .. 29)
+Unused
+Unused
+0 - not property, 1 - becomes property
+Unused
+Unused
+Special to Jump To
+--------------------
+Change Boat Possession
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Boat to set (0 .. 29)
+Unused
+Unused
+0 - not property, 1 - becomes property
+Unused
+Unused
+Special to Jump To
+--------------------
+Show/Hide Town
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Town to show/hide
+Unused
+Unused
+0 - town hidden, 1 - town visible
+Unused
+Unused
+Special to Jump To
+--------------------
+Major Event Has Occurred
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Number of Special Event (0 .. 9)
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Forced Give
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Item To Give
+Special if item not given
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Buy Items of Type
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Item Class to Take Away
+Special to call if no items taken
+Unused
+Amount to pay for each item
+Unused
+Unused
+Special to Jump To
+--------------------
+Call Global Special
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Set Many Flags
+Stuff Done Flag Part A
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Value to change the 10 flags to
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Copy Flag
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Unused
+Unused
+Unused
+Unused
+Unused
+Flag to change to Part A
+Flag to change to Part B
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Display Picture
+sdf1
+sdf2
+Picture title string
+msg2
+msg3
+pic
+pt
+Number of large (full-sheet) pic to display
+ex1b
+ex1c
+ex2a
+ex2b
+ex2c
+Special to Jump To
+--------------------
+Have a Rest
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Number of moves that pass
+Health and spell pts. to give
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Wandering will fight
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+0 - no attack, 1 - attack
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+End Scenario
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Set Pointer
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Unused
+Unused
+Unused
+Unused
+Unused
+Pointer to point to that flag (100-199)
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Set/Retrieve Campaign Flag
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+Scen. string with campaign ID (-1 - default)
+Unused
+Unused
+Unused
+Unused
+Campaign Flag Part A (0..24)
+Campaign Flag Part B (0..24)
+ex1c
+0 - Set Campaign Flag, 1 - Retrieve Flag
+ex2b
+ex2c
+Special to Jump To
+--------------------
+Debug Print Numbers
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+msg1
+msg2
+msg3
+0 - SDF, 1 - extra1 values, 2 - monster hp/mp
+pt
+Number of monster, or value to print
+Value to print (could be a pointer)
+Value to print (could be a pointer)
+ex2a
+ex2b
+ex2c
+Special to Jump To
+--------------------
+Multiplication
+Result Stuff Done Flag Part A
+Result Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+First SDF part A, or first number
+First SDF part B, or -1 to for literal number
+Unused
+Second SDF part A, or second number
+Second SDF part B, or -1 for literal number
+Unused
+Special to Jump To
+--------------------
+Division
+Result Stuff Done Flag Part A
+Result Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+First SDF part A, or first number
+First SDF part B, or -1 to for literal number
+Remainder Stuff Done Flag Part A
+Second SDF part A, or second number
+Second SDF part B, or -1 for literal number
+Remainder Stuff Done Flag Part B
+Special to Jump To
+--------------------
+Exponentiation
+Result Stuff Done Flag Part A
+Result Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+First SDF part A, or first number
+First SDF part B, or -1 to for literal number
+Unused
+Second SDF part A, or second number
+Second SDF part B, or -1 for literal number
+Unused
+Special to Jump To
+--------------------

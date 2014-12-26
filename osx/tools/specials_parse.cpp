@@ -64,139 +64,23 @@ SpecialParser::SpecialParser() {
 						   
 #undef A
 
-struct initer {
-	initer() {
-		opcode.add
-			("null", eSpecType::NONE)
-			("set-sdf", eSpecType::SET_SDF)
-			("inc-sdf", eSpecType::INC_SDF)
-			("disp-msg", eSpecType::DISPLAY_MSG)
-			("secret-pass", eSpecType::SECRET_PASSAGE)
-			("disp-sm-msg", eSpecType::DISPLAY_SM_MSG)
-			("flip-sdf", eSpecType::FLIP_SDF)
-			("if-context", eSpecType::IF_CONTEXT)
-			("block-move", eSpecType::CANT_ENTER)
-			("change-time", eSpecType::CHANGE_TIME)
-			("start-timer-scen", eSpecType::SCEN_TIMER_START)
-			("play-sound", eSpecType::PLAY_SOUND)
-			("change-horse", eSpecType::CHANGE_HORSE_OWNER)
-			("change-boat", eSpecType::CHANGE_BOAT_OWNER)
-			("town-visible", eSpecType::SET_TOWN_VISIBILITY)
-			("set-event", eSpecType::MAJOR_EVENT_OCCURRED)
-			("force-give", eSpecType::FORCED_GIVE)
-			("buy-item-class", eSpecType::BUY_ITEMS_OF_TYPE)
-			("call-global", eSpecType::CALL_GLOBAL)
-			("set-sdf-row", eSpecType::SET_SDF_ROW)
-			("copy-sdf", eSpecType::COPY_SDF)
-			("rest", eSpecType::REST)
-			("set-wander-fight", eSpecType::WANDERING_WILL_FIGHT)
-			("end-scen", eSpecType::END_SCENARIO)
-			("once-give-item", eSpecType::ONCE_GIVE_ITEM)
-			("once-give-spec-item", eSpecType::ONCE_GIVE_SPEC_ITEM)
-			("once", eSpecType::ONCE_NULL)
-			("once-set-sdf", eSpecType::ONCE_SET_SDF)
-			("once-disp-msg", eSpecType::ONCE_DISPLAY_MSG)
-			("once-dlog", eSpecType::ONCE_DIALOG)
-			("once-give-dlog", eSpecType::ONCE_GIVE_ITEM_DIALOG)
-			("once-encounter", eSpecType::ONCE_OUT_ENCOUNTER)
-			("once-trap", eSpecType::ONCE_TRAP)
-			("select-pc", eSpecType::SELECT_PC)
-			("damage", eSpecType::DAMAGE)
-			("hp", eSpecType::AFFECT_HP)
-			("sp", eSpecType::AFFECT_SP)
-			("xp", eSpecType::AFFECT_XP)
-			("skill-pts", eSpecType::AFFECT_SKILL_PTS)
-			("death", eSpecType::AFFECT_DEADNESS)
-			("status", eSpecType::AFFECT_POISON)
-			("statistic", eSpecType::AFFECT_STAT)
-			("spell", eSpecType::AFFECT_MAGE_SPELL)
-			("gold", eSpecType::AFFECT_GOLD)
-			("food", eSpecType::AFFECT_FOOD)
-			("alchemy", eSpecType::AFFECT_ALCHEMY)
-			("stealth", eSpecType::AFFECT_STEALTH)
-			("firewalk", eSpecType::AFFECT_FIREWALK)
-			("flight", eSpecType::AFFECT_FLIGHT)
-			("if-sdf", eSpecType::IF_SDF)
-			("if-town", eSpecType::IF_TOWN_NUM)
-			("if-spec-item", eSpecType::IF_HAVE_SPECIAL_ITEM)
-			("if-sdf-compare", eSpecType::IF_SDF_COMPARE)
-			("if-ter", eSpecType::IF_TOWN_TER_TYPE)
-			("if-gold", eSpecType::IF_HAS_GOLD_AND_TAKE)
-			("if-food", eSpecType::IF_HAS_FOOD_AND_TAKE)
-			("if-item-class-on-space", eSpecType::IF_ITEM_CLASS_ON_SPACE_AND_TAKE)
-			("if-item-class", eSpecType::IF_HAVE_ITEM_CLASS_AND_TAKE)
-			("if-item-class-equip", eSpecType::IF_EQUIP_ITEM_CLASS_AND_TAKE)
-			("if-day", eSpecType::IF_DAY_REACHED)
-			("if-field", eSpecType::IF_FIELDS)
-			("if-event", eSpecType::IF_EVENT_OCCURRED)
-			("if-trait", eSpecType::IF_TRAIT)
-			("if-species", eSpecType::IF_SPECIES)
-			("if-statistic", eSpecType::IF_STATISTIC)
-			("if-response", eSpecType::IF_TEXT_RESPONSE)
-			("if-sdf-eq", eSpecType::IF_SDF_EQ)
-			("town-attitude", eSpecType::MAKE_TOWN_HOSTILE)
-			("change-ter", eSpecType::TOWN_CHANGE_TER)
-			("swap-ter", eSpecType::TOWN_SWAP_TER)
-			("trans-ter", eSpecType::TOWN_TRANS_TER)
-			("move-party", eSpecType::TOWN_MOVE_PARTY)
-			("hit-space", eSpecType::TOWN_HIT_SPACE)
-			("explode-space", eSpecType::TOWN_EXPLODE_SPACE)
-			("lock-space", eSpecType::TOWN_LOCK_SPACE)
-			("unlock-space", eSpecType::TOWN_UNLOCK_SPACE)
-			("anim-explode", eSpecType::TOWN_SFX_BURST)
-			("make-wandering", eSpecType::TOWN_CREATE_WANDERING)
-			("place-monst", eSpecType::TOWN_PLACE_MONST)
-			("destroy-most", eSpecType::TOWN_DESTROY_MONST)
-			("nuke-monsts", eSpecType::TOWN_NUKE_MONSTS)
-			("lever-generic", eSpecType::TOWN_GENERIC_LEVER)
-			("portal-generic", eSpecType::TOWN_GENERIC_PORTAL)
-			("stair-generic", eSpecType::TOWN_GENERIC_STAIR)
-			("button-generic", eSpecType::TOWN_GENERIC_BUTTON)
-			("lever", eSpecType::TOWN_LEVER)
-			("portal", eSpecType::TOWN_PORTAL)
-			("stair", eSpecType::TOWN_STAIR)
-			("set-sector", eSpecType::TOWN_RELOCATE)
-			("place-item", eSpecType::TOWN_PLACE_ITEM)
-			("split-party", eSpecType::TOWN_SPLIT_PARTY)
-			("unite-party", eSpecType::TOWN_REUNITE_PARTY)
-			("start-timer-town", eSpecType::TOWN_TIMER_START)
-			("rect-place-field", eSpecType::RECT_PLACE_FIELD)
-			("rect-move-items", eSpecType::RECT_MOVE_ITEMS)
-			("rect-destroy-items", eSpecType::RECT_DESTROY_ITEMS)
-			("rect-change-ter", eSpecType::RECT_CHANGE_TER)
-			("rect-swap-ter", eSpecType::RECT_SWAP_TER)
-			("rect-trans-ter", eSpecType::RECT_TRANS_TER)
-			("rect-lock", eSpecType::RECT_LOCK)
-			("rect-unlock", eSpecType::RECT_UNLOCK)
-			("make-out-monst", eSpecType::OUT_PLACE_ENCOUNTER)
-			("start-shop", eSpecType::OUT_STORE)
-		;
-		// A check for missing types.
-		// There's really no need to check all the way to the max of the underlying type.
-		// It's unlikely we'd go above 255, so unsigned char would be fine, but just in case,
-		// let's use unsigned short.
-		// Could change the actual enum's underlying type instead though?
-		using underlying = signed short;//std::underlying_type<eSpecType>::type;
-		struct node_less : std::binary_function<eSpecType, eSpecType, bool> {
-			bool operator()(const eSpecType& x, const eSpecType& y) const {return underlying(x) < underlying(y);}
-		};
-		std::set<eSpecType, node_less> allNodes;
-		for(underlying i = 0; i < std::numeric_limits<underlying>::max(); i++) {
-			eSpecType check = (eSpecType) i;
-			eSpecCat category = getNodeCategory(check);
-			if(category == eSpecCat::INVALID) continue;
-			allNodes.insert(check);
-		}
-		opcode.for_each([&allNodes](const std::string&, eSpecType node) {
-			allNodes.erase(node);
-		});
-		std::for_each(allNodes.begin(), allNodes.end(), [](eSpecType node){
-			printf("Warning: Missing opcode definition for special node type with ID %d\n", (int)node);
-		});
+void init_specials_parse() {
+	opcode.add((*eSpecType::NONE).opcode(), eSpecType::NONE);
+	// Fill in all the opcodes and check for missing types.
+	// There's really no need to check all the way to the max of the underlying type.
+	// It's unlikely we'd go above 255, so unsigned char would be fine, but just in case,
+	// let's use unsigned short.
+	// Could change the actual enum's underlying type instead though?
+	using underlying = unsigned short;
+	for(underlying i = 0; i < std::numeric_limits<underlying>::max(); i++) {
+		eSpecType check = (eSpecType) i;
+		eSpecCat category = getNodeCategory(check);
+		if(category == eSpecCat::INVALID) continue;
+		if((*check).opcode().empty())
+			printf("Warning: Missing opcode definition for special node type with ID %d\n", i);
+		else opcode.add((*check).opcode(), check);
 	}
-};
-
-static struct initer initer;
+}
 
 void SpecialParser::init_file() {
 	specials.clear();
@@ -301,6 +185,8 @@ void SpecialParser::set_third(int i, ph_t, bool& pass) {
 }
 
 std::map<size_t,cSpecial> SpecialParser::parse(std::string code) {
+	static bool inited = false;
+	if(!inited) init_specials_parse();
 	bool success = qi::parse(code.begin(), code.end(), nodes_file);
 	(void) success; // Suppress "unused parameter" warning
 	return specials;

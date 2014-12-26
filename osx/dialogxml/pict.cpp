@@ -778,6 +778,7 @@ void cPict::drawPresetField(short num, rectangle to_rect){
 void cPict::drawPresetBoom(short num, rectangle to_rect){
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_BOOM);
 	rectangle from_rect = calc_rect(num % 8, num / 8);
+	// TODO: Be smarter about this - we know the first row is static booms and subsequent rows are animated booms.
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);

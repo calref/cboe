@@ -27,7 +27,6 @@ cPictChoice::cPictChoice(std::vector<pic_num_t>& pics,ePicType t,cDialog* parent
 
 cPictChoice::cPictChoice(std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg("choose-pict.xml",parent) {
 	picts = pics;
-	sort(picts.begin(),picts.end());
 	attachHandlers();
 }
 
@@ -40,7 +39,6 @@ cPictChoice::cPictChoice(
 	for(auto iter = begin; iter != end; iter++) {
 		picts.push_back({*iter,t});
 	}
-	sort(picts.begin(),picts.end());
 	attachHandlers();
 }
 
@@ -48,7 +46,6 @@ cPictChoice::cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* p
 	for(pic_num_t i = first; i <= last; i++) {
 		picts.push_back({i,t});
 	}
-	sort(picts.begin(),picts.end());
 	attachHandlers();
 }
 
@@ -79,6 +76,10 @@ bool cPictChoice::show(size_t cur_sel){
 	fillPage();
 	dlg.run();
 	return didAccept;
+}
+
+void cPictChoice::attachSelectHandler(std::function<void(cPictChoice&,int)> f) {
+	select_handler = f;
 }
 
 void cPictChoice::fillPage(){
@@ -134,6 +135,8 @@ bool cPictChoice::onSelect(bool losing) {
 	if(losing) return true;
 	int i = boost::lexical_cast<int>(leds->getSelected().substr(3));
 	cur = page * per_page + i - 1;
+	if(select_handler)
+		select_handler(*this, cur);
 	return true;
 }
 
@@ -143,6 +146,10 @@ pic_num_t cPictChoice::getPicChosen() {
 
 ePicType cPictChoice::getPicChosenType() {
 	return dlg.getResult<std::pair<pic_num_t,ePicType>>().second;
+}
+
+size_t cPictChoice::getSelected() {
+	return cur;
 }
 
 const size_t cStringChoice::per_page = 40;
@@ -188,11 +195,16 @@ cDialog* cStringChoice::operator->() {
 
 size_t cStringChoice::show(size_t selectedIndex) {
 	cur = selectedIndex;
+	if(cur >= strings.size()) cur = 0;
 	page = cur / per_page;
 	fillPage();
-	dlg.setResult<size_t>(cur);
+	dlg.setResult<size_t>(selectedIndex);
 	dlg.run();
 	return dlg.getResult<size_t>();
+}
+
+void cStringChoice::attachSelectHandler(std::function<void(cStringChoice&,int)> f) {
+	select_handler = f;
 }
 
 void cStringChoice::fillPage(){
@@ -243,6 +255,8 @@ bool cStringChoice::onSelect(bool losing) {
 	if(losing) return true;
 	int i = boost::lexical_cast<int>(leds->getSelected().substr(3));
 	cur = page * per_page + i - 1;
+	if(select_handler)
+		select_handler(*this, cur);
 	return true;
 }
 

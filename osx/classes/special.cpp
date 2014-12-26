@@ -6,10 +6,12 @@
  *
  */
 
+#include "special.h"
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
+#include <boost/lexical_cast.hpp>
 
 #include "dlogutil.hpp"
 #include "classes.h"
@@ -186,181 +188,269 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 	return in;
 }
 
-// This is sort of a workaround for VS2013 not supporting C99 designated initializers in C++.
-namespace node_types {
-	using np_populator = std::function<void(node_properties_t)>;
-	template<typename T> struct np_populator_builder {
-		T node_properties_t::*const prop;
-		np_populator_builder(T node_properties_t::* p) : prop(p) {}
-		void setVal(node_properties_t props, T val) const {
-			(props.*prop) = val;
-		}
-		template<typename T2> np_populator operator= (T2 val) const {
-			return std::bind(&np_populator_builder<T>::setVal, this, std::placeholders::_1, val);
-		}
-	};
-	namespace keys {
-		template<typename T> using npb = const np_populator_builder<T>;
-		using npt = node_properties_t;
-		// Needs to be one of these for every member variable in node_properties_t.
-		npb<bool> ex1a_ch(&npt::ex1a_choose), ex1b_ch(&npt::ex1b_choose), ex1c_ch(&npt::ex1c_choose);
-		npb<bool> ex2a_ch(&npt::ex1a_choose), ex2b_ch(&npt::ex2b_choose), ex2c_ch(&npt::ex2c_choose);
-		npb<short> sdf_lbl(&npt::sdf_label), msg_lbl(&npt::sdf_label);
-		npb<short> pic_lbl(&npt::sdf_label), jmp_lbl(&npt::sdf_label);
+// Key:
+// space - no button
+// m - Create/Edit button to edit message pair (covers msg1 and msg2 together)
+// M - Create/Edit button to edit single message
+// $ - As above, but always a scenario message
+// d - Create/Edit button to edit dialog message sequence
+// b - Choose button to select a button label
+// p - Choose button to select a picture (uses pictype for type)
+// ? - Choose button to select a picture type
+// s - Create/Edit button to edit special node
+// S - As above, but always a scenario node
+// x - Choose button to select a sound
+// X - Choose button to select a trap type
+// T - Choose button to select a town
+// i - Choose button to select an item
+// I - Choose button to select a special item
+// # - Choose button to select store item (uses ex1b for type)
+// t - Choose button to select a terrain type
+// c - Choose button to select a monster type
+// a - Choose button to select an alchemy recipe
+// A - Choose button to select a mage spell
+// P - Choose button to select a priest spell
+// k - Choose button to select a skill
+// K - As above, but add the special pseudo-skills for the if-statistic node
+// f - Choose button to select a field type
+// F - As above, but also include Dispel and Smash
+// q - Choose button to select a trait
+// Q - Choose button to select a species
+// = - Choose button to select a comparison method (<=, <, =, >, >=)
+// + - Choose button to select stat cumulation mode
+// * - Choose button to select a special node context
+// @ - Choose button to select a monster attitude
+// D - Choose button to select a damage type
+// ! - Choose button to select an explosion animation type
+// / - Choose button to select generic stairway text
+// : - Choose stairway trigger conditions
+// L - Choose button to select a town lighting type
+// & - Choose button to select shop type
+// % - Choose button to select shop cost adjustment
+static const char*const button_dict[7][11] = {
+	{ // general nodes
+		" mmmmmmmmm mmm mmmmmm   Mmm  $ mmm", // msg1
+		"                                  ", // msg2
+		"                                  ", // msg3
+		"                                  ", // pic
+		"                                  ", // pictype
+		"              x  T i              ", // ex1a
+		"             S     ss             ", // ex1b
+		"                                  ", // ex1c
+		"                                  ", // ex2a
+		"                                  ", // ex2b
+		"                                  ", // ex2c
+	}, { // one-shot nodes
+		"mm  mddddddmmm", // msg1
+		"        III   ", // msg2
+		"              ", // msg3
+		"     pppppp   ", // pic
+		"              ", // pictype
+		"iI   bbbiii  X", // ex1a
+		"     sss      ", // ex1b
+		"              ", // ex1c
+		"     bbb      ", // ex2a
+		"s    ssssss   ", // ex2b
+		"              ", // ex2c
+	}, { // affect pc nodes
+		"mmmmmmmmmmmmmmmmmmmmmmmmmmm", // msg1
+		"                           ", // msg2
+		"                           ", // msg3
+		"                           ", // pic
+		"                           ", // pictype
+		"                   AP  a   ", // ex1a
+		"                           ", // ex1b
+		"                           ", // ex1c
+		"                  K        ", // ex2a
+		" D                         ", // ex2b
+		"                           ", // ex2c
+	}, { // if-then nodes
+		"                        $  $", // msg1
+		"                            ", // msg2
+		"                            ", // msg3
+		"                            ", // pic
+		"                            ", // pictype
+		"                  f  Qq $ * ", // ex1a
+		"ssss   ss ssss sssss sssss =", // ex1b
+		"                          ss", // ex1c
+		"                       K$   ", // ex2a
+		"s   sss  s    s     s==+s  =", // ex2b
+		"                           s", // ex2c
+	}, { // town nodes
+		"mmmmmmmmmmmmmmm   dddmmmmmmm", // msg1
+		"                            ", // msg2
+		"                            ", // msg3
+		"                  pp        ", // pic
+		"                            ", // pictype
+		"            c             L ", // ex1a
+		"              s s s      s @", // ex1b
+		"                            ", // ex1c
+		"@tt      ! c     T  T i     ", // ex2a
+		"  t  DD          /          ", // ex2b
+		"                 :  :       ", // ex2c
+	}, { // rectangle nodes
+		"m           mmmmmmm", // msg1
+		"                   ", // msg2
+		"                   ", // msg3
+		"                   ", // pic
+		"                   ", // pictype
+		"              tt   ", // sdf1
+		"                   ", // unused
+		"                   ", // ex1c
+		"F              t   ", // sdf2
+		"                   ", // unused
+		"                   ", // ex2c
+	}, { // outdoors nodes
+		" mmmM", // msg1
+		"     ", // msg2
+		"     ", // msg3
+		"     ", // pic
+		"     ", // pictype
+		"    #", // ex1a
+		"    &", // ex1b
+		"     ", // ex1c
+		" t   ", // ex2a
+		"    %", // ex2b
+		"     ", // ex2c
 	}
-}
-
-node_properties_t::node_properties_t(std::initializer_list<node_types::np_populator> vals) {
-	for(node_types::np_populator val : vals) val(*this);
-}
-
-using namespace node_types::keys;
-
-// This is the database of information on the special nodes, used by the scenario editor to decide how to set up the edit node dialog.
-// Keys ending in _ch indicate whether a "Choose" or "Create/Edit" button should be present, and must be a boolean.
-//    (Whether it's a Choose or Create/Edit button depends on the field.)
-// Keys ending in _lbl indicate the set of labels applied to that set of fields, and are also used to determine the effect of the buttons.
-// The extra fields curently have their label associations hard-coded rather than listed here.
-
-const std::map<eSpecType, node_properties_t> allNodeProps = {
-	{eSpecType::NONE, {}},
-	{eSpecType::SET_SDF, {sdf_lbl = 1,msg_lbl = 1}},
-	{eSpecType::INC_SDF, {sdf_lbl = 1,msg_lbl = 1}},
-	{eSpecType::DISPLAY_MSG, {msg_lbl = 1}},
-	{eSpecType::SECRET_PASSAGE, {msg_lbl = 1}},
-	{eSpecType::DISPLAY_SM_MSG, {msg_lbl = 1}},
-	{eSpecType::FLIP_SDF, {sdf_lbl = 1,msg_lbl = 1}},
-	// TODO: XXX_BLOCK were here and had jmp_lbl = 1; what to do about that?
-	{eSpecType::CANT_ENTER, {msg_lbl = 1}},
-	{eSpecType::CHANGE_TIME, {msg_lbl = 1}},
-	{eSpecType::SCEN_TIMER_START, {ex1b_ch = true}},
-	{eSpecType::PLAY_SOUND, {}},
-	{eSpecType::CHANGE_HORSE_OWNER, {}},
-	{eSpecType::CHANGE_BOAT_OWNER, {}},
-	{eSpecType::SET_TOWN_VISIBILITY, {msg_lbl = 1}},
-	{eSpecType::MAJOR_EVENT_OCCURRED, {msg_lbl = 1}},
-	{eSpecType::FORCED_GIVE, {ex1a_ch = true,ex2b_ch = true,msg_lbl = 1}},
-	{eSpecType::BUY_ITEMS_OF_TYPE, {ex1b_ch = true,msg_lbl = 1}},
-	{eSpecType::CALL_GLOBAL, {}},
-	{eSpecType::SET_SDF_ROW, {sdf_lbl = 1}},
-	{eSpecType::COPY_SDF, {sdf_lbl = 1}},
-	// TODO: Sanctify was here, and had ex1b_ch = true; what to do about that?
-	{eSpecType::REST, {msg_lbl = 1}},
-	{eSpecType::WANDERING_WILL_FIGHT, {}},
-	{eSpecType::END_SCENARIO, {}},
-	{eSpecType::ONCE_GIVE_ITEM, {ex1a_ch = true,ex2b_ch = true,sdf_lbl = 1,msg_lbl = 1}},
-	{eSpecType::ONCE_GIVE_SPEC_ITEM, {sdf_lbl = 1,msg_lbl = 1}},
-	{eSpecType::ONCE_NULL, {sdf_lbl = 1}},
-	{eSpecType::ONCE_SET_SDF, {sdf_lbl = 1}},
-	{eSpecType::ONCE_DISPLAY_MSG, {sdf_lbl = 1,msg_lbl = 1}},
-	{eSpecType::ONCE_DIALOG, {ex1a_ch = true,ex2a_ch = true,ex1b_ch = true,ex2b_ch = true,
-		sdf_lbl = 1,msg_lbl = 4,pic_lbl = 1,jmp_lbl = 4}},
-	{eSpecType::ONCE_DIALOG_TERRAIN, {ex1a_ch = true,ex2a_ch = true,ex1b_ch = true,ex2b_ch = true,
-		sdf_lbl = 1,msg_lbl = 4,pic_lbl = 2,jmp_lbl = 4}},
-	{eSpecType::ONCE_DIALOG_MONSTER, {ex1a_ch = true,ex2a_ch = true,ex1b_ch = true,ex2b_ch = true,
-		sdf_lbl = 1,msg_lbl = 4,pic_lbl = 3,jmp_lbl = 4}},
-	{eSpecType::ONCE_GIVE_ITEM_DIALOG, {ex1a_ch = true,ex2b_ch = true,sdf_lbl = 1,msg_lbl = 5,pic_lbl = 1}},
-	{eSpecType::ONCE_GIVE_ITEM_TERRAIN, {ex1a_ch = true,ex2b_ch = true,sdf_lbl = 1,msg_lbl = 5,pic_lbl = 2}},
-	{eSpecType::ONCE_GIVE_ITEM_MONSTER, {ex1a_ch = true,ex2b_ch = true,sdf_lbl = 1,msg_lbl = 5,pic_lbl = 3}},
-	{eSpecType::ONCE_OUT_ENCOUNTER, {sdf_lbl = 1,msg_lbl = 1}},
-	{eSpecType::ONCE_TOWN_ENCOUNTER, {sdf_lbl = 1,msg_lbl = 1}},
-	{eSpecType::ONCE_TRAP, {sdf_lbl = 1,msg_lbl = 1,jmp_lbl = 2}},
-	{eSpecType::SELECT_PC, {ex1b_ch = true,msg_lbl = 1}},
-	{eSpecType::DAMAGE, {msg_lbl = 1}},
-	{eSpecType::AFFECT_HP, {msg_lbl = 1}},
-	{eSpecType::AFFECT_SP, {msg_lbl = 1}},
-	{eSpecType::AFFECT_XP, {msg_lbl = 1}},
-	{eSpecType::AFFECT_SKILL_PTS, {msg_lbl = 1}},
-	{eSpecType::AFFECT_DEADNESS, {msg_lbl = 1}},
-	{eSpecType::AFFECT_POISON, {msg_lbl = 1}},
-	{eSpecType::AFFECT_SPEED, {msg_lbl = 1}},
-	{eSpecType::AFFECT_INVULN, {msg_lbl = 1}},
-	{eSpecType::AFFECT_MAGIC_RES, {msg_lbl = 1}},
-	{eSpecType::AFFECT_WEBS, {msg_lbl = 1}},
-	{eSpecType::AFFECT_DISEASE, {msg_lbl = 1}},
-	{eSpecType::AFFECT_SANCTUARY, {msg_lbl = 1}},
-	{eSpecType::AFFECT_CURSE_BLESS, {msg_lbl = 1}},
-	{eSpecType::AFFECT_DUMBFOUND, {msg_lbl = 1}},
-	{eSpecType::AFFECT_SLEEP, {msg_lbl = 1}},
-	{eSpecType::AFFECT_PARALYSIS, {msg_lbl = 1}},
-	{eSpecType::AFFECT_STAT, {msg_lbl = 1,pic_lbl = 4}},
-	{eSpecType::AFFECT_MAGE_SPELL, {msg_lbl = 1}},
-	{eSpecType::AFFECT_PRIEST_SPELL, {msg_lbl = 1}},
-	{eSpecType::AFFECT_GOLD, {msg_lbl = 1}},
-	{eSpecType::AFFECT_FOOD, {msg_lbl = 1}},
-	{eSpecType::AFFECT_ALCHEMY, {msg_lbl = 1}},
-	{eSpecType::AFFECT_STEALTH, {msg_lbl = 1}},
-	{eSpecType::AFFECT_FIREWALK, {msg_lbl = 1}},
-	{eSpecType::AFFECT_FLIGHT, {msg_lbl = 1}},
-	{eSpecType::IF_SDF, {ex1b_ch = true,ex2b_ch = true,sdf_lbl = 1,jmp_lbl = 3}},
-	{eSpecType::IF_TOWN_NUM, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_RANDOM, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_HAVE_SPECIAL_ITEM, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_SDF_COMPARE, {ex2b_ch = true,sdf_lbl = 1,jmp_lbl = 3}},
-	{eSpecType::IF_TOWN_TER_TYPE, {ex2a_ch = true,ex2b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_OUT_TER_TYPE, {ex2a_ch = true,ex2b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_HAS_GOLD, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_HAS_FOOD, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_ITEM_CLASS_ON_SPACE, {ex2b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_HAVE_ITEM_CLASS, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_EQUIP_ITEM_CLASS, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_HAS_GOLD_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_HAS_FOOD_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_ITEM_CLASS_ON_SPACE_AND_TAKE, {ex2b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_HAVE_ITEM_CLASS_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_EQUIP_ITEM_CLASS_AND_TAKE, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_DAY_REACHED, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_FIELDS, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_EVENT_OCCURRED, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_SPECIES, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_TRAIT, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_STATISTIC, {ex1b_ch = true,jmp_lbl = 3}},
-	{eSpecType::IF_TEXT_RESPONSE, {ex1b_ch = true,ex2b_ch = true,pic_lbl = 5,jmp_lbl = 3}},
-	{eSpecType::IF_SDF_EQ, {ex1b_ch = true,sdf_lbl = 1,jmp_lbl = 3}},
-	{eSpecType::IF_CONTEXT, {}},
-	{eSpecType::MAKE_TOWN_HOSTILE, {msg_lbl = 1}},
-	{eSpecType::TOWN_CHANGE_TER, {ex2a_ch = true,msg_lbl = 1}},
-	{eSpecType::TOWN_SWAP_TER, {ex2a_ch = true,msg_lbl = 1}},
-	{eSpecType::TOWN_TRANS_TER, {msg_lbl = 1}},
-	{eSpecType::TOWN_MOVE_PARTY, {msg_lbl = 1}},
-	{eSpecType::TOWN_HIT_SPACE, {msg_lbl = 1}},
-	{eSpecType::TOWN_EXPLODE_SPACE, {msg_lbl = 1,pic_lbl = 6}},
-	{eSpecType::TOWN_LOCK_SPACE, {msg_lbl = 1}},
-	{eSpecType::TOWN_UNLOCK_SPACE, {msg_lbl = 1}},
-	{eSpecType::TOWN_SFX_BURST, {msg_lbl = 1}},
-	{eSpecType::TOWN_CREATE_WANDERING, {msg_lbl = 1}},
-	{eSpecType::TOWN_PLACE_MONST, {ex2a_ch = true,msg_lbl = 1}},
-	{eSpecType::TOWN_DESTROY_MONST, {ex1a_ch = true,msg_lbl = 1}},
-	{eSpecType::TOWN_NUKE_MONSTS, {msg_lbl = 1}},
-	{eSpecType::TOWN_GENERIC_LEVER, {ex1b_ch = true}},
-	{eSpecType::TOWN_GENERIC_PORTAL, {}},
-	{eSpecType::TOWN_GENERIC_BUTTON, {ex1b_ch = true}},
-	{eSpecType::TOWN_GENERIC_STAIR, {}},
-	{eSpecType::TOWN_LEVER, {ex1b_ch = true,msg_lbl = 2,pic_lbl = 2}},
-	{eSpecType::TOWN_PORTAL, {msg_lbl = 2,pic_lbl = 1}},
-	{eSpecType::TOWN_STAIR, {msg_lbl = 2}},
-	{eSpecType::TOWN_RELOCATE, {msg_lbl = 1}},
-	{eSpecType::TOWN_PLACE_ITEM, {ex2a_ch = true,msg_lbl = 1}},
-	{eSpecType::TOWN_SPLIT_PARTY, {msg_lbl = 1}},
-	{eSpecType::TOWN_REUNITE_PARTY, {msg_lbl = 1}},
-	{eSpecType::TOWN_TIMER_START, {ex1b_ch = true,msg_lbl = 1}},
-	{eSpecType::RECT_PLACE_FIELD, {sdf_lbl = 2,msg_lbl = 1}},
-	{eSpecType::RECT_MOVE_ITEMS, {sdf_lbl = 4,msg_lbl = 1}},
-	{eSpecType::RECT_DESTROY_ITEMS, {msg_lbl = 1}},
-	{eSpecType::RECT_CHANGE_TER, {sdf_lbl = 5,msg_lbl = 1}},
-	{eSpecType::RECT_SWAP_TER, {sdf_lbl = 6,msg_lbl = 1}},
-	// TODO: Is it correct for some RECT specials to not have sdf_lbl = something?
-	{eSpecType::RECT_TRANS_TER, {msg_lbl = 1}},
-	{eSpecType::RECT_LOCK, {msg_lbl = 1}},
-	{eSpecType::RECT_UNLOCK, {msg_lbl = 1}},
-	{eSpecType::OUT_MAKE_WANDER, {}},
-	{eSpecType::OUT_CHANGE_TER, {ex2a_ch = true,msg_lbl = 1}},
-	{eSpecType::OUT_PLACE_ENCOUNTER, {msg_lbl = 1}},
-	{eSpecType::OUT_MOVE_PARTY, {msg_lbl = 1}},
-	{eSpecType::OUT_STORE, {ex1a_ch = true,msg_lbl = 3}},
 };
 
+static int offsets[] = {
+	int(eSpecType::NONE),
+	int(eSpecType::ONCE_GIVE_ITEM),
+	int(eSpecType::SELECT_PC),
+	int(eSpecType::IF_SDF),
+	int(eSpecType::MAKE_TOWN_HOSTILE),
+	int(eSpecType::RECT_PLACE_FIELD),
+	int(eSpecType::OUT_MAKE_WANDER),
+};
+
+static std::map<eSpecType, node_properties_t> loadProps() {
+	std::map<eSpecType, node_properties_t> allNodeProps;
+	// There's really no need to check all the way to the max of the underlying type.
+	// It's unlikely we'd go above 255, so unsigned char would be fine, but just in case,
+	// let's use unsigned short.
+	// Could change the actual enum's underlying type instead though?
+	using underlying = unsigned short;//std::underlying_type<eSpecType>::type;
+	for(underlying i = 0; i < std::numeric_limits<underlying>::max(); i++) {
+		eSpecType check = (eSpecType) i;
+		eSpecCat category = getNodeCategory(check);
+		if(category == eSpecCat::INVALID) continue;
+		node_properties_t props;
+		props.self = check;
+		int j = int(category), k = i - offsets[j];
+		props.m1_btn = button_dict[j][0][k];
+		props.m2_btn = button_dict[j][1][k];
+		props.m3_btn = button_dict[j][2][k];
+		props.p_btn = button_dict[j][3][k];
+		props.pt_btn = button_dict[j][4][k];
+		if(category != eSpecCat::RECT) {
+			props.x1a_btn = button_dict[j][5][k];
+			props.x1b_btn = button_dict[j][6][k];
+		}
+		props.x1c_btn = button_dict[j][7][k];
+		if(category != eSpecCat::RECT) {
+			props.x2a_btn = button_dict[j][8][k];
+			props.x2b_btn = button_dict[j][9][k];
+		}
+		props.x2c_btn = button_dict[j][10][k];
+		if(category == eSpecCat::RECT) {
+			props.x1a_btn = props.x2a_btn = ' ';
+			props.x1b_btn = props.x2b_btn = ' ';
+		}
+		allNodeProps[check] = props;
+	}
+	return allNodeProps;
+}
+
 const node_properties_t& operator* (eSpecType t) {
-	node_properties_t p = allNodeProps.at(t);
-	return p;
+	static std::map<eSpecType, node_properties_t> allNodeProps = loadProps();
+	return allNodeProps.at(t);
+}
+
+std::string node_properties_t::opcode() const {
+	return get_str("specials-opcodes", int(self) + 1);
+}
+
+static std::string get_node_string(std::string base, eSpecType type, int which) {
+	eSpecCat cat = getNodeCategory(type);
+	int i = int(cat), j = int(type);
+	int strnum = (j - offsets[i]) * 16 + which + 1;
+	switch(cat) {
+		case eSpecCat::GENERAL:
+			return get_str(base + "-general", strnum);
+		case eSpecCat::ONCE:
+			return get_str(base + "-once", strnum);
+		case eSpecCat::AFFECT:
+			return get_str(base + "-affect", strnum);
+		case eSpecCat::IF_THEN:
+			return get_str(base + "-ifthen", strnum);
+		case eSpecCat::TOWN:
+			return get_str(base + "-town", strnum);
+		case eSpecCat::RECT:
+			return get_str(base + "-rect", strnum);
+		case eSpecCat::OUTDOOR:
+			return get_str(base + "-outdoor", strnum);
+	}
+	return "";
+}
+
+std::string node_properties_t::name() const {
+	return get_node_string("specials-text", self, 0);
+}
+
+std::string node_properties_t::sdf1_lbl() const {
+	return get_node_string("specials-text", self, 1);
+}
+
+std::string node_properties_t::sdf2_lbl() const {
+	return get_node_string("specials-text", self, 2);
+}
+
+std::string node_properties_t::msg1_lbl() const {
+	return get_node_string("specials-text", self, 3);
+}
+
+std::string node_properties_t::msg2_lbl() const {
+	return get_node_string("specials-text", self, 4);
+}
+
+std::string node_properties_t::msg3_lbl() const {
+	return get_node_string("specials-text", self, 5);
+}
+
+std::string node_properties_t::pic_lbl() const {
+	return get_node_string("specials-text", self, 6);
+}
+
+std::string node_properties_t::pt_lbl() const {
+	return get_node_string("specials-text", self, 7);
+}
+
+std::string node_properties_t::ex1a_lbl() const {
+	return get_node_string("specials-text", self, 8);
+}
+
+std::string node_properties_t::ex1b_lbl() const {
+	return get_node_string("specials-text", self, 9);
+}
+
+std::string node_properties_t::ex1c_lbl() const {
+	return get_node_string("specials-text", self, 10);
+}
+
+std::string node_properties_t::ex2a_lbl() const {
+	return get_node_string("specials-text", self, 11);
+}
+
+std::string node_properties_t::ex2b_lbl() const {
+	return get_node_string("specials-text", self, 12);
+}
+
+std::string node_properties_t::ex2c_lbl() const {
+	return get_node_string("specials-text", self, 13);
+}
+
+std::string node_properties_t::jmp_lbl() const {
+	return get_node_string("specials-text", self, 14);
 }

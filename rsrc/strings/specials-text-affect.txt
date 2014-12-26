@@ -1,0 +1,432 @@
+Select a PC
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+0 - only living, 1 - any PC, 2 - whole party
+Special if Cancel button pressed
+Unused
+0 - player choice, 1 - random, 11..16 - specific
+Unused
+Unused
+Special to Jump To
+--------------------
+Do Damage
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Number of dice
+Number of 'sides' on dice
+Unused
+Amount of extra damage
+Type of damage
+Unused
+Special to Jump To
+--------------------
+Affect Health
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount
+0 - raise, 1 - lower
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Spell Points
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount
+0 - raise, 1 - lower
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Experience
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 100)
+0 - raise, 1 - lower
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Skill Points
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 10)
+0 - raise, 1 - lower
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Kill/Raise Dead
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+0 - dead, 1 - dust,  2- stoned
+0 - raise dead, 1 - hurt
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Poison
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 8)
+0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Slow/Haste
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 8)
+0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Invulnerability
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 8)
+0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Magic Resistance
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 8)
+0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Webs
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 8)
+0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Disease
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 8)
+0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Sanctuary
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 8)
+0 - adds, 1 - removes
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Curse/Bless
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 8)
+0 - blesses, 1 - curses
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Dumbfounding
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 7)
+0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Sleep
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 8)
+0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Paralysis
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 5000)
+0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Statistic
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Chance of changing (0 - 100)
+Unused
+Amount (0 .. 10)
+0 - increase, 1 - decrease
+Unused
+Statistic to adjust (0..21)
+Unused
+Unused
+Special to Jump To
+--------------------
+Give Mage Spell
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Which Spell (0 .. 61)
+0 - remove, 1 - give
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Give Priest Spell
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Which Spell (0 .. 61)
+0 - remove, 1 - give
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Gold
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 25000)
+0 - increase, 1 - decrease
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Food
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 25000)
+0 - increase, 1 - decrease
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Alchemy
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Which Recipe (0 .. 19)
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Stealth
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 250)
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Firewalk
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 250)
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Affect Flying
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Amount (0 .. 250)
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
