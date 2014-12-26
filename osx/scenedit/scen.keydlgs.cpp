@@ -29,7 +29,7 @@ extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 short num_specs[3] = {256,60,100};
 
-std::vector<pic_num_t> field_pics = {2,3,5,6,7,8,9,10,11,12,13,14,15,16,24,25,26,27,28,29,30,31};
+std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31};
 std::vector<pic_num_t> boom_pics = {0,1,2,3,4,8,16,24,32};
 std::vector<pic_num_t> lgdlog_pics = {0,72};
 
