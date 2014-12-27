@@ -371,6 +371,12 @@ short pick_town_num(std::string which_dlog,short def) {
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["okay"].attachClickHandler(save_town_num);
 	town_dlg["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.num_towns - 1, "Town number"));
+	town_dlg["choose"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
+		int i = me["town"].getTextAsNum();
+		i = choose_text(STRT_TOWN, i, &me, "Which town?");
+		me["town"].setTextToNum(i);
+		return true;
+	});
 	
 	town_dlg["town"].setTextToNum(def);
 	std::string prompt = town_dlg["prompt"].getText();
@@ -1118,12 +1124,13 @@ void edit_talk_node(short which_node,short parent_num) {
 }
 
 static void put_out_loc_in_dlog(cDialog& me, location cur_loc) {
-	std::ostringstream str("X = ");
-	str << cur_loc.x;
+	std::ostringstream str;
+	str << "X = " << cur_loc.x;
 	me["x"].setText(str.str());
-	str.str("Y = ");
-	str << cur_loc.y;
+	str.str("");
+	str << "Y = " << cur_loc.y;
 	me["y"].setText(str.str());
+	me["title"].setText(scenario.outdoors[cur_loc.x][cur_loc.y]->out_name);
 }
 
 static bool pick_out_event_filter(cDialog& me, std::string item_hit, location& cur_loc) {
@@ -1139,6 +1146,11 @@ static bool pick_out_event_filter(cDialog& me, std::string item_hit, location& c
 	} else if(item_hit == "yplus") {
 		if(cur_loc.y >= scenario.out_height - 1) beep();
 		else cur_loc.y++;
+	} else if(item_hit == "choose") {
+		int i = cur_loc.x * scenario.out_width + cur_loc.y;
+		i = choose_text(STRT_SECTOR, i, &me, "Which sector?");
+		cur_loc.x = i / scenario.out_width;
+		cur_loc.y = i % scenario.out_width;
 	}
 	put_out_loc_in_dlog(me, cur_loc);
 	return true;
@@ -1158,7 +1170,7 @@ location pick_out(location default_loc) {
 	cDialog out_dlg("select-sector");
 	out_dlg["okay"].attachClickHandler(std::bind(finish_pick_out, _1, true, std::ref(default_loc), prev_loc));
 	out_dlg["cancel"].attachClickHandler(std::bind(finish_pick_out, _1, false, std::ref(default_loc), prev_loc));
-	out_dlg.attachClickHandlers(std::bind(pick_out_event_filter, _1, _2, std::ref(default_loc)), {"xplus", "xminus", "yplus", "yminus"});
+	out_dlg.attachClickHandlers(std::bind(pick_out_event_filter, _1, _2, std::ref(default_loc)), {"xplus", "xminus", "yplus", "yminus", "choose"});
 	
 	out_dlg["width"].setTextToNum(scenario.out_width);
 	out_dlg["height"].setTextToNum(scenario.out_height);

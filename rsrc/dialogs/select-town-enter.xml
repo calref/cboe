@@ -6,8 +6,9 @@
 	<button name='okay' type='regular' top='95' left='206'>OK</button>
 	<button name='cancel' type='regular' top='95' left='140'>Cancel</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
-	<text size='large' top='6' left='50' width='267' height='17'>Entrance to what town?</text>
+	<text size='large' top='6' left='50' width='207' height='17'>Entrance to what town?</text>
 	<text name='prompt' top='25' left='50' width='213' height='42'>
 		What town do you want the party to end up in when they walk into this space?
 	</text>
+	<button name='choose' type='regular' top='69' left='186'>Choose</button>
 </dialog>

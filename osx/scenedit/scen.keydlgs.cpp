@@ -183,7 +183,14 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 			}
 			break;
 		case STRT_SECTOR:
-			// TODO: Generate a list of all outdoor sectors
+			for(size_t i = 0; i < scenario.outdoors.width(); i++) {
+				for(size_t j = 0; j < scenario.outdoors.height(); j++) {
+					std::ostringstream name;
+					name << '[' << i << ',' << j << ']';
+					name << ' ' << scenario.outdoors[i][j]->out_name;
+					strings.push_back(name.str());
+				}
+			}
 			break;
 		case STRT_MAGE:
 			for(int i = 0; i < 62; i++) {
