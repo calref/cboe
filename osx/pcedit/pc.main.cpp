@@ -200,7 +200,7 @@ void handle_apple_menu(int item_hit) {
 	
 	switch(item_hit) {
 		case 1:
-			cChoiceDlog("about-pced.xml").show();
+			cChoiceDlog("about-pced").show();
 			break;
 		default:
 			//GetItem (apple_menu,item_hit,desk_acc_name);
@@ -264,19 +264,19 @@ void handle_extra_menu(int item_hit) {
 			
 		case 4:
 			if(univ.party.is_split() > 0) {
-				cChoiceDlog("reunite-first.xml").show();
+				cChoiceDlog("reunite-first").show();
 				break;
 			}
-			cChoiceDlog("leave-town.xml").show();
+			cChoiceDlog("leave-town").show();
 			leave_town();
 			break;
 			
 		case 5:
 			if(univ.party.is_split() == 0) {
-				cChoiceDlog("not-split.xml").show();
+				cChoiceDlog("not-split").show();
 				break;
 			}
-			cChoiceDlog("reunited.xml").show();
+			cChoiceDlog("reunited").show();
 			univ.town.p_loc = univ.party.left_at();
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status >= eMainStatus::SPLIT)
@@ -326,7 +326,7 @@ void handle_extra_menu(int item_hit) {
 				display_strings(25,15);
 				break;
 			}
-			if(cChoiceDlog("leave-scenario.xml",{"okay","cancel"}).show() != "okay")
+			if(cChoiceDlog("leave-scenario",{"okay","cancel"}).show() != "okay")
 				break;
 			remove_party_from_scen();
 			break;
@@ -472,7 +472,7 @@ bool verify_restore_quit(bool mode) {
 	
 	if(file_in_mem.empty())
 		return true;
-	cChoiceDlog verify(mode ? "save-open.xml" : "save-quit.xml", {"save", "quit", "cancel"});
+	cChoiceDlog verify(mode ? "save-open" : "save-quit", {"save", "quit", "cancel"});
 	choice = verify.show();
 	if(choice == "cancel")
 		return false;

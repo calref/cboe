@@ -898,7 +898,7 @@ static void handle_victory() {reload_startup();
 	draw_startup(0);
 	menu_activate();
 	univ.party.scen_name = ""; // should be harmless...
-	if(cChoiceDlog("congrats-save.xml",{"cancel","save"}).show() == "save"){
+	if(cChoiceDlog("congrats-save",{"cancel","save"}).show() == "save"){
 		// TODO: Wait, this shouldn't be a "save as" action, should it? It should save without asking for a location.
 		fs::path file = nav_put_party();
 		if(!file.empty()) save_party(file, univ);
@@ -1299,7 +1299,7 @@ bool handle_action(sf::Event event) {
 						// TODO: Jobs! Or maybe quests!
 						break;
 					case 8: // help
-						cChoiceDlog("help-inventory.xml").show();
+						cChoiceDlog("help-inventory").show();
 						break;
 					default:
 						handle_switch_pc_items(i, need_redraw);
@@ -1686,9 +1686,9 @@ bool handle_keystroke(sf::Event& event){
 				give_help(205,6);
 				break;
 			}
-			if(is_out()) cChoiceDlog("help-outdoor.xml").show();
-			if(is_town()) cChoiceDlog("help-town.xml").show();
-			if(is_combat()) cChoiceDlog("help-combat.xml").show();
+			if(is_out()) cChoiceDlog("help-outdoor").show();
+			if(is_town()) cChoiceDlog("help-town").show();
+			if(is_combat()) cChoiceDlog("help-combat").show();
 			break;
 			
 		case '1': case '2': case '3': case '4': case '5': case '6':
@@ -2554,7 +2554,7 @@ void switch_pc(short which) {
 void drop_pc(short which) {
 	std::string choice;
 	
-	choice = cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show();
+	choice = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
 	if(choice == "no") {
 		add_string_to_buf("Delete PC: Cancelled.           ");
 		return;
@@ -2575,7 +2575,7 @@ void handle_death() {
 	
 	while(true) {
 		// Use death (or leave Exile) dialog
-		choice = cChoiceDlog("party-death.xml",{"load","new","quit"}).show();
+		choice = cChoiceDlog("party-death",{"load","new","quit"}).show();
 		
 		if(choice == "quit") {
 			All_Done = true;
@@ -2604,7 +2604,7 @@ void start_new_game() {
 	std::string choice;
 	using kb = sf::Keyboard;
 	
-	choice = cChoiceDlog("new-party.xml",{"okay","cancel"}).show();
+	choice = cChoiceDlog("new-party",{"okay","cancel"}).show();
 	if(choice == "cancel")
 		return;
 	
@@ -2872,7 +2872,7 @@ bool outd_move_party(location destination,bool forced) {
 					 && univ.scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 				// TODO: It kinda looks like there should be a check for eTerSpec::BRIDGE here?
 				// Note: Maybe not though, since this is where boating over lava was once hard-coded...?
-				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
+				if(cChoiceDlog("boat-bridge",{"under","land"}).show() == "under")
 					forced = true;
 				else {
 					add_string_to_buf("You leave the boat.             ");
@@ -3033,7 +3033,7 @@ bool town_move_party(location destination,short forced) {
 				return false;
 			// Crossing bridge: land or go through
 			else if(!is_blocked(destination) && univ.scenario.ter_types[ter].boat_over && univ.scenario.ter_types[ter].special == eTerSpec::BRIDGE) {
-				if(cChoiceDlog("boat-bridge.xml",{"under","land"}).show() == "under")
+				if(cChoiceDlog("boat-bridge",{"under","land"}).show() == "under")
 					forced = true;
 				else if(!is_blocked(destination)) {
 					add_string_to_buf("You leave the boat.             ");
@@ -3194,7 +3194,7 @@ bool check_for_interrupt(){
 		interrupt = true;
 	if(interrupt) {
 		// TODO: A customized dialog with a more appropriate message
-		cChoiceDlog confirm("quit-confirm-nosave.xml", {"quit","cancel"});
+		cChoiceDlog confirm("quit-confirm-nosave", {"quit","cancel"});
 		if(confirm.show() == "quit") return true;
 	}
 	return false;

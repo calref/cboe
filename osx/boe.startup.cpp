@@ -77,7 +77,7 @@ bool handle_startup_press(location the_point) {
 					
 				case STARTBTN_JOIN: // regular scen
 					if(!party_in_memory) {
-						cChoiceDlog("need-party.xml").show();
+						cChoiceDlog("need-party").show();
 						break;
 					}
 					scen = pick_prefab_scen();
@@ -96,7 +96,7 @@ bool handle_startup_press(location the_point) {
 					
 				case STARTBTN_CUSTOM: // custom
 					if(!party_in_memory) {
-						cChoiceDlog("need-party.xml").show();
+						cChoiceDlog("need-party").show();
 						break;
 					}
 					// if not reg, rub out
@@ -104,7 +104,7 @@ bool handle_startup_press(location the_point) {
 					scen = pick_a_scen();
 					if(scen < 0) break;
 					if(scen_headers.data(scen).prog_make_ver[0] >= 2) {
-						cChoiceDlog("scen-version-mismatch.xml").show();
+						cChoiceDlog("scen-version-mismatch").show();
 						break;
 					}
 					scen_name = scen_headers.strs(scen).file;

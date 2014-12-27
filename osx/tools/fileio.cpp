@@ -546,7 +546,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	// the three flags still follow that.
 	FILE* file_id = fopen(file_to_load.c_str(), "rb");
 	if(file_id == NULL) {
-		cChoiceDlog("load-game-fail.xml").show();
+		cChoiceDlog("load-game-fail").show();
 		return false;
 	}
 	
@@ -555,7 +555,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	n = fread(&flags, len, 1, file_id);
 	if(n < 1) {
 		fclose(file_id);
-		cChoiceDlog("not-save-game.xml").show();
+		cChoiceDlog("not-save-game").show();
 		return false;
 	}
 	
@@ -634,7 +634,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 		case new_oboe:
 			return load_party_v2(file_to_load, univ, town_restore, in_scen, maps_there);
 		case unknown:
-			cChoiceDlog("not-save-game.xml").show();
+			cChoiceDlog("not-save-game").show();
 			return false;
 	}
 	
@@ -791,7 +791,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	{ // Load main party data first
 		std::istream& fin = partyIn.getFile("save/party.txt");
 		if(!fin) {
-			cChoiceDlog("load-game-fail.xml").show();
+			cChoiceDlog("load-game-fail").show();
 			return false;
 		}
 		univ.party.readFrom(fin);
@@ -800,7 +800,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	{ // Then the "setup" array
 		std::istream& fin = partyIn.getFile("save/setup.dat");
 		if(!fin) {
-			cChoiceDlog("load-game-fail.xml").show();
+			cChoiceDlog("load-game-fail").show();
 			return false;
 		}
 		uint16_t magic;
@@ -819,7 +819,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		fname[7] = i + '1';
 		std::istream& fin = partyIn.getFile(fname);
 		if(!fin) {
-			cChoiceDlog("load-game-fail.xml").show();
+			cChoiceDlog("load-game-fail").show();
 			return false;
 		}
 		univ.party[i].readFrom(fin);
@@ -830,7 +830,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 			// Load town data
 			std::istream& fin = partyIn.getFile("save/town.txt");
 			if(!fin) {
-				cChoiceDlog("load-game-fail.xml").show();
+				cChoiceDlog("load-game-fail").show();
 				return false;
 			}
 			univ.town.readFrom(fin);
@@ -849,7 +849,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		// Load outdoors data
 		std::istream& fin = partyIn.getFile("save/out.txt");
 		if(!fin) {
-			cChoiceDlog("load-game-fail.xml").show();
+			cChoiceDlog("load-game-fail").show();
 			return false;
 		}
 		univ.out.readFrom(fin);

@@ -232,7 +232,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 					case 11: // pick out
 						if(change_made) {
-							if(!save_check("save-section-confirm.xml"))
+							if(!save_check("save-section-confirm"))
 								break;
 						}
 						spot_hit = pick_out(cur_out);
@@ -249,10 +249,10 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 					case 16: // pick town
 						if(change_made) {
-							if(!save_check("save-section-confirm.xml"))
+							if(!save_check("save-section-confirm"))
 								break;
 						}
-						x = pick_town_num("select-town-edit.xml",cur_town);
+						x = pick_town_num("select-town-edit",cur_town);
 						if(x >= 0){
 							cur_town = x;
 							town = scenario.towns[cur_town];
@@ -839,7 +839,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				}
 				if(!editing_town) {
 					if((spot_hit.x == 0) || (spot_hit.x == 47) || (spot_hit.y == 0) || (spot_hit.y == 47)) {
-						cChoiceDlog("not-at-edge.xml").show();
+						cChoiceDlog("not-at-edge").show();
 						break;
 					}
 					for(x = 0; x < 18; x++)
@@ -885,7 +885,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				set_cursor(wand_curs);
 				break;
 			case MODE_SET_OUT_START: //edit out start loc
-				if(cChoiceDlog("set-out-start-confirm.xml", {"okay", "cancel"}).show() == "cancel")
+				if(cChoiceDlog("set-out-start-confirm", {"okay", "cancel"}).show() == "cancel")
 					break;
 				if((spot_hit.x != minmax(4,43,spot_hit.x)) ||
 					(spot_hit.y != minmax(4,43,spot_hit.y))) {
@@ -1927,7 +1927,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	}
 	if(scenario.ter_types[terrain_type].special == eTerSpec::IS_A_SIGN && !editing_town) {
 		if((l.x == 0) || (l.x == 47) || (l.y == 0) || (l.y == 47)) {
-			cChoiceDlog("not-at-edge.xml").show();
+			cChoiceDlog("not-at-edge").show();
 			mouse_button_held = false;
 			return;
 		}
@@ -2896,7 +2896,7 @@ void place_edit_special(location loc) {
 	
 	if(!editing_town) {
 		if((loc.x == 0) || (loc.x == 47) || (loc.y == 0) || (loc.y == 47)) {
-			cChoiceDlog("not-at-edge.xml").show();
+			cChoiceDlog("not-at-edge").show();
 			return;
 		}
 		for(i = 0; i < 18; i++)
@@ -2955,7 +2955,7 @@ void set_special(location spot_hit) {
 	}
 	if(!editing_town) {
 		if((spot_hit.x == 0) || (spot_hit.x == 47) || (spot_hit.y == 0) || (spot_hit.y == 47)) {
-			cChoiceDlog("not-at-edge.xml").show();
+			cChoiceDlog("not-at-edge").show();
 			return;
 		}
 		for(x = 0; x < 18; x++)
@@ -3000,13 +3000,13 @@ void town_entry(location spot_hit) {
 	y = -2;
 	for(x = 0; x < 8; x++)
 		if((current_terrain->exit_locs[x].x == spot_hit.x) && (current_terrain->exit_locs[x].y == spot_hit.y)) {
-			y = pick_town_num("select-town-enter.xml",current_terrain->exit_dests[x]);
+			y = pick_town_num("select-town-enter",current_terrain->exit_dests[x]);
 			if(y >= 0) current_terrain->exit_dests[x] = y;
 		}
 	if(y == -2) {
 		for(x = 0; x < 8; x++)
 			if(current_terrain->exit_locs[x].x == 100) {
-				y = pick_town_num("select-town-enter.xml",0);
+				y = pick_town_num("select-town-enter",0);
 				if(y >= 0) {
 					current_terrain->exit_dests[x] = y;
 					current_terrain->exit_locs[x] = spot_hit;

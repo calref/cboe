@@ -441,7 +441,7 @@ bool pc_combat_move(location destination) {
 			s1 = univ.town.monst[monst_hit].attitude;
 			if(s1 % 2 == 1) s2 = 2;
 			else {
-				std::string result = cChoiceDlog("attack-friendly.xml",{"cancel","attack"}).show();
+				std::string result = cChoiceDlog("attack-friendly",{"cancel","attack"}).show();
 				if(result == "cancel") s2 = 1;
 				else if(result == "attack") s2 = 2;
 			}

@@ -461,7 +461,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			}
 			
 			// See what party wants to do.
-			choice = cChoiceDlog("locked-door-action.xml",{"leave","pick","bash"}).show();
+			choice = cChoiceDlog("locked-door-action",{"leave","pick","bash"}).show();
 			
 			can_enter = false;
 			if(choice == "leave")
@@ -2485,7 +2485,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				i = custom_choice_dialog(strs,27,PIC_DLOG,buttons);
 				// TODO: Make custom_choice_dialog return string?
 			}
-			else i = cChoiceDlog("basic-trap.xml",{"yes","no"}).show() == "no";
+			else i = cChoiceDlog("basic-trap",{"yes","no"}).show() == "no";
 			if(i == 1) {set_sd = false; *next_spec = -1; *a = 1;}
 			else {
 				if(is_combat())
@@ -3385,10 +3385,10 @@ void set_terrain(location l, ter_num_t terrain_type) {
 void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				   short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw) {
 	static const char*const stairDlogs[8] = {
-		"basic-stair-up.xml", "basic-stair-down.xml",
-		"basic-slope-up.xml", "basic-slope-down.xml",
-		"slimy-stair-up.xml", "slimy-stair-down.xml",
-		"dark-slope-up.xml", "dark-slope-down.xml"
+		"basic-stair-up", "basic-stair-down",
+		"basic-slope-up", "basic-slope-down",
+		"slimy-stair-up", "slimy-stair-down",
+		"dark-slope-up", "dark-slope-down"
 	};
 	bool check_mess = true;
 	std::array<std::string, 6> strs;
@@ -3530,7 +3530,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = -1;
 				check_mess = false;
 			}
-			else if(cChoiceDlog("basic-portal.xml",{"yes","no"}).show() == "yes") {
+			else if(cChoiceDlog("basic-portal",{"yes","no"}).show() == "yes") {
 				*a = 1;
 				if(which_mode == eSpecCtx::TALK)
 					teleport_party(spec.ex1a,spec.ex1b,1);
@@ -3538,7 +3538,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::TOWN_GENERIC_BUTTON:
-			if(cChoiceDlog("basic-button.xml",{"yes","no"}).show() == "yes")
+			if(cChoiceDlog("basic-button",{"yes","no"}).show() == "yes")
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::TOWN_GENERIC_STAIR:

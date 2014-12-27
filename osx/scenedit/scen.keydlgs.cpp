@@ -305,7 +305,7 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 void edit_text_str(short which_str,short mode) {
 	using namespace std::placeholders;
 	
-	cDialog dlog("edit-text.xml");
+	cDialog dlog("edit-text");
 	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, std::ref(which_str), mode), {"okay", "left", "right"});
 	
 	dlog["num"].setTextToNum(which_str);
@@ -344,7 +344,7 @@ static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, short
 bool edit_area_rect_str(short which_str,short mode) {
 	using namespace std::placeholders;
 	
-	cDialog dlog("set-area-desc.xml");
+	cDialog dlog("set-area-desc");
 	dlog.attachClickHandlers(std::bind(edit_area_rect_event_filter, _1, _2, which_str, mode), {"okay", "cancel"});
 	
 	if(mode == 0)
@@ -469,7 +469,7 @@ static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edi
 
 static bool discard_spec_enc(cDialog& me, node_stack_t& edit_stack) {
 	if(edit_stack.size() > 1) {
-		std::string action = cChoiceDlog("discard-special-node.xml", {"save", "cancel", "revert"}).show();
+		std::string action = cChoiceDlog("discard-special-node", {"save", "cancel", "revert"}).show();
 		if(action == "save") return true;
 		if(action == "cancel") return me.toast(false);
 		edit_stack.pop();
@@ -730,7 +730,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	if(the_node.pic < 0)
 		the_node.pic = 0;
 	
-	cDialog special("edit-special-node.xml",parent);
+	cDialog special("edit-special-node",parent);
 	special.attachClickHandlers(std::bind(commit_spec_enc, _1, _2, std::ref(edit_stack)), {"okay", "back"});
 	special.attachClickHandlers(std::bind(edit_spec_enc_type, _1, _2, std::ref(edit_stack)), {
 		"general", "oneshot", "affectpc", "ifthen", "town", "out", "rect"
@@ -929,7 +929,7 @@ void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent) {
 	using namespace std::placeholders;
 	short num_s_strs[3] = {100,90,100};
 	
-	cDialog edit("edit-special-text.xml", parent);
+	cDialog edit("edit-special-text", parent);
 	edit.attachClickHandlers(std::bind(edit_spec_text_event_filter, _1, _2, mode, str1, str2), {"okay", "cancel"});
 	
 	if(*str1 >= num_s_strs[mode])
@@ -1075,7 +1075,7 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 	}
 	
 	using namespace std::placeholders;
-	cDialog edit("edit-dialog-text.xml",parent);
+	cDialog edit("edit-dialog-text",parent);
 	edit.attachClickHandlers(std::bind(edit_dialog_text_event_filter, _1, _2, mode, str1), {"okay", "cancel"});
 	
 	if(*str1 >= 0){
@@ -1117,7 +1117,7 @@ static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, sho
 short edit_special_num(short mode,short what_start) {
 	using namespace std::placeholders;
 	
-	cDialog edit("edit-special-assign.xml");
+	cDialog edit("edit-special-assign");
 	edit.attachClickHandlers(std::bind(edit_special_num_event_filter, _1, _2, mode), {"okay", "cancel"});
 	
 	edit["num"].setTextToNum(what_start);
@@ -1157,7 +1157,7 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 void edit_scen_intro() {
 	short i;
 	
-	cDialog edit("edit-intro.xml");
+	cDialog edit("edit-intro");
 	edit.attachClickHandlers(edit_scen_intro_event_filter, {"okay", "cancel", "choose"});
 	
 	edit["picnum"].setTextToNum(scenario.intro_pic);

@@ -115,7 +115,7 @@ short char_select_pc(short active_only,short free_inv_only,const char *title) {
 	
 	make_cursor_sword();
 	
-	cDialog selectPc("select-pc.xml");
+	cDialog selectPc("select-pc");
 	selectPc.attachClickHandlers(select_pc_event_filter, {"cancel", "pick1", "pick2", "pick3", "pick4", "pick5", "pick6"});
 	
 	selectPc["title"].setText(title);
@@ -207,7 +207,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	
 	make_cursor_sword();
 	
-	cDialog pcInfo("pc-spell-info.xml", parent);
+	cDialog pcInfo("pc-spell-info", parent);
 	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
 	
 	for(i = 0; i < 62; i++) {
@@ -291,7 +291,7 @@ void pick_race_abil(cPlayer *pc,short mode) {
 	store_pc = pc;
 	make_cursor_sword();
 	
-	cDialog pickAbil("pick-race-abil.xml");
+	cDialog pickAbil("pick-race-abil");
 	pickAbil["done"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, true));
 	auto led_selector = std::bind(pick_race_select_led, _1, _2, _3, mode);
 	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5"});
@@ -318,7 +318,7 @@ void display_alchemy(bool allowEdit) {
 	
 	make_cursor_sword();
 	
-	cChoiceDlog showAlch("pc-alchemy-info.xml", {"done"});
+	cChoiceDlog showAlch("pc-alchemy-info", {"done"});
 	
 	for(i = 0; i < 20; i++) {
 		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);
@@ -601,7 +601,7 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	
 	std::map<eSkill,short> skills = univ.party[pc_num].skills;
 	
-	cDialog xpDlog("spend-xp.xml",parent);
+	cDialog xpDlog("spend-xp",parent);
 	xpDlog.addLabelFor("hp","Health (1/10)",LABEL_LEFT,75,true);
 	xpDlog.addLabelFor("sp","Spell Pts. (1/15)",LABEL_LEFT,75,true);
 	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(skills));

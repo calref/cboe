@@ -990,7 +990,7 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	view_loc = (is_out()) ? univ.party.p_loc : univ.town.p_loc;
 	make_cursor_sword();
 	
-	cChoiceDlog sign("view-sign.xml");
+	cChoiceDlog sign("view-sign");
 	cPict& pict = dynamic_cast<cPict&>(sign->getControl("ter"));
 	
 	store_sign_mode = sign_type;
@@ -1127,7 +1127,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 void pick_preferences() {
 	make_cursor_sword();
 	
-	cDialog prefsDlog("preferences.xml");
+	cDialog prefsDlog("preferences");
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
 	cLedGroup& displayMode = dynamic_cast<cLedGroup&>(prefsDlog["display"]);
@@ -1252,7 +1252,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 			put_party_stats(me);
 		} else if(item_hit == "delete") { // Note: This button is also used for "create new PC".
 			if(univ.party[which_pc].main_status != eMainStatus::ABSENT) {
-				if(cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show() == "yes")
+				if(cChoiceDlog("delete-pc-confirm",{"yes","no"}).show() == "yes")
 					univ.party[which_pc].main_status = eMainStatus::ABSENT;
 				put_party_stats(me);
 			}
@@ -1279,7 +1279,7 @@ void edit_party() {
 		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 	}
 	
-	cDialog pcDialog("edit-party.xml");
+	cDialog pcDialog("edit-party");
 	std::vector<std::string> buttons = {"done", "help"};
 	for(int i = 1; i <= 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i);
@@ -1329,7 +1329,7 @@ void tip_of_day() {
 	
 	make_cursor_sword();
 	
-	cDialog tips("tip-of-day.xml");
+	cDialog tips("tip-of-day");
 	tips.attachClickHandlers(&tip_of_day_event_filter,{"done","next"});
 	
 	place_str = get_str("tips",50 + store_tip_page_on);
@@ -1411,12 +1411,12 @@ short pick_a_scen() {
 	store_scen_page_on = 0;
 	
 	if(store_num_scen == 0) {
-		cChoiceDlog("no-scenarios.xml").show();
+		cChoiceDlog("no-scenarios").show();
 		return -1;
 	}
 	make_cursor_sword();
 	
-	cDialog pickScen("pick-scenario.xml");
+	cDialog pickScen("pick-scenario");
 	pickScen.attachClickHandlers(pick_a_scen_event_filter, {"cancel", "next", "prev", "start1", "start2", "start3"});
 	
 	put_scen_info(pickScen);
@@ -1434,7 +1434,7 @@ short pick_prefab_scen() {
 	
 	make_cursor_sword();
 	
-	cChoiceDlog pickScenario("pick-prefab-scen.xml", {"cancel", "scen1", "scen2", "scen3"});
+	cChoiceDlog pickScenario("pick-prefab-scen", {"cancel", "scen1", "scen2", "scen3"});
 	
 	std::string item_hit = pickScenario.show();
 	if(item_hit == "cancel") return -1;

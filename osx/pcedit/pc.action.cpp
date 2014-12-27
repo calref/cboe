@@ -134,7 +134,7 @@ void edit_gold_or_food(short which_to_edit) {
 	store_which_to_edit = which_to_edit;
 	
 	make_cursor_sword();
-	cDialog dlog("get-num.xml");
+	cDialog dlog("get-num");
 	dlog["okay"].attachClickHandler(get_num_event_filter);
 	if(which_to_edit == 0)
 		dlog["prompt"].setText("How much gold do you want?");
@@ -156,7 +156,7 @@ void edit_day() {
 	
 	make_cursor_sword();
 	
-	cDialog dlog("edit-day.xml");
+	cDialog dlog("edit-day");
 	dlog["okay"].attachClickHandler(get_num_event_filter);
 	
 	dlog["number"].setTextToNum(((univ.party.age) / 3700) + 1);
@@ -270,7 +270,7 @@ void edit_xp(cPlayer *pc) {
 	
 	make_cursor_sword();
 	
-	cDialog dlog("edit-xp.xml");
+	cDialog dlog("edit-xp");
 	dlog["okay"].attachClickHandler(get_num_event_filter);
 	
 	dlog["number"].setTextToNum(pc->experience);

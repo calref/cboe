@@ -214,7 +214,7 @@ location get_spec_loc(short which) {
 // 1 if pull
 // levers should always start to left.
 short handle_lever(location w) {
-	if(cChoiceDlog("basic-lever.xml",{"pull", "leave"}).show() == "leave")
+	if(cChoiceDlog("basic-lever",{"pull", "leave"}).show() == "leave")
 		return 0;
 	play_sound(94);
 	switch_lever(w);

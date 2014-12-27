@@ -205,7 +205,7 @@ void init_party_scen_data() {
 			if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
 				stored_item = true;
 	if(stored_item)
-		if(cChoiceDlog("keep-stored-items.xml", {"yes", "no"}).show() == "yes") {
+		if(cChoiceDlog("keep-stored-items", {"yes", "no"}).show() == "yes") {
 			std::vector<cItemRec*> saved_item_refs;
 			for(i = 0; i < 3;i++)
 				for(j = 0; j < NUM_TOWN_ITEMS; j++)
@@ -266,7 +266,7 @@ void put_party_in_scen(std::string scen_name) {
 			}
 		}
 	if(item_took)
-		cChoiceDlog("removed-special-items.xml").show();
+		cChoiceDlog("removed-special-items").show();
 	univ.party.age = 0;
 	for(i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;
@@ -2274,7 +2274,7 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	make_cursor_sword();
 	
-	cDialog castSpell("cast-spell.xml");
+	cDialog castSpell("cast-spell");
 	
 	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark), std::ref(former_spell)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
 	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, dark, former_spell), {"target1","target2","target3","target4","target5","target6"});
@@ -2475,7 +2475,7 @@ short alch_choice(short pc_num) {
 	
 	store_alchemy_pc = pc_num;
 	
-	cDialog chooseAlchemy("pick-potion.xml");
+	cDialog chooseAlchemy("pick-potion");
 	chooseAlchemy.attachClickHandlers(alch_choice_event_filter, {"cancel", "help"});
 	for(i = 0; i < 20; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
@@ -2546,7 +2546,7 @@ bool pick_pc_name(short pc_num,cDialog* parent) {
 	using namespace std::placeholders;
 	make_cursor_sword();
 	
-	cDialog pcPickName("pick-pc-name.xml", parent);
+	cDialog pcPickName("pick-pc-name", parent);
 	pcPickName["name"].setText(univ.party[pc_num].name);
 	pcPickName["okay"].attachClickHandler(std::bind(pc_name_event_filter, _1, pc_num));
 	
@@ -2563,7 +2563,7 @@ m_num_t pick_trapped_monst() {
 	
 	make_cursor_sword();
 	
-	cChoiceDlog soulCrystal("soul-crystal.xml",{"cancel","pick1","pick2","pick3","pick4"});
+	cChoiceDlog soulCrystal("soul-crystal",{"cancel","pick1","pick2","pick3","pick4"});
 	
 	for(i = 0; i < 4; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);

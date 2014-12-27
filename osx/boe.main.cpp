@@ -178,7 +178,7 @@ int main(int /*argc*/, char* argv[]) {
 		mainPtr.display();
 		
 		if(!game_run_before)
-			cChoiceDlog("welcome.xml").show();
+			cChoiceDlog("welcome").show();
 		else if(give_intro_hint)
 			tip_of_day();
 		game_run_before = true;
@@ -328,7 +328,7 @@ void Handle_One_Event() {
 		case sf::Event::Closed:
 			if(overall_mode == MODE_STARTUP) {
 				if(party_in_memory) {
-					std::string choice = cChoiceDlog("quit-confirm-save.xml", {"save","quit","cancel"}).show();
+					std::string choice = cChoiceDlog("quit-confirm-save", {"save","quit","cancel"}).show();
 					if(choice == "cancel") break;
 					if(choice == "save") {
 						fs::path file = nav_put_party();
@@ -340,12 +340,12 @@ void Handle_One_Event() {
 				break;
 			}
 			if(overall_mode > MODE_TOWN){
-				std::string choice = cChoiceDlog("quit-confirm-nosave.xml", {"quit", "cancel"}).show();
+				std::string choice = cChoiceDlog("quit-confirm-nosave", {"quit", "cancel"}).show();
 				if(choice == "cancel")
 					break;
 			}
 			else {
-				std::string choice = cChoiceDlog("quit-confirm-save.xml", {"save", "quit", "cancel"}).show();
+				std::string choice = cChoiceDlog("quit-confirm-save", {"save", "quit", "cancel"}).show();
 				if(choice == "cancel")
 					break;
 				if(choice == "save")
@@ -433,7 +433,7 @@ void handle_apple_menu(int item_hit) {
 	
 	switch(item_hit) {
 		case 1:
-			cChoiceDlog("about-boe.xml").show();
+			cChoiceDlog("about-boe").show();
 			break;
 		default:
 //			GetItem (apple_menu,item_hit,desk_acc_name);
@@ -458,7 +458,7 @@ void handle_file_menu(int item_hit) {
 			break;
 		case 4:
 			if(overall_mode != MODE_STARTUP) {
-				choice = cChoiceDlog("restart-game.xml",{"okay","cancel"}).show();
+				choice = cChoiceDlog("restart-game",{"okay","cancel"}).show();
 				if(choice == "cancel")
 					return;
 				for(i = 0; i < 6; i++)
@@ -479,7 +479,7 @@ void handle_file_menu(int item_hit) {
 			
 			if(overall_mode == MODE_STARTUP) {
 				if(party_in_memory) {
-					std::string choice = cChoiceDlog("quit-confirm-save.xml", {"save","quit","cancel"}).show();
+					std::string choice = cChoiceDlog("quit-confirm-save", {"save","quit","cancel"}).show();
 					if(choice == "cancel") break;
 					if(choice == "save") {
 						fs::path file = nav_put_party();
@@ -491,12 +491,12 @@ void handle_file_menu(int item_hit) {
 				break;
 			}
 			if(overall_mode > MODE_TOWN) {
-				choice = cChoiceDlog("quit-confirm-nosave.xml",{"quit","cancel"}).show();
+				choice = cChoiceDlog("quit-confirm-nosave",{"quit","cancel"}).show();
 				if(choice == "cancel")
 					return;
 			}
 			else {
-				choice = cChoiceDlog("quit-confirm-save.xml",{"quit","save","cancel"}).show();
+				choice = cChoiceDlog("quit-confirm-save",{"quit","save","cancel"}).show();
 				if(choice == "cancel")
 					break;
 				if(choice == "save")
@@ -526,7 +526,7 @@ void handle_options_menu(int item_hit) {
 			else {
 				choice = char_select_pc(0,0,"Delete who?");
 				if(choice < 6) {
-					std::string confirm = cChoiceDlog("delete-pc-confirm.xml",{"yes","no"}).show();
+					std::string confirm = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
 					if(confirm == "yes")
 						kill_pc(choice,eMainStatus::ABSENT);
 				}
@@ -597,12 +597,12 @@ void handle_options_menu(int item_hit) {
 void handle_help_menu(int item_hit) {
 	std::string dialogToShow;
 	switch(item_hit) {
-		case 1: dialogToShow = "help-outdoor.xml"; break;
-		case 2: dialogToShow = "help-town.xml"; break;
-		case 3: dialogToShow = "help-combat.xml"; break;
-		case 4: dialogToShow = "help-fields.xml"; break;
-		case 6: dialogToShow = "help-hints.xml"; break;
-		case 7: dialogToShow = "help-magic.xml"; break;
+		case 1: dialogToShow = "help-outdoor"; break;
+		case 2: dialogToShow = "help-town"; break;
+		case 3: dialogToShow = "help-combat"; break;
+		case 4: dialogToShow = "help-fields"; break;
+		case 6: dialogToShow = "help-hints"; break;
+		case 7: dialogToShow = "help-magic"; break;
 	}
 	if(!dialogToShow.empty())
 		cChoiceDlog(dialogToShow).show();
@@ -623,7 +623,7 @@ void handle_library_menu(int item_hit) {
 		case 5:
 			tip_of_day(); break;
 		case 7:
-			cChoiceDlog("welcome.xml").show();
+			cChoiceDlog("welcome").show();
 			break;
 	}
 }

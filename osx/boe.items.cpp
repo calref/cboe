@@ -562,7 +562,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 		add_string_to_buf("Drop: Item is cursed.           ");
 	else switch(overall_mode) {
 		case MODE_OUTDOORS:
-			choice = cChoiceDlog("drop-item-confirm.xml",{"okay","cancel"}).show();
+			choice = cChoiceDlog("drop-item-confirm",{"okay","cancel"}).show();
 			if(choice == "cancel")
 				return;
 			add_string_to_buf("Drop: OK");
@@ -975,7 +975,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 		item = *item_array[item_hit];
 		if(item.property) {
 			if(me.getResult<bool>()) {
-				std::string choice = cChoiceDlog("steal-item.xml",{"steal","leave"}).show();
+				std::string choice = cChoiceDlog("steal-item",{"steal","leave"}).show();
 				if(choice == "leave") return true;
 				me.setResult(true);
 			}
@@ -1059,7 +1059,7 @@ bool show_get_items(std::string titleText, std::vector<cItemRec*>& itemRefs, sho
 	if(!pc_gworld_loaded)
 		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 	
-	cDialog itemDialog("get-items.xml");
+	cDialog itemDialog("get-items");
 	auto handler = std::bind(display_item_event_filter, _1, _2, std::ref(first_item), std::ref(pc_getting), std::ref(itemRefs), overload);
 	itemDialog.attachClickHandlers(handler, {"done", "up", "down"});
 	itemDialog.attachClickHandlers(handler, {"pc1", "pc2", "pc3", "pc4", "pc5", "pc6"});
@@ -1112,7 +1112,7 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 }
 
 void custom_pic_dialog(std::string title, pic_num_t bigpic) {
-	cDialog pic_dlg("show-map.xml");
+	cDialog pic_dlg("show-map");
 	cControl& okay = pic_dlg["okay"];
 	cControl& text = pic_dlg["title"];
 	okay.attachClickHandler(std::bind(&cDialog::toast, &pic_dlg, false));
@@ -1182,7 +1182,7 @@ short get_num_of_items(short max_num) {
 	
 	make_cursor_sword();
 	
-	cDialog numPanel("get-num.xml");
+	cDialog numPanel("get-num");
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
 	sprintf((char *) sign_text,"How many? (0-%d) ",max_num);
@@ -1426,7 +1426,7 @@ static bool get_text_response_event_filter(cDialog& me, std::string, eKeyMod) {
 std::string get_text_response(std::string prompt, pic_num_t pic) {
 	make_cursor_sword();
 	
-	cDialog strPanel("get-response.xml");
+	cDialog strPanel("get-response");
 	strPanel.attachClickHandlers(get_text_response_event_filter, {"okay"});
 	if(!prompt.empty()) {
 		dynamic_cast<cPict&>(strPanel["pic"]).setPict(pic);
@@ -1445,7 +1445,7 @@ short get_num_response(short min, short max, std::string prompt) {
 	
 	make_cursor_sword();
 	
-	cDialog numPanel("get-num.xml");
+	cDialog numPanel("get-num");
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
 	sout << " (" << min << '-' << max << ')';

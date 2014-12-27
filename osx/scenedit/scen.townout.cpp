@@ -107,7 +107,7 @@ void edit_placed_monst(short which_m) {
 	store_placed_monst = town->creatures(which_m);
 	store_which_placed_monst = which_m;
 	
-	cDialog edit("edit-townperson.xml");
+	cDialog edit("edit-townperson");
 	edit.attachClickHandlers(edit_placed_monst_event_filter, {"type-edit", "pict-edit", "okay", "cancel", "more"});
 	
 	put_placed_monst_in_dlog(edit);
@@ -175,7 +175,7 @@ static bool edit_placed_monst_adv_time_flag(cDialog& me, std::string id, bool lo
 cCreature edit_placed_monst_adv(cCreature monst_record, cDialog& parent) {
 	store_placed_monst2 = monst_record;
 	
-	cDialog edit("edit-townperson-advanced.xml", &parent);
+	cDialog edit("edit-townperson-advanced", &parent);
 	edit["okay"].attachClickHandler(edit_placed_monst_adv_event_filter);
 	edit["cancel"].attachClickHandler(edit_placed_monst_adv_event_filter);
 	edit["time"].attachFocusHandler(edit_placed_monst_adv_time_flag);
@@ -242,7 +242,7 @@ void edit_placed_item(short which_i) {
 	
 	cTown::cItem placed_item = town->preset_items[which_i];
 	
-	cDialog item_dlg("edit-placed-item.xml");
+	cDialog item_dlg("edit-placed-item");
 	item_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &item_dlg, false));
 	item_dlg["okay"].attachClickHandler(std::bind(get_placed_item_in_dlog, _1, std::ref(placed_item), which_i));
 	item_dlg["choose"].attachClickHandler(std::bind(edit_placed_item_event_filter, _1, std::ref(placed_item), which_i));
@@ -273,7 +273,7 @@ void edit_sign(short which_sign,short picture) {
 	using namespace std::placeholders;
 	location view_loc;
 	
-	cDialog sign_dlg("edit-sign.xml");
+	cDialog sign_dlg("edit-sign");
 	sign_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &sign_dlg, false));
 	sign_dlg["okay"].attachClickHandler(std::bind(edit_sign_event_filter, _1, which_sign));
 	cPict& icon = dynamic_cast<cPict&>(sign_dlg["pic"]);
@@ -345,7 +345,7 @@ void edit_roomdescs(bool town) {
 	bool str_do_delete[16] = {0};
 	int numDescs = town ? 16 : 8;
 	
-	cDialog room_dlg(town ? "edit-town-roomdescs.xml" : "edit-out-roomdescs.xml");
+	cDialog room_dlg(town ? "edit-town-roomdescs" : "edit-out-roomdescs");
 	room_dlg["okay"].attachClickHandler(std::bind(save_roomdescs, _1, town, str_do_delete));
 	room_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &room_dlg, false));
 	for(int i = 0; i < numDescs; i++) {
@@ -398,7 +398,7 @@ static bool save_ter_change(cDialog& me, std::string, eKeyMod) {
 
 bool change_ter(short& change_from,short& change_to,short& chance) {
 	using namespace std::placeholders;
-	cDialog chg_dlg("change-terrain.xml");
+	cDialog chg_dlg("change-terrain");
 	chg_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &chg_dlg, false));
 	chg_dlg["okay"].attachClickHandler(save_ter_change);
 	chg_dlg["chance"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "The chance"));
@@ -424,7 +424,7 @@ static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
 void outdoor_details() {
 	char temp_str[256];
 	
-	cDialog out_dlg("edit-outdoor-details.xml");
+	cDialog out_dlg("edit-outdoor-details");
 	out_dlg["okay"].attachClickHandler(outdoor_details_event_filter);
 	snprintf(temp_str,256,"X = %d, Y = %d",cur_out.x,cur_out.y);
 	out_dlg["loc"].setText(temp_str);
@@ -546,7 +546,7 @@ void edit_out_wand(short mode) {
 	short which_out_wand = 0;
 	cOutdoors::cWandering store_out_wand = (mode == 0) ? current_terrain->wandering[0] : current_terrain->special_enc[0];
 	
-	cDialog wand_dlg("edit-outdoor-encounter.xml");
+	cDialog wand_dlg("edit-outdoor-encounter");
 	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	
 	wand_dlg["endx"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 299, "First part of Stuff Done flag", "-1 if not used"));
@@ -606,7 +606,7 @@ static void put_town_details_in_dlog(cDialog& me) {
 
 void edit_town_details() {
 	using namespace std::placeholders;
-	cDialog town_dlg("edit-town-details.xml");
+	cDialog town_dlg("edit-town-details");
 	town_dlg["okay"].attachClickHandler(save_town_details);
 	town_dlg["chop"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10000, "The day the town becomes abandoned", "-1 if it doesn't"));
 	town_dlg["key"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10, "The event which prevents the town from becoming abandoned", "-1 or 0 for none"));
@@ -661,7 +661,7 @@ static bool edit_town_events_event_filter(cDialog& me, std::string item_hit, eKe
 void edit_town_events() {
 	using namespace std::placeholders;
 	
-	cDialog evt_dlg("edit-town-events.xml");
+	cDialog evt_dlg("edit-town-events");
 	evt_dlg["okay"].attachClickHandler(save_town_events);
 	evt_dlg.attachClickHandlers(edit_town_events_event_filter, {"edit1", "edit2", "edit3", "edit4", "edit5", "edit6", "edit7", "edit8"});
 	evt_dlg.attachFocusHandlers(std::bind(check_range_msg, _1, _2, _3, -1, 99, "The town special node", "-1 for no special"), {"spec1", "spec2", "spec3", "spec4", "spec5", "spec6", "spec7", "spec8"});
@@ -701,7 +701,7 @@ static void put_advanced_town_in_dlog(cDialog& me) {
 void edit_advanced_town() {
 	using namespace std::placeholders;
 	
-	cDialog town_dlg("edit-town-advanced.xml");
+	cDialog town_dlg("edit-town-advanced");
 	town_dlg["okay"].attachClickHandler(save_advanced_town);
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	auto loc_check = std::bind(check_range_msg, _1, _2, _3, -1, 47, "The town exit coordinates", "-1 if you want them ignored");
@@ -759,7 +759,7 @@ static bool edit_town_wand_event_filter(cDialog& me, std::string item_hit, eKeyM
 void edit_town_wand() {
 	using namespace std::placeholders;
 	
-	cDialog wand_dlg("edit-town-wandering.xml");
+	cDialog wand_dlg("edit-town-wandering");
 	wand_dlg["okay"].attachClickHandler(save_town_wand);
 	auto check_monst = std::bind(check_range_msg, _1, _2, _3, 0, 255, "Wandering monsters", "0 means no monster");
 	// Just go through and attach the same focus handler to ALL text fields.
@@ -1155,7 +1155,7 @@ location pick_out(location default_loc) {
 	using namespace std::placeholders;
 	location prev_loc = default_loc;
 	
-	cDialog out_dlg("select-sector.xml");
+	cDialog out_dlg("select-sector");
 	out_dlg["okay"].attachClickHandler(std::bind(finish_pick_out, _1, true, std::ref(default_loc), prev_loc));
 	out_dlg["cancel"].attachClickHandler(std::bind(finish_pick_out, _1, false, std::ref(default_loc), prev_loc));
 	out_dlg.attachClickHandlers(std::bind(pick_out_event_filter, _1, _2, std::ref(default_loc)), {"xplus", "xminus", "yplus", "yminus"});

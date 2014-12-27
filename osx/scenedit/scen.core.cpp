@@ -326,7 +326,7 @@ static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which_ter
 
 short edit_ter_type(ter_num_t which_ter) {
 	using namespace std::placeholders;
-	cDialog ter_dlg("edit-terrain.xml");
+	cDialog ter_dlg("edit-terrain");
 	// Attach handlers
 	ter_dlg["pict"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,2999,"terrain graphic"));
 	ter_dlg["pickpict"].attachClickHandler(std::bind(pick_picture,PIC_TER,_1,"pict","graphic",0));
@@ -548,7 +548,7 @@ short edit_monst_type(short which_monst) {
 	using namespace std::placeholders;
 	cMonster store_monst = scenario.scen_monsters[which_monst];
 	
-	cDialog monst_dlg("edit-monster.xml");
+	cDialog monst_dlg("edit-monster");
 	monst_dlg["pickicon"].attachClickHandler(std::bind(pick_picture,PIC_MONST,_1,"pic","icon",0));
 	monst_dlg["picktalk"].attachClickHandler(std::bind(pick_picture,PIC_TALK,_1,"talk","",0));
 	monst_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &monst_dlg, false));
@@ -677,7 +677,7 @@ cMonster edit_monst_abil(cMonster starting_record,short which_monst) {
 	using namespace std::placeholders;
 	cMonster store_monst = starting_record;
 	
-	cDialog monst_dlg("edit-monster-abils.xml");
+	cDialog monst_dlg("edit-monster-abils");
 	monst_dlg["poison"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 8, "Poison"));
 	monst_dlg["breath-str"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 4, "Breath Damage"));
 	monst_dlg["loot-item"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 399, "Item To Drop", "-1 for no item"));
@@ -929,7 +929,7 @@ short edit_item_type(short which_item) {
 	using namespace std::placeholders;
 	cItemRec store_item = scenario.scen_items[which_item];
 	
-	cDialog item_dlg("edit-item.xml");
+	cDialog item_dlg("edit-item");
 	item_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 50, "Item Level"));
 	item_dlg["awkward"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 20, "Awkward"));
 	item_dlg["bonus"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 60, "Bonus"));
@@ -1067,7 +1067,7 @@ cItemRec edit_item_abil(cItemRec starting_record,short which_item) {
 	
 	cItemRec store_item = starting_record;
 	
-	cDialog item_dlg("edit-item-abils.xml");
+	cDialog item_dlg("edit-item-abils");
 	if(store_item.ability != eItemAbil::SUMMONING && store_item.ability != eItemAbil::MASS_SUMMONING) {
 		item_dlg["str"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 10, "Ability Strength"));
 	} else {
@@ -1146,7 +1146,7 @@ void edit_spec_item(short which_item) {
 	using namespace std::placeholders;
 	cSpecItem store_item = scenario.special_items[which_item];
 	
-	cDialog item_dlg("edit-special-item.xml");
+	cDialog item_dlg("edit-special-item");
 	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 255, "Scenario special node called", "-1 for no special"));
 	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(store_item), which_item), {"okay", "cancel", "clear", "edit-spec", "left", "right"});
 	
@@ -1213,7 +1213,7 @@ static bool edit_save_rects_event_filter(cDialog& me, std::string item_hit) {
 void edit_save_rects() {
 	using namespace std::placeholders;
 	
-	cDialog save_dlg("edit-save-rects.xml");
+	cDialog save_dlg("edit-save-rects");
 	save_dlg.attachClickHandlers(std::bind(edit_save_rects_event_filter, _1, _2), {"okay"});
 	
 	put_save_rects_in_dlog(save_dlg);
@@ -1276,7 +1276,7 @@ void edit_horses() {
 	using namespace std::placeholders;
 	size_t page = 0;
 	
-	cDialog horse_dlg("edit-horses.xml");
+	cDialog horse_dlg("edit-horses");
 	horse_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.horses, 30, std::ref(page)), {"okay", "left", "right"});
 	
 	put_vehicles_in_dlog(horse_dlg, scenario.horses, page);
@@ -1288,7 +1288,7 @@ void edit_boats() {
 	using namespace std::placeholders;
 	size_t page = 0;
 	
-	cDialog boat_dlg("edit-boats.xml");
+	cDialog boat_dlg("edit-boats");
 	boat_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.boats, 30, std::ref(page)), {"okay", "left", "right"});
 	
 	put_vehicles_in_dlog(boat_dlg, scenario.boats, page);
@@ -1336,7 +1336,7 @@ static bool edit_add_town_event_filter(cDialog& me, std::string item_hit) {
 void edit_add_town() {
 	using namespace std::placeholders;
 	
-	cDialog vary_dlg("edit-town-varying.xml");
+	cDialog vary_dlg("edit-town-varying");
 	vary_dlg.attachClickHandlers(std::bind(edit_add_town_event_filter, _1, _2), {"okay"});
 	
 	put_add_town_in_dlog(vary_dlg);
@@ -1426,7 +1426,7 @@ void edit_item_placement() {
 	cScenario::cItemStorage store_storage = scenario.storage_shortcuts[0];
 	short cur_shortcut = 0;
 	
-	cDialog shortcut_dlg("edit-item-shortcut.xml");
+	cDialog shortcut_dlg("edit-item-shortcut");
 	shortcut_dlg.attachClickHandlers(std::bind(edit_item_placement_event_filter, _1, _2, std::ref(store_storage), std::ref(cur_shortcut)), {"okay", "cancel", "left", "right", "choose-ter"});
 	for(int i = 0; i < 10; i++) {
 		std::string id = "choose-item" + std::to_string(i + 1);
@@ -1473,7 +1473,7 @@ static bool edit_scen_details_event_filter(cDialog& me, std::string, eKeyMod) {
 }
 
 void edit_scen_details() {
-	cDialog info_dlg("edit-scenario-details.xml");
+	cDialog info_dlg("edit-scenario-details");
 	info_dlg["okay"].attachClickHandler(edit_scen_details_event_filter);
 	
 	put_scen_details_in_dlog(info_dlg);
@@ -1505,7 +1505,7 @@ static bool edit_make_scen_1_event_filter(cDialog& me, std::string, eKeyMod) {
 }
 
 bool edit_make_scen_1(std::string& filename,std::string& title,bool& grass) {
-	cDialog new_dlog("make-scenario1.xml");
+	cDialog new_dlog("make-scenario1");
 	new_dlog["okay"].attachClickHandler(edit_make_scen_1_event_filter);
 	new_dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, false));
 	new_dlog.setResult(false);
@@ -1540,7 +1540,7 @@ static bool edit_make_scen_2_event_filter(cDialog& me, std::string, eKeyMod) {
 }
 
 bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, short& town_s, bool& def_town) {
-	cDialog new_dlog("make-scenario2.xml");
+	cDialog new_dlog("make-scenario2");
 	new_dlog["okay"].attachClickHandler(edit_make_scen_2_event_filter);
 	new_dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, false));
 	new_dlog.setResult(false);
@@ -1657,7 +1657,7 @@ void set_starting_loc() {
 	using namespace std::placeholders;
 	// ignore parent in Mac version
 	
-	cDialog loc_dlg("set-start-loc.xml");
+	cDialog loc_dlg("set-start-loc");
 	loc_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &loc_dlg, false));
 	loc_dlg["okay"].attachClickHandler(set_starting_loc_filter);
 	loc_dlg["town-num"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.num_towns - 1, "The starting town"));
@@ -1711,7 +1711,7 @@ static bool edit_scenario_events_event_filter(cDialog& me, std::string item_hit,
 void edit_scenario_events() {
 	using namespace std::placeholders;
 	
-	cDialog evt_dlg("edit-scenario-events.xml");
+	cDialog evt_dlg("edit-scenario-events");
 	evt_dlg["okay"].attachClickHandler(save_scenario_events);
 	for(int i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);

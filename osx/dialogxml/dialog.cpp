@@ -823,7 +823,7 @@ template<> pair<string,cStack*> cDialog::parse(Element& who /*stack*/) {
 cDialog::cDialog(cDialog* p) : parent(p) {}
 
 cDialog::cDialog(std::string path, cDialog* p) : parent(p) {
-	loadFromFile(path);
+	loadFromFile(path + ".xml");
 }
 
 extern fs::path progDir;

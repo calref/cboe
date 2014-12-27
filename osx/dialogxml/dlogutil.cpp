@@ -25,7 +25,7 @@ const size_t cPictChoice::per_page = 36;
 
 cPictChoice::cPictChoice(std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : cPictChoice(pics.begin(), pics.end(), t, parent) {}
 
-cPictChoice::cPictChoice(std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg("choose-pict.xml",parent) {
+cPictChoice::cPictChoice(std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg("choose-pict",parent) {
 	picts = pics;
 	attachHandlers();
 }
@@ -35,14 +35,14 @@ cPictChoice::cPictChoice(
 		std::vector<pic_num_t>::iterator end,
 		ePicType t,
 		cDialog* parent
-	) : dlg("choose-pict.xml",parent) {
+	) : dlg("choose-pict",parent) {
 	for(auto iter = begin; iter != end; iter++) {
 		picts.push_back({*iter,t});
 	}
 	attachHandlers();
 }
 
-cPictChoice::cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* parent) : dlg("choose-pict.xml",parent) {
+cPictChoice::cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* parent) : dlg("choose-pict",parent) {
 	for(pic_num_t i = first; i <= last; i++) {
 		picts.push_back({i,t});
 	}
@@ -158,7 +158,7 @@ cStringChoice::cStringChoice(
 		std::vector<std::string>& strs,
 		std::string title,
 		cDialog* parent
-	) : dlg("choose-string.xml",parent) {
+	) : dlg("choose-string",parent) {
 	if(!title.empty()) dlg["title"].setText(title);
 	strings = strs;
 	attachHandlers();
@@ -169,7 +169,7 @@ cStringChoice::cStringChoice(
 		std::vector<std::string>::iterator end,
 		std::string title,
 		cDialog* parent
-	) : dlg("choose-string.xml",parent) {
+	) : dlg("choose-string",parent) {
 	if(!title.empty()) dlg["title"].setText(title);
 	copy(begin,end,std::inserter(strings, strings.begin()));
 	attachHandlers();
@@ -458,7 +458,6 @@ std::string cStrDlog::getFileName(short n_strs, ePicType type, bool hasTitle){
 	if(hasTitle) sout << "-title";
 	if(type == PIC_DLOG_LG || type == PIC_CUSTOM_DLOG_LG || type == PIC_SCEN_LG)
 		sout << "-lg";
-	sout << ".xml";
 	return sout.str();
 }
 

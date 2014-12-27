@@ -96,12 +96,12 @@ void set_up_apple_events() {
 	}
 	
 	if(overall_mode < MODE_TALK_TOWN) {
-		std::string choice = cChoiceDlog("quit-confirm-save.xml", {"save", "quit", "cancel"}).show();
+		std::string choice = cChoiceDlog("quit-confirm-save", {"save", "quit", "cancel"}).show();
 		if(choice == "cancel") return; // TODO: Need to make sure the quit is actually cancelled here
 		if(choice == "save")
 			save_party(univ.file, univ);
 	} else {
-		std::string choice = cChoiceDlog("quit-confirm-nosave.xml", {"quit", "cancel"}).show();
+		std::string choice = cChoiceDlog("quit-confirm-nosave", {"quit", "cancel"}).show();
 		if(choice == "cancel") return; // TODO: Need to make sure the quit is actually cancelled here
 	}
 	

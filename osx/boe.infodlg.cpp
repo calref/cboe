@@ -124,7 +124,7 @@ void display_spells(eSkill mode,short force_spell,cDialog* parent) {
 	
 	make_cursor_sword();
 	
-	cDialog spellInfo("spell-info.xml", parent);
+	cDialog spellInfo("spell-info", parent);
 	spellInfo.attachClickHandlers(std::bind(display_spells_event_filter,_1,_2,mode), {"done","left","right"});
 	
 	dynamic_cast<cPict&>(spellInfo["icon"]).setPict(mode == eSkill::MAGE_SPELLS ? 14 : 15);
@@ -180,7 +180,7 @@ void display_skills(eSkill force_skill,cDialog* parent) {
 	
 	make_cursor_sword();
 	
-	cDialog skillDlog("skill-info.xml", parent);
+	cDialog skillDlog("skill-info", parent);
 	skillDlog.attachClickHandlers(display_skills_event_filter,{"done", "left", "right"});
 	
 	put_skill_info(skillDlog);
@@ -329,7 +329,7 @@ void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent) {
 	else store_i = univ.party[pc_num].items[item];
 	make_cursor_sword();
 	
-	cDialog itemInfo("item-info.xml",parent);
+	cDialog itemInfo("item-info",parent);
 	// By attaching the click handler to "id" and "magic", we suppress normal LED behaviour
 	itemInfo.attachClickHandlers(std::bind(display_pc_item_event_filter, _1, _2, std::ref(store_i), std::ref(item), pc_num), {"done","left","right","id","magic"});
 	
@@ -473,7 +473,7 @@ void display_monst(short array_pos,cCreature *which_m,short mode) {
 	
 	make_cursor_sword();
 	
-	cDialog monstInfo("monster-info.xml");
+	cDialog monstInfo("monster-info");
 	auto event_filter = std::bind(display_monst_event_filter, _1, _2,std::ref(store_m));
 	monstInfo["done"].attachClickHandler(std::bind(&cDialog::toast, &monstInfo, true));
 	monstInfo.attachClickHandlers(event_filter, {"left", "right"});
@@ -543,7 +543,7 @@ void display_alchemy() {
 	
 	make_cursor_sword();
 	
-	cDialog alchemy("many-str.xml");
+	cDialog alchemy("many-str");
 	alchemy.attachClickHandlers(display_alchemy_event_filter, {"done", "left", "right"});
 	
 	get_text = get_str("alchemy", 1);
@@ -680,7 +680,7 @@ void give_pc_info(short pc_num) {
 	
 	make_cursor_sword();
 	
-	cDialog pcInfo("pc-info.xml");
+	cDialog pcInfo("pc-info");
 	pcInfo.attachClickHandlers(std::bind(give_pc_info_event_filter, _1, _2, std::ref(pc_num)), {"done", "left", "right"});
 	pcInfo.attachClickHandlers(give_pc_extra_info, {"seemage", "seepriest", "trait", "alch"});
 	
@@ -753,7 +753,7 @@ void adventure_notes() {
 	
 	make_cursor_sword();
 	
-	cDialog encNotes("adventure-notes.xml");
+	cDialog encNotes("adventure-notes");
 	encNotes.attachClickHandlers(adventure_notes_event_filter, {"done", "left", "rigth", "del1", "del2", "del3"});
 	
 	for(i = 0; i < 3; i++) {
@@ -816,7 +816,7 @@ void talk_notes() {
 	
 	make_cursor_sword();
 	
-	cDialog talkNotes("talk-notes.xml");
+	cDialog talkNotes("talk-notes");
 	talkNotes.attachClickHandlers(talk_notes_event_filter, {"done", "left", "right", "del"});
 	
 	put_talk(talkNotes);
@@ -870,7 +870,7 @@ void journal() {
 	
 	make_cursor_sword();
 	
-	cDialog journal("event-journal.xml");
+	cDialog journal("event-journal");
 	journal.attachClickHandlers(journal_event_filter, {"done", "left", "right"});
 	
 	for(i = 0; i < 3; i++) {

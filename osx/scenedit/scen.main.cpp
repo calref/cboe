@@ -220,7 +220,7 @@ void Handle_Update() {
 void handle_apple_menu(int item_hit) {
 	switch(item_hit) {
 		case 1:
-			cChoiceDlog("about-scened.xml").show();
+			cChoiceDlog("about-scened").show();
 			break;
 	}
 }
@@ -253,7 +253,7 @@ void handle_file_menu(int item_hit) {
 			break;
 			
 		case 5: // quit
-			if(!save_check("save-before-quit.xml"))
+			if(!save_check("save-before-quit"))
 				break;
 			All_Done = true;
 			break;
@@ -371,15 +371,15 @@ void handle_scenario_menu(int item_hit) {
 				giveError("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.");
 				return;
 			}
-			if(cChoiceDlog("delete-town-confirm.xml", {"okay", "cancel"}).show() == "okay")
+			if(cChoiceDlog("delete-town-confirm", {"okay", "cancel"}).show() == "okay")
 				delete_last_town();
 			break;
 		case 20: // Write Data to Text File
-			if(cChoiceDlog("data-dump-confirm.xml", {"okay", "cancel"}).show() == "okay")
+			if(cChoiceDlog("data-dump-confirm", {"okay", "cancel"}).show() == "okay")
 				start_data_dump();
 			break;
 		case 21: // Do Full Text Dump
-			if(cChoiceDlog("text-dump-confirm.xml", {"okay", "cancel"}).show() == "okay")
+			if(cChoiceDlog("text-dump-confirm", {"okay", "cancel"}).show() == "okay")
 				scen_text_dump();
 			redraw_screen();
 			break;
@@ -415,18 +415,18 @@ void handle_town_menu(int item_hit) {
 			edit_roomdescs(true);
 			break;
 		case 8:
-			if(cChoiceDlog("add-random-items.xml", {"okay", "cancel"}).show() == "cancel")
+			if(cChoiceDlog("add-random-items", {"okay", "cancel"}).show() == "cancel")
 				break;
 			place_items_in_town();
 			break; // add random
 		case 9:
 			for(i = 0; i < 64; i++)
 				town->preset_items[i].property = 0;
-			cChoiceDlog("set-not-owned.xml").show();
+			cChoiceDlog("set-not-owned").show();
 			draw_terrain();
 			break; // set not prop
 		case 10:
-			if(cChoiceDlog("clear-items-confirm.xml", {"okay", "cancel"}).show() == "cancel")
+			if(cChoiceDlog("clear-items-confirm", {"okay", "cancel"}).show() == "cancel")
 				break;
 			for(i = 0; i < 64; i++)
 				town->preset_items[i].code = -1;
@@ -495,16 +495,16 @@ void handle_outdoor_menu(int item_hit) {
 void handle_help_menu(int item_hit) {
 	switch(item_hit) {
 		case 1:
-			cChoiceDlog("help-editing.xml").show();
+			cChoiceDlog("help-editing").show();
 			break; // started
 		case 2:
-			cChoiceDlog("help-testing.xml").show();
+			cChoiceDlog("help-testing").show();
 			break; // testing
 		case 3:
-			cChoiceDlog("help-distributing.xml").show();
+			cChoiceDlog("help-distributing").show();
 			break; // distributing
 		case 5:
-			cChoiceDlog("help-contest.xml").show();
+			cChoiceDlog("help-contest").show();
 			break; // contest
 	}
 }
