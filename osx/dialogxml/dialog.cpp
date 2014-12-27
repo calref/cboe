@@ -1159,7 +1159,8 @@ void cDialog::run(){
 			case sf::Event::TextEntered:
 				if(!pendingKey.spec && !currentFocus.empty()) {
 					pendingKey.c = currentEvent.text.unicode;
-					dynamic_cast<cTextField*>(controls[currentFocus])->handleInput(pendingKey);
+					if(pendingKey.c != '\t')
+						dynamic_cast<cTextField*>(controls[currentFocus])->handleInput(pendingKey);
 				}
 				break;
 			case sf::Event::MouseButtonPressed:
