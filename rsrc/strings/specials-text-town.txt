@@ -292,8 +292,8 @@ Unused
 Number of first message in dialog
 Unused
 Unused
-Terrain Picture number
-Unused
+Picture number
+Picture type
 Unused
 If Pulled, call this special ...
 Unused
@@ -308,8 +308,8 @@ Unused
 Number of first message in dialog
 Unused
 Unused
-Dialog Picture number
-Unused
+Picture number
+Picture type
 X coordinate to telep. to
 Y coordinate to telep. to
 Unused
@@ -324,8 +324,8 @@ Unused
 Number of first message in dialog
 Unused
 Unused
-Unused
-Unused
+Picture number
+Picture type
 X coordinate to place at
 Y coordinate to place at
 Unused

@@ -78,14 +78,14 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Display Dialog (Dialog pic)
+Display Dialog
 Stuff Done Flag Part A
 Stuff Done Flag Part B
 Number of first message in dialog
+Unused
 1 - add 'Leave'/'OK' button, else no
-Unused
-Dialog Picture number
-Unused
+Picture number
+Picture type
 Label of 2nd button (-1 - no button)
 Special if button 2 pressed
 Unused
@@ -94,46 +94,46 @@ Special if button 3 pressed
 Unused
 Special if OK/Leave picked
 --------------------
-Display Dialog (Terrain pic)
-Stuff Done Flag Part A
-Stuff Done Flag Part B
-Number of first message in dialog
-1 - add 'Leave'/'OK' button, else no
+Unused Node
 Unused
-Terrain Picture number
 Unused
-Label of 2nd button (-1 - no button)
-Special if button 2 pressed
 Unused
-Label of 3rd button (-1 - no button)
-Special if button 3 pressed
 Unused
-Special if OK/Leave picked
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
 --------------------
-Display Dialog (Monster pic)
-Stuff Done Flag Part A
-Stuff Done Flag Part B
-Number of first message in dialog
-1 - add 'Leave'/'OK' button, else no
+Unused Node
 Unused
-Monster Picture number
 Unused
-Label of 2nd button (-1 - no button)
-Special if button 2 pressed
 Unused
-Label of 3rd button (-1 - no button)
-Special if button 3 pressed
 Unused
-Special if OK/Leave picked
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
 --------------------
-Give Item (Dialog pic)
+Give Item Dialog
 Stuff Done Flag Part A
 Stuff Done Flag Part B
 Number of first message in dialog
+Unused
 Num. of spec. item to give (-1 none)
-Unused
-Dialog Picture number
-Unused
+Picture number
+Picture type
 Item to give
 Amount of gold to give
 Unused

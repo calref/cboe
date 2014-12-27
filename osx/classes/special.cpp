@@ -48,9 +48,30 @@ void cSpecial::append(legacy::special_node_type& old){
 	switch(old.type) {
 		case 55: case 58: case 189: // Large dialogs with 36x36 dialog graphics
 			pic -= 700;
+			pictype = PIC_DLOG;
+			m3 = m2;
+			m2 = -1;
 			break;
 		case 57: case 60: // Large dialogs with monster graphics
 			pic -= 400;
+			pictype = PIC_MONST;
+			m3 = m2;
+			m2 = -1;
+			if(old.type == 57) type = eSpecType::ONCE_DIALOG;
+			else if(old.type == 60) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
+			break;
+		case 56: case 59: case 188: // Large dialogs with terrain graphics
+			pictype = PIC_TER;
+			m3 = m2;
+			m2 = -1;
+			if(old.type == 56) type = eSpecType::ONCE_DIALOG;
+			else if(old.type == 59) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
+			break;
+		case 190: // Large stairway dialog
+			pic = 19;
+			pictype = PIC_DLOG;
+			m3 = m2;
+			m2 = -1;
 			break;
 			// TODO: Originally the block nodes supported messages; the new version doesn't.
 			// (Will probably need to make special nodes a dynamic vector before fixing this.)
@@ -193,7 +214,7 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // m - Create/Edit button to edit message pair (covers msg1 and msg2 together)
 // M - Create/Edit button to edit single message
 // $ - As above, but always a scenario message
-// d - Create/Edit button to edit dialog message sequence
+// d - Create/Edit button to edit dialog message sequence (covers msg1 and msg2 together)
 // b - Choose button to select a button label
 // p - Choose button to select a picture (uses pictype for type)
 // ? - Choose button to select a picture type
@@ -242,10 +263,10 @@ static const char*const button_dict[7][11] = {
 		"                                  ", // ex2c
 	}, { // one-shot nodes
 		"mm  mddddddmmm", // msg1
-		"        III   ", // msg2
-		"              ", // msg3
+		"              ", // msg2
+		"        III   ", // msg3
 		"     pppppp   ", // pic
-		"              ", // pictype
+		"     ??????   ", // pictype
 		"iI   bbbiii  X", // ex1a
 		"     sss      ", // ex1b
 		"              ", // ex1c
@@ -280,8 +301,8 @@ static const char*const button_dict[7][11] = {
 		"mmmmmmmmmmmmmmm   dddmmmmmmm", // msg1
 		"                            ", // msg2
 		"                            ", // msg3
-		"                  pp        ", // pic
-		"                            ", // pictype
+		"                  ppp       ", // pic
+		"                  ???       ", // pictype
 		"            c             L ", // ex1a
 		"              s s s      s @", // ex1b
 		"                            ", // ex1c

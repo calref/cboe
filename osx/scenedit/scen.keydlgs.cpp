@@ -599,7 +599,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 	else if(field == "msg2") btn = (*type).m2_btn;
 	else if(field == "msg3") btn = (*type).m3_btn;
 	else if(field == "pict") btn = (*type).p_btn;
-	else if(field == "picttype") btn = (*type).pt_btn;
+	else if(field == "pictype") btn = (*type).pt_btn;
 	else if(field == "x1a") btn = (*type).x1a_btn;
 	else if(field == "x1b") btn = (*type).x1b_btn;
 	else if(field == "x1c") btn = (*type).x1c_btn;
@@ -669,6 +669,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			choose_string = false;
 			if(pictype < 0) me["pictype"].setTextToNum(PIC_DLOG);
 			store = choose_graphic(val, pictype < 0 ? PIC_DLOG : ePicType(pictype), &me);
+			if(store < 0) store = val;
 			break;
 		case 'f': case 'F': choose_string = false; store = choose_field_type(val, &me, btn == 'F'); break;
 		case 'D': choose_string = false; store = choose_damage_type(val, &me); break;
@@ -685,7 +686,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case 'Q': strt = STRT_RACE; title = "Which species?"; break;
 		case 'T': strt = STRT_TOWN; title = "Which town?"; break;
 		case 'b': strt = STRT_BUTTON; title = "Which button?"; break;
-		case '?': strt = STRT_PICT; title = "Which picture type?"; break;
+		case '?': strt = STRT_PICT; title = "Which picture type?"; str_adj = -1; break;
 		case 'x': strt = STRT_SND; title = "Which sound?"; break;
 		case 'X': strt = STRT_TRAP; title = "What trap type?"; break;
 		case '=': strt = STRT_CMP; title = "What comparison method?"; str_adj = 2; break;
@@ -709,7 +710,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			break;
 	}
 	if(choose_string)
-		store = choose_text(strt, val, &me, title) - str_adj;
+		store = choose_text(strt, val + str_adj, &me, title) - str_adj;
 	me[field].setTextToNum(store);
 	return true;
 }

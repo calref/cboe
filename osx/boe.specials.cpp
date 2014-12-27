@@ -2399,37 +2399,28 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = false;
 			break;
 		case eSpecType::ONCE_DIALOG:
-		case eSpecType::ONCE_DIALOG_TERRAIN:
-		case eSpecType::ONCE_DIALOG_MONSTER:
 			check_mess = false;
 			if(spec.m1 < 0)
 				break;
 			for(i = 0; i < 3; i++)
 				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type, spec.m1 + i * 2,spec.m1 + i * 2 + 1);
-			if(spec.m2 > 0) {
+			if(spec.m3 > 0) {
 				buttons[0] = 1;
 				buttons[1] = spec.ex1a;
 				buttons[2] = spec.ex2a;
 				if((spec.ex1a >= 0) || (spec.ex2a >= 0))
 					buttons[0] = 20;
 			}
-			if(spec.m2 <= 0) {buttons[0] = spec.ex1a;buttons[1] = spec.ex2a;}
+			if(spec.m3 <= 0) {
+				buttons[0] = spec.ex1a;
+				buttons[1] = spec.ex2a;
+			}
 			if((buttons[0] < 0) && (buttons[1] < 0)) {
 				giveError("Dialog box ended up with no buttons.");
 				break;
 			}
-			switch(cur_node.type) {
-				case eSpecType::ONCE_DIALOG:
-					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_DLOG,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic, PIC_DLOG,buttons) ; break;
-				case eSpecType::ONCE_DIALOG_TERRAIN:
-					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_TER,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic,PIC_TER,buttons) ; break;
-				case eSpecType::ONCE_DIALOG_MONSTER:
-					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000, PIC_CUSTOM_MONST,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic, get_monst_pictype(spec.pic),buttons) ; break;
-			}
-			if(spec.m2 > 0) {
+			i = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
+			if(spec.m3 > 0) {
 				if(i == 1) {
 					if((spec.ex1a >= 0) || (spec.ex2a >= 0)) {
 						set_sd = false;
@@ -2444,26 +2435,13 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::ONCE_GIVE_ITEM_DIALOG:
-		case eSpecType::ONCE_GIVE_ITEM_TERRAIN:
-		case eSpecType::ONCE_GIVE_ITEM_MONSTER:
 			check_mess = false;
 			if(spec.m1 < 0)
 				break;
 			for(i = 0; i < 3; i++)
 				get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type, spec.m1 + i * 2,spec.m1 + i * 2 + 1);
 			buttons[0] = 20; buttons[1] = 19;
-			//i = custom_choice_dialog(strs,spec.pic,buttons) ;
-			switch(cur_node.type) {
-				case eSpecType::ONCE_GIVE_ITEM_DIALOG:
-					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_DLOG,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic,PIC_DLOG,buttons) ; break;
-				case eSpecType::ONCE_GIVE_ITEM_TERRAIN:
-					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_TER,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic,PIC_TER,buttons) ; break;
-				case eSpecType::ONCE_GIVE_ITEM_MONSTER:
-					if(spec.pic >= 1000) i = custom_choice_dialog(strs,spec.pic % 1000,PIC_CUSTOM_MONST,buttons) ;
-					else i = custom_choice_dialog(strs,spec.pic,get_monst_pictype(spec.pic),buttons) ; break;
-			}
+			i = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
 			if(i == 1) {set_sd = false; *next_spec = -1;}
 			else {
 				store_i = get_stored_item(spec.ex1a);
@@ -2473,10 +2451,10 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				else {
 					give_gold(spec.ex1b,true);
 					give_food(spec.ex2a,true);
-					if((spec.m2 >= 0) && (spec.m2 < 50)) {
-						if(univ.party.spec_items[spec.m2] == 0)
+					if((spec.m3 >= 0) && (spec.m3 < 50)) {
+						if(univ.party.spec_items[spec.m3] == 0)
 							ASB("You get a special item.");
-						univ.party.spec_items[spec.m2] = 1;
+						univ.party.spec_items[spec.m3] = 1;
 						*redraw = true;
 						if(stat_window == 6)
 							set_stat_window(6);
@@ -3600,8 +3578,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				for(i = 0; i < 3; i++)
 					get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type, spec.m1 + i * 2 ,spec.m1 + i * 2 + 1);
 				buttons[0] = 9; buttons[1] = 35;
-				// TODO: Handle custom pictures?
-				i = custom_choice_dialog(strs,spec.pic,PIC_TER,buttons);
+				i = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
 				if(i == 1) {*next_spec = -1;}
 				else {
 					ter = coord_to_ter(store_special_loc.x,store_special_loc.y);
@@ -3632,8 +3609,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				for(i = 0; i < 3; i++)
 					get_strs(strs[i * 2],strs[i * 2 + 1], cur_spec_type,spec.m1 + i * 2, spec.m1 + i * 2 + 1);
 				buttons[0] = 9; buttons[1] = 8;
-				// TODO: Wait, wait, aren't you supposed to be able to pick which picture to show?
-				i = custom_choice_dialog(strs,22,PIC_DLOG,buttons);
+				i = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
 				if(i == 1) {
 					*next_spec = -1;
 					if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
@@ -3673,8 +3649,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 				if(spec.ex2b == 1)
 					i = 2;
-				// TODO: Wait, wait, don't you get to choose the picture to show?
-				else i = custom_choice_dialog(strs,19,PIC_DLOG,buttons) ;
+				else i = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
 				*a = 1;
 				if(i == 1) {
 					*next_spec = -1;
