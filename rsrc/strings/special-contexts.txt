@@ -1,0 +1,103 @@
+Outdoors
+Town
+Combat
+
+
+Entering town
+Leaving town
+Talking
+Using special item
+Town event timer triggered
+Scenario event timer triggered
+Special node timer triggered
+Killed a monster
+Entetred outdoor combat
+Fled outdoor encounter
+Won outdoor encounter
+Targetung spell
+Using space
+Seeing a monster for the first time
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Looking
+In Boat
+On Horse

@@ -117,6 +117,9 @@ void cSpecial::append(legacy::special_node_type& old){
 			} else ex2a = 11;
 			ex2b = 0;
 			break;
+		case 154: // text response
+			ex1a -= 160;
+			break;
 		case 229: // Outdoor store - fix spell IDs
 			if(ex1b == 1 || ex1b == 2)
 				ex1a += 30;

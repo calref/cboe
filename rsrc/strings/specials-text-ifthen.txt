@@ -342,11 +342,11 @@ Unused
 Unused
 Unused
 Unused
-Required species (0 - human, 1 - nephil, 2 - slith)
-If enough of species present, call this special ...
+Required species
+If enough of species, call this special ...
 Unused
 Required number of species
-Comparison method (-2 - <=, -1 - <, 0 - =, 1 - >, 2 - >=)
+Comparison method (-2 .. 2)
 Unused
 Otherwise call this special
 --------------------
@@ -358,11 +358,11 @@ Unused
 Unused
 Unused
 Unused
-Required trait (0 - human, 1 - nephil, 2 - slith)
+Required trait
 If enough of trait present, call this special ...
 Unused
 Required number of trait
-Comparison method (-2 - <=, -1 - <, 0 - =, 1 - >, 2 - >=)
+Comparison method (-2 .. 2)
 Unused
 Otherwise call this special
 --------------------

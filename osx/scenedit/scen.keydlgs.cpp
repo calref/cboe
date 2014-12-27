@@ -215,10 +215,14 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 			strings.push_back("Maximum Spell Points");
 			break;
 		case STRT_TRAIT:
-			// TODO: Generate a list of traits names
+			for(int i = 0; i < 16; i++) {
+				strings.push_back(get_str("traits", i * 2 + 1));
+			}
 			break;
 		case STRT_RACE:
-			// TODO: Generate a list of race names
+			for(int i = 0; i < 20; i++) {
+				strings.push_back(get_str("traits", i * 2 + 33));
+			}
 			break;
 		case STRT_PICT:
 			strings = *ResMgr::get<StringRsrc>("picture-types");
@@ -253,7 +257,8 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 			strings = {"Fully Lit", "Dark", "Very Dark", "Totally Dark"};
 			break;
 		case STRT_CONTEXT:
-			// TODO: Generate a list of special node contexts
+			// TODO: This is a discontinous list, so there's probably a better way to deal with it...
+			strings = *ResMgr::get<StringRsrc>("special-contexts");
 			break;
 		case STRT_SHOP:
 			strings = {"Items", "Mage Spells", "Priest Spells", "Alchemy", "Healing", "Magic Shop: Junk", "Magic Shop: Lousy", "Magic Shop: So-so", "Magic Shop: Good", "Magic Shop: Great"};
@@ -642,7 +647,8 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			break;
 		case 'M': case '$':
 			choose_string = false;
-			// TODO: This might need a new dialog, or maybe a tweak of an existing one
+			edit_spec_text(mode, &val, nullptr, &me);
+			store = val;
 			break;
 		case 'd':
 			choose_string = false;
@@ -852,7 +858,7 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 				}
 			}
 		}
-		str = me["str2"].getText();
+		str = str2 == nullptr ? "" : me["str2"].getText();
 		if(!str.empty()) {
 			if(*str2 < 0) {
 				size_t n = num_strs(spec_str_mode);
@@ -935,7 +941,7 @@ void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent) {
 	using namespace std::placeholders;
 	short num_s_strs[3] = {100,90,100};
 	
-	cDialog edit("edit-special-text", parent);
+	cDialog edit(str2 ? "edit-special-text" : "edit-special-text-sm", parent);
 	edit.attachClickHandlers(std::bind(edit_spec_text_event_filter, _1, _2, mode, str1, str2), {"okay", "cancel"});
 	
 	if(*str1 >= num_s_strs[mode])
@@ -954,21 +960,23 @@ void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent) {
 		if(mode == 5)
 			edit["str1"].setText(town->sign_strs[*str1]);
 	}
-	if(*str2 >= num_s_strs[mode])
-		*str2 = -1;
-	if(*str2 >= 0){
-		if(mode == 0)
-			edit["str2"].setText(scenario.spec_strs[*str2]);
-		if(mode == 1)
-			edit["str2"].setText(current_terrain->spec_strs[*str2]);
-		if(mode == 2)
-			edit["str2"].setText(town->spec_strs[*str2]);
-		if(mode == 3)
-			edit["str2"].setText(scenario.journal_strs[*str2]);
-		if(mode == 4)
-			edit["str2"].setText(current_terrain->sign_strs[*str2]);
-		if(mode == 5)
-			edit["str2"].setText(town->sign_strs[*str2]);
+	if(str2 != nullptr) {
+		if(*str2 >= num_s_strs[mode])
+			*str2 = -1;
+		if(*str2 >= 0){
+			if(mode == 0)
+				edit["str2"].setText(scenario.spec_strs[*str2]);
+			if(mode == 1)
+				edit["str2"].setText(current_terrain->spec_strs[*str2]);
+			if(mode == 2)
+				edit["str2"].setText(town->spec_strs[*str2]);
+			if(mode == 3)
+				edit["str2"].setText(scenario.journal_strs[*str2]);
+			if(mode == 4)
+				edit["str2"].setText(current_terrain->sign_strs[*str2]);
+			if(mode == 5)
+				edit["str2"].setText(town->sign_strs[*str2]);
+		}
 	}
 	edit.run();
 }

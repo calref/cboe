@@ -34,7 +34,7 @@
 	<led name='good10' state='off' top='157' left='416'/>
 	<text size='large' top='30' left='55' width='65' height='18'>Species:</text>
 	<text name='xp' framed='true' top='352' left='254' width='50' height='16'/>
-	<text name='info' framed='true' top='282' left='15' width='149' height='59'>Select species and traits.</text>
+	<text name='info' framed='true' top='282' left='15' width='300' height='59'>Select species and traits.</text>
 	<!--
 	 TODO: If it looks wrong in-game, try reverting to original label widths.
 	 Original label widths were: 75 75 92 75 75 116 75 75 126 116 75 75 126

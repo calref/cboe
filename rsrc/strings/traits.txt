@@ -1,300 +1,71 @@
+Toughness
 This makes you more resistant to damage. Blows of all sorts have less of an effect on you.
+Magically Apt
 The possessor of this advantage will find that his or her spells will function better. This helps both Priest and Mage spells.
+Ambidextrous
 An ambidextrous warrior will be able to use one weapon in each hand without any penalties. Normally, using two weapons makes both of them much less likely to hit.
+Nimble Fingers
 Having nimble fingers improves one's chances of picking locks and disarming traps.
+Cave Lore
 When underground, knowledge of Cave Lore helps one hunt and forage for food and deal better with special circumstances.
+Woodsman
 When roaming the surface of the world, a Woodsman is able to hunt and bring down food, find useful herbs, and deal with circumstances involving nature's adversity.
+Good Constitution
 Someone with a Good Constitution will find that poison and disease have a reduced (although not eliminated) effect.
+Highly Alert
 Highly Alert people have the edginess that helps them resist magical sleep. In addition, having someone in your group who is Highly Alert may help keep you from being surprised.
+Exceptional Strength
 An Exceptionally Strong character will be able to carry much more stuff, and, in addition, will do a small amount more damage in combat.
+Recuperation
 A very few adventurers have magical blood running in their veins, causing them to heal damage to their bodies at an amazing rate.
+Sluggish
 Sluggish characters just can't move that quickly, even when circumstances seem to demand it. A sluggish character gets fewer action points in combat.
+Magically Inept
 Magically Inept characters, for some reason, resist the effects of magical items, and are unable to use them. Potions and scrolls won't work for them at all, although worn items, such as rings and armor, will have a small effect.
+Frail
 Frail characters are cursed at birth with a weak constitution. Poison and disease will have a greater effect on such characters.
+Chronic Disease
 Chronic Disease is the worst disadvantage a character may possess. Such characters have a slow, lingering, incurable physical ailment, causing them to occasionally suffer the effects of a mild disease.
+Bad Back
 A character with a Bad Back cannot bear to haul too much weight. Such a person cannot carry as much as he or she might have been able to otherwise.
+Pacifist
+
+Human
 Human is the default species in Blades of Exile. Humans have skins of a variety of hues, and are soft, generally fragile, and incredibly resourceful.
+Nephilim
 The Nephilim are a race of feline humanoids. Once common on the surface world, they have been hunted to near extinction, although some now remain in Exile. Nephilim characters start with better dexterity, and are much better at using missile weapons.
+Slithzerikai
 The Slithzerikai (sliths for short) are a race of lizard men, both strong and smart. Once unknown on the surface world, they are starting to appear there. Slith characters get bonuses to strength and intelligence, and are better at using pole weapons.
-Blades of Exile Prefs
+Vahnatai
 
+Reptile
 
+Beast
 
+Important
 
+Mage
 
+Priest
 
+Humanoid
 
+Demon
 
+Undead
 
+Giant
 
+Slime
 
+Stone
 
+Bug
 
+Dragon
 
+Magical
 
+Plant
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Bird

@@ -244,12 +244,12 @@ static void display_traits_graphics(cDialog& me) {
 }
 
 static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing, const short store_trait_mode) {
-	if(losing) return true;
-	std::string abil_str;
+	int abil_str = 0;
 	cPlayer *pc;
 	
 	pc = store_pc;
 	if(item_hit == "race") {
+		item_hit = dynamic_cast<cLedGroup&>(me["race"]).getSelected();
 		eRace race;
 		switch(item_hit[4] - '1') {
 			case 0: race = eRace::HUMAN; break;
@@ -260,25 +260,24 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing,
 		if(store_trait_mode == 0)
 			pc->race = race;
 		display_traits_graphics(me);
-		abil_str = get_str("traits",16 + int(race));
-		me["info"].setText(abil_str);
+		abil_str = 34 + int(race) * 2;
 	} else if(item_hit.substr(0,3) == "bad") {
 		int hit = item_hit[3] - '1';
 		eTrait trait = eTrait(hit + 10);
 		if(store_trait_mode != 1)
 			pc->traits[trait] = !pc->traits[trait];
 		display_traits_graphics(me);
-		abil_str = get_str("traits",hit + 11);
-		me["info"].setText(abil_str);
+		abil_str = 22 + hit * 2;
 	} else if(item_hit.substr(0,4) == "good") {
 		int hit = item_hit[4] - '1';
 		eTrait trait = eTrait(hit);
 		if(store_trait_mode != 1)
 			pc->traits[trait] = !pc->traits[trait];
 		display_traits_graphics(me);
-		abil_str = get_str("traits",hit + 1);
-		me["info"].setText(abil_str);
+		abil_str = 2 + hit * 2;
 	}
+	if(abil_str > 0)
+		me["info"].setText(get_str("traits", abil_str));
 	return store_trait_mode == 0;
 }
 
