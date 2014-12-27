@@ -1002,7 +1002,7 @@ static void frame_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y
 	shape.setOutlineColor(colour);
 	shape.setFillColor(sf::Color::Transparent);
 	// TODO: Determine the correct outline value; should be one pixel, not sure if it should be negative
-	shape.setOutlineThickness(1.0);
+	shape.setOutlineThickness(-1.0);
 	target.draw(shape);
 }
 

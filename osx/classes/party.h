@@ -11,6 +11,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 #include <map>
 #include <set>
 #include "vehicle.h"
@@ -82,7 +83,7 @@ public:
 	short in_boat;
 	short in_horse;
 	cOutdoors::cCreature out_c[10];
-	cItemRec magic_store_items[5][10];
+	std::array<std::array<cItemRec,10>,5> magic_store_items;
 	short imprisoned_monst[4]; // Soul Crystal?
 	char m_noted[256]; // has the monster been scried?
 	char m_seen[256]; // has the monster ever been seen? (this used to have the above meaning)

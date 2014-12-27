@@ -1,15 +1,17 @@
 
 #ifndef BOE_GAME_DLGUTIL_H
 
+#include <string>
 #include "dialog.hpp"
 #include "simpletypes.h"
+#include "shop.hpp"
 
-void start_shop_mode(short shop_type,short shop_min,short shop_max,short cost_adj,const char* store_name);
+void start_shop_mode(eShopType shop_type,short shop_min,short shop_max,short cost_adj,std::string store_name);
 void end_shop_mode();
 void handle_shop_event(location p);
-void handle_sale(short what_chosen,short cost);
-void handle_info_request(short what_chosen);
-void set_up_shop_array();
+void handle_sale(cShopItem item, int i);
+void handle_info_request(cShopItem item);
+void set_up_shop_array(eShopType shop_type, short shop_min, short shop_max);
 void start_talk_mode(short m_num,short personality,m_num_t monst_type,short store_face_pic);
 void end_talk_mode();
 void handle_talk_event(location p);

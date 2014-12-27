@@ -35,6 +35,7 @@
 #include "winutil.h"
 #include "cursors.h"
 #include "spell.hpp"
+#include "shop.hpp"
 
 rectangle bottom_buttons[7];
 rectangle town_buttons[10];
@@ -76,9 +77,9 @@ short door_pc,store_drop_item;
 short current_switch = 6;
 cOutdoors::cWandering store_wandering_special;
 long dummy;
-short store_shop_type;
 
 short store_selling_values[8] = {0,0,0,0,0,0,0,0};
+extern cShop active_shop;
 
 extern short cen_x, cen_y, stat_window,give_delays;//,pc_moves[6];
 extern eGameMode overall_mode;
@@ -655,7 +656,7 @@ static void handle_switch_pc(short which_pc) {
 	else if(is_combat())
 		// TODO: Allow this, provided the chosen PC has APs; it would be equivalent to pressing space until reaching that PC
 		add_string_to_buf("Set active: Can't set this in combat.");
-	else if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || store_shop_type != 3))
+	else if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::HEALING))
 		add_string_to_buf("Set active: PC must be here & active.");
 	else {
 		current_pc = which_pc;
@@ -675,7 +676,7 @@ static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 	else {
 		if(!is_combat()) {
 			// TODO: Maybe allow this in combat, as per the above TODO note?
-			if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || store_shop_type != 12))
+			if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALCHEMY))
 				add_string_to_buf("Set active: PC must be here & active.");
 			else {
 				current_pc = which_pc;
@@ -687,7 +688,8 @@ static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 		}
 		set_stat_window(which_pc);
 		if(overall_mode == MODE_SHOPPING) {
-			set_up_shop_array();
+			if(active_shop.getType() == eShopType::HEALING)
+				set_up_shop_array(eShopType::HEALING, 0, 0);
 			draw_shop_graphics(0,item_screen_button_rects[which_pc]); // rect is dummy
 		}
 	}
@@ -1274,7 +1276,8 @@ bool handle_action(sf::Event event) {
 		put_pc_screen();
 		put_item_screen(stat_window,0);
 		if(overall_mode == MODE_SHOPPING) {
-			set_up_shop_array();
+			if(active_shop.getType() == eShopType::HEALING)
+				set_up_shop_array(eShopType::HEALING, 0, 0);
 			draw_shop_graphics(0,pc_buttons[0][0]);
 		}
 	}

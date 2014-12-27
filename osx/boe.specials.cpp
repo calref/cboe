@@ -3942,19 +3942,13 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*a = 1;
 			break;
 		case eSpecType::OUT_STORE:
-			get_strs(str1,str2,1,spec.m1 + 10,-1);
+			get_strs(str1,str2,1,spec.m1,-1);
 			if(spec.ex2a >= 40)
 				spec.ex2a = 39;
 			if(spec.ex2a < 1)
 				spec.ex2a = 1;
 			spec.ex2b = minmax(0,6,spec.ex2b);
-			switch(spec.ex1b) {
-				case 0: start_shop_mode(0,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1.c_str()); break;
-				case 1: start_shop_mode(10,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1.c_str()); break;
-				case 2: start_shop_mode(11,spec.ex1a,spec.ex1a + spec.ex2a - 1 ,spec.ex2b,str1.c_str()); break;
-				case 3: start_shop_mode(12,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1.c_str()); break;
-				case 4: start_shop_mode(3,spec.ex1a,spec.ex1a + spec.ex2a - 1,spec.ex2b,str1.c_str()); break;
-			}
+			start_shop_mode(eShopType(spec.ex1b), spec.ex1a, spec.ex1a + spec.ex2a - 1, spec.ex2b, str1);
 			*next_spec = -1;
 			break;
 	}

@@ -919,8 +919,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 				csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 1000,PICT_CUSTOM + PICT_ITEM);
 			else csp(987,20 + i * 4,/*4800 + */item.graphic_num,PICT_ITEM);
 #endif
-			get_item_interesting_string(item,(char *) message);
-			me[detail].setText(message);
+			me[detail].setText(get_item_interesting_string(item));
 			storage = item.item_weight();
 			sprintf ((char *) message, "Weight: %d",storage);
 			me[weight].setText(message);

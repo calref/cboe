@@ -286,6 +286,8 @@
 		91FCC8F118FEEDC6007026CE /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
 		91FCC8F218FEEFE0007026CE /* pc.editors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF070F969BD300BF5B67 /* pc.editors.cpp */; };
 		91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8F318FF069A007026CE /* pc.appleevents.mm */; };
+		91FDB57B1A4E77CA00DE5983 /* shop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FDB5791A4E774E00DE5983 /* shop.cpp */; };
+		91FDB57C1A4E77CA00DE5983 /* shop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FDB5791A4E774E00DE5983 /* shop.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -780,6 +782,8 @@
 		91FCC8DA18FE2CCA007026CE /* pc.menus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pc.menus.h; sourceTree = "<group>"; };
 		91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.menus.mac.mm; sourceTree = "<group>"; };
 		91FCC8F318FF069A007026CE /* pc.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.appleevents.mm; sourceTree = "<group>"; };
+		91FDB5771A4E71A900DE5983 /* shop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shop.hpp; sourceTree = "<group>"; };
+		91FDB5791A4E774E00DE5983 /* shop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shop.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -948,6 +952,7 @@
 				913D05BB0FA1EA0A00184C18 /* pc.cpp */,
 				91AC607F0FA26A3B00EEAE67 /* regtown.cpp */,
 				91279C580F9D1253007B0D52 /* scenario.cpp */,
+				91FDB5791A4E774E00DE5983 /* shop.cpp */,
 				91279CC60F9D1A02007B0D52 /* special.cpp */,
 				91597A6E1A3BEDC700BE7BF9 /* spell.cpp */,
 				91E5C7B70F9F619D00C21460 /* talking.cpp */,
@@ -973,6 +978,7 @@
 				91AC607E0FA26A3B00EEAE67 /* regtown.h */,
 				91279C570F9D1253007B0D52 /* scenario.h */,
 				912287850FD41A2300B21642 /* simpletypes.h */,
+				91FDB5771A4E71A900DE5983 /* shop.hpp */,
 				91279CC50F9D1A02007B0D52 /* special.h */,
 				91597A6C1A3BED2D00BE7BF9 /* spell.hpp */,
 				91E5C7B60F9F619D00C21460 /* talking.h */,
@@ -1606,6 +1612,7 @@
 				915E090A1A316EE3008BDF00 /* map_parse.cpp in Sources */,
 				91597A6F1A3C021400BE7BF9 /* spell.cpp in Sources */,
 				9179A4671A48683100FEF872 /* stack.cpp in Sources */,
+				91FDB57B1A4E77CA00DE5983 /* shop.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1721,6 +1728,7 @@
 				915E090B1A316EE4008BDF00 /* map_parse.cpp in Sources */,
 				91597A701A3C021600BE7BF9 /* spell.cpp in Sources */,
 				9179A4651A48683100FEF872 /* stack.cpp in Sources */,
+				91FDB57C1A4E77CA00DE5983 /* shop.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

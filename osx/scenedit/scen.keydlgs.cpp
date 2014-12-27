@@ -249,8 +249,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 			// TODO: Generate a list of special node contexts
 			break;
 		case STRT_SHOP:
-			// TODO: There are actually a few more shop types than this (like junk shops)
-			strings = {"Items", "Mage Spells", "Priest Spells", "Alchemy", "Healing"};
+			strings = {"Items", "Mage Spells", "Priest Spells", "Alchemy", "Healing", "Magic Shop: Junk", "Magic Shop: Lousy", "Magic Shop: So-so", "Magic Shop: Good", "Magic Shop: Great"};
 			break;
 		case STRT_COST_ADJ:
 			strings = {"Extremely Cheap", "Very Reasonable", "Pretty Average", "Somewhat Pricey", "Expensive", "Exorbitant", "Utterly Ridiculous"};
@@ -612,11 +611,11 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 	}
 	if(btn == '#') {
 		// TODO: Enumify the shop types
-		switch(me["x1b"].getTextAsNum()) {
-			case 0: btn = 'i'; break;
-			case 1: btn = 'A'; break;
-			case 2: btn = 'P'; break;
-			case 3: btn = 'a'; break;
+		switch(eShopType(me["x1b"].getTextAsNum())) {
+			case eShopType::ITEMS: btn = 'i'; break;
+			case eShopType::MAGE: btn = 'A'; break;
+			case eShopType::PRIEST: btn = 'P'; break;
+			case eShopType::ALCHEMY: btn = 'a'; break;
 		}
 	}
 	short val = me[field].getTextAsNum(), mode = (btn == 'S' || btn == '$') ? 0 : edit_stack.top().mode, store;

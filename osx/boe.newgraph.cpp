@@ -22,6 +22,7 @@
 #include "scrollbar.hpp"
 #include <memory>
 #include "location.h"
+#include "shop.hpp"
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,
@@ -86,10 +87,8 @@ extern m_num_t store_monst_type;
 std::vector<word_rect_t> talk_words;
 
 // Shop vars
-extern short store_shop_items[30],store_shop_costs[30];
-extern short store_shop_type,store_shop_min,store_shop_max,store_cost_mult;
+extern cShop active_shop;
 extern eGameMode store_pre_shop_mode;
-extern char store_store_name[256];
 extern rectangle shopping_rects[8][7];
 extern rectangle bottom_help_rects[4];
 extern rectangle shop_name_str;
@@ -673,9 +672,8 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	rectangle face_rect = {6,6,38,38};
 	rectangle title_rect = {15,48,42,260};
 	rectangle dest_rect,help_from = {85,36,101,54};
-	short faces[13] = {1,1,1,42,43, 1,1,1,1,1, 44,44,44};
 	
-	short i,what_chosen;
+	short i;
 	// In the 0..65535 range, these blue components were: 0, 32767, 14535, 26623, 59391
 	// The green components on the second line were 40959 and 24575
 	// TODO: The duplication of sf::Color here shouldn't be necessary...
@@ -685,9 +683,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	rectangle shopper_name = {44,6,56,260};
 	short current_pos;
 	
-	short cur_cost,what_magic_shop,what_magic_shop_item;
-	char cur_name[60];
-	char cur_info_str[60];
+	short cur_cost;
 	static const char*const cost_strs[] = {
 		"Extremely Cheap","Very Reasonable","Pretty Average","Somewhat Pricey",
 		"Expensive","Exorbitant","Utterly Ridiculous"};
@@ -716,7 +712,12 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	
 	// Place store icon
 	if(!pressed) {
-		i = faces[store_shop_type];
+		i = 0;
+		eShopType type = active_shop.getType();
+		if(type == eShopType::HEALING) i = 41;
+		else if(type == eShopType::FOOD) i = 42;
+		else if(type == eShopType::MAGE || type == eShopType::PRIEST || type == eShopType::ALCHEMY)
+			i = 43;
 		rectangle from_rect = {0,0,32,32};
 		from_rect.offset(32 * (i % 10),32 * (i / 10));
 		rect_draw_some_item(talkfaces_gworld, from_rect, talk_gworld, face_rect);
@@ -728,24 +729,34 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	style.lineHeight = 18;
 	dest_rect = title_rect;
 	dest_rect.offset(1,1);
-	win_draw_string(talk_gworld,dest_rect,store_store_name,eTextMode::LEFT_TOP,style);
+	win_draw_string(talk_gworld,dest_rect,active_shop.getName(),eTextMode::LEFT_TOP,style);
 	dest_rect.offset(-1,-1);
 	style.colour = c[4];
-	win_draw_string(talk_gworld,dest_rect,store_store_name,eTextMode::LEFT_TOP,style);
+	win_draw_string(talk_gworld,dest_rect,active_shop.getName(),eTextMode::LEFT_TOP,style);
 	
 	style.font = FONT_BOLD;
 	style.pointSize = 12;
 	
 	style.colour = c[3];
-	switch(store_shop_type) {
-		case 3: sprintf(cur_name,"Healing for %s.",univ.party[current_pc].name.c_str()); break;
-		case 10: sprintf(cur_name,"Mage Spells for %s.",univ.party[current_pc].name.c_str());break;
-		case 11: sprintf(cur_name,"Priest Spells for %s.",univ.party[current_pc].name.c_str()); break;
-		case 12: sprintf(cur_name,"Buying Alchemy.");break;
-		case 4: sprintf(cur_name,"Buying Food.");break;
-		default:sprintf(cur_name,"Shopping for %s.",univ.party[current_pc].name.c_str()); break;
+	std::ostringstream title;
+	switch(active_shop.getType()) {
+		case eShopType::HEALING:
+			title << "Healing for " << univ.party[current_pc].name << '.';
+			break;
+		case eShopType::MAGE:
+			title << "Mage Spells for " << univ.party[current_pc].name << '.';
+			break;
+		case eShopType::PRIEST:
+			title << "Priest Spells for " << univ.party[current_pc].name << '.';
+			break;
+		case eShopType::ALCHEMY:
+			title << "Buying Alchemy.";
+			break;
+		default:
+			title << "Shopping for " << univ.party[current_pc].name << '.';
+			break;
 	}
-	win_draw_string(talk_gworld,shopper_name,cur_name,eTextMode::LEFT_TOP,style);
+	win_draw_string(talk_gworld,shopper_name,title.str(),eTextMode::LEFT_TOP,style);
 	
 	// Place help and done buttons
 	// TODO: Reimplement these with a cButton
@@ -767,67 +778,34 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	// Place all the items
 	for(i = 0; i < 8; i++) {
 		current_pos = i + shop_sbar->getPosition();
-		if(store_shop_items[current_pos] < 0)
-			break; // theoretically, this shouldn't happen
-		cur_cost = store_shop_costs[current_pos];
-		what_chosen = store_shop_items[current_pos];
+		cShopItem item = active_shop.getItem(i);
+		if(item.type == eShopItemType::EMPTY)
+			continue; // theoretically, this shouldn't happen
+		cur_cost = item.cost;
+		base_item = item.item;
+		std::string cur_name = base_item.full_name, cur_info_str;
 		rectangle from_rect, to_rect = shopping_rects[i][2];
 		sf::Texture* from_gw;
-		switch(what_chosen / 100) {
-			case 0: case 1: case 2: case 3: case 4:
-				base_item = get_stored_item(what_chosen);
+		switch(item.type) {
+			case eShopItemType::ITEM:
 				base_item.ident = true;
-				graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
-				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
-				strcpy(cur_name,base_item.full_name.c_str());
-				get_item_interesting_string(base_item,cur_info_str);
+				cur_info_str = get_item_interesting_string(base_item);
 				break;
-			case 5:
-				base_item = store_alchemy(what_chosen - 500);
-				graf_pos_ref(from_gw, from_rect) = calc_item_rect(53,to_rect);
-				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
-				strcpy(cur_name,base_item.full_name.c_str());
-				strcpy(cur_info_str,"");
+			case eShopItemType::ALCHEMY:
+				cur_info_str = "";
 				break;
-			case 6:
-				//base_item = food_types[what_chosen - 600];
-				//draw_dialog_graphic( talk_gworld, shopping_rects[i][2],633, false,1);
-				//strcpy(cur_name,base_item.full_name);
-				//get_item_interesting_string(base_item,cur_info_str);
+			case eShopItemType::MAGE_SPELL:
+				cur_info_str = "";
 				break;
-			case 7:
-				what_chosen -= 700;
-				graf_pos_ref(from_gw, from_rect) = calc_item_rect(99,to_rect);
-				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
-				strcpy(cur_name,heal_types[what_chosen]);
-				strcpy(cur_info_str,"");
+			case eShopItemType::PRIEST_SPELL:
+				cur_info_str = "";
 				break;
-			case 8:
-				base_item = store_mage_spells(what_chosen - 800 - 30);
-				graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
-				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
-				
-				strcpy(cur_name,base_item.full_name.c_str());
-				strcpy(cur_info_str,"");
-				break;
-			case 9:
-				base_item = store_priest_spells(what_chosen - 900 - 30);
-				graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
-				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
-				strcpy(cur_name,base_item.full_name.c_str());
-				strcpy(cur_info_str,"");
-				break;
-			default:
-				what_magic_shop = (what_chosen / 1000) - 1;
-				what_magic_shop_item = what_chosen % 1000;
-				base_item = univ.party.magic_store_items[what_magic_shop][what_magic_shop_item];
-				base_item.ident = true;
-				graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
-				rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
-				strcpy(cur_name,base_item.full_name.c_str());
-				get_item_interesting_string(base_item,cur_info_str);
+			default: // Healing
+				cur_info_str = "";
 				break;
 		}
+		graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+		rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 		
 		// Now draw item shopping_rects[i][7]
 		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
@@ -835,44 +813,41 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		style.pointSize = 12;
 		style.lineHeight = 12;
 		win_draw_string(talk_gworld,shopping_rects[i][3],cur_name,eTextMode::WRAP,style);
-		sprintf(cur_name,"Cost: %d",cur_cost);
+		cur_name = "Cost: " + std::to_string(cur_cost);
 		win_draw_string(talk_gworld,shopping_rects[i][4],cur_name,eTextMode::WRAP,style);
 		style.pointSize = 10;
 		win_draw_string(talk_gworld,shopping_rects[i][5],cur_info_str,eTextMode::WRAP,style);
-		if((store_shop_type != 3) && (store_shop_type != 4))
+		if(active_shop.getType() != eShopType::HEALING) // Draw info button
 			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][6],pressed ? sf::BlendNone : sf::BlendAlpha);
 		
 	}
 	
 	// Finally, cost info and help strs
-	sprintf(cur_name,"Prices here are %s.",cost_strs[store_cost_mult]);
+	title.str("");
+	title << "Prices here are " << cost_strs[active_shop.getCostAdjust()] << '.';
 	style.pointSize = 10;
 	style.lineHeight = 12;
-	win_draw_string(talk_gworld,bottom_help_rects[0],cur_name,eTextMode::WRAP,style);
+	win_draw_string(talk_gworld,bottom_help_rects[0],title.str(),eTextMode::WRAP,style);
 	win_draw_string(talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",eTextMode::WRAP,style);
 	win_draw_string(talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",eTextMode::WRAP,style);
-	if((store_shop_type != 3) && (store_shop_type != 4))
+	if(active_shop.getType() != eShopType::HEALING)
 		win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",eTextMode::WRAP,style);
 	
 	undo_clip(talk_gworld);
 	talk_gworld.display();
 	
 	refresh_shopping();
-	shop_sbar->show();
-	shop_sbar->draw();
+	if(shop_sbar->getMaximum() > 1)
+		shop_sbar->show();
+	else shop_sbar->hide();
 }
 
 void refresh_shopping() {
-	// TODO: The duplication of rectangle here shouldn't be necessary...
-	rectangle from_rects[4] = {rectangle{0,0,62,279},rectangle{62,0,352,253},rectangle{62,269,352,279},rectangle{352,0,415,279}};
-	rectangle to_rect;
-	short i;
-	
-	for(i = 0; i < 4; i++) {
-		to_rect = from_rects[i];
-		to_rect.offset(5,5);
-		rect_draw_some_item(talk_gworld.getTexture(),from_rects[i],to_rect,ul);
-	}
+	rectangle from_rect(talk_gworld);
+	rectangle to_rect = from_rect;
+	to_rect.offset(5,5);
+	rect_draw_some_item(talk_gworld.getTexture(),from_rect,to_rect,ul);
+	shop_sbar->draw();
 }
 
 static void place_talk_face() {
@@ -914,84 +889,17 @@ void click_talk_rect(word_rect_t word) {
 	place_talk_face();
 }
 
-cItemRec store_mage_spells(short which_s) {
-	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-	static const short cost[62] = {
-		// TODO: Costs for the level 1-3 spells
-		5,5,5,5,5,5,5,5,5,5,
-		5,5,5,5,5,5,5,5,5,5,
-		5,5,5,5,5,5,5,5,5,5,
-		150,200,150,1000,1200,400,300,200,
-		200,250,500,1500,300,  250,125,150,
-		400,450, 800,600,700,600,7500, 500,
-		5000,3000,3500,4000,4000,4500,7000,5000
-	};
-	
-	std::string str;
-	
-	if(which_s != minmax(0,61,which_s))
-		which_s = 0;
-	spell.item_level = which_s;
-	spell.value = cost[which_s];
-	str = get_str("magic-names",which_s + 1);
-	spell.full_name = str.c_str();
-	return spell;
-}
-
-cItemRec store_priest_spells(short which_s) {
-	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-	static const short cost[62] = {
-		// TODO: Costs for the level 1-3 spells
-		5,5,5,5,5,5,5,5,5,5,
-		5,5,5,5,5,5,5,5,5,5,
-		5,5,5,5,5,5,5,5,5,5,
-		100,150,75,400,200, 100,80,250,
-		400,400,1200,600,300, 600,350,250,
-		500,500,600,800, 1000,900,400,600,
-		2500,2000,4500,4500,3000,3000,2000,2000
-	};
-	std::string str;
-	
-	if(which_s != minmax(0,61,which_s))
-		which_s = 0;
-	spell.item_level = which_s;
-	spell.value = cost[which_s];
-	str = get_str("magic-names",which_s + 101);
-	spell.full_name = str.c_str();
-	return spell;
-}
-cItemRec store_alchemy(short which_s) {
-	cItemRec spell('spel');// = {21,0, 0,0,0,0,0,0, 53,0,0,0,0, 0, 0,0, {0,0},"", "",0,0,0,0};
-	static const short val[20] = {
-		50,75,30,130,100,
-		150, 200,200,300,250,
-		300, 500,600,750,700,
-		1000,10000,5000,7000,12000
-	};
-	std::string str;
-	
-	if(which_s != minmax(0,19,which_s))
-		which_s = 0;
-	spell.item_level = which_s;
-	spell.value = val[which_s];
-	str = get_str("magic-names",which_s + 200);
-	spell.full_name = str.c_str();
-	return spell;
-}
-
-void get_item_interesting_string(cItemRec item,char *message) {
+std::string get_item_interesting_string(cItemRec item) {
 	if(item.property) {
-		strcpy(message,"Not yours.");
-		return;
+		return "Not yours.";
 	}
 	if(!item.ident) {
-		strcpy(message,"");
-		return;
+		return "";
 	}
 	if(item.cursed) {
-		strcpy(message,"Cursed item.");
-		return;
+		return "Cursed item.";
 	}
+	char message[256];
 	switch(item.variety) {
 		case eItemType::ONE_HANDED:
 		case eItemType::TWO_HANDED:
@@ -1033,6 +941,7 @@ void get_item_interesting_string(cItemRec item,char *message) {
 	}
 	if(item.charges > 0)
 		sprintf(message,"Uses: %d",item.charges);
+	return message;
 }
 
 // color 0 - regular  1 - darker
