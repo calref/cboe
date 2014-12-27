@@ -773,6 +773,8 @@ void edit_town_wand() {
 	wand_dlg.forEach([&check_monst](std::string, cControl& ctrl) {
 		if(ctrl.getType() == CTRL_FIELD)
 			ctrl.attachFocusHandler(check_monst);
+		else if(ctrl.getText() == "Choose")
+			ctrl.attachClickHandler(edit_town_wand_event_filter);
 	});
 	
 	put_town_wand_in_dlog(wand_dlg);
