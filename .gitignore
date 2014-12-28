@@ -27,3 +27,17 @@ Win32/*/obj
 *blades.ini
 
 .config.vars
+
+# XCode Junk Files
+src/*.xcodeproj/xcuserdata
+src/*.xcodeproj/*.xcworkspace/xcuserdata
+src/*.xcodeproj/*.mode*
+src/*.xcodeproj/*.pbxuser
+
+# Shader Builder projects
+# It's an sqlite3 database and not particularly important, so exclude it
+src/tools/*.sbproj
+
+# Doxygen stuff
+src/doxy/html/
+src/doxy/doxy_warnings.txt
