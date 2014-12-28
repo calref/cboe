@@ -15,6 +15,7 @@
 #include "dlogutil.hpp"
 #include "winutil.h"
 #include "stack.hpp"
+#include "fileio.h"
 
 extern short cen_x, cen_y, overall_mode;//,user_given_password;
 extern bool mouse_button_held,editing_town;
@@ -361,16 +362,20 @@ static bool save_town_num(cDialog& me, std::string, eKeyMod) {
 	return true;
 }
 
-short pick_town_num(std::string which_dlog,short def) {
+short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 	using namespace std::placeholders;
 	
 	cDialog town_dlg(which_dlog);
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["okay"].attachClickHandler(save_town_num);
 	town_dlg["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.num_towns - 1, "Town number"));
-	town_dlg["choose"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
+	town_dlg["choose"].attachClickHandler([&scenario](cDialog& me, std::string, eKeyMod) -> bool {
 		int i = me["town"].getTextAsNum();
+		if(&scenario != &::scenario)
+			scenario.towns.swap(::scenario.towns);
 		i = choose_text(STRT_TOWN, i, &me, "Which town?");
+		if(&scenario != &::scenario)
+			scenario.towns.swap(::scenario.towns);
 		me["town"].setTextToNum(i);
 		return true;
 	});
@@ -954,7 +959,6 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<short>& talk_edit_stac
 
 static bool talk_node_back(cDialog& me, std::stack<short>& talk_edit_stack) {
 	if(!save_talk_node(me, "back", talk_edit_stack)) return true;
-	auto& talk_node = town->talking.talk_nodes[talk_edit_stack.top()];
 	talk_edit_stack.pop();
 	put_talk_node_in_dlog(me, talk_edit_stack);
 	return true;
@@ -1102,80 +1106,44 @@ location pick_out(location default_loc) {
 	return default_loc;
 }
 
-void new_town_event_filter (short item_hit) {
-#if 0
-	switch(item_hit) {
-		case 3:
-			dialog_answer = 1;
-			toast_dialog();
-			break;
-		case 23:
-			dialog_answer = -1;
-			toast_dialog();
-			break;
-		default:
-			cd_hit_led_range(830,11,13,item_hit);
-			cd_hit_led_range(830,18,20,item_hit);
-			break;
-	}
-#endif
-}
-
 bool new_town(short which_town) {
 	// ignore parent in Mac version
 	printf("Town creation currently disabled.\n");
-//	short basic_dlog_hit,i,j,store_dialog_answer;
-//	char temp_str[256];
-//	short size = 0,preset = 0;
-//
-//
-//	cd_create_dialog_parent_num(830,0);
-//
-//	cdsin(830,22,which_town);
-//	cd_set_led(830,12,1);
-//	cd_set_led(830,18,1);
-//	sprintf((char *) temp_str,"Town name");
-//	CDST(830,2,(char *) temp_str);
-//
-//	basic_dlog_hit = cd_run_dialog();
-//
-//	size = cd_get_led_range(830,11,13);
-//	preset = cd_get_led_range(830,18,20);
-//	CDGT(830,2,(char *) temp_str);
-//	temp_str[30] = 0;
-//	cd_kill_dialog(830,0);
-//	if(dialog_answer < 0)
-//		return false;
-//
-//	scenario.num_towns++;
-//	scenario.town_size[which_town] = size;
-//	scenario.town_hidden[which_town] = 0;
-//	cur_town = which_town;
-//	scenario.last_town_edited = cur_town;
-//	init_town(size);
-//	strcpy(town->town_strs(0),(char *) temp_str);
-//
-//	for(i = 0; i < max_dim[size]; i++)
-//		for(j = 0; j < max_dim[size]; j++)
-//			switch(preset) {
-//				case 0:
-//					town->terrain(i,j) = 0;
-//					break;
-//				case 1:
-//					town->terrain(i,j) = 2;
-//					break;
-//				case 2:
-//					town->terrain(i,j) = 2;
-//					if(get_ran(1,0,8) == 0)
-//						town->terrain(i,j) = 3;
-//						else  if(get_ran(1,0,10) == 0)
-//						town->terrain(i,j) = 4;
-//					break;
-//				}
-//
-//	reset_pwd();
-//	return true;
-	return false;
+	short basic_dlog_hit,i,j,store_dialog_answer;
+
+	cChoiceDlog new_dlg("new-town", {"okay", "cancel"});
+	new_dlg->getControl("num").setTextToNum(which_town);
+	if(new_dlg.show() == "cancel") return false;
+	
+	std::string size = dynamic_cast<cLedGroup&>(new_dlg->getControl("size")).getSelected();
+	std::string preset = dynamic_cast<cLedGroup&>(new_dlg->getControl("preset")).getSelected();
+
+	scenario.num_towns++;
+	if(size == "lg") scenario.towns.push_back(new cBigTown(scenario));
+	else if(size == "med") scenario.towns.push_back(new cMedTown(scenario));
+	else if(size == "sm") scenario.towns.push_back(new cTinyTown(scenario));
+	
+	scenario.town_hidden[which_town] = 0;
+	cur_town = which_town;
+	town = scenario.towns[cur_town];
+	scenario.last_town_edited = cur_town;
+	town->town_name = new_dlg->getControl("name").getText().substr(0,30);
+
+	for(i = 0; i < town->max_dim(); i++)
+		for(j = 0; j < town->max_dim(); j++)
+			if(preset == "cave") {
+				town->terrain(i,j) = 0;
+			} else {
+				town->terrain(i,j) = 2;
+				if(preset == "flowers") {
+					if(get_ran(1,0,8) == 0)
+						town->terrain(i,j) = 3;
+					else if(get_ran(1,0,10) == 0)
+						town->terrain(i,j) = 4;
+				}
+			}
+	
+	return true;
 }
 
 // before calling this, be sure to do all checks to make sure it's safe.
@@ -1188,60 +1156,13 @@ void delete_last_town() {
 	scenario.town_data_size[scenario.num_towns][2] = 0;
 	scenario.town_data_size[scenario.num_towns][3] = 0;
 	scenario.town_data_size[scenario.num_towns][4] = 0;
-	//scenario.flag_a = 41942 /*sizeof(scenario_data_type)*/ + get_ran(1,-1000,1000);
-	//scenario.flag_b = town_s(user_given_password);
-	//scenario.flag_c = out_s(user_given_password);
-	//scenario.flag_e = str_size_1(user_given_password);
-	//scenario.flag_f = str_size_2(user_given_password);
-	//scenario.flag_h = str_size_3(user_given_password);
-	//scenario.flag_g = 10000 + get_ran(1,0,5000);
-	//scenario.flag_d = init_data(user_given_password);
 	save_scenario();
 }
 
-void pick_import_town_event_filter (short item_hit) {
-#if 0
-	switch(item_hit) {
-		case 3:
-			dialog_answer = CDGN(841,2);
-			if(dialog_answer < 0) {
-				give_error("This number is out of the correct range. It must be at least 0.","",841);
-				break;
-			}
-			toast_dialog();
-			break;
-		case 8:
-			dialog_answer = -1;
-			toast_dialog();
-			break;
-			
-	}
-#endif
-}
-
 short pick_import_town(short def, fs::path& temp_file_to_load) {
-#if 0
-	// ignore parent in Mac version
-	short town_strs_hit;
-	NavReplyRecord s_reply;
-	
-	NavChooseFile(NULL,&s_reply,NULL,NULL,NULL,NULL,NULL,NULL);
-	
-	if(!s_reply.validRecord)
-		return -1;
-	AEKeyword keyword;
-	DescType descType;
-	Size actualSize;
-	
-	AEGetNthPtr(&s_reply.selection,1,typeFSS,&keyword,&descType,&temp_file_to_load,sizeof(FSSpec),&actualSize);
-	
-	cd_create_dialog_parent_num(841,0);
-	
-	CDSN(841,2,0);
-	
-	town_strs_hit = cd_run_dialog();
-	
-	cd_kill_dialog(841);
-#endif
-	return 0;//dialog_answer;
+	cScenario temp_scenario;
+	temp_file_to_load = nav_get_scenario();
+	load_scenario(temp_file_to_load, temp_scenario);
+	short town = pick_town_num("select-import-town", def, temp_scenario);
+	return town;
 }

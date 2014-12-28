@@ -3,7 +3,7 @@ void edit_placed_monst(short which_m);
 cCreature edit_placed_monst_adv(cCreature monst_record, class cDialog& parent);
 void edit_sign(short which_sign,short picture);
 void edit_roomdescs(bool town);
-short pick_town_num(std::string which_dlog,short def);
+short pick_town_num(std::string which_dlog,short def,cScenario& scenario);
 bool change_ter(short& change_from,short& change_to,short& chance);
 void edit_out_wand(short mode);
 void outdoor_details();

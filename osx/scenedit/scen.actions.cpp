@@ -250,7 +250,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							if(!save_check("save-section-confirm"))
 								break;
 						}
-						x = pick_town_num("select-town-edit",cur_town);
+						x = pick_town_num("select-town-edit",cur_town,scenario);
 						if(x >= 0){
 							cur_town = x;
 							town = scenario.towns[cur_town];
@@ -2998,13 +2998,13 @@ void town_entry(location spot_hit) {
 	y = -2;
 	for(x = 0; x < 8; x++)
 		if((current_terrain->exit_locs[x].x == spot_hit.x) && (current_terrain->exit_locs[x].y == spot_hit.y)) {
-			y = pick_town_num("select-town-enter",current_terrain->exit_dests[x]);
+			y = pick_town_num("select-town-enter",current_terrain->exit_dests[x],scenario);
 			if(y >= 0) current_terrain->exit_dests[x] = y;
 		}
 	if(y == -2) {
 		for(x = 0; x < 8; x++)
 			if(current_terrain->exit_locs[x].x == 100) {
-				y = pick_town_num("select-town-enter",0);
+				y = pick_town_num("select-town-enter",0,scenario);
 				if(y >= 0) {
 					current_terrain->exit_dests[x] = y;
 					current_terrain->exit_locs[x] = spot_hit;

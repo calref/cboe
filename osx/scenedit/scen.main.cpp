@@ -229,6 +229,8 @@ void handle_file_menu(int item_hit) {
 	fs::path file_to_load;
 	switch(item_hit) {
 		case 1: // open
+			if(change_made && !save_check("save-before-load"))
+				break;
 			file_to_load = nav_get_scenario();
 			if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 				cur_town = scenario.last_town_edited;

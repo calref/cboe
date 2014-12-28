@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<!-- OK Button -->
+	<field name='town' top='148' left='224' width='52' height='16'/>
+	<button name='okay' type='regular' top='181' left='278'>OK</button>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='175' height='17'>Importing a town</text>
+	<text name='prompt' top='143' left='50' width='162' height='27'>What town do you wish to import?</text>
+	<text top='27' left='50' width='301' height='54'>
+		Enter a town number and hit OK, and you will be asked to select a scenario file.
+		The town with that number in the selected scenario will then be loaded in over the current town.
+	</text>
+	<button name='cancel' type='regular' def-key='esc' top='181' left='212'>Cancel</button>
+	<text top='83' left='50' width='301' height='54'>
+		Warning: This will write over the town currently in memory.
+		Also, the town you select must be the same size (large/medium/small) as the town currently in memory.
+	</text>
+	<button name='choose' type='regular' top='146' left='281'>Choose</button>
+</dialog>
