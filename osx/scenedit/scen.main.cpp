@@ -331,9 +331,9 @@ void handle_scenario_menu(int item_hit) {
 				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
 			}
-			i = pick_import_town(0,file);
-			if(i >= 0) {
-				import_town(i,file);
+			if(cTown* town = pick_import_town(0)) {
+				delete scenario.towns[cur_town];
+				scenario.towns[cur_town] = town;
 				change_made = true;
 				redraw_screen();
 			}

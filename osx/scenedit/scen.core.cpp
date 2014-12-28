@@ -1564,6 +1564,7 @@ bool build_scenario() {
 	bool default_town, grass;
 	std::string filename, title;
 	short i,j;
+	cTown* warriors_grove = nullptr;
 	
 	if(!edit_make_scen_1(filename, title, grass))
 		return false;
@@ -1581,7 +1582,10 @@ bool build_scenario() {
 	} else {
 		fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
 		if(!fs::exists(basePath)) {oopsError(40);}
-		import_town(0, basePath);
+		cScenario base;
+		load_scenario(basePath, base);
+		warriors_grove = base.towns[0];
+		base.towns[0] = nullptr;
 	}
 	if(med > 0) med--;
 	// TODO: This will probably change drastically once the new scenario format is implemented
@@ -1593,6 +1597,9 @@ bool build_scenario() {
 	cur_out.x = 0;
 	cur_out.y = 0;
 	current_terrain = scenario.outdoors[0][0];
+	
+	if(default_town && warriors_grove)
+		scenario.towns.push_back(warriors_grove);
 	
 	// TODO: Append i+1 to each town name
 	for(i = 0; i < large; i++) {

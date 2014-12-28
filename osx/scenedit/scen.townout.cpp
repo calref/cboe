@@ -1159,10 +1159,13 @@ void delete_last_town() {
 	save_scenario();
 }
 
-short pick_import_town(short def, fs::path& temp_file_to_load) {
+cTown* pick_import_town(short def) {
 	cScenario temp_scenario;
-	temp_file_to_load = nav_get_scenario();
-	load_scenario(temp_file_to_load, temp_scenario);
-	short town = pick_town_num("select-import-town", def, temp_scenario);
+	fs::path path = nav_get_scenario();
+	load_scenario(path, temp_scenario);
+	short town_num = pick_town_num("select-import-town", def, temp_scenario);
+	if(town_num < 0) return nullptr;
+	cTown* town = temp_scenario.towns[town_num];
+	temp_scenario.towns[town_num] = nullptr;
 	return town;
 }

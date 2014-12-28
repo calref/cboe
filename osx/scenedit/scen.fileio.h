@@ -1,6 +1,5 @@
 
 void save_scenario();
-void import_town(short which_town,fs::path temp_file_to_load);
 void create_basic_scenario();
 void make_new_scenario(std::string file_name,short out_width,short out_height,bool making_warriors_grove,
 	bool use_grass);
