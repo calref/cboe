@@ -412,9 +412,9 @@ static void put_monst_info_in_dlog(cDialog& me, m_num_t which_monst) {
 			break;
 	}
 	
-	me["type"].setText(get_str("monster-abilities",150 + int(store_monst.m_type)));
-	me["type1"].setText(get_str("monster-abilities",130 + store_monst.a[0].type));
-	me["type2"].setText(get_str("monster-abilities",130 + store_monst.a[1].type));
+	me["type"].setText(get_str("traits",33 + int(store_monst.m_type) * 2));
+	me["type1"].setText(get_str("monster-abilities",131 + store_monst.a[0].type));
+	me["type2"].setText(get_str("monster-abilities",131 + store_monst.a[1].type));
 	// TODO: Attack 3 type
 //	me["type3"].setText(get_str("monster-abilities",130 + store_monst.a[2].type));
 }
@@ -481,7 +481,7 @@ static bool save_monst_info(cDialog& me, cMonster& store_monst) {
 	return true;
 }
 
-static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonster& store_monst,short which_monst) {
+static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonster& store_monst,short& which_monst) {
 	short i;
 	cMonster temp_monst;
 	
@@ -513,35 +513,41 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 		put_monst_info_in_dlog(me,which_monst);
 	} else if(item_hit == "picktype") {
 		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text_res("monster-abilities",150,167,int(store_monst.m_type) + 150,&me,"Choose Monster Type:");
+		i = choose_text(STRT_RACE,int(store_monst.m_type),&me,"Choose Monster Type:");
 		if(i >= 0) {
-			i -= 150;
 			store_monst.m_type = (eRace) i;
 			put_monst_info_in_dlog(me,which_monst);
 		}
 	} else if(item_hit == "picktype1") {
 		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text_res("monster-abilities",130,139,store_monst.a[0].type + 130,&me,"Choose Attack 1 Type:");
+		i = choose_text_res("monster-abilities",130,139,store_monst.a[0].type,&me,"Choose Attack 1 Type:");
 		if(i >= 0) {
-			store_monst.a[0].type = i - 130;
+			store_monst.a[0].type = i;
 			put_monst_info_in_dlog(me,which_monst);
 		}
 	} else if(item_hit == "picktype2") {
 		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text_res("monster-abilities",130,139,store_monst.a[1].type + 130,&me,"Choose Attack 2 & 3 Type:");
+		i = choose_text_res("monster-abilities",130,139,store_monst.a[1].type,&me,"Choose Attack 2 & 3 Type:");
 		if(i >= 0) {
-			store_monst.a[1].type = store_monst.a[2].type = i - 130;
+			store_monst.a[1].type = store_monst.a[2].type = i;
 			put_monst_info_in_dlog(me,which_monst);
 		}
 	} else if(item_hit == "picktype3") {
 		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text_res("monster-abilities",130,139,store_monst.a[2].type + 130,&me,"Choose Attack 3 Type:");
+		i = choose_text_res("monster-abilities",130,139,store_monst.a[2].type,&me,"Choose Attack 3 Type:");
 		if(i >= 0) {
-			store_monst.a[2].type = i - 130;
+			store_monst.a[2].type = i;
 			put_monst_info_in_dlog(me,which_monst);
 		}
 	}
 	return true;
+}
+
+static bool check_monst_dice(cDialog& me, std::string fld, bool losing) {
+	if(fld[0] == 'd') return check_range_msg(me, fld, losing, 0, 20, "attack number of dice", "0 means no attack");
+	char dice[] = {'d', 'i', 'c', 'e', fld.back(), 0};
+	if(me[dice].getTextAsNum() == 0) return true;
+	return check_range(me, fld, losing, 1, 50, "attack damage per die");
 }
 
 short edit_monst_type(short which_monst) {
@@ -561,9 +567,8 @@ short edit_monst_type(short which_monst) {
 	monst_dlg["mage"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 7, "magic spells"));
 	monst_dlg["priest"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 7, "priest spells"));
 	monst_dlg["treas"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 4, "treasure"));
-	monst_dlg.attachFocusHandlers(std::bind(check_range_msg,_1,_2,_3,0,20,"attack number of dice","0 means no attack"),{"dice1","dice2","dice3"});
-	monst_dlg.attachFocusHandlers(std::bind(check_range,_1,_2,_3,1,50,"attack damage per die"),{"sides1","sides2","sides3"});
-	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(store_monst),which_monst),{"okay","abils","left","right","picktype","picktype1","picktype2"});
+	monst_dlg.attachFocusHandlers(check_monst_dice,{"dice1","dice2","dice3","sides1","sides2","sides3"});
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(store_monst),std::ref(which_monst)),{"okay","abils","left","right","picktype","picktype1","picktype2"});
 	
 	put_monst_info_in_dlog(monst_dlg, which_monst);
 	
@@ -652,14 +657,14 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonst
 			me.toast(true);
 	} else if(item_hit == "abils") {
 		if(!save_monst_abils(me, store_monst)) return true;
-		i = choose_text_res("monster-abilities", 1, 38, store_monst.spec_skill + 1, &me, "Choose Monster Ability:");
+		i = choose_text_res("monster-abilities", 0, 37, store_monst.spec_skill, &me, "Choose Monster Ability:");
 		if(i >= 0) {
 			store_monst.spec_skill = i - 1;
 			put_monst_abils_in_dlog(me, store_monst, which_monst);
 		}
 	} else if(item_hit == "radiate") {
 		if(!save_monst_abils(me, store_monst)) return true;
-		i = choose_text_res("monster-abilities", 50, 65, store_monst.radiate_1 + 50, &me, "Choose Radiation Ability:");
+		i = choose_text_res("monster-abilities", 50, 65, store_monst.radiate_1, &me, "Choose Radiation Ability:");
 		if(i >= 0) {
 			store_monst.radiate_1 = i - 50;
 			put_monst_abils_in_dlog(me, store_monst, which_monst);
