@@ -398,10 +398,12 @@ static void setup_node_field(cDialog& me, std::string field, short value, std::s
 		case 's': case 'S': // specials
 			me[button].show();
 			me[button].setText("Create/Edit");
+			dynamic_cast<cButton&>(me[button]).setBtnType(BTN_LG);
 			break;
 		default:
 			me[button].show();
 			me[button].setText("Choose");
+			dynamic_cast<cButton&>(me[button]).setBtnType(BTN_REG);
 			break;
 	}
 }
