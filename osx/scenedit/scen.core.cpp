@@ -889,7 +889,7 @@ static bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) 
 	return true;
 }
 
-static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItemRec& store_item, short store_which_item) {
+static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItemRec& store_item, short& store_which_item) {
 	short i;
 	cItemRec temp_item;
 	
@@ -944,7 +944,7 @@ short edit_item_type(short which_item) {
 	item_dlg["value"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 10000, "Value"));
 	item_dlg["weight"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 250, "Weight"));
 	item_dlg["class"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Special Class"));
-	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(store_item), which_item), {"okay", "cancel", "prev", "next", "abils", "choosepic"});
+	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(store_item), std::ref(which_item)), {"okay", "cancel", "prev", "next", "abils", "choosepic"});
 	
 	put_item_info_in_dlog(item_dlg, store_item, which_item);
 	
@@ -1000,30 +1000,30 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You can only give an ability of this sort to a melee weapon.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 1, 15, int(store_item.ability) + 1, &me, "Choose Weapon Ability (inherent)");
-		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
+		i = choose_text_res("item-abilities", 0, 14, int(store_item.ability), &me, "Choose Weapon Ability (inherent)");
+		if(i >= 0) store_item.ability = eItemAbil(i);
 		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "general") {
-		if(save_item_abils(me, store_item)) return true;
+		if(!save_item_abils(me, store_item)) return true;
 		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE)|| (store_item.variety == eItemType::POTION) || (store_item.variety == eItemType::SCROLL) ||
 		   (store_item.variety == eItemType::WAND) || (store_item.variety == eItemType::TOOL) || (store_item.variety == eItemType::WEAPON_POISON) ||
 		   (store_item.variety == eItemType::NON_USE_OBJECT) || (store_item.variety == eItemType::BOLTS)){
 			giveError("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 31, 63, int(store_item.ability) + 1, &me, "Choose General Ability (inherent)");
-		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
+		i = choose_text_res("item-abilities", 30, 62, int(store_item.ability), &me, "Choose General Ability (inherent)");
+		if(i >= 0) store_item.ability = eItemAbil(i + 30);
 		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "usable") {
-		if(save_item_abils(me, store_item)) return true;
+		if(!save_item_abils(me, store_item)) return true;
 		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE) || (store_item.variety == eItemType::BOLTS)){
 			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 71, 95, int(store_item.ability) + 1, &me, "Choose Usable Ability (Not spell)");
-		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
+		i = choose_text_res("item-abilities", 70, 94, int(store_item.ability), &me, "Choose Usable Ability (Not spell)");
+		if(i >= 0) store_item.ability = eItemAbil(i + 70);
 		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "spell") {
@@ -1032,8 +1032,8 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 111, 136, int(store_item.ability) + 1, &me, "Choose Usable Ability (Spell)");
-		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
+		i = choose_text_res("item-abilities", 110, 135, int(store_item.ability), &me, "Choose Usable Ability (Spell)");
+		if(i >= 0) store_item.ability = eItemAbil(i + 110);
 		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "reagent") {
@@ -1043,8 +1043,8 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You can only give an ability of this sort to an item of type Non-Use Object.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 151, 162, int(store_item.ability) + 1, &me, "Choose Reagent Ability");
-		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
+		i = choose_text_res("item-abilities", 150, 161, int(store_item.ability), &me, "Choose Reagent Ability");
+		if(i >= 0) store_item.ability = eItemAbil(i + 150);
 		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "missile") {
@@ -1053,8 +1053,8 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 171, 177, int(store_item.ability) + 1, &me, "Choose Missile Ability");
-		if(i >= 0) store_item.ability = (eItemAbil) (i - 1);
+		i = choose_text_res("item-abilities", 170, 176, int(store_item.ability), &me, "Choose Missile Ability");
+		if(i >= 0) store_item.ability = eItemAbil(i + 170);
 		else store_item.ability = eItemAbil::NONE;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	}
