@@ -518,6 +518,10 @@ void giveError(std::string str1, std::string str2, cDialog* parent){
 	error.show();
 }
 
+void giveError(std::string str1, cDialog* parent) {
+	giveError(str1, "", parent);
+}
+
 void oopsError(short error, short code, short mode){
 	std::ostringstream error_str1, error_str2;
 	static const char* progname[3] = {"the scenario editor", "Blades of Exile", "the PC editor"};

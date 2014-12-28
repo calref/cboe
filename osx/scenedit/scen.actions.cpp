@@ -106,8 +106,6 @@ short town_buttons[6][10] = {
 
 cCreature last_placed_monst;
 
-cSpeech::cNode null_talk_node = {0,0,{120,120,120,120},{120,120,120,120},{0,0,0,0}};
-
 rectangle working_rect;
 location last_space_hit;
 bool erasing_mode;
@@ -389,7 +387,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						start_string_editing(3,1);
 						break;
 					case 12:
-						edit_talk_node(j,0);
+						edit_talk_node(j);
 						start_dialogue_editing(1);
 						break;
 					case 13:

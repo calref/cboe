@@ -1,0 +1,300 @@
+Regular speech
+Unused
+Unused
+Unused
+Unused
+First part of response ...
+Second part of response ...
+Response depends on flag
+Stuff Done flag Pt. A
+Stuff Done flag Pt. B
+Value to compare to
+Unused
+Response if less than or equal to
+Response if greater than
+Set flag to 1
+Stuff Done flag Pt. A
+Stuff Done flag Pt. B
+Unused
+Unused
+First part of response ...
+Second part of response ...
+Inn
+Cost of Inn
+Quality of Inn (0 .. 3)
+Move party to X
+Move party to Y
+Response if can afford it ...
+Response if not enough money ...
+Depends on Day
+Day when response changes
+Unused
+Unused
+Unused
+Response if day not reached ...
+Response if day reached ...
+Depends on time (and event)
+If this day has been reached ...
+And this event did not heppen before it ...
+Unused
+Unused
+Respond with this ...
+Otherwise respond with this ...
+Depends on town
+Town to check
+Unused
+Unused
+Unused
+Response if in this town ...
+Otherwise respond ...
+Buy Items
+Cost adjustment (0 .. 6)
+Number of first item in shop
+Total number of items in shop
+Unused
+Name of shop
+Unused
+Receive Training
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Mage Spell Shop
+Cost adjustment (0 .. 6)
+Number of first spell in shop
+Total number of spells in shop
+Unused
+Name of shop
+Unused
+Priest Spell Shop
+Cost adjustment (0 .. 6)
+Number of first spell in shop
+Total number of spells in shop
+Unused
+Name of shop
+Unused
+Alchemy Shop
+Cost adjustment (0 .. 6)
+Number of first recipe in shop
+Total number of recipes in shop
+Unused
+Name of shop
+Unused
+Healer
+Cost adjustment (0 .. 6)
+Unused
+Unused
+Unused
+Name of healer
+Unused
+Sell Weapons
+Unused
+Unused
+Unused
+Unused
+Buyer's response
+Unused
+Sell Armor
+Unused
+Unused
+Unused
+Unused
+Buyer's response
+Unused
+Sell All Items
+Unused
+Unused
+Unused
+Unused
+Buyer's response
+Unused
+Identify Items
+Cost to identify
+Unused
+Unused
+Unused
+Person identifying items says:
+Unused
+Enchant Weapons
+Type of enchantment (See docs. for list)
+Unused
+Unused
+Unused
+Person augmenting items says:
+Unused
+Pay For Response
+Amount of gold taken
+Unused
+Unused
+Unused
+Response if party has gold
+Response if they don't
+Buy response, Change Flag
+Amount of gold taken
+Stuff Done Flag, Pt. A
+Stuff Done Flag, Pt. B
+Change flag to
+Response if party has gold
+Response if they don't
+Ship Shop
+Cost of Boat
+Number of first boat sold
+Total number of boats sold
+Unused
+Response if party has gold
+Response if they don't
+Horse Shop
+Cost of Horse
+Number of first horse sold
+Total number of horses sold
+Unused
+Response if party has gold
+Response if they don't
+Buy Special Item
+Number of item being sold
+Cost of item
+Unused
+Unused
+Response if party buys it
+Response if party can't afford it
+Magic Shop
+Cost adjustment (0 .. 6)
+Which shop (0 .. 4)
+Unused
+Unused
+Name of shop
+Unused
+Reveal Town Location
+Cost to know where town is
+Number of town to reveal
+Unused
+Unused
+Response if party can pay
+Response if party can't afford it
+Force Conversation End
+Unused
+Unused
+Unused
+Unused
+First part of response
+Second part of response
+Hostile Conversation End
+Unused
+Unused
+Unused
+Unused
+First part of response
+Second part of response
+Town Hostile Conv. End
+Unused
+Unused
+Unused
+Unused
+First part of response
+Second part of response
+Eliminate Creature
+Unused
+Unused
+Unused
+Unused
+First part of response
+Second part of response
+Call Town Special
+Number of town special node to call
+Unused
+Unused
+Unused
+First part of response (if no other response given in special)
+Second part of response (if no other response given in special)
+Call Scenario Special
+Number of scenario special node to call
+Unused
+Unused
+Unused
+First part of response (if no other response given in special)
+Second part of response (if no other response given in special)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

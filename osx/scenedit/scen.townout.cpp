@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+#include <stack>
 #include <boost/lexical_cast.hpp>
 #include "scen.global.h"
 #include "classes.h"
@@ -39,10 +40,6 @@ const char *day_str_1[] = {"Unused","Day creature appears","Day creature disappe
 const char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 - no event)","",
 	"Unused","Unused","Unused",
 	"Event code (0 - no event)","Event code (0 - no event)"};
-
-short store_which_talk_node,last_talk_node[60];
-cSpeech::cNode store_talk_node;
-location store_cur_loc;
 
 static void put_placed_monst_in_dlog(cDialog& me) {
 	me["num"].setTextToNum(store_which_placed_monst);
@@ -782,347 +779,270 @@ void edit_town_wand() {
 	wand_dlg.run();
 }
 
-bool save_basic_dlog() {
-#if 0
-	CDGT(821,2,town->talking.talk_strs[store_which_talk_node]);
-	town->talking.talk_strs[store_which_talk_node][30] = 0;
-	CDGT(821,3,town->talking.talk_strs[160 + store_which_talk_node]);
-	CDGT(821,4,town->talking.talk_strs[10 + store_which_talk_node]);
-	CDGT(821,5,town->talking.talk_strs[20 + store_which_talk_node]);
-	CDGT(821,6,town->talking.talk_strs[30 + store_which_talk_node]);
-#endif
-	return true;
+static void save_basic_dlog(cDialog& me, short& which_personality) {
+	auto& the_node = town->talking.people[which_personality];
+	the_node.title = me["title"].getText().substr(0,30);
+	the_node.dunno = me["dunno"].getText();
+	the_node.look = me["look"].getText();
+	the_node.name = me["name"].getText();
+	the_node.job = me["job"].getText();
 }
 
-void put_basic_dlog_in_dlog() {
-#if 0
-	cdsin(821,14,store_which_talk_node + cur_town * 10);
-	CDST(821,2,town->talking.talk_strs[store_which_talk_node]);
-	CDST(821,3,town->talking.talk_strs[160 + store_which_talk_node]);
-	CDST(821,4,town->talking.talk_strs[10 + store_which_talk_node]);
-	CDST(821,5,town->talking.talk_strs[20 + store_which_talk_node]);
-	CDST(821,6,town->talking.talk_strs[30 + store_which_talk_node]);
-#endif
+static void put_basic_dlog_in_dlog(cDialog& me, const short which_personality) {
+	auto& the_node = town->talking.people[which_personality];
+	me["title"].setText(the_node.title);
+	me["dunno"].setText(the_node.dunno);
+	me["look"].setText(the_node.look);
+	me["name"].setText(the_node.name);
+	me["job"].setText(the_node.job);
+	me["num"].setTextToNum(which_personality + cur_town * 10);
 }
 
-void edit_basic_dlog_event_filter (short item_hit) {
-#if 0
-	switch(item_hit) {
-		case 7:
-			if(save_basic_dlog())
-				toast_dialog();
-			break;
-		case 8:
-			toast_dialog();
-			break;
-		case 9:
-			if(!save_basic_dlog()) break;
-			store_which_talk_node--;
-			if(store_which_talk_node < 0) store_which_talk_node = 9;
-			put_basic_dlog_in_dlog();
-			break;
-		case 10:
-			if(!save_basic_dlog()) break;
-			store_which_talk_node++;
-			if(store_which_talk_node > 9) store_which_talk_node = 0;
-			put_basic_dlog_in_dlog();
-			break;
+static bool edit_basic_dlog_event_filter(cDialog& me, std::string item_hit, short& which_personality) {
+	if(item_hit == "left") {
+		save_basic_dlog(me, which_personality);
+		which_personality--;
+		if(which_personality < 0) which_personality = 9;
+		put_basic_dlog_in_dlog(me, which_personality);
+	} else { // right
+		save_basic_dlog(me, which_personality);
+		which_personality++;
+		if(which_personality > 9) which_personality = 0;
+		put_basic_dlog_in_dlog(me, which_personality);
 	}
-#endif
+	return true;
 }
 
 void edit_basic_dlog(short which_node) {
-	// ignore parent in Mac version
-	short basic_dlog_hit;
-#if 0
-	store_which_talk_node = which_node;
+	using namespace std::placeholders;
 	
-	cd_create_dialog_parent_num(821,0);
+	cDialog person_dlg("edit-personality");
+	person_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &person_dlg, true));
+	person_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &person_dlg, false));
+	person_dlg.attachClickHandlers(std::bind(edit_basic_dlog_event_filter, _1, _2, std::ref(which_node)), {"left", "right"});
 	
-	cd_attach_key(821,10,0);
-	cd_attach_key(821,9,0);
+	put_basic_dlog_in_dlog(person_dlg, which_node);
 	
-	put_basic_dlog_in_dlog();
-	
-	basic_dlog_hit = cd_run_dialog();
-	cd_kill_dialog(821);
-#endif
+	person_dlg.run();
 }
 
-bool save_talk_node() {
-	char str[256];
-	short i;
-#if 0
-	
-	store_talk_node.personality = CDGN(817,2);
-	if((store_talk_node.personality >= 0) &&
-		((store_talk_node.personality < cur_town * 10) || (store_talk_node.personality >= (cur_town + 1) * 10))) {
-		sprintf((char *) str,"The legal range for personalities in this town is from %d to %d.",
-				cur_town * 10,cur_town * 10 + 9);
-		give_error("Personalities in talk nodes must be -1 (for unused node), -2 (all personalities use) or in the legal range of personalities in this town.",
-				   (char *) str,817);
+static bool check_talk_personality(cDialog& me, std::string item_hit, bool losing) {
+	if(!losing) return true;
+	int i = me[item_hit].getTextAsNum();
+	if(i != -1 && i != -2 && i / 10 != cur_town) {
+		std::ostringstream message;
+		message << "The legal range for personalities in this town is from ";
+		message << cur_town * 10 << " to " << cur_town * 10 + 9 << ".";
+		giveError("Personalities in talk nodes must be -1 (for unused node), -2 (all personalities use) or in the legal range of personalities in this town.", message.str(), &me);
 		return false;
 	}
-	CDGT(817,3,(char *) str);
-	for(i = 0; i < 4; i++) {
-		store_talk_node.link1[i] = str[i];
-		if((str[i] < 97) || (str[i] > 122)) {
-			give_error("The words this node is the response to must be at least 4 characters long, and all characters must be lower case letters.",
-					   "",817);
-			return false;
-		}
-	}
-	CDGT(817,4,(char *) str);
-	for(i = 0; i < 4; i++) {
-		store_talk_node.link2[i] = str[i];
-		if((str[i] < 97) || (str[i] > 122)) {
-			give_error("The words this node is the response to must be at least 4 characters long, and all characters must be lower case letters.",
-					   "",817);
-			return false;
-		}
-	}
-	for(i = 0; i < 4; i++)
-		store_talk_node.extras[i] = CDGN(817,5 + i);
-	
-	switch(store_talk_node.type) {
-		case 1: case 2:
-			if(cre(store_talk_node.extras[0],0,299,"First part of Stuff Done flag must be from 0 to 299.","",817) > 0) return false;
-			if(cre(store_talk_node.extras[1],0,9,"Second part of Stuff Done flag must be from 0 to 9.","",817) > 0) return false;
-			break;
-		case 3:
-			if(cre(store_talk_node.extras[0],0,1000,"Inn cost must be from 0 to 1000.","",817) > 0) return false;
-			if(cre(store_talk_node.extras[1],0,3,"Inn quality must be from 0 to 3.","",817) > 0) return false;
-			break;
-		case 5:
-			if(cre(store_talk_node.extras[1],0,9,"Event must be from 0 to 9. (0 means no event)","",817) > 0) return false;
-			break;
-		case 6:
-			if(cre(store_talk_node.extras[0],0,199,"Town number must be from 0 to 199.","",817) > 0) return false;
-			break;
-		case 7: case 9: case 10: case 11: case 12:
-			if(cre(store_talk_node.extras[0],0,6,"Cost adjustment must be from 0 (cheapest) to 6 (most expensive).","",817) > 0) return false;
-			break;
-		case 17:
-			if(cre(store_talk_node.extras[0],0,6,"Enchantment type must be from 0 to 6. See the documentation for a list of possible abilities.","",817) > 0) return false;
-			break;
-		case 19: case 23:
-			if(cre(store_talk_node.extras[1],0,299,"First part of Stuff Done flag must be from 0 to 299.","",817) > 0) return false;
-			if(cre(store_talk_node.extras[2],0,9,"Second part of Stuff Done flag must be from 0 to 9.","",817) > 0) return false;
-			break;
-		case 20: case 21:
-			if(cre(store_talk_node.extras[1],0,29,"The first boat/horse must be in the legal range (0 - 29).","",817) > 0) return false;
-			break;
-		case 22:
-			if(cre(store_talk_node.extras[0],0,49,"The special item must be in the legal range (0 - 49).","",817) > 0) return false;
-			break;
-		case 29:
-			if(cre(store_talk_node.extras[0],-1,99,"The town special node called must be in the legal range (0 - 99), or -1 for No Special.","",817) > 0) return false;
-			break;
-		case 30:
-			if(cre(store_talk_node.extras[0],-1,255,"The scenario special node called must be in the legal range (0 - 255), or -1 for No Special.","",817) > 0) return false;
-			break;
-	}
-	
-	CDGT(817,9,town->talking.talk_strs[40 + store_which_talk_node * 2]);
-	CDGT(817,10,town->talking.talk_strs[40 + store_which_talk_node * 2 + 1]);
-	
-	town->talking.talk_nodes[store_which_talk_node] = store_talk_node;
-#endif
 	return true;
 }
 
-void put_talk_node_in_dlog() {
-	char str[256];
-	short i;
-#if 0
-	CDSN(817,2,store_talk_node.personality);
-	str[4] = 0;
-	for(i = 0; i < 4; i++)
-		str[i] = store_talk_node.link1[i];
-	CDST(817,3,(char *) str);
-	for(i = 0; i < 4; i++)
-		str[i] = store_talk_node.link2[i];
-	CDST(817,4,(char *) str);
-	get_str(str,40,store_talk_node.type * 7 + 1);
-	csit(817,15,(char *) str);
-	get_str(str,40,store_talk_node.type * 7 + 2);
-	csit(817,16,(char *) str);
-	get_str(str,40,store_talk_node.type * 7 + 3);
-	csit(817,17,(char *) str);
-	get_str(str,40,store_talk_node.type * 7 + 4);
-	csit(817,18,(char *) str);
-	get_str(str,40,store_talk_node.type * 7 + 5);
-	csit(817,19,(char *) str);
-	get_str(str,40,store_talk_node.type * 7 + 6);
-	csit(817,20,(char *) str);
-	get_str(str,40,store_talk_node.type * 7 + 7);
-	csit(817,21,(char *) str);
-	for(i = 0; i < 4; i++)
-		CDSN(817,5 + i,store_talk_node.extras[i]);
-	CDST(817,9,town->talking.talk_strs[40 + store_which_talk_node * 2]);
-	CDST(817,10,town->talking.talk_strs[40 + store_which_talk_node * 2 + 1]);
-	
-	if((store_talk_node.type == 7) || (store_talk_node.type == 9) ||
-		(store_talk_node.type == 10) || (store_talk_node.type == 11))
-		cd_activate_item(817,37,1);
-	else cd_activate_item(817,37,0);
-	if(last_talk_node[0] >= 0)
-		cd_activate_item(817,13,1);
-	else cd_activate_item(817,13,0);
-	if((store_talk_node.type != 29) && (store_talk_node.type != 30))
-		cd_activate_item(817,38,0);
-	else cd_activate_item(817,38,1);
-#endif
+static bool check_talk_key(cDialog& me, std::string item_hit, bool losing) {
+	if(!losing) return true;
+	std::string key = me[item_hit].getText();
+	bool passes = true;
+	if(key.length() != 4) passes = false;
+	for(int i = 0; i < 4; i++) {
+		if(i < key.length() && !islower(key[i]))
+			passes = false;
+	}
+	if(!passes) {
+		giveError("The words this node is the response to must be 4 characters long, and all characters must be lower case letters.", &me);
+		return false;
+	}
+	return true;
 }
 
-void edit_talk_node_event_filter (short item_hit) {
-	short i,j,node_to_change_to = -1,spec;
-#if 0
-	switch(item_hit) {
-		case 11:
-			if(save_talk_node())
-				toast_dialog();
+static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>& talk_edit_stack) {
+	if(!me.toast(true)) return false;
+	if(item_hit != "okay") me.untoast();
+	
+	cSpeech::cNode& talk_node = town->talking.talk_nodes[talk_edit_stack.top()];
+	
+	talk_node.personality = me["who"].getTextAsNum();
+	
+	std::string link = me["key1"].getText();
+	std::copy(link.begin(), link.begin() + 4, talk_node.link1);
+	link = me["key2"].getText();
+	std::copy(link.begin(), link.begin() + 4, talk_node.link2);
+	
+	for(int i = 0; i < 4; i++)
+		talk_node.extras[i] = me["extra" + std::to_string(i + 1)].getTextAsNum();
+	
+	switch(talk_node.type) {
+		case 1: case 2:
+			if(cre(talk_node.extras[0],0,299,"First part of Stuff Done flag must be from 0 to 299.","",&me)) return false;
+			if(cre(talk_node.extras[1],0,9,"Second part of Stuff Done flag must be from 0 to 9.","",&me)) return false;
 			break;
-		case 13:  //go_back
-			if(!save_talk_node())
+		case 3:
+			if(cre(talk_node.extras[0],0,1000,"Inn cost must be from 0 to 1000.","",&me)) return false;
+			if(cre(talk_node.extras[1],0,3,"Inn quality must be from 0 to 3.","",&me)) return false;
+			break;
+		case 5:
+			if(cre(talk_node.extras[1],0,9,"Event must be from 0 to 9. (0 means no event)","",&me)) return false;
+			break;
+		case 6:
+			if(cre(talk_node.extras[0],0,199,"Town number must be from 0 to 199.","",&me)) return false;
+			break;
+		case 7: case 9: case 10: case 11: case 12:
+			if(cre(talk_node.extras[0],0,6,"Cost adjustment must be from 0 (cheapest) to 6 (most expensive).","",&me)) return false;
+			break;
+		case 17:
+			if(cre(talk_node.extras[0],0,6,"Enchantment type must be from 0 to 6. See the documentation for a list of possible abilities.","",&me)) return false;
+			break;
+		case 19: case 23:
+			if(cre(talk_node.extras[1],0,299,"First part of Stuff Done flag must be from 0 to 299.","",&me)) return false;
+			if(cre(talk_node.extras[2],0,9,"Second part of Stuff Done flag must be from 0 to 9.","",&me)) return false;
+			break;
+		case 20: case 21:
+			if(cre(talk_node.extras[1],0,29,"The first boat/horse must be in the legal range (0 - 29).","",&me)) return false;
+			break;
+		case 22:
+			if(cre(talk_node.extras[0],0,49,"The special item must be in the legal range (0 - 49).","",&me)) return false;
+			break;
+		case 29:
+			if(cre(talk_node.extras[0],-1,99,"The town special node called must be in the legal range (0 - 99), or -1 for No Special.","",&me)) return false;
+			break;
+		case 30:
+			if(cre(talk_node.extras[0],-1,255,"The scenario special node called must be in the legal range (0 - 255), or -1 for No Special.","",&me)) return false;
+			break;
+	}
+	
+	talk_node.str1 = me["str1"].getText();
+	talk_node.str2 = me["str2"].getText();
+	
+	town->talking.talk_nodes[talk_edit_stack.top()] = talk_node;
+	return true;
+}
+
+static void put_talk_node_in_dlog(cDialog& me, std::stack<short>& talk_edit_stack) {
+	cSpeech::cNode& talk_node = town->talking.talk_nodes[talk_edit_stack.top()];
+	
+	me["who"].setTextToNum(talk_node.personality);
+	
+	std::string link = "";
+	for(int i = 0; i < 4; i++) link += talk_node.link1[i];
+	me["key1"].setText(link);
+	link = "";
+	for(int i = 0; i < 4; i++) link += talk_node.link2[i];
+	me["key2"].setText(link);
+	
+	int iDescBase = talk_node.type * 7;
+	static const char*const strIDs[] = {"type", "lblA", "lblB", "lblC", "lblD", "lbl1", "lbl2"};
+	for(int i = 0; i < 7; i++)
+		me[strIDs[i]].setText(get_str("talk-node-descs", iDescBase + i + 1));
+	
+	for(int i = 0; i < 4; i++)
+		me["extra" + std::to_string(i + 1)].setTextToNum(talk_node.extras[i]);
+	
+	me["str1"].setText(talk_node.str1);
+	me["str2"].setText(talk_node.str2);
+	
+	if(talk_node.type == 7 || talk_node.type == 9 || talk_node.type == 10 || talk_node.type == 11)
+		me["chooseB"].show();
+	else me["chooseB"].hide();
+	if(talk_node.type != 29 && talk_node.type != 30)
+		me["chooseA"].hide();
+	else me["chooseA"].show();
+	
+	if(talk_edit_stack.size() > 1)
+		me["back"].show();
+	else me["back"].hide();
+}
+
+static bool talk_node_back(cDialog& me, std::stack<short>& talk_edit_stack) {
+	if(!save_talk_node(me, "back", talk_edit_stack)) return true;
+	auto& talk_node = town->talking.talk_nodes[talk_edit_stack.top()];
+	talk_edit_stack.pop();
+	put_talk_node_in_dlog(me, talk_edit_stack);
+	return true;
+}
+
+static bool talk_node_branch(cDialog& me, std::stack<short>& talk_edit_stack) {
+	if(!save_talk_node(me, "new", talk_edit_stack)) return true;
+	
+	int spec = -1;
+	for(int j = 0; j < 60; j++)
+		if(town->talking.talk_nodes[j].personality == -1 && strncmp(town->talking.talk_nodes[j].link1, "xxxx", 4) == 0) {
+			spec = j;
+			break;
+		}
+	
+	if(spec < 0) {
+		giveError("You have used all 60 available talk nodes. To create fresh dialogue, go back and reuse an old one.", &me);
+		return true;
+	}
+	
+	talk_edit_stack.push(spec);
+	put_talk_node_in_dlog(me, talk_edit_stack);
+	return true;
+}
+
+static bool select_talk_node_type(cDialog& me, std::stack<short>& talk_edit_stack) {
+	short& i = town->talking.talk_nodes[talk_edit_stack.top()].type;
+	i = choose_text(STRT_TALK_NODE, i, &me, "What Talking Node type?");
+	put_talk_node_in_dlog(me, talk_edit_stack);
+	return true;
+}
+
+static bool select_talk_node_value(cDialog& me, std::string item_hit, const std::stack<short>& talk_edit_stack) {
+	const auto& talk_node = town->talking.talk_nodes[talk_edit_stack.top()];
+	if(item_hit == "chooseB") {
+		int i = me["extra2"].getTextAsNum();
+		switch(talk_node.type) {
+			case 9:
+				i = choose_text(STRT_MAGE,i,&me,"What is the first mage spell in the shop?");
 				break;
-			for(i = 0; i < 60; i++)
-				if(last_talk_node[i] < 0) {
-					node_to_change_to = last_talk_node[i - 1];
-					if(i > 0)
-						last_talk_node[i - 1] = -1;
-					i = 256;
-				}
-			break;
-		case 12:
-			toast_dialog();
-			break;
-		case 14:
-			if(!save_talk_node())
+			case 10:
+				i = choose_text(STRT_PRIEST,i,&me,"What is the first priest spell in the shop?");
 				break;
-			
-			spec = -1;
-			for(j = 0; j < 60; j++)
-				if((town->talking.talk_nodes[j].personality < 0) && (town->talking.talk_nodes[j].extras[3] < 0)) {
-					spec = j;
-					j = 60;
-				}
-			
+			case 11:
+				i = choose_text(STRT_ALCHEMY,i,&me,"What is the first recipe in the shop?");
+				break;
+			default:
+				i = choose_text(STRT_ITEM,i,&me,"What is the first item in the shop?");
+				break;
+		}
+		me["extra1"].setTextToNum(i);
+	} else if(item_hit == "chooseA") {
+		int spec = me["extra1"].getTextAsNum();
+		int mode = talk_node.type == 29 ? 2 : 0;
+		if(spec < 0 || spec >= 100) {
+			spec = get_fresh_spec(mode);
 			if(spec < 0) {
-				give_error("You have used all 60 available talk nodes. To create fresh dialogue, go back and reuse and old one.",
-						   "",817);
-				break;
+				giveError("You can't create a new special encounter because there are no more free special nodes.",
+						   "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
+				return true;
 			}
-			
-			for(i = 0; i < 60; i++)
-				if(last_talk_node[i] < 0) {
-					last_talk_node[i] = store_which_talk_node;
-					node_to_change_to = spec;
-					i = 60;
-				}
-			break;
-			
-		case 28:
-			if(!save_talk_node())
-				break;
-			i = choose_text_res(-5,0,30,store_talk_node.type,817,"What Talking Node type?");
-			if(i >= 0) {
-				store_talk_node.type = i;
-				if((store_talk_node.type == 29) || (store_talk_node.type == 30))
-					store_talk_node.extras[0] = -1;
-				put_talk_node_in_dlog();
-			}
-			
-			break;
-		case 37:
-			i = CDGN(817,6);
-			if(store_talk_node.type == 9) {
-				i = choose_text_res(38,1,32,i + 1,817,"What is the first mage spell in the shop?");
-				if(i >= 0)
-					CDSN(817,6,i - 1);
-			}
-			else if(store_talk_node.type == 10) {
-				i = choose_text_res(38,50,81,i + 50,817,"What is the first priest spell in the shop?");
-				if(i >= 0)
-					CDSN(817,6,i - 50);
-			}
-			else if(store_talk_node.type == 11) {
-				i = choose_text_res(38,100,119,i + 100,817,"What is the first recipe in the shop?");
-				if(i >= 0)
-					CDSN(817,6,i - 100);
-			}
-			else {
-				i = choose_text_res(-2,0,399,i,817,"What is the first item in the shop?");
-				if(i >= 0)
-					CDSN(817,6,i);
-			}
-			break;
-		case 38:
-			if(!save_talk_node())
-				break;
-			spec = CDGN(817,5);
-			if((spec < 0) || (spec >= 100)) {
-				if(store_talk_node.type == 29)
-					spec = get_fresh_spec(2);
-				else spec = get_fresh_spec(0);
-				if(spec < 0) {
-					give_error("You can't create a new special encounter because there are no more free special nodes.",
-							   "To free a special node, set its type to No Special and set its Jump To special to -1.",817);
-					break;
-				}
-				CDSN(817,5,spec);
-			}
-			if(store_talk_node.type == 29)
-				edit_spec_enc(spec,2,817);
-			else edit_spec_enc(spec,0,817);
-			if(store_talk_node.type == 29) {
-				if((spec >= 0) && (spec < 100) && (town->specials[spec].pic < 0))
-					CDSN(817,5,-1);
-			}
-			else {
-				if((spec >= 0) && (spec < 256) && (scenario.scen_specials[spec].pic < 0))
-					CDSN(817,5,-1);
-			}
-			if(!save_talk_node())
-				break;
-			break;
+		}
+		if(edit_spec_enc(spec,mode,&me))
+			me["extra1"].setTextToNum(spec);
 	}
-	if(node_to_change_to >= 0) {
-		store_which_talk_node = node_to_change_to;
-		store_talk_node = town->talking.talk_nodes[store_which_talk_node];
-		if(store_talk_node.extras[3] < 0)
-			store_talk_node.extras[3] = 0;
-		put_talk_node_in_dlog();
-	}
-#endif
+	return true;
 }
 
-void edit_talk_node(short which_node,short parent_num) {
-	// ignore parent in Mac version
-	short talk_node_hit,i;
-#if 0
-	store_which_talk_node = which_node;
-	for(i = 0; i < 60; i++)
-		last_talk_node[i] = -1;
-	//last_talk_node[0] = store_which_mode * 1000 + store_which_talk_node;
-	store_talk_node = town->talking.talk_nodes[store_which_talk_node];
-	if(store_talk_node.extras[3] < 0)
-		store_talk_node.extras[3] = 0;
+void edit_talk_node(short which_node) {
+	using namespace std::placeholders;
 	
-	cd_create_dialog_parent_num(817,parent_num);
+	std::stack<short> talk_edit_stack;
+	talk_edit_stack.push(which_node);
+	cSpeech::cNode talk_node = town->talking.talk_nodes[which_node];
 	
-	cd_activate_item(817,13,0);
-	cd_activate_item(817,37,0);
+	cDialog talk_dlg("edit-talk-node");
+	talk_dlg["okay"].attachClickHandler(std::bind(save_talk_node, _1, _2, std::ref(talk_edit_stack)));
+	talk_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &talk_dlg, false));
+	talk_dlg["back"].attachClickHandler(std::bind(talk_node_back, _1, std::ref(talk_edit_stack)));
+	talk_dlg["new"].attachClickHandler(std::bind(talk_node_branch, _1, std::ref(talk_edit_stack)));
+	talk_dlg["choose-type"].attachClickHandler(std::bind(select_talk_node_type, _1, std::ref(talk_edit_stack)));
+	talk_dlg.attachClickHandlers(std::bind(select_talk_node_value, _1, _2, std::ref(talk_edit_stack)), {"chooseA", "chooseB"});
+	talk_dlg["who"].attachFocusHandler(check_talk_personality);
+	talk_dlg.attachFocusHandlers(check_talk_key, {"key1", "key2"});
 	
-	if((store_talk_node.type != 29) && (store_talk_node.type != 30))
-		cd_activate_item(817,38,0);
-	else cd_activate_item(817,38,1);
-	put_talk_node_in_dlog();
+	put_talk_node_in_dlog(talk_dlg, talk_edit_stack);
 	
-	talk_node_hit = cd_run_dialog();
-	
-	cd_kill_dialog(817);
-#endif
+	talk_dlg.run();
 }
 
 static void put_out_loc_in_dlog(cDialog& me, location cur_loc) {

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<!-- OK button -->
+	<field name='title' top='42' left='174' width='189' height='16'/>
+	<field name='dunno' top='66' left='254' width='246' height='43'/>
+	<field name='look' top='123' left='73' width='427' height='68'/>
+	<field name='name' top='215' left='73' width='427' height='67'/>
+	<field name='job' top='308' left='73' width='427' height='67'/>
+	<button name='okay' type='regular' top='381' left='441'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='381' left='375'>Cancel</button>
+	<button name='left' type='left' top='381' left='47'/>
+	<button name='right' type='right' top='381' left='110'/>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='249' height='15'>Edit Character Basic Dialogue</text>
+	<text top='22' left='50' width='157' height='14'>For personality number:</text>
+	<text name='num' top='22' left='210' width='52' height='14'/>
+	<text top='43' left='50' width='114' height='14'>Character name:</text>
+	<text top='67' left='50' width='173' height='14'>Don't Understand response:</text>
+	<text top='103' left='50' width='160' height='14'>Response to 'look'</text>
+	<text top='196' left='50' width='165' height='14'>Response to 'name'</text>
+	<text top='288' left='52' width='170' height='14'>Response to 'job'</text>
+</dialog>

@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay' debug='true'>
+	<!-- OK button -->
+	<field name='who' top='26' left='186' width='64' height='16'/>
+	<field name='key1' top='54' left='165' width='52' height='16'/>
+	<field name='key2' top='54' left='285' width='52' height='16'/>
+	<field name='extra1' top='114' left='344' width='64' height='16'/>
+	<field name='extra2' top='137' left='344' width='64' height='16'/>
+	<field name='extra3' top='160' left='344' width='64' height='16'/>
+	<field name='extra4' top='183' left='344' width='64' height='16'/>
+	<field name='str1' top='223' left='72' width='430' height='80'/>
+	<field name='str2' top='328' left='72' width='434' height='80'/>
+	<button name='okay' type='regular' top='415' left='445'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='415' left='380'>Cancel</button>
+	<button name='back' type='large' top='415' left='49'>Go Back</button>
+	<button name='new' type='large' top='415' left='155'>Create New</button>
+	<text name='type' framed='true' top='79' left='135' width='160' height='14'/>
+	<text name='lblA' top='115' left='104' width='233' height='14'>A</text>
+	<text name='lblB' top='138' left='104' width='233' height='14'>B</text>
+	<text name='lblC' top='161' left='104' width='233' height='14'>C</text>
+	<text name='lblD' top='184' left='104' width='233' height='14'>D</text>
+	<text name='lbl1' top='204' left='141' width='370' height='14'>a</text>
+	<text name='lbl2' top='309' left='141' width='370' height='14'>b</text>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='6' left='50' width='167' height='14'>Edit Character Dialogue</text>
+	<text size='large' top='27' left='50' width='120' height='14'>For personality:</text>
+	<text size='large' top='55' left='50' width='87' height='14'>Response to:</text>
+	<text top='55' left='224' width='52' height='14'>and to:</text>
+	<text size='large' top='79' left='49' width='77' height='15'>Node type:</text>
+	<button name='choose-type' type='regular' top='76' left='306'>Choose</button>
+	<text size='large' top='100' left='49' width='91' height='14'>Extra values:</text>
+	<text top='115' left='77' width='24' height='14'>A</text>
+	<text top='138' left='77' width='24' height='14'>B</text>
+	<text top='161' left='77' width='24' height='14'>C</text>
+	<text top='184' left='77' width='24' height='14'>D</text>
+	<text size='large' top='203' left='49' width='83' height='15'>Message 1:</text>
+	<text size='large' top='309' left='49' width='80' height='14'>Message 2:</text>
+	<text top='21' left='256' width='207' height='29'>
+		If -1: Node is unused,
+		-2: All personalities use this response.
+	</text>
+	<button name='chooseB' type='regular' top='135' left='414'>Choose</button>
+	<button name='chooseA' type='large' top='112' left='414'>Create/Edit</button>
+</dialog>

@@ -256,6 +256,11 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 		case STRT_LIGHT:
 			strings = {"Fully Lit", "Dark", "Very Dark", "Totally Dark"};
 			break;
+		case STRT_TALK_NODE:
+			for(int i = 0; i < 31; i++) {
+				strings.push_back(get_str("talk-node-descs", i * 7 + 1));
+			}
+			break;
 		case STRT_CONTEXT:
 			// TODO: This is a discontinous list, so there's probably a better way to deal with it...
 			strings = *ResMgr::get<StringRsrc>("special-contexts");

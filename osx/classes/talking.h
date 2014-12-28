@@ -28,7 +28,7 @@ public:
 	public:
 		short personality,type;
 		char link1[4],link2[4];
-		short extras[4];
+		short extras[4] = {-1,-1,-1,-1};
 		std::string str1, str2;
 	};
 	unsigned char strlens[200];

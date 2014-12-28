@@ -11,7 +11,7 @@ void edit_town_details();
 void edit_town_events();
 void edit_advanced_town();
 void edit_basic_dlog(short which_node);
-void edit_talk_node(short which_node,short parent_num);
+void edit_talk_node(short which_node);
 location pick_out(location default_loc);
 short pick_import_town(short def,fs::path& temp_file_to_load);
 bool new_town(short which_town);

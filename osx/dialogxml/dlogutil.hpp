@@ -258,7 +258,11 @@ public:
 /// @param str1 The first string in the error dialog.
 /// @param str2 The second string in the error dialog.
 /// @param parent Optionally, a parent dialog.
-void giveError(std::string str1, std::string str2 = "", cDialog* parent = NULL);
+void giveError(std::string str1, std::string str2, cDialog* parent = NULL);
+/// Shows a simple error dialog.
+/// @param str1 The string in the error dialog.
+/// @param parent Optionally, a parent dialog.
+void giveError(std::string str1, cDialog* parent = NULL);
 /// Shows a generic error dialog and exits.
 /// @param error An arbitrary code intended to be used for locating the error in the source.
 /// @param code A code indicating the result of a failed action that triggered the error.
