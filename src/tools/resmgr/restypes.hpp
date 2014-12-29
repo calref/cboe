@@ -69,7 +69,7 @@ namespace ResMgr {
 			}
 		}
 		// TODO: Handle errors?
-		CursorRsrc* cur = new Cursor(fpath.c_str(),x,y);
+		CursorRsrc* cur = new Cursor(fpath.string(),x,y);
 		return cur;
 		throw xResMgrErr("Failed to load GIF cursor: " + fname);
 	}

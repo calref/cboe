@@ -34,6 +34,18 @@ src/*.xcodeproj/*.xcworkspace/xcuserdata
 src/*.xcodeproj/*.mode*
 src/*.xcodeproj/*.pbxuser
 
+# Visual Studio Junk Files
+src/*.vsproj/*sdf
+src/*.vsproj/*/*.user
+src/*.vsproj/*.suo
+src/*.vsproj/*.aps
+src/*.vsproj/*/*.aps
+src/*.vsproj/*/Debug/
+src/*.vsproj/*/Release/
+src/*.vsproj/Debug/
+src/*.vsproj/Release/
+src/*.vsproj/*/ipch/
+
 # Shader Builder projects
 # It's an sqlite3 database and not particularly important, so exclude it
 src/tools/*.sbproj

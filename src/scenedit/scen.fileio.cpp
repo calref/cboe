@@ -12,7 +12,7 @@
 #include "fileio.h"
 #include "dlogutil.hpp"
 
-#import <fstream>
+#include <fstream>
 using std::endl;
 
 #define	DONE_BUTTON_ITEM	1

@@ -134,7 +134,8 @@ public:
 	
 	void append(legacy::out_info_type& old);
 	
-	ter_num_t(& operator [] (size_t i))[96];
+	typedef ter_num_t arr_96[96];
+	arr_96& operator [] (size_t i);
 	ter_num_t& operator [] (location loc);
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);

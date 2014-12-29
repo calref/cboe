@@ -30,7 +30,7 @@ extern cUniverse univ;
 //extern long ed_flag,ed_key;
 
 extern sf::RenderWindow mainPtr;
-extern bool file_in_mem;
+extern fs::path file_in_mem;
 //extern long register_flag;
 
 extern sf::Texture pc_gworld;
@@ -63,7 +63,7 @@ bool handle_action(sf::Event event) {
 	
 	the_point = {event.mouseButton.x, event.mouseButton.y};
 	
-	if(!file_in_mem)
+	if(file_in_mem.empty())
 		return false;
 	
 	for(i = 0; i < 6; i++)

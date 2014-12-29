@@ -28,8 +28,9 @@ public:
 	public:
 		short personality,type;
 		char link1[4],link2[4];
-		short extras[4] = {-1,-1,-1,-1};
+		short extras[4];
 		std::string str1, str2;
+		cNode() {std::fill(extras, extras + 4, -1);}
 	};
 	unsigned char strlens[200];
 	cPersonality people[10];

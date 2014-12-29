@@ -1,5 +1,6 @@
 
 #include <cstdio>
+#include <map>
 
 //#include "item.h"
 
@@ -29,9 +30,9 @@
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 
-extern short skill_cost[20];
-extern short skill_max[20];
-extern short skill_g_cost[20];
+extern std::map<eSkill,short> skill_cost;
+extern std::map<eSkill,short> skill_max;
+extern std::map<eSkill,short> skill_g_cost;
 extern const char* skill_ids[19];
 //extern party_record_type	party;
 extern short cur_town_talk_loaded;
@@ -138,19 +139,19 @@ void display_spells(eSkill mode,short force_spell,cDialog* parent) {
 
 static void put_skill_info(cDialog& me) {
 	std::string store_text;
-	short pos;
+	eSkill pos;
 	
-	pos = skill_pos;
+	pos = eSkill(skill_pos);
 	
-	store_text = get_str("skills",pos * 2 + 1);
+	store_text = get_str("skills",skill_pos * 2 + 1);
 	me["name"].setText(store_text.c_str());
 	me["skp"].setTextToNum(skill_cost[pos]);
 	me["gold"].setTextToNum(skill_g_cost[pos]);
 	me["max"].setTextToNum(skill_max[pos]);
 	
-	store_text = get_str("skills", pos * 2 + 2);
+	store_text = get_str("skills", skill_pos * 2 + 2);
 	me["desc"].setText(store_text);
-	store_text = get_str("tips", 1 + pos);
+	store_text = get_str("tips", 1 + skill_pos);
 	me["tips"].setText(store_text);
 }
 

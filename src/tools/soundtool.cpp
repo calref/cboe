@@ -115,7 +115,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	if(how_many_times > 1)
 		play_sound(which, how_many_times - 1);
 	// TODO: Since sounds are handled by SFML, all this Windows-specific code shouldn't be needed
-#if defined(WIN32)
+#if 0 //defined(WIN32)
 	short i,num_fails = 0;
 	char snd_name[30];
 	bool asyn = false,a_sound_did_get_played = false;
@@ -233,7 +233,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 #endif
 }
 
-#ifdef WIN32
+#if 0 //def WIN32
 void kill_sound() {
 	sndPlaySound(NULL,0);
 }
@@ -255,7 +255,7 @@ void flip_sound() {
 }
 
 
-#ifdef WIN32
+#if 0 //def WIN32
 void sound_pause(long len) {
 	long t1,t2;
 

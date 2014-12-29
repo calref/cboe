@@ -11,6 +11,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <functional>
 #include "simpletypes.h"
 #include "location.h"
 

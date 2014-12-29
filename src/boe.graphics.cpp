@@ -172,7 +172,7 @@ void adjust_window_mode() {
 	if(display_mode == 5) {
 		ul.x = 14; ul.y = 2;
 		mainPtr.create(sf::VideoMode(605,430,32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
-		mainPtr.setPosition({(desktop.width - 605) / 2, (desktop.height - 430) / 2});
+		mainPtr.setPosition({static_cast<int>((desktop.width - 605) / 2), static_cast<int>((desktop.height - 430) / 2)});
 		r = rectangle(mainPtr);
 	}
 	else {

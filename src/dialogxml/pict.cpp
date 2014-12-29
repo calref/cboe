@@ -68,8 +68,8 @@ std::map<ePicType,void(cPict::*)(short,rectangle)>& cPict::drawPict(){
 }
 
 void cPict::attachClickHandler(click_callback_t f) throw(){
-	if(f == NULL){
-		onClick = NULL;
+	if(f == nullptr){
+		onClick = nullptr;
 		clickable = false;
 	}else{
 		onClick = f;
@@ -82,7 +82,7 @@ void cPict::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported){
 }
 
 bool cPict::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
-	if(onClick != NULL) return onClick(me,id,mods);
+	if(onClick != nullptr) return onClick(me,id,mods);
 	else return false;
 }
 

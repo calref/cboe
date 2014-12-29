@@ -36,6 +36,13 @@ class tarball {
 		header_posix_ustar header;
 		std::string filename;
 		std::stringstream contents;
+		// This seems to be necessary to compile in Visual Studio
+		// Seemingly, stringstream is non-copyable.
+		tarfile() {}
+		tarfile(tarfile& other) {
+			contents.str("");
+			contents << other.contents.str();
+		}
 	};
 	std::deque<tarfile> files;
 	static header_posix_ustar generateTarHeader(const std::string& fileName, unsigned long long fileSize, bool directory=false);

@@ -454,7 +454,7 @@ void draw_lb_slot (short which,short mode)  {
 		from_rect = blue_button_from;
 		if(mode > 0)
 			from_rect.offset(from_rect.right - from_rect.left,0);
-		rect_draw_some_item(editor_mixed,from_rect,left_buttons[which][1],(location){0,0});
+		rect_draw_some_item(editor_mixed,from_rect,left_buttons[which][1],location{0,0});
 	}
 	if(left_button_status[which] % 10 == 3)
 		text_rect.left += 16;

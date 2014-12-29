@@ -12,6 +12,9 @@
 #ifdef __APPLE__
 #include <OpenGl/GL.h>
 #else
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 #include <GL/GL.h>
 #endif
 
@@ -912,12 +915,12 @@ m_pic_index_t m_pic_index[] = {
 };
 
 // TODO: Put these classes in a header?
-class Ellipse : public sf::Shape {
+class EllipseShape : public sf::Shape {
 	float divSz;
 	int points;
 	float a, b;
 public:
-	explicit Ellipse(sf::Vector2f size, unsigned int points = 30) : points(points) {
+	explicit EllipseShape(sf::Vector2f size, unsigned int points = 30) : points(points) {
 		a = size.x / 2.0f;
 		b = size.y / 2.0f;
 		divSz = 2 * pi<float>() / points;
@@ -936,12 +939,12 @@ public:
 	// TODO: Additional functions?
 };
 
-class RoundRect : public sf::Shape {
+class RoundRectShape : public sf::Shape {
 	float divSz;
 	int points;
 	float w,h,r;
 public:
-	RoundRect(sf::Vector2f size, float cornerRadius, unsigned int points = 32) : points(points / 4) {
+	RoundRectShape(sf::Vector2f size, float cornerRadius, unsigned int points = 32) : points(points / 4) {
 		w = size.x;
 		h = size.y;
 		r = cornerRadius;
@@ -1017,22 +1020,22 @@ void frame_rect(sf::RenderTarget& target, rectangle rect, sf::Color colour) {
 }
 
 void fill_roundrect(sf::RenderTarget& target, rectangle rect, int rad, sf::Color colour) {
-	RoundRect fill(sf::Vector2f(rect.width(), rect.height()), rad);
+	RoundRectShape fill(sf::Vector2f(rect.width(), rect.height()), rad);
 	fill_shape(target, fill, rect.left, rect.top, colour);
 }
 
 void frame_roundrect(sf::RenderTarget& target, rectangle rect, int rad, sf::Color colour) {
-	RoundRect frame(sf::Vector2f(rect.width(), rect.height()), rad);
+	RoundRectShape frame(sf::Vector2f(rect.width(), rect.height()), rad);
 	frame_shape(target, frame, rect.left, rect.top, colour);
 }
 
 void fill_circle(sf::RenderTarget& target, rectangle rect, sf::Color colour) {
-	Ellipse fill(sf::Vector2f(rect.width(), rect.height()));
+	EllipseShape fill(sf::Vector2f(rect.width(), rect.height()));
 	fill_shape(target, fill, rect.left, rect.top, colour);
 }
 
 void frame_circle(sf::RenderTarget& target, rectangle rect, sf::Color colour) {
-	Ellipse frame(sf::Vector2f(rect.width(), rect.height()));
+	EllipseShape frame(sf::Vector2f(rect.width(), rect.height()));
 	frame_shape(target, frame, rect.left, rect.top, colour);
 }
 
@@ -1050,7 +1053,7 @@ void frame_region(sf::RenderWindow& target, Region& region, sf::Color colour) {
 }
 
 void Region::addEllipse(rectangle frame) {
-	Ellipse* ellipse = new Ellipse(sf::Vector2f(frame.width(), frame.height()));
+	EllipseShape* ellipse = new EllipseShape(sf::Vector2f(frame.width(), frame.height()));
 	ellipse->setFillColor(sf::Color::Black);
 	shapes.push_back(std::shared_ptr<sf::Shape>(ellipse));
 }

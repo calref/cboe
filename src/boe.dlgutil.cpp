@@ -1292,7 +1292,7 @@ static void put_scen_info(cDialog& me) {
 	}
 }
 
-static static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "cancel") {
 		me.setResult<short>(-1);
 		me.toast(false);

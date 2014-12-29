@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\classes\creatlist.h" />
+    <ClInclude Include="..\..\classes\item.h" />
+    <ClInclude Include="..\..\classes\location.h" />
+    <ClInclude Include="..\..\classes\monster.h" />
+    <ClInclude Include="..\..\classes\outdoors.h" />
+    <ClInclude Include="..\..\classes\party.h" />
+    <ClInclude Include="..\..\classes\pc.h" />
+    <ClInclude Include="..\..\classes\regtown.h" />
+    <ClInclude Include="..\..\classes\scenario.h" />
+    <ClInclude Include="..\..\classes\shop.hpp" />
+    <ClInclude Include="..\..\classes\simpletypes.h" />
+    <ClInclude Include="..\..\classes\special.h" />
+    <ClInclude Include="..\..\classes\spell.hpp" />
+    <ClInclude Include="..\..\classes\talking.h" />
+    <ClInclude Include="..\..\classes\terrain.h" />
+    <ClInclude Include="..\..\classes\tmpltown.h" />
+    <ClInclude Include="..\..\classes\town.h" />
+    <ClInclude Include="..\..\classes\universe.h" />
+    <ClInclude Include="..\..\classes\vehicle.h" />
+    <ClInclude Include="..\..\dialogxml\button.hpp" />
+    <ClInclude Include="..\..\dialogxml\control.hpp" />
+    <ClInclude Include="..\..\dialogxml\dialog.hpp" />
+    <ClInclude Include="..\..\dialogxml\dialog.keys.hpp" />
+    <ClInclude Include="..\..\dialogxml\dlogutil.buttons.hpp" />
+    <ClInclude Include="..\..\dialogxml\dlogutil.hpp" />
+    <ClInclude Include="..\..\dialogxml\field.hpp" />
+    <ClInclude Include="..\..\dialogxml\message.hpp" />
+    <ClInclude Include="..\..\dialogxml\pict.hpp" />
+    <ClInclude Include="..\..\dialogxml\scrollbar.hpp" />
+    <ClInclude Include="..\..\dialogxml\stack.hpp" />
+    <ClInclude Include="..\..\dialogxml\xml-parser\ticpp.h" />
+    <ClInclude Include="..\..\dialogxml\xml-parser\ticpprc.h" />
+    <ClInclude Include="..\..\dialogxml\xml-parser\tinystr.h" />
+    <ClInclude Include="..\..\dialogxml\xml-parser\tinyxml.h" />
+    <ClInclude Include="..\..\tools\cursors.h" />
+    <ClInclude Include="..\..\tools\fileio.h" />
+    <ClInclude Include="..\..\tools\graphtool.h" />
+    <ClInclude Include="..\..\tools\gzstream\gzstream.h" />
+    <ClInclude Include="..\..\tools\map_parse.hpp" />
+    <ClInclude Include="..\..\tools\mathutil.h" />
+    <ClInclude Include="..\..\tools\porting.h" />
+    <ClInclude Include="..\..\tools\prefs.hpp" />
+    <ClInclude Include="..\..\tools\resmgr\resmgr.hpp" />
+    <ClInclude Include="..\..\tools\resmgr\restypes.hpp" />
+    <ClInclude Include="..\..\tools\soundtool.h" />
+    <ClInclude Include="..\..\tools\special_parse.hpp" />
+    <ClInclude Include="..\..\tools\tarball.hpp" />
+    <ClInclude Include="..\..\tools\undo.h" />
+    <ClInclude Include="..\..\tools\vector2d.hpp" />
+    <ClInclude Include="..\..\tools\winutil.h" />
+    <ClInclude Include="..\targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\classes\creatlist.cpp" />
+    <ClCompile Include="..\..\classes\item.cpp" />
+    <ClCompile Include="..\..\classes\location.cpp" />
+    <ClCompile Include="..\..\classes\monster.cpp" />
+    <ClCompile Include="..\..\classes\outdoors.cpp" />
+    <ClCompile Include="..\..\classes\party.cpp" />
+    <ClCompile Include="..\..\classes\pc.cpp" />
+    <ClCompile Include="..\..\classes\regtown.cpp" />
+    <ClCompile Include="..\..\classes\scenario.cpp" />
+    <ClCompile Include="..\..\classes\shop.cpp" />
+    <ClCompile Include="..\..\classes\special.cpp" />
+    <ClCompile Include="..\..\classes\spell.cpp" />
+    <ClCompile Include="..\..\classes\talking.cpp" />
+    <ClCompile Include="..\..\classes\terrain.cpp" />
+    <ClCompile Include="..\..\classes\tmpltown.cpp" />
+    <ClCompile Include="..\..\classes\town.cpp" />
+    <ClCompile Include="..\..\classes\universe.cpp" />
+    <ClCompile Include="..\..\classes\vehicle.cpp" />
+    <ClCompile Include="..\..\dialogxml\button.cpp" />
+    <ClCompile Include="..\..\dialogxml\control.cpp" />
+    <ClCompile Include="..\..\dialogxml\dialog.cpp" />
+    <ClCompile Include="..\..\dialogxml\dlogutil.cpp" />
+    <ClCompile Include="..\..\dialogxml\field.cpp" />
+    <ClCompile Include="..\..\dialogxml\message.cpp" />
+    <ClCompile Include="..\..\dialogxml\pict.cpp" />
+    <ClCompile Include="..\..\dialogxml\scrollbar.cpp" />
+    <ClCompile Include="..\..\dialogxml\stack.cpp" />
+    <ClCompile Include="..\..\dialogxml\xml-parser\ticpp.cpp" />
+    <ClCompile Include="..\..\dialogxml\xml-parser\tinystr.cpp" />
+    <ClCompile Include="..\..\dialogxml\xml-parser\tinyxml.cpp" />
+    <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\tools\fileio.cpp" />
+    <ClCompile Include="..\..\tools\graphtool.cpp" />
+    <ClCompile Include="..\..\tools\gzstream\gzstream.cpp" />
+    <ClCompile Include="..\..\tools\map_parse.cpp" />
+    <ClCompile Include="..\..\tools\mathutil.cpp" />
+    <ClCompile Include="..\..\tools\porting.cpp" />
+    <ClCompile Include="..\..\tools\soundtool.cpp" />
+    <ClCompile Include="..\..\tools\specials_parse.cpp" />
+    <ClCompile Include="..\..\tools\tarball.cpp" />
+    <ClCompile Include="..\..\tools\undo.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1347FE79-73BD-4176-9280-0FE39E3534E2}</ProjectGuid>
+    <RootNamespace>Common</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <NoEntryPoint>false</NoEntryPoint>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

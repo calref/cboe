@@ -8,6 +8,8 @@
 
 //#define BOOST_SPIRIT_DEBUG
 
+#ifndef _MSC_VER // TODO: Figure out why this won't compile in Visual Studio
+
 #include "special_parse.hpp"
 
 #include <fstream>
@@ -17,6 +19,11 @@
 #include <boost/phoenix/bind.hpp>
 
 #include "special.h"
+
+#ifdef _MSC_VER
+#define BOOST_PHOENIX_LIMIT 10
+#define _VARIADIC_MAX 10
+#endif
 
 namespace ph = boost::phoenix;
 qi::symbols<char, eSpecType> opcode;
@@ -229,3 +236,5 @@ void test_special_parse(std::string file) {
 	}
 	fout.close();
 }
+
+#endif

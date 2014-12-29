@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="DialogXML">
+      <UniqueIdentifier>{243e7be1-5ae2-447e-a151-1f024281fc3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{e57ca16d-7be8-4847-8a66-2255b728c9ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{f35d1cde-8f80-49ab-8f96-3fa8a44ce491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Source Files">
+      <UniqueIdentifier>{606f67f8-5f1e-4b19-b417-0757fa8544ef}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="DialogXML\Source Files">
+      <UniqueIdentifier>{71426284-8f6d-42cb-8685-4d92d8e96879}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Tools\Source Files">
+      <UniqueIdentifier>{f41285d1-bf7b-4650-b2e5-0f816e52bac2}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Classes\Header Files">
+      <UniqueIdentifier>{28d415a1-e037-4a8b-bbdb-a6553b192bc3}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="DialogXML\Header Files">
+      <UniqueIdentifier>{17e8463f-156d-44db-9607-b2b5b0c426bb}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Tools\Header Files">
+      <UniqueIdentifier>{a6d8701d-a0e3-4429-8eec-3d0bad13c3f5}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="DialogXML\TinyXML">
+      <UniqueIdentifier>{b705522f-daf8-4db2-9cec-f5ae249e595e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\classes\creatlist.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\item.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\location.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\monster.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\outdoors.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\party.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\pc.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\regtown.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\scenario.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\shop.hpp">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\simpletypes.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\special.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\spell.hpp">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\talking.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\terrain.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\tmpltown.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\town.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\universe.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\vehicle.h">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\xml-parser\ticpp.h">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\xml-parser\ticpprc.h">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\xml-parser\tinystr.h">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\xml-parser\tinyxml.h">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\button.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\control.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\dialog.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\dialog.keys.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\dlogutil.buttons.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\dlogutil.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\field.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\message.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\pict.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\scrollbar.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\stack.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\cursors.h">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\fileio.h">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\graphtool.h">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\map_parse.hpp">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\mathutil.h">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\porting.h">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\prefs.hpp">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\soundtool.h">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\special_parse.hpp">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\tarball.hpp">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\undo.h">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\vector2d.hpp">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\winutil.h">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\resmgr\resmgr.hpp">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\resmgr\restypes.hpp">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools\gzstream\gzstream.h">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\classes\creatlist.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\item.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\location.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\monster.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\outdoors.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\party.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\pc.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\regtown.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\scenario.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\shop.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\special.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\spell.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\talking.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\terrain.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\tmpltown.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\town.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\universe.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\vehicle.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\xml-parser\ticpp.cpp">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\xml-parser\tinystr.cpp">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\xml-parser\tinyxml.cpp">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlerror.cpp">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlparser.cpp">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\button.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\control.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\dialog.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\dlogutil.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\field.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\message.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\pict.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\scrollbar.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\stack.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\gzstream\gzstream.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\fileio.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\graphtool.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\map_parse.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\mathutil.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\porting.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\soundtool.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\specials_parse.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\tarball.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\undo.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

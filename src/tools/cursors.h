@@ -9,6 +9,8 @@
 #ifndef BOE_CURSORS_H
 #define BOE_CURSORS_H
 
+#include <string>
+
 enum cursor_type {
 	wand_curs = 0,
 	eyedropper_curs = 1,
@@ -41,7 +43,7 @@ enum cursor_type {
 class Cursor {
 	void* ptr;
 public:
-	Cursor(const char* imgPath, float hotSpotX, float hotSpotY);
+	Cursor(std::string imgPath, float hotSpotX, float hotSpotY);
 	~Cursor();
 	void apply();
 };

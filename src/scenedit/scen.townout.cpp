@@ -430,12 +430,11 @@ static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
 }
 
 void outdoor_details() {
-	char temp_str[256];
-	
 	cDialog out_dlg("edit-outdoor-details");
 	out_dlg["okay"].attachClickHandler(outdoor_details_event_filter);
-	snprintf(temp_str,256,"X = %d, Y = %d",cur_out.x,cur_out.y);
-	out_dlg["loc"].setText(temp_str);
+	std::ostringstream str_out;
+	str_out << "X = " << cur_out.x << ", Y = " << cur_out.y;
+	out_dlg["loc"].setText(str_out.str());
 	out_dlg["comment"].setText(current_terrain->comment);
 	out_dlg["name"].setText(current_terrain->out_name);
 	

@@ -14,6 +14,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 #include <functional>
 #include "graphtool.h" // for pic_num_t
 #include "soundtool.h" // for snd_num_t

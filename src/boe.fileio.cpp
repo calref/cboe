@@ -147,7 +147,7 @@ void finish_load_party(){
 	loaded_yet = true;
 	
 	// TODO: Why is this still a C-string?
-	strcpy (last_load_file, file_to_load.filename().c_str());
+	strcpy (last_load_file, file_to_load.filename().string().c_str());
 	store_file_reply = file_to_load;
 	
 	add_string_to_buf("Load: Game loaded.            ");
@@ -500,7 +500,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 	bool mac_header = true;
 	
 	// TODO: Rewrite using ifstream, or maybe ifstream_buf
-	FILE* file_id = fopen(file.c_str(), "rb");
+	FILE* file_id = fopen(file.string().c_str(), "rb");
 	if(file_id == NULL) {
 		return false;
 	}

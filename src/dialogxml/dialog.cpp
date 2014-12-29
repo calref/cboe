@@ -178,8 +178,10 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 
 class dlogStringFilter : public boost::iterator_facade<dlogStringFilter, string::value_type, forward_iterator_tag, string::value_type> {
 	friend class boost::iterator_core_access;
+public:
 	using value_type = std::string::value_type;
 	using iter_type = std::string::iterator;
+private:
 	bool found_nl;
 	iter_type base;
 	bool equal(const dlogStringFilter& other) const {
@@ -834,7 +836,7 @@ void cDialog::loadFromFile(std::string path){
 	try{
 		printf("Loading dialog from: %s\n", cPath.c_str());
 		TiXmlBase::SetCondenseWhiteSpace(false);
-		Document xml(cPath.c_str());
+		Document xml(cPath.string().c_str());
 		xml.LoadFile();
 		
 		Iterator<Attribute> attr;
@@ -1524,3 +1526,5 @@ cControl& cDialog::getControl(std::string id) {
 	}
 	throw std::invalid_argument(id + " does not exist in dialog " + fname);
 }
+
+const char*const xBadVal::CONTENT = "<content>";

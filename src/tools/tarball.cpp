@@ -8,6 +8,13 @@
 
 #include "tarball.hpp"
 #include <algorithm>
+#include <cstdio>
+#include <ctime>
+
+#ifdef _MSC_VER
+// For some bizarre reason, Visual Studio doesn't declare snprintf in <cstdio>
+#define snprintf _snprintf_s
+#endif
 
 tarball::header_posix_ustar tarball::generateTarHeader(const std::string& fileName, unsigned long long fileSize, bool directory){
 	static_assert(sizeof(header_posix_ustar) == 512, "Uh-oh! Padding in the tarball header!");

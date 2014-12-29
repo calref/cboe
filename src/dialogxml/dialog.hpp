@@ -18,6 +18,7 @@
 #include <map>
 #include <vector>
 #include <exception>
+#include <functional>
 
 #include "ticpp.h"
 #include "dialog.keys.hpp"
@@ -258,7 +259,7 @@ class xBadVal : std::exception {
 	const char* msg;
 public:
 	/// A magic value to indicate errors in an element's content, rather than an attribute's content.
-	static constexpr const char*const CONTENT = "<content>";
+	static const char*const CONTENT;
 	/// Construct a new exception.
 	/// @param t The tag name of the element with the invalid value.
 	/// @param n The name of the attribute with the invalid value.

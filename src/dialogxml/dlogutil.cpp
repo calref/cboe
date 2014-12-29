@@ -385,7 +385,7 @@ void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cB
 		btn->attachKey(btns[i]->defaultKey);
 		btn->setText(btns[i]->label);
 		btn->setBtnType(btns[i]->type);
-		btn->attachClickHandler(std::bind(&cChoiceDlog::onClick,this,_1,_2));
+		btn->attachClickHandler(std::bind(&cThreeChoice::onClick,this,_1,_2));
 		switch(btns[i]->type){
 			case BTN_HELP:
 				cur_btn_rect.bottom = cur_btn_rect.top + 13;

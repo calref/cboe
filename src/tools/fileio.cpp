@@ -98,7 +98,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	legacy::scenario_data_type *temp_scenario = new legacy::scenario_data_type;
 	legacy::scen_item_data_type *item_data = new legacy::scen_item_data_type;
 	// TODO: Convert this (and all the others in this file) to use C++ streams
-	FILE* file_id = fopen(file_to_load.c_str(),"rb");
+	FILE* file_id = fopen(file_to_load.string().c_str(),"rb");
 	if(file_id == NULL) {
 		// TODO: The third parameter to oopsError is supposed to specify whether we're in the scenario editor or the game, but I don't think this code knows that.
 		// TODO: Alternatively, nuke oopsError and just use giveError. It's more informative, anyway.
@@ -233,7 +233,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	legacy::ave_tr_type ave_t;
 	legacy::tiny_tr_type tiny_t;
 	
-	FILE* file_id = fopen(scen_file.c_str(), "rb");
+	FILE* file_id = fopen(scen_file.string().c_str(), "rb");
 	if(file_id == NULL) {
 		oopsError(14, 0, 0);
 		return false;
@@ -387,7 +387,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	char temp_str[256];
 	legacy::outdoor_record_type store_out;
 	
-	FILE* file_id = fopen(scen_file.c_str(), "rb");
+	FILE* file_id = fopen(scen_file.string().c_str(), "rb");
 	if(file_id == NULL) {
 		oopsError(32, 0, 0);
 		return false;
@@ -526,6 +526,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	bool maps_there = false;
 	bool in_scen = false;
 	enum {old_mac, old_win, new_oboe, unknown} format;
+	typedef unsigned short ushort;
 	
 	long len;
 	short vers,n;
@@ -544,7 +545,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	};
 	// but if the first flag is 0x0B0E, we have a new-format save
 	// the three flags still follow that.
-	FILE* file_id = fopen(file_to_load.c_str(), "rb");
+	FILE* file_id = fopen(file_to_load.string().c_str(), "rb");
 	if(file_id == NULL) {
 		cChoiceDlog("load-game-fail").show();
 		return false;
@@ -783,7 +784,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		fout.close();
 	}
 	
-	igzstream zin(tempPath.c_str());
+	igzstream zin(tempPath.string().c_str());
 	tarball partyIn;
 	partyIn.readFrom(zin);
 	zin.close();
@@ -805,7 +806,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		}
 		uint16_t magic;
 		fin.read((char*)&magic, 2);
-		fin.read((char*)&univ.party.setup, sizeof(cParty::setup));
+		fin.read((char*)&univ.party.setup, sizeof(univ.party.setup));
 		if(magic == 0x0E0B) // should be 0x0B0E!
 			for(auto& i : univ.party.setup)
 				for(auto& j : i)
@@ -886,7 +887,7 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 		std::ostream& fout = partyOut.newFile("save/setup.dat");
 		static uint16_t magic = 0x0B0E;
 		fout.write((char*)&magic, 2);
-		fout.write((char*)&univ.party.setup, sizeof(cParty::setup));
+		fout.write((char*)&univ.party.setup, sizeof(univ.party.setup));
 	}
 	
 	// Then write the data for each of the party members
@@ -928,7 +929,7 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	
 	// Write out the compressed data
 	fs::path tempPath = tempDir/"savetemp.exg";
-	ogzstream zout(tempPath.c_str());
+	ogzstream zout(tempPath.string().c_str());
 	partyOut.writeTo(zout);
 	zout.close();
 	
