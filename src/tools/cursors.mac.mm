@@ -57,9 +57,9 @@ static NSImage* imageFromURL(CFURLRef url){
 	return newImage;
 }
 
-Cursor::Cursor(const char* path, float hotSpotX, float hotSpotY){
+Cursor::Cursor(std::string path, float hotSpotX, float hotSpotY){
 	FSRef ref;
-	FSPathMakeRef((UInt8*)path, &ref, NULL);
+	FSPathMakeRef((UInt8*)path.c_str(), &ref, NULL);
 	CFURLRef imgPath = CFURLCreateFromFSRef(NULL, &ref);
 	
 	NSImage *img = imageFromURL(imgPath);

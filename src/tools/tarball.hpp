@@ -39,7 +39,7 @@ class tarball {
 		// This seems to be necessary to compile in Visual Studio
 		// Seemingly, stringstream is non-copyable.
 		tarfile() {}
-		tarfile(tarfile& other) {
+		tarfile(const tarfile& other) {
 			contents.str("");
 			contents << other.contents.str();
 		}
