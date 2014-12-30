@@ -294,6 +294,7 @@ cBigTown::cBigTown(cScenario& scenario, bool init_strings) : cTown(scenario, ini
 			terrain(i,j) = scenario.default_ground * 2;
 			lighting(i / 8,j) = 0;
 		}
+	init_start();
 }
 
 cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
@@ -310,6 +311,7 @@ cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, ini
 			terrain(i,j) = scenario.default_ground * 2;
 			lighting(i / 8,j) = 0;
 		}
+	init_start();
 }
 
 cTinyTown::cTinyTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
@@ -326,6 +328,7 @@ cTinyTown::cTinyTown(cScenario& scenario, bool init_strings) : cTown(scenario, i
 			terrain(i,j) = scenario.default_ground * 2;
 			lighting(i / 8,j) = 0;
 		}
+	init_start();
 }
 
 short cBigTown::max_dim() const {

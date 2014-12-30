@@ -242,7 +242,7 @@ void put_party_in_scen(std::string scen_name) {
 	bool item_took = false;
 	
 	for(j = 0; j < 6; j++) {
-		univ.party[i].status.clear();
+		univ.party[j].status.clear();
 		if(isSplit(univ.party[j].main_status))
 			univ.party[j].main_status -= eMainStatus::SPLIT;
 		univ.party[j].cur_health = univ.party[j].max_health;

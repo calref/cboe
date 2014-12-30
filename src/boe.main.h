@@ -7,8 +7,6 @@ void Handle_One_Event();
 void Handle_Update();
 void Mouse_Pressed();
 void close_program();
-//void handle_menu_choice(long choice);
-void handle_apple_menu(int item_hit);
 void handle_file_menu(int item_hit);
 void handle_options_menu(int item_hit);
 void handle_help_menu(int item_hit);

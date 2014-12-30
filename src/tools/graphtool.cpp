@@ -68,7 +68,7 @@ void init_graph_tool(){
 	fin.read(vbuf, size);
 	
 	if(!maskShader.loadFromMemory(vbuf, fbuf)) {
-		fprintf(stderr,"Error: Failed to load shaders from %s\nVertex:\n%s\nFragment:\n%s",shaderPath.c_str(),vbuf,fbuf);
+		fprintf(stderr,"Error: Failed to load shaders from %s\nVertex:\n%s\nFragment:\n%s",shaderPath.string().c_str(),vbuf,fbuf);
 	}
 	delete[] fbuf;
 	delete[] vbuf;

@@ -67,9 +67,6 @@ short store_flags[3];
 //stored_town_maps_type town_maps;
 //stored_outdoor_maps_type o_maps;
 
-/* Display globals */
-short give_delays = 0; /* XXX this wasn't defined anywhere, is this right? -jmr */
-
 /* Prototypes */
 int main(int argc, char* argv[]);
 void Initialize(void);
@@ -100,8 +97,8 @@ char start_name[256];
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
 int main(int /*argc*/, char* argv[]) {
 	try {
-	init_menubar();
 	init_directories(argv[0]);
+	init_menubar();
 	Initialize();
 	init_fileio();
 	init_main_buttons();

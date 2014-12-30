@@ -29,7 +29,8 @@
 #include "boe.menus.h"
 
 extern sf::RenderWindow mainPtr;
-extern short stat_window,give_delays;
+extern short stat_window;
+extern bool give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range;
 extern bool anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
@@ -167,6 +168,7 @@ void adjust_window_mode() {
 	sf::ContextSettings winSettings;
 	winSettings.stencilBits = 1;
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+	hideMenuBar();
 	
 	// TODO: Make display_mode an enum
 	if(display_mode == 5) {
@@ -194,6 +196,8 @@ void adjust_window_mode() {
 		item_sbar->relocate({ul.x + 546,ul.y + 146});
 		shop_sbar->relocate({ul.x + 258,ul.y + 67});
 	}
+	init_menubar();
+	showMenuBar();
 }
 
 // TODO: Move to boe.startup.cpp

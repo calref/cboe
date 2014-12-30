@@ -79,9 +79,8 @@ void cTown::append(legacy::town_record_type& old){
 	strong_barriers = defy_scrying = defy_mapping = false;
 }
 
-short max_dim[3] = {64,48,32};
 cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
-	short i,s;
+	short i;
 	location d_loc(100,0);
 	cTown::cWandering d_wan = {0,0,0,0};
 	cTown::cItem null_item = {loc(),-1,0,0,0,0,0};
@@ -103,19 +102,6 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 		exit_locs[i].x = -1;
 		exit_locs[i].y = -1;
 	}
-//	s = town->max_dim();
-	start_locs[0].x = s / 2;
-	start_locs[0].y = 4;
-	start_locs[2].x = s / 2;
-	start_locs[2].y = s - 5;
-	start_locs[1].x = s - 5;
-	start_locs[1].y = s / 2;
-	start_locs[3].x = 4;
-	start_locs[3].y = s / 2;
-	in_town_rect.top = 3;
-	in_town_rect.bottom = s - 4;
-	in_town_rect.left = 3;
-	in_town_rect.right = s - 4;
 	for(i = 0; i < 64; i++) 
 		preset_items[i] = null_item;
 	max_num_monst = 30000;
@@ -173,6 +159,22 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 		talking.people[i].job = "";
 		talking.people[i].dunno = "";
 	}
+}
+
+void cTown::init_start() {
+	short s = this->max_dim();
+	start_locs[0].x = s / 2;
+	start_locs[0].y = 4;
+	start_locs[2].x = s / 2;
+	start_locs[2].y = s - 5;
+	start_locs[1].x = s - 5;
+	start_locs[1].y = s / 2;
+	start_locs[3].x = 4;
+	start_locs[3].y = s / 2;
+	in_town_rect.top = 3;
+	in_town_rect.bottom = s - 4;
+	in_town_rect.left = 3;
+	in_town_rect.right = s - 4;
 }
 
 void cTown::cWandering::append(legacy::wandering_type old){

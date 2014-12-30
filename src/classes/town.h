@@ -128,6 +128,7 @@ public:
 	virtual short max_dim() const = 0;
 	virtual short max_monst() const = 0;
 	virtual short max_items() const = 0;
+	void init_start();
 	void set_up_lights();
 	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
 	

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\classes.h" />
     <ClInclude Include="..\..\classes\creatlist.h" />
     <ClInclude Include="..\..\classes\item.h" />
     <ClInclude Include="..\..\classes\location.h" />
@@ -45,6 +46,7 @@
     <ClInclude Include="..\..\dialogxml\xml-parser\ticpprc.h" />
     <ClInclude Include="..\..\dialogxml\xml-parser\tinystr.h" />
     <ClInclude Include="..\..\dialogxml\xml-parser\tinyxml.h" />
+    <ClInclude Include="..\..\oldstructs.h" />
     <ClInclude Include="..\..\tools\cursors.h" />
     <ClInclude Include="..\..\tools\fileio.h" />
     <ClInclude Include="..\..\tools\graphtool.h" />
@@ -96,16 +98,19 @@
     <ClCompile Include="..\..\dialogxml\xml-parser\tinyxml.cpp" />
     <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\tools\cursors.win.cpp" />
     <ClCompile Include="..\..\tools\fileio.cpp" />
     <ClCompile Include="..\..\tools\graphtool.cpp" />
     <ClCompile Include="..\..\tools\gzstream\gzstream.cpp" />
     <ClCompile Include="..\..\tools\map_parse.cpp" />
     <ClCompile Include="..\..\tools\mathutil.cpp" />
     <ClCompile Include="..\..\tools\porting.cpp" />
+    <ClCompile Include="..\..\tools\prefs.win.cpp" />
     <ClCompile Include="..\..\tools\soundtool.cpp" />
     <ClCompile Include="..\..\tools\specials_parse.cpp" />
     <ClCompile Include="..\..\tools\tarball.cpp" />
     <ClCompile Include="..\..\tools\undo.cpp" />
+    <ClCompile Include="..\..\tools\winutil.win.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1347FE79-73BD-4176-9280-0FE39E3534E2}</ProjectGuid>
@@ -146,6 +151,7 @@
       <AdditionalIncludeDirectories>..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4800;4290</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,6 +159,10 @@
       <AdditionalDependencies>opengl32.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <NoEntryPoint>false</NoEntryPoint>
     </Link>
+    <PostBuildEvent>
+      <Command>call $(ProjectDir)CopyFiles.bat $(SolutionDir)$(Configuration)</Command>
+      <Message>Copy resource files</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

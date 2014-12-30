@@ -53,14 +53,18 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
-      <AdditionalIncludeDirectories>..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;4290</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -124,6 +128,7 @@
     <ClCompile Include="..\..\boe.items.cpp" />
     <ClCompile Include="..\..\boe.locutils.cpp" />
     <ClCompile Include="..\..\boe.main.cpp" />
+    <ClCompile Include="..\..\boe.menus.win.cpp" />
     <ClCompile Include="..\..\boe.monster.cpp" />
     <ClCompile Include="..\..\boe.newgraph.cpp" />
     <ClCompile Include="..\..\boe.party.cpp" />

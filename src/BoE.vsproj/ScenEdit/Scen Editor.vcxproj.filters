@@ -44,6 +44,9 @@
     <ClCompile Include="..\..\scenedit\scen.townout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scenedit\scen.menus.win.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scenedit\scen.actions.h">

@@ -22,6 +22,7 @@
 #include "porting.h"
 #include "restypes.hpp"
 #include "tarball.hpp"
+#include "cursors.h"
 
 bool cur_scen_is_mac =  true, mac_is_intel;
 extern sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
@@ -43,6 +44,14 @@ static bool load_town_talk(fs::path town_base, short which_town, cSpeech& the_ta
 static bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool must_port);
 static bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there);
 
+// Cursors included here so that they needn't be unnecessarily duplicated in platform-specific files
+cursor_type current_cursor = sword_curs;
+cursor_type arrow_curs[3][3] = {
+	{NW_curs, N_curs, NE_curs},
+	{W_curs, wait_curs, E_curs},
+	{SW_curs, S_curs, SE_curs},
+};
+
 #include <stdexcept>
 
 void init_directories(const char* exec_path) {
@@ -54,7 +63,7 @@ void init_directories(const char* exec_path) {
 #endif
 	progDir = progDir.parent_path();
 	if(progDir.filename() == "Scenario Editor") progDir = progDir.parent_path();
-	std::cout << progDir << '\n';
+	std::cout << progDir << std::endl;
 	// Initialize the resource manager paths
 	ResMgr::pushPath<ImageRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac");
 	ResMgr::pushPath<CursorRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac"/"cursors");

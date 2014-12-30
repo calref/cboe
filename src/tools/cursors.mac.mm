@@ -11,23 +11,6 @@
 #include <string>
 #include "restypes.hpp"
 
-cursor_type current_cursor = sword_curs;
-cursor_type arrow_curs[3][3] = {
-	{NW_curs, N_curs, NE_curs},
-	{W_curs,wait_curs,E_curs},
-	{SW_curs, S_curs, SE_curs},
-};
-
-const std::string cursors[25] = {
-	"wand", "eyedropper", "brush", "spraycan",
-	"eraser", "topleft", "bottomright", "hand",
-	"NW", "N", "NE",
-	"W", "wait", "E",
-	"SW", "S", "SE",
-	"sword", "boot", "drop", "target",
-	"talk", "key", "look", "watch",
-};
-
 static NSImage* imageFromURL(CFURLRef url){
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(url, NULL);
 	CGImageRef theImage = nil;

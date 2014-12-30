@@ -27,7 +27,8 @@
 
 #define	DONE_BUTTON_ITEM	1
 
-extern short give_delays,stat_screen_mode;
+extern short stat_screen_mode;
+extern bool give_delays;
 extern eGameMode overall_mode;
 extern bool play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug,ghost_mode;
 extern location center;

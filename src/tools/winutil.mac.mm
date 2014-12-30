@@ -145,6 +145,11 @@ void beep() {
 	NSBeep();
 }
 
+int getMenubarHeight() {
+	// Mac menubar isn't in the window, so we return 0 here.
+	return 0;
+}
+
 NSOpenPanel* dlg_get_scen;
 NSOpenPanel* dlg_get_game;
 NSSavePanel* dlg_put_scen;

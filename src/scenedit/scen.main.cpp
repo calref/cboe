@@ -75,6 +75,8 @@ rectangle right_sbar_rect;
 //Changed to ISO C specified argument and return type.
 int main(int, char* argv[]) {
 	try {
+	
+	init_directories(argv[0]);
 	init_menubar();
 	//outdoor_record_type dummy_outdoor, *store2;
 	
@@ -83,8 +85,6 @@ int main(int, char* argv[]) {
 	init_current_terrain();
 	//create_file();
 	//ExitToShell();
-	
-	init_directories(argv[0]);
 	Initialize();
 	init_fileio();
 	init_snd_tool();

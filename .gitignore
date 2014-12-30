@@ -45,6 +45,8 @@ src/*.vsproj/*/Release/
 src/*.vsproj/Debug/
 src/*.vsproj/Release/
 src/*.vsproj/*/ipch/
+# Output files to work around VS's lack of output within the IDE
+bladeslog.txt
 
 # Shader Builder projects
 # It's an sqlite3 database and not particularly important, so exclude it
@@ -53,3 +55,6 @@ src/tools/*.sbproj
 # Doxygen stuff
 src/doxy/html/
 src/doxy/doxy_warnings.txt
+
+# Windows junk files
+Thumbs.db

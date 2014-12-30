@@ -81,7 +81,8 @@ long dummy;
 short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 extern cShop active_shop;
 
-extern short cen_x, cen_y, stat_window,give_delays;//,pc_moves[6];
+extern short cen_x, cen_y, stat_window;//,pc_moves[6];
+extern bool give_delays;
 extern eGameMode overall_mode;
 extern location	to_create;
 extern bool All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;

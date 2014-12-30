@@ -10,6 +10,9 @@
 #define BOE_CURSORS_H
 
 #include <string>
+#include <boost/filesystem/path.hpp>
+
+namespace fs = boost::filesystem;
 
 enum cursor_type {
 	wand_curs = 0,
@@ -43,7 +46,7 @@ enum cursor_type {
 class Cursor {
 	void* ptr;
 public:
-	Cursor(std::string imgPath, float hotSpotX, float hotSpotY);
+	Cursor(fs::path imgPath, float hotSpotX, float hotSpotY);
 	~Cursor();
 	void apply();
 };

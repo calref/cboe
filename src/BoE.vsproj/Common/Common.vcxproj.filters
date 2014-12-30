@@ -194,6 +194,12 @@
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\targetver.h" />
+    <ClInclude Include="..\..\classes.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\oldstructs.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\classes\creatlist.cpp">
@@ -320,6 +326,15 @@
       <Filter>Tools\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\tools\undo.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\cursors.win.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\prefs.win.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\winutil.win.cpp">
       <Filter>Tools\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

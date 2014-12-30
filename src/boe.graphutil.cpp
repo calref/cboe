@@ -23,7 +23,8 @@
 
 extern sf::RenderWindow mainPtr;
 extern rectangle	windRect;
-extern short stat_window,give_delays;
+extern short stat_window;
+extern bool give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range;
 extern bool anim_onscreen,play_sounds,frills_on,startup_loaded;

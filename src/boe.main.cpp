@@ -28,6 +28,7 @@
 #include "scrollbar.hpp"
 #include "boe.menus.h"
 #include "cursors.h"
+#include "prefs.hpp"
 
 extern cursor_type arrow_curs[3][3];
 extern cursor_type current_cursor;
@@ -91,7 +92,7 @@ eGameMode overall_mode = MODE_STARTUP;
 bool first_update = true,anim_onscreen = false,frills_on = true,changed_display_mode = false,suppress_stat_screen = false;
 short stat_window = 0,store_modifier;
 bool monsters_going = false,boom_anim_active = false;
-short give_delays = 0;
+bool give_delays = false;
 
 sf::RenderWindow mini_map;
 //rectangle d_rects[80];
@@ -145,6 +146,7 @@ int main(int /*argc*/, char* argv[]) {
 		init_directories(argv[0]);
 		//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));
 		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
+		sync_prefs();
 		init_graph_tool();
 		Initialize();
 		init_fileio();
@@ -427,19 +429,9 @@ void Mouse_Pressed() {
 void close_program() {
 	// TODO: Ultimately we would like to have cleanup happen automatically, negating the need for this function
 	//end_music();
-}
-
-void handle_apple_menu(int item_hit) {
-	
-	switch(item_hit) {
-		case 1:
-			cChoiceDlog("about-boe").show();
-			break;
-		default:
-//			GetItem (apple_menu,item_hit,desk_acc_name);
-//			desk_acc_num = OpenDeskAcc(desk_acc_name);
-			break;
-	}
+	// On the Mac, prefs are synced automatically. However, doing it manually won't hurt.
+	// On other platforms, we need to do it manually.
+	sync_prefs();
 }
 
 void handle_file_menu(int item_hit) {
@@ -603,6 +595,7 @@ void handle_help_menu(int item_hit) {
 		case 4: dialogToShow = "help-fields"; break;
 		case 6: dialogToShow = "help-hints"; break;
 		case 7: dialogToShow = "help-magic"; break;
+		case 10: dialogToShow = "about-boe"; break;
 	}
 	if(!dialogToShow.empty())
 		cChoiceDlog(dialogToShow).show();
@@ -825,7 +818,7 @@ void pause(short length) {
 	redraw_screen(REFRESH_NONE);
 	mainPtr.display();
 	
-	if(give_delays == 0)
+	if(give_delays)
 		sf::sleep(time_in_ticks(len));
 }
 

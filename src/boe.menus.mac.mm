@@ -34,7 +34,6 @@ MenuHandle apple_menu,file_menu,extra_menu,help_menu,monster_info_menu,library_m
 MenuHandle actions_menu,music_menu,mage_spells_menu,priest_spells_menu;
 
 @interface MenuHandler : NSObject
--(void) appMenu:(id) sender;
 -(void) fileMenu:(id) sender;
 -(void) optMenu:(id) sender;
 -(void) actMenu:(id) sender;
@@ -104,6 +103,9 @@ static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
 }
 
 void init_menubar() {
+	static bool inited = false;
+	if(inited) return;
+	inited = true;
 	NSApplication* app = [NSApplication sharedApplication];
 	[NSBundle loadNibNamed: @"menu" owner: app];
 	menu_bar_handle = [app mainMenu];
@@ -120,8 +122,7 @@ void init_menubar() {
 	
 	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
 	setMenuCallback([help_menu itemAtIndex: 0], handler, @selector(onlineHelp:), 0);
-	// TODO: Do away with "handle_apple_menu" and "appMenu" in favour of pushing "About" to the help menu
-	setMenuCallback([apple_menu itemWithTitle: @"About Blades of Exile"], handler, @selector(appMenu:), 1);
+	setMenuCallback([apple_menu itemWithTitle: @"About Blades of Exile"], handler, @selector(helpMenu:), 10);
 	setMenuCallback([apple_menu itemWithTitle: @"Preferences…"], handler, @selector(fileMenu:), 6);
 	setMenuCallback([apple_menu itemWithTitle: @"Quit Blades of Exile"], handler, @selector(fileMenu:), 8);
 	// TODO: Check to make sure that Cocoa 0-indexes its menus
@@ -271,7 +272,6 @@ void menu_activate() {
 	[[file_menu itemWithTitle: @"Save As…"] setEnabled: YES];
 }
 
-void handle_apple_menu(int item_hit);
 void handle_file_menu(int item_hit);
 void handle_options_menu(int item_hit);
 void handle_help_menu(int item_hit);
@@ -281,10 +281,6 @@ void handle_monster_info_menu(int item_hit);
 void handle_menu_spell(eSpell spell_picked);
 
 @implementation MenuHandler
--(void) appMenu:(id) sender {
-	handle_apple_menu([[sender representedObject] intValue]);
-}
-
 -(void) fileMenu:(id) sender {
 	handle_file_menu([[sender representedObject] intValue]);
 }

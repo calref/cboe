@@ -34,11 +34,15 @@ std::string get_clipboard();
 
 void beep();
 
+// Calculates how much of the window is occupied by the menubar
+int getMenubarHeight();
+
 class ModalSession {
 	void* session;
+	sf::Window& parent;
 public:
 	void pumpEvents();
-	ModalSession(sf::Window& win);
+	ModalSession(sf::Window& win, sf::Window& parent);
 	~ModalSession();
 };
 

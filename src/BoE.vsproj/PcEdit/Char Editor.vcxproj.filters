@@ -30,6 +30,9 @@
     <ClCompile Include="..\..\pcedit\pc.main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\pcedit\pc.menus.win.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\pcedit\pc.action.h">
