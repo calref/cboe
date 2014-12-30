@@ -200,7 +200,7 @@ void ModalSession::pumpEvents() {
 	HWND win_handle = (HWND)session;
 }
 
-ModalSession::ModalSession(sf::Window& win, sf::Window& parent) : parent(&parent) {
+ModalSession::ModalSession(sf::Window& win, sf::Window& p) : parent(&p) {
 	session = win.getSystemHandle();
 	EnableWindow(parent->getSystemHandle(), false);
 }
