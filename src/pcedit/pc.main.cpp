@@ -243,9 +243,8 @@ static void display_strings(short nstr, pic_num_t pic) {
 	display_strings.show();
 }
 
-void handle_extra_menu(int item_hit) {
-	short i;
-	//cVehicle v_boat = {{12,17},{0,0},{0,0},80,true,false};
+void handle_edit_menus(int item_hit) {
+	short i,j,k;
 	
 	if(file_in_mem.empty()) {
 		display_strings(5, 7);
@@ -259,7 +258,7 @@ void handle_extra_menu(int item_hit) {
 			edit_gold_or_food(1);
 			break;
 			
-		case 4:
+		case 103:
 			if(univ.party.is_split() > 0) {
 				cChoiceDlog("reunite-first").show();
 				break;
@@ -268,7 +267,7 @@ void handle_extra_menu(int item_hit) {
 			leave_town();
 			break;
 			
-		case 5:
+		case 16:
 			if(univ.party.is_split() == 0) {
 				cChoiceDlog("not-split").show();
 				break;
@@ -281,29 +280,29 @@ void handle_extra_menu(int item_hit) {
 			break;
 			
 			
-		case 6:
+		case 104:
 			display_strings(20,7);
 			for(i = 0; i < 4; i++)
 				univ.party.creature_save[i].which_town = 200;
 			break;
-		case 8: // damage
+		case 5: // damage
 			display_strings(1,15);
 			for(i = 0; i < 6; i++)
 				univ.party[i].cur_health = univ.party[i].max_health;
 			break;
-		case 9: // spell pts
+		case 6: // spell pts
 			display_strings(2,15);
 			for(i = 0; i < 6; i++)
 				univ.party[i].cur_sp = univ.party[i].max_sp;
 			break;
-		case 10: // raise dead
+		case 7: // raise dead
 			display_strings(3,15);
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::DEAD || univ.party[i].main_status == eMainStatus::DUST ||
 						univ.party[i].main_status == eMainStatus::STONE)
 					univ.party[i].main_status = eMainStatus::ALIVE;
 			break;
-		case 11: // conditions
+		case 8: // conditions
 			display_strings(4,15);
 			for(i = 0; i < 6; i++) {
 				univ.party[i].status[eStatus::POISON] = 0;
@@ -318,7 +317,7 @@ void handle_extra_menu(int item_hit) {
 			}
 			break;
 			
-		case 13:
+		case 108:
 			if(!party_in_scen) {
 				display_strings(25,15);
 				break;
@@ -327,32 +326,20 @@ void handle_extra_menu(int item_hit) {
 				break;
 			remove_party_from_scen();
 			break;
-	}
-	redraw_screen();
-}
-
-void handle_edit_menu(int item_hit) {
-	short i,j,k;
-	
-	if(file_in_mem.empty()) {
-		display_strings(5,7);
-		return;
-	}
-	switch(item_hit) {
-		case 1:
+		case 3:
 			display_alchemy(true);
 			break;
-		case 2: // all property
+		case 17: // all property
 			display_strings(6,7);
 			for(i = 0; i < 30; i++) {
 				univ.party.boats[i].property = false;
 				univ.party.horses[i].property = false;
 			}
 			break;
-		case 4: // edit day
+		case 101: // edit day
 			edit_day();
 			break;
-		case 6: // ouit maps
+		case 105: // out maps
 			if(!party_in_scen) {
 				display_strings(25,15);
 				break;
@@ -363,7 +350,7 @@ void handle_edit_menu(int item_hit) {
 					for(k = 0; k < 48; k++)
 						univ.out_maps[i][j][k] = 255;
 			break;
-		case 7: // town maps
+		case 106: // town maps
 			if(!party_in_scen) {
 				display_strings(25,15);
 				break;
@@ -374,21 +361,24 @@ void handle_edit_menu(int item_hit) {
 					for(k = 0; k < 64; k++)
 						univ.town_maps[i][j][k] = 255;
 			break;
-		case 9:
+		case 10:
 			display_pc(current_active_pc,0,0);
 			break;
-		case 10:
+		case 11:
 			display_pc(current_active_pc,1,0);
 			break;
-		case 11:
+		case 12:
 			pick_race_abil(&univ.party[current_active_pc],0);
 			break;
-		case 12:
+		case 13:
 			spend_xp(current_active_pc,1,0);
 			break;
-		case 13:
+		case 14:
 			edit_xp(&univ.party[current_active_pc]);
 			break;
+		case 109:
+			// TODO: Implement "Set SDF"
+			break;;
 	}
 }
 

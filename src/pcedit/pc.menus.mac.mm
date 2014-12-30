@@ -19,8 +19,7 @@ using MenuHandle = NSMenu*;
 
 extern void handle_apple_menu(int item_hit);
 extern void handle_file_menu(int item_hit);
-extern void handle_extra_menu(int item_hit);
-extern void handle_edit_menu(int item_hit);
+extern void handle_edit_menus(int item_hit);
 extern void handle_item_menu(int item_hit);
 
 extern cUniverse univ;
@@ -31,8 +30,7 @@ MenuHandle apple_menu, file_menu, reg_menu, extra_menu, items_menu[4];
 
 @interface MenuHandler : NSObject
 -(void) fileMenu:(id) sender;
--(void) freeMenu:(id) sender;
--(void) specMenu:(id) sender;
+-(void) editMenu:(id) sender;
 -(void) itemMenu:(id) sender;
 -(void) helpMenu:(id) sender;
 @end
@@ -56,8 +54,8 @@ void init_menubar() {
 	
 	apple_menu = [[menu_bar_handle itemWithTitle: @"BoE Character Editor"] submenu];
 	file_menu = [[menu_bar_handle itemWithTitle: @"File"] submenu];
-	reg_menu = [[menu_bar_handle itemWithTitle: @"Free Extras"] submenu];
-	extra_menu = [[menu_bar_handle itemWithTitle: @"Special Edit"] submenu];
+	reg_menu = [[menu_bar_handle itemWithTitle: @"Edit Party"] submenu];
+	extra_menu = [[menu_bar_handle itemWithTitle: @"Scenario Edit"] submenu];
 	items_menu[0] = [[menu_bar_handle itemWithTitle: @"Items 1"] submenu];
 	items_menu[1] = [[menu_bar_handle itemWithTitle: @"Items 2"] submenu];
 	items_menu[2] = [[menu_bar_handle itemWithTitle: @"Items 3"] submenu];
@@ -72,9 +70,9 @@ void init_menubar() {
 	setMenuCallback([file_menu itemWithTitle: @"Open…"], handler, @selector(fileMenu:), 3);
 	
 	for(int i = 0; i < [reg_menu numberOfItems]; i++)
-		setMenuCallback([reg_menu itemAtIndex: i], handler, @selector(freeMenu:), i + 1);
+		setMenuCallback([reg_menu itemAtIndex: i], handler, @selector(editMenu:), i + 1);
 	for(int i = 0; i < [extra_menu numberOfItems]; i++)
-		setMenuCallback([extra_menu itemAtIndex: i], handler, @selector(specMenu:), i + 1);
+		setMenuCallback([extra_menu itemAtIndex: i], handler, @selector(editMenu:), i + 101);
 	
 	update_item_menu();
 	menu_activate();
@@ -112,12 +110,8 @@ void update_item_menu() {
 	handle_file_menu([[sender representedObject] shortValue]);
 }
 
--(void) freeMenu:(id) sender {
-	handle_extra_menu([[sender representedObject] shortValue]);
-}
-
--(void) specMenu:(id) sender {
-	handle_edit_menu([[sender representedObject] shortValue]);
+-(void) editMenu:(id) sender {
+	handle_edit_menus([[sender representedObject] shortValue]);
 }
 
 -(void) itemMenu:(id) sender {
