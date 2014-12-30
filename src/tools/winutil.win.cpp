@@ -200,15 +200,15 @@ void ModalSession::pumpEvents() {
 	HWND win_handle = (HWND)session;
 }
 
-ModalSession::ModalSession(sf::Window& win, sf::Window& parent) : parent(parent) {
+ModalSession::ModalSession(sf::Window& win, sf::Window& parent) : parent(&parent) {
 	session = win.getSystemHandle();
-	EnableWindow(parent.getSystemHandle(), false);
+	EnableWindow(parent->getSystemHandle(), false);
 }
 
 ModalSession::~ModalSession() {
 	HWND win_handle = (HWND)session;
-	EnableWindow(parent.getSystemHandle(), true);
-	RedrawWindow(parent.getSystemHandle(), NULL, NULL, RDW_NOCHILDREN | RDW_UPDATENOW);
+	EnableWindow(parent->getSystemHandle(), true);
+	RedrawWindow(parent->getSystemHandle(), NULL, NULL, RDW_NOCHILDREN | RDW_UPDATENOW);
 }
 
 void set_up_apple_events() {

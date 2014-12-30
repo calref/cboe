@@ -105,7 +105,7 @@ void setWindowFloating(sf::Window& win, bool floating) {
 	}
 }
 
-ModalSession::ModalSession(sf::Window& win) {
+ModalSession::ModalSession(sf::Window& win, sf::Window& /*parent*/) {
 	sf::WindowHandle handle = win.getSystemHandle();
 	id nsHandle = id(handle);
 	if([nsHandle isKindOfClass: [NSWindow class]])

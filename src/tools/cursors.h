@@ -57,4 +57,15 @@ void obscureCursor();
 void set_cursor(cursor_type which_curs);
 void restore_cursor();
 
+// Filenames for the cursors
+static const char*const cursors[25] = {
+	"wand", "eyedropper", "brush", "spraycan",
+	"eraser", "topleft", "bottomright", "hand",
+	"NW", "N", "NE",
+	"W", "wait", "E",
+	"SW", "S", "SE",
+	"sword", "boot", "drop", "target",
+	"talk", "key", "look", "watch",
+};
+
 #endif

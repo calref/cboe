@@ -24,7 +24,6 @@ extern bool mouse_button_held;
 extern short cur_viewing_mode;
 extern cTown* town;
 extern cOutdoors* current_terrain;
-extern short max_dim[3];
 extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
@@ -1645,11 +1644,9 @@ bool build_scenario() {
 
 static bool check_location_bounds(cDialog& me, std::string id, bool losing) {
 	if(!losing) return true;
-	// TODO: Use town->max_dim() instead of max_dim[town_size]
-	// (Requires all towns to be in memory though.)
 	short town_num = me["town-num"].getTextAsNum();
 	short dim = me[id].getTextAsNum();
-	if(dim < 0 || dim >= max_dim[scenario.town_size[town_num]]) {
+	if(dim < 0 || dim >= scenario.towns[town_num]->max_dim()) {
 		giveError("This coordinate is not inside the bounds of the town.");
 		return false;
 	}

@@ -39,7 +39,7 @@ int getMenubarHeight();
 
 class ModalSession {
 	void* session;
-	sf::Window& parent;
+	sf::Window* parent;
 public:
 	void pumpEvents();
 	ModalSession(sf::Window& win, sf::Window& parent);

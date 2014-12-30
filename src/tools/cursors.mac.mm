@@ -11,6 +11,8 @@
 #include <string>
 #include "restypes.hpp"
 
+extern cursor_type current_cursor;
+
 static NSImage* imageFromURL(CFURLRef url){
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(url, NULL);
 	CGImageRef theImage = nil;
@@ -40,7 +42,7 @@ static NSImage* imageFromURL(CFURLRef url){
 	return newImage;
 }
 
-Cursor::Cursor(std::string path, float hotSpotX, float hotSpotY){
+Cursor::Cursor(fs::path path, float hotSpotX, float hotSpotY){
 	FSRef ref;
 	FSPathMakeRef((UInt8*)path.c_str(), &ref, NULL);
 	CFURLRef imgPath = CFURLCreateFromFSRef(NULL, &ref);

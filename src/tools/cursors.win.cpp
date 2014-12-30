@@ -8,16 +8,6 @@
 extern cursor_type current_cursor;
 extern sf::RenderWindow mainPtr;
 
-const std::string cursors[25] = {
-	"wand", "eyedropper", "brush", "spraycan",
-	"eraser", "topleft", "bottomright", "hand",
-	"NW", "N", "NE",
-	"W", "wait", "E",
-	"SW", "S", "SE",
-	"sword", "boot", "drop", "target",
-	"talk", "key", "look", "watch",
-};
-
 static const COLORREF clrMagenta = RGB(255, 0, 255);
 
 // This function adapted from <http://web.archive.org/web/20130502044728/http://marknelson.us/2002/07/01/rendering-transparent-gifs-revisited/>
