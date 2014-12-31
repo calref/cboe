@@ -336,26 +336,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		912CF3540FE448680063B614 /* Copy String Lists */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Strings;
-			dstSubfolderSpec = 7;
-			files = (
-			);
-			name = "Copy String Lists";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		912CF3550FE448680063B614 /* Copy Dialogs */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Dialogs;
-			dstSubfolderSpec = 7;
-			files = (
-			);
-			name = "Copy Dialogs";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		912CF3560FE4494C0063B614 /* Copy Scenarios */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -383,26 +363,6 @@
 				9179A4611A42988800FEF872 /* graphics.exd in Copy Sounds and Graphics */,
 			);
 			name = "Copy Sounds and Graphics";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		912CF37B0FE44A660063B614 /* Copy String Lists */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Strings;
-			dstSubfolderSpec = 7;
-			files = (
-			);
-			name = "Copy String Lists";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		912CF37C0FE44A660063B614 /* Copy Dialogs */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Dialogs;
-			dstSubfolderSpec = 7;
-			files = (
-			);
-			name = "Copy Dialogs";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		914701A618F62A52008A6DC9 /* Copy Fonts */ = {
@@ -451,26 +411,6 @@
 				91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */,
 			);
 			name = "Copy Shaders";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91A32B660FDB5EF100C4E957 /* Copy Dialogs */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Dialogs;
-			dstSubfolderSpec = 7;
-			files = (
-			);
-			name = "Copy Dialogs";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91A32B710FDB5F5A00C4E957 /* Copy String Lists */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Strings;
-			dstSubfolderSpec = 7;
-			files = (
-			);
-			name = "Copy String Lists";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */ = {
@@ -536,24 +476,6 @@
 				919DDBFD19006CF2003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
 			);
 			name = "Copy Libraries and Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91B3EF320F969D9900BF5B67 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "Scenario Editor";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91C687050FD5F277000F6D01 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 16;
-			files = (
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -702,7 +624,6 @@
 		91ACCE82190032E000FAEF8B /* fix_dylibs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = fix_dylibs.sh; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boe.consts.h; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "BoE Scenario Editor-Info.plist"; sourceTree = "<group>"; };
-		91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = BOEScen.rsrc; sourceTree = "<group>"; };
 		91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "BoE Scenario Editor.icns"; sourceTree = "<group>"; };
 		91B3EEDE0F969BA700BF5B67 /* scen.global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.global.h; sourceTree = "<group>"; };
 		91B3EEE00F969BA700BF5B67 /* scen.keydlgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scen.keydlgs.h; sourceTree = "<group>"; };
@@ -731,7 +652,6 @@
 		91B3EF080F969BD300BF5B67 /* pc.fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.fileio.cpp; sourceTree = "<group>"; };
 		91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.graphics.cpp; sourceTree = "<group>"; };
 		91B3EF110F969BD300BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = BoECharEd.icns; sourceTree = "<group>"; };
-		91B3EF120F969BD300BF5B67 /* bladespced.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladespced.rsrc; sourceTree = "<group>"; };
 		91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Blades of Exile Character Editor-Info.plist"; sourceTree = "<group>"; };
 		91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		91B3EF250F969CE300BF5B67 /* bladbase.exs */ = {isa = PBXFileReference; lastKnownFileType = file; name = bladbase.exs; path = "../rsrc/Blades of Exile Bases/bladbase.exs"; sourceTree = "<group>"; };
@@ -751,7 +671,6 @@
 		91C688E70FD702B9000F6D01 /* cursors.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = cursors.mac.mm; sourceTree = "<group>"; };
 		91C749B71A2D6432008E0E10 /* strings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = strings; sourceTree = "<group>"; };
 		91C749B91A2D66F7008E0E10 /* dialogs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dialogs; sourceTree = "<group>"; };
-		91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = bladesofexile.rsrc; sourceTree = "<group>"; };
 		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
 		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
 		91D635AC0F90E7B500674AB3 /* valleydy.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.exs; sourceTree = "<group>"; };
@@ -1063,41 +982,6 @@
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
 		};
-		914B2BAE18E801E4007B6799 /* dialogs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = dialogs;
-			sourceTree = "<group>";
-		};
-		914B2BAF18E801F3007B6799 /* strings */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = strings;
-			sourceTree = "<group>";
-		};
-		91A32AFF0FDAC37400C4E957 /* dialogs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = dialogs;
-			sourceTree = "<group>";
-		};
-		91A32B010FDAC39100C4E957 /* dialogs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = dialogs;
-			sourceTree = "<group>";
-		};
-		91A32B020FDAC39900C4E957 /* strings */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = strings;
-			sourceTree = "<group>";
-		};
 		91B3EECD0F969B7000BF5B67 /* ScenEd */ = {
 			isa = PBXGroup;
 			children = (
@@ -1112,10 +996,8 @@
 		91B3EED50F969BA700BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
-				91A32AFF0FDAC37400C4E957 /* dialogs */,
 				91279BAD0F9CFCBA007B0D52 /* boescenario.icns */,
 				91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */,
-				91B3EEDA0F969BA700BF5B67 /* BOEScen.rsrc */,
 				91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */,
 				914CA49F190C4E9200B6ADD1 /* scen.menu.xib */,
 			);
@@ -1195,10 +1077,7 @@
 		91B3EF0D0F969BD300BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
-				91A32B020FDAC39900C4E957 /* strings */,
-				91A32B010FDAC39100C4E957 /* dialogs */,
 				91B3EF110F969BD300BF5B67 /* BoECharEd.icns */,
-				91B3EF120F969BD300BF5B67 /* bladespced.rsrc */,
 				91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */,
 				91FCC8D718FE28CC007026CE /* pc.menu.xib */,
 			);
@@ -1313,13 +1192,10 @@
 		91D62F2E0F8EB80200674AB3 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
-				914B2BAF18E801F3007B6799 /* strings */,
-				914B2BAE18E801E4007B6799 /* dialogs */,
 				91279BB30F9D03B6007B0D52 /* boesave.icns */,
 				91279BB40F9D03B7007B0D52 /* boesounds.icns */,
 				913D6C040FC57A8E00E12527 /* boeresources.icns */,
 				91279BB50F9D03B7007B0D52 /* boegraphics.icns */,
-				91D62F330F8EB84800674AB3 /* bladesofexile.rsrc */,
 				2B8F435C0C0973680012E4A8 /* BoE.icns */,
 				2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */,
 				9192C11E18F271920088A580 /* menu.xib */,
@@ -1350,8 +1226,6 @@
 			buildPhases = (
 				2BF04ABD0BF518D4006C0831 /* Resources */,
 				2BF04ABE0BF518D4006C0831 /* Sources */,
-				912CF37B0FE44A660063B614 /* Copy String Lists */,
-				912CF37C0FE44A660063B614 /* Copy Dialogs */,
 				2BF04ABF0BF518D4006C0831 /* Frameworks */,
 				91ACCE7319002E4700FAEF8B /* Copy Libraries and Frameworks */,
 				91ACCE801900302D00FAEF8B /* Fix dylib install names */,
@@ -1371,9 +1245,6 @@
 			buildConfigurationList = 91B3EF1D0F969C2400BF5B67 /* Build configuration list for PBXNativeTarget "Blades of Exile Character Editor" */;
 			buildPhases = (
 				91B3EF140F969C2200BF5B67 /* Resources */,
-				91B3EF320F969D9900BF5B67 /* CopyFiles */,
-				912CF3540FE448680063B614 /* Copy String Lists */,
-				912CF3550FE448680063B614 /* Copy Dialogs */,
 				91B3EF150F969C2200BF5B67 /* Sources */,
 				91B3EF160F969C2200BF5B67 /* Frameworks */,
 				91ACCE851900342C00FAEF8B /* Copy Libraries and Frameworks */,
@@ -1394,9 +1265,6 @@
 			buildConfigurationList = 91B3EF440F969F0100BF5B67 /* Build configuration list for PBXNativeTarget "BoE Scenario Editor" */;
 			buildPhases = (
 				91B3EF3B0F969F0000BF5B67 /* Resources */,
-				91A32B710FDB5F5A00C4E957 /* Copy String Lists */,
-				91A32B660FDB5EF100C4E957 /* Copy Dialogs */,
-				91C687050FD5F277000F6D01 /* CopyFiles */,
 				91B3EF3C0F969F0000BF5B67 /* Sources */,
 				91B3EF3D0F969F0000BF5B67 /* Frameworks */,
 				91ACCE901900345200FAEF8B /* Copy Libraries and Frameworks */,
