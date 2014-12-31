@@ -15,6 +15,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // English (United States) resources
 
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Icon
@@ -23,9 +27,6 @@
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_BLADESOFEXILE       ICON                    "../../../Win32/scenedit/BLSCENED.ICO"
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -59,221 +60,193 @@ END
 //
 
 IDR_MENU1 MENU
-{
-	POPUP "&File"
-	{
-		MENUITEM "&Open Scenario\tCtrl+O", 1
-		MENUITEM "&Save Scenario\tCtrl+S", 2
-		MENUITEM "&New Scenario\tCtrl+N", 3
-		MENUITEM SEPARATOR
-		MENUITEM "&Quit\tCtrl+Q", 5
-	}
-
-	POPUP "&Scenario"
-	{
-		MENUITEM "&Create New Town", 101
-		MENUITEM SEPARATOR
-		MENUITEM "&Scenario Details", 103
-		MENUITEM "Scenario Intr&o Text", 104
-		MENUITEM "Set Starting &Location: Town", 105
-		MENUITEM "Set Starting &Location: Outdoors", 106
-		MENUITEM SEPARATOR
-		MENUITEM "Advanced:", 107
-		MENUITEM "  Edit Special &Nodes", 109
-		MENUITEM "  Edit Scenario &Text", 110
-		MENUITEM "  &Import Town", 111
-		MENUITEM "  Edit Saved Item &Rectangles", 112
-		MENUITEM "  Edit &Horses", 113
-		MENUITEM "  Edit &Boats", 114
-		MENUITEM "  Set &Variable Town Entry", 115
-		MENUITEM "  Set Scenario &Event Timers", 116
-		MENUITEM "  Edit Item &Placement Shortcuts", 117
-		MENUITEM "  &Delete Last Town", 118
-		MENUITEM SEPARATOR
-		MENUITEM "  Write D&ata To Text File", 119
-		MENUITEM "  Do &Full Text Dump", 120
-		MENUITEM "  Scenario Shoppin&g Text Dump", 121
-		MENUITEM "  Scenario &Monster Dump", 122
-		MENUITEM "  Scenario Specials D&ump", 123
-		MENUITEM "  Scenario Ob&ject Data Dump", 124
-	}
-
-	POPUP "&Town"
-	{
-		MENUITEM "Town &Details\tCtrl+D", 201
-		MENUITEM "Town &Wandering Monsters", 202
-		MENUITEM "Set Town &Boundaries", 203
-		MENUITEM "&Frill Up Terrain", 204
-		MENUITEM "Remo&ve Terrain Frills", 205
-		MENUITEM "Edit &Area Descriptions", 206
-		MENUITEM SEPARATOR
-		MENUITEM "Add Rand&om Items", 208
-		MENUITEM "Set All Items Not Propert&y", 209
-		MENUITEM "Clear All &Items", 210
-		MENUITEM SEPARATOR
-		MENUITEM "Clear All &Monsters", 217
-		MENUITEM "&Clear All Placed Specials", 218
-		MENUITEM "Clear All &Preset Fields", 219
-		MENUITEM "Clear All &Stains", 220
-		MENUITEM SEPARATOR
-		MENUITEM "Advanced:", 212
-		MENUITEM "  Edit Special &Nodes\tCtrl+1", 213
-		MENUITEM "  Edit Town &Text\tCtrl+2", 214
-		MENUITEM "  Edit Town Dialo&g\tCtrl+3", 222
-		MENUITEM "  Advanced Town Detai&ls\tCtrl+4", 215
-		MENUITEM "  Set Town &Event Timers\tCtrl+5", 216
-		MENUITEM "  Concise Town &Report\tCtrl+6", 221
-	}
-
-	POPUP "&Outdoors"
-	{
-		MENUITEM "Outdoor &Details\tCtrl+D", 301
-		MENUITEM "Outdoor &Wandering Monsters", 302
-		MENUITEM "&Outdoor Special Encounters", 303
-		MENUITEM "&Frill Up Terrain", 304
-		MENUITEM "Remo&ve Terrain Frills", 305
-		MENUITEM "Edit &Area Descriptions", 306
-		MENUITEM "&Clear All Placed Specials", 307
-		MENUITEM SEPARATOR
-		MENUITEM "Advanced:", 310
-		MENUITEM "  Edit Special &Nodes\tCtrl+7", 311
-		MENUITEM "  Edit Outdoor &Text\tCtrl+8", 312
-		MENUITEM "  Concise Outdoor &Report\tCtrl+9", 313
-	}
-
-	POPUP "&Additional Features"
-	{
-		MENUITEM "Terrain &Animations Play", 411
-		MENUITEM SEPARATOR
-		MENUITEM "Edit &Town\tCtrl+T", 401
-		MENUITEM "Edit Outdoo&r\tCtrl+R", 402
-		MENUITEM "&Load Another Outdoor Zone/Town\tCtrl+L", 403
-		MENUITEM SEPARATOR
-		MENUITEM "&Edit Terrain Types\tCtrl+E", 404
-		MENUITEM "Edit &Monsters\tCtrl+F", 405
-		MENUITEM "Edit &Items\tCtrl+G", 406
-		MENUITEM SEPARATOR
-		MENUITEM "Return to Main &Screen\tCtrl+M", 407
-		MENUITEM "Switch &Viewing Mode\tCtrl+I", 408
-		MENUITEM "Load &Previous Outdoor Zone/Town\tCtrl+J", 409
-		MENUITEM "Load &Next Outdoor Zone/Town\tCtrl+K", 410
-		MENUITEM SEPARATOR
-		MENUITEM "Repeat Printing of Last &File\tCtrl+P", 414
-	}
-
-	POPUP "&I1"
-	{
-		MENUITEM "Dummy", 600
-	}
-	POPUP "&I2"
-	{
-		MENUITEM "Dummy", 601
-	}
-	POPUP "&I3"
-	{
-		MENUITEM "Dummy", 602
-	}
-	POPUP "&I4"
-	{
-		MENUITEM "Dummy", 603
-	}
-	POPUP "&I5"
-	{
-		MENUITEM "Dummy", 604
-	}
-	POPUP "&I6"
-	{
-		MENUITEM "Dummy", 605
-	}
-	POPUP "&I7"
-	{
-		MENUITEM "Dummy", 606
-	}
-	POPUP "&I8"
-	{
-		MENUITEM "Dummy", 607
-	}
-	POPUP "&M1"
-	{
-		MENUITEM "Dummy", 608
-	}
-	POPUP "&M2"
-	{
-		MENUITEM "Dummy", 609
-	}
-	POPUP "&M3"
-	{
-		MENUITEM "Dummy", 610
-	}
-	POPUP "&M4"
-	{
-		MENUITEM "Dummy", 611
-	}
-	POPUP "&M5"
-	{
-		MENUITEM "Dummy", 612
-	}
-	POPUP "&Help"
-	{
-		MENUITEM "&Index\tF1", 801
-		MENUITEM SEPARATOR
-		MENUITEM "&Getting Started", 802
-		MENUITEM "&Testing Your Scenario", 803
-		MENUITEM "&Distributing Your Scenario", 804
-		MENUITEM SEPARATOR
-		MENUITEM "&About Blades Scenario Editor", 805
-	}
-
-
-}
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New Scenario\tCtrl+N",       IDM_FILE_NEW
+        MENUITEM "&Open Scenario\tCtrl+O",      IDM_FILE_OPEN
+        MENUITEM SEPARATOR
+        MENUITEM "Close Scenario\tCtrl+W",      IDM_FILE_CLOSE
+        MENUITEM "&Save Scenario\tCtrl+S",      IDM_FILE_SAVE
+        MENUITEM "Revert to Saved",             IDM_FILE_REVERT
+        MENUITEM SEPARATOR
+        MENUITEM "&Quit\tCtrl+Q",               IDM_FILE_QUIT
+    END
+    POPUP "Edit"
+    BEGIN
+        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
+        MENUITEM "Redo\tCtrl+Y",                IDM_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
+        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
+        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
+        MENUITEM "Delete",                      IDM_EDIT_DELETE
+        MENUITEM "Select All\tCtrl+A",          IDM_EDIT_SELECT
+    END
+    POPUP "&Scenario"
+    BEGIN
+        MENUITEM "&Create New Town",            IDM_SCEN_NEW_TOWN
+        MENUITEM SEPARATOR
+        MENUITEM "&Scenario Details",           IDM_SCEN_DETAILS
+        MENUITEM "Scenario Intr&o Text",        IDM_SCEN_INTRO
+        MENUITEM "Set Starting &Location",      IDM_SCEN_START
+        MENUITEM "Change Password",             IDM_SCEN_PASSWORD
+        MENUITEM SEPARATOR
+        MENUITEM "Advanced:",                   IDM_SCEN_NEW_TOWN, GRAYED
+        MENUITEM "  Edit Special &Nodes",       IDM_SCEN_ADV_SPECIALS
+        MENUITEM "  Edit Scenario &Text",       IDM_SCEN_ADV_TEXT
+        MENUITEM "  Edit Journal Entries",      IDM_SCEN_ADV_JOURNAL
+        MENUITEM "  &Import Town",              IDM_SCEN_ADV_IMPORT_TOWN
+        MENUITEM "  Edit Saved Item &Rectangles", IDM_SCEN_ADV_SAVE_RECTS
+        MENUITEM "  Edit &Horses",              IDM_SCEN_ADV_HORSES
+        MENUITEM "  Edit &Boats",               IDM_SCEN_ADV_BOATS
+        MENUITEM "  Set &Variable Town Entry",  IDM_SCEN_ADV_TOWN_VARY
+        MENUITEM "  Set Scenario &Event Timers", IDM_SCEN_ADV_EVENTS
+        MENUITEM "  Edit Item &Placement Shortcuts", IDM_SCEN_ADV_SHORTCUTS
+        MENUITEM "  &Delete Last Town",         IDM_SCEN_ADV_DELETE_TOWN
+        MENUITEM "  Write D&ata To Text File",  IDM_SCEN_ADV_DATA_DUMP
+        MENUITEM "  Do &Full Text Dump",        IDM_SCEN_ADV_TEXT_DUMP
+        MENUITEM "  Scenario Shoppin&g Text Dump", IDM_SCEN_ADV_DATA_DUMP
+        MENUITEM "  Scenario &Monster Dump",    IDM_SCEN_ADV_TEXT_DUMP
+        MENUITEM "  Scenario Specials D&ump",   IDM_SCEN_INTRO
+        MENUITEM "  Scenario Ob&ject Data Dump", IDM_SCEN_PASSWORD
+    END
+    POPUP "&Town"
+    BEGIN
+        MENUITEM "Town &Details\tCtrl+D",       IDM_TOWN_DETAILS
+        MENUITEM "Town &Wandering Monsters",    IDM_TOWN_WANDER
+        MENUITEM "Set Town &Boundaries",        IDM_TOWN_BOUNDS
+        MENUITEM "&Frill Up Terrain",           IDM_TOWN_FRILL
+        MENUITEM "Remo&ve Terrain Frills",      IDM_TOWN_UNFRILL
+        MENUITEM "Edit &Area Descriptions",     IDM_TOWN_AREAS
+        MENUITEM SEPARATOR
+        MENUITEM "Add Rand&om Items",           IDM_TOWN_RANDOM_ITEMS
+        MENUITEM "Set All Items Not Propert&y", IDM_TOWN_NOT_PROPERTY
+        MENUITEM "Clear All &Items",            IDM_TOWN_CLEAR_ITEMS
+        MENUITEM SEPARATOR
+        MENUITEM "Advanced:",                   212, GRAYED
+        MENUITEM "  Edit Special &Nodes\tCtrl+1", IDM_TOWN_ADV_SPECIALS
+        MENUITEM "  Edit Town &Text\tCtrl+2",   IDM_TOWN_ADV_TEXT
+        MENUITEM "  Edit Town &Signs\tCtrl+3",  IDM_TOWN_ADV_SIGNS
+        MENUITEM "  Advanced Town Detai&ls\tCtrl+4", IDM_TOWN_ADV_DETAILS
+        MENUITEM "  Set Town &Event Timers\tCtrl+5", IDM_TOWN_ADV_EVENTS
+        MENUITEM "  Concise Town &Report\tCtrl+6", IDM_TOWN_ADV_REPORT
+    END
+    POPUP "&Outdoors"
+    BEGIN
+        MENUITEM "Outdoor &Details\tCtrl+D",    IDM_OUT_DETAILS
+        MENUITEM "Outdoor &Wandering Monsters", IDM_OUT_WANDER
+        MENUITEM "&Outdoor Special Encounters", IDM_OUT_ENCOUNTER
+        MENUITEM "&Frill Up Terrain",           IDM_OUT_FRILL
+        MENUITEM "Remo&ve Terrain Frills",      IDM_OUT_UNFRILL
+        MENUITEM "Edit &Area Descriptions",     IDM_OUT_AREAS
+        MENUITEM SEPARATOR
+        MENUITEM "Set Starting Location",       IDM_OUT_START
+        MENUITEM SEPARATOR
+        MENUITEM "Advanced:",                   310, GRAYED
+        MENUITEM "  Edit Special &Nodes\tCtrl+7", IDM_OUT_ADV_SPECIALS
+        MENUITEM "  Edit Outdoor &Text\tCtrl+8", IDM_OUT_ADV_TEXT
+        MENUITEM "  Edit Outdoor &Signs\tCtrl+9", IDM_OUT_ADV_SIGNS
+        MENUITEM "  Concise Outdoor &Report\tCtrl+0", IDM_OUT_ADV_REPORT
+    END
+    POPUP "E&xtras"
+    BEGIN
+        MENUITEM "Terrain &Animations Play",    411
+        MENUITEM SEPARATOR
+        MENUITEM "Edit &Town\tCtrl+T",          401
+        MENUITEM "Edit Outdoo&r\tCtrl+R",       402
+        MENUITEM "&Load Another Outdoor Zone/Town\tCtrl+L", 403
+        MENUITEM SEPARATOR
+        MENUITEM "&Edit Terrain Types\tCtrl+E", 404
+        MENUITEM "Edit &Monsters\tCtrl+F",      405
+        MENUITEM "Edit &Items\tCtrl+G",         406
+        MENUITEM SEPARATOR
+        MENUITEM "Return to Main &Screen\tCtrl+M", 407
+        MENUITEM "Switch &Viewing Mode\tCtrl+I", 408
+        MENUITEM "Load &Previous Outdoor Zone/Town\tCtrl+J", 409
+        MENUITEM "Load &Next Outdoor Zone/Town\tCtrl+K", 410
+        MENUITEM SEPARATOR
+        MENUITEM "Repeat Printing of Last &File\tCtrl+P", 414
+    END
+    POPUP "&I1"
+    BEGIN
+        MENUITEM "Dummy",                       600
+    END
+    POPUP "&I2"
+    BEGIN
+        MENUITEM "Dummy",                       601
+    END
+    POPUP "&I3"
+    BEGIN
+        MENUITEM "Dummy",                       602
+    END
+    POPUP "&I4"
+    BEGIN
+        MENUITEM "Dummy",                       603
+    END
+    POPUP "&I5"
+    BEGIN
+        MENUITEM "Dummy",                       604
+    END
+    POPUP "&M1"
+    BEGIN
+        MENUITEM "Dummy",                       608
+    END
+    POPUP "&M2"
+    BEGIN
+        MENUITEM "Dummy",                       609
+    END
+    POPUP "&M3"
+    BEGIN
+        MENUITEM "Dummy",                       610
+    END
+    POPUP "&M4"
+    BEGIN
+        MENUITEM "Dummy",                       611
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Index\tF1",                  IDM_HELP_INDEX
+        MENUITEM "&About Blades Scenario Editor", IDM_HELP_ABOUT
+        MENUITEM SEPARATOR
+        MENUITEM "&Getting Started",            IDM_HELP_START
+        MENUITEM "&Testing Your Scenario",      IDM_HELP_TEST
+        MENUITEM "&Distributing Your Scenario", IDM_HELP_DISTRIBUTE
+    END
+END
 
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Accelerator
 //
-ACCELERATORS_1 ACCELERATORS
-{
-	VK_F1, 801, VIRTKEY
-	"^O", 1, ASCII
-	"^S", 2, ASCII
-	"^N", 3, ASCII
-	"^Q", 5, ASCII
-	"^B", 214, ASCII
-	"^U", 311, ASCII
-	"^T", 401, ASCII
-	"^R", 402, ASCII
-	"^L", 403, ASCII
-	"^E", 404, ASCII
-	"^F", 405, ASCII
-	"^G", 406, ASCII
-	"^M", 407, ASCII
-	"^I", 408, ASCII
-	"^J", 409, ASCII
-	"^K", 410, ASCII
-	"^P", 414, ASCII
-	/*
-	"^1", 213, ASCII
-	"^2", 214, ASCII
-	"^3", 222, ASCII
-	"^4", 215, ASCII
-	"^5", 216, ASCII
-	"^6", 221, ASCII
-	"^7", 311, ASCII
-	"^8", 312, ASCII
-	"^9", 313, ASCII
-	*/
-	VK_TAB, 408, VIRTKEY, CONTROL, NOINVERT
-	VK_LEFT, 409, VIRTKEY, CONTROL, NOINVERT
-	VK_RIGHT, 410, VIRTKEY, CONTROL, NOINVERT
-	VK_UP, 412, VIRTKEY, CONTROL, NOINVERT
-	VK_DOWN, 413, VIRTKEY, CONTROL, NOINVERT
 
-	// Defined elsewhere: D,L
-	// Keys currently available: H,W,Y,Z
-	// Don't use keys A, X, C and V as they are Windows shortcuts (select all, cut, copy and paste)
-
-}
+IDR_ACCELERATOR1 ACCELERATORS
+BEGIN
+    VK_F1,          801,                    VIRTKEY 
+    "^O",           1,                      ASCII   
+    "^S",           2,                      ASCII   
+    "^N",           3,                      ASCII   
+    "^Q",           5,                      ASCII   
+    "^B",           214,                    ASCII   
+    "^U",           311,                    ASCII   
+    "^T",           401,                    ASCII   
+    "^R",           402,                    ASCII   
+    "^L",           403,                    ASCII   
+    "^E",           404,                    ASCII   
+    "^F",           405,                    ASCII   
+    "^G",           406,                    ASCII   
+    "^M",           407,                    ASCII   
+    "\t",           408,                    ASCII   
+    "^J",           409,                    ASCII   
+    "^K",           410,                    ASCII   
+    "^P",           414,                    ASCII   
+    VK_TAB,         408,                    VIRTKEY, CONTROL, NOINVERT
+    VK_LEFT,        409,                    VIRTKEY, CONTROL, NOINVERT
+    VK_RIGHT,       410,                    VIRTKEY, CONTROL, NOINVERT
+    VK_UP,          412,                    VIRTKEY, CONTROL, NOINVERT
+    VK_DOWN,        413,                    VIRTKEY, CONTROL, NOINVERT
+END
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////

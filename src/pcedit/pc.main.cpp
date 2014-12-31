@@ -74,12 +74,9 @@ void Handle_One_Event();
 void Handle_Activate();
 void Handle_Update();
 void Mouse_Pressed();
-void handle_apple_menu(int item_hit);
+void handle_help_menu(int item_hit);
 void handle_file_menu(int item_hit);
-void handle_reg_menu(int item_hit);
-void handle_extra_menu(int item_hit);
-void handle_edit_menu(int item_hit);
-void update_item_menu();
+void handle_edit_menus(int item_hit);
 bool verify_restore_quit(bool mode);
 void set_up_apple_events();
 void handle_item_menu(int item_hit);
@@ -110,6 +107,8 @@ int main(int /*argc*/, char* argv[]) {
 	
 	cDialog::init();
 	redraw_screen();
+	menu_activate();
+	update_item_menu();
 	
 	while(!All_Done)
 		Handle_One_Event();
@@ -154,6 +153,7 @@ void Initialize(void) {
 	//
 	// Size and style obtained from WIND resource #128
 	mainPtr.create(sf::VideoMode(590, 440), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
+	init_menubar();
 }
 
 void Handle_One_Event() {
@@ -191,7 +191,7 @@ void Mouse_Pressed() {
 		All_Done = verify_restore_quit(false);
 }
 
-void handle_apple_menu(int item_hit) {
+void handle_help_menu(int item_hit) {
 	//char desk_acc_name[256];
 	//short desk_acc_num;
 	
@@ -230,6 +230,11 @@ void handle_file_menu(int item_hit) {
 				}
 				menu_activate();
 			}
+			break;
+			// TODO: Implement these two
+		case 4: //close
+			break;
+		case 5: //revert;
 			break;
 		case 7://quit
 			All_Done = verify_restore_quit(false);

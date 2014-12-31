@@ -50,8 +50,6 @@ void Initialize(void);
 void Handle_One_Event();
 void Handle_Activate();
 void Handle_Update();
-void handle_menu_choice(long choice);
-void handle_apple_menu(int item_hit);
 void handle_file_menu(int item_hit);
 void handle_edit_menu(int item_hit);
 void handle_scenario_menu(int item_hit);
@@ -173,6 +171,7 @@ void Initialize(void) {
 	// TODO: I think it should have a close button as well
 	mainPtr.create(sf::VideoMode(windRect.width(), windRect.height()), "Blades of Exile Scenario Editor", sf::Style::Titlebar);
 	mainPtr.setPosition(windRect.topLeft());
+	init_menubar();
 	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
 	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
 	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
@@ -215,14 +214,6 @@ void Handle_One_Event() {
 void Handle_Update() {
 	redraw_screen();
 	restore_cursor();
-}
-
-void handle_apple_menu(int item_hit) {
-	switch(item_hit) {
-		case 1:
-			cChoiceDlog("about-scened").show();
-			break;
-	}
 }
 
 void handle_file_menu(int item_hit) {
@@ -496,6 +487,9 @@ void handle_outdoor_menu(int item_hit) {
 
 void handle_help_menu(int item_hit) {
 	switch(item_hit) {
+		case 0:
+			cChoiceDlog("about-scened").show();
+			break;
 		case 1:
 			cChoiceDlog("help-editing").show();
 			break; // started

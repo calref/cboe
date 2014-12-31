@@ -18,7 +18,6 @@ MenuHandle file_menu, edit_menu, app_menu, scen_menu, town_menu, out_menu, help_
 extern cScenario scenario;
 
 @interface MenuHandler : NSObject
--(void) appMenu:(id) sender;
 -(void) fileMenu:(id) sender;
 -(void) editMenu:(id) sender;
 -(void) scenMenu:(id) sender;
@@ -37,6 +36,10 @@ static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
 }
 
 void init_menubar() {
+	static bool inited = false;
+	if(inited) return;
+	inited = true;
+	
 	NSApplication* app = [NSApplication sharedApplication];
 	[NSBundle loadNibNamed: @"scen.menu" owner: app];
 	menu_bar_handle = [app mainMenu];
@@ -59,7 +62,7 @@ void init_menubar() {
 	mon_menu[3] = [[menu_bar_handle itemWithTitle: @"M4"] submenu];
 	
 	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
-	setMenuCallback([app_menu itemWithTitle: @"About BoE Scenario Editor"], handler, @selector(appMenu:), 1);
+	setMenuCallback([app_menu itemWithTitle: @"About BoE Scenario Editor"], handler, @selector(helpMenu:), 0);
 	setMenuCallback([app_menu itemWithTitle: @"Quit BoE Scenario Editor"], handler, @selector(fileMenu:), 5);
 	// TODO: Organize file menu function
 	setMenuCallback([file_menu itemWithTitle: @"New Scenario…"], handler, @selector(fileMenu:), 3);
@@ -167,7 +170,6 @@ void update_item_menu() {
 	
 }
 
-void handle_apple_menu(int item_hit);
 void handle_file_menu(int item_hit);
 void handle_edit_menu(int item_hit);
 void handle_scenario_menu(int item_hit);
@@ -178,10 +180,6 @@ void handle_item_menu(int item_hit);
 void handle_monst_menu(int item_hit);
 
 @implementation MenuHandler
--(void) appMenu:(id) sender {
-	handle_apple_menu([[sender representedObject] intValue]);
-}
-
 -(void) fileMenu:(id) sender {
 	handle_file_menu([[sender representedObject] intValue]);
 }

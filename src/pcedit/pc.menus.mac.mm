@@ -48,6 +48,10 @@ static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
 }
 
 void init_menubar() {
+	static bool inited = false;
+	if(inited) return;
+	inited = true;
+	
 	NSApplication* app = [NSApplication sharedApplication];
 	[NSBundle loadNibNamed: @"pc.menu" owner: app];
 	menu_bar_handle = [app mainMenu];
@@ -68,6 +72,8 @@ void init_menubar() {
 	setMenuCallback([file_menu itemWithTitle: @"Save"], handler, @selector(fileMenu:), 1);
 	setMenuCallback([file_menu itemWithTitle: @"Save As…"], handler, @selector(fileMenu:), 2);
 	setMenuCallback([file_menu itemWithTitle: @"Open…"], handler, @selector(fileMenu:), 3);
+	setMenuCallback([file_menu itemWithTitle: @"Close"], handler, @selector(fileMenu:), 4);
+	setMenuCallback([file_menu itemWithTitle: @"Revert to Saved"], handler, @selector(fileMenu:), 5);
 	
 	for(int i = 0; i < [reg_menu numberOfItems]; i++)
 		setMenuCallback([reg_menu itemAtIndex: i], handler, @selector(editMenu:), i + 1);

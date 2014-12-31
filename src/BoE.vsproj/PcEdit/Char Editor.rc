@@ -17,6 +17,7 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -62,36 +63,46 @@ IDR_MENU1 MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "&Open Game\tCtrl+O",          2
-        MENUITEM "&Save Game\tCtrl+S",          1
-        MENUITEM "Save As...",                  3
+        MENUITEM "&Open Game\tCtrl+O",          IDM_FILE_OPEN
+        MENUITEM "Close\tCtrl+W",               IDM_FILE_CLOSE
         MENUITEM SEPARATOR
-        MENUITEM "&Quit\tCtrl+Q",               4
-    END
-    POPUP "&Scenario Editing"
-    BEGIN
-        MENUITEM "Edit Day",                    70
+        MENUITEM "&Save Game\tCtrl+S",          IDM_FILE_SAVE
+        MENUITEM "Save As...",                  IDM_FILE_SAVE_AS
+        MENUITEM "Revert to Saved",             IDM_FILE_REVERT
         MENUITEM SEPARATOR
-        MENUITEM "Leave Town",                  44
-        MENUITEM "Make Towns Forget You",       48
-        MENUITEM "Add All Town Maps",           72
-        MENUITEM "Add All Outdoor Maps",        71
-        MENUITEM SEPARATOR
-        MENUITEM "Remove Party From Scenario",  55
+        MENUITEM "&Quit\tCtrl+Q",               IDM_FILE_QUIT
     END
     POPUP "&Edit Party"
     BEGIN
-        MENUITEM "Edit Gold",                   41
-        MENUITEM "Edit Food",                   42
-        MENUITEM "Edit Alchemy",                62
+        MENUITEM "Edit Gold",                   IDM_PARTY_GOLD
+        MENUITEM "Edit Food",                   IDM_PARTY_FOOD
+        MENUITEM "Edit Alchemy",                IDM_PARTY_ALCHEMY
         MENUITEM SEPARATOR
-        MENUITEM "Heal Damage",                 51
-        MENUITEM "Restore Spell Points",        52
-        MENUITEM "Raise Dead, Destone, etc.",   53
-        MENUITEM "Remove Bad Conditions",       54
+        MENUITEM "Heal Damage",                 IDM_PARTY_DAMAGE
+        MENUITEM "Restore Spell Points",        IDM_PARTY_MANA
+        MENUITEM "Raise Dead, Destone, etc.",   IDM_PARTY_DEAD
+        MENUITEM "Remove Bad Conditions",       IDM_PARTY_CONDITIONS
         MENUITEM SEPARATOR
-        MENUITEM "Reunite Party",               45
-        MENUITEM "Own All Boats/Horses",        63
+        MENUITEM "Reunite Party",               IDM_PARTY_REUNITE
+        MENUITEM "Own All Boats/Horses",        IDM_PARTY_VEHICLES
+        MENUITEM SEPARATOR
+        MENUITEM "Edit Mage Spells",            IDM_PARTY_MAGE
+        MENUITEM "Edit Priest Spells",          IDM_PARTY_PRIEST
+        MENUITEM "Edit Traits",                 IDM_PARTY_TRAITS
+        MENUITEM "Edit Skills",                 IDM_PARTY_SKILLS
+        MENUITEM "Edit XP",                     IDM_PARTY_XP
+    END
+    POPUP "&Scenario Editing"
+    BEGIN
+        MENUITEM "Edit Day",                    IDM_SCEN_DAY
+        MENUITEM SEPARATOR
+        MENUITEM "Leave Town",                  IDM_SCEN_LEAVE_TOWN
+        MENUITEM "Make Towns Forget You",       IDM_SCEN_TOWN_RESET
+        MENUITEM "Add All Town Maps",           IDM_SCEN_TOWN_MAP
+        MENUITEM "Add All Outdoor Maps",        IDM_SCEN_OUT_MAP
+        MENUITEM SEPARATOR
+        MENUITEM "Remove Party From Scenario",  IDM_SCEN_LEAVE
+        MENUITEM "Set Stuff Done Flag",         IDM_SCEN_SDF
     END
     POPUP "&I1"
     BEGIN
@@ -111,9 +122,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "Index\tF1",                   100
-        MENUITEM SEPARATOR
-        MENUITEM "About Blades of Exile Editor", 200
+        MENUITEM "About Blades of Exile Editor", IDM_HELP
     END
 END
 
@@ -122,13 +131,13 @@ END
 //
 // Accelerator
 //
-ACCELERATORS_1 ACCELERATORS
-{
 
-	"^O", 2, ASCII
-	"^S", 1, ASCII
-	"^Q", 4, ASCII
-}
+IDR_ACCELERATOR1 ACCELERATORS
+BEGIN
+    "^O",           2,                      ASCII   
+    "^S",           1,                      ASCII   
+    "^Q",           4,                      ASCII   
+END
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
