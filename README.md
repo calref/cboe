@@ -24,15 +24,10 @@ you check into the repository.
 Please do not commit any binaries, junk files, or anything that doesn't
 compile.
 
-The current task at hand is to merge the Windows code into the current
-Mac codebase, which no longer uses platform-specific APIs for most
-things (a few files would need to be rewritten for Windows).
-
-I'd like to consider the Win32/ directory to be considered "frozen" from
-this point on. Apart from minor bugfixes, it should not be altered. The
-src/ directory is to be the official codebase now; as of the time of
-this writing, it only compiles on OSX, but reimplementing a handful of
-files (basically all the .mm ones) should suffice to fix that.
+The Win32/ directory should be considered "frozen" from this point on.
+Apart from minor bugfixes, it should not be altered. The src/ directory
+is to be the official codebase now. As of the time of this writing, it
+has a few major issues on Windows which are being worked on.
 
 Helpful Links
 -------------
