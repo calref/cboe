@@ -3373,6 +3373,8 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 }
 
 void set_terrain(location l, ter_num_t terrain_type) {
+	// TODO: Use dynamic size() instead of hard-coded limit
+	if(terrain_type >= 256) return;
 	ter_num_t former = univ.town->terrain(l.x,l.y);
 	univ.town->terrain(l.x,l.y) = terrain_type;
 	if(univ.scenario.ter_types[terrain_type].special == eTerSpec::CONVEYOR)
@@ -3916,6 +3918,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case eSpecType::OUT_CHANGE_TER:
+			if(spec.ex2a < 0) break;
 			univ.out->terrain[spec.ex1a][spec.ex1b] = spec.ex2a;
 			l.x = spec.ex1a;
 			l.y = spec.ex1b;
