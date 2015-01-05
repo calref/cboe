@@ -54,7 +54,9 @@ void update_item_menu() {
 			AppendMenuA(items_menu, MF_STRING | MF_GRAYED, 1000, "Items Not Loaded");
 		} else for(int i = 0; i < 100; i++) {
 			cItemRec& item = item_list[i + j * 100];
-			AppendMenuA(items_menu, MF_STRING | MF_ENABLED, 1000 + j * 100 + i, item.full_name.c_str());
+			UINT flags = MF_STRING | MF_ENABLED;
+			if(i % 25 == 0) flags |= MF_MENUBARBREAK;
+			AppendMenuA(items_menu, flags, 1000 + j * 100 + i, item.full_name.c_str());
 			// TODO: Also disable gold or food
 			EnableMenuItem(items_menu, i, MF_BYPOSITION | (item.variety != eItemType::NO_ITEM ? MF_ENABLED : MF_GRAYED));
 		}

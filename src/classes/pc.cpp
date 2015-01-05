@@ -296,9 +296,10 @@ void cPlayer::writeTo(std::ostream& file) const {
 	file << "EXPERIENCE " << experience << '\n';
 	file << "SKILLPTS " << skill_pts << '\n';
 	file << "LEVEL " << level << '\n';
+	auto status = this->status;
 	for(int i = 0; i < 15; i++) {
 		eStatus stat = (eStatus) i;
-		if(status.at(stat) != 0)
+		if(status[stat] != 0)
 			file << "STATUS " << i << ' ' << status.at(stat) << '\n';
 	}
 	for(int i = 0; i < 24; i++)
@@ -310,9 +311,10 @@ void cPlayer::writeTo(std::ostream& file) const {
 	for(int i = 0; i < 62; i++)
 		if(priest_spells[i])
 			file << "PRIEST " << i << '\n';
+	auto traits = this->traits;
 	for(int i = 0; i < 62; i++) {
 		eTrait trait = eTrait(i);
-		if(traits.at(trait))
+		if(traits[trait])
 			file << "TRAIT " << i << '\n';
 	}
 	file << "ICON " <<  which_graphic << '\n';
@@ -320,7 +322,7 @@ void cPlayer::writeTo(std::ostream& file) const {
 	file << "DIRECTION " << direction << '\n';
 	file << "POISON " << weap_poisoned << '\n';
 	file << '\f';
-	for(int i; i < 24; i++)
+	for(int i = 0; i < 24; i++)
 		if(items[i].variety != eItemType::NO_ITEM){
 			file << "ITEM " << i << '\n';
 			items[i].writeTo(file);

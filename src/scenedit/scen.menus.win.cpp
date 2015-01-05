@@ -121,7 +121,7 @@ void update_item_menu() {
 		while(GetMenuItemCount(item_menu)) RemoveMenu(item_menu, 0, MF_BYPOSITION);
 		for(int i = 0; i < 80; i++) {
 			UINT flags = MF_STRING | MF_ENABLED;
-			if(i % 40 == 0) flags |= MF_MENUBARBREAK;
+			if(i % 20 == 0) flags |= MF_MENUBARBREAK;
 			AppendMenuA(item_menu, flags, 10000 + i + j * 80, scenario.scen_items[i + j * 80].full_name.c_str());
 		}
 	}
