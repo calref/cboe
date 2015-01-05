@@ -58,3 +58,6 @@ src/doxy/doxy_warnings.txt
 
 # Windows junk files
 Thumbs.db
+
+# Misc
+oldstructs.txt
