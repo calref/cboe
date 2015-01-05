@@ -1,10 +1,11 @@
 
 #include "winutil.h"
+#include <iostream>
 #include <Windows.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 extern sf::RenderWindow mainPtr;
-OPENFILENAME getParty, getScen, putParty, putScen;
+OPENFILENAMEA getParty, getScen, putParty, putScen;
 
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
 // The proper way would involve use of the TextEntered event
@@ -98,10 +99,10 @@ void setWindowFloating(sf::Window& win, bool floating) {
 }
 
 void init_fileio() {
-	OPENFILENAME base_dlg;
-	memset(&base_dlg, 0, sizeof(OPENFILENAME));
+	OPENFILENAMEA base_dlg;
+	memset(&base_dlg, 0, sizeof(OPENFILENAMEA));
 	// Common values
-	base_dlg.lStructSize = sizeof(OPENFILENAME);
+	base_dlg.lStructSize = sizeof(OPENFILENAMEA);
 	base_dlg.hwndOwner = mainPtr.getSystemHandle();
 	base_dlg.nFilterIndex = 1;
 	base_dlg.Flags = OFN_DONTADDTORECENT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
@@ -122,32 +123,50 @@ void init_fileio() {
 	putScen.lpstrTitle = LPCTSTR("Save Scenario");
 }
 
-static std::string runFileDlog(OPENFILENAME& dlg, const std::string& file, bool save) {
+static std::string runFileDlog(OPENFILENAMEA& dlg, const std::string& file, bool save) {
 	size_t sz = std::max<size_t>(MAX_PATH, file.length()) + 1;
 	char* path = new char[sz];
 	std::copy(file.begin(), file.end(), path);
 	std::fill(path + file.length(), path + sz, 0);
 
-	putParty.lpstrFile = path;
-	putParty.nMaxFile = sz - 1;
-	putParty.nFileOffset = file.find_last_of('\\');
-	if(putParty.nFileOffset == std::string::npos)
-		putParty.nFileOffset = 0;
-	else putParty.nFileOffset++;
-	putParty.nFileExtension = file.find_last_of('.');
-	if(putParty.nFileExtension == std::string::npos)
-		putParty.nFileExtension = 0;
-	else putParty.nFileExtension++;
+	dlg.lpstrFile = path;
+	dlg.nMaxFile = sz - 1;
+	dlg.nFileOffset = file.find_last_of('\\');
+	dlg.nFileOffset++;
+	dlg.nFileExtension = file.find_last_of('.');
+	dlg.nFileExtension++;
 
-	if(save) GetSaveFileName(&dlg);
-	else GetOpenFileName(&dlg);
+	int err;
+	if(save) err = GetSaveFileNameA(&dlg);
+	else err = GetOpenFileNameA(&dlg);
+	if(err == 0) {
+#define CASE(x) case x: std::cerr << "File dialog failed: " #x << std::endl; break
+		switch(CommDlgExtendedError()) {
+			CASE(CDERR_DIALOGFAILURE);
+			CASE(CDERR_FINDRESFAILURE);
+			CASE(CDERR_INITIALIZATION);
+			CASE(CDERR_LOADRESFAILURE);
+			CASE(CDERR_LOADSTRFAILURE);
+			CASE(CDERR_LOCKRESFAILURE);
+			CASE(CDERR_MEMALLOCFAILURE);
+			CASE(CDERR_MEMLOCKFAILURE);
+			CASE(CDERR_NOHINSTANCE);
+			CASE(CDERR_NOHOOK);
+			CASE(CDERR_NOTEMPLATE);
+			CASE(CDERR_STRUCTSIZE);
+			CASE(FNERR_BUFFERTOOSMALL);
+			CASE(FNERR_INVALIDFILENAME);
+			CASE(FNERR_SUBCLASSFAILURE);
+		}
+#undef CASE
+	}
 
-	std::string result = putParty.lpstrFile;
-	putParty.lpstrFile = NULL;
-	putParty.nMaxFile = 0;
+	std::string result = dlg.lpstrFile;
+	dlg.lpstrFile = NULL;
+	dlg.nMaxFile = 0;
 	delete path;
-	putParty.Flags &= ~OFN_EXTENSIONDIFFERENT;
-	putParty.Flags &= ~OFN_READONLY;
+	dlg.Flags &= ~OFN_EXTENSIONDIFFERENT;
+	dlg.Flags &= ~OFN_READONLY;
 	return result;
 }
 
