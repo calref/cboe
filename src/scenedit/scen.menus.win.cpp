@@ -9,6 +9,7 @@
 // Include this last because some #defines in the Windows headers cause compile errors in my headers.
 // Fortunately they're on symbols not used in this file, so this should work.
 #include <Windows.h>
+#undef HELP_INDEX // Except this one.
 
 // This is the index of each menu on the menubar
 enum {
@@ -34,8 +35,8 @@ void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
 	MENUITEMINFOA item;
 	item.cbSize = sizeof(MENUITEMINFOA);
 	item.fMask = MIIM_ID | MIIM_FTYPE;
-	GetMenuItemInfoA(file_menu, i++, true, &item);
-	if(info.fType == MFT_SEPARATOR) return;
+	GetMenuItemInfoA(menu, i++, true, &item);
+	if(item.fType == MFT_SEPARATOR) return;
 	menuChoices[item.wID] = cmd;
 }
 
@@ -207,6 +208,7 @@ void shut_down_menus(short mode) {
 			EnableMenuItem(out_menu, i, MF_GRAYED | MF_BYPOSITION);
 		}
 	}
+	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
 void handle_file_menu(int item_hit);
@@ -227,7 +229,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 			handle_item_menu(cmd - 10000);
 		} else if(cmd >= 20000 && cmd < 30000) { // Monster menus
 			handle_monst_menu(cmd - 20000);
-		} else handle_menu_choice(menuChoices[message]);
+		} else handle_menu_choice(menuChoices[cmd]);
 	} else if(message == WM_SETCURSOR) {
 		// Windows resets the cursor to an arrow whenever the mouse moves, unless we do this.
 		// Note: By handling this message, sf::Window::setMouseCursorVisible() will NOT work.

@@ -105,9 +105,9 @@ BEGIN
         MENUITEM "  &Delete Last Town",         IDM_SCEN_ADV_DELETE_TOWN
         MENUITEM "  Write D&ata To Text File",  IDM_SCEN_ADV_DATA_DUMP
         MENUITEM "  Do &Full Text Dump",        IDM_SCEN_ADV_TEXT_DUMP
-        MENUITEM "  Scenario Shoppin&g Text Dump", IDM_SCEN_ADV_DATA_DUMP
-        MENUITEM "  Scenario &Monster Dump",    IDM_SCEN_ADV_TEXT_DUMP
-        MENUITEM "  Scenario Specials D&ump",   IDM_SCEN_INTRO
+        MENUITEM "  Scenario Shoppin&g Text Dump", IDM_SCEN_PASSWORD
+        MENUITEM "  Scenario &Monster Dump",    IDM_SCEN_PASSWORD
+        MENUITEM "  Scenario Specials D&ump",   IDM_SCEN_PASSWORD
         MENUITEM "  Scenario Ob&ject Data Dump", IDM_SCEN_PASSWORD
     END
     POPUP "&Town"
