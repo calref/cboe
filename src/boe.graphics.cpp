@@ -27,6 +27,7 @@
 
 #include "restypes.hpp"
 #include "boe.menus.h"
+#include "winutil.h"
 
 extern sf::RenderWindow mainPtr;
 extern short stat_window;
@@ -64,7 +65,6 @@ extern bool show_startup_splash;
 
 //***********************
 rectangle		menuBarRect;
-short		menuBarHeight;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
 
 short terrain_there[9][9]; // this is an optimization variabel. Keeps track of what terrain
@@ -164,17 +164,19 @@ location ok_space[4] = {loc(),loc(),loc(),loc()};
 sf::Image hold_pict;
 
 void adjust_window_mode() {
-	rectangle r;
+	sf::FloatRect r;
 	sf::ContextSettings winSettings;
 	winSettings.stencilBits = 1;
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	hideMenuBar();
+	int menubarHeight = getMenubarHeight();
 	
 	// TODO: Make display_mode an enum
 	if(display_mode == 5) {
 		ul.x = 14; ul.y = 2;
-		mainPtr.create(sf::VideoMode(605,430,32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
-		mainPtr.setPosition({static_cast<int>((desktop.width - 605) / 2), static_cast<int>((desktop.height - 430) / 2)});
+		int height = 430 + menubarHeight;
+		mainPtr.create(sf::VideoMode(605, height, 32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
+		mainPtr.setPosition({static_cast<int>((desktop.width - 605) / 2), static_cast<int>((desktop.height - height) / 2)});
 		r = rectangle(mainPtr);
 	}
 	else {
@@ -188,7 +190,7 @@ void adjust_window_mode() {
 			case 3: ul.x = 10; ul.y = windRect.bottom - 422 - 6; break;
 			case 4: ul.x = windRect.right - 570 - 6; ul.y = windRect.bottom - 422 - 6; break;
 		}
-		
+		r = windRect;
 	}
 	redraw_screen(REFRESH_NONE);
 	if(text_sbar != NULL) {

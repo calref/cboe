@@ -7,10 +7,12 @@
 #include "boe.infodlg.h"
 #include "boe.consts.h"
 #include "spell.hpp"
+#include "winutil.h"
 
 // Include this last because some #defines in the Windows headers cause compile errors in my headers.
 // Fortunately they're on symbols not used in this file, so this should work.
 #include <Windows.h>
+#include <gl/GL.h>
 
 // This is the index of each menu on the menubar
 enum {
@@ -45,6 +47,13 @@ void init_menubar() {
 	// Now we have to do a little hack to handle menu messages.
 	// We replace SFML's window procedure with our own, which checks for menu events and then forwards to SFML's procedure.
 	mainProc = SetWindowLongPtr(winHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&menuProc));
+	mainPtr.setActive();
+	// Fix the window's viewport so that everything is drawn correctly
+	sf::Vector2u sz = mainPtr.getSize();
+	double menubarHeight = getMenubarHeight();
+	double usableHeight = sz.y - menubarHeight;
+	sf::View view(sf::FloatRect(0, 0, sz.x, usableHeight));
+	mainPtr.setView(view);
 }
 
 void adjust_monst_menu() {
@@ -192,11 +201,13 @@ void menu_activate() {
 }
 
 void hideMenuBar() {
+	if(menuHandle == NULL) return;
 	SetMenu(mainPtr.getSystemHandle(), NULL);
 	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
 void showMenuBar() {
+	if(menuHandle == NULL) return;
 	SetMenu(mainPtr.getSystemHandle(), menuHandle);
 	DrawMenuBar(mainPtr.getSystemHandle());
 }

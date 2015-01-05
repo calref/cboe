@@ -152,7 +152,8 @@ void Initialize(void) {
 	//	The window is full screen size, made smaller to make it more visible.
 	//
 	// Size and style obtained from WIND resource #128
-	mainPtr.create(sf::VideoMode(590, 440), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
+	int height = 440 + getMenubarHeight();
+	mainPtr.create(sf::VideoMode(590, height), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
 	init_menubar();
 }
 

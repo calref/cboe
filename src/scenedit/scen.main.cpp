@@ -165,8 +165,9 @@ void Initialize(void) {
 	rectangle windRect;
 	windRect.width() = mode.width;
 	windRect.height() = mode.height;
+	int height = 420 + getMenubarHeight();
 	
-	windRect.inset((windRect.right - 584) / 2,(windRect.bottom - 420) / 2);
+	windRect.inset((windRect.right - 584) / 2,(windRect.bottom - height) / 2);
 	windRect.offset(0,18);
 	// TODO: I think it should have a close button as well
 	mainPtr.create(sf::VideoMode(windRect.width(), windRect.height()), "Blades of Exile Scenario Editor", sf::Style::Titlebar);

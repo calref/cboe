@@ -73,13 +73,7 @@ rectangle::rectangle() : top(0), left(0), right(0), bottom(0) {}
 rectangle::rectangle(location tl, location br) : top(tl.y), left(tl.x), right(br.x), bottom(br.y) {}
 rectangle::rectangle(int t, int l, int b, int r) : top(t), left(l), right(r), bottom(b) {}
 rectangle::rectangle(sf::Texture& texture) : top(0), left(0), right(texture.getSize().x), bottom(texture.getSize().y) {}
-rectangle::rectangle(sf::RenderTarget& texture) : top(0), left(0), right(texture.getSize().x), bottom(texture.getSize().y) {
-	// This is a hack to work around the menubar in Windows affecting the rect returned by getSize(), despite the available area being unchanged.
-	extern sf::RenderWindow mainPtr;
-	extern int getMenubarHeight();
-	if(&texture == &mainPtr)
-		bottom += getMenubarHeight();
-}
+rectangle::rectangle(sf::RenderTarget& texture) : top(0), left(0), right(texture.getSize().x), bottom(texture.getSize().y) {}
 
 bool rectangle::contains(location p){
 	if(p.y >= top && p.y <= bottom && p.x >= left && p.x <= right)

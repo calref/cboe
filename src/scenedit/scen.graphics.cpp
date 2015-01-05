@@ -432,11 +432,8 @@ void draw_main_screen() {
 }
 
 void draw_lb() {
-	rectangle temp_rect(mainPtr);
 	short i;
 	
-	temp_rect.right = RIGHT_AREA_UL_X - 2;
-	tileImage(mainPtr,temp_rect,bg[20]);
 	for(i = 0; i < NLS; i++)
 		draw_lb_slot(i,0);
 }
