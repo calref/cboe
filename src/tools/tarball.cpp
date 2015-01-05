@@ -35,7 +35,7 @@ tarball::header_posix_ustar tarball::generateTarHeader(const std::string& fileNa
 	memset(header.checksum,' ',8);
 	header.typeflag[0] = directory ? '5' : '0';
 	// leave linkname filled with NULs
-	snprintf(header.magic,6,"ustar  ");
+	snprintf(header.magic,6,"ustar");
 	snprintf(header.version,2," ");
 	// leave uname filled with NULs
 	// leave gname filled with NULs
