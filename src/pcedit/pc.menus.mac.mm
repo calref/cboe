@@ -17,7 +17,7 @@
 
 using MenuHandle = NSMenu*;
 
-extern void handle_apple_menu(int item_hit);
+extern void handle_help_menu(int item_hit);
 extern void handle_file_menu(int item_hit);
 extern void handle_edit_menus(int item_hit);
 extern void handle_item_menu(int item_hit);
@@ -134,7 +134,7 @@ void update_item_menu() {
 -(void) helpMenu:(id) sender {
 	int i = [[sender representedObject] intValue];
 	if(i == 0); // TODO: "BoE Character Editor Help"
-	else if(i == 1) handle_apple_menu(i);
+	else if(i == 1) handle_help_menu(i);
 }
 
 @end
