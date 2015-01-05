@@ -489,12 +489,15 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 			 	working_rect.bottom = spot_hit.y;
 				if((overall_mode == 1) || (overall_mode == MODE_FILLED_RECT)) {
 					change_rect_terrain(working_rect,current_terrain_type,20,0);
+					change_made = true;
 				}
 				else if(overall_mode == MODE_HOLLOW_RECT) {
 					change_rect_terrain(working_rect,current_terrain_type,20,1);
+					change_made = true;
 				}
 				else if(overall_mode == MODE_SET_TOWN_RECT) {
 					town->in_town_rect = working_rect;
+					change_made = true;
 				}
 				else { // MODE_ROOM_RECT
 					if(editing_town) {
@@ -520,6 +523,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					}
 					if(x < 500)
 						giveError("You have placed the maximum number of area rectangles (16 in town, 8 outdoors).");
+					else change_made = true;
 				}
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
@@ -895,6 +899,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				scenario.out_start = spot_hit;
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
+				change_made = true;
 				break;
 			case MODE_ERASE_CREATURE: //delete monst
 				for(x = 0; x < 60; x++)

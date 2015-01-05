@@ -90,7 +90,6 @@ BEGIN
         MENUITEM "&Scenario Details",           IDM_SCEN_DETAILS
         MENUITEM "Scenario Intr&o Text",        IDM_SCEN_INTRO
         MENUITEM "Set Starting &Location",      IDM_SCEN_START
-        MENUITEM "Change Password",             IDM_SCEN_PASSWORD
         MENUITEM SEPARATOR
         MENUITEM "Advanced:",                   IDM_SCEN_NEW_TOWN, GRAYED
         MENUITEM "  Edit Special &Nodes",       IDM_SCEN_ADV_SPECIALS

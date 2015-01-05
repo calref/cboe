@@ -1,5 +1,6 @@
 
 #include "scen.menus.h"
+#include <map>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Resource.h"
 #include "scenario.h"
@@ -25,8 +26,18 @@ extern sf::RenderWindow mainPtr;
 extern cScenario scenario;
 LONG_PTR mainProc;
 HMENU menuHandle = NULL;
+std::map<int,eMenu> menuChoices;
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
+
+void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
+	MENUITEMINFOA item;
+	item.cbSize = sizeof(MENUITEMINFOA);
+	item.fMask = MIIM_ID | MIIM_FTYPE;
+	GetMenuItemInfoA(file_menu, i++, true, &item);
+	if(info.fType == MFT_SEPARATOR) return;
+	menuChoices[item.wID] = cmd;
+}
 
 void init_menubar() {
 	HWND winHandle = mainPtr.getSystemHandle();
@@ -43,6 +54,64 @@ void init_menubar() {
 	double usableHeight = sz.y - menubarHeight;
 	sf::View view(sf::FloatRect(0, 0, sz.x, usableHeight));
 	mainPtr.setView(view);
+	
+	// And now initialize the mapping from Windows menu commands to eMenu constants
+	static bool inited = false;
+	if(inited) return;
+	inited = true;
+	
+	static const eMenu file_choices[] = {
+		eMenu::FILE_NEW, eMenu::FILE_OPEN, eMenu::NONE, eMenu::FILE_CLOSE, eMenu::FILE_SAVE, eMenu::FILE_REVERT, eMenu::NONE, eMenu::QUIT,
+	};
+	static const eMenu edit_choices[] = {
+		eMenu::EDIT_UNDO, eMenu::EDIT_REDO, eMenu::NONE,
+		eMenu::EDIT_CUT, eMenu::EDIT_COPY, eMenu::EDIT_PASTE, eMenu::EDIT_DELETE, eMenu::EDIT_SELECT_ALL,
+	};
+	static const eMenu scen_choices[] = {
+		eMenu::TOWN_CREATE, eMenu::NONE, eMenu::SCEN_DETAILS, eMenu::SCEN_INTRO, eMenu::TOWN_START, eMenu::NONE, eMenu::NONE,
+		eMenu::SCEN_SPECIALS, eMenu::SCEN_TEXT, eMenu::SCEN_JOURNALS, eMenu::TOWN_IMPORT, eMenu::SCEN_SAVE_ITEM_RECTS,
+		eMenu::SCEN_HORSES, eMenu::SCEN_BOATS, eMenu::TOWN_VARYING, eMenu::SCEN_TIMERS, eMenu::SCEN_ITEM_SHORTCUTS,
+		eMenu::TOWN_DELETE, eMenu::SCEN_DATA_DUMP, eMenu::SCEN_TEXT_DUMP,
+	};
+	static const eMenu town_choices[] = {
+		eMenu::TOWN_DETAILS, eMenu::TOWN_WANDERING, eMenu::TOWN_BOUNDARIES, eMenu::FRILL, eMenu::UNFRILL, eMenu::TOWN_AREAS,
+		eMenu::NONE, eMenu::TOWN_ITEMS_RANDOM, eMenu::TOWN_ITEMS_NOT_PROPERTY, eMenu::TOWN_ITEMS_CLEAR, eMenu::NONE, eMenu::NONE,
+		eMenu::TOWN_SPECIALS, eMenu::TOWN_TEXT, eMenu::TOWN_SIGNS, eMenu::TOWN_ADVANCED, eMenu::TOWN_TIMERS,
+	};
+	static const eMenu out_choices[] = {
+		eMenu::OUT_DETAILS, eMenu::OUT_WANDERING, eMenu::OUT_ENCOUNTERS, eMenu::FRILL, eMenu::UNFRILL, eMenu::OUT_AREAS,
+		eMenu::NONE, eMenu::OUT_START, eMenu::NONE, eMenu::NONE,
+		eMenu::OUT_SPECIALS, eMenu::OUT_TEXT, eMenu::OUT_SIGNS,
+	};
+	static const eMenu help_choices[] = {
+		eMenu::HELP_INDEX, eMenu::ABOUT, eMenu::NONE, eMenu::HELP_START, eMenu::HELP_TEST, eMenu::HELP_DIST,
+	};
+	
+	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
+	HMENU edit_menu = GetSubMenu(menuHandle, EDIT_MENU_POS);
+	HMENU scen_menu = GetSubMenu(menuHandle, SCEN_MENU_POS);
+	HMENU town_menu = GetSubMenu(menuHandle, TOWN_MENU_POS);
+	HMENU out_menu = GetSubMenu(menuHandle, OUT_MENU_POS);
+	HMENU help_menu = GetSubMenu(menuHandle, HELP_MENU_POS);
+	
+	int i = 0;
+	for(eMenu opt : file_choices)
+		setMenuCommand(file_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : edit_choices)
+		setMenuCommand(edit_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : scen_choices)
+		setMenuCommand(scen_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : town_choices)
+		setMenuCommand(town_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : out_choices)
+		setMenuCommand(out_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : help_choices)
+		setMenuCommand(help_menu, i++, opt);
 }
 
 void update_item_menu() {
@@ -158,79 +227,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 			handle_item_menu(cmd - 10000);
 		} else if(cmd >= 20000 && cmd < 30000) { // Monster menus
 			handle_monst_menu(cmd - 20000);
-		} else switch(cmd) {
-			// File menu
-			case IDM_FILE_NEW: handle_file_menu(3); break;
-			case IDM_FILE_OPEN: handle_file_menu(1); break;
-			case IDM_FILE_CLOSE: break;
-			case IDM_FILE_SAVE: handle_file_menu(2); break;
-			case IDM_FILE_REVERT: break;
-			case IDM_FILE_QUIT: handle_file_menu(5); break;
-			// Edit menu
-			case IDM_EDIT_UNDO: handle_edit_menu(1); break;
-			case IDM_EDIT_REDO: handle_edit_menu(2); break;
-			case IDM_EDIT_CUT: handle_edit_menu(4); break;
-			case IDM_EDIT_COPY: handle_edit_menu(5); break;
-			case IDM_EDIT_PASTE: handle_edit_menu(6); break;
-			case IDM_EDIT_DELETE: handle_edit_menu(7); break;
-			case IDM_EDIT_SELECT: handle_edit_menu(8); break;
-			// Scenario menu
-			case IDM_SCEN_NEW_TOWN: handle_scenario_menu(1); break;
-			case IDM_SCEN_DETAILS: handle_scenario_menu(3); break;
-			case IDM_SCEN_INTRO: handle_scenario_menu(4); break;
-			case IDM_SCEN_START: handle_scenario_menu(4); break;
-			case IDM_SCEN_PASSWORD: break;
-			// Scenario menu (advanced)
-			case IDM_SCEN_ADV_SPECIALS: handle_scenario_menu(9); break;
-			case IDM_SCEN_ADV_TEXT: handle_scenario_menu(10); break;
-			case IDM_SCEN_ADV_JOURNAL: handle_scenario_menu(11); break;
-			case IDM_SCEN_ADV_IMPORT_TOWN: handle_scenario_menu(12); break;
-			case IDM_SCEN_ADV_SAVE_RECTS: handle_scenario_menu(13); break;
-			case IDM_SCEN_ADV_HORSES: handle_scenario_menu(14); break;
-			case IDM_SCEN_ADV_BOATS: handle_scenario_menu(15); break;
-			case IDM_SCEN_ADV_TOWN_VARY: handle_scenario_menu(16); break;
-			case IDM_SCEN_ADV_EVENTS: handle_scenario_menu(17); break;
-			case IDM_SCEN_ADV_SHORTCUTS: handle_scenario_menu(18); break;
-			case IDM_SCEN_ADV_DELETE_TOWN: handle_scenario_menu(19); break;
-			case IDM_SCEN_ADV_DATA_DUMP: handle_scenario_menu(20); break;
-			case IDM_SCEN_ADV_TEXT_DUMP: handle_scenario_menu(21); break;
-			// Town menu
-			case IDM_TOWN_DETAILS: handle_town_menu(1); break;
-			case IDM_TOWN_WANDER: handle_town_menu(2); break;
-			case IDM_TOWN_BOUNDS: handle_town_menu(3); break;
-			case IDM_TOWN_FRILL: handle_town_menu(4); break;
-			case IDM_TOWN_UNFRILL: handle_town_menu(5); break;
-			case IDM_TOWN_AREAS: handle_town_menu(6); break;
-			case IDM_TOWN_RANDOM_ITEMS: handle_town_menu(8); break;
-			case IDM_TOWN_NOT_PROPERTY: handle_town_menu(9); break;
-			case IDM_TOWN_CLEAR_ITEMS: handle_town_menu(10); break;
-			// Town menu (advanced)
-			case IDM_TOWN_ADV_SPECIALS: handle_town_menu(13); break;
-			case IDM_TOWN_ADV_TEXT: handle_town_menu(14); break;
-			case IDM_TOWN_ADV_SIGNS: handle_town_menu(15); break;
-			case IDM_TOWN_ADV_DETAILS: handle_town_menu(16); break;
-			case IDM_TOWN_ADV_EVENTS: handle_town_menu(17); break;
-			case IDM_TOWN_ADV_REPORT: break;
-			// Outdoors menu
-			case IDM_OUT_DETAILS: handle_outdoor_menu(1); break;
-			case IDM_OUT_WANDER: handle_outdoor_menu(2); break;
-			case IDM_OUT_ENCOUNTER: handle_outdoor_menu(3); break;
-			case IDM_OUT_FRILL: handle_outdoor_menu(4); break;
-			case IDM_OUT_UNFRILL: handle_outdoor_menu(5); break;
-			case IDM_OUT_AREAS: handle_outdoor_menu(6); break;
-			case IDM_OUT_START: handle_outdoor_menu(8); break;
-			// Outdoors menu (advanced)
-			case IDM_OUT_ADV_SPECIALS: handle_outdoor_menu(11); break;
-			case IDM_OUT_ADV_TEXT: handle_outdoor_menu(12); break;
-			case IDM_OUT_ADV_SIGNS: handle_outdoor_menu(13); break;
-			case IDM_OUT_ADV_REPORT: break;
-			// Help menu
-			case IDM_HELP_INDEX: ShellExecuteA(NULL, "open", "https://calref.net/~sylae/boe-doc/editor/About.html", NULL, NULL, SW_SHOWNORMAL); break;
-			case IDM_HELP_ABOUT: handle_help_menu(0); break;
-			case IDM_HELP_START: handle_help_menu(1); break;
-			case IDM_HELP_TEST: handle_help_menu(2); break;
-			case IDM_HELP_DISTRIBUTE: handle_help_menu(3); break;
-		}
+		} else handle_menu_choice(menuChoices[message]);
 	} else if(message == WM_SETCURSOR) {
 		// Windows resets the cursor to an arrow whenever the mouse moves, unless we do this.
 		// Note: By handling this message, sf::Window::setMouseCursorVisible() will NOT work.

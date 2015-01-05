@@ -20,6 +20,7 @@ void makeFrontWindow(sf::Window& win);
 void setWindowFloating(sf::Window& win, bool floating);
 
 void init_fileio();
+void launchURL(std::string url);
 
 fs::path nav_get_party();
 fs::path nav_put_party(fs::path def = "");

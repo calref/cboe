@@ -783,6 +783,7 @@ bool outdoor_move_monster(short num,location dest) {
 	
 	if(!outd_is_blocked(dest) && !outd_is_special(dest) &&
 		(dest != univ.party.p_loc) &&
+	   // TODO: Don't hard-code terrain types!
 		((univ.out[dest.x][dest.y] > 21) || (univ.out[dest.x][dest.y] < 5))) {
 		univ.party.out_c[num].direction =
 		set_direction(univ.party.out_c[num].m_loc, dest);

@@ -145,6 +145,10 @@ void beep() {
 	NSBeep();
 }
 
+void launchURL(std::string url) {
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding]]];
+}
+
 int getMenubarHeight() {
 	// Mac menubar isn't in the window, so we return 0 here.
 	return 0;

@@ -9,6 +9,7 @@
 #include "scen.menus.h"
 #include <Cocoa/Cocoa.h>
 #include "scenario.h"
+#include "winutil.h"
 
 using MenuHandle = NSMenu*;
 MenuHandle menu_bar_handle;
@@ -18,15 +19,9 @@ MenuHandle file_menu, edit_menu, app_menu, scen_menu, town_menu, out_menu, help_
 extern cScenario scenario;
 
 @interface MenuHandler : NSObject
--(void) fileMenu:(id) sender;
--(void) editMenu:(id) sender;
--(void) scenMenu:(id) sender;
--(void) townMenu:(id) sender;
--(void) outMenu:(id) sender;
+-(void) menuChoice:(id) sender;
 -(void) itemMenu:(id) sender;
 -(void) monstMenu:(id) sender;
--(void) helpMenu:(id) sender;
--(void) onlineHelp:(id) sender;
 @end
 
 static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
@@ -61,26 +56,55 @@ void init_menubar() {
 	mon_menu[2] = [[menu_bar_handle itemWithTitle: @"M3"] submenu];
 	mon_menu[3] = [[menu_bar_handle itemWithTitle: @"M4"] submenu];
 	
-	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
-	setMenuCallback([app_menu itemWithTitle: @"About BoE Scenario Editor"], handler, @selector(helpMenu:), 0);
-	setMenuCallback([app_menu itemWithTitle: @"Quit BoE Scenario Editor"], handler, @selector(fileMenu:), 5);
-	// TODO: Organize file menu function
-	setMenuCallback([file_menu itemWithTitle: @"New Scenario…"], handler, @selector(fileMenu:), 3);
-	setMenuCallback([file_menu itemWithTitle: @"Open…"], handler, @selector(fileMenu:), 1);
-	setMenuCallback([file_menu itemWithTitle: @"Save"], handler, @selector(fileMenu:), 2);
-	setMenuCallback([help_menu itemAtIndex: 0], handler, @selector(onlineHelp:), 0);
+	static const eMenu file_choices[] = {
+		eMenu::FILE_NEW, eMenu::FILE_OPEN, eMenu::NONE, eMenu::FILE_CLOSE, eMenu::FILE_SAVE, eMenu::FILE_REVERT,
+	};
+	static const eMenu edit_choices[] = {
+		eMenu::EDIT_UNDO, eMenu::EDIT_REDO, eMenu::NONE,
+		eMenu::EDIT_CUT, eMenu::EDIT_COPY, eMenu::EDIT_PASTE, eMenu::EDIT_DELETE, eMenu::EDIT_SELECT_ALL,
+	};
+	static const eMenu scen_choices[] = {
+		eMenu::TOWN_CREATE, eMenu::NONE, eMenu::SCEN_DETAILS, eMenu::SCEN_INTRO, eMenu::TOWN_START, eMenu::NONE, eMenu::NONE,
+		eMenu::SCEN_SPECIALS, eMenu::SCEN_TEXT, eMenu::SCEN_JOURNALS, eMenu::TOWN_IMPORT, eMenu::SCEN_SAVE_ITEM_RECTS,
+		eMenu::SCEN_HORSES, eMenu::SCEN_BOATS, eMenu::TOWN_VARYING, eMenu::SCEN_TIMERS, eMenu::SCEN_ITEM_SHORTCUTS,
+		eMenu::TOWN_DELETE, eMenu::SCEN_DATA_DUMP, eMenu::SCEN_TEXT_DUMP,
+	};
+	static const eMenu town_choices[] = {
+		eMenu::TOWN_DETAILS, eMenu::TOWN_WANDERING, eMenu::TOWN_BOUNDARIES, eMenu::FRILL, eMenu::UNFRILL, eMenu::TOWN_AREAS,
+		eMenu::NONE, eMenu::TOWN_ITEMS_RANDOM, eMenu::TOWN_ITEMS_NOT_PROPERTY, eMenu::TOWN_ITEMS_CLEAR, eMenu::NONE, eMenu::NONE,
+		eMenu::TOWN_SPECIALS, eMenu::TOWN_TEXT, eMenu::TOWN_SIGNS, eMenu::TOWN_ADVANCED, eMenu::TOWN_TIMERS,
+	};
+	static const eMenu out_choices[] = {
+		eMenu::OUT_DETAILS, eMenu::OUT_WANDERING, eMenu::OUT_ENCOUNTERS, eMenu::FRILL, eMenu::UNFRILL, eMenu::OUT_AREAS,
+		eMenu::NONE, eMenu::OUT_START, eMenu::NONE, eMenu::NONE,
+		eMenu::OUT_SPECIALS, eMenu::OUT_TEXT, eMenu::OUT_SIGNS,
+	};
+	static const eMenu help_choices[] = {
+		eMenu::HELP_INDEX, eMenu::NONE, eMenu::HELP_START, eMenu::HELP_TEST, eMenu::HELP_DIST, eMenu::NONE, eMenu::HELP_CONTEST,
+	};
 	
-	for(int i = 0; i < [edit_menu numberOfItems]; i++)
-		setMenuCallback([edit_menu itemAtIndex: i], handler, @selector(editMenu:), i + 1);
-	for(int i = 0; i < [scen_menu numberOfItems]; i++)
-		setMenuCallback([scen_menu itemAtIndex: i], handler, @selector(scenMenu:), i + 1);
-	for(int i = 0; i < [town_menu numberOfItems]; i++)
-		setMenuCallback([town_menu itemAtIndex: i], handler, @selector(townMenu:), i + 1);
-	for(int i = 0; i < [out_menu numberOfItems]; i++)
-		setMenuCallback([out_menu itemAtIndex: i], handler, @selector(outMenu:), i + 1);
-	for(int i = 2; i < [help_menu numberOfItems]; i++)
-		setMenuCallback([help_menu itemAtIndex: i], handler, @selector(helpMenu:), i - 1);
-	// TODO: Item and monster menus
+	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
+	setMenuCallback([app_menu itemWithTitle: @"About BoE Scenario Editor"], handler, @selector(menuChoice:), int(eMenu::ABOUT));
+	setMenuCallback([app_menu itemWithTitle: @"Quit BoE Scenario Editor"], handler, @selector(menuChoice:), int(eMenu::QUIT));
+	
+	int i = 0;
+	for(eMenu opt : file_choices)
+		setMenuCallback([file_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : edit_choices)
+		setMenuCallback([edit_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : scen_choices)
+		setMenuCallback([scen_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : town_choices)
+		setMenuCallback([town_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : out_choices)
+		setMenuCallback([out_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : help_choices)
+		setMenuCallback([help_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
 }
 
 // mode 0 - initial shut down, 1 - no town, 2 - no out, 3 - no town or out 4 - all menus on
@@ -170,38 +194,9 @@ void update_item_menu() {
 	
 }
 
-void handle_file_menu(int item_hit);
-void handle_edit_menu(int item_hit);
-void handle_scenario_menu(int item_hit);
-void handle_town_menu(int item_hit);
-void handle_outdoor_menu(int item_hit);
-void handle_help_menu(int item_hit);
-void handle_item_menu(int item_hit);
-void handle_monst_menu(int item_hit);
-
 @implementation MenuHandler
--(void) fileMenu:(id) sender {
-	handle_file_menu([[sender representedObject] intValue]);
-}
-
-// TODO: Implement edit menu (much work to be done here!)
-// TODO: Fix edit menu being disabled while a modal dialog is onscreen.
-// This means setting autoenable to false for the Edit menu and finding a
-// way to make the menuitems work instead of just doing nothing.
--(void) editMenu:(id) sender {
-	handle_edit_menu([[sender representedObject] intValue]);
-}
-
--(void) scenMenu:(id) sender {
-	handle_scenario_menu([[sender representedObject] intValue]);
-}
-
--(void) townMenu:(id) sender {
-	handle_town_menu([[sender representedObject] intValue]);
-}
-
--(void) outMenu:(id) sender {
-	handle_outdoor_menu([[sender representedObject] intValue]);
+-(void) menuChoice:(id) sender {
+	handle_menu_choice(eMenu([[sender representedObject] intValue]));
 }
 
 // TODO: Monster and item menus
@@ -211,14 +206,5 @@ void handle_monst_menu(int item_hit);
 
 -(void) monstMenu:(id) sender {
 	(void) sender; // Suppress "unused parameter" warning
-}
-
--(void) helpMenu:(id) sender {
-	handle_help_menu([[sender representedObject] intValue]);
-}
-
--(void) onlineHelp:(id) sender {
-	(void) sender;
-	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"https://calref.net/~sylae/boe-doc/editor/About.html"]];
 }
 @end

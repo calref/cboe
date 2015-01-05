@@ -50,14 +50,6 @@ void Initialize(void);
 void Handle_One_Event();
 void Handle_Activate();
 void Handle_Update();
-void handle_file_menu(int item_hit);
-void handle_edit_menu(int item_hit);
-void handle_scenario_menu(int item_hit);
-void handle_town_menu(int item_hit);
-void handle_outdoor_menu(int item_hit);
-void handle_item_menu(int item_hit);
-void handle_monst_menu(int item_hit);
-void handle_help_menu(int item_hit);
 void Mouse_Pressed();
 void close_program();
 void ding();
@@ -217,10 +209,14 @@ void Handle_Update() {
 	restore_cursor();
 }
 
-void handle_file_menu(int item_hit) {
+void handle_menu_choice(eMenu item_hit) {
+	bool isEdit = false, isHelp = false;
+	std::string helpDlog;
 	fs::path file_to_load;
+	cKey editKey = {true};
 	switch(item_hit) {
-		case 1: // open
+		case eMenu::NONE: return;
+		case eMenu::FILE_OPEN:
 			if(change_made && !save_check("save-before-load"))
 				break;
 			file_to_load = nav_get_scenario();
@@ -235,50 +231,50 @@ void handle_file_menu(int item_hit) {
 				set_up_main_screen();
 			}
 			break;
-		case 2: // save
+		case eMenu::FILE_SAVE:
 			town->set_up_lights();
 			save_scenario();
 			break;
-		case 3: // new scen
+		case eMenu::FILE_NEW:
 			if(build_scenario()) {
 				overall_mode = MODE_MAIN_SCREEN;
 				set_up_main_screen();
 			}
 			break;
-			
-		case 5: // quit
+		case eMenu::QUIT: // quit
 			if(!save_check("save-before-quit"))
 				break;
 			All_Done = true;
 			break;
-	}
-}
-
-void handle_edit_menu(int item_hit) {
-	// Currently, this merely passes appropriate input to the frontmost dialog.
-	// TODO: Handle edit menu operations when no dialog is onscreen.
-	cKey key = {true};
-	switch(item_hit) {
-		case 1: key.k = key_undo; break;
-		case 2: key.k = key_redo; break;
-		case 4: key.k = key_cut; break;
-		case 5: key.k = key_copy; break;
-		case 6: key.k = key_paste; break;
-		case 7: key.k = key_del; break;
-		case 8: key.k = key_selectall; break;
-	}
-	if(!cDialog::sendInput(key)) {
-		// Handle non-dialog edit operations here.
-		switch(key.k) {}
-	}
-}
-
-void handle_scenario_menu(int item_hit) {
-	short i;
-	fs::path file;
-	
-	switch(item_hit) {
-		case 1: // Create new town
+		case eMenu::EDIT_UNDO:
+			editKey.k = key_undo;
+			isEdit = true;
+			break;
+		case eMenu::EDIT_REDO:
+			editKey.k = key_redo;
+			isEdit = true;
+			break;
+		case eMenu::EDIT_CUT:
+			editKey.k = key_cut;
+			isEdit = true;
+			break;
+		case eMenu::EDIT_COPY:
+			editKey.k = key_copy;
+			isEdit = true;
+			break;
+		case eMenu::EDIT_PASTE:
+			editKey.k = key_paste;
+			isEdit = true;
+			break;
+		case eMenu::EDIT_DELETE:
+			editKey.k = key_del;
+			isEdit = true;
+			break;
+		case eMenu::EDIT_SELECT_ALL:
+			editKey.k = key_selectall;
+			isEdit = true;
+			break;
+		case eMenu::TOWN_CREATE:
 			if(change_made) {
 				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
@@ -289,36 +285,33 @@ void handle_scenario_menu(int item_hit) {
 			}
 			if(new_town(scenario.num_towns))
 				set_up_main_screen();
+			change_made = true;
 			break;
-		case 3: // Scenario Details
+		case eMenu::SCEN_DETAILS:
 			edit_scen_details();
+			change_made = true;
 			break;
-		case 4: // Scenario Intro Text
+		case eMenu::SCEN_INTRO:
 			edit_scen_intro();
+			change_made = true;
 			break;
-		case 5: // Set Starting Location
+		case eMenu::TOWN_START:
 			set_starting_loc();
+			change_made = true;
 			break;
-		case 6: // Change Password
-//			if(check_p(user_given_password)) {
-//				user_given_password = get_password();
-//				given_password = true;
-//			}
-			giveError("Passwords have been disabled; they are no longer necessary.");
-			break;
-		case 9: // Edit Special Nodes
+		case eMenu::SCEN_SPECIALS:
 			right_sbar->setPosition(0);
 			start_special_editing(0,0);
 			break;
-		case 10: // Edit Scenario Text
+		case eMenu::SCEN_TEXT:
 			right_sbar->setPosition(0);
 			start_string_editing(0,0);
 			break;
-		case 11: // Edit Journal Entries
+		case eMenu::SCEN_JOURNALS:
 			right_sbar->setPosition(0);
 			start_string_editing(3,0);
 			break;
-		case 12: // Import Town
+		case eMenu::TOWN_IMPORT:
 			if(change_made) {
 				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
@@ -330,25 +323,30 @@ void handle_scenario_menu(int item_hit) {
 				redraw_screen();
 			}
 			break;
-		case 13: // Edit Saved Item Rectangles
+		case eMenu::SCEN_SAVE_ITEM_RECTS:
 			edit_save_rects();
+			change_made = true;
 			break;
-		case 14: // Edit Horses
+		case eMenu::SCEN_HORSES:
 			edit_horses();
+			change_made = true;
 			break;
-		case 15: // Edit Boats
+		case eMenu::SCEN_BOATS:
 			edit_boats();
+			change_made = true;
 			break;
-		case 16: // Set Variable Town Entry
+		case eMenu::TOWN_VARYING:
 			edit_add_town();
+			change_made = true;
 			break;
-		case 17: // Set Scenario Event Timers
+		case eMenu::SCEN_TIMERS:
 			edit_scenario_events();
+			change_made = true;
 			break;
-		case 18: // Edit Item Placement Shortcuts
+		case eMenu::SCEN_ITEM_SHORTCUTS:
 			edit_item_placement();
 			break;
-		case 19: // Delete Last Town
+		case eMenu::TOWN_DELETE:
 			if(change_made) {
 				giveError("You need to save the changes made to your scenario before you can delete a town.");
 				return;
@@ -368,142 +366,146 @@ void handle_scenario_menu(int item_hit) {
 			if(cChoiceDlog("delete-town-confirm", {"okay", "cancel"}).show() == "okay")
 				delete_last_town();
 			break;
-		case 20: // Write Data to Text File
+		case eMenu::SCEN_DATA_DUMP:
 			if(cChoiceDlog("data-dump-confirm", {"okay", "cancel"}).show() == "okay")
 				start_data_dump();
 			break;
-		case 21: // Do Full Text Dump
+		case eMenu::SCEN_TEXT_DUMP:
 			if(cChoiceDlog("text-dump-confirm", {"okay", "cancel"}).show() == "okay")
 				scen_text_dump();
 			redraw_screen();
 			break;
-	}
-	if((item_hit != 18) && (item_hit != 19))
-		change_made = true;
-}
-
-void handle_town_menu(int item_hit) {
-	short i;
-	
-	change_made = true;
-	switch(item_hit) {
-		case 1:
+		case eMenu::TOWN_DETAILS:
 			edit_town_details();
+			change_made = true;
 			break;
-		case 2:
+		case eMenu::TOWN_WANDERING:
 			edit_town_wand();
+			change_made = true;
 			break;
-		case 3:
+		case eMenu::TOWN_BOUNDARIES:
 			overall_mode = MODE_SET_TOWN_RECT;
 			mode_count = 2;
 			set_cursor(topleft_curs);
 			set_string("Set town boundary","Select upper left corner");
 			break;
-		case 4:
+		case eMenu::FRILL:
 			frill_up_terrain();
+			change_made = true;
 			break;
-		case 5:
+		case eMenu::UNFRILL:
 			unfrill_terrain();
+			change_made = true;
 			break;
-		case 6:
+		case eMenu::TOWN_AREAS:
 			edit_roomdescs(true);
+			change_made = true;
 			break;
-		case 8:
+		case eMenu::TOWN_ITEMS_RANDOM:
 			if(cChoiceDlog("add-random-items", {"okay", "cancel"}).show() == "cancel")
 				break;
 			place_items_in_town();
-			break; // add random
-		case 9:
-			for(i = 0; i < 64; i++)
+			change_made = true;
+			break;
+		case eMenu::TOWN_ITEMS_NOT_PROPERTY:
+			for(int i = 0; i < 64; i++)
 				town->preset_items[i].property = 0;
 			cChoiceDlog("set-not-owned").show();
 			draw_terrain();
-			break; // set not prop
-		case 10:
+			change_made = true;
+			break;
+		case eMenu::TOWN_ITEMS_CLEAR:
 			if(cChoiceDlog("clear-items-confirm", {"okay", "cancel"}).show() == "cancel")
 				break;
-			for(i = 0; i < 64; i++)
+			for(int i = 0; i < 64; i++)
 				town->preset_items[i].code = -1;
 			draw_terrain();
-			break; // clear all items
-		case 13:
+			change_made = true;
+			break;
+		case eMenu::TOWN_SPECIALS:
 			right_sbar->setPosition(0);
 			start_special_editing(2,0);
 			break;
-		case 14:
+		case eMenu::TOWN_TEXT:
 			right_sbar->setPosition(0);
 			start_string_editing(2,0);
 			break;
-		case 15:
+		case eMenu::TOWN_SIGNS:
 			right_sbar->setPosition(0);
 			start_string_editing(5,0);
 			break;
-		case 16:
+		case eMenu::TOWN_ADVANCED:
 			edit_advanced_town();
+			change_made = true;
 			break;
-		case 17:
+		case eMenu::TOWN_TIMERS:
 			edit_town_events();
+			change_made = true;
 			break;
-	}
-}
-void handle_outdoor_menu(int item_hit) {
-	change_made = true;
-	switch(item_hit) {
-		case 1:
+		case eMenu::OUT_DETAILS:
 			outdoor_details();
+			change_made = true;
 			break;
-		case 2:
+		case eMenu::OUT_WANDERING:
 			edit_out_wand(0);
+			change_made = true;
 			break;
-		case 3:
+		case eMenu::OUT_ENCOUNTERS:
 			edit_out_wand(1);
+			change_made = true;
 			break;
-		case 4:
-			frill_up_terrain();
-			break;
-		case 5:
-			unfrill_terrain();
-			break;
-		case 6:
+		case eMenu::OUT_AREAS:
 			edit_roomdescs(false);
+			change_made = true;
 			break;
-		case 8:
+		case eMenu::OUT_START:
 			overall_mode = MODE_SET_OUT_START;
 			set_string("Select party starting location.","");
 			break;
-		case 11:
+		case eMenu::OUT_SPECIALS:
 			right_sbar->setPosition(0);
 			start_special_editing(1,0);
 			break;
-		case 12:
+		case eMenu::OUT_TEXT:
 			right_sbar->setPosition(0);
 			start_string_editing(1,0);
 			break;
-		case 13:
+		case eMenu::OUT_SIGNS:
 			right_sbar->setPosition(0);
 			start_string_editing(4,0);
 			break;
-	}
-}
-
-void handle_help_menu(int item_hit) {
-	switch(item_hit) {
-		case 0:
-			cChoiceDlog("about-scened").show();
+		case eMenu::ABOUT:
+			helpDlog = "about-scened";
+			isHelp = true;
 			break;
-		case 1:
-			cChoiceDlog("help-editing").show();
-			break; // started
-		case 2:
-			cChoiceDlog("help-testing").show();
-			break; // testing
-		case 3:
-			cChoiceDlog("help-distributing").show();
-			break; // distributing
-		case 5:
-			cChoiceDlog("help-contest").show();
-			break; // contest
+		case eMenu::HELP_INDEX:
+			launchURL("https://calref.net/~sylae/boe-doc/editor/About.html");
+			break;
+		case eMenu::HELP_START:
+			helpDlog = "help-editing";
+			isHelp = true;
+			break;
+		case eMenu::HELP_TEST:
+			helpDlog = "help-testing";
+			isHelp = true;
+			break;
+		case eMenu::HELP_DIST:
+			helpDlog = "help-distributing";
+			isHelp = true;
+			break;
+		case eMenu::HELP_CONTEST:
+			helpDlog = "help-contest";
+			isHelp = true;
+			break;
 	}
+	if(isEdit) {
+		if(!cDialog::sendInput(editKey)) {
+			// Handle non-dialog edit operations here.
+			switch(editKey.k) {}
+		}
+	}
+	if(isHelp)
+		cChoiceDlog(helpDlog).show();
 }
 
 void handle_item_menu(int item_hit) {
