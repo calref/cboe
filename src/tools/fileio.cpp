@@ -836,6 +836,12 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	}
 	
 	if(in_scen) {
+		fs::path path;
+		path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
+		
+		if(!load_scenario(path, univ.scenario))
+			return false;
+		
 		if(town_restore) {
 			// Load town data
 			std::istream& fin = partyIn.getFile("save/town.txt");

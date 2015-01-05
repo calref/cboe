@@ -2,7 +2,7 @@ All of your character's damage has now been healed. Dead characters are still de
 All of your characters (even dead ones) now have their maximum number of spell points.
 All of your characters who were dead (or dust, or stoned) are now alive and intact. You may wish to select Heal Party now.
 All negative conditions (poison, dumbfounding, disease, paralysis, etc.) have been removed from your characters (even dead ones).
-Before you can do this, you need to load in an Blades of Exile save file. Select Open from the file menu.
+
 All boats and horses are now your property.
 Any major NPCs you may have slain, such as Erika or the dragons, are now alive again. You should now use the Leave Town and then Reset Towns menu items to make sure the characters appear.
 You are now considered a member of the Anama church. You can no longer cast Mage spells. To get the full effect of this, add Anama Rings above.

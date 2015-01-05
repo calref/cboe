@@ -211,15 +211,6 @@ void shut_down_menus(short mode) {
 	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
-void handle_file_menu(int item_hit);
-void handle_edit_menu(int item_hit);
-void handle_scenario_menu(int item_hit);
-void handle_town_menu(int item_hit);
-void handle_outdoor_menu(int item_hit);
-void handle_item_menu(int item_hit);
-void handle_monst_menu(int item_hit);
-void handle_help_menu(int item_hit);
-
 #include "cursors.h"
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {

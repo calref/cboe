@@ -17,11 +17,6 @@
 
 using MenuHandle = NSMenu*;
 
-extern void handle_help_menu(int item_hit);
-extern void handle_file_menu(int item_hit);
-extern void handle_edit_menus(int item_hit);
-extern void handle_item_menu(int item_hit);
-
 extern cUniverse univ;
 extern fs::path file_in_mem;
 extern bool scen_items_loaded;
@@ -29,10 +24,8 @@ MenuHandle menu_bar_handle;
 MenuHandle apple_menu, file_menu, reg_menu, extra_menu, items_menu[4];
 
 @interface MenuHandler : NSObject
--(void) fileMenu:(id) sender;
--(void) editMenu:(id) sender;
 -(void) itemMenu:(id) sender;
--(void) helpMenu:(id) sender;
+-(void) menuChoice:(id) sender;
 @end
 
 @interface ItemWrapper : NSObject
@@ -65,31 +58,50 @@ void init_menubar() {
 	items_menu[2] = [[menu_bar_handle itemWithTitle: @"Items 3"] submenu];
 	items_menu[3] = [[menu_bar_handle itemWithTitle: @"Items 4"] submenu];
 	
-	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
-	setMenuCallback([apple_menu itemWithTitle: @"About BoE Character Editor"], handler, @selector(helpMenu:), 1);
-	setMenuCallback([apple_menu itemWithTitle: @"Quit BoE Character Editor"], handler, @selector(fileMenu:), 7);
-	// TODO: Organize the file menu handling function
-	setMenuCallback([file_menu itemWithTitle: @"Save"], handler, @selector(fileMenu:), 1);
-	setMenuCallback([file_menu itemWithTitle: @"Save As…"], handler, @selector(fileMenu:), 2);
-	setMenuCallback([file_menu itemWithTitle: @"Open…"], handler, @selector(fileMenu:), 3);
-	setMenuCallback([file_menu itemWithTitle: @"Close"], handler, @selector(fileMenu:), 4);
-	setMenuCallback([file_menu itemWithTitle: @"Revert to Saved"], handler, @selector(fileMenu:), 5);
+	static const eMenu file_choices[] = {
+		eMenu::FILE_OPEN, eMenu::FILE_CLOSE, eMenu::NONE, eMenu::FILE_SAVE, eMenu::FILE_SAVE_AS, eMenu::FILE_REVERT,
+	};
+	static const eMenu party_choices[] = {
+		eMenu::EDIT_GOLD, eMenu::EDIT_FOOD, eMenu::EDIT_ALCHEMY, eMenu::NONE,
+		eMenu::HEAL_DAMAGE, eMenu::RESTORE_MANA, eMenu::RAISE_DEAD, eMenu::CURE_CONDITIONS, eMenu::NONE,
+		eMenu::EDIT_MAGE, eMenu::EDIT_PRIEST, eMenu::EDIT_TRAITS, eMenu::EDIT_SKILLS, eMenu::EDIT_XP, eMenu::NONE,
+		eMenu::REUNITE_PARTY, eMenu::OWN_VEHICLES,
+	};
+	static const eMenu scen_choices[] = {
+		eMenu::EDIT_DAY, eMenu::NONE, eMenu::LEAVE_TOWN, eMenu::RESET_TOWNS, eMenu::ADD_OUT_MAPS, eMenu::ADD_TOWN_MAPS,
+		eMenu::NONE, eMenu::LEAVE_SCENARIO, eMenu::SET_SDF,
+	};
 	
-	for(int i = 0; i < [reg_menu numberOfItems]; i++)
-		setMenuCallback([reg_menu itemAtIndex: i], handler, @selector(editMenu:), i + 1);
-	for(int i = 0; i < [extra_menu numberOfItems]; i++)
-		setMenuCallback([extra_menu itemAtIndex: i], handler, @selector(editMenu:), i + 101);
+	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
+	setMenuCallback([apple_menu itemWithTitle: @"About BoE Character Editor"], handler, @selector(menuChoice:), int(eMenu::ABOUT));
+	setMenuCallback([apple_menu itemWithTitle: @"Quit BoE Character Editor"], handler, @selector(menuChoice:), int(eMenu::QUIT));
+	
+	int i = 0;
+	for(eMenu opt : file_choices)
+		setMenuCallback([file_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : party_choices)
+		setMenuCallback([reg_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : scen_choices)
+		setMenuCallback([extra_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
 	
 	update_item_menu();
 	menu_activate();
 }
 
 void menu_activate() {
-	if(file_in_mem.empty())
+	if(file_in_mem.empty()) {
 		for(int i = 3; i < [file_menu numberOfItems]; i++)
 			[[file_menu itemAtIndex: i] setEnabled: NO];
-	else for(int i = 3; i < [file_menu numberOfItems]; i++)
-		[[file_menu itemAtIndex: i] setEnabled: YES];
+		[[menu_bar_handle itemWithTitle: @"Edit Party"] setEnabled: NO];
+		[[menu_bar_handle itemWithTitle: @"Scenario Edit"] setEnabled: NO];
+	} else {
+		for(int i = 3; i < [file_menu numberOfItems]; i++)
+			[[file_menu itemAtIndex: i] setEnabled: YES];
+		[[menu_bar_handle itemWithTitle: @"Edit Party"] setEnabled: YES];
+		[[menu_bar_handle itemWithTitle: @"Scenario Edit"] setEnabled: YES];
+	}
 }
 
 void update_item_menu() {
@@ -112,14 +124,6 @@ void update_item_menu() {
 }
 
 @implementation MenuHandler
--(void) fileMenu:(id) sender {
-	handle_file_menu([[sender representedObject] shortValue]);
-}
-
--(void) editMenu:(id) sender {
-	handle_edit_menus([[sender representedObject] shortValue]);
-}
-
 -(void) itemMenu:(id) sender {
 	ItemWrapper* item = [sender representedObject];
 	cItemRec& theItem = [item item];
@@ -131,12 +135,10 @@ void update_item_menu() {
 	}
 }
 
--(void) helpMenu:(id) sender {
-	int i = [[sender representedObject] intValue];
-	if(i == 0); // TODO: "BoE Character Editor Help"
-	else if(i == 1) handle_help_menu(i);
+-(void) menuChoice:(id) sender {
+	eMenu opt = eMenu([[sender representedObject] intValue]);
+	handle_menu_choice(opt);
 }
-
 @end
 
 @implementation ItemWrapper {

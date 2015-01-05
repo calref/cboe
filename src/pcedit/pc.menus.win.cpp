@@ -1,5 +1,6 @@
 
 #include "pc.menus.h"
+#include <map>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Resource.h"
 #include "universe.h"
@@ -24,8 +25,18 @@ extern bool scen_items_loaded;
 extern fs::path file_in_mem;
 LONG_PTR mainProc;
 HMENU menuHandle = NULL;
+std::map<int,eMenu> menuChoices;
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
+
+void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
+	MENUITEMINFOA item;
+	item.cbSize = sizeof(MENUITEMINFOA);
+	item.fMask = MIIM_ID | MIIM_FTYPE;
+	GetMenuItemInfoA(menu, i++, true, &item);
+	if(item.fType == MFT_SEPARATOR) return;
+	menuChoices[item.wID] = cmd;
+}
 
 void init_menubar() {
 	HWND winHandle = mainPtr.getSystemHandle();
@@ -42,6 +53,46 @@ void init_menubar() {
 	double usableHeight = sz.y - menubarHeight;
 	sf::View view(sf::FloatRect(0, 0, sz.x, usableHeight));
 	mainPtr.setView(view);
+	
+	// And now initialize the mapping from Windows menu commands to eMenu constants
+	static bool inited = false;
+	if(inited) return;
+	inited = true;
+	
+	static const eMenu file_choices[] = {
+		eMenu::FILE_OPEN, eMenu::FILE_CLOSE, eMenu::NONE, eMenu::FILE_SAVE, eMenu::FILE_SAVE_AS, eMenu::FILE_REVERT, eMenu::NONE, eMenu::QUIT,
+	};
+	static const eMenu party_choices[] = {
+		eMenu::EDIT_GOLD, eMenu::EDIT_FOOD, eMenu::EDIT_ALCHEMY, eMenu::NONE,
+		eMenu::HEAL_DAMAGE, eMenu::RESTORE_MANA, eMenu::RAISE_DEAD, eMenu::CURE_CONDITIONS, eMenu::NONE,
+		eMenu::EDIT_MAGE, eMenu::EDIT_PRIEST, eMenu::EDIT_TRAITS, eMenu::EDIT_SKILLS, eMenu::EDIT_XP, eMenu::NONE,
+		eMenu::REUNITE_PARTY, eMenu::OWN_VEHICLES,
+	};
+	static const eMenu scen_choices[] = {
+		eMenu::EDIT_DAY, eMenu::NONE, eMenu::LEAVE_TOWN, eMenu::RESET_TOWNS, eMenu::ADD_OUT_MAPS, eMenu::ADD_TOWN_MAPS,
+		eMenu::NONE, eMenu::LEAVE_SCENARIO, eMenu::SET_SDF,
+	};
+	static const eMenu help_choices[] = {
+		eMenu::ABOUT,
+	};
+	
+	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
+	HMENU party_menu = GetSubMenu(menuHandle, PARTY_MENU_POS);
+	HMENU scen_menu = GetSubMenu(menuHandle, SCEN_MENU_POS);
+	HMENU help_menu = GetSubMenu(menuHandle, HELP_MENU_POS);
+	
+	int i = 0;
+	for(eMenu opt : file_choices)
+		setMenuCommand(file_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : party_choices)
+		setMenuCommand(party_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : scen_choices)
+		setMenuCommand(scen_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : help_choices)
+		setMenuCommand(help_menu, i++, opt);
 }
 
 void update_item_menu() {
@@ -75,11 +126,6 @@ void menu_activate() {
 	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
-void handle_help_menu(int item_hit);
-void handle_file_menu(int item_hit);
-void handle_edit_menus(int item_hit);
-void handle_item_menu(int item_hit);
-
 #include "cursors.h"
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -87,40 +133,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 		int cmd = LOWORD(wParam);
 		if(cmd >= 1000) { // Item menus
 			handle_item_menu(cmd - 1000);
-		} else switch(cmd) {
-			// File menu
-			case IDM_FILE_OPEN: handle_file_menu(3); break;
-			case IDM_FILE_CLOSE: handle_file_menu(4); break;
-			case IDM_FILE_SAVE: handle_file_menu(1); break;
-			case IDM_FILE_SAVE_AS: handle_file_menu(2); break;
-			case IDM_FILE_REVERT: handle_file_menu(5); break;
-			case IDM_FILE_QUIT: handle_file_menu(7); break;
-			// Edit Party menu
-			case IDM_PARTY_GOLD: handle_edit_menus(1); break;
-			case IDM_PARTY_FOOD: handle_edit_menus(2); break;
-			case IDM_PARTY_ALCHEMY: handle_edit_menus(3); break;
-			case IDM_PARTY_DAMAGE: handle_edit_menus(5); break;
-			case IDM_PARTY_MANA: handle_edit_menus(6); break;
-			case IDM_PARTY_DEAD: handle_edit_menus(7); break;
-			case IDM_PARTY_CONDITIONS: handle_edit_menus(8); break;
-			case IDM_PARTY_REUNITE: handle_edit_menus(10); break;
-			case IDM_PARTY_VEHICLES: handle_edit_menus(11); break;
-			case IDM_PARTY_MAGE: handle_edit_menus(13); break;
-			case IDM_PARTY_PRIEST: handle_edit_menus(14); break;
-			case IDM_PARTY_TRAITS: handle_edit_menus(15); break;
-			case IDM_PARTY_SKILLS: handle_edit_menus(16); break;
-			case IDM_PARTY_XP: handle_edit_menus(17); break;
-			// Scenario Editing menu
-			case IDM_SCEN_DAY: handle_edit_menus(101); break;
-			case IDM_SCEN_LEAVE_TOWN: handle_edit_menus(103); break;
-			case IDM_SCEN_TOWN_RESET: handle_edit_menus(104); break;
-			case IDM_SCEN_TOWN_MAP: handle_edit_menus(105); break;
-			case IDM_SCEN_OUT_MAP: handle_edit_menus(106); break;
-			case IDM_SCEN_LEAVE: handle_edit_menus(108); break;
-			case IDM_SCEN_SDF: handle_edit_menus(109); break;
-			// Help menu
-			case IDM_HELP: handle_help_menu(1);
-		}
+		} else handle_menu_choice(menuChoices[cmd]);
 	} else if(message == WM_SETCURSOR) {
 		// Windows resets the cursor to an arrow whenever the mouse moves, unless we do this.
 		// Note: By handling this message, sf::Window::setMouseCursorVisible() will NOT work.

@@ -74,12 +74,8 @@ void Handle_One_Event();
 void Handle_Activate();
 void Handle_Update();
 void Mouse_Pressed();
-void handle_help_menu(int item_hit);
-void handle_file_menu(int item_hit);
-void handle_edit_menus(int item_hit);
 bool verify_restore_quit(bool mode);
 void set_up_apple_events();
-void handle_item_menu(int item_hit);
 //item_record_type convert_item (short_item_record_type s_item);
 extern bool cur_scen_is_mac;
 extern fs::path progDir;
@@ -192,33 +188,28 @@ void Mouse_Pressed() {
 		All_Done = verify_restore_quit(false);
 }
 
-void handle_help_menu(int item_hit) {
-	//char desk_acc_name[256];
-	//short desk_acc_num;
-	
-	switch(item_hit) {
-		case 1:
-			cChoiceDlog("about-pced").show();
-			break;
-		default:
-			//GetItem (apple_menu,item_hit,desk_acc_name);
-			//desk_acc_num = OpenDeskAcc(desk_acc_name);
-			break;
-	}
+static void display_strings(short nstr, pic_num_t pic) {
+	cStrDlog display_strings(get_str("pcedit", nstr), "", "Editing party", pic, PIC_DLOG);
+	display_strings.setSound(57);
+	display_strings.show();
 }
 
-void handle_file_menu(int item_hit) {
+void handle_menu_choice(eMenu item_hit) {
+	int i,j,k;
 	fs::path file;
-	
 	switch(item_hit) {
-		case 1://save
+		case eMenu::NONE: break;
+		case eMenu::ABOUT:
+			cChoiceDlog("about-pced").show();
+			break;
+		case eMenu::FILE_SAVE:
 			save_party(file_in_mem, univ);
 			break;
-		case 2://save as
+		case eMenu::FILE_SAVE_AS:
 			file = nav_put_party();
 			if(!file.empty()) save_party(file, univ);
 			break;
-		case 3://open
+		case eMenu::FILE_OPEN:
 			if(verify_restore_quit(true)){
 				file = nav_get_party();
 				if(!file.empty()) {
@@ -226,45 +217,24 @@ void handle_file_menu(int item_hit) {
 						file_in_mem = file;
 						party_in_scen = !univ.party.scen_name.empty();
 						if(!party_in_scen) load_base_item_defs();
+						scen_items_loaded = true;
 						update_item_menu();
 					}
 				}
 				menu_activate();
 			}
 			break;
-			// TODO: Implement these two
-		case 4: //close
-			break;
-		case 5: //revert;
-			break;
-		case 7://quit
+		case eMenu::QUIT:
 			All_Done = verify_restore_quit(false);
 			break;
-	}
-}
-
-static void display_strings(short nstr, pic_num_t pic) {
-	cStrDlog display_strings(get_str("pcedit", nstr), "", "Editing party", pic, PIC_DLOG);
-	display_strings.setSound(57);
-	display_strings.show();
-}
-
-void handle_edit_menus(int item_hit) {
-	short i,j,k;
-	
-	if(file_in_mem.empty()) {
-		display_strings(5, 7);
-		return;
-	}
-	switch(item_hit) {
-		case 1:
+		case eMenu::EDIT_GOLD:
 			edit_gold_or_food(0);
 			break;
-		case 2:
+		case eMenu::EDIT_FOOD:
 			edit_gold_or_food(1);
 			break;
 			
-		case 103:
+		case eMenu::LEAVE_TOWN:
 			if(univ.party.is_split() > 0) {
 				cChoiceDlog("reunite-first").show();
 				break;
@@ -273,7 +243,7 @@ void handle_edit_menus(int item_hit) {
 			leave_town();
 			break;
 			
-		case 16:
+		case eMenu::REUNITE_PARTY:
 			if(univ.party.is_split() == 0) {
 				cChoiceDlog("not-split").show();
 				break;
@@ -286,29 +256,29 @@ void handle_edit_menus(int item_hit) {
 			break;
 			
 			
-		case 104:
+		case eMenu::RESET_TOWNS:
 			display_strings(20,7);
 			for(i = 0; i < 4; i++)
 				univ.party.creature_save[i].which_town = 200;
 			break;
-		case 5: // damage
+		case eMenu::HEAL_DAMAGE:
 			display_strings(1,15);
 			for(i = 0; i < 6; i++)
 				univ.party[i].cur_health = univ.party[i].max_health;
 			break;
-		case 6: // spell pts
+		case eMenu::RESTORE_MANA:
 			display_strings(2,15);
 			for(i = 0; i < 6; i++)
 				univ.party[i].cur_sp = univ.party[i].max_sp;
 			break;
-		case 7: // raise dead
+		case eMenu::RAISE_DEAD:
 			display_strings(3,15);
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::DEAD || univ.party[i].main_status == eMainStatus::DUST ||
 						univ.party[i].main_status == eMainStatus::STONE)
 					univ.party[i].main_status = eMainStatus::ALIVE;
 			break;
-		case 8: // conditions
+		case eMenu::CURE_CONDITIONS:
 			display_strings(4,15);
 			for(i = 0; i < 6; i++) {
 				univ.party[i].status[eStatus::POISON] = 0;
@@ -323,7 +293,7 @@ void handle_edit_menus(int item_hit) {
 			}
 			break;
 			
-		case 108:
+		case eMenu::LEAVE_SCENARIO:
 			if(!party_in_scen) {
 				display_strings(25,15);
 				break;
@@ -332,20 +302,20 @@ void handle_edit_menus(int item_hit) {
 				break;
 			remove_party_from_scen();
 			break;
-		case 3:
+		case eMenu::EDIT_ALCHEMY:
 			display_alchemy(true);
 			break;
-		case 17: // all property
+		case eMenu::OWN_VEHICLES:
 			display_strings(6,7);
 			for(i = 0; i < 30; i++) {
 				univ.party.boats[i].property = false;
 				univ.party.horses[i].property = false;
 			}
 			break;
-		case 101: // edit day
+		case eMenu::EDIT_DAY:
 			edit_day();
 			break;
-		case 105: // out maps
+		case eMenu::ADD_OUT_MAPS:
 			if(!party_in_scen) {
 				display_strings(25,15);
 				break;
@@ -356,7 +326,7 @@ void handle_edit_menus(int item_hit) {
 					for(k = 0; k < 48; k++)
 						univ.out_maps[i][j][k] = 255;
 			break;
-		case 106: // town maps
+		case eMenu::ADD_TOWN_MAPS:
 			if(!party_in_scen) {
 				display_strings(25,15);
 				break;
@@ -367,24 +337,21 @@ void handle_edit_menus(int item_hit) {
 					for(k = 0; k < 64; k++)
 						univ.town_maps[i][j][k] = 255;
 			break;
-		case 10:
+		case eMenu::EDIT_MAGE:
 			display_pc(current_active_pc,0,0);
 			break;
-		case 11:
+		case eMenu::EDIT_PRIEST:
 			display_pc(current_active_pc,1,0);
 			break;
-		case 12:
+		case eMenu::EDIT_TRAITS:
 			pick_race_abil(&univ.party[current_active_pc],0);
 			break;
-		case 13:
+		case eMenu::EDIT_SKILLS:
 			spend_xp(current_active_pc,1,0);
 			break;
-		case 14:
+		case eMenu::EDIT_XP:
 			edit_xp(&univ.party[current_active_pc]);
 			break;
-		case 109:
-			// TODO: Implement "Set SDF"
-			break;;
 	}
 }
 
@@ -443,11 +410,6 @@ void handle_edit_menus(int item_hit) {
 // TODO: Let this take the item directly instead of the index
 void handle_item_menu(int item_hit) {
 	cItemRec store_i;
-	
-	if(file_in_mem.empty()) {
-		display_strings(5,7);
-		return;
-	}
 	store_i = univ.scenario.scen_items[item_hit];
 	store_i.ident = true;
 	give_to_pc(current_active_pc,store_i,false);
