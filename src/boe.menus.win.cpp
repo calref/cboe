@@ -1,5 +1,6 @@
 
 #include "boe.menus.h"
+#include <map>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Resource.h"
 #include "universe.h"
@@ -35,8 +36,18 @@ extern eGameMode overall_mode;
 extern sf::RenderWindow mainPtr;
 LONG_PTR mainProc;
 HMENU menuHandle = NULL;
+std::map<int,eMenu> menuChoices;
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
+
+void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
+	MENUITEMINFOA item;
+	item.cbSize = sizeof(MENUITEMINFOA);
+	item.fMask = MIIM_ID | MIIM_FTYPE;
+	GetMenuItemInfoA(menu, i++, true, &item);
+	if(item.fType == MFT_SEPARATOR) return;
+	menuChoices[item.wID] = cmd;
+}
 
 void init_menubar() {
 	HWND winHandle = mainPtr.getSystemHandle();
@@ -54,6 +65,52 @@ void init_menubar() {
 	double usableHeight = sz.y - menubarHeight;
 	sf::View view(sf::FloatRect(0, 0, sz.x, usableHeight));
 	mainPtr.setView(view);
+	
+	// And now initialize the mapping from Windows menu commands to eMenu constants
+	static bool inited = false;
+	if(inited) return;
+	inited = true;
+	
+	static const eMenu file_choices[] = {
+		eMenu::FILE_NEW, eMenu::FILE_OPEN, eMenu::NONE, eMenu::FILE_ABORT, eMenu::FILE_SAVE, eMenu::FILE_SAVE_AS, eMenu::NONE, eMenu::PREFS, eMenu::NONE, eMenu::QUIT,
+	};
+	static const eMenu opt_choices[] = {
+		eMenu::OPTIONS_PC_GRAPHIC, eMenu::OPTIONS_RENAME_PC, eMenu::OPTIONS_NEW_PC, eMenu::OPTIONS_DELETE_PC, eMenu::NONE,
+		eMenu::OPTIONS_TALK_NOTES, eMenu::OPTIONS_ENCOUNTER_NOTES, eMenu::OPTIONS_STATS, eMenu::OPTIONS_JOURNAL,
+	};
+	static const eMenu act_choices[] = {
+		eMenu::ACTIONS_ALCHEMY, eMenu::ACTIONS_WAIT, eMenu::ACTIONS_AUTOMAP,
+	};
+	static const eMenu lib_choices[] = {
+		eMenu::LIBRARY_MAGE, eMenu::LIBRARY_PRIEST, eMenu::LIBRARY_SKILLS, eMenu::LIBRARY_ALCHEMY, eMenu::LIBRARY_TIPS,
+		eMenu::NONE, eMenu::LIBRARY_INTRO,
+	};
+	static const eMenu help_choices[] = {
+		eMenu::HELP_INDEX, eMenu::ABOUT, eMenu::NONE, eMenu::HELP_OUT, eMenu::HELP_TOWN, eMenu::HELP_COMBAT, eMenu::HELP_BARRIER,
+		eMenu::NONE, eMenu::HELP_HINTS, eMenu::HELP_SPELLS,
+	};
+	
+	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
+	HMENU opt_menu = GetSubMenu(menuHandle, OPT_MENU_POS);
+	HMENU act_menu = GetSubMenu(menuHandle, ACT_MENU_POS);
+	HMENU lib_menu = GetSubMenu(menuHandle, LIB_MENU_POS);
+	HMENU help_menu = GetSubMenu(menuHandle, HELP_MENU_POS);
+	
+	int i = 0;
+	for(eMenu opt : file_choices)
+		setMenuCommand(file_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : opt_choices)
+		setMenuCommand(opt_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : act_choices)
+		setMenuCommand(act_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : lib_choices)
+		setMenuCommand(lib_menu, i++, opt);
+	i = 0;
+	for(eMenu opt : help_choices)
+		setMenuCommand(help_menu, i++, opt);
 }
 
 void adjust_monst_menu() {
@@ -212,14 +269,6 @@ void showMenuBar() {
 	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
-void handle_file_menu(int item_hit);
-void handle_options_menu(int item_hit);
-void handle_help_menu(int item_hit);
-void handle_library_menu(int item_hit);
-void handle_actions_menu(int item_hit);
-void handle_monster_info_menu(int item_hit);
-void handle_menu_spell(eSpell spell_picked);
-
 #include "cursors.h"
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -231,48 +280,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 			handle_menu_spell(cSpell::fromNum(eSkill::MAGE_SPELLS, cmd - 2000));
 		} else if(cmd >= 3000 && cmd < 4000) {
 			handle_menu_spell(cSpell::fromNum(eSkill::PRIEST_SPELLS, cmd - 3000));
-		} else switch(cmd) {
-			// File menu
-			case IDM_FILE_NEW: handle_file_menu(4); break;
-			case IDM_FILE_OPEN: handle_file_menu(1); break;
-			case IDM_FILE_ABORT: handle_file_menu(0); break;
-			case IDM_FILE_SAVE: handle_file_menu(2); break;
-			case IDM_FILE_SAVE_AS: handle_file_menu(3); break;
-			case IDM_FILE_PREFS: handle_file_menu(6); break;
-			case IDM_FILE_QUIT: handle_file_menu(8); break;
-			// Options menu
-			case IDM_OPTIONS_GRAPHIC: handle_options_menu(1); break;
-			case IDM_OPTIONS_NAME: handle_options_menu(2); break;
-			case IDM_OPTIONS_NEW: handle_options_menu(3); break;
-			case IDM_OPTIONS_DELETE: handle_options_menu(4); break;
-			case IDM_OPTIONS_TALKING: handle_options_menu(6); break;
-			case IDM_OPTIONS_ENCOUNTER: handle_options_menu(7); break;
-			case IDM_OPTIONS_STATS: handle_options_menu(8); break;
-			// Actions menu
-			case IDM_ACTIONS_ALCHEMY: handle_actions_menu(1); break;
-			case IDM_ACTIONS_WAIT: handle_actions_menu(2); break;
-			case IDM_ACTIONS_MAP: handle_actions_menu(3); break;
-			// Monster/Spell menu About items
-			case IDM_MONSTERS_ABOUT: break;
-			case IDM_MAGE_ABOUT: give_help(209, 0); break;
-			case IDM_PRIEST_ABOUT: give_help(209, 0); break;
-			// Library menu
-			case IDM_LIBRARY_MAGE: handle_library_menu(1); break;
-			case IDM_LIBRARY_PRIEST: handle_library_menu(2); break;
-			case IDM_LIBRARY_ALCHEMY: handle_library_menu(3); break;
-			case IDM_LIBRARY_SKILLS: handle_library_menu(4); break;
-			case IDM_LIBRARY_TIPS: handle_library_menu(5); break;
-			case IDM_LIBRARY_INTRO: handle_library_menu(7); break;
-			// Help menu
-			case IDM_HELP_INDEX: ShellExecuteA(NULL, "open", "https://calref.net/~sylae/boe-doc/game/Contents.html", NULL, NULL, SW_SHOWNORMAL); break;
-			case IDM_HELP_ABOUT: handle_help_menu(10); break;
-			case IDM_HELP_OUTDOOR: handle_help_menu(1); break;
-			case IDM_HELP_TOWN: handle_help_menu(2); break;
-			case IDM_HELP_COMBAT: handle_help_menu(3); break;
-			case IDM_HELP_BARRIER: handle_help_menu(4); break;
-			case IDM_HELP_HINTS: handle_help_menu(6); break;
-			case IDM_HELP_SPELLS: handle_help_menu(7); break;
-		}
+		} else handle_menu_choice(menuChoices[cmd]);
 	} else if(message == WM_SETCURSOR) {
 		// Windows resets the cursor to an arrow whenever the mouse moves, unless we do this.
 		// Note: By handling this message, sf::Window::setMouseCursorVisible() will NOT work.

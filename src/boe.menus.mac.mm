@@ -34,15 +34,9 @@ MenuHandle apple_menu,file_menu,extra_menu,help_menu,monster_info_menu,library_m
 MenuHandle actions_menu,music_menu,mage_spells_menu,priest_spells_menu;
 
 @interface MenuHandler : NSObject
--(void) fileMenu:(id) sender;
--(void) optMenu:(id) sender;
--(void) actMenu:(id) sender;
+-(void) menuChoice:(id) sender;
 -(void) monstMenu:(id) sender;
 -(void) spellMenu:(id) sender;
--(void) libMenu:(id) sender;
--(void) helpMenu:(id) sender;
--(void) onlineHelp:(id) sender;
--(void) menuHelp:(id) sender; // The "About This Menu" options
 @end
 
 @interface MonsterWrapper : NSObject
@@ -120,32 +114,50 @@ void init_menubar() {
 	priest_spells_menu = [[menu_bar_handle itemWithTitle: @"Cast Priest"] submenu];
 	monster_info_menu = [[menu_bar_handle itemWithTitle: @"Monsters"] submenu];
 	
-	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
-	setMenuCallback([help_menu itemAtIndex: 0], handler, @selector(onlineHelp:), 0);
-	setMenuCallback([apple_menu itemWithTitle: @"About Blades of Exile"], handler, @selector(helpMenu:), 10);
-	setMenuCallback([apple_menu itemWithTitle: @"Preferences…"], handler, @selector(fileMenu:), 6);
-	setMenuCallback([apple_menu itemWithTitle: @"Quit Blades of Exile"], handler, @selector(fileMenu:), 8);
-	// TODO: Check to make sure that Cocoa 0-indexes its menus
-	// TODO: Need to verify arrangement of the File menu
-	setMenuCallback([file_menu itemWithTitle: @"New Game…"], handler, @selector(fileMenu:), 4);
-	setMenuCallback([file_menu itemWithTitle: @"Save"], handler, @selector(fileMenu:), 2);
-	setMenuCallback([file_menu itemWithTitle: @"Save As…"], handler, @selector(fileMenu:), 3);
-	setMenuCallback([file_menu itemWithTitle: @"Open…"], handler, @selector(fileMenu:), 1);
-	setMenuCallback([file_menu itemWithTitle: @"Abort"], handler, @selector(fileMenu:), 0);
-//	for(int i = 0; i < [file_menu numberOfItems]; i++)
-//		setMenuCallback([file_menu itemAtIndex: i], handler, @selector(fileMenu:), i + 1);
-	for(int i = 0; i < [extra_menu numberOfItems]; i++)
-		setMenuCallback([extra_menu itemAtIndex: i], handler, @selector(optMenu:), i + 1);
-	for(int i = 1; i < [help_menu numberOfItems]; i++)
-		setMenuCallback([help_menu itemAtIndex: i], handler, @selector(helpMenu:), i - 1);
-	for(int i = 0; i < [library_menu numberOfItems]; i++)
-		setMenuCallback([library_menu itemAtIndex: i], handler, @selector(libMenu:), i + 1);
-	for(int i = 0; i < [actions_menu numberOfItems]; i++)
-		setMenuCallback([actions_menu itemAtIndex: i], handler, @selector(actMenu:), i + 1);
+	static const eMenu file_choices[] = {
+		eMenu::FILE_NEW, eMenu::FILE_OPEN, eMenu::NONE, eMenu::FILE_ABORT, eMenu::FILE_SAVE, eMenu::FILE_SAVE_AS,
+	};
+	static const eMenu opt_choices[] = {
+		eMenu::OPTIONS_PC_GRAPHIC, eMenu::OPTIONS_RENAME_PC, eMenu::OPTIONS_NEW_PC, eMenu::OPTIONS_DELETE_PC, eMenu::NONE,
+		eMenu::OPTIONS_TALK_NOTES, eMenu::OPTIONS_ENCOUNTER_NOTES, eMenu::OPTIONS_STATS, eMenu::OPTIONS_JOURNAL,
+	};
+	static const eMenu act_choices[] = {
+		eMenu::ACTIONS_ALCHEMY, eMenu::ACTIONS_WAIT, eMenu::ACTIONS_AUTOMAP,
+	};
+	static const eMenu lib_choices[] = {
+		eMenu::LIBRARY_MAGE, eMenu::LIBRARY_PRIEST, eMenu::LIBRARY_SKILLS, eMenu::LIBRARY_ALCHEMY, eMenu::LIBRARY_TIPS,
+		eMenu::NONE, eMenu::LIBRARY_INTRO,
+	};
+	static const eMenu help_choices[] = {
+		eMenu::HELP_INDEX, eMenu::NONE, eMenu::HELP_OUT, eMenu::HELP_TOWN, eMenu::HELP_COMBAT, eMenu::HELP_BARRIER,
+		eMenu::NONE, eMenu::HELP_HINTS, eMenu::HELP_SPELLS,
+	};
 	
-	setMenuCallback([mage_spells_menu itemAtIndex: 0], handler, @selector(menuHelp:), 0);
-	setMenuCallback([priest_spells_menu itemAtIndex: 0], handler, @selector(menuHelp:), 1);
-	setMenuCallback([monster_info_menu itemAtIndex: 0], handler, @selector(menuHelp:), 2);
+	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
+	setMenuCallback([apple_menu itemWithTitle: @"About Blades of Exile"], handler, @selector(menuChoice:), int(eMenu::ABOUT));
+	setMenuCallback([apple_menu itemWithTitle: @"Preferences…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
+	setMenuCallback([apple_menu itemWithTitle: @"Quit Blades of Exile"], handler, @selector(menuChoice:), int(eMenu::QUIT));
+	
+	int i = 0;
+	for(eMenu opt : file_choices)
+		setMenuCallback([file_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : opt_choices)
+		setMenuCallback([extra_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : act_choices)
+		setMenuCallback([actions_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : lib_choices)
+		setMenuCallback([library_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	for(eMenu opt : help_choices)
+		setMenuCallback([help_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
+	i = 0;
+	
+	setMenuCallback([mage_spells_menu itemAtIndex: 0], handler, @selector(menuChoice:), int(eMenu::ABOUT_MAGE));
+	setMenuCallback([priest_spells_menu itemAtIndex: 0], handler, @selector(menuChoice:), int(eMenu::ABOUT_PRIEST));
+	setMenuCallback([monster_info_menu itemAtIndex: 0], handler, @selector(menuChoice:), int(eMenu::ABOUT_MONSTERS));
 	
 	menu_activate();
 }
@@ -272,27 +284,7 @@ void menu_activate() {
 	[[file_menu itemWithTitle: @"Save As…"] setEnabled: YES];
 }
 
-void handle_file_menu(int item_hit);
-void handle_options_menu(int item_hit);
-void handle_help_menu(int item_hit);
-void handle_library_menu(int item_hit);
-void handle_actions_menu(int item_hit);
-void handle_monster_info_menu(int item_hit);
-void handle_menu_spell(eSpell spell_picked);
-
 @implementation MenuHandler
--(void) fileMenu:(id) sender {
-	handle_file_menu([[sender representedObject] intValue]);
-}
-
--(void) optMenu:(id) sender {
-	handle_options_menu([[sender representedObject] intValue]);
-}
-
--(void) actMenu:(id) sender {
-	handle_actions_menu([[sender representedObject] intValue]);
-}
-
 -(void) monstMenu:(id) sender {
 	cMonster* monst = [[sender representedObject] monst];
 	handle_monster_info_menu([monster_info_menu indexOfItem: sender] - 1);
@@ -303,23 +295,8 @@ void handle_menu_spell(eSpell spell_picked);
 	handle_menu_spell(cSpell::fromNum([spell type], [spell num]));
 }
 
--(void) libMenu:(id) sender {
-	handle_library_menu([[sender representedObject] intValue]);
-}
-
--(void) helpMenu:(id) sender {
-	handle_help_menu([[sender representedObject] intValue]);
-}
-
--(void) onlineHelp:(id) sender {
-	(void) sender; // Suppress "unused parameter" warning
-	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"https://calref.net/~sylae/boe-doc/game/Contents.html"]];
-}
-
--(void) menuHelp:(id) sender {
-	// TODO: Do something for monster menu as well
-	if([[sender representedObject] intValue] < 2)
-		give_help(209,0);
+-(void) menuChoice:(id) sender {
+	handle_menu_choice(eMenu([[sender representedObject] intValue]));
 }
 @end
 

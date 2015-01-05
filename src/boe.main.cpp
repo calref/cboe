@@ -434,23 +434,25 @@ void close_program() {
 	sync_prefs();
 }
 
-void handle_file_menu(int item_hit) {
-	std::string choice;
-	short i;
+void handle_menu_choice(eMenu item_hit) {
+	std::string dialogToShow;
+	sf::Event dummyEvent = {sf::Event::KeyPressed};
+	short i, choice;
 	
 	switch(item_hit) {
-		case 1:
+		case eMenu::NONE: break;
+		case eMenu::FILE_OPEN:
 			do_load();
 			break;
-		case 2:
+		case eMenu::FILE_SAVE:
 			do_save(0);
 			break;
-		case 3:
+		case eMenu::FILE_SAVE_AS:
 			do_save(1);
 			break;
-		case 4:
+		case eMenu::FILE_NEW:
 			if(overall_mode != MODE_STARTUP) {
-				choice = cChoiceDlog("restart-game",{"okay","cancel"}).show();
+				std::string choice = cChoiceDlog("restart-game",{"okay","cancel"}).show();
 				if(choice == "cancel")
 					return;
 				for(i = 0; i < 6; i++)
@@ -464,10 +466,10 @@ void handle_file_menu(int item_hit) {
 			draw_startup(0);
 			menu_activate();
 			break;
-		case 6:
+		case eMenu::PREFS:
 			pick_preferences();
 			break;
-		case 8:
+		case eMenu::QUIT:
 			
 			if(overall_mode == MODE_STARTUP) {
 				if(party_in_memory) {
@@ -483,12 +485,12 @@ void handle_file_menu(int item_hit) {
 				break;
 			}
 			if(overall_mode > MODE_TOWN) {
-				choice = cChoiceDlog("quit-confirm-nosave",{"quit","cancel"}).show();
+				std::string choice = cChoiceDlog("quit-confirm-nosave",{"quit","cancel"}).show();
 				if(choice == "cancel")
 					return;
 			}
 			else {
-				choice = cChoiceDlog("quit-confirm-save",{"quit","save","cancel"}).show();
+				std::string choice = cChoiceDlog("quit-confirm-save",{"quit","save","cancel"}).show();
 				if(choice == "cancel")
 					break;
 				if(choice == "save")
@@ -496,21 +498,14 @@ void handle_file_menu(int item_hit) {
 			}
 			All_Done = true;
 			break;
-	}
-}
-
-void handle_options_menu(int item_hit) {
-	short choice,i;
-	
-	switch(item_hit) {
-		case 1:
+		case eMenu::OPTIONS_PC_GRAPHIC:
 			choice = char_select_pc(0,0,"New graphic for who?");
 			if(choice < 6)
 				pick_pc_graphic(choice,1,NULL);
 			draw_terrain();
 			break;
 			
-		case 4:
+		case eMenu::OPTIONS_DELETE_PC:
 			if(!prime_time()) {
 				ASB("Finish what you're doing first.");
 				print_buf();
@@ -527,7 +522,7 @@ void handle_options_menu(int item_hit) {
 			break;
 			
 			
-		case 2:
+		case eMenu::OPTIONS_RENAME_PC:
 			choice = select_pc(0,0);
 			if(choice < 6)
 				pick_pc_name(choice,NULL);
@@ -536,7 +531,7 @@ void handle_options_menu(int item_hit) {
 			break;
 			
 			
-		case 3:
+		case eMenu::OPTIONS_NEW_PC:
 			if(!(is_town())) {
 				add_string_to_buf("Add PC: Town mode only.");
 				print_buf();
@@ -565,10 +560,10 @@ void handle_options_menu(int item_hit) {
 			put_item_screen(stat_window,0);
 			break;
 			
-		//case 6:
-		//	journal();
-		//	break;////
-		case 6:
+		case eMenu::OPTIONS_JOURNAL:
+			journal();
+			break;
+		case eMenu::OPTIONS_TALK_NOTES:
 			if(overall_mode == MODE_TALKING) {
 				ASB("Talking notes: Can't read while talking.");
 				print_buf();
@@ -576,64 +571,63 @@ void handle_options_menu(int item_hit) {
 			}
 			talk_notes();
 			break;
-		case 7:
+		case eMenu::OPTIONS_ENCOUNTER_NOTES:
 			adventure_notes();
 			break;
-		case 8:
+		case eMenu::OPTIONS_STATS:
 			if(overall_mode != MODE_STARTUP)
 				print_party_stats();
 			break;
-	}
-}
-
-void handle_help_menu(int item_hit) {
-	std::string dialogToShow;
-	switch(item_hit) {
-		case 1: dialogToShow = "help-outdoor"; break;
-		case 2: dialogToShow = "help-town"; break;
-		case 3: dialogToShow = "help-combat"; break;
-		case 4: dialogToShow = "help-fields"; break;
-		case 6: dialogToShow = "help-hints"; break;
-		case 7: dialogToShow = "help-magic"; break;
-		case 10: dialogToShow = "about-boe"; break;
-	}
-	if(!dialogToShow.empty())
-		cChoiceDlog(dialogToShow).show();
-	// TODO: Windows version has an option to bring up Windows help for the game; should we have something equivalent for Mac?
-}
-void handle_library_menu(int item_hit) {
-	switch(item_hit) {
-		case 1: display_spells(eSkill::MAGE_SPELLS,100,0);
+		case eMenu::HELP_OUT:
+			dialogToShow = "help-outdoor";
 			break;
-		case 2: display_spells(eSkill::PRIEST_SPELLS,100,0);
+		case eMenu::HELP_TOWN:
+			dialogToShow = "help-town";
 			break;
-		case 3: display_skills(eSkill::INVALID,0);
+		case eMenu::HELP_COMBAT:
+			dialogToShow = "help-combat";
 			break;
-		case 4:
+		case eMenu::HELP_BARRIER:
+			dialogToShow = "help-fields";
+			break;
+		case eMenu::HELP_HINTS:
+			dialogToShow = "help-hints";
+			break;
+		case eMenu::HELP_SPELLS:
+			dialogToShow = "help-magic";
+			break;
+		case eMenu::ABOUT:
+			dialogToShow = "about-boe";
+			break;
+		case eMenu::LIBRARY_MAGE:
+			display_spells(eSkill::MAGE_SPELLS,100,0);
+			break;
+		case eMenu::LIBRARY_PRIEST:
+			display_spells(eSkill::PRIEST_SPELLS,100,0);
+			break;
+		case eMenu::LIBRARY_SKILLS:
+			display_skills(eSkill::INVALID,0);
+			break;
+		case eMenu::LIBRARY_ALCHEMY:
 			// TODO: Create a dedicated dialog for alchemy info
 			display_alchemy();
 			break;
-		case 5:
-			tip_of_day(); break;
-		case 7:
-			cChoiceDlog("welcome").show();
+		case eMenu::LIBRARY_TIPS:
+			tip_of_day();
 			break;
-	}
-}
-
-void handle_actions_menu(int item_hit) {
-	sf::Event dummyEvent = {sf::Event::KeyPressed};
-	switch(item_hit) {
-		case 1:
+		case eMenu::LIBRARY_INTRO:
+			dialogToShow = "welcome";
+			break;
+		case eMenu::ACTIONS_ALCHEMY:
 			dummyEvent.key.code = sf::Keyboard::A;
 			dummyEvent.key.shift = true;
 			handle_keystroke(dummyEvent);
 			break;
-		case 2:
+		case eMenu::ACTIONS_WAIT:
 			dummyEvent.key.code = sf::Keyboard::W;
 			handle_keystroke(dummyEvent);
 			break;
-		case 3:
+		case eMenu::ACTIONS_AUTOMAP:
 			if(!prime_time()) {
 				ASB("Finish what you're doing first.");
 				print_buf();
@@ -644,7 +638,16 @@ void handle_actions_menu(int item_hit) {
 			}
 			make_cursor_sword();
 			break;
+		case eMenu::HELP_INDEX:
+			launchURL("https://calref.net/~sylae/boe-doc/game/Contents.html");
+			break;
+		case eMenu::ABOUT_MAGE:
+		case eMenu::ABOUT_PRIEST:
+			give_help(209,0);
+			break;
 	}
+	if(!dialogToShow.empty())
+		cChoiceDlog(dialogToShow).show();
 }
 
 //  TODO: Let this function take a cMonster* instead of the item_hit

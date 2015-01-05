@@ -801,11 +801,8 @@ static bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 }
 
 void talk_notes() {
-	
-	short i;
-	
 	store_num_i = 0;
-	for(i = 0; i < 120; i++)
+	for(size_t i = 0; i < univ.party.talk_save.size(); i++)
 		if(univ.party.talk_save[i].filled)
 			store_num_i = i + 1;
 	store_page_on = 0;
@@ -859,6 +856,11 @@ static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 }
 
 void journal() {
+	if(univ.party.journal.empty()) {
+		ASB("Nothing in your events journal.");
+		print_buf();
+		return;
+	}
 	
 	unsigned short i;
 	char place_str[256];
@@ -906,7 +908,7 @@ static void give_help(short help1,short help2,cDialog* parent) {
 	}
 	if((PSD[SDF_NO_INSTANT_HELP] > 0) && !help_forced)
 		return;
-	if(univ.party.help_received[help1] > 0)
+	if(univ.party.help_received[help1] > 0 && !help_forced)
 		return;
 	//if(help1 >= 20)
 	univ.party.help_received[help1] = 1;
