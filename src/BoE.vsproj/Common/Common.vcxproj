@@ -124,7 +124,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -143,8 +143,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -152,6 +151,8 @@
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4800;4290</DisableSpecificWarnings>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,12 +168,15 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
+      <DisableSpecificWarnings>4800;4290</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -180,6 +184,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PostBuildEvent>
+      <Command>call $(ProjectDir)CopyFiles.bat $(SolutionDir)$(Configuration)</Command>
+      <Message>Copy resource files</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
