@@ -15,6 +15,7 @@
 #include "dlogutil.hpp"
 #include "graphtool.h"
 #include "winutil.h"
+#include "cursors.h"
 
 void cTextField::attachClickHandler(click_callback_t) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(false);
@@ -122,6 +123,7 @@ bool cTextField::handleClick(location clickLoc) {
 		if(e.type == sf::Event::MouseButtonReleased){
 			done = true;
 		} else if(e.type == sf::Event::MouseMoved){
+			restore_cursor();
 			location newLoc(e.mouseMove.x, e.mouseMove.y);
 			set_ip(newLoc, &cTextField::selectionPoint);
 		}

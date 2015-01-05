@@ -1158,16 +1158,18 @@ void cDialog::run(){
 				where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
 				itemHit = process_click(where);
 				break;
+			default: // To silence warning of unhandled enum values
+				break;
 			case sf::Event::MouseMoved:
-				set_cursor(sword_curs);
+				bool inField = false;
 				for(auto& ctrl : controls) {
 					if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x, currentEvent.mouseMove.y)) {
 						set_cursor(text_curs);
+						inField = true;
 						break;
 					}
 				}
-				break;
-			default: // To silence warning of unhandled enum values
+				if(!inField) set_cursor(sword_curs);
 				break;
 		}
 		if(itemHit.empty()) continue;;

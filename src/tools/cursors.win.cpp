@@ -8,64 +8,35 @@
 extern cursor_type current_cursor;
 extern sf::RenderWindow mainPtr;
 
-static const COLORREF clrMagenta = RGB(255, 0, 255);
-
-// This loads an image from a file and replaces transparency with magenta.
-// This is probably undesirable in the general case, but since we only expect transparent GIFs, it should work out.
-HBITMAP LoadPicture(std::string filename) {
-	sf::Image gif;
-	gif.loadFromFile(filename);
-	HDC dc = CreateCompatibleDC(NULL);
-	HBITMAP bmp = CreateCompatibleBitmap(dc, gif.getSize().x, gif.getSize().y);
-	SelectObject(dc, &bmp);
-	// Not exactly efficient, but it gets the job done.
-	for(int x = 0; x < gif.getSize().x; x++) {
-		for(int y = 0; y < gif.getSize().y; y++) {
-			sf::Color clr = gif.getPixel(x, y);
-			if(clr == sf::Color::Transparent)
-				SetPixel(dc, x, y, clrMagenta);
-			else SetPixel(dc, x, y, RGB(clr.r, clr.g, clr.b));
-		}
-	}
-	DeleteDC(dc);
-	return bmp;
-}
-
-// This function taken from <http://www.codeproject.com/Articles/5220/Creating-a-color-cursor-from-a-bitmap>
-void GetMaskBitmaps(HBITMAP hSourceBitmap, COLORREF clrTransparent, HBITMAP& hAndMaskBitmap, HBITMAP& hXorMaskBitmap) {
+// This function adapted from <http://www.codeproject.com/Articles/5220/Creating-a-color-cursor-from-a-bitmap>
+static void GetMaskBitmaps(const sf::Image& srcImage, HBITMAP& hAndMaskBitmap, HBITMAP& hXorMaskBitmap) {
 	HDC hDC = GetDC(NULL);
 	HDC hMainDC = CreateCompatibleDC(hDC);
 	HDC hAndMaskDC = CreateCompatibleDC(hDC);
 	HDC hXorMaskDC = CreateCompatibleDC(hDC);
 
-	//Get the dimensions of the source bitmap
-	BITMAP bm;
-	GetObject(hSourceBitmap, sizeof(BITMAP), &bm);
+	hAndMaskBitmap = CreateCompatibleBitmap(hDC, srcImage.getSize().x, srcImage.getSize().y);
+	hXorMaskBitmap = CreateCompatibleBitmap(hDC, srcImage.getSize().x, srcImage.getSize().y);
 
-	hAndMaskBitmap = CreateCompatibleBitmap(hDC, bm.bmWidth, bm.bmHeight);
-	hXorMaskBitmap = CreateCompatibleBitmap(hDC, bm.bmWidth, bm.bmHeight);
-
-	//Select the bitmaps to DC
-	HBITMAP hOldMainBitmap = (HBITMAP)SelectObject(hMainDC, hSourceBitmap);
+	// Select the bitmaps to DC
 	HBITMAP hOldAndMaskBitmap = (HBITMAP)SelectObject(hAndMaskDC, hAndMaskBitmap);
 	HBITMAP hOldXorMaskBitmap = (HBITMAP)SelectObject(hXorMaskDC, hXorMaskBitmap);
 
-	//Scan each pixel of the souce bitmap and create the masks
-	COLORREF MainBitPixel;
-	for(int x = 0; x<bm.bmWidth; ++x) {
-		for(int y = 0; y<bm.bmHeight; ++y) {
-			MainBitPixel = GetPixel(hMainDC, x, y);
-			if(MainBitPixel == clrTransparent) {
+	// Scan each pixel of the source bitmap and create the masks
+	sf::Color mainBitPixel;
+	for(int x = 0; x < srcImage.getSize().x; ++x) {
+		for(int y = 0; y < srcImage.getSize().y; ++y) {
+			mainBitPixel = srcImage.getPixel(x, y);
+			if(mainBitPixel.a == 0) {
 				SetPixel(hAndMaskDC, x, y, RGB(255, 255, 255));
 				SetPixel(hXorMaskDC, x, y, RGB(0, 0, 0));
 			} else {
 				SetPixel(hAndMaskDC, x, y, RGB(0, 0, 0));
-				SetPixel(hXorMaskDC, x, y, MainBitPixel);
+				SetPixel(hXorMaskDC, x, y, RGB(mainBitPixel.r, mainBitPixel.g, mainBitPixel.b));
 			}
 		}
 	}
 
-	SelectObject(hMainDC, hOldMainBitmap);
 	SelectObject(hAndMaskDC, hOldAndMaskBitmap);
 	SelectObject(hXorMaskDC, hOldXorMaskBitmap);
 
@@ -77,12 +48,15 @@ void GetMaskBitmaps(HBITMAP hSourceBitmap, COLORREF clrTransparent, HBITMAP& hAn
 }
 
 Cursor::Cursor(fs::path imgPath, float hotSpotX, float hotSpotY) {
-	HBITMAP cursorImage = LoadPicture(imgPath.string()), cursorAnd, cursorXor;
-	if(cursorImage == NULL) {
+	sf::Image gif;
+	if(!gif.loadFromFile(imgPath.string())) {
 		std::string error = "Error loading cursor from " + imgPath.string();
 		throw std::exception(error.c_str());
 	}
-	GetMaskBitmaps(cursorImage, clrMagenta, cursorAnd, cursorXor);
+	// Calculate the AND and XOR masks
+	HBITMAP cursorAnd = CreateCompatibleBitmap(GetDC(NULL), gif.getSize().x, gif.getSize().y);
+	HBITMAP cursorXor = CreateCompatibleBitmap(GetDC(NULL), gif.getSize().x, gif.getSize().y);
+	GetMaskBitmaps(gif, cursorAnd, cursorXor);
 
 	ICONINFO iconinfo = {0};
 	iconinfo.fIcon = FALSE;
@@ -92,22 +66,24 @@ Cursor::Cursor(fs::path imgPath, float hotSpotX, float hotSpotY) {
 	iconinfo.hbmColor = cursorXor;
 
 	HCURSOR hCursor = CreateIconIndirect(&iconinfo);
-	ptr = &hCursor;
-	DeleteObject(cursorImage);
+	if(hCursor == NULL) {
+		std::string error = "Error creating cursor from " + imgPath.string();
+		error += " (error code " + std::to_string(GetLastError()) + ")";
+		throw error;
+	}
+	ptr = hCursor;
 	DeleteObject(cursorAnd);
 	DeleteObject(cursorXor);
 }
 
 Cursor::~Cursor() {
-	HCURSOR* curs = (HCURSOR*)ptr;
-	DestroyIcon(*curs);
+	HCURSOR curs = (HCURSOR)ptr;
+	DestroyIcon(curs);
 }
 
 void Cursor::apply() {
-	HCURSOR* curs = (HCURSOR*)ptr;
-	SetCursor(*curs);
-	// TODO: This ensures the cursor stays set when the mouse moves. Is it necessary, though?
-	SetClassLong(mainPtr.getSystemHandle(), GCL_HCURSOR, (LONG)(*curs));
+	HCURSOR curs = (HCURSOR)ptr;
+	SetCursor(curs);
 }
 
 void obscureCursor() {

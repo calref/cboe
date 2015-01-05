@@ -202,6 +202,7 @@ bool cControl::handleClick(location){
 			clicked = frame.contains(e.mouseButton.x, e.mouseButton.y);
 			depressed = false;
 		} else if(e.type == sf::Event::MouseMoved){
+			restore_cursor();
 			depressed = frame.contains(e.mouseMove.x, e.mouseMove.y);
 		}
 	}

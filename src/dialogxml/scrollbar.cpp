@@ -102,6 +102,7 @@ bool cScrollbar::handleClick(location where) {
 				case PART_THUMB: break;
 			}
 		} else if(e.type == sf::Event::MouseMoved){
+			restore_cursor();
 			switch(pressedPart) {
 				case PART_UP:
 					depressed = e.mouseMove.y < frame.top + 16;

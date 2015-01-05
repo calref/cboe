@@ -220,6 +220,8 @@ void handle_actions_menu(int item_hit);
 void handle_monster_info_menu(int item_hit);
 void handle_menu_spell(eSpell spell_picked);
 
+#include "cursors.h"
+
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 	if(message == WM_COMMAND) {
 		int cmd = LOWORD(wParam);
@@ -271,6 +273,11 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 			case IDM_HELP_HINTS: handle_help_menu(6); break;
 			case IDM_HELP_SPELLS: handle_help_menu(7); break;
 		}
+	} else if(message == WM_SETCURSOR) {
+		// Windows resets the cursor to an arrow whenever the mouse moves, unless we do this.
+		// Note: By handling this message, sf::Window::setMouseCursorVisible() will NOT work.
+		restore_cursor();
+		return true;
 	}
 	return CallWindowProc(reinterpret_cast<WNDPROC>(mainProc), handle, message, wParam, lParam);
 }
