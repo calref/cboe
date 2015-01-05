@@ -10,8 +10,7 @@ extern sf::RenderWindow mainPtr;
 
 static const COLORREF clrMagenta = RGB(255, 0, 255);
 
-// This function adapted from <http://web.archive.org/web/20130502044728/http://marknelson.us/2002/07/01/rendering-transparent-gifs-revisited/>
-// It loads an image from a file and replaces transparency with magenta.
+// This loads an image from a file and replaces transparency with magenta.
 // This is probably undesirable in the general case, but since we only expect transparent GIFs, it should work out.
 HBITMAP LoadPicture(std::string filename) {
 	sf::Image gif;
