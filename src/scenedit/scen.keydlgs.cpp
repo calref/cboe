@@ -1109,11 +1109,11 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 				edit[id].setText(current_terrain->spec_strs[*str1 + i]);
 			if(mode == 2)
 				edit[id].setText(town->spec_strs[*str1 + i]);
-			if(mode == 0)
+			if(mode == 3)
 				edit[id].setText(scenario.journal_strs[*str1 + i]);
-			if(mode == 1)
+			if(mode == 4)
 				edit[id].setText(current_terrain->sign_strs[*str1 + i]);
-			if(mode == 2)
+			if(mode == 5)
 				edit[id].setText(town->sign_strs[*str1 + i]);
 		}
 	}
