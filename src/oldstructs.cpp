@@ -8,22 +8,27 @@
 
 #include "oldstructs.h"
 #include <fstream>
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 
 using namespace legacy;
 
 #define STRUCT_INFO(what) \
-	log << #what << ": " << sizeof(what) << " bytes" << std::endl
+	what temp_##what; \
+	log << #what << ": " << sizeof(temp_##what) << " bytes" << std::endl
 #define MEM_INFO(what,member) \
-	log << "   " << #member << ": " << sizeof(what :: member) << " bytes, offset " \
+	log << "   " << #member << ": " << sizeof(temp_##what . member) << " bytes, offset " \
 		<< offsetof(what,member) << std::endl
 
 // This is just a function to output all known information about each struct and its members.
 void debug_oldstructs(); // Suppress "no prototype" warning
 void debug_oldstructs() {
+#ifndef _WIN32
 	char cwd[256];
 	getcwd(cwd, 256);
 	printf("%s" ,cwd);
+#endif
 	std::ofstream log("oldstructs.txt");
 	STRUCT_INFO(Rect);
 	MEM_INFO(Rect,top);

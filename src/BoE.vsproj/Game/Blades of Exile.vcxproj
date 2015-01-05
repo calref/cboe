@@ -137,6 +137,7 @@
     <ClCompile Include="..\..\boe.text.cpp" />
     <ClCompile Include="..\..\boe.town.cpp" />
     <ClCompile Include="..\..\boe.townspec.cpp" />
+    <ClCompile Include="..\..\oldstructs.cpp" />
     <ClCompile Include="..\..\pcedit\pc.editors.cpp" />
   </ItemGroup>
   <ItemGroup>
