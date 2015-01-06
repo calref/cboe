@@ -83,14 +83,14 @@ BEGIN
         MENUITEM "Raise Dead, Destone, etc.",   IDM_PARTY_DEAD
         MENUITEM "Remove Bad Conditions",       IDM_PARTY_CONDITIONS
         MENUITEM SEPARATOR
-        MENUITEM "Reunite Party",               IDM_PARTY_REUNITE
-        MENUITEM "Own All Boats/Horses",        IDM_PARTY_VEHICLES
-        MENUITEM SEPARATOR
         MENUITEM "Edit Mage Spells",            IDM_PARTY_MAGE
         MENUITEM "Edit Priest Spells",          IDM_PARTY_PRIEST
         MENUITEM "Edit Traits",                 IDM_PARTY_TRAITS
         MENUITEM "Edit Skills",                 IDM_PARTY_SKILLS
         MENUITEM "Edit XP",                     IDM_PARTY_XP
+        MENUITEM SEPARATOR
+        MENUITEM "Reunite Party",               IDM_PARTY_REUNITE
+        MENUITEM "Own All Boats/Horses",        IDM_PARTY_VEHICLES
     END
     POPUP "&Scenario Editing"
     BEGIN

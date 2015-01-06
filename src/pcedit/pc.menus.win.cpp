@@ -118,11 +118,17 @@ void update_item_menu() {
 void menu_activate() {
 	if(menuHandle == NULL) return;
 	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
-	if(file_in_mem.empty())
+	if(file_in_mem.empty()) {
+		EnableMenuItem(menuHandle, PARTY_MENU_POS, MF_BYPOSITION | MF_GRAYED);
+		EnableMenuItem(menuHandle, SCEN_MENU_POS, MF_BYPOSITION | MF_GRAYED);
 		for(int i = 1; i < GetMenuItemCount(file_menu) - 1; i++)
 			EnableMenuItem(file_menu, i, MF_BYPOSITION | MF_GRAYED);
-	else for(int i = 1; i < GetMenuItemCount(file_menu) - 1; i++)
-		EnableMenuItem(file_menu, i, MF_BYPOSITION | MF_ENABLED);
+	} else {
+		EnableMenuItem(menuHandle, PARTY_MENU_POS, MF_BYPOSITION | MF_ENABLED);
+		EnableMenuItem(menuHandle, SCEN_MENU_POS, MF_BYPOSITION | MF_ENABLED);
+		for(int i = 1; i < GetMenuItemCount(file_menu) - 1; i++)
+			EnableMenuItem(file_menu, i, MF_BYPOSITION | MF_ENABLED);
+	}
 	DrawMenuBar(mainPtr.getSystemHandle());
 }
 

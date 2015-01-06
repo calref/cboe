@@ -543,6 +543,7 @@ void handle_menu_choice(eMenu item_hit) {
 			if(i == 6) {
 				ASB("Add PC: You already have 6 PCs.");
 				print_buf();
+				break;
 			}
 			if(univ.town.num == univ.scenario.which_town_start) {
 				give_help(56,0);

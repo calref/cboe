@@ -38,6 +38,7 @@
 #define IDM_HELP_SPELLS                 141
 #define IDM_HELP_ABOUT                  142
 #define IDM_HELP_TOWN                   143
+#define IDM_OPTIONS_JOURNAL             144
 
 // Next default values for new objects
 // 

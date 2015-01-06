@@ -62,6 +62,7 @@ BEGIN
         MENUITEM "See Talking Notes",           IDM_OPTIONS_TALKING
         MENUITEM "See Encounter Notes",         IDM_OPTIONS_ENCOUNTER
         MENUITEM "See Overall Party Stats",     IDM_OPTIONS_STATS
+        MENUITEM "See Journal",                 IDM_OPTIONS_JOURNAL
     END
     POPUP "&Actions"
     BEGIN

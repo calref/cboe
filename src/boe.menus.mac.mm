@@ -208,7 +208,7 @@ void adjust_spell_menus() {
 		for(i = 0; i < 62; i++)
 			if(on_spell_menu[0][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[0][i]);
-				std::string name = get_str("magic-names", i + 1);
+				std::string name = (*spell).name();
 				if((*spell).cost >= 0)
 					sprintf(spell_name," L%d - %s, C %d",(*spell).level, name.c_str(), (*spell).cost);
 				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, name.c_str());
@@ -242,7 +242,7 @@ void adjust_spell_menus() {
 		for(i = 0; i < 62; i++)
 			if(on_spell_menu[1][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
-				std::string name = get_str("magic-names", i + 101);
+				std::string name = (*spell).name();
 				if((*spell).cost >= 0)
 					sprintf(spell_name," L%d - %s, C %d",(*spell).level, name.c_str(), (*spell).cost);
 				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, name.c_str());

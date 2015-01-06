@@ -14,6 +14,7 @@
 // Fortunately they're on symbols not used in this file, so this should work.
 #include <Windows.h>
 #include <gl/GL.h>
+#undef HELP_INDEX // Except this one
 
 // This is the index of each menu on the menubar
 enum {
@@ -111,6 +112,10 @@ void init_menubar() {
 	i = 0;
 	for(eMenu opt : help_choices)
 		setMenuCommand(help_menu, i++, opt);
+	
+	menuChoices[IDM_MAGE_ABOUT] = eMenu::ABOUT_MAGE;
+	menuChoices[IDM_PRIEST_ABOUT] = eMenu::ABOUT_PRIEST;
+	menuChoices[IDM_MONSTERS_ABOUT] = eMenu::ABOUT_MONSTERS;
 }
 
 void adjust_monst_menu() {
@@ -172,26 +177,26 @@ void adjust_spell_menus() {
 		on_spell_menu[0][i] = -1;
 	}
 	for(i = 0; i < 62; i++)
-	if(pc_can_cast_spell(current_pc, cSpell::fromNum(eSkill::MAGE_SPELLS, i))) {
-		on_spell_menu[0][spell_pos] = i;
-		spell_pos++;
-	}
+		if(pc_can_cast_spell(current_pc, cSpell::fromNum(eSkill::MAGE_SPELLS, i))) {
+			on_spell_menu[0][spell_pos] = i;
+			spell_pos++;
+		}
 	for(i = 0; i < 62; i++)
-	if(on_spell_menu[0][i] != old_on_spell_menu[0][i])
-		need_menu_change = true;
+		if(on_spell_menu[0][i] != old_on_spell_menu[0][i])
+			need_menu_change = true;
 	if(need_menu_change) {
 		while(GetMenuItemCount(spell_menu) > 2) {
 			RemoveMenu(spell_menu, 2, MF_BYPOSITION);
 		}
 		for(i = 0; i < 62; i++)
-		if(on_spell_menu[0][i] >= 0) {
-			eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[0][i]);
-			std::string name = get_str("magic-names", i + 1);
-			if((*spell).cost >= 0)
-				sprintf(spell_name, " L%d - %s, C %d", (*spell).level, name.c_str(), (*spell).cost);
-			else sprintf(spell_name, " L%d - %s, C ?", (*spell).level, name.c_str());
-			AppendMenuA(spell_menu, MF_STRING | MF_ENABLED, 2000 + i, spell_name);
-		}
+			if(on_spell_menu[0][i] >= 0) {
+				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[0][i]);
+				std::string name = (*spell).name();
+				if((*spell).cost >= 0)
+					sprintf(spell_name, " L%d - %s, C %d", (*spell).level, name.c_str(), (*spell).cost);
+				else sprintf(spell_name, " L%d - %s, C ?", (*spell).level, name.c_str());
+				AppendMenuA(spell_menu, MF_STRING | MF_ENABLED, 2000 + int(spell), spell_name);
+			}
 	}
 
 	need_menu_change = false;
@@ -203,26 +208,26 @@ void adjust_spell_menus() {
 		on_spell_menu[1][i] = -1;
 	}
 	for(i = 0; i < 62; i++)
-	if(pc_can_cast_spell(current_pc, cSpell::fromNum(eSkill::PRIEST_SPELLS, i))) {
-		on_spell_menu[1][spell_pos] = i;
-		spell_pos++;
-	}
+		if(pc_can_cast_spell(current_pc, cSpell::fromNum(eSkill::PRIEST_SPELLS, i))) {
+			on_spell_menu[1][spell_pos] = i;
+			spell_pos++;
+		}
 	for(i = 0; i < 62; i++)
-	if(on_spell_menu[1][i] != old_on_spell_menu[1][i])
-		need_menu_change = true;
+		if(on_spell_menu[1][i] != old_on_spell_menu[1][i])
+			need_menu_change = true;
 	if(need_menu_change) {
 		while(GetMenuItemCount(spell_menu) > 2) {
 			RemoveMenu(spell_menu, 2, MF_BYPOSITION);
 		}
 		for(i = 0; i < 62; i++)
-		if(on_spell_menu[1][i] >= 0) {
-			eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
-			std::string name = get_str("magic-names", i + 101);
-			if((*spell).cost >= 0)
-				sprintf(spell_name, " L%d - %s, C %d", (*spell).level, name.c_str(), (*spell).cost);
-			else sprintf(spell_name, " L%d - %s, C ?", (*spell).level, name.c_str());
-			AppendMenuA(spell_menu, MF_STRING | MF_ENABLED, 2000 + i, spell_name);
-		}
+			if(on_spell_menu[1][i] >= 0) {
+				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
+				std::string name = (*spell).name();
+				if((*spell).cost >= 0)
+					sprintf(spell_name, " L%d - %s, C %d", (*spell).level, name.c_str(), (*spell).cost);
+				else sprintf(spell_name, " L%d - %s, C ?", (*spell).level, name.c_str());
+				AppendMenuA(spell_menu, MF_STRING | MF_ENABLED, 2000 + int(spell), spell_name);
+			}
 	}
 
 
