@@ -292,12 +292,6 @@ void start_town_mode(short which_town, short entry_dir) {
 				// First set up the values.
 				cCreature& preset = univ.town->creatures(i);
 				univ.town.monst.assign(i, preset, univ.scenario.scen_monsters[preset.number], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
-				univ.town.monst[i].target = 6;
-				univ.town.monst[i].active = 1; // TODO: Can those two \/ be commented out?
-				//univ.town.monst[i].attitude = univ.town->creatures(i).start_attitude;
-				//univ.town.monst[i].cur_loc = univ.town->creatures(i).start_loc;
-				//univ.town.monst[i].mobility = univ.town->creatures(i).mobility;
-				univ.town.monst[i].summoned = 0;
 				
 				if(univ.town.monst[i].spec_enc_code > 0)
 					univ.town.monst[i].active = 0;

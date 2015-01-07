@@ -151,7 +151,6 @@ public:
 
 class cCreature : public cMonster {
 public:
-	using cMonster::operator=;
 	unsigned long id;
 	m_num_t number;
 	short active, attitude;

@@ -56,4 +56,5 @@ void cPopulation::assign(size_t n, const cCreature& other, const cMonster& base,
 	dudes[n].attitude = dudes[n].start_attitude; // TODO: Is this right?
 	dudes[n].cur_loc = dudes[n].start_loc;
 	dudes[n].target = 6; // No target
+	dudes[n].summoned = 0;
 }

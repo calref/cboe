@@ -812,7 +812,7 @@ void cDialog::loadFromFile(std::string path){
 	fname = path;
 	fs::path cPath = progDir/"data"/"dialogs"/path;
 	try{
-		printf("Loading dialog from: %s\n", cPath.c_str());
+		printf("Loading dialog from: %s\n", cPath.string().c_str());
 		TiXmlBase::SetCondenseWhiteSpace(false);
 		Document xml(cPath.string().c_str());
 		xml.LoadFile();
