@@ -2180,7 +2180,7 @@ void post_load() {
 
 //mode; // 0 - normal  1 - save as
 void do_save(short mode) {
-	if(overall_mode > MODE_TOWN) {
+	if(overall_mode > MODE_TOWN && overall_mode != MODE_STARTUP) {
 		add_string_to_buf("Save: Only while outdoors, or in         ");
 		add_string_to_buf("  town and not looking/casting.          ");
 		print_buf();

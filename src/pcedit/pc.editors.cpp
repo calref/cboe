@@ -269,7 +269,7 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing,
 		display_traits_graphics(me);
 		abil_str = 22 + hit * 2;
 	} else if(item_hit.substr(0,4) == "good") {
-		int hit = item_hit[4] - '1';
+		int hit = boost::lexical_cast<int>(item_hit.substr(4)) - 1;
 		eTrait trait = eTrait(hit);
 		if(store_trait_mode != 1)
 			pc->traits[trait] = !pc->traits[trait];

@@ -231,6 +231,7 @@ ModalSession::ModalSession(sf::Window& win, sf::Window& p) : parent(&p) {
 ModalSession::~ModalSession() {
 	HWND win_handle = (HWND)session;
 	EnableWindow(parent->getSystemHandle(), true);
+	makeFrontWindow(parent);
 	RedrawWindow(parent->getSystemHandle(), NULL, NULL, RDW_NOCHILDREN | RDW_UPDATENOW);
 }
 

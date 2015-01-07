@@ -890,6 +890,13 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 bool save_party(fs::path dest_file, const cUniverse& univ) {
 	if(!fs::exists(tempDir)) fs::create_directories(tempDir);
 	
+	// Make sure it has the proper file extension
+	std::string fname = dest_file.filename().string();
+	size_t dot = fname.find_last_of('.');
+	if(dot == std::string::npos || fname.substr(dot) != ".exg")
+		fname += ".exg";
+	dest_file = dest_file.parent_path()/fname;
+	
 	bool in_scen = univ.party.scen_name != "";
 	bool in_town = univ.town.num < 200;
 	bool save_maps = !univ.party.stuff_done[306][0];

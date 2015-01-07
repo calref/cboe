@@ -207,25 +207,25 @@ extern sf::RenderWindow mainPtr;
 
 void init_fileio(){
 	dlg_get_scen = [NSOpenPanel openPanel];
-	[dlg_get_scen setAllowedFileTypes: [NSArray arrayWithObjects: @"com.spidweb.bladesofexile.scenario", @"exs", @"boes", nil]];
+	[dlg_get_scen setAllowedFileTypes: [NSArray arrayWithObjects: @"exs", @"boes", nil]];
 	[dlg_get_scen setMessage: @"Select a scenario to edit:"];
 	[dlg_get_scen setTitle: @"Load Scenario"];
 	[dlg_get_scen retain];
 	
 	dlg_get_game = [NSOpenPanel openPanel];
-	[dlg_get_game setAllowedFileTypes: [NSArray arrayWithObjects: @"com.spidweb.bladesofexile.savegame", @"com.spidweb.bladesofexile.oldmacsave", @"com.spidweb.bladesofexile.oldwinsave", @"exg", @"boe", @"SAV", @"mac", nil]];
+	[dlg_get_game setAllowedFileTypes: [NSArray arrayWithObjects: @"exg", @"boe", @"SAV", @"mac", nil]];
 	[dlg_get_game setMessage: @"Select a saved game to resume:"];
 	[dlg_get_game setTitle: @"Load Game"];
 	[dlg_get_game retain];
 	
 	dlg_put_scen = [NSSavePanel savePanel];
-	[dlg_put_scen setAllowedFileTypes: [NSArray arrayWithObjects: @"com.spidweb.bladesofexile.scenario", @"boes", nil]];
+	[dlg_put_scen setAllowedFileTypes: [NSArray arrayWithObjects: @"boes", nil]];
 	[dlg_put_scen setMessage: @"Select a location to save the scenario:"];
 	[dlg_put_scen setTitle: @"Save Scenario"];
 	[dlg_put_scen retain];
 	
 	dlg_put_game = [NSSavePanel savePanel];
-	[dlg_put_game setAllowedFileTypes: [NSArray arrayWithObjects: @"com.spidweb.bladesofexile.savegame", @"exg", nil]];
+	[dlg_put_game setAllowedFileTypes: [NSArray arrayWithObjects: @"exg", nil]];
 	[dlg_put_game setMessage: @"Select a location to save your game:"];
 	[dlg_put_game setTitle: @"Save Game"];
 	[dlg_put_game retain];
