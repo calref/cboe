@@ -15,10 +15,9 @@
 
 #include "simpletypes.h"
 #include "item.h"
+#include "pictypes.hpp"
 
 namespace legacy { struct pc_record_type; };
-
-typedef unsigned short pic_num_t; // TODO: This is now defined in multiple places...
 
 class cPlayer {
 public:

@@ -14,6 +14,7 @@
 #include <boost/filesystem/path.hpp>
 #include <SFML/Graphics.hpp>
 #include "location.h"
+#include "pictypes.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -55,7 +56,6 @@ public:
 	rectangle getEnclosingRect();
 };
 
-typedef unsigned short pic_num_t;
 // TODO: Okay, is this really needed? Also this value also means "blank pic" in the dialog engine.
 static const pic_num_t NO_PIC = std::numeric_limits<pic_num_t>::max();
 using graf_pos = std::pair<sf::Texture*,rectangle>;

@@ -577,6 +577,7 @@
 		913D05BA0FA1EA0A00184C18 /* pc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pc.h; sourceTree = "<group>"; };
 		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.cpp; sourceTree = "<group>"; };
 		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boeresources.icns; sourceTree = "<group>"; };
+		913FB40A1A5C90840067B9D2 /* pictypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pictypes.hpp; sourceTree = "<group>"; };
 		914701A418F629D4008A6DC9 /* dungeon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = dungeon.ttf; sourceTree = "<group>"; };
 		914701A518F629D4008A6DC9 /* maidenword.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = maidenword.ttf; sourceTree = "<group>"; };
 		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsd; path = schemas/dialog.xsd; sourceTree = "<group>"; };
@@ -800,6 +801,7 @@
 				910BBAB40FB91A26001E34EA /* field.hpp */,
 				910BBAB80FB91ADB001E34EA /* message.hpp */,
 				910BBAA80FB8F733001E34EA /* pict.hpp */,
+				913FB40A1A5C90840067B9D2 /* pictypes.hpp */,
 				9179A4631A4867E200FEF872 /* stack.hpp */,
 				919145FD18E3C750005CF3A4 /* scrollbar.hpp */,
 			);
