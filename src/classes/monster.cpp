@@ -13,6 +13,7 @@
 
 #include "classes.h"
 #include "oldstructs.h"
+#include "fileio.h"
 
 void cMonster::append(legacy::monster_record_type& old){
 	level = old.level;
@@ -458,12 +459,108 @@ bool cMonster::hasAbil(eMonstAbil what, unsigned char* x1, unsigned char* x2){
 	return false;
 }
 
-void cMonster::writeTo(std::ostream& /*file*/) const {
-	// TODO: Implement this (low priority since only used for exported summons)
+void cMonster::writeTo(std::ostream& file) const {
+	file << "MONSTER " << maybe_quote_string(m_name) << '\n';
+	file << "LEVEL " << int(level) << '\n';
+	file << "ARMOR " << int(armor) << '\n';
+	file << "SKILL " << int(skill) << '\n';
+	for(int i = 0; i < 3; i++)
+		file << "ATTACK " << i + 1 << ' ' << int(a[i].dice) << ' ' << int(a[i].sides) << ' ' << int(a[i].type) << '\n';
+	file << "HEALTH " << int(m_health) << '\n';
+	file << "SPEED " << int(speed) << '\n';
+	file << "MAGE " << int(mu) << '\n';
+	file << "PRIEST " << int(cl) << '\n';
+	file << "RACE " << m_type << '\n';
+	file << "BREATH " << int(breath_type) << ' ' << int(breath) << '\n';
+	file << "TREASURE" << int(treasure) << '\n';
+	file << "ABIL 1 " << int(spec_skill) << " 0 0\n";
+	file << "ABIL 2 " << int(radiate_1) << ' ' << int(radiate_2) << " 0\n";
+	file << "POISON " << int(poison) << '\n';
+	file << "CORPSEITEM " << corpse_item << ' ' << corpse_item_chance << '\n';
+	file << "IMMUNE " << int(immunities) << '\n';
+	file << "SIZE " << int(x_width) << ' ' << int(y_width) << '\n';
+	file << "ATTITUDE " << int(default_attitude) << '\n';
+	file << "SUMMON " << int(summon_type) << '\n';
+	file << "PORTRAIT " << default_facial_pic << '\n';
+	file << "PICTURE " << picture_num << '\n';
+	file << "SOUND " << ambient_sound << '\n';
 }
 
-void cMonster::readFrom(std::istream& /*file*/) {
-	// TODO: Implement this (low priority since only used for exported summons)
+void cMonster::readFrom(std::istream& file) {
+	// On-see event is not exported, so make sure the fields are not filled with garbage data
+	see_sound = 0;
+	see_str1 = -1;
+	see_str2 = -1;
+	see_spec = -1;
+	while(file) {
+		std::string cur;
+		int temp1, temp2, temp3;
+		getline(file, cur);
+		std::istringstream line(cur);
+		line >> cur;
+		if(cur == "MONSTER") {
+			line >> std::ws;
+			m_name = read_maybe_quoted_string(line);
+		} else if(cur == "ATTACK") {
+			int which;
+			line >> which >> temp1 >> temp2 >> temp3;
+			which--;
+			a[which].dice = temp1;
+			a[which].sides = temp2;
+			a[which].type = temp3;
+		} else if(cur == "BREATH") {
+			line >> temp1 >> temp2;
+			breath_type = temp1;
+			breath = temp2;
+		} else if(cur == "ABIL") {
+			int which;
+			line >> which >> temp1 >> temp2 >> temp3;
+			if(which == 1)
+				spec_skill = temp1;
+			else if(which == 2)
+				radiate_1 = temp1, radiate_2 = temp2;
+		}  else if(cur == "SIZE") {
+			line >> temp1 >> temp2;
+			x_width = temp1;
+			y_width = temp2;
+		} else if(cur == "RACE")
+			line >> m_type;
+		else if(cur == "CORPSEITEM")
+			line >> corpse_item >> corpse_item_chance;
+		else if(cur == "PORTRAIT")
+			line >> default_facial_pic;
+		else if(cur == "PICTURE")
+			line >> picture_num;
+		else if(cur == "SOUND")
+			line >> ambient_sound;
+		else {
+			line >> temp1;
+			if(cur == "LEVEL")
+				level = temp1;
+			else if (cur == "ARMOR")
+				armor = temp1;
+			else if(cur == "SKILL")
+				skill = temp1;
+			else if(cur == "HEALTH")
+				m_health = temp1;
+			else if(cur == "SPEED")
+				speed = temp1;
+			else if(cur == "MAGE")
+				mu = temp1;
+			else if(cur == "PRIEST")
+				cl = temp1;
+			else if(cur == "TREASURE")
+				treasure = temp1;
+			else if(cur == "POISON")
+				poison = temp1;
+			else if(cur == "IMMUNITIES")
+				immunities = temp1;
+			else if(cur == "ATTITUDE")
+				default_attitude = temp1;
+			else if(cur == "SUMMON")
+				summon_type = temp1;
+		}
+	}
 }
 
 void cCreature::writeTo(std::ostream& file) const {
@@ -486,10 +583,9 @@ void cCreature::writeTo(std::ostream& file) const {
 	file << "FACE " << facial_pic << '\n';
 	file << "TARGET " << target << '\n';
 	file << "TARGLOC " << targ_loc.x << ' ' << targ_loc.y << '\n';
-	for(int i = 0; i < 15; i++) {
-		eStatus stat = (eStatus) i;
-		if(status.at(stat) != 0)
-			file << "STATUS " << i << ' ' << status.at(stat) << '\n';
+	for(auto stat : status) {
+		if(stat.second != 0)
+			file << "STATUS " << stat.first << ' ' << stat.second << '\n';
 	}
 	file << "CURHP " << health << '\n';
 	file << "CURSP " << mp << '\n';

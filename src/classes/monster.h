@@ -105,7 +105,7 @@ public:
 	};
 	struct cAbility{
 		eMonstAbil abil;
-		unsigned char extra1, extra2;
+		unsigned short extra1, extra2;
 		operator std::string();
 	};
 	unsigned char level;

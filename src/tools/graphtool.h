@@ -10,6 +10,7 @@
 #define GRAPHTOOL_H
 
 #include <string>
+#include <memory>
 #include <functional>
 #include <boost/filesystem/path.hpp>
 #include <SFML/Graphics.hpp>
@@ -65,20 +66,22 @@ using hilite_t = std::pair<size_t,size_t>;
 struct cCustomGraphics {
 	size_t numSheets;
 	sf::Texture* sheets = NULL;
-	sf::Texture* party = NULL;
+	std::shared_ptr<sf::Texture> party_sheet;
 	bool is_old = false;
 	void clear() {
 		if(sheets != NULL) delete[] sheets;
 		sheets = NULL;
 	}
 	~cCustomGraphics() {
-		if(party != NULL) delete party;
+		clear();
 	}
 	explicit operator bool() {
 		return sheets;
 	}
+	void convert_sheets();
+	void copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlots);
 	graf_pos find_graphic(pic_num_t pic, bool party = false);
-	size_t count();
+	size_t count(bool party = false);
 };
 
 struct snippet_t {

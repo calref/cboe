@@ -445,7 +445,11 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		to_rect.inset(-1,-1);
 		to_rect.offset(20,1);
 		from_rect.inset(2,2);
-		if(extra_val >= 1000) {
+		if(extra_val >= 10000) {
+			sf::Texture* src_gw;
+			graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(extra_val - 10000, true);
+			rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
+		} else if(extra_val >= 1000) {
 			sf::Texture* src_gw;
 			graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(extra_val - 1000);
 			rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
@@ -947,9 +951,7 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
 }
 
 std::string get_m_name(m_num_t num) {
-	
-	////
-	//strcpy((char *) str,(char *) scenario.scen_monsters[num].m_name);
+	if(num >= 10000) return univ.party.summons[num - 10000].m_name;
 	return univ.scenario.scen_monsters[num].m_name;
 }
 std::string get_ter_name(ter_num_t num) {

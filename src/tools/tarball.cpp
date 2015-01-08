@@ -65,7 +65,8 @@ void tarball::writeTo(std::ostream& out) {
 		entry.header = generateTarHeader(entry.filename, size);
 		out.write((char*)&entry.header, sizeof(header_posix_ustar));
 		out << entry.contents.rdbuf();
-		out.write(padding, padLength);
+		if(padLength < 512)
+			out.write(padding, padLength);
 	}
 }
 
@@ -88,7 +89,8 @@ void tarball::readFrom(std::istream& in) {
 		// Skip past the padding without using seekg.
 		// This is because the gzstreams don't support seekg.
 		// We're done with the data in this buffer, anyway, so just dump the padding here.
-		in.read(buf, padLength);
+		if(padLength < 512)
+			in.read(buf, padLength);
 	}
 }
 
@@ -110,4 +112,13 @@ std::istream& tarball::getFile(std::string fname) {
 	empty.clear(std::ios_base::badbit);
 	empty.seekg(0);
 	return empty;
+}
+
+bool tarball::hasFile(std::string fname) {
+	for(tarfile& entry : files) {
+		if(entry.filename == fname) {
+			return true;
+		}
+	}
+	return false;
 }

@@ -194,9 +194,7 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 	std::string desc_str;
 	
 	cPict& pic = dynamic_cast<cPict&>(me["pic"]);
-	if(s_i.graphic_num >= 1000) // was 150
-		pic.setPict(s_i.graphic_num - 1000, PIC_CUSTOM_ITEM);
-	else pic.setPict(s_i.graphic_num, PIC_ITEM);
+	pic.setPict(s_i.graphic_num, PIC_ITEM);
 	
 	// id? magic?
 	cLed& id = dynamic_cast<cLed&>(me["id"]);

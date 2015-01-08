@@ -1210,7 +1210,9 @@ void place_glands(location where,m_num_t m_type) {
 	cItemRec store_i;
 	cMonster monst;
 	
-	monst = univ.scenario.scen_monsters[m_type];
+	if(m_type >= 10000)
+		monst = univ.party.summons[m_type - 10000];
+	else monst = univ.scenario.scen_monsters[m_type];
 	
 	if((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,1,100) < monst.corpse_item_chance)) {
 		store_i = get_stored_item(monst.corpse_item);

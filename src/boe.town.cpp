@@ -274,8 +274,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				for(k = 0; k < univ.town->max_dim(); k++) { // now load in saved setup,
 					// except that pushable things restore to orig locs
 					temp = univ.party.setup[i][j][k] << 8;
-					temp &= OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK;
-					univ.town.fields[j][k] &= ~(OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK);
+					temp &= ~(OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK);
 					univ.town.fields[j][k] |= temp;
 				}
 		}

@@ -176,12 +176,16 @@ location get_monst_head(short m_num) {
 }
 
 short get_monst_picnum(m_num_t monst) {
+	if(monst >= 10000) return univ.party.summons[monst - 10000].picture_num;
 	return univ.scenario.scen_monsters[monst].picture_num;
 }
 
 ePicType get_monst_pictype(m_num_t monst) {
 	ePicType type = PIC_MONST;
-	short n = univ.scenario.scen_monsters[monst].picture_num;
+	short n;
+	if(monst >= 10000)
+		n = univ.party.summons[monst - 10000].picture_num;
+	else n = univ.scenario.scen_monsters[monst].picture_num;
 	if(n >= 1000){
 		type += PIC_CUSTOM;
 		switch(n / 1000){
@@ -204,9 +208,9 @@ ePicType get_monst_pictype(m_num_t monst) {
 }
 
 void get_monst_dims(m_num_t monst,short *width, short *height) {
-	
-	*width = univ.scenario.scen_monsters[monst].x_width;
-	*height = univ.scenario.scen_monsters[monst].y_width;
+	cMonster& the_monst = monst >= 10000 ? univ.party.summons[monst - 10000] : univ.scenario.scen_monsters[monst];
+	*width = the_monst.x_width;
+	*height = the_monst.y_width;
 }
 
 // Used to set up monsters for outdoor wandering encounters.
@@ -216,7 +220,8 @@ void set_up_monst(short mode,m_num_t m_num) {
 	
 	for(which = 0; which < univ.town->max_monst(); which++)
 		if(univ.town.monst[which].active == 0) {
-			univ.town.monst.assign(which, cCreature(m_num), univ.scenario.scen_monsters[m_num], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+			cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
+			univ.town.monst.assign(which, cCreature(m_num), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 			univ.town.monst[which].active = 2;
 			univ.town.monst[which].summoned = 0;
 			univ.town.monst[which].attitude = mode + 1;
@@ -1270,9 +1275,11 @@ short place_monster(m_num_t which,location where) {
 	}
 	
 	if(i < univ.town->max_monst()) {
-		univ.town.monst.assign(i, cCreature(which), univ.scenario.scen_monsters[which], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
-		static_cast<cMonster&>(univ.town.monst[i]) = univ.scenario.scen_monsters[which];
-		univ.town.monst[i].attitude = univ.scenario.scen_monsters[which].default_attitude;
+		// 10000 or more means an exported summon saved with the party
+		cMonster& monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
+		univ.town.monst.assign(i, cCreature(which), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+		static_cast<cMonster&>(univ.town.monst[i]) = monst;
+		univ.town.monst[i].attitude = monst.default_attitude;
 		if(univ.town.monst[i].attitude % 2 == 0)
 			univ.town.monst[i].attitude = 1;
 		univ.town.monst[i].mobility = 1;
@@ -1283,6 +1290,7 @@ short place_monster(m_num_t which,location where) {
 		
 		univ.town.set_crate(where.x,where.y,false);
 		univ.town.set_barrel(where.x,where.y,false);
+		univ.town.set_block(where.x,where.y,false);
 		
 		return i;
 	}

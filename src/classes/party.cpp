@@ -242,7 +242,7 @@ bool cParty::start_timer(short time, short node, short type){
 }
 
 void cParty::writeTo(std::ostream& file) const {
-	file << "CREATEVERSION" << OBOE_CURRENT_VERSION << '\n';
+	file << "CREATEVERSION " << std::hex << OBOE_CURRENT_VERSION << std::dec << '\n';
 	file << "AGE " << age << '\n';
 	file << "GOLD " << gold << '\n';
 	file << "FOOD " << food << '\n';
@@ -302,9 +302,6 @@ void cParty::writeTo(std::ostream& file) const {
 	file << "SCENARIO " << scen_name << '\n';
 	file << "WON " << scen_won << '\n';
 	file << "PLAYED " << scen_played << '\n';
-	for(unsigned int i = 0; i < 250; i++)
-		if(graphicUsed[i])
-			file << "GRAPHIC " << i << '\n';
 	for(auto iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
 		std::string campaign_id = maybe_quote_string(iter->first);
 		// Okay, we have the campaign ID in a state such that reading it back in will restore the original ID.
@@ -354,7 +351,7 @@ void cParty::writeTo(std::ostream& file) const {
 	file << '\f';
 	for(unsigned int i = 0; i < party_event_timers.size(); i++)
 		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << party_event_timers[i].global_or_town
-			 << ' ' << party_event_timers[i].node_to_call << '\n';
+			 << ' ' << party_event_timers[i].node_to_call << '\f';
 	file << '\f';
 	for(int i = 0; i < 4; i++)
 		for(int j = 0; j < 60; j++) {
@@ -374,8 +371,9 @@ void cParty::writeTo(std::ostream& file) const {
 			}
 	if(summons.size() > 0) {
 		file << '\f';
-		file << "SUMMON" << '\n';
+		int i = 0;
 		for(const cMonster& monst : summons) {
+			file << "SUMMON " << i++ << '\n';
 			monst.writeTo(file);
 			file << '\f';
 		}
@@ -431,7 +429,7 @@ void cParty::readFrom(std::istream& file){
 			stuff_done[i][j] = n;
 		} else if(cur == "CREATEVERSION") {
 			unsigned long long version;
-			sin >> version;
+			sin >> std::hex >> version >> std::dec;
 			if(version > OBOE_CURRENT_VERSION) {
 				giveError("Warning: this game appears to have been created with a newer version of Blades of Exile than you are running. Exile will do its best to load the saved game anyway, but there may be loss of information.");
 			}
@@ -513,11 +511,6 @@ void cParty::readFrom(std::istream& file){
 			sin >> scen_won;
 		else if(cur == "PLAYED")
 			sin >> scen_played;
-		else if(cur == "GRAPHIC") {
-			int i;
-			sin >> i;
-			graphicUsed[i] = true;
-		}
 		sin.clear();
 	}
 	bin.clear();
@@ -568,7 +561,9 @@ void cParty::readFrom(std::istream& file){
 		} else if(cur == "TIMER") {
 			int i;
 			bin >> i;
-			bin >> party_event_timers[i].time >> party_event_timers[i].global_or_town >> party_event_timers[i].node_to_call;
+			cTimer timer;
+			bin >> timer.time >> timer.global_or_town >> timer.node_to_call;
+			party_event_timers.push_back(timer);
 		} else if(cur == "CREATURE") {
 			int i, j;
 			bin >> i >> j;
@@ -579,22 +574,25 @@ void cParty::readFrom(std::istream& file){
 			bin >> i >> j;
 			stored_items[i][j].readFrom(bin);
 		} else if(cur == "SUMMON") {
-			int i;
+			size_t i;
 			bin >> i;
 			cMonster monst;
+			bin >> std::ws;
 			monst.readFrom(bin);
-			summons.push_back(monst);
+			if(i >= summons.size())
+				summons.resize(i + 1);
+			summons[i] = monst;
 		} else if(cur == "JOURNAL") {
 			cJournal entry;
 			bin >> entry.day;
 			entry.in_scen = read_maybe_quoted_string(bin);
-			bin >> std::skipws;
+			bin >> std::ws;
 			getline(bin, entry.the_str);
 		} else if(cur == "ENCNOTE") {
 			cEncNote note;
 			bin >> note.type;
 			note.where = read_maybe_quoted_string(bin);
-			bin >> std::skipws;
+			bin >> std::ws;
 			getline(bin, note.the_str);
 		} else if(cur == "TALKNOTE") {
 			cConvers note;
@@ -609,7 +607,7 @@ void cParty::readFrom(std::istream& file){
 					note.in_scen = read_maybe_quoted_string(sin);
 				} else if(cur == "-") break;
 			}
-			bin >> std::skipws;
+			bin >> std::ws;
 			getline(bin, note.the_str1);
 			getline(bin, note.the_str2);
 		}

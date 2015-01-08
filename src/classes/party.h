@@ -84,7 +84,7 @@ public:
 	short in_horse;
 	cOutdoors::cCreature out_c[10];
 	std::array<std::array<cItemRec,10>,5> magic_store_items;
-	short imprisoned_monst[4]; // Soul Crystal?
+	m_num_t imprisoned_monst[4]; // Soul Crystal
 	char m_noted[256]; // has the monster been scried?
 	char m_seen[256]; // has the monster ever been seen? (this used to have the above meaning)
 	std::vector<cJournal> journal;
@@ -108,11 +108,10 @@ private:
 	cPlayer adven[6];
 public:
 	unsigned short setup[4][64][64]; // formerly setup_save_type
-	cItemRec stored_items[3][115]; // formerly stored_items_list_type
+	std::array<std::array<cItemRec,115>,3> stored_items; // formerly stored_items_list_type
 	
 	//string graphicsFile; // the name of the png file holding this party's custom item, pc, and summonable monster graphics
 	std::vector<cMonster> summons; // an array of monsters which can be summoned by the party's items yet don't originate from this scenario
-	bool graphicUsed[250]; // whether each custom graphics slot on the party's sheet is actually used; needed to place new custom graphics on the sheet.
 	unsigned short scen_won, scen_played; // numbers of scenarios won and played respectively by this party
 private:
 	std::map<std::string,campaign_flag_type> campaign_flags;

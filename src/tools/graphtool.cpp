@@ -661,26 +661,91 @@ rectangle calc_rect(short i, short j){
 
 graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	short sheet = which_rect / 100;
-	if(is_old) sheet = 0;
+	if(is_old || party) sheet = 0;
 	else which_rect %= 100;
 	rectangle store_rect = {0,0,36,28};
 	
 	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
-	return std::make_pair(party ? this->party : &sheets[sheet],store_rect);
+	return std::make_pair(party ? party_sheet.get() : &sheets[sheet],store_rect);
 }
 
-size_t cCustomGraphics::count() {
-	if(sheets == NULL) return 0;
-	else if(is_old) {
-		rectangle bounds(sheets[0]);
+size_t cCustomGraphics::count(bool party) {
+	if(!party && sheets == NULL) return 0;
+	else if(party && party_sheet == NULL) return 0;
+	else if(is_old || party) {
+		rectangle bounds(party ? *party_sheet : sheets[0]);
 		if(bounds.width() < 280) return bounds.width() / 28;
-		return bounds.height() / 36;
+		return 10 * bounds.height() / 36;
 	} else {
 		size_t count = 100 * (numSheets - 1);
 		rectangle bounds(sheets[numSheets - 1]);
 		if(bounds.width() < 280) count += bounds.width() / 28;
-		else count += bounds.height() / 36;
+		else count += 10 * bounds.height() / 36;
 		return count;
+	}
+}
+
+void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlots) {
+	if(numSlots < 1) return;
+	if(!party_sheet) {
+		sf::Image empty;
+		empty.create(280, 180, sf::Color::Transparent);
+		party_sheet.reset(new sf::Texture);
+		party_sheet->create(280, 180);
+		party_sheet->update(empty);
+		numSheets = 1;
+	}
+	size_t havePics = count();
+	if(havePics < dest + numSlots) {
+		int addRows = 1;
+		while(havePics + 10 * addRows < dest + numSlots)
+			addRows++;
+		sf::RenderTexture temp;
+		temp.create(280, party_sheet->getSize().y + 36 * addRows);
+		temp.clear(sf::Color::Transparent);
+		rect_draw_some_item(*party_sheet, rectangle(*party_sheet), temp, rectangle(*party_sheet));
+		*party_sheet = temp.getTexture();
+	}
+	sf::Texture* from_sheet;
+	sf::Texture* to_sheet;
+	sf::Texture* last_src = nullptr;
+	sf::RenderTexture temp;
+	rectangle from_rect, to_rect;
+	for(size_t i = 0; i < numSlots; i++) {
+		graf_pos_ref(from_sheet, from_rect) = find_graphic(src + i);
+		graf_pos_ref(to_sheet, to_rect) = find_graphic(dest + i, true);
+		if(to_sheet != last_src) {
+			if(last_src) *last_src = temp.getTexture();
+			last_src = to_sheet;
+			temp.create(to_sheet->getSize().x, to_sheet->getSize().y);
+			rect_draw_some_item(*to_sheet, rectangle(*to_sheet), temp, rectangle(*to_sheet));
+		}
+		rect_draw_some_item(*from_sheet, from_rect, temp, to_rect);
+	}
+	*last_src = temp.getTexture();
+}
+
+void cCustomGraphics::convert_sheets() {
+	if(!is_old) return;
+	int num_graphics = count();
+	is_old = false;
+	sf::Image old_graph = sheets[0].copyToImage();
+	delete[] sheets;
+	numSheets = num_graphics / 100;
+	if(num_graphics % 100) numSheets++;
+	sheets = new sf::Texture[numSheets];
+	for(size_t i = 0; i < numSheets; i++) {
+		sf::IntRect subrect;
+		subrect.top = i * 280;
+		subrect.width = 280;
+		subrect.height = 360;
+		
+		sf::Image sheet;
+		sheet.create(280, 360);
+		sheet.copy(old_graph, 0, 0, subrect);
+		
+		sheets[i].create(280, 360);
+		sheets[i].update(sheet);
 	}
 }
 

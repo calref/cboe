@@ -10,6 +10,8 @@
 #define BOE_DATA_UNIVERSE_H
 
 #include <iosfwd>
+#include <memory>
+#include <set>
 #include <boost/filesystem/path.hpp>
 #include "party.h"
 #include "creatlist.h"
@@ -18,6 +20,7 @@
 #include "talking.h"
 #include "simpletypes.h"
 #include "scenario.h"
+#include "pictypes.hpp"
 
 namespace fs = boost::filesystem; // TODO: Centralize this namespace alias?
 
@@ -151,7 +154,18 @@ enum eAmbientSound {
 };
 
 class cUniverse{
+	template<typename T> using update_info = std::set<T*>;
+	std::map<pic_num_t, update_info<cItemRec>> update_items;
+	std::map<pic_num_t, update_info<cMonster>> update_monsters;
+	std::map<pic_num_t, update_info<cPlayer>> update_pcs;
+	std::set<pic_num_t> used_graphics;
+	pic_num_t addGraphic(pic_num_t pic, ePicType type);
+	void check_monst(cMonster& monst);
+	void check_item(cItemRec& item);
 public:
+	void exportSummons();
+	void exportGraphics();
+								   
 	cScenario scenario;
 	cParty party;
 	cCurTown town;

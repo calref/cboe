@@ -12,6 +12,7 @@
 #include <string>
 #include <map>
 #include <iosfwd>
+#include <array>
 
 #include "simpletypes.h"
 #include "item.h"
@@ -32,7 +33,7 @@ public:
 	short skill_pts;
 	short level;
 	std::map<eStatus,short> status;
-	cItemRec items[24];
+	std::array<cItemRec,24> items;
 	bool equip[24];
 	bool priest_spells[62];
 	bool mage_spells[62];

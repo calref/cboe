@@ -197,21 +197,19 @@ void draw_monsters() {
 								// TODO: Windows special-cases the bear and drake, whose graphics are split between two columns/sheets. Is this necessary?
 								// It really doesn't look necessary to me, since each quadrant of the graphic is fetched separately.
 								// Technically what they do is always pass 0 as the final argument to get_monster_template_rect, instead of passing k; they also hardcode the sheet to look on (4 for drake, 5 for bear).
-								m_num_t m_num = univ.party.out_c[i].what_monst.monst[j];
-								pic_num_t this_monst = univ.scenario.scen_monsters[m_num].picture_num;
-								source_rect = get_monster_template_rect(this_monst,(univ.party.out_c[i].direction < 4) ? 0 : 1,k);
+								source_rect = get_monster_template_rect(picture_wanted,(univ.party.out_c[i].direction < 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-								rect_draw_some_item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
+								rect_draw_some_item(monst_gworld[m_pic_index[picture_wanted].i/20], source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
 							}
 						}
 					}
 				}
 			}
-	if(is_town())
+	if(is_town() || is_combat()) {
 		for(i = 0; i < univ.town->max_monst(); i++)
 			if((univ.town.monst[i].active != 0) && (univ.town.monst[i].spec_skill != 11))
-				if(party_can_see_monst(i)) {
+				if(point_onscreen(center,univ.town.monst[i].cur_loc) && party_can_see_monst(i)) {
 					check_if_monst_seen(univ.town.monst[i].number, univ.town.monst[i].cur_loc);
 					where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
 					where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
@@ -221,80 +219,27 @@ void draw_monsters() {
 						store_loc = where_draw;
 						store_loc.x += k % width;
 						store_loc.y += k / width;
-						// customize?
-						if(univ.town.monst[i].picture_num >= 1000) {
-							sf::Texture* src_gw;
-							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic((univ.town.monst[i].picture_num % 1000) +
-																						 k + ((univ.town.monst[i].direction < 4) ? 0 : width * height)
-																						 + ((combat_posing_monster == i + 100) ? (2 * width * height) : 0));
-							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
-							// in bed?
-							if((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								univ.scenario.ter_types[ter].special == eTerSpec::BED &&
-								isHumanoid(univ.town.monst[i].m_type)
-								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
-								(width == 1) && (height == 1)) ////
-								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1.u);
-							else Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
-						}
-						if(univ.town.monst[i].picture_num < 1000) {
-							pic_num_t this_monst = univ.town.monst[i].picture_num;
-							source_rect = get_monster_template_rect(this_monst,
-																	((univ.town.monst[i].direction < 4) ? 0 : 1) + ((combat_posing_monster == i + 100) ? 10 : 0),k);
-							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
-							// in bed?
-							if((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								(univ.scenario.ter_types[ter].special == eTerSpec::BED) &&
-								isHumanoid(univ.town.monst[i].m_type)
-								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
-								(width == 1) && (height == 1)) ////
-								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1.u);
-							else Draw_Some_Item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld, store_loc, 1, 0);
-						}
-					}
-				}
-	if(is_combat()) {
-		for(i = 0; i < univ.town->max_monst(); i++)
-			if((univ.town.monst[i].active != 0) && (univ.town.monst[i].spec_skill != 11))
-				if(point_onscreen(center,univ.town.monst[i].cur_loc) && party_can_see_monst(i)) {
-					check_if_monst_seen(univ.town.monst[i].number,univ.town.monst[i].cur_loc);
-					where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
-					where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
-					get_monst_dims(univ.town.monst[i].number,&width,&height);
-					
-					for(k = 0; k < width * height; k++) {
-						store_loc = where_draw;
-						store_loc.x += k % width;
-						store_loc.y += k / width;
-						// customize?
-						if(univ.town.monst[i].picture_num >= 1000) {
+						ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
+						// in bed?
+						if(store_loc.x >= 0 && store_loc.x < 9 && store_loc.y >= 0 && store_loc.y < 9 &&
+						   (univ.scenario.ter_types[ter].special == eTerSpec::BED) && isHumanoid(univ.town.monst[i].m_type)
+						   && (univ.town.monst[i].active == 1 || univ.town.monst[i].target == 6) &&
+						   width == 1 && height == 1)
+							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1.u);
+						else if(univ.town.monst[i].picture_num >= 1000) {
+							bool isParty = univ.town.monst[i].picture_num >= 10000;
 							sf::Texture* src_gw;
 							pic_num_t need_pic = (univ.town.monst[i].picture_num % 1000) + k;
 							if(univ.town.monst[i].direction >= 4) need_pic += width * height;
 							if(combat_posing_monster == i + 100) need_pic += (2 * width * height);
 							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(need_pic);
-							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
-							if((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								univ.scenario.ter_types[ter].special == eTerSpec::BED &&
-								isHumanoid(univ.town.monst[i].m_type)
-								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
-								(width == 1) && (height == 1))
-								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1.u);
-							else Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
-						}
-						if(univ.town.monst[i].picture_num < 1000) {
+							Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
+						} else {
 							pic_num_t this_monst = univ.town.monst[i].picture_num;
 							int pic_mode = (univ.town.monst[i].direction) < 4 ? 0 : 1;
 							pic_mode += (combat_posing_monster == i + 100) ? 10 : 0;
 							source_rect = get_monster_template_rect(this_monst, pic_mode, k);
-							ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
-							if((store_loc.x >= 0) && (store_loc.x < 9) && (store_loc.y >= 0) && (store_loc.y < 9) &&
-								univ.scenario.ter_types[ter].special == eTerSpec::BED &&
-								isHumanoid(univ.town.monst[i].m_type)
-								&& ((univ.town.monst[i].active == 1) || (univ.town.monst[i].target == 6)) &&
-								(width == 1) && (height == 1))
-								draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1.u);
-							else Draw_Some_Item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld, store_loc, 1, 0);
+							Draw_Some_Item(monst_gworld[m_pic_index[this_monst].i/20], source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
 					}
 				}
@@ -315,7 +260,7 @@ void play_see_monster_str(unsigned short m, location monst_loc) {
 		short where1 = is_out() ? univ.party.outdoor_corner.x + univ.party.i_w_c.x : univ.town.num;
 		short where2 = is_out() ? univ.party.outdoor_corner.y + univ.party.i_w_c.y : univ.town.num;
 		std::string placename = is_out() ? univ.out->out_name : univ.town->town_name;
-		cStrDlog display_strings(str1 ? univ.scenario.monst_strs[str1] : "", str2 ? univ.scenario.monst_strs[str2] : "", "", pic, type, NULL);
+		cStrDlog display_strings(str1 < 100 ? univ.scenario.monst_strs[str1] : "", str2 < 100 ? univ.scenario.monst_strs[str2] : "", "", pic, type, NULL);
 		display_strings.setSound(snd);
 		display_strings.setRecordHandler(cStringRecorder(NOTE_MONST).string1(str1).string2(str2).from(where1,where2).at(placename));
 		display_strings.show();
@@ -389,10 +334,16 @@ void draw_items(location where){
 		if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where) {
 			if(univ.town.items[i].contained) continue;
 			if(party_can_see(where) >= 6) continue;
-			if(univ.town.items[i].graphic_num >= 1000){
+			if(univ.town.items[i].graphic_num >= 10000){
+				sf::Texture* src_gw;
+				graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(univ.town.items[i].graphic_num - 10000, true);
+				to_rect = coord_to_rect(where_draw.x,where_draw.y);
+				terrain_there[where_draw.x][where_draw.y] = -1;
+				rect_draw_some_item(*src_gw,from_rect,terrain_screen_gworld,to_rect,sf::BlendAlpha);
+			}else if(univ.town.items[i].graphic_num >= 1000){
 				sf::Texture* src_gw;
 				graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(univ.town.items[i].graphic_num - 1000);
-				to_rect = coord_to_rect(where.x,where.y);
+				to_rect = coord_to_rect(where_draw.x,where_draw.y);
 				terrain_there[where_draw.x][where_draw.y] = -1;
 				rect_draw_some_item(*src_gw,from_rect,terrain_screen_gworld,to_rect,sf::BlendAlpha);
 			}else{
@@ -753,14 +704,17 @@ char get_fluid_trim(location where,ter_num_t ter_type) {
 }
 
 // Sees if party has seen a monster of this sort, gives special messages as necessary
-void check_if_monst_seen(unsigned short m_num, location at) {
+void check_if_monst_seen(unsigned short m_num, location at) {\
 	// Give special messages if necessary
-	if(!univ.party.m_seen[m_num]) {
+	if(m_num < 10000 && !univ.party.m_seen[m_num]) {
 		univ.party.m_seen[m_num] = true;
 		play_see_monster_str(m_num, at);
 	}
 	// Make the monster vocalize if applicable
-	snd_num_t sound = univ.scenario.scen_monsters[m_num].ambient_sound;
+	snd_num_t sound;
+	if(m_num >= 10000)
+		sound = univ.party.summons[m_num - 10000].ambient_sound;
+	else sound = univ.scenario.scen_monsters[m_num].ambient_sound;
 	if(get_ran(1,1,100) < 10) play_sound(-sound);
 }
 

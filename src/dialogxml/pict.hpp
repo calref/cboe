@@ -44,7 +44,9 @@ public:
 	///
 	/// - If type is PIC_MONST, it automatically looks up the chosen icon to determine
 	/// whether it should apply the tall or wide modifiers.
-	/// - If num is 1000 or greater and type is not PIC_FULL, it automatically subtracts 1000 and applies the custom modifier.
+	/// - If num is 4 digits in decimal and type is not PIC_FULL, it automatically subtracts 1000 and applies the custom modifier.
+	/// (If type is PIC_TER_MAP, it does not subtract 1000.)
+	/// - If num is 10000 or greater and type is PIC_TER_MAP, it automatically subtracts 10000 and applies the party modifier.
 	void setPict(pic_num_t num, ePicType type);
 	/// Set the pict's icon.
 	/// @param num The new icon index.

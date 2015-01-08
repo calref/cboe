@@ -55,6 +55,9 @@ void leave_town() {
 }
 
 void remove_party_from_scen() {
+	univ.exportGraphics();
+	univ.exportSummons();
+	univ.party.scen_name = "";
 	store_flags[1] = 200;
 	party_in_scen = false;
 	load_base_item_defs();

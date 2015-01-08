@@ -115,9 +115,14 @@ void cPict::setPict(pic_num_t num, ePicType type){
 		if(m_pic_index[num].y == 2) picType += PIC_TALL;
 	}
 	if(picType != PIC_FULL && picNum >= 1000) {
-		if(picType != PIC_CUSTOM_TER_MAP)
-			picNum -= 1000;
-		picType += PIC_CUSTOM;
+		if(picNum >= 10000) {
+			picNum -= 10000;
+			picType += PIC_PARTY;
+		} else {
+			if(picType != PIC_CUSTOM_TER_MAP)
+				picNum -= 1000;
+			picType += PIC_CUSTOM;
+		}
 	}
 	recalcRect();
 }

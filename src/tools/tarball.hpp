@@ -52,6 +52,7 @@ public:
 	std::ostream& newFile(std::string fname);
 	void newDirectory(std::string dname);
 	std::istream& getFile(std::string fname);
+	bool hasFile(std::string fname);
 };
 
 

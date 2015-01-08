@@ -814,8 +814,10 @@ void cCurTown::writeTo(std::ostream& file) const {
 	}
 	file << '\f';
 	file << "FIELDS\n";
-	writeArray(file, fields, 64, 46);
-	file << "SIZE " << record()->max_dim() << "\n";
+	file << std::hex;
+	writeArray(file, fields, record()->max_dim(), record()->max_dim());
+	file << std::dec;
+	file << "TERRAIN\n";
 	record()->writeTerrainTo(file);
 	// TODO: Do we need to save special_spot?
 }
@@ -846,9 +848,11 @@ void cCurTown::readFrom(std::istream& file){
 		getline(file, cur, '\f');
 		bin.str(cur);
 		bin >> cur;
-		if(cur == "FIELDS")
-			readArray(bin, fields, 64, 64);
-		else if(cur == "ITEM") {
+		if(cur == "FIELDS") {
+			bin >> std::hex;
+			readArray(bin, fields, univ.scenario.towns[num]->max_dim(), univ.scenario.towns[num]->max_dim());
+			bin >> std::dec;
+		} else if(cur == "ITEM") {
 			int i;
 			bin >> i;
 			items[i].readFrom(bin);
@@ -857,11 +861,8 @@ void cCurTown::readFrom(std::istream& file){
 			bin >> i;
 			monst[i].active = true;
 			monst[i].readFrom(bin);
-		} else if(cur == "SIZE") {
-			int dim;
-			bin >> dim;
+		} else if(cur == "TERRAIN")
 			univ.scenario.towns[num]->readTerrainFrom(bin);
-		}
 		bin.clear();
 	}
 }
@@ -882,6 +883,189 @@ cOutdoors* cCurOut::operator->() {
 }
 
 cUniverse::cUniverse(long party_type) : party(*this, party_type), out(*this), town(*this) {}
+
+void cUniverse::check_monst(cMonster& monst) {
+	if(monst.picture_num >= 10000) {
+		int pic = monst.picture_num - 10000;
+		int sz = pic / 1000, base = pic % 1000;
+		int numGraph = 4;
+		if(sz > 1) numGraph *= 2;
+		if(sz == 4) numGraph *= 2;
+		for(int i = 0; i < numGraph; i++)
+			used_graphics.insert(base + i);
+	} else if(monst.picture_num >= 1000) {
+		update_monsters[monst.picture_num].insert(&monst);
+	}
+}
+
+void cUniverse::check_item(cItemRec& item) {
+	if(item.variety == eItemType::NO_ITEM) return;
+	if(item.graphic_num >= 10000)
+		used_graphics.insert(item.graphic_num - 10000);
+	else if(item.graphic_num >= 1000)
+		update_items[item.graphic_num - 1000].insert(&item);
+	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING) {
+		m_num_t monst = item.ability_strength;
+		if(monst >= 10000)
+			check_monst(party.summons[monst - 10000]);
+		else check_monst(scenario.scen_monsters[monst]);
+	}
+}
+
+extern cCustomGraphics spec_scen_g;
+
+pic_num_t cUniverse::addGraphic(pic_num_t pic, ePicType type) {
+	// Now find the first unused slot with sufficient space for the graphic we're adding
+	int needSlots = 0;
+	switch(type - PIC_PARTY) {
+		case PIC_MONST: needSlots = 4; break;
+		case PIC_MONST_WIDE: needSlots = 8; break;
+		case PIC_MONST_TALL: needSlots = 8; break;
+		case PIC_MONST_LG: needSlots = 16; break;
+		case PIC_ITEM: needSlots = 1; break;
+		case PIC_PC: needSlots = 4; break;
+		default: break;
+	}
+	pic_num_t pos = -1;
+	bool foundSpace = false;
+	while(!foundSpace) {
+		// First find an empty slot.
+		while(used_graphics.count(++pos));
+		// Then check if there's enough space.
+		foundSpace = true;
+		for(pic_num_t i = 1; i < needSlots; i++) {
+			if(used_graphics.count(pos + i)) foundSpace = false;
+		}
+	}
+	// And finally, actually transfer the graphic over
+	spec_scen_g.copy_graphic(pos, pic, needSlots);
+	// Also mark these slots used so we don't overwrite them with the next copy
+	for(pic_num_t i = 1; i < needSlots; i++) {
+		used_graphics.insert(pos + i);
+	}
+	return pos;
+}
+
+void cUniverse::exportGraphics() {
+	// First determine which graphics are used, and which need to be copied.
+	// The party sheet can contain the following types of graphics:
+	// - Monster graphics for monsters summoned by custom items or captured in the party's soul crystal
+	// - Item graphics for custom items that the party has in their possession or in their saved item rectangles
+	// - Custom PC graphics - TODO: Rendering support for custom PC graphics
+	// TODO: Missile graphics for custom items/monsters
+	// So basically, almost all the graphics are linked to items.
+	used_graphics.clear();
+	for(int i = 0; i < 6; i++) {
+		if(party[i].main_status == eMainStatus::ABSENT)
+			continue;
+		if(party[i].which_graphic >= 10000) {
+			for(int j = 0; j < 4; j++)
+				used_graphics.insert(party[i].which_graphic - 10000 + j);
+		} else if(party[i].which_graphic >= 1000)
+			update_pcs[party[i].which_graphic - 1000].insert(&party[i]);
+		for(size_t j = 0; j < party[i].items.size(); j++) {
+			check_item(party[i].items[j]);
+		}
+	}
+	for(size_t i = 0; i < party.stored_items.size(); i++) {
+		for(size_t j = 0; j < party.stored_items[i].size(); j++) {
+			check_item(party.stored_items[i][j]);
+		}
+	}
+	for(int i = 0; i < 4; i++) {
+		if(party.imprisoned_monst[i] != 0)
+			check_monst(scenario.scen_monsters[party.imprisoned_monst[i]]);
+	}
+	// And then, just add all the graphics, and update references to them
+	for(auto pic : update_pcs) {
+		pic_num_t pos = addGraphic(pic.first, PIC_PC);
+		for(auto& pc : pic.second)
+			pc->which_graphic = 10000 + pos;
+	}
+	update_pcs.clear();
+	for(auto pic : update_items) {
+		pic_num_t pos = addGraphic(pic.first, PIC_ITEM);
+		for(auto& item : pic.second)
+			item->graphic_num = 10000 + pos;
+	}
+	update_items.clear();
+	for(auto pic : update_monsters) {
+		int sz = pic.first / 1000, base = pic.first % 1000;
+		ePicType type;
+		switch(sz) {
+			case 1: type = PIC_MONST; break;
+			case 2: type = PIC_MONST_WIDE; break;
+			case 3: type = PIC_MONST_TALL; break;
+			case 4: type = PIC_MONST_LG; break;
+			default: continue;
+		}
+		pic_num_t pos = addGraphic(base, type);
+		for(auto& monst : pic.second)
+			monst->picture_num = 10000 + sz * 1000 + pos;
+	}
+	update_monsters.clear();
+}
+
+void cUniverse::exportSummons() {
+	std::set<m_num_t> used_monsters, need_monsters;
+	std::map<m_num_t, update_info<cItemRec>> update_items;
+	for(int i = 0; i < 6; i++) {
+		if(party[i].main_status == eMainStatus::ABSENT)
+			continue;
+		for(size_t j = 0; j < party[i].items.size(); j++) {
+			if(party[i].items[j].variety == eItemType::NO_ITEM) continue;
+			if(party[i].items[j].ability == eItemAbil::SUMMONING || party[i].items[j].ability == eItemAbil::MASS_SUMMONING) {
+				m_num_t monst = party[i].items[j].ability_strength;
+				if(monst >= 10000)
+					used_monsters.insert(monst - 10000);
+				else {
+					need_monsters.insert(monst);
+					update_items[monst].insert(&party[i].items[j]);
+				}
+			}
+		}
+	}
+	for(size_t i = 0; i < party.stored_items.size(); i++) {
+		for(size_t j = 0; j < party.stored_items[i].size(); j++) {
+			if(party.stored_items[i][j].variety == eItemType::NO_ITEM) continue;
+			if(party.stored_items[i][j].ability == eItemAbil::SUMMONING||party.stored_items[i][j].ability == eItemAbil::MASS_SUMMONING) {
+				m_num_t monst = party.stored_items[i][j].ability_strength;
+				if(monst >= 10000)
+					used_monsters.insert(monst - 10000);
+				else {
+					need_monsters.insert(monst);
+					update_items[monst].insert(&party.stored_items[i][j]);
+				}
+			}
+		}
+	}
+	for(int i = 0; i < 4; i++) {
+		if(party.imprisoned_monst[i] == 0) continue;
+		if(party.imprisoned_monst[i] >= 10000)
+			used_monsters.insert(party.imprisoned_monst[i] - 10000);
+		else need_monsters.insert(party.imprisoned_monst[i]);
+	}
+	// Now that we know which exported summon slots are still in use and which new monsters need to be exported,
+	// we can copy the monster records from the scenario record into the exported summon slots.
+	if(used_monsters.empty()) party.summons.clear();
+	else {
+		auto max = std::max_element(used_monsters.begin(), used_monsters.end());
+		party.summons.resize(*max + 1);
+	}
+	for(m_num_t monst : need_monsters) {
+		m_num_t dest = -1;
+		while(used_monsters.count(++dest));
+		used_monsters.insert(dest);
+		if(dest < party.summons.size())
+			party.summons[dest] = scenario.scen_monsters[monst];
+		else party.summons.push_back(scenario.scen_monsters[monst]);
+		for(auto& item : update_items[monst])
+			item->ability_strength = 10000 + dest;
+		for(int i = 0; i < 4; i++)
+			if(party.imprisoned_monst[i] == monst)
+				party.imprisoned_monst[i] = dest + 10000;
+	}
+}
 
 short cUniverse::difficulty_adjust() const {
 	short party_level = 0;

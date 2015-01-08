@@ -739,6 +739,9 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	
 	fin.close();
 	
+	univ.~cUniverse();
+	new(&univ) cUniverse();
+	
 	if(in_scen){
 		fs::path path;
 		path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
@@ -879,9 +882,19 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 					for(int k = 0; k < 48; k++)
 						univ.out_maps[i][j][k] = fin.get();
 		}
-	}
+	} else univ.party.scen_name = "";
 	
-	// TODO: Also get the party custom graphics sheet
+	if(partyIn.hasFile("save/export.png")) {
+		std::istream& fin = partyIn.getFile("save/export.png");
+		sf::Image party_sheet;
+		StdInputStream stream(fin);
+		if(party_sheet.loadFromStream(stream)) {
+			//party_sheet.flipVertically();
+			spec_scen_g.party_sheet.reset(new sf::Texture);
+			spec_scen_g.party_sheet->create(party_sheet.getSize().x, party_sheet.getSize().y);
+			spec_scen_g.party_sheet->update(party_sheet);
+		} else giveError("There was an error loading the party custom graphics.");
+	}
 	
 	return true;
 }
@@ -947,7 +960,16 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 		}
 	}
 	
-	// TODO: Add the party graphics sheet
+	if(spec_scen_g.party_sheet) {
+		sf::Image party_pics = spec_scen_g.party_sheet->copyToImage();
+		party_pics.flipVertically();
+		fs::path tempPath = tempDir/"temp.png";
+		party_pics.saveToFile(tempPath.string());
+		std::ostream& pic_out = partyOut.newFile("save/export.png");
+		std::ifstream fin(tempPath.string().c_str(), std::ios::binary);
+		pic_out << fin.rdbuf();
+		fin.close();
+	}
 	
 	// Write out the compressed data
 	fs::path tempPath = tempDir/"savetemp.exg";
@@ -979,7 +1001,7 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 
 std::string read_maybe_quoted_string(std::istream& from) {
 	std::string result;
-	from >> std::skipws;
+	from >> std::ws;
 	if(from.peek() == '"' ||  from.peek() == '\'') {
 		char delim = from.get();
 		getline(from, result, delim);

@@ -894,7 +894,11 @@ static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_
 	need_reprint = true;
 }
 
-static void handle_victory() {reload_startup();
+static void handle_victory() {
+	// This is the point at which we need to transfer any exported graphics over to the party sheet.
+	univ.exportGraphics();
+	univ.exportSummons();
+	reload_startup();
 	overall_mode = MODE_STARTUP;
 	in_scen_debug = false;
 	ghost_mode = false;
@@ -2629,6 +2633,10 @@ void start_new_game() {
 	
 	// And now, reconstruct the universe.
 	new(&univ) cUniverse(party_type);
+	
+	// Destroy party graphics
+	extern cCustomGraphics spec_scen_g;
+	spec_scen_g.party_sheet.reset();
 	
 	// Default is save maps
 	PSD[SDF_NO_MAPS] = 0;

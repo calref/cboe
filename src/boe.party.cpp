@@ -161,8 +161,6 @@ void init_party_scen_data() {
 	for(i = 0; i < 5; i++)
 		for(j = 0; j < 10; j++)
 			univ.party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
-	for(i = 0; i < 4; i++)
-		univ.party.imprisoned_monst[i] = 0;
 	for(i = 0; i < 256; i++)
 		univ.party.m_seen[i] = univ.party.m_noted[i] = 0;
 //	for(i = 0; i < 50; i++)
@@ -251,17 +249,8 @@ void put_party_in_scen(std::string scen_name) {
 	for(j = 0; j < 6; j++)
 	 	for(i = 23; i >= 0; i--) {
 			univ.party[j].items[i].special_class = 0;
-			// TODO: Don't take items just because they have a special graphic
-			if(univ.party[j].items[i].graphic_num >= 150) {
-				take_item(j,i + 30); // strip away special items
-				item_took = true;
-			}
-			if(univ.party[j].items[i].ability == eItemAbil::SUMMONING) {
-				take_item(j,i + 30); // strip away summoning items
-				item_took = true;
-			}
-			if(univ.party[j].items[i].ability == eItemAbil::MASS_SUMMONING) {
-				take_item(j,i + 30); // strip away summoning items
+			if(univ.party[j].items[i].ability == eItemAbil::CALL_SPECIAL) {
+				take_item(j,i + 30);
 				item_took = true;
 			}
 		}
@@ -2571,9 +2560,10 @@ m_num_t pick_trapped_monst() {
 			soulCrystal->getControl("pick" + n).hide();
 		}
 		else {
-			sp = get_m_name(univ.party.imprisoned_monst[i]);
+			m_num_t which = univ.party.imprisoned_monst[i];
+			sp = get_m_name(which);
 			soulCrystal->getControl("slot" + n).setText(sp);
-			get_monst = univ.scenario.scen_monsters[univ.party.imprisoned_monst[i]];
+			get_monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
 			soulCrystal->getControl("lvl" + n).setTextToNum(get_monst.level);
 		}
 	}
