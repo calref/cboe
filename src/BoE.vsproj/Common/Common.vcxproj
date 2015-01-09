@@ -164,7 +164,7 @@
       <NoEntryPoint>false</NoEntryPoint>
     </Link>
     <PostBuildEvent>
-      <Command>call $(ProjectDir)CopyFiles.bat $(SolutionDir)$(Configuration)</Command>
+      <Command>call "$(ProjectDir)CopyFiles.bat" "$(SolutionDir)" "$(Configuration)" "$(VCInstallDir)"</Command>
       <Message>Copy resource files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -188,7 +188,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>call $(ProjectDir)CopyFiles.bat $(SolutionDir)$(Configuration)</Command>
+      <Command>call "$(ProjectDir)CopyFiles.bat" "$(SolutionDir)" "$(Configuration)" "$(VCInstallDir)"</Command>
       <Message>Copy resource files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
