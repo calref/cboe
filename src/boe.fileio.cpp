@@ -66,8 +66,6 @@ cCustomGraphics spec_scen_g;
 extern bool pc_gworld_loaded;
 extern sf::Texture pc_gworld;
 
-std::ofstream flog("bladeslog.txt");
-
 void finish_load_party(){
 	bool town_restore = univ.town.num < 200;
 	bool in_scen = univ.party.scen_name.length() > 0;
