@@ -177,9 +177,11 @@ should ensure that they get caught somewhere before `main()`.
 
 Prefer C++-style casts to C-style casts.
 
-Do not use `cout`, `clog`, `cerr`, or `cin`. Do not include `<iostream>`.
-To write log messages, use `printf`. All other C++ streams are permitted
-and in fact encouraged. Do not use `sprintf` for anything.
+Do not use the C-style stream functions `printf`, `fprintf`, or `perror`
+to print diagnostic output to stdout or stderr. Use either `cout` or
+`cerr` for this purpose. Do not use `clog` or `cin`. For other uses,
+C++ streams are included. Do not use `sprintf` for anything. Do not
+even use `snprintf`.
 
 Use const whenever it makes sense. In particular, declare string
 constants as `const char*const`.
