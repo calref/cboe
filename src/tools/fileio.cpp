@@ -57,20 +57,6 @@ std::filebuf logfile;
 
 void init_directories(const char* exec_path) {
 	progDir = fs::canonical(exec_path);
-#ifdef _MSC_VER
-#ifdef DEBUG
-	void set_debug_buffers();
-	set_debug_buffers();
-#else
-	std::string logpath = (progDir.parent_path()/"bladeslog.txt").string();
-	logfile.open(logpath.c_str(), std::ios::out);
-	std::cout.rdbuf(&logfile);
-	std::cerr.rdbuf(&logfile);
-#endif
-	std::cout << "Testing cout" << std::endl;
-	std::cerr << "Testing cerr" << std::endl;
-	sf::err().rdbuf(std::cerr.rdbuf());
-#endif
 #ifdef __APPLE__
 	// Need to back up out of the application package
 	// We're pointing at .app/Contents/MacOS/exec_name, so back out three steps
@@ -78,7 +64,6 @@ void init_directories(const char* exec_path) {
 #endif
 	progDir = progDir.parent_path();
 	if(progDir.filename() == "Scenario Editor") progDir = progDir.parent_path();
-	std::cout << progDir << std::endl;
 	// Initialize the resource manager paths
 	ResMgr::pushPath<ImageRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac");
 	ResMgr::pushPath<CursorRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac"/"cursors");
@@ -100,6 +85,23 @@ void init_directories(const char* exec_path) {
 #endif // __APPLE__
 #endif // _Win32||_Win64
 	tempDir /= "Temporary Files";
+
+	// Depending on the build environment, we may need to redirect stdout and stderr.
+#ifdef _MSC_VER
+#ifdef DEBUG
+	void set_debug_buffers();
+	set_debug_buffers();
+#else
+	std::string logpath = (tempDir.parent_path()/"bladeslog.txt").string();
+	logfile.open(logpath.c_str(), std::ios::out);
+	std::cout.rdbuf(&logfile);
+	std::cerr.rdbuf(&logfile);
+#endif
+	std::cout << "Testing cout" << std::endl;
+	std::cerr << "Testing cerr" << std::endl;
+	sf::err().rdbuf(std::cerr.rdbuf());
+#endif
+	std::cout << progDir << std::endl;
 }
 
 void check_for_intel() {
