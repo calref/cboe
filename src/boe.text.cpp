@@ -1245,7 +1245,7 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 	bool is_dup;
 	if(last == new_last) {
 		size_t i, num_pos = 0;
-		enum {begin, f_space, f_lparen, f_x, f_num, f_rparen} state = begin;
+		enum {begin, f_space, f_lparen, f_x, f_num, f_rparen, err} state = begin;
 		for(i = last; i < 50 && text_buffer[prev_pointer].line[i]; i++) {
 			if(state == f_x) num_pos = i;
 			if(isdigit(text_buffer[prev_pointer].line[i]) && (state == f_x || state == f_num))
@@ -1266,6 +1266,10 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 				case ')':
 					if(state == f_num)
 						state = f_rparen;
+					break;
+				default:
+					if(i > last)
+						state = err;
 					break;
 			}
 			if(state == f_rparen) break;
