@@ -84,7 +84,7 @@ void init_specials_parse() {
 		eSpecCat category = getNodeCategory(check);
 		if(category == eSpecCat::INVALID) continue;
 		if((*check).opcode().empty())
-			printf("Warning: Missing opcode definition for special node type with ID %d\n", i);
+			std::cout << "Warning: Missing opcode definition for special node type with ID " << i << std::endl;
 		else opcode.add((*check).opcode(), check);
 	}
 }

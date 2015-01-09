@@ -1,6 +1,7 @@
 
 #include "boe.menus.h"
 #include <map>
+#include <sstream>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Resource.h"
 #include "universe.h"
@@ -160,7 +161,6 @@ void adjust_spell_menus() {
 	if(menuHandle == NULL) return;
 	short i, j, spell_pos = 0;
 	HMENU spell_menu;
-	char spell_name[256];
 	short old_on_spell_menu[2][62];
 	bool need_menu_change = false;
 
@@ -191,11 +191,10 @@ void adjust_spell_menus() {
 		for(i = 0; i < 62; i++)
 			if(on_spell_menu[0][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[0][i]);
-				std::string name = (*spell).name();
-				if((*spell).cost >= 0)
-					sprintf(spell_name, " L%d - %s, C %d", (*spell).level, name.c_str(), (*spell).cost);
-				else sprintf(spell_name, " L%d - %s, C ?", (*spell).level, name.c_str());
-				AppendMenuA(spell_menu, MF_STRING | MF_ENABLED, 2000 + int(spell), spell_name);
+				std::ostringstream sout;
+				sout << " L" << (*spell).level << " - " << (*spell).name() << ", C ";
+				if((*spell).cost >= 0) sout << (*spell).cost; else sout << '?';
+				AppendMenuA(spell_menu, MF_STRING | MF_ENABLED, 2000 + int(spell), sout.str().c_str());
 			}
 	}
 
@@ -222,11 +221,10 @@ void adjust_spell_menus() {
 		for(i = 0; i < 62; i++)
 			if(on_spell_menu[1][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
-				std::string name = (*spell).name();
-				if((*spell).cost >= 0)
-					sprintf(spell_name, " L%d - %s, C %d", (*spell).level, name.c_str(), (*spell).cost);
-				else sprintf(spell_name, " L%d - %s, C ?", (*spell).level, name.c_str());
-				AppendMenuA(spell_menu, MF_STRING | MF_ENABLED, 2000 + int(spell), spell_name);
+				std::ostringstream sout;
+				sout << " L" << (*spell).level << " - " << (*spell).name() << ", C ";
+				if((*spell).cost >= 0) sout << (*spell).cost; else sout << '?';
+				AppendMenuA(spell_menu, MF_STRING | MF_ENABLED, 2000 + int(spell), sout.str().c_str());
 			}
 	}
 

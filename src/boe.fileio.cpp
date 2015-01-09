@@ -44,7 +44,7 @@ cScenarioList scen_headers;
 extern bool mac_is_intel;
 
 bool loaded_yet = false, got_nagged = false,ae_loading = false;
-char last_load_file[63] = "Blades of Exile Save";
+std::string last_load_file = "Blades of Exile Save";
 fs::path file_to_load;
 fs::path store_file_reply;
 short jl;
@@ -147,8 +147,7 @@ void finish_load_party(){
 	current_pc = first_active_pc();
 	loaded_yet = true;
 	
-	// TODO: Why is this still a C-string?
-	strcpy (last_load_file, file_to_load.filename().string().c_str());
+	last_load_file = file_to_load.filename().string();
 	store_file_reply = file_to_load;
 	
 	add_string_to_buf("Load: Game loaded.            ");
@@ -469,7 +468,7 @@ void start_data_dump() {
 void build_scen_headers() {
 	fs::path scenDir = progDir;
 	scenDir /= "Blades of Exile Scenarios";
-	printf("%s\n%s\n",progDir.c_str(),scenDir.c_str());
+	std::cout << progDir << '\n' << scenDir << std::endl;
 	scen_headers.clear();
 	fs::path folderRef(scenDir); // TODO: This variable is unnecessary
 	fs::directory_iterator iter(folderRef);

@@ -576,13 +576,13 @@ void handle_talk_event(location p) {
 		case TALK_ASK: // ask about
 			save_talk_str1 = get_text_response("Ask about what?", 8);
 			strncpy(asked, save_talk_str1.c_str(), 4);
-			if(strncmp(asked, "name", 4) == 0) goto SPECIAL_NAME;
-			if(strncmp(asked, "look", 4) == 0) goto SPECIAL_LOOK;
-			if(strncmp(asked, "job", 3) == 0)  goto SPECIAL_JOB;
-			if(strncmp(asked, "work", 4) == 0) goto SPECIAL_JOB;
-			if(strncmp(asked, "bye", 3) == 0)  goto SPECIAL_DONE;
-			if(strncmp(asked, "buy", 3) == 0)  goto SPECIAL_BUY;
-			if(strncmp(asked, "sell", 4) == 0) goto SPECIAL_SELL;
+			if(strnicmp(asked, "name", 4) == 0) goto SPECIAL_NAME;
+			if(strnicmp(asked, "look", 4) == 0) goto SPECIAL_LOOK;
+			if(strnicmp(asked, "job", 3) == 0)  goto SPECIAL_JOB;
+			if(strnicmp(asked, "work", 4) == 0) goto SPECIAL_JOB;
+			if(strnicmp(asked, "bye", 3) == 0)  goto SPECIAL_DONE;
+			if(strnicmp(asked, "buy", 3) == 0)  goto SPECIAL_BUY;
+			if(strnicmp(asked, "sell", 4) == 0) goto SPECIAL_SELL;
 			which_talk_entry = scan_for_response(asked);
 			if(which_talk_entry == -1) goto SPECIAL_DUNNO;
 			break;

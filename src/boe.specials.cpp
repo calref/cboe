@@ -162,7 +162,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		default:
 			// No movement happened, so just return false.
 			// TODO: Should there be an error message here?
-			printf("Note: Improper mode passed to check_special_terrain: %d\n", (int)mode);
+			std::cout << "Note: Improper mode passed to check_special_terrain: " << int(mode) << std::endl;
 			return false;
 	}
 	ter_special = univ.scenario.ter_types[ter].special;
@@ -489,7 +489,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 	short r1,i;
 	
 	if(mode != eSpecCtx::COMBAT_MOVE && mode != eSpecCtx::TOWN_MOVE && mode != eSpecCtx::OUT_MOVE) {
-		printf("Note: Improper mode passed to check_fields: %d\n", (int)mode);
+		std::cout << "Note: Improper mode passed to check_special_terrain: " << int(mode) << std::endl;
 		return;
 	}
 	if(is_out())
@@ -604,7 +604,6 @@ void use_item(short pc,short item) {
 	short level,i,j,item_use_code,str,type,r1;
 	short sp[3] = {}; // Dummy values to pass to run_special; not actually used
 	eStatus which_stat;
-	char to_draw[60];
 	location user_loc;
 	cCreature *which_m;
 	extern effect_pat_type single;
@@ -654,10 +653,11 @@ void use_item(short pc,short item) {
 		}
 	}
 	if(take_charge) {
+		std::string name;
 		if(!univ.party[pc].items[item].ident)
-			sprintf((char *) to_draw, "Use: %s",univ.party[pc].items[item].name.c_str());
-		else sprintf((char *) to_draw, "Use: %s",univ.party[pc].items[item].full_name.c_str());
-		add_string_to_buf((char *) to_draw);
+			name = univ.party[pc].items[item].name.c_str();
+		else name = univ.party[pc].items[item].full_name.c_str();
+		add_string_to_buf("Use: " + name);
 		
 		if(univ.party[pc].items[item].variety == eItemType::POTION)
 			play_sound(56);

@@ -93,7 +93,6 @@ extern location golem_m_locs[16];
 extern cUniverse univ;
 //extern piles_of_stuff_dumping_type *data_store;
 extern sf::Texture pc_gworld;
-char c_line[60];
 
 // Variables for spell selection
 short on_which_spell_page = 0;
@@ -432,10 +431,9 @@ void curse_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[eStatus::BLESS_CURSE] = minmax(-8,8,univ.party[which_pc].status[eStatus::BLESS_CURSE] - how_much);
 		if(how_much < 0)
-			sprintf(c_line, "  %s blessed.", univ.party[which_pc].name.c_str());
+			add_string_to_buf("  " + univ.party[which_pc].name + " blessed.");
 		else if(how_much > 0)
-			sprintf(c_line, "  %s cursed.", univ.party[which_pc].name.c_str());
-		if(how_much != 0) add_string_to_buf(c_line);
+			add_string_to_buf("  " + univ.party[which_pc].name + " cursed.");
 	}
 	put_pc_screen();
 	if(how_much > 0)
@@ -457,20 +455,19 @@ void dumbfound_pc(short which_pc,short how_much) {
 	if(r1 < univ.party[which_pc].level)
 		how_much -= 2;
 	if(how_much <= 0) {
-		sprintf ((char *) c_line, "  %s saved.",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+		add_string_to_buf("  " + univ.party[which_pc].name + " saved.");
 		return;
 	}
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[eStatus::DUMB] = min(univ.party[which_pc].status[eStatus::DUMB] + how_much,8);
-		sprintf ((char *) c_line, "  %s dumbfounded.",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+		add_string_to_buf("  " + univ.party[which_pc].name + " dumbfounded.");
 	}
 	one_sound(67);
 	put_pc_screen();
 	adjust_spell_menus();
 	give_help(28,0);
 }
+
 void disease_pc(short which_pc,short how_much) {
 	short r1,level;
 	
@@ -480,8 +477,7 @@ void disease_pc(short which_pc,short how_much) {
 	if(r1 < univ.party[which_pc].level * 2)
 		how_much -= 2;
 	if(how_much <= 0) {
-		sprintf ((char *) c_line, "  %s saved.",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+		add_string_to_buf("  " + univ.party[which_pc].name + " saved.");
 		return;
 	}
 	if((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_DISEASE)) > 0)
@@ -492,8 +488,7 @@ void disease_pc(short which_pc,short how_much) {
 		how_much++;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[eStatus::DISEASE] = min(univ.party[which_pc].status[eStatus::DISEASE] + how_much,8);
-		sprintf ((char *) c_line, "  %s diseased.",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+		add_string_to_buf("  " + univ.party[which_pc].name + " diseased.");
 	}
 	one_sound(66);
 	put_pc_screen();
@@ -523,19 +518,17 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust) {
 	if(what_type == eStatus::ASLEEP && (univ.party[which_pc].traits[eTrait::HIGHLY_ALERT] || univ.party[which_pc].status[eStatus::ASLEEP] < 0))
 		how_much = -1;
 	if(how_much <= 0) {
-		sprintf ((char *) c_line, "  %s resisted.",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+		add_string_to_buf("  " + univ.party[which_pc].name + " resisted.");
 		return;
 	}
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[what_type] = how_much;
 		if(what_type == eStatus::ASLEEP)
-			sprintf ((char *) c_line, "  %s falls asleep.",(char *) univ.party[which_pc].name.c_str());
-		else sprintf ((char *) c_line, "  %s paralyzed.",(char *) univ.party[which_pc].name.c_str());
+			add_string_to_buf("  " + univ.party[which_pc].name + " falls asleep.");
+		else add_string_to_buf("  " + univ.party[which_pc].name + " paralyzed.");
 		if(what_type == eStatus::ASLEEP)
 			play_sound(96);
 		else play_sound(90);
-		add_string_to_buf((char *) c_line);
 		univ.party[which_pc].ap = 0;
 	}
 	put_pc_screen();
@@ -553,10 +546,9 @@ void slow_pc(short which_pc,short how_much) {
 		
 		univ.party[which_pc].status[eStatus::HASTE_SLOW] = minmax(-8,8,univ.party[which_pc].status[eStatus::HASTE_SLOW] - how_much);
 		if(how_much < 0)
-			sprintf (c_line, "  %s hasted.", univ.party[which_pc].name.c_str());
+			add_string_to_buf("  " + univ.party[which_pc].name + " hasted.");
 		else if(how_much > 0)
-			sprintf(c_line, "  %s slowed.", univ.party[which_pc].name.c_str());
-		if(how_much != 0) add_string_to_buf(c_line);
+			add_string_to_buf("  " + univ.party[which_pc].name + " slowed.");
 	}
 	put_pc_screen();
 	give_help(35,0);
@@ -567,8 +559,7 @@ void web_pc(short which_pc,short how_much) {
 		return;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[eStatus::WEBS] = min(univ.party[which_pc].status[eStatus::WEBS] + how_much,8);
-		sprintf ((char *) c_line, "  %s webbed.",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+		add_string_to_buf("  " + univ.party[which_pc].name + " webbed.");
 		one_sound(17);
 	}
 	put_pc_screen();
@@ -579,14 +570,12 @@ void acid_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(pc_has_abil_equip(which_pc,eItemAbil::ACID_PROTECTION) < 24) {
-		sprintf ((char *) c_line, "  %s resists acid.",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+		add_string_to_buf("  " + univ.party[which_pc].name + " resists acid.");
 		return;
 	}
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].status[eStatus::ACID] += how_much;
-		sprintf ((char *) c_line, "  %s covered with acid!",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+		add_string_to_buf("  " + univ.party[which_pc].name + " covered with acid!");
 		one_sound(42);
 	}
 	put_pc_screen();
@@ -695,8 +684,8 @@ void award_xp(short pc_num,short amt) {
 	while(univ.party[pc_num].experience >= (univ.party[pc_num].level * (univ.party[pc_num].get_tnl()))) {
 		play_sound(7);
 		univ.party[pc_num].level++;
-		sprintf ((char *) c_line, "  %s is level %d!  ",(char *) univ.party[pc_num].name.c_str(),univ.party[pc_num].level);
-		add_string_to_buf((char *) c_line);
+		std::string level = std::to_string(univ.party[pc_num].level);
+		add_string_to_buf("  " + univ.party[pc_num].name + " is level " + level + "!");
 		univ.party[pc_num].skill_pts += (univ.party[pc_num].level < 20) ? 5 : 4;
 		add_hp = (univ.party[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[univ.party[pc_num].skills[eSkill::STRENGTH]]
 			: max (skill_bonus[univ.party[pc_num].skills[eSkill::STRENGTH]],0);
@@ -716,8 +705,7 @@ void award_xp(short pc_num,short amt) {
 void drain_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
 		univ.party[which_pc].experience = max(univ.party[which_pc].experience - how_much,0);
-		sprintf ((char *) c_line, "  %s drained.",(char *) univ.party[which_pc].name.c_str());
-		add_string_to_buf((char *) c_line);
+		add_string_to_buf("  " + univ.party[which_pc].name + " drained.");
 	}
 }
 
@@ -896,12 +884,13 @@ void give_party_spell(short which) {
 		return;}
 	
 	// TODO: This seems like the wrong sounds
+	// TODO: The order of checking seems wrong here; why check for alive after checking for the spell?
 	if(which < 100)
 		for(i = 0; i < 6; i++)
 			if(!univ.party[i].mage_spells[which]) {
 				univ.party[i].mage_spells[which] = true;
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
-					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
+					add_string_to_buf(univ.party[i].name + " learns spell.");
 				give_help(41,0);
 				if(!sound_done) {
 					sound_done = true;
@@ -913,7 +902,7 @@ void give_party_spell(short which) {
 			if(!univ.party[i].priest_spells[which - 100]) {
 				univ.party[i].priest_spells[which - 100] = true;
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
-					sprintf((char *) str,"%s learns spell.",univ.party[i].name.c_str());
+					add_string_to_buf(univ.party[i].name + " learns spell.");
 				give_help(41,0);
 				if(!sound_done) {
 					sound_done = true;
@@ -1079,13 +1068,12 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 					if(univ.party[i].main_status == eMainStatus::ALIVE) {
 						univ.party[i].status[eStatus::MAGIC_RESISTANCE] += 4 + univ.party[pc_num].level / 3 + stat_adj(pc_num,eSkill::INTELLIGENCE);
 					}
-				sprintf ((char *) c_line, "  Party protected.                         ");
+				add_string_to_buf("  Party protected.");
 			}
 			if(spell_num == eSpell::RESIST_MAGIC && target < 6) {
 				univ.party[target].status[eStatus::MAGIC_RESISTANCE] += 2 + stat_adj(pc_num,eSkill::INTELLIGENCE) + get_ran(2,1,2);
-				sprintf ((char *) c_line, "  %s protected.",univ.party[target].name.c_str());
+				add_string_to_buf("  " + univ.party[target].name + " protected.");
 			}
-			add_string_to_buf((char *) c_line);
 			break;
 	}
 }
@@ -1104,6 +1092,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 	play_sound(24);
 	current_spell_range = 8;
 	store_priest = spell_num;
+	std::ostringstream loc_str;
 	
 	switch(spell_num) {
 		case eSpell::LOCATION:
@@ -1111,17 +1100,16 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			
 			if(is_town()) {
 				loc = (overall_mode == MODE_OUTDOORS) ? univ.party.p_loc : univ.town.p_loc;
-				sprintf ((char *) c_line, "  You're at: x %d  y %d.",
-						 (short) loc.x, (short) loc.y);
+				loc_str <<  "  You're at: x " << loc.x << "  y " << loc.y << '.';
 			}
 			if(is_out()) {
 				loc = (overall_mode == MODE_OUTDOORS) ? univ.party.p_loc : univ.town.p_loc;
 				x = loc.x; y = loc.y;
 				x += 48 * univ.party.outdoor_corner.x; y += 48 * univ.party.outdoor_corner.y;
-				sprintf ((char *) c_line, "  You're outside at: x %d  y %d.",x,y);
+				loc_str << "  You're outside at: x " << x << "  y " << y << '.';
 				
 			}
-			add_string_to_buf((char *) c_line);
+			add_string_to_buf(loc_str.str());
 			break;
 			
 		case eSpell::MANNA_MINOR: case eSpell::MANNA:
@@ -1130,8 +1118,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			r1 = max(0,store);
 			if(spell_num == eSpell::MANNA_MINOR)
 				r1 = r1 / 3;
-			sprintf ((char *) c_line, "  You gain %d food.   ",r1);
-			add_string_to_buf((char *) c_line);
+			add_string_to_buf("  You gain " + std::to_string(r1) + " food.   ");
 			give_food(r1,true);
 			break;
 			
@@ -1247,68 +1234,61 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			target = store_spell_target;
 			if(target < 6) {
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
+				std::ostringstream sout;
+				sout << "  " << univ.party[target].name;
 				switch(spell_num) {
 					case eSpell::HEAL_MINOR: case eSpell::HEAL: case eSpell::HEAL_MAJOR:
 						if(spell_num == eSpell::HEAL_MINOR)
 							r1 = get_ran(2, 1, 4);
 						else r1 = get_ran(2 + (spell_num == eSpell::HEAL ? 6 : 12), 1, 4);
-						sprintf ((char *) c_line, "  %s healed %d.   ",
-								 (char *) univ.party[target].name.c_str(),r1);
+						sout << " healed " << r1 << '.';
 						heal_pc(target,r1);
 						one_sound(52);
 						break;
 						
 					case eSpell::POISON_WEAKEN: case eSpell::POISON_CURE:
-						sprintf ((char *) c_line, "  %s cured.    "
-								 ,(char *) univ.party[target].name.c_str());
+						sout << " cured.";
 						r1 = ((spell_num == eSpell::POISON_WEAKEN) ? 1 : 3) + get_ran(1,0,2) + stat_adj(pc_num,eSkill::INTELLIGENCE) / 2;
 						cure_pc(target,r1);
 						break;
 						
 					case eSpell::AWAKEN:
 						if(univ.party[target].status[eStatus::ASLEEP] <= 0) {
-							sprintf ((char *) c_line, "  %s is already awake!    "
-									 ,(char *) univ.party[target].name.c_str());
+							sout << " is already awake!";
 							break;
 						}
-						sprintf ((char *) c_line, "  %s wakes up.    "
-								 ,(char *) univ.party[target].name.c_str());
+						sout << " wakes up.";
 						univ.party[target].status[eStatus::ASLEEP] = 0;
 						break;
 					case eSpell::PARALYSIS_CURE:
 						if(univ.party[target].status[eStatus::PARALYZED] <= 0) {
-							sprintf ((char *) c_line, "  %s isn't paralyzed!    "
-									 ,(char *) univ.party[target].name.c_str());
+							sout << " isn't paralyzed!";
 							break;
 						}
-						sprintf ((char *) c_line, "  %s can move now.    "
-								 ,(char *) univ.party[target].name.c_str());
+						sout << " can move now.";
 						univ.party[target].status[eStatus::PARALYZED] = 0;
 						break;
 						
 					case eSpell::DISEASE_CURE:
-						sprintf ((char *) c_line, "  %s recovers.      "
-								 ,(char *) univ.party[target].name.c_str());
+						sout << " recovers.";
 						r1 = 2 + get_ran(1,0,2) + stat_adj(pc_num,eSkill::INTELLIGENCE) / 2;
 						univ.party[target].status[eStatus::DISEASE] = max(0,univ.party[target].status[eStatus::DISEASE] - r1);
 						break;
 						
 					case eSpell::RESTORE_MIND:
-						sprintf ((char *) c_line, "  %s restored.      "
-								 ,(char *) univ.party[target].name.c_str());
+						sout << " restored.";
 						r1 = 1 + get_ran(1,0,2) + stat_adj(pc_num,eSkill::INTELLIGENCE) / 2;
 						univ.party[target].status[eStatus::DUMB] = max(0,univ.party[target].status[eStatus::DUMB] - r1);
 						break;
 						
 					case eSpell::CLEANSE:
-						sprintf ((char *) c_line, "  %s cleansed.      "
-								 ,(char *) univ.party[target].name.c_str());
+						sout << " cleansed.";
 						univ.party[target].status[eStatus::DISEASE] = 0;
 						univ.party[target].status[eStatus::WEBS] = 0;
 						break;
 				}
+				add_string_to_buf(sout.str());
 			}
-			add_string_to_buf((char *) c_line);
 			put_pc_screen();
 			break;
 			
@@ -1323,14 +1303,14 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 				}
 				
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
+				std::ostringstream sout;
+				sout << "  " << univ.party[target].name;
 				if(spell_num == eSpell::MARTYRS_SHIELD) {
-					sprintf ((char *) c_line, "  %s shielded.         ",
-							 (char *) univ.party[target].name.c_str());
+					sout << " shielded.";
 					r1 = max(1,get_ran((univ.party[pc_num].level + 5) / 5,1,3) + adj);
 					univ.party[target].status[eStatus::MARTYRS_SHIELD] += r1;
 				} else if(spell_num == eSpell::SANCTUARY) {
-					sprintf ((char *) c_line, "  %s hidden.         ",
-							 (char *) univ.party[target].name.c_str());
+					sout << " hidden.";
 					r1 = max(0,get_ran(0,1,3) + univ.party[pc_num].level / 4 + adj);
 					univ.party[target].status[eStatus::INVISIBLE] += r1;
 				} else if(spell_num == eSpell::SYMBIOSIS) {
@@ -1347,25 +1327,22 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 						targ_damaged = univ.party[target].max_health - univ.party[target].cur_health;
 					}
 					add_string_to_buf("  You absorb damage.");
-					sprintf ((char *) c_line, "  %s healed %d.         ", (char *) univ.party[target].name.c_str(),
-							 univ.party[target].cur_health - store_victim_health);
-					add_string_to_buf ((char *) c_line);
-					sprintf ((char *) c_line, "  %s takes %d.         ", (char *) univ.party[pc_num].name.c_str(),
-							 store_caster_health - univ.party[pc_num].cur_health);
+					sout << " healed " << univ.party[target].cur_health - store_victim_health << '.';
+					add_string_to_buf(sout.str());
+					sout.str("");
+					sout << " takes " << store_caster_health - univ.party[pc_num].cur_health << '.';
 				} else if(spell_num == eSpell::REVIVE) {
-					sprintf ((char *) c_line, "  %s healed.         ",
-							 (char *) univ.party[target].name.c_str());
+					sout << " healed.";
 					heal_pc(target,250);
 					univ.party[target].status[eStatus::POISON] = 0;
 					one_sound(-53); one_sound(52);
 				} else if(spell_num == eSpell::DESTONE) {
 					if(univ.party[target].main_status == eMainStatus::STONE) {
 						univ.party[target].main_status = eMainStatus::ALIVE;
-						sprintf ((char *) c_line, "  %s destoned.                                  ",
-								 (char *) univ.party[target].name.c_str());
+						sout << " destoned.";
 						play_sound(53);
 					}
-					else sprintf ((char *) c_line,"  Wasn't stoned.              ");
+					else sout << " wasn't stoned.";
 				} else if(spell_num == eSpell::CURSE_REMOVE) {
 					for(i = 0; i < 24; i++)
 						if(univ.party[target].items[i].cursed){
@@ -1375,12 +1352,12 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 							}
 						}
 					play_sound(52);
-					sprintf ((char *) c_line,"  Your items glow.     ");
+					sout.str("  Your items glow.");
 				} else {
 					
 					if(!PSD[SDF_RESURRECT_NO_BALM]) {
 						if((item = pc_has_abil(pc_num,eItemAbil::RESSURECTION_BALM)) == 24) {
-							add_string_to_buf("  Need resurrection balm.        ");
+							add_string_to_buf("  Need resurrection balm.");
 							break;
 						}
 						else take_item(pc_num,item);
@@ -1388,8 +1365,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 					if(spell_num == eSpell::RAISE_DEAD) {
 						if(univ.party[target].main_status == eMainStatus::DEAD)
 							if(get_ran(1,1,univ.party[pc_num].level / 2) == 1) {
-								sprintf ((char *) c_line, "  %s now dust.                          ",
-										 (char *) univ.party[target].name.c_str());
+								sout << " now dust.";
 								play_sound(5);
 								univ.party[target].main_status = eMainStatus::DUST;
 							}
@@ -1401,12 +1377,12 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 										univ.party[target].skills[skill] -= (univ.party[target].skills[skill] > 1) ? 1 : 0;
 									}
 								univ.party[target].cur_health = 1;
-								sprintf ((char *) c_line, "  %s raised.                          ",
-										 (char *) univ.party[target].name.c_str());
+								sout << " raised.";
 								play_sound(52);
 							}
-							else sprintf ((char *) c_line,"  Didn't work.              ");
-						
+						else if(univ.party[target].main_status != eMainStatus::ALIVE)
+							sout.str("  Didn't work.");
+						else sout << " was OK.";
 					} else if(spell_num == eSpell::RESURRECT) {
 						if(univ.party[target].main_status != eMainStatus::ALIVE) {
 							univ.party[target].main_status = eMainStatus::ALIVE;
@@ -1416,14 +1392,13 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 									univ.party[target].skills[skill] -= (univ.party[target].skills[skill] > 1) ? 1 : 0;
 								}
 							univ.party[target].cur_health = 1;
-							sprintf ((char *) c_line, "  %s raised.                          ",
-									 (char *) univ.party[target].name.c_str());
+							sout << " raised.";
 							play_sound(52);
 						}
-						else sprintf ((char *) c_line,"  Was OK.              ");
+						else sout << " was OK.";
 					}
 				}
-				add_string_to_buf((char *) c_line);
+				add_string_to_buf(sout.str());
 				put_pc_screen();
 			}
 			break;
@@ -1432,14 +1407,12 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			if(spell_num != eSpell::REVIVE_ALL) {
 				r1 = get_ran((spell_num == eSpell::HEAL_ALL ? 6 : 3) + adj, 1, 4);
-				sprintf ((char *) c_line, "  Party healed %d.       ", r1);
-				add_string_to_buf((char *) c_line);
+				add_string_to_buf("  Party healed " + std::to_string(r1) + ".");
 				heal_party(r1);
 				play_sound(52);
 			} else {
 				r1 = get_ran(7 + adj, 1, 4);
-				sprintf ((char *) c_line, "  Party revived.     ");
-				add_string_to_buf((char *) c_line);
+				add_string_to_buf("  Party revived.");
 				r1 = r1 * 2;
 				heal_party(r1);
 				play_sound(-53);
@@ -1450,8 +1423,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			
 		case eSpell::POISON_CURE_ALL:
 			univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			sprintf ((char *) c_line, "  Party cured.  ");
-			add_string_to_buf((char *) c_line);
+			add_string_to_buf("  Party cured.");
 			cure_party(3 + stat_adj(pc_num,eSkill::INTELLIGENCE));
 			break;
 			
@@ -1667,6 +1639,7 @@ void do_mindduel(short pc_num,cCreature *monst) {
 		make_town_hostile();
 	monst->attitude = 1;
 	
+	std::ostringstream sout;
 	add_string_to_buf("Mindduel!");
 	while(univ.party[pc_num].main_status == eMainStatus::ALIVE && monst->active > 0 && i < 10) {
 		play_sound(1);
@@ -1675,17 +1648,19 @@ void do_mindduel(short pc_num,cCreature *monst) {
 		r1 += 5 * balance;
 		r2 = get_ran(1,1,6);
 		if(r1 < 30) {
-			sprintf((char *)c_line, "  %s is drained %d.",univ.party[pc_num].name.c_str(),r2);
-			add_string_to_buf((char *) c_line);
+			sout << "  " << univ.party[pc_num].name << " is drained " << r2 << '.';
+			add_string_to_buf(sout.str());
 			monst->mp += r2;
 			balance++;
 			if(univ.party[pc_num].cur_sp == 0) {
 				univ.party[pc_num].status[eStatus::DUMB] += 2;
-				sprintf((char *) c_line,"  %s is dumbfounded.",univ.party[pc_num].name.c_str());
-				add_string_to_buf((char *) c_line);
+				sout.str("");
+				sout << "  " << univ.party[pc_num].name << " is dumbfounded.";
+				add_string_to_buf(sout.str());
 				if(univ.party[pc_num].status[eStatus::DUMB] > 7) {
-					sprintf((char *) c_line,"  %s is killed!",univ.party[pc_num].name.c_str());
-					add_string_to_buf((char *) c_line);
+					sout.str("");
+					sout << "  " << univ.party[pc_num].name << " is killed!";
+					add_string_to_buf(sout.str());
 					kill_pc(pc_num,eMainStatus::DEAD);
 				}
 				
@@ -1695,8 +1670,8 @@ void do_mindduel(short pc_num,cCreature *monst) {
 			}
 		}
 		if(r1 > 70) {
-			sprintf((char *)c_line, "  %s drains %d.",univ.party[pc_num].name.c_str(),r2);
-			add_string_to_buf((char *) c_line);
+			sout << "  " << univ.party[pc_num].name << " drains " << r2 << '.';
+			add_string_to_buf(sout.str());
 			univ.party[pc_num].cur_sp += r2;
 			balance--;
 			if(monst->mp == 0) {
@@ -2000,7 +1975,7 @@ static void put_spell_led_buttons(cDialog& me, const eSkill store_situation,cons
 static void put_spell_list(cDialog& me, const eSkill store_situation) {
 	
 	short i;
-	char add_text[256];
+	std::ostringstream name;
 	
 	if(on_which_spell_page == 0) {
 		me["col1"].setText("Level 1:");
@@ -2009,14 +1984,13 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col4"].setText("Level 4:");
 		for(i = 0; i < 38; i++) {
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-			std::string name = get_str("magic-names", i + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
+			name << get_str("magic-names", i + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
+			name << " (";
 			if((*cSpell::fromNum(store_situation,i)).cost < 0) { // Simulacrum, which has a variable cost
-				sprintf((char *) add_text,"%s (?)", name.c_str());
-			} else sprintf((char *) add_text,"%s (%d)", name.c_str(), (*cSpell::fromNum(store_situation,i)).cost);
-			//for(j = 0; j < 30; i++)
-			//	if(add_text[j] == '&')
-			//		add_text[j] = (char) ((97 + i > 122) ? 65 + (i - 26) : 97 + i);
-			me[id].setText(add_text);
+				name << '?';
+			} else name << (*cSpell::fromNum(store_situation,i)).cost;
+			name << ")";
+			me[id].setText(name.str());
 			if(spell_index[i] == 90)
 				me[id].show();
 		}
@@ -2028,10 +2002,14 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col4"].setText("");
 		for(i = 0; i < 38; i++) {
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-			std::string name = get_str("magic-names", spell_index[i] + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
 			if(spell_index[i] < 90) {
-				sprintf(add_text, "%s (%d)", name.c_str(), (*cSpell::fromNum(store_situation,i)).cost);
-				me[id].setText(add_text);
+				name << get_str("magic-names", spell_index[i] + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
+				name << " (";
+				if((*cSpell::fromNum(store_situation,i)).cost < 0) {
+					name << '?';
+				} else name << (*cSpell::fromNum(store_situation,i)).cost;
+				name << ")";
+				me[id].setText(name.str());
 			}
 			else me[id].hide();
 		}
@@ -2309,8 +2287,7 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 void print_spell_cast(eSpell spell,eSkill which) {
 	short spell_num = (which == eSkill::PRIEST_SPELLS ? int(spell) - 100 : int(spell));
 	std::string name = get_str("magic-names", spell_num + (which == eSkill::MAGE_SPELLS ? 1 : 101));
-	sprintf ((char *) c_line, "Spell: %s                  ", name.c_str());
-	add_string_to_buf((char *) c_line);
+	add_string_to_buf("Spell: " + name);
 }
 
 short stat_adj(short pc_num,eSkill which) {
@@ -2458,7 +2435,6 @@ static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 short alch_choice(short pc_num) {
 	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
 	short i,store_alchemy_pc;
-	char get_text[256];
 	
 	make_cursor_sword();
 	
@@ -2473,9 +2449,10 @@ short alch_choice(short pc_num) {
 		if(univ.party[pc_num].skills[eSkill::ALCHEMY] < difficulty[i] || univ.party.alchemy[i] == 0)
 			chooseAlchemy["potion" + n].hide();
 	}
-	sprintf((char *) get_text, "%s (skill %d)",
-			univ.party[pc_num].name.c_str(),univ.party[pc_num].skills[eSkill::ALCHEMY]);
-	chooseAlchemy["mixer"].setText(get_text);
+	std::ostringstream sout;
+	sout << univ.party[pc_num].name;
+	sout << " (skill " << univ.party[pc_num].skills[eSkill::ALCHEMY] << ")";
+	chooseAlchemy["mixer"].setText(sout.str());
 	if(univ.party.help_received[20] == 0) {
 		// TODO: I'm not sure if the initial draw is needed
 //		cd_initial_draw(1047);
@@ -2599,9 +2576,7 @@ void poison_pc(short which_pc,short how_much) {
 		
 		if(how_much > 0) {
 			univ.party[which_pc].status[eStatus::POISON] = min(univ.party[which_pc].status[eStatus::POISON] + how_much,8);
-			sprintf ((char *) c_line, "  %s poisoned.",
-					 (char *) univ.party[which_pc].name.c_str());
-			add_string_to_buf((char *) c_line);
+			add_string_to_buf("  " + univ.party[which_pc].name + " poisoned.");
 			one_sound(17);
 			give_help(33,0);
 		}
@@ -2812,9 +2787,8 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		if(univ.party[which_pc].status[eStatus::ASLEEP] > 0)
 			univ.party[which_pc].status[eStatus::ASLEEP]--;
 		
-		sprintf ((char *) c_line, "  %s takes %d. ",(char *) univ.party[which_pc].name.c_str(), how_much);
 		if(do_print)
-			add_string_to_buf((char *) c_line);
+			add_string_to_buf("  " + univ.party[which_pc].name + " takes " + std::to_string(how_much) + '.');
 		if(damage_type != 10) {
 			if(is_combat())
 				boom_space(univ.party[which_pc].combat_pos,overall_mode,boom_gr[damage_type],how_much,sound_type);
@@ -2834,13 +2808,11 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		univ.party[which_pc].cur_health = 0;
 	else // Check if PC can die
 		if(how_much > 25) {
-			sprintf ((char *) c_line, "  %s is obliterated.  ",(char *) univ.party[which_pc].name.c_str());
-			add_string_to_buf((char *) c_line);
+			add_string_to_buf("  " + univ.party[which_pc].name + " is obliterated.  ");
 			kill_pc(which_pc, eMainStatus::DUST);
 		}
 		else {
-			sprintf ((char *) c_line, "  %s is killed.",(char *) univ.party[which_pc].name.c_str());
-			add_string_to_buf((char *) c_line);
+			add_string_to_buf("  " + univ.party[which_pc].name + " is killed.");
 			kill_pc(which_pc,eMainStatus::DEAD);
 		}
 	if(univ.party[which_pc].cur_health == 0 && univ.party[which_pc].main_status == eMainStatus::ALIVE)
@@ -2943,8 +2915,7 @@ void set_pc_moves() {
 			else { // do webs
 				univ.party[i].ap = max(0,univ.party[i].ap - univ.party[i].status[eStatus::WEBS] / 2);
 				if(univ.party[i].ap == 0) {
-					sprintf((char *) c_line,"%s must clean webs.",univ.party[i].name.c_str());
-					add_string_to_buf((char *) c_line);
+					add_string_to_buf(univ.party[i].name + " must clean webs.");
 					univ.party[i].status[eStatus::WEBS] = max(0,univ.party[i].status[eStatus::WEBS] - 3);
 				}
 			}

@@ -846,7 +846,7 @@ void draw_terrain(){
 			yMin = cen_y + 5 - (324 / size);
 			yMax = cen_y + 5;
 		} else yMax = std::min(yMax, 324 / size);
-		printf("Drawing map for x = %d...%d and y = %d...%d\n", xMin, xMax, yMin, yMax);
+		std::cout << "Drawing map for x = " << xMin << "..." << xMax << " and y = " << yMin << "..." << yMax << std::endl;
 		for(q = xMin; q < xMax; q++)
 			for(r = yMin; r < yMax; r++) {
 				t_to_draw = editing_town ? town->terrain(q,r) : current_terrain->terrain[q][r];

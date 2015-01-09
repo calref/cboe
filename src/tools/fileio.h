@@ -59,6 +59,9 @@ void readArray(std::istream& from, T(* array)[D], int width, int height) {
 	}
 }
 
+// Manipulator to write an error code to a C++ string, similar to how perror() does
+std::ostream& std_fmterr(std::ostream& out);
+
 // SFML doesn't support standard C++ streams, so I need to do this in order to load images from a stream.
 class StdInputStream : public sf::InputStream {
 	std::istream& stream;

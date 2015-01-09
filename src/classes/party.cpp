@@ -413,7 +413,7 @@ void cParty::readFrom(std::istream& file){
 	bin.str(cur);
 	while(bin) { // continue as long as no error, such as eof, occurs
 		getline(bin, cur);
-		printf("Parsing line in party.txt: %s\n", cur.c_str());
+		std::cout << "Parsing line in party.txt: " << cur << std::endl;
 		std::istringstream sin(cur);
 		sin >> cur;
 		if(cur == "AGE")

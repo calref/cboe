@@ -8,6 +8,7 @@
 
 #include "oldstructs.h"
 #include <fstream>
+#include <iostream>
 #ifndef _WIN32
 #include <unistd.h>
 #endif
@@ -27,7 +28,7 @@ void debug_oldstructs() {
 #ifndef _WIN32
 	char cwd[256];
 	getcwd(cwd, 256);
-	printf("%s" ,cwd);
+	std::cout << cwd << std::endl;
 #endif
 	std::ofstream log("oldstructs.txt");
 	STRUCT_INFO(Rect);

@@ -392,12 +392,10 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 		}
 		check_fields(univ.party[current_pc].combat_pos,eSpecCtx::COMBAT_MOVE,current_pc);
 	} else {
-		char str[256];
 		add_string_to_buf("Pause.");
 		for(int k = 0; k < 6; k++)
 			if(univ.party[k].main_status == eMainStatus::ALIVE && univ.party[k].status[eStatus::WEBS] > 0) {
-				sprintf(str,"%s cleans webs.",univ.party[k].name.c_str());
-				add_string_to_buf(str);
+				add_string_to_buf(univ.party[k].name + " cleans webs.");
 				move_to_zero(univ.party[k].status[eStatus::WEBS]);
 				move_to_zero(univ.party[k].status[eStatus::WEBS]);
 			}
@@ -651,7 +649,6 @@ static void handle_bash_pick(location destination, bool& did_something, bool& ne
 }
 
 static void handle_switch_pc(short which_pc) {
-	char str[256];
 	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING)
 		add_string_to_buf("Set active: Finish what you're doing first.");
 	else if(is_combat())
@@ -662,16 +659,12 @@ static void handle_switch_pc(short which_pc) {
 	else {
 		current_pc = which_pc;
 		set_stat_window(which_pc);
-		if(overall_mode == MODE_SHOPPING)
-			sprintf(str,"Now shopping: %s",univ.party[which_pc].name.c_str());
-		else sprintf(str,"Now active: %s",univ.party[which_pc].name.c_str());
-		add_string_to_buf(str);
+		add_string_to_buf("Now " + std::string(overall_mode == MODE_SHOPPING ? "shopping" : "active") + ": " + univ.party[which_pc].name);
 		adjust_spell_menus();
 	}
 }
 
 static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
-	char str[256];
 	if(!prime_time() && overall_mode != MODE_TALKING && overall_mode != MODE_SHOPPING)
 		add_string_to_buf("Set active: Finish what you're doing first.");
 	else {
@@ -681,8 +674,7 @@ static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 				add_string_to_buf("Set active: PC must be here & active.");
 			else {
 				current_pc = which_pc;
-				sprintf(str,"Now active: %s",univ.party[which_pc].name.c_str());
-				add_string_to_buf(str);
+				add_string_to_buf("Now active: " + univ.party[which_pc].name);
 				adjust_spell_menus();
 				need_redraw = true;
 			}
@@ -949,7 +941,7 @@ bool handle_action(sf::Event event) {
 	bool right_button = event.mouseButton.button == sf::Mouse::Right;
 	eGameMode previous_mode;
 	
-	char str[60];
+	std::ostringstream str;
 	location the_point,point_in_area;
 	
 	
@@ -1254,14 +1246,16 @@ bool handle_action(sf::Event event) {
 							handle_switch_pc(i);
 							break;
 						case 1:
-							sprintf(str,"%s has %d health out of %d.",univ.party[i].name.c_str(),
-									univ.party[i].cur_health,univ.party[i].max_health);
-							add_string_to_buf((char *)str);
+							str.str("");
+							str << univ.party[i].name << " has ";
+							str << univ.party[i].cur_health << " health out of " << univ.party[i].max_health << '.';
+							add_string_to_buf(str.str());
 							break;
 						case 2:
-							sprintf(str,"%s has %d spell pts. out of %d.",univ.party[i].name.c_str(),
-									univ.party[i].cur_sp,univ.party[i].max_sp);
-							add_string_to_buf(str);
+							str.str("");
+							str << univ.party[i].name << " has ";
+							str << univ.party[i].cur_health << " spell pts. out of " << univ.party[i].max_health << '.';
+							add_string_to_buf(str.str());
 							break;
 						case 3: // pc info
 							give_pc_info(i);
@@ -2505,7 +2499,6 @@ void increase_age() {
 }
 
 void handle_hunting() {
-	char str[60];
 	short i,pic;
 	ter_num_t ter;
 	
@@ -2518,18 +2511,16 @@ void handle_hunting() {
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[eTrait::CAVE_LORE] && get_ran(1,0,12) == 5
 		   && (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
-			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);
-			add_string_to_buf((char *)str);
+			add_string_to_buf(univ.party[i].name + "hunts.");
 			put_pc_screen();
 		}
 	for(i = 0; i < 6; i++)
 		if(
 			univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[eTrait::WOODSMAN] && get_ran(1,0,12) == 5
 			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
-			sprintf((char *)str,"%s hunts.",univ.party[i].name.c_str());
 			univ.party.food += get_ran(2,1,6);
-			add_string_to_buf((char *)str);
+			add_string_to_buf(univ.party[i].name + "hunts.");
 			put_pc_screen();
 		}
 	
@@ -2774,10 +2765,8 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		}
 		else {
 			int n = univ.party.food;
-			char s[25];
 			univ.party.food = (univ.party.food * 19) / 20;
-			sprintf(s,"  (%d supplies lost.)",n - univ.party.food);
-			add_string_to_buf(s);
+			add_string_to_buf("  (" + std::to_string(n - univ.party.food) + " supplies lost.)");
 		}
 		put_pc_screen();
 		play_sound(28);
@@ -2796,7 +2785,6 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 }
 
 bool outd_move_party(location destination,bool forced) {
-	char create_line[60];
 	short boat_num,horse_num,spec_num;
 	location real_dest, sector_p_in;
 	bool keep_going = true,check_f;
@@ -2895,6 +2883,8 @@ bool outd_move_party(location destination,bool forced) {
 				forced = true;
 		}
 		
+		univ.party.direction = set_direction(univ.party.p_loc, destination);
+		std::string dir_str = dir_string[univ.party.direction];
 		if(((boat_num = out_boat_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
 			if(flying()) {
 				add_string_to_buf("You land first.                 ");
@@ -2903,7 +2893,6 @@ bool outd_move_party(location destination,bool forced) {
 			give_help(61,0);
 			add_string_to_buf("Move: You board the boat.           ");
 			univ.party.in_boat = boat_num;
-			univ.party.direction = set_direction(univ.party.p_loc, destination);
 			
 			univ.party.p_loc = real_dest;
 			univ.party.i_w_c.x = (univ.party.p_loc.x > 48) ? 1 : 0;
@@ -2926,7 +2915,6 @@ bool outd_move_party(location destination,bool forced) {
 			add_string_to_buf("Move: You mount the horses.           ");
 			play_sound(84);
 			univ.party.in_horse = horse_num;
-			univ.party.direction = set_direction(univ.party.p_loc, destination);
 			
 			univ.party.p_loc = real_dest;
 			univ.party.i_w_c.x = (univ.party.p_loc.x > 48) ? 1 : 0;
@@ -2952,7 +2940,6 @@ bool outd_move_party(location destination,bool forced) {
 					return false;
 				}
 			}
-			univ.party.direction = set_direction(univ.party.p_loc, destination);
 			
 			// TODO: But I though you automatically landed when entering?
 			if(flying() && univ.scenario.ter_types[ter].special == eTerSpec::TOWN_ENTRANCE) {
@@ -2965,8 +2952,7 @@ bool outd_move_party(location destination,bool forced) {
 			univ.party.i_w_c.x = (univ.party.p_loc.x > 47) ? 1 : 0;
 			univ.party.i_w_c.y = (univ.party.p_loc.y > 47) ? 1 : 0;
 			univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
-			sprintf (create_line, "Moved: %s",dir_string[univ.party.direction]);//, univ.party.p_loc.x, univ.party.p_loc.y, univ.party.loc_in_sec.x, univ.party.loc_in_sec.y);
-			add_string_to_buf(create_line);
+			add_string_to_buf("Moved: " + dir_str);
 			move_sound(univ.out[real_dest.x][real_dest.y],num_out_moves);
 			num_out_moves++;
 			
@@ -2989,8 +2975,7 @@ bool outd_move_party(location destination,bool forced) {
 			return true;
 		}
 		else {
- 			sprintf ((char *) create_line, "Blocked: %s",dir_string[set_direction(univ.party.p_loc, destination)]);
- 			add_string_to_buf((char *) create_line);
+ 			add_string_to_buf("Blocked: " + dir_str);
 			return false;
 		}
 	}
@@ -2998,7 +2983,7 @@ bool outd_move_party(location destination,bool forced) {
 }
 
 bool town_move_party(location destination,short forced) {
-	char create_line[60],keep_going = true;
+	bool keep_going = true;
 	short boat_there,horse_there,spec_num;
 	ter_num_t ter;
 	bool check_f = false;
@@ -3062,6 +3047,8 @@ bool town_move_party(location destination,short forced) {
 				forced = true;
 		}
 		
+		univ.party.direction = set_direction(univ.town.p_loc, destination);
+		std::string dir_str = dir_string[univ.party.direction];
 		if(((boat_there = town_boat_there(destination)) < 30) && (univ.party.in_boat < 0)) {
 			if(univ.party.boats[boat_there].property) {
 				add_string_to_buf("  Not your boat.             ");
@@ -3070,7 +3057,6 @@ bool town_move_party(location destination,short forced) {
 			give_help(61,0);
 			add_string_to_buf("Move: You board the boat.           ");
 			univ.party.in_boat = boat_there;
-			univ.party.direction = set_direction(univ.town.p_loc, destination);
 			
 			univ.town.p_loc = destination;
 			center = univ.town.p_loc;
@@ -3086,7 +3072,6 @@ bool town_move_party(location destination,short forced) {
 			add_string_to_buf("Move: You mount the horses.           ");
 			play_sound(84);
 			univ.party.in_horse = horse_there;
-			univ.party.direction = set_direction(univ.town.p_loc, destination);
 			
 			univ.town.p_loc = destination;
 			center = univ.town.p_loc;
@@ -3109,10 +3094,8 @@ bool town_move_party(location destination,short forced) {
 				}
 				
 			}
-			univ.party.direction = set_direction(univ.town.p_loc, destination);
 			univ.town.p_loc = destination;
-			sprintf ((char *) create_line, "Moved: %s",dir_string[univ.party.direction]);
-			add_string_to_buf((char *) create_line);
+			add_string_to_buf("Moved: " + dir_str);
 //			place_treasure(destination,5,3);
 			
 			move_sound(univ.town->terrain(destination.x,destination.y),(short) univ.party.age);
@@ -3129,10 +3112,7 @@ bool town_move_party(location destination,short forced) {
 			return true;
 		}
 		else {
-			if(is_door(destination))
-				sprintf ((char *) create_line, "Door locked: %s               ",dir_string[set_direction(univ.town.p_loc, destination)]);
-			else sprintf ((char *) create_line, "Blocked: %s               ",dir_string[set_direction(univ.town.p_loc, destination)]);
-			add_string_to_buf((char *) create_line);
+			add_string_to_buf((is_door(destination) ? "Door locked: " : "Blocked: ") + dir_str);
 			return false;
 		}
 	}

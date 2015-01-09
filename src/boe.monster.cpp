@@ -1235,7 +1235,6 @@ void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amo
 }
 void record_monst(cCreature *which_m) {
 	short r1;
-	char str[60];
 	
 	r1 = get_ran(1,1,100);
 	r1 = (r1 * 7) / 10;
@@ -1259,8 +1258,7 @@ void record_monst(cCreature *which_m) {
 			univ.party.imprisoned_monst[r1] = which_m->number;
 		}
 		ASB("Capture Soul: Success!");
-		sprintf((char *)str,"  Caught in slot %d.",r1 + 1);
-		add_string_to_buf((char *)str);
+		add_string_to_buf("  Caught in slot " + std::to_string(r1 + 1) + ".");
 		play_sound(53);
 	}
 }

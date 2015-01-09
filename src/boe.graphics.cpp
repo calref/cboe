@@ -326,7 +326,6 @@ void draw_startup_anim(bool advance) {
 void draw_startup_stats() {
 	rectangle from_rect,to_rect,party_to = {0,0,36,28},pc_rect,frame_rect;
 	short i;
-	char str[256];
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -373,52 +372,55 @@ void draw_startup_stats() {
 			}
 			style.pointSize = 12;
 			pc_rect.offset(12,16);
+			std::string status = "Level " + univ.party[i].level;
 			switch(univ.party[i].main_status) {
 				case eMainStatus::ALIVE:
 					switch(univ.party[i].race) {
-						case eRace::HUMAN: sprintf((char *) str,"Level %d Human",univ.party[i].level); break;
-						case eRace::NEPHIL: sprintf((char *) str,"Level %d Nephilim",univ.party[i].level); break;
-						case eRace::SLITH: sprintf((char *) str,"Level %d Slithzerikai",univ.party[i].level); break;
-						case eRace::VAHNATAI: sprintf((char *) str,"Level %d Vahnatai",univ.party[i].level); break;
-						case eRace::REPTILE: sprintf((char *) str,"Level %d Reptile",univ.party[i].level); break;
-						case eRace::BEAST: sprintf((char *) str,"Level %d Beast",univ.party[i].level); break;
-						case eRace::IMPORTANT: sprintf((char *) str,"Level %d V.I.P.",univ.party[i].level); break;
-						case eRace::MAGE: sprintf((char *) str,"Level %d Human Mage",univ.party[i].level); break;
-						case eRace::PRIEST: sprintf((char *) str,"Level %d Human Priest",univ.party[i].level); break;
-						case eRace::HUMANOID: sprintf((char *) str,"Level %d Humanoid",univ.party[i].level); break;
-						case eRace::DEMON: sprintf((char *) str,"Level %d Demon",univ.party[i].level); break;
-						case eRace::UNDEAD: sprintf((char *) str,"Level %d Undead",univ.party[i].level); break;
-						case eRace::GIANT: sprintf((char *) str,"Level %d Giant",univ.party[i].level); break;
-						case eRace::SLIME: sprintf((char *) str,"Level %d Slime",univ.party[i].level); break;
-						case eRace::STONE: sprintf((char *) str,"Level %d Golem",univ.party[i].level); break;
-						case eRace::BUG: sprintf((char *) str,"Level %d Bug",univ.party[i].level); break;
-						case eRace::DRAGON: sprintf((char *) str,"Level %d Dragon",univ.party[i].level); break;
-						case eRace::MAGICAL: sprintf((char *) str,"Level %d Magical Creature",univ.party[i].level); break;
-						case eRace::PLANT: sprintf((char *) str,"Level %d Plant",univ.party[i].level); break;
-						case eRace::BIRD: sprintf((char *) str,"Level %d Bird",univ.party[i].level); break;
-						default: sprintf((char *) str,"Level %d *ERROR INVALID RACE*",univ.party[i].level); break;
+						case eRace::HUMAN: status += " Human"; break;
+						case eRace::NEPHIL: status += " Nephilim"; break;
+						case eRace::SLITH: status += " Slithzerikai"; break;
+						case eRace::VAHNATAI: status += " Vahnatai"; break;
+						case eRace::REPTILE: status += " Reptile"; break;
+						case eRace::BEAST: status += " Beast"; break;
+						case eRace::IMPORTANT: status += " V.I.P."; break;
+						case eRace::MAGE: status += " Human Mage"; break;
+						case eRace::PRIEST: status += " Human Priest"; break;
+						case eRace::HUMANOID: status += " Humanoid"; break;
+						case eRace::DEMON: status += " Demon"; break;
+						case eRace::UNDEAD: status += " Undead"; break;
+						case eRace::GIANT: status += " Giant"; break;
+						case eRace::SLIME: status += " Slime"; break;
+						case eRace::STONE: status += " Golem"; break;
+						case eRace::BUG: status += " Bug"; break;
+						case eRace::DRAGON: status += " Dragon"; break;
+						case eRace::MAGICAL: status += " Magical Creature"; break;
+						case eRace::PLANT: status += " Plant"; break;
+						case eRace::BIRD: status += " Bird"; break;
+						default: status += " *ERROR INVALID RACE*"; break;
 					}
-					win_draw_string(mainPtr,pc_rect,str,eTextMode::WRAP,style,ul);
+					win_draw_string(mainPtr,pc_rect,status,eTextMode::WRAP,style,ul);
 					pc_rect.offset(0,13);
-					sprintf((char *) str,"Health %d, Spell pts. %d",
-							univ.party[i].max_health,univ.party[i].max_sp);
-					win_draw_string(mainPtr,pc_rect,str,eTextMode::WRAP,style,ul);
+					status = "Health " + std::to_string(univ.party[i].max_health);
+					status += ", Spell pts. " + std::to_string(univ.party[i].max_sp);
 					break;
 				case eMainStatus::DEAD:
-					win_draw_string(mainPtr,pc_rect,"Dead",eTextMode::WRAP,style,ul);
+					status = "Dead";
 					break;
 				case eMainStatus::DUST:
-					win_draw_string(mainPtr,pc_rect,"Dust",eTextMode::WRAP,style,ul);
+					status = "Dust";
 					break;
 				case eMainStatus::STONE:
-					win_draw_string(mainPtr,pc_rect,"Stone",eTextMode::WRAP,style,ul);
+					status = "Stone";
 					break;
 				case eMainStatus::FLED:
-					win_draw_string(mainPtr,pc_rect,"Fled",eTextMode::WRAP,style,ul);
+					status = "Fled";
 					break;
 				default: //absent, and all variations thereof; do nothing
+					status.clear();
 					break;
 			}
+			if(!status.empty())
+				win_draw_string(mainPtr,pc_rect,status,eTextMode::WRAP,style,ul);
 		}
 	}
 	
@@ -1477,7 +1479,6 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	location where_draw(4,4);
 	rectangle source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
 	short del_len;
-	char dam_str[20];
 	short x_adj = 0,y_adj = 0,which_m;
 	short sound_to_play[20] = {
 		97,69,70,71,72, 73,55,75,42,86,
@@ -1539,7 +1540,6 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	rect_draw_some_item(boom_gworld,source_rect,dest_rect,ul,sf::BlendAlpha);
 	
 	if((dest_rect.right - dest_rect.left >= 28) && (dest_rect.bottom - dest_rect.top >= 36)) {
-		sprintf(dam_str,"%d",damage);
 		TextStyle style;
 		style.lineHeight = 10;
 		//text_rect = coord_to_rect(where_draw.x,where_draw.y);
@@ -1549,7 +1549,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		if((damage < 10) && (dest_rect.right - dest_rect.left > 19))
 			text_rect.left += 10;
 		text_rect.offset(-4,-5);
-		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style,ul);
+		win_draw_string(mainPtr,text_rect,std::to_string(damage),eTextMode::CENTRE,style,ul);
 	}
 	play_sound((skip_boom_delay?-1:1)*sound_to_play[sound]);
 	mainPtr.display();

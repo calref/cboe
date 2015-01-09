@@ -9,7 +9,7 @@
 #include "boe.menus.h"
 
 #include <Cocoa/Cocoa.h>
-#include <array>
+#include <sstream>
 #include "universe.h"
 #include "boe.party.h"
 #include "boe.infodlg.h"
@@ -176,7 +176,6 @@ void init_spell_menus() {
 void adjust_spell_menus() {
 	short i,j,spell_pos = 0;
 	NSMenu* spell_menu;
-	char spell_name[256];
 	short old_on_spell_menu[2][62];
 	bool need_menu_change = false;
 	
@@ -208,11 +207,10 @@ void adjust_spell_menus() {
 		for(i = 0; i < 62; i++)
 			if(on_spell_menu[0][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[0][i]);
-				std::string name = (*spell).name();
-				if((*spell).cost >= 0)
-					sprintf(spell_name," L%d - %s, C %d",(*spell).level, name.c_str(), (*spell).cost);
-				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, name.c_str());
-				NSString* str = [NSString stringWithUTF8String: spell_name];
+				std::ostringstream sout;
+				sout << " L" << (*spell).level << " - " << (*spell).name() << ", C ";
+				if((*spell).cost >= 0) sout << (*spell).cost; else sout << '?';
+				NSString* str = [NSString stringWithUTF8String: sout.str().c_str()];
 				NSMenuItem* newItem = [spell_menu addItemWithTitle: str action: @selector(spellMenu:) keyEquivalent: @""];
 				[newItem setTarget: targ];
 				[newItem setRepresentedObject: [SpellWrapper withSpell: on_spell_menu[0][i] ofType: eSkill::MAGE_SPELLS]];
@@ -242,11 +240,10 @@ void adjust_spell_menus() {
 		for(i = 0; i < 62; i++)
 			if(on_spell_menu[1][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
-				std::string name = (*spell).name();
-				if((*spell).cost >= 0)
-					sprintf(spell_name," L%d - %s, C %d",(*spell).level, name.c_str(), (*spell).cost);
-				else sprintf(spell_name," L%d - %s, C ?",(*spell).level, name.c_str());
-				NSString* str = [NSString stringWithUTF8String: spell_name];
+				std::ostringstream sout;
+				sout << " L" << (*spell).level << " - " << (*spell).name() << ", C ";
+				if((*spell).cost >= 0) sout << (*spell).cost; else sout << '?';
+				NSString* str = [NSString stringWithUTF8String: sout.str().c_str()];
 				NSMenuItem* newItem = [spell_menu addItemWithTitle: str action: @selector(spellMenu:) keyEquivalent: @""];
 				[newItem setTarget: targ];
 				[newItem setRepresentedObject: [SpellWrapper withSpell: on_spell_menu[1][i] ofType: eSkill::PRIEST_SPELLS]];

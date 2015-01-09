@@ -16,6 +16,7 @@
 #include <memory>
 #include <boost/filesystem.hpp>
 #include <functional>
+#include <iostream>
 
 /// A simple resource manager.
 /// Handles loading, retaining, and releasing of resources as necessary.
@@ -59,7 +60,7 @@ namespace ResMgr {
 			std::stack<fs::path> tmpPaths = resPaths();
 			while(!tmpPaths.empty()) {
 				fs::path thisPath = tmpPaths.top()/path;
-				printf("Testing %s...\n",thisPath.string().c_str());
+				std::cout << "Testing " << thisPath << "...\n";
 				if(fs::exists(thisPath)) {
 					pathFound()[path] = tmpPaths.top();
 					return thisPath;
@@ -167,7 +168,7 @@ namespace ResMgr {
 	template<typename type> void pushPath(fs::path path) {
 		printf("Pushing path %s in %s...\n",path.string().c_str(),__FUNCTION__);
 		resPool<type>::resPaths().push(path);
-		if(resPool<type>::resPaths().empty()) printf("A problem occurred.\n");
+		if(resPool<type>::resPaths().empty()) std::cerr << "A problem occurred.\n";
 	}
 	
 	/// Pop a path from the path resolution stack.

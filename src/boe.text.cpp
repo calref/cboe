@@ -1,8 +1,7 @@
 #define  LINES_IN_TEXT_WIN	11
 #define	TEXT_BUF_LEN	70
 
-#include <cstdio>
-#include <cstring>
+#include <sstream>
 
 //#include "item.h"
 
@@ -96,7 +95,6 @@ extern sf::Texture bg_gworld;
 // Draws the pc area in upper right
 //void win_draw_string(WindowPtr dest_window,rectangle dest_rect,char *str,short mode,short line_height)
 void put_pc_screen() {
-	char to_draw[256];
 	short i = 0,j;
 	rectangle erase_rect = {17,2,98,269},to_draw_rect,from_rect;
 	// TODO: The duplication of rectangle here shouldn't be necessary...
@@ -117,13 +115,9 @@ void put_pc_screen() {
 	style.colour = sf::Color::White;
 	style.lineHeight = 10;
 	// Put food, gold, day
-	sprintf((char *) to_draw, "%d", (short) univ.party.gold);
-	win_draw_string( pc_stats_gworld,small_erase_rects[1],to_draw,eTextMode::WRAP,style);
-	sprintf((char *) to_draw, "%d", (short) univ.party.food);
-	win_draw_string( pc_stats_gworld,small_erase_rects[0],to_draw,eTextMode::WRAP,style);
-	i = calc_day();
-	sprintf((char *) to_draw, "%d", i);
-	win_draw_string( pc_stats_gworld,small_erase_rects[2],to_draw,eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,small_erase_rects[1],std::to_string(univ.party.gold),eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,small_erase_rects[0],std::to_string(univ.party.food),eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,small_erase_rects[2],std::to_string(calc_day()),eTextMode::WRAP,style);
 	style.colour = sf::Color::Black;
 	
 	for(i = 0; i < 6; i++) {
@@ -135,51 +129,51 @@ void put_pc_screen() {
 				style.colour = sf::Color::Blue;
 			}
 			
-			sprintf((char *) to_draw, "%d. %-20s             ", i + 1, (char *) univ.party[i].name.c_str());
-			win_draw_string(pc_stats_gworld,pc_buttons[i][0],to_draw,eTextMode::WRAP,style);
+			std::ostringstream sout;
+			sout << i + 1 << ". " << univ.party[i].name;
+			win_draw_string(pc_stats_gworld,pc_buttons[i][0],sout.str(),eTextMode::WRAP,style);
 			style.italic = false;
 			style.colour = sf::Color::Black;
 			
 			to_draw_rect = pc_buttons[i][1];
 			to_draw_rect.right += 20;
+			sout.str("");
 			switch(univ.party[i].main_status) {
 				case eMainStatus::ALIVE:
 					if(univ.party[i].cur_health == univ.party[i].max_health)
 						style.colour = sf::Color::Green;
 					else style.colour = sf::Color::Red;
-					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_health);
-					win_draw_string( pc_stats_gworld,pc_buttons[i][1],to_draw,eTextMode::WRAP,style);
+					win_draw_string( pc_stats_gworld,pc_buttons[i][1],std::to_string(univ.party[i].cur_health),eTextMode::WRAP,style);
 					if(univ.party[i].cur_sp == univ.party[i].max_sp)
 						style.colour = sf::Color::Blue;
 					else style.colour = sf::Color::Magenta;
-					sprintf((char *) to_draw, "%-3d              ",univ.party[i].cur_sp);
-					win_draw_string( pc_stats_gworld,pc_buttons[i][2],to_draw,eTextMode::WRAP,style);
+					win_draw_string( pc_stats_gworld,pc_buttons[i][2],std::to_string(univ.party[i].cur_sp),eTextMode::WRAP,style);
 					draw_pc_effects(i);
 					break;
 				case eMainStatus::DEAD:
-					sprintf((char *) to_draw, "Dead");
+					sout << "Dead";
 					break;
 				case eMainStatus::DUST:
-					sprintf((char *) to_draw, "Dust");
+					sout << "Dust";
 					break;
 				case eMainStatus::STONE:
-					sprintf((char *) to_draw, "Stone");
+					sout << "Stone";
 					break;
 				case eMainStatus::FLED:
-					sprintf((char *) to_draw, "Fled");
+					sout << "Fled";
 					break;
 				case eMainStatus::SURFACE:
-					sprintf((char *) to_draw, "Surface");
+					sout << "Surface";
 					break;
 				case eMainStatus::WON:
-					sprintf((char *) to_draw, "Won");
+					sout << "Won";
 					break;
 				default:
-					sprintf((char *) to_draw, "Absent");
+					sout << "Absent";
 					break;
 			}
 			if(univ.party[i].main_status != eMainStatus::ALIVE)
-				win_draw_string( pc_stats_gworld,to_draw_rect,to_draw,eTextMode::WRAP,style);
+				win_draw_string( pc_stats_gworld,to_draw_rect,sout.str(),eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
 			
 			// Now put trade and info buttons
@@ -358,7 +352,6 @@ void place_buy_button(short position,short pc_num,short item_num) {
 	// TODO: The duplication of rectangle here shouldn't be necessary...
 	rectangle button_sources[3] = {rectangle{24,0,36,30},rectangle{36,0,48,30},rectangle{48,0,60,30}};
 	short val_to_place;
-	char store_str[60];
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 	
 	if(univ.party[pc_num].items[item_num].variety == eItemType::NO_ITEM)
@@ -421,12 +414,12 @@ void place_buy_button(short position,short pc_num,short item_num) {
 		dest_rect = item_buttons[position][5];
 		dest_rect.right = dest_rect.left + 30;
 		rect_draw_some_item(invenbtn_gworld, source_rect, item_stats_gworld, dest_rect, sf::BlendAlpha);
-		sprintf((char *) store_str,"        %d",val_to_place);
 		TextStyle style;
 		if(val_to_place >= 10000)
 			style.font = FONT_PLAIN;
 		style.lineHeight = 10;
-		win_draw_string(item_stats_gworld,item_buttons[position][5],store_str,eTextMode::LEFT_TOP,style);
+		dest_rect.offset(dest_rect.width() + 5,0);
+		win_draw_string(item_stats_gworld,dest_rect,std::to_string(val_to_place),eTextMode::LEFT_TOP,style);
 	}
 }
 
@@ -714,20 +707,14 @@ void draw_pc_effects(short pc) {
 
 
 void print_party_stats() {
-	char store_string[256];
 	add_string_to_buf("PARTY STATS:");
-	sprintf((char *) store_string, "  Number of kills: %lld                   ", univ.party.total_m_killed);
-	add_string_to_buf(store_string);
+	add_string_to_buf("  Number of kills: " + std::to_string(univ.party.total_m_killed));
 	if((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
-		sprintf((char *) store_string, "  Kills in this town: %d                   ", univ.party.m_killed[univ.town.num]);
-		add_string_to_buf(store_string);
+		add_string_to_buf("  Kills in this town: " + std::to_string(univ.party.m_killed[univ.town.num]));
 	}
-	sprintf((char *) store_string, "  Total experience: %lld                   ", univ.party.total_xp_gained);
-	add_string_to_buf(store_string);
-	sprintf((char *) store_string, "  Total damage done: %lld                   ", univ.party.total_dam_done);
-	add_string_to_buf(store_string);
-	sprintf((char *) store_string, "  Total damage taken: %lld                   ", univ.party.total_dam_taken);
-	add_string_to_buf(store_string);
+	add_string_to_buf("  Total experience: " + std::to_string(univ.party.total_xp_gained));
+	add_string_to_buf("  Total damage done: " + std::to_string(univ.party.total_dam_done));
+	add_string_to_buf("  Total damage taken: " + std::to_string(univ.party.total_dam_taken));
 	print_buf();
 }
 

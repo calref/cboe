@@ -16,6 +16,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <boost/filesystem/path.hpp>
 #include "cursors.h"
@@ -26,6 +27,9 @@ using CursorRsrc = Cursor;
 using FontRsrc = sf::Font;
 using StringRsrc = std::vector<std::string>;
 using SoundRsrc = sf::SoundBuffer;
+
+// Redeclare this instead of including "fileio.h"
+extern std::ostream& std_fmterr(std::ostream& out);
 
 namespace ResMgr {
 	/// Load an image from a PNG file.
@@ -61,9 +65,9 @@ namespace ResMgr {
 		} else {
 			auto entry = cursor_hs.find(fname);
 			if(entry == cursor_hs.end())
-				fprintf(stderr,"Cursor hotspot missing: %s\n",fname.c_str());
+				std::cerr << "Cursor hotspot missing: " << fname << std::endl;
 			else {
-				fprintf(stderr,"Cursor hotspot missing (using fallback value): %s\n",fname.c_str());
+				std::cerr << "Cursor hotspot missing (using fallback value): " << fname << std::endl;
 				location hs = entry->second;
 				x = hs.x; y = hs.y;
 			}
@@ -92,7 +96,7 @@ namespace ResMgr {
 		fs::path fpath = resPool<StringRsrc>::rel2abs(fname + ".txt");
 		std::ifstream fin(fpath.c_str());
 		if(fin.fail()) {
-			perror("Error opening file");
+			std::cerr << std_fmterr << ": Error opening file";
 			throw xResMgrErr("Failed to load string list: " + fpath.string());
 		}
 		std::string next;

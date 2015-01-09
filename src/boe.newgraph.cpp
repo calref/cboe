@@ -521,7 +521,6 @@ short get_missile_direction(location origin_point,location the_point) {
 void do_explosion_anim(short /*sound_num*/,short special_draw) {
 	rectangle active_area_rect,to_rect,from_rect;
 	rectangle base_rect = {0,0,36,28},text_rect;
-	char str[60];
 	short i,temp_val,temp_val2;
 	location screen_ul;
 	
@@ -604,10 +603,9 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 						text_rect.left -= 10;
 						if(store_booms[i].val_to_place < 10)
 							text_rect.left += 8;
-						sprintf(str,"%d",store_booms[i].val_to_place);
 						style.colour = sf::Color::White;
 						style.lineHeight = 12;
-						win_draw_string(mainPtr,text_rect,str,eTextMode::CENTRE,style);
+						win_draw_string(mainPtr,text_rect,std::to_string(store_booms[i].val_to_place),eTextMode::CENTRE,style);
 						style.colour = sf::Color::Black;
 						mainPtr.setActive();
 					}
@@ -899,7 +897,7 @@ std::string get_item_interesting_string(cItemRec item) {
 	if(item.cursed) {
 		return "Cursed item.";
 	}
-	char message[256];
+	std::ostringstream sout;
 	switch(item.variety) {
 		case eItemType::ONE_HANDED:
 		case eItemType::TWO_HANDED:
@@ -908,8 +906,8 @@ std::string get_item_interesting_string(cItemRec item) {
 		case eItemType::BOLTS:
 		case eItemType::MISSILE_NO_AMMO:
 			if(item.bonus != 0)
-				sprintf(message,"Damage: 1-%d + %d.",item.item_level,item.bonus);
-			else sprintf(message,"Damage: 1-%d.",item.item_level);
+				sout << "Damage: 1-" << item.item_level << " + " << item.bonus << '.';
+			else sout << "Damage: 1-" << item.item_level << '.';
 			break;
 		case eItemType::SHIELD:
 		case eItemType::ARMOR:
@@ -917,31 +915,29 @@ std::string get_item_interesting_string(cItemRec item) {
 		case eItemType::GLOVES:
 		case eItemType::SHIELD_2:
 		case eItemType::BOOTS: // TODO: Verify that this is displayed correctly
-			sprintf(message,"Blocks %d-%d damage.",item.item_level + ((item.protection > 0) ? 1 : 0),
-					item.item_level + item.protection);
+			sout << "Blocks " << item.item_level + ((item.protection > 0) ? 1 : 0) << '-' << item.item_level + item.protection << " damage.";
 			break;
 		case eItemType::BOW:
 		case eItemType::CROSSBOW:
-			sprintf(message,"Bonus : +%d to hit.",item.bonus);
+			sout << "Bonus: +" << item.bonus << " to hit.";
 			break;
 		case eItemType::GOLD:
-			sprintf(message,"%d gold pieces.",item.item_level);
+			sout << item.item_level << " gold pieces.";
 			break;
 		case eItemType::FOOD:
-			sprintf(message,"%d food.",item.item_level);
+			sout << item.item_level << " food.";
 			break;
 		case eItemType::WEAPON_POISON:
-			sprintf(message,"Poison: Does %d-%d damage.",item.item_level,item.item_level * 6);
+			sout << "Poison: Does " << item.item_level << '-' << item.item_level * 6 << " damage.";
 			break;
 		default:
-			strcpy(message,"");
 			if(item.charges > 0)
-				sprintf(message,"Uses: %d",item.charges);
-			break;
+				sout << "Uses: " << item.charges;
+			return sout.str();
 	}
 	if(item.charges > 0)
-		sprintf(message,"Uses: %d",item.charges);
-	return message;
+		sout << "; Uses: " << item.charges;
+	return sout.str();
 }
 
 // color 0 - regular  1 - darker
@@ -1096,8 +1092,8 @@ short scan_for_response(const char *str) {
 		if(personality == -1) continue;
 		if(personality != store_personality && personality != -2)
 			continue;
-		if(strncmp(str, node.link1, 4) == 0) return i;
-		if(strncmp(str, node.link2, 4) == 0) return i;
+		if(strnicmp(str, node.link1, 4) == 0) return i;
+		if(strnicmp(str, node.link2, 4) == 0) return i;
 	}
 	return -1;
 }

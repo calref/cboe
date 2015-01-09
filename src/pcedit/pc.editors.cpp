@@ -392,20 +392,13 @@ static void update_gold_skills(cDialog& me) {
 
 
 static void do_xp_draw(cDialog& me,std::map<eSkill,short>& store_skills) {
-	
-	char get_text[256];
 	short mode,pc_num;
 	
 	mode = store_train_mode;
 	pc_num = store_train_pc;
-	if(mode == 0) {
-		if(univ.party[pc_num].main_status == eMainStatus::ALIVE)
-			sprintf((char *) get_text, "%s",(char *) univ.party[pc_num].name.c_str());
-		else sprintf((char *) get_text, "New PC");
-	}
-	else sprintf((char *) get_text, "%s",(char *) univ.party[pc_num].name.c_str());
-	
-	me["recipient"].setText(get_text);
+	if(mode == 0 && univ.party[pc_num].main_status != eMainStatus::ALIVE)
+		me["recipient"].setText("New PC");
+	else me["recipient"].setText(univ.party[pc_num].name);
 	
 	for(i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);

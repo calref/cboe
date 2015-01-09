@@ -968,7 +968,7 @@ static bool talk_node_branch(cDialog& me, std::stack<short>& talk_edit_stack) {
 	
 	int spec = -1;
 	for(int j = 0; j < 60; j++)
-		if(town->talking.talk_nodes[j].personality == -1 && strncmp(town->talking.talk_nodes[j].link1, "xxxx", 4) == 0) {
+		if(town->talking.talk_nodes[j].personality == -1 && strnicmp(town->talking.talk_nodes[j].link1, "xxxx", 4) == 0) {
 			spec = j;
 			break;
 		}
@@ -1107,7 +1107,7 @@ location pick_out(location default_loc) {
 
 bool new_town(short which_town) {
 	// ignore parent in Mac version
-	printf("Town creation currently disabled.\n");
+	std::cout << "Town creation currently disabled.\n";
 	short basic_dlog_hit,i,j,store_dialog_answer;
 
 	cChoiceDlog new_dlg("new-town", {"okay", "cancel"});

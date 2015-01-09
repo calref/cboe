@@ -18,6 +18,7 @@
 #include <GL/GL.h>
 #endif
 
+#include <iostream>
 #include <typeinfo>
 #include <unordered_map>
 #include <boost/filesystem.hpp>
@@ -25,6 +26,7 @@
 
 #include "restypes.hpp"
 #include "mathutil.h"
+#include "fileio.h"
 
 using boost::math::constants::pi;
 
@@ -49,7 +51,7 @@ void init_graph_tool(){
 	std::ifstream fin;
 	
 	fin.open(fragPath.c_str());
-	if(!fin.good()) perror("Error loading fragment shader");
+	if(!fin.good()) std::cerr << std_fmterr << ": Error loading fragment shader" << std::endl;
 	fin.seekg(0, std::ios::end);
 	int size = fin.tellg();
 	fin.seekg(0);
@@ -59,7 +61,7 @@ void init_graph_tool(){
 	fin.close();
 	
 	fin.open(vertPath.c_str());
-	if(!fin.good()) perror("Error loading vertex shader");
+	if(!fin.good()) std::cerr << std_fmterr << ": Error loading vertex shader" << std::endl;
 	fin.seekg(0, std::ios::end);
 	size = fin.tellg();
 	fin.seekg(0);
@@ -68,7 +70,7 @@ void init_graph_tool(){
 	fin.read(vbuf, size);
 	
 	if(!maskShader.loadFromMemory(vbuf, fbuf)) {
-		fprintf(stderr,"Error: Failed to load shaders from %s\nVertex:\n%s\nFragment:\n%s",shaderPath.string().c_str(),vbuf,fbuf);
+		std::cerr << "Error: Failed to load shaders from " << shaderPath << "\nVertex:\n" << vbuf << "\nFragment:\n" << fbuf << std::endl;
 	}
 	delete[] fbuf;
 	delete[] vbuf;
@@ -1036,7 +1038,7 @@ public:
 				return {w - r - r*cos(t - half_pi), r + r*sin(t - half_pi)};
 		}
 		// Unreachable
-		printf("Whoops, rounded rectangle had bad point!");
+		std::cerr << "Whoops, rounded rectangle had bad point!" << std::endl;
 		return {0,0};
 	}
 	

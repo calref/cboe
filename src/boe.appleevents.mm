@@ -64,7 +64,7 @@ void set_up_apple_events() {
 	// TODO: I'm not entirely sure that a file specifier is convertable to a string.
 	NSString* file = [fileDesc stringValue];
 	if(file == nil) {
-		printf("Error: filename was nil\n");
+		std::cerr << "Error: filename was nil" << std::endl;
 		return;
 	}
 	

@@ -83,9 +83,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	if(!play_sounds || how_many_times == 0) return;
 	
 	if(abs(which) > NUM_SOUNDS) {
-		//char msg[50];
-		/*s*/printf(/*msg,*/"Error: Sound #%i does not exist.\n",abs(which));
-		//give_error(msg,"",0);
+		std::cerr << "Error: Sound #" << abs(which) << " does not exist." << std::endl;
 		return;
 	}
 	

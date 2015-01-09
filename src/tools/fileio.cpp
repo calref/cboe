@@ -467,7 +467,7 @@ void load_spec_graphics(fs::path scen_file) {
 	static const char*const noGraphics = "The game will still work without the custom graphics, but some things will not look right.";
 	short i;
 	fs::path path(scen_file);
-	printf("Loading scenario graphics... (%s)\n",path.string().c_str());
+	std::cout << "Loading scenario graphics... (" << path  << ")\n";
 	// Tried path.replace_extension, but that only deleted the extension, so I have to do it manually
 	std::string filename = path.stem().string();
 	path = path.parent_path();
@@ -1049,3 +1049,6 @@ std::string maybe_quote_string(std::string which) {
 	return which;
 }
 
+std::ostream& std_fmterr(std::ostream& out) {
+	return out << strerror(errno);
+}

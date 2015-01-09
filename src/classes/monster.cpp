@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <iostream>
 
 #include "classes.h"
 #include "oldstructs.h"
@@ -597,7 +598,7 @@ void cCreature::readFrom(std::istream& file) {
 	while(file) {
 		std::string cur;
 		getline(file, cur);
-		printf("Parsing line in town.txt: %s\n", cur.c_str());
+		std::cout << "Parsing line in town.txt: " << cur << std::endl;
 		std::istringstream line(cur);
 		line >> cur;
 		if(cur == "MONSTER")

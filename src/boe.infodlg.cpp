@@ -190,7 +190,6 @@ void display_skills(eSkill force_skill,cDialog* parent) {
 }
 
 static void put_item_info(cDialog& me,const cItemRec& s_i) {
-	char store_text[256];
 	std::string desc_str;
 	
 	cPict& pic = dynamic_cast<cPict&>(me["pic"]);
@@ -242,22 +241,23 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 	if(s_i.protection > 0)
 		me["def"].setTextToNum(s_i.protection);
 	
+	std::string store_text;
 	switch(s_i.variety) {
 		case eItemType::ONE_HANDED:
 		case eItemType::TWO_HANDED:
 			switch(s_i.type) {
 				case eSkill::EDGED_WEAPONS:
-					sprintf((char *) store_text, "Edged weapon");
+					store_text = "Edged weapon";
 					break;
 				case eSkill::BASHING_WEAPONS:
-					sprintf((char *) store_text, "Bashing weapon");
+					store_text = "Bashing weapon";
 					break;
 				case eSkill::POLE_WEAPONS:
-					sprintf((char *) store_text, "Pole weapon");
+					store_text = "Pole weapon";
 					break;
 				case eSkill::INVALID:
 				default:
-					sprintf((char*)store_text, "Error weapon"); // should never be reached
+					store_text = "Error weapon"; // should never be reached
 			}
 			// TODO: I wonder if this would fit better in the Item Type box?
 			if(s_i.ability == eItemAbil::NONE)
@@ -557,22 +557,22 @@ void display_alchemy() {
 
 static void display_pc_info(cDialog& me, const short pc) {
 	short i,store;
-	char str[256];
-	char to_draw[60];
+	std::ostringstream to_draw;
 	
 	short weap1 = 24,weap2 = 24,hit_adj = 0, dam_adj = 0,skill_item;
 	
 	store = pc_carry_weight(pc);
 	i = amount_pc_can_carry(pc);
-	sprintf ((char *) to_draw, "%s is carrying %d stones out of %d.",univ.party[pc].name.c_str(),store,i);
-	me["weight"].setText(to_draw);
+	to_draw << univ.party[pc].name << " is carrying " << store << " stones out of " << i << '.';
+	me["weight"].setText(to_draw.str());
+	to_draw.str("");
 	
-	sprintf((char *) str,"%d out of %d.",
-			univ.party[pc].cur_health,univ.party[pc].max_health);
-	me["hp"].setText(str);
-	sprintf((char *) str,"%d out of %d.",
-			univ.party[pc].cur_sp,univ.party[pc].max_sp);
-	me["sp"].setText(str);
+	to_draw << univ.party[pc].cur_health << " out of " << univ.party[pc].max_health << '.';
+	me["hp"].setText(to_draw.str());
+	to_draw.str("");
+	to_draw << univ.party[pc].cur_sp << " out of " << univ.party[pc].max_sp << '.';
+	me["sp"].setText(to_draw.str());
+	to_draw.str("");
 	
 	for(i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
@@ -622,13 +622,13 @@ static void display_pc_info(cDialog& me, const short pc) {
 		else {
 			// TODO: What's with always putting the percent sign in front?
 			if(hit_adj + 5 * univ.party[pc].items[weap1].bonus < 0)
-				sprintf(to_draw,"Penalty to hit: %%%d",hit_adj + 5 * univ.party[pc].items[weap1].bonus);
-			else sprintf(to_draw,"Bonus to hit: +%%%d",hit_adj + 5 * univ.party[pc].items[weap1].bonus);
-			me["weap1a"].setText(to_draw);
-			sprintf(to_draw,"Damage: (1-%d) + %d",univ.party[pc].items[weap1].item_level
-					,dam_adj + univ.party[pc].items[weap1].bonus);
-			me["weap1b"].setText(to_draw);
-			
+				to_draw << "Penalty to hit: %" << hit_adj + 5 * univ.party[pc].items[weap1].bonus;
+			else to_draw << "Bonus to hit: +%" << hit_adj + 5 * univ.party[pc].items[weap1].bonus;
+			me["weap1a"].setText(to_draw.str());
+			to_draw.str("");
+			to_draw << "Damage: (1-" << univ.party[pc].items[weap1].item_level << ") + " << dam_adj + univ.party[pc].items[weap1].bonus;
+			me["weap1b"].setText(to_draw.str());
+			to_draw.str("");
 		}
 	}
 	if(weap2 < 24) {
@@ -636,13 +636,13 @@ static void display_pc_info(cDialog& me, const short pc) {
 			me["weap2a"].setText("Not identified.");
 		else {
 			if(hit_adj + 5 * univ.party[pc].items[weap2].bonus < 0)
-				sprintf(to_draw,"Penalty to hit: %%%d",hit_adj + 5 * univ.party[pc].items[weap2].bonus);
-			else sprintf(to_draw,"Bonus to hit: +%%%d",hit_adj + 5 * univ.party[pc].items[weap2].bonus);
-			me["weap2a"].setText(to_draw);
-			sprintf(to_draw,"Damage: (1-%d) + %d",univ.party[pc].items[weap2].item_level
-					,dam_adj + univ.party[pc].items[weap2].bonus);
-			me["weap2b"].setText(to_draw);
-			
+				to_draw << "Penalty to hit: %" << hit_adj + 5 * univ.party[pc].items[weap2].bonus;
+			else to_draw << "Bonus to hit: +%" << hit_adj + 5 * univ.party[pc].items[weap2].bonus;
+			me["weap2a"].setText(to_draw.str());
+			to_draw.str("");
+			to_draw << "Damage: (1-" << univ.party[pc].items[weap2].item_level << ") + " << dam_adj + univ.party[pc].items[weap2].bonus;
+			me["weap2b"].setText(to_draw.str());
+			to_draw.str("");
 		}
 	}
 }
@@ -825,9 +825,6 @@ void talk_notes() {
 }
 
 static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
-	short i;
-	char place_str[256];
-	
 	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
 		if(store_page_on == 0)
@@ -838,19 +835,21 @@ static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 			store_page_on = 0;
 		else store_page_on++;
 	}
-	for(i = 0; i < 3; i++) {
+	return true;
+}
+
+static void fill_journal(cDialog& me) {
+	for(int i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if((long)univ.party.journal.size() > i + (store_page_on * 3)) {
 			me["str" + n].setText(univ.party.journal[i].the_str);
-			sprintf((char *)place_str,"Day: %d",univ.party.journal[i].day);
-			me["day" + n].setText(place_str);
+			me["day" + n].setText("Day: " + std::to_string(univ.party.journal[i].day));
 		}
 		else{
 			me["str" + n].setText("");
 			me["day" + n].setText("");
 		}
 	}
-	return true;
 }
 
 void journal() {
@@ -859,9 +858,6 @@ void journal() {
 		print_buf();
 		return;
 	}
-	
-	unsigned short i;
-	char place_str[256];
 	
 	store_num_i = 0;
 	//for(i = 0; i < 120; i++)
@@ -874,14 +870,7 @@ void journal() {
 	cDialog journal("event-journal");
 	journal.attachClickHandlers(journal_event_filter, {"done", "left", "right"});
 	
-	for(i = 0; i < 3; i++) {
-		if(univ.party.journal.size() > i) {
-			std::string n = boost::lexical_cast<std::string>(i + 1);
-			journal["str" + n].setText(univ.party.journal[i].the_str);
-			sprintf((char *)place_str,"Day: %d",univ.party.journal[i].day);
-			journal["day" + n].setText(place_str);
-		}
-	}
+	fill_journal(journal);
 	if(store_num_i <= 3) {
 		journal["left"].hide();
 		journal["right"].hide();

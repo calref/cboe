@@ -54,7 +54,6 @@ extern short store_current_pc;
 //extern location monster_targs[60];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
-char create_line[60];
 eSpell spell_being_cast;
 bool spell_freebie;
 short missile_inv_slot, ammo_inv_slot;
@@ -392,6 +391,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 }
 
 bool pc_combat_move(location destination) {
+	std::string create_line;
 	short dir,monst_hit,s1,s2,i,monst_exist,switch_pc;
 	bool keep_going = true,forced = false,check_f = false;
 	location monst_loc,store_loc;
@@ -425,12 +425,12 @@ bool pc_combat_move(location destination) {
 				univ.party[current_pc].main_status = eMainStatus::FLED;
 				if(combat_active_pc == current_pc)
 					combat_active_pc = 6;
-				sprintf (create_line, "Moved: Fled.                    ");
+				create_line = "Moved: Fled.";
 				univ.party[current_pc].ap = 0;
 			}
 			else {
 				take_ap(1);
-				sprintf (create_line, "Moved: Couldn't flee.                  ");
+				create_line = "Moved: Couldn't flee.";
 			}
 			add_string_to_buf(create_line);
 			return true;
@@ -498,8 +498,9 @@ bool pc_combat_move(location destination) {
 				univ.party[current_pc].combat_pos = destination;
 				univ.party[current_pc].direction = dir;
 				take_ap(1);
-				sprintf ((char *) create_line, "Moved: %s               ",d_string[dir]);
-				add_string_to_buf((char *) create_line);
+				create_line += "Moved: ";
+				create_line += d_string[dir];
+				add_string_to_buf(create_line);
 				move_sound(univ.town->terrain(destination.x,destination.y),univ.party[current_pc].ap);
 				
 			}
@@ -507,8 +508,9 @@ bool pc_combat_move(location destination) {
 			return true;
 		}
 		else {
-			sprintf ((char *) create_line, "Blocked: %s               ",d_string[dir]);
-			add_string_to_buf((char *) create_line);
+			create_line += "Blocked: ";
+			create_line += d_string[dir];
+			add_string_to_buf(create_line);
 			return false;
 		}
 	}
@@ -577,9 +579,8 @@ void pc_attack(short who_att,short target) {
 	combat_posing_monster = current_working_monster = who_att;
 	
 	if(weap1 == 24) {
-		
-		sprintf ((char *) create_line, "%s punches.  ",(char *) univ.party[who_att].name.c_str());//,hit_adj, dam_adj);
-		add_string_to_buf((char *) create_line);
+		std::string create_line = univ.party[who_att].name + " punches.";
+		add_string_to_buf(create_line);
 		
 		r1 = get_ran(1,1,100) + hit_adj - 20;
 		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
@@ -590,7 +591,8 @@ void pc_attack(short who_att,short target) {
 		}
 		else {
 			draw_terrain(2);
-			sprintf (create_line, "%s misses. ",(char *) univ.party[who_att].name.c_str());
+			
+			create_line = univ.party[who_att].name + " misses.";
 			add_string_to_buf(create_line);
 			play_sound(2);
 		}
@@ -604,7 +606,7 @@ void pc_attack(short who_att,short target) {
 		if(what_skill1 == eSkill::INVALID)
 			what_skill1 = eSkill::EDGED_WEAPONS;
 		
-		sprintf (create_line, "%s swings. ",univ.party[who_att].name.c_str());//,hit_adj, dam_adj);
+		std::string create_line = univ.party[who_att].name + " swings. ";
 		add_string_to_buf(create_line);
 		
 		r1 = get_ran(1,1,100) - 5 + hit_adj
@@ -672,8 +674,8 @@ void pc_attack(short who_att,short target) {
 		}
 		else {
 			draw_terrain(2);
-			sprintf ((char *) create_line, "  %s misses.              ",(char *) univ.party[who_att].name.c_str());
-			add_string_to_buf((char *) create_line);
+			create_line = "  " + univ.party[who_att].name + " misses.";
+			add_string_to_buf(create_line);
 			if(what_skill1 == eSkill::POLE_WEAPONS)
 				play_sound(19);
 			else play_sound(2);
@@ -686,8 +688,7 @@ void pc_attack(short who_att,short target) {
 		if(what_skill1 == eSkill::INVALID)
 			what_skill1 = eSkill::EDGED_WEAPONS;
 		
-		
-		sprintf(create_line, "%s swings.                    ",univ.party[who_att].name.c_str());//,hit_adj, dam_adj);
+		std::string create_line = univ.party[who_att].name + " swings.";
 		add_string_to_buf(create_line);
 		r1 = get_ran(1,1,100) + hit_adj - 5 * univ.party[who_att].items[weap2].bonus;
 		
@@ -733,8 +734,8 @@ void pc_attack(short who_att,short target) {
 		}
 		else {
 			draw_terrain(2);
-			sprintf ((char *) create_line, "%s misses.             ",(char *) univ.party[who_att].name.c_str());
-			add_string_to_buf((char *) create_line);
+			create_line = univ.party[who_att].name + " misses.";
+			add_string_to_buf(create_line);
 			if(what_skill2 == eSkill::POLE_WEAPONS)
 				play_sound(19);
 			else play_sound(2);
@@ -1494,14 +1495,15 @@ void fire_missile(location target) {
 			combat_posing_monster = current_working_monster = missile_firer;
 			draw_terrain(2);
 			void_sanctuary(missile_firer);
+			// TODO: Why is this sound commented out?
 			//play_sound((overall_mode == MODE_FIRING) ? 12 : 14);
 			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
 			missile_firer = missile_firer;
 			r1 = get_ran(1,1,100) - 5 * hit_bonus - 10;
 			r1 += 5 * (univ.party[missile_firer].status[eStatus::WEBS] / 3);
 			r2 = get_ran(1,1,dam) + dam_bonus;
-			sprintf ((char *) create_line, "%s fires.",(char *) univ.party[missile_firer].name.c_str()); // debug
-			add_string_to_buf((char *) create_line);
+			std::string create_line = univ.party[missile_firer].name + " fires.";
+			add_string_to_buf(create_line);
 			
 			if(overall_mode == MODE_THROWING) {
 				switch(univ.party[missile_firer].items[ammo_inv_slot].item_level) {
@@ -1615,9 +1617,10 @@ bool combat_next_step() {
 	center = univ.party[current_pc].combat_pos;		*/
 	
 	if((combat_active_pc == 6) && (current_pc != store_pc)) {
-		sprintf(create_line, "Active:  %s (#%d, %d ap.)                     ",
-				univ.party[current_pc].name.c_str(),current_pc + 1,univ.party[current_pc].ap);
-		add_string_to_buf(create_line);
+		std::ostringstream create_line;
+		create_line << "Active:  " << univ.party[current_pc].name;
+		create_line << " (#" << current_pc + 1 << ", " << univ.party[current_pc].ap << " ap.)";
+		add_string_to_buf(create_line.str());
 		print_buf();
 	}
 	if((current_pc != store_pc) || (to_return)) {
@@ -2417,8 +2420,7 @@ void monster_attack_pc(short who_att,short target) {
 				}
 			}
 			else {
-				sprintf ((char *) create_line, "  Misses.");
-				add_string_to_buf((char *) create_line);
+				add_string_to_buf("  Misses.");
 				play_sound(2);
 			}
 			mainPtr.display();
@@ -2559,8 +2561,7 @@ void monster_attack_monster(short who_att,short attackee) {
 				}
 			}
 			else {
-				sprintf ((char *) create_line, "  Misses.");
-				add_string_to_buf((char *) create_line);
+				add_string_to_buf("  Misses.");
 				play_sound(2);
 			}
 			combat_posing_monster = -1;
@@ -2614,7 +2615,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	else if(level == 14) { // vapors
 		//play_sound(44);
 		if(target < 100) { // on PC
-			sprintf (create_line, "  Breathes on %s.                  ",univ.party[target].name.c_str());
+			std::string create_line = "  Breathes on " + univ.party[target].name + '.';
 			add_string_to_buf(create_line);
 		}
 		else {  // on monst
@@ -2627,7 +2628,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	else if(level == 19) { // webs
 		//play_sound(14);
 		if(target < 100) { // on PC
-			sprintf (create_line, "  Throws web at %s.                  ",univ.party[target].name.c_str());
+			std::string create_line = "  Throws web at " + univ.party[target].name + '.';
 			add_string_to_buf(create_line);
 		}
 		else {  // on monst
@@ -2641,8 +2642,8 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		// TODO: This sound doesn't seem right?
 		play_sound(51);
 		if(target < 100) { // on PC
-			sprintf (create_line, "  Fires ray at %s.                  ",univ.party[target].name.c_str());
-			add_string_to_buf((char *) create_line);
+			std::string create_line = "  Fires ray at " + univ.party[target].name + '.';
+			add_string_to_buf(create_line);
 			sleep_pc(target,100,eStatus::PARALYZED,0);
 		}
 		else {  // on monst
@@ -2657,7 +2658,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		//play_sound(43);
 		run_a_missile(source,targ_space,14,0,43,0,0,100);
 		if(target < 100) { // on PC
-			sprintf (create_line, "  Gazes at %s.                  ",univ.party[target].name.c_str());
+			std::string create_line = "  Gazes at " + univ.party[target].name + '.';
 			add_string_to_buf(create_line);
 			petrify_pc(target, univ.town.monst[i].level / 4);
 		}
@@ -2683,7 +2684,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 				
 			}
 			run_a_missile(source,targ_space,8,0,43,0,0,100);
-			sprintf (create_line, "  Drains %s.                  ",univ.party[target].name.c_str());
+			std::string create_line = "  Drains " + univ.party[target].name + '.';
 			add_string_to_buf(create_line);
 			univ.party[target].cur_sp = univ.party[target].cur_sp / 2;
 		}
@@ -2701,7 +2702,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		r1 = get_ran(7,1,6);
 		start_missile_anim();
 		if(target < 100) { // pc
-			sprintf (create_line, "  Hits %s with heat ray.",univ.party[target].name.c_str());
+			std::string create_line = "  Hits " + univ.party[target].name + " with heat ray.";
 			add_string_to_buf(create_line);
 			damage_pc(target,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
 		}
@@ -2718,7 +2719,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 					  0,0,100);
 		//play_sound(64);
 		if(target < 100) { // pc
-			sprintf (create_line, "  Spits acid on %s.",univ.party[target].name.c_str());
+			std::string create_line = "  Spits acid on " + univ.party[target].name + '.';
 			add_string_to_buf(create_line);
 			acid_pc(target,6);
 		}
@@ -2728,27 +2729,27 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		}
 	}
 	else if(target < 100) {  // missile on PC
-		
+		std::string create_line;
 		switch(level) {
 			case 1: case 2: case 20:
 				run_a_missile(source,targ_space,3,1,12,0,0,100);
-				sprintf (create_line, "  Shoots at %s.",univ.party[target].name.c_str());
+				create_line = "  Shoots at " + univ.party[target].name + '.';
 				break;
 			case 3:
 				run_a_missile(source,targ_space,5,1,14,0,0,100);
-				sprintf (create_line, "  Throws spear at %s.",univ.party[target].name.c_str());
+				create_line = "  Throws spear at " + univ.party[target].name + '.';
 				break;
 			case 7:
 				run_a_missile(source,targ_space,7,1,14,0,0,100);
-				sprintf (create_line, "  Throws razordisk at %s.",univ.party[target].name.c_str());
+				create_line = "  Throws razordisk at " + univ.party[target].name + '.';
 				break;
 			case 34:
 				run_a_missile(source,targ_space,5,1,14,0,0,100);
-				sprintf (create_line, "  Fires spines at %s.",univ.party[target].name.c_str());
+				create_line = "  Fires spines at " + univ.party[target].name + '.';
 				break;
 			default:
 				run_a_missile(source,targ_space,12,1,14,0,0,100);
-				sprintf (create_line, "  Throws rock at %s.",univ.party[target].name.c_str());
+				create_line = "  Throws rock at " + univ.party[target].name + '.';
 				break;
 		}
 		
@@ -2778,7 +2779,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 			}
 		}
 		else {
-			sprintf (create_line, "  Misses %s.",univ.party[target].name.c_str());
+			std::string create_line = "  Misses " + univ.party[target].name + '.';
 			add_string_to_buf(create_line);
 		}
 		
@@ -4133,9 +4134,7 @@ void handle_disease() {
 							dumbfound_pc(i,3);
 							break;
 						case 9: case 10:
-							sprintf (create_line, "  %s unaffected. ",
-									 univ.party[i].name.c_str());
-							add_string_to_buf(create_line);
+							add_string_to_buf("  " + univ.party[i].name + "unaffected.");
 							break;
 					}
 					r1 = get_ran(1,0,7);
@@ -4238,7 +4237,6 @@ void end_combat() {
 bool combat_cast_mage_spell() {
 	short target,i,store_sp,bonus = 1,r1,store_sound = 0,store_m_type = 0,num_opp = 0;
 	eSpell spell_num;
-	char c_line[60];
 	cCreature *which_m;
 	cMonster get_monst;
 	
@@ -4313,23 +4311,21 @@ bool combat_cast_mage_spell() {
 					if(target < 6) {
 						univ.party[current_pc].cur_sp -= (*spell_num).cost;
 						play_sound(4);
+						std::string c_line = "  " + univ.party[target].name;
 						switch(spell_num) {
 							case eSpell::ENVENOM:
-								sprintf (c_line, "  %s receives venom.               ",
-										 univ.party[target].name.c_str());
+								c_line += " receives venom.";
 								poison_weapon(target,3 + bonus,1);
 								store_m_type = 11;
 								break;
 								
 							case eSpell::STRENGTH:
-								sprintf (c_line, "  %s stronger.                     ",
-										 univ.party[target].name.c_str());
+								c_line += " stronger.";
 								curse_pc(target, -3);
 								store_m_type = 8;
 								break;
 							case eSpell::RESIST_MAGIC:
-								sprintf (c_line, "  %s resistant.                     ",
-										 univ.party[target].name.c_str());
+								c_line += " resistant.";
 								univ.party[target].status[eStatus::MAGIC_RESISTANCE] += 5 + bonus;
 								store_m_type = 15;
 								break;
@@ -4337,8 +4333,7 @@ bool combat_cast_mage_spell() {
 							default:
 								i = (spell_num == eSpell::HASTE_MINOR) ? 2 : max(2,univ.party[current_pc].level / 2 + bonus);
 								slow_pc(target, -i);
-								sprintf (c_line, "  %s hasted.                       ",
-										 univ.party[target].name.c_str());
+								c_line += " hasted.";
 								store_m_type = 8;
 								break;
 						}
@@ -4364,10 +4359,9 @@ bool combat_cast_mage_spell() {
 						}
 					//play_sound(4);
 					if(spell_num == eSpell::HASTE_MAJOR)
-						sprintf (c_line, "  Party hasted.     ");
+						add_string_to_buf("  Party hasted.");
 					else
-						sprintf (c_line, "  Party blessed!           ");
-					add_string_to_buf(c_line);
+						add_string_to_buf("  Party blessed!");
 					
 					break;
 					
@@ -4379,12 +4373,11 @@ bool combat_cast_mage_spell() {
 					if(spell_num == eSpell::FEAR_GROUP)
 						store_sound = 54;
 					switch(spell_num) {
-						case eSpell::SLOW_GROUP: sprintf (c_line, "  Enemy slowed:       "); break;
-						case eSpell::RAVAGE_ENEMIES: sprintf (c_line, "  Enemy ravaged:              ");break;
-						case eSpell::FEAR_GROUP: sprintf (c_line, "  Enemy scared:   ");break;
-						case eSpell::PARALYSIS_MASS: sprintf (c_line, "  Enemy paralyzed:   ");break;
+						case eSpell::SLOW_GROUP: add_string_to_buf("  Enemy slowed:"); break;
+						case eSpell::RAVAGE_ENEMIES: add_string_to_buf("  Enemy ravaged:"); break;
+						case eSpell::FEAR_GROUP: add_string_to_buf("  Enemy scared:"); break;
+						case eSpell::PARALYSIS_MASS: add_string_to_buf("  Enemy paralyzed:"); break;
 					}
-					add_string_to_buf(c_line);
 					for(i = 0; i < univ.town->max_monst(); i++) {
 						if((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
 							&& (dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= (*spell_num).range)
@@ -4520,9 +4513,7 @@ bool combat_cast_priest_spell() {
 					
 				case eSpell::AVATAR:
 					univ.party[current_pc].cur_sp -= (*spell_num).cost;
-					sprintf ((char *) c_line, "  %s is an avatar! ",
-							 (char *) univ.party[current_pc].name.c_str());
-					add_string_to_buf((char *) c_line);
+					add_string_to_buf("  " + univ.party[current_pc].name + " is an avatar!");
 					heal_pc(current_pc,200);
 					cure_pc(current_pc,8);
 					univ.party[current_pc].status[eStatus::BLESS_CURSE] = 8;
@@ -4592,8 +4583,7 @@ void start_spell_targeting(eSpell num, bool freebie) {
 	spell_being_cast = num;
 	spell_freebie = freebie;
 	
-	sprintf ((char *) create_line, "  Target spell.                ");
-	add_string_to_buf((char *) create_line);
+	add_string_to_buf("  Target spell.");
 	if(isMage(num))
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
@@ -4635,12 +4625,11 @@ void start_fancy_spell_targeting(eSpell num, bool freebie) {
 	
 	for(i = 0; i < 8; i++)
 		spell_targets[i] = null_loc;
-	sprintf (create_line, "  Target spell.                ");
+	add_string_to_buf("  Target spell.");
 	if(isMage(num))
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	add_string_to_buf("  (Hit space to cast.)");
-	add_string_to_buf(create_line);
 	overall_mode = MODE_FANCY_TARGET;
 	current_pat = single;
 	current_spell_range = (*num).range;

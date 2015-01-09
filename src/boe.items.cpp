@@ -150,12 +150,14 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overl
 			if(stat_window == pc_num)
 				put_item_screen(stat_window,0);
 		}
-		if(overall_mode != MODE_STARTUP) {
+		if(overall_mode != MODE_STARTUP && print_result) {
+			std::ostringstream announce;
+			announce << "  " << univ.party[pc_num].name << " gets ";
 			if(!item.ident)
-				sprintf((char *) announce_string,"  %s gets %s.",univ.party[pc_num].name.c_str(),item.name.c_str());
-			else sprintf((char *) announce_string,"  %s gets %s.",univ.party[pc_num].name.c_str(),item.full_name.c_str());
-			if(print_result)
-				add_string_to_buf((char *)announce_string);
+				announce << item.name;
+			else announce << item.full_name;
+			announce << '.';
+			add_string_to_buf(announce.str());
 		}
 		
 		combine_things(pc_num);
@@ -170,7 +172,6 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overl
 bool forced_give(short item_num,eItemAbil abil) {
 	short i,j;
 	cItemRec item;
-	char announce_string[60];
 	
 	if((item_num < 0) || (item_num > 399))
 		return true;
@@ -182,10 +183,13 @@ bool forced_give(short item_num,eItemAbil abil) {
 			if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].items[j].variety == eItemType::NO_ITEM) {
 				univ.party[i].items[j] = item;
 				
+				std::ostringstream announce;
+				announce << "  " << univ.party[i].name << " gets ";
 				if(!item.ident)
-					sprintf((char *) announce_string,"  %s gets %s.",univ.party[i].name.c_str(),item.name.c_str());
-				else sprintf((char *) announce_string,"  %s gets %s.",univ.party[i].name.c_str(),item.full_name.c_str());
-				add_string_to_buf((char *)announce_string);
+					announce << item.name;
+				else announce << item.full_name;
+				announce << '.';
+				add_string_to_buf(announce.str());
 				combine_things(i);
 				sort_pc_items(i);
 				return true;
@@ -423,57 +427,52 @@ void remove_charge(short pc_num,short which_item) {
 }
 
 void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val) {
-	char store_name[60];
-	
-	////
 	if(univ.party[pc_num].items[item_hit].magic ||
 		(univ.party[pc_num].items[item_hit].ability != eItemAbil::NONE))
 		return;
 	univ.party[pc_num].items[item_hit].magic = true;
 	univ.party[pc_num].items[item_hit].enchanted = true;
+	std::string store_name = univ.party[pc_num].items[item_hit].full_name;
 	switch(enchant_type) {
 		case 0:
-			sprintf((char *)store_name,"%s (+1)",univ.party[pc_num].items[item_hit].full_name.c_str());
+			store_name += " (+1)";
 			univ.party[pc_num].items[item_hit].bonus++;
 			univ.party[pc_num].items[item_hit].value = new_val;
 			break;
 		case 1:
-			sprintf((char *)store_name,"%s (+2)",univ.party[pc_num].items[item_hit].full_name.c_str());
+			store_name += " (+2)";
 			univ.party[pc_num].items[item_hit].bonus += 2;
 			univ.party[pc_num].items[item_hit].value = new_val;
 			break;
 		case 2:
-			sprintf((char *)store_name,"%s (+3)",univ.party[pc_num].items[item_hit].full_name.c_str());
+			store_name += " (+3)";
 			univ.party[pc_num].items[item_hit].bonus += 3;
 			univ.party[pc_num].items[item_hit].value = new_val;
 			break;
 		case 3:
-			sprintf((char *)store_name,"%s (F)",univ.party[pc_num].items[item_hit].full_name.c_str());
+			store_name += " (F)";
 			univ.party[pc_num].items[item_hit].ability = eItemAbil::FLAME;
 			univ.party[pc_num].items[item_hit].ability_strength = 5;
 			univ.party[pc_num].items[item_hit].charges = 8;
 			break;
 		case 4:
-			sprintf((char *)store_name,"%s (F!)",univ.party[pc_num].items[item_hit].full_name.c_str());
+			store_name += " (F!)";
 			univ.party[pc_num].items[item_hit].value = new_val;
 			univ.party[pc_num].items[item_hit].ability = eItemAbil::FLAMING_WEAPON;
 			univ.party[pc_num].items[item_hit].ability_strength = 5;
 			break;
 		case 5:
-			sprintf((char *)store_name,"%s (+5)",univ.party[pc_num].items[item_hit].full_name.c_str());
+			store_name += " (+5)";
 			univ.party[pc_num].items[item_hit].value = new_val;
 			univ.party[pc_num].items[item_hit].bonus += 5;
 			break;
 		case 6:
-			sprintf((char *)store_name,"%s (B)",univ.party[pc_num].items[item_hit].full_name.c_str());
+			store_name += " (B)";
 			univ.party[pc_num].items[item_hit].bonus++;
 			univ.party[pc_num].items[item_hit].ability = eItemAbil::BLESS_CURSE;
 			univ.party[pc_num].items[item_hit].ability_strength = 5;
 			univ.party[pc_num].items[item_hit].magic_use_type = 0;
 			univ.party[pc_num].items[item_hit].charges = 8;
-			break;
-		default:
-			strcpy(store_name,univ.party[pc_num].items[item_hit].full_name.c_str());
 			break;
 	}
 	if(univ.party[pc_num].items[item_hit].value > 15000)
@@ -856,9 +855,8 @@ void set_town_attitude(short lo,short hi,short att) {
 
 
 static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& current_getting_pc, const std::vector<cItemRec*>& item_array) {
-	short i,storage;
+	short i;
 	cItemRec item;
-	char message[256];
 	
 	// First make sure all arrays for who can get stuff are in order.
 	if(current_getting_pc < 6 && (univ.party[current_getting_pc].main_status != eMainStatus::ALIVE
@@ -920,9 +918,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 			else csp(987,20 + i * 4,/*4800 + */item.graphic_num,PICT_ITEM);
 #endif
 			me[detail].setText(get_item_interesting_string(item));
-			storage = item.item_weight();
-			sprintf ((char *) message, "Weight: %d",storage);
-			me[weight].setText(message);
+			me[weight].setText("Weight: " + std::to_string(item.item_weight()));
 		} catch(std::out_of_range) { // erase the spot
 			me[pict].hide();
 			me[name].setText("");
@@ -932,10 +928,10 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	}
 	
 	if(current_getting_pc < 6) {
-		i = amount_pc_can_carry(current_getting_pc);
-		storage = pc_carry_weight(current_getting_pc);
-		sprintf ((char *) message, "%s is carrying %d out of %d.",univ.party[current_getting_pc].name.c_str(),storage,i);
-		me["prompt"].setText(message);
+		std::ostringstream sout;
+		sout << univ.party[current_getting_pc].name << " is carrying ";
+		sout << pc_carry_weight(current_getting_pc) << " out of " << amount_pc_can_carry(current_getting_pc) << '.';
+		me["prompt"].setText(sout.str());
 	}
 	
 	for(i = 0; i < 6; i++)
@@ -1177,15 +1173,12 @@ static bool get_num_of_items_event_filter(cDialog& me, std::string, eKeyMod) {
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
 //short sign_type; // terrain type
 short get_num_of_items(short max_num) {
-	char sign_text[256];
-	
 	make_cursor_sword();
 	
 	cDialog numPanel("get-num");
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
-	sprintf((char *) sign_text,"How many? (0-%d) ",max_num);
-	numPanel["prompt"].setText(sign_text);
+	numPanel["prompt"].setText("How many? (0-" + std::to_string(max_num) + ") ");
 	numPanel["number"].setTextToNum(max_num);
 	numPanel.run();
 	

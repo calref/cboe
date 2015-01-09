@@ -812,7 +812,7 @@ void cDialog::loadFromFile(std::string path){
 	fname = path;
 	fs::path cPath = progDir/"data"/"dialogs"/path;
 	try{
-		printf("Loading dialog from: %s\n", cPath.string().c_str());
+		std::cout << "Loading dialog from: " << cPath << std::endl;
 		TiXmlBase::SetCondenseWhiteSpace(false);
 		Document xml(cPath.string().c_str());
 		xml.LoadFile();
@@ -915,20 +915,20 @@ void cDialog::loadFromFile(std::string path){
 			return a.second->tabOrder < b.second->tabOrder;
 		});
 	} catch(Exception& x){ // XML processing exception
-		printf("%s",x.what());
-		exit(1);
+		std::cerr << x.what();
+		throw;
 	} catch(xBadVal& x){ // Invalid value for an attribute
-		printf("%s",x.what());
-		exit(1);
+		std::cerr << x.what();
+		throw;
 	} catch(xBadAttr& x){ // Invalid attribute for an element
-		printf("%s",x.what());
-		exit(1);
+		std::cerr << x.what();
+		throw;
 	} catch(xBadNode& x){ // Invalid element
-		printf("%s",x.what());
-		exit(1);
+		std::cerr << x.what();
+		throw;
 	} catch(xMissingAttr& x){ // Invalid element
-		printf("%s",x.what());
-		exit(1);
+		std::cerr << x.what();
+		throw;
 	}
 	dialogNotToast = true;
 	if(bg == BG_DARK) defTextClr = sf::Color::White;
@@ -949,7 +949,7 @@ void cDialog::loadFromFile(std::string path){
 void cDialog::recalcRect(){
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
-		printf("%s \"%s\"\n",typeid(*(iter->second)).name(),iter->first.c_str());
+		std::cout << typeid(*(iter->second)).name() << " \"" << iter->first << "\"\n";
 		rectangle frame = iter->second->getBounds();
 		if(frame.right > winRect.right)
 			winRect.right = frame.right;
@@ -1379,7 +1379,7 @@ const char* xBadNode::what() throw() {
 	if(msg == NULL){
 		char* s = new (nothrow) char[200];
 		if(s == NULL){
-			printf("Allocation of memory for error message failed, bailing out...");
+			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
 		sprintf(s,"XML Parse Error: Unknown element %s encountered (dialog %s, line %d, column %d).",type.c_str(),dlg.c_str(),row,col);
@@ -1404,7 +1404,7 @@ const char* xBadAttr::what() throw() {
 	if(msg == NULL){
 		char* s = new (nothrow) char[200];
 		if(s == NULL){
-			printf("Allocation of memory for error message failed, bailing out...");
+			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
 		sprintf(s,"XML Parse Error: Unknown attribute %s encountered on element %s (dialog %s, line %d, column %d).",name.c_str(),type.c_str(),dlg.c_str(),row,col);
@@ -1429,7 +1429,7 @@ const char* xMissingAttr::what() throw() {
 	if(msg == NULL){
 		char* s = new (nothrow) char[200];
 		if(s == NULL){
-			printf("Allocation of memory for error message failed, bailing out...");
+			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
 		sprintf(s,"XML Parse Error: Required attribute %s missing on element %s (dialog %s, line %d, column %d).",name.c_str(),type.c_str(),dlg.c_str(),row,col);
@@ -1455,7 +1455,7 @@ const char* xBadVal::what() throw() {
 	if(msg == NULL){
 		char* s = new (nothrow) char[200];
 		if(s == NULL){
-			printf("Allocation of memory for error message failed, bailing out...");
+			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
 		sprintf(s,"XML Parse Error: Invalid value %s for attribute %s encountered on element %s (dialog %s, line %d, column %d).",val.c_str(),name.c_str(),type.c_str(),dlg.c_str(),row,col);

@@ -11,6 +11,7 @@
 #include <map>
 #include <set>
 #include <sstream>
+#include <iostream>
 
 #include "classes.h"
 #include "oldstructs.h"
@@ -337,7 +338,7 @@ void cPlayer::readFrom(std::istream& file){
 	bin.str(cur);
 	while(bin) { // continue as long as no error, such as eof, occurs
 		getline(bin, cur);
-		printf("Parsing line in pcN.txt: %s\n", cur.c_str());
+		std::cout << "Parsing line in pcN.txt: " << cur << std::endl;
 		sin.str(cur);
 		sin >> cur;
 		if(cur == "STATUS"){
