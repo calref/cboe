@@ -53,9 +53,24 @@ cursor_type arrow_curs[3][3] = {
 };
 
 #include <stdexcept>
+std::filebuf logfile;
 
 void init_directories(const char* exec_path) {
 	progDir = fs::canonical(exec_path);
+#ifdef _MSC_VER
+#ifdef DEBUG
+	void set_debug_buffers();
+	set_debug_buffers();
+#else
+	std::string logpath = (progDir.parent_path()/"bladeslog.txt").string();
+	logfile.open(logpath.c_str(), std::ios::out);
+	std::cout.rdbuf(&logfile);
+	std::cerr.rdbuf(&logfile);
+#endif
+	std::cout << "Testing cout" << std::endl;
+	std::cerr << "Testing cerr" << std::endl;
+	sf::err().rdbuf(std::cerr.rdbuf());
+#endif
 #ifdef __APPLE__
 	// Need to back up out of the application package
 	// We're pointing at .app/Contents/MacOS/exec_name, so back out three steps

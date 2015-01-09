@@ -99,6 +99,7 @@
     <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\tools\cursors.win.cpp" />
+    <ClCompile Include="..\..\tools\debugout.win.cpp" />
     <ClCompile Include="..\..\tools\fileio.cpp" />
     <ClCompile Include="..\..\tools\graphtool.cpp" />
     <ClCompile Include="..\..\tools\gzstream\gzstream.cpp" />

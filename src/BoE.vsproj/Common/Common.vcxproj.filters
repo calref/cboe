@@ -337,5 +337,8 @@
     <ClCompile Include="..\..\tools\winutil.win.cpp">
       <Filter>Tools\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\tools\debugout.win.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
