@@ -393,7 +393,8 @@ const node_properties_t& operator* (eSpecType t) {
 }
 
 std::string node_properties_t::opcode() const {
-	return get_str("specials-opcodes", int(self) + 1);
+	if(self == eSpecType::NONE) return "nop";
+	return get_str("specials-opcodes", int(self));
 }
 
 static std::string get_node_string(std::string base, eSpecType type, int which) {

@@ -9,37 +9,36 @@
 #ifndef BoE_special_parse_hpp
 #define BoE_special_parse_hpp
 
-#include <boost/spirit/include/qi.hpp>
-
 #include "special.h"
+#include <boost/spirit/include/classic.hpp>
 
-namespace qi = boost::spirit::qi;
-typedef boost::spirit::context<boost::fusion::cons<int &, boost::fusion::nil_>, boost::fusion::vector0<void>>& ph_t;
-typedef qi::rule<std::string::iterator,int()> Rule;
+namespace spirit = boost::spirit::classic;
+typedef spirit::rule<> Rule;
 
 class SpecialParser {
-	static void init_file();
-	static void init_block();
-	static void prep_add_symbol(char c);
+	using Iter = Rule::scanner_t::iterator_t;
+	static void init_file(Iter, Iter);
+	static void init_block(Iter, Iter);
+	static void prep_add_symbol(Iter, Iter);
 	static void add_symbol(int i);
-	static void add_command();
+	static void add_command(Iter, Iter);
 	static void set_type(eSpecType type);
 	static void skip_to(int i);
-	static void for_sdf();
-	static void for_pic();
-	static void for_msg();
-	static void for_ex1();
-	static void for_ex2();
-	static void for_goto();
-	static void set_first(int i, ph_t, bool& pass);
-	static void set_second(int i, ph_t, bool& pass);
-	static void set_third(int i, ph_t, bool& pass);
+	static void for_sdf(Iter, Iter);
+	static void for_pic(Iter, Iter);
+	static void for_msg(Iter, Iter);
+	static void for_ex1(Iter, Iter);
+	static void for_ex2(Iter, Iter);
+	static void for_goto(Iter, Iter);
+	static void set_first(int i);
+	static void set_second(int i);
+	static void set_third(int i);
 	static std::string temp_symbol;
 	static int cur_node, cur_fld;
 	static cSpecial curSpec;
 	static std::map<size_t, cSpecial> specials;
-	static qi::symbols<char, int> defn;
-	static Rule ws, comment, symbol, val;
+	static spirit::symbols<> defn;
+	static Rule ws, comment, symbol, symbol_ch;
 	static Rule datcode, command, init_line, null_line, def_line, cmd_line, op_line, cmd_block, nodes_file;
 	static bool grammar_built;
 public:
