@@ -8,15 +8,12 @@
 
 //#define BOOST_SPIRIT_DEBUG
 
-#ifndef _MSC_VER // TODO: Figure out why this won't compile in Visual Studio
-
 #include "special_parse.hpp"
 
 #include <fstream>
 #include <sstream>
 #include <iterator>
 #include <set>
-#include <boost/phoenix/bind.hpp>
 
 #include "special.h"
 
@@ -237,4 +234,3 @@ void test_special_parse(std::string file) {
 	fout.close();
 }
 
-#endif
