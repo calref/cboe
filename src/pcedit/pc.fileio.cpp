@@ -6,13 +6,13 @@
 #include "classes.h"
 #include "pc.fileio.h"
 #include "pc.graphics.h"
-#include "graphtool.h"
-#include "soundtool.h"
+#include "graphtool.hpp"
+#include "soundtool.hpp"
 #include "pc.editors.h"
-#include "mathutil.h"
+#include "mathutil.hpp"
 #include "dlogutil.hpp"
 #include "restypes.hpp"
-#include "fileio.h"
+#include "fileio.hpp"
 
 #define	DONE_BUTTON_ITEM	1
 

@@ -7,9 +7,9 @@
 #include "pc.editors.h"
 #include "pc.fileio.h"
 #include "pc.action.h"
-#include "graphtool.h"
-#include "soundtool.h"
-#include "mathutil.h"
+#include "graphtool.hpp"
+#include "soundtool.hpp"
+#include "mathutil.hpp"
 #include "dlogutil.hpp"
 #include <boost/lexical_cast.hpp>
 

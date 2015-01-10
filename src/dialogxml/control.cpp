@@ -9,11 +9,11 @@
 #include "control.hpp"
 #include <sstream>
 #include "dialog.hpp"
-#include "soundtool.h"
+#include "soundtool.hpp"
 #include "button.hpp"
-#include "graphtool.h"
+#include "graphtool.hpp"
 #include "restypes.hpp"
-#include "mathutil.h"
+#include "mathutil.hpp"
 
 extern bool play_sounds;
 

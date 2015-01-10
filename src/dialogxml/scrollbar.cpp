@@ -8,8 +8,8 @@
 
 #include "scrollbar.hpp"
 #include "restypes.hpp"
-#include "graphtool.h"
-#include "mathutil.h"
+#include "graphtool.hpp"
+#include "mathutil.hpp"
 
 sf::Texture cScrollbar::scroll_gw;
 tessel_ref_t cScrollbar::bar_tessel[2];

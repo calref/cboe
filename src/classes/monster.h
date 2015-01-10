@@ -13,9 +13,9 @@
 #include <map>
 #include <iosfwd>
 
-#include "soundtool.h"
+#include "soundtool.hpp"
 #include "simpletypes.h"
-#include "graphtool.h"
+#include "graphtool.hpp"
 
 namespace legacy {
 	struct monster_record_type;

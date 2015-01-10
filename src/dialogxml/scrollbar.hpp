@@ -13,7 +13,7 @@
 /// Scrollbar-related classes and types.
 
 #include "control.hpp"
-#include "graphtool.h"
+#include "graphtool.hpp"
 
 /// A simple vertical scrollbar.
 /// This has no coupling with scrollable data; that must be handled externally by

@@ -16,9 +16,9 @@
 #include "boe.infodlg.h"
 #include "boe.monster.h"
 #include "boe.specials.h"
-#include "soundtool.h"
-#include "graphtool.h"
-#include "mathutil.h"
+#include "soundtool.hpp"
+#include "graphtool.hpp"
+#include "mathutil.hpp"
 #include "dlogutil.hpp"
 
 extern sf::RenderWindow mainPtr;

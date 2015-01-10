@@ -6,7 +6,7 @@
  *
  */
 
-#include "fileio.h"
+#include "fileio.hpp"
 
 #include <fstream>
 #include <boost/filesystem/operations.hpp>
@@ -16,13 +16,13 @@
 
 #include "classes.h"
 #include "map_parse.hpp"
-#include "graphtool.h"
-#include "mathutil.h"
+#include "graphtool.hpp"
+#include "mathutil.hpp"
 
-#include "porting.h"
+#include "porting.hpp"
 #include "restypes.hpp"
 #include "tarball.hpp"
-#include "cursors.h"
+#include "cursors.hpp"
 
 bool cur_scen_is_mac =  true, mac_is_intel;
 extern sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;

@@ -13,7 +13,7 @@
 #include <stdexcept>
 
 #include "dialog.hpp"
-#include "graphtool.h"
+#include "graphtool.hpp"
 
 #include <cmath>
 #include <climits>

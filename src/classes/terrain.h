@@ -13,7 +13,8 @@
 #include <iosfwd>
 
 #include "simpletypes.h"
-#include "graphtool.h" // for pic_num_t
+#include "pictypes.hpp"
+#include "location.h"
 
 namespace legacy { struct terrain_type_type; };
 

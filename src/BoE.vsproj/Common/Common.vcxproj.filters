@@ -145,28 +145,28 @@
     <ClInclude Include="..\..\dialogxml\stack.hpp">
       <Filter>DialogXML\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\cursors.h">
+    <ClInclude Include="..\..\tools\cursors.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\fileio.h">
+    <ClInclude Include="..\..\tools\fileio.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\graphtool.h">
+    <ClInclude Include="..\..\tools\graphtool.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tools\map_parse.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\mathutil.h">
+    <ClInclude Include="..\..\tools\mathutil.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\porting.h">
+    <ClInclude Include="..\..\tools\porting.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tools\prefs.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\soundtool.h">
+    <ClInclude Include="..\..\tools\soundtool.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tools\special_parse.hpp">
@@ -175,13 +175,13 @@
     <ClInclude Include="..\..\tools\tarball.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\undo.h">
+    <ClInclude Include="..\..\tools\undo.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tools\vector2d.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\winutil.h">
+    <ClInclude Include="..\..\tools\winutil.hpp">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tools\resmgr\resmgr.hpp">

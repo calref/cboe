@@ -14,7 +14,7 @@
 
 #include <string>
 #include "control.hpp"
-#include "graphtool.h"
+#include "graphtool.hpp"
 
 /// The field's expected input type.
 enum eFldType {

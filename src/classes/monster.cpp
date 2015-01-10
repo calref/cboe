@@ -14,7 +14,7 @@
 
 #include "classes.h"
 #include "oldstructs.h"
-#include "fileio.h"
+#include "fileio.hpp"
 
 void cMonster::append(legacy::monster_record_type& old){
 	level = old.level;

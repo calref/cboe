@@ -4,7 +4,7 @@
 #include <boost/lexical_cast.hpp>
 #include "scen.global.h"
 #include "classes.h"
-#include "graphtool.h"
+#include "graphtool.hpp"
 #include "scen.graphics.h"
 //#include "itemlist.h"
 #include "scen.core.h"
@@ -15,7 +15,7 @@
 #include "scen.menus.h"
 #include "dialog.hpp"
 #include "dlogutil.hpp"
-#include "fileio.h"
+#include "fileio.hpp"
 #include "field.hpp"
 #include "restypes.hpp"
 

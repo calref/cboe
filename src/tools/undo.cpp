@@ -6,7 +6,7 @@
  *
  */
 
-#include "undo.h"
+#include "undo.hpp"
 
 cUndoList::cUndoList(){
 	lastSave = cur = theList.begin();

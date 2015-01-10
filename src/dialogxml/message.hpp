@@ -16,7 +16,7 @@
 
 #include <string>
 #include "control.hpp"
-#include "graphtool.h" // for eFont
+#include "graphtool.hpp" // for eFont
 
 /// A simple static text message.
 /// This class can also create a frame for grouping controls or a clickable area.

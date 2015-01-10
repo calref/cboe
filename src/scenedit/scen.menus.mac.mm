@@ -9,7 +9,7 @@
 #include "scen.menus.h"
 #include <Cocoa/Cocoa.h>
 #include "scenario.h"
-#include "winutil.h"
+#include "winutil.hpp"
 
 using MenuHandle = NSMenu*;
 MenuHandle menu_bar_handle;

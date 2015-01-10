@@ -1,5 +1,5 @@
 
-#include "winutil.h"
+#include "winutil.hpp"
 #include <iostream>
 #include <Windows.h>
 #include <SFML/Graphics/RenderWindow.hpp>

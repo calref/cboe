@@ -6,7 +6,7 @@
 //  Wrappers for NSCursor, based on an Apple example
 //
 
-#include "cursors.h"
+#include "cursors.hpp"
 #include <Cocoa/Cocoa.h>
 #include <string>
 #include "restypes.hpp"

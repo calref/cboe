@@ -14,7 +14,7 @@
 #include "dlogutil.hpp"
 #include "classes.h"
 #include "oldstructs.h"
-#include "fileio.h"
+#include "fileio.hpp"
 
 void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 	int i,j;

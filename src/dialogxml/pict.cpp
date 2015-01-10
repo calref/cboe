@@ -11,7 +11,7 @@
 #include <map>
 #include <stdexcept>
 
-#include "graphtool.h"
+#include "graphtool.hpp"
 #include "dialog.hpp"
 #include "restypes.hpp"
 

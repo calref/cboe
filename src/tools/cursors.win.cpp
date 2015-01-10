@@ -1,5 +1,5 @@
 
-#include "cursors.h"
+#include "cursors.hpp"
 #include <Windows.h>
 #include <exception>
 #include <SFML/Graphics/RenderWindow.hpp>

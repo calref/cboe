@@ -6,7 +6,7 @@
 //
 //
 
-#include "winutil.h"
+#include "winutil.hpp"
 #include <Cocoa/Cocoa.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 

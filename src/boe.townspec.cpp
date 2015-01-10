@@ -15,10 +15,10 @@
 #include "boe.text.h"
 #include "boe.itemdata.h"
 #include "boe.townspec.h"
-#include "soundtool.h"
-#include "mathutil.h"
+#include "soundtool.hpp"
+#include "mathutil.hpp"
 #include "dlogutil.hpp"
-#include "winutil.h"
+#include "winutil.hpp"
 
 extern eGameMode overall_mode;
 //extern party_record_type univ.party;

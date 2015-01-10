@@ -10,8 +10,8 @@
 #include <stdexcept>
 #include <boost/type_traits/is_pointer.hpp>
 #include "dialog.hpp"
-#include "graphtool.h"
-#include "soundtool.h"
+#include "graphtool.hpp"
+#include "soundtool.hpp"
 using namespace std;
 using namespace ticpp;
 #include "pict.hpp"
@@ -20,9 +20,9 @@ using namespace ticpp;
 #include "message.hpp"
 #include "scrollbar.hpp"
 #include "stack.hpp"
-#include "winutil.h"
-#include "mathutil.h"
-#include "cursors.h"
+#include "winutil.hpp"
+#include "mathutil.hpp"
+#include "cursors.hpp"
 
 // TODO: Would be nice if I could avoid depending on mainPtr
 extern sf::RenderWindow mainPtr;

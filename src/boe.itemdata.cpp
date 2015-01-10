@@ -8,7 +8,7 @@
 
 #include "classes.h"
 #include "boe.itemdata.h"
-#include "mathutil.h"
+#include "mathutil.hpp"
 //extern piles_of_stuff_dumping_type *data_store;
 
 //item_record_type convert_item (short_item_record_type s_item);

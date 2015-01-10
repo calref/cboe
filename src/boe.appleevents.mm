@@ -9,7 +9,7 @@
 #include <Cocoa/Cocoa.h>
 #include <memory>
 #include <algorithm>
-#include "fileio.h"
+#include "fileio.hpp"
 #include "boe.global.h"
 #include "dlogutil.hpp"
 #include "universe.h"

@@ -13,8 +13,8 @@
 
 #include "classes.h"
 #include "oldstructs.h"
-#include "mathutil.h"
-#include "fileio.h"
+#include "mathutil.hpp"
+#include "fileio.hpp"
 
 void cCurOut::append(legacy::out_info_type& old){
 	for(int i = 0; i < 96; i++)

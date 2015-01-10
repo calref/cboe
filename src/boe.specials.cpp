@@ -18,17 +18,17 @@
 #include "boe.monster.h"
 #include "boe.locutils.h"
 #include "boe.actions.h"
-#include "soundtool.h"
+#include "soundtool.hpp"
 #include "boe.townspec.h"
 #include "boe.graphics.h"
 #include "boe.fileio.h"
 #include "boe.specials.h"
 #include "boe.newgraph.h"
 #include "boe.dlgutil.h"
-#include "mathutil.h"
+#include "mathutil.hpp"
 #include "boe.main.h"
 #include "dlogutil.hpp"
-#include "fileio.h"
+#include "fileio.hpp"
 #include <array>
 
 extern sf::RenderWindow mainPtr;

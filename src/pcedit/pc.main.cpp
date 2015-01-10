@@ -8,14 +8,14 @@
 #include "pc.editors.h"
 #include "pc.action.h"
 #include "pc.fileio.h"
-#include "soundtool.h"
-#include "graphtool.h"
+#include "soundtool.hpp"
+#include "graphtool.hpp"
 #include "boe.consts.h"
 #include "dlogutil.hpp"
-#include "fileio.h"
+#include "fileio.hpp"
 #include "pc.menus.h"
-#include "winutil.h"
-#include "cursors.h"
+#include "winutil.hpp"
+#include "cursors.hpp"
 
 cUniverse univ;
 

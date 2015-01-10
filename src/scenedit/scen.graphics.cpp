@@ -4,12 +4,12 @@
 #include <cstring>
 #include "scen.global.h"
 #include "classes.h"
-#include "graphtool.h"
+#include "graphtool.hpp"
 #include "scen.graphics.h"
 #include <cmath>
 #include "scen.keydlgs.h"
-#include "soundtool.h"
-#include "mathutil.h"
+#include "soundtool.hpp"
+#include "mathutil.hpp"
 #include "boe.consts.h" // TODO: Put these constants in a global file
 
 #include "dialog.hpp"

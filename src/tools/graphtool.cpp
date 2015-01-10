@@ -7,7 +7,7 @@
  */
 
 #define GRAPHTOOL_CPP
-#include "graphtool.h"
+#include "graphtool.hpp"
 
 #ifdef __APPLE__
 #include <OpenGl/GL.h>
@@ -25,8 +25,8 @@
 #include <boost/math/constants/constants.hpp>
 
 #include "restypes.hpp"
-#include "mathutil.h"
-#include "fileio.h"
+#include "mathutil.hpp"
+#include "fileio.hpp"
 
 using boost::math::constants::pi;
 

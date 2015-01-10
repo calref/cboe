@@ -4,7 +4,7 @@
 
 #include "scen.global.h"
 #include "classes.h"
-#include "graphtool.h"
+#include "graphtool.hpp"
 #include "scen.graphics.h"
 #include <cmath>
 #include "scen.btnmg.h"

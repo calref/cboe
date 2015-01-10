@@ -15,12 +15,12 @@
 #include "boe.party.h"
 #include "boe.startup.h"
 #include "boe.party.h"
-#include "soundtool.h"
-#include "fileio.h"
+#include "soundtool.hpp"
+#include "fileio.hpp"
 #include "dlogutil.hpp"
-#include "winutil.h"
+#include "winutil.hpp"
 #include "boe.menus.h"
-#include "mathutil.h"
+#include "mathutil.hpp"
 
 #include <vector>
 using std::vector;

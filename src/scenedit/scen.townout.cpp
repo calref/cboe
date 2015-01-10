@@ -4,18 +4,18 @@
 #include <boost/lexical_cast.hpp>
 #include "scen.global.h"
 #include "classes.h"
-#include "graphtool.h"
+#include "graphtool.hpp"
 #include "scen.graphics.h"
 #include "scen.townout.h"
 #include "scen.keydlgs.h"
 #include "scen.fileio.h"
 #include "scen.core.h"
-#include "mathutil.h"
+#include "mathutil.hpp"
 #include "button.hpp"
 #include "dlogutil.hpp"
-#include "winutil.h"
+#include "winutil.hpp"
 #include "stack.hpp"
-#include "fileio.h"
+#include "fileio.hpp"
 
 extern short cen_x, cen_y, overall_mode;//,user_given_password;
 extern bool mouse_button_held,editing_town;

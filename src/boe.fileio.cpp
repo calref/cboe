@@ -16,12 +16,11 @@
 #include "boe.dlgutil.h"
 #include "boe.infodlg.h"
 #include "boe.graphutil.h"
-#include "graphtool.h"
-#include "soundtool.h"
-#include "mathutil.h"
+#include "graphtool.hpp"
+#include "soundtool.hpp"
+#include "mathutil.hpp"
 #include "dlogutil.hpp"
-#include "fileio.h"
-#include "porting.h" // only needed for one little flip_short call, though...
+#include "fileio.hpp"
 #include <boost/filesystem.hpp>
 #include "restypes.hpp"
 

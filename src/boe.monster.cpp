@@ -11,12 +11,12 @@
 #include "boe.text.h"
 #include "boe.specials.h"
 #include "boe.items.h"
-#include "soundtool.h"
+#include "soundtool.hpp"
 #include "boe.graphics.h"
 #include "boe.newgraph.h"
 #include "boe.main.h"
-#include "mathutil.h"
-#include "graphtool.h"
+#include "mathutil.hpp"
+#include "graphtool.hpp"
 
 //extern current_town_type univ.town;
 //extern party_record_type party;

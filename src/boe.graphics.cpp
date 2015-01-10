@@ -13,9 +13,9 @@
 #include "boe.monster.h"
 #include "boe.locutils.h"
 #include "boe.text.h"
-#include "graphtool.h"
-#include "soundtool.h"
-#include "mathutil.h"
+#include "graphtool.hpp"
+#include "soundtool.hpp"
+#include "mathutil.hpp"
 
 #include "boe.party.h"
 #include "boe.town.h"
@@ -27,7 +27,7 @@
 
 #include "restypes.hpp"
 #include "boe.menus.h"
-#include "winutil.h"
+#include "winutil.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern short stat_window;

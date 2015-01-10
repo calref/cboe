@@ -17,17 +17,17 @@
 #include "boe.newgraph.h"
 #include "boe.itemdata.h"
 #include "boe.infodlg.h"
-#include "soundtool.h"
+#include "soundtool.hpp"
 #include "boe.monster.h"
 #include "boe.main.h"
-#include "graphtool.h"
-#include "mathutil.h"
+#include "graphtool.hpp"
+#include "mathutil.hpp"
 #include "dlogutil.hpp"
 #include "restypes.hpp"
 #include "message.hpp"
 #include <array>
 #include <boost/lexical_cast.hpp>
-#include "winutil.h"
+#include "winutil.hpp"
 
 extern short stat_window,which_combat_type,current_pc;
 extern eGameMode overall_mode;

@@ -3,12 +3,12 @@
 #include "pc.global.h"
 #include "classes.h"
 #include "pc.editors.h"
-#include "graphtool.h"
+#include "graphtool.hpp"
 #include "dialog.hpp"
 #include "control.hpp"
 #include "button.hpp"
 #include "dlogutil.hpp"
-#include "winutil.h"
+#include "winutil.hpp"
 #include <boost/lexical_cast.hpp>
 
 /*

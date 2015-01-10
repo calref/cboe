@@ -7,7 +7,7 @@
  */
 
 #include <cstdlib>
-#include "mathutil.h"
+#include "mathutil.hpp"
 
 short get_ran (short times,short  min,short  max){
 	long int store;

@@ -14,7 +14,7 @@
 #include <boost/lexical_cast.hpp>
 #include "dialog.hpp"
 #include "dlogutil.hpp"
-#include "mathutil.h"
+#include "mathutil.hpp"
 #include <array>
 #include "message.hpp"
 

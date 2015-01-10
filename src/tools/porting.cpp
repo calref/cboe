@@ -6,7 +6,7 @@
  *
  */
 
-#include "porting.h"
+#include "porting.hpp"
 
 extern bool cur_scen_is_mac, mac_is_intel;
 

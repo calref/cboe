@@ -16,9 +16,9 @@
 #include "boe.itemdata.h"
 #include "boe.locutils.h"
 #include "boe.text.h"
-#include "soundtool.h"
-#include "mathutil.h"
-#include "graphtool.h"
+#include "soundtool.hpp"
+#include "mathutil.hpp"
+#include "graphtool.hpp"
 #include "scrollbar.hpp"
 #include <memory>
 #include "location.h"

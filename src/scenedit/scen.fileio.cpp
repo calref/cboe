@@ -4,12 +4,12 @@
 #include <iostream>
 #include "scen.fileio.h"
 #include "scen.keydlgs.h"
-#include "graphtool.h"
+#include "graphtool.hpp"
 #include "scen.core.h"
-#include "soundtool.h"
-#include "mathutil.h"
+#include "soundtool.hpp"
+#include "mathutil.hpp"
 #include "oldstructs.h"
-#include "fileio.h"
+#include "fileio.hpp"
 #include "dlogutil.hpp"
 
 #include <fstream>

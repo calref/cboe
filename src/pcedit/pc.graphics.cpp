@@ -1,16 +1,16 @@
-//#include <cMemory>
+
 #include <iomanip>
 #include "pc.global.h"
 #include "classes.h"
 #include "pc.graphics.h"
 #include "pc.editors.h"
 #include "pc.action.h"
-#include "soundtool.h"
-#include "graphtool.h"
+#include "soundtool.hpp"
+#include "graphtool.hpp"
 #include "dlogutil.hpp"
 #include "restypes.hpp"
 #include "message.hpp"
-#include "mathutil.h"
+#include "mathutil.hpp"
 
 extern cUniverse univ;
 

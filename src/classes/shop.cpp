@@ -8,8 +8,8 @@
 
 #include "shop.hpp"
 #include <numeric>
-#include "mathutil.h"
-#include "graphtool.h" // for get_str
+#include "mathutil.hpp"
+#include "graphtool.hpp" // for get_str
 
 static long cost_mult[7] = {5,7,10,13,16,20,25};
 

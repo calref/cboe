@@ -13,9 +13,9 @@
 #include <boost/lexical_cast.hpp>
 #include "dialog.hpp"
 #include "dlogutil.hpp"
-#include "graphtool.h"
-#include "winutil.h"
-#include "cursors.h"
+#include "graphtool.hpp"
+#include "winutil.hpp"
+#include "cursors.hpp"
 
 void cTextField::attachClickHandler(click_callback_t) throw(xHandlerNotSupported){
 	throw xHandlerNotSupported(false);

@@ -19,7 +19,7 @@
 #include <iostream>
 #include <map>
 #include <boost/filesystem/path.hpp>
-#include "cursors.h"
+#include "cursors.hpp"
 #include "location.h"
 
 using ImageRsrc = sf::Image;

@@ -5,7 +5,7 @@
  *  Created by Celtic Minstrel on 16/04/09.
  *
  */
-#include "soundtool.h"
+#include "soundtool.hpp"
 
 #include <cmath>
 #include <cstdio>
@@ -15,7 +15,7 @@
 #include <unordered_map>
 
 #include "restypes.hpp"
-#include "mathutil.h"
+#include "mathutil.hpp"
 
 std::shared_ptr<sf::SoundBuffer> sound_handles[NUM_SOUNDS];
 sf::Sound chan[4];

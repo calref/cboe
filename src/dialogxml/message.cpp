@@ -7,8 +7,8 @@
  */
 
 #include "message.hpp"
-#include "graphtool.h"
-#include "mathutil.h"
+#include "graphtool.hpp"
+#include "mathutil.hpp"
 #include "dialog.hpp"
 
 extern sf::Texture bg_gworld;

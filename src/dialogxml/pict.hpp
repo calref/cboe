@@ -16,7 +16,6 @@
 
 #include <vector>
 #include <map>
-#include "graphtool.h" // for pic_num_t
 #include "control.hpp"
 #include "pictypes.hpp"
 

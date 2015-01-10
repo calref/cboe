@@ -16,8 +16,8 @@
 #include <vector>
 #include <array>
 #include <functional>
-#include "graphtool.h" // for pic_num_t
-#include "soundtool.h" // for snd_num_t
+#include "pictypes.hpp"
+#include "soundtool.hpp" // for snd_num_t
 #include "pict.hpp"
 #include "dialog.hpp"
 #include "button.hpp"

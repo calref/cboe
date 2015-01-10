@@ -15,7 +15,7 @@
 #include "dlogutil.hpp"
 #include "classes.h"
 #include "oldstructs.h"
-#include "fileio.h"
+#include "fileio.hpp"
 
 cParty::cParty(cUniverse& univ, long party_preset) : univ(univ) {
 	gold = 200;

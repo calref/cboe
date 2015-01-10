@@ -19,16 +19,16 @@
 #include "boe.combat.h"
 #include "boe.party.h"
 #include "boe.text.h"
-#include "soundtool.h"
+#include "soundtool.hpp"
 #include "boe.locutils.h"
 #include "boe.specials.h"
 #include "boe.infodlg.h"
-#include "mathutil.h"
+#include "mathutil.hpp"
 #include "boe.main.h"
-#include "graphtool.h"
+#include "graphtool.hpp"
 #include "dlogutil.hpp"
-#include "fileio.h"
-#include "winutil.h"
+#include "fileio.hpp"
+#include "winutil.hpp"
 
 //extern current_town_type univ.town;
 //extern party_record_type	party;

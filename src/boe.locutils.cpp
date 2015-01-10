@@ -1,7 +1,7 @@
 
 //#include "item.h"
 
-#include "mathutil.h"
+#include "mathutil.hpp"
 #include "boe.global.h"
 
 #include "classes.h"
