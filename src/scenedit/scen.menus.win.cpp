@@ -4,7 +4,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Resource.h"
 #include "scenario.h"
-#include "winutil.h"
+#include "winutil.hpp"
 
 // Include this last because some #defines in the Windows headers cause compile errors in my headers.
 // Fortunately they're on symbols not used in this file, so this should work.
@@ -211,7 +211,7 @@ void shut_down_menus(short mode) {
 	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
-#include "cursors.h"
+#include "cursors.hpp"
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 	if(message == WM_COMMAND) {

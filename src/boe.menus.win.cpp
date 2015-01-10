@@ -9,7 +9,7 @@
 #include "boe.infodlg.h"
 #include "boe.consts.h"
 #include "spell.hpp"
-#include "winutil.h"
+#include "winutil.hpp"
 
 // Include this last because some #defines in the Windows headers cause compile errors in my headers.
 // Fortunately they're on symbols not used in this file, so this should work.
@@ -272,7 +272,7 @@ void showMenuBar() {
 	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
-#include "cursors.h"
+#include "cursors.hpp"
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 	if(message == WM_COMMAND) {
