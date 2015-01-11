@@ -13,7 +13,7 @@ void cStack::attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) 
 	onClick = f;
 }
 
-void cStack::attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported) {
+void cStack::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported) {
 	throw xHandlerNotSupported(true);
 }
 

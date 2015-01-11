@@ -113,7 +113,7 @@ short store_pc_graphic;
 // Until that time, the party scen vals are uninited
 // Then, it inits the party properly for starting the scenario based
 // on the loaded scenario
-void init_party_scen_data() {
+static void init_party_scen_data() {
 	short i,j,k,l;
 	bool stored_item = false;
 	short store_help;
@@ -1470,7 +1470,6 @@ void cast_town_spell(location where) {
 	}
 	
 	adjust = can_see_light(univ.town.p_loc,where,sight_obscurity);
-	eSkill spell_type = (*town_spell).type;
 	if(!spell_freebie)
 		univ.party[who_cast].cur_sp -= (*town_spell).cost;
 	ter = univ.town->terrain(where.x,where.y);

@@ -30,4 +30,5 @@ void edit_scen_intro();
 bool edit_area_rect_str(short which_str,short mode);
 void make_cursor_sword() ;
 void edit_dialog_text(short mode,short *str1,cDialog* parent);
+size_t num_strs(short str_mode);
 

@@ -586,7 +586,7 @@ short total_encumberance(short pc_num) {
 	return store;
 }
 
-rectangle get_stat_effect_rect(eStatus which_effect) {
+static rectangle get_stat_effect_rect(eStatus which_effect) {
 	int code = (int) which_effect;
 	rectangle base = {0,0,12,12};
 	base.offset(12 * (code % 3), 12 * (code / 3));

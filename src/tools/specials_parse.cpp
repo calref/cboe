@@ -82,11 +82,11 @@ SpecialParser::SpecialParser() {
 						   
 #undef _
 
-auto SpecialParser::on_error(const Rule::scanner_t& scan, spirit::parser_error<eParseError, Iter> error) -> ErrStatus {
+auto SpecialParser::on_error(const Rule::scanner_t&, spirit::parser_error<eParseError, Iter>) -> ErrStatus {
 	return ErrStatus(ErrStatus::fail);
 }
 
-void init_specials_parse() {
+static void init_specials_parse() {
 	opcode.add((*eSpecType::NONE).opcode().c_str(), eSpecType::NONE);
 	// Fill in all the opcodes and check for missing types.
 	// There's really no need to check all the way to the max of the underlying type.

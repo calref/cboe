@@ -432,7 +432,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 			i = (the_point.x - TER_RECT_UL_X - 8) / scale;
 			j = (the_point.y - TER_RECT_UL_Y - 8) / scale;
 			if(scale > 4) {
-				short dim = editing_town ? town->max_dim() : 48;
 				if(cen_x + 5 > 256 / scale)
 					spot_hit.x = cen_x + 5 - 256/scale + i;
 				else spot_hit.x = i;

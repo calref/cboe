@@ -427,6 +427,8 @@ static std::string get_node_string(std::string base, eSpecType type, int which) 
 			return get_str(base + "-rect", strnum);
 		case eSpecCat::OUTDOOR:
 			return get_str(base + "-outdoor", strnum);
+		case eSpecCat::INVALID:
+			return "error";
 	}
 	return "";
 }

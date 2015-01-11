@@ -132,7 +132,7 @@ bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_va
 }
 
 // TODO: I have two functions that do this. (The other one is choose_graphic.)
-bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::string pic_fld, pic_num_t modifier){
+static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::string pic_fld, pic_num_t modifier){
 	pic_num_t cur_sel = 0;
 	if(result_fld != ""){
 		cControl& fld_ctrl = parent[result_fld];

@@ -175,7 +175,7 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	return p;
 }
 
-string dlogStringFilter(string toFilter) {
+static string dlogStringFilter(string toFilter) {
 	string filtered;
 	bool found_nl = false;
 	for(char c : toFilter) {

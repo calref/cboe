@@ -357,6 +357,7 @@ void cTextField::handleInput(cKey key) {
 		contents.insert(contents.begin() + insertionPoint, char(key.c));
 		selectionPoint = ++insertionPoint;
 	} else switch(key.k) {
+		case key_enter: break; // Shouldn't be receiving this anyway
 			// TODO: Implement all the other special keys
 		case key_left: case key_word_left:
 			if(haveSelection && !select) {

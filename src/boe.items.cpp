@@ -1013,7 +1013,7 @@ bool pc_gworld_loaded = false;
 // Returns true is a theft committed
 //pc_num;  // < 6 - this pc only  6 - any pc
 //short mode; // 0 - adjacent  1 - all in sight
-bool display_item(location from_loc,short pc_num,short mode, bool check_container) {
+bool display_item(location from_loc,short /*pc_num*/,short mode, bool check_container) {
 //	short item_array[130];
 	std::vector<cItemRec*> item_array;
 	short i;

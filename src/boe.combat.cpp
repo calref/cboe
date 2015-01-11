@@ -650,6 +650,9 @@ void pc_attack(short who_att,short target) {
 			 	case eSkill::POLE_WEAPONS:
 					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,3);
 					break;
+				default: // TODO: Not sure what sound to play for unconventional weapons, but let's just go with the generic "ouch" for now
+					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON, 0);
+					break;
 			}
 			// poison
 			if(univ.party[who_att].status[eStatus::POISONED_WEAPON] > 0 && univ.party[who_att].weap_poisoned == weap1) {
@@ -715,6 +718,9 @@ void pc_attack(short who_att,short target) {
 					break;
 			 	case eSkill::POLE_WEAPONS:
 					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,3);
+					break;
+				default: // TODO: Not sure what sound to play for unconventional weapons, but let's just go with the generic "ouch" for now
+					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON, 0);
 					break;
 			}
 			

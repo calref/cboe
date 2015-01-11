@@ -147,15 +147,6 @@ short select_pc(short active_only,short free_inv_only) {
 	else return char_select_pc(active_only,free_inv_only,"Select a character:");
 }
 
-static short party_total_level() {
-	short i,j = 0;
-	
-	for(i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			j += univ.party[i].level;
-	return j;
-}
-
 static void put_pc_spells(cDialog& me, const short store_trait_mode) {
 	short i;
 	
@@ -243,7 +234,7 @@ static void display_traits_graphics(cDialog& me) {
 	me["xp"].setTextToNum(store);
 }
 
-static bool pick_race_select_led(cDialog& me, std::string item_hit, bool losing, const short store_trait_mode) {
+static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const short store_trait_mode) {
 	int abil_str = 0;
 	cPlayer *pc;
 	

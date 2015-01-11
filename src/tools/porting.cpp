@@ -41,58 +41,6 @@ void port_town(legacy::town_record_type* dummy_town_ptr){
 	
 }
 
-static void port_dummy_t_d(short size,char *buffer) {
-	short i;
-	legacy::big_tr_type *d1;
-	legacy::ave_tr_type *d2;
-	legacy::tiny_tr_type *d3;
-	
-	if(cur_scen_is_mac != mac_is_intel)
-		return;
-	
-	switch(size) {
-		case 0:
-			d1 = (legacy::big_tr_type *) buffer;
-			for(i =0 ; i < 16; i++) 
-				flip_rect(&d1->room_rect[i]);
-			for(i =0 ; i < 60; i++) {
-				flip_short(&d1->creatures[i].spec1);
-				flip_short(&d1->creatures[i].spec2);
-				flip_short(&d1->creatures[i].monster_time);
-				flip_short(&d1->creatures[i].personality);
-				flip_short(&d1->creatures[i].special_on_kill);
-				flip_short(&d1->creatures[i].facial_pic);
-			}
-			break;
-			case 1:
-			d2 = (legacy::ave_tr_type *) buffer;
-			for(i =0 ; i < 16; i++) 
-				flip_rect(&d2->room_rect[i]);
-			for(i =0 ; i < 40; i++) {
-				flip_short(&d2->creatures[i].spec1);
-				flip_short(&d2->creatures[i].spec2);
-				flip_short(&d2->creatures[i].monster_time);
-				flip_short(&d2->creatures[i].personality);
-				flip_short(&d2->creatures[i].special_on_kill);
-				flip_short(&d2->creatures[i].facial_pic);
-			}
-			break;
-			case 2:
-			d3 = (legacy::tiny_tr_type *) buffer;
-			for(i =0 ; i < 16; i++) 
-				flip_rect(&d3->room_rect[i]);
-			for(i =0 ; i < 30; i++) {
-				flip_short(&d3->creatures[i].spec1);
-				flip_short(&d3->creatures[i].spec2);
-				flip_short(&d3->creatures[i].monster_time);
-				flip_short(&d3->creatures[i].personality);
-				flip_short(&d3->creatures[i].special_on_kill);
-				flip_short(&d3->creatures[i].facial_pic);
-			}
-			break;
-	} 
-}
-
 void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr) {
 	short i;
 	

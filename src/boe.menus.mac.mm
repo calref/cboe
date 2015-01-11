@@ -284,6 +284,7 @@ void menu_activate() {
 @implementation MenuHandler
 -(void) monstMenu:(id) sender {
 	cMonster* monst = [[sender representedObject] monst];
+	(void) monst; // Mark variable as unused
 	handle_monster_info_menu([monster_info_menu indexOfItem: sender] - 1);
 }
 

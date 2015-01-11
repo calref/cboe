@@ -1423,7 +1423,6 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 					need_redraw = false;
 			}
 			//pause(2);
-			short store_cur_pc = current_pc;
 			if(combat_next_step())
 				need_redraw = true;
 		}

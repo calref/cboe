@@ -330,7 +330,6 @@ void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::stri
 	if(mode == eTextMode::WRAP) {
 		moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
 		for(i = 0; text_len(i) != text_len(i + 1) && i < str_len;i++) {
-			int iLen = text_len(i), lineLen = text_len(last_line_break);
 			if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
 				 && (last_word_break >= last_line_break)) || (str[i] == '|')) {
 				if(str[i] == '|') {
