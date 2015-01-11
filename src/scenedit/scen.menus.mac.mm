@@ -80,7 +80,7 @@ void init_menubar() {
 		eMenu::OUT_SPECIALS, eMenu::OUT_TEXT, eMenu::OUT_SIGNS,
 	};
 	static const eMenu help_choices[] = {
-		eMenu::HELP_INDEX, eMenu::NONE, eMenu::HELP_START, eMenu::HELP_TEST, eMenu::HELP_DIST, eMenu::NONE, eMenu::HELP_CONTEST,
+		eMenu::HELP_TOC, eMenu::NONE, eMenu::HELP_START, eMenu::HELP_TEST, eMenu::HELP_DIST, eMenu::NONE, eMenu::HELP_CONTEST,
 	};
 	
 	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
