@@ -232,7 +232,7 @@ void draw_monsters() {
 							pic_num_t need_pic = (univ.town.monst[i].picture_num % 1000) + k;
 							if(univ.town.monst[i].direction >= 4) need_pic += width * height;
 							if(combat_posing_monster == i + 100) need_pic += (2 * width * height);
-							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(need_pic);
+							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
 							Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						} else {
 							pic_num_t this_monst = univ.town.monst[i].picture_num;
