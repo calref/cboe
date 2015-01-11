@@ -37,7 +37,7 @@ public:
 	
 	cSpecial();
 	void append(legacy::special_node_type& old);
-	void writeTo(std::ostream& file) const;
+	void writeTo(std::ostream& file, int n) const;
 };
 
 struct pending_special_type {

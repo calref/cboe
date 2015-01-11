@@ -99,7 +99,7 @@ public:
 	short timer_spec_times[8];
 	short timer_specs[8];
 	unsigned char strlens[180];
-	cSpecial specials[100];
+	std::array<cSpecial,100> specials;
 	//unsigned char specials1,specials2,res1,res2;
 	bool strong_barriers : 1;
 	bool defy_mapping : 1;

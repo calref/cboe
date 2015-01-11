@@ -25,11 +25,22 @@ cSpecial::cSpecial(){
 	pictype = 4;
 	m1 = -1;
 	m2 = -1;
+	m3 = -1;
 	ex1a = -1;
 	ex1b = -1;
 	ex2a = -1;
 	ex2b = -1;
 	jumpto = -1;
+}
+
+void cSpecial::writeTo(std::ostream& file, int n) const {
+	file << '@' << (*type).opcode() << " = " << n << '\n';
+	file << "\tsdf " << sd1 << ", " << sd2 << '\n';
+	file << "\tmsg " << m1 << ", " << m2 << ", " << m3 << '\n';
+	file << "\tpic " << pic << ", " << pictype << '\n';
+	file << "\tex1 " << ex1a << ", " << ex1b << ", " << ex1c << '\n';
+	file << "\tex2 " << ex2a << ", " << ex2b << ", " << ex2c << '\n';
+	file << "\tgoto " << jumpto << '\n';
 }
 
 void cSpecial::append(legacy::special_node_type& old){

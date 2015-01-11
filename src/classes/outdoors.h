@@ -62,7 +62,7 @@ public:
 	location wandering_locs[4];
 	rectangle info_rect[8];
 	unsigned char strlens[180];
-	cSpecial specials[60];
+	std::array<cSpecial,60> specials;
 	//char strs[120][256];
 	std::string out_name;
 	// Using std::array here so we can have .size()

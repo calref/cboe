@@ -77,7 +77,7 @@ public:
 	short scenario_timer_times[20];
 	short scenario_timer_specs[20];
 	short flag_h;
-	cSpecial scen_specials[256];
+	std::array<cSpecial,256> scen_specials;
 	cItemStorage storage_shortcuts[10];
 	short flag_d;
 	// Need to keep scen_str_len around for noe to support legacy scenarios.
