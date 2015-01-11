@@ -38,11 +38,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 @todo add TYPECOUNT support. See ticpp::NodeFactory.
 @todo Add a quick reference
 */
-#ifdef TIXML_USE_TICPP
+
+ /*
+ * THIS FILE WAS ALTERED BY Matt Janisz, 12. October 2012.
+ *
+ * - added ticppapi.h include and TICPP_API dll-interface to support building DLL using VS200X
+ */
+ 
+#ifndef TIXML_USE_TICPP
+	#define TIXML_USE_TICPP
+#endif
 
 #ifndef TICPP_INCLUDED
 #define TICPP_INCLUDED
 
+#include "ticppapi.h"
 #include "tinyxml.h"
 #include <sstream>
 #include <vector>
@@ -65,7 +75,7 @@ namespace ticpp
     /**
 	This is a ticpp exception class
 	*/
-	class Exception : public std::exception
+	class TICPP_API Exception : public std::exception
 	{
 	public:
 		/**
@@ -95,16 +105,16 @@ namespace ticpp
 	}
 
 	// Forward Declarations for Visitor, and others.
-	class Document;
-	class Element;
-	class Declaration;
-	class StylesheetReference;
-	class Text;
-	class Comment;
-	class Attribute;
+	class TICPP_API Document;
+	class TICPP_API Element;
+	class TICPP_API Declaration;
+	class TICPP_API StylesheetReference;
+	class TICPP_API Text;
+	class TICPP_API Comment;
+	class TICPP_API Attribute;
 
 	/** Wrapper around TiXmlVisitor */
-	class Visitor : public TiXmlVisitor
+	class TICPP_API Visitor : public TiXmlVisitor
 	{
 	public:
 		// Overload the TiXmlVisitor functions, wrap objects, call ticpp::Visitor functions
@@ -147,7 +157,7 @@ namespace ticpp
 	};
 
 	/** Wrapper around TiXmlBase */
-	class Base
+	class TICPP_API Base
 	{
 	public:
 
@@ -161,7 +171,7 @@ namespace ticpp
 		{
 			std::stringstream convert;
 			convert << value;
-			if( convert.fail() )
+			if ( convert.fail() )
 			{
 				TICPPTHROW( "Could not convert value to text" );
 			}
@@ -185,7 +195,7 @@ namespace ticpp
 			std::istringstream val( temp );
 			val >> *out;
 
-			if( val.fail() )
+			if ( val.fail() )
 			{
 				TICPPTHROW( "Could not convert \"" << temp << "\" to target type" );
 			}
@@ -224,7 +234,7 @@ namespace ticpp
 		{
 			return ( GetBasePointer() == rhs.GetBasePointer() );
 		}
-		
+
 		/**
 		Compare internal TiXml pointers to determine is both are wrappers around the same node
 		*/
@@ -232,7 +242,7 @@ namespace ticpp
 		{
 			return ( GetBasePointer() != rhs.GetBasePointer() );
 		}
-		
+
 		/**
 		Builds detailed error string using TiXmlDocument::Error() and others
 		*/
@@ -241,16 +251,16 @@ namespace ticpp
 			std::ostringstream full_message;
 			#ifndef TICPP_NO_RTTI
 			TiXmlNode* node = dynamic_cast< TiXmlNode* >( GetBasePointer() );
-			if( node != 0 )
+			if ( node != 0 )
 			{
 				TiXmlDocument* doc = node->GetDocument();
-				if( doc != 0 )
+				if ( doc != 0 )
 				{
-					if( doc->Error() )
+					if ( doc->Error() )
 					{
 						full_message 	<< "\nDescription: " << doc->ErrorDesc()
-										<< "\nFile: " << (strlen( doc->Value() ) > 0 ? doc->Value() : "<unnamed-file>") 
-										<< "\nLine: " << doc->ErrorRow() 
+										<< "\nFile: " << (strlen( doc->Value() ) > 0 ? doc->Value() : "<unnamed-file>")
+										<< "\nLine: " << doc->ErrorRow()
 										<< "\nColumn: " << doc->ErrorCol();
 					}
 				}
@@ -282,11 +292,11 @@ namespace ticpp
 
 		void ValidatePointer() const
 		{
-			if( m_impRC->IsNull() )
+			if ( m_impRC->IsNull() )
 			{
 				TICPPTHROW( "Internal TiXml Pointer is NULL" );
 			}
-		}		
+		}
 
 		/**
 		@internal
@@ -298,7 +308,7 @@ namespace ticpp
 	/**
 	Wrapper around TiXmlAttribute
 	*/
-	class Attribute : public Base
+	class TICPP_API Attribute : public Base
 	{
 	private:
 		TiXmlAttribute* m_tiXmlPointer;
@@ -465,7 +475,7 @@ namespace ticpp
 	/**
 	Wrapper around TiXmlNode
 	*/
-	class Node : public Base
+	class TICPP_API Node : public Base
 	{
 	public:
 
@@ -616,7 +626,7 @@ namespace ticpp
 		@see LinkEndChild
 		@see TiXmlNode::InsertEndChild
 		*/
-		Node* InsertEndChild( Node& addThis );
+		Node* InsertEndChild( const Node& addThis );
 
 		/**
 		Adds a child past the LastChild.
@@ -641,7 +651,7 @@ namespace ticpp
 		@see InsertAfterChild
 		@see TiXmlNode::InsertBeforeChild
 		*/
-		Node* InsertBeforeChild( Node* beforeThis, Node& addThis );
+		Node* InsertBeforeChild( Node* beforeThis, const Node& addThis );
 
 		/**
 		Adds a child after the specified child.
@@ -654,7 +664,7 @@ namespace ticpp
 		@see InsertBeforeChild
 		@see TiXmlNode::InsertAfterChild
 		*/
-		Node* InsertAfterChild( Node* afterThis, Node& addThis );
+		Node* InsertAfterChild( Node* afterThis, const Node& addThis );
 
 		/**
 		Replace a child of this node.
@@ -666,7 +676,7 @@ namespace ticpp
 
 		@see TiXmlNode::ReplaceChild
 		*/
-		Node* ReplaceChild( Node* replaceThis, Node& withThis );
+		Node* ReplaceChild( Node* replaceThis, const Node& withThis );
 
 		/**
 		Delete a child of this node.
@@ -758,7 +768,7 @@ namespace ticpp
 			for( Node* child = FirstChild( value, false ); child; child = child->NextSibling( value, false ) )
 			{
 				*first = dynamic_cast< T* >( child );
-				if( 0 != *first )
+				if ( 0 != *first )
 				{
 					return;
 				}
@@ -783,7 +793,7 @@ namespace ticpp
 			Node* sibling = NextSibling( value, false );
 			*next = dynamic_cast< T* >( sibling );
 
-			while( ( 0 != sibling ) && ( 0 == *next ) )
+			while ( ( 0 != sibling ) && ( 0 == *next ) )
 			{
 				sibling = sibling->NextSibling( value, false );
 				*next = dynamic_cast< T* >( sibling );
@@ -803,7 +813,7 @@ namespace ticpp
 			Node* sibling = PreviousSibling( value, false );
 			*previous = dynamic_cast< T* >( sibling );
 
-			while( ( 0 != sibling ) && ( 0 == *previous ) )
+			while ( ( 0 != sibling ) && ( 0 == *previous ) )
 			{
 				sibling = sibling->PreviousSibling( value, false );
 				*previous = dynamic_cast< T* >( sibling );
@@ -908,7 +918,7 @@ namespace ticpp
 			T* To() const
 		{
 			T* pointer = dynamic_cast< T* >( this );
-			if( 0 == pointer )
+			if ( 0 == pointer )
 			{
 				std::string thisType = typeid( this ).name();
 				std::string targetType = typeid( T ).name();
@@ -1029,26 +1039,26 @@ namespace ticpp
 	TinyXML++ introduces iterators:
 	@code
 	ticpp::Iterator< ticpp::Node > child;
-	for( child = child.begin( parent ); child != child.end(); child++ )
+	for ( child = child.begin( parent ); child != child.end(); child++ )
 	@endcode
 
 	Iterators have the added advantage of filtering by type:
 	@code
 	// Only iterates through Comment nodes
 	ticpp::Iterator< ticpp::Comment > child;
-	for( child = child.begin( parent ); child != child.end(); child++ )
+	for ( child = child.begin( parent ); child != child.end(); child++ )
 	@endcode
 
 	@code
 	// Only iterates through Element nodes with value "ElementValue"
 	ticpp::Iterator< ticpp::Element > child( "ElementValue" );
-	for( child = child.begin( parent ); child != child.end(); child++ )
+	for ( child = child.begin( parent ); child != child.end(); child++ )
 	@endcode
 
 	Finally, Iterators also work with Attributes
 	@code
 	ticpp::Iterator< ticpp::Attribute > attribute;
-	for( attribute = attribute.begin( element ); attribute != attribute.end(); attribute++ )
+	for ( attribute = attribute.begin( element ); attribute != attribute.end(); attribute++ )
 	@endcode
 	*/
 	template < class T = Node >
@@ -1066,7 +1076,7 @@ namespace ticpp
 		@return The first child of type T.
 		@code
 		ticpp::Iterator< ticpp::Node > child;
-		for( child = child.begin( parent ); child != child.end(); child++ )
+		for ( child = child.begin( parent ); child != child.end(); child++ )
 		@endcode
 		*/
 		T* begin( const Node* parent ) const
@@ -1081,7 +1091,7 @@ namespace ticpp
 		@return NULL
 		@code
 		ticpp::Iterator< ticpp::Node > child;
-		for( child = child.begin( parent ); child != child.end(); child++ )
+		for ( child = child.begin( parent ); child != child.end(); child++ )
 		@endcode
 		*/
 		T* end() const
@@ -1094,7 +1104,7 @@ namespace ticpp
 		@code
 		// Only iterates through Element nodes with value "ElementValue"
 		ticpp::Iterator< ticpp::Element > child( "ElementValue" );
-		for( child = child.begin( parent ); child != child.end(); child++ )
+		for ( child = child.begin( parent ); child != child.end(); child++ )
 		@endcode
 		*/
 		Iterator( const std::string& value = "" )
@@ -1162,7 +1172,7 @@ namespace ticpp
 
 		/** Sets internal pointer to the Previous Sibling, or Iterator::END, if there are no prior siblings */
 		Iterator operator--(int)
-		{			
+		{
 			Iterator tmp(*this);
 			--(*this);
 			return tmp;
@@ -1171,11 +1181,11 @@ namespace ticpp
 		/** Compares internal pointer */
 		bool operator!=( const T* p ) const
 		{
-			if( m_p == p )
+			if ( m_p == p )
 			{
 				return false;
 			}
-			if( 0 == m_p || 0 == p )
+			if ( 0 == m_p || 0 == p )
 			{
 				return true;
 			}
@@ -1191,11 +1201,11 @@ namespace ticpp
 		/** Compares internal pointer* */
 		bool operator==( T* p ) const
 		{
-			if( m_p == p )
+			if ( m_p == p )
 			{
 				return true;
 			}
-			if( 0 == m_p || 0 == p )
+			if ( 0 == m_p || 0 == p )
 			{
 				return false;
 			}
@@ -1261,7 +1271,7 @@ namespace ticpp
 		NodeImp( T* tiXmlPointer )
 		{
 			// Check for NULL pointers
-			if( 0 == tiXmlPointer )
+			if ( 0 == tiXmlPointer )
 			{
 				#ifdef TICPP_NO_RTTI
 					TICPPTHROW( "Can not create TinyXML objext" );
@@ -1317,7 +1327,7 @@ namespace ticpp
 	};
 
 	/** Wrapper around TiXmlComment */
-	class Comment : public NodeImp< TiXmlComment >
+	class TICPP_API Comment : public NodeImp< TiXmlComment >
 	{
 	public:
 
@@ -1338,7 +1348,7 @@ namespace ticpp
 	};
 
 	/** Wrapper around TiXmlText */
-	class Text : public NodeImp< TiXmlText >
+	class TICPP_API Text : public NodeImp< TiXmlText >
 	{
 	public:
 
@@ -1377,7 +1387,7 @@ namespace ticpp
 	};
 
 	/** Wrapper around TiXmlDocument */
-	class Document : public NodeImp< TiXmlDocument >
+	class TICPP_API Document : public NodeImp< TiXmlDocument >
 	{
 	public:
 		/**
@@ -1397,11 +1407,12 @@ namespace ticpp
 		Document( const char* documentName );
 
 		/**
-		Constructor.
-		Create a document with a name. The name of the document is also the filename of the xml.
-
-		@param documentName Name to set in the Document.
-		*/
+		 * Constructor.
+		 * Create a document with a name. The name of the document is also the filename of the xml.
+		 * @param documentName Name to set in the Document.
+		 * @note LoadFile() needs to be called to actually load the data from the file specified by documentName
+		 * 		 SaveFile() needs to be called to save data to file specified by documentName.
+		 */
 		Document( const std::string& documentName );
 
 		/**
@@ -1455,7 +1466,7 @@ namespace ticpp
 	};
 
 	/** Wrapper around TiXmlElement */
-	class Element : public NodeImp< TiXmlElement >
+	class TICPP_API Element : public NodeImp< TiXmlElement >
 	{
 	public:
 		/**
@@ -1522,7 +1533,7 @@ namespace ticpp
 			for( Attribute* child = FirstAttribute( false ); child; child = child->Next( false ) )
 			{
 				*first = dynamic_cast< Attribute* >( child );
-				if( 0 != *first )
+				if ( 0 != *first )
 				{
 					return;
 				}
@@ -1559,9 +1570,9 @@ namespace ticpp
 		{
 			// Get the element's text value as a std::string
 			std::string temp;
-			if( !GetTextImp( &temp ) )
+			if ( !GetTextImp( &temp ) )
 			{
-				if( throwIfNotFound )
+				if ( throwIfNotFound )
 				{
 					TICPPTHROW( "Text does not exists in the current element" );
 				}
@@ -1585,7 +1596,7 @@ namespace ticpp
 		{
 			// Get the element's text value as a std::string
 			std::string temp;
-			if( !GetTextImp( &temp ) )
+			if ( !GetTextImp( &temp ) )
 			{
 				return defaultValue;
 			}
@@ -1612,7 +1623,7 @@ namespace ticpp
 		{
 			// Get the element's text value as a std::string
 			std::string temp;
-			if( !GetTextImp( &temp ) )
+			if ( !GetTextImp( &temp ) )
 			{
 				// The text value does not exist - set value to the default
 				*value = defaultValue;
@@ -1643,9 +1654,9 @@ namespace ticpp
 		{
 			// Get the element's text value as a std::string
 			std::string temp;
-			if( !GetTextImp( &temp ) )
+			if ( !GetTextImp( &temp ) )
 			{
-				if( throwIfNotFound )
+				if ( throwIfNotFound )
 				{
 					TICPPTHROW( "Text does not exists in the current element" );
 				}
@@ -1672,13 +1683,13 @@ namespace ticpp
 			ValidatePointer();
 			std::string temp = ToString( value );
 
-			if( m_tiXmlPointer->NoChildren() )
+			if ( m_tiXmlPointer->NoChildren() )
 			{
 				m_tiXmlPointer->LinkEndChild( new TiXmlText( temp ) );
 			}
 			else
 			{
-				if( 0 == m_tiXmlPointer->GetText() )
+				if ( 0 == m_tiXmlPointer->GetText() )
 				{
 					m_tiXmlPointer->InsertBeforeChild( m_tiXmlPointer->FirstChild(), TiXmlText( temp ) );
 				}
@@ -1706,7 +1717,7 @@ namespace ticpp
 		{
 			// Get the attribute's value as a std::string
 			std::string temp;
-			if( !GetAttributeImp( name, &temp ) )
+			if ( !GetAttributeImp( name, &temp ) )
 			{
 				// The attribute does not exist - set value to the default
 				*value = defaultValue;
@@ -1742,11 +1753,12 @@ namespace ticpp
 			// Get the attribute's value as a std::string
 			std::string temp;
 			T value;
-			if( !GetAttributeImp( name, &temp ) )
+			if ( !GetAttributeImp( name, &temp ) )
 			{
-				if( throwIfNotFound )
+				if ( throwIfNotFound )
 				{
-					TICPPTHROW( "Attribute does not exist" );
+					const std::string error( std::string( "Attribute '" ) + name + std::string( "' does not exist" ) );
+					TICPPTHROW( error );
 				}
 			}
 			else
@@ -1774,11 +1786,12 @@ namespace ticpp
 		{
 			// Get the attribute's value as a std::string
 			std::string temp;
-			if( !GetAttributeImp( name, &temp ) )
+			if ( !GetAttributeImp( name, &temp ) )
 			{
-				if( throwIfNotFound )
+				if ( throwIfNotFound )
 				{
-					TICPPTHROW( "Attribute does not exist" );
+					const std::string error( std::string( "Attribute '" ) + name + std::string( "' does not exist" ) );
+					TICPPTHROW( error );
 				}
 				else
 				{
@@ -1832,7 +1845,7 @@ namespace ticpp
 	};
 
 	/** Wrapper around TiXmlDeclaration */
-	class Declaration : public NodeImp< TiXmlDeclaration >
+	class TICPP_API Declaration : public NodeImp< TiXmlDeclaration >
 	{
 	public:
 		/**
@@ -1867,7 +1880,7 @@ namespace ticpp
 	};
 
 	/** Wrapper around TiXmlStylesheetReference */
-	class StylesheetReference : public NodeImp< TiXmlStylesheetReference >
+	class TICPP_API StylesheetReference : public NodeImp< TiXmlStylesheetReference >
 	{
 	public:
 		/**
@@ -1898,5 +1911,3 @@ namespace ticpp
 }
 
 #endif	// TICPP_INCLUDED
-
-#endif // TIXML_USE_TICPP

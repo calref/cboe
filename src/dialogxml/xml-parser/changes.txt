@@ -267,3 +267,5 @@ Changes in version 2.1.5
   Comments should not, in fact, parse entities. Fixed the code path and added tests.
 - We were not catching all the returns from ftell. Thanks to Bernard for catching that.
   
+2.5.4
+- Added dll-interface declarations to support using DLLs built via VS200X.

@@ -22,6 +22,11 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
+ /*
+ * THIS FILE WAS ALTERED BY Matt Janisz, 12. October 2012.
+ *
+ * - added ticppapi.h include and TICPP_API dll-interface to support building DLL using VS200X
+ */
 
 #ifndef TINYXML_INCLUDED
 #define TINYXML_INCLUDED
@@ -32,6 +37,7 @@ distribution.
 #pragma warning( disable : 4786 )
 #endif
 
+#include "ticppapi.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,15 +94,15 @@ distribution.
 	#endif
 #endif
 
-class TiXmlDocument;
-class TiXmlElement;
-class TiXmlComment;
-class TiXmlUnknown;
-class TiXmlAttribute;
-class TiXmlText;
-class TiXmlDeclaration;
-class TiXmlStylesheetReference;
-class TiXmlParsingData;
+class TICPP_API TiXmlDocument;
+class TICPP_API TiXmlElement;
+class TICPP_API TiXmlComment;
+class TICPP_API TiXmlUnknown;
+class TICPP_API TiXmlAttribute;
+class TICPP_API TiXmlText;
+class TICPP_API TiXmlDeclaration;
+class TICPP_API TiXmlStylesheetReference;
+class TICPP_API TiXmlParsingData;
 
 const int TIXML_MAJOR_VERSION = 2;
 const int TIXML_MINOR_VERSION = 5;
@@ -105,7 +111,7 @@ const int TIXML_PATCH_VERSION = 3;
 /*	Internal structure for tracking location of items
 	in the XML file.
 */
-struct TiXmlCursor
+struct TICPP_API TiXmlCursor
 {
 	TiXmlCursor()		{ Clear(); }
 	void Clear()		{ row = col = -1; }
@@ -133,7 +139,7 @@ struct TiXmlCursor
 
 	@sa TiXmlNode::Accept()
 */
-class TiXmlVisitor
+class TICPP_API TiXmlVisitor
 {
 public:
 	virtual ~TiXmlVisitor() {}
@@ -203,9 +209,9 @@ const TiXmlEncoding TIXML_DEFAULT_ENCODING = TIXML_ENCODING_UNKNOWN;
 */
 #ifdef TIXML_USE_TICPP
 #include "ticpprc.h"
-class TiXmlBase : public TiCppRC
+class TICPP_API TiXmlBase : public TiCppRC
 #else
-class TiXmlBase
+class TICPP_API TiXmlBase
 #endif
 {
 	friend class TiXmlNode;
@@ -308,7 +314,7 @@ protected:
 	}
 	inline static bool IsWhiteSpace( int c )
 	{
-		if( c < 256 )
+		if ( c < 256 )
 			return IsWhiteSpace( (char) c );
 		return false;	// Again, only truly correct for English/Latin...but usually works.
 	}
@@ -342,7 +348,7 @@ protected:
 	inline static const char* GetChar( const char* p, char* _value, int* length, TiXmlEncoding encoding )
 	{
 		assert( p );
-		if( encoding == TIXML_ENCODING_UTF8 )
+		if ( encoding == TIXML_ENCODING_UTF8 )
 		{
 			*length = utf8ByteTable[ *((const unsigned char*)p) ];
 			assert( *length >= 0 && *length < 5 );
@@ -352,14 +358,14 @@ protected:
 			*length = 1;
 		}
 
-		if( *length == 1 )
+		if ( *length == 1 )
 		{
-			if( *p == '&' )
+			if ( *p == '&' )
 				return GetEntity( p, _value, length, encoding );
 			*_value = *p;
 			return p+1;
 		}
-		else if( *length )
+		else if ( *length )
 		{
 			//strncpy( _value, p, *length );	// lots of compilers don't like this function (unsafe),
 												// and the null terminator isn't needed
@@ -396,9 +402,9 @@ protected:
 	static int IsAlphaNum( unsigned char anyByte, TiXmlEncoding encoding );
 	inline static int ToLower( int v, TiXmlEncoding encoding )
 	{
-		if( encoding == TIXML_ENCODING_UTF8 )
+		if ( encoding == TIXML_ENCODING_UTF8 )
 		{
-			if( v < 128 ) return tolower( v );
+			if ( v < 128 ) return tolower( v );
 			return v;
 		}
 		else
@@ -435,7 +441,7 @@ private:
 	in a document, or stand on its own. The type of a TiXmlNode
 	can be queried, and it can be cast to its more defined type.
 */
-class TiXmlNode : public TiXmlBase
+class TICPP_API TiXmlNode : public TiXmlBase
 {
 	friend class TiXmlDocument;
 	friend class TiXmlElement;
@@ -794,7 +800,7 @@ private:
 		  part of the tinyXML document object model. There are other
 		  suggested ways to look at this problem.
 */
-class TiXmlAttribute : public TiXmlBase
+class TICPP_API TiXmlAttribute : public TiXmlBase
 {
 	friend class TiXmlAttributeSet;
 
@@ -918,7 +924,7 @@ private:
 		- I like circular lists
 		- it demonstrates some independence from the (typical) doubly linked list.
 */
-class TiXmlAttributeSet
+class TICPP_API TiXmlAttributeSet
 {
 public:
 	TiXmlAttributeSet();
@@ -958,7 +964,7 @@ private:
 	and can contain other elements, text, comments, and unknowns.
 	Elements also contain an arbitrary number of attributes.
 */
-class TiXmlElement : public TiXmlNode
+class TICPP_API TiXmlElement : public TiXmlNode
 {
 public:
 	/// Construct an element.
@@ -1010,7 +1016,7 @@ public:
 	int QueryFloatAttribute( const char* name, float* _value ) const {
 		double d;
 		int result = QueryDoubleAttribute( name, &d );
-		if( result == TIXML_SUCCESS ) {
+		if ( result == TIXML_SUCCESS ) {
 			*_value = (float)d;
 		}
 		return result;
@@ -1028,12 +1034,12 @@ public:
 	template< typename T > int QueryValueAttribute( const std::string& name, T* outValue ) const
 	{
 		const TiXmlAttribute* node = attributeSet.Find( name );
-		if( !node )
+		if ( !node )
 			return TIXML_NO_ATTRIBUTE;
 
 		std::stringstream sstream( node->ValueStr() );
 		sstream >> *outValue;
-		if( !sstream.fail() )
+		if ( !sstream.fail() )
 			return TIXML_SUCCESS;
 		return TIXML_WRONG_TYPE;
 	}
@@ -1046,7 +1052,7 @@ public:
 	template<> int QueryValueAttribute( const std::string& name, std::string* outValue ) const
 	{
 		const TiXmlAttribute* node = attributeSet.Find( name );
-		if( !node )
+		if ( !node )
 			return TIXML_NO_ATTRIBUTE;
 		*outValue = node->ValueStr();
 		return TIXML_SUCCESS;
@@ -1168,7 +1174,7 @@ private:
 
 /**	An XML comment.
 */
-class TiXmlComment : public TiXmlNode
+class TICPP_API TiXmlComment : public TiXmlNode
 {
 public:
 	/// Constructs an empty comment.
@@ -1218,7 +1224,7 @@ private:
 	you generally want to leave it alone, but you can change the output mode with
 	SetCDATA() and query it with CDATA().
 */
-class TiXmlText : public TiXmlNode
+class TICPP_API TiXmlText : public TiXmlNode
 {
 	friend class TiXmlElement;
 public:
@@ -1291,7 +1297,7 @@ private:
 	handled as special cases, not generic attributes, simply
 	because there can only be at most 3 and they are always the same.
 */
-class TiXmlDeclaration : public TiXmlNode
+class TICPP_API TiXmlDeclaration : public TiXmlNode
 {
 public:
 	/// Construct an empty declaration.
@@ -1361,7 +1367,7 @@ private:
 	handled as special cases, not generic attributes, simply
 	because there can only be at most 2 and they are always the same.
 */
-class TiXmlStylesheetReference : public TiXmlNode
+class TICPP_API TiXmlStylesheetReference : public TiXmlNode
 {
 public:
 	/// Construct an empty declaration.
@@ -1424,7 +1430,7 @@ private:
 
 	DTD tags get thrown into TiXmlUnknowns.
 */
-class TiXmlUnknown : public TiXmlNode
+class TICPP_API TiXmlUnknown : public TiXmlNode
 {
 public:
 	TiXmlUnknown() : TiXmlNode( TiXmlNode::UNKNOWN )	{}
@@ -1463,7 +1469,7 @@ private:
 	XML pieces. It can be saved, loaded, and printed to the screen.
 	The 'value' of a document node is the xml file name.
 */
-class TiXmlDocument : public TiXmlNode
+class TICPP_API TiXmlDocument : public TiXmlNode
 {
 public:
 	/// Create an empty document, that has no name.
@@ -1652,16 +1658,16 @@ private:
 
 	@verbatim
 	TiXmlElement* root = document.FirstChildElement( "Document" );
-	if( root )
+	if ( root )
 	{
 		TiXmlElement* element = root->FirstChildElement( "Element" );
-		if( element )
+		if ( element )
 		{
 			TiXmlElement* child = element->FirstChildElement( "Child" );
-			if( child )
+			if ( child )
 			{
 				TiXmlElement* child2 = child->NextSiblingElement( "Child" );
-				if( child2 )
+				if ( child2 )
 				{
 					// Finally do something useful.
 	@endverbatim
@@ -1673,7 +1679,7 @@ private:
 	@verbatim
 	TiXmlHandle docHandle( &document );
 	TiXmlElement* child2 = docHandle.FirstChild( "Document" ).FirstChild( "Element" ).Child( "Child", 1 ).ToElement();
-	if( child2 )
+	if ( child2 )
 	{
 		// do something useful
 	@endverbatim
@@ -1689,10 +1695,10 @@ private:
 
 	@verbatim
 	int i=0;
-	while( true )
+	while ( true )
 	{
 		TiXmlElement* child = docHandle.FirstChild( "Document" ).FirstChild( "Element" ).Child( "Child", i ).ToElement();
-		if( !child )
+		if ( !child )
 			break;
 		// do something
 		++i;
@@ -1712,7 +1718,7 @@ private:
 	}
 	@endverbatim
 */
-class TiXmlHandle
+class TICPP_API TiXmlHandle
 {
 public:
 	/// Create a handle from any node (at any depth of the tree.) This can be a null pointer.
@@ -1811,7 +1817,7 @@ private:
 	fprintf( stdout, "%s", printer.CStr() );
 	@endverbatim
 */
-class TiXmlPrinter : public TiXmlVisitor
+class TICPP_API TiXmlPrinter : public TiXmlVisitor
 {
 public:
 	TiXmlPrinter() : depth( 0 ), simpleTextPrint( false ),
@@ -1827,6 +1833,7 @@ public:
 	virtual bool Visit( const TiXmlText& text );
 	virtual bool Visit( const TiXmlComment& comment );
 	virtual bool Visit( const TiXmlUnknown& unknown );
+	virtual bool Visit( const TiXmlStylesheetReference& stylesheet );
 
 	/** Set the indent characters for printing. By default 4 spaces
 		but tab (\t) is also useful, or null/empty string for no indentation.

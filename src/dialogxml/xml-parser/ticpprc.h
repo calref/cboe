@@ -20,26 +20,33 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+ /*
+ * THIS FILE WAS ALTERED BY Matt Janisz, 12. October 2012.
+ *
+ * - added ticppapi.h include and TICPP_API dll-interface to support building DLL using VS200X
+ */
+
 #ifdef TIXML_USE_TICPP
 
 #ifndef TICPPRC_INCLUDED
 #define TICPPRC_INCLUDED
 
+#include "ticppapi.h"
 #include <vector>
 
 // Forward declare ticpp::Node, so it can be made a friend of TiCppRC
 namespace ticpp
 {
-	class Base;
+	class TICPP_API Base;
 }
 
 // Forward declare TiCppRCImp so TiCppRC can hold a pointer to it
-class TiCppRCImp;
+class TICPP_API TiCppRCImp;
 
 /**
 Base class for reference counting functionality
 */
-class TiCppRC
+class TICPP_API TiCppRC
 {
 	// Allow ticpp::Node to directly modify reference count
 	friend class ticpp::Base;
@@ -71,7 +78,7 @@ public:
 	void DeleteSpawnedWrappers();
 };
 
-class TiCppRCImp
+class TICPP_API TiCppRCImp
 {
 private:
 

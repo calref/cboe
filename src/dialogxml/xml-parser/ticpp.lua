@@ -116,3 +116,6 @@ else
 	table.insert( package.buildoptions, "-fPIC" )
 end
 
+if ( package.kind == "dll" ) then
+    table.insert( package.defines, "BUILD_TICPP_DLL" )
+end
