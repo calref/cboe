@@ -1155,7 +1155,7 @@ void delete_last_town() {
 	scenario.town_data_size[scenario.num_towns][2] = 0;
 	scenario.town_data_size[scenario.num_towns][3] = 0;
 	scenario.town_data_size[scenario.num_towns][4] = 0;
-	save_scenario();
+	save_scenario(scenario.scen_file);
 }
 
 cTown* pick_import_town(short def) {

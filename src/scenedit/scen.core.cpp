@@ -1614,7 +1614,6 @@ bool build_scenario() {
 		cur_town = which_town;
 		scenario.addTown<cBigTown>();
 		town->town_name = "Large town";
-		save_scenario();
 	}
 	for(i = 0; i < med; i++) {
 		which_town = scenario.num_towns;
@@ -1624,7 +1623,6 @@ bool build_scenario() {
 		cur_town = which_town;
 		scenario.addTown<cMedTown>();
 		town->town_name = "Medium town";
-		save_scenario();
 	}
 	for(i = 0; i < small; i++) {
 		which_town = scenario.num_towns;
@@ -1634,7 +1632,6 @@ bool build_scenario() {
 		cur_town = which_town;
 		scenario.addTown<cTinyTown>();
 		town->town_name = "Small town";
-		save_scenario();
 	}
 	cur_town = 0;
 	town = scenario.towns[0];

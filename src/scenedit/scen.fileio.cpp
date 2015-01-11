@@ -98,7 +98,7 @@ void save_scenario(fs::path toFile) {
 	for(size_t i = 0; i < scenario.towns.size(); i++) {
 		std::string file_basename = 't' + std::to_string(i);
 		// First the main data.
-		std::ostream town = scen_file.newFile("scenario/towns/" + file_basename + ".xml");
+		std::ostream& town = scen_file.newFile("scenario/towns/" + file_basename + ".xml");
 		
 		// Then the map.
 		std::ostream& town_map = scen_file.newFile("scenario/towns/" + file_basename + ".map");
