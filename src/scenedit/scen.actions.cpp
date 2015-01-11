@@ -3220,7 +3220,7 @@ extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
 // if just_redo_text not 0, simply need to update text portions
 void start_string_editing(short mode,short just_redo_text) {
 	long pos;
-	char str[256];
+	std::ostringstream str;
 	bool draw_full = false;
 	
 	if(just_redo_text == 0) {
@@ -3237,28 +3237,28 @@ void start_string_editing(short mode,short just_redo_text) {
 	for(size_t i = 0; i < num_strs(mode); i++) {
 		switch(mode) {
 			case 0:
-				sprintf((char *) str,"%d - %-30.30s",i,scenario.spec_strs[i].c_str());
-				set_rb(i,7000 + i,(char *) str,0);
+				str << i << " - " << scenario.spec_strs[i].substr(0,30);
+				set_rb(i,7000 + i,str.str().c_str(),0);
 				break;
 			case 1:
-				sprintf((char *) str,"%d - %-30.30s",i,current_terrain->spec_strs[i].c_str());
-				set_rb(i,8000 + i,(char *) str,0);
+				str << i << " - " << current_terrain->spec_strs[i].substr(0,30);
+				set_rb(i,8000 + i,str.str().c_str(),0);
 				break;
 			case 2:
-				sprintf((char *) str,"%d - %-30.30s",i, town->spec_strs[i].c_str());
-				set_rb(i,9000 + i,(char *) str,0);
+				str << i << " - " << town->spec_strs[i].substr(0,30);
+				set_rb(i,9000 + i,str.str().c_str(),0);
 				break;
-			case 3: // TODO: This is currently inaccessible - add menu option?
-				sprintf((char *) str,"%d - %-30.30s",i,scenario.journal_strs[i].c_str());
-				set_rb(i,11000 + i,str,0);
+			case 3:
+				str << i << " - " << scenario.journal_strs[i].substr(0,30);
+				set_rb(i,11000 + i,str.str().c_str(),0);
 				break;
-			case 4: // TODO: This is currently inaccessible - add menu option?
-				sprintf((char *) str,"%d - %-30.30s",i,current_terrain->sign_strs[i].c_str());
-				set_rb(i,14000 + i,str,0);
+			case 4:
+				str << i << " - " << current_terrain->sign_strs[i].substr(0,30);
+				set_rb(i,14000 + i,str.str().c_str(),0);
 				break;
-			case 5: // TODO: This is currently inaccessible - add menu option?
-				sprintf((char *) str,"%d - %-30.30s",i,town->sign_strs[i].c_str());
-				set_rb(i,15000 + i,str,0);
+			case 5:
+				str << i << " - " << town->sign_strs[i].substr(0,30);
+				set_rb(i,15000 + i,str.str().c_str(),0);
 				break;
 		}
 	}
