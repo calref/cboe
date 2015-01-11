@@ -121,7 +121,6 @@ void force_town_enter(short which_town,location where_start) {
 //short entry_dir; // if 9, go to forced
 void start_town_mode(short which_town, short entry_dir) {
 	short i,m,n;
-	char message[60];
 	short j,k,town_number;
 	short at_which_save_slot,former_town;
 	bool monsters_loaded = false,town_toast = false;
@@ -298,13 +297,11 @@ void start_town_mode(short which_town, short entry_dir) {
 				// Now, if necessary, fry the monster.
 				switch(univ.town.monst[i].time_flag) {
 					case 1:
-						if(!day_reached(univ.town.monst[i].monster_time,
-										 univ.town.monst[i].time_code))
+						if(!day_reached(univ.town.monst[i].monster_time, univ.town.monst[i].time_code))
 							univ.town.monst[i].active = 0;
 						break;
 					case 2:
-						if(day_reached(univ.town.monst[i].monster_time,
-										univ.town.monst[i].time_code))
+						if(day_reached(univ.town.monst[i].monster_time, univ.town.monst[i].time_code))
 							univ.town.monst[i].active = 0;
 						break;
 					case 3:
@@ -595,7 +592,7 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		//if(univ.town.town_num < 120) {
 		for(i = 0; i < univ.town->max_dim(); i++)
 			for(j = 0; j < univ.town->max_dim(); j++)
-				if(is_explored(i,j) > 0) {
+				if(is_explored(i,j)) {
 					univ.town_maps[univ.town.num][i / 8][j] = univ.town_maps[univ.town.num][i / 8][j] |
 					(char) (s_pow(2,i % 8));
 				}
@@ -1216,7 +1213,7 @@ void erase_out_specials() {
 							univ.out[48 * i + sector.exit_locs[k].x][48 * j + sector.exit_locs[k].y] =
 								univ.scenario.ter_types[sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y]].flag1.u;
 						}
-						else if(univ.party.can_find_town[sector.exit_dests[k]] > 0) {
+						else if(univ.party.can_find_town[sector.exit_dests[k]]) {
 							univ.out[48 * i + sector.exit_locs[k].x][48 * j + sector.exit_locs[k].y] =
 								sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y];
 							
@@ -1266,7 +1263,7 @@ void clear_map() {
 
 void draw_map(bool need_refresh) {
 	if(!map_visible) return;
-	short i,j;
+	short i;
 	pic_num_t pic;
 	rectangle the_rect,map_world_rect = {0,0,384,384};
 	location where;

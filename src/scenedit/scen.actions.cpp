@@ -149,7 +149,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 	bool need_redraw = false,option_hit = false,ctrl_hit = false;
 	location spot_hit;
 	location cur_point,cur_point2;
-	short right_top,right_hit;
+	long right_top;
+	short right_hit;
 	eScenMode old_mode;
 	rectangle temp_rect;
 	//printf("Handling click at {v = %i,h = %i}\n",the_point.v,the_point.h);
@@ -989,7 +990,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 		cur_point2.y -= terrain_rects[255].bottom + 5;
 		for(i = 0; i < 10; i++)
 			for(j = 0; j < 6; j++) {
-				if((good_palette_buttons[editing_town][j][i] > 0) && !mouse_button_held && (cur_point2.in(palette_buttons[i][j]))
+				if(good_palette_buttons[editing_town][j][i] && !mouse_button_held && cur_point2.in(palette_buttons[i][j])
 					&& /*((j < 3) || (editing_town)) &&*/ (overall_mode < MODE_MAIN_SCREEN)) {
 					temp_rect = palette_buttons[i][j];
 					temp_rect.offset(RIGHT_AREA_UL_X + 5, RIGHT_AREA_UL_Y + terrain_rects[255].bottom + 5);
@@ -1697,27 +1698,6 @@ void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bo
 		}
 }
 
-void swap_val(unsigned char *val,short a,short b) {
-	if(*val == a)
-		*val = b;
-	else if(*val == b)
-		*val = a;
-}
-void change_val_4 (unsigned char *val,short a,short b,short c,short d) {
-	if(*val == a)
-		*val = b;
-	else if(*val == b)
-		*val = c;
-	else if(*val == c)
-		*val = d;
-	else if(*val == d)
-		*val = a;
-}
-void change_val (unsigned char *val,short a,short b) {
-	if(*val == a)
-		*val = b;
-}
-
 void frill_up_terrain() {
 	short i,j;
 	ter_num_t terrain_type;
@@ -1763,7 +1743,7 @@ void unfrill_terrain() {
 	draw_terrain();
 }
 
-static ter_num_t find_object_part(unsigned char num, unsigned char x, unsigned char y, ter_num_t fallback){
+static ter_num_t find_object_part(unsigned char num, short x, short y, ter_num_t fallback){
 	for(int i = 0; i < 256; i++){
 		if(scenario.ter_types[i].obj_num == num &&
 		   scenario.ter_types[i].obj_pos.x == x &&
@@ -2810,7 +2790,7 @@ void adjust_space(location l) {
 	
 }
 
-bool place_item(location spot_hit,short which_item,short property,short always,short odds)  {
+bool place_item(location spot_hit,short which_item,bool property,bool always,short odds)  {
 	// odds 0 - 100, with 100 always
 	
 	short x;
@@ -3239,7 +3219,7 @@ extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
 // mode 0 - scen 1 - out 2 - town 3 - journal
 // if just_redo_text not 0, simply need to update text portions
 void start_string_editing(short mode,short just_redo_text) {
-	short i,pos;
+	long pos;
 	char str[256];
 	bool draw_full = false;
 	
@@ -3254,7 +3234,7 @@ void start_string_editing(short mode,short just_redo_text) {
 		reset_rb();
 		right_sbar->setMaximum(num_strs(mode) - NRSONPAGE);
 	}
-	for(i = 0; i < num_strs(mode); i++) {
+	for(size_t i = 0; i < num_strs(mode); i++) {
 		switch(mode) {
 			case 0:
 				sprintf((char *) str,"%d - %-30.30s",i,scenario.spec_strs[i].c_str());
@@ -3286,7 +3266,7 @@ void start_string_editing(short mode,short just_redo_text) {
 	pos = right_sbar->getPosition();
 	if(draw_full)
 		redraw_screen();
-	else for(i = 0; i < NRSONPAGE; i++)
+	else for(int i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i + pos,0);
 	set_lb(NLS - 3,1,"Command-click to clear",1);
 }

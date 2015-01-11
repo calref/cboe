@@ -11,7 +11,7 @@ bool is_combat();
 //short vdist(location p1,location p2) ;
 bool adjacent(location p1,location p2);
 bool point_onscreen(location center,location check);
-short set_direction (location old_pt, location new_pt);
+eDirection set_direction (location old_pt, location new_pt);
 location global_to_local(location global);
 location local_to_global(location local);
 bool loc_off_world(location p1);

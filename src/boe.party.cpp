@@ -56,7 +56,7 @@ extern cItemRec start_items[6];
 char empty_string[256] = "                                           ";
 
 //extern stored_town_maps_type town_maps;
-extern bool fast_bang;
+extern short fast_bang;
 extern bool flushingInput;
 //extern party_record_type	party;
 extern short stat_window,current_pc;
@@ -877,7 +877,6 @@ bool repeat_cast_ok(eSkill type) {
 void give_party_spell(short which) {
 	short i;
 	bool sound_done = false;
-	char str[60];
 	
 	if((which < 0) || (which > 161) || ((which > 61) && (which < 100))) {
 		giveError("The scenario has tried to give you a non-existant spell.");
@@ -1730,8 +1729,6 @@ void dispel_fields(short i,short j,short mode) {
 }
 
 bool pc_can_cast_spell(short pc_num,eSkill type) {
-	short store_w_cast;
-	
 	if(type == eSkill::MAGE_SPELLS && pc_can_cast_spell(pc_num, eSpell::LIGHT))
 		return true;
 	if(type == eSkill::PRIEST_SPELLS && pc_can_cast_spell(pc_num, eSpell::HEAL_MINOR))
@@ -2937,7 +2934,7 @@ void take_ap(short num) {
 short trait_present(eTrait which_trait) {
 	short i,ret = 0;
 	for(i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[which_trait] > 0)
+		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[which_trait])
 			ret += 1;
 	return ret;
 }

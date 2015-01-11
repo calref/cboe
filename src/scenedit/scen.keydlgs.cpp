@@ -790,7 +790,7 @@ short get_fresh_spec(short which_mode) {
 
 static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short spec_str_mode, short* str1, short* str2) {
 	std::string str;
-	short i;
+	size_t i;
 	
 	if(item_hit == "okay") {
 		str = me["str1"].getText();
@@ -1026,7 +1026,7 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, sho
 
 // mode 0 - scen 1 - out 2 - town
 void edit_dialog_text(short mode,short *str1,cDialog* parent) {
-	short i,j;
+	size_t i,j;
 	short num_s_strs[3] = {100,90,100};
 	
 	if(*str1 >= num_s_strs[mode] - 6)
@@ -1068,7 +1068,7 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 			}
 		}
 		if(*str1 >= 0)
-			for(i = *str1; i < *str1 + 6; i++) {
+			for(short i = *str1; i < *str1 + 6; i++) {
 				switch(mode) {
 					case 0:
 						scenario.spec_strs[i] = "";

@@ -60,7 +60,7 @@ public:
 	};
 	class cTimer {
 	public:
-		short time;
+		long time;
 		short global_or_town;
 		short node_to_call;
 	};

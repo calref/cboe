@@ -389,8 +389,8 @@ void redraw_screen() {
 	rectangle windRect(mainPtr);
 	tileImage(mainPtr,windRect,bg[20]);
 	draw_main_screen();
-	if(overall_mode < MODE_MAIN_SCREEN);
-	draw_terrain();
+	if(overall_mode < MODE_MAIN_SCREEN)
+		draw_terrain();
 	mainPtr.display();
 }
 
@@ -467,17 +467,15 @@ void draw_lb_slot (short which,short mode)  {
 }
 
 void draw_rb() {
-	short i,pos;
-	
- 	pos = right_sbar->getPosition();
-	for(i = pos; i < pos + NRSONPAGE; i++)
+	long pos = right_sbar->getPosition();
+	for(long i = pos; i < pos + NRSONPAGE; i++)
 		draw_rb_slot(i,0);
 }
 
 // mode 0 normal 1 pressed
 void draw_rb_slot (short which,short mode)  {
 	rectangle text_rect;
- 	short pos;
+ 	long pos;
  	
  	pos = right_sbar->getPosition();
 	if((which < pos) || (which >= pos + NRSONPAGE))
@@ -599,7 +597,7 @@ void draw_terrain(){
 	short q,r,x,i,small_i;
 	location which_pt,where_draw;
 	rectangle draw_rect,clipping_rect = {8,8,332,260};
-	unsigned char t_to_draw;
+	ter_num_t t_to_draw;
 	rectangle source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
 	rectangle boat_rect = {0,0,36,28};
 	

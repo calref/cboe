@@ -85,7 +85,7 @@ bool belt_present = false;
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
-bool fast_bang = false;
+short fast_bang = false; // Note: This mostly behaves as a boolean variable, but values other than 1 are assigned to it, so I made it a short
 short spec_item_array[60];
 short current_spell_range;
 eGameMode overall_mode = MODE_STARTUP;
@@ -208,38 +208,14 @@ int main(int /*argc*/, char* argv[]) {
 	}
 }
 
-//
-//	Initialize everything for the program, make sure we can run
-//
-
-//MW specified argument and return type.
 void Initialize(void) {
-	/* Initialize all the needed managers. */
-	//InitCursor();
-	
-	
-	//GetKeys(key_state);
-	
-	//
 	//	To make the Random sequences truly random, we need to make the seed start
 	//	at a different number.  An easy way to do this is to put the current time
 	//	and date into the seed.  Since it is always incrementing the starting seed
 	//	will always be different.  Don't for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
-	//
-	//unsigned long time;
-	//GetDateTime(&time);
-	//SetQDGlobalsRandomSeed(time);
 	srand(time(NULL));
 	
-//	stored_key = open_pref_file();
-//	if(stored_key == -100) {
-//		stored_key = open_pref_file();
-//		if(stored_key == -100) {
-//			Alert(983,NULL);
-//			ExitToShell();
-//		}
-//	}
 	load_prefs();
 	text_sbar.reset(new cScrollbar(mainPtr));
 	text_sbar->setBounds(sbar_rect);
@@ -256,7 +232,6 @@ void Initialize(void) {
 	shop_sbar->setPageSize(8);
 	shop_sbar->hide();
 	adjust_window_mode();
-	
 }
 
 void Handle_One_Event() {

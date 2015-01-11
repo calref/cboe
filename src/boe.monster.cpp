@@ -586,7 +586,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 }
 
 
-bool rand_move(char i) {
+bool rand_move(m_num_t i) {
 	bool acted_yet = false;
 	short j;
 	location store_loc;
@@ -722,8 +722,7 @@ bool combat_move_monster(short which,location destination) {
 	else if(!monst_check_special_terrain(destination,2,which))
 		return false;
 	else {
-		univ.town.monst[which].direction =
-		set_direction(univ.town.monst[which].cur_loc, destination);
+		univ.town.monst[which].direction = set_direction(univ.town.monst[which].cur_loc, destination);
 		univ.town.monst[which].cur_loc = destination;
 		monst_inflict_fields(which);
 		
@@ -803,8 +802,7 @@ bool town_move_monster(short num,location dest) {
 		return false;
 	
 	if(monst_can_be_there(dest,num)) {
-		univ.town.monst[num].direction =
-		set_direction(univ.town.monst[num].cur_loc, dest);
+		univ.town.monst[num].direction = set_direction(univ.town.monst[num].cur_loc, dest);
 		univ.town.monst[num].cur_loc = dest;
 		monst_inflict_fields(num);
 		return true;
@@ -1003,9 +1001,9 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			can_enter = false;
 		else {
 			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_crate((short) where_check.x,(short) where_check.y,false);
+			univ.town.set_crate(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
-				univ.town.set_crate((short) to_loc.x,(short) to_loc.y, true);
+				univ.town.set_crate(to_loc.x,to_loc.y, true);
 			for(i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))
@@ -1017,9 +1015,9 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			can_enter = false;
 		else {
 			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_barrel((short) where_check.x,(short) where_check.y,false);
+			univ.town.set_barrel(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
-				univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,true);
+				univ.town.set_barrel(to_loc.x,to_loc.y,true);
 			for(i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))

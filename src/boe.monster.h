@@ -20,7 +20,7 @@ short select_active_pc();
 short closest_pc(location where);
 short closest_monst(location where,short mode);
 short switch_target_to_adjacent(short which_m,short orig_target);
-bool rand_move(char i);
+bool rand_move(m_num_t i);
 bool seek_party(short i,location l1,location l2);
 bool flee_party(short i,location l1,location l2);
 bool try_move(short i,location start,short x,short y);

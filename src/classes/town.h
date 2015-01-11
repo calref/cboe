@@ -68,7 +68,8 @@ public:
 	public:
 		location loc;
 		short code,ability;
-		unsigned char charges,always_there,property,contained;
+		unsigned char charges;
+		bool always_there, property, contained;
 		
 		void append(legacy::preset_item_type old);
 	};

@@ -13,14 +13,14 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type = eMainStat
 void petrify_monst(cCreature* m_target, short strength);
 void special_increase_age(long length = 1, bool queue = false);
 void do_rest(long length, int hp_restore, int mp_restore);
-void out_move_party(char x,char y) ;
+void out_move_party(short x,short y) ;
 void teleport_party(short x,short y,short mode);
 bool run_stone_circle(short which);
 void fade_party();
 void change_level(short town_num,short x,short y);
 void push_things();
 void set_terrain(location l, ter_num_t terrain_type);
-void queue_special(eSpecCtx mode, short which_type, short spec, location spec_loc);
+void queue_special(eSpecCtx mode, unsigned short which_type, short spec, location spec_loc);
 void run_special(eSpecCtx which_mode,short which_type,short start_spec,location spec_loc,short *a,short *b,short *redraw);
 void run_special(pending_special_type spec, short* a, short* b, short* redraw);
 cSpecial get_node(short cur_spec,short cur_spec_type);

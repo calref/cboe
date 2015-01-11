@@ -48,7 +48,7 @@ extern effect_pat_type current_pat;
 extern short num_targets_left;
 extern location spell_targets[8];
 extern bool in_scen_debug;
-extern bool fast_bang;
+extern short fast_bang;
 //extern unsigned char misc_i[64][64],sfx[64][64];
 extern short store_current_pc;
 //extern location monster_targs[60];
@@ -2080,7 +2080,7 @@ void do_monster_turn() {
 							}
 						
 						if(cur_monst->attitude == 0) {
-							acted_yet = rand_move (i);
+							acted_yet = rand_move(i);
 							futzing++;
 						}
 					}
@@ -2660,12 +2660,12 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		if(target < 100) { // on PC
 			std::string create_line = "  Gazes at " + univ.party[target].name + '.';
 			add_string_to_buf(create_line);
-			petrify_pc(target, univ.town.monst[i].level / 4);
+			petrify_pc(target, m_target->level / 4);
 		}
 		else {
 			// TODO: This might be relevant to the AFFECT_DEADNESS special when used on monsters
 			monst_spell_note(m_target->number,9);
-			petrify_monst(m_target, univ.town.monst[i].level / 4);
+			petrify_monst(m_target, m_target->level / 4);
 		}
 	}
 	else if(level == 9) { /// Drain sp
@@ -3830,7 +3830,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 					spot_hit.x = i;
 					spot_hit.y = j;
 					
-					if(!monster_hit && sight_obscurity(i,j) < 5 && monst_on_space(spot_hit,k) > 0) {
+					if(!monster_hit && sight_obscurity(i,j) < 5 && monst_on_space(spot_hit,k)) {
 						
 						if(pat.pattern[i - center.x + 4][j - center.y + 4] > 0)
 							monster_hit = true;
@@ -4431,7 +4431,6 @@ bool combat_cast_mage_spell() {
 bool combat_cast_priest_spell() {
 	short target,i,store_sp,bonus,store_sound = 0,store_m_type = 0,num_opp = 0;
 	eSpell spell_num;
-	char c_line[60];
 	cCreature *which_m;
 	effect_pat_type protect_pat = {{
 		{0,1,1,1,1,1,1,1,0},
@@ -4710,7 +4709,7 @@ static void process_force_cage(location loc, short i) {
 void process_fields() {
 	short i,j,k,r1;
 	location loc;
-	char qf[64][64];
+	short qf[64][64];
 	rectangle r;
 	
 	if(is_out())
@@ -4724,7 +4723,7 @@ void process_fields() {
 		for(k = 0; k < ((is_combat()) ? 4 : 1); k++) {
 			for(i = r.left + 1; i < r.right ; i++)
 				for(j = r.top + 1; j < r.bottom ; j++)
-					if(univ.town.is_quickfire(i,j) > 0) {
+					if(univ.town.is_quickfire(i,j)) {
 						r1 = get_ran(1,1,8);
 						if(r1 != 1) {
 							qf[i - 1][j] = 1;

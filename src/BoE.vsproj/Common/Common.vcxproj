@@ -153,7 +153,7 @@
       <AdditionalIncludeDirectories>..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4800;4290</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;4290;4244;4996</DisableSpecificWarnings>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
     </ClCompile>
@@ -179,7 +179,7 @@
       <AdditionalIncludeDirectories>..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
-      <DisableSpecificWarnings>4800;4290</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;4290;4244;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

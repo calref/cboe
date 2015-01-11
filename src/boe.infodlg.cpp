@@ -64,7 +64,8 @@ short store_str2b;
 short store_page_on,store_num_i;
 
 // Misc dialog vars
-short position,num_entries;
+short position;
+long num_entries;
 unsigned short cur_entry;
 
 static void put_spell_info(cDialog& me, eSkill display_mode) {

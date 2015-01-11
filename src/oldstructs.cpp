@@ -22,6 +22,11 @@ using namespace legacy;
 	log << "   " << #member << ": " << sizeof(temp_##what . member) << " bytes, offset " \
 		<< offsetof(what,member) << std::endl
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4101)
+#endif
+
 // This is just a function to output all known information about each struct and its members.
 void debug_oldstructs(); // Suppress "no prototype" warning
 void debug_oldstructs() {
@@ -452,3 +457,7 @@ void debug_oldstructs() {
 	
 	
 }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif

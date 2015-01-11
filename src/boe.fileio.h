@@ -12,9 +12,6 @@ namespace fs = boost::filesystem; // TODO: Centralize this alias!
 //void save_file(short mode);
 void finish_load_party();
 void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bool hollow);
-void swap_val(unsigned char *val,short a,short b);
-void change_val_4 (unsigned char *val,short a,short b,short c,short d);
-void change_val (unsigned char *val,short a,short b);
 void form_template_terrain() ;
 //void load_town(short town_num,short mode,short extra,char *str);
 void shift_universe_left();

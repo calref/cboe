@@ -95,6 +95,24 @@ class cUniverse;
 //as said 13 and 14 are unused
 #define MONSTER_DEATH_TRIGGERS				15 //death triggers global special
 
+// Directions!
+enum eDirection {
+	DIR_N = 0,
+	DIR_NE = 1,
+	DIR_E = 2,
+	DIR_SE = 3,
+	DIR_S = 4,
+	DIR_SW = 5,
+	DIR_W = 6,
+	DIR_NW = 7,
+	DIR_HERE = 8,
+};
+
+inline eDirection& operator++ (eDirection& me, int) {
+	if(me == DIR_HERE) return me = DIR_N;
+	else return me = (eDirection)(1 + (int)me);
+}
+
 class cMonster {
 public:
 	struct cAttack{
@@ -142,7 +160,7 @@ public:
 	
 	std::string getAbil1Name();
 	std::string getAbil2Name();
-	bool hasAbil(eMonstAbil what, unsigned char* x1 = NULL, unsigned char* x2 = NULL);
+	bool hasAbil(eMonstAbil what, unsigned short& x1, unsigned short& x2);
 	void append(legacy::monster_record_type& old);
 	cMonster();
 	void writeTo(std::ostream& file) const;
@@ -156,7 +174,7 @@ public:
 	short active, attitude;
 	unsigned char start_attitude;
 	location start_loc, cur_loc;
-	unsigned char mobility; // Was a bool, but am making it a char to allow for additional mobility states
+	unsigned short mobility;
 	unsigned char time_flag;
 	short summoned;
 	unsigned char extra1, extra2;
@@ -169,10 +187,10 @@ public:
 	short health;
 	short mp;
 	short max_mp;
-	unsigned char ap;
+	short ap;
 	short morale,m_morale; // these are calculated in-game based on the level
 	std::map<eStatus,short> status;
-	unsigned char direction;
+	eDirection direction;
 	
 	cCreature();
 	cCreature(int num);
@@ -189,5 +207,7 @@ std::ostream& operator << (std::ostream& out, eRace e);
 std::istream& operator >> (std::istream& in, eRace& e);
 std::ostream& operator << (std::ostream& out, eMonstAbil e);
 std::istream& operator >> (std::istream& in, eMonstAbil& e);
+std::ostream& operator << (std::ostream& out, eDirection e);
+std::istream& operator >> (std::istream& in, eDirection& e);
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att);
 #endif

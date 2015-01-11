@@ -24,8 +24,8 @@ static void GetMaskBitmaps(const sf::Image& srcImage, HBITMAP& hAndMaskBitmap, H
 
 	// Scan each pixel of the source bitmap and create the masks
 	sf::Color mainBitPixel;
-	for(int x = 0; x < srcImage.getSize().x; ++x) {
-		for(int y = 0; y < srcImage.getSize().y; ++y) {
+	for(size_t x = 0; x < srcImage.getSize().x; ++x) {
+		for(size_t y = 0; y < srcImage.getSize().y; ++y) {
 			mainBitPixel = srcImage.getPixel(x, y);
 			if(mainBitPixel.a == 0) {
 				SetPixel(hAndMaskDC, x, y, RGB(255, 255, 255));

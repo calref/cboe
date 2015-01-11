@@ -55,7 +55,7 @@ void erase_spot(short i,short j);
 void draw_targeting_line(location where_curs);
 bool party_toast();
 void redraw_partial_terrain(rectangle redraw_rect);
-bool is_nature(char i, char j, unsigned char ground_t);
+bool is_nature(short i, short j, unsigned short ground_t);
 void put_dialog_graphic(short graphic_num,short spec_g,rectangle draw_rect);
 void draw_startup_stats();
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter);

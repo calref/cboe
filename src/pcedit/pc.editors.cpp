@@ -97,7 +97,7 @@ bool talk_done = false;
 long val_for_text;
 bool keep_change = false;
 short store_h,store_sp,i,store_skp;
-long store_g;
+unsigned short store_g;
 short store_train_mode,store_train_pc;
 
 static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) {
@@ -230,13 +230,13 @@ static void display_traits_graphics(cDialog& me) {
 	for(i = 0; i < 10; i++) {
 		std::string id = "good" + boost::lexical_cast<std::string>(i + 1);
 		eTrait trait = eTrait(i);
-		dynamic_cast<cLed&>(me[id]).setState((store_pc->traits[trait] > 0) ? led_red : led_off);
+		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
 	}
 	for(i = 0; i < 5; i++) {
 		// TODO: Pacifist
 		std::string id = "bad" + boost::lexical_cast<std::string>(i + 1);
 		eTrait trait = eTrait(i + 10);
-		dynamic_cast<cLed&>(me[id]).setState((store_pc->traits[trait] > 0) ? led_red : led_off);
+		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
 	}
 	
 	store = store_pc->get_tnl();

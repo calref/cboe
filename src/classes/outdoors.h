@@ -56,7 +56,7 @@ public:
 	location special_locs[18];
 	unsigned short special_id[18];
 	location exit_locs[8];
-	char exit_dests[8];
+	short exit_dests[8];
 	location sign_locs[8];
 	cWandering wandering[4],special_enc[4];
 	location wandering_locs[4];

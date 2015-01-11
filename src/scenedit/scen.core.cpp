@@ -442,7 +442,7 @@ static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& 
 		}
 		else {
 			// TODO: Update this with new value if more monster pictures are added later
-			if(cre(store_monst.picture_num,0,200,"Non-customized monster pic must be from 0 to 200.","",&me) > 0) return false;
+			if(cre(store_monst.picture_num,0,200,"Non-customized monster pic must be from 0 to 200.","",&me)) return false;
 			store_monst.x_width = m_pic_index[store_monst.picture_num].x;
 			store_monst.y_width = m_pic_index[store_monst.picture_num].y;
 			

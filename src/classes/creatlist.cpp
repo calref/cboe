@@ -51,7 +51,7 @@ void cPopulation::assign(size_t n, const cCreature& other, const cMonster& base,
 	if(dudes[n].level >= 20)
 		dudes[n].m_morale += 10 * (dudes[n].level - 20);
 	dudes[n].morale = dudes[n].m_morale;
-	dudes[n].direction = 0;
+	dudes[n].direction = DIR_HERE;
 	dudes[n].status.clear();
 	dudes[n].attitude = dudes[n].start_attitude; // TODO: Is this right?
 	dudes[n].cur_loc = dudes[n].start_loc;

@@ -55,7 +55,7 @@ extern tessel_ref_t map_pat[];
 extern location store_anim_ul;
 extern long register_flag;
 extern long ed_flag,ed_key;
-extern bool fast_bang;
+extern short fast_bang;
 extern tessel_ref_t bg[];
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
@@ -781,7 +781,7 @@ void refresh_text_bar() {
 
 // this is used for determinign whether to round off walkway corners
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
-bool is_nature(char x, char y, unsigned char ground_t) {
+bool is_nature(short x, short y, unsigned short ground_t) {
 	ter_num_t ter_type;
 	
 	ter_type = coord_to_ter((short) x,(short) y);
@@ -930,7 +930,7 @@ void draw_terrain(short	mode) {
 				// Finally, draw this terrain spot
 				if(trim == eTrimType::WALKWAY){
 					int trim = -1;
-					unsigned char ground_t = univ.scenario.ter_types[spec_terrain].trim_ter;
+					unsigned short ground_t = univ.scenario.ter_types[spec_terrain].trim_ter;
 					ter_num_t ground_ter = get_ter_from_ground(ground_t);
 					if(!loc_off_act_area(where_draw)) {
 						if(is_nature(where_draw.x - 1,where_draw.y,ground_t)){ // check left

@@ -730,7 +730,7 @@ static void handle_drop_item(short item_hit, bool& need_redraw) {
 }
 
 static void handle_item_shop_action(short item_hit) {
-	short i = item_hit - item_sbar->getPosition();
+	long i = item_hit - item_sbar->getPosition();
 	switch(stat_screen_mode) {
 		case 2: // identify item
 			if(!take_gold(shop_identify_cost,false))
@@ -931,7 +931,8 @@ static void handle_party_death() {for(int i = 0; i < 6; i++)
 }
 
 bool handle_action(sf::Event event) {
-	short item_hit,s1,s2,s3;
+	short s1,s2,s3;
+	long item_hit;
 	bool are_done = false;
 	bool need_redraw = false, did_something = false, need_reprint = false;
 	bool pc_delayed = false;
@@ -1237,7 +1238,7 @@ bool handle_action(sf::Event event) {
 		}
 		for(int i = 0; i < 6; i++)
 			for(int j = 0; j < 5; j++)
-				if(pc_area_button_active[i][j] > 0 && point_in_area.in(pc_buttons[i][j])) {
+				if(pc_area_button_active[i][j] && point_in_area.in(pc_buttons[i][j])) {
 					pc_buttons[i][j].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
 					arrow_button_click(pc_buttons[i][j]);
 					pc_buttons[i][j].offset(-PC_WIN_UL_X,-PC_WIN_UL_Y);
@@ -1311,7 +1312,7 @@ bool handle_action(sf::Event event) {
 		if(stat_window < 7) {
 			for(int i = 0; i < 8; i++)
 				for(int j = 0; j < 6; j++)
-					if(item_area_button_active[i][j] > 0 && point_in_area.in(item_buttons[i][j])) {
+					if(item_area_button_active[i][j] && point_in_area.in(item_buttons[i][j])) {
 						item_buttons[i][j].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 						// if((j > 0) || (stat_screen_mode < 2)) // TODO: <-- Windows version has this check - why?
 						arrow_button_click(item_buttons[i][j]);
@@ -2446,11 +2447,11 @@ void increase_age() {
 	// Recuperation and chronic disease disads
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			if(univ.party[i].traits[eTrait::RECUPERATION] > 0 && get_ran(1,0,10) == 1 && univ.party[i].cur_health < univ.party[i].max_health) {
+			if(univ.party[i].traits[eTrait::RECUPERATION] && get_ran(1,0,10) == 1 && univ.party[i].cur_health < univ.party[i].max_health) {
 				heal_pc(i,2);
 				update_stat = true;
 			}
-			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] > 0 && get_ran(1,0,110) == 1) {
+			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
 				disease_pc(i,4);
 				update_stat = true;
 			}

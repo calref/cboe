@@ -96,7 +96,7 @@ bool point_onscreen(location center,location check) {
 }
 
 
-short set_direction (location old_pt, location new_pt) {
+eDirection set_direction (location old_pt, location new_pt) {
 	if(old_pt.x == new_pt.x) {
 		if(old_pt.y > new_pt.y)
 			return DIR_N;

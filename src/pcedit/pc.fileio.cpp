@@ -63,28 +63,6 @@ void remove_party_from_scen() {
 	load_base_item_defs();
 }
 
-/*
- * XXX This was referenced but not defined, so I copied the implementation
- * from blxfileio.c. Need to check that it's OK.
- */
-short init_data(short flag) {
-	long k = 0;
-	
-	k = (long) flag;
-	k = k * k;
-	jl = jl * jl + 84 + k;
-	k = k + 51;
-	jl = jl * 2 + 1234 + k;
-	k = k % 3000;
-	jl = jl * 54;
-	jl = jl * 2 + 1234 + k;
-	k = k * 82;
-	k = k % 10000;
-	k = k + 10000;
-	
-	return (short) k;
-}
-
 void load_base_item_defs(){
 	fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
 	scen_items_loaded = load_scenario(basePath, univ.scenario);

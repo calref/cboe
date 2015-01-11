@@ -679,7 +679,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	sf::Color c[7] = {sf::Color{0,0,0},sf::Color{0,0,128},sf::Color{0,0,57},sf::Color{0,0,104},sf::Color{0,0,232},
 		sf::Color{0,160,0},sf::Color{0,96,0}};
 	rectangle shopper_name = {44,6,56,260};
-	short current_pos;
+	long current_pos;
 	
 	short cur_cost;
 	static const char*const cost_strs[] = {

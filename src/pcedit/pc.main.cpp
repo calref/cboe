@@ -235,7 +235,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 			
 		case eMenu::LEAVE_TOWN:
-			if(univ.party.is_split() > 0) {
+			if(univ.party.is_split()) {
 				cChoiceDlog("reunite-first").show();
 				break;
 			}
@@ -244,7 +244,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 			
 		case eMenu::REUNITE_PARTY:
-			if(univ.party.is_split() == 0) {
+			if(!univ.party.is_split()) {
 				cChoiceDlog("not-split").show();
 				break;
 			}

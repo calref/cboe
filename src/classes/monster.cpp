@@ -128,7 +128,7 @@ void cCreature::append(legacy::creature_data_type old){
 	m_morale = old.m_d.m_morale;
 	for(int i = 0; i < 15; i++)
 		status[(eStatus) i] = old.m_d.status[i];
-	direction = old.m_d.direction;
+	direction = eDirection(old.m_d.direction);
 }
 
 cMonster::cAttack::operator int() const {
@@ -170,6 +170,19 @@ std::istream& operator >> (std::istream& in, eRace& e){
 	if(i > 0 && i < 20)
 		e = (eRace) i;
 	else e = eRace::HUMAN;
+	return in;
+}
+
+std::ostream& operator << (std::ostream& out, eDirection e) {
+	return out << (int)e;
+}
+
+std::istream& operator >> (std::istream& in, eDirection& e) {
+	int i;
+	in >> i;
+	if(i >= 0 && i < 8)
+		e = (eDirection)i;
+	else e = DIR_HERE;
 	return in;
 }
 
@@ -447,14 +460,14 @@ std::string cMonster::getAbil2Name() {
 	return (std::string) abil2;
 }
 
-bool cMonster::hasAbil(eMonstAbil what, unsigned char* x1, unsigned char* x2){
+bool cMonster::hasAbil(eMonstAbil what, unsigned short& x1, unsigned short& x2){
 	if(abil1.abil == what){
-		if(x1 != NULL) *x1 = abil1.extra1;
-		if(x2 != NULL) *x2 = abil1.extra2;
+		x1 = abil1.extra1;
+		x2 = abil1.extra2;
 		return true;
 	}else if(abil2.abil == what){
-		if(x1 != NULL) *x1 = abil2.extra1;
-		if(x2 != NULL) *x2 = abil2.extra2;
+		x1 = abil2.extra1;
+		x2 = abil2.extra2;
 		return true;
 	}
 	return false;

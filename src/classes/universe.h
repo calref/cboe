@@ -68,59 +68,59 @@ public:
 	void prep_arena(); // Set up for a combat arena
 	void place_preset_fields();
 	
-	bool is_explored(char x, char y) const;
-	bool is_force_wall(char x, char y) const;
-	bool is_fire_wall(char x, char y) const;
-	bool is_antimagic(char x, char y) const;
-	bool is_scloud(char x, char y) const; // stinking cloud
-	bool is_ice_wall(char x, char y) const;
-	bool is_blade_wall(char x, char y) const;
-	bool is_sleep_cloud(char x, char y) const;
-	bool is_block(char x, char y) const; // currently unused
-	bool is_spot(char x, char y) const;
-	bool is_special(char x, char y) const;
-	bool is_web(char x, char y) const;
-	bool is_crate(char x, char y) const;
-	bool is_barrel(char x, char y) const;
-	bool is_fire_barr(char x, char y) const;
-	bool is_force_barr(char x, char y) const;
-	bool is_quickfire(char x, char y) const;
-	bool is_sm_blood(char x, char y) const;
-	bool is_med_blood(char x, char y) const;
-	bool is_lg_blood(char x, char y) const;
-	bool is_sm_slime(char x, char y) const;
-	bool is_lg_slime(char x, char y) const;
-	bool is_ash(char x, char y) const;
-	bool is_bones(char x, char y) const;
-	bool is_rubble(char x, char y) const;
-	bool is_force_cage(char x, char y) const;
-//	bool is_trim(char x, char y, char t) const;
-	bool set_explored(char x, char y, bool b);
-	bool set_force_wall(char x, char y, bool b);
-	bool set_fire_wall(char x, char y, bool b);
-	bool set_antimagic(char x, char y, bool b);
-	bool set_scloud(char x, char y, bool b); // stinking cloud
-	bool set_ice_wall(char x, char y, bool b);
-	bool set_blade_wall(char x, char y, bool b);
-	bool set_sleep_cloud(char x, char y, bool b);
-	bool set_block(char x, char y, bool b); // currently unused
-	bool set_spot(char x, char y, bool b);
-	bool set_web(char x, char y, bool b);
-	bool set_crate(char x, char y, bool b);
-	bool set_barrel(char x, char y, bool b);
-	bool set_fire_barr(char x, char y, bool b);
-	bool set_force_barr(char x, char y, bool b);
-	bool set_quickfire(char x, char y, bool b);
-	bool set_sm_blood(char x, char y, bool b);
-	bool set_med_blood(char x, char y, bool b);
-	bool set_lg_blood(char x, char y, bool b);
-	bool set_sm_slime(char x, char y, bool b);
-	bool set_lg_slime(char x, char y, bool b);
-	bool set_ash(char x, char y, bool b);
-	bool set_bones(char x, char y, bool b);
-	bool set_rubble(char x, char y, bool b);
-	bool set_force_cage(char x, char y, bool b);
-//	bool set_trim(char x, char y, char t, bool b);
+	bool is_explored(short x, short y) const;
+	bool is_force_wall(short x, short y) const;
+	bool is_fire_wall(short x, short y) const;
+	bool is_antimagic(short x, short y) const;
+	bool is_scloud(short x, short y) const; // stinking cloud
+	bool is_ice_wall(short x, short y) const;
+	bool is_blade_wall(short x, short y) const;
+	bool is_sleep_cloud(short x, short y) const;
+	bool is_block(short x, short y) const; // currently unused
+	bool is_spot(short x, short y) const;
+	bool is_special(short x, short y) const;
+	bool is_web(short x, short y) const;
+	bool is_crate(short x, short y) const;
+	bool is_barrel(short x, short y) const;
+	bool is_fire_barr(short x, short y) const;
+	bool is_force_barr(short x, short y) const;
+	bool is_quickfire(short x, short y) const;
+	bool is_sm_blood(short x, short y) const;
+	bool is_med_blood(short x, short y) const;
+	bool is_lg_blood(short x, short y) const;
+	bool is_sm_slime(short x, short y) const;
+	bool is_lg_slime(short x, short y) const;
+	bool is_ash(short x, short y) const;
+	bool is_bones(short x, short y) const;
+	bool is_rubble(short x, short y) const;
+	bool is_force_cage(short x, short y) const;
+//	bool is_trim(short x, short y, char t) const;
+	bool set_explored(short x, short y, bool b);
+	bool set_force_wall(short x, short y, bool b);
+	bool set_fire_wall(short x, short y, bool b);
+	bool set_antimagic(short x, short y, bool b);
+	bool set_scloud(short x, short y, bool b); // stinking cloud
+	bool set_ice_wall(short x, short y, bool b);
+	bool set_blade_wall(short x, short y, bool b);
+	bool set_sleep_cloud(short x, short y, bool b);
+	bool set_block(short x, short y, bool b); // currently unused
+	bool set_spot(short x, short y, bool b);
+	bool set_web(short x, short y, bool b);
+	bool set_crate(short x, short y, bool b);
+	bool set_barrel(short x, short y, bool b);
+	bool set_fire_barr(short x, short y, bool b);
+	bool set_force_barr(short x, short y, bool b);
+	bool set_quickfire(short x, short y, bool b);
+	bool set_sm_blood(short x, short y, bool b);
+	bool set_med_blood(short x, short y, bool b);
+	bool set_lg_blood(short x, short y, bool b);
+	bool set_sm_slime(short x, short y, bool b);
+	bool set_lg_slime(short x, short y, bool b);
+	bool set_ash(short x, short y, bool b);
+	bool set_bones(short x, short y, bool b);
+	bool set_rubble(short x, short y, bool b);
+	bool set_force_cage(short x, short y, bool b);
+//	bool set_trim(short x, short y, char t, bool b);
 	bool is_impassable(short x, short y);
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);

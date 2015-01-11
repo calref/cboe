@@ -182,7 +182,8 @@ void end_shop_mode() {
 }
 
 void handle_shop_event(location p) {
-	short i,store_what_picked;
+	short i;
+	unsigned long store_what_picked;
 	
 	p.x -= 5;
 	p.y -= 5;
@@ -823,7 +824,7 @@ void handle_talk_event(location p) {
 			strnum1 = -1;
 			return;
 		case 24:
-			if(univ.party.can_find_town[b] > 0) {
+			if(univ.party.can_find_town[b]) {
 				// TODO: Uh, is something supposed to happen here?
 			}
 			else if(univ.party.gold < a) {

@@ -47,7 +47,8 @@ extern cOutdoors::cWandering store_wandering_special;
 extern short monst_marked_damage[60];
 extern eSpell spell_being_cast, town_spell;
 extern sf::RenderWindow mini_map;
-extern bool fast_bang,end_scenario;
+extern short fast_bang;
+extern bool end_scenario;
 //extern short town_size[3];
 extern cUniverse univ;
 extern std::queue<pending_special_type> special_queue;
@@ -278,9 +279,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		if(univ.town.is_crate(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the crate.");
 			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_crate((short) where_check.x,(short) where_check.y,false);
+			univ.town.set_crate(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
-				univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
+				univ.town.set_crate(to_loc.x,to_loc.y,true);
 			for(i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))
@@ -289,9 +290,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		if(univ.town.is_barrel(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the barrel.");
 			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_barrel((short) where_check.x,(short) where_check.y,false);
+			univ.town.set_barrel(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
-				univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,false);
+				univ.town.set_barrel(to_loc.x,to_loc.y,false);
 			for(i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))
@@ -1207,8 +1208,8 @@ bool use_space(location where) {
 			return false;
 		}
 		add_string_to_buf("  You push the crate.");
-		univ.town.set_crate((short) where.x,(short) where.y,false);
-		univ.town.set_crate((short) to_loc.x,(short) to_loc.y,true);
+		univ.town.set_crate(where.x,where.y,false);
+		univ.town.set_crate(to_loc.x,to_loc.y,true);
 		for(i = 0; i < NUM_TOWN_ITEMS; i++)
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
 			   && (univ.town.items[i].contained))
@@ -1221,8 +1222,8 @@ bool use_space(location where) {
 			return false;
 		}
 		add_string_to_buf("  You push the barrel.");
-		univ.town.set_barrel((short) where.x,(short) where.y,false);
-		univ.town.set_barrel((short) to_loc.x,(short) to_loc.y,true);
+		univ.town.set_barrel(where.x, where.y,false);
+		univ.town.set_barrel(to_loc.x,to_loc.y,true);
 		for(i = 0; i < NUM_TOWN_ITEMS; i++)
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
 			   && (univ.town.items[i].contained))
@@ -1235,8 +1236,8 @@ bool use_space(location where) {
 			return false;
 		}
 		add_string_to_buf("  You push the block.");
-		univ.town.set_block((short) where.x,(short) where.y,false);
-		univ.town.set_block((short) to_loc.x,(short) to_loc.y,true);
+		univ.town.set_block(where.x,where.y,false);
+		univ.town.set_block(to_loc.x,to_loc.y,true);
 	}
 	
 	if(univ.scenario.ter_types[ter].special == eTerSpec::CHANGE_WHEN_USED) {
@@ -1345,7 +1346,7 @@ void PSOE(short which_special,unsigned char *stuff_done_val,short where_put) {
 	//play_sound(0);
 }
 
-void out_move_party(char x,char y) {
+void out_move_party(short x,short y) {
 	location l;
 	
 	l.x = x;l.y = y;
@@ -1921,7 +1922,7 @@ void special_increase_age(long length, bool queue) {
 		draw_terrain(0);
 }
 
-void queue_special(eSpecCtx mode, short which_type, short spec, location spec_loc) {
+void queue_special(eSpecCtx mode, unsigned short which_type, short spec, location spec_loc) {
 	if(spec < 0) return;
 	pending_special_type queued_special;
 	queued_special.spec = spec;
@@ -2351,7 +2352,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 
 // TODO: What was next_spec_type for? Is it still needed?
 void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				  short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw) {
+				  short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw) {
 	bool check_mess = true,set_sd = true;
 	std::array<std::string, 6> strs;
 	short i,j;
@@ -2507,7 +2508,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 
 // TODO: What was next_spec_type for? Is it still needed?
 void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw) {
+				 short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw) {
 	bool check_mess = true;
 	short i,pc = 6,r1;
 	cSpecial spec;
@@ -2929,7 +2930,7 @@ static bool isValidField(int fld, bool allowSpecial) {
 
 // TODO: What was next_spec_type for? Is it still needed?
 void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				 short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw) {
+				 short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw) {
 	bool check_mess = false;
 	std::string str1, str2, str3;
 	short i,j,k;
@@ -3385,7 +3386,7 @@ void set_terrain(location l, ter_num_t terrain_type) {
 
 // TODO: What was next_spec_type for? Is it still needed?
 void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				   short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw) {
+				   short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw) {
 	static const char*const stairDlogs[8] = {
 		"basic-stair-up", "basic-stair-down",
 		"basic-slope-up", "basic-slope-down",
@@ -3697,13 +3698,13 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			if(is_combat()) {
 				ASB("Not while in combat.");
-				if((which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE) < 3)
+				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
 				check_mess = false;
 				break;
 			}
-			if(univ.party.is_split() > 0) {
+			if(univ.party.is_split()) {
 				ASB("Party is already split.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
@@ -3772,7 +3773,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 
 // TODO: What was next_spec_type for? Is it still needed?
 void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-			   short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw){
+			   short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw){
 	bool check_mess = true;
 	short i,j,k;
 	cSpecial spec;
@@ -3901,7 +3902,7 @@ END:
 
 // TODO: What was next_spec_type for? Is it still needed?
 void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				  short *next_spec,short */*next_spec_type*/,short *a,short *b,short *redraw){
+				  short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw){
 	bool check_mess = false;
 	std::string str1, str2;
 	cSpecial spec;

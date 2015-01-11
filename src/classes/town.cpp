@@ -239,8 +239,8 @@ void cTown::set_up_lights() {
 			if(rad > 0) {
 				for(where.x = std::max(0,i - rad); where.x < std::min(this->max_dim(),short(i + rad + 1)); where.x++)
 					for(where.y = std::max(0,j - rad); where.y < std::min(this->max_dim(),short(j + rad + 1)); where.y++)
-						if((where_lit[where.x][where.y] == 0) && (dist(where,l) <= rad) && (can_see(l,where,get_obscurity) < 5))
-							where_lit[where.x][where.y] = 1;
+						if(!where_lit[where.x][where.y] && dist(where,l) <= rad && can_see(l,where,get_obscurity) < 5)
+							where_lit[where.x][where.y] = true;
 			}
 		}
 	for(short i = 0; i < 8; i++)
@@ -248,7 +248,7 @@ void cTown::set_up_lights() {
 			this->lighting(i,j) = 0;
 	for(where.x = 0; where.x < this->max_dim(); where.x++)
 		for(where.y = 0; where.y < this->max_dim(); where.y++) {
-			if(where_lit[where.x][where.y] > 0) {
+			if(where_lit[where.x][where.y]) {
 				this->lighting(where.x / 8,where.y) = this->lighting(where.x / 8,where.y) | (1 << (where.x % 8));
 			}
 		}

@@ -116,7 +116,6 @@ bool give_to_party(cItemRec item, short print_result) {
 ////
 bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overload) {
 	short free_space;
-	char announce_string[60];
 	
 	if(item.variety == eItemType::NO_ITEM)
 		return true;
@@ -529,9 +528,10 @@ void equip_item(short pc_num,short item_num) {
 						}
 				}
 				
+				size_t hands_free = 2 - num_hands_occupied;
 				if(is_combat() && univ.party[pc_num].items[item_num].variety == eItemType::ARMOR)
 					add_string_to_buf("Equip: Not armor in combat");
-				else if(2 - num_hands_occupied < num_hands_to_use.count(univ.party[pc_num].items[item_num].variety))
+				else if(hands_free < num_hands_to_use.count(univ.party[pc_num].items[item_num].variety))
 					add_string_to_buf("Equip: Not enough free hands");
 				else if(equippable.count(univ.party[pc_num].items[item_num].variety) <= num_equipped_of_this_type)
 					add_string_to_buf("Equip: Can't equip another");
@@ -775,7 +775,7 @@ short get_item(location place,short pc_num,bool check_container) {
 				item_near = true;
 			}
 	if(item_near)
-		if(display_item(place,pc_num,mass_get,check_container) > 0) { // if true, there was a theft
+		if(display_item(place,pc_num,mass_get,check_container)) { // if true, there was a theft
 			for(i = 0; i < univ.town->max_monst(); i++)
 				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 != 1)
 					&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {

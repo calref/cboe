@@ -213,7 +213,8 @@ void put_pc_screen() {
 // if suppress_buttons > 0, save time by not redrawing buttons
 void put_item_screen(short screen_num,short suppress_buttons) {
 	std::ostringstream sout;
-	short i_num,item_offset;
+	long i_num;
+	long item_offset;
 	short i = 0,j,pc;
 	rectangle erase_rect = {17,2,122,255},dest_rect;
 	rectangle upper_frame_rect = {3,3,15,268};
@@ -919,16 +920,10 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
 	
 	for(i = 0; i < 6; i++)
 		if(encounter.monst[i] != 0) {
-			switch(encounter.monst[i]) {
-					////
-					
-				default:
-					msg = get_m_name(encounter.monst[i]);
-					std::ostringstream sout;
-					sout << "  " << nums[i] << " x " << msg << "        ";
-					msg = sout.str();
-					break;
-			}
+			msg = get_m_name(encounter.monst[i]);
+			std::ostringstream sout;
+			sout << "  " << nums[i] << " x " << msg << "        ";
+			msg = sout.str();
 			add_string_to_buf((char *) msg.c_str());
 		}
 	if(encounter.monst[6] != 0) {
@@ -1225,7 +1220,8 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 		size_t split = str.find_last_of(' ', 49);
 		add_string_to_buf(str.substr(0,split));
 		str = str.substr(split);
-		while(str.find_last_not_of(' ') > 48 - indent) {
+		size_t wrap_w = 48 - indent;
+		while(str.find_last_not_of(' ') > wrap_w) {
 			std::string wrap(indent, ' ');
 			split = str.find_last_of(' ', 49 - indent);
 			wrap += str.substr(0,split);
@@ -1310,9 +1306,10 @@ void init_buf() {
 }
 
 void print_buf () {
-	short num_lines_printed = 0,ctrl_val;
+	short num_lines_printed = 0;
+	long ctrl_val;
 	short line_to_print;
-	short start_print_point;
+	long start_print_point;
 	bool end_loop = false;
 	rectangle store_text_rect,dest_rect,erase_rect = {2,2,136,255};
 	
@@ -1417,7 +1414,7 @@ short calc_day() {
 // which_event is the univ.party.key_times value to cross reference with.
 // if the key_time is reached before which_day, event won't happen
 // if it's 0, event always happens
-bool day_reached(unsigned char which_day, unsigned char which_event) {
+bool day_reached(unsigned short which_day, unsigned short which_event) {
 	// Windows version unconditionally added 20 days for no reason at all.
 	// Instead, let's add 10 days, but only if easy mode enabled.
 	if(PSD[SDF_EASY_MODE]) which_day += 10;

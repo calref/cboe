@@ -132,15 +132,15 @@ static void put_placed_monst_adv_in_dlog(cDialog& me) {
 static bool get_placed_monst_adv_in_dlog(cDialog& me) {
 	store_placed_monst2.time_flag = dynamic_cast<cLedGroup&>(me["time"]).getSelected()[4] - '1';
 	store_placed_monst2.monster_time = me["extra1"].getTextAsNum();
-  	if(cre(store_placed_monst2.monster_time,0,1000,"Given day must be from 0 to 1000.","",&me) > 0) return false;
+  	if(cre(store_placed_monst2.monster_time,0,1000,"Given day must be from 0 to 1000.","",&me)) return false;
 	store_placed_monst2.time_code = me["extra2"].getTextAsNum();
-  	if(cre(store_placed_monst2.time_code,0,10,"Event code must be 0 (for no event) or from 1 to 10.","",&me) > 0) return false;
+  	if(cre(store_placed_monst2.time_code,0,10,"Event code must be 0 (for no event) or from 1 to 10.","",&me)) return false;
 	store_placed_monst2.special_on_kill = me["death"].getTextAsNum();
-  	if(cre(store_placed_monst2.special_on_kill,-1,99,"Town special node number must be from 0 to 99 (or -1 for no special).","",&me) > 0) return false;
+  	if(cre(store_placed_monst2.special_on_kill,-1,99,"Town special node number must be from 0 to 99 (or -1 for no special).","",&me)) return false;
 	store_placed_monst2.spec1 = me["sdfx"].getTextAsNum();
-  	if(cre(store_placed_monst2.spec1,-1,299,"First part of special flag must be -1 (if this is to be ignored) or from 0 to 299.","",&me) > 0) return false;
+  	if(cre(store_placed_monst2.spec1,-1,299,"First part of special flag must be -1 (if this is to be ignored) or from 0 to 299.","",&me)) return false;
 	store_placed_monst2.spec2 = me["sdfy"].getTextAsNum();
-  	if(cre(store_placed_monst2.spec2,-1,9,"Second part of special flag must be -1 (if this is to be ignored) or from 0 to 9.","",&me) > 0) return false;
+  	if(cre(store_placed_monst2.spec2,-1,9,"Second part of special flag must be -1 (if this is to be ignored) or from 0 to 9.","",&me)) return false;
 	
 	std::string group = dynamic_cast<cLedGroup&>(me["group"]).getSelected();
 	if(group == "group10") store_placed_monst2.spec_enc_code = 10;
@@ -848,7 +848,7 @@ static bool check_talk_key(cDialog& me, std::string item_hit, bool losing) {
 	std::string key = me[item_hit].getText();
 	bool passes = true;
 	if(key.length() != 4) passes = false;
-	for(int i = 0; i < 4; i++) {
+	for(size_t i = 0; i < 4; i++) {
 		if(i < key.length() && !islower(key[i]))
 			passes = false;
 	}
@@ -1108,7 +1108,7 @@ location pick_out(location default_loc) {
 bool new_town(short which_town) {
 	// ignore parent in Mac version
 	std::cout << "Town creation currently disabled.\n";
-	short basic_dlog_hit,i,j,store_dialog_answer;
+	short i,j;
 
 	cChoiceDlog new_dlg("new-town", {"okay", "cancel"});
 	new_dlg->getControl("num").setTextToNum(which_town);
