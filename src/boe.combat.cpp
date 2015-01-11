@@ -148,7 +148,7 @@ effect_pat_type open_square = {{
 	{0,0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type rad2 = {{
+effect_pat_type radius2 = {{
 	{0,0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0},
 	{0,0,0,1,1,1,0,0,0},
@@ -158,7 +158,7 @@ effect_pat_type rad2 = {{
 	{0,0,0,1,1,1,0,0,0},
 	{0,0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type rad3 = {{
+effect_pat_type radius3 = {{
 	{0,0,0,0,0,0,0,0,0},
 	{0,0,0,1,1,1,0,0,0},
 	{0,0,1,1,1,1,1,0,0},
@@ -1010,7 +1010,7 @@ void do_combat_cast(location target) {
 								add_missile(target,9,1,0,0);
 								store_sound = 11;
 								r1 = min(18,(level * 7) / 10 + 2 * bonus);
-								place_spell_pattern(rad2,target,DAMAGE_MAGIC,r1,current_pc);
+								place_spell_pattern(radius2,target,DAMAGE_MAGIC,r1,current_pc);
 								ashes_loc = target;
 								break;
 								
@@ -1065,7 +1065,7 @@ void do_combat_cast(location target) {
 								r1 = min(12,1 + (level * 2) / 3 + bonus) + 2;
 								if(r1 > 20)
 									r1 = (r1 * 8) / 10;
-								place_spell_pattern(rad2,target,DAMAGE_FIRE,r1,current_pc);
+								place_spell_pattern(radius2,target,DAMAGE_FIRE,r1,current_pc);
 								ashes_loc = target;
 								break;
 							case eSpell::KILL:
@@ -1418,7 +1418,7 @@ void load_missile() {
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
 		if(univ.party[current_pc].items[arrow].ability == eItemAbil::MISSILE_EXPLODING)
-			current_pat = rad2;
+			current_pat = radius2;
 		else
 			current_pat = single;
 	}
@@ -1487,7 +1487,7 @@ void fire_missile(location target) {
 				pause(dist(univ.party[current_pc].combat_pos,target)*5);
 			run_a_missile(univ.party[missile_firer].combat_pos,target,2,1,5,0,0,100);
 			start_missile_anim();
-			place_spell_pattern(rad2,target, DAMAGE_FIRE,univ.party[missile_firer].items[ammo_inv_slot].ability_strength * 2,missile_firer);
+			place_spell_pattern(radius2,target, DAMAGE_FIRE,univ.party[missile_firer].items[ammo_inv_slot].ability_strength * 2,missile_firer);
 			do_explosion_anim(5,0);
 			end_missile_anim();
 			handle_marked_damage();
@@ -2610,7 +2610,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		ASB("Creature breathes.");
 		run_a_missile(source,targ_space,0,0,44,
 					  0,0,100);
-		place_spell_pattern(rad2,targ_space,CLOUD_SLEEP,7);
+		place_spell_pattern(radius2,targ_space,CLOUD_SLEEP,7);
 	}
 	else if(level == 14) { // vapors
 		//play_sound(44);
@@ -3066,7 +3066,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::CONFLAGRATION:
 				run_a_missile(l,target,13,1,25,0,0,80);
-				place_spell_pattern(rad2,target,WALL_FIRE,7);
+				place_spell_pattern(radius2,target,WALL_FIRE,7);
 				break;
 			case eSpell::FIREBALL:
 				r1 = 1 + (caster->level * 3) / 4;
@@ -3108,7 +3108,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::WEB:
 				play_sound(25);
-				place_spell_pattern(rad2,target,FIELD_WEB,7);
+				place_spell_pattern(radius2,target,FIELD_WEB,7);
 				break;
 			case eSpell::POISON:
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
@@ -3153,12 +3153,12 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				r1 = 1 + (caster->level * 3) / 4 + 3;
 				if(r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(rad2,target,DAMAGE_FIRE,r1,7);
+				place_spell_pattern(radius2,target,DAMAGE_FIRE,r1,7);
 				ashes_loc = target;
 				break;
 			case eSpell::SHOCKSTORM:
 				run_a_missile(l,target,6,1,11,0,0,80);
-				place_spell_pattern(rad2,target,WALL_FORCE,7);
+				place_spell_pattern(radius2,target,WALL_FORCE,7);
 				break;
 			case eSpell::POISON_MAJOR:
 				run_a_missile(l,vict_loc,11,1,11,0,0,80);
@@ -3513,7 +3513,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				r1 = (caster->level * 3) / 4 + 5;
 				if(r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(rad2,target,DAMAGE_MAGIC,r1,7 );
+				place_spell_pattern(radius2,target,DAMAGE_MAGIC,r1,7 );
 				ashes_loc = target;
 				break;
 		}
@@ -4409,7 +4409,7 @@ bool combat_cast_mage_spell() {
 					break;
 					
 				case eSpell::BLADE_AURA: // Pyhrrus effect
-					place_spell_pattern(rad2,univ.party[current_pc].combat_pos,WALL_BLADES,6);
+					place_spell_pattern(radius2,univ.party[current_pc].combat_pos,WALL_BLADES,6);
 					break;
 			}
 			
@@ -4601,10 +4601,10 @@ void start_spell_targeting(eSpell num, bool freebie) {
 		case eSpell::CONFLAGRATION: case eSpell::FIRESTORM: case eSpell::SHOCKSTORM: case eSpell::WEB:
 		case eSpell::ANTIMAGIC: case eSpell::WALL_ICE_BALL: case eSpell::CLOUD_SLEEP_LARGE:
 		case eSpell::DIVINE_THUD: case eSpell::DISPEL_SPHERE:
-			current_pat = rad2;
+			current_pat = radius2;
 			break;
 		case eSpell::PESTILENCE: case eSpell::GOO_BOMB: case eSpell::FOUL_VAPOR:
-			current_pat = rad3;
+			current_pat = radius3;
 			break;
 		case eSpell::WALL_FORCE: case eSpell::WALL_ICE: case eSpell::WALL_BLADES:
 			add_string_to_buf("  (Hit space to rotate.)");

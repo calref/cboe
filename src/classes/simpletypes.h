@@ -568,7 +568,7 @@ enum class eSpecCtx {
 };
 
 enum class eSpecType {
-	ERROR = -1, // A magic value used while processing nodes
+	INVALID = -1, // A magic value used while processing nodes
 	NONE = 0,
 	SET_SDF = 1,
 	INC_SDF = 2,

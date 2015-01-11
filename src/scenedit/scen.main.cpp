@@ -465,7 +465,7 @@ void handle_menu_choice(eMenu item_hit) {
 			helpDlog = "about-scened";
 			isHelp = true;
 			break;
-		case eMenu::HELP_INDEX:
+		case eMenu::HELP_TOC:
 			launchURL("https://calref.net/~sylae/boe-doc/editor/About.html");
 			break;
 		case eMenu::HELP_START:

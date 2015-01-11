@@ -614,7 +614,7 @@ void handle_menu_choice(eMenu item_hit) {
 			}
 			make_cursor_sword();
 			break;
-		case eMenu::HELP_INDEX:
+		case eMenu::HELP_TOC:
 			launchURL("https://calref.net/~sylae/boe-doc/game/Contents.html");
 			break;
 		case eMenu::ABOUT_MAGE:

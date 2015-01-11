@@ -88,7 +88,7 @@ void init_menubar() {
 		eMenu::NONE, eMenu::LIBRARY_INTRO,
 	};
 	static const eMenu help_choices[] = {
-		eMenu::HELP_INDEX, eMenu::ABOUT, eMenu::NONE, eMenu::HELP_OUT, eMenu::HELP_TOWN, eMenu::HELP_COMBAT, eMenu::HELP_BARRIER,
+		eMenu::HELP_TOC, eMenu::ABOUT, eMenu::NONE, eMenu::HELP_OUT, eMenu::HELP_TOWN, eMenu::HELP_COMBAT, eMenu::HELP_BARRIER,
 		eMenu::NONE, eMenu::HELP_HINTS, eMenu::HELP_SPELLS,
 	};
 	

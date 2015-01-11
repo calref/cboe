@@ -1564,7 +1564,7 @@ bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, 
 extern fs::path progDir;
 extern eScenMode overall_mode;
 bool build_scenario() {
-	short width, height, large, med, small, which_town;
+	short width, height, lg, med, sm, which_town;
 	bool default_town, grass;
 	std::string filename, title;
 	short i,j;
@@ -1573,7 +1573,7 @@ bool build_scenario() {
 	if(!edit_make_scen_1(filename, title, grass))
 		return false;
 	filename += ".boes";
-	if(!edit_make_scen_2(width, height, large, med, small, default_town))
+	if(!edit_make_scen_2(width, height, lg, med, sm, default_town))
 		return false;
 	scenario = cScenario(true);
 	scenario.scen_name = title;
@@ -1606,7 +1606,7 @@ bool build_scenario() {
 		scenario.towns.push_back(warriors_grove);
 	
 	// TODO: Append i+1 to each town name
-	for(i = 0; i < large; i++) {
+	for(i = 0; i < lg; i++) {
 		which_town = scenario.num_towns;
 		scenario.num_towns++;
 		scenario.town_size[which_town] = 0;
@@ -1624,7 +1624,7 @@ bool build_scenario() {
 		scenario.addTown<cMedTown>();
 		town->town_name = "Medium town";
 	}
-	for(i = 0; i < small; i++) {
+	for(i = 0; i < sm; i++) {
 		which_town = scenario.num_towns;
 		scenario.num_towns++;
 		scenario.town_size[which_town] = 2;

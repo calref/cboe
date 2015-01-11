@@ -219,7 +219,7 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 	in >> i;
 	e = (eSpecType) i;
 	if(getNodeCategory(e) == eSpecCat::INVALID)
-		e = eSpecType::ERROR;
+		e = eSpecType::INVALID;
 	return in;
 }
 

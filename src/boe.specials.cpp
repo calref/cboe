@@ -2017,7 +2017,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		
 		//print_nums(1111,cur_spec_type,cur_node.type);
 		
-		if(cur_node.type == eSpecType::ERROR) {
+		if(cur_node.type == eSpecType::INVALID) {
 			special_in_progress = false;
 			return;
 		}
@@ -2072,7 +2072,7 @@ cSpecial get_node(short cur_spec,short cur_spec_type) {
 	cSpecial dummy_node;
 	
 	dummy_node = univ.scenario.scen_specials[0];
-	dummy_node.type = eSpecType::ERROR;
+	dummy_node.type = eSpecType::INVALID;
 	if(cur_spec_type == 0) {
 		if(cur_spec != minmax(0,255,cur_spec)) {
 			giveError("The scenario called a scenario special node out of range.");

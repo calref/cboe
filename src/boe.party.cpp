@@ -75,7 +75,7 @@ extern eSpell store_mage, store_priest;
 //extern cOutdoors outdoors[2][2];
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting,stat_screen_mode;
-extern effect_pat_type null_pat,single,t,square,rad2,rad3;
+extern effect_pat_type null_pat,single,t,square,radius2,radius3;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
 extern short hit_chance[21],combat_active_pc;//,pc_moves[6];
@@ -1037,7 +1037,7 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 			
 		case eSpell::ANTIMAGIC:
 			add_string_to_buf("  Target spell.               ");
-			current_pat = rad2;
+			current_pat = radius2;
 			start_town_targeting(spell_num,pc_num);
 			break;
 			
@@ -1175,7 +1175,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			
 		case eSpell::DISPEL_SPHERE: case eSpell::DISPEL_FIELD:
 			add_string_to_buf("  Target spell.               ");
-			current_pat = (spell_num == eSpell::DISPEL_SPHERE) ? rad2 : single;
+			current_pat = (spell_num == eSpell::DISPEL_SPHERE) ? radius2 : single;
 			start_town_targeting(spell_num,pc_num);
 			break;
 			

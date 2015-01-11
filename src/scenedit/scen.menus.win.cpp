@@ -85,7 +85,7 @@ void init_menubar() {
 		eMenu::OUT_SPECIALS, eMenu::OUT_TEXT, eMenu::OUT_SIGNS,
 	};
 	static const eMenu help_choices[] = {
-		eMenu::HELP_INDEX, eMenu::ABOUT, eMenu::NONE, eMenu::HELP_START, eMenu::HELP_TEST, eMenu::HELP_DIST,
+		eMenu::HELP_TOC, eMenu::ABOUT, eMenu::NONE, eMenu::HELP_START, eMenu::HELP_TEST, eMenu::HELP_DIST,
 	};
 	
 	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
