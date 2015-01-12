@@ -243,11 +243,11 @@ void handle_menu_choice(eMenu item_hit) {
 				giveError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
 			}
-			if(scenario.num_towns >= 200) {
+			if(scenario.towns.size() >= 200) {
 				giveError("You have reached the limit of 200 towns you can have in one scenario.");
 				return;
 			}
-			if(new_town(scenario.num_towns))
+			if(new_town(scenario.towns.size()))
 				set_up_main_screen();
 			change_made = true;
 			break;
@@ -315,15 +315,15 @@ void handle_menu_choice(eMenu item_hit) {
 				giveError("You need to save the changes made to your scenario before you can delete a town.");
 				return;
 			}
-			if(scenario.num_towns == 1) {
+			if(scenario.towns.size() == 1) {
 				giveError("You can't delete the last town in a scenario. All scenarios must have at least 1 town.");
 				return;
 			}
-			if(scenario.num_towns - 1 == cur_town) {
+			if(scenario.towns.size() - 1 == cur_town) {
 				giveError("You can't delete the last town in a scenario while you're working on it. Load a different town, and try this again.");
 				return;
 			}
-			if(scenario.num_towns - 1 == scenario.which_town_start) {
+			if(scenario.towns.size() - 1 == scenario.which_town_start) {
 				giveError("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.");
 				return;
 			}

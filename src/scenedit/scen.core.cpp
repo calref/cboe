@@ -1605,29 +1605,14 @@ bool build_scenario() {
 	
 	// TODO: Append i+1 to each town name
 	for(i = 0; i < lg; i++) {
-		which_town = scenario.num_towns;
-		scenario.num_towns++;
-		scenario.town_size[which_town] = 0;
-		scenario.town_hidden[which_town] = 0;
-		cur_town = which_town;
 		scenario.addTown<cBigTown>();
 		town->town_name = "Large town";
 	}
 	for(i = 0; i < med; i++) {
-		which_town = scenario.num_towns;
-		scenario.num_towns++;
-		scenario.town_size[which_town] = 1;
-		scenario.town_hidden[which_town] = 0;
-		cur_town = which_town;
 		scenario.addTown<cMedTown>();
 		town->town_name = "Medium town";
 	}
 	for(i = 0; i < sm; i++) {
-		which_town = scenario.num_towns;
-		scenario.num_towns++;
-		scenario.town_size[which_town] = 2;
-		scenario.town_hidden[which_town] = 0;
-		cur_town = which_town;
 		scenario.addTown<cTinyTown>();
 		town->town_name = "Small town";
 	}
@@ -1663,7 +1648,7 @@ void set_starting_loc() {
 	cDialog loc_dlg("set-start-loc");
 	loc_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &loc_dlg, false));
 	loc_dlg["okay"].attachClickHandler(set_starting_loc_filter);
-	loc_dlg["town-num"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.num_towns - 1, "The starting town"));
+	loc_dlg["town-num"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "The starting town"));
 	loc_dlg.attachFocusHandlers(check_location_bounds, {"town-x", "town-y"});
 	
 	loc_dlg["town-num"].setTextToNum(scenario.which_town_start);

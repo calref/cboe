@@ -70,20 +70,20 @@ public:
 	const_col_ref operator[](size_t x) const {
 		return const_col_ref(*this, x);
 	}
-	size_t width() {
+	size_t width() const {
 		return w;
 	}
-	size_t height() {
+	size_t height() const {
 		return h;
 	}
-	size_t size() {
+	size_t size() const {
 		return data.size();
 	}
 	void resize(size_t width, size_t height) {
 		w = width; h = height;
 		data.resize(w * h);
 	}
-	bool empty() {
+	bool empty() const {
 		return data.empty();
 	}
 	vector2d() : w(0), h(0) {}

@@ -365,7 +365,7 @@ short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 	cDialog town_dlg(which_dlog);
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["okay"].attachClickHandler(save_town_num);
-	town_dlg["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.num_towns - 1, "Town number"));
+	town_dlg["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "Town number"));
 	town_dlg["choose"].attachClickHandler([&scenario](cDialog& me, std::string, eKeyMod) -> bool {
 		int i = me["town"].getTextAsNum();
 		if(&scenario != &::scenario)
@@ -379,7 +379,7 @@ short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 	
 	town_dlg["town"].setTextToNum(def);
 	std::string prompt = town_dlg["prompt"].getText();
-	prompt += " (0 - " + std::to_string(scenario.num_towns - 1) + ')';
+	prompt += " (0 - " + std::to_string(scenario.towns.size() - 1) + ')';
 	town_dlg["prompt"].setText(prompt);
 	
 	town_dlg.setResult<short>(-1);
@@ -685,7 +685,7 @@ static bool save_advanced_town(cDialog& me, std::string, eKeyMod) {
 	}
 	town->spec_on_entry = me["onenter"].getTextAsNum();
 	town->spec_on_entry_if_dead = me["onenterdead"].getTextAsNum();
-	scenario.town_hidden[cur_town] = dynamic_cast<cLed&>(me["hidden"]).getState() != led_off;
+	town->is_hidden = dynamic_cast<cLed&>(me["hidden"]).getState() != led_off;
 	return true;
 }
 
@@ -699,7 +699,7 @@ static void put_advanced_town_in_dlog(cDialog& me) {
 	}
 	me["onenter"].setTextToNum(town->spec_on_entry);
 	me["onenterdead"].setTextToNum(town->spec_on_entry_if_dead);
-	dynamic_cast<cLed&>(me["hidden"]).setState(scenario.town_hidden[cur_town] ? led_red : led_off);
+	dynamic_cast<cLed&>(me["hidden"]).setState(town->is_hidden ? led_red : led_off);
 }
 
 void edit_advanced_town() {
@@ -1060,19 +1060,19 @@ static bool pick_out_event_filter(cDialog& me, std::string item_hit, location& c
 		if(cur_loc.x == 0) beep();
 		else cur_loc.x--;
 	} else if(item_hit == "xplus") {
-		if(cur_loc.x >= scenario.out_width - 1) beep();
+		if(cur_loc.x >= scenario.outdoors.width() - 1) beep();
 		else cur_loc.x++;
 	} else if(item_hit == "yminus") {
 		if(cur_loc.y == 0) beep();
 		else cur_loc.y--;
 	} else if(item_hit == "yplus") {
-		if(cur_loc.y >= scenario.out_height - 1) beep();
+		if(cur_loc.y >= scenario.outdoors.height() - 1) beep();
 		else cur_loc.y++;
 	} else if(item_hit == "choose") {
-		int i = cur_loc.x * scenario.out_width + cur_loc.y;
+		int i = cur_loc.x * scenario.outdoors.width() + cur_loc.y;
 		i = choose_text(STRT_SECTOR, i, &me, "Which sector?");
-		cur_loc.x = i / scenario.out_width;
-		cur_loc.y = i % scenario.out_width;
+		cur_loc.x = i / scenario.outdoors.width();
+		cur_loc.y = i % scenario.outdoors.width();
 	}
 	put_out_loc_in_dlog(me, cur_loc);
 	return true;
@@ -1094,8 +1094,8 @@ location pick_out(location default_loc) {
 	out_dlg["cancel"].attachClickHandler(std::bind(finish_pick_out, _1, false, std::ref(default_loc), prev_loc));
 	out_dlg.attachClickHandlers(std::bind(pick_out_event_filter, _1, _2, std::ref(default_loc)), {"xplus", "xminus", "yplus", "yminus", "choose"});
 	
-	out_dlg["width"].setTextToNum(scenario.out_width);
-	out_dlg["height"].setTextToNum(scenario.out_height);
+	out_dlg["width"].setTextToNum(scenario.outdoors.width());
+	out_dlg["height"].setTextToNum(scenario.outdoors.height());
 	put_out_loc_in_dlog(out_dlg, default_loc);
 	
 	out_dlg.run();
@@ -1113,12 +1113,10 @@ bool new_town(short which_town) {
 	std::string size = dynamic_cast<cLedGroup&>(new_dlg->getControl("size")).getSelected();
 	std::string preset = dynamic_cast<cLedGroup&>(new_dlg->getControl("preset")).getSelected();
 
-	scenario.num_towns++;
 	if(size == "lg") scenario.towns.push_back(new cBigTown(scenario));
 	else if(size == "med") scenario.towns.push_back(new cMedTown(scenario));
 	else if(size == "sm") scenario.towns.push_back(new cTinyTown(scenario));
 	
-	scenario.town_hidden[which_town] = 0;
 	cur_town = which_town;
 	town = scenario.towns[cur_town];
 	scenario.last_town_edited = cur_town;
@@ -1143,15 +1141,9 @@ bool new_town(short which_town) {
 
 // before calling this, be sure to do all checks to make sure it's safe.
 void delete_last_town() {
-	scenario.num_towns--;
-	scenario.town_size[scenario.num_towns] = 0;
-	scenario.town_hidden[scenario.num_towns] = 0;
-	scenario.town_data_size[scenario.num_towns][0] = 0;
-	scenario.town_data_size[scenario.num_towns][1] = 0;
-	scenario.town_data_size[scenario.num_towns][2] = 0;
-	scenario.town_data_size[scenario.num_towns][3] = 0;
-	scenario.town_data_size[scenario.num_towns][4] = 0;
-	save_scenario(scenario.scen_file);
+	cTown* last_town = scenario.towns.back();
+	scenario.towns.pop_back();
+	delete last_town;
 }
 
 cTown* pick_import_town(short def) {

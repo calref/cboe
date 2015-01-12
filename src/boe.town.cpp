@@ -116,9 +116,9 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	former_town = town_number = which_town;
 	
-	if(town_number < 0 || town_number >= univ.scenario.num_towns) {
+	if(town_number < 0 || town_number >= univ.scenario.towns.size()) {
 		giveError("The scenario tried to put you into a town that doesn't exist.",
-			"Requested town: " + std::to_string(town_number) + "|Max town: " + std::to_string(univ.scenario.num_towns));
+			"Requested town: " + std::to_string(town_number) + "|Max town: " + std::to_string(univ.scenario.towns.size()));
 		return;
 	}
 	
@@ -140,9 +140,9 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	
 	
-	if(town_number < 0 || town_number >= univ.scenario.num_towns) {
+	if(town_number < 0 || town_number >= univ.scenario.towns.size()) {
 		giveError("The scenario tried to put you into a town that doesn't exist.",
-			"Requested town: " + std::to_string(former_town) + "|Adjusted town: " + std::to_string(town_number) + "|Max town: " + std::to_string(univ.scenario.num_towns));
+			"Requested town: " + std::to_string(former_town) + "|Adjusted town: " + std::to_string(town_number) + "|Max town: " + std::to_string(univ.scenario.towns.size()));
 		return;
 	}
 	
@@ -1192,7 +1192,7 @@ void erase_out_specials() {
 						}
 					}
 					if(sector.special_id[k] < 0) continue; // TODO: Is this needed? Seems to be important, so why was it commented out?
-					out_num = univ.scenario.out_width * (univ.party.outdoor_corner.y + j) + univ.party.outdoor_corner.x + i;
+					out_num = univ.scenario.outdoors.width() * (univ.party.outdoor_corner.y + j) + univ.party.outdoor_corner.x + i;
 					
 					sn = sector.specials[sector.special_id[k]];
 					sd1 = sn.sd1; sd2 = sn.sd2;
@@ -1253,7 +1253,6 @@ void draw_map(bool need_refresh) {
 	short total_size = 48; // if full redraw, use this to figure out everything
 	rectangle area_to_put_on_map_rect;
 	rectangle custom_from;
-	short town_type = univ.scenario.town_size[univ.town.num];
 	
 	draw_surroundings = true;
 	
@@ -1274,33 +1273,32 @@ void draw_map(bool need_refresh) {
 		redraw_rect = view_rect;
 	}
 	else {
-		switch(town_type) {
-			case 0:
+		total_size = univ.town->max_dim();
+		switch(total_size) {
+			case 64:
 				view_rect.left = minmax(0,24,univ.town.p_loc.x - 20);
 				view_rect.right = view_rect.left + 40;
 				view_rect.top = minmax(0,24,univ.town.p_loc.y - 20);
 				view_rect.bottom = view_rect.top + 40;
 				redraw_rect = big_rect;
-				total_size = 64;
 				break;
-			case 1:
+			case 48:
 				view_rect.left = minmax(0,8,univ.town.p_loc.x - 20);
 				view_rect.right = view_rect.left + 40;
 				view_rect.top = minmax(0,8,univ.town.p_loc.y - 20);
 				view_rect.bottom = view_rect.top + 40;
 				redraw_rect = view_rect;
 				break;
-			case 2:
+			case 32:
 				view_rect = tiny_rect;
 				redraw_rect = view_rect;
-				total_size = 32;
 				break;
 		}
 	}
 	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)) ||
-		(((is_town()) || (is_combat())) && (town_type != 2))) {
+		(((is_town()) || (is_combat())) && (univ.town->max_dim() != 48))) {
 		area_to_draw_from = view_rect;
 		area_to_draw_from.left *= 6;
 		area_to_draw_from.right *= 6;
@@ -1526,9 +1524,9 @@ void check_done() {
 }
 
 bool quadrant_legal(short i, short j) {
-	if(univ.party.outdoor_corner.x + i >= univ.scenario.out_width)
+	if(univ.party.outdoor_corner.x + i >= univ.scenario.outdoors.width())
 		return false;
-	if(univ.party.outdoor_corner.y + j >= univ.scenario.out_height)
+	if(univ.party.outdoor_corner.y + j >= univ.scenario.outdoors.height())
 		return false;
 	if(univ.party.outdoor_corner.x + i < 0)
 		return false;

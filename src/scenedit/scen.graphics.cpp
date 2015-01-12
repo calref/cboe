@@ -598,19 +598,19 @@ void draw_terrain(){
 					short ter_x = cen_x + q - 4, ter_y = cen_y + r - 4;
 					if(ter_x == -1 && ter_y == -1 && cur_out.x > 0 && cur_out.y > 0)
 						t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y - 1]->terrain[47][47];
-					else if(ter_x == -1 && ter_y == 48 && cur_out.x > 0 && cur_out.y < scenario.out_height - 1)
+					else if(ter_x == -1 && ter_y == 48 && cur_out.x > 0 && cur_out.y < scenario.outdoors.height() - 1)
 						t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y + 1]->terrain[47][0];
-					else if(ter_x == 48 && ter_y == -1 && cur_out.x < scenario.out_width - 1 && cur_out.y > 0)
+					else if(ter_x == 48 && ter_y == -1 && cur_out.x < scenario.outdoors.width() - 1 && cur_out.y > 0)
 						t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y - 1]->terrain[0][47];
-					else if(ter_x == 48 && ter_y == 48 && cur_out.x < scenario.out_width - 1 && cur_out.y < scenario.out_height - 1)
+					else if(ter_x == 48 && ter_y == 48 && cur_out.x < scenario.outdoors.width() - 1 && cur_out.y < scenario.outdoors.height() - 1)
 						t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y + 1]->terrain[0][0];
 					else if(ter_x == -1 && ter_y >= 0 && ter_y < 48 && cur_out.x > 0)
 						t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y]->terrain[47][ter_y];
 					else if(ter_y == -1 && ter_x >= 0 && ter_x < 48 && cur_out.y > 0)
 						t_to_draw = scenario.outdoors[cur_out.x][cur_out.y - 1]->terrain[ter_x][47];
-					else if(ter_x == 48 && ter_y >= 0 && ter_y < 48 && cur_out.x < scenario.out_width - 1)
+					else if(ter_x == 48 && ter_y >= 0 && ter_y < 48 && cur_out.x < scenario.outdoors.width() - 1)
 						t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y]->terrain[0][ter_y];
-					else if(ter_y == 48 && ter_x >= 0 && ter_x < 48 && cur_out.y < scenario.out_height - 1)
+					else if(ter_y == 48 && ter_x >= 0 && ter_x < 48 && cur_out.y < scenario.outdoors.height() - 1)
 						t_to_draw = scenario.outdoors[cur_out.x][cur_out.y + 1]->terrain[ter_x][0];
 					else if(ter_x == -1 || ter_x == 48 || ter_y == -1 || ter_y == 48)
 						t_to_draw = 90;

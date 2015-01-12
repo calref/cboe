@@ -48,17 +48,12 @@ public:
 	cScenario& operator=(const cScenario& other) = default;
 	void destroy_terrain();
 public:
-	unsigned char num_towns;
-	unsigned char out_width,out_height,difficulty,intro_pic,default_ground;
-	unsigned char town_size[200];
-	unsigned char town_hidden[200];
+	unsigned short difficulty,intro_pic,default_ground;
 	short intro_mess_pic,intro_mess_len;
 	location where_start,out_sec_start,out_start;
-	short which_town_start;
-	short town_data_size[200][5];
+	size_t which_town_start;
 	short town_to_add_to[10];
 	short flag_to_add_to_town[10][2];
-	short out_data_size[100][2];
 	rectangle store_item_rects[3];
 	short store_item_towns[3];
 	cSpecItem special_items[50];
@@ -71,9 +66,6 @@ public:
 	short scenario_timer_specs[20];
 	std::array<cSpecial,256> scen_specials;
 	cItemStorage storage_shortcuts[10];
-	// Need to keep scen_str_len around for noe to support legacy scenarios.
-	// (Only way to avoid it would be loading the entire scenario into memory at once.)
-	unsigned char scen_str_len[300];
 	location last_out_edited;
 	short last_town_edited;
 	scenario_header_flags format;

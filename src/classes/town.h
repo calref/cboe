@@ -104,7 +104,8 @@ public:
 	bool strong_barriers : 1;
 	bool defy_mapping : 1;
 	bool defy_scrying : 1;
-	char reserved_bits : 5;
+	bool is_hidden : 1;
+	char reserved_bits : 4;
 	short hostile_fry_party; // number of a special to be called when the town goes hostile TODO: Not sure about this yet though
 	short difficulty;
 	std::string town_name;

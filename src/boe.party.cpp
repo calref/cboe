@@ -152,8 +152,8 @@ static void init_party_scen_data() {
 	
 	univ.party.direction = 0;
 	univ.party.at_which_save_slot = 0;
-	for(i = 0; i < 200; i++)
-		univ.party.can_find_town[i] = !univ.scenario.town_hidden[i];
+	for(i = 0; i < univ.scenario.towns.size(); i++)
+		univ.party.can_find_town[i] = !univ.scenario.towns[i]->is_hidden;
 	for(i = 0; i < 20; i++)
 	 	univ.party.key_times[i] = 30000;
 	univ.party.party_event_timers.clear();

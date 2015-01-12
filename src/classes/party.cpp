@@ -156,8 +156,8 @@ void cParty::cEncNote::append(int16_t(& old)[2], const cScenario& scenario) {
 			type = NOTE_SCEN;
 			break;
 		case 1:
-			the_str = scenario.outdoors[old[1] % scenario.out_width][old[1] / scenario.out_width]->spec_strs[old[0] - 1010];
-			where = scenario.outdoors[old[1] % scenario.out_width][old[1] / scenario.out_width]->out_name;
+			the_str = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->spec_strs[old[0] - 1010];
+			where = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->out_name;
 			type = NOTE_OUT;
 			break;
 		case 2:

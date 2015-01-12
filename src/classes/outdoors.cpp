@@ -15,7 +15,7 @@
 #include "classes.h"
 #include "oldstructs.h"
 
-void cOutdoors::append(legacy::outdoor_record_type& old, const cScenario& scenario){
+void cOutdoors::append(legacy::outdoor_record_type& old){
 	int i,j;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;

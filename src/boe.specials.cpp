@@ -1412,7 +1412,7 @@ void fade_party() {
 void change_level(short town_num,short x,short y) {
 	location l(x,y);
 	
-	if((town_num < 0) || (town_num >= univ.scenario.num_towns)) {
+	if((town_num < 0) || (town_num >= univ.scenario.towns.size())) {
 		giveError("The scenario special encounter tried to put you into a town that doesn't exist.");
 		return;
 	}
@@ -2153,7 +2153,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::SET_TOWN_VISIBILITY:
 			check_mess = true;
-			if(spec.ex1a != minmax(0,univ.scenario.num_towns - 1,spec.ex1a))
+			if(spec.ex1a != minmax(0,univ.scenario.towns.size() - 1,spec.ex1a))
 				giveError("Town out of range.");
 			else univ.party.can_find_town[spec.ex1a] = spec.ex2a;
 			*redraw = true;

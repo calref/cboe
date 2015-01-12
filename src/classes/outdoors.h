@@ -73,7 +73,7 @@ public:
 	bool special_spot[48][48];
 	
 	explicit cOutdoors(cScenario& scenario, bool init_strings = false);
-	void append(legacy::outdoor_record_type& old, const cScenario& scenario);
+	void append(legacy::outdoor_record_type& old);
 };
 
 #endif

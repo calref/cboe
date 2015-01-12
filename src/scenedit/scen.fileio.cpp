@@ -649,8 +649,8 @@ void scen_text_dump(){
 		if(scenario.spec_strs[i][0] != '*')
 			fout << "  Message " << i << ": " << scenario.spec_strs[i] << endl;
 	fout << endl << "Outdoor Sections Text:" << endl << endl;
-	for(out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
-		for(out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
+	for(out_sec.x = 0; out_sec.x < scenario.outdoors.width(); out_sec.x++) {
+		for(out_sec.y = 0; out_sec.y < scenario.outdoors.height(); out_sec.y++) {
 			fout << "  Section (x = " << (short)out_sec.x << ", y = " << (short)out_sec.y << "):" << endl;
 			fout << "    Name: " << scenario.outdoors[out_sec.x][out_sec.y]->out_name;
 			fout << "    Comment: " << scenario.outdoors[out_sec.x][out_sec.y]->comment;
@@ -667,7 +667,7 @@ void scen_text_dump(){
 		}
 	}
 	fout << "Town Text:" << endl << endl;
-	for(short j = 0; j < scenario.num_towns; j++) {
+	for(short j = 0; j < scenario.towns.size(); j++) {
 		fout << "  Town " << j << ':' << endl;
 		fout << "  Town Messages:" << endl;
 		fout << "    Name: " << scenario.towns[i]->town_name << endl;

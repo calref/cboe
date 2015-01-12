@@ -1934,9 +1934,9 @@ bool handle_keystroke(sf::Event& event){
 		case 'T':
 			if(!in_scen_debug) break;
 			short find_direction_from;
-			sout << "Enter Town Number (between 0 and " << univ.scenario.num_towns - 1 << ')';
-            i = get_num_response(0, univ.scenario.num_towns - 1, "Enter Town Number");
-            if(i >= 0 && i < univ.scenario.num_towns) {
+			sout << "Enter Town Number (between 0 and " << univ.scenario.towns.size() - 1 << ')';
+            i = get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number");
+            if(i >= 0 && i < univ.scenario.towns.size()) {
             	if(univ.party.direction == 0) find_direction_from = 2;
 				else if(univ.party.direction == 4) find_direction_from = 0;
 				else if(univ.party.direction < 4) find_direction_from = 3;
@@ -2758,12 +2758,12 @@ bool outd_move_party(location destination,bool forced) {
 		// Check if party moves into new sector
 		if((destination.x < 6) && (univ.party.outdoor_corner.x > 0))
 			shift_universe_left();
-		if(destination.x > 90 && univ.party.outdoor_corner.x < univ.scenario.out_width - 1)
+		if(destination.x > 90 && univ.party.outdoor_corner.x < univ.scenario.outdoors.width() - 1)
 			shift_universe_right();
 		if((destination.y < 6)  && (univ.party.outdoor_corner.y > 0)) {
 			shift_universe_up();
 		}
-		else if(destination.y > 90 && univ.party.outdoor_corner.y < univ.scenario.out_height - 1)
+		else if(destination.y > 90 && univ.party.outdoor_corner.y < univ.scenario.outdoors.height() - 1)
 			shift_universe_down();
 		// Now stop from going off the world's edge
 		real_dest.x = univ.party.p_loc.x + real_dest.x;
@@ -2772,8 +2772,8 @@ bool outd_move_party(location destination,bool forced) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
-		if((real_dest.x > 94 /*92*/ && univ.party.outdoor_corner.x >= univ.scenario.out_width - 2) ||
-			(real_dest.x > 46 /*44*/ && univ.party.outdoor_corner.x >= univ.scenario.out_width - 1)) {
+		if((real_dest.x > 94 /*92*/ && univ.party.outdoor_corner.x >= univ.scenario.outdoors.width() - 2) ||
+			(real_dest.x > 46 /*44*/ && univ.party.outdoor_corner.x >= univ.scenario.outdoors.width() - 1)) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
@@ -2781,8 +2781,8 @@ bool outd_move_party(location destination,bool forced) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
-		else if((real_dest.y > 94 /*92*/ && univ.party.outdoor_corner.y >= univ.scenario.out_height - 2) ||
-				 (real_dest.y > 46 /*44*/ && univ.party.outdoor_corner.y >= univ.scenario.out_height - 1)) {
+		else if((real_dest.y > 94 /*92*/ && univ.party.outdoor_corner.y >= univ.scenario.outdoors.height() - 2) ||
+				 (real_dest.y > 46 /*44*/ && univ.party.outdoor_corner.y >= univ.scenario.outdoors.height() - 1)) {
 			ASB("You've reached the world's edge.");
 			return false;
 		}
@@ -3090,7 +3090,7 @@ void setup_outdoors(location where) {
 }
 
 short get_outdoor_num() {
-	return (univ.scenario.out_width * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) + univ.party.outdoor_corner.x + univ.party.i_w_c.x);
+	return (univ.scenario.outdoors.width() * (univ.party.outdoor_corner.y + univ.party.i_w_c.y) + univ.party.outdoor_corner.x + univ.party.i_w_c.x);
 }
 
 short count_walls(location loc) { // TODO: Generalize this function

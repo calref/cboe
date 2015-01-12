@@ -34,7 +34,7 @@ fs::path progDir, tempDir;
 void load_spec_graphics(fs::path scen_file);
 // Load old scenarios (town talk is handled by the town loading function)
 static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario);
-static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, cScenario& scenario);
+static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario);
 static bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy::scenario_data_type& scenario);
 // Load new scenarios
 static bool load_outdoors(fs::path out_base, location which_out, cOutdoors& the_out);
@@ -204,18 +204,18 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	load_spec_graphics(scenario.scen_file);
 	
 	// Now load all the outdoor sectors
-	scenario.outdoors.resize(scenario.out_width, scenario.out_height);
-	for(int x = 0; x < scenario.out_width; x++) {
-		for(int y = 0; y < scenario.out_height; y++) {
+	scenario.outdoors.resize(temp_scenario->out_width, temp_scenario->out_height);
+	for(int x = 0; x < temp_scenario->out_width; x++) {
+		for(int y = 0; y < temp_scenario->out_height; y++) {
 			scenario.outdoors[x][y] = new cOutdoors(scenario);
-			load_outdoors_v1(scenario.scen_file, loc(x,y), *scenario.outdoors[x][y], scenario);
+			load_outdoors_v1(scenario.scen_file, loc(x,y), *scenario.outdoors[x][y], *temp_scenario);
 		}
 	}
 	
 	// Then load all the towns
-	scenario.towns.resize(scenario.num_towns);
-	for(int i = 0; i < scenario.num_towns; i++) {
-		switch(scenario.town_size[i]) {
+	scenario.towns.resize(scenario.format.num_towns);
+	for(int i = 0; i < scenario.format.num_towns; i++) {
+		switch(temp_scenario->town_size[i]) {
 			case 0: scenario.towns[i] = new cBigTown(scenario); break;
 			case 1: scenario.towns[i] = new cMedTown(scenario); break;
 			case 2: scenario.towns[i] = new cTinyTown(scenario); break;
@@ -387,7 +387,7 @@ bool load_town_talk(fs::path town_base, short which_town, cSpeech& the_talk) {
 	return false;
 }
 
-static long get_outdoors_offset(location& which_out, cScenario& scenario){
+static long get_outdoors_offset(location& which_out, legacy::scenario_data_type& scenario){
 	int i,j,out_sec_num;
 	long len_to_jump,store;
 	out_sec_num = scenario.out_width * which_out.y + which_out.x;
@@ -407,7 +407,7 @@ static long get_outdoors_offset(location& which_out, cScenario& scenario){
 }
 
 //mode -> 0 - primary load  1 - add to top  2 - right  3 - bottom  4 - left
-bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, cScenario& scenario){
+bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario){
 	short i,n;
 	long len,len_to_jump;
 	char temp_str[256];
@@ -438,7 +438,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	the_out.x = which_out.x;
 	the_out.y = which_out.y;
 	port_out(&store_out);
-	the_out.append(store_out, scenario);
+	the_out.append(store_out);
 	for(i = 0; i < 108; i++) {
 		len = (long) (store_out.strlens[i]);
 		n = fread(temp_str, len, 1, file_id);

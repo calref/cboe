@@ -207,11 +207,11 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							giveError("You need to save the changes made to your scenario before you can add a new town.");
 							return are_done;
 						}
-						if(scenario.num_towns >= 200) {
+						if(scenario.towns.size() >= 200) {
 							giveError("You have reached the limit of 200 towns you can have in one scenario.");
 							return are_done;
 						}
-						if(new_town(scenario.num_towns))
+						if(new_town(scenario.towns.size()))
 							set_up_main_screen();
 						break;
 					case 6:
@@ -586,20 +586,15 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					giveError("Either no monster has been placed, or the last time you tried to place a monster the operation failed.");
 					break;
 				}
-				for(i = 0; i < 60; i++)
+				for(i = 0; i < town->max_monst(); i++)
 					if(town->creatures(i).number == 0) {
 						town->creatures(i) = last_placed_monst;
 						town->creatures(i).start_loc = spot_hit;
-						if((i >= 30) && (scenario.town_size[cur_town] == 2)) {
-							giveError("Small towns can have at most 30 preset monsters."); // error
-							town->creatures(i).number = 0;
-						}
-						else if((i >= 40) && (scenario.town_size[cur_town] == 1)) {
-							giveError("Medium towns can have at most 40 preset monsters."); // error
-							town->creatures(i).number = 0;
-						}
-						i = 60;
+						break;
 					}
+				if(i == town->max_monst()) { // Placement failed
+					giveError("The town only has room for " + std::to_string(town->max_monst()) + " preset monsters.");
+				}
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
 				break;
@@ -622,20 +617,11 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						town->creatures(i).personality = -1;
 						town->creatures(i).special_on_kill = -1;
 						town->creatures(i).facial_pic = scenario.scen_monsters[mode_count].default_facial_pic;
-						if((i >= 30) && (scenario.town_size[cur_town] == 2)) {
-							giveError("Small towns can have at most 30 preset monsters."); // error
-							town->creatures(i).number = 0;
-						}
-						else if((i >= 40) && (scenario.town_size[cur_town] == 1)) {
-							giveError("Medium towns can have at most 40 preset monsters."); // error
-							town->creatures(i).number = 0;
-						}
 						last_placed_monst = town->creatures(i);
-						
-						i = 70;
+						break;
 					}
-				if((i < 70) && (scenario.town_size[cur_town] == 0)) {
-					giveError("Large towns can have at most 60 preset monsters."); // error
+				if(i == town->max_monst()) { // Placement failed
+					giveError("The town only has room for " + std::to_string(town->max_monst()) + " preset monsters.");
 				}
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);

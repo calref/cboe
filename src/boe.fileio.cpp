@@ -277,7 +277,7 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) {
 	short i,j;
 	
 	if((pc_pos_x != minmax(0,47,pc_pos_x)) || (pc_pos_y != minmax(0,47,pc_pos_y)) ||
-		(out_x != minmax(0,univ.scenario.out_width - 1,out_x)) || (out_y != minmax(0,univ.scenario.out_height - 1,out_y))) {
+		(out_x != minmax(0,univ.scenario.outdoors.width() - 1,out_x)) || (out_y != minmax(0,univ.scenario.outdoors.height() - 1,out_y))) {
 		giveError("The scenario has tried to place you in an out of bounds outdoor location.");
 		return;
 	}
@@ -303,15 +303,16 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) {
 
 
 void build_outdoors() {
-	short i,j,x = univ.party.outdoor_corner.x,y=univ.party.outdoor_corner.y;
+	short i,j;
+	size_t x = univ.party.outdoor_corner.x, y = univ.party.outdoor_corner.y;
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++) {
 			univ.out[i][j] = univ.scenario.outdoors[x][y]->terrain[i][j];
-			if(x + 1 < univ.scenario.out_width)
+			if(x + 1 < univ.scenario.outdoors.width())
 				univ.out[48 + i][j] = univ.scenario.outdoors[x+1][y]->terrain[i][j];
-			if(y + 1 < univ.scenario.out_height)
+			if(y + 1 < univ.scenario.outdoors.height())
 				univ.out[i][48 + j] = univ.scenario.outdoors[x][y+1]->terrain[i][j];
-			if(x + 1 < univ.scenario.out_width && y + 1 < univ.scenario.out_height)
+			if(x + 1 < univ.scenario.outdoors.width() && y + 1 < univ.scenario.outdoors.height())
 				univ.out[48 + i][48 + j] = univ.scenario.outdoors[x+1][y+1]->terrain[i][j];
 		}
 	
@@ -333,7 +334,7 @@ void build_outdoors() {
 short onm(char x_sector,char y_sector) {
 	short i;
 	
-	i = y_sector * univ.scenario.out_width + x_sector;
+	i = y_sector * univ.scenario.outdoors.width() + x_sector;
 	return i;
 }
 
@@ -349,20 +350,20 @@ void save_outdoor_maps() {
 				univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] =
 					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] |
 						(char) (s_pow(2,i % 8));
-			if(univ.party.outdoor_corner.x + 1 < univ.scenario.out_width) {
+			if(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width()) {
 				if(univ.out.out_e[i + 48][j] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] =
 						univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] |
 							(char) (s_pow(2,i % 8));
 			}
-			if(univ.party.outdoor_corner.y + 1 < univ.scenario.out_height) {
+			if(univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) {
 				if(univ.out.out_e[i][j + 48] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] =
 						univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] |
 							(char) (s_pow(2,i % 8));
 			}
-			if((univ.party.outdoor_corner.y + 1 < univ.scenario.out_height) &&
-				(univ.party.outdoor_corner.x + 1 < univ.scenario.out_width)) {
+			if((univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) &&
+				(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width())) {
 				if(univ.out.out_e[i + 48][j + 48] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] =
 						univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] |
@@ -380,20 +381,20 @@ void add_outdoor_maps() { // This takes the existing outdoor map info and supple
 				((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] &
 				  (char) (s_pow(2,i % 8))) != 0))
 			 	univ.out.out_e[i][j] = 1;
-			if(univ.party.outdoor_corner.x + 1 < univ.scenario.out_width) {
+			if(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width()) {
 				if((univ.out.out_e[i + 48][j] == 0) &&
 					((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] &
 					  (char) (s_pow(2,i % 8))) != 0))
 				 	univ.out.out_e[i + 48][j] = 1;
 			}
-			if(univ.party.outdoor_corner.y + 1 < univ.scenario.out_height) {
+			if(univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) {
 				if((univ.out.out_e[i][j + 48] == 0) &&
 					((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] &
 					  (char) (s_pow(2,i % 8))) != 0))
 				 	univ.out.out_e[i][j + 48] = 1;
 			}
-			if((univ.party.outdoor_corner.y + 1 < univ.scenario.out_height) &&
-				(univ.party.outdoor_corner.x + 1 < univ.scenario.out_width)) {
+			if((univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) &&
+				(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width())) {
 				if((univ.out.out_e[i + 48][j + 48] == 0) &&
 					((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] &
 					  (char) (s_pow(2,i % 8))) != 0))
