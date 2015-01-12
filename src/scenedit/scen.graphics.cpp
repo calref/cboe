@@ -24,7 +24,6 @@ void load_terrain_template();
 short terrain_in_index();
 void put_terrain_in_template();
 void place_location();
-//void draw_cur_string();
 void undo_clip();
 
 short find_index_spot();
@@ -36,15 +35,11 @@ extern sf::RenderWindow mainPtr;
 extern cTown* current_town;
 extern short cen_x, cen_y,current_terrain_type,cur_town;
 extern cTown* town;
-//extern big_tr_type t_d;
-//extern template_town_type town_template;
 extern short cur_viewing_mode;
 extern eScenMode overall_mode;
 eDrawMode draw_mode = DRAW_TERRAIN;
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern bool editing_town;
-//extern short max_dim[3];
-//extern piles_of_stuff_dumping_type *data_store;
 extern cScenario scenario;
 extern rectangle world_screen;
 extern sf::Texture bg_gworld;
@@ -58,7 +53,6 @@ extern bool left_buttons_active,right_buttons_active;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
 extern short right_button_status[NRS];
 short mini_map_scales[3] = {12, 6, 4};
-//extern unsigned char m_pic_index[200];
 // TODO: What is this for?
 //extern btn_t buttons[];
 extern location cur_out;
@@ -78,7 +72,6 @@ sf::Texture small_ter_gworld;
 sf::Texture boom_gworld;
 cCustomGraphics spec_scen_g;
 sf::Texture vehicle_gworld;
-//GWorldPtr dlg_buttons_gworld[NUM_BUTTONS][2]
 sf::RenderTexture ter_draw_gworld;
 sf::Texture dlogpics_gworld;
 sf::Texture talkfaces_gworld;
@@ -341,13 +334,6 @@ void run_startup_g() {
 
 void load_graphics(){
 	int i;
-	//for(i = 0; i < NUM_BUTTONS; i++)
-	//	for(j = 0; j < 2; j++)
-	//		dlg_buttons_gworld[i][j] = load_pict(2000 + (2 * i) + j); // move to dlogtool
-//	for(i = 0; i < 14; i++)
-//	    bg[i] = GetPixPat (128 + i);
-//	for(i = 0; i < 25; i++)
-//	    map_pat[i] = GetPixPat (200 + i);
 	
 	for(i = 0; i < 11; i++){
 		std::ostringstream sout;
@@ -368,7 +354,6 @@ void load_graphics(){
 	tiny_obj_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("tinyobj"));
 	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
 	small_ter_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("termap"));
-	//mixed_gworld = load_pict(903);
 	vehicle_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("vehicle"));
 	missiles_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("missiles"));
 	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
@@ -397,11 +382,6 @@ void redraw_screen() {
 void draw_main_screen() {
 	rectangle draw_rect;
 	
-	
-	// draw left buttons (always active)
-	//for(i = 0; i < NLS; i++) {
-	//	draw_lb_slot(i);
-	//}
 	draw_lb();
 	
 	// draw right buttons (only when not editing terrain)
@@ -855,8 +835,6 @@ void draw_terrain(){
 	}
 	ter_draw_gworld.display();
 	
-	//to_rect = world_screen;
-	//OffsetRect(&to_rect,TER_RECT_UL_X,TER_RECT_UL_Y);
 	rect_draw_some_item(ter_draw_gworld.getTexture(),terrain_rect,mainPtr,world_screen);
 }
 
@@ -1065,18 +1043,11 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 				else if(picture_wanted == 9) tileImage(ter_draw_gworld, dest_rect,map_pat[20]);
 				else if(picture_wanted == 10) tileImage(ter_draw_gworld, dest_rect,map_pat[19]);
 				else {
-					//source_rect.left = 112 * (picture_wanted / 5);
-					//source_rect.right = source_rect.left + 28;
-					//source_rect.top = 36 * (picture_wanted % 5);
-					//source_rect.bottom = source_rect.top + 36;
 					from_rect.offset(12 * 20, (picture_wanted - 960) * 12);
 					rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
-					//rect_draw_some_item(source_gworld, source_rect, ter_draw_gworld, dest_rect, 0, 0);
 				}
 			}
 			else {
-				//source_rect = get_template_rect(terrain_to_draw);
-				//source_gworld = terrain_gworld[picture_wanted / 50];
 				from_rect.offset((picture_wanted % 20) * 12,(picture_wanted / 20) * 12);
 				rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
 			}
@@ -1159,31 +1130,19 @@ void place_location() {
 	rectangle text_rect = {0,0,12,100};
 	short picture_wanted;
 	
-	/*
-	 from_rect = terrain_buttons_rect;
-	 from_rect.top = from_rect.bottom - 150;
-	 draw_rect = from_rect;
-	 OffsetRect(&draw_rect,RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
-	 rect_draw_some_item(terrain_buttons_gworld,from_rect,
-	 terrain_buttons_gworld,draw_rect,0,1);
-	 */
-	
-	//EraseRect(&text_rect);
-	
-	erase_rect.left = 2;//terrain_rects[255].left + 17;
+	erase_rect.left = 2;
 	erase_rect.right = RIGHT_AREA_WIDTH - 1;
-	erase_rect.top = terrain_rects[255].top + 26 - 9;//12 - 9;
+	erase_rect.top = terrain_rects[255].top + 26 - 9;
 	erase_rect.bottom = erase_rect.top + 12;
 	tileImage(terrain_buttons_gworld, erase_rect,bg[17]);
 	
-	//MoveTo(terrain_rects[255].left + 20 ,terrain_rects[255].top + 12);
 	location moveTo(5 ,terrain_rects[255].top + 15);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
 	if(overall_mode < MODE_MAIN_SCREEN)
 		sprintf((char *) draw_str,"Center: x = %d, y = %d  ",cen_x,cen_y);
 	else {
-		//MoveTo(5 ,terrain_rects[255].top + 28);
+		moveTo.y += 13; // TODO: Not sure how important this is.
 		sprintf((char *) draw_str,"Click terrain to edit. ");
 	}
 	TextStyle style;
@@ -1361,29 +1320,4 @@ bool container_there(location l) {
 	return 0;
 }
 
-//void get_str(const char* str,short i, short j)
-//{
-//	if(i == -1) {
-//		strcpy((char *) str,data_store->scen_item_list.monst_names[j]);
-//		return;
-//	}
-//	if(i == -2) {
-//		strcpy((char *) str,data_store->scen_item_list.scen_items[j].full_name);
-//		return;
-//	}
-//	if(i == -3) {
-//		strcpy((char *) str,buttons[available_dlog_buttons[j]].str);
-//		return;
-//	}
-//	if(i == -4) {
-//		strcpy((char *) str,data_store->scen_item_list.ter_names[j]);
-//		return;
-//	}
-//	if(i == -5) {
-//		get_str(str,40,j * 7 + 1);
-//		return;
-//	}
-//	GetIndString(str, i, j);
-//	p2cstr(str);
-//}
 void record_display_strings(){}

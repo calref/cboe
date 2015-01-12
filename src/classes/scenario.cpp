@@ -78,7 +78,7 @@ cScenario::cScenario(bool init_strings) {
 		scenario_timer_specs[i] = -1;
 	}
 	for(i = 0; i < 400; i++) {
-		scen_items[i] = cItemRec();
+		scen_items[i] = cItem();
 	}
 	if(!init_strings) return;
 	for(i = 0; i < 270; i++) {
@@ -108,8 +108,6 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 		item_odds[i] = 0;
 }
 
-//{-1,{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},{0,0,0,0,0,0,0,0,0,0},0}
-
 void cScenario::append(legacy::scenario_data_type& old){
 	is_legacy = true;
 	int i,j;
@@ -125,7 +123,6 @@ void cScenario::append(legacy::scenario_data_type& old){
 	// TODO: One or both of these should probably be moved to cTown
 	for(i = 0; i < 200; i++) town_size[i] = old.town_size[i];
 	for(i = 0; i < 200; i++) town_hidden[i] = old.town_hidden[i];
-	flag_a = old.flag_a;
 	intro_mess_pic = old.intro_mess_pic;
 	intro_mess_len = old.intro_mess_len;
 	where_start.x = old.where_start.x;
@@ -135,7 +132,6 @@ void cScenario::append(legacy::scenario_data_type& old){
 	out_start.x = old.out_start.x;
 	out_start.y = old.out_start.y;
 	which_town_start = old.which_town_start;
-	flag_b = old.flag_b;
 	// TODO: Town data size doesn't even need to be stored at all; its only purpose is for locating the offset of a town within the old scenario format; same with out data size
 	for(i = 0; i < 200; i++)
 		for(j = 0; j < 5; j++)
@@ -144,7 +140,6 @@ void cScenario::append(legacy::scenario_data_type& old){
 	for(i = 0; i < 10; i++)
 		for(j = 0; j < 2; j++)
 			flag_to_add_to_town[i][j] = old.flag_to_add_to_town[i][j];
-	flag_c = old.flag_c;
 	for(i = 0; i < 100; i++){
 		out_data_size[i][0] = old.out_data_size[i][0];
 		out_data_size[i][1] = old.out_data_size[i][1];
@@ -157,29 +152,23 @@ void cScenario::append(legacy::scenario_data_type& old){
 		store_item_rects[i].right = old.store_item_rects[i].right;
 	}
 	for(i = 0; i < 3; i++) store_item_towns[i] = old.store_item_towns[i];
-	flag_e = old.flag_e;
 	for(i = 0; i < 50; i++) special_items[i].flags = old.special_items[i];
 	for(i = 0; i < 50; i++) special_items[i].special = old.special_item_special[i];
 	rating = old.rating;
 	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
-	flag_f = old.flag_f;
 	for(i = 0; i < 256; i++) scen_monsters[i].append(old.scen_monsters[i]);
 	for(i = 0; i < 30; i++) boats[i].append(old.scen_boats[i]);
 	for(i = 0; i < 30; i++) horses[i].append(old.scen_horses[i]);
-	flag_g = old.flag_g;
 	for(i = 0; i < 256; i++){
 		ter_types[i].i = i;
 		ter_types[i].append(old.ter_types[i]);
 	}
 	for(i = 0; i < 20; i++) scenario_timer_times[i] = old.scenario_timer_times[i];
 	for(i = 0; i < 20; i++) scenario_timer_specs[i] = old.scenario_timer_specs[i];
-	flag_h = old.flag_h;
 	for(i = 0; i < 256; i++) scen_specials[i].append(old.scen_specials[i]);
 	for(i = 0; i < 10; i++) storage_shortcuts[i] = old.storage_shortcuts[i];
-	flag_d = old.flag_d;
 	for(i = 0; i < 300; i++) scen_str_len[i] = old.scen_str_len[i];
-	flag_i = old.flag_i;
 	last_out_edited.x = old.last_out_edited.x;
 	last_out_edited.y = old.last_out_edited.y;
 	last_town_edited = old.last_town_edited;

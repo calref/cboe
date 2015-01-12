@@ -13,30 +13,11 @@
 #include "dlogutil.hpp"
 #include <boost/lexical_cast.hpp>
 
-/* Adventure globals */
-//extern party_record_type party;
-//extern outdoor_record_type outdoors[2][2];
-//extern current_town_type c_town;
-//extern big_tr_type t_d;
-//extern town_item_list	t_i;
-//extern unsigned char out[96][96],out_e[96][96];
-//extern setup_save_type setup_save;
-//extern stored_items_list_type stored_items[3];
-//extern stored_town_maps_type town_maps;
-//extern stored_outdoor_maps_type o_maps;
 extern cUniverse univ;
-
-//extern bool ed_reg;
-//extern long ed_flag,ed_key;
-
 extern sf::RenderWindow mainPtr;
 extern fs::path file_in_mem;
-//extern long register_flag;
-
 extern sf::Texture pc_gworld;
 extern bool diff_depth_ok;
-
-
 
 short which_pc_displayed,store_pc_trait_mode,store_which_to_edit;
 extern short current_active_pc;
@@ -49,11 +30,6 @@ extern rectangle name_rect;
 extern rectangle pc_race_rect;
 extern rectangle edit_rect[5][2];
 
-
-
-//extern rectangle pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-//extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
-//short mode; // ignore,
 bool handle_action(sf::Event event) {
 	short i;
 	
@@ -197,7 +173,7 @@ void combine_things(short pc_num) {
 	}
 }
 
-bool give_to_pc(short pc_num,cItemRec item, short /*print_result*/) {
+bool give_to_pc(short pc_num,cItem item, short /*print_result*/) {
 	short free_space;
 	
 	if(item.variety == eItemType::NO_ITEM)
@@ -212,7 +188,7 @@ bool give_to_pc(short pc_num,cItemRec item, short /*print_result*/) {
 	return false;
 }
 
-bool give_to_party(cItemRec item,short print_result) {
+bool give_to_party(cItem item,short print_result) {
 	short i = 0;
 	
 	while(i < 6) {
@@ -250,7 +226,6 @@ void take_item(short pc_num,short which_item) {
 	short i;
 	
 	if(univ.party[pc_num].weap_poisoned == which_item && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0) {
-		//			add_string_to_buf("  Poison lost.           ");
 		univ.party[pc_num].status[eStatus::POISONED_WEAPON] = 0;
 	}
 	if(univ.party[pc_num].weap_poisoned > which_item && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0)

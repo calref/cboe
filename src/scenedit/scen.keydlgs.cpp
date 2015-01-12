@@ -13,18 +13,15 @@
 #include "restypes.hpp"
 #include "spell.hpp"
 
-extern short cen_x, cen_y/*, overall_mode*/;
+extern short cen_x, cen_y;
 extern bool mouse_button_held;
 extern short cur_viewing_mode;
 extern cTown* town;
-//extern big_tr_type t_d;
-extern short /*max_dim[3],*/mode_count,to_create;
+extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
-extern cItemRec item_list[400];
 extern cScenario scenario;
 extern cSpecial null_spec_node;
 extern cSpeech null_talk_node;
-//extern piles_of_stuff_dumping_type *data_store;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 short num_specs[3] = {256,60,100};
@@ -164,7 +161,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 			}
 			break;
 		case STRT_ITEM:
-			for(cItemRec& item : scenario.scen_items) {
+			for(cItem& item : scenario.scen_items) {
 				strings.push_back(item.full_name);
 			}
 			break;

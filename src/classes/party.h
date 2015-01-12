@@ -83,7 +83,7 @@ public:
 	short in_boat;
 	short in_horse;
 	cOutdoors::cCreature out_c[10];
-	std::array<std::array<cItemRec,10>,5> magic_store_items;
+	std::array<std::array<cItem,10>,5> magic_store_items;
 	m_num_t imprisoned_monst[4]; // Soul Crystal
 	char m_noted[256]; // has the monster been scried?
 	char m_seen[256]; // has the monster ever been seen? (this used to have the above meaning)
@@ -96,8 +96,6 @@ public:
 	bool can_find_town[200];
 	short key_times[100];
 	std::vector<cTimer> party_event_timers;
-	//short global_or_town[30];
-	//short node_to_call[30];
 	char spec_items[50];
 	char help_received[120];
 	short m_killed[200]; // monsters killed per town, I think
@@ -108,9 +106,8 @@ private:
 	cPlayer adven[6];
 public:
 	unsigned short setup[4][64][64]; // formerly setup_save_type
-	std::array<std::array<cItemRec,115>,3> stored_items; // formerly stored_items_list_type
+	std::array<std::array<cItem,115>,3> stored_items; // formerly stored_items_list_type
 	
-	//string graphicsFile; // the name of the png file holding this party's custom item, pc, and summonable monster graphics
 	std::vector<cMonster> summons; // an array of monsters which can be summoned by the party's items yet don't originate from this scenario
 	unsigned short scen_won, scen_played; // numbers of scenarios won and played respectively by this party
 private:

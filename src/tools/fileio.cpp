@@ -906,7 +906,6 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		sf::Image party_sheet;
 		StdInputStream stream(fin);
 		if(party_sheet.loadFromStream(stream)) {
-			//party_sheet.flipVertically();
 			spec_scen_g.party_sheet.reset(new sf::Texture);
 			spec_scen_g.party_sheet->create(party_sheet.getSize().x, party_sheet.getSize().y);
 			spec_scen_g.party_sheet->update(party_sheet);

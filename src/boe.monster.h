@@ -1,8 +1,6 @@
 
 #include "pict.hpp"
 
-//cMonster return_monster_template(m_num_t store);
-//short difficulty_adjust();
 short out_enc_lev_tot(short which);
 void create_wand_monst();
 void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forced);

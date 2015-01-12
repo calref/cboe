@@ -10,10 +10,7 @@
 #include "scen.btnmg.h"
 #include "scrollbar.hpp"
 
-//extern piles_of_stuff_dumping_type *data_store;
 extern rectangle right_sbar_rect;
-
-
 
 rectangle left_button[NLS];
 extern rectangle right_buttons[NRSONPAGE];
@@ -76,7 +73,6 @@ void set_lb(short slot, short mode, const char *label, short do_draw)  {
 			return;
 	}
 	left_button_status[slot] = mode;
-	//sprintf((char *)strings_ls[slot], "%-39.39s", label);
 	sprintf((char *)strings_ls[slot], "%-50.50s", label);
 	strings_ls[slot][39] = 0;
 	if(do_draw > 0)
@@ -122,7 +118,6 @@ void set_rb(short slot, short mode, const char *label, short do_draw) {
 			return;
 	}
 	right_button_status[slot] = mode;
-	//sprintf((char *)strings_rs[slot], "%-39.39s", label);
 	sprintf((char *)strings_rs[slot], "%s", label);
 	strings_rs[slot][39] = 0;
 	for(i = 0; i < 39; i++)

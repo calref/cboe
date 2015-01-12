@@ -3,8 +3,6 @@
 
 #include <sstream>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -12,7 +10,6 @@
 #include "boe.locutils.h"
 #include "mathutil.hpp"
 #include "graphtool.hpp"
-//#include "soundtool.h"
 #include "scrollbar.hpp"
 #include "restypes.hpp"
 
@@ -22,7 +19,6 @@ typedef struct {
 
 buf_line text_buffer[TEXT_BUF_LEN];
 short buf_pointer = 30, lines_to_print= 0, num_added_since_stop = 0;
-//char store_string[60],store_string2[60];
 short start_print_point= 0;
 short mark_where_printing_long;
 bool printing_long = false;
@@ -48,14 +44,12 @@ extern eGameMode overall_mode;
 extern sf::RenderWindow mainPtr;
 extern rectangle more_info_button;
 extern short which_item_page[6];
-//extern CursHandle sword_curs;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar;
 extern location store_anim_ul;
 extern tessel_ref_t bg[];
 extern short dest_personalities[40];
 extern location source_locs[6];
 extern location dest_locs[40] ;
-//extern piles_of_stuff_dumping_type *data_store;
 
 extern sf::Texture tiny_obj_gworld,invenbtn_gworld,status_gworld;
 extern cCustomGraphics spec_scen_g;
@@ -64,12 +58,6 @@ extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
 extern short terrain_there[9][9];
 
 // game globals
-//extern party_record_type party;
-//extern current_town_type univ.town;
-//extern cOutdoors outdoors[2][2];
-//extern town_item_list	univ.town;
-//extern unsigned char out[96][96];
-//extern big_tr_type t_d;
 extern location ul;
 extern bool play_sounds,suppress_stat_screen;
 extern rectangle item_buttons[8][6];
@@ -93,7 +81,6 @@ extern location ok_space[4];
 extern sf::Texture bg_gworld;
 
 // Draws the pc area in upper right
-//void win_draw_string(WindowPtr dest_window,rectangle dest_rect,char *str,short mode,short line_height)
 void put_pc_screen() {
 	short i = 0,j;
 	rectangle erase_rect = {17,2,98,269},to_draw_rect,from_rect;
@@ -262,7 +249,6 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 			}
 			break;
 		case 7: // On jobs page
-			////
 			break;
 			
 		default: // on an items page
@@ -298,14 +284,13 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 						else style.colour = sf::Color::Blue;
 					} else style.colour = sf::Color::Black;
 					
-					////
 					sout.str("");
 					if(!univ.party[pc].items[i_num].ident)
 						sout << univ.party[pc].items[i_num].name << "  ";
 					else { /// Don't place # of charges when Sell button up and space tight
 						sout << univ.party[pc].items[i_num].full_name << ' ';
 						// TODO: Why are bashing weapons excluded from this?
-						if(univ.party[pc].items[i_num].charges > 0 && univ.party[pc].items[i_num].type != eSkill::BASHING_WEAPONS
+						if(univ.party[pc].items[i_num].charges > 0 && univ.party[pc].items[i_num].weap_type != eSkill::BASHING_WEAPONS
 						   && (stat_screen_mode <= 1))
 							sout << '(' << int(univ.party[pc].items[i_num].charges) << ')';
 					}
@@ -424,7 +409,6 @@ void place_buy_button(short position,short pc_num,short item_num) {
 	}
 }
 
-//extern bool item_area_button_active[8][6];
 // name, use, give, drop, info, sell/id
 // shortcuts - if which_button_to_put is 10, all 4 buttons now
 //				if which_button_to_put is 11, just right 2
@@ -475,12 +459,7 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 	}
 }
-//rectangle get_custom_rect (short which_rect) {
-//	rectangle store_rect = {0,0,36,28};
-//
-//	OffsetRect(&store_rect,28 * (which_rect % 10),36 * (which_rect / 10));
-//	return store_rect;
-//}
+
 void place_item_bottom_buttons() {
 	rectangle pc_from_rect = {0,0,36,28},but_from_rect = {30,60,46,78},to_rect;
 	rectangle spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76};
@@ -554,7 +533,6 @@ void refresh_stat_areas(short mode) {
 	// TODO: The duplication of rectangle here shouldn't be necessary...
 	rectangle dest_rect,parts_of_area_to_draw[3] = {rectangle{0,0,17,271},rectangle{16,0,123,256},rectangle{123,0,144,271}};
 	
-	//x = mode * 10;
 	dest_rect = rectangle(pc_stats_gworld);
 	rectangle oldRect = dest_rect;
 	dest_rect.offset(PC_WIN_UL_X,PC_WIN_UL_Y);
@@ -572,7 +550,6 @@ void refresh_stat_areas(short mode) {
 	rect_draw_some_item(text_area_gworld.getTexture(),oldRect, dest_rect,ul, x);
 }
 
-////
 // get job info gone
 
 short total_encumberance(short pc_num) {
@@ -611,7 +588,6 @@ void draw_pc_effects(short pc) {
 	TextStyle style;
 	name_width = string_length(univ.party[pc].name, style);
 	right_limit = pc_buttons[0][1].left - 5;
-	//dest_rect.left = pc_buttons[i][1].left - 16;
 	dest_rect.left = name_width + 33;
 	dest_rect.right = dest_rect.left + 12;
 	dest_rect.top += pc * 13;
@@ -939,9 +915,7 @@ std::string get_m_name(m_num_t num) {
 std::string get_ter_name(ter_num_t num) {
 	std::string store_name = "Pit";
 	
-	////
 	if((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))));
-	//sprintf((char *) store_name,"Pit");
 	else {
 		store_name = univ.scenario.ter_types[num].name;
 	}
@@ -955,8 +929,6 @@ void print_monst_name(m_num_t m_type) {
 
 //short target; // < 100 - pc  >= 100  monst
 void print_monst_attacks(m_num_t m_type,short target) {
-	//char store_string3[60];
-	
 	std::string msg = get_m_name(m_type);
 	msg += " attacks ";
 	if(target < 100)
@@ -966,7 +938,6 @@ void print_monst_attacks(m_num_t m_type,short target) {
 	add_string_to_buf((char *) msg.c_str());
 }
 
-////
 void damaged_message(short damage,short type) {
 	std::ostringstream sout;
 	sout << "  " << get_str("monster-abilities",130 + type);

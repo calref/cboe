@@ -1,6 +1,4 @@
 
-//#include "item.h"
-
 #define DIR_ARRAY_DEF
 #include "boe.global.h"
 #include "classes.h"
@@ -33,10 +31,9 @@
 extern cursor_type arrow_curs[3][3];
 extern cursor_type current_cursor;
 
-/* Mac stuff globals */
-bool  All_Done = false;
-sf::Event	event;
-sf::RenderWindow	mainPtr;
+bool All_Done = false;
+sf::Event event;
+sf::RenderWindow mainPtr;
 short had_text_freeze = 0,num_fonts;
 bool app_started_normally = false, skip_boom_delay = false;
 bool first_startup_update = true;
@@ -47,11 +44,8 @@ rectangle sbar_rect = {283,546,421,562};
 rectangle shop_sbar_rect = {67,258,357,274};
 rectangle item_sbar_rect = {146,546,253,562};
 bool bgm_on = false,bgm_init = false;
-//short dialog_answer;
 location store_anim_ul;
 cUniverse univ;
-//piles_of_stuff_dumping_type *data_store;
-//talking_record_type talking;
 
 bool gInBackground = false;
 bool flushingInput = false;
@@ -69,20 +63,6 @@ bool in_scen_debug = false;
 bool show_startup_splash = true;
 bool belt_present = false;
 
-/* Adventure globals */
-//party_record_type party;
-//pc_record_type adven[6];
-//outdoor_record_type outdoors[2][2];
-//current_town_type c_town;
-//big_tr_type t_d;
-//town_item_list	t_i;
-//unsigned char out[96][96],out_e[96][96];
-//setup_save_type setup_save;
-//unsigned char misc_i[64][64],sfx[64][64];
-////unsigned char template_terrain[64][64];
-//location monster_targs[60]; // TODO: Integrate this into the town cCreature type
-//outdoor_strs_type outdoor_text[2][2];
-
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
 short fast_bang = false; // Note: This mostly behaves as a boolean variable, but values other than 1 are assigned to it, so I made it a short
@@ -95,9 +75,6 @@ bool monsters_going = false,boom_anim_active = false;
 bool give_delays = false;
 
 sf::RenderWindow mini_map;
-//rectangle d_rects[80];
-////short d_rect_index[80];
-//short town_size[3] = {64,48,32};
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
 location ul = {28,10};
 short display_mode = 0; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
@@ -120,22 +97,11 @@ location center;
 short current_pc;
 short combat_active_pc;
 effect_pat_type current_pat;
-//short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 // TODO: Integrate this ^ into the town cCreature type
 short spell_caster, missile_firer,current_monst_tactic;
 short store_current_pc = 0;
 
-////town_record_type anim_town;
-//tiny_tr_type anim_t_d;
-
-//stored_items_list_type stored_items[3];
-//stored_outdoor_maps_type o_maps;
-
 sf::Clock animTimer;
-
-//
-//	Main body of program Exile
-//
 
 int main(int /*argc*/, char* argv[]) {
 #if 0
@@ -144,7 +110,6 @@ int main(int /*argc*/, char* argv[]) {
 #endif
 	try{
 		init_directories(argv[0]);
-		//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));
 		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 		sync_prefs();
 		init_graph_tool();
@@ -154,29 +119,18 @@ int main(int /*argc*/, char* argv[]) {
 		init_buf();
 		
 		set_up_apple_events();
-		//import_template_terrain();
-		//import_anim_terrain(0);
 		make_cursor_watch();
 		plop_fancy_startup();
-		
-		//PSD[SDF_NO_FRILLS] = 0;
-		//PSD[SDF_NO_SOUNDS] = 0;
 		
 		init_screen_locs();
 		
 		init_snd_tool();
 		cDialog::init();
 		
-		//init_party(0);
-		//PSD[SDF_GAME_SPEED] = 1;
-		//init_anim(0);
-		
 		flushingInput = true;
 		
 		init_spell_menus();
 		
-//		if(overall_mode == MODE_STARTUP)
-//			overall_mode = MODE_OUTDOORS;
 		mainPtr.display();
 		
 		if(!game_run_before)
@@ -329,19 +283,6 @@ void Handle_One_Event() {
 					save_party(univ.file, univ);
 			}
 			All_Done = true;
-			// TODO: Handle closing of mini-map
-#if 0
-			else {
-				for(i = 0; i < 18; i++)
-					if((the_window == GetDialogWindow(modeless_dialogs[i])) && (modeless_exists[i])) {
-						//CloseDialog(modeless_dialogs[i]);
-						HideWindow(GetDialogWindow(modeless_dialogs[i]));
-						modeless_exists[i] = false;
-						SelectWindow(mainPtr);
-						SetPortWindowPort(mainPtr);
-					}
-			}
-#endif
 		default:
 			break; // There's several events we don't need to handle at all
 	}
@@ -403,7 +344,6 @@ void Mouse_Pressed() {
 
 void close_program() {
 	// TODO: Ultimately we would like to have cleanup happen automatically, negating the need for this function
-	//end_music();
 	// On the Mac, prefs are synced automatically. However, doing it manually won't hurt.
 	// On other platforms, we need to do it manually.
 	sync_prefs();
@@ -631,34 +571,6 @@ void handle_monster_info_menu(int item_hit) {
 	display_monst(item_hit - 1, NULL,1);
 }
 
-//void load_cursors() {
-//	short i,j;
-//	for(i = 0; i < 3; i++)
-//		for(j = 0; j < 3; j++)
-//			arrow_curs[i][j] = GetCursor(100 + (i - 1) + 10 * (j - 1));
-//	sword_curs = GetCursor(120);
-//
-////	HLock ((Handle) sword_curs);
-////	SetCursor (*sword_curs);
-////	HUnlock((Handle) sword_curs);
-//
-//	boot_curs = GetCursor(121);
-//	key_curs = GetCursor(122);
-//	target_curs = GetCursor(124);
-//	talk_curs = GetCursor(126);
-//	look_curs = GetCursor(129);
-//
-//	set_cursor(sword_curs);
-//	current_cursor = 124;
-//
-//}
-
-//void set_cursor(CursHandle which_curs) {
-//	HLock ((Handle) which_curs);
-//	SetCursor (*which_curs);
-//	HUnlock((Handle) which_curs);
-//}
-
 static cursor_type get_mode_cursor(){
 	switch(overall_mode){
 		case MODE_TOWN_TARGET:
@@ -718,7 +630,7 @@ void move_sound(ter_num_t ter,short step){
 	spec = univ.scenario.ter_types[ter].special;
 	snd = univ.scenario.ter_types[ter].step_sound;
 	
-	//if on swamp don't play squish sound : BoE legacy behavior, can be removed safely
+	// if on swamp don't play squish sound : BoE legacy behavior, can be removed safely
 	if(snd == 4 && !flying() && univ.party.in_boat == 0){
 		if(on_swamp && get_ran(1,1,100) >= 10)return;
 		on_swamp = true;

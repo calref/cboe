@@ -1,8 +1,6 @@
 
 #include <iostream>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include <array>
@@ -51,47 +49,27 @@ short who_cast,which_pc_displayed;
 eSpell town_spell;
 extern bool spell_freebie;
 bool spell_button_active[90];
-extern cItemRec start_items[6];
+extern cItem start_items[6];
 
-char empty_string[256] = "                                           ";
-
-//extern stored_town_maps_type town_maps;
 extern short fast_bang;
 extern bool flushingInput;
-//extern party_record_type	party;
 extern short stat_window,current_pc;
 extern eGameMode overall_mode;
-//extern current_town_type	univ.town;
-//extern big_tr_type t_d;
-//extern unsigned char out[96][96],out_e[96][96];
 extern fs::path progDir;
 extern location center;
 extern sf::RenderWindow mainPtr;
 extern bool spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
-//extern stored_items_list_type stored_items[3];
-//extern CursHandle sword_curs;
-//extern setup_save_type setup_save;
 extern eSpell store_mage, store_priest;
-//extern cOutdoors outdoors[2][2];
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting,stat_screen_mode;
 extern effect_pat_type null_pat,single,t,square,radius2,radius3;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
-extern short hit_chance[21],combat_active_pc;//,pc_moves[6];
-extern short boom_gr[8];
-//extern	unsigned char beasts[5];
-//extern	unsigned char m1[20];
-//extern	unsigned char m2[16];
-//extern	unsigned char m3[16];
-//extern stored_town_maps_type maps;
-//extern stored_outdoor_maps_type o_maps;
+extern short hit_chance[21],combat_active_pc;extern short boom_gr[8];
 extern short current_ground;
 extern short monst_marked_damage[60];
 extern location golem_m_locs[16];
-//extern town_item_list t_i;
 extern cUniverse univ;
-//extern piles_of_stuff_dumping_type *data_store;
 extern sf::Texture pc_gworld;
 
 // Variables for spell selection
@@ -203,7 +181,7 @@ static void init_party_scen_data() {
 				stored_item = true;
 	if(stored_item)
 		if(cChoiceDlog("keep-stored-items", {"yes", "no"}).show() == "yes") {
-			std::vector<cItemRec*> saved_item_refs;
+			std::vector<cItem*> saved_item_refs;
 			for(i = 0; i < 3;i++)
 				for(j = 0; j < NUM_TOWN_ITEMS; j++)
 					if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
@@ -214,7 +192,7 @@ static void init_party_scen_data() {
 		}
 	for(i = 0; i < 3;i++)
 		for(j = 0; j < NUM_TOWN_ITEMS; j++) {
-			univ.party.stored_items[i][j] = cItemRec();
+			univ.party.stored_items[i][j] = cItem();
 		}
 	
 	for(i = 0; i < 200; i++)
@@ -333,22 +311,13 @@ bool create_pc(short spot,cDialog* parent) {
 	
 	pick_race_abil(&univ.party[spot],0);
 	
-	// TODO: Not sure if these initial draws are needed
-//	if(parent != NULL)
-//		cd_initial_draw(989);
-	
 	still_ok = spend_xp(spot,0,parent);
 	if(!still_ok)
 		return false;
 	univ.party[spot].cur_health = univ.party[spot].max_health;
 	univ.party[spot].cur_sp = univ.party[spot].max_sp;
-//	if(parent != NULL)
-//		cd_initial_draw(989);
 	
 	pick_pc_graphic(spot,0,parent);
-	
-//	if(parent != NULL)
-//		cd_initial_draw(989);
 	pick_pc_name(spot,parent);
 	
 	univ.party[spot].main_status = eMainStatus::ALIVE;
@@ -1901,6 +1870,7 @@ static void draw_spell_pc_info(cDialog& me) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["pc" + n].setText(univ.party[i].name);
+			// TODO: Maybe this detail should be reimplemented?
 			//if(pc_casting == i)
 			//	cd_text_frame(1098,24 + store_spell_target,11);
 			//else cd_text_frame(1098,24 + store_spell_target,1);
@@ -2163,7 +2133,6 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	using namespace std::placeholders;
 	eSpell store_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	short former_target = store_spell_target;
-//	store_situation = type;
 	short dark = 6;
 	can_choose_caster = (pc_num < 6) ? false : true;
 	
@@ -2339,10 +2308,7 @@ void do_alchemy() {
 	};
 	short which_p,which_item,which_item2,r1;
 	short pc_num;
-	cItemRec store_i('alch');// = {7,0, 0,0,0,1,0,0, 50,0,0,0,0, 0, 8,0, {0,0},"Potion","Potion",0,5,0,0};
-	
-//	{7,0,0,0,0,1,1,30,59,0,0,250,1,0,1,{0,0},"Graymold Salve","Potion"},
-//	{7,0,0,0,0,1,1,30,13,0,0,250,1,0,1,{0,0},"Resurrection Balm","Potion"},
+	cItem store_i('alch');
 	
 	static const short potion_abils[20] = {
 		72,87,70,73,70,
@@ -2518,7 +2484,6 @@ bool pick_pc_name(short pc_num,cDialog* parent) {
 }
 
 m_num_t pick_trapped_monst() {
-	// ignore parent in Mac version
 	short i;
 	std::string sp;
 	cMonster get_monst;
@@ -2622,7 +2587,6 @@ void hit_party(short how_much,eDamageType damage_type) {
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			dummy = damage_pc(i,how_much,damage_type,eRace::UNKNOWN,0);
-//			dummy = damage_pc(i,how_much,damage_type + 30);
 	put_pc_screen();
 }
 
@@ -2647,9 +2611,6 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return false;
-	
-	//sound_type = damage_type / 100;
-	//damage_type = damage_type % 100;
 	
 	if(damage_type >= DAMAGE_NO_PRINT) {
 		do_print = false;
@@ -2764,9 +2725,6 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		if(is_town())
 			add_explosion(univ.town.p_loc,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
 		else add_explosion(univ.party[which_pc].combat_pos,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
-		//sprintf ((char *) c_line, "  %s takes %d. ",(char *) univ.party[which_pc].name, how_much);
-		//if(do_print)
-		//	add_string_to_buf((char *) c_line);
 		if(how_much == 0)
 			return false;
 		else return true;

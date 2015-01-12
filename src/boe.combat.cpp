@@ -1,8 +1,6 @@
 
 #include <cstdio>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -25,10 +23,6 @@
 #include "boe.menus.h"
 #include "spell.hpp"
 
-//extern party_record_type party;
-//extern current_town_type univ.town;
-//extern big_tr_type t_d;
-//extern town_item_list	t_i;
 extern eGameMode overall_mode;
 extern bool ghost_mode;
 extern short which_combat_type;
@@ -43,15 +37,11 @@ extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev,store_item_spell_level;
 extern short store_spell_target,pc_casting,current_spell_range;
 extern effect_pat_type current_pat;
-//extern short town_size[3];
-//extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short num_targets_left;
 extern location spell_targets[8];
 extern bool in_scen_debug;
 extern short fast_bang;
-//extern unsigned char misc_i[64][64],sfx[64][64];
 extern short store_current_pc;
-//extern location monster_targs[60];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
 eSpell spell_being_cast;
@@ -265,8 +255,6 @@ bool center_on_monst;
 
 void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terrain,short num_walls) {
 	short i,j,how_many,num_tries = 0;
-//	short low[10] = {15,7,3,3,1,1,1,7,2,1};
-//	short high[10] = {30,10,5,5,3,2,1,10,4,1};
 	short low[10] = {15,7,4,3,2,1,1,7,2,1};
 	short high[10] = {30,10,6,5,3,2,1,10,4,1};
 	rectangle town_rect(0,0,47,47);
@@ -289,8 +277,6 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++) {
 			univ.town.fields[i][j] = 0;
-			//univ.out.misc_i[i][j] = 0;
-			//univ.out.sfx[i][j] = 0;
 		}
 	univ.town.prep_arena();
 	univ.town->in_town_rect = town_rect;
@@ -600,7 +586,7 @@ void pc_attack(short who_att,short target) {
 	
 	// Don't forget awkward and stat adj.
 	if(weap1 < 24) {
-		what_skill1 = univ.party[who_att].items[weap1].type;
+		what_skill1 = univ.party[who_att].items[weap1].weap_type;
 		
 		// safety valve
 		if(what_skill1 == eSkill::INVALID)
@@ -617,7 +603,7 @@ void pc_attack(short who_att,short target) {
 			r1 += 25;
 		
 		// race adj.
-		if(univ.party[who_att].race == eRace::SLITH && univ.party[who_att].items[weap1].type == eSkill::POLE_WEAPONS)
+		if(univ.party[who_att].race == eRace::SLITH && univ.party[who_att].items[weap1].weap_type == eSkill::POLE_WEAPONS)
 			r1 -= 10;
 		
 		r2 = get_ran(1,1,univ.party[who_att].items[weap1].item_level) + dam_adj + 2 + univ.party[who_att].items[weap1].bonus;
@@ -685,7 +671,7 @@ void pc_attack(short who_att,short target) {
 		}
 	}
 	if((weap2 < 24) && (which_m->active > 0)) {
-		what_skill2 = univ.party[who_att].items[weap2].type;
+		what_skill2 = univ.party[who_att].items[weap2].weap_type;
 		
 		// safety valve
 		if(what_skill1 == eSkill::INVALID)
@@ -1609,8 +1595,6 @@ bool combat_next_step() {
 		to_return = true;
 	// TODO: Windows version checks for overall_mode being MODE_OUTDOORS or MODE_TOWN - that's not necessary, right?
 	center = univ.party[current_pc].combat_pos;
-	//if(ensure_redraw)
-	//	draw_terrain(0);
 	
 	adjust_spell_menus();
 	
@@ -2170,8 +2154,6 @@ void do_monster_turn() {
 			if(cur_monst->active == 0)
 				cur_monst->ap = 0;
 			
-			//if((futzing == 1) && (get_ran(1,0,1) == 0)) // If monster's just pissing around, give up
-			//	cur_monst->ap = 0;
 			if(futzing > 1) // If monster's just pissing around, give up
 				cur_monst->ap = 0;
 		}  // End of monster action loop
@@ -3064,7 +3046,6 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				if(r1 == 0)
 					break;
 				x = get_ran(3,1,4);
-				//Delay(12,&dummy); // gives sound time to end
 				play_sound(25);
 				play_sound(-61);
 				summon_monster(r1,caster->cur_loc,
@@ -3612,15 +3593,6 @@ bool pc_near(short pc_num,location where,short radius) {
 	else return false;
 }
 
-/*short pc_there(location where) {
-	short i;
-	
-	for(i = 0; i < 6; i++)
-		if((univ.party[i].main_status == 1) && (univ.party[i].combat_pos.x == where.x) && (univ.party[i].combat_pos.y == where.y))
-			return i;
-	return 6;
-} */
-
 //short active; // 0 - any monst 1 - monster need be active
 bool monst_near(short m_num,location where,short radius,short active) {
 	if((univ.town.monst[m_num].active != 0) && (vdist(univ.town.monst[m_num].cur_loc,where) <= radius)
@@ -4029,8 +4001,6 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 	short i;
 	bool stop_hitting = false,hit_monsters = true;
 	
-//	sprintf ((char *) create_line, "  %d %d.                                  ",target.x,target.y);
-//	add_string_to_buf((char *) create_line);
 	if((target.x < 0) || (target.x > 63) || (target.y < 0) || (target.y > 63))
 		return;
 	
@@ -4837,7 +4807,6 @@ void process_fields() {
 void scloud_space(short m,short n) {
 	// TODO: Is it correct for these to not affect monsters?
 	location target;
-	//cPopulation::cCreature;
 	short i;
 	
 	target.x = (char) m;

@@ -1,8 +1,6 @@
 
 #include <cstdio>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -18,17 +16,10 @@
 #include "mathutil.hpp"
 #include "graphtool.hpp"
 
-//extern current_town_type univ.town;
-//extern party_record_type party;
 extern eGameMode overall_mode;
-//extern cOutdoors univ.out.outdoors[2][2];
 extern short which_combat_type;
-//extern big_tr_type t_d;
-//extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short spell_caster, missile_firer,current_monst_tactic;
 extern short hit_chance[21];
-//extern unsigned char univ.out.misc_i[64][64];
-//extern location monster_targs[60];
 
 extern location center;
 extern short boom_gr[8],futzing;
@@ -37,46 +28,6 @@ extern cUniverse univ;
 
 
 short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};
-
-//cCreature null_start_type; = {0,0,loc(80,80),1,0,0,0,0,0,0,0, 0,-1,-1,-1};
-
-////
-//cMonster return_monster_template(m_num_t store)
-//{
-//	cMonster monst;
-//	short m_num,i;
-//
-//	m_num = store;
-//	monst = scenario.scen_monsters[store];
-//	if(monst.spec_skill == 11)
-//		monst.picture_num = 0;
-//
-//	monst.m_num = m_num;
-//	monst.health = (PSD[SDF_EASY_MODE] == 0) ? monst.health : monst.health / 2;
-//
-//	// now adjust for difficulty
-//	monst.health = monst.health * difficulty_adjust();
-//
-//	monst.m_health = monst.health; // in scenario file, health is stored in health field
-//	monst.max_mp = 0;
-//	monst.mp = monst.max_mp;
-//
-//	monst.ap = 0;
-//
-//	if((monst.mu > 0) || (monst.cl > 0))
-//		monst.max_mp = monst.mp = 12 * monst.level;
-//
-//	monst.m_morale = 10 * monst.level;
-//	if(monst.level >= 20)
-//		monst.m_morale += 10 * (monst.level - 20);
-//
-//	monst.morale = monst.m_morale;
-//	monst.direction = 0;
-//	for(i = 0; i < 15; i++)
-//		monst.status[i] = 0;
-//
-//	return monst;
-//}
 
 short out_enc_lev_tot(short which) {
 	short count = 0,i;
@@ -135,7 +86,6 @@ void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forc
 	
 	
 	while(i < 10) {
-		////
 		if(!univ.party.out_c[i].exists || ((i == 9) && (forced > 0))) {
 			if((sd_legit(group.end_spec1,group.end_spec2)) && (PSD[group.end_spec1][group.end_spec2] > 0))
 				return;
@@ -326,7 +276,6 @@ void do_monsters() {
 	}
 }
 
-////
 bool monst_hate_spot(short which_m,location *good_loc) {
 	location prospect,loc;
 	
@@ -1260,8 +1209,8 @@ void record_monst(cCreature *which_m) {
 		play_sound(53);
 	}
 }
+
 // returns 90 is no placement, OW returns # of spot
-////
 short place_monster(m_num_t which,location where) {
 	short i = 0;
 	
@@ -1301,13 +1250,7 @@ bool summon_monster(m_num_t which,location where,short duration,short given_atti
 	short which_m,spot;
 	
 	if((is_town()) || (monsters_going)) {
-		// Ooooh ... mondo kludge. Need to find caster's attitude to give it to monst.
 		which_m = monst_there(where);
-//		if(pc_there(where) < 6)
-//			which_att = 2;
-//		else if(which_m == 90)
-//			which_att = 1;
-//		else which_att = univ.town.monst[which_m].attitude;
 		loc = find_clear_spot(where,0);
 		if(loc.x == 0)
 			return false;
@@ -1356,11 +1299,9 @@ void activate_monsters(short code,short /*attitude*/) {
 			cCreature& monst = univ.town->creatures(i);
 			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 			univ.town.monst[i].spec_enc_code = 0;
-			univ.town.monst[i].active = 2; // TODO: Can thes be commented out? \/
-			//univ.town.monst[i].attitude = univ.town->creatures(i).start_attitude;
+			univ.town.monst[i].active = 2;
 			
 			univ.town.monst[i].summoned = 0;
-			//univ.town.monst[i].cur_loc = univ.town->creatures(i).start_loc;
 			univ.town.monst[i].target = 6;
 			
 			univ.town.set_crate(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);

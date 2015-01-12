@@ -1,8 +1,6 @@
 
 #include <cstring>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -37,11 +35,8 @@
 #include "shop.hpp"
 #define	NUM_HINTS	30
 
-//extern big_tr_type t_d;
 extern short stat_window;
 extern eGameMode overall_mode;
-//extern current_town_type univ.town;
-//extern party_record_type party;
 extern bool play_sounds,give_intro_hint,show_startup_splash,changed_display_mode;
 extern sf::RenderWindow mainPtr;
 extern rectangle d_rects[80];
@@ -54,11 +49,8 @@ extern location center;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern bool map_visible;
 extern sf::RenderWindow mini_map;
-//extern town_item_list	t_i;
 extern bool game_run_before,skip_boom_delay;
 extern cUniverse univ;
-//extern piles_of_stuff_dumping_type *data_store;
-//extern talking_record_type talking;
 extern sf::Texture pc_gworld;
 
 extern cScenarioList scen_headers;
@@ -79,9 +71,8 @@ std::string title_string;
 m_num_t store_monst_type;
 short store_m_num;
 rectangle dummy_rect = {0,0,0,0};
-//hold_responses store_resp[83];
 short strnum1,strnum2,oldstrnum1,oldstrnum2;
-short store_talk_face_pic;//,cur_town_talk_loaded = -1;
+short store_talk_face_pic;
 int current_talk_node;
 extern std::vector<word_rect_t> talk_words;
 
@@ -176,7 +167,6 @@ void end_shop_mode() {
 	stat_screen_mode = 0;
 	put_item_screen(stat_window,0);
 	put_pc_screen();
-	//refresh_screen(0);
 	// TODO: I suspect REFRESH_NONE will suffice here
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
 }
@@ -214,7 +204,7 @@ void handle_shop_event(location p) {
 }
 
 void handle_sale(cShopItem item, int i) {
-	cItemRec base_item = item.item;
+	cItem base_item = item.item;
 	short cost = item.cost;
 	rectangle dummy_rect = {0,0,0,0};
 	
@@ -344,7 +334,7 @@ void handle_sale(cShopItem item, int i) {
 
 
 void handle_info_request(cShopItem item) {
-	cItemRec base_item = item.item;
+	cItem base_item = item.item;
 	
 	switch(item.type) {
 		case eShopItemType::ITEM:
@@ -481,7 +471,6 @@ void end_talk_mode() {
 	stat_screen_mode = 0;
 	put_item_screen(stat_window,0);
 	put_pc_screen();
-	//refresh_screen(0);
 	// TODO: I suspect REFRESH_NONE will suffice here
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
 }
@@ -1355,59 +1344,3 @@ short pick_prefab_scen() {
 	if(item_hit == "cancel") return -1;
 	else return item_hit[4] - '1';
 }
-
-//void give_password_filter (short item_hit)
-//{
-//
-//	switch(item_hit) {
-//		default:
-//
-//			toast_dialog();
-//			break;
-//
-//		}
-//}
-//
-//bool enter_password()
-//// ignore parent in Mac version
-//{
-//	short town_strs_hit,i;
-//	char temp_str[256];
-//
-//	cd_create_dialog_parent_num(823,0);
-//
-//	CDSN(823,2,0);
-//
-//	town_strs_hit = cd_run_dialog();
-//
-//	CDGT(823,2,(char *) temp_str);
-//	i = wd_to_pwd(temp_str);
-//
-//	cd_kill_dialog(823);
-//
-//	return check_p(i);
-//}
-//
-//short wd_to_pwd(Str255 str)
-//{
-//	char pwd[8] = "aaaaaa";
-//	short i;
-//	long val = 0,pow[6] = {1,10,100,1000,9999,99999};
-//
-//	for(i = 0; i < 6; i++) {
-//		if(str[i] == 0)
-//			i = 6;
-//			else {
-//				if((str[i] >= 65) && (str[i] <= 90))
-//					pwd[i] = str[i] + 32;
-//				else if((str[i] >= 48) && (str[i] <= 57))
-//					pwd[i] = str[i] + 49;
-//				else if((str[i] >= 97) && (str[i] <= 122))
-//					pwd[i] = str[i];
-//				}
-//		}
-//	for(i = 0; i < 6; i++)
-//		val = val + pow[i] * (long) (pwd[i] - 97);
-//	val = val % 30000;
-//	return (short) val;
-//}

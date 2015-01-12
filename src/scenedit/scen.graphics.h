@@ -31,7 +31,6 @@ void make_field_type(short i,short j,eFieldType field_type);
 void take_field_type(short i,short j,eFieldType field_type);
 bool container_there(location l);
 bool is_spot(short i,short j);
-//void get_str(const char* str,short i, short j);
 short string_length(char *str);
 rectangle get_custom_rect (short which_rect);
 void init_dialogs();

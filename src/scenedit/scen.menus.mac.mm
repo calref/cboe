@@ -7,8 +7,8 @@
 //
 
 #include "scen.menus.h"
+#include "scenario.h" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
-#include "scenario.h"
 #include "winutil.hpp"
 
 using MenuHandle = NSMenu*;

@@ -2,8 +2,6 @@
 #include <cstdio>
 #include <map>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -34,15 +32,10 @@ extern std::map<eSkill,short> skill_cost;
 extern std::map<eSkill,short> skill_max;
 extern std::map<eSkill,short> skill_g_cost;
 extern const char* skill_ids[19];
-//extern party_record_type	party;
 extern short cur_town_talk_loaded;
-//extern current_town_type univ.town;
 extern bool give_intro_hint;
 extern sf::RenderWindow mainPtr;
 extern short on_monst_menu[256];
-//extern big_tr_type t_d;
-extern location tinraya_portculli[12];
-//extern piles_of_stuff_dumping_type *data_store;
 
 bool full_roster = false;
 
@@ -51,7 +44,6 @@ extern location dest_locs[40];
 
 extern short dest_personalities[40];
 location source_locs[6] = {loc(2,9),loc(0,6),loc(3,6),loc(3,4),loc(6,2),loc(0,0)};
-//extern current_town_type univ.town;
 extern location dest_locs[40] ;
 extern char *alch_names[];
 extern cUniverse univ;
@@ -190,7 +182,7 @@ void display_skills(eSkill force_skill,cDialog* parent) {
 	skillDlog.run();
 }
 
-static void put_item_info(cDialog& me,const cItemRec& s_i) {
+static void put_item_info(cDialog& me,const cItem& s_i) {
 	std::string desc_str;
 	
 	cPict& pic = dynamic_cast<cPict&>(me["pic"]);
@@ -246,7 +238,7 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 	switch(s_i.variety) {
 		case eItemType::ONE_HANDED:
 		case eItemType::TWO_HANDED:
-			switch(s_i.type) {
+			switch(s_i.weap_type) {
 				case eSkill::EDGED_WEAPONS:
 					store_text = "Edged weapon";
 					break;
@@ -301,7 +293,7 @@ static void put_item_info(cDialog& me,const cItemRec& s_i) {
 	
 }
 
-static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, cItemRec& store_i, short& item, const short pc_num) {
+static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, cItem& store_i, short& item, const short pc_num) {
 	
 	if(item_hit == "done") {
 		me.toast(true);
@@ -321,9 +313,9 @@ static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, cIte
 	return true;
 }
 
-void display_pc_item(short pc_num,short item,cItemRec si,cDialog* parent) {
+void display_pc_item(short pc_num,short item,cItem si,cDialog* parent) {
 	using namespace std::placeholders;
-	cItemRec store_i;
+	cItem store_i;
 	if(pc_num == 6)
 		store_i = si;
 	else store_i = univ.party[pc_num].items[item];
@@ -741,9 +733,7 @@ void adventure_notes() {
 	unsigned short i;
 	
 	store_num_i = 0;
-	//for(i = 0; i < 140; i++)
-	//	if(univ.party.special_notes_str[i][0] > 0)
-	store_num_i = univ.party.special_notes.size(); //i + 1;
+	store_num_i = univ.party.special_notes.size();
 	store_page_on = 0;
 	if(store_num_i == 0) {
 		ASB("Nothing in your journal.");
@@ -861,9 +851,7 @@ void journal() {
 	}
 	
 	store_num_i = 0;
-	//for(i = 0; i < 120; i++)
-	//if(univ.party.journal[i].str_num > 0)
-	store_num_i = univ.party.journal.size();//i + 1;
+	store_num_i = univ.party.journal.size();
 	store_page_on = 0;
 	
 	make_cursor_sword();
@@ -898,7 +886,6 @@ static void give_help(short help1,short help2,cDialog* parent) {
 		return;
 	if(univ.party.help_received[help1] > 0 && !help_forced)
 		return;
-	//if(help1 >= 20)
 	univ.party.help_received[help1] = 1;
 	append_iarray_pref("ReceivedHelp", help1);
 	str1 = get_str("help",help1);
@@ -922,9 +909,6 @@ void put_spec_item_info (short which_i) {
 							 univ.scenario.special_items[which_i].name,univ.scenario.intro_pic,PIC_SCEN);
 	display_strings.setSound(57);
 	display_strings.show();
-	//item_name = get_str(6,1 + which_i * 2);
-	//display_strings(6,2 + which_i * 2,0,0,
-	//(char *)item_name,-1,702,0);
 }
 
 // Callback for recording encounter strings

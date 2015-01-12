@@ -21,17 +21,11 @@ void do_sign(short town_num, short which_sign, short sign_type);
 void do_talk(short personality, unsigned short m_num);
 void put_party_stats();
 void edit_party();
-void pick_preferences()  ;
-//void check_pref_file() ;
-//long open_pref_file();
-//void make_pref_file(FSSpec pref);
+void pick_preferences();
 void save_prefs(bool resetHelp = false);
 void load_prefs();
 void tip_of_day();
 short pick_a_scen();
 short pick_prefab_scen();
-//void give_password_filter (short item_hit);
-//bool enter_password();
-//short wd_to_pwd(Str255 str);
 
 #endif

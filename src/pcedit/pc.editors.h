@@ -1,7 +1,7 @@
 
 
-bool give_to_pc(short pc_num,cItemRec  item, short print_result);
-bool give_to_party(cItemRec item,short print_result);
+bool give_to_pc(short pc_num,cItem item, short print_result);
+bool give_to_party(cItem item,short print_result);
 void give_gold(short amount,bool print_result);
 bool take_gold(short amount,bool print_result);
 short pc_has_space(short pc_num);

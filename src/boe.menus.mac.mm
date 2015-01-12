@@ -8,9 +8,9 @@
 
 #include "boe.menus.h"
 
+#include "universe.h" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include <sstream>
-#include "universe.h"
 #include "boe.party.h"
 #include "boe.infodlg.h"
 #include "boe.consts.h"

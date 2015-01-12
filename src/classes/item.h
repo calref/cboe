@@ -17,7 +17,7 @@
 
 namespace legacy { struct item_record_type; };
 
-class cItemRec {
+class cItem {
 public:
 	eItemType variety;
 	short item_level;
@@ -25,7 +25,7 @@ public:
 	int bonus;
 	int protection;
 	int charges;
-	eSkill type;
+	eSkill weap_type;
 	int magic_use_type;
 	unsigned short graphic_num;
 	eItemAbil ability;
@@ -39,7 +39,6 @@ public:
 	std::string full_name;
 	std::string name;
 	unsigned int treas_class;
-	//unsigned char item_properties;
 	bool ident : 1;
 	bool property : 1;
 	bool magic : 1;
@@ -52,26 +51,12 @@ private:
 	unsigned int reserved1;
 	unsigned int reserved2;
 public:
-	//string desc; // for future use
+	std::string desc;
 	unsigned char rec_treas_class() const;
-//	bool is_ident() const;
-//	bool is_property() const;
-//	bool is_magic() const;
-//	bool is_contained() const;
-//	bool is_cursed() const;
-//	bool is_concealed() const;
-//	bool is_enchanted() const;
-//	void set_ident(bool b);
-//	void set_property(bool b);
-//	void set_magic(bool b);
-//	void set_contained(bool b);
-//	void set_cursed(bool b);
-//	void set_concealed(bool b);
-//	void set_enchanted(bool b);
 	short item_weight() const;
 	
-	cItemRec();
-	cItemRec(long preset);
+	cItem();
+	cItem(long preset);
 	void append(legacy::item_record_type& old);
 	void writeTo(std::ostream& file, std::string prefix = "") const;
 	void readFrom(std::istream& sin);

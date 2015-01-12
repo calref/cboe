@@ -1,6 +1,4 @@
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -25,19 +23,13 @@
 #include <vector>
 using std::vector;
 
-//extern party_record_type party;
-//extern pc_record_type adven[6];
 extern bool play_sounds,party_in_memory;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
 extern location ul;
-//extern piles_of_stuff_dumping_type *data_store;
 extern cScenarioList scen_headers;;
-//extern std::vector<std::string> scen_names;;
 extern cUniverse univ;
 extern eGameMode overall_mode;
-
-//void start_game();
 
 rectangle startup_button[6];
 
@@ -99,7 +91,6 @@ bool handle_startup_press(location the_point) {
 						cChoiceDlog("need-party").show();
 						break;
 					}
-					// if not reg, rub out
 					
 					scen = pick_a_scen();
 					if(scen < 0) break;

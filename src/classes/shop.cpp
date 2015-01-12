@@ -31,7 +31,7 @@ size_t cShop::size() {
 	});
 }
 
-void cShop::addItem(cItemRec item) {
+void cShop::addItem(cItem item) {
 	size_t i = firstEmpty();
 	if(i >= items.size()) return;
 	if(item.variety == eItemType::NO_ITEM) return;
@@ -45,8 +45,8 @@ void cShop::addItem(cItemRec item) {
 	items[i].cost /= 10;
 }
 
-static cItemRec store_mage_spells(short which_s) {
-	cItemRec spell('spel');
+static cItem store_mage_spells(short which_s) {
+	cItem spell('spel');
 	static const short cost[62] = {
 		// TODO: Costs for the level 1-3 spells
 		5,5,5,5,5,5,5,5,5,5,
@@ -66,8 +66,8 @@ static cItemRec store_mage_spells(short which_s) {
 	return spell;
 }
 
-static cItemRec store_priest_spells(short which_s) {
-	cItemRec spell('spel');
+static cItem store_priest_spells(short which_s) {
+	cItem spell('spel');
 	static const short cost[62] = {
 		// TODO: Costs for the level 1-3 spells
 		5,5,5,5,5,5,5,5,5,5,
@@ -87,8 +87,8 @@ static cItemRec store_priest_spells(short which_s) {
 	return spell;
 }
 
-static cItemRec store_alchemy(short which_s) {
-	cItemRec spell('spel');
+static cItem store_alchemy(short which_s) {
+	cItem spell('spel');
 	static const short val[20] = {
 		50,75,30,130,100,
 		150, 200,200,300,250,

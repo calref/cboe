@@ -2,8 +2,6 @@
 #include <cstring>
 #include <cstdio>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -63,7 +61,6 @@ extern sf::RenderWindow mini_map;
 bool map_visible = false;
 extern bool show_startup_splash;
 
-//***********************
 rectangle		menuBarRect;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
 
@@ -133,8 +130,6 @@ sf::Texture startup_button_orig;
 sf::Texture anim_mess;
 
 bool has_run_anim = false,currently_loading_graphics = false;
-//short anim_step = 0;
-//short overall_anim_step = 0;
 
 rectangle main_win_rect = {0,0,410,250};
 rectangle main_win2_source_rect = {0,0,410,265};
@@ -145,8 +140,6 @@ tiny_world_1_rect = {195,242,385,475};
 
 rectangle share_mess_source_rect = {0,0,59,120},
 share_mess_rect = {120,384,179,504};
-//rectangle start_buttons_source_rect = {0,0,180,180},
-//	start_buttons_rect = {224,30,405,210};
 rectangle start_buttons_source_rect = {0,0,186,190},
 start_buttons_rect = {214,30,400,220};
 
@@ -299,7 +292,6 @@ void draw_startup(short but_type) {
 	rect_draw_some_item(startup_gworld,startup_from[0],to_rect,ul);
 	to_rect = startup_top;
 	to_rect.offset(ul);
-	//PaintRect(&to_rect);
 	
 	for(i = 0; i < 5; i++) {
 		rect_draw_some_item(startup_gworld,startup_from[1],startup_button[i],ul);
@@ -444,7 +436,6 @@ void draw_start_button(short which_position,short which_button) {
 		"Start Scenario","Custom Scenario","Quit"};
 	// The 0..65535 version of the blue component was 14472; the commented version was 43144431
 	sf::Color base_color = {0,0,57};
-	//RGBColor lit_color = {0,0,57},base_color = {0,0,169};
 	
 	from_rect = startup_from[3];
 	from_rect.offset((which_button > 0) ? 40 : 0,0);
@@ -1614,8 +1605,6 @@ void draw_targets(location center) {
 	for(i = 0; i < 8; i++)
 		if((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]))) {
 			dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
-			//OffsetRect(&dest_rect,5,5);
-			//InsetRect(&dest_rect,8,12);
 			rect_draw_some_item(roads_gworld,calc_rect(6,0),dest_rect,ul,sf::BlendAlpha);
 		}
 }

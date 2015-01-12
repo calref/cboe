@@ -63,7 +63,6 @@ public:
 	rectangle info_rect[8];
 	unsigned char strlens[180];
 	std::array<cSpecial,60> specials;
-	//char strs[120][256];
 	std::string out_name;
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.

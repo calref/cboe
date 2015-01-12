@@ -1,7 +1,4 @@
 
-
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -21,41 +18,11 @@
 #include "winutil.hpp"
 
 extern eGameMode overall_mode;
-//extern party_record_type univ.party;
-//extern current_town_type	univ.town;
-//extern unsigned char out[96][96],out_e[96][96];
 extern short current_pc,stat_window;
-//extern cOutdoors outdoors[2][2];
 extern location center;
-//extern town_item_list	t_i;
-//extern big_tr_type t_d;
 extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 char answer[256];
-
-/*bool (which)
-short which; {
-	short choice,i;
-	item_record_type treas[] = {
-		{0,0,0,0,0,0,0,0,0,0,0,0,false,false,false,{0,0},"",""}
-	};
-	bool can_enter = true;
-	location where;
-	
-	where = get_spec_loc(which);
-	
-	switch(which) {
-		case 1:
-			break;
-			
-			
-	}
-	
-	return can_enter;
-} */
-
-
-
 
 void activate_monster_enc(short enc_num,std::string list,short str,short strsnd,short *flip_bit) {
 	if(*flip_bit == 0) {

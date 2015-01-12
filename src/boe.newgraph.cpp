@@ -3,8 +3,6 @@
 #include <cstdio>
 #include <vector>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -55,16 +53,11 @@ extern bool play_sounds,boom_anim_active;
 extern sf::Texture fields_gworld,boom_gworld,missiles_gworld,invenbtn_gworld;
 extern sf::Texture tiny_obj_gworld, items_gworld, talkfaces_gworld;
 extern sf::RenderTexture terrain_screen_gworld;
-//extern party_record_type party;
 extern sf::Texture bg_gworld;
 extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern location center;
 extern short monst_marked_damage[60];
-//extern current_town_type univ.town;
-//extern big_tr_type t_d;
-//extern town_item_list	t_i;
-//extern unsigned char misc_i[64][64],sfx[64][64];
 extern location store_anim_ul;
 extern char light_area[13][13];
 extern short terrain_there[9][9];
@@ -73,7 +66,6 @@ extern tessel_ref_t bw_pats[6];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern short store_talk_face_pic;
 extern cUniverse univ;
-//extern talking_record_type talking;
 
 // Talk vars
 extern eGameMode store_pre_talk_mode;
@@ -94,7 +86,6 @@ extern rectangle bottom_help_rects[4];
 extern rectangle shop_name_str;
 extern rectangle shop_frame ;
 extern rectangle shop_done_rect;
-//extern item_record_type food_types[15];
 extern char *heal_types[];
 extern short heal_costs[8];
 extern short terrain_there[9][9];
@@ -117,23 +108,6 @@ store_boom_type store_booms[30];
 bool have_missile,have_boom;
 rectangle explode_place_rect[30];
 
-
-// Animation vars
-//extern town_record_type anim_town;
-//extern tiny_tr_type anim_t_d;
-//extern short anim_step;
-//extern char anim_str[60];
-//extern location anim_str_loc;
-//
-//// if < 6; target PC, if >= 100, targ monst, if 6, go to anim_pc_loc
-//short anim_pc_targets[6];
-//short anim_monst_targets[60];
-//
-//short anim_pcs[6];
-//
-//location anim_pc_locs[6],anim_monst_locs[60];
-//location anim_string_loc;
-//char anim_string[60];
 char last_light_mask[13][13];
 
 void apply_unseen_mask() {
@@ -164,7 +138,6 @@ void apply_unseen_mask() {
 				to_rect.offset(-28 + i * 28,-36 + 36 * j);
 				to_rect |= big_to;
 				tileImage(terrain_screen_gworld, to_rect, bw_pats[3], sf::BlendAlpha);
-				//PaintRoundRect(&to_rect,4,4);
 				for(k = i - 2; k < i + 1; k++)
 					for(l = j - 2; l < j + 1; l++)
 						if((k >= 0) && (l >= 0) && (k < 9) && (l < 9) && ((k != i - 1) || (l != j - 1)))
@@ -580,7 +553,6 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 		else if(special_draw < 2)
 			explode_place_rect[i] = rectangle();
 	
-	//play_sound(-1 * sound_num);
 	if(special_draw < 2)
 		play_sound(-1 * boom_type_sound[cur_boom_type]);
 	
@@ -620,11 +592,6 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 	for(i = 0; i < 30; i++)
 		if(special_draw != 1)
 			store_booms[i].boom_type = -1;
-	
-	//to_rect = terrain_screen_gworld->portRect;
-	//OffsetRect(&to_rect,current_terrain_ul.h,current_terrain_ul.v);
-	//rect_draw_some_item(terrain_screen_gworld,terrain_screen_gworld->portRect,
-	//	terrain_screen_gworld,to_rect,0,1);
 }
 
 /*
@@ -685,7 +652,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	static const char*const cost_strs[] = {
 		"Extremely Cheap","Very Reasonable","Pretty Average","Somewhat Pricey",
 		"Expensive","Exorbitant","Utterly Ridiculous"};
-	cItemRec base_item;
+	cItem base_item;
 	
 	if(overall_mode != 21) {
 		return;
@@ -887,7 +854,7 @@ void click_talk_rect(word_rect_t word) {
 	place_talk_face();
 }
 
-std::string get_item_interesting_string(cItemRec item) {
+std::string get_item_interesting_string(cItem item) {
 	if(item.property) {
 		return "Not yours.";
 	}

@@ -26,19 +26,8 @@ void display_alchemy(bool allowEdit);
 bool spend_xp(short pc_num, short mode, cDialog* parent);
 // TODO: There's probably a more logical way of arranging this
 
-/* Adventure globals */
-//extern party_record_type party;
-//extern outdoor_record_type outdoors[2][2];
-//extern current_town_type c_town;
-//extern big_tr_type t_d;
-//extern town_item_list	t_i;
-//extern unsigned char out[96][96],out_e[96][96];
-//extern setup_save_type setup_save;
-//extern stored_items_list_type stored_items[3];
 extern cUniverse univ;
-
 extern short store_flags[3];
-
 extern short current_active_pc;
 
 extern sf::RenderWindow mainPtr;

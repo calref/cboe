@@ -41,5 +41,5 @@ class aEditMonster : public cAction {
 };
 
 class aEditItem : public cAction {
-	cItemRec oldItem, newItem;
+	cItem oldItem, newItem;
 };*/

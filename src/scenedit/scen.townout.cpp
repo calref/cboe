@@ -1,3 +1,4 @@
+
 #include <cstdio>
 #include <cstring>
 #include <stack>
@@ -17,21 +18,17 @@
 #include "stack.hpp"
 #include "fileio.hpp"
 
-extern short cen_x, cen_y, overall_mode;//,user_given_password;
+extern short cen_x, cen_y, overall_mode;
 extern bool mouse_button_held,editing_town;
 extern short cur_viewing_mode;
 extern cTown* town;
-//extern big_tr_type t_d;
 extern short mode_count,to_create,cur_town;
 extern ter_num_t template_terrain[64][64];
-extern cItemRec item_list[400];
 extern cScenario scenario;
 extern cSpecial null_spec_node;
 extern cSpeech::cNode null_talk_node;
-//extern piles_of_stuff_dumping_type *data_store;
 extern cOutdoors* current_terrain;
 extern location cur_out;
-//extern cSpeech talking;
 
 cCreature store_placed_monst,store_placed_monst2;
 short store_which_placed_monst;
@@ -1106,7 +1103,6 @@ location pick_out(location default_loc) {
 }
 
 bool new_town(short which_town) {
-	// ignore parent in Mac version
 	std::cout << "Town creation currently disabled.\n";
 	short i,j;
 

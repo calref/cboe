@@ -14,7 +14,7 @@ cUndoList::cUndoList(){
 
 size_t cUndoList::maxUndoSize = 0;
 
-//TODO: These functions should have error checking to ensure they do not access an out of bounds action
+// TODO: These functions should have error checking to ensure they do not access an out of bounds action
 void cUndoList::undo(){
 	(*cur)->undo();
 	cur--;

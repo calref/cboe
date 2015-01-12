@@ -23,12 +23,6 @@ namespace legacy {
 		typedef uint8_t                   Boolean;
 	}
 	using pad_t = uint8_t; // To make the padding bytes super-explicit
-//#define NLS	25
-//	// number of left slots for buttons
-//#define	NRS	400
-//	// number of right slots for scrolling list
-//#define NRSONPAGE	33
-//	// number of right slots for scrolling list on page at 1 time
 	
 #pragma pack(push,1)
 	struct location {
@@ -270,7 +264,6 @@ namespace legacy {
 		location outdoor_corner,i_w_c,p_loc,loc_in_sec;
 		boat_record_type boats[30];
 		horse_record_type horses[30];
-		//int8_t pad1[8];
 		creature_list_type creature_save[4];
 		int16_t in_boat,in_horse;
 		outdoor_creature_type out_c[10];

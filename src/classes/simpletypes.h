@@ -536,13 +536,6 @@ inline void operator += (eDamageType& cur, eDamageType othr){
 		cur = (eDamageType) ((int)cur + (int)othr);
 }
 
-//class sbyte {
-//	signed char c;
-//public:
-//	operator int() {return c;}
-//	sbyte(signed char k) : c(k) {}
-//}
-
 enum class eSpecCtx {
 	OUT_MOVE = 0,
 	TOWN_MOVE = 1,

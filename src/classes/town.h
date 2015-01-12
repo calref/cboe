@@ -101,14 +101,12 @@ public:
 	short timer_specs[8];
 	unsigned char strlens[180];
 	std::array<cSpecial,100> specials;
-	//unsigned char specials1,specials2,res1,res2;
 	bool strong_barriers : 1;
 	bool defy_mapping : 1;
 	bool defy_scrying : 1;
 	char reserved_bits : 5;
 	short hostile_fry_party; // number of a special to be called when the town goes hostile TODO: Not sure about this yet though
 	short difficulty;
-	//char town_strs[180][256];
 	std::string town_name;
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.

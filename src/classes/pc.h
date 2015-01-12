@@ -33,16 +33,14 @@ public:
 	short skill_pts;
 	short level;
 	std::map<eStatus,short> status;
-	std::array<cItemRec,24> items;
+	std::array<cItem,24> items;
 	bool equip[24];
 	bool priest_spells[62];
 	bool mage_spells[62];
 	pic_num_t which_graphic;
 	short weap_poisoned;
-	//bool advan[15];
 	std::map<eTrait,bool> traits;
 	eRace race;
-	//short exp_adj;
 	short direction;
 	short ap;
 	// transient stuff

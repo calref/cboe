@@ -34,7 +34,7 @@ enum class eShopItemType {
 struct cShopItem {
 	eShopItemType type = eShopItemType::EMPTY;
 	int cost;
-	cItemRec item;
+	cItem item;
 };
 
 class cShop {
@@ -46,7 +46,7 @@ class cShop {
 public:
 	cShop();
 	cShop(eShopType type, int adj, std::string name);
-	void addItem(cItemRec item);
+	void addItem(cItem item);
 	void addSpecial(eShopItemType type, int n = 0);
 	template<typename Iter> void addItems(Iter begin, Iter end) {
 		while(begin != end) addItem(*begin++);

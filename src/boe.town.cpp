@@ -2,8 +2,6 @@
 #include <cstdio>
 #include <queue>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -30,38 +28,21 @@
 #include "fileio.hpp"
 #include "winutil.hpp"
 
-//extern current_town_type univ.town;
-//extern party_record_type	party;
-//extern town_item_list univ.town;
 extern short stat_window,store_spell_target,which_combat_type,current_pc,combat_active_pc;
 extern eGameMode overall_mode;
 extern location center;
 extern sf::RenderWindow mainPtr;
-//extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
-//extern cOutdoors univ.out.outdoors[2][2];
-//extern unsigned char univ.out.misc_i[64][64];
 extern short store_current_pc,current_ground;
-//extern pascal bool cd_event_filter();
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
-//extern location monster_targs[60];
 extern std::queue<pending_special_type> special_queue;
 
 extern bool map_visible,diff_depth_ok;
 extern sf::RenderWindow mini_map;
-//extern unsigned char univ.out[96][96],univ.out.out_e[96][96],univ.out.sfx[64][64];
-//extern stored_items_list_type stored_items[3];
-//extern stored_town_maps_type maps;
-//extern stored_outdoor_maps_type o_maps;
-//extern big_tr_type t_d;
-//extern short town_size[3];
-//extern setup_save_type setup_save;
-//extern stored_town_maps_type town_maps;
 
 extern location hor_vert_place[14];
 extern location diag_place[14];
 extern location golem_m_locs[16];
 extern cUniverse univ;
-//extern piles_of_stuff_dumping_type *data_store;
 extern sf::Texture anim_gworld;
 extern sf::Texture terrain_gworld[NUM_TER_SHEETS];
 extern cCustomGraphics spec_scen_g;
@@ -117,7 +98,6 @@ void force_town_enter(short which_town,location where_start) {
 	town_force_loc = where_start;
 }
 
-////
 //short entry_dir; // if 9, go to forced
 void start_town_mode(short which_town, short entry_dir) {
 	short i,m,n;
@@ -184,8 +164,6 @@ void start_town_mode(short which_town, short entry_dir) {
 	// Set up map, using stored map
 	for(i = 0; i < univ.town->max_dim(); i++)
 		for(j = 0; j < univ.town->max_dim(); j++) {
-			//univ.town.fields[i][j] = 0;
-			//univ.out.sfx[i][j] = 0;
 			if(univ.town_maps[univ.town.num][i / 8][j] & (char)(s_pow(2,i % 8)))
 				make_explored(i,j);
 			
@@ -398,7 +376,6 @@ void start_town_mode(short which_town, short entry_dir) {
 				univ.town.set_fire_barr(j,k,false);
 				univ.town.set_force_barr(j,k,false);
 				univ.town.set_quickfire(j,k,false);
-				//univ.out.misc_i[j][k] = univ.out.misc_i[j][k] & 3;
 			}
 			if(univ.town.is_quickfire(j,k))
 				univ.town.quickfire_present = true;
@@ -406,7 +383,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	// Set up items, maybe place items already there
 	for(i = 0; i < NUM_TOWN_ITEMS; i++)
-		univ.town.items[i] = cItemRec();
+		univ.town.items[i] = cItem();
 	
 	for(j = 0; j < 3; j++)
 		if(univ.scenario.store_item_towns[j] == town_number) {
@@ -501,7 +478,6 @@ void start_town_mode(short which_town, short entry_dir) {
 	univ.town.set_fire_barr(univ.town.p_loc.x,univ.town.p_loc.y,false);
 	univ.town.set_force_barr(univ.town.p_loc.x,univ.town.p_loc.y,false);
 	univ.town.set_quickfire(univ.town.p_loc.x,univ.town.p_loc.y,false);
-	//univ.out.misc_i[univ.town.p_loc.x][univ.town.p_loc.y] = univ.out.misc_i[univ.town.p_loc.x][univ.town.p_loc.y] & 3;
 	update_explored(univ.town.p_loc);
 	
 	// If a PC dead, drop his items
@@ -517,7 +493,7 @@ void start_town_mode(short which_town, short entry_dir) {
 		univ.town.monst[i].targ_loc.y = 0;
 	}
 	
-	//// check horses
+	// check horses
 	for(i = 0; i < 30; i++) {
 		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
 			if(!univ.party.boats[i].exists) {
@@ -589,14 +565,12 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		}
 		
 		// Now store map
-		//if(univ.town.town_num < 120) {
 		for(i = 0; i < univ.town->max_dim(); i++)
 			for(j = 0; j < univ.town->max_dim(); j++)
 				if(is_explored(i,j)) {
 					univ.town_maps[univ.town.num][i / 8][j] = univ.town_maps[univ.town.num][i / 8][j] |
 					(char) (s_pow(2,i % 8));
 				}
-		//}
 		
 		to_return = univ.party.p_loc;
 		
@@ -898,8 +872,6 @@ void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/) {
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++) {
 			univ.town.fields[i][j] = 0;
-			//univ.out.misc_i[i][j] = 0;
-			//univ.out.sfx[i][j] = 0;
 			if((j <= 8) || (j >= 35) || (i <= 8) || (i >= 35))
 				univ.town->terrain(i,j) = 90;
 			else univ.town->terrain(i,j) = ter_base[ter_type];
@@ -1321,7 +1293,6 @@ void draw_map(bool need_refresh) {
 			case 2:
 				view_rect = tiny_rect;
 				redraw_rect = view_rect;
-				//InsetRect(&area_to_draw_to,48,48);
 				total_size = 32;
 				break;
 		}

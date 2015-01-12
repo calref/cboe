@@ -2,8 +2,6 @@
 #include <iostream>
 #include <fstream>
 
-//#include "item.h"
-
 #include "boe.global.h"
 #include "classes.h"
 #include "boe.fileio.h"
@@ -59,7 +57,6 @@ char start_name[256];
 short start_volume,data_volume;
 extern fs::path progDir;
 
-//template_town_type town_template;
 cCustomGraphics spec_scen_g;
 
 extern bool pc_gworld_loaded;
@@ -114,7 +111,6 @@ void finish_load_party(){
 	// graphics wise
 	end_startup();
 	
-	//end_anim();
 	overall_mode = town_restore ? MODE_TOWN : MODE_OUTDOORS;
 	stat_screen_mode = 0;
 	build_outdoors();
@@ -496,6 +492,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 	long len;
 	bool mac_header = true;
 	
+	// TODO: This will only accept old-format scenarios!
 	// TODO: Rewrite using ifstream, or maybe ifstream_buf
 	FILE* file_id = fopen(file.string().c_str(), "rb");
 	if(file_id == NULL) {
@@ -519,8 +516,6 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 			mac_header = false;
 		}
 	if(!file_ok) {
-		//scen_headers[header_entry].flag1 = 0;
-		//scen_headers.pop_back();
 		fclose(file_id);
 		return false;
 	}

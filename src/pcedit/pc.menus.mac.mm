@@ -7,9 +7,9 @@
 //
 
 #include "pc.menus.h"
+#include "universe.h" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include "item.h"
-#include "universe.h"
 
 #ifndef __APPLE__
 #error pc.menus.mm is Mac-specific code; try compiling pc.menus.win.cpp instead
@@ -30,7 +30,7 @@ MenuHandle apple_menu, file_menu, reg_menu, extra_menu, items_menu[4];
 
 @interface ItemWrapper : NSObject
 +(id) withItem:(int) theItem;
--(cItemRec&) item;
+-(class cItem&) item;
 -(void) setItem:(int) theItem;
 @end
 
@@ -106,7 +106,7 @@ void menu_activate() {
 
 void update_item_menu() {
 	id targ = [[file_menu itemAtIndex: 0] target];
-	cItemRec(& item_list)[400] = univ.scenario.scen_items;
+	auto& item_list = univ.scenario.scen_items;
 	for(int j = 0; j < 4; j++){
 		[items_menu[j] removeAllItems];
 		if(!scen_items_loaded) {
@@ -126,7 +126,7 @@ void update_item_menu() {
 @implementation MenuHandler
 -(void) itemMenu:(id) sender {
 	ItemWrapper* item = [sender representedObject];
-	cItemRec& theItem = [item item];
+	class cItem& theItem = [item item];
 	(void) theItem; // Suppress "unused parameter" warning
 	for(int i = 0; i < 4; i++) {
 		int whichItem = [items_menu[i] indexOfItem: sender];
@@ -155,7 +155,7 @@ void update_item_menu() {
 	self->itemID = theItem;
 }
 
--(cItemRec&) item {
+-(class cItem&) item {
 	return univ.scenario.scen_items[self->itemID];
 }
 

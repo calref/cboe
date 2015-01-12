@@ -6,7 +6,6 @@
 #include "classes.h"
 #include "graphtool.hpp"
 #include "scen.graphics.h"
-//#include "itemlist.h"
 #include "scen.core.h"
 #include "scen.keydlgs.h"
 #include "scen.townout.h"
@@ -19,7 +18,7 @@
 #include "field.hpp"
 #include "restypes.hpp"
 
-extern short cen_x, cen_y,/* overall_mode,*/cur_town;
+extern short cen_x, cen_y,cur_town;
 extern bool mouse_button_held;
 extern short cur_viewing_mode;
 extern cTown* town;
@@ -29,7 +28,6 @@ extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cSpecial null_spec_node;
 extern cSpeech null_talk_node;
-//extern piles_of_stuff_dumping_type *data_store;
 extern location cur_out;
 extern short start_volume, start_dir;
 
@@ -694,7 +692,7 @@ cMonster edit_monst_abil(cMonster starting_record,short which_monst) {
 	return store_monst;
 }
 
-static void put_item_info_in_dlog(cDialog& me, cItemRec& store_item, short which_item) {
+static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_item) {
 	me["num"].setTextToNum(which_item);
 	me["full"].setText(store_item.full_name);
 	me["short"].setText(store_item.name);
@@ -792,7 +790,7 @@ static void put_item_info_in_dlog(cDialog& me, cItemRec& store_item, short which
 	}
 	
 	cLedGroup& weapType = dynamic_cast<cLedGroup&>(me["melee-type"]);
-	switch(store_item.type) {
+	switch(store_item.weap_type) {
 		case eSkill::INVALID:
 		case eSkill::EDGED_WEAPONS:
 			weapType.setSelected("edge");
@@ -816,7 +814,7 @@ static void put_item_info_in_dlog(cDialog& me, cItemRec& store_item, short which
 	me["class"].setTextToNum(store_item.special_class);
 }
 
-static bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) {
+static bool save_item_info(cDialog& me, cItem& store_item, short which_item) {
 	store_item.full_name = me["full"].getText();
 	store_item.name = me["short"].getText();
 	store_item.graphic_num = me["picnum"].getTextAsNum();
@@ -850,12 +848,12 @@ static bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) 
 	else if(variety == "missile") store_item.variety = eItemType::MISSILE_NO_AMMO;
 	else if(variety == "unused1") store_item.variety = eItemType::UNUSED1;
 	else if(variety == "unused2") store_item.variety = eItemType::UNUSED2;
-	store_item.type = eSkill::INVALID;
+	store_item.weap_type = eSkill::INVALID;
 	if(store_item.variety == eItemType::ONE_HANDED || store_item.variety == eItemType::TWO_HANDED) {
 		std::string weapType = dynamic_cast<cLedGroup&>(me["melee-type"]).getSelected();
-		if(weapType == "edge") store_item.type = eSkill::EDGED_WEAPONS;
-		else if(weapType == "bash") store_item.type = eSkill::BASHING_WEAPONS;
-		else if(weapType == "pole") store_item.type = eSkill::POLE_WEAPONS;
+		if(weapType == "edge") store_item.weap_type = eSkill::EDGED_WEAPONS;
+		else if(weapType == "bash") store_item.weap_type = eSkill::BASHING_WEAPONS;
+		else if(weapType == "pole") store_item.weap_type = eSkill::POLE_WEAPONS;
 	}
 	
 	store_item.item_level = me["level"].getTextAsNum();
@@ -888,9 +886,9 @@ static bool save_item_info(cDialog& me, cItemRec& store_item, short which_item) 
 	return true;
 }
 
-static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItemRec& store_item, short& store_which_item) {
+static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem& store_item, short& store_which_item) {
 	short i;
-	cItemRec temp_item;
+	cItem temp_item;
 	
 	if(item_hit == "cancel") {
 		me.toast(false);
@@ -931,7 +929,7 @@ static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem
 
 short edit_item_type(short which_item) {
 	using namespace std::placeholders;
-	cItemRec store_item = scenario.scen_items[which_item];
+	cItem store_item = scenario.scen_items[which_item];
 	
 	cDialog item_dlg("edit-item");
 	item_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 50, "Item Level"));
@@ -951,7 +949,7 @@ short edit_item_type(short which_item) {
 	return 0;
 }
 
-static void put_item_abils_in_dlog(cDialog& me, cItemRec& store_item, short which_item) {
+static void put_item_abils_in_dlog(cDialog& me, cItem& store_item, short which_item) {
 	
 	me["num"].setTextToNum(which_item);
 	me["name"].setText(store_item.full_name.c_str());
@@ -968,7 +966,7 @@ static void put_item_abils_in_dlog(cDialog& me, cItemRec& store_item, short whic
 	dynamic_cast<cLed&>(me["conceal"]).setState(store_item.concealed ? led_red : led_off);
 }
 
-static bool save_item_abils(cDialog& me, cItemRec& store_item) {
+static bool save_item_abils(cDialog& me, cItem& store_item) {
 	store_item.magic_use_type = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["use-type"]).getSelected().substr(3));
 	store_item.treas_class = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["treasure"]).getSelected().substr(4));
 	store_item.ability_strength = me["str"].getTextAsNum();
@@ -981,7 +979,7 @@ static bool save_item_abils(cDialog& me, cItemRec& store_item) {
 	return true;
 }
 
-static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItemRec& store_item, short which_item) {
+static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem& store_item, short which_item) {
 	short i;
 	
 	if(item_hit == "cancel") {
@@ -1066,10 +1064,10 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 	return true;
 }
 
-cItemRec edit_item_abil(cItemRec starting_record,short which_item) {
+cItem edit_item_abil(cItem starting_record,short which_item) {
 	using namespace std::placeholders;
 	
-	cItemRec store_item = starting_record;
+	cItem store_item = starting_record;
 	
 	cDialog item_dlg("edit-item-abils");
 	if(store_item.ability != eItemAbil::SUMMONING && store_item.ability != eItemAbil::MASS_SUMMONING) {
@@ -1661,7 +1659,6 @@ static bool set_starting_loc_filter(cDialog& me, std::string, eKeyMod) {
 
 void set_starting_loc() {
 	using namespace std::placeholders;
-	// ignore parent in Mac version
 	
 	cDialog loc_dlg("set-start-loc");
 	loc_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &loc_dlg, false));

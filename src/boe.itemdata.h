@@ -4,22 +4,21 @@
 
 #include "item.h"
 
-cItemRec get_stored_item(short which);
-cItemRec get_food();
-cItemRec	get_weapon(short loot);
-cItemRec	get_armor(short loot);
-cItemRec get_helm(short loot);
-cItemRec get_gloves(short loot);
-cItemRec get_boots(short loot);
-cItemRec	get_shield(short loot);
-cItemRec	get_potion(short loot);
-cItemRec	get_scroll(short loot);
-cItemRec	get_missile(short loot);
-cItemRec	get_poison(short loot);
-cItemRec get_wand(short loot);
-cItemRec get_ring(short loot);
-cItemRec get_necklace(short loot);
-//item_record_type convert_item (short_item_record_type s_item);
-cItemRec pull_item_of_type(unsigned int loot_max,short min_val,short max_val,eItemType t1, eItemType t2 = eItemType::NO_ITEM, eItemType t3 = eItemType::NO_ITEM);
+cItem get_stored_item(short which);
+cItem get_food();
+cItem get_weapon(short loot);
+cItem get_armor(short loot);
+cItem get_helm(short loot);
+cItem get_gloves(short loot);
+cItem get_boots(short loot);
+cItem get_shield(short loot);
+cItem get_potion(short loot);
+cItem get_scroll(short loot);
+cItem get_missile(short loot);
+cItem get_poison(short loot);
+cItem get_wand(short loot);
+cItem get_ring(short loot);
+cItem get_necklace(short loot);
+cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,eItemType t1, eItemType t2 = eItemType::NO_ITEM, eItemType t3 = eItemType::NO_ITEM);
 
 #endif

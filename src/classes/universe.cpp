@@ -723,35 +723,6 @@ bool cCurTown::set_force_cage(short x, short y, bool b){
 	return true;
 }
 
-//bool cCurTown::set_trim(short x, short y, char t, bool b){
-//	unsigned char bit = 1 << t;
-//	if(b){
-//		switch(t){
-//			case 0:
-//				set_trim(x,y,1,false);
-//				break;
-//			case 1:
-//				if(!is_trim(x,y,3)) break;
-//				set_trim(x,y,3,false);
-//				set_trim(x,y,5,false);
-//				break;
-//			case 2:
-//				set_trim(x,y,1,false);
-//				set_trim(x,y,3,false);
-//				break;
-//			case 3:
-//				if(!is_trim(x,y,1)) break;
-//				set_trim(x,y,3,false);
-//				set_trim(x,y,5,false);
-//				break;
-//			case 6:
-//				set_trim(x,y,5,false);
-//				break;
-//		}
-//		trim[x][y] |= bit;
-//	}else trim[x][y] &= ~bit;
-//}
-
 // TODO: This seems to be wrong; impassable implies "blocks movement", which two other blockages also do
 bool cCurTown::is_impassable(short i,short  j) {
 	ter_num_t ter;
@@ -898,7 +869,7 @@ void cUniverse::check_monst(cMonster& monst) {
 	}
 }
 
-void cUniverse::check_item(cItemRec& item) {
+void cUniverse::check_item(cItem& item) {
 	if(item.variety == eItemType::NO_ITEM) return;
 	if(item.graphic_num >= 10000)
 		used_graphics.insert(item.graphic_num - 10000);
@@ -1008,7 +979,7 @@ void cUniverse::exportGraphics() {
 
 void cUniverse::exportSummons() {
 	std::set<m_num_t> used_monsters, need_monsters;
-	std::map<m_num_t, update_info<cItemRec>> update_items;
+	std::map<m_num_t, update_info<cItem>> update_items;
 	for(int i = 0; i < 6; i++) {
 		if(party[i].main_status == eMainStatus::ABSENT)
 			continue;

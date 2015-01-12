@@ -1,5 +1,4 @@
 
-//#include <cMemory>
 #include <iostream>
 #include <cstring>
 #include "pc.global.h"
@@ -35,7 +34,6 @@ rectangle pc_race_rect; //Holds current pc's race
 rectangle edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
 
 short current_active_pc = 0;
-//short dialog_answer;
 
 /* Mac stuff globals */
 bool All_Done = false,diff_depth_ok = false;
@@ -46,26 +44,7 @@ fs::path file_in_mem;
 bool party_in_scen = false;
 bool scen_items_loaded = false;
 
-/* Adventure globals */
-//party_record_type party;
-//outdoor_record_type outdoors[2][2];
-//current_town_type c_town;
-//big_tr_type t_d;
-//town_item_list	t_i;
-//unsigned char out[96][96],out_e[96][96];
-//setup_save_type setup_save;
-//unsigned char misc_i[64][64],sfx[64][64];
-//unsigned char template_terrain[64][64];
-
 short store_flags[3];
-
-//town_record_type anim_town;
-//tiny_tr_type anim_t_d;
-
-//stored_items_list_type stored_items[3];
-//stored_town_maps_type maps;
-//stored_town_maps_type town_maps;
-//stored_outdoor_maps_type o_maps;
 
 /* Prototypes */
 int main(int argc, char* argv[]);
@@ -76,16 +55,10 @@ void Handle_Update();
 void Mouse_Pressed();
 bool verify_restore_quit(bool mode);
 void set_up_apple_events();
-//item_record_type convert_item (short_item_record_type s_item);
 extern bool cur_scen_is_mac;
 extern fs::path progDir;
-// File io
 short specials_res_id;
 char start_name[256];
-
-//
-//	Main body of program Exile
-//
 
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
 int main(int /*argc*/, char* argv[]) {
@@ -121,13 +94,6 @@ int main(int /*argc*/, char* argv[]) {
 	}
 }
 
-
-
-//
-//	Initialize everything for the program, make sure we can run
-//
-
-//MW specified argument and return type.
 void Initialize(void) {
 	
 	check_for_intel();
@@ -138,16 +104,10 @@ void Initialize(void) {
 	//	and date into the seed.  Since it is always incrementing the starting seed
 	//	will always be different.  Don’t for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
-	//
-	//GetDateTime(&randSeed);
-    //  SetQDGlobalsRandomSeed((long)randSeed);
 	srand(time(NULL));
 	
-	//
 	//	Make a new window for drawing in, and it must be a color window.
 	//	The window is full screen size, made smaller to make it more visible.
-	//
-	// Size and style obtained from WIND resource #128
 	int height = 440 + getMenubarHeight();
 	mainPtr.create(sf::VideoMode(590, height), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
 	init_menubar();
@@ -355,71 +315,13 @@ void handle_menu_choice(eMenu item_hit) {
 	}
 }
 
-//item_record_type convert_item (short_item_record_type s_item) {
-//	item_record_type i;
-//	location l = {0,0};
-//	short temp_val;
-//
-//	i.variety = (short) s_item.variety;
-//	i.item_level = (short) s_item.item_level;
-//	i.awkward = (short) s_item.awkward;
-//	i.bonus = (short) s_item.bonus;
-//	i.protection = (short) s_item.protection;
-//	i.charges = (short) s_item.charges;
-//	i.type = (short) s_item.type;
-//	i.graphic_num = (short) s_item.graphic_num;
-//	if(i.graphic_num >= 25)
-//		i.graphic_num += 20;
-//	i.ability = (short) s_item.real_abil;
-//	i.type_flag = (short) s_item.type_flag;
-//	i.is_special = (short) s_item.is_special;
-//	i.value = (short) s_item.value;
-//	i.weight = s_item.weight;
-//	i.special_class = 0;
-//	i.item_loc = l;
-//	strcpy((char *)i.full_name,(char *)s_item.full_name);
-//	strcpy((char *)i.name,(char *)s_item.name);
-//
-//	if(i.charges > 0)
-//		temp_val = i.value * i.charges;
-//		else temp_val = i.value;
-//	if(temp_val >= 15)
-//		i.treas_class = 1;
-//	if(temp_val >= 100)
-//		i.treas_class = 2;
-//	if(temp_val >= 900)
-//		i.treas_class = 3;
-//	if(temp_val >= 2400)
-//		i.treas_class = 4;
-//
-//	i.magic_use_type = s_item.magic_use_type;
-//	i.ability_strength = s_item.ability_strength;
-//	i.reserved1 = 0;
-//	i.reserved2 = 0;
-//	i.item_properties = 0;
-//	if(s_item.identified)
-//		i.item_properties = i.item_properties | 1;
-//	if((s_item.ability == 14) || (s_item.ability == 129) || (s_item.ability == 95))
-//		i.item_properties = i.item_properties | 16;
-//	if(s_item.magic)
-//		i.item_properties = i.item_properties | 4;
-//
-//	return i;
-//}
-
 // TODO: Let this take the item directly instead of the index
 void handle_item_menu(int item_hit) {
-	cItemRec store_i;
+	cItem store_i;
 	store_i = univ.scenario.scen_items[item_hit];
 	store_i.ident = true;
 	give_to_pc(current_active_pc,store_i,false);
 }
-
-//void set_cursor(CursHandle which_curs) {
-//	HLock ((Handle) which_curs);
-//	SetCursor (*which_curs);
-//	HUnlock((Handle) which_curs);
-//}
 
 //short mode; // 0 - quit  1- restore
 bool verify_restore_quit(bool mode) {
@@ -436,73 +338,3 @@ bool verify_restore_quit(bool mode) {
 	save_party(file_in_mem, univ);
 	return true;
 }
-
-//pascal bool cd_event_filter (DialogPtr hDlg, EventRecord *event, short *dummy_item_hit) {
-//	char chr,chr2;
-//	short the_type,wind_hit,item_hit;
-//	Handle the_handle = NULL;
-//	rectangle the_rect,button_rect;
-//	location the_point;
-//	CWindowPtr w;
-//	RgnHandle updateRgn;
-//
-//	dummy_item_hit = 0;
-//
-//	switch(event->what) {
-//		case updateEvt:
-//			w = GetDialogWindow(hDlg);
-//			updateRgn = NewRgn();
-//			GetWindowRegion(w, kWindowUpdateRgn, updateRgn);
-//			if(EmptyRgn(updateRgn)) {
-//				return true;
-//			}
-//			BeginUpdate(GetDialogWindow(hDlg));
-//			cd_redraw(hDlg);
-//			EndUpdate(GetDialogWindow(hDlg));
-//			DrawDialog(hDlg);
-//			return true;
-//			break;
-//
-//		case keyDown:
-//			chr = event->message & charCodeMask;
-//			chr2 = (char) ((event->message & keyCodeMask) >> 8);
-//			switch(chr2) {
-//				case 126: chr = 22; break;
-//				case 124: chr = 21; break;
-//				case 123: chr = 20; break;
-//				case 125: chr = 23; break;
-//				case 53: chr = 24; break;
-//				case 36: chr = 31; break;
-//				case 76: chr = 31; break;
-//			}
-//			// specials ... 20 - <-  21 - ->  22 up  23 down  24 esc
-//			// 25-30  ctrl 1-6  31 - return
-//
-//			wind_hit = cd_process_keystroke(hDlg,chr,&item_hit);
-//			break;
-//
-//		case mouseDown:
-//			the_point = event->where;
-//			GlobalToLocal(&the_point);
-//			wind_hit = cd_process_click(hDlg,the_point, event->modifiers,&item_hit);
-//			break;
-//
-//		default: wind_hit = -1; break;
-//	}
-//	switch(wind_hit) {
-//		case -1: break;
-//
-//		case 917: edit_day_event_filter(item_hit); break;
-//		case 970: case 971: case 972: case 973: display_strings_event_filter(item_hit); break;
-//		case 991: display_pc_event_filter(item_hit); break;
-//		case 996: display_alchemy_event_filter(item_hit); break;
-//		case 1010: spend_xp_event_filter (item_hit); break;
-//		case 1012: case 947: edit_gold_or_food_event_filter (item_hit); break;
-//		case 1013: pick_race_abil_event_filter (item_hit); break;
-//		case 1018: select_pc_event_filter (item_hit); break;
-//		case 1024: edit_xp_event_filter (item_hit); break;
-//		case 1073: give_reg_info_event_filter (item_hit); break;
-//		default: fancy_choice_dialog_event_filter (item_hit); break;
-//	}
-//	return(wind_hit != -1);
-//}

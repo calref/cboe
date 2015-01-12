@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include <memory>
 #include <set>
+#include <array>
 #include <boost/filesystem/path.hpp>
 #include "party.h"
 #include "creatlist.h"
@@ -44,15 +45,13 @@ public:
 	// formerly current_town_type
 	short num; // 200 if outdoors (my addition)
 	short difficulty;
-	//char explored[64][64];
 	bool hostile;
 	cPopulation monst;
 	bool in_boat; // is this really needed?
 	location p_loc;
 	
-	cItemRec items[115]; // formerly town_item_list type
+	std::array<cItem,115> items; // formerly town_item_list type
 	
-	//ter_num_t template_terrain[64][64];
 	unsigned long fields[64][64];
 	
 	void append(legacy::current_town_type& old);
@@ -155,13 +154,13 @@ enum eAmbientSound {
 
 class cUniverse{
 	template<typename T> using update_info = std::set<T*>;
-	std::map<pic_num_t, update_info<cItemRec>> update_items;
+	std::map<pic_num_t, update_info<cItem>> update_items;
 	std::map<pic_num_t, update_info<cMonster>> update_monsters;
 	std::map<pic_num_t, update_info<cPlayer>> update_pcs;
 	std::set<pic_num_t> used_graphics;
 	pic_num_t addGraphic(pic_num_t pic, ePicType type);
 	void check_monst(cMonster& monst);
-	void check_item(cItemRec& item);
+	void check_item(cItem& item);
 public:
 	void exportSummons();
 	void exportGraphics();

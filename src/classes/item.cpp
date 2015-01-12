@@ -15,8 +15,7 @@
 #include "boe.consts.h" // TODO: If this is needed here, maybe it shouldn't be in the "boe" namespace
 #include "oldstructs.h"
 
-cItemRec k;
-unsigned char cItemRec::rec_treas_class() const {
+unsigned char cItem::rec_treas_class() const {
 	short tmp = value;
 	if(charges > 0) tmp *= charges;
 	if(tmp >=   15) return 1;
@@ -26,74 +25,7 @@ unsigned char cItemRec::rec_treas_class() const {
 	return 0;
 }
 
-//bool cItemRec::is_ident() const {
-//	return item_properties & 1;
-//}
-//
-//bool cItemRec::is_property() const {
-//	return item_properties & 2;
-//}
-//
-//bool cItemRec::is_magic() const {
-//	return item_properties & 4;
-//}
-//
-//bool cItemRec::is_contained() const {
-//	return item_properties & 8;
-//}
-//
-//bool cItemRec::is_cursed() const {
-//	return item_properties & 16;
-//}
-//
-//bool cItemRec::is_concealed() const {
-//	return item_properties & 32;
-//}
-//
-//bool cItemRec::is_enchanted() const {
-//	return item_properties & 64;
-//}
-//
-//// Set bit to 1: a |= b
-//// Set bit to 0: a &= ~b
-//// Toggle bit:   a ^= b
-//
-//void cItemRec::set_ident(bool b) {
-//	if(b) item_properties |=  1;
-//	else  item_properties &= ~1;
-//}
-//
-//void cItemRec::set_property(bool b) {
-//	if(b) item_properties |=  2;
-//	else  item_properties &= ~2;
-//}
-//
-//void cItemRec::set_magic(bool b) {
-//	if(b) item_properties |=  4;
-//	else  item_properties &= ~4;
-//}
-//
-//void cItemRec::set_contained(bool b) {
-//	if(b) item_properties |=  8;
-//	else  item_properties &= ~8;
-//}
-//
-//void cItemRec::set_cursed(bool b) {
-//	if(b) item_properties |=  16;
-//	else  item_properties &= ~16;
-//}
-//
-//void cItemRec::set_concealed(bool b) {
-//	if(b) item_properties |=  32;
-//	else  item_properties &= ~32;
-//}
-//
-//void cItemRec::set_enchanted(bool b) {
-//	if(b) item_properties |=  64;
-//	else  item_properties &= ~64;
-//}
-
-short cItemRec::item_weight() const {
+short cItem::item_weight() const {
 	short n = charges, w = weight;
 	if(variety == eItemType::NO_ITEM)
 		return 0;
@@ -104,14 +36,14 @@ short cItemRec::item_weight() const {
 	return w;
 }
 
-cItemRec::cItemRec(){
+cItem::cItem(){
 	variety = eItemType::NO_ITEM;
 	item_level = 0;
 	awkward = 0;
 	bonus = 0;
 	protection = 0;
 	charges = 0;
-	type = eSkill::INVALID;
+	weap_type = eSkill::INVALID;
 	magic_use_type = 0;
 	graphic_num = 0;
 	ability = eItemAbil::NONE;
@@ -132,7 +64,7 @@ cItemRec::cItemRec(){
 	reserved2 = 0;
 }
 
-cItemRec::cItemRec(long preset){
+cItem::cItem(long preset){
 	ability = eItemAbil::NONE;
 	ability_strength = 0;
 	type_flag = 0;
@@ -153,7 +85,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 1;
 			protection = 0;
 			charges = 0;
-			type = eSkill::EDGED_WEAPONS;
+			weap_type = eSkill::EDGED_WEAPONS;
 			magic_use_type = 0;
 			graphic_num = 55;
 			value = 2;
@@ -169,7 +101,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eSkill::INVALID;
+			weap_type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 75;
 			value = 2;
@@ -185,7 +117,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eSkill::INVALID;
+			weap_type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 10;
 			value = 15;
@@ -201,7 +133,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 12;
-			type = eSkill::INVALID;
+			weap_type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 57;
 			value = 1;
@@ -217,7 +149,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eSkill::POLE_WEAPONS;
+			weap_type = eSkill::POLE_WEAPONS;
 			magic_use_type = 0;
 			graphic_num = 4;
 			value = 10;
@@ -233,7 +165,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eSkill::INVALID;
+			weap_type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 76;
 			value = 6;
@@ -249,7 +181,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eSkill::INVALID;
+			weap_type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 72;
 			value = 0;
@@ -265,7 +197,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			type = eSkill::INVALID;
+			weap_type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 63;
 			value = 0;
@@ -281,7 +213,7 @@ cItemRec::cItemRec(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 1;
-			type = eSkill::INVALID;
+			weap_type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 60;
 			value = 0;
@@ -294,7 +226,7 @@ cItemRec::cItemRec(long preset){
 	}
 }
 
-void cItemRec::append(legacy::item_record_type& old){
+void cItem::append(legacy::item_record_type& old){
 	variety = (eItemType) old.variety;
 	item_level = old.item_level;
 	awkward = old.awkward;
@@ -302,8 +234,8 @@ void cItemRec::append(legacy::item_record_type& old){
 	protection = old.protection;
 	charges = old.charges;
 	if(old.type >= 3 && old.type <= 5)
-		type = eSkill(old.type);
-	else type = eSkill::INVALID;
+		weap_type = eSkill(old.type);
+	else weap_type = eSkill::INVALID;
 	magic_use_type = old.magic_use_type;
 	graphic_num = old.graphic_num;
 	if(graphic_num >= 150) // custom item graphic
@@ -336,14 +268,14 @@ void cItemRec::append(legacy::item_record_type& old){
 	reserved2 = old.reserved2;
 }
 
-void cItemRec::writeTo(std::ostream& file, std::string prefix) const {
+void cItem::writeTo(std::ostream& file, std::string prefix) const {
 	file << prefix << "VARIETY " << variety << '\n';
 	file << prefix << "LEVEL " << item_level << '\n';
 	file << prefix << "AWKWARD " << awkward << '\n';
 	file << prefix << "BONUS " << bonus << '\n';
 	file << prefix << "PROT " << protection << '\n';
 	file << prefix << "CHARGES " << charges << '\n';
-	file << prefix << "WEAPON " << type << '\n';
+	file << prefix << "WEAPON " << weap_type << '\n';
 	file << prefix << "USE " << magic_use_type << '\n';
 	file << prefix << "ICON " << graphic_num << '\n';
 	file << prefix << "ABILITY " << ability << '\n';
@@ -367,7 +299,7 @@ void cItemRec::writeTo(std::ostream& file, std::string prefix) const {
 	if(unsellable) file << prefix << "UNSELLABLE\n";
 }
 
-void cItemRec::readFrom(std::istream& sin){
+void cItem::readFrom(std::istream& sin){
 	while(sin) {
 		std::string cur;
 		getline(sin, cur);
@@ -379,7 +311,7 @@ void cItemRec::readFrom(std::istream& sin){
 		else if(cur == "BONUS") sin >> bonus;
 		else if(cur == "PROT") sin >> protection;
 		else if(cur == "CHARGES") sin >> charges;
-		else if(cur == "WEAPON") sin >> type;
+		else if(cur == "WEAPON") sin >> weap_type;
 		else if(cur == "USE") sin >> magic_use_type;
 		else if(cur == "ICON") sin >> graphic_num;
 		else if(cur == "ABILITY") sin >> ability;

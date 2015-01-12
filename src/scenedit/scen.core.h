@@ -5,7 +5,7 @@ short edit_ter_type(ter_num_t which_ter);
 short edit_monst_type(short which_monst);
 cMonster edit_monst_abil(cMonster starting_record,short parent_num);
 short edit_item_type(short which_item);
-cItemRec edit_item_abil(cItemRec starting_record,short parent_num);
+cItem edit_item_abil(cItem starting_record,short parent_num);
 void edit_spec_item(short which_item);
 void edit_save_rects();
 void edit_horses();

@@ -18,8 +18,6 @@
 #define	BITMAP_WIDTH	28
 #define	BITMAP_HEIGHT	36
 
-//#define	STORED_GRAPHICS	240
-
 #define	PC_WIN_UL_X	291
 #define	PC_WIN_UL_Y	5
 #define	ITEM_WIN_UL_X	291

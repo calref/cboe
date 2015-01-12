@@ -34,7 +34,6 @@ void cPlayer::append(legacy::pc_record_type old){
 	// TODO: Why are advan and exp_adj commented out?
 	for(i = 0; i < 15; i++){
 		status[(eStatus) i] = old.status[i];
-		//advan[i] = old.advan[i];
 		eTrait trait = eTrait(i);
 		traits[trait] = old.traits[i];
 	}
@@ -49,7 +48,6 @@ void cPlayer::append(legacy::pc_record_type old){
 	which_graphic = old.which_graphic;
 	weap_poisoned = old.weap_poisoned;
 	race = (eRace) old.race;
-	//exp_adj = old.exp_adj;
 	direction = old.direction;
 }
 
@@ -93,7 +91,7 @@ cPlayer::cPlayer(){
 	skill_pts = 60; 
 	level = 1;
 	for(i = 0; i < 24; i++)
-		items[i] = cItemRec();
+		items[i] = cItem();
 	for(i = 0; i < 24; i++)
 		equip[i] = false;
 	
@@ -105,7 +103,6 @@ cPlayer::cPlayer(){
 	weap_poisoned = 24;
 		
 	race = eRace::HUMAN;
-	//exp_adj = 100;
 	direction = 0;
 }
 
@@ -148,7 +145,7 @@ cPlayer::cPlayer(long key,short slot){
 		skill_pts = 60; 
 		level = 1;
 		for(i = 0; i < 24; i++)
-			items[i] = cItemRec();
+			items[i] = cItem();
 		for(i = 0; i < 24; i++)
 			equip[i] = false;
 		
@@ -166,7 +163,6 @@ cPlayer::cPlayer(long key,short slot){
 		}		
 		
 		race = eRace::HUMAN;
-		//exp_adj = 100;
 		direction = 0;
 	}else if(key == 'dflt'){
 		// TODO: The duplication of std::map<eSkill,short> shouldn't be needed here
@@ -245,7 +241,7 @@ cPlayer::cPlayer(long key,short slot){
 		level = 1;
 		
 		for(i = 0; i < 24; i++)
-			items[i] = cItemRec();
+			items[i] = cItem();
 		for(i = 0; i < 24; i++)
 			equip[i] = false;
 		cur_sp = pc_sp[slot]; 
@@ -257,11 +253,9 @@ cPlayer::cPlayer(long key,short slot){
 		for(i = 0; i < 15; i++) {
 			eTrait trait = eTrait(i);
 			traits[trait] = pc_t[slot].count(trait);
-			//advan[i] = false;
 		}
 		
 		race = (eRace) pc_race[slot];
-		//exp_adj = 100;
 		direction = 0;
 		
 		which_graphic = pc_graphics[slot];

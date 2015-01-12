@@ -21,10 +21,8 @@
 extern cScenario scenario;
 
 extern cTown* town;
-extern short cur_town;//overall_mode,given_password,user_given_password;
+extern short cur_town;
 extern location cur_out;
-//extern piles_of_stuff_dumping_type *data_store;
-//extern cSpeech talking;
 extern cOutdoors* current_terrain;
 extern bool change_made;
 extern cCustomGraphics spec_scen_g;

@@ -151,16 +151,14 @@ enum eTrapType {
 	TRAP_DISEASE_ALL = 12,
 };
 
-//stuff used in blxactions.c
-
-//Startup button rects (also used in startup.c)
+// Startup button rects
 #define STARTBTN_LOAD		0
 #define STARTBTN_NEW		1
 #define STARTBTN_ORDER		2
 #define STARTBTN_JOIN		3
 #define STARTBTN_CUSTOM		4
 
-//Shop rects
+// Shop rects
 #define SHOPRECT_WHOLE_AREA		0
 #define SHOPRECT_ACTIVE_AREA	1
 #define SHOPRECT_GRAPHIC		2

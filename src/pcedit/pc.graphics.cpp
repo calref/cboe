@@ -21,15 +21,9 @@ extern fs::path file_in_mem;
 extern short store_flags[3];
 extern sf::Texture button_num_gworld,bg_gworld;
 extern short current_active_pc;
-//extern bool ed_reg;
-
-//extern long register_flag,stored_key;
-//extern long ed_flag,ed_key;
 
 sf::Texture title_gworld,pc_gworld,dlogpics_gworld;
 sf::Texture buttons_gworld,invenbtn_gworld,status_gworld;
-//GWorldPtr race_dark,train_dark,items_dark,spells_dark;
-//GWorldPtr race_light,train_light,items_light,spells_light;
 rectangle whole_win_rect = {0,0,440,590};
 rectangle title_from = {0,0,70,380};
 extern rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
@@ -69,8 +63,7 @@ void init_main_buttons() {
 	
 	rectangle base_rect;
 	
-	//whole_win_rect = mainPtr->portRect;
-	//Initialize pc_info_rect in center
+	// Initialize pc_info_rect in center
 	pc_info_rect= whole_win_rect;
 	pc_info_rect.inset(100,100);
 	pc_info_rect.bottom+=52;
@@ -81,7 +74,7 @@ void init_main_buttons() {
 	name_rect.bottom = pc_info_rect.top  + 15;
 	name_rect.top = pc_info_rect.top;
 	
-	//Initialize pc_area_buttons
+	// Initialize pc_area_buttons
 	pc_area_buttons[0][0].top=pc_info_rect.top;
 	pc_area_buttons[0][0].bottom=pc_area_buttons[0][0].top + 56;
 	
@@ -105,7 +98,7 @@ void init_main_buttons() {
 		pc_area_buttons[i][2].offset(0,-1);
 		pc_area_buttons[i][3].offset(0,-2);
 	}
-	//Initialize the edit_rect buttons
+	// Initialize the edit_rect buttons
 	edit_rect[0][0].top = pc_info_rect.top;
 	for(i = 0; i < 5; i++) {
 		if(i >= 2)
@@ -124,30 +117,17 @@ void init_main_buttons() {
 		edit_rect[i][1].left = edit_rect[i][0].left + 8 + indent2;
 	}
 	
-	
-	
-//	name_rect.left = pc_info_rect.left;
-//	name_rect.right = pc_info_rect.left + (pc_info_rect.right - pc_info_rect.left)/4;
-//	name_rect.bottom = pc_info_rect.top  + 15;
-//	name_rect.top = pc_info_rect.top;
-	
-//	if(name_rect.right == name_rect.left) {
-//		SysBeep(50); SysBeep(50);
-//		}
-	//Initialize pc_race_rect
+	// Initialize pc_race_rect
 	pc_race_rect.top = pc_info_rect.top;
 	pc_race_rect.bottom = name_rect.bottom;
 	pc_race_rect.left = name_rect.right;
 	pc_race_rect.right = pc_info_rect.left + (pc_info_rect.right - pc_info_rect.left)/2;
 	
-	//initialize info_area_rect
+	// initialize info_area_rect
 	info_area_rect.top = pc_info_rect.top;
 	info_area_rect.left = pc_info_rect.left;
 	info_area_rect.right = pc_race_rect.right;
 	info_area_rect.bottom = pc_info_rect.bottom;
-/*	if(name_rect.right == name_rect.left) {
-		SysBeep(50);
-	} */
 	
 	// Initialize hp_sp_rect
 	hp_sp_rect.top = name_rect.bottom + 1;
@@ -160,10 +140,7 @@ void init_main_buttons() {
 	skill_rect.right = pc_race_rect.right;
 	skill_rect.bottom = skill_rect.top + 12;
 	
-	//if(name_rect.right == name_rect.left) {
-	//	SysBeep(50); SysBeep(50);
-	//}
-	//Initialize skills_rect
+	// Initialize skills_rect
 	base_rect.top = skill_rect.bottom + 1;
 	base_rect.left = skill_rect.left + 1;
 	base_rect.right = name_rect.right - 1;
@@ -174,12 +151,12 @@ void init_main_buttons() {
 		pc_skills_rect[i].offset((i / 10) * ((name_rect.right)-(name_rect.left)), (i % 10) * (pc_info_rect.bottom - name_rect.bottom)/30);
 	}
 	
-	//Initialize status_rect
+	// Initialize status_rect
 	status_rect.top = pc_skills_rect[9].bottom + 5;
 	status_rect.left = pc_info_rect.left + 1;
 	status_rect.right = pc_race_rect.right;
 	status_rect.bottom = status_rect.top + 12;
-	//Initialize pc_status_rect
+	// Initialize pc_status_rect
 	base_rect.top = status_rect.bottom + 1;
 	base_rect.left = status_rect.left + 1;
 	base_rect.right = name_rect.right - 1;
@@ -188,12 +165,12 @@ void init_main_buttons() {
 		pc_status_rect[i] = base_rect;
 		pc_status_rect[i].offset((i / 5) * ((name_rect.right)-(name_rect.left)), (i % 5) * (pc_info_rect.bottom - status_rect.bottom)/15);
 	}
-	//Initialize traits_rect
+	// Initialize traits_rect
 	traits_rect.top = pc_status_rect[4].bottom + 5;
 	traits_rect.left = pc_info_rect.left + 1;
 	traits_rect.right = pc_race_rect.right;
 	traits_rect.bottom = traits_rect.top + 12;
-	//Initialize pc_traits_rect
+	// Initialize pc_traits_rect
 	base_rect.top = traits_rect.bottom - 1;
 	base_rect.left = traits_rect.left + 1;
 	base_rect.right = name_rect.right - 1;
@@ -277,16 +254,11 @@ void draw_main_screen() {
 	}
 	
 	frame_dlog_rect(mainPtr,pc_info_rect); // draw the frame
-	//i = pc_info_rect.left-pc_info_rect.right;
-	//sprintf((char *)temp_str,"Width of pc_info_rect %d ",
-	//	(short) i);
-	//win_draw_string(mainPtr,pc_info_rect,temp_str,0,12);
 	
 	style.colour = sf::Color::Black;
 	dest_rect = pc_area_buttons[5][0];
 	dest_rect.right = whole_win_rect.right - 30; //What is this for? Commenting it out has no effect.
 	dest_rect.left += 60;
-	//Off0setRect(&dest_rect,0,45);
 	dest_rect.offset(0,21);
 	if(!file_in_mem.empty())
 		win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",eTextMode::WRAP,style);
@@ -328,8 +300,6 @@ void do_button_action(short /*which_pc*/,short which_button) {
 	redraw_screen();
 }
 
-//extern rectangle pc_area_buttons[6][6] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
-//extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 void draw_items() {
 	short i;
@@ -342,6 +312,7 @@ void draw_items() {
 	dest_rect.bottom += 3;
 	dest_rect.offset(0,-14);
 	
+	// TODO: Should this be reimplemented?
 	// First, draw "Fred's Items:"
 	//sprintf((char *)to_draw,"%s items:",univ.party[current_active_pc].name);
 	//TextSize(12);
@@ -367,17 +338,11 @@ void draw_items() {
 					to_draw += " (" + std::to_string(univ.party[current_active_pc].items[i].charges) + ")";
 			}
 			
-			//if(i % 2 == 0)
-			//	sprintf((char *) to_draw, "%d %d %d %d",
-			//		pc_info_rect.left,pc_info_rect.right,pc_info_rect.top,pc_info_rect.bottom);
-			//else sprintf((char *) to_draw, "%d %d %d %d",
-			//	name_rect.left,name_rect.right,name_rect.top,name_rect.bottom);
-			
 			TextStyle style;
 			style.lineHeight = 10;
 			win_draw_string(mainPtr,item_string_rects[i][0],to_draw,eTextMode::WRAP,style);
 			
-			//Draw id/drop buttons
+			// Draw id/drop buttons
 			rect_draw_some_item(invenbtn_gworld,d_from,mainPtr,item_string_rects[i][1],sf::BlendAlpha);
 			rect_draw_some_item(invenbtn_gworld,i_from,mainPtr,item_string_rects[i][2],sf::BlendAlpha);
 		}
@@ -451,7 +416,7 @@ void display_party() {
 						// draw statistics
 					case eMainStatus::ALIVE:
 						if(i == current_active_pc) {
-							//Draw in race
+							// Draw in race
 							if(univ.party[i].race == eRace::HUMAN)
 								win_draw_string(mainPtr,pc_race_rect,"Human   ",eTextMode::CENTRE,style);
 							if(univ.party[i].race == eRace::NEPHIL)
@@ -486,7 +451,7 @@ void display_party() {
 							style.lineHeight = 10;
 							//end skills
 							
-							//Write in pc Status
+							// Write in pc Status
 							style.pointSize = 10;
 							style.font = FONT_BOLD;
 							win_draw_string(mainPtr,status_rect,"Status:",eTextMode::WRAP,style);
@@ -581,7 +546,7 @@ void display_party() {
 							style.lineHeight = 10;
 							//end pc status section
 							
-							//Write in Traits
+							// Write in Traits
 							style.pointSize = 10;
 							style.font = FONT_BOLD;
 							win_draw_string(mainPtr,traits_rect,"Traits:",eTextMode::WRAP,style);

@@ -20,8 +20,6 @@ extern bool play_sounds;
 extern short current_active_pc;
 extern long stored_key;
 extern sf::RenderWindow mainPtr;
-
-extern cItemRec item_list[400];
 extern cUniverse univ;
 
 extern bool file_in_mem,party_in_scen,scen_items_loaded;

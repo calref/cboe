@@ -2,8 +2,6 @@
 #include <cmath>
 #include <queue>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -64,8 +62,7 @@ extern bool flushingInput;
 bool ghost_mode;
 rectangle startup_top;
 
-// TODO: The duplication of rectangle here shouldn't be necessary...
-cItemRec start_items[6] = {cItemRec('nife'),cItemRec('buck'),cItemRec('bow '),cItemRec('arrw'),cItemRec('pole'),cItemRec('helm')};
+cItem start_items[6] = {cItem('nife'),cItem('buck'),cItem('bow '),cItem('arrw'),cItem('pole'),cItem('helm')};
 bool item_area_button_active[8][6];
 bool pc_area_button_active[6][5];
 short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
@@ -89,22 +86,12 @@ extern bool All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going
 extern bool party_in_memory,in_scen_debug;
 
 // game info globals
-
-//extern stored_town_maps_type town_maps;
 extern sf::RenderWindow mainPtr;
-////extern party_record_type	party;
-//extern cOutdoors outdoors[2][2];
-//extern current_town_type	c_town;
-//extern big_tr_type t_d;
-//extern unsigned char out[96][96],out_e[96][96];
 extern short which_item_page[6];
 extern short store_spell_target,pc_casting;
 extern eSpell store_mage, store_priest;
-//extern town_item_list	t_i; // shouldn't be here
-//extern unsigned char misc_i[64][64];
 extern short spec_item_array[60];
 extern cUniverse univ;
-//extern piles_of_stuff_dumping_type *data_store;
 extern std::vector<word_rect_t> talk_words;
 extern bool talk_end_forced;
 
@@ -119,8 +106,6 @@ extern short combat_active_pc,stat_screen_mode;
 extern bool map_visible,diff_depth_ok;
 extern sf::RenderWindow mini_map;
 
-//extern stored_items_list_type stored_items[3];
-//extern stored_outdoor_maps_type o_maps;
 extern location ul;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern short shop_identify_cost;
@@ -191,8 +176,6 @@ void init_screen_locs() {
 		bottom_buttons[i].left = 5 + (i * 37);
 		bottom_buttons[i].right = bottom_buttons[i].left + 36;
 		town_buttons[i] = bottom_buttons[i];
-		
-		//FrameRect (&bottom_buttons[i]);
 	}
 	
 	for(i = 0; i < 5; i++) {
@@ -840,9 +823,8 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 		} else {
 			univ.party.direction = end_town_combat();
 			center = univ.town.p_loc;
-			//put_pc_screen();
 			set_stat_window(current_pc);
-			redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT);
+			redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT | REFRESH_STATS);
 			play_sound(93);
 			need_reprint = true;
 			need_redraw = true;
@@ -1971,14 +1953,7 @@ bool handle_keystroke(sf::Event& event){
 			print_buf();
 			break;
 			
-//		case '`':
-//			break;
-//		case '[':
-//			break;
-//		case '+':
-//			break;
 		case '<':
-			//break;
 			if(!in_scen_debug) break;
 			ASB("Debug: Increase age.");
 			ASB("  It is now 1 day later.");
@@ -2332,15 +2307,7 @@ void increase_age() {
 	
 	// Plants and magic shops
 	if(univ.party.age % 4000 == 0) {
-		//SysBeep(2);
-		//ASB("DEBUG: Stuff replaced.");
 		refresh_store_items();
-		//for(i = 0; i < 10; i++)
-		//	PSD[302][i] = 0;
-		//for(i = 0; i < 10; i++)
-		//	PSD[301][i] = 0;
-		//for(i = 0; i < 10; i++)
-		////	PSD[300][i] = 0;
 	}
 	
 	// Protection, etc.
@@ -2480,14 +2447,11 @@ void increase_age() {
 	dump_gold(1);
 	
 	special_increase_age();
-	//if(!debug_on)
 	push_things();
 	
 	if(is_town()) {
 		process_fields();
 	}
-	
-	
 	
 	// Cancel switching PC order
 	current_switch = 6;
@@ -2607,7 +2571,6 @@ void start_new_game() {
 	if(choice == "cancel")
 		return;
 	
-	//which = choice - 1;
 	// Destroy the universe
 	univ.~cUniverse();
 	
@@ -2707,7 +2670,6 @@ static eDirection find_waterfall(short x, short y, short mode){
 	for(eDirection i = DIR_N; i < DIR_HERE; i++){
 		if(mode == 0){
 			to_dir[i] = univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special == eTerSpec::WATERFALL;
-			//printf("%i\n",scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1);
 			if(univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1.u != i) to_dir[i] = false;
 		}else{
 			to_dir[i] = univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special == eTerSpec::WATERFALL;

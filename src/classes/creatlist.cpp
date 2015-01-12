@@ -53,7 +53,7 @@ void cPopulation::assign(size_t n, const cCreature& other, const cMonster& base,
 	dudes[n].morale = dudes[n].m_morale;
 	dudes[n].direction = DIR_HERE;
 	dudes[n].status.clear();
-	dudes[n].attitude = dudes[n].start_attitude; // TODO: Is this right?
+	dudes[n].attitude = dudes[n].start_attitude;
 	dudes[n].cur_loc = dudes[n].start_loc;
 	dudes[n].target = 6; // No target
 	dudes[n].summoned = 0;

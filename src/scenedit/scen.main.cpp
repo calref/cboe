@@ -22,11 +22,10 @@
 #include "scen.menus.h"
 
 /* Globals */
-bool  All_Done = false; // delete play_sounds
+bool  All_Done = false;
 sf::Event event;
 sf::RenderWindow mainPtr;
 cTown* town = NULL;
-//big_tr_type t_d;
 bool diff_depth_ok = false,mouse_button_held = false,editing_town = false;
 short cur_viewing_mode = 0;
 short cen_x, cen_y;
@@ -34,9 +33,6 @@ eScenMode overall_mode = MODE_INTRO_SCREEN;
 std::shared_ptr<cScrollbar> right_sbar;
 short mode_count = 0;
 cOutdoors* current_terrain;
-//cSpeech talking;
-//short given_password;
-//short user_given_password = -1;
 short pixel_depth,old_depth = 8;
 
 bool change_made = false;
@@ -55,12 +51,7 @@ void close_program();
 void ding();
 
 cScenario scenario;
-//piles_of_stuff_dumping_type *data_store;
 rectangle right_sbar_rect;
-
-//
-//	Main body of program Exileedit
-//
 
 //Changed to ISO C specified argument and return type.
 int main(int, char* argv[]) {
@@ -68,13 +59,8 @@ int main(int, char* argv[]) {
 	
 	init_directories(argv[0]);
 	init_menubar();
-	//outdoor_record_type dummy_outdoor, *store2;
 	
-	
-	//data_store = (piles_of_stuff_dumping_type *) NewPtr(sizeof(piles_of_stuff_dumping_type));
 	init_current_terrain();
-	//create_file();
-	//ExitToShell();
 	Initialize();
 	init_fileio();
 	init_snd_tool();
@@ -97,16 +83,8 @@ int main(int, char* argv[]) {
 	Set_up_win();
 	init_screen_locs();
 	
-	//create_basic_scenario();
 	shut_down_menus(0);
 	
-	//update_item_menu();
-	
-//	to_create = get_town_to_edit();
-	
-//	load_terrain(to_create);
-	
-	//	modify_lists();
 	set_up_start_screen();
 	
 	check_for_intel();
@@ -139,7 +117,6 @@ void Initialize(void) {
 	
 	//	Make a new window for drawing in, and it must be a color window.
 	//	The window is full screen size, made smaller to make it more visible.
-	//
 	sf::VideoMode mode = sf::VideoMode::getDesktopMode();
 	rectangle windRect;
 	windRect.width() = mode.width;

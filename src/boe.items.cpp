@@ -2,8 +2,6 @@
 #include <cstdio>
 #include <cstring>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -31,19 +29,13 @@
 
 extern short stat_window,which_combat_type,current_pc;
 extern eGameMode overall_mode;
-//extern party_record_type party;
-//extern current_town_type univ.town;
-//extern town_item_list	univ.town.items;
 extern sf::RenderWindow mainPtr;
 extern bool boom_anim_active;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
-//extern big_tr_type t_d;
 
-//extern CursHandle sword_curs;
 extern bool map_visible,diff_depth_ok;
 extern sf::RenderWindow mini_map;
-//extern short town_size[3];
 extern sf::Texture pc_gworld;
 extern cUniverse univ;
 
@@ -69,7 +61,7 @@ std::map<const eItemType, const short> excluding_types = {
 short selected,item_max = 0;
 
 void sort_pc_items(short pc_num) {
-	cItemRec store_item;
+	cItem store_item;
 	using it = eItemType;
 	static std::map<eItemType, const short> item_priority = {
 		{it::NO_ITEM, 20}, {it::ONE_HANDED, 8}, {it::TWO_HANDED, 8}, {it::GOLD, 20}, {it::BOW, 9},
@@ -102,7 +94,7 @@ void sort_pc_items(short pc_num) {
 	}
 }
 
-bool give_to_party(cItemRec item, short print_result) {
+bool give_to_party(cItem item, short print_result) {
 	short i = 0;
 	
 	while(i < 6) {
@@ -113,8 +105,7 @@ bool give_to_party(cItemRec item, short print_result) {
 	return false;
 }
 
-////
-bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overload) {
+bool give_to_pc(short pc_num,cItem item,short print_result,bool allow_overload) {
 	short free_space;
 	
 	if(item.variety == eItemType::NO_ITEM)
@@ -170,7 +161,7 @@ bool give_to_pc(short pc_num,cItemRec  item,short  print_result,bool allow_overl
 // if abil > 0, force abil, else ignore
 bool forced_give(short item_num,eItemAbil abil) {
 	short i,j;
-	cItemRec item;
+	cItem item;
 	
 	if((item_num < 0) || (item_num > 399))
 		return true;
@@ -197,13 +188,13 @@ bool forced_give(short item_num,eItemAbil abil) {
 }
 
 bool GTP(short item_num) {
-	cItemRec item;
+	cItem item;
 	
 	item = get_stored_item(item_num);
 	return give_to_party(item,true);
 }
 bool silent_GTP(short item_num) {
-	cItemRec item;
+	cItem item;
 	
 	item = get_stored_item(item_num);
 	return give_to_party(item,false);
@@ -361,7 +352,7 @@ short pc_has_space(short pc_num) {
 
 // returns 1 if OK, 2 if no room, 3 if not enough cash, 4 if too heavy, 5 if too many of item
 // Made specials cases for if item is gold or food
-short pc_ok_to_buy(short pc_num,short cost,cItemRec item) {
+short pc_ok_to_buy(short pc_num,short cost,cItem item) {
 	short i;
 	
 	if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
@@ -405,7 +396,7 @@ void take_item(short pc_num,short which_item) {
 		univ.party[pc_num].items[i] = univ.party[pc_num].items[i + 1];
 		univ.party[pc_num].equip[i] = univ.party[pc_num].equip[i + 1];
 	}
-	univ.party[pc_num].items[23] = cItemRec();
+	univ.party[pc_num].items[23] = cItem();
 	univ.party[pc_num].equip[23] = false;
 	
 	if((stat_window == pc_num) && (do_print))
@@ -551,7 +542,7 @@ void equip_item(short pc_num,short item_num) {
 void drop_item(short pc_num,short item_num,location where_drop) {
 	std::string choice;
 	short how_many = 0;
-	cItemRec item_store;
+	cItem item_store;
 	bool take_given_item = true;
 	location loc;
 	
@@ -604,7 +595,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 	}
 }
 
-bool place_item(cItemRec item,location where,bool forced) {
+bool place_item(cItem item,location where,bool forced) {
 	short i;
 	
 	for(i = 0; i < NUM_TOWN_ITEMS; i++)
@@ -658,7 +649,7 @@ void destroy_an_item() {
 
 void give_thing(short pc_num, short item_num) {
 	short who_to,how_many = 0;
-	cItemRec item_store;
+	cItem item_store;
 	bool take_given_item = true;
 	
 	if(univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
@@ -741,7 +732,7 @@ short dist_from_party(location where) {
 }
 
 // TODO: I have no idea what is going on here, other than that it seems to have something to do items being picked up in town
-void set_item_flag(cItemRec *item) {
+void set_item_flag(cItem* item) {
 	if((item->is_special > 0) && (item->is_special < 65)) {
 		item->is_special--;
 		univ.party.item_taken[univ.town.num][item->is_special / 8] =
@@ -854,9 +845,9 @@ void set_town_attitude(short lo,short hi,short att) {
 // TODO: Set town status to "dead"? Could reuse above with magic att (eg -1), or write new function.
 
 
-static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& current_getting_pc, const std::vector<cItemRec*>& item_array) {
+static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& current_getting_pc, const std::vector<cItem*>& item_array) {
 	short i;
-	cItemRec item;
+	cItem item;
 	
 	// First make sure all arrays for who can get stuff are in order.
 	if(current_getting_pc < 6 && (univ.party[current_getting_pc].main_status != eMainStatus::ALIVE
@@ -943,8 +934,8 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 }
 
 
-static bool display_item_event_filter(cDialog& me, std::string id, size_t& first_item_shown, short& current_getting_pc, std::vector<cItemRec*>& item_array, bool allow_overload) {
-	cItemRec item;
+static bool display_item_event_filter(cDialog& me, std::string id, size_t& first_item_shown, short& current_getting_pc, std::vector<cItem*>& item_array, bool allow_overload) {
+	cItem item;
 	
 	if(id == "done") {
 		me.toast(true);
@@ -1000,7 +991,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 			play_sound(0); // formerly force_play_sound
 			give_to_pc(current_getting_pc, item, false, allow_overload);
 		}
-		*item_array[item_hit] = cItemRec();
+		*item_array[item_hit] = cItem();
 		item_array.erase(item_array.begin() + item_hit);
 		put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 	}
@@ -1015,7 +1006,7 @@ bool pc_gworld_loaded = false;
 //short mode; // 0 - adjacent  1 - all in sight
 bool display_item(location from_loc,short /*pc_num*/,short mode, bool check_container) {
 //	short item_array[130];
-	std::vector<cItemRec*> item_array;
+	std::vector<cItem*> item_array;
 	short i;
 	
 	make_cursor_sword();
@@ -1047,7 +1038,7 @@ bool display_item(location from_loc,short /*pc_num*/,short mode, bool check_cont
 	return stole_something;
 }
 
-bool show_get_items(std::string titleText, std::vector<cItemRec*>& itemRefs, short pc_getting, bool overload) {
+bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short pc_getting, bool overload) {
 	using namespace std::placeholders;
 	size_t first_item = 0;
 	
@@ -1072,8 +1063,6 @@ bool show_get_items(std::string titleText, std::vector<cItemRec*>& itemRefs, sho
 	put_item_graphics(itemDialog, first_item, pc_getting, itemRefs);
 	
 	if(univ.party.help_received[36] == 0) {
-		// TODO: Not sure if I need to an initial draw
-//		cd_initial_draw(987);
 		give_help(36,37,itemDialog);
 	}
 	
@@ -1083,12 +1072,6 @@ bool show_get_items(std::string titleText, std::vector<cItemRec*>& itemRefs, sho
 	
 	
 }
-
-
-//void fancy_choice_dialog_event_filter (short item_hit) {
-//	toast_dialog();
-//	dialog_answer = item_hit;
-//}
 
 short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) {
 	make_cursor_sword();
@@ -1129,41 +1112,6 @@ void custom_pic_dialog(std::string title, pic_num_t bigpic) {
 	pic_dlg.run();
 }
 
-//short fancy_choice_dialog(short which_dlog,short parent)
-//// ignore parent in Mac version
-//{
-//	short item_hit,i,store_dialog_answer,err;
-//
-//	store_dialog_answer = dialog_answer;
-//	make_cursor_sword();
-//
-//	err = cd_create_dialog_parent_num(which_dlog,parent);
-//	if(err != 0)
-//		printf("Error %i while creating dialog %i.\n",err,which_dlog);
-//
-//	if(which_dlog == 1062) {
-//		//i = get_ran(1,0,12);
-//		//get_str(temp_str,11,10 + i);
-//		//csit(1062,10,(char *) temp_str);
-//	}
-//
-//	item_hit = cd_run_dialog();
-//	cd_kill_dialog(which_dlog,0);
-//
-//	if(parent < 2) {
-//		SetPort(GetWindowPort(mainPtr));
-//		BeginUpdate(mainPtr);
-//		if(!in_startup_mode)
-//			refresh_screen(0);
-//			else draw_startup(0);
-//		EndUpdate(mainPtr);
-//		}
-//	i = dialog_answer;
-//	dialog_answer = store_dialog_answer;
-//
-//	return i;
-//}
-
 static bool get_num_of_items_event_filter(cDialog& me, std::string, eKeyMod) {
 	if(me.toast(true))
 		me.setResult<int>(me["number"].getTextAsNum());
@@ -1198,9 +1146,8 @@ void make_cursor_watch() {
 	set_cursor(watch_curs);
 }
 
-////
 void place_glands(location where,m_num_t m_type) {
-	cItemRec store_i;
+	cItem store_i;
 	cMonster monst;
 	
 	if(m_type >= 10000)
@@ -1230,7 +1177,7 @@ void reset_item_max() {
 			item_max = i + 1;
 }
 
-short item_val(cItemRec item) {
+short item_val(cItem item) {
 	if(item.charges == 0)
 		return item.value;
 	return item.charges * item.value;
@@ -1240,7 +1187,7 @@ short item_val(cItemRec item) {
 //short mode;  // 0 - normal, 1 - force
 void place_treasure(location where,short level,short loot,short mode) {
 	
-	cItemRec new_item;
+	cItem new_item;
 	short amt,r1,i,j;
 	// Make these static const because they are never changed.
 	// Saves them being initialized every time the function is called.
@@ -1356,8 +1303,8 @@ void place_treasure(location where,short level,short loot,short mode) {
 	}
 }
 
-cItemRec return_treasure(short loot) {
-	cItemRec treas;
+cItem return_treasure(short loot) {
+	cItem treas;
 	static const short which_treas_chart[48] = {
 		1,1,1,1,1,2,2,2,2,2,
 		3,3,3,3,3,2,2,2,4,4,
@@ -1404,7 +1351,7 @@ void refresh_store_items() {
 			univ.party.magic_store_items[i][j] = return_treasure(loot_index[j]);
 			if(univ.party.magic_store_items[i][j].variety == eItemType::GOLD ||
 			   univ.party.magic_store_items[i][j].variety == eItemType::FOOD)
-				univ.party.magic_store_items[i][j] = cItemRec();
+				univ.party.magic_store_items[i][j] = cItem();
 			univ.party.magic_store_items[i][j].ident = true;
 		}
 	

@@ -1,6 +1,4 @@
 
-//#include "item.h"
-
 #include "mathutil.hpp"
 #include "boe.global.h"
 
@@ -10,17 +8,11 @@
 #include "boe.monster.h"
 
 bool combat_pt_in_light();
-//extern short town_size[3];
 location obs_sec;
 location which_party_sec;
 
-//extern party_record_type party;
-//extern current_town_type univ.town;
 extern short which_combat_type,current_pc;
 extern eGameMode overall_mode;
-//extern big_tr_type t_d;
-//extern cOutdoors outdoors[2][2];
-//extern unsigned char out[96][96], out_e[96][96];
 extern location center;
 extern cUniverse univ;
 
@@ -43,7 +35,6 @@ void make_explored(short i,short j) {
 void take_explored(short i,short j) {
 	if(is_out())
 		univ.out.out_e[i][j] = 0;
-	//	univ.town.explored[i][j] = univ.town.explored[i][j] & 254;
 	else univ.town.set_explored(i,j,false);
 }
 
@@ -64,24 +55,6 @@ bool is_combat() {
 		return true;
 	else return false;
 }
-
-//
-//void set_terrain_blocked() {
-//	short i;
-//
-//	for(i = 0; i < 256; i++)
-//		terrain_blocked[i] = scenario.ter_types[i].blockage;
-//}
-
-//short dist(location p1,location p2) {
-//	return s_sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-//}
-//
-//short vdist(location p1,location p2) {
-//	short i,j;
-//	i = abs((short) (p1.x - p2.x)); j = abs((short) (p1.y - p2.y));
-//	return max(i,j);
-//}
 
 bool adjacent(location p1,location p2) {
 	if((abs((short) (p1.x - p2.x)) <= 1) && (abs((short) (p1.y - p2.y)) <= 1))
@@ -301,7 +274,6 @@ bool is_blocked(location to_check) {
 		ter = univ.town->terrain(to_check.x,to_check.y);
 		gr = univ.scenario.ter_types[ter].picture;
 		
-		////
 		// Terrain blocking?
 		if(impassable(ter)) {
 			return true;

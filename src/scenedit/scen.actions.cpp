@@ -1,3 +1,4 @@
+
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -30,8 +31,6 @@ short current_block_edited = 0;
 short current_terrain_type = 0;
 short safety = 0;
 location spot_hit,last_spot_hit(-1,-1);
-//cTown::cCreature null_monst = {0,0,loc(),0,0,0,0,0,0};
-//creature_start_type store_monst = {0,0,{0,0},0,0,0,0,0,0};
 bool sign_error_received = false;
 short copied_spec = -1;
 
@@ -62,20 +61,16 @@ rectangle terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
 extern short cen_x, cen_y, cur_town;
 extern eScenMode overall_mode;
 extern bool mouse_button_held,editing_town;
-extern short cur_viewing_mode;//,user_given_password;
+extern short cur_viewing_mode;
 extern cTown* town;
-//extern big_tr_type t_d;
-extern short /*max_dim[3],*/mode_count,to_create;
+extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
-extern cItemRec item_list[400];
 extern cScenario scenario;
 extern std::shared_ptr<cScrollbar> right_sbar;
 extern cOutdoors* current_terrain;
 extern location cur_out;
 extern sf::RenderWindow mainPtr;
-//extern piles_of_stuff_dumping_type *data_store;
 bool small_any_drawn = false;
-//extern cSpeech talking;
 extern bool change_made;
 
 rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
@@ -153,8 +148,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 	short right_hit;
 	eScenMode old_mode;
 	rectangle temp_rect;
-	//printf("Handling click at {v = %i,h = %i}\n",the_point.v,the_point.h);
-	//GlobalToLocal(&the_point);
 	if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt))
 		option_hit = true;
 	if(kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl))
@@ -301,24 +294,17 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						edit_monst_type(j);
 						update_item_menu();
 						start_monster_editing(1);
-						//sprintf((char *) str,"%d - %s",j,(char *) data_store->scen_item_list.monst_names[j]);
-						//set_rb(j - 1,2000 + j,(char *) str,0);
 						break;
 					case 3:
 						edit_item_type(j);
 						update_item_menu();
 						start_item_editing(1);
-						//sprintf((char *) str,"%d - %s",j,(char *) data_store->scen_item_list.scen_items[j].full_name);
-						//set_rb(j,3000 + j,(char *) str,0);
 						break;
 					case 4:
 						if(option_hit) {
 							scenario.scen_specials[j] = cSpecial();
 						}
 						else edit_spec_enc(j,0,nullptr);
-						//get_str(s2,22,scenario.scen_specials[j].type + 1);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
-						//set_rb(j,4000 + j,(char *) str,0);
 						start_special_editing(0,1);
 						break;
 					case 5:
@@ -326,9 +312,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							current_terrain->specials[j] = cSpecial();
 						}
 						else edit_spec_enc(j,1,nullptr);
-						//get_str(s2,22,current_terrain.specials[j].type + 1);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
-						//set_rb(j,5000 + j,(char *) str,0);
 						start_special_editing(1,1);
 						break;
 					case 6:
@@ -336,9 +319,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							town->specials[j] = cSpecial();
 						}
 						else edit_spec_enc(j,2,nullptr);
-						//get_str(s2,22,town.specials[j].type + 1);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *) s2);
-						//set_rb(j,6000 + j,(char *) str,0);
 						start_special_editing(2,1);
 						break;
 					case 7:
@@ -347,8 +327,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							scenario.spec_strs[j] = s2;
 						}
 						else edit_text_str(j,0);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *)data_store->scen_strs[j]);
-						//set_rb(j,7000 + j,(char *) str,0);
 						start_string_editing(0,1);
 						break;
 						
@@ -358,8 +336,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							current_terrain->spec_strs[j] = s2;
 						}
 						else edit_text_str(j,1);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *) data_store->out_strs[j]);
-						//set_rb(j,8000 + j,(char *) str,0);
 						start_string_editing(1,1);
 						break;
 					case 9:
@@ -368,14 +344,10 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							town->spec_strs[j] = s2;
 						}
 						else edit_text_str(j,2);
-						//sprintf((char *) str,"%d - %-30.30s",j,(char *) data_store->town_strs[j]);
-						//set_rb(j,9000 + j,(char *) str,0);
 						start_string_editing(2,1);
 						break;
 					case 10:
 						edit_spec_item(j);
-						//sprintf((char *) str,"%d - %s",j,(char *) data_store->scen_strs[60 + j * 2]);
-						//set_rb(j,10000 + j,(char *) str,0);
 						start_special_item_editing();
 						break;
 					case 11:
@@ -411,11 +383,10 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						start_string_editing(5,1);
 						break;
 				}
-				//draw_rb_slot(i + right_top,0);
 				mouse_button_held = false;
 			}
 	}
-	if((overall_mode < MODE_MAIN_SCREEN) //&& (PtInRect (the_point, &world_screen))
+	if((overall_mode < MODE_MAIN_SCREEN)
 		&& (the_point.x > world_screen.left + 8) && (the_point.x < world_screen.right - 8)
 		&& (the_point.y > world_screen.top + 8) && (the_point.y < world_screen.bottom - 8) ) {
 		if(cur_viewing_mode == 0) {
@@ -556,15 +527,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 				}
 				break;
-			//case MODE_TOGGLE_SPECIAL_DOT:
-//				town.special[spot_hit.x][spot_hit.y] = !town.special[spot_hit.x][spot_hit.y];
-				/*if(mouse_button_held)
-					break;
-				if(is_special(spot_hit.x,spot_hit.y))
-					take_special(spot_hit.x,spot_hit.y);
-				else make_special(spot_hit.x,spot_hit.y);
-				overall_mode = 0; */
-				//break;
 				
 			case MODE_LARGE_PAINTBRUSH:
 				mouse_button_held = true;
@@ -596,7 +558,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						if((scenario.scen_items[mode_count].variety == eItemType::GOLD) ||
 							(scenario.scen_items[mode_count].variety == eItemType::FOOD))
 							town->preset_items[x].ability = get_ran(1,4,6);
-						//town.preset_items[x].charges = 0;
 						town->preset_items[x].always_there = 0;
 						town->preset_items[x].property = 0;
 						town->preset_items[x].contained = container_there(town->preset_items[x].loc);
@@ -620,11 +581,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
 				break;
-//			case 7: // edit_monst does nothing at all, but I think this would otherwise be the same as mode 39
-//				edit_monst(1,spot_hit.x,spot_hit.y);
-//				overall_mode = MODE_DRAWING;
-//				set_cursor(wand_curs);
-//				break;
 			case MODE_PLACE_SAME_CREATURE:
 				if(last_placed_monst.number == 0) {
 					giveError("Either no monster has been placed, or the last time you tried to place a monster the operation failed.");
@@ -1093,7 +1049,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							break;
 						case 202:
 							if(!editing_town) {
-								//set_string("Edit placed item","Not while outdoors.");
 								set_string("Toggle special spot","Select location");
 								overall_mode = MODE_TOGGLE_SPECIAL_DOT;
 								set_cursor(wand_curs);
@@ -1261,17 +1216,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 	if(need_redraw) {
 		draw_main_screen();
 		draw_terrain();
-		//draw_frames();
 	}
-	
-//	if((get_ran(1,1,100) == 50) && (!check_p2(user_given_password))) {
-//		fancy_choice_dialog(868,0);
-//		return are_done;
-//	}
-//	if((get_ran(1,1,100) == 50) && (!check_p3(user_given_password))) {
-//		fancy_choice_dialog(868,0);
-//		return are_done;
-//	}
 	
 	return are_done;
 }
@@ -1438,7 +1383,6 @@ void handle_keystroke(sf::Event event) {
 					town->preset_items[i].code = -1;
 				if(town->preset_items[i].code >= 0) {
 					edit_placed_item(i);
-					//town.preset_items[i] = edit_item(town.preset_items[i]);
 				}
 			}
 			break;
@@ -1478,26 +1422,6 @@ void handle_keystroke(sf::Event event) {
 		draw_terrain();
 	mouse_button_held = false;
 }
-
-
-
-//void get_wandering_monst() {
-//}
-//
-//void get_town_info() {
-//}
-//
-//void edit_monst(short mode,short x,short y) {
-//	//mode; // 1 - place/edit  2 - place same
-//}
-//
-//
-//void get_sign_resource() {
-//}
-//
-//
-//void set_info_strings() {
-//}
 
 bool is_wall(short i,short j) {
 	ter_num_t ter;
@@ -2810,7 +2734,6 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 				(scenario.scen_items[which_item].variety == eItemType::FOOD))
 				town->preset_items[x].ability = get_ran(1,4,6);
 			
-			//town.preset_items[x].charges = 0;
 			town->preset_items[x].always_there = always;
 			town->preset_items[x].property = property;
 			town->preset_items[x].contained = container_there(town->preset_items[x].loc);
@@ -3052,7 +2975,6 @@ void set_up_main_screen() {
 	shut_down_menus(4);
 	shut_down_menus(3);
 	redraw_screen();
-	//draw_main_screen();
 }
 
 void start_town_edit() {

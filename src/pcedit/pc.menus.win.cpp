@@ -97,14 +97,14 @@ void init_menubar() {
 
 void update_item_menu() {
 	if(menuHandle == NULL) return;
-	cItemRec(& item_list)[400] = univ.scenario.scen_items;
+	auto& item_list = univ.scenario.scen_items;
 	for(int j = 0; j < 4; j++) {
 		HMENU items_menu = GetSubMenu(menuHandle, ITEMS_MENU_POS + j);
 		while(GetMenuItemCount(items_menu)) RemoveMenu(items_menu, 0, MF_BYPOSITION);
 		if(!scen_items_loaded) {
 			AppendMenuA(items_menu, MF_STRING | MF_GRAYED, 1000, "Items Not Loaded");
 		} else for(int i = 0; i < 100; i++) {
-			cItemRec& item = item_list[i + j * 100];
+			cItem& item = item_list[i + j * 100];
 			UINT flags = MF_STRING | MF_ENABLED;
 			if(i % 25 == 0) flags |= MF_MENUBARBREAK;
 			AppendMenuA(items_menu, flags, 1000 + j * 100 + i, item.full_name.c_str());

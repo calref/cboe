@@ -4,8 +4,6 @@
 #include <cstdio>
 #include <queue>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -28,28 +26,14 @@ extern bool give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range;
 extern bool anim_onscreen,play_sounds,frills_on,startup_loaded;
-//extern short town_size[3];
-//extern cParty party;
-//extern pc_record_type adven[6];
-//extern big_tr_type t_d;
-//extern cOutdoors outdoors[2][2];
 extern cUniverse univ;
-//extern current_town_type c_town;
-//extern town_item_list t_i;
-//extern unsigned char out[96][96],out_e[96][96];
 extern effect_pat_type current_pat;
-//extern unsigned char misc_i[64][64],sfx[64][64];
 extern sf::RenderWindow mini_map;
-//extern short monst_target[60]; // 0-5 target that pc   6 - no target  100 + x - target monster x
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 
-//extern piles_of_stuff_dumping_type *data_store; TODO: Abolish storage_gworld
 extern sf::RenderTexture terrain_screen_gworld;
 extern sf::Texture items_gworld,tiny_obj_gworld,pc_gworld,monst_gworld[NUM_MONST_SHEETS];
 extern sf::Texture fields_gworld,anim_gworld,vehicle_gworld,terrain_gworld[NUM_TER_SHEETS];
-//extern short which_g_stored[STORED_GRAPHICS];
-//extern short wish_list[STORED_GRAPHICS];
-//extern short storage_status[STORED_GRAPHICS]; // 0 - empty 1 - in use 2 - there, not in use
 extern short terrain_there[9][9];
 extern std::queue<pending_special_type> special_queue;
 
@@ -58,7 +42,6 @@ extern location center;
 extern short which_combat_type,current_pc;
 extern bool monsters_going,anim_onscreen;
 
-//extern short pc_moves[6];
 extern short num_targets_left;
 extern location spell_targets[8];
 extern short display_mode;
@@ -66,7 +49,6 @@ extern short display_mode;
 extern long anim_ticks;
 
 extern char spot_seen[9][9];
-//extern char out_trim[96][96],town_trim[64][64];
 extern short monster_index[21];
 
 extern bool supressing_some_spaces;
@@ -103,7 +85,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 		fill_rect(terrain_screen_gworld, where_draw, sf::Color::Black);
 		return;
 	}
- 	////
+ 	
 	if(terrain_to_draw >= 10000) { // force using a specific graphic
 		terrain_to_draw -= 10000;
  		if(terrain_there[i][j] == terrain_to_draw)
@@ -371,8 +353,6 @@ void draw_outd_boats(location center) {
 			(can_see_light(center, univ.party.boats[i].loc,sight_obscurity) < 5) && (univ.party.in_boat != i)) {
 			where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
 			where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
-			//source_rect = boat_rects[0];
-			//OffsetRect(&source_rect,61,0);
 			Draw_Some_Item(vehicle_gworld, calc_rect(0,0), terrain_screen_gworld, where_draw, 1, 0);
 		}
 	for(i = 0; i < 30; i++)
@@ -381,10 +361,6 @@ void draw_outd_boats(location center) {
 			(can_see_light(center, univ.party.horses[i].loc,sight_obscurity) < 5) && (univ.party.in_horse != i)) {
 			where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
 			where_draw.y = univ.party.horses[i].loc.y - center.y + 4;
-			//source_rect = boat_rects[0];
-			//OffsetRect(&source_rect,61,0);
-			//OffsetRect(&source_rect,0,74);
-			//OffsetRect(&source_rect,56,36);
 			Draw_Some_Item(vehicle_gworld, calc_rect(0,1), terrain_screen_gworld, where_draw, 1, 0);
 		}
 }
@@ -401,8 +377,6 @@ void draw_town_boat(location center) {
 			 && (pt_in_light(center,univ.party.boats[i].loc)))) {
 				where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
 				where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
-				//source_rect = boat_rects[0];
-				//OffsetRect(&source_rect,61,0);
 				Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0);
 			}
 	for(i = 0; i < 30; i++)
@@ -412,10 +386,6 @@ void draw_town_boat(location center) {
 			 && (pt_in_light(center,univ.party.horses[i].loc)))) {
 				where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
 				where_draw.y = univ.party.horses[i].loc.y - center.y + 4;
-				//source_rect = boat_rects[0];
-				//OffsetRect(&source_rect,61,0);
-				//OffsetRect(&source_rect,0,74);
-				//OffsetRect(&source_rect,56,36);
 				Draw_Some_Item(vehicle_gworld, calc_rect(1,1), terrain_screen_gworld, where_draw, 1, 0);
 			}
 }
@@ -510,15 +480,10 @@ void draw_party_symbol(location center) {
 		else Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
 	}
 	else if(univ.party.in_boat >= 0) {
-		//source_rect = boat_rects[dir_array[univ.party.direction]];
-		//OffsetRect(&source_rect,61,0);
 		if(univ.party.direction == 0 || univ.party.direction > 4) i = 4;
 		else i = 3;
 		Draw_Some_Item(vehicle_gworld, calc_rect(i,0), terrain_screen_gworld, target, 1, 0);
 	}else {
-		//source_rect = boat_rects[(univ.party.direction < 4) ? 0 : 1];
-		//OffsetRect(&source_rect,61,0);
-		//OffsetRect(&source_rect,0,74);
 		Draw_Some_Item(vehicle_gworld, calc_rect( univ.party.direction > 3 , 1), terrain_screen_gworld, target, 1, 0);
 	}
 }
@@ -552,7 +517,6 @@ rectangle get_monster_template_rect (pic_num_t picture_wanted,short mode,short w
 	}
 	if(mode == 0) adj++;
 	picture_wanted = (m_pic_index[picture_wanted].i + which_part) % 20;
-	//return return_item_rect(300 + picture_wanted + (300 * mode) + adj);
 	return calc_rect(2 * (picture_wanted / 10) + adj, picture_wanted % 10);
 }
 

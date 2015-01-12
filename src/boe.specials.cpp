@@ -3,8 +3,6 @@
 #include <cstring>
 #include <queue>
 
-//#include "item.h"
-
 #include "boe.global.h"
 
 #include "classes.h"
@@ -33,39 +31,29 @@
 
 extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
-//extern party_record_type party;
-//extern current_town_type	univ.town;
-//extern unsigned char univ.out[96][96],out_e[96][96],sfx[64][64];
 extern short which_combat_type,current_pc,stat_window;
-//extern cOutdoors univ.out.outdoors[2][2];
 extern location center;
 extern bool in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
-//extern big_tr_type t_d;
 extern effect_pat_type current_pat;
-//extern town_item_list	univ.town;
 extern cOutdoors::cWandering store_wandering_special;
 extern short monst_marked_damage[60];
 extern eSpell spell_being_cast, town_spell;
 extern sf::RenderWindow mini_map;
 extern short fast_bang;
 extern bool end_scenario;
-//extern short town_size[3];
 extern cUniverse univ;
 extern std::queue<pending_special_type> special_queue;
-//extern piles_of_stuff_dumping_type *data_store;
 
 bool can_draw_pcs = true;
 
 short boom_gr[8] = {3,0,2,1,1,4,3,3};
 short store_item_spell_level = 10;
 
-// global vbalues for when processing special encounters
+// global values for when processing special encounters
 short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
 extern std::map<eSkill,short> skill_max;
 location store_special_loc;
 bool special_in_progress = false;
-
-//// Pretty much all of this is new for BoE
 
 // 0 - can't use 1 - combat only 2 - town only 3 - town & combat only  4 - everywhere  5 - outdoor
 // + 10 - mag. inept can use
@@ -318,7 +306,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				can_enter = false;
 			break;
 		case eTerSpec::DAMAGING:
-			//if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
+			// if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
 			if(flying() || univ.party.in_boat >= 0)
 				break;
 			if(mode == eSpecCtx::TOWN_MOVE && town_boat_there(where_check) < 30)
@@ -374,7 +362,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			fast_bang = 0;
 			break;
 		case eTerSpec::DANGEROUS:
-			//if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
+			// if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
 			if(flying() || univ.party.in_boat >= 0)
 				break;
 			if(mode == eSpecCtx::TOWN_MOVE && town_boat_there(where_check) < 30)
@@ -1266,7 +1254,7 @@ bool use_space(location where) {
 }
 
 // Note ... if this is a container, the code must first process any specials. If
-//specials return false, can't get items inside. If true, can get items inside.
+// specials return false, can't get items inside. If true, can get items inside.
 // Can't get items out in combat.
 bool adj_town_look(location where) {
 	ter_num_t terrain;
@@ -1453,9 +1441,6 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	//print_num(which_m,(short)univ.town.monst[which_m].m_loc.x,(short)univ.town.monst[which_m].m_loc.y);
 	
 	if(univ.town.monst[which_m].active == 0) return false;
-	
-	//sound_type = dam_type / 100;
-	//dam_type = dam_type % 100;
 	
 	if(dam_type >= DAMAGE_MARKED) { // note: MARKED here actually means NO_PRINT
 		do_print = false;
@@ -1731,7 +1716,7 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 }
 
 // Pushes party and monsters around by moving walls and conveyor belts.
-//This is very fragils, and only hands a few cases.
+// This is very fragile, and only hands a few cases.
 void push_things() {
 	bool redraw = false;
 	short i,k;
@@ -2358,7 +2343,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	short i,j;
 	std::array<short, 3> buttons = {-1,-1,-1};
 	cSpecial spec;
-	cItemRec store_i;
+	cItem store_i;
 	location l;
 	std::string choice;
 	
@@ -3400,7 +3385,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	cSpecial spec;
 	location l;
 	ter_num_t ter;
-	cItemRec store_i;
+	cItem store_i;
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
@@ -4020,10 +4005,8 @@ void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str
 			break;
 		case 1:
 			if(which_str1 >= 0)
-				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str1,(char *) str1);
 				str1 = univ.out->spec_strs[which_str1];
 			if(which_str2 >= 0)
-				//load_outdoor_str(loc(univ.party.outdoor_corner.x + univ.party.i_w_c.x,univ.party.outdoor_corner.y + univ.party.i_w_c.y),which_str2,(char *) str2);
 				str2 = univ.out->spec_strs[which_str2];
 			break;
 		case 2:
