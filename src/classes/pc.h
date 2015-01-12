@@ -48,6 +48,8 @@ public:
 	location combat_pos;
 	short marked_damage, dir, parry, last_attacked;
 	
+	void finish_create();
+	
 	void append(legacy::pc_record_type old);
 	cPlayer();
 	cPlayer(long key,short slot);

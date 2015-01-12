@@ -174,6 +174,22 @@ cItem::cItem(long preset){
 			name = "Helm";
 			ident = true;
 			break;
+		case 'rdsk':
+			variety = eItemType::THROWN_MISSILE;
+			item_level = 9;
+			awkward = 0;
+			bonus = 1;
+			protection = 0;
+			charges = 8;
+			weap_type = eSkill::INVALID;
+			magic_use_type = 0;
+			graphic_num = 59;
+			value = 10;
+			weight = 1;
+			full_name = "Iron Razordisks";
+			name = "Razordisks";
+			ident = true;
+			break;
 		case 'food':
 			variety = eItemType::FOOD;
 			item_level = 0;

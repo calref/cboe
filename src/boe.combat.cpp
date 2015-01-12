@@ -1543,10 +1543,10 @@ void fire_missile(location target) {
 					poison_monst(cur_monst,poison_amt);
 				}
 			}
-//			else if((targ_monst = pc_there(target)) < 6 && univ.party[current_pc].items[ammo_inv_slot].ability == 176){
-//				ASB("  There is a flash of light.");
-//				heal_pc(targ_monst,r2);
-//			}
+			else if((targ_monst = pc_there(target)) < 6 && univ.party[current_pc].items[ammo_inv_slot].ability == eItemAbil::MISSILE_HEAL_TARGET){
+				ASB("  There is a flash of light.");
+				heal_pc(targ_monst,r2);
+			}
 			else hit_space(target,r2,DAMAGE_WEAPON,1,0);
 			
 		}

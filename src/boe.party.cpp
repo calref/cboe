@@ -49,7 +49,6 @@ short who_cast,which_pc_displayed;
 eSpell town_spell;
 extern bool spell_freebie;
 bool spell_button_active[90];
-extern cItem start_items[6];
 
 extern short fast_bang;
 extern bool flushingInput;
@@ -323,24 +322,8 @@ bool create_pc(short spot,cDialog* parent) {
 	univ.party[spot].main_status = eMainStatus::ALIVE;
 	
 	if(overall_mode != MODE_STARTUP) {
-		// TODO: start_items will need to be extended for Vahnatai race
-		int raceCode = (int) univ.party[spot].race;
-		univ.party[spot].items[0] = start_items[raceCode * 2];
-		univ.party[spot].equip[0] = true;
-		univ.party[spot].items[1] = start_items[raceCode * 2 + 1];
-		univ.party[spot].equip[1] = true;
-		
-		// Do stat adjs for selected race.
-		if(univ.party[spot].race == eRace::NEPHIL)
-			univ.party[spot].skills[eSkill::DEXTERITY] += 2;
-		if(univ.party[spot].race == eRace::SLITH) {
-			univ.party[spot].skills[eSkill::STRENGTH] += 2;
-			univ.party[spot].skills[eSkill::INTELLIGENCE] += 1;
-		}
-		// TODO: Vahnatai
-		// TODO: Why is this code in two different places?
-		univ.party[spot].max_sp += univ.party[spot].skills[eSkill::MAGE_SPELLS] * 3 + univ.party[spot].skills[eSkill::PRIEST_SPELLS] * 3;
-		univ.party[spot].cur_sp = univ.party[spot].max_sp;
+		// TODO: Why only when not in MODE_STARTUP?
+		univ.party[spot].finish_create();
 	}
 	
 	return true;
@@ -1939,9 +1922,7 @@ static void put_spell_led_buttons(cDialog& me, const eSkill store_situation,cons
 }
 
 static void put_spell_list(cDialog& me, const eSkill store_situation) {
-	
 	short i;
-	std::ostringstream name;
 	
 	if(on_which_spell_page == 0) {
 		me["col1"].setText("Level 1:");
@@ -1949,6 +1930,7 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col3"].setText("Level 3:");
 		me["col4"].setText("Level 4:");
 		for(i = 0; i < 38; i++) {
+			std::ostringstream name;
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 			name << get_str("magic-names", i + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
 			name << " (";
@@ -1967,6 +1949,7 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col3"].setText("Level 7:");
 		me["col4"].setText("");
 		for(i = 0; i < 38; i++) {
+			std::ostringstream name;
 			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 			if(spell_index[i] < 90) {
 				name << get_str("magic-names", spell_index[i] + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
@@ -2553,13 +2536,20 @@ void poison_party(short how_much) {
 }
 //type; // which status to affect
 void affect_pc(short which_pc,eStatus type,short how_much) {
+	static const std::set<eStatus> allow_negative = {
+		// The obvious ones:
+		eStatus::BLESS_CURSE, eStatus::HASTE_SLOW,
+		// The ones that BoE previously allowed:
+		eStatus::POISONED_WEAPON, eStatus::POISON, eStatus::ASLEEP,
+		// (Note: Negative levels of sleep can be obtained from the Hyperactivity spell. The other two never go negative.)
+		// The additional ones that make sense in the negative:
+		eStatus::MAGIC_RESISTANCE, eStatus::DUMB,
+	};
 	
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	univ.party[which_pc].status[type] = minmax (-8,8,univ.party[which_pc].status[type] + how_much);
-	// TODO: Original code also allowed poisoned weapon, poison, and sleep to be negative; should this be restored?
-	// TODO: For certain other status effects it could make sense to allow negatives, eg magic resistance or dumbfounded
-	if(type != eStatus::BLESS_CURSE && type != eStatus::HASTE_SLOW)
+	if(!allow_negative.count(type))
 		univ.party[which_pc].status[type] = max(univ.party[which_pc].status[type],0);
 	put_pc_screen();
 }

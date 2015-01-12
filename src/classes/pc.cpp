@@ -75,6 +75,41 @@ short cPlayer::get_tnl(){
 	return tnl;
 }
 
+void cPlayer::finish_create() {
+	// Start items
+	switch(race) {
+		case eRace::HUMAN:
+			items[0] = cItem('nife');
+			items[1] = cItem('buck');
+			break;
+		case eRace::NEPHIL:
+			items[0] = cItem('bow ');
+			items[1] = cItem('arrw');
+			break;
+		case eRace::SLITH:
+			items[0] = cItem('pole');
+			items[1] = cItem('helm');
+			break;
+		case eRace::VAHNATAI:
+			items[0] = cItem('nife');
+			items[1] = cItem('rdsk');
+			break;
+	}
+	equip[0] = true;
+	equip[1] = true;
+	// Racial stat adjustments
+	if(race == eRace::NEPHIL)
+		skills[eSkill::DEXTERITY] += 2;
+	if(race == eRace::SLITH) {
+		skills[eSkill::STRENGTH] += 2;
+		skills[eSkill::INTELLIGENCE] += 1;
+	}
+	// TODO: Vahnatai
+	// Bonus spell points for spellcasters
+	max_sp += skills[eSkill::MAGE_SPELLS] * 3 + skills[eSkill::PRIEST_SPELLS] * 3;
+	cur_sp = max_sp;
+}
+
 cPlayer::cPlayer(){
 	short i;
 	main_status = eMainStatus::ABSENT;

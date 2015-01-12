@@ -62,7 +62,6 @@ extern bool flushingInput;
 bool ghost_mode;
 rectangle startup_top;
 
-cItem start_items[6] = {cItem('nife'),cItem('buck'),cItem('bow '),cItem('arrw'),cItem('pole'),cItem('helm')};
 bool item_area_button_active[8][6];
 bool pc_area_button_active[6][5];
 short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
@@ -2611,28 +2610,11 @@ void start_new_game() {
 	
 	
 	// everyone gets a weapon
-	for(i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++) {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			int raceCode = (int) univ.party[i].race;
-			univ.party[i].items[0] = start_items[raceCode * 2];
-			univ.party[i].equip[0] = true;
-			univ.party[i].items[1] = start_items[raceCode * 2 + 1];
-			univ.party[i].equip[1] = true;
+			univ.party[i].finish_create();
 		}
-	// PCs get adjustments
-	for(i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			// Do stat adjs for selected race.
-			if(univ.party[i].race == eRace::NEPHIL)
-				univ.party[i].skills[eSkill::DEXTERITY] += 2;
-			if(univ.party[i].race == eRace::SLITH) {
-				univ.party[i].skills[eSkill::STRENGTH] += 2;
-				univ.party[i].skills[eSkill::INTELLIGENCE] += 1;
-			}
-			// TODO: Vahnatai
-			univ.party[i].max_sp += univ.party[i].skills[eSkill::MAGE_SPELLS] * 3 + univ.party[i].skills[eSkill::PRIEST_SPELLS] * 3;
-			univ.party[i].cur_sp = univ.party[i].max_sp;
-		}
+	}
 	fs::path file = nav_put_party();
 	if(!file.empty()) save_party(file, univ);
 	party_in_memory = true;
