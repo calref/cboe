@@ -60,8 +60,6 @@ cItem::cItem(){
 	treas_class = 0;
 	ident = property = magic = contained = false;
 	cursed = concealed = enchanted = unsellable = false;
-	reserved1 = 0;
-	reserved2 = 0;
 }
 
 cItem::cItem(long preset){
@@ -75,8 +73,6 @@ cItem::cItem(long preset){
 	treas_class = 0;
 	ident = property = magic = contained = false;
 	cursed = concealed = enchanted = unsellable = false;
-	reserved1 = 0;
-	reserved2 = 0;
 	switch(preset){
 		case 'nife':
 			variety = eItemType::ONE_HANDED;
@@ -738,8 +734,6 @@ void cItem::append(legacy::item_record_type& old){
 	concealed = old.item_properties & 32;
 	enchanted = false;
 	unsellable = old.item_properties & 16;
-	reserved1 = old.reserved1;
-	reserved2 = old.reserved2;
 	// Set missile, if needed
 	switch(variety) {
 		case eItemType::ARROW:

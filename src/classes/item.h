@@ -48,9 +48,6 @@ public:
 	bool concealed : 1;
 	bool enchanted : 1;
 	bool unsellable : 1;
-private:
-	unsigned int reserved1;
-	unsigned int reserved2;
 public:
 	std::string desc;
 	unsigned char rec_treas_class() const;
