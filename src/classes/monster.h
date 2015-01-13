@@ -177,7 +177,7 @@ public:
 class cCreature : public cMonster {
 public:
 	unsigned long id;
-	m_num_t number;
+	mon_num_t number;
 	short active, attitude;
 	unsigned char start_attitude;
 	location start_loc, cur_loc;

@@ -876,7 +876,7 @@ void cUniverse::check_item(cItem& item) {
 	else if(item.graphic_num >= 1000)
 		update_items[item.graphic_num - 1000].insert(&item);
 	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING) {
-		m_num_t monst = item.abil_data[0];
+		mon_num_t monst = item.abil_data[0];
 		if(monst >= 10000)
 			check_monst(party.summons[monst - 10000]);
 		else check_monst(scenario.scen_monsters[monst]);
@@ -978,15 +978,15 @@ void cUniverse::exportGraphics() {
 }
 
 void cUniverse::exportSummons() {
-	std::set<m_num_t> used_monsters, need_monsters;
-	std::map<m_num_t, update_info<cItem>> update_items;
+	std::set<mon_num_t> used_monsters, need_monsters;
+	std::map<mon_num_t, update_info<cItem>> update_items;
 	for(int i = 0; i < 6; i++) {
 		if(party[i].main_status == eMainStatus::ABSENT)
 			continue;
 		for(size_t j = 0; j < party[i].items.size(); j++) {
 			if(party[i].items[j].variety == eItemType::NO_ITEM) continue;
 			if(party[i].items[j].ability == eItemAbil::SUMMONING || party[i].items[j].ability == eItemAbil::MASS_SUMMONING) {
-				m_num_t monst = party[i].items[j].abil_data[0];
+				mon_num_t monst = party[i].items[j].abil_data[0];
 				if(monst >= 10000)
 					used_monsters.insert(monst - 10000);
 				else {
@@ -1000,7 +1000,7 @@ void cUniverse::exportSummons() {
 		for(size_t j = 0; j < party.stored_items[i].size(); j++) {
 			if(party.stored_items[i][j].variety == eItemType::NO_ITEM) continue;
 			if(party.stored_items[i][j].ability == eItemAbil::SUMMONING||party.stored_items[i][j].ability == eItemAbil::MASS_SUMMONING) {
-				m_num_t monst = party.stored_items[i][j].abil_data[0];
+				mon_num_t monst = party.stored_items[i][j].abil_data[0];
 				if(monst >= 10000)
 					used_monsters.insert(monst - 10000);
 				else {
@@ -1023,8 +1023,8 @@ void cUniverse::exportSummons() {
 		auto max = std::max_element(used_monsters.begin(), used_monsters.end());
 		party.summons.resize(*max + 1);
 	}
-	for(m_num_t monst : need_monsters) {
-		m_num_t dest = -1;
+	for(mon_num_t monst : need_monsters) {
+		mon_num_t dest = -1;
 		while(used_monsters.count(++dest));
 		used_monsters.insert(dest);
 		if(dest < party.summons.size())

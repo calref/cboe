@@ -31,8 +31,8 @@ class cOutdoors {
 public:
 	class cWandering { // formerly out_wandering_type
 	public:
-		m_num_t monst[7];
-		m_num_t friendly[3];
+		mon_num_t monst[7];
+		mon_num_t friendly[3];
 		short spec_on_meet,spec_on_win,spec_on_flee,cant_flee;
 		short end_spec1,end_spec2;
 		

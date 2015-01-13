@@ -348,7 +348,7 @@ short edit_ter_type(ter_num_t which_ter) {
 	return 0;
 }
 
-static void put_monst_info_in_dlog(cDialog& me, m_num_t which_monst) {
+static void put_monst_info_in_dlog(cDialog& me, mon_num_t which_monst) {
 	char str[256];
 	cMonster& store_monst = scenario.scen_monsters[which_monst];
 	

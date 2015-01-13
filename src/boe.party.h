@@ -44,7 +44,7 @@ void do_alchemy();
 short alch_choice(short pc_num);
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent_num);
 bool pick_pc_name(short pc_num,cDialog* parent)  ;
-m_num_t pick_trapped_monst()  ;
+mon_num_t pick_trapped_monst();
 bool flying() ;
 void acid_pc(short which_pc,short how_much);
 void poison_pc(short which_pc,short how_much);

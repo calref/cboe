@@ -125,12 +125,12 @@ location get_monst_head(short m_num) {
 	return l;
 }
 
-short get_monst_picnum(m_num_t monst) {
+short get_monst_picnum(mon_num_t monst) {
 	if(monst >= 10000) return univ.party.summons[monst - 10000].picture_num;
 	return univ.scenario.scen_monsters[monst].picture_num;
 }
 
-ePicType get_monst_pictype(m_num_t monst) {
+ePicType get_monst_pictype(mon_num_t monst) {
 	ePicType type = PIC_MONST;
 	short n;
 	if(monst >= 10000)
@@ -157,7 +157,7 @@ ePicType get_monst_pictype(m_num_t monst) {
 	return type;
 }
 
-void get_monst_dims(m_num_t monst,short *width, short *height) {
+void get_monst_dims(mon_num_t monst,short *width, short *height) {
 	cMonster& the_monst = monst >= 10000 ? univ.party.summons[monst - 10000] : univ.scenario.scen_monsters[monst];
 	*width = the_monst.x_width;
 	*height = the_monst.y_width;
@@ -165,7 +165,7 @@ void get_monst_dims(m_num_t monst,short *width, short *height) {
 
 // Used to set up monsters for outdoor wandering encounters.
 //mode; // 0 - unfriendly  1 - friendly & fightin'
-void set_up_monst(short mode,m_num_t m_num) {
+void set_up_monst(short mode,mon_num_t m_num) {
 	short which;
 	
 	for(which = 0; which < univ.town->max_monst(); which++)
@@ -571,7 +571,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 }
 
 
-bool rand_move(m_num_t i) {
+bool rand_move(mon_num_t i) {
 	bool acted_yet = false;
 	short j;
 	location store_loc;
@@ -1074,7 +1074,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	return can_enter;
 }
 
-void forced_place_monster(m_num_t which,location where) {
+void forced_place_monster(mon_num_t which,location where) {
 	// TODO: Windows version has logic to destroy unimportant monsters to make room, but the real issue here is the non-dynamic nature of the monster array, so a better fix would be to use an std::vector in cPopulation... and then this function wouldn't even be needed.
 	bool free_spot = false;
 	short i = 0,r1;
@@ -1281,7 +1281,7 @@ void record_monst(cCreature *which_m) {
 }
 
 // returns 90 is no placement, OW returns # of spot
-short place_monster(m_num_t which,location where) {
+short place_monster(mon_num_t which,location where) {
 	short i = 0;
 	
 	while((i < univ.town->max_monst()) && ((univ.town.monst[i].active != 0) ||
@@ -1315,7 +1315,7 @@ short place_monster(m_num_t which,location where) {
 // returns true if placement was successful
 //which; // if in town, this is caster loc., if in combat, this is where to try
 // to put monster
-bool summon_monster(m_num_t which,location where,short duration,short given_attitude) {
+bool summon_monster(mon_num_t which,location where,short duration,short given_attitude) {
 	location loc;
 	short which_m,spot;
 	
@@ -1394,7 +1394,7 @@ short get_encumberance(short pc_num) {
 	return store;
 }
 
-m_num_t get_summon_monster(short summon_class) {
+mon_num_t get_summon_monster(short summon_class) {
 	short i,j;
 	
 	for(i = 0; i < 200; i++) {

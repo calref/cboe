@@ -75,7 +75,7 @@ extern bool talk_end_forced;
 extern std::string old_str1,old_str2,one_back1,one_back2;
 extern rectangle talk_area_rect, word_place_rect,talk_help_rect;
 extern std::string title_string;
-extern m_num_t store_monst_type;
+extern mon_num_t store_monst_type;
 std::vector<word_rect_t> talk_words;
 
 // Shop vars

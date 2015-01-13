@@ -12,7 +12,7 @@ void handle_shop_event(location p);
 void handle_sale(cShopItem item, int i);
 void handle_info_request(cShopItem item);
 void set_up_shop_array(eShopType shop_type, short shop_min, short shop_max);
-void start_talk_mode(short m_num,short personality,m_num_t monst_type,short store_face_pic);
+void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic);
 void end_talk_mode();
 void handle_talk_event(location p);
 void handle_talk_spec(short ttype,char* place_string1,char* place_string2);

@@ -1154,7 +1154,7 @@ void make_cursor_watch() {
 	set_cursor(watch_curs);
 }
 
-void place_glands(location where,m_num_t m_type) {
+void place_glands(location where,mon_num_t m_type) {
 	cItem store_i;
 	cMonster monst;
 	

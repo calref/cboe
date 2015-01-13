@@ -84,7 +84,7 @@ public:
 	short in_horse;
 	cOutdoors::cCreature out_c[10];
 	std::array<std::array<cItem,10>,5> magic_store_items;
-	m_num_t imprisoned_monst[4]; // Soul Crystal
+	mon_num_t imprisoned_monst[4]; // Soul Crystal
 	char m_noted[256]; // has the monster been scried?
 	char m_seen[256]; // has the monster ever been seen? (this used to have the above meaning)
 	std::vector<cJournal> journal;

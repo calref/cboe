@@ -2485,8 +2485,6 @@ static bool pc_name_event_filter(cDialog& me, short store_train_pc) {
 	return true;
 }
 
-//town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
-//short sign_type; // terrain type
 bool pick_pc_name(short pc_num,cDialog* parent) {
 	using namespace std::placeholders;
 	make_cursor_sword();
@@ -2500,7 +2498,7 @@ bool pick_pc_name(short pc_num,cDialog* parent) {
 	return 1;
 }
 
-m_num_t pick_trapped_monst() {
+mon_num_t pick_trapped_monst() {
 	short i;
 	std::string sp;
 	cMonster get_monst;
@@ -2515,7 +2513,7 @@ m_num_t pick_trapped_monst() {
 			soulCrystal->getControl("pick" + n).hide();
 		}
 		else {
-			m_num_t which = univ.party.imprisoned_monst[i];
+			mon_num_t which = univ.party.imprisoned_monst[i];
 			sp = get_m_name(which);
 			soulCrystal->getControl("slot" + n).setText(sp);
 			get_monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];

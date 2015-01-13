@@ -59,7 +59,7 @@ public:
 //	};
 	class cWandering { // formerly wandering_type
 	public:
-		m_num_t monst[4];
+		mon_num_t monst[4];
 		
 		bool isNull();
 		void append(legacy::wandering_type old);

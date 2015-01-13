@@ -908,7 +908,7 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
 	}
 }
 
-std::string get_m_name(m_num_t num) {
+std::string get_m_name(mon_num_t num) {
 	if(num >= 10000) return univ.party.summons[num - 10000].m_name;
 	return univ.scenario.scen_monsters[num].m_name;
 }
@@ -922,13 +922,13 @@ std::string get_ter_name(ter_num_t num) {
 	return store_name;
 }
 
-void print_monst_name(m_num_t m_type) {
+void print_monst_name(mon_num_t m_type) {
 	std::string msg = get_m_name(m_type) + ':';
 	add_string_to_buf((char *) msg.c_str());
 }
 
 //short target; // < 100 - pc  >= 100  monst
-void print_monst_attacks(m_num_t m_type,short target) {
+void print_monst_attacks(mon_num_t m_type,short target) {
 	std::string msg = get_m_name(m_type);
 	msg += " attacks ";
 	if(target < 100)
@@ -946,13 +946,13 @@ void damaged_message(short damage,short type) {
 }
 
 // This prepares the monster's string for the text bar
-std::string print_monster_going(m_num_t m_num,short ap) {
+std::string print_monster_going(mon_num_t m_num,short ap) {
 	std::ostringstream sout(get_m_name(m_num));
 	sout << " (ap: " << ap << ')';
 	return sout.str();
 }
 
-void monst_spell_note(m_num_t number,short which_mess) {
+void monst_spell_note(mon_num_t number,short which_mess) {
 	std::string msg = get_m_name(number);
 	switch(which_mess) {
 		case 1:
@@ -1125,7 +1125,7 @@ void monst_spell_note(m_num_t number,short which_mess) {
 }
 
 //short type; // 0 - mage 1- priest
-void monst_cast_spell_note(m_num_t number,eSpell spell) {
+void monst_cast_spell_note(mon_num_t number,eSpell spell) {
 	short spell_num = short(spell);
 	std::string msg = get_m_name(number);
 	msg += " casts:";
@@ -1135,14 +1135,14 @@ void monst_cast_spell_note(m_num_t number,eSpell spell) {
 	add_string_to_buf((char *) msg.c_str());
 }
 
-void monst_breathe_note(m_num_t number) {
+void monst_breathe_note(mon_num_t number) {
 	std::string msg = get_m_name(number);
 	msg += " breathes.";
 	add_string_to_buf((char *) msg.c_str());
 	
 }
 
-void monst_damaged_mes(short which_m,short how_much,short how_much_spec) {
+void monst_damaged_mes(mon_num_t which_m,short how_much,short how_much_spec) {
 	std::string msg = get_m_name(univ.town.monst[which_m].number);
 	msg = "  " + msg + " takes ";
 	std::ostringstream sout(msg);
@@ -1153,7 +1153,7 @@ void monst_damaged_mes(short which_m,short how_much,short how_much_spec) {
 	add_string_to_buf((char *) msg.c_str());
 }
 
-void monst_killed_mes(short which_m) {
+void monst_killed_mes(mon_num_t which_m) {
 	std::string msg = get_m_name(univ.town.monst[which_m].number);
 	msg = "  " + msg + " dies.";
 	add_string_to_buf((char *) msg.c_str());

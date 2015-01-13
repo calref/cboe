@@ -50,7 +50,7 @@ short missile_inv_slot, ammo_inv_slot;
 short force_wall_position = 10; //  10 -> no force wall
 bool processing_fields = true;
 short futzing;
-m_num_t store_sum_monst;
+mon_num_t store_sum_monst;
 short store_sum_monst_cost;
 extern cUniverse univ;
 
@@ -871,7 +871,7 @@ void do_combat_cast(location target) {
 		CLOUD_STINK,CLOUD_STINK,
 		WALL_ICE,WALL_ICE,WALL_BLADES,
 	};
-	m_num_t summon;
+	mon_num_t summon;
 	
 	location ashes_loc;
 	

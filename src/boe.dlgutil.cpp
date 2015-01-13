@@ -68,7 +68,7 @@ sf::RenderTexture talk_gworld;
 bool talk_end_forced;
 rectangle talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
 std::string title_string;
-m_num_t store_monst_type;
+mon_num_t store_monst_type;
 short store_m_num;
 rectangle dummy_rect = {0,0,0,0};
 short strnum1,strnum2,oldstrnum1,oldstrnum2;
@@ -421,7 +421,7 @@ void set_up_shop_array(eShopType store_shop_type, short store_shop_min, short st
 	shop_sbar->setMaximum(active_shop.size() - 8);
 }
 
-void start_talk_mode(short m_num,short personality,m_num_t monst_type,short store_face_pic) {
+void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic) {
 	rectangle area_rect;
 	std::string place_string1;
 	
