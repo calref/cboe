@@ -958,7 +958,7 @@ static void put_item_abils_in_dlog(cDialog& me, cItem& store_item, short which_i
 	
 	dynamic_cast<cLedGroup&>(me["use-type"]).setSelected("use" + std::to_string(store_item.magic_use_type));
 	dynamic_cast<cLedGroup&>(me["treasure"]).setSelected("type" + std::to_string(store_item.treas_class));
-	me["str"].setTextToNum(store_item.ability_strength);
+	me["str"].setTextToNum(store_item.abil_data[0]);
 	
 	dynamic_cast<cLed&>(me["always-id"]).setState(store_item.ident ? led_red : led_off);
 	dynamic_cast<cLed&>(me["magic"]).setState(store_item.magic ? led_red : led_off);
@@ -969,7 +969,7 @@ static void put_item_abils_in_dlog(cDialog& me, cItem& store_item, short which_i
 static bool save_item_abils(cDialog& me, cItem& store_item) {
 	store_item.magic_use_type = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["use-type"]).getSelected().substr(3));
 	store_item.treas_class = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["treasure"]).getSelected().substr(4));
-	store_item.ability_strength = me["str"].getTextAsNum();
+	store_item.abil_data[0] = me["str"].getTextAsNum();
 	
 	store_item.property = store_item.enchanted = store_item.contained = false;
 	store_item.ident = dynamic_cast<cLed&>(me["always-id"]).getState() != led_off;

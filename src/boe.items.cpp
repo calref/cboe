@@ -222,7 +222,7 @@ short get_prot_level(short pc_num,eItemAbil abil) {
 	for(i = 0; i < 24; i++)
 		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM && (univ.party[pc_num].items[i].ability == abil)
 		   && (univ.party[pc_num].equip[i]))
-			return univ.party[pc_num].items[i].ability_strength;
+			return univ.party[pc_num].items[i].abil_data[0];
 	return -1;
 	
 }
@@ -441,15 +441,16 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 			break;
 		case 3:
 			store_name += " (F)";
-			univ.party[pc_num].items[item_hit].ability = eItemAbil::FLAME;
-			univ.party[pc_num].items[item_hit].ability_strength = 5;
+			univ.party[pc_num].items[item_hit].ability = eItemAbil::CAST_SPELL;
+			univ.party[pc_num].items[item_hit].abil_data[0] = 5;
+			univ.party[pc_num].items[item_hit].abil_data[1] = int(eSpell::FLAME);
 			univ.party[pc_num].items[item_hit].charges = 8;
 			break;
 		case 4:
 			store_name += " (F!)";
 			univ.party[pc_num].items[item_hit].value = new_val;
 			univ.party[pc_num].items[item_hit].ability = eItemAbil::FLAMING_WEAPON;
-			univ.party[pc_num].items[item_hit].ability_strength = 5;
+			univ.party[pc_num].items[item_hit].abil_data[0] = 5;
 			break;
 		case 5:
 			store_name += " (+5)";
@@ -459,8 +460,9 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 		case 6:
 			store_name += " (B)";
 			univ.party[pc_num].items[item_hit].bonus++;
-			univ.party[pc_num].items[item_hit].ability = eItemAbil::BLESS_CURSE;
-			univ.party[pc_num].items[item_hit].ability_strength = 5;
+			univ.party[pc_num].items[item_hit].ability = eItemAbil::AFFECT_STATUS;
+			univ.party[pc_num].items[item_hit].abil_data[0] = 5;
+			univ.party[pc_num].items[item_hit].abil_data[1] = int(eStatus::BLESS_CURSE);
 			univ.party[pc_num].items[item_hit].magic_use_type = 0;
 			univ.party[pc_num].items[item_hit].charges = 8;
 			break;

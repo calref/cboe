@@ -57,7 +57,12 @@ const cSpell& cSpell::finish() {
 
 std::string cSpell::name() const {
 	return get_str("magic-names", int(num) + 1);
-};
+}
+
+bool cSpell::is_priest() const {
+	// This is used to determine where the spell is implemented, not which skill is required.
+	return int(num) >= 100;
+}
 
 const cSpell& operator*(eSpell spell_num) {
 	return cSpell::dictionary[spell_num];
@@ -343,32 +348,32 @@ cSpell P_CLEANSE_MAJOR = cSpell(eSpell::CLEANSE_MAJOR).asType(eSkill::PRIEST_SPE
 
 // Special spells
 cSpell S_STRENGTHEN_TARGET = cSpell(eSpell::STRENGTHEN_TARGET)
-	.withRange(10).finish();
+	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_SUMMON_RAT = cSpell(eSpell::SUMMON_RAT)
-	.withRange(8).finish();
+	.withRange(8).withRefer(REFER_TARGET).when(WHEN_COMBAT).when(WHEN_TOWN).finish();
 cSpell S_WALL_ICE_BALL = cSpell(eSpell::WALL_ICE_BALL)
-	.withRange(8).finish();
+	.withRange(8).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_GOO_BOMB = cSpell(eSpell::GOO_BOMB)
-	.withRange(12).finish();
+	.withRange(12).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_FOUL_VAPOR = cSpell(eSpell::FOUL_VAPOR)
-	.withRange(8).finish();
+	.withRange(8).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_CLOUD_SLEEP_LARGE = cSpell(eSpell::CLOUD_SLEEP_LARGE)
-	.withRange(10).finish();
+	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_ACID_SPRAY = cSpell(eSpell::ACID_SPRAY)
-	.withRange(10).finish();
+	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_PARALYZE_BEAM = cSpell(eSpell::PARALYZE_BEAM)
-	.withRange(10).finish();
+	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_SLEEP_MASS = cSpell(eSpell::SLEEP_MASS)
-	.withRange(10).finish();
+	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_RAVAGE_ENEMIES = cSpell(eSpell::RAVAGE_ENEMIES)
-	.withRange(12).finish();
+	.withRange(12).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_DISPEL_FIELD = cSpell(eSpell::DISPEL_FIELD)
-	.withRange(10).finish();
+	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).when(WHEN_TOWN).finish();
 cSpell S_MOVE_MOUNTAINS_MASS = cSpell(eSpell::MOVE_MOUNTAINS_MASS)
-	.withRange(8).finish();
+	.withRange(8).withRefer(REFER_TARGET).when(WHEN_TOWN).finish();
 // TODO: These two have a range of 10 only because all monster spells do (monster spells ignore official spell range)
 // They should perhaps have better ranges assigned at some point.
 cSpell S_WRACK = cSpell(eSpell::WRACK).asLevel(1)
-	.withRange(10).finish();
+	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_UNHOLY_RAVAGING = cSpell(eSpell::UNHOLY_RAVAGING).asLevel(6)
-	.withRange(10).finish();
+	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();

@@ -862,7 +862,7 @@ void give_party_spell(short which) {
 			}
 }
 
-void do_mage_spell(short pc_num,eSpell spell_num) {
+void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 	short i,j,item,target,r1,adj,store;
 	location where;
 	
@@ -875,12 +875,14 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 	
 	switch(spell_num) {
 		case eSpell::LIGHT:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			increase_light(50);
 			break;
 			
 		case eSpell::IDENTIFY:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			ASB("All of your items are identified.");
 			for(i = 0; i < 6; i++)
 				for(j = 0; j < 24; j++)
@@ -888,7 +890,8 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 			break;
 			
 		case eSpell::TRUE_SIGHT:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			for(where.x = 0; where.x < 64; where.x++)
 				for(where.y = 0; where.y < 64; where.y++)
 					if(dist(where,univ.town.p_loc) <= 2)
@@ -899,7 +902,8 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 		case eSpell::SUMMON_BEAST:
 			r1 = get_summon_monster(1);
 			if(r1 < 0) break;
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(3,1,4) + adj;
 			if(!summon_monster(r1,where,store,2))
 				add_string_to_buf("  Summon failed.");
@@ -909,7 +913,8 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 			j = minmax(1,7,store);
 			r1 = get_summon_monster(1); ////
 			if(r1 < 0) break;
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(4,1,4) + adj;
 			for(i = 0; i < j; i++)
 				if(!summon_monster(r1,where,store,2))
@@ -920,7 +925,8 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 			j = minmax(1,6,store);
 			r1 = get_summon_monster(2); ////
 			if(r1 < 0) break;
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(5,1,4) + adj;
 			for(i = 0; i < j; i++)
 				if(!summon_monster(r1,where,store,2))
@@ -931,7 +937,8 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 			j = minmax(1,5,store);
 			r1 = get_summon_monster(3); ////
 			if(r1 < 0) break;
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(7,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
 			for(i = 0; i < j; i++)
 				if(!summon_monster(r1,where,store,2))
@@ -941,31 +948,35 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 			store = get_ran(5,1,4) + 2 * stat_adj(who_cast,eSkill::INTELLIGENCE);
 			if(!summon_monster(85,where,store,2))
 				add_string_to_buf("  Summon failed.");
-			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			else if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 			
 		case eSpell::DISPEL_SQUARE:
-			add_string_to_buf("  Target spell.               ");
 			current_pat = square;
-			start_town_targeting(spell_num,pc_num);
+			start_town_targeting(spell_num,pc_num,freebie);
 			break;
 			
 		case eSpell::LIGHT_LONG:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			increase_light(200);
 			break;
 			
 		case eSpell::MAGIC_MAP:
 			item = pc_has_abil(pc_num,eItemAbil::SAPPHIRE);
-			if(item == 24)
+			if(item == 24 && !freebie)
 				add_string_to_buf("  You need a sapphire.        ");
 			else if(univ.town->defy_scrying || univ.town->defy_mapping)
 				add_string_to_buf("  The spell fails.                ");
 			else {
-				remove_charge(pc_num,item);
-				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-				add_string_to_buf("  As the sapphire dissolves,       ");
-				add_string_to_buf("  you have a vision.               ");
+				if(freebie) add_string_to_buf("  You have a vision.");
+				else {
+					remove_charge(pc_num,item);
+					univ.party[pc_num].cur_sp -= (*spell_num).cost;
+					add_string_to_buf("  As the sapphire dissolves,       ");
+					add_string_to_buf("  you have a vision.               ");
+				}
 				for(i = 0; i < 64; i++)
 					for(j = 0; j < 64; j++)
 						make_explored(i,j);
@@ -975,22 +986,21 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 			
 			
 		case eSpell::STEALTH:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			PSD[SDF_PARTY_STEALTHY] += max(6,univ.party[pc_num].level * 2);
 			break;
 			
 			
 		case eSpell::SCRY_MONSTER: case eSpell::UNLOCK: case eSpell::CAPTURE_SOUL: case eSpell::DISPEL_BARRIER:
 		case eSpell::BARRIER_FIRE: case eSpell::BARRIER_FORCE: case eSpell::QUICKFIRE:
-			add_string_to_buf("  Target spell.               ");
 			current_pat = single;
-			start_town_targeting(spell_num,pc_num);
+			start_town_targeting(spell_num,pc_num,freebie);
 			break;
 			
 		case eSpell::ANTIMAGIC:
-			add_string_to_buf("  Target spell.               ");
 			current_pat = radius2;
-			start_town_targeting(spell_num,pc_num);
+			start_town_targeting(spell_num,pc_num,freebie);
 			break;
 			
 		case eSpell::FLIGHT:
@@ -1003,7 +1013,8 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 			else if(univ.party.in_horse >= 0) ////
 				add_string_to_buf("  Leave horse first.             ");
 			else {
-				univ.party[pc_num].cur_sp -= (*spell_num).cost;
+				if(!freebie)
+					univ.party[pc_num].cur_sp -= (*spell_num).cost;
 				add_string_to_buf("  You start flying!               ");
 				PSD[SDF_PARTY_FLIGHT] = 3;
 			}
@@ -1011,7 +1022,7 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 			
 		case eSpell::RESIST_MAGIC: case eSpell::PROTECTION:
 			target = store_spell_target;
-			if(target < 6)
+			if(target < 6 && !freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			if(spell_num == eSpell::PROTECTION && target < 6) {
 				univ.party[target].status[eStatus::INVULNERABLE] += 2 + stat_adj(pc_num,eSkill::INTELLIGENCE) + get_ran(2,1,2);
@@ -1029,7 +1040,7 @@ void do_mage_spell(short pc_num,eSpell spell_num) {
 	}
 }
 
-void do_priest_spell(short pc_num,eSpell spell_num) {
+void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	short r1,r2, target, i,item,store,adj,x,y;
 	location loc;
 	location where;
@@ -1047,7 +1058,8 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 	
 	switch(spell_num) {
 		case eSpell::LOCATION:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			
 			if(is_town()) {
 				loc = (overall_mode == MODE_OUTDOORS) ? univ.party.p_loc : univ.town.p_loc;
@@ -1064,7 +1076,8 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			break;
 			
 		case eSpell::MANNA_MINOR: case eSpell::MANNA:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = univ.party[pc_num].level / 3 + 2 * stat_adj(who_cast,eSkill::INTELLIGENCE) + get_ran(2,1,4);
 			r1 = max(0,store);
 			if(spell_num == eSpell::MANNA_MINOR)
@@ -1076,11 +1089,12 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 		case eSpell::RITUAL_SANCTIFY:
 			add_string_to_buf("  Sanctify which space?               ");
 			current_pat = single;
-			start_town_targeting(spell_num,pc_num);
+			start_town_targeting(spell_num,pc_num,freebie);
 			break;
 			
 		case eSpell::LIGHT_DIVINE:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			// TODO: Should this call increase_light_level?
 			univ.party.light_level += 210;
 			break;
@@ -1089,10 +1103,12 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			store = stat_adj(who_cast,eSkill::INTELLIGENCE);
 			if(!summon_monster(125,where,get_ran(2,1,4) + store,2))
 				add_string_to_buf("  Summon failed.");
-			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			else if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 		case eSpell::STICKS_TO_SNAKES:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			r1 = univ.party[who_cast].level / 6 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,1);
 			for(i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
@@ -1102,7 +1118,8 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			}
 			break;
 		case eSpell::SUMMON_HOST:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(2,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
 			if(!summon_monster(126,where,store,2))
 				add_string_to_buf("  Summon failed.");
@@ -1116,36 +1133,39 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			store = get_ran(6,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
 			if(!summon_monster(122,where,store,2))
 				add_string_to_buf("  Summon failed.");
-			else univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			else if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 			
 		case eSpell::MOVE_MOUNTAINS: case eSpell::MOVE_MOUNTAINS_MASS:
 			add_string_to_buf("  Destroy what?               ");
 			current_pat = (spell_num == eSpell::MOVE_MOUNTAINS) ? single : square;
-			start_town_targeting(spell_num,pc_num);
+			start_town_targeting(spell_num,pc_num,freebie);
 			break;
 			
 		case eSpell::DISPEL_SPHERE: case eSpell::DISPEL_FIELD:
-			add_string_to_buf("  Target spell.               ");
 			current_pat = (spell_num == eSpell::DISPEL_SPHERE) ? radius2 : single;
-			start_town_targeting(spell_num,pc_num);
+			start_town_targeting(spell_num,pc_num,freebie);
 			break;
 			
 		case eSpell::DETECT_LIFE:
 			add_string_to_buf("  Monsters now on map.                ");
 			PSD[SDF_PARTY_DETECT_LIFE] += 6 + get_ran(1,0,6);
 			clear_map();
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 		case eSpell::FIREWALK:
 			add_string_to_buf("  You are now firewalking.                ");
 			PSD[SDF_PARTY_FIREWALK] += univ.party[pc_num].level / 12 + 2;
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 			
 		case eSpell::SHATTER:
 			add_string_to_buf("  You send out a burst of energy. ");
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			for(loc.x = where.x - 1;loc.x < where.x + 2; loc.x++)
 				for(loc.y = where.y - 1;loc.y < where.y + 2; loc.y++)
 					crumble_wall(loc);
@@ -1165,7 +1185,8 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 				add_string_to_buf("  Not while on horseback. ");
 				return;
 			}
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			add_string_to_buf("  You are moved... ");
 			force_town_enter(univ.scenario.which_town_start,univ.scenario.where_start);
 			start_town_mode(univ.scenario.which_town_start,9);
@@ -1184,7 +1205,8 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 //			target = select_pc(11,0);
 			target = store_spell_target;
 			if(target < 6) {
-				univ.party[pc_num].cur_sp -= (*spell_num).cost;
+				if(!freebie)
+					univ.party[pc_num].cur_sp -= (*spell_num).cost;
 				std::ostringstream sout;
 				sout << "  " << univ.party[target].name;
 				switch(spell_num) {
@@ -1253,7 +1275,8 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 					return;
 				}
 				
-				univ.party[pc_num].cur_sp -= (*spell_num).cost;
+				if(!freebie)
+					univ.party[pc_num].cur_sp -= (*spell_num).cost;
 				std::ostringstream sout;
 				sout << "  " << univ.party[target].name;
 				if(spell_num == eSpell::MARTYRS_SHIELD) {
@@ -1307,7 +1330,7 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 				} else {
 					
 					if(!PSD[SDF_RESURRECT_NO_BALM]) {
-						if((item = pc_has_abil(pc_num,eItemAbil::RESSURECTION_BALM)) == 24) {
+						if((item = pc_has_abil(pc_num,eItemAbil::RESURRECTION_BALM)) == 24) {
 							add_string_to_buf("  Need resurrection balm.");
 							break;
 						}
@@ -1355,7 +1378,8 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			break;
 			
 		case eSpell::HEAL_ALL_LIGHT: case eSpell::HEAL_ALL: case eSpell::REVIVE_ALL:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			if(spell_num != eSpell::REVIVE_ALL) {
 				r1 = get_ran((spell_num == eSpell::HEAL_ALL ? 6 : 3) + adj, 1, 4);
 				add_string_to_buf("  Party healed " + std::to_string(r1) + ".");
@@ -1373,13 +1397,15 @@ void do_priest_spell(short pc_num,eSpell spell_num) {
 			break;
 			
 		case eSpell::POISON_CURE_ALL:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			add_string_to_buf("  Party cured.");
 			cure_party(3 + stat_adj(pc_num,eSkill::INTELLIGENCE));
 			break;
 			
 		case eSpell::SANCTUARY_MASS: case eSpell::CLEANSE_MAJOR: case eSpell::HYPERACTIVITY:
-			univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			switch(spell_num) {
 				case eSpell::SANCTUARY_MASS: add_string_to_buf("  Party hidden.");break;
 				case eSpell::CLEANSE_MAJOR: add_string_to_buf("  Party cleansed.");break;
@@ -2262,6 +2288,7 @@ short stat_adj(short pc_num,eSkill which) {
 }
 
 void start_town_targeting(eSpell s_num,short who_c,bool freebie) {
+	add_string_to_buf("  Target spell.");
 	overall_mode = MODE_TOWN_TARGET;
 	town_spell = s_num;
 	who_cast = who_c;
@@ -2339,7 +2366,7 @@ void do_alchemy() {
 		}
 		else {
 			store_i.value = potion_val[which_p];
-			store_i.ability_strength = potion_strs[which_p];
+			store_i.abil_data[0] = potion_strs[which_p];
 			store_i.ability = (eItemAbil) potion_abils[which_p];
 			if(which_p == 8)
 				store_i.magic_use_type = 2;

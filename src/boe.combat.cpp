@@ -608,11 +608,11 @@ void pc_attack(short who_att,short target) {
 		
 		r2 = get_ran(1,1,univ.party[who_att].items[weap1].item_level) + dam_adj + 2 + univ.party[who_att].items[weap1].bonus;
 		if(univ.party[who_att].items[weap1].ability == eItemAbil::WEAK_WEAPON)
-			r2 = (r2 * (10 - univ.party[who_att].items[weap1].ability_strength)) / 10;
+			r2 = (r2 * (10 - univ.party[who_att].items[weap1].abil_data[0])) / 10;
 		
 		if(r1 <= hit_chance[univ.party[who_att].skills[what_skill1]]) {
 			spec_dam = calc_spec_dam(univ.party[who_att].items[weap1].ability,
-									 univ.party[who_att].items[weap1].ability_strength,which_m);
+									 univ.party[who_att].items[weap1].abil_data[0],which_m);
 			
 			// assassinate
 			r1 = get_ran(1,1,100);
@@ -648,17 +648,22 @@ void pc_attack(short who_att,short target) {
 				poison_monst(which_m,poison_amt);
 				move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
 			}
-			if((univ.party[who_att].items[weap1].ability == eItemAbil::POISONED_WEAPON) && (get_ran(1,0,1) == 1)) {
+			if((univ.party[who_att].items[weap1].ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
+				switch(eStatus(univ.party[who_att].items[weap1].abil_data[1])) {
+						// TODO: Handle other status types
+					case eStatus::POISON:
 				add_string_to_buf("  Blade drips venom.             ");
-				poison_monst(which_m,univ.party[who_att].items[weap1].ability_strength / 2);
-			}
-			if((univ.party[who_att].items[weap1].ability == eItemAbil::ACIDIC_WEAPON) && (get_ran(1,0,1) == 1)) {
+				poison_monst(which_m,univ.party[who_att].items[weap1].abil_data[0] / 2);
+						break;
+					case eStatus::ACID:
 				add_string_to_buf("  Blade drips acid.             ");
-				acid_monst(which_m,univ.party[who_att].items[weap1].ability_strength / 2);
+				acid_monst(which_m,univ.party[who_att].items[weap1].abil_data[0] / 2);
+						break;
+				}
 			}
 			if((univ.party[who_att].items[weap1].ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drains life.             ");
-				heal_pc(who_att,univ.party[who_att].items[weap1].ability_strength / 2);
+				heal_pc(who_att,univ.party[who_att].items[weap1].abil_data[0] / 2);
 			}
 		}
 		else {
@@ -688,11 +693,11 @@ void pc_attack(short who_att,short target) {
 		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
 		r2 = get_ran(1,1,univ.party[who_att].items[weap2].item_level) + dam_adj - 1 + univ.party[who_att].items[weap2].bonus;
 		if(univ.party[who_att].items[weap2].ability == eItemAbil::WEAK_WEAPON)
-			r2 = (r2 * (10 - univ.party[who_att].items[weap2].ability_strength)) / 10;
+			r2 = (r2 * (10 - univ.party[who_att].items[weap2].abil_data[0])) / 10;
 		
 		if(r1 <= hit_chance[univ.party[who_att].skills[what_skill2]]) {
 			spec_dam = calc_spec_dam(univ.party[who_att].items[weap2].ability,
-									 univ.party[who_att].items[weap2].ability_strength,which_m);
+									 univ.party[who_att].items[weap2].abil_data[0],which_m);
 			switch(what_skill2) {
 			 	case eSkill::EDGED_WEAPONS:
 					if(univ.party[who_att].items[weap1].item_level < 8)
@@ -710,17 +715,21 @@ void pc_attack(short who_att,short target) {
 					break;
 			}
 			
-			if((univ.party[who_att].items[weap2].ability == eItemAbil::POISONED_WEAPON) && (get_ran(1,0,1) == 1)) {
+			if((univ.party[who_att].items[weap2].ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
+				switch(eStatus(univ.party[who_att].items[weap2].abil_data[1])) {
+					case eStatus::POISON:
 				add_string_to_buf("  Blade drips venom.             ");
-				poison_monst(which_m,univ.party[who_att].items[weap2].ability_strength / 2);
-			}
-			if((univ.party[who_att].items[weap2].ability == eItemAbil::ACIDIC_WEAPON) && (get_ran(1,0,1) == 1)) {
+				poison_monst(which_m,univ.party[who_att].items[weap2].abil_data[0] / 2);
+						break;
+					case eStatus::ACID:
 				add_string_to_buf("  Blade drips acid.             ");
-				acid_monst(which_m,univ.party[who_att].items[weap2].ability_strength / 2);
+				acid_monst(which_m,univ.party[who_att].items[weap2].abil_data[0] / 2);
+						break;
+				}
 			}
 			if((univ.party[who_att].items[weap2].ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
 				add_string_to_buf("  Blade drains life.             ");
-				heal_pc(who_att,univ.party[who_att].items[weap2].ability_strength / 2);
+				heal_pc(who_att,univ.party[who_att].items[weap2].abil_data[0] / 2);
 			}
 			
 		}
@@ -1027,7 +1036,10 @@ void do_combat_cast(location target) {
 								//hit_space(target,r1,5,1,0);
 								break;
 							case eSpell::WOUND:
-								r1 = get_ran(min(7,2 + bonus + level / 2),1,4);
+							case eSpell::WRACK:
+								if(spell_being_cast == eSpell::WRACK)
+									r1 = get_ran(2 + bonus / 2,1,4);
+								else r1 = get_ran(min(7,2 + bonus + level / 2),1,4);
 								add_missile(target,14,1,0,0);
 								do_missile_anim(100,univ.party[current_pc].combat_pos,24);
 								hit_space(target,r1,DAMAGE_UNBLOCKABLE,1,0);
@@ -1162,6 +1174,15 @@ void do_combat_cast(location target) {
 											store_m_type = 9;
 											charm_monst(cur_monst,0,eStatus::PARALYZED,500);
 											store_sound = 24;
+											break;
+										case eSpell::UNHOLY_RAVAGING:
+											store_m_type = 14;
+											store_sound = 53;
+											r1 = get_ran(4,1,8);
+											r2 = get_ran(1,0,2);
+											damage_monst(targ_num, 7, r1, 0, DAMAGE_MAGIC,0);
+											slow_monst(cur_monst, 4 + r2);
+											poison_monst(cur_monst, 5 + r2);
 											break;
 											
 										case eSpell::SCRY_MONSTER:
@@ -1450,8 +1471,8 @@ void fire_missile(location target) {
 	hit_bonus += stat_adj(missile_firer,eSkill::DEXTERITY) - can_see_light(univ.party[missile_firer].combat_pos,target,sight_obscurity)
 		+ minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
 	if((skill_item = pc_has_abil_equip(missile_firer,eItemAbil::ACCURACY)) < 24) {
-		hit_bonus += univ.party[missile_firer].items[skill_item].ability_strength / 2;
-		dam_bonus += univ.party[missile_firer].items[skill_item].ability_strength / 2;
+		hit_bonus += univ.party[missile_firer].items[skill_item].abil_data[0] / 2;
+		dam_bonus += univ.party[missile_firer].items[skill_item].abil_data[0] / 2;
 	}
 	
 	// race adj.
@@ -1479,7 +1500,7 @@ void fire_missile(location target) {
 				pause(dist(univ.party[current_pc].combat_pos,target)*5);
 			run_a_missile(univ.party[missile_firer].combat_pos,target,2,1,5,0,0,100);
 			start_missile_anim();
-			place_spell_pattern(radius2,target, DAMAGE_FIRE,univ.party[missile_firer].items[ammo_inv_slot].ability_strength * 2,missile_firer);
+			place_spell_pattern(radius2,target, DAMAGE_FIRE,univ.party[missile_firer].items[ammo_inv_slot].abil_data[0] * 2,missile_firer);
 			do_explosion_anim(5,0);
 			end_missile_anim();
 			handle_marked_damage();
@@ -1525,7 +1546,7 @@ void fire_missile(location target) {
 			else if((targ_monst = monst_there(target)) < univ.town->max_monst()) {
 				cur_monst = &univ.town.monst[targ_monst];
 				spec_dam = calc_spec_dam(univ.party[missile_firer].items[ammo_inv_slot].ability,
-										 univ.party[missile_firer].items[ammo_inv_slot].ability_strength,cur_monst);
+										 univ.party[missile_firer].items[ammo_inv_slot].abil_data[0],cur_monst);
 				if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::MISSILE_HEAL_TARGET) {
 					ASB("  There is a flash of light.");
 					cur_monst->health += r2;
@@ -4211,9 +4232,8 @@ void end_combat() {
 
 
 bool combat_cast_mage_spell() {
-	short target,i,store_sp,bonus = 1,r1,store_sound = 0,store_m_type = 0,num_opp = 0;
+	short store_sp;
 	eSpell spell_num;
-	cCreature *which_m;
 	cMonster get_monst;
 	
 	if(univ.town.is_antimagic(univ.party[current_pc].combat_pos.x,univ.party[current_pc].combat_pos.y)) {
@@ -4254,7 +4274,6 @@ bool combat_cast_mage_spell() {
 			store_sum_monst_cost = get_monst.level;
 		}
 		
-		bonus = stat_adj(current_pc,eSkill::INTELLIGENCE);
 		combat_posing_monster = current_working_monster = current_pc;
 		if(spell_num == eSpell::NONE) return false;
 		print_spell_cast(spell_num,eSkill::MAGE_SPELLS);
@@ -4271,13 +4290,29 @@ bool combat_cast_mage_spell() {
 			start_fancy_spell_targeting(spell_num);
 		}
 		else {
-			start_missile_anim();
 			take_ap(6);
 			draw_terrain(2);
+			combat_immed_mage_cast(current_pc,spell_num);
+		}
+		put_pc_screen();
+	}
+	combat_posing_monster = current_working_monster = -1;
+	// Did anything actually get cast?
+	if(store_sp == univ.party[current_pc].cur_sp)
+		return false;
+	else return true;
+}
+
+void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
+	short target, store_m_type = 0, i, store_sound = 0, num_opp = 0, r1;
+	short bonus = freebie ? 1 : stat_adj(current_pc,eSkill::INTELLIGENCE);
+	cCreature* which_m;
+	start_missile_anim();
 			switch(spell_num) {
 				case eSpell::SHOCKWAVE:
-					univ.party[current_pc].cur_sp -= (*spell_num).cost;
-					add_string_to_buf("  The ground shakes.          ");
+					if(!freebie)
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
+					add_string_to_buf("  The ground shakes!");
 					do_shockwave(univ.party[current_pc].combat_pos);
 					break;
 					
@@ -4285,7 +4320,8 @@ bool combat_cast_mage_spell() {
 //					target = select_pc(11,0);
 					target = store_spell_target;
 					if(target < 6) {
-						univ.party[current_pc].cur_sp -= (*spell_num).cost;
+						if(!freebie)
+							univ.party[current_pc].cur_sp -= (*spell_num).cost;
 						play_sound(4);
 						std::string c_line = "  " + univ.party[target].name;
 						switch(spell_num) {
@@ -4320,7 +4356,8 @@ bool combat_cast_mage_spell() {
 					
 				case eSpell::HASTE_MAJOR: case eSpell::BLESS_MAJOR:
 					store_sound = 25;
-					univ.party[current_pc].cur_sp -= (*spell_num).cost;
+					if(!freebie)
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					
 					
 					for(i = 0; i < 6; i++)
@@ -4344,7 +4381,8 @@ bool combat_cast_mage_spell() {
 					
 					
 				case eSpell::SLOW_GROUP: case eSpell::FEAR_GROUP: case eSpell::PARALYSIS_MASS: // affect monsters in area spells
-					univ.party[current_pc].cur_sp -= (*spell_num).cost;
+					if(!freebie)
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					store_sound = 25;
 					if(spell_num == eSpell::FEAR_GROUP)
 						store_sound = 54;
@@ -4388,36 +4426,15 @@ bool combat_cast_mage_spell() {
 					place_spell_pattern(radius2,univ.party[current_pc].combat_pos,WALL_BLADES,6);
 					break;
 			}
-			
-		}
 		if(num_opp < 10)
 			do_missile_anim((num_opp < 5) ? 50 : 25,univ.party[current_pc].combat_pos,store_sound);
 		else play_sound(store_sound);
 		end_missile_anim();
-		put_pc_screen();
-	}
-	combat_posing_monster = current_working_monster = -1;
-	// Did anything actually get cast?
-	if(store_sp == univ.party[current_pc].cur_sp)
-		return false;
-	else return true;
 }
 
-
 bool combat_cast_priest_spell() {
-	short target,i,store_sp,bonus,store_sound = 0,store_m_type = 0,num_opp = 0;
+	short store_sp;
 	eSpell spell_num;
-	cCreature *which_m;
-	effect_pat_type protect_pat = {{
-		{0,1,1,1,1,1,1,1,0},
-		{1,5,5,5,5,5,5,5,1},
-		{1,5,6,6,6,6,6,5,1},
-		{1,5,6,3,3,3,6,5,1},
-		{1,5,6,3,3,3,6,5,1},
-		{1,5,6,3,3,3,6,5,1},
-		{1,5,6,6,6,6,6,5,1},
-		{1,5,5,5,5,5,5,5,1},
-		{0,1,1,1,1,1,1,1,0}}};
 	
 	if(univ.town.is_antimagic(univ.party[current_pc].combat_pos.x,univ.party[current_pc].combat_pos.y)) {
 		add_string_to_buf("  Not in antimagic field.");
@@ -4441,7 +4458,6 @@ bool combat_cast_priest_spell() {
 	}
 	
 	if(spell_num == eSpell::NONE) return false;
-	bonus = stat_adj(current_pc,eSkill::INTELLIGENCE);
 	
 	combat_posing_monster = current_working_monster = current_pc;
 	
@@ -4461,23 +4477,52 @@ bool combat_cast_priest_spell() {
 			start_fancy_spell_targeting(spell_num);
 		}
 		else {
-			start_missile_anim();
 			take_ap(5);
 			draw_terrain(2);
+			combat_immed_priest_cast(current_pc, spell_num);
+		}
+		put_pc_screen();
+	}
+	
+	combat_posing_monster = current_working_monster = -1;
+	// Did anything actually get cast?
+	if(store_sp == univ.party[current_pc].cur_sp)
+		return false;
+	else return true;
+}
+
+void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) {
+	short target,i,store_sound = 0,store_m_type = 0,num_opp = 0;
+	short bonus = freebie ? 1 : stat_adj(current_pc,eSkill::INTELLIGENCE);
+	cCreature *which_m;
+	effect_pat_type protect_pat = {{
+		{0,1,1,1,1,1,1,1,0},
+		{1,5,5,5,5,5,5,5,1},
+		{1,5,6,6,6,6,6,5,1},
+		{1,5,6,3,3,3,6,5,1},
+		{1,5,6,3,3,3,6,5,1},
+		{1,5,6,3,3,3,6,5,1},
+		{1,5,6,6,6,6,6,5,1},
+		{1,5,5,5,5,5,5,5,1},
+		{0,1,1,1,1,1,1,1,0}
+	}};
+	start_missile_anim();
 			switch(spell_num) {
 				case eSpell::BLESS_MINOR: case eSpell::BLESS:
 //					target = select_pc(11,0);
 					target = store_spell_target;
 					if(target < 6) {
 						store_sound = 4;
-						univ.party[current_pc].cur_sp -= (*spell_num).cost;
+						if(!freebie)
+							univ.party[current_pc].cur_sp -= (*spell_num).cost;
 						curse_pc(target,-(spell_num==eSpell::BLESS_MINOR ? 2 : max(2,(univ.party[current_pc].level * 3) / 4 + 1 + bonus)));
 						add_missile(univ.party[target].combat_pos,8,0,0,0);
 					}
 					break;
 					
 				case eSpell::BLESS_PARTY:
-					univ.party[current_pc].cur_sp -= (*spell_num).cost;
+					if(!freebie)
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					for(i = 0; i < 6; i++)
 						if(univ.party[i].main_status == eMainStatus::ALIVE) {
 							curse_pc(i, -(univ.party[current_pc].level / 3));
@@ -4487,7 +4532,8 @@ bool combat_cast_priest_spell() {
 					break;
 					
 				case eSpell::AVATAR:
-					univ.party[current_pc].cur_sp -= (*spell_num).cost;
+					if(!freebie)
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					add_string_to_buf("  " + univ.party[current_pc].name + " is an avatar!");
 					heal_pc(current_pc,200);
 					cure_pc(current_pc,8);
@@ -4502,11 +4548,15 @@ bool combat_cast_priest_spell() {
 					break;
 					
 				case eSpell::CURSE_ALL: case eSpell::CHARM_MASS: case eSpell::PESTILENCE:
-					univ.party[current_pc].cur_sp -= (*spell_num).cost;
+					if(!freebie)
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					store_sound = 24;
 					for(i = 0; i < univ.town->max_monst(); i++) {
 						if((univ.town.monst[i].active != 0) &&(univ.town.monst[i].attitude % 2 == 1) &&
 							(dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= (*spell_num).range)) {
+							// TODO: Should this ^ also check that you can see each target? ie can_see_light(...) < 5
+							// --> can_see_light(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc,sight_obscurity)
+							// (The item version of the spell used to check for this, but no longer does since it now defers to here.)
 							which_m = &univ.town.monst[i];
 							switch(spell_num) {
 								case eSpell::CURSE_ALL:
@@ -4514,6 +4564,9 @@ bool combat_cast_priest_spell() {
 									store_m_type = 8;
 									break;
 								case eSpell::CHARM_MASS:
+									// TODO: As an item spell, the penalty was 0, though perhaps it was intended to be 8
+									// (since 8 was passed as the final argument). Now the penalty has increased to 27.
+									// It should probably be put back somehow.
 									charm_monst(which_m,28 - bonus,eStatus::CHARM,0);
 									store_m_type = 14;
 									break;
@@ -4531,25 +4584,17 @@ bool combat_cast_priest_spell() {
 					break;
 					
 				case eSpell::PROTECTIVE_CIRCLE:
-					univ.party[current_pc].cur_sp -= (*spell_num).cost;
+					if(!freebie)
+						univ.party[current_pc].cur_sp -= (*spell_num).cost;
 					play_sound(24);
 					add_string_to_buf("  Protective field created.");
 					place_spell_pattern(protect_pat,univ.party[current_pc].combat_pos,6);
 					break;
 			}
-		}
 		if(num_opp < 10)
 			do_missile_anim((num_opp < 5) ? 50 : 25,univ.party[current_pc].combat_pos,store_sound);
 		else play_sound(store_sound);
 		end_missile_anim();
-		put_pc_screen();
-	}
-	
-	combat_posing_monster = current_working_monster = -1;
-	// Did anything actually get cast?
-	if(store_sp == univ.party[current_pc].cur_sp)
-		return false;
-	else return true;
 }
 
 void start_spell_targeting(eSpell num, bool freebie) {

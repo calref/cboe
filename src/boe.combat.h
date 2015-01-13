@@ -52,6 +52,8 @@ bool out_monst_all_dead();
 void end_combat();
 bool combat_cast_mage_spell();
 bool combat_cast_priest_spell();
+void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie = false);
+void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie = false);
 void start_spell_targeting(eSpell num, bool freebie = false);
 void start_fancy_spell_targeting(eSpell num, bool freebie = false);
 void spell_cast_hit_return();

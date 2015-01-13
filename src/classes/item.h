@@ -29,7 +29,7 @@ public:
 	int magic_use_type;
 	unsigned short graphic_num;
 	eItemAbil ability;
-	unsigned int ability_strength;
+	unsigned int abil_data[2];
 	unsigned short type_flag;
 	unsigned int is_special;
 	short value;
@@ -76,19 +76,5 @@ public:
 	std::string name;
 	std::string descr;
 };
-
-/*
- typedef struct {
- short variety, item_level;
- char awkward, bonus, protection, charges, type;
- unsigned char graphic_num,ability, type_flag, is_special;
- short value;
- bool identified, magic;
- unsigned char weight, description_flag;
- char full_name[25], name[15];
- unsigned char reserved1,reserved2;
- unsigned char magic_use_type, ability_strength, treas_class, real_abil;
- } short_item_record_type;
- */
 
 #endif

@@ -38,6 +38,7 @@ public:
 	eSkill type;
 	int when_cast;
 	std::string name() const;
+	bool is_priest() const;
 	static eSpell fromNum(eSkill type, int num);
 };
 

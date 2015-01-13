@@ -2216,8 +2216,8 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 			}
 			short item = pc_has_abil_equip(i,eItemAbil::REGENERATE);
 			if(item < 24 && univ.party[i].cur_health < univ.party[i].max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)){
-				int j = get_ran(1,0,univ.party[i].items[item].ability_strength / 3);
-				if(univ.party[i].items[item].ability_strength / 3 == 0)
+				int j = get_ran(1,0,univ.party[i].items[item].abil_data[0] / 3);
+				if(univ.party[i].items[item].abil_data[0] / 3 == 0)
 					j = get_ran(1,0,1);
 				if(is_out()) j = j * 4;
 				heal_pc(i,j);
@@ -2434,8 +2434,8 @@ void increase_age() {
 			if((item = pc_has_abil_equip(i,eItemAbil::REGENERATE)) < 24
 			   && (univ.party[i].cur_health < univ.party[i].max_health)
 			   && ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
-				j = get_ran(1,0,univ.party[i].items[item].ability_strength / 3);
-				if(univ.party[i].items[item].ability_strength / 3 == 0)
+				j = get_ran(1,0,univ.party[i].items[item].abil_data[0] / 3);
+				if(univ.party[i].items[item].abil_data[0] / 3 == 0)
 					j = get_ran(1,0,1);
 				if(is_out()) j = j * 4;
 				heal_pc(i,j);

@@ -28,6 +28,7 @@
 #include "dlogutil.hpp"
 #include "fileio.hpp"
 #include <array>
+#include "spell.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
@@ -58,18 +59,10 @@ bool special_in_progress = false;
 // 0 - can't use 1 - combat only 2 - town only 3 - town & combat only  4 - everywhere  5 - outdoor
 // + 10 - mag. inept can use
 std::map<eItemAbil, short> abil_chart = {
-	{eItemAbil::POISON_WEAPON,13}, {eItemAbil::BLESS_CURSE,4}, {eItemAbil::AFFECT_POISON,4}, {eItemAbil::HASTE_SLOW,4},
-	{eItemAbil::AFFECT_INVULN,3}, {eItemAbil::AFFECT_MAGIC_RES,3}, {eItemAbil::AFFECT_WEB,3}, {eItemAbil::AFFECT_DISEASE,4},
-	{eItemAbil::AFFECT_SANCTUARY,3}, {eItemAbil::AFFECT_DUMBFOUND,3}, {eItemAbil::AFFECT_MARTYRS_SHIELD,3}, {eItemAbil::AFFECT_SLEEP,3},
-	{eItemAbil::AFFECT_PARALYSIS,3}, {eItemAbil::AFFECT_ACID,3}, {eItemAbil::BLISS,3}, {eItemAbil::AFFECT_EXPERIENCE,4},
+	{eItemAbil::POISON_WEAPON,13}, {eItemAbil::AFFECT_STATUS,3}, {eItemAbil::BLISS,3}, {eItemAbil::AFFECT_EXPERIENCE,4},
 	{eItemAbil::AFFECT_SKILL_POINTS,4}, {eItemAbil::AFFECT_HEALTH,4}, {eItemAbil::AFFECT_SPELL_POINTS,4}, {eItemAbil::DOOM,3},
 	{eItemAbil::LIGHT,13}, {eItemAbil::STEALTH,3}, {eItemAbil::FIREWALK,3}, {eItemAbil::FLYING,5}, {eItemAbil::MAJOR_HEALING,4},
-	{eItemAbil::CALL_SPECIAL,4}, {eItemAbil::FLAME,1}, {eItemAbil::FIREBALL,1}, {eItemAbil::FIRESTORM,1}, {eItemAbil::KILL,1},
-	{eItemAbil::ICE_BOLT,1}, {eItemAbil::SLOW,1}, {eItemAbil::SHOCKWAVE,1}, {eItemAbil::DISPEL_UNDEAD,1}, {eItemAbil::DISPEL_SPIRIT,1},
-	{eItemAbil::SUMMONING,3}, {eItemAbil::MASS_SUMMONING,3}, {eItemAbil::ACID_SPRAY,1}, {eItemAbil::STINKING_CLOUD,1},
-	{eItemAbil::SLEEP_FIELD,1}, {eItemAbil::VENOM,1}, {eItemAbil::SHOCKSTORM,1}, {eItemAbil::PARALYSIS,1}, {eItemAbil::WEB,1},
-	{eItemAbil::STRENGTHEN_TARGET,1}, {eItemAbil::QUICKFIRE,3}, {eItemAbil::MASS_CHARM,1}, {eItemAbil::MAGIC_MAP,2},
-	{eItemAbil::DISPEL_BARRIER,2}, {eItemAbil::ICE_WALL,1}, {eItemAbil::CHARM_SPELL,1}, {eItemAbil::ANTIMAGIC_CLOUD,1},
+	{eItemAbil::CALL_SPECIAL,4}, {eItemAbil::CAST_SPELL,4},
 };
 
 // TODO: I bet this is completely unused; it looks like it does nothing.
@@ -592,17 +585,41 @@ void use_item(short pc,short item) {
 	bool take_charge = true,inept_ok = false;
 	short level,i,j,item_use_code,str,type,r1;
 	short sp[3] = {}; // Dummy values to pass to run_special; not actually used
-	eStatus which_stat;
+	eStatus status;
+	eSpell spell;
 	location user_loc;
 	cCreature *which_m;
 	extern effect_pat_type single;
 	eItemAbil abil = univ.party[pc].items[item].ability;
 	level = univ.party[pc].items[item].item_level;
 	
+	// TODO: Replace abil_chart with a cItem member function
 	item_use_code = abil_chart[abil];
 	if(item_use_code >= 10) {
 		item_use_code -= 10;
 		inept_ok = true;
+	}
+	if(abil == eItemAbil::AFFECT_STATUS) {
+		status = eStatus(univ.party[pc].items[item].abil_data[1]);
+		if(status == eStatus::POISON || status == eStatus::DISEASE || status == eStatus::HASTE_SLOW || status == eStatus:: BLESS_CURSE)
+			item_use_code = 4;
+	} else if(abil == eItemAbil::CAST_SPELL) {
+		spell = eSpell(univ.party[pc].items[item].abil_data[1]);
+		int when = (*spell).when_cast;
+		// Rather than trying to translate the spell's "when cast" value to the less expressive item_use_code,
+		// simply check if it's useable in the current context.
+		if(is_out() && when & WHEN_OUTDOORS)
+			item_use_code = 5;
+		else if(is_town() && when & WHEN_TOWN)
+			item_use_code = 2;
+		else if(is_combat() && when & WHEN_COMBAT)
+			item_use_code = 1;
+		else {
+			// It's not useable in the current context, so translate to the item_use_code that gives the best error message
+			if(is_town() || is_out())
+				item_use_code = 1;
+			else item_use_code = 2;
+		}
 	}
 	
 	if(is_out())
@@ -651,63 +668,60 @@ void use_item(short pc,short item) {
 		if(univ.party[pc].items[item].variety == eItemType::POTION)
 			play_sound(56);
 		
-		str = univ.party[pc].items[item].ability_strength;
-		store_item_spell_level = str * 2 + 1;
+		str = univ.party[pc].items[item].abil_data[0];
+		store_item_spell_level = str;
 		type = univ.party[pc].items[item].magic_use_type;
 		
 		switch(abil) {
 			case eItemAbil::POISON_WEAPON: // poison weapon
 				take_charge = poison_weapon(pc,str,0);
 				break;
-			case eItemAbil::BLESS_CURSE:
+			case eItemAbil::AFFECT_STATUS:
+				switch(status) {
+					case eStatus::BLESS_CURSE:
 				play_sound(4);
-				which_stat = eStatus::BLESS_CURSE;
 				if(type % 2 == 1) {
 					ASB("  You feel awkward.");
 					str = str * -1;
 				}else ASB("  You feel blessed.");
 				if(type > 1)
-					affect_party(which_stat,str);
-				else affect_pc(pc,which_stat,str);
+					affect_party(status,str);
+				else affect_pc(pc,status,str);
 				break;
-			case eItemAbil::HASTE_SLOW:
+			case eStatus::HASTE_SLOW:
 				// TODO: Is this the right sound?
 				play_sound(75);
-				which_stat = eStatus::HASTE_SLOW;
 				if(type % 2 == 1) {
 					ASB("  You feel sluggish.");
 					str = str * -1;
 				}else ASB("  You feel speedy.");
 				if(type > 1)
-					affect_party(which_stat,str);
-				else affect_pc(pc,which_stat,str);
+					affect_party(status,str);
+				else affect_pc(pc,status,str);
 				break;
-			case eItemAbil::AFFECT_INVULN:
+			case eStatus::INVULNERABLE:
 				// TODO: Is this the right sound?
 				play_sound(68);
-				which_stat = eStatus::INVULNERABLE;
 				if(type % 2 == 1) {
 					ASB("  You feel odd.");
 					str = str * -1;
 				}else ASB("  You feel protected.");
 				if(type > 1)
-					affect_party(which_stat,str);
-				else affect_pc(pc,which_stat,str);
+					affect_party(status,str);
+				else affect_pc(pc,status,str);
 				break;
-			case eItemAbil::AFFECT_MAGIC_RES:
+			case eStatus::MAGIC_RESISTANCE:
 				// TODO: Is this the right sound?
 				play_sound(51);
-				which_stat = eStatus::MAGIC_RESISTANCE;
 				if(type % 2 == 1) {
 					ASB("  You feel odd.");
 					str = str * -1;
 				}else ASB("  You feel protected.");
 				if(type > 1)
-					affect_party(which_stat,str);
-				else affect_pc(pc,which_stat,str);
+					affect_party(status,str);
+				else affect_pc(pc,status,str);
 				break;
-			case eItemAbil::AFFECT_WEB:
-				which_stat = eStatus::WEBS;
+			case eStatus::WEBS:
 				if(type % 2 == 1)
 					ASB("  You feel sticky.");
 				else {
@@ -715,34 +729,32 @@ void use_item(short pc,short item) {
 					str = str * -1;
 				}
 				if(type > 1)
-					affect_party(which_stat,str);
-				else affect_pc(pc,which_stat,str);
+					affect_party(status,str);
+				else affect_pc(pc,status,str);
 				break;
-			case eItemAbil::AFFECT_SANCTUARY:
+			case eStatus::INVISIBLE:
 				// TODO: Is this the right sound?
 				play_sound(43);
-				which_stat = eStatus::INVISIBLE;
 				if(type % 2 == 1) {
 					ASB("  You feel exposed.");
 					str = str * -1;
 				}else ASB("  You feel obscure.");
 				if(type > 1)
-					affect_party(which_stat,str);
-				else affect_pc(pc,which_stat,str);
+					affect_party(status,str);
+				else affect_pc(pc,status,str);
 				break;
-			case eItemAbil::AFFECT_MARTYRS_SHIELD:
+			case eStatus::MARTYRS_SHIELD:
 				// TODO: Is this the right sound?
 				play_sound(43);
-				which_stat = eStatus::MARTYRS_SHIELD;
 				if(type % 2 == 1) {
 					ASB("  You feel dull.");
 					str = str * -1;
 				}else ASB("  You start to glow slightly.");
 				if(type > 1)
-					affect_party(which_stat,str);
-				else affect_pc(pc,which_stat,str);
+					affect_party(status,str);
+				else affect_pc(pc,status,str);
 				break;
-			case eItemAbil::AFFECT_POISON:
+			case eStatus::POISON:
 				switch(type) {
 					case 0:
 						ASB("  You feel better.");
@@ -762,7 +774,7 @@ void use_item(short pc,short item) {
 						break;
 				}
 				break;
-			case eItemAbil::AFFECT_DISEASE:
+			case eStatus::DISEASE:
 				switch(type) {
 					case 0:
 						ASB("  You feel healthy.");
@@ -783,7 +795,7 @@ void use_item(short pc,short item) {
 						break;
 				}
 				break;
-			case eItemAbil::AFFECT_DUMBFOUND:
+			case eStatus::DUMB:
 				switch(type) {
 					case 0:
 						ASB("  You feel clear headed.");
@@ -804,7 +816,7 @@ void use_item(short pc,short item) {
 						break;
 				}
 				break;
-			case eItemAbil::AFFECT_SLEEP:
+			case eStatus::ASLEEP:
 				switch(type) {
 					case 0:
 						ASB("  You feel alert.");
@@ -825,7 +837,7 @@ void use_item(short pc,short item) {
 						break;
 				}
 				break;
-			case eItemAbil::AFFECT_PARALYSIS:
+			case eStatus::PARALYZED:
 				switch(type) {
 					case 0:
 						ASB("  You find it easier to move.");
@@ -846,7 +858,7 @@ void use_item(short pc,short item) {
 						break;
 				}
 				break;
-			case eItemAbil::AFFECT_ACID:
+			case eStatus::ACID:
 				switch(type) {
 					case 0:
 						ASB("  Your skin tingles pleasantly.");
@@ -867,6 +879,7 @@ void use_item(short pc,short item) {
 						break;
 				}
 				break;
+				}
 			case eItemAbil::BLISS:
 				switch(type) {
 					case 0: case 1:
@@ -1037,43 +1050,56 @@ void use_item(short pc,short item) {
 				run_special(eSpecCtx::USE_SPEC_ITEM,0,str,user_loc,&sp[0],&sp[1],&sp[2]);
 				break;
 				
-				
-				// spell effects
-			case eItemAbil::FLAME:
-				add_string_to_buf("  It fires a bolt of flame.");
-				start_spell_targeting(eSpell::FLAME, true);
-				break;
-			case eItemAbil::FIREBALL:
-				add_string_to_buf("  It shoots a fireball.         ");
-				start_spell_targeting(eSpell::FIREBALL, true);
-				break;
-			case eItemAbil::FIRESTORM:
-				add_string_to_buf("  It shoots a huge fireball. ");
-				start_spell_targeting(eSpell::FIRESTORM, true);
-				break;
-			case eItemAbil::KILL:
-				add_string_to_buf("  It shoots a black ray.  ");
-				start_spell_targeting(eSpell::KILL, true);
-				break;
-			case eItemAbil::ICE_BOLT:
-				add_string_to_buf("  It fires a ball of ice.   ");
-				start_spell_targeting(eSpell::ICE_BOLT, true);
-				break;
-			case eItemAbil::SLOW:
-				add_string_to_buf("  It fires a purple ray.   ");
-				start_spell_targeting(eSpell::SLOW, true);
-				break;
-			case eItemAbil::SHOCKWAVE:
-				add_string_to_buf("  The ground shakes!        ");
-				do_shockwave(univ.party[current_pc].combat_pos);
-				break;
-			case eItemAbil::DISPEL_UNDEAD:
-				add_string_to_buf("  It shoots a white ray.   ");
-				start_spell_targeting(eSpell::DISPEL_UNDEAD, true);
-				break;
-			case eItemAbil::DISPEL_SPIRIT:
-				add_string_to_buf("  It shoots a golden ray.   ");
-				start_spell_targeting(eSpell::RAVAGE_SPIRIT, true);
+			case eItemAbil::CAST_SPELL:
+				if(univ.town.is_antimagic(user_loc.x, user_loc.y)) {
+					add_string_to_buf("  Not in antimagic field.");
+					take_charge = false;
+					break;
+				}
+				switch(spell) {
+					case eSpell::FLAME: add_string_to_buf("  It fires a bolt of flame."); break;
+					case eSpell::FIREBALL: add_string_to_buf("  It shoots a fireball."); break;
+					case eSpell::FIRESTORM: add_string_to_buf("  It shoots a huge fireball. "); break;
+					case eSpell::KILL: add_string_to_buf("  It shoots a black ray."); break;
+					case eSpell::ICE_BOLT: add_string_to_buf("  It fires a ball of ice."); break;
+					case eSpell::SLOW: add_string_to_buf("  It fires a purple ray."); break;
+					case eSpell::DISPEL_UNDEAD: add_string_to_buf("  It shoots a white ray."); break;
+					case eSpell::RAVAGE_SPIRIT: add_string_to_buf("  It shoots a golden ray."); break;
+					case eSpell::ACID_SPRAY: add_string_to_buf("  Acid sprays from the tip!"); break;
+					case eSpell::FOUL_VAPOR: add_string_to_buf("  It creates a cloud of gas."); break;
+					case eSpell::CLOUD_SLEEP: add_string_to_buf("  It creates a shimmering cloud."); break;
+					case eSpell::POISON: add_string_to_buf("  A green ray emerges."); break;
+					case eSpell::SHOCKSTORM: add_string_to_buf("  Sparks fly."); break;
+					case eSpell::PARALYZE_BEAM: add_string_to_buf("  It shoots a silvery beam."); break;
+					case eSpell::GOO_BOMB: add_string_to_buf("  It explodes!"); break;
+					case eSpell::STRENGTHEN_TARGET: add_string_to_buf("  It shoots a fiery red ray."); break;
+					case eSpell::CHARM_MASS: ASB("It throbs, and emits odd rays."); break;
+					case eSpell::DISPEL_BARRIER: add_string_to_buf("  It fires a blinding ray."); break;
+					case eSpell::WALL_ICE_BALL: add_string_to_buf("  It shoots a blue sphere."); break;
+					case eSpell::CHARM_FOE: add_string_to_buf("  It fires a lovely, sparkling beam."); break;
+					case eSpell::ANTIMAGIC: add_string_to_buf("  Your hair stands on end."); break;
+				}
+				if(overall_mode == MODE_COMBAT) {
+					bool priest = (*spell).is_priest();
+					switch((*spell).refer) {
+						case REFER_YES:
+							if(priest) do_priest_spell(current_pc, spell, true);
+							else do_mage_spell(current_pc, spell, true);
+							break;
+						case REFER_TARGET:
+							start_spell_targeting(spell, true);
+							break;
+						case REFER_FANCY:
+							start_fancy_spell_targeting(spell, true);
+							break;
+						case REFER_IMMED:
+							if(priest) combat_immed_priest_cast(current_pc, spell, true);
+							else combat_immed_mage_cast(current_pc, spell, true);
+							break;
+					}
+				} else if((*spell).is_priest())
+					do_priest_spell(current_pc, spell, true);
+				else do_mage_spell(current_pc, spell, true);
 				break;
 			case eItemAbil::SUMMONING:
 				if(!summon_monster(str,user_loc,50,2))
@@ -1085,81 +1111,9 @@ void use_item(short pc,short item) {
 					if(!summon_monster(str,user_loc,r1,2))
 						add_string_to_buf("  Summon failed.");
 				break;
-			case eItemAbil::ACID_SPRAY:
-				add_string_to_buf("  Acid sprays from the tip!   ");
-				start_spell_targeting(eSpell::ACID_SPRAY,  true);
-				break;
-			case eItemAbil::STINKING_CLOUD:
-				add_string_to_buf("  It creates a cloud of gas.   ");
-				start_spell_targeting(eSpell::FOUL_VAPOR, true);
-				break;
-			case eItemAbil::SLEEP_FIELD:
-				add_string_to_buf("  It creates a shimmering cloud.   ");
-				start_spell_targeting(eSpell::CLOUD_SLEEP, true);
-				break;
-			case eItemAbil::VENOM:
-				add_string_to_buf("  A green ray emerges.        ");
-				start_spell_targeting(eSpell::POISON, true);
-				break;
-			case eItemAbil::SHOCKSTORM:
-				add_string_to_buf("  Sparks fly.");
-				start_spell_targeting(eSpell::SHOCKSTORM, true);
-				break;
-			case eItemAbil::PARALYSIS:
-				add_string_to_buf("  It shoots a silvery beam.   ");
-				start_spell_targeting(eSpell::PARALYZE_BEAM, true);
-				break;
-			case eItemAbil::WEB:
-				add_string_to_buf("  It explodes!");
-				start_spell_targeting(eSpell::GOO_BOMB, true);
-				break;
-			case eItemAbil::STRENGTHEN_TARGET:
-				add_string_to_buf("  It shoots a fiery red ray.   ");
-				start_spell_targeting(eSpell::STRENGTHEN_TARGET, true);
-				break;
 			case eItemAbil::QUICKFIRE:
 				add_string_to_buf("Fire pours out!");
 				univ.town.set_quickfire(user_loc.x,user_loc.y,true);
-				break;
-			case eItemAbil::MASS_CHARM:
-				ASB("It throbs, and emits odd rays.");
-				for(i = 0; i < univ.town->max_monst(); i++) {
-					if((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
-						&& (dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= 8)
-						&& (can_see_light(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
-						which_m = &univ.town.monst[i];
-						charm_monst(which_m,0,eStatus::CHARM,8);
-					}
-				}
-				break;
-			case eItemAbil::MAGIC_MAP:
-				if(univ.town->defy_scrying || univ.town->defy_mapping) {
-					add_string_to_buf("  It doesn't work.");
-					break;
-				}
-				add_string_to_buf("  You have a vision.            ");
-				for(i = 0; i < univ.town->max_dim(); i++)
-					for(j = 0; j < univ.town->max_dim(); j++)
-						make_explored(i,j);
-				clear_map();
-				break;
-			case eItemAbil::DISPEL_BARRIER:
-				add_string_to_buf("  It fires a blinding ray.");
-				add_string_to_buf("  Target spell.    ");
-				current_pat = single;
-				start_town_targeting(eSpell::DISPEL_BARRIER,current_pc, true);
-				break;
-			case eItemAbil::ICE_WALL:
-				add_string_to_buf("  It shoots a blue sphere.   ");
-				start_spell_targeting(eSpell::WALL_ICE_BALL, true);
-				break;
-			case eItemAbil::CHARM_SPELL:
-				add_string_to_buf("  It fires a lovely, sparkling beam.");
-				start_spell_targeting(eSpell::CHARM_FOE, true);
-				break;
-			case eItemAbil::ANTIMAGIC_CLOUD:
-				add_string_to_buf("  Your hair stands on end.   ");
-				start_spell_targeting(eSpell::ANTIMAGIC, true);
 				break;
 		}
 	}

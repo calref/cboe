@@ -47,7 +47,7 @@ cItem::cItem(){
 	magic_use_type = 0;
 	graphic_num = 0;
 	ability = eItemAbil::NONE;
-	ability_strength = 0;
+	abil_data[0] = 0;
 	type_flag = 0;
 	is_special = 0;
 	value = 0;
@@ -66,7 +66,7 @@ cItem::cItem(){
 
 cItem::cItem(long preset){
 	ability = eItemAbil::NONE;
-	ability_strength = 0;
+	abil_data[0] = 0;
 	type_flag = 0;
 	is_special = 0;
 	special_class = 0;
@@ -260,8 +260,432 @@ void cItem::append(legacy::item_record_type& old){
 		graphic_num = 74;
 	else if(graphic_num >= 45) // small graphics were moved up to make a bit more room for new large graphics
 		graphic_num += 10;
-	ability = (eItemAbil) old.ability;
-	ability_strength = old.ability_strength;
+	abil_data[0] = old.ability_strength;
+	switch(old.ability) {
+		// Weapon abilities
+		case 0:
+			ability = eItemAbil::NONE;
+			break;
+		case 1:
+			ability = eItemAbil::FLAMING_WEAPON;
+			break;
+		case 2:
+			ability = eItemAbil::DEMON_SLAYER;
+			break;
+		case 3:
+			ability = eItemAbil::UNDEAD_SLAYER;
+			break;
+		case 4:
+			ability = eItemAbil::LIZARD_SLAYER;
+			break;
+		case 5:
+			ability = eItemAbil::GIANT_SLAYER;
+			break;
+		case 6:
+			ability = eItemAbil::MAGE_SLAYER;
+			break;
+		case 7:
+			ability = eItemAbil::PRIEST_SLAYER;
+			break;
+		case 8:
+			ability = eItemAbil::BUG_SLAYER;
+			break;
+		case 9:
+			ability = eItemAbil::STATUS_WEAPON;
+			abil_data[1] = int(eStatus::ACID);
+			break;
+		case 10:
+			ability = eItemAbil::SOULSUCKER;
+			break;
+		case 11:
+			ability = eItemAbil::DRAIN_MISSILES;
+			break;
+		case 12:
+			ability = eItemAbil::WEAK_WEAPON;
+			break;
+		case 13:
+			ability = eItemAbil::CAUSES_FEAR;
+			break;
+		case 14:
+			ability = eItemAbil::STATUS_WEAPON;
+			abil_data[1] = int(eStatus::POISON);
+			break;
+		// General abilities
+		case 30:
+			ability = eItemAbil::PROTECTION;
+			break;
+		case 31:
+			ability = eItemAbil::FULL_PROTECTION;
+			break;
+		case 32:
+			ability = eItemAbil::FIRE_PROTECTION;
+			break;
+		case 33:
+			ability = eItemAbil::COLD_PROTECTION;
+			break;
+		case 34:
+			ability = eItemAbil::POISON_PROTECTION;
+			break;
+		case 35:
+			ability = eItemAbil::MAGIC_PROTECTION;
+			break;
+		case 36:
+			ability = eItemAbil::ACID_PROTECTION;
+			break;
+		case 37:
+			ability = eItemAbil::SKILL;
+			break;
+		case 38:
+			ability = eItemAbil::STRENGTH;
+			break;
+		case 39:
+			ability = eItemAbil::DEXTERITY;
+			break;
+		case 40:
+			ability = eItemAbil::INTELLIGENCE;
+			break;
+		case 41:
+			ability = eItemAbil::ACCURACY;
+			break;
+		case 42:
+			ability = eItemAbil::THIEVING;
+			break;
+		case 43:
+			ability = eItemAbil::GIANT_STRENGTH;
+			break;
+		case 44:
+			ability = eItemAbil::LIGHTER_OBJECT;
+			break;
+		case 45:
+			ability = eItemAbil::HEAVIER_OBJECT;
+			break;
+		case 46:
+			ability = eItemAbil::OCCASIONAL_BLESS;
+			break;
+		case 47:
+			ability = eItemAbil::OCCASIONAL_HASTE;
+			break;
+		case 48:
+			ability = eItemAbil::LIFE_SAVING;
+			break;
+		case 49:
+			ability = eItemAbil::PROTECT_FROM_PETRIFY;
+			break;
+		case 50:
+			ability = eItemAbil::REGENERATE;
+			break;
+		case 51:
+			ability = eItemAbil::POISON_AUGMENT;
+			break;
+		case 52:
+			ability = eItemAbil::DISEASE_PARTY;
+			break;
+		case 53:
+			ability = eItemAbil::WILL;
+			break;
+		case 54:
+			ability = eItemAbil::FREE_ACTION;
+			break;
+		case 55:
+			ability = eItemAbil::SPEED;
+			break;
+		case 56:
+			ability = eItemAbil::SLOW_WEARER;
+			break;
+		case 57:
+			ability = eItemAbil::PROTECT_FROM_UNDEAD;
+			break;
+		case 58:
+			ability = eItemAbil::PROTECT_FROM_DEMONS;
+			break;
+		case 59:
+			ability = eItemAbil::PROTECT_FROM_HUMANOIDS;
+			break;
+		case 60:
+			ability = eItemAbil::PROTECT_FROM_REPTILES;
+			break;
+		case 61:
+			ability = eItemAbil::PROTECT_FROM_GIANTS;
+			break;
+		case 62:
+			ability = eItemAbil::PROTECT_FROM_DISEASE;
+			break;
+		// Usable abilities
+		case 70:
+			ability = eItemAbil::POISON_WEAPON;
+			break;
+		case 71:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::BLESS_CURSE);
+			break;
+		case 72:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::POISON);
+			break;
+		case 73:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::HASTE_SLOW);
+			break;
+		case 74:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::INVULNERABLE);
+			break;
+		case 75:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::MAGIC_RESISTANCE);
+			break;
+		case 76:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::WEBS);
+			break;
+		case 77:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::DISEASE);
+			break;
+		case 78:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::INVISIBLE);
+			break;
+		case 79:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::DUMB);
+			break;
+		case 80:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::MARTYRS_SHIELD);
+			break;
+		case 81:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::ASLEEP);
+			break;
+		case 82:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::PARALYZED);
+			break;
+		case 83:
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[1] = int(eStatus::ACID);
+			break;
+		case 84:
+			ability = eItemAbil::BLISS;
+			break;
+		case 85:
+			ability = eItemAbil::AFFECT_EXPERIENCE;
+			break;
+		case 86:
+			ability = eItemAbil::AFFECT_SKILL_POINTS;
+			break;
+		case 87:
+			ability = eItemAbil::AFFECT_HEALTH;
+			break;
+		case 88:
+			ability = eItemAbil::AFFECT_SPELL_POINTS;
+			break;
+		case 89:
+			ability = eItemAbil::DOOM;
+			break;
+		case 90:
+			ability = eItemAbil::LIGHT;
+			break;
+		case 91:
+			ability = eItemAbil::STEALTH;
+			break;
+		case 92:
+			ability = eItemAbil::FIREWALK;
+			break;
+		case 93:
+			ability = eItemAbil::FLYING;
+			break;
+		case 94:
+			ability = eItemAbil::MAJOR_HEALING;
+			break;
+		case 95:
+			ability = eItemAbil::CALL_SPECIAL;
+			break;
+		// Spells
+		case 110:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::FLAME);
+			break;
+		case 111:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::FIREBALL);
+			break;
+		case 112:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::FIRESTORM);
+			break;
+		case 113:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::KILL);
+			break;
+		case 114:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::ICE_BOLT);
+			break;
+		case 115:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::SLOW);
+			break;
+		case 116:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::SHOCKWAVE);
+			break;
+		case 117:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::DISPEL_UNDEAD);
+			break;
+		case 118:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::RAVAGE_SPIRIT);
+			break;
+		case 119:
+			ability = eItemAbil::SUMMONING;
+			break;
+		case 120:
+			ability = eItemAbil::MASS_SUMMONING;
+			break;
+		case 121:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::ACID_SPRAY);
+			break;
+		case 122:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::FOUL_VAPOR);
+			break;
+		case 123:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::CLOUD_SLEEP);
+			break;
+		case 124:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::POISON);
+			break;
+		case 125:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::SHOCKSTORM);
+			break;
+		case 126:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::PARALYZE_BEAM);
+			break;
+		case 127:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::GOO_BOMB);
+			break;
+		case 128:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::STRENGTHEN_TARGET);
+			break;
+		case 129:
+			ability = eItemAbil::QUICKFIRE;
+			break;
+		case 130:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::CHARM_MASS);
+			break;
+		case 131:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::MAGIC_MAP);
+			break;
+		case 132:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::DISPEL_BARRIER);
+			break;
+		case 133:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::WALL_ICE_BALL);
+			break;
+		case 134:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[1] = int(eSpell::CHARM_FOE);
+			break;
+		case 135:
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = abil_data[0] * 2 + 1;
+			abil_data[1] = int(eSpell::ANTIMAGIC);
+			break;
+		// Reagents
+		case 150:
+			ability = eItemAbil::HOLLY;
+			break;
+		case 151:
+			ability = eItemAbil::COMFREY;
+			break;
+		case 152:
+			ability = eItemAbil::NETTLE;
+			break;
+		case 153:
+			ability = eItemAbil::WORMGRASS;
+			break;
+		case 154:
+			ability = eItemAbil::ASPTONGUE;
+			break;
+		case 155:
+			ability = eItemAbil::EMBERF;
+			break;
+		case 156:
+			ability = eItemAbil::GRAYMOLD;
+			break;
+		case 157:
+			ability = eItemAbil::MANDRAKE;
+			break;
+		case 158:
+			ability = eItemAbil::SAPPHIRE;
+			break;
+		case 159:
+			ability = eItemAbil::SMOKY_CRYSTAL;
+			break;
+		case 160:
+			ability = eItemAbil::RESURRECTION_BALM;
+			break;
+		case 161:
+			ability = eItemAbil::LOCKPICKS;
+			break;
+		// Missile abilities
+		case 170:
+			ability = eItemAbil::MISSILE_RETURNING;
+			break;
+		case 171:
+			ability = eItemAbil::MISSILE_LIGHTNING;
+			break;
+		case 172:
+			ability = eItemAbil::MISSILE_EXPLODING;
+			break;
+		case 173:
+			ability = eItemAbil::MISSILE_ACID;
+			break;
+		case 174:
+			ability = eItemAbil::MISSILE_SLAY_UNDEAD;
+			break;
+		case 175:
+			ability = eItemAbil::MISSILE_SLAY_DEMON;
+			break;
+		case 176:
+			ability = eItemAbil::MISSILE_HEAL_TARGET;
+			break;
+	}
 	type_flag = old.type_flag;
 	is_special = old.is_special;
 	value = old.value;
@@ -295,7 +719,7 @@ void cItem::writeTo(std::ostream& file, std::string prefix) const {
 	file << prefix << "USE " << magic_use_type << '\n';
 	file << prefix << "ICON " << graphic_num << '\n';
 	file << prefix << "ABILITY " << ability << '\n';
-	file << prefix << "ABILSTR " << ability_strength << '\n';
+	file << prefix << "ABILSTR " << abil_data[0] << '\t' << abil_data[1] << '\n';
 	file << prefix << "TYPE " << type_flag << '\n';
 	file << prefix << "ISSPEC " << is_special << '\n';
 	file << prefix << "VALUE " << value << '\n';
@@ -331,7 +755,7 @@ void cItem::readFrom(std::istream& sin){
 		else if(cur == "USE") sin >> magic_use_type;
 		else if(cur == "ICON") sin >> graphic_num;
 		else if(cur == "ABILITY") sin >> ability;
-		else if(cur == "ABILSTR") sin >> ability_strength;
+		else if(cur == "ABILSTR") sin >> abil_data[0] >> abil_data[1];
 		else if(cur == "TYPE") sin >> type_flag;
 		else if(cur == "ISSPEC") sin >> is_special;
 		else if(cur == "VALUE") sin >> value;
