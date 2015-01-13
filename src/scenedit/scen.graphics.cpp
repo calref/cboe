@@ -139,29 +139,29 @@ static short get_small_icon(ter_num_t ter){
 			icon = 23;
 			break;
 		case eTerSpec::DAMAGING:
-			switch(scenario.ter_types[ter].flag3.u){
-				case DAMAGE_WEAPON:
+			switch(eDamageType(scenario.ter_types[ter].flag3.u)) {
+				case eDamageType::WEAPON:
 					icon = 40;
 					break;
-				case DAMAGE_FIRE:
+				case eDamageType::FIRE:
 					icon = 37;
 					break;
-				case DAMAGE_POISON:
+				case eDamageType::POISON:
 					icon = 43;
 					break;
-				case DAMAGE_MAGIC:
+				case eDamageType::MAGIC:
 					icon = 39;
 					break;
-				case DAMAGE_UNBLOCKABLE:
+				case eDamageType::UNBLOCKABLE:
 					icon = 39;
 					break;
-				case DAMAGE_COLD:
+				case eDamageType::COLD:
 					icon = 38;
 					break;
-				case DAMAGE_UNDEAD:
+				case eDamageType::UNDEAD:
 					icon = 18;
 					break;
-				case DAMAGE_DEMON:
+				case eDamageType::DEMON:
 					icon = 19;
 					break;
 			}

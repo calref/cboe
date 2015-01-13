@@ -88,7 +88,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			for(i = 0; i < num_hits; i++) {
 				add_string_to_buf("  A knife flies out!              ");
 				r1 = get_ran(2 + univ.town.difficulty / 14,1,10);
-				damage_pc(pc_num,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
+				damage_pc(pc_num,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 			}
 			break;
 			
@@ -111,7 +111,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			for(i = 0; i < num_hits; i++) {
 				add_string_to_buf("  There is an explosion.        ");
 				r1 = get_ran(3 + univ.town.difficulty / 13,1,8);
-				hit_party(r1,DAMAGE_FIRE);
+				hit_party(r1,eDamageType::FIRE);
 			}
 			break;
 			
@@ -136,7 +136,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 		case TRAP_FLAMES:
 			add_string_to_buf("  Flames shoot from the walls.        ");
 			r1 = get_ran(10 + trap_level * 5,1,8);
-			hit_party(r1,DAMAGE_FIRE);
+			hit_party(r1,eDamageType::FIRE);
 			break;
 		case TRAP_DUMBFOUND:
 			add_string_to_buf("  You feel disoriented.        ");

@@ -217,27 +217,27 @@ cMonster::cAbility::operator std::string(){
 		case MONST_DRAIN_XP_DAMAGE_RAY:
 		case MONST_DAMAGE_TOUCH:
 		case MONST_DRAIN_XP_DAMAGE_TOUCH:
-			switch(extra1){
-				case DAMAGE_WEAPON:
+			switch(eDamageType(extra1)) {
+				case eDamageType::WEAPON:
 					sout << "Health drain";
 					break;
-				case DAMAGE_FIRE:
+				case eDamageType::FIRE:
 					sout << "Heat";
 					break;
-				case DAMAGE_POISON:
+				case eDamageType::POISON:
 					sout << "Pain";
 					break;
-				case DAMAGE_MAGIC:
+				case eDamageType::MAGIC:
 					sout << "Shock";
 					break;
-				case DAMAGE_UNBLOCKABLE:
+				case eDamageType::UNBLOCKABLE:
 					sout << "Wounding";
 					break;
-				case DAMAGE_COLD:
+				case eDamageType::COLD:
 					sout << "Icy";
 					break;
-				case DAMAGE_UNDEAD:
-				case DAMAGE_DEMON:
+				case eDamageType::UNDEAD:
+				case eDamageType::DEMON:
 					sout << "Unholy";
 					break;
 				default:

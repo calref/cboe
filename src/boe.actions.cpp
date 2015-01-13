@@ -1838,7 +1838,7 @@ bool handle_keystroke(sf::Event& event){
 				
 				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)
 					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 10) )
-					damage_monst(i, 7,1000,0, DAMAGE_UNBLOCKABLE,0);
+					damage_monst(i, 7,1000,0, eDamageType::UNBLOCKABLE,0);
 			}
 			// kill_monst(&univ.town.monst[i],6);
 			draw_terrain();
@@ -2339,7 +2339,7 @@ void increase_age() {
 			add_string_to_buf("Starving! ");
 			play_sound(66);
 			r1 = get_ran(3,1,6);
-			hit_party(r1,DAMAGE_UNBLOCKABLE);
+			hit_party(r1,eDamageType::UNBLOCKABLE);
 			update_stat = true;
 			if(overall_mode < MODE_COMBAT)
 				boom_space(univ.party.p_loc,overall_mode,0,r1,0);

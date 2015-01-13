@@ -786,17 +786,17 @@ void monst_inflict_fields(short which_monst) {
 				where_check.y = univ.town.monst[which_monst].cur_loc.y + j;
 				if(univ.town.is_quickfire(where_check.x,where_check.y)) {
 					r1 = get_ran(2,1,8);
-					damage_monst(which_monst,7,r1,0,DAMAGE_FIRE,0);
+					damage_monst(which_monst,7,r1,0,eDamageType::FIRE,0);
 					break;
 				}
 				if(univ.town.is_blade_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(6,1,8);
-					damage_monst(which_monst,7,r1,0,DAMAGE_WEAPON,0);
+					damage_monst(which_monst,7,r1,0,eDamageType::WEAPON,0);
 					break;
 				}
 				if(univ.town.is_force_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(3,1,6);
-					damage_monst(which_monst,7,r1,0,DAMAGE_MAGIC,0);
+					damage_monst(which_monst,7,r1,0,eDamageType::MAGIC,0);
 					break;
 				}
 				if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
@@ -806,7 +806,7 @@ void monst_inflict_fields(short which_monst) {
 				if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(3,1,6);
 					if(univ.town.monst[which_monst].spec_skill != 23)
-						damage_monst(which_monst,7,r1,0,DAMAGE_COLD,0);
+						damage_monst(which_monst,7,r1,0,eDamageType::COLD,0);
 					break;
 				}
 				if(univ.town.is_scloud(where_check.x,where_check.y)) {
@@ -824,7 +824,7 @@ void monst_inflict_fields(short which_monst) {
 				if(univ.town.is_fire_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(2,1,6);
 					if(univ.town.monst[which_monst].spec_skill != 22)
-						damage_monst(which_monst,7,r1,0,DAMAGE_FIRE,0);
+						damage_monst(which_monst,7,r1,0,eDamageType::FIRE,0);
 					break;
 				}
 				if(univ.town.is_force_cage(where_check.x,where_check.y))
@@ -846,7 +846,7 @@ void monst_inflict_fields(short which_monst) {
 				univ.town.set_barrel(where_check.x,where_check.y,false);
 				if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 					r1 = get_ran(2,1,10);
-					damage_monst(which_monst,7,r1,0,DAMAGE_FIRE,0);
+					damage_monst(which_monst,7,r1,0,eDamageType::FIRE,0);
 				}
 			}
 	
@@ -1006,7 +1006,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			break;
 			
 		case eTerSpec::DAMAGING: // TODO: Update this to check other cases
-			if(ter_flag == DAMAGE_FIRE && univ.town.monst[which_monst].immunities & 8)
+			if(eDamageType(ter_flag) == eDamageType::FIRE && univ.town.monst[which_monst].immunities & 8)
 				return true;
 			else return false;
 			break;

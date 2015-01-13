@@ -152,15 +152,15 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			break;
 		case 2:
 			special = eTerSpec::DAMAGING;
-			flag3.u = DAMAGE_FIRE;
+			flag3.u = int(eDamageType::FIRE);
 			break;
 		case 3:
 			special = eTerSpec::DAMAGING;
-			flag3.u = DAMAGE_COLD;
+			flag3.u = int(eDamageType::COLD);
 			break;
 		case 4:
 			special = eTerSpec::DAMAGING;
-			flag3.u = DAMAGE_MAGIC;
+			flag3.u = int(eDamageType::MAGIC);
 			break;
 		case 5:
 			special = eTerSpec::DANGEROUS;

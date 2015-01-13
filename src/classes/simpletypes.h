@@ -458,47 +458,17 @@ enum class eTrait {
 
 /* damage type*/
 /* used as parameter to some functions */
-enum eDamageType {
-	DAMAGE_WEAPON = 0,
-	DAMAGE_FIRE = 1,
-	DAMAGE_POISON = 2,
-	DAMAGE_MAGIC = 3,
-	DAMAGE_UNBLOCKABLE = 4, //from the source files - the display is the same as the magic one (damage_monst in SPECIALS.cpp)
-	DAMAGE_COLD = 5,
-	DAMAGE_UNDEAD = 6, //from the source files - the display is the same as the weapon one
-	DAMAGE_DEMON = 7, //from the source files - the display is the same as the weapon one
-	// 8 and 9 aren't defined : doesn't print any damage. According to the source files the 9 is DAMAGE_MARKED though. Wrong ?
-	DAMAGE_MARKED = 10, // usage: DAMAGE_MARKED + damage_type
-	DAMAGE_WEAPON_MARKED = 10,
-	DAMAGE_FIRE_MARKED = 11,
-	DAMAGE_POISON_MARKED = 12,
-	DAMAGE_MAGIC_MARKED = 13,
-	DAMAGE_UNBLOCKABLE_MARKED = 14,
-	DAMAGE_COLD_MARKED = 15,
-	DAMAGE_UNDEAD_MARKED = 16,
-	DAMAGE_DEMON_MARKED = 17,
-	DAMAGE_NO_PRINT = 30, // usage: DAMAGE_NO_PRINT + damage_type
-	DAMAGE_WEAPON_NO_PRINT = 30,
-	DAMAGE_FIRE_NO_PRINT = 31,
-	DAMAGE_POISON_NO_PRINT = 32,
-	DAMAGE_MAGIC_NO_PRINT = 33,
-	DAMAGE_UNBLOCKABLE_NO_PRINT = 34,
-	DAMAGE_COLD_NO_PRINT = 35,
-	DAMAGE_UNDEAD_NO_PRINT = 36,
-	DAMAGE_DEMON_NO_PRINT = 37,
-	// What about both NO_PRINT and MARKED?
+enum class eDamageType {
+	WEAPON = 0,
+	FIRE = 1,
+	POISON = 2,
+	MAGIC = 3,
+	UNBLOCKABLE = 4,
+	COLD = 5,
+	UNDEAD = 6,
+	DEMON = 7,
+	MARKED = 10,
 };
-
-inline void operator -= (eDamageType& cur, eDamageType othr){
-	if((othr == DAMAGE_MARKED && cur >= DAMAGE_MARKED && cur < DAMAGE_NO_PRINT) ||
-	   (othr == DAMAGE_NO_PRINT && cur >= DAMAGE_NO_PRINT))
-		cur = (eDamageType) ((int)cur - (int)othr);
-}
-
-inline void operator += (eDamageType& cur, eDamageType othr){
-	if((othr == DAMAGE_MARKED || othr == DAMAGE_NO_PRINT) && cur < DAMAGE_MARKED)
-		cur = (eDamageType) ((int)cur + (int)othr);
-}
 
 enum class eSpecCtx {
 	OUT_MOVE = 0,

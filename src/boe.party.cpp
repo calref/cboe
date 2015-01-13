@@ -4,6 +4,7 @@
 #include "boe.global.h"
 
 #include <array>
+#include <map>
 
 #include "classes.h"
 
@@ -31,7 +32,6 @@
 #include "fileio.hpp"
 #include "boe.menus.h"
 #include "restypes.hpp"
-#include <array>
 #include <boost/lexical_cast.hpp>
 #include "button.hpp"
 #include "spell.hpp"
@@ -64,7 +64,8 @@ extern short store_spell_target,pc_casting,stat_screen_mode;
 extern effect_pat_type null_pat,single,t,square,radius2,radius3;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
-extern short hit_chance[21],combat_active_pc;extern short boom_gr[8];
+extern short hit_chance[21],combat_active_pc;
+extern std::map<eDamageType,int> boom_gr;
 extern short current_ground;
 extern short monst_marked_damage[60];
 extern location golem_m_locs[16];
@@ -2617,36 +2618,25 @@ void slay_party(eMainStatus mode) {
 	put_pc_screen();
 }
 
-//short damage_type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable
-// 5 - cold  6 - undead attack  7 - demon attack
-// 10 - marked damage, from during anim mode ... no boom, and totally unblockable
-// 30 + *   same as *, but no print
-// 100s digit - sound data
-bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type) {
+bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print) {
 	short i, r1,level;
-	bool do_print = true;
 	
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return false;
 	
-	if(damage_type >= DAMAGE_NO_PRINT) {
-		do_print = false;
-		damage_type -= DAMAGE_NO_PRINT;
-	}
-	
 	if(sound_type == 0) {
-		if((damage_type == 1) || (damage_type == 4) )
+		if(damage_type == eDamageType::FIRE || damage_type == eDamageType::UNBLOCKABLE)
 			sound_type = 5;
-		if 	(damage_type == 3)
+		if(damage_type == eDamageType::MAGIC)
 			sound_type = 12;
-		if 	(damage_type == 5)
+		if(damage_type == eDamageType::COLD)
 			sound_type = 7;
-		if 	(damage_type == 2)
+		if(damage_type == eDamageType::POISON)
 			sound_type = 11;
 	}
 	
 	// armor
-	if((damage_type == 0) || (damage_type == 6) ||(damage_type == 7)) {
+	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
 		how_much -= minmax(-5,5,univ.party[which_pc].status[eStatus::BLESS_CURSE]);
 		for(i = 0; i < 24; i++)
 			if((univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) && (univ.party[which_pc].equip[i])) {
@@ -2679,11 +2669,12 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	}
 	
 	// parry
-	if((damage_type < 2) && (univ.party[which_pc].parry < 100))
+	// TODO: Used to also apply this to fire damage; is that correct?
+	if(damage_type == eDamageType::WEAPON && univ.party[which_pc].parry < 100)
 		how_much -= univ.party[which_pc].parry / 4;
 	
 	
-	if(damage_type != 10) {
+	if(damage_type != eDamageType::MARKED) {
 		if(PSD[SDF_EASY_MODE] > 0)
 			how_much -= 3;
 		// toughness
@@ -2694,11 +2685,11 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 			how_much -= 1;
 	}
 	
-	if((damage_type == DAMAGE_WEAPON) && ((level = get_prot_level(which_pc,eItemAbil::PROTECTION)) > 0))
+	if(damage_type == eDamageType::WEAPON && ((level = get_prot_level(which_pc,eItemAbil::PROTECTION)) > 0))
 		how_much = how_much - level;
-	if((damage_type == DAMAGE_UNDEAD) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_UNDEAD)) > 0))
+	if(damage_type == eDamageType::UNDEAD && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_UNDEAD)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if((damage_type == DAMAGE_DEMON) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_DEMONS)) > 0))
+	if(damage_type == eDamageType::DEMON && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_DEMONS)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	if((type_of_attacker == eRace::HUMANOID) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_HUMANOIDS)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
@@ -2714,24 +2705,24 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		how_much = 0;
 	
 	// magic resistance
-	if(damage_type == DAMAGE_MAGIC && ((level = get_prot_level(which_pc,eItemAbil::MAGIC_PROTECTION)) > 0))
+	if(damage_type == eDamageType::MAGIC && ((level = get_prot_level(which_pc,eItemAbil::MAGIC_PROTECTION)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// Mag. res helps w. fire and cold
-	if(((damage_type == 1) || (damage_type == 5)) &&
+	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::COLD) &&
 		univ.party[which_pc].status[eStatus::MAGIC_RESISTANCE] > 0)
 		how_much = how_much / 2;
 	
 	// fire res.
-	if(damage_type == DAMAGE_FIRE && ((level = get_prot_level(which_pc,eItemAbil::FIRE_PROTECTION)) > 0))
+	if(damage_type == eDamageType::FIRE && ((level = get_prot_level(which_pc,eItemAbil::FIRE_PROTECTION)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// cold res.
-	if(damage_type == DAMAGE_COLD && ((level = get_prot_level(which_pc,eItemAbil::COLD_PROTECTION)) > 0))
+	if(damage_type == eDamageType::COLD && ((level = get_prot_level(which_pc,eItemAbil::COLD_PROTECTION)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// major resistance
-	if((damage_type == DAMAGE_FIRE || damage_type == DAMAGE_POISON || damage_type == DAMAGE_MAGIC || damage_type == DAMAGE_COLD)
+	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::POISON || damage_type == eDamageType::MAGIC || damage_type == eDamageType::COLD)
 	   && ((level = get_prot_level(which_pc,eItemAbil::FULL_PROTECTION)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
@@ -2739,16 +2730,21 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		if(how_much < 0)
 			how_much = 0;
 		univ.party[which_pc].marked_damage += how_much;
+		// TODO: Also, if it's magic, use boom type 3 (must implement in the animation engine first)
+		// It would also be nice to have a special boom type for cold.
+		short boom_type = 2;
+		if(damage_type == eDamageType::FIRE)
+			boom_type = 0;
 		if(is_town())
-			add_explosion(univ.town.p_loc,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
-		else add_explosion(univ.party[which_pc].combat_pos,how_much,0,(damage_type > 2) ? 2 : 0,0,0);
+			add_explosion(univ.town.p_loc,how_much,0,boom_type,0,0);
+		else add_explosion(univ.party[which_pc].combat_pos,how_much,0,boom_type,0,0);
 		if(how_much == 0)
 			return false;
 		else return true;
 	}
 	
 	if(how_much <= 0) {
-		if((damage_type == 0) || (damage_type == 6) || (damage_type == 7))
+		if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON)
 			play_sound(2);
 		add_string_to_buf ("  No damage.");
 		return false;
@@ -2760,7 +2756,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		
 		if(do_print)
 			add_string_to_buf("  " + univ.party[which_pc].name + " takes " + std::to_string(how_much) + '.');
-		if(damage_type != 10) {
+		if(damage_type != eDamageType::MARKED) {
 			if(is_combat())
 				boom_space(univ.party[which_pc].combat_pos,overall_mode,boom_gr[damage_type],how_much,sound_type);
 			else if(is_town())

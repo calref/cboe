@@ -573,7 +573,7 @@ void pc_attack(short who_att,short target) {
 		r2 = get_ran(1,1,4) + dam_adj;
 		
 		if(r1 <= hit_chance[univ.party[who_att].skills[what_skill1]]) {
-			damage_monst(target, who_att, r2, 0,DAMAGE_WEAPON,4);
+			damage_monst(target, who_att, r2, 0,eDamageType::WEAPON,4);
 		}
 		else {
 			draw_terrain(2);
@@ -595,7 +595,7 @@ void pc_attack(short who_att,short target) {
 	if((univ.town.monst[target].status[eStatus::MARTYRS_SHIELD] > 0 || univ.town.monst[target].spec_skill == 22)
 	   && (store_hp - univ.town.monst[target].health > 0)) {
 		add_string_to_buf("  Shares damage!   ");
-		damage_pc(who_att, store_hp - univ.town.monst[target].health, DAMAGE_MAGIC,eRace::UNKNOWN,0);
+		damage_pc(who_att, store_hp - univ.town.monst[target].health, eDamageType::MAGIC,eRace::UNKNOWN,0);
 	}
 	combat_posing_monster = current_working_monster = -1;
 }
@@ -647,17 +647,17 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 		switch(what_skill) {
 			case eSkill::EDGED_WEAPONS:
 				if(weap.item_level < 8)
-					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,1);
-				else damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,2);
+					damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON,1);
+				else damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON,2);
 				break;
 			case eSkill::BASHING_WEAPONS:
-				damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,4);
+				damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON,4);
 				break;
 			case eSkill::POLE_WEAPONS:
-				damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,3);
+				damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON,3);
 				break;
 			default: // TODO: Not sure what sound to play for unconventional weapons, but let's just go with the generic "ouch" for now
-				damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON, 0);
+				damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON, 0);
 				break;
 		}
 		if(do_poison) {
@@ -981,7 +981,7 @@ void do_combat_cast(location target) {
 					case eSpell::BARRIER_FIRE:
 						play_sound(68);
 						r1 = get_ran(3,2,7);
-						hit_space(target,r1,DAMAGE_FIRE,true,true);
+						hit_space(target,r1,eDamageType::FIRE,true,true);
 						univ.town.set_fire_barr(target.x,target.y,true);
 						if(univ.town.is_fire_barr(target.x,target.y))
 							add_string_to_buf("  You create the barrier.              ");
@@ -990,7 +990,7 @@ void do_combat_cast(location target) {
 					case eSpell::BARRIER_FORCE:
 						play_sound(68);
 						r1 = get_ran(7,2,7);
-						hit_space(target,r1,DAMAGE_FIRE,true,true);
+						hit_space(target,r1,eDamageType::FIRE,true,true);
 						univ.town.set_force_barr(target.x,target.y,true);
 						if(univ.town.is_force_barr(target.x,target.y))
 							add_string_to_buf("  You create the barrier.              ");
@@ -1005,7 +1005,7 @@ void do_combat_cast(location target) {
 								add_missile(target,9,1,0,0);
 								store_sound = 11;
 								r1 = min(18,(level * 7) / 10 + 2 * bonus);
-								place_spell_pattern(radius2,target,DAMAGE_MAGIC,r1,current_pc);
+								place_spell_pattern(radius2,target,eDamageType::MAGIC,r1,current_pc);
 								ashes_loc = target;
 								break;
 								
@@ -1013,19 +1013,19 @@ void do_combat_cast(location target) {
 								r1 = (spell_being_cast == eSpell::SPARK) ? get_ran(2,1,4) : get_ran(min(20,level + bonus),1,4);
 								add_missile(target,6,1,0,0);
 								do_missile_anim(100,univ.party[current_pc].combat_pos,11);
-								hit_space(target,r1,(spell_being_cast == eSpell::SPARK) ? DAMAGE_MAGIC : DAMAGE_COLD,1,0);
+								hit_space(target,r1,(spell_being_cast == eSpell::SPARK) ? eDamageType::MAGIC : eDamageType::COLD,1,0);
 								break;
 							case eSpell::ARROWS_FLAME:
 								add_missile(target,4,1,0,0);
 								r1 = get_ran(2,1,4);
-								boom_type[i] = DAMAGE_FIRE;
+								boom_type[i] = eDamageType::FIRE;
 								boom_dam[i] = r1;
 								//hit_space(target,r1,1,1,0);
 								break;
 							case eSpell::SMITE:
 								add_missile(target,6,1,0,0);
 								r1 = get_ran(2,1,5);
-								boom_type[i] = DAMAGE_COLD;
+								boom_type[i] = eDamageType::COLD;
 								boom_dam[i] = r1;
 								//hit_space(target,r1,5,1,0);
 								break;
@@ -1036,13 +1036,13 @@ void do_combat_cast(location target) {
 								else r1 = get_ran(min(7,2 + bonus + level / 2),1,4);
 								add_missile(target,14,1,0,0);
 								do_missile_anim(100,univ.party[current_pc].combat_pos,24);
-								hit_space(target,r1,DAMAGE_UNBLOCKABLE,1,0);
+								hit_space(target,r1,eDamageType::UNBLOCKABLE,1,0);
 								break;
 							case eSpell::FLAME:
 								r1 = get_ran(min(10,1 + level / 3 + bonus),1,6);
 								add_missile(target,2,1,0,0);
 								do_missile_anim(100,univ.party[current_pc].combat_pos,11);
-								hit_space(target,r1,DAMAGE_FIRE,1,0);
+								hit_space(target,r1,eDamageType::FIRE,1,0);
 								break;
 							case eSpell::FIREBALL: case eSpell::FLAMESTRIKE:
 								r1 = min(9,1 + (level * 2) / 3 + bonus) + 1;
@@ -1053,7 +1053,7 @@ void do_combat_cast(location target) {
 									r1 = (r1 * 14) / 10;
 								else if(r1 > 10) r1 = (r1 * 8) / 10;
 								if(r1 <= 0) r1 = 1;
-								place_spell_pattern(square,target,DAMAGE_FIRE,r1,current_pc);
+								place_spell_pattern(square,target,eDamageType::FIRE,r1,current_pc);
 								ashes_loc = target;
 								break;
 							case eSpell::FIRESTORM:
@@ -1063,20 +1063,20 @@ void do_combat_cast(location target) {
 								r1 = min(12,1 + (level * 2) / 3 + bonus) + 2;
 								if(r1 > 20)
 									r1 = (r1 * 8) / 10;
-								place_spell_pattern(radius2,target,DAMAGE_FIRE,r1,current_pc);
+								place_spell_pattern(radius2,target,eDamageType::FIRE,r1,current_pc);
 								ashes_loc = target;
 								break;
 							case eSpell::KILL:
 								add_missile(target,9,1,0,0);
 								do_missile_anim(100,univ.party[current_pc].combat_pos,11);
 								r1 = get_ran(3,0,10) + univ.party[current_pc].level * 2;
-								hit_space(target,40 + r1,DAMAGE_MAGIC,1,0);
+								hit_space(target,40 + r1,eDamageType::MAGIC,1,0);
 								break;
 							case eSpell::ARROWS_DEATH:
 								add_missile(target,9,1,0,0);
 								store_sound = 11;
 								r1 = get_ran(3,0,10) + univ.party[current_pc].level + 3 * bonus;
-								boom_type[i] = DAMAGE_MAGIC;
+								boom_type[i] = eDamageType::MAGIC;
 								boom_dam[i] = r1;
 								//hit_space(target,40 + r1,3,1,0);
 								break;
@@ -1174,7 +1174,7 @@ void do_combat_cast(location target) {
 											store_sound = 53;
 											r1 = get_ran(4,1,8);
 											r2 = get_ran(1,0,2);
-											damage_monst(targ_num, 7, r1, 0, DAMAGE_MAGIC,0);
+											damage_monst(targ_num, 7, r1, 0, eDamageType::MAGIC,0);
 											slow_monst(cur_monst, 4 + r2);
 											poison_monst(cur_monst, 5 + r2);
 											break;
@@ -1304,7 +1304,7 @@ void do_combat_cast(location target) {
 											else {
 												r1 = get_ran((spell_being_cast == eSpell::TURN_UNDEAD) ? 2 : 6, 1, 14);
 												
-												hit_space(cur_monst->cur_loc,r1,DAMAGE_UNBLOCKABLE,0,current_pc);
+												hit_space(cur_monst->cur_loc,r1,eDamageType::UNBLOCKABLE,0,current_pc);
 											}
 											store_sound = 24;
 											break;
@@ -1323,7 +1323,7 @@ void do_combat_cast(location target) {
 												//if(PSD[4][0] == 3) // anama
 												//	r1 += 25;
 												//play_sound(53);
-												hit_space(cur_monst->cur_loc,r1,DAMAGE_UNBLOCKABLE,0,current_pc);
+												hit_space(cur_monst->cur_loc,r1,eDamageType::UNBLOCKABLE,0,current_pc);
 											}
 											store_sound = 24;
 											break;
@@ -1365,12 +1365,12 @@ void handle_marked_damage() {
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].marked_damage > 0) {
 			// TODO: Perhaps there should be a way of determining the correct race here?
-			damage_pc(i,univ.party[i].marked_damage,DAMAGE_MARKED,eRace::UNKNOWN,0);
+			damage_pc(i,univ.party[i].marked_damage,eDamageType::MARKED,eRace::UNKNOWN,0);
 			univ.party[i].marked_damage = 0;
 		}
 	for(i = 0; i < univ.town->max_monst(); i++)
 		if(monst_marked_damage[i] > 0) {
-			damage_monst(i, current_pc, monst_marked_damage[i], 0, DAMAGE_MARKED,0); // was 9 rather than 10; probably a mistake
+			damage_monst(i, current_pc, monst_marked_damage[i], 0, eDamageType::MARKED,0); // was 9 rather than 10; probably a mistake
 			
 			monst_marked_damage[i] = 0;
 		}
@@ -1494,7 +1494,7 @@ void fire_missile(location target) {
 				pause(dist(univ.party[current_pc].combat_pos,target)*5);
 			run_a_missile(univ.party[missile_firer].combat_pos,target,2,1,5,0,0,100);
 			start_missile_anim();
-			place_spell_pattern(radius2,target, DAMAGE_FIRE,univ.party[missile_firer].items[ammo_inv_slot].abil_data[0] * 2,missile_firer);
+			place_spell_pattern(radius2,target, eDamageType::FIRE,univ.party[missile_firer].items[ammo_inv_slot].abil_data[0] * 2,missile_firer);
 			do_explosion_anim(5,0);
 			end_missile_anim();
 			handle_marked_damage();
@@ -1545,7 +1545,7 @@ void fire_missile(location target) {
 					ASB("  There is a flash of light.");
 					cur_monst->health += r2;
 				}
-				else damage_monst(targ_monst, missile_firer, r2, spec_dam, DAMAGE_WEAPON,13);
+				else damage_monst(targ_monst, missile_firer, r2, spec_dam, eDamageType::WEAPON,13);
 				
 				//if(univ.party[missile_firer].items[ammo_inv_slot].ability == 33)
 				//	hit_space(cur_monst->m_loc,get_ran(3,1,6),1,1,1);
@@ -1562,7 +1562,7 @@ void fire_missile(location target) {
 				ASB("  There is a flash of light.");
 				heal_pc(targ_monst,r2);
 			}
-			else hit_space(target,r2,DAMAGE_WEAPON,1,0);
+			else hit_space(target,r2,eDamageType::WEAPON,1,0);
 			
 		}
 		
@@ -2192,7 +2192,7 @@ void do_monster_turn() {
 					printed_acid = true;
 				}
 				r1 = get_ran(cur_monst->status[eStatus::ACID],1,6);
-				damage_monst(i, 6,r1, 0, DAMAGE_MAGIC,0);
+				damage_monst(i, 6,r1, 0, eDamageType::MAGIC,0);
 				cur_monst->status[eStatus::ACID]--;
 			}
 			
@@ -2212,7 +2212,7 @@ void do_monster_turn() {
 						printed_poison = true;
 					}
 					r1 = get_ran(cur_monst->status[eStatus::POISON],1,6);
-					damage_monst(i, 6, r1, 0, DAMAGE_POISON,0);
+					damage_monst(i, 6, r1, 0, eDamageType::POISON,0);
 					cur_monst->status[eStatus::POISON]--;
 				}
 				if(cur_monst->status[eStatus::DISEASE] > 0) {  // Disease
@@ -2255,7 +2255,7 @@ void do_monster_turn() {
 void monster_attack_pc(short who_att,short target) {
 	cCreature *attacker;
 	short r1,r2,i,store_hp,sound_type = 0;
-	eDamageType dam_type = DAMAGE_WEAPON;
+	eDamageType dam_type = eDamageType::WEAPON;
 	
 	
 	attacker = &univ.town.monst[who_att];
@@ -2315,13 +2315,12 @@ void monster_attack_pc(short who_att,short target) {
 			// Check if hit, and do effects
 			if(r1 <= hit_chance[(attacker->skill + 4) / 2]) {
 				if(attacker->m_type == eRace::UNDEAD)
-					dam_type = DAMAGE_UNDEAD;
+					dam_type = eDamageType::UNDEAD;
 				if(attacker->m_type == eRace::DEMON)
-					dam_type = DAMAGE_DEMON;
+					dam_type = eDamageType::DEMON;
 				
 				store_hp = univ.party[target].cur_health;
 				sound_type = get_monst_sound(attacker,i);
-				dam_type += DAMAGE_MARKED;
 				if(damage_pc(target,r2,dam_type,
 							  attacker->m_type,sound_type) &&
 					(store_hp - univ.party[target].cur_health > 0)) {
@@ -2330,7 +2329,7 @@ void monster_attack_pc(short who_att,short target) {
 					
 					if(univ.party[target].status[eStatus::MARTYRS_SHIELD] > 0) {
 						add_string_to_buf("  Shares damage!                 ");
-						damage_monst(who_att, 6, store_hp - univ.party[target].cur_health, 0, DAMAGE_MAGIC,0);
+						damage_monst(who_att, 6, store_hp - univ.party[target].cur_health, 0, eDamageType::MAGIC,0);
 					}
 					
 					if((attacker->poison > 0) && (i == 0)) {
@@ -2412,13 +2411,13 @@ void monster_attack_pc(short who_att,short target) {
 						&& (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,eItemAbil::LIFE_SAVING) == 24)) {
 						add_string_to_buf("  Freezing touch!");
 						r1 = get_ran(3,1,10);
-						damage_pc(target,r1,DAMAGE_COLD,eRace::UNKNOWN,0);
+						damage_pc(target,r1,eDamageType::COLD,eRace::UNKNOWN,0);
 					}
 					// Killing touch
 					if(attacker->spec_skill == 35) {
 						add_string_to_buf("  Killing touch!");
 						r1 = get_ran(20,1,10);
-						damage_pc(target,r1,DAMAGE_UNBLOCKABLE,eRace::UNKNOWN,0);
+						damage_pc(target,r1,eDamageType::UNBLOCKABLE,eRace::UNKNOWN,0);
 					}
 				}
 			}
@@ -2443,7 +2442,7 @@ void monster_attack_pc(short who_att,short target) {
 void monster_attack_monster(short who_att,short attackee) {
 	cCreature *attacker,*target;
 	short r1,r2,i,store_hp,sound_type = 0;
-	eDamageType dam_type = DAMAGE_WEAPON;
+	eDamageType dam_type = eDamageType::WEAPON;
 	
 	attacker = &univ.town.monst[who_att];
 	target = &univ.town.monst[attackee];
@@ -2486,14 +2485,13 @@ void monster_attack_monster(short who_att,short attackee) {
 			// Check if hit, and do effects
 			if(r1 <= hit_chance[(attacker->skill + 4) / 2]) {
 				if(attacker->m_type == eRace::DEMON)
-					dam_type = DAMAGE_DEMON;
+					dam_type = eDamageType::DEMON;
 				if(attacker->m_type == eRace::UNDEAD)
-					dam_type = DAMAGE_UNDEAD;
+					dam_type = eDamageType::UNDEAD;
 				store_hp = target->health;
 				
 				sound_type = get_monst_sound(attacker,i);
-				dam_type += DAMAGE_MARKED;
-				if(damage_monst(attackee,7,r2,0,dam_type,sound_type)) {
+				if(damage_monst(attackee,7,r2,0,dam_type,sound_type,false)) {
 					damaged_message(store_hp - target->health,
 									attacker->a[i].type);
 					
@@ -2551,7 +2549,7 @@ void monster_attack_monster(short who_att,short attackee) {
 						&& (get_ran(1,0,8) < 6)) {
 						add_string_to_buf("  Freezing touch!");
 						r1 = get_ran(3,1,10);
-						damage_monst(attackee,7,r1,0,DAMAGE_COLD,0);
+						damage_monst(attackee,7,r1,0,eDamageType::COLD,0);
 					}
 					
 					// Death touch
@@ -2559,7 +2557,7 @@ void monster_attack_monster(short who_att,short attackee) {
 						&& (get_ran(1,0,8) < 6)) {
 						add_string_to_buf("  Killing touch!");
 						r1 = get_ran(20,1,10);
-						damage_monst(attackee,7,r1,0,DAMAGE_UNBLOCKABLE,0);
+						damage_monst(attackee,7,r1,0,eDamageType::UNBLOCKABLE,0);
 					}
 				}
 			}
@@ -2707,11 +2705,11 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		if(target < 100) { // pc
 			std::string create_line = "  Hits " + univ.party[target].name + " with heat ray.";
 			add_string_to_buf(create_line);
-			damage_pc(target,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
+			damage_pc(target,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 		}
 		else { // on monst
 			add_string_to_buf("  Fires heat ray.");
-			damage_monst(target - 100,7,r1,0,DAMAGE_FIRE,0);
+			damage_monst(target - 100,7,r1,0,eDamageType::FIRE,0);
 		}
 		do_explosion_anim(5,0);
 		end_missile_anim();
@@ -2777,7 +2775,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 //			sprintf ((char *) create_line, "  Hits %s.",(char *) univ.party[target].name);
 //			add_string_to_buf((char *) create_line);
 			
-			if(damage_pc(target,r2,DAMAGE_WEAPON,eRace::UNKNOWN,13)) {
+			if(damage_pc(target,r2,eDamageType::WEAPON,eRace::UNKNOWN,13)) {
 				// TODO: Uh, is something supposed to happen here!?
 			}
 		}
@@ -2817,7 +2815,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 		if(r1 <= hit_chance[dam[level] * 2]) {
 //			monst_spell_note(m_target->number,16);
 			
-			damage_monst(target - 100,7,r2,0,DAMAGE_WEAPON,13);
+			damage_monst(target - 100,7,r2,0,eDamageType::WEAPON,13);
 		}
 		else {
 			monst_spell_note(m_target->number,18);
@@ -2829,7 +2827,7 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 //dam_type; // 0 - fire  1 - cold  2 - magic
 bool monst_breathe(cCreature *caster,location targ_space,short dam_type) {
 	short level,missile_t[4] = {13,6,8,8};
-	eDamageType type[4] = {DAMAGE_FIRE, DAMAGE_COLD, DAMAGE_MAGIC, DAMAGE_UNBLOCKABLE};
+	eDamageType type[4] = {eDamageType::FIRE, eDamageType::COLD, eDamageType::MAGIC, eDamageType::UNBLOCKABLE};
 	location l;
 	
 	draw_terrain(2);
@@ -3014,7 +3012,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 			case eSpell::SPARK:
 				run_a_missile(l,vict_loc,6,1,11,0,0,80);
 				r1 = get_ran(2,1,4);
-				damage_target(targ,r1,DAMAGE_MAGIC);
+				damage_target(targ,r1,eDamageType::MAGIC);
 				break;
 			case eSpell::HASTE_MINOR:
 				play_sound(25);
@@ -3032,7 +3030,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
 				start_missile_anim();
 				r1 = get_ran(min(15,caster->level),1,4);
-				damage_target(targ,r1,DAMAGE_FIRE);
+				damage_target(targ,r1,eDamageType::FIRE);
 				break;
 			case eSpell::POISON_MINOR:
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
@@ -3075,7 +3073,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				if(r1 > 29) r1 = 29;
 				run_a_missile(l,target,2,1,11,0,0,80);
 				start_missile_anim();
-				place_spell_pattern(square,target,DAMAGE_FIRE,r1,7);
+				place_spell_pattern(square,target,eDamageType::FIRE,r1,7);
 				ashes_loc = target;
 				break;
 			case eSpell::SUMMON_WEAK: case eSpell::SUMMON: case eSpell::SUMMON_MAJOR:
@@ -3123,7 +3121,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				run_a_missile(l,vict_loc,6,1,11,0,0,80);
 				r1 = get_ran(5 + (caster->level / 5),1,8);
 				start_missile_anim();
-				damage_target(targ,r1,DAMAGE_COLD);
+				damage_target(targ,r1,eDamageType::COLD);
 				break;
 			case eSpell::SLOW_GROUP:
 				play_sound(25);
@@ -3155,7 +3153,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				r1 = 1 + (caster->level * 3) / 4 + 3;
 				if(r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(radius2,target,DAMAGE_FIRE,r1,7);
+				place_spell_pattern(radius2,target,eDamageType::FIRE,r1,7);
 				ashes_loc = target;
 				break;
 			case eSpell::SHOCKSTORM:
@@ -3173,7 +3171,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				run_a_missile(l,vict_loc,9,1,11,0,0,80);
 				r1 = 35 + get_ran(3,1,10);
 				start_missile_anim();
-				damage_target(targ,r1,DAMAGE_MAGIC);
+				damage_target(targ,r1,eDamageType::MAGIC);
 				break;
 			case eSpell::DEMON:
 				x = get_ran(3,1,4);
@@ -3338,7 +3336,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				run_a_missile(l,vict_loc,8,0,24,0,0,80);
 				r1 = get_ran(2,1,4);
 				start_missile_anim();
-				damage_target(targ,r1,DAMAGE_UNBLOCKABLE);
+				damage_target(targ,r1,eDamageType::UNBLOCKABLE);
 				break;
 			case eSpell::GOO:
 				play_sound(24);
@@ -3360,7 +3358,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				run_a_missile(l,vict_loc,8,0,24,0,0,80);
 				r1 = get_ran(2,1,6) + 2;
 				start_missile_anim();
-				damage_target(targ,r1,DAMAGE_UNBLOCKABLE);
+				damage_target(targ,r1,eDamageType::UNBLOCKABLE);
 				break;
 			case eSpell::SUMMON_SPIRIT: case eSpell::SUMMON_GUARDIAN:
 				play_sound(24);
@@ -3396,7 +3394,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				run_a_missile(l,vict_loc,6,0,24,0,0,80);
 				r1 = get_ran(4,1,6) + 2;
 				start_missile_anim();
-				damage_target(targ,r1,DAMAGE_COLD);
+				damage_target(targ,r1,eDamageType::COLD);
 				break;
 			case eSpell::STICKS_TO_SNAKES: // sticks to snakes
 				play_sound(24);
@@ -3481,14 +3479,14 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				run_a_missile(l,target,2,0,11,0,0,80);
 				r1 = 2 + caster->level / 2 + 2;
 				start_missile_anim();
-				place_spell_pattern(square,target,DAMAGE_FIRE,r1,7);
+				place_spell_pattern(square,target,eDamageType::FIRE,r1,7);
 				ashes_loc = target;
 				break;
 			case eSpell::UNHOLY_RAVAGING:
 				run_a_missile(l,vict_loc,14,0,53,0,0,80);
 				r1 = get_ran(4,1,8);
 				r2 = get_ran(1,0,2);
-				damage_target(targ,r1,DAMAGE_MAGIC);
+				damage_target(targ,r1,eDamageType::MAGIC);
 				if(targ < 6) {
 					slow_pc(targ,6);
 					poison_pc(targ,5 + r2);
@@ -3515,7 +3513,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				r1 = (caster->level * 3) / 4 + 5;
 				if(r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(radius2,target,DAMAGE_MAGIC,r1,7 );
+				place_spell_pattern(radius2,target,eDamageType::MAGIC,r1,7 );
 				ashes_loc = target;
 				break;
 		}
@@ -3617,7 +3615,7 @@ bool monst_near(short m_num,location where,short radius,short active) {
 }
 
 void fireball_space(location loc,short dam) {
-	place_spell_pattern(square,loc,DAMAGE_FIRE,dam,7);
+	place_spell_pattern(square,loc,eDamageType::FIRE,dam,7);
 }
 
 //type;  // 0 - take codes in pattern, OW make all nonzero this type
@@ -3753,57 +3751,57 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 					switch(effect) {
 						case WALL_FORCE:
 							r1 = get_ran(2,1,6);
-							damage_pc(k,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
+							damage_pc(k,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 							break;
 						case WALL_FIRE:
 							r1 = get_ran(1,1,6) + 1;
-							damage_pc(k,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
+							damage_pc(k,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 							break;
 						case WALL_ICE:
 							r1 = get_ran(2,1,6);
-							damage_pc(k,r1,DAMAGE_COLD,eRace::UNKNOWN,0);
+							damage_pc(k,r1,eDamageType::COLD,eRace::UNKNOWN,0);
 							break;
 						case WALL_BLADES:
 							r1 = get_ran(4,1,8);
-							damage_pc(k,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
+							damage_pc(k,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 							break;
 						case OBJECT_BLOCK:
 							r1 = get_ran(6,1,8);
-							damage_pc(k,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
+							damage_pc(k,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 							break;
 						case BARRIER_CAGE:
 							univ.party[k].status[eStatus::FORCECAGE] = 8;
 							break;
 						default:
-							eDamageType type = DAMAGE_MARKED;
+							eDamageType type = eDamageType::MARKED;
 							unsigned short dice;
 							if(effect > 50 && effect <= 80) {
-								type = DAMAGE_FIRE;
+								type = eDamageType::FIRE;
 								dice = effect - 50;
 							} else if(effect > 90 && effect <= 120) {
-								type = DAMAGE_COLD;
+								type = eDamageType::COLD;
 								dice = effect - 90;
 							} else if(effect > 130 && effect <= 160) {
-								type = DAMAGE_MAGIC;
+								type = eDamageType::MAGIC;
 								dice = effect - 130;
 								// The rest of these are new, currently unused.
 							} else if(effect > 170 && effect <= 200) {
-								type = DAMAGE_WEAPON;
+								type = eDamageType::WEAPON;
 								dice = effect - 170;
 							} else if(effect > 210 && effect <= 240) {
-								type = DAMAGE_POISON;
+								type = eDamageType::POISON;
 								dice = effect - 210;
 							} else if(effect > 250 && effect <= 280) {
-								type = DAMAGE_UNBLOCKABLE;
+								type = eDamageType::UNBLOCKABLE;
 								dice = effect - 250;
 							} else if(effect > 290 && effect <= 320) {
-								type = DAMAGE_UNDEAD;
+								type = eDamageType::UNDEAD;
 								dice = effect - 290;
 							} else if(effect > 330 && effect <= 360) {
-								type = DAMAGE_DEMON;
+								type = eDamageType::DEMON;
 								dice = effect - 330;
 							}
-							if(type == DAMAGE_MARKED) break;
+							if(type == eDamageType::MARKED) break;
 							r1 = get_ran(dice,1,6);
 							damage_pc(k,r1,type,eRace::UNKNOWN,0);
 							break;
@@ -3835,14 +3833,14 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 								break;
 							case WALL_FORCE:
 								r1 = get_ran(3,1,6);
-								damage_monst(k, who_hit, r1,0, DAMAGE_MAGIC,0);
+								damage_monst(k, who_hit, r1,0, eDamageType::MAGIC,0);
 								break;
 							case WALL_FIRE:
 								r1 = get_ran(2,1,6);
 								which_m = &univ.town.monst[k];
 								if(which_m->spec_skill == 22)
 									break;
-								damage_monst(k, who_hit, r1,0, DAMAGE_FIRE,0);
+								damage_monst(k, who_hit, r1,0, eDamageType::FIRE,0);
 								break;
 							case CLOUD_STINK:
 								which_m = &univ.town.monst[k];
@@ -3853,11 +3851,11 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 								r1 = get_ran(3,1,6);
 								if(which_m->spec_skill == 23)
 									break;
-								damage_monst(k, who_hit, r1,0, DAMAGE_COLD,0);
+								damage_monst(k, who_hit, r1,0, eDamageType::COLD,0);
 								break;
 							case WALL_BLADES:
 								r1 = get_ran(6,1,8);
-								damage_monst(k, who_hit, r1,0, DAMAGE_WEAPON,0);
+								damage_monst(k, who_hit, r1,0, eDamageType::WEAPON,0);
 								break;
 							case CLOUD_SLEEP:
 								which_m = &univ.town.monst[k];
@@ -3865,41 +3863,41 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 								break;
 							case OBJECT_BLOCK:
 								r1 = get_ran(6,1,8);
-								damage_monst(k,who_hit,r1,0,DAMAGE_WEAPON,0);
+								damage_monst(k,who_hit,r1,0,eDamageType::WEAPON,0);
 								break;
 							case BARRIER_CAGE:
 								univ.town.monst[k].status[eStatus::FORCECAGE] = 8;
 								break;
 							default:
-								eDamageType type = DAMAGE_MARKED;
+								eDamageType type = eDamageType::MARKED;
 								unsigned short dice;
 								if(effect > 50 && effect <= 80) {
-									type = DAMAGE_FIRE;
+									type = eDamageType::FIRE;
 									dice = effect - 50;
 								} else if(effect > 90 && effect <= 120) {
-									type = DAMAGE_COLD;
+									type = eDamageType::COLD;
 									dice = effect - 90;
 								} else if(effect > 130 && effect <= 160) {
-									type = DAMAGE_MAGIC;
+									type = eDamageType::MAGIC;
 									dice = effect - 130;
 									// The rest of these are new, currently unused.
 								} else if(effect > 170 && effect <= 200) {
-									type = DAMAGE_WEAPON;
+									type = eDamageType::WEAPON;
 									dice = effect - 170;
 								} else if(effect > 210 && effect <= 240) {
-									type = DAMAGE_POISON;
+									type = eDamageType::POISON;
 									dice = effect - 210;
 								} else if(effect > 250 && effect <= 280) {
-									type = DAMAGE_UNBLOCKABLE;
+									type = eDamageType::UNBLOCKABLE;
 									dice = effect - 250;
 								} else if(effect > 290 && effect <= 320) {
-									type = DAMAGE_UNDEAD;
+									type = eDamageType::UNDEAD;
 									dice = effect - 290;
 								} else if(effect > 330 && effect <= 360) {
-									type = DAMAGE_DEMON;
+									type = eDamageType::DEMON;
 									dice = effect - 330;
 								}
-								if(type == DAMAGE_MARKED) break;
+								if(type == eDamageType::MARKED) break;
 								r1 = get_ran(dice,1,6);
 								damage_monst(k,who_hit,r1,0,type,0);
 								break;
@@ -3924,15 +3922,15 @@ void place_spell_pattern(effect_pat_type pat,location center,eDamageType type,sh
 	unsigned short code;
 	dice = minmax(1, 30, dice);
 	switch(type) {
-		case DAMAGE_FIRE: code = 50; break;
-		case DAMAGE_COLD: code = 90; break;
-		case DAMAGE_MAGIC: code = 130; break;
+		case eDamageType::FIRE: code = 50; break;
+		case eDamageType::COLD: code = 90; break;
+		case eDamageType::MAGIC: code = 130; break;
 			// TODO: These are new; nothing actually uses them, but maybe eventually!
-		case DAMAGE_WEAPON: code = 170; break;
-		case DAMAGE_POISON: code = 210; break;
-		case DAMAGE_UNBLOCKABLE: code = 250; break;
-		case DAMAGE_UNDEAD: code = 290; break;
-		case DAMAGE_DEMON: code = 330; break;
+		case eDamageType::WEAPON: code = 170; break;
+		case eDamageType::POISON: code = 210; break;
+		case eDamageType::UNBLOCKABLE: code = 250; break;
+		case eDamageType::UNDEAD: code = 290; break;
+		case eDamageType::DEMON: code = 330; break;
 	}
 	place_spell_pattern(pat, center, code + dice, who_hit);
 }
@@ -3953,12 +3951,12 @@ void do_shockwave(location target) {
 	for(i = 0; i < 6; i++)
 		if((dist(target,univ.party[i].combat_pos) > 0) && (dist(target,univ.party[i].combat_pos) < 11)
 			&& univ.party[i].main_status == eMainStatus::ALIVE)
-			damage_pc(i, get_ran(2 + dist(target,univ.party[i].combat_pos) / 2, 1, 6), DAMAGE_UNBLOCKABLE,eRace::UNKNOWN,0);
+			damage_pc(i, get_ran(2 + dist(target,univ.party[i].combat_pos) / 2, 1, 6), eDamageType::UNBLOCKABLE,eRace::UNKNOWN,0);
 	for(i = 0; i < univ.town->max_monst(); i++)
 		if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) < 11)
 			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
-			damage_monst(i, current_pc, get_ran(2 + dist(target,univ.town.monst[i].cur_loc) / 2 , 1, 6), 0, DAMAGE_UNBLOCKABLE,0);
+			damage_monst(i, current_pc, get_ran(2 + dist(target,univ.town.monst[i].cur_loc) / 2 , 1, 6), 0, eDamageType::UNBLOCKABLE,0);
 	do_explosion_anim(5,0);
 	end_missile_anim();
 	handle_marked_damage();
@@ -4024,7 +4022,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 		hit_all -= 10;
 	}
 	
-	if((univ.town.is_antimagic(target.x,target.y)) && ((type == 1) || (type == 3) || (type == 5))) {
+	if(univ.town.is_antimagic(target.x,target.y) && (type == eDamageType::FIRE || type == eDamageType::MAGIC || type == eDamageType::COLD)) {
 		return;
 	}
 	
@@ -4078,7 +4076,7 @@ void do_poison() {
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if(univ.party[i].status[eStatus::POISON] > 0) {
 					r1 = get_ran(univ.party[i].status[eStatus::POISON],1,6);
-					damage_pc(i,r1,DAMAGE_POISON,eRace::UNKNOWN,0);
+					damage_pc(i,r1,eDamageType::POISON,eRace::UNKNOWN,0);
 					if(get_ran(1,0,8) < 6)
 						move_to_zero(univ.party[i].status[eStatus::POISON]);
 					if(get_ran(1,0,8) < 6)
@@ -4153,7 +4151,7 @@ void handle_acid() {
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if(univ.party[i].status[eStatus::ACID] > 0) {
 					r1 = get_ran(univ.party[i].status[eStatus::ACID],1,6);
-					damage_pc(i,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
+					damage_pc(i,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 					move_to_zero(univ.party[i].status[eStatus::ACID]);
 				}
 		if(overall_mode < MODE_COMBAT)
@@ -4766,7 +4764,7 @@ void process_fields() {
 			if(univ.town.is_force_wall(i,j)) {
 				r1 = get_ran(3,1,6);
 				loc.x = i; loc.y = j;
-				hit_pcs_in_space(loc,r1,DAMAGE_MAGIC,1,1);
+				hit_pcs_in_space(loc,r1,eDamageType::MAGIC,1,1);
 				r1 = get_ran(1,1,6);
 				if(r1 == 2)
 					univ.town.set_force_wall(i,j,false);
@@ -4774,7 +4772,7 @@ void process_fields() {
 			if(univ.town.is_fire_wall(i,j)) {
 				loc.x = i; loc.y = j;
 				r1 = get_ran(2,1,6) + 1;
-				hit_pcs_in_space(loc,r1,DAMAGE_FIRE,1,1);
+				hit_pcs_in_space(loc,r1,eDamageType::FIRE,1,1);
 				r1 = get_ran(1,1,4);
 				if(r1 == 2)
 					univ.town.set_fire_wall(i,j,false);
@@ -4803,7 +4801,7 @@ void process_fields() {
 			if(univ.town.is_ice_wall(i,j)) {
 				loc.x = i; loc.y = j;
 				r1 = get_ran(3,1,6);
-				hit_pcs_in_space(loc,r1,DAMAGE_COLD,1,1);
+				hit_pcs_in_space(loc,r1,eDamageType::COLD,1,1);
 				r1 = get_ran(1,1,6);
 				if(r1 == 1)
 					univ.town.set_ice_wall(i,j,false);
@@ -4811,7 +4809,7 @@ void process_fields() {
 			if(univ.town.is_blade_wall(i,j)) {
 				loc.x = i; loc.y = j;
 				r1 = get_ran(6,1,8);
-				hit_pcs_in_space(loc,r1,DAMAGE_WEAPON,1,1);
+				hit_pcs_in_space(loc,r1,eDamageType::WEAPON,1,1);
 				r1 = get_ran(1,1,5);
 				if(r1 == 1)
 					univ.town.set_blade_wall(i,j,false);
@@ -4836,7 +4834,7 @@ void process_fields() {
 				if(univ.town.is_quickfire(i,j)) {
 					loc.x = i; loc.y = j;
 					r1 = get_ran(2,1,8);
-					hit_pcs_in_space(loc,r1,DAMAGE_FIRE,1,1);
+					hit_pcs_in_space(loc,r1,eDamageType::FIRE,1,1);
 				}
 	}
 	

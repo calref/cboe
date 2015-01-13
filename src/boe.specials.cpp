@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstring>
 #include <queue>
+#include <map>
 
 #include "boe.global.h"
 
@@ -47,7 +48,16 @@ extern std::queue<pending_special_type> special_queue;
 
 bool can_draw_pcs = true;
 
-short boom_gr[8] = {3,0,2,1,1,4,3,3};
+std::map<eDamageType,int> boom_gr = {
+	{eDamageType::WEAPON, 3},
+	{eDamageType::FIRE, 0},
+	{eDamageType::POISON, 2},
+	{eDamageType::MAGIC, 1},
+	{eDamageType::UNBLOCKABLE, 1},
+	{eDamageType::COLD, 4},
+	{eDamageType::UNDEAD, 3},
+	{eDamageType::DEMON, 3},
+};
 short store_item_spell_level = 10;
 
 // global values for when processing special encounters
@@ -120,7 +130,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 	eTerSpec ter_special;
 	std::string choice;
 	ter_flag_t ter_flag1,ter_flag2,ter_flag3;
-	eDamageType dam_type = DAMAGE_WEAPON;
+	eDamageType dam_type = eDamageType::WEAPON;
 	bool can_enter = true;
 	location out_where,from_loc,to_loc;
 	short s1 = 0,s2 = 0,s3 = 0;
@@ -308,10 +318,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				break;
 			if(ter_flag3.u > 0 && ter_flag3.u < 8)
 				dam_type = (eDamageType) ter_flag3.u;
-			else dam_type = DAMAGE_WEAPON;
-			r1 = get_ran(ter_flag2.u,dam_type,ter_flag1.u);
+			else dam_type = eDamageType::WEAPON;
+			r1 = get_ran(ter_flag2.u,1,ter_flag1.u);
 			switch(dam_type){
-				case DAMAGE_FIRE:
+				case eDamageType::FIRE:
 					add_string_to_buf("  It's hot!");
 					pic_type = 0;
 					if(PSD[SDF_PARTY_FIREWALK] > 0) {
@@ -319,25 +329,25 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 						r1 = -1;
 					}
 					break;
-				case DAMAGE_COLD:
+				case eDamageType::COLD:
 					add_string_to_buf("  You feel cold!");
 					pic_type = 4;
 					break;
-				case DAMAGE_MAGIC:
-				case DAMAGE_UNBLOCKABLE:
+				case eDamageType::MAGIC:
+				case eDamageType::UNBLOCKABLE:
 					add_string_to_buf("  Something shocks you!");
 					pic_type = 1;
 					break;
-				case DAMAGE_WEAPON:
+				case eDamageType::WEAPON:
 					add_string_to_buf("  You feel pain!");
 					pic_type = 3;
 					break;
-				case DAMAGE_POISON:
+				case eDamageType::POISON:
 					add_string_to_buf("  You suddenly feel very ill for a moment...");
 					pic_type = 2;
 					break;
-				case DAMAGE_UNDEAD:
-				case DAMAGE_DEMON:
+				case eDamageType::UNDEAD:
+				case eDamageType::DEMON:
 					add_string_to_buf("  A dark wind blows through you!");
 					pic_type = 1; // TODO: Verify that this is correct
 					break;
@@ -485,7 +495,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 //		if(mode < 2)
 //			hit_party(r1,1);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
@@ -495,7 +505,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 //		if(mode < 2)
 //			hit_party(r1,3);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
 	}
@@ -505,7 +515,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 //		if(mode < 2)
 //			hit_party(r1,5);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,DAMAGE_COLD,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::COLD,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,4,r1,7);
 	}
@@ -515,7 +525,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 //		if(mode < 2)
 //			hit_party(r1,0);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,DAMAGE_WEAPON,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,3,r1,2);
 	}
@@ -525,7 +535,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 //		if(mode < 2)
 //			hit_party(r1,1);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,DAMAGE_FIRE,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
@@ -558,9 +568,9 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 		add_string_to_buf("  Magic barrier!               ");
 		r1 = get_ran(2,1,10);
 		if(mode != eSpecCtx::COMBAT_MOVE)
-			hit_party(r1,DAMAGE_MAGIC);
+			hit_party(r1,eDamageType::MAGIC);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,DAMAGE_MAGIC,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
 	}
@@ -949,7 +959,7 @@ void use_item(short pc,short item) {
 						break;
 					case 1:
 						ASB("  You feel sick.");
-						damage_pc(pc,20 * str,DAMAGE_UNBLOCKABLE,eRace::HUMAN,0);
+						damage_pc(pc,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
 						break;
 					case 2:
 						ASB("  You all feel better.");
@@ -957,7 +967,7 @@ void use_item(short pc,short item) {
 						break;
 					case 3:
 						ASB("  You all feel sick.");
-						hit_party(20 * str,DAMAGE_UNBLOCKABLE);
+						hit_party(20 * str,eDamageType::UNBLOCKABLE);
 						break;
 				}
 				break;
@@ -987,7 +997,7 @@ void use_item(short pc,short item) {
 					case 0: case 1:
 						ASB("  You feel terrible.");
 						drain_pc(pc,str * 5);
-						damage_pc(pc,20 * str,DAMAGE_UNBLOCKABLE,eRace::HUMAN,0);
+						damage_pc(pc,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
 						disease_pc(pc,2 * str);
 						dumbfound_pc(pc,2 * str);
 						break;
@@ -995,7 +1005,7 @@ void use_item(short pc,short item) {
 						ASB("  You all feel terrible.");
 						for(i = 0; i < 6; i++) {
 							drain_pc(i,str * 5);
-							damage_pc(i,20 * str,DAMAGE_UNBLOCKABLE,eRace::HUMAN,0);
+							damage_pc(i,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
 							disease_pc(i,2 * str);
 							dumbfound_pc(i,2 * str);
 						}
@@ -1378,37 +1388,25 @@ void change_level(short town_num,short x,short y) {
 
 
 // Damaging and killing monsters needs to be here because several have specials attached to them.
-//short which_m, who_hit, how_much, how_much_spec;  // 6 for who_hit means dist. xp evenly  7 for no xp
-//short dam_type;  // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold
-// 6 - demon 7 - undead
-// 9 - marked damage, from during anim mode
-//+10 = no_print
-// 100s digit - damage sound for boom space
-bool damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, eDamageType dam_type, short sound_type) {
+bool damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, eDamageType dam_type, short sound_type, bool do_print) {
 	cCreature *victim;
 	short r1,which_spot;
 	location where_put;
 	
-	bool do_print = true;
 	char resist;
 	
 	//print_num(which_m,(short)univ.town.monst[which_m].m_loc.x,(short)univ.town.monst[which_m].m_loc.y);
 	
 	if(univ.town.monst[which_m].active == 0) return false;
 	
-	if(dam_type >= DAMAGE_MARKED) { // note: MARKED here actually means NO_PRINT
-		do_print = false;
-		dam_type -= DAMAGE_MARKED;
-	}
-	
 	if(sound_type == 0) {
-		if((dam_type == 1) || (dam_type == 4) )
+		if(dam_type == eDamageType::FIRE || dam_type == eDamageType::UNBLOCKABLE)
 			sound_type = 5;
-		if 	(dam_type == 5)
+		if(dam_type == eDamageType::COLD)
 			sound_type = 7;
-		if 	(dam_type == 3)
+		if(dam_type == eDamageType::MAGIC)
 			sound_type = 12;
-		if 	(dam_type == 2)
+		if(dam_type == eDamageType::POISON)
 			sound_type = 11;
 	}
 	
@@ -1416,25 +1414,25 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	victim = &univ.town.monst[which_m];
 	resist = victim->immunities;
 	
-	if(dam_type == 3) {
+	if(dam_type == eDamageType::MAGIC) {
 		if(resist & 1)
 			how_much = how_much / 2;
 		if(resist & 2)
 			how_much = 0;
 	}
-	if(dam_type == 1) {
+	if(dam_type == eDamageType::FIRE) {
 		if(resist & 4)
 			how_much = how_much / 2;
 		if(resist & 8)
 			how_much = 0;
 	}
-	if(dam_type == 5) {
+	if(dam_type == eDamageType::COLD) {
 		if(resist & 16)
 			how_much = how_much / 2;
 		if(resist & 32)
 			how_much = 0;
 	}
-	if(dam_type == 2) {
+	if(dam_type == eDamageType::POISON) {
 		if(resist & 64)
 			how_much = how_much / 2;
 		if(resist & 128)
@@ -1442,7 +1440,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	}
 	
 	// Absorb damage?
-	if(((dam_type == 1) || (dam_type == 3) || (dam_type == 5))
+	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::MAGIC || dam_type == eDamageType::COLD)
 		&& (victim->spec_skill == 26)) {
 		if(32767 - victim->health > how_much)
 			victim->health = 32767;
@@ -1452,9 +1450,9 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	}
 	
 	// Saving throw
-	if(((dam_type == 1) || (dam_type == 5)) && (get_ran(1,0,20) <= victim->level))
+	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::COLD) && get_ran(1,0,20) <= victim->level)
 		how_much /= 2;
-	if((dam_type == 3) && (get_ran(1,0,24) <= victim->level))
+	if(dam_type == eDamageType::MAGIC && (get_ran(1,0,24) <= victim->level))
 		how_much /= 2;
 	
 	// Invulnerable?
@@ -1464,14 +1462,19 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	
 	r1 = get_ran(1,0,(victim->armor * 5) / 4);
 	r1 += victim->level / 4;
-	if(dam_type == 0)
+	if(dam_type == eDamageType::WEAPON)
 		how_much -= r1;
 	
 	if(boom_anim_active) {
 		if(how_much < 0)
 			how_much = 0;
+		// TODO: Also, if it's magic, use boom type 3 (must implement in the animation engine first)
+		// It would also be nice to have a special boom type for cold.
+		short boom_type = 2;
+		if(dam_type == eDamageType::FIRE)
+			boom_type = 0;
 		monst_marked_damage[which_m] += how_much;
-		add_explosion(victim->cur_loc,how_much,0,(dam_type > 2) ? 2 : 0,14 * (victim->x_width - 1),18 * (victim->y_width - 1));
+		add_explosion(victim->cur_loc,how_much,0,boom_type,14 * (victim->x_width - 1),18 * (victim->y_width - 1));
 		// Note: Windows version printed an "undamaged" message here if applicable, but I don't think that's right.
 		if(how_much == 0)
 			return false;
@@ -1481,7 +1484,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	if(how_much <= 0) {
 		if(is_combat())
 			monst_spell_note(victim->number,7);
-		if((how_much <= 0) && ((dam_type == DAMAGE_WEAPON) || (dam_type == DAMAGE_UNDEAD) || (dam_type == DAMAGE_DEMON))) {
+		if(how_much <= 0 && (dam_type == eDamageType::WEAPON || dam_type == eDamageType::UNDEAD || dam_type == eDamageType::DEMON)) {
 			draw_terrain(2);
 			play_sound(2);
 		}
@@ -1530,7 +1533,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	
 	// TODO: This looks like the reason Windows split the boom_space function in two.
 	// It doesn't exactly make sense though, since in its version, boom_space is only called for how_much_spec.
-	if(dam_type != 9) { // note special damage only gamed in hand-to-hand, not during animation
+	if(dam_type != eDamageType::MARKED) { // note special damage only gamed in hand-to-hand, not during animation
 		if(party_can_see_monst(which_m)) {
 			boom_space(victim->cur_loc,100,boom_gr[dam_type],how_much,sound_type);
 			if(how_much_spec > 0)
@@ -1745,7 +1748,7 @@ void push_things() {
 			}
 			if(univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
 				ASB("You crash into the block.");
-				hit_party(get_ran(1, 1, 6), DAMAGE_WEAPON);
+				hit_party(get_ran(1, 1, 6), eDamageType::WEAPON);
 			}
 			for(k = 0; k < NUM_TOWN_ITEMS; k++)
 				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
@@ -1783,7 +1786,7 @@ void push_things() {
 					}
 					if(univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
 						ASB("You crash into the block.");
-						damage_pc(i,get_ran(1, 1, 6), DAMAGE_WEAPON,eRace::UNKNOWN,0);
+						damage_pc(i,get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN,0);
 					}
 					for(k = 0; k < NUM_TOWN_ITEMS; k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
