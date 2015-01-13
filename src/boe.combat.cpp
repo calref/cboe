@@ -584,164 +584,11 @@ void pc_attack(short who_att,short target) {
 		}
 	}
 	
-	// Don't forget awkward and stat adj.
-	if(weap1 < 24) {
-		what_skill1 = univ.party[who_att].items[weap1].weap_type;
-		
-		// safety valve
-		if(what_skill1 == eSkill::INVALID)
-			what_skill1 = eSkill::EDGED_WEAPONS;
-		
-		std::string create_line = univ.party[who_att].name + " swings. ";
-		add_string_to_buf(create_line);
-		
-		r1 = get_ran(1,1,100) - 5 + hit_adj
-			- 5 * univ.party[who_att].items[weap1].bonus;
-		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
-		
-		if(weap2 < 24 && !univ.party[who_att].traits[eTrait::AMBIDEXTROUS])
-			r1 += 25;
-		
-		// race adj.
-		if(univ.party[who_att].race == eRace::SLITH && univ.party[who_att].items[weap1].weap_type == eSkill::POLE_WEAPONS)
-			r1 -= 10;
-		
-		r2 = get_ran(1,1,univ.party[who_att].items[weap1].item_level) + dam_adj + 2 + univ.party[who_att].items[weap1].bonus;
-		if(univ.party[who_att].items[weap1].ability == eItemAbil::WEAK_WEAPON)
-			r2 = (r2 * (10 - univ.party[who_att].items[weap1].abil_data[0])) / 10;
-		
-		if(r1 <= hit_chance[univ.party[who_att].skills[what_skill1]]) {
-			spec_dam = calc_spec_dam(univ.party[who_att].items[weap1].ability,
-									 univ.party[who_att].items[weap1].abil_data[0],which_m);
-			
-			// assassinate
-			r1 = get_ran(1,1,100);
-			if((univ.party[who_att].level >= which_m->level - 1)
-				&& univ.party[who_att].skills[eSkill::ASSASSINATION] >= which_m->level / 2
-				&& (which_m->spec_skill != 12)) // Can't assassinate splitters
-				if(r1 < hit_chance[max(univ.party[who_att].skills[eSkill::ASSASSINATION] - which_m->level,0)]) {
-					add_string_to_buf("  You assassinate.           ");
-					spec_dam += r2;
-				}
-			
-			switch(what_skill1) {
-			 	case eSkill::EDGED_WEAPONS:
-					if(univ.party[who_att].items[weap1].item_level < 8)
-						damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,1);
-					else damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,2);
-					break;
-			 	case eSkill::BASHING_WEAPONS:
-					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,4);
-					break;
-			 	case eSkill::POLE_WEAPONS:
-					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,3);
-					break;
-				default: // TODO: Not sure what sound to play for unconventional weapons, but let's just go with the generic "ouch" for now
-					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON, 0);
-					break;
-			}
-			// poison
-			if(univ.party[who_att].status[eStatus::POISONED_WEAPON] > 0 && univ.party[who_att].weap_poisoned == weap1) {
-				poison_amt = univ.party[who_att].status[eStatus::POISONED_WEAPON];
-				if(pc_has_abil_equip(who_att,eItemAbil::POISON_AUGMENT) < 24)
-					poison_amt += 2;
-				poison_monst(which_m,poison_amt);
-				move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
-			}
-			if((univ.party[who_att].items[weap1].ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
-				switch(eStatus(univ.party[who_att].items[weap1].abil_data[1])) {
-						// TODO: Handle other status types
-					case eStatus::POISON:
-						add_string_to_buf("  Blade drips venom.             ");
-						poison_monst(which_m,univ.party[who_att].items[weap1].abil_data[0] / 2);
-						break;
-					case eStatus::ACID:
-						add_string_to_buf("  Blade drips acid.             ");
-						acid_monst(which_m,univ.party[who_att].items[weap1].abil_data[0] / 2);
-						break;
-				}
-			}
-			if((univ.party[who_att].items[weap1].ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
-				add_string_to_buf("  Blade drains life.             ");
-				heal_pc(who_att,univ.party[who_att].items[weap1].abil_data[0] / 2);
-			}
-		}
-		else {
-			draw_terrain(2);
-			create_line = "  " + univ.party[who_att].name + " misses.";
-			add_string_to_buf(create_line);
-			if(what_skill1 == eSkill::POLE_WEAPONS)
-				play_sound(19);
-			else play_sound(2);
-		}
-	}
-	if((weap2 < 24) && (which_m->active > 0)) {
-		what_skill2 = univ.party[who_att].items[weap2].weap_type;
-		
-		// safety valve
-		if(what_skill1 == eSkill::INVALID)
-			what_skill1 = eSkill::EDGED_WEAPONS;
-		
-		std::string create_line = univ.party[who_att].name + " swings.";
-		add_string_to_buf(create_line);
-		r1 = get_ran(1,1,100) + hit_adj - 5 * univ.party[who_att].items[weap2].bonus;
-		
-		// Ambidextrous?
-		if(!univ.party[who_att].traits[eTrait::AMBIDEXTROUS])
-			r1 += 25;
-		
-		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
-		r2 = get_ran(1,1,univ.party[who_att].items[weap2].item_level) + dam_adj - 1 + univ.party[who_att].items[weap2].bonus;
-		if(univ.party[who_att].items[weap2].ability == eItemAbil::WEAK_WEAPON)
-			r2 = (r2 * (10 - univ.party[who_att].items[weap2].abil_data[0])) / 10;
-		
-		if(r1 <= hit_chance[univ.party[who_att].skills[what_skill2]]) {
-			spec_dam = calc_spec_dam(univ.party[who_att].items[weap2].ability,
-									 univ.party[who_att].items[weap2].abil_data[0],which_m);
-			switch(what_skill2) {
-			 	case eSkill::EDGED_WEAPONS:
-					if(univ.party[who_att].items[weap1].item_level < 8)
-						damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,1);
-					else damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,2);
-					break;
-			 	case eSkill::BASHING_WEAPONS:
-					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,4);
-					break;
-			 	case eSkill::POLE_WEAPONS:
-					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,3);
-					break;
-				default: // TODO: Not sure what sound to play for unconventional weapons, but let's just go with the generic "ouch" for now
-					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON, 0);
-					break;
-			}
-			
-			if((univ.party[who_att].items[weap2].ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
-				switch(eStatus(univ.party[who_att].items[weap2].abil_data[1])) {
-					case eStatus::POISON:
-						add_string_to_buf("  Blade drips venom.             ");
-						poison_monst(which_m,univ.party[who_att].items[weap2].abil_data[0] / 2);
-						break;
-					case eStatus::ACID:
-						add_string_to_buf("  Blade drips acid.             ");
-						acid_monst(which_m,univ.party[who_att].items[weap2].abil_data[0] / 2);
-						break;
-				}
-			}
-			if((univ.party[who_att].items[weap2].ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
-				add_string_to_buf("  Blade drains life.             ");
-				heal_pc(who_att,univ.party[who_att].items[weap2].abil_data[0] / 2);
-			}
-			
-		}
-		else {
-			draw_terrain(2);
-			create_line = univ.party[who_att].name + " misses.";
-			add_string_to_buf(create_line);
-			if(what_skill2 == eSkill::POLE_WEAPONS)
-				play_sound(19);
-			else play_sound(2);
-		}
-	}
+	short weap_poisoned = univ.party[who_att].weap_poisoned;
+	if(weap1 < 24)
+		pc_attack_weapon(who_att, target, hit_adj, dam_adj, univ.party[who_att].items[weap1],weap2 < 24 ? 2 : 1,weap_poisoned == weap1);
+	if(weap2 < 24 && which_m->active > 0)
+		pc_attack_weapon(who_att, target, hit_adj, dam_adj, univ.party[who_att].items[weap2],0,weap_poisoned == weap2);
 	move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
 	take_ap(4);
 	
@@ -751,7 +598,105 @@ void pc_attack(short who_att,short target) {
 		damage_pc(who_att, store_hp - univ.town.monst[target].health, DAMAGE_MAGIC,eRace::UNKNOWN,0);
 	}
 	combat_posing_monster = current_working_monster = -1;
+}
+
+// primary: 0 - secondary weapon, 1 - primary (and only) weapon, 2 - primary of two weapons
+void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cItem& weap,short primary,bool do_poison) {
+	short r1, r2;
+	cCreature* which_m = &univ.town.monst[target];
+	eSkill what_skill = weap.weap_type;
+		
+		// safety valve
+		if(what_skill == eSkill::INVALID)
+			what_skill = eSkill::EDGED_WEAPONS;
+		
+		std::string create_line = univ.party[who_att].name + " swings.";
+		add_string_to_buf(create_line);
+		r1 = get_ran(1,1,100) + hit_adj - 5 * weap.bonus;
+		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
+	if(primary) r1 -= 5;
+		
+		// Ambidextrous?
+		if(primary != 1 && !univ.party[who_att].traits[eTrait::AMBIDEXTROUS])
+			r1 += 25;
 	
+	if(primary) {
+		// race adj.
+		if(univ.party[who_att].race == eRace::SLITH && weap.weap_type == eSkill::POLE_WEAPONS)
+			r1 -= 10;
+	}
+		
+		r2 = get_ran(1,1,weap.item_level) + dam_adj + weap.bonus;
+	if(primary) r2 += 2; else r2 -= 1;
+		if(weap.ability == eItemAbil::WEAK_WEAPON)
+			r2 = (r2 * (10 - weap.abil_data[0])) / 10;
+		
+		if(r1 <= hit_chance[univ.party[who_att].skills[what_skill]]) {
+			short spec_dam = calc_spec_dam(weap.ability,weap.abil_data[0],which_m);
+		if(primary) {
+			// assassinate
+			r1 = get_ran(1,1,100);
+			if((univ.party[who_att].level >= which_m->level - 1)
+				&& univ.party[who_att].skills[eSkill::ASSASSINATION] >= which_m->level / 2
+				&& (which_m->spec_skill != 12)) // Can't assassinate splitters
+				if(r1 < hit_chance[max(univ.party[who_att].skills[eSkill::ASSASSINATION] - which_m->level,0)]) {
+					add_string_to_buf("  You assassinate.           ");
+					spec_dam += r2;
+				}
+		}
+			switch(what_skill) {
+			 	case eSkill::EDGED_WEAPONS:
+					if(weap.item_level < 8)
+						damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,1);
+					else damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,2);
+					break;
+			 	case eSkill::BASHING_WEAPONS:
+					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,4);
+					break;
+			 	case eSkill::POLE_WEAPONS:
+					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON,3);
+					break;
+				default: // TODO: Not sure what sound to play for unconventional weapons, but let's just go with the generic "ouch" for now
+					damage_monst(target, who_att, r2, spec_dam, DAMAGE_WEAPON, 0);
+					break;
+			}
+		if(do_poison) {
+			// poison
+			if(univ.party[who_att].status[eStatus::POISONED_WEAPON] > 0) {
+				short poison_amt = univ.party[who_att].status[eStatus::POISONED_WEAPON];
+				if(pc_has_abil_equip(who_att,eItemAbil::POISON_AUGMENT) < 24)
+					poison_amt += 2;
+				poison_monst(which_m,poison_amt);
+				move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
+			}
+		}
+			if((weap.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
+				switch(eStatus(weap.abil_data[1])) {
+						// TODO: Handle other status types
+					case eStatus::POISON:
+						add_string_to_buf("  Blade drips venom.             ");
+						poison_monst(which_m,weap.abil_data[0] / 2);
+						break;
+					case eStatus::ACID:
+						add_string_to_buf("  Blade drips acid.             ");
+						acid_monst(which_m,weap.abil_data[0] / 2);
+						break;
+				}
+			}
+			if((weap.ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
+				add_string_to_buf("  Blade drains life.             ");
+				heal_pc(who_att,weap.abil_data[0] / 2);
+			}
+			
+		}
+		else {
+			draw_terrain(2);
+			create_line = "  " + univ.party[who_att].name + " misses.";
+			add_string_to_buf(create_line);
+			if(what_skill == eSkill::POLE_WEAPONS)
+				play_sound(19);
+			else play_sound(2);
+		}
 }
 
 
