@@ -66,6 +66,7 @@ extern tessel_ref_t bw_pats[6];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern short store_talk_face_pic;
 extern cUniverse univ;
+extern cCustomGraphics spec_scen_g;
 
 // Talk vars
 extern eGameMode store_pre_talk_mode;
@@ -91,18 +92,18 @@ extern short heal_costs[8];
 extern short terrain_there[9][9];
 
 // Missile anim vars
-typedef struct {
+struct store_missile_type {
 	location dest;
-	short missile_type; // -1 no miss
+	miss_num_t missile_type; // -1 no miss
 	short path_type,x_adj,y_adj;
-} store_missile_type;
-typedef struct {
+};
+struct store_boom_type {
 	location dest;
 	short val_to_place,offset;
 	short place_type; // 0 - on spot, 1 - random area near spot
 	short boom_type;  // -1 no miss
 	short x_adj,y_adj;
-} store_boom_type;
+};
 store_missile_type store_missiles[30];
 store_boom_type store_booms[30];
 bool have_missile,have_boom;
@@ -257,7 +258,7 @@ void end_missile_anim() {
 	boom_anim_active = false;
 }
 
-void add_missile(location dest,short missile_type,short path_type,short x_adj,short y_adj) {
+void add_missile(location dest,miss_num_t missile_type,short path_type,short x_adj,short y_adj) {
 	short i;
 	
 	if(!boom_anim_active)
@@ -280,7 +281,7 @@ void add_missile(location dest,short missile_type,short path_type,short x_adj,sh
 		}
 }
 
-void run_a_missile(location from,location fire_to,short miss_type,short path,short sound_num,short x_adj,short y_adj,short len) {
+void run_a_missile(location from,location fire_to,miss_num_t miss_type,short path,short sound_num,short x_adj,short y_adj,short len) {
 //	if((cartoon_happening) && (anim_step < 140))
 //		return;
 	start_missile_anim();
@@ -434,11 +435,30 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				missile_place_rect[i] = temp_rect;
 				
 				// Now put in missile
-				from_rect = missile_origin_rect[i];
-				if(store_missiles[i].missile_type >= 7)
-					from_rect.offset(18 * (t % 8),0);
-				rect_draw_some_item(missiles_gworld,from_rect,
-									mainPtr,temp_rect,sf::BlendAlpha);
+				if(store_missiles[i].missile_type < 1000) {
+					from_rect = missile_origin_rect[i];
+					if(store_missiles[i].missile_type >= 7)
+						from_rect.offset(18 * (t % 8),0);
+					rect_draw_some_item(missiles_gworld,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
+				} else {
+					// Custom missile graphics
+					// TODO: Test this!
+					int step = missile_origin_rect[i].left / 18;
+					miss_num_t base = store_missiles[i].missile_type;
+					bool isParty = false;
+					if(base >= 10000) {
+						isParty = true;
+						base -= 10000;
+					} else base -= 1000;
+					base += step % 4;
+					sf::Texture* from_gw;
+					graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(base, isParty);
+					from_rect.width() = 18;
+					from_rect.height() = 18;
+					if(step >= 4)
+						from_rect.offset(0,18);
+					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
+				}
 			}
 		mainPtr.display();
 		if((PSD[SDF_GAME_SPEED] == 3) || ((PSD[SDF_GAME_SPEED] == 1) && (t % 4 == 0)) ||

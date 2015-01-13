@@ -35,6 +35,7 @@ public:
 	short value;
 	unsigned int weight;
 	unsigned int special_class;
+	miss_num_t missile;
 	location item_loc;
 	std::string full_name;
 	std::string name;

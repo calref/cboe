@@ -154,7 +154,7 @@ enum eAmbientSound {
 
 class cUniverse{
 	template<typename T> using update_info = std::set<T*>;
-	std::map<pic_num_t, update_info<cItem>> update_items;
+	std::map<pic_num_t, update_info<cItem>> update_items, update_missiles;
 	std::map<pic_num_t, update_info<cMonster>> update_monsters;
 	std::map<pic_num_t, update_info<cPlayer>> update_pcs;
 	std::set<pic_num_t> used_graphics;

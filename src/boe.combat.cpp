@@ -859,10 +859,12 @@ void place_target(location target) {
 }
 
 void do_combat_cast(location target) {
-	short adjust,r1,r2,targ_num,level,bonus = 1,i,item,store_sound = 0;
+	short adjust,r1,r2,targ_num,level,bonus = 1,i,item;
+	snd_num_t store_sound = 0;
 	cCreature *cur_monst;
 	bool freebie = false,ap_taken = false,cost_taken = false;
-	short num_targets = 1,store_m_type = 2;
+	short num_targets = 1;
+	miss_num_t store_m_type = 2;
 	eFieldType spray_type_array[15] = {
 		FIELD_WEB,FIELD_WEB,FIELD_WEB,
 		WALL_FORCE,WALL_FORCE,
@@ -1458,7 +1460,7 @@ void load_missile() {
 
 void fire_missile(location target) {
 	short r1, r2, skill, dam, dam_bonus, hit_bonus, range, targ_monst, spec_dam = 0,poison_amt = 0;
-	short skill_item,m_type = 0;
+	short skill_item;
 	cCreature *cur_monst;
 	bool exploding = false;
 	missile_firer = current_pc;
@@ -1518,27 +1520,7 @@ void fire_missile(location target) {
 			std::string create_line = univ.party[missile_firer].name + " fires.";
 			add_string_to_buf(create_line);
 			
-			if(overall_mode == MODE_THROWING) {
-				// TODO: Store the missile in cItem directly
-				switch(univ.party[missile_firer].items[ammo_inv_slot].item_level) {
-					case 7:
-						m_type = 10;
-						break;
-					case 4:
-						m_type = 1;
-						break;
-					case 8:
-						m_type = 5;
-						break;
-					case 9:
-						m_type = 7;
-						break;
-					default:
-						m_type = 10;
-						break;
-				}
-			} else if(overall_mode == MODE_FIRING || overall_mode == MODE_FANCY_TARGET)
-				m_type = univ.party[missile_firer].items[ammo_inv_slot].magic ? 4 : 3;
+			miss_num_t m_type = univ.party[missile_firer].items[ammo_inv_slot].missile;
 			run_a_missile(univ.party[missile_firer].combat_pos,target,m_type,1,(overall_mode == MODE_FIRING) ? 12 : 14,
 						  0,0,100);
 			
@@ -2878,7 +2860,8 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 
 //dam_type; // 0 - fire  1 - cold  2 - magic
 bool monst_breathe(cCreature *caster,location targ_space,short dam_type) {
-	short level,missile_t[4] = {13,6,8,8};
+	short level;
+	miss_num_t missile_t[4] = {13,6,8,8};
 	eDamageType type[4] = {eDamageType::FIRE, eDamageType::COLD, eDamageType::MAGIC, eDamageType::UNBLOCKABLE};
 	location l;
 	
@@ -4356,7 +4339,9 @@ bool combat_cast_mage_spell() {
 }
 
 void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
-	short target, store_m_type = 0, i, store_sound = 0, num_opp = 0, r1;
+	short target, i, num_opp = 0, r1;
+	snd_num_t store_sound = 0;
+	miss_num_t store_m_type = 0;
 	short bonus = freebie ? 1 : stat_adj(current_pc,eSkill::INTELLIGENCE);
 	cCreature* which_m;
 	start_missile_anim();
@@ -4544,7 +4529,9 @@ bool combat_cast_priest_spell() {
 }
 
 void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) {
-	short target,i,store_sound = 0,store_m_type = 0,num_opp = 0;
+	short target,i,num_opp = 0;
+	snd_num_t store_sound = 0;
+	miss_num_t store_m_type = 0;
 	short bonus = freebie ? 1 : stat_adj(current_pc,eSkill::INTELLIGENCE);
 	cCreature *which_m;
 	effect_pat_type protect_pat = {{

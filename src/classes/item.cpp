@@ -740,6 +740,49 @@ void cItem::append(legacy::item_record_type& old){
 	unsellable = old.item_properties & 16;
 	reserved1 = old.reserved1;
 	reserved2 = old.reserved2;
+	// Set missile, if needed
+	switch(variety) {
+		case eItemType::ARROW:
+		case eItemType::BOLTS:
+			missile = magic ? 4 : 3;
+			break;
+		case eItemType::THROWN_MISSILE:
+			// This is tricky... basically, all we can really do is guess.
+			// We'll base our guess on the item's level, since the preset items have standard levels
+			switch(item_level) {
+				case 7: // Throwing knives
+					missile = 10;
+					break;
+				case 4: // Darts
+					missile = 1;
+					break;
+				case 8: // Javelins
+					missile = 5;
+					break;
+				case 9: // Razordisks
+					missile = 7;
+					break;
+				default:
+					auto npos = std::string::npos;
+					// Okay, that failed. Try examining the item's name.
+					// We'll use the unidentified name since it's more likely to contain the appropriate generic words
+					if(name.find("Knife") != npos) missile = 10;
+					else if(name.find("Knives") != npos) missile = 10;
+					else if(name.find("Spear") != npos) missile = 5;
+					else if(name.find("Javelin") != npos) missile = 5;
+					else if(name.find("Razordisk") != npos) missile = 7;
+					else if(name.find("Star") != npos) missile = 7;
+					else if(name.find("Dart") != npos) missile = 1;
+					else if(name.find("Rock") != npos) missile = 12;
+					// Okay, give up. Fall back to darts since we have no idea what's correct.
+					else missile = 1;
+					break;
+			}
+		case eItemType::MISSILE_NO_AMMO:
+			// Just assume it's a sling and use the rock missile.
+			missile = 12;
+			break;
+	}
 }
 
 void cItem::writeTo(std::ostream& file, std::string prefix) const {

@@ -881,6 +881,13 @@ void cUniverse::check_item(cItem& item) {
 			check_monst(party.summons[monst - 10000]);
 		else check_monst(scenario.scen_monsters[monst]);
 	}
+	if(item.variety == eItemType::ARROW || item.variety == eItemType::BOLTS || item.variety == eItemType::MISSILE_NO_AMMO || item.variety == eItemType::THROWN_MISSILE) {
+		if(item.missile >= 10000)
+			for(int i = 0; i < 4; i++)
+				used_graphics.insert(item.missile - 10000 + i);
+		else if(item.missile >= 1000)
+			update_missiles[item.missile - 1000].insert(&item);
+	}
 }
 
 extern cCustomGraphics spec_scen_g;
@@ -895,6 +902,7 @@ pic_num_t cUniverse::addGraphic(pic_num_t pic, ePicType type) {
 		case PIC_MONST_LG: needSlots = 16; break;
 		case PIC_ITEM: needSlots = 1; break;
 		case PIC_PC: needSlots = 4; break;
+		case PIC_MISSILE: needSlots = 4; break;
 		default: break;
 	}
 	pic_num_t pos = -1;
@@ -923,7 +931,7 @@ void cUniverse::exportGraphics() {
 	// - Monster graphics for monsters summoned by custom items or captured in the party's soul crystal
 	// - Item graphics for custom items that the party has in their possession or in their saved item rectangles
 	// - Custom PC graphics - TODO: Rendering support for custom PC graphics
-	// TODO: Missile graphics for custom items/monsters
+	// TODO: Missile graphics for custom monsters
 	// So basically, almost all the graphics are linked to items.
 	used_graphics.clear();
 	for(int i = 0; i < 6; i++) {
@@ -960,6 +968,12 @@ void cUniverse::exportGraphics() {
 			item->graphic_num = 10000 + pos;
 	}
 	update_items.clear();
+	for(auto pic : update_missiles) {
+		pic_num_t pos = addGraphic(pic.first, PIC_MISSILE);
+		for(auto& item : pic.second)
+			item->missile = 10000 + pos;
+	}
+	update_missiles.clear();
 	for(auto pic : update_monsters) {
 		int sz = pic.first / 1000, base = pic.first % 1000;
 		ePicType type;
