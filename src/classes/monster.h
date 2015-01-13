@@ -88,11 +88,13 @@ class cUniverse;
 #define MONSTER_RADIATE_ANTIMAGIC_FIELDS	4
 #define MONSTER_RADIATE_SLEEP_FIELDS		5
 #define MONSTER_RADIATE_STINKING_CLOUDS		6
-//as said 7,8 and 9 are unused
-#define MONSTER_SUMMON1						10 //5 percent chance
-#define MONSTER_SUMMON2						11 //20 percent chance
-#define MONSTER_SUMMON3						12 //50 percent chance
-//as said 13 and 14 are unused
+#define MONSTER_RADIATE_BLADE_FIELDS		7
+
+#define MONSTER_SUMMON_5_PERCENT			10 //5 percent chance
+#define MONSTER_SUMMON_20_PERCENT			11 //20 percent chance
+#define MONSTER_SUMMON_50_PERCENT			12 //50 percent chance
+
+#define MONSTER_SPECIAL_ACTION				14
 #define MONSTER_DEATH_TRIGGERS				15 //death triggers global special
 
 // Directions!

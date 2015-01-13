@@ -224,7 +224,7 @@ void do_monsters() {
 							l1 = univ.town.monst[i].cur_loc;
 							l2 = (univ.town.monst[i].target <= 6) ? univ.town.p_loc : univ.town.monst[target - 100].cur_loc;
 							
-							if((univ.town.monst[i].morale < 0) && (univ.town.monst[i].spec_skill != 13)
+							if(univ.town.monst[i].morale < 0 && univ.town.monst[i].spec_skill != MONSTER_MINDLESS
 								&& univ.town.monst[i].m_type != eRace::UNDEAD)  {
 								acted_yet = flee_party(i,l1,l2);
 								if(get_ran(1,0,10) < 6)
@@ -283,38 +283,44 @@ bool monst_hate_spot(short which_m,location *good_loc) {
 	bool hate_spot = false;
 	// Hate barriers
 	if(univ.town.is_fire_barr(loc.x,loc.y) || univ.town.is_force_barr(loc.x,loc.y)) hate_spot = true;
-	// Hate regular fields
-	else if(univ.town.is_quickfire(loc.x,loc.y) || univ.town.is_blade_wall(loc.x,loc.y)) hate_spot = true;
+	// Hate quickfire
+	else if(univ.town.is_quickfire(loc.x,loc.y)) hate_spot = true;
+	// Hate blade wall?
+	else if(univ.town.is_blade_wall(loc.x,loc.y)) {
+		hate_spot = true;
+		if(univ.town.monst[which_m].radiate_1 == MONSTER_RADIATE_BLADE_FIELDS) hate_spot = false;
+		else if(univ.town.monst[which_m].spec_skill == MONSTER_INVULNERABILITY) hate_spot = false;
+	}
 	// Hate ice wall?
 	else if(univ.town.is_ice_wall(loc.x,loc.y)) {
 		hate_spot = true;
-		if(univ.town.monst[which_m].radiate_1 == 2) hate_spot = false;
+		if(univ.town.monst[which_m].radiate_1 == MONSTER_RADIATE_ICE_FIELDS) hate_spot = false;
 		else if(univ.town.monst[which_m].cold_res == RESIST_ALL) hate_spot = false;
 	}
 	// Hate fire wall?
 	else if(univ.town.is_fire_wall(loc.x,loc.y)) {
 		hate_spot = true;
-		if(univ.town.monst[which_m].radiate_1 == 1) hate_spot = false;
+		if(univ.town.monst[which_m].radiate_1 == MONSTER_RADIATE_FIRE_FIELDS) hate_spot = false;
 		else if(univ.town.monst[which_m].fire_res == RESIST_ALL) hate_spot = false;
 	}
 	// Note: Monsters used to enter shock walls even if they were merely resistant to magic
 	// Hate shock wall?
 	else if(univ.town.is_force_wall(loc.x,loc.y)) {
 		hate_spot = true;
-		if(univ.town.monst[which_m].radiate_1 == 3) hate_spot = false;
+		if(univ.town.monst[which_m].radiate_1 == MONSTER_RADIATE_SHOCK_FIELDS) hate_spot = false;
 		else if(univ.town.monst[which_m].magic_res == RESIST_ALL) hate_spot = false;
 	}
 	// Hate stink cloud?
 	else if(univ.town.is_scloud(loc.x,loc.y)) {
 		hate_spot = true;
-		if(univ.town.monst[which_m].radiate_1 == 6) hate_spot = false;
+		if(univ.town.monst[which_m].radiate_1 == MONSTER_RADIATE_STINKING_CLOUDS) hate_spot = false;
 		else if(univ.town.monst[which_m].magic_res == RESIST_ALL) hate_spot = false;
 		else if(univ.town.monst[which_m].magic_res == RESIST_HALF) hate_spot = false;
 	}
 	// Hate sleep cloud?
 	else if(univ.town.is_sleep_cloud(loc.x,loc.y)) {
 		hate_spot = true;
-		if(univ.town.monst[which_m].radiate_1 == 5) hate_spot = false;
+		if(univ.town.monst[which_m].radiate_1 == MONSTER_RADIATE_SLEEP_FIELDS) hate_spot = false;
 		else if(univ.town.monst[which_m].magic_res == RESIST_ALL) hate_spot = false;
 		else if(univ.town.monst[which_m].magic_res == RESIST_HALF) hate_spot = false;
 	}
@@ -821,27 +827,31 @@ void monst_inflict_fields(short which_monst) {
 				}
 				if(univ.town.is_blade_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(6,1,8);
-					damage_monst(which_monst,7,r1,0,eDamageType::WEAPON,0);
+					if(univ.town.monst[which_monst].radiate_1 != MONSTER_RADIATE_BLADE_FIELDS)
+						damage_monst(which_monst,7,r1,0,eDamageType::WEAPON,0);
 					break;
 				}
 				if(univ.town.is_force_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(3,1,6);
-					damage_monst(which_monst,7,r1,0,eDamageType::MAGIC,0);
+					if(univ.town.monst[which_monst].radiate_1 != MONSTER_RADIATE_SHOCK_FIELDS)
+						damage_monst(which_monst,7,r1,0,eDamageType::MAGIC,0);
 					break;
 				}
 				if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
-					charm_monst(which_m,0,eStatus::ASLEEP,3);
+					if(univ.town.monst[which_monst].radiate_1 != MONSTER_RADIATE_SLEEP_FIELDS)
+						charm_monst(which_m,0,eStatus::ASLEEP,3);
 					break;
 				}
 				if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(3,1,6);
-					if(univ.town.monst[which_monst].spec_skill != 23)
+					if(univ.town.monst[which_monst].radiate_1 != MONSTER_RADIATE_ICE_FIELDS)
 						damage_monst(which_monst,7,r1,0,eDamageType::COLD,0);
 					break;
 				}
 				if(univ.town.is_scloud(where_check.x,where_check.y)) {
 					r1 = get_ran(1,2,3);
-					curse_monst(which_m,r1);
+					if(univ.town.monst[which_monst].radiate_1 != MONSTER_RADIATE_STINKING_CLOUDS)
+						curse_monst(which_m,r1);
 					break;
 				}
 				if(univ.town.is_web(where_check.x,where_check.y) && which_m->m_type != eRace::BUG) {
@@ -853,7 +863,7 @@ void monst_inflict_fields(short which_monst) {
 				}
 				if(univ.town.is_fire_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(2,1,6);
-					if(univ.town.monst[which_monst].spec_skill != 22)
+					if(univ.town.monst[which_monst].radiate_1 != MONSTER_RADIATE_FIRE_FIELDS)
 						damage_monst(which_monst,7,r1,0,eDamageType::FIRE,0);
 					break;
 				}
@@ -916,7 +926,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	// nasty barriers
 	if((which_m->mu > 0) || (which_m->cl > 0))
 		mage = true;
-	if(which_m->spec_skill == 13)
+	if(which_m->spec_skill == MONSTER_MINDLESS)
 		guts = 20;
 	else guts = get_ran(1,1,(which_m->level / 2));
 	guts += which_m->health / 20;
@@ -927,25 +937,25 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	
 	if((univ.town.is_antimagic(where_check.x,where_check.y)) && (mage))
 		return false;
-	if((univ.town.is_fire_wall(where_check.x,where_check.y)) && (which_m->spec_skill != 22)) {
+	if(univ.town.is_fire_wall(where_check.x,where_check.y) && which_m->radiate_1 != MONSTER_RADIATE_FIRE_FIELDS) {
 		if(guts < 3) return false;
 	}
-	if(univ.town.is_force_wall(where_check.x,where_check.y)) {
+	if(univ.town.is_force_wall(where_check.x,where_check.y) && which_m->radiate_1 != MONSTER_RADIATE_SHOCK_FIELDS) {
 		if(guts < 4) return false;
 	}
-	if((univ.town.is_ice_wall(where_check.x,where_check.y)) && (which_m->spec_skill != 23)) {
+	if(univ.town.is_ice_wall(where_check.x,where_check.y) && which_m->radiate_1 != MONSTER_RADIATE_ICE_FIELDS) {
 		if(guts < 5) return false;
 	}
-	if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
+	if(univ.town.is_sleep_cloud(where_check.x,where_check.y) && which_m->radiate_1 != MONSTER_RADIATE_SLEEP_FIELDS) {
 		if(guts < 8) return false;
 	}
-	if(univ.town.is_blade_wall(where_check.x,where_check.y)) {
+	if(univ.town.is_blade_wall(where_check.x,where_check.y) && which_m->radiate_1 != MONSTER_RADIATE_BLADE_FIELDS) {
 		if(guts < 8) return false;
 	}
 	if(univ.town.is_quickfire(where_check.x,where_check.y)) {
 		if(guts < 8) return false;
 	}
-	if(univ.town.is_scloud(where_check.x,where_check.y)) {
+	if(univ.town.is_scloud(where_check.x,where_check.y) && which_m->radiate_1 != MONSTER_RADIATE_STINKING_CLOUDS) {
 		if(guts < 4) return false;
 	}
 	if(univ.town.is_web(where_check.x,where_check.y) && which_m->m_type != eRace::BUG) {
@@ -1083,7 +1093,7 @@ void forced_place_monster(m_num_t which,location where) {
 }
 
 void magic_adjust(cCreature *which_m,short *how_much) {
-	if(which_m->spec_skill == 26) {
+	if(which_m->spec_skill == MONSTER_ABSORB_SPELLS) {
 		*how_much = 0;
 		if(32767 - which_m->health > 3)
 			which_m->health = 32767;
@@ -1213,7 +1223,7 @@ void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amo
 		r1 -= 25;
 	if(which_status == eStatus::PARALYZED)
 		r1 -= 15;
-	if((which_status == eStatus::ASLEEP) && (which_m->spec_skill == 32))
+	if(which_status == eStatus::ASLEEP && which_m->spec_skill == MONSTER_BREATHES_SLEEP_CLOUDS)
 		return;
 	
 	if(r1 > charm_odds[which_m->level / 2]) {
@@ -1250,7 +1260,7 @@ void record_monst(cCreature *which_m) {
 		ASB("Capture Soul: Monster is too big.");
 	}
 	// TODO: Are these two sounds right?
-	else if((r1 > charm_odds[which_m->level / 2]) || (which_m->spec_skill == 12)
+	else if(r1 > charm_odds[which_m->level / 2] || which_m->spec_skill == MONSTER_SPLITS
 			 || which_m->m_type == eRace::IMPORTANT) {
 		monst_spell_note(which_m->number,10);
 		play_sound(68);
