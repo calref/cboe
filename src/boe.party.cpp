@@ -2283,19 +2283,14 @@ short stat_adj(short pc_num,eSkill which) {
 	if(which == eSkill::INTELLIGENCE) {
 		if(univ.party[pc_num].traits[eTrait::MAGICALLY_APT])
 			tr++;
-		if(pc_has_abil_equip(pc_num,eItemAbil::INTELLIGENCE) < 24)
-			tr++;
 	}
 	if(which == eSkill::STRENGTH) {
 		if(univ.party[pc_num].traits[eTrait::STRENGTH])
 			tr++;
-		if(pc_has_abil_equip(pc_num,eItemAbil::STRENGTH) < 24)
-			tr++;
 	}
-	if(which == eSkill::DEXTERITY) {
-		if(pc_has_abil_equip(pc_num,eItemAbil::DEXTERITY) < 24)
-			tr++;
-	}
+	// TODO: Use ability strength?
+	if(pc_has_abil_equip(pc_num,eItemAbil::BOOST_STAT,int(which)) < 24)
+		tr++;
 	return tr;
 }
 
@@ -2572,37 +2567,6 @@ void poison_party(short how_much) {
 	
 	for(i = 0; i < 6; i++)
 		poison_pc(i,how_much);
-}
-//type; // which status to affect
-void affect_pc(short which_pc,eStatus type,short how_much) {
-	static const std::set<eStatus> allow_negative = {
-		// The obvious ones:
-		eStatus::BLESS_CURSE, eStatus::HASTE_SLOW,
-		// The ones that BoE previously allowed:
-		eStatus::POISONED_WEAPON, eStatus::POISON, eStatus::ASLEEP,
-		// (Note: Negative levels of sleep can be obtained from the Hyperactivity spell. The other two never go negative.)
-		// The additional ones that make sense in the negative:
-		eStatus::MAGIC_RESISTANCE, eStatus::DUMB,
-	};
-	
-	// TODO: Apply STATUS_PROTECTION item abilities; the challenge is to determine whether to apply to positive or negative how_much
-	// TODO: I'd like to merge poison_pc, web_pc, acid_pc etc into this function.
-	
-	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
-		return;
-	univ.party[which_pc].status[type] = minmax (-8,8,univ.party[which_pc].status[type] + how_much);
-	if(!allow_negative.count(type))
-		univ.party[which_pc].status[type] = max(univ.party[which_pc].status[type],0);
-	put_pc_screen();
-}
-//type; // which status to affect
-void affect_party(eStatus type,short how_much) {
-	short i;
-	
-	for(i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			univ.party[i].status[type] = minmax (-8,8,univ.party[i].status[type] + how_much);
-	put_pc_screen();
 }
 
 void void_sanctuary(short pc_num) {

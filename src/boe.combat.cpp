@@ -1735,21 +1735,53 @@ void combat_run_monst() {
 			move_to_zero(univ.party[i].status[eStatus::PARALYZED]);
 			
 			// Do special items
-			if(((item_level = get_prot_level(i,eItemAbil::OCCASIONAL_HASTE)) > 0)
-				&& (get_ran(1,0,10) == 5)) {
-				update_stat = true;
-				univ.party[i].status[eStatus::HASTE_SLOW] += item_level / 2;
-				add_string_to_buf("An item hastes you!");
-			}
-			if((item_level = get_prot_level(i,eItemAbil::OCCASIONAL_BLESS)) > 0) {
-				if(get_ran(1,0,10) == 5) {
-					update_stat = true;
-					univ.party[i].status[eStatus::BLESS_CURSE] += item_level / 2;
-					add_string_to_buf("An item blesses you!");
+			for(int j = 0; j < 24; j++) {
+				cItem& item = univ.party[i].items[j];
+				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
+				if(item.magic_use_type > 1) continue; // Affects whole party, which is handled elsewhere
+				if(get_ran(1,0,10) != 5) continue;
+				int how_much = item.abil_data[0];
+				if(item.magic_use_type % 2 == 1) how_much *= -1;
+				eStatus status = eStatus(item.abil_data[1]);
+				if(isStatusNegative(status))
+					how_much *= -1;
+				switch(status) {
+					case eStatus::MAIN: break;
+					case eStatus::HASTE_SLOW:
+						if(how_much > 0) add_string_to_buf("An item hastes you!");
+						else add_string_to_buf("An item slows you!");
+						break;
+					case eStatus::BLESS_CURSE:
+						if(how_much > 0) add_string_to_buf("An item blesses you!");
+						else add_string_to_buf("An item curses you!");
+						break;
+					case eStatus::POISON:
+						if(how_much > 0) add_string_to_buf("An item poisons you!");
+						else if(univ.party[i].status[eStatus::POISON] > 0)
+							add_string_to_buf("An item cures you!");
+						break;
+					case eStatus::INVULNERABLE:
+					case eStatus::MAGIC_RESISTANCE:
+					case eStatus::INVISIBLE:
+					case eStatus::MARTYRS_SHIELD:
+						if(how_much > 0) add_string_to_buf("An item protects you!");
+						// TODO: Message for negative amounts:
+						break;
+					case eStatus::DISEASE:
+						if(how_much > 0) add_string_to_buf("An item diseases you!");
+						else if(univ.party[i].status[eStatus::DISEASE] > 0)
+							add_string_to_buf("An item cures you!");
+						break;
+					case eStatus::DUMB:
+						if(how_much > 0) add_string_to_buf("An item clouds your mind!");
+						else if(univ.party[i].status[eStatus::DUMB] > 0)
+							add_string_to_buf("An item clears your mind!");
+						break;
+						// TODO: Messages for other statuses?
 				}
+				univ.party[i].apply_status(status, how_much);
+				update_stat = true;
 			}
-			
-			
 		}
 	
 	special_increase_age();

@@ -2191,13 +2191,20 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	for(int i = 0; i < 6; i++)
 		univ.party[i].status.clear();
 	// Specials countdowns
-	if((length > 500 || age_before / 500 < univ.party.age / 500) && party_has_abil(eItemAbil::DISEASE_PARTY) && get_ran(1,0,5) == 3) {
-		// TODO: This seems to be the "radioactivity" handler, and the string appears to not exist.
-		cStrDlog display_enc_string("Missing String: Radioactivity", "", "", 8, PIC_DLOG);
-		display_enc_string.setSound(3);
-		display_enc_string.show();
+	if((length > 500 || age_before / 500 < univ.party.age / 500) && party_has_abil(eItemAbil::OCCASIONAL_STATUS)) {
+		// TODO: There used to be a "display strings" here; should we hook in a special node call?
 		for(int i = 0; i < 6; i++)
-			disease_pc(i,5);
+			for(int j = 0; j < 24; j++) {
+				cItem& item = univ.party[i].items[j];
+				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
+				if(item.magic_use_type < 2) continue;
+				if(get_ran(1,0,5) != 3) continue;
+				int how_much = item.abil_data[0];
+				if(item.magic_use_type % 2 == 1) how_much *= -1;
+				if(isStatusNegative(eStatus(item.abil_data[1])))
+					how_much *= -1;
+				univ.party.apply_status(eStatus(item.abil_data[1]), how_much);
+			}
 	}
 	// Plants and magic shops
 	if(length > 4000 || age_before / 4000 < univ.party.age / 4000)
@@ -2293,14 +2300,21 @@ void increase_age() {
 	}
 	
 	// Specials countdowns
-	if((univ.party.age % 500 == 0 && get_ran(1,0,5) == 3 && party_has_abil(eItemAbil::DISEASE_PARTY))) {
-		update_stat = true;
-		// TODO: This seems to be the "radioactivity" handler, and the string appears to not exist.
-		cStrDlog display_enc_string("Missing String: Radioactivity", "", "", 8, PIC_DLOG);
-		display_enc_string.setSound(3);
-		display_enc_string.show();
-		for(i = 0; i < 6; i++)
-			disease_pc(i,2);
+	if(univ.party.age % 500 == 0 && party_has_abil(eItemAbil::OCCASIONAL_STATUS)) {
+		// TODO: There used to be a "display strings" here; should we hook in a special node call?
+		for(int i = 0; i < 6; i++)
+			for(int j = 0; j < 24; j++) {
+				cItem& item = univ.party[i].items[j];
+				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
+				if(item.magic_use_type < 2) continue;
+				if(get_ran(1,0,5) != 3) continue;
+				int how_much = item.abil_data[0];
+				if(item.magic_use_type % 2 == 1) how_much *= -1;
+				eStatus status = eStatus(item.abil_data[1]);
+				if(isStatusNegative(status))
+					how_much *= -1;
+				univ.party.apply_status(status, how_much);
+			}
 	}
 	
 	

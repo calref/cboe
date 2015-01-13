@@ -49,6 +49,7 @@ public:
 	short marked_damage, dir, parry, last_attacked;
 	
 	void finish_create();
+	void apply_status(eStatus which, int how_much);
 	
 	void append(legacy::pc_record_type old);
 	cPlayer();

@@ -15,6 +15,7 @@
 
 #include "classes.h"
 #include "oldstructs.h"
+#include "mathutil.hpp"
 
 void cPlayer::append(legacy::pc_record_type old){
 	int i;
@@ -73,6 +74,27 @@ short cPlayer::get_tnl(){
 	tnl = (tnl * store_per) / 100;	
 	
 	return tnl;
+}
+
+void cPlayer::apply_status(eStatus which, int how_much) {
+	static const std::set<eStatus> allow_negative = {
+		// The obvious ones:
+		eStatus::BLESS_CURSE, eStatus::HASTE_SLOW,
+		// The ones that BoE previously allowed:
+		eStatus::POISONED_WEAPON, eStatus::POISON, eStatus::ASLEEP,
+		// (Note: Negative levels of sleep can be obtained from the Hyperactivity spell. The other two never go negative.)
+		// The additional ones that make sense in the negative:
+		eStatus::MAGIC_RESISTANCE, eStatus::DUMB,
+	};
+	
+	// TODO: Apply STATUS_PROTECTION item abilities; the challenge is to determine whether to apply to positive or negative how_much
+	// TODO: I'd like to merge poison_pc, web_pc, acid_pc etc into this function.
+	
+	if(main_status != eMainStatus::ALIVE)
+		return;
+	status[which] = minmax(-8,8,status[which] + how_much);
+	if(!allow_negative.count(which))
+		status[which] = max(status[which],0);
 }
 
 void cPlayer::finish_create() {

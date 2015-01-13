@@ -49,8 +49,6 @@ bool flying() ;
 void acid_pc(short which_pc,short how_much);
 void poison_pc(short which_pc,short how_much);
 void poison_party(short how_much);
-void affect_pc(short which_pc,eStatus type,short how_much);
-void affect_party(eStatus type,short how_much);
 void void_sanctuary(short pc_num);
 void hit_party(short how_much,eDamageType damage_type);
 void slay_party(eMainStatus mode);

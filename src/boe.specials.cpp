@@ -391,10 +391,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 								slow_pc(i,ter_flag1.s);
 								break;
 							case eStatus::INVULNERABLE: // Should say "You feel odd." / "You feel protected."?
-								affect_pc(i,eStatus::INVULNERABLE,ter_flag1.u);
+								univ.party[i].apply_status(eStatus::INVULNERABLE,ter_flag1.u);
 								break;
 							case eStatus::MAGIC_RESISTANCE: // Should say "You feel odd." / "You feel protected."?
-								affect_pc(i,eStatus::MAGIC_RESISTANCE,ter_flag1.u);
+								univ.party[i].apply_status(eStatus::MAGIC_RESISTANCE,ter_flag1.u);
 								break;
 							case eStatus::WEBS: // Should say "You feel sticky." / "Your skin tingles."?
 								web_pc(i,ter_flag1.u);
@@ -405,13 +405,13 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 							case eStatus::INVISIBLE:
 								if(ter_flag1.s < 0) add_string_to_buf("You feel obscure.");
 								else add_string_to_buf("You feel exposed.");
-								affect_pc(i,eStatus::INVISIBLE,ter_flag1.s);
+								univ.party[i].apply_status(eStatus::INVISIBLE,ter_flag1.s);
 								break;
 							case eStatus::DUMB: // Should say "You feel clearheaded." / "You feel confused."?
 								dumbfound_pc(i,ter_flag1.u);
 								break;
 							case eStatus::MARTYRS_SHIELD: // Should say "You feel dull." / "You start to glow slightly."?
-								affect_pc(i,eStatus::MARTYRS_SHIELD,ter_flag1.u);
+								univ.party[i].apply_status(eStatus::MARTYRS_SHIELD,ter_flag1.u);
 								break;
 							case eStatus::ASLEEP: // Should say "You feel alert." / "You feel very tired."?
 								sleep_pc(i,ter_flag1.u,eStatus::ASLEEP,ter_flag1.u / 2);
@@ -695,8 +695,8 @@ void use_item(short pc,short item) {
 							str = str * -1;
 						}else ASB("  You feel blessed.");
 						if(type > 1)
-							affect_party(status,str);
-						else affect_pc(pc,status,str);
+							univ.party.apply_status(status,str);
+						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::HASTE_SLOW:
 						// TODO: Is this the right sound?
@@ -706,8 +706,8 @@ void use_item(short pc,short item) {
 							str = str * -1;
 						}else ASB("  You feel speedy.");
 						if(type > 1)
-							affect_party(status,str);
-						else affect_pc(pc,status,str);
+							univ.party.apply_status(status,str);
+						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::INVULNERABLE:
 						// TODO: Is this the right sound?
@@ -717,8 +717,8 @@ void use_item(short pc,short item) {
 							str = str * -1;
 						}else ASB("  You feel protected.");
 						if(type > 1)
-							affect_party(status,str);
-						else affect_pc(pc,status,str);
+							univ.party.apply_status(status,str);
+						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::MAGIC_RESISTANCE:
 						// TODO: Is this the right sound?
@@ -728,8 +728,8 @@ void use_item(short pc,short item) {
 							str = str * -1;
 						}else ASB("  You feel protected.");
 						if(type > 1)
-							affect_party(status,str);
-						else affect_pc(pc,status,str);
+							univ.party.apply_status(status,str);
+						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::WEBS:
 						if(type % 2 == 1)
@@ -739,8 +739,8 @@ void use_item(short pc,short item) {
 							str = str * -1;
 						}
 						if(type > 1)
-							affect_party(status,str);
-						else affect_pc(pc,status,str);
+							univ.party.apply_status(status,str);
+						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::INVISIBLE:
 						// TODO: Is this the right sound?
@@ -750,8 +750,8 @@ void use_item(short pc,short item) {
 							str = str * -1;
 						}else ASB("  You feel obscure.");
 						if(type > 1)
-							affect_party(status,str);
-						else affect_pc(pc,status,str);
+							univ.party.apply_status(status,str);
+						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::MARTYRS_SHIELD:
 						// TODO: Is this the right sound?
@@ -761,8 +761,8 @@ void use_item(short pc,short item) {
 							str = str * -1;
 						}else ASB("  You start to glow slightly.");
 						if(type > 1)
-							affect_party(status,str);
-						else affect_pc(pc,status,str);
+							univ.party.apply_status(status,str);
+						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::POISON:
 						switch(type) {
@@ -788,7 +788,7 @@ void use_item(short pc,short item) {
 						switch(type) {
 							case 0:
 								ASB("  You feel healthy.");
-								affect_pc(pc,eStatus::DISEASE,-1 * str);
+								univ.party[pc].apply_status(eStatus::DISEASE,-1 * str);
 								break;
 							case 1:
 								ASB("  You feel sick.");
@@ -796,7 +796,7 @@ void use_item(short pc,short item) {
 								break;
 							case 2:
 								ASB("  You all feel healthy.");
-								affect_party(eStatus::DISEASE,-1 * str);
+								univ.party.apply_status(eStatus::DISEASE,-1 * str);
 								break;
 							case 3:
 								ASB("  You all feel sick.");
@@ -809,7 +809,7 @@ void use_item(short pc,short item) {
 						switch(type) {
 							case 0:
 								ASB("  You feel clear headed.");
-								affect_pc(pc,eStatus::DUMB,-1 * str);
+								univ.party[pc].apply_status(eStatus::DUMB,-1 * str);
 								break;
 							case 1:
 								ASB("  You feel confused.");
@@ -817,7 +817,7 @@ void use_item(short pc,short item) {
 								break;
 							case 2:
 								ASB("  You all feel clear headed.");
-								affect_party(eStatus::DUMB,-1 * str);
+								univ.party.apply_status(eStatus::DUMB,-1 * str);
 								break;
 							case 3:
 								ASB("  You all feel confused.");
@@ -830,7 +830,7 @@ void use_item(short pc,short item) {
 						switch(type) {
 							case 0:
 								ASB("  You feel alert.");
-								affect_pc(pc,eStatus::ASLEEP,-1 * str);
+								univ.party[pc].apply_status(eStatus::ASLEEP,-1 * str);
 								break;
 							case 1:
 								ASB("  You feel very tired.");
@@ -838,7 +838,7 @@ void use_item(short pc,short item) {
 								break;
 							case 2:
 								ASB("  You all feel alert.");
-								affect_party(eStatus::ASLEEP,-1 * str);
+								univ.party.apply_status(eStatus::ASLEEP,-1 * str);
 								break;
 							case 3:
 								ASB("  You all feel very tired.");
@@ -851,7 +851,7 @@ void use_item(short pc,short item) {
 						switch(type) {
 							case 0:
 								ASB("  You find it easier to move.");
-								affect_pc(pc,eStatus::PARALYZED,-1 * str * 100);
+								univ.party[pc].apply_status(eStatus::PARALYZED,-1 * str * 100);
 								break;
 							case 1:
 								ASB("  You feel very stiff.");
@@ -859,7 +859,7 @@ void use_item(short pc,short item) {
 								break;
 							case 2:
 								ASB("  You all find it easier to move.");
-								affect_party(eStatus::PARALYZED,-1 * str * 100);
+								univ.party.apply_status(eStatus::PARALYZED,-1 * str * 100);
 								break;
 							case 3:
 								ASB("  You all feel very stiff.");
@@ -872,7 +872,7 @@ void use_item(short pc,short item) {
 						switch(type) {
 							case 0:
 								ASB("  Your skin tingles pleasantly.");
-								affect_pc(pc,eStatus::ACID,-1 * str);
+								univ.party[pc].apply_status(eStatus::ACID,-1 * str);
 								break;
 							case 1:
 								ASB("  Your skin burns!");
@@ -880,7 +880,7 @@ void use_item(short pc,short item) {
 								break;
 							case 2:
 								ASB("  You all tingle pleasantly.");
-								affect_party(eStatus::ACID,-1 * str);
+								univ.party.apply_status(eStatus::ACID,-1 * str);
 								break;
 							case 3:
 								ASB("  Everyone's skin burns!");
@@ -895,14 +895,12 @@ void use_item(short pc,short item) {
 					case 0: case 1:
 						ASB("  You feel wonderful!");
 						heal_pc(pc,str * 20);
-						affect_pc(pc,eStatus::BLESS_CURSE,str);
+						univ.party[pc].apply_status(eStatus::BLESS_CURSE,str);
 						break;
 					case 2: case 3:
 						ASB("  Everyone feels wonderful!");
-						for(i = 0; i < 6; i++) {
-							heal_pc(i,str * 20);
-							affect_pc(i,eStatus::BLESS_CURSE,str);
-						}
+						heal_party(str*20);
+						univ.party.apply_status(eStatus::BLESS_CURSE,str);
 						break;
 				}
 				break;
@@ -2664,18 +2662,18 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::AFFECT_INVULN:
 			for(i = 0; i < 6; i++)
 				if((pc < 0) || (pc == i))
-					affect_pc(i,eStatus::INVULNERABLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					univ.party[i].apply_status(eStatus::INVULNERABLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_MAGIC_RES:
 			for(i = 0; i < 6; i++)
 				if((pc < 0) || (pc == i))
-					affect_pc(i,eStatus::MAGIC_RESISTANCE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					univ.party[i].apply_status(eStatus::MAGIC_RESISTANCE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_WEBS:
 			if(spec.ex2a < 0) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i))
-						affect_pc(i,eStatus::WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+						univ.party[i].apply_status(eStatus::WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
 				if(univ.town.monst[spec.ex2a].active > 0) {
@@ -2690,7 +2688,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.ex2a < 0) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i))
-						affect_pc(i,eStatus::DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
+						univ.party[i].apply_status(eStatus::DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
 			}
 			else {
 				if(univ.town.monst[spec.ex2a].active > 0) {
@@ -2704,13 +2702,13 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::AFFECT_SANCTUARY:
 			for(i = 0; i < 6; i++)
 				if((pc < 0) || (pc == i))
-					affect_pc(i,eStatus::INVISIBLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+					univ.party[i].apply_status(eStatus::INVISIBLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_CURSE_BLESS:
 			if(spec.ex2a < 0) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i))
-						affect_pc(i,eStatus::BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+						univ.party[i].apply_status(eStatus::BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
 				if(univ.town.monst[spec.ex2a].active > 0) {
@@ -2725,7 +2723,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.ex2a < 0) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i))
-						affect_pc(i,eStatus::DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
+						univ.party[i].apply_status(eStatus::DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
 			}
 			else {
 				if(univ.town.monst[spec.ex2a].active > 0) {
@@ -2741,7 +2739,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i)) {
 						if(spec.ex1b == 0) {
-							affect_pc(i,eStatus::ASLEEP,-1 * spec.ex1a);
+							univ.party[i].apply_status(eStatus::ASLEEP,-1 * spec.ex1a);
 						}
 						else sleep_pc(i,spec.ex1a,eStatus::ASLEEP,10);
 					}
@@ -2760,7 +2758,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i)) {
 						if(spec.ex1b == 0) {
-							affect_pc(i,eStatus::PARALYZED,-1 * spec.ex1a);
+							univ.party[i].apply_status(eStatus::PARALYZED,-1 * spec.ex1a);
 						}
 						else sleep_pc(i,spec.ex1a,eStatus::PARALYZED,10);
 					}

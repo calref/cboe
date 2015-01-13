@@ -103,12 +103,33 @@ enum class eStatus {
 	ASLEEP = 11,
 	PARALYZED = 12,
 	ACID = 13,
-	FORCECAGE = 14, // This is new and currently unused, since forcecages aren't even really implemented yet.
+	FORCECAGE = 14,
 	// This one is new
 	// It's not quite a real status effect since it doesn't expire
-	// We use 15 because 14 was technically a "reserved/unused" status, though it was never used for anything
 	CHARM = 15,
 };
+
+inline bool isStatusNegative(eStatus stat) {
+	switch(stat) {
+		case eStatus::POISONED_WEAPON: return false;
+		case eStatus::BLESS_CURSE: return false;
+		case eStatus::POISON: return true;
+		case eStatus::HASTE_SLOW: return false;
+		case eStatus::INVULNERABLE: return false;
+		case eStatus::MAGIC_RESISTANCE: return false;
+		case eStatus::WEBS: return true;
+		case eStatus::DISEASE: return true;
+		case eStatus::INVISIBLE: return false;
+		case eStatus::DUMB: return true;
+		case eStatus::MARTYRS_SHIELD: return false;
+		case eStatus::ASLEEP: return true;
+		case eStatus::PARALYZED: return true;
+		case eStatus::ACID: return true;
+		case eStatus::FORCECAGE: return true;
+		case eStatus::CHARM: return true;
+	}
+	return false;
+}
 
 /* Special Ability a.k.a spec_skill */
 
@@ -304,21 +325,17 @@ enum class eItemAbil {
 	FULL_PROTECTION = 31,
 	STATUS_PROTECTION = 36,
 	SKILL = 37,
-	STRENGTH = 38,
-	DEXTERITY = 39,
-	INTELLIGENCE = 40,
+	BOOST_STAT = 38,
 	ACCURACY = 41,
 	THIEVING = 42,
 	GIANT_STRENGTH = 43,
 	LIGHTER_OBJECT = 44,
 	HEAVIER_OBJECT = 45,
-	OCCASIONAL_BLESS = 46,
-	OCCASIONAL_HASTE = 47,
+	OCCASIONAL_STATUS = 46,
 	LIFE_SAVING = 48,
 	PROTECT_FROM_PETRIFY = 49,
 	REGENERATE = 50,
 	POISON_AUGMENT = 51,
-	DISEASE_PARTY = 52,
 	WILL = 53,
 	FREE_ACTION = 54,
 	SPEED = 55,
@@ -345,7 +362,7 @@ enum class eItemAbil {
 	QUICKFIRE = 129,
 	// Reagents
 	HOLLY = 150, // Holly/Toadstool
-	COMFREY = 151, // Comfreey Root
+	COMFREY = 151, // Comfrey Root
 	NETTLE = 152, // Glowing Nettle
 	WORMGRASS = 153, // Crypt Shroom/Wormgrass
 	ASPTONGUE = 154, // Asptongue Mold

@@ -349,14 +349,20 @@ void cItem::append(legacy::item_record_type& old){
 		case 37:
 			ability = eItemAbil::SKILL;
 			break;
-		case 38:
-			ability = eItemAbil::STRENGTH;
+		case 38: // Strength
+			ability = eItemAbil::BOOST_STAT;
+			abil_data[0] = 1;
+			abil_data[1] = int(eSkill::STRENGTH);
 			break;
-		case 39:
-			ability = eItemAbil::DEXTERITY;
+		case 39: // Dexterity
+			ability = eItemAbil::BOOST_STAT;
+			abil_data[0] = 1;
+			abil_data[1] = int(eSkill::DEXTERITY);
 			break;
-		case 40:
-			ability = eItemAbil::INTELLIGENCE;
+		case 40: // Intelligence
+			ability = eItemAbil::BOOST_STAT;
+			abil_data[0] = 1;
+			abil_data[1] = int(eSkill::INTELLIGENCE);
 			break;
 		case 41:
 			ability = eItemAbil::ACCURACY;
@@ -374,10 +380,14 @@ void cItem::append(legacy::item_record_type& old){
 			ability = eItemAbil::HEAVIER_OBJECT;
 			break;
 		case 46:
-			ability = eItemAbil::OCCASIONAL_BLESS;
+			ability = eItemAbil::OCCASIONAL_STATUS;
+			abil_data[1] = int(eStatus::BLESS_CURSE);
+			magic_use_type = 0;
 			break;
 		case 47:
-			ability = eItemAbil::OCCASIONAL_HASTE;
+			ability = eItemAbil::OCCASIONAL_STATUS;
+			abil_data[1] = int(eStatus::HASTE_SLOW);
+			magic_use_type = 0;
 			break;
 		case 48:
 			ability = eItemAbil::LIFE_SAVING;
@@ -392,7 +402,9 @@ void cItem::append(legacy::item_record_type& old){
 			ability = eItemAbil::POISON_AUGMENT;
 			break;
 		case 52:
-			ability = eItemAbil::DISEASE_PARTY;
+			ability = eItemAbil::OCCASIONAL_STATUS;
+			abil_data[1] = int(eStatus::DISEASE);
+			magic_use_type = 3;
 			break;
 		case 53:
 			ability = eItemAbil::WILL;

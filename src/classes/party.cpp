@@ -231,6 +231,11 @@ bool cParty::record(eEncNoteType type, const std::string& what, const std::strin
 	return false;
 }
 
+void cParty::apply_status(eStatus which, int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i].apply_status(which, how_much);
+}
+
 bool cParty::start_timer(short time, short node, short type){
 	if(party_event_timers.size() == party_event_timers.max_size()) return false; // Shouldn't be reached
 	cTimer t;

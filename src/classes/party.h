@@ -127,6 +127,8 @@ public:
 	void append(legacy::stored_items_list_type& old,short which_list);
 	void append(legacy::setup_save_type& old);
 	
+	void apply_status(eStatus which, int how_much);
+	
 	void add_pc(legacy::pc_record_type old);
 	void add_pc(cPlayer new_pc);
 	void void_pcs();
