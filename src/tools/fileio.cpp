@@ -757,7 +757,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	fin.close();
 	
 	univ.~cUniverse();
-	new(&univ) cUniverse();
+	new(&univ) cUniverse('    ');
 	
 	if(in_scen){
 		fs::path path;
@@ -817,6 +817,9 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	tarball partyIn;
 	partyIn.readFrom(zin);
 	zin.close();
+	
+	univ.~cUniverse();
+	new(&univ) cUniverse('    ');
 	
 	{ // Load main party data first
 		std::istream& fin = partyIn.getFile("save/party.txt");

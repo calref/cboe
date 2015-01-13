@@ -34,7 +34,7 @@ public:
 	short level;
 	std::map<eStatus,short> status;
 	std::array<cItem,24> items;
-	bool equip[24];
+	std::array<bool,24> equip;
 	bool priest_spells[62];
 	bool mage_spells[62];
 	pic_num_t which_graphic;

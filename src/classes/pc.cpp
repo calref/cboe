@@ -365,6 +365,7 @@ void cPlayer::readFrom(std::istream& file){
 	std::string cur;
 	getline(file, cur, '\f');
 	bin.str(cur);
+	std::fill(equip.begin(), equip.end(), false);
 	while(bin) { // continue as long as no error, such as eof, occurs
 		getline(bin, cur);
 		std::cout << "Parsing line in pcN.txt: " << cur << std::endl;
