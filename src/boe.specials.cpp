@@ -679,206 +679,206 @@ void use_item(short pc,short item) {
 			case eItemAbil::AFFECT_STATUS:
 				switch(status) {
 					case eStatus::BLESS_CURSE:
-				play_sound(4);
-				if(type % 2 == 1) {
-					ASB("  You feel awkward.");
-					str = str * -1;
-				}else ASB("  You feel blessed.");
-				if(type > 1)
-					affect_party(status,str);
-				else affect_pc(pc,status,str);
-				break;
-			case eStatus::HASTE_SLOW:
-				// TODO: Is this the right sound?
-				play_sound(75);
-				if(type % 2 == 1) {
-					ASB("  You feel sluggish.");
-					str = str * -1;
-				}else ASB("  You feel speedy.");
-				if(type > 1)
-					affect_party(status,str);
-				else affect_pc(pc,status,str);
-				break;
-			case eStatus::INVULNERABLE:
-				// TODO: Is this the right sound?
-				play_sound(68);
-				if(type % 2 == 1) {
-					ASB("  You feel odd.");
-					str = str * -1;
-				}else ASB("  You feel protected.");
-				if(type > 1)
-					affect_party(status,str);
-				else affect_pc(pc,status,str);
-				break;
-			case eStatus::MAGIC_RESISTANCE:
-				// TODO: Is this the right sound?
-				play_sound(51);
-				if(type % 2 == 1) {
-					ASB("  You feel odd.");
-					str = str * -1;
-				}else ASB("  You feel protected.");
-				if(type > 1)
-					affect_party(status,str);
-				else affect_pc(pc,status,str);
-				break;
-			case eStatus::WEBS:
-				if(type % 2 == 1)
-					ASB("  You feel sticky.");
-				else {
-					ASB("  Your skin tingles.");
-					str = str * -1;
-				}
-				if(type > 1)
-					affect_party(status,str);
-				else affect_pc(pc,status,str);
-				break;
-			case eStatus::INVISIBLE:
-				// TODO: Is this the right sound?
-				play_sound(43);
-				if(type % 2 == 1) {
-					ASB("  You feel exposed.");
-					str = str * -1;
-				}else ASB("  You feel obscure.");
-				if(type > 1)
-					affect_party(status,str);
-				else affect_pc(pc,status,str);
-				break;
-			case eStatus::MARTYRS_SHIELD:
-				// TODO: Is this the right sound?
-				play_sound(43);
-				if(type % 2 == 1) {
-					ASB("  You feel dull.");
-					str = str * -1;
-				}else ASB("  You start to glow slightly.");
-				if(type > 1)
-					affect_party(status,str);
-				else affect_pc(pc,status,str);
-				break;
-			case eStatus::POISON:
-				switch(type) {
-					case 0:
-						ASB("  You feel better.");
-						cure_pc(pc,str);
+						play_sound(4);
+						if(type % 2 == 1) {
+							ASB("  You feel awkward.");
+							str = str * -1;
+						}else ASB("  You feel blessed.");
+						if(type > 1)
+							affect_party(status,str);
+						else affect_pc(pc,status,str);
 						break;
-					case 1:
-						ASB("  You feel ill.");
-						poison_pc(pc,str);
+					case eStatus::HASTE_SLOW:
+						// TODO: Is this the right sound?
+						play_sound(75);
+						if(type % 2 == 1) {
+							ASB("  You feel sluggish.");
+							str = str * -1;
+						}else ASB("  You feel speedy.");
+						if(type > 1)
+							affect_party(status,str);
+						else affect_pc(pc,status,str);
 						break;
-					case 2:
-						ASB("  You all feel better.");
-						cure_party(str);
+					case eStatus::INVULNERABLE:
+						// TODO: Is this the right sound?
+						play_sound(68);
+						if(type % 2 == 1) {
+							ASB("  You feel odd.");
+							str = str * -1;
+						}else ASB("  You feel protected.");
+						if(type > 1)
+							affect_party(status,str);
+						else affect_pc(pc,status,str);
 						break;
-					case 3:
-						ASB("  You all feel ill.");
-						poison_party(str);
+					case eStatus::MAGIC_RESISTANCE:
+						// TODO: Is this the right sound?
+						play_sound(51);
+						if(type % 2 == 1) {
+							ASB("  You feel odd.");
+							str = str * -1;
+						}else ASB("  You feel protected.");
+						if(type > 1)
+							affect_party(status,str);
+						else affect_pc(pc,status,str);
 						break;
-				}
-				break;
-			case eStatus::DISEASE:
-				switch(type) {
-					case 0:
-						ASB("  You feel healthy.");
-						affect_pc(pc,eStatus::DISEASE,-1 * str);
+					case eStatus::WEBS:
+						if(type % 2 == 1)
+							ASB("  You feel sticky.");
+						else {
+							ASB("  Your skin tingles.");
+							str = str * -1;
+						}
+						if(type > 1)
+							affect_party(status,str);
+						else affect_pc(pc,status,str);
 						break;
-					case 1:
-						ASB("  You feel sick.");
-						disease_pc(pc,str);
+					case eStatus::INVISIBLE:
+						// TODO: Is this the right sound?
+						play_sound(43);
+						if(type % 2 == 1) {
+							ASB("  You feel exposed.");
+							str = str * -1;
+						}else ASB("  You feel obscure.");
+						if(type > 1)
+							affect_party(status,str);
+						else affect_pc(pc,status,str);
 						break;
-					case 2:
-						ASB("  You all feel healthy.");
-						affect_party(eStatus::DISEASE,-1 * str);
+					case eStatus::MARTYRS_SHIELD:
+						// TODO: Is this the right sound?
+						play_sound(43);
+						if(type % 2 == 1) {
+							ASB("  You feel dull.");
+							str = str * -1;
+						}else ASB("  You start to glow slightly.");
+						if(type > 1)
+							affect_party(status,str);
+						else affect_pc(pc,status,str);
 						break;
-					case 3:
-						ASB("  You all feel sick.");
-						for(i = 0; i < 6; i++)
-							disease_pc(i,str);
+					case eStatus::POISON:
+						switch(type) {
+							case 0:
+								ASB("  You feel better.");
+								cure_pc(pc,str);
+								break;
+							case 1:
+								ASB("  You feel ill.");
+								poison_pc(pc,str);
+								break;
+							case 2:
+								ASB("  You all feel better.");
+								cure_party(str);
+								break;
+							case 3:
+								ASB("  You all feel ill.");
+								poison_party(str);
+								break;
+						}
 						break;
-				}
-				break;
-			case eStatus::DUMB:
-				switch(type) {
-					case 0:
-						ASB("  You feel clear headed.");
-						affect_pc(pc,eStatus::DUMB,-1 * str);
+					case eStatus::DISEASE:
+						switch(type) {
+							case 0:
+								ASB("  You feel healthy.");
+								affect_pc(pc,eStatus::DISEASE,-1 * str);
+								break;
+							case 1:
+								ASB("  You feel sick.");
+								disease_pc(pc,str);
+								break;
+							case 2:
+								ASB("  You all feel healthy.");
+								affect_party(eStatus::DISEASE,-1 * str);
+								break;
+							case 3:
+								ASB("  You all feel sick.");
+								for(i = 0; i < 6; i++)
+									disease_pc(i,str);
+								break;
+						}
 						break;
-					case 1:
-						ASB("  You feel confused.");
-						dumbfound_pc(pc,str);
+					case eStatus::DUMB:
+						switch(type) {
+							case 0:
+								ASB("  You feel clear headed.");
+								affect_pc(pc,eStatus::DUMB,-1 * str);
+								break;
+							case 1:
+								ASB("  You feel confused.");
+								dumbfound_pc(pc,str);
+								break;
+							case 2:
+								ASB("  You all feel clear headed.");
+								affect_party(eStatus::DUMB,-1 * str);
+								break;
+							case 3:
+								ASB("  You all feel confused.");
+								for(i = 0; i < 6; i++)
+									dumbfound_pc(i,str);
+								break;
+						}
 						break;
-					case 2:
-						ASB("  You all feel clear headed.");
-						affect_party(eStatus::DUMB,-1 * str);
+					case eStatus::ASLEEP:
+						switch(type) {
+							case 0:
+								ASB("  You feel alert.");
+								affect_pc(pc,eStatus::ASLEEP,-1 * str);
+								break;
+							case 1:
+								ASB("  You feel very tired.");
+								sleep_pc(pc,str + 1,eStatus::ASLEEP,200);
+								break;
+							case 2:
+								ASB("  You all feel alert.");
+								affect_party(eStatus::ASLEEP,-1 * str);
+								break;
+							case 3:
+								ASB("  You all feel very tired.");
+								for(i = 0; i < 6; i++)
+									sleep_pc(i,str + 1,eStatus::ASLEEP,200);
+								break;
+						}
 						break;
-					case 3:
-						ASB("  You all feel confused.");
-						for(i = 0; i < 6; i++)
-							dumbfound_pc(i,str);
+					case eStatus::PARALYZED:
+						switch(type) {
+							case 0:
+								ASB("  You find it easier to move.");
+								affect_pc(pc,eStatus::PARALYZED,-1 * str * 100);
+								break;
+							case 1:
+								ASB("  You feel very stiff.");
+								sleep_pc(pc,str * 20 + 10,eStatus::PARALYZED,200);
+								break;
+							case 2:
+								ASB("  You all find it easier to move.");
+								affect_party(eStatus::PARALYZED,-1 * str * 100);
+								break;
+							case 3:
+								ASB("  You all feel very stiff.");
+								for(i = 0; i < 6; i++)
+									sleep_pc(i,str * 20 + 10,eStatus::PARALYZED,200);
+								break;
+						}
 						break;
-				}
-				break;
-			case eStatus::ASLEEP:
-				switch(type) {
-					case 0:
-						ASB("  You feel alert.");
-						affect_pc(pc,eStatus::ASLEEP,-1 * str);
+					case eStatus::ACID:
+						switch(type) {
+							case 0:
+								ASB("  Your skin tingles pleasantly.");
+								affect_pc(pc,eStatus::ACID,-1 * str);
+								break;
+							case 1:
+								ASB("  Your skin burns!");
+								acid_pc(pc,str);
+								break;
+							case 2:
+								ASB("  You all tingle pleasantly.");
+								affect_party(eStatus::ACID,-1 * str);
+								break;
+							case 3:
+								ASB("  Everyone's skin burns!");
+								for(i = 0; i < 6; i++)
+									acid_pc(i,str);
+								break;
+						}
 						break;
-					case 1:
-						ASB("  You feel very tired.");
-						sleep_pc(pc,str + 1,eStatus::ASLEEP,200);
-						break;
-					case 2:
-						ASB("  You all feel alert.");
-						affect_party(eStatus::ASLEEP,-1 * str);
-						break;
-					case 3:
-						ASB("  You all feel very tired.");
-						for(i = 0; i < 6; i++)
-							sleep_pc(i,str + 1,eStatus::ASLEEP,200);
-						break;
-				}
-				break;
-			case eStatus::PARALYZED:
-				switch(type) {
-					case 0:
-						ASB("  You find it easier to move.");
-						affect_pc(pc,eStatus::PARALYZED,-1 * str * 100);
-						break;
-					case 1:
-						ASB("  You feel very stiff.");
-						sleep_pc(pc,str * 20 + 10,eStatus::PARALYZED,200);
-						break;
-					case 2:
-						ASB("  You all find it easier to move.");
-						affect_party(eStatus::PARALYZED,-1 * str * 100);
-						break;
-					case 3:
-						ASB("  You all feel very stiff.");
-						for(i = 0; i < 6; i++)
-							sleep_pc(i,str * 20 + 10,eStatus::PARALYZED,200);
-						break;
-				}
-				break;
-			case eStatus::ACID:
-				switch(type) {
-					case 0:
-						ASB("  Your skin tingles pleasantly.");
-						affect_pc(pc,eStatus::ACID,-1 * str);
-						break;
-					case 1:
-						ASB("  Your skin burns!");
-						acid_pc(pc,str);
-						break;
-					case 2:
-						ASB("  You all tingle pleasantly.");
-						affect_party(eStatus::ACID,-1 * str);
-						break;
-					case 3:
-						ASB("  Everyone's skin burns!");
-						for(i = 0; i < 6; i++)
-							acid_pc(i,str);
-						break;
-				}
-				break;
 				}
 			case eItemAbil::BLISS:
 				switch(type) {
