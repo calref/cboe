@@ -39,7 +39,22 @@ void cMonster::append(legacy::monster_record_type& old){
 	poison = old.poison;
 	corpse_item = old.corpse_item;
 	corpse_item_chance = old.corpse_item_chance;
-	immunities = old.immunities;
+	if(old.immunities & 2)
+		magic_res = RESIST_ALL;
+	else if(old.immunities & 1)
+		magic_res = RESIST_HALF;
+	if(old.immunities & 8)
+		fire_res = RESIST_ALL;
+	else if(old.immunities & 4)
+		fire_res = RESIST_HALF;
+	if(old.immunities & 32)
+		cold_res = RESIST_ALL;
+	else if(old.immunities & 16)
+		cold_res = RESIST_HALF;
+	if(old.immunities & 128)
+		poison_res = RESIST_ALL;
+	else if(old.immunities & 64)
+		poison_res = RESIST_HALF;
 	x_width = old.x_width;
 	y_width = old.y_width;
 	radiate_1 = old.radiate_1;
@@ -488,7 +503,7 @@ void cMonster::writeTo(std::ostream& file) const {
 	file << "ABIL 2 " << int(radiate_1) << ' ' << int(radiate_2) << " 0\n";
 	file << "POISON " << int(poison) << '\n';
 	file << "CORPSEITEM " << corpse_item << ' ' << corpse_item_chance << '\n';
-	file << "IMMUNE " << int(immunities) << '\n';
+	file << "IMMUNE " << magic_res << '\t' << fire_res << '\t' << cold_res << '\t' << poison_res << '\n';
 	file << "SIZE " << int(x_width) << ' ' << int(y_width) << '\n';
 	file << "ATTITUDE " << int(default_attitude) << '\n';
 	file << "SUMMON " << int(summon_type) << '\n';
@@ -530,10 +545,17 @@ void cMonster::readFrom(std::istream& file) {
 				spec_skill = temp1;
 			else if(which == 2)
 				radiate_1 = temp1, radiate_2 = temp2;
-		}  else if(cur == "SIZE") {
+		} else if(cur == "SIZE") {
 			line >> temp1 >> temp2;
 			x_width = temp1;
 			y_width = temp2;
+		} else if(cur == "IMMUNE") {
+			line >> temp1 >> temp2;
+			magic_res = temp1;
+			fire_res = temp2;
+			line >> temp1 >> temp2;
+			cold_res = temp1;
+			poison_res = temp2;
 		} else if(cur == "RACE")
 			line >> m_type;
 		else if(cur == "CORPSEITEM")
@@ -564,8 +586,6 @@ void cMonster::readFrom(std::istream& file) {
 				treasure = temp1;
 			else if(cur == "POISON")
 				poison = temp1;
-			else if(cur == "IMMUNITIES")
-				immunities = temp1;
 			else if(cur == "ATTITUDE")
 				default_attitude = temp1;
 			else if(cur == "SUMMON")

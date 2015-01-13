@@ -280,20 +280,50 @@ bool monst_hate_spot(short which_m,location *good_loc) {
 	location prospect,loc;
 	
 	loc = univ.town.monst[which_m].cur_loc;
-	if(univ.town.is_fire_barr(loc.x,loc.y) || univ.town.is_force_barr(loc.x,loc.y) || univ.town.is_quickfire(loc.x,loc.y)
-		|| univ.town.is_blade_wall(loc.x,loc.y) // hate regular fields
-		|| (univ.town.is_ice_wall(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 2)
-			&& ((univ.town.monst[which_m].immunities & 32) == 0)) // hate ice wall?
-		|| (univ.town.is_fire_wall(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 1)
-			&& ((univ.town.monst[which_m].immunities & 8) == 0)) // hate fire wall?
-		|| (univ.town.is_scloud(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 6)
-			&& ((univ.town.monst[which_m].immunities & 3) == 0)) // hate stink cloud?
-		|| (univ.town.is_sleep_cloud(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 5)
-			&& ((univ.town.monst[which_m].immunities & 3) == 0)) // hate sleep cloud?
-		|| (univ.town.is_force_wall(loc.x,loc.y) && (univ.town.monst[which_m].radiate_1 != 3)
-			&& ((univ.town.monst[which_m].immunities & 3) == 0)) // hate shock cloud?
-		|| (((univ.town.monst[which_m].mu > 0) || (univ.town.monst[which_m].cl > 0))
-			&& univ.town.is_antimagic(loc.x,loc.y))) { // hate antimagic
+	bool hate_spot = false;
+	// Hate barriers
+	if(univ.town.is_fire_barr(loc.x,loc.y) || univ.town.is_force_barr(loc.x,loc.y)) hate_spot = true;
+	// Hate regular fields
+	else if(univ.town.is_quickfire(loc.x,loc.y) || univ.town.is_blade_wall(loc.x,loc.y)) hate_spot = true;
+	// Hate ice wall?
+	else if(univ.town.is_ice_wall(loc.x,loc.y)) {
+		hate_spot = true;
+		if(univ.town.monst[which_m].radiate_1 == 2) hate_spot = false;
+		else if(univ.town.monst[which_m].cold_res == RESIST_ALL) hate_spot = false;
+	}
+	// Hate fire wall?
+	else if(univ.town.is_fire_wall(loc.x,loc.y)) {
+		hate_spot = true;
+		if(univ.town.monst[which_m].radiate_1 == 1) hate_spot = false;
+		else if(univ.town.monst[which_m].fire_res == RESIST_ALL) hate_spot = false;
+	}
+	// Note: Monsters used to enter shock walls even if they were merely resistant to magic
+	// Hate shock wall?
+	else if(univ.town.is_force_wall(loc.x,loc.y)) {
+		hate_spot = true;
+		if(univ.town.monst[which_m].radiate_1 == 3) hate_spot = false;
+		else if(univ.town.monst[which_m].magic_res == RESIST_ALL) hate_spot = false;
+	}
+	// Hate stink cloud?
+	else if(univ.town.is_scloud(loc.x,loc.y)) {
+		hate_spot = true;
+		if(univ.town.monst[which_m].radiate_1 == 6) hate_spot = false;
+		else if(univ.town.monst[which_m].magic_res == RESIST_ALL) hate_spot = false;
+		else if(univ.town.monst[which_m].magic_res == RESIST_HALF) hate_spot = false;
+	}
+	// Hate sleep cloud?
+	else if(univ.town.is_sleep_cloud(loc.x,loc.y)) {
+		hate_spot = true;
+		if(univ.town.monst[which_m].radiate_1 == 5) hate_spot = false;
+		else if(univ.town.monst[which_m].magic_res == RESIST_ALL) hate_spot = false;
+		else if(univ.town.monst[which_m].magic_res == RESIST_HALF) hate_spot = false;
+	}
+	// Hate antimagic?
+	else if(univ.town.is_antimagic(loc.x,loc.y)) {
+		if(univ.town.monst[which_m].mu > 0 || univ.town.monst[which_m].cl > 0)
+			hate_spot = true;
+	}
+	if(hate_spot) {
 		prospect = find_clear_spot(loc,1);
 		if(prospect.x > 0) {
 			*good_loc = prospect;
@@ -1006,10 +1036,18 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			break;
 			
 		case eTerSpec::DAMAGING: // TODO: Update this to check other cases
-			if(eDamageType(ter_flag) == eDamageType::FIRE && univ.town.monst[which_monst].immunities & 8)
-				return true;
-			else return false;
-			break;
+			switch(eDamageType(ter_flag)) {
+				case eDamageType::FIRE:
+					return univ.town.monst[which_monst].fire_res == RESIST_ALL;
+				case eDamageType::COLD:
+					return univ.town.monst[which_monst].cold_res == RESIST_ALL;
+				case eDamageType::MAGIC:
+					return univ.town.monst[which_monst].magic_res == RESIST_ALL;
+				case eDamageType::POISON:
+					return univ.town.monst[which_monst].poison_res == RESIST_ALL;
+				default:
+					return univ.town.monst[which_monst].spec_skill == MONSTER_INVULNERABILITY;
+			}
 			// TODO: Should it check any other terrain specials?
 	}
 	
@@ -1051,18 +1089,30 @@ void magic_adjust(cCreature *which_m,short *how_much) {
 			which_m->health = 32767;
 		else which_m->health += 3;
 	}
-	if(which_m->immunities & 1)
-		*how_much = *how_much / 2;
-	if(which_m->immunities & 2)
-		*how_much = 0;
+	switch(which_m->magic_res) {
+		case RESIST_HALF:
+			*how_much /= 2;
+			break;
+		case RESIST_ALL:
+			*how_much = 0;
+			break;
+		case RESIST_DOUBLE:
+			*how_much *= 2;
+			break;
+	}
 }
 
 void poison_monst(cCreature *which_m,short how_much) {
-	if(which_m->immunities & 64)
-		how_much = how_much / 2;
-	if(which_m->immunities & 128) {
-		monst_spell_note(which_m->number,10);
-		return;
+	switch(which_m->poison_res) {
+		case RESIST_HALF:
+			how_much /= 2;
+			break;
+		case RESIST_ALL:
+			monst_spell_note(which_m->number,10);
+			return;
+		case RESIST_DOUBLE:
+			how_much *= 2;
+			break;
 	}
 	which_m->status[eStatus::POISON] = min(8, which_m->status[eStatus::POISON] + how_much);
 	if(how_much >= 0)
@@ -1147,10 +1197,17 @@ void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amo
 		 which_m->m_type == eRace::STONE || which_m->m_type == eRace::PLANT))
 		return;
 	r1 = get_ran(1,1,100);
-	if(which_m->immunities & 1)
-		r1 = r1 * 2;
-	if(which_m->immunities & 2)
-		r1 = 200;
+	switch(which_m->magic_res) {
+		case RESIST_HALF:
+			r1 *= 2;
+			break;
+		case RESIST_ALL:
+			r1 = 200;
+			break;
+		case RESIST_DOUBLE:
+			r1 /= 2;
+			break;
+	}
 	r1 += penalty;
 	if(which_status == eStatus::ASLEEP)
 		r1 -= 25;

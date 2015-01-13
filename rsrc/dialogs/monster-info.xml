@@ -21,14 +21,14 @@
 	<text name='priest' framed='true' top='137' left='188' width='25' height='17'/>
 	<text name='poison' framed='true' top='137' left='280' width='25' height='17'/>
 	<text name='abil1' framed='true' top='165' left='67' width='238' height='16'/>
-	<led name='immune1' state='off' top='227' left='118'/>
-	<led name='immune2' state='off' top='242' left='118'/>
-	<led name='immune3' state='off' top='257' left='118'/>
-	<led name='immune4' state='off' top='272' left='118'/>
-	<led name='immune5' state='off' top='227' left='241'/>
-	<led name='immune6' state='off' top='242' left='241'/>
-	<led name='immune7' state='off' top='257' left='241'/>
-	<led name='immune8' state='off' top='272' left='241'/>
+	<led name='magic-res' state='off' top='227' left='118'/>
+	<led name='magic-imm' state='off' top='242' left='118'/>
+	<led name='fire-res' state='off' top='257' left='118'/>
+	<led name='fire-imm' state='off' top='272' left='118'/>
+	<led name='cold-res' state='off' top='227' left='241'/>
+	<led name='cold-imm' state='off' top='242' left='241'/>
+	<led name='poison-res' state='off' top='257' left='241'/>
+	<led name='poison-imm' state='off' top='272' left='241'/>
 	<button name='left' type='left' def-key='left' top='319' left='11'/>
 	<button name='right' type='right' def-key='right' top='319' left='74'/>
 	<text top='288' left='10' width='305' height='28'>(To make monsters appear in roster menu, cast Scry Monster on them.)</text>

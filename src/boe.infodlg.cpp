@@ -410,17 +410,15 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 	me["mage"].setTextToNum(store_m.mu);
 	me["priest"].setTextToNum(store_m.cl);
 	me["poison"].setTextToNum(store_m.poison);
-	// 2140 - lit  2141 - dark
-	// immunities
-	for(i = 0; i < 8; i++) {
-		std::string id = "immune" + boost::lexical_cast<std::string>(i + 1);
-		cLed& led = dynamic_cast<cLed&>(me[id]);
-		// TODO: What's this s_pow nonsense? Isn't this just 1 << i? Also, why not make it a C++ bitfield?
-		if(store_m.immunities & (char)(s_pow(2,i)))
-			led.setState(led_red);
-		else led.setState(led_off);
-	}
-	
+	// Immunities
+	dynamic_cast<cLed&>(me["magic-res"]).setState(store_m.magic_res == RESIST_HALF ? led_red : led_off);
+	dynamic_cast<cLed&>(me["magic-imm"]).setState(store_m.magic_res == RESIST_ALL ? led_red : led_off);
+	dynamic_cast<cLed&>(me["fire-res"]).setState(store_m.fire_res == RESIST_HALF ? led_red : led_off);
+	dynamic_cast<cLed&>(me["fire-imm"]).setState(store_m.fire_res == RESIST_ALL ? led_red : led_off);
+	dynamic_cast<cLed&>(me["cold-res"]).setState(store_m.cold_res == RESIST_HALF ? led_red : led_off);
+	dynamic_cast<cLed&>(me["cold-imm"]).setState(store_m.cold_res == RESIST_ALL ? led_red : led_off);
+	dynamic_cast<cLed&>(me["poison-res"]).setState(store_m.poison_res == RESIST_HALF ? led_red : led_off);
+	dynamic_cast<cLed&>(me["poison-imm"]).setState(store_m.poison_res == RESIST_ALL ? led_red : led_off);
 }
 
 

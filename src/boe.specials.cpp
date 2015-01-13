@@ -1391,8 +1391,6 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	short r1,which_spot;
 	location where_put;
 	
-	char resist;
-	
 	//print_num(which_m,(short)univ.town.monst[which_m].m_loc.x,(short)univ.town.monst[which_m].m_loc.y);
 	
 	if(univ.town.monst[which_m].active == 0) return false;
@@ -1408,33 +1406,59 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 			sound_type = 11;
 	}
 	
-	
 	victim = &univ.town.monst[which_m];
-	resist = victim->immunities;
 	
 	if(dam_type == eDamageType::MAGIC) {
-		if(resist & 1)
-			how_much = how_much / 2;
-		if(resist & 2)
-			how_much = 0;
+		switch(victim->magic_res) {
+			case RESIST_HALF:
+				how_much /= 2;
+				break;
+			case RESIST_ALL:
+				how_much = 0;
+				break;
+			case RESIST_DOUBLE:
+				how_much *= 2;
+				break;
+		}
 	}
 	if(dam_type == eDamageType::FIRE) {
-		if(resist & 4)
-			how_much = how_much / 2;
-		if(resist & 8)
-			how_much = 0;
+		switch(victim->fire_res) {
+			case RESIST_HALF:
+				how_much /= 2;
+				break;
+			case RESIST_ALL:
+				how_much = 0;
+				break;
+			case RESIST_DOUBLE:
+				how_much *= 2;
+				break;
+		}
 	}
 	if(dam_type == eDamageType::COLD) {
-		if(resist & 16)
-			how_much = how_much / 2;
-		if(resist & 32)
-			how_much = 0;
+		switch(victim->cold_res) {
+			case RESIST_HALF:
+				how_much /= 2;
+				break;
+			case RESIST_ALL:
+				how_much = 0;
+				break;
+			case RESIST_DOUBLE:
+				how_much *= 2;
+				break;
+		}
 	}
 	if(dam_type == eDamageType::POISON) {
-		if(resist & 64)
-			how_much = how_much / 2;
-		if(resist & 128)
-			how_much = 0;
+		switch(victim->poison_res) {
+			case RESIST_HALF:
+				how_much /= 2;
+				break;
+			case RESIST_ALL:
+				how_much = 0;
+				break;
+			case RESIST_DOUBLE:
+				how_much *= 2;
+				break;
+		}
 	}
 	
 	// Absorb damage?
@@ -1576,7 +1600,7 @@ void petrify_monst(cCreature* m_target, short strength) {
 	r1 += m_target->status[eStatus::BLESS_CURSE];
 	r1 -= strength;
 	
-	if(r1 > 14 || m_target->immunities & 2)
+	if(r1 > 14 || m_target->magic_res == RESIST_ALL)
 		monst_spell_note(m_target->number,10);
 	else {
 		monst_spell_note(m_target->number,8);

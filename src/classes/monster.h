@@ -113,6 +113,8 @@ inline eDirection& operator++ (eDirection& me, int) {
 	else return me = (eDirection)(1 + (int)me);
 }
 
+enum eResistType {RESIST_NONE, RESIST_HALF, RESIST_ALL, RESIST_DOUBLE};
+
 class cMonster {
 public:
 	struct cAttack{
@@ -143,7 +145,10 @@ public:
 	unsigned char poison;
 	item_num_t corpse_item;
 	short corpse_item_chance;
-	unsigned char immunities;
+	int magic_res : 2;
+	int fire_res : 2;
+	int cold_res : 2;
+	int poison_res : 2;
 	unsigned char x_width,y_width;
 	unsigned char radiate_1; // TODO: Delete in favour of cAbility
 	unsigned short radiate_2; // I THINK this is the extra field for the second ability TODO: Delete in favour of cAbility

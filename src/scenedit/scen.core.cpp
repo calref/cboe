@@ -573,11 +573,6 @@ short edit_monst_type(short which_monst) {
 	return 0;
 }
 
-static const std::string resist_field_names[8] = {
-	"magic-res", "fire-res", "cold-res", "poison-res",
-	"magic-imm", "fire-imm", "cold-imm", "poison-imm",
-};
-
 static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short which_monst) {
 	me["num"].setTextToNum(which_monst);
 	
@@ -609,12 +604,14 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short wh
 	
 	dynamic_cast<cLedGroup&>(me["summon"]).setSelected("s" + boost::lexical_cast<std::string,short>(store_monst.summon_type));
 	
- 	for(short i = 0; i < 8; i++) {
-		cLed& resistLed = dynamic_cast<cLed&>(me[resist_field_names[i]]);
-		if(store_monst.immunities & (1 << i))
-			resistLed.setState(led_red);
-		else resistLed.setState(led_off);
-	}
+	dynamic_cast<cLed&>(me["magic-res"]).setState(store_monst.magic_res == RESIST_HALF ? led_red : led_off);
+	dynamic_cast<cLed&>(me["magic-imm"]).setState(store_monst.magic_res == RESIST_ALL ? led_red : led_off);
+	dynamic_cast<cLed&>(me["fire-res"]).setState(store_monst.fire_res == RESIST_HALF ? led_red : led_off);
+	dynamic_cast<cLed&>(me["fire-imm"]).setState(store_monst.fire_res == RESIST_ALL ? led_red : led_off);
+	dynamic_cast<cLed&>(me["cold-res"]).setState(store_monst.cold_res == RESIST_HALF ? led_red : led_off);
+	dynamic_cast<cLed&>(me["cold-imm"]).setState(store_monst.cold_res == RESIST_ALL ? led_red : led_off);
+	dynamic_cast<cLed&>(me["poison-res"]).setState(store_monst.poison_res == RESIST_HALF ? led_red : led_off);
+	dynamic_cast<cLed&>(me["poison-imm"]).setState(store_monst.poison_res == RESIST_ALL ? led_red : led_off);
 }
 
 static bool save_monst_abils(cDialog& me, cMonster& store_monst) {
@@ -634,11 +631,14 @@ static bool save_monst_abils(cDialog& me, cMonster& store_monst) {
 	
  	store_monst.corpse_item = me["loot-item"].getTextAsNum();
 	store_monst.corpse_item_chance = me["loot-chance"].getTextAsNum();
-	store_monst.immunities = 0;
-	for(short i = 0; i < 8; i++) {
-		if(dynamic_cast<cLed&>(me[resist_field_names[i]]).getState() != led_off)
-			store_monst.immunities |= 1 << i;
-	}
+	if(dynamic_cast<cLed&>(me["magic-res"]).getState() != led_off) store_monst.magic_res = RESIST_HALF;
+	if(dynamic_cast<cLed&>(me["magic-imm"]).getState() != led_off) store_monst.magic_res = RESIST_ALL;
+	if(dynamic_cast<cLed&>(me["fire-res"]).getState() != led_off) store_monst.fire_res = RESIST_HALF;
+	if(dynamic_cast<cLed&>(me["fire-imm"]).getState() != led_off) store_monst.fire_res = RESIST_ALL;
+	if(dynamic_cast<cLed&>(me["cold-res"]).getState() != led_off) store_monst.cold_res = RESIST_HALF;
+	if(dynamic_cast<cLed&>(me["cold-imm"]).getState() != led_off) store_monst.cold_res = RESIST_ALL;
+	if(dynamic_cast<cLed&>(me["poison-res"]).getState() != led_off) store_monst.poison_res = RESIST_HALF;
+	if(dynamic_cast<cLed&>(me["poison-imm"]).getState() != led_off) store_monst.poison_res = RESIST_ALL;
 	return true;
 }
 
