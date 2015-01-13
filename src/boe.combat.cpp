@@ -672,7 +672,14 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 		}
 		if((weap.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
 			switch(eStatus(weap.abil_data[1])) {
-					// TODO: Handle other status types
+					// TODO: It should be possible to make monsters support magic resistance and invulnerability, at least.
+					// Maybe also poisoned weapon and invisibility.
+				case eStatus::MAIN: // Not a valid status
+				case eStatus::INVISIBLE: // Not supported by monsters
+				case eStatus::MAGIC_RESISTANCE: // Not supported by monsters
+				case eStatus::INVULNERABLE: // Not supported by monsters
+				case eStatus::POISONED_WEAPON: // Not supported by monsters
+					break;
 				case eStatus::POISON:
 					add_string_to_buf("  Blade drips venom.");
 					poison_monst(which_m,weap.abil_data[0] / 2);
@@ -680,6 +687,48 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 				case eStatus::ACID:
 					add_string_to_buf("  Blade drips acid.");
 					acid_monst(which_m,weap.abil_data[0] / 2);
+					break;
+				case eStatus::BLESS_CURSE:
+					add_string_to_buf("  Blade leaks a dark aura.");
+					curse_monst(which_m, weap.abil_data[0] / 2);
+					break;
+				case eStatus::HASTE_SLOW:
+					add_string_to_buf("  Blade leaks a smoky aura.");
+					slow_monst(which_m, weap.abil_data[0] / 2);
+					break;
+				case eStatus::WEBS:
+					add_string_to_buf("  Blade drips goo.");
+					web_monst(which_m, weap.abil_data[0] / 2);
+					break;
+				case eStatus::DISEASE:
+					add_string_to_buf("  Blade drips bile.");
+					disease_monst(which_m, weap.abil_data[0] / 2);
+					break;
+				case eStatus::DUMB:
+					add_string_to_buf("  Blade leaks a misty aura.");
+					dumbfound_monst(which_m, weap.abil_data[0] / 2);
+					break;
+				case eStatus::ASLEEP:
+					add_string_to_buf("  Blade emits coruscating lights.");
+					charm_monst(which_m, 20 + r2 + spec_dam, eStatus::ASLEEP, weap.abil_data[0] / 2);
+					break;
+				case eStatus::PARALYZED:
+					add_string_to_buf("  Blade emits a purple flash.");
+					charm_monst(which_m, 20 + r2 + spec_dam, eStatus::PARALYZED, weap.abil_data[0] / 2);
+					break;
+				case eStatus::CHARM:
+					add_string_to_buf("  Blade leaks a bright aura.");
+					// Higher penalty means more likely to resist.
+					charm_monst(which_m, 20 + r2 + spec_dam - weap.abil_data[0] / 2, eStatus::CHARM, 0);
+					break;
+				case eStatus::FORCECAGE:
+					add_string_to_buf("  Blade emits a green flash.");
+					charm_monst(which_m, r2 + spec_dam - weap.abil_data[0] / 2, eStatus::FORCECAGE, 0);
+					break;
+				case eStatus::MARTYRS_SHIELD:
+					add_string_to_buf("  Blade leaks an odd-coloured aura.");
+					which_m->status[eStatus::MARTYRS_SHIELD] -= weap.abil_data[0] / 2;
+					// TODO: Maybe clip it to 0?
 					break;
 			}
 		}

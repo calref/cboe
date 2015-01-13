@@ -1167,8 +1167,11 @@ void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amo
 		if(which_status == eStatus::CHARM) {
 			which_m->attitude = 2;
 			monst_spell_note(which_m->number,23);
-		}
-		else {
+		} else if(which_status == eStatus::FORCECAGE) {
+			which_m->status[eStatus::FORCECAGE] = 8;
+			univ.town.set_force_cage(which_m->cur_loc.x, which_m->cur_loc.y, true);
+			monst_spell_note(which_m->number,52);
+		} else {
 			which_m->status[which_status] = amount;
 			if(which_status == eStatus::ASLEEP && (amount >= 0))
 				monst_spell_note(which_m->number,28);

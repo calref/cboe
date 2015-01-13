@@ -1114,6 +1114,10 @@ void monst_spell_note(m_num_t number,short which_mess) {
 			break;
 		case 51:
 			msg = "  " + msg + " is obliterated!";
+			break;
+		case 52:
+			msg = "  " + msg + " is trapped!";
+			break;
 	}
 	
 	if(which_mess > 0)
