@@ -266,31 +266,39 @@ void cItem::append(legacy::item_record_type& old){
 		case 0:
 			ability = eItemAbil::NONE;
 			break;
-		case 1:
-			ability = eItemAbil::FLAMING_WEAPON;
+		case 1: // Flaming weapon
+			ability = eItemAbil::DAMAGING_WEAPON;
+			abil_data[1] = int(eDamageType::UNBLOCKABLE);
 			break;
-		case 2:
-			ability = eItemAbil::DEMON_SLAYER;
+		case 2: // Demon slayer
+			ability = eItemAbil::SLAYER_WEAPON;
+			abil_data[1] = int(eRace::DEMON);
 			break;
-		case 3:
-			ability = eItemAbil::UNDEAD_SLAYER;
+		case 3: // Undead slayer
+			ability = eItemAbil::SLAYER_WEAPON;
+			abil_data[1] = int(eRace::UNDEAD);
 			break;
-		case 4:
-			ability = eItemAbil::LIZARD_SLAYER;
+		case 4: // Lizard slayer
+			ability = eItemAbil::SLAYER_WEAPON;
+			abil_data[1] = int(eRace::REPTILE);
 			break;
-		case 5:
-			ability = eItemAbil::GIANT_SLAYER;
+		case 5: // Giant slayer
+			ability = eItemAbil::SLAYER_WEAPON;
+			abil_data[1] = int(eRace::GIANT);
 			break;
-		case 6:
-			ability = eItemAbil::MAGE_SLAYER;
+		case 6: // Mage slayer
+			ability = eItemAbil::SLAYER_WEAPON;
+			abil_data[1] = int(eRace::MAGE);
 			break;
-		case 7:
-			ability = eItemAbil::PRIEST_SLAYER;
+		case 7: // Priest slayer
+			ability = eItemAbil::SLAYER_WEAPON;
+			abil_data[1] = int(eRace::PRIEST);
 			break;
-		case 8:
-			ability = eItemAbil::BUG_SLAYER;
+		case 8: // Bug slayer
+			ability = eItemAbil::SLAYER_WEAPON;
+			abil_data[1] = int(eRace::BUG);
 			break;
-		case 9:
+		case 9: // Acidic weapon
 			ability = eItemAbil::STATUS_WEAPON;
 			abil_data[1] = int(eStatus::ACID);
 			break;
@@ -306,31 +314,37 @@ void cItem::append(legacy::item_record_type& old){
 		case 13:
 			ability = eItemAbil::CAUSES_FEAR;
 			break;
-		case 14:
+		case 14: // Poisoned weapon
 			ability = eItemAbil::STATUS_WEAPON;
 			abil_data[1] = int(eStatus::POISON);
 			break;
 		// General abilities
-		case 30:
-			ability = eItemAbil::PROTECTION;
+		case 30: // Protection
+			ability = eItemAbil::DAMAGE_PROTECTION;
+			abil_data[1] = int(eDamageType::WEAPON);
 			break;
 		case 31:
 			ability = eItemAbil::FULL_PROTECTION;
 			break;
-		case 32:
-			ability = eItemAbil::FIRE_PROTECTION;
+		case 32: // Fire protection
+			ability = eItemAbil::DAMAGE_PROTECTION;
+			abil_data[1] = int(eDamageType::FIRE);
 			break;
-		case 33:
-			ability = eItemAbil::COLD_PROTECTION;
+		case 33: // Cold protection
+			ability = eItemAbil::DAMAGE_PROTECTION;
+			abil_data[1] = int(eDamageType::COLD);
 			break;
-		case 34:
-			ability = eItemAbil::POISON_PROTECTION;
+		case 34: // Poison protection
+			ability = eItemAbil::STATUS_PROTECTION;
+			abil_data[1] = int(eStatus::POISON);
 			break;
-		case 35:
-			ability = eItemAbil::MAGIC_PROTECTION;
+		case 35: // Magic protection
+			ability = eItemAbil::DAMAGE_PROTECTION;
+			abil_data[1] = int(eDamageType::MAGIC);
 			break;
-		case 36:
-			ability = eItemAbil::ACID_PROTECTION;
+		case 36: // Acid protection
+			ability = eItemAbil::STATUS_PROTECTION;
+			abil_data[1] = int(eStatus::ACID);
 			break;
 		case 37:
 			ability = eItemAbil::SKILL;
@@ -392,23 +406,29 @@ void cItem::append(legacy::item_record_type& old){
 		case 56:
 			ability = eItemAbil::SLOW_WEARER;
 			break;
-		case 57:
-			ability = eItemAbil::PROTECT_FROM_UNDEAD;
+		case 57: // Protect from undead
+			ability = eItemAbil::DAMAGE_PROTECTION;
+			abil_data[1] = int(eDamageType::UNDEAD);
 			break;
-		case 58:
-			ability = eItemAbil::PROTECT_FROM_DEMONS;
+		case 58: // Protect from demons
+			ability = eItemAbil::DAMAGE_PROTECTION;
+			abil_data[1] = int(eDamageType::DEMON);
 			break;
-		case 59:
-			ability = eItemAbil::PROTECT_FROM_HUMANOIDS;
+		case 59: // Protect from humanoids
+			ability = eItemAbil::PROTECT_FROM_SPECIES;
+			abil_data[1] = int(eRace::HUMANOID);
 			break;
-		case 60:
-			ability = eItemAbil::PROTECT_FROM_REPTILES;
+		case 60: // Protect from reptiles
+			ability = eItemAbil::PROTECT_FROM_SPECIES;
+			abil_data[1] = int(eRace::REPTILE);
 			break;
-		case 61:
-			ability = eItemAbil::PROTECT_FROM_GIANTS;
+		case 61: // Protect from giants
+			ability = eItemAbil::PROTECT_FROM_SPECIES;
+			abil_data[1] = int(eRace::GIANT);
 			break;
-		case 62:
-			ability = eItemAbil::PROTECT_FROM_DISEASE;
+		case 62: // Protect from disease
+			ability = eItemAbil::STATUS_PROTECTION;
+			abil_data[1] = int(eStatus::DISEASE);
 			break;
 		// Usable abilities
 		case 70:
@@ -677,10 +697,12 @@ void cItem::append(legacy::item_record_type& old){
 			ability = eItemAbil::MISSILE_ACID;
 			break;
 		case 174:
-			ability = eItemAbil::MISSILE_SLAY_UNDEAD;
+			ability = eItemAbil::MISSILE_SLAYER;
+			abil_data[1] = int(eRace::UNDEAD);
 			break;
 		case 175:
-			ability = eItemAbil::MISSILE_SLAY_DEMON;
+			ability = eItemAbil::MISSILE_SLAYER;
+			abil_data[1] = int(eRace::DEMON);
 			break;
 		case 176:
 			ability = eItemAbil::MISSILE_HEAL_TARGET;

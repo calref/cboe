@@ -379,9 +379,12 @@ void cure_party(short amt) {
 
 // if how_much < 0, bless
 void curse_pc(short which_pc,short how_much) {
+	int level;
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
+		if(how_much > 0 && (level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::BLESS_CURSE))) > 0)
+			how_much -= level / 2;
 		univ.party[which_pc].status[eStatus::BLESS_CURSE] = minmax(-8,8,univ.party[which_pc].status[eStatus::BLESS_CURSE] - how_much);
 		if(how_much < 0)
 			add_string_to_buf("  " + univ.party[which_pc].name + " blessed.");
@@ -396,7 +399,7 @@ void curse_pc(short which_pc,short how_much) {
 }
 
 void dumbfound_pc(short which_pc,short how_much) {
-	short r1;
+	short r1,level;
 	
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
@@ -405,6 +408,8 @@ void dumbfound_pc(short which_pc,short how_much) {
 		add_string_to_buf("  Ring of Will glows.");
 		r1 -= 10;
 	}
+	if((level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::DUMB))) > 0)
+		how_much -= level / 4;
 	if(r1 < univ.party[which_pc].level)
 		how_much -= 2;
 	if(how_much <= 0) {
@@ -433,7 +438,7 @@ void disease_pc(short which_pc,short how_much) {
 		add_string_to_buf("  " + univ.party[which_pc].name + " saved.");
 		return;
 	}
-	if((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_DISEASE)) > 0)
+	if((level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE))) > 0)
 		how_much -= level / 2;
 	if(univ.party[which_pc].traits[eTrait::FRAIL] && how_much > 1)
 		how_much++;
@@ -462,7 +467,8 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust) {
 			how_much -= level / 2;
 		if((level = get_prot_level(which_pc,eItemAbil::FREE_ACTION)) > 0)
 			how_much -= (what_type == eStatus::ASLEEP) ? level : level * 300;
-		
+		if((level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(what_type))) > 0)
+			how_much -= level / 4;
 	}
 	
 	r1 = get_ran(1,1,100) + adjust;
@@ -493,10 +499,12 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust) {
 
 // if how_much < 0, haste
 void slow_pc(short which_pc,short how_much) {
+	int level;
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
-		
+		if(how_much > 0 && (level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::HASTE_SLOW))) > 0)
+			how_much -= level / 2;
 		univ.party[which_pc].status[eStatus::HASTE_SLOW] = minmax(-8,8,univ.party[which_pc].status[eStatus::HASTE_SLOW] - how_much);
 		if(how_much < 0)
 			add_string_to_buf("  " + univ.party[which_pc].name + " hasted.");
@@ -508,9 +516,12 @@ void slow_pc(short which_pc,short how_much) {
 }
 
 void web_pc(short which_pc,short how_much) {
+	int level;
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
+		if((level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::WEBS))) > 0)
+			how_much -= level / 2;
 		univ.party[which_pc].status[eStatus::WEBS] = min(univ.party[which_pc].status[eStatus::WEBS] + how_much,8);
 		add_string_to_buf("  " + univ.party[which_pc].name + " webbed.");
 		one_sound(17);
@@ -522,7 +533,7 @@ void web_pc(short which_pc,short how_much) {
 void acid_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
-	if(pc_has_abil_equip(which_pc,eItemAbil::ACID_PROTECTION) < 24) {
+	if(pc_has_abil_equip(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::ACID)) < 24) {
 		add_string_to_buf("  " + univ.party[which_pc].name + " resists acid.");
 		return;
 	}
@@ -2536,7 +2547,7 @@ void poison_pc(short which_pc,short how_much) {
 	short level;
 	
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
-		if((level = get_prot_level(which_pc,eItemAbil::POISON_PROTECTION)) > 0)
+		if((level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::POISON))) > 0)
 			how_much -= level / 2;
 		if((level = get_prot_level(which_pc,eItemAbil::FULL_PROTECTION)) > 0)
 			how_much -= level / 3;
@@ -2573,6 +2584,9 @@ void affect_pc(short which_pc,eStatus type,short how_much) {
 		// The additional ones that make sense in the negative:
 		eStatus::MAGIC_RESISTANCE, eStatus::DUMB,
 	};
+	
+	// TODO: Apply STATUS_PROTECTION item abilities; the challenge is to determine whether to apply to positive or negative how_much
+	// TODO: I'd like to merge poison_pc, web_pc, acid_pc etc into this function.
 	
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
@@ -2685,41 +2699,23 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 			how_much -= 1;
 	}
 	
-	if(damage_type == eDamageType::WEAPON && ((level = get_prot_level(which_pc,eItemAbil::PROTECTION)) > 0))
-		how_much = how_much - level;
-	if(damage_type == eDamageType::UNDEAD && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_UNDEAD)) > 0))
+	if((level = get_prot_level(which_pc,eItemAbil::DAMAGE_PROTECTION,int(damage_type))) > 0) {
+		if(damage_type == eDamageType::WEAPON) how_much -= level;
+		else how_much = how_much / ((level >= 7) ? 4 : 2);
+	}
+	// TODO: Do these perhaps depend on the ability strength less than they should?
+	if((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_SPECIES,int(type_of_attacker))) > 0)
 		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if(damage_type == eDamageType::DEMON && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_DEMONS)) > 0))
-		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if((type_of_attacker == eRace::HUMANOID) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_HUMANOIDS)) > 0))
-		how_much = how_much / ((level >= 7) ? 4 : 2);
-	// TODO: Should sliths be counted as reptiles?
-	if((type_of_attacker == eRace::REPTILE) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_REPTILES)) > 0))
-		how_much = how_much / ((level >= 7) ? 4 : 2);
-	if((type_of_attacker == eRace::GIANT) && ((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_GIANTS)) > 0))
-		how_much = how_much / ((level >= 7) ? 4 : 2);
-	
 	
 	// invuln
 	if(univ.party[which_pc].status[eStatus::INVULNERABLE] > 0)
 		how_much = 0;
 	
-	// magic resistance
-	if(damage_type == eDamageType::MAGIC && ((level = get_prot_level(which_pc,eItemAbil::MAGIC_PROTECTION)) > 0))
-		how_much = how_much / ((level >= 7) ? 4 : 2);
-	
 	// Mag. res helps w. fire and cold
+	// TODO: Why doesn't this help with magic damage?
 	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::COLD) &&
 		univ.party[which_pc].status[eStatus::MAGIC_RESISTANCE] > 0)
 		how_much = how_much / 2;
-	
-	// fire res.
-	if(damage_type == eDamageType::FIRE && ((level = get_prot_level(which_pc,eItemAbil::FIRE_PROTECTION)) > 0))
-		how_much = how_much / ((level >= 7) ? 4 : 2);
-	
-	// cold res.
-	if(damage_type == eDamageType::COLD && ((level = get_prot_level(which_pc,eItemAbil::COLD_PROTECTION)) > 0))
-		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// major resistance
 	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::POISON || damage_type == eDamageType::MAGIC || damage_type == eDamageType::COLD)

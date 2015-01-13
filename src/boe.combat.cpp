@@ -632,7 +632,11 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 		r2 = (r2 * (10 - weap.abil_data[0])) / 10;
 	
 	if(r1 <= hit_chance[univ.party[who_att].skills[what_skill]]) {
-		short spec_dam = calc_spec_dam(weap.ability,weap.abil_data[0],which_m);
+		eDamageType dmg_tp = eDamageType::UNBLOCKABLE;
+		short spec_dam = calc_spec_dam(weap.ability,weap.abil_data[0],weap.abil_data[1],which_m,dmg_tp);
+		short bonus_dam = 0;
+		if(dmg_tp != eDamageType::UNBLOCKABLE)
+			std::swap(spec_dam, bonus_dam);
 		if(primary) {
 			// assassinate
 			r1 = get_ran(1,1,100);
@@ -660,6 +664,8 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 				damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON, 0);
 				break;
 		}
+		if(bonus_dam)
+			damage_monst(target, who_att, bonus_dam, 0, dmg_tp, 0);
 		if(do_poison) {
 			// poison
 			if(univ.party[who_att].status[eStatus::POISONED_WEAPON] > 0) {
@@ -749,49 +755,49 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 }
 
 
-short calc_spec_dam(eItemAbil abil,short abil_str,cCreature *monst) {
+short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,cCreature* monst,eDamageType& dmg_type) {
 	short store = 0;
 	
 	switch(abil) {
-		case eItemAbil::FLAMING_WEAPON:
+		case eItemAbil::DAMAGING_WEAPON:
 		case eItemAbil::MISSILE_LIGHTNING:
 			store += get_ran(abil_str,1,6);
+			if(abil == eItemAbil::DAMAGING_WEAPON)
+				dmg_type = eDamageType(abil_dat);
+			else dmg_type = eDamageType::FIRE;
 			break;
-		case eItemAbil::DEMON_SLAYER:
-			if(monst->m_type == eRace::DEMON)
-				store += 8 * abil_str;
-			break;
-		case eItemAbil::MISSILE_SLAY_DEMON:
-			if(monst->m_type == eRace::DEMON)
-				store += 25 + 8 * abil_str;
-			break;
-		case eItemAbil::MISSILE_SLAY_UNDEAD:
-			if(monst->m_type == eRace::UNDEAD)
-				store += 20 + 6 * abil_str;
-			break;
-		case eItemAbil::UNDEAD_SLAYER:
-			if(monst->m_type == eRace::UNDEAD)
-				store += 6 * abil_str;
-			break;
-		case eItemAbil::LIZARD_SLAYER:
-			if(monst->m_type == eRace::REPTILE)
-				store += 5 * abil_str;
-			break;
-		case eItemAbil::GIANT_SLAYER:
-			if(monst->m_type == eRace::GIANT)
-				store += 8 * abil_str;
-			break;
-		case eItemAbil::MAGE_SLAYER:
-			if(monst->m_type == eRace::MAGE)
-				store += 4 * abil_str;
-			break;
-		case eItemAbil::PRIEST_SLAYER:
-			if(monst->m_type == eRace::PRIEST)
-				store += 4 * abil_str;
-			break;
-		case eItemAbil::BUG_SLAYER:
-			if(monst->m_type == eRace::BUG)
-				store += 7 * abil_str;
+		case eItemAbil::SLAYER_WEAPON:
+		case eItemAbil::MISSILE_SLAYER:
+			if(monst->m_type != eRace(abil_dat))
+				break;
+			store += abil_str;
+			switch(eRace(abil_dat)) {
+				case eRace::DEMON:
+				case eRace::GIANT:
+					store *= 8;
+					break;
+				case eRace::UNDEAD:
+					store *= 6;
+					break;
+				case eRace::REPTILE:
+					store *= 5;
+					break;
+				case eRace::MAGE:
+				case eRace::PRIEST:
+					store *= 4;
+					break;
+				case eRace::BUG:
+				case eRace::PLANT:
+					store *= 7;
+					break;
+			}
+			if(abil == eItemAbil::MISSILE_SLAYER) {
+				if(eRace(abil_dat) == eRace::DEMON)
+					store += 25;
+				else if(eRace(abil_dat) == eRace::UNDEAD)
+					store += 20;
+				else store += 10;
+			}
 			break;
 		case eItemAbil::CAUSES_FEAR:
 			scare_monst(monst,abil_str * 10);
@@ -1513,6 +1519,7 @@ void fire_missile(location target) {
 			add_string_to_buf(create_line);
 			
 			if(overall_mode == MODE_THROWING) {
+				// TODO: Store the missile in cItem directly
 				switch(univ.party[missile_firer].items[ammo_inv_slot].item_level) {
 					case 7:
 						m_type = 10;
@@ -1539,13 +1546,17 @@ void fire_missile(location target) {
 				add_string_to_buf("  Missed.");
 			else if((targ_monst = monst_there(target)) < univ.town->max_monst()) {
 				cur_monst = &univ.town.monst[targ_monst];
-				spec_dam = calc_spec_dam(univ.party[missile_firer].items[ammo_inv_slot].ability,
-										 univ.party[missile_firer].items[ammo_inv_slot].abil_data[0],cur_monst);
+				eDamageType dmg_tp = eDamageType::UNBLOCKABLE;
+				short bonus_dam = 0;
+				cItem& missile = univ.party[missile_firer].items[ammo_inv_slot];
+				spec_dam = calc_spec_dam(missile.ability,missile.abil_data[0],missile.abil_data[1],cur_monst,dmg_tp);
+				if(dmg_tp != eDamageType::UNBLOCKABLE) std::swap(bonus_dam, spec_dam);
 				if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::MISSILE_HEAL_TARGET) {
 					ASB("  There is a flash of light.");
 					cur_monst->health += r2;
 				}
 				else damage_monst(targ_monst, missile_firer, r2, spec_dam, eDamageType::WEAPON,13);
+				if(bonus_dam) damage_monst(targ_monst, missile_firer, bonus_dam, 0, dmg_tp, 0);
 				
 				//if(univ.party[missile_firer].items[ammo_inv_slot].ability == 33)
 				//	hit_space(cur_monst->m_loc,get_ran(3,1,6),1,1,1);
@@ -4129,7 +4140,7 @@ void handle_disease() {
 					r1 = get_ran(1,0,7);
 					if(univ.party[i].traits[eTrait::GOOD_CONST])
 						r1 -= 2;
-					if((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,eItemAbil::PROTECT_FROM_DISEASE) < 24))
+					if((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE)) < 24))
 						move_to_zero(univ.party[i].status[eStatus::DISEASE]);
 				}
 		put_pc_screen();

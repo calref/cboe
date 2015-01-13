@@ -159,15 +159,18 @@ bool give_to_pc(short pc_num,cItem item,short print_result,bool allow_overload) 
 
 // TODO: Utilize the second parameter in special node processing
 // if abil > 0, force abil, else ignore
-bool forced_give(short item_num,eItemAbil abil) {
+bool forced_give(short item_num,eItemAbil abil,short dat) {
 	short i,j;
 	cItem item;
 	
 	if((item_num < 0) || (item_num > 399))
 		return true;
 	item = get_stored_item(item_num);
-	if(abil > eItemAbil::NONE)
+	if(abil > eItemAbil::NONE) {
 		item.ability = abil;
+		item.abil_data[0] = dat / 1000;
+		item.abil_data[1] = dat % 1000;
+	}
 	for(i = 0; i < 6; i++)
 		for(j = 0; j < 24; j++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].items[j].variety == eItemType::NO_ITEM) {
@@ -216,52 +219,54 @@ bool take_gold(short amount,bool print_result) {
 }
 
 // returnes equipped protection level of specified abil, or -1 if no such abil is equipped
-short get_prot_level(short pc_num,eItemAbil abil) {
+short get_prot_level(short pc_num,eItemAbil abil, short dat) {
 	short i = 0;
 	
 	for(i = 0; i < 24; i++)
 		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM && (univ.party[pc_num].items[i].ability == abil)
-		   && (univ.party[pc_num].equip[i]))
+		   && univ.party[pc_num].equip[i] && (dat < 0 || dat == univ.party[pc_num].items[i].abil_data[1]))
 			return univ.party[pc_num].items[i].abil_data[0];
 	return -1;
 	
 }
 
-short pc_has_abil_equip(short pc_num,eItemAbil abil) {
-	short i = 0;
-	
-	while((univ.party[pc_num].items[i].variety == eItemType::NO_ITEM || univ.party[pc_num].items[i].ability != abil
-		   || !univ.party[pc_num].equip[i]) && (i < 24))
-		i++;
-	return i;
-	
+short pc_has_abil_equip(short pc_num,eItemAbil abil,short dat) {
+	for(short i = 0; i < 24; i++) {
+		if(univ.party[pc_num].items[i].variety == eItemType::NO_ITEM) continue;
+		if(univ.party[pc_num].items[i].ability != abil) continue;
+		if(!univ.party[pc_num].equip[i]) continue;
+		if(dat >= 0 && dat != univ.party[pc_num].items[i].abil_data[1]) continue;
+		return i;
+	}
+	return 0;
 }
 
-short pc_has_abil(short pc_num,eItemAbil abil) {
-	short i = 0;
-	
-	while((univ.party[pc_num].items[i].variety == eItemType::NO_ITEM || univ.party[pc_num].items[i].ability != abil
-		   ) && (i < 24))
-		i++;
-	return i;
+short pc_has_abil(short pc_num,eItemAbil abil,short dat) {
+	for(short i = 0; i < 24; i++) {
+		if(univ.party[pc_num].items[i].variety == eItemType::NO_ITEM) continue;
+		if(univ.party[pc_num].items[i].ability != abil) continue;
+		if(dat >= 0 && dat != univ.party[pc_num].items[i].abil_data[1]) continue;
+		return i;
+	}
+	return 0;
 }
 
-bool party_has_abil(eItemAbil abil) {
+bool party_has_abil(eItemAbil abil,short dat) {
 	short i;
 	
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			if(pc_has_abil(i,abil) < 24)
+			if(pc_has_abil(i,abil,dat) < 24)
 				return true;
 	return false;
 }
 
-bool party_take_abil(eItemAbil abil) {
+bool party_take_abil(eItemAbil abil,short dat) {
 	short i,item;
 	
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			if((item = pc_has_abil(i,abil)) < 24) {
+			if((item = pc_has_abil(i,abil,dat)) < 24) {
 				if(univ.party[i].items[item].charges > 1)
 					univ.party[i].items[item].charges--;
 				else take_item(i,item);
@@ -449,8 +454,9 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 		case 4:
 			store_name += " (F!)";
 			univ.party[pc_num].items[item_hit].value = new_val;
-			univ.party[pc_num].items[item_hit].ability = eItemAbil::FLAMING_WEAPON;
+			univ.party[pc_num].items[item_hit].ability = eItemAbil::DAMAGING_WEAPON;
 			univ.party[pc_num].items[item_hit].abil_data[0] = 5;
+			univ.party[pc_num].items[item_hit].abil_data[1] = int(eDamageType::FIRE);
 			break;
 		case 5:
 			store_name += " (+5)";

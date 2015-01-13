@@ -13,7 +13,7 @@ void char_parry();
 void char_stand_ready();
 void pc_attack(short who_att,short target);
 void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cItem& weap,short primary,bool do_poison);
-short calc_spec_dam(eItemAbil abil,short abil_str,cCreature *monst);
+short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,cCreature* monst,eDamageType& dmg_type);
 void place_target(location target);
 void do_combat_cast(location target);
 void handle_marked_damage();
