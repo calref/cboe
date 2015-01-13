@@ -112,6 +112,9 @@
     <ClInclude Include="..\..\dialogxml\xml-parser\tinyxml.h">
       <Filter>DialogXML\TinyXML</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\dialogxml\xml-parser\tinyprint.hpp">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\dialogxml\button.hpp">
       <Filter>DialogXML\Header Files</Filter>
     </ClInclude>
@@ -263,6 +266,9 @@
       <Filter>DialogXML\TinyXML</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dialogxml\xml-parser\tinyxml.cpp">
+      <Filter>DialogXML\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\xml-parser\tinyprint.cpp">
       <Filter>DialogXML\TinyXML</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlerror.cpp">

@@ -46,6 +46,7 @@
     <ClInclude Include="..\..\dialogxml\xml-parser\ticpprc.h" />
     <ClInclude Include="..\..\dialogxml\xml-parser\tinystr.h" />
     <ClInclude Include="..\..\dialogxml\xml-parser\tinyxml.h" />
+    <ClInclude Include="..\..\dialogxml\xml-parser\tinyprint.hpp" />
     <ClInclude Include="..\..\oldstructs.h" />
     <ClInclude Include="..\..\tools\cursors.hpp" />
     <ClInclude Include="..\..\tools\fileio.hpp" />
@@ -96,6 +97,7 @@
     <ClCompile Include="..\..\dialogxml\xml-parser\ticpp.cpp" />
     <ClCompile Include="..\..\dialogxml\xml-parser\tinystr.cpp" />
     <ClCompile Include="..\..\dialogxml\xml-parser\tinyxml.cpp" />
+    <ClCompile Include="..\..\dialogxml\xml-parser\tinyprint.cpp" />
     <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\tools\cursors.win.cpp" />
