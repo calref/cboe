@@ -45,5 +45,7 @@ void Printer::PushNode(Node* node) {
 }
 
 Printer::~Printer() {
+	while(!openElements.empty())
+		CloseElement(openElements.top()->Value());
 	stream << doc;
 }

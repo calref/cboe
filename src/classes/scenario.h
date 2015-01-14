@@ -49,7 +49,7 @@ public:
 	void destroy_terrain();
 public:
 	unsigned short difficulty,intro_pic,default_ground;
-	short intro_mess_pic,intro_mess_len;
+	short intro_mess_pic;
 	location where_start,out_sec_start,out_start;
 	size_t which_town_start;
 	short town_to_add_to[10];
@@ -79,7 +79,6 @@ public:
 	// This'll make the transition smoother once it becomes a vector.
 	std::array<std::string,50> journal_strs;
 	std::array<std::string,100> spec_strs;
-	std::string monst_strs[100];
 	bool adjust_diff : 1;
 	char : 7;
 	bool is_legacy;
@@ -91,6 +90,8 @@ public:
 	void append(legacy::scenario_data_type& old);
 	void append(legacy::scen_item_data_type& old);
 	void writeTo(std::ostream& file) const;
+	std::string format_scen_version();
+	std::string format_ed_version();
 	
 	cScenario& operator=(cScenario&& other);
 	cScenario(cScenario&) = delete;

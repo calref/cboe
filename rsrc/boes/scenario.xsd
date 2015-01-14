@@ -112,16 +112,11 @@
 						<xs:attribute name="town" type="xs:integer" use="required"/>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="town-flags" minOccurs="0" maxOccurs="10">
+				<xs:element name="town-flag" minOccurs="0" maxOccurs="10">
 					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="town-flag">
-								<xs:complexType>
-									<xs:attribute name="town" type="xs:integer"/>
-									<xs:attribute name="add" type="xs:integer"/>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
+						<xs:attribute name="town" type="xs:integer"/>
+						<xs:attribute name="add-x" type="xs:integer"/>
+						<xs:attribute name="add-y" type="xs:integer"/>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="specials">
@@ -133,7 +128,9 @@
 										<xs:element name="name" type="xs:string"/>
 										<xs:element name="description" type="xs:string"/>
 									</xs:sequence>
-									<xs:attribute name="special" type="bool"/>
+									<xs:attribute name="special" type="xs:integer"/>
+									<xs:attribute name="start-with" type="bool"/>
+									<xs:attribute name="useable" type="bool"/>
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>
@@ -196,6 +193,20 @@
 				<xs:element ref="creator"/>
 				<xs:element ref="game"/>
 				<xs:element ref="editor"/>
+				<xs:element name="strings">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="string" type="xs:string" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="journal">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="string" type="xs:string" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="boes" type="xs:string"/>
 		</xs:complexType>

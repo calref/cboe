@@ -926,10 +926,6 @@ void cStringRecorder::operator()(cDialog& me) {
 			str1 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label1];
 			str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
 			break;
-		case NOTE_MONST:
-			str1 = univ.scenario.monst_strs[label1];
-			str2 = univ.scenario.monst_strs[label2];
-			break;
 	}
 	if(univ.party.record(type, str1, location))
 		give_help(58,0,&me);

@@ -34,6 +34,11 @@ namespace ticpp {
 		template<typename T> void PushText(T textVal) {
 			PushNode(new Text(boost::lexical_cast<std::string>(textVal)));
 		}
+		template<typename T> void PushElement(std::string tagName, T elemVal) {
+			OpenElement(tagName);
+			PushText(elemVal);
+			CloseElement(tagName);
+		}
 	};
 }
 

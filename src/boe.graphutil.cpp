@@ -242,9 +242,9 @@ void play_see_monster_str(unsigned short m, location monst_loc) {
 		short where1 = is_out() ? univ.party.outdoor_corner.x + univ.party.i_w_c.x : univ.town.num;
 		short where2 = is_out() ? univ.party.outdoor_corner.y + univ.party.i_w_c.y : univ.town.num;
 		std::string placename = is_out() ? univ.out->out_name : univ.town->town_name;
-		cStrDlog display_strings(str1 < 100 ? univ.scenario.monst_strs[str1] : "", str2 < 100 ? univ.scenario.monst_strs[str2] : "", "", pic, type, NULL);
+		cStrDlog display_strings(str1 < 100 ? univ.scenario.spec_strs[str1] : "", str2 < 100 ? univ.scenario.spec_strs[str2] : "", "", pic, type, NULL);
 		display_strings.setSound(snd);
-		display_strings.setRecordHandler(cStringRecorder(NOTE_MONST).string1(str1).string2(str2).from(where1,where2).at(placename));
+		display_strings.setRecordHandler(cStringRecorder(NOTE_SCEN).string1(str1).string2(str2).from(where1,where2).at(placename));
 		display_strings.show();
 	}
 	// Then run the special, if any

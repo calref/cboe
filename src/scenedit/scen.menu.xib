@@ -998,14 +998,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">performClose:</string>
-						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="776162233"/>
-					</object>
-					<int key="connectionID">193</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">showHelp:</string>
 						<reference key="source" ref="1014"/>
 						<reference key="destination" ref="238773614"/>
@@ -1160,11 +1152,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">82</int>
 						<reference key="object" ref="705341025"/>
-						<reference key="parent" ref="720053764"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">73</int>
-						<reference key="object" ref="776162233"/>
 						<reference key="parent" ref="720053764"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -1846,6 +1833,11 @@
 						<reference key="object" ref="304878788"/>
 						<reference key="parent" ref="784697102"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">886</int>
+						<reference key="object" ref="776162233"/>
+						<reference key="parent" ref="720053764"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1883,7 +1875,6 @@
 				<string key="690.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="691.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="75.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="79.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="795.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1969,12 +1960,13 @@
 				<string key="883.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="884.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="885.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="886.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">885</int>
+			<int key="maxID">886</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

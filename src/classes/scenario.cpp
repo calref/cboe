@@ -107,8 +107,7 @@ void cScenario::append(legacy::scenario_data_type& old){
 	difficulty = old.difficulty;
 	intro_pic = old.intro_pic;
 	default_ground = old.default_ground;
-	intro_mess_pic = old.intro_mess_pic;
-	intro_mess_len = old.intro_mess_len;
+	intro_mess_pic = old.intro_pic;
 	where_start.x = old.where_start.x;
 	where_start.y = old.where_start.y;
 	out_sec_start.x = old.out_sec_start.x;
@@ -166,4 +165,18 @@ void cScenario::append(legacy::scen_item_data_type& old){
 		scen_monsters[i].m_name = old.monst_names[i];
 	for(i = 0; i < 256; i++)
 		ter_types[i].name = old.ter_names[i];
+}
+
+static std::string format_version(const unsigned char(& ver)[3]) {
+	std::ostringstream fmt;
+	fmt << int(ver[0]) << '.' << int(ver[1]) << '.' << int(ver[2]);
+	return fmt.str();
+}
+
+std::string cScenario::format_ed_version() {
+	return format_version(format.prog_make_ver);
+}
+
+std::string cScenario::format_scen_version() {
+	return format_version(format.ver);
 }

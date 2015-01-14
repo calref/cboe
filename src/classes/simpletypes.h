@@ -717,7 +717,6 @@ enum eEncNoteType {
 	NOTE_SCEN,
 	NOTE_OUT,
 	NOTE_TOWN,
-	NOTE_MONST,
 };
 
 // This is a slight misnomer, as a couple of these are not true fields.

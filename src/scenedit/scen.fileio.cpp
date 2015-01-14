@@ -15,6 +15,7 @@
 #include "dlogutil.hpp"
 #include "tarball.hpp"
 #include "gzstream.h"
+#include "tinyprint.hpp"
 
 #define	DONE_BUTTON_ITEM	1
 
@@ -48,6 +49,21 @@ template<typename Container> static void writeSpecialNodes(std::ostream& fout, C
 	}
 }
 
+static std::string boolstr(bool b) {
+	return b ? "true" : "false";
+}
+
+template<> void ticpp::Printer::PushElement(std::string tagName, location pos) {
+	OpenElement(tagName);
+	PushAttribute("x", pos.x);
+	PushAttribute("y", pos.y);
+	CloseElement(tagName);
+}
+
+static bool is_minmax(int lo, int hi, int val) {
+	return minmax(lo, hi, val) == val;
+}
+
 void save_scenario(fs::path toFile) {
 	// TODO: I'm not certain 1.0.0 is the correct version here?
 	scenario.format.prog_make_ver[0] = 1;
@@ -61,6 +77,126 @@ void save_scenario(fs::path toFile) {
 		
 		// Next, the bulk scenario data.
 		std::ostream& scen_data = scen_file.newFile("scenario/scenario.xml");
+		ticpp::Printer data("scenario.xml", scen_data);
+		data.OpenElement("scenario");
+		data.PushAttribute("boes", scenario.format_ed_version());
+		data.PushElement("title", scenario.scen_name);
+		data.PushElement("icon", scenario.intro_pic);
+		data.PushElement("id", scenario.campaign_id);
+		data.PushElement("version", scenario.format_scen_version());
+		data.PushElement("language", "en-US");
+		data.OpenElement("author");
+		data.PushElement("name", scenario.contact_info);
+		// TODO: Store name and email in separate fields.
+		data.PushElement("email", "");
+		data.CloseElement("author");
+		data.OpenElement("text");
+		data.PushElement("teaser", scenario.who_wrote[0]);
+		data.PushElement("teaser", scenario.who_wrote[1]);
+		if(scenario.intro_pic != scenario.intro_mess_pic)
+			data.PushElement("icon", scenario.intro_mess_pic);
+		for(int i = 0; i < 6; i++)
+			data.PushElement("intro-msg", scenario.intro_strs[i]);
+		data.CloseElement("text");
+		data.OpenElement("ratings");
+		switch(scenario.rating) {
+			case 0: data.PushElement("content", "g"); break;
+			case 1: data.PushElement("content", "pg"); break;
+			case 2: data.PushElement("content", "r"); break;
+			case 3: data.PushElement("content", "nc17"); break;
+		}
+		data.PushElement("difficulty", scenario.difficulty + 1);
+		data.CloseElement("ratings");
+		data.OpenElement("flags");
+		data.PushElement("adjust-difficulty", boolstr(scenario.adjust_diff));
+		data.PushElement("legacy", boolstr(scenario.is_legacy));
+		data.PushElement("custom-graphics", boolstr(scenario.uses_custom_graphics));
+		data.CloseElement("flags");
+		data.OpenElement("creator");
+		data.PushElement("type", "oboe");
+		data.PushElement("version", scenario.format_ed_version());
+		// TODO: fill <os> element
+		data.PushElement("os", "");
+		data.CloseElement("creator");
+		data.OpenElement("game");
+		data.PushElement("num-towns", scenario.towns.size());
+		data.PushElement("out-width", scenario.outdoors.width());
+		data.PushElement("out-height", scenario.outdoors.height());
+		data.PushElement("start-town", scenario.which_town_start);
+		data.PushElement("town-start", scenario.where_start);
+		data.PushElement("outdoor-start", scenario.out_sec_start);
+		data.PushElement("sector-start", scenario.out_start);
+		for(int i = 0; i < 3; i++) {
+			if(is_minmax(0, scenario.towns.size(), scenario.store_item_towns[i])) {
+				data.OpenElement("store-items");
+				data.PushAttribute("top", scenario.store_item_rects[i].top);
+				data.PushAttribute("left", scenario.store_item_rects[i].left);
+				data.PushAttribute("bottom", scenario.store_item_rects[i].bottom);
+				data.PushAttribute("right", scenario.store_item_rects[i].right);
+				data.PushAttribute("town", scenario.store_item_towns[i]);
+				data.CloseElement("store-items");
+			}
+		}
+		for(int i = 0; i < 10; i++) {
+			if(is_minmax(0, scenario.towns.size(), scenario.town_to_add_to[i])) {
+				data.OpenElement("town-flag");
+				data.PushAttribute("town", scenario.town_to_add_to[i]);
+				data.PushAttribute("add-x", scenario.flag_to_add_to_town[i][0]);
+				data.PushAttribute("add-y", scenario.flag_to_add_to_town[i][1]);
+				data.CloseElement("town-flag");
+			}
+		}
+		data.OpenElement("specials");
+		for(int i = 0; i < 50; i++) {
+			data.OpenElement("item");
+			data.PushAttribute("start-with", boolstr(scenario.special_items[i].flags / 10));
+			data.PushAttribute("useable", boolstr(scenario.special_items[i].flags % 10));
+			data.PushAttribute("special", scenario.special_items[i].special);
+			data.PushElement("name", scenario.special_items[i].name);
+			data.PushElement("description", scenario.special_items[i].descr);
+			data.CloseElement("item");
+		}
+		data.CloseElement("specials");
+		for(int i = 0; i < 20; i++) {
+			if(scenario.scenario_timer_times[i] > 0) {
+				data.OpenElement("timer");
+				data.PushAttribute("time", scenario.scenario_timer_times[i]);
+				data.PushText(scenario.scenario_timer_specs[i]);
+				data.CloseElement("timer");
+			}
+		}
+		data.CloseElement("game");
+		data.OpenElement("editor");
+		data.PushElement("default-ground", scenario.default_ground);
+		data.PushElement("last-out-section", scenario.last_out_edited);
+		data.PushElement("last-town", scenario.last_town_edited);
+		for(int i = 0; i < 10; i++) {
+			if(scenario.storage_shortcuts[i].ter_type >= 0) {
+				cScenario::cItemStorage shortcut = scenario.storage_shortcuts[i];
+				data.OpenElement("storage");
+				data.PushElement("on-terrain", shortcut.ter_type);
+				data.PushElement("is-property", boolstr(shortcut.property));
+				for(int j = 0; j < 10; j++) {
+					if(shortcut.item_num[j] >= 0) {
+						data.OpenElement("item");
+						data.PushAttribute("chance", shortcut.item_odds[j]);
+						data.PushText(shortcut.item_num[j]);
+						data.CloseElement("item");
+					}
+				}
+				data.CloseElement("storage");
+			}
+		}
+		data.CloseElement("editor");
+		data.OpenElement("strings");
+		for(size_t i = 0; i < scenario.spec_strs.size(); i++)
+			data.PushElement("string", scenario.spec_strs[i]);
+		data.CloseElement("strings");
+		data.OpenElement("journal");
+		for(size_t i = 0; i < scenario.journal_strs.size(); i++)
+			data.PushElement("string", scenario.journal_strs[i]);
+		data.CloseElement("journal");
+		data.CloseElement("scenario");
 		
 		// Then the terrains...
 		std::ostream& terrain = scen_file.newFile("scenario/terrain.xml");

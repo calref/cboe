@@ -274,7 +274,7 @@ void put_party_in_scen(std::string scen_name) {
 		if(!univ.scenario.intro_strs[j].empty()) {
 			for(i = 0; i < 6; i++)
 				strs[i] = univ.scenario.intro_strs[i];
-			custom_choice_dialog(strs,univ.scenario.intro_pic,PIC_SCEN,buttons) ;
+			custom_choice_dialog(strs,univ.scenario.intro_mess_pic,PIC_SCEN,buttons) ;
 			j = 6;
 		}
 	give_help(1,2);

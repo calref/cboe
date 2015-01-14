@@ -770,7 +770,6 @@ std::istream& operator>>(std::istream& in, eEncNoteType& type) {
 	if(name == "SCEN") type = NOTE_SCEN;
 	else if(name == "OUT") type = NOTE_OUT;
 	else if(name == "TOWN") type = NOTE_TOWN;
-	else if(name == "MONST") type = NOTE_MONST;
 	else in.setstate(std::ios_base::failbit);
 	return in;
 }
@@ -785,9 +784,6 @@ std::ostream& operator<<(std::ostream& out, eEncNoteType type) {
 			break;
 		case NOTE_TOWN:
 			out << "TOWN";
-			break;
-		case NOTE_MONST:
-			out << "MONST";
 			break;
 	}
 	return out;
