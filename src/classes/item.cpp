@@ -132,6 +132,7 @@ cItem::cItem(long preset){
 			weap_type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 57;
+			missile = 3;
 			value = 1;
 			weight = 1;
 			full_name = "Arrows";
@@ -180,6 +181,7 @@ cItem::cItem(long preset){
 			weap_type = eSkill::INVALID;
 			magic_use_type = 0;
 			graphic_num = 59;
+			missile = 7;
 			value = 10;
 			weight = 1;
 			full_name = "Iron Razordisks";

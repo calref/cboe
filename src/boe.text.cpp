@@ -940,7 +940,7 @@ void print_monst_attacks(mon_num_t m_type,short target) {
 
 void damaged_message(short damage,short type) {
 	std::ostringstream sout;
-	sout << "  " << get_str("monster-abilities",130 + type);
+	sout << "    " << get_str("monster-abilities",130 + type);
 	sout << " for " << damage;
 	add_string_to_buf(sout.str().c_str());
 }
@@ -1150,9 +1150,8 @@ void monst_breathe_note(mon_num_t number) {
 
 void monst_damaged_mes(mon_num_t which_m,short how_much,short how_much_spec) {
 	std::string msg = get_m_name(univ.town.monst[which_m].number);
-	msg = "  " + msg + " takes ";
-	std::ostringstream sout(msg);
-	sout << how_much;
+	std::ostringstream sout;
+	sout << "  " << msg << " takes " << how_much;
 	if(how_much_spec > 0)
 		sout << '+' << how_much_spec;
 	msg = sout.str();

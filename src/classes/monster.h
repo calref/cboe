@@ -130,10 +130,10 @@ public:
 	std::map<eMonstAbil, uAbility> abil;
 	item_num_t corpse_item;
 	short corpse_item_chance;
-	int magic_res : 2;
-	int fire_res : 2;
-	int cold_res : 2;
-	int poison_res : 2;
+	unsigned int magic_res : 2;
+	unsigned int fire_res : 2;
+	unsigned int cold_res : 2;
+	unsigned int poison_res : 2;
 	bool mindless : 1;
 	bool invuln : 1;
 	bool invisible : 1;

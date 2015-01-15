@@ -238,7 +238,7 @@ short pc_has_abil_equip(short pc_num,eItemAbil abil,short dat) {
 		if(dat >= 0 && dat != univ.party[pc_num].items[i].abil_data[1]) continue;
 		return i;
 	}
-	return 0;
+	return 24;
 }
 
 short pc_has_abil(short pc_num,eItemAbil abil,short dat) {
@@ -248,7 +248,7 @@ short pc_has_abil(short pc_num,eItemAbil abil,short dat) {
 		if(dat >= 0 && dat != univ.party[pc_num].items[i].abil_data[1]) continue;
 		return i;
 	}
-	return 0;
+	return 24;
 }
 
 bool party_has_abil(eItemAbil abil,short dat) {

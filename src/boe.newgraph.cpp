@@ -451,8 +451,9 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 						base -= 10000;
 					} else base -= 1000;
 					base += step % 4;
-					sf::Texture* from_gw;
+					sf::Texture* from_gw = nullptr;
 					graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(base, isParty);
+					if(from_gw == nullptr) continue;
 					from_rect.width() = 18;
 					from_rect.height() = 18;
 					if(step >= 4)

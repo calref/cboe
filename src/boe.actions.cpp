@@ -630,7 +630,7 @@ static void handle_bash_pick(location destination, bool& did_something, bool& ne
 	put_item_screen(stat_window,0);
 }
 
-static void handle_switch_pc(short which_pc) {
+static void handle_switch_pc(short which_pc, bool& need_redraw) {
 	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING)
 		add_string_to_buf("Set active: Finish what you're doing first.");
 	else if(is_combat())
@@ -643,6 +643,7 @@ static void handle_switch_pc(short which_pc) {
 		set_stat_window(which_pc);
 		add_string_to_buf("Now " + std::string(overall_mode == MODE_SHOPPING ? "shopping" : "active") + ": " + univ.party[which_pc].name);
 		adjust_spell_menus();
+		need_redraw = true;
 	}
 }
 
@@ -1225,7 +1226,8 @@ bool handle_action(sf::Event event) {
 					pc_buttons[i][j].offset(-PC_WIN_UL_X,-PC_WIN_UL_Y);
 					switch(j) {
 						case 0:
-							handle_switch_pc(i);
+							handle_switch_pc(i, need_redraw);
+							need_reprint = true;
 							break;
 						case 1:
 							str.str("");

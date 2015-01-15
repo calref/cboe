@@ -132,8 +132,6 @@ inline bool isStatusNegative(eStatus stat) {
 	return false;
 }
 
-/* Special Ability a.k.a spec_skill */
-
 enum class eMonstAbil {
 	NO_ABIL,
 	MISSILE,
@@ -244,7 +242,6 @@ enum class eTrimType {
 	CITY = 18, // the game will join roads up to this space but not draw roads on the space
 };
 
-/*      terrain type blockage          */
 enum class eTerObstruct {
 	CLEAR = 0,
 	BLOCK_SIGHT = 1,
@@ -716,6 +713,7 @@ enum eEncNoteType {
 	NOTE_TOWN,
 };
 
+// MARK: eFieldType
 // This is a slight misnomer, as a couple of these are not true fields.
 enum eFieldType {
 	SPECIAL_EXPLORED = 0,
