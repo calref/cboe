@@ -180,8 +180,7 @@ void cMonster::addAbil(eMonstAbilTemplate what, int param) {
 			abil[eMonstAbil::DRAIN_SP].gen = {true, eMonstGen::GAZE, 8, 50, 8, 625};
 			break;
 		case eMonstAbilTemplate::RAY_HEAT:
-			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::RAY, 13, 7, 6, 625};
-			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::FIRE;
+			abil[eMonstAbil::RAY_HEAT].special = {true, 6, 625, 7};
 			break;
 		case eMonstAbilTemplate::RAY_PARALYSIS:
 			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::RAY, -1, 100, 6, 750};
@@ -216,8 +215,7 @@ void cMonster::addAbil(eMonstAbilTemplate what, int param) {
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::ACID;
 			break;
 		case eMonstAbilTemplate::SHOOTS_WEB:
-			abil[eMonstAbil::FIELD].gen = {true, eMonstGen::SPIT, 8, PAT_SINGLE, 4, 375};
-			abil[eMonstAbil::FIELD].gen.fld = eFieldType::FIELD_WEB;
+			abil[eMonstAbil::MISSILE_WEB].special = {true, 4, 375};
 			break;
 			// Touch abilities
 		case eMonstAbilTemplate::TOUCH_POISON:
@@ -600,63 +598,59 @@ std::string uAbility::to_string(eMonstAbil key) const {
 			}
 			break;
 		case eMonstAbilCat::GENERAL:
-			if(key == eMonstAbil::FIELD && gen.type == eMonstGen::SPIT && gen.fld == eFieldType::FIELD_WEB) {
-				sout << "Throws webs";
-			} else {
-				switch(key) {
-					case eMonstAbil::STUN: sout << "Stunning"; break;
-					case eMonstAbil::PETRIFY: sout << "Petrifying"; break;
-					case eMonstAbil::DRAIN_SP: sout << "Spell point drain"; break;
-					case eMonstAbil::DRAIN_XP: sout << "Experience drain"; break;
-					case eMonstAbil::KILL: sout << "Death"; break;
-					case eMonstAbil::STEAL_FOOD: sout << "Steals food"; break;
-					case eMonstAbil::STEAL_GOLD: sout << "Steals gold!"; break;
-					case eMonstAbil::FIELD:
-						switch(gen.fld) {
-							case eFieldType::CLOUD_SLEEP: sout << "Sleep"; break;
-							case eFieldType::CLOUD_STINK: sout << "Foul"; break;
-							case eFieldType::WALL_FIRE: sout << "Fiery"; break;
-							case eFieldType::WALL_FORCE: sout << "Charged"; break;
-							case eFieldType::WALL_ICE: sout << "Frosted"; break;
-							case eFieldType::WALL_BLADES: sout << "Thorny"; break;
-							case eFieldType::FIELD_ANTIMAGIC: sout << "Null"; break;
-							case eFieldType::FIELD_WEB: sout << "Web"; break;
-							case eFieldType::FIELD_QUICKFIRE: sout << "Incendiary"; break;
-						}
-						break;
-					case eMonstAbil::DAMAGE:
-						switch(gen.dmg) {
-							case eDamageType::FIRE: sout << "Heat"; break;
-							case eDamageType::COLD: sout << "Icy"; break;
-							case eDamageType::MAGIC: sout << "Shock"; break;
-							case eDamageType::UNBLOCKABLE: sout << "Wounding"; break;
-							case eDamageType::POISON: sout << "Pain"; break;
-							case eDamageType::WEAPON: sout << "Stamina drain"; break;
-							case eDamageType::DEMON: sout << "Unholy"; break;
-							case eDamageType::UNDEAD: sout << "Necrotic"; break;
-						}
-						break;
-					case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
-						switch(gen.stat) {
-							case eStatus::POISON: sout << "Poison"; break;
-							case eStatus::DISEASE: sout << "Infectious"; break;
-							case eStatus::DUMB: sout << "Dumbfounding"; break;
-							case eStatus::WEBS: sout << "Glue"; break;
-							case eStatus::ASLEEP: sout << "Sleep"; break;
-							case eStatus::PARALYZED: sout << "Paralysis"; break;
-							case eStatus::ACID: sout << "Acid"; break;
-							case eStatus::HASTE_SLOW: sout << "Slowing"; break;
-							case eStatus::BLESS_CURSE: sout << "Curse"; break;
-						}
-						break;
-				}
-				switch(gen.type) {
-					case eMonstGen::RAY: sout << " ray"; break;
-					case eMonstGen::TOUCH: sout << " touch"; break;
-					case eMonstGen::GAZE: sout << " gaze"; break;
-					case eMonstGen::BREATH: sout << " breath"; break;
-					case eMonstGen::SPIT: sout << " spit"; break;
-				}
+			switch(key) {
+				case eMonstAbil::STUN: sout << "Stunning"; break;
+				case eMonstAbil::PETRIFY: sout << "Petrifying"; break;
+				case eMonstAbil::DRAIN_SP: sout << "Spell point drain"; break;
+				case eMonstAbil::DRAIN_XP: sout << "Experience drain"; break;
+				case eMonstAbil::KILL: sout << "Death"; break;
+				case eMonstAbil::STEAL_FOOD: sout << "Steals food"; break;
+				case eMonstAbil::STEAL_GOLD: sout << "Steals gold!"; break;
+				case eMonstAbil::FIELD:
+					switch(gen.fld) {
+						case eFieldType::CLOUD_SLEEP: sout << "Sleep"; break;
+						case eFieldType::CLOUD_STINK: sout << "Foul"; break;
+						case eFieldType::WALL_FIRE: sout << "Fiery"; break;
+						case eFieldType::WALL_FORCE: sout << "Charged"; break;
+						case eFieldType::WALL_ICE: sout << "Frosted"; break;
+						case eFieldType::WALL_BLADES: sout << "Thorny"; break;
+						case eFieldType::FIELD_ANTIMAGIC: sout << "Null"; break;
+						case eFieldType::FIELD_WEB: sout << "Web"; break;
+						case eFieldType::FIELD_QUICKFIRE: sout << "Incendiary"; break;
+					}
+					break;
+				case eMonstAbil::DAMAGE:
+					switch(gen.dmg) {
+						case eDamageType::FIRE: sout << "Heat"; break;
+						case eDamageType::COLD: sout << "Icy"; break;
+						case eDamageType::MAGIC: sout << "Shock"; break;
+						case eDamageType::UNBLOCKABLE: sout << "Wounding"; break;
+						case eDamageType::POISON: sout << "Pain"; break;
+						case eDamageType::WEAPON: sout << "Stamina drain"; break;
+						case eDamageType::DEMON: sout << "Unholy"; break;
+						case eDamageType::UNDEAD: sout << "Necrotic"; break;
+					}
+					break;
+				case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
+					switch(gen.stat) {
+						case eStatus::POISON: sout << "Poison"; break;
+						case eStatus::DISEASE: sout << "Infectious"; break;
+						case eStatus::DUMB: sout << "Dumbfounding"; break;
+						case eStatus::WEBS: sout << "Glue"; break;
+						case eStatus::ASLEEP: sout << "Sleep"; break;
+						case eStatus::PARALYZED: sout << "Paralysis"; break;
+						case eStatus::ACID: sout << "Acid"; break;
+						case eStatus::HASTE_SLOW: sout << "Slowing"; break;
+						case eStatus::BLESS_CURSE: sout << "Curse"; break;
+					}
+					break;
+			}
+			switch(gen.type) {
+				case eMonstGen::RAY: sout << " ray"; break;
+				case eMonstGen::TOUCH: sout << " touch"; break;
+				case eMonstGen::GAZE: sout << " gaze"; break;
+				case eMonstGen::BREATH: sout << " breath"; break;
+				case eMonstGen::SPIT: sout << " spit"; break;
 			}
 			if(key == eMonstAbil::DAMAGE) {
 				sout << " (" << gen.strength << ")";
@@ -699,6 +693,12 @@ std::string uAbility::to_string(eMonstAbil key) const {
 					break;
 				case eMonstAbil::ABSORB_SPELLS:
 					sout << "Absorbs spells";
+					break;
+				case eMonstAbil::MISSILE_WEB:
+					sout << "Throws webs";
+					break;
+				case eMonstAbil::RAY_HEAT:
+					sout << "Heat ray (" << special.extra3 << "d6)";
 					break;
 				case eMonstAbil::SPECIAL:
 				case eMonstAbil::DEATH_TRIGGER:

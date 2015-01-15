@@ -2048,10 +2048,23 @@ void do_monster_turn() {
 									break; // We're looking for ranged attacks
 								if(dist(cur_monst->cur_loc, targ_space) > abil.second.gen.range)
 									break; // Target not in range
-								if(abil.second.gen.type != eMonstGen::RAY && abil.second.gen.type != eMonstGen::BREATH
-								   && monst_adjacent(targ_space, i))
+								if(abil.second.gen.type == eMonstGen::SPIT && monst_adjacent(targ_space, i))
 								   break; // Target adjacent; prefer melee attacks
 								if(get_ran(1,1,1000) >= abil.second.gen.odds)
+									break;
+								pick_abil = abil;
+								break;
+							case eMonstAbil::MISSILE_WEB:
+								if(dist(cur_monst->cur_loc, targ_space) > abil.second.special.extra1)
+									break; // Target not in range
+								if(get_ran(1,1,1000) >= abil.second.special.extra2)
+									break;
+								pick_abil = abil;
+								break;
+							case eMonstAbil::RAY_HEAT:
+								if(dist(cur_monst->cur_loc, targ_space) > abil.second.special.extra1)
+									break; // Target not in range
+								if(get_ran(1,1,1000) >= abil.second.special.extra2)
 									break;
 								pick_abil = abil;
 								break;
@@ -2064,16 +2077,13 @@ void do_monster_turn() {
 					monst_fire_missile(i/*,cur_monst->skill*/,cur_monst->status[eStatus::BLESS_CURSE],
 									   pick_abil,cur_monst->cur_loc,target);
 					if(pick_abil.first == eMonstAbil::MISSILE) {
-						if(pick_abil.second.missile.type == eMonstMissile::ARROW || pick_abil.second.missile.type == eMonstMissile::BOLT)
+						if(pick_abil.second.missile.type == eMonstMissile::ARROW || pick_abil.second.missile.type == eMonstMissile::BOLT
+						   || pick_abil.second.missile.type == eMonstMissile::SPINE)
 							take_m_ap(3,cur_monst);
 						else take_m_ap(2,cur_monst);
-					} else {
-						if(pick_abil.second.gen.type == eMonstGen::BREATH)
-							take_m_ap(4,cur_monst);
-						else if(pick_abil.second.gen.type == eMonstGen::SPIT)
-							take_m_ap(3,cur_monst);
-						else take_m_ap(2,cur_monst);
-					}
+					} else if(pick_abil.first == eMonstAbil::RAY_HEAT)
+						take_m_ap(1,cur_monst);
+					else take_m_ap(3,cur_monst);
 					had_monst = true;
 					acted_yet = true;
 				}
@@ -2647,9 +2657,23 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 			if(target < 100) add_string_to_buf("  Misses " + univ.party[target].name + '.');
 			else monst_spell_note(m_target->number,18);
 		}
+	} else if(abil.first == eMonstAbil::MISSILE_WEB) {
+		if(target < 100) add_string_to_buf("  Throws web at " + univ.party[target].name + '.');
+		else monst_spell_note(m_target->number, 58);
+		run_a_missile(source, targ_space, 8, 0, 14, 0, 0, 100);
+		web_space(targ_space.x, targ_space.y);
+	} else if(abil.first == eMonstAbil::RAY_HEAT) {
+		if(target < 100) add_string_to_buf("  Hits " + univ.party[target].name + " with heat ray!");
+		else monst_spell_note(m_target->number, 55);
+		run_a_missile(source, targ_space, 13, 0, 51, 0, 0, 100);
+		uAbility proxy = {true};
+		proxy.gen.strength = abil.second.special.extra3;
+		proxy.gen.type = eMonstGen::RAY;
+		proxy.gen.dmg = eDamageType::FIRE;
+		monst_basic_abil(m_num, {eMonstAbil::DAMAGE, proxy}, target);
 	} else {
 		if(abil.first == eMonstAbil::DRAIN_SP && target < 100 && univ.party[target].cur_sp < 4) {
-			// modify target is target has no sp
+			// modify target if target has no sp
 			for(i = 0; i < 8; i++) {
 				j = get_ran(1,0,5);
 				if(univ.party[j].main_status == eMainStatus::ALIVE && univ.party[j].cur_sp > 4 &&
@@ -2667,30 +2691,23 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 			case eMonstGen::RAY:
 				snd = 51;
 				if(target < 100) add_string_to_buf("  Fires ray at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 55); // TODO: Add this note
+				else monst_spell_note(m_target->number, 55);
 				break;
 			case eMonstGen::GAZE:
 				snd = 43;
 				if(target < 100) add_string_to_buf("  Gazes at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 56); // TODO: Add this note
+				else monst_spell_note(m_target->number, 56);
 				break;
 			case eMonstGen::BREATH:
 				snd = 44;
 				if(target < 100) add_string_to_buf("  Breathes on " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 57); // TODO: Add this note
+				else monst_spell_note(m_target->number, 57);
 				break;
 			case eMonstGen::SPIT:
-				// Special case for "spit web" -> "throws web"
-				if(abil.first == eMonstAbil::FIELD && abil.second.gen.fld == eFieldType::FIELD_WEB) {
-					snd = 14;
-					if(target < 100) add_string_to_buf("  Throws web at " + univ.party[target].name + '.');
-					else monst_spell_note(m_target->number, 58); // TODO: Add this note
-				} else {
-					path_type = 1;
-					snd = 64;
-					if(target < 100) add_string_to_buf("  Spits at " + univ.party[target].name + '.');
-					else monst_spell_note(m_target->number, 59); // TODO: Add this note
-				}
+				path_type = 1;
+				snd = 64;
+				if(target < 100) add_string_to_buf("  Spits at " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 59);
 				break;
 		}
 		if(abil.second.gen.pic < 0) play_sound(snd);

@@ -103,7 +103,7 @@ union uAbility {
 	} radiate;
 	struct {
 		bool active;
-		int extra1, extra2;
+		int extra1, extra2, extra3;
 	} special;
 	std::string to_string(eMonstAbil myKey) const;
 };

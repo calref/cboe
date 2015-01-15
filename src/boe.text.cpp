@@ -1124,6 +1124,21 @@ void monst_spell_note(mon_num_t number,short which_mess) {
 		case 54:
 			msg = "  Throws knife at " + msg + '.';
 			break;
+		case 55:
+			msg = "  Fires ray at " + msg + '.';
+			break;
+		case 56:
+			msg = "  Gazes at " + msg + '.';
+			break;
+		case 57:
+			msg = "  Breathes on " + msg + '.';
+			break;
+		case 58:
+			msg = "  Throws web at " + msg + '.';
+			break;
+		case 59:
+			msg = "  Spits at " + msg + '.';
+			break;
 	}
 	
 	if(which_mess > 0)
