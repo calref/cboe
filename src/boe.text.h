@@ -21,7 +21,7 @@ std::string get_m_name(mon_num_t num);
 std::string get_ter_name(ter_num_t num);
 void print_monst_name(mon_num_t m_type);
 void print_monst_attacks(mon_num_t m_type,short target);
-void damaged_message(short damage,short type);
+void damaged_message(short damage,eMonstMelee type);
 std::string print_monster_going(mon_num_t m_num,short ap);
 void monst_spell_note(mon_num_t number,short which_mess);
 void monst_cast_spell_note(mon_num_t number,eSpell spell);

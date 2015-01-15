@@ -938,9 +938,9 @@ void print_monst_attacks(mon_num_t m_type,short target) {
 	add_string_to_buf((char *) msg.c_str());
 }
 
-void damaged_message(short damage,short type) {
+void damaged_message(short damage,eMonstMelee type) {
 	std::ostringstream sout;
-	sout << "    " << get_str("monster-abilities",130 + type);
+	sout << "    " << get_str("monster-abilities",130 + int(type));
 	sout << " for " << damage;
 	add_string_to_buf(sout.str().c_str());
 }

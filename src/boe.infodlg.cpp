@@ -391,7 +391,7 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 	}
 	
 	for(i = 0; i < 3; i++) {
-		if(store_m.a[i] > 0) {
+		if(store_m.a[i].dice > 0) {
 			if(store_m.a[i].sides == 0) continue;
 			std::ostringstream sout(std::ios_base::ate);
 			sout << store_m.a[i];

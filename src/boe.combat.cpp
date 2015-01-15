@@ -2306,7 +2306,7 @@ void monster_attack_pc(short who_att,short target) {
 	
 	
 	
-	if((attacker->a[0] != 0) || (attacker->a[2] != 0))
+	if((attacker->a[0].dice != 0) || (attacker->a[2].dice != 0))
 		print_monst_attacks(attacker->number,target);
 	
 	// Check sanctuary
@@ -2319,7 +2319,7 @@ void monster_attack_pc(short who_att,short target) {
 	}
 	
 	for(i = 0; i < 3; i++) {
-		if(attacker->a[i] > 0 && univ.party[target].main_status == eMainStatus::ALIVE) {
+		if(attacker->a[i].dice > 0 && univ.party[target].main_status == eMainStatus::ALIVE) {
 //			sprintf ((char *) create_line, "  Attacks %s.",(char *) univ.party[target].name);
 //			add_string_to_buf((char *) create_line);
 			
@@ -2331,7 +2331,7 @@ void monster_attack_pc(short who_att,short target) {
 				r1 += 5 * univ.party[target].parry;
 			
 			// Damage roll
-			r2 = get_ran(attacker->a[i] / 100 + 1,1,attacker->a[i] % 100)
+			r2 = get_ran(attacker->a[i].dice,1,attacker->a[i].sides)
 				+ min(8,attacker->status[eStatus::BLESS_CURSE]) - univ.party[target].status[eStatus::BLESS_CURSE] + 1;
 			if(univ.difficulty_adjust() > 2)
 				r2 = r2 * 2;
@@ -2449,10 +2449,10 @@ void monster_attack_monster(short who_att,short attackee) {
 	}
 	
 	
-	if((attacker->a[1] != 0) || (attacker->a[0] != 0))
+	if((attacker->a[1].dice != 0) || (attacker->a[0].dice != 0))
 		print_monst_attacks(attacker->number,100 + attackee);
 	for(i = 0; i < 3; i++) {
-		if((attacker->a[i] > 0) && (target->active != 0)) {
+		if((attacker->a[i].dice > 0) && (target->active != 0)) {
 //			sprintf ((char *) create_line, "  Attacks %s.",(char *) univ.party[target].name);
 //			add_string_to_buf((char *) create_line);
 			
@@ -2466,7 +2466,7 @@ void monster_attack_monster(short who_att,short attackee) {
 			r1 += 5 * (attacker->status[eStatus::WEBS] / 3);
 			
 			// Damage roll
-			r2 = get_ran(attacker->a[i] / 100 + 1,1,attacker->a[i] % 100)
+			r2 = get_ran(attacker->a[i].dice,1,attacker->a[i].sides)
 				+ min(10,attacker->status[eStatus::BLESS_CURSE]) - target->status[eStatus::BLESS_CURSE] + 2;
 			
 			if(target->status[eStatus::ASLEEP] > 0 || target->status[eStatus::PARALYZED] > 0) {
@@ -4926,26 +4926,25 @@ void add_new_action(short pc_num) {
 }
 
 short get_monst_sound(cCreature *attacker,short which_att) {
-	short type,strength;
+	short strength;
+	eMonstMelee type;
 	
 	type = attacker->a[which_att].type;
-	strength = attacker->a[which_att];
+	strength = attacker->a[which_att].sides;
 	
 	switch(type) {
-		case 3:
+		case eMonstMelee::SLIME:
 			return 11;
-			break;
-		case 4:
+		case eMonstMelee::PUNCH:
 			return 4;
-			break;
-		case 1:
+		case eMonstMelee::CLAW:
 			return 9;
-			break;
-		case 2:
+		case eMonstMelee::BITE:
 			return 10;
-			break;
 			
 		default:
+			// TODO: These sounds don't quite seem right.
+			// They're passed to boom_space, so 0 = ouch, 1 = small sword, 2 = loud sword, 3 = pole, 4 = club
 			if(attacker->m_type == eRace::HUMAN) {
 				if(strength > 9)
 					return 3;
@@ -4959,7 +4958,6 @@ short get_monst_sound(cCreature *attacker,short which_att) {
 			if(attacker->m_type == eRace::PRIEST)
 				return 4;
 			return 0;
-			break;
 	}
 	return 0;
 }

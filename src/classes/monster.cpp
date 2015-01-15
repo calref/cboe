@@ -26,9 +26,12 @@ void cMonster::append(legacy::monster_record_type& old){
 	m_health = old.m_health;
 	armor = old.armor;
 	skill = old.skill;
-	for(int i = 0; i < 3; i++) a[i] = old.a[i];
-	a[0].type = old.a1_type;
-	a[1].type = a[2].type = old.a23_type;
+	for(int i = 0; i < 3; i++) {
+		a[i].dice = old.a[i] / 100 + 1;
+		a[i].sides = old.a[i] % 100;
+	}
+	a[0].type = eMonstMelee(old.a1_type);
+	a[1].type = a[2].type = eMonstMelee(old.a23_type);
 	// Unless human, add 3 to the monster's type to get its race
 	// This is because nephil, slith, and vahnatai were inserted
 	if(old.m_type) m_type = eRace(old.m_type + 3);
@@ -439,16 +442,6 @@ void cCreature::append(legacy::creature_data_type old){
 	direction = eDirection(old.m_d.direction);
 }
 
-cMonster::cAttack::operator int() const {
-	return dice * 100 + sides;
-}
-
-cMonster::cAttack& cMonster::cAttack::operator=(int n){
-	dice = n / 100 + 1;
-	sides = n % 100;
-	return *this;
-}
-
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att) {
 	out << int(att.dice) << 'd' << int(att.sides);
 	return out;
@@ -544,6 +537,19 @@ std::istream& operator >> (std::istream& in, eMonstGen& e) {
 	if(i >= 0 && i <= int(eMonstGen::SPIT))
 		e = (eMonstGen)i;
 	else e = eMonstGen::TOUCH;
+	return in;
+}
+
+std::ostream& operator << (std::ostream& out, eMonstMelee e) {
+	return out << (int)e;
+}
+
+std::istream& operator >> (std::istream& in, eMonstMelee& e) {
+	int i;
+	in >> i;
+	if(i >= 0 && i <= int(eMonstMelee::STAB))
+		e = (eMonstMelee)i;
+	else e = eMonstMelee::PUNCH;
 	return in;
 }
 
@@ -727,7 +733,7 @@ void cMonster::writeTo(std::ostream& file) const {
 	file << "ARMOR " << int(armor) << '\n';
 	file << "SKILL " << int(skill) << '\n';
 	for(int i = 0; i < 3; i++)
-		file << "ATTACK " << i + 1 << ' ' << int(a[i].dice) << ' ' << int(a[i].sides) << ' ' << int(a[i].type) << '\n';
+		file << "ATTACK " << i + 1 << ' ' << a[i].dice << ' ' << a[i].sides << ' ' << a[i].type << '\n';
 	file << "HEALTH " << int(m_health) << '\n';
 	file << "SPEED " << int(speed) << '\n';
 	file << "MAGE " << int(mu) << '\n';
@@ -804,11 +810,8 @@ void cMonster::readFrom(std::istream& file) {
 			m_name = read_maybe_quoted_string(line);
 		} else if(cur == "ATTACK") {
 			int which;
-			line >> which >> temp1 >> temp2 >> temp3;
+			line >> which >> a[which].dice >> a[which].sides >> a[which].type;
 			which--;
-			a[which].dice = temp1;
-			a[which].sides = temp2;
-			a[which].type = temp3;
 		} else if(cur == "SIZE") {
 			line >> temp1 >> temp2;
 			x_width = temp1;

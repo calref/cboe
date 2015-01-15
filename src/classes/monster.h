@@ -111,10 +111,8 @@ union uAbility {
 class cMonster {
 public:
 	struct cAttack{
-		unsigned char dice, sides, type;
-		// TODO: Remove the need for these operators by changing the code that uses them
-		operator int() const;
-		cAttack& operator=(int n);
+		unsigned short dice, sides;
+		eMonstMelee type;
 	};
 	unsigned char level;
 	std::string m_name;
@@ -198,6 +196,8 @@ std::ostream& operator << (std::ostream& out, eMonstAbil e);
 std::istream& operator >> (std::istream& in, eMonstAbil& e);
 std::ostream& operator << (std::ostream& out, eMonstMissile e);
 std::istream& operator >> (std::istream& in, eMonstMissile& e);
+std::ostream& operator << (std::ostream& out, eMonstMelee e);
+std::istream& operator >> (std::istream& in, eMonstMelee& e);
 std::ostream& operator << (std::ostream& out, eMonstGen e);
 std::istream& operator >> (std::istream& in, eMonstGen& e);
 std::ostream& operator << (std::ostream& out, eDirection e);
