@@ -601,6 +601,7 @@ void redraw_screen(int refresh) {
 		item_sbar->draw();
 		shop_sbar->draw();
 	}
+	mainPtr.display();
 }
 
 void put_background() {
@@ -1508,6 +1509,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		if(fast_bang == 1)
 			fast_bang = 2;
 	}
+	refresh_stat_areas(0);
 	
 	where_draw.x = where.x - center.x + 4;
 	where_draw.y = where.y - center.y + 4;

@@ -223,7 +223,6 @@ void Handle_One_Event() {
 		}
 		flushingInput = false;
 		redraw_screen(REFRESH_NONE);
-		mainPtr.display();
 		return;
 	}
 	switch(event.type) {
@@ -287,7 +286,6 @@ void Handle_One_Event() {
 			break; // There's several events we don't need to handle at all
 	}
 	flushingInput = false; // TODO: Could there be a case when the key and mouse input that needs to be flushed has other events interspersed?
-	mainPtr.display(); // TODO: I'm assuming this needs to be SOMEWHERE, at least.
 }
 
 
@@ -303,7 +301,6 @@ static void handleUpdateWhileScrolling(volatile bool& doneScrolling, int refresh
 	while(!doneScrolling) {
 		sf::sleep(sf::milliseconds(10));
 		redraw_screen(refresh);
-		mainPtr.display();
 	}
 }
 
@@ -707,7 +704,6 @@ void pause(short length) {
 	
 	// Before pausing, make sure the screen is updated.
 	redraw_screen(REFRESH_NONE);
-	mainPtr.display();
 	
 	if(give_delays)
 		sf::sleep(time_in_ticks(len));

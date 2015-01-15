@@ -2410,9 +2410,7 @@ void monster_attack_pc(short who_att,short target) {
 								break;
 						}
 						if(snd > 0) play_sound(snd);
-						print_buf();
 						monst_basic_abil(who_att, abil, target);
-						put_pc_screen();
 					}
 				}
 			}
@@ -2420,7 +2418,7 @@ void monster_attack_pc(short who_att,short target) {
 				add_string_to_buf("  Misses.");
 				play_sound(2);
 			}
-			mainPtr.display();
+			redraw_screen(REFRESH_STATS | REFRESH_TERRAIN | REFRESH_TRANS);
 			sf::sleep(time_in_ticks(2));
 			combat_posing_monster = -1;
 			draw_terrain(2);
@@ -3109,7 +3107,6 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 						break;
 					j = get_ran(1,2,3);
 				}
-				mainPtr.display(); // TODO: Needed?
 				sf::sleep(time_in_ticks(12)); // gives sound time to end
 				x = get_ran(4,1,4);
 				for(i = 0; i < j; i++){
@@ -3190,7 +3187,6 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				x = get_ran(3,1,4);
 				play_sound(25);
 				play_sound(-61);
-				mainPtr.display(); // TODO: Needed?
 				sf::sleep(time_in_ticks(12)); // gives sound time to end
 				summon_monster(85,caster->cur_loc,
 							   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);

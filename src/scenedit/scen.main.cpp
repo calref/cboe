@@ -493,7 +493,6 @@ static void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
 		sf::sleep(sf::milliseconds(10));
 		// TODO: redraw_screen should probably take the argument specifying what to update
 		redraw_screen(/*REFRESH_RIGHT_BAR*/);
-		mainPtr.display();
 	}
 }
 
