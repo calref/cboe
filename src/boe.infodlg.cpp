@@ -357,7 +357,7 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 	short abil,i;
 	
 	cPict& pic = dynamic_cast<cPict&>(me["pic"]);
-	if(store_m.spec_skill == MONSTER_INVISIBLE)
+	if(store_m.invisible)
 		pic.setPict(400,PIC_MONST);// TODO: should probably be PICT_BLANK?
 	else if(store_m.picture_num < 1000)
 		pic.setPict(store_m.picture_num,PIC_MONST);
@@ -382,12 +382,13 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 	store_text = get_m_name(store_m.number);
 	me["name"].setText(store_text);
 	
-	// TODO: More descriptive ability descriptions, taking into account potential variation
-	abil = store_m.spec_skill;
-	str = get_str("monster-abilities",abil + 1);
-	me["abil1"].setText(str);
-	str = get_str("monster-abilities",store_m.radiate_1 + 50);
-	me["abil2"].setText(str);
+	i = 1;
+	for(auto& abil : store_m.abil) {
+		if(i > 2) break; // TODO: Support showing more than just the first two abilities
+		std::string id = "abil" + std::to_string(i);
+		me[id].setText(abil.second.to_string(abil.first));
+		i++;
+	}
 	
 	for(i = 0; i < 3; i++) {
 		if(store_m.a[i] > 0) {
@@ -409,7 +410,6 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 	me["ap"].setTextToNum(store_m.speed);
 	me["mage"].setTextToNum(store_m.mu);
 	me["priest"].setTextToNum(store_m.cl);
-	me["poison"].setTextToNum(store_m.poison);
 	// Immunities
 	dynamic_cast<cLed&>(me["magic-res"]).setState(store_m.magic_res == RESIST_HALF ? led_red : led_off);
 	dynamic_cast<cLed&>(me["magic-imm"]).setState(store_m.magic_res == RESIST_ALL ? led_red : led_off);

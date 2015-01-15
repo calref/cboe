@@ -1118,6 +1118,12 @@ void monst_spell_note(mon_num_t number,short which_mess) {
 		case 52:
 			msg = "  " + msg + " is trapped!";
 			break;
+		case 53:
+			msg = "  Throws dart at " + msg + '.';
+			break;
+		case 54:
+			msg = "  Throws knife at " + msg + '.';
+			break;
 	}
 	
 	if(which_mess > 0)

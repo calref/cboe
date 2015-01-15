@@ -833,7 +833,7 @@ void set_town_attitude(short lo,short hi,short att) {
 				
 				univ.town.monst[i].mobility = 1;
 				// If a "guard", give a power boost
-				if(univ.scenario.scen_monsters[num].spec_skill == MONSTER_GUARD) {
+				if(univ.scenario.scen_monsters[num].guard) {
 					univ.town.monst[i].active = 2;
 					univ.town.monst[i].health *= 3;
 					univ.town.monst[i].status[eStatus::HASTE_SLOW] = 8;

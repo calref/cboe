@@ -1463,7 +1463,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	
 	// Absorb damage?
 	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::MAGIC || dam_type == eDamageType::COLD)
-		&& victim->spec_skill == MONSTER_ABSORB_SPELLS) {
+		&& victim->abil[eMonstAbil::ABSORB_SPELLS].active) {
 		if(32767 - victim->health > how_much)
 			victim->health = 32767;
 		else victim->health += how_much;
@@ -1478,7 +1478,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		how_much /= 2;
 	
 	// Invulnerable?
-	if(victim->spec_skill == MONSTER_INVULNERABILITY)
+	if(victim->invuln)
 		how_much = how_much / 10;
 	
 	
@@ -1523,7 +1523,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		victim->health = -1;
 	
 	// splitting monsters
-	if(victim->spec_skill == MONSTER_SPLITS && victim->health > 0){
+	if(victim->abil[eMonstAbil::SPLITS].active && victim->health > 0){
 		where_put = find_clear_spot(victim->cur_loc,1);
 		if(where_put.x > 0)
 			if((which_spot = place_monster(victim->number,where_put)) < 90) {
@@ -1636,8 +1636,8 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 	
 	if(which_m->special_on_kill >= 0)
 		run_special(eSpecCtx::KILL_MONST,2,which_m->special_on_kill,which_m->cur_loc,&s1,&s2,&s3);
-	if(which_m->radiate_1 == MONSTER_DEATH_TRIGGERS)
-		run_special(eSpecCtx::KILL_MONST,0,which_m->radiate_2,which_m->cur_loc,&s1,&s2,&s3);
+	if(which_m->abil[eMonstAbil::DEATH_TRIGGER].active)
+		run_special(eSpecCtx::KILL_MONST,0,which_m->abil[eMonstAbil::DEATH_TRIGGER].special.extra1,which_m->cur_loc,&s1,&s2,&s3);
 	
 	if((!in_scen_debug) && ((which_m->summoned >= 100) || (which_m->summoned == 0))) { // no xp for party-summoned monsters
 		xp = which_m->level * 2;

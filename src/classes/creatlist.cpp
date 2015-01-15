@@ -39,7 +39,7 @@ void cPopulation::assign(size_t n, const cCreature& other, const cMonster& base,
 	static_cast<cMonster&>(dudes[n]) = base;
 	// Now set up extra stuff
 	dudes[n].active = 1; // TODO: Is this right?
-	if(dudes[n].spec_skill == MONSTER_INVISIBLE) dudes[n].picture_num = 0;
+	if(dudes[n].invisible) dudes[n].picture_num = 0;
 	dudes[n].m_health /= easy ? 2 : 1;
 	dudes[n].m_health *= difficulty_adjust;
 	dudes[n].health = dudes[n].m_health;

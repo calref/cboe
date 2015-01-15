@@ -17,6 +17,8 @@ enum eSpellSelect {SELECT_NO, SELECT_ACTIVE, SELECT_ANY};
 // This one is meant for indexing a bit field
 enum eSpellWhen {WHEN_COMBAT = 1, WHEN_TOWN = 2, WHEN_OUTDOORS = 4};
 
+enum eSpellPat {PAT_SINGLE, PAT_SQ, PAT_SMSQ, PAT_OPENSQ, PAT_RAD2, PAT_RAD3, PAT_PLUS, PAT_WALL};
+
 class cSpell {
 	static std::map<eSpell,cSpell> dictionary;
 	friend const cSpell& operator*(eSpell spell_num);

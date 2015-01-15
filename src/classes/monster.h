@@ -26,76 +26,31 @@ namespace legacy {
 class cScenario;
 class cUniverse;
 
-/* Attack Types */
+enum class eMonstAbilTemplate {
+	// Non-magical missiles
+	THROWS_DARTS, SHOOTS_ARROWS, THROWS_SPEARS, THROWS_ROCKS1, THROWS_ROCKS2, THROWS_ROCKS3,
+	THROWS_RAZORDISKS, THROWS_KNIVES, GOOD_ARCHER, SHOOTS_SPINES, CROSSBOWMAN, SLINGER,
+	// Magical missiles
+	RAY_PETRIFY, RAY_SP_DRAIN, RAY_HEAT, RAY_PARALYSIS,
+	BREATH_FIRE, BREATH_FROST, BREATH_ELECTRICITY, BREATH_DARKNESS, BREATH_FOUL, BREATH_SLEEP,
+	SPIT_ACID, SHOOTS_WEB,
+	// Touch abilities
+	TOUCH_POISON, TOUCH_ACID, TOUCH_DISEASE, TOUCH_WEB, TOUCH_SLEEP, TOUCH_DUMB, TOUCH_PARALYSIS,
+	TOUCH_PETRIFY, TOUCH_DEATH, TOUCH_XP_DRAIN, TOUCH_ICY, TOUCH_ICY_DRAINING, TOUCH_STUN, TOUCH_STEAL_FOOD, TOUCH_STEAL_GOLD,
+	// Misc abilities
+	SPLITS, MARTYRS_SHIELD, ABSORB_SPELLS, SUMMON_5, SUMMON_20, SUMMON_50, SPECIAL, DEATH_TRIGGERS,
+	// Radiate abilities
+	RADIATE_FIRE, RADIATE_ICE, RADIATE_SHOCK, RADIATE_ANTIMAGIC, RADIATE_SLEEP, RADIATE_STINK, RADIATE_BLADE, RADIATE_WEB,
+	// Advanced abilities
+	CUSTOM_MISSILE, CUSTOM_DAMAGE, CUSTOM_STATUS, CUSTOM_FIELD, CUSTOM_PETRIFY, CUSTOM_SP_DRAIN, CUSTOM_XP_DRAIN,
+	CUSTOM_KILL, CUSTOM_STEAL_FOOD, CUSTOM_STEAL_GOLD, CUSTOM_STUN, CUSTOM_STATUS2, CUSTOM_RADIATE, CUSTOM_SUMMON,
+};
 
-#define MONSTER_ATTACK_SWINGS		0
-#define MONSTER_ATTACK_CLAWS		1
-#define MONSTER_ATTACK_BITES		2
-#define MONSTER_ATTACK_SLIMES		3
-#define MONSTER_ATTACK_PUNCHES		4
-#define MONSTER_ATTACK_STINGS		5
-#define MONSTER_ATTACK_CLUBS		6
-#define MONSTER_ATTACK_BURNS		7
-#define MONSTER_ATTACK_HARMS		8
-#define MONSTER_ATTACK_STABS		9
+enum class eMonstMelee {SWING, CLAW, BITE, SLIME, PUNCH, STING, CLUB, BURN, HARM, STAB};
 
+enum class eMonstMissile {DART, ARROW, SPEAR, ROCK, RAZORDISK, SPINE, KNIFE, BOLT};
 
-#define MONSTER_NO_SPECIAL_ABILITY			0
-#define MONSTER_THROWS_DARTS				1 //1-6
-#define MONSTER_SHOOTS_ARROWS				2 //2-12
-#define MONSTER_THROWS_SPEARS				3 //3-18
-#define MONSTER_THROWS_ROCKS1				4 //4-24 damages
-#define MONSTER_THROWS_ROCKS2				5 //5-30 damages
-#define MONSTER_THROWS_ROCKS3				6 //6-36 damages
-#define MONSTER_THROWS_RAZORDISKS			7 //4-24
-#define MONSTER_PETRIFICATION_RAY			8
-#define MONSTER_SP_DRAIN_RAY				9 //spell points drain ray
-#define MONSTER_HEAT_RAY					10
-#define MONSTER_INVISIBLE					11
-#define MONSTER_SPLITS						12
-#define MONSTER_MINDLESS					13
-#define MONSTER_BREATHES_STINKING_CLOUDS	14
-#define MONSTER_ICY_TOUCH					15
-#define MONSTER_XP_DRAINING_TOUCH			16
-#define MONSTER_ICY_AND_DRAINING_TOUCH		17
-#define MONSTER_SLOWING_TOUCH				18
-#define MONSTER_SHOOTS_WEB					19
-#define MONSTER_GOOD_ARCHER					20 //7-42
-#define MONSTER_STEALS_FOOD					21
-#define MONSTER_PERMANENT_MARTYRS_SHIELD	22
-#define MONSTER_PARALYSIS_RAY				23
-#define MONSTER_DUMBFOUNDING_TOUCH			24
-#define MONSTER_DISEASE_TOUCH				25
-#define MONSTER_ABSORB_SPELLS				26
-#define MONSTER_WEB_TOUCH					27
-#define MONSTER_SLEEP_TOUCH					28
-#define MONSTER_PARALYSIS_TOUCH				29
-#define MONSTER_PETRIFICATION_TOUCH			30
-#define MONSTER_ACID_TOUCH					31
-#define MONSTER_BREATHES_SLEEP_CLOUDS		32
-#define MONSTER_ACID_SPIT					33
-#define MONSTER_SHOOTS_SPINES				34 //7-42
-#define MONSTER_DEATH_TOUCH					35
-#define MONSTER_INVULNERABILITY				36
-#define MONSTER_GUARD						37
-
-/* Create Monsters/Fields */
-
-#define MONSTER_NO_RADIATE					0
-#define MONSTER_RADIATE_FIRE_FIELDS			1
-#define MONSTER_RADIATE_ICE_FIELDS			2
-#define MONSTER_RADIATE_SHOCK_FIELDS		3
-#define MONSTER_RADIATE_ANTIMAGIC_FIELDS	4
-#define MONSTER_RADIATE_SLEEP_FIELDS		5
-#define MONSTER_RADIATE_STINKING_CLOUDS		6
-#define MONSTER_RADIATE_BLADE_FIELDS		7
-
-#define MONSTER_SUMMON_5_PERCENT			10 //5 percent chance
-#define MONSTER_SUMMON_20_PERCENT			11 //20 percent chance
-#define MONSTER_SUMMON_50_PERCENT			12 //50 percent chance
-
-#define MONSTER_SPECIAL_ACTION				14
-#define MONSTER_DEATH_TRIGGERS				15 //death triggers global special
+enum class eMonstGen {RAY, TOUCH, GAZE, BREATH, SPIT};
 
 // Directions!
 enum eDirection {
@@ -117,6 +72,42 @@ inline eDirection& operator++ (eDirection& me, int) {
 
 enum eResistType {RESIST_NONE, RESIST_HALF, RESIST_ALL, RESIST_DOUBLE};
 
+union uAbility {
+	bool active;
+	struct {
+		bool active;
+		eMonstMissile type;
+		miss_num_t pic;
+		int dice, sides, skill, range, odds;
+	} missile;
+	struct {
+		bool active;
+		eMonstGen type;
+		miss_num_t pic;
+		int strength, range, odds;
+		union {
+			eDamageType dmg;
+			eStatus stat;
+			eFieldType fld;
+		};
+	} gen;
+	struct {
+		bool active;
+		mon_num_t type;
+		int min, max, len, chance;
+	} summon;
+	struct {
+		bool active;
+		eFieldType type;
+		int chance;
+	} radiate;
+	struct {
+		bool active;
+		int extra1, extra2;
+	} special;
+	std::string to_string(eMonstAbil myKey) const;
+};
+
 class cMonster {
 public:
 	struct cAttack{
@@ -124,11 +115,6 @@ public:
 		// TODO: Remove the need for these operators by changing the code that uses them
 		operator int() const;
 		cAttack& operator=(int n);
-	};
-	struct cAbility{
-		eMonstAbil abil;
-		unsigned short extra1, extra2;
-		operator std::string();
 	};
 	unsigned char level;
 	std::string m_name;
@@ -140,20 +126,20 @@ public:
 	unsigned char speed;
 	unsigned char mu;
 	unsigned char cl;
-	unsigned char breath;
-	unsigned char breath_type;
 	unsigned char treasure;
-	unsigned char spec_skill; // TODO: Delete in favour of cAbility
-	unsigned char poison;
+	std::map<eMonstAbil, uAbility> abil;
 	item_num_t corpse_item;
 	short corpse_item_chance;
 	int magic_res : 2;
 	int fire_res : 2;
 	int cold_res : 2;
 	int poison_res : 2;
+	bool mindless : 1;
+	bool invuln : 1;
+	bool invisible : 1;
+	bool guard : 1;
+	char : 4;
 	unsigned char x_width,y_width;
-	unsigned char radiate_1; // TODO: Delete in favour of cAbility
-	unsigned short radiate_2; // I THINK this is the extra field for the second ability TODO: Delete in favour of cAbility
 	unsigned char default_attitude;
 	unsigned char summon_type;
 	pic_num_t default_facial_pic;
@@ -161,13 +147,9 @@ public:
 	str_num_t see_str1, see_str2;
 	snd_num_t see_sound, ambient_sound; // ambient_sound has a chance of being played every move
 	spec_num_t see_spec;
-private:
-	cAbility abil1, abil2;
 public:
 	
-	std::string getAbil1Name();
-	std::string getAbil2Name();
-	bool hasAbil(eMonstAbil what, unsigned short& x1, unsigned short& x2);
+	void addAbil(eMonstAbilTemplate what, int param = 0);
 	void append(legacy::monster_record_type& old);
 	cMonster();
 	void writeTo(std::ostream& file) const;
@@ -214,7 +196,15 @@ std::ostream& operator << (std::ostream& out, eRace e);
 std::istream& operator >> (std::istream& in, eRace& e);
 std::ostream& operator << (std::ostream& out, eMonstAbil e);
 std::istream& operator >> (std::istream& in, eMonstAbil& e);
+std::ostream& operator << (std::ostream& out, eMonstMissile e);
+std::istream& operator >> (std::istream& in, eMonstMissile& e);
+std::ostream& operator << (std::ostream& out, eMonstGen e);
+std::istream& operator >> (std::istream& in, eMonstGen& e);
 std::ostream& operator << (std::ostream& out, eDirection e);
 std::istream& operator >> (std::istream& in, eDirection& e);
+std::ostream& operator << (std::ostream& out, eDamageType e);
+std::istream& operator >> (std::istream& in, eDamageType& e);
+std::ostream& operator << (std::ostream& out, eFieldType e);
+std::istream& operator >> (std::istream& in, eFieldType& e);
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att);
 #endif

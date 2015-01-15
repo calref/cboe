@@ -592,7 +592,7 @@ void pc_attack(short who_att,short target) {
 	move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
 	take_ap(4);
 	
-	if((univ.town.monst[target].status[eStatus::MARTYRS_SHIELD] > 0 || univ.town.monst[target].spec_skill == MONSTER_PERMANENT_MARTYRS_SHIELD)
+	if((univ.town.monst[target].status[eStatus::MARTYRS_SHIELD] > 0 || univ.town.monst[target].abil[eMonstAbil::MARTYRS_SHIELD].active)
 	   && (store_hp - univ.town.monst[target].health > 0)) {
 		add_string_to_buf("  Shares damage!   ");
 		damage_pc(who_att, store_hp - univ.town.monst[target].health, eDamageType::MAGIC,eRace::UNKNOWN,0);
@@ -642,7 +642,7 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 			r1 = get_ran(1,1,100);
 			if((univ.party[who_att].level >= which_m->level - 1)
 				&& univ.party[who_att].skills[eSkill::ASSASSINATION] >= which_m->level / 2
-				&& (which_m->spec_skill != MONSTER_SPLITS)) // Can't assassinate splitters
+				&& (!which_m->abil[eMonstAbil::SPLITS].active)) // Can't assassinate splitters
 				if(r1 < hit_chance[max(univ.party[who_att].skills[eSkill::ASSASSINATION] - which_m->level,0)]) {
 					add_string_to_buf("  You assassinate.");
 					spec_dam += r2;
@@ -1962,8 +1962,7 @@ void do_monster_turn() {
 					current_monst_tactic = 1; // this means flee
 				
 				
-				if( (((cur_monst->spec_skill > 0) && (cur_monst->spec_skill < 4))
-					  || (cur_monst->spec_skill == 20)) && // Archer?
+				if(cur_monst->abil[eMonstAbil::MISSILE].active && // Archer?
 					(dist(cur_monst->cur_loc,targ_space) < 6) &&
 					!monst_adjacent(targ_space,i))
 					current_monst_tactic = 1; // this means flee
@@ -1972,7 +1971,7 @@ void do_monster_turn() {
 			
 			// flee
 			if((univ.town.monst[i].target != 6) && (((cur_monst->morale <= 0)
-					&& cur_monst->spec_skill != MONSTER_MINDLESS && cur_monst->m_type != eRace::UNDEAD)
+					&& !cur_monst->mindless && cur_monst->m_type != eRace::UNDEAD)
 					|| (current_monst_tactic == 1))) {
 				if(cur_monst->morale < 0)
 					cur_monst->morale++;
@@ -1994,13 +1993,11 @@ void do_monster_turn() {
 //				sprintf((char *)create_line,"%d: %d  %d  %d",i,cur_monst->breath,cur_monst->mu,cur_monst->cl);
 //				add_string_to_buf((char *)create_line);
 				
-				// Breathe (fire)
-				if( (cur_monst->breath > 0)
-					&& (get_ran(1,1,8) < 4) && !acted_yet) {
-					//print_nums(cur_monst->breath,cur_monst->breath_type,dist(cur_monst->m_loc,targ_space) );
-					if((target != 6)
-						&& (dist(cur_monst->cur_loc,targ_space) <= 8)) {
-						acted_yet = monst_breathe(cur_monst,targ_space,cur_monst->breath_type);
+				// Basic breath weapons
+				if(cur_monst->abil[eMonstAbil::DAMAGE].active && cur_monst->abil[eMonstAbil::DAMAGE].gen.type == eMonstGen::BREATH
+					&& !acted_yet && get_ran(1,1,1000) < cur_monst->abil[eMonstAbil::DAMAGE].gen.odds) {
+					if(target != 6  && dist(cur_monst->cur_loc,targ_space) <= cur_monst->abil[eMonstAbil::DAMAGE].gen.range) {
+						acted_yet = monst_breathe(cur_monst,targ_space,cur_monst->abil[eMonstAbil::DAMAGE]);
 						had_monst = true;
 						acted_yet = true;
 						take_m_ap(4,cur_monst);
@@ -2029,34 +2026,56 @@ void do_monster_turn() {
 					}
 				}
 				
-				// Missile
-				if((abil_range[cur_monst->spec_skill] > 0) // breathing gas short range
-					&& (get_ran(1,1,8) < abil_odds[cur_monst->spec_skill]) && !acted_yet) {
-					// Don't fire when adjacent, unless non-gaze magical attack
-					if((!monst_adjacent(targ_space,i) ||
-						 ((cur_monst->spec_skill > 7) && (cur_monst->spec_skill != MONSTER_GOOD_ARCHER)
-						  && (cur_monst->spec_skill != MONSTER_ACID_SPIT)))
-						// TODO: ^ What about shooting spines? That's non-magical too, isn't it?
-						// TODO: ^ What about gaze attacks? Aren't they supposed to be excluded too?
-						// missile range
-						&& (dist(cur_monst->cur_loc,targ_space) <= abil_range[cur_monst->spec_skill])) {
-						print_monst_name(cur_monst->number);
-						monst_fire_missile(i/*,cur_monst->skill*/,cur_monst->status[eStatus::BLESS_CURSE],
-										   cur_monst->spec_skill,cur_monst->cur_loc,target);
-						
-						// Vapors don't count as action
-						// TODO: Except that this code makes them consume 3 ap.
-						// TODO: This is an odd choice of skills to consume 2 ap.
-						// Shouldn't it be something more like "all archery skills" or "all thrown missile skills"?
-						// (Cross-reference with PC action point consumption in similar situations.)
-						if(cur_monst->spec_skill == MONSTER_THROWS_RAZORDISKS || cur_monst->spec_skill == MONSTER_GOOD_ARCHER)
-							take_m_ap(2,cur_monst);
-						else if(cur_monst->spec_skill == MONSTER_HEAT_RAY)
-							take_m_ap(1,cur_monst);
-						else take_m_ap(3,cur_monst);
-						had_monst = true;
-						acted_yet = true;
+				// Missile (except basic breath weapons)
+				std::pair<eMonstAbil, uAbility> pick_abil;
+				if(!acted_yet) {
+					// Go through all the monster's abilities and try to select one that's useable at this time
+					for(auto& abil : cur_monst->abil) {
+						switch(abil.first) {
+							case eMonstAbil::MISSILE:
+								if(dist(cur_monst->cur_loc, targ_space) > abil.second.missile.range)
+									break; // Target not in range
+								if(abil.second.missile.type != eMonstMissile::SPINE && monst_adjacent(targ_space, i))
+								   break; // Target adjacent; prefer melee attacks
+								if(get_ran(1,1,1000) >= abil.second.missile.odds)
+									break;
+								pick_abil = abil;
+								break;
+							case eMonstAbil::DAMAGE: case eMonstAbil::STATUS: case eMonstAbil::STATUS2: case eMonstAbil::FIELD:
+							case eMonstAbil::PETRIFY: case eMonstAbil::DRAIN_SP: case eMonstAbil::DRAIN_XP: case eMonstAbil::KILL:
+							case eMonstAbil::STEAL_FOOD: case eMonstAbil::STEAL_GOLD: case eMonstAbil::STUN:
+								if(abil.second.gen.type == eMonstGen::TOUCH)
+									break; // We're looking for ranged attacks
+								if(dist(cur_monst->cur_loc, targ_space) > abil.second.gen.range)
+									break; // Target not in range
+								if(abil.second.gen.type != eMonstGen::RAY && abil.second.gen.type != eMonstGen::BREATH
+								   && monst_adjacent(targ_space, i))
+								   break; // Target adjacent; prefer melee attacks
+								if(get_ran(1,1,1000) >= abil.second.gen.odds)
+									break;
+								pick_abil = abil;
+								break;
+						}
+						if(pick_abil.second.active) break;
 					}
+				}
+				if(pick_abil.second.active) {
+					print_monst_name(cur_monst->number);
+					monst_fire_missile(i/*,cur_monst->skill*/,cur_monst->status[eStatus::BLESS_CURSE],
+									   pick_abil,cur_monst->cur_loc,target);
+					if(pick_abil.first == eMonstAbil::MISSILE) {
+						if(pick_abil.second.missile.type == eMonstMissile::ARROW || pick_abil.second.missile.type == eMonstMissile::BOLT)
+							take_m_ap(3,cur_monst);
+						else take_m_ap(2,cur_monst);
+					} else {
+						if(pick_abil.second.gen.type == eMonstGen::BREATH)
+							take_m_ap(4,cur_monst);
+						else if(pick_abil.second.gen.type == eMonstGen::SPIT)
+							take_m_ap(3,cur_monst);
+						else take_m_ap(2,cur_monst);
+					}
+					had_monst = true;
+					acted_yet = true;
 				}
 			} // Special attacks
 			
@@ -2144,47 +2163,28 @@ void do_monster_turn() {
 					}
 			
 			// Place fields for monsters that create them. Only done when monst sees foe
-			if((target != 6) && (can_see_light(cur_monst->cur_loc,targ_space,sight_obscurity) < 5)) { ////
-				if((cur_monst->radiate_1 == MONSTER_RADIATE_FIRE_FIELDS) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,WALL_FIRE,7);
-				if((cur_monst->radiate_1 == MONSTER_RADIATE_ICE_FIELDS) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,WALL_ICE,7);
-				if((cur_monst->radiate_1 == MONSTER_RADIATE_SHOCK_FIELDS) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,WALL_FORCE,7);
-				if((cur_monst->radiate_1 == MONSTER_RADIATE_ANTIMAGIC_FIELDS) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,FIELD_ANTIMAGIC,7);
-				if((cur_monst->radiate_1 == MONSTER_RADIATE_SLEEP_FIELDS) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,CLOUD_SLEEP,7);
-				if((cur_monst->radiate_1 == MONSTER_RADIATE_STINKING_CLOUDS) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,CLOUD_STINK,7);
-				if((cur_monst->radiate_1 == MONSTER_RADIATE_BLADE_FIELDS) && (get_ran(1,1,100) < cur_monst->radiate_2))
-					place_spell_pattern(square,cur_monst->cur_loc,WALL_BLADES,7);
-				if((cur_monst->radiate_1 == MONSTER_SUMMON_5_PERCENT) && (get_ran(1,1,100) < 5)){
-					if(summon_monster(cur_monst->radiate_2,
-									   cur_monst->cur_loc,130,cur_monst->attitude)) {
+			if(target != 6 && can_see_light(cur_monst->cur_loc,targ_space,sight_obscurity) < 5) {
+				if(cur_monst->abil[eMonstAbil::RADIATE].active && get_ran(1,1,100) < cur_monst->abil[eMonstAbil::RADIATE].radiate.chance)
+					place_spell_pattern(square, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
+				if(cur_monst->abil[eMonstAbil::SUMMON].active && get_ran(1,1,100) < cur_monst->abil[eMonstAbil::SUMMON].summon.chance) {
+					uAbility abil = cur_monst->abil[eMonstAbil::SUMMON];
+					r1 = get_ran(1, abil.summon.min, abil.summon.max);
+					if(r1 && summon_monster(abil.summon.type, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude)) {
 						monst_spell_note(cur_monst->number,33);
 						play_sound(61);
+						bool failed = false;
+						while(--r1 && !failed) {
+							failed = summon_monster(abil.summon.type, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude);
+						}
 					}
 				}
-				if((cur_monst->radiate_1 == MONSTER_SUMMON_20_PERCENT) && (get_ran(1,1,100) < 20)){
-					if(summon_monster(cur_monst->radiate_2,
-									   cur_monst->cur_loc,130,cur_monst->attitude)) {
-						monst_spell_note(cur_monst->number,33);
-						play_sound(61);
-					}
-				}
-				if((cur_monst->radiate_1 == MONSTER_SUMMON_50_PERCENT) && (get_ran(1,1,100) < 50)){
-					if(summon_monster(cur_monst->radiate_2,
-									   cur_monst->cur_loc,130,cur_monst->attitude)) {
-						monst_spell_note(cur_monst->number,33);
-						play_sound(61);
-					}
-				}
-				if((cur_monst->radiate_1 == MONSTER_SPECIAL_ACTION) && !special_called && party_can_see_monst(i))	{
+				if(cur_monst->abil[eMonstAbil::SPECIAL].active && !special_called && party_can_see_monst(i)) {
+					uAbility abil = cur_monst->abil[eMonstAbil::SPECIAL];
 					short s1, s2, s3;
 					special_called = true;
-					take_m_ap(1,cur_monst);
-					run_special(eSpecCtx::MONST_SPEC_ABIL,0,cur_monst->radiate_2,cur_monst->cur_loc,&s1,&s2,&s3);
+					// TODO: Is it good to allow only one monster to use a special ability per combat round?
+					run_special(eSpecCtx::MONST_SPEC_ABIL,0,abil.special.extra1,cur_monst->cur_loc,&s1,&s2,&s3);
+					take_m_ap(abil.special.extra2,cur_monst);
 				}
 			}
 			
@@ -2299,7 +2299,7 @@ void monster_attack_pc(short who_att,short target) {
 	// Draw attacker frames
 	if((is_combat())
 		&& ((center_on_monst) || !monsters_going)) {
-		if(attacker->spec_skill != MONSTER_INVISIBLE)
+		if(!attacker->invisible)
 			frame_space(attacker->cur_loc,0,attacker->x_width,attacker->y_width);
 		frame_space(univ.party[target].combat_pos,1,1,1);
 	}
@@ -2364,93 +2364,55 @@ void monster_attack_pc(short who_att,short target) {
 						damage_monst(who_att, 6, store_hp - univ.party[target].cur_health, 0, eDamageType::MAGIC,0);
 					}
 					
-					if((attacker->poison > 0) && (i == 0)) {
-						poison_pc(target,attacker->poison);
-					}
-					
-					// Gremlin
-					if((attacker->spec_skill == MONSTER_STEALS_FOOD) && (get_ran(1,0,2) < 2)) {
-						add_string_to_buf("  Steals food!                 ");
+					for(auto& abil : attacker->abil) {
+						if(!abil.second.active) continue;
+						if(getMonstAbilCategory(abil.first) != eMonstAbilCat::GENERAL)
+							continue;
+						if(abil.second.gen.type != eMonstGen::TOUCH)
+							continue;
+						if(abil.second.gen.range > 0 && get_ran(1,1,1000) <= abil.second.gen.range)
+							continue;
+						// Print message and possibly choose sound
+						snd_num_t snd = 0;
+						switch(abil.first) {
+							case eMonstAbil::STUN: add_string_to_buf("  Stuns!"); break;
+							case eMonstAbil::PETRIFY: add_string_to_buf("  Petrifying touch!"); break;
+							case eMonstAbil::DRAIN_SP: add_string_to_buf("  Drains magic!"); break;
+							case eMonstAbil::DRAIN_XP: add_string_to_buf("  Drains life!"); break;
+							case eMonstAbil::KILL: add_string_to_buf("  Killing touch!"); break;
+							case eMonstAbil::STEAL_FOOD: add_string_to_buf("  Steals food!"); snd = 26; break;
+							case eMonstAbil::STEAL_GOLD: add_string_to_buf("  Steals gold!"); break; // TODO: Pick a sound
+							case eMonstAbil::FIELD: break; // TODO: Invent messages?
+							case eMonstAbil::DAMAGE:
+								switch(abil.second.gen.dmg) {
+									case eDamageType::FIRE: add_string_to_buf("  Burning touch!"); break;
+									case eDamageType::COLD: add_string_to_buf("  Freezing touch!"); break;
+									case eDamageType::MAGIC: add_string_to_buf("  Shocking touch!"); break;
+									case eDamageType::UNBLOCKABLE: add_string_to_buf("  Eerie touch!"); break;
+									case eDamageType::POISON: add_string_to_buf("  Slimy touch!"); break;
+									case eDamageType::WEAPON: add_string_to_buf("  Drains stamina!"); break;
+									case eDamageType::UNDEAD: add_string_to_buf("  Chilling touch!"); break;
+									case eDamageType::DEMON: add_string_to_buf("  Unholy touch!"); break;
+								}
+								break;
+							case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
+								switch(abil.second.gen.stat) {
+									case eStatus::POISON: add_string_to_buf("  Poisonous!"); break;
+									case eStatus::DISEASE: add_string_to_buf("  Causes disease!"); break;
+									case eStatus::DUMB: add_string_to_buf("  Dumbfounds!"); break;
+									case eStatus::WEBS: add_string_to_buf("  Webs!"); break;
+									case eStatus::ASLEEP: add_string_to_buf("  Sleeps!"); break;
+									case eStatus::PARALYZED: add_string_to_buf("  Paralysis touch!"); break;
+									case eStatus::ACID: add_string_to_buf("  Acid touch!"); break;
+									case eStatus::HASTE_SLOW: add_string_to_buf("  Slowing touch!"); break;
+									case eStatus::BLESS_CURSE: add_string_to_buf("  Cursing touch!"); break;
+								}
+								break;
+						}
+						if(snd > 0) play_sound(snd);
 						print_buf();
-						play_sound(26);
-						univ.party.food = (long) max(0, (short) (univ.party.food) - get_ran(1,0,10) - 10);
+						monst_basic_abil(who_att, abil, target);
 						put_pc_screen();
-					}
-					
-					// Disease
-					if(((attacker->spec_skill == MONSTER_DISEASE_TOUCH))
-						&& (get_ran(1,0,2) < 2)) {
-						add_string_to_buf("  Causes disease!                 ");
-						print_buf();
-						disease_pc(target,6);
-					}
-					
-					// Petrification touch
-					if(attacker->spec_skill == MONSTER_PETRIFICATION_TOUCH) {
-						add_string_to_buf("  Petrifying touch!");
-						print_buf();
-						petrify_pc(target,attacker->level / 4);
-					}
-					
-					// Undead xp drain
-					if(((attacker->spec_skill == MONSTER_XP_DRAINING_TOUCH) || (attacker->spec_skill == MONSTER_ICY_AND_DRAINING_TOUCH))
-						&& (pc_has_abil_equip(target,eItemAbil::LIFE_SAVING) == 24)) {
-						// Note: Icy+Draining Touch also enters another if block further down.
-						add_string_to_buf("  Drains life!                 ");
-						drain_pc(target,(attacker->level * 3) / 2);
-						put_pc_screen();
-					}
-					
-					// Undead slow
-					// TODO: Why does life-saving protect from this?
-					if((attacker->spec_skill == MONSTER_SLOWING_TOUCH) && (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,eItemAbil::LIFE_SAVING) == 24)) {
-						add_string_to_buf("  Stuns! ");
-						slow_pc(target,2);
-						put_pc_screen();
-					}
-					// Dumbfound target
-					if(attacker->spec_skill == MONSTER_DUMBFOUNDING_TOUCH) {
-						add_string_to_buf("  Dumbfounds! ");
-						dumbfound_pc(target,2);
-						put_pc_screen();
-					}
-					
-					// Web target
-					if(attacker->spec_skill == MONSTER_WEB_TOUCH) {
-						add_string_to_buf("  Webs!                    ");
-						web_pc(target,5);
-						put_pc_screen();
-					}
-					// Sleep target
-					if(attacker->spec_skill == MONSTER_SLEEP_TOUCH) {
-						add_string_to_buf("  Sleeps!                    ");
-						sleep_pc(target,6,eStatus::ASLEEP,-15);
-						put_pc_screen();
-					}
-					// Paralyze target
-					if(attacker->spec_skill == MONSTER_PARALYSIS_TOUCH) {
-						add_string_to_buf("  Paralysis touch!                    ");
-						sleep_pc(target,500,eStatus::PARALYZED,-5);
-						put_pc_screen();
-					}
-					// Acid touch
-					if(attacker->spec_skill == MONSTER_ACID_TOUCH)  {
-						add_string_to_buf("  Acid touch!      ");
-						acid_pc(target,(attacker->level > 20) ? 4 : 2);
-					}
-					
-					// Freezing touch
-					if(((attacker->spec_skill == MONSTER_ICY_TOUCH) || (attacker->spec_skill == MONSTER_ICY_AND_DRAINING_TOUCH))
-						&& (get_ran(1,0,8) < 6) && (pc_has_abil_equip(target,eItemAbil::LIFE_SAVING) == 24)) {
-						add_string_to_buf("  Freezing touch!");
-						r1 = get_ran(3,1,10);
-						damage_pc(target,r1,eDamageType::COLD,eRace::UNKNOWN,0);
-					}
-					// Killing touch
-					if(attacker->spec_skill == MONSTER_DEATH_TOUCH) {
-						add_string_to_buf("  Killing touch!");
-						r1 = get_ran(20,1,10);
-						damage_pc(target,r1,eDamageType::UNBLOCKABLE,eRace::UNKNOWN,0);
 					}
 				}
 			}
@@ -2483,7 +2445,7 @@ void monster_attack_monster(short who_att,short attackee) {
 	// Draw attacker frames
 	if((is_combat())
 		&& (center_on_monst || !monsters_going)) {
-		if(attacker->spec_skill != MONSTER_INVISIBLE)
+		if(!attacker->invisible)
 			frame_space(attacker->cur_loc,0,attacker->x_width,attacker->y_width);
 		frame_space(target->cur_loc,1,1,1);
 	}
@@ -2528,70 +2490,52 @@ void monster_attack_monster(short who_att,short attackee) {
 					damaged_message(store_hp - target->health,
 									attacker->a[i].type);
 					
-					if((attacker->poison > 0) && (i == 0)) {
-						poison_monst(target,attacker->poison);
-					}
-					
-					// Undead slow
-					// TODO: This should not be associated with undead, should it?
-					if((attacker->spec_skill == MONSTER_SLOWING_TOUCH) && (get_ran(1,0,8) < 6)) {
-						add_string_to_buf("  Stuns!      ");
-						slow_monst(target,2);
-					}
-					
-					// Web target
-					if(attacker->spec_skill == MONSTER_WEB_TOUCH) {
-						add_string_to_buf("  Webs!      ");
-						web_monst(target,4);
-					}
-					// Sleep target
-					if(attacker->spec_skill == MONSTER_SLEEP_TOUCH) {
-						add_string_to_buf("  Sleeps!      ");
-						charm_monst(target,-15,eStatus::ASLEEP,6);
-					}
-					// Dumbfound target
-					if(attacker->spec_skill == MONSTER_DUMBFOUNDING_TOUCH) {
-						add_string_to_buf("  Dumbfounds!      ");
-						dumbfound_monst(target,2);
-					}
-					// Disease target
-					if(((attacker->spec_skill == MONSTER_DISEASE_TOUCH))
-						&& (get_ran(1,0,2) < 2)) {
-						add_string_to_buf("  Causes disease!                 ");
+					for(auto& abil : attacker->abil) {
+						if(!abil.second.active) continue;
+						if(getMonstAbilCategory(abil.first) != eMonstAbilCat::GENERAL)
+							continue;
+						if(abil.second.gen.type != eMonstGen::TOUCH)
+							continue;
+						if(abil.second.gen.range > 0 && get_ran(1,1,1000) <= abil.second.gen.range)
+							continue;
+						// Print message and possibly choose sound
+						snd_num_t snd = 0;
+						switch(abil.first) {
+							case eMonstAbil::STUN: add_string_to_buf("  Stuns!"); break;
+							case eMonstAbil::PETRIFY: add_string_to_buf("  Petrifying touch!"); break;
+							case eMonstAbil::DRAIN_SP: add_string_to_buf("  Drains magic!"); break;
+							case eMonstAbil::KILL: add_string_to_buf("  Killing touch!"); break;
+							case eMonstAbil::FIELD: break; // TODO: Invent messages?
+							case eMonstAbil::DAMAGE:
+								switch(abil.second.gen.dmg) {
+									case eDamageType::FIRE: add_string_to_buf("  Burning touch!"); break;
+									case eDamageType::COLD: add_string_to_buf("  Freezing touch!"); break;
+									case eDamageType::MAGIC: add_string_to_buf("  Shocking touch!"); break;
+									case eDamageType::UNBLOCKABLE: add_string_to_buf("  Eerie touch!"); break;
+									case eDamageType::POISON: add_string_to_buf("  Slimy touch!"); break;
+									case eDamageType::WEAPON: add_string_to_buf("  Drains stamina!"); break;
+									case eDamageType::UNDEAD: add_string_to_buf("  Chilling touch!"); break;
+									case eDamageType::DEMON: add_string_to_buf("  Unholy touch!"); break;
+								}
+								break;
+							case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
+								switch(abil.second.gen.stat) {
+									case eStatus::POISON: add_string_to_buf("  Poisonous!"); break;
+									case eStatus::DISEASE: add_string_to_buf("  Causes disease!"); break;
+									case eStatus::DUMB: add_string_to_buf("  Dumbfounds!"); break;
+									case eStatus::WEBS: add_string_to_buf("  Webs!"); break;
+									case eStatus::ASLEEP: add_string_to_buf("  Sleeps!"); break;
+									case eStatus::PARALYZED: add_string_to_buf("  Paralysis touch!"); break;
+									case eStatus::ACID: add_string_to_buf("  Acid touch!"); break;
+									case eStatus::HASTE_SLOW: add_string_to_buf("  Slowing touch!"); break;
+									case eStatus::BLESS_CURSE: add_string_to_buf("  Cursing touch!"); break;
+								}
+								break;
+						}
+						if(snd > 0) play_sound(snd);
 						print_buf();
-						disease_monst(target,6);
-					}
-					// Paralyze target
-					if(attacker->spec_skill == MONSTER_PARALYSIS_TOUCH) {
-						add_string_to_buf("  Paralysis touch!      ");
-						charm_monst(target,-5,eStatus::PARALYZED,500);
-					}
-					// Petrify target
-					if(attacker->spec_skill == MONSTER_PETRIFICATION_TOUCH) {
-						add_string_to_buf("  Petrification touch!                ");
-						petrify_monst(target, attacker->level / 4);
-					}
-					
-					// Acid touch
-					if(attacker->spec_skill == MONSTER_ACID_TOUCH)  {
-						add_string_to_buf("  Acid touch!      ");
-						acid_monst(target,3);
-					}
-					
-					// Freezing touch
-					if(((attacker->spec_skill == MONSTER_ICY_TOUCH) || (attacker->spec_skill == MONSTER_ICY_AND_DRAINING_TOUCH))
-						&& (get_ran(1,0,8) < 6)) {
-						add_string_to_buf("  Freezing touch!");
-						r1 = get_ran(3,1,10);
-						damage_monst(attackee,7,r1,0,eDamageType::COLD,0);
-					}
-					
-					// Death touch
-					if((attacker->spec_skill == MONSTER_DEATH_TOUCH)
-						&& (get_ran(1,0,8) < 6)) {
-						add_string_to_buf("  Killing touch!");
-						r1 = get_ran(20,1,10);
-						damage_monst(attackee,7,r1,0,eDamageType::UNBLOCKABLE,0);
+						monst_basic_abil(who_att, abil, attackee + 100);
+						put_pc_screen();
 					}
 				}
 			}
@@ -2611,7 +2555,7 @@ void monster_attack_monster(short who_att,short attackee) {
 
 
 //short target; // 100 +  - monster is target
-void monst_fire_missile(short m_num,short bless,short level,location source,short target) {
+void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> abil,location source,short target) {
 	cCreature *m_target;
 	short r1,r2,dam[40] = {
 		0,1,2,3,4, 6,8,7,0,0, 0,0,0,0,0, 0,0,0,0,0,
@@ -2641,254 +2585,288 @@ void monst_fire_missile(short m_num,short bless,short level,location source,shor
 	}
 	
 	draw_terrain(2);
-	if(level == MONSTER_BREATHES_SLEEP_CLOUDS) {
-		ASB("Creature breathes.");
-		run_a_missile(source,targ_space,0,0,44,
-					  0,0,100);
-		place_spell_pattern(radius2,targ_space,CLOUD_SLEEP,7);
-	}
-	else if(level == MONSTER_BREATHES_STINKING_CLOUDS) {
-		//play_sound(44);
-		if(target < 100) { // on PC
-			std::string create_line = "  Breathes on " + univ.party[target].name + '.';
-			add_string_to_buf(create_line);
+	if(abil.first == eMonstAbil::MISSILE) {
+		snd_num_t snd = 14;
+		switch(abil.second.missile.type) {
+			case eMonstMissile::ARROW:
+			case eMonstMissile::BOLT:
+				snd = 12;
+				if(target < 100) add_string_to_buf("  Shoots at " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 12);
+				break;
+			case eMonstMissile::SPEAR:
+				if(target < 100) add_string_to_buf("  Throws spear at " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 13);
+				break;
+			case eMonstMissile::RAZORDISK:
+				if(target < 100) add_string_to_buf("  Throws razordisk at " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 15);
+				break;
+			case eMonstMissile::SPINE:
+				if(target < 100) add_string_to_buf("  Fires spines at " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 32);
+				break;
+			case eMonstMissile::DART:
+				if(target < 100) add_string_to_buf("  Throws dart at " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 53);
+				break;
+			case eMonstMissile::ROCK:
+				if(target < 100) add_string_to_buf("  Throws rock at " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 14);
+				break;
+			case eMonstMissile::KNIFE:
+				if(target < 100) add_string_to_buf("  Throws knife at " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 54);
+				break;
 		}
-		else {  // on monst
-			add_string_to_buf("  Breathes vapors.");
-		}
-		run_a_missile(source,targ_space,12,0,44,
-					  0,0,100);
-		scloud_space(targ_space.x,targ_space.y);
-	}
-	else if(level == MONSTER_SHOOTS_WEB) {
-		//play_sound(14);
-		if(target < 100) { // on PC
-			std::string create_line = "  Throws web at " + univ.party[target].name + '.';
-			add_string_to_buf(create_line);
-		}
-		else {  // on monst
-			add_string_to_buf("  Throws web.");
-		}
-		run_a_missile(source,targ_space,8,0,14,
-					  0,0,100);
-		web_space(targ_space.x,targ_space.y);
-	}
-	else if(level == MONSTER_PARALYSIS_RAY) {
-		// TODO: This sound doesn't seem right?
-		play_sound(51);
-		if(target < 100) { // on PC
-			std::string create_line = "  Fires ray at " + univ.party[target].name + '.';
-			add_string_to_buf(create_line);
-			sleep_pc(target,100,eStatus::PARALYZED,0);
-		}
-		else {  // on monst
-			add_string_to_buf("  Shoots a ray.");
-			charm_monst(m_target,0,eStatus::PARALYZED,100);
-		}
-		//run_a_missile(source,targ_space,8,0,14,
-		//	0,0,100);
-		//web_space(targ_space.x,targ_space.y);
-	}
-	else if(level == MONSTER_PETRIFICATION_RAY) {
-		//play_sound(43);
-		run_a_missile(source,targ_space,14,0,43,0,0,100);
-		if(target < 100) { // on PC
-			std::string create_line = "  Gazes at " + univ.party[target].name + '.';
-			add_string_to_buf(create_line);
-			petrify_pc(target, m_target->level / 4);
-		}
-		else {
-			// TODO: This might be relevant to the AFFECT_DEADNESS special when used on monsters
-			monst_spell_note(m_target->number,9);
-			petrify_monst(m_target, m_target->level / 4);
-		}
-	}
-	else if(level == MONSTER_SP_DRAIN_RAY) {
-		if(target < 100) { // pc
-			// modify target is target has no sp
-			if(univ.party[target].cur_sp < 4) {
-				for(i = 0; i < 8; i++) {
-					j = get_ran(1,0,5);
-					if(univ.party[j].main_status == eMainStatus::ALIVE && univ.party[j].cur_sp > 4 &&
-					   (can_see_light(source,univ.party[j].combat_pos,sight_obscurity) < 5) && (dist(source,univ.party[j].combat_pos) <= 8)) {
-						target = j;
-						i = 8;
-						targ_space = univ.party[target].combat_pos;
-					}
-				}
-				
+		if(abil.second.missile.type == eMonstMissile::ARROW || abil.second.missile.type == eMonstMissile::BOLT)
+			snd = 12;
+		if(abil.second.missile.pic < 0) play_sound(snd);
+		else run_a_missile(source, targ_space, abil.second.missile.pic, 1, snd, 0, 0, 100);
+		if((target < 100 && univ.party[target].status[eStatus::INVISIBLE] > 0) || m_target->invisible) {
+			if(get_ran(1,1,100) > hit_chance[univ.town.monst[m_num].level]) {
+				add_string_to_buf("  Can't find target!");
+				return;
 			}
-			run_a_missile(source,targ_space,8,0,43,0,0,100);
-			std::string create_line = "  Drains " + univ.party[target].name + '.';
-			add_string_to_buf(create_line);
-			univ.party[target].cur_sp = univ.party[target].cur_sp / 2;
 		}
-		else { // on monst
-			run_a_missile(source,targ_space,8,0,43,0,0,100);
-			monst_spell_note(m_target->number,11);
-			if(m_target->mp >= 4)
-				m_target->mp = m_target->mp / 2;
-			else m_target->skill = 1;
-		}
-	}
-	else if(level == MONSTER_HEAT_RAY) {
-		run_a_missile(source,targ_space,13,0,51,
-					  0,0,100);
-		r1 = get_ran(7,1,6);
-		start_missile_anim();
-		if(target < 100) { // pc
-			std::string create_line = "  Hits " + univ.party[target].name + " with heat ray.";
-			add_string_to_buf(create_line);
-			damage_pc(target,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
-		}
-		else { // on monst
-			add_string_to_buf("  Fires heat ray.");
-			damage_monst(target - 100,7,r1,0,eDamageType::FIRE,0);
-		}
-		do_explosion_anim(5,0);
-		end_missile_anim();
-		handle_marked_damage();
-	}
-	else if(level == MONSTER_ACID_SPIT) {
-		run_a_missile(source,targ_space,0,1,64,
-					  0,0,100);
-		//play_sound(64);
-		if(target < 100) { // pc
-			std::string create_line = "  Spits acid on " + univ.party[target].name + '.';
-			add_string_to_buf(create_line);
-			acid_pc(target,6);
-		}
-		else { // on monst
-			add_string_to_buf("  Spits acid.");
-			acid_monst(m_target,6);
-		}
-	}
-	else if(target < 100) {  // missile on PC
-		std::string create_line;
-		switch(level) {
-			case MONSTER_THROWS_DARTS: case MONSTER_SHOOTS_ARROWS: case MONSTER_GOOD_ARCHER:
-				run_a_missile(source,targ_space,3,1,12,0,0,100);
-				create_line = "  Shoots at " + univ.party[target].name + '.';
-				break;
-			case MONSTER_THROWS_SPEARS:
-				run_a_missile(source,targ_space,5,1,14,0,0,100);
-				create_line = "  Throws spear at " + univ.party[target].name + '.';
-				break;
-			case MONSTER_THROWS_RAZORDISKS:
-				run_a_missile(source,targ_space,7,1,14,0,0,100);
-				create_line = "  Throws razordisk at " + univ.party[target].name + '.';
-				break;
-			case MONSTER_SHOOTS_SPINES:
-				run_a_missile(source,targ_space,5,1,14,0,0,100);
-				create_line = "  Fires spines at " + univ.party[target].name + '.';
-				break;
-			default:
-				run_a_missile(source,targ_space,12,1,14,0,0,100);
-				create_line = "  Throws rock at " + univ.party[target].name + '.';
-				break;
-		}
-		
-		add_string_to_buf(create_line);
-		
-		// Check sanctuary
-		if(univ.party[target].status[eStatus::INVISIBLE] > 0) {
-			r1 = get_ran(1,1,100);
-			if(r1 > hit_chance[level]) {
-				add_string_to_buf("  Can't find target!                 ");
-			}
-			return;
-		}
-		
-		r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * univ.party[target].status[eStatus::BLESS_CURSE]
-			- 5 * (can_see_light(source, univ.party[target].combat_pos,sight_obscurity));
+		int target_bless = target < 100 ? univ.party[target].status[eStatus::BLESS_CURSE] : m_target->status[eStatus::BLESS_CURSE];
+		location target_pos = target < 100 ? univ.party[target].combat_pos : m_target->cur_loc;
+		int r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * target_bless - 5 * can_see_light(source, target_pos, sight_obscurity);
 		if(univ.party[target].parry < 100)
 			r1 += 5 * univ.party[target].parry;
-		r2 = get_ran(dam[level],1,7) + min(10,bless);
-		
-		if(r1 <= hit_chance[dam[level] * 2]) {
-//			sprintf ((char *) create_line, "  Hits %s.",(char *) univ.party[target].name);
-//			add_string_to_buf((char *) create_line);
 			
-			if(damage_pc(target,r2,eDamageType::WEAPON,eRace::UNKNOWN,13)) {
-				// TODO: Uh, is something supposed to happen here!?
+		if(r1 <= hit_chance[abil.second.missile.skill]) {
+			r2 = get_ran(abil.second.missile.dice,1,abil.second.missile.sides) + min(10,bless);
+			if(target < 100) {
+				add_string_to_buf("  Hits " + univ.party[target].name + '.');
+				// TODO: Should we pass in the monster's actual race here?
+				damage_pc(target,r2,eDamageType::WEAPON,eRace::UNKNOWN,13);
+			} else {
+				monst_spell_note(m_target->number, 16);
+				damage_monst(target - 100,7,r2,0,eDamageType::WEAPON,13);
+			}
+		} else {
+			if(target < 100) add_string_to_buf("  Misses " + univ.party[target].name + '.');
+			else monst_spell_note(m_target->number,18);
+		}
+	} else {
+		if(abil.first == eMonstAbil::DRAIN_SP && target < 100 && univ.party[target].cur_sp < 4) {
+			// modify target is target has no sp
+			for(i = 0; i < 8; i++) {
+				j = get_ran(1,0,5);
+				if(univ.party[j].main_status == eMainStatus::ALIVE && univ.party[j].cur_sp > 4 &&
+				   (can_see_light(source,univ.party[j].combat_pos,sight_obscurity) < 5) && (dist(source,univ.party[j].combat_pos) <= 8)) {
+					target = j;
+					i = 8;
+					targ_space = univ.party[target].combat_pos;
+				}
 			}
 		}
-		else {
-			std::string create_line = "  Misses " + univ.party[target].name + '.';
-			add_string_to_buf(create_line);
+		snd_num_t snd;
+		int path_type = 0;
+		switch(abil.second.gen.type) {
+			case eMonstGen::TOUCH: return; // never reached
+			case eMonstGen::RAY:
+				snd = 51;
+				if(target < 100) add_string_to_buf("  Fires ray at " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 55); // TODO: Add this note
+				break;
+			case eMonstGen::GAZE:
+				snd = 43;
+				if(target < 100) add_string_to_buf("  Gazes at " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 56); // TODO: Add this note
+				break;
+			case eMonstGen::BREATH:
+				snd = 44;
+				if(target < 100) add_string_to_buf("  Breathes on " + univ.party[target].name + '.');
+				else monst_spell_note(m_target->number, 57); // TODO: Add this note
+				break;
+			case eMonstGen::SPIT:
+				// Special case for "spit web" -> "throws web"
+				if(abil.first == eMonstAbil::FIELD && abil.second.gen.fld == eFieldType::FIELD_WEB) {
+					snd = 14;
+					if(target < 100) add_string_to_buf("  Throws web at " + univ.party[target].name + '.');
+					else monst_spell_note(m_target->number, 58); // TODO: Add this note
+				} else {
+					path_type = 1;
+					snd = 64;
+					if(target < 100) add_string_to_buf("  Spits at " + univ.party[target].name + '.');
+					else monst_spell_note(m_target->number, 59); // TODO: Add this note
+				}
+				break;
 		}
-		
-	}
-	else { // missile on monst
-		switch(level) {
-			case MONSTER_THROWS_DARTS: case MONSTER_SHOOTS_ARROWS: case MONSTER_GOOD_ARCHER:
-				run_a_missile(source,targ_space,3,1,12,0,0,100);
-				monst_spell_note(m_target->number,12);
-				break;
-			case MONSTER_THROWS_SPEARS:
-				run_a_missile(source,targ_space,5,1,14,0,0,100);
-				monst_spell_note(m_target->number,13);
-				break;
-			case MONST_THROWS_RAZORDISKS:
-				run_a_missile(source,targ_space,7,1,14,0,0,100);
-				monst_spell_note(m_target->number,15);
-				break;
-			case MONSTER_SHOOTS_SPINES:
-				run_a_missile(source,targ_space,5,1,14,0,0,100);
-				monst_spell_note(m_target->number,32);
-				break;
-			default:
-				run_a_missile(source,targ_space,12,1,14,0,0,100);
-				monst_spell_note(m_target->number,14);
-				break;
-		}
-		r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * m_target->status[eStatus::BLESS_CURSE]
-			- 5 * (can_see_light(source, m_target->cur_loc,sight_obscurity));
-		r2 = get_ran(dam[level],1,7) + min(10,bless);
-		
-		if(r1 <= hit_chance[dam[level] * 2]) {
-//			monst_spell_note(m_target->number,16);
-			
-			damage_monst(target - 100,7,r2,0,eDamageType::WEAPON,13);
-		}
-		else {
-			monst_spell_note(m_target->number,18);
-		}
+		if(abil.second.gen.pic < 0) play_sound(snd);
+		else run_a_missile(source, targ_space, abil.second.gen.pic, path_type, snd, 0, 0, 100);
+		monst_basic_abil(m_num, abil, target);
 	}
 }
 
+void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short target) {
+	int i, r1;
+	cCreature* m_target;
+	location targ_space;
+	if(target == 6)
+		return;
+	if(target >= 100) {
+		m_target = &univ.town.monst[m_num];
+		targ_space = univ.town.monst[target - 100].cur_loc;
+		if(univ.town.monst[target - 100].active == 0)
+			return;
+	} else {
+		targ_space = (is_combat()) ? univ.party[target].combat_pos : univ.town.p_loc;
+		if(univ.party[target].main_status != eMainStatus::ALIVE)
+			return;
+	}
+	switch(abil.first) {
+		case eMonstAbil::DAMAGE:
+			// Determine die size
+			i = 6;
+			if(abil.second.gen.type == eMonstGen::BREATH)
+				i = 8;
+			else if(abil.second.gen.type == eMonstGen::SPIT || abil.second.gen.type == eMonstGen::TOUCH)
+				i = 10;
+			r1 = get_ran(abil.second.gen.strength, 1, i);
+			start_missile_anim();
+			if(target < 100) damage_pc(target, r1, abil.second.gen.dmg, eRace::UNKNOWN, 0);
+			else damage_monst(target - 100, 7, r1, 0, abil.second.gen.dmg, 0);
+			do_explosion_anim(5, 0);
+			end_missile_anim();
+			handle_marked_damage();
+			break;
+		case eMonstAbil::STUN:
+			if(target < 100 && pc_has_abil_equip(target, eItemAbil::LIFE_SAVING) < 24)
+				break;
+		case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
+			switch(abil.second.gen.stat) {
+				case eStatus::PARALYZED:
+				case eStatus::ASLEEP:
+					if(abil.second.gen.type == eMonstGen::TOUCH)
+						i = abil.second.gen.stat == eStatus::ASLEEP ? -15 : -5;
+					else i = univ.town.monst[m_num].level / 2;
+					if(target < 100) sleep_pc(target, abil.second.gen.strength, abil.second.gen.stat, i);
+					else charm_monst(m_target, i, abil.second.gen.stat, abil.second.gen.strength);
+					break;
+				case eStatus::ACID:
+					if(target < 100) acid_pc(target, abil.second.gen.strength);
+					else acid_monst(m_target, abil.second.gen.strength);
+					break;
+				case eStatus::POISON:
+					if(target < 100) poison_pc(target, abil.second.gen.strength);
+					else poison_monst(m_target, abil.second.gen.strength);
+					break;
+				case eStatus::BLESS_CURSE:
+					if(target < 100) curse_pc(target, abil.second.gen.strength);
+					else curse_monst(m_target, abil.second.gen.strength);
+					break;
+				case eStatus::HASTE_SLOW:
+					if(target < 100) slow_pc(target, abil.second.gen.strength);
+					else slow_monst(m_target, abil.second.gen.strength);
+					break;
+				case eStatus::WEBS:
+					if(target < 100) web_pc(target, abil.second.gen.strength);
+					else web_monst(m_target, abil.second.gen.strength);
+					break;
+				case eStatus::DISEASE:
+					if(target < 100) disease_pc(target, abil.second.gen.strength);
+					else disease_monst(m_target, abil.second.gen.strength);
+					break;
+				case eStatus::DUMB:
+					if(target < 100) dumbfound_pc(target, abil.second.gen.strength);
+					else dumbfound_monst(m_target, abil.second.gen.strength);
+					break;
+				// These only work on PCs
+				case eStatus::INVULNERABLE:
+				case eStatus::MAGIC_RESISTANCE:
+				case eStatus::INVISIBLE:
+				case eStatus::MARTYRS_SHIELD:
+					if(target < 100)
+						univ.party[target].apply_status(abil.second.gen.stat, -abil.second.gen.strength);
+					break;
+				// This only works on monsters
+				case eStatus::CHARM:
+					if(target >= 100)
+						charm_monst(m_target, abil.second.gen.strength, eStatus::CHARM, univ.town.monst[m_num].attitude);
+					break;
+				// These three don't make sense in this context
+				case eStatus::MAIN:
+				case eStatus::POISONED_WEAPON:
+				case eStatus::FORCECAGE:
+					return;
+			}
+			break;
+		case eMonstAbil::PETRIFY:
+			i = univ.town.monst[m_num].level * abil.second.gen.strength / 100;
+			if(target < 100) petrify_pc(target, i);
+			else petrify_monst(m_target, i);
+			break;
+		case eMonstAbil::DRAIN_SP:
+			if(target < 100) {
+				add_string_to_buf("  Drains " + univ.party[target].name + '.');
+				univ.party[target].cur_sp *= abil.second.gen.strength;
+				univ.party[target].cur_sp /= 100;
+			} else {
+				monst_spell_note(m_target->number,11);
+				// TODO: If mp < 4 it used to set monster's skill to 1. Should that be restored?
+				m_target->mp *= abil.second.gen.strength;
+				m_target->mp /= 100;
+			}
+			break;
+		case eMonstAbil::DRAIN_XP:
+			if(target < 100) {
+				if(pc_has_abil_equip(target, eItemAbil::LIFE_SAVING) < 24) break;
+				drain_pc(target, univ.town.monst[m_num].level * abil.second.gen.strength / 100);
+			}
+			break;
+		case eMonstAbil::KILL:
+			r1 = get_ran(10 * abil.second.gen.strength, 1, 10);
+			damage_target(target, r1, eDamageType::UNBLOCKABLE);
+			break;
+		case eMonstAbil::STEAL_FOOD:
+			univ.party.food = std::max(0, univ.party.food - get_ran(1,0,abil.second.gen.strength) - abil.second.gen.strength);
+			break;
+		case eMonstAbil::STEAL_GOLD:
+			univ.party.gold = std::max(0, univ.party.gold - get_ran(1,0,abil.second.gen.strength) - abil.second.gen.strength);
+			break;
+		case eMonstAbil::FIELD:
+			effect_pat_type pat;
+			switch(eSpellPat(abil.second.gen.strength)) {
+				case PAT_SINGLE: pat = single; break;
+				case PAT_SQ: pat = small_square; break;
+				case PAT_OPENSQ: pat = open_square; break;
+				case PAT_SMSQ: pat = square; break;
+				case PAT_PLUS: pat = t; break;
+				case PAT_RAD2: pat = radius2; break;
+				case PAT_RAD3: pat = radius3; break;
+				default: // either PAT_WALL or not a valid eSpellPat
+					pat = field[abil.second.gen.strength / 10];
+					break;
+			}
+			place_spell_pattern(pat, targ_space, abil.second.gen.fld, 7);
+			break;
+	}
+}
 
-//dam_type; // 0 - fire  1 - cold  2 - magic
-bool monst_breathe(cCreature *caster,location targ_space,short dam_type) {
-	short level;
-	miss_num_t missile_t[4] = {13,6,8,8};
-	eDamageType type[4] = {eDamageType::FIRE, eDamageType::COLD, eDamageType::MAGIC, eDamageType::UNBLOCKABLE};
-	location l;
-	
+bool monst_breathe(cCreature *caster,location targ_space,uAbility abil) {
 	draw_terrain(2);
 	if((is_combat()) && (center_on_monst)) {
 		frame_space(caster->cur_loc,0,caster->x_width,caster->y_width);
 	}
-	//if(dam_type < 2)
-	l = caster->cur_loc;
+	
+	location l = caster->cur_loc;
 	if((caster->direction < 4) &&
 		(caster->x_width > 1))
 		l.x++;
 	
-	dam_type = caster->breath_type;
-	run_a_missile(l,targ_space,missile_t[dam_type],0,44,0,0,100);
-	//	play_sound(44);
-	//else play_sound(64);
-	level = caster->breath;
-	//if(level > 10)
-	//	play_sound(5);
+	if(abil.gen.pic >= 0)
+		run_a_missile(l,targ_space,abil.gen.pic,0,44,0,0,100);
+	else play_sound(44);
 	
 	monst_breathe_note(caster->number);
-	level = get_ran(caster->breath,1,8);
+	short level = get_ran(abil.gen.strength,1,8);
 	if(overall_mode < MODE_COMBAT)
 		level = level / 3;
 	start_missile_anim();
-	hit_space(targ_space,level,type[dam_type],1,1);
+	hit_space(targ_space,level,abil.gen.dmg,1,1);
 	do_explosion_anim(5,0);
 	end_missile_anim();
 	handle_marked_damage();
@@ -3861,47 +3839,33 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 						if(pat.pattern[i - center.x + 4][j - center.y + 4] > 0)
 							monster_hit = true;
 						effect = pat.pattern[i - center.x + 4][j - center.y + 4];
+						which_m = &univ.town.monst[k];
+						if(which_m->abil[eMonstAbil::RADIATE].active && effect == which_m->abil[eMonstAbil::RADIATE].radiate.type)
+							continue;
 						switch(effect) {
 							case FIELD_WEB:
-								which_m = &univ.town.monst[k];
 								web_monst(which_m,3);
 								break;
 							case WALL_FORCE:
 								r1 = get_ran(3,1,6);
-								if(which_m->radiate_1 == MONSTER_RADIATE_SHOCK_FIELDS)
-									break;
 								damage_monst(k, who_hit, r1,0, eDamageType::MAGIC,0);
 								break;
 							case WALL_FIRE:
 								r1 = get_ran(2,1,6);
-								which_m = &univ.town.monst[k];
-								if(which_m->radiate_1 == MONSTER_RADIATE_FIRE_FIELDS)
-									break;
 								damage_monst(k, who_hit, r1,0, eDamageType::FIRE,0);
 								break;
 							case CLOUD_STINK:
-								which_m = &univ.town.monst[k];
-								if(which_m->radiate_1 == MONSTER_RADIATE_STINKING_CLOUDS)
-									break;
 								curse_monst(which_m,get_ran(1,1,2));
 								break;
 							case WALL_ICE:
-								which_m = &univ.town.monst[k];
 								r1 = get_ran(3,1,6);
-								if(which_m->radiate_1 == MONSTER_RADIATE_ICE_FIELDS)
-									break;
 								damage_monst(k, who_hit, r1,0, eDamageType::COLD,0);
 								break;
 							case WALL_BLADES:
 								r1 = get_ran(6,1,8);
-								if(which_m->radiate_1 == MONSTER_RADIATE_BLADE_FIELDS)
-									break;
 								damage_monst(k, who_hit, r1,0, eDamageType::WEAPON,0);
 								break;
 							case CLOUD_SLEEP:
-								which_m = &univ.town.monst[k];
-								if(which_m->radiate_1 == MONSTER_RADIATE_SLEEP_FIELDS)
-									break;
 								charm_monst(which_m,0,eStatus::ASLEEP,3);
 								break;
 							case OBJECT_BLOCK:

@@ -134,54 +134,51 @@ inline bool isStatusNegative(eStatus stat) {
 
 /* Special Ability a.k.a spec_skill */
 
-enum eMonstAbil {
-	MONST_NO_ABIL = 0,
-	// Missile abilities (extra1 = number of sided dice; extra2 = number of sides)
-	MONST_THROWS_DARTS = 10,
-	MONST_SHOOTS_ARROWS,
-	MONST_THROWS_SPEARS,
-	MONST_THROWS_ROCKS,
-	MONST_THROWS_RAZORDISKS,
-	MONST_GOOD_ARCHER,
-	MONST_SHOOTS_SPINES,
-	MONST_THROWS_KNIVES,
-	// Ray abilities (extra1 = type of damage / status where applicable)
-	MONST_DAMAGE_RAY = 20,
-	MONST_STATUS_RAY,
-	MONST_PETRIFY_RAY,
-	MONST_DRAIN_SP_RAY,
-	MONST_DRAIN_XP_RAY,
-	MONST_DRAIN_XP_DAMAGE_RAY,
-	MONST_KILL_RAY,
-	MONST_STEAL_FOOD_RAY,
-	MONST_STEAL_GOLD_RAY,
-	// Touch abilities (extra1 = type of damage / status where applicable)
-	MONST_DAMAGE_TOUCH = 30,
-	MONST_STATUS_TOUCH,
-	MONST_PETRIFY_TOUCH,
-	MONST_DRAIN_SP_TOUCH,
-	MONST_DRAIN_XP_TOUCH,
-	MONST_DRAIN_XP_DAMAGE_TOUCH,
-	MONST_KILL_TOUCH,
-	MONST_STEAL_FOOD_TOUCH,
-	MONST_STEAL_GOLD_TOUCH,
-	// Summon abilities (extra1 = which monster / type / species; extra2 = % chance)
-	MONST_SUMMON_ONE = 40,
-	MONST_SUMMON_TYPE,
-	MONST_SUMMON_SPECIES,
-	MONST_SUMMON_RANDOM,
-	MONST_MASS_SUMMON,
-	// Misc abilities (extra1 = field / special #; extra2 = % chance for radiate only)
-	MONST_SPLITS = 50,
-	MONST_FIELD_MISSILE,
-	MONST_MARTYRS_SHIELD,
-	MONST_ABSORB_SPELLS,
-	MONST_INVULNERABLE,
-	MONST_RADIATE,
-	MONST_CALL_LOCAL_SPECIAL,
-	MONST_CALL_GLOBAL_SPECIAL,
+enum class eMonstAbil {
+	NO_ABIL,
+	MISSILE,
+	
+	DAMAGE,
+	STATUS,
+	FIELD,
+	PETRIFY,
+	DRAIN_SP,
+	DRAIN_XP,
+	KILL,
+	STEAL_FOOD,
+	STEAL_GOLD,
+	STUN,
+	STATUS2,
+	
+	SPLITS,
+	MARTYRS_SHIELD,
+	ABSORB_SPELLS,
+	SPECIAL,
+	DEATH_TRIGGER,
+	
+	RADIATE,
+	SUMMON,
 };
 
+enum class eMonstAbilCat {
+	INVALID, MISSILE, GENERAL, SUMMON, RADIATE, SPECIAL
+};
+
+inline eMonstAbilCat getMonstAbilCategory(eMonstAbil what) {
+	if(what == eMonstAbil::NO_ABIL)
+		return eMonstAbilCat::SPECIAL;
+	if(what == eMonstAbil::MISSILE)
+		return eMonstAbilCat::MISSILE;
+	if(what >= eMonstAbil::DAMAGE && what <= eMonstAbil::STATUS2)
+		return eMonstAbilCat::GENERAL;
+	if(what >= eMonstAbil::SPLITS && what <= eMonstAbil::DEATH_TRIGGER)
+		return eMonstAbilCat::SPECIAL;
+	if(what == eMonstAbil::RADIATE)
+		return eMonstAbilCat::RADIATE;
+	if(what == eMonstAbil::SUMMON)
+		return eMonstAbilCat::SUMMON;
+	return eMonstAbilCat::INVALID;
+}
 
 /* Terrains Special Properties : scenario.ter_types[i].special */      //complete
 

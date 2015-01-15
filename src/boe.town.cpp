@@ -361,7 +361,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	// Flush excess doomguards and viscous goos
 	for(i = 0; i < univ.town->max_monst(); i++)
-		if((univ.town.monst[i].spec_skill == MONSTER_SPLITS) &&
+		if((univ.town.monst[i].abil[eMonstAbil::SPLITS].active) &&
 			(univ.town.monst[i].number != univ.town->creatures(i).number))
 			univ.town.monst[i].active = 0;
 	
