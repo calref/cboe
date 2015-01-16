@@ -67,7 +67,6 @@ extern short current_spell_range;
 extern short hit_chance[21],combat_active_pc;
 extern std::map<eDamageType,int> boom_gr;
 extern short current_ground;
-extern short monst_marked_damage[60];
 extern location golem_m_locs[16];
 extern cUniverse univ;
 extern sf::Texture pc_gworld;

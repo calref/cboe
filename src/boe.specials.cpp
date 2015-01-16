@@ -38,7 +38,6 @@ extern location center;
 extern bool in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
 extern effect_pat_type current_pat;
 extern cOutdoors::cWandering store_wandering_special;
-extern short monst_marked_damage[60];
 extern eSpell spell_being_cast, town_spell;
 extern sf::RenderWindow mini_map;
 extern short fast_bang;
@@ -1495,7 +1494,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		short boom_type = 2;
 		if(dam_type == eDamageType::FIRE)
 			boom_type = 0;
-		monst_marked_damage[which_m] += how_much;
+		univ.town.monst[which_m].marked_damage += how_much;
 		add_explosion(victim->cur_loc,how_much,0,boom_type,14 * (victim->x_width - 1),18 * (victim->y_width - 1));
 		// Note: Windows version printed an "undamaged" message here if applicable, but I don't think that's right.
 		if(how_much == 0)

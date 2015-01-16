@@ -178,6 +178,7 @@ public:
 	short morale,m_morale; // these are calculated in-game based on the level
 	std::map<eStatus,short> status;
 	eDirection direction;
+	short marked_damage = 0; // for use during animations
 	
 	cCreature();
 	cCreature(int num);

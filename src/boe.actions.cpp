@@ -1157,6 +1157,7 @@ bool handle_action(sf::Event event) {
 		// Targeting a space
 		else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING ||
 				overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) {
+			destination = center;
 			destination.x += i - 4;
 			destination.y += j - 4;
 			handle_target_space(destination, did_something, need_redraw, need_reprint);

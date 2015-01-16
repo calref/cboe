@@ -66,8 +66,6 @@ extern short boom_gr[8];
 
 const char *d_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 
-short monst_marked_damage[60];
-
 location hor_vert_place[14] = {
 	loc(0,0),loc(-1,1),loc(1,1),loc(-2,2),loc(0,2),
 	loc(2,2),loc(0,1),loc(-1,2),loc(1,2),loc(-1,3),
@@ -893,6 +891,11 @@ void do_combat_cast(location target) {
 	}
 	force_wall_position = 10;
 	
+	// TODO: Should we do this here? Or in the handling of targeting modes?
+	// (It really depends whether we want to be able to trigger it for targeting something other than a spell.)
+	if(adjust <= 4 && !cast_spell_on_space(target, spell_being_cast))
+		return; // The special node intercepted and cancelled regular spell behaviour.
+	
 	void_sanctuary(current_pc);
 	if(overall_mode == MODE_SPELL_TARGET) {
 		spell_targets[0] = target;
@@ -1377,10 +1380,10 @@ void handle_marked_damage() {
 			univ.party[i].marked_damage = 0;
 		}
 	for(i = 0; i < univ.town->max_monst(); i++)
-		if(monst_marked_damage[i] > 0) {
-			damage_monst(i, current_pc, monst_marked_damage[i], 0, eDamageType::MARKED,0); // was 9 rather than 10; probably a mistake
+		if(univ.town.monst[i].marked_damage > 0) {
+			damage_monst(i, current_pc, univ.town.monst[i].marked_damage, 0, eDamageType::MARKED,0);
 			
-			monst_marked_damage[i] = 0;
+			univ.town.monst[i].marked_damage = 0;
 		}
 }
 
