@@ -322,7 +322,8 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				case eDamageType::FIRE:
 					add_string_to_buf("  It's hot!");
 					pic_type = 0;
-					if(PSD[SDF_PARTY_FIREWALK] > 0) {
+					// TODO: Would be nice to have something similar to this but for other damaging terrains...
+					if(univ.party.status[ePartyStatus::FIREWALK] > 0) {
 						add_string_to_buf("  It doesn't affect you.");
 						r1 = -1;
 					}
@@ -1014,14 +1015,14 @@ void use_item(short pc,short item) {
 				break;
 			case eItemAbil::STEALTH:
 				ASB("  Your footsteps become quieter.");
-				PSD[SDF_PARTY_STEALTHY] += 5 * str;
+				univ.party.status[ePartyStatus::STEALTH] += 5 * str;
 				break;
 			case eItemAbil::FIREWALK:
 				ASB("  You feel chilly.");
-				PSD[SDF_PARTY_FIREWALK] += 2 * str;
+				univ.party.status[ePartyStatus::FIREWALK] += 2 * str;
 				break;
 			case eItemAbil::FLYING:
-				if(PSD[SDF_PARTY_FLIGHT] > 0) {
+				if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
 					add_string_to_buf("  Not while already flying.          ");
 					take_charge = false;
 					break;
@@ -1034,7 +1035,7 @@ void use_item(short pc,short item) {
 					take_charge = false;
 				} else {
 					ASB("  You rise into the air!");
-					PSD[SDF_PARTY_FLIGHT] += str;
+					univ.party.status[ePartyStatus::FLIGHT] += str;
 				}
 				break;
 			case eItemAbil::MAJOR_HEALING:
@@ -2928,14 +2929,14 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			univ.party.alchemy[spec.ex1a] = true;
 			break;
 		case eSpecType::AFFECT_STEALTH:
-			r1 = (short) PSD[SDF_PARTY_STEALTHY];
+			r1 = (short) univ.party.status[ePartyStatus::STEALTH];
 			r1 = minmax(0,250,r1 + spec.ex1a);
-			PSD[SDF_PARTY_STEALTHY] = r1;
+			univ.party.status[ePartyStatus::STEALTH] = r1;
 			break;
 		case eSpecType::AFFECT_FIREWALK:
-			r1 = (short) PSD[SDF_PARTY_FIREWALK];
+			r1 = (short) univ.party.status[ePartyStatus::FIREWALK];
 			r1 = minmax(0,250,r1 + spec.ex1a);
-			PSD[SDF_PARTY_FIREWALK] = r1;
+			univ.party.status[ePartyStatus::FIREWALK] = r1;
 			break;
 		case eSpecType::AFFECT_FLIGHT:
 			if(univ.party.in_boat >= 0)
@@ -2943,9 +2944,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else if(univ.party.in_horse >= 0)////
 				add_string_to_buf("  Can't fly when on a horse.  ");
 			else {
-				r1 = (short) PSD[SDF_PARTY_FLIGHT];
+				r1 = (short) univ.party.status[ePartyStatus::FLIGHT];
 				r1 = minmax(0,250,r1 + spec.ex1a);
-				PSD[SDF_PARTY_FLIGHT] = r1;
+				univ.party.status[ePartyStatus::FLIGHT] = r1;
 			}
 			break;
 	}

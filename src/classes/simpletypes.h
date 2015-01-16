@@ -132,6 +132,13 @@ inline bool isStatusNegative(eStatus stat) {
 	return false;
 }
 
+enum class ePartyStatus {
+	STEALTH,
+	FLIGHT,
+	DETECT_LIFE,
+	FIREWALK,
+};
+
 enum class eMonstAbil {
 	NO_ABIL,
 	MISSILE,

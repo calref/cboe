@@ -54,6 +54,14 @@ void cParty::append(legacy::party_record_type& old){
 		for(j = 0; j < 8; j++)
 			item_taken[i][j] = old.item_taken[i][j];
 	light_level = old.light_level;
+	if(stuff_done[305][0] > 0)
+		status[ePartyStatus::STEALTH] = stuff_done[305][0];
+	if(stuff_done[305][1] > 0)
+		status[ePartyStatus::FLIGHT] = stuff_done[305][1];
+	if(stuff_done[305][2] > 0)
+		status[ePartyStatus::DETECT_LIFE] = stuff_done[305][2];
+	if(stuff_done[305][3] > 0)
+		status[ePartyStatus::FIREWALK] = stuff_done[305][3];
 	outdoor_corner.x = old.outdoor_corner.x;
 	outdoor_corner.y = old.outdoor_corner.y;
 	i_w_c.x = old.i_w_c.x;
@@ -271,6 +279,10 @@ void cParty::writeTo(std::ostream& file) const {
 	file << "SECTOR " << p_loc.x << ' ' << p_loc.y << '\n';
 	file << "LOCINSECTOR " << loc_in_sec.x << ' ' << loc_in_sec.y << '\n';
 	file << "IN " << in_boat << ' ' << in_horse << '\n';
+	for(auto& kv : status) {
+		if(kv.second > 0)
+			file << "STATUS " << kv.first << ' ' << kv.second << '\n';
+	}
 	for(int i = 0; i < 256; i++)
 		if(m_noted[i])
 			file << "ROSTER " << i << '\n';
@@ -442,6 +454,11 @@ void cParty::readFrom(std::istream& file){
 			int i,j,k;
 			sin >> i >> j >> k;
 			pointers[i] = std::make_pair(j,k);
+		} else if(cur == "STATUS") {
+			ePartyStatus stat;
+			int n;
+			sin >> stat >> n;
+			status[stat] = n;
 		}else if(cur == "ITEMTAKEN"){
 			int i;
 			sin >> i;
@@ -784,6 +801,35 @@ std::ostream& operator<<(std::ostream& out, eEncNoteType type) {
 			break;
 		case NOTE_TOWN:
 			out << "TOWN";
+			break;
+	}
+	return out;
+}
+
+std::istream& operator>>(std::istream& in, ePartyStatus& type) {
+	std::string name;
+	in >> name;
+	if(name == "STEALTH") type = ePartyStatus::STEALTH;
+	else if(name == "FLIGHT") type = ePartyStatus::FLIGHT;
+	else if(name == "DETECT") type = ePartyStatus::DETECT_LIFE;
+	else if(name == "FIREWALK") type = ePartyStatus::FIREWALK;
+	else in.setstate(std::ios_base::failbit);
+	return in;
+}
+
+std::ostream& operator<<(std::ostream& out, ePartyStatus type) {
+	switch(type) {
+		case ePartyStatus::STEALTH:
+			out << "STEALTH";
+			break;
+		case ePartyStatus::FLIGHT:
+			out << "FLIGHT";
+			break;
+		case ePartyStatus::FIREWALK:
+			out << "FIREWALK";
+			break;
+		case ePartyStatus::DETECT_LIFE:
+			out << "DETECT";
 			break;
 	}
 	return out;

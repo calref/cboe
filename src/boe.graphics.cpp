@@ -675,8 +675,8 @@ void draw_text_bar(short mode) {
 	
 	if(mode == 1)
 		remember_tiny_text = 500;
-	if((PSD[SDF_PARTY_STEALTHY] > 0)    || (PSD[SDF_PARTY_FLIGHT] > 0) ||
-		(PSD[SDF_PARTY_DETECT_LIFE] > 0) || (PSD[SDF_PARTY_FIREWALK] > 0) )
+	if((univ.party.status[ePartyStatus::STEALTH] > 0) || (univ.party.status[ePartyStatus::FLIGHT] > 0) ||
+		(univ.party.status[ePartyStatus::DETECT_LIFE] > 0) || (univ.party.status[ePartyStatus::FIREWALK] > 0) )
 		remember_tiny_text = 500;
 	if(is_out()) {
 		for(i = 0; i < 8; i++)
@@ -739,25 +739,25 @@ void put_text_bar(std::string str) {
 	style.pointSize = 12;
 	style.lineHeight = 12;
 	rectangle to_rect = rectangle(text_bar_gworld);
+	to_rect.top += 5;
 	// TODO: Not sure what the line height should be, so I just picked something
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
 	if(!monsters_going) {
 		to_rect.left = 205;
-		to_rect.top = 14;
-		if(PSD[SDF_PARTY_STEALTHY] > 0) {
+		if(univ.party.status[ePartyStatus::STEALTH] > 0) {
 			win_draw_string(text_bar_gworld, to_rect, "Stealth", eTextMode::LEFT_TOP, style);
 			to_rect.left -= 60;
 		}
-		if(PSD[SDF_PARTY_FLIGHT] > 0) {
+		if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
 			win_draw_string(text_bar_gworld, to_rect, "Flying", eTextMode::LEFT_TOP, style);
 			to_rect.left -= 60;
 		}
-		if(PSD[SDF_PARTY_DETECT_LIFE] > 0) {
+		if(univ.party.status[ePartyStatus::DETECT_LIFE] > 0) {
 			win_draw_string(text_bar_gworld, to_rect, "Detect Life", eTextMode::LEFT_TOP, style);
 			to_rect.left -= 60;
 		}
-		if(PSD[SDF_PARTY_FIREWALK] > 0) {
+		if(univ.party.status[ePartyStatus::FIREWALK] > 0) {
 			win_draw_string(text_bar_gworld, to_rect, "Firewalk", eTextMode::LEFT_TOP, style);
 			to_rect.left -= 60;
 		}

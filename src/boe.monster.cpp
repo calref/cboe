@@ -244,7 +244,7 @@ void do_monsters() {
 				if((univ.town.monst[i].active == 1) && (univ.town.monst[i].attitude % 2 == 1)
 					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 8)) {
 					r1 = get_ran(1,1,100);
-					r1 += (PSD[SDF_PARTY_STEALTHY] > 0) ? 46 : 0;
+					r1 += (univ.party.status[ePartyStatus::STEALTH] > 0) ? 46 : 0;
 					r1 += can_see_light(univ.town.monst[i].cur_loc,univ.town.p_loc,sight_obscurity) * 10;
 					if(r1 < 50) {
 						univ.town.monst[i].active = 2;

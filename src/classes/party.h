@@ -90,6 +90,7 @@ public:
 	std::vector<cJournal> journal;
 	std::vector<cEncNote> special_notes;
 	std::vector<cConvers> talk_save;
+	std::map<ePartyStatus,short> status;
 	short direction;
 	short at_which_save_slot;
 	char alchemy[20];
@@ -164,5 +165,7 @@ bool operator==(const cParty::cEncNote& one, const cParty::cEncNote& two);
 
 std::istream& operator>>(std::istream& in, eEncNoteType& type);
 std::ostream& operator<<(std::ostream& out, eEncNoteType type);
+std::istream& operator>>(std::istream& in, ePartyStatus& type);
+std::ostream& operator<<(std::ostream& out, ePartyStatus type);
 
 #endif

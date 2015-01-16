@@ -998,7 +998,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::STEALTH:
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			PSD[SDF_PARTY_STEALTHY] += max(6,univ.party[pc_num].level * 2);
+			univ.party.status[ePartyStatus::STEALTH] += max(6,univ.party[pc_num].level * 2);
 			break;
 			
 			
@@ -1014,7 +1014,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::FLIGHT:
-			if(PSD[SDF_PARTY_FLIGHT] > 0) {
+			if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
 				add_string_to_buf("  Not while already flying.          ");
 				return;
 			}
@@ -1026,7 +1026,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				if(!freebie)
 					univ.party[pc_num].cur_sp -= (*spell_num).cost;
 				add_string_to_buf("  You start flying!               ");
-				PSD[SDF_PARTY_FLIGHT] = 3;
+				univ.party.status[ePartyStatus::FLIGHT] = 3;
 			}
 			break;
 			
@@ -1160,14 +1160,14 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			
 		case eSpell::DETECT_LIFE:
 			add_string_to_buf("  Monsters now on map.                ");
-			PSD[SDF_PARTY_DETECT_LIFE] += 6 + get_ran(1,0,6);
+			univ.party.status[ePartyStatus::DETECT_LIFE] += 6 + get_ran(1,0,6);
 			clear_map();
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 		case eSpell::FIREWALK:
 			add_string_to_buf("  You are now firewalking.                ");
-			PSD[SDF_PARTY_FIREWALK] += univ.party[pc_num].level / 12 + 2;
+			univ.party.status[ePartyStatus::FIREWALK] += univ.party[pc_num].level / 12 + 2;
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
@@ -2529,7 +2529,7 @@ mon_num_t pick_trapped_monst() {
 
 
 bool flying() {
-	if(PSD[SDF_PARTY_FLIGHT] == 0)
+	if(univ.party.status[ePartyStatus::FLIGHT] == 0)
 		return false;
 	else return true;
 }

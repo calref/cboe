@@ -1684,8 +1684,8 @@ void combat_run_monst() {
 	if(univ.town->lighting_type == 3)
 		univ.party.light_level = 0;
 	
-	move_to_zero(PSD[SDF_PARTY_DETECT_LIFE]);
-	move_to_zero(PSD[SDF_PARTY_FIREWALK]);
+	move_to_zero(univ.party.status[ePartyStatus::DETECT_LIFE]);
+	move_to_zero(univ.party.status[ePartyStatus::FIREWALK]);
 	
 	// decrease monster present counter
 	move_to_zero(PSD[SDF_HOSTILES_PRESENT]);
@@ -1699,7 +1699,7 @@ void combat_run_monst() {
 				update_stat = true;
 			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
 			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
-			move_to_zero(PSD[SDF_PARTY_STEALTHY]);
+			move_to_zero(univ.party.status[ePartyStatus::STEALTH]);
 			if((item = pc_has_abil_equip(i,eItemAbil::REGENERATE)) < 24) {
 				update_stat = true;
 				heal_pc(i,get_ran(1,0,univ.party[i].items[item].item_level + 1));
@@ -1812,7 +1812,7 @@ void do_monster_turn() {
 		if((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1) && (overall_mode == MODE_COMBAT)) {
 			r1 = get_ran(1,1,100); // Check if see PCs first
 			// TODO: Hang on, isn't stealth supposed to get better as you level up?
-			r1 += (PSD[SDF_PARTY_STEALTHY] > 0) ? 45 : 0;
+			r1 += (univ.party.status[ePartyStatus::STEALTH] > 0) ? 45 : 0;
 			r1 += can_see_light(cur_monst->cur_loc,closest_pc_loc(cur_monst->cur_loc),sight_obscurity) * 10;
 			if(r1 < 50)
 				cur_monst->active = 2;

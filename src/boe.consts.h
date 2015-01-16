@@ -30,10 +30,6 @@
 //#define SDF_PARTY_SPLIT_Y		304][2
 //#define SDF_PARTY_SPLIT_PC		304][3
 //#define SDF_PARTY_SPLIT_TOWN	304][4 // for future use, hopefully
-#define SDF_PARTY_STEALTHY		305][0
-#define SDF_PARTY_FLIGHT		305][1
-#define SDF_PARTY_DETECT_LIFE	305][2
-#define SDF_PARTY_FIREWALK		305][3
 #define SDF_SKIP_STARTUP		305][4 // preferably deprecated
 #define SDF_LESS_SOUND			305][5
 #define SDF_NO_TARGET_LINE		305][6

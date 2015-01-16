@@ -1786,9 +1786,9 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'E':
 			if(!in_scen_debug) break;
-			PSD[SDF_PARTY_STEALTHY] += 10;
-			PSD[SDF_PARTY_DETECT_LIFE] += 10;
-			PSD[SDF_PARTY_FIREWALK] += 10;
+			univ.party.status[ePartyStatus::STEALTH] += 10;
+			univ.party.status[ePartyStatus::DETECT_LIFE] += 10;
+			univ.party.status[ePartyStatus::FIREWALK] += 10;
 			add_string_to_buf("Debug: Stealth, Detect Life, Firewalk!");
 			print_buf();
 			put_pc_screen();
@@ -1799,7 +1799,7 @@ bool handle_keystroke(sf::Event& event){
 			if(overall_mode != MODE_OUTDOORS){
 				add_string_to_buf("Debug: Can only fly outdoors.");
 			}else{
-				PSD[SDF_PARTY_FLIGHT] += 10;
+				univ.party.status[ePartyStatus::FLIGHT] += 10;
 				add_string_to_buf("Debug: You start flying!");
 			}
 			print_buf();
@@ -2187,10 +2187,10 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	handle_disease();
 	handle_disease();
 	// Clear party spell effects
-	PSD[SDF_PARTY_STEALTHY] = 0;
-	PSD[SDF_PARTY_DETECT_LIFE] = 0;
-	PSD[SDF_PARTY_FIREWALK] = 0;
-	PSD[SDF_PARTY_FLIGHT] = 0; // This one shouldn't be nonzero anyway, since you can't rest while flying.
+	univ.party.status[ePartyStatus::STEALTH] = 0;
+	univ.party.status[ePartyStatus::DETECT_LIFE] = 0;
+	univ.party.status[ePartyStatus::FIREWALK] = 0;
+	univ.party.status[ePartyStatus::FLIGHT] = 0; // This one shouldn't be nonzero anyway, since you can't rest while flying.
 	for(int i = 0; i < 6; i++)
 		univ.party[i].status.clear();
 	// Specials countdowns
@@ -2268,19 +2268,25 @@ void increase_age() {
 	move_to_zero(PSD[SDF_HOSTILES_PRESENT]);
 	
 	// Party spell effects
-	if(PSD[SDF_PARTY_STEALTHY] == 1) {reset_text_bar();
-		add_string_to_buf("Your footsteps grow louder.      "); }
-	move_to_zero(PSD[SDF_PARTY_STEALTHY]);
-	if(PSD[SDF_PARTY_DETECT_LIFE] == 1) {reset_text_bar();
-		add_string_to_buf("You stop detecting monsters.      ");}
-	move_to_zero(PSD[SDF_PARTY_DETECT_LIFE]);
-	if(PSD[SDF_PARTY_FIREWALK] == 1) {reset_text_bar();
-		add_string_to_buf("Your feet stop glowing.      ");}
-	move_to_zero(PSD[SDF_PARTY_FIREWALK]);
+	if(univ.party.status[ePartyStatus::STEALTH] == 1) {
+		reset_text_bar();
+		add_string_to_buf("Your footsteps grow louder.      ");
+	}
+	move_to_zero(univ.party.status[ePartyStatus::STEALTH]);
+	if(univ.party.status[ePartyStatus::DETECT_LIFE] == 1) {
+		reset_text_bar();
+		add_string_to_buf("You stop detecting monsters.      ");
+	}
+	move_to_zero(univ.party.status[ePartyStatus::DETECT_LIFE]);
+	if(univ.party.status[ePartyStatus::FIREWALK] == 1) {
+		reset_text_bar();
+		add_string_to_buf("Your feet stop glowing.      ");
+	}
+	move_to_zero(univ.party.status[ePartyStatus::FIREWALK]);
 	
-	if(PSD[SDF_PARTY_FLIGHT] == 2)
+	if(univ.party.status[ePartyStatus::FLIGHT] == 2)
 		add_string_to_buf("You are starting to descend.");
-	if(PSD[SDF_PARTY_FLIGHT] == 1) {
+	if(univ.party.status[ePartyStatus::FLIGHT] == 1) {
 		if(blocksMove(univ.scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage)) {
 			add_string_to_buf("  You plummet to your deaths.                  ");
 			slay_party(eMainStatus::DEAD);
@@ -2291,7 +2297,7 @@ void increase_age() {
 		reset_text_bar();
 	}
 	
-	move_to_zero(PSD[SDF_PARTY_FLIGHT]);
+	move_to_zero(univ.party.status[ePartyStatus::FLIGHT]);
 	
 	if(overall_mode > MODE_OUTDOORS && univ.town->lighting_type >= LIGHT_DRAINS) {
 		increase_light(-9);
@@ -2849,7 +2855,7 @@ bool outd_move_party(location destination,bool forced) {
 		if(((boat_num = out_boat_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
 			if(flying()) {
 				add_string_to_buf("You land first.                 ");
-				PSD[SDF_PARTY_FLIGHT] = 0;
+				univ.party.status[ePartyStatus::FLIGHT] = 0;
 			}
 			give_help(61,0);
 			add_string_to_buf("Move: You board the boat.           ");

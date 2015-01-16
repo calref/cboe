@@ -459,8 +459,8 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	
 	// End flying
-	if(PSD[SDF_PARTY_FLIGHT] > 0) {
-		PSD[SDF_PARTY_FLIGHT] = 0;
+	if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
+		univ.party.status[ePartyStatus::FLIGHT] = 0;
 		add_string_to_buf("You land, and enter.             ");
 	}
 	
@@ -627,8 +627,8 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		erase_out_specials();
 		
-		PSD[SDF_PARTY_STEALTHY] = 0;
-		//PSD[SDF_PARTY_DETECT_LIFE] = 0; // TODO: Yes? No? Maybe?
+		univ.party.status[ePartyStatus::STEALTH] = 0;
+		univ.party.status[ePartyStatus::DETECT_LIFE] = 0; // TODO: Yes? No? Maybe?
 		for(i = 0; i < 6; i++)
 			erase_if(univ.party[i].status, [](std::pair<const eStatus, short> kv) -> bool {
 				// TODO: These were the only statuses kept in the original code, but what about acid? Should it be kept too?
@@ -1451,7 +1451,7 @@ void draw_map(bool need_refresh) {
 		
 		// Now place PCs and monsters
 		if(draw_pcs) {
-			if((is_town()) && (PSD[SDF_PARTY_DETECT_LIFE] > 0))
+			if((is_town()) && (univ.party.status[ePartyStatus::DETECT_LIFE] > 0))
 				for(i = 0; i < univ.town->max_monst(); i++)
 					if(univ.town.monst[i].active > 0) {
 						where = univ.town.monst[i].cur_loc;
