@@ -97,6 +97,17 @@ void cPlayer::apply_status(eStatus which, int how_much) {
 		status[which] = max(status[which],0);
 }
 
+void cPlayer::avatar() {
+	status[eStatus::BLESS_CURSE] = 8;
+	status[eStatus::HASTE_SLOW] = 8;
+	status[eStatus::INVULNERABLE] = 3;
+	status[eStatus::MAGIC_RESISTANCE] = 8;
+	status[eStatus::WEBS] = 0;
+	status[eStatus::DISEASE] = 0;
+	status[eStatus::DUMB] = 0;
+	status[eStatus::MARTYRS_SHIELD] = 8;
+}
+
 void cPlayer::finish_create() {
 	// Start items
 	switch(race) {

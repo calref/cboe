@@ -1451,6 +1451,17 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					}
 				}
 			break;
+			
+		case eSpell::AVATAR:
+			heal_pc(pc_num,200);
+			cure_pc(pc_num,8);
+			// TODO: Move the heal/cure over to this function as well
+			univ.party[pc_num].avatar();
+			break;
+			
+		default:
+			add_string_to_buf("  Error: Spell not implemented for town.", 4);
+			break;
 	}
 }
 

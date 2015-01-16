@@ -4556,14 +4556,8 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 			add_string_to_buf("  " + univ.party[current_pc].name + " is an avatar!");
 			heal_pc(current_pc,200);
 			cure_pc(current_pc,8);
-			univ.party[current_pc].status[eStatus::BLESS_CURSE] = 8;
-			univ.party[current_pc].status[eStatus::HASTE_SLOW] = 8;
-			univ.party[current_pc].status[eStatus::INVULNERABLE] = 3;
-			univ.party[current_pc].status[eStatus::MAGIC_RESISTANCE] = 8;
-			univ.party[current_pc].status[eStatus::WEBS] = 0;
-			univ.party[current_pc].status[eStatus::DISEASE] = 0;
-			univ.party[current_pc].status[eStatus::DUMB] = 0;
-			univ.party[current_pc].status[eStatus::MARTYRS_SHIELD] = 8;
+			// TODO: Move the heal/cure over to this function as well
+			univ.party[current_pc].avatar();
 			break;
 			
 		case eSpell::CURSE_ALL: case eSpell::CHARM_MASS: case eSpell::PESTILENCE:
