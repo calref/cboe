@@ -341,7 +341,7 @@ static const char*const button_dict[7][11] = {
 		"                           ", // ex1c
 		"                  K        ", // ex2a
 		" D                         ", // ex2b
-		"                           ", // ex2c
+		" x                         ", // ex2c
 	}, { // if-then nodes
 		"                        $  $", // msg1
 		"                            ", // msg2
@@ -396,7 +396,7 @@ static const char*const button_dict[7][11] = {
 static int offsets[] = {
 	int(eSpecType::NONE),
 	int(eSpecType::ONCE_GIVE_ITEM),
-	int(eSpecType::SELECT_PC),
+	int(eSpecType::SELECT_TARGET),
 	int(eSpecType::IF_SDF),
 	int(eSpecType::MAKE_TOWN_HOSTILE),
 	int(eSpecType::RECT_PLACE_FIELD),

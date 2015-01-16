@@ -50,7 +50,7 @@ void acid_pc(short which_pc,short how_much);
 void poison_pc(short which_pc,short how_much);
 void poison_party(short how_much);
 void void_sanctuary(short pc_num);
-void hit_party(short how_much,eDamageType damage_type);
+void hit_party(short how_much,eDamageType damage_type,short snd_type = 0);
 void slay_party(eMainStatus mode);
 bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print = true);
 void kill_pc(short which_pc,eMainStatus type);

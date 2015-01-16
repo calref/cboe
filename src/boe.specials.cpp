@@ -1941,6 +1941,34 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 	next_spec = start_spec;
 	next_spec_type = which_type;
 	current_pc_picked_in_spec_enc = -1;
+	switch(which_mode) {
+		case eSpecCtx::OUT_MOVE: case eSpecCtx::TOWN_MOVE: case eSpecCtx::COMBAT_MOVE:
+		case eSpecCtx::OUT_LOOK: case eSpecCtx::TOWN_LOOK: case eSpecCtx::ENTER_TOWN: case eSpecCtx::LEAVE_TOWN:
+		case eSpecCtx::TALK: case eSpecCtx::USE_SPEC_ITEM: case eSpecCtx::TOWN_HOSTILE:
+		case eSpecCtx::TOWN_TIMER: case eSpecCtx::SCEN_TIMER: case eSpecCtx::PARTY_TIMER:
+		case eSpecCtx::OUTDOOR_ENC: case eSpecCtx::FLEE_ENCOUNTER: case eSpecCtx::WIN_ENCOUNTER:
+			// Default behaviour - select entire party, or active member if split or in combat
+			if(is_combat()) current_pc_picked_in_spec_enc = current_pc;
+			else {
+				if(univ.party.is_split() && cur_node.type != eSpecType::AFFECT_DEADNESS)
+					current_pc_picked_in_spec_enc = univ.party.pc_present();
+				if(current_pc_picked_in_spec_enc == 6 && univ.party.pc_present(current_pc_picked_in_spec_enc))
+					current_pc_picked_in_spec_enc = current_pc_picked_in_spec_enc;
+				if(current_pc_picked_in_spec_enc == 6)
+					current_pc_picked_in_spec_enc = -1;
+			}
+			break;
+		case eSpecCtx::KILL_MONST: case eSpecCtx::SEE_MONST: case eSpecCtx::MONST_SPEC_ABIL:
+			// The monster is the target
+			current_pc_picked_in_spec_enc = 100 + monst_there(spec_loc);
+			break;
+		case eSpecCtx::TARGET: case eSpecCtx::USE_SPACE:
+			// If there's a monster on the space, select that as the target
+			mon_num_t who = monst_there(spec_loc);
+			if(who < univ.town->max_monst())
+				current_pc_picked_in_spec_enc = 100 + who;
+			break;
+	}
 	store_special_loc = spec_loc;
 	if(end_scenario) {
 		special_in_progress = false;
@@ -2512,19 +2540,14 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				 short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw) {
 	bool check_mess = true;
-	short i,pc = 6,r1;
+	short i,pc = current_pc_picked_in_spec_enc,r1;
 	cSpecial spec;
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
-	if(univ.party.is_split() && cur_node.type != eSpecType::AFFECT_DEADNESS)
-		pc = univ.party.pc_present();
-	if(pc == 6 && univ.party.pc_present(current_pc_picked_in_spec_enc))
-		pc = current_pc_picked_in_spec_enc;
-	if(pc == 6) pc = -1;
 	
 	switch(cur_node.type) {
-		case eSpecType::SELECT_PC:
+		case eSpecType::SELECT_TARGET:
 			check_mess = false;
 			// If this <= 0, pick PC normally
 			// TODO: I think this is for compatibility with old scenarios? If so, remove it and just convert data on load.
@@ -2553,10 +2576,13 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				// Honour the request for alive PCs only.
 				if(spec.ex1a == 1 || univ.party[pc].main_status == eMainStatus::ALIVE)
 					current_pc_picked_in_spec_enc = pc;
-				// TODO: If >= 100, select a specific monster
-			} else {
+			} else if(spec.ex2a >= 100) {
+				short monst = spec.ex2a - 100;
+				// Honour the request for alive only
+				if(spec.ex1a == 1 || univ.town.monst[monst].active > 0)
+					current_pc_picked_in_spec_enc = spec.ex2a;
+			} else if(spec.ex2a == 1) {
 				// Pick random PC (from *i)
-				// TODO: What if spec.ex1a == 2?
 				
 				if(spec.ex1a == 0) {
 					short pc_alive = 0;
@@ -2576,61 +2602,58 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::DAMAGE: {
 			r1 = get_ran(spec.ex1a,1,spec.ex1b) + spec.ex2a;
 			eDamageType dam_type = (eDamageType) spec.ex2b;
-			if(pc < 0) {
-				if(spec.pic == 1 && overall_mode == MODE_COMBAT)
-					damage_pc(current_pc,r1,dam_type,eRace::UNKNOWN,0); // was HUMAN
-				else hit_party(r1,dam_type);
-			}
-			else damage_pc(pc,r1,dam_type,eRace::UNKNOWN,0);
-			// TODO: Extend to affect monsters too
+			int snd_type = spec.ex2c < 0 ? 0 : -spec.ex2c;
+			if(pc < 0) hit_party(r1, dam_type, snd_type);
+			else if(pc >= 100) damage_monst(pc - 100, 7, r1, 0, dam_type, snd_type);
+			else damage_pc(pc,r1,dam_type,eRace::UNKNOWN, snd_type);
 			break;
 		}
 		case eSpecType::AFFECT_HP:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i))
 						univ.party[i].cur_health = minmax(0,univ.party[i].max_health,
 														  univ.party[i].cur_health + spec.ex1a * (spec.ex1b ? -1: 1));
 			}
 			else {
-				univ.town.monst[spec.ex2a].health = minmax(0, univ.town.monst[spec.ex2a].m_health,
-					univ.town.monst[spec.ex2a].health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+				cCreature& who = univ.town.monst[pc - 100];
+				who.health = minmax(0, who.m_health, who.health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 				if(spec.ex1b == 0)
-					monst_spell_note(univ.town.monst[spec.ex2a].number,41);
-				else
-					monst_spell_note(univ.town.monst[spec.ex2a].number,42);
+					monst_spell_note(who.number,41);
+				else monst_spell_note(who.number,42);
 			}
 			break;
 		case eSpecType::AFFECT_SP:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i))
 						univ.party[i].cur_sp = minmax(0, univ.party[i].max_sp,
 							univ.party[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
-				univ.town.monst[spec.ex2a].mp = minmax(0, univ.town.monst[spec.ex2a].max_mp,
-					univ.town.monst[spec.ex2a].mp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+				cCreature& who = univ.town.monst[pc - 100];
+				who.mp = minmax(0, who.max_mp, who.mp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 				if(spec.ex1b == 0)
-					monst_spell_note(univ.town.monst[spec.ex2a].number,43);
-				else
-					monst_spell_note(univ.town.monst[spec.ex2a].number,44);
+					monst_spell_note(who.number,43);
+				else monst_spell_note(who.number,44);
 			}
 			break;
 		case eSpecType::AFFECT_XP:
+			if(pc >= 100) break;
 			for(i = 0; i < 6; i++)
 				if((pc < 0) || (pc == i)) {
 					if(spec.ex1b == 0) award_xp(i,spec.ex1a); else drain_pc(i,spec.ex1a);
 				}
 			break;
 		case eSpecType::AFFECT_SKILL_PTS:
+			if(pc >= 100) break;
 			for(i = 0; i < 6; i++)
 				if((pc < 0) || (pc == i))
 					univ.party[i].skill_pts = minmax(0,	100,
 						univ.party[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_DEADNESS:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i)) {
 						if(spec.ex1b == 0) {
@@ -2656,35 +2679,36 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*redraw = 1;
 			} else {
 				// Kill monster
-				if(univ.town.monst[spec.ex2a].active > 0 && spec.ex1b > 0) {
+				cCreature& who = univ.town.monst[pc - 100];
+				if(who.active > 0 && spec.ex1b > 0) {
 					switch(spec.ex1a) {
 						case 0:
-							monst_spell_note(univ.town.monst[spec.ex2a].number,46);
-							kill_monst(&univ.town.monst[spec.ex2a],7,eMainStatus::DEAD);
+							monst_spell_note(who.number,46);
+							kill_monst(&who,7,eMainStatus::DEAD);
 							break;
 						case 1:
-							monst_spell_note(univ.town.monst[spec.ex2a].number,51);
-							kill_monst(&univ.town.monst[spec.ex2a],7,eMainStatus::DUST);
+							monst_spell_note(who.number,51);
+							kill_monst(&who,7,eMainStatus::DUST);
 							break;
 						case 2:
 							if(spec.ex1c > 0)
-								petrify_monst(&univ.town.monst[spec.ex2a], spec.ex1c);
+								petrify_monst(&who, spec.ex1c);
 							else {
-								monst_spell_note(univ.town.monst[spec.ex2a].number,8);
-								kill_monst(&univ.town.monst[spec.ex2a],7,eMainStatus::STONE);
+								monst_spell_note(who.number,8);
+								kill_monst(&who,7,eMainStatus::STONE);
 							}
 							break;
 					}
 				}
 				// Bring back to life
-				else if(univ.town.monst[spec.ex2a].active == 0 && spec.ex1b == 0) {
-					univ.town.monst[spec.ex2a].active = 1;
-					monst_spell_note(univ.town.monst[spec.ex2a].number,45);
+				else if(who.active == 0 && spec.ex1b == 0) {
+					who.active = 1;
+					monst_spell_note(who.number,45);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_POISON:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i)) {
 						if(spec.ex1b == 0) {
@@ -2694,16 +2718,17 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 			}
 			else {
-				if(univ.town.monst[spec.ex2a].active > 0) {
+				cCreature& who = univ.town.monst[pc - 100];
+				if(who.active > 0) {
 					short alvl = spec.ex1a;
 					if(spec.ex1b == 0)
 						alvl = -1*alvl;
-					poison_monst(&univ.town.monst[spec.ex2a],alvl);
+					poison_monst(&who,alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_SPEED:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i)) {
 						if(spec.ex1b == 0) {
@@ -2713,91 +2738,99 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 			}
 			else {
-				if(univ.town.monst[spec.ex2a].active > 0) {
+				cCreature& who = univ.town.monst[pc - 100];
+				if(who.active > 0) {
 					short alvl = spec.ex1a;
 					if(spec.ex1b == 0)
 						alvl = -1*alvl;
-					slow_monst(&univ.town.monst[spec.ex2a],alvl);
+					slow_monst(&who,alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_INVULN:
+			if(pc >= 100) break;
 			for(i = 0; i < 6; i++)
 				if((pc < 0) || (pc == i))
 					univ.party[i].apply_status(eStatus::INVULNERABLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_MAGIC_RES:
+			if(pc >= 100) break;
 			for(i = 0; i < 6; i++)
 				if((pc < 0) || (pc == i))
 					univ.party[i].apply_status(eStatus::MAGIC_RESISTANCE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_WEBS:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i))
 						univ.party[i].apply_status(eStatus::WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
-				if(univ.town.monst[spec.ex2a].active > 0) {
+				cCreature& who = univ.town.monst[pc - 100];
+				if(who.active > 0) {
 					short alvl = spec.ex1a;
 					if(spec.ex1b == 0)
 						alvl = -1*alvl;
-					web_monst(&univ.town.monst[spec.ex2a],alvl);
+					web_monst(&who,alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_DISEASE:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i))
 						univ.party[i].apply_status(eStatus::DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
 			}
 			else {
-				if(univ.town.monst[spec.ex2a].active > 0) {
+				cCreature& who = univ.town.monst[pc - 100];
+				if(who.active > 0) {
 					short alvl = spec.ex1a;
 					if(spec.ex1b == 0)
 						alvl = -1*alvl;
-					disease_monst(&univ.town.monst[spec.ex2a],alvl);
+					disease_monst(&who,alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_SANCTUARY:
+			if(pc >= 100) break;
 			for(i = 0; i < 6; i++)
 				if((pc < 0) || (pc == i))
 					univ.party[i].apply_status(eStatus::INVISIBLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_CURSE_BLESS:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i))
 						univ.party[i].apply_status(eStatus::BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			}
 			else {
-				if(univ.town.monst[spec.ex2a].active > 0) {
+				cCreature& who = univ.town.monst[pc - 100];
+				if(who.active > 0) {
 					short alvl = spec.ex1a;
 					if(spec.ex1b == 0)
 						alvl = -1*alvl;
-					curse_monst(&univ.town.monst[spec.ex2a],alvl);
+					curse_monst(&who,alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_DUMBFOUND:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i))
 						univ.party[i].apply_status(eStatus::DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
 			}
 			else {
-				if(univ.town.monst[spec.ex2a].active > 0) {
+				cCreature& who = univ.town.monst[pc - 100];
+				if(who.active > 0) {
 					short alvl = spec.ex1a;
 					if(spec.ex1b == 0)
 						alvl = -1*alvl;
-					dumbfound_monst(&univ.town.monst[spec.ex2a],alvl);
+					dumbfound_monst(&who,alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_SLEEP:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i)) {
 						if(spec.ex1b == 0) {
@@ -2807,16 +2840,17 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 			}
 			else {
-				if(univ.town.monst[spec.ex2a].active > 0) {
+				cCreature& who = univ.town.monst[pc - 100];
+				if(who.active > 0) {
 					short alvl = spec.ex1a;
 					if(spec.ex1b == 0)
 						alvl = -1*alvl;
-					charm_monst(&univ.town.monst[spec.ex2a],0,eStatus::ASLEEP,alvl);
+					charm_monst(&who,0,eStatus::ASLEEP,alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_PARALYSIS:
-			if(spec.ex2a < 0) {
+			if(pc < 100) {
 				for(i = 0; i < 6; i++)
 					if((pc < 0) || (pc == i)) {
 						if(spec.ex1b == 0) {
@@ -2826,15 +2860,17 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 			}
 			else {
-				if(univ.town.monst[spec.ex2a].active > 0) {
+				cCreature& who = univ.town.monst[pc - 100];
+				if(who.active > 0) {
 					short alvl = spec.ex1a;
 					if(spec.ex1b == 0)
 						alvl = -1*alvl;
-					charm_monst(&univ.town.monst[spec.ex2a],0,eStatus::PARALYZED,alvl);
+					charm_monst(&who,0,eStatus::PARALYZED,alvl);
 				}
 			}
 			break;
 		case eSpecType::AFFECT_STAT:
+			if(pc >= 100) break;
 			if(spec.ex2a != minmax(0,20,spec.ex2a)) {
 				giveError("Skill is out of range.");
 				break;
@@ -2851,6 +2887,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			break;
 		case eSpecType::AFFECT_MAGE_SPELL:
+			if(pc >= 100) break;
 			if(spec.ex1a != minmax(0,61,spec.ex1a)) {
 				giveError("Mage spell is out of range (0 - 61). See docs.");
 				break;
@@ -2860,6 +2897,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					univ.party[i].mage_spells[spec.ex1a] = spec.ex1b;
 			break;
 		case eSpecType::AFFECT_PRIEST_SPELL:
+			if(pc >= 100) break;
 			if(spec.ex1a != minmax(0,61,spec.ex1a)) {
 				giveError("Priest spell is out of range (0 - 61). See docs.");
 				break;

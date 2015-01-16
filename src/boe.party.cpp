@@ -2572,13 +2572,13 @@ void void_sanctuary(short pc_num) {
 	}
 }
 
-void hit_party(short how_much,eDamageType damage_type) {
+void hit_party(short how_much,eDamageType damage_type,short snd_type) {
 	short i;
 	bool dummy;
 	
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			dummy = damage_pc(i,how_much,damage_type,eRace::UNKNOWN,0);
+			dummy = damage_pc(i,how_much,damage_type,eRace::UNKNOWN,snd_type);
 	put_pc_screen();
 }
 

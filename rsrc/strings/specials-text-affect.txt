@@ -1,4 +1,4 @@
-Select a PC
+Select a target
 Unused
 Unused
 First part of message
@@ -6,10 +6,10 @@ Second part of message
 Unused
 Unused
 Unused
-0 - only living, 1 - any PC, 2 - whole party
+0 - only living, 1 - any, 2 - whole party
 Special if Cancel button pressed
 Unused
-0 - player choice, 1 - random, 11..16 - specific
+0 - player choice, 1 - random, 11..16 - specific, 100+ monster
 Unused
 Unused
 Special to Jump To
@@ -27,7 +27,7 @@ Number of 'sides' on dice
 Unused
 Amount of extra damage
 Type of damage
-Unused
+Sound to play
 Special to Jump To
 --------------------
 Affect Health
