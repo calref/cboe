@@ -216,17 +216,17 @@ public:
 	/// @param pics A list of all icons in the dialog.
 	/// @param t The type of icons to show; all icons are assumed to be of the same type.
 	/// @param parent Optionally, a parent dialog.
-	cPictChoice(std::vector<pic_num_t>& pics, ePicType t, cDialog* parent = NULL);
+	cPictChoice(const std::vector<pic_num_t>& pics, ePicType t, cDialog* parent = NULL);
 	/// Initializes a dialog from a list of icons.
 	/// @param pics A list of all icons in the dialog as {num,type} pairs.
 	/// @param parent Optionally, a parent dialog.
-	cPictChoice(std::vector<std::pair<pic_num_t,ePicType>>& pics, cDialog* parent = NULL);
+	cPictChoice(const std::vector<std::pair<pic_num_t,ePicType>>& pics, cDialog* parent = NULL);
 	/// Initializes a dialog from an iterator pair.
 	/// @param begin An iterator to the first icon in the dialog.
 	/// @param end An iterator to one past the last icon in the dialog.
 	/// @param t The type of icons to show; all icons are assumed to be of the same type.
 	/// @param parent Optionally, a parent dialog.
-	cPictChoice(std::vector<pic_num_t>::iterator begin, std::vector<pic_num_t>::iterator end, ePicType t, cDialog* parent = NULL);
+	cPictChoice(std::vector<pic_num_t>::const_iterator begin, std::vector<pic_num_t>::const_iterator end, ePicType t, cDialog* parent = NULL);
 	/// Initializes a dialog from an index pair.
 	/// @param first The number of the first icon in the dialog.
 	/// @param last The number of the last icon in the dialog.

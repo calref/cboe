@@ -2708,165 +2708,153 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			}
 			break;
-		case eSpecType::AFFECT_POISON:
+		case eSpecType::AFFECT_STATUS:
 			if(pc < 100) {
 				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i)) {
-						if(spec.ex1b == 0) {
-							cure_pc(i,spec.ex1a);
+					if(pc < 0 || pc == i) {
+						switch(eStatus(spec.ex2a)) {
+							case eStatus::POISON:
+								if(spec.ex1b == 0)
+									cure_pc(i, spec.ex1a);
+								else poison_pc(i, spec.ex1a);
+								break;
+							case eStatus::HASTE_SLOW:
+								if(spec.ex1b == 0)
+									slow_pc(i, -spec.ex1a);
+								else slow_pc(i, spec.ex1a);
+								break;
+							case eStatus::INVULNERABLE:
+								if(spec.ex1b == 0)
+									univ.party[i].apply_status(eStatus::INVULNERABLE, spec.ex1a);
+								else univ.party[i].apply_status(eStatus::INVULNERABLE, -spec.ex1a);
+								break;
+							case eStatus::MAGIC_RESISTANCE:
+								if(spec.ex1b == 0)
+									univ.party[i].apply_status(eStatus::MAGIC_RESISTANCE, spec.ex1a);
+								else univ.party[i].apply_status(eStatus::MAGIC_RESISTANCE, -spec.ex1a);
+								break;
+							case eStatus::WEBS:
+								if(spec.ex1b == 0)
+									univ.party[i].apply_status(eStatus::WEBS, -spec.ex1a);
+								else web_pc(i, spec.ex1a);
+								break;
+							case eStatus::DISEASE:
+								if(spec.ex1b == 0)
+									univ.party[i].apply_status(eStatus::DISEASE, -spec.ex1a);
+								else disease_pc(i, spec.ex1a);
+								break;
+							case eStatus::INVISIBLE:
+								if(spec.ex1b == 0)
+									univ.party[i].apply_status(eStatus::INVISIBLE, spec.ex1a);
+								else univ.party[i].apply_status(eStatus::INVISIBLE, -spec.ex1a);
+								break;
+							case eStatus::BLESS_CURSE:
+								if(spec.ex1b == 0)
+									curse_pc(i, -spec.ex1a);
+								else curse_pc(i, spec.ex1a);
+								break;
+							case eStatus::DUMB:
+								if(spec.ex1b == 0)
+									univ.party[i].apply_status(eStatus::DUMB, -spec.ex1a);
+								else dumbfound_pc(i, spec.ex1a);
+								break;
+							case eStatus::ASLEEP:
+								if(spec.ex1b == 0)
+									univ.party[i].apply_status(eStatus::ASLEEP, -spec.ex1a);
+								else sleep_pc(i, spec.ex1a, eStatus::ASLEEP, 10);
+								break;
+							case eStatus::PARALYZED:
+								if(spec.ex1b == 0)
+									univ.party[i].apply_status(eStatus::PARALYZED, -spec.ex1a);
+								else sleep_pc(i, spec.ex1a, eStatus::PARALYZED, 10);
+								break;
+							case eStatus::POISONED_WEAPON:
+								if(spec.ex1b == 0)
+									poison_weapon(i, spec.ex1a, true);
+								else univ.party[i].apply_status(eStatus::POISONED_WEAPON, -spec.ex1a);
+								break;
+							case eStatus::MARTYRS_SHIELD:
+								if(spec.ex1b == 0)
+									univ.party[i].apply_status(eStatus::MARTYRS_SHIELD, spec.ex1a);
+								else univ.party[i].apply_status(eStatus::MARTYRS_SHIELD, -spec.ex1a);
+								break;
+							case eStatus::ACID:
+								if(spec.ex1b == 0)
+									univ.party[i].apply_status(eStatus::ACID, -spec.ex1a);
+								else acid_pc(i, spec.ex1a);
+								break;
+								// Invalid values
+							case eStatus::MAIN:
+							case eStatus::CHARM:
+							case eStatus::FORCECAGE:
+								break;
 						}
-						else poison_pc(i,spec.ex1a);
 					}
 			}
 			else {
 				cCreature& who = univ.town.monst[pc - 100];
 				if(who.active > 0) {
-					short alvl = spec.ex1a;
-					if(spec.ex1b == 0)
-						alvl = -1*alvl;
-					poison_monst(&who,alvl);
-				}
-			}
-			break;
-		case eSpecType::AFFECT_SPEED:
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i)) {
-						if(spec.ex1b == 0) {
-							slow_pc(i,-spec.ex1a);
-						}
-						else slow_pc(i,spec.ex1a);
+					switch(eStatus(spec.ex2a)) {
+						case eStatus::POISON:
+							if(spec.ex1b == 0)
+								poison_monst(&who, -spec.ex1a);
+							else poison_monst(&who, spec.ex1a);
+							break;
+						case eStatus::HASTE_SLOW:
+							if(spec.ex1b == 0)
+								slow_monst(&who, -spec.ex1a);
+							else slow_monst(&who, spec.ex1a);
+							break;
+						case eStatus::WEBS:
+							if(spec.ex1b == 0)
+								web_monst(&who, -spec.ex1a);
+							else web_monst(&who, spec.ex1a);
+							break;
+						case eStatus::DISEASE:
+							if(spec.ex1b == 0)
+								disease_monst(&who, -spec.ex1a);
+							else disease_monst(&who, spec.ex1a);
+							break;
+						case eStatus::BLESS_CURSE:
+							if(spec.ex1b == 0)
+								curse_monst(&who, -spec.ex1a);
+							else curse_monst(&who, spec.ex1a);
+							break;
+						case eStatus::DUMB:
+							if(spec.ex1b == 0)
+								dumbfound_monst(&who, -spec.ex1a);
+							else dumbfound_monst(&who, spec.ex1a);
+							break;
+						case eStatus::ASLEEP:
+							if(spec.ex1b == 0)
+								charm_monst(&who, 0, eStatus::ASLEEP, -spec.ex1a);
+							else charm_monst(&who, 0, eStatus::ASLEEP, spec.ex1a);
+							break;
+						case eStatus::PARALYZED:
+							if(spec.ex1b == 0)
+								charm_monst(&who, 0, eStatus::PARALYZED, -spec.ex1a);
+							else charm_monst(&who, 0, eStatus::PARALYZED, spec.ex1a);
+							break;
+						case eStatus::MARTYRS_SHIELD:
+							if(spec.ex1b == 0)
+								who.status[eStatus::MARTYRS_SHIELD] = min(10, who.status[eStatus::MARTYRS_SHIELD] + spec.ex1a);
+							else who.status[eStatus::MARTYRS_SHIELD] = max(0, who.status[eStatus::MARTYRS_SHIELD] - spec.ex1a);
+							break;
+						case eStatus::ACID:
+							if(spec.ex1b == 0)
+								acid_monst(&who, -spec.ex1a);
+							else acid_monst(&who, spec.ex1a);
+							break;
+							// Invalid values
+						case eStatus::MAIN:
+						case eStatus::FORCECAGE:
+						case eStatus::POISONED_WEAPON:
+						case eStatus::INVULNERABLE:
+						case eStatus::MAGIC_RESISTANCE:
+						case eStatus::INVISIBLE:
+						case eStatus::CHARM:
+							break;
 					}
-			}
-			else {
-				cCreature& who = univ.town.monst[pc - 100];
-				if(who.active > 0) {
-					short alvl = spec.ex1a;
-					if(spec.ex1b == 0)
-						alvl = -1*alvl;
-					slow_monst(&who,alvl);
-				}
-			}
-			break;
-		case eSpecType::AFFECT_INVULN:
-			if(pc >= 100) break;
-			for(i = 0; i < 6; i++)
-				if((pc < 0) || (pc == i))
-					univ.party[i].apply_status(eStatus::INVULNERABLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-			break;
-		case eSpecType::AFFECT_MAGIC_RES:
-			if(pc >= 100) break;
-			for(i = 0; i < 6; i++)
-				if((pc < 0) || (pc == i))
-					univ.party[i].apply_status(eStatus::MAGIC_RESISTANCE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-			break;
-		case eSpecType::AFFECT_WEBS:
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i))
-						univ.party[i].apply_status(eStatus::WEBS,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-			}
-			else {
-				cCreature& who = univ.town.monst[pc - 100];
-				if(who.active > 0) {
-					short alvl = spec.ex1a;
-					if(spec.ex1b == 0)
-						alvl = -1*alvl;
-					web_monst(&who,alvl);
-				}
-			}
-			break;
-		case eSpecType::AFFECT_DISEASE:
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i))
-						univ.party[i].apply_status(eStatus::DISEASE,spec.ex1a * ((spec.ex1b != 0) ? 1: -1));
-			}
-			else {
-				cCreature& who = univ.town.monst[pc - 100];
-				if(who.active > 0) {
-					short alvl = spec.ex1a;
-					if(spec.ex1b == 0)
-						alvl = -1*alvl;
-					disease_monst(&who,alvl);
-				}
-			}
-			break;
-		case eSpecType::AFFECT_SANCTUARY:
-			if(pc >= 100) break;
-			for(i = 0; i < 6; i++)
-				if((pc < 0) || (pc == i))
-					univ.party[i].apply_status(eStatus::INVISIBLE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-			break;
-		case eSpecType::AFFECT_CURSE_BLESS:
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i))
-						univ.party[i].apply_status(eStatus::BLESS_CURSE,spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-			}
-			else {
-				cCreature& who = univ.town.monst[pc - 100];
-				if(who.active > 0) {
-					short alvl = spec.ex1a;
-					if(spec.ex1b == 0)
-						alvl = -1*alvl;
-					curse_monst(&who,alvl);
-				}
-			}
-			break;
-		case eSpecType::AFFECT_DUMBFOUND:
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i))
-						univ.party[i].apply_status(eStatus::DUMB,spec.ex1a * ((spec.ex1b == 0) ? -1: 1));
-			}
-			else {
-				cCreature& who = univ.town.monst[pc - 100];
-				if(who.active > 0) {
-					short alvl = spec.ex1a;
-					if(spec.ex1b == 0)
-						alvl = -1*alvl;
-					dumbfound_monst(&who,alvl);
-				}
-			}
-			break;
-		case eSpecType::AFFECT_SLEEP:
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i)) {
-						if(spec.ex1b == 0) {
-							univ.party[i].apply_status(eStatus::ASLEEP,-1 * spec.ex1a);
-						}
-						else sleep_pc(i,spec.ex1a,eStatus::ASLEEP,10);
-					}
-			}
-			else {
-				cCreature& who = univ.town.monst[pc - 100];
-				if(who.active > 0) {
-					short alvl = spec.ex1a;
-					if(spec.ex1b == 0)
-						alvl = -1*alvl;
-					charm_monst(&who,0,eStatus::ASLEEP,alvl);
-				}
-			}
-			break;
-		case eSpecType::AFFECT_PARALYSIS:
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i)) {
-						if(spec.ex1b == 0) {
-							univ.party[i].apply_status(eStatus::PARALYZED,-1 * spec.ex1a);
-						}
-						else sleep_pc(i,spec.ex1a,eStatus::PARALYZED,10);
-					}
-			}
-			else {
-				cCreature& who = univ.town.monst[pc - 100];
-				if(who.active > 0) {
-					short alvl = spec.ex1a;
-					if(spec.ex1b == 0)
-						alvl = -1*alvl;
-					charm_monst(&who,0,eStatus::PARALYZED,alvl);
 				}
 			}
 			break;
@@ -2928,26 +2916,15 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			univ.party.alchemy[spec.ex1a] = true;
 			break;
-		case eSpecType::AFFECT_STEALTH:
-			r1 = (short) univ.party.status[ePartyStatus::STEALTH];
+		case eSpecType::AFFECT_PARTY_STATUS:
+			if(spec.ex2a < 0 || spec.ex2a > 3) break;
+			if(spec.ex2a == 1 && univ.party.in_boat >= 0)
+				add_string_to_buf("  Can't fly when on a boat. ");
+			else if(spec.ex2a == 1 && univ.party.in_horse >= 0)////
+				add_string_to_buf("  Can't fly when on a horse.  ");
+			r1 = univ.party.status[ePartyStatus(spec.ex2a)];
 			r1 = minmax(0,250,r1 + spec.ex1a);
 			univ.party.status[ePartyStatus::STEALTH] = r1;
-			break;
-		case eSpecType::AFFECT_FIREWALK:
-			r1 = (short) univ.party.status[ePartyStatus::FIREWALK];
-			r1 = minmax(0,250,r1 + spec.ex1a);
-			univ.party.status[ePartyStatus::FIREWALK] = r1;
-			break;
-		case eSpecType::AFFECT_FLIGHT:
-			if(univ.party.in_boat >= 0)
-				add_string_to_buf("  Can't fly when on a boat. ");
-			else if(univ.party.in_horse >= 0)////
-				add_string_to_buf("  Can't fly when on a horse.  ");
-			else {
-				r1 = (short) univ.party.status[ePartyStatus::FLIGHT];
-				r1 = minmax(0,250,r1 + spec.ex1a);
-				univ.party.status[ePartyStatus::FLIGHT] = r1;
-			}
 			break;
 	}
 	if(check_mess) {

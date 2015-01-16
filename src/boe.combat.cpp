@@ -2796,7 +2796,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short ta
 				case eStatus::INVULNERABLE:
 				case eStatus::MAGIC_RESISTANCE:
 				case eStatus::INVISIBLE:
-				case eStatus::MARTYRS_SHIELD:
+				case eStatus::MARTYRS_SHIELD: // TODO: Wait what? This one works for monsters!
 					if(target < 100)
 						univ.party[target].apply_status(abil.second.gen.stat, -abil.second.gen.strength);
 					break;

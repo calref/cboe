@@ -185,6 +185,19 @@ void cSpecial::append(legacy::special_node_type& old){
 			if(ex1a > 0) ex1a = 10;
 			ex2a = 0;
 			break;
+			// Party statuses (three nodes collapsed into one)
+		case 104:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(ePartyStatus::STEALTH);
+			break;
+		case 105:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(ePartyStatus::FIREWALK);
+			break;
+		case 106:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(ePartyStatus::FLIGHT);
+			break;
 			// Place fields (twelve individual node types were collapsed into one)
 		case 200:
 			type = eSpecType::RECT_PLACE_FIELD;
@@ -237,6 +250,51 @@ void cSpecial::append(legacy::special_node_type& old){
 				case 1: sd2 = OBJECT_BARREL; break;
 				case 2: sd2 = OBJECT_CRATE; break;
 			}
+			break;
+			// Affect status effect (eleven individual node types were collapsed into one)
+		case 87:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::POISON);
+			break;
+		case 88:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::HASTE_SLOW);
+			break;
+		case 89:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::INVULNERABLE);
+			break;
+		case 90:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::MAGIC_RESISTANCE);
+			break;
+		case 91:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::WEBS);
+			break;
+		case 92:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::DISEASE);
+			break;
+		case 93:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::INVISIBLE);
+			break;
+		case 94:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::BLESS_CURSE);
+			break;
+		case 95:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::DUMB);
+			break;
+		case 96:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::ASLEEP);
+			break;
+		case 97:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::PARALYZED);
 			break;
 			// These are ones that were added in the Windows version but only recently added to the Mac version.
 		case 28:
@@ -312,6 +370,8 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // L - Choose button to select a town lighting type
 // & - Choose button to select shop type
 // % - Choose button to select shop cost adjustment
+// e - Choose button to select a status effect
+// E - Choose button to select a party status effect
 static const char*const button_dict[7][11] = {
 	{ // general nodes
 		" mmmMMmmmm mmm mmmmmm   Mmm  $ mmmmmm", // msg1
@@ -338,17 +398,17 @@ static const char*const button_dict[7][11] = {
 		"s    ssssss   ", // ex2b
 		"              ", // ex2c
 	}, { // affect pc nodes
-		"mmmmmmmmmmmmmmmmmmmmmmmmmmm", // msg1
-		"                           ", // msg2
-		"                           ", // msg3
-		"                           ", // pic
-		"                           ", // pictype
-		"                   AP  a   ", // ex1a
-		"                           ", // ex1b
-		"                           ", // ex1c
-		"                  K        ", // ex2a
-		" D                         ", // ex2b
-		" x                         ", // ex2c
+		"mmmmmmmm          mmmmmmm", // msg1
+		"                         ", // msg2
+		"                         ", // msg3
+		"                         ", // pic
+		"                         ", // pictype
+		"                   AP  a ", // ex1a
+		"                        E", // ex1b
+		"       e                 ", // ex1c
+		"                  K      ", // ex2a
+		" D                       ", // ex2b
+		" x                       ", // ex2c
 	}, { // if-then nodes
 		"                        $  $", // msg1
 		"                            ", // msg2

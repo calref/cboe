@@ -23,16 +23,16 @@
 
 const size_t cPictChoice::per_page = 36;
 
-cPictChoice::cPictChoice(std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : cPictChoice(pics.begin(), pics.end(), t, parent) {}
+cPictChoice::cPictChoice(const std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : cPictChoice(pics.begin(), pics.end(), t, parent) {}
 
-cPictChoice::cPictChoice(std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg("choose-pict",parent) {
+cPictChoice::cPictChoice(const std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg("choose-pict",parent) {
 	picts = pics;
 	attachHandlers();
 }
 
 cPictChoice::cPictChoice(
-		std::vector<pic_num_t>::iterator begin,
-		std::vector<pic_num_t>::iterator end,
+		std::vector<pic_num_t>::const_iterator begin,
+		std::vector<pic_num_t>::const_iterator end,
 		ePicType t,
 		cDialog* parent
 	) : dlg("choose-pict",parent) {

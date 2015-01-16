@@ -1101,6 +1101,7 @@ void forced_place_monster(mon_num_t which,location where) {
 }
 
 void magic_adjust(cCreature *which_m,short *how_much) {
+	if(*how_much <= 0) return;
 	if(which_m->abil[eMonstAbil::ABSORB_SPELLS].active) {
 		*how_much = 0;
 		if(32767 - which_m->health > 3)
@@ -1121,16 +1122,18 @@ void magic_adjust(cCreature *which_m,short *how_much) {
 }
 
 void poison_monst(cCreature *which_m,short how_much) {
-	switch(which_m->poison_res) {
-		case RESIST_HALF:
-			how_much /= 2;
-			break;
-		case RESIST_ALL:
-			monst_spell_note(which_m->number,10);
-			return;
-		case RESIST_DOUBLE:
-			how_much *= 2;
-			break;
+	if(how_much > 0) {
+		switch(which_m->poison_res) {
+			case RESIST_HALF:
+				how_much /= 2;
+				break;
+			case RESIST_ALL:
+				monst_spell_note(which_m->number,10);
+				return;
+			case RESIST_DOUBLE:
+				how_much *= 2;
+				break;
+		}
 	}
 	which_m->status[eStatus::POISON] = min(8, which_m->status[eStatus::POISON] + how_much);
 	if(how_much >= 0)
@@ -1210,6 +1213,12 @@ void dumbfound_monst(cCreature *which_m,short how_much) {
 void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amount) {
 	short r1;
 	
+	if(which_status != eStatus::CHARM && which_status != eStatus::FORCECAGE && amount < 0) {
+		which_m->status[which_status] -= amount;
+		if(which_status == eStatus::PARALYZED)
+			which_m->status[which_status] = max(0, which_m->status[which_status]);
+		return;
+	}
 	
 	if((which_status == eStatus::ASLEEP) &&
 		(which_m->m_type == eRace::UNDEAD || which_m->m_type == eRace::SLIME ||

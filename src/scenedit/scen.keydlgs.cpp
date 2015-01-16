@@ -576,7 +576,7 @@ static short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
 
 static pic_num_t choose_damage_type(short cur, cDialog* parent) {
 	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Unblockable", "Cold", "Undead", "Demon"};
-	static std::vector<pic_num_t> pics = {3,0,2,1,1,4,3,3};
+	static const std::vector<pic_num_t> pics = {3,0,2,1,1,4,3,3};
 	short prev = cur;
 	if(cur < 0 || cur >= pics.size()) cur = 0;
 	cPictChoice pic_dlg(pics, PIC_BOOM, parent);
@@ -592,7 +592,7 @@ static pic_num_t choose_damage_type(short cur, cDialog* parent) {
 
 static pic_num_t choose_boom_type(short cur, cDialog* parent) {
 	static const char*const boomNames[] = {"Fire", "Magic/Cold/Electricity", "Teleport", "Magic/Electricity"};
-	static std::vector<pic_num_t> pics = {12,28,20,36};
+	static const std::vector<pic_num_t> pics = {12,28,20,36};
 	short prev = cur;
 	if(cur < 0 || cur >= pics.size()) cur = 0;
 	cPictChoice pic_dlg(pics, PIC_BOOM, parent);
@@ -600,6 +600,28 @@ static pic_num_t choose_boom_type(short cur, cDialog* parent) {
 	pic_dlg->getControl("help").setText(boomNames[cur]);
 	pic_dlg.attachSelectHandler([](cPictChoice& me, int n) {
 		me->getControl("help").setText(boomNames[n]);
+	});
+	bool made_choice = pic_dlg.show(cur);
+	size_t item_hit = pic_dlg.getSelected();
+	return made_choice ? item_hit : prev;
+}
+
+static pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {
+	static const char*const status[] = {
+		"Poisoned Weapon", "Bless/Curse", "Poison", "Haste/Slow", "Invulnerable",
+		"Magic Resist/Amplify", "Webs", "Disease", "Sanctuary", "Dumbfounding/Enlightening",
+		"Martyr's Shield", "Sleep/Hyperactivity", "Paralysis", "Acid"
+	};
+	static const char*const pstatus[] = {"Stealth", "Flight", "Detect Life", "Firewalk"};
+	static const std::vector<pic_num_t> status_pics = {4,0,2,6,5,9,10,11,13,14,15,16,17,18};
+	static const std::vector<pic_num_t> pstatus_pics = {25,23,24,26};
+	short prev = cur;
+	if(cur < 0 || cur >= (party ? pstatus_pics : status_pics).size()) cur = 0;
+	cPictChoice pic_dlg(party ? pstatus_pics : status_pics, PIC_STATUS, parent);
+	pic_dlg->getControl("prompt").setText("Select a status effect:");
+	pic_dlg->getControl("help").setText((party ? pstatus : status)[cur]);
+	pic_dlg.attachSelectHandler([party](cPictChoice& me, int n) {
+		me->getControl("help").setText((party ? pstatus : status)[n]);
 	});
 	bool made_choice = pic_dlg.show(cur);
 	size_t item_hit = pic_dlg.getSelected();
@@ -691,6 +713,8 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case 'f': case 'F': choose_string = false; store = choose_field_type(val, &me, btn == 'F'); break;
 		case 'D': choose_string = false; store = choose_damage_type(val, &me); break;
 		case '!': choose_string = false; store = choose_boom_type(val, &me); break;
+		case 'e': choose_string = false; store = choose_status_effect(val, false, &me); break;
+		case 'E': choose_string = false; store = choose_status_effect(val, true, &me); break;
 		case 'i': strt = STRT_ITEM; title = "Which item?"; break;
 		case 'I': strt = STRT_SPEC_ITEM; title = "Which special item?"; break;
 		case 't': strt = STRT_TER; title = "Which terrain?"; break;

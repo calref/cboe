@@ -110,7 +110,7 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Affect Poison
+Affect Status Effect
 Unused
 Unused
 First part of message
@@ -118,168 +118,168 @@ Second part of message
 Unused
 Unused
 Unused
-Amount (0 .. 8)
-0 - cure, 1 - inflict
+Amount (usually 0 .. 8)
+0 - help, 1 - harm
+Which effect (0 .. 13)
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
 Unused
 Unused
 Unused
 Unused
 Special to Jump To
 --------------------
-Affect Slow/Haste
-Unused
-Unused
-First part of message
-Second part of message
-Unused
-Unused
-Unused
-Amount (0 .. 8)
-0 - cure, 1 - inflict
+Unused Node
 Unused
 Unused
 Unused
 Unused
-Special to Jump To
---------------------
-Affect Invulnerability
-Unused
-Unused
-First part of message
-Second part of message
 Unused
 Unused
 Unused
-Amount (0 .. 8)
-0 - cure, 1 - inflict
+Unused
+Unused
 Unused
 Unused
 Unused
 Unused
 Special to Jump To
 --------------------
-Affect Magic Resistance
-Unused
-Unused
-First part of message
-Second part of message
-Unused
-Unused
-Unused
-Amount (0 .. 8)
-0 - cure, 1 - inflict
+Unused Node
 Unused
 Unused
 Unused
 Unused
-Special to Jump To
---------------------
-Affect Webs
-Unused
-Unused
-First part of message
-Second part of message
 Unused
 Unused
 Unused
-Amount (0 .. 8)
-0 - cure, 1 - inflict
+Unused
+Unused
 Unused
 Unused
 Unused
 Unused
 Special to Jump To
 --------------------
-Affect Disease
-Unused
-Unused
-First part of message
-Second part of message
-Unused
-Unused
-Unused
-Amount (0 .. 8)
-0 - cure, 1 - inflict
+Unused Node
 Unused
 Unused
 Unused
 Unused
-Special to Jump To
---------------------
-Affect Sanctuary
-Unused
-Unused
-First part of message
-Second part of message
 Unused
 Unused
 Unused
-Amount (0 .. 8)
-0 - adds, 1 - removes
+Unused
+Unused
 Unused
 Unused
 Unused
 Unused
 Special to Jump To
 --------------------
-Affect Curse/Bless
-Unused
-Unused
-First part of message
-Second part of message
-Unused
-Unused
-Unused
-Amount (0 .. 8)
-0 - blesses, 1 - curses
+Unused Node
 Unused
 Unused
 Unused
 Unused
-Special to Jump To
---------------------
-Affect Dumbfounding
-Unused
-Unused
-First part of message
-Second part of message
 Unused
 Unused
 Unused
-Amount (0 .. 7)
-0 - cure, 1 - inflict
+Unused
+Unused
 Unused
 Unused
 Unused
 Unused
 Special to Jump To
 --------------------
-Affect Sleep
-Unused
-Unused
-First part of message
-Second part of message
+Unused Node
 Unused
 Unused
 Unused
-Amount (0 .. 8)
-0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
 Unused
 Unused
 Unused
 Unused
 Special to Jump To
 --------------------
-Affect Paralysis
-Unused
-Unused
-First part of message
-Second part of message
+Unused Node
 Unused
 Unused
 Unused
-Amount (0 .. 5000)
-0 - cure, 1 - inflict
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
 Unused
 Unused
 Unused
@@ -382,7 +382,7 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Affect Stealth
+Affect Party Status Effect
 Unused
 Unused
 First part of message
@@ -391,39 +391,7 @@ Unused
 Unused
 Unused
 Amount (0 .. 250)
-Unused
-Unused
-Unused
-Unused
-Unused
-Special to Jump To
---------------------
-Affect Firewalk
-Unused
-Unused
-First part of message
-Second part of message
-Unused
-Unused
-Unused
-Amount (0 .. 250)
-Unused
-Unused
-Unused
-Unused
-Unused
-Special to Jump To
---------------------
-Affect Flying
-Unused
-Unused
-First part of message
-Second part of message
-Unused
-Unused
-Unused
-Amount (0 .. 250)
-Unused
+Which effect (0 .. 3)
 Unused
 Unused
 Unused
