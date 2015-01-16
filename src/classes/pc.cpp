@@ -108,6 +108,221 @@ void cPlayer::avatar() {
 	status[eStatus::MARTYRS_SHIELD] = 8;
 }
 
+void cPlayer::sort_items() {
+	using it = eItemType;
+	static std::map<eItemType, const short> item_priority = {
+		{it::NO_ITEM, 20}, {it::ONE_HANDED, 8}, {it::TWO_HANDED, 8}, {it::GOLD, 20}, {it::BOW, 9},
+		{it::ARROW, 9}, {it::THROWN_MISSILE, 3}, {it::POTION, 2}, {it::SCROLL, 1}, {it::WAND, 0},
+		{it::TOOL, 7}, {it::FOOD, 20}, {it::SHIELD, 10}, {it::ARMOR, 10}, {it::HELM, 10},
+		{it::GLOVES, 10}, {it::SHIELD_2, 10}, {it::BOOTS, 10}, {it::RING, 5}, {it::NECKLACE, 6},
+		{it::WEAPON_POISON, 4}, {it::NON_USE_OBJECT, 11}, {it::PANTS, 12}, {it::CROSSBOW, 9}, {it::BOLTS, 9},
+		{it::MISSILE_NO_AMMO, 9}, {it::UNUSED1, 20}, {it::UNUSED2, 20}
+	};
+	bool no_swaps = false;
+	
+	while(!no_swaps) {
+		no_swaps = true;
+		for(int i = 0; i < 23; i++)
+			if(item_priority[items[i + 1].variety] <
+			   item_priority[items[i].variety]) {
+			  	no_swaps = false;
+				std::swap(items[i + 1], items[i]);
+				std::swap(equip[i + 1], equip[i]);
+				if(weap_poisoned == i + 1)
+					weap_poisoned--;
+				else if(weap_poisoned == i)
+					weap_poisoned++;
+			}
+	}
+}
+
+bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
+	short free_space;
+	
+	if(item.variety == eItemType::NO_ITEM)
+		return true;
+	if(item.variety == eItemType::GOLD) {
+		party.gold += item.item_level;
+		if(do_print && print_result)
+			print_result("You get some gold.");
+		return true;
+	}
+	if(item.variety == eItemType::FOOD) {
+		party.food += item.item_level;
+		if(do_print && print_result)
+			print_result("You get some food.");
+		return true;
+	}
+	if(!allow_overload && item.item_weight() > free_weight()) {
+	  	if(do_print && print_result) {
+			//beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+			print_result("Item too heavy to carry.");
+		}
+		return false;
+	}
+	free_space = has_space();
+	if(free_space == 24 || main_status != eMainStatus::ALIVE)
+		return false;
+	else {
+		item.property = false;
+		item.contained = false;
+		items[free_space] = item;
+		
+		if(do_print && print_result) {
+			std::ostringstream announce;
+			announce << "  " << name << " gets ";
+			if(!item.ident)
+				announce << item.name;
+			else announce << item.full_name;
+			announce << '.';
+			print_result(announce.str());
+		}
+		
+		combine_things();
+		sort_items();
+		return true;
+	}
+	return false;
+}
+
+short cPlayer::max_weight() {
+	return 100 + (15 * min(skills[eSkill::STRENGTH],20)) + (traits[eTrait::STRENGTH] * 30)
+		+ (traits[eTrait::BAD_BACK] * -50);
+}
+
+short cPlayer::cur_weight() {
+	short weight = 0;
+	bool airy = false,heavy = false;
+	
+	for(int i = 0; i < 24; i++)
+		if(items[i].variety != eItemType::NO_ITEM) {
+			weight += items[i].item_weight();
+			if(items[i].ability == eItemAbil::LIGHTER_OBJECT)
+				airy = true;
+			if(items[i].ability == eItemAbil::HEAVIER_OBJECT)
+				heavy = true;
+		}
+	if(airy)
+		weight -= 30;
+	if(heavy)
+		weight += 30;
+	if(weight < 0)
+		weight = 0;
+	return weight;
+}
+
+short cPlayer::free_weight() {
+	return max_weight() - cur_weight();
+}
+
+short cPlayer::has_space() {
+	for(int i = 0; i < 24; i++) {
+		if(items[i].variety == eItemType::NO_ITEM)
+			return i;
+	}
+	return 24;
+}
+
+void cPlayer::combine_things() {
+	for(int i = 0; i < 24; i++) {
+		if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag > 0 && items[i].ident) {
+			for(int j = i + 1; j < 24; j++)
+				if(items[j].variety != eItemType::NO_ITEM && items[j].type_flag == items[i].type_flag && items[j].ident) {
+					if(print_result) print_result("(items combined)");
+					short test = items[i].charges + items[j].charges;
+					if(test > 125) {
+						items[i].charges = 125;
+						if(print_result) print_result("(Can have at most 125 of any item.");
+					}
+					else items[i].charges += items[j].charges;
+				 	if(equip[j]) {
+				 		equip[i] = true;
+				 		equip[j] = false;
+					}
+					take_item(j);
+				}
+		}
+		if(items[i].variety != eItemType::NO_ITEM && items[i].charges < 0)
+			items[i].charges = 1;
+	}
+}
+
+short cPlayer::get_prot_level(eItemAbil abil, short dat) {
+	int sum = 0;
+	for(int i = 0; i < 24; i++) {
+		if(items[i].variety == eItemType::NO_ITEM) continue;
+		if(items[i].ability != abil) continue;
+		if(!equip[i]) continue;
+		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
+		sum += items[i].abil_data[1];
+	}
+	return sum; // TODO: Should we return -1 if the sum is 0?
+	
+}
+
+short cPlayer::has_abil_equip(eItemAbil abil,short dat) {
+	for(short i = 0; i < 24; i++) {
+		if(items[i].variety == eItemType::NO_ITEM) continue;
+		if(items[i].ability != abil) continue;
+		if(!equip[i]) continue;
+		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
+		return i;
+	}
+	return 24;
+}
+
+short cPlayer::has_abil(eItemAbil abil,short dat) {
+	for(short i = 0; i < 24; i++) {
+		if(items[i].variety == eItemType::NO_ITEM) continue;
+		if(items[i].ability != abil) continue;
+		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
+		return i;
+	}
+	return 24;
+}
+
+eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) {
+	if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
+		for(int i = 0; i < 24; i++)
+			if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag == item.type_flag && items[i].charges > 123)
+				return eBuyStatus::HAVE_LOTS;
+		
+		if(has_space() == 24)
+			return eBuyStatus::NO_SPACE;
+		if(item.item_weight() > free_weight()) {
+	  		return eBuyStatus::TOO_HEAVY;
+		}
+	}
+	if(cost > party.gold)
+		return eBuyStatus::NEED_GOLD;
+	return eBuyStatus::OK;
+}
+
+void cPlayer::take_item(int which_item) {
+	if(weap_poisoned == which_item && status[eStatus::POISONED_WEAPON] > 0) {
+		if(print_result) print_result("  Poison lost.");
+		status[eStatus::POISONED_WEAPON] = 0;
+	}
+	if(weap_poisoned > which_item && status[eStatus::POISONED_WEAPON] > 0)
+		weap_poisoned--;
+	
+	for(int i = which_item; i < 23; i++) {
+		items[i] = items[i + 1];
+		equip[i] = equip[i + 1];
+	}
+	items[23] = cItem();
+	equip[23] = false;
+}
+
+void cPlayer::remove_charge(int which_item) {
+	if(items[which_item].charges > 0) {
+		items[which_item].charges--;
+		if(items[which_item].charges == 0) {
+			take_item(which_item);
+		}
+	}
+}
+
 void cPlayer::finish_create() {
 	// Start items
 	switch(race) {
@@ -143,7 +358,7 @@ void cPlayer::finish_create() {
 	cur_sp = max_sp;
 }
 
-cPlayer::cPlayer(){
+cPlayer::cPlayer(cParty& party) : party(party) {
 	short i;
 	main_status = eMainStatus::ABSENT;
 	name = "\n";
@@ -174,7 +389,7 @@ cPlayer::cPlayer(){
 	direction = 0;
 }
 
-cPlayer::cPlayer(long key,short slot){
+cPlayer::cPlayer(cParty& party,long key,short slot) : party(party) {
 	short i;
 	main_status = eMainStatus::ALIVE;
 	if(key == 'dbug'){
@@ -497,3 +712,5 @@ std::istream& operator >> (std::istream& in, eMainStatus& e){
 	else e = eMainStatus::ABSENT;
 	return in;
 }
+
+void(* cPlayer::print_result)(std::string) = nullptr;

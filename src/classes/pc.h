@@ -20,7 +20,12 @@
 
 namespace legacy { struct pc_record_type; };
 
+enum class eBuyStatus {OK, NO_SPACE, NEED_GOLD, TOO_HEAVY, HAVE_LOTS};
+
+class cParty;
+
 class cPlayer {
+	cParty& party;
 public:
 	eMainStatus main_status;
 	std::string name;
@@ -52,9 +57,24 @@ public:
 	void apply_status(eStatus which, int how_much);
 	void avatar();
 	
+	void combine_things();
+	void sort_items();
+	bool give_item(cItem item, bool do_print, bool allow_overload = false);
+	void take_item(int which_item);
+	void remove_charge(int which_item);
+	short has_space();
+	short max_weight();
+	short cur_weight();
+	short free_weight();
+	short get_prot_level(eItemAbil abil, short dat = -1);
+	short has_abil_equip(eItemAbil abil, short dat = -1);
+	short has_abil(eItemAbil abil, short dat = -1);
+	eBuyStatus ok_to_buy(short cost,cItem item);
+	
 	void append(legacy::pc_record_type old);
-	cPlayer();
-	cPlayer(long key,short slot);
+	cPlayer(cParty& party);
+	cPlayer(cParty& party,long key,short slot);
+	static void(* print_result)(std::string);
 	short get_tnl();
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);

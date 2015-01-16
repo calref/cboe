@@ -547,11 +547,11 @@ void pc_attack(short who_att,short target) {
 	}
 	
 	
-	if((skill_item = pc_has_abil_equip(who_att,eItemAbil::SKILL)) < 24) {
+	if((skill_item = univ.party[who_att].has_abil_equip(eItemAbil::SKILL)) < 24) {
 		hit_adj += 5 * (univ.party[who_att].items[skill_item].item_level / 2 + 1);
 		dam_adj += univ.party[who_att].items[skill_item].item_level / 2;
 	}
-	if((skill_item = pc_has_abil_equip(who_att,eItemAbil::GIANT_STRENGTH)) < 24) {
+	if((skill_item = univ.party[who_att].has_abil_equip(eItemAbil::GIANT_STRENGTH)) < 24) {
 		dam_adj += univ.party[who_att].items[skill_item].item_level;
 		hit_adj += univ.party[who_att].items[skill_item].item_level * 2;
 	}
@@ -668,7 +668,7 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 			// poison
 			if(univ.party[who_att].status[eStatus::POISONED_WEAPON] > 0) {
 				short poison_amt = univ.party[who_att].status[eStatus::POISONED_WEAPON];
-				if(pc_has_abil_equip(who_att,eItemAbil::POISON_AUGMENT) < 24)
+				if(univ.party[who_att].has_abil_equip(eItemAbil::POISON_AUGMENT) < 24)
 					poison_amt += 2;
 				poison_monst(which_m,poison_amt);
 				move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
@@ -1209,11 +1209,13 @@ void do_combat_cast(location target) {
 											if((cur_monst->mu == 0) && (cur_monst->cl == 0))
 												add_string_to_buf("  Can't duel: no magic.");
 											else {
-												item = pc_has_abil(current_pc,eItemAbil::SMOKY_CRYSTAL);
+												item = univ.party[current_pc].has_abil(eItemAbil::SMOKY_CRYSTAL);
 												if(item >= 24)
 													add_string_to_buf("  You need a smoky crystal.   ");
 												else {
-													remove_charge(current_pc,item);
+													univ.party[current_pc].remove_charge(item);
+													if(stat_window == current_pc)
+														put_item_screen(stat_window,1);
 													do_mindduel(current_pc,cur_monst);
 												}
 											}
@@ -1475,7 +1477,7 @@ void fire_missile(location target) {
 	hit_bonus = (overall_mode == MODE_FIRING) ? univ.party[missile_firer].items[missile_inv_slot].bonus : 0;
 	hit_bonus += stat_adj(missile_firer,eSkill::DEXTERITY) - can_see_light(univ.party[missile_firer].combat_pos,target,sight_obscurity)
 		+ minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
-	if((skill_item = pc_has_abil_equip(missile_firer,eItemAbil::ACCURACY)) < 24) {
+	if((skill_item = univ.party[missile_firer].has_abil_equip(eItemAbil::ACCURACY)) < 24) {
 		hit_bonus += univ.party[missile_firer].items[skill_item].abil_data[0] / 2;
 		dam_bonus += univ.party[missile_firer].items[skill_item].abil_data[0] / 2;
 	}
@@ -1549,7 +1551,7 @@ void fire_missile(location target) {
 				// poison
 				if(univ.party[missile_firer].status[eStatus::POISONED_WEAPON] > 0 && univ.party[missile_firer].weap_poisoned == ammo_inv_slot) {
 					poison_amt = univ.party[missile_firer].status[eStatus::POISONED_WEAPON];
-					if(pc_has_abil_equip(missile_firer,eItemAbil::POISON_AUGMENT) < 24)
+					if(univ.party[missile_firer].has_abil_equip(eItemAbil::POISON_AUGMENT) < 24)
 						poison_amt++;
 					poison_monst(cur_monst,poison_amt);
 				}
@@ -1566,11 +1568,13 @@ void fire_missile(location target) {
 			if(univ.party[missile_firer].items[ammo_inv_slot].ability != eItemAbil::MISSILE_RETURNING)
 				univ.party[missile_firer].items[ammo_inv_slot].charges--;
 			else univ.party[missile_firer].items[ammo_inv_slot].charges = 1;
-			if(pc_has_abil_equip(missile_firer,eItemAbil::DRAIN_MISSILES) < 24
+			if(univ.party[missile_firer].has_abil_equip(eItemAbil::DRAIN_MISSILES) < 24
 			   && univ.party[missile_firer].items[ammo_inv_slot].ability != eItemAbil::MISSILE_RETURNING)
 				univ.party[missile_firer].items[ammo_inv_slot].charges--;
 			if(univ.party[missile_firer].items[ammo_inv_slot].charges <= 0)
-				take_item(missile_firer,ammo_inv_slot);
+				univ.party[missile_firer].take_item(ammo_inv_slot);
+			if(missile_firer == stat_window)
+				put_item_screen(stat_window,1);
 		}
 	}
 	
@@ -1700,7 +1704,7 @@ void combat_run_monst() {
 			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
 			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
 			move_to_zero(univ.party.status[ePartyStatus::STEALTH]);
-			if((item = pc_has_abil_equip(i,eItemAbil::REGENERATE)) < 24) {
+			if((item = univ.party[i].has_abil_equip(eItemAbil::REGENERATE)) < 24) {
 				update_stat = true;
 				heal_pc(i,get_ran(1,0,univ.party[i].items[item].item_level + 1));
 			}
@@ -2752,7 +2756,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short ta
 			handle_marked_damage();
 			break;
 		case eMonstAbil::STUN:
-			if(target < 100 && pc_has_abil_equip(target, eItemAbil::LIFE_SAVING) < 24)
+			if(target < 100 && univ.party[target].has_abil_equip(eItemAbil::LIFE_SAVING) < 24)
 				break;
 		case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
 			switch(abil.second.gen.stat) {
@@ -2831,7 +2835,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short ta
 			break;
 		case eMonstAbil::DRAIN_XP:
 			if(target < 100) {
-				if(pc_has_abil_equip(target, eItemAbil::LIFE_SAVING) < 24) break;
+				if(univ.party[target].has_abil_equip(eItemAbil::LIFE_SAVING) < 24) break;
 				drain_pc(target, univ.town.monst[m_num].level * abil.second.gen.strength / 100);
 			}
 			break;
@@ -4152,7 +4156,7 @@ void handle_disease() {
 					r1 = get_ran(1,0,7);
 					if(univ.party[i].traits[eTrait::GOOD_CONST])
 						r1 -= 2;
-					if((get_ran(1,0,7) <= 0) || (pc_has_abil_equip(i,eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE)) < 24))
+					if((get_ran(1,0,7) <= 0) || (univ.party[i].has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE)) < 24))
 						move_to_zero(univ.party[i].status[eStatus::DISEASE]);
 				}
 		put_pc_screen();

@@ -325,7 +325,7 @@ void handle_item_menu(int item_hit) {
 	cItem store_i;
 	store_i = univ.scenario.scen_items[item_hit];
 	store_i.ident = true;
-	give_to_pc(current_active_pc,store_i,false);
+	univ.party[current_active_pc].give_item(store_i,false);
 }
 
 //short mode; // 0 - quit  1- restore

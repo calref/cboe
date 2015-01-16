@@ -106,7 +106,7 @@ public:
 	std::string scen_name;
 private:
 	cUniverse& univ;
-	cPlayer adven[6];
+	std::array<cPlayer*,6> adven;
 public:
 	unsigned short setup[4][64][64]; // formerly setup_save_type
 	std::array<std::array<cItem,115>,3> stored_items; // formerly stored_items_list_type
@@ -129,11 +129,12 @@ public:
 	void append(legacy::big_tr_type& old);
 	void append(legacy::stored_items_list_type& old,short which_list);
 	void append(legacy::setup_save_type& old);
+	void append(legacy::pc_record_type(& old)[6]);
 	
 	void apply_status(eStatus which, int how_much);
 	
-	void add_pc(legacy::pc_record_type old);
-	void add_pc(cPlayer new_pc);
+	void new_pc(size_t spot);
+	size_t free_space();
 	void void_pcs();
 	bool save_talk(const std::string& who, const std::string& where, const std::string& str1, const std::string& str2);
 	bool add_to_journal(const std::string& event, short day);
@@ -144,19 +145,26 @@ public:
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 	
+	bool give_item(cItem item,bool do_print);
+	bool forced_give(item_num_t item_num,eItemAbil abil,short dat = -1);
+	bool has_abil(eItemAbil abil, short dat = -1);
+	bool take_abil(eItemAbil abil, short dat = -1);
+	bool check_class(unsigned int item_class,bool take);
+	
 	bool start_split(short x, short y, snd_num_t noise, short who);
 	bool end_split(snd_num_t noise);
 	bool is_split() const;
 	bool pc_present(short n) const;
 	short pc_present() const; // If only one pc is present, returns the number of that pc. Otherwise returns 6.
+	void swap_pcs(size_t a, size_t b);
 	
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
 	typedef std::vector<cTimer>::iterator timerIter;
 	cParty(cUniverse& univ, long party_preset = 'dflt');
-	// TODO: Remove this in favour of cParty constructor
-	friend void init_party(short);
+	~cParty();
+	static void(* print_result)(std::string);
 };
 
 bool operator==(const cParty::cConvers& one, const cParty::cConvers& two);

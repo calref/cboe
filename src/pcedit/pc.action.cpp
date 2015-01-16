@@ -76,7 +76,7 @@ bool handle_action(sf::Event event) {
 		if((the_point.in(item_string_rects[i][1])) && // drop item
 		   univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
 			flash_rect(item_string_rects[i][1]);
-			take_item(current_active_pc,i);
+			univ.party[current_active_pc].take_item(i);
 		}
 	for(i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][2])) && // identify item
@@ -144,61 +144,6 @@ void edit_day() {
 	univ.party.age = (long long) (3700) * (long long) (dialog_answer);
 }
 
-void combine_things(short pc_num) {
-	short i,j,test;
-	
-	for(i = 0; i < 24; i++) {
-		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM &&
-		   (univ.party[pc_num].items[i].type_flag > 0) && (univ.party[pc_num].items[i].ident)) {
-			for(j = i + 1; j < 24; j++)
-				if(univ.party[pc_num].items[j].variety != eItemType::NO_ITEM &&
-				   (univ.party[pc_num].items[j].type_flag == univ.party[pc_num].items[i].type_flag)
-				   && (univ.party[pc_num].items[j].ident)) {
-					//					add_string_to_buf("(items combined)");
-					test = (short) (univ.party[pc_num].items[i].charges) + (short) (univ.party[pc_num].items[j].charges);
-					if(test > 125) {
-						univ.party[pc_num].items[i].charges = 125;
-						//						ASB("Can have at most 125 of any item.");
-					}
-					else univ.party[pc_num].items[i].charges += univ.party[pc_num].items[j].charges;
-				 	if(univ.party[pc_num].equip[j]) {
-				 		univ.party[pc_num].equip[i] = true;
-				 		univ.party[pc_num].equip[j] = false;
-					}
-					take_item(pc_num,j);
-				}
-		}
-		if(univ.party[pc_num].items[i].variety != eItemType::NO_ITEM && univ.party[pc_num].items[i].charges < 0)
-			univ.party[pc_num].items[i].charges = 1;
-	}
-}
-
-bool give_to_pc(short pc_num,cItem item, short /*print_result*/) {
-	short free_space;
-	
-	if(item.variety == eItemType::NO_ITEM)
-		return true;
-	if((free_space = pc_has_space(pc_num)) == 24  || univ.party[pc_num].main_status != eMainStatus::ALIVE)
-		return false;
-	else {
-		univ.party[pc_num].items[free_space] = item;
-		combine_things(pc_num);
-		return true;
-	}
-	return false;
-}
-
-bool give_to_party(cItem item,short print_result) {
-	short i = 0;
-	
-	while(i < 6) {
-		if(give_to_pc(i,item,print_result))
-			return true;
-		i++;
-	}
-	return false;
-}
-
 void give_gold(short amount,bool /*print_result*/) {
 	univ.party.gold = univ.party.gold + amount;
 }
@@ -208,36 +153,6 @@ bool take_gold(short amount,bool /*print_result*/) {
 		return false;
 	univ.party.gold = univ.party.gold - amount;
 	return true;
-}
-
-short pc_has_space(short pc_num) {
-	short i = 0;
-	
-	while(i < 24) {
-		if(univ.party[pc_num].items[i].variety == eItemType::NO_ITEM)
-			return i;
-		i++;
-	}
-	return 24;
-}
-
-//short pc_num,which_item;  // if which_item > 20, don't update stat win, item is which_item - 20
-void take_item(short pc_num,short which_item) {
-	short i;
-	
-	if(univ.party[pc_num].weap_poisoned == which_item && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0) {
-		univ.party[pc_num].status[eStatus::POISONED_WEAPON] = 0;
-	}
-	if(univ.party[pc_num].weap_poisoned > which_item && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0)
-		univ.party[pc_num].weap_poisoned--;
-	
-	for(i = which_item; i < 23; i++) {
-		univ.party[pc_num].items[i] = univ.party[pc_num].items[i + 1];
-		univ.party[pc_num].equip[i] = univ.party[pc_num].equip[i + 1];
-	}
-	univ.party[pc_num].items[23].variety = eItemType::NO_ITEM;
-	univ.party[pc_num].equip[23] = false;
-	
 }
 
 void edit_xp(cPlayer *pc) {

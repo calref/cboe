@@ -1121,6 +1121,11 @@ short print_terrain(location space) {
 	return (short) which_terrain;
 }
 
+void add_string_to_buf(std::string str) {
+	// This is a separate overload instead of using a defaulted parameter so that
+	// it can be passed as an argument to various other functions
+	add_string_to_buf(str, 0);
+}
 
 void add_string_to_buf(std::string str, unsigned short indent) {
 	if(overall_mode == MODE_STARTUP)

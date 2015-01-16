@@ -1079,3 +1079,5 @@ short cCurTown::countMonsters(){
 			to_ret++;
 	return to_ret;
 }
+
+void(* cUniverse::print_result)(std::string) = nullptr;

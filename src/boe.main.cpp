@@ -112,6 +112,7 @@ int main(int /*argc*/, char* argv[]) {
 		init_directories(argv[0]);
 		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 		sync_prefs();
+		cUniverse::print_result = cParty::print_result = cPlayer::print_result = add_string_to_buf;
 		init_graph_tool();
 		Initialize();
 		init_fileio();

@@ -552,8 +552,8 @@ static void display_pc_info(cDialog& me, const short pc) {
 	
 	short weap1 = 24,weap2 = 24,hit_adj = 0, dam_adj = 0,skill_item;
 	
-	store = pc_carry_weight(pc);
-	i = amount_pc_can_carry(pc);
+	store = univ.party[pc].cur_weight();
+	i = univ.party[pc].max_weight();
 	to_draw << univ.party[pc].name << " is carrying " << store << " stones out of " << i << '.';
 	me["weight"].setText(to_draw.str());
 	to_draw.str("");
@@ -594,11 +594,11 @@ static void display_pc_info(cDialog& me, const short pc) {
 		hit_adj -= 25;
 	
 	dam_adj = stat_adj(pc,eSkill::STRENGTH) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
-	if((skill_item = pc_has_abil_equip(pc,eItemAbil::SKILL)) < 24) {
+	if((skill_item = univ.party[pc].has_abil_equip(eItemAbil::SKILL)) < 24) {
 		hit_adj += 5 * (univ.party[pc].items[skill_item].item_level / 2 + 1);
 		dam_adj += univ.party[pc].items[skill_item].item_level / 2;
 	}
-	if((skill_item = pc_has_abil_equip(pc,eItemAbil::GIANT_STRENGTH)) < 24) {
+	if((skill_item = univ.party[pc].has_abil_equip(eItemAbil::GIANT_STRENGTH)) < 24) {
 		dam_adj += univ.party[pc].items[skill_item].item_level;
 		hit_adj += univ.party[pc].items[skill_item].item_level * 2;
 	}

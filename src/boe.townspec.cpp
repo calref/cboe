@@ -39,7 +39,7 @@ void activate_monster_enc(short enc_num,std::string list,short str,short strsnd,
 // 7 - level drain  8 - alert  9 - big flames 10 - dumbfound 11 - disease 1
 // 12 - disease all
 bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
-	short r1,skill,i,num_hits = 1,i_level;
+	short r1,skill,i,num_hits = 1;
 	short trap_odds[30] = {5,30,35,42,48, 55,63,69,75,77,
 		78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99};
 	
@@ -65,8 +65,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 	
 	if(pc_num < 6) {
 		i = stat_adj(pc_num,eSkill::DEXTERITY);
-		if((i_level = get_prot_level(pc_num,eItemAbil::THIEVING)) > 0)
-			i = i + i_level / 2;
+		i += univ.party[pc_num].get_prot_level(eItemAbil::THIEVING) / 2;
 		skill = minmax(0,20,univ.party[pc_num].skills[eSkill::DISARM_TRAPS] +
 					   + univ.party[pc_num].skills[eSkill::LUCK] / 2 + 1 - univ.town.difficulty + 2 * i);
 		

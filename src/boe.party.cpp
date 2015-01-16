@@ -236,7 +236,7 @@ void put_party_in_scen(std::string scen_name) {
 	 	for(i = 23; i >= 0; i--) {
 			univ.party[j].items[i].special_class = 0;
 			if(univ.party[j].items[i].ability == eItemAbil::CALL_SPECIAL) {
-				take_item(j,i + 30);
+				univ.party[j].take_item(i);
 				item_took = true;
 			}
 		}
@@ -307,23 +307,15 @@ void put_party_in_scen(std::string scen_name) {
 bool create_pc(short spot,cDialog* parent) {
 	bool still_ok = true;
 	
-	if(spot == 6) {
-		for(spot = 0; spot < 6; spot++)
-			if(univ.party[spot].main_status == eMainStatus::ABSENT)
-				break;
-	}
-	if(spot == 6)
-		return false;
-	
-	univ.party[spot] = cPlayer();
+	if(spot == 6) spot = univ.party.free_space();
+	if(spot == 6) return false;
+	univ.party.new_pc(spot);
 	
 	pick_race_abil(&univ.party[spot],0);
 	
 	still_ok = spend_xp(spot,0,parent);
 	if(!still_ok)
 		return false;
-	univ.party[spot].cur_health = univ.party[spot].max_health;
-	univ.party[spot].cur_sp = univ.party[spot].max_sp;
 	
 	pick_pc_graphic(spot,0,parent);
 	pick_pc_name(spot,parent);
@@ -334,6 +326,8 @@ bool create_pc(short spot,cDialog* parent) {
 		// TODO: Why only when not in MODE_STARTUP?
 		univ.party[spot].finish_create();
 	}
+	univ.party[spot].cur_health = univ.party[spot].max_health;
+	univ.party[spot].cur_sp = univ.party[spot].max_sp;
 	
 	return true;
 }
@@ -391,8 +385,8 @@ void curse_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
-		if(how_much > 0 && (level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::BLESS_CURSE))) > 0)
-			how_much -= level / 2;
+		if(how_much > 0)
+			how_much -= univ.party[which_pc].get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::BLESS_CURSE)) / 2;
 		univ.party[which_pc].status[eStatus::BLESS_CURSE] = minmax(-8,8,univ.party[which_pc].status[eStatus::BLESS_CURSE] - how_much);
 		if(how_much < 0)
 			add_string_to_buf("  " + univ.party[which_pc].name + " blessed.");
@@ -412,12 +406,11 @@ void dumbfound_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	r1 = get_ran(1,0,90);
-	if(pc_has_abil_equip(which_pc,eItemAbil::WILL) < 24) {
+	if(univ.party[which_pc].has_abil_equip(eItemAbil::WILL) < 24) {
 		add_string_to_buf("  Ring of Will glows.");
 		r1 -= 10;
 	}
-	if((level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::DUMB))) > 0)
-		how_much -= level / 4;
+	how_much -= univ.party[which_pc].get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::DUMB)) / 4;
 	if(r1 < univ.party[which_pc].level)
 		how_much -= 2;
 	if(how_much <= 0) {
@@ -446,8 +439,7 @@ void disease_pc(short which_pc,short how_much) {
 		add_string_to_buf("  " + univ.party[which_pc].name + " saved.");
 		return;
 	}
-	if((level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE))) > 0)
-		how_much -= level / 2;
+	how_much -= univ.party[which_pc].get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE)) / 2;
 	if(univ.party[which_pc].traits[eTrait::FRAIL] && how_much > 1)
 		how_much++;
 	if(univ.party[which_pc].traits[eTrait::FRAIL] && how_much == 1 && get_ran(1,0,1) == 0)
@@ -471,12 +463,10 @@ void sleep_pc(short which_pc,short how_much,eStatus what_type,short adjust) {
 	// TODO: Uh, what if an invalid status is passed in?
 	// --> Currently, you'd get that status effect, but with a "paralyzed" message, sound, and quick-help
 	if(what_type == eStatus::ASLEEP || what_type == eStatus::PARALYZED) { ////
-		if((level = get_prot_level(which_pc,eItemAbil::WILL)) > 0)
-			how_much -= level / 2;
-		if((level = get_prot_level(which_pc,eItemAbil::FREE_ACTION)) > 0)
-			how_much -= (what_type == eStatus::ASLEEP) ? level : level * 300;
-		if((level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(what_type))) > 0)
-			how_much -= level / 4;
+		how_much -= univ.party[which_pc].get_prot_level(eItemAbil::WILL) / 2;
+		level = univ.party[which_pc].get_prot_level(eItemAbil::FREE_ACTION);
+		how_much -= (what_type == eStatus::ASLEEP) ? level : level * 300;
+		how_much -= univ.party[which_pc].get_prot_level(eItemAbil::STATUS_PROTECTION,int(what_type)) / 4;
 	}
 	
 	r1 = get_ran(1,1,100) + adjust;
@@ -511,8 +501,8 @@ void slow_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
-		if(how_much > 0 && (level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::HASTE_SLOW))) > 0)
-			how_much -= level / 2;
+		if(how_much > 0)
+			how_much -= univ.party[which_pc].get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::HASTE_SLOW)) / 2;
 		univ.party[which_pc].status[eStatus::HASTE_SLOW] = minmax(-8,8,univ.party[which_pc].status[eStatus::HASTE_SLOW] - how_much);
 		if(how_much < 0)
 			add_string_to_buf("  " + univ.party[which_pc].name + " hasted.");
@@ -528,8 +518,7 @@ void web_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
-		if((level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::WEBS))) > 0)
-			how_much -= level / 2;
+		how_much -= univ.party[which_pc].get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::WEBS)) / 2;
 		univ.party[which_pc].status[eStatus::WEBS] = min(univ.party[which_pc].status[eStatus::WEBS] + how_much,8);
 		add_string_to_buf("  " + univ.party[which_pc].name + " webbed.");
 		one_sound(17);
@@ -541,7 +530,7 @@ void web_pc(short which_pc,short how_much) {
 void acid_pc(short which_pc,short how_much) {
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return;
-	if(pc_has_abil_equip(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::ACID)) < 24) {
+	if(univ.party[which_pc].has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::ACID)) < 24) {
 		add_string_to_buf("  " + univ.party[which_pc].name + " resists acid.");
 		return;
 	}
@@ -984,7 +973,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::MAGIC_MAP:
-			item = pc_has_abil(pc_num,eItemAbil::SAPPHIRE);
+			item = univ.party[pc_num].has_abil(eItemAbil::SAPPHIRE);
 			if(item == 24 && !freebie)
 				add_string_to_buf("  You need a sapphire.        ");
 			else if(univ.town->defy_scrying || univ.town->defy_mapping)
@@ -992,7 +981,9 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			else {
 				if(freebie) add_string_to_buf("  You have a vision.");
 				else {
-					remove_charge(pc_num,item);
+					univ.party[pc_num].remove_charge(item);
+					if(stat_window == pc_num)
+						put_item_screen(stat_window,1);
 					univ.party[pc_num].cur_sp -= (*spell_num).cost;
 					add_string_to_buf("  As the sapphire dissolves,       ");
 					add_string_to_buf("  you have a vision.               ");
@@ -1350,11 +1341,11 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 				} else {
 					
 					if(!PSD[SDF_RESURRECT_NO_BALM]) {
-						if((item = pc_has_abil(pc_num,eItemAbil::RESURRECTION_BALM)) == 24) {
+						if((item = univ.party[pc_num].has_abil(eItemAbil::RESURRECTION_BALM)) == 24) {
 							add_string_to_buf("  Need resurrection balm.");
 							break;
 						}
-						else take_item(pc_num,item);
+						else univ.party[pc_num].take_item(item);
 					}
 					if(spell_num == eSpell::RAISE_DEAD) {
 						if(univ.party[target].main_status == eMainStatus::DEAD)
@@ -1640,8 +1631,7 @@ void do_mindduel(short pc_num,cCreature *monst) {
 	short i = 0,adjust,r1,r2,balance = 0;
 	
 	adjust = (univ.party[pc_num].level + univ.party[pc_num].skills[eSkill::INTELLIGENCE]) / 2 - monst->level * 2;
-	if((i = get_prot_level(pc_num,eItemAbil::WILL)) > 0)
-		adjust += i * 5;
+	adjust += univ.party[pc_num].get_prot_level(eItemAbil::WILL) * 5;
 	if(monst->attitude % 2 != 1)
 		make_town_hostile();
 	monst->attitude = 1;
@@ -2298,7 +2288,7 @@ short stat_adj(short pc_num,eSkill which) {
 			tr++;
 	}
 	// TODO: Use ability strength?
-	if(pc_has_abil_equip(pc_num,eItemAbil::BOOST_STAT,int(which)) < 24)
+	if(univ.party[pc_num].has_abil_equip(eItemAbil::BOOST_STAT,int(which)) < 24)
 		tr++;
 	return tr;
 }
@@ -2359,20 +2349,28 @@ void do_alchemy() {
 	
 	which_p = alch_choice(pc_num);
 	if(which_p < 20) {
-		if(pc_has_space(pc_num) == 24) {
+		if(univ.party[pc_num].has_space() == 24) {
 			add_string_to_buf("Alchemy: Can't carry another item.");
 			return;
 		}
-		// TODO: Spread this out a bit, since there seems to be a chance of which_item2 not being initialized.
-		if(((which_item = pc_has_abil(pc_num,ingred1_needed[which_p])) == 24) ||
-			(ingred2_needed[which_p] != eItemAbil::NONE && (which_item2 = pc_has_abil(pc_num,ingred2_needed[which_p])) == 24)) {
+		
+		if((which_item = univ.party[pc_num].has_abil(ingred1_needed[which_p])) == 24) {
 			add_string_to_buf("Alchemy: Don't have ingredients.");
 			return;
 		}
+		
+		if(ingred2_needed[which_p] != eItemAbil::NONE) {
+			if(univ.party[pc_num].has_abil(ingred2_needed[which_p]) == 24) {
+				add_string_to_buf("Alchemy: Don't have ingredients.");
+				return;
+			}
+			univ.party[pc_num].remove_charge(which_item);
+			// We call this twice because remove_charge might move the item and change its index
+			which_item2 = univ.party[pc_num].has_abil(ingred2_needed[which_p]);
+			univ.party[pc_num].remove_charge(which_item2);
+		} else univ.party[pc_num].remove_charge(which_item);
+		
 		play_sound(8);
-		remove_charge(pc_num,which_item);
-		if(ingred2_needed[which_p] != eItemAbil::NONE)
-			remove_charge(pc_num,which_item2);
 		
 		r1 = get_ran(1,1,100);
 		if(r1 < fail_chance[univ.party[pc_num].skills[eSkill::ALCHEMY] - alch_difficulty[which_p]]) {
@@ -2393,7 +2391,7 @@ void do_alchemy() {
 				store_i.charges++;
 			if(store_i.variety == eItemType::POTION)
 				store_i.graphic_num += get_ran(1,0,2);
-			if(!give_to_pc(pc_num,store_i,0)) {
+			if(!univ.party[pc_num].give_item(store_i,false)) {
 				ASB("No room in inventory.");
 				ASB("  Potion placed on floor.");
 				place_item(store_i,univ.town.p_loc,true);
@@ -2549,10 +2547,8 @@ void poison_pc(short which_pc,short how_much) {
 	short level;
 	
 	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
-		if((level = get_prot_level(which_pc,eItemAbil::STATUS_PROTECTION,int(eStatus::POISON))) > 0)
-			how_much -= level / 2;
-		if((level = get_prot_level(which_pc,eItemAbil::FULL_PROTECTION)) > 0)
-			how_much -= level / 3;
+		how_much -= univ.party[which_pc].get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::POISON)) / 2;
+		how_much -= univ.party[which_pc].get_prot_level(eItemAbil::FULL_PROTECTION) / 3;
 		
 		if(univ.party[which_pc].traits[eTrait::FRAIL] && how_much > 1)
 			how_much++;
@@ -2670,12 +2666,12 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 			how_much -= 1;
 	}
 	
-	if((level = get_prot_level(which_pc,eItemAbil::DAMAGE_PROTECTION,int(damage_type))) > 0) {
+	if((level = univ.party[which_pc].get_prot_level(eItemAbil::DAMAGE_PROTECTION,int(damage_type))) > 0) {
 		if(damage_type == eDamageType::WEAPON) how_much -= level;
 		else how_much = how_much / ((level >= 7) ? 4 : 2);
 	}
 	// TODO: Do these perhaps depend on the ability strength less than they should?
-	if((level = get_prot_level(which_pc,eItemAbil::PROTECT_FROM_SPECIES,int(type_of_attacker))) > 0)
+	if((level = univ.party[which_pc].get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(type_of_attacker))) > 0)
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// invuln
@@ -2690,7 +2686,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	
 	// major resistance
 	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::POISON || damage_type == eDamageType::MAGIC || damage_type == eDamageType::COLD)
-	   && ((level = get_prot_level(which_pc,eItemAbil::FULL_PROTECTION)) > 0))
+	   && ((level = univ.party[which_pc].get_prot_level(eItemAbil::FULL_PROTECTION)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	if(boom_anim_active) {
@@ -2762,7 +2758,7 @@ void petrify_pc(short which_pc, short strength) {
 	r1 += univ.party[which_pc].status[eStatus::BLESS_CURSE];
 	r1 -= strength;
 	
-	if(pc_has_abil_equip(which_pc,eItemAbil::PROTECT_FROM_PETRIFY) < 24)
+	if(univ.party[which_pc].has_abil_equip(eItemAbil::PROTECT_FROM_PETRIFY) < 24)
 		r1 = 20;
 	
 	if(r1 > 14) {
@@ -2785,7 +2781,7 @@ void kill_pc(short which_pc,eMainStatus type) {
 	}
 	
 	if(type != eMainStatus::STONE)
-		i = pc_has_abil_equip(which_pc,eItemAbil::LIFE_SAVING);
+		i = univ.party[which_pc].has_abil_equip(eItemAbil::LIFE_SAVING);
 	
 	if(!no_save && type != eMainStatus::ABSENT && univ.party[which_pc].skills[eSkill::LUCK] > 0 &&
 	   get_ran(1,1,100) < hit_chance[univ.party[which_pc].skills[eSkill::LUCK]]) {
@@ -2819,7 +2815,7 @@ void kill_pc(short which_pc,eMainStatus type) {
 	}
 	else {
 		add_string_to_buf("  Life saved!              ");
-		take_item(which_pc,i);
+		univ.party[which_pc].take_item(i);
 		heal_pc(which_pc,200);
 	}
 	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
@@ -2839,10 +2835,8 @@ void set_pc_moves() {
 			r = get_encumberance(i);
 			univ.party[i].ap = minmax(1,8,univ.party[i].ap - (r / 3));
 			
-			if((i_level = get_prot_level(i,eItemAbil::SPEED)) > 0)
-				univ.party[i].ap += i_level / 7 + 1;
-			if((i_level = get_prot_level(i,eItemAbil::SLOW_WEARER)) > 0)
-				univ.party[i].ap -= i_level / 5;
+			univ.party[i].ap += univ.party[i].get_prot_level(eItemAbil::SPEED) / 7 + 1;
+			univ.party[i].ap -= univ.party[i].get_prot_level(eItemAbil::SLOW_WEARER) / 5;
 			
 			if(univ.party[i].status[eStatus::HASTE_SLOW] < 0 && univ.party.age % 2 == 1) // slowed?
 				univ.party[i].ap = 0;

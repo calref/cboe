@@ -210,20 +210,21 @@ void handle_sale(cShopItem item, int i) {
 	
 	switch(item.type) {
 		case eShopItemType::ITEM:
-			switch(pc_ok_to_buy(current_pc,cost,base_item)) {
-				case 1:
+			switch(univ.party[current_pc].ok_to_buy(cost,base_item)) {
+				case eBuyStatus::OK:
 					play_sound(-38);
-					give_to_pc(current_pc,base_item,true);
+					take_gold(cost,true);
+					univ.party[current_pc].give_item(base_item,true);
 					if(active_shop.getType() != eShopType::ITEMS) {
 						// Magic shops have limited stock
 						active_shop.clearItem(i);
 						shop_sbar->setMaximum(shop_sbar->getMaximum() - 1);
 					}
 					break;
-				case 2: ASB("Can't carry any more items."); break;
-				case 3: ASB("Not enough cash."); break;
-				case 4: ASB("Item is too heavy."); break;
-				case 5: ASB("You own too many of this."); break;
+				case eBuyStatus::NO_SPACE: ASB("Can't carry any more items."); break;
+				case eBuyStatus::NEED_GOLD: ASB("Not enough cash."); break;
+				case eBuyStatus::TOO_HEAVY: ASB("Item is too heavy."); break;
+				case eBuyStatus::HAVE_LOTS: ASB("You own too many of this."); break;
 			}
 			break;
 		case eShopItemType::ALCHEMY:

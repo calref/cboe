@@ -89,53 +89,6 @@ short store_h,store_sp,i,store_skp;
 unsigned short store_g;
 short store_train_mode,store_train_pc;
 
-static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) {
-	me.toast(true);
-	if(item_hit != "cancel") {
-		short which_pc = item_hit[item_hit.length() - 1] - '1';
-		me.setResult<short>(which_pc);
-	} else me.setResult<short>(6);
-	return true;
-}
-
-//active_only;  // 0 - no  1 - yes   2 - disarm trap
-short char_select_pc(short active_only,short free_inv_only,const char *title) {
-	short item_hit,i;
-	
-	make_cursor_sword();
-	
-	cDialog selectPc("select-pc");
-	selectPc.attachClickHandlers(select_pc_event_filter, {"cancel", "pick1", "pick2", "pick3", "pick4", "pick5", "pick6"});
-	
-	selectPc["title"].setText(title);
-	
-	for(i = 0; i < 6; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if(univ.party[i].main_status == eMainStatus::ABSENT ||
-		   (active_only && univ.party[i].main_status > eMainStatus::ALIVE) ||
-		   (free_inv_only == 1 && pc_has_space(i) == 24) || univ.party[i].main_status == eMainStatus::FLED) {
-			selectPc["pick" + n].hide();
-		}
-		// TODO: Wouldn't this lead to blank name fields for non-active characters if those characters are allowed?
-		if(univ.party[i].main_status != eMainStatus::ABSENT) {
-			selectPc["pc" + n].setText(univ.party[i].name);
-		}
-		else selectPc["pc" + n].hide();
-	}
-	
-	selectPc.run();
-	item_hit = selectPc.getResult<short>();
-	
-	return item_hit;
-}
-
-//active_only;  // 0 - no  1 - yes   2 - disarm trap
-short select_pc(short active_only,short free_inv_only) {
-	if(active_only == 2)
-		return char_select_pc(active_only,free_inv_only,"Trap! Who will disarm?");
-	else return char_select_pc(active_only,free_inv_only,"Select a character:");
-}
-
 static void put_pc_spells(cDialog& me, const short store_trait_mode) {
 	short i;
 	

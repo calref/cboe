@@ -39,7 +39,12 @@ cParty::cParty(cUniverse& univ, long party_preset) : univ(univ) {
 	std::fill(key_times, key_times + 20, std::numeric_limits<short>::max());
 	
 	for(int i = 0; i < 6; i++)
-		adven[i] = cPlayer(party_preset, i);
+		adven[i] = new cPlayer(*this, party_preset, i);
+}
+
+cParty::~cParty() {
+	for(int i = 0; i < 6; i++)
+		delete adven[i];
 }
 
 void cParty::append(legacy::party_record_type& old){
@@ -180,25 +185,31 @@ void cParty::cEncNote::append(int16_t(& old)[2], const cScenario& scenario) {
 	}
 }
 
-void cParty::add_pc(legacy::pc_record_type old){
-	for(int i = 0; i < 6; i++)
-		if(adven[i].main_status == eMainStatus::ABSENT){
-			adven[i].append(old);
-			break;
-		}
+void cParty::append(legacy::pc_record_type(& old)[6]) {
+	for(int i = 0; i < 6; i++) {
+		delete adven[i];
+		adven[i] = new cPlayer(*this);
+		adven[i]->append(old[i]);
+	}
 }
 
-void cParty::void_pcs(){
-	for(int i = 0; i < 6; i++)
-		adven[i].main_status = eMainStatus::ABSENT;
+void cParty::new_pc(size_t spot) {
+	if(spot < 6){
+		delete adven[spot];
+		adven[spot] = new cPlayer(*this);
+	}
 }
 
-void cParty::add_pc(cPlayer new_pc){
+size_t cParty::free_space() {
 	for(int i = 0; i < 6; i++)
-		if(adven[i].main_status == eMainStatus::ABSENT){
-			adven[i] = new_pc;
-			break;
-		}
+		if(adven[i]->main_status == eMainStatus::ABSENT)
+			return i;
+	return 6;
+}
+
+void cParty::swap_pcs(size_t a, size_t b) {
+	if(a < 6 && b < 6)
+		std::swap(adven[a], adven[b]);
 }
 
 bool cParty::save_talk(const std::string& who, const std::string& where, const std::string& str1, const std::string& str2){
@@ -245,7 +256,87 @@ bool cParty::record(eEncNoteType type, const std::string& what, const std::strin
 
 void cParty::apply_status(eStatus which, int how_much) {
 	for(int i = 0; i < 6; i++)
-		adven[i].apply_status(which, how_much);
+		adven[i]->apply_status(which, how_much);
+}
+
+bool cParty::give_item(cItem item,bool do_print) {
+	for(int i = 0; i < 6; i++) {
+		if(adven[i]->give_item(item,do_print))
+			return true;
+	}
+	return false;
+}
+
+// TODO: Utilize the second parameter in special node processing
+// if abil > 0, force abil, else ignore
+bool cParty::forced_give(item_num_t item_num,eItemAbil abil,short dat) {
+	if(item_num < 0 || item_num >= univ.scenario.scen_items.size())
+		return true;
+	cItem item = univ.scenario.scen_items[item_num];
+	if(abil > eItemAbil::NONE) {
+		item.ability = abil;
+		item.abil_data[0] = dat / 1000;
+		item.abil_data[1] = dat % 1000;
+	}
+	for(int i = 0; i < 6; i++)
+		for(int j = 0; j < 24; j++)
+			if(adven[i]->main_status == eMainStatus::ALIVE && adven[i]->items[j].variety == eItemType::NO_ITEM) {
+				adven[i]->items[j] = item;
+				
+				if(print_result) {
+					std::ostringstream announce;
+					announce << "  " << univ.party[i].name << " gets ";
+					if(!item.ident)
+						announce << item.name;
+					else announce << item.full_name;
+					announce << '.';
+					print_result(announce.str());
+				}
+				adven[i]->combine_things();
+				adven[i]->sort_items();
+				return true;
+			}
+	return false;
+}
+
+bool cParty::has_abil(eItemAbil abil, short dat) {
+	for(int i = 0; i < 6; i++)
+		if(adven[i]->main_status == eMainStatus::ALIVE)
+			if(adven[i]->has_abil(abil,dat) < 24)
+				return true;
+	return false;
+}
+
+bool cParty::take_abil(eItemAbil abil, short dat) {
+	short item;
+	for(int i = 0; i < 6; i++)
+		if(adven[i]->main_status == eMainStatus::ALIVE)
+			if((item = adven[i]->has_abil(abil,dat)) < 24) {
+				if(adven[i]->items[item].charges > 1)
+					adven[i]->items[item].charges--;
+				else adven[i]->take_item(item);
+				return true;
+			}
+	return false;
+}
+
+bool cParty::check_class(unsigned int item_class,bool take) {
+	short i,j;
+	
+	if(item_class == 0)
+		return false;
+	for(i = 0; i < 6; i++)
+		if(adven[i]->main_status == eMainStatus::ALIVE)
+			for(j = 23; j >= 0; j--)
+				if(adven[i]->items[j].variety != eItemType::NO_ITEM && (adven[i]->items[j].special_class == item_class)) {
+					if(take) {
+						if(adven[i]->items[j].charges > 1)
+							adven[i]->items[j].charges--;
+						else adven[i]->take_item(j);
+					}
+					return true;
+				}
+	return false;
 }
 
 bool cParty::start_timer(short time, short node, short type){
@@ -652,15 +743,15 @@ void cParty::readFrom(std::istream& file){
 cPlayer& cParty::operator[](unsigned short n){
 	if(n > 6) throw std::out_of_range("Attempt to access a player that doesn't exist.");
 	else if(n == 6)
-		return adven[0]; // TODO: PC #6 should never be accessed, but bounds checking is rarely done, so this is a quick fix.
-	return adven[n];
+		return *adven[0]; // TODO: PC #6 should never be accessed, but bounds checking is rarely done, so this is a quick fix.
+	return *adven[n];
 }
 
 const cPlayer& cParty::operator[](unsigned short n) const{
 	if(n > 6) throw std::out_of_range("Attempt to access a player that doesn't exist.");
 	else if(n == 6)
-		return adven[0]; // TODO: PC #6 should never be accessed, but bounds checking is rarely done, so this is a quick fix.
-	return adven[n];
+		return *adven[0]; // TODO: PC #6 should never be accessed, but bounds checking is rarely done, so this is a quick fix.
+	return *adven[n];
 }
 
 // Note that the pointer functions take the pointer with its negative sign stripped off!
@@ -724,7 +815,7 @@ bool cParty::start_split(short x,short y,snd_num_t noise,short who) {
 	univ.town.p_loc.y = y;
 	for(i = 0; i < 6; i++)
 		if(i != who)
-			adven[i].main_status += eMainStatus::SPLIT;
+			adven[i]->main_status += eMainStatus::SPLIT;
 	play_sound(noise);
 	return true;
 }
@@ -832,4 +923,5 @@ std::ostream& operator<<(std::ostream& out, ePartyStatus type) {
 	return out;
 }
 
+void(* cParty::print_result)(std::string) = nullptr;
 

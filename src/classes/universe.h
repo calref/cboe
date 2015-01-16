@@ -178,6 +178,7 @@ public:
 	void append(legacy::stored_outdoor_maps_type& old);
 	short difficulty_adjust() const;
 	explicit cUniverse(long party_type = 'dflt');
+	static void(* print_result)(std::string);
 };
 
 #endif

@@ -722,14 +722,15 @@ static void handle_item_shop_action(short item_hit) {
 				play_sound(68);
 				ASB("Your item is identified.");
 				univ.party[stat_window].items[item_hit].ident = true;
-				combine_things(stat_window);
+				univ.party[stat_window].combine_things();
 			}
 			break;
 		case 3: case 4: case 5: // various selling
 			play_sound(-39);
 			univ.party.gold += store_selling_values[i];
 			ASB("You sell your item.");
-			take_item(stat_window,item_hit);
+			univ.party[stat_window].take_item(item_hit);
+			put_item_screen(stat_window,1);
 			break;
 		case 6: // enchant item
 			if(!take_gold(store_selling_values[i],false))
@@ -2200,7 +2201,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	for(int i = 0; i < 6; i++)
 		univ.party[i].status.clear();
 	// Specials countdowns
-	if((length > 500 || age_before / 500 < univ.party.age / 500) && party_has_abil(eItemAbil::OCCASIONAL_STATUS)) {
+	if((length > 500 || age_before / 500 < univ.party.age / 500) && univ.party.has_abil(eItemAbil::OCCASIONAL_STATUS)) {
 		// TODO: There used to be a "display strings" here; should we hook in a special node call?
 		for(int i = 0; i < 6; i++)
 			for(int j = 0; j < 24; j++) {
@@ -2230,7 +2231,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
 				disease_pc(i,6);
 			}
-			short item = pc_has_abil_equip(i,eItemAbil::REGENERATE);
+			short item = univ.party[i].has_abil_equip(eItemAbil::REGENERATE);
 			if(item < 24 && univ.party[i].cur_health < univ.party[i].max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)){
 				int j = get_ran(1,0,univ.party[i].items[item].abil_data[0] / 3);
 				if(univ.party[i].items[item].abil_data[0] / 3 == 0)
@@ -2311,7 +2312,7 @@ void increase_age() {
 	}
 	
 	// Specials countdowns
-	if(univ.party.age % 500 == 0 && party_has_abil(eItemAbil::OCCASIONAL_STATUS)) {
+	if(univ.party.age % 500 == 0 && univ.party.has_abil(eItemAbil::OCCASIONAL_STATUS)) {
 		// TODO: There used to be a "display strings" here; should we hook in a special node call?
 		for(int i = 0; i < 6; i++)
 			for(int j = 0; j < 24; j++) {
@@ -2456,7 +2457,7 @@ void increase_age() {
 				update_stat = true;
 			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
 			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
-			if((item = pc_has_abil_equip(i,eItemAbil::REGENERATE)) < 24
+			if((item = univ.party[i].has_abil_equip(eItemAbil::REGENERATE)) < 24
 			   && (univ.party[i].cur_health < univ.party[i].max_health)
 			   && ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
 				j = get_ran(1,0,univ.party[i].items[item].abil_data[0] / 3);
@@ -2516,14 +2517,10 @@ void handle_hunting() {
 }
 
 void switch_pc(short which) {
-	cPlayer store_pc;
-	
 	if(current_switch < 6) {
 		if(current_switch != which) {
 			add_string_to_buf("Switch: OK.");
-			store_pc = univ.party[which];
-			univ.party[which] = univ.party[current_switch];
-			univ.party[current_switch] = store_pc;
+			univ.party.swap_pcs(which, current_switch);
 			if(current_pc == current_switch)
 				current_pc = which;
 			else if(current_pc == which)
@@ -2549,7 +2546,7 @@ void drop_pc(short which) {
 	add_string_to_buf("Delete PC: OK.                  ");
 	kill_pc(which,eMainStatus::ABSENT);
 	for(short i = which; i < 5; i++)
-		univ.party[i] = univ.party[i + 1];
+		univ.party.swap_pcs(i, i + 1);
 	univ.party[5].main_status = eMainStatus::ABSENT;
 	set_stat_window(0);
 	put_pc_screen();

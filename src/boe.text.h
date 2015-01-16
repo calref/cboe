@@ -30,7 +30,8 @@ void monst_damaged_mes(mon_num_t which_m,short how_much,short how_much_spec);
 void monst_killed_mes(mon_num_t which_m);
 void print_nums(short a,short b,short c);
 short print_terrain(location space);
-void add_string_to_buf(std::string str, unsigned short indent = 0); // Set second paramater to nonzero to auto-split the line if it's too long
+void add_string_to_buf(std::string str, unsigned short indent); // Set second paramater to nonzero to auto-split the line if it's too long
+void add_string_to_buf(std::string str);
 void init_buf();
 void print_buf () ;
 void restart_printing();

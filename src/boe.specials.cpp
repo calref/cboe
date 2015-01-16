@@ -1127,7 +1127,9 @@ void use_item(short pc,short item) {
 	
 	put_pc_screen();
 	if((take_charge) && (univ.party[pc].items[item].charges > 0))
-		remove_charge(pc,item);
+		univ.party[pc].remove_charge(item);
+	if(stat_window == pc)
+		put_item_screen(stat_window,1);
 	if(!take_charge) {
 		draw_terrain(0);
 		put_item_screen(stat_window,0);
@@ -2176,12 +2178,12 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::FORCED_GIVE:
 			check_mess = true;
-			if(!forced_give(spec.ex1a,eItemAbil::NONE) && spec.ex1b >= 0)
+			if(!univ.party.forced_give(spec.ex1a,eItemAbil::NONE) && spec.ex1b >= 0)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::BUY_ITEMS_OF_TYPE:
 			for(i = 0; i < 144; i++)
-				if(party_check_class(spec.ex1a,0))
+				if(univ.party.check_class(spec.ex1a,true))
 					store_val++;
 			if(store_val == 0) {
 				if( spec.ex1b >= 0)
@@ -2401,7 +2403,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 	switch(cur_node.type) {
 		case eSpecType::ONCE_GIVE_ITEM:
-			if(!forced_give(spec.ex1a,eItemAbil::NONE)) {
+			if(!univ.party.forced_give(spec.ex1a,eItemAbil::NONE)) {
 				set_sd = false;
 				if( spec.ex2b >= 0)
 					*next_spec = spec.ex2b;
@@ -2477,7 +2479,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(i == 1) {set_sd = false; *next_spec = -1;}
 			else {
 				store_i = get_stored_item(spec.ex1a);
-				if((spec.ex1a >= 0) && (!give_to_party(store_i,true))) {
+				if((spec.ex1a >= 0) && (!univ.party.give_item(store_i,true))) {
 					set_sd = false; *next_spec = -1;
 				}
 				else {
@@ -3024,7 +3026,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			break;
 		case eSpecType::IF_HAVE_ITEM_CLASS:
-			if(party_check_class(spec.ex1a,!spec.ex2a))
+			if(univ.party.check_class(spec.ex1a,spec.ex2a))
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_EQUIP_ITEM_CLASS:
@@ -3036,7 +3038,9 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							*next_spec = spec.ex1b;
 							if(spec.ex2c) {
 								*redraw = 1;
-								take_item(i,j);
+								univ.party[i].take_item(j);
+								if(i == stat_window)
+									put_item_screen(stat_window,1);
 							}
 						}
 			break;

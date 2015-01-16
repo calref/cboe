@@ -772,9 +772,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	
 	univ.party.append(store_party);
 	univ.party.append(store_setup);
-	univ.party.void_pcs();
-	for(int i = 0; i < 6; i++)
-		univ.party.add_pc(store_pc[i]);
+	univ.party.append(store_pc);
 	if(in_scen){
 		univ.out.append(store_out_info);
 		if(town_restore){

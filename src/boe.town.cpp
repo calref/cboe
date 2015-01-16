@@ -1061,7 +1061,7 @@ void pick_lock(location where,short pc_num) {
 	short unlock_adjust;
 	
 	terrain = univ.town->terrain(where.x,where.y);
-	which_item = pc_has_abil_equip(pc_num,eItemAbil::LOCKPICKS);
+	which_item = univ.party[pc_num].has_abil_equip(eItemAbil::LOCKPICKS);
 	if(which_item == 24) {
 		add_string_to_buf("  Need lockpick equipped.        ");
 		return;
@@ -1079,7 +1079,7 @@ void pick_lock(location where,short pc_num) {
 	if(univ.party[pc_num].traits[eTrait::NIMBLE])
 		r1 -= 8;
 	
-	if(pc_has_abil_equip(pc_num,eItemAbil::THIEVING) < 24)
+	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING) < 24)
 		r1 = r1 - 12;
 	
 	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
@@ -1091,7 +1091,9 @@ void pick_lock(location where,short pc_num) {
 		add_string_to_buf("  Didn't work.                ");
 		if(will_break) {
 			add_string_to_buf("  Pick breaks.                ");
-			remove_charge(pc_num,which_item);
+			univ.party[pc_num].remove_charge(which_item);
+			if(stat_window == pc_num)
+				put_item_screen(stat_window,1);
 		}
 		play_sound(41);
 	}
