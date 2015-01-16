@@ -208,8 +208,13 @@ void handle_menu_choice(eMenu item_hit) {
 				cChoiceDlog("not-split").show();
 				break;
 			}
+			if(univ.party.left_in != size_t(-1) && univ.party.left_in != univ.town.num) {
+				std::string need_town = univ.scenario.towns[univ.party.left_in]->town_name;
+				giveError("You can't reunite your party when you're in a different town than you split up in.", "Return to the following town in-game and then try again: " + need_town);
+				break;
+			}
 			cChoiceDlog("reunited").show();
-			univ.town.p_loc = univ.party.left_at();
+			univ.town.p_loc = univ.party.left_at;
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status >= eMainStatus::SPLIT)
 					univ.party[i].main_status -= eMainStatus::SPLIT;
