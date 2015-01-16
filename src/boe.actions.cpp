@@ -1795,6 +1795,7 @@ bool handle_keystroke(sf::Event& event){
 			univ.party.status[ePartyStatus::DETECT_LIFE] += 10;
 			univ.party.status[ePartyStatus::FIREWALK] += 10;
 			add_string_to_buf("Debug: Stealth, Detect Life, Firewalk!");
+			draw_text_bar();
 			print_buf();
 			put_pc_screen();
 			break;
@@ -2149,7 +2150,7 @@ void post_load() {
 	put_pc_screen();
 	draw_terrain();
 	draw_buttons(0);
-	draw_text_bar(1);
+	draw_text_bar();
 	
 	print_buf();
 	
@@ -2274,17 +2275,14 @@ void increase_age() {
 	
 	// Party spell effects
 	if(univ.party.status[ePartyStatus::STEALTH] == 1) {
-		reset_text_bar();
 		add_string_to_buf("Your footsteps grow louder.      ");
 	}
 	move_to_zero(univ.party.status[ePartyStatus::STEALTH]);
 	if(univ.party.status[ePartyStatus::DETECT_LIFE] == 1) {
-		reset_text_bar();
 		add_string_to_buf("You stop detecting monsters.      ");
 	}
 	move_to_zero(univ.party.status[ePartyStatus::DETECT_LIFE]);
 	if(univ.party.status[ePartyStatus::FIREWALK] == 1) {
-		reset_text_bar();
 		add_string_to_buf("Your feet stop glowing.      ");
 	}
 	move_to_zero(univ.party.status[ePartyStatus::FIREWALK]);
@@ -2299,7 +2297,6 @@ void increase_age() {
 			pause(150);
 		}
 		else add_string_to_buf("  You land safely.                  ");
-		reset_text_bar();
 	}
 	
 	move_to_zero(univ.party.status[ePartyStatus::FLIGHT]);

@@ -79,6 +79,7 @@ extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x -
 extern bool supressing_some_spaces;
 extern location ok_space[4];
 extern sf::Texture bg_gworld;
+extern std::map<eStatus, std::pair<short, short>> statIcons;
 
 // Draws the pc area in upper right
 void put_pc_screen() {
@@ -563,24 +564,13 @@ short total_encumberance(short pc_num) {
 	return store;
 }
 
-static rectangle get_stat_effect_rect(eStatus which_effect) {
-	int code = (int) which_effect;
+rectangle get_stat_effect_rect(int code) {
 	rectangle base = {0,0,12,12};
 	base.offset(12 * (code % 3), 12 * (code / 3));
 	return base;
 }
 
 void draw_pc_effects(short pc) {
-	// TODO: Calculate these rects from scratch instead of hard-coding them. (use above function)
-	// TODO: The duplication of rectangle here shouldn't be necessary...
-	rectangle source_rects[18] = {
-		rectangle{00,0,12,12},rectangle{00,12,12,24},rectangle{00,24,12,36},
-		rectangle{12,0,24,12},rectangle{12,12,24,24},rectangle{12,24,24,36},
-		rectangle{24,0,36,12},rectangle{24,12,36,24},rectangle{24,24,36,36},
-		rectangle{36,0,47,12},rectangle{36,12,47,24},rectangle{36,24,47,36},
-		rectangle{47,0,60,12},rectangle{47,12,60,24},rectangle{47,24,60,36},
-		rectangle{60,0,72,12},rectangle{60,12,72,24},rectangle{60,24,72,36}
-	};
 	rectangle dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};
 	short right_limit = 250;
 	short name_width;
@@ -595,90 +585,19 @@ void draw_pc_effects(short pc) {
 	
 	if(exceptSplit(univ.party[pc].main_status) != eMainStatus::ALIVE)
 		return;
-	// TODO: This used to draw the status icons in the spell dialog, but it no longer does. Fix that.
-	if((univ.party[pc].status[eStatus::POISONED_WEAPON] > 0) && (dest_rect.right < right_limit)) {
-		rect_draw_some_item(status_gworld,source_rects[4],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if(univ.party[pc].status[eStatus::BLESS_CURSE] > 0) {
-		rect_draw_some_item(status_gworld,source_rects[2],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	else if(univ.party[pc].status[eStatus::BLESS_CURSE] < 0) {
-		rect_draw_some_item(status_gworld,source_rects[3],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if(univ.party[pc].status[eStatus::POISON] > 0) {
-		rect_draw_some_item(status_gworld,source_rects[(univ.party[pc].status[eStatus::POISON] > 4) ? 1 : 0],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if(univ.party[pc].status[eStatus::INVULNERABLE] > 0) {
-		rect_draw_some_item(status_gworld,source_rects[5],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if(univ.party[pc].status[eStatus::HASTE_SLOW] > 0) {
-		rect_draw_some_item(status_gworld,source_rects[6],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	else if(univ.party[pc].status[eStatus::HASTE_SLOW] < 0) {
-		rect_draw_some_item(status_gworld,source_rects[8],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}else{
-		rect_draw_some_item(status_gworld,source_rects[7],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if((univ.party[pc].status[eStatus::MAGIC_RESISTANCE] > 0) && (dest_rect.right < right_limit)) {
-		rect_draw_some_item(status_gworld,source_rects[9],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if((univ.party[pc].status[eStatus::WEBS] > 0) && (dest_rect.right < right_limit)) {
-		rect_draw_some_item(status_gworld,source_rects[10],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if((univ.party[pc].status[eStatus::DISEASE] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item(status_gworld,source_rects[11],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if((univ.party[pc].status[eStatus::INVISIBLE] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item(status_gworld,source_rects[12],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if((univ.party[pc].status[eStatus::DUMB] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item(status_gworld,source_rects[13],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if((univ.party[pc].status[eStatus::MARTYRS_SHIELD] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item(status_gworld,source_rects[14],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if((univ.party[pc].status[eStatus::ASLEEP] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item(status_gworld,source_rects[15],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if((univ.party[pc].status[eStatus::PARALYZED] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item(status_gworld,source_rects[16],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
-	}
-	if((univ.party[pc].status[eStatus::ACID] > 0) && (dest_rect.right < right_limit)){
-		rect_draw_some_item(status_gworld,source_rects[17],pc_stats_gworld,dest_rect,sf::BlendAlpha);
-		dest_rect.left += 13;
-		dest_rect.right += 13;
+	
+	univ.party[pc].status[eStatus::HASTE_SLOW]; // This just makes sure it exists in the map, without changing its value if it does
+	for(auto next : univ.party[pc].status) {
+		short placedIcon = -1;
+		if(next.first == eStatus::POISON && next.second > 4) placedIcon = 1;
+		else if(next.second > 0) placedIcon = statIcons[next.first].first;
+		else if(next.second < 0) placedIcon = statIcons[next.first].second;
+		else if(next.first == eStatus::HASTE_SLOW) placedIcon = 7;
+		if(placedIcon >= 0) {
+			rect_draw_some_item(status_gworld, get_stat_effect_rect(placedIcon), pc_stats_gworld, dest_rect, sf::BlendAlpha);
+			dest_rect.offset(13, 0);
+		}
+		if(dest_rect.right >= right_limit) break;
 	}
 }
 
@@ -947,7 +866,8 @@ void damaged_message(short damage,eMonstMelee type) {
 
 // This prepares the monster's string for the text bar
 std::string print_monster_going(mon_num_t m_num,short ap) {
-	std::ostringstream sout(get_m_name(m_num));
+	std::ostringstream sout;
+	sout << get_m_name(m_num);
 	sout << " (ap: " << ap << ')';
 	return sout.str();
 }
@@ -1210,6 +1130,7 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 	if(str.find_last_not_of(' ') == std::string::npos)
 		return;
 	
+	// TODO: Base this on pixel length instead of character length
 	if(indent && str.find_last_not_of(' ') > 48) {
 		if(indent > 20) indent = 20;
 		size_t split = str.find_last_of(' ', 49);

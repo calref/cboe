@@ -71,6 +71,16 @@ extern location golem_m_locs[16];
 extern cUniverse univ;
 extern sf::Texture pc_gworld;
 
+// First icon is displayed for positive values, second for negative, if -1 no negative icon.
+// This omits two special cases - major poison, and normal speed; they are hard-coded.
+std::map<eStatus, std::pair<short, short>> statIcons = {
+	{eStatus::POISONED_WEAPON, {4,-1}}, {eStatus::BLESS_CURSE, {2,3}}, {eStatus::POISON, {0,-1}},
+	{eStatus::HASTE_SLOW, {6,8}}, {eStatus::INVULNERABLE, {5,-1}}, {eStatus::MAGIC_RESISTANCE, {9,19}},
+	{eStatus::WEBS, {10,-1}}, {eStatus::DISEASE, {11,-1}}, {eStatus::INVISIBLE, {12,-1}},
+	{eStatus::DUMB, {13,18}}, {eStatus::MARTYRS_SHIELD, {14,-1}}, {eStatus::ASLEEP, {15,21}},
+	{eStatus::PARALYZED, {16,-1}}, {eStatus::ACID, {17,-1}}, {eStatus::FORCECAGE, {20,-1}},
+};
+
 // Variables for spell selection
 short on_which_spell_page = 0;
 short store_last_cast_mage = 6,store_last_cast_priest = 6;
@@ -1843,17 +1853,7 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation, const sho
 	}
 }
 
-// TODO: Use the map here to simplify drawing the graphics in draw_pc_effects()
 static void put_target_status_graphics(cDialog& me, short for_pc) {
-	// First icon is displayed for positive values, second for negative, if -1 no negative icon.
-	// This omits two special cases - major poison, and normal speed; they are hard-coded.
-	static std::map<eStatus, std::pair<short, short>> statIcons = {
-		{eStatus::POISONED_WEAPON, {4,-1}}, {eStatus::BLESS_CURSE, {2,3}}, {eStatus::POISON, {0,-1}},
-		{eStatus::HASTE_SLOW, {6,8}}, {eStatus::INVULNERABLE, {5,-1}}, {eStatus::MAGIC_RESISTANCE, {9,19}},
-		{eStatus::WEBS, {10,-1}}, {eStatus::DISEASE, {11,-1}}, {eStatus::INVISIBLE, {12,-1}},
-		{eStatus::DUMB, {13,18}}, {eStatus::MARTYRS_SHIELD, {14,-1}}, {eStatus::ASLEEP, {15,-1}},
-		{eStatus::PARALYZED, {16,-1}}, {eStatus::ACID, {17,-1}}, {eStatus::FORCECAGE, {20,-1}},
-	};
 	bool isAlive = univ.party[for_pc].main_status == eMainStatus::ALIVE;
 	univ.party[for_pc].status[eStatus::HASTE_SLOW]; // This just makes sure it exists in the map, without changing its value if it does
 	std::string id = "pc" + std::to_string(for_pc + 1);

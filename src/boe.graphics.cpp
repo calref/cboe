@@ -90,9 +90,6 @@ short which_graphic_index[6] = {50,50,50,50,50,50};
 
 char combat_graphics[5] = {28,29,36,79,2};
 short debug_nums[6] = {0,0,0,0,0,0};
-short remember_tiny_text = 300; // Remembers what's in the tiny text-bar, to prevent redrawing.
-// 50 indicates area name, other number indicates which-rect.
-// Add 200 if last mess. was in town
 
 char light_area[13][13];
 char unexplored_area[13][13];
@@ -584,7 +581,8 @@ void redraw_screen(int refresh) {
 			break;
 		default:
 			redraw_terrain();
-			draw_text_bar(bool(refresh & REFRESH_BAR));
+			if(refresh & REFRESH_BAR)
+				draw_text_bar();
 			refresh_text_bar();
 			draw_buttons(0);
 			break;
@@ -659,75 +657,46 @@ void draw_buttons(short mode) {
 	rect_draw_some_item(buttons_gworld, source_rect, mainPtr, dest_rec, sf::BlendAdd);
 }
 
-void reset_text_bar() {
-	remember_tiny_text = 300;
-}
-
-
-//short mode; // 0 - no redraw  1 - forced
-void draw_text_bar(short mode) {
-	//short num_rect[3] = {12,10,4}; // Why? Just... why?
+void draw_text_bar() {
 	short i;
 	location loc;
-	std::string combat_string;
 	
 	loc = (is_out()) ? global_to_local(univ.party.p_loc) : univ.town.p_loc;
 	
-	if(mode == 1)
-		remember_tiny_text = 500;
-	if((univ.party.status[ePartyStatus::STEALTH] > 0) || (univ.party.status[ePartyStatus::FLIGHT] > 0) ||
-		(univ.party.status[ePartyStatus::DETECT_LIFE] > 0) || (univ.party.status[ePartyStatus::FIREWALK] > 0) )
-		remember_tiny_text = 500;
+	bool in_area = false;
 	if(is_out()) {
 		for(i = 0; i < 8; i++)
 			if(loc.in(univ.out->info_rect[i])) {
-				if((remember_tiny_text == i) && (mode == 0))
-					return;
-				else {
-					put_text_bar(univ.out->rect_names[i]);
-					remember_tiny_text = i;
-					return;
-				}
-			} // TODO: I'm pretty sure this brace location is correct, but must verify it
-		if(remember_tiny_text != 50 + univ.party.i_w_c.x + univ.party.i_w_c.y) {
+				put_text_bar(univ.out->rect_names[i]);
+				in_area = true;
+			}
+		if(!in_area) {
 			put_text_bar(univ.out->out_name);
-			remember_tiny_text = 50 + univ.party.i_w_c.x + univ.party.i_w_c.y;
 		}
 	}
 	if(is_town()) {
 		for(i = 0; i < 16; i++)
 			if(loc.in(univ.town->room_rect(i))) {
-				if((remember_tiny_text == 200 + i) && (mode == 0))
-					return;
-				else {
-					put_text_bar(univ.town->rect_names[i]);
-					remember_tiny_text = 200 + i;
-					return;
-				}
-			} // TODO: I'm pretty sure this brace location is correct, but must verify it
-		if(remember_tiny_text != 250) {
+				put_text_bar(univ.town->rect_names[i]);
+				in_area = true;
+			}
+		if(!in_area) {
 			put_text_bar(univ.town->town_name);
-			remember_tiny_text = 250;
 		}
 		
 	}
 	if((is_combat()) && (current_pc < 6) && !monsters_going) {
 		std::ostringstream sout;
 		sout << univ.party[current_pc].name << " (ap: " << univ.party[current_pc].ap << ')';
-		combat_string = sout.str();
-		put_text_bar((char *) combat_string.c_str());
-		remember_tiny_text = 500;
+		put_text_bar(sout.str());
 	}
-	if((is_combat()) && (monsters_going))	// Print bar for 1st monster with >0 ap -
-		// that is monster that is going
+	if((is_combat()) && (monsters_going))
+		// Print bar for 1st monster with >0 ap - that is monster that is going
 		for(i = 0; i < univ.town->max_monst(); i++)
 			if((univ.town.monst[i].active > 0) && (univ.town.monst[i].ap > 0)) {
-				combat_string = print_monster_going(univ.town.monst[i].number,univ.town.monst[i].ap);
-				put_text_bar((char *) combat_string.c_str());
-				remember_tiny_text = 500;
+				put_text_bar(print_monster_going(univ.town.monst[i].number,univ.town.monst[i].ap));
 				i = 400;
 			}
-	text_bar_gworld.display();
 }
 
 void put_text_bar(std::string str) {
@@ -744,22 +713,24 @@ void put_text_bar(std::string str) {
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
 	if(!monsters_going) {
-		to_rect.left = 205;
+		to_rect.left = to_rect.right - 15;
+		to_rect.width() = 12;
+		to_rect.height() = 12;
 		if(univ.party.status[ePartyStatus::STEALTH] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Stealth", eTextMode::LEFT_TOP, style);
-			to_rect.left -= 60;
+			rect_draw_some_item(status_gworld, get_stat_effect_rect(25), text_bar_gworld, to_rect, sf::BlendAlpha);
+			to_rect.offset(-15, 0);
 		}
 		if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Flying", eTextMode::LEFT_TOP, style);
-			to_rect.left -= 60;
+			rect_draw_some_item(status_gworld, get_stat_effect_rect(23), text_bar_gworld, to_rect, sf::BlendAlpha);
+			to_rect.offset(-15, 0);
 		}
 		if(univ.party.status[ePartyStatus::DETECT_LIFE] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Detect Life", eTextMode::LEFT_TOP, style);
-			to_rect.left -= 60;
+			rect_draw_some_item(status_gworld, get_stat_effect_rect(24), text_bar_gworld, to_rect, sf::BlendAlpha);
+			to_rect.offset(-15, 0);
 		}
 		if(univ.party.status[ePartyStatus::FIREWALK] > 0) {
-			win_draw_string(text_bar_gworld, to_rect, "Firewalk", eTextMode::LEFT_TOP, style);
-			to_rect.left -= 60;
+			rect_draw_some_item(status_gworld, get_stat_effect_rect(26), text_bar_gworld, to_rect, sf::BlendAlpha);
+			to_rect.offset(-15, 0);
 		}
 	}
 	
@@ -1025,7 +996,7 @@ void draw_terrain(short	mode) {
 	
 	if(mode == 0) {
 		redraw_terrain();
-		draw_text_bar(0);
+		draw_text_bar();
 		if((overall_mode >= MODE_COMBAT) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
 			draw_pcs(center,1);
 		if(overall_mode == MODE_FANCY_TARGET)
