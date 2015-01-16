@@ -481,12 +481,15 @@ void start_town_mode(short which_town, short entry_dir) {
 	update_explored(univ.town.p_loc);
 	
 	// If a PC dead, drop his items
-	for(m = 0; m < 6; m++)
+	for(m = 0; m < 6; m++) {
+		if(univ.party[m].main_status == eMainStatus::ALIVE || isSplit(univ.party[m].main_status))
+			continue;
 		for(n = 0; n < 24; n++)
-			if(univ.party[m].main_status != eMainStatus::ALIVE && univ.party[m].items[n].variety != eItemType::NO_ITEM) {
+			if(univ.party[m].items[n].variety != eItemType::NO_ITEM) {
 				place_item(univ.party[m].items[n],univ.town.p_loc,true);
 				univ.party[m].items[n].variety = eItemType::NO_ITEM;
 			}
+	}
 	
 	for(i = 0; i < univ.town->max_monst(); i++) {
 		univ.town.monst[i].targ_loc.x = 0;

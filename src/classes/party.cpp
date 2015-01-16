@@ -70,6 +70,10 @@ void cParty::append(legacy::party_record_type& old){
 	p_loc.y = old.p_loc.y;
 	loc_in_sec.x = old.loc_in_sec.x;
 	loc_in_sec.y = old.loc_in_sec.y;
+	if(stuff_done[304][0]) {
+		left_at = loc(stuff_done[304][1], stuff_done[304][2]);
+		left_in = -1;
+	}
 	party_event_timers.reserve(30);
 	for(i = 0; i < 30; i++){
 		boats[i].append(old.boats[i]);
@@ -283,6 +287,10 @@ void cParty::writeTo(std::ostream& file) const {
 		if(kv.second > 0)
 			file << "STATUS " << kv.first << ' ' << kv.second << '\n';
 	}
+	if(is_split()) {
+		file << "SPLIT_LEFT_IN " << left_in << '\n';
+		file << "SPLIT_LEFT_AT " << left_at.x << ' ' << left_at.y << '\n';
+	}
 	for(int i = 0; i < 256; i++)
 		if(m_noted[i])
 			file << "ROSTER " << i << '\n';
@@ -477,6 +485,10 @@ void cParty::readFrom(std::istream& file){
 			sin >> p_loc.x >> p_loc.y;
 		else if(cur == "LOCINSECTOR")
 			sin >> loc_in_sec.x >> loc_in_sec.y;
+		else if(cur == "SPLIT_LEFT_IN")
+			sin >> left_in;
+		else if(cur == "SPLIT_LEFT_AT")
+			sin >> left_at.x >> left_at.y;
 		else if(cur == "IN")
 			sin >> in_boat >> in_horse;
 		else if(cur == "ROSTER"){
@@ -685,72 +697,57 @@ unsigned char& cParty::cpn_flag(unsigned int x, unsigned int y, std::string id) 
 	return campaign_flags[id].idx[x][y];
 }
 
-bool cParty::is_split(){
+bool cParty::is_split() const {
 	bool ret = false;
 	for(int i = 0; i < 6; i++)
-		if(!stuff_done[304][i])
+		if(!pc_present(i))
 			ret = true;
 	return ret;
 }
 
-bool cParty::pc_present(short i){
+bool cParty::pc_present(short i) const {
 	if(i >= 6 || i < 0) return false;
-	return stuff_done[304][i];
+	return !isSplit(univ.party[i].main_status);
 }
 
-location cParty::left_at(){
-	return loc(stuff_done[304][6],stuff_done[304][7]);
-}
-
-size_t cParty::left_in(){
-	return stuff_done[304][8];
-}
 extern cUniverse univ;
-std::string cParty::start_split(short a,short b,snd_num_t noise,short who) {
+bool cParty::start_split(short x,short y,snd_num_t noise,short who) {
 	short i;
 	
-	if(who >= 6 || who < 0) return "";
+	if(who >= 6 || who < 0) return false;
 	if(is_split())
-		return "Party already split!";
-	stuff_done[304][who] = 0;
-	stuff_done[304][6] = univ.town.p_loc.x;
-	stuff_done[304][7] = univ.town.p_loc.y;
-	stuff_done[304][8] = univ.town.num;
-	univ.town.p_loc.x = a;
-	univ.town.p_loc.y = b;
-	// TODO: This looks like it won't work.
+		return false;
+	// TODO: Allow splitting an arbitrary subgroup of the party
+	left_at = univ.town.p_loc;
+	left_in = univ.town.num;
+	univ.town.p_loc.x = x;
+	univ.town.p_loc.y = y;
 	for(i = 0; i < 6; i++)
-		if(!stuff_done[304][who])
+		if(i != who)
 			adven[i].main_status += eMainStatus::SPLIT;
-	// TODO: Uh, why play sound 10 instead of the one passed in?
-	if(noise > 0)
-		play_sound(10);
-	return "";
+	play_sound(noise);
+	return true;
 }
 
-std::string cParty::end_split(snd_num_t noise) {
+bool cParty::end_split(snd_num_t noise) {
 	short i;
 	
 	if(!is_split())
-		return "Party already together!";
-	univ.town.p_loc = left_at();
-	univ.town.num = left_in();
+		return false;
 	for(i = 0; i < 6; i++){
 		if(isSplit(univ.party[i].main_status))
 			univ.party[i].main_status -= eMainStatus::SPLIT;
-		stuff_done[304][i] = true;
 	}
-	if(noise > 0)
-		play_sound(10);	
-	return "You are reunited.";
+	play_sound(noise);
+	return true;
 }
 
-short cParty::pc_present(){
+short cParty::pc_present() const {
 	short ret = 7;
 	for(int i = 0; i < 6; i++){
-		if(stuff_done[304][i] && ret == 7)
+		if(pc_present(i) && ret == 7)
 			ret = i;
-		else if(stuff_done[304][i] && ret < 6)
+		else if(pc_present(i) && ret < 6)
 			ret = 6;
 	}
 	if(ret == 7) ret = 6;

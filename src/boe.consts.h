@@ -25,11 +25,6 @@
 /* stuff done flags */
 #define SDF_SPEC_LOC_X			301][0 // For special nodes to access the trigger location
 #define SDF_SPEC_LOC_Y			301][1
-//#define SDF_IS_PARTY_SPLIT		304][0
-//#define SDF_PARTY_SPLIT_X		304][1
-//#define SDF_PARTY_SPLIT_Y		304][2
-//#define SDF_PARTY_SPLIT_PC		304][3
-//#define SDF_PARTY_SPLIT_TOWN	304][4 // for future use, hopefully
 #define SDF_SKIP_STARTUP		305][4 // preferably deprecated
 #define SDF_LESS_SOUND			305][5
 #define SDF_NO_TARGET_LINE		305][6

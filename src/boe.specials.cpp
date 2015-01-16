@@ -3713,7 +3713,8 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(r1 != 6) {
 				current_pc = r1;
 				*next_spec = -1;
-				ASB(univ.party.start_split(spec.ex1a,spec.ex1b,spec.ex2a,r1));
+				if(!univ.party.start_split(spec.ex1a,spec.ex1b,spec.ex2a,r1))
+					ASB("Party already split!");
 				update_explored(univ.town.p_loc);
 				center = univ.town.p_loc;
 			}
@@ -3728,9 +3729,15 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*a = 1;
 			*next_spec = -1;
 			check_mess = false;
-			ASB(univ.party.end_split(spec.ex1a));
-			update_explored(univ.town.p_loc);
-			center = univ.town.p_loc;
+			if(univ.party.end_split(spec.ex1a))
+				ASB("Party already together!");
+			else ASB("You are reunited.");
+			if(spec.ex2a); // This means reunite the party by bringing the others to the current location rather than the reverse.
+			else if(univ.party.left_in == size_t(-1) || univ.town.num == univ.party.left_in) {
+				univ.town.p_loc = univ.party.left_at;
+				update_explored(univ.town.p_loc);
+				center = univ.town.p_loc;
+			} else change_level(univ.party.left_in, univ.party.left_at.x, univ.party.left_at.y);
 			break;
 		case eSpecType::TOWN_TIMER_START:
 			univ.party.start_timer(spec.ex1a, spec.ex1b, 1);

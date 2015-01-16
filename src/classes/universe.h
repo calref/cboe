@@ -43,7 +43,7 @@ class cCurTown {
 public:
 	bool quickfire_present = false, belt_present = false;
 	// formerly current_town_type
-	short num; // 200 if outdoors (my addition)
+	size_t num; // 200 if outdoors (my addition)
 	short difficulty;
 	bool hostile;
 	cPopulation monst;

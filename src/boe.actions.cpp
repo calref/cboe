@@ -896,7 +896,12 @@ static void handle_party_death() {for(int i = 0; i < 6; i++)
 		}
 	}
 	if(univ.party.is_split()) {
-		ASB(univ.party.end_split(0));
+		univ.party.end_split(0);
+		if(univ.party.left_in == size_t(-1) || univ.town.num == univ.party.left_in) {
+			univ.town.p_loc = univ.party.left_at;
+			update_explored(univ.town.p_loc);
+			center = univ.town.p_loc;
+		} else change_level(univ.party.left_in, univ.party.left_at.x, univ.party.left_at.y);
 		update_explored(univ.town.p_loc);
 		center = univ.town.p_loc;
 		if(is_combat()) overall_mode = MODE_TOWN;

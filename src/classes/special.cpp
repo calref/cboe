@@ -178,6 +178,13 @@ void cSpecial::append(legacy::special_node_type& old){
 			type = eSpecType::IF_EQUIP_ITEM_CLASS;
 			ex2a = (old.type - 131) / 5;
 			break;
+		case 193: // Split party
+			if(ex2a > 0) ex2a = 10;
+			break;
+		case 194: // Reunite party
+			if(ex1a > 0) ex1a = 10;
+			ex2a = 0;
+			break;
 			// Place fields (twelve individual node types were collapsed into one)
 		case 200:
 			type = eSpecType::RECT_PLACE_FIELD;

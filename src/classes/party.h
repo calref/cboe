@@ -91,6 +91,8 @@ public:
 	std::vector<cEncNote> special_notes;
 	std::vector<cConvers> talk_save;
 	std::map<ePartyStatus,short> status;
+	location left_at;
+	size_t left_in;
 	short direction;
 	short at_which_save_slot;
 	char alchemy[20];
@@ -142,13 +144,11 @@ public:
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 	
-	std::string start_split(short a, short b, snd_num_t noise, short who);
-	std::string end_split(snd_num_t noise);
-	bool is_split();
-	bool pc_present(short n);
-	short pc_present(); // If only one pc is present, returns the number of that pc. Otherwise returns 6.
-	location left_at(); // The location that the left-behind character in a split were left at.
-	size_t left_in(); // The town they were left in.
+	bool start_split(short x, short y, snd_num_t noise, short who);
+	bool end_split(snd_num_t noise);
+	bool is_split() const;
+	bool pc_present(short n) const;
+	short pc_present() const; // If only one pc is present, returns the number of that pc. Otherwise returns 6.
 	
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;

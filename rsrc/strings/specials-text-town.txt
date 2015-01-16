@@ -377,7 +377,7 @@ Unused
 X coordinate to place lone PC at
 Y coordinate to place lone PC at
 Unused
-0 - no telep. noise, 1 - play telep. noise
+Sound to play (10 = teleport)
 Unused
 Unused
 Special to Jump To
@@ -390,10 +390,10 @@ Second part of message
 Unused
 Unused
 Unused
-0 - no sound, 1 - teleport sound
+Sound to play (10 = teleport)
 Unused
 Unused
-Unused
+If 1, don't change location
 Unused
 Unused
 Special to Jump To
