@@ -410,8 +410,8 @@ static void put_monst_info_in_dlog(cDialog& me, mon_num_t which_monst) {
 	}
 	
 	me["type"].setText(get_str("traits",33 + int(store_monst.m_type) * 2));
-	me["type1"].setText(get_str("monster-abilities",131 + store_monst.a[0].type));
-	me["type2"].setText(get_str("monster-abilities",131 + store_monst.a[1].type));
+	me["type1"].setText(get_str("monster-abilities",131 + int(store_monst.a[0].type)));
+	me["type2"].setText(get_str("monster-abilities",131 + int(store_monst.a[1].type)));
 	// TODO: Attack 3 type
 //	me["type3"].setText(get_str("monster-abilities",130 + store_monst.a[2].type));
 }
@@ -517,23 +517,23 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 		}
 	} else if(item_hit == "picktype1") {
 		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text_res("monster-abilities",130,139,store_monst.a[0].type,&me,"Choose Attack 1 Type:");
+		i = choose_text_res("monster-abilities",130,139,int(store_monst.a[0].type),&me,"Choose Attack 1 Type:");
 		if(i >= 0) {
-			store_monst.a[0].type = i;
+			store_monst.a[0].type = eMonstMelee(i);
 			put_monst_info_in_dlog(me,which_monst);
 		}
 	} else if(item_hit == "picktype2") {
 		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text_res("monster-abilities",130,139,store_monst.a[1].type,&me,"Choose Attack 2 & 3 Type:");
+		i = choose_text_res("monster-abilities",130,139,int(store_monst.a[1].type),&me,"Choose Attack 2 & 3 Type:");
 		if(i >= 0) {
-			store_monst.a[1].type = store_monst.a[2].type = i;
+			store_monst.a[1].type = store_monst.a[2].type = eMonstMelee(i);
 			put_monst_info_in_dlog(me,which_monst);
 		}
 	} else if(item_hit == "picktype3") {
 		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text_res("monster-abilities",130,139,store_monst.a[2].type,&me,"Choose Attack 3 Type:");
+		i = choose_text_res("monster-abilities",130,139,int(store_monst.a[2].type),&me,"Choose Attack 3 Type:");
 		if(i >= 0) {
-			store_monst.a[2].type = i;
+			store_monst.a[2].type = eMonstMelee(i);
 			put_monst_info_in_dlog(me,which_monst);
 		}
 	}
@@ -576,31 +576,8 @@ short edit_monst_type(short which_monst) {
 static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short which_monst) {
 	me["num"].setTextToNum(which_monst);
 	
-	me["poison"].setTextToNum(store_monst.poison);
-	me["breath-str"].setTextToNum(store_monst.breath);
-	
-	me["abil-name"].setText(get_str("monster-abilities", store_monst.spec_skill + 1));
-	me["radiate-name"].setText(get_str("monster-abilities", store_monst.radiate_1 + 50));
-	me["radiate-param"].setText(get_str("monster-abilities", store_monst.radiate_1 + 80));
-	me["abil-xtra"].setTextToNum(store_monst.radiate_2);
 	me["loot-item"].setTextToNum(store_monst.corpse_item);
 	me["loot-chance"].setTextToNum(store_monst.corpse_item_chance);
-	
-	cLedGroup& breathType = dynamic_cast<cLedGroup&>(me["breath-type"]);
-	switch(store_monst.breath_type) {
-		case 0:
-			breathType.setSelected("fire");
-			break;
-		case 1:
-			breathType.setSelected("cold");
-			break;
-		case 2:
-			breathType.setSelected("shock");
-			break;
-		case 3:
-			breathType.setSelected("dark");
-			break;
-	}
 	
 	dynamic_cast<cLedGroup&>(me["summon"]).setSelected("s" + boost::lexical_cast<std::string,short>(store_monst.summon_type));
 	
@@ -615,19 +592,7 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short wh
 }
 
 static bool save_monst_abils(cDialog& me, cMonster& store_monst) {
- 	store_monst.poison = me["poison"].getTextAsNum();
-	store_monst.breath = me["breath-str"].getTextAsNum();
-	std::string breathType = dynamic_cast<cLedGroup&>(me["breath-type"]).getSelected();
-	if(breathType == "fire")
-		store_monst.breath_type = 0;
-	else if(breathType == "cold")
-		store_monst.breath_type = 1;
-	else if(breathType == "shock")
-		store_monst.breath_type = 2;
-	else if(breathType == "dark")
-		store_monst.breath_type = 3;
 	store_monst.summon_type = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["summon"]).getSelected().substr(1));
- 	store_monst.radiate_2 = me["abil-xtra"].getTextAsNum();
 	
  	store_monst.corpse_item = me["loot-item"].getTextAsNum();
 	store_monst.corpse_item_chance = me["loot-chance"].getTextAsNum();
@@ -652,25 +617,6 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonst
 	} else if(item_hit == "okay") {
 		if(save_monst_abils(me, store_monst))
 			me.toast(true);
-	} else if(item_hit == "abils") {
-		if(!save_monst_abils(me, store_monst)) return true;
-		i = choose_text_res("monster-abilities", 0, 37, store_monst.spec_skill, &me, "Choose Monster Ability:");
-		if(i >= 0) {
-			store_monst.spec_skill = i - 1;
-			put_monst_abils_in_dlog(me, store_monst, which_monst);
-		}
-	} else if(item_hit == "radiate") {
-		if(!save_monst_abils(me, store_monst)) return true;
-		i = choose_text_res("monster-abilities", 50, 65, store_monst.radiate_1, &me, "Choose Radiation Ability:");
-		if(i >= 0) {
-			store_monst.radiate_1 = i - 50;
-			put_monst_abils_in_dlog(me, store_monst, which_monst);
-		}
-		if(i >= 1 && i <= 6)
-			me["abil-xtra"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Radiation Chance"));
-		else if(i >= 10 && i <= 12)
-			me["abil-xtra"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 255, "Summoned Monster"));
-		else me["abil-xtra"].attachFocusHandler(nullptr);
 	}
 	return true;
 }
