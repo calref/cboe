@@ -62,19 +62,4 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Outdoor Store
-Unused
-Unused
-Name of Store
-Unused
-Unused
-Unused
-Unused
-Number of first item in store
-Store type (see docs. for list)
-Unused
-Number of items in store (1 .. 40)
-Cost adjust (0 .. 6, lower = cheaper)
-Unused
-Special to Jump To
---------------------
+

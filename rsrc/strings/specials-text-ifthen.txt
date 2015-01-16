@@ -121,7 +121,7 @@ Unused
 If party has this much gold ...
 Call this special ...
 Unused
-Unused
+If 1, take gold
 Unused
 Unused
 Otherwise call this special
@@ -137,7 +137,7 @@ Unused
 If party has this much food ...
 Call this special ...
 Unused
-Unused
+If 1, take food
 Unused
 Unused
 Otherwise call this special
@@ -155,7 +155,7 @@ Y coordinate of space
 Unused
 If item of this class on space ...
 Call this special ...
-Unused
+If 1, take item
 Otherwise call this special
 --------------------
 Have Item With Class?
@@ -169,7 +169,7 @@ Unused
 If has item of this special class ...
 Call this special ...
 Unused
-Unused
+If 1, take item
 Unused
 Unused
 Otherwise call this special
@@ -185,28 +185,12 @@ Unused
 If has equipped item of this special ...
 Call this special ...
 Unused
-Unused
-Unused
-Unused
-Otherwise call this special
---------------------
-Has Gold? (+ take)
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-If party has this much gold ...
-Call this special ...
-Unused
-Unused
+If 1, take item
 Unused
 Unused
 Otherwise call this special
 --------------------
-Has Food? (+ take)
+Unused Node
 Unused
 Unused
 Unused
@@ -214,15 +198,15 @@ Unused
 Unused
 Unused
 Unused
-If party has this much food ...
-Call this special ...
 Unused
 Unused
 Unused
 Unused
-Otherwise call this special
+Unused
+Unused
+Special to Jump To
 --------------------
-Item Class on Space? (+ take)
+Unused Node
 Unused
 Unused
 Unused
@@ -230,15 +214,15 @@ Unused
 Unused
 Unused
 Unused
-X coordinate of space
-Y coordinate of space
 Unused
-If item of this class on space ...
-Call this special ...
 Unused
-Otherwise call this special
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
 --------------------
-Have Item W. Class? (+ take)
+Unused Node
 Unused
 Unused
 Unused
@@ -246,15 +230,15 @@ Unused
 Unused
 Unused
 Unused
-If has item of this special class ...
-Call this special ...
 Unused
 Unused
 Unused
 Unused
-Otherwise call this special
+Unused
+Unused
+Special to Jump To
 --------------------
-Equip Item W. Class? (+ take)
+Unused Node
 Unused
 Unused
 Unused
@@ -262,13 +246,29 @@ Unused
 Unused
 Unused
 Unused
-If has equipped item of this class ...
-Call this special ...
 Unused
 Unused
-eUnused
 Unused
-Otherwise call this special
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Unused Node
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
 --------------------
 Day Reached?
 Unused

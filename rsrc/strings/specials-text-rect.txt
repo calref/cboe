@@ -4,7 +4,7 @@ Which field type
 First part of message
 Second part of message
 Unused
-Unused
+0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle
 Left of rectangle
@@ -195,8 +195,8 @@ X of space to move to
 Y of space to move to
 First part of message
 Second part of message
-Unused
-Unused
+Set to 1 to place in container, if present
+0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle
 Left of rectangle
@@ -212,7 +212,7 @@ Unused
 First part of message
 Second part of message
 Unused
-Unused
+0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle
 Left of rectangle
@@ -228,7 +228,7 @@ Chance of changing (0 - 100)
 First part of message
 Second part of message
 Unused
-Unused
+0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle
 Left of rectangle
@@ -244,7 +244,7 @@ with this ter. type
 First part of message
 Second part of message
 Unused
-Unused
+0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle
 Left of rectangle
@@ -260,7 +260,7 @@ Unused
 First part of message
 Second part of message
 Unused
-Unused
+0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle
 Left of rectangle
@@ -276,7 +276,7 @@ Unused
 First part of message
 Second part of message
 Unused
-Unused
+0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle
 Left of rectangle
@@ -292,7 +292,7 @@ Unused
 First part of message
 Second part of message
 Unused
-Unused
+0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle
 Left of rectangle

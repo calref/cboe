@@ -14,7 +14,23 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Change Terrain
+Do Missile Animation
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Which missile animation?
+Unused
+X coordinate of start space
+Y coordinate of start space
+Path type
+X coordinate of end space
+Y coordinate of end space
+Sound to play
+Special to Jump To
+--------------------
+Animate Monster Attack
 Unused
 Unused
 First part of message
@@ -22,44 +38,28 @@ Second part of message
 Unused
 Unused
 Unused
-X coordinate of space
-Y coordinate of space
+X coordinate of monster (or monster ID)
+Y coordinate of monster (or -1 to use X as ID)
 Unused
-Terrain to change to
+Unused
 Unused
 Unused
 Special to Jump To
 --------------------
-Swap Terrain
+Animate Fake Damage
 Unused
 Unused
 First part of message
 Second part of message
 Unused
-Unused
-Unused
+pic
+pictype
 X coordinate of space
 Y coordinate of space
-Unused
-Swap this terrain ...
-With this terrain ...
-Unused
-Special to Jump To
---------------------
-Transform Terrain
-Unused
-Unused
-First part of message
-Second part of message
-Unused
-Unused
-Unused
-X coordinate of space
-Y coordinate of space
-Unused
-Unused
-Unused
-Unused
+extra 1c
+Boom type
+Number to print (0 means print no number)
+Sound to play
 Special to Jump To
 --------------------
 Move Party
@@ -362,7 +362,7 @@ X coordinate to place at
 Y coordinate to place at
 Unused
 Item to place
-Unused
+Set to 1 to place in container, if present
 Unused
 Special to Jump To
 --------------------

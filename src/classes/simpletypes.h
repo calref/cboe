@@ -498,13 +498,13 @@ enum class eSpecType {
 	SET_SDF = 1,
 	INC_SDF = 2,
 	DISPLAY_MSG = 3,
-	SECRET_PASSAGE = 4,
+	ENTER_SHOP = 4,
 	DISPLAY_SM_MSG = 5,
 	FLIP_SDF = 6,
-	SDF_RANDOM = 7, // formerly OUT_BLOCK
-	SDF_ADD = 8, // formerly TOWN_BLOCK
-	SDF_DIFF = 9, // formerly FIGHT_BLOCK
-	UNUSED1 = 10, // formerly LOOK_BLOCK
+	SDF_RANDOM = 7,
+	SDF_ADD = 8,
+	SDF_DIFF = 9,
+	STORY_DIALOG = 10,
 	CANT_ENTER = 11,
 	CHANGE_TIME = 12,
 	SCEN_TIMER_START = 13,
@@ -518,7 +518,7 @@ enum class eSpecType {
 	CALL_GLOBAL = 21,
 	SET_SDF_ROW = 22,
 	COPY_SDF = 23,
-	DISPLAY_PICTURE = 24, // formerly SANCTIFY
+	DISPLAY_PICTURE = 24,
 	REST = 25,
 	WANDERING_WILL_FIGHT = 26,
 	END_SCENARIO = 27,
@@ -528,6 +528,9 @@ enum class eSpecType {
 	SDF_TIMES = 31,
 	SDF_DIVIDE = 32, // Computes both quotient and remainder
 	SDF_POWER = 33,
+	CHANGE_TER = 34,
+	SWAP_TER = 35,
+	TRANS_TER = 36,
 	ONCE_GIVE_ITEM = 50,
 	ONCE_GIVE_SPEC_ITEM = 51,
 	ONCE_NULL = 52,
@@ -574,18 +577,18 @@ enum class eSpecType {
 	IF_RANDOM = 132,
 	IF_HAVE_SPECIAL_ITEM = 133,
 	IF_SDF_COMPARE = 134,
-	IF_TOWN_TER_TYPE = 135,
-	IF_OUT_TER_TYPE = 136,
+	IF_TER_TYPE = 135,
+	UNUSED21 = 136,
 	IF_HAS_GOLD = 137,
 	IF_HAS_FOOD = 138,
 	IF_ITEM_CLASS_ON_SPACE = 139,
 	IF_HAVE_ITEM_CLASS = 140,
 	IF_EQUIP_ITEM_CLASS = 141,
-	IF_HAS_GOLD_AND_TAKE = 142,
-	IF_HAS_FOOD_AND_TAKE = 143,
-	IF_ITEM_CLASS_ON_SPACE_AND_TAKE = 144,
-	IF_HAVE_ITEM_CLASS_AND_TAKE = 145,
-	IF_EQUIP_ITEM_CLASS_AND_TAKE = 146,
+	UNUSED22 = 142,
+	UNUSED23 = 143,
+	UNUSED24 = 144,
+	UNUSED25 = 145,
+	UNUSED26 = 146,
 	IF_DAY_REACHED = 147,
 	IF_FIELDS = 148,
 	IF_PARTY_SIZE = 149,
@@ -598,9 +601,9 @@ enum class eSpecType {
 	IF_CONTEXT = 156,
 	IF_NUM_RESPONSE = 157,
 	MAKE_TOWN_HOSTILE = 170,
-	TOWN_CHANGE_TER = 171,
-	TOWN_SWAP_TER = 172,
-	TOWN_TRANS_TER = 173,
+	TOWN_RUN_MISSILE = 171,
+	TOWN_MONST_ATTACK = 172,
+	TOWN_BOOM_SPACE = 173,
 	TOWN_MOVE_PARTY = 174,
 	TOWN_HIT_SPACE = 175,
 	TOWN_EXPLODE_SPACE = 176,
@@ -645,10 +648,9 @@ enum class eSpecType {
 	RECT_LOCK = 217,
 	RECT_UNLOCK = 218,
 	OUT_MAKE_WANDER = 225,
-	OUT_CHANGE_TER = 226,
+	UNUSED20 = 226,
 	OUT_PLACE_ENCOUNTER = 227,
 	OUT_MOVE_PARTY = 228,
-	OUT_STORE = 229,
 };
 
 enum class eSpecCat {
@@ -658,7 +660,7 @@ enum class eSpecCat {
 
 inline eSpecCat getNodeCategory(eSpecType node) {
 	int code = (int) node;
-	if(code >= 0 && code <= 33)
+	if(code >= 0 && code <= 36)
 		return eSpecCat::GENERAL;
 	if(code >= 50 && code <= 63)
 		return eSpecCat::ONCE;
@@ -670,7 +672,7 @@ inline eSpecCat getNodeCategory(eSpecType node) {
 		return eSpecCat::TOWN;
 	if(code >= 200 && code <= 218)
 		return eSpecCat::RECT;
-	if(code >= 225 && code <= 229)
+	if(code >= 225 && code <= 228)
 		return eSpecCat::OUTDOOR;
 	return eSpecCat::INVALID;
 }

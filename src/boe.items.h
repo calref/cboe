@@ -25,7 +25,7 @@ void remove_charge(short pc_num,short which_item);
 void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val);
 void equip_item(short pc_num,short item_num);
 void drop_item(short pc_num,short item_num,location where_drop);
-bool place_item(cItem item,location where,bool forced);
+bool place_item(cItem item,location where,bool forced,bool contained = false);
 void destroy_an_item();
 void give_thing(short pc_num, short item_num);
 void combine_things(short pc_num);
@@ -40,6 +40,7 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 bool display_item(location from_loc,short pc_num,short mode, bool check_container);
 short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) ;
 void custom_pic_dialog(std::string title, pic_num_t bigpic);
+void story_dialog(std::string title, str_num_t first, str_num_t last, int which_str_type, pic_num_t pic, ePicType pt);
 short get_num_of_items(short max_num);
 void init_mini_map();
 void put_pc_effects_on_dialog(cDialog& dialog,short item);

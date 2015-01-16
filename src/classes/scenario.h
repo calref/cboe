@@ -58,10 +58,10 @@ public:
 	short store_item_towns[3];
 	cSpecItem special_items[50];
 	short rating,uses_custom_graphics;
-	cMonster scen_monsters[256];
+	std::array<cMonster,256> scen_monsters;
 	cVehicle boats[30];
 	cVehicle horses[30];
-	cTerrain ter_types[256];
+	std::array<cTerrain,256> ter_types;
 	short scenario_timer_times[20];
 	short scenario_timer_specs[20];
 	std::array<cSpecial,256> scen_specials;

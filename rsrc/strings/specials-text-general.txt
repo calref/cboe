@@ -62,19 +62,19 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Secret Passage
+Start Shopping
 Unused
 Unused
-First part of message
-Second part of message
-Unused
-Unused
+Name of Store
 Unused
 Unused
 Unused
 Unused
+Number of first item in store
+Store type (see docs. for list)
 Unused
-Unused
+Number of items in store (1 .. 40)
+Cost adjust (0 .. 6, lower = cheaper)
 Unused
 Special to Jump To
 --------------------
@@ -158,21 +158,21 @@ Second SDF part B, or -1 for literal number
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Story Dialog
+Unused
+Unused
+Dialog title string
+First string in dialog
+Last string in dialog
+Picture number
+Picture type
 Unused
 Unused
 Unused
 Unused
 Unused
 Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
+Special to Jump To
 --------------------
 Can't Enter
 Unused
@@ -185,7 +185,7 @@ Unused
 0 - can enter, 1 - no enter
 Unused
 Unused
-Unused
+0 - don't force, 1 - force if blocked
 Unused
 Unused
 Special to Jump To
@@ -540,5 +540,69 @@ Unused
 Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Unused
+Special to Jump To
+--------------------
+Change Terrain
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Terrain to change to
+Unused
+Unused
+Special to Jump To
+--------------------
+Swap Terrain
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Swap this terrain ...
+With this terrain ...
+Unused
+Special to Jump To
+--------------------
+Transform Terrain
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space
+Y coordinate of space
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Special Name
+sdf1
+sdf2
+message1
+message2
+message3
+pic
+pictype
+extra 1a
+extra 1b
+extra 1c
+extra 2a
+extra 2b
+extra 2c
 Special to Jump To
 --------------------

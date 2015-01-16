@@ -107,7 +107,12 @@ void cSpecial::append(legacy::special_node_type& old){
 			break;
 		case 148: case 149: // if barrels or crates
 			type = eSpecType::IF_FIELDS;
-			ex1a = old.type == 148 ? OBJECT_BARREL : OBJECT_CRATE;
+			m1 = old.type == 148 ? OBJECT_BARREL : OBJECT_CRATE;
+			m2 = ex1b;
+			ex1a = ex1b = 0;
+			ex2a = ex2b = 64;
+			sd1 = 1;
+			sd2 = std::numeric_limits<short>::max();
 			break;
 		case 151: case 152: // if has cave lore or woodsman
 			type = eSpecType::IF_TRAIT;
@@ -132,8 +137,46 @@ void cSpecial::append(legacy::special_node_type& old){
 			ex1a -= 160;
 			break;
 		case 229: // Outdoor store - fix spell IDs
+			type = eSpecType::ENTER_SHOP;
 			if(ex1b == 1 || ex1b == 2)
 				ex1a += 30;
+			break;
+		case 4: // Secret passage
+			type = eSpecType::CANT_ENTER;
+			ex1a = 0;
+			ex2a = 1;
+			break;
+		case 171: case 226: // Change terrain (town/outdoor)
+			type = eSpecType::CHANGE_TER;
+			break;
+		case 172: // Swap terrain
+			type = eSpecType::SWAP_TER;
+			break;
+		case 173: // Transform terrain
+			type = eSpecType::TRANS_TER;
+			break;
+		case 135: case 136: // If terrain
+			type = eSpecType::IF_TER_TYPE;
+			break;
+		case 137: case 142: // If has gold (and maybe take)
+			type = eSpecType::IF_HAS_GOLD;
+			ex2a = (old.type - 137) / 5;
+			break;
+		case 138: case 143: // If has food (and maybe take)
+			type = eSpecType::IF_HAS_FOOD;
+			ex2a = (old.type - 138) / 5;
+			break;
+		case 139: case 144: // If item on space (and maybe take)
+			type = eSpecType::IF_ITEM_CLASS_ON_SPACE;
+			ex2c = (old.type - 139) / 5;
+			break;
+		case 140: case 145: // If have item class (and maybe take)
+			type = eSpecType::IF_HAVE_ITEM_CLASS;
+			ex2a = (old.type - 140) / 5;
+			break;
+		case 141: case 146: // If equip item class (and maybe take)
+			type = eSpecType::IF_EQUIP_ITEM_CLASS;
+			ex2a = (old.type - 131) / 5;
 			break;
 			// Place fields (twelve individual node types were collapsed into one)
 		case 200:
@@ -264,17 +307,17 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // % - Choose button to select shop cost adjustment
 static const char*const button_dict[7][11] = {
 	{ // general nodes
-		" mmmmmmmmm mmm mmmmmm   Mmm  $ mmm", // msg1
-		"                                  ", // msg2
-		"                                  ", // msg3
-		"                                  ", // pic
-		"                                  ", // pictype
-		"              x  T i              ", // ex1a
-		"             S     ss             ", // ex1b
-		"                                  ", // ex1c
-		"                                  ", // ex2a
-		"                                  ", // ex2b
-		"                                  ", // ex2c
+		" mmmMMmmmm mmm mmmmmm   Mmm  $ mmmmmm", // msg1
+		"                                     ", // msg2
+		"                                     ", // msg3
+		"                                     ", // pic
+		"                                     ", // pictype
+		"    #         x  T i                 ", // ex1a
+		"    &        S     ss                ", // ex1b
+		"                                     ", // ex1c
+		"                                  tt ", // ex2a
+		"    %                              t ", // ex2b
+		"                                     ", // ex2c
 	}, { // one-shot nodes
 		"mm  mddddddmmm", // msg1
 		"              ", // msg2
@@ -306,23 +349,23 @@ static const char*const button_dict[7][11] = {
 		"                            ", // pic
 		"                            ", // pictype
 		"                  f  Qq $ * ", // ex1a
-		"ssss   ss ssss sssss sssss =", // ex1b
+		"ssss   ss ss     sss sssss =", // ex1b
 		"                          ss", // ex1c
 		"                       K$   ", // ex2a
-		"s   sss  s    s     s==+s  =", // ex2b
+		"s   ss   s          s==+s  =", // ex2b
 		"                           s", // ex2c
 	}, { // town nodes
 		"mmmmmmmmmmmmmmm   dddmmmmmmm", // msg1
 		"                            ", // msg2
 		"                            ", // msg3
-		"                  ppp       ", // pic
-		"                  ???       ", // pictype
+		" p                ppp       ", // pic
+		" ?                ???       ", // pictype
 		"            c             L ", // ex1a
 		"              s s s      s @", // ex1b
 		"                            ", // ex1c
-		"@tt      ! c     T  T i     ", // ex2a
-		"  t  DD          /          ", // ex2b
-		"                 :  :       ", // ex2c
+		"@  D     ! c     T  T i     ", // ex2a
+		"     DD          /          ", // ex2b
+		" x x             :  :       ", // ex2c
 	}, { // rectangle nodes
 		"m           mmmmmmm", // msg1
 		"                   ", // msg2

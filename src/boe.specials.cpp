@@ -44,6 +44,7 @@ extern short fast_bang;
 extern bool end_scenario;
 extern cUniverse univ;
 extern std::queue<pending_special_type> special_queue;
+extern short combat_posing_monster;
 
 bool can_draw_pcs = true;
 
@@ -180,13 +181,12 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		for(i = 0; i < 18; i++)
 			if(out_where == univ.out->special_locs[i]) {
 				*spec_num = univ.out->special_id[i];
-				if((*spec_num >= 0) &&
-					univ.out->specials[*spec_num].type == eSpecType::SECRET_PASSAGE)
-					*forced = true;
 				// call special
 				run_special(mode,1,univ.out->special_id[i],out_where,&s1,&s2,&s3);
 				if(s1 > 0)
 					can_enter = false;
+				else if(s2 > 0)
+					*forced = true;
 				erase_out_specials();
 				put_pc_screen();
 				put_item_screen(stat_window,0);
@@ -211,9 +211,6 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		}
 		for(i = 0; i < 50; i++)
 			if(where_check == univ.town->special_locs[i]) {
-				if(univ.town->specials[univ.town->spec_id[i]].type == eSpecType::SECRET_PASSAGE) {
-					*forced = true;
-				}
 				*spec_num = univ.town->spec_id[i];
 				bool runSpecial = false;
 				if(!is_blocked(where_check)) runSpecial = true;
@@ -226,6 +223,8 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 					run_special(mode,2,univ.town->spec_id[i],where_check,&s1,&s2,&s3);
 					if(s1 > 0)
 						can_enter = false;
+					else if(s2 > 0)
+						*forced = true;
 				}
 			}
 		put_pc_screen();
@@ -2102,7 +2101,10 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE) {
 				if(spec.ex1a != 0)
 					*a = 1;
-				else *a = 0;
+				else {
+					*a = 0;
+					if(spec.ex2a != 0) *b = 1;
+				}
 			}
 			break;
 		case eSpecType::CHANGE_TIME:
@@ -2284,6 +2286,43 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					print_nums(spec.ex1a, univ.town.monst[spec.ex1a].health, univ.town.monst[spec.ex1a].mp);
 					break;
 			}
+			break;
+		case eSpecType::CHANGE_TER:
+			set_terrain(loc(spec.ex1a,spec.ex1b),spec.ex2a);
+			*redraw = true;
+			draw_map(true);
+			check_mess = true;
+			break;
+		case eSpecType::SWAP_TER:
+			if(coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a){
+				set_terrain(loc(spec.ex1a,spec.ex1b),spec.ex2b);
+			}
+			else if(coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2b){
+				set_terrain(loc(spec.ex1a,spec.ex1b),spec.ex2a);
+			}
+			*redraw = 1;
+			draw_map(true);
+			check_mess = true;
+			break;
+		case eSpecType::TRANS_TER:
+			set_terrain(loc(spec.ex1a,spec.ex1b),univ.scenario.ter_types[coord_to_ter(spec.ex1a,spec.ex1b)].trans_to_what);
+			*redraw = 1;
+			draw_map(true);
+			check_mess = true;
+			break;
+		case eSpecType::ENTER_SHOP:
+			get_strs(str1,str2,1,spec.m1,-1);
+			if(spec.ex2a >= 40)
+				spec.ex2a = 39;
+			if(spec.ex2a < 1)
+				spec.ex2a = 1;
+			spec.ex2b = minmax(0,6,spec.ex2b);
+			start_shop_mode(eShopType(spec.ex1b), spec.ex1a, spec.ex1a + spec.ex2a - 1, spec.ex2b, str1);
+			*next_spec = -1;
+			break;
+		case eSpecType::STORY_DIALOG:
+			get_strs(str1,str2,cur_spec_type,spec.m1,-1);
+			story_dialog(str1, spec.m2, spec.m3, cur_spec_type, spec.pic, ePicType(spec.pictype));
 			break;
 	}
 	if(check_mess) {
@@ -2934,23 +2973,25 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			else giveError("A Stuff Done flag is out of range.");
 			break;
-		case eSpecType::IF_TOWN_TER_TYPE:
-			if(((is_town()) || (is_combat())) && (univ.town->terrain(spec.ex1a,spec.ex1b) == spec.ex2a))
-				*next_spec = spec.ex2b;
-			break;
-		case eSpecType::IF_OUT_TER_TYPE:
+		case eSpecType::IF_TER_TYPE:
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			l = local_to_global(l);
-			if((is_out()) && (univ.out[l.x][l.y] == spec.ex2a))
+			if((is_town() || is_combat()) && univ.town->terrain(spec.ex1a,spec.ex1b) == spec.ex2a)
+				*next_spec = spec.ex2b;
+			else if(is_out() && univ.out[l.x][l.y] == spec.ex2a)
 				*next_spec = spec.ex2b;
 			break;
 		case eSpecType::IF_HAS_GOLD:
-			if(univ.party.gold >= spec.ex1a)
+			if(univ.party.gold >= spec.ex1a) {
+				if(spec.ex2a) take_gold(spec.ex1a,true);
 				*next_spec = spec.ex1b;
+			}
 			break;
 		case eSpecType::IF_HAS_FOOD:
-			if(univ.party.food >= spec.ex1a)
+			if(univ.party.food >= spec.ex1a) {
+				if(spec.ex2a) take_food(spec.ex1a,true);
 				*next_spec = spec.ex1b;
+			}
 			break;
 		case eSpecType::IF_ITEM_CLASS_ON_SPACE:
 			if(is_out())
@@ -2958,11 +2999,16 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			l.x = spec.ex1a; l.y = spec.ex1b;
 			for(i = 0; i < NUM_TOWN_ITEMS; i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == (unsigned)spec.ex2a
-				   && (l == univ.town.items[i].item_loc))
+				   && l == univ.town.items[i].item_loc) {
 					*next_spec = spec.ex2b;
+					if(spec.ex2c) {
+						*redraw = 1;
+						univ.town.items[i].variety = eItemType::NO_ITEM;
+					}
+				}
 			break;
 		case eSpecType::IF_HAVE_ITEM_CLASS:
-			if(party_check_class(spec.ex1a,1))
+			if(party_check_class(spec.ex1a,!spec.ex2a))
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_EQUIP_ITEM_CLASS:
@@ -2970,46 +3016,12 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					for(j = 0; j < 24; j++)
 						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
-						   && (univ.party[i].equip[j]))
+						   && univ.party[i].equip[j]) {
 							*next_spec = spec.ex1b;
-			break;
-		case eSpecType::IF_HAS_GOLD_AND_TAKE:
-			if(univ.party.gold >= spec.ex1a) {
-				take_gold(spec.ex1a,true);
-				*next_spec = spec.ex1b;
-			}
-			break;
-		case eSpecType::IF_HAS_FOOD_AND_TAKE:
-			if(univ.party.food >= spec.ex1a) {
-				take_food(spec.ex1a,true);
-				*next_spec = spec.ex1b;
-			}
-			break;
-		case eSpecType::IF_ITEM_CLASS_ON_SPACE_AND_TAKE:
-			if(is_out())
-				break;
-			l.x = spec.ex1a; l.y = spec.ex1b;
-			for(i = 0; i < NUM_TOWN_ITEMS; i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == (unsigned)spec.ex2a
-				   && (l == univ.town.items[i].item_loc)) {
-					*next_spec = spec.ex2b;
-					*redraw = 1;
-					univ.town.items[i].variety = eItemType::NO_ITEM;
-				}
-			break;
-		case eSpecType::IF_HAVE_ITEM_CLASS_AND_TAKE:
-			if(party_check_class(spec.ex1a,0))
-				*next_spec = spec.ex1b;
-			break;
-		case eSpecType::IF_EQUIP_ITEM_CLASS_AND_TAKE:
-			for(i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE)
-					for(j = 0; j < 24; j++)
-						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
-						   && (univ.party[i].equip[j])) {
-							*next_spec = spec.ex1b;
-							*redraw = 1;
-							take_item(i,j);
+							if(spec.ex2c) {
+								*redraw = 1;
+								take_item(i,j);
+							}
 						}
 			break;
 		case eSpecType::IF_DAY_REACHED:
@@ -3017,14 +3029,14 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_FIELDS:
-			if(!isValidField(spec.ex1a, false)) {
+			if(!isValidField(spec.m1, false)) {
 				giveError("Scenario tried to check for invalid field type (1...24)");
 				break;
 			}
 			i = 0;
-			for(j = 0; j < univ.town->max_dim(); j++)
-				for(k = 0; k < univ.town->max_dim(); k++) {
-					switch(eFieldType(spec.ex1a)) {
+			for(j = spec.ex1b; j < std::min(spec.ex2b, univ.town->max_dim()); j++)
+				for(k = spec.ex1a; k < std::min(spec.ex2a, univ.town->max_dim()); k++) {
+					switch(eFieldType(spec.m1)) {
 						// These values are not allowed
 						case SPECIAL_EXPLORED: case SPECIAL_SPOT: case FIELD_DISPEL: case FIELD_SMASH: break;
 						// Walls
@@ -3057,11 +3069,8 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						case SFX_RUBBLE: i += univ.town.is_rubble(i,j); break;
 					}
 				}
-			if(i > 0)
-				*next_spec = spec.ex1b;
-			// TODO: Are there other object types to account for?
-			// TODO: Allow restricting to a specific rect
-			// TODO: Allow requiring a minimum and maximum number of objects
+			if(i >= spec.sd1 && i <= spec.sd2)
+				*next_spec = spec.m2;
 			break;
 		case eSpecType::IF_PARTY_SIZE:
 			if(spec.ex2a < 1) {
@@ -3337,14 +3346,19 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 }
 
 void set_terrain(location l, ter_num_t terrain_type) {
-	// TODO: Use dynamic size() instead of hard-coded limit
-	if(terrain_type >= 256) return;
-	ter_num_t former = univ.town->terrain(l.x,l.y);
-	univ.town->terrain(l.x,l.y) = terrain_type;
-	if(univ.scenario.ter_types[terrain_type].special == eTerSpec::CONVEYOR)
-		belt_present = true;
-	if(univ.scenario.ter_types[former].light_radius != univ.scenario.ter_types[terrain_type].light_radius)
-		univ.town->set_up_lights();
+	if(terrain_type >= univ.scenario.ter_types.size()) return;
+	if(is_out()) {
+		univ.out->terrain[l.x][l.y] = terrain_type;
+		l = local_to_global(l);
+		univ.out[l.x][l.y] = terrain_type;
+	} else {
+		ter_num_t former = univ.town->terrain(l.x,l.y);
+		univ.town->terrain(l.x,l.y) = terrain_type;
+		if(univ.scenario.ter_types[terrain_type].special == eTerSpec::CONVEYOR)
+			belt_present = true;
+		if(univ.scenario.ter_types[former].light_radius != univ.scenario.ter_types[terrain_type].light_radius)
+			univ.town->set_up_lights();
+	}
 }
 
 // TODO: What was next_spec_type for? Is it still needed?
@@ -3375,27 +3389,6 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	switch(cur_node.type) {
 		case eSpecType::MAKE_TOWN_HOSTILE:
 			set_town_attitude(spec.ex1a,spec.ex1b,spec.ex2a);
-			break;
-		case eSpecType::TOWN_CHANGE_TER:
-			set_terrain(l,spec.ex2a);
-			*redraw = true;
-			draw_map(true);
-			break;
-		case eSpecType::TOWN_SWAP_TER:
-			if(coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2a){
-				set_terrain(l,spec.ex2b);
-			}
-			else if(coord_to_ter(spec.ex1a,spec.ex1b) == spec.ex2b){
-				set_terrain(l,spec.ex2a);
-			}
-			*redraw = 1;
-			draw_map(true);
-			break;
-		case eSpecType::TOWN_TRANS_TER:
-			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			set_terrain(l,univ.scenario.ter_types[ter].trans_to_what);
-			*redraw = 1;
-			draw_map(true);
 			break;
 		case eSpecType::TOWN_MOVE_PARTY:
 			if(is_combat()) {
@@ -3654,7 +3647,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_PLACE_ITEM:
 			store_i = get_stored_item(spec.ex2a);
-			place_item(store_i,l,true);
+			place_item(store_i,l,true,spec.ex2b);
 			break;
 		case eSpecType::TOWN_SPLIT_PARTY:
 			if(which_mode == eSpecCtx::TALK)
@@ -3728,6 +3721,36 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			univ.town.monst[spec.ex1a].attitude = spec.ex1b;
 			break;
+		case eSpecType::TOWN_RUN_MISSILE:
+			if(which_mode == eSpecCtx::TALK)
+				break;
+			if((i = monst_there(loc(spec.ex2a, spec.ex2b))) < 90) {
+				cCreature& who = univ.town.monst[i];
+				i = 14 * who.x_width - 1;
+				r1 = 18 * who.y_width - 1;
+			} else i = r1 = 0;
+			run_a_missile(l, loc(spec.ex2a, spec.ex2b), spec.pic, spec.ex1c, spec.ex2c, i, r1, 100);
+			break;
+		case eSpecType::TOWN_BOOM_SPACE:
+			// TODO: This should work, but does it need a bit of extra logic?
+			if(which_mode == eSpecCtx::TALK)
+				break;
+			boom_space(l, 100, spec.ex2a, spec.ex2b, -spec.ex2c);
+			break;
+		case eSpecType::TOWN_MONST_ATTACK:
+			// TODO: I'm not certain if this will work.
+			if(which_mode == eSpecCtx::TALK)
+				break;
+			i = combat_posing_monster;
+			if(l.y >= 0) combat_posing_monster = monst_there(l);
+			else combat_posing_monster = spec.ex1a;
+			if(combat_posing_monster < 0 || combat_posing_monster >= univ.town->max_monst()) {
+				combat_posing_monster = i;
+				break;
+			}
+			redraw_screen(REFRESH_TERRAIN);
+			combat_posing_monster = i;
+			break;
 	}
 	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
@@ -3753,6 +3776,9 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	for(i = spec.ex1b;i <= spec.ex2b;i++)
 		for(j = spec.ex1a; j <= spec.ex2a; j++) {
 			l.x = i; l.y = j;
+			// If pict non-zero, exclude rectangle interior
+			if(spec.pic > 0 && i > spec.ex1b && i < spec.ex2b && j > spec.ex1a && j < spec.ex2a)
+				continue;
 			switch(cur_node.type) {
 				case eSpecType::RECT_PLACE_FIELD:
 					if(!isValidField(spec.sd2, true)) {
@@ -3802,10 +3828,13 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						}
 					break;
 				case eSpecType::RECT_MOVE_ITEMS:
+					i = is_container(loc(spec.sd1,spec.sd2));
 					for(k = 0; k < NUM_TOWN_ITEMS; k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
 							univ.town.items[k].item_loc.x = spec.sd1;
 							univ.town.items[k].item_loc.y = spec.sd2;
+							if(i && spec.m3)
+								univ.town.items[k].contained = true;
 						}
 					break;
 				case eSpecType::RECT_DESTROY_ITEMS:
@@ -3881,16 +3910,6 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			create_wand_monst();
 			*redraw = 1;
 			break;
-		case eSpecType::OUT_CHANGE_TER:
-			if(spec.ex2a < 0) break;
-			univ.out->terrain[spec.ex1a][spec.ex1b] = spec.ex2a;
-			l.x = spec.ex1a;
-			l.y = spec.ex1b;
-			l = local_to_global(l);
-			univ.out[l.x][l.y] = spec.ex2a;
-			*redraw = 1;
-			check_mess = true;
-			break;
 		case eSpecType::OUT_PLACE_ENCOUNTER:
 			if(spec.ex1a != minmax(0,3,spec.ex1a)) {
 				giveError("Special outdoor enc. is out of range. Must be 0-3.");
@@ -3907,16 +3926,6 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			out_move_party(spec.ex1a,spec.ex1b);
 			*redraw = 1;
 			*a = 1;
-			break;
-		case eSpecType::OUT_STORE:
-			get_strs(str1,str2,1,spec.m1,-1);
-			if(spec.ex2a >= 40)
-				spec.ex2a = 39;
-			if(spec.ex2a < 1)
-				spec.ex2a = 1;
-			spec.ex2b = minmax(0,6,spec.ex2b);
-			start_shop_mode(eShopType(spec.ex1b), spec.ex1a, spec.ex1a + spec.ex2a - 1, spec.ex2b, str1);
-			*next_spec = -1;
 			break;
 	}
 	

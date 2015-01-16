@@ -1,13 +1,13 @@
 set-sdf
 inc-sdf
 disp-msg
-secret-pass
+start-shop
 disp-sm-msg
 flip-sdf
 sdf-rand
 sdf-add
 sdf-diff
-
+story-dlog
 block-move
 change-time
 start-timer-scen
@@ -31,9 +31,9 @@ print-nums
 sdf-times
 sdf-divide
 sdf-power
-
-
-
+change-ter
+swap-ter
+trans-ter
 
 
 
@@ -58,8 +58,8 @@ once-dlog
 once-give-dlog
 
 
-once-encounter
-
+once-out-encounter
+once-town-encounter
 once-trap
 
 
@@ -134,16 +134,16 @@ if-spec-item
 if-sdf-compare
 if-ter
 
-
-
-
-
-
 if-gold
 if-food
 if-item-class-at
 if-item-class
 if-item-class-equip
+
+
+
+
+
 if-day
 if-field
 if-party-size
@@ -168,9 +168,9 @@ if-num-response
 
 
 town-attitude
-change-ter
-swap-ter
-trans-ter
+anim-missile
+anim-attack
+anim-splat
 move-party
 hit-space
 explode-space
@@ -225,5 +225,3 @@ rect-unlock
 
 
 make-out-monst
-
-start-shop

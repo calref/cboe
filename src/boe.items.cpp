@@ -603,13 +603,17 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 	}
 }
 
-bool place_item(cItem item,location where,bool forced) {
+bool place_item(cItem item,location where,bool forced,bool contained) {
 	short i;
+	
+	if(contained && !is_container(where))
+		contained = false;
 	
 	for(i = 0; i < NUM_TOWN_ITEMS; i++)
 		if(univ.town.items[i].variety == eItemType::NO_ITEM) {
 			univ.town.items[i] = item;
 			univ.town.items[i].item_loc = where;
+			univ.town.items[i].contained = contained;
 			reset_item_max();
 			return true;
 		}
@@ -620,6 +624,7 @@ bool place_item(cItem item,location where,bool forced) {
 		if(univ.town.items[i].variety == eItemType::NO_ITEM) {
 			univ.town.items[i] = item;
 			univ.town.items[i].item_loc = where;
+			univ.town.items[i].contained = contained;
 			reset_item_max();
 			return true;
 		}
@@ -1118,6 +1123,32 @@ void custom_pic_dialog(std::string title, pic_num_t bigpic) {
 	text.setBounds(txtBounds);
 	pic_dlg.recalcRect();
 	pic_dlg.run();
+}
+
+void story_dialog(std::string title, str_num_t first, str_num_t last, int which_str_type, pic_num_t pic, ePicType pt) {
+	cDialog story_dlg("many-str");
+	dynamic_cast<cPict&>(story_dlg["pict"]).setPict(pic, pt);
+	str_num_t cur = first;
+	story_dlg.attachClickHandlers([&cur,first,last,which_str_type](cDialog& me, std::string clicked, eKeyMod) -> bool {
+		if(clicked == "left") {
+			if(cur > first) cur--;
+		} else if(clicked == "done" || cur == last) {
+			me.toast(false);
+			return true;
+		} else if(clicked == "right") {
+			cur++;
+		}
+		if(which_str_type == 0)
+			me["str"].setText(univ.scenario.spec_strs[cur]);
+		else if(which_str_type == 1)
+			me["str"].setText(univ.out->spec_strs[cur]);
+		else if(which_str_type == 2)
+			me["str"].setText(univ.town->spec_strs[cur]);
+		return true;
+	}, {"left", "right", "done"});
+	story_dlg["left"].triggerClickHandler(story_dlg, "left", eKeyMod());
+	story_dlg["title"].setText(title);
+	story_dlg.run();
 }
 
 static bool get_num_of_items_event_filter(cDialog& me, std::string, eKeyMod) {

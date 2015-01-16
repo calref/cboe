@@ -1472,9 +1472,10 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	rectangle source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
 	short del_len;
 	short x_adj = 0,y_adj = 0,which_m;
-	short sound_to_play[20] = {
+	short sound_lookup[20] = {
 		97,69,70,71,72, 73,55,75,42,86,
 		87,88,89,98,0, 0,0,0,0,0};
+	short sound_to_play = sound < 0 ? -sound : sound_lookup[sound];
 	
 	//sound_key = type / 10;
 	//type = type % 10;
@@ -1495,7 +1496,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	// Redraw terrain in proper position
 	if(((!point_onscreen(center,where) && (overall_mode >= MODE_COMBAT)) || (overall_mode == MODE_OUTDOORS))
 		) {
-		play_sound(sound_to_play[sound]);
+		play_sound(sound_to_play);
 		
 		return;
 	}
@@ -1532,7 +1533,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	source_rect.offset(-store_rect.left + 28 * type,-store_rect.top);
 	rect_draw_some_item(boom_gworld,source_rect,dest_rect,ul,sf::BlendAlpha);
 	
-	if((dest_rect.right - dest_rect.left >= 28) && (dest_rect.bottom - dest_rect.top >= 36)) {
+	if(damage > 0 && dest_rect.right - dest_rect.left >= 28 && dest_rect.bottom - dest_rect.top >= 36) {
 		TextStyle style;
 		style.lineHeight = 10;
 		//text_rect = coord_to_rect(where_draw.x,where_draw.y);
@@ -1544,7 +1545,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		text_rect.offset(-4,-5);
 		win_draw_string(mainPtr,text_rect,std::to_string(damage),eTextMode::CENTRE,style,ul);
 	}
-	play_sound((skip_boom_delay?-1:1)*sound_to_play[sound]);
+	play_sound((skip_boom_delay?-1:1)*sound_to_play);
 	mainPtr.display();
 	if((sound == 6) && (fast_bang == 0) && (!skip_boom_delay))
 		sf::sleep(time_in_ticks(12));
