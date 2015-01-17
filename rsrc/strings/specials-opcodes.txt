@@ -41,7 +41,7 @@ append-monst
 append-item
 append-ter
 pause
-
+start-talk
 
 
 

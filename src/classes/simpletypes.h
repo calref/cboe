@@ -545,6 +545,7 @@ enum class eSpecType {
 	APPEND_ITEM = 41,
 	APPEND_TER = 42,
 	PAUSE = 43,
+	START_TALK = 44,
 	ONCE_GIVE_ITEM = 50,
 	ONCE_GIVE_SPEC_ITEM = 51,
 	ONCE_NULL = 52,
@@ -668,7 +669,7 @@ enum class eSpecCat {
 
 inline eSpecCat getNodeCategory(eSpecType node) {
 	int code = (int) node;
-	if(code >= 0 && code <= 43)
+	if(code >= 0 && code <= 44)
 		return eSpecCat::GENERAL;
 	if(code >= 50 && code <= 63)
 		return eSpecCat::ONCE;

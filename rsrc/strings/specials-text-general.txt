@@ -76,7 +76,7 @@ Unused
 Number of items in store (1 .. 40)
 Cost adjust (0 .. 6, lower = cheaper)
 Unused
-Special to Jump To
+Unused
 --------------------
 Display Small Message
 Unused
@@ -701,6 +701,22 @@ Unused
 Unused
 Unused
 Special to Jump To
+--------------------
+Start Conversation
+Unused
+Unused
+Unused
+Unused
+Unused
+Facial Picture
+Unused
+Personality
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
 --------------------
 Special Name
 sdf1

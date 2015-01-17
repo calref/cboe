@@ -677,9 +677,7 @@ void handle_talk_event(location p) {
 			strnum1 = -1;
 			return;
 		case eTalkNode::BUY_HEALING:
-			// TODO: extra1 and extra2 are actually never used! So remove them.
-			start_shop_mode(eShopType::HEALING,univ.town.monst[store_m_num].extra1,
-							univ.town.monst[store_m_num].extra2,a,save_talk_str1.c_str());
+			start_shop_mode(eShopType::HEALING,0,0,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
 			break;
@@ -834,8 +832,10 @@ void handle_talk_event(location p) {
 			talk_end_forced = true;
 			break;
 		case eTalkNode::END_FIGHT:
-			univ.town.monst[store_m_num].attitude = 1;
-			univ.town.monst[store_m_num].mobility = 1;
+			if(store_m_num >= 0 && store_m_num <= univ.town->max_monst()) {
+				univ.town.monst[store_m_num].attitude = 1;
+				univ.town.monst[store_m_num].mobility = 1;
+			}
 			talk_end_forced = true;
 			break;
 		case eTalkNode::END_ALARM:
@@ -843,11 +843,13 @@ void handle_talk_event(location p) {
 			talk_end_forced = true;
 			break;
 		case eTalkNode::END_DIE:
-			// TODO: Any reason not to call something like kill_monst?
-			univ.town.monst[store_m_num].active = 0;
-			// Special killing effects
-			if(sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2))
-				PSD[univ.town.monst[store_m_num].spec1][univ.town.monst[store_m_num].spec2] = 1;
+			if(store_m_num >= 0 && store_m_num <= univ.town->max_monst()) {
+				// TODO: Any reason not to call something like kill_monst?
+				univ.town.monst[store_m_num].active = 0;
+				// Special killing effects
+				if(sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2))
+					PSD[univ.town.monst[store_m_num].spec1][univ.town.monst[store_m_num].spec2] = 1;
+			}
 			talk_end_forced = true;
 			break;
 			// TODO: Strings resulting from this don't seem to be recordable; whyever not?

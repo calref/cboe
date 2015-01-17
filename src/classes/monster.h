@@ -164,7 +164,6 @@ public:
 	unsigned short mobility;
 	unsigned char time_flag;
 	short summoned;
-	unsigned char extra1, extra2;
 	short spec1, spec2;
 	char spec_enc_code, time_code;
 	short monster_time, personality;

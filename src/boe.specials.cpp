@@ -1538,8 +1538,6 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 				univ.town.monst[which_spot].start_loc = victim->start_loc;
 				univ.town.monst[which_spot].mobility = victim->mobility;
 				univ.town.monst[which_spot].time_flag = victim->time_flag;
-				univ.town.monst[which_spot].extra1 = victim->extra1;
-				univ.town.monst[which_spot].extra2 = victim->extra2;
 				univ.town.monst[which_spot].spec1 = victim->spec1;
 				univ.town.monst[which_spot].spec2 = victim->spec2;
 				univ.town.monst[which_spot].spec_enc_code = victim->spec_enc_code;
@@ -2405,6 +2403,13 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.ex1a < 0) break;
 			redraw_screen(REFRESH_TERRAIN | REFRESH_STATS);
 			sf::sleep(sf::milliseconds(spec.ex1a));
+			break;
+		case eSpecType::START_TALK:
+			i = current_pc_picked_in_spec_enc;
+			if(i >= 100) i -= 100;
+			else i = -1;
+			start_talk_mode(i, spec.ex1a, spec.ex1b, spec.pic);
+			*next_spec = -1;
 			break;
 	}
 	if(check_mess) {

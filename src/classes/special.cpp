@@ -379,17 +379,17 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // (terrain, monster, dialog, talk, item, pc, field, boom, missile, status)
 static const char*const button_dict[7][11] = {
 	{ // general nodes
-		" mmmMMmmmm mmm mmmmmm   Mmm  $ mmmmmm       ", // msg1
-		"                                            ", // msg2
-		"                                            ", // msg3
-		"                                            ", // pic
-		"                                            ", // pictype
-		"    #         x  T i                  M cit ", // ex1a
-		"    &        S     ss                       ", // ex1b
-		"                                            ", // ex1c
-		"                                  tt        ", // ex2a
-		"    %                              t        ", // ex2b
-		"                                            ", // ex2c
+		" mmmMMmmmm mmm mmmmmm   Mmm  $ mmmmmm        ", // msg1
+		"                                             ", // msg2
+		"                                             ", // msg3
+		"                                            3", // pic
+		"                                             ", // pictype
+		"    #         x  T i                  M cit  ", // ex1a
+		"    &        S     ss                       c", // ex1b
+		"                                             ", // ex1c
+		"                                  tt         ", // ex2a
+		"    %                              t         ", // ex2b
+		"                                             ", // ex2c
 	}, { // one-shot nodes
 		"mm  mddddddmmm", // msg1
 		"              ", // msg2

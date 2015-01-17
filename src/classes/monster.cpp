@@ -375,7 +375,7 @@ cCreature::cCreature(){
 	id = number = active = attitude = start_attitude = 0;
 	start_loc.x = start_loc.y = cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;
 	mobility = 1;
-	time_flag = summoned = extra1 = extra2 = 0;
+	time_flag = summoned  = 0;
 	spec1 = spec2 = spec_enc_code = time_code = monster_time = 0;
 	personality = special_on_kill = facial_pic = -1;
 	target = 6;
@@ -392,8 +392,6 @@ void cCreature::append(legacy::creature_start_type old){
 	start_loc.y = old.start_loc.y;
 	mobility = old.mobile;
 	time_flag = old.time_flag;
-	extra1 = old.extra1;
-	extra2 = old.extra2;
 	spec1 = old.spec1;
 	spec2 = old.spec2;
 	spec_enc_code = old.spec_enc_code;
@@ -419,8 +417,6 @@ void cCreature::append(legacy::creature_data_type old){
 	start_loc.y = old.monst_start.start_loc.y;
 	mobility = old.monst_start.mobile;
 	time_flag = old.monst_start.time_flag;
-	extra1 = old.monst_start.extra1;
-	extra2 = old.monst_start.extra2;
 	spec1 = old.monst_start.spec1;
 	spec2 = old.monst_start.spec2;
 	spec_enc_code = old.monst_start.spec_enc_code;
@@ -931,8 +927,6 @@ void cCreature::writeTo(std::ostream& file) const {
 	file << "MOBILITY " << unsigned(mobility) << '\n';
 	file << "TIMEFLAG " << unsigned(time_flag) << '\n';
 	file << "SUMMONED " << summoned << '\n';
-	// TODO: Don't remember what these do
-	file << "EXTRA " << unsigned(extra1) << ' ' << unsigned(extra2) << '\n';
 	file << "SPEC " << spec1 << ' ' << spec2 << '\n';
 	file << "SPECCODE " << int(spec_enc_code) << '\n';
 	file << "TIMECODE " << int(time_code) << '\n';
@@ -981,12 +975,7 @@ void cCreature::readFrom(std::istream& file) {
 			time_flag = i;
 		} else if(cur == "SUMMONED")
 			line >> summoned;
-		else if(cur == "EXTRA") {
-			unsigned int i,j;
-			line >> i >> j;
-			extra1 = i;
-			extra2 = j;
-		} else if(cur == "SPEC")
+		else if(cur == "SPEC")
 			line >> spec1 >> spec2;
 		else if(cur == "SPECCODE") {
 			int i;
