@@ -4052,8 +4052,14 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(which_mode == eSpecCtx::TALK)
 				break;
 			i = combat_posing_monster;
-			if(l.y >= 0) combat_posing_monster = monst_there(l);
-			else combat_posing_monster = spec.ex1a;
+			if(l.y >= 0) {
+				int monst = monst_there(l);
+				if(monst < 90)
+					combat_posing_monster = 100 + monst;
+				else combat_posing_monster = pc_there(l);
+				if(combat_posing_monster == 6)
+					combat_posing_monster = -1;
+			} else combat_posing_monster = spec.ex1a;
 			if(combat_posing_monster < 0 || combat_posing_monster >= univ.town->max_monst()) {
 				combat_posing_monster = i;
 				break;

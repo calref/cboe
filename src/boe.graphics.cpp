@@ -361,7 +361,7 @@ void draw_startup_stats() {
 			}
 			style.pointSize = 12;
 			pc_rect.offset(12,16);
-			std::string status = "Level " + univ.party[i].level;
+			std::string status = "Level " + std::to_string(univ.party[i].level);
 			switch(univ.party[i].main_status) {
 				case eMainStatus::ALIVE:
 					switch(univ.party[i].race) {

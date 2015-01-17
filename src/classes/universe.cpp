@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <stack>
 
 #include "classes.h"
 #include "oldstructs.h"
@@ -856,6 +857,8 @@ cOutdoors* cCurOut::operator->() {
 cUniverse::cUniverse(long party_type) : party(*this, party_type), out(*this), town(*this) {}
 
 void cUniverse::check_monst(cMonster& monst) {
+	if(monst.see_spec == -2) return; // Avoid infinite recursion
+	monst.see_spec = -2;
 	if(monst.picture_num >= 10000) {
 		int pic = monst.picture_num - 10000;
 		int sz = pic / 1000, base = pic % 1000;
@@ -865,7 +868,34 @@ void cUniverse::check_monst(cMonster& monst) {
 		for(int i = 0; i < numGraph; i++)
 			used_graphics.insert(base + i);
 	} else if(monst.picture_num >= 1000) {
-		update_monsters[monst.picture_num].insert(&monst);
+		update_monsters[monst.picture_num - 1000].insert(&monst);
+	}
+	for(auto& abil : monst.abil) {
+		switch(getMonstAbilCategory(abil.first)) {
+			case eMonstAbilCat::MISSILE:
+				if(abil.second.missile.pic >= 10000) {
+					for(int i = 0; i < 4; i++)
+						used_graphics.insert(abil.second.missile.pic - 10000 + i);
+				} else if(abil.second.missile.pic >= 1000) {
+					update_missiles[abil.second.missile.pic - 1000].insert(&abil.second.missile.pic);
+				}
+				break;
+			case eMonstAbilCat::GENERAL:
+				if(abil.second.gen.pic >= 10000) {
+					for(int i = 0; i < 4; i++)
+						used_graphics.insert(abil.second.gen.pic - 10000 + i);
+				} else if(abil.second.gen.pic >= 1000) {
+					update_missiles[abil.second.gen.pic - 1000].insert(&abil.second.gen.pic);
+				}
+				break;
+			case eMonstAbilCat::SUMMON:
+				check_monst(scenario.scen_monsters[abil.second.summon.type]);
+				break;
+			case eMonstAbilCat::RADIATE:
+			case eMonstAbilCat::SPECIAL:
+			case eMonstAbilCat::INVALID:
+				break;
+		}
 	}
 }
 
@@ -886,7 +916,7 @@ void cUniverse::check_item(cItem& item) {
 			for(int i = 0; i < 4; i++)
 				used_graphics.insert(item.missile - 10000 + i);
 		else if(item.missile >= 1000)
-			update_missiles[item.missile - 1000].insert(&item);
+			update_missiles[item.missile - 1000].insert(&item.missile);
 	}
 }
 
@@ -970,8 +1000,8 @@ void cUniverse::exportGraphics() {
 	update_items.clear();
 	for(auto pic : update_missiles) {
 		pic_num_t pos = addGraphic(pic.first, PIC_MISSILE);
-		for(auto& item : pic.second)
-			item->missile = 10000 + pos;
+		for(auto& missile : pic.second)
+			*missile = 10000 + pos;
 	}
 	update_missiles.clear();
 	for(auto pic : update_monsters) {
@@ -1029,6 +1059,21 @@ void cUniverse::exportSummons() {
 		if(party.imprisoned_monst[i] >= 10000)
 			used_monsters.insert(party.imprisoned_monst[i] - 10000);
 		else need_monsters.insert(party.imprisoned_monst[i]);
+	}
+	std::stack<mon_num_t> last_check;
+	for(mon_num_t m : need_monsters) last_check.push(m);
+	while(!last_check.empty()) {
+		mon_num_t monst = last_check.top();
+		last_check.pop();
+		if(scenario.scen_monsters[monst].abil[eMonstAbil::SUMMON].active) {
+			mon_num_t summon = scenario.scen_monsters[monst].abil[eMonstAbil::SUMMON].summon.type;
+			if(summon >= 10000)
+				used_monsters.insert(summon - 10000);
+			else if(!need_monsters.count(summon)) {
+				last_check.push(summon);
+				need_monsters.insert(summon);
+			}
+		}
 	}
 	// Now that we know which exported summon slots are still in use and which new monsters need to be exported,
 	// we can copy the monster records from the scenario record into the exported summon slots.

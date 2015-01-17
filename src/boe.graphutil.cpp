@@ -270,14 +270,26 @@ void draw_pcs(location center,short mode) {
 			   (/*cartoon_happening ||*/ party_can_see(univ.party[i].combat_pos) < 6)){
 				where_draw.x = univ.party[i].combat_pos.x - center.x + 4;
 				where_draw.y = univ.party[i].combat_pos.y - center.y + 4;
-				source_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
-				if(univ.party[i].dir >= 4)
-					source_rect.offset(28,0);
-				if(combat_posing_monster == i)
-					source_rect.offset(0,288);
+				sf::Texture* from_gw;
+				if(univ.party[i].which_graphic >= 1000) {
+					bool isParty = univ.party[i].which_graphic >= 10000;
+					pic_num_t need_pic = univ.party[i].which_graphic % 1000;
+					if(univ.party[i].dir >= 4)
+						need_pic++;
+					if(combat_posing_monster == i)
+						need_pic += 2;
+					graf_pos_ref(from_gw, source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
+				} else {
+					source_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
+					if(univ.party[i].dir >= 4)
+						source_rect.offset(28,0);
+					if(combat_posing_monster == i)
+						source_rect.offset(0,288);
+					from_gw = &pc_gworld;
+				}
 				
 				if(mode == 0) {
-					Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0);
+					Draw_Some_Item(*from_gw, source_rect, terrain_screen_gworld, where_draw, 1, 0);
 				}
 				
 				if((current_pc == i) && (mode == 1) && !monsters_going) {
@@ -470,14 +482,24 @@ void draw_party_symbol(location center) {
 	
 	if((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
 		i = first_active_pc();
-		source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[i].which_graphic % 8);
-		if(univ.party[current_pc].dir >= 4)
-			source_rect.offset(28,0);
+		sf::Texture* from_gw;
+		if(univ.party[i].which_graphic >= 1000) {
+			bool isParty = univ.party[i].which_graphic >= 10000;
+			pic_num_t need_pic = univ.party[i].which_graphic % 1000;
+			if(univ.party[i].dir >= 4)
+				need_pic++;
+			graf_pos_ref(from_gw, source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
+		} else {
+			source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[i].which_graphic % 8);
+			if(univ.party[current_pc].dir >= 4)
+				source_rect.offset(28,0);
+			from_gw = &pc_gworld;
+		}
 		ter_num_t ter = is_out() ? univ.out[univ.party.p_loc.x][univ.party.p_loc.y] : univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		// now wedge in bed graphic
 		if(is_town() && univ.scenario.ter_types[ter].special == eTerSpec::BED)
 			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + univ.scenario.ter_types[ter].flag1.u);
-		else Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, target, 1, 0);
+		else Draw_Some_Item(*from_gw, source_rect, terrain_screen_gworld, target, 1, 0);
 	}
 	else if(univ.party.in_boat >= 0) {
 		if(univ.party.direction == 0 || univ.party.direction > 4) i = 4;
