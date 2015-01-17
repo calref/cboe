@@ -34,13 +34,13 @@ sdf-power
 change-ter
 swap-ter
 trans-ter
-
-
-
-
-
-
-
+clear-buf
+append-str
+append-num
+append-monst
+append-item
+append-ter
+pause
 
 
 
@@ -85,9 +85,9 @@ xp
 skill-pts
 death
 status
-
-
-
+traits
+ap
+name
 
 
 
@@ -96,13 +96,13 @@ status
 
 
 statistic
-spell
+spell-mage
+spell-priest
 gold
 food
 alchemy
 party-status
-
-
+create-pc
 
 
 
@@ -133,16 +133,16 @@ if-rand
 if-spec-item
 if-sdf-compare
 if-ter
-
+if-alive
 if-gold
 if-food
 if-item-class-at
 if-item-class
 if-item-class-equip
-
-
-
-
+if-spell-mage
+if-spell-priest
+if-alchemy
+if-status
 
 if-day
 if-field
@@ -195,10 +195,10 @@ unite-party
 start-timer-town
 set-lighting
 set-attitude
-
-
+set-center
+lift-fog
 rect-place-field
-
+rect-set-explored
 
 
 
@@ -212,6 +212,8 @@ rect-place-field
 rect-move-items
 rect-destroy-items
 rect-change-ter
+rect-swap-ter
+rect-trans-ter
 rect-lock
 rect-unlock
 
@@ -220,8 +222,7 @@ rect-unlock
 
 
 
-
-
-
+make-out-wandering
 
 make-out-monst
+out-move-party
