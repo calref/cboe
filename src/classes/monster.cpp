@@ -27,7 +27,7 @@ void cMonster::append(legacy::monster_record_type& old){
 	armor = old.armor;
 	skill = old.skill;
 	for(int i = 0; i < 3; i++) {
-		a[i].dice = old.a[i] / 100 + 1;
+		a[i].dice = old.a[i] / 100;
 		a[i].sides = old.a[i] % 100;
 	}
 	a[0].type = eMonstMelee(old.a1_type);

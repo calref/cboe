@@ -145,7 +145,7 @@ short choose_text_res(std::string res_list,short first_t,short last_t,unsigned s
 	cur_choice -= first_t;
 	
 	StringRsrc strings = *ResMgr::get<StringRsrc>(res_list);
-	cStringChoice dlog(strings.begin() + first_t, strings.begin() + last_t + 1, title, parent);
+	cStringChoice dlog(strings.begin() + first_t - 1, strings.begin() + last_t, title, parent);
 	
 	return dlog.show(cur_choice);
 }

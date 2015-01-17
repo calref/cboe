@@ -348,9 +348,8 @@ short edit_ter_type(ter_num_t which_ter) {
 	return 0;
 }
 
-static void put_monst_info_in_dlog(cDialog& me, mon_num_t which_monst) {
+static void put_monst_info_in_dlog(cDialog& me, cMonster& store_monst, mon_num_t which_monst) {
 	char str[256];
-	cMonster& store_monst = scenario.scen_monsters[which_monst];
 	
 	if(store_monst.picture_num < 1000)
 		dynamic_cast<cPict&>(me["icon"]).setPict(store_monst.picture_num,PIC_MONST);
@@ -410,10 +409,9 @@ static void put_monst_info_in_dlog(cDialog& me, mon_num_t which_monst) {
 	}
 	
 	me["type"].setText(get_str("traits",33 + int(store_monst.m_type) * 2));
-	me["type1"].setText(get_str("monster-abilities",131 + int(store_monst.a[0].type)));
-	me["type2"].setText(get_str("monster-abilities",131 + int(store_monst.a[1].type)));
-	// TODO: Attack 3 type
-//	me["type3"].setText(get_str("monster-abilities",130 + store_monst.a[2].type));
+	me["type1"].setText(get_str("monster-abilities",130 + int(store_monst.a[0].type)));
+	me["type2"].setText(get_str("monster-abilities",130 + int(store_monst.a[1].type)));
+	me["type3"].setText(get_str("monster-abilities",130 + int(store_monst.a[2].type)));
 }
 
 static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& store_monst) {
@@ -492,7 +490,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 		temp_monst = edit_monst_abil(store_monst,which_monst);
 		if(temp_monst.level < 255)
 			store_monst = temp_monst;
-		put_monst_info_in_dlog(me,which_monst);
+		put_monst_info_in_dlog(me,store_monst,which_monst);
 	} else if(item_hit == "left") {
 		if(!save_monst_info(me,store_monst)) return false;
 		scenario.scen_monsters[which_monst] = store_monst;
@@ -500,41 +498,41 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 		// TODO: Use size() once scen_monsters becomes a vector
 		if(which_monst < 1) which_monst = 255;
 		store_monst = scenario.scen_monsters[which_monst];
-		put_monst_info_in_dlog(me,which_monst);
+		put_monst_info_in_dlog(me,store_monst,which_monst);
 	} else if(item_hit == "right") {
 		if(!save_monst_info(me,store_monst)) return false;
 		scenario.scen_monsters[which_monst] = store_monst;
 		which_monst++;
 		if(which_monst > 255) which_monst = 1;
 		store_monst = scenario.scen_monsters[which_monst];
-		put_monst_info_in_dlog(me,which_monst);
+		put_monst_info_in_dlog(me,store_monst,which_monst);
 	} else if(item_hit == "picktype") {
 		if(!save_monst_info(me,store_monst)) return false;
 		i = choose_text(STRT_RACE,int(store_monst.m_type),&me,"Choose Monster Type:");
 		if(i >= 0) {
 			store_monst.m_type = (eRace) i;
-			put_monst_info_in_dlog(me,which_monst);
+			put_monst_info_in_dlog(me,store_monst,which_monst);
 		}
 	} else if(item_hit == "picktype1") {
 		if(!save_monst_info(me,store_monst)) return false;
 		i = choose_text_res("monster-abilities",130,139,int(store_monst.a[0].type),&me,"Choose Attack 1 Type:");
 		if(i >= 0) {
 			store_monst.a[0].type = eMonstMelee(i);
-			put_monst_info_in_dlog(me,which_monst);
+			put_monst_info_in_dlog(me,store_monst,which_monst);
 		}
 	} else if(item_hit == "picktype2") {
 		if(!save_monst_info(me,store_monst)) return false;
 		i = choose_text_res("monster-abilities",130,139,int(store_monst.a[1].type),&me,"Choose Attack 2 & 3 Type:");
 		if(i >= 0) {
 			store_monst.a[1].type = store_monst.a[2].type = eMonstMelee(i);
-			put_monst_info_in_dlog(me,which_monst);
+			put_monst_info_in_dlog(me,store_monst,which_monst);
 		}
 	} else if(item_hit == "picktype3") {
 		if(!save_monst_info(me,store_monst)) return false;
 		i = choose_text_res("monster-abilities",130,139,int(store_monst.a[2].type),&me,"Choose Attack 3 Type:");
 		if(i >= 0) {
 			store_monst.a[2].type = eMonstMelee(i);
-			put_monst_info_in_dlog(me,which_monst);
+			put_monst_info_in_dlog(me,store_monst,which_monst);
 		}
 	}
 	return true;
@@ -565,9 +563,9 @@ short edit_monst_type(short which_monst) {
 	monst_dlg["priest"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 7, "priest spells"));
 	monst_dlg["treas"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 4, "treasure"));
 	monst_dlg.attachFocusHandlers(check_monst_dice,{"dice1","dice2","dice3","sides1","sides2","sides3"});
-	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(store_monst),std::ref(which_monst)),{"okay","abils","left","right","picktype","picktype1","picktype2"});
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(store_monst),std::ref(which_monst)),{"okay","abils","left","right","picktype","picktype1","picktype2","picktype3"});
 	
-	put_monst_info_in_dlog(monst_dlg, which_monst);
+	put_monst_info_in_dlog(monst_dlg, store_monst, which_monst);
 	
 	monst_dlg.run();
 	return 0;
@@ -609,7 +607,6 @@ static bool save_monst_abils(cDialog& me, cMonster& store_monst) {
 
 static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonster& store_monst,short which_monst) {
 	using namespace std::placeholders;
-	short i;
 	
 	if(item_hit == "cancel") {
 		store_monst.level = 255;
@@ -626,8 +623,6 @@ cMonster edit_monst_abil(cMonster starting_record,short which_monst) {
 	cMonster store_monst = starting_record;
 	
 	cDialog monst_dlg("edit-monster-abils");
-	monst_dlg["poison"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 8, "Poison"));
-	monst_dlg["breath-str"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 4, "Breath Damage"));
 	monst_dlg["loot-item"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 399, "Item To Drop", "-1 for no item"));
 	monst_dlg["loot-chance"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 100, "Dropping Chance", "-1 for no item"));
 	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_event_filter, _1, _2, std::ref(store_monst),which_monst), {"okay", "cancel", "abils", "radiate"});
