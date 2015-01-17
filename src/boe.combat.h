@@ -6,6 +6,7 @@
 #include "monster.h"
 #include "outdoors.h"
 #include "boe.global.h"
+#include "spell.hpp"
 
 void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terrain,short num_walls);
 bool pc_combat_move(location destination);
@@ -56,8 +57,8 @@ bool combat_cast_mage_spell();
 bool combat_cast_priest_spell();
 void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie = false);
 void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie = false);
-void start_spell_targeting(eSpell num, bool freebie = false);
-void start_fancy_spell_targeting(eSpell num, bool freebie = false);
+void start_spell_targeting(eSpell num, bool freebie = false, int spell_range = 4, eSpellPat pat = PAT_SINGLE);
+void start_fancy_spell_targeting(eSpell num, bool freebie = false, int spell_range = 4, eSpellPat pat = PAT_SINGLE, int targets = 1);
 void spell_cast_hit_return();
 void process_fields();
 void scloud_space(short m,short n);

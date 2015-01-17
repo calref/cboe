@@ -36,9 +36,11 @@ extern eGameMode overall_mode;
 extern short which_combat_type,current_pc,stat_window;
 extern location center;
 extern bool in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
+extern effect_pat_type single,t,square,radius2,radius3,small_square,open_square,field[8];
 extern effect_pat_type current_pat;
 extern cOutdoors::cWandering store_wandering_special;
 extern eSpell spell_being_cast, town_spell;
+extern short spell_caster;
 extern sf::RenderWindow mini_map;
 extern short fast_bang;
 extern bool end_scenario;
@@ -3681,6 +3683,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	location l;
 	ter_num_t ter;
 	cItem store_i;
+	effect_pat_type pat;
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
@@ -4075,6 +4078,72 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::TOWN_LIFT_FOG:
 			fog_lifted = spec.ex1a;
 			redraw_screen(REFRESH_TERRAIN);
+			break;
+		case eSpecType::TOWN_START_TARGETING:
+			if(spec.ex1a < 0 || spec.ex1a > 7) {
+				giveError("Invalid spell pattern (0 - 7).");
+				break;
+			}
+			if(spec.ex1c > 1 && !is_combat()) {
+				add_string_to_buf("  Target: Only in combat");
+				break;
+			}
+			if(!is_combat())
+				start_town_targeting(eSpell::NONE, spec.jumpto, true, eSpellPat(spec.ex1a));
+			else if(spec.ex1c > 1)
+				start_fancy_spell_targeting(eSpell::NONE, true, spec.ex1b, eSpellPat(spec.ex1a), spec.ex1c);
+			else start_spell_targeting(eSpell::NONE, true, spec.ex1b, eSpellPat(spec.ex1a));
+			spell_caster = spec.jumpto;
+			*next_spec = -1;
+			break;
+		case eSpecType::TOWN_SPELL_PAT_FIELD:
+			if(spec.ex1c < -1 || spec.ex1c > 14) {
+				giveError("Invalid spell pattern (-1 - 14).");
+				break;
+			}
+			if((spec.ex2a < 1 || spec.ex2a == 9 || spec.ex2a > 24) && spec.ex2a != 32 && spec.ex2a != 33) {
+				giveError("Invalid field type (see docs).");
+				break;
+			}
+			switch(spec.ex1c) {
+				case -1: pat = current_pat; break;
+				case PAT_SINGLE: pat = single; break;
+				case PAT_SQ: pat = square; break;
+				case PAT_SMSQ: pat = small_square; break;
+				case PAT_OPENSQ: pat = open_square; break;
+				case PAT_PLUS: pat = t; break;
+				case PAT_RAD2: pat = radius2; break;
+				case PAT_RAD3: pat = radius3; break;
+				default: pat = field[spec.ex1c - 7];
+			}
+			place_spell_pattern(pat, l, eFieldType(spec.ex2a), 6);
+			break;
+		case eSpecType::TOWN_SPELL_PAT_BOOM:
+			if(spec.ex1c < -1 || spec.ex1c > 14) {
+				giveError("Invalid spell pattern (-1 - 14).");
+				break;
+			}
+			if(spec.ex2a < 0 || spec.ex2a > 7) {
+				giveError("Invalid damage type (0 - 7).");
+				break;
+			}
+			switch(spec.ex1c) {
+				case -1: pat = current_pat; break;
+				case PAT_SINGLE: pat = single; break;
+				case PAT_SQ: pat = square; break;
+				case PAT_SMSQ: pat = small_square; break;
+				case PAT_OPENSQ: pat = open_square; break;
+				case PAT_PLUS: pat = t; break;
+				case PAT_RAD2: pat = radius2; break;
+				case PAT_RAD3: pat = radius3; break;
+				default: pat = field[spec.ex1c - 7];
+			}
+			if(spec.ex2c) start_missile_anim();
+			place_spell_pattern(pat, l, eDamageType(spec.ex2a), spec.ex2b, 6);
+			if(spec.ex2c) {
+				do_explosion_anim(0, 0);
+				end_missile_anim();
+			}
 			break;
 	}
 	if(check_mess) {

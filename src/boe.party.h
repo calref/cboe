@@ -2,6 +2,8 @@
 #ifndef BOE_GAME_PARTY_H
 #define BOE_GAME_PARTY_H
 
+#include "spell.hpp"
+
 class cDialog;
 void make_boats();
 bool create_pc(short spot,cDialog* parent_num);
@@ -39,7 +41,7 @@ bool pc_can_cast_spell(short pc_num,eSpell spell_num);
 bool pc_can_cast_spell(short pc_num,eSkill spell_num);
 eSpell pick_spell(short pc_num,eSkill type);
 short stat_adj(short pc_num,eSkill which);
-void start_town_targeting(eSpell s_num,short who_c,bool freebie);
+void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat = PAT_SINGLE);
 void do_alchemy();
 short alch_choice(short pc_num);
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent_num);

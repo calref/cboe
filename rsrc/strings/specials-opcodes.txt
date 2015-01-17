@@ -197,9 +197,9 @@ set-lighting
 set-attitude
 set-center
 lift-fog
-
-
-
+start-target
+spell-pat-field
+spell-pat-boom
 
 
 

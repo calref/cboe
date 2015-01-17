@@ -61,7 +61,7 @@ extern bool spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting,stat_screen_mode;
-extern effect_pat_type null_pat,single,t,square,radius2,radius3;
+extern effect_pat_type null_pat,single,t,square,radius2,radius3,small_square,open_square;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
 extern short hit_chance[21],combat_active_pc;
@@ -962,8 +962,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::DISPEL_SQUARE:
-			current_pat = square;
-			start_town_targeting(spell_num,pc_num,freebie);
+			start_town_targeting(spell_num,pc_num,freebie,PAT_SQ);
 			break;
 			
 		case eSpell::LIGHT_LONG:
@@ -1005,13 +1004,11 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			
 		case eSpell::SCRY_MONSTER: case eSpell::UNLOCK: case eSpell::CAPTURE_SOUL: case eSpell::DISPEL_BARRIER:
 		case eSpell::BARRIER_FIRE: case eSpell::BARRIER_FORCE: case eSpell::QUICKFIRE:
-			current_pat = single;
 			start_town_targeting(spell_num,pc_num,freebie);
 			break;
 			
 		case eSpell::ANTIMAGIC:
-			current_pat = radius2;
-			start_town_targeting(spell_num,pc_num,freebie);
+			start_town_targeting(spell_num,pc_num,freebie,PAT_RAD2);
 			break;
 			
 		case eSpell::FLIGHT:
@@ -1099,7 +1096,6 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			
 		case eSpell::RITUAL_SANCTIFY:
 			add_string_to_buf("  Sanctify which space?               ");
-			current_pat = single;
 			start_town_targeting(spell_num,pc_num,freebie);
 			break;
 			
@@ -1150,13 +1146,11 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			
 		case eSpell::MOVE_MOUNTAINS: case eSpell::MOVE_MOUNTAINS_MASS:
 			add_string_to_buf("  Destroy what?               ");
-			current_pat = (spell_num == eSpell::MOVE_MOUNTAINS) ? single : square;
-			start_town_targeting(spell_num,pc_num,freebie);
+			start_town_targeting(spell_num,pc_num,freebie, spell_num == eSpell::MOVE_MOUNTAINS ? PAT_SINGLE : PAT_SQ);
 			break;
 			
 		case eSpell::DISPEL_SPHERE: case eSpell::DISPEL_FIELD:
-			current_pat = (spell_num == eSpell::DISPEL_SPHERE) ? radius2 : single;
-			start_town_targeting(spell_num,pc_num,freebie);
+			start_town_targeting(spell_num,pc_num,freebie, spell_num == eSpell::DISPEL_SPHERE ? PAT_RAD2 : PAT_SINGLE);
 			break;
 			
 		case eSpell::DETECT_LIFE:
@@ -1456,6 +1450,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	}
 }
 
+extern short spell_caster;
 void cast_town_spell(location where) {
 	short adjust,r1,targ,store;
 	location loc;
@@ -1482,6 +1477,10 @@ void cast_town_spell(location where) {
 	if(adjust > 4)
 		add_string_to_buf("  Can't see target.       ");
 	else switch(town_spell) {
+		case eSpell::NONE: // Not a spell but a special node targeting
+			run_special(eSpecCtx::TARGET, 2, spell_caster, where, &r1, &targ, &store);
+			if(store > 0) redraw_screen(REFRESH_ALL);
+			break;
 		case eSpell::SCRY_MONSTER: case eSpell::CAPTURE_SOUL:
 			targ = monst_there(where);
 			if(targ < univ.town->max_monst()) {
@@ -2293,12 +2292,22 @@ short stat_adj(short pc_num,eSkill which) {
 	return tr;
 }
 
-void start_town_targeting(eSpell s_num,short who_c,bool freebie) {
+void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat) {
 	add_string_to_buf("  Target spell.");
 	overall_mode = MODE_TOWN_TARGET;
 	town_spell = s_num;
 	who_cast = who_c;
 	spell_freebie = freebie;
+	switch(pat) {
+		case PAT_SINGLE: current_pat = single; break;
+		case PAT_SQ: current_pat = square; break;
+		case PAT_SMSQ: current_pat = small_square; break;
+		case PAT_OPENSQ: current_pat = open_square; break;
+		case PAT_PLUS: current_pat = t; break;
+		case PAT_RAD2: current_pat = radius2; break;
+		case PAT_RAD3: current_pat = radius3; break;
+		case PAT_WALL: current_pat = single; break; // Rotateable wall not supported by town targeting
+	}
 }
 
 extern short alch_difficulty[20];

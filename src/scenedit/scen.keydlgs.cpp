@@ -272,6 +272,9 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 		case STRT_STATUS:
 			strings = {"Alive", "Dead", "Dust", "Petrified", "Fled Outdoor Combat", "Absent", "Deleted"};
 			break;
+		case STRT_SPELL_PAT:
+			strings = {"Single Space", "3x3 Square", "2x2 Square", "3x3 Open Square", "Radius 2 Circle", "Radius 3 Circle", "Cross", "Rotateable 2x8 Wall"};
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = 0;
@@ -722,6 +725,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case '!': choose_string = false; store = choose_boom_type(val, &me); break;
 		case 'e': choose_string = false; store = choose_status_effect(val, false, &me); break;
 		case 'E': choose_string = false; store = choose_status_effect(val, true, &me); break;
+		case '{': case '}': strt = STRT_SPELL_PAT; title = "Which spell pattern?"; break;
 		case 'i': strt = STRT_ITEM; title = "Which item?"; break;
 		case 'I': strt = STRT_SPEC_ITEM; title = "Which special item?"; break;
 		case 't': strt = STRT_TER; title = "Which terrain?"; break;

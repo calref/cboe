@@ -904,7 +904,8 @@ void do_combat_cast(location target) {
 		num_targets = 8;
 	}
 	
-	spell_caster = current_pc;
+	if(spell_being_cast != eSpell::NONE)
+		spell_caster = current_pc;
 	
 	// assign monster summoned, if summoning
 	if(spell_being_cast == eSpell::SUMMON_BEAST) {
@@ -954,7 +955,10 @@ void do_combat_cast(location target) {
 				}
 				boom_targ[i] = target;
 				switch(spell_being_cast) {
-						
+					case eSpell::NONE: // Not a spell but a special node targeting
+						run_special(eSpecCtx::TARGET, which_combat_type + 1, spell_caster, target, &r1, &r2, &item);
+						if(item > 0) redraw_screen(REFRESH_ALL);
+						break;
 					case eSpell::GOO: case eSpell::WEB: case eSpell::GOO_BOMB:
 						place_spell_pattern(current_pat,target,FIELD_WEB,current_pc);
 						break;
@@ -4614,7 +4618,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 	end_missile_anim();
 }
 
-void start_spell_targeting(eSpell num, bool freebie) {
+void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat pat) {
 	
 	// First, remember what spell was cast.
 	spell_being_cast = num;
@@ -4625,7 +4629,7 @@ void start_spell_targeting(eSpell num, bool freebie) {
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	overall_mode = MODE_SPELL_TARGET;
-	current_spell_range = (*num).range;
+	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
 	current_pat = single;
 	
 	switch(num) {  // Different spells have different messages and diff. target shapes
@@ -4649,10 +4653,26 @@ void start_spell_targeting(eSpell num, bool freebie) {
 			force_wall_position = 0;
 			current_pat = field[0];
 			break;
+		case eSpell::NONE:
+			switch(pat) {
+				case PAT_SINGLE: current_pat = single; break;
+				case PAT_SQ: current_pat = square; break;
+				case PAT_SMSQ: current_pat = small_square; break;
+				case PAT_OPENSQ: current_pat = open_square; break;
+				case PAT_PLUS: current_pat = t; break;
+				case PAT_RAD2: current_pat = radius2; break;
+				case PAT_RAD3: current_pat = radius3; break;
+				case PAT_WALL:
+					add_string_to_buf("  (Hit space to rotate.)");
+					force_wall_position = 0;
+					current_pat = field[0];
+					break;
+			}
+			break;
 	}
 }
 
-void start_fancy_spell_targeting(eSpell num, bool freebie) {
+void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat pat, int targets) {
 	short i;
 	location null_loc(120,0);
 	
@@ -4669,7 +4689,7 @@ void start_fancy_spell_targeting(eSpell num, bool freebie) {
 	add_string_to_buf("  (Hit space to cast.)");
 	overall_mode = MODE_FANCY_TARGET;
 	current_pat = single;
-	current_spell_range = (*num).range;
+	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
 	
 	switch(num) { // Assign special targeting shapes and number of targets
 		case eSpell::SMITE:
@@ -4702,6 +4722,19 @@ void start_fancy_spell_targeting(eSpell num, bool freebie) {
 			break;
 		case eSpell::SUMMON_MAJOR:
 			num_targets_left = minmax(1,5,univ.party[current_pc].level / 8 + stat_adj(current_pc,eSkill::INTELLIGENCE) / 2);
+			break;
+		case eSpell::NONE:
+			num_targets_left = minmax(1,8,targets);
+			switch(pat) {
+				case PAT_SINGLE: current_pat = single; break;
+				case PAT_SQ: current_pat = square; break;
+				case PAT_SMSQ: current_pat = small_square; break;
+				case PAT_OPENSQ: current_pat = open_square; break;
+				case PAT_PLUS: current_pat = t; break;
+				case PAT_RAD2: current_pat = radius2; break;
+				case PAT_RAD3: current_pat = radius3; break;
+				case PAT_WALL: current_pat = single; break; // Fancy targeting doesn't support the rotateable pattern
+			}
 			break;
 	}
 	
