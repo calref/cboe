@@ -20,7 +20,7 @@ void cSpeech::append(legacy::talking_record_type& old){
 		strlens[i] = old.strlens[i];
 	for(i = 0; i < 60; i++){
 		talk_nodes[i].personality = old.talk_nodes[i].personality;
-		talk_nodes[i].type = old.talk_nodes[i].type;
+		talk_nodes[i].type = eTalkNode(old.talk_nodes[i].type);
 		for(j = 0; j < 4; j++){
 			talk_nodes[i].link1[j] = old.talk_nodes[i].link1[j];
 			talk_nodes[i].link2[j] = old.talk_nodes[i].link2[j];

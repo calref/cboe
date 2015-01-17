@@ -43,7 +43,7 @@ size_t num_strs(short str_mode) {
 }
 
 //cre = check range error
-bool cre(short val,short min,short max,const char *text1,const char *text2,cDialog* parent) {
+bool cre(short val,short min,short max,std::string text1,std::string text2,cDialog* parent) {
 	if((val < min) || (val > max)) {
 		giveError(text1,text2,parent);
 		return true;

@@ -13,7 +13,7 @@ enum eStrType {
 	STRT_STATUS, STRT_SPELL_PAT,
 };
 
-bool cre(short val,short min,short max,const char *text1,const char *text2,cDialog* parent) ;
+bool cre(short val,short min,short max,std::string text1,std::string text2,cDialog* parent) ;
 void display_strings(char *text1, char *text2,
 	char *title,short sound_num,short graphic_num,short graphic_type,cDialog* parent);
 void put_choice_pics(short g_type);

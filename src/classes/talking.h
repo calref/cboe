@@ -26,7 +26,8 @@ class cSpeech { // formerly talking_record_type
 public:
 	class cNode { // formerly talking_node_type
 	public:
-		short personality,type;
+		short personality;
+		eTalkNode type;
 		char link1[4],link2[4];
 		short extras[4];
 		std::string str1, str2;

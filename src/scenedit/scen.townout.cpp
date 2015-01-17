@@ -873,40 +873,41 @@ static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>&
 		talk_node.extras[i] = me["extra" + std::to_string(i + 1)].getTextAsNum();
 	
 	switch(talk_node.type) {
-		case 1: case 2:
+		case eTalkNode::DEP_ON_SDF: case eTalkNode::SET_SDF:
 			if(cre(talk_node.extras[0],0,299,"First part of Stuff Done flag must be from 0 to 299.","",&me)) return false;
 			if(cre(talk_node.extras[1],0,9,"Second part of Stuff Done flag must be from 0 to 9.","",&me)) return false;
 			break;
-		case 3:
+		case eTalkNode::INN:
 			if(cre(talk_node.extras[0],0,1000,"Inn cost must be from 0 to 1000.","",&me)) return false;
 			if(cre(talk_node.extras[1],0,3,"Inn quality must be from 0 to 3.","",&me)) return false;
 			break;
-		case 5:
+		case eTalkNode::DEP_ON_TIME_AND_EVENT:
 			if(cre(talk_node.extras[1],0,9,"Event must be from 0 to 9. (0 means no event)","",&me)) return false;
 			break;
-		case 6:
-			if(cre(talk_node.extras[0],0,199,"Town number must be from 0 to 199.","",&me)) return false;
+		case eTalkNode::DEP_ON_TOWN:
+			if(cre(talk_node.extras[0],0,scenario.towns.size(),"Town number must be from 0 to " + std::to_string(scenario.towns.size()) + ".","",&me)) return false;
 			break;
-		case 7: case 9: case 10: case 11: case 12:
+		case eTalkNode::BUY_ITEMS: case eTalkNode::BUY_MAGE: case eTalkNode::BUY_PRIEST:
+		case eTalkNode::BUY_ALCHEMY: case eTalkNode::BUY_HEALING:
 			if(cre(talk_node.extras[0],0,6,"Cost adjustment must be from 0 (cheapest) to 6 (most expensive).","",&me)) return false;
 			break;
-		case 17:
+		case eTalkNode::ENCHANT:
 			if(cre(talk_node.extras[0],0,6,"Enchantment type must be from 0 to 6. See the documentation for a list of possible abilities.","",&me)) return false;
 			break;
-		case 19: case 23:
+		case eTalkNode::BUY_SDF:
 			if(cre(talk_node.extras[1],0,299,"First part of Stuff Done flag must be from 0 to 299.","",&me)) return false;
 			if(cre(talk_node.extras[2],0,9,"Second part of Stuff Done flag must be from 0 to 9.","",&me)) return false;
 			break;
-		case 20: case 21:
+		case eTalkNode::BUY_SHIP: case eTalkNode::BUY_HORSE:
 			if(cre(talk_node.extras[1],0,29,"The first boat/horse must be in the legal range (0 - 29).","",&me)) return false;
 			break;
-		case 22:
+		case eTalkNode::BUY_SPEC_ITEM:
 			if(cre(talk_node.extras[0],0,49,"The special item must be in the legal range (0 - 49).","",&me)) return false;
 			break;
-		case 29:
+		case eTalkNode::CALL_TOWN_SPEC:
 			if(cre(talk_node.extras[0],-1,99,"The town special node called must be in the legal range (0 - 99), or -1 for No Special.","",&me)) return false;
 			break;
-		case 30:
+		case eTalkNode::CALL_SCEN_SPEC:
 			if(cre(talk_node.extras[0],-1,255,"The scenario special node called must be in the legal range (0 - 255), or -1 for No Special.","",&me)) return false;
 			break;
 	}
@@ -930,7 +931,7 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<short>& talk_edit_stac
 	for(int i = 0; i < 4; i++) link += talk_node.link2[i];
 	me["key2"].setText(link);
 	
-	int iDescBase = talk_node.type * 7;
+	int iDescBase = int(talk_node.type) * 7;
 	static const char*const strIDs[] = {"type", "lblA", "lblB", "lblC", "lblD", "lbl1", "lbl2"};
 	for(int i = 0; i < 7; i++)
 		me[strIDs[i]].setText(get_str("talk-node-descs", iDescBase + i + 1));
@@ -941,10 +942,10 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<short>& talk_edit_stac
 	me["str1"].setText(talk_node.str1);
 	me["str2"].setText(talk_node.str2);
 	
-	if(talk_node.type == 7 || talk_node.type == 9 || talk_node.type == 10 || talk_node.type == 11)
+	if(talk_node.type == eTalkNode::BUY_ITEMS || talk_node.type == eTalkNode::BUY_MAGE || talk_node.type == eTalkNode::BUY_PRIEST || talk_node.type == eTalkNode::BUY_ALCHEMY)
 		me["chooseB"].show();
 	else me["chooseB"].hide();
-	if(talk_node.type != 29 && talk_node.type != 30)
+	if(talk_node.type != eTalkNode::CALL_TOWN_SPEC && talk_node.type != eTalkNode::CALL_SCEN_SPEC)
 		me["chooseA"].hide();
 	else me["chooseA"].show();
 	
@@ -981,8 +982,9 @@ static bool talk_node_branch(cDialog& me, std::stack<short>& talk_edit_stack) {
 }
 
 static bool select_talk_node_type(cDialog& me, std::stack<short>& talk_edit_stack) {
-	short& i = town->talking.talk_nodes[talk_edit_stack.top()].type;
+	short i = short(town->talking.talk_nodes[talk_edit_stack.top()].type);
 	i = choose_text(STRT_TALK_NODE, i, &me, "What Talking Node type?");
+	town->talking.talk_nodes[talk_edit_stack.top()].type = eTalkNode(i);
 	put_talk_node_in_dlog(me, talk_edit_stack);
 	return true;
 }
@@ -992,13 +994,13 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 	if(item_hit == "chooseB") {
 		int i = me["extra2"].getTextAsNum();
 		switch(talk_node.type) {
-			case 9:
+			case eTalkNode::BUY_MAGE:
 				i = choose_text(STRT_MAGE,i,&me,"What is the first mage spell in the shop?");
 				break;
-			case 10:
+			case eTalkNode::BUY_PRIEST:
 				i = choose_text(STRT_PRIEST,i,&me,"What is the first priest spell in the shop?");
 				break;
-			case 11:
+			case eTalkNode::BUY_ALCHEMY:
 				i = choose_text(STRT_ALCHEMY,i,&me,"What is the first recipe in the shop?");
 				break;
 			default:
@@ -1008,7 +1010,7 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 		me["extra1"].setTextToNum(i);
 	} else if(item_hit == "chooseA") {
 		int spec = me["extra1"].getTextAsNum();
-		int mode = talk_node.type == 29 ? 2 : 0;
+		int mode = talk_node.type == eTalkNode::CALL_TOWN_SPEC ? 2 : 0;
 		if(spec < 0 || spec >= 100) {
 			spec = get_fresh_spec(mode);
 			if(spec < 0) {

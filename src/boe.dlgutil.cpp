@@ -480,7 +480,8 @@ void handle_talk_event(location p) {
 	short i,get_pc,s1 = -1,s2 = -1,s3 = -1;
 	char asked[4];
 	
-	short a,b,c,d,ttype;
+	short a,b,c,d;
+	eTalkNode ttype;
 	
 	p.x -= 5;
 	p.y -= 5;
@@ -593,9 +594,9 @@ void handle_talk_event(location p) {
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
 	
 	switch(ttype) {
-		case 0:
+		case eTalkNode::REGULAR:
 			break;
-		case 1:
+		case eTalkNode::DEP_ON_SDF:
 			if(PSD[a][b] > c) {
 				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
@@ -603,10 +604,10 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
-		case 2:
+		case eTalkNode::SET_SDF:
 			PSD[a][b] = 1;
 			break;
-		case 3:
+		case eTalkNode::INN:
 			if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
@@ -623,7 +624,7 @@ void handle_talk_event(location p) {
 			strnum2 = 0;
 			save_talk_str2 = "";
 			break;
-		case 4:
+		case eTalkNode::DEP_ON_TIME:
 			if(day_reached((unsigned char) a,0)) {
 				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
@@ -631,7 +632,7 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
-		case 5:
+		case eTalkNode::DEP_ON_TIME_AND_EVENT:
 			if(day_reached((unsigned char) a,(unsigned char) b)) {
 				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
@@ -639,7 +640,7 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
-		case 6:
+		case eTalkNode::DEP_ON_TOWN:
 			if(univ.town.num != a) {
 				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
@@ -647,12 +648,12 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
-		case 7:
+		case eTalkNode::BUY_ITEMS:
 			c = minmax(1,30,c);
 			start_shop_mode(eShopType::ITEMS,b,b + c - 1,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
-		case 8:
+		case eTalkNode::TRAINING:
 			if((get_pc = char_select_pc(0,"Train who?")) < 6) {
 				strnum1 = -1;
 				spend_xp(get_pc,1, NULL);
@@ -660,54 +661,54 @@ void handle_talk_event(location p) {
 			save_talk_str1 = "You conclude your training.";
 			return;
 			
-		case 9:
+		case eTalkNode::BUY_MAGE:
 			c = minmax(1,61,c);
 			start_shop_mode(eShopType::MAGE,b,b + c - 1,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
-		case 10:
+		case eTalkNode::BUY_PRIEST:
 			c = minmax(1,61,c);
 			start_shop_mode(eShopType::PRIEST,b,b + c - 1,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
-		case 11:
+		case eTalkNode::BUY_ALCHEMY:
 			c = minmax(1,19,c);
 			start_shop_mode(eShopType::ALCHEMY,b,b + c - 1,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
-		case 12: //healer
+		case eTalkNode::BUY_HEALING:
 			// TODO: extra1 and extra2 are actually never used! So remove them.
 			start_shop_mode(eShopType::HEALING,univ.town.monst[store_m_num].extra1,
 							univ.town.monst[store_m_num].extra2,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
 			break;
-		case 13: // sell weap
+		case eTalkNode::SELL_WEAPONS:
 			strnum1 = -1;
 			stat_screen_mode = 3;
 			put_item_screen(stat_window,1);
 			give_help(42,43);
 			break;
-		case 14: // sell armor
+		case eTalkNode::SELL_ARMOR:
 			strnum1 = -1;
 			stat_screen_mode = 4;
 			put_item_screen(stat_window,1);
 			give_help(42,43);
 			break;
-		case 15: // sell misc
+		case eTalkNode::SELL_ITEMS:
 			strnum1 = -1;
 			stat_screen_mode = 5;
 			put_item_screen(stat_window,1);
 			give_help(42,43);
 			break;
-		case 16: case 17: // ident enchant
+		case eTalkNode::IDENTIFY: case eTalkNode::ENCHANT:
 			strnum1 = -1;
-			stat_screen_mode = (ttype == 16) ? 2 : 6;
+			stat_screen_mode = (ttype == eTalkNode::IDENTIFY) ? 2 : 6;
 			shop_identify_cost = a;
 			put_item_screen(stat_window,1);
-			give_help(ttype - 16 + 44,0);
+			give_help(ttype == eTalkNode::IDENTIFY ? 44 : 45,0);
 			break;
-		case 18:
+		case eTalkNode::BUY_INFO:
 			if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
@@ -720,7 +721,7 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
-		case 19:
+		case eTalkNode::BUY_SDF:
 			if((sd_legit(b,c)) && (PSD[b][c] == d)) {
 				save_talk_str1 = "You've already learned that.";
 				strnum1 = -1;
@@ -739,7 +740,7 @@ void handle_talk_event(location p) {
 			strnum2 = 0;
 			save_talk_str2 = "";
 			break;
-		case 20:
+		case eTalkNode::BUY_SHIP:
 			if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
@@ -765,7 +766,7 @@ void handle_talk_event(location p) {
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
-		case 21:
+		case eTalkNode::BUY_HORSE:
 			if(univ.party.gold < a) {
 				strnum1 = strnum2;
 				strnum2 = 0;
@@ -791,7 +792,7 @@ void handle_talk_event(location p) {
 			strnum1 = -1;
 			strnum2 = -1;
 			break;
-		case 22:
+		case eTalkNode::BUY_SPEC_ITEM:
 			if(univ.party.spec_items[a] > 0) {
 				save_talk_str1 = "You already have it.";
 				strnum1 = -1;
@@ -808,12 +809,12 @@ void handle_talk_event(location p) {
 			strnum2 = 0;
 			save_talk_str2 = "";
 			break;
-		case 23:
+		case eTalkNode::BUY_JUNK:
 			start_shop_mode(eShopType(5 + b),0,
 							9,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
-		case 24:
+		case eTalkNode::BUY_TOWN_LOC:
 			if(univ.party.can_find_town[b]) {
 				// TODO: Uh, is something supposed to happen here?
 			}
@@ -829,19 +830,19 @@ void handle_talk_event(location p) {
 			strnum2 = 0;
 			save_talk_str2 = "";
 			break;
-		case 25:
+		case eTalkNode::END_FORCE:
 			talk_end_forced = true;
 			break;
-		case 26:
+		case eTalkNode::END_FIGHT:
 			univ.town.monst[store_m_num].attitude = 1;
 			univ.town.monst[store_m_num].mobility = 1;
 			talk_end_forced = true;
 			break;
-		case 27:
+		case eTalkNode::END_ALARM:
 			make_town_hostile();
 			talk_end_forced = true;
 			break;
-		case 28:
+		case eTalkNode::END_DIE:
 			// TODO: Any reason not to call something like kill_monst?
 			univ.town.monst[store_m_num].active = 0;
 			// Special killing effects
@@ -850,7 +851,7 @@ void handle_talk_event(location p) {
 			talk_end_forced = true;
 			break;
 			// TODO: Strings resulting from this don't seem to be recordable; whyever not?
-		case 29: // town special
+		case eTalkNode::CALL_TOWN_SPEC:
 			run_special(eSpecCtx::TALK,2,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
@@ -865,7 +866,7 @@ void handle_talk_event(location p) {
 			put_pc_screen();
 			put_item_screen(stat_window,0);
 			break;
-		case 30: // scen special
+		case eTalkNode::CALL_SCEN_SPEC:
 			run_special(eSpecCtx::TALK,0,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
