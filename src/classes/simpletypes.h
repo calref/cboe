@@ -643,18 +643,8 @@ enum class eSpecType {
 	TOWN_SET_ATTITUDE = 197,
 	TOWN_SET_CENTER = 198,
 	TOWN_LIFT_FOG = 199,
-	RECT_PLACE_FIELD = 200,
-	RECT_SET_EXPLORED = 201,
-	UNUSED3 = 202,
-	UNUSED4 = 203,
-	UNUSED5 = 204,
-	UNUSED6 = 205,
-	UNUSED7 = 206,
-	UNUSED8 = 207,
-	UNUSED9 = 208,
-	UNUSED10 = 209,
-	UNUSED11 = 210,
-	UNUSED12 = 211,
+	RECT_PLACE_FIELD = 210,
+	RECT_SET_EXPLORED = 211,
 	RECT_MOVE_ITEMS = 212,
 	RECT_DESTROY_ITEMS = 213,
 	RECT_CHANGE_TER = 214,
@@ -685,7 +675,7 @@ inline eSpecCat getNodeCategory(eSpecType node) {
 		return eSpecCat::IF_THEN;
 	if(code >= 170 && code <= 199)
 		return eSpecCat::TOWN;
-	if(code >= 200 && code <= 218)
+	if(code >= 210 && code <= 218)
 		return eSpecCat::RECT;
 	if(code >= 225 && code <= 228)
 		return eSpecCat::OUTDOOR;
