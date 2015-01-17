@@ -70,8 +70,6 @@ inline eDirection& operator++ (eDirection& me, int) {
 	else return me = (eDirection)(1 + (int)me);
 }
 
-enum eResistType {RESIST_NONE, RESIST_HALF, RESIST_ALL, RESIST_DOUBLE};
-
 union uAbility {
 	bool active;
 	struct {
@@ -128,10 +126,10 @@ public:
 	std::map<eMonstAbil, uAbility> abil;
 	item_num_t corpse_item;
 	short corpse_item_chance;
-	unsigned int magic_res : 2;
-	unsigned int fire_res : 2;
-	unsigned int cold_res : 2;
-	unsigned int poison_res : 2;
+	unsigned int magic_res;
+	unsigned int fire_res;
+	unsigned int cold_res;
+	unsigned int poison_res;
 	bool mindless : 1;
 	bool invuln : 1;
 	bool invisible : 1;

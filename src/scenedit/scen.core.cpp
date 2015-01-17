@@ -578,15 +578,6 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short wh
 	me["loot-chance"].setTextToNum(store_monst.corpse_item_chance);
 	
 	dynamic_cast<cLedGroup&>(me["summon"]).setSelected("s" + boost::lexical_cast<std::string,short>(store_monst.summon_type));
-	
-	dynamic_cast<cLed&>(me["magic-res"]).setState(store_monst.magic_res == RESIST_HALF ? led_red : led_off);
-	dynamic_cast<cLed&>(me["magic-imm"]).setState(store_monst.magic_res == RESIST_ALL ? led_red : led_off);
-	dynamic_cast<cLed&>(me["fire-res"]).setState(store_monst.fire_res == RESIST_HALF ? led_red : led_off);
-	dynamic_cast<cLed&>(me["fire-imm"]).setState(store_monst.fire_res == RESIST_ALL ? led_red : led_off);
-	dynamic_cast<cLed&>(me["cold-res"]).setState(store_monst.cold_res == RESIST_HALF ? led_red : led_off);
-	dynamic_cast<cLed&>(me["cold-imm"]).setState(store_monst.cold_res == RESIST_ALL ? led_red : led_off);
-	dynamic_cast<cLed&>(me["poison-res"]).setState(store_monst.poison_res == RESIST_HALF ? led_red : led_off);
-	dynamic_cast<cLed&>(me["poison-imm"]).setState(store_monst.poison_res == RESIST_ALL ? led_red : led_off);
 }
 
 static bool save_monst_abils(cDialog& me, cMonster& store_monst) {
@@ -594,14 +585,6 @@ static bool save_monst_abils(cDialog& me, cMonster& store_monst) {
 	
  	store_monst.corpse_item = me["loot-item"].getTextAsNum();
 	store_monst.corpse_item_chance = me["loot-chance"].getTextAsNum();
-	if(dynamic_cast<cLed&>(me["magic-res"]).getState() != led_off) store_monst.magic_res = RESIST_HALF;
-	if(dynamic_cast<cLed&>(me["magic-imm"]).getState() != led_off) store_monst.magic_res = RESIST_ALL;
-	if(dynamic_cast<cLed&>(me["fire-res"]).getState() != led_off) store_monst.fire_res = RESIST_HALF;
-	if(dynamic_cast<cLed&>(me["fire-imm"]).getState() != led_off) store_monst.fire_res = RESIST_ALL;
-	if(dynamic_cast<cLed&>(me["cold-res"]).getState() != led_off) store_monst.cold_res = RESIST_HALF;
-	if(dynamic_cast<cLed&>(me["cold-imm"]).getState() != led_off) store_monst.cold_res = RESIST_ALL;
-	if(dynamic_cast<cLed&>(me["poison-res"]).getState() != led_off) store_monst.poison_res = RESIST_HALF;
-	if(dynamic_cast<cLed&>(me["poison-imm"]).getState() != led_off) store_monst.poison_res = RESIST_ALL;
 	return true;
 }
 

@@ -297,34 +297,32 @@ bool monst_hate_spot(short which_m,location *good_loc) {
 	else if(univ.town.is_ice_wall(loc.x,loc.y)) {
 		hate_spot = true;
 		if(have_radiate && which_radiate == eFieldType::WALL_ICE) hate_spot = false;
-		else if(univ.town.monst[which_m].cold_res == RESIST_ALL) hate_spot = false;
+		else if(univ.town.monst[which_m].cold_res == 0) hate_spot = false;
 	}
 	// Hate fire wall?
 	else if(univ.town.is_fire_wall(loc.x,loc.y)) {
 		hate_spot = true;
 		if(have_radiate && which_radiate == eFieldType::WALL_FIRE) hate_spot = false;
-		else if(univ.town.monst[which_m].fire_res == RESIST_ALL) hate_spot = false;
+		else if(univ.town.monst[which_m].fire_res == 0) hate_spot = false;
 	}
 	// Note: Monsters used to enter shock walls even if they were merely resistant to magic
 	// Hate shock wall?
 	else if(univ.town.is_force_wall(loc.x,loc.y)) {
 		hate_spot = true;
 		if(have_radiate && which_radiate == eFieldType::WALL_FORCE) hate_spot = false;
-		else if(univ.town.monst[which_m].magic_res == RESIST_ALL) hate_spot = false;
+		else if(univ.town.monst[which_m].magic_res == 0) hate_spot = false;
 	}
 	// Hate stink cloud?
 	else if(univ.town.is_scloud(loc.x,loc.y)) {
 		hate_spot = true;
 		if(have_radiate && which_radiate == eFieldType::CLOUD_STINK) hate_spot = false;
-		else if(univ.town.monst[which_m].magic_res == RESIST_ALL) hate_spot = false;
-		else if(univ.town.monst[which_m].magic_res == RESIST_HALF) hate_spot = false;
+		else if(univ.town.monst[which_m].magic_res <= 50) hate_spot = false;
 	}
 	// Hate sleep cloud?
 	else if(univ.town.is_sleep_cloud(loc.x,loc.y)) {
 		hate_spot = true;
 		if(have_radiate && which_radiate == eFieldType::CLOUD_SLEEP) hate_spot = false;
-		else if(univ.town.monst[which_m].magic_res == RESIST_ALL) hate_spot = false;
-		else if(univ.town.monst[which_m].magic_res == RESIST_HALF) hate_spot = false;
+		else if(univ.town.monst[which_m].magic_res <= 50) hate_spot = false;
 	}
 	// Hate antimagic?
 	else if(univ.town.is_antimagic(loc.x,loc.y)) {
@@ -1056,13 +1054,13 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		case eTerSpec::DAMAGING: // TODO: Update this to check other cases
 			switch(eDamageType(ter_flag)) {
 				case eDamageType::FIRE:
-					return univ.town.monst[which_monst].fire_res == RESIST_ALL;
+					return univ.town.monst[which_monst].fire_res == 0;
 				case eDamageType::COLD:
-					return univ.town.monst[which_monst].cold_res == RESIST_ALL;
+					return univ.town.monst[which_monst].cold_res == 0;
 				case eDamageType::MAGIC:
-					return univ.town.monst[which_monst].magic_res == RESIST_ALL;
+					return univ.town.monst[which_monst].magic_res == 0;
 				case eDamageType::POISON:
-					return univ.town.monst[which_monst].poison_res == RESIST_ALL;
+					return univ.town.monst[which_monst].poison_res == 0;
 				default:
 					return univ.town.monst[which_monst].invuln;
 			}
@@ -1108,32 +1106,14 @@ void magic_adjust(cCreature *which_m,short *how_much) {
 			which_m->health = 32767;
 		else which_m->health += 3;
 	}
-	switch(which_m->magic_res) {
-		case RESIST_HALF:
-			*how_much /= 2;
-			break;
-		case RESIST_ALL:
-			*how_much = 0;
-			break;
-		case RESIST_DOUBLE:
-			*how_much *= 2;
-			break;
-	}
+	*how_much *= which_m->magic_res;
+	*how_much /= 100;
 }
 
 void poison_monst(cCreature *which_m,short how_much) {
 	if(how_much > 0) {
-		switch(which_m->poison_res) {
-			case RESIST_HALF:
-				how_much /= 2;
-				break;
-			case RESIST_ALL:
-				monst_spell_note(which_m->number,10);
-				return;
-			case RESIST_DOUBLE:
-				how_much *= 2;
-				break;
-		}
+		how_much *= which_m->poison_res;
+		how_much /= 100;
 	}
 	which_m->status[eStatus::POISON] = min(8, which_m->status[eStatus::POISON] + how_much);
 	if(how_much >= 0)
@@ -1225,17 +1205,10 @@ void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amo
 		 which_m->m_type == eRace::STONE || which_m->m_type == eRace::PLANT))
 		return;
 	r1 = get_ran(1,1,100);
-	switch(which_m->magic_res) {
-		case RESIST_HALF:
-			r1 *= 2;
-			break;
-		case RESIST_ALL:
-			r1 = 200;
-			break;
-		case RESIST_DOUBLE:
-			r1 /= 2;
-			break;
-	}
+	if(which_m->magic_res > 0) {
+		r1 *= 100;
+		r1 /= which_m->magic_res;
+	} else r1 = 200;
 	r1 += penalty;
 	if(which_status == eStatus::ASLEEP)
 		r1 -= 25;

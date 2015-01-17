@@ -1413,56 +1413,20 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	victim = &univ.town.monst[which_m];
 	
 	if(dam_type == eDamageType::MAGIC) {
-		switch(victim->magic_res) {
-			case RESIST_HALF:
-				how_much /= 2;
-				break;
-			case RESIST_ALL:
-				how_much = 0;
-				break;
-			case RESIST_DOUBLE:
-				how_much *= 2;
-				break;
-		}
+		how_much *= victim->magic_res;
+		how_much /= 100;
 	}
 	if(dam_type == eDamageType::FIRE) {
-		switch(victim->fire_res) {
-			case RESIST_HALF:
-				how_much /= 2;
-				break;
-			case RESIST_ALL:
-				how_much = 0;
-				break;
-			case RESIST_DOUBLE:
-				how_much *= 2;
-				break;
-		}
+		how_much *= victim->fire_res;
+		how_much /= 100;
 	}
 	if(dam_type == eDamageType::COLD) {
-		switch(victim->cold_res) {
-			case RESIST_HALF:
-				how_much /= 2;
-				break;
-			case RESIST_ALL:
-				how_much = 0;
-				break;
-			case RESIST_DOUBLE:
-				how_much *= 2;
-				break;
-		}
+		how_much *= victim->cold_res;
+		how_much /= 100;
 	}
 	if(dam_type == eDamageType::POISON) {
-		switch(victim->poison_res) {
-			case RESIST_HALF:
-				how_much /= 2;
-				break;
-			case RESIST_ALL:
-				how_much = 0;
-				break;
-			case RESIST_DOUBLE:
-				how_much *= 2;
-				break;
-		}
+		how_much *= victim->poison_res;
+		how_much /= 100;
 	}
 	
 	// Absorb damage?
@@ -1602,7 +1566,8 @@ void petrify_monst(cCreature* m_target, short strength) {
 	r1 += m_target->status[eStatus::BLESS_CURSE];
 	r1 -= strength;
 	
-	if(r1 > 14 || m_target->magic_res == RESIST_ALL)
+	// TODO: This should probably do something similar to charm_monst with the magic resistance
+	if(r1 > 14 || m_target->magic_res == 0)
 		monst_spell_note(m_target->number,10);
 	else {
 		monst_spell_note(m_target->number,8);

@@ -105,21 +105,25 @@ void cMonster::append(legacy::monster_record_type& old){
 	corpse_item = old.corpse_item;
 	corpse_item_chance = old.corpse_item_chance;
 	if(old.immunities & 2)
-		magic_res = RESIST_ALL;
+		magic_res = 0;
 	else if(old.immunities & 1)
-		magic_res = RESIST_HALF;
+		magic_res = 50;
+	else magic_res = 100;
 	if(old.immunities & 8)
-		fire_res = RESIST_ALL;
+		fire_res = 0;
 	else if(old.immunities & 4)
-		fire_res = RESIST_HALF;
+		fire_res = 50;
+	else fire_res = 100;
 	if(old.immunities & 32)
-		cold_res = RESIST_ALL;
+		cold_res = 0;
 	else if(old.immunities & 16)
-		cold_res = RESIST_HALF;
+		cold_res = 50;
+	else cold_res = 100;
 	if(old.immunities & 128)
-		poison_res = RESIST_ALL;
+		poison_res = 0;
 	else if(old.immunities & 64)
-		poison_res = RESIST_HALF;
+		poison_res = 50;
+	else poison_res = 100;
 	x_width = old.x_width;
 	y_width = old.y_width;
 	default_attitude = old.default_attitude;
@@ -143,7 +147,7 @@ void cMonster::addAbil(eMonstAbilTemplate what, int param) {
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ARROW, 3, 2, 7, 4, 8, 750};
 			break;
 		case eMonstAbilTemplate::THROWS_SPEARS:
-			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ARROW, 5, 3, 7, 6, 8, 625};
+			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::SPEAR, 5, 3, 7, 6, 8, 625};
 			break;
 		case eMonstAbilTemplate::THROWS_ROCKS1:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ROCK, 12, 4, 7, 8, 10, 625};
@@ -365,6 +369,7 @@ void cMonster::addAbil(eMonstAbilTemplate what, int param) {
 }
 
 cMonster::cMonster(){
+	magic_res = poison_res = fire_res = cold_res = 100;
 	// TODO: Fill in
 	see_str1 = -1;
 	see_str2 = -1;
@@ -812,14 +817,9 @@ void cMonster::readFrom(std::istream& file) {
 			line >> temp1 >> temp2;
 			x_width = temp1;
 			y_width = temp2;
-		} else if(cur == "IMMUNE") {
-			line >> temp1 >> temp2;
-			magic_res = temp1;
-			fire_res = temp2;
-			line >> temp1 >> temp2;
-			cold_res = temp1;
-			poison_res = temp2;
-		} else if(cur == "RACE")
+		} else if(cur == "IMMUNE")
+			line >> magic_res >> fire_res >> cold_res >> poison_res;
+		else if(cur == "RACE")
 			line >> m_type;
 		else if(cur == "CORPSEITEM")
 			line >> corpse_item >> corpse_item_chance;

@@ -384,7 +384,8 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 	
 	i = 1;
 	for(auto& abil : store_m.abil) {
-		if(i > 2) break; // TODO: Support showing more than just the first two abilities
+		if(i > 4) break; // TODO: Support showing more than just the first four abilities
+		if(!abil.second.active) continue;
 		std::string id = "abil" + std::to_string(i);
 		me[id].setText(abil.second.to_string(abil.first));
 		i++;
@@ -411,14 +412,13 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 	me["mage"].setTextToNum(store_m.mu);
 	me["priest"].setTextToNum(store_m.cl);
 	// Immunities
-	dynamic_cast<cLed&>(me["magic-res"]).setState(store_m.magic_res == RESIST_HALF ? led_red : led_off);
-	dynamic_cast<cLed&>(me["magic-imm"]).setState(store_m.magic_res == RESIST_ALL ? led_red : led_off);
-	dynamic_cast<cLed&>(me["fire-res"]).setState(store_m.fire_res == RESIST_HALF ? led_red : led_off);
-	dynamic_cast<cLed&>(me["fire-imm"]).setState(store_m.fire_res == RESIST_ALL ? led_red : led_off);
-	dynamic_cast<cLed&>(me["cold-res"]).setState(store_m.cold_res == RESIST_HALF ? led_red : led_off);
-	dynamic_cast<cLed&>(me["cold-imm"]).setState(store_m.cold_res == RESIST_ALL ? led_red : led_off);
-	dynamic_cast<cLed&>(me["poison-res"]).setState(store_m.poison_res == RESIST_HALF ? led_red : led_off);
-	dynamic_cast<cLed&>(me["poison-imm"]).setState(store_m.poison_res == RESIST_ALL ? led_red : led_off);
+	me["magic-res"].setText(std::to_string(100 - store_m.magic_res) + '%');
+	me["fire-res"].setText(std::to_string(100 - store_m.fire_res) + '%');
+	me["cold-res"].setText(std::to_string(100 - store_m.cold_res) + '%');
+	me["poison-res"].setText(std::to_string(100 - store_m.poison_res) + '%');
+	dynamic_cast<cLed&>(me["mindless"]).setState(store_m.mindless ? led_red : led_off);
+	dynamic_cast<cLed&>(me["invuln"]).setState(store_m.invuln ? led_red : led_off);
+	dynamic_cast<cLed&>(me["guard"]).setState(store_m.guard ? led_red : led_off);
 }
 
 
@@ -446,6 +446,7 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreat
 	if(roster[position % 60].number != on_monst_menu[position]) {
 		cMonster& monst = univ.scenario.scen_monsters[on_monst_menu[position]];
 		roster.assign(position % 60, cCreature(on_monst_menu[position]), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+		store_m = roster[position % 60];
 	}
 	put_monst_info(me, store_m);
 	return true;
@@ -468,8 +469,7 @@ void display_monst(short array_pos,cCreature *which_m,short mode) {
 	monstInfo["done"].attachClickHandler(std::bind(&cDialog::toast, &monstInfo, true));
 	monstInfo.attachClickHandlers(event_filter, {"left", "right"});
 	// Also add the click handler to the LEDs to suppress normal LED behaviour
-	monstInfo.attachClickHandlers(event_filter, {"immune1", "immune2", "immune3", "immune4"});
-	monstInfo.attachClickHandlers(event_filter, {"immune5", "immune6", "immune7", "immune8"});
+	monstInfo.attachClickHandlers(event_filter, {"guard", "mindless", "invuln"});
 	
 	if(full_roster) {
 		// This is a bit hacky - call event handler with dummy ID to ensure the monster details are correctly populated.
@@ -478,32 +478,6 @@ void display_monst(short array_pos,cCreature *which_m,short mode) {
 		monstInfo["left"].hide();
 		monstInfo["right"].hide();
 	}
-	// TODO: Put these labels in the XML definition
-	monstInfo.addLabelFor("name", "Name", LABEL_LEFT, 26, true);
-	monstInfo.addLabelFor("lvl", "Level", LABEL_LEFT, 21, true);
-	monstInfo.addLabelFor("hp", "Health", LABEL_LEFT, 24, true);
-	monstInfo.addLabelFor("sp", "Magic Pts.", LABEL_LEFT, 32, true);
-	monstInfo.addLabelFor("def", "Armor", LABEL_LEFT, 23, true);
-	monstInfo.addLabelFor("skill", "Skill", LABEL_LEFT, 18, true);
-	monstInfo.addLabelFor("morale", "Morale", LABEL_LEFT, 23, true);
-	monstInfo.addLabelFor("ap", "Speed", LABEL_LEFT, 19, true);
-	monstInfo.addLabelFor("attack1", "Att #1", LABEL_LEFT, 26, true);
-	monstInfo.addLabelFor("attack2", "Att #2", LABEL_LEFT, 23, true);
-	monstInfo.addLabelFor("attack3", "Att #3", LABEL_LEFT, 22, true);
-	monstInfo.addLabelFor("mage", "Mage L.", LABEL_LEFT, 34, true);
-	monstInfo.addLabelFor("priest", "Priest L.", LABEL_LEFT, 30, true);
-	monstInfo.addLabelFor("poison", "Poison", LABEL_LEFT, 23, true);
-	monstInfo.addLabelFor("abil1", "Ability 1", LABEL_LEFT, 29, true);
-	monstInfo.addLabelFor("abil2", "Ability 2", LABEL_LEFT, 29, true);
-	// TODO: These could be the actual content text instead of a label, maybe?
-	monstInfo.addLabelFor("immune1", "Magic Resistant", LABEL_LEFT, 45, false);
-	monstInfo.addLabelFor("immune2", "Immune To Magic", LABEL_LEFT, 45, false);
-	monstInfo.addLabelFor("immune3", "Fire Resistant", LABEL_LEFT, 45, false);
-	monstInfo.addLabelFor("immune4", "Immune To Fire", LABEL_LEFT, 45, false);
-	monstInfo.addLabelFor("immune5", "Cold Resistant", LABEL_LEFT, 45, false);
-	monstInfo.addLabelFor("immune6", "Immune To Cold", LABEL_LEFT, 45, false);
-	monstInfo.addLabelFor("immune7", "Poison Resistant", LABEL_LEFT, 45, false);
-	monstInfo.addLabelFor("immune8", "Immune To Poison", LABEL_LEFT, 45, false);
 	put_monst_info(monstInfo, store_m);
 	
 	monstInfo.run();
