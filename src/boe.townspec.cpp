@@ -50,7 +50,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 	}
 	
 	if(pc_num == 7) {
-		pc_num = select_pc(1,0);
+		pc_num = char_select_pc(0,"Trap! Who will disarm?");
 		if(pc_num == 6)
 			return false;
 	}

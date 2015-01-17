@@ -372,19 +372,22 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // % - Choose button to select shop cost adjustment
 // e - Choose button to select a status effect
 // E - Choose button to select a party status effect
+// w - Choose button to select main party status effect
+// 0..9 - Choose button to select a specific type of picture
+// (terrain, monster, dialog, talk, item, pc, field, boom, missile, status)
 static const char*const button_dict[7][11] = {
 	{ // general nodes
-		" mmmMMmmmm mmm mmmmmm   Mmm  $ mmmmmm", // msg1
-		"                                     ", // msg2
-		"                                     ", // msg3
-		"                                     ", // pic
-		"                                     ", // pictype
-		"    #         x  T i                 ", // ex1a
-		"    &        S     ss                ", // ex1b
-		"                                     ", // ex1c
-		"                                  tt ", // ex2a
-		"    %                              t ", // ex2b
-		"                                     ", // ex2c
+		" mmmMMmmmm mmm mmmmmm   Mmm  $ mmmmmm       ", // msg1
+		"                                            ", // msg2
+		"                                            ", // msg3
+		"                                            ", // pic
+		"                                            ", // pictype
+		"    #         x  T i                  M cit ", // ex1a
+		"    &        S     ss                       ", // ex1b
+		"                                            ", // ex1c
+		"                                  tt        ", // ex2a
+		"    %                              t        ", // ex2b
+		"                                            ", // ex2c
 	}, { // one-shot nodes
 		"mm  mddddddmmm", // msg1
 		"              ", // msg2
@@ -398,43 +401,43 @@ static const char*const button_dict[7][11] = {
 		"s    ssssss   ", // ex2b
 		"              ", // ex2c
 	}, { // affect pc nodes
-		"mmmmmmmm          mmmmmmm", // msg1
-		"                         ", // msg2
-		"                         ", // msg3
-		"                         ", // pic
-		"                         ", // pictype
-		"                   AP  a ", // ex1a
-		"                        E", // ex1b
-		"       e                 ", // ex1c
-		"                  K      ", // ex2a
-		" D                       ", // ex2b
-		" x                       ", // ex2c
+		"mmmmmmmmmmm       mmmmmmmm", // msg1
+		"                          ", // msg2
+		"          M              M", // msg3
+		"                         5", // pic
+		"                         s", // pictype
+		"      w q          AP  a  ", // ex1a
+		"                        E ", // ex1b
+		"       e                 Q", // ex1c
+		"                  K       ", // ex2a
+		" D                        ", // ex2b
+		" x                        ", // ex2c
 	}, { // if-then nodes
 		"                        $  $", // msg1
 		"                            ", // msg2
 		"                            ", // msg3
 		"                            ", // pic
 		"                            ", // pictype
-		"                  f  Qq $ * ", // ex1a
-		"ssss   ss ss     sss sssss =", // ex1b
+		"      w     APae  f  Qq $ * ", // ex1a
+		"ssss  sss ssssss sss sssss =", // ex1b
 		"                          ss", // ex1c
 		"                       K$   ", // ex2a
-		"s   ss   s          s==+s  =", // ex2b
-		"                           s", // ex2c
+		"s   ss   s     +    s==+s  =", // ex2b
+		"               =           s", // ex2c
 	}, { // town nodes
-		"mmmmmmmmmmmmmmm   dddmmmmmmm", // msg1
-		"                            ", // msg2
-		"                            ", // msg3
-		" p                ppp       ", // pic
-		" ?                ???       ", // pictype
-		"            c             L ", // ex1a
-		"              s s s      s @", // ex1b
-		"                            ", // ex1c
-		"@  D     ! c     T  T i     ", // ex2a
-		"     DD          /          ", // ex2b
-		" x x             :  :       ", // ex2c
+		"mmmmmmmmmmmmmmm   dddmmmmmmmmm", // msg1
+		"                              ", // msg2
+		"                              ", // msg3
+		" 8                ppp         ", // pic
+		"                  ???         ", // pictype
+		"            c             L   ", // ex1a
+		"              s s s      s @  ", // ex1b
+		"                              ", // ex1c
+		"@  D     ! c     T  T i       ", // ex2a
+		"     DD          /            ", // ex2b
+		" x x             :  :         ", // ex2c
 	}, { // rectangle nodes
-		"m           mmmmmmm", // msg1
+		"mm          mmmmmmm", // msg1
 		"                   ", // msg2
 		"                   ", // msg3
 		"                   ", // pic

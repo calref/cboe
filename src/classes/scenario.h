@@ -78,7 +78,7 @@ public:
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.
 	std::array<std::string,50> journal_strs;
-	std::array<std::string,100> spec_strs;
+	std::array<std::string,101> spec_strs;
 	bool adjust_diff : 1;
 	char : 7;
 	bool is_legacy;
@@ -86,6 +86,7 @@ public:
 	vector2d<cOutdoors*> outdoors;
 	std::vector<cTown*> towns;
 	template<typename Town> void addTown() {towns.push_back(new Town(*this, true));}
+	std::string& get_buf() {return spec_strs[100];}
 	
 	void append(legacy::scenario_data_type& old);
 	void append(legacy::scen_item_data_type& old);

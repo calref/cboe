@@ -66,6 +66,7 @@ extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x
 extern short store_talk_face_pic;
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
+extern bool fog_lifted;
 
 // Talk vars
 extern eGameMode store_pre_talk_mode;
@@ -115,7 +116,7 @@ void apply_unseen_mask() {
 	short i,j,k,l;
 	bool need_bother = false;
 	
-	if(PSD[SDF_NO_FRILLS] > 0)
+	if(PSD[SDF_NO_FRILLS] > 0 || fog_lifted)
 		return;
 	
 	if((is_combat()) && (which_combat_type == 0))
@@ -152,7 +153,7 @@ void apply_light_mask(bool onWindow) {
 	rectangle big_to = {13,13,337,265};
 	short i,j;
 	bool is_dark = false,same_mask = true;
-	if(PSD[SDF_NO_FRILLS] > 0)
+	if(PSD[SDF_NO_FRILLS] > 0 || fog_lifted)
 		return;
 	if(is_out())
 		return;

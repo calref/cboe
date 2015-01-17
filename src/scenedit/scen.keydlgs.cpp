@@ -269,6 +269,9 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 		case STRT_COST_ADJ:
 			strings = {"Extremely Cheap", "Very Reasonable", "Pretty Average", "Somewhat Pricey", "Expensive", "Exorbitant", "Utterly Ridiculous"};
 			break;
+		case STRT_STATUS:
+			strings = {"Alive", "Dead", "Dust", "Petrified", "Fled Outdoor Combat", "Absent", "Deleted"};
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = 0;
@@ -629,6 +632,10 @@ static pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {
 }
 
 static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
+	static const ePicType pics[10] = {
+		PIC_TER, PIC_MONST, PIC_DLOG, PIC_TALK, PIC_ITEM,
+		PIC_PC, PIC_FIELD, PIC_BOOM, PIC_MISSILE, PIC_STATUS
+	};
 	std::string field = item_hit.substr(0, item_hit.find_first_of('-'));
 	char btn;
 	eSpecType type = edit_stack.top().node.type;
@@ -739,6 +746,13 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case '%': strt = STRT_COST_ADJ; title = "What cost adjust?"; break;
 		case '*': strt = STRT_CONTEXT; title = "What context?"; break;
 		case ':': strt = STRT_STAIR_MODE; title = "Select trigger limitations:"; break;
+		case 'w': strt = STRT_STATUS; title = "Select status:"; str_adj = 1; break;
+		case '0': case '1': case '2': case '3': case '4':
+		case '5': case '6': case '7': case '8': case '9':
+			choose_string = false;
+			store = choose_graphic(val, pics[btn - '0'], &me);
+			if(store < 0) store = val;
+			break;
 		case '#':
 			choose_string = false;
 			store = val;

@@ -59,6 +59,7 @@ short num_chirps_played = 0;
 
 extern rectangle startup_button[6];
 extern bool flushingInput;
+extern bool fog_lifted;
 bool ghost_mode;
 rectangle startup_top;
 
@@ -613,7 +614,7 @@ static void handle_bash_pick(location destination, bool& did_something, bool& ne
 	if(!adjacent(destination,univ.town.p_loc))
 		add_string_to_buf("  Must be adjacent.              ");
 	else {
-		short pc = char_select_pc(true, false, isBash ? "Who will bash?" : "Who will pick the lock?");
+		short pc = char_select_pc(0, isBash ? "Who will bash?" : "Who will pick the lock?");
 		if(pc == 6) {
 			add_string_to_buf("  Cancelled");
 			overall_mode = MODE_TOWN;
@@ -1382,6 +1383,8 @@ bool handle_action(sf::Event event) {
 	
 	// MARK: Handle non-PC stuff (like monsters) if the party actually did something
 	if(did_something) handle_monster_actions(need_redraw, need_reprint);
+	if(fog_lifted) need_redraw = true;
+	fog_lifted = false;
 	if(need_redraw) draw_terrain();
 	if(need_reprint || need_redraw) print_buf();
 	
@@ -1477,12 +1480,12 @@ void handle_menu_spell(eSpell spell_picked) {
 		store_mage = spell_picked;
 	else store_priest = spell_picked;
 	if(spell_type == eSkill::MAGE_SPELLS && (*spell_picked).need_select != SELECT_NO) {
-		if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 0 : 1,0,"Cast spell on who?")) == 6)
+		if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
 			return;
 	}
 	else {
 		if(spell_type == eSkill::PRIEST_SPELLS && (*spell_picked).need_select != SELECT_NO)
-			if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 0 : 1,0,"Cast spell on who?")) == 6)
+			if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
 				return;
 	}
 /*	if((is_combat()) && (((spell_type == 0) && (refer_mage[spell_picked] > 0)) ||

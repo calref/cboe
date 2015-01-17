@@ -10,6 +10,7 @@ enum eStrType {
 	STRT_PICT, STRT_SND, STRT_CMP, STRT_ACCUM, STRT_TRAP,
 	STRT_ATTITUDE, STRT_STAIR, STRT_LIGHT, STRT_CONTEXT,
 	STRT_SHOP, STRT_COST_ADJ, STRT_STAIR_MODE, STRT_TALK_NODE,
+	STRT_STATUS,
 };
 
 bool cre(short val,short min,short max,const char *text1,const char *text2,cDialog* parent) ;

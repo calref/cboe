@@ -412,7 +412,7 @@ void handle_menu_choice(eMenu item_hit) {
 			All_Done = true;
 			break;
 		case eMenu::OPTIONS_PC_GRAPHIC:
-			choice = char_select_pc(0,0,"New graphic for who?");
+			choice = char_select_pc(1,"New graphic for who?");
 			if(choice < 6)
 				pick_pc_graphic(choice,1,NULL);
 			draw_terrain();
@@ -424,7 +424,7 @@ void handle_menu_choice(eMenu item_hit) {
 				print_buf();
 			}
 			else {
-				choice = char_select_pc(0,0,"Delete who?");
+				choice = char_select_pc(1,"Delete who?");
 				if(choice < 6) {
 					std::string confirm = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
 					if(confirm == "yes")
@@ -436,7 +436,7 @@ void handle_menu_choice(eMenu item_hit) {
 			
 			
 		case eMenu::OPTIONS_RENAME_PC:
-			choice = select_pc(0,0);
+			choice = char_select_pc(1,"Rename who?");
 			if(choice < 6)
 				pick_pc_name(choice,NULL);
 			put_pc_screen();

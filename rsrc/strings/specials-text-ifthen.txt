@@ -78,7 +78,7 @@ Call this special if 2nd flag lower ...
 Unused
 Otherwise call this special
 --------------------
-Terrain this type? (town)
+Terrain this type?
 Unused
 Unused
 Unused
@@ -94,7 +94,7 @@ Call this special ...
 Unused
 Otherwise call this special
 --------------------
-Terrain this type? (out)
+Is Alive?
 Unused
 Unused
 Unused
@@ -102,11 +102,11 @@ Unused
 Unused
 Unused
 Unused
-X coordinate of space
-Y coordinate of space
-Unused
-If space is this terrain type ...
+If PC has this status ... (-1 = alive)
 Call this special ...
+Unused
+Unused
+Unused
 Unused
 Otherwise call this special
 --------------------
@@ -190,7 +190,7 @@ Unused
 Unused
 Otherwise call this special
 --------------------
-Unused Node
+Has Mage Spell?
 Unused
 Unused
 Unused
@@ -198,15 +198,15 @@ Unused
 Unused
 Unused
 Unused
+If selected PC knows this mage spell ...
+Call this special ...
 Unused
 Unused
 Unused
 Unused
-Unused
-Unused
-Special to Jump To
+Otherwise call this special
 --------------------
-Unused Node
+Has Priest Spell?
 Unused
 Unused
 Unused
@@ -214,15 +214,15 @@ Unused
 Unused
 Unused
 Unused
+If selected PC knows this priest spell ...
+Call this special ...
 Unused
 Unused
 Unused
 Unused
-Unused
-Unused
-Special to Jump To
+Otherwise call this special
 --------------------
-Unused Node
+Has Alchemy?
 Unused
 Unused
 Unused
@@ -230,15 +230,15 @@ Unused
 Unused
 Unused
 Unused
+If party knows this recipe ...
+Call this special...
 Unused
 Unused
 Unused
 Unused
-Unused
-Unused
-Special to Jump To
+Otherwise call this special
 --------------------
-Unused Node
+Has Status Effect?
 Unused
 Unused
 Unused
@@ -246,13 +246,13 @@ Unused
 Unused
 Unused
 Unused
+If PC has enough of this status effect ...
+Call this special...
 Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Special to Jump To
+Value to compare to
+Cumulation mode (if whole party selected)
+Comparison mode
+Otherwise call this special
 --------------------
 Unused Node
 Unused

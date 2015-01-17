@@ -538,6 +538,13 @@ enum class eSpecType {
 	CHANGE_TER = 34,
 	SWAP_TER = 35,
 	TRANS_TER = 36,
+	CLEAR_BUF = 37,
+	APPEND_STRING = 38,
+	APPEND_NUM = 39,
+	APPEND_MONST = 40,
+	APPEND_ITEM = 41,
+	APPEND_TER = 42,
+	PAUSE = 43,
 	ONCE_GIVE_ITEM = 50,
 	ONCE_GIVE_SPEC_ITEM = 51,
 	ONCE_NULL = 52,
@@ -560,9 +567,9 @@ enum class eSpecType {
 	AFFECT_SKILL_PTS = 85,
 	AFFECT_DEADNESS = 86,
 	AFFECT_STATUS = 87,
-	UNUSED27 = 88,
-	UNUSED28 = 89,
-	UNUSED29 = 90,
+	AFFECT_TRAITS = 88,
+	AFFECT_AP = 89,
+	AFFECT_NAME = 90,
 	UNUSED30 = 91,
 	UNUSED31 = 92,
 	UNUSED32 = 93,
@@ -577,22 +584,23 @@ enum class eSpecType {
 	AFFECT_FOOD = 102,
 	AFFECT_ALCHEMY = 103,
 	AFFECT_PARTY_STATUS = 104,
+	CREATE_NEW_PC = 105,
 	IF_SDF = 130,
 	IF_TOWN_NUM = 131,
 	IF_RANDOM = 132,
 	IF_HAVE_SPECIAL_ITEM = 133,
 	IF_SDF_COMPARE = 134,
 	IF_TER_TYPE = 135,
-	UNUSED21 = 136,
+	IF_ALIVE = 136,
 	IF_HAS_GOLD = 137,
 	IF_HAS_FOOD = 138,
 	IF_ITEM_CLASS_ON_SPACE = 139,
 	IF_HAVE_ITEM_CLASS = 140,
 	IF_EQUIP_ITEM_CLASS = 141,
-	UNUSED22 = 142,
-	UNUSED23 = 143,
-	UNUSED24 = 144,
-	UNUSED25 = 145,
+	IF_MAGE_SPELL = 142,
+	IF_PRIEST_SPELL = 143,
+	IF_RECIPE = 144,
+	IF_STATUS = 145,
 	UNUSED26 = 146,
 	IF_DAY_REACHED = 147,
 	IF_FIELDS = 148,
@@ -633,8 +641,10 @@ enum class eSpecType {
 	TOWN_TIMER_START = 195,
 	TOWN_CHANGE_LIGHTING = 196,
 	TOWN_SET_ATTITUDE = 197,
+	TOWN_SET_CENTER = 198,
+	TOWN_LIFT_FOG = 199,
 	RECT_PLACE_FIELD = 200,
-	UNUSED2 = 201,
+	RECT_SET_EXPLORED = 201,
 	UNUSED3 = 202,
 	UNUSED4 = 203,
 	UNUSED5 = 204,
@@ -665,15 +675,15 @@ enum class eSpecCat {
 
 inline eSpecCat getNodeCategory(eSpecType node) {
 	int code = (int) node;
-	if(code >= 0 && code <= 36)
+	if(code >= 0 && code <= 43)
 		return eSpecCat::GENERAL;
 	if(code >= 50 && code <= 63)
 		return eSpecCat::ONCE;
-	if(code >= 80 && code <= 104)
+	if(code >= 80 && code <= 105)
 		return eSpecCat::AFFECT;
 	if(code >= 130 && code <= 157)
 		return eSpecCat::IF_THEN;
-	if(code >= 170 && code <= 197)
+	if(code >= 170 && code <= 199)
 		return eSpecCat::TOWN;
 	if(code >= 200 && code <= 218)
 		return eSpecCat::RECT;

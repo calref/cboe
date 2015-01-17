@@ -6,7 +6,7 @@ Second part of message
 Unused
 Unused
 Unused
-0 - only living, 1 - any, 2 - whole party
+0 - only living, 1 - any, 2 - all, 3 - dead, 4 - inv. space
 Special if Cancel button pressed
 Unused
 0 - player choice, 1 - random, 11..16 - specific, 100+ monster
@@ -126,44 +126,44 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Affect Traits
+Unused
+Unused
+First part of message
+Second part of message
 Unused
 Unused
 Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Special to Jump To
---------------------
-Unused Node
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
+Which trait
+0 - give, 1 - take
 Unused
 Unused
 Unused
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Affect Action Points
+Unused
+Unused
+First part of message
+Second part of message
 Unused
 Unused
 Unused
+How many AP
+0 - give, 1 = take
+extra 1c
+extra 2a
+extra 2b
+extra 2c
+Special to Jump To
+--------------------
+Affect Name
 Unused
 Unused
+First part of message
+Second part of message
+New name
 Unused
 Unused
 Unused
@@ -396,5 +396,21 @@ Unused
 Unused
 Unused
 Unused
+Special to Jump To
+--------------------
+Create New PC
+Unused
+Unused
+First part of message
+Second part of message
+PC name
+Which graphic
+Special to call if no room
+PC health
+PC spell points
+PC race
+PC strength
+PC dexterity
+PC intelligence
 Special to Jump To
 --------------------

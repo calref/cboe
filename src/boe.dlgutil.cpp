@@ -653,7 +653,7 @@ void handle_talk_event(location p) {
 			strnum1 = -1;
 			return;
 		case 8:
-			if((get_pc = char_select_pc(1,0,"Train who?")) < 6) {
+			if((get_pc = char_select_pc(0,"Train who?")) < 6) {
 				strnum1 = -1;
 				spend_xp(get_pc,1, NULL);
 			}

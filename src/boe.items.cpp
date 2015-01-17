@@ -360,7 +360,7 @@ void give_thing(short pc_num, short item_num) {
 		add_string_to_buf("Give: Item is cursed.           ");
 	else {
 		item_store = univ.party[pc_num].items[item_num];
-		who_to = char_select_pc(1,1,"Give item to who?");
+		who_to = char_select_pc(3,"Give item to who?");
 		if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[pc_num].combat_pos,univ.party[who_to].combat_pos)) {
 			add_string_to_buf("Give: Must be adjacent.");
 			who_to = 6;
@@ -1117,8 +1117,9 @@ static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) 
 	return true;
 }
 
-//active_only;  // 0 - no  1 - yes   2 - disarm trap
-short char_select_pc(short active_only,short free_inv_only,const char *title) {
+// mode determines which PCs can be picked
+// 0 - only living pcs, 1 - any pc, 2 - only dead pcs, 3 - only living pcs with inventory space
+short char_select_pc(short mode,const char *title) {
 	short item_hit,i;
 	
 	make_cursor_sword();
@@ -1130,16 +1131,28 @@ short char_select_pc(short active_only,short free_inv_only,const char *title) {
 	
 	for(i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if(univ.party[i].main_status == eMainStatus::ABSENT ||
-		   (active_only && univ.party[i].main_status > eMainStatus::ALIVE) ||
-		   (free_inv_only == 1 && univ.party[i].has_space() == 24) || univ.party[i].main_status == eMainStatus::FLED) {
-			selectPc["pick" + n].hide();
+		bool can_pick = true;
+		if(univ.party[i].main_status == eMainStatus::ABSENT || univ.party[i].main_status == eMainStatus::FLED)
+			can_pick = false;
+		else switch(mode) {
+			case 3:
+				if(univ.party[i].has_space() == 24)
+					can_pick = false;
+			case 0:
+				if(univ.party[i].main_status != eMainStatus::ALIVE)
+					can_pick = false;
+				break;
+			case 2:
+				if(univ.party[i].main_status == eMainStatus::ALIVE)
+					can_pick = false;
+				break;
 		}
-		// TODO: Wouldn't this lead to blank name fields for non-active characters if those characters are allowed?
-		if(univ.party[i].main_status != eMainStatus::ABSENT) {
+		if(!can_pick) {
+			selectPc["pick" + n].hide();
+			selectPc["pc" + n].hide();
+		} else {
 			selectPc["pc" + n].setText(univ.party[i].name);
 		}
-		else selectPc["pc" + n].hide();
 	}
 	
 	selectPc.run();
@@ -1148,9 +1161,6 @@ short char_select_pc(short active_only,short free_inv_only,const char *title) {
 	return item_hit;
 }
 
-//active_only;  // 0 - no  1 - yes   2 - disarm trap
-short select_pc(short active_only,short free_inv_only) {
-	if(active_only == 2)
-		return char_select_pc(active_only,free_inv_only,"Trap! Who will disarm?");
-	else return char_select_pc(active_only,free_inv_only,"Select a character:");
+short select_pc(short mode) {
+	return char_select_pc(mode,"Select a character:");
 }

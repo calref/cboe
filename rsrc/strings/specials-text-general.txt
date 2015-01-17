@@ -231,7 +231,7 @@ Unused
 Unused
 Unused
 Which sound
-Unused
+0 - wait for sound to finish, 1 - don't wait
 Unused
 Unused
 Unused
@@ -584,6 +584,118 @@ Unused
 Unused
 X coordinate of space
 Y coordinate of space
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Clear String Buffer
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Append String to Buffer
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+String to append
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Append Number to Buffer
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Number to append
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Append Monster/PC Name to Buffer
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Monster type, or 0 to used selected PC
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Append Item Name to Buffer
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Item type
+0 - unidentified, 1 - full identified name
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Append Terrain Name to Buffer
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Terrain type
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Pause
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+How long (in milliseconds)
+Unused
 Unused
 Unused
 Unused

@@ -417,8 +417,8 @@ Special to Jump To
 Change Lighting
 Unused
 Unused
-Unused
-Unused
+First part of message
+Second part of message
 Unused
 Unused
 Unused
@@ -433,13 +433,45 @@ Special to Jump To
 Set Monster Attitude
 Unused
 Unused
-Unused
-Unused
+First part of message
+Second part of message
 Unused
 Unused
 Unused
 Which monster
 New attitude
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Center View on Space
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X coordinate of space (if -1, center on party)
+Y coordinate of space
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Lift Fog
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+1 - lift fog, 0 - put back
+Unused
 Unused
 Unused
 Unused

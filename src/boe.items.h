@@ -41,5 +41,5 @@ void refresh_store_items();
 std::string get_text_response(std::string prompt = "", pic_num_t pic = 16);
 short get_num_response(short min, short max, std::string prompt);
 
-short char_select_pc(short active_only,short free_inv_only,const char *title);
-short select_pc(short active_only,short free_inv_only);
+short char_select_pc(short mode,const char *title);
+short select_pc(short mode);

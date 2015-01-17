@@ -14,13 +14,13 @@ Right of rectangle
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Set Explored
 Unused
 Unused
+First part of message
+Second part of message
 Unused
-Unused
-Unused
-Unused
+0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle
 Left of rectangle

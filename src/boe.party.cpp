@@ -703,9 +703,9 @@ short check_party_stat(eSkill which_stat, short mode) {
 			num_pcs++;
 			if(mode < 2)
 				total += check_party_stat_get(i,which_stat);
-			else if(mode == 2)
-				total = max(check_party_stat_get(i,which_stat), total);
 			else if(mode == 3)
+				total = max(check_party_stat_get(i,which_stat), total);
+			else if(mode == 2)
 				total = min(check_party_stat_get(i,which_stat), total);
 		}
 	
@@ -2343,7 +2343,7 @@ void do_alchemy() {
 		300,500,175,250,500
 	};
 	
-	pc_num = select_pc(1,0);
+	pc_num = select_pc(0);
 	if(pc_num == 6)
 		return;
 	
