@@ -190,15 +190,15 @@ void cMonster::addAbil(eMonstAbilTemplate what, int param) {
 			break;
 		case eMonstAbilTemplate::BREATH_FIRE:
 			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::BREATH, 13, param, 8, 375};
-			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::UNBLOCKABLE;
+			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::FIRE;
 			break;
 		case eMonstAbilTemplate::BREATH_FROST:
 			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::BREATH, 6, param, 8, 375};
-			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::UNBLOCKABLE;
+			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::COLD;
 			break;
 		case eMonstAbilTemplate::BREATH_ELECTRICITY:
 			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::BREATH, 8, param, 8, 375};
-			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::UNBLOCKABLE;
+			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::MAGIC;
 			break;
 		case eMonstAbilTemplate::BREATH_DARKNESS:
 			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::BREATH, 8, param, 8, 375};
@@ -599,7 +599,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 				case eMonstAbil::STUN: sout << "Stunning"; break;
 				case eMonstAbil::PETRIFY: sout << "Petrifying"; break;
 				case eMonstAbil::DRAIN_SP: sout << "Spell point drain"; break;
-				case eMonstAbil::DRAIN_XP: sout << "Experience drain"; break;
+				case eMonstAbil::DRAIN_XP: sout << "Draining"; break;
 				case eMonstAbil::KILL: sout << "Death"; break;
 				case eMonstAbil::STEAL_FOOD: sout << "Steals food"; break;
 				case eMonstAbil::STEAL_GOLD: sout << "Steals gold!"; break;
@@ -618,7 +618,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 					break;
 				case eMonstAbil::DAMAGE:
 					switch(gen.dmg) {
-						case eDamageType::FIRE: sout << "Heat"; break;
+						case eDamageType::FIRE: sout << "Fiery"; break;
 						case eDamageType::COLD: sout << "Icy"; break;
 						case eDamageType::MAGIC: sout << "Shock"; break;
 						case eDamageType::UNBLOCKABLE: sout << "Wounding"; break;
