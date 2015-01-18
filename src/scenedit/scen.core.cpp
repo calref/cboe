@@ -1704,6 +1704,8 @@ static bool check_scenario_timer_time(cDialog& me, std::string id, bool losing) 
 }
 
 static bool edit_scenario_events_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+	// item_hit is of the form editN; we need an ID of the form nodeN
+	item_hit.replace(0, 4, "node");
 	short spec = me[item_hit].getTextAsNum();
 	if(spec < 0 || spec > 255) {
 		spec = get_fresh_spec(0);
