@@ -120,7 +120,7 @@ void cPict::setPict(pic_num_t num, ePicType type){
 			picType += PIC_PARTY;
 		} else {
 			if(picType != PIC_CUSTOM_TER_MAP)
-				picNum -= 1000;
+				picNum %= 1000;
 			picType += PIC_CUSTOM;
 		}
 	}
@@ -584,7 +584,6 @@ void cPict::draw(){
 }
 
 void cPict::drawPresetTer(short num, rectangle to_rect){
-	std::cout << "Getting terrain icon from sheet " << num / 50 << ".\n";
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_TER, num / 50);
 	num = num % 50;
 	rectangle from_rect = calc_rect(num % 10, num / 10);
@@ -596,7 +595,6 @@ void cPict::drawPresetTer(short num, rectangle to_rect){
 void cPict::drawPresetTerAnim(short num, rectangle to_rect){
 	rectangle from_rect = calc_rect(4 * (num / 5) + animFrame % 4, num % 5);
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_TER_ANIM);
-	std::cout << "Getting animated terrain graphic " << num << " from sheet 20\n";
 	if(to_rect.right - to_rect.left > 28) {
 		to_rect.inset(4,0);
 		to_rect.right = to_rect.left + 28;
@@ -832,7 +830,6 @@ void cPict::drawStatusIcon(short num, rectangle to_rect){
 }
 
 void cPict::drawCustomTer(short num, rectangle to_rect){
-	std::cout << "Drawing graphic " << num << " as a custom terrain pic.\n";
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	rectangle from_rect;
@@ -842,7 +839,6 @@ void cPict::drawCustomTer(short num, rectangle to_rect){
 }
 
 void cPict::drawCustomTerAnim(short num, rectangle to_rect){
-	std::cout << "Drawing graphic " << num << " as a custom animated terrain pic.\n";
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	num += animFrame % 4;
@@ -855,7 +851,6 @@ void cPict::drawCustomTerAnim(short num, rectangle to_rect){
 void cPict::drawCustomMonstSm(short num, rectangle to_rect){
 	static const short adj[4] = {0, 2, 1, 3};
 	num += adj[animFrame % 4];
-	std::cout << "Drawing graphic " << num << " as a custom space pic.\n";
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
@@ -976,7 +971,6 @@ void cPict::drawCustomTalk(short num, rectangle to_rect){
 }
 
 void cPict::drawCustomItem(short num, rectangle to_rect){
-	std::cout << "Drawing graphic " << num << " as a custom space pic." << std::endl;
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	rectangle from_rect;
@@ -1013,7 +1007,6 @@ void cPict::drawCustomTerMap(short num, rectangle to_rect){
 }
 
 void cPict::drawPartyMonstSm(short num, rectangle to_rect){
-	std::cout << "Drawing graphic " << num << " as a custom space pic.\n";
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	sf::Texture* from_gw;
@@ -1093,7 +1086,6 @@ void cPict::drawPartyScen(short num, rectangle to_rect){
 }
 
 void cPict::drawPartyItem(short num, rectangle to_rect){
-	std::cout << "Drawing graphic " << num << " as a custom space pic.\n";
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	sf::Texture* from_gw;
@@ -1105,7 +1097,6 @@ void cPict::drawPartyItem(short num, rectangle to_rect){
 }
 
 void cPict::drawPartyPc(short num, rectangle to_rect){
-	std::cout << "Drawing graphic " << num << " as a custom space pic.\n";
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	sf::Texture* from_gw;

@@ -2,6 +2,7 @@
 #include <stack>
 #include <set>
 #include <map>
+#include <numeric>
 #include <boost/lexical_cast.hpp>
 #include "scen.global.h"
 #include "classes.h"
@@ -54,19 +55,27 @@ bool cre(short val,short min,short max,std::string text1,std::string text2,cDial
 // TODO: I have two functions that do this. (The other one is pick_picture.)
 pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 	int i = 0;
-	std::vector<std::pair<pic_num_t,ePicType>> pics;
+	std::vector<pic_num_t> all_pics;
+	size_t total_pics = 0;
 	cPictChoice* pic_dlg = nullptr;
 	switch(g_type) {
-		case PIC_TER: // TODO: Increase upper limit to allow picking of the added graphics
-			pic_dlg = new cPictChoice(0, 252, PIC_TER, parent);
-			break;
-		case PIC_TER_ANIM: // TODO: Increase to allow picking of the added graphics
-			pic_dlg = new cPictChoice(0, 13, PIC_TER_ANIM, parent);
-			break;
-		case PIC_MONST:
-		case PIC_MONST_WIDE:
-		case PIC_MONST_TALL:
-		case PIC_MONST_LG:
+		case PIC_TER: total_pics = 859; break;
+		case PIC_TER_ANIM: total_pics = 20; break;
+		case PIC_DLOG: total_pics = 44; break;
+		case PIC_TALK: total_pics = 84; break;
+		case PIC_SCEN: total_pics = 30; break;
+		case PIC_ITEM: total_pics = 123; break;
+		case PIC_PC: total_pics = 36; break;
+		case PIC_FIELD: all_pics = field_pics; break;
+		case PIC_BOOM: all_pics = boom_pics; break;
+		case PIC_DLOG_LG: all_pics = lgdlog_pics; break;
+		case PIC_MISSILE: total_pics = 16; break;
+		case PIC_STATUS: total_pics = 27; break;
+		case PIC_SCEN_LG: total_pics = 4; break;
+		case PIC_TER_MAP: total_pics = 980; break;
+		case PIC_MONST: case PIC_MONST_WIDE:
+		case PIC_MONST_TALL: case PIC_MONST_LG:
+			std::vector<std::pair<pic_num_t,ePicType>> pics;
 			for(m_pic_index_t m_pic : m_pic_index) {
 				// TODO: Put the added monster graphics in m_pic_index to allow picking them
 				ePicType type = PIC_MONST;
@@ -74,64 +83,45 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 				if(m_pic.y == 2) type += PIC_TALL;
 				pics.push_back({i++, type});
 			}
+			for(size_t i = 0; i < scenario.custom_graphics.size(); i++) {
+				if(scenario.custom_graphics[i] == PIC_MONST)
+					pics.push_back({1000 + i, PIC_CUSTOM_MONST});
+				else if(scenario.custom_graphics[i] == PIC_MONST_WIDE)
+					pics.push_back({2000 + i, PIC_CUSTOM_MONST_WIDE});
+				else if(scenario.custom_graphics[i] == PIC_MONST_TALL)
+					pics.push_back({3000 + i, PIC_CUSTOM_MONST_TALL});
+				else if(scenario.custom_graphics[i] == PIC_MONST_LG)
+					pics.push_back({4000 + i, PIC_CUSTOM_MONST_LG});
+				if(cur_choice == pics.back().first)
+					cur_choice = pics.size() - 1;
+			}
 			pic_dlg = new cPictChoice(pics, parent);
 			break;
-		case PIC_DLOG: // TODO: Increase upper limit to allow picking of the added graphics
-			pic_dlg = new cPictChoice(0, 31, PIC_DLOG, parent);
-			break;
-		case PIC_TALK:
-			pic_dlg = new cPictChoice(0, 83, PIC_TALK, parent);
-			break;
-		case PIC_SCEN:
-			pic_dlg = new cPictChoice(0, 29, PIC_SCEN, parent);
-			break;
-		case PIC_ITEM:
-			pic_dlg = new cPictChoice(0, 122, PIC_ITEM, parent);
-			break;
-		case PIC_PC:
-			pic_dlg = new cPictChoice(0, 35, PIC_PC, parent);
-			break;
-		case PIC_FIELD:
-			pic_dlg = new cPictChoice(field_pics, PIC_FIELD, parent);
-			break;
-		case PIC_BOOM:
-			pic_dlg = new cPictChoice(boom_pics, PIC_BOOM, parent);
-			break;
-		case PIC_DLOG_LG:
-			pic_dlg = new cPictChoice(lgdlog_pics, PIC_DLOG_LG, parent);
-			break;
-		case PIC_FULL:
-			// TODO: Should this be handled at all?
-			break;
-		case PIC_MISSILE:
-			pic_dlg = new cPictChoice(0, 15, PIC_MISSILE, parent);
-			break;
-		case PIC_STATUS:
-			pic_dlg = new cPictChoice(0, 17, PIC_STATUS, parent);
-			break;
-		case PIC_SCEN_LG:
-			pic_dlg = new cPictChoice(0, 3, PIC_SCEN_LG, parent);
-			break;
-		case PIC_TER_MAP:
-			pic_dlg = new cPictChoice(0, 418, PIC_TER_MAP, parent);
-			break;
-		default: // Custom or party; assume custom, since this is the scenario editor and the party sheet isn't available
-			if(g_type & PIC_PARTY) break;
-			ePicType g_base_type = g_type - PIC_CUSTOM;
-			pic_num_t totalPics = spec_scen_g.count();
-			pic_num_t last;
-			if(g_base_type == PIC_DLOG || g_base_type == PIC_TALK || g_base_type == PIC_SCEN)
-				last = totalPics - 2;
-			else if(g_base_type == PIC_TER_ANIM || g_base_type == PIC_MONST || g_base_type == PIC_PC || g_base_type == PIC_MISSILE)
-				last = totalPics - 4;
-			else if(g_base_type==PIC_DLOG_LG || g_base_type==PIC_SCEN_LG || g_base_type==PIC_MONST_WIDE || g_base_type==PIC_MONST_TALL)
-				last = totalPics - 8;
-			else if(g_base_type == PIC_MONST_LG) last = totalPics - 16;
-			else if(g_base_type == PIC_TER_MAP) last = totalPics * 6 - 1; // TODO: Check this formula
-			else last = totalPics = 1;
-			pic_dlg = new cPictChoice(0, last, g_type, parent);
 	}
-	if(!pic_dlg) return cur_choice;
+	if(!pic_dlg) {
+		if(all_pics.size());
+		else if(total_pics > 0) {
+			all_pics.resize(total_pics);
+			std::iota(all_pics.begin(), all_pics.end(), 0);
+		} else return cur_choice;
+		// Now add the custom pics
+		for(size_t i = 0; i < scenario.custom_graphics.size(); i++) {
+			if(scenario.custom_graphics[i] == g_type) {
+				if(g_type == PIC_TER_MAP) {
+					for(int j = 1; j <= 6; j++)
+						all_pics.push_back(j * 1000 + i);
+				} else if(g_type == PIC_TER_ANIM)
+					all_pics.push_back(2000 + i);
+				else all_pics.push_back(1000 + i);
+			}
+		}
+		if(cur_choice >= 1000) {
+			auto selected = std::find(all_pics.begin(), all_pics.end(), cur_choice);
+			if(selected == all_pics.end()) cur_choice = -1;
+			else cur_choice = selected - all_pics.begin();
+		}
+		pic_dlg = new cPictChoice(all_pics, g_type, parent);
+	}
 	bool made_choice = pic_dlg->show(cur_choice);
 	pic_num_t item_hit = pic_dlg->getPicChosen();
 	delete pic_dlg;

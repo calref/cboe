@@ -158,6 +158,21 @@
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="last-town" type="xs:integer"/>
+				<xs:element name="graphics" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="pic" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:integer">
+											<xs:attribute name="index" type="xs:integer"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="storage" minOccurs="0" maxOccurs="10">
 					<xs:complexType>
 						<xs:sequence>
@@ -196,14 +211,14 @@
 				<xs:element name="strings">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="string" type="xs:string" maxOccurs="unbounded"/>
+							<xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="journal">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="string" type="xs:string" maxOccurs="unbounded"/>
+							<xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

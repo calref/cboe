@@ -66,6 +66,7 @@
 #define IDM_EDIT_PASTE                  160
 #define IDM_EDIT_DELETE                 161
 #define IDM_EDIT_SELECT                 162
+#define IDM_SCEN_CUSTOM_PICS            163
 
 // Next default values for new objects
 // 
@@ -74,6 +75,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        103
 #define _APS_NEXT_COMMAND_VALUE         40014
 #define _APS_NEXT_CONTROL_VALUE         1001
-#define _APS_NEXT_SYMED_VALUE           163
+#define _APS_NEXT_SYMED_VALUE           164
 #endif
 #endif

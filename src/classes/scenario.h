@@ -58,6 +58,7 @@ public:
 	short store_item_towns[3];
 	cSpecItem special_items[50];
 	short rating,uses_custom_graphics;
+	std::vector<ePicType> custom_graphics;
 	std::array<cMonster,256> scen_monsters;
 	cVehicle boats[30];
 	cVehicle horses[30];

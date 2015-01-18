@@ -11,6 +11,7 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 #include <functional>
 #include <boost/filesystem/path.hpp>
 #include <SFML/Graphics.hpp>
@@ -138,7 +139,7 @@ short can_see(location p1,location p2,std::function<short(short,short)> get_obsc
 std::string get_str(std::string list, short j);
 
 #ifndef GRAPHTOOL_CPP
-extern m_pic_index_t m_pic_index[200];
+extern const std::vector<m_pic_index_t> m_pic_index;
 extern tessel_ref_t bg[];
 #endif
 

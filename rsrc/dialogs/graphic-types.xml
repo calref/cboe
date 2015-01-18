@@ -1,0 +1,232 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
+<dialog skin='light' defbtn='okay'>
+	<pict type='dlog' num='16' top='6' left='6'/>
+	<text size='large' top='18' left='50' width='250' height='17'>Classify Custom Graphics:</text>
+	<text top='18' left='372' width='80' height='16'>First Graphic:</text>
+	<text name='num0' top='18' left='462' width='40' height='16'/>
+	<text name='num1' top='48' left='12' width='28' height='16'/>
+	<text name='num2' top='48' left='48' width='28' height='16'/>
+	<text name='num3' top='48' left='84' width='28' height='16'/>
+	<text name='num4' top='48' left='120' width='28' height='16'/>
+	<text name='num5' top='48' left='156' width='28' height='16'/>
+	<text name='num6' top='48' left='192' width='28' height='16'/>
+	<text name='num7' top='48' left='228' width='28' height='16'/>
+	<text name='num8' top='48' left='264' width='28' height='16'/>
+	<text name='num9' top='48' left='300' width='28' height='16'/>
+	<text name='num10' top='48' left='336' width='28' height='16'/>
+	<pict name='pic1' type='ter' num='0' top='68' left='12'/>
+	<pict name='pic2' type='ter' num='1' top='68' left='48'/>
+	<pict name='pic3' type='ter' num='2' top='68' left='84'/>
+	<pict name='pic4' type='ter' num='3' top='68' left='120'/>
+	<pict name='pic5' type='ter' num='4' top='68' left='156'/>
+	<pict name='pic6' type='ter' num='5' top='68' left='192'/>
+	<pict name='pic7' type='ter' num='6' top='68' left='228'/>
+	<pict name='pic8' type='ter' num='7' top='68' left='264'/>
+	<pict name='pic9' type='ter' num='8' top='68' left='300'/>
+	<pict name='pic10' type='ter' num='9' top='68' left='336'/>
+	<group name='type1'>
+		<led name='ter1' top='110' left='20'/>
+		<led name='anim1' top='125' left='20'/>
+		<led name='map1' top='140' left='20'/>
+		<led name='monst-sm1' top='155' left='20'/>
+		<led name='monst-wide1' top='170' left='20'/>
+		<led name='monst-tall1' top='185' left='20'/>
+		<led name='monst-lg1' top='200' left='20'/>
+		<led name='dlog1' top='215' left='20'/>
+		<led name='dlog-lg1' top='230' left='20'/>
+		<led name='talk1' top='245' left='20'/>
+		<led name='item1' top='260' left='20'/>
+		<led name='boom1' top='275' left='20'/>
+		<led name='miss1' top='290' left='20'/>
+		<led name='none1' top='305' left='20'/>
+	</group>
+	<group name='type2'>
+		<led name='ter2' top='110' left='56'/>
+		<led name='anim2' top='125' left='56'/>
+		<led name='map2' top='140' left='56'/>
+		<led name='monst-sm2' top='155' left='56'/>
+		<led name='monst-wide2' top='170' left='56'/>
+		<led name='monst-tall2' top='185' left='56'/>
+		<led name='monst-lg2' top='200' left='56'/>
+		<led name='dlog2' top='215' left='56'/>
+		<led name='dlog-lg2' top='230' left='56'/>
+		<led name='talk2' top='245' left='56'/>
+		<led name='item2' top='260' left='56'/>
+		<led name='boom2' top='275' left='56'/>
+		<led name='miss2' top='290' left='56'/>
+		<led name='none2' top='305' left='56'/>
+	</group>
+	<group name='type3'>
+		<led name='ter3' top='110' left='92'/>
+		<led name='anim3' top='125' left='92'/>
+		<led name='map3' top='140' left='92'/>
+		<led name='monst-sm3' top='155' left='92'/>
+		<led name='monst-wide3' top='170' left='92'/>
+		<led name='monst-tall3' top='185' left='92'/>
+		<led name='monst-lg3' top='200' left='92'/>
+		<led name='dlog3' top='215' left='92'/>
+		<led name='dlog-lg3' top='230' left='92'/>
+		<led name='talk3' top='245' left='92'/>
+		<led name='item3' top='260' left='92'/>
+		<led name='boom3' top='275' left='92'/>
+		<led name='miss3' top='290' left='92'/>
+		<led name='none3' top='305' left='92'/>
+	</group>
+	<group name='type4'>
+		<led name='ter4' top='110' left='128'/>
+		<led name='anim4' top='125' left='128'/>
+		<led name='map4' top='140' left='128'/>
+		<led name='monst-sm4' top='155' left='128'/>
+		<led name='monst-wide4' top='170' left='128'/>
+		<led name='monst-tall4' top='185' left='128'/>
+		<led name='monst-lg4' top='200' left='128'/>
+		<led name='dlog4' top='215' left='128'/>
+		<led name='dlog-lg4' top='230' left='128'/>
+		<led name='talk4' top='245' left='128'/>
+		<led name='item4' top='260' left='128'/>
+		<led name='boom4' top='275' left='128'/>
+		<led name='miss4' top='290' left='128'/>
+		<led name='none4' top='305' left='128'/>
+	</group>
+	<group name='type5'>
+		<led name='ter5' top='110' left='164'/>
+		<led name='anim5' top='125' left='164'/>
+		<led name='map5' top='140' left='164'/>
+		<led name='monst-sm5' top='155' left='164'/>
+		<led name='monst-wide5' top='170' left='164'/>
+		<led name='monst-tall5' top='185' left='164'/>
+		<led name='monst-lg5' top='200' left='164'/>
+		<led name='dlog5' top='215' left='164'/>
+		<led name='dlog-lg5' top='230' left='164'/>
+		<led name='talk5' top='245' left='164'/>
+		<led name='item5' top='260' left='164'/>
+		<led name='boom5' top='275' left='164'/>
+		<led name='miss5' top='290' left='164'/>
+		<led name='none5' top='305' left='164'/>
+	</group>
+	<group name='type6'>
+		<led name='ter6' top='110' left='200'/>
+		<led name='anim6' top='125' left='200'/>
+		<led name='map6' top='140' left='200'/>
+		<led name='monst-sm6' top='155' left='200'/>
+		<led name='monst-wide6' top='170' left='200'/>
+		<led name='monst-tall6' top='185' left='200'/>
+		<led name='monst-lg6' top='200' left='200'/>
+		<led name='dlog6' top='215' left='200'/>
+		<led name='dlog-lg6' top='230' left='200'/>
+		<led name='talk6' top='245' left='200'/>
+		<led name='item6' top='260' left='200'/>
+		<led name='boom6' top='275' left='200'/>
+		<led name='miss6' top='290' left='200'/>
+		<led name='none6' top='305' left='200'/>
+	</group>
+	<group name='type7'>
+		<led name='ter7' top='110' left='236'/>
+		<led name='anim7' top='125' left='236'/>
+		<led name='map7' top='140' left='236'/>
+		<led name='monst-sm7' top='155' left='236'/>
+		<led name='monst-wide7' top='170' left='236'/>
+		<led name='monst-tall7' top='185' left='236'/>
+		<led name='monst-lg7' top='200' left='236'/>
+		<led name='dlog7' top='215' left='236'/>
+		<led name='dlog-lg7' top='230' left='236'/>
+		<led name='talk7' top='245' left='236'/>
+		<led name='item7' top='260' left='236'/>
+		<led name='boom7' top='275' left='236'/>
+		<led name='miss7' top='290' left='236'/>
+		<led name='none7' top='305' left='236'/>
+	</group>
+	<group name='type8'>
+		<led name='ter8' top='110' left='272'/>
+		<led name='anim8' top='125' left='272'/>
+		<led name='map8' top='140' left='272'/>
+		<led name='monst-sm8' top='155' left='272'/>
+		<led name='monst-wide8' top='170' left='272'/>
+		<led name='monst-tall8' top='185' left='272'/>
+		<led name='monst-lg8' top='200' left='272'/>
+		<led name='dlog8' top='215' left='272'/>
+		<led name='dlog-lg8' top='230' left='272'/>
+		<led name='talk8' top='245' left='272'/>
+		<led name='item8' top='260' left='272'/>
+		<led name='boom8' top='275' left='272'/>
+		<led name='miss8' top='290' left='272'/>
+		<led name='none8' top='305' left='272'/>
+	</group>
+	<group name='type9'>
+		<led name='ter9' top='110' left='308'/>
+		<led name='anim9' top='125' left='308'/>
+		<led name='map9' top='140' left='308'/>
+		<led name='monst-sm9' top='155' left='308'/>
+		<led name='monst-wide9' top='170' left='308'/>
+		<led name='monst-tall9' top='185' left='308'/>
+		<led name='monst-lg9' top='200' left='308'/>
+		<led name='dlog9' top='215' left='308'/>
+		<led name='dlog-lg9' top='230' left='308'/>
+		<led name='talk9' top='245' left='308'/>
+		<led name='item9' top='260' left='308'/>
+		<led name='boom9' top='275' left='308'/>
+		<led name='miss9' top='290' left='308'/>
+		<led name='none9' top='305' left='308'/>
+	</group>
+	<group name='type10'>
+		<led name='ter10' top='110' left='344'/>
+		<led name='anim10' top='125' left='344'/>
+		<led name='map10' top='140' left='344'/>
+		<led name='monst-sm10' top='155' left='344'/>
+		<led name='monst-wide10' top='170' left='344'/>
+		<led name='monst-tall10' top='185' left='344'/>
+		<led name='monst-lg10' top='200' left='344'/>
+		<led name='dlog10' top='215' left='344'/>
+		<led name='dlog-lg10' top='230' left='344'/>
+		<led name='talk10' top='245' left='344'/>
+		<led name='item10' top='260' left='344'/>
+		<led name='boom10' top='275' left='344'/>
+		<led name='miss10' top='290' left='344'/>
+		<led name='none10' top='305' left='344'/>
+	</group>
+	<text framed='true' left='20' top='110' width='492' height='12'/>
+	<text framed='true' left='20' top='125' width='492' height='12'/>
+	<text framed='true' left='20' top='140' width='492' height='12'/>
+	<text framed='true' left='20' top='155' width='492' height='12'/>
+	<text framed='true' left='20' top='170' width='492' height='12'/>
+	<text framed='true' left='20' top='185' width='492' height='12'/>
+	<text framed='true' left='20' top='200' width='492' height='12'/>
+	<text framed='true' left='20' top='215' width='492' height='12'/>
+	<text framed='true' left='20' top='230' width='492' height='12'/>
+	<text framed='true' left='20' top='245' width='492' height='12'/>
+	<text framed='true' left='20' top='260' width='492' height='12'/>
+	<text framed='true' left='20' top='275' width='492' height='12'/>
+	<text framed='true' left='20' top='290' width='492' height='12'/>
+	<text framed='true' left='20' top='305' width='492' height='12'/>
+	<text top='108' left='372' width='140' height='16'>Terrain (non-animated)</text>
+	<text top='123' left='372' width='140' height='16'>Terrain (animated)</text>
+	<text top='138' left='372' width='140' height='16'>Terrain (6 map icons)</text>
+	<text top='153' left='372' width='140' height='16'>Monster (1x1 small)</text>
+	<text top='168' left='372' width='140' height='16'>Monster (2x1 wide)</text>
+	<text top='183' left='372' width='140' height='16'>Monster (1x2 tall)</text>
+	<text top='198' left='372' width='140' height='16'>Monster (2x2 large)</text>
+	<text top='213' left='372' width='140' height='16'>Dialog Icon (36x36 split)</text>
+	<text top='228' left='372' width='140' height='16'>Large Dialog Icon (72x72)</text>
+	<text top='243' left='372' width='140' height='16'>Talk Portrait (32x32 split)</text>
+	<text top='258' left='372' width='140' height='16'>Item</text>
+	<text top='273' left='372' width='140' height='16'>Boom (currently unused)</text>
+	<text top='288' left='372' width='140' height='16'>Missile</text>
+	<text top='303' left='372' width='140' height='16'>Part of another graphic</text>
+	<text top='326' left='20' width='500' height='140'>
+		You can use this dialog to let the scenario editor know how to interpret the contents of your
+		custom graphics sheets. Above you see a single line of one of your sheets. For each slot,
+		you can specify what type of graphic it is intended to represent; this information will be
+		used by the editor to offer that graphic in relevant contexts (for example, marking it as an
+		item graphic will cause the editor to include it in the list of item graphics to select).
+		This is solely for use by the editor and does not prevent you from using a graphic in more than
+		one way (for example, both as an item and as a monster); in that case, you would simply have
+		to enter the number manually. For graphics that take up more than one slot, mark only the
+		first slot as the required type; subsequent slots should instead be marked as "part of another graphic".
+	</text>
+	<button name='left' type='left' def-key='left' top='454' left='30'/>
+	<button name='right' type='right' def-key='right' top='454' left='95'/>
+	<button name='cancel' type='regular' def-key='esc' top='454' left='384'>Cancel</button>
+	<button name='okay' type='regular' top='454' left='449'>OK</button>
+</dialog>

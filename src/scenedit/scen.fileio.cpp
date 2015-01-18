@@ -170,6 +170,17 @@ void save_scenario(fs::path toFile) {
 		data.PushElement("default-ground", scenario.default_ground);
 		data.PushElement("last-out-section", scenario.last_out_edited);
 		data.PushElement("last-town", scenario.last_town_edited);
+		if(!scenario.custom_graphics.empty()) {
+			data.OpenElement("graphics");
+			for(size_t i = 0; i < scenario.custom_graphics.size(); i++) {
+				if(scenario.custom_graphics[i] == PIC_FULL) continue;
+				data.OpenElement("pic");
+				data.PushAttribute("index", i);
+				data.PushText(scenario.custom_graphics[i]);
+				data.CloseElement("pic");
+			}
+			data.CloseElement("graphics");
+		}
 		for(int i = 0; i < 10; i++) {
 			if(scenario.storage_shortcuts[i].ter_type >= 0) {
 				cScenario::cItemStorage shortcut = scenario.storage_shortcuts[i];

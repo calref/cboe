@@ -502,7 +502,7 @@ std::string get_str(std::string list, short j){
 	return strings[j - 1];
 }
 
-m_pic_index_t m_pic_index[] = {
+extern const std::vector<m_pic_index_t> m_pic_index = {
 	{1, 1, 1},
 	{2, 1, 1},
 	{3, 1, 1},
@@ -702,27 +702,6 @@ m_pic_index_t m_pic_index[] = {
 	{203, 1, 1},
 	//180
 	{204, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	//190
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	{0, 1, 1},
-	//200
 };
 
 // TODO: Put these classes in a header?

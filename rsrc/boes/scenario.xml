@@ -138,5 +138,12 @@
     <last-out-section x="0" y="0"/>
     <!-- Last town edited -->
     <last-town>0</last-town>
+    <!-- This is a way to specify what type of graphics are in the custom graphics sheet
+    For example, this states that the fourth graphic is an item. -->
+    <graphics><pic index='3'>7</pic></graphics>
   </editor>
+  <!-- All the scenario strings go here -->
+  <strings/>
+  <!-- And the journal strings here -->
+  <journal/>
 </scenario>

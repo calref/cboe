@@ -1,6 +1,8 @@
+
 #include <cstdio>
 #include <cstring>
 #include <functional>
+#include <numeric>
 #include <boost/lexical_cast.hpp>
 #include "scen.global.h"
 #include "classes.h"
@@ -26,6 +28,7 @@ extern cOutdoors* current_terrain;
 extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
+extern cCustomGraphics spec_scen_g;
 extern cSpecial null_spec_node;
 extern cSpeech null_talk_node;
 extern location cur_out;
@@ -130,12 +133,11 @@ bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_va
 }
 
 // TODO: I have two functions that do this. (The other one is choose_graphic.)
-static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::string pic_fld, pic_num_t modifier){
+static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld, std::string pic_fld){
 	pic_num_t cur_sel = 0;
 	if(result_fld != ""){
 		cControl& fld_ctrl = parent[result_fld];
 		cur_sel = fld_ctrl.getTextAsNum();
-		cur_sel -= modifier;
 	}else if(pic_fld != ""){
 		cPict& pic_ctrl = dynamic_cast<cPict&>(parent[pic_fld]);
 		if(pic_ctrl.getPicType() == type)
@@ -145,10 +147,12 @@ static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld,
 	if(pic != NO_PIC){
 		if(result_fld != ""){
 			cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);
-			fld_ctrl.setTextToNum(pic + modifier);
+			fld_ctrl.setTextToNum(pic);
 		}
 		if(pic_fld != ""){
 			cPict& pic_ctrl = dynamic_cast<cPict&>(parent[pic_fld]);
+			if(type == PIC_TER_ANIM && pic < 1000)
+				pic += 960;
 			pic_ctrl.setPict(pic,type);
 		}
 	}
@@ -326,8 +330,8 @@ short edit_ter_type(ter_num_t which_ter) {
 	cDialog ter_dlg("edit-terrain");
 	// Attach handlers
 	ter_dlg["pict"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,2999,"terrain graphic"));
-	ter_dlg["pickpict"].attachClickHandler(std::bind(pick_picture,PIC_TER,_1,"pict","graphic",0));
-	ter_dlg["pickanim"].attachClickHandler(std::bind(pick_picture,PIC_TER_ANIM,_1,"pict","graphic",960));
+	ter_dlg["pickpict"].attachClickHandler(std::bind(pick_picture,PIC_TER,_1,"pict","graphic"));
+	ter_dlg["pickanim"].attachClickHandler(std::bind(pick_picture,PIC_TER_ANIM,_1,"pict","graphic"));
 	ter_dlg["light"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,255,"light radius"));
 	ter_dlg["trans"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,65535,"\"transform to what?\""));
 	ter_dlg["ground"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,255,"ground type"));
@@ -349,7 +353,7 @@ short edit_ter_type(ter_num_t which_ter) {
 }
 
 static void put_monst_info_in_dlog(cDialog& me, cMonster& store_monst, mon_num_t which_monst) {
-	char str[256];
+	std::ostringstream strb;
 	
 	if(store_monst.picture_num < 1000)
 		dynamic_cast<cPict&>(me["icon"]).setPict(store_monst.picture_num,PIC_MONST);
@@ -372,10 +376,11 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& store_monst, mon_num_t
 	me["num"].setTextToNum(which_monst);
 	me["name"].setText(store_monst.m_name);
 	me["pic"].setTextToNum(store_monst.picture_num);
-	sprintf((char *) str,"Width = %d",store_monst.x_width);
-	me["w"].setText(str);
-	sprintf((char *) str,"Height = %d",store_monst.y_width);
-	me["h"].setText(str);
+	strb << "Width = " << int(store_monst.x_width);
+	me["w"].setText(strb.str());
+	strb.str("");
+	strb << "Height = " << int(store_monst.y_width);
+	me["h"].setText(strb.str());
 	me["level"].setTextToNum(store_monst.level);
 	me["health"].setTextToNum(store_monst.m_health);
 	me["armor"].setTextToNum(store_monst.armor);
@@ -416,33 +421,46 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& store_monst, mon_num_t
 
 static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& store_monst) {
 	if(!losing) return true;
+	static size_t max_preset = m_pic_index.size() - 1;
+	static const std::string error = "Non-customized monster pic must be from 0 to " + std::to_string(max_preset) + ".";
 	if(check_range(me, id, losing, 0, 4999, "Monster pic")) {
-		// later check pic num for error, and assign widths if custom
-		if(store_monst.picture_num >= 1000) {
-			if((store_monst.picture_num >= 1000) && (store_monst.picture_num < 2000)) {
+		pic_num_t pic = me[id].getTextAsNum();
+		store_monst.picture_num = pic;
+		cPict& icon = dynamic_cast<cPict&>(me["icon"]);
+		switch(pic / 1000) {
+			case 0:
+				if(cre(pic,0,max_preset,error,"",&me)) return false;
+				store_monst.x_width = m_pic_index[store_monst.picture_num].x;
+				store_monst.y_width = m_pic_index[store_monst.picture_num].y;
+				icon.setPict(pic, PIC_MONST);
+				break;
+			case 1:
 				store_monst.x_width = 1;
 				store_monst.y_width = 1;
-			}
-			if((store_monst.picture_num >= 2000) && (store_monst.picture_num < 3000)) {
+				icon.setPict(pic, PIC_MONST);
+				break;
+			case 2:
 				store_monst.x_width = 2;
 				store_monst.y_width = 1;
-			}
-			if((store_monst.picture_num >= 3000) && (store_monst.picture_num < 4000)) {
+				icon.setPict(pic, PIC_MONST_WIDE);
+				break;
+			case 3:
 				store_monst.x_width = 1;
 				store_monst.y_width = 2;
-			}
-			if((store_monst.picture_num >= 4000) && (store_monst.picture_num < 5000)) {
+				icon.setPict(pic, PIC_MONST_TALL);
+				break;
+			case 4:
 				store_monst.x_width = 2;
 				store_monst.y_width = 2;
-			}
+				icon.setPict(pic, PIC_MONST_LG);
+				break;
 		}
-		else {
-			// TODO: Update this with new value if more monster pictures are added later
-			if(cre(store_monst.picture_num,0,200,"Non-customized monster pic must be from 0 to 200.","",&me)) return false;
-			store_monst.x_width = m_pic_index[store_monst.picture_num].x;
-			store_monst.y_width = m_pic_index[store_monst.picture_num].y;
-			
-		}
+		std::ostringstream strb;
+		strb << "Width = " << int(store_monst.x_width);
+		me["w"].setText(strb.str());
+		strb.str("");
+		strb << "Height = " << int(store_monst.y_width);
+		me["h"].setText(strb.str());
 	}
 	return true;
 }
@@ -545,13 +563,19 @@ static bool check_monst_dice(cDialog& me, std::string fld, bool losing) {
 	return check_range(me, fld, losing, 1, 50, "attack damage per die");
 }
 
+static bool pick_monst_picture(cDialog& me) {
+	bool result = pick_picture(PIC_MONST, me, "pic", "icon");
+	me["pic"].triggerFocusHandler(me, "pic", true);
+	return result;
+}
+
 short edit_monst_type(short which_monst) {
 	using namespace std::placeholders;
 	cMonster store_monst = scenario.scen_monsters[which_monst];
 	
 	cDialog monst_dlg("edit-monster");
-	monst_dlg["pickicon"].attachClickHandler(std::bind(pick_picture,PIC_MONST,_1,"pic","icon",0));
-	monst_dlg["picktalk"].attachClickHandler(std::bind(pick_picture,PIC_TALK,_1,"talk","",0));
+	monst_dlg["pickicon"].attachClickHandler(std::bind(pick_monst_picture,_1));
+	monst_dlg["picktalk"].attachClickHandler(std::bind(pick_picture,PIC_TALK,_1,"talk",""));
 	monst_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &monst_dlg, false));
 	monst_dlg["pic"].attachFocusHandler(std::bind(check_monst_pic, _1, _2, _3, std::ref(store_monst)));
 	monst_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 40, "level"));
@@ -830,9 +854,9 @@ static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem
 		if(store_which_item > 399) store_which_item = 0;
 		store_item = scenario.scen_items[store_which_item];
 		put_item_info_in_dlog(me, store_item, store_which_item);
-	} else if(item_hit == "choospic") {
+	} else if(item_hit == "choosepic") {
 		if(!save_item_info(me, store_item, store_which_item)) return true;
-		i = pick_picture(PIC_ITEM, me, "picnum", "pic", 0);
+		i = pick_picture(PIC_ITEM, me, "picnum", "pic");
 		if(i < 0) return true;
 		store_item.graphic_num = i;
 	} else if(item_hit == "abils") {
@@ -1637,3 +1661,154 @@ void edit_scenario_events() {
 	evt_dlg.run();
 }
 
+static void fill_custom_pics_types(cDialog& me, std::vector<ePicType>& pics, pic_num_t first) {
+	pic_num_t last = first + 9;
+	if(last >= pics.size()) pics.resize(last + 1, PIC_FULL);
+	me["num0"].setTextToNum(first);
+	for(pic_num_t i = first; i <= last; i++) {
+		std::string id = std::to_string(i - first + 1);
+		cLedGroup& grp = dynamic_cast<cLedGroup&>(me["type" + id]);
+		cPict& pic = dynamic_cast<cPict&>(me["pic" + id]);
+		pic.setPict(i, PIC_CUSTOM_TER);
+		cControl& num = me["num" + id];
+		num.setTextToNum(1000 + i);
+		switch(pics[i]) {
+			case PIC_TER:
+				grp.setSelected("ter" + id);
+				break;
+			case PIC_TER_ANIM:
+				grp.setSelected("anim" + id);
+				num.setTextToNum(2000 + i);
+				break;
+			case PIC_TER_MAP:
+				grp.setSelected("map" + id);
+				break;
+			case PIC_MONST:
+				grp.setSelected("monst-sm" + id);
+				break;
+			case PIC_MONST_WIDE:
+				grp.setSelected("monst-wide" + id);
+				num.setTextToNum(2000 + i);
+				break;
+			case PIC_MONST_TALL:
+				grp.setSelected("monst-tall" + id);
+				num.setTextToNum(3000 + i);
+				break;
+			case PIC_MONST_LG:
+				grp.setSelected("monst-lg" + id);
+				num.setTextToNum(4000 + i);
+				break;
+			case PIC_DLOG:
+				grp.setSelected("dlog" + id);
+				break;
+			case PIC_DLOG_LG:
+				grp.setSelected("dlog-lg" + id);
+				break;
+			case PIC_TALK:
+				grp.setSelected("talk" + id);
+				pic.setPict(i, PIC_CUSTOM_TALK);
+				break;
+			case PIC_ITEM:
+				grp.setSelected("item" + id);
+				break;
+			case PIC_BOOM:
+				grp.setSelected("boom" + id);
+				break;
+			case PIC_MISSILE:
+				grp.setSelected("miss" + id);
+				break;
+			case PIC_FULL:
+				grp.setSelected("none" + id);
+				break;
+		}
+	}
+}
+
+static bool set_custom_pic_type(cDialog& me, std::string hit, std::vector<ePicType>& pics, pic_num_t first) {
+	hit = dynamic_cast<cLedGroup&>(me[hit]).getSelected();
+	size_t iNum = hit.find_last_not_of("0123456789");
+	std::string id = hit.substr(iNum + 1);
+	hit = hit.substr(0, iNum + 1);
+	pic_num_t pic = boost::lexical_cast<int>(id) + first - 1;
+	cControl& num = me["num" + id];
+	num.setTextToNum(1000 + pic);
+	if(hit == "ter") {
+		pics[pic] = PIC_TER;
+	} else if(hit == "anim") {
+		pics[pic] = PIC_TER_ANIM;
+		num.setTextToNum(2000 + pic);
+	} else if(hit == "map") {
+		pics[pic] = PIC_TER_MAP;
+	} else if(hit == "monst-sm") {
+		pics[pic] = PIC_MONST;
+	} else if(hit == "monst-wide") {
+		pics[pic] = PIC_MONST_WIDE;
+		num.setTextToNum(2000 + pic);
+	} else if(hit == "monst-tall") {
+		pics[pic] = PIC_MONST_TALL;
+		num.setTextToNum(3000 + pic);
+	} else if(hit == "monst-lg") {
+		pics[pic] = PIC_MONST_LG;
+		num.setTextToNum(4000 + pic);
+	} else if(hit == "dlog") {
+		pics[pic] = PIC_DLOG;
+	} else if(hit == "dlog-lg") {
+		pics[pic] = PIC_DLOG_LG;
+	} else if(hit == "talk") {
+		pics[pic] = PIC_TALK;
+	} else if(hit == "item") {
+		pics[pic] = PIC_ITEM;
+	} else if(hit == "boom") {
+		pics[pic] = PIC_BOOM;
+	} else if(hit == "miss") {
+		pics[pic] = PIC_MISSILE;
+	} else if(hit == "none") {
+		pics[pic] = PIC_FULL;
+	}
+	return true;
+}
+
+static bool save_pics_types(cDialog& me, const std::vector<ePicType>& pics) {
+	if(!me.toast(true)) return true;
+	scenario.custom_graphics = pics;
+	return true;
+}
+
+static bool change_pics_page(cDialog& me, std::string hit, std::vector<ePicType>& pics, pic_num_t& first) {
+	size_t num_pics = spec_scen_g.count();
+	if(hit == "left") {
+		if(first == 0) first = ((num_pics - 1) / 10) * 10;
+		else first -= 10;
+	} else if(hit == "right") {
+		if(first + 10 >= num_pics) first = 0;
+		else first += 10;
+	} else return true;
+	fill_custom_pics_types(me, pics, first);
+	return true;
+}
+
+void edit_custom_pics_types() {
+	if(spec_scen_g.count() == 0) {
+		giveError("You don't have any custom graphics to classify!");
+		return;
+	}
+	using namespace std::placeholders;
+	std::vector<ePicType> pics = scenario.custom_graphics;
+	pic_num_t first_pic = 0;
+	
+	cDialog pic_dlg("graphic-types");
+	for(int i = 0; i < 10; i++) {
+		std::string id = std::to_string(i + 1);
+		pic_dlg["type" + id].attachFocusHandler(std::bind(set_custom_pic_type, _1, _2, std::ref(pics), std::ref(first_pic)));
+	}
+	pic_dlg["okay"].attachClickHandler(std::bind(save_pics_types, _1, std::ref(pics)));
+	pic_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
+	pic_dlg.attachClickHandlers(std::bind(change_pics_page, _1, _2, std::ref(pics), std::ref(first_pic)), {"left", "right"});
+									   
+	fill_custom_pics_types(pic_dlg, pics, first_pic);
+	if(spec_scen_g.count() <= 10) {
+		pic_dlg["left"].hide();
+		pic_dlg["right"].hide();
+	}
+	pic_dlg.run();
+}
