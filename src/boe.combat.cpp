@@ -2416,7 +2416,10 @@ void monster_attack_pc(short who_att,short target) {
 									case eDamageType::DEMON: add_string_to_buf("  Unholy touch!"); break;
 								}
 								break;
-							case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
+							case eMonstAbil::STATUS2:
+								// STATUS2 is active only on attack #1; STATUS is active on all attacks
+								if(i > 0) continue;
+							case eMonstAbil::STATUS:
 								switch(abil.second.gen.stat) {
 									case eStatus::POISON: add_string_to_buf("  Poisonous!"); break;
 									case eStatus::DISEASE: add_string_to_buf("  Causes disease!"); break;
