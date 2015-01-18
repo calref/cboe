@@ -1252,11 +1252,9 @@ void draw_map(bool need_refresh) {
 	redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // Rectangle visible in view screen
 	
 	rectangle area_to_draw_from,area_to_draw_on = {29,47,269,287};
-	short small_adj = 0;
 	ter_num_t what_ter;
 	bool draw_surroundings = false,expl;
 	short total_size = 48; // if full redraw, use this to figure out everything
-	rectangle area_to_put_on_map_rect;
 	rectangle custom_from;
 	
 	draw_surroundings = true;
@@ -1303,17 +1301,14 @@ void draw_map(bool need_refresh) {
 	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
 		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
 		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)) ||
-		(((is_town()) || (is_combat())) && (univ.town->max_dim() != 48))) {
+		is_town() || is_combat()) {
 		area_to_draw_from = view_rect;
+		area_to_draw_from.width() = 40;
+		area_to_draw_from.height() = 40;
 		area_to_draw_from.left *= 6;
 		area_to_draw_from.right *= 6;
 		area_to_draw_from.top *= 6;
 		area_to_draw_from.bottom *= 6;
-	}
-	else {
-		area_to_draw_from = area_to_draw_on;
-		area_to_draw_from.offset(-area_to_draw_from.left,-area_to_draw_from.top);
-		small_adj = 0;
 	}
 	
 	if(is_combat())
@@ -1324,10 +1319,6 @@ void draw_map(bool need_refresh) {
 	
 	if((is_combat()) && (which_combat_type == 0)) {
 		title_string = "No map in combat.";
-		canMap = false;
-	}
-	else if((is_town()) && ((univ.town.num == -1) || (univ.town.num == -1))) {
-		title_string = "No map here.";
 		canMap = false;
 	}else if((is_town() && univ.town->defy_mapping)) {
 		title_string = "This place defies mapping.";
@@ -1349,14 +1340,11 @@ void draw_map(bool need_refresh) {
 			out_mode = true;
 		else out_mode = false;
 		
-		area_to_put_on_map_rect = redraw_rect;
-		area_to_put_on_map_rect.top = area_to_put_on_map_rect.left = 0;
-		area_to_put_on_map_rect.right = area_to_put_on_map_rect.bottom = total_size;
-		
-		for(where.x= area_to_put_on_map_rect.left; where.x < area_to_put_on_map_rect.right; where.x++)
-			for(where.y= area_to_put_on_map_rect.top; where.y < area_to_put_on_map_rect.bottom; where.y++) {
+		// TODO: It could be possible to draw the entire map here and then only refresh if a spot actually changes terrain type
+		for(where.x = redraw_rect.left; where.x < redraw_rect.right; where.x++)
+			for(where.y = redraw_rect.top; where.y < redraw_rect.bottom; where.y++) {
 				draw_rect = orig_draw_rect;
-				draw_rect.offset(6 * where.x + small_adj, 6 * where.y + small_adj);
+				draw_rect.offset(6 * where.x, 6 * where.y);
 				
 				if(out_mode)
 					what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
@@ -1444,13 +1432,6 @@ void draw_map(bool need_refresh) {
 	win_draw_string(mini_map, map_title_rect,title_string,eTextMode::WRAP,style);
 	win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",eTextMode::WRAP,style);
 	
-	/*SetPort( mini_map);
-	 GetDialogItem(mini_map, 1, &the_type, &the_handle, &the_rect);
-	 
-	 PenSize(3,3);
-	 InsetRect(&the_rect, -4, -4);
-	 FrameRoundRect(&the_rect, 16, 16);
-	 PenSize(1,1); */
 	if(canMap) {
 		rect_draw_some_item(map_gworld.getTexture(),area_to_draw_from,mini_map,area_to_draw_on);
 		
@@ -1462,14 +1443,10 @@ void draw_map(bool need_refresh) {
 						where = univ.town.monst[i].cur_loc;
 						if((is_explored(where.x,where.y)) &&
 							((where.x >= view_rect.left) && (where.x < view_rect.right)
-							 && (where.y >= view_rect.top) && (where.x < view_rect.bottom))){
+							 && where.y >= view_rect.top && where.y < view_rect.bottom)){
 								
 								draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 								draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-								//if((!is_out()) && (town_type == 2)) {
-								//	draw_rect.left += 48;
-								//	draw_rect.top += 48;
-								//}
 								draw_rect.right = draw_rect.left + 6;
 								draw_rect.bottom = draw_rect.top + 6;
 								
@@ -1482,10 +1459,6 @@ void draw_map(bool need_refresh) {
 				
 				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-				//if((!is_out()) && (town_type == 2)) {
-				//	draw_rect.left += 48;
-				//	draw_rect.top += 48;
-				//}
 				draw_rect.right = draw_rect.left + 6;
 				draw_rect.bottom = draw_rect.top + 6;
 				fill_rect(mini_map, draw_rect, sf::Color::Red);
