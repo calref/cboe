@@ -127,7 +127,7 @@ The `<led>` tag accepts the following attributes:
 Attributes** above.
 * `state` - Specifies the starting state of the LED. Can be one of
 `red`, `green`, or `off`; defaults to `off`.
-* `font`, `size`, `color`, `colour` - See **Common Attributes** above.
+* `font`, `size`, `color`, `colour` - See **Common Attributes** above. Note that, for an LED, omitting the size attribute gives a different result than any of the possible values.
 
 The `<group>` tag
 -----------------

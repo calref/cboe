@@ -493,6 +493,8 @@ void cTextField::restore(storage_t to) {
 	cControl::restore(to);
 	if(to.find("fld-ip") != to.end())
 		insertionPoint = boost::any_cast<int>(to["fld-ip"]);
+	else insertionPoint = getText().length();
 	if(to.find("fld-sp") != to.end())
 		selectionPoint = boost::any_cast<int>(to["fld-sp"]);
+	else selectionPoint = 0;
 }

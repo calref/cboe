@@ -225,11 +225,13 @@ bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 
 void cLed::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	if(prop == TXT_FONT) textFont = (eFont) val;
+	else if(prop == TXT_SIZE) textSize = val;
 	else throw xUnsupportedProp(prop);
 }
 
 short cLed::getFormat(eFormat prop) throw(xUnsupportedProp){
 	if(prop == TXT_FONT) return textFont;
+	else if(prop == TXT_SIZE) return textSize;
 	else throw xUnsupportedProp(prop);
 }
 
@@ -240,8 +242,8 @@ void cLed::draw(){
 	
 	if(visible){
 		TextStyle style;
-		style.pointSize = 9;
-		style.lineHeight = 8;
+		style.pointSize = textSize;
+		style.lineHeight = textSize - 1;
 		from_rect = ledRects[state][depressed];
 		to_rect = frame;
 		to_rect.right = to_rect.left + 14;
@@ -265,6 +267,7 @@ void cLed::restore(storage_t to) {
 	cButton::restore(to);
 	if(to.find("led-state") != to.end())
 		setState(boost::any_cast<eLedState>(to["led-state"]));
+	else setState(led_off);
 }
 
 cLedGroup::cLedGroup(cDialog* parent) :
@@ -501,4 +504,5 @@ void cLedGroup::restore(storage_t to) {
 	cControl::restore(to);
 	if(to.find("led-select") != to.end())
 		setSelected(boost::any_cast<std::string>(to["led-select"]));
+	else setSelected("");
 }

@@ -229,24 +229,11 @@ void draw_monsters() {
 }
 
 void play_see_monster_str(unsigned short m, location monst_loc) {
-	short str1, str2, pic, snd, spec;
+	short pic, spec;
 	ePicType type;
-	str1 = univ.scenario.scen_monsters[m].see_str1;
-	str2 = univ.scenario.scen_monsters[m].see_str2;
 	pic = univ.scenario.scen_monsters[m].picture_num;
 	type =  get_monst_pictype(m);
-	snd = univ.scenario.scen_monsters[m].see_sound;
 	spec = univ.scenario.scen_monsters[m].see_spec;
-	// First display strings, if any
-	if((str1 >= 0 && str1 < 100) || (str2 >= 0 && str2 < 100)) {
-		short where1 = is_out() ? univ.party.outdoor_corner.x + univ.party.i_w_c.x : univ.town.num;
-		short where2 = is_out() ? univ.party.outdoor_corner.y + univ.party.i_w_c.y : univ.town.num;
-		std::string placename = is_out() ? univ.out->out_name : univ.town->town_name;
-		cStrDlog display_strings(str1 < 100 ? univ.scenario.spec_strs[str1] : "", str2 < 100 ? univ.scenario.spec_strs[str2] : "", "", pic, type, NULL);
-		display_strings.setSound(snd);
-		display_strings.setRecordHandler(cStringRecorder(NOTE_SCEN).string1(str1).string2(str2).from(where1,where2).at(placename));
-		display_strings.show();
-	}
 	// Then run the special, if any
 	if(spec > -1){
 		queue_special(eSpecCtx::SEE_MONST, 0, spec, monst_loc);

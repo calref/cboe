@@ -63,7 +63,11 @@ public:
 	/// Set the number of pages in the stack.
 	/// @param n The new number of pages
 	/// @note If you reduce the number of pages, some data will be destroyed.
+	/// @note If the current page is deleted by this function, the last page will be shown, if there are any left.
 	void setPageCount(size_t n);
+	/// Add a new page to the end of the stack.
+	/// This is equivalent to calling setPageCount(getPageCount() + 1).
+	void addPage();
 	// Get the number of pages in the stack.
 	/// @return The number of pages
 	size_t getPageCount();

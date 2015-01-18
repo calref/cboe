@@ -140,8 +140,7 @@ public:
 	unsigned char summon_type;
 	pic_num_t default_facial_pic;
 	pic_num_t picture_num;
-	str_num_t see_str1, see_str2;
-	snd_num_t see_sound, ambient_sound; // ambient_sound has a chance of being played every move
+	snd_num_t ambient_sound; // has a chance of being played every move
 	spec_num_t see_spec;
 public:
 	

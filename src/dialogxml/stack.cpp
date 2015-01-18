@@ -96,8 +96,14 @@ size_t cStack::getPage() {
 }
 
 void cStack::setPageCount(size_t n) {
+	if(curPage >= n && n > 0)
+		setPage(nPages - 1);
 	nPages = n;
 	storage.resize(nPages);
+}
+
+void cStack::addPage() {
+	setPageCount(getPageCount() + 1);
 }
 
 size_t cStack::getPageCount() {
@@ -142,5 +148,5 @@ void cStack::fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& reve
 	}
 }
 
-cStack::cStack(cDialog& parent) : cControl(CTRL_STACK, parent) {}
+cStack::cStack(cDialog& parent) : cControl(CTRL_STACK, parent), curPage(0), nPages(0) {}
 

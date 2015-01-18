@@ -19,6 +19,7 @@
 #include "fileio.hpp"
 #include "field.hpp"
 #include "restypes.hpp"
+#include "stack.hpp"
 
 extern short cen_x, cen_y,cur_town;
 extern bool mouse_button_held;
@@ -600,8 +601,46 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short wh
 	
 	me["loot-item"].setTextToNum(store_monst.corpse_item);
 	me["loot-chance"].setTextToNum(store_monst.corpse_item_chance);
+	me["magic-res"].setTextToNum(store_monst.magic_res);
+	me["fire-res"].setTextToNum(store_monst.fire_res);
+	me["cold-res"].setTextToNum(store_monst.cold_res);
+	me["poison-res"].setTextToNum(store_monst.poison_res);
+	me["onsee"].setTextToNum(store_monst.see_spec);
+	me["snd"].setTextToNum(store_monst.ambient_sound);
+	
+	if(store_monst.mindless)
+		dynamic_cast<cLed&>(me["mindless"]).setState(led_red);
+	if(store_monst.invuln)
+		dynamic_cast<cLed&>(me["invuln"]).setState(led_red);
+	if(store_monst.invisible)
+		dynamic_cast<cLed&>(me["invis"]).setState(led_red);
+	if(store_monst.guard)
+		dynamic_cast<cLed&>(me["guard"]).setState(led_red);
 	
 	dynamic_cast<cLedGroup&>(me["summon"]).setSelected("s" + boost::lexical_cast<std::string,short>(store_monst.summon_type));
+	
+	cStack& abils = dynamic_cast<cStack&>(me["abils"]);
+	abils.setPageCount(0); // This clears out any data still in the stack
+	abils.setPageCount(1);
+	int i = 0;
+	for(auto& abil : store_monst.abil) {
+		if(!abil.second.active) continue;
+		std::string id = std::to_string((i % 4) + 1);
+		if(i % 4 == 0) abils.setPage(i / 4);
+		else if(i % 4 == 3) abils.addPage();
+		me["abil-name" + id].setText(abil.second.to_string(abil.first));
+		me["abil-edit" + id].setText("Edit");
+		i++;
+	}
+	abils.setPage(0);
+	
+	if(abils.getPageCount() <= 1) {
+		me["abil-up"].hide();
+		me["abil-down"].hide();
+	} else {
+		me["abil-up"].show();
+		me["abil-down"].show();
+	}
 }
 
 static bool save_monst_abils(cDialog& me, cMonster& store_monst) {
@@ -609,10 +648,21 @@ static bool save_monst_abils(cDialog& me, cMonster& store_monst) {
 	
  	store_monst.corpse_item = me["loot-item"].getTextAsNum();
 	store_monst.corpse_item_chance = me["loot-chance"].getTextAsNum();
+	store_monst.magic_res = me["magic-res"].getTextAsNum();
+	store_monst.fire_res = me["fire-res"].getTextAsNum();
+	store_monst.cold_res = me["cold-res"].getTextAsNum();
+	store_monst.poison_res = me["poison-res"].getTextAsNum();
+	store_monst.see_spec = me["onsee"].getTextAsNum();
+	store_monst.ambient_sound = me["snd"].getTextAsNum();
+	
+	store_monst.mindless = dynamic_cast<cLed&>(me["mindless"]).getState() != led_off;
+	store_monst.invuln = dynamic_cast<cLed&>(me["invuln"]).getState() != led_off;
+	store_monst.invisible = dynamic_cast<cLed&>(me["invis"]).getState() != led_off;
+	store_monst.guard = dynamic_cast<cLed&>(me["guard"]).getState() != led_off;
 	return true;
 }
 
-static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonster& store_monst,short which_monst) {
+static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonster& store_monst) {
 	using namespace std::placeholders;
 	
 	if(item_hit == "cancel") {
@@ -621,6 +671,30 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonst
 	} else if(item_hit == "okay") {
 		if(save_monst_abils(me, store_monst))
 			me.toast(true);
+	} else if(item_hit == "abil-up") {
+		cStack& abils = dynamic_cast<cStack&>(me["abils"]);
+		if(abils.getPage() == 0) abils.setPage(abils.getPageCount() - 1);
+		else abils.setPage(abils.getPage() - 1);
+	} else if(item_hit == "abil-down") {
+		cStack& abils = dynamic_cast<cStack&>(me["abils"]);
+		if(abils.getPage() >= abils.getPageCount() - 1) abils.setPage(0);
+		else abils.setPage(abils.getPage() + 1);
+	} else if(item_hit == "edit-see") {
+		short spec = me["onsee"].getTextAsNum();
+		if(spec < 0 || spec > 255) {
+			spec = get_fresh_spec(0);
+			if(spec < 0) {
+				giveError("You can't create a new scenario special encounter because there are no more free special nodes.",
+						  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
+				return true;
+			}
+		}
+		if(edit_spec_enc(spec,0,&me))
+			me["onsee"].setTextToNum(spec);
+	} else if(item_hit == "pick-snd") {
+		int i = me["snd"].getTextAsNum();
+		i = choose_text(STRT_SND, i, &me, "Select monster vocalization sound:");
+		me["snd"].setTextToNum(i);
 	}
 	return true;
 }
@@ -632,7 +706,7 @@ cMonster edit_monst_abil(cMonster starting_record,short which_monst) {
 	cDialog monst_dlg("edit-monster-abils");
 	monst_dlg["loot-item"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 399, "Item To Drop", "-1 for no item"));
 	monst_dlg["loot-chance"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 100, "Dropping Chance", "-1 for no item"));
-	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_event_filter, _1, _2, std::ref(store_monst),which_monst), {"okay", "cancel", "abils", "radiate"});
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_event_filter, _1, _2, std::ref(store_monst)), {"okay", "cancel", "abil-up", "abil-down", "edit-see", "pick-snd"});
 	
 	put_monst_abils_in_dlog(monst_dlg, store_monst, which_monst);
 	

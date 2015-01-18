@@ -132,8 +132,6 @@ void cMonster::append(legacy::monster_record_type& old){
 	picture_num = old.picture_num;
 	if(picture_num == 122) picture_num = 119;
 	see_spec = -1;
-	see_str1 = see_str2 = -1;
-	see_sound = 0;
 	ambient_sound = 0;
 }
 
@@ -371,8 +369,6 @@ void cMonster::addAbil(eMonstAbilTemplate what, int param) {
 cMonster::cMonster(){
 	magic_res = poison_res = fire_res = cold_res = 100;
 	// TODO: Fill in
-	see_str1 = -1;
-	see_str2 = -1;
 	see_spec = -1;
 }
 
@@ -792,17 +788,14 @@ void cMonster::writeTo(std::ostream& file) const {
 }
 
 void cMonster::readFrom(std::istream& file) {
-	// On-see event is not exported, so make sure the fields are not filled with garbage data
-	see_sound = 0;
-	see_str1 = -1;
-	see_str2 = -1;
+	// On-see event is not exported, so make sure the field ise not filled with garbage data
 	see_spec = -1;
 	std::istringstream bin;
 	std::string cur;
 	getline(file, cur, '\f');
 	bin.str(cur);
 	while(bin) {
-		int temp1, temp2, temp3;
+		int temp1, temp2;
 		getline(bin, cur);
 		std::istringstream line(cur);
 		line >> cur;

@@ -1128,6 +1128,8 @@ void cPict::restore(storage_t to) {
 	cControl::restore(to);
 	if(to.find("pic-num") != to.end())
 		picNum = boost::any_cast<pic_num_t>(to["pic-num"]);
+	else picNum = -1;
 	if(to.find("pic-type") != to.end())
 		picType = boost::any_cast<ePicType>(to["pic-type"]);
+	else picNum = PIC_DLOG;
 }

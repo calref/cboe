@@ -199,4 +199,5 @@ void cScrollbar::restore(storage_t to) {
 	cControl::restore(to);
 	if(to.find("scroll-pos") != to.end())
 		pos = boost::any_cast<int>(to["scroll-pos"]);
+	else pos = 0;
 }

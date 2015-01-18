@@ -326,4 +326,5 @@ cControl::storage_t cControl::store() {
 void cControl::restore(storage_t to) {
 	if(to.find("text") != to.end())
 		lbl = boost::any_cast<std::string>(to["text"]);
+	else lbl = "";
 }

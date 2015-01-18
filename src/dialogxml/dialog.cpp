@@ -583,7 +583,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 				p.second->setFormat(TXT_SIZE, 12);
 			else if(val == "small")
 				p.second->setFormat(TXT_SIZE, 10);
-			if(val == "title")
+			else if(val == "title")
 				p.second->setFormat(TXT_SIZE, 18);
 			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "color" || name == "colour"){
