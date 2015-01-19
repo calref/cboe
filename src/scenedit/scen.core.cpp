@@ -1113,6 +1113,8 @@ static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_it
 	else dynamic_cast<cPict&>(me["pic"]).setPict(store_item.graphic_num, PIC_ITEM);
 	me["picnum"].setTextToNum(store_item.graphic_num);
 	
+	bool missile = false, weapon = false;
+	
 	cLedGroup& variety = dynamic_cast<cLedGroup&>(me["variety"]);
 	switch(store_item.variety) {
 		case eItemType::NO_ITEM:
@@ -1120,21 +1122,27 @@ static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_it
 			break;
 		case eItemType::ONE_HANDED:
 			variety.setSelected("weap1");
+			weapon = true;
 			break;
 		case eItemType::TWO_HANDED:
 			variety.setSelected("weap2");
+			weapon = true;
 			break;
 		case eItemType::GOLD:
 			variety.setSelected("gold");
 			break;
 		case eItemType::BOW:
 			variety.setSelected("bow");
+			weapon = true;
 			break;
 		case eItemType::ARROW:
 			variety.setSelected("arrow");
+			missile = true;
 			break;
 		case eItemType::THROWN_MISSILE:
 			variety.setSelected("thrown");
+			missile = true;
+			weapon = true;
 			break;
 		case eItemType::POTION:
 			variety.setSelected("potion");
@@ -1186,12 +1194,16 @@ static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_it
 			break;
 		case eItemType::CROSSBOW:
 			variety.setSelected("xbow");
+			weapon = true;
 			break;
 		case eItemType::BOLTS:
 			variety.setSelected("bolt");
+			missile = true;
 			break;
 		case eItemType::MISSILE_NO_AMMO:
 			variety.setSelected("missile");
+			missile = true;
+			weapon = true;
 			break;
 		case eItemType::UNUSED1:
 			variety.setSelected("unused1");
@@ -1201,18 +1213,31 @@ static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_it
 			break;
 	}
 	
-	cLedGroup& weapType = dynamic_cast<cLedGroup&>(me["melee-type"]);
-	switch(store_item.weap_type) {
-		case eSkill::INVALID:
-		case eSkill::EDGED_WEAPONS:
-			weapType.setSelected("edge");
-			break;
-		case eSkill::BASHING_WEAPONS:
-			weapType.setSelected("bash");
-			break;
-		case eSkill::POLE_WEAPONS:
-			weapType.setSelected("pole");
-			break;
+	if(missile) {
+		me["missile"].show();
+		me["missile-pic"].show();
+		me["missile-pic"].show();
+		me["choosemiss"].show();
+		me["missile"].setTextToNum(store_item.missile);
+		dynamic_cast<cPict&>(me["missile-pic"]).setPict(store_item.missile);
+	} else {
+		me["missile"].hide();
+		me["missile-title"].hide();
+		me["missile-pic"].hide();
+		me["choosemiss"].hide();
+		me["missile"].setText("0");
+	}
+	
+	if(weapon) {
+		me["skill-title"].show();
+		me["weap-type"].show();
+		me["choosetp"].show();
+		me["weap-type"].setTextToNum(int(store_item.weap_type));
+	} else {
+		me["skill-title"].hide();
+		me["weap-type"].hide();
+		me["choosetp"].hide();
+		me["weap-type"].setText("0");
 	}
 	
 	me["level"].setTextToNum(store_item.item_level);
@@ -1226,7 +1251,7 @@ static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_it
 	me["class"].setTextToNum(store_item.special_class);
 }
 
-static bool save_item_info(cDialog& me, cItem& store_item, short which_item) {
+static void save_item_info(cDialog& me, cItem& store_item, short which_item) {
 	store_item.full_name = me["full"].getText();
 	store_item.name = me["short"].getText();
 	store_item.graphic_num = me["picnum"].getTextAsNum();
@@ -1260,13 +1285,8 @@ static bool save_item_info(cDialog& me, cItem& store_item, short which_item) {
 	else if(variety == "missile") store_item.variety = eItemType::MISSILE_NO_AMMO;
 	else if(variety == "unused1") store_item.variety = eItemType::UNUSED1;
 	else if(variety == "unused2") store_item.variety = eItemType::UNUSED2;
-	store_item.weap_type = eSkill::INVALID;
-	if(store_item.variety == eItemType::ONE_HANDED || store_item.variety == eItemType::TWO_HANDED) {
-		std::string weapType = dynamic_cast<cLedGroup&>(me["melee-type"]).getSelected();
-		if(weapType == "edge") store_item.weap_type = eSkill::EDGED_WEAPONS;
-		else if(weapType == "bash") store_item.weap_type = eSkill::BASHING_WEAPONS;
-		else if(weapType == "pole") store_item.weap_type = eSkill::POLE_WEAPONS;
-	}
+	store_item.weap_type = eSkill(me["weap-type"].getTextAsNum());
+	store_item.missile = me["missile"].getTextAsNum();
 	
 	store_item.item_level = me["level"].getTextAsNum();
 	if((store_item.variety == eItemType::GOLD || store_item.variety == eItemType::FOOD) && store_item.item_level == 0)
@@ -1281,48 +1301,62 @@ static bool save_item_info(cDialog& me, cItem& store_item, short which_item) {
 	store_item.weight = me["weight"].getTextAsNum();
 	store_item.special_class = me["class"].getTextAsNum();
 	
-	if((store_item.type_flag > 0) && (store_item.charges == 0)) {
-		giveError("If the Type Flag is greater than 0, the Charges must also be greater than 0.","",&me);
-		return false;
-	}
-	if(store_item.variety == eItemType::UNUSED1 || store_item.variety == eItemType::UNUSED2) {
-		giveError("The Unused item varieties are reserved for later expansions, and can't be used now.","",&me);
-		return false;
-	}
+	int was_charges = store_item.charges;
+	if(store_item.type_flag > 0 && store_item.charges == 0)
+		store_item.charges = 1;
 	eItemAbilCat cat = getItemAbilCategory(store_item.ability);
-	if((cat == eItemAbilCat::SPELL || cat == eItemAbilCat::NONSPELL || cat == eItemAbilCat::REAGENT) && (store_item.charges == 0)) {
-		giveError("An item with the special ability selected must have at least 1 charge.","",&me);
-		return false;
-	}
-	scenario.scen_items[which_item] = store_item;
-	return true;
+	if((cat == eItemAbilCat::SPELL || cat == eItemAbilCat::NONSPELL || cat == eItemAbilCat::REAGENT) && store_item.charges == 0)
+		store_item.charges = 1;
+	if(was_charges != store_item.charges)
+		giveError("Due to either the selected special ability or the presence of a type flag, this item's charges have been set to 1.", &me);
 }
 
 static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem& store_item, short& store_which_item) {
 	short i;
 	cItem temp_item;
+	std::string variety = dynamic_cast<cLedGroup&>(me["variety"]).getSelected();
+	bool valid = true;
+	if(variety.substr(0,6) == "unused") valid = false;
+	if(!valid && item_hit != "cancel" && item_hit.substr(0,6) != "choose") {
+		giveError("The Unused item varieties are reserved for later expansions, and can't be used now.","",&me);
+		return true;
+	}
 	
 	if(item_hit == "cancel") {
 		me.toast(false);
 	} else if(item_hit == "okay") {
-		if(save_item_info(me, store_item, store_which_item)) me.toast(true);
+		save_item_info(me, store_item, store_which_item);
+		if(!me.toast(true)) return true;
+		scenario.scen_items[store_which_item] = store_item;
 	} else if(item_hit == "prev") {
-		if(!save_item_info(me, store_item, store_which_item)) return true;
+		save_item_info(me, store_item, store_which_item);
+		scenario.scen_items[store_which_item] = store_item;
 		store_which_item--;
 		if(store_which_item < 0) store_which_item = 399;
 		store_item = scenario.scen_items[store_which_item];
 		put_item_info_in_dlog(me, store_item, store_which_item);
 	} else if(item_hit == "next") {
-		if(!save_item_info(me, store_item, store_which_item)) return true;
+		save_item_info(me, store_item, store_which_item);
+		scenario.scen_items[store_which_item] = store_item;
 		store_which_item++;
 		if(store_which_item > 399) store_which_item = 0;
 		store_item = scenario.scen_items[store_which_item];
 		put_item_info_in_dlog(me, store_item, store_which_item);
 	} else if(item_hit == "choosepic") {
-		if(!save_item_info(me, store_item, store_which_item)) return true;
+		save_item_info(me, store_item, store_which_item);
 		i = pick_picture(PIC_ITEM, me, "picnum", "pic");
 		if(i < 0) return true;
 		store_item.graphic_num = i;
+	} else if(item_hit == "choosetp") {
+		save_item_info(me, store_item, store_which_item);
+		i = choose_text(STRT_SKILL, int(store_item.weap_type), &me, "Select the weapon's key skill:");
+		store_item.weap_type = eSkill(i);
+		me["weap-type"].setTextToNum(i);
+	} else if(item_hit == "choosemiss") {
+		save_item_info(me, store_item, store_which_item);
+		i = pick_picture(PIC_MISSILE, me, "missile", "missile-pic");
+		if(i < 0) return true;
+		store_item.missile = i;
 	} else if(item_hit == "abils") {
 		if(store_item.variety == eItemType::NO_ITEM) {
 			giveError("You must give the item a type (weapon, armor, etc.) before you can choose its abilities.","",&me);
@@ -1335,6 +1369,38 @@ static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem
 		temp_item = edit_item_abil(store_item,store_which_item);
 		if(temp_item.variety != eItemType::NO_ITEM)
 			store_item = temp_item;
+	}
+	return true;
+}
+
+static bool change_item_variety(cDialog& me, std::string group, const cItem& item) {
+	std::string hit = dynamic_cast<cLedGroup&>(me[group]).getSelected();
+	
+	if(hit == "arrow" || hit == "thrown" || hit == "bolt" || hit == "missile") {
+		me["missile"].show();
+		me["missile-pic"].show();
+		me["missile-pic"].show();
+		me["choosemiss"].show();
+		me["missile"].setTextToNum(item.missile);
+		dynamic_cast<cPict&>(me["missile-pic"]).setPict(item.missile);
+	} else {
+		me["missile"].hide();
+		me["missile-title"].hide();
+		me["missile-pic"].hide();
+		me["choosemiss"].hide();
+		me["missile"].setText("0");
+	}
+	
+	if(hit.substr(0,4) == "weap" || hit == "bow" || hit == "xbow" || hit == "missile" || hit == "thrown") {
+		me["skill-title"].show();
+		me["weap-type"].show();
+		me["choosetp"].show();
+		me["weap-type"].setTextToNum(int(item.weap_type));
+	} else {
+		me["skill-title"].hide();
+		me["weap-type"].hide();
+		me["choosetp"].hide();
+		me["weap-type"].setText("0");
 	}
 	return true;
 }
@@ -1353,7 +1419,8 @@ short edit_item_type(short which_item) {
 	item_dlg["value"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 10000, "Value"));
 	item_dlg["weight"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 250, "Weight"));
 	item_dlg["class"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Special Class"));
-	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(store_item), std::ref(which_item)), {"okay", "cancel", "prev", "next", "abils", "choosepic"});
+	item_dlg["variety"].attachFocusHandler(std::bind(change_item_variety, _1, _2, std::ref(store_item)));
+	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(store_item), std::ref(which_item)), {"okay", "cancel", "prev", "next", "abils", "choosepic", "choosetp", "choosemiss"});
 	
 	put_item_info_in_dlog(item_dlg, store_item, which_item);
 	

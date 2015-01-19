@@ -247,9 +247,13 @@ void cItem::append(legacy::item_record_type& old){
 	bonus = old.bonus;
 	protection = old.protection;
 	charges = old.charges;
-	if(old.type >= 3 && old.type <= 5)
-		weap_type = eSkill(old.type);
+	if(old.type >= 1 && old.type <= 3)
+		weap_type = eSkill(old.type + 2);
 	else weap_type = eSkill::INVALID;
+	if(variety == eItemType::BOW || variety == eItemType::CROSSBOW || variety == eItemType::MISSILE_NO_AMMO)
+		weap_type = eSkill::ARCHERY;
+	else if(variety == eItemType::THROWN_MISSILE)
+		weap_type = eSkill::THROWN_MISSILES;
 	magic_use_type = old.magic_use_type;
 	graphic_num = old.graphic_num;
 	if(graphic_num >= 150) // custom item graphic
@@ -742,41 +746,27 @@ void cItem::append(legacy::item_record_type& old){
 		case eItemType::BOLTS:
 			missile = magic ? 4 : 3;
 			break;
-		case eItemType::THROWN_MISSILE:
-			// This is tricky... basically, all we can really do is guess.
-			// We'll base our guess on the item's level, since the preset items have standard levels
-			switch(item_level) {
-				case 7: // Throwing knives
-					missile = 10;
-					break;
-				case 4: // Darts
-					missile = 1;
-					break;
-				case 8: // Javelins
-					missile = 5;
-					break;
-				case 9: // Razordisks
-					missile = 7;
-					break;
-				default:
-					auto npos = std::string::npos;
-					// Okay, that failed. Try examining the item's name.
-					// We'll use the unidentified name since it's more likely to contain the appropriate generic words
-					if(name.find("Knife") != npos) missile = 10;
-					else if(name.find("Knives") != npos) missile = 10;
-					else if(name.find("Spear") != npos) missile = 5;
-					else if(name.find("Javelin") != npos) missile = 5;
-					else if(name.find("Razordisk") != npos) missile = 7;
-					else if(name.find("Star") != npos) missile = 7;
-					else if(name.find("Dart") != npos) missile = 1;
-					else if(name.find("Rock") != npos) missile = 12;
-					// Okay, give up. Fall back to darts since we have no idea what's correct.
-					else missile = 1;
-					break;
-			}
 		case eItemType::MISSILE_NO_AMMO:
 			// Just assume it's a sling and use the rock missile.
 			missile = 12;
+			break;
+		case eItemType::THROWN_MISSILE:
+			// This is tricky... basically, all we can really do is guess.
+			// And the only way to guess is by examining the item's name
+			// We'll use the unidentified name since it's more likely to contain the appropriate generic words
+			auto npos = std::string::npos;
+			// Okay, that failed. Try examining the item's name.
+			if(name.find("Knife") != npos) missile = 10;
+			// Unidentified name limit was quite short, so the S might've been cut off
+			else if(name.find("Knive") != npos) missile = 10;
+			else if(name.find("Spear") != npos) missile = 5;
+			else if(name.find("Javelin") != npos) missile = 5;
+			else if(name.find("Razordisk") != npos) missile = 7;
+			else if(name.find("Star") != npos) missile = 7;
+			else if(name.find("Dart") != npos) missile = 1;
+			else if(name.find("Rock") != npos) missile = 12;
+			// Okay, give up. Fall back to darts since we have no idea what's correct.
+			else missile = 1;
 			break;
 	}
 }

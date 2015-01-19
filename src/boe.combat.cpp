@@ -1475,17 +1475,18 @@ void load_missile() {
 }
 
 void fire_missile(location target) {
-	short r1, r2, skill, dam, dam_bonus, hit_bonus, range, targ_monst, spec_dam = 0,poison_amt = 0;
+	short r1, r2, skill, dam, dam_bonus, hit_bonus = 0, range, targ_monst, spec_dam = 0,poison_amt = 0;
 	short skill_item;
 	cCreature *cur_monst;
 	bool exploding = false;
 	missile_firer = current_pc;
 	
-	skill = overall_mode == MODE_FIRING ? univ.party[missile_firer].skills[eSkill::ARCHERY] : univ.party[missile_firer].skills[eSkill::THROWN_MISSILES];
+	skill = univ.party[missile_firer].skills[univ.party[missile_firer].items[missile_inv_slot].weap_type];
 	range = (overall_mode == MODE_FIRING) ? 12 : 8;
 	dam = univ.party[missile_firer].items[ammo_inv_slot].item_level;
 	dam_bonus = univ.party[missile_firer].items[ammo_inv_slot].bonus + minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
-	hit_bonus = (overall_mode == MODE_FIRING) ? univ.party[missile_firer].items[missile_inv_slot].bonus : 0;
+	if(overall_mode == MODE_FIRING)
+		hit_bonus = univ.party[missile_firer].items[missile_inv_slot].bonus;
 	hit_bonus += stat_adj(missile_firer,eSkill::DEXTERITY) - can_see_light(univ.party[missile_firer].combat_pos,target,sight_obscurity)
 		+ minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
 	if((skill_item = univ.party[missile_firer].has_abil_equip(eItemAbil::ACCURACY)) < 24) {

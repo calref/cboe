@@ -26,8 +26,8 @@
 	 -->
 	<group name='variety'>
 		<led name='none' state='off' top='89' left='106' width='90'>No Item</led>
-		<led name='weap1' state='off' top='104' left='106' width='90'>1-Handed weapon</led>
-		<led name='weap2' state='off' top='119' left='106' width='90'>2-Handed weapon</led>
+		<led name='weap1' state='off' top='104' left='106' width='90'>1-Hand weapon</led>
+		<led name='weap2' state='off' top='119' left='106' width='90'>2-Hand weapon</led>
 		<led name='gold' state='off' top='134' left='106' width='90'>Gold</led>
 		<led name='bow' state='off' top='149' left='106' width='90'>Bow</led>
 		<led name='arrow' state='off' top='164' left='106' width='90'>Arrows</led>
@@ -44,7 +44,7 @@
 		<!--
 		 TODO: Why are there two shields?
 		 -->
-		<led name='shield2' state='off' top='119' left='336' width='90'>Shield</led>
+		<led name='shield2' state='off' top='119' left='336' width='90'>Shield 2</led>
 		<led name='boots' state='off' top='134' left='336' width='90'>Boots</led>
 		<led name='ring' state='off' top='149' left='336' width='90'>Ring</led>
 		<led name='necklace' state='off' top='164' left='336' width='90'>Necklace</led>
@@ -56,14 +56,6 @@
 		<led name='missile' state='off' top='149' left='448' width='90'>Missile (no ammo)</led>
 		<led name='unused1' state='off' top='164' left='448' width='90'>Unused</led>
 		<led name='unused2' state='off' top='179' left='448' width='80'>Unused</led>
-	</group>
-	<!--
-	 NOTE: These LEDs have been shifted 80 pixels left to account for the labels swapping sides
-	 -->
-	<group name='melee-type'>
-		<led name='edge' state='off' top='233' left='442' width='80'>Edged</led>
-		<led name='bash' state='off' top='248' left='442' width='80'>Bashing</led>
-		<led name='pole' state='off' top='263' left='442' width='80'>Pole</led>
 	</group>
 	<pict name="pic" type='dlog' num='16' top='8' left='11'/>
 	<text size='large' top='6' left='50' width='158' height='16'>Edit an Item Type</text>
@@ -83,7 +75,13 @@
 	<text top='224' left='220' width='141' height='13'>Value: (0-10000)</text>
 	<text top='248' left='220' width='141' height='13'>Weight: (0-250)</text>
 	<text top='272' left='220' width='141' height='13'>Special class: (0-100)</text>
-	<text top='200' left='425' width='161' height='28'>Weapon type: (ignored if not a weapon)</text>
+	<text name='missile-title' top='200' left='440' width='140' height='16'>Missile type:</text>
+	<field name='missile' top='223' left='463' width='50' height='16'/>
+	<pict name='missile-pic' type='missile' num='3' top='223' left='440'/>
+	<button name='choosemiss' type='regular' top='220' left='521'>Choose</button>
+	<text name='skill-title' top='250' left='440' width='140' height='16'>Weapon key skill:</text>
+	<field name='weap-type' top='271' left='440' width='73' height='16'/>
+	<button name='choosetp' type='regular' top='268' left='521'>Choose</button>
 	<text top='293' left='221' width='363' height='40'>
 		Enter properties for this item type. 
 		For a detailed description of the fields, see the documentation. 
