@@ -889,7 +889,8 @@ void cUniverse::check_monst(cMonster& monst) {
 				}
 				break;
 			case eMonstAbilCat::SUMMON:
-				check_monst(scenario.scen_monsters[abil.second.summon.type]);
+				if(abil.second.summon.type == eMonstSummon::TYPE)
+					check_monst(scenario.scen_monsters[abil.second.summon.what]);
 				break;
 			case eMonstAbilCat::RADIATE:
 			case eMonstAbilCat::SPECIAL:
@@ -1065,8 +1066,9 @@ void cUniverse::exportSummons() {
 	while(!last_check.empty()) {
 		mon_num_t monst = last_check.top();
 		last_check.pop();
-		if(scenario.scen_monsters[monst].abil[eMonstAbil::SUMMON].active) {
-			mon_num_t summon = scenario.scen_monsters[monst].abil[eMonstAbil::SUMMON].summon.type;
+		cMonster& what = scenario.scen_monsters[monst];
+		if(what.abil[eMonstAbil::SUMMON].active && what.abil[eMonstAbil::SUMMON].summon.type == eMonstSummon::TYPE) {
+			mon_num_t summon = what.abil[eMonstAbil::SUMMON].summon.what;
 			if(summon >= 10000)
 				used_monsters.insert(summon - 10000);
 			else if(!need_monsters.count(summon)) {

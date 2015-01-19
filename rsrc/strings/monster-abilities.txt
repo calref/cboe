@@ -1,69 +1,73 @@
-No special ability
-Throws darts (dam 1-6)
-Shoots arrows (dam 2-12)
-Throws spears (dam 3-18)
-Throws rocks (dam 4-24)
-Throws rocks (dam 5-30)
-Throws rocks (dam 6-36)
-Throws razordisks (4-24)
+Throws darts
+Shoots arrows
+Throws spears
+Throws stones
+Throws rocks
+Throws boulders
+Throws razordisks
+Throws knives
+Good archer
+Shoots spines
+Crossbowman
+Slinger (small stones)
 Petrification ray
 Spell point drain ray
 Heat ray
-Invisible
-Splits when hit
-Mindless (resists fear)
-Breathes stinking clouds
-Icy touch
-Experience draining touch
-Icy and draining touch
-Slowing touch
-Shoots webs
-Good archer (dam 7-42)
-Steals food when hits
-Permanent martyr's shield
 Paralysis ray
-Dumbfounding touch
+Breathes fire
+Breathes frost
+Breathes electricity
+Breathes darkness
+Breathes stinking clouds
+Breathes sleep clouds
+Acid spit
+Shoots webs
+Poisoned weapon
+Acid touch
 Disease touch
-Absorb spells
 Web touch
 Sleep touch
+Dumbfounding touch
 Paralysis touch
 Petrification touch
-Acid touch
-Breathe sleep clouds
-Acid spit
-Shoot spines (dam 7-42)
 Death touch (use with care)
-Invulnerable (use with care)
-Guard
-
-
-
-
-
-
-
-
-
-
-
-
-No ability
+Experience draining touch
+Icy touch
+Icy and draining touch
+Stunning touch
+Steals food when hits
+Steals gold when hits
+Splits when hit
+Permanent martyr's shield
+Absorb spells
+Summon (%5 chance)
+Summon (%20 chance)
+Summon (%50 chance)
+Run global special during turn
+Death triggers global special
 Radiate fire fields
 Radiate ice fields
 Radiate shock fields
 Radiate antimagic fields
 Radiate sleep fields
 Radiate stink clouds
-Unused
-Unused
-Unused
-Summon (%5 chance)
-Summon (%20 chance)
-Summon (%50 chance)
-Unused
-Unused
-Death triggers global special
+Radiate blade fields
+Radiate webs
+Custom missile ability (advanced)
+Custom damage ability (advanced)
+Custom status effect (advanced)
+Custom field ability (advanced)
+Custom petrification (advanced)
+Custom SP drain (advanced)
+Custom XP drain (advanced)
+Custom death ability (advanced)
+Custom steal food (advanced)
+Custom steal gold (advanced)
+Custom undead stat (advanced)
+Custom weapon stat (advanced)
+Custom radiate fields (advanced)
+Custom summoning (advanced)
+Custom long damage (advanced)
 
 
 
@@ -73,34 +77,28 @@ Death triggers global special
 
 
 
-
-
-
-
-
-Unused
-Percentage chance (1-100%)
-Percentage chance (1-100%)
-Percentage chance (1-100%)
-Percentage chance (1-100%)
-Percentage chance (1-100%)
-Percentage chance (1-100%)
-Unused
-Unused
-Unused
-Number of creature to summon
-Number of creature to summon
-Number of creature to summon
-Unused
-Unused
-Number of special to call
-
-
-
-
-
-
-
+Missile
+Damaging
+Status effect
+Field creation
+Petrification
+Drain spell points
+Drain experience
+Kill
+Steal food
+Steal gold
+Stun (status negated by life-saving)
+Damaging (full attack - 4 ap)
+Status effect (first attack only)
+Splits when hit
+Martyr's shield
+Absorb spells
+Web missile
+Heat ray (costs 1 action point)
+Call special node
+Death triggers special
+Radiate fields
+Summon aid
 
 
 
@@ -109,19 +107,21 @@ Number of special to call
 
 
 
+Darts
+Bow/Arrows
+Spears
+Rocks
+Razordisks
+Spines
+Knives
+Crossbow/Bolts
 
 
-
-
-
-
-
-
-
-
-
-
-
+Ray
+Touch
+Gaze
+Breath
+Spit
 
 
 
@@ -137,4 +137,53 @@ Clubs
 Burns
 Harms
 Stabs
+
+
+
+
+
+
+
+
+
+
+Summon specific creature
+Summon creature of summon type
+Summon random creature of species
+
+
+
+
+
+
+
+Chance of Activating
+
+
+
+
+
+Chance of Activating
+HP gained from non-damaging effects
+
+Ability Range
+Chance of using
+
+Ability Range
+Chance of Using
+Ability Strength
+Special to Call
+Action Points
+Chance of using
+Special to Call
+
+
+
+
+
+
+
+
+
+
 

@@ -175,6 +175,7 @@ cTextField::cTextField(cDialog* parent) :
 cTextField::~cTextField(){}
 
 void cTextField::draw(){
+	if(!visible) return;
 	static const sf::Color hiliteClr = {127,127,127}, ipClr = {92, 92, 92};
 	inWindow->setActive();
 	rectangle outline = frame;

@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay'>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='18' left='50' width='250' height='17'>Edit Monster Ability:</text>
+	<text top='52' left='10' width='100' height='16'>For monster:</text>
+	<text name='monst' framed='true' top='52' left='120' width='200' height='16'/>
+	<text top='80' left='10' width='100' height='16'>Display name:</text>
+	<text name='name' framed='true' top='80' left='120' width='200' height='16'/>
+	<text top='108' left='10' width='100' height='16'>Ability Type:</text>
+	<text name='type' framed='true' top='108' left='120' width='200' height='16'/>
+	<text top='136' left='10' width='100' height='16'>Action Point Cost:</text>
+	<text name='ap' framed='true' top='136' left='120' width='200' height='16'/>
+	
+	<text top='164' left='10' width='100' height='16'>Ability Subtype:</text>
+	<text name='subtype' framed='true' top='164' left='120' width='200' height='16'/>
+	<button name='pick-subtype' type='regular' top='161' left='330'>Choose</button>
+	
+	<text top='192' left='10' width='100' height='16'>Missile:</text>
+	<field name='missile' top='190' left='120' width='50' height='16'/>
+	<text name='missile-touch' framed='true' top='192' left='120' width='50' height='16'>None</text>
+	<button name='pick-missile' type='regular' top='187' left='180'>Choose</button>
+	<pict name='missile-pic' type='missile' num='0' top='192' left='253'/>
+	
+	<text top='220' left='10' width='100' height='16'>Ability Range:</text>
+	<field name='range' top='218' left='120' width='50' height='16'/>
+	<text name='range-touch' framed='true' top='220' left='120' width='50' height='16'>Touch</text>
+	<text top='220' left='180' width='100' height='16'>Chance of Using:</text>
+	<field name='odds' top='218' left='290' width='50' height='16'/>
+	
+	<text top='248' left='10' width='100' height='16'>Ability Strength:</text>
+	<field name='strength' top='246' left='120' width='70' height='16'/>
+	<button name='pick-strength' type='regular' top='245' left='200'>Choose</button>
+	
+	<text name='extra-title' top='276' left='10' width='100' height='16'>Extra:</text>
+	<field name='extra' top='274' left='120' width='70' height='16'/>
+	<button name='pick-extra' type='regular' top='271' left='200'>Choose</button>
+	
+	<button name='okay' type='regular' top='300' left='330'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='300' left='265'>Cancel</button>
+	<button name='delete' type='regular' top='300' left='10'>Delete</button>
+</dialog>

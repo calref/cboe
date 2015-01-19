@@ -153,6 +153,7 @@ enum class eMonstAbil {
 	STEAL_FOOD,
 	STEAL_GOLD,
 	STUN,
+	DAMAGE2,
 	STATUS2,
 	
 	SPLITS,

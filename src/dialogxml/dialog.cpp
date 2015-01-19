@@ -1016,8 +1016,13 @@ void cDialog::run(){
 	dialogNotToast = true;
 	// Focus the first text field, if there is one
 	if(!tabOrder.empty()) {
-		tabOrder[0].second->triggerFocusHandler(*this, tabOrder[0].first, false);
-		currentFocus = tabOrder[0].first;
+		auto iter = std::find_if(tabOrder.begin(), tabOrder.end(), [](std::pair<std::string,cTextField*> ctrl){
+			return ctrl.second->isVisible();
+		});
+		if(iter != tabOrder.end()) {
+			iter->second->triggerFocusHandler(*this, tabOrder[0].first, false);
+			currentFocus = iter->first;
+		}
 	}
 	// Sometimes it seems like the Cocoa menu handling clobbers the active rendering context.
 	// For whatever reason, delaying 100 milliseconds appears to fix this.
@@ -1197,7 +1202,7 @@ template<typename Iter> void cDialog::handleTabOrder(string& itemHit, Iter begin
 	while(iter != cur){
 		// If tab order is explicitly specified for all fields, gaps are possible
 		if(iter->second == nullptr) continue;
-		if(iter->second->getType() == CTRL_FIELD){
+		if(iter->second->getType() == CTRL_FIELD && iter->second->isVisible()){
 			if(iter->second->triggerFocusHandler(*this,iter->first,false)){
 				currentFocus = iter->first;
 			}
@@ -1235,11 +1240,16 @@ bool cDialog::toast(bool triggerFocus){
 		if(!this->getControl(currentFocus).triggerFocusHandler(*this, currentFocus, true)) return false;
 	}
 	dialogNotToast = false;
+	didAccept = triggerFocus;
 	return true;
 }
 
 void cDialog::untoast() {
 	dialogNotToast = true;
+}
+
+bool cDialog::accepted() {
+	return didAccept;
 }
 
 bool cDialog::setFocus(cTextField* newFocus, bool force) {

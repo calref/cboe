@@ -506,7 +506,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonst
 		}
 	} else if(item_hit == "abils") {
 		if(!save_monst_info(me,store_monst)) return false;
-		temp_monst = edit_monst_abil(store_monst,which_monst);
+		temp_monst = edit_monst_abil(store_monst,which_monst,me);
 		if(temp_monst.level < 255)
 			store_monst = temp_monst;
 		put_monst_info_in_dlog(me,store_monst,which_monst);
@@ -596,8 +596,7 @@ short edit_monst_type(short which_monst) {
 	return 0;
 }
 
-static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short which_monst) {
-	me["num"].setTextToNum(which_monst);
+static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst) {
 	
 	me["loot-item"].setTextToNum(store_monst.corpse_item);
 	me["loot-chance"].setTextToNum(store_monst.corpse_item_chance);
@@ -626,11 +625,25 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst, short wh
 	for(auto& abil : store_monst.abil) {
 		if(!abil.second.active) continue;
 		std::string id = std::to_string((i % 4) + 1);
-		if(i % 4 == 0) abils.setPage(i / 4);
-		else if(i % 4 == 3) abils.addPage();
+		if(i % 4 == 0) {
+			abils.setPage(i / 4);
+			for(int j = 0; j < 4; j++) {
+				std::string id = std::to_string(j + 1);
+				me["abil-name" + id].setText("");
+				me["abil-edit" + id].setText("Add");
+			}
+		} else if(i % 4 == 3) abils.addPage();
 		me["abil-name" + id].setText(abil.second.to_string(abil.first));
 		me["abil-edit" + id].setText("Edit");
 		i++;
+	}
+	if(i % 4 == 0) {
+		abils.setPage(i / 4);
+		for(int j = 0; j < 4; j++) {
+			std::string id = std::to_string(j + 1);
+			me["abil-name" + id].setText("");
+			me["abil-edit" + id].setText("Add");
+		}
 	}
 	abils.setPage(0);
 	
@@ -699,16 +712,393 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonst
 	return true;
 }
 
-cMonster edit_monst_abil(cMonster starting_record,short which_monst) {
+static short get_monst_abil_num(std::string prompt, int min, int max, cDialog& parent) {
+	cDialog numPanel("get-mabil-num", &parent);
+	numPanel["okay"].attachClickHandler(std::bind(&cDialog::toast, &numPanel, false));
+	numPanel["prompt"].setText(prompt + " (" + std::to_string(min) + "-" + std::to_string(max) + ") ");
+	numPanel["number"].setTextToNum(min);
+	numPanel.run();
+	
+	int result = numPanel["number"].getTextAsNum();
+	if(result < min) return min;
+	if(result > max) return max;
+	return result;
+}
+
+static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil, uAbility detail) {
+	eMonstAbilCat cat = getMonstAbilCategory(abil);
+	me["monst"].setText(monst.m_name);
+	me["name"].setText(detail.to_string(abil));
+	// These names start at line 80 in the strings file, but the first valid ability is ID 1, so add 79.
+	me["type"].setText(get_str("monster-abilities", 79 + int(abil)));
+	// Action points
+	if(cat == eMonstAbilCat::MISSILE) {
+		if(detail.missile.type == eMonstMissile::ARROW || detail.missile.type == eMonstMissile::BOLT || detail.missile.type == eMonstMissile::SPINE)
+			me["ap"].setTextToNum(3);
+		else me["ap"].setTextToNum(2);
+	} else if(cat == eMonstAbilCat::GENERAL) {
+		if(detail.gen.type == eMonstGen::TOUCH)
+			me["ap"].setText("0 (part of standard attack)");
+		else if(abil == eMonstAbil::DAMAGE2)
+			me["ap"].setTextToNum(4);
+		else me["ap"].setTextToNum(3);
+	} else if(abil == eMonstAbil::RAY_HEAT)
+		me["ap"].setTextToNum(1);
+	else if(abil == eMonstAbil::MISSILE_WEB)
+		me["ap"].setTextToNum(3);
+	else if(abil == eMonstAbil::SPECIAL)
+		me["ap"].setTextToNum(detail.special.extra2);
+	else if(cat == eMonstAbilCat::SPECIAL)
+		me["ap"].setText("0 (passive ability)");
+	// Subtype
+	if(cat == eMonstAbilCat::MISSILE)
+		me["subtype"].setText(get_str("monster-abilities", 110 + int(detail.missile.type)));
+	else if(cat == eMonstAbilCat::GENERAL)
+		me["subtype"].setText(get_str("monster-abilities", 120 + int(detail.gen.type)));
+	else if(cat == eMonstAbilCat::SUMMON)
+		me["subtype"].setText(get_str("monster-abilities", 150 + int(detail.summon.type)));
+	// Missile and range
+	if(cat == eMonstAbilCat::MISSILE || cat == eMonstAbilCat::GENERAL) {
+		if(cat == eMonstAbilCat::GENERAL && detail.gen.type == eMonstGen::TOUCH) {
+			me["missile"].hide();
+			me["pick-missile"].hide();
+			me["missile-pic"].hide();
+			me["missile-touch"].show();
+			me["range"].hide();
+			me["range-touch"].show();
+		} else {
+			me["missile"].show();
+			me["pick-missile"].show();
+			me["missile-pic"].show();
+			me["missile-touch"].hide();
+			me["range"].show();
+			me["range-touch"].hide();
+		}
+		miss_num_t missile;
+		int range;
+		if(cat == eMonstAbilCat::GENERAL) {
+			missile = detail.gen.pic;
+			range = detail.gen.range;
+		} else {
+			missile = detail.missile.pic;
+			range = detail.missile.range;
+		}
+		me["missile"].setTextToNum(missile);
+		dynamic_cast<cPict&>(me["missile-pic"]).setPict(missile, PIC_MISSILE);
+		me["range"].setTextToNum(range);
+	}
+	// Chance
+	if(cat != eMonstAbilCat::SPECIAL) {
+		int odds = 0;
+		if(cat == eMonstAbilCat::MISSILE) odds = detail.missile.odds;
+		else if(cat == eMonstAbilCat::GENERAL) odds = detail.gen.odds;
+		else if(cat == eMonstAbilCat::SUMMON) odds = detail.summon.chance;
+		else if(cat == eMonstAbilCat::RADIATE) odds = detail.radiate.chance;
+		me["odds"].setTextToNum(odds);
+	}
+	// Field type
+	if(cat == eMonstAbilCat::RADIATE || abil == eMonstAbil::FIELD) {
+		if(abil == eMonstAbil::FIELD)
+			me["extra"].setTextToNum(int(detail.gen.fld));
+		else me["field"].setTextToNum(int(detail.radiate.type));
+	}
+	// Other type-specific fields
+	if(cat == eMonstAbilCat::MISSILE) {
+		me["dice"].setTextToNum(detail.missile.dice);
+		me["sides"].setTextToNum(detail.missile.sides);
+		me["skill"].setTextToNum(detail.missile.skill);
+	} else if(cat == eMonstAbilCat::GENERAL) {
+		me["strength"].setTextToNum(detail.gen.strength);
+		bool haveExtra = false;
+		cControl& title = me["extra-title"];
+		cControl& field = me["extra"];
+		cControl& pick = me["pick-extra"];
+		if(abil == eMonstAbil::FIELD) {
+			haveExtra = true;
+			title.setText("Field Type:");
+			field.setTextToNum(int(detail.gen.fld));
+		} else if(abil == eMonstAbil::DAMAGE || abil == eMonstAbil::DAMAGE2) {
+			haveExtra = true;
+			title.setText("Damage Type:");
+			field.setTextToNum(int(detail.gen.dmg));
+		} else if(abil == eMonstAbil::STATUS || abil == eMonstAbil::STATUS2 || abil == eMonstAbil::STUN) {
+			haveExtra = true;
+			title.setText("Status Effect:");
+			field.setTextToNum(int(detail.gen.stat));
+		}
+		if(haveExtra)
+			title.show(), field.show(), pick.show();
+		else title.hide(), field.hide(), pick.hide();
+	} else if(cat == eMonstAbilCat::SUMMON) {
+		switch(detail.summon.type) {
+			case eMonstSummon::TYPE: me["summon"].setText(scenario.scen_monsters[detail.summon.what].m_name); break;
+			case eMonstSummon::LEVEL: me["summon"].setTextToNum(detail.summon.what); break;
+			case eMonstSummon::SPECIES: me["summon"].setText(get_str("traits", detail.summon.what * 2 + 33)); break;
+		}
+		me["max"].setTextToNum(detail.summon.max);
+		me["min"].setTextToNum(detail.summon.min);
+		me["len"].setTextToNum(detail.summon.len);
+	} else if(cat == eMonstAbilCat::SPECIAL) {
+		me["extra1"].setTextToNum(detail.special.extra1);
+		me["extra2"].setTextToNum(detail.special.extra2);
+		me["extra3"].setTextToNum(detail.special.extra3);
+	}
+}
+
+static void save_monst_abil_detail(cDialog& me, eMonstAbil abil, uAbility& detail) {
+	eMonstAbilCat cat = getMonstAbilCategory(abil);
+	if(cat == eMonstAbilCat::MISSILE) {
+		detail.missile.pic = me["missile"].getTextAsNum();
+		detail.missile.dice = me["dice"].getTextAsNum();
+		detail.missile.sides = me["sides"].getTextAsNum();
+		detail.missile.range = me["range"].getTextAsNum();
+		detail.missile.odds = me["odds"].getTextAsNum();
+		detail.missile.skill = me["skill"].getTextAsNum();
+	} else if(cat == eMonstAbilCat::GENERAL) {
+		detail.gen.pic = me["missile"].getTextAsNum();
+		detail.gen.strength = me["strength"].getTextAsNum();
+		detail.gen.range = me["range"].getTextAsNum();
+		detail.gen.odds = me["odds"].getTextAsNum();
+	} else if(cat == eMonstAbilCat::SUMMON) {
+		detail.summon.max = me["max"].getTextAsNum();
+		detail.summon.min = me["min"].getTextAsNum();
+		detail.summon.len = me["len"].getTextAsNum();
+		detail.summon.chance = me["odds"].getTextAsNum();
+	} else if(cat == eMonstAbilCat::RADIATE) {
+		detail.radiate.chance = me["odds"].getTextAsNum();
+	} else if(cat == eMonstAbilCat::SPECIAL) {
+		detail.special.extra1 = me["extra1"].getTextAsNum();
+		detail.special.extra2 = me["extra2"].getTextAsNum();
+		detail.special.extra3 = me["extra3"].getTextAsNum();
+	}
+}
+
+static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst) {
+	eMonstAbil abil;
+	uAbility abil_params;
+	std::map<eMonstAbil,uAbility>::iterator iter;
+	if(me[hit].getText() == "Add") {
+		int i = choose_text_res("monster-abilities", 1, 70, 0, &me, "Select an ability to add.");
+		eMonstAbilTemplate tmpl = eMonstAbilTemplate(i);
+		int param = 0;
+		switch(tmpl) {
+			case eMonstAbilTemplate::RADIATE_FIRE:
+			case eMonstAbilTemplate::RADIATE_ICE:
+			case eMonstAbilTemplate::RADIATE_SHOCK:
+			case eMonstAbilTemplate::RADIATE_ANTIMAGIC:
+			case eMonstAbilTemplate::RADIATE_SLEEP:
+			case eMonstAbilTemplate::RADIATE_STINK:
+			case eMonstAbilTemplate::RADIATE_BLADE:
+			case eMonstAbilTemplate::RADIATE_WEB:
+				param = get_monst_abil_num("Percentage chance of radiating:", 0, 100, me);
+				break;
+			case eMonstAbilTemplate::SUMMON_5:
+			case eMonstAbilTemplate::SUMMON_20:
+			case eMonstAbilTemplate::SUMMON_50:
+				param = choose_text(STRT_MONST, 0, &me, "Summon which monster?");
+				break;
+			case eMonstAbilTemplate::SPECIAL:
+			case eMonstAbilTemplate::DEATH_TRIGGERS:
+				param = get_fresh_spec(0);
+				if(param < 0) {
+					giveError("You can't create a new scenario special encounter because there are no more free special nodes.",
+							  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
+					return true;
+				}
+				if(!edit_spec_enc(param,0,&me))
+					return true;
+				break;
+			case eMonstAbilTemplate::TOUCH_POISON:
+				param = get_monst_abil_num("Poison strength:", 0, 8, me);
+				break;
+			case eMonstAbilTemplate::BREATH_FIRE:
+			case eMonstAbilTemplate::BREATH_FROST:
+			case eMonstAbilTemplate::BREATH_ELECTRICITY:
+			case eMonstAbilTemplate::BREATH_DARKNESS:
+				param = get_monst_abil_num("Breath weapon strength:", 0, 4, me);
+				break;
+		}
+		// Protect from overwriting an existing ability.
+		auto save_abils = monst.abil;
+		iter = monst.addAbil(tmpl, param);
+		// Normally it'll never return end(), but if a new template was added and not implemented, it would.
+		if(iter == monst.abil.end()) {
+			giveError("Failed to add the new ability. When reporting this, mention which ability you tried to add.", &me);
+			return true;
+		}
+		if(save_abils.find(iter->first) != save_abils.end() && save_abils[iter->first].active) {
+			// TODO: Warn about overwriting an ability and give a choce between keeping the old or the new
+			bool overwrite = true;
+			if(!overwrite) {
+				monst.abil = save_abils;
+				return true;
+			}
+		}
+		size_t iShow = std::distance(monst.abil.begin(), iter);
+		dynamic_cast<cStack&>(me["abils"]).setPage(iShow / 4);
+		if(tmpl < eMonstAbilTemplate::CUSTOM_MISSILE && tmpl != eMonstAbilTemplate::SPECIAL) {
+			put_monst_abils_in_dlog(me, monst);
+			return true;
+		}
+	} else {
+		size_t which = 4 * dynamic_cast<cStack&>(me["abils"]).getPage() + (hit[9] - '1');
+		iter = monst.abil.begin();
+		std::advance(iter, which);
+	}
+	abil = iter->first;
+	abil_params = iter->second;
+	std::string which_dlg = "special";
+	eMonstAbilCat cat = getMonstAbilCategory(abil);
+	switch(cat) {
+		case eMonstAbilCat::MISSILE: which_dlg = "missile"; break;
+		case eMonstAbilCat::GENERAL: which_dlg = "general"; break;
+		case eMonstAbilCat::SUMMON: which_dlg = "summon"; break;
+		case eMonstAbilCat::RADIATE: which_dlg = "radiate"; break;
+		case eMonstAbilCat::INVALID: return true;
+		case eMonstAbilCat::SPECIAL: break;
+	}
+	using namespace std::placeholders;
+	cDialog abil_dlg("edit-mabil-" + which_dlg, &me);
+	abil_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
+	abil_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
+	abil_dlg["delete"].attachClickHandler([&monst,iter](cDialog& me,std::string,eKeyMod){
+		// TODO: Show confirmation first?
+		return me.toast(false), monst.abil.erase(iter), true;
+	});
+	auto onfocus = [&](cDialog& me,std::string,bool losing) -> bool {
+		if(!losing) return true;
+		save_monst_abil_detail(me, abil, abil_params);
+		fill_monst_abil_detail(me, monst, abil, abil_params);
+		return true;
+	};
+	abil_dlg.forEach([&onfocus](std::string, cControl& ctrl){
+		if(ctrl.getType() == CTRL_FIELD)
+			ctrl.attachFocusHandler(onfocus);
+	});
+	
+	if(cat == eMonstAbilCat::MISSILE || cat == eMonstAbilCat::GENERAL || cat == eMonstAbilCat::SUMMON) {
+		int first, last;
+		if(cat == eMonstAbilCat::MISSILE) first = 110, last = 117;
+		else if(cat == eMonstAbilCat::GENERAL) first = 120, last = 124;
+		else if(cat == eMonstAbilCat::SUMMON) first = 150, last = 152;
+		abil_dlg["pick-subtype"].attachClickHandler([&,cat](cDialog& me,std::string,eKeyMod) -> bool {
+			save_monst_abil_detail(me, abil, abil_params);
+			int i = 0;
+			if(cat == eMonstAbilCat::MISSILE) i = int(abil_params.missile.type);
+			else if(cat == eMonstAbilCat::GENERAL) i = int(abil_params.gen.type);
+			else if(cat == eMonstAbilCat::SUMMON) i = int(abil_params.summon.type);
+			i = choose_text_res("monster-abilities", first, last, i + first, &me, "Select ability subtype:");
+			if(cat == eMonstAbilCat::MISSILE) abil_params.missile.type = eMonstMissile(i);
+			else if(cat == eMonstAbilCat::GENERAL) abil_params.gen.type = eMonstGen(i);
+			else if(cat == eMonstAbilCat::SUMMON) abil_params.summon.type = eMonstSummon(i);
+			fill_monst_abil_detail(me, monst, abil, abil_params);
+			return true;
+		});
+		if(cat != eMonstAbilCat::SUMMON)
+			abil_dlg["pick-missile"].attachClickHandler(std::bind(pick_picture, PIC_MISSILE, _1, "missile", "missile-pic"));
+	}
+	if(cat == eMonstAbilCat::GENERAL) {
+		abil_dlg["pick-extra"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
+			save_monst_abil_detail(me, abil, abil_params);
+			int i = -1;
+			if(abil == eMonstAbil::FIELD) {
+				i = int(abil_params.gen.fld);
+				i = choose_field_type(i, &me, false);
+				abil_params.gen.fld = eFieldType(i);
+			} else if(abil == eMonstAbil::DAMAGE || abil == eMonstAbil::DAMAGE2) {
+				i = int(abil_params.gen.dmg);
+				i = choose_damage_type(i, &me);
+				abil_params.gen.dmg = eDamageType(i);
+			} else if(abil == eMonstAbil::STATUS || abil == eMonstAbil::STATUS2 || abil == eMonstAbil::STUN) {
+				i = int(abil_params.gen.stat);
+				i = choose_status_effect(i, false, &me);
+				abil_params.gen.stat = eStatus(i);
+			}
+			fill_monst_abil_detail(me, monst, abil, abil_params);
+			return true;
+		});
+		if(abil == eMonstAbil::FIELD)
+			abil_dlg["pick-strength"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
+				save_monst_abil_detail(me, abil, abil_params);
+				int i = abil_params.gen.strength;
+				i = choose_text(STRT_SPELL_PAT, i, &me, "Which spell pattern?");
+				abil_params.gen.strength = i;
+				fill_monst_abil_detail(me, monst, abil, abil_params);
+				return true;
+			});
+		else abil_dlg["pick-strength"].hide();
+	} else if(cat == eMonstAbilCat::RADIATE) {
+		abil_dlg["pick-field"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
+			save_monst_abil_detail(me, abil, abil_params);
+			int i = abil_params.radiate.type;
+			i = choose_field_type(i, &me, false);
+			abil_params.radiate.type = eFieldType(i);
+			fill_monst_abil_detail(me, monst, abil, abil_params);
+			return true;
+		});
+	} else if(cat == eMonstAbilCat::SUMMON) {
+		abil_dlg["pick-summon"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
+			save_monst_abil_detail(me, abil, abil_params);
+			int i = abil_params.summon.what;
+			eStrType type;
+			switch(abil_params.summon.type) {
+				case eMonstSummon::TYPE: type = STRT_MONST; break;
+				case eMonstSummon::LEVEL: type = STRT_SUMMON; break;
+				case eMonstSummon::SPECIES: type = STRT_RACE; break;
+			}
+			i = choose_text(type, i, &me, "Summon what?");
+			abil_params.summon.what = i;
+			fill_monst_abil_detail(me, monst, abil, abil_params);
+			return true;
+		});
+	} else if(cat == eMonstAbilCat::SPECIAL) {
+		if(abil == eMonstAbil::SPECIAL || abil == eMonstAbil::DEATH_TRIGGER)
+			abil_dlg["pick-extra1"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
+				short spec = me["extra1"].getTextAsNum();
+				if(spec < 0 || spec > 255) {
+					spec = get_fresh_spec(0);
+					if(spec < 0) {
+						giveError("You can't create a new scenario special encounter because there are no more free special nodes.",
+								  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
+						return true;
+					}
+				}
+				if(edit_spec_enc(spec,0,&me))
+					me["extra1"].setTextToNum(spec);
+				return true;
+			});
+		else abil_dlg["pick-extra1"].hide();
+		int iStr = int(abil) - int(eMonstAbil::SPLITS);
+		for(int i = 0; i < 3; i++) {
+			std::string id = "extra" + std::to_string(i + 1);
+			std::string title = get_str("monster-abilities", 160 + iStr * 3 + i);
+			if(title.empty()) {
+				abil_dlg[id].hide();
+				abil_dlg[id + "-title"].hide();
+			} else abil_dlg[id + "-title"].setText(title + ":");
+		}
+	}
+	fill_monst_abil_detail(abil_dlg, monst, abil, abil_params);
+	abil_dlg.run();
+	save_monst_abil_detail(abil_dlg, abil, abil_params);
+	if(abil_dlg.accepted())
+		iter->second = abil_params;
+	put_monst_abils_in_dlog(me, monst);
+	return true;
+}
+
+cMonster edit_monst_abil(cMonster starting_record,short which_monst,cDialog& parent) {
 	using namespace std::placeholders;
 	cMonster store_monst = starting_record;
 	
-	cDialog monst_dlg("edit-monster-abils");
+	cDialog monst_dlg("edit-monster-abils",&parent);
 	monst_dlg["loot-item"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 399, "Item To Drop", "-1 for no item"));
 	monst_dlg["loot-chance"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 100, "Dropping Chance", "-1 for no item"));
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_detail, _1, _2, std::ref(store_monst)), {"abil-edit1", "abil-edit2", "abil-edit3", "abil-edit4"});
 	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_event_filter, _1, _2, std::ref(store_monst)), {"okay", "cancel", "abil-up", "abil-down", "edit-see", "pick-snd"});
 	
-	put_monst_abils_in_dlog(monst_dlg, store_monst, which_monst);
+	monst_dlg["num"].setTextToNum(which_monst);
+	put_monst_abils_in_dlog(monst_dlg, store_monst);
 	
 	monst_dlg.run();
 	return store_monst;

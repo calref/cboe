@@ -44,6 +44,7 @@ enum class eMonstAbilTemplate {
 	// Advanced abilities
 	CUSTOM_MISSILE, CUSTOM_DAMAGE, CUSTOM_STATUS, CUSTOM_FIELD, CUSTOM_PETRIFY, CUSTOM_SP_DRAIN, CUSTOM_XP_DRAIN,
 	CUSTOM_KILL, CUSTOM_STEAL_FOOD, CUSTOM_STEAL_GOLD, CUSTOM_STUN, CUSTOM_STATUS2, CUSTOM_RADIATE, CUSTOM_SUMMON,
+	CUSTOM_DAMAGE2,
 };
 
 enum class eMonstMelee {SWING, CLAW, BITE, SLIME, PUNCH, STING, CLUB, BURN, HARM, STAB};
@@ -51,6 +52,8 @@ enum class eMonstMelee {SWING, CLAW, BITE, SLIME, PUNCH, STING, CLUB, BURN, HARM
 enum class eMonstMissile {DART, ARROW, SPEAR, ROCK, RAZORDISK, SPINE, KNIFE, BOLT};
 
 enum class eMonstGen {RAY, TOUCH, GAZE, BREATH, SPIT};
+
+enum class eMonstSummon {TYPE, LEVEL, SPECIES};
 
 // Directions!
 enum eDirection {
@@ -91,7 +94,8 @@ union uAbility {
 	} gen;
 	struct {
 		bool active;
-		mon_num_t type;
+		eMonstSummon type;
+		mon_num_t what;
 		int min, max, len, chance;
 	} summon;
 	struct {
@@ -144,7 +148,7 @@ public:
 	spec_num_t see_spec;
 public:
 	
-	void addAbil(eMonstAbilTemplate what, int param = 0);
+	std::map<eMonstAbil,uAbility>::iterator addAbil(eMonstAbilTemplate what, int param = 0);
 	void append(legacy::monster_record_type& old);
 	cMonster();
 	void writeTo(std::ostream& file) const;
@@ -193,6 +197,8 @@ std::ostream& operator << (std::ostream& out, eMonstAbil e);
 std::istream& operator >> (std::istream& in, eMonstAbil& e);
 std::ostream& operator << (std::ostream& out, eMonstMissile e);
 std::istream& operator >> (std::istream& in, eMonstMissile& e);
+std::ostream& operator << (std::ostream& out, eMonstSummon e);
+std::istream& operator >> (std::istream& in, eMonstSummon& e);
 std::ostream& operator << (std::ostream& out, eMonstMelee e);
 std::istream& operator >> (std::istream& in, eMonstMelee& e);
 std::ostream& operator << (std::ostream& out, eMonstGen e);

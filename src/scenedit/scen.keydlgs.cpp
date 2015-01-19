@@ -265,6 +265,9 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 		case STRT_SPELL_PAT:
 			strings = {"Single Space", "3x3 Square", "2x2 Square", "3x3 Open Square", "Radius 2 Circle", "Radius 3 Circle", "Cross", "Rotateable 2x8 Wall"};
 			break;
+		case STRT_SUMMON:
+			strings = {"0 - no summon (weak)", "1 - weak summoning", "2 - summoning", "3 - major summoning", "4 - no summon (unique/powerful"};
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = 0;
@@ -529,7 +532,7 @@ static bool edit_spec_enc_type(cDialog& me, std::string item_hit, node_stack_t& 
 	return true;
 }
 
-static short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
+short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
 	static const char*const fieldNames[] = {
 		"Wall of Force", "Wall of Fire", "Antimagic Field", "Stinking Cloud", "Wall of Ice", "Wall of Blades", "Sleep Cloud",
 		"Stone Block", "Webs", "Crate", "Barrel", "Fire Barrier", "Force Barrier", "Quickfire",
@@ -570,7 +573,7 @@ static short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
 	return made_choice ? item_hit : prev;
 }
 
-static pic_num_t choose_damage_type(short cur, cDialog* parent) {
+pic_num_t choose_damage_type(short cur, cDialog* parent) {
 	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Unblockable", "Cold", "Undead", "Demon"};
 	static const std::vector<pic_num_t> pics = {3,0,2,1,1,4,3,3};
 	short prev = cur;
@@ -602,14 +605,14 @@ static pic_num_t choose_boom_type(short cur, cDialog* parent) {
 	return made_choice ? item_hit : prev;
 }
 
-static pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {
+pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {
 	static const char*const status[] = {
 		"Poisoned Weapon", "Bless/Curse", "Poison", "Haste/Slow", "Invulnerable",
 		"Magic Resist/Amplify", "Webs", "Disease", "Sanctuary", "Dumbfounding/Enlightening",
 		"Martyr's Shield", "Sleep/Hyperactivity", "Paralysis", "Acid"
 	};
 	static const char*const pstatus[] = {"Stealth", "Flight", "Detect Life", "Firewalk"};
-	static const std::vector<pic_num_t> status_pics = {4,0,2,6,5,9,10,11,13,14,15,16,17,18};
+	static const std::vector<pic_num_t> status_pics = {4,2,0,6,5,9,10,11,12,13,14,15,16,17};
 	static const std::vector<pic_num_t> pstatus_pics = {25,23,24,26};
 	short prev = cur;
 	if(cur < 0 || cur >= (party ? pstatus_pics : status_pics).size()) cur = 0;

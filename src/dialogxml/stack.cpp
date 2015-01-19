@@ -98,6 +98,7 @@ size_t cStack::getPage() {
 void cStack::setPageCount(size_t n) {
 	if(curPage >= n && n > 0)
 		setPage(nPages - 1);
+	if(n == 0) curPage = 0;
 	nPages = n;
 	storage.resize(nPages);
 }

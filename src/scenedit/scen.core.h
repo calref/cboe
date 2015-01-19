@@ -4,7 +4,7 @@ class cDialog;
 void edit_custom_pics_types();
 short edit_ter_type(ter_num_t which_ter);
 short edit_monst_type(short which_monst);
-cMonster edit_monst_abil(cMonster starting_record,short parent_num);
+cMonster edit_monst_abil(cMonster starting_record,short which_monst,cDialog& parent);
 short edit_item_type(short which_item);
 cItem edit_item_abil(cItem starting_record,short parent_num);
 void edit_spec_item(short which_item);

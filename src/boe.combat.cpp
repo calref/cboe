@@ -590,10 +590,17 @@ void pc_attack(short who_att,short target) {
 	move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
 	take_ap(4);
 	
-	if((univ.town.monst[target].status[eStatus::MARTYRS_SHIELD] > 0 || univ.town.monst[target].abil[eMonstAbil::MARTYRS_SHIELD].active)
-	   && (store_hp - univ.town.monst[target].health > 0)) {
-		add_string_to_buf("  Shares damage!   ");
-		damage_pc(who_att, store_hp - univ.town.monst[target].health, eDamageType::MAGIC,eRace::UNKNOWN,0);
+	if(store_hp - univ.town.monst[target].health > 0) {
+		cCreature& who = univ.town.monst[target];
+		if(who.status[eStatus::MARTYRS_SHIELD] > 0 || (who.abil[eMonstAbil::MARTYRS_SHIELD].active && get_ran(1,1,1000) <= who.abil[eMonstAbil::MARTYRS_SHIELD].special.extra1)) {
+			int how_much = store_hp - who.health;
+			if(who.abil[eMonstAbil::MARTYRS_SHIELD].active) {
+				how_much *= who.abil[eMonstAbil::MARTYRS_SHIELD].special.extra2;
+				how_much /= 100;
+			}
+			add_string_to_buf("  Shares damage!   ");
+			damage_pc(who_att, how_much, eDamageType::MAGIC,eRace::UNKNOWN,0);
+		}
 	}
 	combat_posing_monster = current_working_monster = -1;
 }
@@ -1899,7 +1906,7 @@ void do_monster_turn() {
 			return;
 		
 		futzing = 0; // assume monster is fresh
-		
+		special_called = false;
 		cur_monst = &univ.town.monst[i];
 		
 		
@@ -2005,10 +2012,10 @@ void do_monster_turn() {
 //				add_string_to_buf((char *)create_line);
 				
 				// Basic breath weapons
-				if(cur_monst->abil[eMonstAbil::DAMAGE].active && cur_monst->abil[eMonstAbil::DAMAGE].gen.type == eMonstGen::BREATH
-					&& !acted_yet && get_ran(1,1,1000) < cur_monst->abil[eMonstAbil::DAMAGE].gen.odds) {
-					if(target != 6  && dist(cur_monst->cur_loc,targ_space) <= cur_monst->abil[eMonstAbil::DAMAGE].gen.range) {
-						acted_yet = monst_breathe(cur_monst,targ_space,cur_monst->abil[eMonstAbil::DAMAGE]);
+				if(cur_monst->abil[eMonstAbil::DAMAGE2].active && cur_monst->abil[eMonstAbil::DAMAGE2].gen.type == eMonstGen::BREATH
+					&& !acted_yet && get_ran(1,1,1000) < cur_monst->abil[eMonstAbil::DAMAGE2].gen.odds) {
+					if(target != 6  && dist(cur_monst->cur_loc,targ_space) <= cur_monst->abil[eMonstAbil::DAMAGE2].gen.range) {
+						acted_yet = monst_breathe(cur_monst,targ_space,cur_monst->abil[eMonstAbil::DAMAGE2]);
 						had_monst = true;
 						acted_yet = true;
 						take_m_ap(4,cur_monst);
@@ -2054,7 +2061,7 @@ void do_monster_turn() {
 								break;
 							case eMonstAbil::DAMAGE: case eMonstAbil::STATUS: case eMonstAbil::STATUS2: case eMonstAbil::FIELD:
 							case eMonstAbil::PETRIFY: case eMonstAbil::DRAIN_SP: case eMonstAbil::DRAIN_XP: case eMonstAbil::KILL:
-							case eMonstAbil::STEAL_FOOD: case eMonstAbil::STEAL_GOLD: case eMonstAbil::STUN:
+							case eMonstAbil::STEAL_FOOD: case eMonstAbil::STEAL_GOLD: case eMonstAbil::STUN: case eMonstAbil::DAMAGE2:
 								if(abil.second.gen.type == eMonstGen::TOUCH)
 									break; // We're looking for ranged attacks
 								if(dist(cur_monst->cur_loc, targ_space) > abil.second.gen.range)
@@ -2094,9 +2101,21 @@ void do_monster_turn() {
 						else take_m_ap(2,cur_monst);
 					} else if(pick_abil.first == eMonstAbil::RAY_HEAT)
 						take_m_ap(1,cur_monst);
+					else if(pick_abil.first == eMonstAbil::DAMAGE2)
+						take_m_ap(4,cur_monst);
 					else take_m_ap(3,cur_monst);
 					had_monst = true;
 					acted_yet = true;
+				}
+				
+				// Unusual ability - don't use multiple times per round
+				if(cur_monst->abil[eMonstAbil::SPECIAL].active && !special_called && party_can_see_monst(i) && get_ran(1,1,1000) <= cur_monst->abil[eMonstAbil::SPECIAL].special.extra3) {
+					uAbility abil = cur_monst->abil[eMonstAbil::SPECIAL];
+					short s1, s2, s3;
+					special_called = true;
+					// TODO: Is it good to allow only one monster to use a special ability per combat round?
+					run_special(eSpecCtx::MONST_SPEC_ABIL,0,abil.special.extra1,cur_monst->cur_loc,&s1,&s2,&s3);
+					take_m_ap(abil.special.extra2,cur_monst);
 				}
 			} // Special attacks
 			
@@ -2189,23 +2208,31 @@ void do_monster_turn() {
 					place_spell_pattern(square, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
 				if(cur_monst->abil[eMonstAbil::SUMMON].active && get_ran(1,1,100) < cur_monst->abil[eMonstAbil::SUMMON].summon.chance) {
 					uAbility abil = cur_monst->abil[eMonstAbil::SUMMON];
-					r1 = get_ran(1, abil.summon.min, abil.summon.max);
-					if(r1 && summon_monster(abil.summon.type, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude)) {
+					mon_num_t what_summon = 0;
+					switch(abil.summon.type) {
+						case eMonstSummon::TYPE: what_summon = abil.summon.what; break;
+						case eMonstSummon::LEVEL: what_summon = get_summon_monster(minmax(0, 4, abil.summon.what)); break;
+						case eMonstSummon::SPECIES:
+							for(k = 0; k < 200; k++) {
+								j = get_ran(1,0,255);
+								if(univ.scenario.scen_monsters[j].m_type == eRace(abil.summon.what)) {
+									what_summon = j;
+									break;
+								}
+							}
+							if(!what_summon) ASB("  Summon failed.");
+							break;
+					}
+					if(what_summon) r1 = get_ran(1, abil.summon.min, abil.summon.max);
+					else r1 = 0;
+					if(r1 && summon_monster(what_summon, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude)) {
 						monst_spell_note(cur_monst->number,33);
 						play_sound(61);
 						bool failed = false;
 						while(--r1 && !failed) {
-							failed = summon_monster(abil.summon.type, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude);
+							failed = summon_monster(what_summon, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude);
 						}
 					}
-				}
-				if(cur_monst->abil[eMonstAbil::SPECIAL].active && !special_called && party_can_see_monst(i)) {
-					uAbility abil = cur_monst->abil[eMonstAbil::SPECIAL];
-					short s1, s2, s3;
-					special_called = true;
-					// TODO: Is it good to allow only one monster to use a special ability per combat round?
-					run_special(eSpecCtx::MONST_SPEC_ABIL,0,abil.special.extra1,cur_monst->cur_loc,&s1,&s2,&s3);
-					take_m_ap(abil.special.extra2,cur_monst);
 				}
 			}
 			
@@ -2391,7 +2418,7 @@ void monster_attack_pc(short who_att,short target) {
 							continue;
 						if(abil.second.gen.type != eMonstGen::TOUCH)
 							continue;
-						if(abil.second.gen.range > 0 && get_ran(1,1,1000) <= abil.second.gen.range)
+						if(abil.second.gen.odds > 0 && get_ran(1,1,1000) <= abil.second.gen.odds)
 							continue;
 						// Print message and possibly choose sound
 						snd_num_t snd = 0;
@@ -2404,7 +2431,7 @@ void monster_attack_pc(short who_att,short target) {
 							case eMonstAbil::STEAL_FOOD: add_string_to_buf("  Steals food!"); snd = 26; break;
 							case eMonstAbil::STEAL_GOLD: add_string_to_buf("  Steals gold!"); break; // TODO: Pick a sound
 							case eMonstAbil::FIELD: break; // TODO: Invent messages?
-							case eMonstAbil::DAMAGE:
+							case eMonstAbil::DAMAGE: case eMonstAbil::DAMAGE2:
 								switch(abil.second.gen.dmg) {
 									case eDamageType::FIRE: add_string_to_buf("  Burning touch!"); break;
 									case eDamageType::COLD: add_string_to_buf("  Freezing touch!"); break;
@@ -2528,7 +2555,7 @@ void monster_attack_monster(short who_att,short attackee) {
 							case eMonstAbil::DRAIN_SP: add_string_to_buf("  Drains magic!"); break;
 							case eMonstAbil::KILL: add_string_to_buf("  Killing touch!"); break;
 							case eMonstAbil::FIELD: break; // TODO: Invent messages?
-							case eMonstAbil::DAMAGE:
+							case eMonstAbil::DAMAGE: case eMonstAbil::DAMAGE2:
 								switch(abil.second.gen.dmg) {
 									case eDamageType::FIRE: add_string_to_buf("  Burning touch!"); break;
 									case eDamageType::COLD: add_string_to_buf("  Freezing touch!"); break;
@@ -2747,7 +2774,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short ta
 			return;
 	}
 	switch(abil.first) {
-		case eMonstAbil::DAMAGE:
+		case eMonstAbil::DAMAGE: case eMonstAbil::DAMAGE2:
 			// Determine die size
 			i = 6;
 			if(abil.second.gen.type == eMonstGen::BREATH)

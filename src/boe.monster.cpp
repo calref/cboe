@@ -1100,11 +1100,12 @@ void forced_place_monster(mon_num_t which,location where) {
 
 void magic_adjust(cCreature *which_m,short *how_much) {
 	if(*how_much <= 0) return;
-	if(which_m->abil[eMonstAbil::ABSORB_SPELLS].active) {
+	if(which_m->abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= which_m->abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
+		int gain = which_m->abil[eMonstAbil::ABSORB_SPELLS].special.extra2;
 		*how_much = 0;
-		if(32767 - which_m->health > 3)
+		if(32767 - which_m->health > gain)
 			which_m->health = 32767;
-		else which_m->health += 3;
+		else which_m->health += gain;
 	}
 	*how_much *= which_m->magic_res;
 	*how_much /= 100;

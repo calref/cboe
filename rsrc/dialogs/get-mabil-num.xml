@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<field name="number" type='int' top='53' left='60' width='75' height='16'/>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text name='prompt' top='8' left='49' width='200' height='26'/>
+	<button name='okay' type='regular' top='52' left='171'>OK</button>
+</dialog>

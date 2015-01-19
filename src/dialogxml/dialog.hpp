@@ -150,6 +150,9 @@ public:
 	/// This is meant to be called from within an event handler to reverse a previous call to toast();
 	/// if you're already out of the dialog's event loop, you should instead call run() to reopen it.
 	void untoast();
+	/// Determine how the dialog exited.
+	/// @return the argument passed to toast() when the dialog was closed
+	bool accepted();
 	/// Get a reference to a control.
 	/// @param id The unique key of the control.
 	/// @throw std::invalid_argument if the control does not exist.
@@ -190,7 +193,7 @@ private:
 	void draw();
 	std::string process_keystroke(cKey keyHit);
 	std::string process_click(location where);
-	bool dialogNotToast;
+	bool dialogNotToast, didAccept;
 	rectangle winRect;
 	std::string defaultButton;
 	boost::any result;

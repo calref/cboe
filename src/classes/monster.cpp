@@ -135,235 +135,242 @@ void cMonster::append(legacy::monster_record_type& old){
 	ambient_sound = 0;
 }
 
-void cMonster::addAbil(eMonstAbilTemplate what, int param) {
+std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate what, int param) {
 	switch(what) {
 		// Missiles: {true, type, missile pic, dice, sides, skill, range, odds}
 		case eMonstAbilTemplate::THROWS_DARTS:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::DART, 1, 1, 7, 2, 6, 500};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::SHOOTS_ARROWS:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ARROW, 3, 2, 7, 4, 8, 750};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::THROWS_SPEARS:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::SPEAR, 5, 3, 7, 6, 8, 625};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::THROWS_ROCKS1:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ROCK, 12, 4, 7, 8, 10, 625};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::THROWS_ROCKS2:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ROCK, 12, 6, 7, 12, 10, 500};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::THROWS_ROCKS3:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ROCK, 12, 8, 7, 16, 10, 500};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::THROWS_RAZORDISKS:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::RAZORDISK, 7, 7, 7, 14, 8, 625};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::THROWS_KNIVES:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::KNIFE, 10, 2, 7, 2, 6, 500};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::GOOD_ARCHER:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ARROW, 3, 8, 7, 16, 10, 875};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::SHOOTS_SPINES:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::SPINE, 5, 6, 7, 12, 9, 625};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::CROSSBOWMAN:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::BOLT, 3, 10, 7, 16, 10, 875};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::SLINGER:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ROCK, 12, 2, 7, 3, 8, 750};
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		// Magical missiles: {true, type, missile pic, strength, range, odds}
 		case eMonstAbilTemplate::RAY_PETRIFY:
 			abil[eMonstAbil::PETRIFY].gen = {true, eMonstGen::GAZE, -1, 25, 6, 625};
-			break;
+			return abil.find(eMonstAbil::PETRIFY);
 		case eMonstAbilTemplate::RAY_SP_DRAIN:
 			abil[eMonstAbil::DRAIN_SP].gen = {true, eMonstGen::GAZE, 8, 50, 8, 625};
-			break;
+			return abil.find(eMonstAbil::DRAIN_SP);
 		case eMonstAbilTemplate::RAY_HEAT:
 			abil[eMonstAbil::RAY_HEAT].special = {true, 6, 625, 7};
-			break;
+			return abil.find(eMonstAbil::RAY_HEAT);
 		case eMonstAbilTemplate::RAY_PARALYSIS:
 			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::RAY, -1, 100, 6, 750};
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::PARALYZED;
-			break;
+			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::BREATH_FIRE:
-			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::BREATH, 13, param, 8, 375};
-			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::FIRE;
-			break;
+			abil[eMonstAbil::DAMAGE2].gen = {true, eMonstGen::BREATH, 13, param, 8, 375};
+			abil[eMonstAbil::DAMAGE2].gen.dmg = eDamageType::FIRE;
+			return abil.find(eMonstAbil::DAMAGE2);
 		case eMonstAbilTemplate::BREATH_FROST:
-			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::BREATH, 6, param, 8, 375};
-			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::COLD;
-			break;
+			abil[eMonstAbil::DAMAGE2].gen = {true, eMonstGen::BREATH, 6, param, 8, 375};
+			abil[eMonstAbil::DAMAGE2].gen.dmg = eDamageType::COLD;
+			return abil.find(eMonstAbil::DAMAGE2);
 		case eMonstAbilTemplate::BREATH_ELECTRICITY:
-			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::BREATH, 8, param, 8, 375};
-			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::MAGIC;
-			break;
+			abil[eMonstAbil::DAMAGE2].gen = {true, eMonstGen::BREATH, 8, param, 8, 375};
+			abil[eMonstAbil::DAMAGE2].gen.dmg = eDamageType::MAGIC;
+			return abil.find(eMonstAbil::DAMAGE2);
 		case eMonstAbilTemplate::BREATH_DARKNESS:
-			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::BREATH, 8, param, 8, 375};
-			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::UNBLOCKABLE;
-			break;
+			abil[eMonstAbil::DAMAGE2].gen = {true, eMonstGen::BREATH, 8, param, 8, 375};
+			abil[eMonstAbil::DAMAGE2].gen.dmg = eDamageType::UNBLOCKABLE;
+			return abil.find(eMonstAbil::DAMAGE2);
 		case eMonstAbilTemplate::BREATH_FOUL:
 			abil[eMonstAbil::FIELD].gen = {true, eMonstGen::BREATH, 12, PAT_SINGLE, 6, 375};
 			abil[eMonstAbil::FIELD].gen.fld = eFieldType::CLOUD_STINK;
-			break;
+			return abil.find(eMonstAbil::FIELD);
 		case eMonstAbilTemplate::BREATH_SLEEP:
 			abil[eMonstAbil::FIELD].gen = {true, eMonstGen::BREATH, 0, PAT_RAD2, 8, 750};
 			abil[eMonstAbil::FIELD].gen.fld = eFieldType::CLOUD_SLEEP;
-			break;
+			return abil.find(eMonstAbil::FIELD);
 		case eMonstAbilTemplate::SPIT_ACID:
 			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::SPIT, 0, 6, 6, 500};
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::ACID;
-			break;
+			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::SHOOTS_WEB:
 			abil[eMonstAbil::MISSILE_WEB].special = {true, 4, 375};
-			break;
+			return abil.find(eMonstAbil::MISSILE_WEB);
 			// Touch abilities
 		case eMonstAbilTemplate::TOUCH_POISON:
-			abil[eMonstAbil::STATUS2].gen = {true, eMonstGen::TOUCH, -1, param};
+			abil[eMonstAbil::STATUS2].gen = {true, eMonstGen::TOUCH, -1, param, 0, 1000};
 			abil[eMonstAbil::STATUS2].gen.stat = eStatus::POISON;
-			break;
+			return abil.find(eMonstAbil::STATUS2);
 		case eMonstAbilTemplate::TOUCH_ACID:
-			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, level > 20 ? 4 : 2};
+			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, level > 20 ? 4 : 2, 0, 1000};
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::ACID;
-			break;
+			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::TOUCH_DISEASE:
-			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 6, 667};
+			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 6, 0, 667};
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::DISEASE;
-			break;
+			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::TOUCH_WEB:
-			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 5};
+			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 5, 0, 1000};
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::WEBS;
-			break;
+			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::TOUCH_SLEEP:
-			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 6};
+			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 6, 0, 1000};
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::ASLEEP;
-			break;
+			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::TOUCH_DUMB:
-			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 2};
+			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 2, 0, 1000};
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::DUMB;
-			break;
+			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::TOUCH_PARALYSIS:
-			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 500};
+			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 0, 500};
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::PARALYZED;
-			break;
+			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::TOUCH_PETRIFY:
-			abil[eMonstAbil::PETRIFY].gen = {true, eMonstGen::TOUCH, -1, 25};
-			break;
+			abil[eMonstAbil::PETRIFY].gen = {true, eMonstGen::TOUCH, -1, 0, 25};
+			return abil.find(eMonstAbil::PETRIFY);
 		case eMonstAbilTemplate::TOUCH_DEATH:
-			abil[eMonstAbil::KILL].gen = {true, eMonstGen::TOUCH, -1, 2, 667};
-			break;
+			abil[eMonstAbil::KILL].gen = {true, eMonstGen::TOUCH, -1, 2, 0, 667};
+			return abil.find(eMonstAbil::KILL);
 		case eMonstAbilTemplate::TOUCH_ICY:
 		case eMonstAbilTemplate::TOUCH_ICY_DRAINING:
-			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::TOUCH, -1, 3, 667};
+			abil[eMonstAbil::DAMAGE].gen = {true, eMonstGen::TOUCH, -1, 3, 0, 667};
 			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::COLD;
-			if(what == eMonstAbilTemplate::TOUCH_ICY) break;
+			if(what == eMonstAbilTemplate::TOUCH_ICY)
+				return abil.find(eMonstAbil::DAMAGE);
 		case eMonstAbilTemplate::TOUCH_XP_DRAIN:
-			abil[eMonstAbil::DRAIN_XP].gen = {true, eMonstGen::TOUCH, -1, 150};
-			break;
+			abil[eMonstAbil::DRAIN_XP].gen = {true, eMonstGen::TOUCH, -1, 0, 150};
+			return abil.find(eMonstAbil::DRAIN_XP);
 		case eMonstAbilTemplate::TOUCH_STUN:
-			abil[eMonstAbil::STUN].gen = {true, eMonstGen::TOUCH, -1, 2, 667};
+			abil[eMonstAbil::STUN].gen = {true, eMonstGen::TOUCH, -1, 2, 0, 667};
 			abil[eMonstAbil::STUN].gen.stat = eStatus::HASTE_SLOW;
-			break;
+			return abil.find(eMonstAbil::STUN);
 		case eMonstAbilTemplate::TOUCH_STEAL_FOOD:
-			abil[eMonstAbil::STEAL_FOOD].gen = {true, eMonstGen::TOUCH, -1, 10, 667};
-			break;
+			abil[eMonstAbil::STEAL_FOOD].gen = {true, eMonstGen::TOUCH, -1, 10, 0, 667};
+			return abil.find(eMonstAbil::STEAL_FOOD);
 		case eMonstAbilTemplate::TOUCH_STEAL_GOLD:
-			abil[eMonstAbil::STEAL_GOLD].gen = {true, eMonstGen::TOUCH, -1, 10, 667};
-			break;
+			abil[eMonstAbil::STEAL_GOLD].gen = {true, eMonstGen::TOUCH, -1, 10, 0, 667};
+			return abil.find(eMonstAbil::STEAL_GOLD);
 			// Misc abilities
 		case eMonstAbilTemplate::SPLITS:
-			abil[eMonstAbil::SPLITS].special = {true, 100, 0};
-			break;
+			abil[eMonstAbil::SPLITS].special = {true, 1000, 0, 0};
+			return abil.find(eMonstAbil::SPLITS);
 		case eMonstAbilTemplate::MARTYRS_SHIELD:
-			abil[eMonstAbil::MARTYRS_SHIELD].special = {true, 0, 0};
-			break;
+			abil[eMonstAbil::MARTYRS_SHIELD].special = {true, 1000, 100, 0};
+			return abil.find(eMonstAbil::MARTYRS_SHIELD);
 		case eMonstAbilTemplate::ABSORB_SPELLS:
-			abil[eMonstAbil::ABSORB_SPELLS].special = {true, 100, 0};
-			break;
+			abil[eMonstAbil::ABSORB_SPELLS].special = {true, 1000, 3, 0};
+			return abil.find(eMonstAbil::ABSORB_SPELLS);
 		case eMonstAbilTemplate::SUMMON_5:
-			abil[eMonstAbil::SUMMON].summon = {true, static_cast<mon_num_t>(param), 1, 1, 130, 5};
-			break;
+			abil[eMonstAbil::SUMMON].summon = {true, eMonstSummon::TYPE, static_cast<mon_num_t>(param), 1, 1, 130, 5};
+			return abil.find(eMonstAbil::SUMMON);
 		case eMonstAbilTemplate::SUMMON_20:
-			abil[eMonstAbil::SUMMON].summon = {true, static_cast<mon_num_t>(param), 1, 1, 130, 20};
-			break;
+			abil[eMonstAbil::SUMMON].summon = {true, eMonstSummon::TYPE, static_cast<mon_num_t>(param), 1, 1, 130, 20};
+			return abil.find(eMonstAbil::SUMMON);
 		case eMonstAbilTemplate::SUMMON_50:
-			abil[eMonstAbil::SUMMON].summon = {true, static_cast<mon_num_t>(param), 1, 1, 130, 50};
-			break;
+			abil[eMonstAbil::SUMMON].summon = {true, eMonstSummon::TYPE, static_cast<mon_num_t>(param), 1, 1, 130, 50};
+			return abil.find(eMonstAbil::SUMMON);
 		case eMonstAbilTemplate::SPECIAL:
 			abil[eMonstAbil::SPECIAL].special = {true, param, 1};
-			break;
+			return abil.find(eMonstAbil::SPECIAL);
 		case eMonstAbilTemplate::DEATH_TRIGGERS:
 			abil[eMonstAbil::DEATH_TRIGGER].special = {true, param, 0};
-			break;
+			return abil.find(eMonstAbil::SPECIAL);
 			// Radiate abilities
 		case eMonstAbilTemplate::RADIATE_FIRE:
 			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_FIRE, param};
-			break;
+			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_ICE:
 			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_ICE, param};
-			break;
+			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_SHOCK:
 			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_FORCE, param};
-			break;
+			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_ANTIMAGIC:
 			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::FIELD_ANTIMAGIC, param};
-			break;
+			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_SLEEP:
 			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::CLOUD_SLEEP, param};
-			break;
+			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_STINK:
 			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::CLOUD_STINK, param};
-			break;
+			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_BLADE:
 			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_BLADES, param};
-			break;
+			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_WEB:
 			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::FIELD_WEB, param};
-			break;
+			return abil.find(eMonstAbil::RADIATE);
 			// Advanced abilities
 		case eMonstAbilTemplate::CUSTOM_MISSILE:
 			abil[eMonstAbil::MISSILE].active = true;
-			break;
+			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::CUSTOM_DAMAGE:
 			abil[eMonstAbil::DAMAGE].active = true;
-			break;
+			return abil.find(eMonstAbil::DAMAGE);
+		case eMonstAbilTemplate::CUSTOM_DAMAGE2:
+			abil[eMonstAbil::DAMAGE2].active = true;
+			return abil.find(eMonstAbil::DAMAGE2);
 		case eMonstAbilTemplate::CUSTOM_STATUS:
 			abil[eMonstAbil::STATUS].active = true;
-			break;
+			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::CUSTOM_FIELD:
 			abil[eMonstAbil::FIELD].active = true;
-			break;
+			return abil.find(eMonstAbil::FIELD);
 		case eMonstAbilTemplate::CUSTOM_PETRIFY:
 			abil[eMonstAbil::PETRIFY].active = true;
-			break;
+			return abil.find(eMonstAbil::PETRIFY);
 		case eMonstAbilTemplate::CUSTOM_SP_DRAIN:
 			abil[eMonstAbil::DRAIN_SP].active = true;
-			break;
+			return abil.find(eMonstAbil::DRAIN_SP);
 		case eMonstAbilTemplate::CUSTOM_XP_DRAIN:
 			abil[eMonstAbil::DRAIN_XP].active = true;
-			break;
+			return abil.find(eMonstAbil::DRAIN_XP);
 		case eMonstAbilTemplate::CUSTOM_KILL:
 			abil[eMonstAbil::KILL].active = true;
-			break;
+			return abil.find(eMonstAbil::KILL);
 		case eMonstAbilTemplate::CUSTOM_STEAL_FOOD:
 			abil[eMonstAbil::STEAL_FOOD].active = true;
-			break;
+			return abil.find(eMonstAbil::STEAL_FOOD);
 		case eMonstAbilTemplate::CUSTOM_STEAL_GOLD:
 			abil[eMonstAbil::STEAL_GOLD].active = true;
-			break;
+			return abil.find(eMonstAbil::STEAL_GOLD);
 		case eMonstAbilTemplate::CUSTOM_STUN:
 			abil[eMonstAbil::STUN].active = true;
-			break;
+			return abil.find(eMonstAbil::STUN);
 		case eMonstAbilTemplate::CUSTOM_STATUS2:
 			abil[eMonstAbil::STATUS2].active = true;
+			return abil.find(eMonstAbil::STATUS2);
 		case eMonstAbilTemplate::CUSTOM_RADIATE:
 			abil[eMonstAbil::RADIATE].active = true;
+			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::CUSTOM_SUMMON:
 			abil[eMonstAbil::SUMMON].active = true;
-			break;
+			return abil.find(eMonstAbil::SUMMON);
 	}
+	return abil.end();
 }
 
 cMonster::cMonster(){
@@ -561,6 +568,19 @@ std::istream& operator >> (std::istream& in, eMonstMissile& e) {
 	return in;
 }
 
+std::ostream& operator << (std::ostream& out, eMonstSummon e) {
+	return out << (int)e;
+}
+
+std::istream& operator >> (std::istream& in, eMonstSummon& e) {
+	int i;
+	in >> i;
+	if(i >= 0 && i <= int(eMonstSummon::SPECIES))
+		e = (eMonstSummon)i;
+	else e = eMonstSummon::TYPE;
+	return in;
+}
+
 std::string uAbility::to_string(eMonstAbil key) const {
 	std::ostringstream sout;
 	short i = 0;
@@ -616,7 +636,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 						case eFieldType::FIELD_QUICKFIRE: sout << "Incendiary"; break;
 					}
 					break;
-				case eMonstAbil::DAMAGE:
+				case eMonstAbil::DAMAGE: case eMonstAbil::DAMAGE2:
 					switch(gen.dmg) {
 						case eDamageType::FIRE: sout << "Fiery"; break;
 						case eDamageType::COLD: sout << "Icy"; break;
@@ -649,7 +669,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 				case eMonstGen::BREATH: sout << " breath"; break;
 				case eMonstGen::SPIT: sout << " spit"; break;
 			}
-			if(key == eMonstAbil::DAMAGE) {
+			if(key == eMonstAbil::DAMAGE || key == eMonstAbil::DAMAGE2) {
 				sout << " (" << gen.strength << ")";
 			} else if(key == eMonstAbil::STATUS || key == eMonstAbil::STATUS2 || key == eMonstAbil::STUN) {
 				sout << " (" << gen.strength;
@@ -763,7 +783,7 @@ void cMonster::writeTo(std::ostream& file) const {
 				file << "DAMAGE " << abil.second.gen.strength << '\n';
 				file << "RANGE " << abil.second.gen.range << '\n';
 				file << "CHANCE " << abil.second.gen.odds << '\n';
-				if(abil.first == eMonstAbil::DAMAGE)
+				if(abil.first == eMonstAbil::DAMAGE || abil.first == eMonstAbil::DAMAGE2)
 					file << "EXTRA " << abil.second.gen.dmg << '\n';
 				else if(abil.first == eMonstAbil::FIELD)
 					file << "EXTRA " << abil.second.gen.fld << '\n';
@@ -775,7 +795,7 @@ void cMonster::writeTo(std::ostream& file) const {
 				file << "CHANCE " << abil.second.radiate.chance << '\n';
 				break;
 			case eMonstAbilCat::SUMMON:
-				file << "TYPE " << abil.second.summon.type << '\n';
+				file << "TYPE " << abil.second.summon.type << '\t' << abil.second.summon.what << '\n';
 				file << "HOWMANY " << abil.second.summon.min << ' ' << abil.second.summon.max << '\n';
 				file << "CHANCE " << abil.second.summon.chance << '\n';
 				break;
@@ -870,7 +890,7 @@ void cMonster::readFrom(std::istream& file) {
 					else if(cat == eMonstAbilCat::RADIATE)
 						line >> abil.radiate.type;
 					else if(cat == eMonstAbilCat::SUMMON)
-						line >> abil.summon.type;
+						line >> abil.summon.type >> abil.summon.what;
 				} else if(cur == "DAMAGE") {
 					if(cat == eMonstAbilCat::MISSILE)
 						line >> abil.missile.dice >> abil.missile.sides;
@@ -894,7 +914,7 @@ void cMonster::readFrom(std::istream& file) {
 					else if(cat == eMonstAbilCat::SUMMON)
 						line >> abil.summon.chance;
 				} else if(cur == "EXTRA") {
-					if(key == eMonstAbil::DAMAGE)
+					if(key == eMonstAbil::DAMAGE || key == eMonstAbil::DAMAGE2)
 						line >> abil.gen.dmg;
 					else if(key == eMonstAbil::FIELD)
 						line >> abil.gen.fld;
