@@ -168,7 +168,7 @@ static void init_party_scen_data() {
 	 	univ.party.key_times[i] = 30000;
 	univ.party.party_event_timers.clear();
 	for(i = 0; i < 50; i++)
-		univ.party.spec_items[i] = (univ.scenario.special_items[i].flags >= 10) ? 1 : 0;
+		univ.party.spec_items[i] = univ.scenario.special_items[i].flags >= 10;
 	
 	for(i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;
@@ -289,7 +289,7 @@ void put_party_in_scen(std::string scen_name) {
 	
 	// this is kludgy, put here to prevent problems
 	for(i = 0; i < 50; i++)
-		univ.party.spec_items[i] = (univ.scenario.special_items[i].flags >= 10) ? 1 : 0;
+		univ.party.spec_items[i] = univ.scenario.special_items[i].flags >= 100;
 	
 	// Compatibility flags
 	if(univ.scenario.format.prog_make_ver[0] < 2){

@@ -99,7 +99,7 @@ public:
 	bool can_find_town[200];
 	short key_times[100];
 	std::vector<cTimer> party_event_timers;
-	char spec_items[50];
+	std::array<bool,50> spec_items;
 	char help_received[120];
 	short m_killed[200]; // monsters killed per town, I think
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;

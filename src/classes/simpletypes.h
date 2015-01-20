@@ -298,8 +298,8 @@ enum class eItemType {
 	CROSSBOW = 23,
 	BOLTS = 24,
 	MISSILE_NO_AMMO = 25, //e.g slings
-	UNUSED1 = 26, // these are here solely because they are options in the editor
-	UNUSED2 = 27,
+	SPECIAL = 26, // these are here solely because they are options in the editor
+	UNUSED1 = 27,
 };
 
 inline bool isArmourType(eItemType type) {

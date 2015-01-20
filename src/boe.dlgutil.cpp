@@ -224,7 +224,10 @@ void handle_sale(cShopItem item, int i) {
 				case eBuyStatus::NO_SPACE: ASB("Can't carry any more items."); break;
 				case eBuyStatus::NEED_GOLD: ASB("Not enough cash."); break;
 				case eBuyStatus::TOO_HEAVY: ASB("Item is too heavy."); break;
-				case eBuyStatus::HAVE_LOTS: ASB("You own too many of this."); break;
+				case eBuyStatus::HAVE_LOTS:
+					if(base_item.variety == eItemType::SPECIAL) ASB("You already own this.");
+					else ASB("You own too many of this.");
+					break;
 			}
 			break;
 		case eShopItemType::ALCHEMY:
@@ -791,7 +794,7 @@ void handle_talk_event(location p) {
 			strnum2 = -1;
 			break;
 		case eTalkNode::BUY_SPEC_ITEM:
-			if(univ.party.spec_items[a] > 0) {
+			if(univ.party.spec_items[a]) {
 				save_talk_str1 = "You already have it.";
 				strnum1 = -1;
 			}
@@ -802,7 +805,7 @@ void handle_talk_event(location p) {
 			else {
 				univ.party.gold -= b;
 				put_pc_screen();
-				univ.party.spec_items[a] = 1;
+				univ.party.spec_items[a] = true;
 			}
 			strnum2 = 0;
 			save_talk_str2 = "";

@@ -926,16 +926,12 @@ bool handle_action(sf::Event event) {
 	bool need_redraw = false, did_something = false, need_reprint = false;
 	bool pc_delayed = false;
 	location cur_loc,loc_in_sec,cur_direction;
-	unsigned char debug_storage;
 	short button_hit = 12;
 	bool right_button = event.mouseButton.button == sf::Mouse::Right;
 	eGameMode previous_mode;
 	
 	std::ostringstream str;
 	location the_point,point_in_area;
-	
-	
-	debug_storage = univ.party.spec_items[1];
 	
 	the_point = location(event.mouseButton.x, event.mouseButton.y);
 	the_point.x -= ul.x;

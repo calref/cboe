@@ -1208,8 +1208,8 @@ static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_it
 		case eItemType::UNUSED1:
 			variety.setSelected("unused1");
 			break;
-		case eItemType::UNUSED2:
-			variety.setSelected("unused2");
+		case eItemType::SPECIAL:
+			variety.setSelected("special");
 			break;
 	}
 	
@@ -1284,7 +1284,7 @@ static void save_item_info(cDialog& me, cItem& store_item, short which_item) {
 	else if(variety == "bolt") store_item.variety = eItemType::BOLTS;
 	else if(variety == "missile") store_item.variety = eItemType::MISSILE_NO_AMMO;
 	else if(variety == "unused1") store_item.variety = eItemType::UNUSED1;
-	else if(variety == "unused2") store_item.variety = eItemType::UNUSED2;
+	else if(variety == "special") store_item.variety = eItemType::SPECIAL;
 	store_item.weap_type = eSkill(me["weap-type"].getTextAsNum());
 	store_item.missile = me["missile"].getTextAsNum();
 	
@@ -1305,7 +1305,7 @@ static void save_item_info(cDialog& me, cItem& store_item, short which_item) {
 	if(store_item.type_flag > 0 && store_item.charges == 0)
 		store_item.charges = 1;
 	eItemAbilCat cat = getItemAbilCategory(store_item.ability);
-	if((cat == eItemAbilCat::SPELL || cat == eItemAbilCat::NONSPELL || cat == eItemAbilCat::REAGENT) && store_item.charges == 0)
+	if((cat == eItemAbilCat::USABLE || cat == eItemAbilCat::REAGENT) && store_item.charges == 0)
 		store_item.charges = 1;
 	if(was_charges != store_item.charges)
 		giveError("Due to either the selected special ability or the presence of a type flag, this item's charges have been set to 1.", &me);
@@ -1362,8 +1362,8 @@ static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("You must give the item a type (weapon, armor, etc.) before you can choose its abilities.","",&me);
 			return true;
 		}
-		if(store_item.variety == eItemType::GOLD || store_item.variety == eItemType::FOOD) {
-			giveError("Gold and Food cannot be given special abilities.","",&me);
+		if(store_item.variety == eItemType::GOLD || store_item.variety == eItemType::FOOD || store_item.variety == eItemType::SPECIAL) {
+			giveError("Gold, Food, and Special Items cannot be given special abilities.","",&me);
 			return true;
 		}
 		temp_item = edit_item_abil(store_item,store_which_item);

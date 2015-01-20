@@ -498,7 +498,7 @@ void set_stat_window(short new_stat) {
 			for(i = 0; i < 60; i++)
 				spec_item_array[i] = -1;
 			for(i = 0; i < 50; i++) ////
-				if(univ.party.spec_items[i] > 0) {
+				if(univ.party.spec_items[i]) {
 					spec_item_array[array_pos] = i;
 					array_pos++;
 				}

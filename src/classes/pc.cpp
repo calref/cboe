@@ -116,7 +116,7 @@ void cPlayer::sort_items() {
 		{it::TOOL, 7}, {it::FOOD, 20}, {it::SHIELD, 10}, {it::ARMOR, 10}, {it::HELM, 10},
 		{it::GLOVES, 10}, {it::SHIELD_2, 10}, {it::BOOTS, 10}, {it::RING, 5}, {it::NECKLACE, 6},
 		{it::WEAPON_POISON, 4}, {it::NON_USE_OBJECT, 11}, {it::PANTS, 12}, {it::CROSSBOW, 9}, {it::BOLTS, 9},
-		{it::MISSILE_NO_AMMO, 9}, {it::UNUSED1, 20}, {it::UNUSED2, 20}
+		{it::MISSILE_NO_AMMO, 9}, {it::UNUSED1, 20}, {it::SPECIAL, 20}
 	};
 	bool no_swaps = false;
 	
@@ -151,6 +151,12 @@ bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
 		party.food += item.item_level;
 		if(do_print && print_result)
 			print_result("You get some food.");
+		return true;
+	}
+	if(item.variety == eItemType::SPECIAL) {
+		party.spec_items[item.item_level] = true;
+		if(do_print && print_result)
+			print_result("You get a special item.");
 		return true;
 	}
 	if(!allow_overload && item.item_weight() > free_weight()) {
@@ -286,7 +292,10 @@ short cPlayer::skill(eSkill skill) {
 }
 
 eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) {
-	if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
+	if(item.variety == eItemType::SPECIAL) {
+		if(party.spec_items[item.item_level])
+			return eBuyStatus::HAVE_LOTS;
+	} else if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
 		for(int i = 0; i < 24; i++)
 			if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag == item.type_flag && items[i].charges > 123)
 				return eBuyStatus::HAVE_LOTS;

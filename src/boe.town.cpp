@@ -400,6 +400,9 @@ void start_town_mode(short which_town, short entry_dir) {
 					// place the preset item, if party hasn't gotten it already
 					if(univ.town.items[j].variety == eItemType::NO_ITEM) {
 						univ.town.items[j] = get_stored_item(univ.town->preset_items[i].code);
+						// Don't place special items if already in the party's possession
+						if(univ.town.items[j].variety == eItemType::SPECIAL && univ.party.spec_items[univ.town.items[j].item_level])
+							break;
 						univ.town.items[j].item_loc = univ.town->preset_items[i].loc;
 						
 						// Not use the items data flags, starting with forcing an ability

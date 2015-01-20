@@ -643,17 +643,19 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 			item.property = false;
 		}
 		
-		if(item_array[item_hit]->variety == eItemType::GOLD) {
-			if(item_array[item_hit]->item_level > 3000)
-				item_array[item_hit]->item_level = 3000;
+		if(item.variety == eItemType::GOLD) {
+			if(item.item_level > 3000)
+				item.item_level = 3000;
 			set_item_flag(&item);
-			give_gold(item_array[item_hit]->item_level,false);
+			give_gold(item.item_level,false);
 			play_sound(39); // formerly force_play_sound
-		} else if(item_array[item_hit]->variety == eItemType::FOOD) {
-			give_food(item_array[item_hit]->item_level,false);
+		} else if(item.variety == eItemType::FOOD) {
+			give_food(item.item_level,false);
 			set_item_flag(&item);
-			set_item_flag(item_array[item_hit]);
 			play_sound(62); // formerly force_play_sound
+		} else if(item.variety == eItemType::SPECIAL) {
+			univ.party.spec_items[item.item_level] = true;
+			set_item_flag(&item);
 		} else {
 			if(!allow_overload && item.item_weight() > univ.party[current_getting_pc].free_weight()) {
 				beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
@@ -1051,6 +1053,7 @@ void refresh_store_items() {
 		for(j = 0; j < 10; j++) {
 			univ.party.magic_store_items[i][j] = return_treasure(loot_index[j]);
 			if(univ.party.magic_store_items[i][j].variety == eItemType::GOLD ||
+			   univ.party.magic_store_items[i][j].variety == eItemType::SPECIAL ||
 			   univ.party.magic_store_items[i][j].variety == eItemType::FOOD)
 				univ.party.magic_store_items[i][j] = cItem();
 			univ.party.magic_store_items[i][j].ident = true;

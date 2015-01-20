@@ -2445,7 +2445,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				set_sd = false;
 			}
 			else {
-				univ.party.spec_items[spec.ex1a] = (spec.ex1b == 0) ? 1 : 0;
+				univ.party.spec_items[spec.ex1a] = spec.ex1b == 0;
 			}
 			if(stat_window == 6)
 				set_stat_window(6);
@@ -2512,9 +2512,9 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					give_gold(spec.ex1b,true);
 					give_food(spec.ex2a,true);
 					if((spec.m3 >= 0) && (spec.m3 < 50)) {
-						if(univ.party.spec_items[spec.m3] == 0)
+						if(!univ.party.spec_items[spec.m3])
 							ASB("You get a special item.");
-						univ.party.spec_items[spec.m3] = 1;
+						univ.party.spec_items[spec.m3] = true;
 						*redraw = true;
 						if(stat_window == 6)
 							set_stat_window(6);

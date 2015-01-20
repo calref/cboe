@@ -54,7 +54,7 @@
 		<led name='xbow' state='off' top='119' left='448' width='90'>Crossbow</led>
 		<led name='bolt' state='off' top='134' left='448' width='90'>Bolts</led>
 		<led name='missile' state='off' top='149' left='448' width='90'>Missile (no ammo)</led>
-		<led name='unused1' state='off' top='164' left='448' width='90'>Unused</led>
+		<led name='special' state='off' top='164' left='448' width='90'>Special Item</led>
 		<led name='unused2' state='off' top='179' left='448' width='80'>Unused</led>
 	</group>
 	<pict name="pic" type='dlog' num='16' top='8' left='11'/>
