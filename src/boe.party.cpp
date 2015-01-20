@@ -2593,6 +2593,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
 		return false;
 	
+	// TODO: I think there should be a way to force sound_type = 0 for UNBLOCKABLE
 	if(sound_type == 0) {
 		if(damage_type == eDamageType::FIRE || damage_type == eDamageType::UNBLOCKABLE)
 			sound_type = 5;

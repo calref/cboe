@@ -343,7 +343,7 @@ cItem::cItem(eAlchemy recipe) : cItem('alch') {
 			break;
 		case eAlchemy::BLISS:
 			value = 250;
-			ability = eItemAbil::BLISS;
+			ability = eItemAbil::BLISS_DOOM;
 			abil_data[0] = 5;
 			break;
 		case eAlchemy::POWER_STRONG:
@@ -615,7 +615,11 @@ void cItem::append(legacy::item_record_type& old){
 			abil_data[1] = int(eStatus::ACID);
 			break;
 		case 84:
-			ability = eItemAbil::BLISS;
+			ability = eItemAbil::BLISS_DOOM;
+			if(magic_use_type == 1)
+				magic_use_type = 0;
+			else if(magic_use_type == 3)
+				magic_use_type = 2;
 			break;
 		case 85:
 			ability = eItemAbil::AFFECT_EXPERIENCE;
@@ -630,22 +634,33 @@ void cItem::append(legacy::item_record_type& old){
 			ability = eItemAbil::AFFECT_SPELL_POINTS;
 			break;
 		case 89:
-			ability = eItemAbil::DOOM;
+			ability = eItemAbil::BLISS_DOOM;
+			if(magic_use_type == 0)
+				magic_use_type = 1;
+			else if(magic_use_type == 2)
+				magic_use_type = 3;
 			break;
 		case 90:
 			ability = eItemAbil::LIGHT;
 			break;
 		case 91:
-			ability = eItemAbil::STEALTH;
+			ability = eItemAbil::AFFECT_PARTY_STATUS;
+			abil_data[1] = int(ePartyStatus::STEALTH);
 			break;
 		case 92:
-			ability = eItemAbil::FIREWALK;
+			ability = eItemAbil::AFFECT_PARTY_STATUS;
+			abil_data[1] = int(ePartyStatus::FIREWALK);
 			break;
 		case 93:
-			ability = eItemAbil::FLYING;
+			ability = eItemAbil::AFFECT_PARTY_STATUS;
+			abil_data[1] = int(ePartyStatus::FLIGHT);
 			break;
 		case 94:
-			ability = eItemAbil::MAJOR_HEALING;
+			ability = eItemAbil::HEALTH_POISON;
+			if(magic_use_type == 1)
+				magic_use_type = 0;
+			else if(magic_use_type == 3)
+				magic_use_type = 2;
 			break;
 		case 95:
 			ability = eItemAbil::CALL_SPECIAL;
@@ -698,9 +713,13 @@ void cItem::append(legacy::item_record_type& old){
 			break;
 		case 119:
 			ability = eItemAbil::SUMMONING;
+			abil_data[1] = abil_data[0];
+			abil_data[0] = 50;
 			break;
 		case 120:
 			ability = eItemAbil::MASS_SUMMONING;
+			abil_data[1] = abil_data[0];
+			abil_data[0] = 6;
 			break;
 		case 121:
 			ability = eItemAbil::CAST_SPELL;

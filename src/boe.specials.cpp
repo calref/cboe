@@ -72,9 +72,9 @@ bool special_in_progress = false;
 // 0 - can't use 1 - combat only 2 - town only 3 - town & combat only  4 - everywhere  5 - outdoor
 // + 10 - mag. inept can use
 std::map<eItemAbil, short> abil_chart = {
-	{eItemAbil::POISON_WEAPON,13}, {eItemAbil::AFFECT_STATUS,3}, {eItemAbil::BLISS,3}, {eItemAbil::AFFECT_EXPERIENCE,4},
-	{eItemAbil::AFFECT_SKILL_POINTS,4}, {eItemAbil::AFFECT_HEALTH,4}, {eItemAbil::AFFECT_SPELL_POINTS,4}, {eItemAbil::DOOM,3},
-	{eItemAbil::LIGHT,13}, {eItemAbil::STEALTH,3}, {eItemAbil::FIREWALK,3}, {eItemAbil::FLYING,5}, {eItemAbil::MAJOR_HEALING,4},
+	{eItemAbil::POISON_WEAPON,13}, {eItemAbil::AFFECT_STATUS,3}, {eItemAbil::BLISS_DOOM,3}, {eItemAbil::AFFECT_EXPERIENCE,4},
+	{eItemAbil::AFFECT_SKILL_POINTS,4}, {eItemAbil::AFFECT_HEALTH,4}, {eItemAbil::AFFECT_SPELL_POINTS,4},
+	{eItemAbil::LIGHT,13}, {eItemAbil::AFFECT_PARTY_STATUS,3}, {eItemAbil::HEALTH_POISON,4},
 	{eItemAbil::CALL_SPECIAL,4}, {eItemAbil::CAST_SPELL,4},
 };
 
@@ -632,7 +632,8 @@ void use_item(short pc,short item) {
 				item_use_code = 1;
 			else item_use_code = 2;
 		}
-	}
+	} else if(abil == eItemAbil::AFFECT_PARTY_STATUS && univ.party[pc].items[item].abil_data[1] == int(ePartyStatus::FLIGHT))
+		item_use_code = 5;
 	
 	if(is_out())
 		user_loc = univ.party.p_loc;
@@ -892,17 +893,33 @@ void use_item(short pc,short item) {
 						}
 						break;
 				}
-			case eItemAbil::BLISS:
+			case eItemAbil::BLISS_DOOM:
 				switch(type) {
-					case 0: case 1:
+					case 0:
 						ASB("  You feel wonderful!");
 						heal_pc(pc,str * 20);
 						univ.party[pc].apply_status(eStatus::BLESS_CURSE,str);
 						break;
-					case 2: case 3:
+					case 1:
+						ASB("  You feel terrible.");
+						drain_pc(pc,str * 5);
+						damage_pc(pc,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
+						disease_pc(pc,2 * str);
+						dumbfound_pc(pc,2 * str);
+						break;
+					case 2:
 						ASB("  Everyone feels wonderful!");
 						heal_party(str*20);
 						univ.party.apply_status(eStatus::BLESS_CURSE,str);
+						break;
+					case 3:
+						ASB("  You all feel terrible.");
+						for(i = 0; i < 6; i++) {
+							drain_pc(i,str * 5);
+							damage_pc(i,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
+							disease_pc(i,2 * str);
+							dumbfound_pc(i,2 * str);
+						}
 						break;
 				}
 				break;
@@ -992,66 +1009,51 @@ void use_item(short pc,short item) {
 						break;
 				}
 				break;
-			case eItemAbil::DOOM:
-				switch(type) {
-					case 0: case 1:
-						ASB("  You feel terrible.");
-						drain_pc(pc,str * 5);
-						damage_pc(pc,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
-						disease_pc(pc,2 * str);
-						dumbfound_pc(pc,2 * str);
-						break;
-					case 2: case 3:
-						ASB("  You all feel terrible.");
-						for(i = 0; i < 6; i++) {
-							drain_pc(i,str * 5);
-							damage_pc(i,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
-							disease_pc(i,2 * str);
-							dumbfound_pc(i,2 * str);
-						}
-						break;
-				}
-				break;
 			case eItemAbil::LIGHT:
 				ASB("  You have more light.");
 				increase_light(50 * str);
 				break;
-			case eItemAbil::STEALTH:
-				ASB("  Your footsteps become quieter.");
-				univ.party.status[ePartyStatus::STEALTH] += 5 * str;
-				break;
-			case eItemAbil::FIREWALK:
-				ASB("  You feel chilly.");
-				univ.party.status[ePartyStatus::FIREWALK] += 2 * str;
-				break;
-			case eItemAbil::FLYING:
-				if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
-					add_string_to_buf("  Not while already flying.          ");
-					take_charge = false;
-					break;
-				}
-				if(univ.party.in_boat >= 0) {
-					add_string_to_buf("  Leave boat first.             ");
-					take_charge = false;
-				} else if(univ.party.in_horse >= 0) {
-					add_string_to_buf("  Leave horse first.             ");
-					take_charge = false;
-				} else {
-					ASB("  You rise into the air!");
-					univ.party.status[ePartyStatus::FLIGHT] += str;
-				}
-				break;
-			case eItemAbil::MAJOR_HEALING:
-				switch(type) {
-					case 0: case 1:
-						ASB("  You feel wonderful.");
-						heal_pc(pc,200);
-						cure_pc(pc,8);
+			case eItemAbil::AFFECT_PARTY_STATUS:
+				switch(ePartyStatus(univ.party[pc].items[item].abil_data[1])) {
+					case ePartyStatus::STEALTH: ASB("  Your footsteps become quieter."); str *= 5; break;
+					case ePartyStatus::FIREWALK: ASB("  You feel chilly."); str *= 2; break;
+					case ePartyStatus::DETECT_LIFE: ASB("  You detect  life."); break;
+					case ePartyStatus::FLIGHT:
+						if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
+							add_string_to_buf("  Not while already flying.          ");
+							take_charge = false;
+						} else if(univ.party.in_boat >= 0) {
+							add_string_to_buf("  Leave boat first.             ");
+							take_charge = false;
+						} else if(univ.party.in_horse >= 0) {
+							add_string_to_buf("  Leave horse first.             ");
+							take_charge = false;
+						} else ASB("  You rise into the air!");
 						break;
-					case 2: case 3:
+				}
+				if(take_charge) univ.party.status[ePartyStatus(univ.party[pc].items[item].abil_data[1])] += str;
+				break;
+			case eItemAbil::HEALTH_POISON:
+				switch(type) {
+					case 0:
+						ASB("  You feel wonderful.");
+						heal_pc(pc,str*25);
+						cure_pc(pc,str);
+						break;
+					case 1:
+						ASB("  You feel terrible.");
+						damage_pc(pc, str*25, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
+						poison_pc(pc,str);
+						break;
+					case 2:
 						ASB("  You all feel wonderful.");
-						heal_party(200);
-						cure_party(8);
+						heal_party(str*25);
+						cure_party(str);
+						break;
+					case 3:
+						ASB("  You all feel terrible.");
+						hit_party(str*25, eDamageType::UNBLOCKABLE);
+						poison_party(str);
 						break;
 				}
 				break;
@@ -1088,6 +1090,7 @@ void use_item(short pc,short item) {
 					case eSpell::WALL_ICE_BALL: add_string_to_buf("  It shoots a blue sphere."); break;
 					case eSpell::CHARM_FOE: add_string_to_buf("  It fires a lovely, sparkling beam."); break;
 					case eSpell::ANTIMAGIC: add_string_to_buf("  Your hair stands on end."); break;
+					default: add_string_to_buf("  It casts a spell: " + (*spell).name()); break;
 				}
 				if(overall_mode == MODE_COMBAT) {
 					bool priest = (*spell).is_priest();
@@ -1112,13 +1115,14 @@ void use_item(short pc,short item) {
 				else do_mage_spell(current_pc, spell, true);
 				break;
 			case eItemAbil::SUMMONING:
-				if(!summon_monster(str,user_loc,50,2))
+				if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,str,2))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::MASS_SUMMONING:
-				r1 = get_ran(6,1,4);
-				for(i = 0; i < get_ran(1,3,5); i++) // TODO: Why recalculate the random number for each loop iteration?
-					if(!summon_monster(str,user_loc,r1,2))
+				r1 = get_ran(str,1,4);
+				j = get_ran(1,3,5);
+				for(i = 0; i < j; i++)
+					if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,r1,2))
 						add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::QUICKFIRE:
