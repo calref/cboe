@@ -648,8 +648,8 @@ void award_xp(short pc_num,short amt) {
 		std::string level = std::to_string(univ.party[pc_num].level);
 		add_string_to_buf("  " + univ.party[pc_num].name + " is level " + level + "!");
 		univ.party[pc_num].skill_pts += (univ.party[pc_num].level < 20) ? 5 : 4;
-		add_hp = (univ.party[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[univ.party[pc_num].skill(eSkill::STRENGTH)]
-			: max (skill_bonus[univ.party[pc_num].skill(eSkill::STRENGTH)],0);
+		add_hp = (univ.party[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[univ.party[pc_num].skills[eSkill::STRENGTH]]
+			: max (skill_bonus[univ.party[pc_num].skills[eSkill::STRENGTH]],0);
 		if(add_hp < 0)
 			add_hp = 0;
 		univ.party[pc_num].max_health += add_hp;
