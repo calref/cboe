@@ -302,13 +302,13 @@ static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, cIte
 			item = (item == 0) ? 23 : item - 1;
 		} while(univ.party[pc_num].items[item].variety == eItemType::NO_ITEM);
 		store_i = univ.party[pc_num].items[item];
-		put_item_info(me,item);
+		put_item_info(me,store_i);
 	} else if(item_hit == "right") {
 		do {
 			item = (item == 23) ? 0 : item + 1;
 		} while(univ.party[pc_num].items[item].variety == eItemType::NO_ITEM);
 		store_i = univ.party[pc_num].items[item];
-		put_item_info(me,item);
+		put_item_info(me,store_i);
 	}
 	return true;
 }
