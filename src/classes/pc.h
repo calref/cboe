@@ -69,6 +69,7 @@ public:
 	short get_prot_level(eItemAbil abil, short dat = -1);
 	short has_abil_equip(eItemAbil abil, short dat = -1);
 	short has_abil(eItemAbil abil, short dat = -1);
+	short skill(eSkill skill);
 	eBuyStatus ok_to_buy(short cost,cItem item);
 	
 	void append(legacy::pc_record_type old);

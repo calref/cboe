@@ -648,8 +648,8 @@ void award_xp(short pc_num,short amt) {
 		std::string level = std::to_string(univ.party[pc_num].level);
 		add_string_to_buf("  " + univ.party[pc_num].name + " is level " + level + "!");
 		univ.party[pc_num].skill_pts += (univ.party[pc_num].level < 20) ? 5 : 4;
-		add_hp = (univ.party[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[univ.party[pc_num].skills[eSkill::STRENGTH]]
-			: max (skill_bonus[univ.party[pc_num].skills[eSkill::STRENGTH]],0);
+		add_hp = (univ.party[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[univ.party[pc_num].skill(eSkill::STRENGTH)]
+			: max (skill_bonus[univ.party[pc_num].skill(eSkill::STRENGTH)],0);
 		if(add_hp < 0)
 			add_hp = 0;
 		univ.party[pc_num].max_health += add_hp;
@@ -687,7 +687,7 @@ static short check_party_stat_get(short pc, eSkill which_stat) {
 		case eSkill::CUR_LEVEL:
 			return univ.party[pc].level;
 		default:
-			return univ.party[pc].skills[which_stat];
+			return univ.party[pc].skill(which_stat);
 	}
 	return 0;
 }
@@ -739,11 +739,11 @@ bool poison_weapon( short pc_num, short how_much,short safe) {
 		// Nimble?
 		if(univ.party[pc_num].traits[eTrait::NIMBLE])
 			r1 -= 6;
-		if((r1 > p_chance[univ.party[pc_num].skills[eSkill::POISON]]) && (safe == 0)) {
+		if((r1 > p_chance[univ.party[pc_num].skill(eSkill::POISON)]) && (safe == 0)) {
 			add_string_to_buf("  Poison put on badly.         ");
 			p_level = p_level / 2;
 			r1 = get_ran(1,1,100);
-			if(r1 > p_chance[univ.party[pc_num].skills[eSkill::POISON]] + 10) {
+			if(r1 > p_chance[univ.party[pc_num].skill(eSkill::POISON)] + 10) {
 				add_string_to_buf("  You nick yourself.          ");
 				univ.party[pc_num].status[eStatus::POISON] += p_level;
 			}
@@ -1629,7 +1629,7 @@ void crumble_wall(location where) { // TODO: Add something like this to the spre
 void do_mindduel(short pc_num,cCreature *monst) {
 	short i = 0,adjust,r1,r2,balance = 0;
 	
-	adjust = (univ.party[pc_num].level + univ.party[pc_num].skills[eSkill::INTELLIGENCE]) / 2 - monst->level * 2;
+	adjust = (univ.party[pc_num].level + univ.party[pc_num].skill(eSkill::INTELLIGENCE)) / 2 - monst->level * 2;
 	adjust += univ.party[pc_num].get_prot_level(eItemAbil::WILL) * 5;
 	if(monst->attitude % 2 != 1)
 		make_town_hostile();
@@ -1757,7 +1757,7 @@ bool pc_can_cast_spell(short pc_num,eSpell spell_num) {
 		return false; // From Windows version. It does kinda make sense, though this function shouldn't even be called in these modes.
 	if(!isMage(spell_num) && !isPriest(spell_num))
 		return false;
-	if(univ.party[pc_num].skills[type] < level)
+	if(univ.party[pc_num].skill(type) < level)
 		return false;
 	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return false;
@@ -2180,7 +2180,7 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	}
 	
 	if(!can_choose_caster) {
-		if(univ.party[pc_num].skills[type] == 0) {
+		if(univ.party[pc_num].skill(type) == 0) {
 			if(type == eSkill::MAGE_SPELLS) add_string_to_buf("Cast: No mage skill.");
 			else add_string_to_buf("Cast: No priest skill.");
 			return eSpell::NONE;
@@ -2277,6 +2277,8 @@ void print_spell_cast(eSpell spell,eSkill which) {
 short stat_adj(short pc_num,eSkill which) {
 	short tr;
 	
+	// This is one place where we use the base skill level instead of the adjusted skill level
+	// Using the adjusted skill level here would alter the original mechanics of stat-boosting items
 	tr = skill_bonus[univ.party[pc_num].skills[which]];
 	if(which == eSkill::INTELLIGENCE) {
 		if(univ.party[pc_num].traits[eTrait::MAGICALLY_APT])
@@ -2366,16 +2368,16 @@ void do_alchemy() {
 		play_sound(8);
 		
 		r1 = get_ran(1,1,100);
-		if(r1 < fail_chance[univ.party[pc_num].skills[eSkill::ALCHEMY] - alch_difficulty[which_p]]) {
+		if(r1 < fail_chance[univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p]]) {
 			add_string_to_buf("Alchemy: Failed.               ");
 			r1 = get_ran(1,0,1);
 			play_sound(41 );
 		}
 		else {
 			cItem store_i(potion);
-			if(univ.party[pc_num].skills[eSkill::ALCHEMY] - alch_difficulty[which_p] >= 5)
+			if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p] >= 5)
 				store_i.charges++;
-			if(univ.party[pc_num].skills[eSkill::ALCHEMY] - alch_difficulty[which_p] >= 11)
+			if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p] >= 11)
 				store_i.charges++;
 			store_i.graphic_num += get_ran(1,0,2);
 			if(!univ.party[pc_num].give_item(store_i,false)) {
@@ -2420,12 +2422,12 @@ eAlchemy alch_choice(short pc_num) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		chooseAlchemy["label" + n].setText(get_str("magic-names", i + 200));
 		chooseAlchemy["potion" + n].attachClickHandler(alch_choice_event_filter);
-		if(univ.party[pc_num].skills[eSkill::ALCHEMY] < difficulty[i] || univ.party.alchemy[i] == 0)
+		if(univ.party[pc_num].skill(eSkill::ALCHEMY) < difficulty[i] || univ.party.alchemy[i] == 0)
 			chooseAlchemy["potion" + n].hide();
 	}
 	std::ostringstream sout;
 	sout << univ.party[pc_num].name;
-	sout << " (skill " << univ.party[pc_num].skills[eSkill::ALCHEMY] << ")";
+	sout << " (skill " << univ.party[pc_num].skill(eSkill::ALCHEMY) << ")";
 	chooseAlchemy["mixer"].setText(sout.str());
 	if(univ.party.help_received[20] == 0) {
 		// TODO: I'm not sure if the initial draw is needed
@@ -2624,7 +2626,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 						how_much = how_much - univ.party[which_pc].items[i].bonus;
 					}
 					r1 = get_ran(1,1,100);
-					if(r1 < hit_chance[univ.party[which_pc].skills[eSkill::DEFENSE]] - 20)
+					if(r1 < hit_chance[univ.party[which_pc].skill(eSkill::DEFENSE)] - 20)
 						how_much -= 1;
 				}
 				if(univ.party[which_pc].items[i].protection > 0) {
@@ -2651,7 +2653,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		if(univ.party[which_pc].traits[eTrait::TOUGHNESS])
 			how_much--;
 		// luck
-		if(get_ran(1,1,100) < 2 * (hit_chance[univ.party[which_pc].skills[eSkill::LUCK]] - 20))
+		if(get_ran(1,1,100) < 2 * (hit_chance[univ.party[which_pc].skill(eSkill::LUCK)] - 20))
 			how_much -= 1;
 	}
 	
@@ -2772,8 +2774,9 @@ void kill_pc(short which_pc,eMainStatus type) {
 	if(type != eMainStatus::STONE)
 		i = univ.party[which_pc].has_abil_equip(eItemAbil::LIFE_SAVING);
 	
-	if(!no_save && type != eMainStatus::ABSENT && univ.party[which_pc].skills[eSkill::LUCK] > 0 &&
-	   get_ran(1,1,100) < hit_chance[univ.party[which_pc].skills[eSkill::LUCK]]) {
+	int luck = univ.party[which_pc].skill(eSkill::LUCK);
+	if(!no_save && type != eMainStatus::ABSENT && luck > 0 &&
+	   get_ran(1,1,100) < hit_chance[luck]) {
 		add_string_to_buf("  But you luck out!          ");
 		univ.party[which_pc].cur_health = 0;
 	}

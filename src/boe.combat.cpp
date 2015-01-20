@@ -503,7 +503,7 @@ bool pc_combat_move(location destination) {
 
 void char_parry() {
 	univ.party[current_pc].parry = (univ.party[current_pc].ap / 4) *
-		(2 + stat_adj(current_pc,eSkill::DEXTERITY) + univ.party[current_pc].skills[eSkill::DEFENSE]);
+		(2 + stat_adj(current_pc,eSkill::DEXTERITY) + univ.party[current_pc].skill(eSkill::DEFENSE));
 	univ.party[current_pc].ap = 0;
 }
 
@@ -514,9 +514,8 @@ void char_stand_ready() {
 
 void pc_attack(short who_att,short target) {
 	short r1,r2,weap1 = 24, weap2 = 24,i,store_hp,skill_item;
-	eSkill what_skill1 = eSkill::DEXTERITY, what_skill2 = eSkill::DEXTERITY;
 	cCreature *which_m;
-	short hit_adj, dam_adj, spec_dam = 0,poison_amt;
+	short hit_adj, dam_adj;
 	
 	// slice out bad attacks
 	if(univ.party[who_att].main_status != eMainStatus::ALIVE)
@@ -570,7 +569,7 @@ void pc_attack(short who_att,short target) {
 		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
 		r2 = get_ran(1,1,4) + dam_adj;
 		
-		if(r1 <= hit_chance[univ.party[who_att].skills[what_skill1]]) {
+		if(r1 <= hit_chance[univ.party[who_att].skill(eSkill::DEXTERITY)]) {
 			damage_monst(target, who_att, r2, 0,eDamageType::WEAPON,4);
 		}
 		else {
@@ -636,7 +635,7 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 	if(weap.ability == eItemAbil::WEAK_WEAPON)
 		r2 = (r2 * (10 - weap.abil_data[0])) / 10;
 	
-	if(r1 <= hit_chance[univ.party[who_att].skills[what_skill]]) {
+	if(r1 <= hit_chance[univ.party[who_att].skill(what_skill)]) {
 		eDamageType dmg_tp = eDamageType::UNBLOCKABLE;
 		short spec_dam = calc_spec_dam(weap.ability,weap.abil_data[0],weap.abil_data[1],which_m,dmg_tp);
 		short bonus_dam = 0;
@@ -645,10 +644,10 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 		if(primary) {
 			// assassinate
 			r1 = get_ran(1,1,100);
-			if((univ.party[who_att].level >= which_m->level - 1)
-				&& univ.party[who_att].skills[eSkill::ASSASSINATION] >= which_m->level / 2
+			int assassin = univ.party[who_att].skill(eSkill::ASSASSINATION);
+			if((univ.party[who_att].level >= which_m->level - 1) && assassin >= which_m->level / 2
 				&& (!which_m->abil[eMonstAbil::SPLITS].active)) // Can't assassinate splitters
-				if(r1 < hit_chance[max(univ.party[who_att].skills[eSkill::ASSASSINATION] - which_m->level,0)]) {
+				if(r1 < hit_chance[max(assassin - which_m->level,0)]) {
 					add_string_to_buf("  You assassinate.");
 					spec_dam += r2;
 				}
@@ -1481,7 +1480,7 @@ void fire_missile(location target) {
 	bool exploding = false;
 	missile_firer = current_pc;
 	
-	skill = univ.party[missile_firer].skills[univ.party[missile_firer].items[missile_inv_slot].weap_type];
+	skill = univ.party[missile_firer].skill(univ.party[missile_firer].items[missile_inv_slot].weap_type);
 	range = (overall_mode == MODE_FIRING) ? 12 : 8;
 	dam = univ.party[missile_firer].items[ammo_inv_slot].item_level;
 	dam_bonus = univ.party[missile_firer].items[ammo_inv_slot].bonus + minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
@@ -4297,7 +4296,7 @@ bool combat_cast_mage_spell() {
 	store_sp = univ.party[current_pc].cur_sp;
 	if(univ.party[current_pc].cur_sp == 0)
 		add_string_to_buf("Cast: No spell points.        ");
-	else if(univ.party[current_pc].skills[eSkill::MAGE_SPELLS] == 0)
+	else if(univ.party[current_pc].skill(eSkill::MAGE_SPELLS) == 0)
 		add_string_to_buf("Cast: No mage skill.        ");
 	else if(get_encumberance(current_pc) > 1) {
 		add_string_to_buf("Cast: Too encumbered.        ");
@@ -4508,7 +4507,7 @@ bool combat_cast_priest_spell() {
 	if(univ.party[current_pc].cur_sp == 0) {
 		add_string_to_buf("Cast: No spell points.        ");
 		return false;
-	} else if(univ.party[current_pc].skills[eSkill::PRIEST_SPELLS] == 0) {
+	} else if(univ.party[current_pc].skill(eSkill::PRIEST_SPELLS) == 0) {
 		add_string_to_buf("Cast: No priest skill.        ");
 		return false;
 	}
@@ -4798,8 +4797,8 @@ static void process_force_cage(location loc, short i) {
 		cPlayer& who = univ.party[i];
 		// We want to make sure everyone has a chance of eventually breaking a cage, because it never ends on its own,
 		// and because being trapped unconditionally prevents you from ending combat mode.
-		short bonus = 5 + who.skills[eSkill::MAGE_LORE];
-		if(get_ran(1,1,100) < who.skills[eSkill::MAGE_SPELLS]*10 + who.skills[eSkill::PRIEST_SPELLS]*4 + bonus) {
+		short bonus = 5 + who.skill(eSkill::MAGE_LORE);
+		if(get_ran(1,1,100) < who.skill(eSkill::MAGE_SPELLS)*10 + who.skill(eSkill::PRIEST_SPELLS)*4 + bonus) {
 			play_sound(60);
 			add_string_to_buf("  " + who.name + " breaks force cage.");
 			univ.town.set_force_cage(loc.x,loc.y,false);

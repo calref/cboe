@@ -1073,7 +1073,7 @@ void pick_lock(location where,short pc_num) {
 		will_break = true;
 	
 	r1 = get_ran(1,1,100) - 5 * stat_adj(pc_num,eSkill::DEXTERITY) + univ.town.difficulty * 7
-		- 5 * univ.party[pc_num].skills[eSkill::LOCKPICKING] - univ.party[pc_num].items[which_item].abil_data[0] * 7;
+		- 5 * univ.party[pc_num].skill(eSkill::LOCKPICKING) - univ.party[pc_num].items[which_item].abil_data[0] * 7;
 	
 	// Nimble?
 	if(univ.party[pc_num].traits[eTrait::NIMBLE])

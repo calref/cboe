@@ -541,7 +541,11 @@ static void display_pc_info(cDialog& me, const short pc) {
 	
 	for(i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
-		me[skill_ids[i]].setTextToNum(univ.party[pc].skills[skill]);
+		int bonus = univ.party[pc].get_prot_level(eItemAbil::BOOST_STAT, i);
+		to_draw << univ.party[pc].skills[skill];
+		if(bonus > 0) to_draw << '+' << bonus;
+		me[skill_ids[i]].setText(to_draw.str());
+		to_draw.str("");
 	}
 	store = total_encumberance(pc);
 	me["encumb"].setTextToNum(store);

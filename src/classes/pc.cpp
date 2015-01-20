@@ -186,7 +186,7 @@ bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
 }
 
 short cPlayer::max_weight() {
-	return 100 + (15 * min(skills[eSkill::STRENGTH],20)) + (traits[eTrait::STRENGTH] * 30)
+	return 100 + (15 * min(skill(eSkill::STRENGTH),20)) + (traits[eTrait::STRENGTH] * 30)
 		+ (traits[eTrait::BAD_BACK] * -50);
 }
 
@@ -279,6 +279,10 @@ short cPlayer::has_abil(eItemAbil abil,short dat) {
 		return i;
 	}
 	return 24;
+}
+
+short cPlayer::skill(eSkill skill) {
+	return min(20, skills[skill] + get_prot_level(eItemAbil::BOOST_STAT, int(skill)));
 }
 
 eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) {

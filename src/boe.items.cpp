@@ -996,7 +996,7 @@ void place_treasure(location where,short level,short loot,short mode) {
 			if(new_item.variety != eItemType::NO_ITEM) {
 				for(i = 0; i < 6; i++)
 					if((univ.party[i].main_status == eMainStatus::ALIVE)
-					   && get_ran(1,1,100) < id_odds[univ.party[i].skills[eSkill::ITEM_LORE]])
+					   && get_ran(1,1,100) < id_odds[univ.party[i].skill(eSkill::ITEM_LORE)])
 						new_item.ident = true;
 				place_item(new_item,where,false);
 			}
