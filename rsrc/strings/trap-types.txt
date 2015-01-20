@@ -10,3 +10,4 @@ Flames
 Dumbfound
 Disease
 Foul Spray (disease all)
+Custom Effect

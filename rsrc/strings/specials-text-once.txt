@@ -212,13 +212,13 @@ Stuff Done Flag Part B
 First part of message
 Second part of message
 Unused
-Unused
-Unused
+Picture number
+Picture type
 Type of trap
 Trap severity (0 .. 3)
 Unused
 Penalty (0 .. 100, higher is harder)
-Unused
+(Custom only) Special node for effect
 Unused
 Special after trap finished
 --------------------

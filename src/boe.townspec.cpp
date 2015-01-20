@@ -34,7 +34,6 @@ void activate_monster_enc(short enc_num,std::string list,short str,short strsnd,
 	}
 }
 
-//short pc_num; // 6 - BOOM!  7 - pick here
 //short trap_type; // 0 - random  1 - blade  2 - dart  3 - gas  4 - boom  5 - paralyze  6  - no
 // 7 - level drain  8 - alert  9 - big flames 10 - dumbfound 11 - disease 1
 // 12 - disease all
@@ -43,23 +42,10 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 	short trap_odds[30] = {5,30,35,42,48, 55,63,69,75,77,
 		78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99};
 	
-	if(pc_num > 7) { // Debug
-		beep();
-		ASB("TRAP ERROR! REPORT!");
-		return true;
-	}
-	
-	if(pc_num == 7) {
-		pc_num = char_select_pc(0,"Trap! Who will disarm?");
-		if(pc_num == 6)
-			return false;
-	}
-	
-	
 	num_hits += trap_level;
 	
 	if(trap_type == TRAP_RANDOM)
-		trap_type = (eTrapType) get_ran(1,1,4);
+		trap_type = (eTrapType) get_ran(1,0,4);
 	if(trap_type == TRAP_FALSE_ALARM)
 		return true;
 	
@@ -102,8 +88,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			add_string_to_buf("  Poison gas pours out.          ");
 			r1 = 2 + univ.town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
-			for(i = 0; i < 6; i++)
-				poison_pc(i,r1);
+			poison_party(r1);
 			break;
 			
 		case TRAP_EXPLOSION:
@@ -158,12 +143,17 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 				disease_pc(i,r1);
 			break;
 			
+		case TRAP_CUSTOM:
+			univ.party.force_ptr(5, 301, 4);
+			PSD[SDF_SPEC_TRAPLVL] = trap_level;
+			break;
+			
 		default:
 			add_string_to_buf("ERROR: Invalid trap type."); // should never be reached
 	}
 	put_pc_screen();
 	put_item_screen(stat_window,0);
-	return true;
+	return false;
 }
 
 location get_spec_loc(short which) {

@@ -27,6 +27,7 @@
 #define SDF_SPEC_LOC_Y			301][1
 #define SDF_SPEC_TER			301][2
 #define SDF_SPEC_STRBUF			301][3
+#define SDF_SPEC_TRAPLVL		301][4
 #define SDF_SKIP_STARTUP		305][4 // preferably deprecated
 #define SDF_LESS_SOUND			305][5
 #define SDF_NO_TARGET_LINE		305][6
@@ -142,6 +143,7 @@ enum eTrapType {
 	TRAP_DUMBFOUND = 10, //dumbfound all
 	TRAP_DISEASE = 11,
 	TRAP_DISEASE_ALL = 12,
+	TRAP_CUSTOM = 13,
 };
 
 // Startup button rects

@@ -118,6 +118,11 @@ void cSpecial::append(legacy::special_node_type& old){
 			type = eSpecType::IF_TRAIT;
 			ex1a = old.type - 147;
 			break;
+		case 63: // Trap used to force a specific picture
+			type = eSpecType::ONCE_TRAP;
+			pic = 27;
+			pictype = PIC_DLOG;
+			break;
 		case 153: // if enough mage lore
 			type = eSpecType::IF_STATISTIC;
 			if(ex2a >= 0) { // Windows version added "if statistic" much earlier, but it still needs a little conversion.
@@ -394,13 +399,13 @@ static const char*const button_dict[7][11] = {
 		"mm  mddddddmmm", // msg1
 		"              ", // msg2
 		"        III   ", // msg3
-		"     pppppp   ", // pic
-		"     ??????   ", // pictype
+		"     pppppp  p", // pic
+		"     ??????  ?", // pictype
 		"iI   bbbiii  X", // ex1a
 		"     sss      ", // ex1b
 		"              ", // ex1c
 		"     bbb      ", // ex2a
-		"s    ssssss   ", // ex2b
+		"s    ssssss  S", // ex2b
 		"              ", // ex2c
 	}, { // affect pc nodes
 		"mmmmmmmmmmm       mmmmmmmm", // msg1

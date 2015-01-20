@@ -2036,6 +2036,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 	else erase_specials();
 	special_in_progress = false;
 	
+	// TODO: Should find a way to do this that doesn't risk stack overflow
 	if(next_spec == -1 && !special_queue.empty()) {
 		pending_special_type pending = special_queue.front();
 		special_queue.pop();
@@ -2410,7 +2411,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 
 // TODO: What was next_spec_type for? Is it still needed?
 void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-				  short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw) {
+				  short* next_spec,short* next_spec_type,short* a,short* b,short* redraw) {
 	bool check_mess = true,set_sd = true;
 	std::array<std::string, 6> strs;
 	short i,j;
@@ -2540,18 +2541,28 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if((spec.m1 >= 0) || (spec.m2 >= 0)) {
 				get_strs(strs[0],strs[1], cur_spec_type, spec.m1, spec.m2);
 				buttons[0] = 3; buttons[1] = 2;
-				// TODO: Why not allow a choice of dialog picture?
-				i = custom_choice_dialog(strs,27,PIC_DLOG,buttons);
+				i = custom_choice_dialog(strs,spec.pic,ePicType(spec.pictype),buttons);
 				// TODO: Make custom_choice_dialog return string?
 			}
 			else i = cChoiceDlog("basic-trap",{"yes","no"}).show() == "no";
-			if(i == 1) {set_sd = false; *next_spec = -1; *a = 1;}
-			else {
-				if(is_combat())
-					j = run_trap(current_pc,(eTrapType)spec.ex1a,spec.ex1b,spec.ex2a);
-				else j = run_trap(7,(eTrapType)spec.ex1a,spec.ex1b,spec.ex2a);
-				if(j == 0) {
-					*a = 1; set_sd = false;
+			if(i == 1) {
+				set_sd = false;
+				*next_spec = -1;
+				*a = 1;
+			} else {
+				if(!is_combat()) {
+					j = char_select_pc(0,"Trap! Who will disarm?");
+					if(j == 6){
+						*a = 1;
+						set_sd = false;
+					}
+				} else j = current_pc;
+				bool disarmed = run_trap(j,eTrapType(spec.ex1a),spec.ex1b,spec.ex2a);
+				if(!disarmed && spec.ex1a == TRAP_CUSTOM) {
+					if(spec.jumpto >= 0)
+						queue_special(which_mode, cur_spec_type, spec.jumpto, loc(PSD[SDF_SPEC_LOC_X], PSD[SDF_SPEC_LOC_Y]));
+					*next_spec = spec.ex2b;
+					*next_spec_type = 0;
 				}
 			}
 			break;
