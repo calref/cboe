@@ -832,27 +832,33 @@ void cItem::append(legacy::item_record_type& old){
 			break;
 		// Missile abilities
 		case 170:
-			ability = eItemAbil::MISSILE_RETURNING;
+			ability = eItemAbil::RETURNING_MISSILE;
 			break;
 		case 171:
-			ability = eItemAbil::MISSILE_LIGHTNING;
+			ability = eItemAbil::DAMAGING_WEAPON;
+			abil_data[1] = int(eDamageType::FIRE);
 			break;
 		case 172:
-			ability = eItemAbil::MISSILE_EXPLODING;
+			ability = eItemAbil::EXPLODING_WEAPON;
+			abil_data[1] = int(eDamageType::FIRE);
 			break;
 		case 173:
-			ability = eItemAbil::MISSILE_ACID;
+			ability = eItemAbil::STATUS_WEAPON;
+			abil_data[0] *= 2;
+			abil_data[1] = int(eStatus::ACID);
 			break;
 		case 174:
-			ability = eItemAbil::MISSILE_SLAYER;
+			ability = eItemAbil::SLAYER_WEAPON;
+			abil_data[0] += 3;
 			abil_data[1] = int(eRace::UNDEAD);
 			break;
 		case 175:
-			ability = eItemAbil::MISSILE_SLAYER;
+			ability = eItemAbil::SLAYER_WEAPON;
+			abil_data[0] += 3;
 			abil_data[1] = int(eRace::DEMON);
 			break;
 		case 176:
-			ability = eItemAbil::MISSILE_HEAL_TARGET;
+			ability = eItemAbil::HEALING_WEAPON;
 			break;
 	}
 	type_flag = old.type_flag;

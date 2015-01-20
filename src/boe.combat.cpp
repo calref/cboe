@@ -604,6 +604,98 @@ void pc_attack(short who_att,short target) {
 	combat_posing_monster = current_working_monster = -1;
 }
 
+static void apply_weapon_status(eStatus status, int how_much, int dmg, int who, std::string weap_type) {
+	cCreature* which_m;
+	if(who >= 100) which_m = &univ.town.monst[who - 100];
+	switch(status) {
+			// TODO: It should be possible to make monsters support magic resistance and invulnerability, at least.
+			// Maybe also poisoned weapon and invisibility.
+		case eStatus::MAIN: break; // Not a valid status
+		case eStatus::INVISIBLE:
+			if(who >= 100) break; // Not supported by monsters
+			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
+			univ.party[who].apply_status(eStatus::INVISIBLE, how_much / -2);
+			break;
+		case eStatus::MAGIC_RESISTANCE:
+			if(who >= 100) break; // Not supported by monsters
+			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
+			univ.party[who].apply_status(eStatus::MAGIC_RESISTANCE, how_much / -2);
+			break;
+		case eStatus::INVULNERABLE:
+			if(who >= 100) break; // Not supported by monsters
+			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
+			univ.party[who].apply_status(eStatus::INVULNERABLE, how_much / -2);
+			break;
+		case eStatus::POISONED_WEAPON:
+			if(who >= 100) break; // Not supported by monsters
+			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
+			univ.party[who].apply_status(eStatus::POISONED_WEAPON, how_much / -2);
+			break;
+		case eStatus::POISON:
+			add_string_to_buf("  " + weap_type + " drips venom.");
+			if(who < 6) poison_pc(who, how_much / 2);
+			else poison_monst(which_m, how_much / 2);
+			break;
+		case eStatus::ACID:
+			add_string_to_buf("  " + weap_type + " drips acid.");
+			if(who < 6) acid_pc(who, how_much / 2);
+			else acid_monst(which_m, how_much / 2);
+			break;
+		case eStatus::BLESS_CURSE:
+			add_string_to_buf("  " + weap_type + " leaks a dark aura.");
+			if(who < 6) curse_pc(who, how_much / 2);
+			else curse_monst(which_m, how_much / 2);
+			break;
+		case eStatus::HASTE_SLOW:
+			add_string_to_buf("  " + weap_type + " leaks a smoky aura.");
+			if(who < 6) slow_pc(who, how_much / 2);
+			else slow_monst(which_m, how_much / 2);
+			break;
+		case eStatus::WEBS:
+			add_string_to_buf("  " + weap_type + " drips goo.");
+			if(who < 6) web_pc(who, how_much / 1);
+			else web_monst(which_m, how_much / 2);
+			break;
+		case eStatus::DISEASE:
+			add_string_to_buf("  " + weap_type + " drips bile.");
+			if(who < 6) disease_pc(who, how_much / 2);
+			else disease_monst(which_m, how_much / 2);
+			break;
+		case eStatus::DUMB:
+			add_string_to_buf("  " + weap_type + " leaks a misty aura.");
+			if(who < 6) dumbfound_pc(who, how_much / 2);
+			else dumbfound_monst(which_m, how_much / 2);
+			break;
+		case eStatus::ASLEEP:
+			add_string_to_buf("  " + weap_type + " emits coruscating lights.");
+			if(who < 6) sleep_pc(who, how_much / 2, eStatus::ASLEEP, 20 + dmg);
+			else charm_monst(which_m, 20 + dmg, eStatus::ASLEEP, how_much / 2);
+			break;
+		case eStatus::PARALYZED:
+			add_string_to_buf("  " + weap_type + " emits a purple flash.");
+			if(who < 6) sleep_pc(who, how_much / 2, eStatus::PARALYZED, 20 + dmg);
+			else charm_monst(which_m, 20 + dmg, eStatus::PARALYZED, how_much / 2);
+			break;
+		case eStatus::CHARM:
+			if(who < 6) break;
+			add_string_to_buf("  " + weap_type + " leaks a bright aura.");
+			// Higher penalty means more likely to resist.
+			charm_monst(which_m, 20 + dmg - how_much / 2, eStatus::CHARM, 0);
+			break;
+		case eStatus::FORCECAGE:
+			add_string_to_buf("  " + weap_type + " emits a green flash.");
+			if(who < 6) sleep_pc(who, 0, eStatus::FORCECAGE, dmg - how_much / 2);
+			else charm_monst(which_m, dmg - how_much / 2, eStatus::FORCECAGE, 0);
+			break;
+		case eStatus::MARTYRS_SHIELD:
+			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
+			if(who < 6) univ.party[who].apply_status(eStatus::MARTYRS_SHIELD, how_much / -2);
+			else which_m->status[eStatus::MARTYRS_SHIELD] -= how_much / 2;
+			// TODO: Maybe clip it to 0?
+			break;
+	}
+}
+
 // primary: 0 - secondary weapon, 1 - primary (and only) weapon, 2 - primary of two weapons
 void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cItem& weap,short primary,bool do_poison) {
 	short r1, r2;
@@ -635,7 +727,18 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 	if(weap.ability == eItemAbil::WEAK_WEAPON)
 		r2 = (r2 * (10 - weap.abil_data[0])) / 10;
 	
-	if(r1 <= hit_chance[univ.party[who_att].skill(what_skill)]) {
+	if(weap.ability == eItemAbil::EXPLODING_WEAPON) {
+		add_string_to_buf("  The weapon produces an explosion!");
+		if(PSD[SDF_GAME_SPEED] == 0)
+			pause(1);
+		else pause(5);
+		play_sound(5);
+		start_missile_anim();
+		place_spell_pattern(radius2, which_m->cur_loc, eDamageType(weap.abil_data[1]), weap.abil_data[0] * 2, who_att);
+		do_explosion_anim(5,0);
+		end_missile_anim();
+		handle_marked_damage();
+	} else if(r1 <= hit_chance[univ.party[who_att].skill(what_skill)]) {
 		eDamageType dmg_tp = eDamageType::UNBLOCKABLE;
 		short spec_dam = calc_spec_dam(weap.ability,weap.abil_data[0],weap.abil_data[1],which_m,dmg_tp);
 		short bonus_dam = 0;
@@ -652,7 +755,10 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 					spec_dam += r2;
 				}
 		}
-		switch(what_skill) {
+		if(weap.ability == eItemAbil::HEALING_WEAPON) {
+			ASB("  There is a flash of light.");
+			which_m->health = min(which_m->health + r2, which_m->m_health);
+		} else switch(what_skill) {
 			case eSkill::EDGED_WEAPONS:
 				if(weap.item_level < 8)
 					damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON,1);
@@ -681,72 +787,12 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 			}
 		}
 		if((weap.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
-			switch(eStatus(weap.abil_data[1])) {
-					// TODO: It should be possible to make monsters support magic resistance and invulnerability, at least.
-					// Maybe also poisoned weapon and invisibility.
-				case eStatus::MAIN: // Not a valid status
-				case eStatus::INVISIBLE: // Not supported by monsters
-				case eStatus::MAGIC_RESISTANCE: // Not supported by monsters
-				case eStatus::INVULNERABLE: // Not supported by monsters
-				case eStatus::POISONED_WEAPON: // Not supported by monsters
-					break;
-				case eStatus::POISON:
-					add_string_to_buf("  Blade drips venom.");
-					poison_monst(which_m,weap.abil_data[0] / 2);
-					break;
-				case eStatus::ACID:
-					add_string_to_buf("  Blade drips acid.");
-					acid_monst(which_m,weap.abil_data[0] / 2);
-					break;
-				case eStatus::BLESS_CURSE:
-					add_string_to_buf("  Blade leaks a dark aura.");
-					curse_monst(which_m, weap.abil_data[0] / 2);
-					break;
-				case eStatus::HASTE_SLOW:
-					add_string_to_buf("  Blade leaks a smoky aura.");
-					slow_monst(which_m, weap.abil_data[0] / 2);
-					break;
-				case eStatus::WEBS:
-					add_string_to_buf("  Blade drips goo.");
-					web_monst(which_m, weap.abil_data[0] / 2);
-					break;
-				case eStatus::DISEASE:
-					add_string_to_buf("  Blade drips bile.");
-					disease_monst(which_m, weap.abil_data[0] / 2);
-					break;
-				case eStatus::DUMB:
-					add_string_to_buf("  Blade leaks a misty aura.");
-					dumbfound_monst(which_m, weap.abil_data[0] / 2);
-					break;
-				case eStatus::ASLEEP:
-					add_string_to_buf("  Blade emits coruscating lights.");
-					charm_monst(which_m, 20 + r2 + spec_dam, eStatus::ASLEEP, weap.abil_data[0] / 2);
-					break;
-				case eStatus::PARALYZED:
-					add_string_to_buf("  Blade emits a purple flash.");
-					charm_monst(which_m, 20 + r2 + spec_dam, eStatus::PARALYZED, weap.abil_data[0] / 2);
-					break;
-				case eStatus::CHARM:
-					add_string_to_buf("  Blade leaks a bright aura.");
-					// Higher penalty means more likely to resist.
-					charm_monst(which_m, 20 + r2 + spec_dam - weap.abil_data[0] / 2, eStatus::CHARM, 0);
-					break;
-				case eStatus::FORCECAGE:
-					add_string_to_buf("  Blade emits a green flash.");
-					charm_monst(which_m, r2 + spec_dam - weap.abil_data[0] / 2, eStatus::FORCECAGE, 0);
-					break;
-				case eStatus::MARTYRS_SHIELD:
-					add_string_to_buf("  Blade leaks an odd-coloured aura.");
-					which_m->status[eStatus::MARTYRS_SHIELD] -= weap.abil_data[0] / 2;
-					// TODO: Maybe clip it to 0?
-					break;
-			}
+			apply_weapon_status(eStatus(weap.abil_data[1]), weap.abil_data[0], r2 + spec_dam, target + 100, "Blade");
 		}
 		if((weap.ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
 			add_string_to_buf("  Blade drains life.");
 			heal_pc(who_att,weap.abil_data[0] / 2);
 		}
-		
 	}
 	else {
 		draw_terrain(2);
@@ -764,14 +810,12 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,cCreature* mons
 	
 	switch(abil) {
 		case eItemAbil::DAMAGING_WEAPON:
-		case eItemAbil::MISSILE_LIGHTNING:
 			store += get_ran(abil_str,1,6);
 			if(abil == eItemAbil::DAMAGING_WEAPON)
 				dmg_type = eDamageType(abil_dat);
 			else dmg_type = eDamageType::FIRE;
 			break;
 		case eItemAbil::SLAYER_WEAPON:
-		case eItemAbil::MISSILE_SLAYER:
 			if(monst->m_type != eRace(abil_dat))
 				break;
 			store += abil_str;
@@ -795,19 +839,9 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,cCreature* mons
 					store *= 7;
 					break;
 			}
-			if(abil == eItemAbil::MISSILE_SLAYER) {
-				if(eRace(abil_dat) == eRace::DEMON)
-					store += 25;
-				else if(eRace(abil_dat) == eRace::UNDEAD)
-					store += 20;
-				else store += 10;
-			}
 			break;
 		case eItemAbil::CAUSES_FEAR:
-			scare_monst(monst,abil_str * 10);
-			break;
-		case eItemAbil::MISSILE_ACID:
-			acid_monst(monst,abil_str);
+			if(monst) scare_monst(monst,abil_str * 10);
 			break;
 	}
 	return store;
@@ -1424,6 +1458,7 @@ void load_missile() {
 	}
 	
 	if(thrown < 24) {
+		missile_inv_slot = thrown;
 		ammo_inv_slot = thrown;
 		add_string_to_buf("Throw: Select a target.        ");
 		add_string_to_buf("  (Hit 's' to cancel.)");
@@ -1447,7 +1482,7 @@ void load_missile() {
 		add_string_to_buf("Fire: Select a target.        ");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
-		if(univ.party[current_pc].items[arrow].ability == eItemAbil::MISSILE_EXPLODING)
+		if(univ.party[current_pc].items[arrow].ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else
 			current_pat = single;
@@ -1498,7 +1533,7 @@ void fire_missile(location target) {
 	if(univ.party[missile_firer].race == eRace::REPTILE)
 		hit_bonus += 2;
 	
-	if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::MISSILE_EXPLODING)
+	if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::EXPLODING_WEAPON)
 		exploding = true;
 	
 	if(dist(univ.party[missile_firer].combat_pos,target) > range)
@@ -1508,6 +1543,7 @@ void fire_missile(location target) {
 	else {
 		// First, some missiles do special things
 		if(exploding) {
+			cItem& missile = univ.party[missile_firer].items[ammo_inv_slot];
 			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
 			void_sanctuary(current_pc); // TODO: Is this right?
 			missile_firer = current_pc;
@@ -1518,7 +1554,7 @@ void fire_missile(location target) {
 				pause(dist(univ.party[current_pc].combat_pos,target)*5);
 			run_a_missile(univ.party[missile_firer].combat_pos,target,2,1,5,0,0,100);
 			start_missile_anim();
-			place_spell_pattern(radius2,target, eDamageType::FIRE,univ.party[missile_firer].items[ammo_inv_slot].abil_data[0] * 2,missile_firer);
+			place_spell_pattern(radius2,target, eDamageType(missile.abil_data[1]),missile.abil_data[0] * 2,missile_firer);
 			do_explosion_anim(5,0);
 			end_missile_anim();
 			handle_marked_damage();
@@ -1526,13 +1562,13 @@ void fire_missile(location target) {
 			combat_posing_monster = current_working_monster = missile_firer;
 			draw_terrain(2);
 			void_sanctuary(missile_firer);
-			// TODO: Why is this sound commented out?
-			//play_sound((overall_mode == MODE_FIRING) ? 12 : 14);
 			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
 			missile_firer = missile_firer;
 			r1 = get_ran(1,1,100) - 5 * hit_bonus - 10;
 			r1 += 5 * (univ.party[missile_firer].status[eStatus::WEBS] / 3);
 			r2 = get_ran(1,1,dam) + dam_bonus;
+			if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::WEAK_WEAPON)
+				r2 = (r2 * (10 - univ.party[missile_firer].items[ammo_inv_slot].abil_data[0])) / 10;
 			std::string create_line = univ.party[missile_firer].name + " fires.";
 			add_string_to_buf(create_line);
 			
@@ -1549,16 +1585,12 @@ void fire_missile(location target) {
 				cItem& missile = univ.party[missile_firer].items[ammo_inv_slot];
 				spec_dam = calc_spec_dam(missile.ability,missile.abil_data[0],missile.abil_data[1],cur_monst,dmg_tp);
 				if(dmg_tp != eDamageType::UNBLOCKABLE) std::swap(bonus_dam, spec_dam);
-				if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::MISSILE_HEAL_TARGET) {
+				if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::HEALING_WEAPON) {
 					ASB("  There is a flash of light.");
 					cur_monst->health += r2;
 				}
 				else damage_monst(targ_monst, missile_firer, r2, spec_dam, eDamageType::WEAPON,13);
 				if(bonus_dam) damage_monst(targ_monst, missile_firer, bonus_dam, 0, dmg_tp, 0);
-				
-				//if(univ.party[missile_firer].items[ammo_inv_slot].ability == 33)
-				//	hit_space(cur_monst->m_loc,get_ran(3,1,6),1,1,1);
-				
 				// poison
 				if(univ.party[missile_firer].status[eStatus::POISONED_WEAPON] > 0 && univ.party[missile_firer].weap_poisoned == ammo_inv_slot) {
 					poison_amt = univ.party[missile_firer].status[eStatus::POISONED_WEAPON];
@@ -1566,21 +1598,47 @@ void fire_missile(location target) {
 						poison_amt++;
 					poison_monst(cur_monst,poison_amt);
 				}
+				if((missile.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
+					apply_weapon_status(eStatus(missile.abil_data[1]), missile.abil_data[0], r2 + spec_dam, targ_monst + 100, "Missile");
+				}
+				if((missile.ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
+					add_string_to_buf("  Missile drains life.");
+					heal_pc(missile_firer,missile.abil_data[0] / 2);
+				}
+			} else if((targ_monst = pc_there(target)) < 6) {
+				eDamageType dmg_tp = eDamageType::UNBLOCKABLE;
+				cItem& missile = univ.party[missile_firer].items[ammo_inv_slot];
+				spec_dam = calc_spec_dam(missile.ability,missile.abil_data[0],missile.abil_data[1],nullptr,dmg_tp);
+				eRace race = univ.party[missile_firer].race;
+				if(univ.party[current_pc].items[ammo_inv_slot].ability == eItemAbil::HEALING_WEAPON) {
+					ASB("  There is a flash of light.");
+					heal_pc(targ_monst,r2);
+				}
+				else damage_pc(targ_monst, r2, eDamageType::WEAPON, race, 0);
+				if(spec_dam > 0) damage_pc(targ_monst, spec_dam, dmg_tp, race, 0);
+				// poison
+				if(univ.party[missile_firer].status[eStatus::POISONED_WEAPON] > 0 && univ.party[missile_firer].weap_poisoned == ammo_inv_slot) {
+					poison_amt = univ.party[missile_firer].status[eStatus::POISONED_WEAPON];
+					if(univ.party[missile_firer].has_abil_equip(eItemAbil::POISON_AUGMENT) < 24)
+						poison_amt++;
+					poison_pc(targ_monst,poison_amt);
+				}
+				if((missile.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
+					apply_weapon_status(eStatus(missile.abil_data[1]), missile.abil_data[0], r2 + spec_dam, targ_monst, "Missile");
+				}
+				if((missile.ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
+					add_string_to_buf("  Missile drains life.");
+					heal_pc(missile_firer,missile.abil_data[0] / 2);
+				}
 			}
-			else if((targ_monst = pc_there(target)) < 6 && univ.party[current_pc].items[ammo_inv_slot].ability == eItemAbil::MISSILE_HEAL_TARGET){
-				ASB("  There is a flash of light.");
-				heal_pc(targ_monst,r2);
-			}
-			else hit_space(target,r2,eDamageType::WEAPON,1,0);
-			
 		}
 		
 		if(univ.party[missile_firer].items[ammo_inv_slot].variety != eItemType::MISSILE_NO_AMMO) {
-			if(univ.party[missile_firer].items[ammo_inv_slot].ability != eItemAbil::MISSILE_RETURNING)
+			if(univ.party[missile_firer].items[ammo_inv_slot].ability != eItemAbil::RETURNING_MISSILE)
 				univ.party[missile_firer].items[ammo_inv_slot].charges--;
 			else univ.party[missile_firer].items[ammo_inv_slot].charges = 1;
 			if(univ.party[missile_firer].has_abil_equip(eItemAbil::DRAIN_MISSILES) < 24
-			   && univ.party[missile_firer].items[ammo_inv_slot].ability != eItemAbil::MISSILE_RETURNING)
+			   && univ.party[missile_firer].items[ammo_inv_slot].ability != eItemAbil::RETURNING_MISSILE)
 				univ.party[missile_firer].items[ammo_inv_slot].charges--;
 			if(univ.party[missile_firer].items[ammo_inv_slot].charges <= 0)
 				univ.party[missile_firer].take_item(ammo_inv_slot);

@@ -320,6 +320,9 @@ enum class eItemAbil {
 	NONE = 0,
 	DAMAGING_WEAPON = 1,
 	SLAYER_WEAPON = 2,
+	HEALING_WEAPON = 3,
+	EXPLODING_WEAPON = 4,
+	RETURNING_MISSILE = 5,
 	STATUS_WEAPON = 9,
 	SOULSUCKER = 10,
 	DRAIN_MISSILES = 11,
@@ -375,34 +378,23 @@ enum class eItemAbil {
 	SMOKY_CRYSTAL = 159,
 	RESURRECTION_BALM = 160,
 	LOCKPICKS = 161,
-	// Missile Abilities
-	MISSILE_RETURNING = 170,
-	MISSILE_LIGHTNING = 171,
-	MISSILE_EXPLODING = 172,
-	MISSILE_ACID = 173,
-	MISSILE_SLAYER = 174,
-	MISSILE_HEAL_TARGET = 176,
 };
 
 enum class eItemAbilCat {
 	INVALID = -1,
-	WEAPON, GENERAL, NONSPELL, SPELL, REAGENT, MISSILE
+	WEAPON, GENERAL, USABLE, REAGENT
 };
 
 inline eItemAbilCat getItemAbilCategory(eItemAbil abil) {
 	int code = (int) abil;
-	if(code >= 0 && code <= 14)
+	if(code >= 0 && code <= 13)
 		return eItemAbilCat::WEAPON;
-	if(code >= 30 && code <= 62)
+	if(code >= 30 && code <= 57)
 		return eItemAbilCat::GENERAL;
-	if(code >= 70 && code <= 95)
-		return eItemAbilCat::NONSPELL;
-	if(code >= 110 && code <= 135)
-		return eItemAbilCat::SPELL;
+	if(code >= 70 && code <= 129)
+		return eItemAbilCat::USABLE;
 	if(code >= 150 && code <= 161)
 		return eItemAbilCat::REAGENT;
-	if(code >= 170 && code <= 176)
-		return eItemAbilCat::MISSILE;
 	return eItemAbilCat::INVALID;
 }
 
