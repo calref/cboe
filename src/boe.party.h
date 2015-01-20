@@ -43,7 +43,7 @@ eSpell pick_spell(short pc_num,eSkill type);
 short stat_adj(short pc_num,eSkill which);
 void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat = PAT_SINGLE);
 void do_alchemy();
-short alch_choice(short pc_num);
+eAlchemy alch_choice(short pc_num);
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent_num);
 bool pick_pc_name(short pc_num,cDialog* parent)  ;
 mon_num_t pick_trapped_monst();

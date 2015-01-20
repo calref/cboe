@@ -2331,33 +2331,17 @@ void do_alchemy() {
 		0,0,0,0,0,
 		0,0,0,0,0
 	};
-	short which_p,which_item,which_item2,r1;
+	short which_item,which_item2,r1;
 	short pc_num;
-	cItem store_i('alch');
-	
-	static const short potion_abils[20] = {
-		72,87,70,73,70,
-		87,72,73,77,88,
-		79,70,87,70,160,
-		88,86,71,84,88
-	};
-	static const short potion_strs[20] = {
-		2,2,2,2,4, 5,8,5,4,2,
-		8,6,8,8,0, 5,2,8,5,8
-	};
-	static const short potion_val[20] = {
-		40,60,15,50,50,
-		180,200,100,150,100,
-		200,150,300,400,100,
-		300,500,175,250,500
-	};
 	
 	pc_num = select_pc(0);
 	if(pc_num == 6)
 		return;
 	
-	which_p = alch_choice(pc_num);
-	if(which_p < 20) {
+	eAlchemy potion = alch_choice(pc_num);
+	// TODO: Remove need for this cast by changing the above data to either std::maps or an unary operator*
+	int which_p = int(potion);
+	if(potion != eAlchemy::NONE) {
 		if(univ.party[pc_num].has_space() == 24) {
 			add_string_to_buf("Alchemy: Can't carry another item.");
 			return;
@@ -2388,18 +2372,12 @@ void do_alchemy() {
 			play_sound(41 );
 		}
 		else {
-			store_i.value = potion_val[which_p];
-			store_i.abil_data[0] = potion_strs[which_p];
-			store_i.ability = (eItemAbil) potion_abils[which_p];
-			if(which_p == 8)
-				store_i.magic_use_type = 2;
-			store_i.full_name = get_str("magic-names", which_p + 200);
+			cItem store_i(potion);
 			if(univ.party[pc_num].skills[eSkill::ALCHEMY] - alch_difficulty[which_p] >= 5)
 				store_i.charges++;
 			if(univ.party[pc_num].skills[eSkill::ALCHEMY] - alch_difficulty[which_p] >= 11)
 				store_i.charges++;
-			if(store_i.variety == eItemType::POTION)
-				store_i.graphic_num += get_ran(1,0,2);
+			store_i.graphic_num += get_ran(1,0,2);
 			if(!univ.party[pc_num].give_item(store_i,false)) {
 				ASB("No room in inventory.");
 				ASB("  Potion placed on floor.");
@@ -2419,15 +2397,16 @@ static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 		return true;
 	}
 	if(item_hit == "cancel")
-		me.setResult<short>(20);
+		me.setResult<eAlchemy>(eAlchemy::NONE);
 	else {
-		me.setResult<short>(item_hit[6] - '1');
+		int potion_id = boost::lexical_cast<int>(item_hit.substr(6));
+		me.setResult<eAlchemy>(eAlchemy(potion_id));
 	}
 	me.toast(true);
 	return true;
 }
 
-short alch_choice(short pc_num) {
+eAlchemy alch_choice(short pc_num) {
 	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
 	short i,store_alchemy_pc;
 	
@@ -2455,7 +2434,7 @@ short alch_choice(short pc_num) {
 	}
 	
 	chooseAlchemy.run();
-	return chooseAlchemy.getResult<short>();
+	return chooseAlchemy.getResult<eAlchemy>();
 }
 
 extern bool pc_gworld_loaded;

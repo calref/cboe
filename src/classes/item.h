@@ -54,7 +54,8 @@ public:
 	short item_weight() const;
 	
 	cItem();
-	cItem(long preset);
+	explicit cItem(long preset);
+	explicit cItem(eAlchemy recipe);
 	void append(legacy::item_record_type& old);
 	void writeTo(std::ostream& file, std::string prefix = "") const;
 	void readFrom(std::istream& sin);
