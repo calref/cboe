@@ -1488,7 +1488,9 @@ void load_missile() {
 		current_spell_range = 8;
 		if(univ.party[current_pc].items[thrown].ability == eItemAbil::DISTANCE_MISSILE)
 			current_spell_range += univ.party[current_pc].items[thrown].abil_data[0];
-		current_pat = single;
+		if(univ.party[current_pc].items[thrown].ability == eItemAbil::EXPLODING_WEAPON)
+			current_pat = radius2;
+		else current_pat = single;
 	}
 	else if(((bolts < 24) && (bow < 24)) || ((arrow < 24) && (crossbow < 24)))  {
 		add_string_to_buf("Fire: Wrong ammunition.       ");
@@ -1510,8 +1512,7 @@ void load_missile() {
 			current_spell_range += univ.party[current_pc].items[arrow].abil_data[0];
 		if(univ.party[current_pc].items[arrow].ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
-		else
-			current_pat = single;
+		else current_pat = single;
 	}
 	else if((bolts < 24) && (crossbow < 24)) {
 		missile_inv_slot = crossbow;
@@ -1522,7 +1523,9 @@ void load_missile() {
 		current_spell_range = 12;
 		if(univ.party[current_pc].items[bolts].ability == eItemAbil::DISTANCE_MISSILE)
 			current_spell_range += univ.party[current_pc].items[bolts].abil_data[0];
-		current_pat = single;
+		if(univ.party[current_pc].items[bolts].ability == eItemAbil::EXPLODING_WEAPON)
+			current_pat = radius2;
+		else current_pat = single;
 	}
 	else if(no_ammo < 24) {
 		missile_inv_slot = no_ammo;
@@ -1533,7 +1536,9 @@ void load_missile() {
 		current_spell_range = 12;
 		if(univ.party[current_pc].items[no_ammo].ability == eItemAbil::DISTANCE_MISSILE)
 			current_spell_range += univ.party[current_pc].items[no_ammo].abil_data[0];
-		current_pat = single;
+		if(univ.party[current_pc].items[no_ammo].ability == eItemAbil::EXPLODING_WEAPON)
+			current_pat = radius2;
+		else current_pat = single;
 	}
 	else add_string_to_buf("Fire: Equip a missile.       ");
 }
@@ -4429,7 +4434,7 @@ void handle_disease() {
 					r1 = get_ran(1,0,7);
 					if(univ.party[i].traits[eTrait::GOOD_CONST])
 						r1 -= 2;
-					if((get_ran(1,0,7) <= 0) || (univ.party[i].has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE)) < 24))
+					if(r1 <= 0 || univ.party[i].has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE)) < 24)
 						move_to_zero(univ.party[i].status[eStatus::DISEASE]);
 				}
 		put_pc_screen();
