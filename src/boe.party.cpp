@@ -2610,7 +2610,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	// armor
 	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
 		how_much -= minmax(-5,5,univ.party[which_pc].status[eStatus::BLESS_CURSE]);
-		for(i = 0; i < 24; i++)
+		for(i = 0; i < 24; i++) {
 			if((univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) && (univ.party[which_pc].equip[i])) {
 				if(isArmourType(univ.party[which_pc].items[i].variety)) {
 					r1 = get_ran(1,1,univ.party[which_pc].items[i].item_level);
@@ -2638,6 +2638,15 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 					how_much += r1;
 				}
 			}
+			if(univ.party[which_pc].items[i].ability == eItemAbil::MELEE_PROTECTION) {
+				r1 = get_ran(1,1,univ.party[which_pc].items[i].abil_data[0]);
+				if(damage_type == eDamageType::DEMON)
+					how_much -= max(1,r1 / 5);
+				else if(damage_type == eDamageType::UNDEAD)
+					how_much -= max(1,r1 / 4);
+				else how_much -= max(1,r1 / 2);
+			}
+		}
 	}
 	
 	// parry

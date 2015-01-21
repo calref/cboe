@@ -788,10 +788,18 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 		}
 		if((weap.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
 			apply_weapon_status(eStatus(weap.abil_data[1]), weap.abil_data[0], r2 + spec_dam, target + 100, "Blade");
-		}
-		if((weap.ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
+		} else if(weap.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 			add_string_to_buf("  Blade drains life.");
 			heal_pc(who_att,weap.abil_data[0] / 2);
+		} else if(weap.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
+			short s1,s2,s3;
+			univ.party.force_ptr(21, 301, 5);
+			univ.party.force_ptr(22, 301, 6);
+			univ.party.force_ptr(20, 301, 7);
+			PSD[SDF_SPEC_TARGLOC_X] = which_m->cur_loc.x;
+			PSD[SDF_SPEC_TARGLOC_Y] = which_m->cur_loc.y;
+			PSD[SDF_SPEC_TARGET] = 100 + target; // ready to be passed to SELECT_TARGET node
+			run_special(eSpecCtx::ATTACKING_MELEE, 0, weap.abil_data[0],univ.party[who_att].combat_pos, &s1, &s2, &s3);
 		}
 	}
 	else {
@@ -1464,6 +1472,8 @@ void load_missile() {
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		overall_mode = MODE_THROWING;
 		current_spell_range = 8;
+		if(univ.party[current_pc].items[thrown].ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += univ.party[current_pc].items[thrown].abil_data[0];
 		current_pat = single;
 	}
 	else if(((bolts < 24) && (bow < 24)) || ((arrow < 24) && (crossbow < 24)))  {
@@ -1482,6 +1492,8 @@ void load_missile() {
 		add_string_to_buf("Fire: Select a target.        ");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
+		if(univ.party[current_pc].items[arrow].ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += univ.party[current_pc].items[arrow].abil_data[0];
 		if(univ.party[current_pc].items[arrow].ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else
@@ -1494,6 +1506,8 @@ void load_missile() {
 		add_string_to_buf("Fire: Select a target.        ");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
+		if(univ.party[current_pc].items[bolts].ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += univ.party[current_pc].items[bolts].abil_data[0];
 		current_pat = single;
 	}
 	else if(no_ammo < 24) {
@@ -1503,6 +1517,8 @@ void load_missile() {
 		add_string_to_buf("Fire: Select a target.        ");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
+		if(univ.party[current_pc].items[no_ammo].ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += univ.party[current_pc].items[no_ammo].abil_data[0];
 		current_pat = single;
 	}
 	else add_string_to_buf("Fire: Equip a missile.       ");
@@ -1523,14 +1539,42 @@ void fire_missile(location target) {
 		hit_bonus = univ.party[missile_firer].items[missile_inv_slot].bonus;
 	hit_bonus += stat_adj(missile_firer,eSkill::DEXTERITY) - can_see_light(univ.party[missile_firer].combat_pos,target,sight_obscurity)
 		+ minmax(-8,8,univ.party[missile_firer].status[eStatus::BLESS_CURSE]);
-	if((skill_item = univ.party[missile_firer].has_abil_equip(eItemAbil::ACCURACY)) < 24) {
-		hit_bonus += univ.party[missile_firer].items[skill_item].abil_data[0] / 2;
-		dam_bonus += univ.party[missile_firer].items[skill_item].abil_data[0] / 2;
+	skill_item = univ.party[missile_firer].get_prot_level(eItemAbil::ACCURACY) / 2;
+	hit_bonus += skill_item;
+	dam_bonus += skill_item;
+	if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::SEEKING_MISSILE) {
+		targ_monst = monst_there(target);
+		std::set<int> targets;
+		if(targ_monst >= univ.town->max_monst() || univ.town.monst[targ_monst].attitude % 2 == 0) {
+			for(int i = -1; i <= 1; i++) {
+				for(int j = -1; j <= 1; j++) {
+					if(i == 0 && j == 0) continue;
+					targ_monst = monst_there(loc(target.x + i, target.y + j));
+					if(targ_monst < univ.town->max_monst()) {
+						bool invisible = univ.town.monst[targ_monst].invisible;
+						bool friendly = univ.town.monst[targ_monst].attitude % 2 == 0;
+						int seek_chance = 10;
+						if(invisible && friendly)
+							seek_chance -= 8;
+						else if(invisible)
+							seek_chance -= 5;
+						else if(friendly)
+							seek_chance -= 9;
+						if(get_ran(1,1,10) <= seek_chance)
+							targets.insert(targ_monst);
+					}
+				}
+			}
+			if(!targets.empty()) {
+				auto iter = targets.begin();
+				std::advance(iter, get_ran(1,1,targets.size()) - 1);
+				target = univ.town.monst[*iter].cur_loc;
+			}
+		} else hit_bonus += 10;
 	}
 	
 	// race adj.
-	// TODO: Should this apply to sliths as well? The bladbase suggests otherwise, but it has been changed from the original; maybe the sliths were originally considered to be reptiles.
-	if(univ.party[missile_firer].race == eRace::REPTILE)
+	if(univ.party[missile_firer].race == eRace::NEPHIL)
 		hit_bonus += 2;
 	
 	if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::EXPLODING_WEAPON)
@@ -1600,10 +1644,19 @@ void fire_missile(location target) {
 				}
 				if((missile.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
 					apply_weapon_status(eStatus(missile.abil_data[1]), missile.abil_data[0], r2 + spec_dam, targ_monst + 100, "Missile");
-				}
-				if((missile.ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
+				} else if(missile.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 					add_string_to_buf("  Missile drains life.");
 					heal_pc(missile_firer,missile.abil_data[0] / 2);
+				}
+				if(cur_monst->abil[eMonstAbil::HIT_TRIGGER].active) {
+					short s1,s2,s3;
+					univ.party.force_ptr(21, 301, 5);
+					univ.party.force_ptr(22, 301, 6);
+					univ.party.force_ptr(20, 301, 7);
+					PSD[SDF_SPEC_TARGLOC_X] = cur_monst->cur_loc.x;
+					PSD[SDF_SPEC_TARGLOC_Y] = cur_monst->cur_loc.y;
+					PSD[SDF_SPEC_TARGET] = 100 + targ_monst; // ready to be passed to SELECT_TARGET node
+					run_special(eSpecCtx::ATTACKED_RANGE, 0, cur_monst->abil[eMonstAbil::HIT_TRIGGER].special.extra1, univ.party[missile_firer].combat_pos, &s1, &s2, &s3);
 				}
 			} else if((targ_monst = pc_there(target)) < 6) {
 				eDamageType dmg_tp = eDamageType::UNBLOCKABLE;
@@ -1625,10 +1678,29 @@ void fire_missile(location target) {
 				}
 				if((missile.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
 					apply_weapon_status(eStatus(missile.abil_data[1]), missile.abil_data[0], r2 + spec_dam, targ_monst, "Missile");
-				}
-				if((missile.ability == eItemAbil::SOULSUCKER) && (get_ran(1,0,1) == 1)) {
+				} else if(missile.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 					add_string_to_buf("  Missile drains life.");
 					heal_pc(missile_firer,missile.abil_data[0] / 2);
+				} else if(missile.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
+					short s1,s2,s3;
+					univ.party.force_ptr(21, 301, 5);
+					univ.party.force_ptr(22, 301, 6);
+					univ.party.force_ptr(20, 301, 7);
+					PSD[SDF_SPEC_TARGLOC_X] = univ.party[targ_monst].combat_pos.x;
+					PSD[SDF_SPEC_TARGLOC_Y] = univ.party[targ_monst].combat_pos.y;
+					PSD[SDF_SPEC_TARGET] = 11 + targ_monst; // ready to be passed to SELECT_TARGET node
+					run_special(eSpecCtx::ATTACKING_RANGE, 0, missile.abil_data[0], univ.party[missile_firer].combat_pos, &s1, &s2, &s3);
+				}
+				int spec_item = univ.party[targ_monst].has_abil_equip(eItemAbil::HIT_CALL_SPECIAL);
+				if(spec_item < 24) {
+					short s1,s2,s3;
+					univ.party.force_ptr(21, 301, 5);
+					univ.party.force_ptr(22, 301, 6);
+					univ.party.force_ptr(20, 301, 7);
+					PSD[SDF_SPEC_TARGLOC_X] = univ.party[targ_monst].combat_pos.x;
+					PSD[SDF_SPEC_TARGLOC_Y] = univ.party[targ_monst].combat_pos.y;
+					PSD[SDF_SPEC_TARGET] = 11 + targ_monst; // ready to be passed to SELECT_TARGET node
+					run_special(eSpecCtx::ATTACKED_RANGE, 0, univ.party[targ_monst].items[spec_item].abil_data[0], univ.party[missile_firer].combat_pos, &s1, &s2, &s3);
 				}
 			}
 		}
@@ -2171,7 +2243,14 @@ void do_monster_turn() {
 					uAbility abil = cur_monst->abil[eMonstAbil::SPECIAL];
 					short s1, s2, s3;
 					special_called = true;
-					// TODO: Is it good to allow only one monster to use a special ability per combat round?
+					univ.party.force_ptr(21, 301, 5);
+					univ.party.force_ptr(22, 301, 6);
+					univ.party.force_ptr(20, 301, 7);
+					PSD[SDF_SPEC_TARGLOC_X] = targ_space.x;
+					PSD[SDF_SPEC_TARGLOC_Y] = targ_space.y;
+					if(target < 6)
+						PSD[SDF_SPEC_TARGET] = 11 + target; // ready to be passed to SELECT_TARGET node
+					else PSD[SDF_SPEC_TARGET] = target; // ready to be passed to SELECT_TARGET node
 					run_special(eSpecCtx::MONST_SPEC_ABIL,0,abil.special.extra1,cur_monst->cur_loc,&s1,&s2,&s3);
 					take_m_ap(abil.special.extra2,cur_monst);
 				}
@@ -2433,6 +2512,7 @@ void monster_attack_pc(short who_att,short target) {
 			r1 = get_ran(1,1,100) - 5 * min(8,attacker->status[eStatus::BLESS_CURSE]) + 5 * univ.party[target].status[eStatus::BLESS_CURSE]
 				+ 5 * stat_adj(target,eSkill::DEXTERITY) - 15;
 			r1 += 5 * (attacker->status[eStatus::WEBS] / 3);
+			r1 += univ.party[target].get_prot_level(eItemAbil::EVASION);
 			if(univ.party[target].parry < 100)
 				r1 += 5 * univ.party[target].parry;
 			
@@ -2465,9 +2545,13 @@ void monster_attack_pc(short who_att,short target) {
 					damaged_message(store_hp - univ.party[target].cur_health,
 									attacker->a[i].type);
 					
-					if(univ.party[target].status[eStatus::MARTYRS_SHIELD] > 0) {
+					int martyr1 = univ.party[target].status[eStatus::MARTYRS_SHIELD];
+					int martyr2 = univ.party[target].get_prot_level(eItemAbil::MARTYRS_SHIELD);
+					if(martyr1 + martyr2 > 0) {
+						int dmg = store_hp - univ.party[target].cur_health;
+						if(get_ran(1,1,20) < martyr2) dmg += max(1, martyr2 / 5);
 						add_string_to_buf("  Shares damage!                 ");
-						damage_monst(who_att, 6, store_hp - univ.party[target].cur_health, 0, eDamageType::MAGIC,0);
+						damage_monst(who_att, 6, dmg, 0, eDamageType::MAGIC,0);
 					}
 					
 					for(auto& abil : attacker->abil) {
@@ -2520,6 +2604,18 @@ void monster_attack_pc(short who_att,short target) {
 						}
 						if(snd > 0) play_sound(snd);
 						monst_basic_abil(who_att, abil, target);
+					}
+					
+					int spec_item = univ.party[target].has_abil_equip(eItemAbil::HIT_CALL_SPECIAL);
+					if(spec_item < 24) {
+						short s1,s2,s3;
+						univ.party.force_ptr(21, 301, 5);
+						univ.party.force_ptr(22, 301, 6);
+						univ.party.force_ptr(20, 301, 7);
+						PSD[SDF_SPEC_TARGLOC_X] = univ.party[target].combat_pos.x;
+						PSD[SDF_SPEC_TARGLOC_Y] = univ.party[target].combat_pos.y;
+						PSD[SDF_SPEC_TARGET] = 11 + who_att; // ready to be passed to SELECT_TARGET node
+						run_special(eSpecCtx::ATTACKED_MELEE, 0, univ.party[target].items[spec_item].abil_data[0], attacker->cur_loc, &s1, &s2, &s3);
 					}
 				}
 			}
@@ -2644,6 +2740,17 @@ void monster_attack_monster(short who_att,short attackee) {
 						monst_basic_abil(who_att, abil, attackee + 100);
 						put_pc_screen();
 					}
+					
+					if(target->abil[eMonstAbil::HIT_TRIGGER].active) {
+						short s1,s2,s3;
+						univ.party.force_ptr(21, 301, 5);
+						univ.party.force_ptr(22, 301, 6);
+						univ.party.force_ptr(20, 301, 7);
+						PSD[SDF_SPEC_TARGLOC_X] = target->cur_loc.x;
+						PSD[SDF_SPEC_TARGLOC_Y] = target->cur_loc.y;
+						PSD[SDF_SPEC_TARGET] = 100 + attackee; // ready to be passed to SELECT_TARGET node
+						run_special(eSpecCtx::ATTACKED_MELEE, 0, target->abil[eMonstAbil::HIT_TRIGGER].special.extra1, attacker->cur_loc, &s1, &s2, &s3);
+					}
 				}
 			}
 			else {
@@ -2739,6 +2846,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 		int target_bless = target < 100 ? univ.party[target].status[eStatus::BLESS_CURSE] : m_target->status[eStatus::BLESS_CURSE];
 		location target_pos = target < 100 ? univ.party[target].combat_pos : m_target->cur_loc;
 		int r1 = get_ran(1,1,100) - 5 * min(10,bless) + 5 * target_bless - 5 * can_see_light(source, target_pos, sight_obscurity);
+		r1 += univ.party[target].get_prot_level(eItemAbil::EVASION);
 		if(univ.party[target].parry < 100)
 			r1 += 5 * univ.party[target].parry;
 			
@@ -2755,6 +2863,29 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 		} else {
 			if(target < 100) add_string_to_buf("  Misses " + univ.party[target].name + '.');
 			else monst_spell_note(m_target->number,18);
+		}
+		if(target < 100) {
+			int spec_item = univ.party[target].has_abil_equip(eItemAbil::HIT_CALL_SPECIAL);
+			if(spec_item < 24) {
+				short s1,s2,s3;
+				// TODO: This force_ptr...run_special code is almost duplicated in several places; maybe make a call_attack_spec subroutine?
+				univ.party.force_ptr(21, 301, 5);
+				univ.party.force_ptr(22, 301, 6);
+				univ.party.force_ptr(20, 301, 7);
+				PSD[SDF_SPEC_TARGLOC_X] = univ.party[target].combat_pos.x;
+				PSD[SDF_SPEC_TARGLOC_Y] = univ.party[target].combat_pos.y;
+				PSD[SDF_SPEC_TARGET] = 11 + target; // ready to be passed to SELECT_TARGET node
+				run_special(eSpecCtx::ATTACKED_RANGE, 0, univ.party[target].items[spec_item].abil_data[0], univ.town.monst[m_num].cur_loc, &s1, &s2, &s3);
+			}
+		} else if(m_target->abil[eMonstAbil::HIT_TRIGGER].active) {
+			short s1,s2,s3;
+			univ.party.force_ptr(21, 301, 5);
+			univ.party.force_ptr(22, 301, 6);
+			univ.party.force_ptr(20, 301, 7);
+			PSD[SDF_SPEC_TARGLOC_X] = m_target->cur_loc.x;
+			PSD[SDF_SPEC_TARGLOC_Y] = m_target->cur_loc.y;
+			PSD[SDF_SPEC_TARGET] = target; // ready to be passed to SELECT_TARGET node
+			run_special(eSpecCtx::ATTACKED_RANGE, 0, m_target->abil[eMonstAbil::HIT_TRIGGER].special.extra1, univ.town.monst[m_num].cur_loc, &s1, &s2, &s3);
 		}
 	} else if(abil.first == eMonstAbil::MISSILE_WEB) {
 		if(target < 100) add_string_to_buf("  Throws web at " + univ.party[target].name + '.');

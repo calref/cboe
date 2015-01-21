@@ -28,6 +28,9 @@
 #define SDF_SPEC_TER			301][2
 #define SDF_SPEC_STRBUF			301][3
 #define SDF_SPEC_TRAPLVL		301][4
+#define SDF_SPEC_TARGLOC_X		301][5
+#define SDF_SPEC_TARGLOC_Y		301][6
+#define SDF_SPEC_TARGET			301][7
 #define SDF_SKIP_STARTUP		305][4 // preferably deprecated
 #define SDF_LESS_SOUND			305][5
 #define SDF_NO_TARGET_LINE		305][6

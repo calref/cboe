@@ -44,6 +44,7 @@ Summon (%5 chance)
 Summon (%20 chance)
 Summon (%50 chance)
 Run global special during turn
+Run global special when hit
 Death triggers global special
 Radiate fire fields
 Radiate ice fields
@@ -68,7 +69,6 @@ Custom weapon stat (advanced)
 Custom radiate fields (advanced)
 Custom summoning (advanced)
 Custom long damage (advanced)
-
 
 
 
@@ -178,7 +178,7 @@ Chance of using
 Special to Call
 
 
-
+Special to Call
 
 
 

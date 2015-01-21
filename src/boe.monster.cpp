@@ -1375,9 +1375,14 @@ void activate_monsters(short code,short /*attitude*/) {
 short get_encumberance(short pc_num) {
 	short store = 0,i,what_val;
 	
+	what_val = univ.party[pc_num].free_weight();
+	if(what_val < 0) store += what_val / -10;
+	
 	for(i = 0; i < 24; i++)
 		if(univ.party[pc_num].equip[i]) {
 			what_val = univ.party[pc_num].items[i].awkward;
+			if(univ.party[pc_num].items[i].ability == eItemAbil::ENCUMBERING)
+				what_val += univ.party[pc_num].items[i].abil_data[0];
 			if(what_val == 1 && get_ran(1,0,130) < hit_chance[univ.party[pc_num].skill(eSkill::DEFENSE)])
 				what_val--;
 			if(what_val > 1 && get_ran(1,0,70) < hit_chance[univ.party[pc_num].skill(eSkill::DEFENSE)])

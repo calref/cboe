@@ -1594,7 +1594,6 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 		play_sound(29 + i);
 	} else switch(which_m->m_type) {
 		case eRace::GIANT: play_sound(29); break;
-			// TODO: Should sliths be considered reptiles too? Check original bladbase.
 			// TODO: Should birds be considered beasts? If there are any birds in the bladbase, probably; otherwise, better to have new sound
 		case eRace::REPTILE: case eRace::BEAST: case eRace::DEMON: case eRace::UNDEAD: case eRace::STONE:
 			i = get_ran(1,0,1); play_sound(31 + i); break;
@@ -1932,8 +1931,14 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 			}
 			break;
 		case eSpecCtx::KILL_MONST: case eSpecCtx::SEE_MONST: case eSpecCtx::MONST_SPEC_ABIL:
-			// The monster is the target
+		case eSpecCtx::ATTACKED_MELEE: case eSpecCtx::ATTACKING_MELEE:
+		case eSpecCtx::ATTACKED_RANGE: case eSpecCtx::ATTACKING_RANGE:
+			// The monster/PC on the trigger space is the target
 			current_pc_picked_in_spec_enc = 100 + monst_there(spec_loc);
+			if(current_pc_picked_in_spec_enc > univ.town->max_monst())
+				current_pc_picked_in_spec_enc = pc_there(spec_loc);
+			if(current_pc_picked_in_spec_enc == 6)
+				current_pc_picked_in_spec_enc = -1;
 			break;
 		case eSpecCtx::TARGET: case eSpecCtx::USE_SPACE:
 			// If there's a monster on the space, select that as the target
@@ -3611,6 +3616,30 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					break;
 				case 18: // See monster
 					if(which_mode == eSpecCtx::SEE_MONST)
+						*next_spec = spec.ex1c;
+					break;
+				case 19: // Monster using special ability
+					if(which_mode == eSpecCtx::MONST_SPEC_ABIL)
+						*next_spec = spec.ex1c;
+					break;
+				case 20: // Town goes hostile
+					if(which_mode == eSpecCtx::TOWN_HOSTILE)
+						*next_spec = spec.ex1c;
+					break;
+				case 21: // Item ability activated on attacking
+					if(which_mode == eSpecCtx::ATTACKING_MELEE)
+						*next_spec = spec.ex1c;
+					break;
+				case 22: // Item ability activated on attacking
+					if(which_mode == eSpecCtx::ATTACKING_RANGE)
+						*next_spec = spec.ex1c;
+					break;
+				case 23: // Item or monster ability activated on being hit
+					if(which_mode == eSpecCtx::ATTACKED_MELEE)
+						*next_spec = spec.ex1c;
+					break;
+				case 24: // Item or monster ability activated on being hit
+					if(which_mode == eSpecCtx::ATTACKED_RANGE)
 						*next_spec = spec.ex1c;
 					break;
 					// Past here are special values that don't have an equivalent in eSpecCtx.

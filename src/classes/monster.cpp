@@ -295,9 +295,12 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 		case eMonstAbilTemplate::SPECIAL:
 			abil[eMonstAbil::SPECIAL].special = {true, param, 1};
 			return abil.find(eMonstAbil::SPECIAL);
+		case eMonstAbilTemplate::HIT_TRIGGERS:
+			abil[eMonstAbil::HIT_TRIGGER].special = {true, param, 0};
+			return abil.find(eMonstAbil::HIT_TRIGGER);
 		case eMonstAbilTemplate::DEATH_TRIGGERS:
 			abil[eMonstAbil::DEATH_TRIGGER].special = {true, param, 0};
-			return abil.find(eMonstAbil::SPECIAL);
+			return abil.find(eMonstAbil::DEATH_TRIGGER);
 			// Radiate abilities
 		case eMonstAbilTemplate::RADIATE_FIRE:
 			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_FIRE, param};

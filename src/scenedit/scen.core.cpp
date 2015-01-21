@@ -898,6 +898,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 				param = choose_text(STRT_MONST, 0, &me, "Summon which monster?");
 				break;
 			case eMonstAbilTemplate::SPECIAL:
+			case eMonstAbilTemplate::HIT_TRIGGERS:
 			case eMonstAbilTemplate::DEATH_TRIGGERS:
 				param = get_fresh_spec(0);
 				if(param < 0) {
@@ -1052,7 +1053,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 			return true;
 		});
 	} else if(cat == eMonstAbilCat::SPECIAL) {
-		if(abil == eMonstAbil::SPECIAL || abil == eMonstAbil::DEATH_TRIGGER)
+		if(abil == eMonstAbil::SPECIAL || abil == eMonstAbil::HIT_TRIGGER || abil == eMonstAbil::DEATH_TRIGGER)
 			abil_dlg["pick-extra1"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
 				short spec = me["extra1"].getTextAsNum();
 				if(spec < 0 || spec > 255) {
