@@ -26,6 +26,13 @@ namespace legacy {
 
 class cScenario;
 
+enum eAmbientSound {
+	AMBIENT_NONE,
+	AMBIENT_DRIP,
+	AMBIENT_BIRD,
+	AMBIENT_CUSTOM,
+};
+
 class cOutdoors {
 	cScenario& scenario;
 public:
@@ -71,6 +78,8 @@ public:
 	std::array<std::string,90> spec_strs;
 	std::array<std::string,8> sign_strs;
 	bool special_spot[48][48];
+	eAmbientSound ambient_sound;
+	snd_num_t out_sound;
 	
 	explicit cOutdoors(cScenario& scenario, bool init_strings = false);
 	void append(legacy::outdoor_record_type& old);

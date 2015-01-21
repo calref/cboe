@@ -62,6 +62,10 @@ void cButton::draw(){
 		else style.pointSize = 12;
 		from_rect = btnRects[type][depressed];
 		to_rect = frame;
+		if(type == BTN_TINY) {
+			to_rect.right = to_rect.left + 14;
+			to_rect.bottom = to_rect.top + 10;
+		}
 		rect_draw_some_item(buttons[btnGW[type]],from_rect,*inWindow,to_rect,sf::BlendAlpha);
 		style.colour = sf::Color::Black;
 		style.lineHeight = 8;
@@ -244,9 +248,11 @@ void cLed::draw(){
 		TextStyle style;
 		style.pointSize = textSize;
 		style.lineHeight = textSize - 1;
+		style.font = textFont;
 		from_rect = ledRects[state][depressed];
 		to_rect = frame;
 		to_rect.right = to_rect.left + 14;
+		to_rect.bottom = to_rect.top + 10;
 		rect_draw_some_item(buttons[btnGW[BTN_LED]],from_rect,*inWindow,to_rect);
 		style.colour = parent->getDefTextClr();
 		to_rect.right = frame.right;

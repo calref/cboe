@@ -434,6 +434,24 @@ void outdoor_details() {
 	out_dlg["loc"].setText(str_out.str());
 	out_dlg["comment"].setText(current_terrain->comment);
 	out_dlg["name"].setText(current_terrain->out_name);
+	dynamic_cast<cLedGroup&>(out_dlg["ambient"]).setSelected("snd" + std::to_string(int(current_terrain->ambient_sound) + 1));
+	out_dlg["ambient"].attachFocusHandler([](cDialog& me, std::string, bool) -> bool {
+		cLedGroup& lg = dynamic_cast<cLedGroup&>(me["ambient"]);
+		std::string hit = lg.getSelected();
+		std::string prev = lg.getPrevSelection();
+		eAmbientSound choice = eAmbientSound(hit[3] - '1');
+		if(choice == AMBIENT_CUSTOM) {
+			int i = prev == "snd4" ? current_terrain->out_sound : -1;
+			i = choose_text(STRT_SND, i, &me, "Choose ambient sound:");
+			if(i < 0) {
+				lg.setSelected(prev);
+				return false;
+			}
+			current_terrain->out_sound = i;
+		}
+		current_terrain->ambient_sound = choice;
+		return true;
+	});
 	
 	out_dlg.run();
 }
@@ -685,7 +703,11 @@ static bool save_advanced_town(cDialog& me, std::string, eKeyMod) {
 	}
 	town->spec_on_entry = me["onenter"].getTextAsNum();
 	town->spec_on_entry_if_dead = me["onenterdead"].getTextAsNum();
+	town->spec_on_hostile = me["onhostile"].getTextAsNum();
 	town->is_hidden = dynamic_cast<cLed&>(me["hidden"]).getState() != led_off;
+	town->defy_mapping = dynamic_cast<cLed&>(me["nomap"]).getState() != led_off;
+	town->defy_scrying = dynamic_cast<cLed&>(me["noscry"]).getState() != led_off;
+	town->strong_barriers = dynamic_cast<cLed&>(me["barrier"]).getState() != led_off;
 	return true;
 }
 
@@ -699,7 +721,28 @@ static void put_advanced_town_in_dlog(cDialog& me) {
 	}
 	me["onenter"].setTextToNum(town->spec_on_entry);
 	me["onenterdead"].setTextToNum(town->spec_on_entry_if_dead);
+	me["onhostile"].setTextToNum(town->spec_on_hostile);
 	dynamic_cast<cLed&>(me["hidden"]).setState(town->is_hidden ? led_red : led_off);
+	dynamic_cast<cLed&>(me["nomap"]).setState(town->defy_mapping ? led_red : led_off);
+	dynamic_cast<cLed&>(me["noscry"]).setState(town->defy_scrying ? led_red : led_off);
+	dynamic_cast<cLed&>(me["barrier"]).setState(town->strong_barriers ? led_red : led_off);
+}
+
+static bool edit_advanced_town_special(cDialog& me, std::string hit, eKeyMod) {
+	std::string fld = hit.substr(5);
+	short spec = me[fld].getTextAsNum();
+	if(spec < 0 || spec > 99) {
+		spec = get_fresh_spec(2);
+		if(spec < 0) {
+			giveError("You can't create a new town special encounter because there are no more free special nodes.",
+					  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
+			return true;
+		}
+	}
+	if(edit_spec_enc(spec,2,&me)) {
+		me[fld].setTextToNum(spec);
+	}
+	return true;
 }
 
 void edit_advanced_town() {
@@ -711,9 +754,11 @@ void edit_advanced_town() {
 	auto loc_check = std::bind(check_range_msg, _1, _2, _3, -1, 47, "The town exit coordinates", "-1 if you want them ignored");
 	auto spec_check = std::bind(check_range_msg, _1, _2, _3, -1, 99, _4, "-1 for no special");
 	town_dlg.attachFocusHandlers(std::bind(spec_check, _1, _2, _3, "The town exit special"), {"onexit1", "onexit2", "onexit3", "onexit4"});
-	town_dlg.attachFocusHandlers(std::bind(spec_check, _1, _2, _3, "Thw town entry special"), {"onenter", "onenterdead"});
+	town_dlg.attachFocusHandlers(std::bind(spec_check, _1, _2, _3, "The town entry special"), {"onenter", "onenterdead"});
+	town_dlg["onhostile"].attachFocusHandler(std::bind(spec_check, _1, _2, _3, "The town hostile special"));
 	town_dlg.attachFocusHandlers(loc_check, {"exit1-x", "exit2-x", "exit3-x", "exit4-x"});
 	town_dlg.attachFocusHandlers(loc_check, {"exit1-y", "exit2-y", "exit3-y", "exit4-y"});
+	town_dlg.attachClickHandlers(edit_advanced_town_special, {"edit-onexit1", "edit-onexit2", "edit-onexit3", "edit-onexit4", "edit-onenter", "edit-onenterdead", "edit-onhostile"});
 	
 	put_advanced_town_in_dlog(town_dlg);
 	

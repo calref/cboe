@@ -69,12 +69,13 @@
 <xsl:for-each select='dialog/button | dialog/stack/button'>
 	<div>
 	<xsl:attribute name='class'>
+		<xsl:if test='/dialog/@debug = "true" and @type = "tiny"'>debug</xsl:if>
 		button <xsl:value-of select='./@type'/>
 	</xsl:attribute>
 	<xsl:attribute name='style'>
 		background-image: url('img/button/<xsl:value-of select='./@type'/>.png');
 		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
-		<xsl:if test='@type = "push"'>width: <xsl:value-of select='./@width'/>;</xsl:if>
+		<xsl:if test='@type = "push" or @type = "tiny"'>width: <xsl:value-of select='./@width'/>px;</xsl:if>
 	</xsl:attribute>
 	<xsl:attribute name='title'>
 		<xsl:if test='/dialog/@debug = "true" and @name'>

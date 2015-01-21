@@ -42,21 +42,6 @@ class cTown { // formerly town_record_type
 protected:
 	cScenario& scenario;
 public:
-//	class cCreature { // formerly creature_start_type
-//	public:
-//		unsigned short number;
-//		unsigned char start_attitude;
-//		location start_loc;
-//		unsigned char mobile;
-//		unsigned char time_flag;
-//		unsigned char extra1,extra2;
-//		short spec1, spec2;
-//		char spec_enc_code,time_code;
-//		short monster_time,personality;
-//		short special_on_kill,facial_pic;
-//		
-//		cCreature& operator = (legacy::creature_start_type old);
-//	};
 	class cWandering { // formerly wandering_type
 	public:
 		mon_num_t monst[4];
@@ -105,8 +90,7 @@ public:
 	bool defy_mapping : 1;
 	bool defy_scrying : 1;
 	bool is_hidden : 1;
-	char reserved_bits : 4;
-	short hostile_fry_party; // number of a special to be called when the town goes hostile TODO: Not sure about this yet though
+	char : 4;
 	short difficulty;
 	std::string town_name;
 	// Using std::array here so we can have .size()

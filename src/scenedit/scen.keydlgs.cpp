@@ -270,7 +270,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
-		cur_choice = 0;
+		cur_choice = -1;
 	cStringChoice dlog(strings, title, parent);
 	
 	return dlog.show(cur_choice);

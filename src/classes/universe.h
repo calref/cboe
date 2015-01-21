@@ -145,13 +145,6 @@ public:
 	explicit cCurOut(cUniverse& univ);
 };
 
-enum eAmbientSound {
-	AMBIENT_NONE,
-	AMBIENT_DRIP,
-	AMBIENT_BIRD,
-	AMBIENT_CUSTOM,
-};
-
 class cUniverse{
 	template<typename T> using update_info = std::set<T*>;
 	std::map<pic_num_t, update_info<cItem>> update_items;
@@ -172,7 +165,6 @@ public:
 	char town_maps[200][8][64]; // formerly stored_town_maps_type
 	cCurOut out;
 	char out_maps[100][6][48]; // formerly stored_outdoor_maps_type
-	snd_num_t out_sound;
 	fs::path file;
 	
 	void append(legacy::stored_town_maps_type& old);

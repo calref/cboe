@@ -17,6 +17,7 @@
 
 void cOutdoors::append(legacy::outdoor_record_type& old){
 	int i,j;
+	ambient_sound = AMBIENT_NONE;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
 	for(i = 0; i < 60; i++) {

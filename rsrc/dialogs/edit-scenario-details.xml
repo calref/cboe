@@ -7,7 +7,7 @@
 	<field name='who1' top='104' left='181' width='243' height='47'/>
 	<field name='who2' top='159' left='181' width='243' height='47'/>
 	<field name='contact' top='214' left='181' width='243' height='65'/>
-	<button name='okay' type='regular' top='357' left='395'>OK</button>
+	<button name='okay' type='regular' top='446' left='395'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text top='23' left='50' width='372' height='53'>
 		This is where you can define the various pieces of information the user will see when deciding whether or not to play your scenario.
@@ -18,41 +18,29 @@
 	<text top='102' left='50' width='120' height='14'>Credits, Part 1:</text>
 	<text top='150' left='50' width='120' height='14'>Credits, Part 2:</text>
 	<text top='213' left='50' width='120' height='14'>Contact Information:</text>
-	<text top='294' left='50' width='120' height='14'>Rating:</text>
-	<!--
-	 TODO: Move these LED labels into the LED elements
-	 -->
-	<text top='285' left='107' width='23' height='14'>G</text>
-	<text top='301' left='107' width='23' height='14'>PG</text>
-	<text top='318' left='107' width='23' height='14'>R</text>
-	<text top='335' left='107' width='32' height='14'>NC-17</text>
-	<!--
-	 NOTE: These LEDs had 18 added to the width of their labels
-	 -->
+	<text top='285' left='50' width='50' height='14'>Rating:</text>
 	<group name='rating'>
-		<led name='rate1' state='off' top='288' left='164' width='41'/>
-		<led name='rate2' state='off' top='305' left='164' width='41'/>
-		<led name='rate3' state='off' top='322' left='164' width='41'/>
-		<led name='rate4' state='off' top='339' left='164' width='50'/>
+		<led name='rate1' state='off' top='288' left='107' width='41'>G</led>
+		<led name='rate2' state='off' top='305' left='107' width='41'>PG</led>
+		<led name='rate3' state='off' top='322' left='107' width='41'>R</led>
+		<led name='rate4' state='off' top='339' left='107' width='50'>NC-17</led>
 	</group>
-	<text top='284' left='199' width='71' height='14'>Difficulty:</text>
-	<!--
-	 TODO: Move these LED labels into the LED elements
-	 -->
-	<text top='284' left='280' width='76' height='15'>Low Level (1-8)</text>
-	<text top='301' left='281' width='103' height='15'>Medium Level (9-18)</text>
-	<text top='318' left='281' width='76' height='15'>High Level (19-30)</text>
+	<text top='285' left='199' width='71' height='14'>Difficulty:</text>
 	<!--
 	 TODO: Isn't there a level cap? If so, this should probably say "30-cap" (with cap replaced with the actual cap) rather than 30+.
 	 -->
-	<text top='335' left='281' width='76' height='15'>Very High Level (30+)</text>
-	<!--
-	 NOTE: These LEDs had 18 added to the width of their labels
-	 -->
 	<group name='difficulty'>
-		<led name='lvl1' state='off' top='288' left='423' width='94'/>
-		<led name='lvl2' state='off' top='305' left='423' width='94'/>
-		<led name='lvl3' state='off' top='322' left='423' width='94'/>
-		<led name='lvl4' state='off' top='339' left='423' width='94'/>
+		<led name='lvl1' state='off' top='288' left='281' width='94'>Low Level (1-8)</led>
+		<led name='lvl2' state='off' top='305' left='281' width='94'>Medium Level (9-18)</led>
+		<led name='lvl3' state='off' top='322' left='281' width='94'>High Level (19-30)</led>
+		<led name='lvl4' state='off' top='339' left='281' width='94'>Very High Level (30+)</led>
 	</group>
+	<led name='adjust' top='356' left='50' size='small' width='350'>Adjust difficulty if played by a party stronger than recommended</led>
+	<text top='379' left='50' width='120' height='14'>Campaign ID:</text>
+	<field name='cpnid' top='378' left='181' width='100' height='16'/>
+	<text top='402' left='50' width='400' height='44'>
+		If your scenario is part of a campaign of several scenarios,
+		the ID specified here makes it easy to carry information from one scenario to the next.
+		It should be the same in each scenario in the series.
+	</text>
 </dialog>

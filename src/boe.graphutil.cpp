@@ -59,7 +59,6 @@ extern cCustomGraphics spec_scen_g;
 // TODO: The duplication of rectangle here shouldn't be necessary...
 rectangle boat_rects[4] = {rectangle{0,0,36,28}, rectangle{0,28,36,56},rectangle{0,56,36,84},rectangle{0,84,36,112}};
 bool gave_no_g_error = false;
-eAmbientSound ambient_sound;
 
 //short dest; // 0 - terrain gworld   1 - screen
 // if terrain_to_draw is -1, do black
@@ -696,7 +695,7 @@ void play_ambient_sound(){ // TODO: Maybe add a system for in-town ambient sound
 	if(overall_mode != MODE_OUTDOORS) return; // ambient sounds are outdoors only at the moment
 	if(get_ran(1,1,100) > 10) return; // 10% chance per move of playing a sound
 	short sound_to_play;
-	switch(ambient_sound){
+	switch(univ.out->ambient_sound){
 		case AMBIENT_DRIP:
 			sound_to_play = get_ran(1,0,1);
 			play_sound(-drip[sound_to_play]);
@@ -706,7 +705,7 @@ void play_ambient_sound(){ // TODO: Maybe add a system for in-town ambient sound
 			play_sound(-bird[sound_to_play]);
 			break;
 		case AMBIENT_CUSTOM:
-			sound_to_play = univ.out_sound;
+			sound_to_play = univ.out->out_sound;
 			play_sound(-sound_to_play);
 			break;
 		case AMBIENT_NONE:
