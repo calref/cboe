@@ -101,7 +101,8 @@ extern bool talk_end_forced;
 extern short which_combat_type,num_targets_left;
 extern location center;
 extern short current_pc;
-extern short combat_active_pc,stat_screen_mode;
+extern short combat_active_pc;
+extern eStatMode stat_screen_mode;
 
 extern bool map_visible,diff_depth_ok;
 extern sf::RenderWindow mini_map;
@@ -716,7 +717,7 @@ static void handle_drop_item(short item_hit, bool& need_redraw) {
 static void handle_item_shop_action(short item_hit) {
 	long i = item_hit - item_sbar->getPosition();
 	switch(stat_screen_mode) {
-		case 2: // identify item
+		case MODE_IDENTIFY:
 			if(!take_gold(shop_identify_cost,false))
 				ASB("Identify: You don't have the gold.");
 			else {
@@ -726,14 +727,14 @@ static void handle_item_shop_action(short item_hit) {
 				univ.party[stat_window].combine_things();
 			}
 			break;
-		case 3: case 4: case 5: // various selling
+		case MODE_SELL_WEAP: case MODE_SELL_ARMOR: case MODE_SELL_ANY:
 			play_sound(-39);
 			univ.party.gold += store_selling_values[i];
 			ASB("You sell your item.");
 			univ.party[stat_window].take_item(item_hit);
 			put_item_screen(stat_window,1);
 			break;
-		case 6: // enchant item
+		case MODE_ENCHANT:
 			if(!take_gold(store_selling_values[i],false))
 				ASB("Enchant: You don't have the gold.");
 			else {

@@ -41,7 +41,8 @@ extern bool play_sounds,give_intro_hint,show_startup_splash,changed_display_mode
 extern sf::RenderWindow mainPtr;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
-extern short display_mode,stat_screen_mode,current_pc;
+extern short display_mode,current_pc;
+extern eStatMode stat_screen_mode;
 extern long register_flag;
 extern long ed_flag,ed_key;
 extern bool save_maps,give_delays;
@@ -124,7 +125,7 @@ void start_shop_mode(eShopType shop_type,short shop_min,short shop_max,short cos
 	
 	store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
-	stat_screen_mode = 1;
+	stat_screen_mode = MODE_SHOP;
 	
 	set_up_shop_array(shop_type, shop_min, std::max(shop_min, shop_max));
 	put_background();
@@ -164,7 +165,7 @@ void end_shop_mode() {
 		center = univ.town.p_loc;
 		update_explored(center);
 	}
-	stat_screen_mode = 0;
+	stat_screen_mode = MODE_INVEN;
 	put_item_screen(stat_window,0);
 	put_pc_screen();
 	// TODO: I suspect REFRESH_NONE will suffice here
@@ -448,7 +449,7 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	store_pre_talk_mode = overall_mode;
 	overall_mode = MODE_TALKING;
 	talk_end_forced = false;
-	stat_screen_mode = 1;
+	stat_screen_mode = MODE_SHOP;
 	current_talk_node = TALK_LOOK;
 	
 	// Bring up and place first strings.
@@ -472,7 +473,7 @@ void end_talk_mode() {
 		center = univ.town.p_loc;
 		update_explored(center);
 	}
-	stat_screen_mode = 0;
+	stat_screen_mode = MODE_INVEN;
 	put_item_screen(stat_window,0);
 	put_pc_screen();
 	// TODO: I suspect REFRESH_NONE will suffice here
@@ -686,25 +687,25 @@ void handle_talk_event(location p) {
 			break;
 		case eTalkNode::SELL_WEAPONS:
 			strnum1 = -1;
-			stat_screen_mode = 3;
+			stat_screen_mode = MODE_SELL_WEAP;
 			put_item_screen(stat_window,1);
 			give_help(42,43);
 			break;
 		case eTalkNode::SELL_ARMOR:
 			strnum1 = -1;
-			stat_screen_mode = 4;
+			stat_screen_mode = MODE_SELL_ARMOR;
 			put_item_screen(stat_window,1);
 			give_help(42,43);
 			break;
 		case eTalkNode::SELL_ITEMS:
 			strnum1 = -1;
-			stat_screen_mode = 5;
+			stat_screen_mode = MODE_SELL_ANY;
 			put_item_screen(stat_window,1);
 			give_help(42,43);
 			break;
 		case eTalkNode::IDENTIFY: case eTalkNode::ENCHANT:
 			strnum1 = -1;
-			stat_screen_mode = (ttype == eTalkNode::IDENTIFY) ? 2 : 6;
+			stat_screen_mode = (ttype == eTalkNode::IDENTIFY) ? MODE_IDENTIFY : MODE_ENCHANT;
 			shop_identify_cost = a;
 			put_item_screen(stat_window,1);
 			give_help(ttype == eTalkNode::IDENTIFY ? 44 : 45,0);

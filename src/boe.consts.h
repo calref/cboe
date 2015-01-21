@@ -80,6 +80,16 @@ enum eGameMode {
 	MODE_CUTSCENE = 51, // for future use
 };
 
+enum eStatMode {
+	MODE_INVEN = 0,
+	MODE_SHOP = 1,
+	MODE_IDENTIFY = 2,
+	MODE_SELL_WEAP = 3,
+	MODE_SELL_ARMOR = 4,
+	MODE_SELL_ANY = 5,
+	MODE_ENCHANT = 6,
+};
+
 #ifndef DIR_ARRAY_DEF
 extern signed char dir_x_dif[9];
 extern signed char dir_y_dif[9];

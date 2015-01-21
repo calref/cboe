@@ -24,7 +24,7 @@
 
 #define	DONE_BUTTON_ITEM	1
 
-extern short stat_screen_mode;
+extern eStatMode stat_screen_mode;
 extern bool give_delays;
 extern eGameMode overall_mode;
 extern bool play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug,ghost_mode;
@@ -112,7 +112,7 @@ void finish_load_party(){
 	end_startup();
 	
 	overall_mode = town_restore ? MODE_TOWN : MODE_OUTDOORS;
-	stat_screen_mode = 0;
+	stat_screen_mode = MODE_INVEN;
 	build_outdoors();
 	erase_out_specials();
 	

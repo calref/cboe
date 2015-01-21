@@ -60,7 +60,8 @@ extern sf::RenderWindow mainPtr;
 extern bool spell_forced,save_maps,suppress_stat_screen,boom_anim_active;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
-extern short store_spell_target,pc_casting,stat_screen_mode;
+extern short store_spell_target,pc_casting;
+extern eStatMode stat_screen_mode;
 extern effect_pat_type null_pat,single,t,square,radius2,radius3,small_square,open_square;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
@@ -261,7 +262,7 @@ void put_party_in_scen(std::string scen_name) {
 	// graphics wise
 	end_startup();
 	
-	stat_screen_mode = 0;
+	stat_screen_mode = MODE_INVEN;
 	build_outdoors();
 	erase_out_specials();
 	

@@ -80,8 +80,8 @@ location ul = {28,10};
 short display_mode = 0; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
 long stored_key;
 short pixel_depth,old_depth = 8;
-// TODO: Enumify stat_screen_mode
-short current_ground = 0,stat_screen_mode = 0;
+short current_ground = 0;
+eStatMode stat_screen_mode;
 short anim_step = -1;
 
 // Spell casting globals

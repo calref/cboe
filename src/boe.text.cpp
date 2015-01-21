@@ -34,7 +34,8 @@ rectangle item_buttons_from[7] = {
 
 eGameMode store_mode;
 
-extern short had_text_freeze,stat_screen_mode;
+extern short had_text_freeze;
+extern eStatMode stat_screen_mode;
 
 // graphics globals
 extern rectangle status_panel_rect,status_panel_title_rect;
@@ -292,7 +293,7 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 						sout << univ.party[pc].items[i_num].full_name << ' ';
 						// TODO: Why are bashing weapons excluded from this?
 						if(univ.party[pc].items[i_num].charges > 0 && univ.party[pc].items[i_num].weap_type != eSkill::BASHING_WEAPONS
-						   && (stat_screen_mode <= 1))
+						   && (stat_screen_mode == MODE_INVEN || stat_screen_mode == MODE_SHOP))
 							sout << '(' << int(univ.party[pc].items[i_num].charges) << ')';
 					}
 					dest_rect.left -= 2;
@@ -302,7 +303,7 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 					
 					// this is kludgy, awkwark, and has redundant code. Done this way to
 					// make go faster, and I got lazy.
-					if((stat_screen_mode == 0) &&
+					if((stat_screen_mode == MODE_SHOP) &&
 						((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 						place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic
 						if(abil_chart[univ.party[pc].items[i_num].ability]) // place use if can
@@ -312,7 +313,7 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 					else {
 						place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic
 						place_item_button(3,i,4,0); // info button
-						if((stat_screen_mode == 0) &&
+						if((stat_screen_mode == MODE_SHOP) &&
 							((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 							place_item_button(1,i,2,0);
 							place_item_button(2,i,3,0);
@@ -320,7 +321,7 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 								place_item_button(0,i,1,0);
 						}
 					}
-					if(stat_screen_mode > 1) {
+					if(stat_screen_mode != MODE_INVEN && stat_screen_mode != MODE_SHOP) {
 						place_buy_button(i,pc,i_num);
 						
 					}
@@ -352,14 +353,14 @@ void place_buy_button(short position,short pc_num,short item_num) {
 	val_to_place = val_to_place / 2;
 	
 	switch(stat_screen_mode) {
-		case 2:
+		case MODE_IDENTIFY:
 			if(!univ.party[pc_num].items[item_num].ident) {
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[0];
 				val_to_place = shop_identify_cost;
 			}
 			break;
-		case 3: // sell weapons
+		case MODE_SELL_WEAP:
 			if(isWeaponType(univ.party[pc_num].items[item_num].variety) &&
 				(!univ.party[pc_num].equip[item_num]) &&
 				(univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
@@ -368,7 +369,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 				source_rect = button_sources[1];
 			}
 			break;
-		case 4: // sell armor
+		case MODE_SELL_ARMOR:
 			if(isArmourType(univ.party[pc_num].items[item_num].variety) &&
 			   (!univ.party[pc_num].equip[item_num]) &&
 			   (univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
@@ -377,7 +378,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 				source_rect = button_sources[1];
 			}
 			break;
-		case 5: // sell any
+		case MODE_SELL_ANY:
 			if((val_to_place > 0) && (univ.party[pc_num].items[item_num].ident) &&
 				(!univ.party[pc_num].equip[item_num]) &&
 				(!univ.party[pc_num].items[item_num].unsellable)) {
@@ -385,7 +386,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 				source_rect = button_sources[1];
 			}
 			break;
-		case 6: // augment weapons
+		case MODE_ENCHANT:
 			if((univ.party[pc_num].items[item_num].variety == eItemType::ONE_HANDED || univ.party[pc_num].items[item_num].variety == eItemType::TWO_HANDED) &&
 				(univ.party[pc_num].items[item_num].ident) &&
 				univ.party[pc_num].items[item_num].ability == eItemAbil::NONE &&
