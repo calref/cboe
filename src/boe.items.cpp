@@ -39,24 +39,9 @@ extern sf::RenderWindow mini_map;
 extern sf::Texture pc_gworld;
 extern cUniverse univ;
 
-const std::multiset<eItemType> equippable = {
-	eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::BOW, eItemType::ARROW, eItemType::THROWN_MISSILE,
-	eItemType::TOOL, eItemType::SHIELD, eItemType::ARMOR, eItemType::HELM, eItemType::GLOVES,
-	eItemType::SHIELD_2, eItemType::BOOTS, eItemType::RING, eItemType::NECKLACE, eItemType::PANTS,
-	eItemType::CROSSBOW, eItemType::BOLTS, eItemType::MISSILE_NO_AMMO,
-	// And these are the ones that you can equip two of
-	eItemType::ONE_HANDED, eItemType::RING,
-};
-const std::multiset<eItemType> num_hands_to_use = {
-	eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::SHIELD, eItemType::SHIELD_2,
-};
-
-// For following, if an item of type n is equipped, no other items of type n can be equipped,
-// TODO: Should SHIELD and SHIELD_2 have an entry here?
-std::map<const eItemType, const short> excluding_types = {
-	{eItemType::BOW, 2}, {eItemType::ARROW, 1}, {eItemType::THROWN_MISSILE, 1},
-	{eItemType::CROSSBOW, 2}, {eItemType::BOLTS, 1}, {eItemType::MISSILE_NO_AMMO, 2}
-};
+extern const std::multiset<eItemType> equippable;
+extern const std::multiset<eItemType> num_hands_to_use;
+extern std::map<const eItemType, const short> excluding_types;
 
 short selected,item_max = 0;
 

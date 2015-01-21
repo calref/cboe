@@ -56,6 +56,7 @@ const cSpell& cSpell::finish() {
 }
 
 std::string cSpell::name() const {
+	if(num == eSpell::NONE) return "INVALID SPELL";
 	return get_str("magic-names", int(num) + 1);
 }
 
@@ -75,6 +76,13 @@ eSpell cSpell::fromNum(eSkill type, int num) {
 	else if(type == eSkill::PRIEST_SPELLS)
 		return eSpell(num + 100);
 	return eSpell::NONE;
+}
+
+eSpell cSpell::fromNum(int num) {
+	eSpell check = eSpell(num);
+	if(dictionary.find(check) == dictionary.end())
+		return eSpell::NONE;
+	return check;
 }
 
 // Mage Spells

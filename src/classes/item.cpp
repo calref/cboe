@@ -14,6 +14,27 @@
 #include "classes.h"
 #include "boe.consts.h" // TODO: If this is needed here, maybe it shouldn't be in the "boe" namespace
 #include "oldstructs.h"
+#include "spell.hpp"
+
+extern const std::multiset<eItemType> equippable = {
+	eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::BOW, eItemType::ARROW, eItemType::THROWN_MISSILE,
+	eItemType::TOOL, eItemType::SHIELD, eItemType::ARMOR, eItemType::HELM, eItemType::GLOVES,
+	eItemType::SHIELD_2, eItemType::BOOTS, eItemType::RING, eItemType::NECKLACE, eItemType::PANTS,
+	eItemType::CROSSBOW, eItemType::BOLTS, eItemType::MISSILE_NO_AMMO,
+	// And these are the ones that you can equip two of
+	eItemType::ONE_HANDED, eItemType::RING,
+};
+
+extern const std::multiset<eItemType> num_hands_to_use = {
+	eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::SHIELD, eItemType::SHIELD_2,
+};
+
+// For following, if an item of type n is equipped, no other items of type n can be equipped,
+// TODO: Should SHIELD and SHIELD_2 have an entry here?
+std::map<const eItemType, const short> excluding_types = {
+	{eItemType::BOW, 2}, {eItemType::ARROW, 1}, {eItemType::THROWN_MISSILE, 1},
+	{eItemType::CROSSBOW, 2}, {eItemType::BOLTS, 1}, {eItemType::MISSILE_NO_AMMO, 2}
+};
 
 unsigned char cItem::rec_treas_class() const {
 	short tmp = value;
@@ -909,6 +930,295 @@ void cItem::append(legacy::item_record_type& old){
 			else missile = 1;
 			break;
 	}
+}
+
+std::string cItem::getAbilName() {
+	bool harmful = magic_use_type % 2;
+	bool party = magic_use_type >= 2;
+	std::ostringstream sout;
+	switch(ability) {
+		case eItemAbil::NONE: sout << "No ability"; break;
+		case eItemAbil::HEALING_WEAPON: sout << "Heals target"; break;
+		case eItemAbil::RETURNING_MISSILE: sout << "Returning missile"; break;
+		case eItemAbil::DISTANCE_MISSILE: sout << "Farflight missile"; break;
+		case eItemAbil::SEEKING_MISSILE: sout << "Seeking missile"; break;
+		case eItemAbil::ANTIMAGIC_WEAPON: sout << "Manasucker"; break;
+		case eItemAbil::SOULSUCKER: sout << "Soulsucker"; break;
+		case eItemAbil::DRAIN_MISSILES: sout << "Drain Missiles"; break;
+		case eItemAbil::WEAK_WEAPON: sout << "Weak Weapon"; break;
+		case eItemAbil::CAUSES_FEAR: sout << "Causes Fear"; break;
+		case eItemAbil::WEAPON_CALL_SPECIAL: sout << "Unusual Attack Effect"; break;
+		case eItemAbil::FULL_PROTECTION: sout << "Full Protection"; break;
+		case eItemAbil::MELEE_PROTECTION: sout << "Melee Protection"; break;
+		case eItemAbil::EVASION: sout << "Evasion"; break;
+		case eItemAbil::MARTYRS_SHIELD: sout << "Martyr's Shield"; break;
+		case eItemAbil::ENCUMBERING: sout << "Awkward Weapon"; break;
+		case eItemAbil::SKILL: sout << "Skill"; break;
+		case eItemAbil::BOOST_WAR: sout << "Warrior's Mantle"; break;
+		case eItemAbil::BOOST_MAGIC: sout << "Mage's Mantle"; break;
+		case eItemAbil::ACCURACY: sout << "Accuracy"; break;
+		case eItemAbil::THIEVING: sout << "Thieving"; break;
+		case eItemAbil::GIANT_STRENGTH: sout << "Giant Strength"; break;
+		case eItemAbil::LIGHTER_OBJECT: sout << "Lighter Object"; break;
+		case eItemAbil::HEAVIER_OBJECT: sout << "Heavier Object"; break;
+		case eItemAbil::HIT_CALL_SPECIAL: sout << "Unusual Defense Effect"; break;
+		case eItemAbil::LIFE_SAVING: sout << "Life Saving"; break;
+		case eItemAbil::PROTECT_FROM_PETRIFY: sout << "Protect from Petrify"; break;
+		case eItemAbil::REGENERATE: sout << "Regenerate"; break;
+		case eItemAbil::POISON_AUGMENT: sout << "Poison Augment"; break;
+		case eItemAbil::RADIANT: sout << "Radiance"; break;
+		case eItemAbil::WILL: sout << "Will"; break;
+		case eItemAbil::FREE_ACTION: sout << "Free Action"; break;
+		case eItemAbil::SPEED: sout << "Speed"; break;
+		case eItemAbil::SLOW_WEARER: sout << "Slow Wearer"; break;
+		case eItemAbil::LOCKPICKS: sout << "Lockpicks"; break;
+		case eItemAbil::POISON_WEAPON: sout << "Poison Weapon"; break;
+		case eItemAbil::CALL_SPECIAL: sout << "Unusual Ability"; break;
+		case eItemAbil::QUICKFIRE: sout << "Quickfire"; break;
+		case eItemAbil::HOLLY: sout << "Holly/Toadstool"; break;
+		case eItemAbil::COMFREY: sout << "Comfrey Root"; break;
+		case eItemAbil::NETTLE: sout << "Glowing Nettle"; break;
+		case eItemAbil::WORMGRASS: sout << "Crypt Shroom/Wormgrass"; break;
+		case eItemAbil::ASPTONGUE: sout << "Asptongue Mold"; break;
+		case eItemAbil::EMBERF: sout << "Ember Flower"; break;
+		case eItemAbil::GRAYMOLD: sout << "Graymold"; break;
+		case eItemAbil::MANDRAKE: sout << "Mandrake Root"; break;
+		case eItemAbil::SAPPHIRE: sout << "Sapphire"; break;
+		case eItemAbil::SMOKY_CRYSTAL: sout << "Smoky Crystal"; break;
+		case eItemAbil::RESURRECTION_BALM: sout << "Resurrection Balm"; break;
+		case eItemAbil::DAMAGING_WEAPON:
+			switch(eDamageType(abil_data[1])) {
+				case eDamageType::FIRE: sout << "Flaming"; break;
+				case eDamageType::MAGIC: sout << "Shocking"; break;
+				case eDamageType::COLD: sout << "Frosty"; break;
+				case eDamageType::POISON: sout << "Slimy"; break;
+				case eDamageType::WEAPON: sout << "Enhanced"; break;
+				case eDamageType::UNDEAD: sout << "Necrotic"; break;
+				case eDamageType::DEMON: sout << "Unholy"; break;
+				case eDamageType::UNBLOCKABLE: sout << "Dark"; break;
+				case eDamageType::MARKED: break; // Invalid
+			}
+			sout << " Weapon";
+			break;
+		case eItemAbil::SLAYER_WEAPON:
+			switch(eRace(abil_data[1])) {
+				case eRace::UNKNOWN: break; // Invalid
+				case eRace::DEMON: sout << "Demon"; break;
+				case eRace::UNDEAD: sout << "Undead"; break;
+				case eRace::REPTILE: sout << "Lizard"; break;
+				case eRace::GIANT: sout << "Giant"; break;
+				case eRace::MAGE: sout << "Mage"; break;
+				case eRace::PRIEST: sout << "Priest"; break;
+				case eRace::BUG: sout << "Bug"; break;
+				case eRace::HUMAN: sout << "Human"; break;
+				case eRace::NEPHIL: sout << "Nephil"; break;
+				case eRace::SLITH: sout << "Slith"; break;
+				case eRace::VAHNATAI: sout << "Vahnatai"; break;
+				case eRace::HUMANOID: sout << "Humanoid"; break;
+				case eRace::BEAST: sout << "Beast"; break;
+				case eRace::IMPORTANT: sout << "VIP"; break; // TODO: This one should probably not exist
+				case eRace::SLIME: sout << "Slime"; break;
+				case eRace::STONE: sout << "Golem"; break;
+				case eRace::DRAGON: sout << "Dragon"; break;
+				case eRace::MAGICAL: sout << "Magical Beast"; break;
+				case eRace::PLANT: sout << "Plant"; break;
+				case eRace::BIRD: sout << "Bird"; break;
+			}
+			sout << " Slayer";
+			break;
+		case eItemAbil::EXPLODING_WEAPON:
+			sout << "Explodes ";
+			switch(eDamageType(abil_data[1])) {
+				case eDamageType::FIRE: sout << "in flames"; break;
+				case eDamageType::COLD: sout << "into frost"; break;
+				case eDamageType::MAGIC: sout << "in sparks"; break;
+				case eDamageType::POISON: sout << "into slime"; break;
+				case eDamageType::WEAPON: sout << "in shrapnel"; break;
+				case eDamageType::UNBLOCKABLE: sout << "in darkness"; break;
+				case eDamageType::UNDEAD: sout.str("Implodes"); break;
+				case eDamageType::DEMON: sout << "into corruption"; break;
+				case eDamageType::MARKED: break; // Invalid
+			}
+			break;
+		case eItemAbil::STATUS_WEAPON:
+			switch(eStatus(abil_data[1])) {
+				case eStatus::MAIN: break; // Invalid
+				case eStatus::POISONED_WEAPON:
+				case eStatus::INVULNERABLE:
+				case eStatus::MAGIC_RESISTANCE:
+				case eStatus::INVISIBLE:
+					break; // TODO: Not implemented?
+				case eStatus::ACID: sout << "Acidic"; break;
+				case eStatus::POISON: sout << "Poisoned"; break;
+				case eStatus::BLESS_CURSE: sout << "Cursing"; break;
+				case eStatus::HASTE_SLOW: sout << "Slowing"; break;
+				case eStatus::WEBS: sout << "Webbing"; break;
+				case eStatus::DISEASE: sout << "Infectious"; break;
+				case eStatus::DUMB: sout << "Dumbfounding"; break;
+				case eStatus::MARTYRS_SHIELD: sout << "Martyr Draining"; break;
+				case eStatus::ASLEEP: sout << "Soporific"; break;
+				case eStatus::PARALYZED: sout << "Paralytic"; break;
+				case eStatus::FORCECAGE: sout << "Entrapping"; break;
+				case eStatus::CHARM: sout << "Charming"; break;
+			}
+			sout << " Weapon";
+			break;
+		case eItemAbil::DAMAGE_PROTECTION:
+			switch(eDamageType(abil_data[1])) {
+				case eDamageType::WEAPON: break;
+				case eDamageType::FIRE: sout << "Fire"; break;
+				case eDamageType::COLD: sout << "Cold"; break;
+				case eDamageType::MAGIC: sout << "Magic"; break;
+				case eDamageType::DEMON: sout << "Demon"; break;
+				case eDamageType::UNDEAD: sout << "Undead"; break;
+				case eDamageType::POISON: sout << "Poison"; break;
+				case eDamageType::UNBLOCKABLE: sout << "Darkness"; break;
+				case eDamageType::MARKED: break; // Invalid
+			}
+			sout << " Protection";
+			break;
+		case eItemAbil::STATUS_PROTECTION:
+			sout << "Protect From ";
+			switch(eStatus(abil_data[1])) {
+				case eStatus::MAIN: break; // Invalid;
+				case eStatus::POISONED_WEAPON:
+				case eStatus::INVULNERABLE:
+				case eStatus::MARTYRS_SHIELD:
+				case eStatus::FORCECAGE:
+				case eStatus::CHARM:
+				case eStatus::INVISIBLE:
+					break; // TODO: Not implemented:
+				case eStatus::POISON: sout << "Poison"; break;
+				case eStatus::ACID: sout << "Acid"; break;
+				case eStatus::DISEASE: sout << "Disease"; break;
+				case eStatus::BLESS_CURSE: sout << "Curses"; break;
+				case eStatus::HASTE_SLOW: sout << "Slowing"; break;
+				case eStatus::MAGIC_RESISTANCE: sout << "Magic Vulnerability"; break;
+				case eStatus::WEBS: sout << "Webbing"; break;
+				case eStatus::DUMB: sout << "Dumbfounding"; break;
+				case eStatus::ASLEEP: sout << "Sleep"; break;
+				case eStatus::PARALYZED: sout << "Paralysis"; break;
+			}
+			break;
+		case eItemAbil::BOOST_STAT:
+			sout << get_str("skills", abil_data[1] * 2 + 1);
+			break;
+		case eItemAbil::OCCASIONAL_STATUS:
+			sout << "Occasional ";
+			switch(eStatus(abil_data[1])) {
+				case eStatus::MAIN: break; // Invalid;
+				case eStatus::FORCECAGE:
+				case eStatus::CHARM:
+					break; // TODO: Not implemented?
+				case eStatus::DISEASE: sout << (harmful ? "Disease" : "Cure Disease"); break;
+				case eStatus::HASTE_SLOW: sout << (harmful ? "Slow" : "Haste"); break;
+				case eStatus::BLESS_CURSE: sout << (harmful ? "Curse" : "Bless"); break;
+				case eStatus::POISON: sout << (harmful ? "Poison" : "Cure"); break;
+				case eStatus::WEBS: sout << (harmful ? "Webbing" : "Cleansing"); break;
+				case eStatus::DUMB: sout << (harmful ? "Dumbfounding" : "Enlightening"); break;
+				case eStatus::MARTYRS_SHIELD: sout << (harmful ? "Lose" : "Gain") << " Martyr's Shield"; break;
+				case eStatus::INVULNERABLE: sout << (harmful ? "Lose" : "Gain") << " Invulnerability"; break;
+				case eStatus::MAGIC_RESISTANCE: sout << "Magic " << (harmful ? "Vulnerability" : "Resistance"); break;
+				case eStatus::INVISIBLE: sout << (harmful ? "Lose" : "Gain") << " Sanctuary"; break;
+				case eStatus::POISONED_WEAPON: sout << (harmful ? "Lose" : "Gain") << " Weapon Poison"; break;
+				case eStatus::ASLEEP: sout << (harmful ? "Sleep" : "Hyperactivity"); break;
+				case eStatus::PARALYZED: sout << (harmful ? "Gain" : "Lose") << " Paralysis"; break;
+				case eStatus::ACID: sout << (harmful ? "Gain" : "Neutralize") << " Acid"; break;
+			}
+			sout << (party ? " Party" : " Wearer");
+			break;
+		case eItemAbil::PROTECT_FROM_SPECIES:
+			sout << "Protection from ";
+			switch(eRace(abil_data[1])) {
+				case eRace::UNKNOWN: break; // Invalid
+				case eRace::UNDEAD: sout << "Undead"; break;
+				case eRace::DEMON: sout << "Demons"; break;
+				case eRace::HUMANOID: sout << "Humanoids"; break;
+				case eRace::REPTILE: sout << "Reptiles"; break;
+				case eRace::GIANT: sout << "Giants"; break;
+				case eRace::HUMAN: sout << "Humans"; break;
+				case eRace::NEPHIL: sout << "Nephilim"; break;
+				case eRace::SLITH: sout << "Sliths"; break;
+				case eRace::VAHNATAI: sout << "Vahnatai"; break;
+				case eRace::BEAST: sout << "Beasts"; break;
+				case eRace::IMPORTANT: sout << "VIPs"; break;
+				case eRace::MAGE: sout << "Mages"; break;
+				case eRace::PRIEST: sout << "Priests"; break;
+				case eRace::SLIME: sout << "Slimes"; break;
+				case eRace::STONE: sout << "Golems"; break;
+				case eRace::BUG: sout << "Bugs"; break;
+				case eRace::DRAGON: sout << "Dragons"; break;
+				case eRace::MAGICAL: sout << "Magical Beasts"; break;
+				case eRace::PLANT: sout << "Plants"; break;
+				case eRace::BIRD: sout << "Birds"; break;
+			}
+			break;
+		case eItemAbil::AFFECT_STATUS:
+			switch(eStatus(abil_data[1])) {
+				case eStatus::MAIN: break; // Invalid;
+				case eStatus::FORCECAGE: break;
+				case eStatus::CHARM: break;
+				case eStatus::POISONED_WEAPON: sout << (harmful ? "Increase" : "Decrease") << " Weapon Poison"; break;
+				case eStatus::BLESS_CURSE: sout << (harmful ? "Curse" : "Bless"); break;
+				case eStatus::POISON: sout << (harmful ? "Cause" : "Cure") << " Poison"; break;
+				case eStatus::HASTE_SLOW: sout << (harmful ? "Slow" : "Haste"); break;
+				case eStatus::INVULNERABLE: sout << (harmful ? "Lose" : "Add") << " Invulnerability"; break;
+				case eStatus::MAGIC_RESISTANCE: sout << (harmful ? "Lose" : "Add") << " Magic Resistance"; break;
+				case eStatus::WEBS: sout << (harmful ? "Lose" : "Add") << "Webs"; break;
+				case eStatus::DISEASE: sout << (harmful ? "Cause" : "Cure") << " Disease"; break;
+				case eStatus::INVISIBLE: sout << (harmful ? "Lose" : "Add") << " Sanctuary"; break;
+				case eStatus::DUMB: sout << (harmful ? "Add" : "Lose") << " Dumbfounding"; break;
+				case eStatus::MARTYRS_SHIELD: sout << (harmful ? "Lose" : "Add") << " Martyr's Shield"; break;
+				case eStatus::ASLEEP: sout << (harmful ? "Cause" : "Cure") << " Sleep"; break;
+				case eStatus::PARALYZED: sout << (harmful ? "Cause" : "Cure") << " Paralysis"; break;
+				case eStatus::ACID: sout << (harmful ? "Cause" : "Cure") << " Acid"; break;
+			}
+			break;
+		case eItemAbil::CAST_SPELL:
+			sout << "Spell: " << (*cSpell::fromNum(abil_data[1])).name();
+			break;
+		case eItemAbil::BLISS_DOOM:
+			if(magic_use_type >= 2)
+				sout << "Party ";
+			sout << (harmful ? "Doom" : "Bliss");
+			break;
+		case eItemAbil::AFFECT_EXPERIENCE:
+			sout << (harmful ? "Drain" : "Gain") << " Experience";
+			break;
+		case eItemAbil::AFFECT_SKILL_POINTS:
+			sout << (harmful ? "Drain" : "Gain") << " Skill Points";
+			break;
+		case eItemAbil::AFFECT_HEALTH:
+			sout << (harmful ? "Drain Health" : "Heal");
+			break;
+		case eItemAbil::AFFECT_SPELL_POINTS:
+			sout << (harmful ? "Drain" : "Restore") << " Spell Points";
+			break;
+		case eItemAbil::LIGHT:
+			sout << (harmful ? "Drain" : "Increase") << " Light";
+			break;
+		case eItemAbil::AFFECT_PARTY_STATUS:
+			sout << (harmful ? "Lose " : "Gain ");
+			switch(ePartyStatus(abil_data[1])) {
+				case ePartyStatus::STEALTH: sout << "Stealth"; break;
+				case ePartyStatus::FLIGHT: sout << "Flight"; break;
+				case ePartyStatus::DETECT_LIFE: sout << "Life Detection"; break;
+				case ePartyStatus::FIREWALK: sout << "Firewalk"; break;
+			}
+			break;
+		case eItemAbil::HEALTH_POISON:
+			sout << "Major " << (harmful ? "Poison" : "Healing");
+			if(party) sout << " All";
+			break;
+		case eItemAbil::SUMMONING:
+			// TODO: Figure out a way to wedge the monster name in here.
+			sout << "Summons " << "monst-names";
+			break;
+		case eItemAbil::MASS_SUMMONING:
+			sout << "Mass summon " << "monst-names";
+			break;
+	}
+	return sout.str();
 }
 
 void cItem::writeTo(std::ostream& file, std::string prefix) const {

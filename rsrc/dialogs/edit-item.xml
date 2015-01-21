@@ -5,87 +5,89 @@
 	<!--
 	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
 	 -->
-	<field name='full' top='30' left='163' width='126' height='16'/>
-	<field name="short" top='30' left='458' width='125' height='16'/>
-	<field name='picnum' top='62' left='140' width='52' height='16'/>
-	<field name='level' top='199' left='161' width='52' height='16'/>
-	<field name='awkward' top='223' left='161' width='52' height='16'/>
-	<field name='bonus' top='247' left='161' width='52' height='16'/>
-	<field name='prot' top='271' left='161' width='52' height='16'/>
-	<field name='charges' top='295' left='161' width='52' height='16'/>
-	<field name='flag' top='199' left='366' width='52' height='16'/>
-	<field name='value' top='223' left='366' width='52' height='16'/>
-	<field name='weight' top='247' left='366' width='52' height='16'/>
-	<field name='class' top='271' left='366' width='52' height='16'/>
-	<button name='okay' type='regular' top='337' left='509'>OK</button>
-	<button name='cancel' type='regular' top='337' left='434' def-key='esc'>Cancel</button>
-	<button name='prev' type='left' top='337' left='13'/>
-	<button name='next' type='right' top='337' left='76'/>
+	<field name='full' top='30' left='163' width='226' height='16'/>
+	<field name="short" top='54' left='163' width='125' height='16'/>
+	<field name='picnum' top='82' left='140' width='52' height='16'/>
+	<field name='level' top='219' left='161' width='52' height='16'/>
+	<field name='awkward' top='243' left='161' width='52' height='16'/>
+	<field name='bonus' top='267' left='161' width='52' height='16'/>
+	<field name='prot' top='291' left='161' width='52' height='16'/>
+	<field name='charges' top='315' left='161' width='52' height='16'/>
+	<field name='flag' top='219' left='366' width='52' height='16'/>
+	<field name='value' top='243' left='366' width='52' height='16'/>
+	<field name='weight' top='267' left='366' width='52' height='16'/>
+	<field name='class' top='291' left='366' width='52' height='16'/>
+	<button name='okay' type='regular' top='357' left='509'>OK</button>
+	<button name='cancel' type='regular' top='357' left='434' def-key='esc'>Cancel</button>
+	<button name='prev' type='left' top='357' left='13'/>
+	<button name='next' type='right' top='357' left='76'/>
 	<!--
 	 NOTE: All these LEDs have been shifted 100 pixels left to account for the labels swapping sides
 	 -->
 	<group name='variety'>
-		<led name='none' state='off' top='89' left='106' width='90'>No Item</led>
-		<led name='weap1' state='off' top='104' left='106' width='90'>1-Hand weapon</led>
-		<led name='weap2' state='off' top='119' left='106' width='90'>2-Hand weapon</led>
-		<led name='gold' state='off' top='134' left='106' width='90'>Gold</led>
-		<led name='bow' state='off' top='149' left='106' width='90'>Bow</led>
-		<led name='arrow' state='off' top='164' left='106' width='90'>Arrows</led>
-		<led name='thrown' state='off' top='179' left='106' width='90'>Thrown missile</led>
-		<led name='potion' state='off' top='89' left='218' width='90'>Potion/Magic Item</led>
-		<led name='scroll' state='off' top='104' left='218' width='90'>Scroll/Magic Item</led>
-		<led name='wand' state='off' top='119' left='218' width='90'>Wand</led>
-		<led name='tool' state='off' top='134' left='218' width='90'>Tool</led>
-		<led name='food' state='off' top='149' left='218' width='90'>Food</led>
-		<led name='shield' state='off' top='164' left='218' width='90'>Shield</led>
-		<led name='armor' state='off' top='179' left='218' width='90'>Armor</led>
-		<led name='helm' state='off' top='89' left='336' width='90'>Helm</led>
-		<led name='gloves' state='off' top='104' left='336' width='90'>Gloves</led>
+		<led name='none' state='off' top='109' left='106' width='90'>No Item</led>
+		<led name='weap1' state='off' top='124' left='106' width='90'>1-Hand weapon</led>
+		<led name='weap2' state='off' top='139' left='106' width='90'>2-Hand weapon</led>
+		<led name='gold' state='off' top='154' left='106' width='90'>Gold</led>
+		<led name='bow' state='off' top='169' left='106' width='90'>Bow</led>
+		<led name='arrow' state='off' top='184' left='106' width='90'>Arrows</led>
+		<led name='thrown' state='off' top='199' left='106' width='90'>Thrown missile</led>
+		<led name='potion' state='off' top='109' left='218' width='90'>Potion/Magic Item</led>
+		<led name='scroll' state='off' top='124' left='218' width='90'>Scroll/Magic Item</led>
+		<led name='wand' state='off' top='139' left='218' width='90'>Wand</led>
+		<led name='tool' state='off' top='154' left='218' width='90'>Tool</led>
+		<led name='food' state='off' top='169' left='218' width='90'>Food</led>
+		<led name='shield' state='off' top='184' left='218' width='90'>Shield</led>
+		<led name='armor' state='off' top='199' left='218' width='90'>Armor</led>
+		<led name='helm' state='off' top='109' left='336' width='90'>Helm</led>
+		<led name='gloves' state='off' top='124' left='336' width='90'>Gloves</led>
 		<!--
 		 TODO: Why are there two shields?
 		 -->
-		<led name='shield2' state='off' top='119' left='336' width='90'>Shield 2</led>
-		<led name='boots' state='off' top='134' left='336' width='90'>Boots</led>
-		<led name='ring' state='off' top='149' left='336' width='90'>Ring</led>
-		<led name='necklace' state='off' top='164' left='336' width='90'>Necklace</led>
-		<led name='poison' state='off' top='179' left='336' width='90'>Weapon Poison</led>
-		<led name='nonuse' state='off' top='89' left='448' width='90'>Non-Use Object</led>
-		<led name='pants' state='off' top='104' left='448' width='90'>Pants</led>
-		<led name='xbow' state='off' top='119' left='448' width='90'>Crossbow</led>
-		<led name='bolt' state='off' top='134' left='448' width='90'>Bolts</led>
-		<led name='missile' state='off' top='149' left='448' width='90'>Missile (no ammo)</led>
-		<led name='special' state='off' top='164' left='448' width='90'>Special Item</led>
-		<led name='unused2' state='off' top='179' left='448' width='80'>Unused</led>
+		<led name='shield2' state='off' top='139' left='336' width='90'>Shield 2</led>
+		<led name='boots' state='off' top='154' left='336' width='90'>Boots</led>
+		<led name='ring' state='off' top='169' left='336' width='90'>Ring</led>
+		<led name='necklace' state='off' top='184' left='336' width='90'>Necklace</led>
+		<led name='poison' state='off' top='199' left='336' width='90'>Weapon Poison</led>
+		<led name='nonuse' state='off' top='109' left='448' width='90'>Non-Use Object</led>
+		<led name='pants' state='off' top='124' left='448' width='90'>Pants</led>
+		<led name='xbow' state='off' top='139' left='448' width='90'>Crossbow</led>
+		<led name='bolt' state='off' top='154' left='448' width='90'>Bolts</led>
+		<led name='missile' state='off' top='169' left='448' width='90'>Missile (no ammo)</led>
+		<led name='special' state='off' top='184' left='448' width='90'>Special Item</led>
+		<led name='unused2' state='off' top='199' left='448' width='80'>Unused</led>
 	</group>
 	<pict name="pic" type='dlog' num='16' top='8' left='11'/>
 	<text size='large' top='6' left='50' width='158' height='16'>Edit an Item Type</text>
 	<text top='8' left='222' width='111' height='14'>Item number:</text>
 	<text name='num' top='8' left='340' width='37' height='14'/>
 	<text top='31' left='50' width='107' height='14'>Item Full Name:</text>
-	<text top='31' left='298' width='155' height='14'>Item Unidentified Name:</text>
-	<text top='63' left='8' width='120' height='14'>Item picture:</text>
-	<button name="choosepic" type='large' top='58' left='201'>Select Icon</button>
-	<text size='large' top='87' left='8' width='86' height='16'>Item type:</text>
-	<text top='200' left='8' width='148' height='14'>Item level: (0 - 50)</text>
-	<text top='224' left='8' width='148' height='14'>Awkwardness: (0-20)</text>
-	<text top='248' left='8' width='148' height='14'>Bonus: (0-10)</text>
-	<text top='272' left='8' width='148' height='14'>Protection: (-10 - 20)</text>
-	<text top='296' left='8' width='148' height='14'>Charges: (0-100)</text>
-	<text top='200' left='220' width='137' height='13'>Type flag: (0-1000)</text>
-	<text top='224' left='220' width='141' height='13'>Value: (0-10000)</text>
-	<text top='248' left='220' width='141' height='13'>Weight: (0-250)</text>
-	<text top='272' left='220' width='141' height='13'>Special class: (0-100)</text>
-	<text name='missile-title' top='200' left='440' width='140' height='16'>Missile type:</text>
-	<field name='missile' top='223' left='463' width='50' height='16'/>
-	<pict name='missile-pic' type='missile' num='3' top='223' left='440'/>
-	<button name='choosemiss' type='regular' top='220' left='521'>Choose</button>
-	<text name='skill-title' top='250' left='440' width='140' height='16'>Weapon key skill:</text>
-	<field name='weap-type' top='271' left='440' width='73' height='16'/>
-	<button name='choosetp' type='regular' top='268' left='521'>Choose</button>
-	<text top='293' left='221' width='363' height='40'>
+	<text top='55' left='2' width='155' height='14'>Item Unidentified Name:</text>
+	<text top='56' left='298' width='80' height='14'>Item Ability:</text>
+	<text name='abilname' framed='true' top='55' left='387' width='185' height='14'/>
+	<text top='83' left='8' width='120' height='14'>Item picture:</text>
+	<button name="choosepic" type='large' top='78' left='201'>Select Icon</button>
+	<text size='large' top='97' left='8' width='96' height='16'>Item type:</text>
+	<text top='220' left='8' width='148' height='14'>Item level: (0 - 50)</text>
+	<text top='244' left='8' width='148' height='14'>Awkwardness: (0-20)</text>
+	<text top='268' left='8' width='148' height='14'>Bonus: (0-10)</text>
+	<text top='292' left='8' width='148' height='14'>Protection: (-10 - 20)</text>
+	<text top='316' left='8' width='148' height='14'>Charges: (0-100)</text>
+	<text top='220' left='220' width='137' height='13'>Type flag: (0-1000)</text>
+	<text top='244' left='220' width='141' height='13'>Value: (0-10000)</text>
+	<text top='268' left='220' width='141' height='13'>Weight: (0-250)</text>
+	<text top='292' left='220' width='141' height='13'>Special class: (0-100)</text>
+	<text name='missile-title' top='220' left='440' width='140' height='16'>Missile type:</text>
+	<field name='missile' top='243' left='463' width='50' height='16'/>
+	<pict name='missile-pic' type='missile' num='3' top='243' left='440'/>
+	<button name='choosemiss' type='regular' top='240' left='521'>Choose</button>
+	<text name='skill-title' top='270' left='440' width='140' height='16'>Weapon key skill:</text>
+	<field name='weap-type' top='291' left='440' width='73' height='16'/>
+	<button name='choosetp' type='regular' top='288' left='521'>Choose</button>
+	<text top='313' left='221' width='363' height='40'>
 		Enter properties for this item type. 
 		For a detailed description of the fields, see the documentation. 
 		Click Edit Abilities to edit item abilities.
 	</text>
-	<button name="abils" type='large' top='337' left='155'>Abilities</button>
+	<button name="abils" type='large' top='357' left='155'>Abilities</button>
 </dialog>

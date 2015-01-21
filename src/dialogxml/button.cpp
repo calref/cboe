@@ -478,6 +478,7 @@ std::string cLedGroup::getPrevSelection(){
 }
 
 void cLedGroup::draw(){
+	if(!visible) return;
 	ledIter iter = choices.begin();
 	while(iter != choices.end()){
 		iter->second->draw();

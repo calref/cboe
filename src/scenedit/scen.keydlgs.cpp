@@ -131,8 +131,8 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 short choose_text_res(std::string res_list,short first_t,short last_t,unsigned short cur_choice,cDialog* parent,const char *title) {
 	location view_loc;
 	if((cur_choice < first_t) || (cur_choice > last_t))
-		cur_choice = first_t;
-	cur_choice -= first_t;
+		cur_choice = -1;
+	else cur_choice -= first_t;
 	
 	StringRsrc strings = *ResMgr::get<StringRsrc>(res_list);
 	cStringChoice dlog(strings.begin() + first_t - 1, strings.begin() + last_t, title, parent);

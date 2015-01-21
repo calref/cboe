@@ -309,10 +309,8 @@ inline bool isArmourType(eItemType type) {
 }
 
 inline bool isWeaponType(eItemType type) {
-	if(type == eItemType::CROSSBOW || type == eItemType::BOLTS)
-		return true;
 	int code = (int) type;
-	return code >= 1 && code <= 6 && code != 3;
+	return (code >= 1 && code <= 6 && code != 3) || (code >= 23 && code <= 25);
 }
 
 /*      items[i].ability      */
@@ -329,7 +327,7 @@ enum class eItemAbil {
 	ANTIMAGIC_WEAPON = 8,
 	STATUS_WEAPON = 9,
 	SOULSUCKER = 10,
-	DRAIN_MISSILES = 11,
+	UNUSED = 11,
 	WEAK_WEAPON = 12,
 	CAUSES_FEAR = 13,
 	WEAPON_CALL_SPECIAL = 14,
@@ -362,8 +360,10 @@ enum class eItemAbil {
 	SPEED = 55,
 	SLOW_WEARER = 56,
 	PROTECT_FROM_SPECIES = 57,
+	LOCKPICKS = 58,
+	DRAIN_MISSILES = 59,
 	// Usable
-	POISON_WEAPON = 70, //put poison on weapon
+	POISON_WEAPON = 70,
 	AFFECT_STATUS = 71,
 	CAST_SPELL = 72,
 	BLISS_DOOM = 73,
@@ -390,7 +390,6 @@ enum class eItemAbil {
 	SAPPHIRE = 158,
 	SMOKY_CRYSTAL = 159,
 	RESURRECTION_BALM = 160,
-	LOCKPICKS = 161,
 };
 
 enum class eItemAbilCat {
@@ -535,7 +534,7 @@ enum class eSpecType {
 	DISPLAY_PICTURE = 24,
 	REST = 25,
 	WANDERING_WILL_FIGHT = 26,
-	END_SCENARIO = 27,
+	END_SCENARIO = 27, // add "win/lose" option
 	SET_POINTER = 28,
 	SET_CAMP_FLAG = 29,
 	PRINT_NUMS = 30, // For debugging
@@ -666,7 +665,7 @@ enum class eSpecType {
 	OUT_MAKE_WANDER = 225,
 	UNUSED20 = 226,
 	OUT_PLACE_ENCOUNTER = 227,
-	OUT_MOVE_PARTY = 228,
+	OUT_MOVE_PARTY = 228, // allow change sector
 };
 
 enum class eSpecCat {

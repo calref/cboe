@@ -53,6 +53,8 @@ public:
 	unsigned char rec_treas_class() const;
 	short item_weight() const;
 	
+	std::string getAbilName();
+	
 	cItem();
 	explicit cItem(long preset);
 	explicit cItem(eAlchemy recipe);

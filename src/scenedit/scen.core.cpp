@@ -34,6 +34,13 @@ extern cSpecial null_spec_node;
 extern cSpeech null_talk_node;
 extern location cur_out;
 extern short start_volume, start_dir;
+extern const std::multiset<eItemType> equippable;
+
+const std::set<eItemAbil> items_no_strength = {
+	eItemAbil::NONE, eItemAbil::HEALING_WEAPON, eItemAbil::RETURNING_MISSILE, eItemAbil::SEEKING_MISSILE, eItemAbil::DRAIN_MISSILES,
+	eItemAbil::LIGHTER_OBJECT, eItemAbil::HEAVIER_OBJECT, eItemAbil::LIFE_SAVING, eItemAbil::POISON_AUGMENT,
+	eItemAbil::QUICKFIRE,
+};
 
 static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	
@@ -879,6 +886,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 	std::map<eMonstAbil,uAbility>::iterator iter;
 	if(me[hit].getText() == "Add") {
 		int i = choose_text_res("monster-abilities", 1, 70, 0, &me, "Select an ability to add.");
+		if(i < 0) return true;
 		eMonstAbilTemplate tmpl = eMonstAbilTemplate(i);
 		int param = 0;
 		switch(tmpl) {
@@ -982,13 +990,14 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 		if(cat == eMonstAbilCat::MISSILE) first = 110, last = 117;
 		else if(cat == eMonstAbilCat::GENERAL) first = 120, last = 124;
 		else if(cat == eMonstAbilCat::SUMMON) first = 150, last = 152;
-		abil_dlg["pick-subtype"].attachClickHandler([&,cat](cDialog& me,std::string,eKeyMod) -> bool {
+		abil_dlg["pick-subtype"].attachClickHandler([&,cat,first,last](cDialog& me,std::string,eKeyMod) -> bool {
 			save_monst_abil_detail(me, abil, abil_params);
 			int i = 0;
 			if(cat == eMonstAbilCat::MISSILE) i = int(abil_params.missile.type);
 			else if(cat == eMonstAbilCat::GENERAL) i = int(abil_params.gen.type);
 			else if(cat == eMonstAbilCat::SUMMON) i = int(abil_params.summon.type);
 			i = choose_text_res("monster-abilities", first, last, i + first, &me, "Select ability subtype:");
+			if(i < 0) return true;
 			if(cat == eMonstAbilCat::MISSILE) abil_params.missile.type = eMonstMissile(i);
 			else if(cat == eMonstAbilCat::GENERAL) abil_params.gen.type = eMonstGen(i);
 			else if(cat == eMonstAbilCat::SUMMON) abil_params.summon.type = eMonstSummon(i);
@@ -1250,6 +1259,7 @@ static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_it
 	me["value"].setTextToNum(store_item.value);
 	me["weight"].setTextToNum(store_item.weight);
 	me["class"].setTextToNum(store_item.special_class);
+	me["abilname"].setText(store_item.getAbilName());
 }
 
 static void save_item_info(cDialog& me, cItem& store_item, short which_item) {
@@ -1359,6 +1369,7 @@ static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem
 		if(i < 0) return true;
 		store_item.missile = i;
 	} else if(item_hit == "abils") {
+		save_item_info(me, store_item, store_which_item);
 		if(store_item.variety == eItemType::NO_ITEM) {
 			giveError("You must give the item a type (weapon, armor, etc.) before you can choose its abilities.","",&me);
 			return true;
@@ -1367,7 +1378,7 @@ static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem
 			giveError("Gold, Food, and Special Items cannot be given special abilities.","",&me);
 			return true;
 		}
-		temp_item = edit_item_abil(store_item,store_which_item);
+		temp_item = edit_item_abil(store_item,store_which_item,me);
 		if(temp_item.variety != eItemType::NO_ITEM)
 			store_item = temp_item;
 	}
@@ -1433,129 +1444,226 @@ static void put_item_abils_in_dlog(cDialog& me, cItem& store_item, short which_i
 	
 	me["num"].setTextToNum(which_item);
 	me["name"].setText(store_item.full_name.c_str());
-	me["variety"].setText(get_str("item-types", (int)store_item.variety));
-	me["abilname"].setText(get_str("item-abilities", int(store_item.ability) + 1));
+	me["variety"].setText(get_str("item-types", int(store_item.variety) + 1));
+	if(store_item.ability == eItemAbil::NONE)
+		me["abilname"].setText("No ability");
+	else me["abilname"].setText(get_str("item-abilities", int(store_item.ability)));
 	
 	dynamic_cast<cLedGroup&>(me["use-type"]).setSelected("use" + std::to_string(store_item.magic_use_type));
 	dynamic_cast<cLedGroup&>(me["treasure"]).setSelected("type" + std::to_string(store_item.treas_class));
-	me["str"].setTextToNum(store_item.abil_data[0]);
+	me["str1"].setTextToNum(store_item.abil_data[0]);
+	me["str2"].setTextToNum(store_item.abil_data[1]);
+	
+	if(store_item.ability == eItemAbil::CALL_SPECIAL || store_item.ability == eItemAbil::WEAPON_CALL_SPECIAL || store_item.ability == eItemAbil::HIT_CALL_SPECIAL) {
+		me["str1-choose"].show();
+		me["str1-title"].setText("Special to call");
+	} else {
+		me["str1-choose"].hide();
+		if(getItemAbilCategory(store_item.ability) == eItemAbilCat::REAGENT || items_no_strength.count(store_item.ability) > 0)
+			me["str1-title"].setText("Unused");
+		else me["str1-title"].setText("Ability strength");
+	}
+	
+	me["str2-choose1"].show();
+	me["str2-choose1"].setText("Choose");
+	me["str2-choose2"].hide();
+	switch(store_item.ability) {
+		case eItemAbil::DAMAGING_WEAPON:
+		case eItemAbil::EXPLODING_WEAPON:
+		case eItemAbil::DAMAGE_PROTECTION:
+			me["str2-title"].setText("Type of damage");
+			break;
+		case eItemAbil::STATUS_WEAPON:
+		case eItemAbil::STATUS_PROTECTION:
+		case eItemAbil::OCCASIONAL_STATUS:
+		case eItemAbil::AFFECT_STATUS:
+		case eItemAbil::AFFECT_PARTY_STATUS:
+			me["str2-title"].setText("Which status effect");
+			break;
+		case eItemAbil::SLAYER_WEAPON:
+		case eItemAbil::PROTECT_FROM_SPECIES:
+			me["str2-title"].setText("Which species");
+			break;
+		case eItemAbil::BOOST_STAT:
+			me["str2-title"].setText("Which statistic");
+			break;
+		case eItemAbil::CAST_SPELL:
+			me["str2-title"].setText("Which spell");
+			me["str2-choose1"].setText("Mage");
+			me["str2-choose2"].show();
+			break;
+		case eItemAbil::SUMMONING:
+		case eItemAbil::MASS_SUMMONING:
+			me["str2-title"].setText("Which monster");
+			break;
+		default:
+			me["str2-title"].setText("Unused");
+			me["str2-choose1"].hide();
+			break;
+	}
+	
+	if((store_item.ability >= eItemAbil::BLISS_DOOM && store_item.ability <= eItemAbil::HEALTH_POISON) || store_item.ability == eItemAbil::AFFECT_STATUS || store_item.ability == eItemAbil::OCCASIONAL_STATUS) {
+		me["use-title"].show();
+		me["use-type"].show();
+	} else {
+		me["use-title"].hide();
+		me["use-type"].hide();
+	}
 	
 	dynamic_cast<cLed&>(me["always-id"]).setState(store_item.ident ? led_red : led_off);
 	dynamic_cast<cLed&>(me["magic"]).setState(store_item.magic ? led_red : led_off);
 	dynamic_cast<cLed&>(me["cursed"]).setState(store_item.cursed ? led_red : led_off);
 	dynamic_cast<cLed&>(me["conceal"]).setState(store_item.concealed ? led_red : led_off);
+	dynamic_cast<cLed&>(me["no-sell"]).setState(store_item.unsellable ? led_red : led_off);
 }
 
-static bool save_item_abils(cDialog& me, cItem& store_item) {
+static void save_item_abils(cDialog& me, cItem& store_item) {
 	store_item.magic_use_type = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["use-type"]).getSelected().substr(3));
 	store_item.treas_class = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["treasure"]).getSelected().substr(4));
-	store_item.abil_data[0] = me["str"].getTextAsNum();
+	store_item.abil_data[0] = me["str1"].getTextAsNum();
+	store_item.abil_data[1] = me["str2"].getTextAsNum();
 	
 	store_item.property = store_item.enchanted = store_item.contained = false;
 	store_item.ident = dynamic_cast<cLed&>(me["always-id"]).getState() != led_off;
 	store_item.magic = dynamic_cast<cLed&>(me["magic"]).getState() != led_off;
-	store_item.cursed = store_item.unsellable = dynamic_cast<cLed&>(me["cursed"]).getState() != led_off;
+	store_item.cursed = dynamic_cast<cLed&>(me["cursed"]).getState() != led_off;
+	store_item.unsellable = dynamic_cast<cLed&>(me["no-sell"]).getState() != led_off;
 	store_item.concealed = dynamic_cast<cLed&>(me["conceal"]).getState() != led_off;
-	return true;
 }
 
 static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem& store_item, short which_item) {
 	short i;
 	
 	if(item_hit == "cancel") {
-		store_item.ability = eItemAbil::NONE;
+		store_item.variety = eItemType::NO_ITEM;
 		me.toast(false);
 		return true;
 	} else if(item_hit == "okay") {
-		if(save_item_abils(me, store_item)) {
-			me.toast(true);
-			return true;
+		save_item_abils(me, store_item);
+		me.toast(true);
+	} else if(item_hit == "str1-choose") {
+		save_item_abils(me, store_item);
+		short spec = me["str1"].getTextAsNum();
+		if(spec < 0 || spec > 255) {
+			spec = get_fresh_spec(0);
+			if(spec < 0) {
+				giveError("You can't create a new scenario special encounter because there are no more free special nodes.",
+						  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
+				return true;
+			}
 		}
+		if(edit_spec_enc(spec,0,&me)) {
+			store_item.abil_data[0] = spec;
+			me["str1"].setTextToNum(spec);
+		}
+	} else if(item_hit == "str2-choose1") {
+		save_item_abils(me, store_item);
+		i = store_item.abil_data[1];
+		switch(store_item.ability) {
+			case eItemAbil::DAMAGING_WEAPON:
+			case eItemAbil::EXPLODING_WEAPON:
+			case eItemAbil::DAMAGE_PROTECTION:
+				i = choose_damage_type(i, &me);
+				break;
+			case eItemAbil::STATUS_WEAPON:
+			case eItemAbil::STATUS_PROTECTION:
+			case eItemAbil::OCCASIONAL_STATUS:
+			case eItemAbil::AFFECT_STATUS:
+			case eItemAbil::AFFECT_PARTY_STATUS:
+				i = choose_status_effect(i, store_item.ability == eItemAbil::AFFECT_PARTY_STATUS, &me);
+				break;
+			case eItemAbil::SLAYER_WEAPON:
+			case eItemAbil::PROTECT_FROM_SPECIES:
+				i = choose_text(STRT_RACE, i, &me, "Which species?");
+				break;
+			case eItemAbil::BOOST_STAT:
+				i = choose_text(STRT_SKILL, i, &me, "Boost which skill?");
+				break;
+			case eItemAbil::CAST_SPELL:
+				i = choose_text_res("magic-names", 1, 73, i + 1, &me, "Which mage spell?");
+				if(i < 0) return true;
+				break;
+			case eItemAbil::SUMMONING:
+			case eItemAbil::MASS_SUMMONING:
+				i = choose_text(STRT_MONST, i, &me, "Summon which monster type?");
+				break;
+			default: return true;
+		}
+		store_item.abil_data[1] = i;
+		me["str2"].setTextToNum(i);
+	} else if(item_hit == "str2-choose2") {
+		save_item_abils(me, store_item);
+		i = 100 + choose_text_res("magic-names", 101, 166, store_item.abil_data[1] + 1, &me, "Which priest spell?");
+		if(i < 100) return true;
+		store_item.abil_data[1] = i;
+		me["str2"].setTextToNum(i);
+	} else if(item_hit == "clear") {
+		save_item_abils(me, store_item);
+		store_item.ability = eItemAbil::NONE;
+		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "weapon") {
-		if(!save_item_abils(me, store_item)) return true;
-		if(store_item.variety != eItemType::ONE_HANDED && store_item.variety != eItemType::TWO_HANDED) {
-			giveError("You can only give an ability of this sort to a melee weapon.","",&me);
+		save_item_abils(me, store_item);
+		if(!isWeaponType(store_item.variety)) {
+			giveError("You can only give an ability of this sort to a weapon.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 0, 14, int(store_item.ability), &me, "Choose Weapon Ability (inherent)");
-		if(i >= 0) store_item.ability = eItemAbil(i);
-		else store_item.ability = eItemAbil::NONE;
+		i = choose_text_res("item-abilities", 1, 14, int(store_item.ability), &me, "Choose Weapon Ability (inherent)");
+		if(i < 0) return true;
+		eItemAbil abil = eItemAbil(i + 1);
+		if(abil >= eItemAbil::RETURNING_MISSILE && abil <= eItemAbil::SEEKING_MISSILE) {
+			if(store_item.variety != eItemType::THROWN_MISSILE && store_item.variety != eItemType::ARROW &&
+				store_item.variety != eItemType::BOLTS && store_item.variety != eItemType::MISSILE_NO_AMMO) {
+				giveError("You can only give this ability to a missile.",&me);
+				return true;
+			}
+		}
+		store_item.ability = abil;
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "general") {
-		if(!save_item_abils(me, store_item)) return true;
-		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE)|| (store_item.variety == eItemType::POTION) || (store_item.variety == eItemType::SCROLL) ||
-		   (store_item.variety == eItemType::WAND) || (store_item.variety == eItemType::TOOL) || (store_item.variety == eItemType::WEAPON_POISON) ||
-		   (store_item.variety == eItemType::NON_USE_OBJECT) || (store_item.variety == eItemType::BOLTS)){
-			giveError("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).","",&me);
+		save_item_abils(me, store_item);
+		if(equippable.count(store_item.variety) == 0 || store_item.variety == eItemType::ARROW || store_item.variety == eItemType::THROWN_MISSILE || store_item.variety == eItemType::BOLTS){
+			giveError("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 30, 62, int(store_item.ability), &me, "Choose General Ability (inherent)");
-		if(i >= 0) store_item.ability = eItemAbil(i + 30);
-		else store_item.ability = eItemAbil::NONE;
+		i = choose_text_res("item-abilities", 30, 58, int(store_item.ability), &me, "Choose General Ability (inherent)");
+		if(i < 0) return true;
+		store_item.ability = eItemAbil(i + 30);
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "usable") {
-		if(!save_item_abils(me, store_item)) return true;
+		save_item_abils(me, store_item);
 		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE) || (store_item.variety == eItemType::BOLTS)){
-			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
+			giveError("You can't give an ability of this sort to a missile.",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 70, 94, int(store_item.ability), &me, "Choose Usable Ability (Not spell)");
-		if(i >= 0) store_item.ability = eItemAbil(i + 70);
-		else store_item.ability = eItemAbil::NONE;
-		put_item_abils_in_dlog(me, store_item, which_item);
-	} else if(item_hit == "spell") {
-		if(!save_item_abils(me,store_item)) return true;
-		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE) || (store_item.variety == eItemType::BOLTS)){
-			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
-			return true;
-		}
-		i = choose_text_res("item-abilities", 110, 135, int(store_item.ability), &me, "Choose Usable Ability (Spell)");
-		if(i >= 0) store_item.ability = eItemAbil(i + 110);
-		else store_item.ability = eItemAbil::NONE;
+		i = choose_text_res("item-abilities", 70, 84, int(store_item.ability), &me, "Choose Usable Ability");
+		if(i < 0) return true;
+		store_item.ability = eItemAbil(i + 70);
 		put_item_abils_in_dlog(me, store_item, which_item);
 	} else if(item_hit == "reagent") {
-		if(!save_item_abils(me, store_item)) return true;
-		// TODO: Some of these should also be applicable to tools, as I recall?
+		save_item_abils(me, store_item);
 		if(store_item.variety != eItemType::NON_USE_OBJECT){
-			giveError("You can only give an ability of this sort to an item of type Non-Use Object.","",&me);
+			giveError("You can only give an ability of this sort to an item of type Non-Use Object.",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 150, 161, int(store_item.ability), &me, "Choose Reagent Ability");
-		if(i >= 0) store_item.ability = eItemAbil(i + 150);
-		else store_item.ability = eItemAbil::NONE;
+		i = choose_text_res("item-abilities", 150, 160, int(store_item.ability), &me, "Choose Reagent Ability");
+		if(i < 0) return true;
+		store_item.ability = eItemAbil(i + 150);
 		put_item_abils_in_dlog(me, store_item, which_item);
-	} else if(item_hit == "missile") {
-		if(!save_item_abils(me,store_item)) return true;
-		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE) || (store_item.variety == eItemType::BOLTS)){
-			giveError("You can only give an ability of this sort to an item which isn't a missile.","",&me);
-			return true;
-		}
-		i = choose_text_res("item-abilities", 170, 176, int(store_item.ability), &me, "Choose Missile Ability");
-		if(i >= 0) store_item.ability = eItemAbil(i + 170);
-		else store_item.ability = eItemAbil::NONE;
-		put_item_abils_in_dlog(me, store_item, which_item);
-	}
-	using namespace std::placeholders;
-	if(store_item.ability != eItemAbil::SUMMONING && store_item.ability != eItemAbil::MASS_SUMMONING) {
-		me["str"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 10, "Ability Strength"));
-	} else {
-		me["str"].attachFocusHandler(std::bind(check_range_msg, _1,_2,_3, 0,255, "Ability Strength","the number of the monster to summon"));
 	}
 	return true;
 }
 
-cItem edit_item_abil(cItem starting_record,short which_item) {
+cItem edit_item_abil(cItem starting_record,short which_item,cDialog& parent) {
 	using namespace std::placeholders;
 	
 	cItem store_item = starting_record;
 	
-	cDialog item_dlg("edit-item-abils");
-	if(store_item.ability != eItemAbil::SUMMONING && store_item.ability != eItemAbil::MASS_SUMMONING) {
-		item_dlg["str"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 10, "Ability Strength"));
-	} else {
-		item_dlg["str"].attachFocusHandler(std::bind(check_range_msg,_1,_2,_3, 0,255, "Ability Strength","the number of the monster to summon"));
-	}
-	item_dlg.attachClickHandlers(std::bind(edit_item_abil_event_filter, _1, _2, std::ref(store_item), which_item), {"okay", "cancel", "weapon", "general", "usable", "missile", "reagent", "spell"});
+	cDialog item_dlg("edit-item-abils",&parent);
+	item_dlg.attachClickHandlers(std::bind(edit_item_abil_event_filter, _1, _2, std::ref(store_item), which_item), {
+		"okay", "cancel",
+		"clear", "weapon", "general", "usable", "reagent",
+		"str1-choose", "str2-choose1", "str2-choose2",
+	});
 	
 	put_item_abils_in_dlog(item_dlg, store_item, which_item);
 	

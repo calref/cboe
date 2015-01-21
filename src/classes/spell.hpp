@@ -42,6 +42,7 @@ public:
 	std::string name() const;
 	bool is_priest() const;
 	static eSpell fromNum(eSkill type, int num);
+	static eSpell fromNum(int num);
 };
 
 // Need to declare this a second time in order for it to be in scope where it's needed
