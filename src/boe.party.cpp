@@ -1102,8 +1102,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::LIGHT_DIVINE:
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			// TODO: Should this call increase_light_level?
-			univ.party.light_level += 210;
+			increase_light(210);
 			break;
 			
 		case eSpell::SUMMON_SPIRIT:

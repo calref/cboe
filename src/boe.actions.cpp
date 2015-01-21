@@ -2310,6 +2310,16 @@ void increase_age() {
 		}
 	}
 	
+	if(univ.town->lighting_type != LIGHT_NORMAL) {
+		int radiance = 0;
+		for(int i = 0; i < 6; i++)
+			radiance += univ.party[i].get_prot_level(eItemAbil::RADIANT);
+		if(radiance > 0 && univ.party.light_level < radiance && get_ran(1,1,10) < radiance) {
+			ASB("One of your items is glowing softly!");
+			univ.party.light_level += radiance * 3;
+		}
+	}
+	
 	// Specials countdowns
 	if(univ.party.age % 500 == 0 && univ.party.has_abil(eItemAbil::OCCASIONAL_STATUS)) {
 		// TODO: There used to be a "display strings" here; should we hook in a special node call?

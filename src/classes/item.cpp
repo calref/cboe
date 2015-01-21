@@ -642,6 +642,7 @@ void cItem::append(legacy::item_record_type& old){
 			break;
 		case 90:
 			ability = eItemAbil::LIGHT;
+			magic_use_type = 2;
 			break;
 		case 91:
 			ability = eItemAbil::AFFECT_PARTY_STATUS;

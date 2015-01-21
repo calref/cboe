@@ -791,6 +791,18 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 		} else if(weap.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 			add_string_to_buf("  Blade drains life.");
 			heal_pc(who_att,weap.abil_data[0] / 2);
+		} else if(weap.ability == eItemAbil::ANTIMAGIC_WEAPON && which_m->mu + which_m->cl > 0 && get_ran(1,0,1) == 1) {
+			short drain = weap.abil_data[0];
+			magic_adjust(which_m, &drain);
+			if(drain > 0) {
+				add_string_to_buf("  Blade drains energy.");
+				if(which_m->mu > 0 && which_m->mp > 4)
+					drain = min(which_m->mp, drain / 3);
+				else if(which_m->cl > 0 && which_m->mp > 10)
+					drain = min(which_m->mp, drain / 2);
+				which_m->mp -= drain;
+				restore_sp_pc(who_att, drain / 3);
+			}
 		} else if(weap.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
 			short s1,s2,s3;
 			univ.party.force_ptr(21, 301, 5);
@@ -824,7 +836,9 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,cCreature* mons
 			else dmg_type = eDamageType::FIRE;
 			break;
 		case eItemAbil::SLAYER_WEAPON:
-			if(monst->m_type != eRace(abil_dat))
+			// Slith, nephilim, and vahnatai are affected by humanoid-bane weapons as well as their individual banes
+			if(abil_dat == int(eRace::HUMANOID) && (monst->m_type == eRace::SLITH || monst->m_type == eRace::NEPHIL || monst->m_type == eRace::VAHNATAI));
+			else if(monst->m_type != eRace(abil_dat))
 				break;
 			store += abil_str;
 			switch(eRace(abil_dat)) {
@@ -1647,6 +1661,18 @@ void fire_missile(location target) {
 				} else if(missile.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 					add_string_to_buf("  Missile drains life.");
 					heal_pc(missile_firer,missile.abil_data[0] / 2);
+				} else if(missile.ability == eItemAbil::ANTIMAGIC_WEAPON && cur_monst->mu + cur_monst->cl > 0 && get_ran(1,0,1) == 1) {
+					short drain = missile.abil_data[0];
+					magic_adjust(cur_monst, &drain);
+					if(drain > 0) {
+						add_string_to_buf("  Missile drains energy.");
+						if(cur_monst->mu > 0 && cur_monst->mp > 4)
+							drain = min(cur_monst->mp, drain / 3);
+						else if(cur_monst->cl > 0 && cur_monst->mp > 10)
+							drain = min(cur_monst->mp, drain / 2);
+						cur_monst->mp -= drain;
+						restore_sp_pc(missile_firer, drain / 3);
+					}
 				}
 				if(cur_monst->abil[eMonstAbil::HIT_TRIGGER].active) {
 					short s1,s2,s3;
@@ -1681,6 +1707,20 @@ void fire_missile(location target) {
 				} else if(missile.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 					add_string_to_buf("  Missile drains life.");
 					heal_pc(missile_firer,missile.abil_data[0] / 2);
+				} else if(missile.ability == eItemAbil::ANTIMAGIC_WEAPON &&
+						univ.party[targ_monst].skill(eSkill::MAGE_SPELLS) + univ.party[targ_monst].skill(eSkill::PRIEST_SPELLS) > 0 &&
+						get_ran(1,0,1) == 1) {
+					short drain = missile.abil_data[0];
+					magic_adjust(cur_monst, &drain);
+					if(drain > 0) {
+						add_string_to_buf("  Missile drains energy.");
+						if(univ.party[targ_monst].skill(eSkill::MAGE_SPELLS) > 0 && univ.party[targ_monst].cur_sp > 4)
+							drain = min(univ.party[targ_monst].cur_sp, drain / 3);
+						else if(univ.party[targ_monst].skill(eSkill::PRIEST_SPELLS) > 0 && univ.party[targ_monst].cur_sp > 10)
+							drain = min(univ.party[targ_monst].cur_sp, drain / 2);
+						univ.party[targ_monst].cur_sp -= drain;
+						restore_sp_pc(missile_firer, drain / 3);
+					}
 				} else if(missile.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
 					short s1,s2,s3;
 					univ.party.force_ptr(21, 301, 5);
@@ -1828,6 +1868,16 @@ void combat_run_monst() {
 		univ.party.light_level = max (0,univ.party.light_level - 9);
 	if(univ.town->lighting_type == 3)
 		univ.party.light_level = 0;
+	
+	if(univ.town->lighting_type != LIGHT_NORMAL) {
+		int radiance = 0;
+		for(int i = 0; i < 6; i++)
+			radiance += univ.party[i].get_prot_level(eItemAbil::RADIANT);
+		if(radiance > 0 && univ.party.light_level < radiance && get_ran(1,1,10) < radiance) {
+			ASB("One of your items is glowing softly!");
+			univ.party.light_level += radiance * 3;
+		}
+	}
 	
 	move_to_zero(univ.party.status[ePartyStatus::DETECT_LIFE]);
 	move_to_zero(univ.party.status[ePartyStatus::FIREWALK]);

@@ -288,7 +288,12 @@ short cPlayer::has_abil(eItemAbil abil,short dat) {
 }
 
 short cPlayer::skill(eSkill skill) {
-	return min(20, skills[skill] + get_prot_level(eItemAbil::BOOST_STAT, int(skill)));
+	int bulk_bonus = 0;
+	if(skill >= eSkill::EDGED_WEAPONS && skill <= eSkill::DEFENSE)
+		bulk_bonus = get_prot_level(eItemAbil::BOOST_WAR);
+	else if(skill >= eSkill::MAGE_SPELLS && skill <= eSkill::ITEM_LORE)
+		bulk_bonus = get_prot_level(eItemAbil::BOOST_MAGIC);
+	return min(20, skills[skill] + get_prot_level(eItemAbil::BOOST_STAT, int(skill))) + bulk_bonus;
 }
 
 eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) {

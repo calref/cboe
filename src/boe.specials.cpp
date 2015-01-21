@@ -1010,8 +1010,13 @@ void use_item(short pc,short item) {
 				}
 				break;
 			case eItemAbil::LIGHT:
-				ASB("  You have more light.");
-				increase_light(50 * str);
+				if(type % 2 == 0) {
+					ASB("  You have more light.");
+					increase_light(50 * str);
+				} else {
+					ASB("  It gets darker.");
+					increase_light(-50 & str);
+				}
 				break;
 			case eItemAbil::AFFECT_PARTY_STATUS:
 				switch(ePartyStatus(univ.party[pc].items[item].abil_data[1])) {
