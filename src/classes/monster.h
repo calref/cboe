@@ -116,17 +116,17 @@ public:
 		unsigned short dice, sides;
 		eMonstMelee type;
 	};
-	unsigned char level;
+	unsigned int level;
 	std::string m_name;
 	short m_health;
-	unsigned char armor;
-	unsigned char skill;
+	unsigned int armor;
+	unsigned int skill;
 	cAttack a[3];
 	eRace m_type;
-	unsigned char speed;
-	unsigned char mu;
-	unsigned char cl;
-	unsigned char treasure;
+	unsigned int speed;
+	unsigned int mu;
+	unsigned int cl;
+	unsigned int treasure;
 	std::map<eMonstAbil, uAbility> abil;
 	item_num_t corpse_item;
 	short corpse_item_chance;
@@ -139,9 +139,9 @@ public:
 	bool invisible : 1;
 	bool guard : 1;
 	char : 4;
-	unsigned char x_width,y_width;
-	unsigned char default_attitude;
-	unsigned char summon_type;
+	unsigned int x_width,y_width;
+	unsigned int default_attitude;
+	unsigned int summon_type;
 	pic_num_t default_facial_pic;
 	pic_num_t picture_num;
 	snd_num_t ambient_sound; // has a chance of being played every move

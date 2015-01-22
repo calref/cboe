@@ -11,16 +11,90 @@
 			<xs:pattern value="\d*d\d+"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:complexType name="immunity">
-		<xs:attribute name="immune" type="bool"/>
-		<xs:attribute name="resist" type="bool"/>
-	</xs:complexType>
-	<xs:element name="ability">
+	<xs:simpleType name="species">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="human"/>
+			<xs:enumeration value="nephil"/>
+			<xs:enumeration value="slith"/>
+			<xs:enumeration value="vahnatai"/>
+			<xs:enumeration value="reptile"/>
+			<xs:enumeration value="beast"/>
+			<xs:enumeration value="important"/>
+			<xs:enumeration value="mage"/>
+			<xs:enumeration value="priest"/>
+			<xs:enumeration value="humanoid"/>
+			<xs:enumeration value="demon"/>
+			<xs:enumeration value="undead"/>
+			<xs:enumeration value="giant"/>
+			<xs:enumeration value="slime"/>
+			<xs:enumeration value="stone"/>
+			<xs:enumeration value="bug"/>
+			<xs:enumeration value="dragon"/>
+			<xs:enumeration value="magic"/>
+			<xs:enumeration value="plant"/>
+			<xs:enumeration value="bird"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="permille">
+		<xs:restriction base="xs:decimal">
+			<xs:fractionDigits value="1"/>
+			<xs:maxInclusive value="100"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="general">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="type" type="xs:integer"/>
+				<xs:element name="missile" type="xs:integer" minOccurs="0"/>
+				<xs:element name="strength" type="xs:integer"/>
+				<xs:element name="range" type="xs:integer" minOccurs="0"/>
+				<xs:element name="chance" type="permille"/>
+				<xs:element name="extra" type="xs:integer" minOccurs="0"/>
+			</xs:all>
+			<xs:attribute name="type" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="missile">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="type" type="xs:integer"/>
+				<xs:element name="missile" type="xs:integer"/>
+				<xs:element name="strength" type="dice"/>
+				<xs:element name="skill" type="xs:integer"/>
+				<xs:element name="range" type="xs:integer"/>
+				<xs:element name="chance" type="permille"/>
+			</xs:all>
+			<xs:attribute name="type" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="summon">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="type" type="xs:integer"/>
+				<xs:element name="min" type="xs:integer"/>
+				<xs:element name="max" type="xs:integer"/>
+				<xs:element name="duration" type="xs:integer"/>
+				<xs:element name="chance" type="permille"/>
+			</xs:all>
+			<xs:attribute name="type" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="radiate">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="type" type="xs:integer"/>
+				<xs:element name="chance" type="permille"/>
+			</xs:all>
+			<xs:attribute name="type" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="special">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="type" type="xs:integer"/>
-				<xs:element name="param" type="xs:integer" minOccurs="0" maxOccurs="2"/>
+				<xs:element name="param" type="xs:integer" minOccurs="0" maxOccurs="3"/>
 			</xs:sequence>
+			<xs:attribute name="type" type="xs:integer" use="required"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="attack">
@@ -44,31 +118,25 @@
 				<xs:element name="treasure" minOccurs="0" type="xs:integer"/>
 				<xs:element name="mage" minOccurs="0" type="xs:integer"/>
 				<xs:element name="priest" minOccurs="0" type="xs:integer"/>
-				<xs:element name="breath" minOccurs="0">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:integer">
-								<xs:attribute name="type" use="required">
-									<xs:simpleType>
-										<xs:restriction base="xs:token">
-											<xs:enumeration value="fire"/>
-											<xs:enumeration value="cold"/>
-											<xs:enumeration value="shock"/>
-											<xs:enumeration value="dark"/>
-										</xs:restriction>
-									</xs:simpleType>
-								</xs:attribute>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="poison" minOccurs="0" type="xs:integer"/>
+				<xs:element name="race" type="species"/>
 				<xs:element name="abilities" minOccurs="0">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element ref="ability" maxOccurs="2"/>
+							<xs:element name="invisible" minOccurs="0"/>
+							<xs:element name="guard" minOccurs="0"/>
+							<xs:choice maxOccurs="unbounded">
+								<xs:element ref="general" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element ref="missile" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element ref="summon" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element ref="radiate" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element ref="special" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:choice>
 						</xs:sequence>
 					</xs:complexType>
+					<xs:unique name="abilsPerMonst">
+						<xs:selector xpath="general|missile|summon|radiate|special"/>
+						<xs:field xpath="@type"/>
+					</xs:unique>
 				</xs:element>
 				<xs:element name="attacks">
 					<xs:complexType>
@@ -89,31 +157,19 @@
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="default-face" minOccurs="0" type="xs:integer"/>
-				<xs:element name="onsight" minOccurs="0">
-					<xs:complexType>
-						<xs:all minOccurs="1">
-							<xs:element name="sound" minOccurs="0" type="xs:integer"/>
-							<xs:element name="special" minOccurs="0" type="xs:integer"/>
-							<xs:element name="message" minOccurs="0">
-								<xs:complexType>
-									<xs:sequence>
-										<xs:element name="text" maxOccurs="2" type="xs:string"/>
-									</xs:sequence>
-								</xs:complexType>
-							</xs:element>
-						</xs:all>
-					</xs:complexType>
-				</xs:element>
+				<xs:element name="onsight" minOccurs="0" type="xs:integer"/>
 				<xs:element name="voice" minOccurs="0" type="xs:integer"/>
 				<xs:element name="summon" minOccurs="0" type="xs:integer"/>
 				<xs:element name="attitude" type="xs:integer"/>
 				<xs:element name="immunity">
 					<xs:complexType>
 						<xs:all>
-							<xs:element name="fire" type="immunity" minOccurs="0"/>
-							<xs:element name="cold" type="immunity" minOccurs="0"/>
-							<xs:element name="poison" type="immunity" minOccurs="0"/>
-							<xs:element name="magic" type="immunity" minOccurs="0"/>
+							<xs:element name="fire" type="xs:integer" minOccurs="0"/>
+							<xs:element name="cold" type="xs:integer" minOccurs="0"/>
+							<xs:element name="poison" type="xs:integer" minOccurs="0"/>
+							<xs:element name="magic" type="xs:integer" minOccurs="0"/>
+							<xs:element name="all" type="bool" minOccurs="0"/>
+							<xs:element name="fear" type="bool" minOccurs="0"/>
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
@@ -135,5 +191,9 @@
 				<xs:element ref="monster" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
+		<xs:unique name='monsterIds'>
+			<xs:selector xpath='monster'/>
+			<xs:field xpath='@id'/>
+		</xs:unique>
 	</xs:element>
 </xs:schema>

@@ -11,6 +11,7 @@
 #include <map>
 #include <sstream>
 #include <iostream>
+#include <boost/lexical_cast.hpp>
 
 #include "classes.h"
 #include "oldstructs.h"
@@ -467,15 +468,82 @@ std::istream& operator >> (std::istream& in, eStatus& e){
 }
 
 std::ostream& operator << (std::ostream& out, eRace e){
-	return out << (int) e;
+	switch(e) {
+		case eRace::HUMAN: out << "human"; break;
+		case eRace::NEPHIL: out << "nephil"; break;
+		case eRace::SLITH: out << "slith"; break;
+		case eRace::VAHNATAI: out << "vahnatai"; break;
+		case eRace::HUMANOID: out << "humanoid"; break;
+		case eRace::BEAST: out << "beast"; break;
+		case eRace::BIRD: out << "bird"; break;
+		case eRace::BUG: out << "bug"; break;
+		case eRace::DEMON: out << "demon"; break;
+		case eRace::DRAGON: out << "dragon"; break;
+		case eRace::GIANT: out << "giant"; break;
+		case eRace::IMPORTANT: out << "important"; break;
+		case eRace::MAGE: out << "mage"; break;
+		case eRace::PRIEST: out << "priest"; break;
+		case eRace::MAGICAL: out << "magic"; break;
+		case eRace::PLANT: out << "plant"; break;
+		case eRace::REPTILE: out << "reptile"; break;
+		case eRace::SLIME: out << "slime"; break;
+		case eRace::STONE: out << "stone"; break;
+		case eRace::UNDEAD: out << "undead"; break;
+		case eRace::UNKNOWN: out << "humanoid"; break;
+	}
+	return out;
 }
 
 std::istream& operator >> (std::istream& in, eRace& e){
-	int i;
-	in >> i;
-	if(i > 0 && i < 20)
-		e = (eRace) i;
-	else e = eRace::HUMAN;
+	std::string key;
+	in >> key;
+	e = eRace::HUMANOID;
+	try {
+		int i = boost::lexical_cast<int>(key);
+		if(i > 0 && i < 20)
+			e = (eRace) i;
+	} catch(boost::bad_lexical_cast) {
+		if(key == "human")
+			e = eRace::HUMAN;
+		else if(key == "nephil")
+			e = eRace::NEPHIL;
+		else if(key == "slith")
+			e = eRace::SLITH;
+		else if(key == "vahnatai")
+			e = eRace::VAHNATAI;
+		else if(key == "humanoid")
+			e = eRace::HUMANOID;
+		else if(key == "beast")
+			e = eRace::BEAST;
+		else if(key == "bird")
+			e = eRace::BIRD;
+		else if(key == "bug")
+			e = eRace::BUG;
+		else if(key == "demon")
+			e = eRace::DEMON;
+		else if(key == "dragon")
+			e = eRace::DRAGON;
+		else if(key == "giant")
+			e = eRace::GIANT;
+		else if(key == "important")
+			e = eRace::IMPORTANT;
+		else if(key == "mage")
+			e = eRace::MAGE;
+		else if(key == "priest")
+			e = eRace::PRIEST;
+		else if(key == "magic")
+			e = eRace::MAGICAL;
+		else if(key == "plant")
+			e = eRace::PLANT;
+		else if(key == "reptile")
+			e = eRace::REPTILE;
+		else if(key == "slime")
+			e = eRace::SLIME;
+		else if(key == "stone")
+			e = eRace::STONE;
+		else if(key == "undead")
+			e = eRace::UNDEAD;
+	}
 	return in;
 }
 

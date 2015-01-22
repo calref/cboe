@@ -30,6 +30,10 @@ void Printer::CloseElement(std::string tagName) {
 	PushNode(top);
 }
 
+void Printer::PushElement(std::string tagName) {
+	PushNode(new Element(tagName));
+}
+
 void Printer::PushComment(std::string comment) {
 	PushNode(new Comment(comment));
 }

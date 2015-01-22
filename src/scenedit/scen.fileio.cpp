@@ -4,6 +4,7 @@
 #include "classes.h"
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include "scen.fileio.h"
 #include "scen.keydlgs.h"
 #include "graphtool.hpp"
@@ -57,6 +58,15 @@ template<> void ticpp::Printer::PushElement(std::string tagName, location pos) {
 	OpenElement(tagName);
 	PushAttribute("x", pos.x);
 	PushAttribute("y", pos.y);
+	CloseElement(tagName);
+}
+
+template<> void ticpp::Printer::PushElement(std::string tagName, cMonster::cAttack attack) {
+	OpenElement(tagName);
+	PushAttribute("type", attack.type);
+	std::ostringstream strength;
+	strength << attack.dice << 'd' << attack.sides;
+	PushText(strength.str());
 	CloseElement(tagName);
 }
 
@@ -291,6 +301,150 @@ void writeItemsToXml(ticpp::Printer&& data) {
 	data.CloseElement("items");
 }
 
+void writeMonstersToXml(ticpp::Printer&& data) {
+	std::ostringstream str;
+	data.OpenElement("monsters");
+	for(size_t i = 1; i < scenario.scen_monsters.size(); i++) {
+		data.OpenElement("monster");
+		data.PushAttribute("id", i);
+		cMonster& monst = scenario.scen_monsters[i];
+		data.PushElement("name", monst.m_name);
+		if(monst.default_facial_pic >= 0)
+			data.PushElement("default-face", monst.default_facial_pic);
+		
+		data.OpenElement("pic");
+		data.PushAttribute("w", monst.x_width);
+		data.PushAttribute("h", monst.y_width);
+		data.PushText(monst.picture_num);
+		data.CloseElement("pic");
+		
+		data.PushElement("race", monst.m_type);
+		data.PushElement("level", monst.level);
+		data.PushElement("armor", monst.armor);
+		data.PushElement("skill", monst.skill);
+		data.PushElement("hp", monst.m_health);
+		data.PushElement("speed", monst.speed);
+		data.PushElement("attitude", monst.default_attitude);
+		data.PushElement("summon", monst.summon_type);
+		data.PushElement("treasure", monst.treasure);
+		if(monst.mu > 0)
+			data.PushElement("mage", monst.mu);
+		if(monst.cl > 0)
+			data.PushElement("priest", monst.cl);
+		if(monst.ambient_sound > 0)
+			data.PushElement("voice", monst.ambient_sound);
+		if(monst.see_spec >= 0)
+			data.PushElement("onsight", monst.see_spec);
+		
+		data.OpenElement("attacks");
+		data.PushElement("attack", monst.a[0]);
+		if(monst.a[1].dice > 0 || monst.a[2].dice > 0)
+			data.PushElement("attack", monst.a[1]);
+		if(monst.a[2].dice > 0)
+			data.PushElement("attack", monst.a[2]);
+		data.CloseElement("attacks");
+		
+		data.OpenElement("immunity");
+		if(monst.magic_res != 100)
+			data.PushElement("magic", monst.magic_res);
+		if(monst.fire_res != 100)
+			data.PushElement("fire", monst.magic_res);
+		if(monst.cold_res != 100)
+			data.PushElement("cold", monst.magic_res);
+		if(monst.poison_res != 100)
+			data.PushElement("poison", monst.magic_res);
+		if(monst.mindless) data.PushElement("fear", true);
+		if(monst.invuln) data.PushElement("all", true);
+		data.CloseElement("immunity");
+		
+		if(monst.corpse_item_chance > 0) {
+			data.OpenElement("loot");
+			data.PushElement("type", monst.corpse_item);
+			data.PushElement("chance", monst.corpse_item_chance);
+			data.CloseElement("loot");
+		}
+		
+		if(monst.invisible || monst.guard || !monst.abil.empty()) {
+			data.OpenElement("abilities");
+			if(monst.invisible) data.PushElement("invisible");
+			if(monst.guard) data.PushElement("guard");
+			for(auto& p : monst.abil) {
+				if(p.first == eMonstAbil::NO_ABIL || !p.second.active) continue;
+				str.str("");
+				eMonstAbil abil = p.first;
+				uAbility& param = p.second;
+				switch(getMonstAbilCategory(abil)) {
+					case eMonstAbilCat::GENERAL:
+						data.OpenElement("general");
+						data.PushAttribute("type", abil);
+						data.PushElement("type", param.gen.type);
+						if(param.gen.type != eMonstGen::TOUCH) {
+							data.PushElement("missile", param.gen.pic);
+							data.PushElement("range", param.gen.range);
+						}
+						data.PushElement("strength", param.gen.strength);
+						str << std::fixed << std::setprecision(1) << float(param.gen.odds)/10;
+						data.PushElement("chance", str.str());
+						if(abil == eMonstAbil::DAMAGE || abil == eMonstAbil::DAMAGE2)
+							data.PushElement("extra", param.gen.dmg);
+						else if(abil == eMonstAbil::STATUS || abil == eMonstAbil::STATUS2 || abil == eMonstAbil::STUN)
+							data.PushElement("extra", param.gen.stat);
+						else if(abil == eMonstAbil::FIELD)
+							data.PushElement("extra", param.gen.fld);
+						data.CloseElement("general");
+						break;
+					case eMonstAbilCat::MISSILE:
+						data.OpenElement("missile");
+						data.PushAttribute("type", abil);
+						data.PushElement("type", param.missile.type);
+						data.PushElement("missile", param.missile.pic);
+						data.OpenElement("strength");
+						data.PushText(std::to_string(param.missile.dice) + 'd' + std::to_string(param.missile.sides));
+						data.CloseElement("strength");
+						data.PushElement("skill", param.missile.skill);
+						data.PushElement("range", param.missile.range);
+						str << std::fixed << std::setprecision(1) << float(param.missile.odds)/10;
+						data.PushElement("chance", str.str());
+						data.CloseElement("missile");
+						break;
+					case eMonstAbilCat::SUMMON:
+						data.OpenElement("summon");
+						data.PushAttribute("type", abil);
+						data.PushElement("type", param.summon.type);
+						data.PushElement("min", param.summon.min);
+						data.PushElement("max", param.summon.max);
+						data.PushElement("duration", param.summon.len);
+						data.PushElement("chance", param.summon.chance);
+						data.CloseElement("summon");
+						break;
+					case eMonstAbilCat::RADIATE:
+						data.OpenElement("radiate");
+						data.PushAttribute("type", abil);
+						data.PushElement("type", param.radiate.type);
+						data.PushElement("chance", param.radiate.chance);
+						data.CloseElement("radiate");
+						break;
+					case eMonstAbilCat::SPECIAL:
+						data.OpenElement("special");
+						data.PushAttribute("type", abil);
+						data.PushElement("param", param.special.extra1);
+						if(abil != eMonstAbil::SPLITS && abil != eMonstAbil::DEATH_TRIGGER) {
+							data.PushElement("param", param.special.extra2);
+							if(abil == eMonstAbil::RAY_HEAT)
+								data.PushElement("param", param.special.extra3);
+						}
+						data.CloseElement("special");
+						break;
+					case eMonstAbilCat::INVALID: break;
+				}
+			}
+			data.CloseElement("abilities");
+		}
+		data.CloseElement("monster");
+	}
+	data.CloseElement("monsters");
+}
+
 void save_scenario(fs::path toFile) {
 	// TODO: I'm not certain 1.0.0 is the correct version here?
 	scenario.format.prog_make_ver[0] = 1;
@@ -316,6 +470,7 @@ void save_scenario(fs::path toFile) {
 		
 		// ...and monsters
 		std::ostream& monsters = scen_file.newFile("scenario/monsters.xml");
+		writeMonstersToXml(ticpp::Printer("monsters.xml", monsters));
 		
 		// And the special nodes.
 		std::ostream& scen_spec = scen_file.newFile("scenario/scenario.spec");

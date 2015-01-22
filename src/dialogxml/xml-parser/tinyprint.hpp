@@ -25,6 +25,7 @@ namespace ticpp {
 		~Printer();
 		void OpenElement(std::string tagName);
 		void CloseElement(std::string tagName);
+		void PushElement(std::string tagName);
 		void PushComment(std::string comment);
 		void PushStylesheet(std::string value, std::string href);
 		void PushNode(Node* node);
