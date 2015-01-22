@@ -329,7 +329,7 @@ void cSpecial::append(legacy::special_node_type& old){
 	}
 }
 
-std::ostream& operator << (std::ostream& out, eSpecType& e) {
+std::ostream& operator << (std::ostream& out, eSpecType e) {
 	return out << (int) e;
 }
 

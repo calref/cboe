@@ -15,6 +15,7 @@
 #include "simpletypes.h"
 #include "pictypes.hpp"
 #include "location.h"
+#include "soundtool.hpp" // for snd_num_t
 
 namespace legacy { struct terrain_type_type; };
 
@@ -31,14 +32,14 @@ public:
 	ter_flag_t flag3; // new additional flag for special properties
 	eTerSpec special;
 	ter_num_t trans_to_what;
-	unsigned char fly_over;
-	unsigned char boat_over;
-	unsigned char block_horse;
-	unsigned char light_radius;
-	unsigned char step_sound;
+	bool fly_over;
+	bool boat_over;
+	bool block_horse;
+	unsigned int light_radius;
+	snd_num_t step_sound;
 	unsigned char shortcut_key; // for editor use only
-	unsigned char obj_num = 0; // ditto (formerly res1)
-	unsigned char ground_type; // ditto (formerly res2)
+	unsigned int obj_num = 0; // ditto (formerly res1)
+	unsigned int ground_type; // ditto (formerly res2)
 	eTrimType trim_type; // ditto, mostly (formerly res3)
 	unsigned short trim_ter; // ditto
 	unsigned short combat_arena;
@@ -51,9 +52,11 @@ public:
 	void writeTo(std::ostream& file) const;
 };
 
-std::ostream& operator << (std::ostream& out, eTerSpec& e);
+std::ostream& operator << (std::ostream& out, eTerSpec e);
 std::istream& operator >> (std::istream& in, eTerSpec& e);
-std::ostream& operator << (std::ostream& out, eTerObstruct& e);
+std::ostream& operator << (std::ostream& out, eTrimType e);
+std::istream& operator >> (std::istream& in, eTrimType& e);
+std::ostream& operator << (std::ostream& out, eTerObstruct e);
 std::istream& operator >> (std::istream& in, eTerObstruct& e);
 
 #endif

@@ -64,7 +64,7 @@ struct node_properties_t {
 	node_properties_t(std::initializer_list<std::function<void(node_properties_t)>>);
 };
 
-std::ostream& operator << (std::ostream& out, eSpecType& e);
+std::ostream& operator << (std::ostream& out, eSpecType e);
 std::istream& operator >> (std::istream& in, eSpecType& e);
 const node_properties_t& operator* (eSpecType t);
 

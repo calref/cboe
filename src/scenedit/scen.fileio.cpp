@@ -197,6 +197,50 @@ void writeScenarioToXml(ticpp::Printer&& data) {
 	data.CloseElement("scenario");
 }
 
+void writeTerrainToXml(ticpp::Printer&& data) {
+	data.OpenElement("terrains");
+	for(size_t i = 0; i < scenario.ter_types.size(); i++) {
+		data.OpenElement("terrain");
+		data.PushAttribute("id", i);
+		cTerrain& ter = scenario.ter_types[i];
+		data.PushElement("name", ter.name);
+		data.PushElement("pic", ter.picture);
+		data.PushElement("map", ter.map_pic);
+		data.PushElement("blockage", ter.blockage);
+		data.PushElement("transform", ter.trans_to_what);
+		data.PushElement("fly", ter.fly_over);
+		data.PushElement("boat", ter.boat_over);
+		data.PushElement("ride", !ter.block_horse);
+		data.PushElement("light", ter.light_radius);
+		data.PushElement("step-sound", ter.step_sound);
+		data.PushElement("trim", ter.trim_type);
+		data.PushElement("arena", ter.combat_arena);
+		
+		data.OpenElement("special");
+		data.PushElement("type", ter.special);
+		data.PushElement("flag", ter.flag1.u);
+		data.PushElement("flag", ter.flag2.u);
+		data.PushElement("flag", ter.flag3.u);
+		data.CloseElement("special");
+		
+		data.OpenElement("editor");
+		if(ter.shortcut_key > 0)
+		   data.PushElement("shortcut", ter.shortcut_key);
+		data.PushElement("ground", ter.ground_type);
+		data.PushElement("trim-for", ter.trim_ter);
+		if(ter.obj_num > 0) {
+			data.OpenElement("object");
+			data.PushElement("num", ter.obj_num);
+			data.PushElement("pos", ter.obj_pos);
+			data.PushElement("size", ter.obj_size);
+			data.CloseElement("object");
+		}
+		data.CloseElement("editor");
+		data.CloseElement("terrain");
+	}
+	data.CloseElement("terrains");
+}
+
 void save_scenario(fs::path toFile) {
 	// TODO: I'm not certain 1.0.0 is the correct version here?
 	scenario.format.prog_make_ver[0] = 1;
@@ -214,6 +258,7 @@ void save_scenario(fs::path toFile) {
 		
 		// Then the terrains...
 		std::ostream& terrain = scen_file.newFile("scenario/terrain.xml");
+		writeTerrainToXml(ticpp::Printer("terrain.xml", terrain));
 		
 		// ...items...
 		std::ostream& items = scen_file.newFile("scenario/items.xml");
