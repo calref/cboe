@@ -38,8 +38,8 @@ class cOutdoors {
 public:
 	class cWandering { // formerly out_wandering_type
 	public:
-		mon_num_t monst[7];
-		mon_num_t friendly[3];
+		std::array<mon_num_t,7> monst;
+		std::array<mon_num_t,3> friendly;
 		short spec_on_meet,spec_on_win,spec_on_flee,cant_flee;
 		short end_spec1,end_spec2;
 		
@@ -65,7 +65,7 @@ public:
 	location exit_locs[8];
 	short exit_dests[8];
 	location sign_locs[8];
-	cWandering wandering[4],special_enc[4];
+	std::array<cWandering,4> wandering, special_enc;
 	location wandering_locs[4];
 	std::array<cSpecial,60> specials;
 	std::string out_name;

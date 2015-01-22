@@ -70,6 +70,35 @@ template<> void ticpp::Printer::PushElement(std::string tagName, cMonster::cAtta
 	CloseElement(tagName);
 }
 
+template<> void ticpp::Printer::PushElement(std::string tagName, cOutdoors::cWandering enc) {
+	OpenElement(tagName);
+	PushAttribute("can-flee", !enc.cant_flee);
+	for(size_t i = 0; i < enc.monst.size(); i++) {
+		PushElement("monster", enc.monst[i]);
+	}
+	for(size_t i = 0; i < enc.friendly.size(); i++) {
+		OpenElement("monster");
+		PushAttribute("friendly", true);
+		PushText(enc.friendly[i]);
+		CloseElement("monster");
+	}
+	PushElement("onmeet", enc.spec_on_meet);
+	PushElement("onwin", enc.spec_on_win);
+	PushElement("onflee", enc.spec_on_flee);
+	PushElement("sdf", loc(enc.end_spec1, enc.end_spec2));
+	CloseElement(tagName);
+}
+
+template<> void ticpp::Printer::PushElement(std::string tagName, info_rect_t rect) {
+	OpenElement(tagName);
+	PushAttribute("top", rect.top);
+	PushAttribute("left", rect.left);
+	PushAttribute("bottom", rect.bottom);
+	PushAttribute("right", rect.right);
+	PushText(rect.descr);
+	CloseElement(tagName);
+}
+
 static bool is_minmax(int lo, int hi, int val) {
 	return minmax(lo, hi, val) == val;
 }
@@ -445,6 +474,39 @@ void writeMonstersToXml(ticpp::Printer&& data) {
 	data.CloseElement("monsters");
 }
 
+void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
+	data.OpenElement("sector");
+	data.PushAttribute("boes", scenario.format_ed_version());
+	data.PushElement("name", sector.out_name);
+	if(!sector.comment.empty())
+		data.PushElement("comment", sector.comment);
+	switch(sector.ambient_sound) {
+		case AMBIENT_NONE: break;
+		case AMBIENT_BIRD: data.PushElement("sound", "birds"); break;
+		case AMBIENT_DRIP: data.PushElement("sound", "drip"); break;
+		case AMBIENT_CUSTOM: data.PushElement("sound", sector.out_sound); break;
+	}
+	for(auto& enc : sector.special_enc)
+		data.PushElement("encounter", enc);
+	for(auto& enc : sector.wandering)
+		data.PushElement("wandering", enc);
+	data.OpenElement("signs");
+	for(auto& sign : sector.sign_strs)
+		data.PushElement("string", sign);
+	data.CloseElement("signs");
+	data.OpenElement("descriptions");
+	for(auto& area : sector.info_rect) {
+		if(!area.descr.empty() && area.top < area.bottom && area.left < area.right)
+			data.PushElement("area", area);
+	}
+	data.CloseElement("descriptions");
+	data.OpenElement("strings");
+	for(auto& str : sector.spec_strs)
+		data.PushElement("string", str);
+	data.CloseElement("strings");
+	data.CloseElement("sector");
+}
+
 void save_scenario(fs::path toFile) {
 	// TODO: I'm not certain 1.0.0 is the correct version here?
 	scenario.format.prog_make_ver[0] = 1;
@@ -483,6 +545,7 @@ void save_scenario(fs::path toFile) {
 			std::string file_basename = "out" + std::to_string(x) + '~' + std::to_string(y);
 			// First the main data.
 			std::ostream& outdoors = scen_file.newFile("scenario/out/" + file_basename + ".xml");
+			writeOutdoorsToXml(ticpp::Printer(file_basename + ".xml", outdoors), *scenario.outdoors[x][y]);
 			
 			// Then the map.
 			std::ostream& out_map = scen_file.newFile("scenario/out/" + file_basename + ".map");

@@ -42,28 +42,66 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="name" type="xs:string"/>
+				<xs:element name="comment" type="xs:string" minOccurs="0"/>
+				<xs:element name="sound" minOccurs="0">
+					<xs:simpleType>
+						<xs:union memberTypes="xs:integer">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="birds"/>
+									<xs:enumeration value="drip"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:union>
+					</xs:simpleType>
+				</xs:element>
 				<xs:element name="encounter" type="encounter" minOccurs="0" maxOccurs="4"/>
 				<xs:element name="wandering" type="encounter" minOccurs="0" maxOccurs="4"/>
-				<xs:choice maxOccurs="unbounded">
-					<xs:element name="sign">
-						<xs:complexType>
-							<xs:simpleContent>
-								<xs:extension base="xs:string">
-									<xs:attribute name="id" type="xs:integer"/>
-								</xs:extension>
-							</xs:simpleContent>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="description">
-						<xs:complexType>
-							<xs:simpleContent>
-								<xs:extension base="xs:string">
-									<xs:attributeGroup ref="rect"/>
-								</xs:extension>
-							</xs:simpleContent>
-						</xs:complexType>
-					</xs:element>
-				</xs:choice>
+				<xs:element name="signs">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="string" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="id" type="xs:integer"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="descriptions">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="area" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attributeGroup ref="rect"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="strings">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="string" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="id" type="xs:integer"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="boes" type="xs:string"/>
 		</xs:complexType>

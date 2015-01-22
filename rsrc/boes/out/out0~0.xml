@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sector boes="1.0">
 	<name>Outdoor Section</name>
+	<!-- Outdoor ambient sound -->
+	<sound>birds</sound>
 	
 	<!-- Wandering encounter info -->
 	<wandering>
@@ -8,8 +10,14 @@
 		<monster friendly="true">27</monster>
 	</wandering>
 	
-	<sign id="0">This is a sample sign!</sign>
+	<signs>
+		<string id="0">This is a sample sign!</string>
+	</signs>
 	
 	<!-- outdoor description rects -->
-	<description top="32" left="32" bottom="36" right="36">This is an area description!</description>
+	<descriptions>
+		<area top="32" left="32" bottom="36" right="36">This is an area description!</area>
+	</descriptions>
+	
+	<strings/>
 </sector>
