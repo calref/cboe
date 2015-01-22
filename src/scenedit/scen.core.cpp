@@ -319,16 +319,101 @@ static void fill_ter_info(cDialog& me, short ter){
 static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which_ter) {
 	if(!save_ter_info(me, scenario.ter_types[which_ter])) return true;
 	
-	if(id == "done") me.toast(true);
-	else if(id == "left") {
+	if(!me.toast(true)) return true;
+	if(id == "left") {
+		me.untoast();
 		// TODO: Use size() once ter_types becomes a vector
-		if(which_ter == 0) which_ter = 255;
+		if(which_ter == 0)
+			which_ter = scenario.ter_types.size() - 1;
 		else which_ter--;
 		fill_ter_info(me, which_ter);
 	} else if(id == "right") {
+		me.untoast();
 		which_ter++;
-		if(which_ter > 255) which_ter = 0;
+		if(which_ter >= scenario.ter_types.size())
+			which_ter = 0;
 		fill_ter_info(me, which_ter);
+	}
+	return true;
+}
+
+static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
+	cTerrain& ter = scenario.ter_types[which_ter];
+	const pic_num_t pic = ter.picture;
+	cDialog obj_dlg("edit-ter-obj", &me);
+	obj_dlg.attachFocusHandlers([&pic](cDialog& me, std::string fld, bool losing) -> bool {
+		if(!losing) return true;
+		int id = me["id"].getTextAsNum();
+		if(fld != "id") {
+			int i = me[fld].getTextAsNum();
+			if(i > 4 || (i == 4 && (fld == "x" || fld == "y"))) {
+				giveError("Terrain objects cannot be larger than 4x4 tiles.", &me);
+				return false;
+			} else if(id > 0 && i == 0 && (fld == "w" || fld == "h")) {
+				giveError("Width and height cannot be zero.", &me);
+				return false;
+			}
+		} else {
+			// Check if the object already exists and, if so, import the size data
+			for(cTerrain& check : scenario.ter_types) {
+				if(check.obj_num == id) {
+					me["w"].setTextToNum(check.obj_size.x);
+					me["h"].setTextToNum(check.obj_size.y);
+					break;
+				}
+			}
+		}
+		pic_num_t obj[4][4] = {{74,74,74,74},{74,74,74,74},{74,74,74,74},{74,74,74,74}};
+		for(cTerrain& check : scenario.ter_types) {
+			if(check.obj_num != id) continue;
+			obj[check.obj_pos.x][check.obj_pos.y] = check.picture;
+		}
+		obj[me["x"].getTextAsNum()][me["y"].getTextAsNum()] = pic;
+		for(int x = 0; x < 4; x++) {
+			for(int y = 0; y < 4; y++) {
+				std::string id = "x" + std::to_string(x) + "y" + std::to_string(y);
+				dynamic_cast<cPict&>(me[id]).setPict(obj[x][y]);
+			}
+		}
+		return true;
+	}, {"w", "h", "x", "y", "id"});
+	obj_dlg["okay"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
+		if(!me.toast(true)) return true;
+		int x = me["x"].getTextAsNum(), y = me["y"].getTextAsNum();
+		int w = me["w"].getTextAsNum(), h = me["h"].getTextAsNum();
+		if(x >= w || y >= h) {
+			giveError("X and Y must be less than width and height, respectively.", &me);
+			me.untoast();
+			return true;
+		}
+		return true;
+	});
+	obj_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &obj_dlg, false));
+	obj_dlg["w"].setTextToNum(ter.obj_size.x);
+	obj_dlg["h"].setTextToNum(ter.obj_size.y);
+	obj_dlg["x"].setTextToNum(ter.obj_pos.x);
+	obj_dlg["y"].setTextToNum(ter.obj_pos.y);
+	obj_dlg["id"].setTextToNum(ter.obj_num);
+	obj_dlg["id"].triggerFocusHandler(obj_dlg, "w", true);
+	obj_dlg.run();
+	if(obj_dlg.accepted()) {
+		ter.obj_num = obj_dlg["id"].getTextAsNum();
+		ter.obj_pos.x = obj_dlg["x"].getTextAsNum();
+		ter.obj_pos.y = obj_dlg["y"].getTextAsNum();
+		ter.obj_size.x = obj_dlg["w"].getTextAsNum();
+		ter.obj_size.y = obj_dlg["h"].getTextAsNum();
+		// If you changed the size, propagate it to other terrains in the same object.
+		// If the position is the same as an existing terrain in that object, remove that terrain from the object.
+		for(cTerrain update : scenario.ter_types) {
+			if(update.obj_num == ter.obj_num) {
+				if(update.obj_pos == ter.obj_pos) {
+					update.obj_pos = update.obj_size = loc();
+					update.obj_num = 0;
+				} else {
+					update.obj_size = ter.obj_size;
+				}
+			}
+		}
 	}
 	return true;
 }
@@ -349,7 +434,7 @@ short edit_ter_type(ter_num_t which_ter) {
 	ter_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &ter_dlg, false));
 	ter_dlg["arena"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,299,"ground type"));
 	// TODO: Add focus handler for key
-	// TODO: Add click handler for object
+	ter_dlg["object"].attachClickHandler(std::bind(edit_ter_obj, _1, std::ref(which_ter)));
 	ter_dlg.attachClickHandlers(std::bind(finish_editing_ter,_1,_2,std::ref(which_ter)), {"left", "right", "done"});
 	ter_dlg["picktrim"].attachClickHandler(std::bind(pick_string,"trim-names", _1, "trim", ""));
 	ter_dlg["pickarena"].attachClickHandler(std::bind(pick_string,"arena-names", _1, "arena", ""));

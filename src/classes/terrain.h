@@ -37,7 +37,7 @@ public:
 	unsigned char light_radius;
 	unsigned char step_sound;
 	unsigned char shortcut_key; // for editor use only
-	unsigned char obj_num; // ditto (formerly res1)
+	unsigned char obj_num = 0; // ditto (formerly res1)
 	unsigned char ground_type; // ditto (formerly res2)
 	eTrimType trim_type; // ditto, mostly (formerly res3)
 	unsigned short trim_ter; // ditto

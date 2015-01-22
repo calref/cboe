@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay'>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text framed='true' top='12' left='60' width='112' height='144'/>
+	<pict name='x0y0' framed='false' type='ter' num='0' top='12' left='60'/>
+	<pict name='x0y1' framed='false' type='ter' num='0' top='48' left='60'/>
+	<pict name='x0y2' framed='false' type='ter' num='0' top='84' left='60'/>
+	<pict name='x0y3' framed='false' type='ter' num='0' top='120' left='60'/>
+	<pict name='x1y0' framed='false' type='ter' num='0' top='12' left='88'/>
+	<pict name='x1y1' framed='false' type='ter' num='0' top='48' left='88'/>
+	<pict name='x1y2' framed='false' type='ter' num='0' top='84' left='88'/>
+	<pict name='x1y3' framed='false' type='ter' num='0' top='120' left='88'/>
+	<pict name='x2y0' framed='false' type='ter' num='0' top='12' left='116'/>
+	<pict name='x2y1' framed='false' type='ter' num='0' top='48' left='116'/>
+	<pict name='x2y2' framed='false' type='ter' num='0' top='84' left='116'/>
+	<pict name='x2y3' framed='false' type='ter' num='0' top='120' left='116'/>
+	<pict name='x3y0' framed='false' type='ter' num='0' top='12' left='144'/>
+	<pict name='x3y1' framed='false' type='ter' num='0' top='48' left='144'/>
+	<pict name='x3y2' framed='false' type='ter' num='0' top='84' left='144'/>
+	<pict name='x3y3' framed='false' type='ter' num='0' top='120' left='144'/>
+	<text top='166' left='130' width='10' height='16'>X</text>
+	<text top='166' left='180' width='10' height='16'>Y</text>
+	<text top='186' left='10' width='100' height='16'>Object Size:</text>
+	<field name='w' type='uint' top='184' left='120' width='40' height='16'/>
+	<field name='h' type='uint' top='184' left='170' width='40' height='16'/>
+	<text top='208' left='10' width='100' height='28'>Position of this tile in object:</text>
+	<field name='x' type='uint' top='212' left='120' width='40' height='16'/>
+	<field name='y' type='uint' top='212' left='170' width='40' height='16'/>
+	<text top='242' left='10' width='100' height='16'>Object unique ID:</text>
+	<field name='id' type='uint' top='240' left='120' width='50' height='16'/>
+	<button name='cancel' type='regular' def-key='esc' top='264' left='85'>Cancel</button>
+	<button name='okay' type='regular' top='264' left='150'>OK</button>
+</dialog>

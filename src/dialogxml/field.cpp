@@ -59,6 +59,14 @@ bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFoc
 	return passed;
 }
 
+void cTextField::setText(std::string to) {
+	cControl::setText(to);
+	if(haveFocus)
+		insertionPoint = to.length();
+	else insertionPoint = -1;
+	selectionPoint = 0;
+}
+
 void cTextField::set_ip(location clickLoc, int cTextField::* insertionPoint) {
 	TextStyle style;
 	style.font = FONT_PLAIN;
@@ -480,7 +488,11 @@ void cTextField::handleInput(cKey key) {
 		case key_insert:
 			break;
 	}
+	// Setting the text normally resets insertion/selection point, but we don't want that here.
+	int ip = insertionPoint, sp = selectionPoint;
 	setText(contents);
+	insertionPoint = ip;
+	selectionPoint = sp;
 }
 
 cControl::storage_t cTextField::store() {
