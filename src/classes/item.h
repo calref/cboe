@@ -48,7 +48,6 @@ public:
 	bool concealed : 1;
 	bool enchanted : 1;
 	bool unsellable : 1;
-public:
 	std::string desc;
 	unsigned char rec_treas_class() const;
 	short item_weight() const;

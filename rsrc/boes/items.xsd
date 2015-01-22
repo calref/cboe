@@ -21,6 +21,7 @@
 			<xs:enumeration value="tool"/>
 			<xs:enumeration value="food"/>
 			<xs:enumeration value="shield"/>
+			<xs:enumeration value="shield2"/>
 			<xs:enumeration value="armor"/>
 			<xs:enumeration value="helm"/>
 			<xs:enumeration value="gloves"/>
@@ -28,20 +29,22 @@
 			<xs:enumeration value="ring"/>
 			<xs:enumeration value="necklace"/>
 			<xs:enumeration value="poison"/>
-			<xs:enumeration value="non-usable"/>
+			<xs:enumeration value="object"/>
 			<xs:enumeration value="pants"/>
 			<xs:enumeration value="crossbow"/>
 			<xs:enumeration value="bolts"/>
 			<xs:enumeration value="missile"/>
+			<xs:enumeration value="special"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="weaponType">
 		<xs:restriction base="xs:token">
+			<xs:enumeration value="str"/>
+			<xs:enumeration value="dex"/>
+			<xs:enumeration value="int"/>
 			<xs:enumeration value="edged"/>
 			<xs:enumeration value="bashing"/>
 			<xs:enumeration value="pole"/>
-			<!-- The rest of these values are for potential expansion -->
-			<!-- Each corresponds to a skill/stat -->
 			<xs:enumeration value="thrown"/>
 			<xs:enumeration value="archery"/>
 			<xs:enumeration value="defense"/>
@@ -66,7 +69,8 @@
 				<xs:element name="bonus" type="xs:integer" minOccurs="0"/>
 				<xs:element name="protection" type="xs:integer" minOccurs="0"/>
 				<xs:element name="charges" type="xs:integer" minOccurs="0"/>
-				<xs:element name="melee-type" type="weaponType" minOccurs="0"/>
+				<xs:element name="weapon-type" type="weaponType" minOccurs="0"/>
+				<xs:element name="missile-type" type="xs:integer" minOccurs="0"/>
 				<xs:element name="pic" type="xs:integer"/>
 				<xs:element name="flag" type="xs:integer" minOccurs="0"/>
 				<xs:element name="value" type="xs:integer"/>
@@ -80,6 +84,7 @@
 						<xs:sequence>
 							<xs:element name="type" type="xs:integer"/>
 							<xs:element name="strength" type="xs:integer"/>
+							<xs:element name="data" type="xs:integer"/>
 							<xs:element name="use-flag" type="xs:integer" minOccurs="0"/>
 						</xs:sequence>
 					</xs:complexType>
@@ -96,7 +101,9 @@
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="description" type="xs:string" minOccurs="0"/>
 			</xs:all>
+			<xs:attribute name="id" type="xs:integer" use="required"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="items">

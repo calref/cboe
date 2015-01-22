@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <items>
-	<item>
+	<item id='0'>
 		<variety>shield</variety>
 		<level>3</level>
 		<pic>12</pic>

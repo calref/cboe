@@ -241,6 +241,56 @@ void writeTerrainToXml(ticpp::Printer&& data) {
 	data.CloseElement("terrains");
 }
 
+void writeItemsToXml(ticpp::Printer&& data) {
+	data.OpenElement("items");
+	for(size_t i = 0; i < scenario.scen_items.size(); i++) {
+		data.OpenElement("item");
+		data.PushAttribute("id", i);
+		cItem& item = scenario.scen_items[i];
+		data.PushElement("variety", item.variety);
+		data.PushElement("level", item.item_level);
+		data.PushElement("awkward", item.awkward);
+		data.PushElement("bonus", item.bonus);
+		data.PushElement("protection", item.protection);
+		if(item.charges > 0)
+			data.PushElement("charges", item.charges);
+		if(isWeaponType(item.variety) && item.variety != eItemType::ARROW && item.variety != eItemType::BOLTS)
+		   data.PushElement("weapon-type", item.weap_type);
+		data.PushElement("missile-type", item.missile);
+		data.PushElement("pic", item.graphic_num);
+		if(item.type_flag > 0)
+			data.PushElement("flag", item.type_flag);
+		data.PushElement("name", item.name);
+		data.PushElement("full-name", item.full_name);
+		data.PushElement("treasure", item.treas_class);
+		data.PushElement("value", item.value);
+		data.PushElement("weight", item.weight);
+		if(item.special_class > 0)
+			data.PushElement("class", item.special_class);
+		
+		data.OpenElement("properties");
+		if(item.ident) data.PushElement("identified", "true");
+		if(item.magic) data.PushElement("magic", "true");
+		if(item.cursed) data.PushElement("cursed", "true");
+		if(item.concealed) data.PushElement("concealed", "true");
+		if(item.enchanted) data.PushElement("enchanted", "true");
+		if(item.unsellable) data.PushElement("unsellable", "true");
+		data.CloseElement("properties");
+		
+		if(item.ability != eItemAbil::NONE) {
+			data.OpenElement("ability");
+			data.PushElement("type", item.ability);
+			data.PushElement("strength", item.abil_data[0]);
+			data.PushElement("data", item.abil_data[1]);
+			data.PushElement("use-flag", item.magic_use_type);
+			data.CloseElement("ability");
+		}
+		if(!item.desc.empty()) data.PushElement("description", item.desc);
+		data.CloseElement("item");
+	}
+	data.CloseElement("items");
+}
+
 void save_scenario(fs::path toFile) {
 	// TODO: I'm not certain 1.0.0 is the correct version here?
 	scenario.format.prog_make_ver[0] = 1;
@@ -262,6 +312,7 @@ void save_scenario(fs::path toFile) {
 		
 		// ...items...
 		std::ostream& items = scen_file.newFile("scenario/items.xml");
+		writeItemsToXml(ticpp::Printer("items.xml", items));
 		
 		// ...and monsters
 		std::ostream& monsters = scen_file.newFile("scenario/monsters.xml");
