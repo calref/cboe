@@ -70,10 +70,10 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 			}
 		}
 	for(i = 0; i < 16; i++) {
-		_room_rect[i].top = old.room_rect[i].top;
-		_room_rect[i].left = old.room_rect[i].left;
-		_room_rect[i].bottom = old.room_rect[i].bottom;
-		_room_rect[i].right = old.room_rect[i].right;
+		room_rect[i].top = old.room_rect[i].top;
+		room_rect[i].left = old.room_rect[i].left;
+		room_rect[i].bottom = old.room_rect[i].bottom;
+		room_rect[i].right = old.room_rect[i].right;
 	}
 	for(i = 0; i < 30; i++) {
 		_creatures[i].append(old.creatures[i]);
@@ -134,10 +134,10 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 			}
 		}
 	for(i = 0; i < 16; i++) {
-		_room_rect[i].top = old.room_rect[i].top;
-		_room_rect[i].left = old.room_rect[i].left;
-		_room_rect[i].bottom = old.room_rect[i].bottom;
-		_room_rect[i].right = old.room_rect[i].right;
+		room_rect[i].top = old.room_rect[i].top;
+		room_rect[i].left = old.room_rect[i].left;
+		room_rect[i].bottom = old.room_rect[i].bottom;
+		room_rect[i].right = old.room_rect[i].right;
 	}
 	for(i = 0; i < 40; i++) {
 		_creatures[i].append(old.creatures[i]);
@@ -198,10 +198,10 @@ void cBigTown::append(legacy::big_tr_type& old, int town_numo){
 			}
 		}
 	for(i = 0; i < 16; i++) {
-		_room_rect[i].top = old.room_rect[i].top;
-		_room_rect[i].left = old.room_rect[i].left;
-		_room_rect[i].bottom = old.room_rect[i].bottom;
-		_room_rect[i].right = old.room_rect[i].right;
+		room_rect[i].top = old.room_rect[i].top;
+		room_rect[i].left = old.room_rect[i].left;
+		room_rect[i].bottom = old.room_rect[i].bottom;
+		room_rect[i].right = old.room_rect[i].right;
 	}
 	for(i = 0; i < 60; i++) {
 		_creatures[i].append(old.creatures[i]);
@@ -218,10 +218,6 @@ void cTinyTown::writeTerrainTo(std::ostream& file) {
 
 void cTinyTown::readTerrainFrom(std::istream& file) {
 	readArray(file, _terrain, 32, 32);
-}
-
-rectangle& cTinyTown::room_rect(size_t i){
-	return _room_rect[i];
 }
 
 cCreature& cTinyTown::creatures(size_t i){
@@ -244,10 +240,6 @@ void cMedTown::readTerrainFrom(std::istream& file) {
 	readArray(file, _terrain, 48, 48);
 }
 
-rectangle& cMedTown::room_rect(size_t i){
-	return _room_rect[i];
-}
-
 cCreature& cMedTown::creatures(size_t i){
 	return _creatures[i];
 }
@@ -268,10 +260,6 @@ void cBigTown::readTerrainFrom(std::istream& file) {
 	readArray(file, _terrain, 64, 64);
 }
 
-rectangle& cBigTown::room_rect(size_t i){
-	return _room_rect[i];
-}
-
 cCreature& cBigTown::creatures(size_t i){
 	return _creatures[i];
 }
@@ -282,13 +270,6 @@ unsigned char& cBigTown::lighting(size_t i, size_t r){
 
 cBigTown::cBigTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
 	int i;
-	rectangle d_rect = {0,0,0,0};
-	for(i = 0; i < 16; i++) {
-		_room_rect[i].top = d_rect.top;
-		_room_rect[i].left = d_rect.left;
-		_room_rect[i].bottom = d_rect.bottom;
-		_room_rect[i].right = d_rect.right;
-	}
 	for(i = 0; i < max_dim(); i++)
 		for(int j = 0; j < max_dim(); j++) {
 			terrain(i,j) = scenario.default_ground * 2;
@@ -299,13 +280,6 @@ cBigTown::cBigTown(cScenario& scenario, bool init_strings) : cTown(scenario, ini
 
 cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
 	int i;
-	rectangle d_rect = {0,0,0,0};
-	for(i = 0; i < 16; i++) {
-		_room_rect[i].top = d_rect.top;
-		_room_rect[i].left = d_rect.left;
-		_room_rect[i].bottom = d_rect.bottom;
-		_room_rect[i].right = d_rect.right;
-	}
 	for(i = 0; i < max_dim(); i++)
 		for(int j = 0; j < max_dim(); j++) {
 			terrain(i,j) = scenario.default_ground * 2;
@@ -316,13 +290,6 @@ cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, ini
 
 cTinyTown::cTinyTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
 	int i;
-	rectangle d_rect = {0,0,0,0};
-	for(i = 0; i < 16; i++) {
-		_room_rect[i].top = d_rect.top;
-		_room_rect[i].left = d_rect.left;
-		_room_rect[i].bottom = d_rect.bottom;
-		_room_rect[i].right = d_rect.right;
-	}
 	for(i = 0; i < max_dim(); i++)
 		for(int j = 0; j < max_dim(); j++) {
 			terrain(i,j) = scenario.default_ground * 2;

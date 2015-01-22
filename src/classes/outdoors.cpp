@@ -134,8 +134,6 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 		wandering_locs[i].x = old.wandering_locs[i].x;
 		wandering_locs[i].y = old.wandering_locs[i].y;
 	}
-	for(i = 0; i < 180; i++)
-		strlens[i] = old.strlens[i];
 	for(i = 0; i < 60; i++)
 		specials[i].append(old.specials[i]);
 }
@@ -172,12 +170,11 @@ cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario
 		temp_str = get_str("outdoor-default",i + 1);
 		if(i == 0) out_name = temp_str;
 		else if(i == 9) comment = temp_str;
-		else if(i < 9) rect_names[i-1] = temp_str;
+		else if(i < 9) info_rect[i-1].descr = temp_str;
 		else if(i >= 10 && i < 100)
 			spec_strs[i-10] = temp_str;
 		else if(i >= 100 && i < 108)
 			sign_strs[i-100] = temp_str;
-		strlens[i] = temp_str.length();
 	}
 }
 

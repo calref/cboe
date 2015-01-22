@@ -40,11 +40,9 @@ class cBigTemplTown : public cBigTown, cTemplTown {
 private:
 	//cCreature _creatures[60];
 	//ter_num_t _terrain[64][64];
-	//rectangle _room_rect[16];
 	//unsigned char _lighting[4][32];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim() const;
@@ -59,11 +57,9 @@ class cMedTemplTown : public cMedTown, cTemplTown {
 private:
 	//cCreature _creatures[40];
 	//ter_num_t _terrain[48][48];
-	//rectangle _room_rect[16];
 	//unsigned char _lighting[4][32];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim() const;
@@ -78,11 +74,9 @@ class cTinyTemplTown : public cTinyTown, cTemplTown {
 private:
 	//cCreature _creatures[30];
 	//ter_num_t _terrain[32][32];
-	//rectangle _room_rect[16];
 	//unsigned char _lighting[4][32];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	rectangle& room_rect(size_t i);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	short max_dim() const;

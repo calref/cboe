@@ -777,11 +777,11 @@ void draw_terrain(){
 		if(editing_town) {
 			// draw info rects
 			for(i = 0; i < 16; i++)
-				if(town->room_rect(i).left > 0) {
-					draw_rect.left = 22 + 28 * (town->room_rect(i).left - cen_x + 4);
-					draw_rect.right = 22 + 28 * (town->room_rect(i).right - cen_x + 4);
-					draw_rect.top = 24 + 36 * (town->room_rect(i).top - cen_y + 4);
-					draw_rect.bottom = 24 + 36 * (town->room_rect(i).bottom - cen_y + 4);
+				if(town->room_rect[i].left > 0) {
+					draw_rect.left = 22 + 28 * (town->room_rect[i].left - cen_x + 4);
+					draw_rect.right = 22 + 28 * (town->room_rect[i].right - cen_x + 4);
+					draw_rect.top = 24 + 36 * (town->room_rect[i].top - cen_y + 4);
+					draw_rect.bottom = 24 + 36 * (town->room_rect[i].bottom - cen_y + 4);
 					frame_rect(ter_draw_gworld, draw_rect, sf::Color::Red);
 				}
 			// draw border rect

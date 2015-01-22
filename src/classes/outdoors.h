@@ -67,13 +67,11 @@ public:
 	location sign_locs[8];
 	cWandering wandering[4],special_enc[4];
 	location wandering_locs[4];
-	rectangle info_rect[8];
-	unsigned char strlens[180];
 	std::array<cSpecial,60> specials;
 	std::string out_name;
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.
-	std::array<std::string,8> rect_names;
+	std::array<info_rect_t,8> info_rect;
 	std::string comment;
 	std::array<std::string,90> spec_strs;
 	std::array<std::string,8> sign_strs;

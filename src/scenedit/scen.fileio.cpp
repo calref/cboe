@@ -1056,8 +1056,8 @@ void scen_text_dump(){
 			fout << "    Name: " << scenario.outdoors[out_sec.x][out_sec.y]->out_name;
 			fout << "    Comment: " << scenario.outdoors[out_sec.x][out_sec.y]->comment;
 			for(i = 0; i < 8; i++)
-				if(scenario.outdoors[out_sec.x][out_sec.y]->rect_names[i][0] != '*')
-					fout << "    Area Rectangle " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->rect_names[i] << endl;
+				if(scenario.outdoors[out_sec.x][out_sec.y]->info_rect[i].descr[0] != '*')
+					fout << "    Area Rectangle " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->info_rect[i].descr << endl;
 			for(i = 0; i < 90; i++)
 				if(scenario.outdoors[out_sec.x][out_sec.y]->spec_strs[i][0] != '*')
 					fout << "    Message " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->spec_strs[i] << endl;
@@ -1073,8 +1073,8 @@ void scen_text_dump(){
 		fout << "  Town Messages:" << endl;
 		fout << "    Name: " << scenario.towns[i]->town_name << endl;
 		for(i = 0; i < 16; i++)
-			if(scenario.towns[i]->rect_names[i][0] != '*')
-				fout << "    Area Rectangle " << i << ": " << scenario.towns[i]->rect_names[i] << endl;
+			if(scenario.towns[i]->room_rect[i].descr[0] != '*')
+				fout << "    Area Rectangle " << i << ": " << scenario.towns[i]->room_rect[i].descr << endl;
 		fout << "    Name: " << scenario.towns[i]->town_name << endl;
 		for(i = 0; i < 3; i++)
 			if(scenario.towns[i]->comment[i][0] != '*')

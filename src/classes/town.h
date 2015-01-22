@@ -84,7 +84,6 @@ public:
 	short spec_on_hostile;
 	short timer_spec_times[8];
 	short timer_specs[8];
-	unsigned char strlens[180];
 	std::array<cSpecial,100> specials;
 	bool strong_barriers : 1;
 	bool defy_mapping : 1;
@@ -95,7 +94,7 @@ public:
 	std::string town_name;
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.
-	std::array<std::string,16> rect_names;
+	std::array<info_rect_t,16> room_rect;
 	std::array<std::string,3> comment;
 	std::array<std::string,100> spec_strs;
 	std::array<std::string,20> sign_strs;
@@ -106,7 +105,6 @@ public:
 	virtual void append(legacy::ave_tr_type& old, int town_num);
 	virtual void append(legacy::tiny_tr_type& old, int town_num);
 	virtual ter_num_t& terrain(size_t x, size_t y) = 0;
-	virtual rectangle& room_rect(size_t i) = 0;
 	virtual cCreature& creatures(size_t i) = 0;
 	virtual unsigned char& lighting(size_t i, size_t r) = 0;
 	virtual short max_dim() const = 0;

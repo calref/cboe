@@ -344,8 +344,8 @@ static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, short
 		me.toast(true);
 		std::string str = me["area"].getText().substr(0,29);
 		if(str_mode == 0)
-			current_terrain->rect_names[which_str];
-		else town->rect_names[which_str];
+			current_terrain->info_rect[which_str].descr;
+		else town->room_rect[which_str].descr;
 	} else if(item_hit == "cancel") {
 		me.setResult(false);
 		me.toast(false);
@@ -361,8 +361,8 @@ bool edit_area_rect_str(short which_str,short mode) {
 	dlog.attachClickHandlers(std::bind(edit_area_rect_event_filter, _1, _2, which_str, mode), {"okay", "cancel"});
 	
 	if(mode == 0)
-		dlog["area"].setText(current_terrain->rect_names[which_str]);
-	else dlog["area"].setText(town->rect_names[which_str]);
+		dlog["area"].setText(current_terrain->info_rect[which_str].descr);
+	else dlog["area"].setText(town->room_rect[which_str].descr);
 	
 	dlog.run();
 	

@@ -667,7 +667,7 @@ void draw_text_bar() {
 	if(is_out()) {
 		for(i = 0; i < 8; i++)
 			if(loc.in(univ.out->info_rect[i])) {
-				put_text_bar(univ.out->rect_names[i]);
+				put_text_bar(univ.out->info_rect[i].descr);
 				in_area = true;
 			}
 		if(!in_area) {
@@ -676,8 +676,8 @@ void draw_text_bar() {
 	}
 	if(is_town()) {
 		for(i = 0; i < 16; i++)
-			if(loc.in(univ.town->room_rect(i))) {
-				put_text_bar(univ.town->rect_names[i]);
+			if(loc.in(univ.town->room_rect[i])) {
+				put_text_bar(univ.town->room_rect[i].descr);
 				in_area = true;
 			}
 		if(!in_area) {

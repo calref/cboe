@@ -71,8 +71,6 @@ void cTown::append(legacy::town_record_type& old){
 		timer_spec_times[i] = old.timer_spec_times[i];
 		timer_specs[i] = old.timer_specs[i];
 	}
-	for(i = 0; i < 180; i++)
-		strlens[i] = old.strlens[i];
 	for(i = 0; i < 100; i++)
 		specials[i].append(old.specials[i]);
 	difficulty = old.difficulty;
@@ -140,14 +138,13 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 		temp_str = get_str("town-default",i + 1);
 		if(i == 0) town_name = temp_str;
 		else if(i >= 1 && i < 17)
-			rect_names[i-1] = temp_str;
+			room_rect[i-1].descr = temp_str;
 		else if(i >= 17 && i < 20)
 			comment[i-17] = temp_str;
 		else if(i >= 20 && i < 120)
 			spec_strs[i-20] = temp_str;
 		else if(i >= 120 && i < 140)
 			sign_strs[i-120] = temp_str;
-		strlens[i] = temp_str.length();
 	}
 	
 	for(i = 0; i < 200; i++)

@@ -292,11 +292,11 @@ static bool save_roomdescs(cDialog& me, bool isTown, bool str_do_delete[]) {
 	for(int i = 0; i < numDescs; i++) {
 		std::string id = "desc" + std::to_string(i + 1);
 		if(isTown) {
-			town->rect_names[i] = me[id].getText().substr(0,30);
+			town->room_rect[i].descr = me[id].getText().substr(0,30);
 			if(str_do_delete[i])
-				town->room_rect(i).right = 0;
+				town->room_rect[i].right = 0;
 		} else {
-			current_terrain->rect_names[i] = me[id].getText().substr(0,30);
+			current_terrain->info_rect[i].descr = me[id].getText().substr(0,30);
 			if(str_do_delete[i])
 				current_terrain->info_rect[i].right = 0;
 		}
@@ -310,17 +310,17 @@ static void put_roomdescs_in_dlog(cDialog& me, bool isTown, bool str_do_delete[]
 		std::string id = std::to_string(i + 1);
 		std::ostringstream str;
 		bool active = true;
-		if(isTown && town->room_rect(i).right == 0) active = false;
+		if(isTown && town->room_rect[i].right == 0) active = false;
 		if(!isTown && current_terrain->info_rect[i].right == 0) active = false;
 		if(str_do_delete[i]) active = false;
 		if(!active) {
 			str << "Not yet placed.";
 			me["del" + id].hide();
 		} else if(isTown) {
-			me["desc" + id].setText(town->rect_names[i]);
-			str << "X = " << town->room_rect(i).left << ", Y = " << town->room_rect(i).top;
+			me["desc" + id].setText(town->room_rect[i].descr);
+			str << "X = " << town->room_rect[i].left << ", Y = " << town->room_rect[i].top;
 		} else {
-			me["desc" + id].setText(current_terrain->rect_names[i]);
+			me["desc" + id].setText(current_terrain->info_rect[i].descr);
 			str << "X = " << current_terrain->info_rect[i].left << ", Y = " << current_terrain->info_rect[i].top;
 		}
 		me["rect" + id].setText(str.str());

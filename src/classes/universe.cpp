@@ -44,10 +44,10 @@ void cCurTown::append(legacy::big_tr_type& old){
 		for(j = 0; j < record()->max_dim(); j++)
 			record()->terrain(i,j) = old.terrain[i][j];
 	for(i = 0; i < 16; i++){
-		record()->room_rect(i).top = old.room_rect[i].top;
-		record()->room_rect(i).left = old.room_rect[i].left;
-		record()->room_rect(i).bottom = old.room_rect[i].bottom;
-		record()->room_rect(i).right = old.room_rect[i].right;
+		record()->room_rect[i].top = old.room_rect[i].top;
+		record()->room_rect[i].left = old.room_rect[i].left;
+		record()->room_rect[i].bottom = old.room_rect[i].bottom;
+		record()->room_rect[i].right = old.room_rect[i].right;
 	}
 	for(i = 0; i < record()->max_monst(); i++)
 		record()->creatures(i).append(old.creatures[i]);

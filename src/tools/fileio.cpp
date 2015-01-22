@@ -314,7 +314,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		temp_str[len] = 0;
 		if(i == 0) the_town.town_name = temp_str;
 		else if(i >= 1 && i < 17)
-			the_town.rect_names[i-1] = temp_str;
+			the_town.room_rect[i-1].descr = temp_str;
 		else if(i >= 17 && i < 20)
 			the_town.comment[i-17] = temp_str;
 		else if(i >= 20 && i < 120)
@@ -445,7 +445,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 		temp_str[len] = 0;
 		if(i == 0) the_out.out_name = temp_str;
 		else if(i == 9) the_out.comment = temp_str;
-		else if(i < 9) the_out.rect_names[i-1] = temp_str;
+		else if(i < 9) the_out.info_rect[i-1].descr = temp_str;
 		else if(i >= 10 && i < 100)
 			the_out.spec_strs[i-10] = temp_str;
 		else if(i >= 100 && i < 108)

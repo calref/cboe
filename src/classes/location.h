@@ -10,6 +10,7 @@
 #define BOE_LOCATION_H
 
 #include <SFML/Graphics.hpp>
+#include <string>
 
 struct rectangle;
 
@@ -73,6 +74,10 @@ struct rectangle {
 	operator typename sf::template Rect<T>() {
 		return sf::Rect<T>(left, top, width(), height());
 	}
+};
+
+struct info_rect_t : public rectangle {
+	std::string descr;
 };
 
 bool operator == (location p1,location p2);

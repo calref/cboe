@@ -25,10 +25,6 @@ void cBigTemplTown::readTerrainFrom(std::istream& /*file*/) {
 	// TODO: Read in the terrain somehow
 }
 
-rectangle& cBigTemplTown::room_rect(size_t i){
-	return _room_rect[i];
-}
-
 cCreature& cBigTemplTown::creatures(size_t i){
 	return _creatures[i];
 }
