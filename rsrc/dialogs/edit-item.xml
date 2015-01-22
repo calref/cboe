@@ -90,4 +90,5 @@
 		Click Edit Abilities to edit item abilities.
 	</text>
 	<button name="abils" type='large' top='357' left='155'>Abilities</button>
+	<button name="desc" type='large' top='357' left='263'>Description</button>
 </dialog>

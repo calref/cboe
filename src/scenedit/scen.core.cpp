@@ -1368,6 +1368,15 @@ static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem
 		i = pick_picture(PIC_MISSILE, me, "missile", "missile-pic");
 		if(i < 0) return true;
 		store_item.missile = i;
+	} else if(item_hit == "desc") {
+		cDialog desc_dlg("edit-text", &me);
+		desc_dlg["left"].hide();
+		desc_dlg["right"].hide();
+		desc_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &desc_dlg, true));
+		desc_dlg["text"].setText(store_item.desc);
+		desc_dlg["num-lbl"].setText(store_item.full_name);
+		desc_dlg.run();
+		store_item.desc = desc_dlg["text"].getText();
 	} else if(item_hit == "abils") {
 		save_item_info(me, store_item, store_which_item);
 		if(store_item.variety == eItemType::NO_ITEM) {
@@ -1432,7 +1441,7 @@ short edit_item_type(short which_item) {
 	item_dlg["weight"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 250, "Weight"));
 	item_dlg["class"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Special Class"));
 	item_dlg["variety"].attachFocusHandler(std::bind(change_item_variety, _1, _2, std::ref(store_item)));
-	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(store_item), std::ref(which_item)), {"okay", "cancel", "prev", "next", "abils", "choosepic", "choosetp", "choosemiss"});
+	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(store_item), std::ref(which_item)), {"okay", "cancel", "prev", "next", "abils", "choosepic", "choosetp", "choosemiss", "desc"});
 	
 	put_item_info_in_dlog(item_dlg, store_item, which_item);
 	

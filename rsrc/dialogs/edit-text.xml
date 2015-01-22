@@ -7,6 +7,6 @@
 	<text name='num' top='8' left='315' width='40' height='14'/>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='138' height='17'>Editing text:</text>
-	<text top='8' left='197' width='111' height='14'>Text number:</text>
+	<text name='num-lbl' top='8' left='197' width='111' height='14'>Text number:</text>
 	<button name='okay' type='regular' top='141' left='279'>OK</button>
 </dialog>

@@ -53,7 +53,7 @@ public:
 	unsigned char rec_treas_class() const;
 	short item_weight() const;
 	
-	std::string getAbilName();
+	std::string getAbilName() const;
 	
 	cItem();
 	explicit cItem(long preset);

@@ -190,14 +190,14 @@ static void put_item_info(cDialog& me,const cItem& s_i) {
 	
 	// id? magic?
 	cLed& id = dynamic_cast<cLed&>(me["id"]);
-	if(s_i.magic && s_i.ident)
+	if(s_i.ident)
 		id.setState(led_red);
 	else id.setState(led_off);
 	cLed& magic = dynamic_cast<cLed&>(me["magic"]);
-	if(s_i.ident)
+	if(s_i.magic && s_i.ident)
 		magic.setState(led_red);
 	else magic.setState(led_off);
-	me["type"].setText(get_str("item-types-display", (int)s_i.variety));
+	me["type"].setText(get_str("item-types-display", int(s_i.variety)));
 	
 	// Clear fields
 	me["val"].setText("");
@@ -210,12 +210,13 @@ static void put_item_info(cDialog& me,const cItem& s_i) {
 	me["abil"].setText("");
 	
 	if(!s_i.ident) {
-		me["name"].setText(s_i.name.c_str());
+		me["name"].setText(s_i.name);
 		return;
 	}
 	
-	me["name"].setText(s_i.full_name.c_str());
+	me["name"].setText(s_i.full_name);
 	me["weight"].setTextToNum(s_i.item_weight());
+	me["desc"].setText(s_i.desc);
 	
 	// TODO: This calculation (value for an item with charges) should be in a member function of cItem
 	me["val"].setTextToNum((s_i.charges > 0) ? s_i.value * s_i.charges : s_i.value);
@@ -224,9 +225,7 @@ static void put_item_info(cDialog& me,const cItem& s_i) {
 		if(s_i.concealed) {
 			me["abil"].setText("???");
 		} else {
-			// TODO: More descriptive ability descriptions, taking into account potential variation
-			desc_str = get_str("item-abilities",int(s_i.ability) + 1);
-			me["abil"].setText(desc_str.c_str());
+			me["abil"].setText(s_i.getAbilName());
 		}
 	}
 	if(s_i.charges > 0)
@@ -238,29 +237,14 @@ static void put_item_info(cDialog& me,const cItem& s_i) {
 	switch(s_i.variety) {
 		case eItemType::ONE_HANDED:
 		case eItemType::TWO_HANDED:
-			switch(s_i.weap_type) {
-				case eSkill::EDGED_WEAPONS:
-					store_text = "Edged weapon";
-					break;
-				case eSkill::BASHING_WEAPONS:
-					store_text = "Bashing weapon";
-					break;
-				case eSkill::POLE_WEAPONS:
-					store_text = "Pole weapon";
-					break;
-				case eSkill::INVALID:
-				default:
-					store_text = "Error weapon"; // should never be reached
-			}
-			// TODO: I wonder if this would fit better in the Item Type box?
-			if(s_i.ability == eItemAbil::NONE)
-				me["abil"].setText(store_text);
 		case eItemType::BOW:
 		case eItemType::CROSSBOW:
-		case eItemType::ARROW:
 		case eItemType::THROWN_MISSILE:
-		case eItemType::BOLTS:
 		case eItemType::MISSILE_NO_AMMO:
+			if(s_i.ability == eItemAbil::NONE)
+				me["abil"].setText("Key skill: " + get_str("skills", int(s_i.weap_type) * 2 + 1));
+		case eItemType::ARROW:
+		case eItemType::BOLTS:
 			me["dmg"].setTextToNum(s_i.item_level);
 			me["bonus"].setTextToNum(s_i.bonus);
 			break;
@@ -329,21 +313,6 @@ void display_pc_item(short pc_num,short item,cItem si,cDialog* parent) {
 		itemInfo["left"].hide();
 		itemInfo["right"].hide();
 	}
-	itemInfo.addLabelFor("name", "Name:", LABEL_LEFT, 26, true);
-	itemInfo.addLabelFor("type", "Type:", LABEL_LEFT, 26, true);
-	itemInfo.addLabelFor("val", "Value:", LABEL_LEFT, 20, true);
-	itemInfo.addLabelFor("dmg", "Damage:", LABEL_LEFT, 26, true);
-	itemInfo.addLabelFor("bonus", "Bonus:", LABEL_LEFT, 24, true);
-	itemInfo.addLabelFor("def", "Defend:", LABEL_LEFT, 25, true);
-	itemInfo.addLabelFor("enc", "Encumb.:", LABEL_LEFT, 29, true);
-	itemInfo.addLabelFor("use", "Uses:", LABEL_LEFT, 19, true);
-	itemInfo.addLabelFor("lvl", "Item Level:", LABEL_LEFT, 37, true);
-	itemInfo.addLabelFor("abil", "Ability", LABEL_LEFT, 26, true);
-	itemInfo.addLabelFor("id", "ID?", LABEL_LEFT, 13, true);
-	itemInfo.addLabelFor("magic", "Magic?", LABEL_LEFT, 22, true);
-	itemInfo.addLabelFor("weight", "Weight", LABEL_LEFT, 27, true);
-	
-	itemInfo["desc"].hide();
 	
 	put_item_info(itemInfo,si);
 	

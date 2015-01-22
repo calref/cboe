@@ -134,7 +134,7 @@ cItem::cItem(long preset){
 			bonus = 0;
 			protection = 0;
 			charges = 0;
-			weap_type = eSkill::INVALID;
+			weap_type = eSkill::ARCHERY;
 			magic_use_type = 0;
 			graphic_num = 10;
 			value = 15;
@@ -199,7 +199,7 @@ cItem::cItem(long preset){
 			bonus = 1;
 			protection = 0;
 			charges = 8;
-			weap_type = eSkill::INVALID;
+			weap_type = eSkill::THROWN_MISSILES;
 			magic_use_type = 0;
 			graphic_num = 59;
 			missile = 7;
@@ -932,7 +932,7 @@ void cItem::append(legacy::item_record_type& old){
 	}
 }
 
-std::string cItem::getAbilName() {
+std::string cItem::getAbilName() const {
 	bool harmful = magic_use_type % 2;
 	bool party = magic_use_type >= 2;
 	std::ostringstream sout;
