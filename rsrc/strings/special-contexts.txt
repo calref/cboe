@@ -17,11 +17,11 @@ Won outdoor encounter
 Targetung spell
 Using space
 Seeing a monster for the first time
-
-
-
-
-
+Monster using special ability
+Attacking at melee
+Being attacked at melee
+Attacking at range
+Being attacked at range
 
 
 

@@ -523,7 +523,7 @@ static bool edit_spec_enc_type(cDialog& me, std::string item_hit, node_stack_t& 
 		else choices.push_back(name);
 	}
 	size_t cancelled = -1, result;
-	cStringChoice choose(choices, "Select a special node type:");
+	cStringChoice choose(choices, "Select a special node type:",&me);
 	result = choose.show((current < start || current > finish) ? cancelled : current - start);
 	if(result != cancelled) {
 		edit_stack.top().node.type = eSpecType(result + start);
@@ -753,7 +753,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case '#':
 			choose_string = false;
 			store = val;
-			giveError("Either you have not chosen a shop type yet, or the shop type you chose doesn't allow you to customize its items.");
+			giveError("Either you have not chosen a shop type yet, or the shop type you chose doesn't allow you to customize its items.",&me);
 			break;
 		default:
 			choose_string = false;

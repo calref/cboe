@@ -495,6 +495,36 @@ void cLedGroup::draw(){
 void cButton::setBtnType(eBtnType newType){
 	if(type == BTN_LED || newType == BTN_LED) return; // can't change type
 	type = newType;
+	switch(newType) {
+		case BTN_SM:
+			frame.width() = 23;
+			frame.height() = 23;
+			break;
+		case BTN_REG: case BTN_DONE:
+		case BTN_LEFT: case BTN_RIGHT:
+		case BTN_UP: case BTN_DOWN:
+			frame.width() = 63;
+			frame.height() = 23;
+			break;
+		case BTN_LG:
+			frame.width() = 102;
+			frame.height() = 23;
+			break;
+		case BTN_HELP:
+			frame.width() = 16;
+			frame.height() = 13;
+			break;
+		case BTN_TALL:
+		case BTN_TRAIT:
+			frame.width() = 63;
+			frame.height() = 40;
+			break;
+		case BTN_PUSH:
+			frame.width() = 30;
+			frame.height() = 30;
+			break;
+
+	}
 }
 
 eBtnType cButton::getBtnType(){

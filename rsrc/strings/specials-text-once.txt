@@ -142,35 +142,35 @@ Special if item IS taken
 Unused
 Special to Jump To
 --------------------
-Give Item (Terrain pic)
-Stuff Done Flag Part A
-Stuff Done Flag Part B
-Number of first message in dialog
-Num. of spec. item to give (-1 none)
+Unused Node
 Unused
-Terrain Picture number
 Unused
-Item to give
-Amount of gold to give
 Unused
-Amount of food to give
-Special if item IS taken
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
 Unused
 Special to Jump To
 --------------------
-Give Item (Monster pic)
-Stuff Done Flag Part A
-Stuff Done Flag Part B
-Number of first message in dialog
-Num. of spec. item to give (-1 none)
+Unused Node
 Unused
-Monster Picture number
 Unused
-Item to give
-Amount of gold to give
 Unused
-Amount of food to give
-Special if item IS taken
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
 Unused
 Special to Jump To
 --------------------

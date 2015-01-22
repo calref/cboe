@@ -14,18 +14,18 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Change Out Terrain
-Unused
-Unused
-First part of message
-Second part of message
+Unused Node
 Unused
 Unused
 Unused
-X coordinate of space
-Y coordinate of space
 Unused
-Terrain to change to
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
 Unused
 Unused
 Special to Jump To

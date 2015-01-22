@@ -287,18 +287,18 @@ Unused
 Otherwise call this special
 --------------------
 If Fields?
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
+Minimum # of fields
+Maximum # of fields
 Field Type
-If any fields, call this special ...
+If enough fields, call this special ...
 Unused
 Unused
 Unused
+Top of rectangle
+Left of rectangle
+Unused
+Bottom of rectangle
+Right of rectangle
 Unused
 Otherwise call this special
 --------------------
@@ -378,7 +378,7 @@ If the party has this much of the stat ...
 Call this special ...
 Unused
 Which statistic
-Check mode (0 - cumulative, 1 - average, 2 - minimum, 3 - maximum)
+Check mode
 Unused
 Otherwise call this special
 --------------------
@@ -422,7 +422,7 @@ Unused
 Unused
 Unused
 Unused
-Which context (0 .. 18 or 100 .. 102)
+Which context (0 .. 24 or 100 .. 102)
 0 - can enter, 1 - no enter
 If context matches, call this special ...
 Unused

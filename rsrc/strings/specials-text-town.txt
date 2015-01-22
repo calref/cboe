@@ -198,8 +198,8 @@ Second part of message
 Unused
 Unused
 Unused
-Type of creature to remove
-Unused
+X coordinate of space
+Y coordinate of space
 Unused
 Unused
 Unused
@@ -214,7 +214,7 @@ Second part of message
 Unused
 Unused
 Unused
-0 - all, 1 - friendly, 2 - hostile
+Type (or 0 - all, -1 - friendly, -2 - hostile)
 Unused
 Unused
 Unused
@@ -398,7 +398,7 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Start General Timer
+Start Town Timer
 Unused
 Unused
 First part of message

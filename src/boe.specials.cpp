@@ -3771,18 +3771,16 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_DESTROY_MONST:
-			for(i = 0; i < univ.town->max_monst(); i++)
-				if(univ.town.monst[i].number == spec.ex1a) {
-					univ.town.monst[i].active = 0;
-				}
+			if(spec.ex1a >= 0 && spec.ex1b >= 0 && (i = monst_there(l)))
+				univ.town.monst[i].active = 0;
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_NUKE_MONSTS:
 			for(i = 0; i < univ.town->max_monst(); i++)
 				if((univ.town.monst[i].active > 0) &&
-					(((spec.ex1a == 0) && (1 == 1)) ||
-					 ((spec.ex1a == 1) && (univ.town.monst[i].attitude % 2 == 0)) ||
-					 ((spec.ex1a == 2) && (univ.town.monst[i].attitude % 2 == 1)))){
+					(univ.town.monst[i].number == spec.ex1a || spec.ex1a == 0 ||
+					 (spec.ex1a == -1 && univ.town.monst[i].attitude % 2 == 0) ||
+					 (spec.ex1a == -2 && univ.town.monst[i].attitude % 2 == 1)){
 						univ.town.monst[i].active = 0;
 					}
 			*redraw = 1;

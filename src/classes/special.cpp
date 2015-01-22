@@ -183,6 +183,13 @@ void cSpecial::append(legacy::special_node_type& old){
 			type = eSpecType::IF_EQUIP_ITEM_CLASS;
 			ex2a = (old.type - 131) / 5;
 			break;
+		case 182: // Destroy all monsters of particular type
+			type = eSpecType::TOWN_NUKE_MONSTS;
+			break;
+		case 183: // Destroy all monsters, or all friendly / all hostile
+			type = eSpecType::TOWN_NUKE_MONSTS;
+			ex1a = -ex1a;
+			break;
 		case 193: // Split party
 			if(ex2a > 0) ex2a = 10;
 			break;
@@ -384,11 +391,11 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // (terrain, monster, dialog, talk, item, pc, field, boom, missile, status)
 static const char*const button_dict[7][11] = {
 	{ // general nodes
-		" mmmMMmmmm mmm mmmmmm   Mmm  $ mmmmmm        ", // msg1
+		" mmmMmmmmmMmmm mmmmmm   Mmm  $ mmmmmm        ", // msg1
 		"                                             ", // msg2
 		"                                             ", // msg3
-		"                                            3", // pic
-		"                                             ", // pictype
+		"          p                                 3", // pic
+		"          ?                                  ", // pictype
 		"    #         x  T i                  M cit  ", // ex1a
 		"    &        S     ss                       c", // ex1b
 		"                                             ", // ex1c
@@ -396,16 +403,16 @@ static const char*const button_dict[7][11] = {
 		"    %                              t         ", // ex2b
 		"                                             ", // ex2c
 	}, { // one-shot nodes
-		"mm  mddddddmmm", // msg1
+		"mm  md  d  mmm", // msg1
 		"              ", // msg2
 		"        III   ", // msg3
-		"     pppppp  p", // pic
-		"     ??????  ?", // pictype
-		"iI   bbbiii  X", // ex1a
-		"     sss      ", // ex1b
+		"     p  p    p", // pic
+		"     ?  ?    ?", // pictype
+		"iI   b  i    X", // ex1a
+		"     s        ", // ex1b
 		"              ", // ex1c
-		"     bbb      ", // ex2a
-		"s    ssssss  S", // ex2b
+		"     b        ", // ex2a
+		"s    s  s    S", // ex2b
 		"              ", // ex2c
 	}, { // affect pc nodes
 		"mmmmmmmmmmm       mmmmmmmm", // msg1
@@ -420,15 +427,15 @@ static const char*const button_dict[7][11] = {
 		" D                        ", // ex2b
 		" x                        ", // ex2c
 	}, { // if-then nodes
-		"                        $  $", // msg1
-		"                            ", // msg2
+		"                  f     $  $", // msg1
+		"                  s         ", // msg2
 		"                            ", // msg3
 		"                            ", // pic
 		"                            ", // pictype
-		"      w     APae  f  Qq $ * ", // ex1a
-		"ssss  sss ssssss sss sssss =", // ex1b
+		" T I  w     APae     Qq $ * ", // ex1a
+		"ssss  sss ssssss s s sssss =", // ex1b
 		"                          ss", // ex1c
-		"                       K$   ", // ex2a
+		"     t                 K$   ", // ex2a
 		"s   ss   s     +    s==+s  =", // ex2b
 		"               =           s", // ex2c
 	}, { // town nodes
@@ -440,7 +447,7 @@ static const char*const button_dict[7][11] = {
 		"            c             L   {  ", // ex1a
 		"              s s s      s @     ", // ex1b
 		"                               }}", // ex1c
-		"@  D     ! c     T  T i        FD", // ex2a
+		"@  7     !  c    T  T i        FD", // ex2a
 		"     DD          /               ", // ex2b
 		" x x             :  :            ", // ex2c
 	}, { // rectangle nodes
@@ -456,7 +463,7 @@ static const char*const button_dict[7][11] = {
 		"                   ", // unused
 		"                   ", // ex2c
 	}, { // outdoors nodes
-		" mmmM", // msg1
+		"  mmM", // msg1
 		"     ", // msg2
 		"     ", // msg3
 		"     ", // pic
@@ -464,7 +471,7 @@ static const char*const button_dict[7][11] = {
 		"    #", // ex1a
 		"    &", // ex1b
 		"     ", // ex1c
-		" t   ", // ex2a
+		"     ", // ex2a
 		"    %", // ex2b
 		"     ", // ex2c
 	}
