@@ -264,7 +264,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			}
 			else {
 				// First set up the values.
-				cCreature& preset = univ.town->creatures(i);
+				cTownperson& preset = univ.town->creatures(i);
 				univ.town.monst.assign(i, preset, univ.scenario.scen_monsters[preset.number], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 				
 				if(univ.town.monst[i].spec_enc_code > 0)

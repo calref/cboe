@@ -1505,20 +1505,8 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		if(where_put.x > 0)
 			if((which_spot = place_monster(victim->number,where_put)) < 90) {
 				// TODO: Why so many assignments? Windows only assigns health and monst_start (start_loc I assume)
+				static_cast<cTownperson&>(univ.town.monst[which_spot]) = *victim;
 				univ.town.monst[which_spot].health = victim->health;
-				univ.town.monst[which_spot].number = victim->number;
-				univ.town.monst[which_spot].start_attitude = victim->start_attitude;
-				univ.town.monst[which_spot].start_loc = victim->start_loc;
-				univ.town.monst[which_spot].mobility = victim->mobility;
-				univ.town.monst[which_spot].time_flag = victim->time_flag;
-				univ.town.monst[which_spot].spec1 = victim->spec1;
-				univ.town.monst[which_spot].spec2 = victim->spec2;
-				univ.town.monst[which_spot].spec_enc_code = victim->spec_enc_code;
-				univ.town.monst[which_spot].time_code = victim->time_code;
-				univ.town.monst[which_spot].monster_time = victim->monster_time;
-				univ.town.monst[which_spot].personality = victim->personality;
-				univ.town.monst[which_spot].special_on_kill = victim->special_on_kill;
-				univ.town.monst[which_spot].facial_pic = victim->facial_pic;
 				monst_spell_note(victim->number,27);
 			}
 	}

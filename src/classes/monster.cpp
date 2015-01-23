@@ -384,7 +384,7 @@ cMonster::cMonster(){
 }
 
 cCreature::cCreature(){
-	id = number = active = attitude = start_attitude = 0;
+	number = active = attitude = start_attitude = 0;
 	start_loc.x = start_loc.y = cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;
 	mobility = 1;
 	summoned  = 0;
@@ -398,7 +398,7 @@ cCreature::cCreature(int num) : cCreature() {
 	number = num;
 }
 
-void cCreature::append(legacy::creature_start_type old){
+void cTownperson::append(legacy::creature_start_type old){
 	number = old.number;
 	start_attitude = old.start_attitude;
 	start_loc.x = old.start_loc.x;

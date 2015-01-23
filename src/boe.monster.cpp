@@ -1360,7 +1360,7 @@ void activate_monsters(short code,short /*attitude*/) {
 		return;
 	for(i = 0; i < univ.town->max_monst(); i++)
 		if(univ.town.monst[i].spec_enc_code == code) {
-			cCreature& monst = univ.town->creatures(i);
+			cTownperson& monst = univ.town->creatures(i);
 			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 			univ.town.monst[i].spec_enc_code = 0;
 			univ.town.monst[i].active = 2;

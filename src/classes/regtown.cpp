@@ -220,7 +220,7 @@ void cTinyTown::readTerrainFrom(std::istream& file) {
 	readArray(file, _terrain, 32, 32);
 }
 
-cCreature& cTinyTown::creatures(size_t i){
+cTownperson& cTinyTown::creatures(size_t i){
 	return _creatures[i];
 }
 
@@ -240,7 +240,7 @@ void cMedTown::readTerrainFrom(std::istream& file) {
 	readArray(file, _terrain, 48, 48);
 }
 
-cCreature& cMedTown::creatures(size_t i){
+cTownperson& cMedTown::creatures(size_t i){
 	return _creatures[i];
 }
 
@@ -260,7 +260,7 @@ void cBigTown::readTerrainFrom(std::istream& file) {
 	readArray(file, _terrain, 64, 64);
 }
 
-cCreature& cBigTown::creatures(size_t i){
+cTownperson& cBigTown::creatures(size_t i){
 	return _creatures[i];
 }
 

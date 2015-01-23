@@ -30,7 +30,7 @@ extern cSpeech::cNode null_talk_node;
 extern cOutdoors* current_terrain;
 extern location cur_out;
 
-cCreature store_placed_monst,store_placed_monst2;
+cTownperson store_placed_monst,store_placed_monst2;
 short store_which_placed_monst;
 
 const char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears","",
@@ -67,7 +67,7 @@ static bool get_placed_monst_in_dlog(cDialog& me) {
 
 static bool edit_placed_monst_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	short i;
-	cCreature store_m;
+	cTownperson store_m;
 	
 	if(item_hit == "okay") {
 		if(!get_placed_monst_in_dlog(me)) return true;
@@ -189,7 +189,7 @@ static bool edit_placed_monst_adv_time_flag(cDialog& me, std::string id, bool lo
 	return true;
 }
 
-cCreature edit_placed_monst_adv(cCreature monst_record, cDialog& parent) {
+cTownperson edit_placed_monst_adv(cTownperson monst_record, cDialog& parent) {
 	store_placed_monst2 = monst_record;
 	
 	cDialog edit("edit-townperson-advanced", &parent);

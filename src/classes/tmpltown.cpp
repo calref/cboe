@@ -25,7 +25,7 @@ void cBigTemplTown::readTerrainFrom(std::istream& /*file*/) {
 	// TODO: Read in the terrain somehow
 }
 
-cCreature& cBigTemplTown::creatures(size_t i){
+cTownperson& cBigTemplTown::creatures(size_t i){
 	return _creatures[i];
 }
 

@@ -29,13 +29,12 @@ cCreature& cPopulation::operator[](size_t n){
 	return dudes[n];
 }
 
-// This function takes a preset cCreature from a scenario town record and prepares it for use in-game.
-// It's needed because in the town record, many fields are ignored, including all the superclass fields.
+// This function combines a cTownperson from a scenario town record with a cMonster from the scenario record
+// into a cCreature, and prepares it for use in-game according to the user's preferences and party strength
 // replaces return_monster_template() from boe.monsters.cpp
-void cPopulation::assign(size_t n, const cCreature& other, const cMonster& base, bool easy, int difficulty_adjust){
- 	// First do a basic assign
-	dudes[n] = other;
-	// And make sure the superclass fields are correctly populated
+void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& base, bool easy, int difficulty_adjust){
+	// First copy over the superclass fields
+	static_cast<cTownperson&>(dudes[n]) = other;
 	static_cast<cMonster&>(dudes[n]) = base;
 	// Now set up extra stuff
 	dudes[n].active = 1; // TODO: Is this right?

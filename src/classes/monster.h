@@ -163,20 +163,27 @@ enum class eMonstTime {
 	APPEAR_AFTER_CHOP,
 };
 
-class cCreature : public cMonster {
+class cTownperson {
 public:
-	unsigned long id;
 	mon_num_t number;
-	short active, attitude;
 	unsigned int start_attitude;
-	location start_loc, cur_loc;
+	location start_loc;
 	unsigned short mobility;
 	eMonstTime time_flag;
-	short summoned;
 	short spec1, spec2;
-	char spec_enc_code, time_code;
+	short spec_enc_code, time_code;
 	short monster_time, personality;
-	short special_on_kill, facial_pic;
+	short special_on_kill;
+	pic_num_t facial_pic;
+	
+	void append(legacy::creature_start_type old);
+};
+
+class cCreature : public cMonster, public cTownperson {
+public:
+	short active, attitude;
+	location cur_loc;
+	short summoned;
 	short target;
 	location targ_loc;
 	short health;
@@ -192,7 +199,6 @@ public:
 	cCreature(int num);
 	
 	void append(legacy::creature_data_type old);
-	void append(legacy::creature_start_type old);
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 };

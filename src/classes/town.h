@@ -105,7 +105,7 @@ public:
 	virtual void append(legacy::ave_tr_type& old, int town_num);
 	virtual void append(legacy::tiny_tr_type& old, int town_num);
 	virtual ter_num_t& terrain(size_t x, size_t y) = 0;
-	virtual cCreature& creatures(size_t i) = 0;
+	virtual cTownperson& creatures(size_t i) = 0;
 	virtual unsigned char& lighting(size_t i, size_t r) = 0;
 	virtual size_t max_dim() const = 0;
 	virtual size_t max_monst() const = 0;

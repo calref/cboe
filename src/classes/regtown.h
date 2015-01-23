@@ -25,12 +25,12 @@ namespace legacy {
 class cBigTown : public cTown { // formerly big_tr_type
 protected:
 	ter_num_t _terrain[64][64];
-	cCreature _creatures[60];
+	cTownperson _creatures[60];
 	unsigned char _lighting[8][64];
 public:
 	void append(legacy::big_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
-	cCreature& creatures(size_t i);
+	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	size_t max_monst() const;
@@ -44,12 +44,12 @@ public:
 class cMedTown : public cTown { // formerly ave_tr_type
 protected:
 	ter_num_t _terrain[48][48];
-	cCreature _creatures[40];
+	cTownperson _creatures[40];
 	unsigned char _lighting[6][48];
 public:
 	void append(legacy::ave_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
-	cCreature& creatures(size_t i);
+	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	size_t max_monst() const;
@@ -63,12 +63,12 @@ public:
 class cTinyTown : public cTown { // formerly tiny_tr_type
 protected:
 	ter_num_t _terrain[32][32];
-	cCreature _creatures[30];
+	cTownperson _creatures[30];
 	unsigned char _lighting[4][32];
 public:
 	void append(legacy::tiny_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
-	cCreature& creatures(size_t i);
+	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	size_t max_monst() const;

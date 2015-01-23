@@ -38,12 +38,12 @@ public:
 
 class cBigTemplTown : public cBigTown, cTemplTown {
 private:
-	//cCreature _creatures[60];
+	//cTownperson _creatures[60];
 	//ter_num_t _terrain[64][64];
 	//unsigned char _lighting[4][32];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	cCreature& creatures(size_t i);
+	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	size_t max_monst() const;
@@ -55,12 +55,12 @@ public:
 
 class cMedTemplTown : public cMedTown, cTemplTown {
 private:
-	//cCreature _creatures[40];
+	//cTownperson _creatures[40];
 	//ter_num_t _terrain[48][48];
 	//unsigned char _lighting[4][32];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	cCreature& creatures(size_t i);
+	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	size_t max_monst() const;
@@ -72,12 +72,12 @@ public:
 
 class cTinyTemplTown : public cTinyTown, cTemplTown {
 private:
-	//cCreature _creatures[30];
+	//cTownperson _creatures[30];
 	//ter_num_t _terrain[32][32];
 	//unsigned char _lighting[4][32];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	cCreature& creatures(size_t i);
+	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	size_t max_monst() const;

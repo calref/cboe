@@ -98,7 +98,7 @@ short town_buttons[6][10] = {
 	{50,51,52,53,54,55,56,57,-1,69},
 };
 
-cCreature last_placed_monst;
+cTownperson last_placed_monst;
 
 rectangle working_rect;
 location last_space_hit;
