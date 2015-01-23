@@ -34,20 +34,20 @@ const char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 -
 	"Unused","Unused","Unused",
 	"Event code (0 - no event)","Event code (0 - no event)","Unused"};
 
-static void put_placed_monst_in_dlog(cDialog& me, cTownperson& store_placed_monst, const short store_which_placed_monst) {
-	me["num"].setTextToNum(store_which_placed_monst);
-	me["type"].setText(scenario.scen_monsters[store_placed_monst.number].m_name);
+static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const short which) {
+	me["num"].setTextToNum(which);
+	me["type"].setText(scenario.scen_monsters[monst.number].m_name);
 	// TODO: Make attitude an enum
-	dynamic_cast<cLedGroup&>(me["attitude"]).setSelected("att" + std::to_string(store_placed_monst.start_attitude + 1));
-	dynamic_cast<cLedGroup&>(me["mobility"]).setSelected("mob" + std::to_string(store_placed_monst.mobility + 1));
-	me["talk"].setTextToNum(store_placed_monst.personality);
-	me["picnum"].setTextToNum(store_placed_monst.facial_pic);
+	dynamic_cast<cLedGroup&>(me["attitude"]).setSelected("att" + std::to_string(monst.start_attitude + 1));
+	dynamic_cast<cLedGroup&>(me["mobility"]).setSelected("mob" + std::to_string(monst.mobility + 1));
+	me["talk"].setTextToNum(monst.personality);
+	me["picnum"].setTextToNum(monst.facial_pic);
 	// TODO: Use -1 instead of 0 for "no pic", since 0 is a valid talking picture
- 	if(short(store_placed_monst.facial_pic) < 0)
-		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_monsters[store_placed_monst.number].picture_num, PIC_MONST);
-	else if((store_placed_monst.facial_pic >= 1000))
-		dynamic_cast<cPict&>(me["pic"]).setPict(store_placed_monst.facial_pic - 1000,PIC_CUSTOM_TALK);
-	else dynamic_cast<cPict&>(me["pic"]).setPict(store_placed_monst.facial_pic,PIC_TALK);
+ 	if(short(monst.facial_pic) < 0)
+		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_monsters[monst.number].picture_num, PIC_MONST);
+	else if((monst.facial_pic >= 1000))
+		dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic - 1000,PIC_CUSTOM_TALK);
+	else dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic,PIC_TALK);
 }
 
 static void get_placed_monst_in_dlog(cDialog& me, cTownperson& store_placed_monst) {
@@ -57,62 +57,62 @@ static void get_placed_monst_in_dlog(cDialog& me, cTownperson& store_placed_mons
 	store_placed_monst.facial_pic = me["picnum"].getTextAsNum();
 }
 
-static bool edit_placed_monst_event_filter(cDialog& me, std::string item_hit, cTownperson& store_placed_monst, const short store_which_placed_monst) {
+static bool edit_placed_monst_event_filter(cDialog& me, std::string hit, cTownperson& monst, const short which) {
 	short i;
 	cTownperson store_m;
 	
-	if(item_hit == "okay") {
+	if(hit == "okay") {
 		if(!me.toast(true)) return true;
-		get_placed_monst_in_dlog(me, store_placed_monst);
-		town->creatures[store_which_placed_monst] = store_placed_monst;
-	} else if(item_hit == "cancel") {
+		get_placed_monst_in_dlog(me, monst);
+		town->creatures[which] = monst;
+	} else if(hit == "cancel") {
 		me.toast(false);
-	} else if(item_hit == "del") {
+	} else if(hit == "del") {
 		me.toast(false);
-		town->creatures[store_which_placed_monst].number = 0;
-	} else if(item_hit == "type-edit") {
-		get_placed_monst_in_dlog(me, store_placed_monst);
-		i = choose_text(STRT_MONST,store_placed_monst.number,&me,"Choose Which Monster:");
+		town->creatures[which].number = 0;
+	} else if(hit == "type-edit") {
+		get_placed_monst_in_dlog(me, monst);
+		i = choose_text(STRT_MONST,monst.number,&me,"Choose Which Monster:");
 		if(i >= 0) {
-			store_placed_monst.number = i;
-			put_placed_monst_in_dlog(me, store_placed_monst, store_which_placed_monst);
+			monst.number = i;
+			put_placed_monst_in_dlog(me, monst, which);
 		}
-	} else if(item_hit == "pict-edit") {
-		get_placed_monst_in_dlog(me, store_placed_monst);
-		i = choose_graphic(store_placed_monst.facial_pic,PIC_TALK,&me);
-		store_placed_monst.facial_pic = i;
-		put_placed_monst_in_dlog(me, store_placed_monst, store_which_placed_monst);
-	} else if(item_hit == "talk-edit") {
-		get_placed_monst_in_dlog(me, store_placed_monst);
-		i = choose_text(STRT_TALK, store_placed_monst.personality, &me, "Which personality?");
+	} else if(hit == "pict-edit") {
+		get_placed_monst_in_dlog(me, monst);
+		i = choose_graphic(monst.facial_pic,PIC_TALK,&me);
+		monst.facial_pic = i;
+		put_placed_monst_in_dlog(me, monst, which);
+	} else if(hit == "talk-edit") {
+		get_placed_monst_in_dlog(me, monst);
+		i = choose_text(STRT_TALK, monst.personality, &me, "Which personality?");
 		if(i >= 0)
-			store_placed_monst.personality = i;
-		put_placed_monst_in_dlog(me, store_placed_monst, store_which_placed_monst);
-	} else if(item_hit == "more") { //advanced
-		store_m = edit_placed_monst_adv(store_placed_monst, store_which_placed_monst, me);
+			monst.personality = i;
+		put_placed_monst_in_dlog(me, monst, which);
+	} else if(hit == "more") { //advanced
+		store_m = edit_placed_monst_adv(monst, which, me);
 		if(store_m.number != 0)
-			store_placed_monst = store_m;
+			monst = store_m;
 	}
 	return true;
 }
 
 void edit_placed_monst(short which_m) {
 	using namespace std::placeholders;
-	cTownperson store_placed_monst = town->creatures[which_m];
+	cTownperson monst = town->creatures[which_m];
 	
 	cDialog edit("edit-townperson");
-	edit.attachClickHandlers(std::bind(edit_placed_monst_event_filter, _1, _2, std::ref(store_placed_monst), which_m), {"type-edit", "pict-edit", "talk-edit", "okay", "cancel", "more", "del"});
+	edit.attachClickHandlers(std::bind(edit_placed_monst_event_filter, _1, _2, std::ref(monst), which_m), {"type-edit", "pict-edit", "talk-edit", "okay", "cancel", "more", "del"});
 	
-	put_placed_monst_in_dlog(edit, store_placed_monst, which_m);
+	put_placed_monst_in_dlog(edit, monst, which_m);
 	
 	edit.run();
 }
 
-static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& store_placed_monst2, const short store_which_placed_monst) {
-	me["num"].setTextToNum(store_which_placed_monst);
-	me["type"].setText(scenario.scen_monsters[store_placed_monst2.number].m_name);
+static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst, const short which) {
+	me["num"].setTextToNum(which);
+	me["type"].setText(scenario.scen_monsters[monst.number].m_name);
 	int iTime = 0;
-	switch(store_placed_monst2.time_flag) {
+	switch(monst.time_flag) {
 		case eMonstTime::ALWAYS: iTime = 0; break;
 		case eMonstTime::APPEAR_ON_DAY: iTime = 1; break;
 		case eMonstTime::DISAPPEAR_ON_DAY: iTime = 2; break;
@@ -126,47 +126,47 @@ static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& store_placed_
 	dynamic_cast<cLedGroup&>(me["time"]).setSelected("time" + std::to_string(iTime + 1));
 	me["extra1-lbl"].setText(day_str_1[iTime]);
 	me["extra2-lbl"].setText(day_str_2[iTime]);
-	me["extra1"].setTextToNum(store_placed_monst2.monster_time);
-	me["extra2"].setTextToNum(store_placed_monst2.time_code);
-	me["group"].setTextToNum(store_placed_monst2.spec_enc_code);
-	me["death"].setTextToNum(store_placed_monst2.special_on_kill);
-	me["sdfx"].setTextToNum(store_placed_monst2.spec1);
-	me["sdfy"].setTextToNum(store_placed_monst2.spec2);
+	me["extra1"].setTextToNum(monst.monster_time);
+	me["extra2"].setTextToNum(monst.time_code);
+	me["group"].setTextToNum(monst.spec_enc_code);
+	me["death"].setTextToNum(monst.special_on_kill);
+	me["sdfx"].setTextToNum(monst.spec1);
+	me["sdfy"].setTextToNum(monst.spec2);
 }
 
-static bool get_placed_monst_adv_in_dlog(cDialog& me, cTownperson& store_placed_monst2) {
+static bool get_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst) {
 	switch(dynamic_cast<cLedGroup&>(me["time"]).getSelected()[4] - '1') {
-		case 0: store_placed_monst2.time_flag = eMonstTime::ALWAYS; break;
-		case 1: store_placed_monst2.time_flag = eMonstTime::APPEAR_ON_DAY; break;
-		case 2: store_placed_monst2.time_flag = eMonstTime::DISAPPEAR_ON_DAY; break;
-		case 3: store_placed_monst2.time_flag = eMonstTime::SOMETIMES_A; break;
-		case 4: store_placed_monst2.time_flag = eMonstTime::SOMETIMES_B; break;
-		case 5: store_placed_monst2.time_flag = eMonstTime::SOMETIMES_C; break;
-		case 6: store_placed_monst2.time_flag = eMonstTime::APPEAR_WHEN_EVENT; break;
-		case 7: store_placed_monst2.time_flag = eMonstTime::DISAPPEAR_WHEN_EVENT; break;
-		case 8: store_placed_monst2.time_flag = eMonstTime::APPEAR_AFTER_CHOP; break;
+		case 0: monst.time_flag = eMonstTime::ALWAYS; break;
+		case 1: monst.time_flag = eMonstTime::APPEAR_ON_DAY; break;
+		case 2: monst.time_flag = eMonstTime::DISAPPEAR_ON_DAY; break;
+		case 3: monst.time_flag = eMonstTime::SOMETIMES_A; break;
+		case 4: monst.time_flag = eMonstTime::SOMETIMES_B; break;
+		case 5: monst.time_flag = eMonstTime::SOMETIMES_C; break;
+		case 6: monst.time_flag = eMonstTime::APPEAR_WHEN_EVENT; break;
+		case 7: monst.time_flag = eMonstTime::DISAPPEAR_WHEN_EVENT; break;
+		case 8: monst.time_flag = eMonstTime::APPEAR_AFTER_CHOP; break;
 	}
-	store_placed_monst2.monster_time = me["extra1"].getTextAsNum();
-  	if(cre(store_placed_monst2.monster_time,0,1000,"Given day must be from 0 to 1000.","",&me)) return false;
-	store_placed_monst2.time_code = me["extra2"].getTextAsNum();
-  	if(cre(store_placed_monst2.time_code,0,10,"Event code must be 0 (for no event) or from 1 to 10.","",&me)) return false;
-	store_placed_monst2.special_on_kill = me["death"].getTextAsNum();
-  	if(cre(store_placed_monst2.special_on_kill,-1,99,"Town special node number must be from 0 to 99 (or -1 for no special).","",&me)) return false;
-	store_placed_monst2.spec1 = me["sdfx"].getTextAsNum();
-  	if(cre(store_placed_monst2.spec1,-1,299,"First part of special flag must be -1 (if this is to be ignored) or from 0 to 299.","",&me)) return false;
-	store_placed_monst2.spec2 = me["sdfy"].getTextAsNum();
-  	if(cre(store_placed_monst2.spec2,-1,9,"Second part of special flag must be -1 (if this is to be ignored) or from 0 to 9.","",&me)) return false;
+	monst.monster_time = me["extra1"].getTextAsNum();
+  	if(cre(monst.monster_time,0,1000,"Given day must be from 0 to 1000.","",&me)) return false;
+	monst.time_code = me["extra2"].getTextAsNum();
+  	if(cre(monst.time_code,0,10,"Event code must be 0 (for no event) or from 1 to 10.","",&me)) return false;
+	monst.special_on_kill = me["death"].getTextAsNum();
+  	if(cre(monst.special_on_kill,-1,99,"Town special node number must be from 0 to 99 (or -1 for no special).","",&me)) return false;
+	monst.spec1 = me["sdfx"].getTextAsNum();
+  	if(cre(monst.spec1,-1,299,"First part of special flag must be -1 (if this is to be ignored) or from 0 to 299.","",&me)) return false;
+	monst.spec2 = me["sdfy"].getTextAsNum();
+  	if(cre(monst.spec2,-1,9,"Second part of special flag must be -1 (if this is to be ignored) or from 0 to 9.","",&me)) return false;
 	
-	store_placed_monst2.spec_enc_code = me["group"].getTextAsNum();
+	monst.spec_enc_code = me["group"].getTextAsNum();
 	return true;
 }
 
-static bool edit_placed_monst_adv_event_filter(cDialog& me, std::string item_hit, cTownperson& store_placed_monst2) {
-	if(item_hit == "okay") {
-		if(!get_placed_monst_adv_in_dlog(me, store_placed_monst2)) return true;
+static bool edit_placed_monst_adv_event_filter(cDialog& me, std::string hit, cTownperson& monst) {
+	if(hit == "okay") {
+		if(!get_placed_monst_adv_in_dlog(me, monst)) return true;
 		me.toast(true);
-	} else if(item_hit == "cancel") {
-		store_placed_monst2.number = 0;
+	} else if(hit == "cancel") {
+		monst.number = 0;
 		me.toast(false);
 	}
 	return true;
@@ -182,8 +182,8 @@ static bool edit_placed_monst_adv_time_flag(cDialog& me, std::string, bool losin
 	return true;
 }
 
-static bool edit_placed_monst_adv_death(cDialog& me, cTownperson& store_placed_monst2) {
-	short spec = store_placed_monst2.special_on_kill;
+static bool edit_placed_monst_adv_death(cDialog& me, cTownperson& monst) {
+	short spec = monst.special_on_kill;
 	if(spec < 0) {
 		spec = get_fresh_spec(2);
 		if(spec < 0) {
@@ -197,68 +197,68 @@ static bool edit_placed_monst_adv_death(cDialog& me, cTownperson& store_placed_m
 	return true;
 }
 
-cTownperson edit_placed_monst_adv(cTownperson monst_record, short which, cDialog& parent) {
+cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& parent) {
 	using namespace std::placeholders;
 	
 	cDialog edit("edit-townperson-advanced", &parent);
-	edit["okay"].attachClickHandler(std::bind(edit_placed_monst_adv_event_filter, _1, _2, std::ref(monst_record)));
-	edit["cancel"].attachClickHandler(std::bind(edit_placed_monst_adv_event_filter, _1, _2, std::ref(monst_record)));
-	edit["editdeath"].attachClickHandler(std::bind(edit_placed_monst_adv_death, _1, std::ref(monst_record)));
+	edit["okay"].attachClickHandler(std::bind(edit_placed_monst_adv_event_filter, _1, _2, std::ref(initial)));
+	edit["cancel"].attachClickHandler(std::bind(edit_placed_monst_adv_event_filter, _1, _2, std::ref(initial)));
+	edit["editdeath"].attachClickHandler(std::bind(edit_placed_monst_adv_death, _1, std::ref(initial)));
 	edit["time"].attachFocusHandler(edit_placed_monst_adv_time_flag);
 	
-	put_placed_monst_adv_in_dlog(edit,monst_record,which);
+	put_placed_monst_adv_in_dlog(edit,initial,which);
 	
 	edit.run();
 	
-	return monst_record;
+	return initial;
 }
 
-static void put_placed_item_in_dlog(cDialog& me, const cTown::cItem& store_placed_item, const short store_which_placed_item) {
+static void put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const short which) {
 	char str[256];
-	me["num"].setTextToNum(store_which_placed_item);
-	sprintf(str,"X = %d, Y = %d",store_placed_item.loc.x,store_placed_item.loc.y);
+	me["num"].setTextToNum(which);
+	sprintf(str,"X = %d, Y = %d",item.loc.x,item.loc.y);
 	me["loc"].setText(str);
-	me["name"].setText(scenario.scen_items[store_placed_item.code].full_name);
-	me["charges"].setTextToNum(store_placed_item.charges);
-	if(store_placed_item.always_there)
+	me["name"].setText(scenario.scen_items[item.code].full_name);
+	me["charges"].setTextToNum(item.charges);
+	if(item.always_there)
 		dynamic_cast<cLed&>(me["always"]).setState(led_red);
-	if(store_placed_item.property)
+	if(item.property)
 		dynamic_cast<cLed&>(me["owned"]).setState(led_red);
-	if(store_placed_item.contained)
+	if(item.contained)
 		dynamic_cast<cLed&>(me["contained"]).setState(led_red);
 	
-	dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_items[store_placed_item.code].graphic_num, PIC_ITEM);
+	dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_items[item.code].graphic_num, PIC_ITEM);
 }
 
-static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& store_placed_item, const short store_which_placed_item) {
+static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short which) {
 	if(!me.toast(true)) return true;
 	
-	store_placed_item.charges = me["charges"].getTextAsNum();
-	if(store_placed_item.charges < -1 || store_placed_item.charges > 2500) {
+	item.charges = me["charges"].getTextAsNum();
+	if(item.charges < -1 || item.charges > 2500) {
 		giveError("Number of charges/amount of gold or food must be from 0 to 2500.",
 				  "If an item with charges (not gold or food) leave this at -1 for the item to have the default number of charges.",&me);
 		return true;
 	}
 	
-	eItemType type = scenario.scen_items[store_placed_item.code].variety;
-	if(store_placed_item.charges == 0 && (type == eItemType::GOLD || type == eItemType::FOOD)) {
+	eItemType type = scenario.scen_items[item.code].variety;
+	if(item.charges == 0 && (type == eItemType::GOLD || type == eItemType::FOOD)) {
 		giveError("You must assign gold or food an amount of at least 1.","",&me);
 		return false;
 	}
 	
-	store_placed_item.always_there = dynamic_cast<cLed&>(me["always"]).getState() != led_off;
-	store_placed_item.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
-	store_placed_item.contained = dynamic_cast<cLed&>(me["contained"]).getState() != led_off;
+	item.always_there = dynamic_cast<cLed&>(me["always"]).getState() != led_off;
+	item.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
+	item.contained = dynamic_cast<cLed&>(me["contained"]).getState() != led_off;
 	
-	town->preset_items[store_which_placed_item] = store_placed_item;
+	town->preset_items[which] = item;
 	return true;
 }
 
-static bool edit_placed_item_event_filter(cDialog& me, cTown::cItem& store_placed_item, const short store_which_placed_item) {
-	short i = choose_text(STRT_ITEM, store_placed_item.code, &me, "Place which item?");
+static bool edit_placed_item_event_filter(cDialog& me, cTown::cItem& item, const short which) {
+	short i = choose_text(STRT_ITEM, item.code, &me, "Place which item?");
 	if(i >= 0) {
-		store_placed_item.code = i;
-		put_placed_item_in_dlog(me, store_placed_item, store_which_placed_item);
+		item.code = i;
+		put_placed_item_in_dlog(me, item, which);
 	}
 	return true;
 }
@@ -266,14 +266,14 @@ static bool edit_placed_item_event_filter(cDialog& me, cTown::cItem& store_place
 void edit_placed_item(short which_i) {
 	using namespace std::placeholders;
 	
-	cTown::cItem placed_item = town->preset_items[which_i];
+	cTown::cItem item = town->preset_items[which_i];
 	
 	cDialog item_dlg("edit-placed-item");
 	item_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &item_dlg, false));
-	item_dlg["okay"].attachClickHandler(std::bind(get_placed_item_in_dlog, _1, std::ref(placed_item), which_i));
-	item_dlg["choose"].attachClickHandler(std::bind(edit_placed_item_event_filter, _1, std::ref(placed_item), which_i));
+	item_dlg["okay"].attachClickHandler(std::bind(get_placed_item_in_dlog, _1, std::ref(item), which_i));
+	item_dlg["choose"].attachClickHandler(std::bind(edit_placed_item_event_filter, _1, std::ref(item), which_i));
 	
-	put_placed_item_in_dlog(item_dlg, placed_item, which_i);
+	put_placed_item_in_dlog(item_dlg, item, which_i);
 	
 	item_dlg.run();
 }
@@ -285,12 +285,12 @@ static bool edit_sign_event_filter(cDialog& me, short which_sign) {
 	else current_terrain->sign_strs[which_sign] = me["text"].getText();
 #if 0 // TODO: Apparently there used to be left/right buttons on this dialog.
 	if(item_hit == 3)
-		store_which_sign--;
-	else store_which_sign++;
-	if(store_which_sign < 0)
-		store_which_sign = (editing_town) ? 14 : 7;
-	if(store_which_sign > (editing_town) ? 14 : 7)
-		store_which_sign = 0;
+		which_sign--;
+	else which_sign++;
+	if(which_sign < 0)
+		which_sign = (editing_town) ? 14 : 7;
+	if(which_sign > (editing_town) ? 14 : 7)
+		which_sign = 0;
 #endif
 	return true;
 }
@@ -487,81 +487,81 @@ void outdoor_details() {
 	out_dlg.run();
 }
 
-static void put_out_wand_in_dlog(cDialog& me, short which_out_wand, const cOutdoors::cWandering& store_out_wand) {
+static void put_out_wand_in_dlog(cDialog& me, short which, const cOutdoors::cWandering& wand) {
 	short i;
 	
-	me["num"].setTextToNum(which_out_wand);
+	me["num"].setTextToNum(which);
 	for(i = 0; i < 7; i++) {
 		std::string id = "foe" + std::to_string(i + 1);
-		if(store_out_wand.monst[i] == 0)
+		if(wand.monst[i] == 0)
 			me[id].setText("Empty");
 		// TODO: Wait a second, if 0 is no monster, does that mean it's impossible to use monster 0? Should 1 be subtracted here?
-		else me[id].setText(scenario.scen_monsters[store_out_wand.monst[i]].m_name);
+		else me[id].setText(scenario.scen_monsters[wand.monst[i]].m_name);
 	}
 	for(i = 0; i < 3; i++) {
 		std::string id = "ally" + std::to_string(i + 1);
-		if(store_out_wand.friendly[i] == 0)
+		if(wand.friendly[i] == 0)
 			me[id].setText("Empty");
 		// TODO: Wait a second, if 0 is no monster, does that mean it's impossible to use monster 0? Should 1 be subtracted here?
-		else me[id].setText(scenario.scen_monsters[store_out_wand.friendly[i]].m_name);
+		else me[id].setText(scenario.scen_monsters[wand.friendly[i]].m_name);
 	}
-	dynamic_cast<cLed&>(me["no-flee"]).setState(store_out_wand.cant_flee % 10 == 1 ? led_red : led_off);
-	dynamic_cast<cLed&>(me["forced"]).setState(store_out_wand.cant_flee >= 10 ? led_red : led_off);
-	me["onmeet"].setTextToNum(store_out_wand.spec_on_meet);
-	me["onwin"].setTextToNum(store_out_wand.spec_on_win);
-	me["onflee"].setTextToNum(store_out_wand.spec_on_flee);
-	me["endx"].setTextToNum(store_out_wand.end_spec1);
-	me["endy"].setTextToNum(store_out_wand.end_spec2);
+	dynamic_cast<cLed&>(me["no-flee"]).setState(wand.cant_flee % 10 == 1 ? led_red : led_off);
+	dynamic_cast<cLed&>(me["forced"]).setState(wand.cant_flee >= 10 ? led_red : led_off);
+	me["onmeet"].setTextToNum(wand.spec_on_meet);
+	me["onwin"].setTextToNum(wand.spec_on_win);
+	me["onflee"].setTextToNum(wand.spec_on_flee);
+	me["endx"].setTextToNum(wand.end_spec1);
+	me["endy"].setTextToNum(wand.end_spec2);
 }
 
-static void save_out_wand(cDialog& me, short store_which_out_wand, cOutdoors::cWandering& store_out_wand, short mode) {
-	store_out_wand.spec_on_meet = me["onmeet"].getTextAsNum();
-	store_out_wand.spec_on_win = me["onwin"].getTextAsNum();
-	store_out_wand.spec_on_flee = me["onflee"].getTextAsNum();
-	store_out_wand.end_spec1 = me["endx"].getTextAsNum();
-	store_out_wand.end_spec2 = me["endy"].getTextAsNum();
+static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand, short mode) {
+	wand.spec_on_meet = me["onmeet"].getTextAsNum();
+	wand.spec_on_win = me["onwin"].getTextAsNum();
+	wand.spec_on_flee = me["onflee"].getTextAsNum();
+	wand.end_spec1 = me["endx"].getTextAsNum();
+	wand.end_spec2 = me["endy"].getTextAsNum();
 	
-	store_out_wand.cant_flee = 0;
+	wand.cant_flee = 0;
 	if(dynamic_cast<cLed&>(me["forced"]).getState() != led_off)
-		store_out_wand.cant_flee += 10;
+		wand.cant_flee += 10;
 	if(dynamic_cast<cLed&>(me["no-flee"]).getState() != led_off)
-		store_out_wand.cant_flee += 1;
+		wand.cant_flee += 1;
 	
 	switch(mode) {
 		case 0:
-			current_terrain->wandering[store_which_out_wand] = store_out_wand;
+			current_terrain->wandering[which] = wand;
 			break;
 		case 1:
-			current_terrain->special_enc[store_which_out_wand] = store_out_wand;
+			current_terrain->special_enc[which] = wand;
 			break;
 	}
 }
 
-static bool edit_out_wand_event_filter(cDialog& me, std::string item_hit, short& store_which_out_wand, cOutdoors::cWandering& store_out_wand, short mode) {
+static bool edit_out_wand_event_filter(cDialog& me, std::string hit, short& which, cOutdoors::cWandering& wand, short mode) {
 	if(!me.toast(true)) return true;
-	save_out_wand(me, store_which_out_wand, store_out_wand, mode);
+	save_out_wand(me, which, wand, mode);
 	cCreature store_m;
-	if(item_hit == "left") {
+	if(hit == "left") {
 		me.untoast();
-		store_which_out_wand--;
-		if(store_which_out_wand < 0) store_which_out_wand = 3;
-		store_out_wand = (mode == 0) ? current_terrain->wandering[store_which_out_wand] : current_terrain->special_enc[store_which_out_wand];
-		put_out_wand_in_dlog(me, store_which_out_wand, store_out_wand);
-	} else if(item_hit == "right") {
+		which--;
+		if(which < 0) which = 3;
+		wand = (mode == 0) ? current_terrain->wandering[which] : current_terrain->special_enc[which];
+		put_out_wand_in_dlog(me, which, wand);
+	} else if(hit == "right") {
 		me.untoast();
-		store_which_out_wand++;
-		if(store_which_out_wand > 3) store_which_out_wand = 0;
-		store_out_wand = (mode == 0) ? current_terrain->wandering[store_which_out_wand] : current_terrain->special_enc[store_which_out_wand];
-		put_out_wand_in_dlog(me, store_which_out_wand, store_out_wand);
+		which++;
+		if(which > 3) which = 0;
+		wand = (mode == 0) ? current_terrain->wandering[which] : current_terrain->special_enc[which];
+		put_out_wand_in_dlog(me, which, wand);
 	}
 	return true;
 }
 
-static bool edit_out_wand_spec(cDialog& me, std::string item_hit, short which_out_wand, cOutdoors::cWandering store_out_wand) {
+static bool edit_out_wand_spec(cDialog& me, std::string hit, short which, cOutdoors::cWandering wand) {
 	if(!me.toast(true)) return true;
 	me.untoast();
-	save_out_wand(me, which_out_wand, store_out_wand, 100);
-	std::string fld = "on" + item_hit.substr(5);
+	save_out_wand(me, which, wand, 100);
+	std::string fld = "on" + hit.substr(5);
 	short spec = me[fld].getTextAsNum();
 	if(spec < 0 || spec >= 60) {
 		spec = get_fresh_spec(1);
@@ -576,17 +576,17 @@ static bool edit_out_wand_spec(cDialog& me, std::string item_hit, short which_ou
 	return true;
 }
 
-static bool edit_out_wand_monst(cDialog& me, std::string item_hit, short which_out_wand, cOutdoors::cWandering store_out_wand) {
+static bool edit_out_wand_monst(cDialog& me, std::string hit, short which, cOutdoors::cWandering wand) {
 	if(!me.toast(true)) return true;
-	save_out_wand(me, which_out_wand, store_out_wand, 100);
-	std::string fld = item_hit.substr(7);
+	save_out_wand(me, which, wand, 100);
+	std::string fld = hit.substr(7);
 	short i;
 	if(fld[0] == 'f') {
-		i = choose_text(STRT_MONST,store_out_wand.monst[fld[3] - '0'],&me,"Choose Which Monster:");
-		if(i >= 0) store_out_wand.monst[fld[3] - '0'] = i;
+		i = choose_text(STRT_MONST,wand.monst[fld[3] - '0'],&me,"Choose Which Monster:");
+		if(i >= 0) wand.monst[fld[3] - '0'] = i;
 	} else if(fld[0] == 'a') {
-		i = choose_text(STRT_MONST,store_out_wand.friendly[fld[4] - '0'],&me,"Choose Which Monster:");
-		if(i >= 0) store_out_wand.friendly[fld[4] - '0'] = i;
+		i = choose_text(STRT_MONST,wand.friendly[fld[4] - '0'],&me,"Choose Which Monster:");
+		if(i >= 0) wand.friendly[fld[4] - '0'] = i;
 	}
 	me[fld].setText(scenario.scen_monsters[i].m_name);
 	return true;
@@ -596,23 +596,23 @@ static bool edit_out_wand_monst(cDialog& me, std::string item_hit, short which_o
 void edit_out_wand(short mode) {
 	using namespace std::placeholders;
 	
-	short which_out_wand = 0;
-	cOutdoors::cWandering store_out_wand = (mode == 0) ? current_terrain->wandering[0] : current_terrain->special_enc[0];
+	short which = 0;
+	cOutdoors::cWandering wand = (mode == 0) ? current_terrain->wandering[0] : current_terrain->special_enc[0];
 	
 	cDialog wand_dlg("edit-outdoor-encounter");
 	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	
 	wand_dlg["endx"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 299, "First part of Stuff Done flag", "-1 if not used"));
 	wand_dlg["endy"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 9, "Second part of Stuff Done flag", "-1 if not used"));
-	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_event_filter, _1, _2, std::ref(which_out_wand), std::ref(store_out_wand), mode), {"okay", "left", "right"});
-	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_spec, _1, _2, which_out_wand, std::ref(store_out_wand)), {"edit-meet", "edit-win", "edit-flee"});
-	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_monst, _1, _2, which_out_wand, std::ref(store_out_wand)), {"choose-foe1", "choose-foe2", "choose-foe3", "choose-foe4", "choose-foe5", "choose-foe6", "choose-foe7", "choose-ally1", "choose-ally2", "choose-ally3"});
+	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_event_filter, _1, _2, std::ref(which), std::ref(wand), mode), {"okay", "left", "right"});
+	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_spec, _1, _2, which, std::ref(wand)), {"edit-meet", "edit-win", "edit-flee"});
+	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_monst, _1, _2, which, std::ref(wand)), {"choose-foe1", "choose-foe2", "choose-foe3", "choose-foe4", "choose-foe5", "choose-foe6", "choose-foe7", "choose-ally1", "choose-ally2", "choose-ally3"});
 	wand_dlg.attachFocusHandlers(std::bind(check_range_msg, _1, _2, _3, -1, 59, "Outdoor Special Node", "-1 if not used"), {"onmeet", "onwin", "onflee"});
 	
 	if(mode == 1)
 		wand_dlg["title"].setText("Outdoor Special Encounter:");
 	
-	put_out_wand_in_dlog(wand_dlg, which_out_wand, store_out_wand);
+	put_out_wand_in_dlog(wand_dlg, which, wand);
 	
 	wand_dlg.run();
 }
@@ -856,8 +856,8 @@ void edit_town_wand() {
 	wand_dlg.run();
 }
 
-static void save_basic_dlog(cDialog& me, short& which_personality) {
-	auto& the_node = town->talking.people[which_personality];
+static void save_basic_dlog(cDialog& me, short& which) {
+	auto& the_node = town->talking.people[which];
 	the_node.title = me["title"].getText().substr(0,30);
 	the_node.dunno = me["dunno"].getText();
 	the_node.look = me["look"].getText();
@@ -865,40 +865,40 @@ static void save_basic_dlog(cDialog& me, short& which_personality) {
 	the_node.job = me["job"].getText();
 }
 
-static void put_basic_dlog_in_dlog(cDialog& me, const short which_personality) {
-	auto& the_node = town->talking.people[which_personality];
+static void put_basic_dlog_in_dlog(cDialog& me, const short which) {
+	auto& the_node = town->talking.people[which];
 	me["title"].setText(the_node.title);
 	me["dunno"].setText(the_node.dunno);
 	me["look"].setText(the_node.look);
 	me["name"].setText(the_node.name);
 	me["job"].setText(the_node.job);
-	me["num"].setTextToNum(which_personality + cur_town * 10);
+	me["num"].setTextToNum(which + cur_town * 10);
 }
 
-static bool edit_basic_dlog_event_filter(cDialog& me, std::string item_hit, short& which_personality) {
-	if(item_hit == "left") {
-		save_basic_dlog(me, which_personality);
-		which_personality--;
-		if(which_personality < 0) which_personality = 9;
-		put_basic_dlog_in_dlog(me, which_personality);
+static bool edit_basic_dlog_event_filter(cDialog& me, std::string hit, short& which) {
+	if(hit == "left") {
+		save_basic_dlog(me, which);
+		which--;
+		if(which < 0) which = 9;
+		put_basic_dlog_in_dlog(me, which);
 	} else { // right
-		save_basic_dlog(me, which_personality);
-		which_personality++;
-		if(which_personality > 9) which_personality = 0;
-		put_basic_dlog_in_dlog(me, which_personality);
+		save_basic_dlog(me, which);
+		which++;
+		if(which > 9) which = 0;
+		put_basic_dlog_in_dlog(me, which);
 	}
 	return true;
 }
 
-void edit_basic_dlog(short which_node) {
+void edit_basic_dlog(short personality) {
 	using namespace std::placeholders;
 	
 	cDialog person_dlg("edit-personality");
 	person_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &person_dlg, true));
 	person_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &person_dlg, false));
-	person_dlg.attachClickHandlers(std::bind(edit_basic_dlog_event_filter, _1, _2, std::ref(which_node)), {"left", "right"});
+	person_dlg.attachClickHandlers(std::bind(edit_basic_dlog_event_filter, _1, _2, std::ref(personality)), {"left", "right"});
 	
-	put_basic_dlog_in_dlog(person_dlg, which_node);
+	put_basic_dlog_in_dlog(person_dlg, personality);
 	
 	person_dlg.run();
 }

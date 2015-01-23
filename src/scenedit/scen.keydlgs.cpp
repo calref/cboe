@@ -825,7 +825,7 @@ short get_fresh_spec(short which_mode) {
 	return -1;
 }
 
-static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short spec_str_mode, short* str1, short* str2) {
+static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short str_mode, short* str1, short* str2) {
 	std::string str;
 	size_t i;
 	
@@ -833,9 +833,9 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 		str = me["str1"].getText();
 		if(!str.empty()) {
 			if(*str1 < 0) {
-				size_t n = num_strs(spec_str_mode);
+				size_t n = num_strs(str_mode);
 				for(i = 0; i < n; i++)
-					switch(spec_str_mode) {
+					switch(str_mode) {
 						case 0:
 							// TODO: This could overwrite a string if it's unlucky enough to start with *
 							if(scenario.spec_strs[i][0] == '*') {
@@ -881,7 +881,7 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 				}
 			}
 			if(*str1 >= 0) {
-				switch(spec_str_mode) {
+				switch(str_mode) {
 					case 0:
 						scenario.spec_strs[*str1] = str;
 						break;
@@ -906,9 +906,9 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 		str = str2 == nullptr ? "" : me["str2"].getText();
 		if(!str.empty()) {
 			if(*str2 < 0) {
-				size_t n = num_strs(spec_str_mode);
+				size_t n = num_strs(str_mode);
 				for(i = 160; i < n; i++)
-					switch(spec_str_mode) {
+					switch(str_mode) {
 						case 0:
 							if(scenario.spec_strs[i][0] == '*') {
 								*str2 = i;
@@ -954,7 +954,7 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 				}
 			}
 			if(*str2 >= 0) {
-				switch(spec_str_mode) {
+				switch(str_mode) {
 					case 0:
 						scenario.spec_strs[*str2] = str;
 						break;
@@ -1026,7 +1026,7 @@ void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent) {
 	edit.run();
 }
 
-static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, short spec_str_mode, short* str1){
+static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, short str_mode, short* str1){
 	std::string str;
 	short i;
 	
@@ -1035,7 +1035,7 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, sho
 			std::string id = "str" + std::to_string(i + 1);
 			str = me[id].getText();
 			if(i == 0 && str.empty()) break;
-			switch(spec_str_mode) {
+			switch(str_mode) {
 				case 0:
 					scenario.spec_strs[*str1 + i] = str;
 					break;

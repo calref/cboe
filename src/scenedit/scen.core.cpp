@@ -39,19 +39,19 @@ const std::set<eItemAbil> items_no_strength = {
 	eItemAbil::QUICKFIRE,
 };
 
-static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
+static bool save_ter_info(cDialog& me, cTerrain& ter) {
 	
-	store_ter.picture = me["pict"].getTextAsNum();
+	ter.picture = me["pict"].getTextAsNum();
 	// TODO: Should somehow verify the pict number is valid
 	
 	std::string blockage = dynamic_cast<cLedGroup&>(me["blockage"]).getSelected();
-	if(blockage == "clear") store_ter.blockage = eTerObstruct::CLEAR;
-	else if(blockage == "curtain") store_ter.blockage = eTerObstruct::BLOCK_SIGHT;
-	else if(blockage == "special") store_ter.blockage = eTerObstruct::BLOCK_MONSTERS;
-	else if(blockage == "window") store_ter.blockage = eTerObstruct::BLOCK_MOVE;
-	else if(blockage == "obstructed") store_ter.blockage = eTerObstruct::BLOCK_MOVE_AND_SHOOT;
-	else if(blockage == "opaque") store_ter.blockage = eTerObstruct::BLOCK_MOVE_AND_SIGHT;
-	store_ter.special = (eTerSpec) boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["prop"]).getSelected().substr(4));
+	if(blockage == "clear") ter.blockage = eTerObstruct::CLEAR;
+	else if(blockage == "curtain") ter.blockage = eTerObstruct::BLOCK_SIGHT;
+	else if(blockage == "special") ter.blockage = eTerObstruct::BLOCK_MONSTERS;
+	else if(blockage == "window") ter.blockage = eTerObstruct::BLOCK_MOVE;
+	else if(blockage == "obstructed") ter.blockage = eTerObstruct::BLOCK_MOVE_AND_SHOOT;
+	else if(blockage == "opaque") ter.blockage = eTerObstruct::BLOCK_MOVE_AND_SIGHT;
+	ter.special = (eTerSpec) boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["prop"]).getSelected().substr(4));
 	/*
 	i = CDGN(813,6);
 	if((store_ter.special < 2) || (store_ter.special > 6)) {
@@ -64,15 +64,15 @@ static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 		if(cre(i,0,256,"First special flag must be from 0 to 8.","",813)) return false;
 	}
 	*/
-	if(store_ter.special == eTerSpec::NONE)
-		store_ter.flag1.s = me["flag1"].getTextAsNum();
-	else store_ter.flag1.u = me["flag1"].getTextAsNum();
+	if(ter.special == eTerSpec::NONE)
+		ter.flag1.s = me["flag1"].getTextAsNum();
+	else ter.flag1.u = me["flag1"].getTextAsNum();
 	if(false) // flag2 is never signed, apparently; but that could change?
-		store_ter.flag2.s = me["flag2"].getTextAsNum();
-	else store_ter.flag2.u = me["flag2"].getTextAsNum();
-	if(store_ter.special == eTerSpec::CALL_SPECIAL || store_ter.special == eTerSpec::CALL_SPECIAL_WHEN_USED)
-		store_ter.flag3.s = me["flag3"].getTextAsNum();
-	else store_ter.flag3.u = me["flag3"].getTextAsNum();
+		ter.flag2.s = me["flag2"].getTextAsNum();
+	else ter.flag2.u = me["flag2"].getTextAsNum();
+	if(ter.special == eTerSpec::CALL_SPECIAL || ter.special == eTerSpec::CALL_SPECIAL_WHEN_USED)
+		ter.flag3.s = me["flag3"].getTextAsNum();
+	else ter.flag3.u = me["flag3"].getTextAsNum();
 	
 	/*
 	if(store_ter.special == eTerSpec::TOWN_ENTRANCE) {
@@ -86,34 +86,34 @@ static bool save_ter_info(cDialog& me, cTerrain& store_ter) {
 	/*
 	if(cre(i,0,255,"Transform To What must be from 0 to 255.","",813)) return false;
 	*/
-	store_ter.trans_to_what = me["trans"].getTextAsNum();
-	store_ter.fly_over = dynamic_cast<cLed&>(me["flight"]).getState() == led_red;
-	store_ter.boat_over = dynamic_cast<cLed&>(me["boat"]).getState() == led_red;
-	store_ter.block_horse = dynamic_cast<cLed&>(me["horse"]).getState();
-	store_ter.light_radius = me["light"].getTextAsNum();
+	ter.trans_to_what = me["trans"].getTextAsNum();
+	ter.fly_over = dynamic_cast<cLed&>(me["flight"]).getState() == led_red;
+	ter.boat_over = dynamic_cast<cLed&>(me["boat"]).getState() == led_red;
+	ter.block_horse = dynamic_cast<cLed&>(me["horse"]).getState();
+	ter.light_radius = me["light"].getTextAsNum();
 	/*
 	 if(cre(store_ter.light_radius,0,8,"Light radius must be from 0 to 8.","",813)) return false;
 	 */
 	
 	std::string sound = dynamic_cast<cLedGroup&>(me["sound"]).getSelected();
 	// TODO: Uh, why not use an actual sound number instead of 0...4?
-	if(sound == "step") store_ter.step_sound = 0;
-	else if(sound == "squish") store_ter.step_sound = 1;
-	else if(sound == "crunch") store_ter.step_sound = 2;
-	else if(sound == "nosound") store_ter.step_sound = 3;
-	else if(sound == "splash") store_ter.step_sound = 4;
+	if(sound == "step") ter.step_sound = 0;
+	else if(sound == "squish") ter.step_sound = 1;
+	else if(sound == "crunch") ter.step_sound = 2;
+	else if(sound == "nosound") ter.step_sound = 3;
+	else if(sound == "splash") ter.step_sound = 4;
 	
 	std::string shortcut = me["key"].getText();
-	if(shortcut.length() > 0) store_ter.shortcut_key = shortcut[0];
-	else store_ter.shortcut_key = 0;
+	if(shortcut.length() > 0) ter.shortcut_key = shortcut[0];
+	else ter.shortcut_key = 0;
 	
-	store_ter.name = me["name"].getText();
+	ter.name = me["name"].getText();
 	
-	store_ter.ground_type = me["ground"].getTextAsNum();
-	store_ter.trim_ter = me["trimter"].getTextAsNum();
-	store_ter.trim_type = (eTrimType) me["trim"].getTextAsNum();
-	store_ter.combat_arena = me["arena"].getTextAsNum();
-	store_ter.map_pic = me["map"].getTextAsNum();
+	ter.ground_type = me["ground"].getTextAsNum();
+	ter.trim_ter = me["trimter"].getTextAsNum();
+	ter.trim_type = (eTrimType) me["trim"].getTextAsNum();
+	ter.combat_arena = me["arena"].getTextAsNum();
+	ter.map_pic = me["map"].getTextAsNum();
 	
 	return true;
 }
@@ -313,23 +313,23 @@ static void fill_ter_info(cDialog& me, short ter){
 	me["arena"].setTextToNum(ter_type.combat_arena);
 }
 
-static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which_ter) {
-	if(!save_ter_info(me, scenario.ter_types[which_ter])) return true;
+static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which) {
+	if(!save_ter_info(me, scenario.ter_types[which])) return true;
 	
 	if(!me.toast(true)) return true;
 	if(id == "left") {
 		me.untoast();
 		// TODO: Use size() once ter_types becomes a vector
-		if(which_ter == 0)
-			which_ter = scenario.ter_types.size() - 1;
-		else which_ter--;
-		fill_ter_info(me, which_ter);
+		if(which == 0)
+			which = scenario.ter_types.size() - 1;
+		else which--;
+		fill_ter_info(me, which);
 	} else if(id == "right") {
 		me.untoast();
-		which_ter++;
-		if(which_ter >= scenario.ter_types.size())
-			which_ter = 0;
-		fill_ter_info(me, which_ter);
+		which++;
+		if(which >= scenario.ter_types.size())
+			which = 0;
+		fill_ter_info(me, which);
 	}
 	return true;
 }
@@ -415,7 +415,7 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 	return true;
 }
 
-short edit_ter_type(ter_num_t which_ter) {
+short edit_ter_type(ter_num_t which) {
 	using namespace std::placeholders;
 	cDialog ter_dlg("edit-terrain");
 	// Attach handlers
@@ -431,25 +431,25 @@ short edit_ter_type(ter_num_t which_ter) {
 	ter_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &ter_dlg, false));
 	ter_dlg["arena"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,299,"ground type"));
 	// TODO: Add focus handler for key
-	ter_dlg["object"].attachClickHandler(std::bind(edit_ter_obj, _1, std::ref(which_ter)));
-	ter_dlg.attachClickHandlers(std::bind(finish_editing_ter,_1,_2,std::ref(which_ter)), {"left", "right", "done"});
+	ter_dlg["object"].attachClickHandler(std::bind(edit_ter_obj, _1, std::ref(which)));
+	ter_dlg.attachClickHandlers(std::bind(finish_editing_ter,_1,_2,std::ref(which)), {"left", "right", "done"});
 	ter_dlg["picktrim"].attachClickHandler(std::bind(pick_string,"trim-names", _1, "trim", ""));
 	ter_dlg["pickarena"].attachClickHandler(std::bind(pick_string,"arena-names", _1, "arena", ""));
 	ter_dlg["help"].attachClickHandler(std::bind(show_help, "ter-type-help", _1, 16));
-	fill_ter_info(ter_dlg,which_ter);
+	fill_ter_info(ter_dlg,which);
 	ter_dlg.run();
 	// TODO: What should be returned?
 	return 0;
 }
 
-static void put_monst_info_in_dlog(cDialog& me, cMonster& store_monst, mon_num_t which_monst) {
+static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which) {
 	std::ostringstream strb;
 	
-	if(store_monst.picture_num < 1000)
-		dynamic_cast<cPict&>(me["icon"]).setPict(store_monst.picture_num,PIC_MONST);
+	if(monst.picture_num < 1000)
+		dynamic_cast<cPict&>(me["icon"]).setPict(monst.picture_num,PIC_MONST);
 	else {
 		ePicType type_g = PIC_CUSTOM_MONST;
-		short size_g = store_monst.picture_num / 1000;
+		short size_g = monst.picture_num / 1000;
 		switch(size_g){
 			case 2:
 				type_g += PIC_WIDE;
@@ -461,35 +461,35 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& store_monst, mon_num_t
 				type_g += PIC_LARGE;
 				break;
 		}
-		dynamic_cast<cPict&>(me["icon"]).setPict(store_monst.picture_num,type_g);
+		dynamic_cast<cPict&>(me["icon"]).setPict(monst.picture_num,type_g);
 	}
-	dynamic_cast<cPict&>(me["talkpic"]).setPict(store_monst.default_facial_pic, PIC_TALK);
-	me["num"].setTextToNum(which_monst);
-	me["name"].setText(store_monst.m_name);
-	me["pic"].setTextToNum(store_monst.picture_num);
-	strb << "Width = " << int(store_monst.x_width);
+	dynamic_cast<cPict&>(me["talkpic"]).setPict(monst.default_facial_pic, PIC_TALK);
+	me["num"].setTextToNum(which);
+	me["name"].setText(monst.m_name);
+	me["pic"].setTextToNum(monst.picture_num);
+	strb << "Width = " << int(monst.x_width);
 	me["w"].setText(strb.str());
 	strb.str("");
-	strb << "Height = " << int(store_monst.y_width);
+	strb << "Height = " << int(monst.y_width);
 	me["h"].setText(strb.str());
-	me["level"].setTextToNum(store_monst.level);
-	me["health"].setTextToNum(store_monst.m_health);
-	me["armor"].setTextToNum(store_monst.armor);
-	me["skill"].setTextToNum(store_monst.skill);
-	me["speed"].setTextToNum(store_monst.speed);
-	me["mage"].setTextToNum(store_monst.mu);
-	me["priest"].setTextToNum(store_monst.cl);
-	me["dice1"].setTextToNum(store_monst.a[0].dice);
-	me["sides1"].setTextToNum(store_monst.a[0].sides);
-	me["dice2"].setTextToNum(store_monst.a[1].dice);
-	me["sides2"].setTextToNum(store_monst.a[1].sides);
-	me["dice3"].setTextToNum(store_monst.a[2].dice);
-	me["sides3"].setTextToNum(store_monst.a[2].sides);
-	me["talk"].setTextToNum(short(store_monst.default_facial_pic));
-	me["treas"].setTextToNum(store_monst.treasure);
+	me["level"].setTextToNum(monst.level);
+	me["health"].setTextToNum(monst.m_health);
+	me["armor"].setTextToNum(monst.armor);
+	me["skill"].setTextToNum(monst.skill);
+	me["speed"].setTextToNum(monst.speed);
+	me["mage"].setTextToNum(monst.mu);
+	me["priest"].setTextToNum(monst.cl);
+	me["dice1"].setTextToNum(monst.a[0].dice);
+	me["sides1"].setTextToNum(monst.a[0].sides);
+	me["dice2"].setTextToNum(monst.a[1].dice);
+	me["sides2"].setTextToNum(monst.a[1].sides);
+	me["dice3"].setTextToNum(monst.a[2].dice);
+	me["sides3"].setTextToNum(monst.a[2].sides);
+	me["talk"].setTextToNum(short(monst.default_facial_pic));
+	me["treas"].setTextToNum(monst.treasure);
 	
 	cLedGroup& attitude = dynamic_cast<cLedGroup&>(me["attitude"]);
-	switch(store_monst.default_attitude) {
+	switch(monst.default_attitude) {
 		case 0:
 			attitude.setSelected("docile");
 			break;
@@ -504,144 +504,144 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& store_monst, mon_num_t
 			break;
 	}
 	
-	me["type"].setText(get_str("traits",33 + int(store_monst.m_type) * 2));
-	me["type1"].setText(get_str("monster-abilities",130 + int(store_monst.a[0].type)));
-	me["type2"].setText(get_str("monster-abilities",130 + int(store_monst.a[1].type)));
-	me["type3"].setText(get_str("monster-abilities",130 + int(store_monst.a[2].type)));
+	me["type"].setText(get_str("traits",33 + int(monst.m_type) * 2));
+	me["type1"].setText(get_str("monster-abilities",130 + int(monst.a[0].type)));
+	me["type2"].setText(get_str("monster-abilities",130 + int(monst.a[1].type)));
+	me["type3"].setText(get_str("monster-abilities",130 + int(monst.a[2].type)));
 }
 
-static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& store_monst) {
+static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& monst) {
 	if(!losing) return true;
 	static size_t max_preset = m_pic_index.size() - 1;
 	static const std::string error = "Non-customized monster pic must be from 0 to " + std::to_string(max_preset) + ".";
 	if(check_range(me, id, losing, 0, 4999, "Monster pic")) {
 		pic_num_t pic = me[id].getTextAsNum();
-		store_monst.picture_num = pic;
+		monst.picture_num = pic;
 		cPict& icon = dynamic_cast<cPict&>(me["icon"]);
 		switch(pic / 1000) {
 			case 0:
 				if(cre(pic,0,max_preset,error,"",&me)) return false;
-				store_monst.x_width = m_pic_index[store_monst.picture_num].x;
-				store_monst.y_width = m_pic_index[store_monst.picture_num].y;
+				monst.x_width = m_pic_index[monst.picture_num].x;
+				monst.y_width = m_pic_index[monst.picture_num].y;
 				icon.setPict(pic, PIC_MONST);
 				break;
 			case 1:
-				store_monst.x_width = 1;
-				store_monst.y_width = 1;
+				monst.x_width = 1;
+				monst.y_width = 1;
 				icon.setPict(pic, PIC_MONST);
 				break;
 			case 2:
-				store_monst.x_width = 2;
-				store_monst.y_width = 1;
+				monst.x_width = 2;
+				monst.y_width = 1;
 				icon.setPict(pic, PIC_MONST_WIDE);
 				break;
 			case 3:
-				store_monst.x_width = 1;
-				store_monst.y_width = 2;
+				monst.x_width = 1;
+				monst.y_width = 2;
 				icon.setPict(pic, PIC_MONST_TALL);
 				break;
 			case 4:
-				store_monst.x_width = 2;
-				store_monst.y_width = 2;
+				monst.x_width = 2;
+				monst.y_width = 2;
 				icon.setPict(pic, PIC_MONST_LG);
 				break;
 		}
 		std::ostringstream strb;
-		strb << "Width = " << int(store_monst.x_width);
+		strb << "Width = " << int(monst.x_width);
 		me["w"].setText(strb.str());
 		strb.str("");
-		strb << "Height = " << int(store_monst.y_width);
+		strb << "Height = " << int(monst.y_width);
 		me["h"].setText(strb.str());
 	}
 	return true;
 }
 
-static bool save_monst_info(cDialog& me, cMonster& store_monst) {
+static bool save_monst_info(cDialog& me, cMonster& monst) {
 	
-	store_monst.m_name = me["name"].getText();
-	store_monst.picture_num = me["pic"].getTextAsNum();
-	store_monst.level = me["level"].getTextAsNum();
-	store_monst.m_health = me["health"].getTextAsNum();
-	store_monst.armor = me["armor"].getTextAsNum();
-	store_monst.skill = me["skill"].getTextAsNum();
-	store_monst.speed = me["speed"].getTextAsNum();
-	store_monst.mu = me["mage"].getTextAsNum();
-	store_monst.cl = me["priest"].getTextAsNum();
+	monst.m_name = me["name"].getText();
+	monst.picture_num = me["pic"].getTextAsNum();
+	monst.level = me["level"].getTextAsNum();
+	monst.m_health = me["health"].getTextAsNum();
+	monst.armor = me["armor"].getTextAsNum();
+	monst.skill = me["skill"].getTextAsNum();
+	monst.speed = me["speed"].getTextAsNum();
+	monst.mu = me["mage"].getTextAsNum();
+	monst.cl = me["priest"].getTextAsNum();
 	
-	store_monst.a[0].dice = me["dice1"].getTextAsNum();
-	store_monst.a[1].dice = me["dice2"].getTextAsNum();
-	store_monst.a[2].dice = me["dice3"].getTextAsNum();
-	store_monst.a[0].sides = me["sides1"].getTextAsNum();
-	store_monst.a[1].sides = me["sides2"].getTextAsNum();
-	store_monst.a[2].sides = me["sides3"].getTextAsNum();
+	monst.a[0].dice = me["dice1"].getTextAsNum();
+	monst.a[1].dice = me["dice2"].getTextAsNum();
+	monst.a[2].dice = me["dice3"].getTextAsNum();
+	monst.a[0].sides = me["sides1"].getTextAsNum();
+	monst.a[1].sides = me["sides2"].getTextAsNum();
+	monst.a[2].sides = me["sides3"].getTextAsNum();
 	
-	store_monst.default_facial_pic = me["talk"].getTextAsNum();
-	store_monst.treasure = me["treas"].getTextAsNum();
+	monst.default_facial_pic = me["talk"].getTextAsNum();
+	monst.treasure = me["treas"].getTextAsNum();
 	std::string def_att = dynamic_cast<cLedGroup&>(me["attitude"]).getSelected();
-	if(def_att == "docile") store_monst.default_attitude = 0;
-	else if(def_att == "friendly") store_monst.default_attitude = 2;
-	else if(def_att == "A") store_monst.default_attitude = 1;
-	else if(def_att == "B") store_monst.default_attitude = 3;
+	if(def_att == "docile") monst.default_attitude = 0;
+	else if(def_att == "friendly") monst.default_attitude = 2;
+	else if(def_att == "A") monst.default_attitude = 1;
+	else if(def_att == "B") monst.default_attitude = 3;
 	return true;
 }
 
-static bool edit_monst_type_event_filter(cDialog& me,std::string item_hit,cMonster& store_monst,short& which_monst) {
+static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& monst,short& which) {
 	short i;
 	cMonster temp_monst;
 	
-	if(item_hit == "okay") {
-		if(save_monst_info(me,store_monst)) {
-			scenario.scen_monsters[which_monst] = store_monst;
+	if(hit == "okay") {
+		if(save_monst_info(me,monst)) {
+			scenario.scen_monsters[which] = monst;
 			me.toast(true);
 		}
-	} else if(item_hit == "abils") {
-		if(!save_monst_info(me,store_monst)) return false;
-		temp_monst = edit_monst_abil(store_monst,which_monst,me);
+	} else if(hit == "abils") {
+		if(!save_monst_info(me,monst)) return false;
+		temp_monst = edit_monst_abil(monst,which,me);
 		if(temp_monst.level < 255)
-			store_monst = temp_monst;
-		put_monst_info_in_dlog(me,store_monst,which_monst);
-	} else if(item_hit == "left") {
-		if(!save_monst_info(me,store_monst)) return false;
-		scenario.scen_monsters[which_monst] = store_monst;
-		which_monst--;
+			monst = temp_monst;
+		put_monst_info_in_dlog(me,monst,which);
+	} else if(hit == "left") {
+		if(!save_monst_info(me,monst)) return false;
+		scenario.scen_monsters[which] = monst;
+		which--;
 		// TODO: Use size() once scen_monsters becomes a vector
-		if(which_monst < 1) which_monst = 255;
-		store_monst = scenario.scen_monsters[which_monst];
-		put_monst_info_in_dlog(me,store_monst,which_monst);
-	} else if(item_hit == "right") {
-		if(!save_monst_info(me,store_monst)) return false;
-		scenario.scen_monsters[which_monst] = store_monst;
-		which_monst++;
-		if(which_monst > 255) which_monst = 1;
-		store_monst = scenario.scen_monsters[which_monst];
-		put_monst_info_in_dlog(me,store_monst,which_monst);
-	} else if(item_hit == "picktype") {
-		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text(STRT_RACE,int(store_monst.m_type),&me,"Choose Monster Type:");
+		if(which < 1) which = 255;
+		monst = scenario.scen_monsters[which];
+		put_monst_info_in_dlog(me,monst,which);
+	} else if(hit == "right") {
+		if(!save_monst_info(me,monst)) return false;
+		scenario.scen_monsters[which] = monst;
+		which++;
+		if(which > 255) which = 1;
+		monst = scenario.scen_monsters[which];
+		put_monst_info_in_dlog(me,monst,which);
+	} else if(hit == "picktype") {
+		if(!save_monst_info(me,monst)) return false;
+		i = choose_text(STRT_RACE,int(monst.m_type),&me,"Choose Monster Type:");
 		if(i >= 0) {
-			store_monst.m_type = (eRace) i;
-			put_monst_info_in_dlog(me,store_monst,which_monst);
+			monst.m_type = (eRace) i;
+			put_monst_info_in_dlog(me,monst,which);
 		}
-	} else if(item_hit == "picktype1") {
-		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text_res("monster-abilities",130,139,int(store_monst.a[0].type),&me,"Choose Attack 1 Type:");
+	} else if(hit == "picktype1") {
+		if(!save_monst_info(me,monst)) return false;
+		i = choose_text_res("monster-abilities",130,139,int(monst.a[0].type),&me,"Choose Attack 1 Type:");
 		if(i >= 0) {
-			store_monst.a[0].type = eMonstMelee(i);
-			put_monst_info_in_dlog(me,store_monst,which_monst);
+			monst.a[0].type = eMonstMelee(i);
+			put_monst_info_in_dlog(me,monst,which);
 		}
-	} else if(item_hit == "picktype2") {
-		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text_res("monster-abilities",130,139,int(store_monst.a[1].type),&me,"Choose Attack 2 & 3 Type:");
+	} else if(hit == "picktype2") {
+		if(!save_monst_info(me,monst)) return false;
+		i = choose_text_res("monster-abilities",130,139,int(monst.a[1].type),&me,"Choose Attack 2 & 3 Type:");
 		if(i >= 0) {
-			store_monst.a[1].type = store_monst.a[2].type = eMonstMelee(i);
-			put_monst_info_in_dlog(me,store_monst,which_monst);
+			monst.a[1].type = monst.a[2].type = eMonstMelee(i);
+			put_monst_info_in_dlog(me,monst,which);
 		}
-	} else if(item_hit == "picktype3") {
-		if(!save_monst_info(me,store_monst)) return false;
-		i = choose_text_res("monster-abilities",130,139,int(store_monst.a[2].type),&me,"Choose Attack 3 Type:");
+	} else if(hit == "picktype3") {
+		if(!save_monst_info(me,monst)) return false;
+		i = choose_text_res("monster-abilities",130,139,int(monst.a[2].type),&me,"Choose Attack 3 Type:");
 		if(i >= 0) {
-			store_monst.a[2].type = eMonstMelee(i);
-			put_monst_info_in_dlog(me,store_monst,which_monst);
+			monst.a[2].type = eMonstMelee(i);
+			put_monst_info_in_dlog(me,monst,which);
 		}
 	}
 	return true;
@@ -660,15 +660,15 @@ static bool pick_monst_picture(cDialog& me) {
 	return result;
 }
 
-short edit_monst_type(short which_monst) {
+short edit_monst_type(short which) {
 	using namespace std::placeholders;
-	cMonster store_monst = scenario.scen_monsters[which_monst];
+	cMonster monst = scenario.scen_monsters[which];
 	
 	cDialog monst_dlg("edit-monster");
 	monst_dlg["pickicon"].attachClickHandler(std::bind(pick_monst_picture,_1));
 	monst_dlg["picktalk"].attachClickHandler(std::bind(pick_picture,PIC_TALK,_1,"talk","talkpic"));
 	monst_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &monst_dlg, false));
-	monst_dlg["pic"].attachFocusHandler(std::bind(check_monst_pic, _1, _2, _3, std::ref(store_monst)));
+	monst_dlg["pic"].attachFocusHandler(std::bind(check_monst_pic, _1, _2, _3, std::ref(monst)));
 	monst_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 40, "level"));
 	monst_dlg["health"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 2500, "health"));
 	monst_dlg["armor"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 50, "armor"));
@@ -678,41 +678,41 @@ short edit_monst_type(short which_monst) {
 	monst_dlg["priest"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 7, "priest spells"));
 	monst_dlg["treas"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 4, "treasure"));
 	monst_dlg.attachFocusHandlers(check_monst_dice,{"dice1","dice2","dice3","sides1","sides2","sides3"});
-	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(store_monst),std::ref(which_monst)),{"okay","abils","left","right","picktype","picktype1","picktype2","picktype3"});
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(monst),std::ref(which)),{"okay","abils","left","right","picktype","picktype1","picktype2","picktype3"});
 	
-	put_monst_info_in_dlog(monst_dlg, store_monst, which_monst);
+	put_monst_info_in_dlog(monst_dlg, monst, which);
 	
 	monst_dlg.run();
 	return 0;
 }
 
-static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst) {
+static void put_monst_abils_in_dlog(cDialog& me, cMonster& monst) {
 	
-	me["loot-item"].setTextToNum(store_monst.corpse_item);
-	me["loot-chance"].setTextToNum(store_monst.corpse_item_chance);
-	me["magic-res"].setTextToNum(store_monst.magic_res);
-	me["fire-res"].setTextToNum(store_monst.fire_res);
-	me["cold-res"].setTextToNum(store_monst.cold_res);
-	me["poison-res"].setTextToNum(store_monst.poison_res);
-	me["onsee"].setTextToNum(store_monst.see_spec);
-	me["snd"].setTextToNum(store_monst.ambient_sound);
+	me["loot-item"].setTextToNum(monst.corpse_item);
+	me["loot-chance"].setTextToNum(monst.corpse_item_chance);
+	me["magic-res"].setTextToNum(monst.magic_res);
+	me["fire-res"].setTextToNum(monst.fire_res);
+	me["cold-res"].setTextToNum(monst.cold_res);
+	me["poison-res"].setTextToNum(monst.poison_res);
+	me["onsee"].setTextToNum(monst.see_spec);
+	me["snd"].setTextToNum(monst.ambient_sound);
 	
-	if(store_monst.mindless)
+	if(monst.mindless)
 		dynamic_cast<cLed&>(me["mindless"]).setState(led_red);
-	if(store_monst.invuln)
+	if(monst.invuln)
 		dynamic_cast<cLed&>(me["invuln"]).setState(led_red);
-	if(store_monst.invisible)
+	if(monst.invisible)
 		dynamic_cast<cLed&>(me["invis"]).setState(led_red);
-	if(store_monst.guard)
+	if(monst.guard)
 		dynamic_cast<cLed&>(me["guard"]).setState(led_red);
 	
-	dynamic_cast<cLedGroup&>(me["summon"]).setSelected("s" + boost::lexical_cast<std::string,short>(store_monst.summon_type));
+	dynamic_cast<cLedGroup&>(me["summon"]).setSelected("s" + boost::lexical_cast<std::string,short>(monst.summon_type));
 	
 	cStack& abils = dynamic_cast<cStack&>(me["abils"]);
 	abils.setPageCount(0); // This clears out any data still in the stack
 	abils.setPageCount(1);
 	int i = 0;
-	for(auto& abil : store_monst.abil) {
+	for(auto& abil : monst.abil) {
 		if(!abil.second.active) continue;
 		std::string id = std::to_string((i % 4) + 1);
 		if(i % 4 == 0) {
@@ -746,43 +746,43 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& store_monst) {
 	}
 }
 
-static bool save_monst_abils(cDialog& me, cMonster& store_monst) {
-	store_monst.summon_type = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["summon"]).getSelected().substr(1));
+static bool save_monst_abils(cDialog& me, cMonster& monst) {
+	monst.summon_type = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["summon"]).getSelected().substr(1));
 	
- 	store_monst.corpse_item = me["loot-item"].getTextAsNum();
-	store_monst.corpse_item_chance = me["loot-chance"].getTextAsNum();
-	store_monst.magic_res = me["magic-res"].getTextAsNum();
-	store_monst.fire_res = me["fire-res"].getTextAsNum();
-	store_monst.cold_res = me["cold-res"].getTextAsNum();
-	store_monst.poison_res = me["poison-res"].getTextAsNum();
-	store_monst.see_spec = me["onsee"].getTextAsNum();
-	store_monst.ambient_sound = me["snd"].getTextAsNum();
+ 	monst.corpse_item = me["loot-item"].getTextAsNum();
+	monst.corpse_item_chance = me["loot-chance"].getTextAsNum();
+	monst.magic_res = me["magic-res"].getTextAsNum();
+	monst.fire_res = me["fire-res"].getTextAsNum();
+	monst.cold_res = me["cold-res"].getTextAsNum();
+	monst.poison_res = me["poison-res"].getTextAsNum();
+	monst.see_spec = me["onsee"].getTextAsNum();
+	monst.ambient_sound = me["snd"].getTextAsNum();
 	
-	store_monst.mindless = dynamic_cast<cLed&>(me["mindless"]).getState() != led_off;
-	store_monst.invuln = dynamic_cast<cLed&>(me["invuln"]).getState() != led_off;
-	store_monst.invisible = dynamic_cast<cLed&>(me["invis"]).getState() != led_off;
-	store_monst.guard = dynamic_cast<cLed&>(me["guard"]).getState() != led_off;
+	monst.mindless = dynamic_cast<cLed&>(me["mindless"]).getState() != led_off;
+	monst.invuln = dynamic_cast<cLed&>(me["invuln"]).getState() != led_off;
+	monst.invisible = dynamic_cast<cLed&>(me["invis"]).getState() != led_off;
+	monst.guard = dynamic_cast<cLed&>(me["guard"]).getState() != led_off;
 	return true;
 }
 
-static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonster& store_monst) {
+static bool edit_monst_abil_event_filter(cDialog& me,std::string hit,cMonster& monst) {
 	using namespace std::placeholders;
 	
-	if(item_hit == "cancel") {
-		store_monst.level = 255;
+	if(hit == "cancel") {
+		monst.level = 255;
 		me.toast(false);
-	} else if(item_hit == "okay") {
-		if(save_monst_abils(me, store_monst))
+	} else if(hit == "okay") {
+		if(save_monst_abils(me, monst))
 			me.toast(true);
-	} else if(item_hit == "abil-up") {
+	} else if(hit == "abil-up") {
 		cStack& abils = dynamic_cast<cStack&>(me["abils"]);
 		if(abils.getPage() == 0) abils.setPage(abils.getPageCount() - 1);
 		else abils.setPage(abils.getPage() - 1);
-	} else if(item_hit == "abil-down") {
+	} else if(hit == "abil-down") {
 		cStack& abils = dynamic_cast<cStack&>(me["abils"]);
 		if(abils.getPage() >= abils.getPageCount() - 1) abils.setPage(0);
 		else abils.setPage(abils.getPage() + 1);
-	} else if(item_hit == "edit-see") {
+	} else if(hit == "edit-see") {
 		short spec = me["onsee"].getTextAsNum();
 		if(spec < 0 || spec > 255) {
 			spec = get_fresh_spec(0);
@@ -794,7 +794,7 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string item_hit,cMonst
 		}
 		if(edit_spec_enc(spec,0,&me))
 			me["onsee"].setTextToNum(spec);
-	} else if(item_hit == "pick-snd") {
+	} else if(hit == "pick-snd") {
 		int i = me["snd"].getTextAsNum();
 		i = choose_text(STRT_SND, i, &me, "Select monster vocalization sound:");
 		me["snd"].setTextToNum(i);
@@ -1180,36 +1180,35 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 	return true;
 }
 
-cMonster edit_monst_abil(cMonster starting_record,short which_monst,cDialog& parent) {
+cMonster edit_monst_abil(cMonster initial,short which,cDialog& parent) {
 	using namespace std::placeholders;
-	cMonster store_monst = starting_record;
 	
 	cDialog monst_dlg("edit-monster-abils",&parent);
 	monst_dlg["loot-item"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 399, "Item To Drop", "-1 for no item"));
 	monst_dlg["loot-chance"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 100, "Dropping Chance", "-1 for no item"));
-	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_detail, _1, _2, std::ref(store_monst)), {"abil-edit1", "abil-edit2", "abil-edit3", "abil-edit4"});
-	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_event_filter, _1, _2, std::ref(store_monst)), {"okay", "cancel", "abil-up", "abil-down", "edit-see", "pick-snd"});
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_detail, _1, _2, std::ref(initial)), {"abil-edit1", "abil-edit2", "abil-edit3", "abil-edit4"});
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_event_filter, _1, _2, std::ref(initial)), {"okay", "cancel", "abil-up", "abil-down", "edit-see", "pick-snd"});
 	
-	monst_dlg["num"].setTextToNum(which_monst);
-	put_monst_abils_in_dlog(monst_dlg, store_monst);
+	monst_dlg["num"].setTextToNum(which);
+	put_monst_abils_in_dlog(monst_dlg, initial);
 	
 	monst_dlg.run();
-	return store_monst;
+	return initial;
 }
 
-static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_item) {
-	me["num"].setTextToNum(which_item);
-	me["full"].setText(store_item.full_name);
-	me["short"].setText(store_item.name);
-	if(store_item.graphic_num >= 1000) // was 150
-		dynamic_cast<cPict&>(me["pic"]).setPict(store_item.graphic_num, PIC_CUSTOM_ITEM);
-	else dynamic_cast<cPict&>(me["pic"]).setPict(store_item.graphic_num, PIC_ITEM);
-	me["picnum"].setTextToNum(store_item.graphic_num);
+static void put_item_info_in_dlog(cDialog& me, cItem& item, short which) {
+	me["num"].setTextToNum(which);
+	me["full"].setText(item.full_name);
+	me["short"].setText(item.name);
+	if(item.graphic_num >= 1000) // was 150
+		dynamic_cast<cPict&>(me["pic"]).setPict(item.graphic_num, PIC_CUSTOM_ITEM);
+	else dynamic_cast<cPict&>(me["pic"]).setPict(item.graphic_num, PIC_ITEM);
+	me["picnum"].setTextToNum(item.graphic_num);
 	
 	bool missile = false, weapon = false;
 	
 	cLedGroup& variety = dynamic_cast<cLedGroup&>(me["variety"]);
-	switch(store_item.variety) {
+	switch(item.variety) {
 		case eItemType::NO_ITEM:
 			variety.setSelected("none");
 			break;
@@ -1311,8 +1310,8 @@ static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_it
 		me["missile-pic"].show();
 		me["missile-pic"].show();
 		me["choosemiss"].show();
-		me["missile"].setTextToNum(store_item.missile);
-		dynamic_cast<cPict&>(me["missile-pic"]).setPict(store_item.missile);
+		me["missile"].setTextToNum(item.missile);
+		dynamic_cast<cPict&>(me["missile-pic"]).setPict(item.missile);
 	} else {
 		me["missile"].hide();
 		me["missile-title"].hide();
@@ -1325,7 +1324,7 @@ static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_it
 		me["skill-title"].show();
 		me["weap-type"].show();
 		me["choosetp"].show();
-		me["weap-type"].setTextToNum(int(store_item.weap_type));
+		me["weap-type"].setTextToNum(int(item.weap_type));
 	} else {
 		me["skill-title"].hide();
 		me["weap-type"].hide();
@@ -1333,146 +1332,146 @@ static void put_item_info_in_dlog(cDialog& me, cItem& store_item, short which_it
 		me["weap-type"].setText("0");
 	}
 	
-	me["level"].setTextToNum(store_item.item_level);
-	me["awkward"].setTextToNum(store_item.awkward);
-	me["bonus"].setTextToNum(store_item.bonus);
-	me["prot"].setTextToNum(store_item.protection);
-	me["charges"].setTextToNum(store_item.charges);
-	me["flag"].setTextToNum(store_item.type_flag);
-	me["value"].setTextToNum(store_item.value);
-	me["weight"].setTextToNum(store_item.weight);
-	me["class"].setTextToNum(store_item.special_class);
-	me["abilname"].setText(store_item.getAbilName());
+	me["level"].setTextToNum(item.item_level);
+	me["awkward"].setTextToNum(item.awkward);
+	me["bonus"].setTextToNum(item.bonus);
+	me["prot"].setTextToNum(item.protection);
+	me["charges"].setTextToNum(item.charges);
+	me["flag"].setTextToNum(item.type_flag);
+	me["value"].setTextToNum(item.value);
+	me["weight"].setTextToNum(item.weight);
+	me["class"].setTextToNum(item.special_class);
+	me["abilname"].setText(item.getAbilName());
 }
 
-static void save_item_info(cDialog& me, cItem& store_item, short which_item) {
-	store_item.full_name = me["full"].getText();
-	store_item.name = me["short"].getText();
-	store_item.graphic_num = me["picnum"].getTextAsNum();
+static void save_item_info(cDialog& me, cItem& item) {
+	item.full_name = me["full"].getText();
+	item.name = me["short"].getText();
+	item.graphic_num = me["picnum"].getTextAsNum();
 	
 	std::string variety = dynamic_cast<cLedGroup&>(me["variety"]).getSelected();
-	if(variety == "none") store_item.variety = eItemType::NO_ITEM;
-	else if(variety == "weap1") store_item.variety = eItemType::ONE_HANDED;
-	else if(variety == "weap2") store_item.variety = eItemType::TWO_HANDED;
-	else if(variety == "gold") store_item.variety = eItemType::GOLD;
-	else if(variety == "bow") store_item.variety = eItemType::BOW;
-	else if(variety == "arrow") store_item.variety = eItemType::ARROW;
-	else if(variety == "thrown") store_item.variety = eItemType::THROWN_MISSILE;
-	else if(variety == "potion") store_item.variety = eItemType::POTION;
-	else if(variety == "scroll") store_item.variety = eItemType::SCROLL;
-	else if(variety == "wand") store_item.variety = eItemType::WAND;
-	else if(variety == "tool") store_item.variety = eItemType::TOOL;
-	else if(variety == "food") store_item.variety = eItemType::FOOD;
-	else if(variety == "shield") store_item.variety = eItemType::SHIELD;
-	else if(variety == "armor") store_item.variety = eItemType::ARMOR;
-	else if(variety == "helm") store_item.variety = eItemType::HELM;
-	else if(variety == "gloves") store_item.variety = eItemType::GLOVES;
-	else if(variety == "shield2") store_item.variety = eItemType::SHIELD_2;
-	else if(variety == "boots") store_item.variety = eItemType::BOOTS;
-	else if(variety == "ring") store_item.variety = eItemType::RING;
-	else if(variety == "necklace") store_item.variety = eItemType::NECKLACE;
-	else if(variety == "poison") store_item.variety = eItemType::WEAPON_POISON;
-	else if(variety == "nonuse") store_item.variety = eItemType::NON_USE_OBJECT;
-	else if(variety == "pants") store_item.variety = eItemType::PANTS;
-	else if(variety == "xbow") store_item.variety = eItemType::CROSSBOW;
-	else if(variety == "bolt") store_item.variety = eItemType::BOLTS;
-	else if(variety == "missile") store_item.variety = eItemType::MISSILE_NO_AMMO;
-	else if(variety == "unused1") store_item.variety = eItemType::UNUSED1;
-	else if(variety == "special") store_item.variety = eItemType::SPECIAL;
-	store_item.weap_type = eSkill(me["weap-type"].getTextAsNum());
-	store_item.missile = me["missile"].getTextAsNum();
+	if(variety == "none") item.variety = eItemType::NO_ITEM;
+	else if(variety == "weap1") item.variety = eItemType::ONE_HANDED;
+	else if(variety == "weap2") item.variety = eItemType::TWO_HANDED;
+	else if(variety == "gold") item.variety = eItemType::GOLD;
+	else if(variety == "bow") item.variety = eItemType::BOW;
+	else if(variety == "arrow") item.variety = eItemType::ARROW;
+	else if(variety == "thrown") item.variety = eItemType::THROWN_MISSILE;
+	else if(variety == "potion") item.variety = eItemType::POTION;
+	else if(variety == "scroll") item.variety = eItemType::SCROLL;
+	else if(variety == "wand") item.variety = eItemType::WAND;
+	else if(variety == "tool") item.variety = eItemType::TOOL;
+	else if(variety == "food") item.variety = eItemType::FOOD;
+	else if(variety == "shield") item.variety = eItemType::SHIELD;
+	else if(variety == "armor") item.variety = eItemType::ARMOR;
+	else if(variety == "helm") item.variety = eItemType::HELM;
+	else if(variety == "gloves") item.variety = eItemType::GLOVES;
+	else if(variety == "shield2") item.variety = eItemType::SHIELD_2;
+	else if(variety == "boots") item.variety = eItemType::BOOTS;
+	else if(variety == "ring") item.variety = eItemType::RING;
+	else if(variety == "necklace") item.variety = eItemType::NECKLACE;
+	else if(variety == "poison") item.variety = eItemType::WEAPON_POISON;
+	else if(variety == "nonuse") item.variety = eItemType::NON_USE_OBJECT;
+	else if(variety == "pants") item.variety = eItemType::PANTS;
+	else if(variety == "xbow") item.variety = eItemType::CROSSBOW;
+	else if(variety == "bolt") item.variety = eItemType::BOLTS;
+	else if(variety == "missile") item.variety = eItemType::MISSILE_NO_AMMO;
+	else if(variety == "unused1") item.variety = eItemType::UNUSED1;
+	else if(variety == "special") item.variety = eItemType::SPECIAL;
+	item.weap_type = eSkill(me["weap-type"].getTextAsNum());
+	item.missile = me["missile"].getTextAsNum();
 	
-	store_item.item_level = me["level"].getTextAsNum();
-	if((store_item.variety == eItemType::GOLD || store_item.variety == eItemType::FOOD) && store_item.item_level == 0)
-		store_item.item_level = 1;
+	item.item_level = me["level"].getTextAsNum();
+	if((item.variety == eItemType::GOLD || item.variety == eItemType::FOOD) && item.item_level == 0)
+		item.item_level = 1;
 	
-	store_item.awkward = me["awkward"].getTextAsNum();
-	store_item.bonus = me["bonus"].getTextAsNum();;
-	store_item.protection = me["prot"].getTextAsNum();
-	store_item.charges = me["charges"].getTextAsNum();
-	store_item.type_flag = me["flag"].getTextAsNum();
-	store_item.value = me["value"].getTextAsNum();
-	store_item.weight = me["weight"].getTextAsNum();
-	store_item.special_class = me["class"].getTextAsNum();
+	item.awkward = me["awkward"].getTextAsNum();
+	item.bonus = me["bonus"].getTextAsNum();;
+	item.protection = me["prot"].getTextAsNum();
+	item.charges = me["charges"].getTextAsNum();
+	item.type_flag = me["flag"].getTextAsNum();
+	item.value = me["value"].getTextAsNum();
+	item.weight = me["weight"].getTextAsNum();
+	item.special_class = me["class"].getTextAsNum();
 	
-	int was_charges = store_item.charges;
-	if(store_item.type_flag > 0 && store_item.charges == 0)
-		store_item.charges = 1;
-	eItemAbilCat cat = getItemAbilCategory(store_item.ability);
-	if((cat == eItemAbilCat::USABLE || cat == eItemAbilCat::REAGENT) && store_item.charges == 0)
-		store_item.charges = 1;
-	if(was_charges != store_item.charges)
+	int was_charges = item.charges;
+	if(item.type_flag > 0 && item.charges == 0)
+		item.charges = 1;
+	eItemAbilCat cat = getItemAbilCategory(item.ability);
+	if((cat == eItemAbilCat::USABLE || cat == eItemAbilCat::REAGENT) && item.charges == 0)
+		item.charges = 1;
+	if(was_charges != item.charges)
 		giveError("Due to either the selected special ability or the presence of a type flag, this item's charges have been set to 1.", &me);
 }
 
-static bool edit_item_type_event_filter(cDialog& me, std::string item_hit, cItem& store_item, short& store_which_item) {
+static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& item, short& which) {
 	short i;
 	cItem temp_item;
 	std::string variety = dynamic_cast<cLedGroup&>(me["variety"]).getSelected();
 	bool valid = true;
 	if(variety.substr(0,6) == "unused") valid = false;
-	if(!valid && item_hit != "cancel" && item_hit.substr(0,6) != "choose") {
+	if(!valid && hit != "cancel" && hit.substr(0,6) != "choose") {
 		giveError("The Unused item varieties are reserved for later expansions, and can't be used now.","",&me);
 		return true;
 	}
 	
-	if(item_hit == "cancel") {
+	if(hit == "cancel") {
 		me.toast(false);
-	} else if(item_hit == "okay") {
-		save_item_info(me, store_item, store_which_item);
+	} else if(hit == "okay") {
+		save_item_info(me, item);
 		if(!me.toast(true)) return true;
-		scenario.scen_items[store_which_item] = store_item;
-	} else if(item_hit == "prev") {
-		save_item_info(me, store_item, store_which_item);
-		scenario.scen_items[store_which_item] = store_item;
-		store_which_item--;
-		if(store_which_item < 0) store_which_item = 399;
-		store_item = scenario.scen_items[store_which_item];
-		put_item_info_in_dlog(me, store_item, store_which_item);
-	} else if(item_hit == "next") {
-		save_item_info(me, store_item, store_which_item);
-		scenario.scen_items[store_which_item] = store_item;
-		store_which_item++;
-		if(store_which_item > 399) store_which_item = 0;
-		store_item = scenario.scen_items[store_which_item];
-		put_item_info_in_dlog(me, store_item, store_which_item);
-	} else if(item_hit == "choosepic") {
-		save_item_info(me, store_item, store_which_item);
+		scenario.scen_items[which] = item;
+	} else if(hit == "prev") {
+		save_item_info(me, item);
+		scenario.scen_items[which] = item;
+		which--;
+		if(which < 0) which = 399;
+		item = scenario.scen_items[which];
+		put_item_info_in_dlog(me, item, which);
+	} else if(hit == "next") {
+		save_item_info(me, item);
+		scenario.scen_items[which] = item;
+		which++;
+		if(which > 399) which = 0;
+		item = scenario.scen_items[which];
+		put_item_info_in_dlog(me, item, which);
+	} else if(hit == "choosepic") {
+		save_item_info(me, item);
 		i = pick_picture(PIC_ITEM, me, "picnum", "pic");
 		if(i < 0) return true;
-		store_item.graphic_num = i;
-	} else if(item_hit == "choosetp") {
-		save_item_info(me, store_item, store_which_item);
-		i = choose_text(STRT_SKILL, int(store_item.weap_type), &me, "Select the weapon's key skill:");
-		store_item.weap_type = eSkill(i);
+		item.graphic_num = i;
+	} else if(hit == "choosetp") {
+		save_item_info(me, item);
+		i = choose_text(STRT_SKILL, int(item.weap_type), &me, "Select the weapon's key skill:");
+		item.weap_type = eSkill(i);
 		me["weap-type"].setTextToNum(i);
-	} else if(item_hit == "choosemiss") {
-		save_item_info(me, store_item, store_which_item);
+	} else if(hit == "choosemiss") {
+		save_item_info(me, item);
 		i = pick_picture(PIC_MISSILE, me, "missile", "missile-pic");
 		if(i < 0) return true;
-		store_item.missile = i;
-	} else if(item_hit == "desc") {
+		item.missile = i;
+	} else if(hit == "desc") {
 		cDialog desc_dlg("edit-text", &me);
 		desc_dlg["left"].hide();
 		desc_dlg["right"].hide();
 		desc_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &desc_dlg, true));
-		desc_dlg["text"].setText(store_item.desc);
-		desc_dlg["num-lbl"].setText(store_item.full_name);
+		desc_dlg["text"].setText(item.desc);
+		desc_dlg["num-lbl"].setText(item.full_name);
 		desc_dlg.run();
-		store_item.desc = desc_dlg["text"].getText();
-	} else if(item_hit == "abils") {
-		save_item_info(me, store_item, store_which_item);
-		if(store_item.variety == eItemType::NO_ITEM) {
+		item.desc = desc_dlg["text"].getText();
+	} else if(hit == "abils") {
+		save_item_info(me, item);
+		if(item.variety == eItemType::NO_ITEM) {
 			giveError("You must give the item a type (weapon, armor, etc.) before you can choose its abilities.","",&me);
 			return true;
 		}
-		if(store_item.variety == eItemType::GOLD || store_item.variety == eItemType::FOOD || store_item.variety == eItemType::SPECIAL) {
+		if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD || item.variety == eItemType::SPECIAL) {
 			giveError("Gold, Food, and Special Items cannot be given special abilities.","",&me);
 			return true;
 		}
-		temp_item = edit_item_abil(store_item,store_which_item,me);
+		temp_item = edit_item_abil(item,which,me);
 		if(temp_item.variety != eItemType::NO_ITEM)
-			store_item = temp_item;
+			item = temp_item;
 	}
 	return true;
 }
@@ -1509,9 +1508,9 @@ static bool change_item_variety(cDialog& me, std::string group, const cItem& ite
 	return true;
 }
 
-short edit_item_type(short which_item) {
+short edit_item_type(short which) {
 	using namespace std::placeholders;
-	cItem store_item = scenario.scen_items[which_item];
+	cItem item = scenario.scen_items[which];
 	
 	cDialog item_dlg("edit-item");
 	item_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 50, "Item Level"));
@@ -1523,35 +1522,35 @@ short edit_item_type(short which_item) {
 	item_dlg["value"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 10000, "Value"));
 	item_dlg["weight"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 250, "Weight"));
 	item_dlg["class"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Special Class"));
-	item_dlg["variety"].attachFocusHandler(std::bind(change_item_variety, _1, _2, std::ref(store_item)));
-	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(store_item), std::ref(which_item)), {"okay", "cancel", "prev", "next", "abils", "choosepic", "choosetp", "choosemiss", "desc"});
+	item_dlg["variety"].attachFocusHandler(std::bind(change_item_variety, _1, _2, std::ref(item)));
+	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"okay", "cancel", "prev", "next", "abils", "choosepic", "choosetp", "choosemiss", "desc"});
 	
-	put_item_info_in_dlog(item_dlg, store_item, which_item);
+	put_item_info_in_dlog(item_dlg, item, which);
 	
 	item_dlg.run();
 	return 0;
 }
 
-static void put_item_abils_in_dlog(cDialog& me, cItem& store_item, short which_item) {
+static void put_item_abils_in_dlog(cDialog& me, cItem& item, short which) {
 	
-	me["num"].setTextToNum(which_item);
-	me["name"].setText(store_item.full_name.c_str());
-	me["variety"].setText(get_str("item-types", int(store_item.variety) + 1));
-	if(store_item.ability == eItemAbil::NONE)
+	me["num"].setTextToNum(which);
+	me["name"].setText(item.full_name.c_str());
+	me["variety"].setText(get_str("item-types", int(item.variety) + 1));
+	if(item.ability == eItemAbil::NONE)
 		me["abilname"].setText("No ability");
-	else me["abilname"].setText(get_str("item-abilities", int(store_item.ability)));
+	else me["abilname"].setText(get_str("item-abilities", int(item.ability)));
 	
-	dynamic_cast<cLedGroup&>(me["use-type"]).setSelected("use" + std::to_string(store_item.magic_use_type));
-	dynamic_cast<cLedGroup&>(me["treasure"]).setSelected("type" + std::to_string(store_item.treas_class));
-	me["str1"].setTextToNum(store_item.abil_data[0]);
-	me["str2"].setTextToNum(store_item.abil_data[1]);
+	dynamic_cast<cLedGroup&>(me["use-type"]).setSelected("use" + std::to_string(item.magic_use_type));
+	dynamic_cast<cLedGroup&>(me["treasure"]).setSelected("type" + std::to_string(item.treas_class));
+	me["str1"].setTextToNum(item.abil_data[0]);
+	me["str2"].setTextToNum(item.abil_data[1]);
 	
-	if(store_item.ability == eItemAbil::CALL_SPECIAL || store_item.ability == eItemAbil::WEAPON_CALL_SPECIAL || store_item.ability == eItemAbil::HIT_CALL_SPECIAL) {
+	if(item.ability == eItemAbil::CALL_SPECIAL || item.ability == eItemAbil::WEAPON_CALL_SPECIAL || item.ability == eItemAbil::HIT_CALL_SPECIAL) {
 		me["str1-choose"].show();
 		me["str1-title"].setText("Special to call");
 	} else {
 		me["str1-choose"].hide();
-		if(getItemAbilCategory(store_item.ability) == eItemAbilCat::REAGENT || items_no_strength.count(store_item.ability) > 0)
+		if(getItemAbilCategory(item.ability) == eItemAbilCat::REAGENT || items_no_strength.count(item.ability) > 0)
 			me["str1-title"].setText("Unused");
 		else me["str1-title"].setText("Ability strength");
 	}
@@ -1559,7 +1558,7 @@ static void put_item_abils_in_dlog(cDialog& me, cItem& store_item, short which_i
 	me["str2-choose1"].show();
 	me["str2-choose1"].setText("Choose");
 	me["str2-choose2"].hide();
-	switch(store_item.ability) {
+	switch(item.ability) {
 		case eItemAbil::DAMAGING_WEAPON:
 		case eItemAbil::EXPLODING_WEAPON:
 		case eItemAbil::DAMAGE_PROTECTION:
@@ -1594,7 +1593,7 @@ static void put_item_abils_in_dlog(cDialog& me, cItem& store_item, short which_i
 			break;
 	}
 	
-	if((store_item.ability >= eItemAbil::BLISS_DOOM && store_item.ability <= eItemAbil::HEALTH_POISON) || store_item.ability == eItemAbil::AFFECT_STATUS || store_item.ability == eItemAbil::OCCASIONAL_STATUS) {
+	if((item.ability >= eItemAbil::BLISS_DOOM && item.ability <= eItemAbil::HEALTH_POISON) || item.ability == eItemAbil::AFFECT_STATUS || item.ability == eItemAbil::OCCASIONAL_STATUS) {
 		me["use-title"].show();
 		me["use-type"].show();
 	} else {
@@ -1602,39 +1601,39 @@ static void put_item_abils_in_dlog(cDialog& me, cItem& store_item, short which_i
 		me["use-type"].hide();
 	}
 	
-	dynamic_cast<cLed&>(me["always-id"]).setState(store_item.ident ? led_red : led_off);
-	dynamic_cast<cLed&>(me["magic"]).setState(store_item.magic ? led_red : led_off);
-	dynamic_cast<cLed&>(me["cursed"]).setState(store_item.cursed ? led_red : led_off);
-	dynamic_cast<cLed&>(me["conceal"]).setState(store_item.concealed ? led_red : led_off);
-	dynamic_cast<cLed&>(me["no-sell"]).setState(store_item.unsellable ? led_red : led_off);
+	dynamic_cast<cLed&>(me["always-id"]).setState(item.ident ? led_red : led_off);
+	dynamic_cast<cLed&>(me["magic"]).setState(item.magic ? led_red : led_off);
+	dynamic_cast<cLed&>(me["cursed"]).setState(item.cursed ? led_red : led_off);
+	dynamic_cast<cLed&>(me["conceal"]).setState(item.concealed ? led_red : led_off);
+	dynamic_cast<cLed&>(me["no-sell"]).setState(item.unsellable ? led_red : led_off);
 }
 
-static void save_item_abils(cDialog& me, cItem& store_item) {
-	store_item.magic_use_type = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["use-type"]).getSelected().substr(3));
-	store_item.treas_class = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["treasure"]).getSelected().substr(4));
-	store_item.abil_data[0] = me["str1"].getTextAsNum();
-	store_item.abil_data[1] = me["str2"].getTextAsNum();
+static void save_item_abils(cDialog& me, cItem& item) {
+	item.magic_use_type = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["use-type"]).getSelected().substr(3));
+	item.treas_class = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["treasure"]).getSelected().substr(4));
+	item.abil_data[0] = me["str1"].getTextAsNum();
+	item.abil_data[1] = me["str2"].getTextAsNum();
 	
-	store_item.property = store_item.enchanted = store_item.contained = false;
-	store_item.ident = dynamic_cast<cLed&>(me["always-id"]).getState() != led_off;
-	store_item.magic = dynamic_cast<cLed&>(me["magic"]).getState() != led_off;
-	store_item.cursed = dynamic_cast<cLed&>(me["cursed"]).getState() != led_off;
-	store_item.unsellable = dynamic_cast<cLed&>(me["no-sell"]).getState() != led_off;
-	store_item.concealed = dynamic_cast<cLed&>(me["conceal"]).getState() != led_off;
+	item.property = item.enchanted = item.contained = false;
+	item.ident = dynamic_cast<cLed&>(me["always-id"]).getState() != led_off;
+	item.magic = dynamic_cast<cLed&>(me["magic"]).getState() != led_off;
+	item.cursed = dynamic_cast<cLed&>(me["cursed"]).getState() != led_off;
+	item.unsellable = dynamic_cast<cLed&>(me["no-sell"]).getState() != led_off;
+	item.concealed = dynamic_cast<cLed&>(me["conceal"]).getState() != led_off;
 }
 
-static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem& store_item, short which_item) {
+static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& item, short which) {
 	short i;
 	
-	if(item_hit == "cancel") {
-		store_item.variety = eItemType::NO_ITEM;
+	if(hit == "cancel") {
+		item.variety = eItemType::NO_ITEM;
 		me.toast(false);
 		return true;
-	} else if(item_hit == "okay") {
-		save_item_abils(me, store_item);
+	} else if(hit == "okay") {
+		save_item_abils(me, item);
 		me.toast(true);
-	} else if(item_hit == "str1-choose") {
-		save_item_abils(me, store_item);
+	} else if(hit == "str1-choose") {
+		save_item_abils(me, item);
 		short spec = me["str1"].getTextAsNum();
 		if(spec < 0 || spec > 255) {
 			spec = get_fresh_spec(0);
@@ -1645,13 +1644,13 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			}
 		}
 		if(edit_spec_enc(spec,0,&me)) {
-			store_item.abil_data[0] = spec;
+			item.abil_data[0] = spec;
 			me["str1"].setTextToNum(spec);
 		}
-	} else if(item_hit == "str2-choose1") {
-		save_item_abils(me, store_item);
-		i = store_item.abil_data[1];
-		switch(store_item.ability) {
+	} else if(hit == "str2-choose1") {
+		save_item_abils(me, item);
+		i = item.abil_data[1];
+		switch(item.ability) {
 			case eItemAbil::DAMAGING_WEAPON:
 			case eItemAbil::EXPLODING_WEAPON:
 			case eItemAbil::DAMAGE_PROTECTION:
@@ -1662,7 +1661,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 			case eItemAbil::OCCASIONAL_STATUS:
 			case eItemAbil::AFFECT_STATUS:
 			case eItemAbil::AFFECT_PARTY_STATUS:
-				i = choose_status_effect(i, store_item.ability == eItemAbil::AFFECT_PARTY_STATUS, &me);
+				i = choose_status_effect(i, item.ability == eItemAbil::AFFECT_PARTY_STATUS, &me);
 				break;
 			case eItemAbil::SLAYER_WEAPON:
 			case eItemAbil::PROTECT_FROM_SPECIES:
@@ -1681,130 +1680,128 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string item_hit, cItem
 				break;
 			default: return true;
 		}
-		store_item.abil_data[1] = i;
+		item.abil_data[1] = i;
 		me["str2"].setTextToNum(i);
-	} else if(item_hit == "str2-choose2") {
-		save_item_abils(me, store_item);
-		i = 100 + choose_text_res("magic-names", 101, 166, store_item.abil_data[1] + 1, &me, "Which priest spell?");
+	} else if(hit == "str2-choose2") {
+		save_item_abils(me, item);
+		i = 100 + choose_text_res("magic-names", 101, 166, item.abil_data[1] + 1, &me, "Which priest spell?");
 		if(i < 100) return true;
-		store_item.abil_data[1] = i;
+		item.abil_data[1] = i;
 		me["str2"].setTextToNum(i);
-	} else if(item_hit == "clear") {
-		save_item_abils(me, store_item);
-		store_item.ability = eItemAbil::NONE;
-		put_item_abils_in_dlog(me, store_item, which_item);
-	} else if(item_hit == "weapon") {
-		save_item_abils(me, store_item);
-		if(!isWeaponType(store_item.variety)) {
+	} else if(hit == "clear") {
+		save_item_abils(me, item);
+		item.ability = eItemAbil::NONE;
+		put_item_abils_in_dlog(me, item, which);
+	} else if(hit == "weapon") {
+		save_item_abils(me, item);
+		if(!isWeaponType(item.variety)) {
 			giveError("You can only give an ability of this sort to a weapon.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 1, 14, int(store_item.ability), &me, "Choose Weapon Ability (inherent)");
+		i = choose_text_res("item-abilities", 1, 14, int(item.ability), &me, "Choose Weapon Ability (inherent)");
 		if(i < 0) return true;
 		eItemAbil abil = eItemAbil(i + 1);
 		if(abil >= eItemAbil::RETURNING_MISSILE && abil <= eItemAbil::SEEKING_MISSILE) {
-			if(store_item.variety != eItemType::THROWN_MISSILE && store_item.variety != eItemType::ARROW &&
-				store_item.variety != eItemType::BOLTS && store_item.variety != eItemType::MISSILE_NO_AMMO) {
+			if(item.variety != eItemType::THROWN_MISSILE && item.variety != eItemType::ARROW &&
+				item.variety != eItemType::BOLTS && item.variety != eItemType::MISSILE_NO_AMMO) {
 				giveError("You can only give this ability to a missile.",&me);
 				return true;
 			}
 		}
-		store_item.ability = abil;
-		put_item_abils_in_dlog(me, store_item, which_item);
-	} else if(item_hit == "general") {
-		save_item_abils(me, store_item);
-		if(equippable.count(store_item.variety) == 0 || store_item.variety == eItemType::ARROW || store_item.variety == eItemType::THROWN_MISSILE || store_item.variety == eItemType::BOLTS){
+		item.ability = abil;
+		put_item_abils_in_dlog(me, item, which);
+	} else if(hit == "general") {
+		save_item_abils(me, item);
+		if(equippable.count(item.variety) == 0 || item.variety == eItemType::ARROW || item.variety == eItemType::THROWN_MISSILE || item.variety == eItemType::BOLTS){
 			giveError("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 30, 58, int(store_item.ability), &me, "Choose General Ability (inherent)");
+		i = choose_text_res("item-abilities", 30, 58, int(item.ability), &me, "Choose General Ability (inherent)");
 		if(i < 0) return true;
-		store_item.ability = eItemAbil(i + 30);
-		put_item_abils_in_dlog(me, store_item, which_item);
-	} else if(item_hit == "usable") {
-		save_item_abils(me, store_item);
-		if((store_item.variety == eItemType::ARROW) || (store_item.variety == eItemType::THROWN_MISSILE) || (store_item.variety == eItemType::BOLTS)){
+		item.ability = eItemAbil(i + 30);
+		put_item_abils_in_dlog(me, item, which);
+	} else if(hit == "usable") {
+		save_item_abils(me, item);
+		if((item.variety == eItemType::ARROW) || (item.variety == eItemType::THROWN_MISSILE) || (item.variety == eItemType::BOLTS)){
 			giveError("You can't give an ability of this sort to a missile.",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 70, 84, int(store_item.ability), &me, "Choose Usable Ability");
+		i = choose_text_res("item-abilities", 70, 84, int(item.ability), &me, "Choose Usable Ability");
 		if(i < 0) return true;
-		store_item.ability = eItemAbil(i + 70);
-		put_item_abils_in_dlog(me, store_item, which_item);
-	} else if(item_hit == "reagent") {
-		save_item_abils(me, store_item);
-		if(store_item.variety != eItemType::NON_USE_OBJECT){
+		item.ability = eItemAbil(i + 70);
+		put_item_abils_in_dlog(me, item, which);
+	} else if(hit == "reagent") {
+		save_item_abils(me, item);
+		if(item.variety != eItemType::NON_USE_OBJECT){
 			giveError("You can only give an ability of this sort to an item of type Non-Use Object.",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 150, 160, int(store_item.ability), &me, "Choose Reagent Ability");
+		i = choose_text_res("item-abilities", 150, 160, int(item.ability), &me, "Choose Reagent Ability");
 		if(i < 0) return true;
-		store_item.ability = eItemAbil(i + 150);
-		put_item_abils_in_dlog(me, store_item, which_item);
+		item.ability = eItemAbil(i + 150);
+		put_item_abils_in_dlog(me, item, which);
 	}
 	return true;
 }
 
-cItem edit_item_abil(cItem starting_record,short which_item,cDialog& parent) {
+cItem edit_item_abil(cItem initial,short which_item,cDialog& parent) {
 	using namespace std::placeholders;
 	
-	cItem store_item = starting_record;
-	
 	cDialog item_dlg("edit-item-abils",&parent);
-	item_dlg.attachClickHandlers(std::bind(edit_item_abil_event_filter, _1, _2, std::ref(store_item), which_item), {
+	item_dlg.attachClickHandlers(std::bind(edit_item_abil_event_filter, _1, _2, std::ref(initial), which_item), {
 		"okay", "cancel",
 		"clear", "weapon", "general", "usable", "reagent",
 		"str1-choose", "str2-choose1", "str2-choose2",
 	});
 	
-	put_item_abils_in_dlog(item_dlg, store_item, which_item);
+	put_item_abils_in_dlog(item_dlg, initial, which_item);
 	
 	item_dlg.run();
 	
-	return store_item;
+	return initial;
 }
 
-static void put_spec_item_in_dlog(cDialog& me, cSpecItem& store_item, short which_item) {
-	me["num"].setTextToNum(which_item);
-	me["name"].setText(store_item.name);
-	me["descr"].setText(store_item.descr);
-	me["spec"].setTextToNum(store_item.special);
-	dynamic_cast<cLed&>(me["start-with"]).setState(store_item.flags >= 10 ? led_red : led_off);
-	dynamic_cast<cLed&>(me["usable"]).setState(store_item.flags % 10 > 0 ? led_red : led_off);
+static void put_spec_item_in_dlog(cDialog& me, cSpecItem& item, short which) {
+	me["num"].setTextToNum(which);
+	me["name"].setText(item.name);
+	me["descr"].setText(item.descr);
+	me["spec"].setTextToNum(item.special);
+	dynamic_cast<cLed&>(me["start-with"]).setState(item.flags >= 10 ? led_red : led_off);
+	dynamic_cast<cLed&>(me["usable"]).setState(item.flags % 10 > 0 ? led_red : led_off);
 }
 
-static bool save_spec_item(cDialog& me, cSpecItem& store_item, short which_item) {
-	store_item.name = me["name"].getText().substr(0,25);
-	store_item.descr = me["descr"].getText();
-	store_item.special = me["spec"].getTextAsNum();
-	store_item.flags = 0;
+static bool save_spec_item(cDialog& me, cSpecItem& item, short which) {
+	item.name = me["name"].getText().substr(0,25);
+	item.descr = me["descr"].getText();
+	item.special = me["spec"].getTextAsNum();
+	item.flags = 0;
 	if(dynamic_cast<cLed&>(me["start-with"]).getState() != led_off)
-		store_item.flags += 10;
+		item.flags += 10;
 	if(dynamic_cast<cLed&>(me["usable"]).getState() != led_off)
-		store_item.flags += 1;
-	scenario.special_items[which_item] = store_item;
+		item.flags += 1;
+	scenario.special_items[which] = item;
 	return true;
 }
 
-static bool edit_spec_item_event_filter(cDialog& me, std::string item_hit, cSpecItem& store_item, short which_item) {
-	if(item_hit == "cancel") {
+static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem& item, short which) {
+	if(hit == "cancel") {
 		me.toast(false);
-	} else if(item_hit == "okay") {
-		if(save_spec_item(me, store_item, which_item)) me.toast(true);
-	} else if(item_hit == "left") {
-		if(!save_spec_item(me, store_item, which_item)) return true;
-		which_item--;
-		if(which_item < 0) which_item = 49;
-		store_item = scenario.special_items[which_item];
-		put_spec_item_in_dlog(me, store_item, which_item);
-	} else if(item_hit == "right") {
-		if(!save_spec_item(me, store_item, which_item)) return true;
-		which_item++;
-		if(which_item > 49) which_item = 0;
-		store_item = scenario.special_items[which_item];
-		put_spec_item_in_dlog(me, store_item, which_item);
-	} else if(item_hit == "edit-spec") {
-		if(!save_spec_item(me, store_item, which_item)) return true;
+	} else if(hit == "okay") {
+		if(save_spec_item(me, item, which)) me.toast(true);
+	} else if(hit == "left") {
+		if(!save_spec_item(me, item, which)) return true;
+		which--;
+		if(which < 0) which = 49;
+		item = scenario.special_items[which];
+		put_spec_item_in_dlog(me, item, which);
+	} else if(hit == "right") {
+		if(!save_spec_item(me, item, which)) return true;
+		which++;
+		if(which > 49) which = 0;
+		item = scenario.special_items[which];
+		put_spec_item_in_dlog(me, item, which);
+	} else if(hit == "edit-spec") {
+		if(!save_spec_item(me, item, which)) return true;
 		short spec = me["spec"].getTextAsNum();
 		if((spec < 0) || (spec >= 256)) {
 			spec = get_fresh_spec(0);
@@ -1818,7 +1815,7 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string item_hit, cSpec
 		edit_spec_enc(spec,0,&me);
 		if(spec >= 0 && spec < 256 && scenario.scen_specials[spec].pic < 0)
 			me["spec"].setTextToNum(-1);
-		save_spec_item(me, store_item, which_item);
+		save_spec_item(me, item, which);
 		
 	}
 	return true;
@@ -1826,13 +1823,13 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string item_hit, cSpec
 
 void edit_spec_item(short which_item) {
 	using namespace std::placeholders;
-	cSpecItem store_item = scenario.special_items[which_item];
+	cSpecItem item = scenario.special_items[which_item];
 	
 	cDialog item_dlg("edit-special-item");
 	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 255, "Scenario special node called", "-1 for no special"));
-	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(store_item), which_item), {"okay", "cancel", "clear", "edit-spec", "left", "right"});
+	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), which_item), {"okay", "cancel", "clear", "edit-spec", "left", "right"});
 	
-	put_spec_item_in_dlog(item_dlg, store_item, which_item);
+	put_spec_item_in_dlog(item_dlg, item, which_item);
 	item_dlg["clear"].hide();
 	
 	item_dlg.run();
@@ -1935,17 +1932,17 @@ static void put_vehicles_in_dlog(cDialog& me, cVehicle* vehicles, const short pa
 	}
 }
 
-static bool edit_vehicles_event_filter(cDialog& me, std::string item_hit, cVehicle* vehicles, size_t nVehicles, size_t& page) {
+static bool edit_vehicles_event_filter(cDialog& me, std::string hit, cVehicle* vehicles, size_t nVehicles, size_t& page) {
 	
-	if(item_hit == "okay") {
+	if(hit == "okay") {
 		if(save_vehicles(me, vehicles, page))
 			me.toast(true);
-	} else if(item_hit == "left") {
+	} else if(hit == "left") {
 		if(!save_vehicles(me, vehicles, page)) return true;
 		if(page == 0) page = (nVehicles - 1) / 6;
 		else page--;
 		put_vehicles_in_dlog(me, vehicles, page);
-	} else if(item_hit == "right") {
+	} else if(hit == "right") {
 		if(!save_vehicles(me, vehicles, page)) return true;
 		page++;
 		if(page > (nVehicles - 1) / 6) page = 0;
@@ -2007,8 +2004,8 @@ static void put_add_town_in_dlog(cDialog& me) {
 	}
 }
 
-static bool edit_add_town_event_filter(cDialog& me, std::string item_hit) {
-	if(item_hit == "okay") {
+static bool edit_add_town_event_filter(cDialog& me, std::string hit) {
+	if(hit == "okay") {
 		if(save_add_town(me))
 			me.toast(true);
 	}
@@ -2026,96 +2023,96 @@ void edit_add_town() {
 	vary_dlg.run();
 }
 
-static bool save_item_placement(cDialog& me, cScenario::cItemStorage& store_storage, short cur_shortcut) {
+static bool save_item_placement(cDialog& me, cScenario::cItemStorage& storage, short which) {
 	short i;
 	
-	store_storage.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
-	store_storage.ter_type = me["ter"].getTextAsNum();
-	if(cre(store_storage.ter_type,
+	storage.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
+	storage.ter_type = me["ter"].getTextAsNum();
+	if(cre(storage.ter_type,
 			-1,255,"Terrain Type must be from 0 to 255 (or -1 for No Shortcut).","",&me)) return false;
 	for(i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
-		store_storage.item_num[i] = me["item" + id].getTextAsNum();
-		if(cre(store_storage.item_num[i],
+		storage.item_num[i] = me["item" + id].getTextAsNum();
+		if(cre(storage.item_num[i],
 			   -1,399,"All item numbers must be from 0 to 399 (or -1 for No Item).","",&me)) return false;
-		store_storage.item_odds[i] = me["odds" + id].getTextAsNum();
-		if(cre(store_storage.item_odds[i],
+		storage.item_odds[i] = me["odds" + id].getTextAsNum();
+		if(cre(storage.item_odds[i],
 			   0,100,"All item chances must bve from 0 to 100.","",&me)) return false;
 	}
-	scenario.storage_shortcuts[cur_shortcut] = store_storage;
+	scenario.storage_shortcuts[which] = storage;
 	return true;
 }
 
-static void put_item_placement_in_dlog(cDialog& me, const cScenario::cItemStorage& store_storage, short cur_shortcut) {
+static void put_item_placement_in_dlog(cDialog& me, const cScenario::cItemStorage& storage, short which) {
 	short i;
 	
-	me["num"].setTextToNum(cur_shortcut);
-	dynamic_cast<cLed&>(me["owned"]).setState(store_storage.property ? led_red : led_off);
-	me["ter"].setTextToNum(store_storage.ter_type);
+	me["num"].setTextToNum(which);
+	dynamic_cast<cLed&>(me["owned"]).setState(storage.property ? led_red : led_off);
+	me["ter"].setTextToNum(storage.ter_type);
 	for(i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
-		me["item" + id].setTextToNum(store_storage.item_num[i]);
-		me["odds" + id].setTextToNum(store_storage.item_odds[i]);
+		me["item" + id].setTextToNum(storage.item_num[i]);
+		me["odds" + id].setTextToNum(storage.item_odds[i]);
 	}
 }
 
-static bool edit_item_placement_event_filter(cDialog& me, std::string item_hit, cScenario::cItemStorage& store_storage, short& cur_shortcut) {
+static bool edit_item_placement_event_filter(cDialog& me, std::string hit, cScenario::cItemStorage& storage, short& which) {
 	short i;
 	
-	if(item_hit == "okay") {
-		if(save_item_placement(me, store_storage, cur_shortcut))
+	if(hit == "okay") {
+		if(save_item_placement(me, storage, which))
 			me.toast(true);
-	} else if(item_hit == "cancel") {
+	} else if(hit == "cancel") {
 		me.toast(false);
-	} else if(item_hit == "left") {
-		if(!save_item_placement(me, store_storage, cur_shortcut)) return true;
-		cur_shortcut--;
-		if(cur_shortcut < 0) cur_shortcut = 9;
-		store_storage = scenario.storage_shortcuts[cur_shortcut];
-		put_item_placement_in_dlog(me, store_storage, cur_shortcut);
-	} else if(item_hit == "right") {
-		if(!save_item_placement(me, store_storage, cur_shortcut)) return true;
-		cur_shortcut++;
-		if(cur_shortcut > 9) cur_shortcut = 0;
-		store_storage = scenario.storage_shortcuts[cur_shortcut];
-		put_item_placement_in_dlog(me, store_storage, cur_shortcut);
-	} else if(item_hit == "choose-ter") {
+	} else if(hit == "left") {
+		if(!save_item_placement(me, storage, which)) return true;
+		which--;
+		if(which < 0) which = 9;
+		storage = scenario.storage_shortcuts[which];
+		put_item_placement_in_dlog(me, storage, which);
+	} else if(hit == "right") {
+		if(!save_item_placement(me, storage, which)) return true;
+		which++;
+		if(which > 9) which = 0;
+		storage = scenario.storage_shortcuts[which];
+		put_item_placement_in_dlog(me, storage, which);
+	} else if(hit == "choose-ter") {
 		i = me["ter"].getTextAsNum();
-		store_storage.ter_type = i;
+		storage.ter_type = i;
 		i = choose_text(STRT_TER,i,&me,"Which Terrain?");
 		if(i >= 0){
 			me["ter"].setTextToNum(i);
-			store_storage.ter_type = i;
+			storage.ter_type = i;
 		}
 	}
 	return true;
 }
 
-static bool edit_item_placement_select_item(cDialog& me, cScenario::cItemStorage& store_storage, short item_hit) {
-	std::string id = "item" + std::to_string(item_hit);
+static bool edit_item_placement_select_item(cDialog& me, cScenario::cItemStorage& storage, short hit) {
+	std::string id = "item" + std::to_string(hit);
 	short i = me[id].getTextAsNum();
-	store_storage.item_num[item_hit - 1] = i;
+	storage.item_num[hit - 1] = i;
 	i = choose_text(STRT_ITEM,i,&me,"Place which item?");
 	if(i >= 0) {
 		me[id].setTextToNum(i);
-		store_storage.item_num[item_hit - 1] = i;
+		storage.item_num[hit - 1] = i;
 	}
 	return true;
 }
 
 void edit_item_placement() {
 	using namespace std::placeholders;
-	cScenario::cItemStorage store_storage = scenario.storage_shortcuts[0];
+	cScenario::cItemStorage storage = scenario.storage_shortcuts[0];
 	short cur_shortcut = 0;
 	
 	cDialog shortcut_dlg("edit-item-shortcut");
-	shortcut_dlg.attachClickHandlers(std::bind(edit_item_placement_event_filter, _1, _2, std::ref(store_storage), std::ref(cur_shortcut)), {"okay", "cancel", "left", "right", "choose-ter"});
+	shortcut_dlg.attachClickHandlers(std::bind(edit_item_placement_event_filter, _1, _2, std::ref(storage), std::ref(cur_shortcut)), {"okay", "cancel", "left", "right", "choose-ter"});
 	for(int i = 0; i < 10; i++) {
 		std::string id = "choose-item" + std::to_string(i + 1);
-		shortcut_dlg[id].attachClickHandler(std::bind(edit_item_placement_select_item, _1, std::ref(store_storage), i + 1));
+		shortcut_dlg[id].attachClickHandler(std::bind(edit_item_placement_select_item, _1, std::ref(storage), i + 1));
 	}
 	
-	put_item_placement_in_dlog(shortcut_dlg, store_storage, cur_shortcut);
+	put_item_placement_in_dlog(shortcut_dlg, storage, cur_shortcut);
 	
 	shortcut_dlg.run();
 }
