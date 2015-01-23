@@ -1,6 +1,6 @@
 
 void edit_placed_monst(short which_m);
-cTownperson edit_placed_monst_adv(cTownperson monst_record, class cDialog& parent);
+cTownperson edit_placed_monst_adv(cTownperson monst_record, short which, class cDialog& parent);
 void edit_sign(short which_sign,short picture);
 void edit_roomdescs(bool town);
 short pick_town_num(std::string which_dlog,short def,cScenario& scenario);

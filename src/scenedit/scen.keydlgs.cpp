@@ -21,8 +21,6 @@ extern cTown* town;
 extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
-extern cSpecial null_spec_node;
-extern cSpeech null_talk_node;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 short num_specs[3] = {256,60,100};

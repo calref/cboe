@@ -30,10 +30,6 @@ extern bool change_made;
 extern cCustomGraphics spec_scen_g;
 extern bool mac_is_intel;
 
-short specials_res_id,data_dump_file_id;
-char start_name[256];
-short start_volume,data_volume,jl = 0;
-
 fs::path temp_file_to_load;
 std::string last_load_file = "Blades of Exile Scenario";
 extern fs::path progDir;

@@ -30,10 +30,7 @@ extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cCustomGraphics spec_scen_g;
-extern cSpecial null_spec_node;
-extern cSpeech null_talk_node;
 extern location cur_out;
-extern short start_volume, start_dir;
 extern const std::multiset<eItemType> equippable;
 
 const std::set<eItemAbil> items_no_strength = {
