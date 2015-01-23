@@ -545,7 +545,7 @@ void pc_attack(short who_att,short target) {
 		dam_adj += 10;
 	}
 	
-	
+	// TODO: These should check abil_data[0], not item_level
 	if((skill_item = univ.party[who_att].has_abil_equip(eItemAbil::SKILL)) < 24) {
 		hit_adj += 5 * (univ.party[who_att].items[skill_item].item_level / 2 + 1);
 		dam_adj += univ.party[who_att].items[skill_item].item_level / 2;

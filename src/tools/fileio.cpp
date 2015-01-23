@@ -371,7 +371,7 @@ bool load_town(fs::path town_base, short which_town, cTown*& the_town) {
 	fname = base_fname + ".xml";
 	// Next, load in the town map.
 	fname = base_fname + ".map";
-	map_data map = load_map(town_base/fname);
+	map_data map = load_map(town_base/fname, true);
 	// Then load the town's special nodes.
 	fname = base_fname + ".spec";
 	// Load the town's special encounter strings
@@ -468,7 +468,7 @@ bool load_outdoors(fs::path out_base, location which_out,cOutdoors& the_out) {
 	fname = base_fname + ".xml";
 	// Next, load in the sector map.
 	fname = base_fname + ".map";
-	map_data map = load_map(out_base/fname);
+	map_data map = load_map(out_base/fname, false);
 	// Then load the sector's special nodes.
 	fname = base_fname + ".spec";
 	// Load the sector's special encounter strings

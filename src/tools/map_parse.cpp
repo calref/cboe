@@ -13,7 +13,7 @@
 
 using namespace std;
 
-map_data load_map(fs::path path) {
+map_data load_map(fs::path path, bool isTown) {
 	map_data data;
 	ifstream fin(path.string());
 	int row = 0;
@@ -53,8 +53,14 @@ map_data load_map(fs::path path) {
 					curFeature = eMapFeature::SPECIAL_NODE;
 				} else if(c == '!') {
 					curFeature = eMapFeature::SIGN;
-				} else if(c == '@') {
+				} else if(c == '@' && !isTown) {
 					curFeature = eMapFeature::TOWN;
+				} else if(c == '@' && isTown) {
+					curFeature = eMapFeature::ITEM;
+				} else if(c == '&' && isTown) {
+					curFeature = eMapFeature::FIELD;
+				} else if(c == '$') {
+					curFeature = eMapFeature::CREATURE;
 				} else if(c == '~') {
 					curFeature = eMapFeature::VEHICLE;
 				} else if(c == 'h' && curFeature == eMapFeature::VEHICLE) {

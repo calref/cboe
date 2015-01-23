@@ -406,6 +406,8 @@ void start_town_mode(short which_town, short entry_dir) {
 									break;
 		 					}
 		 				}
+						
+						// TODO: charges are unused! (Also, they're currently stored in ability, not in charges.)
 		 				
 						if(town_toast)
 							univ.town.items[j].property = false;

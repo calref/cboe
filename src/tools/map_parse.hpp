@@ -29,6 +29,9 @@ enum class eMapFeature {
 	ENTRANCE_WEST,
 	ENTRANCE_SOUTH,
 	ENTRANCE_EAST,
+	ITEM,
+	CREATURE,
+	FIELD,
 };
 
 struct loc_compare {
@@ -43,6 +46,6 @@ struct map_data {
 	void addFeature(unsigned int x, unsigned int y, eMapFeature feature, int val = 0);
 };
 
-map_data load_map(fs::path path);
+map_data load_map(fs::path path, bool isTown);
 
 #endif

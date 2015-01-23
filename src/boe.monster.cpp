@@ -73,6 +73,7 @@ void create_wand_monst() {
 			p_loc = univ.town->wandering_locs[r2];
 			p_loc.x += get_ran(1,0,4) - 2;
 			p_loc.y += get_ran(1,0,4) - 2;
+			// TODO: This contradicts the documentation which says only 1-2 are placed of the last monster
 			r3 = get_ran(1,0,3);
 			if(r3 >= 2 && !is_blocked(p_loc)) // place extra monsters?
 				place_monster(univ.town->wandering[r1].monst[3],p_loc);
