@@ -33,15 +33,15 @@
 	<text name='num' top='7' left='454' width='50' height='15'/>
 	<text size='large' top='49' left='9' width='130' height='17'>Creature timing:</text>
 	<group name='time'>
-		<!-- It appears time flag 3 is unused, thus there is no time4 element -->
 		<led name='time1' top='74' left='290' width='100'>Always here</led>
 		<led name='time2' top='90' left='290' width='110'>Appear on given day</led>
 		<led name='time3' top='106' left='290' width='100'>Disappear on day</led>
-		<led name='time5' top='74' left='420' width='100'>Sometimes here A</led>
-		<led name='time6' top='90' left='420' width='100'>Sometimes here B</led>
-		<led name='time7' top='106' left='420' width='100'>Sometimes here C</led>
-		<led name='time8' top='74' left='549' width='100'>Appear when event</led>
-		<led name='time9' top='90' left='549' width='120'>Disappear when event</led>
+		<led name='time4' top='74' left='420' width='100'>Sometimes here A</led>
+		<led name='time5' top='90' left='420' width='100'>Sometimes here B</led>
+		<led name='time6' top='106' left='420' width='100'>Sometimes here C</led>
+		<led name='time7' top='74' left='549' width='100'>Appear when event</led>
+		<led name='time8' top='90' left='549' width='120'>Disappear when event</led>
+		<led name='time9' top='106' left='549' width='120'>Appear after town dies</led>
 	</group>
 	<group name='group'>
 		<led name='group0' top='220' left='77'>None</led>

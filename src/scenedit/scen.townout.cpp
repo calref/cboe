@@ -114,9 +114,21 @@ static void put_placed_monst_adv_in_dlog(cDialog& me) {
 	
 	me["num"].setTextToNum(store_which_placed_monst);
 	me["type"].setText(scenario.scen_monsters[store_placed_monst2.number].m_name);
-	dynamic_cast<cLedGroup&>(me["time"]).setSelected("time" + std::to_string(store_placed_monst2.time_flag + 1));
-	me["extra1-lbl"].setText(day_str_1[store_placed_monst2.time_flag]);
-	me["extra2-lbl"].setText(day_str_2[store_placed_monst2.time_flag]);
+	int iTime = 0;
+	switch(store_placed_monst2.time_flag) {
+		case eMonstTime::ALWAYS: iTime = 0; break;
+		case eMonstTime::APPEAR_ON_DAY: iTime = 1; break;
+		case eMonstTime::DISAPPEAR_ON_DAY: iTime = 2; break;
+		case eMonstTime::SOMETIMES_A: iTime = 3; break;
+		case eMonstTime::SOMETIMES_B: iTime = 4; break;
+		case eMonstTime::SOMETIMES_C: iTime = 5; break;
+		case eMonstTime::APPEAR_WHEN_EVENT: iTime = 6; break;
+		case eMonstTime::DISAPPEAR_WHEN_EVENT: iTime = 7; break;
+		case eMonstTime::APPEAR_AFTER_CHOP: iTime = 8; break;
+	}
+	dynamic_cast<cLedGroup&>(me["time"]).setSelected("time" + std::to_string(iTime + 1));
+	me["extra1-lbl"].setText(day_str_1[iTime]);
+	me["extra2-lbl"].setText(day_str_2[iTime]);
 	me["extra1"].setTextToNum(store_placed_monst2.monster_time);
 	me["extra2"].setTextToNum(store_placed_monst2.time_code);
 	// TODO: Why on earth is this an LED group? Just use a text field!
@@ -127,7 +139,17 @@ static void put_placed_monst_adv_in_dlog(cDialog& me) {
 }
 
 static bool get_placed_monst_adv_in_dlog(cDialog& me) {
-	store_placed_monst2.time_flag = dynamic_cast<cLedGroup&>(me["time"]).getSelected()[4] - '1';
+	switch(dynamic_cast<cLedGroup&>(me["time"]).getSelected()[4] - '1') {
+		case 0: store_placed_monst2.time_flag = eMonstTime::ALWAYS; break;
+		case 1: store_placed_monst2.time_flag = eMonstTime::APPEAR_ON_DAY; break;
+		case 2: store_placed_monst2.time_flag = eMonstTime::DISAPPEAR_ON_DAY; break;
+		case 3: store_placed_monst2.time_flag = eMonstTime::SOMETIMES_A; break;
+		case 4: store_placed_monst2.time_flag = eMonstTime::SOMETIMES_B; break;
+		case 5: store_placed_monst2.time_flag = eMonstTime::SOMETIMES_C; break;
+		case 6: store_placed_monst2.time_flag = eMonstTime::APPEAR_WHEN_EVENT; break;
+		case 7: store_placed_monst2.time_flag = eMonstTime::DISAPPEAR_WHEN_EVENT; break;
+		case 8: store_placed_monst2.time_flag = eMonstTime::APPEAR_AFTER_CHOP; break;
+	}
 	store_placed_monst2.monster_time = me["extra1"].getTextAsNum();
   	if(cre(store_placed_monst2.monster_time,0,1000,"Given day must be from 0 to 1000.","",&me)) return false;
 	store_placed_monst2.time_code = me["extra2"].getTextAsNum();

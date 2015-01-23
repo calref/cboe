@@ -205,43 +205,41 @@ void start_town_mode(short which_town, short entry_dir) {
 			// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
 			for(j = 0; j < univ.town->max_monst(); j++) {
 				switch(univ.town.monst[j].time_flag){
-					case 4: case 5 : //case 6:
-						if((((short) (univ.party.age / 1000) % 3) + 4) != univ.town.monst[j].time_flag)
+					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
+						if((calc_day() % 3) + 3 != int(univ.town.monst[i].time_flag))
 							univ.town.monst[j].active = 0;
 						else {
 							univ.town.monst[j].active = 1;
 							univ.town.monst[j].spec_enc_code = 0;
-							// Now remove time flag so it doesn't get reappearing
-							univ.town.monst[j].time_flag = 0;
 							univ.town.monst[j].cur_loc = univ.town->creatures(j).start_loc;
 							univ.town.monst[j].health = univ.town.monst[j].m_health;
 						}
 						break ;
 						
 						// Now, appearing/disappearing monsters might have arrived/disappeared.
-					case 1:
+					case eMonstTime::APPEAR_ON_DAY:
 						if(day_reached(univ.town.monst[j].monster_time, univ.town.monst[j].time_code)) {
 							univ.town.monst[j].active = 1;
-							univ.town.monst[j].time_flag=0; // Now remove time flag so it doesn't get reappearing
+							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
 						}
 						break;
-					case 2:
+					case eMonstTime::DISAPPEAR_ON_DAY:
 						if(day_reached(univ.town.monst[j].monster_time, univ.town.monst[j].time_code)) {
 							univ.town.monst[j].active = 0;
-							univ.town.monst[j].time_flag=0; // Now remove time flag so it doesn't get disappearing again
+							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
 						}
 						break;
-					case 7:
+					case eMonstTime::APPEAR_WHEN_EVENT:
 						if(calc_day() >= univ.party.key_times[univ.town.monst[j].time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
 							univ.town.monst[j].active = 1;
-							univ.town.monst[j].time_flag=0; // Now remove time flag so it doesn't get reappearing
+							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
 						}
 						break;
 						
-					case 8:
+					case eMonstTime::DISAPPEAR_WHEN_EVENT:
 						if(calc_day() >= univ.party.key_times[univ.town.monst[j].time_code]){
 							univ.town.monst[j].active = 0;
-							univ.town.monst[j].time_flag=0; // Now remove time flag so it doesn't get disappearing again
+							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
 						}
 						break;
 				}
@@ -261,7 +259,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			if(univ.town->creatures(i).number == 0) {
 				univ.town.monst[i].active = 0;
 				univ.town.monst[i].number = 0;
-				univ.town.monst[i].time_flag = 0;
+				univ.town.monst[i].time_flag = eMonstTime::ALWAYS;
 				univ.town.monst[i].cur_loc.x = 80;
 			}
 			else {
@@ -274,50 +272,40 @@ void start_town_mode(short which_town, short entry_dir) {
 				
 				// Now, if necessary, fry the monster.
 				switch(univ.town.monst[i].time_flag) {
-					case 1:
+					case eMonstTime::APPEAR_ON_DAY:
 						if(!day_reached(univ.town.monst[i].monster_time, univ.town.monst[i].time_code))
 							univ.town.monst[i].active = 0;
 						break;
-					case 2:
+					case eMonstTime::DISAPPEAR_ON_DAY:
 						if(day_reached(univ.town.monst[i].monster_time, univ.town.monst[i].time_code))
 							univ.town.monst[i].active = 0;
 						break;
-					case 3:
-						// unused
-						break;
-					case 4: case 5: case 6:
-						if((((short) (univ.party.age / 1000) % 3) + 4) != univ.town.monst[i].time_flag) {
+					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
+						if((calc_day() % 3) + 3 != int(univ.town.monst[i].time_flag)) {
 							univ.town.monst[i].active = 0;
-							univ.town.monst[i].spec_enc_code = 50;
 						}
 						else {
 							univ.town.monst[i].active = 1;
-							// Now remove time flag so it doesn't keep reappearing
-							univ.town.monst[i].time_flag = 0;
 						}
 						break;
-					case 7:
+					case eMonstTime::APPEAR_WHEN_EVENT:
 						if(calc_day() < univ.party.key_times[univ.town.monst[i].time_code])
 							univ.town.monst[i].active = 0;
 						break;
 						
-					case 8:
+					case eMonstTime::DISAPPEAR_WHEN_EVENT:
 						if(calc_day() >= univ.party.key_times[univ.town.monst[i].time_code])
 							univ.town.monst[i].active = 0;
 						break;
-					case 9:
-						if(univ.town->town_chop_time > 0)
-							if(day_reached(univ.town->town_chop_time,univ.town->town_chop_key)) {
-								univ.town.monst[i].active += 10;
-								break;
-							}
-						univ.town.monst[i].active = 0;
+					case eMonstTime::APPEAR_AFTER_CHOP:
+						// TODO: Should these two cases be separated?
+						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
+							univ.town.monst[i].active += 10;
+						else if(univ.party.m_killed[univ.town.num] > univ.town->max_num_monst)
+							univ.town.monst[i].active += 10;
+						else univ.town.monst[i].active = 0;
 						break;
-					case 0:
-						break;
-					default:
-						ASB("ERROR! Odd character data.");
-						print_nums(0,i,univ.town.monst[i].time_flag);
+					case eMonstTime::ALWAYS:
 						break;
 				}
 			}

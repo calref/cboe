@@ -155,6 +155,14 @@ public:
 	void readFrom(std::istream& file);
 };
 
+enum class eMonstTime {
+	ALWAYS,
+	APPEAR_ON_DAY, DISAPPEAR_ON_DAY,
+	SOMETIMES_C, SOMETIMES_A, SOMETIMES_B,
+	APPEAR_WHEN_EVENT, DISAPPEAR_WHEN_EVENT,
+	APPEAR_AFTER_CHOP,
+};
+
 class cCreature : public cMonster {
 public:
 	unsigned long id;
@@ -163,7 +171,7 @@ public:
 	unsigned char start_attitude;
 	location start_loc, cur_loc;
 	unsigned short mobility;
-	unsigned char time_flag;
+	eMonstTime time_flag;
 	short summoned;
 	short spec1, spec2;
 	char spec_enc_code, time_code;
@@ -209,5 +217,7 @@ std::ostream& operator << (std::ostream& out, eDamageType e);
 std::istream& operator >> (std::istream& in, eDamageType& e);
 std::ostream& operator << (std::ostream& out, eFieldType e);
 std::istream& operator >> (std::istream& in, eFieldType& e);
+std::ostream& operator << (std::ostream& out, eMonstTime e);
+std::istream& operator >> (std::istream& in, eMonstTime& e);
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att);
 #endif

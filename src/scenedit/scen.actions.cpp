@@ -606,7 +606,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						town->creatures(i).start_attitude =
 							scenario.scen_monsters[mode_count].default_attitude;
 						town->creatures(i).mobility = 1;
-						town->creatures(i).time_flag = 0;
+						town->creatures(i).time_flag = eMonstTime::ALWAYS;
 						town->creatures(i).spec1 = -1;
 						town->creatures(i).spec2 = -1;
 						town->creatures(i).spec_enc_code = 0;

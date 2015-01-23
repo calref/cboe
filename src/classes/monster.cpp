@@ -387,7 +387,8 @@ cCreature::cCreature(){
 	id = number = active = attitude = start_attitude = 0;
 	start_loc.x = start_loc.y = cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;
 	mobility = 1;
-	time_flag = summoned  = 0;
+	summoned  = 0;
+	time_flag = eMonstTime::ALWAYS;
 	spec1 = spec2 = spec_enc_code = time_code = monster_time = 0;
 	personality = special_on_kill = facial_pic = -1;
 	target = 6;
@@ -403,7 +404,16 @@ void cCreature::append(legacy::creature_start_type old){
 	start_loc.x = old.start_loc.x;
 	start_loc.y = old.start_loc.y;
 	mobility = old.mobile;
-	time_flag = old.time_flag;
+	switch(old.time_flag) {
+		case 0: time_flag = eMonstTime::ALWAYS; break;
+		case 1: time_flag = eMonstTime::APPEAR_ON_DAY; break;
+		case 2: time_flag = eMonstTime::DISAPPEAR_ON_DAY; break;
+		case 4: time_flag = eMonstTime::SOMETIMES_A; break;
+		case 5: time_flag = eMonstTime::SOMETIMES_B; break;
+		case 6: time_flag = eMonstTime::SOMETIMES_C; break;
+		case 7: time_flag = eMonstTime::APPEAR_WHEN_EVENT; break;
+		case 8: time_flag = eMonstTime::DISAPPEAR_WHEN_EVENT; break;
+	}
 	spec1 = old.spec1;
 	spec2 = old.spec2;
 	spec_enc_code = old.spec_enc_code;
@@ -428,7 +438,16 @@ void cCreature::append(legacy::creature_data_type old){
 	start_loc.x = old.monst_start.start_loc.x;
 	start_loc.y = old.monst_start.start_loc.y;
 	mobility = old.monst_start.mobile;
-	time_flag = old.monst_start.time_flag;
+	switch(old.monst_start.time_flag) {
+		case 0: time_flag = eMonstTime::ALWAYS; break;
+		case 1: time_flag = eMonstTime::APPEAR_ON_DAY; break;
+		case 2: time_flag = eMonstTime::DISAPPEAR_ON_DAY; break;
+		case 4: time_flag = eMonstTime::SOMETIMES_A; break;
+		case 5: time_flag = eMonstTime::SOMETIMES_B; break;
+		case 6: time_flag = eMonstTime::SOMETIMES_C; break;
+		case 7: time_flag = eMonstTime::APPEAR_WHEN_EVENT; break;
+		case 8: time_flag = eMonstTime::DISAPPEAR_WHEN_EVENT; break;
+	}
 	spec1 = old.monst_start.spec1;
 	spec2 = old.monst_start.spec2;
 	spec_enc_code = old.monst_start.spec_enc_code;
@@ -543,6 +562,54 @@ std::istream& operator >> (std::istream& in, eRace& e){
 			e = eRace::STONE;
 		else if(key == "undead")
 			e = eRace::UNDEAD;
+	}
+	return in;
+}
+
+std::ostream& operator << (std::ostream& out, eMonstTime e){
+	switch(e) {
+		case eMonstTime::ALWAYS: out << "always"; break;
+		case eMonstTime::APPEAR_ON_DAY: out << "after-day"; break;
+		case eMonstTime::DISAPPEAR_ON_DAY: out << "until-day"; break;
+		case eMonstTime::SOMETIMES_A: out << "travel-a"; break;
+		case eMonstTime::SOMETIMES_B: out << "travel-b"; break;
+		case eMonstTime::SOMETIMES_C: out << "travel-c"; break;
+		case eMonstTime::APPEAR_WHEN_EVENT: out << "after-event"; break;
+		case eMonstTime::DISAPPEAR_WHEN_EVENT: out << "until-event"; break;
+		case eMonstTime::APPEAR_AFTER_CHOP: out << "after-death"; break;
+	}
+	return out;
+}
+
+std::istream& operator >> (std::istream& in, eMonstTime& e){
+	std::string key;
+	in >> key;
+	e = eMonstTime::ALWAYS;
+	try {
+		int i = boost::lexical_cast<int>(key);
+		if(i >= 0 && i != 3 && i < 6)
+			e = eMonstTime(i);
+		else if(i > 6 && i <= 8)
+			e = eMonstTime(i - 1);
+	} catch(boost::bad_lexical_cast) {
+		if(key == "always")
+			e = eMonstTime::ALWAYS;
+		else if(key == "after-day")
+			e = eMonstTime::APPEAR_ON_DAY;
+		else if(key == "until-day")
+			e = eMonstTime::DISAPPEAR_ON_DAY;
+		else if(key == "travel-a")
+			e = eMonstTime::SOMETIMES_A;
+		else if(key == "travel-b")
+			e = eMonstTime::SOMETIMES_B;
+		else if(key == "travel-c")
+			e = eMonstTime::SOMETIMES_C;
+		else if(key == "after-event")
+			e = eMonstTime::APPEAR_WHEN_EVENT;
+		else if(key == "until-event")
+			e = eMonstTime::DISAPPEAR_WHEN_EVENT;
+		else if(key == "after-death")
+			e = eMonstTime::APPEAR_AFTER_CHOP;
 	}
 	return in;
 }
@@ -1009,7 +1076,7 @@ void cCreature::writeTo(std::ostream& file) const {
 	file << "STARTLOC " << start_loc.x << ' ' << start_loc.y << '\n';
 	file << "LOCATION " << cur_loc.x << ' ' << cur_loc.y << '\n';
 	file << "MOBILITY " << unsigned(mobility) << '\n';
-	file << "TIMEFLAG " << unsigned(time_flag) << '\n';
+	file << "TIMEFLAG " << time_flag << '\n';
 	file << "SUMMONED " << summoned << '\n';
 	file << "SPEC " << spec1 << ' ' << spec2 << '\n';
 	file << "SPECCODE " << int(spec_enc_code) << '\n';
@@ -1054,9 +1121,7 @@ void cCreature::readFrom(std::istream& file) {
 			line >> i;
 			mobility = i;
 		} else if(cur == "TIMEFLAG") {
-			unsigned int i;
-			line >> i;
-			time_flag = i;
+			line >> time_flag;
 		} else if(cur == "SUMMONED")
 			line >> summoned;
 		else if(cur == "SPEC")
