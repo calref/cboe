@@ -53,7 +53,7 @@ public:
 	public:
 		location loc;
 		short code,ability;
-		unsigned int charges;
+		int charges;
 		bool always_there, property, contained;
 		
 		void append(legacy::preset_item_type old);

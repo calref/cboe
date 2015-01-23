@@ -213,13 +213,19 @@ cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& par
 	return initial;
 }
 
-static void put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const short which) {
-	char str[256];
+static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const short which) {
+	std::ostringstream loc;
+	cItem base = scenario.scen_items[item.code];
+	if(item.ability >= 0 && item.ability <= int(eEnchant::BLESSED) && (base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED)) {
+		base.enchant_weapon(eEnchant(item.ability), 0);
+	}
+	
 	me["num"].setTextToNum(which);
-	sprintf(str,"X = %d, Y = %d",item.loc.x,item.loc.y);
-	me["loc"].setText(str);
-	me["name"].setText(scenario.scen_items[item.code].full_name);
+	loc << "X = " << item.loc.x << ", Y = " << item.loc.y;
+	me["loc"].setText(loc.str());
+	me["name"].setText(base.full_name);
 	me["charges"].setTextToNum(item.charges);
+	me["abil"].setTextToNum(item.ability);
 	if(item.always_there)
 		dynamic_cast<cLed&>(me["always"]).setState(led_red);
 	if(item.property)
@@ -227,7 +233,31 @@ static void put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const
 	if(item.contained)
 		dynamic_cast<cLed&>(me["contained"]).setState(led_red);
 	
-	dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_items[item.code].graphic_num, PIC_ITEM);
+	dynamic_cast<cPict&>(me["pic"]).setPict(base.graphic_num, PIC_ITEM);
+	
+	me["charges"].show();
+	me["charges-lbl"].show();
+	me["abil"].show();
+	me["abil-lbl"].show();
+	me["abil-choose"].show();
+	
+	if(base.variety == eItemType::GOLD || base.variety == eItemType::FOOD) {
+		me["charges-lbl"].setText("Amount:");
+	} else if(base.charges == 0) {
+		me["charges-lbl"].hide();
+		me["charges"].hide();
+	} else {
+		me["charges-lbl"].setText("Charges:||(-1 = default)");
+	}
+	
+	if(base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED) {
+		me["abil-lbl"].setText("Enchantment:");
+	} else {
+		me["abil-lbl"].hide();
+		me["abil"].hide();
+		me["abil-choose"].hide();
+	}
+	return true;
 }
 
 static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short which) {
@@ -254,12 +284,31 @@ static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short
 	return true;
 }
 
-static bool edit_placed_item_event_filter(cDialog& me, cTown::cItem& item, const short which) {
+static bool edit_placed_item_type(cDialog& me, cTown::cItem& item, const short which) {
 	short i = choose_text(STRT_ITEM, item.code, &me, "Place which item?");
 	if(i >= 0) {
 		item.code = i;
 		put_placed_item_in_dlog(me, item, which);
 	}
+	return true;
+}
+
+static bool edit_placed_item_abil(cDialog& me, cTown::cItem& item, const short which) {
+	cItem& base = scenario.scen_items[item.code];
+	short i = item.ability;
+	if(base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED) {
+		i = choose_text(STRT_ENCHANT, item.ability, &me, "Which enchantment?");
+	}
+	if(i >= 0) {
+		item.ability = i;
+		put_placed_item_in_dlog(me, item, which);
+	}
+	return true;
+}
+
+static bool edit_placed_item_delete(cDialog& me, const short which) {
+	me.toast(false);
+	town->preset_items[which].code = -1;
 	return true;
 }
 
@@ -271,7 +320,10 @@ void edit_placed_item(short which_i) {
 	cDialog item_dlg("edit-placed-item");
 	item_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &item_dlg, false));
 	item_dlg["okay"].attachClickHandler(std::bind(get_placed_item_in_dlog, _1, std::ref(item), which_i));
-	item_dlg["choose"].attachClickHandler(std::bind(edit_placed_item_event_filter, _1, std::ref(item), which_i));
+	item_dlg["choose"].attachClickHandler(std::bind(edit_placed_item_type, _1, std::ref(item), which_i));
+	item_dlg["del"].attachClickHandler(std::bind(edit_placed_item_delete, _1, which_i));
+	item_dlg["abil-choose"].attachClickHandler(std::bind(edit_placed_item_abil, _1, std::ref(item), which_i));
+	item_dlg["abil"].attachFocusHandler(std::bind(put_placed_item_in_dlog, _1, std::ref(item), which_i));
 	
 	put_placed_item_in_dlog(item_dlg, item, which_i);
 	

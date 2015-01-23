@@ -379,7 +379,7 @@ cItem::cItem(eAlchemy recipe) : cItem('alch') {
 void cItem::enchant_weapon(eEnchant enchant_type,short new_val) {
 	if(magic || ability != eItemAbil::NONE)
 		return;
-	if(variety != eItemType::ONE_HANDED || variety != eItemType::TWO_HANDED)
+	if(variety != eItemType::ONE_HANDED && variety != eItemType::TWO_HANDED)
 		return;
 	magic = true;
 	enchanted = true;

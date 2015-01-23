@@ -2,31 +2,27 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog skin='light' defbtn='okay' debug='true'>
 	<!-- OK button -->
-	<field name='charges' top='84' left='335' width='52' height='16'/>
 	<button name='okay' type='regular' top='195' left='316'>OK</button>
 	<pict name='pic' type='dlog' num='16' top='8' left='12'/>
 	<text size='large' top='6' left='50' width='175' height='17'>Editing Preset Item</text>
 	<text top='50' left='50' width='77' height='14'>Item name:</text>
-	<text top='73' left='50' width='280' height='41'>
-		Amount (if gold or food),
-		or Charges (if item that can have charges,
-		leave at -1 if you want the item to have its default number of charges)
+	<text name='charges-lbl' top='73' left='50' width='80' height='24'>
+		Charges:<br/>
+		(-1 = default)
 	</text>
-	<text top='120' left='50' width='116' height='14'>Special Flags:</text>
-	<!--
-	 TODO: Put these LED labels inside the LED elements.
-	 -->
-	<text top='138' left='84' width='164' height='14'>Always here</text>
-	<text top='155' left='84' width='164' height='14'>Someone's property</text>
-	<text top='172' left='84' width='164' height='14'>Contained in something</text>
-	<led name='always' top='138' left='291'/>
-	<led name='owned' top='155' left='291'/>
-	<led name='contained' top='172' left='291'/>
+	<field name='charges' top='73' left='135' width='52' height='16'/>
+	<text name='abil-lbl' top='101' left='50' width='80' height='16'>Ability:</text>
+	<field name='abil' top='101' left='135' width='52' height='16'/>
+	<button name='abil-choose' type='regular' top='98' left='200'>Choose</button>
+	<text top='120' left='50' width='80' height='14'>Special Flags:</text>
+	<led name='always' font='bold' top='138' left='84' width='178' height='14'>Always here</led>
+	<led name='owned' font='bold' top='155' left='84' width='178' height='14'>Someone's property</led>
+	<led name='contained' font='bold' top='172' left='84' width='178' height='14'>Contained in something</led>
 	<text name='name' framed='true' top='50' left='136' width='143' height='14'/>
 	<text top='28' left='50' width='97' height='14'>Item number:</text>
 	<text name='num' top='28' left='151' width='137' height='14'/>
 	<button name='choose' type='regular' top='46' left='290'>Choose</button>
-	<!-- Deleted button -->
+	<button name='del' type='regular' top='195' left='8'>Delete</button>
 	<button name='cancel' type='regular' top='195' left='248'>Cancel</button>
 	<text top='28' left='196' width='70' height='14'>Location:</text>
 	<text name='loc' top='28' left='272' width='116' height='14'/>

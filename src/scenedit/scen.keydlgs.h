@@ -11,6 +11,7 @@ enum eStrType {
 	STRT_ATTITUDE, STRT_STAIR, STRT_LIGHT, STRT_CONTEXT,
 	STRT_SHOP, STRT_COST_ADJ, STRT_STAIR_MODE, STRT_TALK_NODE,
 	STRT_STATUS, STRT_SPELL_PAT, STRT_SUMMON, STRT_TALK,
+	STRT_ENCHANT,
 };
 
 bool cre(short val,short min,short max,std::string text1,std::string text2,cDialog* parent) ;

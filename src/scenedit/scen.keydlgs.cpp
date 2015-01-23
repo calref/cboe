@@ -273,6 +273,9 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 				}
 			}
 			break;
+		case STRT_ENCHANT:
+			strings = {"+1", "+2", "+3", "Shoot Flames", "Flaming", "+5", "Blessed"};
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = -1;
