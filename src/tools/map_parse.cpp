@@ -10,6 +10,8 @@
 
 #include <fstream>
 #include <cctype>
+#include <iterator>
+#include <numeric>
 
 using namespace std;
 
@@ -57,7 +59,7 @@ map_data load_map(fs::path path, bool isTown) {
 					curFeature = eMapFeature::TOWN;
 				} else if(c == '@' && isTown) {
 					curFeature = eMapFeature::ITEM;
-				} else if(c == '&' && isTown) {
+				} else if(c == '&') {
 					curFeature = eMapFeature::FIELD;
 				} else if(c == '$') {
 					curFeature = eMapFeature::CREATURE;
@@ -89,9 +91,9 @@ map_data load_map(fs::path path, bool isTown) {
 
 void map_data::set(unsigned int x, unsigned int y, unsigned int val) {
 	// First make sure the location exists
-	if(y > grid.size())
+	if(y >= grid.size())
 		grid.resize(y + 1);
-	if(x > grid[y].size())
+	if(x >= grid[y].size())
 		grid[y].resize(x + 1);
 	grid[y][x] = val;
 }
@@ -105,6 +107,51 @@ unsigned int map_data::get(unsigned int x, unsigned int y) {
 void map_data::addFeature(unsigned int x, unsigned int y, eMapFeature feature, int val) {
 	location loc(x,y);
 	features.insert({loc,{feature,val}});
+}
+
+auto map_data::getFeatures(unsigned int x, unsigned int y) -> std::vector<feature_t> {
+	std::vector<feature_t> ls;
+	if(y >= grid.size()) return ls;
+	if(x >= grid[y].size()) return ls;
+	using iter_t = decltype(features)::const_iterator;
+	std::pair<iter_t,iter_t> range = features.equal_range(loc(x,y));
+	if(range.first == range.second) return ls;
+	for(auto iter = range.first; iter != range.second; iter++)
+		ls.push_back(iter->second);
+	return ls;
+}
+
+void map_data::writeTo(std::ostream& out) {
+	unsigned int height = grid.size();
+	unsigned int width = std::accumulate(grid.begin(), grid.end(), 0, [](size_t m, std::vector<int>& v){
+		return std::max(m, v.size());
+	});
+	for(unsigned int x = 0; x < width; x++) {
+		bool first = true;
+		for(unsigned int y = 0; y < height; y++) {
+			if(!first) out << ',';
+			first = false;
+			out << grid[y][x];
+			for(auto feat : getFeatures(x,y)) {
+				switch(feat.first) {
+					case eMapFeature::NONE: case eMapFeature::VEHICLE: break;
+					case eMapFeature::SPECIAL_NODE: out << ':' << feat.second; break;
+					case eMapFeature::SIGN: out << '!' << feat.second; break;
+					case eMapFeature::WANDERING: out << '*' << feat.second; break;
+					case eMapFeature::TOWN: case eMapFeature::ITEM: out << '@' << feat.second; break;
+					case eMapFeature::CREATURE: out << '$' << feat.second; break;
+					case eMapFeature::FIELD: out << '&' << feat.second; break;
+					case eMapFeature::ENTRANCE_EAST: out << '>'; break;
+					case eMapFeature::ENTRANCE_NORTH: out << '^'; break;
+					case eMapFeature::ENTRANCE_SOUTH: out << 'v'; break;
+					case eMapFeature::ENTRANCE_WEST: out << '<'; break;
+					case eMapFeature::BOAT: out << (feat.second < 0 ? 'b' : 'B') << abs(feat.second); break;
+					case eMapFeature::HORSE: out << (feat.second < 0 ? 'h' : 'H') << abs(feat.second); break;
+				}
+			}
+		}
+		out << '\n';
+	}
 }
 
 bool loc_compare::operator()(location a, location b) const {

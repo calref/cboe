@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <map>
+#include <iosfwd>
 #include <boost/filesystem/path.hpp>
 #include "location.h"
 
@@ -38,12 +39,16 @@ struct loc_compare {
 	bool operator()(location a, location b) const;
 };
 
-struct map_data {
+class map_data {
 	std::vector<std::vector<int>> grid;
-	std::multimap<location,std::pair<eMapFeature,int>,loc_compare> features;
+	using feature_t = std::pair<eMapFeature,int>;
+	std::multimap<location,feature_t,loc_compare> features;
+public:
 	void set(unsigned int x, unsigned int y, unsigned int val);
 	unsigned int get(unsigned int x, unsigned int y);
 	void addFeature(unsigned int x, unsigned int y, eMapFeature feature, int val = 0);
+	std::vector<feature_t> getFeatures(unsigned int x, unsigned int y);
+	void writeTo(std::ostream& out);
 };
 
 map_data load_map(fs::path path, bool isTown);

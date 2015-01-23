@@ -17,6 +17,7 @@
 #include "tarball.hpp"
 #include "gzstream.h"
 #include "tinyprint.hpp"
+#include "map_parse.hpp"
 
 #define	DONE_BUTTON_ITEM	1
 
@@ -108,7 +109,7 @@ static bool is_minmax(int lo, int hi, int val) {
 	return minmax(lo, hi, val) == val;
 }
 
-void writeScenarioToXml(ticpp::Printer&& data) {
+static void writeScenarioToXml(ticpp::Printer&& data) {
 	data.OpenElement("scenario");
 	data.PushAttribute("boes", scenario.format_ed_version());
 	data.PushElement("title", scenario.scen_name);
@@ -241,7 +242,7 @@ void writeScenarioToXml(ticpp::Printer&& data) {
 	data.CloseElement("scenario");
 }
 
-void writeTerrainToXml(ticpp::Printer&& data) {
+static void writeTerrainToXml(ticpp::Printer&& data) {
 	data.OpenElement("terrains");
 	for(size_t i = 0; i < scenario.ter_types.size(); i++) {
 		data.OpenElement("terrain");
@@ -285,7 +286,7 @@ void writeTerrainToXml(ticpp::Printer&& data) {
 	data.CloseElement("terrains");
 }
 
-void writeItemsToXml(ticpp::Printer&& data) {
+static void writeItemsToXml(ticpp::Printer&& data) {
 	data.OpenElement("items");
 	for(size_t i = 0; i < scenario.scen_items.size(); i++) {
 		data.OpenElement("item");
@@ -335,7 +336,7 @@ void writeItemsToXml(ticpp::Printer&& data) {
 	data.CloseElement("items");
 }
 
-void writeMonstersToXml(ticpp::Printer&& data) {
+static void writeMonstersToXml(ticpp::Printer&& data) {
 	std::ostringstream str;
 	data.OpenElement("monsters");
 	for(size_t i = 1; i < scenario.scen_monsters.size(); i++) {
@@ -479,7 +480,7 @@ void writeMonstersToXml(ticpp::Printer&& data) {
 	data.CloseElement("monsters");
 }
 
-void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
+static void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 	data.OpenElement("sector");
 	data.PushAttribute("boes", scenario.format_ed_version());
 	data.PushElement("name", sector.out_name);
@@ -512,7 +513,7 @@ void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 	data.CloseElement("sector");
 }
 
-void writeTownToXml(ticpp::Printer&& data, cTown& town) {
+static void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 	static const char directions[] = {'n', 'w', 's', 'e'};
 	data.OpenElement("town");
 	data.PushAttribute("boes", scenario.format_ed_version());
@@ -647,6 +648,96 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 	data.CloseElement("town");
 }
 
+map_data buildOutMapData(location which) {
+	cOutdoors& sector = *scenario.outdoors[which.x][which.y];
+	map_data terrain;
+	for(size_t x = 0; x < 48; x++) {
+		for(size_t y = 0; y < 48; y++) {
+			terrain.set(x, y, sector.terrain[x][y]);
+			if(sector.special_spot[x][y])
+				terrain.addFeature(x, y, eMapFeature::FIELD, SPECIAL_SPOT);
+		}
+	}
+	for(size_t i = 0; i < 18; i++) {
+		if(sector.special_id[i] >= 0)
+			terrain.addFeature(sector.special_locs[i].x, sector.special_locs[i].y, eMapFeature::SPECIAL_NODE, sector.special_id[i]);
+	}
+	for(size_t i = 0; i < 8; i++) {
+		if(sector.exit_dests[i] >= 0)
+			terrain.addFeature(sector.exit_locs[i].x, sector.exit_locs[i].y, eMapFeature::TOWN, sector.exit_dests[i]);
+	}
+	for(size_t i = 0; i < sector.sign_strs.size(); i++) {
+		if(!sector.sign_strs[i].empty())
+			terrain.addFeature(sector.sign_locs[i].x, sector.sign_locs[i].y, eMapFeature::SIGN, i);
+	}
+	for(size_t i = 0; i < 4; i++) {
+		terrain.addFeature(sector.wandering_locs[i].x, sector.wandering_locs[i].y, eMapFeature::WANDERING, i);
+	}
+	for(size_t i = 0; i < 30; i++) {
+		if(scenario.boats[i].which_town == 200 && scenario.boats[i].sector == which) {
+			int j = i;
+			if(scenario.boats[i].property) j *= -1;
+			terrain.addFeature(scenario.boats[i].loc.x, scenario.boats[i].loc.y, eMapFeature::HORSE, j);
+		}
+		if(scenario.horses[i].which_town == 200 && scenario.horses[i].sector == which) {
+			int j = i;
+			if(scenario.horses[i].property) j *= -1;
+			terrain.addFeature(scenario.horses[i].loc.x, scenario.horses[i].loc.y, eMapFeature::HORSE, j);
+		}
+	}
+	return terrain;
+}
+
+map_data buildTownMapData(size_t which) {
+	cTown& town = *scenario.towns[which];
+	map_data terrain;
+	for(size_t x = 0; x < town.max_dim(); x++) {
+		for(size_t y = 0; y < town.max_dim(); y++) {
+			terrain.set(x, y, town.terrain(x,y));
+		}
+	}
+	for(size_t i = 0; i < 50; i++) {
+		if(town.spec_id[i] >= 0)
+			terrain.addFeature(town.special_locs[i].x, town.special_locs[i].y, eMapFeature::SPECIAL_NODE, town.spec_id[i]);
+	}
+	for(size_t i = 0; i < town.sign_strs.size(); i++) {
+		if(!town.sign_strs[i].empty())
+			terrain.addFeature(town.sign_locs[i].x, town.sign_locs[i].y, eMapFeature::SIGN, i);
+	}
+	for(size_t i = 0; i < 4; i++) {
+		terrain.addFeature(town.wandering_locs[i].x, town.wandering_locs[i].y, eMapFeature::WANDERING, i);
+	}
+	for(size_t i = 0; i < town.preset_items.size(); i++) {
+		if(town.preset_items[i].code >= 0)
+			terrain.addFeature(town.preset_items[i].loc.x, town.preset_items[i].loc.y, eMapFeature::ITEM, i);
+	}
+	for(size_t i = 0; i < town.preset_fields.size(); i++) {
+		if(town.preset_fields[i].type > 0)
+			terrain.addFeature(town.preset_fields[i].loc.x,town.preset_fields[i].loc.y,eMapFeature::FIELD,town.preset_fields[i].type);
+	}
+	for(size_t i = 0; i < town.creatures.size(); i++) {
+		if(town.creatures[i].number > 0)
+			terrain.addFeature(town.creatures[i].start_loc.x, town.creatures[i].start_loc.y, eMapFeature::CREATURE, i);
+	}
+	for(size_t i = 0; i < 30; i++) {
+		if(scenario.boats[i].which_town == which) {
+			int j = i;
+			if(scenario.boats[i].property) j *= -1;
+			terrain.addFeature(scenario.boats[i].loc.x, scenario.boats[i].loc.y, eMapFeature::HORSE, j);
+		}
+		if(scenario.horses[i].which_town == which) {
+			int j = i;
+			if(scenario.horses[i].property) j *= -1;
+			terrain.addFeature(scenario.horses[i].loc.x, scenario.horses[i].loc.y, eMapFeature::HORSE, j);
+		}
+	}
+	terrain.addFeature(town.start_locs[0].x, town.start_locs[0].y, eMapFeature::ENTRANCE_SOUTH);
+	terrain.addFeature(town.start_locs[1].x, town.start_locs[1].y, eMapFeature::ENTRANCE_WEST);
+	terrain.addFeature(town.start_locs[2].x, town.start_locs[2].y, eMapFeature::ENTRANCE_NORTH);
+	terrain.addFeature(town.start_locs[3].x, town.start_locs[3].y, eMapFeature::ENTRANCE_EAST);
+	return terrain;
+}
+
 void save_scenario(fs::path toFile) {
 	// TODO: I'm not certain 1.0.0 is the correct version here?
 	scenario.format.prog_make_ver[0] = 1;
@@ -689,6 +780,7 @@ void save_scenario(fs::path toFile) {
 			
 			// Then the map.
 			std::ostream& out_map = scen_file.newFile("scenario/out/" + file_basename + ".map");
+			buildOutMapData(loc(x,y)).writeTo(out_map);
 			
 			// And the special nodes.
 			std::ostream& out_spec = scen_file.newFile("scenario/out/" + file_basename + ".spec");
@@ -705,6 +797,7 @@ void save_scenario(fs::path toFile) {
 		
 		// Then the map.
 		std::ostream& town_map = scen_file.newFile("scenario/towns/" + file_basename + ".map");
+		buildTownMapData(i).writeTo(town_map);
 		
 		// And the special nodes.
 		std::ostream& town_spec = scen_file.newFile("scenario/towns/" + file_basename + ".spec");
