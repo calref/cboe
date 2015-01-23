@@ -317,7 +317,7 @@ void edit_sign(short which_sign,short picture) {
 	sign_dlg.run();
 }
 
-static bool save_roomdescs(cDialog& me, bool isTown, bool str_do_delete[]) {
+static bool save_roomdescs(cDialog& me, bool isTown, std::array<bool,16> str_do_delete) {
 	if(!me.toast(true)) return true;
 	int numDescs = isTown ? 16 : 8;
 	for(int i = 0; i < numDescs; i++) {
@@ -335,7 +335,7 @@ static bool save_roomdescs(cDialog& me, bool isTown, bool str_do_delete[]) {
 	return true;
 }
 
-static void put_roomdescs_in_dlog(cDialog& me, bool isTown, bool str_do_delete[]) {
+static void put_roomdescs_in_dlog(cDialog& me, bool isTown, std::array<bool,16> str_do_delete) {
 	int numDescs = isTown ? 16 : 8;
 	for(int i = 0; i < numDescs; i++) {
 		std::string id = std::to_string(i + 1);
@@ -358,7 +358,7 @@ static void put_roomdescs_in_dlog(cDialog& me, bool isTown, bool str_do_delete[]
 	}
 }
 
-static bool delete_roomdesc(cDialog& me, std::string id, bool isTown, bool str_do_delete[]) {
+static bool delete_roomdesc(cDialog& me, std::string id, bool isTown, std::array<bool,16> str_do_delete) {
 	int item_hit = boost::lexical_cast<int>(id.substr(3));
 	me["desc" + id.substr(3)].setText("");
 	str_do_delete[item_hit - 1] = true;
@@ -368,7 +368,7 @@ static bool delete_roomdesc(cDialog& me, std::string id, bool isTown, bool str_d
 
 void edit_roomdescs(bool town) {
 	using namespace std::placeholders;
-	bool str_do_delete[16] = {0};
+	std::array<bool,16> str_do_delete = {0};
 	int numDescs = town ? 16 : 8;
 	
 	cDialog room_dlg(town ? "edit-town-roomdescs" : "edit-out-roomdescs");

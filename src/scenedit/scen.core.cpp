@@ -1783,7 +1783,7 @@ static bool save_spec_item(cDialog& me, cSpecItem& item, short which) {
 	return true;
 }
 
-static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem& item, short which) {
+static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem& item, short& which) {
 	if(hit == "cancel") {
 		me.toast(false);
 	} else if(hit == "okay") {
@@ -1827,7 +1827,7 @@ void edit_spec_item(short which_item) {
 	
 	cDialog item_dlg("edit-special-item");
 	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 255, "Scenario special node called", "-1 for no special"));
-	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), which_item), {"okay", "cancel", "clear", "edit-spec", "left", "right"});
+	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"okay", "cancel", "clear", "edit-spec", "left", "right"});
 	
 	put_spec_item_in_dlog(item_dlg, item, which_item);
 	item_dlg["clear"].hide();
