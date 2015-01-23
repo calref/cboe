@@ -836,7 +836,7 @@ void handle_talk_event(location p) {
 			talk_end_forced = true;
 			break;
 		case eTalkNode::END_FIGHT:
-			if(store_m_num >= 0 && store_m_num <= univ.town->max_monst()) {
+			if(store_m_num >= 0 && store_m_num < univ.town.monst.size()) {
 				univ.town.monst[store_m_num].attitude = 1;
 				univ.town.monst[store_m_num].mobility = 1;
 			}
@@ -847,7 +847,7 @@ void handle_talk_event(location p) {
 			talk_end_forced = true;
 			break;
 		case eTalkNode::END_DIE:
-			if(store_m_num >= 0 && store_m_num <= univ.town->max_monst()) {
+			if(store_m_num >= 0 && store_m_num < univ.town.monst.size()) {
 				// TODO: Any reason not to call something like kill_monst?
 				univ.town.monst[store_m_num].active = 0;
 				// Special killing effects

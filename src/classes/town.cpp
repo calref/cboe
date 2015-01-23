@@ -53,6 +53,7 @@ void cTown::append(legacy::town_record_type& old){
 	in_town_rect.left = old.in_town_rect.left;
 	in_town_rect.bottom = old.in_town_rect.bottom;
 	in_town_rect.right = old.in_town_rect.right;
+	preset_items.resize(64);
 	for(i = 0; i < 64; i++){
 //		preset_items[i].loc.x = old.preset_items[i].item_loc.x;
 //		preset_items[i].loc.y = old.preset_items[i].item_loc.y;
@@ -82,7 +83,6 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	short i;
 	location d_loc(100,0);
 	cTown::cWandering d_wan = {0,0,0,0};
-	cTown::cItem null_item = {loc(),-1,0,0,0,0,0};
 	
 	town_chop_time = -1;
 	town_chop_key = -1;
@@ -101,8 +101,6 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 		exit_locs[i].x = -1;
 		exit_locs[i].y = -1;
 	}
-	for(i = 0; i < 64; i++) 
-		preset_items[i] = null_item;
 	max_num_monst = 30000;
 	spec_on_entry = -1;
 	spec_on_entry_if_dead = -1;
@@ -264,6 +262,22 @@ short cTown::light_obscurity(short x,short y) {
 	if(store == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
 		return 1;
 	return 0;
+}
+
+cTown::cItem::cItem() {
+	loc = {80,80};
+	code = -1;
+	ability = -1;
+	always_there = false;
+	property = false;
+	contained = false;
+}
+
+cTown::cItem::cItem(location loc, short num, ::cItem& item) : cItem() {
+	loc = loc;
+	code = num;
+	if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD)
+		ability = get_ran(1,4,6);
 }
 
 std::ostream& operator<< (std::ostream& out, eLighting light) {

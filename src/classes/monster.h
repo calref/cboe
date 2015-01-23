@@ -177,6 +177,8 @@ public:
 	pic_num_t facial_pic;
 	
 	void append(legacy::creature_start_type old);
+	cTownperson();
+	cTownperson(location loc, mon_num_t num, const cMonster& monst);
 };
 
 class cCreature : public cMonster, public cTownperson {

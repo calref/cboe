@@ -519,7 +519,7 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 		add_string_to_buf("  Can't see space              ");
 		need_reprint = true;
 	} else {
-		for(int i = 0; i < univ.town->max_monst(); i++) {
+		for(int i = 0; i < univ.town.monst.size(); i++) {
 			if(monst_on_space(destination,i)) {
 				did_something = true;
 				need_redraw = true;
@@ -1842,7 +1842,7 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'K':
 			if(!in_scen_debug) break;
-			for(i = 0; i < univ.town->max_monst(); i++) {
+			for(i = 0; i < univ.town.monst.size(); i++) {
 				if((is_combat()) && (univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1))
 					univ.town.monst[i].active = 0;
 				
@@ -2984,7 +2984,7 @@ bool town_move_party(location destination,short forced) {
 	}
 	*/
 	
-	if(monst_there(destination) > univ.town->max_monst())
+	if(monst_there(destination) >= univ.town.monst.size())
 		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,0,&spec_num,&check_f);
 	if(check_f)
 		forced = true;

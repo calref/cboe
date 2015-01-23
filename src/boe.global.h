@@ -10,7 +10,7 @@
 
 #define DRAG_EDGE		15
 
-#define NUM_TOWN_ITEMS	115
+#define NUM_TOWN_ITEMS	univ.town.items.size()
 
 
 #define	DISPLAY_LEFT	23

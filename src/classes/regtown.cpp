@@ -75,8 +75,9 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 		room_rect[i].bottom = old.room_rect[i].bottom;
 		room_rect[i].right = old.room_rect[i].right;
 	}
+	creatures.resize(30);
 	for(i = 0; i < 30; i++) {
-		_creatures[i].append(old.creatures[i]);
+		creatures[i].append(old.creatures[i]);
 	}
 }
 
@@ -139,8 +140,9 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 		room_rect[i].bottom = old.room_rect[i].bottom;
 		room_rect[i].right = old.room_rect[i].right;
 	}
+	creatures.resize(40);
 	for(i = 0; i < 40; i++) {
-		_creatures[i].append(old.creatures[i]);
+		creatures[i].append(old.creatures[i]);
 	}
 }
 
@@ -203,8 +205,9 @@ void cBigTown::append(legacy::big_tr_type& old, int town_numo){
 		room_rect[i].bottom = old.room_rect[i].bottom;
 		room_rect[i].right = old.room_rect[i].right;
 	}
+	creatures.resize(60);
 	for(i = 0; i < 60; i++) {
-		_creatures[i].append(old.creatures[i]);
+		creatures[i].append(old.creatures[i]);
 	}
 }
 
@@ -218,10 +221,6 @@ void cTinyTown::writeTerrainTo(std::ostream& file) {
 
 void cTinyTown::readTerrainFrom(std::istream& file) {
 	readArray(file, _terrain, 32, 32);
-}
-
-cTownperson& cTinyTown::creatures(size_t i){
-	return _creatures[i];
 }
 
 unsigned char& cTinyTown::lighting(size_t i, size_t r){
@@ -240,10 +239,6 @@ void cMedTown::readTerrainFrom(std::istream& file) {
 	readArray(file, _terrain, 48, 48);
 }
 
-cTownperson& cMedTown::creatures(size_t i){
-	return _creatures[i];
-}
-
 unsigned char& cMedTown::lighting(size_t i, size_t r){
 	return _lighting[i][r];
 }
@@ -258,10 +253,6 @@ void cBigTown::writeTerrainTo(std::ostream& file) {
 
 void cBigTown::readTerrainFrom(std::istream& file) {
 	readArray(file, _terrain, 64, 64);
-}
-
-cTownperson& cBigTown::creatures(size_t i){
-	return _creatures[i];
 }
 
 unsigned char& cBigTown::lighting(size_t i, size_t r){
@@ -308,28 +299,4 @@ size_t cMedTown::max_dim() const {
 
 size_t cTinyTown::max_dim() const {
 	return 32;
-}
-
-size_t cBigTown::max_monst() const {
-	return 60;
-}
-
-size_t cMedTown::max_monst() const {
-	return 40;
-}
-
-size_t cTinyTown::max_monst() const {
-	return 30;
-}
-
-size_t cBigTown::max_items() const {
-	return 64;
-}
-
-size_t cMedTown::max_items() const {
-	return 64;
-}
-
-size_t cTinyTown::max_items() const {
-	return 64;
 }

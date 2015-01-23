@@ -120,7 +120,7 @@ void finish_load_party(){
 		center = univ.party.p_loc;
 	}
 	else {
-		for(int i = 0; i < univ.town->max_monst(); i++){
+		for(int i = 0; i < univ.town.monst.size(); i++){
 			univ.town.monst[i].targ_loc.x = 0;
 			univ.town.monst[i].targ_loc.y = 0;
 		}
@@ -450,7 +450,7 @@ void start_data_dump() {
 			fout << "  Combat type " << which_combat_type << " \n";
 		}
 		
-		for(long i = 0; i < univ.town->max_monst(); i++) {
+		for(long i = 0; i < univ.town.monst.size(); i++) {
 			fout << "  Monster " << i << "   Status " << univ.town.monst[i].active;
 			fout << "  Loc " << univ.town.monst[i].cur_loc.x << " " << univ.town.monst[i].cur_loc.y;
 			fout << "  Number " << univ.town.monst[i].number << "  Att " << univ.town.monst[i].attitude;

@@ -326,10 +326,10 @@ bool monst_on_space(location loc,short m_num) {
 short monst_there(location where) { // returns 90 if no
 	short i;
 	
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].active != 0) && (monst_on_space(where,i)))
 			return i;
-	return 90;
+	return univ.town.monst.size();
 }
 bool monst_can_be_there(location loc,short m_num) {
 	short i,j;
@@ -521,7 +521,7 @@ bool combat_pt_in_light(location to_where) {
 bool party_sees_a_monst() { // Returns true is a hostile monster is in sight.
 	short i;
 	
-	for(i = 0; i < univ.town->max_monst(); i++) {
+	for(i = 0; i < univ.town.monst.size(); i++) {
 		if(univ.town.monst[i].active > 0)
 			if((univ.town.monst[i].attitude == 1) &&
 				(party_can_see_monst(i)))

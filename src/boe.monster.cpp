@@ -169,7 +169,7 @@ void get_monst_dims(mon_num_t monst,short *width, short *height) {
 void set_up_monst(short mode,mon_num_t m_num) {
 	short which;
 	
-	for(which = 0; which < univ.town->max_monst(); which++)
+	for(which = 0; which < univ.town.monst.size(); which++)
 		if(univ.town.monst[which].active == 0) {
 			cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
 			univ.town.monst.assign(which, cCreature(m_num), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
@@ -187,7 +187,7 @@ void do_monsters() {
 	bool acted_yet = false;
 	
 	if(overall_mode == MODE_TOWN)
-		for(i = 0; i < univ.town->max_monst(); i++)
+		for(i = 0; i < univ.town.monst.size(); i++)
 			if(univ.town.monst[i].active != 0 && univ.town.monst[i].status[eStatus::ASLEEP] <= 0
 			   && univ.town.monst[i].status[eStatus::PARALYZED] <= 0) {
 				// have to pick targets
@@ -255,7 +255,7 @@ void do_monsters() {
 							play_sound(18);
 						else play_sound(46);
 					}
-					for(j = 0; j < univ.town->max_monst(); j++)
+					for(j = 0; j < univ.town.monst.size(); j++)
 						if((univ.town.monst[j].active == 2)
 							&& ((dist(univ.town.monst[i].cur_loc,univ.town.monst[j].cur_loc) <= 5)))
 							univ.town.monst[i].active = 2;
@@ -418,7 +418,7 @@ short monst_pick_target(short which_m) {
 short monst_pick_target_monst(cCreature *which_m) {
 	short min_dist = 1000,i,cur_targ = 6;
 	
-	for(i = 0; i < univ.town->max_monst(); i++) {
+	for(i = 0; i < univ.town.monst.size(); i++) {
 		if((univ.town.monst[i].active > 0) && // alive
 			(((which_m->attitude % 2 == 1) && (univ.town.monst[i].attitude % 2 == 0)) ||
 			 ((which_m->attitude % 2 == 0) && (univ.town.monst[i].attitude % 2 == 1)) ||
@@ -492,7 +492,7 @@ short closest_pc(location where) {
 short closest_monst(location where,short mode) {
 	short how_close = 200,i,store = 6;
 	
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if((((univ.town.monst[i].attitude % 2 == 1) && (mode == 1)) ||
 			 ((univ.town.monst[i].attitude % 2 == 0) && (mode == 2)))
 			&& (dist(where,univ.town.monst[i].cur_loc) < how_close)) {
@@ -514,7 +514,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 			if((univ.town.monst[orig_target - 100].active > 0) &&
 				(monst_adjacent(univ.town.monst[orig_target - 100].cur_loc,which_m)))
 				return orig_target;
-		for(i = 0; i < univ.town->max_monst(); i++)
+		for(i = 0; i < univ.town.monst.size(); i++)
 			if((univ.town.monst[i].active > 0) &&
 				(univ.town.monst[i].attitude % 2 == 1) &&
 				(monst_adjacent(univ.town.monst[i].cur_loc,which_m)))
@@ -545,7 +545,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 		 		return i;
 	
 	// Check for a nice, adjacent, friendly monster and maybe attack
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].active > 0) &&
 			(univ.town.monst[i].attitude % 2 == 0) &&
 			(monst_adjacent(univ.town.monst[i].cur_loc,which_m)) &&
@@ -1086,7 +1086,7 @@ void forced_place_monster(mon_num_t which,location where) {
 	bool free_spot = false;
 	short i = 0,r1;
 	
-	while(!free_spot && (i < univ.town->max_monst())) {
+	while(!free_spot && (i < univ.town.monst.size())) {
 		if(univ.town.monst[i].active == 0)
 			free_spot = true;
 		i++;
@@ -1274,19 +1274,20 @@ void record_monst(cCreature *which_m) {
 	}
 }
 
-// returns 90 is no placement, OW returns # of spot
+// returns size() is no placement, OW returns # of spot
 short place_monster(mon_num_t which,location where) {
 	short i = 0;
 	
-	while((i < univ.town->max_monst()) && ((univ.town.monst[i].active != 0) ||
-											(univ.town.monst[i].spec_enc_code > 0))) {
+	while(i < univ.town.monst.size() && (univ.town.monst[i].active != 0 || univ.town.monst[i].spec_enc_code > 0)) {
 		i++;
 	}
 	
-	if(i < univ.town->max_monst()) {
+	if(i < univ.town.monst.size()) {
 		// 10000 or more means an exported summon saved with the party
 		cMonster& monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
 		univ.town.monst.assign(i, cCreature(which), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+		// TODO: Should this static_cast assignment be happening?
+		// One effect is resetting max health to ignore difficulty_adjust()
 		static_cast<cMonster&>(univ.town.monst[i]) = monst;
 		univ.town.monst[i].attitude = monst.default_attitude;
 		if(univ.town.monst[i].attitude % 2 == 0)
@@ -1303,7 +1304,7 @@ short place_monster(mon_num_t which,location where) {
 		
 		return i;
 	}
-	return 90;
+	return univ.town.monst.size();
 }
 
 // returns true if placement was successful
@@ -1332,7 +1333,7 @@ bool summon_monster(mon_num_t which,location where,short duration,short given_at
 	}
 	
 	spot = place_monster(which,loc);
-	if(spot >= univ.town->max_monst()) {
+	if(spot >= univ.town.monst.size()) {
 		if(duration < 100)
 			add_string_to_buf("  Too many monsters.");
 		//ASB("  Monster fails to summon monster.");
@@ -1358,9 +1359,9 @@ void activate_monsters(short code,short /*attitude*/) {
 	
 	if(code == 0)
 		return;
-	for(i = 0; i < univ.town->max_monst(); i++)
-		if(univ.town.monst[i].spec_enc_code == code) {
-			cTownperson& monst = univ.town->creatures(i);
+	for(i = 0; i < univ.town->creatures.size(); i++)
+		if(i < univ.town.monst.size() && univ.town.monst[i].spec_enc_code == code) {
+			cTownperson& monst = univ.town->creatures[i];
 			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 			univ.town.monst[i].spec_enc_code = 0;
 			univ.town.monst[i].active = 2;

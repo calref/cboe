@@ -281,7 +281,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	
 	create_out_combat_terrain((short) in_which_terrain,num_walls,0);////
 	
-	for(i = 0; i < univ.town->max_monst(); i++) {
+	for(i = 0; i < univ.town.monst.size(); i++) {
 		univ.town.monst[i].number = 0;
 		univ.town.monst[i].active = 0;
 	}
@@ -319,7 +319,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	}
 	
 	// place monsters, w. friendly monsts landing near PCs
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if(univ.town.monst[i].active > 0) {
 			univ.town.monst[i].target = 6;
 			
@@ -348,12 +348,12 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	
 	combat_active_pc = 6;
 	spell_caster = 6; missile_firer = 6;
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		univ.town.monst[i].target = 6;
 	
 	for(i = 0; i < 6; i++) {
 		univ.party[i].parry = 0;
-		univ.party[i].last_attacked = univ.town->max_monst() + 10;
+		univ.party[i].last_attacked = univ.town.monst.size() + 10;
 	}
 	
 	for(i = 0; i < NUM_TOWN_ITEMS; i++)
@@ -383,12 +383,12 @@ bool pc_combat_move(location destination) {
 	
 	monst_hit = monst_there(destination);
 	
-	if(monst_hit > univ.town->max_monst() && univ.party[current_pc].status[eStatus::FORCECAGE] > 0) {
+	if(monst_hit >= univ.town.monst.size() && univ.party[current_pc].status[eStatus::FORCECAGE] > 0) {
 		add_string_to_buf("Move: Can't escape.");
 		return false;
 	}
 	
-	if(monst_hit > univ.town->max_monst())
+	if(monst_hit >= univ.town.monst.size())
 		keep_going = check_special_terrain(destination,eSpecCtx::COMBAT_MOVE,current_pc,&spec_num,&check_f);
 	if(check_f)
 		forced = true;
@@ -419,7 +419,7 @@ bool pc_combat_move(location destination) {
 			add_string_to_buf(create_line);
 			return true;
 		}
-		else if(monst_hit <= univ.town->max_monst()) {
+		else if(monst_hit < univ.town.monst.size()) {
 			// s2 = 2 here appears to mean "go ahead and attack", while s2 = 1 means "cancel attack".
 			// Then s1 % 2 == 1 means the monster is hostile to the party.
 			s1 = univ.town.monst[monst_hit].attitude;
@@ -457,7 +457,7 @@ bool pc_combat_move(location destination) {
 		else if(forced || (!impassable(univ.town->terrain(destination.x,destination.y)) && pc_there(destination) == 6)) {
 			
 			// monsters get back-shots
-			for(i = 0; i < univ.town->max_monst(); i++) {
+			for(i = 0; i < univ.town.monst.size(); i++) {
 				monst_loc = univ.town.monst[i].cur_loc;
 				monst_exist = univ.town.monst[i].active;
 				
@@ -1228,7 +1228,7 @@ void do_combat_cast(location target) {
 								
 							default:
 								targ_num = monst_there(target);
-								if(targ_num > univ.town->max_monst())
+								if(targ_num >= univ.town.monst.size())
 									add_string_to_buf("  Nobody there                 ");
 								else {
 									cur_monst = &univ.town.monst[targ_num];
@@ -1447,7 +1447,7 @@ void handle_marked_damage() {
 			damage_pc(i,univ.party[i].marked_damage,eDamageType::MARKED,eRace::UNKNOWN,0);
 			univ.party[i].marked_damage = 0;
 		}
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if(univ.town.monst[i].marked_damage > 0) {
 			damage_monst(i, current_pc, univ.town.monst[i].marked_damage, 0, eDamageType::MARKED,0);
 			
@@ -1564,12 +1564,12 @@ void fire_missile(location target) {
 	if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::SEEKING_MISSILE) {
 		targ_monst = monst_there(target);
 		std::set<int> targets;
-		if(targ_monst >= univ.town->max_monst() || univ.town.monst[targ_monst].attitude % 2 == 0) {
+		if(targ_monst >= univ.town.monst.size() || univ.town.monst[targ_monst].attitude % 2 == 0) {
 			for(int i = -1; i <= 1; i++) {
 				for(int j = -1; j <= 1; j++) {
 					if(i == 0 && j == 0) continue;
 					targ_monst = monst_there(loc(target.x + i, target.y + j));
-					if(targ_monst < univ.town->max_monst()) {
+					if(targ_monst < univ.town.monst.size()) {
 						bool invisible = univ.town.monst[targ_monst].invisible;
 						bool friendly = univ.town.monst[targ_monst].attitude % 2 == 0;
 						int seek_chance = 10;
@@ -1641,7 +1641,7 @@ void fire_missile(location target) {
 			
 			if(r1 > hit_chance[skill])
 				add_string_to_buf("  Missed.");
-			else if((targ_monst = monst_there(target)) < univ.town->max_monst()) {
+			else if((targ_monst = monst_there(target)) < univ.town.monst.size()) {
 				cur_monst = &univ.town.monst[targ_monst];
 				eDamageType dmg_tp = eDamageType::UNBLOCKABLE;
 				short bonus_dam = 0;
@@ -2000,7 +2000,7 @@ void do_monster_turn() {
 	
 	monsters_going = true; // This affects how graphics are drawn.
 	
-	num_monst = univ.town->max_monst();
+	num_monst = univ.town.monst.size();
 	if(overall_mode < MODE_COMBAT)
 		which_combat_type = 1;
 	
@@ -2017,7 +2017,7 @@ void do_monster_turn() {
 			if(r1 < 50)
 				cur_monst->active = 2;
 			
-			for(j = 0; j < univ.town->max_monst(); j++)
+			for(j = 0; j < univ.town.monst.size(); j++)
 				if(monst_near(j,cur_monst->cur_loc,5,1)) {
 					cur_monst->active = 2;
 				}
@@ -2025,7 +2025,7 @@ void do_monster_turn() {
 		if((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1)) {
 			// Now it looks for PC-friendly monsters
 			// dist check is for efficiency
-			for(j = 0; j < univ.town->max_monst(); j++)
+			for(j = 0; j < univ.town.monst.size(); j++)
 				if((univ.town.monst[j].active > 0) &&
 					(univ.town.monst[j].attitude % 2 != 1) &&
 					(dist(cur_monst->cur_loc,univ.town.monst[j].cur_loc) <= 6) &&
@@ -2036,7 +2036,7 @@ void do_monster_turn() {
 		// See if friendly, fighting monster see hostile monster. If so, make mobile
 		// dist check is for efficiency
 		if((cur_monst->active == 1) && (cur_monst->attitude == 2)) {
-			for(j = 0; j < univ.town->max_monst(); j++)
+			for(j = 0; j < univ.town.monst.size(); j++)
 				if((univ.town.monst[j].active > 0) && (univ.town.monst[j].attitude % 2 == 1) &&
 					(dist(cur_monst->cur_loc,univ.town.monst[j].cur_loc) <= 6)
 					&& (can_see_light(cur_monst->cur_loc,univ.town.monst[j].cur_loc,sight_obscurity) < 5)) {
@@ -3441,7 +3441,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 					for(i = 0; i < 6; i++)
 						if(pc_near(i,caster->cur_loc,8))
 							slow_pc(i,2 + caster->level / 4);
-				for(i = 0; i < univ.town->max_monst(); i++) {
+				for(i = 0; i < univ.town.monst.size(); i++) {
 					if((univ.town.monst[i].active != 0) &&
 						(((univ.town.monst[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) ||
 						 ((univ.town.monst[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
@@ -3452,7 +3452,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::HASTE_MAJOR:
 				play_sound(25);
-				for(i = 0; i < univ.town->max_monst(); i++)
+				for(i = 0; i < univ.town.monst.size(); i++)
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
@@ -3495,7 +3495,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::BLESS_MAJOR:
 				play_sound(25);
-				for(i = 0; i < univ.town->max_monst(); i++)
+				for(i = 0; i < univ.town.monst.size(); i++)
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
@@ -3747,7 +3747,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 							if(spell == eSpell::PESTILENCE)
 								disease_pc(i,2 + r2);
 						}
-				for(i = 0; i < univ.town->max_monst(); i++) {
+				for(i = 0; i < univ.town.monst.size(); i++) {
 					if((univ.town.monst[i].active != 0) &&
 						(((univ.town.monst[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) ||
 						 ((univ.town.monst[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
@@ -3775,7 +3775,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				play_sound(24);
 				// TODO: What's r2 for here? Should it be used for Revive All?
 				r1 =  get_ran(2,1,4); r2 = get_ran(3,1,6);
-				for(i = 0; i < univ.town->max_monst(); i++)
+				for(i = 0; i < univ.town.monst.size(); i++)
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
@@ -3887,7 +3887,7 @@ location closest_pc_loc(location where) {
 short count_levels(location where,short radius) {
 	short i,store = 0;
 	
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if(monst_near(i,where,radius,0)) {
 			if(univ.town.monst[i].attitude % 2 == 1)
 				store = store - univ.town.monst[i].level;
@@ -4123,7 +4123,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 	fast_bang = 0;
 	
 	// Damage to monsters
-	for(k = 0; k < univ.town->max_monst(); k++)
+	for(k = 0; k < univ.town.monst.size(); k++)
 		if((univ.town.monst[k].active > 0) && (dist(center,univ.town.monst[k].cur_loc) <= 5)) {
 			monster_hit = false;
 			// First actually make barriers, then draw them, then inflict damaging effects.
@@ -4257,7 +4257,7 @@ void do_shockwave(location target) {
 		if((dist(target,univ.party[i].combat_pos) > 0) && (dist(target,univ.party[i].combat_pos) < 11)
 			&& univ.party[i].main_status == eMainStatus::ALIVE)
 			damage_pc(i, get_ran(2 + dist(target,univ.party[i].combat_pos) / 2, 1, 6), eDamageType::UNBLOCKABLE,eRace::UNKNOWN,0);
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) < 11)
 			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
@@ -4275,7 +4275,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type) {
 			if((dist(target,univ.town.p_loc) > 0) && (dist(target,univ.town.p_loc) <= radius)
 				&& univ.party[i].main_status == eMainStatus::ALIVE)
 				damage_pc(i, dam, type,eRace::UNKNOWN,0);
-		for(i = 0; i < univ.town->max_monst(); i++)
+		for(i = 0; i < univ.town.monst.size(); i++)
 			if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 				&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
 				&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
@@ -4288,7 +4288,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type) {
 		if((dist(target,univ.party[i].combat_pos) > 0) && (dist(target,univ.party[i].combat_pos) <= radius)
 			&& univ.party[i].main_status == eMainStatus::ALIVE)
 			damage_pc(i, dam, type,eRace::UNKNOWN,0);
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
 			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
@@ -4336,7 +4336,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 		return;
 	}
 	
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if((hit_monsters) && (univ.town.monst[i].active != 0) && !stop_hitting)
 			if(monst_on_space(target,i)) {
 				if(processing_fields)
@@ -4497,7 +4497,7 @@ bool hit_end_c_button() {
 bool out_monst_all_dead() {
 	short i;
 	
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)) {
 			//print_nums(5555,i,univ.town.monst[i].number);
 			//print_nums(5555,univ.town.monst[i].m_loc.x,univ.town.monst[i].m_loc.y);
@@ -4691,7 +4691,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 				case eSpell::FEAR_GROUP: add_string_to_buf("  Enemy scared:"); break;
 				case eSpell::PARALYSIS_MASS: add_string_to_buf("  Enemy paralyzed:"); break;
 			}
-			for(i = 0; i < univ.town->max_monst(); i++) {
+			for(i = 0; i < univ.town.monst.size(); i++) {
 				if((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
 					&& (dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= (*spell_num).range)
 					&& (can_see_light(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
@@ -4846,7 +4846,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 			if(!freebie)
 				univ.party[current_pc].cur_sp -= (*spell_num).cost;
 			store_sound = 24;
-			for(i = 0; i < univ.town->max_monst(); i++) {
+			for(i = 0; i < univ.town.monst.size(); i++) {
 				if((univ.town.monst[i].active != 0) &&(univ.town.monst[i].attitude % 2 == 1) &&
 					(dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= (*spell_num).range)) {
 					// TODO: Should this ^ also check that you can see each target? ie can_see_light(...) < 5
@@ -5085,7 +5085,7 @@ void process_fields() {
 		}
 	}
 	
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if(univ.town.monst[i].active > 0)
 			monst_inflict_fields(i);
 	

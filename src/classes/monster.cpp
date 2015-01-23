@@ -398,6 +398,27 @@ cCreature::cCreature(int num) : cCreature() {
 	number = num;
 }
 
+cTownperson::cTownperson() {
+	start_loc = {80,80};
+	number = 0;
+	mobility = 1;
+	time_flag = eMonstTime::ALWAYS;
+	spec1 = -1;
+	spec2 = -1;
+	spec_enc_code = 0;
+	time_code = 0;
+	monster_time = 0;
+	personality = -1;
+	special_on_kill = -1;
+}
+
+cTownperson::cTownperson(location loc, mon_num_t num, const cMonster& monst) : cTownperson() {
+	start_loc = loc;
+	number = num;
+	start_attitude = monst.default_attitude;
+	facial_pic = monst.default_facial_pic;
+}
+
 void cTownperson::append(legacy::creature_start_type old){
 	number = old.number;
 	start_attitude = old.start_attitude;

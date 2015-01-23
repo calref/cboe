@@ -186,12 +186,12 @@ void start_town_mode(short which_town, short entry_dir) {
 			univ.town.monst = univ.party.creature_save[i];
 			monsters_loaded = true;
 			
-			for(j = 0; j < univ.town->max_monst(); j++) {
+			for(j = 0; j < univ.town.monst.size(); j++) {
 				if(loc_off_act_area(univ.town.monst[j].cur_loc))
 					univ.town.monst[j].active = 0;
 				if(univ.town.monst[j].active == 2)
 					univ.town.monst[j].active = 1;
-				univ.town.monst[j].cur_loc = univ.town->creatures(j).start_loc;
+				univ.town.monst[j].cur_loc = univ.town.monst[j].start_loc;
 				univ.town.monst[j].health = univ.town.monst[j].m_health;
 				univ.town.monst[j].mp = univ.town.monst[j].max_mp;
 				univ.town.monst[j].morale = univ.town.monst[j].m_morale;
@@ -203,7 +203,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			
 			// Now, travelling NPCs might have arrived. Go through and put them in.
 			// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
-			for(j = 0; j < univ.town->max_monst(); j++) {
+			for(j = 0; j < univ.town.monst.size(); j++) {
 				switch(univ.town.monst[j].time_flag){
 					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
 						if((calc_day() % 3) + 3 != int(univ.town.monst[i].time_flag))
@@ -211,7 +211,7 @@ void start_town_mode(short which_town, short entry_dir) {
 						else {
 							univ.town.monst[j].active = 1;
 							univ.town.monst[j].spec_enc_code = 0;
-							univ.town.monst[j].cur_loc = univ.town->creatures(j).start_loc;
+							univ.town.monst[j].cur_loc = univ.town.monst[j].start_loc;
 							univ.town.monst[j].health = univ.town.monst[j].m_health;
 						}
 						break ;
@@ -255,8 +255,9 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	
 	if(!monsters_loaded) {
-		for(i = 0; i < univ.town->max_monst(); i++){
-			if(univ.town->creatures(i).number == 0) {
+		for(i = 0; i < univ.town->creatures.size(); i++){
+			if(i >= univ.town.monst.size()) break;
+			if(univ.town->creatures[i].number == 0) {
 				univ.town.monst[i].active = 0;
 				univ.town.monst[i].number = 0;
 				univ.town.monst[i].time_flag = eMonstTime::ALWAYS;
@@ -264,7 +265,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			}
 			else {
 				// First set up the values.
-				cTownperson& preset = univ.town->creatures(i);
+				cTownperson& preset = univ.town->creatures[i];
 				univ.town.monst.assign(i, preset, univ.scenario.scen_monsters[preset.number], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 				
 				if(univ.town.monst[i].spec_enc_code > 0)
@@ -315,7 +316,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	// Now munch all large monsters that are misplaced
 	// only large monsters, as some smaller monsters are intentionally placed
 	// where they cannot be
-	for(i = 0; i < univ.town->max_monst(); i++) {
+	for(i = 0; i < univ.town.monst.size(); i++) {
 		if(univ.town.monst[i].active > 0)
 			if(((univ.town.monst[i].x_width > 1) || (univ.town.monst[i].y_width > 1)) &&
 				!monst_can_be_there(univ.town.monst[i].cur_loc,i))
@@ -331,7 +332,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	if(univ.town->town_chop_time > 0) {
 		if(day_reached(univ.town->town_chop_time,univ.town->town_chop_key)) {
 			add_string_to_buf("Area has been abandoned.");
-			for(i = 0; i < univ.town->max_monst(); i++)
+			for(i = 0; i < univ.town.monst.size(); i++)
 				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].active < 10) &&
 					(univ.town.monst[i].attitude % 2 == 1))
 					univ.town.monst[i].active += 10;
@@ -339,7 +340,7 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	}
 	if(town_toast) {
-		for(i = 0; i < univ.town->max_monst(); i++)
+		for(i = 0; i < univ.town.monst.size(); i++)
 			if(univ.town.monst[i].active >= 10)
 				univ.town.monst[i].active -= 10;
 			else univ.town.monst[i].active = 0;
@@ -348,9 +349,9 @@ void start_town_mode(short which_town, short entry_dir) {
 	// TODO: Flush the special node queue on scenario start so that the special actually gets called.
 	
 	// Flush excess doomguards and viscous goos
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].abil[eMonstAbil::SPLITS].active) &&
-			(univ.town.monst[i].number != univ.town->creatures(i).number))
+			(i >= univ.town->creatures.size() || univ.town.monst[i].number != univ.town->creatures[i].number))
 			univ.town.monst[i].active = 0;
 	
 	// Set up field booleans, correct for doors
@@ -379,7 +380,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				univ.town.items[i] = univ.party.stored_items[j][i];
 		}
 	
-	for(i = 0; i < 64; i++)
+	for(i = 0; i < univ.town->preset_items.size(); i++)
 		if((univ.town->preset_items[i].code >= 0)
 			&& (((univ.party.item_taken[univ.town.num][i / 8] & s_pow(2,i % 8)) == 0) ||
 				(univ.town->preset_items[i].always_there))) {
@@ -421,7 +422,7 @@ void start_town_mode(short which_town, short entry_dir) {
 		 	}
 	
 	
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if(loc_off_act_area(univ.town.monst[i].cur_loc))
 			univ.town.monst[i].active = 0;
 	for(i = 0; i < NUM_TOWN_ITEMS; i++)
@@ -429,7 +430,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			univ.town.items[i].variety = eItemType::NO_ITEM;
 	
 	// Clean out unwanted monsters
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if(sd_legit(univ.town.monst[i].spec1,univ.town.monst[i].spec2)) {
 			if(PSD[univ.town.monst[i].spec1][univ.town.monst[i].spec2] > 0)
 				univ.town.monst[i].active = 0;
@@ -484,7 +485,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			}
 	}
 	
-	for(i = 0; i < univ.town->max_monst(); i++) {
+	for(i = 0; i < univ.town.monst.size(); i++) {
 		univ.town.monst[i].targ_loc.x = 0;
 		univ.town.monst[i].targ_loc.y = 0;
 	}
@@ -555,7 +556,8 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		
 		// Clean up special data, just in case
-		for(i = 0; i < univ.town->max_monst(); i++) {
+		// TODO: But... this is the life SDF! Why is it set to (0,0)?
+		for(i = 0; i < univ.town.monst.size(); i++) {
 			univ.town.monst[i].spec1 = 0;
 			univ.town.monst[i].spec2 = 0;
 		}
@@ -690,11 +692,11 @@ void start_town_combat(short direction) {
 	overall_mode = MODE_COMBAT;
 	
 	combat_active_pc = 6;
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		univ.town.monst[i].target = 6;
 	
 	for(i = 0; i < 6; i++) {
-		univ.party[i].last_attacked = univ.town->max_monst() + 10;
+		univ.party[i].last_attacked = univ.town.monst.size() + 10;
 		univ.party[i].parry = 0;
 		univ.party[i].dir = direction;
 		univ.party[current_pc].direction = direction;
@@ -1014,7 +1016,7 @@ void elim_monst(unsigned short which,short spec_a,short spec_b) {
 	if(!sd_legit(spec_a,spec_b))
 		return;
 	if(PSD[spec_a][spec_b] > 0) {
-		for(i = 0; i < univ.town->max_monst(); i++)
+		for(i = 0; i < univ.town.monst.size(); i++)
 			if(univ.town.monst[i].number == which) {
 				univ.town.monst[i].active = 0;
 			}
@@ -1431,7 +1433,7 @@ void draw_map(bool need_refresh) {
 		// Now place PCs and monsters
 		if(draw_pcs) {
 			if((is_town()) && (univ.party.status[ePartyStatus::DETECT_LIFE] > 0))
-				for(i = 0; i < univ.town->max_monst(); i++)
+				for(i = 0; i < univ.town.monst.size(); i++)
 					if(univ.town.monst[i].active > 0) {
 						where = univ.town.monst[i].cur_loc;
 						if((is_explored(where.x,where.y)) &&

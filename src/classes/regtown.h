@@ -23,18 +23,13 @@ namespace legacy {
 };
 
 class cBigTown : public cTown { // formerly big_tr_type
-protected:
 	ter_num_t _terrain[64][64];
-	cTownperson _creatures[60];
 	unsigned char _lighting[8][64];
 public:
 	void append(legacy::big_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
-	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
-	size_t max_monst() const;
-	size_t max_items() const;
 	
 	explicit cBigTown(cScenario& scenario, bool init_strings = false);
 	void writeTerrainTo(std::ostream& file);
@@ -42,18 +37,13 @@ public:
 };
 
 class cMedTown : public cTown { // formerly ave_tr_type
-protected:
 	ter_num_t _terrain[48][48];
-	cTownperson _creatures[40];
 	unsigned char _lighting[6][48];
 public:
 	void append(legacy::ave_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
-	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
-	size_t max_monst() const;
-	size_t max_items() const;
 	
 	explicit cMedTown(cScenario& scenario, bool init_strings = false);
 	void writeTerrainTo(std::ostream& file);
@@ -61,18 +51,13 @@ public:
 };
 
 class cTinyTown : public cTown { // formerly tiny_tr_type
-protected:
 	ter_num_t _terrain[32][32];
-	cTownperson _creatures[30];
 	unsigned char _lighting[4][32];
 public:
 	void append(legacy::tiny_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
-	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
-	size_t max_monst() const;
-	size_t max_items() const;
 	
 	explicit cTinyTown(cScenario& scenario, bool init_strings = false);
 	void writeTerrainTo(std::ostream& file);

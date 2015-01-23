@@ -57,6 +57,8 @@ public:
 		bool always_there, property, contained;
 		
 		void append(legacy::preset_item_type old);
+		cItem();
+		cItem(location loc, short num, ::cItem& item);
 	};
 	class cField { // formerly preset_field_type
 	public:
@@ -77,7 +79,8 @@ public:
 	location exit_locs[4];
 	short exit_specs[4];
 	rectangle in_town_rect;
-	std::array<cItem,64> preset_items;
+	std::vector<cItem> preset_items;
+	std::vector<cTownperson> creatures;
 	short max_num_monst;
 	std::vector<cField> preset_fields;
 	short spec_on_entry,spec_on_entry_if_dead;
@@ -105,11 +108,8 @@ public:
 	virtual void append(legacy::ave_tr_type& old, int town_num);
 	virtual void append(legacy::tiny_tr_type& old, int town_num);
 	virtual ter_num_t& terrain(size_t x, size_t y) = 0;
-	virtual cTownperson& creatures(size_t i) = 0;
 	virtual unsigned char& lighting(size_t i, size_t r) = 0;
 	virtual size_t max_dim() const = 0;
-	virtual size_t max_monst() const = 0;
-	virtual size_t max_items() const = 0;
 	void init_start();
 	void set_up_lights();
 	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting

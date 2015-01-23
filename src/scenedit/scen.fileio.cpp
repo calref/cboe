@@ -608,10 +608,10 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 			data.PushElement("contained", true);
 		data.CloseElement("item");
 	}
-	for(size_t i = 0; i < town.max_monst(); i++) {
+	for(size_t i = 0; i < town.creatures.size(); i++) {
 		data.OpenElement("creature");
 		data.PushAttribute("id", i);
-		cTownperson& preset = town.creatures(i);
+		cTownperson& preset = town.creatures[i];
 		data.PushElement("type", preset.number);
 		data.PushElement("attitude", preset.start_attitude);
 		data.PushElement("mobility", preset.mobility);

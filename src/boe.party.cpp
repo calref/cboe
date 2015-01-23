@@ -1483,7 +1483,7 @@ void cast_town_spell(location where) {
 			break;
 		case eSpell::SCRY_MONSTER: case eSpell::CAPTURE_SOUL:
 			targ = monst_there(where);
-			if(targ < univ.town->max_monst()) {
+			if(targ < univ.town.monst.size()) {
 				if(town_spell == eSpell::SCRY_MONSTER) {
 					univ.party.m_noted[univ.town.monst[targ].number] = true;
 					adjust_monst_menu();

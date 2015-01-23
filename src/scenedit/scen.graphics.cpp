@@ -756,13 +756,13 @@ void draw_terrain(){
 							Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 						}
 					}
-					for(x = 0; x < town->max_items(); x++)
+					for(x = 0; x < town->preset_items.size(); x++)
 						if((cen_x + q - 4 == town->preset_items[x].loc.x) &&
 							(cen_y + r - 4 == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
 						}
-					for(x = 0; x < town->max_monst(); x++)
-						if((cen_x + q - 4 == town->creatures(x).start_loc.x) &&
-							(cen_y + r - 4 == town->creatures(x).start_loc.y) && (town->creatures(x).number != 0)) {
+					for(x = 0; x < town->creatures.size(); x++)
+						if((cen_x + q - 4 == town->creatures[x].start_loc.x) &&
+							(cen_y + r - 4 == town->creatures[x].start_loc.y) && (town->creatures[x].number != 0)) {
 						}
 					
 				}
@@ -844,25 +844,25 @@ void draw_monsts() {
 	rectangle source_rect;
 	location where_draw,store_loc;
 	
-	for(i = 0; i < town->max_monst(); i++)
-		if(town->creatures(i).number != 0) {
-			where_draw.x = town->creatures(i).start_loc.x - cen_x + 4;
-			where_draw.y = town->creatures(i).start_loc.y - cen_y + 4;
-			width = scenario.scen_monsters[town->creatures(i).number].x_width;
-			height = scenario.scen_monsters[town->creatures(i).number].y_width;
+	for(i = 0; i < town->creatures.size(); i++)
+		if(town->creatures[i].number != 0) {
+			where_draw.x = town->creatures[i].start_loc.x - cen_x + 4;
+			where_draw.y = town->creatures[i].start_loc.y - cen_y + 4;
+			width = scenario.scen_monsters[town->creatures[i].number].x_width;
+			height = scenario.scen_monsters[town->creatures[i].number].y_width;
 			
 			for(k = 0; k < width * height; k++) {
 				store_loc = where_draw;
 				if((where_draw.x == minmax(0,8,where_draw.x)) &&
 					(where_draw.y == minmax(0,8,where_draw.y)) &&
-					(scenario.scen_monsters[town->creatures(i).number].picture_num >= 1000)) {
-					graf_pos_ref(from_gworld, source_rect) = spec_scen_g.find_graphic((scenario.scen_monsters[town->creatures(i).number].picture_num + k) % 1000);
+					(scenario.scen_monsters[town->creatures[i].number].picture_num >= 1000)) {
+					graf_pos_ref(from_gworld, source_rect) = spec_scen_g.find_graphic((scenario.scen_monsters[town->creatures[i].number].picture_num + k) % 1000);
 					store_loc.x += k % width;
 					store_loc.y += k / width;
 					Draw_Some_Item(*from_gworld, source_rect, ter_draw_gworld, store_loc, sf::BlendAlpha);
 				}
-				else if(scenario.scen_monsters[town->creatures(i).number].picture_num < 1000) {
-					m_start_pic = m_pic_index[scenario.scen_monsters[town->creatures(i).number].picture_num].i + k;
+				else if(scenario.scen_monsters[town->creatures[i].number].picture_num < 1000) {
+					m_start_pic = m_pic_index[scenario.scen_monsters[town->creatures[i].number].picture_num].i + k;
 					from_gworld = &monst_gworld[m_start_pic / 20];
 					m_start_pic = m_start_pic % 20;
 					source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
@@ -902,7 +902,7 @@ void draw_items() {
 	location where_draw;
 	short pic_num;
 	
-	for(i = 0; i < town->max_items(); i++) {
+	for(i = 0; i < town->preset_items.size(); i++) {
 		if(town->preset_items[i].code >= 0) {
 			where_draw.x = town->preset_items[i].loc.x - cen_x + 4;
 			where_draw.y = town->preset_items[i].loc.y - cen_y + 4;
@@ -1287,7 +1287,6 @@ void make_field_type(short i,short j,eFieldType field_type) {
 			town->preset_fields[k].type = field_type;
 			return;
 		}
-	//give_error("Each town can have at most 50 fields and special effects (webs, barrels, blood stains, etc.). To place more, use the eraser first.","",0);
 	cTown::cField the_field;
 	the_field.loc.x = i;
 	the_field.loc.y = j;

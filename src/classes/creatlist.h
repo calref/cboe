@@ -36,6 +36,7 @@ public:
 	
 	void append(legacy::creature_list_type old);
 	void assign(size_t n, const cTownperson& other, const cMonster& base, bool easy, int difficulty_adjust);
+	size_t size() {return 60;}
 	cCreature& operator[](size_t n);
 	const cCreature& operator[](size_t n) const;
 	cPopulation() : which_town(200) {}

@@ -49,8 +49,9 @@ void cCurTown::append(legacy::big_tr_type& old){
 		record()->room_rect[i].bottom = old.room_rect[i].bottom;
 		record()->room_rect[i].right = old.room_rect[i].right;
 	}
-	for(i = 0; i < record()->max_monst(); i++)
-		record()->creatures(i).append(old.creatures[i]);
+	record()->creatures.resize(60);
+	for(i = 0; i < 60; i++)
+		record()->creatures[i].append(old.creatures[i]);
 	for(i = 0; i < record()->max_dim() / 8; i++)
 		for(j = 0; j < record()->max_dim(); j++)
 			record()->lighting(i,j) = old.lighting[i][j];
@@ -1121,7 +1122,7 @@ short cUniverse::difficulty_adjust() const {
 
 short cCurTown::countMonsters(){
 	short to_ret = 0;
-	for(short i = 0; i < record()->max_monst(); i++)
+	for(short i = 0; i < monst.size(); i++)
 		if(monst[i].active > 0)
 			to_ret++;
 	return to_ret;

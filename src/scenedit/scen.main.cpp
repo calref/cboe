@@ -376,7 +376,7 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 			break;
 		case eMenu::TOWN_ITEMS_NOT_PROPERTY:
-			for(int i = 0; i < 64; i++)
+			for(int i = 0; i < town->preset_items.size(); i++)
 				town->preset_items[i].property = 0;
 			cChoiceDlog("set-not-owned").show();
 			draw_terrain();
@@ -385,8 +385,7 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::TOWN_ITEMS_CLEAR:
 			if(cChoiceDlog("clear-items-confirm", {"okay", "cancel"}).show() == "cancel")
 				break;
-			for(int i = 0; i < 64; i++)
-				town->preset_items[i].code = -1;
+			town->preset_items.clear();
 			draw_terrain();
 			change_made = true;
 			break;

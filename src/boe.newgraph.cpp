@@ -248,7 +248,7 @@ void start_missile_anim() {
 	}
 	for(i = 0; i < 6; i++)
 		univ.party[i].marked_damage = 0;
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		univ.town.monst[i].marked_damage = 0;
 	have_missile = false;
 	have_boom = false;

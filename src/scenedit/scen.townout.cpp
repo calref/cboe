@@ -61,7 +61,7 @@ static bool get_placed_monst_in_dlog(cDialog& me) {
 	store_placed_monst.personality = me["talk"].getTextAsNum();
 	store_placed_monst.facial_pic = me["picnum"].getTextAsNum();
 	// later
-	town->creatures(store_which_placed_monst) = store_placed_monst;
+	town->creatures[store_which_placed_monst] = store_placed_monst;
 	return true;
 }
 
@@ -99,7 +99,7 @@ static bool edit_placed_monst_event_filter(cDialog& me, std::string item_hit, eK
 }
 
 void edit_placed_monst(short which_m) {
-	store_placed_monst = town->creatures(which_m);
+	store_placed_monst = town->creatures[which_m];
 	store_which_placed_monst = which_m;
 	
 	cDialog edit("edit-townperson");

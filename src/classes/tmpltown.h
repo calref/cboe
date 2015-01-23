@@ -37,51 +37,33 @@ public:
 };
 
 class cBigTemplTown : public cBigTown, cTemplTown {
-private:
-	//cTownperson _creatures[60];
-	//ter_num_t _terrain[64][64];
-	//unsigned char _lighting[4][32];
+	unsigned char _lighting[8][64];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
-	size_t max_monst() const;
-	size_t max_items() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 	explicit cBigTemplTown(cScenario& scenario, bool init_strings = false);
 };
 
 class cMedTemplTown : public cMedTown, cTemplTown {
-private:
-	//cTownperson _creatures[40];
-	//ter_num_t _terrain[48][48];
-	//unsigned char _lighting[4][32];
+	unsigned char _lighting[6][48];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
-	size_t max_monst() const;
-	size_t max_items() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 	explicit cMedTemplTown(cScenario& scenario, bool init_strings = false);
 };
 
 class cTinyTemplTown : public cTinyTown, cTemplTown {
-private:
-	//cTownperson _creatures[30];
-	//ter_num_t _terrain[32][32];
-	//unsigned char _lighting[4][32];
+	unsigned char _lighting[4][32];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	cTownperson& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
-	size_t max_monst() const;
-	size_t max_items() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 	explicit cTinyTemplTown(cScenario& scenario, bool init_strings = false);

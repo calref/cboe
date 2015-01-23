@@ -407,7 +407,7 @@ short get_item(location place,short pc_num,bool check_container) {
 	bool item_near = false;
 	short mass_get = 1;
 	
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude == 1)
 			&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 			mass_get = 0;
@@ -427,12 +427,12 @@ short get_item(location place,short pc_num,bool check_container) {
 			}
 	if(item_near)
 		if(display_item(place,pc_num,mass_get,check_container)) { // if true, there was a theft
-			for(i = 0; i < univ.town->max_monst(); i++)
+			for(i = 0; i < univ.town.monst.size(); i++)
 				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 != 1)
 					&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 					make_town_hostile();
-					i = univ.town->max_monst();
 					add_string_to_buf("Your crime was seen!");
+					break;
 				}
 		}
 	
@@ -465,14 +465,14 @@ void set_town_attitude(short lo,short hi,short att) {
 	univ.town.monst.friendly = 1;
 	
 	// Nice smart indexing, like Python :D
-	if(lo <= -univ.town->max_monst())
+	if(lo <= -univ.town.monst.size())
 		lo = 0;
 	if(lo < 0)
-		lo = univ.town->max_monst() + lo;
-	if(hi <= -univ.town->max_monst())
+		lo = univ.town.monst.size() + lo;
+	if(hi <= -univ.town.monst.size())
 		hi = 0;
 	if(hi < 0)
-		hi = univ.town->max_monst() + hi;
+		hi = univ.town.monst.size() + hi;
 	if(hi < lo)
 		std::swap(lo, hi);
 	

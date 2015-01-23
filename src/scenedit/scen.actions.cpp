@@ -51,7 +51,7 @@ bool good_palette_buttons[2][6][10] = {
 		{1,1,1,1,1,1,1,1,0,1}
 	}
 };
-cTown::cItem store_place_item = {loc(),-1,0,0,0,0,0};
+cTown::cItem store_place_item;
 
 short flood_count = 0;
 
@@ -549,30 +549,25 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_ITEM:
-				for(x = 0; x < 64; x++)
+				for(x = 0; x < town->preset_items.size(); x++)
 					if(town->preset_items[x].code < 0) {
-						town->preset_items[x].loc.x = spot_hit.x;
-						town->preset_items[x].loc.y = spot_hit.y;
-						town->preset_items[x].code = mode_count;
-						town->preset_items[x].ability = -1;
-						if((scenario.scen_items[mode_count].variety == eItemType::GOLD) ||
-							(scenario.scen_items[mode_count].variety == eItemType::FOOD))
-							town->preset_items[x].ability = get_ran(1,4,6);
-						town->preset_items[x].always_there = 0;
-						town->preset_items[x].property = 0;
-						town->preset_items[x].contained = container_there(town->preset_items[x].loc);
+						town->preset_items[x] = {spot_hit, mode_count, scenario.scen_items[mode_count]};
+						if(container_there(spot_hit)) town->preset_items[x].contained = true;
 						store_place_item = town->preset_items[x];
-						x = 70;
+						break;
 					}
-				if(x == 64)
-					giveError("You can only have 64 preset items in each town.");
+				if(x == town->preset_items.size()) {
+					town->preset_items.push_back({spot_hit, mode_count, scenario.scen_items[mode_count]});
+					if(container_there(spot_hit)) town->preset_items.back().contained = true;
+					store_place_item = town->preset_items.back();
+				}
 				
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
 				set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
 				break;
 			case MODE_EDIT_ITEM:
-				for(x = 0; x < 64; x++)
+				for(x = 0; x < town->preset_items.size(); x++)
 					if((spot_hit.x == town->preset_items[x].loc.x) &&
 						(spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
 						edit_placed_item(x);
@@ -586,40 +581,29 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					giveError("Either no monster has been placed, or the last time you tried to place a monster the operation failed.");
 					break;
 				}
-				for(i = 0; i < town->max_monst(); i++)
-					if(town->creatures(i).number == 0) {
-						town->creatures(i) = last_placed_monst;
-						town->creatures(i).start_loc = spot_hit;
+				for(i = 0; i < town->creatures.size(); i++)
+					if(town->creatures[i].number == 0) {
+						town->creatures[i] = last_placed_monst;
+						town->creatures[i].start_loc = spot_hit;
 						break;
 					}
-				if(i == town->max_monst()) { // Placement failed
-					giveError("The town only has room for " + std::to_string(town->max_monst()) + " preset monsters.");
+				if(i == town->creatures.size()) { // Placement failed
+					town->creatures.push_back(last_placed_monst);
+					town->creatures.back().start_loc = spot_hit;
 				}
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
 				break;
 			case MODE_PLACE_CREATURE:
-				for(i = 0; i < 60; i++)
-					if(town->creatures(i).number == 0) {
-						town->creatures(i).start_loc = spot_hit;
-						town->creatures(i).number = mode_count;
-						town->creatures(i).start_attitude =
-							scenario.scen_monsters[mode_count].default_attitude;
-						town->creatures(i).mobility = 1;
-						town->creatures(i).time_flag = eMonstTime::ALWAYS;
-						town->creatures(i).spec1 = -1;
-						town->creatures(i).spec2 = -1;
-						town->creatures(i).spec_enc_code = 0;
-						town->creatures(i).time_code = 0;
-						town->creatures(i).monster_time = 0;
-						town->creatures(i).personality = -1;
-						town->creatures(i).special_on_kill = -1;
-						town->creatures(i).facial_pic = scenario.scen_monsters[mode_count].default_facial_pic;
-						last_placed_monst = town->creatures(i);
+				for(i = 0; i < town->creatures.size(); i++)
+					if(town->creatures[i].number == 0) {
+						town->creatures[i] = {spot_hit, mode_count, scenario.scen_monsters[mode_count]};
+						last_placed_monst = town->creatures[i];
 						break;
 					}
-				if(i == town->max_monst()) { // Placement failed
-					giveError("The town only has room for " + std::to_string(town->max_monst()) + " preset monsters.");
+				if(i == town->creatures.size()) { // Placement failed
+					town->creatures.push_back({spot_hit, mode_count, scenario.scen_monsters[mode_count]});
+					last_placed_monst = town->creatures.back();
 				}
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
@@ -695,15 +679,18 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					giveError("Either no item has been placed, or the last time you tried to place an item the operation failed.");
 					break;
 				}
-				for(x = 0; x < 64; x++)
+				for(x = 0; x < town->preset_items.size(); x++)
 					if(town->preset_items[x].code < 0) {
 						town->preset_items[x] = store_place_item;
-						town->preset_items[x].loc.x = spot_hit.x;
-						town->preset_items[x].loc.y = spot_hit.y;
-						
-						town->preset_items[x].contained = container_there(town->preset_items[x].loc);
-						x = 64;
+						town->preset_items[x].loc = spot_hit;
+						town->preset_items[x].contained = container_there(spot_hit);
+						break;
 					}
+				if(x == town->preset_items.size()) {
+					town->preset_items.push_back(store_place_item);
+					town->preset_items.back().loc = spot_hit;
+					town->preset_items.back().contained = container_there(spot_hit);
+				}
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
@@ -732,10 +719,10 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_EDIT_CREATURE: //edit monst
-				for(x = 0; x < 60; x++)
+				for(x = 0; x < town->creatures.size(); x++)
 					if(monst_on_space(spot_hit,x)) {
 						edit_placed_monst(x);
-						last_placed_monst = town->creatures(x);
+						last_placed_monst = town->creatures[x];
 					}
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
@@ -843,17 +830,23 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 			case MODE_ERASE_CREATURE: //delete monst
 				for(x = 0; x < 60; x++)
 					if(monst_on_space(spot_hit,x)) {
-						town->creatures(x).number = 0;
+						town->creatures[x].number = 0;
+						break;
 					}
+				while(town->creatures.back().number == 0)
+					town->creatures.pop_back();
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_ERASE_ITEM: // delete item
-				for(x = 0; x < 64; x++)
+				for(x = 0; x < town->preset_items.size(); x++)
 					if((spot_hit.x == town->preset_items[x].loc.x) &&
 						(spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
 						town->preset_items[x].code = -1;
+						break;
 					}
+				while(town->preset_items.back().code == -1)
+					town->preset_items.pop_back();
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
@@ -1361,7 +1354,7 @@ void handle_keystroke(sf::Event event) {
 			handle_action(pass_point,event);
 			break;
 		case 'I':
-			for(i = 0; i < 64; i++) {
+			for(i = 0; i < town->preset_items.size(); i++) {
 				if((town->preset_items[i].loc.x < 0) ||
 					(town->preset_items[i].loc.y < 0))
 					town->preset_items[i].code = -1;
@@ -2708,22 +2701,15 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 		return true;
 	if(get_ran(1,1,100) > odds)
 		return false;
-	for(x = 0; x < 64; x++)
+	for(x = 0; x < town->preset_items.size(); x++)
 		if(town->preset_items[x].code < 0) {
-			town->preset_items[x].loc.x = spot_hit.x;
-			town->preset_items[x].loc.y = spot_hit.y;
-			town->preset_items[x].code = which_item;
-			town->preset_items[x].ability = -1;
-			if((scenario.scen_items[which_item].variety == eItemType::GOLD) ||
-				(scenario.scen_items[which_item].variety == eItemType::FOOD))
-				town->preset_items[x].ability = get_ran(1,4,6);
-			
-			town->preset_items[x].always_there = always;
-			town->preset_items[x].property = property;
-			town->preset_items[x].contained = container_there(town->preset_items[x].loc);
+			town->preset_items[x] = {spot_hit, which_item, scenario.scen_items[which_item]};
+			town->preset_items[x].contained = container_there(spot_hit);
 			return true;
 		}
-	return false;
+	town->preset_items.push_back({spot_hit, which_item, scenario.scen_items[which_item]});
+	town->preset_items.back().contained = container_there(spot_hit);
+	return true;
 }
 
 void place_items_in_town() {
@@ -3298,12 +3284,14 @@ ter_num_t coord_to_ter(short x,short y) {
 bool monst_on_space(location loc,short m_num) {
 	if(!editing_town)
 		return false;
-	if(town->creatures(m_num).number == 0)
+	if(m_num >= town->creatures.size())
 		return false;
-	if((loc.x - town->creatures(m_num).start_loc.x >= 0) &&
-		(loc.x - town->creatures(m_num).start_loc.x <= scenario.scen_monsters[town->creatures(m_num).number].x_width - 1) &&
-		(loc.y - town->creatures(m_num).start_loc.y >= 0) &&
-		(loc.y - town->creatures(m_num).start_loc.y <= scenario.scen_monsters[town->creatures(m_num).number].y_width - 1))
+	if(town->creatures[m_num].number == 0)
+		return false;
+	if((loc.x - town->creatures[m_num].start_loc.x >= 0) &&
+		(loc.x - town->creatures[m_num].start_loc.x <= scenario.scen_monsters[town->creatures[m_num].number].x_width - 1) &&
+		(loc.y - town->creatures[m_num].start_loc.y >= 0) &&
+		(loc.y - town->creatures[m_num].start_loc.y <= scenario.scen_monsters[town->creatures[m_num].number].y_width - 1))
 		return true;
 	return false;
 	

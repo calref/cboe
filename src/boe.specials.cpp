@@ -1670,7 +1670,7 @@ void push_things() {
 	if(!belt_present)
 		return;
 	
-	for(i = 0; i < univ.town->max_monst(); i++)
+	for(i = 0; i < univ.town.monst.size(); i++)
 		if(univ.town.monst[i].active > 0) {
 			l = univ.town.monst[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
@@ -1928,7 +1928,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		case eSpecCtx::ATTACKED_RANGE: case eSpecCtx::ATTACKING_RANGE:
 			// The monster/PC on the trigger space is the target
 			current_pc_picked_in_spec_enc = 100 + monst_there(spec_loc);
-			if(current_pc_picked_in_spec_enc > univ.town->max_monst())
+			if(current_pc_picked_in_spec_enc - 100 >= univ.town.monst.size())
 				current_pc_picked_in_spec_enc = pc_there(spec_loc);
 			if(current_pc_picked_in_spec_enc == 6)
 				current_pc_picked_in_spec_enc = -1;
@@ -1936,7 +1936,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		case eSpecCtx::TARGET: case eSpecCtx::USE_SPACE:
 			// If there's a monster on the space, select that as the target
 			mon_num_t who = monst_there(spec_loc);
-			if(who < univ.town->max_monst())
+			if(who < univ.town.monst.size())
 				current_pc_picked_in_spec_enc = 100 + who;
 			break;
 	}
@@ -2296,7 +2296,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					print_nums(spec.ex1a, spec.ex1b, spec.ex1c);
 					break;
 				case 2: // Print monster health and spell points
-					if(spec.ex1a >= univ.town->max_monst()) break;
+					if(spec.ex1a >= univ.town.monst.size()) break;
 					print_nums(spec.ex1a, univ.town.monst[spec.ex1a].health, univ.town.monst[spec.ex1a].mp);
 					break;
 			}
@@ -3759,12 +3759,12 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_DESTROY_MONST:
-			if(spec.ex1a >= 0 && spec.ex1b >= 0 && (i = monst_there(l)))
+			if(spec.ex1a >= 0 && spec.ex1b >= 0 && ((i = monst_there(l)) < univ.town.monst.size()))
 				univ.town.monst[i].active = 0;
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_NUKE_MONSTS:
-			for(i = 0; i < univ.town->max_monst(); i++)
+			for(i = 0; i < univ.town.monst.size(); i++)
 				if(univ.town.monst[i].active > 0 &&
 					(univ.town.monst[i].number == spec.ex1a || spec.ex1a == 0 ||
 					 (spec.ex1a == -1 && univ.town.monst[i].attitude % 2 == 0) ||
@@ -4062,13 +4062,13 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			i = combat_posing_monster;
 			if(l.y >= 0) {
 				int monst = monst_there(l);
-				if(monst < 90)
+				if(monst < univ.town.monst.size())
 					combat_posing_monster = 100 + monst;
 				else combat_posing_monster = pc_there(l);
 				if(combat_posing_monster == 6)
 					combat_posing_monster = -1;
 			} else combat_posing_monster = spec.ex1a;
-			if(combat_posing_monster < 0 || combat_posing_monster >= univ.town->max_monst()) {
+			if(combat_posing_monster < 0 || combat_posing_monster - 100 >= univ.town.monst.size()) {
 				combat_posing_monster = i;
 				break;
 			}
