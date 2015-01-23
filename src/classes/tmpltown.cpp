@@ -26,10 +26,6 @@ void cBigTemplTown::readTerrainFrom(std::istream& /*file*/) {
 	// TODO: Read in the terrain somehow
 }
 
-unsigned char& cBigTemplTown::lighting(size_t i, size_t r){
-	return _lighting[i][r];
-}
-
 size_t cBigTemplTown::max_dim() const {
 	return 0; // not sure what they are yet.
 }

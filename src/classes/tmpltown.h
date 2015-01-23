@@ -36,33 +36,27 @@ public:
 	cTerRect ter_rects[10];
 };
 
-class cBigTemplTown : public cBigTown, cTemplTown {
-	unsigned char _lighting[8][64];
+class cBigTemplTown : public cBigTown, public cTemplTown {
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 	explicit cBigTemplTown(cScenario& scenario, bool init_strings = false);
 };
 
-class cMedTemplTown : public cMedTown, cTemplTown {
-	unsigned char _lighting[6][48];
+class cMedTemplTown : public cMedTown, public cTemplTown {
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 	explicit cMedTemplTown(cScenario& scenario, bool init_strings = false);
 };
 
-class cTinyTemplTown : public cTinyTown, cTemplTown {
-	unsigned char _lighting[4][32];
+class cTinyTemplTown : public cTinyTown, public cTemplTown {
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);

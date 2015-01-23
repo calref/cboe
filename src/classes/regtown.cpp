@@ -34,14 +34,14 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 	}
 	for(i = 0; i < 32; i++)
 		for(j = 0; j < 32; j++) {
-			_terrain[i][j] = old.terrain[i][j];
-			_lighting[i / 8][j] = old.lighting[i / 8][j];
-			if(scenario.ter_types[_terrain[i][j]].i == 3000) { // marker to indicate it used to be a special spot
+			ter[i][j] = old.terrain[i][j];
+			light[i / 8][j] = old.lighting[i / 8][j];
+			if(scenario.ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
 			}
-			if(scenario.ter_types[_terrain[i][j]].boat_over) {
+			if(scenario.ter_types[ter[i][j]].boat_over) {
 				// Try to fix specials that could be triggered while in a boat
 				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
 				int found_spec = -1;
@@ -99,14 +99,14 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 	}
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++) {
-			_terrain[i][j] = old.terrain[i][j];
-			_lighting[i / 8][j] = old.lighting[i / 8][j];
-			if(scenario.ter_types[_terrain[i][j]].i == 3000) { // marker to indicate it used to be a special spot
+			ter[i][j] = old.terrain[i][j];
+			light[i / 8][j] = old.lighting[i / 8][j];
+			if(scenario.ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
 			}
-			if(scenario.ter_types[_terrain[i][j]].boat_over) {
+			if(scenario.ter_types[ter[i][j]].boat_over) {
 				// Try to fix specials that could be triggered while in a boat
 				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
 				int found_spec = -1;
@@ -164,14 +164,14 @@ void cBigTown::append(legacy::big_tr_type& old, int town_numo){
 	}
 	for(i = 0; i < 64; i++)
 		for(j = 0; j < 64; j++) {
-			_terrain[i][j] = old.terrain[i][j];
-			_lighting[i / 8][j] = old.lighting[i / 8][j];
-			if(scenario.ter_types[_terrain[i][j]].i == 3000) { // marker to indicate it used to be a special spot
+			ter[i][j] = old.terrain[i][j];
+			light[i / 8][j] = old.lighting[i / 8][j];
+			if(scenario.ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
 			}
-			if(scenario.ter_types[_terrain[i][j]].boat_over) {
+			if(scenario.ter_types[ter[i][j]].boat_over) {
 				// Try to fix specials that could be triggered while in a boat
 				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
 				int found_spec = -1;
@@ -212,57 +212,56 @@ void cBigTown::append(legacy::big_tr_type& old, int town_numo){
 }
 
 ter_num_t& cTinyTown::terrain(size_t x, size_t y){
-	return _terrain[x][y];
+	return ter[x][y];
 }
 
 void cTinyTown::writeTerrainTo(std::ostream& file) {
-	writeArray(file, _terrain, 32, 32);
+	writeArray(file, ter, 32, 32);
 }
 
 void cTinyTown::readTerrainFrom(std::istream& file) {
-	readArray(file, _terrain, 32, 32);
+	readArray(file, ter, 32, 32);
 }
 
 unsigned char& cTinyTown::lighting(size_t i, size_t r){
-	return _lighting[i][r];
+	return light[i][r];
 }
 
 ter_num_t& cMedTown::terrain(size_t x, size_t y){
-	return _terrain[x][y];
+	return ter[x][y];
 }
 
 void cMedTown::writeTerrainTo(std::ostream& file) {
-	writeArray(file, _terrain, 48, 48);
+	writeArray(file, ter, 48, 48);
 }
 
 void cMedTown::readTerrainFrom(std::istream& file) {
-	readArray(file, _terrain, 48, 48);
+	readArray(file, ter, 48, 48);
 }
 
 unsigned char& cMedTown::lighting(size_t i, size_t r){
-	return _lighting[i][r];
+	return light[i][r];
 }
 
 ter_num_t& cBigTown::terrain(size_t x, size_t y){
-	return _terrain[x][y];
+	return ter[x][y];
 }
 
 void cBigTown::writeTerrainTo(std::ostream& file) {
-	writeArray(file, _terrain, 64, 64);
+	writeArray(file, ter, 64, 64);
 }
 
 void cBigTown::readTerrainFrom(std::istream& file) {
-	readArray(file, _terrain, 64, 64);
+	readArray(file, ter, 64, 64);
 }
 
 unsigned char& cBigTown::lighting(size_t i, size_t r){
-	return _lighting[i][r];
+	return light[i][r];
 }
 
 cBigTown::cBigTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
-	int i;
-	for(i = 0; i < max_dim(); i++)
-		for(int j = 0; j < max_dim(); j++) {
+	for(size_t i = 0; i < max_dim(); i++)
+		for(size_t j = 0; j < max_dim(); j++) {
 			terrain(i,j) = scenario.default_ground * 2;
 			lighting(i / 8,j) = 0;
 		}
@@ -270,9 +269,8 @@ cBigTown::cBigTown(cScenario& scenario, bool init_strings) : cTown(scenario, ini
 }
 
 cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
-	int i;
-	for(i = 0; i < max_dim(); i++)
-		for(int j = 0; j < max_dim(); j++) {
+	for(size_t i = 0; i < max_dim(); i++)
+		for(size_t j = 0; j < max_dim(); j++) {
 			terrain(i,j) = scenario.default_ground * 2;
 			lighting(i / 8,j) = 0;
 		}
@@ -280,9 +278,8 @@ cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, ini
 }
 
 cTinyTown::cTinyTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
-	int i;
-	for(i = 0; i < max_dim(); i++)
-		for(int j = 0; j < max_dim(); j++) {
+	for(size_t i = 0; i < max_dim(); i++)
+		for(size_t j = 0; j < max_dim(); j++) {
 			terrain(i,j) = scenario.default_ground * 2;
 			lighting(i / 8,j) = 0;
 		}

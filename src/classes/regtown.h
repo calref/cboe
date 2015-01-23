@@ -23,8 +23,8 @@ namespace legacy {
 };
 
 class cBigTown : public cTown { // formerly big_tr_type
-	ter_num_t _terrain[64][64];
-	unsigned char _lighting[8][64];
+	ter_num_t ter[64][64];
+	unsigned char light[8][64];
 public:
 	void append(legacy::big_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
@@ -37,8 +37,8 @@ public:
 };
 
 class cMedTown : public cTown { // formerly ave_tr_type
-	ter_num_t _terrain[48][48];
-	unsigned char _lighting[6][48];
+	ter_num_t ter[48][48];
+	unsigned char light[6][48];
 public:
 	void append(legacy::ave_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
@@ -51,8 +51,8 @@ public:
 };
 
 class cTinyTown : public cTown { // formerly tiny_tr_type
-	ter_num_t _terrain[32][32];
-	unsigned char _lighting[4][32];
+	ter_num_t ter[32][32];
+	unsigned char light[4][32];
 public:
 	void append(legacy::tiny_tr_type& old, int town_num);
 	ter_num_t& terrain(size_t x, size_t y);
