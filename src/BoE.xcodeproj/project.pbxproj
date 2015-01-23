@@ -61,6 +61,7 @@
 		9107074C18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		9107074D18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		9107074E18F1D18500F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
+		91222FC11A72366D008413A5 /* spell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91597A6E1A3BEDC700BE7BF9 /* spell.cpp */; };
 		912283C90FD0E16C00B21642 /* undo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912283C80FD0E16C00B21642 /* undo.cpp */; };
 		912286F80FD330E500B21642 /* dlogutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBADA0FB91D2A001E34EA /* dlogutil.cpp */; };
 		912286F90FD330EA00B21642 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
@@ -1543,6 +1544,7 @@
 				91BFA3EA19033E01001686E4 /* gzstream.cpp in Sources */,
 				915E090C1A317E2E008BDF00 /* map_parse.cpp in Sources */,
 				9179A4661A48683100FEF872 /* stack.cpp in Sources */,
+				91222FC11A72366D008413A5 /* spell.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
