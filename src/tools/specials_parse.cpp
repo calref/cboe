@@ -42,25 +42,25 @@ SpecialParser::SpecialParser() {
 	symbol_ch = chset<>("A-Za-z$_-");
 	symbol = symbol_ch >> *symbol_ch;
 	eol = eol_p[_(next_line)];
-
+	
 	datcode = str_p("sdf")[_(for_sdf)] | str_p("pic")[_(for_pic)] | str_p("msg")[_(for_msg)] |
 		str_p("ex1")[_(for_ex1)] | str_p("ex2")[_(for_ex2)] | str_p("goto")[_(for_goto)];
-
+	
 	command = datcode >> +ws >> (int_p[_(set_first)] | defn[_(set_first)]) >>
 		!(*ws >> ch_p(',') >> *ws >> (int_p[_(set_second)] | defn[_(set_second)]) >>
 		!(*ws >> ch_p(',') >> *ws >> (int_p[_(set_third)] | defn[_(set_third)])));
-
+	
 	null_line = !comment >> eol;
 	init_line = null_line | def_line;
 	def_line = str_p("def") >> +ws >> symbol[_(prep_add_symbol)] >> *ws >> ch_p('=') >> *ws >> int_p[_(add_symbol)] >> *ws >> !comment >> eol;
 	cmd_line = command >> *ws >> !comment >> eol;
 	op_line = ch_p('@') >> opcode[_(set_type)] >> *ws >> !(ch_p('=') >> *ws >> int_p[_(skip_to)]) >> *ws >> !comment >> eol;
-
+	
 	cmd_block = eps_p[_(init_block)] >> op_line >> *(*ws >> (cmd_line | def_line | null_line));
-
+	
 	// TODO: This fails if the file doesn't end in a newline.
 	nodes_file = /*guard*/err(eps_p[_(init_file)] >> *(*ws >> init_line) >> *cmd_block[_(add_command)] >> end_p);//[_(on_error)];
-
+	
 	// Debugging. If BOOST_SPIRIT_DEBUG not defined, all these expand to nothing.
 	BOOST_SPIRIT_DEBUG_NODE(ws);
 	BOOST_SPIRIT_DEBUG_NODE(eol);
@@ -79,7 +79,7 @@ SpecialParser::SpecialParser() {
 	
 	grammar_built = true;
 }
-						   
+
 #undef _
 
 auto SpecialParser::on_error(const Rule::scanner_t&, spirit::parser_error<eParseError, Iter>) -> ErrStatus {

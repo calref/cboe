@@ -31,7 +31,7 @@ static NSImage* imageFromURL(CFURLRef url){
 	imageRect.size.width = CGImageGetWidth(theImage);
 	
 	// Create a new image to receive the Quartz image data.
-	NSImage	*newImage = [[NSImage alloc] initWithSize:imageRect.size]; 
+	NSImage* newImage = [[NSImage alloc] initWithSize:imageRect.size];
 	[newImage lockFocus];
 	
 	// Get the Quartz context and draw.

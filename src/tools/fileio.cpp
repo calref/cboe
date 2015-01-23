@@ -85,7 +85,7 @@ void init_directories(const char* exec_path) {
 #endif // __APPLE__
 #endif // _Win32||_Win64
 	tempDir /= "Temporary Files";
-
+	
 	// Depending on the build environment, we may need to redirect stdout and stderr.
 #ifdef _MSC_VER
 #ifdef DEBUG
@@ -175,26 +175,26 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	scenario.append(*temp_scenario);
 	scenario.append(*item_data);
 	
-		// TODO: Consider skipping the fread and assignment when len is 0
-		for(i = 0; i < 270; i++) {
-			len = (long) (temp_scenario->scen_str_len[i]);
-			n = fread(temp_str, len, 1, file_id);
-			temp_str[len] = 0;
-			if(i == 0) scenario.scen_name = temp_str;
-			else if(i == 1 || i == 2)
-				scenario.who_wrote[i-1] = temp_str;
-			else if(i == 3)
-				scenario.contact_info = temp_str;
-			else if(i >= 4 && i < 10)
-				scenario.intro_strs[i-4] = temp_str;
-			else if(i >= 10 && i < 60)
-				scenario.journal_strs[i-10] = temp_str;
-			else if(i >= 60 && i < 160) {
-				if(i % 2 == 0) scenario.special_items[(i-60)/2].name = temp_str;
-				else scenario.special_items[(i-60)/2].descr = temp_str;
-			} else if(i >= 260) continue; // These were never ever used, for some reason.
-			else scenario.spec_strs[i-160] = temp_str;
-		}
+	// TODO: Consider skipping the fread and assignment when len is 0
+	for(i = 0; i < 270; i++) {
+		len = (long) (temp_scenario->scen_str_len[i]);
+		n = fread(temp_str, len, 1, file_id);
+		temp_str[len] = 0;
+		if(i == 0) scenario.scen_name = temp_str;
+		else if(i == 1 || i == 2)
+			scenario.who_wrote[i-1] = temp_str;
+		else if(i == 3)
+			scenario.contact_info = temp_str;
+		else if(i >= 4 && i < 10)
+			scenario.intro_strs[i-4] = temp_str;
+		else if(i >= 10 && i < 60)
+			scenario.journal_strs[i-10] = temp_str;
+		else if(i >= 60 && i < 160) {
+			if(i % 2 == 0) scenario.special_items[(i-60)/2].name = temp_str;
+			else scenario.special_items[(i-60)/2].descr = temp_str;
+		} else if(i >= 260) continue; // These were never ever used, for some reason.
+		else scenario.spec_strs[i-160] = temp_str;
+	}
 	
 	fclose(file_id);
 	
@@ -687,14 +687,14 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	char *pc_ptr;
 	long len,store_len,count;
 	
-	// LOAD PARTY	
+	// LOAD PARTY
 	len = (long) sizeof(legacy::party_record_type); // should be 46398
 	store_len = len;
 	fin.read((char*)&store_party, len);
 	if(must_port) port_party(&store_party);
 	party_ptr = (char*) &store_party;
 	for(count = 0; count < store_len; count++)
-		party_ptr[count] ^= 0x5C;	
+		party_ptr[count] ^= 0x5C;
 	
 	// LOAD SETUP
 	len = (long) sizeof(legacy::setup_save_type);
@@ -708,7 +708,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		if(must_port) port_pc(&store_pc[i]);
 		pc_ptr = (char*) &store_pc[i];
 		for(count = 0; count < store_len; count++)
-			pc_ptr[count] ^= 0x6B;	
+			pc_ptr[count] ^= 0x6B;
 	}
 	
 	if(in_scen) {
@@ -717,7 +717,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		len = (long) sizeof(legacy::out_info_type);
 		fin.read((char*)&store_out_info, len);
 		
-		// LOAD TOWN 
+		// LOAD TOWN
 		if(town_restore) {
 			len = (long) sizeof(legacy::current_town_type);
 			fin.read((char*)&store_c_town, len);
@@ -728,7 +728,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 			if(must_port) port_t_d(&t_d);
 			
 			len = (long) sizeof(legacy::town_item_list);
-			fin.read((char*)&t_i, len);			
+			fin.read((char*)&t_i, len);
 		}else univ.town.num = 200;
 		
 		// LOAD STORED ITEMS
@@ -750,7 +750,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		len = (long) (64 * 64);
 		fin.read((char*)sfx, len);
 		
-		fin.read((char*)misc_i, len);	
+		fin.read((char*)misc_i, len);
 		
 	} // end if_scen
 	

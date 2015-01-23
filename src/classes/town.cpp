@@ -96,11 +96,11 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	for(i = 0; i < 15; i++) {
 		sign_locs[i] = d_loc;
 		sign_locs[i].x = 100;
-	}	
+	}
 	for(i = 0; i < 8; i++) {
 		timer_spec_times[i] = 0;
 		timer_specs[i] = -1;
-	}	
+	}
 	for(i = 0; i < 100; i++) {
 		specials[i] = cSpecial();
 	}

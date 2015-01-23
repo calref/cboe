@@ -381,38 +381,38 @@ void start_town_mode(short which_town, short entry_dir) {
 	for(i = 0; i < univ.town->preset_items.size(); i++)
 		if((univ.town->preset_items[i].code >= 0)
 			&& (((univ.party.item_taken[univ.town.num][i / 8] & s_pow(2,i % 8)) == 0) ||
-				(univ.town->preset_items[i].always_there))) {
+			(univ.town->preset_items[i].always_there))) {
 				j = univ.town.items.size();
-					// place the preset item, if party hasn't gotten it already
-						univ.town.items.push_back(get_stored_item(univ.town->preset_items[i].code));
-						// Don't place special items if already in the party's possession
-						if(univ.town.items[j].variety == eItemType::SPECIAL && univ.party.spec_items[univ.town.items[j].item_level])
+				// place the preset item, if party hasn't gotten it already
+				univ.town.items.push_back(get_stored_item(univ.town->preset_items[i].code));
+				// Don't place special items if already in the party's possession
+				if(univ.town.items[j].variety == eItemType::SPECIAL && univ.party.spec_items[univ.town.items[j].item_level])
+					break;
+				univ.town.items[j].item_loc = univ.town->preset_items[i].loc;
+				
+				// Not use the items data flags, starting with forcing an ability
+				if(univ.town->preset_items[i].ability >= 0) {
+					switch(univ.town.items[j].variety) {
+						case eItemType::GOLD:
+						case eItemType::FOOD: // If gold or food, this value is amount
+							if(univ.town->preset_items[i].ability > 0)
+								univ.town.items[j].item_level = univ.town->preset_items[i].ability;
 							break;
-						univ.town.items[j].item_loc = univ.town->preset_items[i].loc;
-						
-						// Not use the items data flags, starting with forcing an ability
-						if(univ.town->preset_items[i].ability >= 0) {
-							switch(univ.town.items[j].variety) {
-								case eItemType::GOLD:
-								case eItemType::FOOD: // If gold or food, this value is amount
-									if(univ.town->preset_items[i].ability > 0)
-										univ.town.items[j].item_level = univ.town->preset_items[i].ability;
-									break;
-								default: //leave other type alone
-									// TODO: Could resupport this "forcing an ability" thing...
-									break;
-		 					}
-		 				}
-						
-						// TODO: charges are unused! (Also, they're currently stored in ability, not in charges.)
-		 				
-						if(town_toast)
-							univ.town.items[j].property = false;
-						else
-							univ.town.items[j].property = univ.town->preset_items[i].property;
-						univ.town.items[j].contained = univ.town->preset_items[i].contained;
-						univ.town.items[j].is_special = i + 1;
-		 	}
+						default: //leave other type alone
+							// TODO: Could resupport this "forcing an ability" thing...
+							break;
+					}
+				}
+				
+				// TODO: charges are unused! (Also, they're currently stored in ability, not in charges.)
+				
+				if(town_toast)
+					univ.town.items[j].property = false;
+				else
+					univ.town.items[j].property = univ.town->preset_items[i].property;
+				univ.town.items[j].contained = univ.town->preset_items[i].contained;
+				univ.town.items[j].is_special = i + 1;
+			}
 	
 	
 	for(i = 0; i < univ.town.monst.size(); i++)

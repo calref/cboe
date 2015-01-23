@@ -587,7 +587,7 @@ void cPict::drawPresetTer(short num, rectangle to_rect){
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_TER, num / 50);
 	num = num % 50;
 	rectangle from_rect = calc_rect(num % 10, num / 10);
-	if(to_rect.right - to_rect.left > 28) 
+	if(to_rect.right - to_rect.left > 28)
 		to_rect.inset(4,0);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
 }

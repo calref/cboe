@@ -273,7 +273,7 @@ void writeTerrainToXml(ticpp::Printer&& data) {
 		
 		data.OpenElement("editor");
 		if(ter.shortcut_key > 0)
-		   data.PushElement("shortcut", ter.shortcut_key);
+			data.PushElement("shortcut", ter.shortcut_key);
 		data.PushElement("ground", ter.ground_type);
 		data.PushElement("trim-for", ter.trim_ter);
 		if(ter.obj_num > 0) {
@@ -303,7 +303,7 @@ void writeItemsToXml(ticpp::Printer&& data) {
 		if(item.charges > 0)
 			data.PushElement("charges", item.charges);
 		if(isWeaponType(item.variety) && item.variety != eItemType::ARROW && item.variety != eItemType::BOLTS)
-		   data.PushElement("weapon-type", item.weap_type);
+			data.PushElement("weapon-type", item.weap_type);
 		data.PushElement("missile-type", item.missile);
 		data.PushElement("pic", item.graphic_num);
 		if(item.type_flag > 0)
@@ -596,8 +596,6 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		data.OpenElement("item");
 		data.PushAttribute("id", i);
 		data.PushElement("type", town.preset_items[i].code);
-		if(town.preset_items[i].ability >= 0)
-			data.PushElement("mod", town.preset_items[i].ability);
 		if(town.preset_items[i].charges > 0)
 			data.PushElement("charges", town.preset_items[i].charges);
 		if(town.preset_items[i].always_there)

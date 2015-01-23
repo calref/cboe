@@ -31,12 +31,12 @@ void port_town(legacy::town_record_type* dummy_town_ptr){
 	flip_short(&dummy_town_ptr->max_num_monst);
 	flip_short(&dummy_town_ptr->spec_on_entry);
 	flip_short(&dummy_town_ptr->spec_on_entry_if_dead);
-	for(i =0 ; i < 8; i++) 
+	for(i =0 ; i < 8; i++)
 		flip_short(&dummy_town_ptr->timer_spec_times[i]);
-	for(i =0 ; i < 8; i++) 
+	for(i =0 ; i < 8; i++)
 		flip_short(&dummy_town_ptr->timer_specs[i]);
 	flip_short(&dummy_town_ptr->difficulty);
-	for(i =0 ; i < 100; i++) 
+	for(i =0 ; i < 100; i++)
 		flip_spec_node(&dummy_town_ptr->specials[i]);
 	
 }
@@ -61,7 +61,7 @@ void port_t_d(legacy::big_tr_type* old) {
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(i =0 ; i < 16; i++) 
+	for(i =0 ; i < 16; i++)
 		flip_rect(&old->room_rect[i]);
 	for(i =0 ; i < 60; i++) {
 		flip_short(&old->creatures[i].spec1);
@@ -70,7 +70,7 @@ void port_t_d(legacy::big_tr_type* old) {
 		flip_short(&old->creatures[i].personality);
 		flip_short(&old->creatures[i].special_on_kill);
 		flip_short(&old->creatures[i].facial_pic);
-	} 
+	}
 }
 
 void port_ave_t(legacy::ave_tr_type* old) {
@@ -78,7 +78,7 @@ void port_ave_t(legacy::ave_tr_type* old) {
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(i =0 ; i < 16; i++) 
+	for(i =0 ; i < 16; i++)
 		flip_rect(&old->room_rect[i]);
 	for(i =0 ; i < 40; i++) {
 		flip_short(&old->creatures[i].spec1);
@@ -95,7 +95,7 @@ void port_tiny_t(legacy::tiny_tr_type* old) {
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(i =0 ; i < 16; i++) 
+	for(i =0 ; i < 16; i++)
 		flip_rect(&old->room_rect[i]);
 	for(i =0 ; i < 30; i++) {
 		flip_short(&old->creatures[i].spec1);
@@ -104,7 +104,7 @@ void port_tiny_t(legacy::tiny_tr_type* old) {
 		flip_short(&old->creatures[i].personality);
 		flip_short(&old->creatures[i].special_on_kill);
 		flip_short(&old->creatures[i].facial_pic);
-	} 
+	}
 }
 
 void port_scenario(legacy::scenario_data_type* temp_scenario) {
@@ -169,9 +169,9 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 	for(i = 0; i < 30; i++) {
 		flip_short(&temp_scenario->scen_horses[i].which_town);
 	}
-	for(i = 0; i < 20; i++) 
+	for(i = 0; i < 20; i++)
 		flip_short(&temp_scenario->scenario_timer_times[i]);
-	for(i = 0; i < 20; i++) 
+	for(i = 0; i < 20; i++)
 		flip_short(&temp_scenario->scenario_timer_specs[i]);
 	for(i = 0; i < 256; i++) {
 		flip_spec_node(&temp_scenario->scen_specials[i]);
@@ -219,11 +219,11 @@ void port_out(legacy::outdoor_record_type *out) {
 		flip_short(&(out->special_enc[i].spec_on_flee));
 		flip_short(&(out->special_enc[i].cant_flee));
 		flip_short(&(out->special_enc[i].end_spec1));
-		flip_short(&(out->special_enc[i].end_spec2));	
+		flip_short(&(out->special_enc[i].end_spec2));
 	}
-	for(i = 0; i < 8; i++) 
+	for(i = 0; i < 8; i++)
 		flip_rect(&(out->info_rect[i]));
-	for(i = 0; i < 60; i++) 
+	for(i = 0; i < 60; i++)
 		flip_spec_node(&(out->specials[i]));
 }
 

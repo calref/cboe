@@ -2237,7 +2237,7 @@ void do_monster_turn() {
 								if(dist(cur_monst->cur_loc, targ_space) > abil.second.missile.range)
 									break; // Target not in range
 								if(abil.second.missile.type != eMonstMissile::SPINE && monst_adjacent(targ_space, i))
-								   break; // Target adjacent; prefer melee attacks
+									break; // Target adjacent; prefer melee attacks
 								if(get_ran(1,1,1000) >= abil.second.missile.odds)
 									break;
 								pick_abil = abil;
@@ -2250,7 +2250,7 @@ void do_monster_turn() {
 								if(dist(cur_monst->cur_loc, targ_space) > abil.second.gen.range)
 									break; // Target not in range
 								if(abil.second.gen.type == eMonstGen::SPIT && monst_adjacent(targ_space, i))
-								   break; // Target adjacent; prefer melee attacks
+									break; // Target adjacent; prefer melee attacks
 								if(get_ran(1,1,1000) >= abil.second.gen.odds)
 									break;
 								pick_abil = abil;
@@ -2902,7 +2902,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 		r1 += univ.party[target].get_prot_level(eItemAbil::EVASION);
 		if(univ.party[target].parry < 100)
 			r1 += 5 * univ.party[target].parry;
-			
+		
 		if(r1 <= hit_chance[abil.second.missile.skill]) {
 			r2 = get_ran(abil.second.missile.dice,1,abil.second.missile.sides) + min(10,bless);
 			if(target < 100) {

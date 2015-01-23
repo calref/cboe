@@ -523,7 +523,6 @@ void cButton::setBtnType(eBtnType newType){
 			frame.width() = 30;
 			frame.height() = 30;
 			break;
-
 	}
 }
 

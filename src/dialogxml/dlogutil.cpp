@@ -345,7 +345,7 @@ void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned shor
 	TextStyle style;
 	rectangle cur_text_rect = {2, left, 0, 0};
 	size_t total_len = 0, str_width, str_height;
-	for(unsigned int i = 0; i < strings.size(); i++) 
+	for(unsigned int i = 0; i < strings.size(); i++)
 		total_len += string_length(strings[i], style);
 	total_len = total_len * 12;
 	str_width = s_sqrt(total_len) + 20;

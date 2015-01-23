@@ -70,4 +70,4 @@ sf::Time time_in_ticks(int ticks) {
 	return sf::microseconds(micro);
 }
 
-	
+

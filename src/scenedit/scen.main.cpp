@@ -56,44 +56,44 @@ rectangle right_sbar_rect;
 //Changed to ISO C specified argument and return type.
 int main(int, char* argv[]) {
 	try {
-	
-	init_directories(argv[0]);
-	init_menubar();
-	
-	init_current_terrain();
-	Initialize();
-	init_fileio();
-	init_snd_tool();
-	load_graphics();
-	
-	cDialog::init();
-	cDialog::defaultBackground = cDialog::BG_LIGHT;
-	cDialog::doAnimations = true;
-	init_graph_tool();
-	
-	cen_x = 18;
-	cen_y = 18;
-	
-	run_startup_g();
-	init_lb();
-	init_rb();
-	
-	make_cursor_sword();
-	
-	Set_up_win();
-	init_screen_locs();
-	
-	shut_down_menus(0);
-	
-	set_up_start_screen();
-	
-	check_for_intel();
-	redraw_screen();
-	
-	while(!All_Done)
-		Handle_One_Event();
-	
-	close_program();
+		
+		init_directories(argv[0]);
+		init_menubar();
+		
+		init_current_terrain();
+		Initialize();
+		init_fileio();
+		init_snd_tool();
+		load_graphics();
+		
+		cDialog::init();
+		cDialog::defaultBackground = cDialog::BG_LIGHT;
+		cDialog::doAnimations = true;
+		init_graph_tool();
+		
+		cen_x = 18;
+		cen_y = 18;
+		
+		run_startup_g();
+		init_lb();
+		init_rb();
+		
+		make_cursor_sword();
+		
+		Set_up_win();
+		init_screen_locs();
+		
+		shut_down_menus(0);
+		
+		set_up_start_screen();
+		
+		check_for_intel();
+		redraw_screen();
+		
+		while(!All_Done)
+			Handle_One_Event();
+		
+		close_program();
 		return 0;
 	} catch(std::exception& x) {
 		giveError(x.what());

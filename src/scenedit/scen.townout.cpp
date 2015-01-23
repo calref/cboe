@@ -534,16 +534,16 @@ static bool edit_out_wand_event_filter(cDialog& me, std::string item_hit, short&
 	cCreature store_m;
 	if(item_hit == "left") {
 		me.untoast();
-			store_which_out_wand--;
-			if(store_which_out_wand < 0) store_which_out_wand = 3;
-			store_out_wand = (mode == 0) ? current_terrain->wandering[store_which_out_wand] : current_terrain->special_enc[store_which_out_wand];
-			put_out_wand_in_dlog(me, store_which_out_wand, store_out_wand);
+		store_which_out_wand--;
+		if(store_which_out_wand < 0) store_which_out_wand = 3;
+		store_out_wand = (mode == 0) ? current_terrain->wandering[store_which_out_wand] : current_terrain->special_enc[store_which_out_wand];
+		put_out_wand_in_dlog(me, store_which_out_wand, store_out_wand);
 	} else if(item_hit == "right") {
 		me.untoast();
-			store_which_out_wand++;
-			if(store_which_out_wand > 3) store_which_out_wand = 0;
-			store_out_wand = (mode == 0) ? current_terrain->wandering[store_which_out_wand] : current_terrain->special_enc[store_which_out_wand];
-			put_out_wand_in_dlog(me, store_which_out_wand, store_out_wand);
+		store_which_out_wand++;
+		if(store_which_out_wand > 3) store_which_out_wand = 0;
+		store_out_wand = (mode == 0) ? current_terrain->wandering[store_which_out_wand] : current_terrain->special_enc[store_which_out_wand];
+		put_out_wand_in_dlog(me, store_which_out_wand, store_out_wand);
 	}
 	return true;
 }
@@ -1174,14 +1174,14 @@ location pick_out(location default_loc) {
 bool new_town(short which_town) {
 	std::cout << "Town creation currently disabled.\n";
 	short i,j;
-
+	
 	cChoiceDlog new_dlg("new-town", {"okay", "cancel"});
 	new_dlg->getControl("num").setTextToNum(which_town);
 	if(new_dlg.show() == "cancel") return false;
 	
 	std::string size = dynamic_cast<cLedGroup&>(new_dlg->getControl("size")).getSelected();
 	std::string preset = dynamic_cast<cLedGroup&>(new_dlg->getControl("preset")).getSelected();
-
+	
 	if(size == "lg") scenario.towns.push_back(new cBigTown(scenario));
 	else if(size == "med") scenario.towns.push_back(new cMedTown(scenario));
 	else if(size == "sm") scenario.towns.push_back(new cTinyTown(scenario));
@@ -1190,7 +1190,7 @@ bool new_town(short which_town) {
 	town = scenario.towns[cur_town];
 	scenario.last_town_edited = cur_town;
 	town->town_name = new_dlg->getControl("name").getText().substr(0,30);
-
+	
 	for(i = 0; i < town->max_dim(); i++)
 		for(j = 0; j < town->max_dim(); j++)
 			if(preset == "cave") {

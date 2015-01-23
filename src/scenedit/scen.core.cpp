@@ -2544,7 +2544,7 @@ void edit_custom_pics_types() {
 	pic_dlg["okay"].attachClickHandler(std::bind(save_pics_types, _1, std::ref(pics)));
 	pic_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	pic_dlg.attachClickHandlers(std::bind(change_pics_page, _1, _2, std::ref(pics), std::ref(first_pic)), {"left", "right"});
-									   
+	
 	fill_custom_pics_types(pic_dlg, pics, first_pic);
 	if(spec_scen_g.count() <= 10) {
 		pic_dlg["left"].hide();

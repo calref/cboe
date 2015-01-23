@@ -169,12 +169,12 @@ void get_monst_dims(mon_num_t monst,short *width, short *height) {
 void set_up_monst(short mode,mon_num_t m_num) {
 	short which = univ.town.monst.size();
 	
-			cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
-			univ.town.monst.assign(which, cCreature(m_num), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
-			univ.town.monst[which].active = 2;
-			univ.town.monst[which].summoned = 0;
-			univ.town.monst[which].attitude = mode + 1;
-			univ.town.monst[which].mobility = 1;
+	cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
+	univ.town.monst.assign(which, cCreature(m_num), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+	univ.town.monst[which].active = 2;
+	univ.town.monst[which].summoned = 0;
+	univ.town.monst[which].attitude = mode + 1;
+	univ.town.monst[which].mobility = 1;
 }
 
 void do_monsters() {
@@ -1259,26 +1259,26 @@ short place_monster(mon_num_t which,location where) {
 		i++;
 	}
 	
-		// 10000 or more means an exported summon saved with the party
-		cMonster& monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
-		univ.town.monst.assign(i, cCreature(which), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
-		// TODO: Should this static_cast assignment be happening?
-		// One effect is resetting max health to ignore difficulty_adjust()
-		static_cast<cMonster&>(univ.town.monst[i]) = monst;
-		univ.town.monst[i].attitude = monst.default_attitude;
-		if(univ.town.monst[i].attitude % 2 == 0)
-			univ.town.monst[i].attitude = 1;
-		univ.town.monst[i].mobility = 1;
-		univ.town.monst[i].active = 2;
-		univ.town.monst[i].cur_loc = where;
-		univ.town.monst[i].summoned = 0;
-		univ.town.monst[i].target = 6;
-		
-		univ.town.set_crate(where.x,where.y,false);
-		univ.town.set_barrel(where.x,where.y,false);
-		univ.town.set_block(where.x,where.y,false);
-		
-		return i;
+	// 10000 or more means an exported summon saved with the party
+	cMonster& monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
+	univ.town.monst.assign(i, cCreature(which), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+	// TODO: Should this static_cast assignment be happening?
+	// One effect is resetting max health to ignore difficulty_adjust()
+	static_cast<cMonster&>(univ.town.monst[i]) = monst;
+	univ.town.monst[i].attitude = monst.default_attitude;
+	if(univ.town.monst[i].attitude % 2 == 0)
+		univ.town.monst[i].attitude = 1;
+	univ.town.monst[i].mobility = 1;
+	univ.town.monst[i].active = 2;
+	univ.town.monst[i].cur_loc = where;
+	univ.town.monst[i].summoned = 0;
+	univ.town.monst[i].target = 6;
+	
+	univ.town.set_crate(where.x,where.y,false);
+	univ.town.set_barrel(where.x,where.y,false);
+	univ.town.set_block(where.x,where.y,false);
+	
+	return i;
 }
 
 // returns true if placement was successful
@@ -1318,8 +1318,8 @@ bool summon_monster(mon_num_t which,location where,short duration,short given_at
 	
 	univ.town.monst[spot].attitude = given_attitude;
 	
-		univ.town.monst[spot].summoned = duration;
-		monst_spell_note(which,21);
+	univ.town.monst[spot].summoned = duration;
+	monst_spell_note(which,21);
 	
 	return true;
 }

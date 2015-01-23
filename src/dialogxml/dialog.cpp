@@ -841,7 +841,7 @@ void cDialog::loadFromFile(std::string path){
 				}catch(int){
 					throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 				}
-			defTextClr = clr;
+				defTextClr = clr;
 			} else if(name == "defbtn") {
 				defaultButton = val;
 			}else if(name != "debug")

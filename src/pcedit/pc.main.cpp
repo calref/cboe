@@ -63,24 +63,24 @@ char start_name[256];
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
 int main(int /*argc*/, char* argv[]) {
 	try {
-	init_directories(argv[0]);
-	init_menubar();
-	Initialize();
-	init_fileio();
-	init_main_buttons();
-	Set_up_win();
-	init_graph_tool();
-	init_snd_tool();
-	
-	set_up_apple_events();
-	
-	cDialog::init();
-	redraw_screen();
-	menu_activate();
-	update_item_menu();
-	
-	while(!All_Done)
-		Handle_One_Event();
+		init_directories(argv[0]);
+		init_menubar();
+		Initialize();
+		init_fileio();
+		init_main_buttons();
+		Set_up_win();
+		init_graph_tool();
+		init_snd_tool();
+		
+		set_up_apple_events();
+		
+		cDialog::init();
+		redraw_screen();
+		menu_activate();
+		update_item_menu();
+		
+		while(!All_Done)
+			Handle_One_Event();
 		return 0;
 	} catch(std::exception& x) {
 		giveError(x.what());

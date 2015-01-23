@@ -71,7 +71,7 @@ short cPlayer::get_tnl(){
 			store_per = store_per + ap[trait];
 	}
 	
-	tnl = (tnl * store_per) / 100;	
+	tnl = (tnl * store_per) / 100;
 	
 	return tnl;
 }
@@ -384,12 +384,12 @@ cPlayer::cPlayer(cParty& party) : party(party) {
 	skills[eSkill::STRENGTH] = 1;
 	skills[eSkill::DEXTERITY] = 1;
 	skills[eSkill::INTELLIGENCE] = 1;
-	cur_health = 6; 
-	max_health = 6; 
- 	cur_sp = 0; 
- 	max_sp = 0; 
- 	experience = 0; 
-	skill_pts = 60; 
+	cur_health = 6;
+	max_health = 6;
+	cur_sp = 0;
+	max_sp = 0;
+	experience = 0;
+	skill_pts = 60;
 	level = 1;
 	for(i = 0; i < 24; i++)
 		items[i] = cItem();
@@ -402,7 +402,7 @@ cPlayer::cPlayer(cParty& party) : party(party) {
 	}
 	which_graphic = 0;
 	weap_poisoned = 24;
-		
+	
 	race = eRace::HUMAN;
 	direction = 0;
 }
@@ -439,11 +439,11 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : party(party) {
 			skills[skill] = 8;
 		}
 		cur_health = 60;
-		max_health = 60; 
-		cur_sp = 90; 
-		max_sp = 90; 
-		experience = 0; 
-		skill_pts = 60; 
+		max_health = 60;
+		cur_sp = 90;
+		max_sp = 90;
+		experience = 0;
+		skill_pts = 60;
 		level = 1;
 		for(i = 0; i < 24; i++)
 			items[i] = cItem();
@@ -461,7 +461,7 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : party(party) {
 		for(i = 0; i < 10; i++) {
 			eTrait trait = eTrait(i);
 			traits[trait] = true;
-		}		
+		}
 		
 		race = eRace::HUMAN;
 		direction = 0;
@@ -536,17 +536,17 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : party(party) {
 			skills[skill] = pc_stats[slot][skill];
 		}
 		cur_health = pc_health[slot];
-		max_health = pc_health[slot]; 
-		experience = 0; 
-		skill_pts = 0; 
+		max_health = pc_health[slot];
+		experience = 0;
+		skill_pts = 0;
 		level = 1;
 		
 		for(i = 0; i < 24; i++)
 			items[i] = cItem();
 		for(i = 0; i < 24; i++)
 			equip[i] = false;
-		cur_sp = pc_sp[slot]; 
-		max_sp = pc_sp[slot]; 
+		cur_sp = pc_sp[slot];
+		max_sp = pc_sp[slot];
 		for(i = 0; i < 62; i++) {
 			priest_spells[i] = (i < 30) ? true : false;
 			mage_spells[i] = (i < 30) ? true : false;

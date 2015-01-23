@@ -562,7 +562,7 @@ static void handle_target_space(location destination, bool& did_something, bool&
 	else if(overall_mode == MODE_FANCY_TARGET) {
 		place_target(destination);
 		need_reprint = true;
-	} 
+	}
 	if(overall_mode != MODE_FANCY_TARGET) {
 		did_something = true;
 		if(overall_mode == MODE_TOWN_TARGET)
@@ -2632,7 +2632,7 @@ void start_new_game() {
 	// (It also refreshed stores... with uninitialized items.)
 	
 	edit_party();
-
+	
 	// if no PCs left, forget it
 	for(i = 0 ; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
@@ -2998,10 +2998,10 @@ bool town_move_party(location destination,short forced) {
 			if((!is_blocked(destination)) && (!is_special(destination))
 				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert
 				&& (!univ.scenario.ter_types[ter].boat_over
-					|| ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y)))) {
-					add_string_to_buf("You leave the boat.             ");
-					univ.party.in_boat = -1;
-				}
+				|| ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y)))) {
+				add_string_to_buf("You leave the boat.             ");
+				univ.party.in_boat = -1;
+			}
 			else if((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y))
 				return false;
 			// Crossing bridge: land or go through
