@@ -393,18 +393,25 @@ void start_town_mode(short which_town, short entry_dir) {
 				// Not use the items data flags, starting with forcing an ability
 				if(univ.town->preset_items[i].ability >= 0) {
 					switch(univ.town.items[j].variety) {
-						case eItemType::GOLD:
-						case eItemType::FOOD: // If gold or food, this value is amount
-							if(univ.town->preset_items[i].ability > 0)
-								univ.town.items[j].item_level = univ.town->preset_items[i].ability;
+						case eItemType::ONE_HANDED:
+						case eItemType::TWO_HANDED: {
+							if(univ.town->preset_items[i].ability > int(eEnchant::BLESSED))
+								break;
+							// TODO: This array and accompanying calculation is now duplicated here and in place_buy_button()
+							const short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
+							int ench = univ.town->preset_items[i].ability;
+							int val = max(aug_cost[ench] * 100, univ.town.items[j].value * (5 + aug_cost[ench]));
+							univ.town.items[j].enchant_weapon(eEnchant(ench), val);
 							break;
-						default: //leave other type alone
-							// TODO: Could resupport this "forcing an ability" thing...
-							break;
+						}
 					}
 				}
 				
-				// TODO: charges are unused! (Also, they're currently stored in ability, not in charges.)
+				if(univ.town->preset_items[i].charges > 0) {
+					eItemType variety = univ.town.items[j].variety;
+					if(univ.town.items[j].charges > 0 || variety == eItemType::GOLD || variety == eItemType::FOOD)
+						univ.town.items[j].charges = univ.town->preset_items[i].charges;
+				}
 				
 				if(town_toast)
 					univ.town.items[j].property = false;

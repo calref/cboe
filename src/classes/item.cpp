@@ -376,6 +376,66 @@ cItem::cItem(eAlchemy recipe) : cItem('alch') {
 	}
 }
 
+void cItem::enchant_weapon(eEnchant enchant_type,short new_val) {
+	if(magic || ability != eItemAbil::NONE)
+		return;
+	if(variety != eItemType::ONE_HANDED || variety != eItemType::TWO_HANDED)
+		return;
+	magic = true;
+	enchanted = true;
+	std::string store_name = full_name;
+	switch(enchant_type) {
+		case eEnchant::PLUS_ONE:
+			store_name += " (+1)";
+			bonus++;
+			value = new_val;
+			break;
+		case eEnchant::PLUS_TWO:
+			store_name += " (+2)";
+			bonus += 2;
+			value = new_val;
+			break;
+		case eEnchant::PLUS_THREE:
+			store_name += " (+3)";
+			bonus += 3;
+			value = new_val;
+			break;
+		case eEnchant::SHOOT_FLAME:
+			store_name += " (F)";
+			ability = eItemAbil::CAST_SPELL;
+			abil_data[0] = 5;
+			abil_data[1] = int(eSpell::FLAME);
+			charges = 8;
+			break;
+		case eEnchant::FLAMING:
+			store_name += " (F!)";
+			value = new_val;
+			ability = eItemAbil::DAMAGING_WEAPON;
+			abil_data[0] = 5;
+			abil_data[1] = int(eDamageType::FIRE);
+			break;
+		case eEnchant::PLUS_FIVE:
+			store_name += " (+5)";
+			value = new_val;
+			bonus += 5;
+			break;
+		case eEnchant::BLESSED:
+			store_name += " (B)";
+			bonus++;
+			ability = eItemAbil::AFFECT_STATUS;
+			abil_data[0] = 5;
+			abil_data[1] = int(eStatus::BLESS_CURSE);
+			magic_use_type = 0;
+			charges = 8;
+			break;
+	}
+	if(value > 15000)
+		value = 15000;
+	if(value < 0)
+		value = 15000;
+	full_name = store_name;
+}
+
 void cItem::append(legacy::item_record_type& old){
 	variety = (eItemType) old.variety;
 	item_level = old.item_level;

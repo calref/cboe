@@ -340,6 +340,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 	// TODO: The duplication of rectangle here shouldn't be necessary...
 	rectangle button_sources[3] = {rectangle{24,0,36,30},rectangle{36,0,48,30},rectangle{48,0,60,30}};
 	short val_to_place;
+	// TODO: This is now duplicated here and in start_town_mode()
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 	
 	if(univ.party[pc_num].items[item_num].variety == eItemType::NO_ITEM)

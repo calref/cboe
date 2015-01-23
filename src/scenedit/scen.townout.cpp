@@ -210,7 +210,7 @@ static void put_placed_item_in_dlog(cDialog& me, const cTown::cItem& store_place
 	sprintf(str,"X = %d, Y = %d",store_placed_item.loc.x,store_placed_item.loc.y);
 	me["loc"].setText(str);
 	me["name"].setText(scenario.scen_items[store_placed_item.code].full_name);
-	me["charges"].setTextToNum(store_placed_item.ability);
+	me["charges"].setTextToNum(store_placed_item.charges);
 	if(store_placed_item.always_there)
 		dynamic_cast<cLed&>(me["always"]).setState(led_red);
 	if(store_placed_item.property)
@@ -224,15 +224,15 @@ static void put_placed_item_in_dlog(cDialog& me, const cTown::cItem& store_place
 static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& store_placed_item, const short store_which_placed_item) {
 	if(!me.toast(true)) return true;
 	
-	store_placed_item.ability = me["charges"].getTextAsNum();
-	if(store_placed_item.ability < -1 || store_placed_item.ability > 2500) {
+	store_placed_item.charges = me["charges"].getTextAsNum();
+	if(store_placed_item.charges < -1 || store_placed_item.charges > 2500) {
 		giveError("Number of charges/amount of gold or food must be from 0 to 2500.",
 				  "If an item with charges (not gold or food) leave this at -1 for the item to have the default number of charges.",&me);
 		return true;
 	}
 	
 	eItemType type = scenario.scen_items[store_placed_item.code].variety;
-	if(store_placed_item.ability == 0 && (type == eItemType::GOLD || type == eItemType::FOOD)) {
+	if(store_placed_item.charges == 0 && (type == eItemType::GOLD || type == eItemType::FOOD)) {
 		giveError("You must assign gold or food an amount of at least 1.","",&me);
 		return false;
 	}

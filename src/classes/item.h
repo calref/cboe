@@ -17,6 +17,8 @@
 
 namespace legacy { struct item_record_type; };
 
+enum class eEnchant {PLUS_ONE, PLUS_TWO, PLUS_THREE, SHOOT_FLAME, FLAMING, PLUS_FIVE, BLESSED};
+
 class cItem {
 public:
 	eItemType variety;
@@ -53,6 +55,7 @@ public:
 	short item_weight() const;
 	
 	std::string getAbilName() const;
+	void enchant_weapon(eEnchant enchant_type, short new_val);
 	
 	cItem();
 	explicit cItem(long preset);

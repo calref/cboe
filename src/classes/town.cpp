@@ -173,8 +173,7 @@ void cTown::cItem::append(legacy::preset_item_type old){
 	loc.x = old.item_loc.x;
 	loc.y = old.item_loc.y;
 	code = old.item_code;
-	ability = old.ability;
-	charges = old.charges;
+	charges = old.ability;
 	always_there = old.always_there;
 	property = old.property;
 	contained = old.contained;
@@ -257,6 +256,7 @@ cTown::cItem::cItem() {
 	loc = {80,80};
 	code = -1;
 	ability = -1;
+	charges = 0;
 	always_there = false;
 	property = false;
 	contained = false;
@@ -266,7 +266,7 @@ cTown::cItem::cItem(location loc, short num, ::cItem& item) : cItem() {
 	loc = loc;
 	code = num;
 	if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD)
-		ability = get_ran(1,4,6);
+		charges = get_ran(1,4,6);
 }
 
 std::ostream& operator<< (std::ostream& out, eLighting light) {

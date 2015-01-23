@@ -97,65 +97,6 @@ short take_food(short amount,bool print_result) {
 	return 0;
 }
 
-void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val) {
-	if(univ.party[pc_num].items[item_hit].magic ||
-		(univ.party[pc_num].items[item_hit].ability != eItemAbil::NONE))
-		return;
-	univ.party[pc_num].items[item_hit].magic = true;
-	univ.party[pc_num].items[item_hit].enchanted = true;
-	std::string store_name = univ.party[pc_num].items[item_hit].full_name;
-	switch(enchant_type) {
-		case 0:
-			store_name += " (+1)";
-			univ.party[pc_num].items[item_hit].bonus++;
-			univ.party[pc_num].items[item_hit].value = new_val;
-			break;
-		case 1:
-			store_name += " (+2)";
-			univ.party[pc_num].items[item_hit].bonus += 2;
-			univ.party[pc_num].items[item_hit].value = new_val;
-			break;
-		case 2:
-			store_name += " (+3)";
-			univ.party[pc_num].items[item_hit].bonus += 3;
-			univ.party[pc_num].items[item_hit].value = new_val;
-			break;
-		case 3:
-			store_name += " (F)";
-			univ.party[pc_num].items[item_hit].ability = eItemAbil::CAST_SPELL;
-			univ.party[pc_num].items[item_hit].abil_data[0] = 5;
-			univ.party[pc_num].items[item_hit].abil_data[1] = int(eSpell::FLAME);
-			univ.party[pc_num].items[item_hit].charges = 8;
-			break;
-		case 4:
-			store_name += " (F!)";
-			univ.party[pc_num].items[item_hit].value = new_val;
-			univ.party[pc_num].items[item_hit].ability = eItemAbil::DAMAGING_WEAPON;
-			univ.party[pc_num].items[item_hit].abil_data[0] = 5;
-			univ.party[pc_num].items[item_hit].abil_data[1] = int(eDamageType::FIRE);
-			break;
-		case 5:
-			store_name += " (+5)";
-			univ.party[pc_num].items[item_hit].value = new_val;
-			univ.party[pc_num].items[item_hit].bonus += 5;
-			break;
-		case 6:
-			store_name += " (B)";
-			univ.party[pc_num].items[item_hit].bonus++;
-			univ.party[pc_num].items[item_hit].ability = eItemAbil::AFFECT_STATUS;
-			univ.party[pc_num].items[item_hit].abil_data[0] = 5;
-			univ.party[pc_num].items[item_hit].abil_data[1] = int(eStatus::BLESS_CURSE);
-			univ.party[pc_num].items[item_hit].magic_use_type = 0;
-			univ.party[pc_num].items[item_hit].charges = 8;
-			break;
-	}
-	if(univ.party[pc_num].items[item_hit].value > 15000)
-		univ.party[pc_num].items[item_hit].value = 15000;
-	if(univ.party[pc_num].items[item_hit].value < 0)
-		univ.party[pc_num].items[item_hit].value = 15000;
-	univ.party[pc_num].items[item_hit].full_name = store_name;
-}
-
 void equip_item(short pc_num,short item_num) {
 	unsigned short num_equipped_of_this_type = 0;
 	unsigned short num_hands_occupied = 0;

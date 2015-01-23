@@ -8,7 +8,6 @@ void give_gold(short amount,bool print_result);
 bool take_gold(short amount,bool print_result);
 void give_food(short amount,bool print_result);
 short take_food(short amount,bool print_result);
-void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val);
 void equip_item(short pc_num,short item_num);
 void drop_item(short pc_num,short item_num,location where_drop);
 bool place_item(cItem item,location where,bool forced,bool contained = false);
