@@ -268,6 +268,13 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 		case STRT_SUMMON:
 			strings = {"0 - no summon (weak)", "1 - weak summoning", "2 - summoning", "3 - major summoning", "4 - no summon (unique/powerful"};
 			break;
+		case STRT_TALK:
+			for(cTown* town : scenario.towns) {
+				for(cPersonality who : town->talking.people) {
+					strings.push_back(who.title + " (in " + town->town_name + ")");
+				}
+			}
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = -1;

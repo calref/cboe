@@ -58,8 +58,7 @@ public:
 	rectangle getEnclosingRect();
 };
 
-// TODO: Okay, is this really needed? Also this value also means "blank pic" in the dialog engine.
-static const pic_num_t NO_PIC = std::numeric_limits<pic_num_t>::max();
+static const pic_num_t NO_PIC = -1;
 using graf_pos = std::pair<sf::Texture*,rectangle>;
 using graf_pos_ref = std::pair<sf::Texture*&,rectangle&>;
 using hilite_t = std::pair<size_t,size_t>;

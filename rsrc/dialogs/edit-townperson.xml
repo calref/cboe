@@ -2,22 +2,23 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' debug='true'>
 	<field name='talk' top='189' left='149' width='67' height='16'/>
-	<text name='picnum' top='189' left='341' width='71' height='16'/>
+	<button name='talk-edit' type='regular' top='186' left='228'>Choose</button>
+	<text name='picnum' top='189' left='375' width='40' height='16'/>
 	<text size='large' top='71' left='51' width='115' height='15'>Creature type:</text>
 	<text top='189' left='51' width='84' height='15'>Personality:</text>
 	<button name='type-edit' type='regular' top='69' left='333'>Choose</button>
 	<text name='type' framed='true' top='71' left='171' width='155' height='15'/>
 	<text top='92' left='51' width='169' height='15'>Creature starting attitude:</text>
 	<text top='128' left='51' width='130' height='15'>Creature can move?</text>
-	<text top='189' left='230' width='100' height='15'>Facial graphic:</text>
+	<text top='189' left='295' width='80' height='15'>Facial graphic:</text>
 	<pict name='pic' type='talk' num='0' top='180' left='426'/>
 	<button name='pict-edit' type='regular' top='186' left='471'>Choose</button>
 	<text size='large' top='6' left='50' width='156' height='17'>Editing a townsperson/monster</text>
 	<group name='attitude'>
-		<led name='att1' top='97' left='342' width='100'>Friendly, Docile</led>
-		<led name='att2' top='113' left='342' width='100'>Hostile, Type A</led>
-		<led name='att3' top='97' left='477' width='100'>Friendly, Will Fight</led>
-		<led name='att4' top='113' left='477' width='100'>Hostile, Type B</led>
+		<led name='att1' top='97' left='242' width='100'>Friendly, Docile</led>
+		<led name='att2' top='113' left='242' width='100'>Hostile, Type A</led>
+		<led name='att3' top='97' left='377' width='100'>Friendly, Will Fight</led>
+		<led name='att4' top='113' left='377' width='100'>Hostile, Type B</led>
 	</group>
 	<group name='mobility'>
 		<led name='mob1' top='133' left='224'>No</led>
@@ -27,13 +28,14 @@
 	<button name='cancel' type='regular' top='224' left='405'>Cancel</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text top='7' left='313' width='126' height='15'>Creature number:</text>
-	<text name='num' top='7' left='250' width='50' height='15'/>
+	<text name='num' top='7' left='450' width='50' height='15'/>
 	<button name='more' type='large' top='224' left='51'>Advanced</button>
+	<button name='del' type='regular' top='224' left='155'>Delete</button>
 	<text top='24' left='50' width='476' height='40'>
 		Enter the information for this monster/townsperson.
 		You only need to worry about the talking section if this is not a hostile monster.
 		To edit the more advanced traits for this monster, press the Advanced button.
 	</text>
 	<text size='large' top='160' left='51' width='256' height='17'>Talking to this creature:</text>
-	<text top='205' left='230' width='101' height='26'>Leave at 0 for no pic.</text>
+	<text top='205' left='295' width='101' height='26'>Leave at -1 for no pic.</text>
 </dialog>

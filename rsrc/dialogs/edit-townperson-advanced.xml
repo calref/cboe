@@ -19,8 +19,9 @@
 		Number of town special node to call when creature is killed:
 		(-1 for none)
 	</text>
+	<button name='editdeath' type='large' top='294' left='360'>Create/Edit</button>
 	<text top='322' left='25' width='230' height='40'>
-		Stuff done flag creature’s life is linked to:
+		Stuff done flag creature's life is linked to:
 		(0 - alive,
 		1 - dead),
 		if either is -1, this is ignored.
@@ -33,34 +34,22 @@
 	<text name='num' top='7' left='454' width='50' height='15'/>
 	<text size='large' top='49' left='9' width='130' height='17'>Creature timing:</text>
 	<group name='time'>
-		<led name='time1' top='74' left='290' width='100'>Always here</led>
-		<led name='time2' top='90' left='290' width='110'>Appear on given day</led>
-		<led name='time3' top='106' left='290' width='100'>Disappear on day</led>
-		<led name='time4' top='74' left='420' width='100'>Sometimes here A</led>
-		<led name='time5' top='90' left='420' width='100'>Sometimes here B</led>
-		<led name='time6' top='106' left='420' width='100'>Sometimes here C</led>
-		<led name='time7' top='74' left='549' width='100'>Appear when event</led>
-		<led name='time8' top='90' left='549' width='120'>Disappear when event</led>
-		<led name='time9' top='106' left='549' width='120'>Appear after town dies</led>
+		<led name='time1' top='74' left='150' width='100'>Always here</led>
+		<led name='time2' top='90' left='150' width='110'>Appear on given day</led>
+		<led name='time3' top='106' left='150' width='100'>Disappear on day</led>
+		<led name='time4' top='74' left='280' width='100'>Sometimes here A</led>
+		<led name='time5' top='90' left='280' width='100'>Sometimes here B</led>
+		<led name='time6' top='106' left='280' width='100'>Sometimes here C</led>
+		<led name='time7' top='74' left='409' width='100'>Appear when event</led>
+		<led name='time8' top='90' left='409' width='120'>Disappear when event</led>
+		<led name='time9' top='106' left='409' width='120'>Appear after town dies</led>
 	</group>
-	<group name='group'>
-		<led name='group0' top='220' left='77'>None</led>
-		<led name='group1' top='236' left='77'>1</led>
-		<led name='group2' top='252' left='77'>2</led>
-		<led name='group3' top='220' left='165'>3</led>
-		<led name='group4' top='236' left='165'>4</led>
-		<led name='group5' top='252' left='165'>5</led>
-		<led name='group6' top='220' left='254'>6</led>
-		<led name='group7' top='236' left='254'>7</led>
-		<led name='group8' top='252' left='254'>8</led>
-		<led name='group9' top='220' left='346'>9</led>
-		<led name='group10' top='236' left='346'>10</led>
-	</group>
-	<text top='203' left='372' width='195' height='78'>
-		A creature which is part of a special group does not exist until it’s created by a special encounter
+	<field name='group' tab-order='3' type='uint' top='205' left='397' width='50' height='16'/>
+	<text top='203' left='25' width='363' height='68'>
+		What special encounter group is this creature a part of? (0 - none)<br/><br/>
+		A creature which is part of a special group does not exist until it's created by a special encounter
 		(like special node type One-Time Place Town Encounter).
 	</text>
-	<text top='203' left='25' width='343' height='15'>What special encounter group is this creature a part of?</text>
 	<text top='133' left='301' width='222' height='44'>
 		For an explanation on how event codes work,
 		see the chapter in the instructions on the passing of time.

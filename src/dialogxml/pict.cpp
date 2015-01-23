@@ -17,7 +17,7 @@
 
 extern sf::Texture bg_gworld;
 extern cCustomGraphics spec_scen_g;
-const pic_num_t cPict::BLANK = std::numeric_limits<pic_num_t>::max();
+const pic_num_t cPict::BLANK = -1;
 
 void cPict::init(){
 	drawPict()[PIC_TER] = &cPict::drawPresetTer;
@@ -716,7 +716,6 @@ void cPict::drawPresetDlogLg(short num, rectangle to_rect){
 }
 
 void cPict::drawPresetTalk(short num, rectangle to_rect){
-	num--;
 	to_rect.right = to_rect.left + 32;
 	to_rect.bottom = to_rect.top + 32;
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_TALK);

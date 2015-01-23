@@ -12,7 +12,7 @@
 /// @file
 /// Constants to specify the type of an icon
 
-typedef unsigned short pic_num_t; ///< An icon's unique number
+typedef signed short pic_num_t; ///< An icon's unique number
 
 /// Specifies an icon type.
 enum ePicType {

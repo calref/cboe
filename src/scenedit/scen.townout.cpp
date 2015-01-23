@@ -33,11 +33,11 @@ extern location cur_out;
 cTownperson store_placed_monst,store_placed_monst2;
 short store_which_placed_monst;
 
-const char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears","",
-	"Unused","Unused","Unused","Unused","Unused"};
-const char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 - no event)","",
+const char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears",
+	"Unused","Unused","Unused","Unused","Unused","Unused"};
+const char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 - no event)",
 	"Unused","Unused","Unused",
-	"Event code (0 - no event)","Event code (0 - no event)"};
+	"Event code (0 - no event)","Event code (0 - no event)","Unused"};
 
 static void put_placed_monst_in_dlog(cDialog& me) {
 	me["num"].setTextToNum(store_which_placed_monst);
@@ -48,21 +48,18 @@ static void put_placed_monst_in_dlog(cDialog& me) {
 	me["talk"].setTextToNum(store_placed_monst.personality);
 	me["picnum"].setTextToNum(store_placed_monst.facial_pic);
 	// TODO: Use -1 instead of 0 for "no pic", since 0 is a valid talking picture
- 	if((store_placed_monst.facial_pic < 1))
-		dynamic_cast<cPict&>(me["pic"]).setPict(-1);
+ 	if(short(store_placed_monst.facial_pic) < 0)
+		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_monsters[store_placed_monst.number].picture_num, PIC_MONST);
 	else if((store_placed_monst.facial_pic >= 1000))
 		dynamic_cast<cPict&>(me["pic"]).setPict(store_placed_monst.facial_pic - 1000,PIC_CUSTOM_TALK);
 	else dynamic_cast<cPict&>(me["pic"]).setPict(store_placed_monst.facial_pic,PIC_TALK);
 }
 
-static bool get_placed_monst_in_dlog(cDialog& me) {
+static void get_placed_monst_in_dlog(cDialog& me) {
 	store_placed_monst.start_attitude = dynamic_cast<cLedGroup&>(me["attitude"]).getSelected()[3] - '1';
 	store_placed_monst.mobility = dynamic_cast<cLedGroup&>(me["mobility"]).getSelected()[3] - '1';
 	store_placed_monst.personality = me["talk"].getTextAsNum();
 	store_placed_monst.facial_pic = me["picnum"].getTextAsNum();
-	// later
-	town->creatures[store_which_placed_monst] = store_placed_monst;
-	return true;
 }
 
 static bool edit_placed_monst_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
@@ -70,25 +67,31 @@ static bool edit_placed_monst_event_filter(cDialog& me, std::string item_hit, eK
 	cTownperson store_m;
 	
 	if(item_hit == "okay") {
-		if(!get_placed_monst_in_dlog(me)) return true;
-		me.toast(true);
+		if(!me.toast(true)) return true;
+		get_placed_monst_in_dlog(me);
+		town->creatures[store_which_placed_monst] = store_placed_monst;
 	} else if(item_hit == "cancel") {
 		me.toast(false);
+	} else if(item_hit == "del") {
+		me.toast(false);
+		town->creatures[store_which_placed_monst].number = 0;
 	} else if(item_hit == "type-edit") {
-		if(!get_placed_monst_in_dlog(me)) return true;
+		get_placed_monst_in_dlog(me);
 		i = choose_text(STRT_MONST,store_placed_monst.number,&me,"Choose Which Monster:");
 		if(i >= 0) {
 			store_placed_monst.number = i;
 			put_placed_monst_in_dlog(me);
 		}
 	} else if(item_hit == "pict-edit") {
-		if(!get_placed_monst_in_dlog(me)) return true;
+		get_placed_monst_in_dlog(me);
 		i = choose_graphic(store_placed_monst.facial_pic,PIC_TALK,&me);
-		if(i >= 0) {
-			// TODO: Use -1 instead of 0 for "no pic"
-			store_placed_monst.facial_pic = i + 1;
-		}
-		else return true;
+		store_placed_monst.facial_pic = i;
+		put_placed_monst_in_dlog(me);
+	} else if(item_hit == "talk-edit") {
+		get_placed_monst_in_dlog(me);
+		i = choose_text(STRT_TALK, store_placed_monst.personality, &me, "Which personality?");
+		if(i >= 0)
+			store_placed_monst.personality = i;
 		put_placed_monst_in_dlog(me);
 	} else if(item_hit == "more") { //advanced
 		store_m = edit_placed_monst_adv(store_placed_monst, me);
@@ -103,7 +106,7 @@ void edit_placed_monst(short which_m) {
 	store_which_placed_monst = which_m;
 	
 	cDialog edit("edit-townperson");
-	edit.attachClickHandlers(edit_placed_monst_event_filter, {"type-edit", "pict-edit", "okay", "cancel", "more"});
+	edit.attachClickHandlers(edit_placed_monst_event_filter, {"type-edit", "pict-edit", "talk-edit", "okay", "cancel", "more", "del"});
 	
 	put_placed_monst_in_dlog(edit);
 	
@@ -111,7 +114,6 @@ void edit_placed_monst(short which_m) {
 }
 
 static void put_placed_monst_adv_in_dlog(cDialog& me) {
-	
 	me["num"].setTextToNum(store_which_placed_monst);
 	me["type"].setText(scenario.scen_monsters[store_placed_monst2.number].m_name);
 	int iTime = 0;
@@ -131,8 +133,7 @@ static void put_placed_monst_adv_in_dlog(cDialog& me) {
 	me["extra2-lbl"].setText(day_str_2[iTime]);
 	me["extra1"].setTextToNum(store_placed_monst2.monster_time);
 	me["extra2"].setTextToNum(store_placed_monst2.time_code);
-	// TODO: Why on earth is this an LED group? Just use a text field!
-	dynamic_cast<cLedGroup&>(me["group"]).setSelected("group" + std::to_string(store_placed_monst2.spec_enc_code));
+	me["group"].setTextToNum(store_placed_monst2.spec_enc_code);
 	me["death"].setTextToNum(store_placed_monst2.special_on_kill);
 	me["sdfx"].setTextToNum(store_placed_monst2.spec1);
 	me["sdfy"].setTextToNum(store_placed_monst2.spec2);
@@ -161,9 +162,7 @@ static bool get_placed_monst_adv_in_dlog(cDialog& me) {
 	store_placed_monst2.spec2 = me["sdfy"].getTextAsNum();
   	if(cre(store_placed_monst2.spec2,-1,9,"Second part of special flag must be -1 (if this is to be ignored) or from 0 to 9.","",&me)) return false;
 	
-	std::string group = dynamic_cast<cLedGroup&>(me["group"]).getSelected();
-	if(group == "group10") store_placed_monst2.spec_enc_code = 10;
-	else store_placed_monst2.spec_enc_code = group[5] - '0';
+	store_placed_monst2.spec_enc_code = me["group"].getTextAsNum();
 	return true;
 }
 
@@ -178,14 +177,28 @@ static bool edit_placed_monst_adv_event_filter(cDialog& me, std::string item_hit
 	return true;
 }
 
-static bool edit_placed_monst_adv_time_flag(cDialog& me, std::string id, bool losingFocus) {
+static bool edit_placed_monst_adv_time_flag(cDialog& me, std::string, bool losingFocus) {
 	if(losingFocus) return true;
 	
-	if(id.substr(0,4) == "time") {
-		int item_hit = id[4] - '1';
-		me["extra1-lbl"].setText(day_str_1[item_hit]);
-		me["extra2-lbl"].setText(day_str_2[item_hit]);
+	cLedGroup& time = dynamic_cast<cLedGroup&>(me["time"]);
+	int item_hit = time.getSelected()[4] - '1';
+	me["extra1-lbl"].setText(day_str_1[item_hit]);
+	me["extra2-lbl"].setText(day_str_2[item_hit]);
+	return true;
+}
+
+static bool edit_placed_monst_adv_death(cDialog& me, std::string, eKeyMod) {
+	short spec = store_placed_monst2.special_on_kill;
+	if(spec < 0) {
+		spec = get_fresh_spec(2);
+		if(spec < 0) {
+			giveError("You can't create a new town special encounter because there are no more free special nodes.",
+					  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
+			return true;
+		}
 	}
+	if(edit_spec_enc(spec,2,&me))
+		me["death"].setTextToNum(spec);
 	return true;
 }
 
@@ -195,6 +208,7 @@ cTownperson edit_placed_monst_adv(cTownperson monst_record, cDialog& parent) {
 	cDialog edit("edit-townperson-advanced", &parent);
 	edit["okay"].attachClickHandler(edit_placed_monst_adv_event_filter);
 	edit["cancel"].attachClickHandler(edit_placed_monst_adv_event_filter);
+	edit["editdeath"].attachClickHandler(edit_placed_monst_adv_death);
 	edit["time"].attachFocusHandler(edit_placed_monst_adv_time_flag);
 	
 	put_placed_monst_adv_in_dlog(edit);

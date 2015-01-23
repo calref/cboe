@@ -130,6 +130,8 @@ void cMonster::append(legacy::monster_record_type& old){
 	default_attitude = old.default_attitude;
 	summon_type = old.summon_type;
 	default_facial_pic = old.default_facial_pic;
+	if(default_facial_pic == 0)
+		default_facial_pic = NO_PIC;
 	picture_num = old.picture_num;
 	if(picture_num == 122) picture_num = 119;
 	see_spec = -1;
@@ -443,6 +445,8 @@ void cTownperson::append(legacy::creature_start_type old){
 	personality = old.personality;
 	special_on_kill = old.special_on_kill;
 	facial_pic = old.facial_pic;
+	if(facial_pic == 0)
+		facial_pic = NO_PIC;
 }
 
 void cCreature::append(legacy::creature_data_type old){

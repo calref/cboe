@@ -849,7 +849,7 @@ static void place_talk_face() {
 	}
 	else {
 		short i = get_monst_picnum(store_monst_type);
-		if(face_to_draw <= 0)
+		if(face_to_draw == NO_PIC)
 			cPict::drawAt(mainPtr, face_rect, i, get_monst_pictype(store_monst_type), false);
 		else cPict::drawAt(mainPtr, face_rect, face_to_draw, PIC_TALK, false);
 	}

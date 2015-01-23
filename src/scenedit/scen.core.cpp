@@ -466,6 +466,7 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& store_monst, mon_num_t
 		}
 		dynamic_cast<cPict&>(me["icon"]).setPict(store_monst.picture_num,type_g);
 	}
+	dynamic_cast<cPict&>(me["talkpic"]).setPict(store_monst.default_facial_pic, PIC_TALK);
 	me["num"].setTextToNum(which_monst);
 	me["name"].setText(store_monst.m_name);
 	me["pic"].setTextToNum(store_monst.picture_num);
@@ -487,7 +488,7 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& store_monst, mon_num_t
 	me["sides2"].setTextToNum(store_monst.a[1].sides);
 	me["dice3"].setTextToNum(store_monst.a[2].dice);
 	me["sides3"].setTextToNum(store_monst.a[2].sides);
-	me["talk"].setTextToNum(store_monst.default_facial_pic);
+	me["talk"].setTextToNum(short(store_monst.default_facial_pic));
 	me["treas"].setTextToNum(store_monst.treasure);
 	
 	cLedGroup& attitude = dynamic_cast<cLedGroup&>(me["attitude"]);
@@ -668,7 +669,7 @@ short edit_monst_type(short which_monst) {
 	
 	cDialog monst_dlg("edit-monster");
 	monst_dlg["pickicon"].attachClickHandler(std::bind(pick_monst_picture,_1));
-	monst_dlg["picktalk"].attachClickHandler(std::bind(pick_picture,PIC_TALK,_1,"talk",""));
+	monst_dlg["picktalk"].attachClickHandler(std::bind(pick_picture,PIC_TALK,_1,"talk","talkpic"));
 	monst_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &monst_dlg, false));
 	monst_dlg["pic"].attachFocusHandler(std::bind(check_monst_pic, _1, _2, _3, std::ref(store_monst)));
 	monst_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 40, "level"));
