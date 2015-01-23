@@ -668,7 +668,7 @@ bool abil_exists(eItemAbil abil) { // use when outdoors
 
 
 
-void start_town_combat(short direction) {
+void start_town_combat(eDirection direction) {
 	short i;
 	
 	place_party(direction);
@@ -708,7 +708,7 @@ void start_town_combat(short direction) {
 	
 }
 
-short end_town_combat() {
+eDirection end_town_combat() {
 	short num_tries = 0,r1,i;
 	
 	r1 = get_ran(1,0,5);

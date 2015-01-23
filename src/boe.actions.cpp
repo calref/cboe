@@ -740,7 +740,8 @@ static void handle_item_shop_action(short item_hit) {
 			else {
 				play_sound(51);
 				ASB("Your item is now enchanted.");
-				enchant_weapon(stat_window,item_hit,shop_identify_cost,store_selling_values[i]);
+				eEnchant ench = eEnchant(shop_identify_cost);
+				univ.party[stat_window].items[item_hit].enchant_weapon(ench,store_selling_values[i]);
 			}
 			break;
 	}

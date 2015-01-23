@@ -127,7 +127,7 @@ void cParty::append(legacy::party_record_type& old){
 		talk_save.push_back(t);
 		help_received[i] = old.help_received[i];
 	}
-	direction = old.direction;
+	direction = eDirection(old.direction);
 	at_which_save_slot = old.at_which_save_slot;
 	for(i = 0; i < 20 ; i++)
 		alchemy[i] = old.alchemy[i];

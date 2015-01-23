@@ -93,7 +93,7 @@ public:
 	std::map<ePartyStatus,short> status;
 	location left_at;
 	size_t left_in;
-	short direction;
+	eDirection direction;
 	short at_which_save_slot;
 	char alchemy[20];
 	bool can_find_town[200];

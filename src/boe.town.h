@@ -9,8 +9,8 @@ void handle_leave_town_specials(short town_number, short which_spec,location sta
 void handle_town_specials(short town_number, bool town_dead,location start_loc) ;
 bool abil_exists(eItemAbil abil);
 
-void start_town_combat(short direction);
-short end_town_combat();
+void start_town_combat(eDirection direction);
+eDirection end_town_combat();
 void place_party(short direction);
 void create_out_combat_terrain(short type,short num_walls,short spec_code);
 void elim_monst(ter_num_t which,short spec_a,short spec_b);

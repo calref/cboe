@@ -55,19 +55,6 @@ enum class eMonstGen {RAY, TOUCH, GAZE, BREATH, SPIT};
 
 enum class eMonstSummon {TYPE, LEVEL, SPECIES};
 
-// Directions!
-enum eDirection {
-	DIR_N = 0,
-	DIR_NE = 1,
-	DIR_E = 2,
-	DIR_SE = 3,
-	DIR_S = 4,
-	DIR_SW = 5,
-	DIR_W = 6,
-	DIR_NW = 7,
-	DIR_HERE = 8,
-};
-
 inline eDirection& operator++ (eDirection& me, int) {
 	if(me == DIR_HERE) return me = DIR_N;
 	else return me = (eDirection)(1 + (int)me);

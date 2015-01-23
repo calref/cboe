@@ -16,6 +16,19 @@ typedef signed short spec_num_t;
 typedef signed short item_num_t;
 typedef unsigned short str_num_t;
 
+// Directions!
+enum eDirection {
+	DIR_N = 0,
+	DIR_NE = 1,
+	DIR_E = 2,
+	DIR_SE = 3,
+	DIR_S = 4,
+	DIR_SW = 5,
+	DIR_W = 6,
+	DIR_NW = 7,
+	DIR_HERE = 8,
+};
+
 enum class eMainStatus {
 	ABSENT = 0, // absent, empty slot
 	ALIVE = 1,

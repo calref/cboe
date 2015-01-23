@@ -161,7 +161,7 @@ static void init_party_scen_data() {
 	univ.party.special_notes.clear();
 	univ.party.talk_save.clear();
 	
-	univ.party.direction = 0;
+	univ.party.direction = DIR_N;
 	univ.party.at_which_save_slot = 0;
 	for(i = 0; i < univ.scenario.towns.size(); i++)
 		univ.party.can_find_town[i] = !univ.scenario.towns[i]->is_hidden;

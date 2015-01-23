@@ -51,7 +51,8 @@ public:
 	// transient stuff
 	std::map<eSkill,eSpell> last_cast;
 	location combat_pos;
-	short marked_damage = 0, dir, parry, last_attacked;
+	short marked_damage = 0, parry, last_attacked;
+	eDirection dir;
 	
 	void finish_create();
 	void apply_status(eStatus which, int how_much);
