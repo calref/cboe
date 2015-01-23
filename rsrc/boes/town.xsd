@@ -38,13 +38,23 @@
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="name" type="xs:string"/>
+				<xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="3"/>
 				<xs:element name="bounds">
 					<xs:complexType>
 						<xs:attributeGroup ref="rect"/>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="difficulty" type="xs:integer"/>
-				<xs:element name="lighting" type="xs:integer"/>
+				<xs:element name="lighting">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="lit"/>
+							<xs:enumeration value="dark"/>
+							<xs:enumeration value="drains"/>
+							<xs:enumeration value="none"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
 				<xs:element name="onenter" minOccurs="0" maxOccurs="2">
 					<xs:complexType>
 						<xs:simpleContent>
@@ -81,7 +91,7 @@
 					<xs:complexType>
 						<xs:simpleContent>
 							<xs:extension base="xs:integer">
-								<xs:attribute name="at" type="xs:integer" use="required"/>
+								<xs:attribute name="freq" type="xs:integer" use="required"/>
 							</xs:extension>
 						</xs:simpleContent>
 					</xs:complexType>
@@ -91,11 +101,12 @@
 						<xs:all>
 							<xs:element name="chop" minOccurs="0">
 								<xs:complexType>
-									<xs:attribute name="day" type="xs:integer"/>
-									<xs:attribute name="event" type="xs:integer"/>
-									<xs:attribute name="kills" type="xs:integer"/>
+									<xs:attribute name="day" type="xs:integer" use="required"/>
+									<xs:attribute name="event" type="xs:integer" use="required"/>
+									<xs:attribute name="kills" type="xs:integer" use="required"/>
 								</xs:complexType>
 							</xs:element>
+							<xs:element name="hidden" minOccurs="0" type="bool"/>
 							<xs:element name="strong-barriers" minOccurs="0" type="bool"/>
 							<xs:element name="defy-mapping" minOccurs="0" type="bool"/>
 							<xs:element name="defy-scrying" minOccurs="0" type="bool"/>
@@ -127,11 +138,11 @@
 							</xs:simpleContent>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="fields">
+					<xs:element name="string">
 						<xs:complexType>
 							<xs:simpleContent>
-								<xs:extension base="xs:integer">
-									<xs:attributeGroup ref="point"/>
+								<xs:extension base="xs:string">
+									<xs:attribute name="id" type="xs:integer"/>
 								</xs:extension>
 							</xs:simpleContent>
 						</xs:complexType>
@@ -139,28 +150,25 @@
 					<xs:element name="item">
 						<xs:complexType>
 							<xs:all>
-								<xs:element name="id" type="xs:integer"/>
+								<xs:element name="type" type="xs:integer"/>
+								<xs:element name="mod" type="xs:integer" minOccurs="0"/>
 								<xs:element name="charges" type="xs:integer" minOccurs="0"/>
 								<xs:element name="always" type="bool" minOccurs="0"/>
 								<xs:element name="property" type="bool" minOccurs="0"/>
 								<xs:element name="contained" type="bool" minOccurs="0"/>
 							</xs:all>
-							<xs:attributeGroup ref="point"/>
+							<xs:attribute name="id" type="xs:integer"/>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="creature">
 						<xs:complexType>
 							<xs:all>
-								<xs:element name="id" type="xs:integer"/>
+								<xs:element name="type" type="xs:integer"/>
 								<xs:element name="attitude" type="xs:integer"/>
 								<xs:element name="mobility" type="xs:integer"/>
 								<xs:element name="sdf" minOccurs="0">
 									<xs:complexType>
-										<xs:simpleContent>
-											<xs:extension base="xs:integer">
-												<xs:attributeGroup ref="point"/>
-											</xs:extension>
-										</xs:simpleContent>
+										<xs:attributeGroup ref="point"/>
 									</xs:complexType>
 								</xs:element>
 								<xs:element name="encounter" type="xs:integer" minOccurs="0"/>
@@ -169,14 +177,28 @@
 										<xs:sequence>
 											<xs:element name="param" maxOccurs="2" type="xs:integer"/>
 										</xs:sequence>
-										<xs:attribute name="type" type="xs:integer"/>
+										<xs:attribute name="type">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="always"/>
+													<xs:enumeration value="after-day"/>
+													<xs:enumeration value="until-day"/>
+													<xs:enumeration value="travel-a"/>
+													<xs:enumeration value="travel-b"/>
+													<xs:enumeration value="travel-c"/>
+													<xs:enumeration value="after-event"/>
+													<xs:enumeration value="until-event"/>
+													<xs:enumeration value="after-chop"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:attribute>
 									</xs:complexType>
 								</xs:element>
 								<xs:element name="face" type="xs:integer" minOccurs="0"/>
 								<xs:element name="personality" type="xs:integer" minOccurs="0"/>
 								<xs:element name="onkill" type="xs:integer" minOccurs="0"/>
 							</xs:all>
-							<xs:attributeGroup ref="point"/>
+							<xs:attribute name="id" type="xs:integer"/>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="description">

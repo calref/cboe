@@ -168,7 +168,7 @@ public:
 	unsigned long id;
 	mon_num_t number;
 	short active, attitude;
-	unsigned char start_attitude;
+	unsigned int start_attitude;
 	location start_loc, cur_loc;
 	unsigned short mobility;
 	eMonstTime time_flag;

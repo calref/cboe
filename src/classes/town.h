@@ -53,7 +53,7 @@ public:
 	public:
 		location loc;
 		short code,ability;
-		unsigned char charges;
+		unsigned int charges;
 		bool always_there, property, contained;
 		
 		void append(legacy::preset_item_type old);
@@ -77,13 +77,13 @@ public:
 	location exit_locs[4];
 	short exit_specs[4];
 	rectangle in_town_rect;
-	cItem preset_items[64];
+	std::array<cItem,64> preset_items;
 	short max_num_monst;
 	std::vector<cField> preset_fields;
 	short spec_on_entry,spec_on_entry_if_dead;
 	short spec_on_hostile;
-	short timer_spec_times[8];
-	short timer_specs[8];
+	std::array<short,8> timer_spec_times;
+	std::array<short,8> timer_specs;
 	std::array<cSpecial,100> specials;
 	bool strong_barriers : 1;
 	bool defy_mapping : 1;
@@ -107,9 +107,9 @@ public:
 	virtual ter_num_t& terrain(size_t x, size_t y) = 0;
 	virtual cCreature& creatures(size_t i) = 0;
 	virtual unsigned char& lighting(size_t i, size_t r) = 0;
-	virtual short max_dim() const = 0;
-	virtual short max_monst() const = 0;
-	virtual short max_items() const = 0;
+	virtual size_t max_dim() const = 0;
+	virtual size_t max_monst() const = 0;
+	virtual size_t max_items() const = 0;
 	void init_start();
 	void set_up_lights();
 	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
@@ -119,5 +119,8 @@ public:
 	virtual void writeTerrainTo(std::ostream& file) = 0;
 	virtual void readTerrainFrom(std::istream& file) = 0;
 };
+
+std::ostream& operator<< (std::ostream& out, eLighting light);
+std::istream& operator>> (std::istream& in, eLighting& light);
 
 #endif

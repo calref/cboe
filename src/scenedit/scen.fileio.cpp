@@ -61,6 +61,15 @@ template<> void ticpp::Printer::PushElement(std::string tagName, location pos) {
 	CloseElement(tagName);
 }
 
+template<> void ticpp::Printer::PushElement(std::string tagName, rectangle rect) {
+	OpenElement(tagName);
+	PushAttribute("top", rect.top);
+	PushAttribute("left", rect.left);
+	PushAttribute("bottom", rect.bottom);
+	PushAttribute("right", rect.right);
+	CloseElement(tagName);
+}
+
 template<> void ticpp::Printer::PushElement(std::string tagName, cMonster::cAttack attack) {
 	OpenElement(tagName);
 	PushAttribute("type", attack.type);
@@ -507,6 +516,143 @@ void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 	data.CloseElement("sector");
 }
 
+void writeTownToXml(ticpp::Printer&& data, cTown& town) {
+	static const char directions[] = {'n', 'w', 's', 'e'};
+	data.OpenElement("town");
+	data.PushAttribute("boes", scenario.format_ed_version());
+	data.PushElement("size", town.max_dim());
+	data.PushElement("name", town.town_name);
+	for(size_t i = 0; i < town.comment.size(); i++) {
+		if(!town.comment[i].empty())
+			data.PushElement("comment", town.comment[i]);
+	}
+	data.PushElement("bounds", town.in_town_rect);
+	data.PushElement("difficulty", town.difficulty);
+	data.PushElement("lighting", town.lighting_type);
+	if(town.spec_on_entry >= 0) {
+		data.OpenElement("onenter");
+		data.PushAttribute("condition", "alive");
+		data.PushText(town.spec_on_entry);
+		data.CloseElement("onenter");
+	}
+	if(town.spec_on_entry_if_dead >= 0) {
+		data.OpenElement("onenter");
+		data.PushAttribute("condition", "dead");
+		data.PushText(town.spec_on_entry_if_dead);
+		data.CloseElement("onenter");
+	}
+	for(int i = 0; i < 4; i++) {
+		if(town.exit_locs[i].x >= 0 && town.exit_locs[i].y >= 0) {
+			data.OpenElement("exit");
+			data.PushAttribute("dir", directions[i]);
+			data.PushAttribute("x", town.exit_locs[i].x);
+			data.PushAttribute("y", town.exit_locs[i].y);
+			data.CloseElement("exit");
+		}
+	}
+	for(int i = 0; i < 4; i++) {
+		if(town.exit_specs[i] >= 0) {
+			data.OpenElement("onexit");
+			data.PushAttribute("dir", directions[i]);
+			data.PushText(town.exit_specs[i]);
+			data.CloseElement("onexit");
+		}
+	}
+	if(town.spec_on_hostile >= 0)
+		data.PushElement("onoffend", town.spec_on_hostile);
+	for(size_t i = 0; i < town.timer_spec_times.size() && i < town.timer_specs.size(); i++) {
+		data.OpenElement("timer");
+		data.PushAttribute("freq", town.timer_spec_times[i]);
+		data.PushText(town.timer_specs[i]);
+		data.CloseElement("timer");
+	}
+	data.OpenElement("flags");
+	if(town.town_chop_time > 0) {
+		data.OpenElement("chop");
+		data.PushAttribute("day", town.town_chop_time);
+		data.PushAttribute("event", town.town_chop_key);
+		data.PushAttribute("kills", town.max_num_monst);
+		data.CloseElement("chop");
+	}
+	if(town.strong_barriers)
+		data.PushElement("strong-barriers", true);
+	if(town.defy_mapping)
+		data.PushElement("defy-mapping", true);
+	if(town.defy_scrying)
+		data.PushElement("defy-scrying", true);
+	if(town.is_hidden)
+		data.PushElement("hidden", true);
+	data.CloseElement("flags");
+	for(int i = 0; i < 4; i++) {
+		if(town.wandering[i].isNull()) continue;
+		data.OpenElement("wandering");
+		for(int j = 0; j < 4; j++) {
+			if(j == 0 || town.wandering[i].monst[j] > 0)
+				data.PushElement("monster", town.wandering[i].monst[j]);
+		}
+		data.CloseElement("wandering");
+	}
+	for(size_t i = 0; i < town.preset_items.size(); i++) {
+		data.OpenElement("item");
+		data.PushAttribute("id", i);
+		data.PushElement("type", town.preset_items[i].code);
+		if(town.preset_items[i].ability >= 0)
+			data.PushElement("mod", town.preset_items[i].ability);
+		if(town.preset_items[i].charges > 0)
+			data.PushElement("charges", town.preset_items[i].charges);
+		if(town.preset_items[i].always_there)
+			data.PushElement("always", true);
+		if(town.preset_items[i].property)
+			data.PushElement("property", true);
+		if(town.preset_items[i].contained)
+			data.PushElement("contained", true);
+		data.CloseElement("item");
+	}
+	for(size_t i = 0; i < town.max_monst(); i++) {
+		data.OpenElement("creature");
+		data.PushAttribute("id", i);
+		cCreature& preset = town.creatures(i);
+		data.PushElement("type", preset.number);
+		data.PushElement("attitude", preset.start_attitude);
+		data.PushElement("mobility", preset.mobility);
+		data.PushElement("personality", preset.personality);
+		data.PushElement("face", preset.facial_pic);
+		if(preset.spec1 >= 0 && preset.spec2 >= 0)
+			data.PushElement("sdf", loc(preset.spec1, preset.spec2));
+		if(preset.spec_enc_code > 0)
+			data.PushElement("encounter", preset.spec_enc_code);
+		if(preset.special_on_kill >= 0)
+			data.PushElement("onkill", preset.special_on_kill);
+		if(preset.time_flag != eMonstTime::ALWAYS) {
+			data.OpenElement("time");
+			data.PushAttribute("type", preset.time_flag);
+			data.PushElement("param", preset.monster_time);
+			data.PushElement("param", preset.time_code);
+			data.CloseElement("time");
+		}
+		data.CloseElement("creature");
+	}
+	for(auto& area : town.room_rect) {
+		if(!area.descr.empty() && area.top < area.bottom && area.left < area.right)
+			data.PushElement("description", area);
+	}
+	for(size_t i = 0; i < town.sign_strs.size(); i++) {
+		if(town.sign_strs[i].empty()) continue;
+		data.OpenElement("sign");
+		data.PushAttribute("id", i);
+		data.PushText(town.sign_strs[i]);
+		data.CloseElement("sign");
+	}
+	for(size_t i = 0; i < town.spec_strs.size(); i++) {
+		if(town.spec_strs[i].empty()) continue;
+		data.OpenElement("string");
+		data.PushAttribute("id", i);
+		data.PushText(town.spec_strs[i]);
+		data.CloseElement("string");
+	}
+	data.CloseElement("town");
+}
+
 void save_scenario(fs::path toFile) {
 	// TODO: I'm not certain 1.0.0 is the correct version here?
 	scenario.format.prog_make_ver[0] = 1;
@@ -561,6 +707,7 @@ void save_scenario(fs::path toFile) {
 		std::string file_basename = 't' + std::to_string(i);
 		// First the main data.
 		std::ostream& town = scen_file.newFile("scenario/towns/" + file_basename + ".xml");
+		writeTownToXml(ticpp::Printer(file_basename + ".xml", town), *scenario.towns[i]);
 		
 		// Then the map.
 		std::ostream& town_map = scen_file.newFile("scenario/towns/" + file_basename + ".map");

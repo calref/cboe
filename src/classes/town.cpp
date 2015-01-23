@@ -13,6 +13,7 @@
 
 #include "classes.h"
 #include "oldstructs.h"
+#include "mathutil.hpp"
 
 void cTown::append(legacy::big_tr_type&, int){}
 void cTown::append(legacy::ave_tr_type&, int){}
@@ -234,8 +235,8 @@ void cTown::set_up_lights() {
 			l.y = j;
 			rad = scenario.ter_types[this->terrain(i,j)].light_radius;
 			if(rad > 0) {
-				for(where.x = std::max(0,i - rad); where.x < std::min(this->max_dim(),short(i + rad + 1)); where.x++)
-					for(where.y = std::max(0,j - rad); where.y < std::min(this->max_dim(),short(j + rad + 1)); where.y++)
+				for(where.x = std::max(0,i - rad); where.x < min(this->max_dim(),short(i + rad + 1)); where.x++)
+					for(where.y = std::max(0,j - rad); where.y < min(this->max_dim(),short(j + rad + 1)); where.y++)
 						if(!where_lit[where.x][where.y] && dist(where,l) <= rad && can_see(l,where,get_obscurity) < 5)
 							where_lit[where.x][where.y] = true;
 			}
@@ -263,4 +264,24 @@ short cTown::light_obscurity(short x,short y) {
 	if(store == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
 		return 1;
 	return 0;
+}
+
+std::ostream& operator<< (std::ostream& out, eLighting light) {
+	switch(light) {
+		case LIGHT_NORMAL: out << "lit"; break;
+		case LIGHT_DARK: out << "dark"; break;
+		case LIGHT_DRAINS: out << "drains"; break;
+		case LIGHT_NONE: out << "none"; break;
+	}
+	return out;
+}
+
+std::istream& operator>> (std::istream& in, eLighting& light) {
+	std::string key;
+	if(key == "lit") light = LIGHT_NORMAL;
+	else if(key == "dark") light = LIGHT_DARK;
+	else if(key == "drains") light = LIGHT_DRAINS;
+	else if(key == "none") light = LIGHT_NONE;
+	else in.fail();
+	return in;
 }

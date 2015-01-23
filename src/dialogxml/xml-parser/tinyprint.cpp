@@ -24,7 +24,7 @@ void Printer::CloseElement(std::string tagName) {
 	if(openElements.empty())
 		throw std::out_of_range("No elements left to close!");
 	if(tagName != openElements.top()->Value())
-		throw std::logic_error("Mismatched closing tag!");
+		throw std::logic_error("Mismatched closing tag! (Expected " + openElements.top()->Value() + ")");
 	Element* top = openElements.top();
 	openElements.pop();
 	PushNode(top);

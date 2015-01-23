@@ -32,9 +32,9 @@ public:
 	ter_num_t& terrain(size_t x, size_t y);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
-	short max_dim() const;
-	short max_monst() const;
-	short max_items() const;
+	size_t max_dim() const;
+	size_t max_monst() const;
+	size_t max_items() const;
 	
 	explicit cBigTown(cScenario& scenario, bool init_strings = false);
 	void writeTerrainTo(std::ostream& file);
@@ -51,9 +51,9 @@ public:
 	ter_num_t& terrain(size_t x, size_t y);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
-	short max_dim() const;
-	short max_monst() const;
-	short max_items() const;
+	size_t max_dim() const;
+	size_t max_monst() const;
+	size_t max_items() const;
 	
 	explicit cMedTown(cScenario& scenario, bool init_strings = false);
 	void writeTerrainTo(std::ostream& file);
@@ -70,9 +70,9 @@ public:
 	ter_num_t& terrain(size_t x, size_t y);
 	cCreature& creatures(size_t i);
 	unsigned char& lighting(size_t i, size_t r);
-	short max_dim() const;
-	short max_monst() const;
-	short max_items() const;
+	size_t max_dim() const;
+	size_t max_monst() const;
+	size_t max_items() const;
 	
 	explicit cTinyTown(cScenario& scenario, bool init_strings = false);
 	void writeTerrainTo(std::ostream& file);

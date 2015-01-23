@@ -3222,8 +3222,8 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			}
 			i = 0;
-			for(j = spec.ex1b; j < std::min(spec.ex2b, univ.town->max_dim()); j++)
-				for(k = spec.ex1a; k < std::min(spec.ex2a, univ.town->max_dim()); k++) {
+			for(j = spec.ex1b; j < min(spec.ex2b, univ.town->max_dim()); j++)
+				for(k = spec.ex1a; k < min(spec.ex2a, univ.town->max_dim()); k++) {
 					switch(eFieldType(spec.m1)) {
 						// These values are not allowed
 						case SPECIAL_EXPLORED: case SPECIAL_SPOT: case FIELD_DISPEL: case FIELD_SMASH: break;

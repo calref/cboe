@@ -8,7 +8,7 @@
   <difficulty>1</difficulty>
   
   <!-- Town's lighting type -->
-  <lighting>0</lighting>
+  <lighting>lit</lighting>
   
   <!-- Entry specials; omitting condition is equivalent to ="alive" -->
   <onenter>12</onenter>
@@ -28,20 +28,17 @@
   </wandering>
 
   <sign id="0">This is a sample sign!</sign>
-
-  <!-- these code both fields and sfx -->
-  <fields x="25" y="17">128</fields><!-- fields.h, bitmask thing -->
   
   <!-- preset items -->
-  <item x="12" y="13">
-    <id>17</id>
+  <item id='17'>
+    <type>17</type>
     <property>true</property>
     <charges>3</charges>
   </item>
   
   <!-- preset creatures -->
-  <creature x="15" y="32">
-    <id>12</id>
+  <creature id='12'>
+    <type>12</type>
     <personality>0</personality>
     <attitude>0</attitude>
     <mobility>1</mobility>

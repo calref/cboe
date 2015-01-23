@@ -298,38 +298,38 @@ cTinyTown::cTinyTown(cScenario& scenario, bool init_strings) : cTown(scenario, i
 	init_start();
 }
 
-short cBigTown::max_dim() const {
+size_t cBigTown::max_dim() const {
 	return 64;
 }
 
-short cMedTown::max_dim() const {
+size_t cMedTown::max_dim() const {
 	return 48;
 }
 
-short cTinyTown::max_dim() const {
+size_t cTinyTown::max_dim() const {
 	return 32;
 }
 
-short cBigTown::max_monst() const {
+size_t cBigTown::max_monst() const {
 	return 60;
 }
 
-short cMedTown::max_monst() const {
+size_t cMedTown::max_monst() const {
 	return 40;
 }
 
-short cTinyTown::max_monst() const {
+size_t cTinyTown::max_monst() const {
 	return 30;
 }
 
-short cBigTown::max_items() const {
+size_t cBigTown::max_items() const {
 	return 64;
 }
 
-short cMedTown::max_items() const {
+size_t cMedTown::max_items() const {
 	return 64;
 }
 
-short cTinyTown::max_items() const {
+size_t cTinyTown::max_items() const {
 	return 64;
 }
