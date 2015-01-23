@@ -31,7 +31,6 @@ bool town_move_monster(short num,location dest);
 bool monster_placid(short m_num);
 void monst_inflict_fields(short which_monst);
 bool monst_check_special_terrain(location where_check,short mode,short which_monst);
-void forced_place_monster(mon_num_t which,location where);
 void magic_adjust(cCreature *which_m,short *how_much);
 void poison_monst(cCreature *which_m,short how_much);
 void acid_monst(cCreature *which_m,short how_much);

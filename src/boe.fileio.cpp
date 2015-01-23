@@ -95,13 +95,13 @@ void finish_load_party(){
 	// Make sure that they know what they are!
 	// Cast to cMonster base class and assign, to avoid clobbering other attributes
 	for(int i = 0; i < 4; i++) {
-		for(int j = 0; j < 60; j++) {
+		for(size_t j = 0; j < univ.party.creature_save[i].size(); j++) {
 			int number = univ.party.creature_save[i][j].number;
 			cMonster& monst = univ.party.creature_save[i][j];
 			monst = univ.scenario.scen_monsters[number];
 		}
 	}
-	for(int j = 0; j < 60; j++) {
+	for(size_t j = 0; j < univ.town.monst.size(); j++) {
 		int number = univ.town.monst[j].number;
 		cMonster& monst = univ.town.monst[j];
 		monst = univ.scenario.scen_monsters[number];

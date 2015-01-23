@@ -12,7 +12,6 @@ void enchant_weapon(short pc_num,short item_hit,short enchant_type,short new_val
 void equip_item(short pc_num,short item_num);
 void drop_item(short pc_num,short item_num,location where_drop);
 bool place_item(cItem item,location where,bool forced,bool contained = false);
-void destroy_an_item();
 void give_thing(short pc_num, short item_num);
 short dist_from_party(location where);
 void set_item_flag(cItem *item);

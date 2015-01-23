@@ -10,9 +10,6 @@
 
 #define DRAG_EDGE		15
 
-#define NUM_TOWN_ITEMS	univ.town.items.size()
-
-
 #define	DISPLAY_LEFT	23
 #define	DISPLAY_TOP		23
 #define	BITMAP_WIDTH	28

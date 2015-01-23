@@ -186,14 +186,14 @@ static void init_party_scen_data() {
 			univ.out.out_e[i][j] = 0;
 	
 	for(i = 0; i < 3;i++)
-		for(j = 0; j < NUM_TOWN_ITEMS; j++)
+		for(j = 0; j < univ.party.stored_items[i].size(); j++)
 			if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
 				stored_item = true;
 	if(stored_item)
 		if(cChoiceDlog("keep-stored-items", {"yes", "no"}).show() == "yes") {
 			std::vector<cItem*> saved_item_refs;
 			for(i = 0; i < 3;i++)
-				for(j = 0; j < NUM_TOWN_ITEMS; j++)
+				for(j = 0; j < univ.party.stored_items[i].size(); j++)
 					if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
 						saved_item_refs.push_back(&univ.party.stored_items[i][j]);
 			short pc = 0;
@@ -201,9 +201,7 @@ static void init_party_scen_data() {
 			show_get_items("Choose stored items to keep:", saved_item_refs, pc, true);
 		}
 	for(i = 0; i < 3;i++)
-		for(j = 0; j < NUM_TOWN_ITEMS; j++) {
-			univ.party.stored_items[i][j] = cItem();
-		}
+		univ.party.stored_items[i].clear();
 	
 	for(i = 0; i < 200; i++)
 		for(j = 0; j < 8; j++)

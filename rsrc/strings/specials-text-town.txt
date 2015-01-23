@@ -186,7 +186,7 @@ X coordinate of space to place
 Y coordinate of space to place
 Unused
 Number of creature to place
-0 - don't force, 1 - force
+Unused
 Unused
 Special to Jump To
 --------------------

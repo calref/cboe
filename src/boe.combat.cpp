@@ -281,10 +281,8 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	
 	create_out_combat_terrain((short) in_which_terrain,num_walls,0);////
 	
-	for(i = 0; i < univ.town.monst.size(); i++) {
-		univ.town.monst[i].number = 0;
-		univ.town.monst[i].active = 0;
-	}
+	univ.town.monst.clear();
+	
 	for(i = 0; i < 7; i++) {
 		how_many = nums[i];
 		if(encounter.what_monst.monst[i] != 0)
@@ -356,8 +354,8 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 		univ.party[i].last_attacked = univ.town.monst.size() + 10;
 	}
 	
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
-		univ.town.items[i].variety = eItemType::NO_ITEM;
+	univ.town.items.clear();
+	
 	store_current_pc = current_pc;
 	current_pc = 0;
 	set_pc_moves();
@@ -4297,18 +4295,9 @@ void radius_damage(location target,short radius, short dam, eDamageType type) {
 	end_missile_anim();
 	handle_marked_damage();
 }
-// Slightly kludgy way to only damage PCs in space)
+
 void hit_pcs_in_space(location target,short dam,eDamageType type,short report,short hit_all) {
-	// TODO: Looks like this no longer does what it claims.
-	//short store_active[T_M],i;
-	
-	//for(i = 0; i < T_M; i++) {
-	//	store_active[i] = univ.town.monst[i].active;
-	//	univ.town.monst[i].active = 0;
-	//}
 	hit_space(target, dam,type, report, 10 + hit_all);
-	//for(i = 0; i < T_M; i++)
-	//	univ.town.monst[i].active = store_active[i];
 }
 
 //type; // 0 - weapon   1 - fire   2 - poison   3 - general magic   4 - unblockable  5 - cold

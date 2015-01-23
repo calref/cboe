@@ -43,7 +43,7 @@ extern const std::multiset<eItemType> equippable;
 extern const std::multiset<eItemType> num_hands_to_use;
 extern std::map<const eItemType, const short> excluding_types;
 
-short selected,item_max = 0;
+short selected;
 
 bool GTP(short item_num) {
 	cItem item;
@@ -285,7 +285,7 @@ bool place_item(cItem item,location where,bool forced,bool contained) {
 	if(contained && !is_container(where))
 		contained = false;
 	
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
+	for(i = 0; i < univ.town.items.size(); i++)
 		if(univ.town.items[i].variety == eItemType::NO_ITEM) {
 			univ.town.items[i] = item;
 			univ.town.items[i].item_loc = where;
@@ -293,47 +293,11 @@ bool place_item(cItem item,location where,bool forced,bool contained) {
 			reset_item_max();
 			return true;
 		}
-	if(!forced)
-		return false;
-	destroy_an_item();
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
-		if(univ.town.items[i].variety == eItemType::NO_ITEM) {
-			univ.town.items[i] = item;
-			univ.town.items[i].item_loc = where;
-			univ.town.items[i].contained = contained;
-			reset_item_max();
-			return true;
-		}
-	
+	univ.town.items.push_back(item);
+	univ.town.items.back().item_loc = where;
+	univ.town.items.back().contained = contained;
+	reset_item_max();
 	return true;
-}
-
-void destroy_an_item() {
-	short i;
-	ASB("Too many items. Some item destroyed.");
-//	for(i = 0; i < NUM_TOWN_ITEMS; i++)
-//		if(univ.town.items[i].type_flag == 15) {
-//			univ.town.items[i].variety = eItemType::NO_ITEM;
-//			return;
-//		}
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
-		if(univ.town.items[i].value < 3) {
-			univ.town.items[i].variety = eItemType::NO_ITEM;
-			return;
-		}
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
-		if(univ.town.items[i].value < 30) {
-			univ.town.items[i].variety = eItemType::NO_ITEM;
-			return;
-		}
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
-		if(!univ.town.items[i].magic) {
-			univ.town.items[i].variety = eItemType::NO_ITEM;
-			return;
-		}
-	i = get_ran(1,0,NUM_TOWN_ITEMS);
-	univ.town.items[i].variety = eItemType::NO_ITEM;
-	
 }
 
 void give_thing(short pc_num, short item_num) {
@@ -412,7 +376,7 @@ short get_item(location place,short pc_num,bool check_container) {
 			&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 			mass_get = 0;
 	
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
+	for(i = 0; i < univ.town.items.size(); i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM)
 			if(((adjacent(place,univ.town.items[i].item_loc)) ||
 				 (mass_get == 1 && !check_container &&
@@ -663,7 +627,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 // TODO: Move this to a more appropriate place
 bool pc_gworld_loaded = false;
 
-// Returns true is a theft committed
+// Returns true if a theft committed
 //pc_num;  // < 6 - this pc only  6 - any pc
 //short mode; // 0 - adjacent  1 - all in sight
 bool display_item(location from_loc,short /*pc_num*/,short mode, bool check_container) {
@@ -675,7 +639,7 @@ bool display_item(location from_loc,short /*pc_num*/,short mode, bool check_cont
 	
 	short current_getting_pc = current_pc;
 	
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
+	for(i = 0; i < univ.town.items.size(); i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
 			if(((adjacent(from_loc,univ.town.items[i].item_loc)) ||
 				 (mode == 1 && !check_container &&
@@ -858,11 +822,8 @@ short party_total_level() {
 }
 
 void reset_item_max() {
-	short i;
-	
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
-		if(univ.town.items[i].variety != eItemType::NO_ITEM)
-			item_max = i + 1;
+	while(univ.town.items.back().variety == eItemType::NO_ITEM)
+		univ.town.items.pop_back();
 }
 
 short item_val(cItem item) {

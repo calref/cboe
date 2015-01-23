@@ -256,8 +256,8 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	if(!monsters_loaded) {
 		for(i = 0; i < univ.town->creatures.size(); i++){
-			if(i >= univ.town.monst.size()) break;
 			if(univ.town->creatures[i].number == 0) {
+				if(i >= univ.town.monst.size()) continue;
 				univ.town.monst[i].active = 0;
 				univ.town.monst[i].number = 0;
 				univ.town.monst[i].time_flag = eMonstTime::ALWAYS;
@@ -371,24 +371,20 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	
 	// Set up items, maybe place items already there
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
-		univ.town.items[i] = cItem();
+	univ.town.items.clear();
 	
 	for(j = 0; j < 3; j++)
 		if(univ.scenario.store_item_towns[j] == town_number) {
-			for(i = 0; i < NUM_TOWN_ITEMS; i++)
-				univ.town.items[i] = univ.party.stored_items[j][i];
+			univ.town.items = univ.party.stored_items[j];
 		}
 	
 	for(i = 0; i < univ.town->preset_items.size(); i++)
 		if((univ.town->preset_items[i].code >= 0)
 			&& (((univ.party.item_taken[univ.town.num][i / 8] & s_pow(2,i % 8)) == 0) ||
 				(univ.town->preset_items[i].always_there))) {
-				for(j = 0; j < NUM_TOWN_ITEMS; j++)
-					
+				j = univ.town.items.size();
 					// place the preset item, if party hasn't gotten it already
-					if(univ.town.items[j].variety == eItemType::NO_ITEM) {
-						univ.town.items[j] = get_stored_item(univ.town->preset_items[i].code);
+						univ.town.items.push_back(get_stored_item(univ.town->preset_items[i].code));
 						// Don't place special items if already in the party's possession
 						if(univ.town.items[j].variety == eItemType::SPECIAL && univ.party.spec_items[univ.town.items[j].item_level])
 							break;
@@ -416,16 +412,13 @@ void start_town_mode(short which_town, short entry_dir) {
 							univ.town.items[j].property = univ.town->preset_items[i].property;
 						univ.town.items[j].contained = univ.town->preset_items[i].contained;
 						univ.town.items[j].is_special = i + 1;
-						
-						j = NUM_TOWN_ITEMS;
-					}
 		 	}
 	
 	
 	for(i = 0; i < univ.town.monst.size(); i++)
 		if(loc_off_act_area(univ.town.monst[i].cur_loc))
 			univ.town.monst[i].active = 0;
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
+	for(i = 0; i < univ.town.items.size(); i++)
 		if(loc_off_act_area(univ.town.items[i].item_loc))
 			univ.town.items[i].variety = eItemType::NO_ITEM;
 	
@@ -543,24 +536,16 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		// Store items, if necessary
 		for(j = 0; j < 3; j++)
 			if(univ.scenario.store_item_towns[j] == univ.town.num) {
-				for(i = 0; i < NUM_TOWN_ITEMS; i++)
+				univ.party.stored_items[j].clear();
+				for(i = 0; i < univ.town.items.size(); i++)
 					if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].is_special == 0 &&
 							univ.town.items[i].item_loc.x >= univ.scenario.store_item_rects[j].left &&
 							univ.town.items[i].item_loc.x <= univ.scenario.store_item_rects[j].right &&
 							univ.town.items[i].item_loc.y >= univ.scenario.store_item_rects[j].top &&
 							univ.town.items[i].item_loc.y <= univ.scenario.store_item_rects[j].bottom) {
-						univ.party.stored_items[j][i] = univ.town.items[i];
+						univ.party.stored_items[j].push_back(univ.town.items[i]);
 					}
-				 	else univ.party.stored_items[j][i].variety = eItemType::NO_ITEM;
 			}
-		
-		
-		// Clean up special data, just in case
-		// TODO: But... this is the life SDF! Why is it set to (0,0)?
-		for(i = 0; i < univ.town.monst.size(); i++) {
-			univ.town.monst[i].spec1 = 0;
-			univ.town.monst[i].spec2 = 0;
-		}
 		
 		// Now store map
 		for(i = 0; i < univ.town->max_dim(); i++)
@@ -666,7 +651,7 @@ bool abil_exists(eItemAbil abil) { // use when outdoors
 			if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].ability == abil)
 				return true;
 	for(i = 0; i < 3; i++)
-		for(j = 0; j < NUM_TOWN_ITEMS; j++)
+		for(j = 0; j < univ.town.items.size(); j++)
 			if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM && univ.party.stored_items[i][j].ability == abil)
 				return true;
 	

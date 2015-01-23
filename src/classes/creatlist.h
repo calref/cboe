@@ -10,6 +10,7 @@
 #define BOE_DATA_CREATLIST_H
 
 #include "monster.h"
+#include <iosfwd>
 
 namespace legacy {
 	struct creature_list_type;
@@ -29,14 +30,16 @@ class cPopulation { // formerly creature_list_type
 //		
 //		cCreature& operator = (legacy::creature_data_type old);
 //	};
-	cCreature dudes[60];
+	std::vector<cCreature> dudes;
 public:
 	short which_town;
 	short friendly;
 	
 	void append(legacy::creature_list_type old);
 	void assign(size_t n, const cTownperson& other, const cMonster& base, bool easy, int difficulty_adjust);
-	size_t size() {return 60;}
+	void readFrom(std::istream& in, size_t n);
+	size_t size() const {return dudes.size();}
+	void clear() {dudes.clear();}
 	cCreature& operator[](size_t n);
 	const cCreature& operator[](size_t n) const;
 	cPopulation() : which_town(200) {}

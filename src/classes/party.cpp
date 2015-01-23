@@ -145,6 +145,7 @@ void cParty::append(legacy::party_record_type& old){
 }
 
 void cParty::append(legacy::stored_items_list_type& old,short which_list){
+	stored_items[which_list].resize(115);
 	for(int i = 0; i < 115; i++)
 		stored_items[which_list][i].append(old.items[i]);
 }
@@ -479,7 +480,7 @@ void cParty::writeTo(std::ostream& file) const {
 		}
 	file << '\f';
 	for(int i = 0; i < 3; i++)
-		for(int j = 0; j < 115; j++)
+		for(size_t j = 0; j < stored_items[i].size(); j++)
 			if(stored_items[i][j].variety != eItemType::NO_ITEM){
 				file << "STORED " << i << ' ' << j << '\n';
 				stored_items[i][j].writeTo(file);
@@ -697,6 +698,9 @@ void cParty::readFrom(std::istream& file){
 		} else if(cur == "STORED") {
 			int i, j;
 			bin >> i >> j;
+			if(i < 0 || i >= 3 || j < 0) continue;
+			if(j >= stored_items[i].size())
+				stored_items[i].resize(j + 1);
 			stored_items[i][j].readFrom(bin);
 		} else if(cur == "SUMMON") {
 			size_t i;

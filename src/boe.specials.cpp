@@ -274,7 +274,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			univ.town.set_crate(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
 				univ.town.set_crate(to_loc.x,to_loc.y,true);
-			for(i = 0; i < NUM_TOWN_ITEMS; i++)
+			for(i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
@@ -285,7 +285,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			univ.town.set_barrel(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
 				univ.town.set_barrel(to_loc.x,to_loc.y,false);
-			for(i = 0; i < NUM_TOWN_ITEMS; i++)
+			for(i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
@@ -1173,7 +1173,7 @@ bool use_space(location where) {
 		add_string_to_buf("  You push the crate.");
 		univ.town.set_crate(where.x,where.y,false);
 		univ.town.set_crate(to_loc.x,to_loc.y,true);
-		for(i = 0; i < NUM_TOWN_ITEMS; i++)
+		for(i = 0; i < univ.town.items.size(); i++)
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
 			   && (univ.town.items[i].contained))
 			 	univ.town.items[i].item_loc = to_loc;
@@ -1187,7 +1187,7 @@ bool use_space(location where) {
 		add_string_to_buf("  You push the barrel.");
 		univ.town.set_barrel(where.x, where.y,false);
 		univ.town.set_barrel(to_loc.x,to_loc.y,true);
-		for(i = 0; i < NUM_TOWN_ITEMS; i++)
+		for(i = 0; i < univ.town.items.size(); i++)
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
 			   && (univ.town.items[i].contained))
 			 	univ.town.items[i].item_loc = to_loc;
@@ -1236,7 +1236,7 @@ bool adj_town_look(location where) {
 	bool can_open = true,item_there = false,got_special = false;
 	short i = 0,s1 = 0, s2 = 0, s3 = 0;
 	
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
+	for(i = 0; i < univ.town.items.size(); i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM && (univ.town.items[i].contained) &&
 		   (where == univ.town.items[i].item_loc))
 			item_there = true;
@@ -1504,7 +1504,6 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		where_put = find_clear_spot(victim->cur_loc,1);
 		if(where_put.x > 0)
 			if((which_spot = place_monster(victim->number,where_put)) < 90) {
-				// TODO: Why so many assignments? Windows only assigns health and monst_start (start_loc I assume)
 				static_cast<cTownperson&>(univ.town.monst[which_spot]) = *victim;
 				univ.town.monst[which_spot].health = victim->health;
 				monst_spell_note(victim->number,27);
@@ -1687,7 +1686,7 @@ void push_things() {
 					redraw = true;
 			}
 		}
-	for(i = 0; i < NUM_TOWN_ITEMS; i++)
+	for(i = 0; i < univ.town.items.size(); i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
 			l = univ.town.items[i].item_loc;
 			ter = univ.town->terrain(l.x,l.y);
@@ -1735,7 +1734,7 @@ void push_things() {
 				ASB("You crash into the block.");
 				hit_party(get_ran(1, 1, 6), eDamageType::WEAPON);
 			}
-			for(k = 0; k < NUM_TOWN_ITEMS; k++)
+			for(k = 0; k < univ.town.items.size(); k++)
 				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
 				   && (univ.town.items[k].item_loc == univ.town.p_loc))
 					univ.town.items[k].contained = false;
@@ -1773,7 +1772,7 @@ void push_things() {
 						ASB("You crash into the block.");
 						damage_pc(i,get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN,0);
 					}
-					for(k = 0; k < NUM_TOWN_ITEMS; k++)
+					for(k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
 						   && (univ.town.items[k].item_loc == univ.party[i].combat_pos))
 							univ.town.items[k].contained = false;
@@ -3171,7 +3170,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(is_out())
 				break;
 			l.x = spec.ex1a; l.y = spec.ex1b;
-			for(i = 0; i < NUM_TOWN_ITEMS; i++)
+			for(i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == (unsigned)spec.ex2a
 				   && l == univ.town.items[i].item_loc) {
 					*next_spec = spec.ex2b;
@@ -3753,9 +3752,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_PLACE_MONST:
-			if(spec.ex2a > 0)
-				forced_place_monster(spec.ex2a,l);
-			else place_monster(spec.ex2a,l);
+			place_monster(spec.ex2a,l);
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_DESTROY_MONST:
@@ -4229,7 +4226,7 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					if(is_out())
 						return;
 					i = is_container(loc(spec.sd1,spec.sd2));
-					for(k = 0; k < NUM_TOWN_ITEMS; k++)
+					for(k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
 							univ.town.items[k].item_loc.x = spec.sd1;
 							univ.town.items[k].item_loc.y = spec.sd2;
@@ -4240,7 +4237,7 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				case eSpecType::RECT_DESTROY_ITEMS:
 					if(is_out())
 						return;
-					for(k = 0; k < NUM_TOWN_ITEMS; k++)
+					for(k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
 							univ.town.items[k].variety = eItemType::NO_ITEM;
 						}

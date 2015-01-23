@@ -310,7 +310,7 @@ void draw_items(location where){
 	rectangle from_rect, to_rect;
 	if(supressing_some_spaces && (where != ok_space[0]) && (where != ok_space[1]) && (where != ok_space[2]) && (where != ok_space[3]))
 		return;
-	for(int i = 0; i < NUM_TOWN_ITEMS; i++) {
+	for(int i = 0; i < univ.town.items.size(); i++) {
 		if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where) {
 			if(univ.town.items[i].contained) continue;
 			if(party_can_see(where) >= 6) continue;

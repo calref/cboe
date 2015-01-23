@@ -50,7 +50,7 @@ public:
 	bool in_boat; // is this really needed?
 	location p_loc;
 	
-	std::array<cItem,115> items; // formerly town_item_list type
+	std::vector<cItem> items; // formerly town_item_list type
 	
 	unsigned long fields[64][64];
 	

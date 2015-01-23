@@ -734,7 +734,7 @@ short do_look(location space) {
 		if(univ.town.is_rubble(space.x,space.y))
 			add_string_to_buf("    Rubble               ");
 		
-		for(i = 0; i < NUM_TOWN_ITEMS; i++) {
+		for(i = 0; i < univ.town.items.size(); i++) {
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && space == univ.town.items[i].item_loc
 			   && (is_lit)) {
 				if(univ.town.items[i].variety == eItemType::GOLD)
@@ -750,7 +750,7 @@ short do_look(location space) {
 			add_string_to_buf("    Food");
 		if(num_items > 8)
 			add_string_to_buf("    Many items");
-		else for(i = 0; i < NUM_TOWN_ITEMS; i++) {
+		else for(i = 0; i < univ.town.items.size(); i++) {
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].variety != eItemType::GOLD && univ.town.items[i].variety != eItemType::FOOD &&
 			   (space == univ.town.items[i].item_loc) && (!univ.town.items[i].contained)) {
 				if(univ.town.items[i].ident)

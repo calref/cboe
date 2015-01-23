@@ -58,6 +58,7 @@ void cCurTown::append(legacy::big_tr_type& old){
 }
 
 void cCurTown::append(legacy::town_item_list& old){
+	items.resize(115);
 	for(int i = 0; i < 115; i++)
 		items[i].append(old.items[i]);
 }
@@ -771,14 +772,14 @@ void cCurTown::writeTo(std::ostream& file) const {
 	file << "INBOAT " << in_boat << '\n';
 	file << "AT " << p_loc.x << ' ' << p_loc.y << '\n';
 	file << '\f';
-	for(int i = 0; i < 115; i++)
+	for(size_t i = 0; i < items.size(); i++)
 		if(items[i].variety != eItemType::NO_ITEM){
 			file << "ITEM " << i << '\n';
 			items[i].writeTo(file);
 			file << '\f';
 		}
 	file << '\f';
-	for(int i = 0; i < 60; i++) {
+	for(int i = 0; i < monst.size(); i++) {
 		if(monst[i].active > 0) {
 			file << "CREATURE " << i << '\n';
 			monst[i].writeTo(file);
@@ -828,12 +829,14 @@ void cCurTown::readFrom(std::istream& file){
 		} else if(cur == "ITEM") {
 			int i;
 			bin >> i;
+			if(i >= items.size())
+				items.resize(i + 1);
 			items[i].readFrom(bin);
 		} else if(cur == "CREATURE") {
 			int i;
 			bin >> i;
+			monst.readFrom(bin, i);
 			monst[i].active = true;
-			monst[i].readFrom(bin);
 		} else if(cur == "TERRAIN")
 			univ.scenario.towns[num]->readTerrainFrom(bin);
 		bin.clear();

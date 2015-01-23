@@ -167,18 +167,14 @@ void get_monst_dims(mon_num_t monst,short *width, short *height) {
 // Used to set up monsters for outdoor wandering encounters.
 //mode; // 0 - unfriendly  1 - friendly & fightin'
 void set_up_monst(short mode,mon_num_t m_num) {
-	short which;
+	short which = univ.town.monst.size();
 	
-	for(which = 0; which < univ.town.monst.size(); which++)
-		if(univ.town.monst[which].active == 0) {
 			cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
 			univ.town.monst.assign(which, cCreature(m_num), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 			univ.town.monst[which].active = 2;
 			univ.town.monst[which].summoned = 0;
 			univ.town.monst[which].attitude = mode + 1;
 			univ.town.monst[which].mobility = 1;
-			break;
-		}
 }
 
 void do_monsters() {
@@ -882,7 +878,7 @@ void monst_inflict_fields(short which_monst) {
 				where_check.y = univ.town.monst[which_monst].cur_loc.y + j;
 				if((univ.town.is_crate(where_check.x,where_check.y)) ||
 					(univ.town.is_barrel(where_check.x,where_check.y)) )
-					for(k = 0; k < NUM_TOWN_ITEMS; k++)
+					for(k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
 						   && (univ.town.items[k].item_loc == where_check))
 							univ.town.items[k].contained = false;
@@ -1000,7 +996,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			univ.town.set_crate(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
 				univ.town.set_crate(to_loc.x,to_loc.y, true);
-			for(i = 0; i < NUM_TOWN_ITEMS; i++)
+			for(i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
@@ -1014,7 +1010,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			univ.town.set_barrel(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
 				univ.town.set_barrel(to_loc.x,to_loc.y,true);
-			for(i = 0; i < NUM_TOWN_ITEMS; i++)
+			for(i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))
 					univ.town.items[i].item_loc = to_loc;
@@ -1079,24 +1075,6 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	}
 	
 	return can_enter;
-}
-
-void forced_place_monster(mon_num_t which,location where) {
-	// TODO: Windows version has logic to destroy unimportant monsters to make room, but the real issue here is the non-dynamic nature of the monster array, so a better fix would be to use an std::vector in cPopulation... and then this function wouldn't even be needed.
-	bool free_spot = false;
-	short i = 0,r1;
-	
-	while(!free_spot && (i < univ.town.monst.size())) {
-		if(univ.town.monst[i].active == 0)
-			free_spot = true;
-		i++;
-	}
-	do
-		r1 = get_ran(1,0,59);
-	while((univ.town.monst[r1].spec1 != 0) || (univ.town.monst[r1].spec2 != 0));
-	if(!free_spot)
-		univ.town.monst[r1].active = 0;
-	place_monster(which,where);
 }
 
 void magic_adjust(cCreature *which_m,short *how_much) {
@@ -1274,7 +1252,6 @@ void record_monst(cCreature *which_m) {
 	}
 }
 
-// returns size() is no placement, OW returns # of spot
 short place_monster(mon_num_t which,location where) {
 	short i = 0;
 	
@@ -1282,7 +1259,6 @@ short place_monster(mon_num_t which,location where) {
 		i++;
 	}
 	
-	if(i < univ.town.monst.size()) {
 		// 10000 or more means an exported summon saved with the party
 		cMonster& monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
 		univ.town.monst.assign(i, cCreature(which), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
@@ -1303,8 +1279,6 @@ short place_monster(mon_num_t which,location where) {
 		univ.town.set_block(where.x,where.y,false);
 		
 		return i;
-	}
-	return univ.town.monst.size();
 }
 
 // returns true if placement was successful
@@ -1313,6 +1287,8 @@ short place_monster(mon_num_t which,location where) {
 bool summon_monster(mon_num_t which,location where,short duration,short given_attitude) {
 	location loc;
 	short which_m,spot;
+	
+	if(which <= 0) return false;
 	
 	if((is_town()) || (monsters_going)) {
 		which_m = monst_there(where);
@@ -1336,20 +1312,14 @@ bool summon_monster(mon_num_t which,location where,short duration,short given_at
 	if(spot >= univ.town.monst.size()) {
 		if(duration < 100)
 			add_string_to_buf("  Too many monsters.");
-		//ASB("  Monster fails to summon monster.");
 		return false;
 	}
 	//play_sound(61);
 	
-//	if(duration < 100)
 	univ.town.monst[spot].attitude = given_attitude;
-//		else univ.town.monst[spot].attitude = which_att;
 	
-	if(which > 0) {//monster here for good
 		univ.town.monst[spot].summoned = duration;
 		monst_spell_note(which,21);
-	}
-	else univ.town.monst[spot].summoned = 0;
 	
 	return true;
 }
@@ -1360,7 +1330,7 @@ void activate_monsters(short code,short /*attitude*/) {
 	if(code == 0)
 		return;
 	for(i = 0; i < univ.town->creatures.size(); i++)
-		if(i < univ.town.monst.size() && univ.town.monst[i].spec_enc_code == code) {
+		if(univ.town->creatures[i].spec_enc_code == code) {
 			cTownperson& monst = univ.town->creatures[i];
 			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 			univ.town.monst[i].spec_enc_code = 0;

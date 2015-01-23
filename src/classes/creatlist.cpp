@@ -15,6 +15,7 @@
 #include "oldstructs.h"
 
 void cPopulation::append(legacy::creature_list_type old){
+	dudes.resize(60);
 	for(int i = 0; i < 60; i++)
 		dudes[i].append(old.dudes[i]);
 	which_town = old.which_town;
@@ -33,6 +34,8 @@ cCreature& cPopulation::operator[](size_t n){
 // into a cCreature, and prepares it for use in-game according to the user's preferences and party strength
 // replaces return_monster_template() from boe.monsters.cpp
 void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& base, bool easy, int difficulty_adjust){
+	// Make sure the space exists
+	if(n >= dudes.size()) dudes.resize(n + 1);
 	// First copy over the superclass fields
 	static_cast<cTownperson&>(dudes[n]) = other;
 	static_cast<cMonster&>(dudes[n]) = base;
@@ -56,4 +59,9 @@ void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& bas
 	dudes[n].cur_loc = dudes[n].start_loc;
 	dudes[n].target = 6; // No target
 	dudes[n].summoned = 0;
+}
+
+void cPopulation::readFrom(std::istream& in, size_t n) {
+	if(n >= dudes.size()) dudes.resize(n + 1);
+	dudes[n].readFrom(in);
 }

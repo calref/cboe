@@ -1093,15 +1093,15 @@ void cMonster::readFrom(std::istream& file) {
 void cCreature::writeTo(std::ostream& file) const {
 	file << "MONSTER " << number << '\n';
 	file << "ATTITUDE " << attitude << '\n';
-	file << "STARTATT " << unsigned(start_attitude) << '\n';
+	file << "STARTATT " << start_attitude << '\n';
 	file << "STARTLOC " << start_loc.x << ' ' << start_loc.y << '\n';
 	file << "LOCATION " << cur_loc.x << ' ' << cur_loc.y << '\n';
-	file << "MOBILITY " << unsigned(mobility) << '\n';
+	file << "MOBILITY " << mobility << '\n';
 	file << "TIMEFLAG " << time_flag << '\n';
 	file << "SUMMONED " << summoned << '\n';
 	file << "SPEC " << spec1 << ' ' << spec2 << '\n';
-	file << "SPECCODE " << int(spec_enc_code) << '\n';
-	file << "TIMECODE " << int(time_code) << '\n';
+	file << "SPECCODE " << spec_enc_code << '\n';
+	file << "TIMECODE " << time_code << '\n';
 	file << "TIME " << monster_time << '\n';
 	file << "TALK " << personality << '\n';
 	file << "DEATH " << special_on_kill << '\n';
@@ -1116,6 +1116,7 @@ void cCreature::writeTo(std::ostream& file) const {
 	file << "CURSP " << mp << '\n';
 	file << "MORALE " << morale << '\n';
 	file << "DIRECTION " << unsigned(direction) << '\n';
+	// TODO: Should we be saving "max_mp" and/or "m_morale"?
 }
 
 void cCreature::readFrom(std::istream& file) {

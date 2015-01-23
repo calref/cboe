@@ -37,9 +37,6 @@ void cTown::append(legacy::town_record_type& old){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
 		spec_id[i] = old.spec_id[i];
-//		preset_fields[i].loc.x = old.preset_fields[i].field_loc.x;
-//		preset_fields[i].loc.y = old.preset_fields[i].field_loc.y;
-//		preset_fields[i].type = old.preset_fields[i].field_type;
 		cField temp;
 		temp.append(old.preset_fields[i]);
 		preset_fields.push_back(temp);
@@ -55,14 +52,6 @@ void cTown::append(legacy::town_record_type& old){
 	in_town_rect.right = old.in_town_rect.right;
 	preset_items.resize(64);
 	for(i = 0; i < 64; i++){
-//		preset_items[i].loc.x = old.preset_items[i].item_loc.x;
-//		preset_items[i].loc.y = old.preset_items[i].item_loc.y;
-//		preset_items[i].code = old.preset_items[i].item_code;
-//		preset_items[i].ability = old.preset_items[i].ability;
-//		preset_items[i].charges = old.preset_items[i].charges;
-//		preset_items[i].always_there = old.preset_items[i].always_there;
-//		preset_items[i].property = old.preset_items[i].property;
-//		preset_items[i].contained = old.preset_items[i].contained;
 		preset_items[i].append(old.preset_items[i]);
 	}
 	max_num_monst = old.max_num_monst;
