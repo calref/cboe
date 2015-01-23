@@ -13,9 +13,9 @@
 
 #include "classes.h"
 
-ter_num_t& cBigTemplTown::terrain(size_t /*x*/, size_t /*y*/){
-	static ter_num_t dummy;
-	return dummy; // TODO: will need to calculate the terrain somehow
+ter_num_t& cBigTemplTown::terrain(size_t x, size_t y){
+	location pos(x,y);
+	return cBigTown::terrain(x,y);
 }
 
 void cBigTemplTown::writeTerrainTo(std::ostream& /*file*/) {
@@ -24,9 +24,5 @@ void cBigTemplTown::writeTerrainTo(std::ostream& /*file*/) {
 
 void cBigTemplTown::readTerrainFrom(std::istream& /*file*/) {
 	// TODO: Read in the terrain somehow
-}
-
-size_t cBigTemplTown::max_dim() const {
-	return 0; // not sure what they are yet.
 }
 

@@ -22,7 +22,7 @@ namespace legacy {
 	struct tiny_tr_type;
 };
 
-class cBigTown : public cTown { // formerly big_tr_type
+class cBigTown : public virtual cTown { // formerly big_tr_type
 	ter_num_t ter[64][64];
 	unsigned char light[8][64];
 public:
@@ -36,7 +36,7 @@ public:
 	void readTerrainFrom(std::istream& file);
 };
 
-class cMedTown : public cTown { // formerly ave_tr_type
+class cMedTown : public virtual cTown { // formerly ave_tr_type
 	ter_num_t ter[48][48];
 	unsigned char light[6][48];
 public:
@@ -50,7 +50,7 @@ public:
 	void readTerrainFrom(std::istream& file);
 };
 
-class cTinyTown : public cTown { // formerly tiny_tr_type
+class cTinyTown : public virtual cTown { // formerly tiny_tr_type
 	ter_num_t ter[32][32];
 	unsigned char light[4][32];
 public:

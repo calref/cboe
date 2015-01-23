@@ -16,7 +16,7 @@
 #include "simpletypes.h"
 #include "regtown.h"
 
-class cTemplTown {
+class cTemplTown : public virtual cTown {
 public:
 	class cCityBlock { // formerly city_block_type
 	public:
@@ -30,34 +30,37 @@ public:
 	public:
 		rectangle rect;
 		ter_num_t ter_type;
-		unsigned char hollow;
+		bool hollow;
 	};
 	cCityBlock blocks[15];
 	cTerRect ter_rects[10];
+	long day;
+	virtual bool is_templated() const {return true;}
+	virtual ~cTemplTown() {}
 };
 
 class cBigTemplTown : public cBigTown, public cTemplTown {
+	ter_num_t after[64][64];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	size_t max_dim() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 	explicit cBigTemplTown(cScenario& scenario, bool init_strings = false);
 };
 
 class cMedTemplTown : public cMedTown, public cTemplTown {
+	ter_num_t after[48][48];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	size_t max_dim() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 	explicit cMedTemplTown(cScenario& scenario, bool init_strings = false);
 };
 
 class cTinyTemplTown : public cTinyTown, public cTemplTown {
+	ter_num_t after[32][32];
 public:
 	ter_num_t& terrain(size_t x, size_t y);
-	size_t max_dim() const;
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 	explicit cTinyTemplTown(cScenario& scenario, bool init_strings = false);

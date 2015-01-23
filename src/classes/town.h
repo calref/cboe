@@ -110,6 +110,7 @@ public:
 	virtual ter_num_t& terrain(size_t x, size_t y) = 0;
 	virtual unsigned char& lighting(size_t i, size_t r) = 0;
 	virtual size_t max_dim() const = 0;
+	virtual bool is_templated() const {return false;}
 	void init_start();
 	void set_up_lights();
 	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
