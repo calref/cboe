@@ -296,7 +296,7 @@ bool is_blocked(location to_check) {
 					return true;
 		
 		// Monster there?
-		if(monst_there(to_check) < 90)
+		if(monst_there(to_check) < univ.town.monst.size())
 			return true;
 		
 		// Magic barrier?
@@ -323,7 +323,7 @@ bool monst_on_space(location loc,short m_num) {
 	return false;
 	
 }
-short monst_there(location where) { // returns 90 if no
+size_t monst_there(location where) { // returns 90 if no
 	short i;
 	
 	for(i = 0; i < univ.town.monst.size(); i++)

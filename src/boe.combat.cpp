@@ -1872,7 +1872,7 @@ void combat_run_monst() {
 	if(univ.town->lighting_type == 3)
 		univ.party.light_level = 0;
 	
-	if(univ.town->lighting_type != LIGHT_NORMAL) {
+	if(is_town() && univ.town->lighting_type != LIGHT_NORMAL) {
 		int radiance = 0;
 		for(int i = 0; i < 6; i++)
 			radiance += univ.party[i].get_prot_level(eItemAbil::RADIANT);
