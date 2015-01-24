@@ -11,6 +11,34 @@
 #include "mathutil.hpp"
 #include "graphtool.hpp" // for get_str
 
+std::map<eSkill,short> skill_cost = {
+	{eSkill::STRENGTH,3}, {eSkill::DEXTERITY,3}, {eSkill::INTELLIGENCE,3},
+	{eSkill::EDGED_WEAPONS,2}, {eSkill::BASHING_WEAPONS,2}, {eSkill::POLE_WEAPONS,2},
+	{eSkill::THROWN_MISSILES,1}, {eSkill::ARCHERY,2}, {eSkill::DEFENSE,2},
+	{eSkill::MAGE_SPELLS,6}, {eSkill::PRIEST_SPELLS,5}, {eSkill::MAGE_LORE,1},
+	{eSkill::ALCHEMY,2}, {eSkill::ITEM_LORE,4}, {eSkill::DISARM_TRAPS,2},
+	{eSkill::LOCKPICKING,1}, {eSkill::ASSASSINATION,4}, {eSkill::POISON,2},
+	{eSkill::LUCK,5},
+};
+std::map<eSkill,short> skill_max = {
+	{eSkill::STRENGTH,20}, {eSkill::DEXTERITY,20}, {eSkill::INTELLIGENCE,20},
+	{eSkill::EDGED_WEAPONS,20}, {eSkill::BASHING_WEAPONS,20}, {eSkill::POLE_WEAPONS,20},
+	{eSkill::THROWN_MISSILES,20}, {eSkill::ARCHERY,20}, {eSkill::DEFENSE,20},
+	{eSkill::MAGE_SPELLS,7}, {eSkill::PRIEST_SPELLS,7}, {eSkill::MAGE_LORE,20},
+	{eSkill::ALCHEMY,20}, {eSkill::ITEM_LORE,10}, {eSkill::DISARM_TRAPS,20},
+	{eSkill::LOCKPICKING,20}, {eSkill::ASSASSINATION,20}, {eSkill::POISON,20},
+	{eSkill::LUCK,20},
+};
+std::map<eSkill,short> skill_g_cost = {
+	{eSkill::STRENGTH,50}, {eSkill::DEXTERITY,503}, {eSkill::INTELLIGENCE,50},
+	{eSkill::EDGED_WEAPONS,40}, {eSkill::BASHING_WEAPONS,40}, {eSkill::POLE_WEAPONS,40},
+	{eSkill::THROWN_MISSILES,30}, {eSkill::ARCHERY,50}, {eSkill::DEFENSE,40},
+	{eSkill::MAGE_SPELLS,250}, {eSkill::PRIEST_SPELLS,250}, {eSkill::MAGE_LORE,25},
+	{eSkill::ALCHEMY,100}, {eSkill::ITEM_LORE,200}, {eSkill::DISARM_TRAPS,30},
+	{eSkill::LOCKPICKING,20}, {eSkill::ASSASSINATION,100}, {eSkill::POISON,80},
+	{eSkill::LUCK,0},
+};
+
 static long cost_mult[7] = {5,7,10,13,16,20,25};
 
 cShop::cShop() {}
@@ -31,7 +59,7 @@ size_t cShop::size() {
 	});
 }
 
-void cShop::addItem(cItem item) {
+void cShop::addItem(cItem item, size_t quantity) {
 	size_t i = firstEmpty();
 	if(i >= items.size()) return;
 	if(item.variety == eItemType::NO_ITEM) return;
@@ -43,6 +71,7 @@ void cShop::addItem(cItem item) {
 		items[i].cost *= item.charges;
 	items[i].cost *= cost_mult[cost_adj];
 	items[i].cost /= 10;
+	items[i].quantity = quantity;
 }
 
 static cItem store_mage_spells(short which_s) {
@@ -122,15 +151,21 @@ void cShop::addSpecial(eShopItemType type, int n) {
 		items[i].item = store_priest_spells(n);
 	else if(type == eShopItemType::ALCHEMY)
 		items[i].item = store_alchemy(n);
-	else {
+	else if(type == eShopItemType::SKILL) {
+		items[i].item.graphic_num = 108;
+		items[i].item.full_name = get_str("skills", n * 2 + 1);
+	} else {
 		items[i].item.graphic_num = 109;
 		items[i].item.full_name = heal_types[int(type) - 700];
 	}
 	if(type == eShopItemType::MAGE_SPELL || type == eShopItemType::PRIEST_SPELL || type == eShopItemType::ALCHEMY)
 		items[i].cost = items[i].item.value;
+	else if(type == eShopItemType::SKILL)
+		items[i].cost = skill_g_cost[eSkill(n)] * 1.5;
 	else items[i].cost = heal_costs[int(type) - 700];
 	items[i].cost *= cost_mult[cost_adj];
 	items[i].cost /= 10;
+	items[i].quantity = 0;
 }
 
 cShopItem cShop::getItem(size_t i) const {
@@ -147,6 +182,13 @@ int cShop::getCostAdjust() const {
 
 std::string cShop::getName() const {
 	return name;
+}
+
+void cShop::takeOne(size_t i) {
+	if(items[i].quantity == 1)
+		clearItem(i);
+	else if(items[i].quantity > 0)
+		items[i].quantity--;
 }
 
 void cShop::clearItem(size_t i) {

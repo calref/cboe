@@ -53,6 +53,7 @@ extern sf::RenderWindow mini_map;
 extern bool game_run_before,skip_boom_delay;
 extern cUniverse univ;
 extern sf::Texture pc_gworld;
+extern std::map<eSkill,short> skill_max;
 
 extern cScenarioList scen_headers;
 
@@ -88,8 +89,6 @@ extern std::vector<word_rect_t> talk_words;
 // n000 + i - magic store n item i
 // talk_area_rect and talk_help_rect used for this too
 eGameMode store_pre_shop_mode;
-// 0 - whole area, 1 - active area 2 - graphic 3 - item name
-// 4 - item cost 5 - item extra str  6 - item help button
 extern rectangle shopping_rects[8][7];
 // TODO: The duplication of rectangle here shouldn't be necessary...
 rectangle bottom_help_rects[4] = {rectangle{356,6,368,250},rectangle{374,6,386,270},rectangle{386,6,398,250},rectangle{398,6,410,250}};
@@ -194,11 +193,11 @@ void handle_shop_event(location p) {
 	for(i = 0; i < 8; i++) {
 		store_what_picked = i + shop_sbar->getPosition();
 		if(store_what_picked >= active_shop.size()) break;
-		if(p.in(shopping_rects[i][1])) {
-			click_shop_rect(shopping_rects[i][1]);
+		if(p.in(shopping_rects[i][SHOPRECT_ACTIVE_AREA])) {
+			click_shop_rect(shopping_rects[i][SHOPRECT_ACTIVE_AREA]);
 			handle_sale(active_shop.getItem(store_what_picked), store_what_picked);
-		} else if(p.in(shopping_rects[i][6]) && active_shop.getType() != eShopType::HEALING){
-			click_shop_rect(shopping_rects[i][6]);
+		} else if(p.in(shopping_rects[i][SHOPRECT_ITEM_HELP]) && active_shop.getType() != eShopType::HEALING){
+			click_shop_rect(shopping_rects[i][SHOPRECT_ITEM_HELP]);
 			handle_info_request(active_shop.getItem(store_what_picked));
 		}
 	}
@@ -208,6 +207,7 @@ void handle_sale(cShopItem item, int i) {
 	cItem base_item = item.item;
 	short cost = item.cost;
 	rectangle dummy_rect = {0,0,0,0};
+	size_t size_before = active_shop.size();
 	
 	switch(item.type) {
 		case eShopItemType::ITEM:
@@ -216,11 +216,10 @@ void handle_sale(cShopItem item, int i) {
 					play_sound(-38);
 					take_gold(cost,true);
 					univ.party[current_pc].give_item(base_item,true);
-					if(active_shop.getType() != eShopType::ITEMS) {
-						// Magic shops have limited stock
-						active_shop.clearItem(i);
+					// Magic shops have limited stock
+					active_shop.takeOne(i);
+					if(active_shop.size() != size_before)
 						shop_sbar->setMaximum(shop_sbar->getMaximum() - 1);
-					}
 					break;
 				case eBuyStatus::NO_SPACE: ASB("Can't carry any more items."); break;
 				case eBuyStatus::NEED_GOLD: ASB("Not enough cash."); break;
@@ -325,6 +324,27 @@ void handle_sale(cShopItem item, int i) {
 				give_help(41,0);
 			}
 			break;
+		case eShopItemType::SKILL:
+			if(base_item.item_level < 0 || base_item.item_level > 18) {
+				beep();
+				giveError("Error: The scenario tried to sell you an invalid skill!");
+				break;
+			}
+			eSkill skill = eSkill(base_item.item_level);
+			if(univ.party[current_pc].skills[skill] >= skill_max[skill])
+				ASB("You're already an expert in this skill.");
+			else if(!take_gold(cost, false))
+				ASB("Not enough gold.");
+			else {
+				// TODO: No idea what's a good sound here.
+				play_sound(62);
+				ASB("You learn a little...");
+				active_shop.takeOne(i);
+				if(active_shop.size() != size_before)
+					shop_sbar->setMaximum(shop_sbar->getMaximum() - 1);
+				univ.party[current_pc].skills[skill]++;
+			}
+			break;
 	}
 	
 	if(overall_mode != MODE_SHOPPING) {
@@ -356,6 +376,9 @@ void handle_info_request(cShopItem item) {
 		case eShopItemType::PRIEST_SPELL:
 			display_spells(eSkill::PRIEST_SPELLS,base_item.item_level - 900 - 30,0);
 			break;
+		case eShopItemType::SKILL:
+			display_skills(eSkill(base_item.item_level), nullptr);
+			break;
 	}
 }
 
@@ -366,7 +389,7 @@ void set_up_shop_array(eShopType store_shop_type, short store_shop_min, short st
 	switch(store_shop_type) {
 		case eShopType::ITEMS:
 			for(int i = store_shop_min; i <= store_shop_max; i++)
-				active_shop.addItem(get_stored_item(i));
+				active_shop.addItem(get_stored_item(i), cShop::INFINITE);
 			break;
 		case eShopType::HEALING:
 			if(univ.party[current_pc].cur_health < univ.party[current_pc].max_health)
@@ -396,19 +419,19 @@ void set_up_shop_array(eShopType store_shop_type, short store_shop_min, short st
 				active_shop.addSpecial(eShopItemType::FOOD, i);
 			break;
 		case eShopType::MAGIC_JUNK:
-			active_shop.addItems(univ.party.magic_store_items[0].begin(), univ.party.magic_store_items[0].end());
+			active_shop.addItems(univ.party.magic_store_items[0].begin(), univ.party.magic_store_items[0].end(), 1);
 			break;
 		case eShopType::MAGIC_LOUSY:
-			active_shop.addItems(univ.party.magic_store_items[1].begin(), univ.party.magic_store_items[1].end());
+			active_shop.addItems(univ.party.magic_store_items[1].begin(), univ.party.magic_store_items[1].end(), 1);
 			break;
 		case eShopType::MAGIC_SO_SO:
-			active_shop.addItems(univ.party.magic_store_items[2].begin(), univ.party.magic_store_items[2].end());
+			active_shop.addItems(univ.party.magic_store_items[2].begin(), univ.party.magic_store_items[2].end(), 1);
 			break;
 		case eShopType::MAGIC_GOOD:
-			active_shop.addItems(univ.party.magic_store_items[3].begin(), univ.party.magic_store_items[3].end());
+			active_shop.addItems(univ.party.magic_store_items[3].begin(), univ.party.magic_store_items[3].end(), 1);
 			break;
 		case eShopType::MAGIC_GREAT:
-			active_shop.addItems(univ.party.magic_store_items[4].begin(), univ.party.magic_store_items[4].end());
+			active_shop.addItems(univ.party.magic_store_items[4].begin(), univ.party.magic_store_items[4].end(), 1);
 			break;
 		case eShopType::MAGE:
 			for(int i = store_shop_min; i <= store_shop_max && i < 62; i++)
@@ -421,6 +444,10 @@ void set_up_shop_array(eShopType store_shop_type, short store_shop_min, short st
 		case eShopType::ALCHEMY:
 			for(int i = store_shop_min; i <= store_shop_max && i < 20; i++)
 				active_shop.addSpecial(eShopItemType::ALCHEMY, i);
+			break;
+		case eShopType::SKILLS:
+			for(int i = max(0,store_shop_min); i <= min(18,store_shop_max); i++)
+				active_shop.addSpecial(eShopItemType::SKILL, i);
 			break;
 	}
 	shop_sbar->setMaximum(active_shop.size() - 8);

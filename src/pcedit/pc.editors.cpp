@@ -41,34 +41,10 @@ extern short which_pc_displayed;
 cPlayer *store_pc;
 sf::Texture button_num_gworld;
 
-std::map<eSkill,short> skill_cost = {
-	{eSkill::STRENGTH,3}, {eSkill::DEXTERITY,3}, {eSkill::INTELLIGENCE,3},
-	{eSkill::EDGED_WEAPONS,2}, {eSkill::BASHING_WEAPONS,2}, {eSkill::POLE_WEAPONS,2},
-	{eSkill::THROWN_MISSILES,1}, {eSkill::ARCHERY,2}, {eSkill::DEFENSE,2},
-	{eSkill::MAGE_SPELLS,6}, {eSkill::PRIEST_SPELLS,5}, {eSkill::MAGE_LORE,1},
-	{eSkill::ALCHEMY,2}, {eSkill::ITEM_LORE,4}, {eSkill::DISARM_TRAPS,2},
-	{eSkill::LOCKPICKING,1}, {eSkill::ASSASSINATION,4}, {eSkill::POISON,2},
-	{eSkill::LUCK,5},
-};
-std::map<eSkill,short> skill_max = {
-	{eSkill::STRENGTH,20}, {eSkill::DEXTERITY,20}, {eSkill::INTELLIGENCE,20},
-	{eSkill::EDGED_WEAPONS,20}, {eSkill::BASHING_WEAPONS,20}, {eSkill::POLE_WEAPONS,20},
-	{eSkill::THROWN_MISSILES,20}, {eSkill::ARCHERY,20}, {eSkill::DEFENSE,20},
-	{eSkill::MAGE_SPELLS,7}, {eSkill::PRIEST_SPELLS,7}, {eSkill::MAGE_LORE,20},
-	{eSkill::ALCHEMY,20}, {eSkill::ITEM_LORE,10}, {eSkill::DISARM_TRAPS,20},
-	{eSkill::LOCKPICKING,20}, {eSkill::ASSASSINATION,20}, {eSkill::POISON,20},
-	{eSkill::LUCK,20},
-};
-std::map<eSkill,short> skill_g_cost = {
-	{eSkill::STRENGTH,50}, {eSkill::DEXTERITY,503}, {eSkill::INTELLIGENCE,50},
-	{eSkill::EDGED_WEAPONS,40}, {eSkill::BASHING_WEAPONS,40}, {eSkill::POLE_WEAPONS,40},
-	{eSkill::THROWN_MISSILES,30}, {eSkill::ARCHERY,50}, {eSkill::DEFENSE,40},
-	{eSkill::MAGE_SPELLS,250}, {eSkill::PRIEST_SPELLS,250}, {eSkill::MAGE_LORE,25},
-	{eSkill::ALCHEMY,100}, {eSkill::ITEM_LORE,200}, {eSkill::DISARM_TRAPS,30},
-	{eSkill::LOCKPICKING,20}, {eSkill::ASSASSINATION,100}, {eSkill::POISON,80},
-	{eSkill::LUCK,0},
-};
-// The index here is the skill's level, not the skill itself; thus 20 is the max index since no spell can go above 20.
+extern std::map<eSkill,short> skill_cost;
+extern std::map<eSkill,short> skill_max;
+extern std::map<eSkill,short> skill_g_cost;
+// The index here is the skill's level, not the skill itself; thus 20 is the max index since no skill can go above 20.
 short skill_bonus[21] = {
 	-3,-3,-2,-1,0,0,1,1,1,2,
 	2,2,3,3,3,3,4,4,4,5,5};
@@ -238,11 +214,23 @@ void pick_race_abil(cPlayer *pc,short mode) {
 	pickAbil.run();
 }
 
-short alch_difficulty[20] = {
+extern const short alch_difficulty[20] = {
 	1,1,1,3,3,
 	4,5,5,7,9,
 	9,10,12,12,9,
 	14,19,10,16,20
+};
+extern const eItemAbil alch_ingred1[20] = {
+	eItemAbil::HOLLY,eItemAbil::COMFREY,eItemAbil::HOLLY,eItemAbil::COMFREY,eItemAbil::WORMGRASS,
+	eItemAbil::NETTLE,eItemAbil::NETTLE,eItemAbil::WORMGRASS,eItemAbil::GRAYMOLD,eItemAbil::WORMGRASS,
+	eItemAbil::GRAYMOLD,eItemAbil::ASPTONGUE,eItemAbil::GRAYMOLD,eItemAbil::MANDRAKE,eItemAbil::EMBERF,
+	eItemAbil::MANDRAKE,eItemAbil::MANDRAKE,eItemAbil::NETTLE,eItemAbil::GRAYMOLD,eItemAbil::MANDRAKE,
+};
+extern const eItemAbil alch_ingred2[20] = {
+	eItemAbil::NONE,eItemAbil::NONE,eItemAbil::NONE,eItemAbil::WORMGRASS,eItemAbil::NONE,
+	eItemAbil::NONE,eItemAbil::NONE,eItemAbil::NETTLE,eItemAbil::NONE,eItemAbil::ASPTONGUE,
+	eItemAbil::HOLLY,eItemAbil::NONE,eItemAbil::COMFREY,eItemAbil::NONE,eItemAbil::NONE,
+	eItemAbil::ASPTONGUE,eItemAbil::EMBERF,eItemAbil::EMBERF,eItemAbil::ASPTONGUE,eItemAbil::EMBERF,
 };
 
 void display_alchemy(bool allowEdit) {

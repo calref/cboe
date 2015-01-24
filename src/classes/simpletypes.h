@@ -1002,6 +1002,7 @@ enum class eShopType {
 	MAGIC_GOOD = 8,
 	MAGIC_GREAT = 9,
 	FOOD = 10,
+	SKILLS = 11,
 };
 
 enum class eAlchemy {

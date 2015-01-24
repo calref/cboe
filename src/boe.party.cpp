@@ -2310,21 +2310,11 @@ void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat) {
 	}
 }
 
-extern short alch_difficulty[20];
+extern const short alch_difficulty[20];
+extern const eItemAbil alch_ingred1[20];
+extern const eItemAbil alch_ingred2[20];
 
 void do_alchemy() {
-	static const eItemAbil ingred1_needed[20] = {
-		eItemAbil::HOLLY,eItemAbil::COMFREY,eItemAbil::HOLLY,eItemAbil::COMFREY,eItemAbil::WORMGRASS,
-		eItemAbil::NETTLE,eItemAbil::NETTLE,eItemAbil::WORMGRASS,eItemAbil::GRAYMOLD,eItemAbil::WORMGRASS,
-		eItemAbil::GRAYMOLD,eItemAbil::ASPTONGUE,eItemAbil::GRAYMOLD,eItemAbil::MANDRAKE,eItemAbil::EMBERF,
-		eItemAbil::MANDRAKE,eItemAbil::MANDRAKE,eItemAbil::NETTLE,eItemAbil::GRAYMOLD,eItemAbil::MANDRAKE,
-	};
-	static const eItemAbil ingred2_needed[20] = {
-		eItemAbil::NONE,eItemAbil::NONE,eItemAbil::NONE,eItemAbil::WORMGRASS,eItemAbil::NONE,
-		eItemAbil::NONE,eItemAbil::NONE,eItemAbil::NETTLE,eItemAbil::NONE,eItemAbil::ASPTONGUE,
-		eItemAbil::HOLLY,eItemAbil::NONE,eItemAbil::COMFREY,eItemAbil::NONE,eItemAbil::NONE,
-		eItemAbil::ASPTONGUE,eItemAbil::EMBERF,eItemAbil::EMBERF,eItemAbil::ASPTONGUE,eItemAbil::EMBERF,
-	};
 	static const short fail_chance[20] = {
 		50,40,30,20,10,
 		8,6,4,2,0,
@@ -2347,19 +2337,19 @@ void do_alchemy() {
 			return;
 		}
 		
-		if((which_item = univ.party[pc_num].has_abil(ingred1_needed[which_p])) == 24) {
+		if((which_item = univ.party[pc_num].has_abil(alch_ingred1[which_p])) == 24) {
 			add_string_to_buf("Alchemy: Don't have ingredients.");
 			return;
 		}
 		
-		if(ingred2_needed[which_p] != eItemAbil::NONE) {
-			if(univ.party[pc_num].has_abil(ingred2_needed[which_p]) == 24) {
+		if(alch_ingred2[which_p] != eItemAbil::NONE) {
+			if(univ.party[pc_num].has_abil(alch_ingred2[which_p]) == 24) {
 				add_string_to_buf("Alchemy: Don't have ingredients.");
 				return;
 			}
 			univ.party[pc_num].remove_charge(which_item);
 			// We call this twice because remove_charge might move the item and change its index
-			which_item2 = univ.party[pc_num].has_abil(ingred2_needed[which_p]);
+			which_item2 = univ.party[pc_num].has_abil(alch_ingred2[which_p]);
 			univ.party[pc_num].remove_charge(which_item2);
 		} else univ.party[pc_num].remove_charge(which_item);
 		

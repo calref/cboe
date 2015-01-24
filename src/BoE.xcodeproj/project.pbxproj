@@ -123,6 +123,7 @@
 		913D05BD0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D05BE0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */ = {isa = PBXBuildFile; fileRef = 913D6C040FC57A8E00E12527 /* boeresources.icns */; };
+		914698F81A73434400F20F5E /* shop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FDB5791A4E774E00DE5983 /* shop.cpp */; };
 		914701A718F62ABF008A6DC9 /* dungeon.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 914701A418F629D4008A6DC9 /* dungeon.ttf */; };
 		914701A818F62AC0008A6DC9 /* maidenword.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 914701A518F629D4008A6DC9 /* maidenword.ttf */; };
 		914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
@@ -1545,6 +1546,7 @@
 				915E090C1A317E2E008BDF00 /* map_parse.cpp in Sources */,
 				9179A4661A48683100FEF872 /* stack.cpp in Sources */,
 				91222FC11A72366D008413A5 /* spell.cpp in Sources */,
+				914698F81A73434400F20F5E /* shop.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

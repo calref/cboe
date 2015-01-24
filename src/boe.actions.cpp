@@ -119,8 +119,6 @@ cCreature save_monster_type;
 short wand_loc_count = 0;
 short monst_place_count = 0; // 1 - standard place	2 - place last
 
-// 0 - whole area, 1 - active area 2 - graphic 3 - item name
-// 4 - item cost 5 - item extra str  6 - item help button
 rectangle shopping_rects[8][7];
 std::queue<pending_special_type> special_queue;
 bool end_scenario = false;
@@ -138,7 +136,8 @@ void init_screen_locs() {
 	shopping_rects[0][SHOPRECT_ITEM_NAME].top += 4;
 	shopping_rects[0][SHOPRECT_ITEM_NAME].left += 28;
 	shopping_rects[0][SHOPRECT_ITEM_COST].top += 20;
-	shopping_rects[0][SHOPRECT_ITEM_COST].left += 154;
+	// TODO: Might need to put this back to what it was (I was trying to make more room for alchemy info)
+	shopping_rects[0][SHOPRECT_ITEM_COST].left += 170;//154;
 	shopping_rects[0][SHOPRECT_ITEM_EXTRA].top += 20;
 	shopping_rects[0][SHOPRECT_ITEM_EXTRA].left += 34;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].top += 3;
@@ -1624,8 +1623,8 @@ bool handle_keystroke(sf::Event& event){
 		}
 		for(i = 0; i < 8; i++)
 			if(chr2 == shop_chars[i]) {
-				pass_point.x = shopping_rects[i][1].left + 9 + ul.x;
-				pass_point.y = shopping_rects[i][1].top + 9 + ul.y;
+				pass_point.x = shopping_rects[i][SHOPRECT_ACTIVE_AREA].left + 9 + ul.x;
+				pass_point.y = shopping_rects[i][SHOPRECT_ACTIVE_AREA].top + 9 + ul.y;
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);

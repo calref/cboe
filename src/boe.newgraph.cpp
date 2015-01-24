@@ -21,6 +21,7 @@
 #include <memory>
 #include "location.h"
 #include "shop.hpp"
+#include "spell.hpp"
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,
@@ -67,6 +68,9 @@ extern short store_talk_face_pic;
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
 extern bool fog_lifted;
+extern const short alch_difficulty[20];
+extern const eItemAbil alch_ingred1[20];
+extern const eItemAbil alch_ingred2[20];
 
 // Talk vars
 extern eGameMode store_pre_talk_mode;
@@ -765,12 +769,13 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	for(i = 0; i < 8; i++) {
 		current_pos = i + shop_sbar->getPosition();
 		cShopItem item = active_shop.getItem(i);
+		eSpell spell; eSkill skill;
 		if(item.type == eShopItemType::EMPTY)
 			continue; // theoretically, this shouldn't happen
 		cur_cost = item.cost;
 		base_item = item.item;
 		std::string cur_name = base_item.full_name, cur_info_str;
-		rectangle from_rect, to_rect = shopping_rects[i][2];
+		rectangle from_rect, to_rect = shopping_rects[i][SHOPRECT_GRAPHIC];
 		sf::Texture* from_gw;
 		switch(item.type) {
 			case eShopItemType::ITEM:
@@ -778,13 +783,21 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 				cur_info_str = get_item_interesting_string(base_item);
 				break;
 			case eShopItemType::ALCHEMY:
-				cur_info_str = "";
+				cur_info_str = get_str("item-abilities", int(alch_ingred1[base_item.item_level]) + 1);
+				if(alch_ingred2[base_item.item_level] != eItemAbil::NONE) {
+					cur_info_str += " and " + get_str("item-abilities", int(alch_ingred2[base_item.item_level]) + 1);
+				}
 				break;
 			case eShopItemType::MAGE_SPELL:
-				cur_info_str = "";
+				spell = cSpell::fromNum(eSkill::MAGE_SPELLS, base_item.item_level);
+				cur_info_str = "Level: " + std::to_string((*spell).level) + "    SP: " + std::to_string((*spell).cost);
 				break;
 			case eShopItemType::PRIEST_SPELL:
-				cur_info_str = "";
+				spell = cSpell::fromNum(eSkill::PRIEST_SPELLS, base_item.item_level);
+				cur_info_str = "Level: " + std::to_string((*spell).level) + "    SP: " + std::to_string((*spell).cost);
+				break;
+			case eShopItemType::SKILL:
+				cur_info_str = "Increase skill by 1";
 				break;
 			default: // Healing
 				cur_info_str = "";
@@ -793,18 +806,16 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
 		rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 		
-		// Now draw item shopping_rects[i][7]
-		// 0 - whole area, 1 - active area 2 - graphic 3 - item name
-		// 4 - item cost 5 - item extra str  6 - item help button
+		// Now draw item
 		style.pointSize = 12;
 		style.lineHeight = 12;
-		win_draw_string(talk_gworld,shopping_rects[i][3],cur_name,eTextMode::WRAP,style);
+		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_NAME],cur_name,eTextMode::WRAP,style);
 		cur_name = "Cost: " + std::to_string(cur_cost);
-		win_draw_string(talk_gworld,shopping_rects[i][4],cur_name,eTextMode::WRAP,style);
+		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_COST],cur_name,eTextMode::WRAP,style);
 		style.pointSize = 10;
-		win_draw_string(talk_gworld,shopping_rects[i][5],cur_info_str,eTextMode::WRAP,style);
+		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::WRAP,style);
 		if(active_shop.getType() != eShopType::HEALING) // Draw info button
-			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][6],pressed ? sf::BlendNone : sf::BlendAlpha);
+			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][SHOPRECT_ITEM_HELP],pressed ? sf::BlendNone : sf::BlendAlpha);
 		
 	}
 	
