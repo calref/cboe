@@ -3,7 +3,7 @@
 
 #include "boe.global.h"
 
-#include "classes.h"
+#include "universe.h"
 
 #include "boe.dlgutil.h"
 #include "boe.text.h"

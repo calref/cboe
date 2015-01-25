@@ -197,9 +197,6 @@
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\targetver.h" />
-    <ClInclude Include="..\..\classes.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\oldstructs.h">
       <Filter>Classes</Filter>
     </ClInclude>

@@ -1,5 +1,6 @@
 
 #include "pict.hpp"
+#include "creature.hpp"
 
 short out_enc_lev_tot(short which);
 void create_wand_monst();

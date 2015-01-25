@@ -1,3 +1,6 @@
+
+#include "creature.hpp"
+
 bool town_specials(short which,short t_num);
 bool handle_wandering_specials (short which,short mode);
 bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,short *spec_num,

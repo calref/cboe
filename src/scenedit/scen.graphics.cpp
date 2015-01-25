@@ -3,7 +3,7 @@
 #include <sstream>
 #include <cstring>
 #include "scen.global.h"
-#include "classes.h"
+#include "scenario.h"
 #include "graphtool.hpp"
 #include "scen.graphics.h"
 #include <cmath>

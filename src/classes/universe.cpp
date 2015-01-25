@@ -6,13 +6,15 @@
  *
  */
 
+#include "universe.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 #include <stack>
 
-#include "classes.h"
+#include "regtown.h"
 #include "oldstructs.h"
 #include "mathutil.hpp"
 #include "fileio.hpp"

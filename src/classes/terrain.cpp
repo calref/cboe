@@ -6,13 +6,15 @@
  *
  */
 
+#include "terrain.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "classes.h"
 #include "oldstructs.h"
+#include "graphtool.hpp" // for NO_PIC
 #include "boe.consts.h" // TODO: Put these constants in a global file
 
 void cTerrain::append(legacy::terrain_type_type& old){

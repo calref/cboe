@@ -6,12 +6,13 @@
  *
  */
 
+#include "talking.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "classes.h"
 #include "oldstructs.h"
 
 void cSpeech::append(legacy::talking_record_type& old){

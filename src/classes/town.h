@@ -17,6 +17,7 @@
 #include "special.h"
 #include "monster.h"
 #include "talking.h"
+#include "item.h"
 
 namespace legacy {
 	struct town_record_type;

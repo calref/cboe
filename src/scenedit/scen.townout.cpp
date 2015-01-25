@@ -4,7 +4,8 @@
 #include <stack>
 #include <boost/lexical_cast.hpp>
 #include "scen.global.h"
-#include "classes.h"
+#include "scenario.h"
+#include "regtown.h"
 #include "graphtool.hpp"
 #include "scen.graphics.h"
 #include "scen.townout.h"
@@ -592,7 +593,6 @@ static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand,
 static bool edit_out_wand_event_filter(cDialog& me, std::string hit, short& which, cOutdoors::cWandering& wand, short mode) {
 	if(!me.toast(true)) return true;
 	save_out_wand(me, which, wand, mode);
-	cCreature store_m;
 	if(hit == "left") {
 		me.untoast();
 		which--;

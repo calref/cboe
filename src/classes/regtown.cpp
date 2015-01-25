@@ -6,13 +6,15 @@
  *
  */
 
+#include "regtown.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
+#include "scenario.h"
 #include "dlogutil.hpp"
-#include "classes.h"
 #include "oldstructs.h"
 #include "fileio.hpp"
 

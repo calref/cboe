@@ -11,6 +11,7 @@
 
 #include "monster.h"
 #include <iosfwd>
+#include "creature.hpp"
 
 namespace legacy {
 	struct creature_list_type;

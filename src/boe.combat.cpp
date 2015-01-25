@@ -3,7 +3,7 @@
 
 #include "boe.global.h"
 
-#include "classes.h"
+#include "universe.h"
 #include "boe.monster.h"
 #include "boe.graphics.h"
 #include "boe.locutils.h"
@@ -1646,7 +1646,7 @@ void fire_missile(location target) {
 					univ.party[missile_firer].heal(missile.abil_data[0] / 2);
 				} else if(missile.ability == eItemAbil::ANTIMAGIC_WEAPON) {
 					short before = cur_monst->get_magic();
-					if(mu + cl > 0 && get_ran(1,0,1) == 1)
+					if(cur_monst->mu + cur_monst->cl > 0 && get_ran(1,0,1) == 1)
 						cur_monst->drain_sp(missile.abil_data[0]);
 					if(before > cur_monst->get_magic()) {
 						add_string_to_buf("  Missile drains energy.");

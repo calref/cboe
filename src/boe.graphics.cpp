@@ -4,7 +4,7 @@
 
 #include "boe.global.h"
 
-#include "classes.h"
+#include "universe.h"
 #include "boe.graphics.h"
 #include "boe.newgraph.h"
 #include "boe.graphutil.h"

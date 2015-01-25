@@ -6,12 +6,14 @@
  *
  */
 
+#include "town.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "classes.h"
+#include "scenario.h"
 #include "oldstructs.h"
 #include "mathutil.hpp"
 

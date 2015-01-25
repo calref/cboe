@@ -1,7 +1,7 @@
 
 #include "boe.global.h"
 
-#include "classes.h"
+#include "universe.h"
 #include "boe.party.h"
 #include "boe.town.h"
 #include "boe.items.h"
