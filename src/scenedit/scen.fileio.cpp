@@ -1,7 +1,7 @@
 
 #include <cstring>
 #include "scen.global.h"
-#include "classes.h"
+#include "scenario.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>

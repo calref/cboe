@@ -3,7 +3,7 @@
 
 #include "pc.graphics.h"
 #include "pc.global.h"
-#include "classes.h"
+#include "universe.h"
 #include "pc.editors.h"
 #include "pc.fileio.h"
 #include "pc.action.h"

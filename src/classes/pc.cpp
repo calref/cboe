@@ -13,7 +13,7 @@
 #include <sstream>
 #include <iostream>
 
-#include "classes.h"
+#include "universe.h"
 #include "oldstructs.h"
 #include "mathutil.hpp"
 

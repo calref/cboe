@@ -7,6 +7,8 @@
  */
 
 #include "special.h"
+
+#include "special.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -14,7 +16,6 @@
 #include <boost/lexical_cast.hpp>
 
 #include "dlogutil.hpp"
-#include "classes.h"
 #include "oldstructs.h"
 
 cSpecial::cSpecial(){

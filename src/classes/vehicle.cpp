@@ -6,12 +6,13 @@
  *
  */
 
+#include "vehicle.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "classes.h"
 #include "oldstructs.h"
 
 cVehicle::cVehicle() :

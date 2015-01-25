@@ -1,7 +1,7 @@
 
 #define DIR_ARRAY_DEF
 #include "boe.global.h"
-#include "classes.h"
+#include "universe.h"
 
 #include <thread>
 #include "boe.graphics.h"

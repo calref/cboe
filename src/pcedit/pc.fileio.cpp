@@ -3,7 +3,7 @@
 #include <cstdio>
 
 #include "pc.global.h"
-#include "classes.h"
+#include "universe.h"
 #include "pc.fileio.h"
 #include "pc.graphics.h"
 #include "graphtool.hpp"

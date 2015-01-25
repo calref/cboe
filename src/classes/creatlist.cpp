@@ -6,12 +6,13 @@
  *
  */
 
+#include "creatlist.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "classes.h"
 #include "oldstructs.h"
 
 void cPopulation::append(legacy::creature_list_type old){

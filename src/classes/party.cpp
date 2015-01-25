@@ -6,14 +6,17 @@
  *
  */
 
+#include "party.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 #include <stdexcept>
 
+#include "scenario.h"
+#include "universe.h"
 #include "dlogutil.hpp"
-#include "classes.h"
 #include "oldstructs.h"
 #include "fileio.hpp"
 

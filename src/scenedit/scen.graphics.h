@@ -1,3 +1,6 @@
+
+#include "simpletypes.h"
+
 void Set_up_win ();
 void run_startup_g();
 void load_graphics();

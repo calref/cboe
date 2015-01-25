@@ -6,12 +6,13 @@
  *
  */
 
+#include "scenario.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "classes.h"
 #include "oldstructs.h"
 
 cScenario::~cScenario() {

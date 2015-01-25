@@ -6,12 +6,12 @@
  *
  */
 
+#include "tmpltown.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
-
-#include "classes.h"
 
 ter_num_t& cBigTemplTown::terrain(size_t x, size_t y){
 	location pos(x,y);

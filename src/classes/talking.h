@@ -10,6 +10,8 @@
 #define BOE_DATA_TALKING_H
 
 #include <iosfwd>
+#include <string>
+#include "simpletypes.h"
 
 namespace legacy {
 	struct talking_record_type;

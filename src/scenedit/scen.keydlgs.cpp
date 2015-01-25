@@ -5,7 +5,7 @@
 #include <numeric>
 #include <boost/lexical_cast.hpp>
 #include "scen.global.h"
-#include "classes.h"
+#include "scenario.h"
 #include "graphtool.hpp"
 #include "scen.graphics.h"
 #include "scen.keydlgs.h"

@@ -6,7 +6,7 @@
 
 #include "boe.global.h"
 
-#include "classes.h"
+#include "universe.h"
 #include "boe.graphutil.h"
 #include "boe.text.h"
 #include "boe.locutils.h"

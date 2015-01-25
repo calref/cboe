@@ -6,7 +6,7 @@
 #include <array>
 #include <map>
 
-#include "classes.h"
+#include "universe.h"
 
 #include "boe.fileio.h"
 #include "boe.graphics.h"

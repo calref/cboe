@@ -6,6 +6,7 @@
 #include "item.h"
 #include "monster.h"
 #include "pc.h"
+#include "creature.hpp"
 
 class cDialog;
 void display_spells(eSkill mode,short force_spell,cDialog* parent);

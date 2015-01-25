@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include "boe.global.h"
-#include "classes.h"
+#include "universe.h"
 #include "boe.fileio.h"
 #include "boe.text.h"
 #include "boe.town.h"
