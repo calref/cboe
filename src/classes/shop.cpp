@@ -38,6 +38,10 @@ std::map<eSkill,short> skill_g_cost = {
 	{eSkill::LOCKPICKING,20}, {eSkill::ASSASSINATION,100}, {eSkill::POISON,80},
 	{eSkill::LUCK,0},
 };
+// The index here is the skill's level, not the skill itself; thus 20 is the max index since no skill can go above 20.
+short skill_bonus[21] = {
+	-3,-3,-2,-1,0,0,1,1,1,2,
+	2,2,3,3,3,3,4,4,4,5,5};
 
 static long cost_mult[7] = {5,7,10,13,16,20,25};
 

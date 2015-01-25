@@ -53,6 +53,7 @@ public:
 	int get_level() const;
 	
 	bool is_alive() const;
+	bool is_friendly() const;
 	bool is_shielded() const;
 	int get_shared_dmg(int base_dmg) const;
 	location get_loc() const;
@@ -60,6 +61,12 @@ public:
 	int magic_adjust(int base);
 	
 	void spell_note(int which);
+	void cast_spell_note(eSpell spell);
+	void print_attacks(iLiving* target);
+	void breathe_note();
+	void damaged_msg(int how_much, int extra);
+	void killed_msg();
+	bool on_space(location loc) const;
 	
 	void append(legacy::creature_data_type old);
 	void writeTo(std::ostream& file) const;

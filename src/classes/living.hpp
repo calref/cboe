@@ -24,11 +24,13 @@ public:
 	short marked_damage = 0; // for use during animations
 	
 	virtual bool is_alive() const = 0;
+	virtual bool is_friendly() const = 0;
 	virtual bool is_shielded() const = 0; // Checks for martyr's shield in any form - status, monster abil, item abil
 	virtual int get_shared_dmg(int base_dmg) const = 0; // And this goes with the above.
 	
 	virtual void apply_status(eStatus which, int how_much);
 	virtual void clear_bad_status();
+	virtual void void_sanctuary();
 	
 	virtual void heal(int how_much) = 0;
 	virtual void poison(int how_much) = 0;

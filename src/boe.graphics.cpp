@@ -1489,10 +1489,10 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 //	source_rect.right += 28 * type;
 	
 	// adjust for possible big monster
-	which_m = monst_there(where);
-	if(which_m < 90) {
-		x_adj += 14 * (univ.town.monst[which_m].x_width - 1);
-		y_adj += 18 * (univ.town.monst[which_m].y_width - 1);
+	if(iLiving* who = univ.target_there(where, TARG_MONST)) {
+		cCreature* monst = dynamic_cast<cCreature*>(who);
+		x_adj += 14 * (monst->x_width - 1);
+		y_adj += 18 * (monst->y_width - 1);
 	}
 	dest_rect.offset(where_draw.x * 28,where_draw.y * 36);
 	source_rect = store_rect = dest_rect;

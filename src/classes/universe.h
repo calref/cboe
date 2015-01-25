@@ -145,6 +145,8 @@ public:
 	explicit cCurOut(cUniverse& univ);
 };
 
+enum eTargetType {TARG_ANY, TARG_PC, TARG_MONST};
+
 class cUniverse{
 	template<typename T> using update_info = std::set<T*>;
 	std::map<pic_num_t, update_info<cItem>> update_items;
@@ -160,6 +162,8 @@ public:
 	void exportGraphics();
 	
 	iLiving& get_target(size_t which);
+	iLiving* target_there(location pos, eTargetType type = TARG_ANY);
+	size_t get_target_i(iLiving& who);
 								   
 	cScenario scenario;
 	cParty party;

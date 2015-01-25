@@ -296,7 +296,7 @@ bool is_blocked(location to_check) {
 					return true;
 		
 		// Monster there?
-		if(monst_there(to_check) < univ.town.monst.size())
+		if(univ.target_there(to_check, TARG_MONST))
 			return true;
 		
 		// Magic barrier?
@@ -311,26 +311,6 @@ bool is_blocked(location to_check) {
 	return true;
 }
 
-bool monst_on_space(location loc,short m_num) {
-	
-	if(univ.town.monst[m_num].active == 0)
-		return false;
-	if((loc.x - univ.town.monst[m_num].cur_loc.x >= 0) &&
-		(loc.x - univ.town.monst[m_num].cur_loc.x <= univ.town.monst[m_num].x_width - 1) &&
-		(loc.y - univ.town.monst[m_num].cur_loc.y >= 0) &&
-		(loc.y - univ.town.monst[m_num].cur_loc.y <= univ.town.monst[m_num].y_width - 1))
-		return true;
-	return false;
-	
-}
-size_t monst_there(location where) { // returns 90 if no
-	short i;
-	
-	for(i = 0; i < univ.town.monst.size(); i++)
-		if((univ.town.monst[i].active != 0) && (monst_on_space(where,i)))
-			return i;
-	return univ.town.monst.size();
-}
 bool monst_can_be_there(location loc,short m_num) {
 	short i,j;
 	location destination;
@@ -579,8 +559,7 @@ location push_loc(location from_where,location to_where) {
 	if(sight_obscurity(loc_to_try.x,loc_to_try.y) > 0 ||
 	   univ.scenario.ter_types[univ.town->terrain(loc_to_try.x,loc_to_try.y)].blockage != eTerObstruct::CLEAR ||
 	   (loc_off_act_area(loc_to_try)) ||
-	   (monst_there(loc_to_try) < 90) ||
-	   (pc_there(loc_to_try) < 6))
+	   univ.target_there(loc_to_try))
 		return from_where;
 	else return loc_to_try;
 }

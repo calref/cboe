@@ -344,7 +344,8 @@ void cPlayer::heal(int amt) {
 	cur_health += amt;
 	if(cur_health > max_health)
 		cur_health = max_health;
-	
+	if(cur_health < 0)
+		cur_health = 0;
 }
 
 void cPlayer::cure(int amt) {
@@ -518,6 +519,8 @@ void cPlayer::restore_sp(int amt) {
 	cur_sp += amt;
 	if(cur_sp > max_sp)
 		cur_sp = max_sp;
+	if(cur_sp < 0)
+		cur_sp = 0;
 }
 
 void award_party_xp(short amt) {
@@ -822,7 +825,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 	current_spell_range = 8;
 	store_mage = spell_num;
 	
-	adj = stat_adj(who_cast,eSkill::INTELLIGENCE);
+	adj = univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
 	
 	switch(spell_num) {
 		case eSpell::LIGHT:
@@ -860,7 +863,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_WEAK:
-			store = univ.party[who_cast].level / 5 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,2);
+			store = univ.party[pc_num].level / 5 + adj / 3 + get_ran(1,0,2);
 			j = minmax(1,7,store);
 			r1 = get_summon_monster(1); ////
 			if(r1 < 0) break;
@@ -872,7 +875,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON:
-			store = univ.party[who_cast].level / 7 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,1);
+			store = univ.party[pc_num].level / 7 + adj / 3 + get_ran(1,0,1);
 			j = minmax(1,6,store);
 			r1 = get_summon_monster(2); ////
 			if(r1 < 0) break;
@@ -884,19 +887,19 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_MAJOR:
-			store = univ.party[who_cast].level / 10 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,1);
+			store = univ.party[pc_num].level / 10 + adj / 3 + get_ran(1,0,1);
 			j = minmax(1,5,store);
 			r1 = get_summon_monster(3); ////
 			if(r1 < 0) break;
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			store = get_ran(7,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
+			store = get_ran(7,1,4) + adj;
 			for(i = 0; i < j; i++)
 				if(!summon_monster(r1,where,store,2))
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::DEMON:
-			store = get_ran(5,1,4) + 2 * stat_adj(who_cast,eSkill::INTELLIGENCE);
+			store = get_ran(5,1,4) + 2 * adj;
 			if(!summon_monster(85,where,store,2))
 				add_string_to_buf("  Summon failed.");
 			else if(!freebie)
@@ -975,15 +978,15 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			if(target < 6 && !freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			if(spell_num == eSpell::PROTECTION && target < 6) {
-				univ.party[target].status[eStatus::INVULNERABLE] += 2 + stat_adj(pc_num,eSkill::INTELLIGENCE) + get_ran(2,1,2);
+				univ.party[target].status[eStatus::INVULNERABLE] += 2 + adj + get_ran(2,1,2);
 				for(i = 0; i < 6; i++)
 					if(univ.party[i].main_status == eMainStatus::ALIVE) {
-						univ.party[i].status[eStatus::MAGIC_RESISTANCE] += 4 + univ.party[pc_num].level / 3 + stat_adj(pc_num,eSkill::INTELLIGENCE);
+						univ.party[i].status[eStatus::MAGIC_RESISTANCE] += 4 + univ.party[pc_num].level / 3 + adj;
 					}
 				add_string_to_buf("  Party protected.");
 			}
 			if(spell_num == eSpell::RESIST_MAGIC && target < 6) {
-				univ.party[target].status[eStatus::MAGIC_RESISTANCE] += 2 + stat_adj(pc_num,eSkill::INTELLIGENCE) + get_ran(2,1,2);
+				univ.party[target].status[eStatus::MAGIC_RESISTANCE] += 2 + adj + get_ran(2,1,2);
 				add_string_to_buf("  " + univ.party[target].name + " protected.");
 			}
 			break;
@@ -999,7 +1002,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	
 	where = univ.town.p_loc;
 	
-	adj = stat_adj(pc_num,eSkill::INTELLIGENCE);
+	adj = univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
 	
 	play_sound(24);
 	current_spell_range = 8;
@@ -1028,7 +1031,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::MANNA_MINOR: case eSpell::MANNA:
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			store = univ.party[pc_num].level / 3 + 2 * stat_adj(who_cast,eSkill::INTELLIGENCE) + get_ran(2,1,4);
+			store = univ.party[pc_num].level / 3 + 2 * adj + get_ran(2,1,4);
 			r1 = max(0,store);
 			if(spell_num == eSpell::MANNA_MINOR)
 				r1 = r1 / 3;
@@ -1048,8 +1051,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::SUMMON_SPIRIT:
-			store = stat_adj(who_cast,eSkill::INTELLIGENCE);
-			if(!summon_monster(125,where,get_ran(2,1,4) + store,2))
+			if(!summon_monster(125,where,get_ran(2,1,4) + adj,2))
 				add_string_to_buf("  Summon failed.");
 			else if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
@@ -1057,10 +1059,10 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::STICKS_TO_SNAKES:
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			r1 = univ.party[who_cast].level / 6 + stat_adj(who_cast,eSkill::INTELLIGENCE) / 3 + get_ran(1,0,1);
+			r1 = univ.party[pc_num].level / 6 + adj / 3 + get_ran(1,0,1);
 			for(i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
-				store = get_ran(2,1,5) + stat_adj(who_cast,eSkill::INTELLIGENCE);
+				store = get_ran(2,1,5) + adj;
 				if(!summon_monster((r2 == 1) ? 100 : 99,where,store,2 ))
 					add_string_to_buf("  Summon failed.");
 			}
@@ -1068,17 +1070,17 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::SUMMON_HOST:
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			store = get_ran(2,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
+			store = get_ran(2,1,4) + adj;
 			if(!summon_monster(126,where,store,2))
 				add_string_to_buf("  Summon failed.");
 			for(i = 0; i < 4; i++)	{
-				store = get_ran(2,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
+				store = get_ran(2,1,4) + adj;
 				if(!summon_monster(125,where,store,2))
 					add_string_to_buf("  Summon failed.");
 			}
 			break;
 		case eSpell::SUMMON_GUARDIAN:
-			store = get_ran(6,1,4) + stat_adj(who_cast,eSkill::INTELLIGENCE);
+			store = get_ran(6,1,4) + adj;
 			if(!summon_monster(122,where,store,2))
 				add_string_to_buf("  Summon failed.");
 			else if(!freebie)
@@ -1167,7 +1169,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 						
 					case eSpell::POISON_WEAKEN: case eSpell::POISON_CURE:
 						sout << " cured.";
-						r1 = ((spell_num == eSpell::POISON_WEAKEN) ? 1 : 3) + get_ran(1,0,2) + stat_adj(pc_num,eSkill::INTELLIGENCE) / 2;
+						r1 = ((spell_num == eSpell::POISON_WEAKEN) ? 1 : 3) + get_ran(1,0,2) + adj / 2;
 						univ.party[target].cure(r1);
 						break;
 						
@@ -1190,13 +1192,13 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 						
 					case eSpell::DISEASE_CURE:
 						sout << " recovers.";
-						r1 = 2 + get_ran(1,0,2) + stat_adj(pc_num,eSkill::INTELLIGENCE) / 2;
+						r1 = 2 + get_ran(1,0,2) + adj / 2;
 						univ.party[target].status[eStatus::DISEASE] = max(0,univ.party[target].status[eStatus::DISEASE] - r1);
 						break;
 						
 					case eSpell::RESTORE_MIND:
 						sout << " restored.";
-						r1 = 1 + get_ran(1,0,2) + stat_adj(pc_num,eSkill::INTELLIGENCE) / 2;
+						r1 = 1 + get_ran(1,0,2) + adj / 2;
 						univ.party[target].status[eStatus::DUMB] = max(0,univ.party[target].status[eStatus::DUMB] - r1);
 						break;
 						
@@ -1266,7 +1268,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 				} else if(spell_num == eSpell::CURSE_REMOVE) {
 					for(i = 0; i < 24; i++)
 						if(univ.party[target].items[i].cursed){
-							r1 = get_ran(1,0,200) - 10 * stat_adj(pc_num,eSkill::INTELLIGENCE);
+							r1 = get_ran(1,0,200) - 10 * adj;
 							if(r1 < 60) {
 								univ.party[target].items[i].cursed = univ.party[target].items[i].unsellable = false;
 							}
@@ -1346,7 +1348,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			add_string_to_buf("  Party cured.");
-			univ.party.cure(3 + stat_adj(pc_num,eSkill::INTELLIGENCE));
+			univ.party.cure(3 + adj);
 			break;
 			
 		case eSpell::SANCTUARY_MASS: case eSpell::CLEANSE_MAJOR: case eSpell::HYPERACTIVITY:
@@ -1361,7 +1363,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if(spell_num == eSpell::SANCTUARY_MASS) {
-						store = get_ran(0,1,3) + univ.party[pc_num].level / 6 + stat_adj(pc_num,eSkill::INTELLIGENCE);
+						store = get_ran(0,1,3) + univ.party[pc_num].level / 6 + adj;
 						r1 = max(0,store);
 						univ.party[i].status[eStatus::INVISIBLE] += r1;
 					}
@@ -1372,7 +1374,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					if(spell_num == eSpell::HYPERACTIVITY) {
 						// Looks like this isn't clipped to a positive number. (That's probably intentional.)
 						// TODO: So, should a status icon be added for negative levels of sleep?
-						univ.party[i].status[eStatus::ASLEEP] -= 6 + 2 * stat_adj(pc_num,eSkill::INTELLIGENCE);
+						univ.party[i].status[eStatus::ASLEEP] -= 6 + 2 * adj;
 						univ.party[i].status[eStatus::HASTE_SLOW] = max(0,univ.party[i].status[eStatus::HASTE_SLOW]);
 					}
 				}
@@ -1390,7 +1392,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 
 extern short spell_caster;
 void cast_town_spell(location where) {
-	short adjust,r1,targ,store;
+	short adjust,r1,store;
 	location loc;
 	ter_num_t ter;
 	
@@ -1406,6 +1408,7 @@ void cast_town_spell(location where) {
 	if(!spell_freebie)
 		univ.party[who_cast].cur_sp -= (*town_spell).cost;
 	ter = univ.town->terrain(where.x,where.y);
+	short adj = univ.party[who_cast].stat_adj(eSkill::INTELLIGENCE);
 	
 	// TODO: Should we do this here? Or in the handling of targeting modes?
 	// (It really depends whether we want to be able to trigger it for targeting something other than a spell.)
@@ -1416,18 +1419,18 @@ void cast_town_spell(location where) {
 		add_string_to_buf("  Can't see target.       ");
 	else switch(town_spell) {
 		case eSpell::NONE: // Not a spell but a special node targeting
-			run_special(eSpecCtx::TARGET, 2, spell_caster, where, &r1, &targ, &store);
+			run_special(eSpecCtx::TARGET, 2, spell_caster, where, &r1, &adjust, &store);
 			if(store > 0) redraw_screen(REFRESH_ALL);
 			break;
 		case eSpell::SCRY_MONSTER: case eSpell::CAPTURE_SOUL:
-			targ = monst_there(where);
-			if(targ < univ.town.monst.size()) {
+			if(iLiving* targ = univ.target_there(where, TARG_MONST)) {
+				cCreature* monst = dynamic_cast<cCreature*>(targ);
 				if(town_spell == eSpell::SCRY_MONSTER) {
-					univ.party.m_noted[univ.town.monst[targ].number] = true;
+					univ.party.m_noted[monst->number] = true;
 					adjust_monst_menu();
-					display_monst(0,&univ.town.monst[targ],0);
+					display_monst(0,monst,0);
 				}
-				else record_monst(&univ.town.monst[targ]);
+				else record_monst(monst);
 			}
 			else add_string_to_buf("  No monster there.");
 			break;
@@ -1443,7 +1446,7 @@ void cast_town_spell(location where) {
 			update_explored(univ.town.p_loc);
 			break;
 		case eSpell::BARRIER_FIRE:
-			if(sight_obscurity(where.x,where.y) == 5 || monst_there(where) < 90) {
+			if(sight_obscurity(where.x,where.y) == 5 || univ.target_there(where, TARG_MONST)) {
 				add_string_to_buf("  Target space obstructed.");
 				break;
 			}
@@ -1453,7 +1456,7 @@ void cast_town_spell(location where) {
 			else add_string_to_buf("  Failed.");
 			break;
 		case eSpell::BARRIER_FORCE:
-			if(sight_obscurity(where.x,where.y) == 5 || monst_there(where) < 90) {
+			if(sight_obscurity(where.x,where.y) == 5 || univ.target_there(where, TARG_MONST)) {
 				add_string_to_buf("  Target space obstructed.");
 				break;
 			}
@@ -1488,7 +1491,7 @@ void cast_town_spell(location where) {
 				if(univ.scenario.ter_types[ter].flag2.u == 10)
 					r1 = 10000;
 				else{
-					r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,eSkill::INTELLIGENCE) + 5 * univ.town.difficulty;
+					r1 = get_ran(1,1,100) - 5 * adj + 5 * univ.town.difficulty;
 					r1 += univ.scenario.ter_types[ter].flag2.u * 7;
 				}
 				if(r1 < (135 - combat_percent[min(19,univ.party[who_cast].level)])) {
@@ -1506,7 +1509,7 @@ void cast_town_spell(location where) {
 			
 		case eSpell::DISPEL_BARRIER:
 			if((univ.town.is_fire_barr(where.x,where.y)) || (univ.town.is_force_barr(where.x,where.y))) {
-				r1 = get_ran(1,1,100) - 5 * stat_adj(who_cast,eSkill::INTELLIGENCE) + 5 * (univ.town.difficulty / 10);
+				r1 = get_ran(1,1,100) - 5 * adj + 5 * (univ.town.difficulty / 10);
 				if(univ.town.is_fire_barr(where.x,where.y))
 					r1 -= 8;
 				if(r1 < (120 - combat_percent[min(19,univ.party[who_cast].level)])) {
@@ -2212,22 +2215,20 @@ void print_spell_cast(eSpell spell,eSkill which) {
 	add_string_to_buf("Spell: " + name);
 }
 
-short stat_adj(short pc_num,eSkill which) {
-	short tr;
-	
+short cPlayer::stat_adj(eSkill which) const {
 	// This is one place where we use the base skill level instead of the adjusted skill level
 	// Using the adjusted skill level here would alter the original mechanics of stat-boosting items
-	tr = skill_bonus[univ.party[pc_num].skills[which]];
+	short tr = skill_bonus[skills[which]];
 	if(which == eSkill::INTELLIGENCE) {
-		if(univ.party[pc_num].traits[eTrait::MAGICALLY_APT])
+		if(traits[eTrait::MAGICALLY_APT])
 			tr++;
 	}
 	if(which == eSkill::STRENGTH) {
-		if(univ.party[pc_num].traits[eTrait::STRENGTH])
+		if(traits[eTrait::STRENGTH])
 			tr++;
 	}
 	// TODO: Use ability strength?
-	if(univ.party[pc_num].has_abil_equip(eItemAbil::BOOST_STAT,int(which)) < 24)
+	if(has_abil_equip(eItemAbil::BOOST_STAT,int(which)) < 24)
 		tr++;
 	return tr;
 }
@@ -2480,10 +2481,11 @@ void cPlayer::poison(int how_much) {
 	put_pc_screen();
 }
 
-void void_sanctuary(short pc_num) {
-	if(univ.party[pc_num].status[eStatus::INVISIBLE] > 0) {
-		add_string_to_buf("You become visible!");
-		univ.party[pc_num].status[eStatus::INVISIBLE] = 0;
+void iLiving::void_sanctuary() {
+	if(status[eStatus::INVISIBLE] > 0) {
+		if(dynamic_cast<cPlayer*const>(this))
+			add_string_to_buf("You become visible!");
+		status[eStatus::INVISIBLE] = 0;
 	}
 }
 

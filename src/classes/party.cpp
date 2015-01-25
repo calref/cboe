@@ -275,6 +275,10 @@ bool cParty::is_alive() const {
 	return false;
 }
 
+bool cParty::is_friendly() const {
+	return true;
+}
+
 bool cParty::is_shielded() const {
 	return false;
 }
@@ -965,7 +969,7 @@ bool cParty::end_split(snd_num_t noise) {
 	return true;
 }
 
-short cParty::pc_present() const {
+iLiving& cParty::pc_present() const {
 	short ret = 7;
 	for(int i = 0; i < 6; i++){
 		if(pc_present(i) && ret == 7)
@@ -973,8 +977,9 @@ short cParty::pc_present() const {
 		else if(pc_present(i) && ret < 6)
 			ret = 6;
 	}
-	if(ret == 7) ret = 6;
-	return ret;
+	if(ret >= 6)
+		return *const_cast<cParty*>(this);
+	return *adven[ret];
 }
 
 bool operator==(const cParty::cConvers& one, const cParty::cConvers& two) {

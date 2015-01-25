@@ -535,14 +535,14 @@ static void display_pc_info(cDialog& me, const short pc) {
 			else weap2 = i;
 		}
 	
-	hit_adj = stat_adj(pc,eSkill::DEXTERITY) * 5 - (total_encumberance(pc)) * 5
+	hit_adj = univ.party[pc].stat_adj(eSkill::DEXTERITY) * 5 - (total_encumberance(pc)) * 5
 		+ 5 * minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
 	if(!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2 < 24)
 		hit_adj -= 25;
 	
 	// TODO: These should check abil_data[0] instead of item_level
 	// TODO: Perhaps dam_adj and hit_adj calculation should be moved into a function somewhere?
-	dam_adj = stat_adj(pc,eSkill::STRENGTH) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
+	dam_adj = univ.party[pc].stat_adj(eSkill::STRENGTH) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
 	if((skill_item = univ.party[pc].has_abil_equip(eItemAbil::SKILL)) < 24) {
 		hit_adj += 5 * (univ.party[pc].items[skill_item].item_level / 2 + 1);
 		dam_adj += univ.party[pc].items[skill_item].item_level / 2;

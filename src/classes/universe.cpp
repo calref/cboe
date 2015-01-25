@@ -927,6 +927,30 @@ void cUniverse::check_item(cItem& item) {
 	}
 }
 
+// This attempts to find the index of a living entity in the party or town, using pointer arithmetic
+// Assuming success, the two get_target() calls are a round-trip
+// Returns maxint on failure (which could happen eg with a stored PC or a monster from a saved town)
+size_t cUniverse::get_target_i(iLiving& who) {
+	if(dynamic_cast<cParty*>(&who))
+		return 6;
+	else if(cPlayer* check = dynamic_cast<cPlayer*>(&who)) {
+		cPlayer* first = &party[0];
+		cPlayer* last = &party[5];
+		if(check >= first && check <= last)
+			return check - first;
+	} else if(cCreature* check = dynamic_cast<cCreature*>(&who)) {
+		size_t num_monst = town.monst.size();
+		cCreature* first = &town.monst[0];
+		cCreature* last = &town.monst[num_monst-1];
+		if(check >= first && check <= last)
+			return check - first + 100;
+	}
+	return -1;
+}
+
+// TODO: Both of these have an issue that they'll return garbage if called outdoors
+// It's less of a problem with target_there since that should never actually be called outdoors,
+// but get_target would be called by "affect PC" special nodes which could be run outdoors.
 iLiving& cUniverse::get_target(size_t which) {
 	size_t maxint = -1;
 	if(which == maxint || which == 6)
@@ -936,6 +960,20 @@ iLiving& cUniverse::get_target(size_t which) {
 	else if(which >= 100 && which < 100 + town.monst.size())
 		return town.monst[which - 100];
 	else throw std::string("Tried to get nonexistent target!");
+}
+
+iLiving* cUniverse::target_there(location where, eTargetType type) {
+	if(type == TARG_ANY || type == TARG_PC) {
+		for(int i = 0; i < 6; i++)
+			if(party[i].is_alive() && where == party[i].get_loc())
+				return &party[i];
+	}
+	if(type == TARG_ANY || type == TARG_MONST) {
+		for(size_t i = 0; i < town.monst.size(); i++)
+			if(town.monst[i].is_alive() && town.monst[i].on_space(where))
+				return &town.monst[i];
+	}
+	return nullptr;
 }
 
 extern cCustomGraphics spec_scen_g;

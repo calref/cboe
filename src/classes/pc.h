@@ -51,9 +51,11 @@ public:
 	// transient stuff
 	std::map<eSkill,eSpell> last_cast;
 	location combat_pos;
-	short parry, last_attacked;
+	short parry;
+	iLiving* last_attacked = nullptr; // Note: Currently this is assigned but never read
 	
 	bool is_alive() const;
+	bool is_friendly() const;
 	bool is_shielded() const;
 	int get_shared_dmg(int base_dmg) const;
 	
@@ -93,6 +95,7 @@ public:
 	short has_abil_equip(eItemAbil abil, short dat = -1) const;
 	short has_abil(eItemAbil abil, short dat = -1) const;
 	short skill(eSkill skill) const;
+	short stat_adj(eSkill skill) const;
 	eBuyStatus ok_to_buy(short cost,cItem item) const;
 	
 	void append(legacy::pc_record_type old);

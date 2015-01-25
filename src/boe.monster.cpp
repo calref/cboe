@@ -732,7 +732,7 @@ location find_clear_spot(location from_where,short mode) {
 		loc.y = loc.y + r1;
 		if(!loc_off_act_area(loc) && !is_blocked(loc)
 			&& can_see_light(from_where,loc,combat_obscurity) == 0
-			&& (!(is_combat()) || (pc_there(loc) == 6))
+			&& (!is_combat() || univ.target_there(loc,TARG_PC) == nullptr)
 			&& (!(is_town()) || (loc != univ.town.p_loc))
 			&& (!(univ.town.fields[loc.x][loc.y] & blocking_fields))) {
 			if((mode == 0) || ((mode == 1) && (adjacent(from_where,loc))))
@@ -741,15 +741,6 @@ location find_clear_spot(location from_where,short mode) {
 		}
 	}
 	return store_loc;
-}
-
-short pc_there(location where) {
-	short i;
-	
-	for(i = 0; i < 6; i++)
-		if(where == univ.party[i].combat_pos && univ.party[i].main_status == eMainStatus::ALIVE)
-			return i;
-	return 6;
 }
 
 location random_shift(location start) {
@@ -819,19 +810,19 @@ void monst_inflict_fields(short which_monst) {
 				// TODO: If the goal is to damage the monster by any fields it's on, why all the break statements?
 				if(univ.town.is_quickfire(where_check.x,where_check.y)) {
 					r1 = get_ran(2,1,8);
-					damage_monst(which_monst,7,r1,0,eDamageType::FIRE,0);
+					damage_monst(which_monst,7,r1,eDamageType::FIRE,0);
 					break;
 				}
 				if(univ.town.is_blade_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(6,1,8);
 					if(have_radiate && which_radiate != eFieldType::WALL_BLADES)
-						damage_monst(which_monst,7,r1,0,eDamageType::WEAPON,0);
+						damage_monst(which_monst,7,r1,eDamageType::WEAPON,0);
 					break;
 				}
 				if(univ.town.is_force_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(3,1,6);
 					if(have_radiate && which_radiate != eFieldType::WALL_FORCE)
-						damage_monst(which_monst,7,r1,0,eDamageType::MAGIC,0);
+						damage_monst(which_monst,7,r1,eDamageType::MAGIC,0);
 					break;
 				}
 				if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
@@ -842,7 +833,7 @@ void monst_inflict_fields(short which_monst) {
 				if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(3,1,6);
 					if(have_radiate && which_radiate != eFieldType::WALL_ICE)
-						damage_monst(which_monst,7,r1,0,eDamageType::COLD,0);
+						damage_monst(which_monst,7,r1,eDamageType::COLD,0);
 					break;
 				}
 				if(univ.town.is_scloud(where_check.x,where_check.y)) {
@@ -861,7 +852,7 @@ void monst_inflict_fields(short which_monst) {
 				if(univ.town.is_fire_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(2,1,6);
 					if(have_radiate && which_radiate != eFieldType::WALL_FIRE)
-						damage_monst(which_monst,7,r1,0,eDamageType::FIRE,0);
+						damage_monst(which_monst,7,r1,eDamageType::FIRE,0);
 					break;
 				}
 				if(univ.town.is_force_cage(where_check.x,where_check.y))
@@ -883,7 +874,7 @@ void monst_inflict_fields(short which_monst) {
 				univ.town.set_barrel(where_check.x,where_check.y,false);
 				if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 					r1 = get_ran(2,1,10);
-					damage_monst(which_monst,7,r1,0,eDamageType::FIRE,0);
+					damage_monst(which_monst,7,r1,eDamageType::FIRE,0);
 				}
 			}
 	
@@ -1273,19 +1264,18 @@ short place_monster(mon_num_t which,location where) {
 // to put monster
 bool summon_monster(mon_num_t which,location where,short duration,short given_attitude) {
 	location loc;
-	short which_m,spot;
+	short spot;
 	
 	if(which <= 0) return false;
 	
 	if((is_town()) || (monsters_going)) {
-		which_m = monst_there(where);
 		loc = find_clear_spot(where,0);
 		if(loc.x == 0)
 			return false;
 	}
 	else {
 		// pc may be summoning using item, in which case where will be pc's space, so fix
-		if(pc_there(where) < 6) {
+		if(univ.target_there(where, TARG_PC)) {
 			where = find_clear_spot(where,0);
 			if(where.x == 0)
 				return false;

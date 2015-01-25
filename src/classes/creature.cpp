@@ -91,6 +91,8 @@ void cCreature::heal(int amt) {
 	health += amt;
 	if(health > m_health)
 		health = m_health;
+	if(health < 0)
+		health = 0;
 }
 
 void cCreature::cure(int amt) {
@@ -105,6 +107,7 @@ void cCreature::restore_sp(int amt) {
 	mp += amt;
 	if(mp > max_mp)
 		mp = max_mp;
+	if(mp < 0) mp = 0;
 }
 
 void cCreature::drain_sp(int drain) {
@@ -121,6 +124,10 @@ void cCreature::drain_sp(int drain) {
 
 bool cCreature::is_alive() const {
 	return active > 0;
+}
+
+bool cCreature::is_friendly() const {
+	return attitude % 2 == 0;
 }
 
 location cCreature::get_loc() const {
@@ -168,6 +175,13 @@ int cCreature::get_magic() const {
 
 int cCreature::get_level() const {
 	return level;
+}
+
+bool cCreature::on_space(location loc) const {
+	if(loc.x - cur_loc.x >= 0 && loc.x - cur_loc.x <= x_width - 1 &&
+	   loc.y - cur_loc.y >= 0 && loc.y - cur_loc.y <= y_width - 1)
+		return true;
+	return false;
 }
 
 void cCreature::writeTo(std::ostream& file) const {
