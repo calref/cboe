@@ -351,7 +351,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	
 	for(i = 0; i < 6; i++) {
 		univ.party[i].parry = 0;
-		univ.party[i].last_attacked = univ.town.monst.size() + 10;
+		univ.party[i].last_attacked = univ.town.monst.size() + 100;
 	}
 	
 	univ.town.items.clear();
@@ -374,10 +374,11 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 
 bool pc_combat_move(location destination) {
 	std::string create_line;
-	short dir,monst_hit,s1,s2,i,monst_exist,switch_pc;
+	short monst_hit,s1,s2,i,monst_exist,switch_pc;
 	bool keep_going = true,forced = false,check_f = false;
 	location monst_loc,store_loc;
 	short spec_num;
+	eDirection dir;
 	
 	monst_hit = monst_there(destination);
 	
@@ -430,8 +431,8 @@ bool pc_combat_move(location destination) {
 			if((s2 == 2) && (s1 % 2 != 1))
 				make_town_hostile();
 			if(s2 == 2) {
-				univ.party[current_pc].last_attacked = monst_hit;
-				pc_attack(current_pc,monst_hit);
+				univ.party[current_pc].last_attacked = 100 + monst_hit;
+				pc_attack(current_pc,100 + monst_hit);
 				return true;
 			}
 		}
@@ -476,7 +477,6 @@ bool pc_combat_move(location destination) {
 			
 			// move if still alive
 			if(univ.party[current_pc].main_status == eMainStatus::ALIVE) {
-				univ.party[current_pc].dir = set_direction(univ.party[current_pc].combat_pos,destination);
 				univ.party[current_pc].combat_pos = destination;
 				univ.party[current_pc].direction = dir;
 				take_ap(1);
@@ -512,7 +512,6 @@ void char_stand_ready() {
 
 void pc_attack(short who_att,short target) {
 	short r1,r2,weap1 = 24, weap2 = 24,i,store_hp,skill_item;
-	cCreature *which_m;
 	short hit_adj, dam_adj;
 	
 	// slice out bad attacks
@@ -522,7 +521,7 @@ void pc_attack(short who_att,short target) {
 		return;
 	
 	univ.party[who_att].last_attacked = target;
-	which_m = &univ.town.monst[target];
+	iLiving& which_m = univ.get_target(target);
 	
 	for(i = 0; i < 24; i++)
 		if(((univ.party[who_att].items[i].variety == eItemType::ONE_HANDED) || (univ.party[who_att].items[i].variety == eItemType::TWO_HANDED)) &&
@@ -532,13 +531,13 @@ void pc_attack(short who_att,short target) {
 			else weap2 = i;
 		}
 	
-	hit_adj = (-5 * minmax(-8,8,univ.party[who_att].status[eStatus::BLESS_CURSE])) + 5 * minmax(-8,8,which_m->status[eStatus::BLESS_CURSE])
+	hit_adj = (-5 * minmax(-8,8,univ.party[who_att].status[eStatus::BLESS_CURSE])) + 5 * minmax(-8,8,which_m.status[eStatus::BLESS_CURSE])
 		- stat_adj(who_att,eSkill::DEXTERITY) * 5 + (get_encumberance(who_att)) * 5;
 	
-	dam_adj = minmax(-8,8,univ.party[who_att].status[eStatus::BLESS_CURSE]) - minmax(-8,8,which_m->status[eStatus::BLESS_CURSE])
+	dam_adj = minmax(-8,8,univ.party[who_att].status[eStatus::BLESS_CURSE]) - minmax(-8,8,which_m.status[eStatus::BLESS_CURSE])
 		+ stat_adj(who_att,eSkill::STRENGTH);
 	
-	if(which_m->status[eStatus::ASLEEP] > 0 || which_m->status[eStatus::PARALYZED] > 0) {
+	if(which_m.status[eStatus::ASLEEP] > 0 || which_m.status[eStatus::PARALYZED] > 0) {
 		hit_adj -= 80;
 		dam_adj += 10;
 	}
@@ -555,7 +554,7 @@ void pc_attack(short who_att,short target) {
 	
 	void_sanctuary(who_att);
 	
-	store_hp = univ.town.monst[target].health;
+	store_hp = which_m.get_health();
 	
 	combat_posing_monster = current_working_monster = who_att;
 	
@@ -568,7 +567,7 @@ void pc_attack(short who_att,short target) {
 		r2 = get_ran(1,1,4) + dam_adj;
 		
 		if(r1 <= hit_chance[univ.party[who_att].skill(eSkill::DEXTERITY)]) {
-			damage_monst(target, who_att, r2, 0,eDamageType::WEAPON,4);
+			damage_monst(target - 100, who_att, r2, 0,eDamageType::WEAPON,4);
 		}
 		else {
 			draw_terrain(2);
@@ -582,19 +581,14 @@ void pc_attack(short who_att,short target) {
 	short weap_poisoned = univ.party[who_att].weap_poisoned;
 	if(weap1 < 24)
 		pc_attack_weapon(who_att, target, hit_adj, dam_adj, univ.party[who_att].items[weap1],weap2 < 24 ? 2 : 1,weap_poisoned == weap1);
-	if(weap2 < 24 && which_m->active > 0)
+	if(weap2 < 24 && which_m.is_alive())
 		pc_attack_weapon(who_att, target, hit_adj, dam_adj, univ.party[who_att].items[weap2],0,weap_poisoned == weap2);
 	move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
 	take_ap(4);
 	
-	if(store_hp - univ.town.monst[target].health > 0) {
-		cCreature& who = univ.town.monst[target];
-		if(who.status[eStatus::MARTYRS_SHIELD] > 0 || (who.abil[eMonstAbil::MARTYRS_SHIELD].active && get_ran(1,1,1000) <= who.abil[eMonstAbil::MARTYRS_SHIELD].special.extra1)) {
-			int how_much = store_hp - who.health;
-			if(who.abil[eMonstAbil::MARTYRS_SHIELD].active) {
-				how_much *= who.abil[eMonstAbil::MARTYRS_SHIELD].special.extra2;
-				how_much /= 100;
-			}
+	if(store_hp - which_m.get_health() > 0) {
+		if(which_m.is_shielded()) {
+			int how_much = which_m.get_shared_dmg(store_hp - which_m.get_health());
 			add_string_to_buf("  Shares damage!   ");
 			damage_pc(who_att, how_much, eDamageType::MAGIC,eRace::UNKNOWN,0);
 		}
@@ -603,8 +597,7 @@ void pc_attack(short who_att,short target) {
 }
 
 static void apply_weapon_status(eStatus status, int how_much, int dmg, int who, std::string weap_type) {
-	cCreature* which_m;
-	if(who >= 100) which_m = &univ.town.monst[who - 100];
+	iLiving& which_m = univ.get_target(who);
 	switch(status) {
 			// TODO: It should be possible to make monsters support magic resistance and invulnerability, at least.
 			// Maybe also poisoned weapon and invisibility.
@@ -612,84 +605,70 @@ static void apply_weapon_status(eStatus status, int how_much, int dmg, int who, 
 		case eStatus::INVISIBLE:
 			if(who >= 100) break; // Not supported by monsters
 			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
-			univ.party[who].apply_status(eStatus::INVISIBLE, how_much / -2);
+			which_m.apply_status(eStatus::INVISIBLE, how_much / -2);
 			break;
 		case eStatus::MAGIC_RESISTANCE:
 			if(who >= 100) break; // Not supported by monsters
 			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
-			univ.party[who].apply_status(eStatus::MAGIC_RESISTANCE, how_much / -2);
+			which_m.apply_status(eStatus::MAGIC_RESISTANCE, how_much / -2);
 			break;
 		case eStatus::INVULNERABLE:
 			if(who >= 100) break; // Not supported by monsters
 			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
-			univ.party[who].apply_status(eStatus::INVULNERABLE, how_much / -2);
+			which_m.apply_status(eStatus::INVULNERABLE, how_much / -2);
 			break;
 		case eStatus::POISONED_WEAPON:
 			if(who >= 100) break; // Not supported by monsters
 			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
-			univ.party[who].apply_status(eStatus::POISONED_WEAPON, how_much / -2);
+			which_m.apply_status(eStatus::POISONED_WEAPON, how_much / -2);
 			break;
 		case eStatus::POISON:
 			add_string_to_buf("  " + weap_type + " drips venom.");
-			if(who < 6) poison_pc(who, how_much / 2);
-			else poison_monst(which_m, how_much / 2);
+			which_m.poison(how_much / 2);
 			break;
 		case eStatus::ACID:
 			add_string_to_buf("  " + weap_type + " drips acid.");
-			if(who < 6) acid_pc(who, how_much / 2);
-			else acid_monst(which_m, how_much / 2);
+			which_m.acid(how_much / 2);
 			break;
 		case eStatus::BLESS_CURSE:
 			add_string_to_buf("  " + weap_type + " leaks a dark aura.");
-			if(who < 6) curse_pc(who, how_much / 2);
-			else curse_monst(which_m, how_much / 2);
+			which_m.curse(how_much / 2);
 			break;
 		case eStatus::HASTE_SLOW:
 			add_string_to_buf("  " + weap_type + " leaks a smoky aura.");
-			if(who < 6) slow_pc(who, how_much / 2);
-			else slow_monst(which_m, how_much / 2);
+			which_m.slow(how_much / 2);
 			break;
 		case eStatus::WEBS:
 			add_string_to_buf("  " + weap_type + " drips goo.");
-			if(who < 6) web_pc(who, how_much / 1);
-			else web_monst(which_m, how_much / 2);
+			which_m.web(how_much / 2);
 			break;
 		case eStatus::DISEASE:
 			add_string_to_buf("  " + weap_type + " drips bile.");
-			if(who < 6) disease_pc(who, how_much / 2);
-			else disease_monst(which_m, how_much / 2);
+			which_m.disease(how_much / 2);
 			break;
 		case eStatus::DUMB:
 			add_string_to_buf("  " + weap_type + " leaks a misty aura.");
-			if(who < 6) dumbfound_pc(who, how_much / 2);
-			else dumbfound_monst(which_m, how_much / 2);
+			which_m.dumbfound(how_much / 2);
 			break;
 		case eStatus::ASLEEP:
 			add_string_to_buf("  " + weap_type + " emits coruscating lights.");
-			if(who < 6) sleep_pc(who, how_much / 2, eStatus::ASLEEP, 20 + dmg);
-			else charm_monst(which_m, 20 + dmg, eStatus::ASLEEP, how_much / 2);
+			which_m.sleep(eStatus::ASLEEP, how_much / 2, 20 + dmg);
 			break;
 		case eStatus::PARALYZED:
 			add_string_to_buf("  " + weap_type + " emits a purple flash.");
-			if(who < 6) sleep_pc(who, how_much / 2, eStatus::PARALYZED, 20 + dmg);
-			else charm_monst(which_m, 20 + dmg, eStatus::PARALYZED, how_much / 2);
+			which_m.sleep(eStatus::PARALYZED, how_much / 2, 20 + dmg);
 			break;
 		case eStatus::CHARM:
-			if(who < 6) break;
 			add_string_to_buf("  " + weap_type + " leaks a bright aura.");
-			// Higher penalty means more likely to resist.
-			charm_monst(which_m, 20 + dmg - how_much / 2, eStatus::CHARM, 0);
+			which_m.sleep(eStatus::CHARM, 0, 20 + dmg - how_much / 2);
 			break;
 		case eStatus::FORCECAGE:
 			add_string_to_buf("  " + weap_type + " emits a green flash.");
-			if(who < 6) sleep_pc(who, 0, eStatus::FORCECAGE, dmg - how_much / 2);
-			else charm_monst(which_m, dmg - how_much / 2, eStatus::FORCECAGE, 0);
+			which_m.sleep(eStatus::FORCECAGE, 0, dmg - how_much / 2);
 			break;
 		case eStatus::MARTYRS_SHIELD:
 			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
-			if(who < 6) univ.party[who].apply_status(eStatus::MARTYRS_SHIELD, how_much / -2);
-			else which_m->status[eStatus::MARTYRS_SHIELD] -= how_much / 2;
-			// TODO: Maybe clip it to 0?
+			which_m.apply_status(eStatus::MARTYRS_SHIELD, how_much / -2);
 			break;
 	}
 }
@@ -697,7 +676,7 @@ static void apply_weapon_status(eStatus status, int how_much, int dmg, int who, 
 // primary: 0 - secondary weapon, 1 - primary (and only) weapon, 2 - primary of two weapons
 void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cItem& weap,short primary,bool do_poison) {
 	short r1, r2;
-	cCreature* which_m = &univ.town.monst[target];
+	iLiving& which_m = univ.get_target(target);
 	eSkill what_skill = weap.weap_type;
 	
 	// safety valve
@@ -732,7 +711,7 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 		else pause(5);
 		play_sound(5);
 		start_missile_anim();
-		place_spell_pattern(radius2, which_m->cur_loc, eDamageType(weap.abil_data[1]), weap.abil_data[0] * 2, who_att);
+		place_spell_pattern(radius2, which_m.get_loc(), eDamageType(weap.abil_data[1]), weap.abil_data[0] * 2, who_att);
 		do_explosion_anim(5,0);
 		end_missile_anim();
 		handle_marked_damage();
@@ -743,44 +722,47 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 		if(dmg_tp != eDamageType::UNBLOCKABLE)
 			std::swap(spec_dam, bonus_dam);
 		if(primary) {
+			bool splits = false;
+			if(cCreature* who = dynamic_cast<cCreature*>(&which_m))
+				splits = who->abil[eMonstAbil::SPLITS].active;
 			// assassinate
 			r1 = get_ran(1,1,100);
 			int assassin = univ.party[who_att].skill(eSkill::ASSASSINATION);
-			if((univ.party[who_att].level >= which_m->level - 1) && assassin >= which_m->level / 2
-				&& (!which_m->abil[eMonstAbil::SPLITS].active)) // Can't assassinate splitters
-				if(r1 < hit_chance[max(assassin - which_m->level,0)]) {
+			if((univ.party[who_att].level >= which_m.get_level() - 1) && assassin >= which_m.get_level() / 2
+				&& !splits) // Can't assassinate splitters
+				if(r1 < hit_chance[max(assassin - which_m.get_level(),0)]) {
 					add_string_to_buf("  You assassinate.");
 					spec_dam += r2;
 				}
 		}
 		if(weap.ability == eItemAbil::HEALING_WEAPON) {
 			ASB("  There is a flash of light.");
-			which_m->health = min(which_m->health + r2, which_m->m_health);
+			which_m.heal(r2);
 		} else switch(what_skill) {
 			case eSkill::EDGED_WEAPONS:
 				if(weap.item_level < 8)
-					damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON,1);
-				else damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON,2);
+					damage_monst(target - 100, who_att, r2, spec_dam, eDamageType::WEAPON,1);
+				else damage_monst(target - 100, who_att, r2, spec_dam, eDamageType::WEAPON,2);
 				break;
 			case eSkill::BASHING_WEAPONS:
-				damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON,4);
+				damage_monst(target - 100, who_att, r2, spec_dam, eDamageType::WEAPON,4);
 				break;
 			case eSkill::POLE_WEAPONS:
-				damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON,3);
+				damage_monst(target - 100, who_att, r2, spec_dam, eDamageType::WEAPON,3);
 				break;
 			default: // TODO: Not sure what sound to play for unconventional weapons, but let's just go with the generic "ouch" for now
-				damage_monst(target, who_att, r2, spec_dam, eDamageType::WEAPON, 0);
+				damage_monst(target - 100, who_att, r2, spec_dam, eDamageType::WEAPON, 0);
 				break;
 		}
 		if(bonus_dam)
-			damage_monst(target, who_att, bonus_dam, 0, dmg_tp, 0);
+			damage_monst(target - 100, who_att, bonus_dam, 0, dmg_tp, 0);
 		if(do_poison) {
 			// poison
 			if(univ.party[who_att].status[eStatus::POISONED_WEAPON] > 0) {
 				short poison_amt = univ.party[who_att].status[eStatus::POISONED_WEAPON];
 				if(univ.party[who_att].has_abil_equip(eItemAbil::POISON_AUGMENT) < 24)
 					poison_amt += 2;
-				poison_monst(which_m,poison_amt);
+				which_m.poison(poison_amt);
 				move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
 			}
 		}
@@ -788,27 +770,23 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 			apply_weapon_status(eStatus(weap.abil_data[1]), weap.abil_data[0], r2 + spec_dam, target + 100, "Blade");
 		} else if(weap.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 			add_string_to_buf("  Blade drains life.");
-			heal_pc(who_att,weap.abil_data[0] / 2);
-		} else if(weap.ability == eItemAbil::ANTIMAGIC_WEAPON && which_m->mu + which_m->cl > 0 && get_ran(1,0,1) == 1) {
-			short drain = weap.abil_data[0];
-			magic_adjust(which_m, &drain);
-			if(drain > 0) {
+			univ.party[who_att].heal(weap.abil_data[0] / 2);
+		} else if(weap.ability == eItemAbil::ANTIMAGIC_WEAPON) {
+			short before = which_m.get_magic();
+			which_m.drain_sp(weap.abil_data[0]);
+			if(before > which_m.get_magic()) {
 				add_string_to_buf("  Blade drains energy.");
-				if(which_m->mu > 0 && which_m->mp > 4)
-					drain = min(which_m->mp, drain / 3);
-				else if(which_m->cl > 0 && which_m->mp > 10)
-					drain = min(which_m->mp, drain / 2);
-				which_m->mp -= drain;
-				restore_sp_pc(who_att, drain / 3);
+				univ.party[who_att].restore_sp((before > which_m.get_magic()) / 3);
 			}
 		} else if(weap.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
 			short s1,s2,s3;
 			univ.party.force_ptr(21, 301, 5);
 			univ.party.force_ptr(22, 301, 6);
 			univ.party.force_ptr(20, 301, 7);
-			PSD[SDF_SPEC_TARGLOC_X] = which_m->cur_loc.x;
-			PSD[SDF_SPEC_TARGLOC_Y] = which_m->cur_loc.y;
-			PSD[SDF_SPEC_TARGET] = 100 + target; // ready to be passed to SELECT_TARGET node
+			PSD[SDF_SPEC_TARGLOC_X] = which_m.get_loc().x;
+			PSD[SDF_SPEC_TARGLOC_Y] = which_m.get_loc().y;
+			PSD[SDF_SPEC_TARGET] = target; // ready to be passed to SELECT_TARGET node
+			if(PSD[SDF_SPEC_TARGET] < 6) PSD[SDF_SPEC_TARGET] += 11;
 			run_special(eSpecCtx::ATTACKING_MELEE, 0, weap.abil_data[0],univ.party[who_att].combat_pos, &s1, &s2, &s3);
 		}
 	}
@@ -823,21 +801,25 @@ void pc_attack_weapon(short who_att,short target,short hit_adj,short dam_adj,cIt
 }
 
 
-short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,cCreature* monst,eDamageType& dmg_type) {
+short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,iLiving& monst,eDamageType& dmg_type) {
 	short store = 0;
 	
-	switch(abil) {
-		case eItemAbil::DAMAGING_WEAPON:
+	if(abil == eItemAbil::DAMAGING_WEAPON) {
 			store += get_ran(abil_str,1,6);
 			if(abil == eItemAbil::DAMAGING_WEAPON)
 				dmg_type = eDamageType(abil_dat);
 			else dmg_type = eDamageType::FIRE;
-			break;
-		case eItemAbil::SLAYER_WEAPON:
+	} else if(abil == eItemAbil::SLAYER_WEAPON) {
+		eRace race = eRace::UNKNOWN;
+		if(cCreature* who = dynamic_cast<cCreature*>(&monst))
+			race = who->m_type;
+		else if(cPlayer* who = dynamic_cast<cPlayer*>(&monst))
+			race = who->race;
+		if(race == eRace::UNKNOWN) return 0;
 			// Slith, nephilim, and vahnatai are affected by humanoid-bane weapons as well as their individual banes
-			if(abil_dat == int(eRace::HUMANOID) && (monst->m_type == eRace::SLITH || monst->m_type == eRace::NEPHIL || monst->m_type == eRace::VAHNATAI));
-			else if(monst->m_type != eRace(abil_dat))
-				break;
+			if(abil_dat == int(eRace::HUMANOID) && (race == eRace::SLITH || race == eRace::NEPHIL || race == eRace::VAHNATAI));
+			else if(race != eRace(abil_dat))
+				return 0;
 			store += abil_str;
 			switch(eRace(abil_dat)) {
 				case eRace::DEMON:
@@ -859,10 +841,8 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,cCreature* mons
 					store *= 7;
 					break;
 			}
-			break;
-		case eItemAbil::CAUSES_FEAR:
-			if(monst) scare_monst(monst,abil_str * 10);
-			break;
+	} else if(abil == eItemAbil::CAUSES_FEAR) {
+			monst.scare(abil_str * 10);
 	}
 	return store;
 }
@@ -1236,12 +1216,12 @@ void do_combat_cast(location target) {
 									switch(spell_being_cast) {
 										case eSpell::ACID_SPRAY:
 											store_m_type = 0;
-											acid_monst(cur_monst,level);
+											cur_monst->acid(level);
 											store_sound = 24;
 											break;
 										case eSpell::PARALYZE_BEAM:
 											store_m_type = 9;
-											charm_monst(cur_monst,0,eStatus::PARALYZED,500);
+											cur_monst->sleep(eStatus::PARALYZED,500,0);
 											store_sound = 24;
 											break;
 										case eSpell::UNHOLY_RAVAGING:
@@ -1250,8 +1230,8 @@ void do_combat_cast(location target) {
 											r1 = get_ran(4,1,8);
 											r2 = get_ran(1,0,2);
 											damage_monst(targ_num, 7, r1, 0, eDamageType::MAGIC,0);
-											slow_monst(cur_monst, 4 + r2);
-											poison_monst(cur_monst, 5 + r2);
+											cur_monst->slow(4 + r2);
+											cur_monst->poison(5 + r2);
 											break;
 											
 										case eSpell::SCRY_MONSTER:
@@ -1288,14 +1268,14 @@ void do_combat_cast(location target) {
 											
 										case eSpell::CHARM_FOE:
 											store_m_type = 14;
-											charm_monst(cur_monst,-1 * (bonus + univ.party[current_pc].level / 8),eStatus::CHARM,0);
+											cur_monst->sleep(eStatus::CHARM,0,-1 * (bonus + univ.party[current_pc].level / 8));
 											store_sound = 24;
 											break;
 											
 										case eSpell::DISEASE:
 											store_m_type = 0;
 											r1 = get_ran(1,0,1);
-											disease_monst(cur_monst,2 + r1 + bonus);
+											cur_monst->disease(2 + r1 + bonus);
 											store_sound = 24;
 											break;
 											
@@ -1307,64 +1287,64 @@ void do_combat_cast(location target) {
 											
 										case eSpell::DUMBFOUND:
 											store_m_type = 14;
-											dumbfound_monst(cur_monst,1 + bonus / 3);
+											cur_monst->dumbfound(1 + bonus / 3);
 											store_sound = 53;
 											break;
 											
 										case eSpell::SCARE:
 											store_m_type = 11;
-											scare_monst(cur_monst,get_ran(2 + bonus,1,6));
+											cur_monst->scare(get_ran(2 + bonus,1,6));
 											store_sound = 54;
 											break;
 										case eSpell::FEAR:
 											store_m_type = 11;
-											scare_monst(cur_monst,get_ran(min(20,univ.party[current_pc].level / 2 + bonus),1,8));
+											cur_monst->scare(get_ran(min(20,univ.party[current_pc].level / 2 + bonus),1,8));
 											store_sound = 54;
 											break;
 											
 										case eSpell::SLOW:
 											store_m_type = 11;
 											r1 = get_ran(1,0,1);
-											slow_monst(cur_monst,2 + r1 + bonus);
+											cur_monst->slow(2 + r1 + bonus);
 											store_sound = 25;
 											break;
 											
 										case eSpell::POISON_MINOR: case eSpell::ARROWS_VENOM:
 											store_m_type = (spell_being_cast == eSpell::ARROWS_VENOM) ? 4 : 11;
-											poison_monst(cur_monst,2 + bonus / 2);
+											cur_monst->poison(2 + bonus / 2);
 											store_sound = 55;
 											break;
 										case eSpell::PARALYZE:
 											store_m_type = 9;
-											charm_monst(cur_monst,-10,eStatus::PARALYZED,1000);
+											cur_monst->sleep(eStatus::PARALYZED,1000,-10);
 											store_sound = 25;
 											break;
 										case eSpell::POISON:
 											store_m_type = 11;
-											poison_monst(cur_monst,4 + bonus / 2);
+											cur_monst->poison(4 + bonus / 2);
 											store_sound = 55;
 											break;
 										case eSpell::POISON_MAJOR:
 											store_m_type = 11;
-											poison_monst(cur_monst,8 + bonus / 2);
+											cur_monst->poison(8 + bonus / 2);
 											store_sound = 55;
 											break;
 											
 										case eSpell::STUMBLE:
 											store_m_type = 8;
-											curse_monst(cur_monst,4 + bonus);
+											cur_monst->curse(4 + bonus);
 											store_sound = 24;
 											break;
 											
 										case eSpell::CURSE:
 											store_m_type = 8;
-											curse_monst(cur_monst,2 + bonus);
+											cur_monst->curse(2 + bonus);
 											store_sound = 24;
 											break;
 											
 										case eSpell::HOLY_SCOURGE:
 											store_m_type = 8;
-											curse_monst(cur_monst,2 + univ.party[current_pc].level / 2);
+											cur_monst->curse(2 + univ.party[current_pc].level / 2);
 											store_sound = 24;
 											break;
 											
@@ -1644,7 +1624,7 @@ void fire_missile(location target) {
 				eDamageType dmg_tp = eDamageType::UNBLOCKABLE;
 				short bonus_dam = 0;
 				cItem& missile = univ.party[missile_firer].items[ammo_inv_slot];
-				spec_dam = calc_spec_dam(missile.ability,missile.abil_data[0],missile.abil_data[1],cur_monst,dmg_tp);
+				spec_dam = calc_spec_dam(missile.ability,missile.abil_data[0],missile.abil_data[1],*cur_monst,dmg_tp);
 				if(dmg_tp != eDamageType::UNBLOCKABLE) std::swap(bonus_dam, spec_dam);
 				if(univ.party[missile_firer].items[ammo_inv_slot].ability == eItemAbil::HEALING_WEAPON) {
 					ASB("  There is a flash of light.");
@@ -1657,24 +1637,20 @@ void fire_missile(location target) {
 					poison_amt = univ.party[missile_firer].status[eStatus::POISONED_WEAPON];
 					if(univ.party[missile_firer].has_abil_equip(eItemAbil::POISON_AUGMENT) < 24)
 						poison_amt++;
-					poison_monst(cur_monst,poison_amt);
+					cur_monst->poison(poison_amt);
 				}
 				if((missile.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
 					apply_weapon_status(eStatus(missile.abil_data[1]), missile.abil_data[0], r2 + spec_dam, targ_monst + 100, "Missile");
 				} else if(missile.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 					add_string_to_buf("  Missile drains life.");
-					heal_pc(missile_firer,missile.abil_data[0] / 2);
-				} else if(missile.ability == eItemAbil::ANTIMAGIC_WEAPON && cur_monst->mu + cur_monst->cl > 0 && get_ran(1,0,1) == 1) {
-					short drain = missile.abil_data[0];
-					magic_adjust(cur_monst, &drain);
-					if(drain > 0) {
+					univ.party[missile_firer].heal(missile.abil_data[0] / 2);
+				} else if(missile.ability == eItemAbil::ANTIMAGIC_WEAPON) {
+					short before = cur_monst->get_magic();
+					if(mu + cl > 0 && get_ran(1,0,1) == 1)
+						cur_monst->drain_sp(missile.abil_data[0]);
+					if(before > cur_monst->get_magic()) {
 						add_string_to_buf("  Missile drains energy.");
-						if(cur_monst->mu > 0 && cur_monst->mp > 4)
-							drain = min(cur_monst->mp, drain / 3);
-						else if(cur_monst->cl > 0 && cur_monst->mp > 10)
-							drain = min(cur_monst->mp, drain / 2);
-						cur_monst->mp -= drain;
-						restore_sp_pc(missile_firer, drain / 3);
+						univ.party[missile_firer].restore_sp((before > cur_monst->get_magic()) / 3);
 					}
 				}
 				if(cur_monst->abil[eMonstAbil::HIT_TRIGGER].active) {
@@ -1690,11 +1666,11 @@ void fire_missile(location target) {
 			} else if((targ_monst = pc_there(target)) < 6) {
 				eDamageType dmg_tp = eDamageType::UNBLOCKABLE;
 				cItem& missile = univ.party[missile_firer].items[ammo_inv_slot];
-				spec_dam = calc_spec_dam(missile.ability,missile.abil_data[0],missile.abil_data[1],nullptr,dmg_tp);
+				spec_dam = calc_spec_dam(missile.ability,missile.abil_data[0],missile.abil_data[1],univ.party[targ_monst],dmg_tp);
 				eRace race = univ.party[missile_firer].race;
 				if(univ.party[current_pc].items[ammo_inv_slot].ability == eItemAbil::HEALING_WEAPON) {
 					ASB("  There is a flash of light.");
-					heal_pc(targ_monst,r2);
+					univ.party[targ_monst].heal(r2);
 				}
 				else damage_pc(targ_monst, r2, eDamageType::WEAPON, race, 0);
 				if(spec_dam > 0) damage_pc(targ_monst, spec_dam, dmg_tp, race, 0);
@@ -1703,26 +1679,22 @@ void fire_missile(location target) {
 					poison_amt = univ.party[missile_firer].status[eStatus::POISONED_WEAPON];
 					if(univ.party[missile_firer].has_abil_equip(eItemAbil::POISON_AUGMENT) < 24)
 						poison_amt++;
-					poison_pc(targ_monst,poison_amt);
+					univ.party[targ_monst].poison(poison_amt);
 				}
 				if((missile.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
 					apply_weapon_status(eStatus(missile.abil_data[1]), missile.abil_data[0], r2 + spec_dam, targ_monst, "Missile");
 				} else if(missile.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 					add_string_to_buf("  Missile drains life.");
-					heal_pc(missile_firer,missile.abil_data[0] / 2);
-				} else if(missile.ability == eItemAbil::ANTIMAGIC_WEAPON &&
-						univ.party[targ_monst].skill(eSkill::MAGE_SPELLS) + univ.party[targ_monst].skill(eSkill::PRIEST_SPELLS) > 0 &&
-						get_ran(1,0,1) == 1) {
-					short drain = missile.abil_data[0];
-					magic_adjust(cur_monst, &drain);
-					if(drain > 0) {
+					univ.party[missile_firer].heal(missile.abil_data[0] / 2);
+				} else if(missile.ability == eItemAbil::ANTIMAGIC_WEAPON) {
+					cPlayer& which_m = univ.party[targ_monst];
+					short before = which_m.get_magic();
+					if(which_m.skill(eSkill::MAGE_SPELLS) + which_m.skill(eSkill::PRIEST_SPELLS) > 0 &&
+					   get_ran(1,0,1) == 1)
+						which_m.drain_sp(missile.abil_data[0]);
+					if(before > which_m.get_magic()) {
 						add_string_to_buf("  Missile drains energy.");
-						if(univ.party[targ_monst].skill(eSkill::MAGE_SPELLS) > 0 && univ.party[targ_monst].cur_sp > 4)
-							drain = min(univ.party[targ_monst].cur_sp, drain / 3);
-						else if(univ.party[targ_monst].skill(eSkill::PRIEST_SPELLS) > 0 && univ.party[targ_monst].cur_sp > 10)
-							drain = min(univ.party[targ_monst].cur_sp, drain / 2);
-						univ.party[targ_monst].cur_sp -= drain;
-						restore_sp_pc(missile_firer, drain / 3);
+						univ.party[missile_firer].restore_sp((before > which_m.get_magic()) / 3);
 					}
 				} else if(missile.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
 					short s1,s2,s3;
@@ -1900,7 +1872,7 @@ void combat_run_monst() {
 			move_to_zero(univ.party.status[ePartyStatus::STEALTH]);
 			if((item = univ.party[i].has_abil_equip(eItemAbil::REGENERATE)) < 24) {
 				update_stat = true;
-				heal_pc(i,get_ran(1,0,univ.party[i].items[item].item_level + 1));
+				univ.party[i].heal(get_ran(1,0,univ.party[i].items[item].item_level + 1));
 			}
 		}
 	for(i = 0; i < 6; i++)
@@ -2076,7 +2048,7 @@ void do_monster_turn() {
 			if((cur_monst->summoned % 100) == 1) {
 				cur_monst->active = 0;
 				cur_monst->ap = 0;
-				monst_spell_note(cur_monst->number,17);
+				cur_monst->spell_note(17);
 			}
 			move_to_zero(cur_monst->summoned);
 		}
@@ -2348,7 +2320,7 @@ void do_monster_turn() {
 									if(univ.party[k].parry > 99 && monst_adjacent(univ.party[k].combat_pos,i)
 									   && (cur_monst->active > 0)) {
 										univ.party[k].parry = 0;
-										pc_attack(k,i);
+										pc_attack(k,100 + i);
 									}
 							}
 						
@@ -2359,7 +2331,7 @@ void do_monster_turn() {
 									if(univ.party[k].parry > 99 && monst_adjacent(univ.party[k].combat_pos,i)
 									   && (cur_monst->active > 0) && (cur_monst->attitude % 2 == 1)) {
 										univ.party[k].parry = 0;
-										pc_attack(k,i);
+										pc_attack(k,100 + i);
 									}
 							}
 						
@@ -2387,7 +2359,7 @@ void do_monster_turn() {
 					   && (pc_adj[k]) && (cur_monst->attitude % 2 == 1) && (cur_monst->active > 0) &&
 					   univ.party[k].status[eStatus::INVISIBLE] == 0) {
 						combat_posing_monster = current_working_monster = k;
-						pc_attack(k,i);
+						pc_attack(k,100 + i);
 						combat_posing_monster = current_working_monster = 100 + i;
 						pc_adj[k] = false;
 					}
@@ -2416,7 +2388,7 @@ void do_monster_turn() {
 					if(what_summon) r1 = get_ran(1, abil.summon.min, abil.summon.max);
 					else r1 = 0;
 					if(r1 && summon_monster(what_summon, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude)) {
-						monst_spell_note(cur_monst->number,33);
+						cur_monst->spell_note(33);
 						play_sound(61);
 						bool failed = false;
 						while(--r1 && !failed) {
@@ -2467,7 +2439,7 @@ void do_monster_turn() {
 			}
 			
 			if(cur_monst->status[eStatus::ASLEEP] == 1)
-				monst_spell_note(cur_monst->number,29);
+				cur_monst->spell_note(29);
 			move_to_zero(cur_monst->status[eStatus::ASLEEP]);
 			move_to_zero(cur_monst->status[eStatus::PARALYZED]);
 			
@@ -2492,10 +2464,10 @@ void do_monster_turn() {
 					}
 					k = get_ran(1,1,5);
 					switch(k) {
-						case 1: case 2: poison_monst(cur_monst, 2);break;
-						case 3:	slow_monst(cur_monst,2); break;
-						case 4: curse_monst(cur_monst,2); break;
-						case 5: scare_monst(cur_monst,10); break;
+						case 1: case 2: cur_monst->poison(2); break;
+						case 3: cur_monst->slow(2); break;
+						case 4: cur_monst->curse(2); break;
+						case 5: cur_monst->scare(10); break;
 					}
 					if(get_ran(1,1,6) < 4)
 						cur_monst->status[eStatus::DISEASE]--;
@@ -2504,8 +2476,7 @@ void do_monster_turn() {
 			}
 			
 			if(univ.party.age % 4 == 0) {
-				if(cur_monst->mp < cur_monst->max_mp)
-					cur_monst->mp += 2;
+				cur_monst->restore_sp(2);
 				move_to_zero(cur_monst->status[eStatus::DUMB]);
 			}
 		} // end take care of monsters
@@ -2598,11 +2569,8 @@ void monster_attack_pc(short who_att,short target) {
 					damaged_message(store_hp - univ.party[target].cur_health,
 									attacker->a[i].type);
 					
-					int martyr1 = univ.party[target].status[eStatus::MARTYRS_SHIELD];
-					int martyr2 = univ.party[target].get_prot_level(eItemAbil::MARTYRS_SHIELD);
-					if(martyr1 + martyr2 > 0) {
-						int dmg = store_hp - univ.party[target].cur_health;
-						if(get_ran(1,1,20) < martyr2) dmg += max(1, martyr2 / 5);
+					if(univ.party[target].is_shielded()) {
+						int dmg = univ.party[target].get_shared_dmg(store_hp - univ.party[target].get_health());
 						add_string_to_buf("  Shares damage!                 ");
 						damage_monst(who_att, 6, dmg, 0, eDamageType::MAGIC,0);
 					}
@@ -2859,31 +2827,31 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 			case eMonstMissile::BOLT:
 				snd = 12;
 				if(target < 100) add_string_to_buf("  Shoots at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 12);
+				else m_target->spell_note(12);
 				break;
 			case eMonstMissile::SPEAR:
 				if(target < 100) add_string_to_buf("  Throws spear at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 13);
+				else m_target->spell_note(13);
 				break;
 			case eMonstMissile::RAZORDISK:
 				if(target < 100) add_string_to_buf("  Throws razordisk at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 15);
+				else m_target->spell_note(15);
 				break;
 			case eMonstMissile::SPINE:
 				if(target < 100) add_string_to_buf("  Fires spines at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 32);
+				else m_target->spell_note(32);
 				break;
 			case eMonstMissile::DART:
 				if(target < 100) add_string_to_buf("  Throws dart at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 53);
+				else m_target->spell_note(53);
 				break;
 			case eMonstMissile::ROCK:
 				if(target < 100) add_string_to_buf("  Throws rock at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 14);
+				else m_target->spell_note(14);
 				break;
 			case eMonstMissile::KNIFE:
 				if(target < 100) add_string_to_buf("  Throws knife at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 54);
+				else m_target->spell_note(54);
 				break;
 		}
 		if(abil.second.missile.type == eMonstMissile::ARROW || abil.second.missile.type == eMonstMissile::BOLT)
@@ -2910,12 +2878,12 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 				// TODO: Should we pass in the monster's actual race here?
 				damage_pc(target,r2,eDamageType::WEAPON,eRace::UNKNOWN,13);
 			} else {
-				monst_spell_note(m_target->number, 16);
+				m_target->spell_note(16);
 				damage_monst(target - 100,7,r2,0,eDamageType::WEAPON,13);
 			}
 		} else {
 			if(target < 100) add_string_to_buf("  Misses " + univ.party[target].name + '.');
-			else monst_spell_note(m_target->number,18);
+			else m_target->spell_note(18);
 		}
 		if(target < 100) {
 			int spec_item = univ.party[target].has_abil_equip(eItemAbil::HIT_CALL_SPECIAL);
@@ -2942,12 +2910,12 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 		}
 	} else if(abil.first == eMonstAbil::MISSILE_WEB) {
 		if(target < 100) add_string_to_buf("  Throws web at " + univ.party[target].name + '.');
-		else monst_spell_note(m_target->number, 58);
+		else m_target->spell_note(58);
 		run_a_missile(source, targ_space, 8, 0, 14, 0, 0, 100);
 		web_space(targ_space.x, targ_space.y);
 	} else if(abil.first == eMonstAbil::RAY_HEAT) {
 		if(target < 100) add_string_to_buf("  Hits " + univ.party[target].name + " with heat ray!");
-		else monst_spell_note(m_target->number, 55);
+		else m_target->spell_note(55);
 		run_a_missile(source, targ_space, 13, 0, 51, 0, 0, 100);
 		uAbility proxy = {true};
 		proxy.gen.strength = abil.second.special.extra3;
@@ -2974,23 +2942,23 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 			case eMonstGen::RAY:
 				snd = 51;
 				if(target < 100) add_string_to_buf("  Fires ray at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 55);
+				else m_target->spell_note(55);
 				break;
 			case eMonstGen::GAZE:
 				snd = 43;
 				if(target < 100) add_string_to_buf("  Gazes at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 56);
+				else m_target->spell_note(56);
 				break;
 			case eMonstGen::BREATH:
 				snd = 44;
 				if(target < 100) add_string_to_buf("  Breathes on " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 57);
+				else m_target->spell_note(57);
 				break;
 			case eMonstGen::SPIT:
 				path_type = 1;
 				snd = 64;
 				if(target < 100) add_string_to_buf("  Spits at " + univ.party[target].name + '.');
-				else monst_spell_note(m_target->number, 59);
+				else m_target->spell_note(59);
 				break;
 		}
 		if(abil.second.gen.pic < 0) play_sound(snd);
@@ -3001,20 +2969,11 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 
 void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short target) {
 	int i, r1;
-	cCreature* m_target;
-	location targ_space;
 	if(target == 6)
 		return;
-	if(target >= 100) {
-		m_target = &univ.town.monst[m_num];
-		targ_space = univ.town.monst[target - 100].cur_loc;
-		if(univ.town.monst[target - 100].active == 0)
-			return;
-	} else {
-		targ_space = (is_combat()) ? univ.party[target].combat_pos : univ.town.p_loc;
-		if(univ.party[target].main_status != eMainStatus::ALIVE)
-			return;
-	}
+	iLiving& m_target = univ.get_target(target);
+	location targ_space = m_target.get_loc();
+	if(!m_target.is_alive()) return;
 	switch(abil.first) {
 		case eMonstAbil::DAMAGE: case eMonstAbil::DAMAGE2:
 			// Determine die size
@@ -3025,8 +2984,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short ta
 				i = 10;
 			r1 = get_ran(abil.second.gen.strength, 1, i);
 			start_missile_anim();
-			if(target < 100) damage_pc(target, r1, abil.second.gen.dmg, eRace::UNKNOWN, 0);
-			else damage_monst(target - 100, 7, r1, 0, abil.second.gen.dmg, 0);
+			damage_target(target, r1, abil.second.gen.dmg);
 			do_explosion_anim(5, 0);
 			end_missile_anim();
 			handle_marked_damage();
@@ -3041,49 +2999,39 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short ta
 					if(abil.second.gen.type == eMonstGen::TOUCH)
 						i = abil.second.gen.stat == eStatus::ASLEEP ? -15 : -5;
 					else i = univ.town.monst[m_num].level / 2;
-					if(target < 100) sleep_pc(target, abil.second.gen.strength, abil.second.gen.stat, i);
-					else charm_monst(m_target, i, abil.second.gen.stat, abil.second.gen.strength);
+					m_target.sleep(abil.second.gen.stat, abil.second.gen.strength, i);
 					break;
 				case eStatus::ACID:
-					if(target < 100) acid_pc(target, abil.second.gen.strength);
-					else acid_monst(m_target, abil.second.gen.strength);
+					m_target.acid(abil.second.gen.strength);
 					break;
 				case eStatus::POISON:
-					if(target < 100) poison_pc(target, abil.second.gen.strength);
-					else poison_monst(m_target, abil.second.gen.strength);
+					m_target.poison(abil.second.gen.strength);
 					break;
 				case eStatus::BLESS_CURSE:
-					if(target < 100) curse_pc(target, abil.second.gen.strength);
-					else curse_monst(m_target, abil.second.gen.strength);
+					m_target.curse(abil.second.gen.strength);
 					break;
 				case eStatus::HASTE_SLOW:
-					if(target < 100) slow_pc(target, abil.second.gen.strength);
-					else slow_monst(m_target, abil.second.gen.strength);
+					m_target.slow(abil.second.gen.strength);
 					break;
 				case eStatus::WEBS:
-					if(target < 100) web_pc(target, abil.second.gen.strength);
-					else web_monst(m_target, abil.second.gen.strength);
+					m_target.web(abil.second.gen.strength);
 					break;
 				case eStatus::DISEASE:
-					if(target < 100) disease_pc(target, abil.second.gen.strength);
-					else disease_monst(m_target, abil.second.gen.strength);
+					m_target.disease(abil.second.gen.strength);
 					break;
 				case eStatus::DUMB:
-					if(target < 100) dumbfound_pc(target, abil.second.gen.strength);
-					else dumbfound_monst(m_target, abil.second.gen.strength);
+					m_target.dumbfound(abil.second.gen.strength);
 					break;
 				// These only work on PCs
 				case eStatus::INVULNERABLE:
 				case eStatus::MAGIC_RESISTANCE:
 				case eStatus::INVISIBLE:
 				case eStatus::MARTYRS_SHIELD: // TODO: Wait what? This one works for monsters!
-					if(target < 100)
-						univ.party[target].apply_status(abil.second.gen.stat, -abil.second.gen.strength);
+					m_target.apply_status(abil.second.gen.stat, -abil.second.gen.strength);
 					break;
 				// This only works on monsters
 				case eStatus::CHARM:
-					if(target >= 100)
-						charm_monst(m_target, abil.second.gen.strength, eStatus::CHARM, univ.town.monst[m_num].attitude);
+					m_target.sleep(abil.second.gen.stat, univ.town.monst[m_num].attitude, abil.second.gen.strength);
 					break;
 				// These three don't make sense in this context
 				case eStatus::MAIN:
@@ -3094,8 +3042,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short ta
 			break;
 		case eMonstAbil::PETRIFY:
 			i = univ.town.monst[m_num].level * abil.second.gen.strength / 100;
-			if(target < 100) petrify_pc(target, i);
-			else petrify_monst(m_target, i);
+			m_target.petrify(i);
 			break;
 		case eMonstAbil::DRAIN_SP:
 			if(target < 100) {
@@ -3103,10 +3050,11 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short ta
 				univ.party[target].cur_sp *= abil.second.gen.strength;
 				univ.party[target].cur_sp /= 100;
 			} else {
-				monst_spell_note(m_target->number,11);
+				cCreature* who = dynamic_cast<cCreature*>(&m_target);
+				who->spell_note(11);
 				// TODO: If mp < 4 it used to set monster's skill to 1. Should that be restored?
-				m_target->mp *= abil.second.gen.strength;
-				m_target->mp /= 100;
+				who->mp *= abil.second.gen.strength;
+				who->mp /= 100;
 			}
 			break;
 		case eMonstAbil::DRAIN_XP:
@@ -3175,7 +3123,7 @@ bool monst_breathe(cCreature *caster,location targ_space,uAbility abil) {
 bool monst_cast_mage(cCreature *caster,short targ) {
 	short r1,j,i,level,target_levels,friend_levels_near,x;
 	bool acted = false;
-	location target,vict_loc,ashes_loc,l;
+	location target,ashes_loc,l;
 	cCreature *affected;
 	const eSpell caster_array[7][18] = {
 		{
@@ -3277,11 +3225,8 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 		targ = 6;
 	}
 	
-	if(targ < 6) {
-		vict_loc = (is_combat()) ? univ.party[targ].combat_pos : univ.town.p_loc;
-	}
-	if(targ >= 100)
-		vict_loc = univ.town.monst[targ - 100].cur_loc;
+	iLiving& victim = univ.get_target(targ);
+	location vict_loc = victim.get_loc();
 	
 	// check antimagic
 	if(targ == 6 && univ.town.is_antimagic(target.x,target.y))
@@ -3327,11 +3272,11 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::HASTE_MINOR:
 				play_sound(25);
-				slow_monst(caster, -2);
+				caster->slow(-2);
 				break;
 			case eSpell::STRENGTH:
 				play_sound(25);
-				curse_monst(caster, -3);
+				caster->curse(-3);
 				break;
 			case eSpell::CLOUD_FLAME:
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
@@ -3345,21 +3290,15 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::POISON_MINOR:
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
-				if(targ < 6)
-					poison_pc(targ,2 + get_ran(1,0,caster->level / 2));
-				else poison_monst(&univ.town.monst[targ - 100],2 + get_ran(1,0,caster->level / 2));
+				victim.poison(2 + get_ran(1,0,caster->level / 2));
 				break;
 			case eSpell::SLOW:
 				run_a_missile(l,vict_loc,15,0,25,0,0,80);
-				if(targ < 6)
-					slow_pc(targ,2 + caster->level / 2);
-				else slow_monst(&univ.town.monst[targ - 100],2 + caster->level / 2);
+				victim.slow(2 + caster->level / 2);
 				break;
 			case eSpell::DUMBFOUND:
 				run_a_missile(l,vict_loc,14,0,25,0,0,80);
-				if(targ < 6)
-					dumbfound_pc(targ,2);
-				else dumbfound_monst(&univ.town.monst[targ - 100],2);
+				victim.dumbfound(2);
 				break;
 			case eSpell::CLOUD_STINK:
 				run_a_missile(l,target,0,0,25,0,0,80);
@@ -3423,9 +3362,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 			case eSpell::POISON:
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
 				x = get_ran(1,0,caster->level / 2);
-				if(targ < 6)
-					poison_pc(targ,4 + x);
-				else poison_monst(&univ.town.monst[targ - 100],4 + x);
+				victim.poison(4 + x);
 				break;
 			case eSpell::ICE_BOLT:
 				run_a_missile(l,vict_loc,6,1,11,0,0,80);
@@ -3438,14 +3375,14 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				if(caster->attitude % 2 == 1)
 					for(i = 0; i < 6; i++)
 						if(pc_near(i,caster->cur_loc,8))
-							slow_pc(i,2 + caster->level / 4);
+							univ.party[i].slow(2 + caster->level / 4);
 				for(i = 0; i < univ.town.monst.size(); i++) {
 					if((univ.town.monst[i].active != 0) &&
 						(((univ.town.monst[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) ||
 						 ((univ.town.monst[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
 						 ((univ.town.monst[i].attitude % 2 == 1) && (caster->attitude != univ.town.monst[i].attitude)))
 						&& (dist(caster->cur_loc,univ.town.monst[i].cur_loc) <= 7))
-						slow_monst(&univ.town.monst[i],2 + caster->level / 4);
+						univ.town.monst[i].slow(2 + caster->level / 4);
 				}
 				break;
 			case eSpell::HASTE_MAJOR:
@@ -3454,7 +3391,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
-						slow_monst(affected, -3);
+						affected->slow(-3);
 					}
 				play_sound(4);
 				break;
@@ -3473,9 +3410,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 			case eSpell::POISON_MAJOR:
 				run_a_missile(l,vict_loc,11,1,11,0,0,80);
 				x = get_ran(1,1,2);
-				if(targ < 6)
-					poison_pc(targ,6 + x);
-				else poison_monst(&univ.town.monst[targ - 100],6 + x);
+				victim.poison(6 + x);
 				break;
 			case eSpell::KILL:
 				run_a_missile(l,vict_loc,9,1,11,0,0,80);
@@ -3499,7 +3434,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 						affected = &univ.town.monst[i];
 						affected->health += get_ran(2,1,10);
 						r1 = get_ran(3,1,4);
-						curse_monst(affected, -r1);
+						affected->curse(-r1);
 						affected->status[eStatus::WEBS] = 0;
 						if(affected->status[eStatus::HASTE_SLOW] < 0)
 							affected->status[eStatus::HASTE_SLOW] = 0;
@@ -3526,7 +3461,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 bool monst_cast_priest(cCreature *caster,short targ) {
 	short r1,r2,i,x,level,target_levels,friend_levels_near;
 	bool acted = false;
-	location target,vict_loc,l;
+	location target,l;
 	cCreature *affected;
 	eSpell caster_array[7][10] = {
 		{
@@ -3602,10 +3537,14 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 	}
 	if(area_effects.count(spell) > 0)
 		targ = 6;
+	
+	iLiving& victim = univ.get_target(targ);
+	location vict_loc = victim.get_loc();
 	if(targ < 6)
 		vict_loc = (is_town()) ? univ.town.p_loc : univ.party[targ].combat_pos;
 	if(targ >= 100)
 		vict_loc = univ.town.monst[targ - 100].cur_loc;
+	
 	if(targ == 6 && univ.town.is_antimagic(target.x,target.y))
 		return false;
 	if(targ < 6 && univ.town.is_antimagic(univ.party[targ].combat_pos.x,univ.party[targ].combat_pos.y))
@@ -3653,15 +3592,13 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				break;
 			case eSpell::BLESS_MINOR: case eSpell::BLESS:
 				play_sound(24);
-				curse_monst(caster, -(spell == eSpell::BLESS ? 5 : 3));
+				caster->curse(-(spell == eSpell::BLESS ? 5 : 3));
 				play_sound(4);
 				break;
 			case eSpell::CURSE:
 				run_a_missile(l,vict_loc,8,0,24,0,0,80);
 				x = get_ran(1,0,1);
-				if(targ < 6)
-					curse_pc(targ,2 + x);
-				else curse_monst(&univ.town.monst[targ - 100],2 + x);
+				victim.curse(2 + x);
 				break;
 			case eSpell::WOUND:
 				run_a_missile(l,vict_loc,8,0,24,0,0,80);
@@ -3680,23 +3617,22 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 			case eSpell::DISEASE:
 				run_a_missile(l,vict_loc,11,0,24,0,0,80);
 				x = get_ran(1,0,2);
-				if(targ < 6)
-					disease_pc(targ,2 + x);
-				else disease_monst(&univ.town.monst[targ - 100],2 + x);
+				victim.disease(2 + x);
 				break;
 			case eSpell::HOLY_SCOURGE:
 				run_a_missile(l,vict_loc,15,0,24,0,0,80);
+				// TODO: Why are PCs and monsters affected in different amounts?
 				if(targ < 6) {
 					r1 = get_ran(1,0,2);
-					slow_pc(targ,2 + r1);
+					victim.slow(2 + r1);
 					r1 = get_ran(1,0,2);
-					curse_pc(targ,3 + r1);
+					victim.curse(3 + r1);
 				}
 				else {
 					r1 = get_ran(1,0,2);
-					slow_monst(&univ.town.monst[targ - 100],r1);
+					victim.slow(r1);
 					r1 = get_ran(1,0,2);
-					curse_monst(&univ.town.monst[targ - 100],r1);
+					victim.curse(r1);
 				}
 				break;
 			case eSpell::SMITE:
@@ -3741,9 +3677,9 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 					for(i = 0; i < 6; i++)
 						if(pc_near(i,caster->cur_loc,8)) {
 							if(spell == eSpell::CURSE_ALL)
-								curse_pc(i,2 + r1);
+								univ.party[i].curse(2 + r1);
 							if(spell == eSpell::PESTILENCE)
-								disease_pc(i,2 + r2);
+								univ.party[i].disease(2 + r2);
 						}
 				for(i = 0; i < univ.town.monst.size(); i++) {
 					if((univ.town.monst[i].active != 0) &&
@@ -3752,9 +3688,9 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 						 ((univ.town.monst[i].attitude % 2 == 1) && (caster->attitude != univ.town.monst[i].attitude)))
 						&& (dist(caster->cur_loc,univ.town.monst[i].cur_loc) <= 7)) {
 						if(spell == eSpell::CURSE_ALL)
-							curse_monst(&univ.town.monst[i],2 + r1);
+							univ.town.monst[i].curse(2 + r1);
 						if(spell == eSpell::PESTILENCE)
-							disease_monst(&univ.town.monst[i],2 + r2);
+							univ.town.monst[i].disease(2 + r2);
 					}
 				}
 				break;
@@ -3767,7 +3703,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 					case eSpell::HEAL_MAJOR: r1 = get_ran(5,1,6) + 3; break;
 					case eSpell::HEAL_ALL: r1 = 50; break;
 				}
-				caster->health = min(caster->health + r1, caster->m_health);
+				caster->heal(r1);
 				break;
 			case eSpell::BLESS_PARTY: case eSpell::REVIVE_ALL:
 				play_sound(24);
@@ -3778,7 +3714,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
 						if(spell == eSpell::BLESS_PARTY)
-							curse_monst(affected, -r1);
+							affected->curse(-r1);
 						if(spell == eSpell::REVIVE_ALL)
 							affected->health += r1;
 					}
@@ -3796,26 +3732,13 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				r1 = get_ran(4,1,8);
 				r2 = get_ran(1,0,2);
 				damage_target(targ,r1,eDamageType::MAGIC);
-				if(targ < 6) {
-					slow_pc(targ,6);
-					poison_pc(targ,5 + r2);
-				}
-				else {
-					slow_monst(&univ.town.monst[targ - 100],6);
-					poison_monst(&univ.town.monst[targ - 100],5 + r2);
-				}
+				victim.slow(6);
+				victim.poison(5 + r2);
 				break;
 			case eSpell::AVATAR:
 				play_sound(24);
-				monst_spell_note(caster->number,26);
-				caster->health = caster->m_health;
-				caster->status[eStatus::BLESS_CURSE] = 8;
-				caster->status[eStatus::POISON] = 0;
-				caster->status[eStatus::HASTE_SLOW] = 8;
-				caster->status[eStatus::WEBS] = 0;
-				caster->status[eStatus::DISEASE] = 0;
-				caster->status[eStatus::DUMB] = 0;
-				caster->status[eStatus::MARTYRS_SHIELD] = 8;
+				caster->spell_note(26);
+				caster->avatar();
 				break;
 			case eSpell::DIVINE_THUD:
 				run_a_missile(l,target,9,0,11,0,0,80);
@@ -4140,7 +4063,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 							continue;
 						switch(effect) {
 							case FIELD_WEB:
-								web_monst(which_m,3);
+								which_m->web(3);
 								break;
 							case WALL_FORCE:
 								r1 = get_ran(3,1,6);
@@ -4151,7 +4074,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 								damage_monst(k, who_hit, r1,0, eDamageType::FIRE,0);
 								break;
 							case CLOUD_STINK:
-								curse_monst(which_m,get_ran(1,1,2));
+								which_m->curse(get_ran(1,1,2));
 								break;
 							case WALL_ICE:
 								r1 = get_ran(3,1,6);
@@ -4162,7 +4085,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 								damage_monst(k, who_hit, r1,0, eDamageType::WEAPON,0);
 								break;
 							case CLOUD_SLEEP:
-								charm_monst(which_m,0,eStatus::ASLEEP,3);
+								which_m->sleep(eStatus::ASLEEP,3,0);
 								break;
 							case OBJECT_BLOCK:
 								r1 = get_ran(6,1,8);
@@ -4402,19 +4325,19 @@ void handle_disease() {
 					r1 = get_ran(1,1,10);
 					switch(r1) {
 						case 1: case 2:
-							poison_pc(i,2);
+							univ.party[i].poison(2);
 							break;
 						case 3: case 4:
-							slow_pc(i,2);
+							univ.party[i].slow(2);
 							break;
 						case 5:
 							drain_pc(i,5);
 							break;
 						case 6: case 7:
-							curse_pc(i,3);
+							univ.party[i].curse(3);
 							break;
 						case 8:
-							dumbfound_pc(i,3);
+							univ.party[i].dumbfound(3);
 							break;
 						case 9: case 10:
 							add_string_to_buf("  " + univ.party[i].name + "unaffected.");
@@ -4504,6 +4427,7 @@ void end_combat() {
 		univ.party[i].status[eStatus::POISONED_WEAPON] = 0;
 		univ.party[i].status[eStatus::BLESS_CURSE] = 0;
 		univ.party[i].status[eStatus::HASTE_SLOW] = 0;
+		univ.party[i].combat_pos = {-1,-1};
 	}
 	if(which_combat_type == 0) {
 		overall_mode = MODE_OUTDOORS;
@@ -4621,7 +4545,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 						
 					case eSpell::STRENGTH:
 						c_line += " stronger.";
-						curse_pc(target, -3);
+						univ.party[target].curse(-3);
 						store_m_type = 8;
 						break;
 					case eSpell::RESIST_MAGIC:
@@ -4632,7 +4556,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 						
 					default:
 						i = (spell_num == eSpell::HASTE_MINOR) ? 2 : max(2,univ.party[current_pc].level / 2 + bonus);
-						slow_pc(target, -i);
+						univ.party[target].slow(-i);
 						c_line += " hasted.";
 						store_m_type = 8;
 						break;
@@ -4650,10 +4574,10 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 			
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
-					slow_pc(i, -(spell_num == eSpell::HASTE_MAJOR ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
+					univ.party[i].slow(-(spell_num == eSpell::HASTE_MAJOR ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
 					if(spell_num == eSpell::BLESS_MAJOR) {
 						poison_weapon(i,2,1);
-						curse_pc(i, -4);
+						univ.party[i].curse(-4);
 						add_missile(univ.party[i].combat_pos,14,0,0,0);
 					}
 					else add_missile(univ.party[i].combat_pos,8,0,0,0);
@@ -4688,17 +4612,17 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 					switch(spell_num) {
 						case eSpell::FEAR_GROUP:
 							r1 = get_ran(univ.party[current_pc].level / 3,1,8);
-							scare_monst(which_m,r1);
+							which_m->scare(r1);
 							store_m_type = 10;
 							break;
 						case eSpell::SLOW_GROUP: case eSpell::RAVAGE_ENEMIES:
-							slow_monst(which_m,5 + bonus);
+							which_m->slow(5 + bonus);
 							if(spell_num == eSpell::RAVAGE_ENEMIES)
-								curse_monst(which_m,3 + bonus);
+								which_m->curse(3 + bonus);
 							store_m_type = 8;
 							break;
 						case eSpell::PARALYSIS_MASS:
-							charm_monst(which_m,15,eStatus::PARALYZED,1000);
+							which_m->sleep(eStatus::PARALYZED,1000,15);
 							store_m_type = 15;
 							break;
 					}
@@ -4805,7 +4729,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 				store_sound = 4;
 				if(!freebie)
 					univ.party[current_pc].cur_sp -= (*spell_num).cost;
-				curse_pc(target,-(spell_num==eSpell::BLESS_MINOR ? 2 : max(2,(univ.party[current_pc].level * 3) / 4 + 1 + bonus)));
+				univ.party[target].curse(-(spell_num==eSpell::BLESS_MINOR ? 2 : max(2,(univ.party[current_pc].level * 3) / 4 + 1 + bonus)));
 				add_missile(univ.party[target].combat_pos,8,0,0,0);
 			}
 			break;
@@ -4815,7 +4739,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 				univ.party[current_pc].cur_sp -= (*spell_num).cost;
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
-					curse_pc(i, -(univ.party[current_pc].level / 3));
+					univ.party[i].curse(-(univ.party[current_pc].level / 3));
 					add_missile(univ.party[i].combat_pos,8,0,0,0);
 				}
 			store_sound = 4;
@@ -4825,9 +4749,6 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 			if(!freebie)
 				univ.party[current_pc].cur_sp -= (*spell_num).cost;
 			add_string_to_buf("  " + univ.party[current_pc].name + " is an avatar!");
-			heal_pc(current_pc,200);
-			cure_pc(current_pc,8);
-			// TODO: Move the heal/cure over to this function as well
 			univ.party[current_pc].avatar();
 			break;
 			
@@ -4844,18 +4765,18 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 					which_m = &univ.town.monst[i];
 					switch(spell_num) {
 						case eSpell::CURSE_ALL:
-							curse_monst(which_m,3 + bonus);
+							which_m->curse(3 + bonus);
 							store_m_type = 8;
 							break;
 						case eSpell::CHARM_MASS:
 							// TODO: As an item spell, the penalty was 0, though perhaps it was intended to be 8
-							// (since 8 was passed as the final argument). Now the penalty has increased to 27.
+							// (since 8 was passed as the amount argument). Now the penalty has increased to 27.
 							// It should probably be put back somehow.
-							charm_monst(which_m,28 - bonus,eStatus::CHARM,0);
+							which_m->sleep(eStatus::CHARM,0,28 - bonus);
 							store_m_type = 14;
 							break;
 						case eSpell::PESTILENCE:
-							disease_monst(which_m,3 + bonus);
+							which_m->disease(3 + bonus);
 							store_m_type = 0;
 							break;
 					}
@@ -5019,7 +4940,7 @@ static void process_force_cage(location loc, short i) {
 		if(which_m.attitude % 2 == 1 && get_ran(1,1,100) < which_m.mu * 10 + which_m.cl * 4 + 5) {
 			// TODO: This sound is not right
 			play_sound(60);
-			monst_spell_note(m, 50);
+			which_m.spell_note(50);
 			univ.town.set_force_cage(loc.x,loc.y,false);
 			which_m.status[eStatus::FORCECAGE] = 0;
 		} else which_m.status[eStatus::FORCECAGE] = 8;
@@ -5176,13 +5097,13 @@ void scloud_space(short m,short n) {
 		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if(univ.party[i].combat_pos == target) {
-					curse_pc(i,get_ran(1,1,2));
+					univ.party[i].curse(get_ran(1,1,2));
 				}
 	if(overall_mode < MODE_COMBAT)
 		if(target == univ.town.p_loc) {
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
-					curse_pc(i,get_ran(1,1,2));
+					univ.party[i].curse(get_ran(1,1,2));
 		}
 }
 
@@ -5199,12 +5120,12 @@ void web_space(short m,short n) {
 		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if(univ.party[i].combat_pos == target) {
-					web_pc(i,3);
+					univ.party[i].web(3);
 				}
 	if(overall_mode < MODE_COMBAT)
 		if(target == univ.town.p_loc) {
 			for(i = 0; i < 6; i++)
-				web_pc(i,3);
+				univ.party[i].web(3);
 		}
 }
 void sleep_cloud_space(short m,short n) {
@@ -5220,12 +5141,11 @@ void sleep_cloud_space(short m,short n) {
 		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if(univ.party[i].combat_pos == target) {
-					sleep_pc(i,3,eStatus::ASLEEP,0);
+					univ.party[i].sleep(eStatus::ASLEEP,3,0);
 				}
 	if(overall_mode < MODE_COMBAT)
 		if(target == univ.town.p_loc) {
-			for(i = 0; i < 6; i++)
-				sleep_pc(i,3,eStatus::ASLEEP,0);
+			univ.party.sleep(eStatus::ASLEEP,3,0);
 		}
 }
 

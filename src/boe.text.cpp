@@ -60,7 +60,7 @@ extern short terrain_there[9][9];
 
 // game globals
 extern location ul;
-extern bool play_sounds,suppress_stat_screen;
+extern bool play_sounds;
 extern rectangle item_buttons[8][6];
 // name, use, give, drip, info, sell/id
 extern rectangle pc_buttons[6][5];
@@ -874,8 +874,8 @@ std::string print_monster_going(mon_num_t m_num,short ap) {
 	return sout.str();
 }
 
-void monst_spell_note(mon_num_t number,short which_mess) {
-	std::string msg = get_m_name(number);
+void cCreature::spell_note(int which_mess) {
+	std::string msg = m_name;
 	switch(which_mess) {
 		case 1:
 			msg = "  " + msg + " scared. ";

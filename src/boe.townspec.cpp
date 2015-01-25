@@ -81,14 +81,14 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			add_string_to_buf("  A dart flies out.              ");
 			r1 = 3 + univ.town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
-			poison_pc(pc_num,r1);
+			univ.party[pc_num].poison(r1);
 			break;
 			
 		case TRAP_GAS:
 			add_string_to_buf("  Poison gas pours out.          ");
 			r1 = 2 + univ.town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
-			poison_party(r1);
+			univ.party.poison(r1);
 			break;
 			
 		case TRAP_EXPLOSION:
@@ -103,7 +103,8 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			add_string_to_buf("  A purple ray flies out.          ");
 			r1 = 200 + univ.town.difficulty * 100;
 			r1 = r1 + trap_level * 400;
-			sleep_pc(pc_num,r1,eStatus::PARALYZED,50);
+			// TODO: It says sleep ray but is actually paralysis ray?
+			univ.party[pc_num].sleep(eStatus::PARALYZED, r1, 50);
 			break;
 		case TRAP_DRAIN_XP:
 			add_string_to_buf("  You feel weak.            ");
@@ -124,23 +125,21 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			break;
 		case TRAP_DUMBFOUND:
 			add_string_to_buf("  You feel disoriented.        ");
-			for(i = 0; i < 6; i++)
-				dumbfound_pc(i,2 + trap_level * 2);
+			univ.party.dumbfound(2 + trap_level * 2);
 			break;
 			
 		case TRAP_DISEASE:
 			add_string_to_buf("  You prick your finger. ");
 			r1 = 3 + univ.town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
-			disease_pc(pc_num,r1);
+			univ.party[pc_num].disease(r1);
 			break;
 			
 		case TRAP_DISEASE_ALL:
 			add_string_to_buf("  A foul substance sprays out.");
 			r1 = 2 + univ.town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
-			for(i = 0; i < 6; i++)
-				disease_pc(i,r1);
+			univ.party.disease(r1);
 			break;
 			
 		case TRAP_CUSTOM:

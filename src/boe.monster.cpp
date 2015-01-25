@@ -26,9 +26,6 @@ extern short boom_gr[8],futzing;
 extern bool processing_fields,monsters_going;
 extern cUniverse univ;
 
-
-short charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};
-
 short out_enc_lev_tot(short which) {
 	short count = 0,i;
 	short num[7] = {22,8,4,4,3,2,1};
@@ -839,7 +836,7 @@ void monst_inflict_fields(short which_monst) {
 				}
 				if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
 					if(have_radiate && which_radiate != eFieldType::CLOUD_SLEEP)
-						charm_monst(which_m,0,eStatus::ASLEEP,3);
+						which_m->sleep(eStatus::ASLEEP,3,0);
 					break;
 				}
 				if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
@@ -851,13 +848,13 @@ void monst_inflict_fields(short which_monst) {
 				if(univ.town.is_scloud(where_check.x,where_check.y)) {
 					r1 = get_ran(1,2,3);
 					if(have_radiate && which_radiate != eFieldType::CLOUD_STINK)
-						curse_monst(which_m,r1);
+						which_m->curse(r1);
 					break;
 				}
 				if(univ.town.is_web(where_check.x,where_check.y) && which_m->m_type != eRace::BUG) {
-					monst_spell_note(which_m->number,19);
+					which_m->spell_note(19);
 					r1 = get_ran(1,2,3);
-					web_monst(which_m,r1);
+					which_m->web(r1);
 					univ.town.set_web(where_check.x,where_check.y,false);
 					break;
 				}
@@ -968,7 +965,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		if((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->mu * 10 + which_m->cl * 4))) {
 			// TODO: Are these barrier sounds right?
 			play_sound(60);
-			monst_spell_note(which_monst, 49);
+			which_m->spell_note(49);
 			univ.town.set_fire_barr(where_check.x,where_check.y,false);
 		}
 		else {
@@ -982,7 +979,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		if((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->mu * 10 + which_m->cl * 4))
 			&& (!univ.town->strong_barriers)) {
 			play_sound(60);
-			monst_spell_note(which_monst, 49);
+			which_m->spell_note(49);
 			univ.town.set_force_barr(where_check.x,where_check.y,false);
 		}
 		else can_enter = false;
@@ -1077,151 +1074,141 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	return can_enter;
 }
 
-void magic_adjust(cCreature *which_m,short *how_much) {
-	if(*how_much <= 0) return;
-	if(which_m->abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= which_m->abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
-		int gain = which_m->abil[eMonstAbil::ABSORB_SPELLS].special.extra2;
-		*how_much = 0;
-		if(32767 - which_m->health > gain)
-			which_m->health = 32767;
-		else which_m->health += gain;
-	}
-	*how_much *= which_m->magic_res;
-	*how_much /= 100;
-}
-
-void poison_monst(cCreature *which_m,short how_much) {
+void cCreature::poison(int how_much) {
 	if(how_much > 0) {
-		how_much *= which_m->poison_res;
+		how_much *= poison_res;
 		how_much /= 100;
 	}
-	which_m->status[eStatus::POISON] = min(8, which_m->status[eStatus::POISON] + how_much);
+	apply_status(eStatus::POISON, how_much);
 	if(how_much >= 0)
-		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 4);
+		spell_note((how_much == 0) ? 10 : 4);
 	else
-		monst_spell_note(which_m->number,34);
+		spell_note(34);
 	
-}
-void acid_monst(cCreature *which_m,short how_much) {
-	magic_adjust(which_m,&how_much);
-	which_m->status[eStatus::ACID] = minmax(-8,8, which_m->status[eStatus::ACID] + how_much);
-	if(how_much >= 0)
-		monst_spell_note(which_m->number,31);
-	else
-		monst_spell_note(which_m->number,48);
 }
 
-void slow_monst(cCreature *which_m,short how_much) {
-	magic_adjust(which_m,&how_much);
-	which_m->status[eStatus::HASTE_SLOW] = minmax(-8,8, which_m->status[eStatus::HASTE_SLOW] - how_much);
+void cCreature::acid(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::ACID, how_much);
 	if(how_much >= 0)
-		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 2);
+		spell_note(31);
 	else
-		monst_spell_note(which_m->number,35);
+		spell_note(48);
+}
+
+void cCreature::slow(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::HASTE_SLOW, -how_much);
+	if(how_much >= 0)
+		spell_note((how_much == 0) ? 10 : 2);
+	else
+		spell_note(35);
 	
 }
-void curse_monst(cCreature *which_m,short how_much) {
-	magic_adjust(which_m,&how_much);
-	which_m->status[eStatus::BLESS_CURSE] = minmax(-8,8, which_m->status[eStatus::BLESS_CURSE] - how_much);
+
+void cCreature::curse(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::BLESS_CURSE, -how_much);
 	if(how_much >= 0)
-		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 5);
+		spell_note((how_much == 0) ? 10 : 5);
 	else
-		monst_spell_note(which_m->number,36);
+		spell_note(36);
 	
 }
-void web_monst(cCreature *which_m,short how_much) {
-	magic_adjust(which_m,&how_much);
-	which_m->status[eStatus::WEBS] = minmax(-8,8, which_m->status[eStatus::WEBS] + how_much);
+
+void cCreature::web(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::WEBS, how_much);
 	if(how_much >= 0)
-		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 19);
+		spell_note((how_much == 0) ? 10 : 19);
 	else
-		monst_spell_note(which_m->number,37);
+		spell_note(37);
 	
 }
-void scare_monst(cCreature *which_m,short how_much) {
-	magic_adjust(which_m,&how_much);
-	which_m->morale = which_m->morale - how_much;
+
+void cCreature::scare(int how_much) {
+	how_much = magic_adjust(how_much);
+	morale -= how_much;
 	// TODO: I don't think there's currently any way to increase monster morale at the moment - add one!
 	if(how_much >= 0)
-		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 1);
+		spell_note((how_much == 0) ? 10 : 1);
 	else
-		monst_spell_note(which_m->number,47);
-	
-}
-void disease_monst(cCreature *which_m,short how_much) {
-	magic_adjust(which_m,&how_much);
-	which_m->status[eStatus::DISEASE] = minmax(-8,8, which_m->status[eStatus::DISEASE] + how_much);
-	if(how_much >= 0)
-		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 25);
-	else
-		monst_spell_note(which_m->number,38);
+		spell_note(47);
 	
 }
 
-void dumbfound_monst(cCreature *which_m,short how_much) {
-	magic_adjust(which_m,&how_much);
-	which_m->status[eStatus::DUMB] = minmax(-8,8, which_m->status[eStatus::DUMB] + how_much);
+void cCreature::disease(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::DISEASE, how_much);
 	if(how_much >= 0)
-		monst_spell_note(which_m->number,(how_much == 0) ? 10 : 22);
+		spell_note((how_much == 0) ? 10 : 25);
 	else
-		monst_spell_note(which_m->number,39);
+		spell_note(38);
 	
 }
 
-// Also used for sleep and paralyze.
+void cCreature::dumbfound(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::DUMB, how_much);
+	if(how_much >= 0)
+		spell_note((how_much == 0) ? 10 : 22);
+	else
+		spell_note(39);
+	
+}
+
 // For charm, amount is the resulting attitude of the charmed monster; if 0, attitude is 2.
-void charm_monst(cCreature *which_m,short penalty,eStatus which_status,short amount) {
-	short r1;
-	
+void cCreature::sleep(eStatus which_status,int amount,int penalty) {
 	if(which_status != eStatus::CHARM && which_status != eStatus::FORCECAGE && amount < 0) {
-		which_m->status[which_status] -= amount;
+		status[which_status] -= amount;
 		if(which_status == eStatus::PARALYZED)
-			which_m->status[which_status] = max(0, which_m->status[which_status]);
+			status[which_status] = max(0, status[which_status]);
 		return;
 	}
 	
 	if((which_status == eStatus::ASLEEP) &&
-		(which_m->m_type == eRace::UNDEAD || which_m->m_type == eRace::SLIME ||
-		 which_m->m_type == eRace::STONE || which_m->m_type == eRace::PLANT))
+	   (m_type == eRace::UNDEAD || m_type == eRace::SLIME ||
+		m_type == eRace::STONE || m_type == eRace::PLANT))
 		return;
-	r1 = get_ran(1,1,100);
-	if(which_m->magic_res > 0) {
+	short r1 = get_ran(1,1,100);
+	if(magic_res > 0) {
 		r1 *= 100;
-		r1 /= which_m->magic_res;
+		r1 /= magic_res;
 	} else r1 = 200;
 	r1 += penalty;
 	if(which_status == eStatus::ASLEEP)
 		r1 -= 25;
 	if(which_status == eStatus::PARALYZED)
 		r1 -= 15;
-	if(which_status == eStatus::ASLEEP && which_m->abil[eMonstAbil::FIELD].active && which_m->abil[eMonstAbil::FIELD].gen.fld == eFieldType::CLOUD_SLEEP)
+	if(which_status == eStatus::ASLEEP && abil[eMonstAbil::FIELD].active && abil[eMonstAbil::FIELD].gen.fld == eFieldType::CLOUD_SLEEP)
 		return;
 	
-	if(r1 > charm_odds[which_m->level / 2]) {
+	if(r1 > charm_odds[level / 2]) {
 		//one_sound(68);
-		monst_spell_note(which_m->number,10);
+		spell_note(10);
 	}
 	else {
 		if(which_status == eStatus::CHARM) {
 			if(amount == 0 || amount > 3) amount = 2;
-			which_m->attitude = amount;
-			monst_spell_note(which_m->number,23);
+			attitude = amount;
+			spell_note(23);
 		} else if(which_status == eStatus::FORCECAGE) {
-			which_m->status[eStatus::FORCECAGE] = 8;
-			univ.town.set_force_cage(which_m->cur_loc.x, which_m->cur_loc.y, true);
-			monst_spell_note(which_m->number,52);
+			status[eStatus::FORCECAGE] = 8;
+			univ.town.set_force_cage(cur_loc.x, cur_loc.y, true);
+			spell_note(52);
 		} else {
-			which_m->status[which_status] = amount;
+			status[which_status] = amount;
 			if(which_status == eStatus::ASLEEP && (amount >= 0))
-				monst_spell_note(which_m->number,28);
+				spell_note(28);
 			if(which_status == eStatus::PARALYZED && (amount >= 0))
-				monst_spell_note(which_m->number,30);
+				spell_note(30);
 			if(amount < 0)
-				monst_spell_note(which_m->number,40);
+				spell_note(40);
 		}
 		//one_sound(53);
 	}
 }
+
 void record_monst(cCreature *which_m) {
 	short r1;
 	
@@ -1232,13 +1219,13 @@ void record_monst(cCreature *which_m) {
 		ASB("Capture Soul: Monster is too big.");
 	}
 	// TODO: Are these two sounds right?
-	else if(r1 > charm_odds[which_m->level / 2] || which_m->abil[eMonstAbil::SPLITS].active
+	else if(r1 > cCreature::charm_odds[which_m->level / 2] || which_m->abil[eMonstAbil::SPLITS].active
 			 || which_m->m_type == eRace::IMPORTANT) {
-		monst_spell_note(which_m->number,10);
+		which_m->spell_note(10);
 		play_sound(68);
 	}
 	else {
-		monst_spell_note(which_m->number,24);
+		which_m->spell_note(24);
 		r1 = get_ran(1,0,3);
 		if(univ.party.imprisoned_monst[r1] == 0)
 			univ.party.imprisoned_monst[r1] = which_m->number;
@@ -1319,7 +1306,7 @@ bool summon_monster(mon_num_t which,location where,short duration,short given_at
 	univ.town.monst[spot].attitude = given_attitude;
 	
 	univ.town.monst[spot].summoned = duration;
-	monst_spell_note(which,21);
+	univ.town.monst[spot].spell_note(21);
 	
 	return true;
 }

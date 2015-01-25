@@ -925,6 +925,17 @@ void cUniverse::check_item(cItem& item) {
 	}
 }
 
+iLiving& cUniverse::get_target(size_t which) {
+	size_t maxint = -1;
+	if(which == maxint || which == 6)
+		return party;
+	else if(which < 6)
+		return party[which];
+	else if(which >= 100 && which < 100 + town.monst.size())
+		return town.monst[which - 100];
+	else throw std::string("Tried to get nonexistent target!");
+}
+
 extern cCustomGraphics spec_scen_g;
 
 pic_num_t cUniverse::addGraphic(pic_num_t pic, ePicType type) {

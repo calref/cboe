@@ -158,6 +158,8 @@ class cUniverse{
 public:
 	void exportSummons();
 	void exportGraphics();
+	
+	iLiving& get_target(size_t which);
 								   
 	cScenario scenario;
 	cParty party;

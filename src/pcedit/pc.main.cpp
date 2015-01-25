@@ -245,17 +245,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::CURE_CONDITIONS:
 			display_strings(4,15);
-			for(i = 0; i < 6; i++) {
-				univ.party[i].status[eStatus::POISON] = 0;
-				if(univ.party[i].status[eStatus::HASTE_SLOW] < 0)
-					univ.party[i].status[eStatus::HASTE_SLOW] = 0;
-				univ.party[i].status[eStatus::WEBS] = 0;
-				univ.party[i].status[eStatus::DISEASE] = 0;
-				univ.party[i].status[eStatus::DUMB] = 0;
-				univ.party[i].status[eStatus::ASLEEP] = 0;
-				univ.party[i].status[eStatus::PARALYZED] = 0;
-				univ.party[i].status[eStatus::ACID] = 0;
-			}
+			univ.party.clear_bad_status();
 			break;
 			
 		case eMenu::LEAVE_SCENARIO:

@@ -16,6 +16,7 @@
 #include "soundtool.hpp"
 #include "simpletypes.h"
 #include "graphtool.hpp"
+#include "living.hpp"
 
 namespace legacy {
 	struct monster_record_type;
@@ -114,7 +115,8 @@ public:
 	unsigned int mu;
 	unsigned int cl;
 	unsigned int treasure;
-	std::map<eMonstAbil, uAbility> abil;
+	// HACK: This is only really marked mutable so that I can use operator[] from const methods
+	mutable std::map<eMonstAbil, uAbility> abil;
 	item_num_t corpse_item;
 	short corpse_item_chance;
 	unsigned int magic_res;
@@ -133,9 +135,9 @@ public:
 	pic_num_t picture_num;
 	snd_num_t ambient_sound; // has a chance of being played every move
 	spec_num_t see_spec;
-public:
 	
 	std::map<eMonstAbil,uAbility>::iterator addAbil(eMonstAbilTemplate what, int param = 0);
+	
 	void append(legacy::monster_record_type& old);
 	cMonster();
 	void writeTo(std::ostream& file) const;
@@ -168,8 +170,9 @@ public:
 	cTownperson(location loc, mon_num_t num, const cMonster& monst);
 };
 
-class cCreature : public cMonster, public cTownperson {
+class cCreature : public cMonster, public cTownperson, public iLiving {
 public:
+	static const short charm_odds[20];
 	short active, attitude;
 	location cur_loc;
 	short summoned;
@@ -178,14 +181,40 @@ public:
 	short health;
 	short mp;
 	short max_mp;
-	short ap;
 	short morale,m_morale; // these are calculated in-game based on the level
-	std::map<eStatus,short> status;
-	eDirection direction;
-	short marked_damage = 0; // for use during animations
 	
 	cCreature();
 	cCreature(int num);
+	
+	void heal(int how_much);
+	void poison(int how_much);
+	void cure(int how_much);
+	void acid(int how_much);
+	void curse(int how_much);
+	void slow(int how_much);
+	void web(int how_much);
+	void disease(int how_much);
+	void dumbfound(int how_much);
+	void scare(int how_much);
+	void sleep(eStatus type, int how_much, int adj);
+	void avatar();
+	void drain_sp(int how_much);
+	void restore_sp(int how_much);
+	void petrify(int adj);
+	void kill(eMainStatus type = eMainStatus::DEAD);
+	
+	int get_health() const;
+	int get_magic() const;
+	int get_level() const;
+	
+	bool is_alive() const;
+	bool is_shielded() const;
+	int get_shared_dmg(int base_dmg) const;
+	location get_loc() const;
+	
+	int magic_adjust(int base);
+	
+	void spell_note(int which);
 	
 	void append(legacy::creature_data_type old);
 	void writeTo(std::ostream& file) const;

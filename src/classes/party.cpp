@@ -260,6 +260,131 @@ void cParty::apply_status(eStatus which, int how_much) {
 		adven[i]->apply_status(which, how_much);
 }
 
+void cParty::clear_bad_status() {
+	for(int i = 0; i < 6; i++)
+		adven[i]->clear_bad_status();
+}
+
+bool cParty::is_alive() const {
+	for(int i = 0; i < 6; i++)
+		if(adven[i]->is_alive())
+			return true;
+	return false;
+}
+
+bool cParty::is_shielded() const {
+	return false;
+}
+
+int cParty::get_shared_dmg(int) const {
+	return 0;
+}
+
+int cParty::get_health() const {
+	int health = 0;
+	for(int i = 0; i < 6; i++)
+		if(adven[i]->is_alive())
+			health += adven[i]->cur_health;
+	return health;
+}
+
+int cParty::get_magic() const {
+	int magic = 0;
+	for(int i = 0; i < 6; i++)
+		if(adven[i]->is_alive())
+			magic += adven[i]->cur_sp;
+	return magic;
+}
+
+int cParty::get_level() const {
+	short j = 0;
+	for(int i = 0; i < 6; i++)
+		if(univ.party[i].main_status == eMainStatus::ALIVE)
+			j += univ.party[i].level;
+	return j;
+}
+
+void cParty::heal(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->heal(how_much);
+}
+
+void cParty::poison(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->poison(how_much);
+}
+
+void cParty::cure(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->cure(how_much);
+}
+
+void cParty::acid(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->acid(how_much);
+}
+
+void cParty::curse(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->curse(how_much);
+}
+
+void cParty::slow(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->slow(how_much);
+}
+
+void cParty::web(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->web(how_much);
+}
+
+void cParty::disease(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->disease(how_much);
+}
+
+void cParty::dumbfound(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->dumbfound(how_much);
+}
+
+void cParty::sleep(eStatus type, int how_much, int adj) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->sleep(type, how_much, adj);
+}
+
+void cParty::scare(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->scare(how_much);
+}
+
+void cParty::avatar() {
+	for(int i = 0; i < 6; i++)
+		adven[i]->avatar();
+}
+
+void cParty::drain_sp(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->drain_sp(how_much);
+}
+
+void cParty::restore_sp(int how_much) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->restore_sp(how_much);
+}
+
+void cParty::petrify(int adj) {
+	for(int i = 0; i < 6; i++)
+		adven[i]->petrify(adj);
+}
+
+location cParty::get_loc() const {
+	if(univ.town.num == 200)
+		return p_loc;
+	return univ.town.p_loc;
+}
+
 bool cParty::give_item(cItem item,bool do_print) {
 	for(int i = 0; i < 6; i++) {
 		if(adven[i]->give_item(item,do_print))
@@ -926,6 +1051,4 @@ std::ostream& operator<<(std::ostream& out, ePartyStatus type) {
 	}
 	return out;
 }
-
-void(* cParty::print_result)(std::string) = nullptr;
 

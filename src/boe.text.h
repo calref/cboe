@@ -23,7 +23,6 @@ void print_monst_name(mon_num_t m_type);
 void print_monst_attacks(mon_num_t m_type,short target);
 void damaged_message(short damage,eMonstMelee type);
 std::string print_monster_going(mon_num_t m_num,short ap);
-void monst_spell_note(mon_num_t number,short which_mess);
 void monst_cast_spell_note(mon_num_t number,eSpell spell);
 void monst_breathe_note(mon_num_t number);
 void monst_damaged_mes(mon_num_t which_m,short how_much,short how_much_spec);

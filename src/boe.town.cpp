@@ -690,7 +690,7 @@ void start_town_combat(eDirection direction) {
 	for(i = 0; i < 6; i++) {
 		univ.party[i].last_attacked = univ.town.monst.size() + 10;
 		univ.party[i].parry = 0;
-		univ.party[i].dir = direction;
+		univ.party[i].direction = direction;
 		univ.party[current_pc].direction = direction;
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			update_explored(univ.party[i].combat_pos);
@@ -722,7 +722,7 @@ eDirection end_town_combat() {
 	for(i = 0; i < 6; i++) {
 		univ.party[i].parry = 0;
 	}
-	return univ.party[r1].dir;
+	return univ.party[r1].direction;
 }
 
 void place_party(short direction) {

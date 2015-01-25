@@ -17,6 +17,7 @@
 #include "simpletypes.h"
 #include "item.h"
 #include "pictypes.hpp"
+#include "living.hpp"
 
 namespace legacy { struct pc_record_type; };
 
@@ -24,12 +25,13 @@ enum class eBuyStatus {OK, NO_SPACE, NEED_GOLD, TOO_HEAVY, HAVE_LOTS};
 
 class cParty;
 
-class cPlayer {
+class cPlayer : public iLiving {
 	cParty& party;
 public:
 	eMainStatus main_status;
 	std::string name;
-	std::map<eSkill, short> skills;
+	// HACK: This is only really marked mutable so that I can use operator[] from const methods
+	mutable std::map<eSkill, short> skills;
 	unsigned short max_health;
 	short cur_health;
 	unsigned short max_sp;
@@ -37,49 +39,69 @@ public:
 	unsigned short experience;
 	short skill_pts;
 	short level;
-	std::map<eStatus,short> status;
 	std::array<cItem,24> items;
 	std::array<bool,24> equip;
 	bool priest_spells[62];
 	bool mage_spells[62];
 	pic_num_t which_graphic;
 	short weap_poisoned;
-	std::map<eTrait,bool> traits;
+	// HACK: This is only really marked mutable so that I can use operator[] from const methods
+	mutable std::map<eTrait,bool> traits;
 	eRace race;
-	short direction;
-	short ap;
 	// transient stuff
 	std::map<eSkill,eSpell> last_cast;
 	location combat_pos;
-	short marked_damage = 0, parry, last_attacked;
-	eDirection dir;
+	short parry, last_attacked;
+	
+	bool is_alive() const;
+	bool is_shielded() const;
+	int get_shared_dmg(int base_dmg) const;
+	
+	int get_health() const;
+	int get_magic() const;
+	int get_level() const;
+	location get_loc() const;
 	
 	void finish_create();
-	void apply_status(eStatus which, int how_much);
+	void heal(int how_much);
+	void poison(int how_much);
+	void cure(int how_much);
+	void acid(int how_much);
+	void curse(int how_much);
+	void slow(int how_much);
+	void web(int how_much);
+	void disease(int how_much);
+	void dumbfound(int how_much);
+	void scare(int how_much);
+	void sleep(eStatus type, int how_much, int adj);
 	void avatar();
+	void drain_sp(int how_much);
+	void restore_sp(int how_much);
+	void petrify(int adj);
+	void kill(eMainStatus type = eMainStatus::DEAD);
 	
 	void combine_things();
 	void sort_items();
 	bool give_item(cItem item, bool do_print, bool allow_overload = false);
 	void take_item(int which_item);
 	void remove_charge(int which_item);
-	short has_space();
-	short max_weight();
-	short cur_weight();
-	short free_weight();
-	short get_prot_level(eItemAbil abil, short dat = -1);
-	short has_abil_equip(eItemAbil abil, short dat = -1);
-	short has_abil(eItemAbil abil, short dat = -1);
-	short skill(eSkill skill);
-	eBuyStatus ok_to_buy(short cost,cItem item);
+	short has_space() const;
+	short max_weight() const;
+	short cur_weight() const;
+	short free_weight() const;
+	short get_prot_level(eItemAbil abil, short dat = -1) const;
+	short has_abil_equip(eItemAbil abil, short dat = -1) const;
+	short has_abil(eItemAbil abil, short dat = -1) const;
+	short skill(eSkill skill) const;
+	eBuyStatus ok_to_buy(short cost,cItem item) const;
 	
 	void append(legacy::pc_record_type old);
 	cPlayer(cParty& party);
 	cPlayer(cParty& party,long key,short slot);
-	static void(* print_result)(std::string);
 	short get_tnl();
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
+	virtual ~cPlayer() = default;
 };
 
 void operator += (eMainStatus& stat, eMainStatus othr);

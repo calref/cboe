@@ -20,6 +20,7 @@
 #include "pc.h"
 #include "outdoors.h"
 #include "monster.h"
+#include "living.hpp"
 
 namespace legacy {
 	struct party_record_type;
@@ -37,7 +38,7 @@ struct campaign_flag_type{
 
 class cUniverse;
 
-class cParty {
+class cParty : public iLiving {
 public:
 	class cConvers { // conversation; formerly talk_save_type
 	public:
@@ -131,7 +132,33 @@ public:
 	void append(legacy::setup_save_type& old);
 	void append(legacy::pc_record_type(& old)[6]);
 	
+	bool is_alive() const;
+	bool is_shielded() const;
+	int get_shared_dmg(int base_dmg) const;
+	location get_loc() const;
+	
 	void apply_status(eStatus which, int how_much);
+	void heal(int how_much);
+	void poison(int how_much);
+	void cure(int how_much);
+	void acid(int how_much);
+	void curse(int how_much);
+	void slow(int how_much);
+	void web(int how_much);
+	void disease(int how_much);
+	void dumbfound(int how_much);
+	void scare(int how_much);
+	void sleep(eStatus type, int how_much, int adj);
+	void clear_bad_status();
+	void avatar();
+	void drain_sp(int how_much);
+	void restore_sp(int how_much);
+	void petrify(int adj);
+	void kill(eMainStatus type = eMainStatus::DEAD);
+	
+	int get_health() const;
+	int get_magic() const;
+	int get_level() const;
 	
 	void new_pc(size_t spot);
 	size_t free_space();
@@ -164,7 +191,6 @@ public:
 	typedef std::vector<cTimer>::iterator timerIter;
 	cParty(cUniverse& univ, long party_preset = 'dflt');
 	~cParty();
-	static void(* print_result)(std::string);
 };
 
 bool operator==(const cParty::cConvers& one, const cParty::cConvers& two);

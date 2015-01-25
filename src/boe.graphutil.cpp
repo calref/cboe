@@ -260,14 +260,14 @@ void draw_pcs(location center,short mode) {
 				if(univ.party[i].which_graphic >= 1000) {
 					bool isParty = univ.party[i].which_graphic >= 10000;
 					pic_num_t need_pic = univ.party[i].which_graphic % 1000;
-					if(univ.party[i].dir >= 4)
+					if(univ.party[i].direction >= 4)
 						need_pic++;
 					if(combat_posing_monster == i)
 						need_pic += 2;
 					graf_pos_ref(from_gw, source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
 				} else {
 					source_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
-					if(univ.party[i].dir >= 4)
+					if(univ.party[i].direction >= 4)
 						source_rect.offset(28,0);
 					if(combat_posing_monster == i)
 						source_rect.offset(0,288);
@@ -294,7 +294,7 @@ void draw_pcs(location center,short mode) {
 		where_draw.x = univ.party[current_pc].combat_pos.x - center.x + 4;
 		where_draw.y = univ.party[current_pc].combat_pos.y - center.y + 4;
 		source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[current_pc].which_graphic % 8);
-		if(univ.party[current_pc].dir >= 4)
+		if(univ.party[current_pc].direction >= 4)
 			source_rect.offset(28,0);
 		if(combat_posing_monster == current_pc)
 			source_rect.offset(0,288);
@@ -472,12 +472,12 @@ void draw_party_symbol(location center) {
 		if(univ.party[i].which_graphic >= 1000) {
 			bool isParty = univ.party[i].which_graphic >= 10000;
 			pic_num_t need_pic = univ.party[i].which_graphic % 1000;
-			if(univ.party[i].dir >= 4)
+			if(univ.party[i].direction >= 4)
 				need_pic++;
 			graf_pos_ref(from_gw, source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
 		} else {
 			source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[i].which_graphic % 8);
-			if(univ.party[current_pc].dir >= 4)
+			if(univ.party[current_pc].direction >= 4)
 				source_rect.offset(28,0);
 			from_gw = &pc_gworld;
 		}

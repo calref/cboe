@@ -10,7 +10,6 @@ bool adj_town_look(location where);
 void PSOE(short which_special,unsigned char *stuff_done_val,short where_put);
 bool damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, eDamageType dam_type, short sound_type, bool do_print = true);
 void kill_monst(cCreature *which_m,short who_killed,eMainStatus type = eMainStatus::DEAD);
-void petrify_monst(cCreature* m_target, short strength);
 void special_increase_age(long length = 1, bool queue = false);
 void do_rest(long length, int hp_restore, int mp_restore);
 void out_move_party(short x,short y) ;

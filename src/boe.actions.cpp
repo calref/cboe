@@ -1513,7 +1513,7 @@ void initiate_outdoor_combat(short i) {
 	draw_terrain();
 	
 	// Is combat too easy?
-	if((party_total_level() > ((out_enc_lev_tot(i) * 5) / 3) ) && (out_enc_lev_tot(i) < 200)
+	if((univ.party.get_level() > ((out_enc_lev_tot(i) * 5) / 3) ) && (out_enc_lev_tot(i) < 200)
 		&& (univ.party.out_c[i].what_monst.cant_flee % 10 != 1)) {
 		add_string_to_buf("Combat: Monsters fled!           ");
 		univ.party.out_c[i].exists = false;
@@ -1772,19 +1772,7 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'C':
 			if(!in_scen_debug) break;
-			for(i = 0; i < 6; i++) {
-				univ.party[i].status[eStatus::POISON] = 0;
-				if(univ.party[i].status[eStatus::BLESS_CURSE] < 0)
-					univ.party[i].status[eStatus::BLESS_CURSE] = 0;
-				if(univ.party[i].status[eStatus::HASTE_SLOW] < 0)
-					univ.party[i].status[eStatus::HASTE_SLOW] = 0;
-				univ.party[i].status[eStatus::WEBS] = 0;
-				univ.party[i].status[eStatus::DISEASE] = 0;
-				univ.party[i].status[eStatus::DUMB] = 0;
-				univ.party[i].status[eStatus::ASLEEP] = 0;
-				univ.party[i].status[eStatus::PARALYZED] = 0;
-				univ.party[i].status[eStatus::ACID] = 0;
-			}
+			univ.party.clear_bad_status();
 			add_string_to_buf("Debug: You get cleaned up!");
 			print_buf();
 			put_pc_screen();
@@ -1833,8 +1821,8 @@ bool handle_keystroke(sf::Event& event){
 				if(isDead(univ.party[i].main_status))
 					univ.party[i].main_status = eMainStatus::ALIVE;
 			}
-			heal_party(250);
-			restore_sp_party(100);
+			univ.party.heal(250);
+			univ.party.restore_sp(100);
 			add_string_to_buf("Debug: Heal party.");
 			print_buf();
 			put_pc_screen();
@@ -2184,8 +2172,8 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	unsigned long age_before = univ.party.age;
 	univ.party.age += length;
 	if(!PSD[SDF_TIMERS_DURING_REST]) {
-		heal_party(hp_restore);
-		restore_sp_party(mp_restore);
+		univ.party.heal(hp_restore);
+		univ.party.restore_sp(mp_restore);
 		put_pc_screen();
 		return;
 	}
@@ -2220,16 +2208,16 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	if(length > 4000 || age_before / 4000 < univ.party.age / 4000)
 		refresh_store_items();
 	// Heal party
-	heal_party(hp_restore);
-	restore_sp_party(mp_restore);
+	univ.party.heal(hp_restore);
+	univ.party.restore_sp(mp_restore);
 	// Recuperation and chronic disease disads
 	for(int i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if(univ.party[i].traits[eTrait::RECUPERATION] && univ.party[i].cur_health < univ.party[i].max_health) {
-				heal_pc(i,hp_restore / 5);
+				univ.party[i].heal(hp_restore / 5);
 			}
 			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
-				disease_pc(i,6);
+				univ.party[i].disease(6);
 			}
 			short item = univ.party[i].has_abil_equip(eItemAbil::REGENERATE);
 			if(item < 24 && univ.party[i].cur_health < univ.party[i].max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)){
@@ -2237,7 +2225,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 				if(univ.party[i].items[item].abil_data[0] / 3 == 0)
 					j = get_ran(1,0,1);
 				if(is_out()) j = j * 4;
-				heal_pc(i,j);
+				univ.party[i].heal(j);
 			}
 		}
 	special_increase_age(length, true);
@@ -2348,9 +2336,9 @@ void increase_age() {
 	// Protection, etc.
 	for(i = 0; i < 6; i++) { // Process some status things, and check if stats updated
 		
-		if(univ.party[i].status[eStatus::INVULNERABLE] == 1 || univ.party[i].status[eStatus::MAGIC_RESISTANCE] == 1
+		if(univ.party[i].status[eStatus::INVULNERABLE] == 1 || abs(univ.party[i].status[eStatus::MAGIC_RESISTANCE]) == 1
 		   || univ.party[i].status[eStatus::INVISIBLE] == 1 || univ.party[i].status[eStatus::MARTYRS_SHIELD] == 1
-		   || univ.party[i].status[eStatus::ASLEEP] == 1 || univ.party[i].status[eStatus::PARALYZED] == 1)
+		   || abs(univ.party[i].status[eStatus::ASLEEP]) == 1 || univ.party[i].status[eStatus::PARALYZED] == 1)
 			update_stat = true;
 		move_to_zero(univ.party[i].status[eStatus::INVULNERABLE]);
 		move_to_zero(univ.party[i].status[eStatus::MAGIC_RESISTANCE]);
@@ -2417,7 +2405,7 @@ void increase_age() {
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health < univ.party[i].max_health)
 					update_stat = true;
-			heal_party(2);
+			univ.party.heal(2);
 		}
 	}
 	else {
@@ -2425,7 +2413,7 @@ void increase_age() {
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health < univ.party[i].max_health)
 					update_stat = true;
-			heal_party(1);
+			univ.party.heal(1);
 		}
 	}
 	if(is_out()) {
@@ -2433,7 +2421,7 @@ void increase_age() {
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp < univ.party[i].max_sp)
 					update_stat = true;
-			restore_sp_party(2);
+			univ.party.restore_sp(2);
 		}
 	}
 	else {
@@ -2441,7 +2429,7 @@ void increase_age() {
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp < univ.party[i].max_sp)
 					update_stat = true;
-			restore_sp_party(1);
+			univ.party.restore_sp(1);
 		}
 	}
 	
@@ -2449,11 +2437,11 @@ void increase_age() {
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if(univ.party[i].traits[eTrait::RECUPERATION] && get_ran(1,0,10) == 1 && univ.party[i].cur_health < univ.party[i].max_health) {
-				heal_pc(i,2);
+				univ.party[i].heal(2);
 				update_stat = true;
 			}
 			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
-				disease_pc(i,4);
+				univ.party[i].disease(4);
 				update_stat = true;
 			}
 			
@@ -2474,7 +2462,7 @@ void increase_age() {
 				if(univ.party[i].items[item].abil_data[0] / 3 == 0)
 					j = get_ran(1,0,1);
 				if(is_out()) j = j * 4;
-				heal_pc(i,j);
+				univ.party[i].heal(j);
 				update_stat = true;
 			}
 		}

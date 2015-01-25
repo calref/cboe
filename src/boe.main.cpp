@@ -69,7 +69,7 @@ short fast_bang = false; // Note: This mostly behaves as a boolean variable, but
 short spec_item_array[60];
 short current_spell_range;
 eGameMode overall_mode = MODE_STARTUP;
-bool first_update = true,anim_onscreen = false,frills_on = true,changed_display_mode = false,suppress_stat_screen = false;
+bool first_update = true,anim_onscreen = false,frills_on = true,changed_display_mode = false;
 short stat_window = 0,store_modifier;
 bool monsters_going = false,boom_anim_active = false;
 bool give_delays = false;
@@ -112,7 +112,7 @@ int main(int /*argc*/, char* argv[]) {
 		init_directories(argv[0]);
 		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 		sync_prefs();
-		cUniverse::print_result = cParty::print_result = cPlayer::print_result = add_string_to_buf;
+		cUniverse::print_result = iLiving::print_result = add_string_to_buf;
 		init_graph_tool();
 		Initialize();
 		init_fileio();

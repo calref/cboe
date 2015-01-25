@@ -17,9 +17,11 @@
 #include "oldstructs.h"
 #include "fileio.hpp"
 #include "spell.hpp"
+#include "mathutil.hpp"
 
 static uAbility test;
 static_assert(&test.active == &test.missile.active, "uAbility union has incorrect layout");
+const short cCreature::charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};
 
 void cMonster::append(legacy::monster_record_type& old){
 	level = old.level;
@@ -490,6 +492,103 @@ void cCreature::append(legacy::creature_data_type old){
 	for(int i = 0; i < 15; i++)
 		status[(eStatus) i] = old.m_d.status[i];
 	direction = eDirection(old.m_d.direction);
+}
+
+void cCreature::avatar() {
+	health = m_health;
+	status[eStatus::POISON] = 0;
+	status[eStatus::BLESS_CURSE] = 8;
+	status[eStatus::HASTE_SLOW] = 8;
+	status[eStatus::WEBS] = 0;
+	status[eStatus::DISEASE] = 0;
+	if(status[eStatus::DUMB] > 0)
+		status[eStatus::DUMB] = 0;
+	status[eStatus::MARTYRS_SHIELD] = 8;
+}
+
+void cCreature::heal(int amt) {
+	if(!is_alive()) return;
+	if(health >= m_health) return;
+	health += amt;
+	if(health > m_health)
+		health = m_health;
+}
+
+void cCreature::cure(int amt) {
+	if(!is_alive()) return;
+	if(status[eStatus::POISON] <= amt)
+		status[eStatus::POISON] = 0;
+	else status[eStatus::POISON] -= amt;
+}
+
+void cCreature::restore_sp(int amt) {
+	if(!is_alive()) return;
+	mp += amt;
+	if(mp > max_mp)
+		mp = max_mp;
+}
+
+void cCreature::drain_sp(int drain) {
+	drain = magic_adjust(drain);
+	if(drain > 0) {
+		if(mu > 0 && mp > 4)
+			drain = min(mp, drain / 3);
+		else if(cl > 0 && mp > 10)
+			drain = min(mp, drain / 2);
+		mp -= drain;
+		if(mp < 0) mp = 0;
+	}
+}
+
+bool cCreature::is_alive() const {
+	return active > 0;
+}
+
+location cCreature::get_loc() const {
+	return cur_loc;
+}
+
+bool cCreature::is_shielded() const {
+	if(status[eStatus::MARTYRS_SHIELD] > 0)
+		return true;
+	if(abil[eMonstAbil::MARTYRS_SHIELD].active && get_ran(1,1,1000) <= abil[eMonstAbil::MARTYRS_SHIELD].special.extra1)
+		return true;
+	return false;
+}
+
+int cCreature::get_shared_dmg(int base_dmg) const {
+	if(abil[eMonstAbil::MARTYRS_SHIELD].active) {
+		base_dmg *= abil[eMonstAbil::MARTYRS_SHIELD].special.extra2;
+		base_dmg /= 100;
+	}
+	return base_dmg;
+}
+
+int cCreature::magic_adjust(int how_much) {
+	if(how_much <= 0) return how_much;
+	if(abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
+		int gain = abil[eMonstAbil::ABSORB_SPELLS].special.extra2;
+		if(32767 - health > gain)
+			health = 32767;
+		else health += gain;
+		return 0;
+	}
+	// TODO: Magic resistance status effect?
+	how_much *= magic_res;
+	how_much /= 100;
+	return how_much;
+}
+
+int cCreature::get_health() const {
+	return health;
+}
+
+int cCreature::get_magic() const {
+	return mp;
+}
+
+int cCreature::get_level() const {
+	return level;
 }
 
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att) {
@@ -1119,7 +1218,7 @@ void cCreature::writeTo(std::ostream& file) const {
 	file << "CURHP " << health << '\n';
 	file << "CURSP " << mp << '\n';
 	file << "MORALE " << morale << '\n';
-	file << "DIRECTION " << unsigned(direction) << '\n';
+	file << "DIRECTION " << direction << '\n';
 	// TODO: Should we be saving "max_mp" and/or "m_morale"?
 }
 

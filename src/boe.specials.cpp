@@ -35,7 +35,7 @@ extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
 extern short which_combat_type,current_pc,stat_window;
 extern location center;
-extern bool in_scen_debug,belt_present,processing_fields,monsters_going,suppress_stat_screen,boom_anim_active;
+extern bool in_scen_debug,belt_present,processing_fields,monsters_going,boom_anim_active;
 extern effect_pat_type single,t,square,radius2,radius3,small_square,open_square,field[8];
 extern effect_pat_type current_pat;
 extern cOutdoors::cWandering store_wandering_special;
@@ -249,15 +249,13 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 		if(univ.town.is_web(where_check.x,where_check.y)) {
 			add_string_to_buf("  Webs!               ");
 			if(mode != eSpecCtx::COMBAT_MOVE) {
-				suppress_stat_screen = true;
 				for(i = 0; i < 6; i++) {
 					r1 = get_ran(1,2,3);
-					web_pc(i,r1);
+					univ.party[i].web(r1);
 				}
-				suppress_stat_screen = true;
 				put_pc_screen();
 			}
-			else web_pc(current_pc,get_ran(1,2,3));
+			else univ.party[current_pc].web(get_ran(1,2,3));
 			univ.town.set_web(where_check.x,where_check.y,false);
 		}
 		if(univ.town.is_force_barr(where_check.x,where_check.y)) {
@@ -384,13 +382,13 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 								if(get_ran(1,1,100) > 60) add_string_to_buf("It's eerie here...");
 								break;
 							case eStatus::BLESS_CURSE: // Should say "You feel awkward." / "You feel blessed."?
-								curse_pc(i,ter_flag1.s);
+								univ.party[i].curse(ter_flag1.s);
 								break;
 							case eStatus::POISON:
-								poison_pc(i,ter_flag1.u);
+								univ.party[i].poison(ter_flag1.u);
 								break;
 							case eStatus::HASTE_SLOW: // Should say "You feel sluggish." / "You feel speedy."?
-								slow_pc(i,ter_flag1.s);
+								univ.party[i].slow(ter_flag1.s);
 								break;
 							case eStatus::INVULNERABLE: // Should say "You feel odd." / "You feel protected."?
 								univ.party[i].apply_status(eStatus::INVULNERABLE,ter_flag1.u);
@@ -399,10 +397,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 								univ.party[i].apply_status(eStatus::MAGIC_RESISTANCE,ter_flag1.u);
 								break;
 							case eStatus::WEBS: // Should say "You feel sticky." / "Your skin tingles."?
-								web_pc(i,ter_flag1.u);
+								univ.party[i].web(ter_flag1.u);
 								break;
 							case eStatus::DISEASE: // Should say "You feel healthy." / "You feel sick."?
-								disease_pc(i,ter_flag1.u);
+								univ.party[i].disease(ter_flag1.u);
 								break;
 							case eStatus::INVISIBLE:
 								if(ter_flag1.s < 0) add_string_to_buf("You feel obscure.");
@@ -410,19 +408,19 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 								univ.party[i].apply_status(eStatus::INVISIBLE,ter_flag1.s);
 								break;
 							case eStatus::DUMB: // Should say "You feel clearheaded." / "You feel confused."?
-								dumbfound_pc(i,ter_flag1.u);
+								univ.party[i].dumbfound(ter_flag1.u);
 								break;
 							case eStatus::MARTYRS_SHIELD: // Should say "You feel dull." / "You start to glow slightly."?
 								univ.party[i].apply_status(eStatus::MARTYRS_SHIELD,ter_flag1.u);
 								break;
 							case eStatus::ASLEEP: // Should say "You feel alert." / "You feel very tired."?
-								sleep_pc(i,ter_flag1.u,eStatus::ASLEEP,ter_flag1.u / 2);
+								univ.party[i].sleep(eStatus::ASLEEP,ter_flag1.u,ter_flag1.u / 2);
 								break;
 							case eStatus::PARALYZED: // Should say "You find it easier to move." / "You feel very stiff."?
-								sleep_pc(i,ter_flag1.u,eStatus::PARALYZED,ter_flag1.u / 2);
+								univ.party[i].sleep(eStatus::PARALYZED,ter_flag1.u,ter_flag1.u / 2);
 								break;
 							case eStatus::ACID: // Should say "Your skin tingles pleasantly." / "Your skin burns!"?
-								acid_pc(i,ter_flag1.u);
+								univ.party[i].acid(ter_flag1.u);
 								break;
 							case eStatus::MAIN: case eStatus::CHARM: // These magic values are illegal in this context
 								break;
@@ -544,27 +542,21 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 	if(univ.town.is_scloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Stinking cloud!               ");
 		if(mode != eSpecCtx::COMBAT_MOVE) {
-			suppress_stat_screen = true;
 			for(i = 0; i < 6; i++) {
 				r1 = get_ran(1,2,3);
-				curse_pc(i,r1);
+				univ.party[i].curse(r1);
 			}
-			suppress_stat_screen = false;
 			put_pc_screen();
 		}
-		else curse_pc(current_pc,get_ran(1,2,3));
+		else univ.party[current_pc].curse(get_ran(1,2,3));
 	}
 	if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Sleep cloud!               ");
 		if(mode != eSpecCtx::COMBAT_MOVE) {
-			suppress_stat_screen = true;
-			for(i = 0; i < 6; i++) {
-				sleep_pc(i,3,eStatus::ASLEEP,0);
-			}
-			suppress_stat_screen = false;
-			put_pc_screen();
+			univ.party.sleep(eStatus::ASLEEP,3,0);
 		}
-		else sleep_pc(current_pc,3,eStatus::ASLEEP,0);
+		else univ.party[current_pc].sleep(eStatus::ASLEEP,3,0);
+		put_pc_screen();
 	}
 	if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		add_string_to_buf("  Magic barrier!               ");
@@ -771,19 +763,19 @@ void use_item(short pc,short item) {
 						switch(type) {
 							case 0:
 								ASB("  You feel better.");
-								cure_pc(pc,str);
+								univ.party[pc].cure(str);
 								break;
 							case 1:
 								ASB("  You feel ill.");
-								poison_pc(pc,str);
+								univ.party[pc].poison(str);
 								break;
 							case 2:
 								ASB("  You all feel better.");
-								cure_party(str);
+								univ.party.cure(str);
 								break;
 							case 3:
 								ASB("  You all feel ill.");
-								poison_party(str);
+								univ.party.poison(str);
 								break;
 						}
 						break;
@@ -795,7 +787,7 @@ void use_item(short pc,short item) {
 								break;
 							case 1:
 								ASB("  You feel sick.");
-								disease_pc(pc,str);
+								univ.party[pc].disease(str);
 								break;
 							case 2:
 								ASB("  You all feel healthy.");
@@ -803,8 +795,7 @@ void use_item(short pc,short item) {
 								break;
 							case 3:
 								ASB("  You all feel sick.");
-								for(i = 0; i < 6; i++)
-									disease_pc(i,str);
+								univ.party.disease(str);
 								break;
 						}
 						break;
@@ -816,7 +807,7 @@ void use_item(short pc,short item) {
 								break;
 							case 1:
 								ASB("  You feel confused.");
-								dumbfound_pc(pc,str);
+								univ.party[pc].dumbfound(str);
 								break;
 							case 2:
 								ASB("  You all feel clear headed.");
@@ -824,8 +815,7 @@ void use_item(short pc,short item) {
 								break;
 							case 3:
 								ASB("  You all feel confused.");
-								for(i = 0; i < 6; i++)
-									dumbfound_pc(i,str);
+								univ.party.dumbfound(str);
 								break;
 						}
 						break;
@@ -837,7 +827,7 @@ void use_item(short pc,short item) {
 								break;
 							case 1:
 								ASB("  You feel very tired.");
-								sleep_pc(pc,str + 1,eStatus::ASLEEP,200);
+								univ.party[pc].sleep(eStatus::ASLEEP,str + 1,200);
 								break;
 							case 2:
 								ASB("  You all feel alert.");
@@ -845,8 +835,7 @@ void use_item(short pc,short item) {
 								break;
 							case 3:
 								ASB("  You all feel very tired.");
-								for(i = 0; i < 6; i++)
-									sleep_pc(i,str + 1,eStatus::ASLEEP,200);
+								univ.party.sleep(eStatus::ASLEEP,str + 1,200);
 								break;
 						}
 						break;
@@ -858,7 +847,7 @@ void use_item(short pc,short item) {
 								break;
 							case 1:
 								ASB("  You feel very stiff.");
-								sleep_pc(pc,str * 20 + 10,eStatus::PARALYZED,200);
+								univ.party[pc].sleep(eStatus::PARALYZED,str * 20 + 10,200);
 								break;
 							case 2:
 								ASB("  You all find it easier to move.");
@@ -866,8 +855,7 @@ void use_item(short pc,short item) {
 								break;
 							case 3:
 								ASB("  You all feel very stiff.");
-								for(i = 0; i < 6; i++)
-									sleep_pc(i,str * 20 + 10,eStatus::PARALYZED,200);
+								univ.party.sleep(eStatus::PARALYZED,str * 20 + 10,200);
 								break;
 						}
 						break;
@@ -879,7 +867,7 @@ void use_item(short pc,short item) {
 								break;
 							case 1:
 								ASB("  Your skin burns!");
-								acid_pc(pc,str);
+								univ.party[pc].acid(str);
 								break;
 							case 2:
 								ASB("  You all tingle pleasantly.");
@@ -887,8 +875,7 @@ void use_item(short pc,short item) {
 								break;
 							case 3:
 								ASB("  Everyone's skin burns!");
-								for(i = 0; i < 6; i++)
-									acid_pc(i,str);
+								univ.party.acid(str);
 								break;
 						}
 						break;
@@ -897,19 +884,19 @@ void use_item(short pc,short item) {
 				switch(type) {
 					case 0:
 						ASB("  You feel wonderful!");
-						heal_pc(pc,str * 20);
+						univ.party[pc].heal(str * 20);
 						univ.party[pc].apply_status(eStatus::BLESS_CURSE,str);
 						break;
 					case 1:
 						ASB("  You feel terrible.");
 						drain_pc(pc,str * 5);
 						damage_pc(pc,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
-						disease_pc(pc,2 * str);
-						dumbfound_pc(pc,2 * str);
+						univ.party[pc].disease(2 * str);
+						univ.party[pc].dumbfound(2 * str);
 						break;
 					case 2:
 						ASB("  Everyone feels wonderful!");
-						heal_party(str*20);
+						univ.party.heal(str*20);
 						univ.party.apply_status(eStatus::BLESS_CURSE,str);
 						break;
 					case 3:
@@ -917,8 +904,8 @@ void use_item(short pc,short item) {
 						for(i = 0; i < 6; i++) {
 							drain_pc(i,str * 5);
 							damage_pc(i,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
-							disease_pc(i,2 * str);
-							dumbfound_pc(i,2 * str);
+							univ.party[i].disease(2 * str);
+							univ.party[i].dumbfound(2 * str);
 						}
 						break;
 				}
@@ -972,7 +959,7 @@ void use_item(short pc,short item) {
 				switch(type) {
 					case 0:
 						ASB("  You feel better.");
-						heal_pc(pc,str * 20);
+						univ.party[pc].heal(str * 20);
 						break;
 					case 1:
 						ASB("  You feel sick.");
@@ -980,7 +967,7 @@ void use_item(short pc,short item) {
 						break;
 					case 2:
 						ASB("  You all feel better.");
-						heal_party(str * 20);
+						univ.party.heal(str * 20);
 						break;
 					case 3:
 						ASB("  You all feel sick.");
@@ -992,7 +979,7 @@ void use_item(short pc,short item) {
 				switch(type) {
 					case 0:
 						ASB("  You feel energized.");
-						restore_sp_pc(pc,str * 5);
+						univ.party[pc].restore_sp(str * 5);
 						break;
 					case 1:
 						ASB("  You feel drained.");
@@ -1000,7 +987,7 @@ void use_item(short pc,short item) {
 						break;
 					case 2:
 						ASB("  You all feel energized.");
-						restore_sp_party(str * 5);
+						univ.party.restore_sp(str * 5);
 						break;
 					case 3:
 						ASB("  You all feel drained.");
@@ -1042,23 +1029,23 @@ void use_item(short pc,short item) {
 				switch(type) {
 					case 0:
 						ASB("  You feel wonderful.");
-						heal_pc(pc,str*25);
-						cure_pc(pc,str);
+						univ.party[pc].heal(str*25);
+						univ.party[pc].cure(str);
 						break;
 					case 1:
 						ASB("  You feel terrible.");
 						damage_pc(pc, str*25, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
-						poison_pc(pc,str);
+						univ.party[pc].poison(str);
 						break;
 					case 2:
 						ASB("  You all feel wonderful.");
-						heal_party(str*25);
-						cure_party(str);
+						univ.party.heal(str*25);
+						univ.party.cure(str);
 						break;
 					case 3:
 						ASB("  You all feel terrible.");
 						hit_party(str*25, eDamageType::UNBLOCKABLE);
-						poison_party(str);
+						univ.party.poison(str);
 						break;
 				}
 				break;
@@ -1482,7 +1469,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	
 	if(how_much <= 0) {
 		if(is_combat())
-			monst_spell_note(victim->number,7);
+			victim->spell_note(7);
 		if(how_much <= 0 && (dam_type == eDamageType::WEAPON || dam_type == eDamageType::UNDEAD || dam_type == eDamageType::DEMON)) {
 			draw_terrain(2);
 			play_sound(2);
@@ -1506,7 +1493,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 			if((which_spot = place_monster(victim->number,where_put)) < 90) {
 				static_cast<cTownperson&>(univ.town.monst[which_spot]) = *victim;
 				univ.town.monst[which_spot].health = victim->health;
-				monst_spell_note(victim->number,27);
+				victim->spell_note(27);
 			}
 	}
 	if(who_hit < 7)
@@ -1555,19 +1542,19 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	return true;
 }
 
-void petrify_monst(cCreature* m_target, short strength) {
-	monst_spell_note(m_target->number,9);
+void cCreature::petrify(int strength) {
+	spell_note(9);
 	short r1 = get_ran(1,0,20);
-	r1 += m_target->level / 4;
-	r1 += m_target->status[eStatus::BLESS_CURSE];
+	r1 += level / 4;
+	r1 += status[eStatus::BLESS_CURSE];
 	r1 -= strength;
 	
 	// TODO: This should probably do something similar to charm_monst with the magic resistance
-	if(r1 > 14 || m_target->magic_res == 0)
-		monst_spell_note(m_target->number,10);
+	if(r1 > 14 || magic_res == 0)
+		spell_note(10);
 	else {
-		monst_spell_note(m_target->number,8);
-		kill_monst(m_target,7);
+		spell_note(8);
+		kill_monst(this,7);
 	}
 }
 
@@ -2693,8 +2680,8 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				cCreature& who = univ.town.monst[pc - 100];
 				who.health = minmax(0, who.m_health, who.health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 				if(spec.ex1b == 0)
-					monst_spell_note(who.number,41);
-				else monst_spell_note(who.number,42);
+					who.spell_note(41);
+				else who.spell_note(42);
 			}
 			break;
 		case eSpecType::AFFECT_SP:
@@ -2708,8 +2695,8 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				cCreature& who = univ.town.monst[pc - 100];
 				who.mp = minmax(0, who.max_mp, who.mp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 				if(spec.ex1b == 0)
-					monst_spell_note(who.number,43);
-				else monst_spell_note(who.number,44);
+					who.spell_note(43);
+				else who.spell_note(44);
 			}
 			break;
 		case eSpecType::AFFECT_XP:
@@ -2751,7 +2738,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 								break;
 							case 2:
 								if(spec.ex1c > 0)
-									petrify_pc(i,spec.ex1c);
+									univ.party[i].petrify(spec.ex1c);
 								else kill_pc(i,eMainStatus::SPLIT_STONE);
 								break;
 							case 3:
@@ -2776,18 +2763,18 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(who.active > 0 && spec.ex1b > 0) {
 					switch(spec.ex1a) {
 						case 0:
-							monst_spell_note(who.number,46);
+							who.spell_note(46);
 							kill_monst(&who,7,eMainStatus::DEAD);
 							break;
 						case 1:
-							monst_spell_note(who.number,51);
+							who.spell_note(51);
 							kill_monst(&who,7,eMainStatus::DUST);
 							break;
 						case 2:
 							if(spec.ex1c > 0)
-								petrify_monst(&who, spec.ex1c);
+								who.petrify(spec.ex1c);
 							else {
-								monst_spell_note(who.number,8);
+								who.spell_note(8);
 								kill_monst(&who,7,eMainStatus::STONE);
 							}
 							break;
@@ -2799,7 +2786,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				// Bring back to life
 				else if(who.active == 0 && spec.ex1b == 0) {
 					who.active = 1;
-					monst_spell_note(who.number,45);
+					who.spell_note(45);
 				}
 			}
 			break;
@@ -2810,13 +2797,13 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						switch(eStatus(spec.ex2a)) {
 							case eStatus::POISON:
 								if(spec.ex1b == 0)
-									cure_pc(i, spec.ex1a);
-								else poison_pc(i, spec.ex1a);
+									univ.party[i].cure(spec.ex1a);
+								else univ.party[i].poison(spec.ex1a);
 								break;
 							case eStatus::HASTE_SLOW:
 								if(spec.ex1b == 0)
-									slow_pc(i, -spec.ex1a);
-								else slow_pc(i, spec.ex1a);
+									univ.party[i].slow(-spec.ex1a);
+								else univ.party[i].slow(spec.ex1a);
 								break;
 							case eStatus::INVULNERABLE:
 								if(spec.ex1b == 0)
@@ -2831,12 +2818,12 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							case eStatus::WEBS:
 								if(spec.ex1b == 0)
 									univ.party[i].apply_status(eStatus::WEBS, -spec.ex1a);
-								else web_pc(i, spec.ex1a);
+								else univ.party[i].web(spec.ex1a);
 								break;
 							case eStatus::DISEASE:
 								if(spec.ex1b == 0)
 									univ.party[i].apply_status(eStatus::DISEASE, -spec.ex1a);
-								else disease_pc(i, spec.ex1a);
+								else univ.party[i].disease(spec.ex1a);
 								break;
 							case eStatus::INVISIBLE:
 								if(spec.ex1b == 0)
@@ -2845,23 +2832,23 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 								break;
 							case eStatus::BLESS_CURSE:
 								if(spec.ex1b == 0)
-									curse_pc(i, -spec.ex1a);
-								else curse_pc(i, spec.ex1a);
+									univ.party[i].curse(-spec.ex1a);
+								else univ.party[i].curse(spec.ex1a);
 								break;
 							case eStatus::DUMB:
 								if(spec.ex1b == 0)
 									univ.party[i].apply_status(eStatus::DUMB, -spec.ex1a);
-								else dumbfound_pc(i, spec.ex1a);
+								else univ.party[i].dumbfound(spec.ex1a);
 								break;
 							case eStatus::ASLEEP:
 								if(spec.ex1b == 0)
 									univ.party[i].apply_status(eStatus::ASLEEP, -spec.ex1a);
-								else sleep_pc(i, spec.ex1a, eStatus::ASLEEP, 10);
+								else univ.party[i].sleep(eStatus::ASLEEP, spec.ex1a, 10);
 								break;
 							case eStatus::PARALYZED:
 								if(spec.ex1b == 0)
 									univ.party[i].apply_status(eStatus::PARALYZED, -spec.ex1a);
-								else sleep_pc(i, spec.ex1a, eStatus::PARALYZED, 10);
+								else univ.party[i].sleep(eStatus::PARALYZED, spec.ex1a, 10);
 								break;
 							case eStatus::POISONED_WEAPON:
 								if(spec.ex1b == 0)
@@ -2876,7 +2863,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							case eStatus::ACID:
 								if(spec.ex1b == 0)
 									univ.party[i].apply_status(eStatus::ACID, -spec.ex1a);
-								else acid_pc(i, spec.ex1a);
+								else univ.party[i].acid(spec.ex1a);
 								break;
 								// Invalid values
 							case eStatus::MAIN:
@@ -2892,43 +2879,43 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					switch(eStatus(spec.ex2a)) {
 						case eStatus::POISON:
 							if(spec.ex1b == 0)
-								poison_monst(&who, -spec.ex1a);
-							else poison_monst(&who, spec.ex1a);
+								who.poison(-spec.ex1a);
+							else who.poison(spec.ex1a);
 							break;
 						case eStatus::HASTE_SLOW:
 							if(spec.ex1b == 0)
-								slow_monst(&who, -spec.ex1a);
-							else slow_monst(&who, spec.ex1a);
+								who.slow(-spec.ex1a);
+							else who.slow(spec.ex1a);
 							break;
 						case eStatus::WEBS:
 							if(spec.ex1b == 0)
-								web_monst(&who, -spec.ex1a);
-							else web_monst(&who, spec.ex1a);
+								who.web(-spec.ex1a);
+							else who.web(spec.ex1a);
 							break;
 						case eStatus::DISEASE:
 							if(spec.ex1b == 0)
-								disease_monst(&who, -spec.ex1a);
-							else disease_monst(&who, spec.ex1a);
+								who.disease(-spec.ex1a);
+							else who.disease(spec.ex1a);
 							break;
 						case eStatus::BLESS_CURSE:
 							if(spec.ex1b == 0)
-								curse_monst(&who, -spec.ex1a);
-							else curse_monst(&who, spec.ex1a);
+								who.curse(-spec.ex1a);
+							else who.curse(spec.ex1a);
 							break;
 						case eStatus::DUMB:
 							if(spec.ex1b == 0)
-								dumbfound_monst(&who, -spec.ex1a);
-							else dumbfound_monst(&who, spec.ex1a);
+								who.dumbfound(-spec.ex1a);
+							else who.dumbfound(spec.ex1a);
 							break;
 						case eStatus::ASLEEP:
 							if(spec.ex1b == 0)
-								charm_monst(&who, 0, eStatus::ASLEEP, -spec.ex1a);
-							else charm_monst(&who, 0, eStatus::ASLEEP, spec.ex1a);
+								who.sleep(eStatus::ASLEEP, -spec.ex1a, 0);
+							else who.sleep(eStatus::ASLEEP, spec.ex1a, 0);
 							break;
 						case eStatus::PARALYZED:
 							if(spec.ex1b == 0)
-								charm_monst(&who, 0, eStatus::PARALYZED, -spec.ex1a);
-							else charm_monst(&who, 0, eStatus::PARALYZED, spec.ex1a);
+								who.sleep(eStatus::PARALYZED, -spec.ex1a, 0);
+							else who.sleep(eStatus::PARALYZED, spec.ex1a, 0);
 							break;
 						case eStatus::MARTYRS_SHIELD:
 							if(spec.ex1b == 0)
@@ -2937,8 +2924,8 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							break;
 						case eStatus::ACID:
 							if(spec.ex1b == 0)
-								acid_monst(&who, -spec.ex1a);
-							else acid_monst(&who, spec.ex1a);
+								who.acid(-spec.ex1a);
+							else who.acid(spec.ex1a);
 							break;
 							// Invalid values
 						case eStatus::MAIN:

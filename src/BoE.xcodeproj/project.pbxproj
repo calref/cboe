@@ -124,6 +124,7 @@
 		913D05BE0FA1EA0A00184C18 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
 		913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */ = {isa = PBXBuildFile; fileRef = 913D6C040FC57A8E00E12527 /* boeresources.icns */; };
 		914698F81A73434400F20F5E /* shop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FDB5791A4E774E00DE5983 /* shop.cpp */; };
+		914698FC1A74216F00F20F5E /* living.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FB1A7362D900F20F5E /* living.cpp */; };
 		914701A718F62ABF008A6DC9 /* dungeon.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 914701A418F629D4008A6DC9 /* dungeon.ttf */; };
 		914701A818F62AC0008A6DC9 /* maidenword.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 914701A518F629D4008A6DC9 /* maidenword.ttf */; };
 		914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
@@ -581,6 +582,8 @@
 		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.cpp; sourceTree = "<group>"; };
 		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boeresources.icns; sourceTree = "<group>"; };
 		913FB40A1A5C90840067B9D2 /* pictypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pictypes.hpp; sourceTree = "<group>"; };
+		914698FA1A7362C200F20F5E /* living.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = living.hpp; sourceTree = "<group>"; };
+		914698FB1A7362D900F20F5E /* living.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = living.cpp; sourceTree = "<group>"; };
 		914701A418F629D4008A6DC9 /* dungeon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = dungeon.ttf; sourceTree = "<group>"; };
 		914701A518F629D4008A6DC9 /* maidenword.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = maidenword.ttf; sourceTree = "<group>"; };
 		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsd; path = schemas/dialog.xsd; sourceTree = "<group>"; };
@@ -873,6 +876,7 @@
 			children = (
 				91AC620A0FA2853700EEAE67 /* creatlist.cpp */,
 				91279D3D0F9D1D6A007B0D52 /* item.cpp */,
+				914698FB1A7362D900F20F5E /* living.cpp */,
 				91279BE10F9D0F73007B0D52 /* location.cpp */,
 				91279CC10F9D19DA007B0D52 /* monster.cpp */,
 				91E5C79D0F9F60FA00C21460 /* outdoors.cpp */,
@@ -898,6 +902,7 @@
 			children = (
 				91AC62090FA2853700EEAE67 /* creatlist.h */,
 				91279D3C0F9D1D6A007B0D52 /* item.h */,
+				914698FA1A7362C200F20F5E /* living.hpp */,
 				91279BE00F9D0F73007B0D52 /* location.h */,
 				91279CC00F9D19DA007B0D52 /* monster.h */,
 				91E5C79C0F9F60FA00C21460 /* outdoors.h */,
@@ -1490,6 +1495,7 @@
 				91597A6F1A3C021400BE7BF9 /* spell.cpp in Sources */,
 				9179A4671A48683100FEF872 /* stack.cpp in Sources */,
 				91FDB57B1A4E77CA00DE5983 /* shop.cpp in Sources */,
+				914698FC1A74216F00F20F5E /* living.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

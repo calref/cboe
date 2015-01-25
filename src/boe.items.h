@@ -30,7 +30,6 @@ void draw_help_dialog_item_buttons(cDialog& dialog,short item);
 void draw_help_dialog_forcefields(cDialog& dialog,short item);
 void make_cursor_watch() ;
 void place_glands(location where,mon_num_t m_type);
-short party_total_level() ;
 void reset_item_max();
 short item_val(cItem item);
 void place_treasure(location where,short level,short loot,short mode);

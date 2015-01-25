@@ -49,7 +49,7 @@ void cPlayer::append(legacy::pc_record_type old){
 	which_graphic = old.which_graphic;
 	weap_poisoned = old.weap_poisoned;
 	race = (eRace) old.race;
-	direction = old.direction;
+	direction = eDirection(old.direction);
 }
 
 short cPlayer::get_tnl(){
@@ -76,36 +76,73 @@ short cPlayer::get_tnl(){
 	return tnl;
 }
 
-void cPlayer::apply_status(eStatus which, int how_much) {
-	static const std::set<eStatus> allow_negative = {
-		// The obvious ones:
-		eStatus::BLESS_CURSE, eStatus::HASTE_SLOW,
-		// The ones that BoE previously allowed:
-		eStatus::POISONED_WEAPON, eStatus::POISON, eStatus::ASLEEP,
-		// (Note: Negative levels of sleep can be obtained from the Hyperactivity spell. The other two never go negative.)
-		// The additional ones that make sense in the negative:
-		eStatus::MAGIC_RESISTANCE, eStatus::DUMB,
-	};
-	
-	// TODO: Apply STATUS_PROTECTION item abilities; the challenge is to determine whether to apply to positive or negative how_much
-	// TODO: I'd like to merge poison_pc, web_pc, acid_pc etc into this function.
-	
-	if(main_status != eMainStatus::ALIVE)
-		return;
-	status[which] = minmax(-8,8,status[which] + how_much);
-	if(!allow_negative.count(which))
-		status[which] = max(status[which],0);
-}
-
 void cPlayer::avatar() {
+	heal(300);
+	cure(8);
 	status[eStatus::BLESS_CURSE] = 8;
 	status[eStatus::HASTE_SLOW] = 8;
 	status[eStatus::INVULNERABLE] = 3;
 	status[eStatus::MAGIC_RESISTANCE] = 8;
 	status[eStatus::WEBS] = 0;
 	status[eStatus::DISEASE] = 0;
-	status[eStatus::DUMB] = 0;
+	if(status[eStatus::DUMB] > 0)
+		status[eStatus::DUMB] = 0;
 	status[eStatus::MARTYRS_SHIELD] = 8;
+}
+
+void cPlayer::drain_sp(int drain) {
+	int mu = skills[eSkill::MAGE_SPELLS];
+	int cl = skills[eSkill::PRIEST_SPELLS];
+	if(drain > 0) {
+		if(mu > 0 && cur_sp > 4)
+			drain = min(cur_sp, drain / 3);
+		else if(cl > 0 && cur_sp > 10)
+			drain = min(cur_sp, drain / 2);
+		cur_sp -= drain;
+		if(cur_sp < 0) cur_sp = 0;
+	}
+}
+
+void cPlayer::scare(int) {
+	// TODO: Not implemented
+}
+
+bool cPlayer::is_alive() const {
+	return main_status == eMainStatus::ALIVE;
+}
+
+bool cPlayer::is_shielded() const {
+	if(status[eStatus::MARTYRS_SHIELD] > 0)
+		return true;
+	if(get_prot_level(eItemAbil::MARTYRS_SHIELD) > 0)
+		return true;
+	return false;
+}
+
+int cPlayer::get_shared_dmg(int base) const {
+	int martyr1 = status[eStatus::MARTYRS_SHIELD];
+	int martyr2 = get_prot_level(eItemAbil::MARTYRS_SHIELD);
+	if(martyr1 + martyr2 <= 0) return 0;
+	if(get_ran(1,1,20) < martyr2) return base + max(1, martyr2 / 5);
+	return base;
+}
+
+location cPlayer::get_loc() const {
+	if(combat_pos.x < 0 || combat_pos.y < 0)
+		return party.get_loc();
+	return combat_pos;
+}
+
+int cPlayer::get_health() const {
+	return cur_health;
+}
+
+int cPlayer::get_magic() const {
+	return cur_sp;
+}
+
+int cPlayer::get_level() const {
+	return level;
 }
 
 void cPlayer::sort_items() {
@@ -191,12 +228,12 @@ bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
 	return false;
 }
 
-short cPlayer::max_weight() {
+short cPlayer::max_weight() const {
 	return 100 + (15 * min(skill(eSkill::STRENGTH),20)) + (traits[eTrait::STRENGTH] * 30)
 		+ (traits[eTrait::BAD_BACK] * -50);
 }
 
-short cPlayer::cur_weight() {
+short cPlayer::cur_weight() const {
 	short weight = 0;
 	bool airy = false,heavy = false;
 	
@@ -217,11 +254,11 @@ short cPlayer::cur_weight() {
 	return weight;
 }
 
-short cPlayer::free_weight() {
+short cPlayer::free_weight() const {
 	return max_weight() - cur_weight();
 }
 
-short cPlayer::has_space() {
+short cPlayer::has_space() const {
 	for(int i = 0; i < 24; i++) {
 		if(items[i].variety == eItemType::NO_ITEM)
 			return i;
@@ -253,7 +290,7 @@ void cPlayer::combine_things() {
 	}
 }
 
-short cPlayer::get_prot_level(eItemAbil abil, short dat) {
+short cPlayer::get_prot_level(eItemAbil abil, short dat) const {
 	int sum = 0;
 	for(int i = 0; i < 24; i++) {
 		if(items[i].variety == eItemType::NO_ITEM) continue;
@@ -266,7 +303,7 @@ short cPlayer::get_prot_level(eItemAbil abil, short dat) {
 	
 }
 
-short cPlayer::has_abil_equip(eItemAbil abil,short dat) {
+short cPlayer::has_abil_equip(eItemAbil abil,short dat) const {
 	for(short i = 0; i < 24; i++) {
 		if(items[i].variety == eItemType::NO_ITEM) continue;
 		if(items[i].ability != abil) continue;
@@ -277,7 +314,7 @@ short cPlayer::has_abil_equip(eItemAbil abil,short dat) {
 	return 24;
 }
 
-short cPlayer::has_abil(eItemAbil abil,short dat) {
+short cPlayer::has_abil(eItemAbil abil,short dat) const {
 	for(short i = 0; i < 24; i++) {
 		if(items[i].variety == eItemType::NO_ITEM) continue;
 		if(items[i].ability != abil) continue;
@@ -287,7 +324,7 @@ short cPlayer::has_abil(eItemAbil abil,short dat) {
 	return 24;
 }
 
-short cPlayer::skill(eSkill skill) {
+short cPlayer::skill(eSkill skill) const {
 	int bulk_bonus = 0;
 	if(skill >= eSkill::EDGED_WEAPONS && skill <= eSkill::DEFENSE)
 		bulk_bonus = get_prot_level(eItemAbil::BOOST_WAR);
@@ -296,7 +333,7 @@ short cPlayer::skill(eSkill skill) {
 	return min(20, skills[skill] + get_prot_level(eItemAbil::BOOST_STAT, int(skill))) + bulk_bonus;
 }
 
-eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) {
+eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 	if(item.variety == eItemType::SPECIAL) {
 		if(party.spec_items[item.item_level])
 			return eBuyStatus::HAVE_LOTS;
@@ -404,7 +441,7 @@ cPlayer::cPlayer(cParty& party) : party(party) {
 	weap_poisoned = 24;
 	
 	race = eRace::HUMAN;
-	direction = 0;
+	direction = DIR_N;
 }
 
 cPlayer::cPlayer(cParty& party,long key,short slot) : party(party) {
@@ -464,7 +501,7 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : party(party) {
 		}
 		
 		race = eRace::HUMAN;
-		direction = 0;
+		direction = DIR_N;
 	}else if(key == 'dflt'){
 		// TODO: The duplication of std::map<eSkill,short> shouldn't be needed here
 		static std::map<eSkill, short> pc_stats[6] = {
@@ -557,7 +594,7 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : party(party) {
 		}
 		
 		race = (eRace) pc_race[slot];
-		direction = 0;
+		direction = DIR_N;
 		
 		which_graphic = pc_graphics[slot];
 	}
@@ -730,5 +767,3 @@ std::istream& operator >> (std::istream& in, eMainStatus& e){
 	else e = eMainStatus::ABSENT;
 	return in;
 }
-
-void(* cPlayer::print_result)(std::string) = nullptr;
