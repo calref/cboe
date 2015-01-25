@@ -2714,6 +2714,12 @@ void monster_attack_monster(short who_att,short attackee) {
 					damaged_message(store_hp - target->health,
 									attacker->a[i].type);
 					
+					if(target->is_shielded()) {
+						int how_much = target->get_shared_dmg(store_hp - target->get_health());
+						add_string_to_buf("  Shares damage!   ");
+						damage_monst(who_att, 7, how_much, 0, eDamageType::MAGIC, 0);
+					}
+					
 					for(auto& abil : attacker->abil) {
 						if(!abil.second.active) continue;
 						if(getMonstAbilCategory(abil.first) != eMonstAbilCat::GENERAL)
@@ -3068,9 +3074,11 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, short ta
 			damage_target(target, r1, eDamageType::UNBLOCKABLE);
 			break;
 		case eMonstAbil::STEAL_FOOD:
+			if(target >= 100) break;
 			univ.party.food = std::max(0, univ.party.food - get_ran(1,0,abil.second.gen.strength) - abil.second.gen.strength);
 			break;
 		case eMonstAbil::STEAL_GOLD:
+			if(target >= 100) break;
 			univ.party.gold = std::max(0, univ.party.gold - get_ran(1,0,abil.second.gen.strength) - abil.second.gen.strength);
 			break;
 		case eMonstAbil::FIELD:

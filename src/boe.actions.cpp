@@ -2195,6 +2195,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 			for(int j = 0; j < 24; j++) {
 				cItem& item = univ.party[i].items[j];
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
+				if(item.abil_data[1] < 0 || item.abil_data[1] > 15) continue;
 				if(item.magic_use_type < 2) continue;
 				if(get_ran(1,0,5) != 3) continue;
 				int how_much = item.abil_data[0];
@@ -2316,6 +2317,7 @@ void increase_age() {
 			for(int j = 0; j < 24; j++) {
 				cItem& item = univ.party[i].items[j];
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
+				if(item.abil_data[1] < 0 || item.abil_data[1] > 15) continue;
 				if(item.magic_use_type < 2) continue;
 				if(get_ran(1,0,5) != 3) continue;
 				int how_much = item.abil_data[0];
