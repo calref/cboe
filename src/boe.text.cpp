@@ -12,6 +12,7 @@
 #include "graphtool.hpp"
 #include "scrollbar.hpp"
 #include "restypes.hpp"
+#include "spell.hpp"
 
 typedef struct {
 	char line[50];
@@ -640,7 +641,7 @@ short do_look(location space) {
 	if((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 		for(i = 0; i < univ.town.monst.size(); i++)
 			if((univ.town.monst[i].active != 0) && (is_lit)
-				&& (monst_on_space(space,i)) &&
+				&& univ.town.monst[i].on_space(space) &&
 				((overall_mode == MODE_LOOK_TOWN) || (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5))
 				&& (univ.town.monst[i].picture_num != 0)) {
 				
@@ -848,15 +849,15 @@ void print_monst_name(mon_num_t m_type) {
 	add_string_to_buf((char *) msg.c_str());
 }
 
-//short target; // < 100 - pc  >= 100  monst
-void print_monst_attacks(mon_num_t m_type,short target) {
-	std::string msg = get_m_name(m_type);
+void cCreature::print_attacks(iLiving* target) {
+	std::string msg = m_name;
 	msg += " attacks ";
-	if(target < 100)
-		msg += univ.party[target].name;
-	else
-		msg += get_m_name(univ.town.monst[target - 100].number);
-	add_string_to_buf((char *) msg.c_str());
+	if(cPlayer* who = dynamic_cast<cPlayer*>(target))
+		msg += who->name;
+	else if(cCreature* monst = dynamic_cast<cCreature*>(target))
+		msg += monst->m_name;
+	else msg += "you";
+	add_string_to_buf(msg);
 }
 
 void damaged_message(short damage,eMonstMelee type) {
@@ -1067,38 +1068,25 @@ void cCreature::spell_note(int which_mess) {
 		add_string_to_buf((char *) msg.c_str());
 }
 
-//short type; // 0 - mage 1- priest
-void monst_cast_spell_note(mon_num_t number,eSpell spell) {
-	short spell_num = short(spell);
-	std::string msg = get_m_name(number);
-	msg += " casts:";
-	add_string_to_buf((char *) msg.c_str());
-	msg = get_str("magic-names", spell_num);
-	msg = "  " + msg;
-	add_string_to_buf((char *) msg.c_str());
+void cCreature::cast_spell_note(eSpell spell) {
+	add_string_to_buf(m_name + " casts:");
+	add_string_to_buf("  " + (*spell).name());
 }
 
-void monst_breathe_note(mon_num_t number) {
-	std::string msg = get_m_name(number);
-	msg += " breathes.";
-	add_string_to_buf((char *) msg.c_str());
-	
+void cCreature::breathe_note() {
+	add_string_to_buf(m_name + " breathes.");
 }
 
-void monst_damaged_mes(mon_num_t which_m,short how_much,short how_much_spec) {
-	std::string msg = get_m_name(univ.town.monst[which_m].number);
+void cCreature::damaged_msg(int how_much,int how_much_spec) {
 	std::ostringstream sout;
-	sout << "  " << msg << " takes " << how_much;
+	sout << "  " << m_name << " takes " << how_much;
 	if(how_much_spec > 0)
 		sout << '+' << how_much_spec;
-	msg = sout.str();
-	add_string_to_buf((char *) msg.c_str());
+	add_string_to_buf(sout.str());
 }
 
-void monst_killed_mes(mon_num_t which_m) {
-	std::string msg = get_m_name(univ.town.monst[which_m].number);
-	msg = "  " + msg + " dies.";
-	add_string_to_buf((char *) msg.c_str());
+void cCreature::killed_msg() {
+	add_string_to_buf("  " + m_name + " dies.");
 }
 
 void print_nums(short a,short b,short c) {

@@ -44,10 +44,6 @@ sf::Texture button_num_gworld;
 extern std::map<eSkill,short> skill_cost;
 extern std::map<eSkill,short> skill_max;
 extern std::map<eSkill,short> skill_g_cost;
-// The index here is the skill's level, not the skill itself; thus 20 is the max index since no skill can go above 20.
-short skill_bonus[21] = {
-	-3,-3,-2,-1,0,0,1,1,1,2,
-	2,2,3,3,3,3,4,4,4,5,5};
 
 // These are the IDs used to refer to the skills in the dialog
 const char* skill_ids[19] = {

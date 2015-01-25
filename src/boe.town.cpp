@@ -688,7 +688,7 @@ void start_town_combat(eDirection direction) {
 		univ.town.monst[i].target = 6;
 	
 	for(i = 0; i < 6; i++) {
-		univ.party[i].last_attacked = univ.town.monst.size() + 10;
+		univ.party[i].last_attacked = nullptr;
 		univ.party[i].parry = 0;
 		univ.party[i].direction = direction;
 		univ.party[current_pc].direction = direction;
@@ -1059,7 +1059,7 @@ void pick_lock(location where,short pc_num) {
 	if(r1 < 75)
 		will_break = true;
 	
-	r1 = get_ran(1,1,100) - 5 * stat_adj(pc_num,eSkill::DEXTERITY) + univ.town.difficulty * 7
+	r1 = get_ran(1,1,100) - 5 * univ.party[pc_num].stat_adj(eSkill::DEXTERITY) + univ.town.difficulty * 7
 		- 5 * univ.party[pc_num].skill(eSkill::LOCKPICKING) - univ.party[pc_num].items[which_item].abil_data[0] * 7;
 	
 	// Nimble?
@@ -1096,7 +1096,7 @@ void bash_door(location where,short pc_num) {
 	short r1,unlock_adjust;
 	
 	terrain = univ.town->terrain(where.x,where.y);
-	r1 = get_ran(1,1,100) - 15 * stat_adj(pc_num,eSkill::STRENGTH) + univ.town.difficulty * 4;
+	r1 = get_ran(1,1,100) - 15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town.difficulty * 4;
 	
 	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.           ");

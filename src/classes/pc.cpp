@@ -111,6 +111,13 @@ bool cPlayer::is_alive() const {
 	return main_status == eMainStatus::ALIVE;
 }
 
+bool cPlayer::is_friendly() const {
+	// Currently players can't be charmed, but that might change in the future
+	if(status[eStatus::CHARM] > 0)
+		return false;
+	return true;
+}
+
 bool cPlayer::is_shielded() const {
 	if(status[eStatus::MARTYRS_SHIELD] > 0)
 		return true;

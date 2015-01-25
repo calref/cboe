@@ -20,13 +20,8 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) ;
 std::string get_m_name(mon_num_t num);
 std::string get_ter_name(ter_num_t num);
 void print_monst_name(mon_num_t m_type);
-void print_monst_attacks(mon_num_t m_type,short target);
 void damaged_message(short damage,eMonstMelee type);
 std::string print_monster_going(mon_num_t m_num,short ap);
-void monst_cast_spell_note(mon_num_t number,eSpell spell);
-void monst_breathe_note(mon_num_t number);
-void monst_damaged_mes(mon_num_t which_m,short how_much,short how_much_spec);
-void monst_killed_mes(mon_num_t which_m);
 void print_nums(short a,short b,short c);
 short print_terrain(location space);
 void add_string_to_buf(std::string str, unsigned short indent); // Set second paramater to nonzero to auto-split the line if it's too long

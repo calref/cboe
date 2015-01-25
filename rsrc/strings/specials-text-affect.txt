@@ -9,8 +9,8 @@ Unused
 0 - only living, 1 - any, 2 - all, 3 - dead, 4 - inv. space
 Special if Cancel button pressed
 Unused
-0 - player choice, 1 - random, 11..16 - specific, 100+ monster
-Unused
+0 - player choice, 1 - random, 2 - specific
+0..6 - PC, 100+ - monster (if above = 2)
 Unused
 Special to Jump To
 --------------------

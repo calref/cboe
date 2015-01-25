@@ -60,11 +60,12 @@ std::map<eDamageType,int> boom_gr = {
 	{eDamageType::COLD, 4},
 	{eDamageType::UNDEAD, 3},
 	{eDamageType::DEMON, 3},
+	{eDamageType::SPECIAL, 1},
 };
 short store_item_spell_level = 10;
 
 // global values for when processing special encounters
-short current_pc_picked_in_spec_enc = -1; // pc that's been selected, -1 if none
+iLiving* current_pc_picked_in_spec_enc = nullptr;
 extern std::map<eSkill,short> skill_max;
 location store_special_loc;
 bool special_in_progress = false;
@@ -126,7 +127,7 @@ bool handle_wandering_specials (short /*which*/,short mode) {
 
 // returns true if can enter this space
 // sets forced to true if definitely can enter
-bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,short *spec_num,
+bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,short *spec_num,
 						   bool *forced) {
 	ter_num_t ter;
 	short r1,i,door_pc,pic_type = 0,ter_pic = 0;
@@ -359,7 +360,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 				hit_party(r1,dam_type);
 			fast_bang = 1;
 			if(mode == eSpecCtx::COMBAT_MOVE)
-				damage_pc(which_pc,r1,dam_type,eRace::UNKNOWN,0);
+				damage_pc(univ.get_target_i(which_pc),r1,dam_type,eRace::UNKNOWN,0);
 			else
 				boom_space(univ.party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
@@ -373,7 +374,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 			if(mode == eSpecCtx::OUT_MOVE && out_boat_there(where_check) < 30)
 				break;
 			//one_sound(17);
-			if(mode == eSpecCtx::COMBAT_MOVE) i = which_pc; else i = 0;
+			if(mode == eSpecCtx::COMBAT_MOVE) i = univ.get_target_i(which_pc); else i = 0;
 			for( ; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if(get_ran(1,1,100) <= ter_flag2.u) {
@@ -477,8 +478,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,short which_pc,sho
 
 // This procedure find the effects of fields that would affect a PC who moves into
 // a space or waited in that same space
-void check_fields(location where_check,eSpecCtx mode,short which_pc) {
+void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 	short r1,i;
+	size_t i_pc = univ.get_target_i(which_pc);
 	
 	if(mode != eSpecCtx::COMBAT_MOVE && mode != eSpecCtx::TOWN_MOVE && mode != eSpecCtx::OUT_MOVE) {
 		std::cout << "Note: Improper mode passed to check_special_terrain: " << int(mode) << std::endl;
@@ -495,7 +497,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 //		if(mode < 2)
 //			hit_party(r1,1);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
+			damage_pc(i_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
@@ -505,7 +507,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 //		if(mode < 2)
 //			hit_party(r1,3);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
+			damage_pc(i_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
 	}
@@ -515,7 +517,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 //		if(mode < 2)
 //			hit_party(r1,5);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::COLD,eRace::UNKNOWN,0);
+			damage_pc(i_pc,r1,eDamageType::COLD,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,4,r1,7);
 	}
@@ -525,7 +527,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 //		if(mode < 2)
 //			hit_party(r1,0);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
+			damage_pc(i_pc,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,3,r1,2);
 	}
@@ -535,7 +537,7 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 //		if(mode < 2)
 //			hit_party(r1,1);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
+			damage_pc(i_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
@@ -564,15 +566,15 @@ void check_fields(location where_check,eSpecCtx mode,short which_pc) {
 		if(mode != eSpecCtx::COMBAT_MOVE)
 			hit_party(r1,eDamageType::MAGIC);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
+			damage_pc(i_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
 	}
 	if(univ.town.is_force_cage(where_check.x,where_check.y)) {
-		if(univ.party[which_pc].status[eStatus::FORCECAGE] == 0)
+		if(which_pc.status[eStatus::FORCECAGE] == 0)
 			add_string_to_buf("  Trapped in force cage!");
-		univ.party[which_pc].status[eStatus::FORCECAGE] = 8;
-	} else univ.party[which_pc].status[eStatus::FORCECAGE] = 0;
+		which_pc.status[eStatus::FORCECAGE] = 8;
+	} else which_pc.status[eStatus::FORCECAGE] = 0;
 	fast_bang = 0;
 }
 
@@ -1386,7 +1388,7 @@ void change_level(short town_num,short x,short y) {
 
 
 // Damaging and killing monsters needs to be here because several have specials attached to them.
-bool damage_monst(short which_m, short who_hit, short how_much, short how_much_spec, eDamageType dam_type, short sound_type, bool do_print) {
+bool damage_monst(short which_m, short who_hit, short how_much, eDamageType dam_type, short sound_type, bool do_print) {
 	cCreature *victim;
 	short r1,which_spot;
 	location where_put;
@@ -1442,7 +1444,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 		how_much /= 2;
 	
 	// Invulnerable?
-	if(victim->invuln)
+	if(dam_type != eDamageType::SPECIAL && victim->invuln)
 		how_much = how_much / 10;
 	
 	
@@ -1480,8 +1482,8 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	}
 	
 	if(do_print)
-		monst_damaged_mes(which_m,how_much,how_much_spec);
-	victim->health = victim->health - how_much - how_much_spec;
+		victim->damaged_msg(how_much,0);
+	victim->health = victim->health - how_much;
 	
 	if(in_scen_debug)
 		victim->health = -1;
@@ -1497,7 +1499,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 			}
 	}
 	if(who_hit < 7)
-		univ.party.total_dam_done += how_much + how_much_spec;
+		univ.party.total_dam_done += how_much;
 	
 	// Monster damages. Make it hostile.
 	victim->active = 2;
@@ -1507,18 +1509,14 @@ bool damage_monst(short which_m, short who_hit, short how_much, short how_much_s
 	if(dam_type != eDamageType::MARKED) { // note special damage only gamed in hand-to-hand, not during animation
 		if(party_can_see_monst(which_m)) {
 			boom_space(victim->cur_loc,100,boom_gr[dam_type],how_much,sound_type);
-			if(how_much_spec > 0)
-				boom_space(victim->cur_loc,100,51,how_much_spec,5);
 		}
 		else {
 			boom_space(victim->cur_loc,overall_mode, boom_gr[dam_type],how_much,sound_type);
-			if(how_much_spec > 0)
-				boom_space(victim->cur_loc,overall_mode,51,how_much_spec,5);
 		}
 	}
 	
 	if(victim->health < 0) {
-		monst_killed_mes(which_m);
+		victim->killed_msg();
 		kill_monst(victim,who_hit);
 	}
 	else {
@@ -1891,7 +1889,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 	special_in_progress = true;
 	next_spec = start_spec;
 	next_spec_type = which_type;
-	current_pc_picked_in_spec_enc = -1;
+	current_pc_picked_in_spec_enc = nullptr;
 	switch(which_mode) {
 		case eSpecCtx::OUT_MOVE: case eSpecCtx::TOWN_MOVE: case eSpecCtx::COMBAT_MOVE:
 		case eSpecCtx::OUT_LOOK: case eSpecCtx::TOWN_LOOK: case eSpecCtx::ENTER_TOWN: case eSpecCtx::LEAVE_TOWN:
@@ -1899,31 +1897,26 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		case eSpecCtx::TOWN_TIMER: case eSpecCtx::SCEN_TIMER: case eSpecCtx::PARTY_TIMER:
 		case eSpecCtx::OUTDOOR_ENC: case eSpecCtx::FLEE_ENCOUNTER: case eSpecCtx::WIN_ENCOUNTER:
 			// Default behaviour - select entire party, or active member if split or in combat
-			if(is_combat()) current_pc_picked_in_spec_enc = current_pc;
+			if(is_combat()) current_pc_picked_in_spec_enc = &univ.party[current_pc];
 			else {
 				if(univ.party.is_split() && cur_node.type != eSpecType::AFFECT_DEADNESS)
-					current_pc_picked_in_spec_enc = univ.party.pc_present();
-				if(current_pc_picked_in_spec_enc == 6 && univ.party.pc_present(current_pc_picked_in_spec_enc))
-					current_pc_picked_in_spec_enc = current_pc_picked_in_spec_enc;
-				if(current_pc_picked_in_spec_enc == 6)
-					current_pc_picked_in_spec_enc = -1;
+					current_pc_picked_in_spec_enc = &univ.party.pc_present();
+				else current_pc_picked_in_spec_enc = &univ.party;
 			}
 			break;
 		case eSpecCtx::KILL_MONST: case eSpecCtx::SEE_MONST: case eSpecCtx::MONST_SPEC_ABIL:
 		case eSpecCtx::ATTACKED_MELEE: case eSpecCtx::ATTACKING_MELEE:
 		case eSpecCtx::ATTACKED_RANGE: case eSpecCtx::ATTACKING_RANGE:
 			// The monster/PC on the trigger space is the target
-			current_pc_picked_in_spec_enc = 100 + monst_there(spec_loc);
-			if(current_pc_picked_in_spec_enc - 100 >= univ.town.monst.size())
-				current_pc_picked_in_spec_enc = pc_there(spec_loc);
-			if(current_pc_picked_in_spec_enc == 6)
-				current_pc_picked_in_spec_enc = -1;
+			current_pc_picked_in_spec_enc = univ.target_there(spec_loc);
+			if(!current_pc_picked_in_spec_enc)
+				current_pc_picked_in_spec_enc = &univ.party;
 			break;
 		case eSpecCtx::TARGET: case eSpecCtx::USE_SPACE:
 			// If there's a monster on the space, select that as the target
-			mon_num_t who = monst_there(spec_loc);
-			if(who < univ.town.monst.size())
-				current_pc_picked_in_spec_enc = 100 + who;
+			current_pc_picked_in_spec_enc = univ.target_there(spec_loc, TARG_MONST);
+			if(!current_pc_picked_in_spec_enc)
+				current_pc_picked_in_spec_enc = &univ.party;
 			break;
 	}
 	store_special_loc = spec_loc;
@@ -2336,8 +2329,8 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::APPEND_MONST:
 			if(spec.ex1a == 0) {
-				int pc = current_pc_picked_in_spec_enc;
-				if(pc < 0)
+				int pc = univ.get_target_i(*current_pc_picked_in_spec_enc);
+				if(pc == 6)
 					univ.scenario.get_buf() += "Your party";
 				else if(pc < 100)
 					univ.scenario.get_buf() += univ.party[pc].name;
@@ -2359,7 +2352,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			sf::sleep(sf::milliseconds(spec.ex1a));
 			break;
 		case eSpecType::START_TALK:
-			i = current_pc_picked_in_spec_enc;
+			i = univ.get_target_i(*current_pc_picked_in_spec_enc);
 			if(i >= 100) i -= 100;
 			else i = -1;
 			start_talk_mode(i, spec.ex1a, spec.ex1b, spec.pic);
@@ -2563,7 +2556,9 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				 short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw) {
 	bool check_mess = true;
-	short i,pc = current_pc_picked_in_spec_enc,r1;
+	short i,r1;
+	iLiving* pc = current_pc_picked_in_spec_enc;
+	short pc_num = univ.get_target_i(*current_pc_picked_in_spec_enc);
 	std::string str;
 	cSpecial spec;
 	
@@ -2579,57 +2574,55 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.ex2a <= 0) {
 				
 				if(spec.ex1a == 2)
-					current_pc_picked_in_spec_enc = -1;
+					current_pc_picked_in_spec_enc = &univ.party;
 				else if(spec.ex1a == 1) {
 					i = select_pc(0);
 					if(i != 6)
-						current_pc_picked_in_spec_enc = i;
+						current_pc_picked_in_spec_enc = &univ.party[i];
 				}
 				else if(spec.ex1a == 0) {
 					i = select_pc(1);
 					if(i != 6)
-						current_pc_picked_in_spec_enc = i;
+						current_pc_picked_in_spec_enc = &univ.party[i];
 				}
 				else if(spec.ex1a == 3) {
 					i = select_pc(2);
 					if(i != 6)
-						current_pc_picked_in_spec_enc = i;
+						current_pc_picked_in_spec_enc = &univ.party[i];
 				}
 				else if(spec.ex1a == 4) {
 					i = select_pc(3);
 					if(i != 6)
-						current_pc_picked_in_spec_enc = i;
+						current_pc_picked_in_spec_enc = &univ.party[i];
 				}
 				if(i == 6)// && (spec.ex1b >= 0))
 					*next_spec = spec.ex1b;
 				
 			}
-			else if(spec.ex2a > 10 || spec.ex2a <= 16) {
+			else if(spec.ex2a == 2) {
 				// Select a specific PC
-				short pc = spec.ex2a - 11;
-				// Honour the request for alive PCs only.
+				short pc = spec.ex2b;
 				bool can_pick = true;
-				if(univ.party[pc].main_status == eMainStatus::ABSENT)
-					can_pick = false;
-				else if(spec.ex1a % 4 == 0 && univ.party[pc].main_status != eMainStatus::ALIVE)
-					can_pick = false;
-				else if(spec.ex1a == 3 && univ.party[pc].main_status == eMainStatus::ALIVE)
-					can_pick = false;
-				else if(spec.ex1a == 4 && univ.party[pc].has_space() == 24)
-					can_pick = false;
+				if(pc >= 0 && pc < 6) {
+					// Honour the request for alive PCs only.
+					if(univ.party[pc].main_status == eMainStatus::ABSENT)
+						can_pick = false;
+					else if(spec.ex1a % 4 == 0 && univ.party[pc].main_status != eMainStatus::ALIVE)
+						can_pick = false;
+					else if(spec.ex1a == 3 && univ.party[pc].main_status == eMainStatus::ALIVE)
+						can_pick = false;
+					else if(spec.ex1a == 4 && univ.party[pc].has_space() == 24)
+						can_pick = false;
+				} else if(pc >= 100 && pc < univ.town.monst.size() + 100) {
+					short monst = pc - 100;
+					// Honour the request for alive only
+					if(spec.ex1a == 0 && univ.town.monst[monst].active == 0)
+						can_pick = false;
+					else if(spec.ex1a == 3 && univ.town.monst[monst].active > 0)
+						can_pick = false;
+				} else can_pick = false; // Because it's an invalid index
 				if(can_pick)
-					current_pc_picked_in_spec_enc = pc;
-				else *next_spec = spec.ex1b;
-			} else if(spec.ex2a >= 100) {
-				short monst = spec.ex2a - 100;
-				// Honour the request for alive only
-				bool can_pick = true;
-				if(spec.ex1a == 0 && univ.town.monst[monst].active == 0)
-					can_pick = false;
-				else if(spec.ex1a == 3 && univ.town.monst[monst].active > 0)
-					can_pick = false;
-				if(can_pick)
-					current_pc_picked_in_spec_enc = spec.ex2a;
+					current_pc_picked_in_spec_enc = &univ.get_target(pc);
 				else *next_spec = spec.ex1b;
 			} else if(spec.ex2a == 1) {
 				// Pick random PC (from *i)
@@ -2651,12 +2644,12 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						tries++;
 					}
 					if(can_pick)
-						current_pc_picked_in_spec_enc = i;
+						current_pc_picked_in_spec_enc = &univ.party[i];
 					else *next_spec = spec.ex1b;
 				}
 				else {
 					i = get_ran(1,0,5);
-					current_pc_picked_in_spec_enc = i;
+					current_pc_picked_in_spec_enc = &univ.party[i];
 				}
 			}
 			break;
@@ -2664,59 +2657,49 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			r1 = get_ran(spec.ex1a,1,spec.ex1b) + spec.ex2a;
 			eDamageType dam_type = (eDamageType) spec.ex2b;
 			int snd_type = spec.ex2c < 0 ? 0 : -spec.ex2c;
-			if(pc < 0) hit_party(r1, dam_type, snd_type);
-			else if(pc >= 100) damage_monst(pc - 100, 7, r1, 0, dam_type, snd_type);
-			else damage_pc(pc,r1,dam_type,eRace::UNKNOWN, snd_type);
+			if(pc_num == 6) hit_party(r1, dam_type, snd_type);
+			else if(pc_num >= 100) damage_monst(pc_num - 100, 7, r1, dam_type, snd_type);
+			else damage_pc(pc_num,r1,dam_type,eRace::UNKNOWN, snd_type);
 			break;
 		}
 		case eSpecType::AFFECT_HP:
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i))
-						univ.party[i].cur_health = minmax(0,univ.party[i].max_health,
-														  univ.party[i].cur_health + spec.ex1a * (spec.ex1b ? -1: 1));
-			}
-			else {
-				cCreature& who = univ.town.monst[pc - 100];
-				who.health = minmax(0, who.m_health, who.health + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+			if(spec.ex1b == 0)
+				pc->heal(spec.ex1a);
+			else pc->heal(-spec.ex1a);
+			if(cCreature* who = dynamic_cast<cCreature*>(pc)) {
 				if(spec.ex1b == 0)
-					who.spell_note(41);
-				else who.spell_note(42);
+					who->spell_note(41);
+				else who->spell_note(42);
 			}
 			break;
 		case eSpecType::AFFECT_SP:
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i))
-						univ.party[i].cur_sp = minmax(0, univ.party[i].max_sp,
-							univ.party[i].cur_sp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
-			}
-			else {
-				cCreature& who = univ.town.monst[pc - 100];
-				who.mp = minmax(0, who.max_mp, who.mp + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
+			if(spec.ex1b == 0)
+				pc->restore_sp(spec.ex1a);
+			else pc->restore_sp(-spec.ex1a);
+			if(cCreature* who = dynamic_cast<cCreature*>(pc)) {
 				if(spec.ex1b == 0)
-					who.spell_note(43);
-				else who.spell_note(44);
+					who->spell_note(43);
+				else who->spell_note(44);
 			}
 			break;
 		case eSpecType::AFFECT_XP:
-			if(pc >= 100) break;
+			if(pc_num >= 100) break;
 			for(i = 0; i < 6; i++)
-				if((pc < 0) || (pc == i)) {
+				if(pc_num == 6 || pc_num == i) {
 					if(spec.ex1b == 0) award_xp(i,spec.ex1a); else drain_pc(i,spec.ex1a);
 				}
 			break;
 		case eSpecType::AFFECT_SKILL_PTS:
-			if(pc >= 100) break;
+			if(pc_num >= 100) break;
 			for(i = 0; i < 6; i++)
-				if((pc < 0) || (pc == i))
+				if(pc_num == 6 || pc_num == i)
 					univ.party[i].skill_pts = minmax(0,	100,
 						univ.party[i].skill_pts + spec.ex1a * ((spec.ex1b != 0) ? -1: 1));
 			break;
 		case eSpecType::AFFECT_DEADNESS:
-			if(pc < 100) {
+			if(pc_num < 100) {
 				for(i = 0; i < 6; i++)
-					if((pc < 0) || (pc == i)) {
+					if(pc_num == 6 || pc_num == i) {
 						if(spec.ex1b == 0) {
 							if(spec.ex1a == 3 && is_combat() && which_combat_type == 0 && univ.party[i].main_status == eMainStatus::FLED)
 								univ.party[i].main_status = eMainStatus::ALIVE;
@@ -2748,7 +2731,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 									univ.party[i].main_status = eMainStatus::FLED;
 								break;
 							case 4:
-								if(i != univ.party.pc_present())
+								if(party_size(true) > 1)
 									univ.party[i].main_status += eMainStatus::SPLIT;
 								break;
 							case 5:
@@ -2759,7 +2742,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*redraw = 1;
 			} else {
 				// Kill monster
-				cCreature& who = univ.town.monst[pc - 100];
+				cCreature& who = univ.town.monst[pc_num - 100];
 				if(who.active > 0 && spec.ex1b > 0) {
 					switch(spec.ex1a) {
 						case 0:
@@ -2791,163 +2774,96 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::AFFECT_STATUS:
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if(pc < 0 || pc == i) {
-						switch(eStatus(spec.ex2a)) {
-							case eStatus::POISON:
-								if(spec.ex1b == 0)
-									univ.party[i].cure(spec.ex1a);
-								else univ.party[i].poison(spec.ex1a);
-								break;
-							case eStatus::HASTE_SLOW:
-								if(spec.ex1b == 0)
-									univ.party[i].slow(-spec.ex1a);
-								else univ.party[i].slow(spec.ex1a);
-								break;
-							case eStatus::INVULNERABLE:
-								if(spec.ex1b == 0)
-									univ.party[i].apply_status(eStatus::INVULNERABLE, spec.ex1a);
-								else univ.party[i].apply_status(eStatus::INVULNERABLE, -spec.ex1a);
-								break;
-							case eStatus::MAGIC_RESISTANCE:
-								if(spec.ex1b == 0)
-									univ.party[i].apply_status(eStatus::MAGIC_RESISTANCE, spec.ex1a);
-								else univ.party[i].apply_status(eStatus::MAGIC_RESISTANCE, -spec.ex1a);
-								break;
-							case eStatus::WEBS:
-								if(spec.ex1b == 0)
-									univ.party[i].apply_status(eStatus::WEBS, -spec.ex1a);
-								else univ.party[i].web(spec.ex1a);
-								break;
-							case eStatus::DISEASE:
-								if(spec.ex1b == 0)
-									univ.party[i].apply_status(eStatus::DISEASE, -spec.ex1a);
-								else univ.party[i].disease(spec.ex1a);
-								break;
-							case eStatus::INVISIBLE:
-								if(spec.ex1b == 0)
-									univ.party[i].apply_status(eStatus::INVISIBLE, spec.ex1a);
-								else univ.party[i].apply_status(eStatus::INVISIBLE, -spec.ex1a);
-								break;
-							case eStatus::BLESS_CURSE:
-								if(spec.ex1b == 0)
-									univ.party[i].curse(-spec.ex1a);
-								else univ.party[i].curse(spec.ex1a);
-								break;
-							case eStatus::DUMB:
-								if(spec.ex1b == 0)
-									univ.party[i].apply_status(eStatus::DUMB, -spec.ex1a);
-								else univ.party[i].dumbfound(spec.ex1a);
-								break;
-							case eStatus::ASLEEP:
-								if(spec.ex1b == 0)
-									univ.party[i].apply_status(eStatus::ASLEEP, -spec.ex1a);
-								else univ.party[i].sleep(eStatus::ASLEEP, spec.ex1a, 10);
-								break;
-							case eStatus::PARALYZED:
-								if(spec.ex1b == 0)
-									univ.party[i].apply_status(eStatus::PARALYZED, -spec.ex1a);
-								else univ.party[i].sleep(eStatus::PARALYZED, spec.ex1a, 10);
-								break;
-							case eStatus::POISONED_WEAPON:
-								if(spec.ex1b == 0)
-									poison_weapon(i, spec.ex1a, true);
-								else univ.party[i].apply_status(eStatus::POISONED_WEAPON, -spec.ex1a);
-								break;
-							case eStatus::MARTYRS_SHIELD:
-								if(spec.ex1b == 0)
-									univ.party[i].apply_status(eStatus::MARTYRS_SHIELD, spec.ex1a);
-								else univ.party[i].apply_status(eStatus::MARTYRS_SHIELD, -spec.ex1a);
-								break;
-							case eStatus::ACID:
-								if(spec.ex1b == 0)
-									univ.party[i].apply_status(eStatus::ACID, -spec.ex1a);
-								else univ.party[i].acid(spec.ex1a);
-								break;
-								// Invalid values
-							case eStatus::MAIN:
-							case eStatus::CHARM:
-							case eStatus::FORCECAGE:
-								break;
+			switch(eStatus(spec.ex2a)) {
+				case eStatus::POISON:
+					if(spec.ex1b == 0)
+						pc->cure(spec.ex1a);
+					else pc->poison(spec.ex1a);
+					break;
+				case eStatus::HASTE_SLOW:
+					if(spec.ex1b == 0)
+						pc->slow(-spec.ex1a);
+					else pc->slow(spec.ex1a);
+					break;
+				case eStatus::INVULNERABLE:
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::INVULNERABLE, spec.ex1a);
+					else pc->apply_status(eStatus::INVULNERABLE, -spec.ex1a);
+					break;
+				case eStatus::MAGIC_RESISTANCE:
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::MAGIC_RESISTANCE, spec.ex1a);
+					else pc->apply_status(eStatus::MAGIC_RESISTANCE, -spec.ex1a);
+					break;
+				case eStatus::WEBS:
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::WEBS, -spec.ex1a);
+					else pc->web(spec.ex1a);
+					break;
+				case eStatus::DISEASE:
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::DISEASE, -spec.ex1a);
+					else pc->disease(spec.ex1a);
+					break;
+				case eStatus::INVISIBLE:
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::INVISIBLE, spec.ex1a);
+					else pc->apply_status(eStatus::INVISIBLE, -spec.ex1a);
+					break;
+				case eStatus::BLESS_CURSE:
+					if(spec.ex1b == 0)
+						pc->curse(-spec.ex1a);
+					else pc->curse(spec.ex1a);
+					break;
+				case eStatus::DUMB:
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::DUMB, -spec.ex1a);
+					else pc->dumbfound(spec.ex1a);
+					break;
+				case eStatus::ASLEEP:
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::ASLEEP, -spec.ex1a);
+					else pc->sleep(eStatus::ASLEEP, spec.ex1a, 10);
+					break;
+				case eStatus::PARALYZED:
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::PARALYZED, -spec.ex1a);
+					else pc->sleep(eStatus::PARALYZED, spec.ex1a, 10);
+					break;
+				case eStatus::POISONED_WEAPON:
+					if(pc_num >= 100) break;
+					for(i = 0; i < 6; i++)
+						if(pc_num == 6 || pc_num == i) {
+							if(spec.ex1b == 0)
+								poison_weapon(i, spec.ex1a, true);
+							else univ.party[i].apply_status(eStatus::POISONED_WEAPON, -spec.ex1a);
 						}
-					}
-			}
-			else {
-				cCreature& who = univ.town.monst[pc - 100];
-				if(who.active > 0) {
-					switch(eStatus(spec.ex2a)) {
-						case eStatus::POISON:
-							if(spec.ex1b == 0)
-								who.poison(-spec.ex1a);
-							else who.poison(spec.ex1a);
-							break;
-						case eStatus::HASTE_SLOW:
-							if(spec.ex1b == 0)
-								who.slow(-spec.ex1a);
-							else who.slow(spec.ex1a);
-							break;
-						case eStatus::WEBS:
-							if(spec.ex1b == 0)
-								who.web(-spec.ex1a);
-							else who.web(spec.ex1a);
-							break;
-						case eStatus::DISEASE:
-							if(spec.ex1b == 0)
-								who.disease(-spec.ex1a);
-							else who.disease(spec.ex1a);
-							break;
-						case eStatus::BLESS_CURSE:
-							if(spec.ex1b == 0)
-								who.curse(-spec.ex1a);
-							else who.curse(spec.ex1a);
-							break;
-						case eStatus::DUMB:
-							if(spec.ex1b == 0)
-								who.dumbfound(-spec.ex1a);
-							else who.dumbfound(spec.ex1a);
-							break;
-						case eStatus::ASLEEP:
-							if(spec.ex1b == 0)
-								who.sleep(eStatus::ASLEEP, -spec.ex1a, 0);
-							else who.sleep(eStatus::ASLEEP, spec.ex1a, 0);
-							break;
-						case eStatus::PARALYZED:
-							if(spec.ex1b == 0)
-								who.sleep(eStatus::PARALYZED, -spec.ex1a, 0);
-							else who.sleep(eStatus::PARALYZED, spec.ex1a, 0);
-							break;
-						case eStatus::MARTYRS_SHIELD:
-							if(spec.ex1b == 0)
-								who.status[eStatus::MARTYRS_SHIELD] = min(10, who.status[eStatus::MARTYRS_SHIELD] + spec.ex1a);
-							else who.status[eStatus::MARTYRS_SHIELD] = max(0, who.status[eStatus::MARTYRS_SHIELD] - spec.ex1a);
-							break;
-						case eStatus::ACID:
-							if(spec.ex1b == 0)
-								who.acid(-spec.ex1a);
-							else who.acid(spec.ex1a);
-							break;
-							// Invalid values
-						case eStatus::MAIN:
-						case eStatus::FORCECAGE:
-						case eStatus::POISONED_WEAPON:
-						case eStatus::INVULNERABLE:
-						case eStatus::MAGIC_RESISTANCE:
-						case eStatus::INVISIBLE:
-						case eStatus::CHARM:
-							break;
-					}
-				}
+					break;
+				case eStatus::MARTYRS_SHIELD:
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::MARTYRS_SHIELD, spec.ex1a);
+					else pc->apply_status(eStatus::MARTYRS_SHIELD, -spec.ex1a);
+					break;
+				case eStatus::ACID:
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::ACID, -spec.ex1a);
+					else pc->acid(spec.ex1a);
+					break;
+					// Invalid values
+				case eStatus::MAIN:
+				case eStatus::CHARM:
+				case eStatus::FORCECAGE:
+					break;
 			}
 			break;
 		case eSpecType::AFFECT_STAT:
-			if(pc >= 100) break;
+			if(pc_num >= 100) break;
 			if(spec.ex2a != minmax(0,20,spec.ex2a)) {
 				giveError("Skill is out of range.");
 				break;
 			}
 			for(i = 0; i < 6; i++)
-				if((pc < 0 || pc == i) && get_ran(1,1,100) < spec.pic) {
+				if((pc_num == 6 || pc_num == i) && get_ran(1,1,100) < spec.pic) {
 					eSkill skill = eSkill(spec.ex2a);
 					int adj = spec.ex1a * (spec.ex1b != 0 ? -1: 1);
 					if(skill == eSkill::MAX_HP)
@@ -2958,23 +2874,23 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			break;
 		case eSpecType::AFFECT_MAGE_SPELL:
-			if(pc >= 100) break;
+			if(pc_num >= 100) break;
 			if(spec.ex1a != minmax(0,61,spec.ex1a)) {
 				giveError("Mage spell is out of range (0 - 61). See docs.");
 				break;
 			}
 			for(i = 0; i < 6; i++)
-				if((pc < 0) || (pc == i))
+				if(pc_num == 6 || pc_num == i)
 					univ.party[i].mage_spells[spec.ex1a] = spec.ex1b;
 			break;
 		case eSpecType::AFFECT_PRIEST_SPELL:
-			if(pc >= 100) break;
+			if(pc_num >= 100) break;
 			if(spec.ex1a != minmax(0,61,spec.ex1a)) {
 				giveError("Priest spell is out of range (0 - 61). See docs.");
 				break;
 			}
 			for(i = 0; i < 6; i++)
-				if((pc < 0) || (pc == i))
+				if(pc_num == 6 || pc_num == i)
 					univ.party[i].priest_spells[spec.ex1a] = spec.ex1b;
 			break;
 		case eSpecType::AFFECT_GOLD:
@@ -3009,66 +2925,66 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			univ.party.status[ePartyStatus::STEALTH] = r1;
 			break;
 		case eSpecType::AFFECT_TRAITS:
-			if(pc >= 100) break;
+			if(pc_num >= 100) break;
 			if(spec.ex1a < 0 || spec.ex1a > 15) {
 				giveError("Trait is out of range (0 - 15).");
 				break;
 			}
 			for(i = 0; i < 6; i++)
-				if(pc < 0 || pc == i)
+				if(pc_num == 6 || pc_num == i)
 					univ.party[i].traits[eTrait(spec.ex1a)] = !spec.ex1b;
 			break;
 		case eSpecType::AFFECT_AP:
 			if(!is_combat()) break;
-			if(pc < 100) {
-				for(i = 0; i < 6; i++)
-					if(pc < 0 || pc == i) {
-						if(spec.ex1b)
-							univ.party[i].ap += spec.ex1a;
-						else univ.party[i].ap -= spec.ex1a;
-						if(univ.party[i].ap < 0)
-							univ.party[i].ap = 0;
-					}
+			if(pc_num == 6) {
+				for(i = 0; i < 6; i++) {
+					if(spec.ex1b)
+						univ.party[i].ap += spec.ex1a;
+					else univ.party[i].ap -= spec.ex1a;
+					if(univ.party[i].ap < 0)
+						univ.party[i].ap = 0;
+				}
 			} else {
-				cCreature& who = univ.town.monst[pc - 100];
 				if(spec.ex1b)
-					who.ap += spec.ex1a;
-				else who.ap -= spec.ex1a;
-				if(who.ap < 0)
-					who.ap = 0;
+					pc->ap += spec.ex1a;
+				else pc->ap -= spec.ex1a;
+				if(pc->ap < 0)
+					pc->ap = 0;
 			}
 			break;
 		case eSpecType::AFFECT_NAME:
 			get_strs(str, str, 0, spec.m3, -1);
-			if(pc < 100) {
+			if(cPlayer* who = dynamic_cast<cPlayer*>(pc))
+				who->name = str;
+			else if(cCreature* monst = dynamic_cast<cCreature*>(pc))
+				monst->m_name = str;
+			else if(dynamic_cast<cParty*>(pc))
 				for(i = 0; i < 6; i++)
-					if(pc < 0 || pc == i)
-						univ.party[i].name = str;
-			} else univ.town.monst[pc - 100].m_name = str;
+					univ.party[i].name = str;
 			break;
 		case eSpecType::CREATE_NEW_PC:
 			if(spec.ex1c < 0 || spec.ex1c > 19) {
 				giveError("Race out of range (0 - 19).");
 				break;
 			}
-			pc = univ.party.free_space();
-			if(pc == 6) {
+			pc_num = univ.party.free_space();
+			if(pc_num == 6) {
 				add_string_to_buf("No room for new PC.");
 				*next_spec = spec.pictype;
 				check_mess = false;
 				break;
 			}
-			current_pc_picked_in_spec_enc = pc;
 			get_strs(str, str, 0, spec.m3, -1);
-			univ.party.new_pc(pc);
-			univ.party[pc].name = str;
-			univ.party[pc].which_graphic = spec.pic;
-			univ.party[pc].cur_health = univ.party[pc].max_health = spec.ex1a;
-			univ.party[pc].cur_sp = univ.party[pc].max_sp = spec.ex1b;
-			univ.party[pc].race = eRace(spec.ex1c);
-			univ.party[pc].skills[eSkill::STRENGTH] = spec.ex2a;
-			univ.party[pc].skills[eSkill::DEXTERITY] = spec.ex2b;
-			univ.party[pc].skills[eSkill::INTELLIGENCE] = spec.ex2c;
+			univ.party.new_pc(pc_num);
+			univ.party[pc_num].name = str;
+			univ.party[pc_num].which_graphic = spec.pic;
+			univ.party[pc_num].cur_health = univ.party[pc_num].max_health = spec.ex1a;
+			univ.party[pc_num].cur_sp = univ.party[pc_num].max_sp = spec.ex1b;
+			univ.party[pc_num].race = eRace(spec.ex1c);
+			univ.party[pc_num].skills[eSkill::STRENGTH] = spec.ex2a;
+			univ.party[pc_num].skills[eSkill::DEXTERITY] = spec.ex2b;
+			univ.party[pc_num].skills[eSkill::INTELLIGENCE] = spec.ex2c;
+			current_pc_picked_in_spec_enc = &univ.get_target(pc_num);
 			break;
 	}
 	if(check_mess) {
@@ -3291,12 +3207,10 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			
 			if(spec.ex2b == -1) {
 				// Check specific PC's stat (uses the active PC from Select PC node)
-				short pc = 6;
-				if(univ.party.is_split())
-					pc = univ.party.pc_present();
-				if(pc == 6 && univ.party.pc_present(current_pc_picked_in_spec_enc))
-					pc = current_pc_picked_in_spec_enc;
-				if(pc != 6) {
+				short pc = univ.get_target_i(*current_pc_picked_in_spec_enc);
+				if(pc == 6 && univ.party.is_split())
+					pc = univ.get_target_i(univ.party.pc_present());
+				if(pc >= 0 && pc < 6) {
 					if(check_party_stat(eSkill(spec.ex2a), 10 + pc) >= spec.ex1a)
 						*next_spec = spec.ex1b;
 					break;
@@ -3387,13 +3301,12 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_ALIVE:
 			i = 0;
-			if(current_pc_picked_in_spec_enc < 100) {
-				int pc = current_pc_picked_in_spec_enc;
+			if(spec.ex1a == -1)
+				i = current_pc_picked_in_spec_enc->is_alive();
+			else if(cPlayer* who = dynamic_cast<cPlayer*>(current_pc_picked_in_spec_enc)) {
+				int pc = univ.get_target_i(*current_pc_picked_in_spec_enc);
 				eMainStatus stat;
 				switch(spec.ex1a) {
-					case -1:
-						stat = eMainStatus::ALIVE;
-						break;
 					case 0:
 						stat = eMainStatus::DEAD;
 						break;
@@ -3416,19 +3329,19 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(stat == eMainStatus::SPLIT)
 					i = univ.party.is_split();
 				else for(j = 0; j < 6; j++)
-					if(pc < 0 || pc == j)
+					if(pc == 6 || pc == i)
 						i += univ.party[j].main_status == stat;
-			} else i = univ.town.monst[current_pc_picked_in_spec_enc - 100].active;
+			}
 			if(i > 0) *next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_MAGE_SPELL:
 			i = 0;
-			if(current_pc_picked_in_spec_enc < 100) {
-				int pc = current_pc_picked_in_spec_enc;
+			if(cPlayer* who = dynamic_cast<cPlayer*>(current_pc_picked_in_spec_enc)) {
+				int pc = univ.get_target_i(*who);
 				if(spec.ex1a < 0 || spec.ex1a >= 62)
 					break;
 				for(j = 0; j < 6; j++)
-					if(pc < 0 || pc == j)
+					if(pc == 6 || pc == i)
 						i += univ.party[j].mage_spells[spec.ex1a];
 			} else {
 				// TODO: Implement for monsters
@@ -3438,12 +3351,12 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_PRIEST_SPELL:
 			i = 0;
-			if(current_pc_picked_in_spec_enc < 100) {
-				int pc = current_pc_picked_in_spec_enc;
+			if(cPlayer* who = dynamic_cast<cPlayer*>(current_pc_picked_in_spec_enc)) {
+				int pc = univ.get_target_i(*who);
 				if(spec.ex1a < 0 || spec.ex1a >= 62)
 					break;
 				for(j = 0; j < 6; j++)
-					if(pc < 0 || pc == j)
+					if(pc == 6 || pc == i)
 						i += univ.party[j].priest_spells[spec.ex1a];
 			} else {
 				// TODO: Implement for monsters
@@ -3464,7 +3377,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				giveError("Invalid status effect (0...14)");
 				break;
 			}
-			if(current_pc_picked_in_spec_enc < 0) {
+			if(dynamic_cast<cParty*>(current_pc_picked_in_spec_enc)) {
 				k = spec.ex2b == 2 ? std::numeric_limits<short>::max() : 0;
 				j = 0;
 				for(i = 0; i < 6; i++, j++)
@@ -3479,15 +3392,9 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					}
 				if(spec.ex2b == 1 && j > 0)
 					k /= j;
-			} else if(current_pc_picked_in_spec_enc < 100) {
-				cPlayer& pc = univ.party[current_pc_picked_in_spec_enc];
-				if(pc.main_status == eMainStatus::ALIVE)
-					k = pc.status[eStatus(spec.ex1a)];
-				else k = 0;
 			} else {
-				cCreature& monst = univ.town.monst[current_pc_picked_in_spec_enc - 100];
-				if(monst.active > 0)
-					k = monst.status[eStatus(spec.ex1a)];
+				if(current_pc_picked_in_spec_enc->is_alive())
+				   k = current_pc_picked_in_spec_enc->status[eStatus(spec.ex1a)];
 				else k = 0;
 			}
 			j = spec.ex2a;
@@ -3743,8 +3650,11 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_DESTROY_MONST:
-			if(spec.ex1a >= 0 && spec.ex1b >= 0 && ((i = monst_there(l)) < univ.town.monst.size()))
-				univ.town.monst[i].active = 0;
+			if(spec.ex1a >= 0 && spec.ex1b >= 0) {
+				iLiving* monst = univ.target_there(l, TARG_MONST);
+				if(monst != nullptr)
+					dynamic_cast<cCreature*>(monst)->active = 0;
+			}
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_NUKE_MONSTS:
@@ -4026,10 +3936,10 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::TOWN_RUN_MISSILE:
 			if(which_mode == eSpecCtx::TALK)
 				break;
-			if((i = monst_there(loc(spec.ex2a, spec.ex2b))) < 90) {
-				cCreature& who = univ.town.monst[i];
-				i = 14 * who.x_width - 1;
-				r1 = 18 * who.y_width - 1;
+			if(iLiving* targ = univ.target_there(loc(spec.ex2a, spec.ex2b), TARG_MONST)) {
+				cCreature* who = dynamic_cast<cCreature*>(targ);
+				i = 14 * who->x_width - 1;
+				r1 = 18 * who->y_width - 1;
 			} else i = r1 = 0;
 			run_a_missile(l, loc(spec.ex2a, spec.ex2b), spec.pic, spec.ex1c, spec.ex2c, i, r1, 100);
 			break;
@@ -4045,10 +3955,9 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			i = combat_posing_monster;
 			if(l.y >= 0) {
-				int monst = monst_there(l);
-				if(monst < univ.town.monst.size())
-					combat_posing_monster = 100 + monst;
-				else combat_posing_monster = pc_there(l);
+				iLiving* who = univ.target_there(l);
+				if(who != nullptr)
+					combat_posing_monster = univ.get_target_i(*who);
 				if(combat_posing_monster == 6)
 					combat_posing_monster = -1;
 			} else combat_posing_monster = spec.ex1a;

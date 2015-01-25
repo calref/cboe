@@ -133,6 +133,7 @@ public:
 	void append(legacy::pc_record_type(& old)[6]);
 	
 	bool is_alive() const;
+	bool is_friendly() const;
 	bool is_shielded() const;
 	int get_shared_dmg(int base_dmg) const;
 	location get_loc() const;
@@ -182,7 +183,7 @@ public:
 	bool end_split(snd_num_t noise);
 	bool is_split() const;
 	bool pc_present(short n) const;
-	short pc_present() const; // If only one pc is present, returns the number of that pc. Otherwise returns 6.
+	iLiving& pc_present() const; // If only one pc is present, returns that pc. Otherwise returns party.
 	void swap_pcs(size_t a, size_t b);
 	
 	typedef std::vector<cEncNote>::iterator encIter;

@@ -373,7 +373,7 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 			move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
 			put_pc_screen();
 		}
-		check_fields(univ.party[current_pc].combat_pos,eSpecCtx::COMBAT_MOVE,current_pc);
+		check_fields(univ.party[current_pc].combat_pos,eSpecCtx::COMBAT_MOVE,univ.party[current_pc]);
 	} else {
 		add_string_to_buf("Pause.");
 		for(int k = 0; k < 6; k++)
@@ -397,7 +397,7 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 			}
 		}
 		put_pc_screen();
-		check_fields(univ.town.p_loc,eSpecCtx::TOWN_MOVE,0);
+		check_fields(univ.town.p_loc,eSpecCtx::TOWN_MOVE,univ.party[0]);
 	}
 	
 	did_something = true;
@@ -519,7 +519,7 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 		need_reprint = true;
 	} else {
 		for(int i = 0; i < univ.town.monst.size(); i++) {
-			if(monst_on_space(destination,i)) {
+			if(univ.town.monst[i].on_space(destination)) {
 				did_something = true;
 				need_redraw = true;
 				if(univ.town.monst[i].attitude % 2 == 1) {
@@ -1836,7 +1836,7 @@ bool handle_keystroke(sf::Event& event){
 				
 				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)
 					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 10) )
-					damage_monst(i, 7,1000,0, eDamageType::UNBLOCKABLE,0);
+					damage_monst(i, 7,1000,eDamageType::UNBLOCKABLE,0);
 			}
 			// kill_monst(&univ.town.monst[i],6);
 			draw_terrain();
@@ -2757,7 +2757,7 @@ bool outd_move_party(location destination,bool forced) {
 	location store_corner,store_iwc;
 	ter_num_t ter;
 	
-	keep_going = check_special_terrain(destination,eSpecCtx::OUT_MOVE,0,&spec_num,&check_f);
+	keep_going = check_special_terrain(destination,eSpecCtx::OUT_MOVE,univ.party[0],&spec_num,&check_f);
 	if(check_f)
 		forced = true;
 	if(in_scen_debug && ghost_mode)
@@ -2974,8 +2974,8 @@ bool town_move_party(location destination,short forced) {
 	}
 	*/
 	
-	if(monst_there(destination) >= univ.town.monst.size())
-		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,0,&spec_num,&check_f);
+	if(univ.target_there(destination, TARG_MONST) != nullptr)
+		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,univ.party[0],&spec_num,&check_f);
 	if(check_f)
 		forced = true;
 	

@@ -49,15 +49,17 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 	if(trap_type == TRAP_FALSE_ALARM)
 		return true;
 	
+	cPlayer& disarmer = univ.party[pc_num];
+	
 	if(pc_num < 6) {
-		i = stat_adj(pc_num,eSkill::DEXTERITY);
-		i += univ.party[pc_num].get_prot_level(eItemAbil::THIEVING) / 2;
-		skill = minmax(0,20,univ.party[pc_num].skill(eSkill::DISARM_TRAPS) +
-					   + univ.party[pc_num].skill(eSkill::LUCK) / 2 + 1 - univ.town.difficulty + 2 * i);
+		i = disarmer.stat_adj(eSkill::DEXTERITY);
+		i += disarmer.get_prot_level(eItemAbil::THIEVING) / 2;
+		skill = minmax(0,20,disarmer.skill(eSkill::DISARM_TRAPS) +
+					   + disarmer.skill(eSkill::LUCK) / 2 + 1 - univ.town.difficulty + 2 * i);
 		
 		r1 = get_ran(1,1,100) + diff;
 		// Nimble?
-		if(univ.party[pc_num].traits[eTrait::NIMBLE])
+		if(disarmer.traits[eTrait::NIMBLE])
 			r1 -= 6;
 		
 		
@@ -81,7 +83,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			add_string_to_buf("  A dart flies out.              ");
 			r1 = 3 + univ.town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
-			univ.party[pc_num].poison(r1);
+			disarmer.poison(r1);
 			break;
 			
 		case TRAP_GAS:
@@ -104,13 +106,13 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			r1 = 200 + univ.town.difficulty * 100;
 			r1 = r1 + trap_level * 400;
 			// TODO: It says sleep ray but is actually paralysis ray?
-			univ.party[pc_num].sleep(eStatus::PARALYZED, r1, 50);
+			disarmer.sleep(eStatus::PARALYZED, r1, 50);
 			break;
 		case TRAP_DRAIN_XP:
 			add_string_to_buf("  You feel weak.            ");
 			r1 = 40;
 			r1 = r1 + trap_level * 30;
-			univ.party[pc_num].experience = max (0,univ.party[pc_num].experience - r1);
+			disarmer.experience = max(0,disarmer.experience - r1);
 			break;
 			
 		case TRAP_ALERT:
@@ -132,7 +134,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			add_string_to_buf("  You prick your finger. ");
 			r1 = 3 + univ.town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
-			univ.party[pc_num].disease(r1);
+			disarmer.disease(r1);
 			break;
 			
 		case TRAP_DISEASE_ALL:

@@ -21,8 +21,6 @@ ter_num_t coord_to_ter(short x,short y);
 bool is_container(location loc);
 void update_explored(location dest);
 bool is_blocked(location to_check);
-bool monst_on_space(location loc,short m_num);
-size_t monst_there(location where) ;
 bool monst_can_be_there(location loc,short m_num);
 bool monst_adjacent(location loc,short m_num);
 bool monst_can_see(short m_num,location l);
