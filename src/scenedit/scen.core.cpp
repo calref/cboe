@@ -21,6 +21,7 @@
 #include "field.hpp"
 #include "restypes.hpp"
 #include "stack.hpp"
+#include "spell.hpp"
 
 extern short cen_x, cen_y,cur_town;
 extern bool mouse_button_held;
@@ -509,6 +510,35 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which
 	me["type1"].setText(get_str("monster-abilities",130 + int(monst.a[0].type)));
 	me["type2"].setText(get_str("monster-abilities",130 + int(monst.a[1].type)));
 	me["type3"].setText(get_str("monster-abilities",130 + int(monst.a[2].type)));
+	
+	// Summoning!
+	std::vector<eSpell> summoned_by;
+	// General summon spells
+	switch(monst.summon_type) {
+		case 1: summoned_by.push_back(eSpell::SUMMON_BEAST); summoned_by.push_back(eSpell::SUMMON_WEAK); break;
+		case 2: summoned_by.push_back(eSpell::SUMMON); break;
+		case 3: summoned_by.push_back(eSpell::SUMMON_MAJOR); break;
+	}
+	// Special summon spells
+	switch(which) {
+		case 85: summoned_by.push_back(eSpell::DEMON); break;
+		case 80: summoned_by.push_back(eSpell::SUMMON_RAT); break;
+		case 125: summoned_by.push_back(eSpell::SUMMON_SPIRIT); // deliberate fallthrough
+		case 126: summoned_by.push_back(eSpell::SUMMON_HOST); break;
+		case 99: case 100: summoned_by.push_back(eSpell::STICKS_TO_SNAKES); break;
+		case 122: summoned_by.push_back(eSpell::SUMMON_GUARDIAN); break;
+	}
+	
+	strb.str("");
+	bool first = true;
+	if(summoned_by.empty())
+		strb << "None";
+	else for(eSpell spell : summoned_by) {
+		if(!first) strb << ", ";
+		first = false;
+		strb << (*spell).name();
+	}
+	me["summons"].setText(strb.str());
 }
 
 static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& monst) {
