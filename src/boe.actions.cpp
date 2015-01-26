@@ -2081,24 +2081,26 @@ bool handle_keystroke(sf::Event& event){
 					case 'P': spell_forced = true; j = 1; break;
 					case 'p': j = 1; break;
 					case 'l': j = 2; break;
-					case 'r': if(overall_mode != MODE_OUTDOORS) return false;
+					case 'r':
+						if(overall_mode != MODE_OUTDOORS) return false;
 						j = 3;
 						break;
-					case 't': if(overall_mode == MODE_TOWN)
-						j = 3;
+					case 't':
+						if(overall_mode == MODE_TOWN)
+							j = 3;
 					else return false;
 						break;
-					case 'A':if(overall_mode == MODE_TOWN) {
-						pass_point.x = 1000 + ul.x;
-						pass_event.mouseButton.x = pass_point.x;
-						pass_event.mouseButton.y = pass_point.y;
-						are_done = handle_action(pass_event);
-					}
-					else {
-						add_string_to_buf("Alchemy: In town only.");
-						print_buf();
-						return false;
-					}
+					case 'A':
+						if(overall_mode == MODE_TOWN) {
+							pass_point.x = 1000 + ul.x;
+							pass_event.mouseButton.x = pass_point.x;
+							pass_event.mouseButton.y = pass_point.y;
+							are_done = handle_action(pass_event);
+						} else {
+							add_string_to_buf("Alchemy: In town only.");
+							print_buf();
+							return false;
+						}
 						break;
 					case 'w':
 						if(overall_mode == MODE_COMBAT)
@@ -2115,13 +2117,16 @@ bool handle_keystroke(sf::Event& event){
 							return false;
 						}
 						break;
-					case 'd': if(overall_mode != MODE_COMBAT) return false;
+					case 'd':
+						if(overall_mode != MODE_COMBAT) return false;
 						j = 3;
 						break;
-					case 'g': if(overall_mode == MODE_OUTDOORS) return false;
+					case 'g':
+						if(overall_mode == MODE_OUTDOORS) return false;
 						j = 4;
 						break;
-					case 'f': if(overall_mode != MODE_TOWN) return false;
+					case 'f':
+						if(overall_mode != MODE_TOWN) return false;
 						j = 6;
 						break;
 				}
