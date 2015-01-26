@@ -19,6 +19,7 @@
 #include "dlogutil.hpp"
 #include "oldstructs.h"
 #include "fileio.hpp"
+#include "mathutil.hpp"
 
 cParty::cParty(cUniverse& univ, long party_preset) : univ(univ) {
 	gold = 200;
@@ -980,6 +981,13 @@ iLiving& cParty::pc_present() const {
 	if(ret >= 6)
 		return *const_cast<cParty*>(this);
 	return *adven[ret];
+}
+
+// stuff done legit, i.e. flags are within proper ranges for stuff done flag
+bool cParty::sd_legit(short a, short b) {
+	if((minmax(0,299,a) == a) && (minmax(0,49,b) == b))
+		return true;
+	return false;
 }
 
 bool operator==(const cParty::cConvers& one, const cParty::cConvers& two) {

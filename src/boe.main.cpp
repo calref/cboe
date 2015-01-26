@@ -713,11 +713,3 @@ void pause(short length) {
 	if(give_delays)
 		sf::sleep(time_in_ticks(len));
 }
-
-// TODO: I think this should be in a better place, maybe in cParty?
-// stuff done legit, i.e. flags are within proper ranges for stuff done flag
-bool sd_legit(short a, short b) {
-	if((minmax(0,299,a) == a) && (minmax(0,9,b) == b))
-		return true;
-	return false;
-}

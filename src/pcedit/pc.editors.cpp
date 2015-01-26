@@ -539,3 +539,39 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	
 	return xpDlog.getResult<bool>();
 }
+
+void edit_stuff_done() {
+	cDialog sdf_dlg("set-sdf");
+	sdf_dlg.attachFocusHandlers([](cDialog& me, std::string, bool losing) -> bool {
+		if(!losing) return true;
+		int x = me["x"].getTextAsNum(), y = me["y"].getTextAsNum();
+		if(!univ.party.sd_legit(x,y)) {
+			std::ostringstream strb;
+			strb << "SDF (" << x << ',' << y << ") does not exist!";
+			me["feedback"].setText(strb.str());
+		} else {
+			me["feedback"].setText("");
+			me["val"].setTextToNum(univ.party.stuff_done[x][y]);
+		}
+		return true;
+	}, {"x","y"});
+	sdf_dlg["set"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
+		int x = me["x"].getTextAsNum(), y = me["y"].getTextAsNum(), val = me["val"].getTextAsNum();
+		std::ostringstream strb;
+		if(!univ.party.sd_legit(x,y)) {
+			strb << "SDF (" << x << ',' << y << ") does not exist!";
+			me["feedback"].setText(strb.str());
+		} else {
+			strb << "You have set SDF (" << x << ',' << y << ") = " << val;
+			me["feedback"].setText(strb.str());
+			univ.party.stuff_done[x][y] = val;
+		}
+		return true;
+	});
+	sdf_dlg["exit"].attachClickHandler(std::bind(&cDialog::toast, &sdf_dlg, false));
+	// Initialize fields with some default values
+	sdf_dlg["x"].setText("0");
+	sdf_dlg["y"].setText("0");
+	sdf_dlg["val"].setTextToNum(univ.party.stuff_done[0][0]);
+	sdf_dlg.run();
+}

@@ -307,6 +307,9 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::EDIT_XP:
 			edit_xp(&univ.party[current_active_pc]);
 			break;
+		case eMenu::SET_SDF:
+			edit_stuff_done();
+			break;
 	}
 }
 

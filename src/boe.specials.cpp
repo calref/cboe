@@ -1524,7 +1524,7 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 	}
 	
 	// Special killing effects
-	if(sd_legit(which_m->spec1,which_m->spec2))
+	if(univ.party.sd_legit(which_m->spec1,which_m->spec2))
 		PSD[which_m->spec1][which_m->spec2] = 1;
 	
 	if(which_m->special_on_kill >= 0)
@@ -2111,7 +2111,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else for(i = 0; i < 10; i++) PSD[spec.sd1][i] = spec.ex1a;
 			break;
 		case eSpecType::COPY_SDF:
-			if(!sd_legit(spec.sd1,spec.sd2) || !sd_legit(spec.ex1a,spec.ex1b))
+			if(!univ.party.sd_legit(spec.sd1,spec.sd2) || !univ.party.sd_legit(spec.ex1a,spec.ex1b))
 				giveError("Stuff Done flag out of range.");
 			else PSD[spec.sd1][spec.sd2] = PSD[spec.ex1a][spec.ex1b];
 			break;
@@ -2146,7 +2146,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::SET_CAMP_FLAG:
-			if(!sd_legit(spec.sd1,spec.sd2))
+			if(!univ.party.sd_legit(spec.sd1,spec.sd2))
 				giveError("Stuff Done flag out of range (x - 0..299, y - 0..49).");
 			else {
 				set_campaign_flag(spec.sd1,spec.sd2,spec.ex1a,spec.ex1b,spec.m1,spec.ex2a);
@@ -2345,7 +2345,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
-	if((sd_legit(spec.sd1,spec.sd2)) && (PSD[spec.sd1][spec.sd2] == 250)) {
+	if((univ.party.sd_legit(spec.sd1,spec.sd2)) && (PSD[spec.sd1][spec.sd2] == 250)) {
 		*next_spec = -1;
 		return;
 	}
@@ -2492,7 +2492,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
 	}
-	if((set_sd) && (sd_legit(spec.sd1,spec.sd2)))
+	if((set_sd) && (univ.party.sd_legit(spec.sd1,spec.sd2)))
 		PSD[spec.sd1][spec.sd2] = 250;
 	
 }
@@ -2963,7 +2963,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	
 	switch(cur_node.type) {
 		case eSpecType::IF_SDF:
-			if(sd_legit(spec.sd1,spec.sd2)) {
+			if(univ.party.sd_legit(spec.sd1,spec.sd2)) {
 				if((spec.ex1a >= 0) && (PSD[spec.sd1][spec.sd2] >= spec.ex1a))
 					*next_spec = spec.ex1b;
 				else if((spec.ex2a >= 0) && (PSD[spec.sd1][spec.sd2] < spec.ex2a))
@@ -2986,7 +2986,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_SDF_COMPARE:
-			if((sd_legit(spec.sd1,spec.sd2)) && (sd_legit(spec.ex1a,spec.ex1b))) {
+			if((univ.party.sd_legit(spec.sd1,spec.sd2)) && (univ.party.sd_legit(spec.ex1a,spec.ex1b))) {
 				if(PSD[spec.ex1a][spec.ex1b] < PSD[spec.sd1][spec.sd2])
 					*next_spec = spec.ex2b;
 			}
@@ -3237,7 +3237,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(j == 3) *next_spec = spec.pictype;
 			break;
 		case eSpecType::IF_SDF_EQ:
-			if(sd_legit(spec.sd1,spec.sd2)) {
+			if(univ.party.sd_legit(spec.sd1,spec.sd2)) {
 				if(PSD[spec.sd1][spec.sd2] == spec.ex1a)
 					*next_spec = spec.ex1b;
 			}
@@ -4175,7 +4175,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 }
 
 void setsd(short a,short b,short val) {
-	if(!sd_legit(a,b)) {
+	if(!univ.party.sd_legit(a,b)) {
 		giveError("The scenario attempted to change an out of range Stuff Done flag.");
 		return;
 	}

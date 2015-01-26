@@ -12,4 +12,3 @@ void set_up_apple_events();
 void move_sound(ter_num_t ter,short step);
 void incidental_noises(bool on_surface);
 void pause(short length);
-bool sd_legit(short a, short b);
