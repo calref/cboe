@@ -662,7 +662,6 @@ static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 		add_string_to_buf("Set active: Finish what you're doing first.");
 	else {
 		if(!is_combat()) {
-			// TODO: Maybe allow this in combat, as per the above TODO note?
 			if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALCHEMY))
 				add_string_to_buf("Set active: PC must be here & active.");
 			else {
@@ -693,10 +692,17 @@ static void handle_equip_item(short item_hit, bool& need_redraw) {
 		equip_item(stat_window, item_hit);
 		take_ap(1);
 		need_redraw = true;
-	}
+	} else if(stat_screen_mode > MODE_SHOP) {
+		// TODO: For some reason, the game didn't do anything at all in this case.
+		// I'm not sure why; maybe it intended to forward to the sell button?
+	} else add_string_to_buf("Equip: Finish what you're doing first.");
 }
 
 static void handle_use_item(short item_hit, bool& did_something, bool& need_redraw) {
+	if(!prime_time()) {
+		add_string_to_buf("Use item: Finish what you're doing first.");
+		return;
+	}
 	use_item(stat_window, item_hit);
 	if(overall_mode != MODE_TOWN_TARGET && overall_mode != MODE_SPELL_TARGET)
 		did_something = true;
@@ -705,6 +711,10 @@ static void handle_use_item(short item_hit, bool& did_something, bool& need_redr
 }
 
 static void handle_give_item(short item_hit, bool& did_something, bool& need_redraw) {
+	if(!prime_time()) {
+		add_string_to_buf("Give item: Finish what you're doing first.");
+		return;
+	}
 	give_thing(stat_window, item_hit);
 	did_something = true;
 	need_redraw = true;
@@ -712,7 +722,9 @@ static void handle_give_item(short item_hit, bool& did_something, bool& need_red
 }
 
 static void handle_drop_item(short item_hit, bool& need_redraw) {
-	if(is_out())
+	if(!prime_time())
+		add_string_to_buf("Drop item: Finish what you're doing first.");
+	else if(is_out())
 		drop_item(stat_window,item_hit,univ.party.p_loc);
 	else {
 		add_string_to_buf("Drop item: Click where to drop item.");
@@ -751,6 +763,9 @@ static void handle_item_shop_action(short item_hit) {
 				eEnchant ench = eEnchant(shop_identify_cost);
 				univ.party[stat_window].items[item_hit].enchant_weapon(ench,store_selling_values[i]);
 			}
+			break;
+		case MODE_INVEN: case MODE_SHOP:
+			// The button doesn't even exist, so just do nothing.
 			break;
 	}
 }
@@ -1297,10 +1312,11 @@ bool handle_action(sf::Event event) {
 				switch(i) {
 					case 6: // special screen
 						give_help(50,0);
-						set_stat_window(6);
+						set_stat_window(ITEM_WIN_SPECIAL);
 						break;
 					case 7:
 						// TODO: Jobs! Or maybe quests!
+						//set_stat_window(ITEM_WIN_QUESTS);
 						break;
 					case 8: // help
 						cChoiceDlog("help-inventory").show();
@@ -1310,7 +1326,7 @@ bool handle_action(sf::Event event) {
 						break;
 				}
 			}
-		if(stat_window < 7) {
+		if(stat_window <= ITEM_WIN_QUESTS) {
 			for(int i = 0; i < 8; i++)
 				for(int j = 0; j < 6; j++)
 					if(item_area_button_active[i][j] && point_in_area.in(item_buttons[i][j])) {
@@ -1320,9 +1336,7 @@ bool handle_action(sf::Event event) {
 						item_buttons[i][j].offset(-ITEM_WIN_UL_X,-ITEM_WIN_UL_Y);
 						
 						item_hit = item_sbar->getPosition() + i;
-						if(!prime_time() && j < 4 && (j > 0 || stat_screen_mode < 2))
-							add_string_to_buf("Item action: Finish what you're doing first.");
-						else switch(j) {
+						switch(j) {
 							case 0: // equip
 								handle_equip_item(item_hit, need_redraw);
 								break;
@@ -1333,14 +1347,16 @@ bool handle_action(sf::Event event) {
 								handle_give_item(item_hit, did_something, need_redraw);
 								break;
 							case 3: // drop
-								if(stat_window == 6) {
+								if(stat_window == ITEM_WIN_SPECIAL) {
 									use_spec_item(spec_item_array[item_hit]);
 									need_redraw = true;
 								} else handle_drop_item(item_hit, need_redraw);
 								break;
 							case 4: // info
-								if(stat_window == 6)
+								if(stat_window == ITEM_WIN_SPECIAL)
 									put_spec_item_info(spec_item_array[item_hit]);
+								else if(stat_window == ITEM_WIN_QUESTS)
+									; // TODO: Implement quests view
 								else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
 								break;
 							case 5: // sell? That this codes was reached indicates that the item was sellable

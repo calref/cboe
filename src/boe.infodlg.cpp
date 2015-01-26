@@ -197,7 +197,7 @@ static void put_item_info(cDialog& me,const cItem& s_i) {
 	if(s_i.magic && s_i.ident)
 		magic.setState(led_red);
 	else magic.setState(led_off);
-	me["type"].setText(get_str("item-types-display", int(s_i.variety)));
+	me["type"].setText(get_str("item-types-display", int(s_i.variety) + 1));
 	
 	// Clear fields
 	me["val"].setText("");
