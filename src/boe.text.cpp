@@ -233,7 +233,7 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 	TextStyle style;
 	style.lineHeight = 10;
 	switch(screen_num) {
-		case 6: // On special items page
+		case ITEM_WIN_SPECIAL:
 			style.font = FONT_BOLD;
 			style.colour = sf::Color::White;
 			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",eTextMode::WRAP,style);
@@ -251,7 +251,8 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 				}
 			}
 			break;
-		case 7: // On jobs page
+		case ITEM_WIN_QUESTS:
+			// TODO: Implement quest list
 			break;
 			
 		default: // on an items page
@@ -314,7 +315,7 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 					else {
 						place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic
 						place_item_button(3,i,4,0); // info button
-						if((stat_screen_mode == MODE_SHOP) &&
+						if((stat_screen_mode == MODE_INVEN) &&
 							((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 							place_item_button(1,i,2,0);
 							place_item_button(2,i,3,0);
@@ -493,11 +494,11 @@ void set_stat_window(short new_stat) {
 	short i,array_pos = 0;
 	
 	stat_window = new_stat;
-	if(stat_window < 6 && univ.party[stat_window].main_status != eMainStatus::ALIVE)
+	if(stat_window < ITEM_WIN_SPECIAL && univ.party[stat_window].main_status != eMainStatus::ALIVE)
 		stat_window = first_active_pc();
 	item_sbar->setPageSize(8);
 	switch(stat_window) {
-		case 6:
+		case ITEM_WIN_SPECIAL:
 			for(i = 0; i < 60; i++)
 				spec_item_array[i] = -1;
 			for(i = 0; i < 50; i++) ////
@@ -508,7 +509,7 @@ void set_stat_window(short new_stat) {
 			array_pos = max(0,array_pos - 8);
 			item_sbar->setMaximum(array_pos);
 			break;
-		case 7:
+		case ITEM_WIN_QUESTS:
 			item_sbar->setMaximum(2);
 			item_sbar->setPageSize(2);
 			break;

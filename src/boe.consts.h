@@ -190,6 +190,10 @@ enum eTrapType {
 #define PCBTN_INFO			3
 #define PCBTN_TRADE			4
 
+// Item window modes (non-PC)
+#define ITEM_WIN_SPECIAL	6
+#define ITEM_WIN_QUESTS		7
+
 //Spell select
 #define SPELL_SELECT_NONE		0
 #define SPELL_SELECT_ACTIVE		1

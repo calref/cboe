@@ -2424,8 +2424,8 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else {
 				univ.party.spec_items[spec.ex1a] = spec.ex1b == 0;
 			}
-			if(stat_window == 6)
-				set_stat_window(6);
+			if(stat_window == ITEM_WIN_SPECIAL)
+				set_stat_window(ITEM_WIN_SPECIAL);
 			*redraw = 1;
 			break;
 		case eSpecType::ONCE_NULL:
@@ -2493,8 +2493,8 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							ASB("You get a special item.");
 						univ.party.spec_items[spec.m3] = true;
 						*redraw = true;
-						if(stat_window == 6)
-							set_stat_window(6);
+						if(stat_window == ITEM_WIN_SPECIAL)
+							set_stat_window(ITEM_WIN_SPECIAL);
 					}
 					if(spec.ex2b >= 0) *next_spec = spec.ex2b;
 				}
