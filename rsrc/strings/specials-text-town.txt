@@ -90,7 +90,7 @@ X coordinate of space
 Y coordinate of space
 Unused
 Damage to inflict (0 .. 1000)
-Type of damage (for list, see docs.)
+Type of damage (0..8)
 Unused
 Special to Jump To
 --------------------
@@ -106,7 +106,7 @@ X coordinate of space
 Y coordinate of space
 Unused
 Damage to inflict (0 .. 1000)
-Type of damage (for list, see docs.)
+Type of damage (0..8)
 Unused
 Special to Jump To
 --------------------
@@ -521,7 +521,7 @@ Unused
 X Coordinate of pattern center
 Y Coordinate of pattern center
 Which spell pattern? (-1 for targeted pattern)
-Which damage type?
+Which damage type? (0..8)
 How many dice? (calculated in d6's)
 0 - sequential simple booms, 1 - simultaneous animated booms
 Special to Jump To

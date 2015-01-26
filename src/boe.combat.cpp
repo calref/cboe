@@ -518,7 +518,7 @@ void pc_attack(short who_att,iLiving* target) {
 	cPlayer& attacker = univ.party[who_att];
 	
 	// slice out bad attacks
-	if(attacker.is_alive()) return;
+	if(!attacker.is_alive()) return;
 	if(target == nullptr) return;
 	if(attacker.status[eStatus::ASLEEP] > 0 || attacker.status[eStatus::PARALYZED] > 0)
 		return;
@@ -1769,7 +1769,7 @@ bool combat_next_step() {
 		}
 		to_return = true;
 		// Safety valve
-		if(party_toast())
+		if(!univ.party.is_alive())
 			return true;
 	}
 	pick_next_pc();
@@ -2068,7 +2068,7 @@ void do_monster_turn() {
 	
 	for(i = 0; i < num_monst; i++) {  // Begin main monster loop, do monster actions
 		// If party dead, no point
-		if(party_toast())
+		if(!univ.party.is_alive())
 			return;
 		
 		futzing = 0; // assume monster is fresh
@@ -2433,7 +2433,7 @@ void do_monster_turn() {
 	
 	for(i = 0; i < num_monst; i++) {  // Begin monster time stuff loop
 		// If party dead, no point
-		if(party_toast())
+		if(!univ.party.is_alive())
 			return;
 		
 		cur_monst = &univ.town.monst[i];

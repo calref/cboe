@@ -449,9 +449,10 @@ cPlayer::cPlayer(cParty& party) : party(party) {
 	
 	race = eRace::HUMAN;
 	direction = DIR_N;
+	combat_pos = {-1,-1};
 }
 
-cPlayer::cPlayer(cParty& party,long key,short slot) : party(party) {
+cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 	short i;
 	main_status = eMainStatus::ALIVE;
 	if(key == 'dbug'){

@@ -406,8 +406,13 @@ void handle_menu_choice(eMenu item_hit) {
 				std::string choice = cChoiceDlog("quit-confirm-save",{"quit","save","cancel"}).show();
 				if(choice == "cancel")
 					break;
-				if(choice == "save")
+				if(choice == "save") {
+					if(univ.file.empty()) {
+						univ.file = nav_put_party();
+						if(univ.file.empty()) break;
+					}
 					save_party(univ.file, univ);
+				}
 			}
 			All_Done = true;
 			break;
