@@ -413,6 +413,7 @@ void set_town_attitude(short lo,short hi,short att) {
 static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& current_getting_pc, const std::vector<cItem*>& item_array) {
 	short i;
 	cItem item;
+	char key_stash[2] = "a";
 	
 	// First make sure all arrays for who can get stuff are in order.
 	if(current_getting_pc < 6 && (univ.party[current_getting_pc].main_status != eMainStatus::ALIVE
@@ -454,6 +455,8 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		sout << "item" << i + 1;
 		std::string pict = sout.str() + "-g", name = sout.str() + "-name";
 		std::string detail = sout.str() + "-detail", weight = sout.str() + "-weight";
+		std::string key = sout.str() + "-key";
+		key_stash[0] = 'a' + i;
 		
 		try {
 			if(item_array.at(i + first_item_shown)->variety == eItemType::NO_ITEM)
@@ -469,11 +472,13 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 			else pic.setPict(item.graphic_num, PIC_ITEM);
 			me[detail].setText(get_item_interesting_string(item));
 			me[weight].setText("Weight: " + std::to_string(item.item_weight()));
+			me[key].setText(key_stash);
 		} catch(std::out_of_range) { // erase the spot
 			me[pict].hide();
 			me[name].setText("");
 			me[detail].setText("");
 			me[weight].setText("");
+			me[key].setText("");
 		}
 	}
 	
