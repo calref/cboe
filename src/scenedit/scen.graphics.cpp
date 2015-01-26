@@ -230,7 +230,8 @@ static short get_small_icon(ter_num_t ter){
 		case eTerSpec::IS_A_CONTAINER:
 			icon = 36;
 			break;
-		case eTerSpec::WATERFALL:
+		case eTerSpec::WATERFALL_CAVE:
+		case eTerSpec::WATERFALL_SURFACE:
 			icon = -1;
 			break;
 		case eTerSpec::CONVEYOR:

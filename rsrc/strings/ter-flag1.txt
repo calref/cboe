@@ -13,11 +13,11 @@ Unused
 Number of special to call
 Unused
 Unused
+Unused
+Unused
 Direction
 Direction
-Unused
-Unused
-Unused
+Direction
 Unused
 Terrain type if hidden
 Terrain to change to when used

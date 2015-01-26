@@ -208,7 +208,7 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			flag3.u = 0;
 			break;
 		case 15:
-			special = eTerSpec::WATERFALL;
+			special = eTerSpec::WATERFALL_CAVE;
 			flag1.u = DIR_S;
 			flag3.u = 0;
 			break;

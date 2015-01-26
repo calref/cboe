@@ -445,6 +445,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				else bash_door(where_check,door_pc);
 			}
 			break;
+		case eTerSpec::WILDERNESS_CAVE:
+		case eTerSpec::WILDERNESS_SURFACE:
+			handle_hunting();
+			break;
 	}
 	
 	// Action may change terrain, so update what's been seen
