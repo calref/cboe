@@ -751,7 +751,7 @@ void handle_talk_event(location p) {
 			strnum2 = 0;
 			break;
 		case eTalkNode::BUY_SDF:
-			if((sd_legit(b,c)) && (PSD[b][c] == d)) {
+			if((univ.party.sd_legit(b,c)) && (PSD[b][c] == d)) {
 				save_talk_str1 = "You've already learned that.";
 				strnum1 = -1;
 			}
@@ -762,7 +762,7 @@ void handle_talk_event(location p) {
 			else {
 				univ.party.gold -= a;
 				put_pc_screen();
-				if(sd_legit(b,c))
+				if(univ.party.sd_legit(b,c))
 					PSD[b][c] = d;
 				else giveError("Invalid Stuff Done flag called in conversation.");
 			}
@@ -878,7 +878,7 @@ void handle_talk_event(location p) {
 				// TODO: Any reason not to call something like kill_monst?
 				univ.town.monst[store_m_num].active = 0;
 				// Special killing effects
-				if(sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2))
+				if(univ.party.sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2))
 					PSD[univ.town.monst[store_m_num].spec1][univ.town.monst[store_m_num].spec2] = 1;
 			}
 			talk_end_forced = true;

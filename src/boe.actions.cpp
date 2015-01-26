@@ -124,6 +124,9 @@ std::queue<pending_special_type> special_queue;
 bool end_scenario = false;
 bool current_bash_is_bash = false;
 
+// This is defined in pc.editors.cpp since the PC editor also uses it
+extern void edit_stuff_done();
+
 void init_screen_locs() {
 	short i,j,k,l;
 	rectangle startup_base = {279,5,327,306};
@@ -1944,27 +1947,14 @@ bool handle_keystroke(sf::Event& event){
 			print_buf();
 			break;
 			
-		case 'S': // TODO: Create a dedicated dialog for this.
+		case 'S':
 			if(!in_scen_debug) break;
-            i = get_num_response(0,299,"Enter SDF Part A");
-            if(i >= 0 && i < 300){
-				j = get_num_response(0,49,"Enter SDF Part B");
-				if(j >= 0 && j < 50){
-					int x = get_num_response(-1,255,"Enter SDF Value or -1 to print");
-					if(x < 256 && x >= 0)
-						PSD[i][j] = x;
-					else if(x == -1){
-						sout << "SDF(" << i << ',' << j << ") = " << PSD[i][j];
-						add_string_to_buf(sout.str());
-					}
-				}
-			}
+			edit_stuff_done();
 			break;
 			
 		case 'T':
 			if(!in_scen_debug) break;
 			short find_direction_from;
-			sout << "Enter Town Number (between 0 and " << univ.scenario.towns.size() - 1 << ')';
             i = get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number");
             if(i >= 0 && i < univ.scenario.towns.size()) {
             	if(univ.party.direction == 0) find_direction_from = 2;
@@ -2000,28 +1990,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 		case '/':
 			if(!in_scen_debug) break;
-			// TODO: Make a dialog for this instead of flooding the transcript
-			ASB("Debug hot keys");
-			ASB("  B  Leave town");
-			ASB("  C  Get cleaned up");
-			ASB("  D  Toggle Debug mode");
-			ASB("  E  Stealth, Detect Life, Firewalk");
-			ASB("  F  Flight");
-			ASB("  G  Ghost");
-			ASB("  H  Heal");
-			ASB("  K  Kill things");
-			ASB("  N  End Scenario");
-			ASB("  O  Location");
-			ASB("  Q  Magic map");
-			ASB("  R  Return to Start");
-			ASB("  S  Set a SDF");
-			ASB("  T  Enter Town");
-			ASB("  W  Refresh jobs/shops");
-			ASB("  =  Heal, increase magic skills");
-			ASB("  <  Make one day pass");
-			ASB("  >  Towns forgive you");
-			ASB("  /  Bring up this list");
-			print_buf();
+			cChoiceDlog("help-debug").show();
 			break;
 		case 'a':
 			if(overall_mode < MODE_TALK_TOWN) {

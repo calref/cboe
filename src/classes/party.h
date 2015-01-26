@@ -186,6 +186,8 @@ public:
 	iLiving& pc_present() const; // If only one pc is present, returns that pc. Otherwise returns party.
 	void swap_pcs(size_t a, size_t b);
 	
+	bool sd_legit(short a, short b);
+	
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;

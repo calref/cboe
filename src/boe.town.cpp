@@ -126,7 +126,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	for(i = 0; i < 10; i++)
 		if(univ.scenario.town_to_add_to[i] >= 0 && univ.scenario.town_to_add_to[i] < 200 &&
 			town_number == univ.scenario.town_to_add_to[i] &&
-			sd_legit(univ.scenario.flag_to_add_to_town[i][0],univ.scenario.flag_to_add_to_town[i][1])) {
+			univ.party.sd_legit(univ.scenario.flag_to_add_to_town[i][0],univ.scenario.flag_to_add_to_town[i][1])) {
 			former_town = town_number;
 			town_number += PSD[univ.scenario.flag_to_add_to_town[i][0]][univ.scenario.flag_to_add_to_town[i][1]];
 			// Now update horses & boats
@@ -431,7 +431,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	// Clean out unwanted monsters
 	for(i = 0; i < univ.town.monst.size(); i++)
-		if(sd_legit(univ.town.monst[i].spec1,univ.town.monst[i].spec2)) {
+		if(univ.party.sd_legit(univ.town.monst[i].spec1,univ.town.monst[i].spec2)) {
 			if(PSD[univ.town.monst[i].spec1][univ.town.monst[i].spec2] > 0)
 				univ.town.monst[i].active = 0;
 		}
@@ -1006,7 +1006,7 @@ void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/) {
 void elim_monst(unsigned short which,short spec_a,short spec_b) {
 	short i;
 	
-	if(!sd_legit(spec_a,spec_b))
+	if(!univ.party.sd_legit(spec_a,spec_b))
 		return;
 	if(PSD[spec_a][spec_b] > 0) {
 		for(i = 0; i < univ.town.monst.size(); i++)
@@ -1130,7 +1130,7 @@ void erase_specials() {
 		//if(univ.town->spec_id[k] >= 0) {
 		sn = univ.town->specials[univ.town->spec_id[k]];
 		sd1 = sn.sd1; sd2 = sn.sd2;
-		if((sd_legit(sd1,sd2)) && (PSD[sd1][sd2] == 250)) {
+		if((univ.party.sd_legit(sd1,sd2)) && (PSD[sd1][sd2] == 250)) {
 			where = univ.town->special_locs[k];
 			if((where.x != 100) && ((where.x > univ.town->max_dim()) || (where.y > univ.town->max_dim())
 									 || (where.x < 0) || (where.y < 0))) {
@@ -1189,7 +1189,7 @@ void erase_out_specials() {
 					
 					sn = sector.specials[sector.special_id[k]];
 					sd1 = sn.sd1; sd2 = sn.sd2;
-					if((sd_legit(sd1,sd2)) && (PSD[sd1][sd2] == 250)) {
+					if((univ.party.sd_legit(sd1,sd2)) && (PSD[sd1][sd2] == 250)) {
 						where = sector.special_locs[k];
 						if((where.x > 48) || (where.y > 48)
 							|| (where.x < 0) || (where.y < 0)) {
