@@ -43,7 +43,7 @@ void set_pc_moves();
 void take_ap(short num);
 short trait_present(eTrait which_trait);
 short race_present(eRace which_race);
-short wilderness_lore_present();
+short wilderness_lore_present(ter_num_t ter);
 void print_spell_cast(eSpell spell,eSkill which);
 void put_party_in_scen(std::string scen_name);
 short party_size(bool only_living);

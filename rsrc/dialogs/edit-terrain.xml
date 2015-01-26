@@ -67,11 +67,11 @@
 		<led name='prop12' top='314' left='146' state='off' width='116'>Call special when step</led>
 		<led name='prop13' top='329' left='146' state='off' width='116'>Reserved</led>
 		<led name='prop14' top='344' left='146' state='off' width='116'>Is a container</led>
-		<led name='prop15' top='359' left='146' state='off' width='116'>Waterfall</led>
-		<led name='prop16' top='254' left='285' state='off' width='116'>Conveyor belt</led>
-		<led name='prop17' top='269' left='285' state='off' width='116'>Reserved</led>
-		<led name='prop18' top='284' left='285' state='off' width='116'>Reserved</led>
-		<led name='prop19' top='299' left='285' state='off' width='116'>Reserved</led>
+		<led name='prop15' top='359' left='146' state='off' width='116'>Wilderness (Caves)</led>
+		<led name='prop16' top='254' left='285' state='off' width='116'>Wilderness (Surface)</led>
+		<led name='prop17' top='269' left='285' state='off' width='116'>Waterfall (Caves)</led>
+		<led name='prop18' top='284' left='285' state='off' width='116'>Waterfall (Surface)</led>
+		<led name='prop19' top='299' left='285' state='off' width='116'>Conveyor Belt</led>
 		<led name='prop20' top='314' left='285' state='off' width='116'>Blocked to monsters</led>
 		<led name='prop21' top='329' left='285' state='off' width='116'>Town entrance</led>
 		<led name='prop22' top='344' left='285' state='off' width='116'>Change when used</led>

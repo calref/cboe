@@ -2492,32 +2492,27 @@ void increase_age() {
 }
 
 void handle_hunting() {
-	short i,pic;
-	ter_num_t ter;
-	
 	if(!is_out())
 		return;
+	if(flying())
+		return;
+	ter_num_t ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
+	if(!wilderness_lore_present(ter))
+		return;
+	eTrait trait = eTrait::PACIFIST;
+	if(univ.scenario.ter_types[ter].special == eTerSpec::WILDERNESS_CAVE)
+		trait = eTrait::CAVE_LORE;
+	else if(univ.scenario.ter_types[ter].special == eTerSpec::WILDERNESS_SURFACE)
+		trait = eTrait::WOODSMAN;
+	if(trait == eTrait::PACIFIST)
+		return;
 	
-	// TODO: Resupport this!
-	ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
-	pic = univ.scenario.ter_types[ter].picture;
-	for(i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[eTrait::CAVE_LORE] && get_ran(1,0,12) == 5
-		   && (((pic >= 0) && (pic <= 1)) || ((pic >= 70) && (pic <= 76))) ) {
+	for(int i = 0; i < 6; i++)
+		if(univ.party[i].is_alive() && univ.party[i].traits[trait] && get_ran(1,0,12) == 5) {
 			univ.party.food += get_ran(2,1,6);
 			add_string_to_buf(univ.party[i].name + "hunts.");
 			put_pc_screen();
 		}
-	for(i = 0; i < 6; i++)
-		if(
-			univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].traits[eTrait::WOODSMAN] && get_ran(1,0,12) == 5
-			&& (((pic >= 2) && (pic <= 4)) || ((pic >= 79) && (pic <= 84)))) {
-			univ.party.food += get_ran(2,1,6);
-			add_string_to_buf(univ.party[i].name + "hunts.");
-			put_pc_screen();
-		}
-	
-	
 }
 
 void switch_pc(short which) {
@@ -2676,10 +2671,12 @@ static eDirection find_waterfall(short x, short y, short mode){
 	bool to_dir[8];
 	for(eDirection i = DIR_N; i < DIR_HERE; i++){
 		if(mode == 0){
-			to_dir[i] = univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special == eTerSpec::WATERFALL;
+			eTerSpec spec = univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special;
+			to_dir[i] = spec == eTerSpec::WATERFALL_CAVE || spec == eTerSpec::WATERFALL_SURFACE;
 			if(univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1.u != i) to_dir[i] = false;
 		}else{
-			to_dir[i] = univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special == eTerSpec::WATERFALL;
+			eTerSpec spec = univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special;
+			to_dir[i] = spec == eTerSpec::WATERFALL_CAVE || spec == eTerSpec::WATERFALL_SURFACE;
 			if(univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].flag1.u != i) to_dir[i] = false;
 		}
 	}
@@ -2726,7 +2723,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		}
 		draw_terrain();
 		print_buf();
-		if((wilderness_lore_present() > 0) && (get_ran(1,0,1) == 0))
+		if(wilderness_lore_present(coord_to_ter(x - dir_x_dif[dir], y - dir_y_dif[dir]) > 0) && get_ran(1,0,1) == 0)
 			add_string_to_buf("  (No supplies lost.)");
 		else if(univ.party.food > 1800){
 			add_string_to_buf("  (Many supplies lost.)");

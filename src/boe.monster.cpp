@@ -1032,7 +1032,8 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			
 		case eTerSpec::BLOCKED_TO_MONSTERS:
 		case eTerSpec::TOWN_ENTRANCE:
-		case eTerSpec::WATERFALL:
+		case eTerSpec::WATERFALL_CAVE:
+		case eTerSpec::WATERFALL_SURFACE:
 			can_enter = false;
 			break;
 			

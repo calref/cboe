@@ -220,11 +220,11 @@ enum class eTerSpec {
 	CALL_SPECIAL = 12, // formerly "call local special"
 	UNUSED3 = 13, // formerly "call scenario special"
 	IS_A_CONTAINER = 14,
-	WATERFALL = 15,
-	CONVEYOR = 16, // formerly "conveyor north"
-	UNUSED4 = 17, // formerly "conveyor east"
-	UNUSED5 = 18, // formerly "conveyor south"
-	UNUSED6 = 19, // formerly "conveyor west"
+	WILDERNESS_CAVE = 15,
+	WILDERNESS_SURFACE = 16, // formerly "conveyor north"
+	WATERFALL_CAVE = 17, // formerly "conveyor east"
+	WATERFALL_SURFACE = 18, // formerly "conveyor south"
+	CONVEYOR = 19, // formerly "conveyor west"
 	BLOCKED_TO_MONSTERS = 20,
 	TOWN_ENTRANCE = 21,
 	CHANGE_WHEN_USED = 22,

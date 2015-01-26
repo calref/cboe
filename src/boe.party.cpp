@@ -2806,11 +2806,13 @@ short race_present(eRace which_race) {
 	return ret;
 }
 
-short wilderness_lore_present() {
-	// TODO: Add contional statement to choose between these
-	// (Probably requires something added to terrain types to specify that it's cave/surface wilderness.)
-	return trait_present(eTrait::CAVE_LORE); // Cave Lore
-	return trait_present(eTrait::WOODSMAN); // Woodsman
+short wilderness_lore_present(ter_num_t ter_type) {
+	cTerrain& ter = univ.scenario.ter_types[ter_type];
+	if(ter.special == eTerSpec::WILDERNESS_CAVE || ter.special == eTerSpec::WATERFALL_CAVE)
+		return trait_present(eTrait::CAVE_LORE);
+	else if(ter.special == eTerSpec::WILDERNESS_SURFACE || ter.special == eTerSpec::WATERFALL_SURFACE)
+		return trait_present(eTrait::WOODSMAN);
+	return false;
 }
 
 short party_size(bool only_living) {
