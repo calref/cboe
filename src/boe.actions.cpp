@@ -2077,20 +2077,21 @@ bool handle_keystroke(sf::Event& event){
 						return false;
 					}
 						break;
-					case 'w':if(overall_mode == MODE_COMBAT)
-						j = 5;
-					else if(overall_mode == MODE_TOWN) {
-						// TODO: Uh, what about ul.y?
-						pass_point.x = 1001 + ul.x;
-						pass_event.mouseButton.x = pass_point.x;
-						pass_event.mouseButton.y = pass_point.y;
-						are_done = handle_action(pass_event);
-					}
-					else {
-						add_string_to_buf("Wait: In town only.");
-						print_buf();
-						return false;
-					}
+					case 'w':
+						if(overall_mode == MODE_COMBAT)
+							j = 5;
+						else if(overall_mode == MODE_TOWN) {
+							// TODO: Uh, what about ul.y?
+							pass_point.x = 1001 + ul.x;
+							pass_event.mouseButton.x = pass_point.x;
+							pass_event.mouseButton.y = pass_point.y;
+							are_done = handle_action(pass_event);
+						}
+						else {
+							add_string_to_buf("Wait: In town only.");
+							print_buf();
+							return false;
+						}
 						break;
 					case 'd': if(overall_mode != MODE_COMBAT) return false;
 						j = 3;
