@@ -836,8 +836,8 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,iLiving& monst,
 	short store = 0;
 	
 	if(abil == eItemAbil::DAMAGING_WEAPON) {
-			store += get_ran(abil_str,1,6);
-			dmg_type = eDamageType(abil_dat);
+		store += get_ran(abil_str,1,6);
+		dmg_type = eDamageType(abil_dat);
 	} else if(abil == eItemAbil::SLAYER_WEAPON) {
 		eRace race = eRace::UNKNOWN;
 		if(cCreature* who = dynamic_cast<cCreature*>(&monst))
@@ -845,33 +845,33 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,iLiving& monst,
 		else if(cPlayer* who = dynamic_cast<cPlayer*>(&monst))
 			race = who->race;
 		if(race == eRace::UNKNOWN) return 0;
-			// Slith, nephilim, and vahnatai are affected by humanoid-bane weapons as well as their individual banes
-			if(abil_dat == int(eRace::HUMANOID) && (race == eRace::SLITH || race == eRace::NEPHIL || race == eRace::VAHNATAI));
-			else if(race != eRace(abil_dat))
-				return 0;
-			store += abil_str;
-			switch(eRace(abil_dat)) {
-				case eRace::DEMON:
-				case eRace::GIANT:
-					store *= 8;
-					break;
-				case eRace::UNDEAD:
-					store *= 6;
-					break;
-				case eRace::REPTILE:
-					store *= 5;
-					break;
-				case eRace::MAGE:
-				case eRace::PRIEST:
-					store *= 4;
-					break;
-				case eRace::BUG:
-				case eRace::PLANT:
-					store *= 7;
-					break;
-			}
+		// Slith, nephilim, and vahnatai are affected by humanoid-bane weapons as well as their individual banes
+		if(abil_dat == int(eRace::HUMANOID) && (race == eRace::SLITH || race == eRace::NEPHIL || race == eRace::VAHNATAI));
+		else if(race != eRace(abil_dat))
+			return 0;
+		store += abil_str;
+		switch(eRace(abil_dat)) {
+			case eRace::DEMON:
+			case eRace::GIANT:
+				store *= 8;
+				break;
+			case eRace::UNDEAD:
+				store *= 6;
+				break;
+			case eRace::REPTILE:
+				store *= 5;
+				break;
+			case eRace::MAGE:
+			case eRace::PRIEST:
+				store *= 4;
+				break;
+			case eRace::BUG:
+			case eRace::PLANT:
+				store *= 7;
+				break;
+		}
 	} else if(abil == eItemAbil::CAUSES_FEAR) {
-			monst.scare(abil_str * 10);
+		monst.scare(abil_str * 10);
 	}
 	return store;
 }
