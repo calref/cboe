@@ -638,10 +638,15 @@ static void handle_bash_pick(location destination, bool& did_something, bool& ne
 static void handle_switch_pc(short which_pc, bool& need_redraw) {
 	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING)
 		add_string_to_buf("Set active: Finish what you're doing first.");
-	else if(is_combat())
-		// TODO: Allow this, provided the chosen PC has APs; it would be equivalent to pressing space until reaching that PC
-		add_string_to_buf("Set active: Can't set this in combat.");
-	else if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::HEALING))
+	else if(is_combat()) {
+		if(univ.party[which_pc].ap > 0) {
+			draw_terrain();
+			current_pc = which_pc;
+			combat_next_step();
+			set_stat_window(current_pc);
+			put_pc_screen();
+		} else add_string_to_buf("Set active: PC has no APs.");
+	} else if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::HEALING))
 		add_string_to_buf("Set active: PC must be here & active.");
 	else {
 		current_pc = which_pc;
