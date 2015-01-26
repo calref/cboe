@@ -1007,51 +1007,51 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		did_cancel = true;
 	}
 	
-		if(!did_cancel) {
-			std::string cur_display_mode = dynamic_cast<cLedGroup&>(me["display"]).getSelected();
-			// TODO: Make an enum for the display mode
-			if(cur_display_mode == "mid") display_mode = 0;
-			else if(cur_display_mode == "tl") display_mode = 1;
-			else if(cur_display_mode == "tr") display_mode = 2;
-			else if(cur_display_mode == "bl") display_mode = 3;
-			else if(cur_display_mode == "br") display_mode = 4;
-			else if(cur_display_mode == "win") display_mode = 5;
-			PSD[SDF_NO_MAPS] = dynamic_cast<cLed&>(me["nomaps"]).getState() != led_off;
-			PSD[SDF_NO_SOUNDS] = dynamic_cast<cLed&>(me["nosound"]).getState() != led_off;
-			play_sounds = !PSD[SDF_NO_SOUNDS];
-			PSD[SDF_NO_FRILLS] = dynamic_cast<cLed&>(me["nofrills"]).getState() != led_off;
-			PSD[SDF_ROOM_DESCS_AGAIN] = dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off;
-			PSD[SDF_NO_INSTANT_HELP] = dynamic_cast<cLed&>(me["nohelp"]).getState() != led_off;
-			PSD[SDF_EASY_MODE] = dynamic_cast<cLed&>(me["easier"]).getState() != led_off;
-			PSD[SDF_LESS_WANDER_ENC] = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
-			PSD[SDF_NO_TER_ANIM] = dynamic_cast<cLed&>(me["noanim"]).getState() != led_off;
-			PSD[SDF_NO_SHORE_FRILLS] = dynamic_cast<cLed&>(me["noshore"]).getState() != led_off;
-			show_startup_splash = dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off;
-			std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
-			/* TODO: Should I add these additional preferences from Windows?
-			party.stuff_done[SDF_NO_TARGET_LINE] = cd_get_led(1099,50);
-			party.stuff_done[SDF_LESS_SOUND] = cd_get_led(1099,52);
-			party.stuff_done[SDF_FASTER_BOOM_SPACES] = cd_get_led(1099,56);
-			party.stuff_done[SDF_ASK_ABOUT_TEXT_BOX] = cd_get_led(1099,60);
-			*/
-			// TODO: NO_SOUNDS and NO_MAPS preferences are stored in two different places
-			if(speed == "fast")
-				PSD[SDF_GAME_SPEED] = 0;
-			else if(speed == "med")
-				PSD[SDF_GAME_SPEED] = 1;
-			else if(speed == "slow")
-				PSD[SDF_GAME_SPEED] = 2;
-			else if(speed == "snail")
-				PSD[SDF_GAME_SPEED] = 3;
-			if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red) {
-				for(i = 0; i < 120; i++)
-					univ.party.help_received[i] = 0;
-				reset_help = true;
-			}
+	if(!did_cancel) {
+		std::string cur_display_mode = dynamic_cast<cLedGroup&>(me["display"]).getSelected();
+		// TODO: Make an enum for the display mode
+		if(cur_display_mode == "mid") display_mode = 0;
+		else if(cur_display_mode == "tl") display_mode = 1;
+		else if(cur_display_mode == "tr") display_mode = 2;
+		else if(cur_display_mode == "bl") display_mode = 3;
+		else if(cur_display_mode == "br") display_mode = 4;
+		else if(cur_display_mode == "win") display_mode = 5;
+		PSD[SDF_NO_MAPS] = dynamic_cast<cLed&>(me["nomaps"]).getState() != led_off;
+		PSD[SDF_NO_SOUNDS] = dynamic_cast<cLed&>(me["nosound"]).getState() != led_off;
+		play_sounds = !PSD[SDF_NO_SOUNDS];
+		PSD[SDF_NO_FRILLS] = dynamic_cast<cLed&>(me["nofrills"]).getState() != led_off;
+		PSD[SDF_ROOM_DESCS_AGAIN] = dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off;
+		PSD[SDF_NO_INSTANT_HELP] = dynamic_cast<cLed&>(me["nohelp"]).getState() != led_off;
+		PSD[SDF_EASY_MODE] = dynamic_cast<cLed&>(me["easier"]).getState() != led_off;
+		PSD[SDF_LESS_WANDER_ENC] = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
+		PSD[SDF_NO_TER_ANIM] = dynamic_cast<cLed&>(me["noanim"]).getState() != led_off;
+		PSD[SDF_NO_SHORE_FRILLS] = dynamic_cast<cLed&>(me["noshore"]).getState() != led_off;
+		show_startup_splash = dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off;
+		std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
+		/* TODO: Should I add these additional preferences from Windows?
+		party.stuff_done[SDF_NO_TARGET_LINE] = cd_get_led(1099,50);
+		party.stuff_done[SDF_LESS_SOUND] = cd_get_led(1099,52);
+		party.stuff_done[SDF_FASTER_BOOM_SPACES] = cd_get_led(1099,56);
+		party.stuff_done[SDF_ASK_ABOUT_TEXT_BOX] = cd_get_led(1099,60);
+		*/
+		// TODO: NO_SOUNDS and NO_MAPS preferences are stored in two different places
+		if(speed == "fast")
+			PSD[SDF_GAME_SPEED] = 0;
+		else if(speed == "med")
+			PSD[SDF_GAME_SPEED] = 1;
+		else if(speed == "slow")
+			PSD[SDF_GAME_SPEED] = 2;
+		else if(speed == "snail")
+			PSD[SDF_GAME_SPEED] = 3;
+		if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red) {
+			for(i = 0; i < 120; i++)
+				univ.party.help_received[i] = 0;
+			reset_help = true;
 		}
-		save_maps = 1 - PSD[SDF_NO_MAPS];
-		give_delays = PSD[SDF_NO_FRILLS];
-		save_prefs(reset_help);
+	}
+	save_maps = 1 - PSD[SDF_NO_MAPS];
+	give_delays = PSD[SDF_NO_FRILLS];
+	save_prefs(reset_help);
 	return true;
 }
 
