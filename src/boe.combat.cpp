@@ -603,8 +603,6 @@ void pc_attack(short who_att,iLiving* target) {
 
 static void apply_weapon_status(eStatus status, int how_much, int dmg, iLiving& which_m, std::string weap_type) {
 	switch(status) {
-			// TODO: It should be possible to make monsters support magic resistance and invulnerability, at least.
-			// Maybe also poisoned weapon and invisibility.
 		case eStatus::MAIN: break; // Not a valid status
 		case eStatus::INVISIBLE:
 			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
@@ -1449,7 +1447,6 @@ void handle_marked_damage() {
 	
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].marked_damage > 0) {
-			// TODO: Perhaps there should be a way of determining the correct race here?
 			damage_pc(i,univ.party[i].marked_damage,eDamageType::MARKED,eRace::UNKNOWN,0);
 			univ.party[i].marked_damage = 0;
 		}
@@ -1775,7 +1772,6 @@ bool combat_next_step() {
 	pick_next_pc();
 	if(current_pc != store_pc)
 		to_return = true;
-	// TODO: Windows version checks for overall_mode being MODE_OUTDOORS or MODE_TOWN - that's not necessary, right?
 	center = univ.party[current_pc].combat_pos;
 	
 	adjust_spell_menus();
@@ -2818,7 +2814,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 			int spec_item = pc_target->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL);
 			if(spec_item < 24) {
 				short s1,s2,s3;
-				// TODO: This force_ptr...run_special code is almost duplicated in several places; maybe make a call_attack_spec subroutine?
+				// TODO: This force_ptr...run_special code is almost duplicated in several places; maybe make a call_attack_spec subroutine!
 				univ.party.force_ptr(21, 301, 5);
 				univ.party.force_ptr(22, 301, 6);
 				univ.party.force_ptr(20, 301, 7);
@@ -2966,11 +2962,10 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 				case eStatus::DUMB:
 					target->dumbfound(abil.second.gen.strength);
 					break;
-				// These only work on PCs
 				case eStatus::INVULNERABLE:
 				case eStatus::MAGIC_RESISTANCE:
 				case eStatus::INVISIBLE:
-				case eStatus::MARTYRS_SHIELD: // TODO: Wait what? This one works for monsters!
+				case eStatus::MARTYRS_SHIELD:
 					target->apply_status(abil.second.gen.stat, -abil.second.gen.strength);
 					break;
 				// This only works on monsters
@@ -4098,7 +4093,6 @@ void place_spell_pattern(effect_pat_type pat,location center,eDamageType type,sh
 		case eDamageType::FIRE: code = 50; break;
 		case eDamageType::COLD: code = 90; break;
 		case eDamageType::MAGIC: code = 130; break;
-			// TODO: These are new; nothing actually uses them, but maybe eventually!
 		case eDamageType::WEAPON: code = 170; break;
 		case eDamageType::POISON: code = 210; break;
 		case eDamageType::UNBLOCKABLE: code = 250; break;

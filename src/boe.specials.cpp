@@ -79,26 +79,6 @@ std::map<eItemAbil, short> abil_chart = {
 	{eItemAbil::CALL_SPECIAL,4}, {eItemAbil::CAST_SPELL,4},
 };
 
-// TODO: I bet this is completely unused; it looks like it does nothing.
-//short which; // number, 0 - 49, of special
-bool town_specials(short which,short /*t_num*/) {
-	bool can_enter = true;
-	short spec_id;
-	location l;
-	
-	
-	l = univ.town->special_locs[which];
-	spec_id = univ.town->spec_id[which];
-	if(spec_id < 0)
-		return true;
-	
-	// call special
-	
-	erase_specials();
-	
-	return can_enter;
-}
-
 // which is unused
 //short mode; // 0 - pre  1 - end by victory  2 - end by flight
 // wanderin spec 99 -> generic spec
@@ -1241,7 +1221,6 @@ bool adj_town_look(location where) {
 						// tell party you find something, if looking at a space they can't step in
 						add_string_to_buf("  Search: You find something!          ");
 					}
-					//call special can_open = town_specials(i,univ.town.town_num);
 					
 					run_special(eSpecCtx::TOWN_LOOK,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
 					if(s1 > 0)
@@ -1504,9 +1483,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, eDamageType dam_
 	// Monster damages. Make it hostile.
 	victim->active = 2;
 	
-	// TODO: This looks like the reason Windows split the boom_space function in two.
-	// It doesn't exactly make sense though, since in its version, boom_space is only called for how_much_spec.
-	if(dam_type != eDamageType::MARKED) { // note special damage only gamed in hand-to-hand, not during animation
+	if(dam_type != eDamageType::MARKED) {
 		if(party_can_see_monst(which_m)) {
 			boom_space(victim->cur_loc,100,boom_gr[dam_type],how_much,sound_type);
 		}
@@ -2386,7 +2363,6 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
  }
  */
 
-// TODO: What was next_spec_type for? Is it still needed?
 void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				  short* next_spec,short* next_spec_type,short* a,short* b,short* redraw) {
 	bool check_mess = true,set_sd = true;
@@ -2552,7 +2528,6 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	
 }
 
-// TODO: What was next_spec_type for? Is it still needed?
 void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				 short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw) {
 	bool check_mess = true;
@@ -3006,7 +2981,6 @@ static bool isValidField(int fld, bool allowSpecial) {
 	return false;
 }
 
-// TODO: What was next_spec_type for? Is it still needed?
 void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				 short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw) {
 	bool check_mess = false;
@@ -3566,7 +3540,6 @@ void set_terrain(location l, ter_num_t terrain_type) {
 	}
 }
 
-// TODO: What was next_spec_type for? Is it still needed?
 void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				   short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw) {
 	static const char*const stairDlogs[8] = {
@@ -4049,7 +4022,6 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	}
 }
 
-// TODO: What was next_spec_type for? Is it still needed?
 void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			   short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw){
 	bool check_mess = true;
@@ -4192,7 +4164,6 @@ END:
 	}
 }
 
-// TODO: What was next_spec_type for? Is it still needed?
 void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				  short *next_spec,short* /*next_spec_type*/,short *a,short *b,short *redraw){
 	bool check_mess = false;

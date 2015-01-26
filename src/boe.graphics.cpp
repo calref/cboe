@@ -549,7 +549,6 @@ void load_main_screen() {
 	if(invenbtn_gworld.getSize().x > 0)
 		return;
 	
-	// TODO: Hopefully reusing a texture here won't cause issues...
 	invenbtn_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("invenbtns"));
 	loadImageToRenderTexture(pc_stats_gworld, "statarea");
 	loadImageToRenderTexture(item_stats_gworld, "inventory");

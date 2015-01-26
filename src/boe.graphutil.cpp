@@ -175,9 +175,6 @@ void draw_monsters() {
 						}
 						if(picture_wanted < 1000) {
 							for(k = 0; k < width * height; k++) {
-								// TODO: Windows special-cases the bear and drake, whose graphics are split between two columns/sheets. Is this necessary?
-								// It really doesn't look necessary to me, since each quadrant of the graphic is fetched separately.
-								// Technically what they do is always pass 0 as the final argument to get_monster_template_rect, instead of passing k; they also hardcode the sheet to look on (4 for drake, 5 for bear).
 								source_rect = get_monster_template_rect(picture_wanted,(univ.party.out_c[i].direction < 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);

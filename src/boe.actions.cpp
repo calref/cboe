@@ -1016,9 +1016,13 @@ bool handle_action(sf::Event event) {
 						main_button_click(combat_buttons[i]);
 				}
 			break;
-		default:
-			// either resting or startup; do nothing
-			// TODO: A call to handle_startup_action() would make sense here, though
+		case MODE_STARTUP: case MODE_RESTING: case MODE_CUTSCENE:
+			// If we get here during these modes, something is probably not right, so bail out
+			add_string_to_buf("Unexpected game state!");
+			return are_done;
+		case MODE_ROOM_DESCR:
+			// TODO: This mode is not yet implemented.
+			// The idea is to put a long description in the transcript with something like "press any key to continue".
 			break;
 	}
 	
@@ -1331,7 +1335,6 @@ bool handle_action(sf::Event event) {
 				for(int j = 0; j < 6; j++)
 					if(item_area_button_active[i][j] && point_in_area.in(item_buttons[i][j])) {
 						item_buttons[i][j].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-						// if((j > 0) || (stat_screen_mode < 2)) // TODO: <-- Windows version has this check - why?
 						arrow_button_click(item_buttons[i][j]);
 						item_buttons[i][j].offset(-ITEM_WIN_UL_X,-ITEM_WIN_UL_Y);
 						
@@ -1359,8 +1362,8 @@ bool handle_action(sf::Event event) {
 									; // TODO: Implement quests view
 								else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
 								break;
-							case 5: // sell? That this codes was reached indicates that the item was sellable
-								// TODO: How does that work? ^
+							case 5: // sell? That this code was reached indicates that the item was sellable
+								// (Based on item_area_button_active)
 								handle_item_shop_action(item_hit);
 								break;
 						}
@@ -1424,7 +1427,7 @@ bool handle_action(sf::Event event) {
 }
 
 void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
-	draw_map(true); // TODO: Might be possible to only do this in certain circumstances?
+	draw_map(true);
 	play_ambient_sound();
 	
 	if(is_combat() && overall_mode != MODE_LOOK_COMBAT) {
@@ -2086,7 +2089,6 @@ bool handle_keystroke(sf::Event& event){
 					else return false;
 						break;
 					case 'A':if(overall_mode == MODE_TOWN) {
-						// TODO: Uh, what about ul.y?
 						pass_point.x = 1000 + ul.x;
 						pass_event.mouseButton.x = pass_point.x;
 						pass_event.mouseButton.y = pass_point.y;
@@ -2102,7 +2104,6 @@ bool handle_keystroke(sf::Event& event){
 						if(overall_mode == MODE_COMBAT)
 							j = 5;
 						else if(overall_mode == MODE_TOWN) {
-							// TODO: Uh, what about ul.y?
 							pass_point.x = 1001 + ul.x;
 							pass_event.mouseButton.x = pass_point.x;
 							pass_event.mouseButton.y = pass_point.y;
@@ -2161,7 +2162,6 @@ void post_load() {
 //		}
 //	make_out_trim();
 	
-	// TODO: Presumably need to call draw() as well, but maybe not here
 	text_sbar->show();
 	item_sbar->show();
 	shop_sbar->hide();
