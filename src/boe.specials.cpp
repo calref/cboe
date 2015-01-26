@@ -1905,13 +1905,18 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		// (Of course, currently all SDFs are positive, so allowing negative arithmetic is useless.)
 		if(cur_node.sd1 <= -10) cur_node.sd1 = univ.party.get_ptr(-cur_node.sd1);
 		if(cur_node.sd2 <= -10) cur_node.sd2 = univ.party.get_ptr(-cur_node.sd2);
+		if(cur_node.m1 <= -10) cur_node.m1 = univ.party.get_ptr(-cur_node.m1);
+		if(cur_node.m2 <= -10) cur_node.m2 = univ.party.get_ptr(-cur_node.m2);
+		if(cur_node.m3 <= -10) cur_node.m3 = univ.party.get_ptr(-cur_node.m3);
+		if(cur_node.pic <= -10) cur_node.pic = univ.party.get_ptr(-cur_node.pic);
+		if(cur_node.pictype <= -10) cur_node.pictype = univ.party.get_ptr(-cur_node.pictype);
 		if(cur_node.ex1a <= -10) cur_node.ex1a = univ.party.get_ptr(-cur_node.ex1a);
 		if(cur_node.ex1b <= -10) cur_node.ex1b = univ.party.get_ptr(-cur_node.ex1b);
 		if(cur_node.ex1c <= -10) cur_node.ex1c = univ.party.get_ptr(-cur_node.ex1c);
 		if(cur_node.ex2a <= -10) cur_node.ex2a = univ.party.get_ptr(-cur_node.ex2a);
 		if(cur_node.ex2b <= -10) cur_node.ex2b = univ.party.get_ptr(-cur_node.ex2b);
 		if(cur_node.ex2c <= -10) cur_node.ex2c = univ.party.get_ptr(-cur_node.ex2c);
-		// TODO: Should pointers be allowed in message, pict, or jumpto as well?
+		if(cur_node.jumpto <= -10) cur_node.jumpto = univ.party.get_ptr(-cur_node.jumpto);
 		
 		//print_nums(1111,cur_spec_type,cur_node.type);
 		
