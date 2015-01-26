@@ -549,6 +549,8 @@ void cItem::append(legacy::item_record_type& old){
 			break;
 		case 37:
 			ability = eItemAbil::SKILL;
+			abil_data[1] = abil_data[0]; // archive original ability strength (SKILL doesn't use abil_data[1] for anything)
+			abil_data[0] = item_level; // Put level into ability strength to preserve legacy behaviour
 			break;
 		case 38: // Strength
 			ability = eItemAbil::BOOST_STAT;
@@ -573,6 +575,8 @@ void cItem::append(legacy::item_record_type& old){
 			break;
 		case 43:
 			ability = eItemAbil::GIANT_STRENGTH;
+			abil_data[1] = abil_data[0]; // archive original ability strength (GIANT_STRENGTH doesn't use abil_data[1] for anything)
+			abil_data[0] = item_level; // Put level into ability strength to preserve legacy behaviour
 			break;
 		case 44:
 			ability = eItemAbil::LIGHTER_OBJECT;

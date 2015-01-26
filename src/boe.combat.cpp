@@ -543,14 +543,13 @@ void pc_attack(short who_att,iLiving* target) {
 		dam_adj += 10;
 	}
 	
-	// TODO: These should check abil_data[0], not item_level
 	if((skill_item = attacker.has_abil_equip(eItemAbil::SKILL)) < 24) {
-		hit_adj += 5 * (attacker.items[skill_item].item_level / 2 + 1);
-		dam_adj += attacker.items[skill_item].item_level / 2;
+		hit_adj += 5 * (attacker.items[skill_item].abil_data[0] / 2 + 1);
+		dam_adj += attacker.items[skill_item].abil_data[0] / 2;
 	}
 	if((skill_item = attacker.has_abil_equip(eItemAbil::GIANT_STRENGTH)) < 24) {
-		dam_adj += attacker.items[skill_item].item_level;
-		hit_adj += attacker.items[skill_item].item_level * 2;
+		dam_adj += attacker.items[skill_item].abil_data[0];
+		hit_adj += attacker.items[skill_item].abil_data[0] * 2;
 	}
 	
 	attacker.void_sanctuary();
