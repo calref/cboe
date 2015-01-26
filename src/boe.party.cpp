@@ -322,7 +322,10 @@ bool create_pc(short spot,cDialog* parent) {
 	univ.party[spot].main_status = eMainStatus::ALIVE;
 	
 	if(overall_mode != MODE_STARTUP) {
-		// TODO: Why only when not in MODE_STARTUP?
+		// If this is called while in startup mode, it means we're in the middle of building a party.
+		// Thus, the PC should not be finalized yet.
+		// However, if we're not in startup mode, it means we're adding a new PC to an existing party.
+		// Thus, we must finalize the PC now.
 		univ.party[spot].finish_create();
 	}
 	univ.party[spot].cur_health = univ.party[spot].max_health;
@@ -1377,8 +1380,6 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 						univ.party[i].status[eStatus::DISEASE] = 0;
 					}
 					if(spell_num == eSpell::HYPERACTIVITY) {
-						// Looks like this isn't clipped to a positive number. (That's probably intentional.)
-						// TODO: So, should a status icon be added for negative levels of sleep?
 						univ.party[i].status[eStatus::ASLEEP] -= 6 + 2 * adj;
 						univ.party[i].status[eStatus::HASTE_SLOW] = max(0,univ.party[i].status[eStatus::HASTE_SLOW]);
 					}
@@ -1771,7 +1772,6 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation, const sho
 		
 		for(int i = 0; i < 6; i++) {
 			std::string id = "target" + boost::lexical_cast<std::string>(i + 1);
-			// TODO: Make this thing an enum
 			switch((*cSpell::fromNum(store_situation,store_spell)).need_select) {
 				case SELECT_NO:
 					me[id].hide();
@@ -2202,8 +2202,6 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	put_spell_led_buttons(castSpell, type, former_spell);
 	
 	if(univ.party.help_received[7] == 0) {
-		// TODO: Not sure if this initial draw is needed
-//		cd_initial_draw(1098);
 		give_help(7,8,castSpell);
 	}
 	
@@ -2364,8 +2362,6 @@ eAlchemy alch_choice(short pc_num) {
 	sout << " (skill " << univ.party[pc_num].skill(eSkill::ALCHEMY) << ")";
 	chooseAlchemy["mixer"].setText(sout.str());
 	if(univ.party.help_received[20] == 0) {
-		// TODO: I'm not sure if the initial draw is needed
-//		cd_initial_draw(1047);
 		give_help(20,21,chooseAlchemy);
 	}
 	

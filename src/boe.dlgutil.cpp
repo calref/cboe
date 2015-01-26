@@ -883,7 +883,7 @@ void handle_talk_event(location p) {
 			}
 			talk_end_forced = true;
 			break;
-			// TODO: Strings resulting from this don't seem to be recordable; whyever not?
+			// TODO: Strings resulting from this don't seem to be recordable; whyever not!?
 		case eTalkNode::CALL_TOWN_SPEC:
 			run_special(eSpecCtx::TALK,2,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
@@ -923,10 +923,7 @@ void handle_talk_event(location p) {
 //short sign_type; // terrain type
 void do_sign(short town_num, short which_sign, short sign_type) {
 	std::string sign_text;
-	location view_loc;
 	
-	// TODO: Why is this line here? The location isn't used anywhere.
-	view_loc = (is_out()) ? univ.party.p_loc : univ.town.p_loc;
 	make_cursor_sword();
 	
 	cChoiceDlog sign("view-sign");
@@ -1000,20 +997,16 @@ void save_prefs(bool resetHelp){
 }
 
 static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
-	// TODO: I should no longer need done_yet as this now only handles the okay and cancel buttons; the LEDs are now handled automatically by the cLed class (and the cLedGroup class, for LED groups).
-	bool done_yet = false,did_cancel = false,reset_help = false;
+	bool did_cancel = false,reset_help = false;
 	short i;
 	
 	if(id == "okay") {
-		done_yet = true;
 		me.toast(true);
 	} else if(id == "cancel") {
-		done_yet = true;
 		me.toast(false);
 		did_cancel = true;
 	}
 	
-	if(done_yet) {
 		if(!did_cancel) {
 			std::string cur_display_mode = dynamic_cast<cLedGroup&>(me["display"]).getSelected();
 			// TODO: Make an enum for the display mode
@@ -1059,7 +1052,6 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		save_maps = 1 - PSD[SDF_NO_MAPS];
 		give_delays = PSD[SDF_NO_FRILLS];
 		save_prefs(reset_help);
-	}
 	return true;
 }
 
@@ -1185,9 +1177,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 		} else if(item_hit == "pic") {
 			if(univ.party[which_pc].main_status == eMainStatus::ABSENT)
 				return true;
-			// TODO: Uhh, why did he check this twice...
-			if(univ.party[which_pc].main_status != eMainStatus::ABSENT)
-				pick_pc_graphic(which_pc,1,&me);
+			pick_pc_graphic(which_pc,1,&me);
 			put_party_stats(me);
 		} else if(item_hit == "delete") { // Note: This button is also used for "create new PC".
 			if(univ.party[which_pc].main_status != eMainStatus::ABSENT) {
@@ -1199,8 +1189,6 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 				give_help(56,0,me);
 				create_pc(which_pc,&me);
 				put_party_stats(me);
-				// TODO: Not sure if this is needed
-//				cd_initial_draw(989); // extra redraw, just in case
 			}
 		}
 	}
@@ -1233,8 +1221,6 @@ void edit_party() {
 	
 	put_party_stats(pcDialog);
 	if(univ.party.help_received[22] == 0) {
-		// TODO: Not sure if this is needed
-		//		cd_initial_draw(989);
 		give_help(22,23,pcDialog);
 	}
 	

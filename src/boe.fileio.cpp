@@ -464,8 +464,7 @@ void build_scen_headers() {
 	scenDir /= "Blades of Exile Scenarios";
 	std::cout << progDir << '\n' << scenDir << std::endl;
 	scen_headers.clear();
-	fs::path folderRef(scenDir); // TODO: This variable is unnecessary
-	fs::directory_iterator iter(folderRef);
+	fs::directory_iterator iter(scenDir);
 	// TODO: Double-check that kFSIterateFlat is identical to the behaviour of Boost's directory_iterator
 #if 0
 	err = FSOpenIterator(&folderRef, kFSIterateFlat, &iter);

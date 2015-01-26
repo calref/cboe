@@ -1036,7 +1036,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			can_enter = false;
 			break;
 			
-		case eTerSpec::DAMAGING: // TODO: Update this to check other cases
+		case eTerSpec::DAMAGING:
 			switch(eDamageType(ter_flag)) {
 				case eDamageType::FIRE:
 					return univ.town.monst[which_monst].fire_res == 0;

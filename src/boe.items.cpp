@@ -467,12 +467,6 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 			if(item.graphic_num >= 1000)
 				pic.setPict(item.graphic_num - 1000, PIC_CUSTOM_ITEM);
 			else pic.setPict(item.graphic_num, PIC_ITEM);
-			// TODO: This code is currently kept here for reference to the changed numbers. It can be removed after verifying it works correctly.
-#if 0
-			if(item.graphic_num >= 1000) // was 150
-				csp(987,20 + i * 4,/*3000 + 2000 + */item.graphic_num - 1000,PICT_CUSTOM + PICT_ITEM);
-			else csp(987,20 + i * 4,/*4800 + */item.graphic_num,PICT_ITEM);
-#endif
 			me[detail].setText(get_item_interesting_string(item));
 			me[weight].setText("Weight: " + std::to_string(item.item_weight()));
 		} catch(std::out_of_range) { // erase the spot
@@ -727,7 +721,6 @@ short get_num_of_items(short max_num) {
 }
 
 void init_mini_map() {
-	// TODO: I'm not sure if the bounds in the DLOG resource included the titlebar height; perhaps the actual height should be a little less
 	mini_map.create(sf::VideoMode(296,277), "Map", sf::Style::Titlebar | sf::Style::Close);
 	mini_map.setPosition(sf::Vector2i(52,62));
 	mini_map.setVisible(false);

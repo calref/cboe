@@ -590,15 +590,14 @@ static void display_pc_info(cDialog& me, const short pc) {
 static bool give_pc_info_event_filter(cDialog& me, std::string item_hit, short& store_pc_num) {
 	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
-		// TODO: Put braces on these do-whiles... o.O
-		do
+		do {
 			store_pc_num = (store_pc_num == 0) ? 5 : store_pc_num - 1;
-		while(univ.party[store_pc_num].main_status != eMainStatus::ALIVE);
+		} while(univ.party[store_pc_num].main_status != eMainStatus::ALIVE);
 		display_pc_info(me, store_pc_num);
 	} else if(item_hit == "right") {
-		do
+		do {
 			store_pc_num = (store_pc_num + 1) % 6;
-		while(univ.party[store_pc_num].main_status != eMainStatus::ALIVE);
+		} while(univ.party[store_pc_num].main_status != eMainStatus::ALIVE);
 		display_pc_info(me, store_pc_num);
 	}
 	return true;
