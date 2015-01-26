@@ -283,7 +283,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			to_loc = push_loc(from_loc,where_check);
 			univ.town.set_barrel(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
-				univ.town.set_barrel(to_loc.x,to_loc.y,false);
+				univ.town.set_barrel(to_loc.x,to_loc.y,true);
 			for(i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && (univ.town.items[i].contained))
