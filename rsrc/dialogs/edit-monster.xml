@@ -43,10 +43,12 @@
 	<pict name='icon' type='monst' num='0' top='8' left='8'/>
 	<text size='large' top='6' left='44' width='158' height='16'>Edit Monster Statistics</text>
 	<text top='8' left='216' width='111' height='16'>Monster number:</text>
-	<text top='339' left='4' width='294' height='54'>
+	<text top='335' left='8' width='150' height='16'>Summoned by these spells:</text>
+	<text name='summons' font='plain' size='small' framed='true' top='337' left='160' width='340' height='14'/>
+	<text top='353' left='4' width='320' height='40'>
 		Enter properties for this monster type.
 		For a detailed description of the fields, see the documentation.
-		To edit monster’s special abilities, press the Edit Abilities button.
+		To edit monster's special abilities, press the Edit Abilities button.
 	</text>
 	<text top='31' left='44' width='120' height='14'>Monster type name:</text>
 	<text top='58' left='8' width='120' height='14'>Monster picture:</text>
