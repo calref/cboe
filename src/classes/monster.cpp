@@ -133,6 +133,7 @@ void cMonster::append(legacy::monster_record_type& old){
 	default_facial_pic = old.default_facial_pic;
 	if(default_facial_pic == 0)
 		default_facial_pic = NO_PIC;
+	else default_facial_pic--;
 	picture_num = old.picture_num;
 	if(picture_num == 122) picture_num = 119;
 	see_spec = -1;
@@ -433,6 +434,7 @@ void cTownperson::append(legacy::creature_start_type old){
 	facial_pic = old.facial_pic;
 	if(facial_pic == 0)
 		facial_pic = NO_PIC;
+	else facial_pic--;
 }
 
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att) {
