@@ -905,6 +905,11 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			else if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
+		case eSpell::SUMMON_RAT:
+			store = get_ran(5,1,4) + 2 * adj;
+			if(!summon_monster(80,where,store,2))
+				add_string_to_buf("  Summon failed.");
+			break;
 			
 		case eSpell::DISPEL_SQUARE:
 			start_town_targeting(spell_num,pc_num,freebie,PAT_SQ);
