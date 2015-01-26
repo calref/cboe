@@ -49,6 +49,7 @@ public:
 	void destroy_terrain();
 public:
 	unsigned short difficulty,intro_pic,default_ground;
+	int bg_out, bg_fight, bg_town, bg_dungeon;
 	short intro_mess_pic;
 	location where_start,out_sec_start,out_start;
 	size_t which_town_start;

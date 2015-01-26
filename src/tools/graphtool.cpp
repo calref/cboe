@@ -101,10 +101,10 @@ void init_graph_tool(){
 	bg_rects[0] = bg_rects[1] = bg_rects[18] = map_pat_rects[7] = tmp_rect;
 	bg_rects[0].right -= 32;
 	bg_rects[0].bottom -= 32;
-	bg_rects[1].left -= 32;
+	bg_rects[1].left += 32;
 	bg_rects[1].bottom -= 32;
 	bg_rects[18].right -= 32;
-	bg_rects[18].top -= 32;
+	bg_rects[18].top += 32;
 	map_pat_rects[7].left += 32;
 	map_pat_rects[7].top += 32;
 	tmp_rect.offset(0, 64);

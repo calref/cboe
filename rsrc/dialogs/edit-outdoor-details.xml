@@ -3,7 +3,7 @@
 <dialog skin='light' defbtn='okay' debug='true'>
 	<!-- OK button -->
 	<field name='name' top='51' left='162' width='151' height='16'/>
-	<button name='okay' type='regular' top='197' left='354'>OK</button>
+	<button name='okay' type='regular' top='295' left='354'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Outdoors Details</text>
 	<text top='53' left='50' width='101' height='14'>Section name:</text>
@@ -11,13 +11,25 @@
 	<text name='loc' top='29' left='142' width='127' height='14'/>
 	<text top='85' left='50' width='100' height='16'>Ambient Sound:</text>
 	<group name='ambient'>
-		<led name='snd1' top='85' left='150' width='50'>None</led>
-		<led name='snd2' top='85' left='210' width='50'>Drips</led>
-		<led name='snd3' top='85' left='270' width='50'>Birdsong</led>
+		<led name='snd1' top='85' left='150' width='40'>None</led>
+		<led name='snd2' top='85' left='210' width='40'>Drips</led>
+		<led name='snd3' top='85' left='270' width='60'>Birdsong</led>
 		<led name='snd4' top='85' left='350' width='50'>Custom</led>
 	</group>
-	<text top='106' left='50' width='101' height='90'>Comment:<br/><br/>
+	<text top='106' left='50' width='190' height='16'>Background: (-1 = scenario default)</text>
+	<field name='bg-out' top='104' left='250' width='80' height='16'/>
+	<button name='pick-out' type='regular' top='101' left='340'>Choose</button>
+	<text top='130' left='50' width='190' height='16'>Combat Background:</text>
+	<field name='bg-fight' top='128' left='250' width='80' height='16'/>
+	<button name='pick-fight' type='regular' top='125' left='340'>Choose</button>
+	<text top='154' left='50' width='190' height='16'>Default Town Background:</text>
+	<field name='bg-town' top='152' left='250' width='80' height='16'/>
+	<button name='pick-town' type='regular' top='149' left='340'>Choose</button>
+	<text top='178' left='50' width='190' height='16'>Default Dungeon Background:</text>
+	<field name='bg-dungeon' top='176' left='250' width='80' height='16'/>
+	<button name='pick-dungeon' type='regular' top='173' left='340'>Choose</button>
+	<text top='204' left='50' width='101' height='90'>Comment:<br/><br/>
 		You can put useful notes for yourself here. It's not used by the game for anything.
 	</text>
-	<field name='comment' top='104' left='162' width='251' height='80'/>
+	<field name='comment' top='204' left='162' width='251' height='80'/>
 </dialog>

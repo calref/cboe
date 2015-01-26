@@ -60,6 +60,10 @@ cScenario::cScenario(bool init_strings) {
 	where_start.x = 24;
 	where_start.y = 24;
 	out_start = where_start;
+	bg_out = 10;
+	bg_fight = 4;
+	bg_town = 13;
+	bg_dungeon = 9;
 	for(i = 0; i < 10; i++) {
 		town_to_add_to[i] = -1;
 	}

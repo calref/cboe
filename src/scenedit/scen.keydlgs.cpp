@@ -50,6 +50,46 @@ bool cre(short val,short min,short max,std::string text1,std::string text2,cDial
 	return false;
 }
 
+short choose_background(short cur_choice, cDialog* parent) {
+	cDialog bg_dlg("choose-bg",parent);
+	auto get_selected = [&]() -> short {
+		std::string sel = dynamic_cast<cLedGroup&>(bg_dlg["group"]).getSelected();
+		if(sel.empty()) return -1;
+		return boost::lexical_cast<int>(sel.substr(3)) - 1;
+	};
+	auto set_colour_for = [&](int which) {
+		sf::Color to = sf::Color::Black;
+		if(which == 2)
+			to = sf::Color::Red;
+		else if(which == 3)
+			to = {0x00, 0x00, 0x80};
+		else if(which == 11)
+			to = {0xC0, 0x40, 0xFF};
+		else if(which <= 5 || which == 7 || which == 9 || which == 15)
+			to = sf::Color::White;
+		bg_dlg["title"].setColour(to);
+		for(int i = 0; i < 21; i++)
+			bg_dlg["led" + std::to_string(i + 1)].setColour(to);
+	};
+	bg_dlg["done"].attachClickHandler(std::bind(&cDialog::toast, &bg_dlg, true));
+	bg_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &bg_dlg, false));
+	bg_dlg["group"].attachFocusHandler([&](cDialog&, std::string, bool) -> bool {
+		int which = get_selected();
+		bg_dlg.setBg(which);
+		set_colour_for(which);
+		return true;
+	});
+	int sel = cur_choice;
+	if(sel < 0 || sel >= 21) sel = bg_dlg.getBg();
+	dynamic_cast<cLedGroup&>(bg_dlg["group"]).setSelected("led" + std::to_string(sel + 1));
+	bg_dlg.setBg(sel);
+	set_colour_for(sel);
+	bg_dlg.run();
+	if(bg_dlg.accepted())
+		return get_selected();
+	return cur_choice;
+}
+
 // TODO: I have two functions that do this. (The other one is pick_picture.)
 pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 	int i = 0;

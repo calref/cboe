@@ -2148,8 +2148,9 @@ void edit_item_placement() {
 	shortcut_dlg.run();
 }
 
-static bool save_scen_details(cDialog& me) {
+static bool save_scen_details(cDialog& me, std::string, eKeyMod) {
 	short i;
+	if(!me.toast(true)) return true;
 	
 	{
 		cLedGroup& difficulty = dynamic_cast<cLedGroup&>(me["difficulty"]);
@@ -2165,6 +2166,10 @@ static bool save_scen_details(cDialog& me) {
 	scenario.who_wrote[1] = me["who2"].getText().substr(0, 60);
 	scenario.contact_info = me["contact"].getText().substr(0, 256);
 	scenario.campaign_id = me["cpnid"].getText();
+	scenario.bg_out = boost::lexical_cast<int>(me["bg-out"].getText().substr(10));
+	scenario.bg_town = boost::lexical_cast<int>(me["bg-town"].getText().substr(10));
+	scenario.bg_dungeon = boost::lexical_cast<int>(me["bg-dungeon"].getText().substr(13));
+	scenario.bg_fight = boost::lexical_cast<int>(me["bg-fight"].getText().substr(11));
 	return true;
 }
 
@@ -2178,17 +2183,40 @@ static void put_scen_details_in_dlog(cDialog& me) {
 	me["who2"].setText(scenario.who_wrote[1]);
 	me["contact"].setText(scenario.contact_info);
 	me["cpnid"].setText(scenario.campaign_id);
+	me["bg-out"].setText("Outdoors: " + std::to_string(scenario.bg_out));
+	me["bg-town"].setText("In towns: " + std::to_string(scenario.bg_town));
+	me["bg-dungeon"].setText("In dungeons: " + std::to_string(scenario.bg_dungeon));
+	me["bg-fight"].setText("In combat: " + std::to_string(scenario.bg_fight));
 }
 
-static bool edit_scen_details_event_filter(cDialog& me, std::string, eKeyMod) {
-	if(save_scen_details(me))
-		me.toast(true);
+static bool edit_scen_default_bgs(cDialog& me, std::string which, eKeyMod) {
+	int bg_i = 0, idx_i = 0;
+	if(which == "bg-out" || which == "bg-town")
+		idx_i = 10;
+	else if(which == "bg-dungeon")
+		idx_i = 13;
+	else if(which == "bg-fight")
+		idx_i = 11;
+	else return true;
+	bg_i = boost::lexical_cast<int>(me[which].getText().substr(idx_i));
+	bg_i = choose_background(bg_i, &me);
+	std::string lbl;
+	if(which == "bg-out")
+		lbl = "Outdoors";
+	else if(which == "bg-town")
+		lbl = "In towns";
+	else if(which == "bg-dungeon")
+		lbl = "In dungeons";
+	else if(which == "bg-fight")
+		lbl = "In combat";
+	me[which].setText(lbl + ": " + std::to_string(bg_i));
 	return true;
 }
 
 void edit_scen_details() {
 	cDialog info_dlg("edit-scenario-details");
-	info_dlg["okay"].attachClickHandler(edit_scen_details_event_filter);
+	info_dlg["okay"].attachClickHandler(save_scen_details);
+	info_dlg.attachClickHandlers(edit_scen_default_bgs, {"bg-out", "bg-town", "bg-dungeon", "bg-fight"});
 	
 	put_scen_details_in_dlog(info_dlg);
 	

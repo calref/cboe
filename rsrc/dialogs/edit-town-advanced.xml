@@ -52,6 +52,10 @@
 	<text top='313' left='259' width='49' height='15'>Right</text>
 	<text top='212' left='331' width='35' height='15'>X</text>
 	<text top='212' left='379' width='40' height='15'>Y</text>
+	<button name='pick-town' type='tiny' top='276' left='30' width='120'>Town Background:</button>
+	<field name='bg-town' top='274' left='160' width='80' height='16'/>
+	<button name='pick-fight' type='tiny' top='302' left='30' width='120'>Combat Background:</button>
+	<field name='bg-fight' top='298' left='160' width='80' height='16'/>
 	<text top='319' left='50' width='100' height='16'>Town Properties:</text>
 	<led name='hidden' font='plain' top='336' left='50' width='450'>
 		Town hidden?
