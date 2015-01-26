@@ -458,6 +458,8 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 
 // This procedure find the effects of fields that would affect a PC who moves into
 // a space or waited in that same space
+// In town mode, process_fields() is responsible for actually dealing the damage
+// All this does is print a message
 void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 	short r1,i;
 	size_t i_pc = univ.get_target_i(which_pc);
@@ -468,34 +470,21 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 	}
 	if(is_out())
 		return;
-	if(is_town())
-		fast_bang = 1;
 	if(univ.town.is_fire_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Fire wall!               ");
 		r1 = get_ran(1,1,6) + 1;
-		// TODO: Is this commented code important?
-//		if(mode < 2)
-//			hit_party(r1,1);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
-		if(overall_mode < MODE_COMBAT)
-			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
 	if(univ.town.is_force_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Force wall!               ");
 		r1 = get_ran(2,1,6);
-//		if(mode < 2)
-//			hit_party(r1,3);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
-		if(overall_mode < MODE_COMBAT)
-			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
 	}
 	if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Ice wall!               ");
 		r1 = get_ran(2,1,6);
-//		if(mode < 2)
-//			hit_party(r1,5);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::COLD,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
@@ -504,58 +493,38 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 	if(univ.town.is_blade_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Blade wall!               ");
 		r1 = get_ran(4,1,8);
-//		if(mode < 2)
-//			hit_party(r1,0);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
-		if(overall_mode < MODE_COMBAT)
-			boom_space(univ.party.p_loc,overall_mode,3,r1,2);
 	}
 	if(univ.town.is_quickfire(where_check.x,where_check.y)) {
 		add_string_to_buf("  Quickfire!               ");
 		r1 = get_ran(2,1,8);
-//		if(mode < 2)
-//			hit_party(r1,1);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
-		if(overall_mode < MODE_COMBAT)
-			boom_space(univ.party.p_loc,overall_mode,0,r1,5);
 	}
 	if(univ.town.is_scloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Stinking cloud!               ");
-		if(mode != eSpecCtx::COMBAT_MOVE) {
-			for(i = 0; i < 6; i++) {
-				r1 = get_ran(1,2,3);
-				univ.party[i].curse(r1);
-			}
-			put_pc_screen();
-		}
-		else univ.party[current_pc].curse(get_ran(1,2,3));
+		univ.party[current_pc].curse(get_ran(1,2,3));
 	}
 	if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Sleep cloud!               ");
-		if(mode != eSpecCtx::COMBAT_MOVE) {
-			univ.party.sleep(eStatus::ASLEEP,3,0);
-		}
-		else univ.party[current_pc].sleep(eStatus::ASLEEP,3,0);
+		univ.party[current_pc].sleep(eStatus::ASLEEP,3,0);
 		put_pc_screen();
 	}
 	if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		add_string_to_buf("  Magic barrier!               ");
 		r1 = get_ran(2,1,10);
-		if(mode != eSpecCtx::COMBAT_MOVE)
-			hit_party(r1,eDamageType::MAGIC);
+		if(is_town()) fast_bang = 1;
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
-		if(overall_mode < MODE_COMBAT)
-			boom_space(univ.party.p_loc,overall_mode,1,r1,12);
+		else hit_party(r1,eDamageType::MAGIC,0);
+		fast_bang = 0;
 	}
 	if(univ.town.is_force_cage(where_check.x,where_check.y)) {
 		if(which_pc.status[eStatus::FORCECAGE] == 0)
 			add_string_to_buf("  Trapped in force cage!");
 		which_pc.status[eStatus::FORCECAGE] = 8;
 	} else which_pc.status[eStatus::FORCECAGE] = 0;
-	fast_bang = 0;
 }
 
 void use_spec_item(short item) {
