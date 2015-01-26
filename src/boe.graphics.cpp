@@ -607,6 +607,8 @@ void put_background() {
 	
 	if(overall_mode == MODE_STARTUP)
 		bg_pict = bg[4];
+	else if(overall_mode == MODE_RESTING)
+		bg_pict = bg[4];
 	else if(is_out()) {
 		if(univ.party.outdoor_corner.x >= 7)
 			bg_pict = bg[0];
@@ -948,8 +950,8 @@ void draw_terrain(short	mode) {
 			
 			if(is_town() || is_combat()) {
 				draw_items(where_draw);
+				draw_fields(where_draw);
 			}
-			draw_fields(where_draw);
 			//draw_monsters(where_draw);
 			//draw_vehicles(where_draw);
 			//if(is_combat) draw_pcs(where_draw); else draw_party(where_draw);
@@ -1429,7 +1431,15 @@ void draw_rest_screen() {
 	
 	store_mode = overall_mode;
 	overall_mode = MODE_RESTING;
-	draw_terrain(0);
+	
+	for(int q = 0; q < 9; q++) {
+		for(int r = 0; r < 9; r++) {
+			draw_one_terrain_spot(q,r,-1);
+		}
+	}
+	draw_party_symbol(center);
+	terrain_screen_gworld.display();
+	
 	overall_mode = store_mode ;
 }
 
@@ -1516,8 +1526,8 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		text_rect.offset(-4,-5);
 		win_draw_string(mainPtr,text_rect,std::to_string(damage),eTextMode::CENTRE,style,ul);
 	}
-	play_sound((skip_boom_delay?-1:1)*sound_to_play);
 	mainPtr.display();
+	play_sound((skip_boom_delay?-1:1)*sound_to_play);
 	if((sound == 6) && (fast_bang == 0) && (!skip_boom_delay))
 		sf::sleep(time_in_ticks(12));
 	
@@ -1573,7 +1583,7 @@ void draw_targets(location center) {
 	rectangle source_rect = {74,36,85,47},dest_rect;
 	short i = 0;
 	
-	if(party_toast())
+	if(!univ.party.is_alive())
 		return;
 	
 	for(i = 0; i < 8; i++)
@@ -1687,16 +1697,6 @@ void draw_targeting_line(location where_curs) {
 			}
 		}
 	}
-}
-
-
-bool party_toast() {
-	short i;
-	
-	for(i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			return false;
-	return true;
 }
 
 void redraw_partial_terrain(rectangle redraw_rect) {

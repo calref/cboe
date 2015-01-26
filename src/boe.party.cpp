@@ -361,7 +361,7 @@ void cPlayer::curse(int how_much) {
 	if(!is_alive()) return;
 	if(how_much > 0)
 		how_much -= get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::BLESS_CURSE)) / 2;
-	apply_status(eStatus::BLESS_CURSE, how_much);
+	apply_status(eStatus::BLESS_CURSE, -how_much);
 	if(how_much < 0)
 		add_string_to_buf("  " + name + " blessed.");
 	else if(how_much > 0)
@@ -2595,7 +2595,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	// invuln
-	if(univ.party[which_pc].status[eStatus::INVULNERABLE] > 0)
+	if(damage_type != eDamageType::SPECIAL && univ.party[which_pc].status[eStatus::INVULNERABLE] > 0)
 		how_much = 0;
 	
 	// Mag. res helps w. fire and cold

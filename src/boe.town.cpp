@@ -721,6 +721,7 @@ eDirection end_town_combat() {
 		current_pc = first_active_pc();
 	for(i = 0; i < 6; i++) {
 		univ.party[i].parry = 0;
+		univ.party[i].combat_pos = {-1,-1};
 	}
 	return univ.party[r1].direction;
 }

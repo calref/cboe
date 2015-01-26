@@ -319,6 +319,7 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 }
 
 static void handle_rest(bool& need_redraw, bool& need_reprint) {
+	sf::Event dummy_evt;
 	int i = 0;
 	ter_num_t ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
 	if(univ.party.in_boat >= 0)
@@ -336,7 +337,7 @@ static void handle_rest(bool& need_redraw, bool& need_reprint) {
 	else {
 		add_string_to_buf("Resting...                    ");
 		print_buf();
-		play_sound(20);
+		play_sound(-20);
 		draw_rest_screen();
 		pause(25);
 		univ.party.food -= 6;
@@ -350,6 +351,8 @@ static void handle_rest(bool& need_redraw, bool& need_reprint) {
 				i = 200;
 				add_string_to_buf("  Monsters nearby.");
 			}
+			while(mainPtr.pollEvent(dummy_evt));
+			redraw_screen(REFRESH_NONE);
 			i++;
 		}
 		put_pc_screen();
@@ -358,6 +361,7 @@ static void handle_rest(bool& need_redraw, bool& need_reprint) {
 		do_rest(1200, get_ran(5,1,10), 50);
 		add_string_to_buf("  Rest successful.                ");
 		put_pc_screen();
+		pause(25);
 	}
 	need_reprint = true;
 	need_redraw = true;
@@ -756,6 +760,7 @@ static void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 
 static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 	short store_hp[6];
+	sf::Event dummy_evt;
 	need_reprint = true;
 	need_redraw = true;
 	
@@ -790,6 +795,8 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 			i = 200;
 			add_string_to_buf("  Monster sighted!");
 		}
+		while(mainPtr.pollEvent(dummy_evt));
+		redraw_screen(REFRESH_NONE);
 	}
 	put_pc_screen();
 }
@@ -889,16 +896,17 @@ static void handle_victory() {
 	}
 }
 
-static void handle_party_death() {for(int i = 0; i < 6; i++)
-	if(univ.party[i].main_status == eMainStatus::FLED) {
-		univ.party[i].main_status = eMainStatus::ALIVE;
-		if(is_combat()) {
-			end_town_mode(0,univ.town.p_loc);
-			add_string_to_buf("End combat.               ");
-			handle_wandering_specials(0,2);
-		}
+static void handle_party_death() {
+	for(int i = 0; i < 6; i++)
+		if(univ.party[i].main_status == eMainStatus::FLED)
+			univ.party[i].main_status = eMainStatus::ALIVE;
+	if(is_combat()) {
+		// TODO: Should this only happen in outdoor combat? Or should we allow fleeing town during combat?
+		end_town_mode(0,univ.town.p_loc);
+		add_string_to_buf("End combat.");
+		handle_wandering_specials(0,2);
 	}
-	if(univ.party.is_split()) {
+	if(!univ.party.is_alive() && univ.party.is_split()) {
 		univ.party.end_split(0);
 		if(univ.party.left_in == size_t(-1) || univ.town.num == univ.party.left_in) {
 			univ.town.p_loc = univ.party.left_at;
@@ -914,7 +922,7 @@ static void handle_party_death() {for(int i = 0; i < 6; i++)
 	draw_terrain();
 	put_pc_screen();
 	put_item_screen(stat_window,0);
-	if(party_toast()) {
+	if(!univ.party.is_alive()) {
 		play_sound(13);
 		handle_death();
 	}
@@ -1387,7 +1395,7 @@ bool handle_action(sf::Event event) {
 	
 	if(end_scenario)
 		handle_victory();
-	else if(party_toast())
+	else if(!univ.party.is_alive())
 		handle_party_death();
 	
 	are_done = All_Done;
@@ -1423,7 +1431,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 		if(overall_mode != MODE_OUTDOORS)
 			do_monster_turn();
 		// Wand monsts
-		if(overall_mode == MODE_OUTDOORS && !party_toast() && univ.party.age % 10 == 0) {
+		if(overall_mode == MODE_OUTDOORS && univ.party.is_alive() && univ.party.age % 10 == 0) {
 			if(get_ran(1,1,70 + PSD[SDF_LESS_WANDER_ENC] * 200) == 10)
 				create_wand_monst();
 			for(int i = 0; i < 10; i++)
@@ -2568,7 +2576,7 @@ void handle_death() {
 		else if(choice == "load") {
 			fs::path file_to_load = nav_get_party();
 			if(!file_to_load.empty()) load_party(file_to_load, univ);
-			if(!party_toast()) {
+			if(univ.party.is_alive()) {
 				if(overall_mode != MODE_STARTUP)
 					post_load(), finish_load_party();
             	return;
@@ -2577,6 +2585,7 @@ void handle_death() {
 		else if(choice == "new") {
 			// TODO: Windows version dumps to main screen without creating a party; which is better?
 			start_new_game();
+			reload_startup();
 			return;
 		}
 	}
@@ -2639,8 +2648,6 @@ void start_new_game() {
 	}
 	fs::path file = nav_put_party();
 	if(!file.empty()) save_party(file, univ);
-	party_in_memory = true;
-	
 	party_in_memory = true;
 }
 
@@ -2974,7 +2981,7 @@ bool town_move_party(location destination,short forced) {
 	}
 	*/
 	
-	if(univ.target_there(destination, TARG_MONST) != nullptr)
+	if(univ.target_there(destination, TARG_MONST) == nullptr)
 		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,univ.party[0],&spec_num,&check_f);
 	if(check_f)
 		forced = true;

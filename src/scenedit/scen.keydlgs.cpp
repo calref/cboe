@@ -582,8 +582,8 @@ short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
 }
 
 pic_num_t choose_damage_type(short cur, cDialog* parent) {
-	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Unblockable", "Cold", "Undead", "Demon"};
-	static const std::vector<pic_num_t> pics = {3,0,2,1,1,4,3,3};
+	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Unblockable", "Cold", "Undead", "Demon", "Special"};
+	static const std::vector<pic_num_t> pics = {3,0,2,1,1,4,3,3,1};
 	short prev = cur;
 	if(cur < 0 || cur >= pics.size()) cur = 0;
 	cPictChoice pic_dlg(pics, PIC_BOOM, parent);

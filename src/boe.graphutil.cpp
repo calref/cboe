@@ -245,7 +245,7 @@ void draw_pcs(location center,short mode) {
 	rectangle source_rect,active_pc_rect;
 	location where_draw;
 	
-	if(party_toast())
+	if(!univ.party.is_alive())
 		return;
 	if(!can_draw_pcs)
 		return;
@@ -457,7 +457,7 @@ void draw_party_symbol(location center) {
 	
 	if(!can_draw_pcs)
 		return;
-	if(party_toast())
+	if(!univ.party.is_alive())
 		return;
 	if((is_town()) && (univ.town.p_loc.x > 70))
 		return;
@@ -481,7 +481,11 @@ void draw_party_symbol(location center) {
 				source_rect.offset(28,0);
 			from_gw = &pc_gworld;
 		}
-		ter_num_t ter = is_out() ? univ.out[univ.party.p_loc.x][univ.party.p_loc.y] : univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
+		ter_num_t ter = 0;
+		if(is_out())
+			ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
+		else if(is_town() || is_combat())
+			ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		// now wedge in bed graphic
 		if(is_town() && univ.scenario.ter_types[ter].special == eTerSpec::BED)
 			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + univ.scenario.ter_types[ter].flag1.u);

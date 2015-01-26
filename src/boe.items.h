@@ -25,7 +25,6 @@ void custom_pic_dialog(std::string title, pic_num_t bigpic);
 void story_dialog(std::string title, str_num_t first, str_num_t last, int which_str_type, pic_num_t pic, ePicType pt);
 short get_num_of_items(short max_num);
 void init_mini_map();
-void put_pc_effects_on_dialog(cDialog& dialog,short item);
 void draw_help_dialog_item_buttons(cDialog& dialog,short item);
 void draw_help_dialog_forcefields(cDialog& dialog,short item);
 void make_cursor_watch() ;

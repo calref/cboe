@@ -159,7 +159,7 @@ void apply_light_mask(bool onWindow) {
 	bool is_dark = false,same_mask = true;
 	if(PSD[SDF_NO_FRILLS] > 0 || fog_lifted)
 		return;
-	if(is_out())
+	if(is_out() || overall_mode == MODE_RESTING)
 		return;
 	if(univ.town->lighting_type == 0)
 		return;
@@ -378,6 +378,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	to_rect = rectangle(terrain_screen_gworld);
+	to_rect.bottom -= 10; // Adjust for pointing buttons
 	rectangle oldBounds = to_rect;
 	to_rect.offset(current_terrain_ul);
 	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,to_rect,ul);
@@ -476,6 +477,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 		store_missiles[i].missile_type = -1;
 	
 	to_rect = rectangle(terrain_screen_gworld);
+	to_rect.bottom -= 10; // Adjust for pointing buttons
 	rectangle oldRect = to_rect;
 	to_rect.offset(current_terrain_ul);
 	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,to_rect,ul);
@@ -548,6 +550,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 	draw_terrain(1);
 	if(special_draw != 2) {
 		to_rect = rectangle(terrain_screen_gworld);
+		to_rect.bottom -= 10; // Adjust for pointing buttons
 		rectangle oldRect = to_rect;
 		to_rect.offset(current_terrain_ul);
 		rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,to_rect,ul);
