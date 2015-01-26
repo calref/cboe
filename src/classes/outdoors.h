@@ -78,6 +78,7 @@ public:
 	bool special_spot[48][48];
 	eAmbientSound ambient_sound;
 	snd_num_t out_sound;
+	int bg_out, bg_fight, bg_town, bg_dungeon;
 	
 	explicit cOutdoors(cScenario& scenario, bool init_strings = false);
 	void append(legacy::outdoor_record_type& old);

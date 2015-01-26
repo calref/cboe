@@ -294,9 +294,15 @@ sf::Color cDialog::parseColor(string what){
 	sf::Color clr;
 	if(what[0] == '#'){
 		unsigned int r,g,b;
-		if(sscanf(what.c_str(),"#%2x%2x%2x",&r,&g,&b) < 3)
+		if(sscanf(what.c_str(),"#%2x%2x%2x",&r,&g,&b) < 3) {
 			if(sscanf(what.c_str(),"#%1x%1x%1x",&r,&g,&b) < 3)
 				throw -1;
+			else {
+				r *= 0x11;
+				g *= 0x11;
+				b *= 0x11;
+			}
+		}
 		clr.r = r, clr.g = g, clr.b = b;
 	}else if(what == "black")
 		clr.r = 0x00, clr.g = 0x00, clr.b = 0x00;
@@ -384,6 +390,16 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 				p.second->setBtnType(BTN_TRAIT);
 			else if(val == "push")
 				p.second->setBtnType(BTN_PUSH);
+		}else if(name == "color" || name == "colour"){
+			std::string val;
+			attr->GetValue(&val);
+			sf::Color clr;
+			try{
+				clr = parseColor(val);
+			}catch(int){
+				throw xBadVal("button",name,val,attr->Row(),attr->Column(),fname);
+			}
+			p.second->setColour(clr);
 		}else if(name == "def-key"){
 			attr->GetValue(&keyMain);
 			foundKey = true;
@@ -424,11 +440,7 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 		}
 		p.second->attachKey(theKey);
 	}
-	if(width > 0 || height > 0) {
-		// TODO: What if width is set but height isn't?
-		frame.right = frame.left + width;
-		frame.bottom = frame.top + height;
-	}else switch(p.second->getBtnType()){
+	switch(p.second->getBtnType()){
 		case BTN_SM:
 			frame.right = frame.left + 23;
 			frame.bottom = frame.top + 23;
@@ -459,6 +471,10 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 			frame.right = frame.left + 63;
 			frame.bottom = frame.top + 23;
 	}
+	if(width > 0)
+		frame.right = frame.left + width;
+	if(height > 0)
+		frame.bottom = frame.top + height;
 	p.second->setBounds(frame);
 	string content;
 	for(node = node.begin(&who); node != node.end(); node++){
@@ -575,7 +591,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 				p.second->setFormat(TXT_FONT, FONT_BOLD);
 			else if(val == "maidenword")
 				p.second->setFormat(TXT_FONT, FONT_MAIDWORD);
-			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
+			else throw xBadVal("led",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "size"){
 			std::string val;
 			attr->GetValue(&val);
@@ -585,7 +601,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 				p.second->setFormat(TXT_SIZE, 10);
 			else if(val == "title")
 				p.second->setFormat(TXT_SIZE, 18);
-			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
+			else throw xBadVal("led",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "color" || name == "colour"){
 			std::string val;
 			attr->GetValue(&val);
@@ -593,7 +609,7 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 			try{
 				clr = parseColor(val);
 			}catch(int){
-				throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
+				throw xBadVal("led",name,val,attr->Row(),attr->Column(),fname);
 			}
 			p.second->setColour(clr);
 		}else if(name == "top"){

@@ -70,6 +70,7 @@ public:
 		cField() : type(FIELD_DISPEL) {}
 	};
 	short town_chop_time,town_chop_key;
+	int bg_town, bg_fight;
 	cWandering wandering[4];
 	location wandering_locs[4];
 	location special_locs[50];

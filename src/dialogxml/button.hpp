@@ -87,6 +87,8 @@ private:
 	std::string fromList;
 	static rectangle btnRects[13][2];
 protected:
+	/// The button's text colour; only used by LED and tiny buttons
+	sf::Color textClr;
 	/// The index in buttons of the texture for each button type.
 	static size_t btnGW[14];
 	/// The textures that hold the graphics for the buttons.
@@ -129,7 +131,6 @@ public:
 private:
 	eLedState state;
 	eFont textFont;
-	sf::Color color;
 	short textSize;
 	static rectangle ledRects[3][2];
 	focus_callback_t onFocus;

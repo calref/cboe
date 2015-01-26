@@ -39,6 +39,7 @@ cButton::cButton(cDialog* parent) :
 	cControl(CTRL_BTN,*parent),
 	wrapLabel(false),
 	type(BTN_REG),
+	textClr(parent->getDefTextClr()),
 	fromList("none") {}
 
 cButton::cButton(cDialog* parent,eControlType t) :
@@ -73,6 +74,7 @@ void cButton::draw(){
 		if(type == BTN_TINY) {
 			textMode = eTextMode::LEFT_TOP;
 			to_rect.left += 18;
+			style.colour = textClr;
 		} else if(type == BTN_PUSH) {
 			to_rect.top += 34;
 		}
@@ -100,13 +102,12 @@ short cButton::getFormat(eFormat prop) throw(xUnsupportedProp){
 	else throw xUnsupportedProp(prop);
 }
 
-void cButton::setColour(sf::Color) throw(xUnsupportedProp) {
-	// TODO: Colour is not supported
+void cButton::setColour(sf::Color clr) throw(xUnsupportedProp) {
+	textClr = clr;
 }
 
 sf::Color cButton::getColour() throw(xUnsupportedProp) {
-	// TODO: Colour is not supported
-	return sf::Color();
+	return textClr;
 }
 
 // Indices within the buttons array.
@@ -187,8 +188,7 @@ cLed::cLed(cDialog* parent) :
 	cButton(parent,CTRL_LED),
 	state(led_off),
 	textFont(FONT_BOLD),
-	textSize(10),
-	color(parent->getDefTextClr()) {
+	textSize(10) {
 	type = BTN_LED;
 }
 
@@ -254,7 +254,7 @@ void cLed::draw(){
 		to_rect.right = to_rect.left + 14;
 		to_rect.bottom = to_rect.top + 10;
 		rect_draw_some_item(buttons[btnGW[BTN_LED]],from_rect,*inWindow,to_rect);
-		style.colour = parent->getDefTextClr();
+		style.colour = textClr;
 		to_rect.right = frame.right;
 		to_rect.left = frame.left + 18; // Possibly could be 20
 		win_draw_string(*inWindow,to_rect,lbl,eTextMode::LEFT_TOP,style);

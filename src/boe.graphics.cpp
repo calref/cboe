@@ -609,24 +609,27 @@ void put_background() {
 	else if(overall_mode == MODE_RESTING)
 		bg_pict = bg[4];
 	else if(is_out()) {
-		if(univ.party.outdoor_corner.x >= 7)
-			bg_pict = bg[0];
-		else bg_pict = bg[10];
-	}
-	else if(is_combat()) {
-		if(univ.party.outdoor_corner.x >= 7)
-			bg_pict = bg[2];
-		else bg_pict = bg[4];
-	}
-	else {
-		if(univ.town->lighting_type > 0) {
-			if(univ.party.outdoor_corner.x >= 7)
-				bg_pict = bg[1];
-			else bg_pict = bg[9];
-		}
-		else if((univ.party.outdoor_corner.x >= 7) && (univ.town.num != 21)) // TODO: What's so special about town 21?
-			bg_pict = bg[8];
-		else bg_pict = bg[13];
+		if(univ.out->bg_out >= 0)
+			bg_pict = bg[univ.out->bg_out];
+		else bg_pict = bg[univ.scenario.bg_out];
+	} else if(is_combat()) {
+		if(which_combat_type == 1 && univ.town->bg_fight >= 0) // TODO: Verify this means town combat
+			bg_pict = bg[univ.town->bg_fight];
+		else if(univ.out->bg_fight >= 0)
+			bg_pict = bg[univ.out->bg_fight];
+		else bg_pict = bg[univ.scenario.bg_fight];
+	} else if(univ.town->lighting_type != LIGHT_NORMAL) {
+		if(univ.town->bg_town >= 0)
+			bg_pict = bg[univ.town->bg_town];
+		else if(univ.out->bg_dungeon >= 0)
+			bg_pict = bg[univ.out->bg_dungeon];
+		else bg_pict = bg[univ.scenario.bg_dungeon];
+	} else {
+		if(univ.town->bg_town >= 0)
+			bg_pict = bg[univ.town->bg_town];
+		else if(univ.out->bg_town >= 0)
+			bg_pict = bg[univ.out->bg_town];
+		else bg_pict = bg[univ.scenario.bg_town];
 	}
 	tileImage(mainPtr, rectangle(mainPtr), bg_pict);
 }

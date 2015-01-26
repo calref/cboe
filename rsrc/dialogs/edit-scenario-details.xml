@@ -7,7 +7,7 @@
 	<field name='who1' top='104' left='181' width='243' height='47'/>
 	<field name='who2' top='159' left='181' width='243' height='47'/>
 	<field name='contact' top='214' left='181' width='243' height='65'/>
-	<button name='okay' type='regular' top='446' left='395'>OK</button>
+	<button name='okay' type='regular' top='500' left='395'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text top='23' left='50' width='372' height='53'>
 		This is where you can define the various pieces of information the user will see when deciding whether or not to play your scenario.
@@ -43,4 +43,11 @@
 		the ID specified here makes it easy to carry information from one scenario to the next.
 		It should be the same in each scenario in the series.
 	</text>
+	<text top='456' left='50' width='120' height='60'>Default backgrounds:<br/>
+		Set the default patterns to be shown behind the game screen.
+	</text>
+	<button name='bg-out' type='tiny' top='456' left='180' width='100'>Outdoors:</button>
+	<button name='bg-town' type='tiny' top='473' left='180' width='100'>In towns:</button>
+	<button name='bg-dungeon' type='tiny' top='490' left='180' width='100'>In dungeons:</button>
+	<button name='bg-fight' type='tiny' top='507' left='180' width='100'>In combat:</button>
 </dialog>

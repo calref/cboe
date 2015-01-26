@@ -107,6 +107,7 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 		specials[i] = cSpecial();
 	}
 	difficulty = 0;
+	bg_town = bg_fight = -1;
 	strong_barriers = defy_scrying = defy_mapping = is_hidden = false;
 	for(i = 0; i < 60; i++) {
 		talking.talk_nodes[i].personality = -1;

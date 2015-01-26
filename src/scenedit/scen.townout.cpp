@@ -507,6 +507,10 @@ static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
 	current_terrain->out_name = me["name"].getText();
 	current_terrain->comment = me["comment"].getText();
+	current_terrain->bg_out = me["bg-out"].getTextAsNum();
+	current_terrain->bg_fight = me["bg-fight"].getTextAsNum();
+	current_terrain->bg_town = me["bg-town"].getTextAsNum();
+	current_terrain->bg_dungeon = me["bg-dungeon"].getTextAsNum();
 	return true;
 }
 
@@ -518,6 +522,10 @@ void outdoor_details() {
 	out_dlg["loc"].setText(str_out.str());
 	out_dlg["comment"].setText(current_terrain->comment);
 	out_dlg["name"].setText(current_terrain->out_name);
+	out_dlg["bg-out"].setTextToNum(current_terrain->bg_out);
+	out_dlg["bg-fight"].setTextToNum(current_terrain->bg_fight);
+	out_dlg["bg-town"].setTextToNum(current_terrain->bg_town);
+	out_dlg["bg-dungeon"].setTextToNum(current_terrain->bg_dungeon);
 	dynamic_cast<cLedGroup&>(out_dlg["ambient"]).setSelected("snd" + std::to_string(int(current_terrain->ambient_sound) + 1));
 	out_dlg["ambient"].attachFocusHandler([](cDialog& me, std::string, bool) -> bool {
 		cLedGroup& lg = dynamic_cast<cLedGroup&>(me["ambient"]);
@@ -536,6 +544,19 @@ void outdoor_details() {
 		current_terrain->ambient_sound = choice;
 		return true;
 	});
+	out_dlg.attachClickHandlers([](cDialog& me, std::string which, eKeyMod) -> bool {
+		std::string fld = which.replace(0, 4, "bg");
+		int bg_i = me[fld].getTextAsNum();
+		bg_i = choose_background(bg_i, &me);
+		me[fld].setTextToNum(bg_i);
+		return true;
+	}, {"pick-out", "pick-fight", "pick-town", "pick-dungeon"});
+	using namespace std::placeholders;
+	auto focus_handler = std::bind(check_range_msg, _1, _2, _3, -1, 21, _4, "-1 to use scenario default");
+	out_dlg["bg-out"].attachFocusHandler(std::bind(focus_handler, _1, _2, _3, "Outdoors Background"));
+	out_dlg["bg-fight"].attachFocusHandler(std::bind(focus_handler, _1, _2, _3, "Combat Background"));
+	out_dlg["bg-town"].attachFocusHandler(std::bind(focus_handler, _1, _2, _3, "Default Town Background"));
+	out_dlg["bg-dungeon"].attachFocusHandler(std::bind(focus_handler, _1, _2, _3, "Default Dungeon Background"));
 	
 	out_dlg.run();
 }
@@ -787,6 +808,8 @@ static bool save_advanced_town(cDialog& me, std::string, eKeyMod) {
 	town->spec_on_entry = me["onenter"].getTextAsNum();
 	town->spec_on_entry_if_dead = me["onenterdead"].getTextAsNum();
 	town->spec_on_hostile = me["onhostile"].getTextAsNum();
+	town->bg_town = me["bg-town"].getTextAsNum();
+	town->bg_fight = me["bg-fight"].getTextAsNum();
 	town->is_hidden = dynamic_cast<cLed&>(me["hidden"]).getState() != led_off;
 	town->defy_mapping = dynamic_cast<cLed&>(me["nomap"]).getState() != led_off;
 	town->defy_scrying = dynamic_cast<cLed&>(me["noscry"]).getState() != led_off;
@@ -805,6 +828,8 @@ static void put_advanced_town_in_dlog(cDialog& me) {
 	me["onenter"].setTextToNum(town->spec_on_entry);
 	me["onenterdead"].setTextToNum(town->spec_on_entry_if_dead);
 	me["onhostile"].setTextToNum(town->spec_on_hostile);
+	me["bg-town"].setTextToNum(town->bg_town);
+	me["bg-fight"].setTextToNum(town->bg_fight);
 	dynamic_cast<cLed&>(me["hidden"]).setState(town->is_hidden ? led_red : led_off);
 	dynamic_cast<cLed&>(me["nomap"]).setState(town->defy_mapping ? led_red : led_off);
 	dynamic_cast<cLed&>(me["noscry"]).setState(town->defy_scrying ? led_red : led_off);
@@ -842,6 +867,17 @@ void edit_advanced_town() {
 	town_dlg.attachFocusHandlers(loc_check, {"exit1-x", "exit2-x", "exit3-x", "exit4-x"});
 	town_dlg.attachFocusHandlers(loc_check, {"exit1-y", "exit2-y", "exit3-y", "exit4-y"});
 	town_dlg.attachClickHandlers(edit_advanced_town_special, {"edit-onexit1", "edit-onexit2", "edit-onexit3", "edit-onexit4", "edit-onenter", "edit-onenterdead", "edit-onhostile"});
+	town_dlg.attachClickHandlers([](cDialog& me, std::string which, eKeyMod) -> bool {
+		std::string fld = which.replace(0, 4, "bg");
+		int bg_i = me[fld].getTextAsNum();
+		bg_i = choose_background(bg_i, &me);
+		me[fld].setTextToNum(bg_i);
+		return true;
+	}, {"pick-fight", "pick-town"});
+	using namespace std::placeholders;
+	auto focus_handler = std::bind(check_range_msg, _1, _2, _3, -1, 21, _4, "-1 to use scenario default");
+	town_dlg["bg-fight"].attachFocusHandler(std::bind(focus_handler, _1, _2, _3, "Combat Background"));
+	town_dlg["bg-town"].attachFocusHandler(std::bind(focus_handler, _1, _2, _3, "Town Background"));
 	
 	put_advanced_town_in_dlog(town_dlg);
 	
