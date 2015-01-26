@@ -19,40 +19,36 @@
 	<pict name='pc5-g' type='pc' num='0' top='393' left='208'/>
 	<pict name='pc6-g' type='pc' num='0' top='393' left='293'/>
 	<text name='title' size='large' top='6' left='64' width='199' height='18'>You Find:</text>
-	<!-- Note: It seems this text exists solely to create a frame. -->
 	<text framed='true' top='31' left='73' width='327' height='309'/>
-	<!--
-	 TODO: In the browser preview, the text in these sections looks too far to the left. Will that occur in-game too?
-	 -->
-	<text name='item1-key' top='37' left='80' width='311' height='36'/>
+	<text name='item1-key' top='37' left='74' width='311' height='36'/>
 	<pict name='item1-g' type='item' num='0' top='37' left='80'/>
 	<text name='item1-name' top='37' left='107' width='212' height='18'/>
 	<text name='item1-detail' top='55' left='116' width='275' height='17'/>
-	<text name='item2-key' top='74' left='80' width='311' height='36'/>
+	<text name='item2-key' top='74' left='74' width='311' height='36'/>
 	<pict name='item2-g' type='item' num='0' top='74' left='80'/>
 	<text name='item2-name' top='74' left='107' width='212' height='18'/>
 	<text name='item2-detail' top='92' left='116' width='275' height='17'/>
-	<text name='item3-key' top='111' left='80' width='311' height='36'/>
+	<text name='item3-key' top='111' left='74' width='311' height='36'/>
 	<pict name='item3-g' type='item' num='0' top='111' left='80'/>
 	<text name='item3-name' top='111' left='107' width='212' height='18'/>
 	<text name='item3-detail' top='129' left='116' width='275' height='17'/>
-	<text name='item4-key' top='148' left='80' width='311' height='36'/>
+	<text name='item4-key' top='148' left='74' width='311' height='36'/>
 	<pict name='item4-g' type='item' num='0' top='148' left='80'/>
 	<text name='item4-name' top='148' left='107' width='212' height='18'/>
 	<text name='item4-detail' top='166' left='116' width='275' height='17'/>
-	<text name='item5-key' top='185' left='80' width='311' height='36'/>
+	<text name='item5-key' top='185' left='74' width='311' height='36'/>
 	<pict name='item5-g' type='item' num='0' top='185' left='80'/>
 	<text name='item5-name' top='185' left='107' width='212' height='18'/>
 	<text name='item5-detail' top='203' left='116' width='275' height='17'/>
-	<text name='item6-key' top='222' left='80' width='311' height='36'/>
+	<text name='item6-key' top='222' left='74' width='311' height='36'/>
 	<pict name='item6-g' type='item' num='0' top='222' left='80'/>
 	<text name='item6-name' top='222' left='107' width='212' height='18'/>
 	<text name='item6-detail' top='240' left='116' width='275' height='17'/>
-	<text name='item7-key' top='259' left='80' width='311' height='36'/>
+	<text name='item7-key' top='259' left='74' width='311' height='36'/>
 	<pict name='item7-g' type='item' num='0' top='259' left='80'/>
 	<text name='item7-name' top='259' left='107' width='212' height='18'/>
 	<text name='item7-detail' top='277' left='116' width='275' height='17'/>
-	<text name='item8-key' top='297' left='80' width='311' height='36'/>
+	<text name='item8-key' top='297' left='74' width='311' height='36'/>
 	<pict name='item8-g' type='item' num='0' top='297' left='80'/>
 	<text name='item8-name' top='297' left='107' width='212' height='18'/>
 	<text name='item8-detail' top='315' left='116' width='275' height='17'/>

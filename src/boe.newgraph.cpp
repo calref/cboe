@@ -894,7 +894,7 @@ std::string get_item_interesting_string(cItem item) {
 		return "Not yours.";
 	}
 	if(!item.ident) {
-		return "";
+		return "Not identified.";
 	}
 	if(item.cursed) {
 		return "Cursed item.";
