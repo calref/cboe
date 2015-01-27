@@ -66,7 +66,10 @@ public:
 	eBtnType getBtnType();
 	/// Create a new button.
 	/// @param parent The parent dialog.
-	explicit cButton(cDialog* parent);
+	explicit cButton(cDialog& parent);
+	/// Create a button outside of a dialog
+	/// @param parent The parent window
+	explicit cButton(sf::RenderWindow& parent);
 	bool isClickable();
 	virtual ~cButton();
 	void draw();

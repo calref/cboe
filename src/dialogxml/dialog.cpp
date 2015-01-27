@@ -351,7 +351,7 @@ template<> pair<string,cButton*> cDialog::parse(Element& who /*button*/){
 	std::string keyMod, keyMain;
 	int keyModRow, keyModCol, keyMainRow, keyMainCol;
 	rectangle frame;
-	p.second = new cButton(this);
+	p.second = new cButton(*this);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
 		if(name == "name")
