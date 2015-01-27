@@ -3659,26 +3659,45 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::TOWN_GENERIC_STAIR:
+			check_mess = false;
 			if(spec.ex2c != 1 && spec.ex2c != 2 && is_combat()) {
 				ASB("Can't change level in combat.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
-				check_mess = false;
 			}
 			else if(spec.ex2c != 2 && spec.ex2c != 3 && which_mode != eSpecCtx::TOWN_MOVE) {
 				ASB("Can't change level now.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
-				check_mess = false;
 			}
 			else {
-				// TODO: This is missing some additions that the non-generic stair has
 				*a = 1;
 				if(spec.ex2b < 0) spec.ex2b = 0;
-				if((spec.ex2b >= 8) || (cChoiceDlog(stairDlogs[spec.ex2b],{"climb","leave"}).show() == "climb"))
+				if((spec.ex2b >= 8) || (cChoiceDlog(stairDlogs[spec.ex2b],{"climb","leave"}).show() == "climb")) {
+					bool was_in_combat = false;
+					short was_active;
+					if(overall_mode == MODE_TALKING)
+						end_talk_mode();
+					else if(is_combat()) {
+						was_in_combat = true;
+						if(which_combat_type == 0) { // outdoor combat
+							ASB("Can't change level in combat.");
+							*next_spec = -1;
+							break;
+						} else {
+							was_active = current_pc;
+							univ.party.direction = end_town_combat();
+						}
+					}
+					*a = 1;
 					change_level(spec.ex2a,l.x,l.y);
+					if(was_in_combat) {
+						start_town_combat(univ.party.direction);
+						current_pc = was_active;
+					}
+				} else *next_spec = -1;
 			}
 			break;
 		case eSpecType::TOWN_LEVER:
@@ -3749,29 +3768,23 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
-				check_mess = false;
 			}
 			else if(spec.ex2c != 2 && spec.ex2c != 3 && which_mode != eSpecCtx::TOWN_MOVE) {
 				ASB("Can't change level now.");
 				if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 					*a = 1;
 				*next_spec = -1;
-				check_mess = false;
 			}
 			else {
-				if(spec.m1 >= 0) {
-					for(i = 0; i < 3; i++)
-						get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type, spec.m1 + i * 2, spec.m1 + i * 2 + 1);
-					buttons[0] = 20; buttons[1] = 24;
-				}
+				for(i = 0; i < 3; i++)
+					get_strs(strs[i * 2],strs[i * 2 + 1],cur_spec_type, spec.m1 + i * 2, spec.m1 + i * 2 + 1);
+				buttons[0] = 20; buttons[1] = 24;
 				if(spec.ex2b == 1)
 					i = 2;
 				else i = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
 				*a = 1;
 				if(i == 1) {
 					*next_spec = -1;
-					if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
-						*a = 1;
 				} else {
 					bool was_in_combat = false;
 					short was_active;
@@ -3781,10 +3794,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						was_in_combat = true;
 						if(which_combat_type == 0) { // outdoor combat
 							ASB("Can't change level in combat.");
-							if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
-								*a = 1;
 							*next_spec = -1;
-							check_mess = false;
 							break;
 						} else {
 							was_active = current_pc;

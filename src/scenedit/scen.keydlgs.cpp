@@ -454,6 +454,8 @@ static void setup_node_field(cDialog& me, std::string field, short value, std::s
 }
 
 static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
+	// These are the node types that should not have a Create/Edit button on the JumpTo
+	static std::set<eSpecType> dead_ends = {eSpecType::ENTER_SHOP, eSpecType::START_TALK, eSpecType::TOWN_GENERIC_STAIR, eSpecType::TOWN_STAIR};
 	cSpecial& spec = edit_stack.top().node;
 	
 	// Show which node is being edited and what type of node it is
@@ -487,7 +489,7 @@ static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
 	setup_node_field(me, "x2b", spec.ex2b, info.ex2b_lbl(), info.x2b_btn);
 	setup_node_field(me, "x2c", spec.ex2c, info.ex2c_lbl(), info.x2c_btn);
 	
-	setup_node_field(me, "jump", spec.jumpto, info.jmp_lbl(), 's');
+	setup_node_field(me, "jump", spec.jumpto, info.jmp_lbl(), dead_ends.count(spec.type) ? ' ' : 's');
 }
 
 static void save_spec_enc(cDialog& me, node_stack_t& edit_stack) {
