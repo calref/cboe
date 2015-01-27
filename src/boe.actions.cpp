@@ -1011,7 +1011,7 @@ bool handle_action(sf::Event event) {
 			
 		case MODE_COMBAT: case MODE_SPELL_TARGET: case MODE_FIRING: case MODE_THROWING:
 		case MODE_FANCY_TARGET: case MODE_DROP_COMBAT: case MODE_LOOK_COMBAT:
-			cur_loc = (overall_mode < MODE_COMBAT) ? center : univ.party[current_pc].combat_pos;
+			cur_loc = center;
 			for(int i = 0; i < 9; i++)
 				if(the_point.in(combat_buttons[i])) {
 					button_hit = i;
