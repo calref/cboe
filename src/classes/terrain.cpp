@@ -33,17 +33,17 @@ void cTerrain::append(legacy::terrain_type_type& old){
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 11 - surface woods
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 12 - shrubbery
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 13 - stalagmites
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 14 - cave fumarole (proposed)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,/* 150 */	// 15 - surface fumarole (proposed)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 16 - cave road (proposed)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 17 - surface road (proposed)
-		1, 0, 1, 1, 1, 1, 1, 1, 1, 0,			// 18 - hills road (proposed)
-		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,			// 19 - crops (proposed)
-		0, 0, 1, 0, 2, 0, 0, 1, 1, 1,/* 200 */	// 20 - cave camp (proposed)
-		1, 0, 2, 1, 1, 1, 0, 1, 1, 1,			// 21 - surface camp (proposed)
-		1, 1, 0, 0, 0, 0, 1, 0, 1, 1,			// (note: fumaroles would have lava.)
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// the numbers in this array are indices into the other arrays
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// (ter_base, ground_type, and terrain_odds first index)
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 14 - cave fumarole
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,/* 150 */	// 15 - surface fumarole
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 16 - cave camp
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,			// 17 - surface camp
+		1, 0, 1, 1, 1, 1, 1, 1, 1, 0,			// 18 - cave crops (uses base terrain for crops)
+		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,			// 19 - surface crops (as above)
+		0, 0, 1, 0, 2, 0, 0, 1, 1, 1,/* 200 */	// (note: fumaroles would have lava.)
+		1, 0, 2, 1, 1, 1, 0, 1, 1, 1,
+		1, 1, 0, 0, 0, 0, 1, 0, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* 250 */
 		4, 4, 4, 4, 1, 1, 1, 1, 1, 1,
 		1, 1, 1, 1
