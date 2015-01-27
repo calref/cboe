@@ -782,20 +782,16 @@ void place_party(short direction) {
 }
 
 // spec_code is encounter's spec_code
-void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/) {
-	short i,j,k,r1,ter_type;
-	static const short ter_base[16] = {
-		2,0,36,50,71,0,0,0,
-		0,2,2, 2, 2, 0,0,36
-	};
-	static const short ground_type[16] = {
-		2,0,36,50,71,0,0,0,
-		0,2,2, 2, 2, 0,0,36
+void create_out_combat_terrain(short ter_type,short num_walls,short /*spec_code*/) {
+	short i,j,k,r1,arena;
+	static const short ter_base[20] = {
+		2,0,36,50,71,     0,0,0, 0,2,
+		2,2, 2, 0, 0,    36,0,2, 0,2,
 	};
 	static const location special_ter_locs[15] = {
 		loc(11,10),loc(11,14),loc(10,20),loc(11,26),loc(9,30),
 		loc(15,19),loc(23,19),loc(19,29),loc(20,11),loc(28,16),
-		loc(28,24),loc(27,19),loc(27,29),loc(15,28),loc(19,19)
+		loc(28,24),loc(27,19),loc(27,29),loc(15,28),loc(19,19),
 	};
 	static const ter_num_t cave_pillar[4][4] = {
 		{0 ,14,11,1 },
@@ -833,64 +829,129 @@ void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/) {
 		{75,75,75,0 },
 		{75,75,75,0 }
 	};
-	static const short terrain_odds[16][10] = {
-		{3,80,4,40,115,20,114,10,112,1},
-		{1,50,93,25,94,5,98,10,95,1},
-		{37,20,0,0,0,0,0,0,0,0},
-		{64,3,63,1,0,0,0,0,0,0},
-		{74,1,0,0,0,0,0,0,0,0},
-		{84,700,97,30,98,20,92,4,95,1},
-		{93,280,91,300,92,270,95,7,98,10},
-		{1,800,93,600,94,10,92,10,95,4},
-		{1,700,96,200,95,100,92,10,112,5},
-		{3,600,87,90,110,20,114,6,113,2},
-		{3,200,4,400,111,250,0,0,0,0},
-		{3,200,4,300,112,50,113,60,114,100},
-		{3,100,4,250,115,120,114,30,112,2},
-		{1,25,76,15,98,300,97,280,75,5},
-		{37,20,76,20,75,5,0,0,0,0}
+	// TODO: There's no surface bonfire or bedding in the default terrain set!
+	static const ter_num_t surf_camp[4][4] = {
+		{105,  2,4,  2},
+		{  2,104,2,105},
+		{115,  2,4,  2},
+		{  2,105,2,115},
+	};
+	static const ter_num_t cave_camp[4][4] = {
+		{105,  0, 1,  0},
+		{  0,104, 0,105},
+		{ 92,  0,93,  0},
+		{  0,105, 0, 92},
+	};
+	static const short terrain_odds[20][10] = {
+		{ 3, 80,    4, 40,   115, 20,   114, 10,   112,  1},	// Grassy field
+		{ 1, 50,   93, 25,    94,  5,    98, 10,    95,  1},	// Ordinary cave
+		{37, 20},												// Mountain
+		{64,  3,   63,  1},										// Surface bridge
+		{74,  1},												// Cave bridge
+		{84,700,   97, 30,    98, 20,    92,  4,    95,  1},	// Rubble-strewn cave
+		{93,280,   91,300,    92,270,    95,  7,    98, 10},	// Cave forest
+		{ 1,800,   93,600,    94, 10,    92, 10,    95,  4},	// Cave mushrooms
+		{ 1,700,   96,200,    95,100,    92, 10,   112,  5},	// Cave swamp
+		{ 3,600,   87, 90,   110, 20,   114,  6,   113,  2},	// Surface rocks
+		{ 3,200,    4,400,   111,250},							// Surface swamp
+		{ 3,200,    4,300,   112, 50,   113, 60,   114,100},	// Surface woods
+		{ 3,100,    4,250,   115,120,   114, 30,   112,  2},	// Surface shrubbery
+		{ 1, 25,   76, 15,    98,300,    97,280,    75,  5},	// Stalagmites
+		{ 1,150,   94, 80,    98, 20,    76, 20,    75,  5},	// Cave fumarole
+		{37,150,   76, 20,    75,  5},							// Surface fumarole
+		{ 1, 50,   93, 25,    94,  5,    98, 10,    95,  1},	// Cave camp
+		{ 3, 80,    4, 40,   115, 20,   114, 10,   112,  1},	// Surface camp
+		{ 1,600,   97, 50,    98, 80,    93, 10,    84, 10},	// Cave crops
+		{ 3,500,    4,500,   110, 50,    87, 10},				// Surface crops
 	}; // ter then odds then ter then odds ...
+	// These sets only include the ones that can have a road running through them
+	static const std::set<int> cave_arenas = {1,5,6,7,8,13};
+	static const std::set<int> surface_arenas = {0,2,9,10,11,12};
 	location stuff_ul;
 	
-//	ter_type = scenario.ter_types[type].picture;
-//	if(ter_type > 260)
-//		ter_type = 1;
-//	else ter_type = general_types[ter_type];
-	ter_type = univ.scenario.ter_types[type].combat_arena;
-	if(ter_type >= 1000) ter_type = 1; // TODO: load town ter_type - 1000 as the combat arena
-	// TODO: Also implement the roads and crops arenas
+	arena = univ.scenario.ter_types[ter_type].combat_arena;
+	if(arena >= 1000) {
+		arena -= 1000;
+		// We take the terrain from the specified town, and nothing else.
+		// No preset creatures, items, special nodes, etc.
+		// Furthermore, if it's a large town, we drop the outer 8 tiles.
+		size_t town_size = univ.scenario.towns[arena]->max_dim();
+		int offset = max(0,town_size - 48);
+		rectangle town_bounds = univ.scenario.towns[arena]->in_town_rect;
+		// Just in case the town boundary is somehow larger than the town...
+		town_bounds.left = minmax(0,town_size - 1, town_bounds.left);
+		town_bounds.right = minmax(0,town_size - 1, town_bounds.right);
+		town_bounds.top = minmax(0,town_size - 1, town_bounds.top);
+		town_bounds.bottom = minmax(0,town_size - 1, town_bounds.bottom);
+		for(i = 0; i < 48; i++)
+			for(j = 0; j < 48; j++) {
+				// This test also accounts for small towns since the town boundary is never larger than the town
+				if(town_bounds.contains(i + offset, j + offset))
+					univ.town->terrain(i,j) = univ.scenario.towns[arena]->terrain(i + offset,j + offset);
+				else univ.town->terrain(i,j) = 90;
+			}
+		// The game uses the upper left corner to replace spaces that are blocked, so it needs to be set to something sensible.
+		// We'll take the terrain at the first entry location.
+		location fetch = univ.scenario.towns[arena]->start_locs[0];
+		univ.town->terrain(0,0) = univ.scenario.towns[arena]->terrain(fetch.x, fetch.y);
+		// And now we're done, so skip the rest of this function.
+		return;
+	}
 	
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++) {
 			univ.town.fields[i][j] = 0;
 			if((j <= 8) || (j >= 35) || (i <= 8) || (i >= 35))
 				univ.town->terrain(i,j) = 90;
-			else univ.town->terrain(i,j) = ter_base[ter_type];
+			else univ.town->terrain(i,j) = ter_base[arena];
 		}
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++)
 			for(k = 0; k < 5; k++)
-				if((univ.town->terrain(i,j) != 90) && (get_ran(1,1,1000) < terrain_odds[ter_type][k * 2 + 1]))
-					univ.town->terrain(i,j) = terrain_odds[ter_type][k * 2];
+				if((univ.town->terrain(i,j) != 90) && (get_ran(1,1,1000) < terrain_odds[arena][k * 2 + 1]))
+					univ.town->terrain(i,j) = terrain_odds[arena][k * 2];
 	
-	univ.town->terrain(0,0) = ter_base[ter_type];
+	univ.town->terrain(0,0) = ter_base[arena];
 	
-	if((ter_type == 3) || (ter_type == 4) ) {
+	bool is_road = univ.scenario.ter_types[ter_type].trim_type == eTrimType::ROAD;
+	bool is_bridge = (arena == 3 || arena == 4);
+	
+	if(arena == 3 || (is_road && surface_arenas.count(arena))) {
 		univ.town->terrain(0,0) = 83;
-		for(i = 15; i < 26; i++)
+		for(i = (is_bridge ? 15 : 19); i < (is_bridge ? 26 : 23); i++)
 			for(j = 9; j < 35; j++)
 				univ.town->terrain(i,j) = 83;
 	}
-	if((type >= 79) && (type <= 81)) {
+	if(arena == 4 || (is_road && cave_arenas.count(arena))) {
 		univ.town->terrain(0,0) = 82;
-		for(i = 19; i < 23; i++)
+		for(i = (is_bridge ? 15 : 19); i < (is_bridge ? 26 : 23); i++)
 			for(j = 9; j < 35; j++)
 				univ.town->terrain(i,j) = 82;
 	}
+	if(arena == 18 || arena == 19) {
+		for(i = 12; i < 15; i++)
+			for(j = 9; j < 35; j++)
+				if(j != 17 && j != 26)
+					univ.town->terrain(i,j) = ter_type;
+		for(i = 17; i < 20; i++)
+			for(j = 9; j < 35; j++)
+				if(j != 17 && j != 26)
+					univ.town->terrain(i,j) = ter_type;
+		for(i = 22; i < 25; i++)
+			for(j = 9; j < 35; j++)
+				if(j != 17 && j != 26)
+					univ.town->terrain(i,j) = ter_type;
+		for(i = 27; i < 30; i++)
+			for(j = 9; j < 35; j++)
+				if(j != 17 && j != 26)
+					univ.town->terrain(i,j) = ter_type;
+	}
+	if(arena == 14 || arena == 15)
+		univ.town->terrain(0,0) = 75;
 	
 	
 	// Now place special lakes, etc.
-	if(ter_type == 2)
+	if(arena == 2 || arena == 15)
 		for(i = 0; i < 15; i++)
 			if(get_ran(1,0,5) == 1) {
 				stuff_ul = special_ter_locs[i];
@@ -922,7 +983,7 @@ void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/) {
 					for(k = 0; k < 4; k++)
 						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = surf_lake[k][j];
 			}
-	if(ter_type == 14)
+	if(arena == 14)
 		for(i = 0; i < 15; i++)
 			if(get_ran(1,0,5) == 1) {
 				stuff_ul = special_ter_locs[i];
@@ -930,7 +991,7 @@ void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/) {
 					for(k = 0; k < 4; k++)
 						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = cave_fume[k][j];
 			}
-	if(ter_type == 15)
+	if(arena == 15)
 		for(i = 0; i < 15; i++)
 			if(get_ran(1,0,5) == 1) {
 				stuff_ul = special_ter_locs[i];
@@ -938,9 +999,21 @@ void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/) {
 					for(k = 0; k < 4; k++)
 						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = surf_fume[k][j];
 			}
+	if(arena == 16) {
+		stuff_ul = loc(18,14);
+		for(j = 0; j < 4; j++)
+			for(k = 0; k < 4; k++)
+				univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = cave_camp[k][j];
+	}
+	if(arena == 17) {
+		stuff_ul = loc(18,14);
+		for(j = 0; j < 4; j++)
+			for(k = 0; k < 4; k++)
+				univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = surf_camp[k][j];
+	}
 	
 	
-	if(ground_type[ter_type] == 0) {
+	if(ter_base[ter_type] == 0) {
 		for(i = 0; i < num_walls; i++) {
 			r1 = get_ran(1,0,3);
 			for(j = 9; j < 35; j++)
@@ -968,7 +1041,7 @@ void create_out_combat_terrain(short type,short num_walls,short /*spec_code*/) {
 		if((univ.town->terrain(8,20) == 9) && (univ.town->terrain(17,35) == 12))
 			univ.town->terrain(8,35) = 20;
 	}
-	if(ground_type[ter_type] == 36) {
+	if(ter_base[ter_type] == 36) {
 		for(i = 0; i < num_walls; i++) {
 			r1 = get_ran(1,0,3);
 			for(j = 9; j < 35; j++)

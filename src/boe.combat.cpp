@@ -279,7 +279,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	univ.town.prep_arena();
 	univ.town->in_town_rect = town_rect;
 	
-	create_out_combat_terrain((short) in_which_terrain,num_walls,0);////
+	create_out_combat_terrain(in_which_terrain,num_walls,0);
 	
 	univ.town.monst.clear();
 	
