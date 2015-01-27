@@ -93,7 +93,7 @@ void cSpecial::append(legacy::special_node_type& old){
 			if(old.type == 7) ex1a = (int) eSpecCtx::OUT_MOVE;
 			if(old.type == 8) ex1a = (int) eSpecCtx::TOWN_MOVE;
 			if(old.type == 9) ex1a = (int) eSpecCtx::COMBAT_MOVE;
-			if(old.type == 10) ex1a = 100;
+			if(old.type == 10) type = eSpecType::IF_LOOKING;
 			break;
 		case 24: // ritual of sanctification
 			type = eSpecType::IF_CONTEXT;
@@ -428,17 +428,17 @@ static const char*const button_dict[7][11] = {
 		" D                        ", // ex2b
 		" x                        ", // ex2c
 	}, { // if-then nodes
-		"                  f     $  $", // msg1
-		"                  s         ", // msg2
-		"                            ", // msg3
-		"                            ", // pic
-		"                            ", // pictype
-		" T I  w     APae     Qq $ * ", // ex1a
-		"ssss  sss ssssss s s sssss =", // ex1b
-		"                          ss", // ex1c
-		"     t                 K$   ", // ex2a
-		"s   ss   s     +    s==+s  =", // ex2b
-		"               =           s", // ex2c
+		"                  f     $  $  ", // msg1
+		"                  s           ", // msg2
+		"                              ", // msg3
+		"                              ", // pic
+		"                              ", // pictype
+		" T I  w     APae     Qq $ *   ", // ex1a
+		"ssss  sss ssssss s s sssss =  ", // ex1b
+		"                s         ssss", // ex1c
+		"     t                 K$     ", // ex2a
+		"s   ss   s     +    s==+s  =  ", // ex2b
+		"               =           s  ", // ex2c
 	}, { // town nodes
 		"mmmmmmmmmmmmmmm   dddmmmmmmmmmmmm", // msg1
 		"                                 ", // msg2
@@ -452,29 +452,29 @@ static const char*const button_dict[7][11] = {
 		"     DD          /               ", // ex2b
 		" x x             :  :            ", // ex2c
 	}, { // rectangle nodes
-		"mm          mmmmmmm", // msg1
-		"                   ", // msg2
-		"                   ", // msg3
-		"                   ", // pic
-		"                   ", // pictype
-		"              tt   ", // sdf1
-		"                   ", // unused
-		"                   ", // ex1c
-		"F              t   ", // sdf2
-		"                   ", // unused
-		"                   ", // ex2c
+		"mmmmmmmmm", // msg1
+		"         ", // msg2
+		"         ", // msg3
+		"         ", // pic
+		"         ", // pictype
+		"    tt   ", // sdf1
+		"         ", // unused
+		"         ", // ex1c
+		"F    t   ", // sdf2
+		"         ", // unused
+		"         ", // ex2c
 	}, { // outdoors nodes
-		"  mmM", // msg1
-		"     ", // msg2
-		"     ", // msg3
-		"     ", // pic
-		"     ", // pictype
-		"    #", // ex1a
-		"    &", // ex1b
-		"     ", // ex1c
-		"     ", // ex2a
-		"    %", // ex2b
-		"     ", // ex2c
+		"  mm", // msg1
+		"    ", // msg2
+		"    ", // msg3
+		"    ", // pic
+		"    ", // pictype
+		"    ", // ex1a
+		"    ", // ex1b
+		"    ", // ex1c
+		"    ", // ex2a
+		"    ", // ex2b
+		"    ", // ex2c
 	}
 };
 

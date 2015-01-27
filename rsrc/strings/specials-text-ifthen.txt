@@ -254,7 +254,7 @@ Cumulation mode (if whole party selected)
 Comparison mode
 Otherwise call this special
 --------------------
-Unused Node
+If Looking?
 Unused
 Unused
 Unused
@@ -264,11 +264,11 @@ Unused
 Unused
 Unused
 Unused
+If player is looking, call this special ...
 Unused
 Unused
 Unused
-Unused
-Special to Jump To
+Otherwise call this special
 --------------------
 Day Reached?
 Unused
@@ -422,7 +422,7 @@ Unused
 Unused
 Unused
 Unused
-Which context (0 .. 24 or 100 .. 102)
+Which context (0 .. 24)
 0 - can enter, 1 - no enter
 If context matches, call this special ...
 Unused
@@ -444,5 +444,37 @@ If test 1 passes but test 2 fails, call this special ...
 Range lower bound (or value to compare to)
 Range upper bound (or comparison method -2 .. 2)
 If test 2 passes but test 1 fails, call this special ...
+Otherwise call this special
+--------------------
+If In Boat?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Which boat? (-1 = any boat)
+If party in boat, call this special ...
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------
+If On Horse?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Which horse? (-1 = any horse)
+If party on horse, call this special ...
+Unused
+Unused
+Unused
 Otherwise call this special
 --------------------

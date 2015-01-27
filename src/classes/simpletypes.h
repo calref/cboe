@@ -622,7 +622,7 @@ enum class eSpecType {
 	IF_PRIEST_SPELL = 143,
 	IF_RECIPE = 144,
 	IF_STATUS = 145,
-	UNUSED26 = 146,
+	IF_LOOKING = 146,
 	IF_DAY_REACHED = 147,
 	IF_FIELDS = 148,
 	IF_PARTY_SIZE = 149,
@@ -634,6 +634,8 @@ enum class eSpecType {
 	IF_SDF_EQ = 155,
 	IF_CONTEXT = 156,
 	IF_NUM_RESPONSE = 157,
+	IF_IN_BOAT = 158,
+	IF_ON_HORSE = 159,
 	MAKE_TOWN_HOSTILE = 170,
 	TOWN_RUN_MISSILE = 171,
 	TOWN_MONST_ATTACK = 172,
@@ -695,7 +697,7 @@ inline eSpecCat getNodeCategory(eSpecType node) {
 		return eSpecCat::ONCE;
 	if(code >= 80 && code <= 105)
 		return eSpecCat::AFFECT;
-	if(code >= 130 && code <= 157)
+	if(code >= 130 && code <= 159)
 		return eSpecCat::IF_THEN;
 	if(code >= 170 && code <= 199)
 		return eSpecCat::TOWN;

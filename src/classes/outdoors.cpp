@@ -80,8 +80,8 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 						int found_spec_id = special_id[found_spec], use_slot = unused_special_slots.back();
 						unused_special_slots.pop_back();
 						cSpecial& node = specials[use_slot];
-						node.type = eSpecType::IF_CONTEXT;
-						node.ex1a = 101; // if in boat
+						node.type = eSpecType::IF_IN_BOAT;
+						node.ex1b = -1; // any boat;
 						node.ex1c = -1; // do nothing
 						node.jumpto = found_spec_id; // else jump here
 						special_id[found_spec] = use_slot;

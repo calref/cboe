@@ -1,8 +1,8 @@
-Outdoors
-Town
-Combat
-
-
+Moving (Outdoors)
+Moving (Town)
+Moving (Combat)
+Looking (Outdoors)
+Looking (Town/Combat)
 Entering town
 Leaving town
 Talking
@@ -22,82 +22,3 @@ Attacking at melee
 Being attacked at melee
 Attacking at range
 Being attacked at range
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Looking
-In Boat
-On Horse
