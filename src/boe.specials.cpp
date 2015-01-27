@@ -3481,21 +3481,20 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					if(which_mode == eSpecCtx::ATTACKED_RANGE)
 						*next_spec = spec.ex1c;
 					break;
-					// Past here are special values that don't have an equivalent in eSpecCtx.
-				case 100: // Look (town or out)
-					if(which_mode == eSpecCtx::OUT_LOOK || which_mode == eSpecCtx::TOWN_LOOK)
-						*next_spec = spec.ex1c;
-					break;
-				case 101: // In boat
-					if((spec.ex1b == -1 && univ.party.in_boat >= 0) || spec.ex1b == univ.party.in_boat)
-						*next_spec = spec.ex1c;
-					break;
-				case 102: // On horse
-					if((spec.ex1b == -1 && univ.party.in_horse >= 0) || spec.ex1b == univ.party.in_horse)
-						*next_spec = spec.ex1c;
-					break;
 			}
 			if(j >= 0) *a = j;
+			break;
+		case eSpecType::IF_LOOKING:
+			if(which_mode == eSpecCtx::OUT_LOOK || which_mode == eSpecCtx::TOWN_LOOK)
+				*next_spec = spec.ex1c;
+			break;
+		case eSpecType::IF_IN_BOAT:
+			if((spec.ex1b == -1 && univ.party.in_boat >= 0) || spec.ex1b == univ.party.in_boat)
+				*next_spec = spec.ex1c;
+			break;
+		case eSpecType::IF_ON_HORSE:
+			if((spec.ex1b == -1 && univ.party.in_horse >= 0) || spec.ex1b == univ.party.in_horse)
+				*next_spec = spec.ex1c;
 			break;
 	}
 	if(check_mess) {
