@@ -1514,7 +1514,7 @@ void cast_town_spell(location where) {
 			
 		case eSpell::DISPEL_BARRIER:
 			if((univ.town.is_fire_barr(where.x,where.y)) || (univ.town.is_force_barr(where.x,where.y))) {
-				r1 = get_ran(1,1,100) - 5 * adj + 5 * (univ.town.difficulty / 10);
+				r1 = get_ran(1,1,100) - 5 * adj + 5 * (univ.town.difficulty / 10) + 25 * univ.town->strong_barriers;
 				if(univ.town.is_fire_barr(where.x,where.y))
 					r1 -= 8;
 				if(r1 < (120 - combat_percent[min(19,univ.party[who_cast].level)])) {
