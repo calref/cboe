@@ -27,6 +27,7 @@
 #include "boe.menus.h"
 #include "cursors.hpp"
 #include "prefs.hpp"
+#include "button.hpp"
 
 extern cursor_type arrow_curs[3][3];
 extern cursor_type current_cursor;
@@ -40,6 +41,7 @@ bool first_startup_update = true;
 bool diff_depth_ok = false,first_sound_played = false,spell_forced = false,startup_loaded = false;
 bool save_maps = true,party_in_memory = false;
 std::shared_ptr<cScrollbar> text_sbar, item_sbar, shop_sbar;
+std::shared_ptr<cButton> done_btn, help_btn;
 rectangle sbar_rect = {283,546,421,562};
 rectangle shop_sbar_rect = {67,258,357,274};
 rectangle item_sbar_rect = {146,546,253,562};
@@ -185,6 +187,12 @@ void Initialize(void) {
 	shop_sbar->setMaximum(16);
 	shop_sbar->setPageSize(8);
 	shop_sbar->hide();
+	done_btn.reset(new cButton(mainPtr));
+	done_btn->setBtnType(BTN_DONE);
+	done_btn->hide();
+	help_btn.reset(new cButton(mainPtr));
+	help_btn->setBtnType(BTN_HELP);
+	help_btn->hide();
 	adjust_window_mode();
 }
 

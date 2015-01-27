@@ -14,6 +14,7 @@
 #include "graphtool.hpp"
 #include "soundtool.hpp"
 #include "mathutil.hpp"
+#include "button.hpp"
 
 #include "boe.party.h"
 #include "boe.town.h"
@@ -46,6 +47,7 @@ extern short num_targets_left;
 extern location spell_targets[8];
 extern short display_mode;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
+extern std::shared_ptr<cButton> done_btn, help_btn;
 extern sf::Texture bg_gworld;
 extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect,startup_top;
 extern rectangle talk_area_rect, word_place_rect;
@@ -183,10 +185,12 @@ void adjust_window_mode() {
 		r = windRect;
 	}
 	redraw_screen(REFRESH_NONE);
-	if(text_sbar != NULL) {
+	if(text_sbar) {
 		text_sbar->relocate({ul.x + 546,ul.y + 283});
 		item_sbar->relocate({ul.x + 546,ul.y + 146});
 		shop_sbar->relocate({ul.x + 258,ul.y + 67});
+		done_btn->relocate({ul.x + 217,ul.y + 393});
+		help_btn->relocate({ul.x + 259,ul.y + 10});
 	}
 	init_menubar();
 	showMenuBar();
@@ -597,6 +601,8 @@ void redraw_screen(int refresh) {
 		text_sbar->draw();
 		item_sbar->draw();
 		shop_sbar->draw();
+		done_btn->draw();
+		help_btn->draw();
 	}
 	mainPtr.display();
 }

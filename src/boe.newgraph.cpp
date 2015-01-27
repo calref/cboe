@@ -22,6 +22,7 @@
 #include "location.h"
 #include "shop.hpp"
 #include "spell.hpp"
+#include "button.hpp"
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,
@@ -57,6 +58,7 @@ extern sf::RenderTexture terrain_screen_gworld;
 extern sf::Texture bg_gworld;
 extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
+extern std::shared_ptr<cButton> done_btn, help_btn;
 extern location center;
 extern location store_anim_ul;
 extern char light_area[13][13];
@@ -78,7 +80,7 @@ extern short store_personality,store_personality_graphic,current_pc;
 extern sf::RenderTexture talk_gworld;
 extern bool talk_end_forced;
 extern std::string old_str1,old_str2,one_back1,one_back2;
-extern rectangle talk_area_rect, word_place_rect,talk_help_rect;
+extern rectangle talk_area_rect, word_place_rect;
 extern std::string title_string;
 extern mon_num_t store_monst_type;
 std::vector<word_rect_t> talk_words;
@@ -751,19 +753,6 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	}
 	win_draw_string(talk_gworld,shopper_name,title.str(),eTextMode::LEFT_TOP,style);
 	
-	// Place help and done buttons
-	// TODO: Reimplement these with a cButton
-#if 0
-	help_from = rectangle(dlg_buttons_gworld[3][0]); // help
-	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
-	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item(dlg_buttons_gworld[3][pressed],help_from,talk_gworld,talk_help_rect);
-	help_from = rectangle(dlg_buttons_gworld[11][0]); // done
-	//talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
-	//talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item(dlg_buttons_gworld[11][pressed],help_from,talk_gworld,shop_done_rect);
-#endif
-	
 	if(pressed)
 		style.colour = c[4];
 	else style.colour = sf::Color::Black;
@@ -840,6 +829,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	if(shop_sbar->getMaximum() > 1)
 		shop_sbar->show();
 	else shop_sbar->hide();
+	done_btn->show();
 }
 
 void refresh_shopping() {
@@ -978,12 +968,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	frame_rect(talk_gworld, area_rect, sf::Color::Black);
 	area_rect.inset(1,1);
 	tileImage(talk_gworld, area_rect,bg[12]);
-	
-	// Put help button
-	// TODO: Reimplement this with a cButton
-	talk_help_rect.right = talk_help_rect.left + help_from.right - help_from.left;
-	talk_help_rect.bottom = talk_help_rect.top + help_from.bottom - help_from.top;
-	rect_draw_some_item(invenbtn_gworld, help_from, talk_gworld, talk_help_rect, sf::BlendAlpha);
 	
 	// Place name oftalkee
 	style.colour = c[3];

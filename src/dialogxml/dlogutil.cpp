@@ -381,7 +381,7 @@ void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cB
 		if(!btns[i]) continue;
 		std::ostringstream sout;
 		sout << "btn" << i + 1;
-		cButton* btn = new cButton(me);
+		cButton* btn = new cButton(*me);
 		btn->attachKey(btns[i]->defaultKey);
 		btn->setText(btns[i]->label);
 		btn->setBtnType(btns[i]->type);

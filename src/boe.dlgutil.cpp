@@ -39,6 +39,7 @@ extern short stat_window;
 extern eGameMode overall_mode;
 extern bool play_sounds,give_intro_hint,show_startup_splash,changed_display_mode;
 extern sf::RenderWindow mainPtr;
+extern location ul;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 extern short display_mode,current_pc;
@@ -48,6 +49,7 @@ extern long ed_flag,ed_key;
 extern bool save_maps,give_delays;
 extern location center;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
+extern std::shared_ptr<cButton> done_btn, help_btn;
 extern bool map_visible;
 extern sf::RenderWindow mini_map;
 extern bool game_run_before,skip_boom_delay;
@@ -151,6 +153,8 @@ void end_shop_mode() {
 	// This would be a place to show the text box, if I add it (and if this is not an outdoor shop).
 	
 	shop_sbar->hide();
+	done_btn->hide();
+	help_btn->hide();
 	if(store_pre_shop_mode == 20) {
 		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
 		place_talk_str("You conclude your business.", "", 0, dummy_rect);
@@ -175,20 +179,24 @@ void handle_shop_event(location p) {
 	short i;
 	unsigned long store_what_picked;
 	
-	p.x -= 5;
-	p.y -= 5;
-	
 	if(p.in(talk_help_rect)) {
-		click_shop_rect(talk_help_rect);
+		location loc = {p.x + ul.x, p.y + ul.y};
+		if(!help_btn->handleClick(loc))
+			return;
 		univ.party.help_received[26] = 0;
 		give_help(26,27);
 		return;
 	}
+	
 	if(p.in(shop_done_rect)) {
-		click_shop_rect(shop_done_rect);
-		end_shop_mode();
+		location loc = {p.x + ul.x, p.y + ul.y};
+		if(done_btn->handleClick(loc))
+			end_shop_mode();
 		return;
 	}
+	
+	p.x -= 5;
+	p.y -= 5;
 	
 	for(i = 0; i < 8; i++) {
 		store_what_picked = i + shop_sbar->getPosition();
@@ -464,6 +472,7 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	store_talk_face_pic = store_face_pic; ////
 	area_rect = talk_area_rect;
 	talk_gworld.create(area_rect.width(), area_rect.height());
+	help_btn->show();
 	
 	// This would be the place to show the text box, if I add it.
 	
@@ -500,6 +509,7 @@ void end_talk_mode() {
 		center = univ.town.p_loc;
 		update_explored(center);
 	}
+	help_btn->hide();
 	stat_screen_mode = MODE_INVEN;
 	put_item_screen(stat_window,0);
 	put_pc_screen();
@@ -514,14 +524,17 @@ void handle_talk_event(location p) {
 	short a,b,c,d;
 	eTalkNode ttype;
 	
-	p.x -= 5;
-	p.y -= 5;
-	
 	if(p.in(talk_help_rect)) {
+		location loc = {p.x + ul.x, p.y + ul.y};
+		if(!help_btn->handleClick(loc))
+			return;
 		univ.party.help_received[5] = 0;
 		give_help(5,6);
 		return;
 	}
+	
+	p.x -= 5;
+	p.y -= 5;
 	
 	int which_talk_entry = TALK_DUNNO;
 	for(word_rect_t& word : talk_words) {
