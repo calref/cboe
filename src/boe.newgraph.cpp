@@ -526,7 +526,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 	
 	short t,cur_boom_type = 0;
 	location current_terrain_ul;
-	short boom_type_sound[3] = {5,10,53};
+	short boom_type_sound[4] = {5,10,53,53};
 	
 	if(!have_boom || !boom_anim_active) {
 		boom_anim_active = false;
