@@ -186,7 +186,7 @@ void draw_monsters() {
 			}
 	if(is_town() || is_combat()) {
 		for(i = 0; i < univ.town.monst.size(); i++)
-			if(univ.town.monst[i].active != 0 && !univ.town.monst[i].invisible)
+			if(univ.town.monst[i].active != 0 && !univ.town.monst[i].invisible && univ.town.monst[i].status[eStatus::INVISIBLE] <= 0)
 				if(point_onscreen(center,univ.town.monst[i].cur_loc) && party_can_see_monst(i)) {
 					check_if_monst_seen(univ.town.monst[i].number, univ.town.monst[i].cur_loc);
 					where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;

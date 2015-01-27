@@ -1204,6 +1204,10 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 						break;
 						
 					case eSpell::RESTORE_MIND:
+						if(univ.party[target].status[eStatus::DUMB] <= 0) {
+							sout << " isn't dumbfounded!";
+							break;
+						}
 						sout << " restored.";
 						r1 = 1 + get_ran(1,0,2) + adj / 2;
 						univ.party[target].status[eStatus::DUMB] = max(0,univ.party[target].status[eStatus::DUMB] - r1);
@@ -1698,12 +1702,15 @@ bool pc_can_cast_spell(short pc_num,eSpell spell_num) {
 	eSkill type = (*spell_num).type;
 	
 	level = (*spell_num).level;
+	int effective_skill = univ.party[pc_num].skill(type);
+	if(univ.party[pc_num].status[eStatus::DUMB] < 0)
+		effective_skill -= univ.party[pc_num].status[eStatus::DUMB];
 	
 	if(overall_mode >= MODE_TALKING)
 		return false; // From Windows version. It does kinda make sense, though this function shouldn't even be called in these modes.
 	if(!isMage(spell_num) && !isPriest(spell_num))
 		return false;
-	if(univ.party[pc_num].skill(type) < level)
+	if(effective_skill < level)
 		return false;
 	if(univ.party[pc_num].main_status != eMainStatus::ALIVE)
 		return false;
@@ -2594,10 +2601,14 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		how_much = 0;
 	
 	// Mag. res helps w. fire and cold
-	// TODO: Why doesn't this help with magic damage?
-	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::COLD) &&
-		univ.party[which_pc].status[eStatus::MAGIC_RESISTANCE] > 0)
-		how_much = how_much / 2;
+	// TODO: Why doesn't this help with magic damage!?
+	if(damage_type == eDamageType::FIRE || damage_type == eDamageType::COLD) {
+		int magic_res = univ.party[which_pc].status[eStatus::MAGIC_RESISTANCE];
+		if(magic_res > 0)
+			how_much /= 2;
+		else if(magic_res < 0)
+			how_much *= 2;
+	}
 	
 	// major resistance
 	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::POISON || damage_type == eDamageType::MAGIC || damage_type == eDamageType::COLD)

@@ -2449,6 +2449,10 @@ void do_monster_turn() {
 				cur_monst->spell_note(29);
 			move_to_zero(cur_monst->status[eStatus::ASLEEP]);
 			move_to_zero(cur_monst->status[eStatus::PARALYZED]);
+			move_to_zero(cur_monst->status[eStatus::INVISIBLE]);
+			move_to_zero(cur_monst->status[eStatus::INVULNERABLE]);
+			move_to_zero(cur_monst->status[eStatus::MAGIC_RESISTANCE]);
+			move_to_zero(cur_monst->status[eStatus::MARTYRS_SHIELD]);
 			
 			if(univ.party.age % 2 == 0) {
 				move_to_zero(cur_monst->status[eStatus::BLESS_CURSE]);
@@ -2513,7 +2517,7 @@ void monster_attack(short who_att,iLiving* target) {
 	// Draw attacker frames
 	if((is_combat())
 	   && (center_on_monst || !monsters_going)) {
-		if(!attacker->invisible)
+		if(!attacker->invisible && attacker->status[eStatus::INVISIBLE] <= 0)
 			frame_space(attacker->cur_loc,0,attacker->x_width,attacker->y_width);
 		frame_space(target->get_loc(),1,1,1);
 	}
@@ -2522,10 +2526,13 @@ void monster_attack(short who_att,iLiving* target) {
 	
 	if(attacker->a[0].dice != 0 || attacker->a[1].dice != 0 || attacker->a[2].dice != 0)
 		attacker->print_attacks(target);
+			
+	// Some things depend on whether it's a player or a monster.
+	cCreature* m_target = dynamic_cast<cCreature*>(target);
+	cPlayer* pc_target = dynamic_cast<cPlayer*>(target);
 	
 	// Check sanctuary
-	// TODO: What about monster permanent invisibility?
-	if(target->status[eStatus::INVISIBLE] > 0) {
+	if(target->status[eStatus::INVISIBLE] > 0 || (m_target != nullptr && m_target->invisible)) {
 		r1 = get_ran(1,1,100);
 		if(r1 > hit_chance[attacker->level / 2]) {
 			add_string_to_buf("  Can't find target!");
@@ -2537,10 +2544,6 @@ void monster_attack(short who_att,iLiving* target) {
 		if(attacker->a[i].dice > 0 && target->is_alive()) {
 //			sprintf ((char *) create_line, "  Attacks %s.",(char *) univ.party[target].name);
 //			add_string_to_buf((char *) create_line);
-			
-			// Some things depend on whether it's a player or a monster.
-			cCreature* m_target = dynamic_cast<cCreature*>(target);
-			cPlayer* pc_target = dynamic_cast<cPlayer*>(target);
 			
 			// if target monster friendly to party, make able to attack
 			if(m_target != nullptr && m_target->attitude == 0)
@@ -2602,6 +2605,12 @@ void monster_attack(short who_att,iLiving* target) {
 						add_string_to_buf("  Shares damage!");
 						int who_hit = pc_target != nullptr ? 6 : 7;
 						damage_monst(who_att, who_hit, dmg, eDamageType::MAGIC,0);
+					}
+					
+					if(i == 0 && attacker->status[eStatus::POISONED_WEAPON] > 0) {
+						short poison_amt = attacker->status[eStatus::POISONED_WEAPON];
+						target->poison(poison_amt);
+						move_to_zero(attacker->status[eStatus::POISONED_WEAPON]);
 					}
 					
 					for(auto& abil : attacker->abil) {
@@ -3130,7 +3139,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 	
 	eSpell spell;
 	
-	level = max(1,caster->mu - caster->status[eStatus::DUMB]) - 1;
+	level = minmax(1,7,caster->mu - caster->status[eStatus::DUMB]) - 1;
 	
 	target = find_fireball_loc(caster->cur_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
 	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->cur_loc,3) : -1 * count_levels(caster->cur_loc,3);
@@ -3448,7 +3457,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 	if(univ.town.is_antimagic(caster->cur_loc.x,caster->cur_loc.y)) {
 		return false;
 	}
-	level = max(1,caster->cl - caster->status[eStatus::DUMB]) - 1;
+	level = minmax(1,7,caster->cl - caster->status[eStatus::DUMB]) - 1;
 	
 	eSpell spell;
 	

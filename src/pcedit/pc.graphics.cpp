@@ -503,6 +503,11 @@ void display_party() {
 									win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Resistant",eTextMode::WRAP,style);
 									cur_rect++;
 								}
+							if(univ.party[i].status[eStatus::MAGIC_RESISTANCE] < 0)
+								if(cur_rect <= 9) {
+									win_draw_string(mainPtr,pc_status_rect[cur_rect],"Magic Vulnerable",eTextMode::WRAP,style);
+									cur_rect++;
+								}
 							if(univ.party[i].status[eStatus::WEBS] > 0)
 								if(cur_rect <= 9) {
 									win_draw_string(mainPtr,pc_status_rect[cur_rect],"Webbed",eTextMode::WRAP,style);
@@ -523,6 +528,11 @@ void display_party() {
 									win_draw_string(mainPtr,pc_status_rect[cur_rect],"Dumbfounded",eTextMode::WRAP,style);
 									cur_rect++;
 								}
+							if(univ.party[i].status[eStatus::DUMB] < 0)
+								if(cur_rect <= 9) {
+									win_draw_string(mainPtr,pc_status_rect[cur_rect],"Enlightened",eTextMode::WRAP,style);
+									cur_rect++;
+								}
 							if(univ.party[i].status[eStatus::MARTYRS_SHIELD] > 0)
 								if(cur_rect <= 9) {
 									win_draw_string(mainPtr,pc_status_rect[cur_rect],"Martyr's Shield",eTextMode::WRAP,style);
@@ -531,6 +541,11 @@ void display_party() {
 							if(univ.party[i].status[eStatus::ASLEEP] > 0)
 								if(cur_rect <= 9) {
 									win_draw_string(mainPtr,pc_status_rect[cur_rect],"Asleep",eTextMode::WRAP,style);
+									cur_rect++;
+								}
+							if(univ.party[i].status[eStatus::ASLEEP] < 0)
+								if(cur_rect <= 9) {
+									win_draw_string(mainPtr,pc_status_rect[cur_rect],"Hyperactive",eTextMode::WRAP,style);
 									cur_rect++;
 								}
 							if(univ.party[i].status[eStatus::PARALYZED] > 0)
