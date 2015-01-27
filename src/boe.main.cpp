@@ -462,16 +462,13 @@ void handle_menu_choice(eMenu item_hit) {
 				print_buf();
 				break;
 			}
-			if(univ.town.num == univ.scenario.which_town_start) {
+			if(univ.town->has_tavern) {
 				give_help(56,0);
 				create_pc(6,NULL);
-			}
-			else {
-				// TODO: Allow additional towns to specify that you can make new characters in them
-				// (Otherwise, certain scenarios where you can't return to the start town would prevent you from creating new characters in the scenario.)
-				add_string_to_buf("Add PC: You can only make new");
-				add_string_to_buf("  characters in the town you ");
-				add_string_to_buf("  started in.");
+			} else {
+				add_string_to_buf("Add PC: You cannot add new");
+				add_string_to_buf("  characters in this town.");
+				add_string_to_buf("  Try in the town you started in.");
 			}
 			print_buf();
 			put_pc_screen();

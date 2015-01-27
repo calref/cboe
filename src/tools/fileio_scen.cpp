@@ -150,6 +150,8 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 		}
 		load_town_v1(scenario.scen_file, i, *scenario.towns[i], *temp_scenario);
 	}
+	// Enable character creation in starting town
+	scenario.towns[scenario.which_town_start]->has_tavern = true;
 	
 	delete temp_scenario;
 	delete item_data;

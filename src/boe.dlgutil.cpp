@@ -1161,10 +1161,9 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 		item_hit = item_hit.substr(0, item_hit.length() - 1);
 		if(item_hit == "name") {
 			if(univ.party[which_pc].main_status == eMainStatus::ABSENT) {
-				// TODO: Clicking a blank field made a new PC? Something to consider reinstating!
-				//give_help(56,0,989);
-				//create_pc(which_pc,989);
-				//cd_initial_draw(989); // extra redraw, just in case
+				give_help(56,0,me);
+				create_pc(which_pc,&me);
+				put_party_stats(me);
 			}
 			else pick_pc_name(which_pc,&me);
 			put_party_stats(me);
@@ -1181,7 +1180,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 			put_party_stats(me);
 		} else if(item_hit == "delete") { // Note: This button is also used for "create new PC".
 			if(univ.party[which_pc].main_status != eMainStatus::ABSENT) {
-				if(cChoiceDlog("delete-pc-confirm",{"yes","no"}).show() == "yes")
+				if(cChoiceDlog("delete-pc-confirm",{"yes","no"},&me).show() == "yes")
 					univ.party[which_pc].main_status = eMainStatus::ABSENT;
 				put_party_stats(me);
 			}

@@ -17,8 +17,8 @@
 	<field name='exit3-y' top='285' left='371' width='39' height='16'/>
 	<field name='exit4-x' top='312' left='323' width='39' height='16'/>
 	<field name='exit4-y' top='312' left='371' width='39' height='16'/>
-	<button name='okay' type='regular' top='380' left='452'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='380' left='386'>Cancel</button>
+	<button name='okay' type='regular' top='397' left='452'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='397' left='386'>Cancel</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Advanced town details</text>
 	<text top='25' left='50' width='439' height='40'>
@@ -64,4 +64,5 @@
 	<led name='nomap' font='plain' top='353' left='50' width='200'>No automap in this town</led>
 	<led name='noscry' font='plain' top='370' left='50' width='200'>Defy scrying (Magic Map doesn't work)</led>
 	<led name='barrier' font='plain' top='387' left='50' width='220'>Magical barriers are stronger in this town</led>
+	<led name='tavern' font='plain' top='404' left='50' width='220'>You can create new PCs in this town</led>
 </dialog>
