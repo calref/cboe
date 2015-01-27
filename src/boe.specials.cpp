@@ -1408,11 +1408,12 @@ bool damage_monst(short which_m, short who_hit, short how_much, eDamageType dam_
 	if(boom_anim_active) {
 		if(how_much < 0)
 			how_much = 0;
-		// TODO: Also, if it's magic, use boom type 3 (must implement in the animation engine first)
 		// It would also be nice to have a special boom type for cold.
 		short boom_type = 2;
 		if(dam_type == eDamageType::FIRE)
 			boom_type = 0;
+		else if(dam_type == eDamageType::MAGIC)
+			boom_type = 3;
 		univ.town.monst[which_m].marked_damage += how_much;
 		add_explosion(victim->cur_loc,how_much,0,boom_type,14 * (victim->x_width - 1),18 * (victim->y_width - 1));
 		// Note: Windows version printed an "undamaged" message here if applicable, but I don't think that's right.
@@ -3587,10 +3588,12 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				set_terrain(l,univ.scenario.ter_types[ter].flag1.u);
 			*redraw = 1;
 			break;
-		case eSpecType::TOWN_SFX_BURST: // TODO: Add a "random offset" mode
+		case eSpecType::TOWN_SFX_BURST:
 			if(which_mode == eSpecCtx::TALK)
 				break;
-			run_a_boom(l,spec.ex2a,0,0);
+			if(spec.ex2b == 1)
+				mondo_boom(l,spec.ex2a);
+			else run_a_boom(l,spec.ex2a,0,0);
 			break;
 		case eSpecType::TOWN_CREATE_WANDERING:
 			create_wand_monst();

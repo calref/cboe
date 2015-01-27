@@ -154,7 +154,7 @@ X coordinate of space
 Y coordinate of space
 Unused
 0 - fire, 1 - elec., 2 - telep.
-Unused
+0 - normal, 1 - huge
 Unused
 Special to Jump To
 --------------------

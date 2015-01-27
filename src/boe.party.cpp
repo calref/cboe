@@ -2614,11 +2614,12 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		if(how_much < 0)
 			how_much = 0;
 		univ.party[which_pc].marked_damage += how_much;
-		// TODO: Also, if it's magic, use boom type 3 (must implement in the animation engine first)
 		// It would also be nice to have a special boom type for cold.
 		short boom_type = 2;
 		if(damage_type == eDamageType::FIRE)
 			boom_type = 0;
+		else if(damage_type == eDamageType::MAGIC)
+			boom_type = 3;
 		if(is_town())
 			add_explosion(univ.town.p_loc,how_much,0,boom_type,0,0);
 		else add_explosion(univ.party[which_pc].combat_pos,how_much,0,boom_type,0,0);
