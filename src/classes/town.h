@@ -94,7 +94,8 @@ public:
 	bool defy_mapping : 1;
 	bool defy_scrying : 1;
 	bool is_hidden : 1;
-	char : 4;
+	bool has_tavern : 1;
+	char : 3;
 	short difficulty;
 	std::string town_name;
 	// Using std::array here so we can have .size()

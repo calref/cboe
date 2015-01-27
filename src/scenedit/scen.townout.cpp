@@ -814,6 +814,7 @@ static bool save_advanced_town(cDialog& me, std::string, eKeyMod) {
 	town->defy_mapping = dynamic_cast<cLed&>(me["nomap"]).getState() != led_off;
 	town->defy_scrying = dynamic_cast<cLed&>(me["noscry"]).getState() != led_off;
 	town->strong_barriers = dynamic_cast<cLed&>(me["barrier"]).getState() != led_off;
+	town->has_tavern = dynamic_cast<cLed&>(me["tavern"]).getState() != led_off;
 	return true;
 }
 
@@ -834,6 +835,7 @@ static void put_advanced_town_in_dlog(cDialog& me) {
 	dynamic_cast<cLed&>(me["nomap"]).setState(town->defy_mapping ? led_red : led_off);
 	dynamic_cast<cLed&>(me["noscry"]).setState(town->defy_scrying ? led_red : led_off);
 	dynamic_cast<cLed&>(me["barrier"]).setState(town->strong_barriers ? led_red : led_off);
+	dynamic_cast<cLed&>(me["tavern"]).setState(town->has_tavern ? led_red : led_off);
 }
 
 static bool edit_advanced_town_special(cDialog& me, std::string hit, eKeyMod) {
