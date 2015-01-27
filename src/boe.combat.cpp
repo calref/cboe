@@ -4931,6 +4931,13 @@ void process_fields() {
 			for(i = r.left + 1; i < r.right ; i++)
 				for(j = r.top + 1; j < r.bottom ; j++)
 					if(qf[i][j] > 0) {
+						ter_num_t ter = univ.town->terrain(i,j);
+						if(univ.scenario.ter_types[ter].special == eTerSpec::CRUMBLING && univ.scenario.ter_types[ter].flag3.u > 0) {
+							// TODO: This seems like the wrong sound
+							play_sound(60);
+							univ.town->terrain(i,j) = univ.scenario.ter_types[ter].flag1.u;
+							add_string_to_buf("  Quickfire burns through barrier.");
+						}
 						univ.town.set_quickfire(i,j,true);
 					}
 		}

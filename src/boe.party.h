@@ -14,7 +14,7 @@ void award_xp(short pc_num,short amt);
 void drain_pc(short which_pc,short how_much);
 short check_party_stat(eSkill which_stat, short mode);
 bool poison_weapon( short pc_num, short how_much,short safe);
-bool is_weapon(short pc_num,short item);
+bool is_poisonable_weap(short pc_num,short item);
 void cast_spell(eSkill type);
 bool repeat_cast_ok(eSkill type);
 void give_party_spell(short which);
