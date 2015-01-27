@@ -387,8 +387,8 @@ void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::stri
 	}
 }
 
-short string_length(std::string str, TextStyle style, short* height){
-	short total_width = 0;
+size_t string_length(std::string str, TextStyle style, short* height){
+	size_t total_width = 0;
 	
 	sf::Text text;
 	style.applyTo(text);

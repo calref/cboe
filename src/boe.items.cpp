@@ -110,12 +110,12 @@ void equip_item(short pc_num,short item_num) {
 		// unequip
 		if(univ.party[pc_num].equip[item_num]) {
 			if(univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
-				add_string_to_buf("Equip: Item is cursed.           ");
+				add_string_to_buf("Equip: Item is cursed.");
 			else {
 				univ.party[pc_num].equip[item_num] = false;
 				add_string_to_buf("Equip: Unequipped");
 				if(univ.party[pc_num].weap_poisoned == item_num && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0) {
-					add_string_to_buf("  Poison lost.           ");
+					add_string_to_buf("  Poison lost.");
 					univ.party[pc_num].status[eStatus::POISONED_WEAPON] = 0;
 				}
 			}
@@ -138,8 +138,7 @@ void equip_item(short pc_num,short item_num) {
 				if(equip_item_type > 0) {
 					for(i = 0; i < 24; i++)
 						if((univ.party[pc_num].equip[i]) && (excluding_types[univ.party[pc_num].items[i].variety] == equip_item_type)) {
-							add_string_to_buf("Equip: You have something of");
-							add_string_to_buf("  this type equipped.");
+							add_string_to_buf("Equip: You have something of this type equipped.", 2);
 							return;
 						}
 				}
@@ -174,7 +173,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 	item_store = univ.party[pc_num].items[item_num];
 	
 	if(univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
-		add_string_to_buf("Drop: Item is cursed.           ");
+		add_string_to_buf("Drop: Item is cursed.");
 	else switch(overall_mode) {
 		case MODE_OUTDOORS:
 			choice = cChoiceDlog("drop-item-confirm",{"okay","cancel"}).show();
@@ -247,7 +246,7 @@ void give_thing(short pc_num, short item_num) {
 	bool take_given_item = true;
 	
 	if(univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
-		add_string_to_buf("Give: Item is cursed.           ");
+		add_string_to_buf("Give: Item is cursed.");
 	else {
 		item_store = univ.party[pc_num].items[item_num];
 		who_to = char_select_pc(3,"Give item to who?");

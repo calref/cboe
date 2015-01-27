@@ -186,7 +186,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
 	   && (univ.town.is_special(where_check.x,where_check.y))) {
 		if(univ.town.is_force_barr(where_check.x,where_check.y)) {
-			add_string_to_buf("  Magic barrier!               ");
+			add_string_to_buf("  Magic barrier!");
 			return false;
 		}
 		if(univ.town.is_force_cage(where_check.x,where_check.y)) {
@@ -228,7 +228,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		check_fields(where_check,mode,which_pc);
 		
 		if(univ.town.is_web(where_check.x,where_check.y)) {
-			add_string_to_buf("  Webs!               ");
+			add_string_to_buf("  Webs!");
 			if(mode != eSpecCtx::COMBAT_MOVE) {
 				for(i = 0; i < 6; i++) {
 					r1 = get_ran(1,2,3);
@@ -240,11 +240,11 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			univ.town.set_web(where_check.x,where_check.y,false);
 		}
 		if(univ.town.is_force_barr(where_check.x,where_check.y)) {
-			add_string_to_buf("  Magic barrier!               ");
+			add_string_to_buf("  Magic barrier!");
 			can_enter = false;
 		}
 		if(univ.town.is_force_cage(where_check.x,where_check.y)) {
-			add_string_to_buf("  Force cage!               ");
+			add_string_to_buf("  Force cage!");
 			can_enter = false;
 		}
 		if(univ.town.is_crate(where_check.x,where_check.y)) {
@@ -475,19 +475,19 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 	if(is_out())
 		return;
 	if(univ.town.is_fire_wall(where_check.x,where_check.y)) {
-		add_string_to_buf("  Fire wall!               ");
+		add_string_to_buf("  Fire wall!");
 		r1 = get_ran(1,1,6) + 1;
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 	}
 	if(univ.town.is_force_wall(where_check.x,where_check.y)) {
-		add_string_to_buf("  Force wall!               ");
+		add_string_to_buf("  Force wall!");
 		r1 = get_ran(2,1,6);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 	}
 	if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
-		add_string_to_buf("  Ice wall!               ");
+		add_string_to_buf("  Ice wall!");
 		r1 = get_ran(2,1,6);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::COLD,eRace::UNKNOWN,0);
@@ -495,28 +495,28 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 			boom_space(univ.party.p_loc,overall_mode,4,r1,7);
 	}
 	if(univ.town.is_blade_wall(where_check.x,where_check.y)) {
-		add_string_to_buf("  Blade wall!               ");
+		add_string_to_buf("  Blade wall!");
 		r1 = get_ran(4,1,8);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 	}
 	if(univ.town.is_quickfire(where_check.x,where_check.y)) {
-		add_string_to_buf("  Quickfire!               ");
+		add_string_to_buf("  Quickfire!");
 		r1 = get_ran(2,1,8);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(i_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 	}
 	if(univ.town.is_scloud(where_check.x,where_check.y)) {
-		add_string_to_buf("  Stinking cloud!               ");
+		add_string_to_buf("  Stinking cloud!");
 		univ.party[current_pc].curse(get_ran(1,2,3));
 	}
 	if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
-		add_string_to_buf("  Sleep cloud!               ");
+		add_string_to_buf("  Sleep cloud!");
 		univ.party[current_pc].sleep(eStatus::ASLEEP,3,0);
 		put_pc_screen();
 	}
 	if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
-		add_string_to_buf("  Magic barrier!               ");
+		add_string_to_buf("  Magic barrier!");
 		r1 = get_ran(2,1,10);
 		if(is_town()) fast_bang = 1;
 		if(mode == eSpecCtx::COMBAT_MOVE)
@@ -590,31 +590,31 @@ void use_item(short pc,short item) {
 		user_loc = univ.party[current_pc].combat_pos;
 	
 	if(item_use_code == 0) {
-		add_string_to_buf("Use: Can't use this item.       ");
+		add_string_to_buf("Use: Can't use this item.");
 		take_charge = false;
 	}
 	if(univ.party[pc].traits[eTrait::MAGICALLY_INEPT] && !inept_ok){
-		add_string_to_buf("Use: Can't - magically inept.       ");
+		add_string_to_buf("Use: Can't - magically inept.");
 		take_charge = false;
 	}
 	
 	// 0 - can't use 1 - combat only 2 - town only 3 - town & combat only  4 - everywhere  5 - outdoor
 	if(take_charge) {
 		if(overall_mode == MODE_OUTDOORS && item_use_code < 4) {
-			add_string_to_buf("Use: Not while outdoors.         ");
+			add_string_to_buf("Use: Not while outdoors.");
 			take_charge = false;
 		}
 		// TODO: Almost all of these look wrong!
 		if((overall_mode == MODE_TOWN) && (item_use_code == 1)) {
-			add_string_to_buf("Use: Not while in town.         ");
+			add_string_to_buf("Use: Not while in town.");
 			take_charge = false;
 		}
 		if((overall_mode == MODE_COMBAT) && (item_use_code == 2)) {
-			add_string_to_buf("Use: Not in combat.         ");
+			add_string_to_buf("Use: Not in combat.");
 			take_charge = false;
 		}
 		if((overall_mode != MODE_OUTDOORS) && (item_use_code == 5)){
-			add_string_to_buf("Use: Only outdoors.           ");
+			add_string_to_buf("Use: Only outdoors.");
 			take_charge = false;
 		}
 	}
@@ -967,13 +967,13 @@ void use_item(short pc,short item) {
 					case ePartyStatus::DETECT_LIFE: ASB("  You detect  life."); break;
 					case ePartyStatus::FLIGHT:
 						if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
-							add_string_to_buf("  Not while already flying.          ");
+							add_string_to_buf("  Not while already flying.");
 							take_charge = false;
 						} else if(univ.party.in_boat >= 0) {
-							add_string_to_buf("  Leave boat first.             ");
+							add_string_to_buf("  Leave boat first.");
 							take_charge = false;
 						} else if(univ.party.in_horse >= 0) {
-							add_string_to_buf("  Leave horse first.             ");
+							add_string_to_buf("  Leave horse first.");
 							take_charge = false;
 						} else ASB("  You rise into the air!");
 						break;
@@ -1192,7 +1192,7 @@ bool adj_town_look(location where) {
 				if(where == univ.town->special_locs[i]) {
 					if(get_blockage(univ.town->terrain(where.x,where.y)) > 0) {
 						// tell party you find something, if looking at a space they can't step in
-						add_string_to_buf("  Search: You find something!          ");
+						add_string_to_buf("  Search: You find something!");
 					}
 					
 					run_special(eSpecCtx::TOWN_LOOK,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
@@ -1207,11 +1207,10 @@ bool adj_town_look(location where) {
 		get_item(where,6,true);
 	}else if(univ.scenario.ter_types[terrain].special == eTerSpec::CHANGE_WHEN_USED ||
 			 univ.scenario.ter_types[terrain].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
-		add_string_to_buf("  (Use this space to do something");
-		add_string_to_buf("  with it.)");
+		add_string_to_buf("  (Use this space to do something with it.)", 2);
 	}else{
 		if(!got_special)
-			add_string_to_buf("  Search: You don't find anything.          ");
+			add_string_to_buf("  Search: You don't find anything.");
 		return false;
 	}
 	return false;
@@ -1483,7 +1482,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, eDamageType dam_
 	
 	if((victim->attitude % 2 != 1) && (who_hit < 7) &&
 		((processing_fields && !monsters_going) || (processing_fields && !PSD[SDF_HOSTILES_PRESENT]))) {
-		add_string_to_buf("Damaged an innocent.           ");
+		add_string_to_buf("Damaged an innocent.");
 		victim->attitude = 1;
 		make_town_hostile();
 	}
@@ -2035,9 +2034,9 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			get_strs(str1,str2, cur_spec_type,cur_node.m1 + mess_adj[cur_spec_type],
 					 cur_node.m2 + mess_adj[cur_spec_type]);
 			if(cur_node.m1 >= 0)
-				ASB(str1.c_str(), 4);
+				add_string_to_buf(str1, 4);
 			if(cur_node.m2 >= 0)
-				ASB(str2.c_str(), 4);
+				add_string_to_buf(str2, 4);
 			break;
 		case eSpecType::FLIP_SDF:
 			setsd(cur_node.sd1,cur_node.sd2,
@@ -2871,9 +2870,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::AFFECT_PARTY_STATUS:
 			if(spec.ex2a < 0 || spec.ex2a > 3) break;
 			if(spec.ex2a == 1 && univ.party.in_boat >= 0)
-				add_string_to_buf("  Can't fly when on a boat. ");
-			else if(spec.ex2a == 1 && univ.party.in_horse >= 0)////
-				add_string_to_buf("  Can't fly when on a horse.  ");
+				add_string_to_buf("  Can't fly when on a boat.");
+			else if(spec.ex2a == 1 && univ.party.in_horse >= 0)
+				add_string_to_buf("  Can't fly when on a horse.");
 			r1 = univ.party.status[ePartyStatus(spec.ex2a)];
 			r1 = minmax(0,250,r1 + spec.ex1a);
 			univ.party.status[ePartyStatus::STEALTH] = r1;

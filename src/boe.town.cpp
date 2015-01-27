@@ -1099,7 +1099,7 @@ void dump_gold(short print_mes) {
 		univ.party.gold = 30000;
 		if(print_mes == 1) {
 			put_pc_screen();
-			add_string_to_buf("Excess gold dropped.            ");
+			add_string_to_buf("Excess gold dropped.");
 			print_buf();
 		}
 	}
@@ -1107,7 +1107,7 @@ void dump_gold(short print_mes) {
 		univ.party.food = 25000;
 		if(print_mes == 1) {
 			put_pc_screen();
-			add_string_to_buf("Excess food dropped.            ");
+			add_string_to_buf("Excess food dropped.");
 			print_buf();
 		}
 	}
@@ -1124,7 +1124,7 @@ void pick_lock(location where,short pc_num) {
 	terrain = univ.town->terrain(where.x,where.y);
 	which_item = univ.party[pc_num].has_abil_equip(eItemAbil::LOCKPICKS);
 	if(which_item == 24) {
-		add_string_to_buf("  Need lockpick equipped.        ");
+		add_string_to_buf("  Need lockpick equipped.");
 		return;
 	}
 	
@@ -1144,14 +1144,14 @@ void pick_lock(location where,short pc_num) {
 		r1 = r1 - 12;
 	
 	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
-		add_string_to_buf("  Wrong terrain type.           ");
+		add_string_to_buf("  Wrong terrain type.");
 		return;
 	}
 	unlock_adjust = univ.scenario.ter_types[terrain].flag2.u;
 	if((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
-		add_string_to_buf("  Didn't work.                ");
+		add_string_to_buf("  Didn't work.");
 		if(will_break) {
-			add_string_to_buf("  Pick breaks.                ");
+			add_string_to_buf("  Pick breaks.");
 			univ.party[pc_num].remove_charge(which_item);
 			if(stat_window == pc_num)
 				put_item_screen(stat_window,1);
@@ -1159,7 +1159,7 @@ void pick_lock(location where,short pc_num) {
 		play_sound(41);
 	}
 	else {
-		add_string_to_buf("  Door unlocked.                ");
+		add_string_to_buf("  Door unlocked.");
 		play_sound(9);
 		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1.u;
 	}
@@ -1173,17 +1173,17 @@ void bash_door(location where,short pc_num) {
 	r1 = get_ran(1,1,100) - 15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town.difficulty * 4;
 	
 	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
-		add_string_to_buf("  Wrong terrain type.           ");
+		add_string_to_buf("  Wrong terrain type.");
 		return;
 	}
 	
 	unlock_adjust = univ.scenario.ter_types[terrain].flag2.u;
 	if(unlock_adjust >= 5 || r1 > (unlock_adjust * 15 + 40) || univ.scenario.ter_types[terrain].flag3.u != 1)  {
-		add_string_to_buf("  Didn't work.                ");
+		add_string_to_buf("  Didn't work.");
 		damage_pc(pc_num,get_ran(1,1,4),eDamageType::UNBLOCKABLE,eRace::UNKNOWN,0);
 	}
 	else {
-		add_string_to_buf("  Lock breaks.                ");
+		add_string_to_buf("  Lock breaks.");
 		play_sound(9);
 		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1.u;
 	}

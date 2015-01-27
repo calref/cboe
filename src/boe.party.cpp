@@ -678,22 +678,22 @@ bool poison_weapon( short pc_num, short how_much,short safe) {
 			i = 30;
 		}
 	if(weap == 24) {
-		add_string_to_buf("  No weapon equipped.       ");
+		add_string_to_buf("  No weapon equipped.");
 		return false;
 	}
 	else {
 		p_level = how_much;
-		add_string_to_buf("  You poison your weapon.       ");
+		add_string_to_buf("  You poison your weapon.");
 		r1 = get_ran(1,1,100);
 		// Nimble?
 		if(univ.party[pc_num].traits[eTrait::NIMBLE])
 			r1 -= 6;
 		if((r1 > p_chance[univ.party[pc_num].skill(eSkill::POISON)]) && (safe == 0)) {
-			add_string_to_buf("  Poison put on badly.         ");
+			add_string_to_buf("  Poison put on badly.");
 			p_level = p_level / 2;
 			r1 = get_ran(1,1,100);
 			if(r1 > p_chance[univ.party[pc_num].skill(eSkill::POISON)] + 10) {
-				add_string_to_buf("  You nick yourself.          ");
+				add_string_to_buf("  You nick yourself.");
 				univ.party[pc_num].status[eStatus::POISON] += p_level;
 			}
 		}
@@ -927,9 +927,9 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::MAGIC_MAP:
 			item = univ.party[pc_num].has_abil(eItemAbil::SAPPHIRE);
 			if(item == 24 && !freebie)
-				add_string_to_buf("  You need a sapphire.        ");
+				add_string_to_buf("  You need a sapphire.");
 			else if(univ.town->defy_scrying || univ.town->defy_mapping)
-				add_string_to_buf("  The spell fails.                ");
+				add_string_to_buf("  The spell fails.");
 			else {
 				if(freebie) add_string_to_buf("  You have a vision.");
 				else {
@@ -937,8 +937,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 					if(stat_window == pc_num)
 						put_item_screen(stat_window,1);
 					univ.party[pc_num].cur_sp -= (*spell_num).cost;
-					add_string_to_buf("  As the sapphire dissolves,       ");
-					add_string_to_buf("  you have a vision.               ");
+					add_string_to_buf("  As the sapphire dissolves, you have a vision.", 2);
 				}
 				for(i = 0; i < 64; i++)
 					for(j = 0; j < 64; j++)
@@ -966,17 +965,17 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			
 		case eSpell::FLIGHT:
 			if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
-				add_string_to_buf("  Not while already flying.          ");
+				add_string_to_buf("  Not while already flying.");
 				return;
 			}
 			if(univ.party.in_boat >= 0)
-				add_string_to_buf("  Leave boat first.             ");
+				add_string_to_buf("  Leave boat first.");
 			else if(univ.party.in_horse >= 0) ////
-				add_string_to_buf("  Leave horse first.             ");
+				add_string_to_buf("  Leave horse first.");
 			else {
 				if(!freebie)
 					univ.party[pc_num].cur_sp -= (*spell_num).cost;
-				add_string_to_buf("  You start flying!               ");
+				add_string_to_buf("  You start flying!");
 				univ.party.status[ePartyStatus::FLIGHT] = 3;
 			}
 			break;
@@ -1048,7 +1047,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::RITUAL_SANCTIFY:
-			add_string_to_buf("  Sanctify which space?               ");
+			add_string_to_buf("  Sanctify which space?");
 			start_town_targeting(spell_num,pc_num,freebie);
 			break;
 			
@@ -1096,7 +1095,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::MOVE_MOUNTAINS: case eSpell::MOVE_MOUNTAINS_MASS:
-			add_string_to_buf("  Destroy what?               ");
+			add_string_to_buf("  Destroy what?");
 			start_town_targeting(spell_num,pc_num,freebie, spell_num == eSpell::MOVE_MOUNTAINS ? PAT_SINGLE : PAT_SQ);
 			break;
 			
@@ -1105,21 +1104,21 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::DETECT_LIFE:
-			add_string_to_buf("  Monsters now on map.                ");
+			add_string_to_buf("  Monsters now on map.");
 			univ.party.status[ePartyStatus::DETECT_LIFE] += 6 + get_ran(1,0,6);
 			clear_map();
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 		case eSpell::FIREWALK:
-			add_string_to_buf("  You are now firewalking.                ");
+			add_string_to_buf("  You are now firewalking.");
 			univ.party.status[ePartyStatus::FIREWALK] += univ.party[pc_num].level / 12 + 2;
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 			
 		case eSpell::SHATTER:
-			add_string_to_buf("  You send out a burst of energy. ");
+			add_string_to_buf("  You send out a burst of energy.");
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			for(loc.x = where.x - 1;loc.x < where.x + 2; loc.x++)
@@ -1130,15 +1129,15 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			
 		case eSpell::WORD_RECALL:
 			if(overall_mode > MODE_OUTDOORS) {
-				add_string_to_buf("  Can only cast outdoors. ");
+				add_string_to_buf("  Can only cast outdoors.");
 				return;
 			}
 			if(univ.party.in_boat >= 0) {
-				add_string_to_buf("  Not while in boat. ");
+				add_string_to_buf("  Not while in boat.");
 				return;
 			}
 			if(univ.party.in_horse >= 0) {////
-				add_string_to_buf("  Not while on horseback. ");
+				add_string_to_buf("  Not while on horseback.");
 				return;
 			}
 			if(!freebie)
@@ -1422,7 +1421,7 @@ void cast_town_spell(location where) {
 		return; // The special node intercepted and cancelled regular spell behaviour.
 	
 	if(adjust > 4)
-		add_string_to_buf("  Can't see target.       ");
+		add_string_to_buf("  Can't see target.");
 	else switch(town_spell) {
 		case eSpell::NONE: // Not a spell but a special node targeting
 			run_special(eSpecCtx::TARGET, 2, spell_caster, where, &r1, &adjust, &store);
@@ -1442,12 +1441,12 @@ void cast_town_spell(location where) {
 			break;
 			
 		case eSpell::DISPEL_FIELD: case eSpell::DISPEL_SPHERE: case eSpell::DISPEL_SQUARE:
-			add_string_to_buf("  You attempt to dispel.              ");
+			add_string_to_buf("  You attempt to dispel.");
 			place_spell_pattern(current_pat,where,FIELD_DISPEL,7);
 			break;
 		case eSpell::MOVE_MOUNTAINS:
 		case eSpell::MOVE_MOUNTAINS_MASS:
-			add_string_to_buf("  You blast the area.              ");
+			add_string_to_buf("  You blast the area.");
 			place_spell_pattern(current_pat, where, FIELD_SMASH, 7);
 			update_explored(univ.town.p_loc);
 			break;
@@ -1458,7 +1457,7 @@ void cast_town_spell(location where) {
 			}
 			univ.town.set_fire_barr(where.x,where.y,true);
 			if(univ.town.is_fire_barr(where.x,where.y))
-				add_string_to_buf("  You create the barrier.              ");
+				add_string_to_buf("  You create the barrier.");
 			else add_string_to_buf("  Failed.");
 			break;
 		case eSpell::BARRIER_FORCE:
@@ -1468,18 +1467,18 @@ void cast_town_spell(location where) {
 			}
 			univ.town.set_force_barr(where.x,where.y,true);
 			if(univ.town.is_force_barr(where.x,where.y))
-				add_string_to_buf("  You create the barrier.              ");
+				add_string_to_buf("  You create the barrier.");
 			else add_string_to_buf("  Failed.");
 			break;
 		case eSpell::QUICKFIRE:
 			univ.town.set_quickfire(where.x,where.y,true);
 			if(univ.town.is_quickfire(where.x,where.y))
-				add_string_to_buf("  You create quickfire.              ");
+				add_string_to_buf("  You create quickfire.");
 			else add_string_to_buf("  Failed.");
 			break;
 			
 		case eSpell::ANTIMAGIC:
-			add_string_to_buf("  You create an antimagic cloud.              ");
+			add_string_to_buf("  You create an antimagic cloud.");
 			for(loc.x = 0; loc.x < univ.town->max_dim(); loc.x++)
 				for(loc.y = 0; loc.y < univ.town->max_dim(); loc.y++)
 					if(dist(where,loc) <= 2 && can_see(where,loc,sight_obscurity) < 5 &&
@@ -1501,16 +1500,16 @@ void cast_town_spell(location where) {
 					r1 += univ.scenario.ter_types[ter].flag2.u * 7;
 				}
 				if(r1 < (135 - combat_percent[min(19,univ.party[who_cast].level)])) {
-					add_string_to_buf("  Door unlocked.                 ");
+					add_string_to_buf("  Door unlocked.");
 					play_sound(9);
 					univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1.u;
 				}
 				else {
 					play_sound(41);
-					add_string_to_buf("  Didn't work.                  ");
+					add_string_to_buf("  Didn't work.");
 				}
 			}else
-				add_string_to_buf("  Wrong terrain type.               ");
+				add_string_to_buf("  Wrong terrain type.");
 			break;
 			
 		case eSpell::DISPEL_BARRIER:
@@ -1519,7 +1518,7 @@ void cast_town_spell(location where) {
 				if(univ.town.is_fire_barr(where.x,where.y))
 					r1 -= 8;
 				if(r1 < (120 - combat_percent[min(19,univ.party[who_cast].level)])) {
-					add_string_to_buf("  Barrier broken.                 ");
+					add_string_to_buf("  Barrier broken.");
 					univ.town.set_fire_barr(where.x,where.y,false);
 					univ.town.set_force_barr(where.x,where.y,false);
 					
@@ -1529,7 +1528,7 @@ void cast_town_spell(location where) {
 				else {
 					store = get_ran(1,0,1);
 					play_sound(41);
-					add_string_to_buf("  Didn't work.                  ");
+					add_string_to_buf("  Didn't work.");
 				}
 			} else if(univ.town.is_force_cage(where.x,where.y)) {
 				add_string_to_buf("  Cage broken.");
@@ -2297,7 +2296,7 @@ void do_alchemy() {
 		
 		r1 = get_ran(1,1,100);
 		if(r1 < fail_chance[univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p]]) {
-			add_string_to_buf("Alchemy: Failed.               ");
+			add_string_to_buf("Alchemy: Failed.");
 			r1 = get_ran(1,0,1);
 			play_sound(41 );
 		}
@@ -2309,11 +2308,10 @@ void do_alchemy() {
 				store_i.charges++;
 			store_i.graphic_num += get_ran(1,0,2);
 			if(!univ.party[pc_num].give_item(store_i,false)) {
-				ASB("No room in inventory.");
-				ASB("  Potion placed on floor.");
+				add_string_to_buf("No room in inventory. Potion placed on floor.", 2);
 				place_item(store_i,univ.town.p_loc,true);
 			}
-			else add_string_to_buf("Alchemy: Successful.             ");
+			else add_string_to_buf("Alchemy: Successful.");
 		}
 		put_item_screen(stat_window,0);
 	}
@@ -2656,7 +2654,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 		univ.party[which_pc].cur_health = 0;
 	else // Check if PC can die
 		if(how_much > 25) {
-			add_string_to_buf("  " + univ.party[which_pc].name + " is obliterated.  ");
+			add_string_to_buf("  " + univ.party[which_pc].name + " is obliterated.");
 			kill_pc(which_pc, eMainStatus::DUST);
 		}
 		else {
@@ -2709,7 +2707,7 @@ void kill_pc(short which_pc,eMainStatus type) {
 	int luck = univ.party[which_pc].skill(eSkill::LUCK);
 	if(!no_save && type != eMainStatus::ABSENT && luck > 0 &&
 	   get_ran(1,1,100) < hit_chance[luck]) {
-		add_string_to_buf("  But you luck out!          ");
+		add_string_to_buf("  But you luck out!");
 		univ.party[which_pc].cur_health = 0;
 	}
 	else if(i == 24 || type == eMainStatus::ABSENT) {
@@ -2738,7 +2736,7 @@ void kill_pc(short which_pc,eMainStatus type) {
 		univ.party[which_pc].ap = 0;
 	}
 	else {
-		add_string_to_buf("  Life saved!              ");
+		add_string_to_buf("  Life saved!");
 		univ.party[which_pc].take_item(i);
 		univ.party[which_pc].heal(200);
 	}

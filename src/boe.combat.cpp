@@ -593,7 +593,7 @@ void pc_attack(short who_att,iLiving* target) {
 	if(store_hp - target->get_health() > 0) {
 		if(target->is_shielded()) {
 			int how_much = target->get_shared_dmg(store_hp - target->get_health());
-			add_string_to_buf("  Shares damage!   ");
+			add_string_to_buf("  Shares damage!");
 			damage_pc(who_att, how_much, eDamageType::MAGIC,eRace::UNKNOWN,0);
 		}
 	}
@@ -878,11 +878,11 @@ void place_target(location target) {
 	
  	if(num_targets_left > 0) {
 		if(loc_off_act_area(target)) {
-			add_string_to_buf("  Space not in town.           ");
+			add_string_to_buf("  Space not in town.");
 			return;
 		}
 		if(can_see_light(univ.party[current_pc].combat_pos,target,sight_obscurity) > 4) {
-			add_string_to_buf("  Can't see target.           ");
+			add_string_to_buf("  Can't see target.");
 			return;
 		}
 		if(dist(univ.party[current_pc].combat_pos,target) > (*spell_being_cast).range)  {
@@ -890,7 +890,7 @@ void place_target(location target) {
 			return;
 		}
 		if(sight_obscurity(target.x,target.y) == 5 && spell_being_cast != eSpell::DISPEL_BARRIER) {
-			add_string_to_buf("  Target space obstructed.           ");
+			add_string_to_buf("  Target space obstructed.");
 			return;
 		}
 		if(univ.town.is_antimagic(target.x,target.y)) {
@@ -1002,15 +1002,15 @@ void do_combat_cast(location target) {
 			}
 			
 			if((adjust = can_see_light(caster.combat_pos,target,sight_obscurity)) > 4) {
-				add_string_to_buf("  Can't see target.           ");
+				add_string_to_buf("  Can't see target.");
 			}
 			else if(loc_off_act_area(target)) {
-				add_string_to_buf("  Space not in town.           ");
+				add_string_to_buf("  Space not in town.");
 			}
 			else if(dist(caster.combat_pos,target) > (*spell_being_cast).range)
 				add_string_to_buf("  Target out of range.");
 			else if(sight_obscurity(target.x,target.y) == 5 && spell_being_cast != eSpell::DISPEL_BARRIER)
-				add_string_to_buf("  Target space obstructed.           ");
+				add_string_to_buf("  Target space obstructed.");
 			else if(univ.town.is_antimagic(target.x,target.y))
 				add_string_to_buf("  Target in antimagic field.");
 			else {
@@ -1066,7 +1066,7 @@ void do_combat_cast(location target) {
 						hit_space(target,r1,eDamageType::FIRE,true,true);
 						univ.town.set_fire_barr(target.x,target.y,true);
 						if(univ.town.is_fire_barr(target.x,target.y))
-							add_string_to_buf("  You create the barrier.              ");
+							add_string_to_buf("  You create the barrier.");
 						else add_string_to_buf("  Failed.");
 						break;
 					case eSpell::BARRIER_FORCE:
@@ -1075,7 +1075,7 @@ void do_combat_cast(location target) {
 						hit_space(target,r1,eDamageType::FIRE,true,true);
 						univ.town.set_force_barr(target.x,target.y,true);
 						if(univ.town.is_force_barr(target.x,target.y))
-							add_string_to_buf("  You create the barrier.              ");
+							add_string_to_buf("  You create the barrier.");
 						else add_string_to_buf("  Failed.");
 						break;
 						
@@ -1233,7 +1233,7 @@ void do_combat_cast(location target) {
 								
 							default:
 								if(!(victim = univ.target_there(target, TARG_MONST)))
-									add_string_to_buf("  Nobody there                 ");
+									add_string_to_buf("  Nobody there.");
 								else {
 									cCreature* cur_monst = dynamic_cast<cCreature*>(victim);
 									if(cur_monst->attitude % 2 != 1 && spell_being_cast != eSpell::SCRY_MONSTER && spell_being_cast != eSpell::CAPTURE_SOUL)
@@ -1375,14 +1375,14 @@ void do_combat_cast(location target) {
 											
 										case eSpell::TURN_UNDEAD: case eSpell::DISPEL_UNDEAD:
 											if(cur_monst->m_type != eRace::UNDEAD) {
-												add_string_to_buf("  Not undead.                    ");
+												add_string_to_buf("  Not undead.");
 												store_m_type = -1;
 												break;
 											}
 											store_m_type = 8;
 											r1 = get_ran(1,0,90);
 											if(r1 > hit_chance[minmax(0,19,bonus * 2 + level * 4 - (cur_monst->level / 2) + 3)])
-												add_string_to_buf("  Monster resisted.                  ");
+												add_string_to_buf("  Monster resisted.");
 											else {
 												r1 = get_ran((spell_being_cast == eSpell::TURN_UNDEAD) ? 2 : 6, 1, 14);
 												
@@ -1393,13 +1393,13 @@ void do_combat_cast(location target) {
 											
 										case eSpell::RAVAGE_SPIRIT:
 											if(cur_monst->m_type != eRace::DEMON) {
-												add_string_to_buf("  Not a demon.                    ");
+												add_string_to_buf("  Not a demon.");
 												store_m_type = -1;
 												break;
 											}
 											r1 = get_ran(1,1,100);
 											if(r1 > hit_chance[minmax(0,19,level * 4 - cur_monst->level + 10)])
-												add_string_to_buf("  Demon resisted.                  ");
+												add_string_to_buf("  Demon resisted.");
 											else {
 												r1 = get_ran(8 + bonus * 2, 1, 11);
 												//if(PSD[4][0] == 3) // anama
@@ -1484,7 +1484,7 @@ void load_missile() {
 	if(thrown < 24) {
 		missile_inv_slot = thrown;
 		ammo_inv_slot = thrown;
-		add_string_to_buf("Throw: Select a target.        ");
+		add_string_to_buf("Throw: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		overall_mode = MODE_THROWING;
 		current_spell_range = 8;
@@ -1495,19 +1495,19 @@ void load_missile() {
 		else current_pat = single;
 	}
 	else if(((bolts < 24) && (bow < 24)) || ((arrow < 24) && (crossbow < 24)))  {
-		add_string_to_buf("Fire: Wrong ammunition.       ");
+		add_string_to_buf("Fire: Wrong ammunition.");
 	}
 	else if((arrow == 24) && (bow < 24)) {
-		add_string_to_buf("Fire: Equip some arrows.       ");
+		add_string_to_buf("Fire: Equip some arrows.");
 	}
 	else if(crossbow == 24 && bolts < 24) {
-		add_string_to_buf("Fire: Equip some bolts.        ");
+		add_string_to_buf("Fire: Equip some bolts.");
 	}
 	else if((arrow < 24) && (bow < 24)) {
 		missile_inv_slot = bow;
 		ammo_inv_slot = arrow;
 		overall_mode = MODE_FIRING;
-		add_string_to_buf("Fire: Select a target.        ");
+		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
 		if(univ.party[current_pc].items[arrow].ability == eItemAbil::DISTANCE_MISSILE)
@@ -1520,7 +1520,7 @@ void load_missile() {
 		missile_inv_slot = crossbow;
 		ammo_inv_slot = bolts;
 		overall_mode = MODE_FIRING;
-		add_string_to_buf("Fire: Select a target.        ");
+		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
 		if(univ.party[current_pc].items[bolts].ability == eItemAbil::DISTANCE_MISSILE)
@@ -1533,7 +1533,7 @@ void load_missile() {
 		missile_inv_slot = no_ammo;
 		ammo_inv_slot = no_ammo;
 		overall_mode = MODE_FIRING;
-		add_string_to_buf("Fire: Select a target.        ");
+		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
 		if(univ.party[current_pc].items[no_ammo].ability == eItemAbil::DISTANCE_MISSILE)
@@ -1542,7 +1542,7 @@ void load_missile() {
 			current_pat = radius2;
 		else current_pat = single;
 	}
-	else add_string_to_buf("Fire: Equip a missile.       ");
+	else add_string_to_buf("Fire: Equip a missile.");
 }
 
 void fire_missile(location target) {
@@ -1609,13 +1609,13 @@ void fire_missile(location target) {
 	if(dist(missile_firer.combat_pos,target) > range)
 		add_string_to_buf("  Out of range.");
 	else if(can_see_light(missile_firer.combat_pos,target,sight_obscurity) >= 5)
-		add_string_to_buf("  Can't see target.             ");
+		add_string_to_buf("  Can't see target.");
 	else {
 		// First, some missiles do special things
 		if(exploding) {
 			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
 			univ.party[current_pc].void_sanctuary(); // TODO: Is this right?
-			add_string_to_buf("  The arrow explodes!             ");
+			add_string_to_buf("  The arrow explodes!");
 			if(PSD[SDF_GAME_SPEED] == 0)
 				pause(dist(missile_firer.combat_pos,target));
 			else
@@ -1760,8 +1760,7 @@ bool combat_next_step() {
 		set_pc_moves();
 		if((combat_active_pc < 6) && (univ.party[combat_active_pc].ap == 0)){
 			combat_active_pc = 6;
-			ASB("The active character is unable to act!");
-			ASB("The whole party is now active.");
+			ASB("The active character is unable to act! The whole party is now active.", 2);
 		}
 		to_return = true;
 		// Safety valve
@@ -2438,7 +2437,7 @@ void do_monster_turn() {
 		if(cur_monst->active != 0) { // Take care of monster effects
 			if(cur_monst->status[eStatus::ACID] > 0) {  // Acid
 				if(!printed_acid) {
-					add_string_to_buf("Acid:              ");
+					add_string_to_buf("Acid:");
 					printed_acid = true;
 				}
 				r1 = get_ran(cur_monst->status[eStatus::ACID],1,6);
@@ -2458,7 +2457,7 @@ void do_monster_turn() {
 				
 				if(cur_monst->status[eStatus::POISON] > 0) {  // Poison
 					if(!printed_poison) {
-						add_string_to_buf("Poisoned monsters:              ");
+						add_string_to_buf("Poisoned monsters:");
 						printed_poison = true;
 					}
 					r1 = get_ran(cur_monst->status[eStatus::POISON],1,6);
@@ -2467,7 +2466,7 @@ void do_monster_turn() {
 				}
 				if(cur_monst->status[eStatus::DISEASE] > 0) {  // Disease
 					if(!printed_disease) {
-						add_string_to_buf("Diseased monsters:              ");
+						add_string_to_buf("Diseased monsters:");
 						printed_disease = true;
 					}
 					k = get_ran(1,1,5);
@@ -2529,7 +2528,7 @@ void monster_attack(short who_att,iLiving* target) {
 	if(target->status[eStatus::INVISIBLE] > 0) {
 		r1 = get_ran(1,1,100);
 		if(r1 > hit_chance[attacker->level / 2]) {
-			add_string_to_buf("  Can't find target!                 ");
+			add_string_to_buf("  Can't find target!");
 		}
 		return;
 	}
@@ -2600,7 +2599,7 @@ void monster_attack(short who_att,iLiving* target) {
 					
 					if(target->is_shielded()) {
 						int dmg = attacker->get_shared_dmg(store_hp - target->get_health());
-						add_string_to_buf("  Shares damage!                 ");
+						add_string_to_buf("  Shares damage!");
 						int who_hit = pc_target != nullptr ? 6 : 7;
 						damage_monst(who_att, who_hit, dmg, eDamageType::MAGIC,0);
 					}
@@ -4228,7 +4227,7 @@ void do_poison() {
 			if(univ.party[i].status[eStatus::POISON] > 0)
 				some_poison = true;
 	if(some_poison) {
-		add_string_to_buf("Poison:                        ");
+		add_string_to_buf("Poison:");
 		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if(univ.party[i].status[eStatus::POISON] > 0) {
@@ -4258,7 +4257,7 @@ void handle_disease() {
 				disease = true;
 	
 	if(disease) {
-		add_string_to_buf("Disease:                        ");
+		add_string_to_buf("Disease:");
 		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if(univ.party[i].status[eStatus::DISEASE] > 0) {
@@ -4303,7 +4302,7 @@ void handle_acid() {
 				some_acid = true;
 	
 	if(some_acid) {
-		add_string_to_buf("Acid:                        ");
+		add_string_to_buf("Acid:");
 		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if(univ.party[i].status[eStatus::ACID] > 0) {
@@ -4392,11 +4391,11 @@ bool combat_cast_mage_spell() {
 	}
 	store_sp = univ.party[current_pc].cur_sp;
 	if(univ.party[current_pc].cur_sp == 0)
-		add_string_to_buf("Cast: No spell points.        ");
+		add_string_to_buf("Cast: No spell points.");
 	else if(univ.party[current_pc].skill(eSkill::MAGE_SPELLS) == 0)
-		add_string_to_buf("Cast: No mage skill.        ");
+		add_string_to_buf("Cast: No mage skill.");
 	else if(get_encumberance(current_pc) > 1) {
-		add_string_to_buf("Cast: Too encumbered.        ");
+		add_string_to_buf("Cast: Too encumbered.");
 		take_ap(6);
 		give_help(40,0);
 		return true;
@@ -4418,7 +4417,7 @@ bool combat_cast_mage_spell() {
 				return false;
 			get_monst = univ.scenario.scen_monsters[store_sum_monst];
 			if(store_sp < get_monst.level) {
-				add_string_to_buf("Cast: Not enough spell points.        ");
+				add_string_to_buf("Cast: Not enough spell points.");
 				return false;
 			}
 			store_sum_monst_cost = get_monst.level;
@@ -4602,10 +4601,10 @@ bool combat_cast_priest_spell() {
 	
 	store_sp = univ.party[current_pc].cur_sp;
 	if(univ.party[current_pc].cur_sp == 0) {
-		add_string_to_buf("Cast: No spell points.        ");
+		add_string_to_buf("Cast: No spell points.");
 		return false;
 	} else if(univ.party[current_pc].skill(eSkill::PRIEST_SPELLS) == 0) {
-		add_string_to_buf("Cast: No priest skill.        ");
+		add_string_to_buf("Cast: No priest skill.");
 		return false;
 	}
 	
@@ -4614,7 +4613,7 @@ bool combat_cast_priest_spell() {
 	combat_posing_monster = current_working_monster = current_pc;
 	
 	if(univ.party[current_pc].cur_sp == 0)
-		add_string_to_buf("Cast: No spell points.        ");
+		add_string_to_buf("Cast: No spell points.");
 	else if(spell_num != eSpell::NONE) {
 		print_spell_cast(spell_num,eSkill::PRIEST_SPELLS);
 		if((*spell_num).refer == REFER_YES) {
