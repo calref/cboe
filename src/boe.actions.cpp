@@ -295,7 +295,7 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 			if(store_sp[i] != univ.party[i].cur_sp)
 				did_something = true;
 	} else if(overall_mode == MODE_TOWN_TARGET) {
-		add_string_to_buf("  Cancelled.                   ");
+		add_string_to_buf("  Cancelled.");
 		overall_mode = MODE_TOWN;
 		need_redraw = true;
 		need_reprint = true;
@@ -311,7 +311,7 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 		spell_forced = false;
 		redraw_terrain();
 	} else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET) {
-		add_string_to_buf("  Cancelled.         ");
+		add_string_to_buf("  Cancelled.");
 		overall_mode = MODE_COMBAT;
 		center = univ.party[current_pc].combat_pos;
 		pause(10);
@@ -326,19 +326,19 @@ static void handle_rest(bool& need_redraw, bool& need_reprint) {
 	int i = 0;
 	ter_num_t ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
 	if(univ.party.in_boat >= 0)
-		add_string_to_buf("Rest:  Not in boat.               ");
+		add_string_to_buf("Rest:  Not in boat.");
 	else if(someone_poisoned())
-		add_string_to_buf("Rest: Someone poisoned.           ");
+		add_string_to_buf("Rest: Someone poisoned.");
 	else if(univ.party.food <= 12)
-		add_string_to_buf("Rest: Not enough food.            ");
+		add_string_to_buf("Rest: Not enough food.");
 	else if(nearest_monster() <= 3)
-		add_string_to_buf("Rest: Monster too close.            ");
+		add_string_to_buf("Rest: Monster too close.");
 	else if(univ.scenario.ter_types[ter].special == eTerSpec::DAMAGING || univ.scenario.ter_types[ter].special == eTerSpec::DANGEROUS)
 		add_string_to_buf("Rest: It's dangerous here.");
 	else if(flying())
-		add_string_to_buf("Rest: Not while flying.           ");
+		add_string_to_buf("Rest: Not while flying.");
 	else {
-		add_string_to_buf("Resting...                    ");
+		add_string_to_buf("Resting...");
 		print_buf();
 		play_sound(-20);
 		draw_rest_screen();
@@ -362,7 +362,7 @@ static void handle_rest(bool& need_redraw, bool& need_reprint) {
 	}
 	if(i == 50) {
 		do_rest(1200, get_ran(5,1,10), 50);
-		add_string_to_buf("  Rest successful.                ");
+		add_string_to_buf("  Rest successful.");
 		put_pc_screen();
 		pause(25);
 	}
@@ -373,9 +373,9 @@ static void handle_rest(bool& need_redraw, bool& need_reprint) {
 static void handle_pause(bool& did_something, bool& need_redraw) {
 	if(overall_mode == MODE_COMBAT) {
 		char_stand_ready();
-		add_string_to_buf("Stand ready.  ");
+		add_string_to_buf("Stand ready.");
 		if(univ.party[current_pc].status[eStatus::WEBS] > 0) {
-			add_string_to_buf("You clean webs.  ");
+			add_string_to_buf("You clean webs.");
 			move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
 			move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
 			put_pc_screen();
@@ -416,11 +416,11 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 	// TODO: I'm not sure what this check was for or if it would be needed for anything anymore.
 //	if(can_see(cur_loc,destination) >= 4 || (overall_mode != MODE_LOOK_OUTDOORS && loc_off_world(destination)))
 	if(overall_mode != MODE_LOOK_COMBAT && party_can_see(destination) == 6)
-		add_string_to_buf("  Can't see space.         ");
+		add_string_to_buf("  Can't see space.");
 	else if(overall_mode == MODE_LOOK_COMBAT && can_see_light(univ.party[current_pc].combat_pos,destination,sight_obscurity) >= 4)
-		add_string_to_buf("  Can't see space.         ");
+		add_string_to_buf("  Can't see space.");
 	else {
-		add_string_to_buf("You see...               ");
+		add_string_to_buf("You see...");
 		ter_num_t ter_looked_at = do_look(destination);
 		if(overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT)
 			if(adjacent(univ.town.p_loc,destination))
@@ -437,7 +437,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 						need_reprint = true;
 						if(adjacent(univ.town->sign_locs[k],univ.town.p_loc))
 							do_sign(univ.town.num,k,ter_looked_at);
-						else add_string_to_buf("  Too far away to read sign.      ");
+						else add_string_to_buf("  Too far away to read sign.");
 					}
 				}
 			} else if(overall_mode == MODE_LOOK_OUTDOORS) {
@@ -446,7 +446,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 						need_reprint = true;
 						if(adjacent(univ.out->sign_locs[k],univ.party.loc_in_sec))
 							do_sign(200 + get_outdoor_num(),k,ter_looked_at);
-						else add_string_to_buf("  Too far away to read sign.      ");
+						else add_string_to_buf("  Too far away to read sign.");
 					}
 				}
 			}
@@ -522,7 +522,7 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 
 static void handle_talk(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
 	if(can_see_light(center,destination,sight_obscurity) >= 4 || loc_off_world(destination)) {
-		add_string_to_buf("  Can't see space              ");
+		add_string_to_buf("  Can't see space.");
 		need_reprint = true;
 	} else {
 		for(int i = 0; i < univ.town.monst.size(); i++) {
@@ -530,7 +530,7 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 				did_something = true;
 				need_redraw = true;
 				if(univ.town.monst[i].attitude % 2 == 1) {
-					add_string_to_buf("  Creature is hostile.        ");
+					add_string_to_buf("  Creature is hostile.");
 				} else if(univ.town.monst[i].summoned > 0 || univ.town.monst[i].personality < 0) {
 					short small_talk = 1;
 					if(!univ.town.monst[i].summoned)
@@ -609,7 +609,7 @@ static void handle_drop_item(location destination, bool& need_redraw) {
 
 static void handle_use_space(location destination, bool& did_something, bool& need_redraw) {
 	if(!adjacent(destination,univ.town.p_loc))
-		add_string_to_buf("  Must be adjacent.              ");
+		add_string_to_buf("  Must be adjacent.");
 	else did_something = use_space(destination);
 	overall_mode = MODE_TOWN;
 	need_redraw = true;
@@ -619,11 +619,11 @@ static void handle_use_space(location destination, bool& did_something, bool& ne
 
 static void handle_bash_pick(location destination, bool& did_something, bool& need_redraw, bool isBash) {
 	if(!adjacent(destination,univ.town.p_loc))
-		add_string_to_buf("  Must be adjacent.              ");
+		add_string_to_buf("  Must be adjacent.");
 	else {
 		short pc = char_select_pc(0, isBash ? "Who will bash?" : "Who will pick the lock?");
 		if(pc == 6) {
-			add_string_to_buf("  Cancelled");
+			add_string_to_buf("  Cancelled.");
 			overall_mode = MODE_TOWN;
 			need_redraw = true;
 			return;
@@ -686,8 +686,7 @@ static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 static void handle_equip_item(short item_hit, bool& need_redraw) {
 	if(overall_mode == MODE_USE_TOWN) {
 		// TODO: Uh, this looks wrong somehow.
-		add_string_to_buf("Note: Clicking 'U' button by item");
-		add_string_to_buf("  uses the item.");
+		add_string_to_buf("Note: Clicking 'U' button by item uses the item.", 2);
 		use_item(stat_window, item_hit);
 		overall_mode = MODE_TOWN;
 		take_ap(3);
@@ -790,7 +789,7 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 	if(party_sees_a_monst())
 		add_string_to_buf("Long wait: Monster in sight.");
 	else {
-		add_string_to_buf("Long wait...                    ");
+		add_string_to_buf("Long wait...");
 		print_buf();
 		play_sound(-20);
 		draw_rest_screen();
@@ -828,12 +827,12 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 	if(overall_mode == MODE_TOWN) {
 		if(univ.party.in_boat >= 0) {
 			need_reprint = true;
-			add_string_to_buf("Combat: Not while in boat.           ");
+			add_string_to_buf("Combat: Not while in boat.");
 		} else if(univ.party.in_horse >= 0) {
 			need_reprint = true;
-			add_string_to_buf("Combat: Not while on horseback.           ");
+			add_string_to_buf("Combat: Not while on horseback.");
 		} else {
-			add_string_to_buf("Combat!                 ");
+			add_string_to_buf("Combat!");
 			play_sound(18);
 			need_reprint = true;
 			start_town_combat(univ.party.direction);
@@ -847,12 +846,12 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 			if(hit_end_c_button()) {
 				end_town_mode(0,univ.town.p_loc);
 				play_sound(93);
-				add_string_to_buf("End combat.               ");
+				add_string_to_buf("End combat.");
 				handle_wandering_specials(0,1);
 				menu_activate();
 				put_pc_screen();
 				set_stat_window(current_pc);
-			} else add_string_to_buf("Can't end combat yet.        ");
+			} else add_string_to_buf("Can't end combat yet.");
 		} else {
 			univ.party.direction = end_town_combat();
 			center = univ.town.p_loc;
@@ -874,7 +873,7 @@ static void handle_missile(bool& need_redraw, bool& need_reprint) {
 		need_reprint = true;
 		redraw_terrain();
 	} else if(overall_mode == MODE_FIRING || overall_mode == MODE_THROWING) {
-		add_string_to_buf("  Cancelled.             ");
+		add_string_to_buf("  Cancelled.");
 		center = univ.party[current_pc].combat_pos;
 		pause(10);
 		need_redraw = true;
@@ -885,7 +884,7 @@ static void handle_missile(bool& need_redraw, bool& need_reprint) {
 static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint) {
 	int j = 0;
 	if(univ.party.in_boat >= 0)
-		add_string_to_buf("Get: Not while in boat.           ");
+		add_string_to_buf("Get: Not while in boat.");
 	if(overall_mode == MODE_TOWN)
 		j = get_item(univ.town.p_loc,6,false);
 	else {
@@ -1040,21 +1039,20 @@ bool handle_action(sf::Event event) {
 				if(overall_mode == MODE_OUTDOORS) overall_mode = MODE_LOOK_OUTDOORS;
 				if(overall_mode == MODE_TOWN) overall_mode = MODE_LOOK_TOWN;
 				if(overall_mode == MODE_COMBAT) overall_mode = MODE_LOOK_COMBAT;
-				add_string_to_buf("Look: Select a space. You can also       ");
-				add_string_to_buf("  right click to look.");
+				add_string_to_buf("Look: Select a space. You can also right click to look.", 2);
 				need_redraw = true;
 				break;
 				
 			case 3:
 				if(overall_mode == MODE_COMBAT) {
-					add_string_to_buf("Parry. ");
+					add_string_to_buf("Parry.");
 					char_parry();
 					did_something = true;
 					need_reprint = true;
 					need_redraw = true;
 				} else if(overall_mode == MODE_TOWN) {
 					overall_mode = MODE_TALK_TOWN;
-					add_string_to_buf("Talk: Select someone    ");
+					add_string_to_buf("Talk: Select someone.");
 					need_reprint = true;
 				} else if(overall_mode == MODE_OUTDOORS)
 					handle_rest(need_redraw, need_reprint);
@@ -1109,10 +1107,10 @@ bool handle_action(sf::Event event) {
 			case 8:
 				if(overall_mode == MODE_COMBAT) {
 					if(combat_active_pc == 6) {
-						add_string_to_buf("This PC now active.           ");
+						add_string_to_buf("This PC now active.");
 						combat_active_pc = current_pc;
 					} else {
-						add_string_to_buf("All PC's now active.           ");
+						add_string_to_buf("All PC's now active.");
 						current_pc = combat_active_pc;
 						combat_active_pc = 6;
 					}
@@ -1438,7 +1436,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 			end_combat();
 			if(which_combat_type == 0) {
 				end_town_mode(0,univ.party.p_loc);
-				add_string_to_buf("Fled the combat.        ");
+				add_string_to_buf("Fled the combat.");
 				handle_wandering_specials(0,2);
 			}
 		} else {
@@ -1550,7 +1548,7 @@ void initiate_outdoor_combat(short i) {
 	// Is combat too easy?
 	if((univ.party.get_level() > ((out_enc_lev_tot(i) * 5) / 3) ) && (out_enc_lev_tot(i) < 200)
 		&& (univ.party.out_c[i].what_monst.cant_flee % 10 != 1)) {
-		add_string_to_buf("Combat: Monsters fled!           ");
+		add_string_to_buf("Combat: Monsters fled!");
 		univ.party.out_c[i].exists = false;
 		return;
 	}
@@ -1875,7 +1873,7 @@ bool handle_keystroke(sf::Event& event){
 			}
 			// kill_monst(&univ.town.monst[i],6);
 			draw_terrain();
-			add_string_to_buf("Debug: Kill things.            ");
+			add_string_to_buf("Debug: Kill things.");
 			print_buf();
 			break;
 			
@@ -1930,11 +1928,11 @@ bool handle_keystroke(sf::Event& event){
 		case 'R':
 			if(!in_scen_debug) break;
 			if(univ.party.in_boat >= 0) {
-				add_string_to_buf("  Not while in boat. ");
+				add_string_to_buf("  Not while in boat.");
 				break;
 			}
 			if(univ.party.in_horse >= 0) {
-				add_string_to_buf("  Not while on horse. ");
+				add_string_to_buf("  Not while on horse.");
 				break;
 			}
 			force_town_enter(univ.scenario.which_town_start,univ.scenario.where_start);
@@ -1968,7 +1966,7 @@ bool handle_keystroke(sf::Event& event){
 		case 'W':
 			if(!in_scen_debug) break;
 			refresh_store_items();
-			add_string_to_buf("Debug: Refreshed jobs/shops.            ");
+			add_string_to_buf("Debug: Refreshed jobs/shops.");
 			print_buf();
 			break;
 			
@@ -2155,8 +2153,7 @@ void post_load() {
 //mode; // 0 - normal  1 - save as
 void do_save(short mode) {
 	if(overall_mode > MODE_TOWN && overall_mode != MODE_STARTUP) {
-		add_string_to_buf("Save: Only while outdoors, or in         ");
-		add_string_to_buf("  town and not looking/casting.          ");
+		add_string_to_buf("Save: Only while outdoors, or in town and not looking/casting.", 2);
 		print_buf();
 		return;
 	}
@@ -2269,15 +2266,15 @@ void increase_age() {
 	
 	// Party spell effects
 	if(univ.party.status[ePartyStatus::STEALTH] == 1) {
-		add_string_to_buf("Your footsteps grow louder.      ");
+		add_string_to_buf("Your footsteps grow louder.");
 	}
 	move_to_zero(univ.party.status[ePartyStatus::STEALTH]);
 	if(univ.party.status[ePartyStatus::DETECT_LIFE] == 1) {
-		add_string_to_buf("You stop detecting monsters.      ");
+		add_string_to_buf("You stop detecting monsters.");
 	}
 	move_to_zero(univ.party.status[ePartyStatus::DETECT_LIFE]);
 	if(univ.party.status[ePartyStatus::FIREWALK] == 1) {
-		add_string_to_buf("Your feet stop glowing.      ");
+		add_string_to_buf("Your feet stop glowing.");
 	}
 	move_to_zero(univ.party.status[ePartyStatus::FIREWALK]);
 	
@@ -2285,12 +2282,12 @@ void increase_age() {
 		add_string_to_buf("You are starting to descend.");
 	if(univ.party.status[ePartyStatus::FLIGHT] == 1) {
 		if(blocksMove(univ.scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage)) {
-			add_string_to_buf("  You plummet to your deaths.                  ");
+			add_string_to_buf("  You plummet to your deaths.");
 			slay_party(eMainStatus::DEAD);
 			print_buf();
 			pause(150);
 		}
-		else add_string_to_buf("  You land safely.                  ");
+		else add_string_to_buf("  You land safely.");
 	}
 	
 	move_to_zero(univ.party.status[ePartyStatus::FLIGHT]);
@@ -2366,7 +2363,7 @@ void increase_age() {
 				how_many_short++;
 		how_many_short = take_food (how_many_short,false);
 		if(how_many_short > 0) {
-			add_string_to_buf("Starving! ");
+			add_string_to_buf("Starving!");
 			play_sound(66);
 			r1 = get_ran(3,1,6);
 			hit_party(r1,eDamageType::UNBLOCKABLE);
@@ -2376,7 +2373,7 @@ void increase_age() {
 		}
 		else {
 			play_sound(6);
-			add_string_to_buf("You eat.  ");
+			add_string_to_buf("You eat.");
 		}
 		update_stat = true;
 	}
@@ -2529,7 +2526,7 @@ void switch_pc(short which) {
 		current_switch = 6;
 	}
 	else {
-		add_string_to_buf("Switch: Switch with who?    ");
+		add_string_to_buf("Switch: Switch with who?");
 		current_switch = which;
 	}
 }
@@ -2539,10 +2536,10 @@ void drop_pc(short which) {
 	
 	choice = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
 	if(choice == "no") {
-		add_string_to_buf("Delete PC: Cancelled.           ");
+		add_string_to_buf("Delete PC: Cancelled.");
 		return;
 	}
-	add_string_to_buf("Delete PC: OK.                  ");
+	add_string_to_buf("Delete PC: OK.");
 	kill_pc(which,eMainStatus::ABSENT);
 	for(short i = which; i < 5; i++)
 		univ.party.swap_pcs(i, i + 1);
@@ -2705,7 +2702,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 	}
 	eDirection dir;
 	while((dir = find_waterfall(x,y,mode)) != DIR_HERE){
-		add_string_to_buf("  Waterfall!                     ");
+		add_string_to_buf("  Waterfall!");
 		if(mode == 0){
 			x += 2 * dir_x_dif[dir];
 			y += 2 * dir_y_dif[dir];
@@ -2726,6 +2723,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		if(wilderness_lore_present(coord_to_ter(x - dir_x_dif[dir], y - dir_y_dif[dir]) > 0) && get_ran(1,0,1) == 0)
 			add_string_to_buf("  (No supplies lost.)");
 		else if(univ.party.food > 1800){
+			// TODO: Shouldn't this check n instead of univ.party.food?
 			add_string_to_buf("  (Many supplies lost.)");
 			univ.party.food -= 50;
 		}
@@ -2841,7 +2839,7 @@ bool outd_move_party(location destination,bool forced) {
 				if(cChoiceDlog("boat-bridge",{"under","land"}).show() == "under")
 					forced = true;
 				else {
-					add_string_to_buf("You leave the boat.             ");
+					add_string_to_buf("You leave the boat.");
 					univ.party.in_boat = -1;
 				}
 			}
@@ -2853,11 +2851,11 @@ bool outd_move_party(location destination,bool forced) {
 		std::string dir_str = dir_string[univ.party.direction];
 		if(((boat_num = out_boat_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
 			if(flying()) {
-				add_string_to_buf("You land first.                 ");
+				add_string_to_buf("You land first.");
 				univ.party.status[ePartyStatus::FLIGHT] = 0;
 			}
 			give_help(61,0);
-			add_string_to_buf("Move: You board the boat.           ");
+			add_string_to_buf("Move: You board the boat.");
 			univ.party.in_boat = boat_num;
 			
 			univ.party.p_loc = real_dest;
@@ -2878,7 +2876,7 @@ bool outd_move_party(location destination,bool forced) {
 			}
 			
 			give_help(60,0);
-			add_string_to_buf("Move: You mount the horses.           ");
+			add_string_to_buf("Move: You mount the horses.");
 			play_sound(84);
 			univ.party.in_horse = horse_num;
 			
@@ -2909,7 +2907,7 @@ bool outd_move_party(location destination,bool forced) {
 			
 			// TODO: But I though you automatically landed when entering?
 			if(flying() && univ.scenario.ter_types[ter].special == eTerSpec::TOWN_ENTRANCE) {
-				add_string_to_buf("Moved: You have to land first.               ");
+				add_string_to_buf("Moved: You have to land first.");
 				return false;
 			}
 			
@@ -2989,7 +2987,7 @@ bool town_move_party(location destination,short forced) {
 				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert
 				&& (!univ.scenario.ter_types[ter].boat_over
 				|| ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y)))) {
-				add_string_to_buf("You leave the boat.             ");
+				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
 			}
 			else if((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y))
@@ -2999,13 +2997,13 @@ bool town_move_party(location destination,short forced) {
 				if(cChoiceDlog("boat-bridge",{"under","land"}).show() == "under")
 					forced = true;
 				else if(!is_blocked(destination)) {
-					add_string_to_buf("You leave the boat.             ");
+					add_string_to_buf("You leave the boat.");
 					univ.party.in_boat = -1;
 				}
 			}
 			// boat in destination
 			else if(town_boat_there(destination) < 30) {
-				add_string_to_buf("  Boat there already.             ");
+				add_string_to_buf("  Boat there already.");
 				return false;
 			}
 			// water or lava
@@ -3017,11 +3015,11 @@ bool town_move_party(location destination,short forced) {
 		std::string dir_str = dir_string[univ.party.direction];
 		if(((boat_there = town_boat_there(destination)) < 30) && (univ.party.in_boat < 0)) {
 			if(univ.party.boats[boat_there].property) {
-				add_string_to_buf("  Not your boat.             ");
+				add_string_to_buf("  Not your boat.");
 				return false;
 			}
 			give_help(61,0);
-			add_string_to_buf("Move: You board the boat.           ");
+			add_string_to_buf("Move: You board the boat.");
 			univ.party.in_boat = boat_there;
 			
 			univ.town.p_loc = destination;
@@ -3031,11 +3029,11 @@ bool town_move_party(location destination,short forced) {
 		}
 		else if(((horse_there = town_horse_there(destination)) < 30) && (univ.party.in_horse < 0)) {
 			if(univ.party.horses[horse_there].property) {
-				add_string_to_buf("  Not your horses.             ");
+				add_string_to_buf("  Not your horses.");
 				return false;
 			}
 			give_help(60,0);
-			add_string_to_buf("Move: You mount the horses.           ");
+			add_string_to_buf("Move: You mount the horses.");
 			play_sound(84);
 			univ.party.in_horse = horse_there;
 			

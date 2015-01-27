@@ -680,62 +680,62 @@ short do_look(location space) {
 		}
 		
 		if(out_boat_there(space) < 30)
-			add_string_to_buf("    Boat                ");
+			add_string_to_buf("    Boat");
 		if(out_horse_there(space) < 30)
-			add_string_to_buf("    Horse                ");
+			add_string_to_buf("    Horse");
 	}
 	
 	if((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 		if(town_boat_there(space) < 30)
-			add_string_to_buf("    Boat               ");
+			add_string_to_buf("    Boat");
 		if(town_horse_there(space) < 30)
-			add_string_to_buf("    Horse               ");
+			add_string_to_buf("    Horse");
 		
 		if(univ.town.is_web(space.x,space.y))
-			add_string_to_buf("    Web               ");
+			add_string_to_buf("    Web");
 		if(univ.town.is_crate(space.x,space.y))
-			add_string_to_buf("    Crate               ");
+			add_string_to_buf("    Crate");
 		if(univ.town.is_barrel(space.x,space.y))
-			add_string_to_buf("    Barrel               ");
+			add_string_to_buf("    Barrel");
 		if(univ.town.is_block(space.x,space.y))
-			add_string_to_buf("    Stone Block               ");
+			add_string_to_buf("    Stone Block");
 		if(univ.town.is_fire_barr(space.x,space.y))
-			add_string_to_buf("    Magic Barrier               ");
+			add_string_to_buf("    Magic Barrier");
 		if(univ.town.is_force_barr(space.x,space.y))
-			add_string_to_buf("    Magic Barrier               ");
+			add_string_to_buf("    Magic Barrier");
 		if(univ.town.is_quickfire(space.x,space.y))
-			add_string_to_buf("    Quickfire               ");
+			add_string_to_buf("    Quickfire");
 		if(univ.town.is_fire_wall(space.x,space.y))
-			add_string_to_buf("    Wall of Fire               ");
+			add_string_to_buf("    Wall of Fire");
 		if(univ.town.is_force_wall(space.x,space.y))
-			add_string_to_buf("    Wall of Force               ");
+			add_string_to_buf("    Wall of Force");
 		if(univ.town.is_antimagic(space.x,space.y))
-			add_string_to_buf("    Antimagic Field               ");
+			add_string_to_buf("    Antimagic Field");
 		if(univ.town.is_scloud(space.x,space.y))
-			add_string_to_buf("    Stinking Cloud               ");
+			add_string_to_buf("    Stinking Cloud");
 		if(univ.town.is_ice_wall(space.x,space.y))
-			add_string_to_buf("    Ice Wall               ");
+			add_string_to_buf("    Ice Wall");
 		if(univ.town.is_blade_wall(space.x,space.y))
-			add_string_to_buf("    Blade Wall               ");
+			add_string_to_buf("    Blade Wall");
 		if(univ.town.is_force_cage(space.x,space.y))
-			add_string_to_buf("    Force Cage               ");
+			add_string_to_buf("    Force Cage");
 		
 		if(univ.town.is_sm_blood(space.x,space.y))
-			add_string_to_buf("    Blood stain               ");
+			add_string_to_buf("    Blood stain");
 		if(univ.town.is_med_blood(space.x,space.y))
-			add_string_to_buf("    Blood stain               ");
+			add_string_to_buf("    Blood stain");
 		if(univ.town.is_lg_blood(space.x,space.y))
-			add_string_to_buf("    Blood stain               ");
+			add_string_to_buf("    Blood stain");
 		if(univ.town.is_sm_slime(space.x,space.y))
-			add_string_to_buf("    Smears of slime               ");
+			add_string_to_buf("    Smears of slime");
 		if(univ.town.is_lg_slime(space.x,space.y))
-			add_string_to_buf("    Smears of slime               ");
+			add_string_to_buf("    Smears of slime");
 		if(univ.town.is_ash(space.x,space.y))
-			add_string_to_buf("    Ashes               ");
+			add_string_to_buf("    Ashes");
 		if(univ.town.is_bones(space.x,space.y))
-			add_string_to_buf("    Bones               ");
+			add_string_to_buf("    Bones");
 		if(univ.town.is_rubble(space.x,space.y))
-			add_string_to_buf("    Rubble               ");
+			add_string_to_buf("    Rubble");
 		
 		for(i = 0; i < univ.town.items.size(); i++) {
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && space == univ.town.items[i].item_loc
@@ -765,7 +765,7 @@ short do_look(location space) {
 	}
 	
 	if(!is_lit) {
-		add_string_to_buf("    Dark                ");
+		add_string_to_buf("    Dark");
 		return 0;
 	}
 	
@@ -815,19 +815,19 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
 	short i;
 	std::string msg;
 	
-	add_string_to_buf((char *) "COMBAT!                 ");
+	add_string_to_buf("COMBAT!");
 	
 	for(i = 0; i < 6; i++)
 		if(encounter.monst[i] != 0) {
 			msg = get_m_name(encounter.monst[i]);
 			std::ostringstream sout;
-			sout << "  " << nums[i] << " x " << msg << "        ";
+			sout << "  " << nums[i] << " x " << msg;
 			msg = sout.str();
-			add_string_to_buf((char *) msg.c_str());
+			add_string_to_buf(msg);
 		}
 	if(encounter.monst[6] != 0) {
-		msg = "  " +  get_m_name(encounter.monst[6]) + "        ";
-		add_string_to_buf((char *) msg.c_str());
+		msg = "  " +  get_m_name(encounter.monst[6]);
+		add_string_to_buf(msg);
 	}
 }
 
@@ -880,41 +880,41 @@ void cCreature::spell_note(int which_mess) {
 	std::string msg = m_name;
 	switch(which_mess) {
 		case 1:
-			msg = "  " + msg + " scared. ";
+			msg = "  " + msg + " scared.";
 			break;
 			
 		case 2:
-			msg = "  " + msg + " slowed. ";
+			msg = "  " + msg + " slowed.";
 			break;
 			
 		case 3:
-			msg = "  " + msg + " weakened. ";
+			msg = "  " + msg + " weakened.";
 			break;
 			
 		case 4:
-			msg = "  " + msg + " poisoned. ";
+			msg = "  " + msg + " poisoned.";
 			break;
 			
 		case 5:
-			msg = "  " + msg + " cursed. ";
+			msg = "  " + msg + " cursed.";
 			break;
 			
 		case 6:
-			msg = "  " + msg + " ravaged. ";
+			msg = "  " + msg + " ravaged.";
 			break;
 			
 		case 7:
-			msg = "  " + msg + " undamaged. ";
+			msg = "  " + msg + " undamaged.";
 			break;
 			
 		case 8:
-			msg = "  " + msg + " is stoned. ";
+			msg = "  " + msg + " is stoned.";
 			break;
 		case 9:
 			msg = "  Gazes at " + msg + '.';
 			break;
 		case 10:
-			msg = "  " + msg + " resists. ";
+			msg = "  " + msg + " resists.";
 			break;
 		case 11:
 			msg = "  Drains " + msg + '.';
@@ -935,31 +935,31 @@ void cCreature::spell_note(int which_mess) {
 			msg = "  Hits " + msg + '.';
 			break;
 		case 17:
-			msg = "  " + msg + " disappears. ";
+			msg = "  " + msg + " disappears.";
 			break;
 		case 18:
 			msg = "  Misses " + msg + '.';
 			break;
 		case 19:
-			msg = "  " + msg + " is webbed. ";
+			msg = "  " + msg + " is webbed.";
 			break;
 		case 20:
-			msg = "  " + msg + " chokes. ";
+			msg = "  " + msg + " chokes.";
 			break;
 		case 21:
-			msg = "  " + msg + " summoned. ";
+			msg = "  " + msg + " summoned.";
 			break;
 		case 22:
-			msg = "  " + msg + " is dumbfounded. ";
+			msg = "  " + msg + " is dumbfounded.";
 			break;
 		case 23:
-			msg = "  " + msg + " is charmed. ";
+			msg = "  " + msg + " is charmed.";
 			break;
 		case 24:
-			msg = "  " + msg + " is recorded. ";
+			msg = "  " + msg + " is recorded.";
 			break;
 		case 25:
-			msg = "  " + msg + " is diseased. ";
+			msg = "  " + msg + " is diseased.";
 			break;
 		case 26:
 			msg = "  " + msg + " is an avatar!";
@@ -968,22 +968,22 @@ void cCreature::spell_note(int which_mess) {
 			msg = "  " + msg + " splits!";
 			break;
 		case 28:
-			msg = "  " + msg + " falls asleep. ";
+			msg = "  " + msg + " falls asleep.";
 			break;
 		case 29:
-			msg = "  " + msg + " wakes up. ";
+			msg = "  " + msg + " wakes up.";
 			break;
 		case 30:
-			msg = "  " + msg + " paralyzed. ";
+			msg = "  " + msg + " paralyzed.";
 			break;
 		case 31:
-			msg = "  " + msg + " covered with acid. ";
+			msg = "  " + msg + " covered with acid.";
 			break;
 		case 32:
 			msg = "  Fires spines at " + msg + '.';
 			break;
 		case 33:
-			msg = "  " + msg + " summons aid. ";
+			msg = "  " + msg + " summons aid.";
 			break;
 		case 34:
 			msg = "  " + msg + " is cured.";
@@ -1063,6 +1063,8 @@ void cCreature::spell_note(int which_mess) {
 		case 59:
 			msg = "  Spits at " + msg + '.';
 			break;
+		default:
+			msg += ": Unknown action " + std::to_string(which_mess);
 	}
 	
 	if(which_mess > 0)
@@ -1119,6 +1121,15 @@ void add_string_to_buf(std::string str) {
 }
 
 void add_string_to_buf(std::string str, unsigned short indent) {
+	static bool inited;
+	static size_t width;
+	static TextStyle buf_style;
+	if(!inited) {
+		inited = true;
+		buf_style.font = FONT_PLAIN;
+		buf_style.pointSize = 12;
+		width = text_area_gworld.getSize().x - 5;
+	}
 	if(overall_mode == MODE_STARTUP)
 		return;
 	
@@ -1126,20 +1137,25 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 	if(str.find_last_not_of(' ') == std::string::npos)
 		return;
 	
-	// TODO: Base this on pixel length instead of character length
-	if(indent && str.find_last_not_of(' ') > 48) {
+	if(indent && string_length(str.substr(0,str.find_last_not_of(' ')), buf_style) >= width) {
 		if(indent > 20) indent = 20;
 		size_t split = str.find_last_of(' ', 49);
+		while(string_length(str.substr(0,split), buf_style) >= width)
+			split = str.find_last_of(' ', split - 1);
 		add_string_to_buf(str.substr(0,split));
 		str = str.substr(split);
-		size_t wrap_w = 48 - indent;
-		while(str.find_last_not_of(' ') > wrap_w) {
-			std::string wrap(indent, ' ');
+		std::string space(indent, ' ');
+		size_t wrap_w = width - string_length(space, buf_style);
+		while(string_length(str.substr(0,str.find_last_not_of(' ')), buf_style) > wrap_w) {
+			std::string wrap = space;
 			split = str.find_last_of(' ', 49 - indent);
+			while(string_length(str.substr(0,split), buf_style) >= wrap_w)
+				split = str.find_last_of(' ', split - 1);
 			wrap += str.substr(0,split);
 			str = str.substr(split);
 			add_string_to_buf(wrap);
 		}
+		add_string_to_buf(space + str);
 		return;
 	}
 	

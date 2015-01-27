@@ -112,7 +112,7 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const 
 std::vector<rectangle> draw_string_hilite(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
 std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
 void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style, location offset = {0,0});
-short string_length(std::string str, TextStyle style, short* height = nullptr);
+size_t string_length(std::string str, TextStyle style, short* height = nullptr);
 rectangle calc_rect(short i, short j);
 void setActiveRenderTarget(sf::RenderTarget& where);
 void flushTessels(sf::Texture& alteredImg);

@@ -64,30 +64,30 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 		
 		
 		if(r1 < trap_odds[skill]) {
-			add_string_to_buf("  Trap disarmed.            ");
+			add_string_to_buf("  Trap disarmed.");
 			return true;
 		}
-		else add_string_to_buf("  Disarm failed.          ");
+		else add_string_to_buf("  Disarm failed.");
 	}
 	
 	switch(trap_type) {
 		case TRAP_BLADE:
 			for(i = 0; i < num_hits; i++) {
-				add_string_to_buf("  A knife flies out!              ");
+				add_string_to_buf("  A knife flies out!");
 				r1 = get_ran(2 + univ.town.difficulty / 14,1,10);
 				damage_pc(pc_num,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 			}
 			break;
 			
 		case TRAP_DART:
-			add_string_to_buf("  A dart flies out.              ");
+			add_string_to_buf("  A dart flies out.");
 			r1 = 3 + univ.town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
 			disarmer.poison(r1);
 			break;
 			
 		case TRAP_GAS:
-			add_string_to_buf("  Poison gas pours out.          ");
+			add_string_to_buf("  Poison gas pours out.");
 			r1 = 2 + univ.town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
 			univ.party.poison(r1);
@@ -95,43 +95,43 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			
 		case TRAP_EXPLOSION:
 			for(i = 0; i < num_hits; i++) {
-				add_string_to_buf("  There is an explosion.        ");
+				add_string_to_buf("  There is an explosion.");
 				r1 = get_ran(3 + univ.town.difficulty / 13,1,8);
 				hit_party(r1,eDamageType::FIRE);
 			}
 			break;
 			
 		case TRAP_SLEEP_RAY:
-			add_string_to_buf("  A purple ray flies out.          ");
+			add_string_to_buf("  A purple ray flies out.");
 			r1 = 200 + univ.town.difficulty * 100;
 			r1 = r1 + trap_level * 400;
 			// TODO: It says sleep ray but is actually paralysis ray?
 			disarmer.sleep(eStatus::PARALYZED, r1, 50);
 			break;
 		case TRAP_DRAIN_XP:
-			add_string_to_buf("  You feel weak.            ");
+			add_string_to_buf("  You feel weak.");
 			r1 = 40;
 			r1 = r1 + trap_level * 30;
 			disarmer.experience = max(0,disarmer.experience - r1);
 			break;
 			
 		case TRAP_ALERT:
-			add_string_to_buf("  An alarm goes off!!!            ");
+			add_string_to_buf("  An alarm goes off!!!");
 			make_town_hostile();
 			break;
 			
 		case TRAP_FLAMES:
-			add_string_to_buf("  Flames shoot from the walls.        ");
+			add_string_to_buf("  Flames shoot from the walls.");
 			r1 = get_ran(10 + trap_level * 5,1,8);
 			hit_party(r1,eDamageType::FIRE);
 			break;
 		case TRAP_DUMBFOUND:
-			add_string_to_buf("  You feel disoriented.        ");
+			add_string_to_buf("  You feel disoriented.");
 			univ.party.dumbfound(2 + trap_level * 2);
 			break;
 			
 		case TRAP_DISEASE:
-			add_string_to_buf("  You prick your finger. ");
+			add_string_to_buf("  You prick your finger.");
 			r1 = 3 + univ.town.difficulty / 14;
 			r1 = r1 + trap_level * 2;
 			disarmer.disease(r1);

@@ -474,9 +474,7 @@ void handle_menu_choice(eMenu item_hit) {
 				give_help(56,0);
 				create_pc(6,NULL);
 			} else {
-				add_string_to_buf("Add PC: You cannot add new");
-				add_string_to_buf("  characters in this town.");
-				add_string_to_buf("  Try in the town you started in.");
+				add_string_to_buf("Add PC: You cannot add new characters in this town. Try in the town you started in.", 2);
 			}
 			print_buf();
 			put_pc_screen();

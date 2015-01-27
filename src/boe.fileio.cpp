@@ -143,7 +143,7 @@ void finish_load_party(){
 	last_load_file = file_to_load.filename().string();
 	store_file_reply = file_to_load;
 	
-	add_string_to_buf("Load: Game loaded.            ");
+	add_string_to_buf("Load: Game loaded.");
 	
 	// Set sounds, map saving, and speed
 	if(((play_sounds) && (PSD[SDF_NO_SOUNDS] == 1)) ||
