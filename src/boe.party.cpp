@@ -670,9 +670,10 @@ bool poison_weapon( short pc_num, short how_much,short safe) {
 	short p_chance[21] = {
 		40,72,81,85,88,89,90,
 		91,92,93,94,94,95,95,96,97,98,100,100,100,100};
+	// TODO: This doesn't allow you to choose between poisoning a melee weapon and poisoning arrows, except by temporarily dequipping one
 	
 	for(i = 0; i < 24; i++)
-		if((univ.party[pc_num].equip[i]) && (is_weapon(pc_num,i))) {
+		if((univ.party[pc_num].equip[i]) && (is_poisonable_weap(pc_num,i))) {
 			weap = i;
 			i = 30;
 		}
@@ -705,8 +706,7 @@ bool poison_weapon( short pc_num, short how_much,short safe) {
 	}
 }
 
-bool is_weapon(short pc_num,short item) {
-	// TODO: Uh, why aren't bows, crossbows, thrown missiles, no-ammo missiles included? (There's probably a reason though.)
+bool is_poisonable_weap(short pc_num,short item) {
 	if((univ.party[pc_num].items[item].variety  == eItemType::ONE_HANDED) ||
 		(univ.party[pc_num].items[item].variety  == eItemType::TWO_HANDED) ||
 		(univ.party[pc_num].items[item].variety  == eItemType::ARROW) ||
@@ -1558,7 +1558,7 @@ bool cast_spell_on_space(location where, eSpell spell) {
 	return true;
 }
 
-void crumble_wall(location where) { // TODO: Add something like this to the spreading quickfire function
+void crumble_wall(location where) {
 	ter_num_t ter;
 	
 	if(loc_off_act_area(where))
@@ -1835,10 +1835,6 @@ static void draw_spell_pc_info(cDialog& me) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["pc" + n].setText(univ.party[i].name);
-			// TODO: Maybe this detail should be reimplemented?
-			//if(pc_casting == i)
-			//	cd_text_frame(1098,24 + store_spell_target,11);
-			//else cd_text_frame(1098,24 + store_spell_target,1);
 			
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				me["hp" + n].setTextToNum(univ.party[i].cur_health);

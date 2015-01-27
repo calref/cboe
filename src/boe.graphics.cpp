@@ -1318,7 +1318,7 @@ static bool connect_roads(ter_num_t ter){
 
 void place_road(short q,short r,location where, bool here) {
 	location draw_loc;
-	ter_num_t ter;
+	ter_num_t ter = coord_to_ter(where.x, where.y);
 	rectangle to_rect;
 	//rectangle road_rects[2] = {{76,112,80,125},{72,144,90,148}}; // 0 - rl partial  1 - ud partial
 	// TODO: The duplication of rectangle here shouldn't be necessary...
