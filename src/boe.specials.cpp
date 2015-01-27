@@ -1397,7 +1397,18 @@ bool damage_monst(short which_m, short who_hit, short how_much, eDamageType dam_
 	// Invulnerable?
 	if(dam_type != eDamageType::SPECIAL && victim->invuln)
 		how_much = how_much / 10;
+	if(dam_type != eDamageType::SPECIAL && victim->status[eStatus::INVULNERABLE] > 0)
+		how_much /= 10;
 	
+	// Mag. res helps w. fire and cold
+	// TODO: Why doesn't this help with magic damage!?
+	if(dam_type == eDamageType::FIRE || dam_type == eDamageType::COLD) {
+		int magic_res = victim->status[eStatus::MAGIC_RESISTANCE];
+		if(magic_res > 0)
+			how_much /= 2;
+		else if(magic_res < 0)
+			how_much *= 2;
+	}
 	
 	r1 = get_ran(1,0,(victim->armor * 5) / 4);
 	r1 += victim->level / 4;
