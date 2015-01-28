@@ -5,7 +5,7 @@ Unused
 Unused
 Status type
 Unused
-Method (1 - Move Mountains, 2 - quickfire, 0 - either)
+Unused
 Unused
 Can be bashed? (0 - can't, 1 - can)
 Unused

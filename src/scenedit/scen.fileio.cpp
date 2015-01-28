@@ -263,9 +263,9 @@ static void writeTerrainToXml(ticpp::Printer&& data) {
 		
 		data.OpenElement("special");
 		data.PushElement("type", ter.special);
-		data.PushElement("flag", ter.flag1.u);
-		data.PushElement("flag", ter.flag2.u);
-		data.PushElement("flag", ter.flag3.u);
+		data.PushElement("flag", ter.flag1);
+		data.PushElement("flag", ter.flag2);
+		data.PushElement("flag", ter.flag3);
 		data.CloseElement("special");
 		
 		data.OpenElement("editor");

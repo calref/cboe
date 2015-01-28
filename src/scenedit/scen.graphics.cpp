@@ -133,13 +133,13 @@ static short get_small_icon(ter_num_t ter){
 	short icon = -1;
 	switch(scenario.ter_types[ter].special){
 		case eTerSpec::NONE:
-			icon = scenario.ter_types[ter].flag1.s;
+			icon = scenario.ter_types[ter].flag1;
 			break;
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			icon = 23;
 			break;
 		case eTerSpec::DAMAGING:
-			switch(eDamageType(scenario.ter_types[ter].flag3.u)) {
+			switch(eDamageType(scenario.ter_types[ter].flag3)) {
 				case eDamageType::WEAPON:
 					icon = 40;
 					break;
@@ -178,7 +178,7 @@ static short get_small_icon(ter_num_t ter){
 			icon = -1;
 			break;
 		case eTerSpec::DANGEROUS:
-			switch((eStatus)scenario.ter_types[ter].flag3.u){
+			switch((eStatus)scenario.ter_types[ter].flag3){
 				case eStatus::POISONED_WEAPON: // TODO: Do something here
 					break;
 				case eStatus::BLESS_CURSE: // TODO: Do something here (check flag1 to determine whether bless or curse)
@@ -224,15 +224,15 @@ static short get_small_icon(ter_num_t ter){
 			icon = 30;
 			break;
 		case eTerSpec::UNLOCKABLE:
-			if(scenario.ter_types[ter].flag2.u >= 5)
-				icon = (scenario.ter_types[ter].flag2.u == 10) ? 32 : 31;
+			if(scenario.ter_types[ter].flag2 >= 5)
+				icon = (scenario.ter_types[ter].flag2 == 10) ? 32 : 31;
 			else icon = 30;
 			break;
 		case eTerSpec::IS_A_SIGN:
 			icon = 26;
 			break;
 		case eTerSpec::CALL_SPECIAL:
-			icon = scenario.ter_types[ter].flag3.s;
+			icon = scenario.ter_types[ter].flag3;
 			break;
 		case eTerSpec::IS_A_CONTAINER:
 			icon = 36;
@@ -242,7 +242,7 @@ static short get_small_icon(ter_num_t ter){
 			icon = -1;
 			break;
 		case eTerSpec::CONVEYOR:
-			switch(scenario.ter_types[ter].flag1.u){ // TODO: Consider the other four possible directions
+			switch(scenario.ter_types[ter].flag1){ // TODO: Consider the other four possible directions
 				case DIR_N:
 					icon = 27;
 					break;
@@ -267,7 +267,7 @@ static short get_small_icon(ter_num_t ter){
 			icon = -1;
 			break;
 		case eTerSpec::CALL_SPECIAL_WHEN_USED:
-			icon = scenario.ter_types[ter].flag3.s;
+			icon = scenario.ter_types[ter].flag3;
 			break;
 		default:
 			icon = -1;

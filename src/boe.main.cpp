@@ -628,40 +628,38 @@ void change_cursor(location where_curs) {
 
 void move_sound(ter_num_t ter,short step){
 	static bool on_swamp = false;
-	short pic,snd;
+	short pic;
 	eTerSpec spec;
 	
 	pic = univ.scenario.ter_types[ter].picture;
 	spec = univ.scenario.ter_types[ter].special;
-	snd = univ.scenario.ter_types[ter].step_sound;
+	eStepSnd snd = univ.scenario.ter_types[ter].step_sound;
 	
 	// if on swamp don't play squish sound : BoE legacy behavior, can be removed safely
-	if(snd == 4 && !flying() && univ.party.in_boat == 0){
-		if(on_swamp && get_ran(1,1,100) >= 10)return;
+	if(snd == eStepSnd::SPLASH && !flying() && univ.party.in_boat < 0){
+		if(on_swamp && get_ran(1,1,100) >= 10) return;
 		on_swamp = true;
-	}else on_swamp = false;
+	} else on_swamp = false;
 	
-	if(!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {// is on boat ?
+	if(!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {
 		if(spec == eTerSpec::TOWN_ENTRANCE)
 			return;
 		play_sound(48); //play boat sound
-	}
-	else if(!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {//// is on horse ?
+	} else if(!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {
 		play_sound(85); //so play horse sound
-	}
-	else switch(univ.scenario.ter_types[ter].step_sound){
-		case 1:
-			play_sound(55); //squish
+	} else switch(univ.scenario.ter_types[ter].step_sound){
+		case eStepSnd::SQUISH:
+			play_sound(55);
 			break;
-		case 2:
-			play_sound(47); //crunch
+		case eStepSnd::CRUNCH:
+			play_sound(47);
 			break;
-		case 3:
-			break; //silence : do nothing
-		case 4:
-			play_sound(17); // big splash
+		case eStepSnd::NONE:
 			break;
-		default: //safety footsteps valve
+		case eStepSnd::SPLASH:
+			play_sound(17);
+			break;
+		case eStepSnd::STEP:
 			if(step % 2 == 0) //footsteps alternate sound
 				play_sound(49);
 			else play_sound(50);

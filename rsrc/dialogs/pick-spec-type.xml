@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='cancel'>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text top='8' left='50' width='300' height='80'>
+		This terrain type is set to call a local special when used or stepped on.
+		That means it will call the special with the given ID in the current area, whether town or outdoors.
+		From here you can edit the corresponding special node in the currently active town or outdoor section.
+		Which would you like to edit?
+	</text>
+	<button name='town' type='large' top='90' left='10'>Edit Town</button>
+	<button name='out' type='large' top='90' left='125'>Edit Outdoor</button>
+	<button name='cancel' type='regular' top='90' left='287'>Cancel</button>
+</dialog>

@@ -1160,7 +1160,7 @@ void pick_lock(location where,short pc_num) {
 		add_string_to_buf("  Wrong terrain type.");
 		return;
 	}
-	unlock_adjust = univ.scenario.ter_types[terrain].flag2.u;
+	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
 	if((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
 		add_string_to_buf("  Didn't work.");
 		if(will_break) {
@@ -1174,7 +1174,7 @@ void pick_lock(location where,short pc_num) {
 	else {
 		add_string_to_buf("  Door unlocked.");
 		play_sound(9);
-		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1.u;
+		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1;
 	}
 }
 
@@ -1190,15 +1190,15 @@ void bash_door(location where,short pc_num) {
 		return;
 	}
 	
-	unlock_adjust = univ.scenario.ter_types[terrain].flag2.u;
-	if(unlock_adjust >= 5 || r1 > (unlock_adjust * 15 + 40) || univ.scenario.ter_types[terrain].flag3.u != 1)  {
+	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
+	if(unlock_adjust >= 5 || r1 > (unlock_adjust * 15 + 40) || univ.scenario.ter_types[terrain].flag3 != 1)  {
 		add_string_to_buf("  Didn't work.");
 		damage_pc(pc_num,get_ran(1,1,4),eDamageType::UNBLOCKABLE,eRace::UNKNOWN,0);
 	}
 	else {
 		add_string_to_buf("  Lock breaks.");
 		play_sound(9);
-		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1.u;
+		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1;
 	}
 }
 
@@ -1260,9 +1260,9 @@ void erase_out_specials() {
 						univ.scenario.ter_types[sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y]].special == eTerSpec::TOWN_ENTRANCE &&
 					   (sector.exit_locs[k].x == minmax(0,47,sector.exit_locs[k].x)) &&
 					   (sector.exit_locs[k].y == minmax(0,47,sector.exit_locs[k].y))) {
-						if(univ.party.can_find_town[sector.exit_dests[k]] == 0) {
+						if(!univ.party.can_find_town[sector.exit_dests[k]]) {
 							univ.out[48 * i + sector.exit_locs[k].x][48 * j + sector.exit_locs[k].y] =
-								univ.scenario.ter_types[sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y]].flag1.u;
+								univ.scenario.ter_types[sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y]].flag1;
 						}
 						else if(univ.party.can_find_town[sector.exit_dests[k]]) {
 							univ.out[48 * i + sector.exit_locs[k].x][48 * j + sector.exit_locs[k].y] =

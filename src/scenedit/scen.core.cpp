@@ -3,6 +3,7 @@
 #include <cstring>
 #include <functional>
 #include <numeric>
+#include <algorithm>
 #include <boost/lexical_cast.hpp>
 #include "scen.global.h"
 #include "scenario.h"
@@ -42,6 +43,61 @@ const std::set<eItemAbil> items_no_strength = {
 };
 
 static bool save_ter_info(cDialog& me, cTerrain& ter) {
+	eTerSpec prop = eTerSpec(boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["prop"]).getSelected().substr(4)));
+	int spec_type = me["flag2"].getTextAsNum();
+	int num_town = (**std::min_element(scenario.towns.begin(), scenario.towns.end(), [](cTown* a,cTown* b){
+		return a->specials.size() < b->specials.size();
+	})).specials.size();
+	int num_out = (**std::min_element(scenario.outdoors.begin(), scenario.outdoors.end(), [](cOutdoors* a,cOutdoors* b){
+		return a->specials.size() < b->specials.size();
+	})).specials.size();
+	int num_loc = std::min(num_town, num_out);
+	int num_glob = scenario.scen_specials.size();
+	switch(prop) {
+		case eTerSpec::CHANGE_WHEN_STEP_ON:
+		case eTerSpec::CHANGE_WHEN_USED:
+			if(!check_range(me, "flag1", true, 0, scenario.ter_types.size() - 1, "Terrain to change to")) return false;
+			if(!check_range(me, "flag2", true, 0, 99, "Sound to play")) return false;
+			break;
+		case eTerSpec::DAMAGING:
+			if(!check_range(me, "flag1", true, 0, 100, "Sides per die")) return false;
+			if(!check_range(me, "flag2", true, 0, 100, "Number of sides")) return false;
+			if(!check_range(me, "flag3", true, 0, 8, "Damage type")) return false;
+			break;
+		case eTerSpec::DANGEROUS:
+			if(!check_range(me, "flag1", true, 0, 8, "Strength")) return false;
+			if(!check_range(me, "flag2", true, 0, 100, "Percentage chance")) return false;
+			if(!check_range(me, "flag3", true, 0, 14, "Status type")) return false;
+			break;
+		case eTerSpec::CRUMBLING:
+			if(!check_range_msg(me, "flag2", true, 0, 2, "Method", "1 - Move Mountains, 2 - quickfire, 0 - either")) return false;
+		if(false) // Prevent next line from executing if it's crumbling
+		case eTerSpec::UNLOCKABLE:
+			if(!check_range(me, "flag2", true, 0, 10, "Difficulty")) return false;
+		case eTerSpec::LOCKABLE:
+		case eTerSpec::TOWN_ENTRANCE:
+			if(!check_range(me, "flag1", true, 0, scenario.ter_types.size() - 1,
+					prop == eTerSpec::TOWN_ENTRANCE ? "Terrain when hidden" :  "Terrain to change to"))
+				return false;
+			break;
+		case eTerSpec::WATERFALL_CAVE:
+		case eTerSpec::WATERFALL_SURFACE:
+		case eTerSpec::CONVEYOR:
+			if(!check_range(me, "flag1", true, 0, 7, "Direction")) return false;
+			break;
+		case eTerSpec::CALL_SPECIAL:
+		case eTerSpec::CALL_SPECIAL_WHEN_USED:
+			if(spec_type < 0 || spec_type > 1) {
+				giveError("Special type must be either 0 or 1.", &me);
+				return false;
+			}
+			if(!check_range(me, "flag1", true, 0, (spec_type == 0 ? num_glob : num_loc) - 1, "Special to call")) return false;
+			break;
+		case eTerSpec::BRIDGE: case eTerSpec::BED: case eTerSpec::IS_A_SIGN: case eTerSpec::IS_A_CONTAINER: case eTerSpec::BLOCKED_TO_MONSTERS:
+		case eTerSpec::WILDERNESS_CAVE: case eTerSpec::WILDERNESS_SURFACE: case eTerSpec::NONE:
+		case eTerSpec::UNUSED1: case eTerSpec::UNUSED2: case eTerSpec::UNUSED3:
+			break;
+	}
 	
 	ter.picture = me["pict"].getTextAsNum();
 	// TODO: Should somehow verify the pict number is valid
@@ -53,57 +109,24 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 	else if(blockage == "window") ter.blockage = eTerObstruct::BLOCK_MOVE;
 	else if(blockage == "obstructed") ter.blockage = eTerObstruct::BLOCK_MOVE_AND_SHOOT;
 	else if(blockage == "opaque") ter.blockage = eTerObstruct::BLOCK_MOVE_AND_SIGHT;
-	ter.special = (eTerSpec) boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["prop"]).getSelected().substr(4));
-	/*
-	i = CDGN(813,6);
-	if((store_ter.special < 2) || (store_ter.special > 6)) {
-		if(cre(i,0,256,"First special flag must be from 0 to 255.","",813)) return false;
-	}
-	else if(store_ter.special == eTerSpec::DAMAGING) {
-		if(cre(i,0,256,"First special flag must be from 0 to 100.","",813)) return false;
-	}
-	else if(store_ter.special == eTerSpec::DANGEROUS) {
-		if(cre(i,0,256,"First special flag must be from 0 to 8.","",813)) return false;
-	}
-	*/
-	if(ter.special == eTerSpec::NONE)
-		ter.flag1.s = me["flag1"].getTextAsNum();
-	else ter.flag1.u = me["flag1"].getTextAsNum();
-	if(false) // flag2 is never signed, apparently; but that could change?
-		ter.flag2.s = me["flag2"].getTextAsNum();
-	else ter.flag2.u = me["flag2"].getTextAsNum();
-	if(ter.special == eTerSpec::CALL_SPECIAL || ter.special == eTerSpec::CALL_SPECIAL_WHEN_USED)
-		ter.flag3.s = me["flag3"].getTextAsNum();
-	else ter.flag3.u = me["flag3"].getTextAsNum();
+	ter.special = prop;
+	ter.flag1 = me["flag1"].getTextAsNum();
+	ter.flag2 = me["flag2"].getTextAsNum();
+	ter.flag3 = me["flag3"].getTextAsNum();
 	
-	/*
-	if(store_ter.special == eTerSpec::TOWN_ENTRANCE) {
-		if(cre(i,0,256,"Second special flag must be from 0 to 200.","",813)) return false;
-	}
-	else if(store_ter.special == eTerSpec::DAMAGING || store_ter.special == eTerSpec::DANGEROUS) {
-		if(cre(i,0,256,"Second special flag must be from 0 to 100.","",813)) return false;
-	}
-	*/
-	
-	/*
-	if(cre(i,0,255,"Transform To What must be from 0 to 255.","",813)) return false;
-	*/
 	ter.trans_to_what = me["trans"].getTextAsNum();
 	ter.fly_over = dynamic_cast<cLed&>(me["flight"]).getState() == led_red;
 	ter.boat_over = dynamic_cast<cLed&>(me["boat"]).getState() == led_red;
 	ter.block_horse = dynamic_cast<cLed&>(me["horse"]).getState();
 	ter.light_radius = me["light"].getTextAsNum();
-	/*
-	 if(cre(store_ter.light_radius,0,8,"Light radius must be from 0 to 8.","",813)) return false;
-	 */
 	
 	std::string sound = dynamic_cast<cLedGroup&>(me["sound"]).getSelected();
-	// TODO: Uh, why not use an actual sound number instead of 0...4?
-	if(sound == "step") ter.step_sound = 0;
-	else if(sound == "squish") ter.step_sound = 1;
-	else if(sound == "crunch") ter.step_sound = 2;
-	else if(sound == "nosound") ter.step_sound = 3;
-	else if(sound == "splash") ter.step_sound = 4;
+	// TODO: Offer the option of a custom sound?
+	if(sound == "step") ter.step_sound = eStepSnd::STEP;
+	else if(sound == "squish") ter.step_sound = eStepSnd::SQUISH;
+	else if(sound == "crunch") ter.step_sound = eStepSnd::CRUNCH;
+	else if(sound == "nosound") ter.step_sound = eStepSnd::NONE;
+	else if(sound == "splash") ter.step_sound = eStepSnd::SPLASH;
 	
 	std::string shortcut = me["key"].getText();
 	if(shortcut.length() > 0) ter.shortcut_key = shortcut[0];
@@ -195,7 +218,87 @@ static bool show_help(std::string from_file, cDialog& parent, pic_num_t pic){
 	return true;
 }
 
-static bool fill_ter_flag_info(cDialog& me, std::string id, bool){
+static bool pick_ter_flag(cDialog& me, std::string id, eKeyMod) {
+	if(id == "editspec") {
+		int which_type = me["flag2"].getTextAsNum();
+		if(which_type == 1) {
+			std::string choice = cChoiceDlog("pick-spec-type", {"town", "out", "cancel"}).show();
+			if(choice == "cancel") return true;
+			else if(choice == "town") which_type = 2;
+		}
+		short spec = me["flag1"].getTextAsNum();
+		if(spec < 0 || spec > 255) {
+			spec = get_fresh_spec(which_type);
+			if(spec < 0) {
+				giveError("You can't create a new special encounter because there are no more free special nodes.",
+						  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
+				return true;
+			}
+		}
+		if(edit_spec_enc(spec,which_type,&me))
+			me["flag1"].setTextToNum(spec);
+		return true;
+	} else if(id == "picktrans") {
+		int i = me["trans"].getTextAsNum();
+		i = choose_text(STRT_TER, i, &me, "Transform to what terrain?");
+		me["trans"].setTextToNum(i);
+		return true;
+	}
+	int which = id[8] - '0';
+	std::string fld = id.substr(4);
+	int i = me[fld].getTextAsNum();
+	eTerSpec prop;
+	cLedGroup& led_ctrl = dynamic_cast<cLedGroup&>(me["prop"]);
+	std::istringstream sel(led_ctrl.getSelected().substr(4));
+	sel >> prop;
+	switch(prop) {
+		case eTerSpec::NONE:
+			// TODO: Could have a pick graphic dialog for the editor icon, but that requires adding a new graphic type
+			return true;
+		case eTerSpec::CHANGE_WHEN_STEP_ON: case eTerSpec::CHANGE_WHEN_USED:
+			if(which == 1)
+				i = choose_text(STRT_TER, i, &me, "Change to what terrain?");
+			else if(which == 2)
+				i = choose_text(STRT_SND, i, &me, "Select the sound to play when it changes:");
+			else return true;
+			break;
+		case eTerSpec::DAMAGING:
+			if(which == 3)
+				i = choose_damage_type(i, &me);
+			else return true;
+			break;
+		case eTerSpec::DANGEROUS:
+			if(which == 3)
+				i = choose_status_effect(i, false, &me);
+			else return true;
+			break;
+		case eTerSpec::BED:
+			if(which == 1)
+				i = choose_graphic(i, PIC_TER, &me);
+			else return true;
+			break;
+		case eTerSpec::WATERFALL_CAVE: case eTerSpec::WATERFALL_SURFACE: case eTerSpec::CONVEYOR:
+			if(which == 1)
+				i = choose_text(STRT_DIR, i, &me, "Which direction?");
+			else return true;
+			break;
+		case eTerSpec::CRUMBLING: case eTerSpec::LOCKABLE: case eTerSpec::UNLOCKABLE: case eTerSpec::TOWN_ENTRANCE:
+			if(which == 1)
+				i = choose_text(STRT_TER, i, &me, prop == eTerSpec::TOWN_ENTRANCE ? "Terrain type when hidden:" : "Terrain to change to:");
+			else return true;
+			break;
+		case eTerSpec::CALL_SPECIAL: case eTerSpec::CALL_SPECIAL_WHEN_USED:
+		case eTerSpec::UNUSED1: case eTerSpec::UNUSED2: case eTerSpec::UNUSED3:
+		case eTerSpec::WILDERNESS_CAVE: case eTerSpec::WILDERNESS_SURFACE:
+		case eTerSpec::BRIDGE: case eTerSpec::IS_A_SIGN: case eTerSpec::IS_A_CONTAINER: case eTerSpec::BLOCKED_TO_MONSTERS:
+			return true;
+	}
+	me[fld].setTextToNum(i);
+	return true;
+}
+
+static bool fill_ter_flag_info(cDialog& me, std::string id, bool losing){
+	if(losing) return true;
 	eTerSpec prop;
 	cLedGroup& led_ctrl = dynamic_cast<cLedGroup&>(me[id]);
 	std::istringstream sel(led_ctrl.getSelected().substr(4));
@@ -206,12 +309,30 @@ static bool fill_ter_flag_info(cDialog& me, std::string id, bool){
 	me["pickflag1"].hide();
 	me["pickflag2"].hide();
 	me["pickflag3"].hide();
+	me["editspec"].hide();
 	switch(prop) {
 		case eTerSpec::NONE:
 			me["pickflag1"].hide(); // TODO: Could have a pick graphic dialog for the editor icon, but that requires adding a new graphic type
 			break;
+		case eTerSpec::CHANGE_WHEN_STEP_ON: case eTerSpec::CHANGE_WHEN_USED:
+			me["pickflag1"].show();
+			me["pickflag2"].show();
+			break;
+		case eTerSpec::DAMAGING: case eTerSpec::DANGEROUS:
+			me["pickflag3"].show();
+			break;
+		case eTerSpec::BED: case eTerSpec::WATERFALL_CAVE: case eTerSpec::WATERFALL_SURFACE: case eTerSpec::CONVEYOR:
+		case eTerSpec::CRUMBLING: case eTerSpec::LOCKABLE: case eTerSpec::UNLOCKABLE: case eTerSpec::TOWN_ENTRANCE:
+			me["pickflag1"].show();
+			break;
+		case eTerSpec::CALL_SPECIAL: case eTerSpec::CALL_SPECIAL_WHEN_USED:
+			me["editspec"].show();
+			break;
+		case eTerSpec::UNUSED1: case eTerSpec::UNUSED2: case eTerSpec::UNUSED3:
+		case eTerSpec::WILDERNESS_CAVE: case eTerSpec::WILDERNESS_SURFACE:
+		case eTerSpec::BRIDGE: case eTerSpec::IS_A_SIGN: case eTerSpec::IS_A_CONTAINER: case eTerSpec::BLOCKED_TO_MONSTERS:
+			break;
 	}
-	// TODO: Click handlers for the "choose" buttons as necessary, plus hide/show them as needed
 	return true;
 }
 
@@ -239,7 +360,9 @@ static void fill_ter_info(cDialog& me, short ter){
 	}
 	me["number"].setTextToNum(ter);
 	me["name"].setText(ter_type.name);
-	me["key"].setTextToNum(ter_type.shortcut_key);
+	if(ter_type.shortcut_key > ' ')
+		me["key"].setText(std::string(1, ter_type.shortcut_key));
+	else me["key"].setText("");
 	me["light"].setTextToNum(ter_type.light_radius);
 	me["trans"].setTextToNum(ter_type.trans_to_what);
 	me["ground"].setTextToNum(ter_type.ground_type);
@@ -274,19 +397,19 @@ static void fill_ter_info(cDialog& me, short ter){
 	}{
 		cLedGroup& led_ctrl = dynamic_cast<cLedGroup&>(me["sound"]);
 		switch(ter_type.step_sound){
-			case 0:
+			case eStepSnd::STEP:
 				led_ctrl.setSelected("step");
 				break;
-			case 1:
+			case eStepSnd::SQUISH:
 				led_ctrl.setSelected("squish");
 				break;
-			case 2:
+			case eStepSnd::CRUNCH:
 				led_ctrl.setSelected("crunch");
 				break;
-			case 3:
+			case eStepSnd::NONE:
 				led_ctrl.setSelected("nosound");
 				break;
-			case 4:
+			case eStepSnd::SPLASH:
 				led_ctrl.setSelected("splash");
 				break;
 		}
@@ -303,15 +426,9 @@ static void fill_ter_info(cDialog& me, short ter){
 		cLed& led_ctrl = dynamic_cast<cLed&>(me["horse"]);
 		led_ctrl.setState(led_red);
 	}
-	if(ter_type.special == eTerSpec::NONE)
-		me["flag1"].setTextToNum(ter_type.flag1.s);
-	else me["flag1"].setTextToNum(ter_type.flag1.u);
-	if(false) // flag2 is never signed, apparently; but that could change?
-		me["flag2"].setTextToNum(ter_type.flag2.s);
-	else me["flag2"].setTextToNum(ter_type.flag2.u);
-	if(ter_type.special == eTerSpec::CALL_SPECIAL || ter_type.special == eTerSpec::CALL_SPECIAL_WHEN_USED)
-		me["flag3"].setTextToNum(ter_type.flag3.s);
-	else me["flag3"].setTextToNum(ter_type.flag3.u);
+	me["flag1"].setTextToNum(ter_type.flag1);
+	me["flag2"].setTextToNum(ter_type.flag2);
+	me["flag3"].setTextToNum(ter_type.flag3);
 	me["arena"].setTextToNum(ter_type.combat_arena);
 }
 
@@ -321,7 +438,6 @@ static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which) {
 	if(!me.toast(true)) return true;
 	if(id == "left") {
 		me.untoast();
-		// TODO: Use size() once ter_types becomes a vector
 		if(which == 0)
 			which = scenario.ter_types.size() - 1;
 		else which--;
@@ -417,31 +533,37 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 	return true;
 }
 
-short edit_ter_type(ter_num_t which) {
+void edit_ter_type(ter_num_t which) {
 	using namespace std::placeholders;
 	cDialog ter_dlg("edit-terrain");
 	// Attach handlers
 	ter_dlg["pict"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,2999,"terrain graphic"));
 	ter_dlg["pickpict"].attachClickHandler(std::bind(pick_picture,PIC_TER,_1,"pict","graphic"));
 	ter_dlg["pickanim"].attachClickHandler(std::bind(pick_picture,PIC_TER_ANIM,_1,"pict","graphic"));
-	ter_dlg["light"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,255,"light radius"));
-	ter_dlg["trans"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,65535,"\"transform to what?\""));
+	ter_dlg["light"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,8,"light radius"));
+	ter_dlg["trans"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,scenario.ter_types.size() - 1,"\"transform to what?\""));
 	ter_dlg["ground"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,255,"ground type"));
-	ter_dlg["trimter"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,255,"trim terrain"));
+	ter_dlg["trimter"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,scenario.ter_types.size() - 1,"trim terrain"));
 	ter_dlg["trim"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,18,"trim type"));
 	ter_dlg["prop"].attachFocusHandler(fill_ter_flag_info);
 	ter_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &ter_dlg, false));
-	ter_dlg["arena"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,299,"ground type"));
+	ter_dlg["arena"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,999 + scenario.towns.size(),"combat areana"));
 	// TODO: Add focus handler for key
 	ter_dlg["object"].attachClickHandler(std::bind(edit_ter_obj, _1, std::ref(which)));
 	ter_dlg.attachClickHandlers(std::bind(finish_editing_ter,_1,_2,std::ref(which)), {"left", "right", "done"});
 	ter_dlg["picktrim"].attachClickHandler(std::bind(pick_string,"trim-names", _1, "trim", ""));
 	ter_dlg["pickarena"].attachClickHandler(std::bind(pick_string,"arena-names", _1, "arena", ""));
 	ter_dlg["help"].attachClickHandler(std::bind(show_help, "ter-type-help", _1, 16));
+	ter_dlg.attachClickHandlers(pick_ter_flag, {"pickflag1", "pickflag2", "pickflag3", "editspec", "picktrans"});
+	ter_dlg["picktown"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
+		int i = me["arena"].getTextAsNum();
+		if(i < 1000) i = -1; else i -= 1000;
+		i = choose_text(STRT_TOWN, i, &me, "Select a town to base the combat arena on:");
+		if(i >= 0) me["arena"].setTextToNum(i + 1000);
+		return true;
+	});
 	fill_ter_info(ter_dlg,which);
 	ter_dlg.run();
-	// TODO: What should be returned?
-	return 0;
 }
 
 static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which) {

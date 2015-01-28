@@ -93,8 +93,6 @@ void cButton::draw(){
 		// Others may need adjustments too, not sure
 		// TODO: How is it supposed to know it's a default button when this fact is stored in the dialog, not the button?
 		if(key.spec && key.k == key_enter) drawFrame(2,frameStyle); // frame default button, to provide a visual cue that it's the default
-	} else if(parent) {
-		tileImage(*inWindow,frame,bg[parent->getBg()]);
 	}
 }
 
@@ -266,8 +264,6 @@ void cLed::draw(){
 		to_rect.right = frame.right;
 		to_rect.left = frame.left + 18; // Possibly could be 20
 		win_draw_string(*inWindow,to_rect,lbl,eTextMode::LEFT_TOP,style);
-	} else if(parent) {
-		tileImage(*inWindow,frame,bg[parent->getBg()]);
 	}
 }
 
