@@ -69,3 +69,7 @@ Magical
 Plant
 
 Bird
+
+Skeletal Undead
+
+Goblin

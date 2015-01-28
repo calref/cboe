@@ -425,6 +425,10 @@ void cPlayer::sleep(eStatus what_type,int how_much,int adjust) {
 	if(!is_alive()) return;
 	if(how_much == 0) return;
 	
+	if((what_type == eStatus::ASLEEP) &&
+	   (race == eRace::UNDEAD || race == eRace::SKELETAL || race == eRace::SLIME ||
+		race == eRace::STONE || race == eRace::PLANT))
+		return;
 	if(what_type == eStatus::ASLEEP || what_type == eStatus::PARALYZED) {
 		how_much -= get_prot_level(eItemAbil::WILL) / 2;
 		level = get_prot_level(eItemAbil::FREE_ACTION);
@@ -2605,6 +2609,17 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	// TODO: Do these perhaps depend on the ability strength less than they should?
 	if((level = univ.party[which_pc].get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(type_of_attacker))) > 0)
 		how_much = how_much / ((level >= 7) ? 4 : 2);
+	if(isHumanoid(type_of_attacker) && !isHuman(type_of_attacker) && type_of_attacker != eRace::HUMANOID) {
+		// If it's a slith, nephil, vahnatai, or goblin, Protection from Humanoids also helps
+		// Humanoid is explicitly excluded here because otherwise it would help twice.
+		if((level = univ.party[which_pc].get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::HUMANOID))) > 0)
+			how_much = how_much / ((level >= 7) ? 4 : 2);
+	}
+	if(type_of_attacker == eRace::SKELETAL) {
+		// Protection from Undead helps with both types of undead
+		if((level = univ.party[which_pc].get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::UNDEAD))) > 0)
+			how_much = how_much / ((level >= 7) ? 4 : 2);
+	}
 	
 	// invuln
 	if(damage_type != eDamageType::SPECIAL && univ.party[which_pc].status[eStatus::INVULNERABLE] > 0)

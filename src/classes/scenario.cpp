@@ -166,8 +166,13 @@ void cScenario::append(legacy::scen_item_data_type& old){
 	short i;
 	for(i = 0; i < 400; i++)
 		scen_items[i].append(old.scen_items[i]);
-	for(i = 0; i < 256; i++)
+	for(i = 0; i < 256; i++) {
 		scen_monsters[i].m_name = old.monst_names[i];
+		if(scen_monsters[i].m_type == eRace::UNDEAD && scen_monsters[i].m_name.find("Skeleton") != std::string::npos)
+			scen_monsters[i].m_type = eRace::SKELETAL;
+		if(scen_monsters[i].m_type == eRace::HUMANOID && scen_monsters[i].m_name.find("Goblin") != std::string::npos)
+			scen_monsters[i].m_type = eRace::GOBLIN;
+	}
 	for(i = 0; i < 256; i++)
 		ter_types[i].name = old.ter_names[i];
 }
