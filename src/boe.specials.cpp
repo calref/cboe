@@ -1603,19 +1603,16 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 	location l;
 	
 	if(isHumanoid(which_m->m_type)) {
-		// TODO: Uh, don't hardcode these!
-		if(( which_m->number == 38) ||
-			( which_m->number == 39))
+		if(which_m->m_type == eRace::GOBLIN)
 			i = 4;
-		else if( which_m->number == 45)
-			i = 0;
 		else i = get_ran(1,0,1);
 		play_sound(29 + i);
 	} else switch(which_m->m_type) {
 		case eRace::GIANT: play_sound(29); break;
 			// TODO: Should birds be considered beasts? If there are any birds in the bladbase, probably; otherwise, better to have new sound
-		case eRace::REPTILE: case eRace::BEAST: case eRace::DEMON: case eRace::UNDEAD: case eRace::STONE:
+		case eRace::REPTILE: case eRace::BEAST: case eRace::DEMON: case eRace::UNDEAD: case eRace::SKELETAL: case eRace::STONE:
 			i = get_ran(1,0,1); play_sound(31 + i); break;
+			// TODO: I feel like dragons should have a different sound.
 		default: play_sound(33); break;
 	}
 	
@@ -1655,9 +1652,10 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 		case eRace::DEMON:
 			univ.town.set_ash(i,j,true);
 			break;
-			// TODO: Don't check which_m->number here; find another way to indicate it
 		case eRace::UNDEAD:
-			if(which_m->number <= 59) univ.town.set_bones(i,j,true);
+			break;
+		case eRace::SKELETAL:
+			univ.town.set_bones(i,j,true);
 			break;
 		case eRace::SLIME: case eRace::PLANT: case eRace::BUG:
 			univ.town.set_sm_slime(i,j,true);
@@ -3212,9 +3210,9 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex2b;
 			break;
 		case eSpecType::IF_SPECIES:
-			if(spec.ex1a < 0 || spec.ex1a > 2) {
-				giveError("Species out of range (0-human, 1-nephilim, 2-slith)");
-				break; // TODO: Should we allow monster races too?
+			if(spec.ex1a < 0 || spec.ex1a > 21) {
+				giveError("Species out of range (0-21)");
+				break;
 			}
 			i = 0;
 			j = min(spec.ex2a,party_size(true));

@@ -91,13 +91,20 @@ enum class eRace {
 	MAGICAL = 17,	// 14
 	PLANT = 18,
 	BIRD = 19,
+	SKELETAL = 20,
+	GOBLIN = 21,
 };
 
 // Types IMPORTANT, MAGE, and PRIEST are implicitly human
+inline bool isHuman(eRace race) {
+	int code = (int) race;
+	return code == 0 || (code >= 6 && code <= 8);
+}
+
 // Types NEPHIL, SLITH, and VAHNATAI are implicitly humanoid
 inline bool isHumanoid(eRace race) {
 	int code = (int) race;
-	return (code >= 0 && code <= 3) || (code >= 6 && code <= 9);
+	return (code >= 0 && code <= 3) || (code >= 6 && code <= 9) || code == 21;
 }
 
 /* adven[i].status*/ //complete - assign a positive value for a help pc effect, a negative for harm pc

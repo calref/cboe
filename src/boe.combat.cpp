@@ -842,8 +842,10 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,iLiving& monst,
 		else if(cPlayer* who = dynamic_cast<cPlayer*>(&monst))
 			race = who->race;
 		if(race == eRace::UNKNOWN) return 0;
-		// Slith, nephilim, and vahnatai are affected by humanoid-bane weapons as well as their individual banes
-		if(abil_dat == int(eRace::HUMANOID) && (race == eRace::SLITH || race == eRace::NEPHIL || race == eRace::VAHNATAI));
+		// Slith, nephilim, goblins, and vahnatai are affected by humanoid-bane weapons as well as their individual banes
+		if(abil_dat == int(eRace::HUMANOID) && isHumanoid(race) && !isHuman(race));
+		// Skeletal undead are also affected by normal undead-bane weapons
+		else if(abil_dat == int(eRace::UNDEAD) && race == eRace::SKELETAL);
 		else if(race != eRace(abil_dat))
 			return 0;
 		store += abil_str;
@@ -860,6 +862,7 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,iLiving& monst,
 				store *= 8;
 				break;
 			case eRace::UNDEAD:
+			case eRace::SKELETAL:
 				store *= 6;
 				break;
 			case eRace::REPTILE:
@@ -881,6 +884,7 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,iLiving& monst,
 			case eRace::NEPHIL:
 			case eRace::SLITH:
 			case eRace::VAHNATAI:
+			case eRace::GOBLIN:
 			case eRace::HUMANOID:
 				store *= 3;
 				break;
@@ -1400,7 +1404,7 @@ void do_combat_cast(location target) {
 											break;
 											
 										case eSpell::TURN_UNDEAD: case eSpell::DISPEL_UNDEAD:
-											if(cur_monst->m_type != eRace::UNDEAD) {
+											if(cur_monst->m_type != eRace::UNDEAD && cur_monst->m_type != eRace::SKELETAL) {
 												add_string_to_buf("  Not undead.");
 												store_m_type = -1;
 												break;
@@ -2220,7 +2224,7 @@ void do_monster_turn() {
 			
 			// flee
 			if((univ.town.monst[i].target != 6) && (((cur_monst->morale <= 0)
-					&& !cur_monst->mindless && cur_monst->m_type != eRace::UNDEAD)
+					&& !cur_monst->mindless && cur_monst->m_type != eRace::UNDEAD && cur_monst->m_type != eRace::SKELETAL)
 					|| (current_monst_tactic == 1))) {
 				if(cur_monst->morale < 0)
 					cur_monst->morale++;
@@ -2656,7 +2660,7 @@ void monster_attack(short who_att,iLiving* target) {
 			draw_terrain(2);
 			// Check if hit, and do effects
 			if(r1 <= hit_chance[(attacker->skill + 4) / 2]) {
-				if(attacker->m_type == eRace::UNDEAD)
+				if(attacker->m_type == eRace::UNDEAD || attacker->m_type == eRace::SKELETAL)
 					dam_type = eDamageType::UNDEAD;
 				if(attacker->m_type == eRace::DEMON)
 					dam_type = eDamageType::DEMON;

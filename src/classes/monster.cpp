@@ -478,6 +478,8 @@ std::ostream& operator << (std::ostream& out, eRace e){
 		case eRace::SLIME: out << "slime"; break;
 		case eRace::STONE: out << "stone"; break;
 		case eRace::UNDEAD: out << "undead"; break;
+		case eRace::SKELETAL: out << "skeletal"; break;
+		case eRace::GOBLIN: out << "goblin"; break;
 		case eRace::UNKNOWN: out << "humanoid"; break;
 	}
 	return out;
@@ -532,6 +534,10 @@ std::istream& operator >> (std::istream& in, eRace& e){
 			e = eRace::STONE;
 		else if(key == "undead")
 			e = eRace::UNDEAD;
+		else if(key == "skeletal")
+			e = eRace::SKELETAL;
+		else if(key == "goblin")
+			e = eRace::GOBLIN;
 	}
 	return in;
 }

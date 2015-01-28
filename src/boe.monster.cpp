@@ -219,7 +219,7 @@ void do_monsters() {
 							l2 = (univ.town.monst[i].target <= 6) ? univ.town.p_loc : univ.town.monst[target - 100].cur_loc;
 							
 							if(univ.town.monst[i].morale < 0 && !univ.town.monst[i].mindless
-								&& univ.town.monst[i].m_type != eRace::UNDEAD)  {
+							   && univ.town.monst[i].m_type != eRace::UNDEAD && univ.town.monst[i].m_type != eRace::SKELETAL)  {
 								acted_yet = flee_party(i,l1,l2);
 								if(get_ran(1,0,10) < 6)
 									univ.town.monst[i].morale++;
@@ -1159,7 +1159,7 @@ void cCreature::sleep(eStatus which_status,int amount,int penalty) {
 	}
 	
 	if((which_status == eStatus::ASLEEP) &&
-	   (m_type == eRace::UNDEAD || m_type == eRace::SLIME ||
+	   (m_type == eRace::UNDEAD || m_type == eRace::SKELETAL || m_type == eRace::SLIME ||
 		m_type == eRace::STONE || m_type == eRace::PLANT))
 		return;
 	short r1 = get_ran(1,1,100);

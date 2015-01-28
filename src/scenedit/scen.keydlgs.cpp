@@ -246,7 +246,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 			}
 			break;
 		case STRT_RACE:
-			for(int i = 0; i < 20; i++) {
+			for(int i = 0; i < 22; i++) {
 				strings.push_back(get_str("traits", i * 2 + 33));
 			}
 			break;
