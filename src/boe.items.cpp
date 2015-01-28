@@ -381,7 +381,7 @@ void set_town_attitude(short lo,short hi,short att) {
 		std::swap(lo, hi);
 	
 	for(i = lo; i <= hi; i++) {
-		if((univ.town.monst[i].active > 0) && (univ.town.monst[i].summoned == 0)){
+		if(univ.town.monst[i].active > 0 && univ.town.monst[i].summon_time == 0){
 			univ.town.monst[i].attitude = att;
 			num = univ.town.monst[i].number;
 			// If made hostile, make mobile

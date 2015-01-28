@@ -19,7 +19,7 @@ cCreature::cCreature(){
 	number = active = attitude = start_attitude = 0;
 	start_loc.x = start_loc.y = cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;
 	mobility = 1;
-	summoned  = 0;
+	summon_time  = 0;
 	time_flag = eMonstTime::ALWAYS;
 	spec1 = spec2 = spec_enc_code = time_code = monster_time = 0;
 	personality = special_on_kill = facial_pic = -1;
@@ -38,7 +38,11 @@ void cCreature::append(legacy::creature_data_type old){
 	cur_loc.y = old.m_loc.y;
 	cMonster::append(old.m_d);
 	mobility = old.mobile;
-	summoned = old.summoned;
+	summon_time = old.summoned;
+	if(summon_time >= 100) {
+		party_summoned = false;
+		summon_time -= 100;
+	} else party_summoned = true;
 	number = old.monst_start.number;
 	start_attitude = old.monst_start.start_attitude;
 	start_loc.x = old.monst_start.start_loc.x;
@@ -192,7 +196,7 @@ void cCreature::writeTo(std::ostream& file) const {
 	file << "LOCATION " << cur_loc.x << ' ' << cur_loc.y << '\n';
 	file << "MOBILITY " << mobility << '\n';
 	file << "TIMEFLAG " << time_flag << '\n';
-	file << "SUMMONED " << summoned << '\n';
+	file << "SUMMONED " << summon_time << ' ' << party_summoned << '\n';
 	file << "SPEC " << spec1 << ' ' << spec2 << '\n';
 	file << "SPECCODE " << spec_enc_code << '\n';
 	file << "TIMECODE " << time_code << '\n';
@@ -239,7 +243,7 @@ void cCreature::readFrom(std::istream& file) {
 		} else if(cur == "TIMEFLAG") {
 			line >> time_flag;
 		} else if(cur == "SUMMONED")
-			line >> summoned;
+			line >> summon_time >> party_summoned;
 		else if(cur == "SPEC")
 			line >> spec1 >> spec2;
 		else if(cur == "SPECCODE") {

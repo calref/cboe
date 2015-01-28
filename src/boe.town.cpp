@@ -196,7 +196,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				univ.town.monst[j].mp = univ.town.monst[j].max_mp;
 				univ.town.monst[j].morale = univ.town.monst[j].m_morale;
 				univ.town.monst[j].status.clear();
-				if(univ.town.monst[j].summoned > 0)
+				if(univ.town.monst[j].summon_time > 0)
 					univ.town.monst[j].active = 0;
 				univ.town.monst[j].target = 6;
 			}

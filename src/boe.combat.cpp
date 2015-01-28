@@ -1199,59 +1199,59 @@ void do_combat_cast(location target) {
 								switch(spell_being_cast) {
 									case eSpell::SIMULACRUM:
 										r2 = get_ran(3,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster(store_sum_monst,target,r2,2))
+										if(!summon_monster(store_sum_monst,target,r2,2,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_BEAST:
 										r2 = get_ran(3,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if((summon == 0) || (!summon_monster(summon,target,r2,2)))
+										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_WEAK:
 										r2 = get_ran(4,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if((summon == 0) || (!summon_monster(summon,target,r2,2)))
+										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON:
 										r2 = get_ran(5,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if((summon == 0) || (!summon_monster(summon,target,r2,2)))
+										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_MAJOR:
 										r2 = get_ran(7,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if((summon == 0) || (!summon_monster(summon,target,r2,2)))
+										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::DEMON:
 										r2 = get_ran(5,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster(85,target,r2,2))
+										if(!summon_monster(85,target,r2,2,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_RAT:
 										r1 = get_ran(3,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster(80,target,r1,2))
+										if(!summon_monster(80,target,r1,2,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 										
 									case eSpell::SUMMON_SPIRIT:
 										r2 = get_ran(2,1,5) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster(125,target,r2,2))
+										if(!summon_monster(125,target,r2,2,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::STICKS_TO_SNAKES:
 										r1 = get_ran(1,0,7);
 										r2 = get_ran(2,1,5) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster((r1 == 1) ? 100 : 99,target,r2,2))
+										if(!summon_monster((r1 == 1) ? 100 : 99,target,r2,2,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_HOST: // host
 										r2 = get_ran(2,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster((i == 0) ? 126 : 125,target,r2,2))
+										if(!summon_monster((i == 0) ? 126 : 125,target,r2,2,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_GUARDIAN: // guardian
 										r2 = get_ran(6,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster(122,target,r2,2))
+										if(!summon_monster(122,target,r2,2,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									default:
@@ -2124,12 +2124,12 @@ void do_monster_turn() {
 		
 		// Now take care of summoned monsters
 		if(cur_monst->active > 0) {
-			if((cur_monst->summoned % 100) == 1) {
+			if(cur_monst->summon_time == 1) {
 				cur_monst->active = 0;
 				cur_monst->ap = 0;
 				cur_monst->spell_note(17);
 			}
-			move_to_zero(cur_monst->summoned);
+			move_to_zero(cur_monst->summon_time);
 		}
 		
 	}
@@ -2473,12 +2473,12 @@ void do_monster_turn() {
 					}
 					if(what_summon) r1 = get_ran(1, abil.summon.min, abil.summon.max);
 					else r1 = 0;
-					if(r1 && summon_monster(what_summon, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude)) {
+					if(r1 && summon_monster(what_summon, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude,cur_monst->is_friendly())) {
 						cur_monst->spell_note(33);
 						play_sound(61);
 						bool failed = false;
 						while(--r1 && !failed) {
-							failed = summon_monster(what_summon, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude);
+							failed = summon_monster(what_summon,cur_monst->cur_loc,abil.summon.len,cur_monst->attitude,cur_monst->is_friendly());
 						}
 					}
 				}
@@ -3361,8 +3361,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				x = get_ran(3,1,4);
 				play_sound(25);
 				play_sound(-61);
-				summon_monster(r1,caster->cur_loc,
-							   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
+				summon_monster(r1,caster->cur_loc,x,caster->attitude,caster->is_friendly());
 				break;
 			case eSpell::CONFLAGRATION:
 				run_a_missile(l,target,13,1,25,0,0,80);
@@ -3400,8 +3399,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				x = get_ran(4,1,4);
 				for(i = 0; i < j; i++){
 					play_sound(-61);
-					if(!summon_monster(r1,caster->cur_loc,
-									   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude)) {
+					if(!summon_monster(r1,caster->cur_loc,x,caster->attitude,caster->is_friendly())) {
 						add_string_to_buf("  Summon failed."); i = j;}
 				}
 				break;
@@ -3473,8 +3471,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				play_sound(25);
 				play_sound(-61);
 				sf::sleep(time_in_ticks(12)); // gives sound time to end
-				summon_monster(85,caster->cur_loc,
-							   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
+				summon_monster(85,caster->cur_loc,x,caster->attitude,caster->is_friendly());
 				break;
 			case eSpell::BLESS_MAJOR:
 				play_sound(25);
@@ -3664,8 +3661,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				play_sound(-61);
 				
 				x =  get_ran(3,1,4);
-				summon_monster(spell == eSpell::SUMMON_SPIRIT ? 125 : 122,caster->cur_loc,
-							   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
+				summon_monster(spell == eSpell::SUMMON_SPIRIT ? 125 : 122,caster->cur_loc,x,caster->attitude,caster->is_friendly());
 				break;
 			case eSpell::DISEASE:
 				run_a_missile(l,vict_loc,11,0,24,0,0,80);
@@ -3701,8 +3697,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 					play_sound(-61);
 					r2 = get_ran(1,0,7);
 					x = get_ran(3,1,4);
-					summon_monster((r2 == 1) ? 100 : 99,caster->cur_loc,
-								   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
+					summon_monster((r2 == 1) ? 100 : 99,caster->cur_loc,x,caster->attitude,caster->is_friendly());
 				}
 				break;
 			case eSpell::MARTYRS_SHIELD: // martyr's shield
@@ -3713,12 +3708,10 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				play_sound(24);
 				x = get_ran(3,1,4) + 1;
 				play_sound(-61);
-				summon_monster(126,caster->cur_loc,
-							   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude);
+				summon_monster(126,caster->cur_loc,x,caster->attitude,caster->is_friendly());
 				for(i = 0; i < 4; i++)	{
 					play_sound(-61);
-					if(!summon_monster(125,caster->cur_loc,
-									   ((caster->attitude % 2 != 1) ? 0 : 100) + x,caster->attitude))
+					if(!summon_monster(125,caster->cur_loc,x,caster->attitude,caster->is_friendly()))
 						i = 4;
 				}
 				break;

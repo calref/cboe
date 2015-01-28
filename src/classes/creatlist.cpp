@@ -59,7 +59,7 @@ void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& bas
 	dudes[n].attitude = dudes[n].start_attitude;
 	dudes[n].cur_loc = dudes[n].start_loc;
 	dudes[n].target = 6; // No target
-	dudes[n].summoned = 0;
+	dudes[n].summon_time = 0;
 }
 
 void cPopulation::readFrom(std::istream& in, size_t n) {

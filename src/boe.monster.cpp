@@ -169,7 +169,7 @@ void set_up_monst(short mode,mon_num_t m_num) {
 	cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
 	univ.town.monst.assign(which, cCreature(m_num), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 	univ.town.monst[which].active = 2;
-	univ.town.monst[which].summoned = 0;
+	univ.town.monst[which].summon_time = 0;
 	univ.town.monst[which].attitude = mode + 1;
 	univ.town.monst[which].mobility = 1;
 }
@@ -1250,7 +1250,7 @@ short place_monster(mon_num_t which,location where) {
 	univ.town.monst[i].mobility = 1;
 	univ.town.monst[i].active = 2;
 	univ.town.monst[i].cur_loc = where;
-	univ.town.monst[i].summoned = 0;
+	univ.town.monst[i].summon_time = 0;
 	univ.town.monst[i].target = 6;
 	
 	univ.town.set_crate(where.x,where.y,false);
@@ -1263,7 +1263,7 @@ short place_monster(mon_num_t which,location where) {
 // returns true if placement was successful
 //which; // if in town, this is caster loc., if in combat, this is where to try
 // to put monster
-bool summon_monster(mon_num_t which,location where,short duration,short given_attitude) {
+bool summon_monster(mon_num_t which,location where,short duration,short given_attitude,bool by_party) {
 	location loc;
 	short spot;
 	
@@ -1296,7 +1296,8 @@ bool summon_monster(mon_num_t which,location where,short duration,short given_at
 	
 	univ.town.monst[spot].attitude = given_attitude;
 	
-	univ.town.monst[spot].summoned = duration;
+	univ.town.monst[spot].summon_time = duration;
+	univ.town.monst[spot].party_summoned = by_party;
 	univ.town.monst[spot].spell_note(21);
 	
 	return true;
@@ -1314,7 +1315,7 @@ void activate_monsters(short code,short /*attitude*/) {
 			univ.town.monst[i].spec_enc_code = 0;
 			univ.town.monst[i].active = 2;
 			
-			univ.town.monst[i].summoned = 0;
+			univ.town.monst[i].summon_time = 0;
 			univ.town.monst[i].target = 6;
 			
 			univ.town.set_crate(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);

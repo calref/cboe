@@ -864,7 +864,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(3,1,4) + adj;
-			if(!summon_monster(r1,where,store,2))
+			if(!summon_monster(r1,where,store,2,true))
 				add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_WEAK:
@@ -876,7 +876,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(4,1,4) + adj;
 			for(i = 0; i < j; i++)
-				if(!summon_monster(r1,where,store,2))
+				if(!summon_monster(r1,where,store,2,true))
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON:
@@ -888,7 +888,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(5,1,4) + adj;
 			for(i = 0; i < j; i++)
-				if(!summon_monster(r1,where,store,2))
+				if(!summon_monster(r1,where,store,2,true))
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_MAJOR:
@@ -900,19 +900,19 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(7,1,4) + adj;
 			for(i = 0; i < j; i++)
-				if(!summon_monster(r1,where,store,2))
+				if(!summon_monster(r1,where,store,2,true))
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::DEMON:
 			store = get_ran(5,1,4) + 2 * adj;
-			if(!summon_monster(85,where,store,2))
+			if(!summon_monster(85,where,store,2,true))
 				add_string_to_buf("  Summon failed.");
 			else if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
 		case eSpell::SUMMON_RAT:
 			store = get_ran(5,1,4) + 2 * adj;
-			if(!summon_monster(80,where,store,2))
+			if(!summon_monster(80,where,store,2,true))
 				add_string_to_buf("  Summon failed.");
 			break;
 			
@@ -1063,7 +1063,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::SUMMON_SPIRIT:
-			if(!summon_monster(125,where,get_ran(2,1,4) + adj,2))
+			if(!summon_monster(125,where,get_ran(2,1,4) + adj,2,true))
 				add_string_to_buf("  Summon failed.");
 			else if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
@@ -1075,7 +1075,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			for(i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
 				store = get_ran(2,1,5) + adj;
-				if(!summon_monster((r2 == 1) ? 100 : 99,where,store,2 ))
+				if(!summon_monster((r2 == 1) ? 100 : 99,where,store,2,true))
 					add_string_to_buf("  Summon failed.");
 			}
 			break;
@@ -1083,17 +1083,17 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			store = get_ran(2,1,4) + adj;
-			if(!summon_monster(126,where,store,2))
+			if(!summon_monster(126,where,store,2,true))
 				add_string_to_buf("  Summon failed.");
 			for(i = 0; i < 4; i++)	{
 				store = get_ran(2,1,4) + adj;
-				if(!summon_monster(125,where,store,2))
+				if(!summon_monster(125,where,store,2,true))
 					add_string_to_buf("  Summon failed.");
 			}
 			break;
 		case eSpell::SUMMON_GUARDIAN:
 			store = get_ran(6,1,4) + adj;
-			if(!summon_monster(122,where,store,2))
+			if(!summon_monster(122,where,store,2,true))
 				add_string_to_buf("  Summon failed.");
 			else if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;

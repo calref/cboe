@@ -531,9 +531,9 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 				need_redraw = true;
 				if(univ.town.monst[i].attitude % 2 == 1) {
 					add_string_to_buf("  Creature is hostile.");
-				} else if(univ.town.monst[i].summoned > 0 || univ.town.monst[i].personality < 0) {
+				} else if(univ.town.monst[i].summon_time > 0 || univ.town.monst[i].personality < 0) {
 					short small_talk = 1;
-					if(!univ.town.monst[i].summoned)
+					if(univ.town.monst[i].summon_time == 0)
 						small_talk = -univ.town.monst[i].personality;
 					std::string str = "No response.";
 					if(small_talk > 1000) str = univ.scenario.spec_strs[small_talk - 1000];
