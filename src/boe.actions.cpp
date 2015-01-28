@@ -2197,10 +2197,10 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 				cItem& item = univ.party[i].items[j];
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
 				if(item.abil_data[1] < 0 || item.abil_data[1] > 15) continue;
-				if(item.magic_use_type < 2) continue;
+				if(!item.abil_group()) continue;
 				if(get_ran(1,0,5) != 3) continue;
 				int how_much = item.abil_data[0];
-				if(item.magic_use_type % 2 == 1) how_much *= -1;
+				if(item.abil_harms()) how_much *= -1;
 				if(isStatusNegative(eStatus(item.abil_data[1])))
 					how_much *= -1;
 				univ.party.apply_status(eStatus(item.abil_data[1]), how_much);
@@ -2319,10 +2319,10 @@ void increase_age() {
 				cItem& item = univ.party[i].items[j];
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
 				if(item.abil_data[1] < 0 || item.abil_data[1] > 15) continue;
-				if(item.magic_use_type < 2) continue;
+				if(!item.abil_group()) continue;
 				if(get_ran(1,0,5) != 3) continue;
 				int how_much = item.abil_data[0];
-				if(item.magic_use_type % 2 == 1) how_much *= -1;
+				if(item.abil_harms()) how_much *= -1;
 				eStatus status = eStatus(item.abil_data[1]);
 				if(isStatusNegative(status))
 					how_much *= -1;

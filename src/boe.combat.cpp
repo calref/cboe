@@ -1898,10 +1898,10 @@ void combat_run_monst() {
 			for(int j = 0; j < 24; j++) {
 				cItem& item = univ.party[i].items[j];
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
-				if(item.magic_use_type > 1) continue; // Affects whole party, which is handled elsewhere
+				if(item.abil_group()) continue; // Affects whole party, which is handled elsewhere
 				if(get_ran(1,0,10) != 5) continue;
 				int how_much = item.abil_data[0];
-				if(item.magic_use_type % 2 == 1) how_much *= -1;
+				if(item.abil_harms()) how_much *= -1;
 				eStatus status = eStatus(item.abil_data[1]);
 				if(isStatusNegative(status))
 					how_much *= -1;
