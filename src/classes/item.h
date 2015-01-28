@@ -17,6 +17,7 @@
 
 namespace legacy { struct item_record_type; };
 
+enum class eItemUse {HELP_ONE, HARM_ONE, HELP_ALL, HARM_ALL};
 enum class eEnchant {PLUS_ONE, PLUS_TWO, PLUS_THREE, SHOOT_FLAME, FLAMING, PLUS_FIVE, BLESSED};
 
 class cItem {
@@ -28,7 +29,7 @@ public:
 	int protection;
 	int charges;
 	eSkill weap_type;
-	int magic_use_type;
+	eItemUse magic_use_type;
 	unsigned short graphic_num;
 	eItemAbil ability;
 	unsigned int abil_data[2];
@@ -56,6 +57,8 @@ public:
 	
 	std::string getAbilName() const;
 	void enchant_weapon(eEnchant enchant_type, short new_val);
+	bool abil_harms() const;
+	bool abil_group() const;
 	
 	cItem();
 	explicit cItem(long preset);
@@ -71,6 +74,8 @@ std::istream& operator >> (std::istream& in, eItemType& e);
 std::istream& operator >> (std::istream& in, eItemAbil& e);
 std::ostream& operator << (std::ostream& out, eSkill e);
 std::istream& operator >> (std::istream& in, eSkill& e);
+std::ostream& operator << (std::ostream& out, eItemUse e);
+std::istream& operator >> (std::istream& in, eItemUse& e);
 
 class cSpecItem {
 public:

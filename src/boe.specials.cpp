@@ -542,9 +542,10 @@ void use_spec_item(short item) {
 
 void use_item(short pc,short item) {
 	bool take_charge = true,inept_ok = false;
-	short level,i,j,item_use_code,str,type,r1;
+	short level,i,j,item_use_code,str,r1;
 	short sp[3] = {}; // Dummy values to pass to run_special; not actually used
 	eStatus status;
+	eItemUse type;
 	eSpell spell;
 	location user_loc;
 	cCreature *which_m;
@@ -619,6 +620,7 @@ void use_item(short pc,short item) {
 		}
 	}
 	if(take_charge) {
+		cItem& the_item = univ.party[pc].items[item];
 		std::string name;
 		if(!univ.party[pc].items[item].ident)
 			name = univ.party[pc].items[item].name.c_str();
@@ -640,95 +642,95 @@ void use_item(short pc,short item) {
 				switch(status) {
 					case eStatus::BLESS_CURSE:
 						play_sound(4);
-						if(type % 2 == 1) {
+						if(the_item.abil_harms()) {
 							ASB("  You feel awkward.");
 							str = str * -1;
 						}else ASB("  You feel blessed.");
-						if(type > 1)
+						if(the_item.abil_group())
 							univ.party.apply_status(status,str);
 						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::HASTE_SLOW:
 						// TODO: Is this the right sound?
 						play_sound(75);
-						if(type % 2 == 1) {
+						if(the_item.abil_harms()) {
 							ASB("  You feel sluggish.");
 							str = str * -1;
 						}else ASB("  You feel speedy.");
-						if(type > 1)
+						if(the_item.abil_group())
 							univ.party.apply_status(status,str);
 						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::INVULNERABLE:
 						// TODO: Is this the right sound?
 						play_sound(68);
-						if(type % 2 == 1) {
+						if(the_item.abil_harms()) {
 							ASB("  You feel odd.");
 							str = str * -1;
 						}else ASB("  You feel protected.");
-						if(type > 1)
+						if(the_item.abil_group())
 							univ.party.apply_status(status,str);
 						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::MAGIC_RESISTANCE:
 						// TODO: Is this the right sound?
 						play_sound(51);
-						if(type % 2 == 1) {
+						if(the_item.abil_harms()) {
 							ASB("  You feel odd.");
 							str = str * -1;
 						}else ASB("  You feel protected.");
-						if(type > 1)
+						if(the_item.abil_group())
 							univ.party.apply_status(status,str);
 						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::WEBS:
-						if(type % 2 == 1)
+						if(the_item.abil_harms())
 							ASB("  You feel sticky.");
 						else {
 							ASB("  Your skin tingles.");
 							str = str * -1;
 						}
-						if(type > 1)
+						if(the_item.abil_group())
 							univ.party.apply_status(status,str);
 						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::INVISIBLE:
 						// TODO: Is this the right sound?
 						play_sound(43);
-						if(type % 2 == 1) {
+						if(the_item.abil_harms()) {
 							ASB("  You feel exposed.");
 							str = str * -1;
 						}else ASB("  You feel obscure.");
-						if(type > 1)
+						if(the_item.abil_group())
 							univ.party.apply_status(status,str);
 						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::MARTYRS_SHIELD:
 						// TODO: Is this the right sound?
 						play_sound(43);
-						if(type % 2 == 1) {
+						if(the_item.abil_harms()) {
 							ASB("  You feel dull.");
 							str = str * -1;
 						}else ASB("  You start to glow slightly.");
-						if(type > 1)
+						if(the_item.abil_group())
 							univ.party.apply_status(status,str);
 						else univ.party[pc].apply_status(status,str);
 						break;
 					case eStatus::POISON:
 						switch(type) {
-							case 0:
+							case eItemUse::HELP_ONE:
 								ASB("  You feel better.");
 								univ.party[pc].cure(str);
 								break;
-							case 1:
+							case eItemUse::HARM_ONE:
 								ASB("  You feel ill.");
 								univ.party[pc].poison(str);
 								break;
-							case 2:
+							case eItemUse::HELP_ALL:
 								ASB("  You all feel better.");
 								univ.party.cure(str);
 								break;
-							case 3:
+							case eItemUse::HARM_ALL:
 								ASB("  You all feel ill.");
 								univ.party.poison(str);
 								break;
@@ -736,19 +738,19 @@ void use_item(short pc,short item) {
 						break;
 					case eStatus::DISEASE:
 						switch(type) {
-							case 0:
+							case eItemUse::HELP_ONE:
 								ASB("  You feel healthy.");
 								univ.party[pc].apply_status(eStatus::DISEASE,-1 * str);
 								break;
-							case 1:
+							case eItemUse::HARM_ONE:
 								ASB("  You feel sick.");
 								univ.party[pc].disease(str);
 								break;
-							case 2:
+							case eItemUse::HELP_ALL:
 								ASB("  You all feel healthy.");
 								univ.party.apply_status(eStatus::DISEASE,-1 * str);
 								break;
-							case 3:
+							case eItemUse::HARM_ALL:
 								ASB("  You all feel sick.");
 								univ.party.disease(str);
 								break;
@@ -756,19 +758,19 @@ void use_item(short pc,short item) {
 						break;
 					case eStatus::DUMB:
 						switch(type) {
-							case 0:
+							case eItemUse::HELP_ONE:
 								ASB("  You feel clear headed.");
 								univ.party[pc].apply_status(eStatus::DUMB,-1 * str);
 								break;
-							case 1:
+							case eItemUse::HARM_ONE:
 								ASB("  You feel confused.");
 								univ.party[pc].dumbfound(str);
 								break;
-							case 2:
+							case eItemUse::HELP_ALL:
 								ASB("  You all feel clear headed.");
 								univ.party.apply_status(eStatus::DUMB,-1 * str);
 								break;
-							case 3:
+							case eItemUse::HARM_ALL:
 								ASB("  You all feel confused.");
 								univ.party.dumbfound(str);
 								break;
@@ -776,19 +778,19 @@ void use_item(short pc,short item) {
 						break;
 					case eStatus::ASLEEP:
 						switch(type) {
-							case 0:
+							case eItemUse::HELP_ONE:
 								ASB("  You feel alert.");
 								univ.party[pc].apply_status(eStatus::ASLEEP,-1 * str);
 								break;
-							case 1:
+							case eItemUse::HARM_ONE:
 								ASB("  You feel very tired.");
 								univ.party[pc].sleep(eStatus::ASLEEP,str + 1,200);
 								break;
-							case 2:
+							case eItemUse::HELP_ALL:
 								ASB("  You all feel alert.");
 								univ.party.apply_status(eStatus::ASLEEP,-1 * str);
 								break;
-							case 3:
+							case eItemUse::HARM_ALL:
 								ASB("  You all feel very tired.");
 								univ.party.sleep(eStatus::ASLEEP,str + 1,200);
 								break;
@@ -796,19 +798,19 @@ void use_item(short pc,short item) {
 						break;
 					case eStatus::PARALYZED:
 						switch(type) {
-							case 0:
+							case eItemUse::HELP_ONE:
 								ASB("  You find it easier to move.");
 								univ.party[pc].apply_status(eStatus::PARALYZED,-1 * str * 100);
 								break;
-							case 1:
+							case eItemUse::HARM_ONE:
 								ASB("  You feel very stiff.");
 								univ.party[pc].sleep(eStatus::PARALYZED,str * 20 + 10,200);
 								break;
-							case 2:
+							case eItemUse::HELP_ALL:
 								ASB("  You all find it easier to move.");
 								univ.party.apply_status(eStatus::PARALYZED,-1 * str * 100);
 								break;
-							case 3:
+							case eItemUse::HARM_ALL:
 								ASB("  You all feel very stiff.");
 								univ.party.sleep(eStatus::PARALYZED,str * 20 + 10,200);
 								break;
@@ -816,19 +818,19 @@ void use_item(short pc,short item) {
 						break;
 					case eStatus::ACID:
 						switch(type) {
-							case 0:
+							case eItemUse::HELP_ONE:
 								ASB("  Your skin tingles pleasantly.");
 								univ.party[pc].apply_status(eStatus::ACID,-1 * str);
 								break;
-							case 1:
+							case eItemUse::HARM_ONE:
 								ASB("  Your skin burns!");
 								univ.party[pc].acid(str);
 								break;
-							case 2:
+							case eItemUse::HELP_ALL:
 								ASB("  You all tingle pleasantly.");
 								univ.party.apply_status(eStatus::ACID,-1 * str);
 								break;
-							case 3:
+							case eItemUse::HARM_ALL:
 								ASB("  Everyone's skin burns!");
 								univ.party.acid(str);
 								break;
@@ -837,24 +839,24 @@ void use_item(short pc,short item) {
 				}
 			case eItemAbil::BLISS_DOOM:
 				switch(type) {
-					case 0:
+					case eItemUse::HELP_ONE:
 						ASB("  You feel wonderful!");
 						univ.party[pc].heal(str * 20);
 						univ.party[pc].apply_status(eStatus::BLESS_CURSE,str);
 						break;
-					case 1:
+					case eItemUse::HARM_ONE:
 						ASB("  You feel terrible.");
 						drain_pc(pc,str * 5);
 						damage_pc(pc,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
 						univ.party[pc].disease(2 * str);
 						univ.party[pc].dumbfound(2 * str);
 						break;
-					case 2:
+					case eItemUse::HELP_ALL:
 						ASB("  Everyone feels wonderful!");
 						univ.party.heal(str*20);
 						univ.party.apply_status(eStatus::BLESS_CURSE,str);
 						break;
-					case 3:
+					case eItemUse::HARM_ALL:
 						ASB("  You all feel terrible.");
 						for(i = 0; i < 6; i++) {
 							drain_pc(i,str * 5);
@@ -867,19 +869,19 @@ void use_item(short pc,short item) {
 				break;
 			case eItemAbil::AFFECT_EXPERIENCE:
 				switch(type) {
-					case 0:
+					case eItemUse::HELP_ONE:
 						ASB("  You feel much smarter.");
 						award_xp(pc,str * 5);
 						break;
-					case 1:
+					case eItemUse::HARM_ONE:
 						ASB("  You feel forgetful.");
 						drain_pc(pc,str * 5);
 						break;
-					case 2:
+					case eItemUse::HELP_ALL:
 						ASB("  You all feel much smarter.");
 						award_party_xp(str * 5);
 						break;
-					case 3:
+					case eItemUse::HARM_ALL:
 						ASB("  You all feel forgetful.");
 						for(i = 0; i < 6; i++)
 							drain_pc(i,str * 5);
@@ -890,20 +892,20 @@ void use_item(short pc,short item) {
 				// TODO: Is this the right sound?
 				play_sound(68);
 				switch(type) {
-					case 0:
+					case eItemUse::HELP_ONE:
 						ASB("  You feel much smarter.");
 						univ.party[pc].skill_pts += str;
 						break;
-					case 1:
+					case eItemUse::HARM_ONE:
 						ASB("  You feel forgetful.");
 						univ.party[pc].skill_pts = max(0,univ.party[pc].skill_pts - str);
 						break;
-					case 2:
+					case eItemUse::HELP_ALL:
 						ASB("  You all feel much smarter.");
 						for(i = 0; i < 6; i++)
 							univ.party[i].skill_pts += str;
 						break;
-					case 3:
+					case eItemUse::HARM_ALL:
 						ASB("  You all feel forgetful.");
 						for(i = 0; i < 6; i++)
 							univ.party[i].skill_pts = max(0,univ.party[i].skill_pts - str);
@@ -912,19 +914,19 @@ void use_item(short pc,short item) {
 				break;
 			case eItemAbil::AFFECT_HEALTH:
 				switch(type) {
-					case 0:
+					case eItemUse::HELP_ONE:
 						ASB("  You feel better.");
 						univ.party[pc].heal(str * 20);
 						break;
-					case 1:
+					case eItemUse::HARM_ONE:
 						ASB("  You feel sick.");
 						damage_pc(pc,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
 						break;
-					case 2:
+					case eItemUse::HELP_ALL:
 						ASB("  You all feel better.");
 						univ.party.heal(str * 20);
 						break;
-					case 3:
+					case eItemUse::HARM_ALL:
 						ASB("  You all feel sick.");
 						hit_party(20 * str,eDamageType::UNBLOCKABLE);
 						break;
@@ -932,19 +934,19 @@ void use_item(short pc,short item) {
 				break;
 			case eItemAbil::AFFECT_SPELL_POINTS:
 				switch(type) {
-					case 0:
+					case eItemUse::HELP_ONE:
 						ASB("  You feel energized.");
 						univ.party[pc].restore_sp(str * 5);
 						break;
-					case 1:
+					case eItemUse::HARM_ONE:
 						ASB("  You feel drained.");
 						univ.party[pc].cur_sp = max(0,univ.party[pc].cur_sp - str * 5);
 						break;
-					case 2:
+					case eItemUse::HELP_ALL:
 						ASB("  You all feel energized.");
 						univ.party.restore_sp(str * 5);
 						break;
-					case 3:
+					case eItemUse::HARM_ALL:
 						ASB("  You all feel drained.");
 						for(i = 0; i < 6; i++)
 							univ.party[i].cur_sp = max(0,univ.party[i].cur_sp - str * 5);
@@ -952,7 +954,7 @@ void use_item(short pc,short item) {
 				}
 				break;
 			case eItemAbil::LIGHT:
-				if(type % 2 == 0) {
+				if(!the_item.abil_harms()) {
 					ASB("  You have more light.");
 					increase_light(50 * str);
 				} else {
@@ -961,10 +963,33 @@ void use_item(short pc,short item) {
 				}
 				break;
 			case eItemAbil::AFFECT_PARTY_STATUS:
-				switch(ePartyStatus(univ.party[pc].items[item].abil_data[1])) {
+				if(the_item.abil_harms()) {
+					ePartyStatus status = ePartyStatus(the_item.abil_data[1]);
+					i = univ.party.status[status];
+					switch(status) {
+						case ePartyStatus::STEALTH: ASB("  Your footsteps become louder."); str *= 5; break;
+						case ePartyStatus::FIREWALK: ASB("  The chill recedes from your feet."); str *= 2; break;
+						case ePartyStatus::DETECT_LIFE: ASB("  Your vision of life becomes blurry."); break;
+						case ePartyStatus::FLIGHT:
+							if(i <= str) {
+								if(blocksMove(univ.scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage)) {
+									add_string_to_buf("  You plummet to your deaths.");
+									slay_party(eMainStatus::DEAD);
+									print_buf();
+									pause(150);
+								} else if(i > 1) {
+									add_string_to_buf("  You plummet to the ground.");
+									hit_party(get_ran(i,1,12), eDamageType::UNBLOCKABLE);
+								} else add_string_to_buf("  You land safely.");
+							} else add_string_to_buf("  You start to descend.");
+							break;
+					}
+					if(str > i) str = i;
+					str *= -1;
+				} else switch(ePartyStatus(the_item.abil_data[1])) {
 					case ePartyStatus::STEALTH: ASB("  Your footsteps become quieter."); str *= 5; break;
 					case ePartyStatus::FIREWALK: ASB("  You feel chilly."); str *= 2; break;
-					case ePartyStatus::DETECT_LIFE: ASB("  You detect  life."); break;
+					case ePartyStatus::DETECT_LIFE: ASB("  You detect life."); break;
 					case ePartyStatus::FLIGHT:
 						if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
 							add_string_to_buf("  Not while already flying.");
@@ -982,22 +1007,22 @@ void use_item(short pc,short item) {
 				break;
 			case eItemAbil::HEALTH_POISON:
 				switch(type) {
-					case 0:
+					case eItemUse::HELP_ONE:
 						ASB("  You feel wonderful.");
 						univ.party[pc].heal(str*25);
 						univ.party[pc].cure(str);
 						break;
-					case 1:
+					case eItemUse::HARM_ONE:
 						ASB("  You feel terrible.");
 						damage_pc(pc, str*25, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
 						univ.party[pc].poison(str);
 						break;
-					case 2:
+					case eItemUse::HELP_ALL:
 						ASB("  You all feel wonderful.");
 						univ.party.heal(str*25);
 						univ.party.cure(str);
 						break;
-					case 3:
+					case eItemUse::HARM_ALL:
 						ASB("  You all feel terrible.");
 						hit_party(str*25, eDamageType::UNBLOCKABLE);
 						univ.party.poison(str);

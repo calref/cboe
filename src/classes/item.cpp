@@ -61,6 +61,18 @@ short cItem::item_weight() const {
 	return w;
 }
 
+bool cItem::abil_harms() const {
+	if(magic_use_type == eItemUse::HARM_ONE || magic_use_type == eItemUse::HARM_ALL)
+		return true;
+	return false;
+}
+
+bool cItem::abil_group() const {
+	if(magic_use_type == eItemUse::HELP_ALL || magic_use_type == eItemUse::HARM_ALL)
+		return true;
+	return false;
+}
+
 cItem::cItem(){
 	variety = eItemType::NO_ITEM;
 	item_level = 0;
@@ -69,7 +81,7 @@ cItem::cItem(){
 	protection = 0;
 	charges = 0;
 	weap_type = eSkill::INVALID;
-	magic_use_type = 0;
+	magic_use_type = eItemUse::HELP_ONE;
 	graphic_num = 0;
 	ability = eItemAbil::NONE;
 	abil_data[0] = 0;
@@ -80,34 +92,18 @@ cItem::cItem(){
 	special_class = 0;
 	item_loc.x = 0;
 	item_loc.y = 0;
-	full_name = "";
-	name = "";
 	treas_class = 0;
 	ident = property = magic = contained = false;
 	cursed = concealed = enchanted = unsellable = false;
 }
 
-cItem::cItem(long preset){
-	ability = eItemAbil::NONE;
-	abil_data[0] = 0;
-	type_flag = 0;
-	is_special = 0;
-	special_class = 0;
-	item_loc.x = 0;
-	item_loc.y = 0;
-	treas_class = 0;
-	ident = property = magic = contained = false;
-	cursed = concealed = enchanted = unsellable = false;
+cItem::cItem(long preset) : cItem() {
 	switch(preset){
 		case 'nife':
 			variety = eItemType::ONE_HANDED;
 			item_level = 4;
-			awkward = 0;
 			bonus = 1;
-			protection = 0;
-			charges = 0;
 			weap_type = eSkill::EDGED_WEAPONS;
-			magic_use_type = 0;
 			graphic_num = 55;
 			value = 2;
 			weight = 7;
@@ -119,11 +115,6 @@ cItem::cItem(long preset){
 			variety = eItemType::SHIELD;
 			item_level = 1;
 			awkward = 1;
-			bonus = 0;
-			protection = 0;
-			charges = 0;
-			weap_type = eSkill::INVALID;
-			magic_use_type = 0;
 			graphic_num = 75;
 			value = 2;
 			weight = 20;
@@ -133,13 +124,7 @@ cItem::cItem(long preset){
 			break;
 		case 'bow ':
 			variety = eItemType::BOW;
-			item_level = 0;
-			awkward = 0;
-			bonus = 0;
-			protection = 0;
-			charges = 0;
 			weap_type = eSkill::ARCHERY;
-			magic_use_type = 0;
 			graphic_num = 10;
 			value = 15;
 			weight = 20;
@@ -150,12 +135,7 @@ cItem::cItem(long preset){
 		case 'arrw':
 			variety = eItemType::ARROW;
 			item_level = 12;
-			awkward = 0;
-			bonus = 0;
-			protection = 0;
 			charges = 12;
-			weap_type = eSkill::INVALID;
-			magic_use_type = 0;
 			graphic_num = 57;
 			missile = 3;
 			value = 1;
@@ -167,12 +147,7 @@ cItem::cItem(long preset){
 		case 'pole':
 			variety = eItemType::TWO_HANDED;
 			item_level = 9;
-			awkward = 0;
-			bonus = 0;
-			protection = 0;
-			charges = 0;
 			weap_type = eSkill::POLE_WEAPONS;
-			magic_use_type = 0;
 			graphic_num = 4;
 			value = 10;
 			weight = 20;
@@ -183,12 +158,7 @@ cItem::cItem(long preset){
 		case 'helm':
 			variety = eItemType::HELM;
 			item_level = 1;
-			awkward = 0;
-			bonus = 0;
-			protection = 0;
-			charges = 0;
 			weap_type = eSkill::INVALID;
-			magic_use_type = 0;
 			graphic_num = 76;
 			value = 6;
 			weight = 15;
@@ -199,12 +169,9 @@ cItem::cItem(long preset){
 		case 'rdsk':
 			variety = eItemType::THROWN_MISSILE;
 			item_level = 9;
-			awkward = 0;
 			bonus = 1;
-			protection = 0;
 			charges = 8;
 			weap_type = eSkill::THROWN_MISSILES;
-			magic_use_type = 0;
 			graphic_num = 59;
 			missile = 7;
 			value = 10;
@@ -215,51 +182,21 @@ cItem::cItem(long preset){
 			break;
 		case 'food':
 			variety = eItemType::FOOD;
-			item_level = 0;
-			awkward = 0;
-			bonus = 0;
-			protection = 0;
-			charges = 0;
-			weap_type = eSkill::INVALID;
-			magic_use_type = 0;
 			graphic_num = 72;
-			value = 0;
-			weight = 0;
 			full_name = "Food";
 			name = "Food";
-			ident = false;
 			break;
 		case 'spel':
 			variety = eItemType::NON_USE_OBJECT;
-			item_level = 0;
-			awkward = 0;
-			bonus = 0;
-			protection = 0;
-			charges = 0;
-			weap_type = eSkill::INVALID;
-			magic_use_type = 0;
 			graphic_num = 63;
-			value = 0;
-			weight = 0;
-			full_name = "";
-			name = "";
-			ident = false;
 			break;
 		case 'alch':
 			variety = eItemType::POTION;
-			item_level = 0;
-			awkward = 0;
-			bonus = 0;
-			protection = 0;
 			charges = 1;
-			weap_type = eSkill::INVALID;
-			magic_use_type = 0;
 			graphic_num = 60;
-			value = 0;
 			weight = 8;
 			full_name = "Potion";
 			name = "Potion";
-			ident = false;
 			magic = true;
 			break;
 	}
@@ -318,7 +255,7 @@ cItem::cItem(eAlchemy recipe) : cItem('alch') {
 			ability = eItemAbil::AFFECT_STATUS;
 			abil_data[0] = 4;
 			abil_data[1] = int(eStatus::DISEASE);
-			magic_use_type = 2;
+			magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case eAlchemy::POWER_WEAK:
 			value = 100;
@@ -428,7 +365,6 @@ void cItem::enchant_weapon(eEnchant enchant_type,short new_val) {
 			ability = eItemAbil::AFFECT_STATUS;
 			abil_data[0] = 5;
 			abil_data[1] = int(eStatus::BLESS_CURSE);
-			magic_use_type = 0;
 			charges = 8;
 			break;
 	}
@@ -453,7 +389,7 @@ void cItem::append(legacy::item_record_type& old){
 		weap_type = eSkill::ARCHERY;
 	else if(variety == eItemType::THROWN_MISSILE)
 		weap_type = eSkill::THROWN_MISSILES;
-	magic_use_type = old.magic_use_type;
+	magic_use_type = eItemUse(old.magic_use_type);
 	graphic_num = old.graphic_num;
 	if(graphic_num >= 150) // custom item graphic
 		graphic_num += 850;
@@ -587,12 +523,12 @@ void cItem::append(legacy::item_record_type& old){
 		case 46:
 			ability = eItemAbil::OCCASIONAL_STATUS;
 			abil_data[1] = int(eStatus::BLESS_CURSE);
-			magic_use_type = 0;
+			magic_use_type = eItemUse::HELP_ONE;
 			break;
 		case 47:
 			ability = eItemAbil::OCCASIONAL_STATUS;
 			abil_data[1] = int(eStatus::HASTE_SLOW);
-			magic_use_type = 0;
+			magic_use_type = eItemUse::HELP_ONE;
 			break;
 		case 48:
 			ability = eItemAbil::LIFE_SAVING;
@@ -609,7 +545,7 @@ void cItem::append(legacy::item_record_type& old){
 		case 52:
 			ability = eItemAbil::OCCASIONAL_STATUS;
 			abil_data[1] = int(eStatus::DISEASE);
-			magic_use_type = 3;
+			magic_use_type = eItemUse::HARM_ALL;
 			break;
 		case 53:
 			ability = eItemAbil::WILL;
@@ -705,10 +641,10 @@ void cItem::append(legacy::item_record_type& old){
 			break;
 		case 84:
 			ability = eItemAbil::BLISS_DOOM;
-			if(magic_use_type == 1)
-				magic_use_type = 0;
-			else if(magic_use_type == 3)
-				magic_use_type = 2;
+			if(magic_use_type == eItemUse::HARM_ONE)
+				magic_use_type = eItemUse::HELP_ONE;
+			else if(magic_use_type == eItemUse::HARM_ALL)
+				magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case 85:
 			ability = eItemAbil::AFFECT_EXPERIENCE;
@@ -724,33 +660,36 @@ void cItem::append(legacy::item_record_type& old){
 			break;
 		case 89:
 			ability = eItemAbil::BLISS_DOOM;
-			if(magic_use_type == 0)
-				magic_use_type = 1;
-			else if(magic_use_type == 2)
-				magic_use_type = 3;
+			if(magic_use_type == eItemUse::HELP_ONE)
+				magic_use_type = eItemUse::HARM_ONE;
+			else if(magic_use_type == eItemUse::HELP_ALL)
+				magic_use_type = eItemUse::HARM_ALL;
 			break;
 		case 90:
 			ability = eItemAbil::LIGHT;
-			magic_use_type = 2;
+			magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case 91:
 			ability = eItemAbil::AFFECT_PARTY_STATUS;
 			abil_data[1] = int(ePartyStatus::STEALTH);
+			magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case 92:
 			ability = eItemAbil::AFFECT_PARTY_STATUS;
 			abil_data[1] = int(ePartyStatus::FIREWALK);
+			magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case 93:
 			ability = eItemAbil::AFFECT_PARTY_STATUS;
 			abil_data[1] = int(ePartyStatus::FLIGHT);
+			magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case 94:
 			ability = eItemAbil::HEALTH_POISON;
-			if(magic_use_type == 1)
-				magic_use_type = 0;
-			else if(magic_use_type == 3)
-				magic_use_type = 2;
+			if(magic_use_type == eItemUse::HARM_ONE)
+				magic_use_type = eItemUse::HELP_ONE;
+			else if(magic_use_type == eItemUse::HARM_ALL)
+				magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case 95:
 			ability = eItemAbil::CALL_SPECIAL;
@@ -1001,8 +940,8 @@ void cItem::append(legacy::item_record_type& old){
 }
 
 std::string cItem::getAbilName() const {
-	bool harmful = magic_use_type % 2;
-	bool party = magic_use_type >= 2;
+	bool harmful = abil_harms();
+	bool party = abil_group();
 	std::ostringstream sout;
 	switch(ability) {
 		case eItemAbil::NONE: sout << "No ability"; break;
@@ -1246,7 +1185,7 @@ std::string cItem::getAbilName() const {
 			sout << "Spell: " << (*cSpell::fromNum(abil_data[1])).name();
 			break;
 		case eItemAbil::BLISS_DOOM:
-			if(magic_use_type >= 2)
+			if(party)
 				sout << "Party ";
 			sout << (harmful ? "Doom" : "Bliss");
 			break;
@@ -1422,6 +1361,16 @@ std::ostream& operator << (std::ostream& out, eItemType e){
 	return out;
 }
 
+std::ostream& operator << (std::ostream& out, eItemUse e){
+	switch(e) {
+		case eItemUse::HELP_ONE: out << "help-one"; break;
+		case eItemUse::HELP_ALL: out << "harm-one"; break;
+		case eItemUse::HARM_ONE: out << "help-all"; break;
+		case eItemUse::HARM_ALL: out << "harm-all"; break;
+	}
+	return out;
+}
+
 std::ostream& operator << (std::ostream& out, eItemAbil e){
 	return out << (int) e;
 }
@@ -1538,6 +1487,27 @@ std::istream& operator >> (std::istream& in, eItemType& e){
 			e = eItemType::MISSILE_NO_AMMO;
 		else if(key == "special")
 			e = eItemType::SPECIAL;
+	}
+	return in;
+}
+
+std::istream& operator >> (std::istream& in, eItemUse& e){
+	std::string key;
+	in >> key;
+	e = eItemUse::HELP_ONE;
+	try {
+		int i = boost::lexical_cast<int>(key);
+		if(i > 0 && i < 4)
+			e = (eItemUse) i;
+	} catch(boost::bad_lexical_cast) {
+		if(key == "help-on")
+			e = eItemUse::HELP_ONE;
+		else if(key == "harm-one")
+			e = eItemUse::HARM_ONE;
+		else if(key == "help-all")
+			e = eItemUse::HELP_ALL;
+		else if(key == "harm-all")
+			e = eItemUse::HARM_ALL;
 	}
 	return in;
 }
