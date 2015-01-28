@@ -583,19 +583,17 @@ void swap_ter(short i,short j,ter_num_t ter1,ter_num_t ter2) {
 }
 
 void alter_space(short i,short j,ter_num_t ter) {
-	location l;
-	
-	l.x = i;
-	l.y = j;
-	
 	if(is_out()) {
+		location l(i,j);
 		l = local_to_global(l);
 		univ.out[l.x][l.y] = ter;
 		univ.out->terrain[i][j] = ter;
-	}
-	else {
+	} else {
+		ter_num_t former = univ.town->terrain(i,j);
 		univ.town->terrain(i,j) = ter;
-		if(univ.scenario.ter_types[univ.town->terrain(i,j)].special == eTerSpec::CONVEYOR)
+		if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
 			univ.town.belt_present = true;
+		if(univ.scenario.ter_types[former].light_radius != univ.scenario.ter_types[ter].light_radius)
+			univ.town->set_up_lights();
 	}
 }

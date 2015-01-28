@@ -203,7 +203,7 @@ void draw_monsters() {
 						   (univ.scenario.ter_types[ter].special == eTerSpec::BED) && isHumanoid(univ.town.monst[i].m_type)
 						   && (univ.town.monst[i].active == 1 || univ.town.monst[i].target == 6) &&
 						   width == 1 && height == 1)
-							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1.u);
+							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1);
 						else if(univ.town.monst[i].picture_num >= 1000) {
 							bool isParty = univ.town.monst[i].picture_num >= 10000;
 							sf::Texture* src_gw;
@@ -485,7 +485,7 @@ void draw_party_symbol(location center) {
 			ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
 		// now wedge in bed graphic
 		if(is_town() && univ.scenario.ter_types[ter].special == eTerSpec::BED)
-			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + univ.scenario.ter_types[ter].flag1.u);
+			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + univ.scenario.ter_types[ter].flag1);
 		else Draw_Some_Item(*from_gw, source_rect, terrain_screen_gworld, target, 1, 0);
 	}
 	else if(univ.party.in_boat >= 0) {

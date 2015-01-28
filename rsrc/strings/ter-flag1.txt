@@ -1,6 +1,6 @@
 Small Icon
 What to change to?
-Amount of damage done
+Sides per die
 Unused
 Graphic when occupied
 Strength (1-8)
@@ -13,8 +13,8 @@ Unused
 Number of special to call
 Unused
 Unused
-Unused
-Unused
+Number of Dice
+Number of Dice
 Direction
 Direction
 Direction

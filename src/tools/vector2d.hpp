@@ -76,6 +76,12 @@ public:
 	size_t height() const {
 		return h;
 	}
+	typename std::vector<Type, Alloc>::iterator begin() {
+		return data.begin();
+	}
+	typename std::vector<Type, Alloc>::iterator end() {
+		return data.end();
+	}
 	size_t size() const {
 		return data.size();
 	}

@@ -891,21 +891,21 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	bool do_look = false; // If becomes true, terrain changed, so need to update what party sees
 	cCreature *which_m;
 	eTerSpec ter_abil;
-	unsigned short ter_flag;
+	unsigned short ter_dir;
 	
 	from_loc = univ.town.monst[which_monst].cur_loc;
 	ter = univ.town->terrain(where_check.x,where_check.y);
 	////
 	which_m = &univ.town.monst[which_monst];
 	ter_abil = univ.scenario.ter_types[ter].special;
-	ter_flag = univ.scenario.ter_types[ter].flag3.u;
+	ter_dir = univ.scenario.ter_types[ter].flag3;
 	
 	if(mode > 0 && ter_abil == eTerSpec::CONVEYOR) {
 		if(
-			((ter_flag == DIR_N) && (where_check.y > from_loc.y)) ||
-			((ter_flag == DIR_E) && (where_check.x < from_loc.x)) ||
-			((ter_flag == DIR_S) && (where_check.y < from_loc.y)) ||
-			((ter_flag == DIR_W) && (where_check.x > from_loc.x)) ) {
+			((ter_dir == DIR_N) && (where_check.y > from_loc.y)) ||
+			((ter_dir == DIR_E) && (where_check.x < from_loc.x)) ||
+			((ter_dir == DIR_S) && (where_check.y < from_loc.y)) ||
+			((ter_dir == DIR_W) && (where_check.x > from_loc.x)) ) {
 			return false;
 		}
 	}
@@ -1023,10 +1023,10 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			can_enter = false;
 			if(!(monster_placid(which_monst))) {
-				univ.town->terrain(where_check.x,where_check.y) = univ.scenario.ter_types[ter].flag1.u;
+				univ.town->terrain(where_check.x,where_check.y) = univ.scenario.ter_types[ter].flag1;
 				do_look = true;
 				if(point_onscreen(center,where_check))
-					play_sound(univ.scenario.ter_types[ter].flag2.u);
+					play_sound(univ.scenario.ter_types[ter].flag2);
 			}
 			break;
 			
@@ -1038,7 +1038,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			break;
 			
 		case eTerSpec::DAMAGING:
-			switch(eDamageType(ter_flag)) {
+			switch(eDamageType(univ.scenario.ter_types[ter].flag3)) {
 				case eDamageType::FIRE:
 					return univ.town.monst[which_monst].fire_res == 0;
 				case eDamageType::COLD:

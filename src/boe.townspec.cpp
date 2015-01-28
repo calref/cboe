@@ -167,18 +167,11 @@ location get_spec_loc(short which) {
 	return where;
 }
 
-// 0 if no pull.
-// 1 if pull
-// levers should always start to left.
-short handle_lever(location w) {
+bool handle_lever(location w) {
 	if(cChoiceDlog("basic-lever",{"pull", "leave"}).show() == "leave")
-		return 0;
+		return false;
 	play_sound(94);
-	switch_lever(w);
-	return 1;
-}
-
-void switch_lever(location w) {
 	alter_space(w.x,w.y,univ.scenario.ter_types[univ.town->terrain(w.x,w.y)].trans_to_what);
+	return true;
 }
 

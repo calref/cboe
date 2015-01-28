@@ -20,7 +20,6 @@ bool run_stone_circle(short which);
 void fade_party();
 void change_level(short town_num,short x,short y);
 void push_things();
-void set_terrain(location l, ter_num_t terrain_type);
 void queue_special(eSpecCtx mode, unsigned short which_type, short spec, location spec_loc);
 void run_special(eSpecCtx which_mode,short which_type,short start_spec,location spec_loc,short *a,short *b,short *redraw);
 void run_special(pending_special_type spec, short* a, short* b, short* redraw);

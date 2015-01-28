@@ -1254,7 +1254,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 bool extend_road_terrain(ter_num_t ter) {
 	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
 	eTerSpec spec = univ.scenario.ter_types[ter].special;
-	ter_num_t flag = univ.scenario.ter_types[ter].flag1.u;
+	ter_num_t flag = univ.scenario.ter_types[ter].flag1;
 	if(trim == eTrimType::ROAD || trim == eTrimType::CITY || trim == eTrimType::WALKWAY)
 		return true;
 	if(spec == eTerSpec::BRIDGE)
@@ -1263,7 +1263,7 @@ bool extend_road_terrain(ter_num_t ter) {
 		return true; // cave entrance, most likely
 	if(spec == eTerSpec::UNLOCKABLE || spec == eTerSpec::CHANGE_WHEN_STEP_ON)
 		return true; // closed door, possibly locked; or closed portcullis
-	if(spec == eTerSpec::CHANGE_WHEN_USED && univ.scenario.ter_types[flag].special == eTerSpec::CHANGE_WHEN_STEP_ON && univ.scenario.ter_types[flag].flag1.u == ter)
+	if(spec == eTerSpec::CHANGE_WHEN_USED && univ.scenario.ter_types[flag].special == eTerSpec::CHANGE_WHEN_STEP_ON && univ.scenario.ter_types[flag].flag1 == ter)
 		return true; // open door (I think) TODO: Verify this works
 	if(spec == eTerSpec::LOCKABLE)
 		return true; // open portcullis (most likely)

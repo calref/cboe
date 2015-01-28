@@ -316,6 +316,9 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 		case STRT_ENCHANT:
 			strings = {"+1", "+2", "+3", "Shoot Flames", "Flaming", "+5", "Blessed"};
 			break;
+		case STRT_DIR:
+			strings = {"North", "Northease", "East", "Southeast", "South", "Southwest", "West", "Northwest", "None"};
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = -1;

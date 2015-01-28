@@ -569,11 +569,7 @@ void cPict::draw(){
 	rectangle rect = frame;
 	inWindow->setActive();
 	
-	if(!visible){ // Erase it
-		rect.inset(-3, -3);
-		tileImage(*inWindow,rect,bg[parent->getBg()]);
-		return;
-	}
+	if(!visible) return;
 	if(picNum == BLANK) { // Just fill with black
 		fill_rect(*inWindow, rect, sf::Color::Black);
 		return;

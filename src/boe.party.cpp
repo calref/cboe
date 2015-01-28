@@ -1504,16 +1504,16 @@ void cast_town_spell(location where) {
 		case eSpell::UNLOCK:
 			// TODO: Is the unlock spell supposed to have a max range?
 			if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
-				if(univ.scenario.ter_types[ter].flag2.u == 10)
+				if(univ.scenario.ter_types[ter].flag2 == 10)
 					r1 = 10000;
 				else{
 					r1 = get_ran(1,1,100) - 5 * adj + 5 * univ.town.difficulty;
-					r1 += univ.scenario.ter_types[ter].flag2.u * 7;
+					r1 += univ.scenario.ter_types[ter].flag2 * 7;
 				}
 				if(r1 < (135 - combat_percent[min(19,univ.party[who_cast].level)])) {
 					add_string_to_buf("  Door unlocked.");
 					play_sound(9);
-					univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1.u;
+					univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1;
 				}
 				else {
 					play_sound(41);
@@ -1577,10 +1577,10 @@ void crumble_wall(location where) {
 	if(loc_off_act_area(where))
 		return;
 	ter = univ.town->terrain(where.x,where.y);
-	if(univ.scenario.ter_types[ter].special == eTerSpec::CRUMBLING && univ.scenario.ter_types[ter].flag3.u < 2) {
+	if(univ.scenario.ter_types[ter].special == eTerSpec::CRUMBLING && univ.scenario.ter_types[ter].flag2 < 2) {
 		// TODO: This seems like the wrong sound
 		play_sound(60);
-		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1.u;
+		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1;
 		add_string_to_buf("  Barrier crumbles.");
 	}
 	

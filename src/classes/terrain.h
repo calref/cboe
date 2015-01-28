@@ -19,24 +19,21 @@
 
 namespace legacy { struct terrain_type_type; };
 
-// Depending on the special ability, the flags may need to be treated as either signed or unsigned
-union ter_flag_t {signed short s; unsigned short u;};
+enum class eStepSnd {STEP, SQUISH, CRUNCH, NONE, SPLASH};
 
 class cTerrain {
 public:
 	std::string name;
 	pic_num_t picture;
 	eTerObstruct blockage;
-	ter_flag_t flag1;
-	ter_flag_t flag2;
-	ter_flag_t flag3; // new additional flag for special properties
+	int flag1, flag2, flag3;
 	eTerSpec special;
 	ter_num_t trans_to_what;
 	bool fly_over;
 	bool boat_over;
 	bool block_horse;
 	unsigned int light_radius;
-	snd_num_t step_sound;
+	eStepSnd step_sound;
 	unsigned char shortcut_key; // for editor use only
 	unsigned int obj_num = 0; // ditto (formerly res1)
 	unsigned int ground_type; // ditto (formerly res2)
@@ -58,5 +55,7 @@ std::ostream& operator << (std::ostream& out, eTrimType e);
 std::istream& operator >> (std::istream& in, eTrimType& e);
 std::ostream& operator << (std::ostream& out, eTerObstruct e);
 std::istream& operator >> (std::istream& in, eTerObstruct& e);
+std::ostream& operator << (std::ostream& out, eStepSnd e);
+std::istream& operator >> (std::istream& in, eStepSnd& e);
 
 #endif

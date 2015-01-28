@@ -2506,7 +2506,7 @@ void handle_hunting() {
 	
 	for(int i = 0; i < 6; i++)
 		if(univ.party[i].is_alive() && univ.party[i].traits[trait] && get_ran(1,0,12) == 5) {
-			univ.party.food += get_ran(2,1,6);
+			univ.party.food += get_ran(univ.scenario.ter_types[ter].flag1,1,6);
 			add_string_to_buf(univ.party[i].name + "hunts.");
 			put_pc_screen();
 		}
@@ -2670,11 +2670,11 @@ static eDirection find_waterfall(short x, short y, short mode){
 		if(mode == 0){
 			eTerSpec spec = univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special;
 			to_dir[i] = spec == eTerSpec::WATERFALL_CAVE || spec == eTerSpec::WATERFALL_SURFACE;
-			if(univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1.u != i) to_dir[i] = false;
+			if(univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1 != i) to_dir[i] = false;
 		}else{
 			eTerSpec spec = univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special;
 			to_dir[i] = spec == eTerSpec::WATERFALL_CAVE || spec == eTerSpec::WATERFALL_SURFACE;
-			if(univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].flag1.u != i) to_dir[i] = false;
+			if(univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].flag1 != i) to_dir[i] = false;
 		}
 	}
 	short count = 0;

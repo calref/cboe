@@ -1,16 +1,16 @@
 Unused
 Number of sound (99 - no sound)
-Damage multiplier
+Number of Dice
 Unused
 Unused
 Percentage chance
 Unused
-Strength
+Method
 Unused
 Difficulty (0-4 L, 5-9 M, 10 I)
 Unused
 Unused
-Type of special (0 - local, 1 - town/global, 2 - out/global, 3 - global)
+Type of special (0 - global, 1 - local)
 Unused
 Unused
 Unused
@@ -21,4 +21,4 @@ Unused
 Unused
 Unused
 Number of sound (99 - no sound)
-Type of special (0 - local, 1 - town/global, 2 - out/global, 3 - global)
+Type of special (0 - global, 1 - local)
