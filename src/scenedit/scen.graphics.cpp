@@ -164,6 +164,11 @@ static short get_small_icon(ter_num_t ter){
 				case eDamageType::DEMON:
 					icon = 19;
 					break;
+				case eDamageType::SPECIAL:
+					// TODO: Need icon for this and possibly new icons for undead/demon
+					break;
+				case eDamageType::MARKED: // Invalid
+					break;
 			}
 			break;
 		case eTerSpec::BRIDGE:
@@ -206,6 +211,8 @@ static short get_small_icon(ter_num_t ter){
 				case eStatus::ACID:
 					icon = 41;
 					break;
+				case eStatus::FORCECAGE:
+					// TODO: Need icon for this
 				case eStatus::MAIN: case eStatus::CHARM:
 					break; // Nothing to do here; these values are "magic" and should not be used
 			}

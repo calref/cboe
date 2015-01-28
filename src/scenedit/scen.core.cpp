@@ -1040,6 +1040,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 			case eMonstAbilTemplate::BREATH_DARKNESS:
 				param = get_monst_abil_num("Breath weapon strength:", 0, 4, me);
 				break;
+			default: break; // None of the other templates take parameters
 		}
 		// Protect from overwriting an existing ability.
 		auto save_abils = monst.abil;

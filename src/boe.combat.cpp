@@ -848,23 +848,46 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,iLiving& monst,
 			return 0;
 		store += abil_str;
 		switch(eRace(abil_dat)) {
+			case eRace::UNKNOWN:
+				// This one shouldn't happen; it's a negative value, which the editor won't allow.
+				// But just in case it does happen, we'll neutralize it.
+				store = 0;
+				break;
 			case eRace::DEMON:
 			case eRace::GIANT:
+			case eRace::STONE:
+			case eRace::DRAGON:
 				store *= 8;
 				break;
 			case eRace::UNDEAD:
 				store *= 6;
 				break;
 			case eRace::REPTILE:
+			case eRace::BEAST:
+			case eRace::BIRD:
 				store *= 5;
 				break;
 			case eRace::MAGE:
 			case eRace::PRIEST:
+			case eRace::MAGICAL:
 				store *= 4;
 				break;
 			case eRace::BUG:
 			case eRace::PLANT:
+			case eRace::SLIME:
 				store *= 7;
+				break;
+			case eRace::HUMAN:
+			case eRace::NEPHIL:
+			case eRace::SLITH:
+			case eRace::VAHNATAI:
+			case eRace::HUMANOID:
+				store *= 3;
+				break;
+			case eRace::IMPORTANT:
+				// Part of the point of this "race" is to make them immune to slayer abilities.
+				// However, a slayer ability made specifically for VIPs shouldn't be useless, either.
+				store /= 2;
 				break;
 		}
 	} else if(abil == eItemAbil::CAUSES_FEAR) {
@@ -1227,6 +1250,9 @@ void do_combat_cast(location target) {
 										if(!summon_monster(122,target,r2,2))
 											add_string_to_buf("  Summon failed.");
 										break;
+									default:
+										add_string_to_buf("  Error: Summoning spell " + (*spell_being_cast).name() + " not implemented for combat mode.", 4);
+										break;
 								}
 								break;
 								
@@ -1408,6 +1434,9 @@ void do_combat_cast(location target) {
 												hit_space(cur_monst->cur_loc,r1,eDamageType::UNBLOCKABLE,0,current_pc);
 											}
 											store_sound = 24;
+											break;
+										default:
+											add_string_to_buf("  Error: Spell " + (*spell_being_cast).name() + " not implemented for combat mode.", 4);
 											break;
 									}
 									if(store_m_type >= 0)
@@ -1906,7 +1935,8 @@ void combat_run_monst() {
 				if(isStatusNegative(status))
 					how_much *= -1;
 				switch(status) {
-					case eStatus::MAIN: break;
+					case eStatus::MAIN: case eStatus::FORCECAGE: case eStatus::CHARM:
+						continue; // Not valid in this context.
 					case eStatus::HASTE_SLOW:
 						if(how_much > 0) add_string_to_buf("An item hastes you!");
 						else add_string_to_buf("An item slows you!");
@@ -1925,7 +1955,7 @@ void combat_run_monst() {
 					case eStatus::INVISIBLE:
 					case eStatus::MARTYRS_SHIELD:
 						if(how_much > 0) add_string_to_buf("An item protects you!");
-						// TODO: Message for negative amounts:
+						else add_string_to_buf("An item makes you vulnerable!");
 						break;
 					case eStatus::DISEASE:
 						if(how_much > 0) add_string_to_buf("An item diseases you!");
@@ -1936,9 +1966,50 @@ void combat_run_monst() {
 						if(how_much > 0) add_string_to_buf("An item clouds your mind!");
 						else if(univ.party[i].status[eStatus::DUMB] > 0)
 							add_string_to_buf("An item clears your mind!");
+						else add_string_to_buf("An item enlightens you!");
 						break;
-						// TODO: Messages for other statuses?
+					case eStatus::WEBS:
+						if(how_much > 0) add_string_to_buf("An item constricts you!");
+						else if(univ.party[i].status[eStatus::WEBS] > 0)
+							add_string_to_buf("An item cleanses you!");
+						break;
+					case eStatus::ASLEEP:
+						if(how_much > 0) add_string_to_buf("An item knocks you out!");
+						else if(univ.party[i].status[eStatus::ASLEEP] > 0)
+							add_string_to_buf("An item wakes you!");
+						else add_string_to_buf("An item makes you restless!");
+						break;
+					case eStatus::PARALYZED:
+						if(how_much > 0) add_string_to_buf("An item paralyzes you!");
+						else if(univ.party[i].status[eStatus::PARALYZED] > 0)
+							add_string_to_buf("An item restores your movement!");
+						break;
+					case eStatus::ACID:
+						if(how_much > 0) add_string_to_buf("An item covers you in acid!");
+						else if(univ.party[i].status[eStatus::ACID] > 0)
+							add_string_to_buf("An item neutralizes the acid!");
+						break;
+					case eStatus::POISONED_WEAPON:
+						if(how_much > 0) {
+							if(univ.party[i].status[eStatus::POISONED_WEAPON] <= 0) {
+								// Need to figure out which weapon to apply to.
+								int weap = 24;
+								for(int k = 0; k < 24; k++) {
+									if(is_poisonable_weap(i, k)) {
+										weap = k;
+										break;
+									}
+								}
+								if(weap < 24)
+									univ.party[i].weap_poisoned = weap;
+								else continue;
+								add_string_to_buf("An item poisons your weapon!");
+							} else add_string_to_buf("An item augments your weapon poison!");
+						} else add_string_to_buf("An item clears the poison from your weapon!");
+						break;
 				}
+				// Note: Since this is an item you're wearing, it bypasses any resistance you might have to the status effect.
+				// Thus we just call apply_status instead of all the various status-specific calls.
 				univ.party[i].apply_status(status, how_much);
 				update_stat = true;
 			}
@@ -2246,6 +2317,11 @@ void do_monster_turn() {
 									break;
 								pick_abil = abil;
 								break;
+								// Non-missile abilities
+							case eMonstAbil::ABSORB_SPELLS: case eMonstAbil::DEATH_TRIGGER: case eMonstAbil::HIT_TRIGGER:
+							case eMonstAbil::MARTYRS_SHIELD: case eMonstAbil::NO_ABIL: case eMonstAbil::RADIATE:
+							case eMonstAbil::SPECIAL: case eMonstAbil::SPLITS: case eMonstAbil::SUMMON:
+								continue;
 						}
 						if(pick_abil.second.active) break;
 					}
@@ -2641,6 +2717,7 @@ void monster_attack(short who_att,iLiving* target) {
 							case eMonstAbil::FIELD: break; // TODO: Invent messages?
 							case eMonstAbil::DAMAGE: case eMonstAbil::DAMAGE2:
 								switch(abil.second.gen.dmg) {
+									case eDamageType::MARKED: break; // Invalid
 									case eDamageType::FIRE: add_string_to_buf("  Burning touch!"); break;
 									case eDamageType::COLD: add_string_to_buf("  Freezing touch!"); break;
 									case eDamageType::MAGIC: add_string_to_buf("  Shocking touch!"); break;
@@ -2649,6 +2726,7 @@ void monster_attack(short who_att,iLiving* target) {
 									case eDamageType::WEAPON: add_string_to_buf("  Drains stamina!"); break;
 									case eDamageType::UNDEAD: add_string_to_buf("  Chilling touch!"); break;
 									case eDamageType::DEMON: add_string_to_buf("  Unholy touch!"); break;
+									case eDamageType::SPECIAL: add_string_to_buf("  Assassinates!"); break;
 								}
 								break;
 							case eMonstAbil::STATUS2:
@@ -2656,6 +2734,7 @@ void monster_attack(short who_att,iLiving* target) {
 								if(i > 0) continue;
 							case eMonstAbil::STATUS:
 								switch(abil.second.gen.stat) {
+									case eStatus::MAIN: continue; // Invalid
 									case eStatus::POISON: add_string_to_buf("  Poisonous!"); break;
 									case eStatus::DISEASE: add_string_to_buf("  Causes disease!"); break;
 									case eStatus::DUMB: add_string_to_buf("  Dumbfounds!"); break;
@@ -2665,8 +2744,21 @@ void monster_attack(short who_att,iLiving* target) {
 									case eStatus::ACID: add_string_to_buf("  Acid touch!"); break;
 									case eStatus::HASTE_SLOW: add_string_to_buf("  Slowing touch!"); break;
 									case eStatus::BLESS_CURSE: add_string_to_buf("  Cursing touch!"); break;
+									case eStatus::CHARM: if(m_target == nullptr) continue; else add_string_to_buf("  Charming touch!"); break;
+									case eStatus::FORCECAGE: add_string_to_buf("  Entrapping touch!"); break;
+									case eStatus::INVISIBLE: add_string_to_buf("  Revealing touch!"); break;
+									case eStatus::INVULNERABLE: add_string_to_buf("  Piercing touch!"); break;
+									case eStatus::MAGIC_RESISTANCE: add_string_to_buf("  Overwhelming touch!"); break;
+									case eStatus::MARTYRS_SHIELD: add_string_to_buf("  Anti-martyr's touch!"); break;
+									case eStatus::POISONED_WEAPON: add_string_to_buf("  Poison-draining touch!"); break;
 								}
 								break;
+								// Non-touch abilities
+							case eMonstAbil::MISSILE: case eMonstAbil::MISSILE_WEB: case eMonstAbil::RAY_HEAT:
+							case eMonstAbil::ABSORB_SPELLS: case eMonstAbil::DEATH_TRIGGER: case eMonstAbil::HIT_TRIGGER:
+							case eMonstAbil::MARTYRS_SHIELD: case eMonstAbil::NO_ABIL: case eMonstAbil::RADIATE:
+							case eMonstAbil::SPECIAL: case eMonstAbil::SPLITS: case eMonstAbil::SUMMON:
+								continue;
 						}
 						if(snd > 0) play_sound(snd);
 						print_buf();
@@ -3038,6 +3130,12 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			}
 			place_spell_pattern(pat, targ_space, abil.second.gen.fld, 7);
 			break;
+			// Non-basic abilities
+		case eMonstAbil::MISSILE: case eMonstAbil::MISSILE_WEB: case eMonstAbil::RAY_HEAT:
+		case eMonstAbil::ABSORB_SPELLS: case eMonstAbil::DEATH_TRIGGER: case eMonstAbil::HIT_TRIGGER:
+		case eMonstAbil::MARTYRS_SHIELD: case eMonstAbil::NO_ABIL: case eMonstAbil::RADIATE:
+		case eMonstAbil::SPECIAL: case eMonstAbil::SPLITS: case eMonstAbil::SUMMON:
+			break;
 	}
 }
 
@@ -3394,6 +3492,9 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 			case eSpell::SHOCKWAVE:
 				do_shockwave(caster->cur_loc);
 				break;
+			default:
+				add_string_to_buf("  Error: Mage spell " + (*spell).name() + " not implemented for monsters.", 4);
+				break;
 		}
 	}
 	else caster->mp++;
@@ -3651,6 +3752,9 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 					case eSpell::HEAL: r1 = get_ran(3,1,6); break;
 					case eSpell::HEAL_MAJOR: r1 = get_ran(5,1,6) + 3; break;
 					case eSpell::HEAL_ALL: r1 = 50; break;
+					default:
+						add_string_to_buf("  Error: Healing spell " + (*spell).name() + " not implemented for monsters.", 4);
+						break;
 				}
 				caster->heal(r1);
 				break;
@@ -3696,6 +3800,9 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				start_missile_anim();
 				place_spell_pattern(radius2,target,eDamageType::MAGIC,r1,7 );
 				ashes_loc = target;
+				break;
+			default:
+				add_string_to_buf("  Error: Priest spell " + (*spell).name() + " not implemented for monsters.", 4);
 				break;
 		}
 		
@@ -3981,6 +4088,9 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 							} else if(effect > 330 && effect <= 360) {
 								type = eDamageType::DEMON;
 								dice = effect - 330;
+							} else if(effect > 370 && effect <= 400) {
+								type = eDamageType::SPECIAL;
+								dice = effect - 370;
 							}
 							if(type == eDamageType::MARKED) break;
 							r1 = get_ran(dice,1,6);
@@ -4071,6 +4181,9 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 								} else if(effect > 330 && effect <= 360) {
 									type = eDamageType::DEMON;
 									dice = effect - 330;
+								} else if(effect > 370 && effect <= 400) {
+									type = eDamageType::SPECIAL;
+									dice = effect - 370;
 								}
 								if(type == eDamageType::MARKED) break;
 								r1 = get_ran(dice,1,6);
@@ -4105,6 +4218,10 @@ void place_spell_pattern(effect_pat_type pat,location center,eDamageType type,sh
 		case eDamageType::UNBLOCKABLE: code = 250; break;
 		case eDamageType::UNDEAD: code = 290; break;
 		case eDamageType::DEMON: code = 330; break;
+		case eDamageType::SPECIAL: code = 370; break;
+		case eDamageType::MARKED:
+			// Not valid; do nothing.
+			return;
 	}
 	place_spell_pattern(pat, center, code + dice, who_hit);
 }
@@ -4487,7 +4604,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 				switch(spell_num) {
 					case eSpell::ENVENOM:
 						c_line += " receives venom.";
-						poison_weapon(target,3 + bonus,1);
+						poison_weapon(target,3 + bonus,true);
 						store_m_type = 11;
 						break;
 						
@@ -4524,7 +4641,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					univ.party[i].slow(-(spell_num == eSpell::HASTE_MAJOR ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
 					if(spell_num == eSpell::BLESS_MAJOR) {
-						poison_weapon(i,2,1);
+						poison_weapon(i,2,true);
 						univ.party[i].curse(-4);
 						add_missile(univ.party[i].combat_pos,14,0,0,0);
 					}
@@ -4551,6 +4668,9 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 				case eSpell::RAVAGE_ENEMIES: add_string_to_buf("  Enemy ravaged:"); break;
 				case eSpell::FEAR_GROUP: add_string_to_buf("  Enemy scared:"); break;
 				case eSpell::PARALYSIS_MASS: add_string_to_buf("  Enemy paralyzed:"); break;
+				default:
+					add_string_to_buf("  Error: Mage group spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
+					break;
 			}
 			for(i = 0; i < univ.town.monst.size(); i++) {
 				if((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
@@ -4573,6 +4693,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 							which_m->sleep(eStatus::PARALYZED,1000,15);
 							store_m_type = 15;
 							break;
+						default: break; // Silence compiler warning
 					}
 					num_opp++;
 					add_missile(univ.town.monst[i].cur_loc,store_m_type,0,
@@ -4584,6 +4705,9 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 			
 		case eSpell::BLADE_AURA: // Pyhrrus effect
 			place_spell_pattern(radius2,univ.party[current_pc].combat_pos,WALL_BLADES,6);
+			break;
+		default:
+			add_string_to_buf("  Error: Mage spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
 			break;
 	}
 	if(num_opp < 10)
@@ -4727,6 +4851,9 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 							which_m->disease(3 + bonus);
 							store_m_type = 0;
 							break;
+						default:
+							add_string_to_buf("  Error: Priest group spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
+							break;
 					}
 					num_opp++;
 					add_missile(univ.town.monst[i].cur_loc,store_m_type,0,
@@ -4742,6 +4869,9 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 			play_sound(24);
 			add_string_to_buf("  Protective field created.");
 			place_spell_pattern(protect_pat,univ.party[current_pc].combat_pos,6);
+			break;
+		default:
+			add_string_to_buf("  Error: Priest spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
 			break;
 	}
 	if(num_opp < 10)
@@ -4800,6 +4930,11 @@ void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat 
 					current_pat = field[0];
 					break;
 			}
+			break;
+		default:
+			if((*num).refer == REFER_TARGET)
+				std::cout << "  Warning: Spell " << (*num).name() << " didn't assign target shape." << std::endl;
+			else add_string_to_buf("  Error: Entered targeting for non-targeted spell " + (*num).name(), 4);
 			break;
 	}
 }
@@ -4869,6 +5004,11 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 				case PAT_WALL: current_pat = single; break; // Fancy targeting doesn't support the rotateable pattern
 			}
 			break;
+		default:
+			if((*num).refer == REFER_FANCY)
+				std::cout << "  Warning: Spell " << (*num).name() << " didn't assign target shape and count." << std::endl;
+			else add_string_to_buf("  Error: Entered fancy targeting for non-fancy-targeted spell " + (*num).name(), 4);
+			break;
 	}
 	
 	num_targets_left = minmax(1,8,num_targets_left);
@@ -4882,11 +5022,12 @@ void spell_cast_hit_return() {
 	}
 }
 
-static void process_force_cage(location loc, short i) {
+void process_force_cage(location loc, short i, short adjust) {
+	if(!univ.town.is_force_cage(loc.x,loc.y)) return;
 	if(i >= 100) {
 		short m = i - 100;
 		cCreature& which_m = univ.town.monst[m];
-		if(which_m.attitude % 2 == 1 && get_ran(1,1,100) < which_m.mu * 10 + which_m.cl * 4 + 5) {
+		if(which_m.attitude % 2 == 1 && get_ran(1,1,100) < which_m.mu * 10 + which_m.cl * 4 + 5 + adjust) {
 			// TODO: This sound is not right
 			play_sound(60);
 			which_m.spell_note(50);
@@ -4900,7 +5041,7 @@ static void process_force_cage(location loc, short i) {
 		cPlayer& who = univ.party[i];
 		// We want to make sure everyone has a chance of eventually breaking a cage, because it never ends on its own,
 		// and because being trapped unconditionally prevents you from ending combat mode.
-		short bonus = 5 + who.skill(eSkill::MAGE_LORE);
+		short bonus = 5 + who.skill(eSkill::MAGE_LORE) + adjust;
 		if(get_ran(1,1,100) < who.skill(eSkill::MAGE_SPELLS)*10 + who.skill(eSkill::PRIEST_SPELLS)*4 + bonus) {
 			play_sound(60);
 			add_string_to_buf("  " + who.name + " breaks force cage.");

@@ -663,9 +663,7 @@ short check_party_stat(eSkill which_stat, short mode) {
 	return total;
 }
 
-
-//short safe; // 1 - always succeeds
-bool poison_weapon( short pc_num, short how_much,short safe) {
+bool poison_weapon(short pc_num, short how_much,bool safe) {
 	short i,weap = 24,p_level,r1;
 	short p_chance[21] = {
 		40,72,81,85,88,89,90,
@@ -688,7 +686,7 @@ bool poison_weapon( short pc_num, short how_much,short safe) {
 		// Nimble?
 		if(univ.party[pc_num].traits[eTrait::NIMBLE])
 			r1 -= 6;
-		if((r1 > p_chance[univ.party[pc_num].skill(eSkill::POISON)]) && (safe == 0)) {
+		if(r1 > p_chance[univ.party[pc_num].skill(eSkill::POISON)] && !safe) {
 			add_string_to_buf("  Poison put on badly.");
 			p_level = p_level / 2;
 			r1 = get_ran(1,1,100);
@@ -697,10 +695,10 @@ bool poison_weapon( short pc_num, short how_much,short safe) {
 				univ.party[pc_num].status[eStatus::POISON] += p_level;
 			}
 		}
-		if(safe != 1)
+		if(!safe)
 			play_sound(55);
 		univ.party[pc_num].weap_poisoned = weap;
-		max (univ.party[pc_num].status[eStatus::POISON], p_level);
+		univ.party[pc_num].status[eStatus::POISONED_WEAPON] = max(univ.party[pc_num].status[eStatus::POISONED_WEAPON], p_level);
 		
 		return true;
 	}
@@ -997,6 +995,9 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				add_string_to_buf("  " + univ.party[target].name + " protected.");
 			}
 			break;
+		default:
+			add_string_to_buf("  Error: Mage spell " + (*spell_num).name() + " not implemented for town mode.", 4);
+			break;
 	}
 }
 
@@ -1218,6 +1219,9 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 						univ.party[target].status[eStatus::DISEASE] = 0;
 						univ.party[target].status[eStatus::WEBS] = 0;
 						break;
+					default:
+						add_string_to_buf("  Error: Healing spell " + (*spell_num).name() + " not implemented for town mode.", 4);
+						break;
 				}
 				add_string_to_buf(sout.str());
 			}
@@ -1369,6 +1373,9 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 				case eSpell::SANCTUARY_MASS: add_string_to_buf("  Party hidden.");break;
 				case eSpell::CLEANSE_MAJOR: add_string_to_buf("  Party cleansed.");break;
 				case eSpell::HYPERACTIVITY: add_string_to_buf("  Party is now really, REALLY awake.");break;
+				default:
+					add_string_to_buf("  Error: Priest group spell " + (*spell_num).name() + " not implemented for town mode.", 4);
+					break;
 			}
 			
 			for(i = 0; i < 6; i++)
@@ -1394,7 +1401,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		default:
-			add_string_to_buf("  Error: Spell not implemented for town.", 4);
+			add_string_to_buf("  Error: Priest spell " + (*spell_num).name() + " not implemented for town mode.", 4);
 			break;
 	}
 }
@@ -1541,6 +1548,9 @@ void cast_town_spell(location where) {
 			
 			else add_string_to_buf("  No barrier there.");
 			
+			break;
+		default:
+			add_string_to_buf("  Error: Spell " + (*town_spell).name() + " not implemented for town mode.", 4);
 			break;
 			
 	}

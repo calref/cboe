@@ -399,6 +399,9 @@ void place_buy_button(short position,short pc_num,short item_num) {
 				val_to_place = max(aug_cost[shop_identify_cost] * 100,univ.party[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));
 			}
 			break;
+		case MODE_INVEN: case MODE_SHOP:
+			// These modes don't have buy buttons, so we shouldn't get here; bail out!
+			return;
 	}
 	if(item_area_button_active[position][5]) {
 		store_selling_values[position] = val_to_place;

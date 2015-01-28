@@ -125,6 +125,7 @@ enum class eStatus {
 
 inline bool isStatusNegative(eStatus stat) {
 	switch(stat) {
+		case eStatus::MAIN: return false;
 		case eStatus::POISONED_WEAPON: return false;
 		case eStatus::BLESS_CURSE: return false;
 		case eStatus::POISON: return true;
