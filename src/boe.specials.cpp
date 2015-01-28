@@ -1128,14 +1128,14 @@ void use_item(short pc,short item) {
 				else do_mage_spell(current_pc, spell, true);
 				break;
 			case eItemAbil::SUMMONING:
-				if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,str,2))
+				if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,str,2,true))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::MASS_SUMMONING:
 				r1 = get_ran(str,1,4);
 				j = get_ran(1,3,5);
 				for(i = 0; i < j; i++)
-					if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,r1,2))
+					if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,r1,2,true))
 						add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::QUICKFIRE:
@@ -1625,7 +1625,7 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 	if(which_m->abil[eMonstAbil::DEATH_TRIGGER].active)
 		run_special(eSpecCtx::KILL_MONST,0,which_m->abil[eMonstAbil::DEATH_TRIGGER].special.extra1,which_m->cur_loc,&s1,&s2,&s3);
 	
-	if((!in_scen_debug) && ((which_m->summoned >= 100) || (which_m->summoned == 0))) { // no xp for party-summoned monsters
+	if(!in_scen_debug && (which_m->summon_time == 0 || !which_m->party_summoned)) { // no xp for party-summoned monsters
 		xp = which_m->level * 2;
 		if(who_killed < 6)
 			award_xp(who_killed,xp);
@@ -1640,7 +1640,7 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 		place_glands(l,which_m->number);
 		
 	}
-	if((!in_scen_debug) && (which_m->summoned == 0))
+	if(!in_scen_debug && which_m->summon_time == 0)
 		place_treasure(which_m->cur_loc, which_m->level / 2, which_m->treasure, 0);
 	
 	i = which_m->cur_loc.x;
@@ -1668,7 +1668,7 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 			break;
 	}
 	
-	if(((is_town()) || (which_combat_type == 1)) && (which_m->summoned == 0)) {
+	if((is_town() || which_combat_type == 1) && which_m->summon_time == 0) {
 		univ.party.m_killed[univ.town.num]++;
 	}
 	

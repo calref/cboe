@@ -20,7 +20,8 @@ public:
 	static const short charm_odds[20];
 	short active, attitude;
 	location cur_loc;
-	short summoned;
+	short summon_time;
+	bool party_summoned;
 	short target;
 	location targ_loc;
 	short health;
