@@ -1432,9 +1432,8 @@ void do_combat_cast(location target) {
 												add_string_to_buf("  Demon resisted.");
 											else {
 												r1 = get_ran(8 + bonus * 2, 1, 11);
-												//if(PSD[4][0] == 3) // anama
-												//	r1 += 25;
-												//play_sound(53);
+												if(univ.party[spell_caster].status[eStatus::DUMB] < 0)
+													r1 += -25 * univ.party[spell_caster].status[eStatus::DUMB] / 3;
 												hit_space(cur_monst->cur_loc,r1,eDamageType::UNBLOCKABLE,0,current_pc);
 											}
 											store_sound = 24;
@@ -5273,8 +5272,16 @@ short get_monst_sound(cCreature *attacker,short which_att) {
 			return 9;
 		case eMonstMelee::BITE:
 			return 10;
-			
-		default:
+		case eMonstMelee::STING:
+			return 12;
+		case eMonstMelee::CLUB:
+			return 4;
+		case eMonstMelee::BURN:
+			return 5;
+		case eMonstMelee::HARM:
+			return 0;
+		case eMonstMelee::STAB:
+		case eMonstMelee::SWING:
 			// TODO: These sounds don't quite seem right.
 			// They're passed to boom_space, so 0 = ouch, 1 = small sword, 2 = loud sword, 3 = pole, 4 = club
 			if(attacker->m_type == eRace::HUMAN) {
@@ -5282,14 +5289,14 @@ short get_monst_sound(cCreature *attacker,short which_att) {
 					return 3;
 				else return 2;
 			}
-			if(attacker->m_type == eRace::HUMAN || attacker->m_type == eRace::IMPORTANT || attacker->m_type == eRace::GIANT) {
-				return 2;
-			}
 			if(attacker->m_type == eRace::MAGE)
 				return 1;
 			if(attacker->m_type == eRace::PRIEST)
 				return 4;
-			return 0;
+			if(isHumanoid(attacker->m_type) || attacker->m_type == eRace::GIANT) {
+				return 2;
+			}
+			return 1;
 	}
 	return 0;
 }

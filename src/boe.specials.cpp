@@ -1668,13 +1668,9 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 			break;
 	}
 	
-	
-	// TODO: Check that this function is not called when a monster kills a monster, since that would lead to false incrementing of the stats.
 	if(((is_town()) || (which_combat_type == 1)) && (which_m->summoned == 0)) {
 		univ.party.m_killed[univ.town.num]++;
 	}
-	
-	univ.party.total_m_killed++;
 	
 	which_m->spec1 = 0; // make sure, if this is a spec. activated monster, it won't come back
 	
