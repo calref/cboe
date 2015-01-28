@@ -205,6 +205,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
 			for(j = 0; j < univ.town.monst.size(); j++) {
 				switch(univ.town.monst[j].time_flag){
+					case eMonstTime::ALWAYS: break; // Nothing to do.
 					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
 						if((calc_day() % 3) + 3 != int(univ.town.monst[i].time_flag))
 							univ.town.monst[j].active = 0;
@@ -241,6 +242,16 @@ void start_town_mode(short which_town, short entry_dir) {
 							univ.town.monst[j].active = 0;
 							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
 						}
+						break;
+					case eMonstTime::APPEAR_AFTER_CHOP:
+						// TODO: Should these two cases be separated?
+						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
+							univ.town.monst[i].active += 10;
+						else if(univ.party.m_killed[univ.town.num] > univ.town->max_num_monst)
+							univ.town.monst[i].active += 10;
+						else univ.town.monst[i].active = 0;
+						if(univ.town.monst[i].active >= 10)
+							univ.town.monst[i].time_flag = eMonstTime::ALWAYS;
 						break;
 				}
 			}
@@ -392,6 +403,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				
 				// Not use the items data flags, starting with forcing an ability
 				if(univ.town->preset_items[i].ability >= 0) {
+					// TODO: What other ways might there be to use this?
 					switch(univ.town.items[j].variety) {
 						case eItemType::ONE_HANDED:
 						case eItemType::TWO_HANDED: {
@@ -404,6 +416,7 @@ void start_town_mode(short which_town, short entry_dir) {
 							univ.town.items[j].enchant_weapon(eEnchant(ench), val);
 							break;
 						}
+						default: break; // Silence compiler warning
 					}
 				}
 				

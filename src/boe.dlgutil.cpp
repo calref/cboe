@@ -218,6 +218,7 @@ void handle_sale(cShopItem item, int i) {
 	size_t size_before = active_shop.size();
 	
 	switch(item.type) {
+		case eShopItemType::EMPTY: break; // Invalid
 		case eShopItemType::ITEM:
 			switch(univ.party[current_pc].ok_to_buy(cost,base_item)) {
 				case eBuyStatus::OK:
@@ -260,7 +261,9 @@ void handle_sale(cShopItem item, int i) {
 				univ.party.food += base_item.item_level;
 			}
 			break;
-		default:
+		case eShopItemType::HEAL_WOUNDS: case eShopItemType::REMOVE_CURSE: case eShopItemType::CURE_DUMBFOUNDING:
+		case eShopItemType::CURE_POISON: case eShopItemType::CURE_DISEASE: case eShopItemType::CURE_PARALYSIS:
+		case eShopItemType::DESTONE: case eShopItemType::RAISE_DEAD: case eShopItemType::RESURRECT:
 			if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
@@ -291,6 +294,7 @@ void handle_sale(cShopItem item, int i) {
 					case eShopItemType::CURE_DUMBFOUNDING:
 						univ.party[current_pc].status[eStatus::DUMB] = 0;
 						break;
+					default: break; // Silence compiler warning
 				}
 				// Once you've been healed, of course you're no longer eligible for that form of healing.
 				active_shop.clearItem(i);
@@ -370,6 +374,7 @@ void handle_info_request(cShopItem item) {
 	cItem base_item = item.item;
 	
 	switch(item.type) {
+		case eShopItemType::EMPTY: break;
 		case eShopItemType::ITEM:
 		case eShopItemType::FOOD:
 			display_pc_item(6,0, base_item,0);
@@ -386,6 +391,10 @@ void handle_info_request(cShopItem item) {
 			break;
 		case eShopItemType::SKILL:
 			display_skills(eSkill(base_item.item_level), nullptr);
+			break;
+		case eShopItemType::HEAL_WOUNDS: case eShopItemType::REMOVE_CURSE: case eShopItemType::CURE_DUMBFOUNDING:
+		case eShopItemType::CURE_POISON: case eShopItemType::CURE_DISEASE: case eShopItemType::CURE_PARALYSIS:
+		case eShopItemType::DESTONE: case eShopItemType::RAISE_DEAD: case eShopItemType::RESURRECT:
 			break;
 	}
 }

@@ -60,6 +60,7 @@ void start_spell_targeting(eSpell num, bool freebie = false, int spell_range = 4
 void start_fancy_spell_targeting(eSpell num, bool freebie = false, int spell_range = 4, eSpellPat pat = PAT_SINGLE, int targets = 1);
 void spell_cast_hit_return();
 void process_fields();
+void process_force_cage(location loc, short i, short bonus = 0);
 void scloud_space(short m,short n);
 void web_space(short m,short n);
 void sleep_cloud_space(short m,short n);

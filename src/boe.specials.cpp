@@ -279,6 +279,15 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	}
 	
 	switch(ter_special) {
+			// First, put the specials that aren't activated on moving into the space here.
+			// This is to silence compiler warnings while still preserving the warning if a new special is added.
+		case eTerSpec::NONE: case eTerSpec::BRIDGE: case eTerSpec::BED:
+		case eTerSpec::UNUSED1: case eTerSpec::CRUMBLING: case eTerSpec::LOCKABLE:
+		case eTerSpec::UNUSED2: case eTerSpec::IS_A_SIGN: case eTerSpec::UNUSED3:
+		case eTerSpec::IS_A_CONTAINER: case eTerSpec::WATERFALL_CAVE: case eTerSpec::WATERFALL_SURFACE:
+		case eTerSpec::CONVEYOR: case eTerSpec::BLOCKED_TO_MONSTERS: case eTerSpec::TOWN_ENTRANCE:
+		case eTerSpec::CHANGE_WHEN_USED: case eTerSpec::CALL_SPECIAL_WHEN_USED:
+			break;
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			alter_space(where_check.x,where_check.y,ter_flag1.u);
 			if(ter_flag2.u < 200) {
@@ -402,6 +411,11 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 								break;
 							case eStatus::ACID: // Should say "Your skin tingles pleasantly." / "Your skin burns!"?
 								univ.party[i].acid(ter_flag1.u);
+								break;
+							case eStatus::FORCECAGE:
+								if(is_out()) break;
+								univ.party[i].sleep(eStatus::FORCECAGE,ter_flag1.u,ter_flag1.u / 2);
+								// TODO: Do we need to process fields here? Or is it done after returning from this function?
 								break;
 							case eStatus::MAIN: case eStatus::CHARM: // These magic values are illegal in this context
 								break;
@@ -636,10 +650,24 @@ void use_item(short pc,short item) {
 		
 		switch(abil) {
 			case eItemAbil::POISON_WEAPON: // poison weapon
-				take_charge = poison_weapon(pc,str,0);
+				take_charge = poison_weapon(pc,str,false);
 				break;
 			case eItemAbil::AFFECT_STATUS:
 				switch(status) {
+					case eStatus::MAIN: case eStatus::CHARM:
+						// These don't make any sense in this context.
+						break;
+					case eStatus::POISONED_WEAPON:
+						if(the_item.abil_harms()) {
+							ASB("  Weapon poison lost.");
+							if(the_item.abil_group())
+								univ.party.apply_status(eStatus::POISONED_WEAPON,-str);
+							else univ.party[pc].apply_status(eStatus::POISONED_WEAPON,-str);
+						} else if(the_item.abil_group()) {
+							for(i = 0; i < 6; i++)
+								take_charge = take_charge || poison_weapon(i,str,true);
+						} else take_charge = poison_weapon(pc,str,true);
+						break;
 					case eStatus::BLESS_CURSE:
 						play_sound(4);
 						if(the_item.abil_harms()) {
@@ -833,6 +861,23 @@ void use_item(short pc,short item) {
 							case eItemUse::HARM_ALL:
 								ASB("  Everyone's skin burns!");
 								univ.party.acid(str);
+								break;
+						}
+						break;
+					case eStatus::FORCECAGE:
+						switch(type) {
+							case eItemUse::HELP_ONE:
+								process_force_cage(univ.party[pc].get_loc(), pc, str);
+								break;
+							case eItemUse::HARM_ONE:
+								univ.party[pc].sleep(eStatus::FORCECAGE, str, str / 2);
+								break;
+							case eItemUse::HELP_ALL:
+								for(i = 0; i < 6; i++)
+									process_force_cage(univ.party[i].get_loc(), i, str);
+								break;
+							case eItemUse::HARM_ALL:
+								univ.party.sleep(eStatus::FORCECAGE, str, str / 2);
 								break;
 						}
 						break;
@@ -1100,6 +1145,23 @@ void use_item(short pc,short item) {
 			case eItemAbil::QUICKFIRE:
 				add_string_to_buf("Fire pours out!");
 				univ.town.set_quickfire(user_loc.x,user_loc.y,true);
+				break;
+				// Now for all the non-usable abilities. These are enumerated here so that the compiler can catch if we've missed one.
+			case eItemAbil::ACCURACY: case eItemAbil::ANTIMAGIC_WEAPON: case eItemAbil::ASPTONGUE: case eItemAbil::BOOST_MAGIC:
+			case eItemAbil::BOOST_STAT: case eItemAbil::BOOST_WAR: case eItemAbil::CAUSES_FEAR: case eItemAbil::COMFREY:
+			case eItemAbil::DAMAGE_PROTECTION: case eItemAbil::DAMAGING_WEAPON: case eItemAbil::DISTANCE_MISSILE:
+			case eItemAbil::DRAIN_MISSILES: case eItemAbil::EMBERF: case eItemAbil::ENCUMBERING: case eItemAbil::EVASION:
+			case eItemAbil::EXPLODING_WEAPON: case eItemAbil::FREE_ACTION: case eItemAbil::FULL_PROTECTION: case eItemAbil::WILL:
+			case eItemAbil::GIANT_STRENGTH: case eItemAbil::GRAYMOLD: case eItemAbil::HEALING_WEAPON: case eItemAbil::HEAVIER_OBJECT:
+			case eItemAbil::HIT_CALL_SPECIAL: case eItemAbil::HOLLY: case eItemAbil::LIFE_SAVING: case eItemAbil::LIGHTER_OBJECT:
+			case eItemAbil::LOCKPICKS: case eItemAbil::MANDRAKE: case eItemAbil::MARTYRS_SHIELD: case eItemAbil::MELEE_PROTECTION:
+			case eItemAbil::NETTLE: case eItemAbil::NONE: case eItemAbil::OCCASIONAL_STATUS: case eItemAbil::POISON_AUGMENT:
+			case eItemAbil::PROTECT_FROM_PETRIFY: case eItemAbil::PROTECT_FROM_SPECIES: case eItemAbil::RADIANT:
+			case eItemAbil::REGENERATE: case eItemAbil::RESURRECTION_BALM: case eItemAbil::RETURNING_MISSILE: case eItemAbil::SAPPHIRE:
+			case eItemAbil::SEEKING_MISSILE: case eItemAbil::SKILL: case eItemAbil::SLAYER_WEAPON: case eItemAbil::SLOW_WEARER:
+			case eItemAbil::SMOKY_CRYSTAL: case eItemAbil::SOULSUCKER: case eItemAbil::SPEED: case eItemAbil::STATUS_PROTECTION:
+			case eItemAbil::STATUS_WEAPON: case eItemAbil::THIEVING: case eItemAbil::WEAK_WEAPON: case eItemAbil::WEAPON_CALL_SPECIAL:
+			case eItemAbil::WORMGRASS: case eItemAbil::UNUSED:
 				break;
 		}
 	}
@@ -2349,6 +2411,9 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			start_talk_mode(i, spec.ex1a, spec.ex1b, spec.pic);
 			*next_spec = -1;
 			break;
+		default:
+			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			break;
 	}
 	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
@@ -2532,6 +2597,9 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					*next_spec_type = 0;
 				}
 			}
+			break;
+		default:
+			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
 	}
 	if(check_mess) {
@@ -2974,6 +3042,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			univ.party[pc_num].skills[eSkill::DEXTERITY] = spec.ex2b;
 			univ.party[pc_num].skills[eSkill::INTELLIGENCE] = spec.ex2c;
 			current_pc_picked_in_spec_enc = &univ.get_target(pc_num);
+			break;
+		default:
+			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
 	}
 	if(check_mess) {
@@ -3531,6 +3602,9 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if((spec.ex1b == -1 && univ.party.in_horse >= 0) || spec.ex1b == univ.party.in_horse)
 				*next_spec = spec.ex1c;
 			break;
+		default:
+			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			break;
 	}
 	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
@@ -4041,6 +4115,9 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				end_missile_anim();
 			}
 			break;
+		default:
+			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			break;
 	}
 	if(check_mess) {
 		handle_message(which_mode,cur_spec_type,cur_node.m1,cur_node.m2,a,b);
@@ -4181,6 +4258,9 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						make_explored(l.x, l.y);
 					else take_explored(l.x, l.y);
 					break;
+				default:
+					giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+					break;
 			}
 		}
 END:
@@ -4222,6 +4302,9 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			out_move_party(spec.ex1a,spec.ex1b);
 			*redraw = 1;
 			*a = 1;
+			break;
+		default:
+			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
 	}
 	

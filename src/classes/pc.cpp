@@ -404,6 +404,10 @@ void cPlayer::finish_create() {
 			items[0] = cItem('nife');
 			items[1] = cItem('rdsk');
 			break;
+		default: break; // Silence compiler warning
+			// It's impossible to reach this point, anyway.
+			// The only way to get a PC of other races is with the Create PC node,
+			// which doesn't call this.
 	}
 	equip[0] = true;
 	equip[1] = true;

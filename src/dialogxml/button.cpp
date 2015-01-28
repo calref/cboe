@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include <stdexcept>
+#include <algorithm>
 
 #include "dialog.hpp"
 #include "graphtool.hpp"
@@ -529,6 +530,11 @@ void cButton::setBtnType(eBtnType newType){
 		case BTN_PUSH:
 			frame.width() = 30;
 			frame.height() = 30;
+			break;
+		case BTN_TINY:
+		case BTN_LED:
+			frame.width() = std::min<int>(frame.width(), 14);
+			frame.height() = std::min<int>(frame.height(), 10);
 			break;
 	}
 }

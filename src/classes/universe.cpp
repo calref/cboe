@@ -155,6 +155,10 @@ void cCurTown::place_preset_fields() {
 			case SFX_RUBBLE:
 				set_rubble(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
+				// The rest can't be preset, but enumerate them in case a new field is added.
+			case FIELD_DISPEL: case FIELD_SMASH: case SPECIAL_EXPLORED: case CLOUD_SLEEP: case CLOUD_STINK:
+			case FIELD_ANTIMAGIC: case WALL_BLADES: case WALL_FIRE: case WALL_FORCE: case WALL_ICE:
+				break;
 		}
 	}
 }

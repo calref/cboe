@@ -1053,6 +1053,9 @@ static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>&
 		case eTalkNode::DEP_ON_TOWN:
 			if(cre(talk_node.extras[0],0,scenario.towns.size(),"Town number must be from 0 to " + std::to_string(scenario.towns.size()) + ".","",&me)) return false;
 			break;
+		case eTalkNode::BUY_TOWN_LOC:
+			if(cre(talk_node.extras[1],0,scenario.towns.size(),"Town number must be from 0 to " + std::to_string(scenario.towns.size()) + ".","",&me)) return false;
+			break;
 		case eTalkNode::BUY_ITEMS: case eTalkNode::BUY_MAGE: case eTalkNode::BUY_PRIEST:
 		case eTalkNode::BUY_ALCHEMY: case eTalkNode::BUY_HEALING:
 			if(cre(talk_node.extras[0],0,6,"Cost adjustment must be from 0 (cheapest) to 6 (most expensive).","",&me)) return false;
@@ -1075,6 +1078,11 @@ static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>&
 			break;
 		case eTalkNode::CALL_SCEN_SPEC:
 			if(cre(talk_node.extras[0],-1,255,"The scenario special node called must be in the legal range (0 - 255), or -1 for No Special.","",&me)) return false;
+			break;
+		case eTalkNode::BUY_INFO: case eTalkNode::BUY_JUNK: case eTalkNode::DEP_ON_TIME: case eTalkNode::REGULAR:
+		case eTalkNode::END_ALARM: case eTalkNode::END_DIE: case eTalkNode::END_FIGHT: case eTalkNode::END_FORCE:
+		case eTalkNode::IDENTIFY: case eTalkNode::SELL_ARMOR: case eTalkNode::SELL_ITEMS: case eTalkNode::SELL_WEAPONS:
+		case eTalkNode::TRAINING:
 			break;
 	}
 	

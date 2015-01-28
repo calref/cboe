@@ -909,33 +909,28 @@ void cItem::append(legacy::item_record_type& old){
 	enchanted = false;
 	unsellable = old.item_properties & 16;
 	// Set missile, if needed
-	switch(variety) {
-		case eItemType::ARROW:
-		case eItemType::BOLTS:
-			missile = magic ? 4 : 3;
-			break;
-		case eItemType::MISSILE_NO_AMMO:
-			// Just assume it's a sling and use the rock missile.
-			missile = 12;
-			break;
-		case eItemType::THROWN_MISSILE:
-			// This is tricky... basically, all we can really do is guess.
-			// And the only way to guess is by examining the item's name
-			// We'll use the unidentified name since it's more likely to contain the appropriate generic words
-			auto npos = std::string::npos;
-			// Okay, that failed. Try examining the item's name.
-			if(name.find("Knife") != npos) missile = 10;
-			// Unidentified name limit was quite short, so the S might've been cut off
-			else if(name.find("Knive") != npos) missile = 10;
-			else if(name.find("Spear") != npos) missile = 5;
-			else if(name.find("Javelin") != npos) missile = 5;
-			else if(name.find("Razordisk") != npos) missile = 7;
-			else if(name.find("Star") != npos) missile = 7;
-			else if(name.find("Dart") != npos) missile = 1;
-			else if(name.find("Rock") != npos) missile = 12;
-			// Okay, give up. Fall back to darts since we have no idea what's correct.
-			else missile = 1;
-			break;
+	if(variety == eItemType::ARROW || variety == eItemType::BOLTS) {
+		missile = magic ? 4 : 3;
+	} else if(variety == eItemType::MISSILE_NO_AMMO) {
+		// Just assume it's a sling and use the rock missile.
+		missile = 12;
+	} else if(variety == eItemType::THROWN_MISSILE) {
+		// This is tricky... basically, all we can really do is guess.
+		// And the only way to guess is by examining the item's name
+		// We'll use the unidentified name since it's more likely to contain the appropriate generic words
+		auto npos = std::string::npos;
+		// Okay, that failed. Try examining the item's name.
+		if(name.find("Knife") != npos) missile = 10;
+		// Unidentified name limit was quite short, so the S might've been cut off
+		else if(name.find("Knive") != npos) missile = 10;
+		else if(name.find("Spear") != npos) missile = 5;
+		else if(name.find("Javelin") != npos) missile = 5;
+		else if(name.find("Razordisk") != npos) missile = 7;
+		else if(name.find("Star") != npos) missile = 7;
+		else if(name.find("Dart") != npos) missile = 1;
+		else if(name.find("Rock") != npos) missile = 12;
+		// Okay, give up. Fall back to darts since we have no idea what's correct.
+		else missile = 1;
 	}
 }
 
@@ -944,6 +939,7 @@ std::string cItem::getAbilName() const {
 	bool party = abil_group();
 	std::ostringstream sout;
 	switch(ability) {
+		case eItemAbil::UNUSED: break; // Invalid
 		case eItemAbil::NONE: sout << "No ability"; break;
 		case eItemAbil::HEALING_WEAPON: sout << "Heals target"; break;
 		case eItemAbil::RETURNING_MISSILE: sout << "Returning missile"; break;
@@ -1003,6 +999,7 @@ std::string cItem::getAbilName() const {
 				case eDamageType::UNDEAD: sout << "Necrotic"; break;
 				case eDamageType::DEMON: sout << "Unholy"; break;
 				case eDamageType::UNBLOCKABLE: sout << "Dark"; break;
+				case eDamageType::SPECIAL: sout << "Assassin's"; break;
 				case eDamageType::MARKED: break; // Invalid
 			}
 			sout << " Weapon";
@@ -1044,17 +1041,17 @@ std::string cItem::getAbilName() const {
 				case eDamageType::UNBLOCKABLE: sout << "in darkness"; break;
 				case eDamageType::UNDEAD: sout.str("Implodes"); break;
 				case eDamageType::DEMON: sout << "into corruption"; break;
+				case eDamageType::SPECIAL: sout << "into energy"; break;
 				case eDamageType::MARKED: break; // Invalid
 			}
 			break;
 		case eItemAbil::STATUS_WEAPON:
 			switch(eStatus(abil_data[1])) {
 				case eStatus::MAIN: break; // Invalid
-				case eStatus::POISONED_WEAPON:
-				case eStatus::INVULNERABLE:
-				case eStatus::MAGIC_RESISTANCE:
-				case eStatus::INVISIBLE:
-					break; // TODO: Not implemented?
+				case eStatus::POISONED_WEAPON: sout << "Poison-draining"; break;
+				case eStatus::INVULNERABLE: sout << "Piercing"; break;
+				case eStatus::MAGIC_RESISTANCE: sout << "Overwhelming"; break;
+				case eStatus::INVISIBLE: sout << "Anti-sanctuary"; break;
 				case eStatus::ACID: sout << "Acidic"; break;
 				case eStatus::POISON: sout << "Poisoned"; break;
 				case eStatus::BLESS_CURSE: sout << "Cursing"; break;
@@ -1080,6 +1077,7 @@ std::string cItem::getAbilName() const {
 				case eDamageType::UNDEAD: sout << "Undead"; break;
 				case eDamageType::POISON: sout << "Poison"; break;
 				case eDamageType::UNBLOCKABLE: sout << "Darkness"; break;
+				case eDamageType::SPECIAL: sout << "Assassin's"; break;
 				case eDamageType::MARKED: break; // Invalid
 			}
 			sout << " Protection";
@@ -1087,14 +1085,14 @@ std::string cItem::getAbilName() const {
 		case eItemAbil::STATUS_PROTECTION:
 			sout << "Protect From ";
 			switch(eStatus(abil_data[1])) {
-				case eStatus::MAIN: break; // Invalid;
+				case eStatus::MAIN: break; // Invalid
 				case eStatus::POISONED_WEAPON:
 				case eStatus::INVULNERABLE:
 				case eStatus::MARTYRS_SHIELD:
 				case eStatus::FORCECAGE:
 				case eStatus::CHARM:
 				case eStatus::INVISIBLE:
-					break; // TODO: Not implemented:
+					break; // These have no negative aspect, so protection from them isn't implemented
 				case eStatus::POISON: sout << "Poison"; break;
 				case eStatus::ACID: sout << "Acid"; break;
 				case eStatus::DISEASE: sout << "Disease"; break;
@@ -1113,9 +1111,9 @@ std::string cItem::getAbilName() const {
 		case eItemAbil::OCCASIONAL_STATUS:
 			sout << "Occasional ";
 			switch(eStatus(abil_data[1])) {
-				case eStatus::MAIN: break; // Invalid;
+				case eStatus::MAIN: break; // Invalid
 				case eStatus::FORCECAGE:
-				case eStatus::CHARM:
+				case eStatus::CHARM: // Doesn't affect PCs
 					break; // TODO: Not implemented?
 				case eStatus::DISEASE: sout << (harmful ? "Disease" : "Cure Disease"); break;
 				case eStatus::HASTE_SLOW: sout << (harmful ? "Slow" : "Haste"); break;
@@ -1163,8 +1161,8 @@ std::string cItem::getAbilName() const {
 		case eItemAbil::AFFECT_STATUS:
 			switch(eStatus(abil_data[1])) {
 				case eStatus::MAIN: break; // Invalid;
-				case eStatus::FORCECAGE: break;
-				case eStatus::CHARM: break;
+				case eStatus::FORCECAGE: sout << (harmful ? "Entrapping" : "Cage Break"); break;
+				case eStatus::CHARM: break; // TODO: Not implemented
 				case eStatus::POISONED_WEAPON: sout << (harmful ? "Increase" : "Decrease") << " Weapon Poison"; break;
 				case eStatus::BLESS_CURSE: sout << (harmful ? "Curse" : "Bless"); break;
 				case eStatus::POISON: sout << (harmful ? "Cause" : "Cure") << " Poison"; break;

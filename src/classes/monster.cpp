@@ -691,7 +691,6 @@ std::istream& operator >> (std::istream& in, eMonstSummon& e) {
 
 std::string uAbility::to_string(eMonstAbil key) const {
 	std::ostringstream sout;
-	short i = 0;
 	switch(getMonstAbilCategory(key)){
 		case eMonstAbilCat::INVALID: break;
 		case eMonstAbilCat::MISSILE:
@@ -733,6 +732,9 @@ std::string uAbility::to_string(eMonstAbil key) const {
 				case eMonstAbil::STEAL_GOLD: sout << "Steals gold!"; break;
 				case eMonstAbil::FIELD:
 					switch(gen.fld) {
+						case eFieldType::SPECIAL_EXPLORED:
+						case eFieldType::SPECIAL_SPOT:
+							break; // These are invalid field types
 						case eFieldType::CLOUD_SLEEP: sout << "Sleep"; break;
 						case eFieldType::CLOUD_STINK: sout << "Foul"; break;
 						case eFieldType::WALL_FIRE: sout << "Fiery"; break;
@@ -742,6 +744,18 @@ std::string uAbility::to_string(eMonstAbil key) const {
 						case eFieldType::FIELD_ANTIMAGIC: sout << "Null"; break;
 						case eFieldType::FIELD_WEB: sout << "Web"; break;
 						case eFieldType::FIELD_QUICKFIRE: sout << "Incendiary"; break;
+						case eFieldType::BARRIER_CAGE: sout << "Entrapping"; break;
+						case eFieldType::BARRIER_FIRE: case eFieldType::BARRIER_FORCE: sout << "Barrier"; break;
+						case eFieldType::FIELD_DISPEL: sout << "Dispelling"; break;
+						case eFieldType::FIELD_SMASH: sout << "Smashing"; break;
+						case eFieldType::OBJECT_BARREL: sout << "Barrel"; break;
+						case eFieldType::OBJECT_BLOCK: sout << "Stone Block"; break;
+						case eFieldType::OBJECT_CRATE: sout << "Crate"; break;
+						case eFieldType::SFX_ASH: case eFieldType::SFX_BONES: case eFieldType::SFX_RUBBLE:
+						case eFieldType::SFX_SMALL_BLOOD: case eFieldType::SFX_MEDIUM_BLOOD: case eFieldType::SFX_LARGE_BLOOD:
+						case eFieldType::SFX_SMALL_SLIME: case eFieldType::SFX_LARGE_SLIME:
+							sout << "Littering";
+							break;
 					}
 					break;
 				case eMonstAbil::DAMAGE: case eMonstAbil::DAMAGE2:
@@ -754,10 +768,13 @@ std::string uAbility::to_string(eMonstAbil key) const {
 						case eDamageType::WEAPON: sout << "Stamina drain"; break;
 						case eDamageType::DEMON: sout << "Unholy"; break;
 						case eDamageType::UNDEAD: sout << "Necrotic"; break;
+						case eDamageType::SPECIAL: sout << "Assassinating"; break;
+						case eDamageType::MARKED: break; // Invalid
 					}
 					break;
 				case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
 					switch(gen.stat) {
+						case eStatus::MAIN: break; // Invalid
 						case eStatus::POISON: sout << "Poison"; break;
 						case eStatus::DISEASE: sout << "Infectious"; break;
 						case eStatus::DUMB: sout << "Dumbfounding"; break;
@@ -767,6 +784,13 @@ std::string uAbility::to_string(eMonstAbil key) const {
 						case eStatus::ACID: sout << "Acid"; break;
 						case eStatus::HASTE_SLOW: sout << "Slowing"; break;
 						case eStatus::BLESS_CURSE: sout << "Curse"; break;
+						case eStatus::CHARM: sout << "Charming"; break;
+						case eStatus::FORCECAGE: sout << "Entrapping"; break;
+						case eStatus::INVISIBLE: sout << "Revealing"; break;
+						case eStatus::INVULNERABLE: sout << "Piercing"; break;
+						case eStatus::MAGIC_RESISTANCE: sout << "Overwhelming"; break;
+						case eStatus::MARTYRS_SHIELD: sout << "Anti-martyr's"; break;
+						case eStatus::POISONED_WEAPON: sout << "Poison-draining"; break;
 					}
 					break;
 			}
@@ -827,7 +851,14 @@ std::string uAbility::to_string(eMonstAbil key) const {
 					break;
 				case eMonstAbil::SPECIAL:
 				case eMonstAbil::DEATH_TRIGGER:
+				case eMonstAbil::HIT_TRIGGER:
 					sout << "Unusual ability";
+					break;
+					// Non-special abilities
+				case eMonstAbil::STUN: case eMonstAbil::NO_ABIL: case eMonstAbil::RADIATE: case eMonstAbil::SUMMON:
+				case eMonstAbil::DAMAGE: case eMonstAbil::DAMAGE2: case eMonstAbil::DRAIN_SP: case eMonstAbil::DRAIN_XP:
+				case eMonstAbil::FIELD: case eMonstAbil::KILL: case eMonstAbil::MISSILE: case eMonstAbil::PETRIFY:
+				case eMonstAbil::STATUS: case eMonstAbil::STATUS2: case eMonstAbil::STEAL_FOOD: case eMonstAbil::STEAL_GOLD:
 					break;
 			}
 			break;
@@ -838,6 +869,9 @@ std::string uAbility::to_string(eMonstAbil key) const {
 		case eMonstAbilCat::RADIATE:
 			sout << "Radiates ";
 			switch(radiate.type) {
+				case eFieldType::SPECIAL_EXPLORED:
+				case eFieldType::SPECIAL_SPOT:
+					break; // These are invalid field types
 				case eFieldType::WALL_BLADES: sout << "blade fields"; break;
 				case eFieldType::WALL_FIRE: sout << "fire fields"; break;
 				case eFieldType::WALL_FORCE: sout << "shock fields"; break;
@@ -846,6 +880,19 @@ std::string uAbility::to_string(eMonstAbil key) const {
 				case eFieldType::CLOUD_SLEEP: sout << "sleep fields"; break;
 				case eFieldType::FIELD_ANTIMAGIC: sout << "antimagic fields"; break;
 				case eFieldType::FIELD_WEB: sout << "webs"; break;
+				case eFieldType::FIELD_QUICKFIRE: sout << "quickfire"; break;
+				case eFieldType::BARRIER_CAGE: sout << "forcecages"; break;
+				case eFieldType::BARRIER_FIRE: case eFieldType::BARRIER_FORCE: sout << "barriers"; break;
+				case eFieldType::FIELD_DISPEL: sout.str("Dispels surrounding fields"); break;
+				case eFieldType::FIELD_SMASH: sout.str("Wall-smashing aura");; break;
+				case eFieldType::OBJECT_BARREL: sout << "barrels"; break;
+				case eFieldType::OBJECT_BLOCK: sout << "stone blocks"; break;
+				case eFieldType::OBJECT_CRATE: sout << "crates"; break;
+				case eFieldType::SFX_ASH: case eFieldType::SFX_BONES: case eFieldType::SFX_RUBBLE:
+				case eFieldType::SFX_SMALL_BLOOD: case eFieldType::SFX_MEDIUM_BLOOD: case eFieldType::SFX_LARGE_BLOOD:
+				case eFieldType::SFX_SMALL_SLIME: case eFieldType::SFX_LARGE_SLIME:
+					sout << "litter";
+					break;
 			}
 			break;
 	}
