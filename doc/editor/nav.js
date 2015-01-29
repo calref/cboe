@@ -31,3 +31,11 @@ document.write('\
 <li><a href="appendix/Examples.html">Special Encounter Examples</a></li>\
 </ol>\
 ');
+
+if(document.location.pathname.contains("appendix")) {
+	var links = document.querySelectorAll(".navbar a");
+	console.log(links);
+	for(var i = 0; i < links.length; i++) {
+		links[i].href = links[i].href.replace("appendix/","");
+	}
+}

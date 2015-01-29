@@ -2,97 +2,152 @@
 <html>
 <head>
   <title>Blades of Exile Editor Documentation [14-A1] Special Encounter Node Types</title>
-  <style>
-  dt {font-weight: bold; margin-top: 0px;}
-  dd dl {margin-top: 0px; margin-bottom: 0px;}
-  dd dt {font-weight: normal; font-style: italic;}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
 <body>
+<div class="navbar">
+<script src='../nav.js' type='application/javascript'></script>
+<noscript>Javascript required for the navbar.</noscript>
+</div>
+<div class="content">
+
 <h2>Section 14: Appendix 1 - Special Encounter Node Types</h2>
-<p>These are the many types of special encounter nodes. They are divided into six different categories, and given with examples and descriptions of what the various editing fields do.</p>
+<p>These are the many types of special encounter nodes. They are divided into six
+different categories, and given with examples and descriptions of what the various editing
+fields do.</p>
 
 <h3>General Use Specials</h3>
-<p>This is the class of special encounters which can be called at practically any time. Most of them can always be called. A few can't - these are noted in the encounter description.</p>
+<p>This is the class of special encounters which can be called at practically any time.
+Most of them can always be called. A few can't - these are noted in the encounter
+description.</p>
 
 <h4>General notes:</h4>
 <dl>
-<dt>Stuff done 1, Stuff done 2:</dt><dd>Some of these nodes change a Stuff Done flag. A Stuff Done flag is described by two values: Stuff done 1 and Stuff done 2. The legal range of the first flag is from 0 to 299, and the range for the second flag is 0 to 9. If a value is given outside the legal range, the special node does nothing and the Jump To node is called next (though often the editor will give you an error when you try to do this).</dd>
-<dt>Jump To:</dt><dd>After a special node is called and has its effect, this field specifies the next node to be called. If this value is negative, the special encounter ends.<br>
-The exceptions to this are the nodes that stop the special encounter (e.g. Town Block, Out Block). When a node stops the encounter, the Jump To flag is ignored.</dd>
+<dt>Stuff done 1, Stuff done 2:</dt><dd>Some of these nodes change a Stuff Done flag. A
+Stuff Done flag is described by two values: Stuff done 1 and Stuff done 2. The legal range
+of the first flag is from 0 to 299, and the range for the second flag is 0 to 9. If a
+value is given outside the legal range, the special node does nothing and the Jump To node
+is called next (though often the editor will give you an error when you try to do
+this).</dd>
+<dt>Jump To:</dt><dd>After a special node is called and has its effect, this field
+specifies the next node to be called. If this value is negative, the special encounter
+ends.<br>
+The exceptions to this are the nodes that stop the special encounter (e.g. Town Block, Out
+Block). When a node stops the encounter, the Jump To flag is ignored.</dd>
 </dl>
 
 <dl>
 
-<dt>Type 0: No special</dt><dd>This is the default setting for all special nodes. It does nothing. If the Jump To field contains a non-negative number, the encounter jumps to that node.
+<dt>Type 0: No special</dt><dd>This is the default setting for all special nodes. It does
+nothing. If the Jump To field contains a non-negative number, the encounter jumps to that
+node.
 <dl>
-<dt>Uses:</dt><dd>If you have a chain of special nodes and want to remove one of the nodes in the middle, set its type to Null Special, and leave the Jump To value unchanged. When the party reaches that special, and that node is reached, it just passes through to the Jump To node.</dd></dd>
+<dt>Uses:</dt><dd>If you have a chain of special nodes and want to remove one of the nodes
+in the middle, set its type to Null Special, and leave the Jump To value unchanged. When
+the party reaches that special, and that node is reached, it just passes through to the
+Jump To node.</dd></dd>
 
 <dt>Type 1: Set Flag</dt><dd>This node sets a Stuff Done flag to the desired value.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>This is the Stuff Done flag to change.</dd>
 <dt>Extra 1a:</dt><dd>This is the value to change it to.</dd>
-<dt>Example:</dt><dd>If Stuff done 1 is set to 90, Stuff done 2 is set to 4, and Extra 1a is set to 8, when this node is called Stuff Done (90,4) becomes 8. If, instead, Stuff done 2 is set to 40, this value is out of range (0 ... 9) and you will get an error.</dd></dd>
+<dt>Example:</dt><dd>If Stuff done 1 is set to 90, Stuff done 2 is set to 4, and Extra 1a
+is set to 8, when this node is called Stuff Done (90,4) becomes 8. If, instead, Stuff done
+2 is set to 40, this value is out of range (0 ... 9) and you will get an error.</dd></dd>
 
-<dt>Type 2: Increment Flag</dt><dd>This node increases (or decreases) a Stuff Done flag by a specified amount.
+<dt>Type 2: Increment Flag</dt><dd>This node increases (or decreases) a Stuff Done flag by
+a specified amount.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>This is the Stuff Done flag to change.</dd>
 <dt>Extra 1a:</dt><dd>This is the amount to increase/decrease the flag by.</dd>
-<dt>Extra 1b:</dt><dd>If this is 0, the flag is increased by Extra 1a. If its non-zero, the flag is decreased by that amount.</dd></dd>
+<dt>Extra 1b:</dt><dd>If this is 0, the flag is increased by Extra 1a. If its non-zero,
+the flag is decreased by that amount.</dd></dd>
 
-<dt>Type 3: Display Message</dt><dd>This vitally important special displays a dialog window containing one (or two) text messages.
+<dt>Type 3: Display Message</dt><dd>This vitally important special displays a dialog
+window containing one (or two) text messages.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd></dd>
 
-<dt>Type 4: Secret Passage</dt><dd>This unusual special encounter only has an effect when its called when the party steps on it, and its the first encounter in the chain. Then, the party can walk through that space as it its a secret passage.
+<dt>Type 4: Secret Passage</dt><dd>This unusual special encounter only has an effect when
+its called when the party steps on it, and its the first encounter in the chain. Then, the
+party can walk through that space as it its a secret passage.
 <dl>
-<dt>Uses:</dt><dd>Suppose you want a pillar the party can walk through. Place a special encounter on the pillar, and have a node of this type be the first special node called.</dd></dd>
+<dt>Uses:</dt><dd>Suppose you want a pillar the party can walk through. Place a special
+encounter on the pillar, and have a node of this type be the first special node
+called.</dd></dd>
 
-<dt>Type 5: Display Small Message</dt><dd>A text message is displayed on one (or two) line(s) of the text area (in the lower right hand corner). Dont make the displayed messages too long.
+<dt>Type 5: Display Small Message</dt><dd>A text message is displayed on one (or two)
+line(s) of the text area (in the lower right hand corner). Dont make the displayed
+messages too long.
 <dl>
-<dt>Mess1, Mess2:</dt><dd>Standard usage - these are the numbers of the messages to put in one or two lines of the text area.</dd></dd>
+<dt>Mess1, Mess2:</dt><dd>Standard usage - these are the numbers of the messages to put in
+one or two lines of the text area.</dd></dd>
 
 <dt>Type 6: Flip Flag</dt><dd>This node changes a Stuff Done flag from 0 to 1 (or back).
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
-<dt>Stuff done 1, Stuff done 2:</dt><dd>This is the Stuff Done flag to change. If the flag is 0, its changed to 1. Otherwise, its changed to 0.</dd></dd>
+<dt>Stuff done 1, Stuff done 2:</dt><dd>This is the Stuff Done flag to change. If the flag
+is 0, its changed to 1. Otherwise, its changed to 0.</dd></dd>
 
-<dt>Type 7: Out Block</dt><dd>If the party is currently outdoors, this node ends the special encounter and nothing else happens. Otherwise, the Jump To node is called.
+<dt>Type 7: Out Block</dt><dd>If the party is currently outdoors, this node ends the
+special encounter and nothing else happens. Otherwise, the Jump To node is called.
 <dl>
 <dt>Mess1, Mess2:</dt><dd> Standard usage.</dd>
-<dt>Extra 1a:</dt><dd>This starts as 0. If this is 1, and the party is outdoors and walking, they are not allowed to enter the space.</dd></dd>
+<dt>Extra 1a:</dt><dd>This starts as 0. If this is 1, and the party is outdoors and
+walking, they are not allowed to enter the space.</dd></dd>
 
-<dt>Type 8: Town block</dt><dd>Like Out Block, but ends the special if the party is in town.
+<dt>Type 8: Town block</dt><dd>Like Out Block, but ends the special if the party is in
+town.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
-<dt>Extra 1a:</dt><dd>This starts as 0. If this is 1, and the party is in town and walking, they are not allowed to enter the space.</dd></dd>
+<dt>Extra 1a:</dt><dd>This starts as 0. If this is 1, and the party is in town and
+walking, they are not allowed to enter the space.</dd></dd>
 
-<dt>Type 9: Combat block</dt><dd>Like Out Block, but ends the special if the party is in combat.
+<dt>Type 9: Combat block</dt><dd>Like Out Block, but ends the special if the party is in
+combat.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
-<dt>Extra 1a:</dt><dd>This starts as 0. If this is 1, and the party is in combat and walking, they are not allowed to enter the space.</dd></dd>
+<dt>Extra 1a:</dt><dd>This starts as 0. If this is 1, and the party is in combat and
+walking, they are not allowed to enter the space.</dd></dd>
 
-<dt>Type 10: Looking block</dt><dd>Like Out Block, but ends the special if this node was called by the party looking at something.
+<dt>Type 10: Looking block</dt><dd>Like Out Block, but ends the special if this node was
+called by the party looking at something.
 <dl>
-<dt>Uses:</dt><dd>Suppose you place a special on a closed portcullis, to be called when the portcullis is opened and the party walks through it. Normally, if the party looks at the closed portcullis, the special you intended to be triggered when they walked on it will be called. Placing a Looking Block before that special will keep it from being called before they actually walk on it.</dd></dd>
+<dt>Uses:</dt><dd>Suppose you place a special on a closed portcullis, to be called when
+the portcullis is opened and the party walks through it. Normally, if the party looks at
+the closed portcullis, the special you intended to be triggered when they walked on it
+will be called. Placing a Looking Block before that special will keep it from being called
+before they actually walk on it.</dd></dd>
 
-<dt>Type 11: Can't Enter</dt><dd>If the party is walking, they are not allowed to enter the space. This can be accompanied by one or two messages, if you wish.
+<dt>Type 11: Can't Enter</dt><dd>If the party is walking, they are not allowed to enter
+the space. This can be accompanied by one or two messages, if you wish.
 <dl>
-<dt>Mess1, Mess2:</dt><dd>Standard usage. If the party is not moving, no messages are displayed.</dd>
-<dt>Extra 1a:</dt><dd>If this is set to 1, the party is kept from entering the space. If not 1, the party is allowed to enter the space (this undoes any Cant Enter nodes already called).</dd>
-<dt>Uses:</dt><dd>If you don't want a party to be able to walk down a passage (for example, a guard won't let them), use this node.</dd>
-<dt>Note:</dt><dd>This doesn't have to be the last node in a chain. If this is the first special node called, the party is still kept from entering the space.</dd></dd>
+<dt>Mess1, Mess2:</dt><dd>Standard usage. If the party is not moving, no messages are
+displayed.</dd>
+<dt>Extra 1a:</dt><dd>If this is set to 1, the party is kept from entering the space. If
+not 1, the party is allowed to enter the space (this undoes any Cant Enter nodes already
+called).</dd>
+<dt>Uses:</dt><dd>If you don't want a party to be able to walk down a passage (for
+example, a guard won't let them), use this node.</dd>
+<dt>Note:</dt><dd>This doesn't have to be the last node in a chain. If this is the first
+special node called, the party is still kept from entering the space.</dd></dd>
 
 <dt>Type 12: Change Time</dt><dd>This special node sets the adventure time forward.
 <dl>
-<dt>Extra 1a:</dt><dd>This is the number of ticks to set the timer forward. A day is 3000 ticks. The maximum this can be set to is 30000.</dd></dd>
+<dt>Extra 1a:</dt><dd>This is the number of ticks to set the timer forward. A day is 3000
+ticks. The maximum this can be set to is 30000.</dd></dd>
 
-<dt>Type 13: Start General Timer</dt><dd>One of the parties special encounter timers is activated. Each move taken, the timer goes down by 1. When it runs out, a scenario special node is called (even if the party enters or leaves town). Also see Start Town Timer, under Town Special Nodes.
+<dt>Type 13: Start General Timer</dt><dd>One of the parties special encounter timers is
+activated. Each move taken, the timer goes down by 1. When it runs out, a scenario special
+node is called (even if the party enters or leaves town). Also see Start Town Timer, under
+Town Special Nodes.
 <dl>
-<dt>Extra 1a:</dt><dd>The number of moves before the timer runs out. (Range 0 ... 30000)</dd>
-<dt>Extra 1b:</dt><dd>The scenario special node to call when the timer runs out. If left at No Special, nothing happens.</dd></dd>
+<dt>Extra 1a:</dt><dd>The number of moves before the timer runs out. (Range 0 ...
+30000)</dd>
+<dt>Extra 1b:</dt><dd>The scenario special node to call when the timer runs out. If left
+at No Special, nothing happens.</dd></dd>
 
 <dt>Type 14: Play a sound</dt><dd>Plays one of the game's sounds.
 <dl>
@@ -102,114 +157,201 @@ The exceptions to this are the nodes that stop the special encounter (e.g. Town 
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Extra1a:</dt><dd>The horse to change ownership of. (Range 0 ... 29)</dd>
-<dt>Extra 2a:</dt><dd>If 0, the horse becomes the parties property. Otherwise, it is no longer the parties property.</dd></dd>
+<dt>Extra 2a:</dt><dd>If 0, the horse becomes the parties property. Otherwise, it is no
+longer the parties property.</dd></dd>
 
-<dt>Type 16: Change Boat Possession</dt><dd>Like Change Horse Possession, except for boats.
+<dt>Type 16: Change Boat Possession</dt><dd>Like Change Horse Possession, except for
+boats.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Extra1a:</dt><dd>The boat to change ownership of. (Range 0 ... 29)</dd>
-<dt>Extra 2a:</dt><dd>If 0, the boat becomes the parties property. Otherwise, it is no longer the parties property.</dd></dd>
+<dt>Extra 2a:</dt><dd>If 0, the boat becomes the parties property. Otherwise, it is no
+longer the parties property.</dd></dd>
 
-<dt>Type 17: Show/Hide Town</dt><dd>This either makes a party know a town is there, or hide it so they can't enter it anymore. This can be accompanied by one or two messages, if you wish.
+<dt>Type 17: Show/Hide Town</dt><dd>This either makes a party know a town is there, or
+hide it so they can't enter it anymore. This can be accompanied by one or two messages, if
+you wish.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Extra 1a:</dt><dd>This is the town to show/hide.</dd>
-<dt>Extra 1b:</dt><dd>If 0, the town becomes hidden. If not 0, the town becomes visible.</dd>
-<dt>Uses:</dt><dd>Suppose dungeon 14 contains a big treasure, revealed by reading a treasure map. When the map is read, call this special. Set Extra 1a to 14 and Extra 2b to 1.</dd></dd>
+<dt>Extra 1b:</dt><dd>If 0, the town becomes hidden. If not 0, the town becomes
+visible.</dd>
+<dt>Uses:</dt><dd>Suppose dungeon 14 contains a big treasure, revealed by reading a
+treasure map. When the map is read, call this special. Set Extra 1a to 14 and Extra 2b to
+1.</dd></dd>
 
-<dt>Type 18: Major Event Has Occurred</dt><dd>A major event is recorded as having occurred. See Passage of Time in the chapter on Special Encounters for a more detailed explanation.
+<dt>Type 18: Major Event Has Occurred</dt><dd>A major event is recorded as having
+occurred. See Passage of Time in the chapter on Special Encounters for a more detailed
+explanation.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Extra 1a:</dt><dd>The number of the special event. (Range 1 ... 20)</dd>
-<dt>Example:</dt><dd>If the slaying of the goblin king is event 4, when it is killed, call this special node with Extra 1a set to 4.</dd></dd>
+<dt>Example:</dt><dd>If the slaying of the goblin king is event 4, when it is killed, call
+this special node with Extra 1a set to 4.</dd></dd>
 
-<dt>Type 19: Forced Give</dt><dd>This places an item in the parties inventory, whether or not its too heavy for them to carry. It only fails to give the item if there is absolutely no room in their inventory.
+<dt>Type 19: Forced Give</dt><dd>This places an item in the parties inventory, whether or
+not its too heavy for them to carry. It only fails to give the item if there is absolutely
+no room in their inventory.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
-<dt>Extra 1a:</dt><dd>The number of the item to give. Press the Choose button to pick an item.</dd>
-<dt>Extra 2b:</dt><dd>The special to jump to if the item is not successfully given (if all the parties item slots are full). If No Special is given, the Jump To special is used as usual.</dd>
-<dt>Uses:</dt><dd>If you want the party to get an item after winning a combat outdoors, use a Forced Give. This makes sure that if it is at all possible, they get it.</dd>
-<dt>Uses 2:</dt><dd>Use this is the party is given an item during a talking special encounter. If the party inventory is full, jump to a special telling them that they can't carry the item and to come back later, and then end the special. This enables you to keep from setting a Stuff Done flag saying they got the item, when, in fact, they didn't.</dd></dd>
+<dt>Extra 1a:</dt><dd>The number of the item to give. Press the Choose button to pick an
+item.</dd>
+<dt>Extra 2b:</dt><dd>The special to jump to if the item is not successfully given (if all
+the parties item slots are full). If No Special is given, the Jump To special is used as
+usual.</dd>
+<dt>Uses:</dt><dd>If you want the party to get an item after winning a combat outdoors,
+use a Forced Give. This makes sure that if it is at all possible, they get it.</dd>
+<dt>Uses 2:</dt><dd>Use this is the party is given an item during a talking special
+encounter. If the party inventory is full, jump to a special telling them that they can't
+carry the item and to come back later, and then end the special. This enables you to keep
+from setting a Stuff Done flag saying they got the item, when, in fact, they
+didn't.</dd></dd>
 
-<dt>Type 20: Buy Items of Type</dt><dd>All items that belong to the given special class (described in the chapter on items) are taken from the party. For each item taken, the party gets some gold. This can be accompanied by one or two messages, if you wish.
+<dt>Type 20: Buy Items of Type</dt><dd>All items that belong to the given special class
+(described in the chapter on items) are taken from the party. For each item taken, the
+party gets some gold. This can be accompanied by one or two messages, if you wish.
 <dl>
-<dt>Mess1, Mess2:</dt><dd>Standard usage. Note that the messages are only displayed if some items are actually taken away.</dd>
+<dt>Mess1, Mess2:</dt><dd>Standard usage. Note that the messages are only displayed if
+some items are actually taken away.</dd>
 <dt>Extra 1a:</dt><dd>The item class to take away. (Range 1 ... 100)</dd>
-<dt>Extra 1b:</dt><dd>The special to jump to if no items are taken. If No Special is specified, the Jump To special is used as usual.</dd>
+<dt>Extra 1b:</dt><dd>The special to jump to if no items are taken. If No Special is
+specified, the Jump To special is used as usual.</dd>
 <dt>Extra 2a:</dt><dd>The amount of gold to pay for each item (Range 0 ... 250)</dd>
-<dt>Uses:</dt><dd>This is a how you give a bounty for items. If you want someone to give the party 10 gold for each unicorn horn, give unicorn horns a special class of, say, 30, and call this special node with Extra 1a set to 30 and Extra 2a set to 10.</dd></dd>
+<dt>Uses:</dt><dd>This is a how you give a bounty for items. If you want someone to give
+the party 10 gold for each unicorn horn, give unicorn horns a special class of, say, 30,
+and call this special node with Extra 1a set to 30 and Extra 2a set to 10.</dd></dd>
 
-<dt>Type 21: Call Global Special</dt><dd>This node does nothing itself. Howe'ver, its Jump To node specifies a scenario special node, not a town or outdoors special node. This is how you call a scenario special node when in town or outdoors.
+<dt>Type 21: Call Global Special</dt><dd>This node does nothing itself. Howe'ver, its Jump
+To node specifies a scenario special node, not a town or outdoors special node. This is
+how you call a scenario special node when in town or outdoors.
 <dl>
-<dt>Note:</dt><dd>Use when in town or outdoors. This can be used if you have one special thing which you want in many towns or outdoors sections. You can place the encounter in scenario specials once, and then just call it from the many places its used.</dd></dd>
+<dt>Note:</dt><dd>Use when in town or outdoors. This can be used if you have one special
+thing which you want in many towns or outdoors sections. You can place the encounter in
+scenario specials once, and then just call it from the many places its used.</dd></dd>
 
-<dt>Type 22: Set Many Flags </dt><dd>This node sets 10 Stuff Done flags to a desired value.
+<dt>Type 22: Set Many Flags </dt><dd>This node sets 10 Stuff Done flags to a desired
+value.
 <dl>
-<dt>Stuff Done 1:</dt><dd>A number from 0 to 299. When this node is called, (Stuff Done 1, 0), (Stuff Done 1, 1), ... (Stuff Done 1, 9) are all set to Extra 1a.</dd>
+<dt>Stuff Done 1:</dt><dd>A number from 0 to 299. When this node is called, (Stuff Done 1,
+0), (Stuff Done 1, 1), ... (Stuff Done 1, 9) are all set to Extra 1a.</dd>
 <dt>Extra 1a:</dt><dd>This is the value to change it to.</dd>
-<dt>Example:</dt><dd>Suppose Stuff Done flag (200,4) is 35. This node is called with Stuff Done 1 equal to 200, and Extra 1a set to 5. Then Stuff Done flag (200,4) will be 5 (as will flags (200,0), (200,1), etc.).</dd></dd>
+<dt>Example:</dt><dd>Suppose Stuff Done flag (200,4) is 35. This node is called with Stuff
+Done 1 equal to 200, and Extra 1a set to 5. Then Stuff Done flag (200,4) will be 5 (as
+will flags (200,0), (200,1), etc.).</dd></dd>
 
 <dt>Type 23: Copy Flag</dt><dd>This sets one Stuff Done flag equal to another.
 <dl>
 <dt>Stuff Done 1, Stuff Done 2:</dt><dd>The flag to change.</dd>
 <dt>Extra 1a, Extra 1b:</dt><dd>The flag to change it to.</dd>
-<dt>Example:</dt><dd>If Stuff Done 1 is 12, Stuff Done 2 is 5, Extra 1a is 8, and Extra 1b is 8, then the value of Stuff Done flag (12,5) becomes the same as Stuff Done flag (8,8).</dd></dd>
+<dt>Example:</dt><dd>If Stuff Done 1 is 12, Stuff Done 2 is 5, Extra 1a is 8, and Extra 1b
+is 8, then the value of Stuff Done flag (12,5) becomes the same as Stuff Done flag
+(8,8).</dd></dd>
 
-<dt>Type 24: Ritual of Sanct. Block</dt><dd>When the party casts Ritual of Sanctification on a space, any special encounter on that space is called. If the first node called is of this type, the special encounter in Jump To is called, and the special encounter continues. Otherwise, the special encounter ends immediately, and the player is told that the ritual had no effect.<br>
-If this special node is called for a reason besides the party casting Ritual of Sanctification (for example, if they searched the space), the special node in Extra 1b is called.
+<dt>Type 24: Ritual of Sanct. Block</dt><dd>When the party casts Ritual of Sanctification
+on a space, any special encounter on that space is called. If the first node called is of
+this type, the special encounter in Jump To is called, and the special encounter
+continues. Otherwise, the special encounter ends immediately, and the player is told that
+the ritual had no effect.<br>
+If this special node is called for a reason besides the party casting Ritual of
+Sanctification (for example, if they searched the space), the special node in Extra 1b is
+called.
 <dl>
-<dt>Extra 1b:</dt><dd>The special node called if this node is called for any reason other than the party casting Ritual of Sanctification.</dd></dd>
+<dt>Extra 1b:</dt><dd>The special node called if this node is called for any reason other
+than the party casting Ritual of Sanctification.</dd></dd>
 
-<dt>Type 25: Have a rest</dt><dd>If the party is in combat or if the party is in town and there was just combat going on, nothing happens. Otherwise, the party gets rested. Some time passes, and their health and spell points are restored.
+<dt>Type 25: Have a rest</dt><dd>If the party is in combat or if the party is in town and
+there was just combat going on, nothing happens. Otherwise, the party gets rested. Some
+time passes, and their health and spell points are restored.
 <dl>
 <dt>Extra 1a:</dt><dd>The number of ticks that pass (a day is 3000 ticks)</dd>
 <dt>Extra 1b:</dt><dd>The amount of health and spell points to restore.</dd></dd>
 
-<dt>Type 26: Wandering Will Fight</dt><dd>This special node only has an effect if called when the party has just encountered a group of monsters outdoors. If called at any other time, it has no effect. The node determines whether the monsters in the group will actually attack the party or not.
+<dt>Type 26: Wandering Will Fight</dt><dd>This special node only has an effect if called
+when the party has just encountered a group of monsters outdoors. If called at any other
+time, it has no effect. The node determines whether the monsters in the group will
+actually attack the party or not.
 <dl>
-<dt>Extra 1a:</dt><dd>If this is set to 0, the monsters will not attack the party, and the outdoor encounter will simply end. If its non-zero, the monsters will attack the party.</dd>
-<dt>Uses:</dt><dd>Suppose a group of soldiers outdoors will only attack the party if they have the stolen Wand of Balloo. If they don't have it, use this node with Extra 1a set to 0. If you don't call a special node of this type, the soldiers will attack.</dd></dd>
+<dt>Extra 1a:</dt><dd>If this is set to 0, the monsters will not attack the party, and the
+outdoor encounter will simply end. If its non-zero, the monsters will attack the
+party.</dd>
+<dt>Uses:</dt><dd>Suppose a group of soldiers outdoors will only attack the party if they
+have the stolen Wand of Balloo. If they don't have it, use this node with Extra 1a set to
+0. If you don't call a special node of this type, the soldiers will attack.</dd></dd>
 
-<dt>Type 27: End Scenario</dt><dd>Every scenario should call a node of this type at least once. When called, the scenario immediately ends, and the player will be returned to the starting screen, with the option of saving the game.
+<dt>Type 27: End Scenario</dt><dd>Every scenario should call a node of this type at least
+once. When called, the scenario immediately ends, and the player will be returned to the
+starting screen, with the option of saving the game.
 <dl>
-<dt>Note:</dt><dd>Without a node of this sort, the player's only option for leaving the scenario is to use the character editor. Please make sure a node of this sort can always be reached.</dd></dd>
+<dt>Note:</dt><dd>Without a node of this sort, the player's only option for leaving the
+scenario is to use the character editor. Please make sure a node of this sort can always
+be reached.</dd></dd>
 </dl>
 
 <h3>One-Shot Specials</h3>
-<p>This is the class of specials you generally only want to occur one time, such as giving items.</p>
-<p>For each of these special node types, you can specify a Stuff Done flag in the Stuff Done 1 and Stuff Done 2 fields. If you do, when the node is called, if that flag has a value of 250, the node does nothing and the special ends immediately. If the flag is not 250, the node has the desired effect, and then that Stuff Done flag is set to 250 (so this node has no effect is called again).</p>
-<p>These nodes have one more special property. If you have a have a special encounter marked by a white dot, the first node called from that special encounter is a One-Shot Special, and the specified Stuff Done flag in that node is 250, then the white dot disappears. Thus, specials that don't do anything anymore aren't marked by a special dot.</p>
+<p>This is the class of specials you generally only want to occur one time, such as giving
+items.</p>
+<p>For each of these special node types, you can specify a Stuff Done flag in the Stuff
+Done 1 and Stuff Done 2 fields. If you do, when the node is called, if that flag has a
+value of 250, the node does nothing and the special ends immediately. If the flag is not
+250, the node has the desired effect, and then that Stuff Done flag is set to 250 (so this
+node has no effect is called again).</p>
+<p>These nodes have one more special property. If you have a have a special encounter
+marked by a white dot, the first node called from that special encounter is a One-Shot
+Special, and the specified Stuff Done flag in that node is 250, then the white dot
+disappears. Thus, specials that don't do anything anymore aren't marked by a special
+dot.</p>
 
 <h4>General notes:</h4>
 <dl>
-<dt>Stuff done 1, Stuff done 2:</dt><dd>All of these nodes change a Stuff Done flag. A Stuff Done flag is described by two values: Stuff done 1 and Stuff done 2. The legal range of the first flag is from 0 to 299, and the range for the second flag is 0 to 9. You can give a value outside the legal range (such as -1 for Stuff Done 1). If you do this, the special node does its job normally, and if this node is called again, it will do it again. This is sometimes a good idea.</dd>
-<dt>Jump To:</dt><dd>This works as before, with one exception. If the specified Stuff Done flag for the called node is 250, the special encounter ends and the Jump To field is ignored.</dd>
+<dt>Stuff done 1, Stuff done 2:</dt><dd>All of these nodes change a Stuff Done flag. A
+Stuff Done flag is described by two values: Stuff done 1 and Stuff done 2. The legal range
+of the first flag is from 0 to 299, and the range for the second flag is 0 to 9. You can
+give a value outside the legal range (such as -1 for Stuff Done 1). If you do this, the
+special node does its job normally, and if this node is called again, it will do it again.
+This is sometimes a good idea.</dd>
+<dt>Jump To:</dt><dd>This works as before, with one exception. If the specified Stuff Done
+flag for the called node is 250, the special encounter ends and the Jump To field is
+ignored.</dd>
 </dl>
 
 <dl>
 
-<dt>Type 50: Give Item</dt><dd>An item is given to the party (specifically, to the first character who can carry it). Gold and food can also be given. If the party cannot carry another item, the Stuff Done flag is not set to 250. This can be accompanied by one or two messages, if you wish.
+<dt>Type 50: Give Item</dt><dd>An item is given to the party (specifically, to the first
+character who can carry it). Gold and food can also be given. If the party cannot carry
+another item, the Stuff Done flag is not set to 250. This can be accompanied by one or two
+messages, if you wish.
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>As usual.</dd>
-<dt>Mess1, Mess2:</dt><dd>Standard usage. If the items cannot be taken, no messages are displayed.</dd>
-<dt>Extra 1a:</dt><dd>The number of the item to be given. If -1, no item is given. Press the Choose button to select an item.</dd>
+<dt>Mess1, Mess2:</dt><dd>Standard usage. If the items cannot be taken, no messages are
+displayed.</dd>
+<dt>Extra 1a:</dt><dd>The number of the item to be given. If -1, no item is given. Press
+the Choose button to select an item.</dd>
 <dt>Extra 1b:</dt><dd>The amount of gold to give. (Range 0 ... 25000)</dd>
 <dt>Extra 2a:</dt><dd>The amount of food to give. (Range 0 ... 25000)</dd>
-<dt>Extra 2b:</dt><dd>The special to jump to if the item cannot be given (to, perhaps, tell them their inventory is full). If No Special is given, the Jump To special is called normally.</dd></dd>
+<dt>Extra 2b:</dt><dd>The special to jump to if the item cannot be given (to, perhaps,
+tell them their inventory is full). If No Special is given, the Jump To special is called
+normally.</dd></dd>
 
-<dt>Type 51: Give Special Item</dt><dd>Gives the party one of the scenarios special items. This can be accompanied by one or two messages, if you wish.
+<dt>Type 51: Give Special Item</dt><dd>Gives the party one of the scenarios special items.
+This can be accompanied by one or two messages, if you wish.
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>As usual.</dd>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Extra 1a:</dt><dd>The number of the special item to give. (Range 0 ... 49)</dd>
-<dt>Extra 1b:</dt><dd>If 0 (the default), the special item is given. Otherwise, its taken away.</dd></dd>
+<dt>Extra 1b:</dt><dd>If 0 (the default), the special item is given. Otherwise, its taken
+away.</dd></dd>
 
-<dt>Type 52: One-Time Do Nothing</dt><dd>If the Stuff Done flag is set to 250, this node ends the special encounter. Otherwise, it just calls the Jump To node.
+<dt>Type 52: One-Time Do Nothing</dt><dd>If the Stuff Done flag is set to 250, this node
+ends the special encounter. Otherwise, it just calls the Jump To node.
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>As usual.</dd>
-<dt>Uses:</dt><dd>This is provided for one time encounters that don't fit into any of the other types. Some other special node must set the Stuff Done flag to 250 to get the encounter to disappear.</dd></dd>
+<dt>Uses:</dt><dd>This is provided for one time encounters that don't fit into any of the
+other types. Some other special node must set the Stuff Done flag to 250 to get the
+encounter to disappear.</dd></dd>
 
-<dt>Type 53: One-Time Nothing and Set</dt><dd>If the Stuff Done flag is set to 250, this node ends the special encounter. Otherwise, it sets the Stuff Done flag to 250 and calls the Jump To node.
+<dt>Type 53: One-Time Nothing and Set</dt><dd>If the Stuff Done flag is set to 250, this
+node ends the special encounter. Otherwise, it sets the Stuff Done flag to 250 and calls
+the Jump To node.
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>As usual</dd></dd>
 
@@ -218,99 +360,191 @@ If this special node is called for a reason besides the party casting Ritual of 
 <dt>Stuff done 1, Stuff done 2:</dt><dd>As usual.</dd>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd></dd>
 
-<dt>Type 55: Display Dialog (Dialog pic)</dt><dd>This very important special node displays a dialog box with up to six text messages and a dialog picture (which you choose) in the upper left. The lower right hand corner can have 1 to 3 buttons. The player must press a button, at which point another special node will be called. You choose a special node to call for each button.<br>
-The first button is always labeled OK if its the only button or Leave if there are other buttons. If the first button is pressed, the Jump To special is called normally. Otherwise the special node in Extra 1b or 2b is called.
+<dt>Type 55: Display Dialog (Dialog pic)</dt><dd>This very important special node displays
+a dialog box with up to six text messages and a dialog picture (which you choose) in the
+upper left. The lower right hand corner can have 1 to 3 buttons. The player must press a
+button, at which point another special node will be called. You choose a special node to
+call for each button.<br>
+The first button is always labeled OK if its the only button or Leave if there are other
+buttons. If the first button is pressed, the Jump To special is called normally. Otherwise
+the special node in Extra 1b or 2b is called.
 <dl>
-<dt>Stuff done 1, Stuff done 2:</dt><dd>As usual, with one exception. If the first button is pressed, the Stuff Done flag is not set to 250. Otherwise, it is.</ddL
-<dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box. The six messages starting with this message will be displayed in the dialog box (though the strings can, of course, be blank). Press the create/edit button to edit the text.</dd>
-<dt>Mess 2:</dt><dd>This determines whether the default OK/Leave button appears. If this is 1, this button appears. Otherwise, it doesn't.</dd>
-<dt>Pict:</dt><dd>This is the number of the picture to display. To select a picture, press the Choose button.</dd>
-<dt>Extra 1a:</dt><dd>Determines what the second button is labeled. If left -1, there is no second button. Press the Choose button to select a label.</dd>
+<dt>Stuff done 1, Stuff done 2:</dt><dd>As usual, with one exception. If the first button
+is pressed, the Stuff Done flag is not set to 250. Otherwise, it is.</ddL
+<dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box. The
+six messages starting with this message will be displayed in the dialog box (though the
+strings can, of course, be blank). Press the create/edit button to edit the text.</dd>
+<dt>Mess 2:</dt><dd>This determines whether the default OK/Leave button appears. If this
+is 1, this button appears. Otherwise, it doesn't.</dd>
+<dt>Pict:</dt><dd>This is the number of the picture to display. To select a picture, press
+the Choose button.</dd>
+<dt>Extra 1a:</dt><dd>Determines what the second button is labeled. If left -1, there is
+no second button. Press the Choose button to select a label.</dd>
 <dt>Extra 1b:</dt><dd>What special node to call is button 2 is pressed.</dd>
-<dt>Extra 2a:</dt><dd>Determines what the third button is labeled. If left -1, there is no third button. Press the Choose button to select a label.</dd>
+<dt>Extra 2a:</dt><dd>Determines what the third button is labeled. If left -1, there is no
+third button. Press the Choose button to select a label.</dd>
 <dt>Extra 2b:</dt><dd>What special node to call is button 3 is pressed.</dd>
-<dt>Example:</dt><dd>If Mess 1 is 30, and Mess 2 is 4, the dialog box that comes up contains messages 30 through 33.</dd>
-<dt>Note:</dt><dd>A dialog box can only contain consecutive text messages. You can't bring up a dialog box which contains message 24, followed by messages 1, 20, and 64.</dd>
-<dt>Example:</dt><dd>Suppose to want a dialog box to come up displaying messages 37 through 40.</dd>
-<dt>Uses:</dt><dd>This is one special node where you may often want to leave Stuff Done 1 at -1 (so this node displays the dialog box every time its called). For example, if you want the text of a book to come up when the party looks at a certain bookshelf, you probably want the same text to keep coming up when the look at the bookshelf later on.</dd></dd>
+<dt>Example:</dt><dd>If Mess 1 is 30, and Mess 2 is 4, the dialog box that comes up
+contains messages 30 through 33.</dd>
+<dt>Note:</dt><dd>A dialog box can only contain consecutive text messages. You can't bring
+up a dialog box which contains message 24, followed by messages 1, 20, and 64.</dd>
+<dt>Example:</dt><dd>Suppose to want a dialog box to come up displaying messages 37
+through 40.</dd>
+<dt>Uses:</dt><dd>This is one special node where you may often want to leave Stuff Done 1
+at -1 (so this node displays the dialog box every time its called). For example, if you
+want the text of a book to come up when the party looks at a certain bookshelf, you
+probably want the same text to keep coming up when the look at the bookshelf later
+on.</dd></dd>
 
-<dt>Type 56: Display Dialog (Terrain pic)</dt><dd>This is exactly like Display Dialog (Dialog pic), except that the picture in the upper left is of a sort of terrain. Press the Select Picture button to pick the picture.</dd>
+<dt>Type 56: Display Dialog (Terrain pic)</dt><dd>This is exactly like Display Dialog
+(Dialog pic), except that the picture in the upper left is of a sort of terrain. Press the
+Select Picture button to pick the picture.</dd>
 
-<dt>Type 57: Display Dialog (Monster pic)</dt><dd>This is exactly like Display Dialog (Dialog pic), except that the picture in the upper left is of a monster. If you select a monster with size greater than 1 x 1, the dialog will show the complete picture of the monster. Press the Select Picture button to pick the picture.</dd>
+<dt>Type 57: Display Dialog (Monster pic)</dt><dd>This is exactly like Display Dialog
+(Dialog pic), except that the picture in the upper left is of a monster. If you select a
+monster with size greater than 1 x 1, the dialog will show the complete picture of the
+monster. Press the Select Picture button to pick the picture.</dd>
 
-<dt>Type 58: Give Item (Dialog pic)</dt><dd>Displays a dialog box with up to six text messages and a dialog picture (which you choose) in the upper left. At the lower right hand corner are two buttons: Take and Leave. If take is pressed, the party is given an item (if the item can be carried). If the item is taken, the Stuff Done flag is set to 250, and a specified special node will then be called. Otherwise, the special encounter ends immediately and the Stuff Done flag is not set.
+<dt>Type 58: Give Item (Dialog pic)</dt><dd>Displays a dialog box with up to six text
+messages and a dialog picture (which you choose) in the upper left. At the lower right
+hand corner are two buttons: Take and Leave. If take is pressed, the party is given an
+item (if the item can be carried). If the item is taken, the Stuff Done flag is set to
+250, and a specified special node will then be called. Otherwise, the special encounter
+ends immediately and the Stuff Done flag is not set.
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>As usual.</dd>
-<dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box. The six messages starting with this message will be displayed in the dialog box (though the strings can, of course, be blank). Press the create/edit button to edit the text.</dd>
-<dt>Mess 2:</dt><dd>The number of special item to give (0 .. 49). If this is left at -1, no special item is given.</dd>
-<dt>Pict:</dt><dd>This is the number of the picture to display. To select a picture, press the Choose button.</dd>
-<dt>Extra 1a:</dt><dd>The number of the item to give. Press the Select Item to pick an item.</dd>
+<dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box. The
+six messages starting with this message will be displayed in the dialog box (though the
+strings can, of course, be blank). Press the create/edit button to edit the text.</dd>
+<dt>Mess 2:</dt><dd>The number of special item to give (0 .. 49). If this is left at -1,
+no special item is given.</dd>
+<dt>Pict:</dt><dd>This is the number of the picture to display. To select a picture, press
+the Choose button.</dd>
+<dt>Extra 1a:</dt><dd>The number of the item to give. Press the Select Item to pick an
+item.</dd>
 <dt>Extra 1b:</dt><dd>The amount of gold to give. (Range 0 ... 25000)</dd>
 <dt>Extra 2a:</dt><dd>The amount of food to give. (Range 0 ... 25000)</dd>
-<dt>Extra 2b:</dt><dd>The special to jump to if the item is taken (note that this is different from the Give Item special node, above). If No Special is given, the Jump To special is called normally.</dd></dd>
+<dt>Extra 2b:</dt><dd>The special to jump to if the item is taken (note that this is
+different from the Give Item special node, above). If No Special is given, the Jump To
+special is called normally.</dd></dd>
 
-<dt>Type 59: Give Item (Terrain pic)</dt><dd>This is exactly like Choose to Take Item (Dialog pic), except that the picture in the upper left is of a sort of terrain. Press the Select Picture button to pick the picture.</dd>
+<dt>Type 59: Give Item (Terrain pic)</dt><dd>This is exactly like Choose to Take Item
+(Dialog pic), except that the picture in the upper left is of a sort of terrain. Press the
+Select Picture button to pick the picture.</dd>
 
-<dt>Type 60: Give Item (Monster pic)</dt><dd>This is exactly like Choose to Take Item (Dialog pic), except that the picture in the upper left is of a monster. If you select a monster with size greater than 1 x 1, the dialog will show the complete picture of the monster. Press the Select Picture button to pick the picture.</dd>
+<dt>Type 60: Give Item (Monster pic)</dt><dd>This is exactly like Choose to Take Item
+(Dialog pic), except that the picture in the upper left is of a monster. If you select a
+monster with size greater than 1 x 1, the dialog will show the complete picture of the
+monster. Press the Select Picture button to pick the picture.</dd>
 
-<dt>Type 61: One-Time Place Outdoor Encounter</dt><dd>This node only has an effect when called while walking outdoors. It places a special outdoor wandering encounter in a random open space near the party. This can be accompanied by one or two messages, if you wish.
+<dt>Type 61: One-Time Place Outdoor Encounter</dt><dd>This node only has an effect when
+called while walking outdoors. It places a special outdoor wandering encounter in a random
+open space near the party. This can be accompanied by one or two messages, if you wish.
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>As usual.</dd>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
-<dt>Extra 1a:</dt><dd>The number of the special outdoor wandering encounter to place. (Range 0 ... 3)</dd></dd>
+<dt>Extra 1a:</dt><dd>The number of the special outdoor wandering encounter to place.
+(Range 0 ... 3)</dd></dd>
 
-<dt>Type 62: One-Time Place Town Encounter</dt><dd>Activates all monsters in town in the specified Special Encounter Group (see the section on monsters in town for more information). If no monsters in that group are left, the encounter has no effect. This can be accompanied by one or two messages, if you wish.
+<dt>Type 62: One-Time Place Town Encounter</dt><dd>Activates all monsters in town in the
+specified Special Encounter Group (see the section on monsters in town for more
+information). If no monsters in that group are left, the encounter has no effect. This can
+be accompanied by one or two messages, if you wish.
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>As usual.</dd>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
-<dt>Extra 1a:</dt><dd>The Special Encounter Code of the monsters to activate. (Range 0 ... 9)</dd></dd>
+<dt>Extra 1a:</dt><dd>The Special Encounter Code of the monsters to activate. (Range 0 ...
+9)</dd></dd>
 
-<dt>Type 63: Trap</dt><dd>Brings up a dialog saying the party has found a trap, and asking if they want to disarm it. If they say no, the special ends immediately, and, if theyre walking, they can't enter the space. Otherwise, they must select a character to disarm it. Once disarmed (or triggered) the Jump To special is called. This node only has an effect in town or combat (no traps outdoors).
+<dt>Type 63: Trap</dt><dd>Brings up a dialog saying the party has found a trap, and asking
+if they want to disarm it. If they say no, the special ends immediately, and, if theyre
+walking, they can't enter the space. Otherwise, they must select a character to disarm it.
+Once disarmed (or triggered) the Jump To special is called. This node only has an effect
+in town or combat (no traps outdoors).
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>As usual.</dd>
-<dt>Mess1, Mess2:</dt><dd>Standard usage. You can provide customized text saying the party sees what may be a trap. If both of these fields are left at -1, the game displays a generic You Found A Trap message.</dd>
-<dt>Extra 1a:</dt><dd>The type of trap: 0 - randomly selected, 1 - damage 1 character, 2 - poison 1 character, 3 - poison party, 4 - damage party, 5 - paralyze character, 6 - no trap after all, 7 - drain experience, 8 - make town hostile, 9 - fire damage 1 character, 10 - dumbfound 1 character, 11 - disease 1 character, 12 - disease party</dd>
-<dt>Extra 1b:</dt><dd>The severity of the trap. The higher the number, the deadlier the trap. A severity of three all but guarantees lethality. (Range 0 ... 3)</dd>
-<dt>Extra 2a:</dt><dd>The disarming penalty. The higher the number, the harder to disarm. (Range 0 ... 100)</dd>
-<dt>Note:</dt><dd>If this special node is placed on a container (like a chest), the party must disarm the trap to be able to take any of the items in the chest.</dd></dd>
+<dt>Mess1, Mess2:</dt><dd>Standard usage. You can provide customized text saying the party
+sees what may be a trap. If both of these fields are left at -1, the game displays a
+generic You Found A Trap message.</dd>
+<dt>Extra 1a:</dt><dd>The type of trap: 0 - randomly selected, 1 - damage 1 character, 2 -
+poison 1 character, 3 - poison party, 4 - damage party, 5 - paralyze character, 6 - no
+trap after all, 7 - drain experience, 8 - make town hostile, 9 - fire damage 1 character,
+10 - dumbfound 1 character, 11 - disease 1 character, 12 - disease party</dd>
+<dt>Extra 1b:</dt><dd>The severity of the trap. The higher the number, the deadlier the
+trap. A severity of three all but guarantees lethality. (Range 0 ... 3)</dd>
+<dt>Extra 2a:</dt><dd>The disarming penalty. The higher the number, the harder to disarm.
+(Range 0 ... 100)</dd>
+<dt>Note:</dt><dd>If this special node is placed on a container (like a chest), the party
+must disarm the trap to be able to take any of the items in the chest.</dd></dd>
 </dl>
 
 <h3>Affect PC/Party Specials</h3>
-<p>All of these special encounters do something to one character or to the party. Whether they affect one character or the party depends on several factors.</p>
-<p>Special node 80 (Select a PC) asks the player to select one of their PCs. Once this node is called, any Affect PC/Party special nodes called only affect the selected PC.</p>
+<p>All of these special encounters do something to one character or to the party. Whether
+they affect one character or the party depends on several factors.</p>
+<p>Special node 80 (Select a PC) asks the player to select one of their PCs. Once this
+node is called, any Affect PC/Party special nodes called only affect the selected PC.</p>
 <p>If no Select PC node has been called, the node affects the entire party.</p>
-<p>Finally, the last few nodes in this section (like Firewalk, Stealth, Affect Gold) only affect the whole party.</p>
-<p>Note that when one of these specials does something bad (e.g. diseases or poisons) a character, all resistances (e.g. protection from poison rings) apply.</p>
+<p>Finally, the last few nodes in this section (like Firewalk, Stealth, Affect Gold) only
+affect the whole party.</p>
+<p>Note that when one of these specials does something bad (e.g. diseases or poisons) a
+character, all resistances (e.g. protection from poison rings) apply.</p>
 
 <h4>General notes:</h4>
-<dt>Stuff done 1, Stuff done 2:</dt><dd> None of these special node types use these fields.</dd>
-<dt>Mess 1, Mess 2:</dt><dd>All of these special node types (except Select a PC) can display one or two messages. If you don't want a message displayed, just leave these at -1.</dd>
-<dt>Extra 1b:</dt><dd>This field usually affects whether the node helps of hurts the party. In general, if its 0 (the default) it helps. Otherwise, it hurts.</dd>
-<dt>Extra 2b:</dt><dd>When these nodes are called during combat, if this is 0, the node only affects the active PC. Otherwise, it affects the whole party. (Exception to this - the Do Damage node type)</dd>
+<dt>Stuff done 1, Stuff done 2:</dt><dd> None of these special node types use these
+fields.</dd>
+<dt>Mess 1, Mess 2:</dt><dd>All of these special node types (except Select a PC) can
+display one or two messages. If you don't want a message displayed, just leave these at
+-1.</dd>
+<dt>Extra 1b:</dt><dd>This field usually affects whether the node helps of hurts the
+party. In general, if its 0 (the default) it helps. Otherwise, it hurts.</dd>
+<dt>Extra 2b:</dt><dd>When these nodes are called during combat, if this is 0, the node
+only affects the active PC. Otherwise, it affects the whole party. (Exception to this -
+the Do Damage node type)</dd>
 <dt>Jump To:</dt><dd>All of these special node types use this field.</dd>
 
 <dl>
 
-<dt>Type 80: Select a PC</dt><dd>Brings up a window asking the player to select a living character. Once this is called, any Affect PC/Party nodes during this special encounter only affect the selected character.
+<dt>Type 80: Select a PC</dt><dd>Brings up a window asking the player to select a living
+character. Once this is called, any Affect PC/Party nodes during this special encounter
+only affect the selected character.
 <dl>
-<dt>Extra 1a:</dt><dd>if this is left at 0 (the default), only living characters may be selected. If it is set to 1, any character (dead or alive) can be picked. If it is set to 2, no choice dialog comes up, Instead, any previous PC selections are undone, and any further Affect PC/Party specials called during this special encounter affect the whole party.</dd>
-<dt>Extra 1b:</dt><dd>This special is called if the Cancel button on the select PC dialog box is pressed. If this is left at No Special, when the Cancel button is pressed the special encounter immediately ends.</dd>
-<dt>Uses:</dt><dd>If you want something to increase the strength of one character, call a Select a PC node, followed by an Affect Statistic node.</dd></dd>
+<dt>Extra 1a:</dt><dd>if this is left at 0 (the default), only living characters may be
+selected. If it is set to 1, any character (dead or alive) can be picked. If it is set to
+2, no choice dialog comes up, Instead, any previous PC selections are undone, and any
+further Affect PC/Party specials called during this special encounter affect the whole
+party.</dd>
+<dt>Extra 1b:</dt><dd>This special is called if the Cancel button on the select PC dialog
+box is pressed. If this is left at No Special, when the Cancel button is pressed the
+special encounter immediately ends.</dd>
+<dt>Uses:</dt><dd>If you want something to increase the strength of one character, call a
+Select a PC node, followed by an Affect Statistic node.</dd></dd>
 
-<dt>Type 81: Do Damage</dt><dd>This special node damages a character, or the whole party. It has no effect when called during a talking special. When called during combat, and a Select a PC node has not been called, it only affects the active character.
+<dt>Type 81: Do Damage</dt><dd>This special node damages a character, or the whole party.
+It has no effect when called during a talking special. When called during combat, and a
+Select a PC node has not been called, it only affects the active character.
 <dl>
-<dt>Pict:</dt><dd>If this is 0, this node damages the whole party. If this is 1, and the node is called during combat, only the current pc is damaged. Otherwise, the whole party is damaged.</dd>
-<dt>Extra 1a:</dt><dd>This is the number of dice of damage that is rolled. (Maximum: 256)</dd>
-<dt>Extra 1b:</dt><dd>This is the number of sides of the dice that are rolled. For example, if Extra 1a is 5 and Extra 2b is 8, the game generates 5 random numbers from 1 to 8, adds them, and does that much damage. (Maximum: 256)</dd>
-<dt>Extra 2a:</dt><dd>This is the amount of extra damage to add. If this is 100, for example, 100 extra points of damage are inflicted.</dd>
-<dt>Extra 2b:</dt><dd>This is the type of damage inflicted (0 - weapon, 1 - fire, 2 - poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon,7 - undead)</dd></dd>
+<dt>Pict:</dt><dd>If this is 0, this node damages the whole party. If this is 1, and the
+node is called during combat, only the current pc is damaged. Otherwise, the whole party
+is damaged.</dd>
+<dt>Extra 1a:</dt><dd>This is the number of dice of damage that is rolled. (Maximum:
+256)</dd>
+<dt>Extra 1b:</dt><dd>This is the number of sides of the dice that are rolled. For
+example, if Extra 1a is 5 and Extra 2b is 8, the game generates 5 random numbers from 1 to
+8, adds them, and does that much damage. (Maximum: 256)</dd>
+<dt>Extra 2a:</dt><dd>This is the amount of extra damage to add. If this is 100, for
+example, 100 extra points of damage are inflicted.</dd>
+<dt>Extra 2b:</dt><dd>This is the type of damage inflicted (0 - weapon, 1 - fire, 2 -
+poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon,7 - undead)</dd></dd>
 
-<dt>Type 82: Affect Health</dt><dd>Increases/decreases health. Health can be changed to a maximum of 250 or a minimum of 0. This special cannot kill anybody, only reduce their health to 0.
+<dt>Type 82: Affect Health</dt><dd>Increases/decreases health. Health can be changed to a
+maximum of 250 or a minimum of 0. This special cannot kill anybody, only reduce their
+health to 0.
 <dl>
 <dt>Extra 1a:</dt><dd>The amount to raise/lower health.</dd>
 <dt>Extra 1b:</dt><dd>If 0, health is raised. Otherwise, its lowered.</dd></dd>
 
-<dt>Type 83: Affect Spell Points</dt><dd>Increases/decreases spell points. Spell points can be changed to a maximum of 100 or a minimum of 0.
+<dt>Type 83: Affect Spell Points</dt><dd>Increases/decreases spell points. Spell points
+can be changed to a maximum of 100 or a minimum of 0.
 <dl>
 <dt>Extra 1a:</dt><dd>The amount to raise/lower spell points.</dd>
 <dt>Extra 1b:</dt><dd>If 0, spell points are raised. Otherwise, theyre lowered.</dd></dd>
@@ -329,11 +563,15 @@ The first button is always labeled OK if its the only button or Leave if there a
 
 <dt>Type 86: Kill/Raise</dt><dd>Adds/drains skill points.
 <dl>
-<dt>Extra 1a:</dt><dd>If field Extra 1b is non-zero, this field is ignored. Otherwise, this is the type of death inflicted: 0 - regular death, 1 - dust, 2 - stoned.</dd>
-<dt>Extra 1b:</dt><dd>If 0, makes the PC/Party intact again (not dead, stoned, etc.) Otherwise, kills/stones the PC/party.</dd>
-<dt>Note:</dt><dd>Needless to say, this should be used very carefully. Nothing makes a scenario unpleasant faster than lots of arbitrary death.</dd></dd>
+<dt>Extra 1a:</dt><dd>If field Extra 1b is non-zero, this field is ignored. Otherwise,
+this is the type of death inflicted: 0 - regular death, 1 - dust, 2 - stoned.</dd>
+<dt>Extra 1b:</dt><dd>If 0, makes the PC/Party intact again (not dead, stoned, etc.)
+Otherwise, kills/stones the PC/party.</dd>
+<dt>Note:</dt><dd>Needless to say, this should be used very carefully. Nothing makes a
+scenario unpleasant faster than lots of arbitrary death.</dd></dd>
 
-<dt>Type 87: Affect Poison</dt><dd>Poisons/cures. Note, if poisoning the party, all resistances apply.
+<dt>Type 87: Affect Poison</dt><dd>Poisons/cures. Note, if poisoning the party, all
+resistances apply.
 <dl>
 <dt>Extra 1a:</dt><dd>The amount to cause/cure health. (Range 0 ... 8)</dd>
 <dt>Extra 1b:</dt><dd>If 0, cures PC/party. Otherwise, poisons.</dd></dd>
@@ -385,24 +623,33 @@ The first button is always labeled OK if its the only button or Leave if there a
 
 <dt>Type 97: Affect Paralysis</dt><dd>Paralyzes/cures.
 <dl>
-<dt>Extra 1a:</dt><dd>The amount to cause/cure paralysis. (Range 0 ... 5000) The amount is the number of turns character is paralyzed.</dd>
+<dt>Extra 1a:</dt><dd>The amount to cause/cure paralysis. (Range 0 ... 5000) The amount is
+the number of turns character is paralyzed.</dd>
 <dt>Extra 1b:</dt><dd>If 0, cures PC/party. Otherwise, paralyzes.</dd>
 <dt>Warning:</dt><dd>Don't paralyze the whole party for too long. It's boring.</dd></dd>
 
-<dt>Type 98: Affect Statistic</dt><dd>Changes the characters statistics (e.g. Strength, Mage Spells, etc.)
+<dt>Type 98: Affect Statistic</dt><dd>Changes the characters statistics (e.g. Strength,
+Mage Spells, etc.)
 <dl>
-<dt>Pict:</dt><dd>This is a number from 1 to 100, which represents the percentage chance the statistic is affected. If 100 (the default) its always changes. If 0, it never is.</dd>
+<dt>Pict:</dt><dd>This is a number from 1 to 100, which represents the percentage chance
+the statistic is affected. If 100 (the default) its always changes. If 0, it never
+is.</dd>
 <dt>Extra 1a:</dt><dd>The amount to increase/decrease (0 .. 10).</dd>
 <dt>Extra 1b:</dt><dd>If 0, increase. If 1, decrease.</dd>
-<dt>Extra 2a:</dt><dd>The statistic to increase/decrease (Range 0 ... 18): 0 - Strength, 1 - Dexterity, 2 - Intelligence, 3 - Edged, 4 - Bashing, 5 - Pole, 6 - Missile, 7 - Bow, 8 - Defense, 9 - Mage Spells, 10 - Priest Spells, 11 - Mage Lore, 12 - Alchemy, 13 - Item Lore, 14 - Traps, 15 - Lockpick, 16 - Assassination, 17 - Poison, 18 - Luck.</dd>
+<dt>Extra 2a:</dt><dd>The statistic to increase/decrease (Range 0 ... 18): 0 - Strength, 1
+- Dexterity, 2 - Intelligence, 3 - Edged, 4 - Bashing, 5 - Pole, 6 - Missile, 7 - Bow, 8 -
+Defense, 9 - Mage Spells, 10 - Priest Spells, 11 - Mage Lore, 12 - Alchemy, 13 - Item
+Lore, 14 - Traps, 15 - Lockpick, 16 - Assassination, 17 - Poison, 18 - Luck.</dd>
 <dt>Note:</dt><dd>Use this node sparingly, especially if decreasing the stat.</dd></dd>
 
-<dt>Type 99: Give Mage Spell</dt><dd>Gives a mage spell. The spells are listed in the Appendices.
+<dt>Type 99: Give Mage Spell</dt><dd>Gives a mage spell. The spells are listed in the
+Appendices.
 <dl>
 <dt>Extra 1a:</dt><dd>The spell to give (Range 0 ... 61).</dd>
 <dt>Example:</dt><dd>To give the spell Wall of Force, set Extra 1a to 25.</dd></dd>
 
-<dt>Type 100: Give Priest Spell</dt><dd>Gives a priest spell. The spells are listed in the Appendices.
+<dt>Type 100: Give Priest Spell</dt><dd>Gives a priest spell. The spells are listed in the
+Appendices.
 <dl>
 <dt>Extra 1a:</dt><dd>The spell to give (Range 0 ... 61).</dd></dd>
 
@@ -417,7 +664,8 @@ The first button is always labeled OK if its the only button or Leave if there a
 <dt>Extra 1a:</dt><dd>The amount to increase/decrease. (Range 0 ... 25000)</dd>
 <dt>Extra 1b:</dt><dd>Whether to increase or decrease.</dd></dd>
 
-<dt>Type 103: Give Alchemy</dt><dd>Gives an alchemy recipe. The recipes are listed in the Appendices.
+<dt>Type 103: Give Alchemy</dt><dd>Gives an alchemy recipe. The recipes are listed in the
+Appendices.
 <dl>
 <dt>Extra 1a:</dt><dd>The recipe to give (Range 0 ... 19).</dd></dd>
 
@@ -434,325 +682,538 @@ The first button is always labeled OK if its the only button or Leave if there a
 <dt>Extra 1a:</dt><dd>The duration (Range 0 ... 250).</dd></dd>
 
 <h3>If-Then Specials</h3>
-<p>These special node types don't do anything by themselves. Instead, they choose from several choices which node to call next. For example, if you want something to happen when the party has the Crown of Might and something different to happen when they don't, you would use an If-Then special, which would lead to two different special nodes, one for when they have the crown, and one for when they don't.</p>
-<p>All of these nodes can be used for any type of special. All of them require selecting a new special node (or nodes) in the Extra 1b and/or Extra 2b fields. If No Special is selected in both of these fields, the Jump To special node is called.</p>
+<p>These special node types don't do anything by themselves. Instead, they choose from
+several choices which node to call next. For example, if you want something to happen when
+the party has the Crown of Might and something different to happen when they don't, you
+would use an If-Then special, which would lead to two different special nodes, one for
+when they have the crown, and one for when they don't.</p>
+<p>All of these nodes can be used for any type of special. All of them require selecting a
+new special node (or nodes) in the Extra 1b and/or Extra 2b fields. If No Special is
+selected in both of these fields, the Jump To special node is called.</p>
 
 <dl>
 
-<dt>Type 130: Stuff Done Flag?</dt><dd>Calls new nodes depending on the value of a given Stuff Done flag. If the Stuff Done flag is greater than the value of Extra 1a, the special in Extra 1b is called. Otherwise, if the Stuff Done flag is less than the value in Extra 2a, the special in Extra 2b is called. If neither case applies, the Jump To special is called.
-<p>The default values for Extra 1a is -1. If it is left at -1, it isn't checked, and the special in Extra 1b won't be called. The same is true for Extra 2a.</p>
+<dt>Type 130: Stuff Done Flag?</dt><dd>Calls new nodes depending on the value of a given
+Stuff Done flag. If the Stuff Done flag is greater than the value of Extra 1a, the special
+in Extra 1b is called. Otherwise, if the Stuff Done flag is less than the value in Extra
+2a, the special in Extra 2b is called. If neither case applies, the Jump To special is
+called.
+<p>The default values for Extra 1a is -1. If it is left at -1, it isn't checked, and the
+special in Extra 1b won't be called. The same is true for Extra 2a.</p>
 <dl>
-<dt>Stuff done 1, Stuff done 2:</dt><dd>Specifies the Stuff Done flag to inspect.</dd></dd>
+<dt>Stuff done 1, Stuff done 2:</dt><dd>Specifies the Stuff Done flag to
+inspect.</dd></dd>
 
 <dt>Type 131: Town Number?</dt><dd>Result depends on the town the party is in.
 <dl>
-<dt>Extra 1a:</dt><dd>The number of a town. If the party is in this town, the special in Extra 1b is called.</dd>
-<dt>Jump To:</dt><dd>This is called if the party is not in a town, or not in the town in Extra 1a.</dd></dd>
+<dt>Extra 1a:</dt><dd>The number of a town. If the party is in this town, the special in
+Extra 1b is called.</dd>
+<dt>Jump To:</dt><dd>This is called if the party is not in a town, or not in the town in
+Extra 1a.</dd></dd>
 
-<dt>Type 132: Random Number?</dt><dd>Result depends on a randomly generated number. The game will pick a random number from 1 to 100.
+<dt>Type 132: Random Number?</dt><dd>Result depends on a randomly generated number. The
+game will pick a random number from 1 to 100.
 <dl>
-<dt>Extra 1a:</dt><dd>If the random number is less than this value, the special in Extra 1b is called.</dd>
+<dt>Extra 1a:</dt><dd>If the random number is less than this value, the special in Extra
+1b is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
-<dt>Type 133: Have Special Item</dt><dd>Result depends on whether the party has a certain special item.
+<dt>Type 133: Have Special Item</dt><dd>Result depends on whether the party has a certain
+special item.
 <dl>
-<dt>Extra 1a:</dt><dd>The number of a special item. If a character has this special item, the special in Extra 1b is called.</dd>
+<dt>Extra 1a:</dt><dd>The number of a special item. If a character has this special item,
+the special in Extra 1b is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
-<dt>Type 134: Stuff Done Compare?</dt><dd>Calls new nodes depending on whether one Stuff Done flag is greater than another or not. If the first Stuff Done flag is greater than or equal to the second, the special in Extra 2b is called. Otherwise, the Jump To special is called.
+<dt>Type 134: Stuff Done Compare?</dt><dd>Calls new nodes depending on whether one Stuff
+Done flag is greater than another or not. If the first Stuff Done flag is greater than or
+equal to the second, the special in Extra 2b is called. Otherwise, the Jump To special is
+called.
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>Specifies the first Stuff Done flag.</dd>
 <dt>Extra 1a, Extra 1b:</dt><dd>Specifies the second Stuff Done flag.</dd>
-<dt>Extra 2b:</dt><dd>The special to jump to if the second flag is less than the first.</dd>
-<dt>Example:</dt><dd>Stuff Done flag (1,8) is 15. Stuff Done Flag (2,3) is 5. If this node is called with Stuff Done 1 equal to 1, Stuff Done 2 equal to 8, Extra 1a equal to 2, and Extra 1b equal to 3, then, as (1,8) is higher than (2,3), the special in Extra 2b will be called.</dd></dd>
+<dt>Extra 2b:</dt><dd>The special to jump to if the second flag is less than the
+first.</dd>
+<dt>Example:</dt><dd>Stuff Done flag (1,8) is 15. Stuff Done Flag (2,3) is 5. If this node
+is called with Stuff Done 1 equal to 1, Stuff Done 2 equal to 8, Extra 1a equal to 2, and
+Extra 1b equal to 3, then, as (1,8) is higher than (2,3), the special in Extra 2b will be
+called.</dd></dd>
 
-<dt>Type 135: Terrain this type? (town)</dt><dd>Result depends on whether a specified spot in town is of a given terrain type.
+<dt>Type 135: Terrain this type? (town)</dt><dd>Result depends on whether a specified spot
+in town is of a given terrain type.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired space.</dd>
-<dt>Extra 2a:</dt><dd>The number of a terrain type. If the given space is of this terrain type, the special in Extra 2b is called.</dd>
-<dt>Jump To:</dt><dd>If the party is not in a town, or the terrain is not of the given type, this special is called.</dd>
-<dt>Uses:</dt><dd>Suppose a guard opens a gate for the party, and tells them he opened it. First, you might want to check if the gate is already opened, so that he can get angry and tell them he already opened it.</dd></dd>
+<dt>Extra 2a:</dt><dd>The number of a terrain type. If the given space is of this terrain
+type, the special in Extra 2b is called.</dd>
+<dt>Jump To:</dt><dd>If the party is not in a town, or the terrain is not of the given
+type, this special is called.</dd>
+<dt>Uses:</dt><dd>Suppose a guard opens a gate for the party, and tells them he opened it.
+First, you might want to check if the gate is already opened, so that he can get angry and
+tell them he already opened it.</dd></dd>
 
-<dt>Type 136: Terrain this type? (outdoors)</dt><dd>Result depends on whether a specified spot in town is of a given terrain type.
+<dt>Type 136: Terrain this type? (outdoors)</dt><dd>Result depends on whether a specified
+spot in town is of a given terrain type.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired space.</dd>
-<dt>Extra 2a:</dt><dd>The number of a terrain type. If the space is of this terrain type, the special in Extra 2b is called.</dd>
-<dt>Jump To:</dt><dd>If the party is not outdoors, or the terrain is not of the given type, this special is called.</dd></dd>
+<dt>Extra 2a:</dt><dd>The number of a terrain type. If the space is of this terrain type,
+the special in Extra 2b is called.</dd>
+<dt>Jump To:</dt><dd>If the party is not outdoors, or the terrain is not of the given
+type, this special is called.</dd></dd>
 
 <dt>Type 137: Has Gold?</dt><dd>Result depends on whether the party has enough gold.
 <dl>
-<dt>Extra 1a:</dt><dd>If the party has at least this much gold, the special is Extra 1b is called.</dd>
+<dt>Extra 1a:</dt><dd>If the party has at least this much gold, the special is Extra 1b is
+called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
-<dt>Uses:</dt><dd>If someone is selling, say, Strength improvement, you can first use this to see if the party has enough gold to afford it.</dd></dd>
+<dt>Uses:</dt><dd>If someone is selling, say, Strength improvement, you can first use this
+to see if the party has enough gold to afford it.</dd></dd>
 
 <dt>Type 138: Has Food?</dt><dd>Result depends on whether the party has enough food.
 <dl>
-<dt>Extra 1a:</dt><dd>If the party has at least this much food, the special is Extra 1b is called.</dd>
+<dt>Extra 1a:</dt><dd>If the party has at least this much food, the special is Extra 1b is
+called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
-<dt>Type 139: Item Class on Space?</dt><dd>Result depends on whether an item of a given special item class is sitting on a specified spot in town.
+<dt>Type 139: Item Class on Space?</dt><dd>Result depends on whether an item of a given
+special item class is sitting on a specified spot in town.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired spot.</dd>
-<dt>Extra 2a:</dt><dd>The number of a special item class. If an item with this special item class is sitting on the given space, the special in Extra 2b is called.</dd>
+<dt>Extra 2a:</dt><dd>The number of a special item class. If an item with this special
+item class is sitting on the given space, the special in Extra 2b is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise (or if the party is outdoors) this special is called.</dd>
-<dt>Uses:</dt><dd>A magic barrier that only lets people through if a certain item has been placed on a nearby pedestal.</dd></dd>
+<dt>Uses:</dt><dd>A magic barrier that only lets people through if a certain item has been
+placed on a nearby pedestal.</dd></dd>
 
-<dt>Type 140: Have Item with Class?</dt><dd>Result depends on whether a PC owns an item with the specified Special Class (see the chapter in items for information on item special class).
+<dt>Type 140: Have Item with Class?</dt><dd>Result depends on whether a PC owns an item
+with the specified Special Class (see the chapter in items for information on item special
+class).
 <dl>
-<dt>Extra 1a:</dt><dd>An item special class number. If a character has an item with this special class, the special in Extra 1b is called.</dd>
+<dt>Extra 1a:</dt><dd>An item special class number. If a character has an item with this
+special class, the special in Extra 1b is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
-<dt>Type 141: Equipped Item with Class?</dt><dd>Result depends on whether a PC owns an item with the specified Special Class, which is currently equipped.
+<dt>Type 141: Equipped Item with Class?</dt><dd>Result depends on whether a PC owns an
+item with the specified Special Class, which is currently equipped.
 <dl>
-<dt>Extra 1a:</dt><dd>An item special class number. If a character has an item with this special class which is equipped, the special in Extra 1b is called.</dd>
+<dt>Extra 1a:</dt><dd>An item special class number. If a character has an item with this
+special class which is equipped, the special in Extra 1b is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
-<dt>Type 142: Has Gold? (and take)</dt><dd>Result depends on whether the party has enough gold.
+<dt>Type 142: Has Gold? (and take)</dt><dd>Result depends on whether the party has enough
+gold.
 <dl>
-<dt>Extra 1a:</dt><dd>If the party has at least this much gold, the special is Extra 1b is called, and that much gold is taken from them.</dd>
+<dt>Extra 1a:</dt><dd>If the party has at least this much gold, the special is Extra 1b is
+called, and that much gold is taken from them.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
-<dt>Note:</dt><dd>This node (and the next four) are the only If-Then nodes that actually have an effect in the game.</dd></dd>
+<dt>Note:</dt><dd>This node (and the next four) are the only If-Then nodes that actually
+have an effect in the game.</dd></dd>
 
-<dt>Type 143: Has Food? (and take)</dt><dd>Result depends on whether the party has enough food.
+<dt>Type 143: Has Food? (and take)</dt><dd>Result depends on whether the party has enough
+food.
 <dl>
-<dt>Extra 1a:</dt><dd>If the party has at least this much food, the special is Extra 1b is called, and that much food is taken from them.</dd>
+<dt>Extra 1a:</dt><dd>If the party has at least this much food, the special is Extra 1b is
+called, and that much food is taken from them.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
-<dt>Type 144: Item Class on Space? (and take)</dt><dd>Result depends on whether an item of a given special item class is sitting on a specified spot in town.
+<dt>Type 144: Item Class on Space? (and take)</dt><dd>Result depends on whether an item of
+a given special item class is sitting on a specified spot in town.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired spot.</dd>
-<dt>Extra 2a:</dt><dd>The number of a special item class. If an item with this special item class is sitting on the given space, the special in Extra 2b is called and that item is removed from the game.</dd>
+<dt>Extra 2a:</dt><dd>The number of a special item class. If an item with this special
+item class is sitting on the given space, the special in Extra 2b is called and that item
+is removed from the game.</dd>
 <dt>Jump To:</dt><dd>Otherwise (or if the party is outdoors) this special is called.</dd>
-<dt>Uses:</dt><dd>A magic barrier that only lets people through if a certain item has been placed on a nearby pedestal.</dd></dd>
+<dt>Uses:</dt><dd>A magic barrier that only lets people through if a certain item has been
+placed on a nearby pedestal.</dd></dd>
 
-<dt>Type 145: Have Item with Class? (and take)</dt><dd>Result depends on whether a PC owns an item with the specified Special Class (see the chapter in items for information on item special class).
+<dt>Type 145: Have Item with Class? (and take)</dt><dd>Result depends on whether a PC owns
+an item with the specified Special Class (see the chapter in items for information on item
+special class).
 <dl>
-<dt>Extra 1a:</dt><dd>An item special class number. If a character has an item with this special class, the special in Extra 1b is called and that item is removed from the game.</dd>
+<dt>Extra 1a:</dt><dd>An item special class number. If a character has an item with this
+special class, the special in Extra 1b is called and that item is removed from the
+game.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
-<dt>Uses:</dt><dd>This is a great special to implement tickets to enter somewhere. Create a ticket item with a special class of, say, 20. Have this special take one item of class 20. If the party has none, have Jump To point to a special node telling them they have no ticket and blocking them from entering.</dd></dd>
+<dt>Uses:</dt><dd>This is a great special to implement tickets to enter somewhere. Create
+a ticket item with a special class of, say, 20. Have this special take one item of class
+20. If the party has none, have Jump To point to a special node telling them they have no
+ticket and blocking them from entering.</dd></dd>
 
-<dt>Type 146: Equip Item with Class? (and take)</dt><dd>Result depends on whether a PC owns an item with the specified Special Class, which is currently equipped.
+<dt>Type 146: Equip Item with Class? (and take)</dt><dd>Result depends on whether a PC
+owns an item with the specified Special Class, which is currently equipped.
 <dl>
-<dt>Extra 1a:</dt><dd>An item special class number. If a character has an item with this special class which is equipped, the special in Extra 1b is called.</dd>
+<dt>Extra 1a:</dt><dd>An item special class number. If a character has an item with this
+special class which is equipped, the special in Extra 1b is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
-<dt>Type 147: Day reached? </dt><dd>Result depends on whether a certain day has been reached.
+<dt>Type 147: Day reached? </dt><dd>Result depends on whether a certain day has been
+reached.
 <dl>
-<dt>Extra 1a:</dt><dd>The number of a day. If it is this day (or later) the special in Extra 1b is called.</dd>
+<dt>Extra 1a:</dt><dd>The number of a day. If it is this day (or later) the special in
+Extra 1b is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
-<dt>Type 148: Any barrels? </dt><dd>Result depends on whether any barrels exist in the current town.
+<dt>Type 148: Any barrels? </dt><dd>Result depends on whether any barrels exist in the
+current town.
 <dl>
 <dt>Extra 1b:</dt><dd>If any barrels are present, this special is called.</dd>
-<dt>Jump To:</dt><dd>Otherwise (or if this special is called while outdoors), this special is called.</dd></dd>
+<dt>Jump To:</dt><dd>Otherwise (or if this special is called while outdoors), this special
+is called.</dd></dd>
 
-<dt>Type 149: Any crates? </dt><dd>Result depends on whether any barrels exist in the current town?
+<dt>Type 149: Any crates? </dt><dd>Result depends on whether any barrels exist in the
+current town?
 <dl>
 <dt>Extra 1b:</dt><dd>If any barrels are present, this special is called.</dd>
-<dt>Jump To:</dt><dd>Otherwise (or if this special is called while outdoors), this special is called.</dd></dd>
+<dt>Jump To:</dt><dd>Otherwise (or if this special is called while outdoors), this special
+is called.</dd></dd>
 
-<dt>Type 150: Special Thing happened?</dt><dd>Result depends on whether a given day was reached before a given event happened (see the chapter on the passage of time for more explanation).
+<dt>Type 150: Special Thing happened?</dt><dd>Result depends on whether a given day was
+reached before a given event happened (see the chapter on the passage of time for more
+explanation).
 <dl>
 <dt>Extra 1a:</dt><dd>The day some special thing is supposed to happen.</dd>
-<dt>Extra 1b:</dt><dd>The number of an event (0 .. 20). This is the event that would prevent the special thing from happening (leave at 0 for no event). If the day in 1a has been reached, and this special event did not occur before the day in 1a, then the special in Extra 2b is called.</dd>
+<dt>Extra 1b:</dt><dd>The number of an event (0 .. 20). This is the event that would
+prevent the special thing from happening (leave at 0 for no event). If the day in 1a has
+been reached, and this special event did not occur before the day in 1a, then the special
+in Extra 2b is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
-<dt>Uses:</dt><dd>Suppose an altar is destroyed on day 50, if the Demon Fred is not killed by them. Let the killing of the demon Fred be event 3 (so, when Fred is killed, a Major Event Has Happened special is called).
-<p>Then, when the party reaches the altar, call this special with Extra 1a set to 50 and Extra 1b set to 3. Then, should Fred have destroyed the altar, the special in Extra 2b will be called.</dd></dd>
+<dt>Uses:</dt><dd>Suppose an altar is destroyed on day 50, if the Demon Fred is not killed
+by them. Let the killing of the demon Fred be event 3 (so, when Fred is killed, a Major
+Event Has Happened special is called).
+<p>Then, when the party reaches the altar, call this special with Extra 1a set to 50 and
+Extra 1b set to 3. Then, should Fred have destroyed the altar, the special in Extra 2b
+will be called.</dd></dd>
 
-<dt>Type 151: Has Cave Lore?</dt><dd>Result depends on whether a living PC has Cave Lore skill.
+<dt>Type 151: Has Cave Lore?</dt><dd>Result depends on whether a living PC has Cave Lore
+skill.
 <dl>
 <dt>Extra 1b:</dt><dd>This special is called if there is a living PC with Cave Lore.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
-<dt>Type 152: Has Woodsman?</dt><dd>Result depends on whether a living PC has Woodsman skill.
+<dt>Type 152: Has Woodsman?</dt><dd>Result depends on whether a living PC has Woodsman
+skill.
 <dl>
 <dt>Extra 1b:</dt><dd>This special is called if there is a living PC with Woodsman.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
-<dt>Type 153: Has Enough Mage Lore?</dt><dd>Result depends on whether the sum of the parties Mage Lore skill is high enough.
+<dt>Type 153: Has Enough Mage Lore?</dt><dd>Result depends on whether the sum of the
+parties Mage Lore skill is high enough.
 <dl>
-<dt>Extra 1a:</dt><dd>If the sum of the living PCs mage lore skill is at least this amount, the special in Extra 1b is called.</dd>
+<dt>Extra 1a:</dt><dd>If the sum of the living PCs mage lore skill is at least this
+amount, the special in Extra 1b is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
 <dt>Note:</dt><dd>Dont make the required Mage Lore be much higher than 20.</dd></dd>
 
-<dt>Type 154: Text response?</dt><dd>This is one of the most complicated and powerful special nodes. It brings up a dialog box asking the party to type in some text (such as the answer to a ridder, or a password). If the response matches one of two given text messages, a specified special node is called.
+<dt>Type 154: Text response?</dt><dd>This is one of the most complicated and powerful
+special nodes. It brings up a dialog box asking the party to type in some text (such as
+the answer to a ridder, or a password). If the response matches one of two given text
+messages, a specified special node is called.
 <dl>
-<dt>Pict:</dt><dd>This is a number from 1 to 10. It is the number of characters the players answer has to match the correct answer to be accepted. If it is 4, the first four characters of the players answer must match the first four characters of the correct answer.</dd>
-<dt>Extra 1a:</dt><dd>The number of a scenario special message (not</dt><dd>a town or outdoor special message).</dd?
-<dt>Extra 1b:</dt><dd>If the players answer matches the message in Extra 1a, this special is called.</dd>
-<dt>Extra 2a:</dt><dd>The number of a scenario special message (not</dt><dd>a town or outdoor special message).</dd>
-<dt>Extra 2b:</dt><dd>If the players answer matches the message in Extra 1a, this special is called.</dd>
+<dt>Pict:</dt><dd>This is a number from 1 to 10. It is the number of characters the
+players answer has to match the correct answer to be accepted. If it is 4, the first four
+characters of the players answer must match the first four characters of the correct
+answer.</dd>
+<dt>Extra 1a:</dt><dd>The number of a scenario special message (not</dt><dd>a town or
+outdoor special message).</dd?
+<dt>Extra 1b:</dt><dd>If the players answer matches the message in Extra 1a, this special
+is called.</dd>
+<dt>Extra 2a:</dt><dd>The number of a scenario special message (not</dt><dd>a town or
+outdoor special message).</dd>
+<dt>Extra 2b:</dt><dd>If the players answer matches the message in Extra 1a, this special
+is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
-<dt>Note:</dt><dd>To create the scenario message containing the correct answer, select Edit Scenario Text from the Scenario menu. Scroll down to messages 160-259, the special encounter messages, and select one that begins with an * (i.e. is unused). Put the correct answer to the question there. The number of that message (160-259) is the number to put in the Extra 1a/Extra 2a field.</dd>
-<dt>Example:</dt><dd>A pixie asks a riddle whose answer is cheese. Scenario message 185 is cheese. Message 1 says the pixie's riddle. Extra 1a is 185, Extra 1b is the special node with the result of correct answering of the riddle, and Jump To leads to the node with the result of an incorrect answer.
-<p>If pict is set to 4, only the first 4 characters of the players answer are looked at. Thus, cheese, cheer, and cheep would count as right answers. Chew, however, would not.</dd>
-<dt>Note:</dt><dd>Letter case is ignored. ChEeSe would be counted as a correct answer, even is the correct answer was CHEese.</dd></dd>
+<dt>Note:</dt><dd>To create the scenario message containing the correct answer, select
+Edit Scenario Text from the Scenario menu. Scroll down to messages 160-259, the special
+encounter messages, and select one that begins with an * (i.e. is unused). Put the correct
+answer to the question there. The number of that message (160-259) is the number to put in
+the Extra 1a/Extra 2a field.</dd>
+<dt>Example:</dt><dd>A pixie asks a riddle whose answer is cheese. Scenario message 185 is
+cheese. Message 1 says the pixie's riddle. Extra 1a is 185, Extra 1b is the special node
+with the result of correct answering of the riddle, and Jump To leads to the node with the
+result of an incorrect answer.
+<p>If pict is set to 4, only the first 4 characters of the players answer are looked at.
+Thus, cheese, cheer, and cheep would count as right answers. Chew, however, would
+not.</dd>
+<dt>Note:</dt><dd>Letter case is ignored. ChEeSe would be counted as a correct answer,
+even is the correct answer was CHEese.</dd></dd>
 
-<dt>Type 155: Stuff done equal?</dt><dd>If the specified Stuff Done flag is equal to the value given in Extra 1a, the special in Extra 1b is called. Otherwise, the Jump To special is called.
+<dt>Type 155: Stuff done equal?</dt><dd>If the specified Stuff Done flag is equal to the
+value given in Extra 1a, the special in Extra 1b is called. Otherwise, the Jump To special
+is called.
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>Specifies the Stuff Done flag to inspect.</dd>
-<dt>Extra 1a:</dt><dd>If the Stuff Done flag equals this value, call special in Extra 1b.</dd></dd>
+<dt>Extra 1a:</dt><dd>If the Stuff Done flag equals this value, call special in Extra
+1b.</dd></dd>
 </dl>
 
 <h3>Town Mode Specials</h3>
-<p>These special nodes only have an effect in town mode (where most of the game takes place). If called outdoors, all of these nodes immediately jump to the Jump To special.</p>
-<p>For all of these special types, unless the description specifically says it ends the special encounter, once done, each node calls the Jump To node.</p>
+<p>These special nodes only have an effect in town mode (where most of the game takes
+place). If called outdoors, all of these nodes immediately jump to the Jump To
+special.</p>
+<p>For all of these special types, unless the description specifically says it ends the
+special encounter, once done, each node calls the Jump To node.</p>
 
 <h4>General notes:</h4>
 <dl>
-<dt>Mess 1, Mess 2:</dt><dd>All of these special node types can display one or two messages. If you don't want a message displayed, just leave these at -1.</dd></dd>
+<dt>Mess 1, Mess 2:</dt><dd>All of these special node types can display one or two
+messages. If you don't want a message displayed, just leave these at -1.</dd></dd>
 </dl>
 
 <dl>
 
-<dt>Type 170: Town Hostile</dt><dd>When called, all friendly people in the town immediately turn hostile.</dd>
+<dt>Type 170: Town Hostile</dt><dd>When called, all friendly people in the town
+immediately turn hostile.</dd>
 
 <dt>Type 171: Change Terrain</dt><dd>Changes a space to a given terrain type.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired space.</dd>
-<dt>Extra 2a:</dt><dd>The number of the terrain type to change it to. Press the Choose button to select a terrain type.</dd></dd>
+<dt>Extra 2a:</dt><dd>The number of the terrain type to change it to. Press the Choose
+button to select a terrain type.</dd></dd>
 
-<dt>Type 172: Swap Terrain</dt><dd>Changes a space from a given terrain type to another, or back.
+<dt>Type 172: Swap Terrain</dt><dd>Changes a space from a given terrain type to another,
+or back.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired space.</dd>
-<dt>Extra 2a:</dt><dd>The number of a terrain type. If the given space is of this type, change it to the type in Extra 2b.</dd>
-<dt>Extra 2b:</dt><dd>The number of a terrain type. If the given space is of this type, change it to the type in Extra 2a.</dd></dd>
+<dt>Extra 2a:</dt><dd>The number of a terrain type. If the given space is of this type,
+change it to the type in Extra 2b.</dd>
+<dt>Extra 2b:</dt><dd>The number of a terrain type. If the given space is of this type,
+change it to the type in Extra 2a.</dd></dd>
 
-<dt>Type 173: Transform Terrain</dt><dd>If the terrain in a given space has a terrain type given in the Transform To What field, it is changed to that terrain type.
+<dt>Type 173: Transform Terrain</dt><dd>If the terrain in a given space has a terrain type
+given in the Transform To What field, it is changed to that terrain type.
 <dl>
-<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to transform.</dd></dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to
+transform.</dd></dd>
 
-<dt>Type 174: Move Party</dt><dd>The party is moved to a new location. The party cannot be moved while in combat ... if the party is in combat mode, they will not be allowed to enter the space, and the special encounter ends immediately.
+<dt>Type 174: Move Party</dt><dd>The party is moved to a new location. The party cannot be
+moved while in combat ... if the party is in combat mode, they will not be allowed to
+enter the space, and the special encounter ends immediately.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to move them to.</dd>
-<dt>Extra 2a:</dt><dd>If 0, they are simply moved. If non-zero, they are teleported (i.e. there is a noise and a pretty flash of light).</dd></dd>
+<dt>Extra 2a:</dt><dd>If 0, they are simply moved. If non-zero, they are teleported (i.e.
+there is a noise and a pretty flash of light).</dd></dd>
 
 <dt>Type 175: Hit Space</dt><dd>Everything within the specified space takes damage.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to hit.</dd>
 <dt>Extra 2a:</dt><dd>The amount of damage to inflict. (Range 0 ... 1000)</dd>
-<dt>Extra 2b:</dt><dd>This is the type of damage inflicted (0 - weapon, 1 - fire, 2 - poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon,7 - undead)</dd>
+<dt>Extra 2b:</dt><dd>This is the type of damage inflicted (0 - weapon, 1 - fire, 2 -
+poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon,7 - undead)</dd>
 <dt>Note:</dt><dd>Damage doing specials are ignored when called while Talking.</dd></dd>
 
-<dt>Type 176: Explosion on Space</dt><dd>Everything within a given radius of the specified space takes damage. Only creatures who can be seen from the exploding space are affected.
+<dt>Type 176: Explosion on Space</dt><dd>Everything within a given radius of the specified
+space takes damage. Only creatures who can be seen from the exploding space are affected.
 <dl>
 <dt>Pict:</dt><dd>The radius of the explosion. (Range 0 ... 100)</dd>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to hit.</dd>
 <dt>Extra 2a:</dt><dd>The amount of damage to inflict. (Range 0 ... 1000)</dd>
-<dt>Extra 2b:</dt><dd>This is the type of damage inflicted (0 - weapon, 1 - fire, 2 - poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon,7 - undead)</dd>
+<dt>Extra 2b:</dt><dd>This is the type of damage inflicted (0 - weapon, 1 - fire, 2 -
+poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon,7 - undead)</dd>
 <dt>Note:</dt><dd>Damage doing specials are ignored when called while Talking.</dd></dd>
 
-<dt>Type 177: Lock Space</dt><dd>If the terrain in a given space has Special Type lockable, it becomes locked (i.e. is changed to its locked terrain type).
+<dt>Type 177: Lock Space</dt><dd>If the terrain in a given space has Special Type
+lockable, it becomes locked (i.e. is changed to its locked terrain type).
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to lock.</dd></dd>
 
-<dt>Type 178: Unlock Space</dt><dd>If the terrain in a given space has Special Type unlockable, it becomes unlocked (i.e. is changed to its locked terrain type).
+<dt>Type 178: Unlock Space</dt><dd>If the terrain in a given space has Special Type
+unlockable, it becomes unlocked (i.e. is changed to its locked terrain type).
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to unlock.</dd></dd>
 
-<dt>Type 179: Do sfx burst</dt><dd>A flashy explosion appears on the specified space. This has no other affect.
+<dt>Type 179: Do sfx burst</dt><dd>A flashy explosion appears on the specified space. This
+has no other affect.
 <dl>
-<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space for the explosion to appear on.</dd>
-<dt>Extra 2a:</dt><dd>The type of explosion. 0 - fire 1 - electricity 2 - teleportation</dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space for the explosion to
+appear on.</dd>
+<dt>Extra 2a:</dt><dd>The type of explosion. 0 - fire 1 - electricity 2 -
+teleportation</dd>
 <dt>Note:</dt><dd>This does nothing if called when in talking mode.</dd></dd>
 
-<dt>Type 180: Make Wandering Monster</dt><dd>A group of wandering monsters appears (at one of the designated wandering monster sites).</dd>
+<dt>Type 180: Make Wandering Monster</dt><dd>A group of wandering monsters appears (at one
+of the designated wandering monster sites).</dd>
 
-<dt>Type 181: Place a Monster</dt><dd>Places a creature of the selected type at the selected space.
+<dt>Type 181: Place a Monster</dt><dd>Places a creature of the selected type at the
+selected space.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates to place the monster at.</dd>
-<dt>Extra 2a:</dt><dd>The number of the creature to place. Press the Choose button to select the monster.</dd>
-<dt>Extra 2b:</dt><dd>If this is 0, if no creature can go there (for example, a creature is already there), nothing happens. If nonzero, the placement is forced.</dd>
-<dt>Note:</dt><dd>There can be at most 60 creatures in a town/dungeon level at any one time.</dd></dd>
+<dt>Extra 2a:</dt><dd>The number of the creature to place. Press the Choose button to
+select the monster.</dd>
+<dt>Extra 2b:</dt><dd>If this is 0, if no creature can go there (for example, a creature
+is already there), nothing happens. If nonzero, the placement is forced.</dd>
+<dt>Note:</dt><dd>There can be at most 60 creatures in a town/dungeon level at any one
+time.</dd></dd>
 
-<dt>Type 182: Destroy Monster</dt><dd>All creatures of the given type in the dungeon are instantly removed.
+<dt>Type 182: Destroy Monster</dt><dd>All creatures of the given type in the dungeon are
+instantly removed.
 <dl>
 <dt>Extra 1a:</dt><dd>The type of creature to remove.</dd></dd>
 
-<dt>Type 183: Destroy all Monsters</dt><dd>Most or all of the creatures in the dungeon disappear.
+<dt>Type 183: Destroy all Monsters</dt><dd>Most or all of the creatures in the dungeon
+disappear.
 <dl>
-<dt>Extra 1a:</dt><dd>If this is 0, all creatures disappear. If 1, only friendly creatures disappear. If 2, only hostile creatures disappear.</dd></dd>
+<dt>Extra 1a:</dt><dd>If this is 0, all creatures disappear. If 1, only friendly creatures
+disappear. If 2, only hostile creatures disappear.</dd></dd>
 
-<dt>Type 184: Generic Lever</dt><dd>A dialog box comes up saying the party has found a lever, and asking if they want to pull it. The dialog buttons are Yes and No. If the No button is pressed, the Jump To special is used. If the Yes button is pushed, the terrain in the special space is turned to its Transform To What type (if this special is called while looking or moving, not talking), and the special node specified in Extra 1b is called.</dd>
+<dt>Type 184: Generic Lever</dt><dd>A dialog box comes up saying the party has found a
+lever, and asking if they want to pull it. The dialog buttons are Yes and No. If the No
+button is pressed, the Jump To special is used. If the Yes button is pushed, the terrain
+in the special space is turned to its Transform To What type (if this special is called
+while looking or moving, not talking), and the special node specified in Extra 1b is
+called.</dd>
 
-<dt>Type 185: Generic Portal</dt><dd>A dialog box comes up saying the party has found a portal, and asking if they want to enter it. The dialog buttons are Enter and Leave. If the Leave button is pressed, the Jump To special is called. Otherwise, the party is moved, and the special encounter ends.
+<dt>Type 185: Generic Portal</dt><dd>A dialog box comes up saying the party has found a
+portal, and asking if they want to enter it. The dialog buttons are Enter and Leave. If
+the Leave button is pressed, the Jump To special is called. Otherwise, the party is moved,
+and the special encounter ends.
 <dl>
-<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is teleported to if the player pushes Enter.</dd>
-<dt>Note:</dt><dd>Like all party moving special nodes, if this is called any time besides when walking in town mode, the special encounter ends immediately, and, if moving, the party is not allowed to enter the space.</dd></dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is
+teleported to if the player pushes Enter.</dd>
+<dt>Note:</dt><dd>Like all party moving special nodes, if this is called any time besides
+when walking in town mode, the special encounter ends immediately, and, if moving, the
+party is not allowed to enter the space.</dd></dd>
 
-<dt>Type 186: Generic Button</dt><dd>A dialog box comes up saying the party has found a button, and asking if they want to push it. The dialog buttons are Yes and No. If the No button is pressed, the Jump To special is used. If the Yes button is pushed, the special node specified in Extra 1b is called.</dd>
+<dt>Type 186: Generic Button</dt><dd>A dialog box comes up saying the party has found a
+button, and asking if they want to push it. The dialog buttons are Yes and No. If the No
+button is pressed, the Jump To special is used. If the Yes button is pushed, the special
+node specified in Extra 1b is called.</dd>
 
-<dt>Type 187: Generic Stairway</dt><dd>A dialog box comes up saying the party has found a stairway, and asking if they want to climb it. The dialog buttons are Climb and Leave. If the Leave button is pressed, the Jump To special is used, and the party is not allowed to enter the space. If the Climb button is pushed, the party is moved to another town.
+<dt>Type 187: Generic Stairway</dt><dd>A dialog box comes up saying the party has found a
+stairway, and asking if they want to climb it. The dialog buttons are Climb and Leave. If
+the Leave button is pressed, the Jump To special is used, and the party is not allowed to
+enter the space. If the Climb button is pushed, the party is moved to another town.
 <dl>
-<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is to be placed in in the new town.</dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is to be
+placed in in the new town.</dd>
 <dt>Extra 2a:</dt><dd>The number of the town to place them in.</dd>
-<dt>Extra 2b:</dt><dd>Determines what text appears in the dialog. 0 - stairs up, 1 - stairs down, 2 - path slopes up, 3 - path slopes down, 4 - slimy stairway up, 5 - slimy stairway down, 6 - dark passage up, 7 - dark passage down.</dd></dd>
+<dt>Extra 2b:</dt><dd>Determines what text appears in the dialog. 0 - stairs up, 1 -
+stairs down, 2 - path slopes up, 3 - path slopes down, 4 - slimy stairway up, 5 - slimy
+stairway down, 6 - dark passage up, 7 - dark passage down.</dd></dd>
 
-<dt>Type 188: Lever</dt><dd>A dialog box comes up with text you supply (saying, perhaps, they've found a lever). The picture in the dialog box is of a terrain type you choose. The dialog buttons are Yes and No. If the No button is pressed, the Jump To special is used. If the Yes button is pushed, the terrain in the special space is turned to its Transform To What type (if this special is called while looking or moving, not talking), and the special node specified in Extra 1b is called.
+<dt>Type 188: Lever</dt><dd>A dialog box comes up with text you supply (saying, perhaps,
+they've found a lever). The picture in the dialog box is of a terrain type you choose. The
+dialog buttons are Yes and No. If the No button is pressed, the Jump To special is used.
+If the Yes button is pushed, the terrain in the special space is turned to its Transform
+To What type (if this special is called while looking or moving, not talking), and the
+special node specified in Extra 1b is called.
 <dl>
-<dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box. Press the Create/Edit button to edit the text.</dd>
-<dt>Pict:</dt><dd>This is the number of the terrain type to display. To select a picture, press the Select Picture button.</dd>
+<dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box.
+Press the Create/Edit button to edit the text.</dd>
+<dt>Pict:</dt><dd>This is the number of the terrain type to display. To select a picture,
+press the Select Picture button.</dd>
 <dt>Extra 1b:</dt><dd>The special node to call is Yes is pushed.</dd></dd>
 
-<dt>Type 189: Portal</dt><dd>A dialog box comes up (saying, perhaps, they've found a teleporter). The picture in the dialog box is a dialog picture you choose. The dialog buttons are Enter and Leave.
+<dt>Type 189: Portal</dt><dd>A dialog box comes up (saying, perhaps, they've found a
+teleporter). The picture in the dialog box is a dialog picture you choose. The dialog
+buttons are Enter and Leave.
 <dl>
-<dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box.</dt><dd>Press the Create/Edit button to edit the text.</dd>
-<dt>Pict:</dt><dd>This is the number of the dialog picture to display. To select a picture, press the Select Picture button.</dd>
-<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is teleported to if the player pushes Enter.</dd>
-<dt>Note:</dt><dd>Like all party moving special nodes, if this is called any time besides when walking in town mode, the special encounter ends immediately, and, if moving, the party is not allowed to enter the space.</dd></dd>
+<dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog
+box.</dt><dd>Press the Create/Edit button to edit the text.</dd>
+<dt>Pict:</dt><dd>This is the number of the dialog picture to display. To select a
+picture, press the Select Picture button.</dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is
+teleported to if the player pushes Enter.</dd>
+<dt>Note:</dt><dd>Like all party moving special nodes, if this is called any time besides
+when walking in town mode, the special encounter ends immediately, and, if moving, the
+party is not allowed to enter the space.</dd></dd>
 
-<dt>Type 190: Stairway</dt><dd>A dialog comes up text you supply (saying, perhaps, they've found a stairway). The picture in the dialog box is a dialog picture you choose. The dialog buttons are Climb and Leave. If the Leave button is pressed, the Jump To special is used, and the party is not allowed to enter the space. If the Climb button is pushed, the party is moved to another town.
+<dt>Type 190: Stairway</dt><dd>A dialog comes up text you supply (saying, perhaps, they've
+found a stairway). The picture in the dialog box is a dialog picture you choose. The
+dialog buttons are Climb and Leave. If the Leave button is pressed, the Jump To special is
+used, and the party is not allowed to enter the space. If the Climb button is pushed, the
+party is moved to another town.
 <dl>
-<dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box. Press the Create/Edit button to edit the text.</dd>
-<dt>Pict:</dt><dd>This is the number of the dialog picture to display. To select a picture, press the Select Picture button.</dd>
-<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is to be placed in in the new town.</dd>
+<dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box.
+Press the Create/Edit button to edit the text.</dd>
+<dt>Pict:</dt><dd>This is the number of the dialog picture to display. To select a
+picture, press the Select Picture button.</dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is to be
+placed in in the new town.</dd>
 <dt>Extra 2a:</dt><dd>The number of the town to place them in.</dd>
-<dt>Extra 2b:</dt><dd>If this is set to 1, the stairway is forced. No dialog box appears. Instead, the party is immediately moved to the different level.</dd></dd>
+<dt>Extra 2b:</dt><dd>If this is set to 1, the stairway is forced. No dialog box appears.
+Instead, the party is immediately moved to the different level.</dd></dd>
 
 <dt>Type 191: Relocate Outdoors</dt><dd>Changes the outdoors location of the party.
 <dl>
-<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the outdoor section to place the party in.</dd>
-<dt>Extra 2a, Extra 2b:</dt><dd>The x and y coordinates of their new location in that sector (Range 0 ... 47, 0 ... 47)</dd>
-<dt>Uses:</dt><dd>If, when the party leaves at the north end of a dungeon, you want them to be in a different location in the outdoors from where they were when the entered, place a special node of this type just before the north exit (where theyre forced to step on it).</dd>
-<dt>Note:</dt><dd>When this node is called, there is a delay while the new outdoors section is loaded into memory. Try not to call it too often.</dd></dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the outdoor section to place
+the party in.</dd>
+<dt>Extra 2a, Extra 2b:</dt><dd>The x and y coordinates of their new location in that
+sector (Range 0 ... 47, 0 ... 47)</dd>
+<dt>Uses:</dt><dd>If, when the party leaves at the north end of a dungeon, you want them
+to be in a different location in the outdoors from where they were when the entered, place
+a special node of this type just before the north exit (where theyre forced to step on
+it).</dd>
+<dt>Note:</dt><dd>When this node is called, there is a delay while the new outdoors
+section is loaded into memory. Try not to call it too often.</dd></dd>
 
 <dt>Type 192: Place Item</dt><dd>Places an item on a specified space.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to place it on.</dd>
-<dt>Extra 2a:</dt><dd>The number of the item to place. Press the Choose button to select an item.</dd></dd>
+<dt>Extra 2a:</dt><dd>The number of the item to place. Press the Choose button to select
+an item.</dd></dd>
 
-<dt>Type 193: Split Party</dt><dd>This powerful and unique special node splits up the party. The player is asked to select a character. If the player hits Cancel, the node special encounter ends immediately and the party is not allowed to enter the space. Otherwise, the selected character is moved to a given spot and everyone else is left behind. To later reunite the party, use the Reunite Party special node below.
-<p>There are three rules when using this special. First, once the character is alone, never let him or her leave town without reuniting with the party. Second, don't let the character reach another Split Party node. Finally, always make it possible to reach a Reunite Party node. Otherwise, the player will be stuck with only one character permanently.
-<p>If this node is called at any time besides in town mode, while walking or looking, the special encounter ends immediately and this node is ignored.</p>
-<p>When this node is used, if the player sends a PC off alone, the special encounter ends immediately. Only is the player hits Cancel is the Jump To node used.</p>
+<dt>Type 193: Split Party</dt><dd>This powerful and unique special node splits up the
+party. The player is asked to select a character. If the player hits Cancel, the node
+special encounter ends immediately and the party is not allowed to enter the space.
+Otherwise, the selected character is moved to a given spot and everyone else is left
+behind. To later reunite the party, use the Reunite Party special node below.
+<p>There are three rules when using this special. First, once the character is alone,
+never let him or her leave town without reuniting with the party. Second, don't let the
+character reach another Split Party node. Finally, always make it possible to reach a
+Reunite Party node. Otherwise, the player will be stuck with only one character
+permanently.
+<p>If this node is called at any time besides in town mode, while walking or looking, the
+special encounter ends immediately and this node is ignored.</p>
+<p>When this node is used, if the player sends a PC off alone, the special encounter ends
+immediately. Only is the player hits Cancel is the Jump To node used.</p>
 <dl>
-<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates to place the alone character in.</dd>
-<dt>Extra 2a:</dt><dd>If 0, nothing else happens. If non-zero, a teleportation noise plays when the party is split up.</dd></dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates to place the alone character
+in.</dd>
+<dt>Extra 2a:</dt><dd>If 0, nothing else happens. If non-zero, a teleportation noise plays
+when the party is split up.</dd></dd>
 
-<dt>Type 194: Reunite Party</dt><dd>If the party is not split up, this node is ignored. If the party is split up, the lone character is moved back to where the party was when it was split up, the party is rejoined, and the special encounter ends.
+<dt>Type 194: Reunite Party</dt><dd>If the party is not split up, this node is ignored. If
+the party is split up, the lone character is moved back to where the party was when it was
+split up, the party is rejoined, and the special encounter ends.
 <dl>
-<dt>Extra 1a:</dt><dd>If 0, nothing else happens. If non-zero, a teleportation noise plays when the party is split up.</dd></dd>
+<dt>Extra 1a:</dt><dd>If 0, nothing else happens. If non-zero, a teleportation noise plays
+when the party is split up.</dd></dd>
 
-<dt>Type 195: Start Town Timer</dt><dd>One of the party's town encounter timers is activated. Each move taken, the timer goes down by 1. When it runs out, a town special node is called. If the party leaves town (even to go to a different dungeon level), however, the timer cleared and no special happens.
+<dt>Type 195: Start Town Timer</dt><dd>One of the party's town encounter timers is
+activated. Each move taken, the timer goes down by 1. When it runs out, a town special
+node is called. If the party leaves town (even to go to a different dungeon level),
+however, the timer cleared and no special happens.
 <dl>
-<dt>Extra 1a:</dt><dd>The number of moves before the timer runs out. (Range 0 ... 30000)</dd>
-<dt>Extra 2b:</dt><dd>The town special node to call when the timer runs out. If left at No Special, nothing happens.</dd></dd>
+<dt>Extra 1a:</dt><dd>The number of moves before the timer runs out. (Range 0 ...
+30000)</dd>
+<dt>Extra 2b:</dt><dd>The town special node to call when the timer runs out. If left at No
+Special, nothing happens.</dd></dd>
 </dl>
 
 <h4>Rectangle Specials:</h4>
-<p>The remaining Town Special nodes all do things to a rectangle of terrain in the town you select. For these nodes, the values have slightly different meanings than before:</p>
-<dt>Extra 1a, Extra 1b, Extra 2a, Extra 2b:</dt><dd>For each of these specials, Extra 1a and Extra 1b are the top and left of the rectangle. Extra 2a and Extra 2b are the bottom and right of the rectangle.
-<p>The default values of Extra 2a and Extra 2b are -1. If you want the effect to only apply to one space (and not a whole rectangle), leave Extra 2a and Extra 2b at -1. In this case, the node only affects the space specified by Extra 1a and Extra 1b.</dd>
-<dt>Stuff done 1, Stuff done 2:</dt><dd>These are used differently than usual. Their special meanings are described below.</dd>
-<dt>Mess 1, Mess 2:</dt><dd>These can be used to display one or two messages when the node is called, as usual. If both are left at -1, no message is displayed.</dd>
-<dt>Pict:</dt><dd>If this is 0 (the default), the entire rectangle is affected. If non-zero, only the outside edges of the rectangle are affected.</dd>
+<p>The remaining Town Special nodes all do things to a rectangle of terrain in the town
+you select. For these nodes, the values have slightly different meanings than before:</p>
+<dt>Extra 1a, Extra 1b, Extra 2a, Extra 2b:</dt><dd>For each of these specials, Extra 1a
+and Extra 1b are the top and left of the rectangle. Extra 2a and Extra 2b are the bottom
+and right of the rectangle.
+<p>The default values of Extra 2a and Extra 2b are -1. If you want the effect to only
+apply to one space (and not a whole rectangle), leave Extra 2a and Extra 2b at -1. In this
+case, the node only affects the space specified by Extra 1a and Extra 1b.</dd>
+<dt>Stuff done 1, Stuff done 2:</dt><dd>These are used differently than usual. Their
+special meanings are described below.</dd>
+<dt>Mess 1, Mess 2:</dt><dd>These can be used to display one or two messages when the node
+is called, as usual. If both are left at -1, no message is displayed.</dd>
+<dt>Pict:</dt><dd>If this is 0 (the default), the entire rectangle is affected. If
+non-zero, only the outside edges of the rectangle are affected.</dd>
 
 <dl>
 
 <dt>Type 200: Place Fire Wall </dt><dd>Fills the rectangle with walls of fire.
 <dl>
-<dt>Stuff Done 1:</dt><dd>The percentage chance that each space will be filled with fire. (Range 0 ... 100)</dd>
-<dt>Note:</dt><dd>Fields are never placed on spaces that contain walls, or other impenetrable terrain.</dd></dd>
+<dt>Stuff Done 1:</dt><dd>The percentage chance that each space will be filled with fire.
+(Range 0 ... 100)</dd>
+<dt>Note:</dt><dd>Fields are never placed on spaces that contain walls, or other
+impenetrable terrain.</dd></dd>
 
 <dt>Type 201: Place Force Wall </dt><dd>Fills the rectangle with walls of force.
 <dl>
@@ -777,7 +1238,9 @@ The first button is always labeled OK if its the only button or Leave if there a
 <dt>Type 206: Place Quickfire </dt><dd>Fills the rectangle with quickfire.
 <dl>
 <dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd>
-<dt>Note:</dt><dd>Be careful with this stuff. Always give the party a chance to escape. Also, quickfire can't move through secret doors. Place a few around the quickfire area so the whole dungeon doesn't get flooded with fire.</dd></dd>
+<dt>Note:</dt><dd>Be careful with this stuff. Always give the party a chance to escape.
+Also, quickfire can't move through secret doors. Place a few around the quickfire area so
+the whole dungeon doesn't get flooded with fire.</dd></dd>
 
 <dt>Type 207: Place Fire Barrier </dt><dd>Fills the rectangle with fire barriers.
 <dl>
@@ -786,50 +1249,71 @@ The first button is always labeled OK if its the only button or Leave if there a
 <dt>Type 208: Place Force Barrier </dt><dd>Fills the rectangle with force barriers.
 <dl>
 <dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd>
-<dt>Note:</dt><dd>Don't block the party in with these. If they don't have the Dispel Barrier spell, they'll be trapped.</dd></dd>
+<dt>Note:</dt><dd>Don't block the party in with these. If they don't have the Dispel
+Barrier spell, they'll be trapped.</dd></dd>
 
-<dt>Type 209: Cleanse Rectangle</dt><dd>Removes all fields, walls, clouds, etc. in the rectangle.
+<dt>Type 209: Cleanse Rectangle</dt><dd>Removes all fields, walls, clouds, etc. in the
+rectangle.
 <dl>
-<dt>Stuff Done 1:</dt><dd>If 0, leave Fire and Force barriers, barrels, crates, and webs alone. If non-zero, erase them too.</dd></dd>
+<dt>Stuff Done 1:</dt><dd>If 0, leave Fire and Force barriers, barrels, crates, and webs
+alone. If non-zero, erase them too.</dd></dd>
 
-<dt>Type 210: Place sfx</dt><dd>Fills the rectangle with a special effect (blood, slime, bone chips, etc.).
+<dt>Type 210: Place sfx</dt><dd>Fills the rectangle with a special effect (blood, slime,
+bone chips, etc.).
 <dl>
 <dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd>
-<dt>Stuff Done 2:</dt><dd>The type of effect (0 - small blood, 1 - medium blood, 2 - large blood, 3 - small slime, 4 - big slime, 5 - ash, 6 - bones, 7 - rubble).</dd></dd>
+<dt>Stuff Done 2:</dt><dd>The type of effect (0 - small blood, 1 - medium blood, 2 - large
+blood, 3 - small slime, 4 - big slime, 5 - ash, 6 - bones, 7 - rubble).</dd></dd>
 
-<dt>Type 211: Place barrels, etc.</dt><dd>Fills the rectangle with a permanent effect (webs, barrels, crates)
+<dt>Type 211: Place barrels, etc.</dt><dd>Fills the rectangle with a permanent effect
+(webs, barrels, crates)
 <dl>
 <dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd>
 <dt>Stuff Done 2:</dt><dd>The type of effect (0 - web, 1 - barrel, 2 - crate).</dd></dd>
 
-<dt>Type 212: Move Items</dt><dd>Moves all of the items in the rectangle to a specified space. Items inside containers are not moved.
+<dt>Type 212: Move Items</dt><dd>Moves all of the items in the rectangle to a specified
+space. Items inside containers are not moved.
 <dl>
-<dt>Stuff Done 1, Stuff Done 2:</dt><dd>The x and y coordinates of the space to move the items to.</dd></dd>
+<dt>Stuff Done 1, Stuff Done 2:</dt><dd>The x and y coordinates of the space to move the
+items to.</dd></dd>
 
-<dt>Type 213: Destroy Items</dt><dd>Destroys all of the items in the rectangle. Be careful not to destroy something the party needs to finish the scenario.</dd>
+<dt>Type 213: Destroy Items</dt><dd>Destroys all of the items in the rectangle. Be careful
+not to destroy something the party needs to finish the scenario.</dd>
 
-<dt>Type 214: Change Rectangle Terrain</dt><dd>Changes the terrain in the rectangle to a given terrain type.
+<dt>Type 214: Change Rectangle Terrain</dt><dd>Changes the terrain in the rectangle to a
+given terrain type.
 <dl>
 <dt>Stuff done 1:</dt><dd>The number of the terrain type to change it to.</dd>
-<dt>Stuff Done 2:</dt><dd>The percentage chance that each space will be changed. (Range 0 ... 100)</dd></dd>
+<dt>Stuff Done 2:</dt><dd>The percentage chance that each space will be changed. (Range 0
+... 100)</dd></dd>
 
-<dt>Type 215: Swap Rectangle Terrain</dt><dd>Changes the terrain in the rectangle from a given terrain type to another, or back.
+<dt>Type 215: Swap Rectangle Terrain</dt><dd>Changes the terrain in the rectangle from a
+given terrain type to another, or back.
 <dl>
-<dt>Stuff done 1:</dt><dd>The number of a terrain type. If the given space is of this type, change it to the type in Stuff done 2.</dd>
-<dt>Stuff done 2:</dt><dd>The number of a terrain type. If the given space is of this type, change it to the type in Stuff done 1.</dd></dd>
+<dt>Stuff done 1:</dt><dd>The number of a terrain type. If the given space is of this
+type, change it to the type in Stuff done 2.</dd>
+<dt>Stuff done 2:</dt><dd>The number of a terrain type. If the given space is of this
+type, change it to the type in Stuff done 1.</dd></dd>
 
-<dt>Type 216: Transform Rectangle Terrain</dt><dd>Every square of terrain in the rectangle given is changed to the terrain type given in its Transform To What field.</dd>
+<dt>Type 216: Transform Rectangle Terrain</dt><dd>Every square of terrain in the rectangle
+given is changed to the terrain type given in its Transform To What field.</dd>
 
-<dt>Type 217: Lock Rectangle</dt><dd>If the terrain in the rectangle has Special Type lockable, it becomes locked (i.e. is changed to its locked terrain type).</dd>
+<dt>Type 217: Lock Rectangle</dt><dd>If the terrain in the rectangle has Special Type
+lockable, it becomes locked (i.e. is changed to its locked terrain type).</dd>
 
-<dt>Type 218: Unlock Rectangle</dt><dd>If the terrain in the rectangle has Special Type unlockable (or unlockable and bashable), it becomes unlocked (i.e. is changed to its locked terrain type).</dd>
+<dt>Type 218: Unlock Rectangle</dt><dd>If the terrain in the rectangle has Special Type
+unlockable (or unlockable and bashable), it becomes unlocked (i.e. is changed to its
+locked terrain type).</dd>
 </dl>
 
 <h3>Outdoor Mode Specials</h3>
-<p>These special nodes only have an effect in outdoor mode. If called anywhere but outdoors, all of these nodes immediately jump to the Jump To special.</p>
-<p>For all of these special types, unless the description specifically says it ends the special encounter, once done, each node calls the Jump To node.</p>
+<p>These special nodes only have an effect in outdoor mode. If called anywhere but
+outdoors, all of these nodes immediately jump to the Jump To special.</p>
+<p>For all of these special types, unless the description specifically says it ends the
+special encounter, once done, each node calls the Jump To node.</p>
 
-<dt>Type 225: Make Outdoor Wandering</dt><dd>A group of wandering monsters appears (at one of the designated wandering monster sites).</dd>
+<dt>Type 225: Make Outdoor Wandering</dt><dd>A group of wandering monsters appears (at one
+of the designated wandering monster sites).</dd>
 
 <dt>Type 226: Change Out Terrain</dt><dd>Changes an outdoor space to a given terrain type.
 <dl>
@@ -837,24 +1321,38 @@ The first button is always labeled OK if its the only button or Leave if there a
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired space.</dd>
 <dt>Extra 2a:</dt><dd>The number of the terrain type to change it to.</dd></dd>
 
-<dt>Type 227: Place Outdoor Encounter</dt><dd>Places a special outdoor wandering encounter in a random open space near the party. This can be accompanied by one or two messages, if you wish.
+<dt>Type 227: Place Outdoor Encounter</dt><dd>Places a special outdoor wandering encounter
+in a random open space near the party. This can be accompanied by one or two messages, if
+you wish.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
-<dt>Extra 1a:</dt><dd>The number of the special outdoor wandering encounter to place. (Range 0 ... 3)</dd></dd>
+<dt>Extra 1a:</dt><dd>The number of the special outdoor wandering encounter to place.
+(Range 0 ... 3)</dd></dd>
 
-<dt>Type 228: Outdoor Move Party</dt><dd>Moves the party to another location. This can be accompanied by one or two messages, if you wish.
+<dt>Type 228: Outdoor Move Party</dt><dd>Moves the party to another location. This can be
+accompanied by one or two messages, if you wish.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired space.</dd></dd>
 
-<dt>Type 229: Outdoor Store</dt><dd>You can places stores outside using this special node type. When called, the special encounter ends immediately, and the party is not allowed to enter the space they were moving into. The game immediately goes into shopping mode.</p>
-<p>In fields Extra 1a and Extra 1b, enter the number of the first item in the scenarios item list that the store sells, and the total number of items the store sells. If the numbers given are, for example, 50 and 10, the store sells items 50-59 from your scenarios item list.</p>
+<dt>Type 229: Outdoor Store</dt><dd>You can places stores outside using this special node
+type. When called, the special encounter ends immediately, and the party is not allowed to
+enter the space they were moving into. The game immediately goes into shopping mode.</p>
+<p>In fields Extra 1a and Extra 1b, enter the number of the first item in the scenarios
+item list that the store sells, and the total number of items the store sells. If the
+numbers given are, for example, 50 and 10, the store sells items 50-59 from your scenarios
+item list.</p>
 <dl>
 <dt>Mess1:</dt><dd>This message is the name of the store the party has found.</dd>
-<dt>Extra 1a:</dt><dd>The number of the item. This is the first item in the stores item list. Press the Choose button to pick an item.</dd>
-<dt>Extra 1b:</dt><dd>The type of store. (0 - items, 1 - mage spells, 2 - priest spells, 3 - alchemy, 4 - healing)</dd>
+<dt>Extra 1a:</dt><dd>The number of the item. This is the first item in the stores item
+list. Press the Choose button to pick an item.</dd>
+<dt>Extra 1b:</dt><dd>The type of store. (0 - items, 1 - mage spells, 2 - priest spells, 3
+- alchemy, 4 - healing)</dd>
 <dt>Extra 2a:</dt><dd>The number of items in the store. (Range 1 ... 40)</dd>
-<dt>Extra 2b:</dt><dd>The item cost adjuster, a number from 0 (very cheap) to 6 (very expensive). See chapter 11 (Dialogue) for the complete list of cost adjustments.</dd></dd>
+<dt>Extra 2b:</dt><dd>The item cost adjuster, a number from 0 (very cheap) to 6 (very
+expensive). See chapter 11 (Dialogue) for the complete list of cost adjustments.</dd></dd>
 </dl>
+
+</div>
 </body>
 </html>
