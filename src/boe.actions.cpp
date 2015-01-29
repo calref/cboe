@@ -403,6 +403,30 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 				univ.party.in_horse = -1;
 			}
 		}
+		if(univ.party.in_boat >= 0) {
+			// If you pause on a bridge or other passable terrain, leave boat.
+			if(overall_mode == MODE_OUTDOORS && !impassable(univ.out[univ.party.p_loc.x][univ.party.p_loc.y])) {
+				univ.party.boats[univ.party.in_boat].which_town = 200;
+				univ.party.boats[univ.party.in_boat].loc_in_sec = global_to_local(univ.party.p_loc);
+				univ.party.boats[univ.party.in_boat].loc = univ.party.p_loc;
+				univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+				univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
+				univ.party.in_boat = -1;
+			} else if(overall_mode == MODE_TOWN && !impassable(univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y))) {
+				univ.party.boats[univ.party.in_boat].loc = univ.town.p_loc;
+				univ.party.boats[univ.party.in_boat].which_town = univ.town.num;
+				univ.party.in_boat = -1;
+			}
+		} else {
+			// The above could leave you stranded in a single-tile passable area, so pausing again should re-enter the boat.
+			int boat = -1;
+			if(overall_mode == MODE_OUTDOORS && (boat = out_boat_there(univ.party.p_loc)) < univ.party.boats.size())
+				univ.party.in_boat = boat;
+			else if(overall_mode == MODE_TOWN && (boat = town_boat_there(univ.town.p_loc)) < univ.party.boats.size())
+				univ.party.in_boat = boat;
+			if(boat >= 0)
+				ASB("You board the boat.");
+		}
 		put_pc_screen();
 		check_fields(univ.town.p_loc,eSpecCtx::TOWN_MOVE,univ.party[0]);
 	}
