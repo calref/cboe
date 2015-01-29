@@ -10,96 +10,302 @@
 <noscript>Javascript required for the navbar.</noscript>
 </div>
 <div class="content">
-<p class="p1"><b>Section 10: Special Encounters<span class="Apple-converted-space"> </span></b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>When you walk into a room and a description comes up, that was a special encounter (called a special, for short). When you enter a valley and monsters appear to attack you, that was a special too. When you reach a locked door, and its unlocked if you have the right key, that is a special. In general, anything strange or out of the ordinary that happens is a special encounter.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>You can create special encounters yourself, and can make them very simple or very elaborate. It can be as straightforward as a text description, or getting an item, or taking damage, or as complicated as a huge branching tree of results, which depends on what missions the party has completed so far (and thus what Stuff Done Flags have been set so far).</p>
-<p class="p3"><span class="Apple-tab-span">	</span>When a special encounter is run by the game (by, for example, the party stepping on a certain space) we say Blades of Exile has called the special. You can have Blades of Exile call a special in a variety of ways. It can happen when the party looks at a space, or steps on a space, or meets wandering monsters outdoors, or kills a certain monster, or even casts Ritual of Sanctification on an evil altar. No matter when or how the special is called, they are all created in the same way, and Blades of Exile runs through them in the same way. Before this will make much sense, though, there needs to be some background on how exactly special encounters work.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Special Nodes</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>The basic ingredient of a special encounter is called a special node. Each town and outdoor section has a list of special nodes, and the scenario itself has a bunch of them too. A special node is the basic building block of a special encounter.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>What a special node is is an instruction. One sort of special node is Display Message, which flashes up some sort of text. Another special node is Damage Party, which does damage. There is a special node for poisoning the party, and another for giving the party an item.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>When a special encounter is called, what happens is that Blades of Exile looks at a special node you create, and does the instruction in it (when this happens, we say Blades of Exile calls the special node). One thing that a special node can do is say do something, and then call another special node. This is called chaining. You can chain several special nodes together, to make a long, complicated special encounter. For example, suppose you want the party to be told theyve been sprayed with poison gas, and then damage and poison all of them. In this case, you would have Blades of Exile call a special node which flashes up the message saying Youve been gassed! and then calls another special node. This next special node will damage the party and then call a third special node. This third node will poison the party, and not specify any more nodes to be called. In this case, you have created a special encounter which is a chain of special nodes, three long.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Each town has 100 special nodes. Each outdoor section has 70. The scenario itself has 256. This multitude of special nodes will be the clay with which you can sculpt a wild, elaborate adventure.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Simple Examples</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Confused yet? Understandable. Creating a special encounter is a lot like writing a short computer program. Writing computer programs is not incredibly difficult, but it does take time to learn how to do it. Time and practice. Making special encounters is not something you can learn to do overnight, but once you can do it, there is nothing that can stop you from creating a truly great scenario.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>And it really isnt that difficult. Here are three simple, step by step examples (and there are several more examples in the appendices), which will show you much of the process. Load up a scenario, such as the very basic scenario you created in the introductory chapter. Select Edit Outdoor Terrain.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Example 1:</b></p>
-<p class="p3"><span class="Apple-tab-span">	</span>First, were going to create a simple text message, which will appear when a party steps on a space. The fourth button in the third row is the Create/Edit special encounter button. Press it, and then click on a spot of ordinary grass.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Wow. A pretty complicated dialog box just came up. This is the special encountering editing box. Its not as bad as it look. For now, were just creating a text message. Press General (a list of special node types will come up), select Display Message, and then press OK. There. You are now editing a node of type Display Message. Now you need to write the message. Notice that two of the fields below that buttons have changed to First Part of Message and Second Part of Message, and that there is a button to the right marked Create/Edit. Press it. This is where you edit the text that will come up. Type something, like You feel very weak and tired. and press return. You will be back on the special editing window. Press OK.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>That was it! Now, whenever a party steps on that space, they will see your text message. If they step on it again, they will see it again. Notice the space is marked with a small S icon. You can edit the encounter if you want. Press the same button (Create/Edit Special) you pressed to create the encounter, and then click on the space with the S icon. You will be editing the encounter again.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Example 2:</b></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Unfortunately, you probably dont want a message to keep reappearing every time they step on a space. It gets annoying. Fortunately, you can have a message only appear once, the very first time you step on it, and then never appear again. The way you do this is to use a Stuff Done Flag. Pick a Stuff Done Flag to be attached to your text message, such as, say, (3,4). This assumes you havent used (3,4) already.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>You are going to create a special encounter which when it is first stepped on displays the text message and sets the Stuff Done Flag (3,4) to 250. The Stuff Done Flag being set to 250 tells Blades of Exile that this special encounter is dead and done and never comes back again.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>To create the encounter, first click on the grass with white spot terrain (second row from bottom, fifth from right), and then place this terrain type on some grass. The white spot marks a special encounter. Press the Create/Edit Special button, and click on this spot.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Special encounters that only happen once are listed under One Shots, so press the One Shots button. Select One-Time Text Message and press OK.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>This looks very similar to the earlier special editing window, with one addition: it now says Stuff Done Flag, First Part and<span class="Apple-converted-space">  </span>Stuff Done Flag, Second Part by the top two text areas. This is where you enter the Stuff Done Flag this encounter will be linked to. Enter 3 in the first box and 4 in the second to indicate Stuff Done Flag (3,4). Then press Create/Edit to edit the message text, and finally press OK to finish editing the special.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>You may want to run the game now to see what happens. Step on the encounter, and youll see the text. After the encounter, notice that the white spot has disappeared. When you put a One Shot special on a space with a white spot, Blades of Exile will make the spot disappear after the special has been visited.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Third Example:</b></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Finally, we will create the earlier example of a chain of specials. This encounter will put up a text message, damage the party, and poison them as well.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Press Create/Edit Special again, and click on a spot of grass. Press General, select Display Message, press OK, and press Create/Edit to write some text. Write You get hurt, or whatever. That was the first node in the chain.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Now, we want this special encounter to do several things. We want several encounters chained together. To do this, we need to tell this special node to call another node once it is done. That is what Jump To means, at the bottom of the window. The Jump To special is the special a node calls when it is done.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>To make a special to be jumped to, press Create/Edit to the right of Jump To. The special editing window will reset itself. You are now editing a different special node. This special node will damage the party. Press Affect PCs, and select Do Damage. Now all of the text areas on the special editing dialog have labels, waiting for you to provide values.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>For now, type 3 in Number of Dice, and 5 in Number of Sides on Dice. Put 2 in Extra Damage and 1 in Type of Damage. This node will add up 3 random numbers from 1 to 5, add 2, and do that amount of damage to each PC. The 1 indicates that the damage is fire damage (damage types are described later on).</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Note that there is a Create/Edit button to the right of the text message area. You can press it to create another text message, which is displayed while the damage is being done. Many of the special nodes have a button of this sort, so that you can accompany the calling of the special node with text.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Now we need one more special node. To make the third node in the chain, we need to use the Jump To field again. Press the Create/Edit button to the right of Jump To. You will now be editing a third special node. Press Affect PCs again, and select Affect Poison. New messages have appeared by the text areas, asking for different values. Put a 2 in the Amount (0 .. 8) field (for a small amount of poison), and 1 in the 0 - cure, 1 - inflict area (since we want to cause poison, not cure it). Press OK. Our special encounter is now complete.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Run the scenario again, and trigger this encounter. Your party will be damaged and poisoned, as promised.</p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>This is only scratching the surface of special encounters and what they can do. There are If-Thens specials, which can call one of 2 or 3 different special nodes, depending on some sort of condition (such as whether a Stuff Done Flag is a certain value, or whether the party has enough gold). There are Town Specs: town specials, which can act as stairways to move the party from one level to another, or fill areas with fire barriers or ice walls. Read on, to find out the basics of special nodes, and how to work with them.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>The Editing Dialog</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>There are almost 200 different sorts of special nodes. These nodes, their effects, and the values you need to give to determine exactly what they do are listed in the Special Nodes section in the appendices. Reading through these is a great way to determine how special encounters work and get ideas for things your scenario can do.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>The special editing dialog has a number of fields and buttons on it, each of which determine the traits of your special encounter.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>For all of the nodes in the fields below, if you place a -1 or leave a -1, that means that there is no effect. If you leave -1s in the message areas for example, no message will be displayed.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Type Selection Buttons - </b>These six buttons each bring up a list of one of the different classes of special encounters. These classes, when they can be used (town nodes have no effect outdoors, for example), and what they do are described in the Appendix on special nodes.</p>
-<p class="p3"><b>Stuff Done flags - </b>Many special nodes either change or examine a Stuff Done flag. Put the two parts of the required stuff done flag in these two text areas.</p>
-<p class="p3"><b>Message 1, Message 2, Pict -</b> Some special nodes display a piece of text on the screen. Other special nodes display a dialog box, with text in the middle and a picture in the upper left corner. The numbers for these messages and the number of the picture to display can be put in these text fields.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Each picture and each text message has a number associated with it (for example, every town has 100 text messages, numbered from 0 to 99). Most of the time, you really dont want to have to worry about these. Fortunately, there is an easier way to deal with this. Press the Create/Edit button to create and edit text messages, and press Choose to the right of the picture test area to select a picture. These buttons only appear if you need to specify a value.</p>
-<p class="p3"><b>Extra 1a and Extra 1b, Extra 2a and Extra 2b -</b> Many special nodes require you to provide different values, such as the amount of health to heal or the value to set a Stuff Done Flag to or the number of an item to give. When you select a special node type, text will appear to the left of these text fields prompting you to enter a value.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Extra 1a and Extra 2a often require you to choose an item, terrain, or monster type. For most special nodes, when this happens, you can press the Choose button to select the appropriate thing.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Similarly, Extra 1b and Extra 2b often require you to special a special node to call. When this happens, a Create/Edit button appears to the right of the text area. Press it to edit the special node to be called.</p>
-<p class="p3"><b>Jump To -</b> Some special nodes call a different special node which is specified in the Extra 1b or Extra 2b fields. If this doesnt happen, and a special node is given in Jump To (in other words, if the value there isnt -1), that special node will be called when this special node is through.</p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>These meanings for the fields are not without exceptions. Some fields sometimes mean different things, and some nodes prevent the Jump To node from being called. These exceptions are detailed in the descriptions of the individual nodes in the node list in the appendices.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Inserting Special Nodes into a Chain - </b>Suppose you create a chain of 3 special nodes, and then realize that you forgot something. Suppose you want to bring up a text message, damage the party, and give them experience. You create special node 16 to bring up a message, click on the Create/Edit button by the Jump To: slot to assign a new node (you get node 17), make node 17 give experience, and then realize that you forgot to include the Damage the Party node.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>The Create/Edit button is to the right of a text field, in which you can enter the number of the next special node to be called. When you press the Create/Edit button to get a new special node, if the number in the text field is -1, you are assigned a new node. If the number is 0 or larger, you will start editing that node.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>For the example above, you can place a new special node inbetween 16 and 17 to damage the party. Go to node 16 (of type Text Message). The Jump To is set to 17. Instead, set it to -1 (enter -1 in the Jump To text field). Then press the Create/Edit button, and you will be assigned a new node. Make that node the desired type (in this case, Damage the Party), and set the Jump To field in the new node to 17. Voila! The chain is now 3 nodes long.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Other Ways to Edit Specials</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>When you select Edit Special Nodes from the Scenario, Town, or Outdoor menus, you will see a list of all of the scenario, current town, or current outdoor section nodes. Click on a node to edit it. For some dialog boxes in which a special node is asked for (like Advanced Town Properties), there is not a Create/Edit button. To create a special encounter for these features, make a special encounter in the Edit Special Nodes window, remember the number of the first special node in the chain, and enter it into the appropriate place (such as Special To Call When Town Entered in the Advanced Town Properties window).</p>
-<p class="p2"><br></p>
-<p class="p3"><b>The Limits</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>You can only have so many special nodes, and so much text in them. Each town can have at most 100 special nodes, which can use at most 100 text messages (each dialog box uses 6 text messages, so these can be eaten up quickly if you arent careful). Each outdoor can have at most 60 special nodes, which can use at most 90 text messages. Finally, the scenario itself has 256 special nodes, which have access to only 100 text messages.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>What Nodes are Called When</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>If you put a special encounter on the ground in town, it is called when the party walks onto it. If you put a special encounter on a space the party cant walk onto, it is called when the party searches that space (such as a Trap special node on a chest). If the special node is triggered in town, a town special node is called. If the special node is triggered while walking or searching outdoors, a special node from that outdoor section is called.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Most of your special encounters will be called when the party walks onto a specified space outdoors or in town. In addition, when the party is outdoors and sails a boat onto a special encounter on the water, that encounter will be called. However, special encounters on the water won't be called while in town.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Scenario special nodes are only called in a few different ways. You can use the General type special node Call Global Special to call a scenario special node. Also, when a special item is used, a Scenario special node is called.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>You can specify a town special node to be called every so many turns while the party is in a town (select Set Town Event Timers from the Town menu). You can also specify a scenario special node to be called every so many moves no matter where the party is in the scenario (select Set Scenario Event Timers from the Scenario menu).</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Very importantly, you can have special nodes called during conversation. This is described in more detail in the chapter on dialogue.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Time Passing</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>When a party begins a scenario, the scenario will be set on day 1, and they won't have done anything or completed any quests. As time passes and the party does things, you might want the world and events to change in response to what the party does.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Every 3700 moves, the Day counter goes up by one. You can have If-Then special nodes call different nodes based on whether a day has been reached. You can also have characters appear or disappear based on what day it is. You set this on the Advanced Monster Settings Dialog, described in the chapter on Editing Towns.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>You may not always want things to change based on just what day it is, however. You may want things to happen based on what the party actually does. In this case, you can use Events. In each scenario, you can have up to 20 events (number 1 .. 20). An even can be something like a town being reached, or a treasure being stolen, or a major creature being killed. When something happens you want to be an Event, call a special node of type Major Event Has Occured. For example, if you want the killing of the Goblin Chief to be Event 4, have a special node called when that creature is killed. That node should, of course, be of type Major Event Has Occured, set to Event 4.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>The purpose of Events is determine whenther things should happen in the scenario or not. The occurance of an Event can prevent bad things from happening. For example, suppose you want the goblin tribe to attack a town on day 90 and kill Fred, one of the characters in the town. This will be prevented if the Goblin Chief is killed before day 90 (killing the chief is Event 4).</p>
-<p class="p3"><span class="Apple-tab-span">	</span>When you place Fred in the town, bring up the Advanced Monster Settings Dialog, and set When Is Creature Here to Appear On Given Day. In the Day Creature Disappears field, enter 90 (for Day 90), and for the Event Code which prevents the disappearance (the second field), enter 4. This character will disappear on day 90 unless Event 4 happens to prevent it.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Similarly, when talking to characters, you can have their responses depend on whether events have happened or not. Suppose, Sue, in the same town, talks about Fred. Before Fred dies, she says something nice about him. After he dies, she says he died. When writing Sue's dialog, give her a dialogue node of type Depends On Time (and event). Set the day the response changes (the first field) to 90, and the Event which prevents the change (the second field) to 4. If Fred was killed (i.e. if the Goblin Chief was not killed before Day 90), she will respond with the second text field. Otherwise, she will respond with the first.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Finally, you can use the If-Then Special Node Type 150: Special Thing happened?, which calls different special nodes depending on whether a day has been reached and whether an Event has happened before that day or not.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Using Events is a good way to spice up your scenario. By picking things that will disappear and people that can die and Events to prevent those occurances, you can create the feeling of the passing of time. This can create a real feeling of urgency in the player!</p>
+<h1>Section 10: Special Encounters</h1>
+
+<p>When you walk into a room and a description comes up, that was a special encounter
+(called a special, for short). When you enter a valley and monsters appear to attack you,
+that was a special too. When you reach a locked door, and it's unlocked if you have the
+right key, that is a special. In general, anything strange or out of the ordinary that
+happens is a special encounter.</p>
+<p>You can create special encounters yourself, and can make them very simple or very
+elaborate. It can be as straightforward as a text description, or getting an item, or
+taking damage, or as complicated as a huge branching tree of results, which depends on
+what missions the party has completed so far (and thus what Stuff Done Flags have been set
+so far).</p>
+<p>When a special encounter is run by the game (by, for example, the party stepping on a
+certain space) we say Blades of Exile has called the special. You can have Blades of Exile
+call a special in a variety of ways. It can happen when the party looks at a space, or
+steps on a space, or meets wandering monsters outdoors, or kills a certain monster, or
+even casts Ritual of Sanctification on an evil altar. No matter when or how the special is
+called, they are all created in the same way, and Blades of Exile runs through them in the
+same way. Before this will make much sense, though, there needs to be some background on
+how exactly special encounters work.</p>
+
+<h2>Special Nodes</h2>
+
+<p>The basic ingredient of a special encounter is called a special node. Each town and
+outdoor section has a list of special nodes, and the scenario itself has a bunch of them
+too. A special node is the basic building block of a special encounter.</p>
+<p>What a special node is is an instruction. One sort of special node is Display Message,
+which flashes up some sort of text. Another special node is Damage Party, which does
+damage. There is a special node for poisoning the party, and another for giving the party
+an item.</p>
+<p>When a special encounter is called, what happens is that Blades of Exile looks at a
+special node you create, and does the instruction in it (when this happens, we say Blades
+of Exile calls the special node). One thing that a special node can do is say do
+something, and then call another special node. This is called chaining. You can chain
+several special nodes together, to make a long, complicated special encounter. For
+example, suppose you want the party to be told they've been sprayed with poison gas, and
+then damage and poison all of them. In this case, you would have Blades of Exile call a
+special node which flashes up the message saying "You've been gassed!" and then calls another
+special node. This next special node will damage the party and then call a third special
+node. This third node will poison the party, and not specify any more nodes to be called.
+In this case, you have created a special encounter which is a chain of special nodes,
+three long.</p>
+<p>Each town has 100 special nodes. Each outdoor section has 70. The scenario itself has
+256. This multitude of special nodes will be the clay with which you can sculpt a wild,
+elaborate adventure.</p>
+
+<h2>Simple Examples</h2>
+
+<p>Confused yet? Understandable. Creating a special encounter is a lot like writing a
+short computer program. Writing computer programs is not incredibly difficult, but it does
+take time to learn how to do it. Time and practice. Making special encounters is not
+something you can learn to do overnight, but once you can do it, there is nothing that can
+stop you from creating a truly great scenario.</p>
+<p>And it really isn't that difficult. Here are three simple, step by step examples (and
+there are several more examples in the appendices), which will show you much of the
+process. Load up a scenario, such as the very basic scenario you created in the
+introductory chapter. Select Edit Outdoor Terrain.</p>
+
+<h3>Example 1</h3>
+
+<p>First, we're going to create a simple text message, which will appear when a party steps
+on a space. The fourth button in the third row is the Create/Edit special encounter
+button. Press it, and then click on a spot of ordinary grass.</p>
+<p>Wow. A pretty complicated dialog box just came up. This is the special encountering
+editing box. It's not as bad as it look. For now, we're just creating a text message. Press
+General (a list of special node types will come up), select Display Message, and then
+press OK. There. You are now editing a node of type Display Message. Now you need to write
+the message. Notice that two of the fields below that buttons have changed to First Part
+of Message and Second Part of Message, and that there is a button to the right marked
+Create/Edit. Press it. This is where you edit the text that will come up. Type something,
+like "You feel very weak and tired". and press return. You will be back on the special
+editing window. Press OK.</p>
+<p>That was it! Now, whenever a party steps on that space, they will see your text
+message. If they step on it again, they will see it again. Notice the space is marked with
+a small S icon. You can edit the encounter if you want. Press the same button (Create/Edit
+Special) you pressed to create the encounter, and then click on the space with the S icon.
+You will be editing the encounter again.</p>
+
+<h3>Example 2</h3>
+
+<p>Unfortunately, you probably don't want a message to keep reappearing every time they
+step on a space. It gets annoying. Fortunately, you can have a message only appear once,
+the very first time you step on it, and then never appear again. The way you do this is to
+use a Stuff Done Flag. Pick a Stuff Done Flag to be attached to your text message, such
+as, say, (3,4). This assumes you havent used (3,4) already.</p>
+<p>You are going to create a special encounter which when it is first stepped on displays
+the text message and sets the Stuff Done Flag (3,4) to 250. The Stuff Done Flag being set
+to 250 tells Blades of Exile that this special encounter is dead and done and never comes
+back again.</p>
+<p>To create the encounter, first click on the grass with white spot terrain (second row
+from bottom, fifth from right), and then place this terrain type on some grass. The white
+spot marks a special encounter. Press the Create/Edit Special button, and click on this
+spot.</p>
+<p>Special encounters that only happen once are listed under One Shots, so press the One
+Shots button. Select One-Time Text Message and press OK.</p>
+<p>This looks very similar to the earlier special editing window, with one addition: it
+now says Stuff Done Flag, First Part and Stuff Done Flag, Second Part by the top two text
+areas. This is where you enter the Stuff Done Flag this encounter will be linked to. Enter
+3 in the first box and 4 in the second to indicate Stuff Done Flag (3,4). Then press
+Create/Edit to edit the message text, and finally press OK to finish editing the
+special.</p>
+<p>You may want to run the game now to see what happens. Step on the encounter, and you'll
+see the text. After the encounter, notice that the white spot has disappeared. When you
+put a One Shot special on a space with a white spot, Blades of Exile will make the spot
+disappear after the special has been visited.</p>
+
+<h3>Third Example:</h3>
+
+<p>Finally, we will create the earlier example of a chain of specials. This encounter will
+put up a text message, damage the party, and poison them as well.</p>
+<p>Press Create/Edit Special again, and click on a spot of grass. Press General, select
+Display Message, press OK, and press Create/Edit to write some text. Write "You get hurt",
+or whatever. That was the first node in the chain.</p>
+<p>Now, we want this special encounter to do several things. We want several encounters
+chained together. To do this, we need to tell this special node to call another node once
+it is done. That is what Jump To means, at the bottom of the window. The Jump To special
+is the special a node calls when it is done.</p>
+<p>To make a special to be jumped to, press Create/Edit to the right of Jump To. The
+special editing window will reset itself. You are now editing a different special node.
+This special node will damage the party. Press Affect PCs, and select Do Damage. Now all
+of the text areas on the special editing dialog have labels, waiting for you to provide
+values.</p>
+<p>For now, type 3 in Number of Dice, and 5 in Number of Sides on Dice. Put 2 in Extra
+Damage and 1 in Type of Damage. This node will add up 3 random numbers from 1 to 5, add 2,
+and do that amount of damage to each PC. The 1 indicates that the damage is fire damage
+(damage types are described later on).</p>
+<p>Note that there is a Create/Edit button to the right of the text message area. You can
+press it to create another text message, which is displayed while the damage is being
+done. Many of the special nodes have a button of this sort, so that you can accompany the
+calling of the special node with text.</p>
+<p>Now we need one more special node. To make the third node in the chain, we need to use
+the Jump To field again. Press the Create/Edit button to the right of Jump To. You will
+now be editing a third special node. Press Affect PCs again, and select Affect Poison. New
+messages have appeared by the text areas, asking for different values. Put a 2 in the
+Amount (0 .. 8) field (for a small amount of poison), and 1 in the 0 - cure, 1 - inflict
+area (since we want to cause poison, not cure it). Press OK. Our special encounter is now
+complete.</p>
+<p>Run the scenario again, and trigger this encounter. Your party will be damaged and
+poisoned, as promised.</p>
+<p></p>
+<p>This is only scratching the surface of special encounters and what they can do. There
+are If-Thens specials, which can call one of 2 or 3 different special nodes, depending on
+some sort of condition (such as whether a Stuff Done Flag is a certain value, or whether
+the party has enough gold). There are Town Specs: town specials, which can act as
+stairways to move the party from one level to another, or fill areas with fire barriers or
+ice walls. Read on, to find out the basics of special nodes, and how to work with
+them.</p>
+
+<h2>The Editing Dialog</h2>
+
+<p>There are almost 200 different sorts of special nodes. These nodes, their effects, and
+the values you need to give to determine exactly what they do are listed in the Special
+Nodes section in the appendices. Reading through these is a great way to determine how
+special encounters work and get ideas for things your scenario can do.</p>
+<p>The special editing dialog has a number of fields and buttons on it, each of which
+determine the traits of your special encounter.</p>
+<p>For all of the nodes in the fields below, if you place a -1 or leave a -1, that means
+that there is no effect. If you leave -1s in the message areas for example, no message
+will be displayed.</p>
+<p><br></p>
+<p><b>Type Selection Buttons - </b>These six buttons each bring up a list of one of the
+different classes of special encounters. These classes, when they can be used (town nodes
+have no effect outdoors, for example), and what they do are described in the Appendix on
+special nodes.</p>
+<p><b>Stuff Done flags - </b>Many special nodes either change or examine a Stuff Done
+flag. Put the two parts of the required stuff done flag in these two text areas.</p>
+<p><b>Message 1, Message 2, Pict -</b> Some special nodes display a piece of text on the
+screen. Other special nodes display a dialog box, with text in the middle and a picture in
+the upper left corner. The numbers for these messages and the number of the picture to
+display can be put in these text fields.</p>
+<p>Each picture and each text message has a number associated with it (for example, every
+town has 100 text messages, numbered from 0 to 99). Most of the time, you really dont want
+to have to worry about these. Fortunately, there is an easier way to deal with this. Press
+the Create/Edit button to create and edit text messages, and press Choose to the right of
+the picture test area to select a picture. These buttons only appear if you need to
+specify a value.</p>
+<p><b>Extra 1a and Extra 1b, Extra 2a and Extra 2b -</b> Many special nodes require you to
+provide different values, such as the amount of health to heal or the value to set a Stuff
+Done Flag to or the number of an item to give. When you select a special node type, text
+will appear to the left of these text fields prompting you to enter a value.</p>
+<p>Extra 1a and Extra 2a often require you to choose an item, terrain, or monster type.
+For most special nodes, when this happens, you can press the Choose button to select the
+appropriate thing.</p>
+<p>Similarly, Extra 1b and Extra 2b often require you to special a special node to call.
+When this happens, a Create/Edit button appears to the right of the text area. Press it to
+edit the special node to be called.</p>
+<p><b>Jump To -</b> Some special nodes call a different special node which is specified in
+the Extra 1b or Extra 2b fields. If this doesn't happen, and a special node is given in
+Jump To (in other words, if the value there isn't -1), that special node will be called
+when this special node is through.</p>
+<p><br></p>
+<p>These meanings for the fields are not without exceptions. Some fields sometimes mean
+different things, and some nodes prevent the Jump To node from being called. These
+exceptions are detailed in the descriptions of the individual nodes in the node list in
+the appendices.</p>
+<p></p>
+<p><b>Inserting Special Nodes into a Chain - </b>Suppose you create a chain of 3 special
+nodes, and then realize that you forgot something. Suppose you want to bring up a text
+message, damage the party, and give them experience. You create special node 16 to bring
+up a message, click on the Create/Edit button by the Jump To: slot to assign a new node
+(you get node 17), make node 17 give experience, and then realize that you forgot to
+include the Damage the Party node.</p>
+<p>The Create/Edit button is to the right of a text field, in which you can enter the
+number of the next special node to be called. When you press the Create/Edit button to get
+a new special node, if the number in the text field is -1, you are assigned a new node. If
+the number is 0 or larger, you will start editing that node.</p>
+<p>For the example above, you can place a new special node inbetween 16 and 17 to damage
+the party. Go to node 16 (of type Text Message). The Jump To is set to 17. Instead, set it
+to -1 (enter -1 in the Jump To text field). Then press the Create/Edit button, and you
+will be assigned a new node. Make that node the desired type (in this case, Damage the
+Party), and set the Jump To field in the new node to 17. Voila! The chain is now 3 nodes
+long.</p>
+
+<h2>Other Ways to Edit Specials</h2>
+
+<p>When you select Edit Special Nodes from the Scenario, Town, or Outdoor menus, you will
+see a list of all of the scenario, current town, or current outdoor section nodes. Click
+on a node to edit it. For some dialog boxes in which a special node is asked for (like
+Advanced Town Properties), there is not a Create/Edit button. To create a special
+encounter for these features, make a special encounter in the Edit Special Nodes window,
+remember the number of the first special node in the chain, and enter it into the
+appropriate place (such as Special To Call When Town Entered in the Advanced Town
+Properties window).</p>
+<p><br></p>
+<p><b>The Limits</b></p>
+<p><br></p>
+<p>You can only have so many special nodes, and so much text in them. Each town can have
+at most 100 special nodes, which can use at most 100 text messages (each dialog box uses 6
+text messages, so these can be eaten up quickly if you aren't careful). Each outdoor can
+have at most 60 special nodes, which can use at most 90 text messages. Finally, the
+scenario itself has 256 special nodes, which have access to only 100 text messages.</p>
+
+<h2>What Nodes are Called When</h2>
+
+<p>If you put a special encounter on the ground in town, it is called when the party walks
+onto it. If you put a special encounter on a space the party can't walk onto, it is called
+when the party searches that space (such as a Trap special node on a chest). If the
+special node is triggered in town, a town special node is called. If the special node is
+triggered while walking or searching outdoors, a special node from that outdoor section is
+called.</p>
+<p>Most of your special encounters will be called when the party walks onto a specified
+space outdoors or in town. In addition, when the party is outdoors and sails a boat onto a
+special encounter on the water, that encounter will be called. However, special encounters
+on the water won't be called while in town.</p>
+<p>Scenario special nodes are only called in a few different ways. You can use the General
+type special node Call Global Special to call a scenario special node. Also, when a
+special item is used, a Scenario special node is called.</p>
+<p>You can specify a town special node to be called every so many turns while the party is
+in a town (select Set Town Event Timers from the Town menu). You can also specify a
+scenario special node to be called every so many moves no matter where the party is in the
+scenario (select Set Scenario Event Timers from the Scenario menu).</p>
+<p>Very importantly, you can have special nodes called during conversation. This is
+described in more detail in the chapter on dialogue.</p>
+
+<h2>Time Passing</h2>
+
+<p>When a party begins a scenario, the scenario will be set on day 1, and they won't have
+done anything or completed any quests. As time passes and the party does things, you might
+want the world and events to change in response to what the party does.</p>
+<p>Every 3700 moves, the Day counter goes up by one. You can have If-Then special nodes
+call different nodes based on whether a day has been reached. You can also have characters
+appear or disappear based on what day it is. You set this on the Advanced Monster Settings
+Dialog, described in the chapter on Editing Towns.</p>
+<p>You may not always want things to change based on just what day it is, however. You may
+want things to happen based on what the party actually does. In this case, you can use
+Events. In each scenario, you can have up to 20 events (number 1 .. 20). An even can be
+something like a town being reached, or a treasure being stolen, or a major creature being
+killed. When something happens you want to be an Event, call a special node of type Major
+Event Has Occured. For example, if you want the killing of the Goblin Chief to be Event 4,
+have a special node called when that creature is killed. That node should, of course, be
+of type Major Event Has Occured, set to Event 4.</p>
+<p>The purpose of Events is determine whenther things should happen in the scenario or
+not. The occurance of an Event can prevent bad things from happening. For example, suppose
+you want the goblin tribe to attack a town on day 90 and kill Fred, one of the characters
+in the town. This will be prevented if the Goblin Chief is killed before day 90 (killing
+the chief is Event 4).</p>
+<p>When you place Fred in the town, bring up the Advanced Monster Settings Dialog, and set
+When Is Creature Here to Appear On Given Day. In the Day Creature Disappears field, enter
+90 (for Day 90), and for the Event Code which prevents the disappearance (the second
+field), enter 4. This character will disappear on day 90 unless Event 4 happens to prevent
+it.</p>
+<p>Similarly, when talking to characters, you can have their responses depend on whether
+events have happened or not. Suppose, Sue, in the same town, talks about Fred. Before Fred
+dies, she says something nice about him. After he dies, she says he died. When writing
+Sue's dialog, give her a dialogue node of type Depends On Time (and event). Set the day
+the response changes (the first field) to 90, and the Event which prevents the change (the
+second field) to 4. If Fred was killed (i.e. if the Goblin Chief was not killed before Day
+90), she will respond with the second text field. Otherwise, she will respond with the
+first.</p>
+<p>Finally, you can use the If-Then Special Node Type 150: Special Thing happened?, which
+calls different special nodes depending on whether a day has been reached and whether an
+Event has happened before that day or not.</p>
+<p>Using Events is a good way to spice up your scenario. By picking things that will
+disappear and people that can die and Events to prevent those occurances, you can create
+the feeling of the passing of time. This can create a real feeling of urgency in the
+player!</p>
 </div>
 </body>
 </html>

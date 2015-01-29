@@ -12,51 +12,132 @@
 <div class="content">
 <h1>Section 8 - Editing Item Types</h1>
 
-<p>Your default scenario comes with 383 premade item types, number 0 to 382, and you can have 400 item types overall. Like terrain types, you can customize the item types to suit your scenario. Click on Edit Item Types to bring up a list of items, and click on an item type to bring up the item editing window. This window has these options:</p>
+<p>Your default scenario comes with 383 premade item types, number 0 to 382, and you can
+have 400 item types overall. Like terrain types, you can customize the item types to suit
+your scenario. Click on Edit Item Types to bring up a list of items, and click on an item
+type to bring up the item editing window. This window has these options:</p>
 <ul>
-<li>Full Name, Unidentified Name: The names of the item the party sees when the item is identified (or unidentified).</li>
-<li>Item Picture: Press the Choose button to select an item icon.</li>
-<li>Item Type: The item's types are generally self-explanatory. The item types determine how many of each item can be equipped, and what affect each type has (armor protects, weapons can be used to attack, etc.). The item type determines which special abilities each item can have. For more on this, read about special abilities, farther on.</li>
-<li>Item level: Determines the strength of armor or weapons. The higher the number, the more damage the weapon does, or the more damage the armor prevents. It has no meaning for items that arent armor or weapons.</li>
-<li>Awkwardness: Determines how much the item interferes with performance in combat when equipped. The higher value, the more the interference.</li>
-<li>Bonus: Gives extra strength to armor and weapons. The higher the number, the more extra damage the weapon does, or the more extra damage the armor prevents. It has no meaning for items that arent armor or weapons.</li>
-<li>Protection: When the item is equipped, if it has a protection value, the item reduces damage in combat. The higher the number, the greater the reduction.</li>
-<li>Charges: The number of times the item can be used. Only has an effect for magical items (like potions) or missiles.</li>
-<li>Type Flag (Advanced): When a character gets several items of the same type (like darts or arrows), they will all be combined into one item. This happens when the items have the same type flag. You can have items have the same type flag, and thus be combined. Only give an item a type flag greater than 100 ... smaller type flags are reserved for the preset items.</li>
-<li>Value: The value of the item in gold.</li>
-<li>Weight: The weight of the item.</li>
-<li>Special Class (Advanced): Some special nodes (like Have Item With Class?) check to see if the party has a special item. Set an items special class here (0 for no special class).</li>
-<li><li>For example, an item Boat Ticket can have special class 1, and a special node which checks if the party has a ticket can check for special class 1. Note that items with a non-zero special class are taken away from the party when they leave the scenario.</li></li>
-
-<p>An item can also have special abilities, like providing resistance to fire, or being a demon slaying weapon. To set an items special ability, press the Abilities button.</li>
-
-<li>Setting Item Abilities (Advanced)</li>
-
-<p>When you press the Abilities button, you will see the item ability dialog. Each item type can have a special ability. The types of abilities available range from shooting fireballs to weapons doing special damage to dragons to items being ingredients for alchemical recipes.</li>
-<p>There are two types of item abilities: usable and inherent.</li>
-
-<li>Usable abilities: Usable item abilities are only activated by pressing the items use button on the PC inventory screen. Otherwise, the ability has no effect. Examples are a wand that shoots fireballs or a healing potion.</li>
-<p>Usable abilities are always linked to the items charges. Whenever an item with a usable ability is actually used, the items amount of charges goes down by 1. When the items charge level goes down to 0, the item disappears. An item with a usable ability must have at least 1 charge.</li>
-<p> The cash value of an item with a usable ability is calculated differently from normal items. The items actual cost is its value multiplied by the number of its charges. (Example: Suppose a Potion of Healing has a value of 100 and 2 charges. This potion would cost 200 gold and sell for half that.)</li>
-<p">Inherent Abilities: Inherent abilities are abilities that are always present and are activated automatically, as opposed to being activated by pressing the Use button on the PC Inventory screen. Examples are a shield with fire protection (which is activated automatically when the character takes fire damage) or comfrey root (whose ability is that it can be used as an alchemical ingredient, and which is used automatically when the party tries to make a potion with it).</li>
-<p>Some inherent abilities have charges (such as alchemical ingredients). When used, the amount of charges goes down by one. When there are no charges left, the item disappears. The name of inherent ability types that require charges have a (c) after them.The value of these items is calculated the same way as for Usable abilities.</li>
-<p>There are six different classes of item ability type, each with its own properties and varieties of items that can possess it. These are listed below, along with whether they are classes of Usable or Inherent abilities:</li>
-<ul>
-<li>Weapon Abilities (Inherent): Abilities of this type can be given to one and two handed weapons, weapon ammunition (darts, arrows, etc.) and non-ammunition missiles (like slings). None of these items have charges.</li>
-<li>General Abilities (Inherent): Abilities of this type can be given to non-missile items which can be equipped (e.g. rings, armor, sword, but not arrows) but not to items that cant (e.g. wands, potions). Only a few of these ability types require that the items having them have charges.</li>
-<li>Non-Spell Usable (Usable): Abilities of this type change the status of the party or individual character in some way, such as making them more or less poisoned, or raising or lowering health. Abilities of these types can be given to any item thats not a missile (e.g. arrows, bolts). Being usable item abilities, any item having one of these abilities must have charges.</li>
-<li>Spell Usable (Usable): Abilities of this type cast some sort of a spell, such as firing a fireball or summoning monsters. Abilities of these types can be given to any item thats not a missile (e.g. arrows, bolts). Being usable item abilities, any item having one of these abilities must have charges.</li>
-<li>Reagents (Inherent): Items with these abilities are alchemical ingredients, spell reagents (e.g. smoky crystals, sapphires), or similar substances. All items with an ability of this type must have charges, and must be of variety Non-use Object.</li>
-<li>Missiles (Inherent): These abilities can only be given to missiles (e.g. arrows, bolts, darts). Each ability is activated when the missile is fired (such as exploding a fireball on the target space).</li>
+<li><b>Full Name, Unidentified Name:</b> The names of the item the party sees when the
+item is identified (or unidentified).</li>
+<li><b>Item Picture:</b> Press the Choose button to select an item icon.</li>
+<li><b>Item Type:</b> The item's types are generally self-explanatory. The item types
+determine how many of each item can be equipped, and what affect each type has (armor
+protects, weapons can be used to attack, etc.). The item type determines which special
+abilities each item can have. For more on this, read about special abilities, farther
+on.</li>
+<li><b>Item level:</b> Determines the strength of armor or weapons. The higher the number,
+the more damage the weapon does, or the more damage the armor prevents. It has no meaning
+for items that aren't armor or weapons.</li>
+<li><b>Awkwardness:</b> Determines how much the item interferes with performance in combat
+when equipped. The higher value, the more the interference.</li>
+<li><b>Bonus:</b> Gives extra strength to armor and weapons. The higher the number, the more
+extra damage the weapon does, or the more extra damage the armor prevents. It has no
+meaning for items that aren't armor or weapons.</li>
+<li><b>Protection:</b> When the item is equipped, if it has a protection value, the item
+reduces damage in combat. The higher the number, the greater the reduction.</li>
+<li><b>Charges:</b> The number of times the item can be used. Only has an effect for magical
+items (like potions) or missiles.</li>
+<li><b>Type Flag (Advanced):</b> When a character gets several items of the same type
+(like darts or arrows), they will all be combined into one item. This happens when the
+items have the same type flag. You can have items have the same type flag, and thus be
+combined. Only give an item a type flag greater than 100 ... smaller type flags are
+reserved for the preset items.</li>
+<li><b>Value:</b> The value of the item in gold.</li>
+<li><b>Weight:</b> The weight of the item.</li>
+<li><b>Special Class (Advanced):<b> Some special nodes (like Have Item With Class?) check
+to see if the party has a special item. Set an item's special class here (0 for no special
+class).
+<p>For example, an item Boat Ticket can have special class 1, and a special node
+which checks if the party has a ticket can check for special class 1. Note that items with
+a non-zero special class are taken away from the party when they leave the
+scenario.</li>
 </ul>
-<p>There are a wide variety of special abilities. The abilities (and the meaning of the Ability Strength field) are listed in the one of the Appendices.</li>
-<p> To select an ability, press one of the six buttons to the upper right. Each button brings up a menu with one of the six classes of special item. The items ability strength (a number from 0 - 10, 10 is strongest) can be entered in the text area just below. The other buttons set other item properties:</li>
-<li>Item Use Properties: For items that affect the party (like healing, or curing/causing poison), you can have use of the item help only the using person, help the entire party, hurt the using PC, or hurt the entire party. For example, if the ability is Slow/Haste, and hurt the entire party is selected, then the item slows the entire party when it is used.</li>
+
+<p>An item can also have special abilities, like providing resistance to fire, or being a
+demon slaying weapon. To set an item's special ability, press the Abilities button.</li>
+
+<h2>Setting Item Abilities (Advanced)</h2>
+
+<p>When you press the Abilities button, you will see the item ability dialog. Each item
+type can have a special ability. The types of abilities available range from shooting
+fireballs to weapons doing special damage to dragons to items being ingredients for
+alchemical recipes.</li>
+<p>There are two types of item abilities: usable and inherent.</p>
+
+<ul>
+<li>Usable abilities: Usable item abilities are only activated by pressing the item's use
+button on the PC inventory screen. Otherwise, the ability has no effect. Examples are a
+wand that shoots fireballs or a healing potion.
+<p>Usable abilities are always linked to the item's charges. Whenever an item with a usable
+ability is actually used, the items amount of charges goes down by 1. When the items
+charge level goes down to 0, the item disappears. An item with a usable ability must have
+at least 1 charge.</p>
+<p>The cash value of an item with a usable ability is calculated differently from normal
+items. The item's actual cost is its value multiplied by the number of its charges.
+(Example: Suppose a Potion of Healing has a value of 100 and 2 charges. This potion would
+cost 200 gold and sell for half that.)</li>
+<li>Inherent Abilities: Inherent abilities are abilities that are always present and are
+activated automatically, as opposed to being activated by pressing the Use button on the
+PC Inventory screen. Examples are a shield with fire protection (which is activated
+automatically when the character takes fire damage) or comfrey root (whose ability is that
+it can be used as an alchemical ingredient, and which is used automatically when the party
+tries to make a potion with it).
+<p>Some inherent abilities have charges (such as alchemical ingredients). When used, the
+amount of charges goes down by one. When there are no charges left, the item disappears.
+The name of inherent ability types that require charges have a (c) after them. The value of
+these items is calculated the same way as for Usable abilities.</p>
+<p>There are six different classes of item ability type, each with its own properties and
+varieties of items that can possess it. These are listed below, along with whether they
+are classes of Usable or Inherent abilities:</p>
+
+<ul>
+<li>Weapon Abilities (Inherent): Abilities of this type can be given to one and two handed
+weapons, weapon ammunition (darts, arrows, etc.) and non-ammunition missiles (like
+slings). None of these items have charges.</li>
+<li>General Abilities (Inherent): Abilities of this type can be given to non-missile items
+which can be equipped (e.g. rings, armor, sword, but not arrows) but not to items that
+can't (e.g. wands, potions). Only a few of these ability types require that the items
+having them have charges.</li>
+<li>Non-Spell Usable (Usable): Abilities of this type change the status of the party or
+individual character in some way, such as making them more or less poisoned, or raising or
+lowering health. Abilities of these types can be given to any item that's not a missile
+(e.g. arrows, bolts). Being usable item abilities, any item having one of these abilities
+must have charges.</li>
+<li>Spell Usable (Usable): Abilities of this type cast some sort of a spell, such as
+firing a fireball or summoning monsters. Abilities of these types can be given to any item
+that's not a missile (e.g. arrows, bolts). Being usable item abilities, any item having one
+of these abilities must have charges.</li>
+<li>Reagents (Inherent): Items with these abilities are alchemical ingredients, spell
+reagents (e.g. smoky crystals, sapphires), or similar substances. All items with an
+ability of this type must have charges, and must be of variety Non-use Object.</li>
+<li>Missiles (Inherent): These abilities can only be given to missiles (e.g. arrows,
+bolts, darts). Each ability is activated when the missile is fired (such as exploding a
+fireball on the target space).</li>
+</ul>
+</ul>
+
+<p>There are a wide variety of special abilities. The abilities (and the meaning of the
+Ability Strength field) are listed in the one of the Appendices.</li>
+<p> To select an ability, press one of the six buttons to the upper right. Each button
+brings up a menu with one of the six classes of special item. The item's ability strength
+(a number from 0 - 10, 10 is strongest) can be entered in the text area just below. The
+other buttons set other item properties:</p>
+<ul>
+<li>Item Use Properties: For items that affect the party (like healing, or curing/causing
+poison), you can have use of the item help only the using person, help the entire party,
+hurt the using PC, or hurt the entire party. For example, if the ability is Slow/Haste,
+and hurt the entire party is selected, then the item slows the entire party when it is
+used.</li>
 <li>Always Identified: If selected, whenever the item is found, it will be identified.</li>
-<li>Magical: The item is magical, and thus cant be augmented by people in towns.</li>
-<li>Cursed: The item is cursed, and a PC equips it, it cant be removed until the curse is removed.</li>
-<li>Conceal Ability: When item info is selected for the item, the player wont be told what the special ability is.</li>
-<li>Item Treasure Class: Determines how often the item is left as a treasure by slain monsters. The higher the class the less often it is left. If Junk, not left is selected, the item will never be found on dead monsters.</li>
+<li>Magical: The item is magical, and thus can't be augmented by people in towns.</li>
+<li>Cursed: The item is cursed, and a PC equips it, it can't be removed until the curse is
+removed.</li>
+<li>Conceal Ability: When item info is selected for the item, the player won't be told what
+the special ability is.</li>
+<li>Item Treasure Class: Determines how often the item is left as a treasure by slain
+monsters. The higher the class the less often it is left. If Junk, not left is selected,
+the item will never be found on dead monsters.</li>
+</ul>
 </div>
 </body>
 </html>

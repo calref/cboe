@@ -10,63 +10,153 @@
 <noscript>Javascript required for the navbar.</noscript>
 </div>
 <div class="content">
-<p class="p1"><b>Section 6 - Editing Terrain Types</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Your default scenario comes with 256 premade terrain types, number 0 to 255 (which are listed in the Appendices). However, you can also customize the terrain types to suit your scenario. Click on Edit Terrain Types to bring up all of the terrain icons, and click on a terrain type to bring up the terrain editing window.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>The first 90 terrain types (0 to 89) are fixed by the game. The only thing you can change in these is the picture. You can do what you want with terrain types 91 - 255.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Defining Terrain Types</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>To define a new terrain type, you need to enter several values, which determine whether the party can walk through it, what it looks like, and similar properties. What each value means is described below:</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Picture:</b> Simply, what the terrain looks like. To select a picture, click the Pick Picture button (if you dont want the terrain graphic to be animated) or the Animated button (if you do). If you want to use a customized terrain graphic, see the chapter Customized Graphics.</p>
-<p class="p3"><b>Name: </b>The name of the terrain, which is given when the party looks at it. This can be at most 30 characters long.</p>
-<p class="p3"><b>Blockage:</b> Whether the party can see through and walk through it. Click on the button by the desired blockage. The blockage values are:</p>
-<p class="p2"><br></p>
-<p class="p3">Clear - Party can see through and walk through terrain unobstructed. (Example: floor, grass)</p>
-<p class="p3">Walk through, opaque - Party can walk through this terrain, but cant see through it. (Example: secret passage)</p>
-<p class="p3">Clear, special - Party can see through and walk through terrain unobstructed, but monsters will not walk through it. (Example: Special encounter, lava)</p>
-<p class="p3">Clear, blocked - Party can see through, but not walk through. (Example: Pits, water)</p>
-<p class="p3">Clear, blocked, obstructed - Party can see through, but not walk through. Also, this terrain partially obstructs missile weapons passing through it. (Example: Pillar, window)</p>
-<p class="p3">Blocked, opaque - Cannot see through or walk through. Total obstruction. (Example: Walls)</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Can Fly Over -</b> Click on this button to turn on/off the light. If this light is lit, a flying party can pass over this terrain.</p>
-<p class="p3"><b>Can Boat Over - </b>If this light is lit, a party in a boat can pass over this terrain.</p>
-<p class="p3"><b>Block Horses -</b> If this light is lit, horses will not walk on this terrain.<span class="Apple-converted-space"> </span></p>
-<p class="p3"><b>Step Sound -</b> The sound that plays when something steps on this terrain. Current options are a regular stepping sound, a squish, a crunch, or nothing.</p>
-<p class="p3"><b>Shortcut Key -</b> This is a shortcut for you when editing your towns and dungeons. Enter a single key in this field, and when editing outdoor or town terrain, this terrain type will be selected. If you give more than one terrain type the same key, typing that key cycles among all the different terrain types that have it (for example, you may want to give all your basic walls the key w).</p>
-<p class="p3"><b>Light Radius - </b>A number from 0 to 10. This determines whether the terrain type casts light, and how far out that light extends. For example, a torch has a light radius of 4, so all spots in town within 4 spaces of a torch space are always lit.</p>
-<p class="p3"><b>Transform to what - </b>This field is used in conjunction with certain types of special nodes (see Special Encounters). If this is a terrain type that you often want to change to something else (such as a closed portcullis, which you may often want to change to an open portcullis), enter the number of the terrain type to change it to here. Then, to change the terrain type, use a Transform Terrain special node.</p>
-<p class="p3"><b>Special Properties, Extra 1, Extra 2 -</b> These fields are where you give the terrain types the really interesting properties. All of the properties are listed on the terrain type editing window. To select a property, click on the button by it.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Many of the special properties need more information to work, which you enter in the two fields (Extra 1, and Extra 2) at the bottom of the terrain type editing window. The window will prompt you with what information needs to be given.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>The special property types, and what you need to enter in Extra 1, and Extra 2 are as follows:</p>
-<p class="p2"><br></p>
-<p class="p3"><b>No Property -</b> The default. The terrain is ordinary. Extra 1 and Extra 2 are ignored.</p>
-<p class="p3"><b>Change When Walk -</b> The terrain type changes to another when the party tries to walk into it. This happens even if the terrain is blocked to travel. Extra 1 is the number of the terrain type the terrain changes into. Extra 2 is the number of the sound that plays when this happens (for a list of sounds, look in the Appendices). If Extra 2 is left at 200, no sound plays.</p>
-<p class="p3"><b>Does Fire Damage -</b> When someone walks on this space, fire damage is inflicted. Damaged inflicted is a random number from 1 to Extra 1, times Extra 2. Only monsters with fire resistance will walk through this space.</p>
-<p class="p3"><b>Does Cold Damage - </b>Exactly like Fire Damage, but cold damage is inflicted.</p>
-<p class="p3"><b>Does Magical Damage - </b>Exactly like Fire Damage, but magical damage is inflicted.</p>
-<p class="p3"><b>Poison Land -</b> Poisons people walking on it. Extra 1 is the intensity of the poison (a number from 1 to 8, with anything above 4 being pretty lethal). Extra 2 is the percentage chance of being affected, a number from 0 to 100 (0 meaning never, and 100 meaning always).</p>
-<p class="p3"><b>Diseased Land -</b> Exactly like Poisoned Land, but spreads disease instead of poison.</p>
-<p class="p3">Crumbling - When Move Mountains or Crumble is cast on this space, it turns into the terrain in Extra 1a.</p>
-<p class="p3"><b>Lockable Terrain -</b> Indicates a terrain type that can be locked. This only comes into play when a special node which locks a terrain type is used on the space (see the chapter on Special Encounters for more information). When that happens, Extra 1 is the terrain type the space changes to. Extra 2 is ignored.</p>
-<p class="p3"><b>Unlockable Terrain -</b> This terrain type can be unlocked, by picking locks, an Unlock spell, or a special encounter which unlocks terrain (though not by bashing). Extra 1 is the number of the terrain type the space becomes when unlocked. Extra 2 is the difficulty of unlocking the door. This is a number from 0 to 10. The higher the number, the harder the door is to unlock. If the difficulty is 5 or above, picking locks always fails (the door is magically locked and requires an Unlock spell). If the difficulty is 10, the lock cant be picked and unlock spells dont work. In this case, the only way this space can become unlocked is if a special encounter unlocks it.</p>
-<p class="p3"><b>Unlockable/bashable - </b>This is exactly like Unlockable, except that the party can also try to unlock it by bashing.</p>
-<p class="p3"><b>Is a Sign -</b> This terrain type is a sign. When a space is given this terrain type, you will be asked what the sign says. When the party looks at that space, that will be the text that is displayed.</p>
-<p class="p3"><b>Call Local Special -</b> When stepped on, this space calls a town special encounter. The number in Extra 1 is the number of the town special encounter node to call.<span class="Apple-converted-space"> </span></p>
-<p class="p3">Note: If stepped on outside, no special encounter is called.</p>
-<p class="p3">Warning: If you create a terrain type with this special property, using it in more than one town can have unpredictable effects. If you, for example, have a terrain type with this property that calls town special encounter 29, make sure every town you use that terrain type in has a sensible special encounter in slot 29.</p>
-<p class="p3"><b>Call Scenario Special -</b> When stepped on, this space calls a scenario special encounter. The number in Extra 1 is the number of the scenario special encounter node to call. Terrain with this special property can be used outdoors.</p>
-<p class="p3"><b>Is a Container - </b>This terrain type can contain items. In the town editor, when you place an item on terrain with this property, the item is automatically considered to be inside it. Extra 1 and Extra 2 are ignored.</p>
-<p class="p3">Example: A dresser, chest, or body.</p>
-<p class="p3"><b>Waterfall -</b> If the party, while outdoors (not in town), moves in a boat to the space just north of a spot of terrain with this property, they are sucked through to the space south of it. There is a screaming noise and they lose some food. Extra 1 and Extra 2 are ignored.</p>
-<p class="p3"><b>Conveyor belt (north), Conveyor belt (east), Conveyor belt (south), Conveyor belt (west) -</b> This space is a conveyor belt, which moves everything on it in the indicated direction. Extra 1 and Extra 2 are ignored.</p>
-<p class="p3"><b>Blocked to Monsters -</b><span class="Apple-converted-space">  </span>Monsters will never walk into a space of this type. Extra 1 and Extra 2 are ignored.</p>
-<p class="p3"><b>Town Entrance -</b> For use when outdoors. This is the entrance to a town. Stepping on a space of this type has no effect when indoors. When you place a space of this type while editing the outdoors, you need to click on the Edit Town Entrance button and then click on the town entrance to attach it to a town or dungeon.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>If the town in question is hidden, when the party sees it it will look like the terrain type in Extra 1a.</p>
-<p class="p3"><b>Usable Space -</b> When the player clicks the Use button and selects this space, it will change to a different terrain type (an example being an open door, which closes). Extra 1 is the number of the terrain type it changes to. Extra 2 is the number of the sound that plays when this happens (for a list of sounds, look in the Appendices). If Extra 2 is left at 200, no sound plays.</p>
-<p class="p3"><b>Call Scenario Special when used- </b>When used (using the Use button in town mode), this space calls a scenario special encounter. The number in Extra 1 is the number of the scenario special encounter node to call.</p>
-<p class="p2"><br></p>
+<h1>Section 6 - Editing Terrain Types</h1>
+
+<p>Your default scenario comes with 256 premade terrain types, number 0 to 255 (which are
+listed in the Appendices). However, you can also customize the terrain types to suit your
+scenario. Click on Edit Terrain Types to bring up all of the terrain icons, and click on a
+terrain type to bring up the terrain editing window.</p>
+<p>The first 90 terrain types (0 to 89) are fixed by the game. The only thing you can
+change in these is the picture. You can do what you want with terrain types 91 - 255.</p>
+
+<h2>Defining Terrain Types</h2>
+
+<p>To define a new terrain type, you need to enter several values, which determine whether
+the party can walk through it, what it looks like, and similar properties. What each value
+means is described below:</p>
+
+<ul>
+<li><b>Picture:</b> Simply, what the terrain looks like. To select a picture, click the
+Pick Picture button (if you dont want the terrain graphic to be animated) or the Animated
+button (if you do). If you want to use a customized terrain graphic, see the chapter
+Customized Graphics.</li>
+<li><b>Name: </b>The name of the terrain, which is given when the party looks at it. This
+can be at most 30 characters long.</li>
+<li><b>Blockage:</b> Whether the party can see through and walk through it. Click on the
+button by the desired blockage. The blockage values are:
+<ul>
+<li>Clear - Party can see through and walk through terrain unobstructed. (Example: floor,
+grass)</li>
+<li>Walk through, opaque - Party can walk through this terrain, but cant see through it.
+(Example: secret passage)</li>
+<li>Clear, special - Party can see through and walk through terrain unobstructed, but
+monsters will not walk through it. (Example: Special encounter, lava)</li>
+<li>Clear, blocked - Party can see through, but not walk through. (Example: Pits,
+water)</li>
+<li>Clear, blocked, obstructed - Party can see through, but not walk through. Also, this
+terrain partially obstructs missile weapons passing through it. (Example: Pillar,
+window)</li>
+<li>Blocked, opaque - Cannot see through or walk through. Total obstruction. (Example:
+Walls)</li>
+</ul>
+<li><b>Can Fly Over -</b> Click on this button to turn on/off the light. If this light is
+lit, a flying party can pass over this terrain.</li>
+<li><b>Can Boat Over - </b>If this light is lit, a party in a boat can pass over this
+terrain.</li>
+<li><b>Block Horses -</b> If this light is lit, horses will not walk on this terrain.</li>
+<li><b>Step Sound -</b> The sound that plays when something steps on this terrain. Current
+options are a regular stepping sound, a squish, a crunch, or nothing.</li>
+<li><b>Shortcut Key -</b> This is a shortcut for you when editing your towns and dungeons.
+Enter a single key in this field, and when editing outdoor or town terrain, this terrain
+type will be selected. If you give more than one terrain type the same key, typing that
+key cycles among all the different terrain types that have it (for example, you may want
+to give all your basic walls the key w).</li>
+<li><b>Light Radius - </b>A number from 0 to 10. This determines whether the terrain type
+casts light, and how far out that light extends. For example, a torch has a light radius
+of 4, so all spots in town within 4 spaces of a torch space are always lit.</li>
+<li><b>Transform to what - </b>This field is used in conjunction with certain types of
+special nodes (see Special Encounters). If this is a terrain type that you often want to
+change to something else (such as a closed portcullis, which you may often want to change
+to an open portcullis), enter the number of the terrain type to change it to here. Then,
+to change the terrain type, use a Transform Terrain special node.</li>
+<li><b>Special Properties, Extra 1, Extra 2 -</b> These fields are where you give the
+terrain types the really interesting properties. All of the properties are listed on the
+terrain type editing window. To select a property, click on the button by it.</li>
+</ul>
+
+<p>Many of the special properties need more information to work, which you enter in the
+two fields (Extra 1, and Extra 2) at the bottom of the terrain type editing window. The
+window will prompt you with what information needs to be given.</p>
+<p>The special property types, and what you need to enter in Extra 1, and Extra 2 are as
+follows:</p>
+
+<ul>
+<li><b>No Property -</b> The default. The terrain is ordinary. Extra 1 and Extra 2 are
+ignored.</li>
+<li><b>Change When Walk -</b> The terrain type changes to another when the party tries to
+walk into it. This happens even if the terrain is blocked to travel. Extra 1 is the number
+of the terrain type the terrain changes into. Extra 2 is the number of the sound that
+plays when this happens (for a list of sounds, look in the Appendices). If Extra 2 is left
+at 200, no sound plays.</li>
+<li><b>Does Fire Damage -</b> When someone walks on this space, fire damage is inflicted.
+Damaged inflicted is a random number from 1 to Extra 1, times Extra 2. Only monsters with
+fire resistance will walk through this space.</li>
+<li><b>Does Cold Damage - </b>Exactly like Fire Damage, but cold damage is inflicted.</li>
+<li><b>Does Magical Damage - </b>Exactly like Fire Damage, but magical damage is
+inflicted.</li>
+<li><b>Poison Land -</b> Poisons people walking on it. Extra 1 is the intensity of the
+poison (a number from 1 to 8, with anything above 4 being pretty lethal). Extra 2 is the
+percentage chance of being affected, a number from 0 to 100 (0 meaning never, and 100
+meaning always).</li>
+<li><b>Diseased Land -</b> Exactly like Poisoned Land, but spreads disease instead of
+poison.</li>
+<li>Crumbling - When Move Mountains or Crumble is cast on this space, it turns into the
+terrain in Extra 1a.</li>
+<li><b>Lockable Terrain -</b> Indicates a terrain type that can be locked. This only comes
+into play when a special node which locks a terrain type is used on the space (see the
+chapter on Special Encounters for more information). When that happens, Extra 1 is the
+terrain type the space changes to. Extra 2 is ignored.</li>
+<li><b>Unlockable Terrain -</b> This terrain type can be unlocked, by picking locks, an
+Unlock spell, or a special encounter which unlocks terrain (though not by bashing). Extra
+1 is the number of the terrain type the space becomes when unlocked. Extra 2 is the
+difficulty of unlocking the door. This is a number from 0 to 10. The higher the number,
+the harder the door is to unlock. If the difficulty is 5 or above, picking locks always
+fails (the door is magically locked and requires an Unlock spell). If the difficulty is
+10, the lock can't be picked and unlock spells don't work. In this case, the only way this
+space can become unlocked is if a special encounter unlocks it.</li>
+<li><b>Unlockable/bashable - </b>This is exactly like Unlockable, except that the party
+can also try to unlock it by bashing.</li>
+<li><b>Is a Sign -</b> This terrain type is a sign. When a space is given this terrain
+type, you will be asked what the sign says. When the party looks at that space, that will
+be the text that is displayed.</li>
+<li><b>Call Local Special -</b> When stepped on, this space calls a town special
+encounter. The number in Extra 1 is the number of the town special encounter node to call.
+<br>Note: If stepped on outside, no special encounter is called.</li>
+<li>Warning: If you create a terrain type with this special property, using it in more
+than one town can have unpredictable effects. If you, for example, have a terrain type
+with this property that calls town special encounter 29, make sure every town you use that
+terrain type in has a sensible special encounter in slot 29.</li>
+<li><b>Call Scenario Special -</b> When stepped on, this space calls a scenario special
+encounter. The number in Extra 1 is the number of the scenario special encounter node to
+call. Terrain with this special property can be used outdoors.</li>
+<li><b>Is a Container - </b>This terrain type can contain items. In the town editor, when
+you place an item on terrain with this property, the item is automatically considered to
+be inside it. Extra 1 and Extra 2 are ignored.
+<br>Example: A dresser, chest, or body.</li>
+<li><b>Waterfall -</b> If the party, while outdoors (not in town), moves in a boat to the
+space just north of a spot of terrain with this property, they are sucked through to the
+space south of it. There is a screaming noise and they lose some food. Extra 1 and Extra 2
+are ignored.</li>
+<li><b>Conveyor belt (north), Conveyor belt (east), Conveyor belt (south), Conveyor belt
+(west) -</b> This space is a conveyor belt, which moves everything on it in the indicated
+direction. Extra 1 and Extra 2 are ignored.</li>
+<li><b>Blocked to Monsters -</b>Monsters will never walk into a space of this type. Extra
+1 and Extra 2 are ignored.</li>
+<li><b>Town Entrance -</b> For use when outdoors. This is the entrance to a town. Stepping
+on a space of this type has no effect when indoors. When you place a space of this type
+while editing the outdoors, you need to click on the Edit Town Entrance button and then
+click on the town entrance to attach it to a town or dungeon.
+<br>If the town in question is hidden, when the party sees it it will look like the
+terrain type in Extra 1a.</li>
+<li><b>Usable Space -</b> When the player clicks the Use button and selects this space, it
+will change to a different terrain type (an example being an open door, which closes).
+Extra 1 is the number of the terrain type it changes to. Extra 2 is the number of the
+sound that plays when this happens (for a list of sounds, look in the Appendices). If
+Extra 2 is left at 200, no sound plays.</li>
+<li><b>Call Scenario Special when used- </b>When used (using the Use button in town mode),
+this space calls a scenario special encounter. The number in Extra 1 is the number of the
+scenario special encounter node to call.</li>
+</ul>
 </div>
 </body>
 </html>

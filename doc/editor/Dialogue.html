@@ -5,132 +5,316 @@
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<p class="p1"><b>Section 11: Dialogue<span class="Apple-converted-space"> </span></b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Along with special encounters, character dialogue is a key way to give your scenario a plot and depth. Writing good dialogue is difficult and time consuming, but there is no better way to get a player involved.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Each character has a personality number. This number determines what the character the party talks to says. Only characters in towns can be given personalities.<span class="Apple-converted-space"> </span></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Each town has 10 personalities stored in it. Town 0 has personalities 0-9. Town 1 has personalities 10-19, town 2 has 20-29, and so on. A character from any town can<span class="Apple-converted-space">  </span>have a personality from any town. To enable the party to talk to a character, place the creature, press Select Monster, click on the monster, and put the personality number in the Personality area. Now that the personality is there, you just need to write the dialogue.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Writing Dialogue</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Press Edit Town Dialogue to edit a towns 10 personalities. A character always responds to name, look, and job, and has a response for when the party asks about something weird. The first 10 entries in the dialogue lists are where these responses are written. Entries for name, look, and job must be given. The Dont Understand Response can be left blank (a generic response will be given).</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Dialogue has nodes, like special encounters. Each town has 60 dialogue nodes. Each dialogue nodes represents one thing the party can ask about. The 60 dialogue nodes are listed when you press Edit Town Dialogue. Click on a dialogue node to edit it. The dialogue nodes editing window will come up. It has these options:</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Personality -</b> This starts at -1, which means that the node is unused. The number of the personality to whom this node belongs. If this is changed to -2, any of the 10 personalities in this town respond to this.</p>
-<p class="p3"><b>Response to #1, Response to #2 - </b>The key word (or key words) the player must ask about to get this node as a response. Each node can have two different words that activate it. These words must consist only of letters and numbers.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>The game only looks at the first 4 letters of these fields, and a word that the player can ask about must be at least 4 letters/numbers long. You can have a character respond to insect, but not to bug.<span class="Apple-converted-space"> </span></p>
-<p class="p3"><span class="Apple-tab-span">	</span>The default value for these fields is xxxx. If you only want a certain response to be given for one key word (as opposed to two) you can leave one of the fields set to xxxx.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>If one character has redundant talking nodes (i.e. two nodes which respond to asking about fish) the earlier one is used.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>If the talking node is for a store of some sort (buying or selling) and the player presses the Buy or Sell button, this node will be used as a response. Again, if one character sells two sorts of things, the earlier one will be used should the player hit the Buy button.</p>
-<p class="p3">Example: You set the first<span class="Apple-converted-space">  </span>field to swor and the second to demo. Then this talking node will be used as a response when the player asks this character about sword, demon, demonstration, Sworgenov.</p>
-<p class="p3"><b>Node type - </b>Click the light for the appropriate talking node type. These types are described below.</p>
-<p class="p3"><b>A,B,C,D - </b>These four fields define certain things for the node type (such as how much an item costs, or what items are sold in the store). In the descriptions below, the value of Field A is referred to by simply A, as in The cost for identification is A.</p>
-<p class="p3"><b>Text 1, Text 2 -</b> The text the character actually says. For some node types, the character responds with the text in both boxes, one before the other. For some node types, however, the character will only respond one bit of text or the other, depending on the node type.</p>
-<p class="p3">Create New - To edit a fresh dialogue node, press this. To return to an earlier node, press Go Back.</p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>When writing character responses, remember that while the two halves of the response text can each be 256 characters long, there isnt room for more than 400 characters on the talking screen. Test your dialogue to make sure it is all fitting.<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p3"><b>Special Node Types</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>The talking node types (and the meanings of the A, B, C, and D fields) are:</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Basic Conversation Talking Nodes -</b><span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>These are the basic talking node types, the talking nodes you will use the most often.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Node Type 0 - Regular Talking</b> <span class="Apple-converted-space">  </span>The character responds with the text in the Text 1 and Text 2 fields. All other fields are ignored.</p>
-<p class="p3"><b>Node Type 1 - Depends on Flag<span class="Apple-converted-space"> </span></b> The response depends on a given Stuff Done flag, specified in the A, B, and C fields. If the stuff done flag (A,B) is less than or equal to the value in C, the character responds with the text in Text 1. Otherwise,<span class="Apple-converted-space">  </span>the character responds with the text in Text 2.</p>
-<p class="p3">Example: Suppose A is 58, B is 3, and C is 2. If the Stuff Done flag (58,3) is 1, the response is Text 1. If Stuff Done flag (58,3) is 5, the response is Text 2.</p>
-<p class="p3"><b>Node Type 2 - Set to One <span class="Apple-converted-space">  </span></b>The character responds with the text in the Text 1 and Text 2 fields. In addition, the Stuff Done flag (A,B) is set to 1.</p>
-<p class="p3">Example: You want Stuff Done flag (100,2) to be set to 1 when the party knows that theres a treasure hidden in a tree. Old Man McGee tells them that its there when asked about tree. When Old Man McGee is asked about tree use a talking node of this type as a response, with A set to 100 and B set to 2.</p>
-<p class="p3"><b>Node Type 3 - Inn<span class="Apple-converted-space"> </span></b> If the party can afford it, conversation ends, and the party is moved to a different place and healed. Field A is the cost of the inn, and field B is the quality of the inn (Range 0 ... 3). If the party can afford it, the character says Text 1, and the party is moved to (C,D). Otherwise, they are told Text 2 and conversation continues.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>If-Then Talking Nodes -<span class="Apple-converted-space"> </span></b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>What the character says when one of these talking nodes is called depends on circumstances, such as what town the party is in or whether a certain Stuff Done flag has been changed.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Node Type 4 - Depend on Time</b><span class="Apple-converted-space">  </span>Response depends on what day it is. If it is after day A, the character responds Text 2. Otherwise, the character responds Text 1. (For more information on this, see the section on passing time).<span class="Apple-converted-space"> </span></p>
-<p class="p3"><b>Node Type 5 - Depend on Time w. Event <span class="Apple-converted-space"> </span></b> Response depends on what day it is. If it is after day A and event B did not happen before day A, the character responds Text 1. Otherwise, the character responds Text 2. (For more information on this, see the section on passing time).<span class="Apple-converted-space"> </span></p>
-<p class="p3"><b>Node Type 6 - Depends On Town</b><span class="Apple-converted-space">  </span>Response depends on what town the party is in. If the party is in town A, the response is Text 1. Otherwise, its Text 2.<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p3"><b>Shopping Talking Nodes -</b><span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>When one of these nodes is a response, conversation temporarily ends, and a shopping screen appears. When the party is done shopping (and the player hits the done button) talking resumes. Most of these require you to specify a cost adjust, which is one of the following:</p>
-<p class="p3">0 - Extremely Cheap</p>
-<p class="p3">1 - Very Reasonable</p>
-<p class="p3">2 - Pretty Average</p>
-<p class="p3">3 - Somewhat Pricey</p>
-<p class="p3">4 - Expensive</p>
-<p class="p3">5 - Exorbitant</p>
-<p class="p3">6 - Utterly Ridiculous</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Node Type 7 - Buy Items<span class="Apple-converted-space"> </span></b> Shop where the party can buy items. A is the cost adjustment (Range 0 ... 6, see above). B is the number of the first item in the shop (from the scenarios item list). C is the total number of items in the shop, taken in order from the scenario item list starting with B (press the Choose button to select). Text 1 is the name of the shop.</p>
-<p class="p3">Example: If A is 1, B is 193, C is 15, and Text 1 is Freds Fish, and this talking node is the response, the player gets to shop in a store called Freds Fish. The prices are quite cheap, and the player can buy items 193-207.</p>
-<p class="p3"><b>Node Type 8 - Training</b> <span class="Apple-converted-space">  </span>The training window immediately comes up. Text 1 &amp; 2 are<span class="Apple-converted-space"> </span></p>
-<p class="p3">ignored.<span class="Apple-converted-space"> </span></p>
-<p class="p3"><b>Node Type 9 - Mage Spell Shop<span class="Apple-converted-space"> </span></b> Shop where the party can buy mage spells. A is the cost adjustment (Range 0 ... 6, see above). B is the number of the first spell sold in the shop (press the Choose button to select). C is the total number of spells sold in the shop, taken from the list of spells in the game, starting with B. Text 1 is the name of the shop.</p>
-<p class="p3"><b>Node Type 10 - Priest Spell Shop</b> Exactly like Mage Spell Shop (above) but with Priest spells. <span class="Apple-converted-space"> </span></p>
-<p class="p3"><b>Node Type 11 - Alchemy Shop </b><span class="Apple-converted-space">  </span>Shop where the party can buy alchemy recipes. A is the cost adjustment (Range 0 ... 6, see above. B is the number of the first recipe sold in the shop (press the Choose button to select). C is the total number of recipes sold in the shop, taken from the list of recipes in the game, starting with B. Text 1 is the name of the shop.</p>
-<p class="p3"><b>Node Type 12 - Healer <span class="Apple-converted-space"> </span></b> Brings up the healing screen. A is the cost adjustment (Range 0 ... 6, see above) and Text 1 is the name of the healer.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Item Button Talking Nodes -<span class="Apple-converted-space"> </span></b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Each of these talking node types makes a button appear by certain items in the PC Inventory Screen. Pressing these buttons does something with the item, such as sell it or identify it. When two of these nodes are used in a row, the buttons created by the second node replace the buttons created by the first.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Node Type 13 - Sell Weapons</b><span class="Apple-converted-space">  </span>The text in Text 1 is the response, and the party can sell all their identified weapons.</p>
-<p class="p3"><b>Node Type 14 - Sell Armor </b><span class="Apple-converted-space">  </span>The text in Text 1 is the response, and the party can sell all their identified armor.</p>
-<p class="p3"><b>Node Type 15 - Sell All </b><span class="Apple-converted-space">  </span>The text in Text 1 is the response, and the party can sell all their identified items.</p>
-<p class="p3"><b>Node Type 16 - Identify </b><span class="Apple-converted-space">  </span>The text in Text 1 is the response, and the party can identify all their items. A is the cost to identify.</p>
-<p class="p3"><b>Node Type 17 - Enchant Weapons</b><span class="Apple-converted-space">  </span>Enables the part to spend money to have their weapons augmented. The character responds Text 1, and Enchant buttons (with costs) appear by all of the characters identified, non-magical weapons. A is the sort of enchantment the party can buy (0 - +1, 1 - +2, 2 - +3, 3 - shoot flame spells,<span class="Apple-converted-space">  </span>4- flaming weapon, 5 - +5, 6 - blessed)</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Buying Talking Nodes -<span class="Apple-converted-space"> </span></b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>All of these talking nodes try to sell the party something (such as the location of a town) but are not regular shops, and dont bring up a shopping screen.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Node Type 18 - Buy Response <span class="Apple-converted-space"> </span></b> The party is charged A gold. If they have it, the text in Text 1 is the response. Otherwise, the text in Text 2 is the response.</p>
-<p class="p3">Example: If the inn sells drinks with a cost of 5, use this talking node type. Set A to 5, and have Text 1 be what happens when the party buys the drink.</p>
-<p class="p3"><b>Node Type 19 - Buy Response, Change flag</b> <span class="Apple-converted-space">  </span>The party can spend money to get a response and have one of their Stuff Done flags changed. The party is charged A gold. If they have it, the text in Text 1 is the response, and the value of Stuff Done flag (B,C) is set to D. Otherwise, the text in Text 2 is the response.</p>
-<p class="p3">Example: You want Stuff Done flag (100,2) to be set to 1 when the party knows that theres a treasure hidden in a tree. Old Man McGee tells them that its there when asked about tree, but he charges 50 gold for the knowledge. When Old Man McGee is asked about tree use a talking node of this type as a response, with A set to 50, B set to 100, C set to 2, and D set to 1. Write in Text 2 Old Man McGees acerbic response if the party doesnt have 50 gold.</p>
-<p class="p3"><b>Node Type 20 - Ship Shop</b> <span class="Apple-converted-space">  </span>Sells the party a boat. A is the cost of the boat. B is the number of the first boat sold in the shop (from the scenarios boat list). C is the total number of boats sold in the shop, taken from the list of boats in the game, starting with B. If the party buys a boat, one boat in the given range becomes their property. Text 1 is the response if the party buys a boat. Text 2 is the response if the party doesnt have enough gold. If all boats in the given range are already owned by the party, the characters response is There are no boats left.</p>
-<p class="p3">Example: If A is 100, B is 5,C is 1, and the party has 100 gold, if the party doesnt already own boat 5, it becomes their property and theyre out 100 gold.</p>
-<p class="p3"><b>Node Type 21 - Horse Shop <span class="Apple-converted-space"> </span></b> Sells the party a horse. A is the cost of the horse. B is the number of the first horse sold in the shop (from the scenarios horse list). C is the total number of horses sold in the shop, taken from the list of horses in the game, starting with B. If the party buys a horse, one horse in the given range becomes their property. Text 1 is the response if the party buys a horse. Text 2 is the response if the party doesnt have enough gold. If all horses in the given range are already owned by the party, the characters response is There are no horses left.</p>
-<p class="p3"><b>Node Type 22 - Buy Special Item <span class="Apple-converted-space"> </span></b> Sells the party a scenario special item. A is the number of the special item being sold. If they already have it, they are told You already have that. Otherwise, the cost of the item is B gold. If the party can afford it, they are told Text 1. Otherwise, they are told Text 2.</p>
-<p class="p3">Note: If you set the cost to 0, the party is always given the item.</p>
-<p class="p3"><b>Node Type 23 - Special Item Shop</b><span class="Apple-converted-space">  </span>This brings up a shop window where the party can buy up to 10 randomly chosen items. These items are changed every 3000 moves, and are often magical. There are 5 different, independently maintained lists of items the shop can give. A is the cost adjustment of the shop (Range 0 ... 6, see above) and B is list of items to sell from (0 .. 4).</p>
-<p class="p3"><b>Node Type 24 - Reveal Town Location </b><span class="Apple-converted-space">  </span>Charges the party money, and enables them to enter a hidden town. The cost is A gold. If the party can afford it, they are told Text 1, and they will be able to see and enter town/dungeon number B. Otherwise, they are told Text 2. If the party already knows where this town is, no gold is taken.</p>
-<p class="p3">Note: If you set the cost to 0, the party is always told where the town is.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>End Conversation Talking Nodes -<span class="Apple-converted-space"> </span></b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>When one of these node types is the response to something the player asks, the conversation ends immediately. Only the Record and Bye buttons at the bottom will be active, and the player can ask about nothing else.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Node Type 25 - Force Conversation End <span class="Apple-converted-space"> </span></b> Responds the text on Text 1 and Text 2 normally, but then the conversation ends.</p>
-<p class="p3"><b>Node Type 26 - Hostile Conversation End</b> <span class="Apple-converted-space">  </span>Responds the text on Text 1 and Text 2 normally, but then the conversation ends, and the character attacks the party.</p>
-<p class="p3"><b>Node Type 27 - Town Hostile Conv. End</b> <span class="Apple-converted-space">  </span>Responds the text on Text 1 and Text 2 normally, but then the conversation ends, and the entire town becomes hostile.</p>
-<p class="p3"><b>Node Type 28 - Eliminate Creature</b> <span class="Apple-converted-space">  </span>Responds the text on Text 1 and Text 2 normally, but then the conversation ends, and the character will disappear. If the character has a Go Away Permanently Stuff Done flag chosen for it, that flag is set to 1 and the character will disappear permanently.</p>
-<p class="p3">Uses: A dying character who tells the party one last thing and expires.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Special Encounter Talking Nodes -<span class="Apple-converted-space"> </span></b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>These highly important node types provide the way to have elaborate special encounters embedded in conversations. When a talking node of one of these types is the response, a town (or scenario) special node is called, which can give the party gold or items, set Stuff Done flags, or do most anything else a special node can do.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>When a special encounter is called inside a conversation, the big question generally is what the character will say (be it Heres some gold, or This is where the hidden treasure is.). What the character says in response to the players question is determined using the Mess 1 and Mess 2 fields in the special nodes called. How this works is described below.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Node Type 29 -</b> Call Town Special <span class="Apple-converted-space">  </span>Calls Town Special Node A, and does what it says. This special encounter can do anything but damage the party or other monsters or move the party.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Displaying messages in special encounters works differently in talking special encounters. If the special node(s) called bring up a dialog box, it is displayed normally (over the talking screen). However, if one or two messages are selected in one of the special nodes, they are not displayed in a dialog box (as they would be if the special encounter wasnt called while talking). Instead, the one or two messages selected in the special node will become the characters response while talking. If no messages are ever selected in the special nodes, the character says the text in Text 1 and Text 2.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>There is one serious limitation to using talking nodes of this type. The special encounter will only work correctly if the personality is one of the current towns 10 personalities. For example, the 10 personalities for town 5 are 50-59. A talking special encounter for personality 55 will only work correctly when the party is in town 5. If you placed personality 55 in town 6 and the party triggered a special encounter while talking to it, it wouldnt work. If you want to have a personality special encounter work no matter what town the party triggers it in, use a Call Scenario Special talking node (type 30, described below).</p>
-<p class="p3"><span class="Apple-tab-span">	</span>To create the talking special encounter, first select Edit Special Nodes from the town menu, select the first node of the special encounter (a node you havent used yet), and create the special encounter. Then, on the dialogue node editing sceen, enter the number of the first node of the encounter in A.</p>
-<p class="p3">Example: Suppose Text 1 is He casts a spell, and the special node selected heals the party, and is the only special node called. If, in Mess 1 and Mess 2 of that special node, no messages are chosen, the character will say He casts a spell. If messages are chosen in Mess 1 and Mess 2, that will be what the character says in the talk area. The player can then ask about things mentioned in those messages in the normal way (clicking on words to ask about them).</p>
-<p class="p3"><b>Node Type 30 - Call Scenario Special </b><span class="Apple-converted-space">  </span>Calls Scenario Special Node A. Except for calling a Scenario special node instead of a Town Special Node, this is exactly the same as Call Town Special, above. The main difference is that you create the special encounter in the Scenario special node list instead of the Town special node list.</p>
-<p class="p3">Note: If a town special is called, only a town message will be shown. If a scenario node is called, a scenario message will be shown.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>The Buy and Sell Buttons</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>When the game is in talk mode, there are Buy and Sell buttons at the bottom of the talking area. The player will expect that, when the former is pressed, the game will go into shopping mode (if the character has anything to sell), and when the latter is pressed the character will offer to buy items (if he or she is so inclined).</p>
-<p class="p3"><span class="Apple-tab-span">	</span>When the Buy button is pressed, that is equivalent to the player asking about purchase. Thus, you should have every shopkeeper respond to this word. Similarly, pressing the Sell button is equivalent to asking about sell. Any character who buys things should respond to this word.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Item Order in Shops</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Items can only be sold in shops in the order they appear in your scenario's item list. A shop can only sell, say, items 117-125 from the item list, not items 117, 121, and 131. If you want to customize the items in a shop (so that it only sells strong poison, steel chain mail, and rings of protection), edit the items in the item list so that those items appear next to each other.</p>
-<p class="p2"><br></p>
+<div class="navbar">
+<script src="nav.js"></script>
+</div>
+<div class='content'>
+<h1>Section 11: Dialogue</h1>
+
+<p>Along with special encounters, character dialogue is a key way to give your scenario a
+plot and depth. Writing good dialogue is difficult and time consuming, but there is no
+better way to get a player involved.</p>
+
+<p>Each character has a personality number. This number determines what the character the
+party talks to says. Only characters in towns can be given personalities.</p>
+
+<p>Each town has 10 personalities stored in it. Town 0 has personalities 0-9. Town 1 has
+personalities 10-19, town 2 has 20-29, and so on. A character from any town can have a
+personality from any town. To enable the party to talk to a character, place the creature,
+press Select Monster, click on the monster, and put the personality number in the
+Personality area. Now that the personality is there, you just need to write the
+dialogue.</p>
+
+<h2>Writing Dialogue</h2>
+
+<p>Press Edit Town Dialogue to edit a town's 10 personalities. A character always responds
+to name, look, and job, and has a response for when the party asks about something weird.
+The first 10 entries in the dialogue lists are where these responses are written. Entries
+for name, look, and job must be given. The Don't Understand Response can be left blank (a
+generic response will be given).</p>
+
+<p>Dialogue has nodes, like special encounters. Each town has 60 dialogue nodes. Each
+dialogue nodes represents one thing the party can ask about. The 60 dialogue nodes are
+listed when you press Edit Town Dialogue. Click on a dialogue node to edit it. The
+dialogue nodes editing window will come up. It has these options:</p>
+
+<p><b>Personality -</b> This starts at -1, which means that the node is unused. The number
+of the personality to whom this node belongs. If this is changed to -2, any of the 10
+personalities in this town respond to this.</p>
+<p><b>Response to #1, Response to #2 - </b>The key word (or key words) the player must ask
+about to get this node as a response. Each node can have two different words that activate
+it. These words must consist only of letters and numbers.</p>
+<p>The game only looks at the first 4 letters of these fields, and a word that the player
+can ask about must be at least 4 letters/numbers long. You can have a character respond to
+insect, but not to bug.</p>
+<p>The default value for these fields is xxxx. If you only want a certain response to be
+given for one key word (as opposed to two) you can leave one of the fields set to
+xxxx.</p>
+<p>If one character has redundant talking nodes (i.e. two nodes which respond to asking
+about fish) the earlier one is used.</p>
+<p>If the talking node is for a store of some sort (buying or selling) and the player
+presses the Buy or Sell button, this node will be used as a response. Again, if one
+character sells two sorts of things, the earlier one will be used should the player hit
+the Buy button.</p>
+<p>Example: You set the first field to swor and the second to demo. Then this talking node
+will be used as a response when the player asks this character about sword, demon,
+demonstration, Sworgenov.</p>
+<p><b>Node type - </b>Click the light for the appropriate talking node type. These types
+are described below.</p>
+<p><b>A,B,C,D - </b>These four fields define certain things for the node type (such as how
+much an item costs, or what items are sold in the store). In the descriptions below, the
+value of Field A is referred to by simply A, as in "The cost for identification is A".</p>
+<p><b>Text 1, Text 2 -</b> The text the character actually says. For some node types, the
+character responds with the text in both boxes, one before the other. For some node types,
+however, the character will only respond one bit of text or the other, depending on the
+node type.</p>
+<p>Create New - To edit a fresh dialogue node, press this. To return to an earlier node,
+press Go Back.</p>
+<p></p>
+<p>When writing character responses, remember that while the two halves of the response
+text can each be 256 characters long, there isn't room for more than 400 characters on the
+talking screen. Test your dialogue to make sure it is all fitting.</p>
+
+<h2>Special Node Types</h2>
+
+<p>The talking node types (and the meanings of the A, B, C, and D fields) are:</p>
+
+<h3>Basic Conversation Talking Nodes</h3>
+
+<p>These are the basic talking node types, the talking nodes you will use the most
+often.</p>
+<p></p>
+<p><b>Node Type 0 - Regular Talking</b> The character responds with the text in the Text 1
+and Text 2 fields. All other fields are ignored.</p>
+<p><b>Node Type 1 - Depends on Flag</b> The response depends on a given Stuff Done flag,
+specified in the A, B, and C fields. If the stuff done flag (A,B) is less than or equal to
+the value in C, the character responds with the text in Text 1. Otherwise,the character
+responds with the text in Text 2.</p>
+<p>Example: Suppose A is 58, B is 3, and C is 2. If the Stuff Done flag (58,3) is 1, the
+response is Text 1. If Stuff Done flag (58,3) is 5, the response is Text 2.</p>
+<p><b>Node Type 2 - Set to One </b>The character responds with the text in the Text 1 and
+Text 2 fields. In addition, the Stuff Done flag (A,B) is set to 1.</p>
+<p>Example: You want Stuff Done flag (100,2) to be set to 1 when the party knows that
+theres a treasure hidden in a tree. Old Man McGee tells them that its there when asked
+about tree. When Old Man McGee is asked about tree use a talking node of this type as a
+response, with A set to 100 and B set to 2.</p>
+<p><b>Node Type 3 - Inn</b> If the party can afford it, conversation ends, and the party
+is moved to a different place and healed. Field A is the cost of the inn, and field B is
+the quality of the inn (Range 0 ... 3). If the party can afford it, the character says
+Text 1, and the party is moved to (C,D). Otherwise, they are told Text 2 and conversation
+continues.</p>
+
+<h3>If-Then Talking Nodes</h3>
+
+<p>What the character says when one of these talking nodes is called depends on
+circumstances, such as what town the party is in or whether a certain Stuff Done flag has
+been changed.</p>
+<p></p>
+<p><b>Node Type 4 - Depend on Time</b> Response depends on what day it is. If it is after
+day A, the character responds Text 2. Otherwise, the character responds Text 1. (For more
+information on this, see the section on passing time).</p>
+<p><b>Node Type 5 - Depend on Time w. Event</b> Response depends on what day it is. If it
+is after day A and event B did not happen before day A, the character responds Text 1.
+Otherwise, the character responds Text 2. (For more information on this, see the section
+on passing time).</p>
+<p><b>Node Type 6 - Depends On Town</b> Response depends on what town the party is in. If
+the party is in town A, the response is Text 1. Otherwise, its Text 2.</p>
+
+<h3>Shopping Talking Nodes</h3>
+
+<p>When one of these nodes is a response, conversation temporarily ends, and a shopping
+screen appears. When the party is done shopping (and the player hits the done button)
+talking resumes. Most of these require you to specify a cost adjust, which is one of the
+following:</p>
+<ul>
+<li>0 - Extremely Cheap</li>
+<li>1 - Very Reasonable</li>
+<li>2 - Pretty Average</li>
+<li>3 - Somewhat Pricey</li>
+<li>4 - Expensive</li>
+<li>5 - Exorbitant</li>
+<li>6 - Utterly Ridiculous</li>
+</ul>
+
+<p><b>Node Type 7 - Buy Items</b> Shop where the party can buy items. A is the cost
+adjustment (Range 0 ... 6, see above). B is the number of the first item in the shop (from
+the scenarios item list). C is the total number of items in the shop, taken in order from
+the scenario item list starting with B (press the Choose button to select). Text 1 is the
+name of the shop.</p>
+<p>Example: If A is 1, B is 193, C is 15, and Text 1 is Fred's Fish, and this talking node
+is the response, the player gets to shop in a store called Fred's Fish. The prices are
+quite cheap, and the player can buy items 193-207.</p>
+<p><b>Node Type 8 - Training</b> The training window immediately comes up. Text 1 &amp; 2
+are ignored.</p>
+<p><b>Node Type 9 - Mage Spell Shop</b> Shop where the party can buy mage spells. A is the
+cost adjustment (Range 0 ... 6, see above). B is the number of the first spell sold in the
+shop (press the Choose button to select). C is the total number of spells sold in the
+shop, taken from the list of spells in the game, starting with B. Text 1 is the name of
+the shop.</p>
+<p><b>Node Type 10 - Priest Spell Shop</b> Exactly like Mage Spell Shop (above) but with
+Priest spells.</p>
+<p><b>Node Type 11 - Alchemy Shop </b>Shop where the party can buy alchemy recipes. A is
+the cost adjustment (Range 0 ... 6, see above. B is the number of the first recipe sold in
+the shop (press the Choose button to select). C is the total number of recipes sold in the
+shop, taken from the list of recipes in the game, starting with B. Text 1 is the name of
+the shop.</p>
+<p><b>Node Type 12 - Healer </b> Brings up the healing screen. A is the cost adjustment
+(Range 0 ... 6, see above) and Text 1 is the name of the healer.</p>
+
+<h3>Item Button Talking Nodes</h3>
+
+<p>Each of these talking node types makes a button appear by certain items in the PC
+Inventory Screen. Pressing these buttons does something with the item, such as sell it or
+identify it. When two of these nodes are used in a row, the buttons created by the second
+node replace the buttons created by the first.</p>
+
+<p><b>Node Type 13 - Sell Weapons</b>The text in Text 1 is the response, and the party can
+sell all their identified weapons.</p>
+<p><b>Node Type 14 - Sell Armor </b>The text in Text 1 is the response, and the party can
+sell all their identified armor.</p>
+<p><b>Node Type 15 - Sell All </b>The text in Text 1 is the response, and the party can
+sell all their identified items.</p>
+<p><b>Node Type 16 - Identify </b>The text in Text 1 is the response, and the party can
+identify all their items. A is the cost to identify.</p>
+<p><b>Node Type 17 - Enchant Weapons</b> Enables the part to spend money to have their
+weapons augmented. The character responds Text 1, and Enchant buttons (with costs) appear
+by all of the characters identified, non-magical weapons. A is the sort of enchantment the
+party can buy (0 - +1, 1 - +2, 2 - +3, 3 - shoot flame spells, 4 - flaming weapon, 5 - +5,
+6 - blessed)</p>
+
+<h3>Buying Talking Nodes</h3>
+
+<p>All of these talking nodes try to sell the party something (such as the location of a
+town) but are not regular shops, and don't bring up a shopping screen.</p>
+
+<p><b>Node Type 18 - Buy Response </b> The party is charged A gold. If they have it, the
+text in Text 1 is the response. Otherwise, the text in Text 2 is the response.</p>
+<p>Example: If the inn sells drinks with a cost of 5, use this talking node type. Set A to
+5, and have Text 1 be what happens when the party buys the drink.</p>
+<p><b>Node Type 19 - Buy Response, Change flag</b> The party can spend money to get a
+response and have one of their Stuff Done flags changed. The party is charged A gold. If
+they have it, the text in Text 1 is the response, and the value of Stuff Done flag (B,C)
+is set to D. Otherwise, the text in Text 2 is the response.</p>
+<p>Example: You want Stuff Done flag (100,2) to be set to 1 when the party knows that
+there's a treasure hidden in a tree. Old Man McGee tells them that it's there when asked
+about tree, but he charges 50 gold for the knowledge. When Old Man McGee is asked about
+tree, use a talking node of this type as a response, with A set to 50, B set to 100, C set
+to 2, and D set to 1. Write in Text 2 Old Man McGee's acerbic response if the party doesn't
+have 50 gold.</p>
+<p><b>Node Type 20 - Ship Shop</b> Sells the party a boat. A is the cost of the boat. B is
+the number of the first boat sold in the shop (from the scenario's boat list). C is the
+total number of boats sold in the shop, taken from the list of boats in the game, starting
+with B. If the party buys a boat, one boat in the given range becomes their property. Text
+1 is the response if the party buys a boat. Text 2 is the response if the party doesn't
+have enough gold. If all boats in the given range are already owned by the party, the
+character's response is "There are no boats left".</p>
+<p>Example: If A is 100, B is 5,C is 1, and the party has 100 gold, if the party doesn't
+already own boat 5, it becomes their property and they're out 100 gold.</p>
+<p><b>Node Type 21 - Horse Shop </b> Sells the party a horse. A is the cost of the horse.
+B is the number of the first horse sold in the shop (from the scenarios horse list). C is
+the total number of horses sold in the shop, taken from the list of horses in the game,
+starting with B. If the party buys a horse, one horse in the given range becomes their
+property. Text 1 is the response if the party buys a horse. Text 2 is the response if the
+party doesn't have enough gold. If all horses in the given range are already owned by the
+party, the character's response is "There are no horses left".</p>
+<p><b>Node Type 22 - Buy Special Item </b> Sells the party a scenario special item. A is
+the number of the special item being sold. If they already have it, they are told "You
+already have that". Otherwise, the cost of the item is B gold. If the party can afford it,
+they are told Text 1. Otherwise, they are told Text 2.</p>
+<p>Note: If you set the cost to 0, the party is always given the item.</p>
+<p><b>Node Type 23 - Special Item Shop</b> This brings up a shop window where the party
+can buy up to 10 randomly chosen items. These items are changed every 3000 moves, and are
+often magical. There are 5 different, independently maintained lists of items the shop can
+give. A is the cost adjustment of the shop (Range 0 ... 6, see above) and B is list of
+items to sell from (0 .. 4).</p>
+<p><b>Node Type 24 - Reveal Town Location</b> Charges the party money, and enables them to
+enter a hidden town. The cost is A gold. If the party can afford it, they are told Text 1,
+and they will be able to see and enter town/dungeon number B. Otherwise, they are told
+Text 2. If the party already knows where this town is, no gold is taken.</p>
+<p>Note: If you set the cost to 0, the party is always told where the town is.</p>
+
+<h3>End Conversation Talking Nodes</h3>
+
+<p>When one of these node types is the response to something the player asks, the
+conversation ends immediately. Only the Record and Bye buttons at the bottom will be
+active, and the player can ask about nothing else.</p>
+
+<p><b>Node Type 25 - Force Conversation End</b> Responds the text on Text 1 and Text 2
+normally, but then the conversation ends.</p>
+<p><b>Node Type 26 - Hostile Conversation End</b> Responds the text on Text 1 and Text 2
+normally, but then the conversation ends, and the character attacks the party.</p>
+<p><b>Node Type 27 - Town Hostile Conv. End</b> Responds the text on Text 1 and Text 2
+normally, but then the conversation ends, and the entire town becomes hostile.</p>
+<p><b>Node Type 28 - Eliminate Creature</b> Responds the text on Text 1 and Text 2
+normally, but then the conversation ends, and the character will disappear. If the
+character has a Go Away Permanently Stuff Done flag chosen for it, that flag is set to 1
+and the character will disappear permanently.</p>
+<p>Uses: A dying character who tells the party one last thing and expires.</p>
+
+<h3>Special Encounter Talking Nodes</h3>
+
+<p>These highly important node types provide the way to have elaborate special encounters
+embedded in conversations. When a talking node of one of these types is the response, a
+town (or scenario) special node is called, which can give the party gold or items, set
+Stuff Done flags, or do most anything else a special node can do.</p>
+<p>When a special encounter is called inside a conversation, the big question generally is
+what the character will say (be it "Here's some gold", or "This is where the hidden treasure
+is".). What the character says in response to the player's question is determined using the
+Mess 1 and Mess 2 fields in the special nodes called. How this works is described
+below.</p>
+
+<p><b>Node Type 29 - Call Town Special</b> Calls Town Special Node A, and does what it says. This special encounter can do anything but damage the party or other monsters or move the party.</p>
+<p>Displaying messages in special encounters works differently in talking special
+encounters. If the special node(s) called bring up a dialog box, it is displayed normally
+(over the talking screen). However, if one or two messages are selected in one of the
+special nodes, they are not displayed in a dialog box (as they would be if the special
+encounter wasn't called while talking). Instead, the one or two messages selected in the
+special node will become the character's response while talking. If no messages are ever
+selected in the special nodes, the character says the text in Text 1 and Text 2.</p>
+<p>There is one serious limitation to using talking nodes of this type. The special
+encounter will only work correctly if the personality is one of the current towns 10
+personalities. For example, the 10 personalities for town 5 are 50-59. A talking special
+encounter for personality 55 will only work correctly when the party is in town 5. If you
+placed personality 55 in town 6 and the party triggered a special encounter while talking
+to it, it wouldn't work. If you want to have a personality special encounter work no matter
+what town the party triggers it in, use a Call Scenario Special talking node (type 30,
+described below).</p>
+<p>To create the talking special encounter, first select Edit Special Nodes from the town
+menu, select the first node of the special encounter (a node you haven't used yet), and
+create the special encounter. Then, on the dialogue node editing sceen, enter the number
+of the first node of the encounter in A.</p>
+<p>Example: Suppose Text 1 is "He casts a spell", and the special node selected heals the
+party, and is the only special node called. If, in Mess 1 and Mess 2 of that special node,
+no messages are chosen, the character will say "He casts a spell". If messages are chosen in
+Mess 1 and Mess 2, that will be what the character says in the talk area. The player can
+then ask about things mentioned in those messages in the normal way (clicking on words to
+ask about them).</p>
+<p><b>Node Type 30 - Call Scenario Special</b> Calls Scenario Special Node A. Except for
+calling a Scenario special node instead of a Town Special Node, this is exactly the same
+as Call Town Special, above. The main difference is that you create the special encounter
+in the Scenario special node list instead of the Town special node list.</p>
+<p>Note: If a town special is called, only a town message will be shown. If a scenario
+node is called, a scenario message will be shown.</p>
+
+<h2>The Buy and Sell Buttons</h2>
+
+<p>When the game is in talk mode, there are Buy and Sell buttons at the bottom of the
+talking area. The player will expect that, when the former is pressed, the game will go
+into shopping mode (if the character has anything to sell), and when the latter is pressed
+the character will offer to buy items (if he or she is so inclined).</p>
+<p>When the Buy button is pressed, that is equivalent to the player asking about purchase.
+Thus, you should have every shopkeeper respond to this word. Similarly, pressing the Sell
+button is equivalent to asking about sell. Any character who buys things should respond to
+this word.</p>
+
+<h2>Item Order in Shops</h2>
+
+<p>Items can only be sold in shops in the order they appear in your scenario's item list.
+A shop can only sell, say, items 117-125 from the item list, not items 117, 121, and 131.
+If you want to customize the items in a shop (so that it only sells strong poison, steel
+chain mail, and rings of protection), edit the items in the item list so that those items
+appear next to each other.</p>
+
+</div>
 </body>
 </html>
