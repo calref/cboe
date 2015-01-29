@@ -61,6 +61,7 @@ extern bool spell_forced,save_maps,boom_anim_active;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting;
+extern short store_item_spell_level;
 extern eStatMode stat_screen_mode;
 extern effect_pat_type null_pat,single,t,square,radius2,radius3,small_square,open_square;
 extern effect_pat_type current_pat;
@@ -830,7 +831,8 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 	current_spell_range = 8;
 	store_mage = spell_num;
 	
-	adj = univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
+	adj = freebie ? 1 : univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
+	short level = freebie ? store_item_spell_level : univ.party[pc_num].level;
 	
 	switch(spell_num) {
 		case eSpell::LIGHT:
@@ -868,7 +870,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_WEAK:
-			store = univ.party[pc_num].level / 5 + adj / 3 + get_ran(1,0,2);
+			store = level / 5 + adj / 3 + get_ran(1,0,2);
 			j = minmax(1,7,store);
 			r1 = get_summon_monster(1); ////
 			if(r1 < 0) break;
@@ -880,7 +882,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON:
-			store = univ.party[pc_num].level / 7 + adj / 3 + get_ran(1,0,1);
+			store = level / 7 + adj / 3 + get_ran(1,0,1);
 			j = minmax(1,6,store);
 			r1 = get_summon_monster(2); ////
 			if(r1 < 0) break;
@@ -892,7 +894,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_MAJOR:
-			store = univ.party[pc_num].level / 10 + adj / 3 + get_ran(1,0,1);
+			store = level / 10 + adj / 3 + get_ran(1,0,1);
 			j = minmax(1,5,store);
 			r1 = get_summon_monster(3); ////
 			if(r1 < 0) break;
@@ -952,7 +954,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::STEALTH:
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			univ.party.status[ePartyStatus::STEALTH] += max(6,univ.party[pc_num].level * 2);
+			univ.party.status[ePartyStatus::STEALTH] += max(6,level * 2);
 			break;
 			
 			
@@ -990,7 +992,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				univ.party[target].status[eStatus::INVULNERABLE] += 2 + adj + get_ran(2,1,2);
 				for(i = 0; i < 6; i++)
 					if(univ.party[i].main_status == eMainStatus::ALIVE) {
-						univ.party[i].status[eStatus::MAGIC_RESISTANCE] += 4 + univ.party[pc_num].level / 3 + adj;
+						univ.party[i].status[eStatus::MAGIC_RESISTANCE] += 4 + level / 3 + adj;
 					}
 				add_string_to_buf("  Party protected.");
 			}
@@ -1014,7 +1016,8 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	
 	where = univ.town.p_loc;
 	
-	adj = univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
+	adj = freebie ? 1 : univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
+	short level = freebie ? store_item_spell_level : univ.party[pc_num].level;
 	
 	play_sound(24);
 	current_spell_range = 8;
@@ -1043,7 +1046,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::MANNA_MINOR: case eSpell::MANNA:
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			store = univ.party[pc_num].level / 3 + 2 * adj + get_ran(2,1,4);
+			store = level / 3 + 2 * adj + get_ran(2,1,4);
 			r1 = max(0,store);
 			if(spell_num == eSpell::MANNA_MINOR)
 				r1 = r1 / 3;
@@ -1071,7 +1074,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::STICKS_TO_SNAKES:
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			r1 = univ.party[pc_num].level / 6 + adj / 3 + get_ran(1,0,1);
+			r1 = level / 6 + adj / 3 + get_ran(1,0,1);
 			for(i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
 				store = get_ran(2,1,5) + adj;
@@ -1117,7 +1120,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 		case eSpell::FIREWALK:
 			add_string_to_buf("  You are now firewalking.");
-			univ.party.status[ePartyStatus::FIREWALK] += univ.party[pc_num].level / 12 + 2;
+			univ.party.status[ePartyStatus::FIREWALK] += level / 12 + 2;
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
@@ -1248,11 +1251,11 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 				sout << "  " << univ.party[target].name;
 				if(spell_num == eSpell::MARTYRS_SHIELD) {
 					sout << " shielded.";
-					r1 = max(1,get_ran((univ.party[pc_num].level + 5) / 5,1,3) + adj);
+					r1 = max(1,get_ran((level + 5) / 5,1,3) + adj);
 					univ.party[target].status[eStatus::MARTYRS_SHIELD] += r1;
 				} else if(spell_num == eSpell::SANCTUARY) {
 					sout << " hidden.";
-					r1 = max(0,get_ran(0,1,3) + univ.party[pc_num].level / 4 + adj);
+					r1 = max(0,get_ran(0,1,3) + level / 4 + adj);
 					univ.party[target].status[eStatus::INVISIBLE] += r1;
 				} else if(spell_num == eSpell::SYMBIOSIS) {
 					store_victim_health = univ.party[target].cur_health;
@@ -1260,7 +1263,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					targ_damaged = univ.party[target].max_health - univ.party[target].cur_health;
 					while((targ_damaged > 0) && (univ.party[pc_num].cur_health > 0)) {
 						univ.party[target].cur_health++;
-						r1 = get_ran(1,1,100) + univ.party[pc_num].level / 2 + 3 * adj;
+						r1 = get_ran(1,1,100) + level / 2 + 3 * adj;
 						if(r1 < 100)
 							univ.party[pc_num].cur_health--;
 						if(r1 < 50)
@@ -1305,7 +1308,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					}
 					if(spell_num == eSpell::RAISE_DEAD) {
 						if(univ.party[target].main_status == eMainStatus::DEAD)
-							if(get_ran(1,1,univ.party[pc_num].level / 2) == 1) {
+							if(get_ran(1,1,level / 2) == 1) {
 								sout << " now dust.";
 								play_sound(5);
 								univ.party[target].main_status = eMainStatus::DUST;
@@ -1385,7 +1388,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if(spell_num == eSpell::SANCTUARY_MASS) {
-						store = get_ran(0,1,3) + univ.party[pc_num].level / 6 + adj;
+						store = get_ran(0,1,3) + level / 6 + adj;
 						r1 = max(0,store);
 						univ.party[i].status[eStatus::INVISIBLE] += r1;
 					}
@@ -1428,7 +1431,8 @@ void cast_town_spell(location where) {
 	if(!spell_freebie)
 		univ.party[who_cast].cur_sp -= (*town_spell).cost;
 	ter = univ.town->terrain(where.x,where.y);
-	short adj = univ.party[who_cast].stat_adj(eSkill::INTELLIGENCE);
+	short adj = spell_freebie ? 1 : univ.party[who_cast].stat_adj(eSkill::INTELLIGENCE);
+	short level = spell_freebie ? store_item_spell_level : univ.party[who_cast].level;
 	
 	// TODO: Should we do this here? Or in the handling of targeting modes?
 	// (It really depends whether we want to be able to trigger it for targeting something other than a spell.)
@@ -1514,7 +1518,7 @@ void cast_town_spell(location where) {
 					r1 = get_ran(1,1,100) - 5 * adj + 5 * univ.town.difficulty;
 					r1 += univ.scenario.ter_types[ter].flag2 * 7;
 				}
-				if(r1 < (135 - combat_percent[min(19,univ.party[who_cast].level)])) {
+				if(r1 < (135 - combat_percent[min(19,level)])) {
 					add_string_to_buf("  Door unlocked.");
 					play_sound(9);
 					univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1;
@@ -1532,7 +1536,7 @@ void cast_town_spell(location where) {
 				r1 = get_ran(1,1,100) - 5 * adj + 5 * (univ.town.difficulty / 10) + 25 * univ.town->strong_barriers;
 				if(univ.town.is_fire_barr(where.x,where.y))
 					r1 -= 8;
-				if(r1 < (120 - combat_percent[min(19,univ.party[who_cast].level)])) {
+				if(r1 < (120 - combat_percent[min(19,level)])) {
 					add_string_to_buf("  Barrier broken.");
 					univ.town.set_fire_barr(where.x,where.y,false);
 					univ.town.set_force_barr(where.x,where.y,false);

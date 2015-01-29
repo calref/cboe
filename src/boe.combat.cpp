@@ -543,6 +543,7 @@ void pc_attack(short who_att,iLiving* target) {
 		dam_adj += 10;
 	}
 	
+	// TODO: These don't stack?
 	if((skill_item = attacker.has_abil_equip(eItemAbil::SKILL)) < 24) {
 		hit_adj += 5 * (attacker.items[skill_item].abil_data[0] / 2 + 1);
 		dam_adj += attacker.items[skill_item].abil_data[0] / 2;
@@ -2634,6 +2635,7 @@ void monster_attack(short who_att,iLiving* target) {
 			r1 += 5 * target->status[eStatus::BLESS_CURSE] - 15;
 			r1 += 5 * (attacker->status[eStatus::WEBS] / 3);
 			if(pc_target != nullptr) {
+				// TODO: Consider this stuff in PC-on-PC attacks
 				r1 += 5 * pc_target->stat_adj(eSkill::DEXTERITY);
 				r1 += pc_target->get_prot_level(eItemAbil::EVASION);
 				if(pc_target->parry < 100)
@@ -4579,6 +4581,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 	snd_num_t store_sound = 0;
 	miss_num_t store_m_type = 0;
 	short bonus = freebie ? 1 : univ.party[current_pc].stat_adj(eSkill::INTELLIGENCE);
+	short level = freebie ? store_item_spell_level : univ.party[current_pc].level;
 	cCreature* which_m;
 	start_missile_anim();
 	switch(spell_num) {
@@ -4616,7 +4619,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 						break;
 						
 					default:
-						i = (spell_num == eSpell::HASTE_MINOR) ? 2 : max(2,univ.party[current_pc].level / 2 + bonus);
+						i = (spell_num == eSpell::HASTE_MINOR) ? 2 : max(2,level / 2 + bonus);
 						univ.party[target].slow(-i);
 						c_line += " hasted.";
 						store_m_type = 8;
@@ -4635,7 +4638,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 			
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
-					univ.party[i].slow(-(spell_num == eSpell::HASTE_MAJOR ? 1 + univ.party[current_pc].level / 8 + bonus : 3 + bonus));
+					univ.party[i].slow(-(spell_num == eSpell::HASTE_MAJOR ? 1 + level / 8 + bonus : 3 + bonus));
 					if(spell_num == eSpell::BLESS_MAJOR) {
 						poison_weapon(i,2,true);
 						univ.party[i].curse(-4);
@@ -4653,7 +4656,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 			
 			
 			
-		case eSpell::SLOW_GROUP: case eSpell::FEAR_GROUP: case eSpell::PARALYSIS_MASS: // affect monsters in area spells
+		case eSpell::SLOW_GROUP: case eSpell::FEAR_GROUP: case eSpell::PARALYSIS_MASS: case eSpell::SLEEP_MASS:
 			if(!freebie)
 				univ.party[current_pc].cur_sp -= (*spell_num).cost;
 			store_sound = 25;
@@ -4664,6 +4667,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 				case eSpell::RAVAGE_ENEMIES: add_string_to_buf("  Enemy ravaged:"); break;
 				case eSpell::FEAR_GROUP: add_string_to_buf("  Enemy scared:"); break;
 				case eSpell::PARALYSIS_MASS: add_string_to_buf("  Enemy paralyzed:"); break;
+				case eSpell::SLEEP_MASS: add_string_to_buf("  Enemy drowsy:"); break;
 				default:
 					add_string_to_buf("  Error: Mage group spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
 					break;
@@ -4675,7 +4679,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 					which_m = &univ.town.monst[i];
 					switch(spell_num) {
 						case eSpell::FEAR_GROUP:
-							r1 = get_ran(univ.party[current_pc].level / 3,1,8);
+							r1 = get_ran(level / 3,1,8);
 							which_m->scare(r1);
 							store_m_type = 10;
 							break;
@@ -4687,6 +4691,10 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 							break;
 						case eSpell::PARALYSIS_MASS:
 							which_m->sleep(eStatus::PARALYZED,1000,15);
+							store_m_type = 15;
+							break;
+						case eSpell::SLEEP_MASS:
+							which_m->sleep(eStatus::ASLEEP,8,15);
 							store_m_type = 15;
 							break;
 						default: break; // Silence compiler warning
@@ -4776,6 +4784,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 	snd_num_t store_sound = 0;
 	miss_num_t store_m_type = 0;
 	short bonus = freebie ? 1 : univ.party[current_pc].stat_adj(eSkill::INTELLIGENCE);
+	short level = freebie ? store_item_spell_level : univ.party[current_pc].level;
 	cCreature *which_m;
 	effect_pat_type protect_pat = {{
 		{0,1,1,1,1,1,1,1,0},
@@ -4797,7 +4806,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 				store_sound = 4;
 				if(!freebie)
 					univ.party[current_pc].cur_sp -= (*spell_num).cost;
-				univ.party[target].curse(-(spell_num==eSpell::BLESS_MINOR ? 2 : max(2,(univ.party[current_pc].level * 3) / 4 + 1 + bonus)));
+				univ.party[target].curse(-(spell_num==eSpell::BLESS_MINOR ? 2 : max(2,(level * 3) / 4 + 1 + bonus)));
 				add_missile(univ.party[target].combat_pos,8,0,0,0);
 			}
 			break;
@@ -4807,7 +4816,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 				univ.party[current_pc].cur_sp -= (*spell_num).cost;
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
-					univ.party[i].curse(-(univ.party[current_pc].level / 3));
+					univ.party[i].curse(-(level / 3));
 					add_missile(univ.party[i].combat_pos,8,0,0,0);
 				}
 			store_sound = 4;
@@ -4954,38 +4963,39 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 	current_pat = single;
 	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
 	short bonus = univ.party[current_pc].stat_adj(eSkill::INTELLIGENCE);
+	short level = freebie ? store_item_spell_level : univ.party[current_pc].level;
 	
 	switch(num) { // Assign special targeting shapes and number of targets
 		case eSpell::SMITE:
-			num_targets_left = minmax(1,8,univ.party[current_pc].level / 4 + bonus / 2);
+			num_targets_left = minmax(1,8,level / 4 + bonus / 2);
 			break;
 		case eSpell::STICKS_TO_SNAKES:
-			num_targets_left = univ.party[current_pc].level / 5 + bonus / 2;
+			num_targets_left = level / 5 + bonus / 2;
 			break;
 		case eSpell::SUMMON_HOST:
 			num_targets_left = 5;
 			break;
 		case eSpell::ARROWS_FLAME:
-			num_targets_left = univ.party[current_pc].level / 4 + bonus / 2;
+			num_targets_left = level / 4 + bonus / 2;
 			break;
 		case eSpell::ARROWS_VENOM:
-			num_targets_left = univ.party[current_pc].level / 5 + bonus / 2;
+			num_targets_left = level / 5 + bonus / 2;
 			break;
 		case eSpell::ARROWS_DEATH: case eSpell::PARALYZE:
-			num_targets_left = univ.party[current_pc].level / 8 + bonus / 3;
+			num_targets_left = level / 8 + bonus / 3;
 			break;
 		case eSpell::SPRAY_FIELDS:
-			num_targets_left = univ.party[current_pc].level / 5 + bonus / 2;
+			num_targets_left = level / 5 + bonus / 2;
 			current_pat = t;
 			break;
 		case eSpell::SUMMON_WEAK:
-			num_targets_left = minmax(1,7,univ.party[current_pc].level / 4 + bonus / 2);
+			num_targets_left = minmax(1,7,level / 4 + bonus / 2);
 			break;
 		case eSpell::SUMMON:
-			num_targets_left = minmax(1,6,univ.party[current_pc].level / 6 + bonus / 2);
+			num_targets_left = minmax(1,6,level / 6 + bonus / 2);
 			break;
 		case eSpell::SUMMON_MAJOR:
-			num_targets_left = minmax(1,5,univ.party[current_pc].level / 8 + bonus / 2);
+			num_targets_left = minmax(1,5,level / 8 + bonus / 2);
 			break;
 		case eSpell::NONE:
 			num_targets_left = minmax(1,8,targets);
