@@ -142,11 +142,11 @@ done. Many of the special nodes have a button of this sort, so that you can acco
 calling of the special node with text.</p>
 <p>Now we need one more special node. To make the third node in the chain, we need to use
 the Jump To field again. Press the Create/Edit button to the right of Jump To. You will
-now be editing a third special node. Press Affect PCs again, and select Affect Poison. New
+now be editing a third special node. Press Affect PCs again, and select Affect Status. New
 messages have appeared by the text areas, asking for different values. Put a 2 in the
 Amount (0 .. 8) field (for a small amount of poison), and 1 in the 0 - cure, 1 - inflict
-area (since we want to cause poison, not cure it). Press OK. Our special encounter is now
-complete.</p>
+area (since we want to cause poison, not cure it). Put 2 in the Which Status field. (This
+means poison.) Press OK. Our special encounter is now complete.</p>
 <p>Run the scenario again, and trigger this encounter. Your party will be damaged and
 poisoned, as promised.</p>
 <p></p>
@@ -176,7 +176,7 @@ have no effect outdoors, for example), and what they do are described in the App
 special nodes.</p>
 <p><b>Stuff Done flags - </b>Many special nodes either change or examine a Stuff Done
 flag. Put the two parts of the required stuff done flag in these two text areas.</p>
-<p><b>Message 1, Message 2, Pict -</b> Some special nodes display a piece of text on the
+<p><b>Message 1-3, Pict, Pict type -</b> Some special nodes display a piece of text on the
 screen. Other special nodes display a dialog box, with text in the middle and a picture in
 the upper left corner. The numbers for these messages and the number of the picture to
 display can be put in these text fields.</p>
@@ -186,19 +186,15 @@ to have to worry about these. Fortunately, there is an easier way to deal with t
 the Create/Edit button to create and edit text messages, and press Choose to the right of
 the picture test area to select a picture. These buttons only appear if you need to
 specify a value.</p>
-<p><b>Extra 1a and Extra 1b, Extra 2a and Extra 2b -</b> Many special nodes require you to
-provide different values, such as the amount of health to heal or the value to set a Stuff
-Done Flag to or the number of an item to give. When you select a special node type, text
-will appear to the left of these text fields prompting you to enter a value.</p>
-<p>Extra 1a and Extra 2a often require you to choose an item, terrain, or monster type.
-For most special nodes, when this happens, you can press the Choose button to select the
-appropriate thing.</p>
-<p>Similarly, Extra 1b and Extra 2b often require you to special a special node to call.
-When this happens, a Create/Edit button appears to the right of the text area. Press it to
-edit the special node to be called.</p>
+<p><b>Extra 1a, 1b, 1c, 2a, 2b, 2c -</b> Many special nodes require you to provide
+different values, such as the amount of health to heal or the value to set a Stuff Done
+Flag to or the number of an item to give. When you select a special node type, text will
+appear to the left of these text fields prompting you to enter a value. Often, there
+will be a Choose button to let you select the value from a list, or a Create/Edit button
+to let you edit a message or a special node to call.</p>
 <p><b>Jump To -</b> Some special nodes call a different special node which is specified in
-the Extra 1b or Extra 2b fields. If this doesn't happen, and a special node is given in
-Jump To (in other words, if the value there isn't -1), that special node will be called
+one of the other fields. If this doesn't happen, and a special node is given in Jump To
+(in other words, if the value there isnt -1), that special node will usually be called
 when this special node is through.</p>
 <p><br></p>
 <p>These meanings for the fields are not without exceptions. Some fields sometimes mean
@@ -251,9 +247,8 @@ special node is triggered in town, a town special node is called. If the special
 triggered while walking or searching outdoors, a special node from that outdoor section is
 called.</p>
 <p>Most of your special encounters will be called when the party walks onto a specified
-space outdoors or in town. In addition, when the party is outdoors and sails a boat onto a
-special encounter on the water, that encounter will be called. However, special encounters
-on the water won't be called while in town.</p>
+space outdoors or in town. In addition, when the party sails a boat onto a special
+encounter on the water, that encounter will be called.</p>
 <p>Scenario special nodes are only called in a few different ways. You can use the General
 type special node Call Global Special to call a scenario special node. Also, when a
 special item is used, a Scenario special node is called.</p>

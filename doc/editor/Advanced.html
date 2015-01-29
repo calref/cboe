@@ -44,19 +44,19 @@ future that the shield has been taken.</p>
 
 <h2>Stuff Done Flags - the Specifics</h2>
 
-<p>But what are the Stuff Done Flags? Picture a grid of numbers, 300 wide and 10 high, all
-of which start at 0. These 3000 numbers are your Stuff Done Flags, and they are all set to
-0 when the party starts a scenario (and are saved in the save file, which is how the game
-remembers what you've done already when the save file is opened).</p>
+<p>But what are the Stuff Done Flags? Picture a grid of numbers, 300 wide and 50 high, all
+of which start at 0. These 15000 numbers are your Stuff Done Flags, and they are all set
+to 0 when the party starts a scenario (and are saved in the save file, which is how the
+game remembers what you've done already when the save file is opened).</p>
 
 <p>Stuff Done Flag are described by coordinates. Much as the coordinates of a spot of
 terrain are given by an X and Y value, a Stuff Done Flag has coordinates too. The first
 coordinate of a Stuff Done Flag is the column it is in (out of 300 columns, a number from
-0 to 9), and the second coordinate of a Stuff Done Flag is the row it is in (out of 10
-rows, a number from 0 to 299). For example, the taking of a shield may be attached to
-Stuff Done Flag X = 112, Y = 3, also written (112,3). Later chapters often refer to the
-two parts of a Stuff Done Flag (the X coordinate is the first part and the Y coordinate is
-the second part). In the example, 112 is the first part, and 3 is the second part.</p>
+0 to 299), and the second coordinate of a Stuff Done Flag is the row it is in (out of 50
+rows, a number from 0 to 49). For example, the taking of a shield may be attached to Stuff
+Done Flag X = 112, Y = 3, also written (112,3). Later chapters often refer to the two
+parts of a Stuff Done Flag (the X coordinate is the first part and the Y coordinate is the
+second part). In the example, 112 is the first part, and 3 is the second part.</p>
 
 <p>All Stuff Done Flags start as 0 when the scenario is started. For every event or thing
 that must be remembered, you will need to assign a Stuff Done Flag to it. When the party
@@ -89,23 +89,24 @@ Stuff Done Flags with first part 0 ((0,0), (0,1), etc.). In town 1, only use Stu
 Flags with first part 1, and so on. For outdoor sections, use the Stuff Done Flags with
 first part 200, 201, 202, and so on. This way, you can be sure when designing town 8, you
 wont use a Stuff Done Flag already needed for town 4.</p>
-<p>Of course, in some towns you will need to use more than 10 Stuff Done Flags. When this
+<p>Of course, in some towns you will need to use more than 50 Stuff Done Flags. When this
 happens, you can consult your notes to find Stuff Done Flags that aren't being used for
 anything yet.</p>
 
 <h2>Text Length</h2>
 
-<p>When writing text messages or dialogue, the maximum message length is 256 characters.
-If the message is too long, it will be chopped off at 256 letters.</p>
+<p>When writing text messages or dialogue, you need to take care about the length of the
+messages. Although the scenario editor makes no restrictions on message length, there is
+only so much space in-game to display the messages, so if a message is too long, it will
+be cut off.</p>
 
 <h2>Editing Text</h2>
 
-<p>The scenario, each town, and each outdoor section has a list of pieces of text. The
-scenario has 260 pieces of text, each town has 140 pieces of text, and each outdoor
-section has 108 pieces. Selecting Edit Text from the Scenario, Outdoor, and Town menus
-will bring up the lists of text. To edit a piece of text, click on it. Each piece of text
-in each list has a specific purpose. The meanings of the text are listed in the
-appendices.</p>
+<p>The scenario, each town, and each outdoor section has a list of text strings used for
+special encounters. Each town and each outdoor section has an additional list of text
+strings used for signs. To edit these text strings, select "Edit Text" or "Edit Signs"
+from the appropriate menu. To edit a string, click on it.</p>
+
 <p></p>
 
 <p>At this point, it's time to tackle the most complicated, most powerful thing in the

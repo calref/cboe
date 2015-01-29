@@ -51,6 +51,17 @@ class).
 which checks if the party has a ticket can check for special class 1. Note that items with
 a non-zero special class are taken away from the party when they leave the
 scenario.</li>
+<li><b>Weapon key skill:</b> If the item is a weapon of any kind (but not ammunition such as
+arrows), there will be a place to enter in the key skill for the weapon. You can click the
+Choose button to select the skill from a list. Generally, you should use Archery skill for
+bows and crossbows, one of Edged, Bashing, or Pole Weapons for one- or two-handed weapons,
+Thrown Missiles for thrown missile weapons, and either Archery or Thrown Missiles for
+no-ammo missile weapons.</li>
+<li><b>Missile animation:</b> If the item is a missile of some kind, there will be a place
+to select the missile animation to use when the item is fired in combat. You can click the
+Choose button to select an animation from a list.</li>
+<li><b>Description:</b> Click the Description button at the bottom to edit a long
+description of the item.</li>
 </ul>
 
 <p>An item can also have special abilities, like providing resistance to fire, or being a
@@ -86,41 +97,35 @@ tries to make a potion with it).
 amount of charges goes down by one. When there are no charges left, the item disappears.
 The name of inherent ability types that require charges have a (c) after them. The value of
 these items is calculated the same way as for Usable abilities.</p>
-<p>There are six different classes of item ability type, each with its own properties and
-varieties of items that can possess it. These are listed below, along with whether they
-are classes of Usable or Inherent abilities:</p>
+<p>There are four different classes of item ability type, each with its own properties and
+varieties of items that can possess it. Three of these classes are inherent abilities. THe
+categories are listed below:</p>
 
 <ul>
-<li>Weapon Abilities (Inherent): Abilities of this type can be given to one and two handed
-weapons, weapon ammunition (darts, arrows, etc.) and non-ammunition missiles (like
-slings). None of these items have charges.</li>
-<li>General Abilities (Inherent): Abilities of this type can be given to non-missile items
+<li>Weapon Abilities: Abilities of this type can be given to weapons. Some of these
+abilities can only be given to missiles (like darts or arrows). None of these abilities
+require charges.</li>
+<li>General Abilities: Abilities of this type can be given to non-missile items
 which can be equipped (e.g. rings, armor, sword, but not arrows) but not to items that
 can't (e.g. wands, potions). Only a few of these ability types require that the items
 having them have charges.</li>
-<li>Non-Spell Usable (Usable): Abilities of this type change the status of the party or
+<li>Usable Abilities: Most abilities of this type change the status of the party or
 individual character in some way, such as making them more or less poisoned, or raising or
-lowering health. Abilities of these types can be given to any item that's not a missile
+lowering health. A few instead cast a spell or have a similar effect such as summoning
+monsters. Abilities of these types can be given to any item that's not a missile
 (e.g. arrows, bolts). Being usable item abilities, any item having one of these abilities
 must have charges.</li>
-<li>Spell Usable (Usable): Abilities of this type cast some sort of a spell, such as
-firing a fireball or summoning monsters. Abilities of these types can be given to any item
-that's not a missile (e.g. arrows, bolts). Being usable item abilities, any item having one
-of these abilities must have charges.</li>
-<li>Reagents (Inherent): Items with these abilities are alchemical ingredients, spell
+<li>Reagents: Items with these abilities are alchemical ingredients, spell
 reagents (e.g. smoky crystals, sapphires), or similar substances. All items with an
 ability of this type must have charges, and must be of variety Non-use Object.</li>
-<li>Missiles (Inherent): These abilities can only be given to missiles (e.g. arrows,
-bolts, darts). Each ability is activated when the missile is fired (such as exploding a
-fireball on the target space).</li>
 </ul>
 </ul>
 
 <p>There are a wide variety of special abilities. The abilities (and the meaning of the
-Ability Strength field) are listed in the one of the Appendices.</li>
-<p> To select an ability, press one of the six buttons to the upper right. Each button
-brings up a menu with one of the six classes of special item. The item's ability strength
-(a number from 0 - 10, 10 is strongest) can be entered in the text area just below. The
+extra fields) are listed in the one of the Appendices.</li>
+<p> To select an ability, press one of the four buttons to the upper right. Each button
+brings up a menu with one of the four classes of special item. The item's ability strength
+can be entered in the text area just below. The
 other buttons set other item properties:</p>
 <ul>
 <li>Item Use Properties: For items that affect the party (like healing, or curing/causing
@@ -130,13 +135,16 @@ and hurt the entire party is selected, then the item slows the entire party when
 used.</li>
 <li>Always Identified: If selected, whenever the item is found, it will be identified.</li>
 <li>Magical: The item is magical, and thus can't be augmented by people in towns.</li>
-<li>Cursed: The item is cursed, and a PC equips it, it can't be removed until the curse is
+<li>Cursed: The item is cursed. If a PC equips it, it can't be removed until the curse is
 removed.</li>
 <li>Conceal Ability: When item info is selected for the item, the player won't be told what
 the special ability is.</li>
+<li>Shops won't buy: Shops will not offer to buy the item. This might be useful to prevent
+the party from accidentally selling items that are important to the plot.</li>
 <li>Item Treasure Class: Determines how often the item is left as a treasure by slain
 monsters. The higher the class the less often it is left. If Junk, not left is selected,
-the item will never be found on dead monsters.</li>
+the item will never be found on dead monsters. If Unique, not left is selected, the item
+will also never be found in junk shops.</li>
 </ul>
 </div>
 </body>
