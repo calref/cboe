@@ -5,43 +5,113 @@
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<p class="p1"><b>Section 9: Advanced Topics Introduction</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>As fun as making exciting dungeons filled with nasty monsters can be, often the scenario designers ambitions encompass larger goals. Many designers want to create a plot, with interesting characters and challenging special encounters. This section describes how to move on into these challenging and satisfying realms.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Before progressing too far, it is best to read this chapter in its entirety. The basics here will be necessary to master, if you are to move on.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Counting and Coordinates</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>As described earlier, all counting begins with 0. The first town is town 0, and 2nd town is town 1, and so on. The coordinate system for Blades of Exile towns and dungeons starts with X = 0, Y = 0 (also written (0,0) ) in the upper left.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Stuff Done Flags</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>The single most important concept to master in scenario design is the Stuff Done Flag. The Stuff Done Flags are numbers the game keeps track of, which are used by the game to remember what the party has done in the scenario so far.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>For example, suppose you have a treasure hidden somewhere, like, say, a shield. You only want the party to be able to get that shield once, so the game needs a way to remember that the party has gotten it.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>This is done with a Stuff Done Flag. It is a number that starts at 0, and is matched up with getting the shield. When the shield is reached, the game sees if the Stuff Done Flag is 0. If it is, the shield hasnt been taken yet, so the game gives the party the shield, and the Stuff Done Flag is set to 1. The Stuff Done Flag being 1 tells the game in the future that the shield has been taken.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Stuff Done Flags - the Specifics</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>But what are the Stuff Done Flags? Picture a grid of numbers, 300 wide and 10 high, all of which start at 0. These 3000 numbers are your Stuff Done Flags, and they are all set to 0 when the party starts a scenario (and are saved in the save file, which is how the game remembers what youve done already when the save file is opened).</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Stuff Done Flag are described by coordinates. Much as the coordinates of a spot of terrain are given by an X and Y value, a Stuff Done Flag has coordinates too. The first coordinate of a Stuff Done Flag is the column it is in (out of 300 columns, a number from 0 to 9), and the second coordinate of a Stuff Done Flag is the row it is in (out of 10 rows, a number from 0 to 299). For example, the taking of a shield may be attached to Stuff Done Flag X = 112, Y = 3, also written (112,3). Later chapters often refer to the two parts of a Stuff Done Flag (the X coordinate is the first part and the Y coordinate is the second part). In the example, 112 is the first part, and 3 is the second part.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>All Stuff Done Flags start as 0 when the scenario is started. For every event or thing that must be remembered, you will need to assign a Stuff Done Flag to it. When the party completes some mission, you may decide that (91,9) will become 1, and when a demon is killed, (94,2) will become 1. Later, you can have special encounters check a Stuff Done Flag, and do different things depending on what the value of the Stuff Done Flag is. For this reason, you will want to keep careful notes on your scenario, to make sure that no two events are linked to the same Stuff Done Flag.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Keeping Notes</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>One thing all of the Exile games have had in common is that, when they were done, dozens of pages of careful, intricate notes had been taken about them. For example, in the first Blades of Exile scenario, Valley of Dying Things, when you take the opening stone in Avizos shop, the Stuff Done Flag (1,2) is set to 250. Later, when the player tries to take the stone, the program will see that the Stuff Done Flag (1,2) is not 0, and will know that stone has been taken and should not be given again.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>In the same scenario, when you kill the evil spirit in Blinlock, Stuff Done Flag (2,3) is set to 1. Suppose, however, that the designer has made a mistake and made the Stuff Done Flag (1,2) set to 1 when the spirit was slain. In this case, if the party killed the spirit first (causing (1,2) to be set to 1), and then went to get the opening stone, it wouldnt be there! (because (1,2) has been set to 1, making the game think that the item has been taken, even if it hasnt) Then the party wouldnt be able to finish the game. This is bad. However, careful notes reminded the designer that the Stuff Done Flag (1,2) had already been used, and thus it wasnt used in Blinlock.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>One useful tip for making sure Stuff Done Flags dont get reused: in town 0, only use Stuff Done Flags with first part 0 ((0,0), (0,1), etc.). It town 1, only use Stuff Done Flags with first part 1, and so on. For outdoor sections, use the Stuff Done Flags with first part 200, 201, 202, and so on. This way, you can be sure when designing town 8, you wont use a Stuff Done Flag already needed for town 4.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>Of course, in some towns you will need to use more than 10 Stuff Done Flags. When this happens, you can consult your notes to find Stuff Done Flags that arent being used for anything yet.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Text Length</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>When writing text messages or dialogue, the maximum message length is 256 characters. If the message is too long, it will be chopped off at 256 letters.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Editing Text</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>The scenario, each town, and each outdoor section has a list of pieces of text. The scenario has 260 pieces of text, each town has 140 pieces of text, and each outdoor section has 108 pieces. Selecting Edit Text from the Scenario, Outdoor, and Town menus will bring up the lists of text. To edit a piece of text, click on it. Each piece of text in each list has a specific purpose. The meanings of the text are listed in the appendices.</p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>At this point, its time to tackle the most complicated, most powerful thing in the Blades of Exile editor, the tool that makes the differences between a bland adventure and a masterpiece: special encounters.</p>
-<p class="p2"><br></p>
+<div class="navbar">
+<script src="nav.js"></script>
+</div>
+<div class='content'>
+
+<h1>Section 9: Advanced Topics Introduction</h1>
+
+<p>As fun as making exciting dungeons filled with nasty monsters can be, often the
+scenario designers ambitions encompass larger goals. Many designers want to create a plot,
+with interesting characters and challenging special encounters. This section describes how
+to move on into these challenging and satisfying realms.</p>
+
+<p>Before progressing too far, it is best to read this chapter in its entirety. The basics
+here will be necessary to master, if you are to move on.</p>
+
+<h2>Counting and Coordinates</h2>
+
+<p>As described earlier, all counting begins with 0. The first town is town 0, and 2nd
+town is town 1, and so on. The coordinate system for Blades of Exile towns and dungeons
+starts with X = 0, Y = 0 (also written (0,0) ) in the upper left.</p>
+
+<h2>Stuff Done Flags</h2>
+
+<p>The single most important concept to master in scenario design is the Stuff Done Flag.
+The Stuff Done Flags are numbers the game keeps track of, which are used by the game to
+remember what the party has done in the scenario so far.</p>
+
+<p>For example, suppose you have a treasure hidden somewhere, like, say, a shield. You
+only want the party to be able to get that shield once, so the game needs a way to
+remember that the party has gotten it.</p>
+
+<p>This is done with a Stuff Done Flag. It is a number that starts at 0, and is matched up
+with getting the shield. When the shield is reached, the game sees if the Stuff Done Flag
+is 0. If it is, the shield hasn't been taken yet, so the game gives the party the shield,
+and the Stuff Done Flag is set to 1. The Stuff Done Flag being 1 tells the game in the
+future that the shield has been taken.</p>
+
+<h2>Stuff Done Flags - the Specifics</h2>
+
+<p>But what are the Stuff Done Flags? Picture a grid of numbers, 300 wide and 10 high, all
+of which start at 0. These 3000 numbers are your Stuff Done Flags, and they are all set to
+0 when the party starts a scenario (and are saved in the save file, which is how the game
+remembers what you've done already when the save file is opened).</p>
+
+<p>Stuff Done Flag are described by coordinates. Much as the coordinates of a spot of
+terrain are given by an X and Y value, a Stuff Done Flag has coordinates too. The first
+coordinate of a Stuff Done Flag is the column it is in (out of 300 columns, a number from
+0 to 9), and the second coordinate of a Stuff Done Flag is the row it is in (out of 10
+rows, a number from 0 to 299). For example, the taking of a shield may be attached to
+Stuff Done Flag X = 112, Y = 3, also written (112,3). Later chapters often refer to the
+two parts of a Stuff Done Flag (the X coordinate is the first part and the Y coordinate is
+the second part). In the example, 112 is the first part, and 3 is the second part.</p>
+
+<p>All Stuff Done Flags start as 0 when the scenario is started. For every event or thing
+that must be remembered, you will need to assign a Stuff Done Flag to it. When the party
+completes some mission, you may decide that (91,9) will become 1, and when a demon is
+killed, (94,2) will become 1. Later, you can have special encounters check a Stuff Done
+Flag, and do different things depending on what the value of the Stuff Done Flag is. For
+this reason, you will want to keep careful notes on your scenario, to make sure that no
+two events are linked to the same Stuff Done Flag.</p>
+
+<h2>Keeping Notes</h2>
+
+<p>One thing all of the Exile games have had in common is that, when they were done,
+dozens of pages of careful, intricate notes had been taken about them. For example, in the
+first Blades of Exile scenario, Valley of Dying Things, when you take the opening stone in
+Avizo's shop, the Stuff Done Flag (1,2) is set to 250. Later, when the player tries to take
+the stone, the program will see that the Stuff Done Flag (1,2) is not 0, and will know
+that stone has been taken and should not be given again.</p>
+
+<p>In the same scenario, when you kill the evil spirit in Blinlock, Stuff Done Flag (2,3)
+is set to 1. Suppose, however, that the designer has made a mistake and made the Stuff
+Done Flag (1,2) set to 1 when the spirit was slain. In this case, if the party killed the
+spirit first (causing (1,2) to be set to 1), and then went to get the opening stone, it
+wouldn't be there! (because (1,2) has been set to 1, making the game think that the item
+has been taken, even if it hasn't) Then the party wouldn't be able to finish the game. This
+is bad. However, careful notes reminded the designer that the Stuff Done Flag (1,2) had
+already been used, and thus it wasn't used in Blinlock.</p>
+
+<p>One useful tip for making sure Stuff Done Flags don't get reused: in town 0, only use
+Stuff Done Flags with first part 0 ((0,0), (0,1), etc.). In town 1, only use Stuff Done
+Flags with first part 1, and so on. For outdoor sections, use the Stuff Done Flags with
+first part 200, 201, 202, and so on. This way, you can be sure when designing town 8, you
+wont use a Stuff Done Flag already needed for town 4.</p>
+<p>Of course, in some towns you will need to use more than 10 Stuff Done Flags. When this
+happens, you can consult your notes to find Stuff Done Flags that aren't being used for
+anything yet.</p>
+
+<h2>Text Length</h2>
+
+<p>When writing text messages or dialogue, the maximum message length is 256 characters.
+If the message is too long, it will be chopped off at 256 letters.</p>
+
+<h2>Editing Text</h2>
+
+<p>The scenario, each town, and each outdoor section has a list of pieces of text. The
+scenario has 260 pieces of text, each town has 140 pieces of text, and each outdoor
+section has 108 pieces. Selecting Edit Text from the Scenario, Outdoor, and Town menus
+will bring up the lists of text. To edit a piece of text, click on it. Each piece of text
+in each list has a specific purpose. The meanings of the text are listed in the
+appendices.</p>
+<p></p>
+
+<p>At this point, it's time to tackle the most complicated, most powerful thing in the
+Blades of Exile editor, the tool that makes the differences between a bland adventure and
+a masterpiece: special encounters.</p>
+
+</div>
 </body>
 </html>
