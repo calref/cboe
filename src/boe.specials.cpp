@@ -2580,6 +2580,8 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 			}
 			break;
+		case eSpecType::ONCE_DISPLAY_MSG:
+			break; // Nothing to do here, but need to include it to prevent the below error from showing.
 		default:
 			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
