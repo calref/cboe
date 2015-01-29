@@ -466,10 +466,12 @@ void cItem::append(legacy::item_record_type& old){
 		case 32: // Fire protection
 			ability = eItemAbil::DAMAGE_PROTECTION;
 			abil_data[1] = int(eDamageType::FIRE);
+			if(abil_data[0] >= 7) abil_data[0] /= 2;
 			break;
 		case 33: // Cold protection
 			ability = eItemAbil::DAMAGE_PROTECTION;
 			abil_data[1] = int(eDamageType::COLD);
+			if(abil_data[0] >= 7) abil_data[0] /= 2;
 			break;
 		case 34: // Poison protection
 			ability = eItemAbil::STATUS_PROTECTION;
@@ -478,6 +480,7 @@ void cItem::append(legacy::item_record_type& old){
 		case 35: // Magic protection
 			ability = eItemAbil::DAMAGE_PROTECTION;
 			abil_data[1] = int(eDamageType::MAGIC);
+			if(abil_data[0] >= 7) abil_data[0] /= 2;
 			break;
 		case 36: // Acid protection
 			ability = eItemAbil::STATUS_PROTECTION;
@@ -562,22 +565,27 @@ void cItem::append(legacy::item_record_type& old){
 		case 57: // Protect from undead
 			ability = eItemAbil::DAMAGE_PROTECTION;
 			abil_data[1] = int(eDamageType::UNDEAD);
+			if(abil_data[0] >= 7) abil_data[0] /= 2;
 			break;
 		case 58: // Protect from demons
 			ability = eItemAbil::DAMAGE_PROTECTION;
 			abil_data[1] = int(eDamageType::DEMON);
+			if(abil_data[0] >= 7) abil_data[0] /= 2;
 			break;
 		case 59: // Protect from humanoids
 			ability = eItemAbil::PROTECT_FROM_SPECIES;
 			abil_data[1] = int(eRace::HUMANOID);
+			if(abil_data[0] >= 7) abil_data[0] /= 2;
 			break;
 		case 60: // Protect from reptiles
 			ability = eItemAbil::PROTECT_FROM_SPECIES;
 			abil_data[1] = int(eRace::REPTILE);
+			if(abil_data[0] >= 7) abil_data[0] /= 2;
 			break;
 		case 61: // Protect from giants
 			ability = eItemAbil::PROTECT_FROM_SPECIES;
 			abil_data[1] = int(eRace::GIANT);
+			if(abil_data[0] >= 7) abil_data[0] /= 2;
 			break;
 		case 62: // Protect from disease
 			ability = eItemAbil::STATUS_PROTECTION;
