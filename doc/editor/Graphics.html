@@ -15,56 +15,50 @@
 
 <p>One of the best ways to put your own personal spin on your scenario is to give it your
 own graphics. You can provide your own graphics for monsters, items, terrain (animated or
-not), and dialog pictures (36 x 36).</p>
+not), dialog pictures (36 x 36), talk portraits (32 x 32), terrain map icons (12 x 12),
+and missile animations (18 x 18).</p>
 
 <p>To create your own graphics, you need to use a painting program. The basic dimension of
-customized graphics is 28 x 36. The custom graphics must be arranged in a one single PICT
-(Macintosh) or .BMP file (Windows) which is 280 wide (wide enough for 10 graphics and some
-multiple of 36 (36,72, 108, etc.) high. This single graphic containing all your custom
-graphics is called the custom sheet.</p>
+customized graphics is 28 x 36. The custom graphics must be arranged in image which are
+180 pixels wide and 360 pixels tall. The images must be named sheetX.png where X is a
+number starting from 0. Each image is called a "sheet". Each sheet contains up to 100
+individual icons. For the game to recognize them, they must be placed inside your scenario
+archive, in a subdirectory called "graphics". You can have up to 10 sheets without issues.
+If you have more, certain types of graphics can't be placed on the additional sheets. Only
+items, dialog pictures, and talk pictures can go on sheets after the tenth one.</p>
+
+<p>Also, if you place files in the graphics directory with the same name as any of the
+graphics sheets used by the game, they will override the default sheet by that name. This
+is normally not a good idea, but might be useful if for example you want a completely new
+look for all terrain types.</p>
 
 <p>The custom graphics are arranged on the custom sheet in rows, 10 to each row. Each row
 is considered to have 10 slots. The first ten slots are in the top row, the next 10 slots
 are in the next row, and so on. The upper left graphic is considered slot 0. The top row
 contains slots 0 to 9 (numbered left to right), the second row contains slots 11 to 20,
-and so on.</p>
+and so on. Each sheet contains 100 slots; thus, slots 0 to 99 are on sheet 0, slots 100 to
+199 or on sheet 1, and so forth.</p>
 
-<h2>How to Make Your Custom Sheet (Macintosh)</h2>
+<h2>How to Make Your Custom Sheets</h2>
 
-<p>Make your graphic in a painting program. Make it in the standard Macintosh 256 color
-palette. Find a copy of the freeware Apple utility ResEdit (available online, or at the
-Spiderweb Software web site, www.spidweb.com). Run it and make a new resource file. Give
-the file the same name as your scenario file, but with .meg at the end instead of .exs
-(for example, if your scenario is called swords.exs, title the graphics resource file
-swords.meg).</p>
+<p>Make your graphic in a painting program, and save it as 8-bit PNG (both indexed and RGB
+will work). For monster, item, and missile graphics, the slots must have a transparent
+background.</p>
 
-<p>Select the custom sheet in your painting program, and copy it. Move to ResEdit, and
-select paste to paste your graphic into the resource file as a PICT. Double click on the
-PICT icon in the ResEdit window, and you will see your custom graphic. Click on it, hit
-Command-I, and give the PICT resource number 1. Save the file, and copy it into the Blades
-of Exile Scenario folder.</p>
+<p>Once you have your graphics sheet, there are a few ways to get it into the
+scenario. A scenario generally consists of a archive file (specifically, a gzipped
+tarball) containing various resource files, so you could put the graphics into the archive
+yourself, either by decompressing it and recompressing it or by using a program that
+allows you to open an archive without uncompressing it.</p>
 
-<h2>How to Make Your Custom Sheet (Windows)</h2>
-
-<p>You must make your graphic in a painting program. However, you need to use a palette
-similar to the Blades of Exile palette. Create a copy of one of the Blades of Exile
-graphics files. Give the file the same name as your scenario file, but with .bmp at the
-end instead of .exs (for example, if your scenario is called swords.exs, title the bitmap
-file swords.bmp).</p>
-
-<p>Open it with your painting program, and change its size to the size of your custom
-sheet. Draw your graphic here, so that you can be sure to be using the same palette as
-Blades of Exile. Place your bitmap file in the BLDSSCEN folder to use it.</p>
-<p></p>
-<p>Note that Macintosh and Windows custom graphics are not compatible. If you don't know
-how to translate a custom graphics file, submit your full scenario at www.spidweb.com (or
-mail a copy on disk to us) and we'll translate your graphics file when we put your
-adventure on our web site (more on this in the next chapter).</p>
-
-<p>Custom graphics can be drawn in the scenario editor. To see your custom graphics, place
-your custom graphics file in the same folder/directory as your scenario. If your graphics
-file isn't there, the custom graphics won't be known. This is a good way to test to make
-sure your custom graphics file is valid.</p>
+<p>However, there's an easier way. Open your scenario in the scenario editor, then go to
+the OBoE temporary files folder, where you'll find an uncompressed copy of your scenario.
+(On the Mac, this can be found at "~/Library/Application Support/Blades of Exile"; on
+Windows, it will be at "%APPDATA%/Blades of Exile".) Simply drop the files into the
+graphics subdirectory within the scenario directory (if it doesn't exist, you can create
+it), then return to the scenario editor and save the scenario. The scenario will
+automatically add the new graphics to the archived copy of the scenario. You may need to
+reload the scenario in the editor before it notice them, however.</p>
 
 <h2>Placing and Using Your Custom Graphics</h2>
 
@@ -116,15 +110,32 @@ consecutive custom sheet slots (pushed into the upper left corner).</p>
 select Display Dialog (Dialog pic) as the special node type. Add 1000 to the slot the left
 half is in, and put that number in the Pict spot.</p>
 
-<p><b>Item - </b>An item graphic takes up one 28 x 36 slot. Add 150 to the slot the
-graphic is in, and put that number in the Item Picture field on the editing items window.
-You can only put new item graphics in the first 105 slots (the highest item graphic number
-Blades can handle is 255).</p>
+<p><b>Item - </b>An item graphic takes up one 28 x 36 slot. Add 1000 to the slot the
+graphic is in, and put that number in the Item Picture field on the editing items window.</p>
+
 <p><b>Face in Dialogue - </b>You can customize the face of a character the party is
 talking to. A dialogue face is a 32x32 graphic. Split the graphic into 2 16x32 halves, and
 put them in two adjacent slots (left half in one slot, and then the right half in the next
 slot). Add 1000 to the slot the left half is in, and put that number in the Facial Graphic
 space in the Editing a Townsperson/Monster window.</p>
+
+<p><b>Missile Animation - </b>You can assign custom missile animations for missile weapons
+and monster abilities. A missile animation consists of 8 separate 18x18 graphics, one for
+each of the cardinal directions. The animation will take up 4 slots in your custom
+graphics sheets. Place the north icon in the first slot, aligned to the left and top.
+Similarly, the northeast graphic goes in the second slot, the east graphic in the third
+slot, and the southeast graphic in the fourth slot. The remaining four graphics go in the
+same slot as the opposite direction, but aligned to the left and bottom. Add 1000 to the
+slot the north and south graphics are in, and put that number in the text field where a
+missile graphic is requested.</p>
+
+<p><b>Terrain Map Icons - </b>A terrain map icon is 12x12 pixels, and each slot on the
+custom graphic sheet can hold six of them. Within a single slot, the terrain map icons are
+numbered 1 through 6, from left to right, top to bottom. Multiply that number by 1000,
+then add it to the number of the slot the icons are in. Put the resulting number in the
+map icon text field in the Editing Terrain window. Example: Suppose you have map icons in
+the slot at row 5, column 3 of sheet 2, and you want to use the left middle icon in that
+slot for a terrain. The number you put in the map icon text field would be 3253.</p>
 <p></p>
 <p>For examples of using custom graphics, look at the scenarios that came with Blades of
 Exile. The three Blades of Exile scenarios, between them, contain examples of Custom

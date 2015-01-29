@@ -112,12 +112,12 @@ where you can directly edit the special nodes and the town text respectively.</l
 <li><em>Set Town Event Times (Advanced)</em>: You can have special nodes called at regular
 time intervals while the party is in the town. Select this option, and a dialog box will
 come up. Enter the time between calling the node in the left column, and the special node
-to call to the right. Press Create/Edit to create the special. Dont make the interval
+to call to the right. Press Create/Edit to create the special. Don't make the interval
 between calling specials too low ... special encounters slow the game down.<!-- That was
 the '90s. Does this still apply, given our new code and new machines? ---></li>
 </ul>
 
-<h2>Town Details, Advanced Town Details</h2>
+<h2>Town Details</h2>
 
 <p>There are two dialog boxes to edit the town details and advanced town details, which
 are accessed through the Town menu.</p>
@@ -130,8 +130,8 @@ it will be like to play through.</p>
 <li><em>Town name</em>: The name of the town.</li>
 <li><em>Day When Town Dies, Event Which Prevents Town Death (Advanced)</em>: After the
 given day, you can have the town be abandoned (i.e. empty of creatures). If the given day
-is left at -1, this doesnt happen. You can also have an event which prevents the town from
-being emptied at the given day. To have an event prevent this, enter the events number (1
+is left at -1, this doesn't happen. You can also have an event which prevents the town from
+being emptied at the given day. To have an event prevent this, enter the event's number (1
 .. 9) in the second text area. For more on this, read the section on Time Passing in the
 Special Encounters Chapter.</li>
 <li><em>Lighting</em>: A town can be fully lit, dark, very dark (torches burn down
@@ -142,12 +142,15 @@ Note that this will remove friendly monsters as well.</li>
 <li><em>Difficulty</em>: This is a number from 0 to 10. The higher the number, the harder
 the town is, i.e. the faster wandering monsters appear and the more challenging locks and
 traps are.</li>
+<li><em>Comment</em>: This is a space for you to add notes to yourself.</li>
 </ul>
+
 <h3>Advanced Town Details Window</h3>
 
 <p>You can also edit more complicated features of the town in this window. All of these
 are advanced topics. For all of these fields, if the value is left at -1, it is
-ignored.</p>
+ignored. For the special node fields, the tiny buttons next to them allow you to
+edit the special node, just like the Create/Edit button in other dialogs.</p>
 <ul>
 <li><em>Exit Town Specials</em>: When the party leaves town while heading in a certain
 direction, you can have a town special node called. Enter the number of the node to call.
@@ -155,15 +158,31 @@ You can use the Edit Special Nodes option in the Town menu to create the special
 encounter.</li>
 <li><em>Town Entry Special Node</em>: You can also set town special nodes to be called
 when the town is entered while abandoned or not abandoned.</li>
+<li><em>Town Hostile Special Node</em>: You can also set a special node to be called when
+the town goes hostile.</li>
 <li><em>Exit Town Location</em>: When the party leaves the town, you may want the party to
 end up in different areas in the current outdoor section. Enter the locations in the
 outdoor section for the party to arrive at when leaving town in that direction.</li>
+<li><em>Backgrounds:</em> You can set the background to appears behind the game interface
+when the player is in this town, and a separate background to use when they enter combat
+mode in this town. If either is left at -1, the game checks the backgrounds set in the
+current outdoor section; if those are also -1, it uses the defaults set in the scenario
+details.</lie>
 <li><em>Town Hidden</em>: You can have a town be invisible when the party enters the
 scenario, only to be made visible by a special encounter (for example, the Show/Hide Town
 node type). To do this, press this button. Note that towns are only hidden when the party
-enters a scenario. If you add a town to a scenario and set it has hidden while a party is
+enters a scenario. If you add a town to a scenario and set it as hidden while a party is
 in the scenario, that party will still be able to see the town. If that party leaves the
-scenario and then reenters, the town will be properly hidden.</li>
+scenario and then re-enters, the town will be properly hidden.</li>
+<li><em>No Automap</em>: You can prevent the automap from functioning in this town.</li>
+<li><em>Defy Scrying</em>: This flag prevents the Magic Map spell from working. It does
+not affect the True Sight spell.</li>
+<li><em>Strong Barriers</em>: If this flag is set, monsters will be unable to break
+through magical barriers in this town, and the Dispel Barrier spell has a lower chance of
+breaking them as well.</li>
+<li><em>Create New PCs</em>: Set this flag to allow the player to add a new PC while in
+this town. Generally, this is set in the starting town, but you may also want to set it in
+other towns, especially if you can't return to the starting town later.</li>
 </ul>
 
 <h2>Placing Items</h2>
@@ -171,12 +190,13 @@ scenario and then reenters, the town will be properly hidden.</li>
 <p>You can place preset items in towns for the party to find. To place an item, select one
 from the I1 - I5 menus, and click on the space to place it on. To edit a placed item,
 press the Edit Item button (in the lower right hand corner) and click on the item to
-edit.</p>
+edit. While editing an item, you can click the Delete button to remove it from the town.</p>
 <p>When you select an item to edit, the Editing Preset Item window will come up. You can
 change which item is here by pressing the Choose button. If you want to set the amount of
-gold or food here or the number of charges the item has (it it's a wand, set of arrows, or
-other item with charges) enter the new amount in the Amount or Charges Text field.
-Finally, there are three options at the bottom of this window:</p>
+gold or food here or the number of charges the item has (if it's a wand, set of arrows, or
+other item with charges) enter the new amount in the Amount or Charges Text field. If it's
+melee weapon, you can set it to be enchanted by clicking the Choose button next to the
+Enchantment field. Finally, there are three options at the bottom of this window:</p>
 <ul>
 <li><em>Always Here</em>: Normally,when the party takes an item,it won't be there the next
 time they enter the town. If this option is selected, the item will be there every time
@@ -200,16 +220,17 @@ click on the monster. The monster dialog window has several options:</p>
 
 <ul>
 <li><em>Creature Type</em>: Press to select a new monster type.</li>
-<li><em>Creature Starting Attitude</em>: Select Friendly (wont attack), Friendly, Will
-Fight (wont fight party, and will fight bad monsters), Hostile, Type A (will attack the
+<li><em>Creature Starting Attitude</em>: Select Friendly (won't attack), Friendly, Will
+Fight (won't fight party, and will fight bad monsters), Hostile, Type A (will attack the
 party, and monsters of type Hostile Type B), and Hostile, Type B (will attack the party,
 and monsters of type Hostile Type A).</li>
-<li><em>Creature Can Move</em>: If no, monster cant move.</li>
-<li><em>Personality</em>: If left at -1, the creature cant be talked to. Otherwise, see
+<li><em>Creature Can Move</em>: If no, monster can't move.</li>
+<li><em>Personality</em>: If left at -1, the creature can't be talked to. Otherwise, see
 chapter on Dialogue.</li>
 <li><em>Facial Graphic</em>: Press Choose to select the picture the player sees when
 talking to this character. If this is left at -1 and the character can be talked to, the
-player will see the creatures graphic on the talking screen.</li>
+player will see the creature's graphic on the talking screen.</li>
+<li><em>Delete</em>: Remove this creature from the town.</li>
 </ul>
 
 <p>There are also more advanced settings for any placed creature. Press the Advanced
@@ -222,7 +243,7 @@ occurred. For a more detailed description of how time works, read the chapter on
 Time.</p>
 <p>Note that, if the town has been abandoned, creatures never appear.</p>
 <p>There are two text editing areas after these buttons, where you will enter the days the
-creatures appear/disappear and the events theyre linked to. The first area will always get
+creatures appear/disappear and the events they're linked to. The first area will always get
 a day, and the second area will get the number of a special event (0 - 9, with 0 meaning
 no event).</p>
 
@@ -241,6 +262,10 @@ days 3,6,9, etc. This can be used for a character which travels from town to tow
 here.</li>
 <li><em>Disappear When Event</em>: Once event in second box has occurred, creature
 disappears.</li>
+<li><em>Appear After Town Dies</em>: The creature does not exist until the town has died.
+A town can die in two ways - either the maximum number of monsters are killed, or the day
+it is supposed to die is reached without the event that should prevent it occurring.
+Creatures with this set are the only creatures that will exist in a dead town.</li>
 <li><em>Special Encounter Group (Advanced)</em>: You can specify that a creature in a town
 will not be there at first, but will be brought into being by a special encounter. You can
 have 10 different groups of these creatures, who will be brought into being by calling a

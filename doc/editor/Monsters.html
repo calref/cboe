@@ -35,8 +35,7 @@ sides, the program generates 8 random numbers from 1 to 11, adds them up, and do
 much damage. A monster can have up to 3 different attacks.</li>
 <li><b>Monster Type:</b> Press Choose to pick a monster type (e.g. human, insect, demon,
 etc.).</li>
-<li><b>Attack 1 Type, Attack 2-3 Type:</b> Press Choose to select an attack type (e.g. bite,
-claw, etc.)</li>
+<li><b>Attack 1 Types:</b> Press Choose to select an attack type (e.g. bite, claw, etc.)</li>
 <li><b>Treasure:</b> Determines how much treasure the monster leaves when killed (0 - none,
 to 4 - lots). Don't have common creatures leave treasure of type 3 or 4.</li>
 <li><b>Default Talking Picture:</b> Press Choose to select the default picture the player
@@ -54,30 +53,40 @@ the Abilities button.</p>
 <p>The monster abilities screen has a wide variety of options.</p>
 
 <ul>
-<li><b>Monster Poison -</b> A number from 0 to 8 (0 - none, 8 - powerful).</li>
-<li><b>Breath Weapon, Breath Weapon Type -</b> The weapon is a number from 0 to 40 (0 -
-none, 40 - strong). This is the number of random numbers from 1 to 8 to sum to generate
-the breath damage. The type is the damage type of the breath (e.g. fire, cold, etc.).</li>
-<li><b>Special Ability - </b> Press choose to pick the monster's special ability. These are
-listed in the Monster Abilities section, later in this chapter.</li>
+<li><b>Special Abilities - </b> Press Add to add a new special ability. Press Edit to edit
+the parameters of an existing special ability. If there are more than four special
+abilities, use the arrow buttons to navigate through them. Abilities are listed in the
+Monster Abilities section, later in this chapter. They are also covered in more detail in
+the appendices.</li>
 <li><b>Summon Type -</b> Determines whether the monster can be summoned by the mages
 summoning spells. Type 1 monsters are easy to summon, while Type 3 monsters require much
 more powerful spells. If No Summon is selected, spells never summon the monster.</li>
-<li><b>Create Monsters/Fields -</b> Press choose to pick the monster's ability to summon aid
-or radiate magical fields. Several of these require giving an extra value in the text area
-just below. The abilities and values needed are listed in the Monster Abilities section,
-later in this chapter.</li>
 <li><b>Item To Drop When Killed, Chance of Dropping -</b> The number of an item to place
 when the monster is killed (like a spider fang when a spider is killed in Exile), and the
 chance to place it (0 - 100).</li>
-<li><b>Monster Resistances -</b> You can have the monster take half or no damage from fire,
-cold, magic, and poison.</li>
+<li><b>Monster Resistances -</b> When the monster takes damage from fire, cold, magic, or
+poison, specify what percentage of the damage will be taken. The percentage can be more
+than 100.</li>
+<li><b>Invisible -</b> Monster can't be seen. You can select a graphic for this creature,
+but it's only seen when editing the town, not playing the scenario.</li>
+<li><b>Mindless -</b> Creature is immune to fear.</li>
+<li><b>Invulnerable - </b> Creature practically immune to damage.</li>
+<li><b>Guard -</b> Creature is a guard. When the party commits a crime and makes the town
+hostile, it becomes stronger and will immediately seek out the party to kill them (even if
+it started out immobile).</li>
+<li><b>Special Node When Seen -</b> When the party sees a monster of this type for the
+first time, this special node will be called. Click the Create/Edit button to edit the
+special node.</li>
+<li><b>Vocalization -</b> Occasionally when a monster of this type is onscreen, the
+specified sound will be played. For example, use this to make a dog occasionally bark at
+you.</li>
 </ul>
 
 <h2>Monster Abilities:</h2>
 
-<p>There are two different classes of monster abilities: regular special abilities and
-fields/summoning abilities. The regular abilities are:</p>
+<p>When adding a new ability, you will be given a list of abilities to choose from. Some
+abilities will bring up an additional dialog for more information after you've chosen
+them.</p>
 
 <ul>
 <li><b>No Ability -</b> No special ability.</li>
@@ -87,58 +96,65 @@ missiles.</li>
 stone.</li>
 <li><b>Spell Point Drain Ray - </b> Monster fires ray which drains spell points.</li>
 <li><b>Heat Ray -</b> Monster fires ray which does fire damage.</li>
-<li><b>Invisible -</b> Monster can't be seen. You can select a graphic for this creature,
-but it's only seen when editing the town, not playing the scenario.</li>
-<li><b>Splits When Hit -</b> When hit, monster splits into two weaker creatures. Don't give
-creatures like this too many health points.</li>
-<li><b>Mindless -</b> Creature is immune to fear.</li>
-<li><b>Breathes Stinking Clouds -</b> Monster fires clouds of stinking cloud.</li>
-<li><b>Icy Touch -</b> When hitting in combat, victim takes cold damage.</li>
-<li><b>Experience Draining Touch -</b> When hitting in combat, victim loses experience.</li>
-<li><b>Icy and Draining Touch -</b> When hitting in combat, victim loses experience and
-takes cold damage.</li>
-<li><b>Slowing Touch - </b> When hitting in combat, victim is slowed.</li>
-<li><b>Shoots Webs -</b> Monster fires globs of web.</li>
-<li><b>Steals Food -</b> When hitting in combat, victim loses food.</li>
-<li><b>Permanent Martyrs Shield - </b> Anyone hitting creature in combat takes damage.</li>
 <li><b>Paralysis Ray -</b> Monster fires ray which paralyzes target.</li>
-<li><b>Dumbfounding Touch - </b> When hitting in combat, victim is dumbfounded.</li>
+<li><b>Breathes Fire -</b> Monster has a breath weapon that deals fire damage.</li>
+<li><b>Breathes Frost -</b> Monster has a breath weapon that deals cold damage.</li>
+<li><b>Breathes Electricity -</b> Monster has a breath weapon that deals magic damage.</li>
+<li><b>Breathes Darkness -</b> Monster has a breath weapon that deals unblockable
+damage.</li>
+<li><b>Breathes Stinking Clouds -</b> Monster fires clouds of stinking cloud.</li>
+<li><b>Breathe Sleep Clouds - </b>Monster fires sleep clouds.</li>
+<li><b>Acid Spit - </b> Monster spits globs of acidic spittle.</li>
+<li><b>Shoots Webs -</b> Monster fires globs of web.</li>
+<li><b>Poisonous -</b> Monster does poison damage along with its primary attack.</li>
+<li><b>Acid Touch - </b> When hitting in combat, victim is covered with acid.</li>
 <li><b>Disease Touch - </b> When hitting in combat, victim is diseased.</li>
+<li><b>Web Touch - </b> When hitting in combat, victim is webbed.</li>
+<li><b>Sleep Touch</b> When hitting in combat, victim falls asleep.</li>
+<li><b>Dumbfounding Touch - </b> When hitting in combat, victim is dumbfounded.</li>
 <li><b>Paralysis Touch -</b> When hitting in combat, victim has chance of being
 paralyzed.</li>
 <li><b>Petrification Touch -</b> When hitting in combat, victim has chance of being turned
 to stone.</li>
-<li><b>Acid Touch - </b> When hitting in combat, victim is covered with acid.</li>
-<li><b>Breathe Sleep Clouds - </b>Monster fires sleep clouds.</li>
-<li><b>Acid Spit - </b> Monster spits globs of acidic spittle.</li>
 <li><b>Death Touch - </b> When hitting in combat, victim has chance of dying.</li>
-<li><b>Invulnerable - </b> Creature practically immune to damage.</li>
-<li><b>Guard -</b> Creature is a guard. When the party commits a crime and makes the town
-hostile, it becomes stronger and will immediately seek out the party to kill them (even if
-it started out immobile).</li>
-</ul>
-
-<p>Each monster can also radiate dangerous fields, or summon monsters to its aid. Press
-the Choose button to select one of these abilities. You will then need to input an extra
-value into the text area just below:</p>
-
-<ul>
-<li><b>Radiate Fire Fields (or ice, shock, antimagic, sleep, or stink fields): </b>The
-monster occasionally surrounds itself with a field of the selected sort. The extra value
-is the chance of the creature doing so on any given turn.</li>
-<li>If a creature radiates fire fields, you probably shouldn't put it near creatures who
-aren't immune to fire.</li>
-<li><b>Summon (%5, %20, %50 chance):</b> The extra value is the number of the creature this
+<li><b>Experience Draining Touch -</b> When hitting in combat, victim loses experience.</li>
+<li><b>Icy Touch -</b> When hitting in combat, victim takes cold damage.</li>
+<li><b>Icy and Draining Touch -</b> When hitting in combat, victim loses experience and
+takes cold damage.</li>
+<li><b>Stunning - </b> When hitting in combat, victim is slowed.</li>
+<li><b>Steals Food -</b> When hitting in combat, victim loses food.</li>
+<li><b>Steals Gold -</b> When hitting in combat, victim loses gold.</li>
+<li><b>Splits When Hit -</b> When hit, monster splits into two weaker creatures. Don't give
+creatures like this too many health points.</li>
+<li><b>Permanent Martyrs Shield -</b> Anyone hitting creature in combat takes damage.</li>
+<li><b>Absorb Spells -</b> When the monster would normally take damage from magic, it instead
+gains health.</li>
+<li><b>Summon (%5, %20, %50 chance) -</b> The extra value is the number of the creature this
 creature occasionally summons. The chance is the chance each turn of the creature
 appearing.</li>
-<li><b>Death Triggers Scenario Special (Advanced):</b> The extra value is the number of a
+<li><b>Radiate Fields - </b>The monster occasionally surrounds itself with a field of the
+selected sort. The extra value is the chance of the creature doing so on any given
+turn.
+<p>If a creature radiates fire fields, you probably shouldn't put it near creatures who
+aren't immune to fire.</li>
+<li><b>Special Ability (Advanced) -</b> On its turn, the monster sometimes calls a special
+node as its action, which can do anything a special node can do. This can be used to
+create special abilities that are otherwise not supported - for example, you could use
+this to make a monster that can teleport.</li>
+<li><b>Death Triggers Scenario Special (Advanced) -</b> The extra value is the number of a
 scenario special node, which is called when a creature of this type is killed.</li>
+<li><b>Custom Ability (Advanced) -</b> Most of the abilities listed above are pre-made
+templates for ease of use. However, the ability system is quite a bit more flexible. If
+you prefer, you can create an ability yourself that doesn't quite fit into the above
+categories. See the appendix for details on how to do this.</li>
 </ul>
 
 <h2>Some Monsters Should be Left Alone</h2>
 
 <p>Certain monster types are summoned by mage spells, and should be left alone. These
-monster types are Guardian, Demon, Snake, Asp, Shade, and Deva.</p>
+monster types are Guardian, Demon, Snake, Asp, Mung Rat, Shade, and Deva. You can easily
+tell that you're editing one of these monsters by looking at the non-editable "Summoned
+By" field at the bottom of the Edit Monster Type dialog.</p>
 </div>
 </body>
 </html>

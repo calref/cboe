@@ -69,39 +69,88 @@ special nodes (see Special Encounters). If this is a terrain type that you often
 change to something else (such as a closed portcullis, which you may often want to change
 to an open portcullis), enter the number of the terrain type to change it to here. Then,
 to change the terrain type, use a Transform Terrain special node.</li>
-<li><b>Special Properties, Extra 1, Extra 2 -</b> These fields are where you give the
+<li><b>Ground Type -</b> This is a number used to identify the basic type of this terrain.
+For example, all terrains on normal cave floor have ground type 0. Similarly, all terrains
+on normal indoor stone floor have ground type 13. This is also used for walls and fluids -
+basic stone wall is ground type 10, for example. This is used for various purposes in the
+game and the editor, such as conformance of complex frills (like the edges of hills),
+drawing of small frills on fluids, and so forth.</li>
+<li><b>Trim Terrain -</b> This is used in conjunction with the trim type. See below for
+details.</li>
+<li><b>Trim Type - </b> This specifies the terrain's trim properties. Click the Choose
+button to select between several options:
+<ul>
+<li><b>Wall -</b> Terrains with this trim type will have their outer corners slightly
+rounded off to match the adjacent terrains. In addition, terrains with transitions will
+conform to them in the editor.</li>
+<li><b>Cardinal Directions -</b> These trim types are used by the editor to draw
+conforming terrains. The Ground Type field must be set to match the primary terrain to
+conform to, while the Trim Terrain field should be set to the Ground Type of the secondary
+terrain. For example, hill trims transition between hills (with ground type 4) and grass
+(with ground type 1), so their Trim Terrain is set to 1.</li>
+<li><b>Frills -</b> Terrains with this trim type will have small frills drawn around their
+borders to match the the adjacent terrains.</li>
+<li><b>Road -</b> Terrains with this trim type will be connected with road segments. In
+addition, if there are two terrains with this trim type separated by a single terrain with
+an appropriate cardinal direction trim type, the road segment will be extended across the
+transition.</li>
+<li><b>Walkway -</b> Terrains with this trim type have their corners rounded off. The Trim
+Terrain field specifies the Ground Type of the base terrain to use for rounding off.</li>
+<li><b>Waterfall -</b> This trim type behaves like the Wall type but also prevents the
+drawing of small frills next to it.</li>
+<li><b>City -</b> If adjacent to a terrain with the Road trim type, a terrain with this
+trim type will have a road segment connected to it.</li>
+</ul>
+<li><b>Combat Arena -</b> Specifies the type of combat arena to be used when the player
+meets a wandering encounter while on this terrain. You can either use a predefined,
+randomly-generated combat arena, or create a town specifying the exact terrain you
+want.</li>
+<li><b>Object Details -</b> This is only used by the editor. When you place a terrain that
+has an object set, the editor looks for other terrains with the same object and places
+them in nearby spaces. For example, this is how the editor knows to place the other half
+of a large rubble pile when you place the first half.</li>
+<li><b>Map Icon -</b> Specify the icon to be used when showing this terrain on the
+automap. If you set it to -1, the game will shrink down the terrain's main graphic.</li>
+<li><b>Special Properties, Extra 1-3 -</b> These fields are where you give the
 terrain types the really interesting properties. All of the properties are listed on the
 terrain type editing window. To select a property, click on the button by it.</li>
 </ul>
 
 <p>Many of the special properties need more information to work, which you enter in the
-two fields (Extra 1, and Extra 2) at the bottom of the terrain type editing window. The
-window will prompt you with what information needs to be given.</p>
-<p>The special property types, and what you need to enter in Extra 1, and Extra 2 are as
-follows:</p>
+three fields at the bottom of the terrain type editing window. The window will prompt you
+with what information needs to be given.</p>
+<p>The special property types, and what you need to enter in extra fields are as follows:</p>
 
 <ul>
-<li><b>No Property -</b> The default. The terrain is ordinary. Extra 1 and Extra 2 are
-ignored.</li>
+<li><b>No Property -</b> The default. The terrain is ordinary. The extra fields are
+ignored by the game. (However, the scenario editor uses the first extra field to specify a
+small icon to apply to the terrain, which can be useful if you have two terrains with
+different properties but the same appearance.)</li>
 <li><b>Change When Walk -</b> The terrain type changes to another when the party tries to
 walk into it. This happens even if the terrain is blocked to travel. Extra 1 is the number
 of the terrain type the terrain changes into. Extra 2 is the number of the sound that
-plays when this happens (for a list of sounds, look in the Appendices). If Extra 2 is left
-at 200, no sound plays.</li>
-<li><b>Does Fire Damage -</b> When someone walks on this space, fire damage is inflicted.
-Damaged inflicted is a random number from 1 to Extra 1, times Extra 2. Only monsters with
-fire resistance will walk through this space.</li>
-<li><b>Does Cold Damage - </b>Exactly like Fire Damage, but cold damage is inflicted.</li>
-<li><b>Does Magical Damage - </b>Exactly like Fire Damage, but magical damage is
-inflicted.</li>
-<li><b>Poison Land -</b> Poisons people walking on it. Extra 1 is the intensity of the
-poison (a number from 1 to 8, with anything above 4 being pretty lethal). Extra 2 is the
-percentage chance of being affected, a number from 0 to 100 (0 meaning never, and 100
-meaning always).</li>
-<li><b>Diseased Land -</b> Exactly like Poisoned Land, but spreads disease instead of
-poison.</li>
-<li>Crumbling - When Move Mountains or Crumble is cast on this space, it turns into the
-terrain in Extra 1a.</li>
+plays when this happens. If Extra 2 is left at 0, no sound plays.</li>
+<li><b>Does Damage -</b> When someone walks on this space, some type of damage is
+inflicted. Damaged inflicted is inflicted using a dice roll, with the number of dice in
+Extra 2 and the sides per die in Extra 1. The type of damage to inflict is in Extra 3.
+Only monsters with at least half resistance to this damage type will walk through this
+space. If the damage type is not fire, cold, poison, or magic, only invulnerable monsters
+will walk through this space.</li>
+<li><b>Bridge - </b>This terrain is considered to be a bridge. If a party boats into this
+terrain, they will be given a choice whether to stay in the boat. When a boat enters a
+space that would be passable on foot but doesn't have this ability, the party is forced to
+stay in the boat.</li>
+<li><b>Change When Occupied - </b> When the party or a humanoid monster is on this space,
+the PC/monster graphic is suppressed and replaced with a different terrain graphic. This
+is used to show people huddling in bed, for example.</li>
+<li><b>Inflicts Status -</b> Inflicts a status effect on people walking on it. Extra 1 is
+the intensity of the effect (usually a number from -8 to 8; depending on the status
+effect, negative intensities might be either good or bad). Extra 2 is the percentage
+chance of being affected, a number from 0 to 100 (0 meaning never, and 100 meaning
+always). Extra 3 is the status effect to inflict.</li>
+<li>Crumbling - If Extra 2 is 0 or 1, it turns into the terrain in Extra 1 when Move
+Mountains or Shatter is cast on this space. If Extra 2 is 1 or 2, it turns into the
+terrain in Extra 1 when quickfire attempts to spread into this space.</li>
 <li><b>Lockable Terrain -</b> Indicates a terrain type that can be locked. This only comes
 into play when a special node which locks a terrain type is used on the space (see the
 chapter on Special Encounters for more information). When that happens, Extra 1 is the
@@ -113,33 +162,35 @@ difficulty of unlocking the door. This is a number from 0 to 10. The higher the 
 the harder the door is to unlock. If the difficulty is 5 or above, picking locks always
 fails (the door is magically locked and requires an Unlock spell). If the difficulty is
 10, the lock can't be picked and unlock spells don't work. In this case, the only way this
-space can become unlocked is if a special encounter unlocks it.</li>
-<li><b>Unlockable/bashable - </b>This is exactly like Unlockable, except that the party
-can also try to unlock it by bashing.</li>
+space can become unlocked is if a special encounter unlocks it. If Extra 3 is 1, you can
+also attempt to bash the door down.</li>
 <li><b>Is a Sign -</b> This terrain type is a sign. When a space is given this terrain
 type, you will be asked what the sign says. When the party looks at that space, that will
 be the text that is displayed.</li>
-<li><b>Call Local Special -</b> When stepped on, this space calls a town special
-encounter. The number in Extra 1 is the number of the town special encounter node to call.
-<br>Note: If stepped on outside, no special encounter is called.</li>
+<li><b>Call Special -</b> When stepped on, this space calls a special node. If Extra 2 is
+0, a scenario special is called. If Extra 2 is 1, an outdoor special is called if stepped
+on outdoors; otherwise a town special is called. The number in Extra 1 is the number of
+the special encounter node to call.
 <li>Warning: If you create a terrain type with this special property, using it in more
-than one town can have unpredictable effects. If you, for example, have a terrain type
+than one area can have unpredictable effects. If you, for example, have a terrain type
 with this property that calls town special encounter 29, make sure every town you use that
 terrain type in has a sensible special encounter in slot 29.</li>
-<li><b>Call Scenario Special -</b> When stepped on, this space calls a scenario special
-encounter. The number in Extra 1 is the number of the scenario special encounter node to
-call. Terrain with this special property can be used outdoors.</li>
 <li><b>Is a Container - </b>This terrain type can contain items. In the town editor, when
 you place an item on terrain with this property, the item is automatically considered to
 be inside it. Extra 1 and Extra 2 are ignored.
 <br>Example: A dresser, chest, or body.</li>
-<li><b>Waterfall -</b> If the party, while outdoors (not in town), moves in a boat to the
-space just north of a spot of terrain with this property, they are sucked through to the
-space south of it. There is a screaming noise and they lose some food. Extra 1 and Extra 2
-are ignored.</li>
-<li><b>Conveyor belt (north), Conveyor belt (east), Conveyor belt (south), Conveyor belt
-(west) -</b> This space is a conveyor belt, which moves everything on it in the indicated
-direction. Extra 1 and Extra 2 are ignored.</li>
+<li><b>Wilderness (Cave/Surface) -</b> When travelling through a terrain with one of these
+abilities, a PC with the Cave Lore or Woodsman traits may occasionally hunt for food.
+Extra 1 indicates how much food you can obtain from this ability. The ability activates at
+random. The choice of Cave/Surface determines which trait is required.</li>
+<li><b>Waterfall (Cave/Surface) -</b> If the party, while outdoors (not in town), moves in
+a boat to the space (for example) just north of a spot of terrain with this property, they
+are sucked through to the space south of it. There is a screaming noise and they lose some
+food. Extra 1 specifies the direction of suction (the example above is for a south
+waterfall). The choice of Cave/Surface determines whether the Cave Lore or Woodsman trait
+is checked for to reduce the food lost.</li>
+<li><b>Conveyor belt -</b> This space is a conveyor belt, which moves everything on it in
+the indicated direction. Extra 1 specifies the direction it pushes in.</li>
 <li><b>Blocked to Monsters -</b>Monsters will never walk into a space of this type. Extra
 1 and Extra 2 are ignored.</li>
 <li><b>Town Entrance -</b> For use when outdoors. This is the entrance to a town. Stepping
@@ -152,10 +203,11 @@ terrain type in Extra 1a.</li>
 will change to a different terrain type (an example being an open door, which closes).
 Extra 1 is the number of the terrain type it changes to. Extra 2 is the number of the
 sound that plays when this happens (for a list of sounds, look in the Appendices). If
-Extra 2 is left at 200, no sound plays.</li>
-<li><b>Call Scenario Special when used- </b>When used (using the Use button in town mode),
-this space calls a scenario special encounter. The number in Extra 1 is the number of the
-scenario special encounter node to call.</li>
+Extra 2 is left at 0, no sound plays.</li>
+<li><b>Call Special when used- </b>When used (using the Use button in town mode), this
+space calls a special node. The node to call is determined in the same way as the Call
+Special ability. Note however that, since using a space is impossible outdoors, this
+ability will never call an outdoor special node.</li>
 </ul>
 </div>
 </body>

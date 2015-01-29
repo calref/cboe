@@ -276,13 +276,10 @@ encounter will only work correctly if the personality is one of the current town
 personalities. For example, the 10 personalities for town 5 are 50-59. A talking special
 encounter for personality 55 will only work correctly when the party is in town 5. If you
 placed personality 55 in town 6 and the party triggered a special encounter while talking
-to it, it wouldn't work. If you want to have a personality special encounter work no matter
-what town the party triggers it in, use a Call Scenario Special talking node (type 30,
-described below).</p>
-<p>To create the talking special encounter, first select Edit Special Nodes from the town
-menu, select the first node of the special encounter (a node you haven't used yet), and
-create the special encounter. Then, on the dialogue node editing sceen, enter the number
-of the first node of the encounter in A.</p>
+to it, it wouldn't work as you might expect - it would call a special node in town 6,
+rather than one in town 5. If you want to have a personality special encounter work the
+same no matter what town the party triggers it in, use a Call Scenario Special talking
+node (type 30, described below).</p>
 <p>Example: Suppose Text 1 is "He casts a spell", and the special node selected heals the
 party, and is the only special node called. If, in Mess 1 and Mess 2 of that special node,
 no messages are chosen, the character will say "He casts a spell". If messages are chosen in
