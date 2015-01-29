@@ -61,8 +61,8 @@ public:
 	short rating,uses_custom_graphics;
 	std::vector<ePicType> custom_graphics;
 	std::array<cMonster,256> scen_monsters;
-	cVehicle boats[30];
-	cVehicle horses[30];
+	std::array<cVehicle,30> boats;
+	std::array<cVehicle,30> horses;
 	std::array<cTerrain,256> ter_types;
 	short scenario_timer_times[20];
 	short scenario_timer_specs[20];

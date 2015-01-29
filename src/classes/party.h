@@ -78,8 +78,8 @@ public:
 	// TODO: Does this duplicate cCurTown::p_loc? If not, why not?
 	location p_loc;
 	location loc_in_sec;
-	cVehicle boats[30];
-	cVehicle horses[30];
+	std::array<cVehicle,30> boats;
+	std::array<cVehicle,30> horses;
 	cPopulation creature_save[4];
 	short in_boat;
 	short in_horse;
