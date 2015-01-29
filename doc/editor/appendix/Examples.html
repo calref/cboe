@@ -1,38 +1,87 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
   <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="949.46">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 10.0px Helvetica; min-height: 12.0px}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 10.0px Helvetica}
-    span.Apple-tab-span {white-space:pre}
+  <link rel="stylesheet" type="text/css" href="../style.css">
   </style>
 </head>
 <body>
-<p class="p1"><b>Appendix 7 - Special Encounter Examples</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Extra examples can be very useful when making special encounters. Here are a few quick sets of instructions for making popular types of encounters.</p>
-<p class="p3"><span class="Apple-tab-span">	</span>As before, to create a special encounter in a town, press the Place/Edit Special Encounter button and click on the space to place the encounter in. To select the special node type, click one of the six buttons at the top of the special node editing window.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Stairway -</b> To make a multi-level dungeon, you need stairways to connect the levels. Suppose town 6 is the first level of a dungeon and town 7 is the second. You want a stairway at (10,12) in town six leading to (20,23) in town 7.</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Place a special encounter at (10,12), press the Town Specs button and select Generic Stairway. Below will be fields for the X coordinate and Y coordinate to place the party in. Place 20 and 23 in these fields. Enter 7 by Number of Town to Place Party In. Finally, you need to enter a number from 0 to 7 in the final field (What Text), representing what the description of the stairway will be. Best keep it simple. Enter 0 for an up stairway and 1 for down.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Alchemy Ingredients - </b>In Exile I-III, sometimes outdoors the party could find alchemy ingredients. When you took them, within a day or two, they would grow back. You can do this in Blades of Exile. Suppose you want comfrey root to be in a spot outdoors, and every 2 days, it will grow back. Pick a Stuff Done to attach to the root, say, (101,3).</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Place a special encounter outdoors. For type, press One Shots on the special node editing window and select Give Item. Place (101,3) in the stuff done flag fields. Press the Choose button to the right of Item To Give, and select Comfrey Root from the item selection window. This special will automatically give the party the root when they step there. (If you want a dialog box to come up and give the option of whether or not to take it, use one of the Give Item One-Shot special node types).</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Now that the item is there, you need to set things so that the item is occasionally replaced. Two days is about 7500 moves. Select Set Scenario Event Timers from the Scenario menu. In the first row (or the first free row) enter 7500 in the Number of Moves Between Each Call field. Press the Create/Edit button to the right, and the special node editing window will come up. Press General and select Set Flag for the node type. Enter (101,3) into the Stuff Done flag fields, and enter 0 in the Set Flag To field. Now, every two days, the comfrey root will be replaced.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Teaching a Spell - </b>Suppose there is a bookshelf in a town. When the party searches it, you want them to learn the spell Firestorm. Look in Appendix VI, and note that Firestorm is spell 10.</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Place a special encounter in the bookshelf. To pick the type, press the Affect PCs button and select Give Mage Spells. Press Create/Edit in the Message area to type the message the party will read (e.g. You can now cast Firestorm!), and enter 10 into the Which Spell field.</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Now suppose you want the party to only learn the spell if their Mage Lore total is 8. Then make the first node called be an If-Thens Mode of type Has Enough Mage Lore? Set the How Much field to 8. Set the Jump-To special to be the special node called if they don't have enough lore, and the Has Enough Mage Lore special be the node that gives them the spell.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Store Outdoors - </b>Suppose you want a shop outdoors, where the party can buy very cheap arrows. While editing the outdoors, place a special. Press Out Specs on the node editing screen, and select Outdoor Store.</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Press the Choose button to pick the first item in the shop, and select Arrows. Enter 0 for the store type (this means the store sells regular items), and 3 for the Number of Items in the shop (so the shop will then sell arrows, iron arrows, and magic arrows). Finally, put 0 on the Cost Adjust field, to make the arrows very cheap.</p>
-<p class="p2"><br></p>
-<p class="p3"><b>Secret Passages - </b>It is easy to place a secret passage on any space using special encounters. Suppose you want the party to be able to walk through a certain tree. Place a secret encounter on the tree and make it of type Secret Passage (to select this, press the General button).</p>
+<div class="navbar">
+<script src='../nav.js' type='application/javascript'></script>
+<noscript>Javascript required for the navbar.</noscript>
+</div>
+<div class="content">
+
+<h1>Appendix 7 - Special Encounter Examples</h1>
+
+<p>Extra examples can be very useful when making special encounters. Here are a few quick
+sets of instructions for making popular types of encounters.</p>
+<p>As before, to create a special encounter in a town, press the Place/Edit Special
+Encounter button and click on the space to place the encounter in. To select the special
+node type, click one of the six buttons at the top of the special node editing window.</p>
+
+<h2>Stairway</h2>
+
+<p>To make a multi-level dungeon, you need stairways to connect the levels. Suppose town 6
+is the first level of a dungeon and town 7 is the second. You want a stairway at (10,12)
+in town six leading to (20,23) in town 7.</p>
+<p>Place a special encounter at (10,12), press the Town Specs button and select Generic
+Stairway. Below will be fields for the X coordinate and Y coordinate to place the party
+in. Place 20 and 23 in these fields. Enter 7 by Number of Town to Place Party In. Finally,
+you need to enter a number from 0 to 7 in the final field (What Text), representing what
+the description of the stairway will be. Best keep it simple. Enter 0 for an up stairway
+and 1 for down.</p>
+
+<h2>Alchemy Ingredients</h2>
+
+<p>In Exile I-III, sometimes outdoors the party could find alchemy ingredients. When you
+took them, within a day or two, they would grow back. You can do this in Blades of Exile.
+Suppose you want comfrey root to be in a spot outdoors, and every 2 days, it will grow
+back. Pick a Stuff Done to attach to the root, say, (101,3).</p>
+<p>Place a special encounter outdoors. For type, press One Shots on the special node
+editing window and select Give Item. Place (101,3) in the stuff done flag fields. Press
+the Choose button to the right of Item To Give, and select Comfrey Root from the item
+selection window. This special will automatically give the party the root when they step
+there. (If you want a dialog box to come up and give the option of whether or not to take
+it, use one of the Give Item One-Shot special node types).</p>
+<p>Now that the item is there, you need to set things so that the item is occasionally
+replaced. Two days is about 7500 moves. Select Set Scenario Event Timers from the Scenario
+menu. In the first row (or the first free row) enter 7500 in the Number of Moves Between
+Each Call field. Press the Create/Edit button to the right, and the special node editing
+window will come up. Press General and select Set Flag for the node type. Enter (101,3)
+into the Stuff Done flag fields, and enter 0 in the Set Flag To field. Now, every two
+days, the comfrey root will be replaced.</p>
+
+<h2>Teaching a Spell</h2>
+
+<p>Suppose there is a bookshelf in a town. When the party searches it, you want them to
+learn the spell Firestorm. Look in Appendix VI, and note that Firestorm is spell 10.</p>
+<p>Place a special encounter in the bookshelf. To pick the type, press the Affect PCs
+button and select Give Mage Spells. Press Create/Edit in the Message area to type the
+message the party will read (e.g. You can now cast Firestorm!), and enter 10 into the
+Which Spell field.</p>
+<p>Now suppose you want the party to only learn the spell if their Mage Lore total is 8.
+Then make the first node called be an If-Thens Mode of type Has Enough Mage Lore? Set the
+How Much field to 8. Set the Jump-To special to be the special node called if they don't
+have enough lore, and the Has Enough Mage Lore special be the node that gives them the
+spell.</p>
+
+<h2>Store Outdoors</h2>
+
+<p>Suppose you want a shop outdoors, where the party can buy very cheap arrows. While
+editing the outdoors, place a special. Press Out Specs on the node editing screen, and
+select Outdoor Store.</p>
+<p>Press the Choose button to pick the first item in the shop, and select Arrows. Enter 0
+for the store type (this means the store sells regular items), and 3 for the Number of
+Items in the shop (so the shop will then sell arrows, iron arrows, and magic arrows).
+Finally, put 0 on the Cost Adjust field, to make the arrows very cheap.</p>
+
+<h2>Secret Passages</h2>
+
+<p>It is easy to place a secret passage on any space using special encounters. Suppose you
+want the party to be able to walk through a certain tree. Place a secret encounter on the
+tree and make it of type Secret Passage (to select this, press the General button).</p>
+
+</div>
 </body>
 </html>

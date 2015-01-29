@@ -1,64 +1,96 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
   <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="949.46">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 10.0px Helvetica; min-height: 12.0px}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 10.0px Helvetica}
-    span.Apple-tab-span {white-space:pre}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
 <body>
-<p class="p1"><b>Appendix 3 - Starting Terrain Types</b></p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>There are 256 premade terrain types (numbered 0 - 255) in the basic scenario you start with. Many of them have special properties, or need to be handled in different ways. Remember that terrain types 0-90 cant be edited (except for the graphic).</p>
-<p class="p2"><br></p>
-<p class="p3">Type 0,1 - Cave Floors (2 types)</p>
-<p class="p3">Type 2,3,4 - Grass (3 types)</p>
-<p class="p3">Type 5-21 - Cave Walls: Terrain 7, 10, 13, and 16 are secret passages. The party can walk through them. Like hills, mountains, and water, the editor automatically adjusts the walls while youre drawing them.</p>
-<p class="p3">Type 22-35 - Mountains: Type 23 is high mountains, which cant be flown over. Mountains are automatically surrounded with hills while youre drawing them.</p>
-<p class="p3">Type 36-49 - Hills</p>
-<p class="p3">Type 50-62 - Surface Water</p>
-<p class="p3">Type 63-74 - Various waters, with rocks, bridges, etc.: Note that some of these waters are darker and animated, unlike the lighter earlier waters. These darker water spaces are generally used for subterranean water.</p>
-<p class="p3">Type 75,76 - Lava: The second lava type doesnt do damage.</p>
-<p class="p3">Type 77 - Waterfall: When the party moves to the space north of this in a boat, they will be thrown two spaces to the south and will lose some food.</p>
-<p class="p3">Type 78 - Portal</p>
-<p class="p3">Type 79, 80, 81 - Roads (Cave, Grass, Hill): When drawn in the game, the road spaces will be connected by drawn roads. Roads only go up, down, left, and right, not diagonally. You can have a road be drawn smoothly from grass onto hills. To have the road continue unbroken, set the spot of terrain at the border between grass and hills to be hill w. road (not grass w. road).</p>
-<p class="p3">Type 82, 83 - Cave and Grass Walkway: Only use the former when drawing walkways on cave floor. Use the latter when drawing walkways around grass.</p>
-<p class="p3">Type 84-89 - Rubble</p>
-<p class="p3">Type 90 - Pit</p>
-<p class="p3">Type 91-100 - Cave floor terrains (trees, mushrooms, etc.). The swamp poisons the party when they walk on it.</p>
-<p class="p3">Type 101-109 - Cave terrains (boxes, bodies, etc.). Note that the box and body terrain types are containers.</p>
-<p class="p3">Type 110-121 - Grass terrains (trees, shrubbery, etc.). The swamp poisons the party when they walk on it.</p>
-<p class="p3">Type 122 - Basic Wall</p>
-<p class="p3">Type 123,124 - Wall w. Secret Door, Wall w. Visible Secret Door: When the party walks into the former, it turns into the latter.</p>
-<p class="p3">Type 125 - Wall w. Door (Unlocked): Turns into Open Door when walked into.</p>
-<p class="p3">Type 126 - Wall w. Door (Locked): Can be picked or bashed to turn into Door (Unlocked)</p>
-<p class="p3">Type 127 - Wall w. Door (Magically Locked): Must cast Unlock Door to turn into Door (Unlocked). The party can try to pick or bash it, but it doesnt work.</p>
-<p class="p3">Type 128 - Wall w. Door (Impassable): Cant be opened (though a special encounter can change the terrain type). The party can try to pick it, bash it, or cast Unlock Doors, but it doesnt work.</p>
-<p class="p3">Type 129 - Wall w. Open Door: If party uses space, it closes the door.</p>
-<p class="p3">Type 130, 131 - Wall w. Portcullises: Open and closed. The closed portcullis cant be opened.</p>
-<p class="p3">Type 132 - Wall w. Sign</p>
-<p class="p3">Type 133-135 - Cracked Wall, Moldy Wall, Fragile Wall: Casting Move Mountains on these walls turns them to rubble.</p>
-<p class="p3">Type 136,137 - Wall w. Painting, Window: Scenery</p>
-<p class="p3">Type 139-153 - Basalt Walls: All of these terrains function like their regular Wall counterparts They just looks different.</p>
-<p class="p3">Type 154=169 - Adobe Walls: All of these terrains function like their regular Wall counterparts They just looks different.</p>
-<p class="p3">Type 170 - Floor</p>
-<p class="p3">Type 171 - Blocked Floor: Monsters wont walk onto this space.</p>
-<p class="p3">Type 172 - Shock Floor: Damages party when they walk on it.</p>
-<p class="p3">Type 173 - Floor w. Rune: Monsters wont walk onto this space.</p>
-<p class="p3">Type 174-207 - Floors with a variety of decorative terrain types. Some of them (like desk and bookshelf) are containers.</p>
-<p class="p3">Type 208,209 - Levers (Advanced): There are used in conjunction with the lever Town special node types.</p>
-<p class="p3">Type 210-216 - Nice floor with various terrains. Monsters wont walk on 211 (the second nice floor).</p>
-<p class="p3">Type 217-231 - Vahnatai floor types.</p>
-<p class="p3">Type 232-245 - Town entries. Notice the fifth town entry is just grass - this is a hidden town.</p>
-<p class="p3">Type 246-251 - Special encounter spots (Advanced): These are used in conjunction with One Shot special encounter nodes. If you put a One-Shot special on a space with this terrain type, after the special is triggered the white spot will disappear.</p>
-<p class="p3">Type 252-255 - Conveyor Belts: These are conveyor belts, which move the party in the 4 different cardinal directions.</p>
-<p class="p2"><br></p>
+<div class="navbar">
+<script src='../nav.js' type='application/javascript'></script>
+<noscript>Javascript required for the navbar.</noscript>
+</div>
+<div class="content">
+
+<h1>Appendix 3 - Starting Terrain Types</h1>
+
+<p>There are 256 premade terrain types (numbered 0 - 255) in the basic scenario you start
+with. Many of them have special properties, or need to be handled in different ways.
+Remember that terrain types 0-90 cant be edited (except for the graphic).</p>
+
+<ul>
+<li>Type 0,1 - Cave Floors (2 types)</li>
+<li>Type 2,3,4 - Grass (3 types)</li>
+<li>Type 5-21 - Cave Walls: Terrain 7, 10, 13, and 16 are secret passages. The party can
+walk through them. Like hills, mountains, and water, the editor automatically adjusts the
+walls while youre drawing them.</li>
+<li>Type 22-35 - Mountains: Type 23 is high mountains, which cant be flown over. Mountains
+are automatically surrounded with hills while youre drawing them.</li>
+<li>Type 36-49 - Hills</li>
+<li>Type 50-62 - Surface Water</li>
+<li>Type 63-74 - Various waters, with rocks, bridges, etc.: Note that some of these waters
+are darker and animated, unlike the lighter earlier waters. These darker water spaces are
+generally used for subterranean water.</li>
+<li>Type 75,76 - Lava: The second lava type doesnt do damage.</li>
+<li>Type 77 - Waterfall: When the party moves to the space north of this in a boat, they
+will be thrown two spaces to the south and will lose some food.</li>
+<li>Type 78 - Portal</li>
+<li>Type 79, 80, 81 - Roads (Cave, Grass, Hill): When drawn in the game, the road spaces
+will be connected by drawn roads. Roads only go up, down, left, and right, not diagonally.
+You can have a road be drawn smoothly from grass onto hills. To have the road continue
+unbroken, set the spot of terrain at the border between grass and hills to be hill w. road
+(not grass w. road).</li>
+<li>Type 82, 83 - Cave and Grass Walkway: Only use the former when drawing walkways on
+cave floor. Use the latter when drawing walkways around grass.</li>
+<li>Type 84-89 - Rubble</li>
+<li>Type 90 - Pit</li>
+<li>Type 91-100 - Cave floor terrains (trees, mushrooms, etc.). The swamp poisons the
+party when they walk on it.</li>
+<li>Type 101-109 - Cave terrains (boxes, bodies, etc.). Note that the box and body terrain
+types are containers.</li>
+<li>Type 110-121 - Grass terrains (trees, shrubbery, etc.). The swamp poisons the party
+when they walk on it.</li>
+<li>Type 122 - Basic Wall</li>
+<li>Type 123,124 - Wall w. Secret Door, Wall w. Visible Secret Door: When the party walks
+into the former, it turns into the latter.</li>
+<li>Type 125 - Wall w. Door (Unlocked): Turns into Open Door when walked into.</li>
+<li>Type 126 - Wall w. Door (Locked): Can be picked or bashed to turn into Door
+(Unlocked)</li>
+<li>Type 127 - Wall w. Door (Magically Locked): Must cast Unlock Door to turn into Door
+(Unlocked). The party can try to pick or bash it, but it doesnt work.</li>
+<li>Type 128 - Wall w. Door (Impassable): Cant be opened (though a special encounter can
+change the terrain type). The party can try to pick it, bash it, or cast Unlock Doors, but
+it doesnt work.</li>
+<li>Type 129 - Wall w. Open Door: If party uses space, it closes the door.</li>
+<li>Type 130, 131 - Wall w. Portcullises: Open and closed. The closed portcullis cant be
+opened.</li>
+<li>Type 132 - Wall w. Sign</li>
+<li>Type 133-135 - Cracked Wall, Moldy Wall, Fragile Wall: Casting Move Mountains on these
+walls turns them to rubble.</li>
+<li>Type 136,137 - Wall w. Painting, Window: Scenery</li>
+<li>Type 139-153 - Basalt Walls: All of these terrains function like their regular Wall
+counterparts They just looks different.</li>
+<li>Type 154=169 - Adobe Walls: All of these terrains function like their regular Wall
+counterparts They just looks different.</li>
+<li>Type 170 - Floor</li>
+<li>Type 171 - Blocked Floor: Monsters wont walk onto this space.</li>
+<li>Type 172 - Shock Floor: Damages party when they walk on it.</li>
+<li>Type 173 - Floor w. Rune: Monsters wont walk onto this space.</li>
+<li>Type 174-207 - Floors with a variety of decorative terrain types. Some of them (like
+desk and bookshelf) are containers.</li>
+<li>Type 208,209 - Levers (Advanced): There are used in conjunction with the lever Town
+special node types.</li>
+<li>Type 210-216 - Nice floor with various terrains. Monsters wont walk on 211 (the second
+nice floor).</li>
+<li>Type 217-231 - Vahnatai floor types.</li>
+<li>Type 232-245 - Town entries. Notice the fifth town entry is just grass - this is a
+hidden town.</li>
+<li>Type 246-251 - Special encounter spots (Advanced): These are used in conjunction with
+One Shot special encounter nodes. If you put a One-Shot special on a space with this
+terrain type, after the special is triggered the white spot will disappear.</li>
+<li>Type 252-255 - Conveyor Belts: These are conveyor belts, which move the party in the 4
+different cardinal directions.</li>
+</ul>
+
+</div>
 </body>
 </html>
