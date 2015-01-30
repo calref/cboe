@@ -2110,9 +2110,9 @@ void edit_horses() {
 	size_t page = 0;
 	
 	cDialog horse_dlg("edit-horses");
-	horse_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.horses, 30, std::ref(page)), {"okay", "left", "right"});
+	horse_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.horses.data(), 30, std::ref(page)), {"okay", "left", "right"});
 	
-	put_vehicles_in_dlog(horse_dlg, scenario.horses, page);
+	put_vehicles_in_dlog(horse_dlg, scenario.horses.data(), page);
 	
 	horse_dlg.run();
 }
@@ -2122,9 +2122,9 @@ void edit_boats() {
 	size_t page = 0;
 	
 	cDialog boat_dlg("edit-boats");
-	boat_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.boats, 30, std::ref(page)), {"okay", "left", "right"});
+	boat_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.boats.data(), 30, std::ref(page)), {"okay", "left", "right"});
 	
-	put_vehicles_in_dlog(boat_dlg, scenario.boats, page);
+	put_vehicles_in_dlog(boat_dlg, scenario.boats.data(), page);
 	
 	boat_dlg.run();
 }
