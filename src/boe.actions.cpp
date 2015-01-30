@@ -2253,6 +2253,11 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 				if(is_out()) j = j * 4;
 				univ.party[i].heal(j);
 			}
+			// Bonus SP and HP wear off
+			if(univ.party[i].cur_sp > univ.party[i].max_sp)
+				univ.party[i].cur_sp = univ.party[i].max_sp;
+			if(univ.party[i].cur_health > univ.party[i].max_health)
+				univ.party[i].cur_health = univ.party[i].max_health;
 		}
 	special_increase_age(length, true);
 	put_pc_screen();
@@ -2260,12 +2265,10 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 }
 
 void increase_age() {
-	short i,j,item,how_many_short = 0,r1,store_day;
-	bool update_stat = false;
+	short i,j,item,how_many_short = 0,r1;
 	
 	
 	// Increase age, adjust light level & stealth
-	store_day = calc_day();
 	if(is_out()) {
 		if(univ.party.in_horse < 0)
 			univ.party.age -= univ.party.age % 10;
@@ -2276,14 +2279,8 @@ void increase_age() {
 		
 	}
 	else univ.party.age++;
-	if(calc_day() != store_day) { // Day changed, so check for interesting stuff.
-		update_stat = true;
-	}
 	
 	move_to_zero(univ.party.light_level);
-	
-//	if(PSD[128][9] == 1)
-//		clear_map();
 	
 	// decrease monster present counter
 	move_to_zero(PSD[SDF_HOSTILES_PRESENT]);
@@ -2366,7 +2363,6 @@ void increase_age() {
 		if(univ.party[i].status[eStatus::INVULNERABLE] == 1 || abs(univ.party[i].status[eStatus::MAGIC_RESISTANCE]) == 1
 		   || univ.party[i].status[eStatus::INVISIBLE] == 1 || univ.party[i].status[eStatus::MARTYRS_SHIELD] == 1
 		   || abs(univ.party[i].status[eStatus::ASLEEP]) == 1 || univ.party[i].status[eStatus::PARALYZED] == 1)
-			update_stat = true;
 		move_to_zero(univ.party[i].status[eStatus::INVULNERABLE]);
 		move_to_zero(univ.party[i].status[eStatus::MAGIC_RESISTANCE]);
 		move_to_zero(univ.party[i].status[eStatus::INVISIBLE]);
@@ -2374,7 +2370,6 @@ void increase_age() {
 		move_to_zero(univ.party[i].status[eStatus::ASLEEP]);
 		move_to_zero(univ.party[i].status[eStatus::PARALYZED]);
 		if(univ.party.age % 40 == 0 && univ.party[i].status[eStatus::POISONED_WEAPON] > 0) {
-			update_stat = true;
 			move_to_zero(univ.party[i].status[eStatus::POISONED_WEAPON]);
 		}
 		
@@ -2391,7 +2386,6 @@ void increase_age() {
 			play_sound(66);
 			r1 = get_ran(3,1,6);
 			hit_party(r1,eDamageType::UNBLOCKABLE);
-			update_stat = true;
 			if(overall_mode < MODE_COMBAT)
 				boom_space(univ.party.p_loc,overall_mode,0,r1,0);
 		}
@@ -2399,7 +2393,6 @@ void increase_age() {
 			play_sound(6);
 			add_string_to_buf("You eat.");
 		}
-		update_stat = true;
 	}
 	
 	// Poison, acid, disease damage
@@ -2407,7 +2400,6 @@ void increase_age() {
 		if(univ.party[i].status[eStatus::POISON] > 0) {
 			i = 6;
 			if(((overall_mode == MODE_OUTDOORS) && (univ.party.age % 50 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 20 == 0))) {
-				update_stat = true;
 				do_poison();
 			}
 		}
@@ -2415,47 +2407,39 @@ void increase_age() {
 		if(univ.party[i].status[eStatus::DISEASE] > 0) {
 			i = 6;
 			if(((overall_mode == MODE_OUTDOORS) && (univ.party.age % 100 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 25 == 0))) {
-				update_stat = true;
 				handle_disease();
 			}
 		}
 	for(i = 0; i < 6; i++) // Acid
 		if(univ.party[i].status[eStatus::ACID] > 0) {
 			i = 6;
-			update_stat = true;
 			handle_acid();
 		}
 	
 	// Healing and restoration of spell pts.
 	if(is_out()) {
 		if(univ.party.age % 100 == 0) {
-			for(i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health < univ.party[i].max_health)
-					update_stat = true;
 			univ.party.heal(2);
 		}
 	}
 	else {
 		if(univ.party.age % 50 == 0) {
 			for(i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health < univ.party[i].max_health)
-					update_stat = true;
+				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health > univ.party[i].max_health)
+					univ.party[i].cur_health--; // Bonus HP wears off
 			univ.party.heal(1);
 		}
 	}
 	if(is_out()) {
 		if(univ.party.age % 80 == 0) {
-			for(i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp < univ.party[i].max_sp)
-					update_stat = true;
 			univ.party.restore_sp(2);
 		}
 	}
 	else {
 		if(univ.party.age % 40 == 0) {
 			for(i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp < univ.party[i].max_sp)
-					update_stat = true;
+				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp > univ.party[i].max_sp)
+					univ.party[i].cur_sp--; // Bonus SP wears off
 			univ.party.restore_sp(1);
 		}
 	}
@@ -2465,11 +2449,9 @@ void increase_age() {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if(univ.party[i].traits[eTrait::RECUPERATION] && get_ran(1,0,10) == 1 && univ.party[i].cur_health < univ.party[i].max_health) {
 				univ.party[i].heal(2);
-				update_stat = true;
 			}
 			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
 				univ.party[i].disease(4);
-				update_stat = true;
 			}
 			
 		}
@@ -2478,8 +2460,6 @@ void increase_age() {
 	// Blessing, slowed,etc.
 	if(univ.party.age % 4 == 0)
 		for(i = 0; i < 6; i++) {
-			if(univ.party[i].status[eStatus::BLESS_CURSE] != 0 || univ.party[i].status[eStatus::HASTE_SLOW] != 0)
-				update_stat = true;
 			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
 			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
 			if((item = univ.party[i].has_abil_equip(eItemAbil::REGENERATE)) < 24
@@ -2490,7 +2470,6 @@ void increase_age() {
 					j = get_ran(1,0,1);
 				if(is_out()) j = j * 4;
 				univ.party[i].heal(j);
-				update_stat = true;
 			}
 		}
 	
@@ -2507,8 +2486,7 @@ void increase_age() {
 	current_switch = 6;
 	
 	// If a change, draw stat screen
-	if(update_stat)
-		put_pc_screen();
+	put_pc_screen();
 	adjust_spell_menus();
 }
 

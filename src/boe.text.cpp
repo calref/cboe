@@ -132,10 +132,14 @@ void put_pc_screen() {
 				case eMainStatus::ALIVE:
 					if(univ.party[i].cur_health == univ.party[i].max_health)
 						style.colour = sf::Color::Green;
+					else if(univ.party[i].cur_health > univ.party[i].max_health)
+						style.colour = {0xff,0x80,0}; // Orange
 					else style.colour = sf::Color::Red;
 					win_draw_string( pc_stats_gworld,pc_buttons[i][1],std::to_string(univ.party[i].cur_health),eTextMode::WRAP,style);
 					if(univ.party[i].cur_sp == univ.party[i].max_sp)
 						style.colour = sf::Color::Blue;
+					else if(univ.party[i].cur_sp > univ.party[i].max_sp)
+						style.colour = {0,0xff,0x80}; // Teal
 					else style.colour = sf::Color::Magenta;
 					win_draw_string( pc_stats_gworld,pc_buttons[i][2],std::to_string(univ.party[i].cur_sp),eTextMode::WRAP,style);
 					draw_pc_effects(i);

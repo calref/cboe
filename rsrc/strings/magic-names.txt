@@ -71,11 +71,11 @@ Paralyze Beam
 Mass Sleep
 Ravage Enemies
 Aura of Blades
-
-
-
-
-
+Icy Rain
+Aura of Flames
+Summon Aid
+Major Summon Aid
+Flash Step
 
 
 
@@ -164,8 +164,8 @@ Dispel Field
 Distance Shatter
 Wrack
 Unholy Ravaging
-
-
+Augmentation
+Nirvana
 
 
 
