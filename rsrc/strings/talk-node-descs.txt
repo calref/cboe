@@ -47,11 +47,11 @@ Unused
 Unused
 Response if in this town ...
 Otherwise respond ...
-Buy Items
+Shop
 Cost adjustment (0 .. 6)
 Number of first item in shop
 Total number of items in shop
-Unused
+Type of shop
 Name of shop
 Unused
 Receive Training
@@ -61,33 +61,33 @@ Unused
 Unused
 Unused
 Unused
-Mage Spell Shop
-Cost adjustment (0 .. 6)
-Number of first spell in shop
-Total number of spells in shop
-Unused
-Name of shop
-Unused
-Priest Spell Shop
-Cost adjustment (0 .. 6)
-Number of first spell in shop
-Total number of spells in shop
-Unused
-Name of shop
-Unused
-Alchemy Shop
-Cost adjustment (0 .. 6)
-Number of first recipe in shop
-Total number of recipes in shop
-Unused
-Name of shop
-Unused
-Healer
-Cost adjustment (0 .. 6)
+Unused Node Type
 Unused
 Unused
 Unused
-Name of healer
+Unused
+Unused
+Unused
+Unused Node Type
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused Node Type
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused Node Type
+Unused
+Unused
+Unused
+Unused
+Unused
 Unused
 Sell Weapons
 Unused
@@ -159,12 +159,12 @@ Unused
 Unused
 Response if party buys it
 Response if party can't afford it
-Magic Shop
-Cost adjustment (0 .. 6)
-Which shop (0 .. 4)
+Unused Node Type
 Unused
 Unused
-Name of shop
+Unused
+Unused
+Unused
 Unused
 Reveal Town Location
 Cost to know where town is

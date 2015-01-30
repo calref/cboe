@@ -710,7 +710,6 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		i = 0;
 		eShopType type = active_shop.getType();
 		if(type == eShopType::HEALING) i = 41;
-		else if(type == eShopType::FOOD) i = 42;
 		else if(type == eShopType::MAGE || type == eShopType::PRIEST || type == eShopType::ALCHEMY)
 			i = 43;
 		rectangle from_rect = {0,0,32,32};

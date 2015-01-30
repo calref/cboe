@@ -724,12 +724,8 @@ enum class eTalkNode {
 	DEP_ON_TIME = 4,
 	DEP_ON_TIME_AND_EVENT = 5,
 	DEP_ON_TOWN = 6,
-	BUY_ITEMS = 7,
+	SHOP = 7,
 	TRAINING = 8,
-	BUY_MAGE = 9,
-	BUY_PRIEST = 10,
-	BUY_ALCHEMY = 11,
-	BUY_HEALING = 12,
 	SELL_WEAPONS = 13,
 	SELL_ARMOR = 14,
 	SELL_ITEMS = 15,
@@ -740,7 +736,6 @@ enum class eTalkNode {
 	BUY_SHIP = 20,
 	BUY_HORSE = 21,
 	BUY_SPEC_ITEM = 22,
-	BUY_JUNK = 23,
 	BUY_TOWN_LOC = 24,
 	END_FORCE = 25,
 	END_FIGHT = 26,
@@ -1012,8 +1007,7 @@ enum class eShopType {
 	MAGIC_SO_SO = 7,
 	MAGIC_GOOD = 8,
 	MAGIC_GREAT = 9,
-	FOOD = 10,
-	SKILLS = 11,
+	SKILLS = 10,
 };
 
 enum class eAlchemy {

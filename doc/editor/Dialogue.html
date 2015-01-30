@@ -122,25 +122,33 @@ the party is in town A, the response is Text 1. Otherwise, its Text 2.</p>
 
 <h3>Shopping Talking Nodes</h3>
 
-<p>When one of these nodes is a response, conversation temporarily ends, and a shopping
-screen appears. When the party is done shopping (and the player hits the done button)
-talking resumes. Most of these require you to specify a cost adjust, which is one of the
-following:</p>
-<ul>
-<li>0 - Extremely Cheap</li>
-<li>1 - Very Reasonable</li>
-<li>2 - Pretty Average</li>
-<li>3 - Somewhat Pricey</li>
-<li>4 - Expensive</li>
-<li>5 - Exorbitant</li>
-<li>6 - Utterly Ridiculous</li>
-</ul>
+<p>When one of these nodes is a response, conversation temporarily ends, and a different sort of screen appears.</p>
 
-<p><b>Node Type 7 - Buy Items</b> Shop where the party can buy items. A is the cost
-adjustment (Range 0 ... 6, see above). B is the number of the first item in the shop (from
-the scenarios item list). C is the total number of items in the shop, taken in order from
-the scenario item list starting with B (press the Choose button to select). Text 1 is the
-name of the shop.</p>
+<p><b>Node Type 7 - Shop</b> A shopping screen appears. WHen the party is done shopping (and the player hits the done button), talking resumes. Shop where the party can buy items. A is the cost adjustment (Range 0 ... 6, see below). B is the number of the first thing in the shop. C is the total number of things in the shop, taken in order starting with B (press the Choose button to select). D is the type of shop. Text 1 is the name of the shop.</p>
+<p>The meaning of the cost adjustments are:</p>
+<ol start='0'>
+<li>Extremely Cheap</li>
+<li>Very Reasonable</li>
+<li>Pretty Average</li>
+<li>Somewhat Pricey</li>
+<li>Expensive</li>
+<li>Exorbitant</li>
+<li>Utterly Ridiculous</li>
+</ol>
+<p>The possible shop types are as follows:</p>
+<ol start='0'>
+<li>Ordinary items shop; B is the number of the first item from the scenario's item list.</li>
+<li>Mage spells shop; B is the number of the first mage spell (0 - 61, but generally not lower than 30).</li>
+<li>Priest spells shop; B is the number of the first priest spell (0 - 61, but generally not lower than 30).</li>
+<li>Alchemy shop; B is the number of the first recipe (0 - 19).</li>
+<li>Healing shop; B and C are ignored.</li>
+<li>Random Items Shop, type 0. This brings up a shop window where the party can buy up to 10 randomly chosen items. These items are changed every 3000 moves, and are often magical. B and C are ignored for these shops.</li>
+<li>Random Items Shop, type 1.</li>
+<li>Random Items Shop, type 2.</li>
+<li>Random Items Shop, type 3.</li>
+<li>Random Items Shop, type 4.</li>
+<li>Skills Shop; B is the number of the first skill (0 - 18).</li>
+</ol>
 <p>Example: If A is 1, B is 193, C is 15, and Text 1 is Fred's Fish, and this talking node
 is the response, the player gets to shop in a store called Fred's Fish. The prices are
 quite cheap, and the player can buy items 193-207.</p>

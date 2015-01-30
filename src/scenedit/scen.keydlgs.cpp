@@ -711,7 +711,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			case eShopType::PRIEST: btn = 'P'; break;
 			case eShopType::ALCHEMY: btn = 'a'; break;
 			case eShopType::SKILLS: btn = 'k'; break;
-			case eShopType::FOOD: case eShopType::HEALING: case eShopType::MAGIC_GOOD: case eShopType::MAGIC_GREAT:
+			case eShopType::HEALING: case eShopType::MAGIC_GOOD: case eShopType::MAGIC_GREAT:
 			case eShopType::MAGIC_JUNK: case eShopType::MAGIC_LOUSY: case eShopType::MAGIC_SO_SO:
 				break;
 		}
