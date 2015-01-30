@@ -108,6 +108,7 @@ void cCreature::cure(int amt) {
 
 void cCreature::restore_sp(int amt) {
 	if(!is_alive()) return;
+	if(mp >= max_mp) return;
 	mp += amt;
 	if(mp > max_mp)
 		mp = max_mp;

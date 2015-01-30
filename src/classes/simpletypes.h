@@ -915,7 +915,12 @@ enum class eSpell {
 	PARALYZE_BEAM = 69,
 	SLEEP_MASS = 70,
 	RAVAGE_ENEMIES = 71,
-	BLADE_AURA = 82,
+	BLADE_AURA = 72,
+	ICY_RAIN = 73,
+	FLAME_AURA = 74,
+	SUMMON_AID = 75,
+	SUMMON_AID_MAJOR = 76,
+	FLASH_STEP = 77,
 	// Priest spells
 	BLESS_MINOR = 100,
 	HEAL_MINOR = 101,
@@ -984,6 +989,8 @@ enum class eSpell {
 	MOVE_MOUNTAINS_MASS = 163,
 	WRACK = 164,
 	UNHOLY_RAVAGING = 165,
+	AUGMENTATION = 166,
+	NIRVANA = 167,
 };
 
 inline bool isMage(eSpell spell) {

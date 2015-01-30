@@ -375,6 +375,8 @@ cSpell S_SLEEP_MASS = cSpell(eSpell::SLEEP_MASS)
 	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_RAVAGE_ENEMIES = cSpell(eSpell::RAVAGE_ENEMIES)
 	.withRange(12).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
+cSpell S_BLADE_AURA = cSpell(eSpell::BLADE_AURA)
+	.withRefer(REFER_IMMED).when(WHEN_COMBAT).finish();
 cSpell S_DISPEL_FIELD = cSpell(eSpell::DISPEL_FIELD)
 	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).when(WHEN_TOWN).finish();
 cSpell S_MOVE_MOUNTAINS_MASS = cSpell(eSpell::MOVE_MOUNTAINS_MASS)
@@ -385,3 +387,17 @@ cSpell S_WRACK = cSpell(eSpell::WRACK).asLevel(1)
 	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_UNHOLY_RAVAGING = cSpell(eSpell::UNHOLY_RAVAGING).asLevel(6)
 	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
+cSpell S_ICY_RAIN = cSpell(eSpell::ICY_RAIN)
+	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
+cSpell S_FLAME_AURA = cSpell(eSpell::FLAME_AURA)
+	.withRefer(REFER_IMMED).when(WHEN_COMBAT).finish();
+cSpell S_SUMMON_AID = cSpell(eSpell::SUMMON_AID)
+	.withRange(4).withRefer(REFER_TARGET).when(WHEN_COMBAT).when(WHEN_TOWN).finish();
+cSpell S_SUMMON_AID_MAJOR = cSpell(eSpell::SUMMON_AID_MAJOR)
+	.withRange(4).withRefer(REFER_TARGET).when(WHEN_COMBAT).when(WHEN_TOWN).finish();
+cSpell S_FLASH_STEP = cSpell(eSpell::FLASH_STEP)
+	.withRange(8).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
+cSpell S_AUGMENTATION = cSpell(eSpell::AUGMENTATION)
+	.withRange(10).withRefer(REFER_IMMED).needsSelect().when(WHEN_COMBAT).finish();
+cSpell S_NIRVANA = cSpell(eSpell::NIRVANA)
+	.withRange(10).withRefer(REFER_IMMED).needsSelect().when(WHEN_COMBAT).finish();

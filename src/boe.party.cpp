@@ -524,6 +524,7 @@ void increase_light(short amt) {
 
 void cPlayer::restore_sp(int amt) {
 	if(!is_alive()) return;
+	if(cur_sp >= max_sp) return;
 	cur_sp += amt;
 	if(cur_sp > max_sp)
 		cur_sp = max_sp;
@@ -893,6 +894,13 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				if(!summon_monster(r1,where,store,2,true))
 					add_string_to_buf("  Summon failed.");
 			break;
+		case eSpell::SUMMON_AID:
+			r1 = get_summon_monster(2);
+			if(r1 < 0) break;
+			store = get_ran(5,1,4) + adj;
+			if(!summon_monster(r1,where,store,2,true))
+				add_string_to_buf("  Summon failed.");
+			break;
 		case eSpell::SUMMON_MAJOR:
 			store = level / 10 + adj / 3 + get_ran(1,0,1);
 			j = minmax(1,5,store);
@@ -904,6 +912,13 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			for(i = 0; i < j; i++)
 				if(!summon_monster(r1,where,store,2,true))
 					add_string_to_buf("  Summon failed.");
+			break;
+		case eSpell::SUMMON_AID_MAJOR:
+			r1 = get_summon_monster(3);
+			if(r1 < 0) break;
+			store = get_ran(7,1,4) + adj;
+			if(!summon_monster(r1,where,store,2,true))
+				add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::DEMON:
 			store = get_ran(5,1,4) + 2 * adj;

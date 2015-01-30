@@ -1003,14 +1003,11 @@ void do_combat_cast(location target) {
 		spell_caster = current_pc;
 	
 	// assign monster summoned, if summoning
-	if(spell_being_cast == eSpell::SUMMON_BEAST) {
+	if(spell_being_cast == eSpell::SUMMON_BEAST || spell_being_cast == eSpell::SUMMON_WEAK) {
 		summon = get_summon_monster(1);
-		
-	} else if(spell_being_cast == eSpell::SUMMON_WEAK) {
-		summon = get_summon_monster(1);
-	} else if(spell_being_cast == eSpell::SUMMON) {
+	} else if(spell_being_cast == eSpell::SUMMON || spell_being_cast == eSpell::SUMMON_AID) {
 		summon = get_summon_monster(2);
-	} else if(spell_being_cast == eSpell::SUMMON_MAJOR) {
+	} else if(spell_being_cast == eSpell::SUMMON_MAJOR || spell_being_cast == eSpell::SUMMON_AID_MAJOR) {
 		summon = get_summon_monster(3);
 	}
 	combat_posing_monster = current_working_monster = current_pc;
@@ -1166,14 +1163,18 @@ void do_combat_cast(location target) {
 								place_spell_pattern(square,target,eDamageType::FIRE,r1,current_pc);
 								ashes_loc = target;
 								break;
-							case eSpell::FIRESTORM:
-								add_missile(target,2,1,0,0);
+							case eSpell::FIRESTORM: case eSpell::ICY_RAIN:
+								if(spell_being_cast == eSpell::FIRESTORM)
+									add_missile(target,2,1,0,0);
+								else add_missile(target,6,1,0,0);
 								store_sound = 11;
 								//do_missile_anim(100,caster.combat_pos,11);
 								r1 = min(12,1 + (level * 2) / 3 + bonus) + 2;
 								if(r1 > 20)
 									r1 = (r1 * 8) / 10;
-								place_spell_pattern(radius2,target,eDamageType::FIRE,r1,current_pc);
+								if(spell_being_cast == eSpell::FIRESTORM)
+									place_spell_pattern(radius2,target,eDamageType::FIRE,r1,current_pc);
+								else place_spell_pattern(radius2,target,eDamageType::COLD,r1,current_pc);
 								ashes_loc = target;
 								break;
 							case eSpell::KILL:
@@ -1195,6 +1196,8 @@ void do_combat_cast(location target) {
 							case eSpell::SUMMON_WEAK: case eSpell::SUMMON: case eSpell::SUMMON_MAJOR:
 							case eSpell::DEMON: case eSpell::SUMMON_SPIRIT: case eSpell::STICKS_TO_SNAKES:
 							case eSpell::SUMMON_HOST: case eSpell::SUMMON_GUARDIAN:
+							case eSpell::SUMMON_AID: case eSpell::SUMMON_AID_MAJOR:
+							case eSpell::FLASH_STEP:
 								add_missile(target,8,1,0,0);
 								do_missile_anim(50,univ.party[current_pc].combat_pos,61);
 								switch(spell_being_cast) {
@@ -1213,12 +1216,12 @@ void do_combat_cast(location target) {
 										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
 											add_string_to_buf("  Summon failed.");
 										break;
-									case eSpell::SUMMON:
+									case eSpell::SUMMON: case eSpell::SUMMON_AID:
 										r2 = get_ran(5,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
 										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
 											add_string_to_buf("  Summon failed.");
 										break;
-									case eSpell::SUMMON_MAJOR:
+									case eSpell::SUMMON_MAJOR: case eSpell::SUMMON_AID_MAJOR:
 										r2 = get_ran(7,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
 										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
 											add_string_to_buf("  Summon failed.");
@@ -1255,6 +1258,13 @@ void do_combat_cast(location target) {
 										if(!summon_monster(122,target,r2,2,true))
 											add_string_to_buf("  Summon failed.");
 										break;
+									case eSpell::FLASH_STEP:
+										if(is_blocked(target))
+											add_string_to_buf("  Teleport failed.");
+										else {
+											add_string_to_buf("  Flash step!");
+											caster.combat_pos = target;
+										}
 									default:
 										add_string_to_buf("  Error: Summoning spell " + (*spell_being_cast).name() + " not implemented for combat mode.", 4);
 										break;
@@ -2569,6 +2579,11 @@ void do_monster_turn() {
 			if(univ.party.age % 4 == 0) {
 				cur_monst->restore_sp(2);
 				move_to_zero(cur_monst->status[eStatus::DUMB]);
+				// Bonus HP and SP wear off
+				if(cur_monst->mp > cur_monst->max_mp)
+					cur_monst->mp--;
+				if(cur_monst->health > cur_monst->m_health)
+					cur_monst->health--;
 			}
 		} // end take care of monsters
 	}
@@ -4710,6 +4725,9 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 		case eSpell::BLADE_AURA: // Pyhrrus effect
 			place_spell_pattern(radius2,univ.party[current_pc].combat_pos,WALL_BLADES,6);
 			break;
+		case eSpell::FLAME_AURA:
+			place_spell_pattern(open_square, univ.party[current_pc].combat_pos, eDamageType::FIRE, 6, current_pc);
+			break;
 		default:
 			add_string_to_buf("  Error: Mage spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
 			break;
@@ -4780,7 +4798,7 @@ bool combat_cast_priest_spell() {
 }
 
 void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) {
-	short target,i,num_opp = 0;
+	short target = store_spell_target,i,num_opp = 0;
 	snd_num_t store_sound = 0;
 	miss_num_t store_m_type = 0;
 	short bonus = freebie ? 1 : univ.party[current_pc].stat_adj(eSkill::INTELLIGENCE);
@@ -4800,8 +4818,6 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 	start_missile_anim();
 	switch(spell_num) {
 		case eSpell::BLESS_MINOR: case eSpell::BLESS:
-//			target = select_pc(11,0);
-			target = store_spell_target;
 			if(target < 6) {
 				store_sound = 4;
 				if(!freebie)
@@ -4874,6 +4890,21 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 			play_sound(24);
 			add_string_to_buf("  Protective field created.");
 			place_spell_pattern(protect_pat,univ.party[current_pc].combat_pos,6);
+			break;
+		case eSpell::AUGMENTATION:
+			if(target < 6) {
+				add_string_to_buf("  Health augmented!");
+				i = get_ran(3,1,6);
+				univ.party[target].cur_health += i;
+			}
+			break;
+		case eSpell::NIRVANA:
+			if(target < 6) {
+				add_string_to_buf("  Enlightened!");
+				i = get_ran(3,1,6);
+				univ.party[target].apply_status(eStatus::DUMB, i / -3);
+				univ.party[target].cur_sp += i * 2;
+			}
 			break;
 		default:
 			add_string_to_buf("  Error: Priest spell " + (*spell_num).name() + " not implemented for combat mode.", 4);

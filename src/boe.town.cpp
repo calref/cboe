@@ -199,6 +199,11 @@ void start_town_mode(short which_town, short entry_dir) {
 				if(univ.town.monst[j].summon_time > 0)
 					univ.town.monst[j].active = 0;
 				univ.town.monst[j].target = 6;
+				// Bonus SP and HP wear off
+				if(univ.town.monst[i].mp > univ.town.monst[i].max_mp)
+					univ.town.monst[i].mp = univ.town.monst[i].max_mp;
+				if(univ.town.monst[i].health > univ.town.monst[i].m_health)
+					univ.town.monst[i].health = univ.town.monst[i].m_health;
 			}
 			
 			// Now, travelling NPCs might have arrived. Go through and put them in.
@@ -535,6 +540,14 @@ location end_town_mode(short switching_level,location destination) { // returns 
 	
 	if(is_combat())
 		combat_end = true;
+	
+	// Bonus SP and HP wear off
+	for(i = 0; i < 6; i++) {
+		if(univ.party[i].cur_sp > univ.party[i].max_sp)
+			univ.party[i].cur_sp = univ.party[i].max_sp;
+		if(univ.party[i].cur_health > univ.party[i].max_health)
+			univ.party[i].cur_health = univ.party[i].max_health;
+	}
 	
 	if(overall_mode == MODE_TOWN) {
 		for(i = 0; i < 4; i++)

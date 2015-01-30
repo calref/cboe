@@ -1825,7 +1825,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 				i = choose_text(STRT_SKILL, i, &me, "Boost which skill?");
 				break;
 			case eItemAbil::CAST_SPELL:
-				i = choose_text_res("magic-names", 1, 73, i + 1, &me, "Which mage spell?");
+				i = choose_text_res("magic-names", 1, 78, i + 1, &me, "Which mage spell?");
 				if(i < 0) return true;
 				break;
 			case eItemAbil::SUMMONING:
@@ -1838,7 +1838,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 		me["str2"].setTextToNum(i);
 	} else if(hit == "str2-choose2") {
 		save_item_abils(me, item);
-		i = 100 + choose_text_res("magic-names", 101, 166, item.abil_data[1] + 1, &me, "Which priest spell?");
+		i = 100 + choose_text_res("magic-names", 101, 168, item.abil_data[1] + 1, &me, "Which priest spell?");
 		if(i < 100) return true;
 		item.abil_data[1] = i;
 		me["str2"].setTextToNum(i);
