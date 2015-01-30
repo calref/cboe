@@ -489,11 +489,13 @@ void draw_party_symbol(location center) {
 		else Draw_Some_Item(*from_gw, source_rect, terrain_screen_gworld, target, 1, 0);
 	}
 	else if(univ.party.in_boat >= 0) {
-		if(univ.party.direction == 0 || univ.party.direction > 4) i = 4;
-		else i = 3;
+		if(univ.party.direction == DIR_N) i = 2;
+		else if(univ.party.direction == DIR_S) i = 3;
+		else i = univ.party.direction > DIR_S;
 		Draw_Some_Item(vehicle_gworld, calc_rect(i,0), terrain_screen_gworld, target, 1, 0);
 	}else {
-		Draw_Some_Item(vehicle_gworld, calc_rect( univ.party.direction > 3 , 1), terrain_screen_gworld, target, 1, 0);
+		i = univ.party.direction > 3;
+		Draw_Some_Item(vehicle_gworld, calc_rect(i + 2, 1), terrain_screen_gworld, target, 1, 0);
 	}
 }
 
