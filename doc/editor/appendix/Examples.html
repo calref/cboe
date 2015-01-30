@@ -80,7 +80,26 @@ Finally, put 0 on the Cost Adjust field, to make the arrows very cheap.</p>
 
 <p>It is easy to place a secret passage on any space using special encounters. Suppose you
 want the party to be able to walk through a certain tree. Place a secret encounter on the
-tree and make it of type Secret Passage (to select this, press the General button).</p>
+tree and make it of type Secret Passage (to select this, press the General button). Set Extra
+1a to 0 and Extra 1b to 1.</p>
+
+<h2>Random Poison Using Pointers</h2>
+
+<p>Suppose you want to afflict a PC with a random amount of poison. The Affect Status node
+only allows you to specify an exact amount, but by using pointers, you can get the random
+amount you want.</p>
+<p>First, decide on a Stuff Done Flag to store the amount - let's say (4,7). Then, decide
+on a pointer to point to that flag, such as 156. Now, create a Set Pointer special node
+(under General) to link the two together - put 4 and 7 in the Stuff Done fields, and 156
+in the Extra 1a field.</p>
+<p>Next, press Create/Edit by the jumpto field, and make the next node a Set SDF to Random
+node (also under General). Put 4 and 7 in the Stuff Done fields again, and set Extra 1a
+amd Extra 1b (min and max) to whatever you want.</p>
+<p>Then press Create/Edit again by the jumpto and make an Affect Status Effect node (under
+Affect PCs). Press Choose by Extra 1c and select poison, put 1 in Extra 1b, and put -156
+in Extra 1a.</p>
+<p>There you go! When the game runs this chain of nodes, it will fetch the value from
+Stuff Done Flag (4,7) and use that as the amount of poison to afflict.</dd>
 
 </div>
 </body>
