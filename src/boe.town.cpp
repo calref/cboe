@@ -207,7 +207,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				switch(univ.town.monst[j].time_flag){
 					case eMonstTime::ALWAYS: break; // Nothing to do.
 					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
-						if((calc_day() % 3) + 3 != int(univ.town.monst[i].time_flag))
+						if((calc_day() % 3) + 3 != int(univ.town.monst[j].time_flag))
 							univ.town.monst[j].active = 0;
 						else {
 							univ.town.monst[j].active = 1;

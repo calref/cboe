@@ -67,7 +67,7 @@ void give_gold(short amount,bool print_result) {
 bool take_gold(short amount,bool print_result) {
 	if(univ.party.gold < amount)
 		return false;
-	univ.party.gold += amount;
+	univ.party.gold -= amount;
 	if(print_result)
 		put_pc_screen();
 	return true;

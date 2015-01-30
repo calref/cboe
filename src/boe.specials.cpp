@@ -3158,6 +3158,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_FIELDS:
+			if(is_out()) break;
 			if(!isValidField(spec.m1, false)) {
 				giveError("Scenario tried to check for invalid field type (1...24)");
 				break;
@@ -3266,6 +3267,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						*next_spec = spec.ex1b;
 					break;
 				}
+				spec.ex2b = 0;
 			}
 			if(check_party_stat(eSkill(spec.ex2a), spec.ex2b) >= spec.ex1a)
 				*next_spec = spec.ex1b;
