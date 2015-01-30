@@ -1,3 +1,4 @@
+Random Trap (out of next 4)
 Knife Trap
 Poison Dart
 Poison Gas (affects whole party)

@@ -297,7 +297,7 @@ Unused
 Amount (0 .. 10)
 0 - increase, 1 - decrease
 Unused
-Statistic to adjust (0..21)
+Statistic to adjust (0..20)
 Unused
 Unused
 Special to Jump To
@@ -311,7 +311,7 @@ Unused
 Unused
 Unused
 Which Spell (0 .. 61)
-0 - remove, 1 - give
+1 - remove, 0 - give
 Unused
 Unused
 Unused
@@ -327,7 +327,7 @@ Unused
 Unused
 Unused
 Which Spell (0 .. 61)
-0 - remove, 1 - give
+1 - remove, 0 - give
 Unused
 Unused
 Unused
@@ -391,9 +391,9 @@ Unused
 Unused
 Unused
 Amount (0 .. 250)
+0 - increase, 1 - decrease
+Unused
 Which effect (0 .. 3)
-Unused
-Unused
 Unused
 Unused
 Special to Jump To

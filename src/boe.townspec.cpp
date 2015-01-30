@@ -45,7 +45,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 	num_hits += trap_level;
 	
 	if(trap_type == TRAP_RANDOM)
-		trap_type = (eTrapType) get_ran(1,0,4);
+		trap_type = (eTrapType) get_ran(1,1,4);
 	if(trap_type == TRAP_FALSE_ALARM)
 		return true;
 	

@@ -12,6 +12,8 @@
 #include "mathutil.hpp"
 
 void iLiving::apply_status(eStatus which, int how_much) {
+	if(!is_alive()) return;
+	
 	static const std::set<eStatus> allow_negative = {
 		// The obvious ones:
 		eStatus::BLESS_CURSE, eStatus::HASTE_SLOW,
@@ -22,12 +24,17 @@ void iLiving::apply_status(eStatus which, int how_much) {
 		eStatus::MAGIC_RESISTANCE, eStatus::DUMB,
 	};
 	
-	// TODO: Martyr's Shield range seems to be 0..10; Paralyzed seems to range something like 0..1000
+	int lo = 0, hi = 8;
 	
-	if(!is_alive()) return;
-	status[which] = minmax(-8,8,status[which] + how_much);
-	if(!allow_negative.count(which))
-		status[which] = max(status[which],0);
+	if(which == eStatus::MARTYRS_SHIELD)
+		hi = 10;
+	else if(which == eStatus::PARALYZED)
+		hi = 5000;
+	
+	if(allow_negative.count(which))
+		lo = -hi;
+	
+	status[which] = minmax(lo,hi,status[which] + how_much);
 }
 
 void iLiving::clear_bad_status() {

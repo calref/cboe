@@ -383,19 +383,19 @@ Unused
 Special to Jump To
 --------------------
 Display Picture
-sdf1
-sdf2
+Unused
+Unused
 Picture title string
-msg2
-msg3
-pic
-pt
+Unused
+Unused
+Unused
+Unused
 Number of large (full-sheet) pic to display
-ex1b
-ex1c
-ex2a
-ex2b
-ex2c
+Unused
+Unused
+Unused
+Unused
+Unused
 Special to Jump To
 --------------------
 Have a Rest
@@ -472,26 +472,26 @@ Unused
 Unused
 Campaign Flag Part A (0..24)
 Campaign Flag Part B (0..24)
-ex1c
+Unused
 0 - Set Campaign Flag, 1 - Retrieve Flag
-ex2b
-ex2c
+Unused
+Unused
 Special to Jump To
 --------------------
 Debug Print Numbers
 Stuff Done Flag Part A
 Stuff Done Flag Part B
-msg1
-msg2
-msg3
+Unused
+Unused
+Unused
 0 - SDF, 1 - extra1 values, 2 - monster hp/mp
-pt
+Unused
 Number of monster, or value to print
 Value to print (could be a pointer)
 Value to print (could be a pointer)
-ex2a
-ex2b
-ex2c
+Unused
+Unused
+Unused
 Special to Jump To
 --------------------
 Multiplication

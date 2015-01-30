@@ -11,7 +11,7 @@ Town event timer triggered
 Scenario event timer triggered
 Special node timer triggered
 Killed a monster
-Entetred outdoor combat
+Entered outdoor combat
 Fled outdoor encounter
 Won outdoor encounter
 Targetung spell
