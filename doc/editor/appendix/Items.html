@@ -43,40 +43,34 @@ these items is calculated the same way as for Usable abilities.</p>
 <p></li>
 </ul>
 
-<p>There are six different classes of item ability type, each with its own properties and
-varieties of items that can possess it. These are listed below, along with whether they
-are classes of Usable or Inherent abilities:</p>
+<p>There are four different classes of item ability type, each with its own properties and
+varieties of items that can possess it. Three of these classes are inherent abilities. THe
+categories are listed below:</p>
 
 <ul>
-<li><b>Weapon Abilities (Inherent):</b> Abilities of this type can be given to one and two
-handed weapons, weapon ammunition (darts, arrows, etc.) and non-ammunition missiles (like
-slings). None of these items have charges.</li>
-<li><b>General Abilities (Inherent):</b>Abilities of this type can be given to non-missile
-items which can be equipped (e.g. rings, armor, sword, but not arrows) but not to items
-that cant (e.g. wands, potions). Only a few of these ability types require for the item
-having them to have charges.</li>
-<li><b>Non-Spell Usable (Usable):</b> Abilities of this type change the status of the
-party or individual character in some way, such as making them more or less poisoned, or
-raising or lowering health. Abilities of these types can be given to any item thats not a
-missile (e.g. arrows, bolts). Being usable item abilities, any item having one of these
-abilities must have charges.</li>
-<li><b>Spell Usable (Usable):</b> Abilities of this type cast some sort of a spell, such
-as firing a fireball or summoning monsters. Abilities of these types can be given to any
-item thats not a missile (e.g. arrows, bolts). Being usable item abilities, any item
-having one of these abilities must have charges.</li>
-<li><b>Reagents (Inherent):</b> Items with these abilities are alchemical ingredients,
-spell reagents (e.g. smoky crystals, sapphires), or similar substances. All items with an
+<li>Weapon Abilities: Abilities of this type can be given to weapons. Some of these
+abilities can only be given to missiles (like darts or arrows). None of these abilities
+require charges.</li>
+<li>General Abilities: Abilities of this type can be given to non-missile items
+which can be equipped (e.g. rings, armor, sword, but not arrows) but not to items that
+can't (e.g. wands, potions). Only a few of these ability types require that the items
+having them have charges.</li>
+<li>Usable Abilities: Most abilities of this type change the status of the party or
+individual character in some way, such as making them more or less poisoned, or raising or
+lowering health. A few instead cast a spell or have a similar effect such as summoning
+monsters. Abilities of these types can be given to any item that's not a missile
+(e.g. arrows, bolts). Being usable item abilities, any item having one of these abilities
+must have charges.</li>
+<li>Reagents: Items with these abilities are alchemical ingredients, spell
+reagents (e.g. smoky crystals, sapphires), or similar substances. All items with an
 ability of this type must have charges, and must be of variety Non-use Object.</li>
-<li><b>Missiles (Inherent):</b> These abilities can only be given to missiles (e.g.
-arrows, bolts, darts). Each ability is activated when the missile is fired (such as
-exploding a fireball on the target space).</li>
 </ul>
 
-<p>As mentioned before, each item type has accompanying Ability Strength and Magic Item
-Adjust targets. For each ability, these two fields have different ranges and different
-affects, and their values will modify the affects of the item abilities in different ways.
-What each ability does and how the Ability Strength and Magic Item Adjust fields affect it
-are described below.</p>
+<p>As mentioned before, each item type has two acompanying extra data fields as well as
+the Magic Item Adjust setting. For each ability, these two fields have different ranges
+and different affects (the first field is usually Ability Strength), and their values will
+modify the affects of the item abilities in different ways. What each ability does and how
+the extra data fields and Magic Item Adjust affect it are described below.</p>
 
 <dl>
 <dt>Ability 0 - No ability</dt>
@@ -87,37 +81,62 @@ are described below.</p>
 
 <p>For each of these abilities, the Ability Strength is a number from 0 to 10, which
 represents the strength of the ability (0 is weakest, 10 is most powerful). The Magic Item
-Adjust field is ignored.</p>
+Adjust field is ignored.</p><!-- TODO: Double-check the expected ranges -->
 
 <dl>
-<dt>Ability 1 - Flaming Weapon</dt>
-<dd>The weapon does extra fire damage.</dd>
-<dt>Ability 2 - Demon slayer</dt>
-<dd>Does extra damage to demons. </dd>
-<dt>Ability 3 - Undead slayer</dt>
-<dd>Does extra damage to undead. </dd>
-<dt>Ability 4 - Lizard slayer</dt>
-<dd>Does extra damage to lizards. </dd>
-<dt>Ability 5 - Giant slayer</dt>
-<dd>Does extra damage to giants. </dd>
-<dt>Ability 6 - Mage slayer</dt>
-<dd>Does extra damage to mages. </dd>
-<dt>Ability 7 - Priest slayer</dt>
-<dd>Does extra damage to priests. </dd>
-<dt>Ability 8 - Bug slayer</dt>
-<dd>Does extra damage to insects. </dd>
-<dt>Ability 9 - Acidic Weapon</dt>
-<dd>Sprays acid on anything it hits.</dd>
+<dt>Ability 1 - Damaging Weapon</dt>
+<dd>The weapon does extra damage of the type specified in the second extra data field. The
+Ability Strength is the number of d6's of extra damage done.</dt>
+<dt>Ability 2 - Slayer Weapon</dt>
+<dd>Does extra damage to the race specified in the second extra data field. If the
+specified race is Humanoid, it also affects Sliths, Nephilim, Vahnatai, and Goblins. If
+the specified race is Undead, it affects both normal and skeletal undead. The amount of
+extra damage is equal to the ability strength times a race-dependent constant:
+<ul>
+<li>Demon, Giant, Stone, Dragon: 8</li>
+<li>Bug, Plant, Slime: 7</li>
+<li>Undead, Skeletal: 6</li>
+<li>Reptile, Beast, Bird: 5</li>
+<li>Mage, Priest, Magical: 4</li>
+<li>Human, Nephil, Slith, Vahnatai, Goblin, Humanoid: 3</li>
+<li>Important: 0.5</li>
+</ul>
+</dt>
+<dt>Ability 3 - Healing Weapon</dt>
+<dd>Restores health to target. The extra data fields are not used; the amount healed is
+equal to the damage that would have otherwise been done.</dt>
+<dt>Ability 4 - Exploding Weapon</dt>
+<dd>Explodes at the target, cast at a level equal to the Ability strength.</dd>
+<dt>Ability 5 - Returning Missile</dt>
+<dd>This missile is not used up when fired. It is best to only give it one use. This
+ability cannot be given to a melee weapon. The extra data fields are not used.</dd>
+<dt>Ability 6 - Farflight Missile</dt>
+<dd>This missile has a greater range than others of its kind. The Ability Strength
+specifies the bonus to the missile's range. This ability cannot be given to a melee
+weapon.</dd>
+<dt>Ability 7 - Seeking Missile</dt>
+<dd>This missile seeks out its target. If aimed at an empty space, there is a chance that
+it will instead target an adjacent space if there is something there. This is especially
+useful when fighting invisible monsters. This ability cannot be given to a melee weapon.
+The extra data fields are not used.</dd>
+<dt>Ability 8 - Draining Weapon</dt>
+<dd>Drains spell points from the target and restores the wielder's spell points. The
+amount of SP drained is equal to the Ability Strength.</dd>
+<dt>Ability 9 - Status-afflicting Weapon</dt>
+<dd>Afflicts some status effect on anything it hits. The second extra data field specifies
+the type of status effect. If it is a beneficial status effect, the weapon will instead
+drain it from the target. The amount afflicted/drained is equal to one-half the Ability
+Strength. (So, an ability strength of 1 has no effect.)</dd>
 <dt>Ability 10 - Soulsucker</dt>
-<dd>When it hits, the wielder is healed. </dd>
-<dt>Ability 11 - Drain Missiles</dt>
-<dd>Drains missiles twice as fast. This only has an effect on bows and crossbows. </dd>
+<dd>When it hits, the wielder is healed. The amount healed is equal to one-half the Ability
+Strength. (So, an ability strength of 1 has no effect.)</dd>
+<dt>Ability 11 - Reserved</dt>
 <dt>Ability 12 - Weak Weapon</dt>
 <dd>Does less damage than usual. If Ability Strength is 10, does no damage at all.</dd>
 <dt>Ability 13 - Causes Fear</dt>
 <dd>Drains morale of target.</dd>
-<dt>Ability 14 - Poisoned Weapon</dt>
-<dd>The weapon poisons any monster it hits.</dd>
+<dt>Ability 14 - Weapon Call Special</dt>
+<dd>The weapon calls a special node every time it hits.</dd>
 </dl>
 
 <h2>General Abilities (Inherent)</h2>
@@ -128,27 +147,56 @@ powerful). The Magic Item Adjust field is ignored.</p>
 
 <dl>
 <dt>Ability 30 - Protection</dt>
-<dd>This partially blocks weapon damage the wielder takes.</dd>
+<dd>This partially blocks damage the wielder takes. The type of damage blocked is
+specified in the second extra data field. The Ability Strength determines how much damage
+is blocked. For weapon damage, the amount blocked is equal to the Ability Strength;
+otherwise, it's equal to one-half the Ability Strength.</dd>
 <dt>Ability 31 - Full Protection</dt>
-<dd>This partially blocks weapon and spell damage the wielder takes.</dd>
-<dt>Ability 32 - Fire protection</dt>
-<dd>This reduces fire damage the wielder takes.</dd>
-<dt>Ability 33 - Cold protection</dt>
-<dd>This reduces cold damage the wielder takes.</dd>
-<dt>Ability 34 - Poison protection</dt>
-<dd>This reduces poison damage the wielder takes.</dd>
-<dt>Ability 35 - Magic protection</dt>
-<dd>This reduces magic damage the wielder takes.</dd>
-<dt>Ability 36 - Acid Protection</dt>
-<dd>Acid sprayed on the wielder is weakened. </dd>
+<dd>This partially blocks weapon and spell damage the wielder takes. It also protects from
+poison.</dd>
+<dt>Ability 32 - Melee Protection</dt>
+<dd>This item behaves as armour even if it isn't. It reduces damage by a die with the
+number of sides specified in Ability Strength. If the item is armour, this is on top of
+the normal damage reduction of the armour.</dd>
+<dt>Ability 33 - Evasion</dt>
+<dd>This reduces the chance of enemies hitting you with melee attacks and non-magical
+missiles. The Ability Strength determines how much less likely they are to hit, as a
+percentage.</dd>
+<dt>Ability 34 - Martyr's Shield</dt>
+<dd>When attacked with this equipped, the enemy will take damage.</dd>
+<dt>Ability 35 - Encumbering</dt>
+<dd>This increases your encumbrance by an amount equal to the Ability Strength.</dd>
+<dt>Ability 36 - Status Protection</dt>
+<dd>Protects you from a negative status effect. The type of status effect is specified in
+the second extra data field. Note that if you specify a beneficial status effect, the
+ability will have no effect. Whenever the specified status effect is received, it is
+reduced by an amount equal to a fraction of the ability strength:
+<ul>
+<li>Sleep, Paralysis, Dumbfound: 1/4</li>
+<li>Poison, Disease, Web, Slow, Curse: 1/2</li>
+<li>Acid: 1</li>
+</ul>
+<p>In addition, if applied to the disease status effect, it makes it wear off more
+quickly.</dd>
 <dt>Ability 37 - Skill</dt>
 <dd>Increases the wielder's chance of hitting in combat. </dd>
-<dt>Ability 38 - Strength</dt>
+<dt>Ability 38 - Boost Statistic</dt>
+<dd>Boosts the wielder's level in the skill specified in the second extra data field. This
+cannot boost max HP or max SP. The Ability Strength is how many extra levels the wielder
+gets. This cannot raise the effective level above 20. It can however raise the effective
+level of Mage or Priest Spells above 7, though there's not much use in doing so - the only
+thing it affects is your chance of breaking a forcecage. If applied to one of the three
+basic stats (Strength, Dexterity, and Intelligence), this ability increases your bonus to
+to that stat by one, but the bonuses are otherwise still based on your actual level in the
+stat. The Ability Strength is still relevant, however, because a few circumstances use the
+modified skill level instead of the stat bonus. These circumstances are: Amount you can carry
+(Strength), Hit chance in unarmed combat (Dexterity), Effectiveness in a mindduel
+(Intelligence).</dd>
 <dd>The wielder's bonuses due to strength are increased.</dd>
-<dt>Ability 39 - Dexterity</dt>
-<dd>The wielder's bonuses due to dexterity are increased.</dd>
-<dt>Ability 40 - Intelligence</dt>
-<dd>The wielder's bonuses due to intelligence are increased.</dd>
+<dt>Ability 39 - Boost Combat Statistics</dt>
+<dd>Like Boost Statistic, above, but applies to all combat statistics simultaneously.</dd>
+<dt>Ability 40 - Boost Magic Statistics</dt>
+<dd>Like Boost Statistic, above, but applies to all magic statistics simultaneously.</dd>
 <dt>Ability 41 - Accuracy</dt>
 <dd>Missile weapons are more accurate.</dd>
 <dt>Ability 42 - Thieving</dt>
@@ -159,10 +207,16 @@ powerful). The Magic Item Adjust field is ignored.</p>
 <dd>Wielder can carrier more weight. </dd>
 <dt>Ability 45 - Heavier object</dt>
 <dd>Wielder can carry less weight. </dd>
-<dt>Ability 46 - Occasional Bless</dt>
-<dd>Sometimes blesses the wearer in combat. </dd>
-<dt>Ability 47 - Occasional Haste</dt>
-<dd>Sometimes hastes the wearer in combat. </dd>
+<dt>Ability 46 - Occasional Status Effect</dt>
+<dd>Occasionally inflicts a status effect. Which status effect is specified by the second
+extra data field. The Ability Strength specifies how much, and the Magic Use Type
+determines whether it is beneficial or harmful. If the Magic Use Type specifies that it
+affects a single character, it must be equipped to have its effect, but if the Magic Use
+Type specifies that it affects the whole party, it need only be carried to have its
+effect.</dd>
+<dt>Ability 47 - Defensive Call Special</dt>
+<dd>Calls a special node when the wearer is hit in melee combat or by a non-magical
+missile.</dd>
 <dt>Ability 48 - Life Saving (c)</dt>
 <dd>When the wielder takes a death blow, he/she survives and is healed, and the item loses
 a charge. This item must be given charges.</dd>
@@ -171,10 +225,11 @@ a charge. This item must be given charges.</dd>
 <dt>Ability 50 - Regenerate</dt>
 <dd>Heals wielder occasionally.</dd>
 <dt>Ability 51 - Poison Augment</dt>
-<dd>Wielder's weapon poison more effective.</dd>
-<dt>Ability 52 - Disease Party</dt>
-<dd>When carried (not just equipped), the item occasionally diseases the entire
-party.</dd>
+<dd>Wielder's weapon poison more effective. The wielder must poison their weapon first for
+this ability to have any effect.</dd>
+<dt>Ability 52 - Radiant</dt>
+<dd>When worn, this item sometimes increases the light level around you. This can even
+work in totally dark towns.</dd>
 <dt>Ability 53 - Will</dt>
 <dd>Wielder more effective in a mindduel, and resists sleeping and paralysis.</dd>
 <dt>Ability 54 - Free Action</dt>
@@ -182,24 +237,23 @@ party.</dd>
 <dt>Ability 55 - Speed</dt>
 <dd>The wearer gets more action points in combat (powerful).</dd>
 <dt>Ability 56 - Slow Wearer</dt>
-<dd>Occasionally slows the wearer in combat.</dd>
-<dt>Ability 57 - Undead Protection</dt>
-<dd>Protects from blows received from undead in combat.</dd>
-<dt>Ability 58 - Demon Protection</dt>
-<dd>Protects from blows received from demons in combat.</dd>
-<dt>Ability 59 - Humanoid Protection</dt>
-<dd>Protects from blows received from humanoids in combat.</dd>
-<dt>Ability 60 - Reptile Protection</dt>
-<dd>Protects from blows received from reptiles in combat.</dd>
-<dt>Ability 61 - Giant Protection</dt>
-<dd>Protects from blows received from giants in combat.</dd>
-<dt>Ability 62 - Disease Protection</dt>
-<dd>Provides resistance from disease.</dd>
+<dd>The wearer gets fewer action points in combat.</dd>
+<dt>Ability 57 - Protect from Species</dt>
+<dd>Protects from blows received in combat from the species specified in the second extra
+data field. If the specified species is Humanoid, it also protects from Sliths, Nephilim,
+Vahnatai, and Goblins. If the specified species is Undead, it protects from both normal
+and skeletal undead. Damage is reduced by an amount equal to one-half the Ability
+Strength.</dd>
+<dt>Ability 58 - Lockpicks</dt>
+<dd>This item can be used as a lockpick. The Ability Strength determines how good a pick
+it is.</dd>
+<dt>Ability 59 - Drains Missiles</dt>
+<dd>Drains missiles twice as fast. This is typically given to bows and crossbows.</dd>
 </dl>
 
-<h2>Non-Spell Usable (Usable)</h2>
+<h2>Usable Abilities</h2>
 
-<p>Each of these item abilities affects a character's statistics (e.g. health, spell
+<p>Most of these item abilities affect a character's statistics (e.g. health, spell
 points) or status (e.g. poison, flying) when the item is used.</p>
 <p>For each of these abilities, the Ability Strength is a number from 0 to 10, which
 represents the strength of the ability (0 is weakest, 10 is most powerful). The meaning of
@@ -211,7 +265,7 @@ character or the whole party, and whether the item helps or hurts the party.</p>
 <p>Some of these abilities can only help (like Bliss) or only hurt (like Doom). For these
 abilities, the Magic Item Adjust values of 0 and 1 have the same effect, and the values 2
 and 3 have the same effect. Also, some abilities only affect the whole party (like Light
-or Firewalk).</p>
+or Firewalk). For these abilities, setting the Magic Item Use type to affect a single PC will have the same effect as the equivalent Whole Party setting.</p>
 <p><br></p>
 <p>Example: Suppose you give an item the ability Dumbfound, set Ability Strength to 2, and
 Magic Item Adjust to 0. Then, when the item is used, the user's level of dumbfounding will
@@ -223,114 +277,80 @@ of acid (which means the acid lasts about 5 turns).</p>
 
 <dl>
 <dt>Ability 70 - Poison Weapon</dt>
-<dd>Increases or decreases the amount of poison on the user's/party's weapons. If the item
-is beneficial, when used, the user has a chance (based on the Poison skill) of poisoning
-him/herself.</dd>
-<dt>Ability 71 - Curse/Bless User</dt>
-<dt>Ability 72 - Cure/Cause Poison</dt>
-<dt>Ability 73 - Speed/Slow User</dt>
-<dt>Ability 74 - Add/Lose Invulnerability</dt>
-<dt>Ability 75 - Add/Lose Magic Resistance</dt>
-<dt>Ability 76 - Add/Lose Web</dt>
-<dd>Affects how much web is on the PC/party.</dd>
-<dt>Ability 77 - Cure/Cause Disease</dt>
-<dt>Ability 78 - Add/Lose Sanctuary</dt>
-<dt>Ability 79 - Cure/Cause Dumbfounding</dt>
-<dt>Ability 80 - Add/Lose Martyrs Shield</dt>
-<dt>Ability 81 - Cure/Cause Sleep</dt>
-<dt>Ability 82 - Cure/Cause Paralysis</dt>
-<dt>Ability 83 - Cure/Cause Acid</dt>
-<dt>Ability 84 - Bliss</dt>
-<dd>Both heals and blesses. Only has a positive effect.</dd>
-<dt>Ability 85 - Add/Lose Experience</dt>
+<dd>This item is a weapon poison that can be applied to the user's weapon. The Magic Use
+Type is ignored, and the Ability Strength is the strength of the poison. When used, the
+user has a chance (based on the Poison skill) of poisoning him/herself.</dd>
+<dt>Ability 71 - Affect Status</dt>
+<dd>Affects the level of a status effect on the user. Note that some pairs of status
+effects are considered opposites, so that curing one is the same as afflicting its
+opposite. The status effect to affect is specified in the second extra data field, and the
+Ability Strength specifies how much to change it.</dd>
+<dt>Ability 72 - Cast Spell</dt>
+<dd>Casts a spell. The spell is cast as if by a PC of level equal to the Ability Strength
+with an Intelligence bonus of 1. The second extra data field specifies which spell to
+cast. For a priest spell, add 100 to the spell number. There are also some extra spells
+not available to PCs that can be specified here - they have IDs 62-72 and 162-165. You can
+click the Mage or Priest button to select the spell from a list. The Magic Item Adjust
+setting is ignored. The additional spells are:
+<ol start='62'>
+<li><i>Strengthen Target</i> - Makes the target monster stronger. Still counts as an
+attack, so casting it on a friendly monster will make it hostile.</li>
+<li><i>Summon Rat</i> - Summons a Mung Rat.</li>
+<li><i>Sphere of Frost</i> - Like the Ice Wall spell, but in a circle.</li>
+<li><i>Goo Bomb</i> - Like the Web spell, but in a larger radius.</li>
+<li><i>Foul Vapours</i> - Like the Stinking Cloud spell, but in a large circle.</li>
+<li><i>Sleep Bomb</i> - Like the Sleep Cloud spell, but in a circle.</li>
+<li><i>Acid Spray</i> - Sprays acid on target.</li>
+<li><i>Paralyze Beam</i> - Like the Paralyze spell, but affects just a single target.</li>
+<li><i>Mass Sleep</i> - Like Mass Paralysis, but puts all nearby monsters to sleep.</li>
+<li><i>Ravage Enemies</i> - Like Slow Group, but also curses enemies.</li>
+<li><i>Aura of Blades</i> - Places a circle of Blade Walls centered on the caster's location.
+This will damage the caster as well as anything within range.</li>
+<li value='162'><i>Dispel Field</i> - This differs from the two Dispel Fields spells (one
+mage, one priest) in only affecting a single space.</li>
+<li><i>Distance Shatter</i> - This combines the range of Move Mountains with the area
+effect of Shatter, destroying any fragile walls in a 3x3 area around the target
+location.</li>
+<li><i>Wrack</i> - A weaker version of the Wound spell.</li>
+<li><i>Unholy Ravaging</i> - Damages, slows, and poisons the targeted monster.</li>
+</ol>
+</dd>
+<dt>Ability 73 - Bliss/Doom</dt>
+<dd>Bliss heals and blesses. Doom poisons, damages, diseases, dumbfounds, and drains
+experience. If the Magic Use Type specifies a helpful item, it causes Bliss; otherwise,
+Doom.</dd>
+<dt>Ability 74 - Add/Lose Experience</dt>
 <dd>Experience gained/lost is equal to 5 times Ability Strength.</dd>
-<dt>Ability 86 - Add/Lose Skill Pts.</dt>
+<dt>Ability 75 - Add/Lose Skill Pts.</dt>
 <dd>Amount of skill points gained/lost is equal to Ability Strength.</dd>
-<dt>Ability 87 - Add/Lose Health</dt>
+<dt>Ability 76 - Add/Lose Health</dt>
 <dd>Amount added or lost is 10 times Ability Strength plus or minus a small random amount.
 Health will not be reduced below 0. This can be as high as 20.</dd>
-<dt>Ability 88 - Add/Lose Spell Points</dt>
+<dt>Ability 77 - Add/Lose Spell Points</dt>
 <dd>Amount added or lost is 5 times Ability Strength plus or minus a small random
 amount.</dd>
-<dt>Ability 89 - Doom</dt>
-<dd>Poisons, damages, diseases, dumbfounds, and drains experience. Only has a negative
-effect.</dd>
-<dt>Ability 90 - Light</dt>
-<dd>Acts as a Light spell.</dd>
-<dt>Ability 91 - Stealth</dt>
-<dd>Acts as a Stealth spell.</dd>
-<dt>Ability 92 - Firewalk</dt>
-<dd>Acts as a Firewalk spell.</dd>
-<dt>Ability 93 - Flying</dt>
-<dd>Acts as a Flying spell.</dd>
-</dl>
-
-<h2>Spell Usable (Usable)</h2>
-
-<p>When an item with one of these abilities is used, it casts a spell (which may need to
-be targeted). For each of these abilities, the Ability Strength is a number from 0 to 10,
-which represents the level the spell is cast at (0 is weakest, 10 is most powerful). The
-meaning of this changes depending on the ability affected. Sometimes, the number affects
-the duration, sometimes the damage done.</p>
-<p>The Magic Item Adjust field is not used, except as noted below.</p>
-
-<dl>
-<dt>Ability 110 - Flame</dt>
-<dd>Casts a Flame spell.</dd>
-<dt>Ability 111 - Fireball</dt>
-<dd>Casts a Fireball spell.</dd>
-<dt>Ability 112 - Firestorm</dt>
-<dd>Casts a Firestorm spell.</dd>
-<dt>Ability 113 - Kill</dt>
-<dd>Casts a Kill spell.</dd>
-<dt>Ability 114 - Ice Bolt</dt>
-<dd>Casts an Ice Bolt spell.</dd>
-<dt>Ability 115 - Slow</dt>
-<dd>Casts a Slow spell.</dd>
-<dt>Ability 116 - Shockwave</dt>
-<dd>Casts a Shockwave spell.</dd>
-<dt>Ability 117 - Dispel Undead</dt>
-<dd>Casts a Dispel Undead spell.</dd>
-<dt>Ability 118 - Dispel Spirit</dt>
-<dd>Casts a Dispel Spirit spell.</dd>
-<dt>Ability 119 - Summoning</dt>
-<dd>Summons one monster. The Ability Strength field contains the number of the monster to
-summon. When the party leaves the scenario, all items of this type are taken away (because
-the monsters in the next scenario might be completely different).</dd>
-<dt>Ability 120 - Mass Summoning</dt>
-<dd>Summons 3-5 monsters. The Ability Strength field contains the number of the monsters
-to summon.When the party leaves the scenario, all items of this type are taken away
-(because the monsters in the next scenario might be completely different).</dd>
-<dt>Ability 121 - Acid Spray</dt>
-<dd>Sprays acid on target. Amount depends on value of Ability Strength field.</dd>
-<dt>Ability 122 - Stinking Cloud</dt>
-<dd>Casts a Stinking Cloud spell.</dd>
-<dt>Ability 123 - Sleep Field</dt>
-<dd>Creates a Sleep Field at target.</dd>
-<dt>Ability 124 - Venom</dt>
-<dd>Casts a Venom spell.</dd>
-<dt>Ability 125 - Shockstorm</dt>
-<dd>Casts a Shockstorm spell. </dd>
-<dt>Ability 126 - Paralysis</dt>
-<dd>Casts a Paralysis spell. </dd>
-<dt>Ability 127 - Web Spell</dt>
-<dd>Casts a Web spell. </dd>
-<dt>Ability 128 - Strengthen Target</dt>
-<dd>Makes the target monster stronger. Can only be used on unfriendly monsters.</dd>
-<dt>Ability 129 - Quickfire</dt>
-<dd>Creates quickfire on space where its used.</dd>
-<dt>Ability 130 - Mass Charm</dt>
-<dd>Charms all monsters nearby.</dd>
-<dt>Ability 131 - Magic Map</dt>
-<dd>Casts a Magic Map spell.</dd>
-<dt>Ability 132 - Dispel Barrier</dt>
-<dd>Casts a Dispel Barrier spell.</dd>
-<dt>Ability 133 - Ice Wall</dt>
-<dd>Casts an Ice Wall spell.</dd>
-<dt>Ability 134 - Charm</dt>
-<dd>Casts a Charm spell.</dd>
-<dt>Ability 130 - Antimagic Cloud</dt>
-<dd>Casts an Antimagic Cloud spell.</dd>
+<dt>Ability 78 - Light</dt>
+<dd>Affects the party light level. The Ability Strength determines how much, and the Magic
+Use Type determines whether it increases or decreases the light level.</dd>
+<dt>Ability 79 - Affect Party Status</dt>
+<dd>Increases or decreases one of the whole-party status effects - Stealth, Firewall,
+Flight or Detect Life. The second extra data field specifies which effect, and the Ability
+Strength determines how much. For Stealth, the Ability Strength is multiplied by 5; for
+Firewalk, it is multiplied by 2. The Magic Use Type determiens whether it increase or
+decreases the status effect.</dd>
+<dt>Ability 80 - Affect Health and Poison</dt>
+<dd>Affects both health and poison. The amount of poison affected is equal to the Ability Strength, while the amount of health changed is equal to 25 times the Ability Strength.</dd>
+<dt>Ability 81 - Call Special</dt>
+<dd>Calls a special node when used.</dd>
+<dt>Ability 82 - Summoning</dt>
+<dd>Summons one monster. The Ability Strength field specifies how long the monster stays,
+while the second extra data field contains the number of the monster to summon. The Magic
+Item Adjust setting is ignored.</dd>
+<dt>Ability 83 - Mass Summoning</dt>
+<dd>Summons 3-5 monsters. Otherwise works just like the above ability.</dd>
+<dt>Ability 84 - Quickfire</dt>
+<dd>Creates quickfire on space where its used. The Magic Item Adjust setting is ignored, as
+are the extra data fields..</dd>
 </dl>
 
 <h2>Reagents (Inherent)</h2>
@@ -347,41 +367,28 @@ used to cast Mindduel.</p>
 
 <dl>
 <dt>Ability 150 - Holly/Toadstool</dt>
+<dd>Used for Weak Curing, Weak Poison, Clarity</dd>
 <dt>Ability 151 - Comfrey Root</dt>
+<dd>Used for Weak Healing, Weak Speed, Strong Healing</dd>
 <dt>Ability 152 - Glowing Nettle</dt>
+<dd>Used for Medium Healing, Strong Curing, Medium Speed, Strong Strength</dd>
 <dt>Ability 153 - Crypt Shroom/Wormgrass</dt>
+<dd>Used for Weak Speed, Medium Poison, Medium Speed, Weak Power</dd>
 <dt>Ability 154 - Asptongue Mold</dt>
+<dd>Used for Weak Power, Strong Poison, Medium Power, Bliss</dd>
 <dt>Ability 155 - Ember Flowers</dt>
+<dd>Used for Resurrection Balm, Knowledge Brew, Strong Strength, Strong Power</dd>
 <dt>Ability 156 - Graymold</dt>
+<dd>Used for Graymold Salve, Clarity, Strong Healing, Bliss</dd>
 <dt>Ability 157 - Mandrake</dt>
+<dd>Used for Killer Poison, Medium Power, Knowledge Brew, Strong Power</dd>
 <dt>Ability 158 - Sapphire</dt>
+<dd>Required to cast Magic Map.</dd>
 <dt>Ability 159 - Smoky Crystal</dt>
+<dd>Required to cast Mindduel.</dd>
 <dt>Ability 160 - Resurrection Balm</dt>
-<dt>Ability 161 - Lockpicks</dt>
-<dd>This item can be used as a lockpick. The Ability Strength determines how good a pick
-it is.</dd>
-</dl>
-
-<h2>Missiles (Inherent)</h2>
-
-<p>These abilities can only be given to missile ammunition. The Magic Item Adjust and
-Ability Strength fields are not used, except as noted below.</p>
-
-<dl>
-<dt>Ability 170 - Returning</dt>
-<dd>This missile is not used up when fired. It is best to only give it one use.</dd>
-<dt>Ability 171 - Lightning</dt>
-<dd>Target takes an amount of magical damage equal to the Ability Strength.</dd>
-<dt>Ability 172 - Exploding</dt>
-<dd>Fireball explodes at the target, cast at a level equal to the Ability strength.</dd>
-<dt>Ability 173 - Acid</dt>
-<dd>Target is sprayed with acid.</dd>
-<dt>Ability 174 - Slay Undead</dt>
-<dd>Does major extra damage versus undead.</dd>
-<dt>Ability 175 - Slay Demon</dt>
-<dd>Does major extra damage against demons.</dd>
-<dt>Ability 176 - Heal Target</dt>
-<dd>Restores health to target.</dd>
+<dd>Required to cast Raise Dead or Resurrect.
+<br>Note: For old-format scenarios, this requirement is waived.</dd>
 </dl>
 
 </div>

@@ -56,6 +56,38 @@ three long.</p>
 256. This multitude of special nodes will be the clay with which you can sculpt a wild,
 elaborate adventure.</p>
 
+<h2>Pointers (Advanced)</h2>
+
+<p>Pointers are an advanced feature of the special node engine. A pointer is a negative
+number that references a Stuff Done Flag, allowing you to directly use the value of a
+Stuff Done Flag as a parameter to a special node.</p>
+<p>When the game calls a special node, it looks at the values it has. If any of them are
+negative (more specifially, less than or equal to -10), the game checks to see if there is
+a pointer with that number. If there is, the game fetches the value of a Stuff Done Flag
+that the pointer points to, and substitutes that into the special node where the pointer
+was specified.</p>
+<p>There are 100 mutable pointers available, which can be set using the Set Pointer
+special node. In addition, there are a number of reserved pointers that are set in certain
+circumstances. Rather than referencing a Stuff Done Flag, these refer to special values of
+the encounter itself. The reserved pointers are:</p>
+<ol start=''>
+<li value='5'>If the special node was called to determine the result of a custom trap
+effect, this pointer refers to the trap level.</li>
+<li value='8'>This can be used anywhere a scenario message is expected to refer to the
+special string buffer. The contents of the special string buffer can be manipulated using
+the Clear Buffer special node and various Append To Buffer special nodes.</li>
+<li value='10'>This contains the X coordinate of the space the special node was triggered
+on.</li>
+<li>This contains the Y coordinate of the space the special node was triggered on.</li>
+<li>This contains the terrain type of the space the special node was triggered on.</li>
+<li value='20'>When a special node is called during an attack, this contains the number of
+the targeted creature, ready to be passed to a Select Target special node.</li>
+<li>When a special node is called during an attack, this contains the X coordinate of the
+targeted space.</li>
+<li>When a special node is called during an attack, this contains the Y coordinate of the
+targeted space.</li>
+</ol>
+
 <h2>Simple Examples</h2>
 
 <p>Confused yet? Understandable. Creating a special encounter is a lot like writing a
