@@ -104,7 +104,7 @@ void cSpecial::append(legacy::special_node_type& old){
 			break;
 		case 99: case 100: // Add mage/priest spell TODO: Merge these by adding 100 if it's a priest spell
 			ex1a += 30;
-			ex1b = 1; // Meaning give spell, not take
+			ex1b = 0; // Meaning give spell, not take
 			break;
 		case 148: case 149: // if barrels or crates
 			type = eSpecType::IF_FIELDS;
@@ -201,15 +201,18 @@ void cSpecial::append(legacy::special_node_type& old){
 			// Party statuses (three nodes collapsed into one)
 		case 104:
 			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(ePartyStatus::STEALTH);
+			ex1b = 0;
+			ex2a = int(ePartyStatus::STEALTH);
 			break;
 		case 105:
 			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(ePartyStatus::FIREWALK);
+			ex1b = 0;
+			ex2a = int(ePartyStatus::FIREWALK);
 			break;
 		case 106:
 			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(ePartyStatus::FLIGHT);
+			ex1b = 0;
+			ex2a = int(ePartyStatus::FLIGHT);
 			break;
 			// Place fields (twelve individual node types were collapsed into one)
 		case 200:
@@ -422,9 +425,9 @@ static const char*const button_dict[7][11] = {
 		"                         5", // pic
 		"                         s", // pictype
 		"      w q          AP  a  ", // ex1a
-		"                        E ", // ex1b
+		"                          ", // ex1b
 		"       e                 Q", // ex1c
-		"                  K       ", // ex2a
+		"                  K     E ", // ex2a
 		" D                        ", // ex2b
 		" x                        ", // ex2c
 	}, { // if-then nodes

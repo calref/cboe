@@ -199,6 +199,8 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				if(!is_blocked(where_check)) runSpecial = true;
 				if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
 				if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
+				if(univ.town->specials[*spec_num].type == eSpecType::CANT_ENTER)
+					runSpecial = true;
 				if(!PSD[SDF_NO_BOAT_SPECIALS] && univ.party.in_boat >= 0 && univ.scenario.ter_types[ter].boat_over)
 					runSpecial = true;
 				if(runSpecial) {
@@ -2202,7 +2204,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::SET_SDF_ROW:
 			if(spec.sd1 != minmax(0,299,spec.sd1))
 				giveError("Stuff Done flag out of range.");
-			else for(i = 0; i < 10; i++) PSD[spec.sd1][i] = spec.ex1a;
+			else for(i = 0; i < 50; i++) PSD[spec.sd1][i] = spec.ex1a;
 			break;
 		case eSpecType::COPY_SDF:
 			if(!univ.party.sd_legit(spec.sd1,spec.sd2) || !univ.party.sd_legit(spec.ex1a,spec.ex1b))
@@ -2286,8 +2288,10 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				case eSpecType::SDF_DIFF: setsd(spec.sd1, spec.sd2, i - j); break;
 				case eSpecType::SDF_TIMES: setsd(spec.sd1, spec.sd2, i * j); break;
 				case eSpecType::SDF_DIVIDE:
-					setsd(spec.sd1, spec.sd2, i / j);
-					setsd(spec.ex1c, spec.ex2c, i % j);
+					if(univ.party.sd_legit(spec.sd1, spec.sd2))
+						setsd(spec.sd1, spec.sd2, i / j);
+					if(univ.party.sd_legit(spec.ex1c, spec.ex2c))
+						setsd(spec.ex1c, spec.ex2c, i % j);
 					break;
 				case eSpecType::SDF_POWER:
 					if(i == 2) setsd(spec.sd1, spec.sd2, 1 << j);
@@ -2374,8 +2378,10 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			} else univ.scenario.get_buf() += univ.scenario.scen_monsters[spec.ex1a].m_name;
 			break;
 		case eSpecType::APPEND_ITEM:
-			if(spec.ex1b)
+			if(spec.ex1b == 1)
 				univ.scenario.get_buf() += univ.scenario.scen_items[spec.ex1a].full_name;
+			else if(spec.ex1b == 2)
+				univ.scenario.get_buf() += get_item_interesting_string(univ.scenario.scen_items[spec.ex1a]);
 			else univ.scenario.get_buf() += univ.scenario.scen_items[spec.ex1a].name;
 			break;
 		case eSpecType::APPEND_TER:
@@ -2922,7 +2928,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			for(i = 0; i < 6; i++)
 				if(pc_num == 6 || pc_num == i)
-					univ.party[i].mage_spells[spec.ex1a] = spec.ex1b;
+					univ.party[i].mage_spells[spec.ex1a] = !spec.ex1b;
 			break;
 		case eSpecType::AFFECT_PRIEST_SPELL:
 			if(pc_num >= 100) break;
@@ -2932,7 +2938,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			for(i = 0; i < 6; i++)
 				if(pc_num == 6 || pc_num == i)
-					univ.party[i].priest_spells[spec.ex1a] = spec.ex1b;
+					univ.party[i].priest_spells[spec.ex1a] = !spec.ex1b;
 			break;
 		case eSpecType::AFFECT_GOLD:
 			if(spec.ex1b == 0)
@@ -2957,12 +2963,14 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_PARTY_STATUS:
 			if(spec.ex2a < 0 || spec.ex2a > 3) break;
-			if(spec.ex2a == 1 && univ.party.in_boat >= 0)
+			if(spec.ex1b == 0 && spec.ex2a == 1 && univ.party.in_boat >= 0)
 				add_string_to_buf("  Can't fly when on a boat.");
-			else if(spec.ex2a == 1 && univ.party.in_horse >= 0)
+			else if(spec.ex1b == 0 && spec.ex2a == 1 && univ.party.in_horse >= 0)
 				add_string_to_buf("  Can't fly when on a horse.");
 			r1 = univ.party.status[ePartyStatus(spec.ex2a)];
-			r1 = minmax(0,250,r1 + spec.ex1a);
+			if(spec.ex1b == 0)
+				r1 = minmax(0,250,r1 + spec.ex1a);
+			else r1 = minmax(0,250,r1 - spec.ex1a);
 			univ.party.status[ePartyStatus::STEALTH] = r1;
 			break;
 		case eSpecType::AFFECT_TRAITS:
