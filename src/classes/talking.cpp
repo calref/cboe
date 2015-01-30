@@ -50,23 +50,27 @@ void cSpeech::append(legacy::talking_record_type& old){
 				talk_nodes[i].type = eTalkNode::DEP_ON_TOWN;
 				break;
 			case 7: // Item shop
-				talk_nodes[i].type = eTalkNode::BUY_ITEMS;
+				talk_nodes[i].type = eTalkNode::SHOP;
+				talk_nodes[i].extras[3] = int(eShopType::ITEMS);
 				break;
 			case 8: // Training
 				talk_nodes[i].type = eTalkNode::TRAINING;
 				break;
 			case 9: // Spell shops
-				talk_nodes[i].type = eTalkNode::BUY_MAGE;
+				talk_nodes[i].extras[3] = int(eShopType::MAGE);
 			if(false) // Intentional fallthrough, but suppress first line
 			case 10:
-				talk_nodes[i].type = eTalkNode::BUY_PRIEST;
+				talk_nodes[i].extras[3] = int(eShopType::PRIEST);
+				talk_nodes[i].type = eTalkNode::SHOP;
 				talk_nodes[i].extras[1] += 30;
 				break;
 			case 11: // Alchemy shop
-				talk_nodes[i].type = eTalkNode::BUY_ALCHEMY;
+				talk_nodes[i].type = eTalkNode::SHOP;
+				talk_nodes[i].extras[3] = int(eShopType::ALCHEMY);
 				break;
 			case 12: // Healer
-				talk_nodes[i].type = eTalkNode::BUY_HEALING;
+				talk_nodes[i].type = eTalkNode::SHOP;
+				talk_nodes[i].extras[3] = int(eShopType::HEALING);
 				break;
 			case 13: // Sell weapons
 				talk_nodes[i].type = eTalkNode::SELL_WEAPONS;
@@ -99,7 +103,9 @@ void cSpeech::append(legacy::talking_record_type& old){
 				talk_nodes[i].type = eTalkNode::BUY_SPEC_ITEM;
 				break;
 			case 23: // Junk shop
-				talk_nodes[i].type = eTalkNode::BUY_JUNK;
+				talk_nodes[i].type = eTalkNode::SHOP;
+				talk_nodes[i].extras[3] = talk_nodes[i].extras[1] + int(eShopType::MAGIC_JUNK);
+				talk_nodes[i].extras[1] = 0;
 				break;
 			case 24: // buy town location
 				talk_nodes[i].type = eTalkNode::BUY_TOWN_LOC;

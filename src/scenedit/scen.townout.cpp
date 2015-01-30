@@ -1038,6 +1038,7 @@ static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>&
 	for(int i = 0; i < 4; i++)
 		talk_node.extras[i] = me["extra" + std::to_string(i + 1)].getTextAsNum();
 	
+	int n;
 	switch(talk_node.type) {
 		case eTalkNode::DEP_ON_SDF: case eTalkNode::SET_SDF:
 			if(cre(talk_node.extras[0],0,299,"First part of Stuff Done flag must be from 0 to 299.","",&me)) return false;
@@ -1056,9 +1057,22 @@ static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>&
 		case eTalkNode::BUY_TOWN_LOC:
 			if(cre(talk_node.extras[1],0,scenario.towns.size(),"Town number must be from 0 to " + std::to_string(scenario.towns.size()) + ".","",&me)) return false;
 			break;
-		case eTalkNode::BUY_ITEMS: case eTalkNode::BUY_MAGE: case eTalkNode::BUY_PRIEST:
-		case eTalkNode::BUY_ALCHEMY: case eTalkNode::BUY_HEALING:
+		case eTalkNode::SHOP:
 			if(cre(talk_node.extras[0],0,6,"Cost adjustment must be from 0 (cheapest) to 6 (most expensive).","",&me)) return false;
+			if(cre(talk_node.extras[3],0,11,"Shop type must be from 0 to 11.", "", &me)) return false;
+			switch(talk_node.extras[3]) {
+				case int(eShopType::ITEMS): n = scenario.scen_items.size(); break;
+				case int(eShopType::MAGE): case int(eShopType::PRIEST): n = 62; break;
+				case int(eShopType::ALCHEMY): n = 20; break;
+				case int(eShopType::SKILLS): n = 18; break;
+				default: n = 0; break;
+			}
+			if(n > 0) {
+				if(cre(talk_node.extras[1],0,n,"First item in shop must be from 0 to " + std::to_string(n), "", &me)) return false;
+				if(cre(talk_node.extras[1],1,30,"Shops cannot have more than 30 items.", "", &me)) return false;
+				int last = talk_node.extras[1] + talk_node.extras[2] - 1;
+				if(cre(last,0,n,"Number of items in shop cannot be such that the last item does not exist.", "", &me)) return false;
+			}
 			break;
 		case eTalkNode::ENCHANT:
 			if(cre(talk_node.extras[0],0,6,"Enchantment type must be from 0 to 6. See the documentation for a list of possible abilities.","",&me)) return false;
@@ -1079,7 +1093,7 @@ static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>&
 		case eTalkNode::CALL_SCEN_SPEC:
 			if(cre(talk_node.extras[0],-1,255,"The scenario special node called must be in the legal range (0 - 255), or -1 for No Special.","",&me)) return false;
 			break;
-		case eTalkNode::BUY_INFO: case eTalkNode::BUY_JUNK: case eTalkNode::DEP_ON_TIME: case eTalkNode::REGULAR:
+		case eTalkNode::BUY_INFO: case eTalkNode::DEP_ON_TIME: case eTalkNode::REGULAR:
 		case eTalkNode::END_ALARM: case eTalkNode::END_DIE: case eTalkNode::END_FIGHT: case eTalkNode::END_FORCE:
 		case eTalkNode::IDENTIFY: case eTalkNode::SELL_ARMOR: case eTalkNode::SELL_ITEMS: case eTalkNode::SELL_WEAPONS:
 		case eTalkNode::TRAINING:
@@ -1116,7 +1130,7 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<short>& talk_edit_stac
 	me["str1"].setText(talk_node.str1);
 	me["str2"].setText(talk_node.str2);
 	
-	if(talk_node.type == eTalkNode::BUY_ITEMS || talk_node.type == eTalkNode::BUY_MAGE || talk_node.type == eTalkNode::BUY_PRIEST || talk_node.type == eTalkNode::BUY_ALCHEMY)
+	if(talk_node.type == eTalkNode::SHOP)
 		me["chooseB"].show();
 	else me["chooseB"].hide();
 	if(talk_node.type != eTalkNode::CALL_TOWN_SPEC && talk_node.type != eTalkNode::CALL_SCEN_SPEC)
@@ -1167,18 +1181,24 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 	const auto& talk_node = town->talking.talk_nodes[talk_edit_stack.top()];
 	if(item_hit == "chooseB") {
 		int i = me["extra2"].getTextAsNum();
-		switch(talk_node.type) {
-			case eTalkNode::BUY_MAGE:
+		switch(talk_node.extras[3]) {
+			case int(eShopType::MAGE):
 				i = choose_text(STRT_MAGE,i,&me,"What is the first mage spell in the shop?");
 				break;
-			case eTalkNode::BUY_PRIEST:
+			case int(eShopType::PRIEST):
 				i = choose_text(STRT_PRIEST,i,&me,"What is the first priest spell in the shop?");
 				break;
-			case eTalkNode::BUY_ALCHEMY:
+			case int(eShopType::ALCHEMY):
 				i = choose_text(STRT_ALCHEMY,i,&me,"What is the first recipe in the shop?");
 				break;
-			default:
+			case int(eShopType::ITEMS):
 				i = choose_text(STRT_ITEM,i,&me,"What is the first item in the shop?");
+				break;
+			case int(eShopType::SKILLS):
+				i = choose_text(STRT_SKILL,i,&me,"What is the first skill in the shop?");
+				break;
+			default:
+				giveError("The shop type you've chosen doesn't support item customization!", &me);
 				break;
 		}
 		me["extra1"].setTextToNum(i);

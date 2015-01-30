@@ -173,6 +173,19 @@ void end_shop_mode() {
 	put_pc_screen();
 	// TODO: I suspect REFRESH_NONE will suffice here
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
+	
+	// If it was a magic shop, we need to update the stored list of items so that bought items don't reappear
+	if(active_shop.getType() >= eShopType::MAGIC_JUNK && active_shop.getType() <= eShopType::MAGIC_GREAT) {
+		int which_shop = int(active_shop.getType()) - int(eShopType::MAGIC_JUNK);
+		int j = 0;
+		for(int i = 0; i < 30 && j < 10; i++) {
+			cShopItem item = active_shop.getItem(i);
+			if(item.type != eShopItemType::EMPTY)
+				univ.party.magic_store_items[which_shop][j++] = item.item;
+		}
+		for(int i = j; i < 10; i++)
+			univ.party.magic_store_items[which_shop][i].variety = eItemType::NO_ITEM;
+	}
 }
 
 void handle_shop_event(location p) {
@@ -249,16 +262,6 @@ void handle_sale(cShopItem item, int i) {
 				play_sound(62);
 				ASB("You buy an alchemical recipe.");
 				univ.party.alchemy[base_item.item_level] = true;
-			}
-			break;
-		case eShopItemType::FOOD:
-			// TODO: This shop type is never actually used. Should it be deleted or restored?
-			if(!take_gold(cost,false))
-				ASB("Not enough gold.");
-			else {
-				play_sound(-38);
-				ASB("You buy food.");
-				univ.party.food += base_item.item_level;
 			}
 			break;
 		case eShopItemType::HEAL_WOUNDS: case eShopItemType::REMOVE_CURSE: case eShopItemType::CURE_DUMBFOUNDING:
@@ -376,7 +379,6 @@ void handle_info_request(cShopItem item) {
 	switch(item.type) {
 		case eShopItemType::EMPTY: break;
 		case eShopItemType::ITEM:
-		case eShopItemType::FOOD:
 			display_pc_item(6,0, base_item,0);
 			break;
 		case eShopItemType::ALCHEMY:
@@ -384,10 +386,10 @@ void handle_info_request(cShopItem item) {
 			display_alchemy();
 			break;
 		case eShopItemType::MAGE_SPELL:
-			display_spells(eSkill::MAGE_SPELLS,base_item.item_level - 800 - 30,0);
+			display_spells(eSkill::MAGE_SPELLS,base_item.item_level,0);
 			break;
 		case eShopItemType::PRIEST_SPELL:
-			display_spells(eSkill::PRIEST_SPELLS,base_item.item_level - 900 - 30,0);
+			display_spells(eSkill::PRIEST_SPELLS,base_item.item_level,0);
 			break;
 		case eShopItemType::SKILL:
 			display_skills(eSkill(base_item.item_level), nullptr);
@@ -429,11 +431,6 @@ void set_up_shop_array(eShopType store_shop_type, short store_shop_min, short st
 				active_shop.addSpecial(eShopItemType::RAISE_DEAD);
 			if(univ.party[current_pc].main_status == eMainStatus::DUST)
 				active_shop.addSpecial(eShopItemType::RESURRECT);
-			break;
-		case eShopType::FOOD:
-			// TODO: This shop type is never actually used. Should it be deleted or resurrected?
-			for(int i = store_shop_min; i <= store_shop_max; i++)
-				active_shop.addSpecial(eShopItemType::FOOD, i);
 			break;
 		case eShopType::MAGIC_JUNK:
 			active_shop.addItems(univ.party.magic_store_items[0].begin(), univ.party.magic_store_items[0].end(), 1);
@@ -646,6 +643,8 @@ void handle_talk_event(location p) {
 	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
 	
+	eShopType shop;
+	
 	switch(ttype) {
 		case eTalkNode::REGULAR:
 			break;
@@ -701,11 +700,6 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			strnum2 = 0;
 			break;
-		case eTalkNode::BUY_ITEMS:
-			c = minmax(1,30,c);
-			start_shop_mode(eShopType::ITEMS,b,b + c - 1,a,save_talk_str1.c_str());
-			strnum1 = -1;
-			return;
 		case eTalkNode::TRAINING:
 			if((get_pc = char_select_pc(0,"Train who?")) < 6) {
 				strnum1 = -1;
@@ -714,26 +708,25 @@ void handle_talk_event(location p) {
 			save_talk_str1 = "You conclude your training.";
 			return;
 			
-		case eTalkNode::BUY_MAGE:
-			c = minmax(1,61,c);
-			start_shop_mode(eShopType::MAGE,b,b + c - 1,a,save_talk_str1.c_str());
+		case eTalkNode::SHOP:
+			if(d < 0 || d > 11) {
+				giveError("Invalid shop type!");
+				return;
+			}
+			shop = eShopType(d);
+			switch(shop) {
+				case eShopType::ITEMS: case eShopType::MAGE: case eShopType::PRIEST:
+					c = minmax(1,30,c);
+					break;
+				case eShopType::ALCHEMY: c = minmax(1,20,c); break;
+				case eShopType::SKILLS: c = minmax(1,19,c); break;
+				case eShopType::HEALING: case eShopType::MAGIC_JUNK: case eShopType::MAGIC_LOUSY:
+				case eShopType::MAGIC_SO_SO: case eShopType::MAGIC_GOOD: case eShopType::MAGIC_GREAT:
+					break;
+			}
+			start_shop_mode(shop,b,b + c - 1,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
-		case eTalkNode::BUY_PRIEST:
-			c = minmax(1,61,c);
-			start_shop_mode(eShopType::PRIEST,b,b + c - 1,a,save_talk_str1.c_str());
-			strnum1 = -1;
-			return;
-		case eTalkNode::BUY_ALCHEMY:
-			c = minmax(1,19,c);
-			start_shop_mode(eShopType::ALCHEMY,b,b + c - 1,a,save_talk_str1.c_str());
-			strnum1 = -1;
-			return;
-		case eTalkNode::BUY_HEALING:
-			start_shop_mode(eShopType::HEALING,0,0,a,save_talk_str1.c_str());
-			strnum1 = -1;
-			return;
-			break;
 		case eTalkNode::SELL_WEAPONS:
 			strnum1 = -1;
 			stat_screen_mode = MODE_SELL_WEAP;
@@ -860,11 +853,6 @@ void handle_talk_event(location p) {
 			strnum2 = 0;
 			save_talk_str2 = "";
 			break;
-		case eTalkNode::BUY_JUNK:
-			start_shop_mode(eShopType(5 + b),0,
-							9,a,save_talk_str1.c_str());
-			strnum1 = -1;
-			return;
 		case eTalkNode::BUY_TOWN_LOC:
 			if(univ.party.can_find_town[b]) {
 				// TODO: Uh, is something supposed to happen here?

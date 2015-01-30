@@ -28,7 +28,6 @@ enum class eShopItemType {
 	MAGE_SPELL = 800,
 	PRIEST_SPELL = 900,
 	ALCHEMY = 500,
-	FOOD = 600,
 	SKILL = 1000,
 };
 
