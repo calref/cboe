@@ -162,22 +162,20 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,rectan
 	rect_draw_some_item(src_gworld,src_rect,mainPtr,targ_rect,mode);
 }
 
-void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const sf::Texture& mask_gworld,rectangle mask_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect) {
-	sf::RenderTexture src;
-	src.create(src_rect.width(), src_rect.height());
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect) {
+	static sf::RenderTexture src;
+	static bool inited = false;
+	if(!inited || src_rect.width() != src.getSize().x || src_rect.height() != src.getSize().y) {
+		src.create(src_rect.width(), src_rect.height());
+		inited =  true;
+	}
 	rectangle dest_rect = src_rect;
 	dest_rect.offset(-dest_rect.left,-dest_rect.top);
 	rect_draw_some_item(src_gworld, src_rect, src, dest_rect);
 	src.display();
-	sf::RenderTexture mask;
-	mask.create(mask_rect.width(), mask_rect.height());
-	dest_rect = mask_rect;
-	dest_rect.offset(-dest_rect.left,-dest_rect.top);
-	rect_draw_some_item(mask_gworld, mask_rect, mask, dest_rect);
-	mask.display();
 	
 	maskShader.setParameter("texture", sf::Shader::CurrentTexture);
-	maskShader.setParameter("mask", mask.getTexture());
+	maskShader.setParameter("mask", mask_gworld);
 	rect_draw_some_item(src.getTexture(), dest_rect, targ_gworld, targ_rect, &maskShader);
 }
 

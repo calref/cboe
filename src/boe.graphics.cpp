@@ -1147,6 +1147,23 @@ void place_trim(short q,short r,location where,ter_num_t ter_type) {
 	}
 }
 
+static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rect) {
+	sf::RenderTexture render;
+	rectangle dest_rect;
+	dest_rect.top = src_rect.top % 36;
+	dest_rect.bottom = (src_rect.bottom - 1) % 36 + 1;
+	dest_rect.left = src_rect.left % 28;
+	dest_rect.right = (src_rect.right - 1) % 28 + 1;
+	std::tie(dest_rect.top, dest_rect.bottom) = std::make_tuple(36 - dest_rect.top, 36 - dest_rect.bottom);
+	render.create(28, 36);
+	render.clear(sf::Color::White);
+	rect_draw_some_item(roads_gworld, src_rect, render, dest_rect);
+	render.display();
+	mask.reset(new sf::Texture);
+	mask->create(28, 36);
+	mask->update(render.getTexture().copyToImage());
+}
+
 //which_trim is 3 -> drawing wall trim -> might shift down if ground is grass
 //short which_mode;  // 0 top 1 bottom 2 left 3 right 4 up left 5 up right 6 down right 7 down left
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
@@ -1160,20 +1177,22 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	// 50 - walkway bl, 51 - walkway tl, 52 - walkway tr, 53 - walkway br
 	// 54 - walkway top, 55 - walkway right, 56 - walkway bottom, 57 - walkway left
 	// 58 - lone walkway
-	rectangle from_rect = {0,0,36,28},to_rect,mask_rect;
-	sf::Texture* from_gworld;
 	// TODO: The duplication of rectangle here shouldn't be necessary...
-	static rectangle trim_rects[] = {
+	static rectangle trim_rects[12] = {
 		rectangle{0,0,36,14}, rectangle{0,0,36,14},
 		rectangle{0,0,18,28}, rectangle{0,0,18,28},
 		rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14},
 		rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14},
 	};
-	static rectangle walkway_rects[] = {
+	static rectangle walkway_rects[9] = {
 		rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28},
 		rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28},
 		rectangle{0,0,36,28},
 	};
+	static std::unique_ptr<sf::Texture> trim_masks[12], walkway_masks[9];
+	rectangle from_rect = {0,0,36,28},to_rect;
+	sf::Texture* from_gworld;
+	sf::Texture* mask;
 	static bool inited = false;
 	if(!inited){
 		inited = true;
@@ -1198,19 +1217,8 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	if(!frills_on)
 		return;
 	
-// if current ground is grass, forget trim
-//	if((current_ground == 2) && (which_trim < 3))
-//		return;
-	
 	terrain_there[q][r] = -1;
 	
-//	from_rect.left = 28 * which_trim + trim_rects[which_mode].left;
-//	from_rect.right = 28 * which_trim + trim_rects[which_mode].right;
-//	from_rect.top = trim_rects[which_mode].top;
-//	from_rect.bottom = trim_rects[which_mode].bottom;
-//
-//	if((which_trim == 3) && (current_ground == 2)) // trim corner walls with grass instead of cave floor
-//		OffsetRect(&from_rect,0,36);
 	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
 	if(pic < 960){
 		from_gworld = &terrain_gworld[pic / 50];
@@ -1224,30 +1232,19 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 		pic %= 1000;
 		graf_pos_ref(from_gworld, from_rect) = spec_scen_g.find_graphic(pic);
 	}
-	if(which_trim < 50) mask_rect = trim_rects[which_trim];
-	else mask_rect = walkway_rects[which_trim - 50];
+	if(which_trim < 50) {
+		if(!trim_masks[which_trim])
+			init_trim_mask(trim_masks[which_trim], trim_rects[which_trim]);
+		mask = trim_masks[which_trim].get();
+	} else {
+		int which = which_trim - 50;
+		if(!walkway_masks[which])
+			init_trim_mask(walkway_masks[which], walkway_rects[which]);
+		mask = walkway_masks[which].get();
+	}
 	to_rect = coord_to_rect(q,r);
-//	to_rect.right = to_rect.left + trim_rects[which_mode].right;
-//	to_rect.left = to_rect.left + trim_rects[which_mode].left;
-//	to_rect.bottom = to_rect.top + trim_rects[which_mode].bottom;
-//	to_rect.top = to_rect.top + trim_rects[which_mode].top;
-//	OffsetRect(&to_rect,-61,-37);
-	if(which_trim == 0 || which_trim == 4 || which_trim == 6 || which_trim == 8 || which_trim == 10){
-		from_rect.right -= 14;
-		to_rect.right -= 14;
-	}else if(which_trim == 1 || which_trim == 5 || which_trim == 7 || which_trim == 9 || which_trim == 11){
-		from_rect.left += 14;
-		to_rect.left += 14;
-	}
-	if(which_trim == 2 || which_trim == 4 || which_trim == 5 || which_trim == 8 || which_trim == 9){
-		from_rect.bottom -= 18;
-		to_rect.bottom -= 18;
-	}else if(which_trim == 3 || which_trim == 6 || which_trim == 7 || which_trim == 10 || which_trim == 11){
-		from_rect.top += 18;
-		to_rect.top += 18;
-	}
 	
-	rect_draw_some_item(*from_gworld, from_rect, roads_gworld, mask_rect, terrain_screen_gworld, to_rect);
+	rect_draw_some_item(*from_gworld, from_rect, *mask, terrain_screen_gworld, to_rect);
 }
 
 
