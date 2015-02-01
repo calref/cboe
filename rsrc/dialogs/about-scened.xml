@@ -7,7 +7,7 @@
 	<button name='okay' type='regular' top='270' left='430'>OK</button>
 	<pict type='dlog' num='16' top='6' left='6'/>
 	<text top='6' left='50' width='420' height='33'>
-		Blades of Exile Scenario Editor v1.0.4 <br/>
+		Blades of Exile Scenario Editor v2.0 alpha<br/>
 		  Copyright 1997, Spiderweb Software, Inc., All rights reserved.
 	</text>
 	<text top='147' left='50' width='425' height='47'>

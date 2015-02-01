@@ -268,14 +268,6 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		univ.town.append(sfx, misc_i);
 	}
 	
-	// Compatibility flags
-	// TODO: Pretty sure I did this elsewhere, so probably don't need it here
-	if(in_scen && univ.scenario.format.prog_make_ver[0] < 2){
-		univ.party.stuff_done[305][8] = 1;
-	} else {
-		univ.party.stuff_done[305][8] = 0;
-	}
-	
 	return true;
 }
 
