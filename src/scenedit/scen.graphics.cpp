@@ -19,6 +19,8 @@
 #include "scrollbar.hpp"
 #include "restypes.hpp"
 
+#include "scen.btnmg.h"
+
 void load_main_screen();
 void load_terrain_template();
 short terrain_in_index();
@@ -50,8 +52,8 @@ extern rectangle right_area_rect;
 extern std::shared_ptr<cScrollbar> right_sbar;
 
 extern bool left_buttons_active,right_buttons_active;
-extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
-extern short right_button_status[NRS];
+extern std::array<lb_t,NLS> left_button_status;
+extern std::array<rb_t,NRS> right_button_status;
 short mini_map_scales[3] = {12, 6, 4};
 // TODO: What is this for?
 //extern btn_t buttons[];
@@ -98,8 +100,6 @@ rectangle terrain_rect = {0,0,340,272};
 char current_string[256] = "";
 char current_string2[256] = "";
 extern rectangle terrain_rects[256];
-extern char strings_ls[NLS][40];
-extern char strings_rs[NRS][40];
 
 short map_pats[220] = {50,50,1,1,1,6,6,6,6,6,
 	6,6,6,6,6,6,6,6,2,2,
@@ -431,27 +431,27 @@ void draw_lb_slot (short which,short mode)  {
 	rectangle text_rect,from_rect;
 	
  	tileImage(mainPtr,left_buttons[which][0],bg[20]);
-	if(left_button_status[which] == 0)
+	if(left_button_status[which].mode == LB_CLEAR)
 		return;
 	text_rect = left_buttons[which][0];
-	if(left_button_status[which] >= 10) {
+	if(left_button_status[which].action != LB_NO_ACTION) {
 		text_rect.left += 18;
 		from_rect = blue_button_from;
 		if(mode > 0)
 			from_rect.offset(from_rect.right - from_rect.left,0);
 		rect_draw_some_item(editor_mixed,from_rect,left_buttons[which][1],location{0,0});
 	}
-	if(left_button_status[which] % 10 == 3)
+	if(left_button_status[which].mode == LB_INDENT)
 		text_rect.left += 16;
 	TextStyle style;
-	if(left_button_status[which] % 10 == 2) {
+	if(left_button_status[which].mode == LB_TITLE) {
 		style.pointSize = 14;
 	}
 	else text_rect.offset(0,2);
 	if(mode > 0)
 		style.colour = sf::Color::Blue;
 	style.lineHeight = 12;
-	win_draw_string(mainPtr,text_rect,strings_ls[which],eTextMode::WRAP,style);
+	win_draw_string(mainPtr,text_rect,left_button_status[which].label,eTextMode::WRAP,style);
 }
 
 void draw_rb() {
@@ -470,7 +470,7 @@ void draw_rb_slot (short which,short mode)  {
 		return;
 	
  	tileImage(mainPtr,right_buttons[which - pos],bg[17]);
-	if(right_button_status[which] == 0)
+	if(right_button_status[which].action == RB_CLEAR)
 		return;
 	text_rect = right_buttons[which - pos];
 	
@@ -478,7 +478,7 @@ void draw_rb_slot (short which,short mode)  {
 	if(mode > 0)
 		style.colour = sf::Color::Red;
 	style.lineHeight = 12;
-	win_draw_string(mainPtr,text_rect,(char *)strings_rs[which],eTextMode::WRAP,style);
+	win_draw_string(mainPtr,text_rect,right_button_status[which].label,eTextMode::WRAP,style);
 }
 
 void set_up_terrain_buttons() {
