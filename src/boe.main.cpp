@@ -114,6 +114,7 @@ int main(int /*argc*/, char* argv[]) {
 		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 		sync_prefs();
 		cUniverse::print_result = iLiving::print_result = add_string_to_buf;
+		cPlayer::give_help = give_help;
 		init_graph_tool();
 		Initialize();
 		init_fileio();

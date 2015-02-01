@@ -28,6 +28,7 @@ class cParty;
 class cPlayer : public iLiving {
 	cParty& party;
 public:
+	static void(* give_help)(short,short);
 	eMainStatus main_status;
 	std::string name;
 	// HACK: This is only really marked mutable so that I can use operator[] from const methods
@@ -65,6 +66,7 @@ public:
 	location get_loc() const;
 	
 	void finish_create();
+	void void_sanctuary();
 	void heal(int how_much);
 	void poison(int how_much);
 	void cure(int how_much);

@@ -30,6 +30,7 @@
 #include "fileio.hpp"
 #include <array>
 #include "spell.hpp"
+#include "boe.menus.h"
 
 extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
@@ -235,9 +236,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 					r1 = get_ran(1,2,3);
 					univ.party[i].web(r1);
 				}
-				put_pc_screen();
 			}
 			else univ.party[current_pc].web(get_ran(1,2,3));
+			put_pc_screen();
 			univ.town.set_web(where_check.x,where_check.y,false);
 		}
 		if(univ.town.is_force_barr(where_check.x,where_check.y)) {
@@ -416,6 +417,8 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 							case eStatus::FORCECAGE:
 								if(is_out()) break;
 								univ.party[i].sleep(eStatus::FORCECAGE,ter_flag1,ter_flag1 / 2);
+								if(univ.party[i].status[eStatus::FORCECAGE] > 0)
+									univ.town.set_force_cage(univ.party[i].get_loc().x, univ.party[i].get_loc().y, true);
 								// TODO: Do we need to process fields here? Or is it done after returning from this function?
 								break;
 							case eStatus::MAIN: case eStatus::CHARM: // These magic values are illegal in this context
@@ -424,6 +427,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 						if(mode == eSpecCtx::COMBAT_MOVE) break; // only damage once in combat!
 					}
 				}
+			put_pc_screen();
+			if(ter_flag3 == int(eStatus::DUMB))
+				adjust_spell_menus();
 			//print_nums(1,which_pc,current_pc);
 			break;
 		case eTerSpec::CALL_SPECIAL: {
@@ -525,7 +531,6 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 	if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Sleep cloud!");
 		univ.party[current_pc].sleep(eStatus::ASLEEP,3,0);
-		put_pc_screen();
 	}
 	if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		add_string_to_buf("  Magic barrier!");
@@ -541,6 +546,7 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 			add_string_to_buf("  Trapped in force cage!");
 		which_pc.status[eStatus::FORCECAGE] = 8;
 	} else which_pc.status[eStatus::FORCECAGE] = 0;
+	put_pc_screen();
 }
 
 void use_spec_item(short item) {
@@ -668,24 +674,24 @@ void use_item(short pc,short item) {
 						break;
 					case eStatus::BLESS_CURSE:
 						play_sound(4);
-						if(the_item.abil_harms()) {
-							ASB("  You feel awkward.");
+						if(!the_item.abil_harms()) {
+							ASB("  You feel blessed.");
 							str = str * -1;
-						}else ASB("  You feel blessed.");
+						}else ASB("  You feel awkward.");
 						if(the_item.abil_group())
-							univ.party.apply_status(status,str);
-						else univ.party[pc].apply_status(status,str);
+							univ.party.curse(str);
+						else univ.party[pc].curse(str);
 						break;
 					case eStatus::HASTE_SLOW:
 						// TODO: Is this the right sound?
 						play_sound(75);
-						if(the_item.abil_harms()) {
-							ASB("  You feel sluggish.");
+						if(!the_item.abil_harms()) {
+							ASB("  You feel speedy.");
 							str = str * -1;
-						}else ASB("  You feel speedy.");
+						}else ASB("  You feel sluggish.");
 						if(the_item.abil_group())
-							univ.party.apply_status(status,str);
-						else univ.party[pc].apply_status(status,str);
+							univ.party.slow(str);
+						else univ.party[pc].slow(str);
 						break;
 					case eStatus::INVULNERABLE:
 						// TODO: Is this the right sound?
@@ -700,6 +706,7 @@ void use_item(short pc,short item) {
 						break;
 					case eStatus::MAGIC_RESISTANCE:
 						// TODO: Is this the right sound?
+						// TODO: This ignores resistances if it's negative
 						play_sound(51);
 						if(the_item.abil_harms()) {
 							ASB("  You feel odd.");
@@ -717,8 +724,8 @@ void use_item(short pc,short item) {
 							str = str * -1;
 						}
 						if(the_item.abil_group())
-							univ.party.apply_status(status,str);
-						else univ.party[pc].apply_status(status,str);
+							univ.party.web(str);
+						else univ.party[pc].web(str);
 						break;
 					case eStatus::INVISIBLE:
 						// TODO: Is this the right sound?
@@ -801,6 +808,7 @@ void use_item(short pc,short item) {
 								univ.party.dumbfound(str);
 								break;
 						}
+						adjust_spell_menus();
 						break;
 					case eStatus::ASLEEP:
 						switch(type) {
@@ -869,6 +877,8 @@ void use_item(short pc,short item) {
 								break;
 							case eItemUse::HARM_ONE:
 								univ.party[pc].sleep(eStatus::FORCECAGE, str, str / 2);
+								if(univ.party[pc].status[eStatus::FORCECAGE] > 0)
+									univ.town.set_force_cage(univ.party[pc].get_loc().x, univ.party[pc].get_loc().y, true);
 								break;
 							case eItemUse::HELP_ALL:
 								for(i = 0; i < 6; i++)
@@ -876,6 +886,9 @@ void use_item(short pc,short item) {
 								break;
 							case eItemUse::HARM_ALL:
 								univ.party.sleep(eStatus::FORCECAGE, str, str / 2);
+								for(i = 0; i < 6; i++)
+									if(univ.party[i].status[eStatus::FORCECAGE] > 0)
+										univ.town.set_force_cage(univ.party[i].get_loc().x, univ.party[i].get_loc().y, true);
 								break;
 						}
 						break;
@@ -909,6 +922,8 @@ void use_item(short pc,short item) {
 						}
 						break;
 				}
+				if(the_item.abil_harms())
+					adjust_spell_menus();
 				break;
 			case eItemAbil::AFFECT_EXPERIENCE:
 				switch(type) {
@@ -2978,6 +2993,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				case eStatus::FORCECAGE:
 					break;
 			}
+			put_pc_screen();
+			if(spec.ex2a == int(eStatus::DUMB))
+				adjust_spell_menus();
 			break;
 		case eSpecType::AFFECT_STAT:
 			if(pc_num >= 100) break;

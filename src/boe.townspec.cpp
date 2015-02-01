@@ -16,6 +16,7 @@
 #include "mathutil.hpp"
 #include "dlogutil.hpp"
 #include "winutil.hpp"
+#include "boe.menus.h"
 
 extern eGameMode overall_mode;
 extern short current_pc,stat_window;
@@ -128,6 +129,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 		case TRAP_DUMBFOUND:
 			add_string_to_buf("  You feel disoriented.");
 			univ.party.dumbfound(2 + trap_level * 2);
+			adjust_spell_menus();
 			break;
 			
 		case TRAP_DISEASE:
