@@ -137,12 +137,18 @@ the party is in town A, the response is Text 1. Otherwise, its Text 2.</p>
 </ol>
 <p>The possible shop types are as follows:</p>
 <ol start='0'>
-<li>Ordinary items shop; B is the number of the first item from the scenario's item list.</li>
-<li>Mage spells shop; B is the number of the first mage spell (0 - 61, but generally not lower than 30).</li>
-<li>Priest spells shop; B is the number of the first priest spell (0 - 61, but generally not lower than 30).</li>
+<li>Ordinary items shop; B is the number of the first item from the scenario's item
+list.</li>
+<li>Mage spells shop; B is the number of the first mage spell (0 - 61, but generally not
+lower than 30).</li>
+<li>Priest spells shop; B is the number of the first priest spell (0 - 61, but generally
+not lower than 30).</li>
 <li>Alchemy shop; B is the number of the first recipe (0 - 19).</li>
 <li>Healing shop; B and C are ignored.</li>
-<li>Random Items Shop, type 0. This brings up a shop window where the party can buy up to 10 randomly chosen items. These items are changed every 3000 moves, and are often magical. B and C are ignored for these shops.</li>
+<li>Random Items Shop, type 0. This brings up a shop window where the party can buy up to
+10 randomly chosen items. These items are changed every 3000 moves, and are often magical.
+There are five separate random lists maintained by the game. B and C are ignored for these
+shops.</li>
 <li>Random Items Shop, type 1.</li>
 <li>Random Items Shop, type 2.</li>
 <li>Random Items Shop, type 3.</li>
@@ -154,20 +160,12 @@ is the response, the player gets to shop in a store called Fred's Fish. The pric
 quite cheap, and the player can buy items 193-207.</p>
 <p><b>Node Type 8 - Training</b> The training window immediately comes up. Text 1 &amp; 2
 are ignored.</p>
-<p><b>Node Type 9 - Mage Spell Shop</b> Shop where the party can buy mage spells. A is the
-cost adjustment (Range 0 ... 6, see above). B is the number of the first spell sold in the
-shop (press the Choose button to select). C is the total number of spells sold in the
-shop, taken from the list of spells in the game, starting with B. Text 1 is the name of
-the shop.</p>
-<p><b>Node Type 10 - Priest Spell Shop</b> Exactly like Mage Spell Shop (above) but with
-Priest spells.</p>
-<p><b>Node Type 11 - Alchemy Shop </b>Shop where the party can buy alchemy recipes. A is
-the cost adjustment (Range 0 ... 6, see above. B is the number of the first recipe sold in
-the shop (press the Choose button to select). C is the total number of recipes sold in the
-shop, taken from the list of recipes in the game, starting with B. Text 1 is the name of
-the shop.</p>
-<p><b>Node Type 12 - Healer </b> Brings up the healing screen. A is the cost adjustment
-(Range 0 ... 6, see above) and Text 1 is the name of the healer.</p>
+<p><b>Node Type 9 - Job Board</b> Brings up the job board, where the player can choose to
+accept a job or quest. This could be something simple like delivering a message or
+package, or it could be something plot-relevant. A is the number of the job board to
+show. If the job board is angry at you for failing too many jobs, no job board will be
+shown and the response will be Text 2. Text 1 is currently ignored, but reserved to be a
+name for the job board.</p>
 
 <h3>Item Button Talking Nodes</h3>
 
@@ -230,11 +228,13 @@ the number of the special item being sold. If they already have it, they are tol
 already have that". Otherwise, the cost of the item is B gold. If the party can afford it,
 they are told Text 1. Otherwise, they are told Text 2.</p>
 <p>Note: If you set the cost to 0, the party is always given the item.</p>
-<p><b>Node Type 23 - Special Item Shop</b> This brings up a shop window where the party
-can buy up to 10 randomly chosen items. These items are changed every 3000 moves, and are
-often magical. There are 5 different, independently maintained lists of items the shop can
-give. A is the cost adjustment of the shop (Range 0 ... 6, see above) and B is list of
-items to sell from (0 .. 4).</p>
+<p><b>Node Type 23 - Receive Quest</b> If quest A has been completed, the response is Text
+2 and nothing special happens. Otherwise, the party is given quest A (if they hadn't
+already received it) and the response is Text 1.</p>
+<p>Note: This node is not set up for the possibility that the quest somehow failed. If the
+quest is one that has a deadline or other failure condition, it might be better to instead
+use node types 29 or 30 to call a special node and check the quest's status before giving
+it.</p>
 <p><b>Node Type 24 - Reveal Town Location</b> Charges the party money, and enables them to
 enter a hidden town. The cost is A gold. If the party can afford it, they are told Text 1,
 and they will be able to see and enter town/dungeon number B. Otherwise, they are told

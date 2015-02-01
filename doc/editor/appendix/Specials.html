@@ -468,6 +468,26 @@ to cause the game to crash since it won't know which town to get the node from.
 <dt>Extra 1a:</dt><dd>This specifies the personality to use for the conversation. A
 personality is defined as part of a town; see the chapter on Dialogue for
 details.</dd></dd>
+
+<dt>Type 45: Update Quest</dt><dd>This special node allows you to set the status of one of
+the scenario's quests or jobs.
+<dl>
+<dt>Extra 1a:</dt><dd>The quest to update.</dd>
+<dt>Extra 1b:</dt><dd>The new status for the quest:
+<ol start='0'>
+<li>Marks the quest as not started. This might be useful if the quest is on a job board
+and you want it to be repeatable. Note however that marking a quest available does not
+grant automatic rewards.</li>
+<li>Marks the quest as started. If it wasn't already started, the game automatically fills
+in the quest's start day, and if Extra 2a is non-negative, the quest is considered to have
+come from the job board with that number.</li>
+<li>Marks the quest as complete. If the quest specifies automatic rewards, the game grants
+these to the party.</li>
+<li>Marks the quest as failed. If it came from a job board, the game increases the anger
+level of that job board. You can set Extra 2a if you want to increase the anger level even
+more. A job board won't offer any jobs if its anger level is 50 or more.</li>
+</ol>
+</dd></dd>
 </dl>
 
 <h3>One-Shot Specials</h3>
@@ -1192,22 +1212,33 @@ is called.
 <dt>Extra 1a:</dt><dd>If the Stuff Done flag equals this value, call special in Extra
 1b.</dd></dd>
 
-<dt>Type 156: If Context?</dt>Result depends on how the special node was called.
+<dt>Type 156: If Context?</dt><dd>Result depends on how the special node was called.
 <dl>
 <dt>Extra 1a:</dt><dd>The context to test for. Click Choose to select one. If you want to check whether the party is in town, in combat, or outdoors, you probably want one of the first three options. To test for Ritual of Sanctification, use the Targeting Spell option and set Extra 1b to 108. Most of these contexts arise from special nodes assigned while editing monsters, items, town details, and other things, rather than special nodes assigned to a terrain space.</dd>
-<dt>Extra 1b:</dt><dd>The meaning of this field depends on the context. Usually it's not used. For the three movement contexts, 0 means you can enter the space and 1 means you can't. For the targeting spell context, setting this to something other than -1 means that the special in Extra 1c will only be called if the spell that was cast is equal to the spell that has the given number. Add 100 to indicate a priest spell. Item-only spells such as Wrack or Strengthen Target can also be tested for; just enter the same spell ID you would enter for the item ability.
+<dt>Extra 1b:</dt><dd>The meaning of this field depends on the context. Usually it's not used. For the three movement contexts, 0 means you can enter the space and 1 means you can't. For the targeting spell context, setting this to something other than -1 means that the special in Extra 1c will only be called if the spell that was cast is equal to the spell that has the given number. Add 100 to indicate a priest spell. Item-only spells such as Wrack or Strengthen Target can also be tested for; just enter the same spell ID you would enter for the item ability.</dd></dd>
 
-<dt>Type 157: If Numeric Response?</dt>Result depends on a number entered by the player.
+<dt>Type 157: If Numeric Response?</dt><dd>Result depends on a number entered by the player.
 <!-- TODO: Document this. -->
 </dd>
 
-<dt>Type 158: In Boat?</dt>Result depends whether the player is in a boat.
+<dt>Type 158: In Boat?</dt><dd>Result depends whether the player is in a boat.
 <dl>
-<dt>Extra 1b:</dt><dd>If left at -1, the special in Extra 1c is called if the player is in any boat. Otherwise, the special in Extra 1c is only called if the player is in the boat with that number.</dd></dd>
+<dt>Extra 1b:</dt><dd>If left at -1, the special in Extra 1c is called if the player is in
+any boat. Otherwise, the special in Extra 1c is only called if the player is in the boat
+with that number.</dd></dd>
 
-<dt>Type 158: On Horse?</dt>Result depends whether the player is on horseback.
+<dt>Type 158: On Horse?</dt><dd>Result depends whether the player is on horseback.
 <dl>
-<dt>Extra 1b:</dt><dd>If left at -1, the special in Extra 1c is called if the player is on any horses. Otherwise, the special in Extra 1c is only called if the player is on the horses with that number.</dd></dd>
+<dt>Extra 1b:</dt><dd>If left at -1, the special in Extra 1c is called if the player is on
+any horses. Otherwise, the special in Extra 1c is only called if the player is on the
+horses with that number.</dd></dd>
+
+<dt>Type 159: Quest Status?</dt><dd>Result depends on the status of a quest.
+<dl>
+<dt>Extra 1a:</dt><dd>The quest to check.</dd>
+<dt>Extra 1b:</dt><dd>If the quest has this status (0 - not started, 1 - started, 2 -
+completed, 3 - failed), the special in Extra 1c is called.</dd>
+<dt>Jumpto:</dt><dd>Otherwise, this special is called.</dd></dd>
 </dl>
 
 <h3>Town Mode Specials</h3>

@@ -256,7 +256,19 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 			}
 			break;
 		case ITEM_WIN_QUESTS:
-			// TODO: Implement quest list
+			style.font = FONT_BOLD;
+			style.colour = sf::Color::White;
+			win_draw_string(item_stats_gworld,upper_frame_rect,"Quests/Jobs:",eTextMode::WRAP,style);
+			style.colour = sf::Color::Black;
+			for(i = 0; i < 8; i++) {
+				i_num = i + item_offset;
+				if(spec_item_array[i_num] >= 0) {
+					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
+					win_draw_string(item_stats_gworld,item_buttons[i][0],univ.scenario.quests[spec_item_array[i_num]].name,eTextMode::WRAP,style);
+					
+					place_item_button(3,i,4,0);
+				}
+			}
 			break;
 			
 		default: // on an items page
@@ -517,8 +529,15 @@ void set_stat_window(short new_stat) {
 			item_sbar->setMaximum(array_pos);
 			break;
 		case ITEM_WIN_QUESTS:
-			item_sbar->setMaximum(2);
-			item_sbar->setPageSize(2);
+			for(i = 0; i < 60; i++)
+				spec_item_array[i] = -1;
+			for(i = 0; i < 50; i++)
+				if(univ.party.quest_status[i] == eQuestStatus::STARTED) {
+					spec_item_array[array_pos] = i;
+					array_pos++;
+				}
+			array_pos = max(0,array_pos - 8);
+			item_sbar->setMaximum(array_pos);
 			break;
 		default:
 			item_sbar->setMaximum(16);

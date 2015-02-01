@@ -1989,6 +1989,105 @@ void edit_spec_item(short which_item) {
 	item_dlg.run();
 }
 
+static void put_quest_in_dlog(cDialog& me, const cQuest& quest, size_t which_quest) {
+	me["num"].setText(std::to_string(which_quest) + " of " + std::to_string(scenario.quests.size()));
+	me["name"].setText(quest.name);
+	me["descr"].setText(quest.descr);
+	me["chop"].setTextToNum(quest.deadline);
+	me["evt"].setTextToNum(quest.event);
+	me["xp"].setTextToNum(quest.xp);
+	me["gold"].setTextToNum(quest.gold);
+	me["bank1"].setTextToNum(quest.bank1);
+	me["bank2"].setTextToNum(quest.bank2);
+	
+	dynamic_cast<cLed&>(me["rel"]).setState(quest.flags % 10 == 1 ? led_red : led_off);
+	dynamic_cast<cLed&>(me["start"]).setState(quest.flags >= 10 ? led_red : led_off);
+	dynamic_cast<cLed&>(me["inbank"]).setState(quest.bank1 >= 0 || quest.bank2 >= 0 ? led_red : led_off);
+	if(quest.bank1 < 0 && quest.bank2 < 0) {
+		me["bank1"].hide();
+		me["bank2"].hide();
+	} else {
+		me["bank1"].show();
+		me["bank2"].show();
+	}
+}
+
+static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest, bool close) {
+	if(!me.toast(true)) return false;
+	
+	quest.name = me["name"].getText();
+	quest.descr = me["descr"].getText();
+	quest.deadline = me["chop"].getTextAsNum();
+	quest.event = me["evt"].getTextAsNum();
+	quest.xp = me["xp"].getTextAsNum();
+	quest.gold = me["gold"].getTextAsNum();
+	
+	quest.flags = dynamic_cast<cLed&>(me["rel"]).getState() == led_red;
+	if(dynamic_cast<cLed&>(me["start"]).getState() == led_red)
+		quest.flags += 10;
+	if(dynamic_cast<cLed&>(me["inbank"]).getState() == led_red) {
+		quest.bank1 = me["bank1"].getTextAsNum();
+		quest.bank2 = me["bank2"].getTextAsNum();
+	} else quest.bank1 = quest.bank2 = -1;
+	
+	scenario.quests[which_quest] = quest;
+	if(!close) me.untoast();
+	return true;
+}
+
+static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, size_t& which_quest) {
+	if(!save_quest_from_dlog(me, quest, which_quest, false))
+		return true;
+	
+	if(dir == "left") {
+		if(which_quest == 0)
+			which_quest = scenario.quests.size();
+		which_quest--;
+	} else if(dir == "right") {
+		which_quest++;
+		if(which_quest == scenario.quests.size())
+			which_quest = 0;
+	}
+	
+	quest = scenario.quests[which_quest];
+	put_quest_in_dlog(me, quest, which_quest);
+	return true;
+}
+
+void edit_quest(size_t which_quest) {
+	using namespace std::placeholders;
+	if(which_quest == scenario.quests.size()) {
+		scenario.quests.resize(which_quest + 1);
+		scenario.quests[which_quest].name = "New Quest";
+	}
+	cQuest quest = scenario.quests[which_quest];
+	
+	cDialog quest_dlg("edit-quest");
+	quest_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
+	quest_dlg["okay"].attachClickHandler(std::bind(save_quest_from_dlog, _1, std::ref(quest), std::ref(which_quest), true));
+	quest_dlg["inbank"].attachFocusHandler([](cDialog& me, std::string, bool losing) -> bool {
+		if(losing) {
+			me["bank1"].hide();
+			me["bank2"].hide();
+		} else {
+			me["bank1"].show();
+			me["bank2"].show();
+		}
+		return true;
+	});
+	// TODO: Some focus handlers
+	
+	if(scenario.quests.size() == 1) {
+		quest_dlg["left"].hide();
+		quest_dlg["right"].hide();
+	} else {
+		quest_dlg.attachClickHandlers(std::bind(change_quest_dlog_page, _1, _2, std::ref(quest), std::ref(which_quest)), {"left", "right"});
+	}
+	
+	put_quest_in_dlog(quest_dlg, quest, which_quest);
+	quest_dlg.run();
+}
+
 static void put_save_rects_in_dlog(cDialog& me) {
 	short i;
 	

@@ -80,7 +80,7 @@ void cButton::draw(){
 		style.lineHeight = 8;
 		eTextMode textMode = eTextMode::CENTRE;
 		if(type == BTN_TINY) {
-			textMode = eTextMode::LEFT_TOP;
+			textMode = wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP;
 			to_rect.left += 18;
 			style.colour = textClr;
 		} else if(type == BTN_PUSH) {
@@ -236,12 +236,14 @@ bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 void cLed::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	if(prop == TXT_FONT) textFont = (eFont) val;
 	else if(prop == TXT_SIZE) textSize = val;
+	else if(prop == TXT_WRAP) wrapLabel = val;
 	else throw xUnsupportedProp(prop);
 }
 
 short cLed::getFormat(eFormat prop) throw(xUnsupportedProp){
 	if(prop == TXT_FONT) return textFont;
 	else if(prop == TXT_SIZE) return textSize;
+	else if(prop == TXT_WRAP) return wrapLabel;
 	else throw xUnsupportedProp(prop);
 }
 
@@ -263,7 +265,7 @@ void cLed::draw(){
 		style.colour = textClr;
 		to_rect.right = frame.right;
 		to_rect.left = frame.left + 18; // Possibly could be 20
-		win_draw_string(*inWindow,to_rect,lbl,eTextMode::LEFT_TOP,style);
+		win_draw_string(*inWindow,to_rect,lbl,wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
 	}
 }
 

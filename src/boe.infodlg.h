@@ -24,6 +24,7 @@ void add_to_journal(short event);
 void give_help(short help1,short help2,class cDialog& parent_num);
 void give_help(short help1,short help2);
 void put_spec_item_info (short which_i);
+void put_quest_info(short which_i);
 
 // These are defined in pc.editors.cpp since they are also used by the character editor
 void pick_race_abil(cPlayer *pc,short mode);

@@ -129,6 +129,15 @@
     <sector-start x="20" y="20"/>
     <!-- Definitions of special items, if any -->
     <specials/>
+    <!-- Define quests here -->
+    <quest start-with='false'>
+    	<!-- Quests can have a deadline, and an event that waives the deadline -->
+    	<deadline relative='true' waive-if='5'>12</deadline>
+    	<!-- Quests can have an automatic reward -->
+    	<reward xp='12000' gold='250'/>
+    	<name>Sample Quest</name>
+    	<description>Your mission, if you choose to accept it, is...!!??</description>
+    </quest>
   </game>
   
   <editor>

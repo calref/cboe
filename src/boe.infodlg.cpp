@@ -849,6 +849,23 @@ void give_help(short help1, short help2, cDialog& parent) {
 	give_help(help1, help2, &parent);
 }
 
+void put_quest_info(short which_i) {
+	cQuest& quest = univ.scenario.quests[which_i];
+	cDialog quest_dlg("quest-info");
+	quest_dlg["name"].setText(quest.name);
+	quest_dlg["descr"].setText(quest.descr);
+	int start = univ.party.quest_start[which_i];
+	quest_dlg["start"].setText("Day " + std::to_string(start));
+	if(quest.deadline > 0)
+		quest_dlg["chop"].setText("Day " + std::to_string(quest.deadline + (quest.flags % 10) * start));
+	else quest_dlg["chop"].setText("None");
+	if(quest.gold > 0)
+		quest_dlg["pay"].setText(std::to_string(quest.gold) + " gold");
+	else quest_dlg["pay"].setText("Unknown");
+	quest_dlg["done"].attachClickHandler(std::bind(&cDialog::toast, &quest_dlg, false));
+	quest_dlg.run();
+}
+
 void put_spec_item_info (short which_i) {
 	cStrDlog display_strings(univ.scenario.special_items[which_i].descr,"",
 							 univ.scenario.special_items[which_i].name,univ.scenario.intro_pic,PIC_SCEN);

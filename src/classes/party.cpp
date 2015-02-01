@@ -552,6 +552,8 @@ void cParty::writeTo(std::ostream& file) const {
 	file << "SCENARIO " << scen_name << '\n';
 	file << "WON " << scen_won << '\n';
 	file << "PLAYED " << scen_played << '\n';
+	for(auto p : quest_status)
+		file << "QUEST " << p.first << ' ' << p.second << ' ' << quest_start.at(p.first) << ' ' << quest_source.at(p.first) << '\n';
 	for(auto iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
 		std::string campaign_id = maybe_quote_string(iter->first);
 		// Okay, we have the campaign ID in a state such that reading it back in will restore the original ID.
@@ -585,6 +587,13 @@ void cParty::writeTo(std::ostream& file) const {
 				magic_store_items[i][j].writeTo(file);
 				file << '\f';
 			}
+	file << '\f';
+	for(int i = 0; i < job_banks.size(); i++) {
+		file << "JOBBANK " << i << ' ' << job_banks[i].anger << '\n';
+		if(!job_banks[i].inited) continue;
+		for(int j = 0; j < 6; j++)
+			file << "JOB " << j << ' ' << job_banks[i].jobs[j] << '\n';
+	}
 	file << '\f';
 	for(int i = 0; i < 10; i++)
 		if(out_c[i].exists){
@@ -756,6 +765,10 @@ void cParty::readFrom(std::istream& file){
 			int i;
 			sin >> i;
 			sin >> m_killed[i];
+		} else if(cur == "QUEST") {
+			int i;
+			sin >> i;
+			sin >> quest_status[i] >> quest_start[i] >> quest_source[i];
 		}else if(cur == "KILLS")
 			sin >> total_m_killed;
 		else if(cur == "DAMAGE")
@@ -872,6 +885,27 @@ void cParty::readFrom(std::istream& file){
 			bin >> std::ws;
 			getline(bin, note.the_str1);
 			getline(bin, note.the_str2);
+		} else if(cur == "JOB_BANK") {
+			int i;
+			bin >> i;
+			if(i < 0) continue;
+			if(i >= job_banks.size())
+				job_banks.resize(i + 1);
+			bin >> job_banks[i].anger;
+			job_banks[i].inited = false;
+			while(bin) {
+				getline(bin, cur);
+				std::istringstream sin(cur);
+				sin >> cur;
+				if(cur == "JOB") {
+					job_banks[i].inited = true;
+					int j;
+					sin >> j;
+					if(j < 0 || j >= 6)
+						continue;
+					sin >> job_banks[i].jobs[j];
+				}
+			}
 		}
 		bin.clear();
 	}
@@ -1063,6 +1097,35 @@ std::ostream& operator<<(std::ostream& out, ePartyStatus type) {
 			break;
 		case ePartyStatus::DETECT_LIFE:
 			out << "DETECT";
+			break;
+	}
+	return out;
+}
+
+std::istream& operator>>(std::istream& in, eQuestStatus& type) {
+	std::string name;
+	in >> name;
+	if(name == "avail") type = eQuestStatus::AVAILABLE;
+	else if(name == "start") type = eQuestStatus::STARTED;
+	else if(name == "done") type = eQuestStatus::COMPLETED;
+	else if(name == "fail") type = eQuestStatus::FAILED;
+	else in.setstate(std::ios_base::failbit);
+	return in;
+}
+
+std::ostream& operator<<(std::ostream& out, eQuestStatus type) {
+	switch(type) {
+		case eQuestStatus::AVAILABLE:
+			out << "avail";
+			break;
+		case eQuestStatus::STARTED:
+			out << "start";
+			break;
+		case eQuestStatus::COMPLETED:
+			out << "done";
+			break;
+		case eQuestStatus::FAILED:
+			out << "fail";
 			break;
 	}
 	return out;
