@@ -171,6 +171,13 @@ static void init_party_scen_data() {
 	univ.party.party_event_timers.clear();
 	for(i = 0; i < 50; i++)
 		univ.party.spec_items[i] = univ.scenario.special_items[i].flags >= 10;
+	for(i = 0; i < univ.scenario.quests.size(); i++) {
+		if(univ.scenario.quests[i].flags >= 10) {
+			univ.party.quest_status[i] = eQuestStatus::STARTED;
+			univ.party.quest_start[i] = 1;
+			univ.party.quest_source[i] = -1;
+		}
+	}
 	
 	for(i = 0; i < 200; i++)
 		univ.party.m_killed[i] = 0;

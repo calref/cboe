@@ -136,6 +136,32 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="quest" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name='deadline' minOccurs='0'>
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base='xs:integer'>
+											<xs:attribute name="relative" type="bool"/>
+											<xs:attribute name='waive-if' type='xs:integer'/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name='reward' minOccurs='0'>
+								<xs:complexType>
+									<xs:attribute name='xp' type='xs:integer'/>
+									<xs:attribute name='gold' type='xs:integer'/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name='bank' type='xs:integer' minOccurs='0' maxOccurs='2'/>
+							<xs:element name="name" type="xs:string"/>
+							<xs:element name="description" type="xs:string"/>
+						</xs:sequence>
+						<xs:attribute name="start-with" type="bool"/>
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="timer" minOccurs="0" maxOccurs="20">
 					<xs:complexType>
 						<xs:simpleContent>

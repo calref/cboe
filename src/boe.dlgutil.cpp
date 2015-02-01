@@ -523,6 +523,67 @@ void end_talk_mode() {
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
 }
 
+static void fill_job_bank(cDialog& me, job_bank_t& bank, std::string) {
+	// TODO: Maybe customize the icon?
+	// TODO: Allow custom title?
+	me["day"].setTextToNum(calc_day());
+	for(int i = 0; i < 4; i++) {
+		std::string id = std::to_string(i + 1);
+		if(bank.jobs[i] >= 0 && bank.jobs[i] < univ.scenario.quests.size()) {
+			cQuest& quest = univ.scenario.quests[bank.jobs[i]];
+			std::string description = quest.descr;
+			if(quest.deadline > 0) {
+				if(quest.flags % 10 == 1)
+					description += " Must be completed in " + std::to_string(quest.deadline) + " days.";
+				else description += " Must be completed by day " + std::to_string(quest.deadline) + ".";
+			}
+			description += " Pay is " + std::to_string(quest.gold) + " gold.";
+			me["take" + id].show();
+			me["job" + id].setText(description);
+		} else {
+			me["take" + id].hide();
+			me["job" + id].setText("");
+		}
+	}
+}
+
+static void show_job_bank(int which_bank, std::string title) {
+	cDialog job_dlg("job-bank");
+	job_dlg.attachClickHandlers([&](cDialog& me, std::string hit, eKeyMod) -> bool {
+		int which = hit[4] - '1';
+		me["prompt"].setText("Job accepted.");
+		job_bank_t& bank = univ.party.job_banks[which_bank];
+		univ.party.quest_status[bank.jobs[which]] = eQuestStatus::STARTED;
+		univ.party.quest_source[bank.jobs[which]] = store_personality;
+		univ.party.quest_start[bank.jobs[which]] = calc_day();
+		// Now, if there are spare jobs available, fill in. Otherwise, clear space.
+		if(bank.jobs[4] >= 0)
+			std::swap(bank.jobs[which], bank.jobs[4]);
+		else if(bank.jobs[5] >= 0)
+			std::swap(bank.jobs[which], bank.jobs[5]);
+		fill_job_bank(me, bank, title);
+		return true;
+	}, {"take1", "take2", "take3", "take4"});
+	job_dlg["done"].attachClickHandler(std::bind(&cDialog::toast, &job_dlg, false));
+	
+	if(which_bank >= univ.party.job_banks.size())
+		univ.party.job_banks.resize(which_bank + 1);
+	if(!univ.party.job_banks[which_bank].inited)
+		generate_job_bank(which_bank, univ.party.job_banks[which_bank]);
+	fill_job_bank(job_dlg, univ.party.job_banks[which_bank], title);
+	
+	int anger = univ.party.job_banks[which_bank].anger;
+	if(anger >= 0 && anger < 10) {
+		job_dlg["prompt"].setText("Dispatcher is neutral towards you.");
+	} else if(anger >= 10 && anger < 20) {
+		job_dlg["prompt"].setText("Dispatcher is a little annoyed at you.");
+	} else if(anger >= 20 && anger < 35) {
+		job_dlg["prompt"].setText("Dispatcher is annoyed at you.");
+	} else job_dlg["prompt"].setText("Dispatcher is rather angry at you.");
+	
+	job_dlg.run();
+}
+
 void handle_talk_event(location p) {
 	short i,get_pc,s1 = -1,s2 = -1,s3 = -1;
 	char asked[4];
@@ -727,6 +788,17 @@ void handle_talk_event(location p) {
 			start_shop_mode(shop,b,b + c - 1,a,save_talk_str1.c_str());
 			strnum1 = -1;
 			return;
+		case eTalkNode::JOB_BANK:
+			if(a < univ.party.job_banks.size() && univ.party.job_banks[a].anger >= 50) {
+				strnum1 = strnum2;
+				save_talk_str1 = save_talk_str2;
+				strnum2 = 0;
+				save_talk_str2 = "";
+				break;
+			} else {
+				show_job_bank(a, save_talk_str1.c_str());
+				return;
+			}
 		case eTalkNode::SELL_WEAPONS:
 			strnum1 = -1;
 			stat_screen_mode = MODE_SELL_WEAP;
@@ -849,6 +921,30 @@ void handle_talk_event(location p) {
 				univ.party.gold -= b;
 				put_pc_screen();
 				univ.party.spec_items[a] = true;
+			}
+			strnum2 = 0;
+			save_talk_str2 = "";
+			break;
+		case eTalkNode::RECEIVE_QUEST:
+			if(a < 0 || a >= univ.scenario.quests.size()) {
+				giveError("Tried to give a nonexistent quest!");
+				return;
+			}
+			switch(univ.party.quest_status[a]) {
+				case eQuestStatus::AVAILABLE:
+					univ.party.quest_status[a] = eQuestStatus::STARTED;
+					univ.party.quest_source[a] = -1;
+					univ.party.quest_start[a] = calc_day();
+					break;
+				case eQuestStatus::STARTED:
+					break;
+				case eQuestStatus::COMPLETED:
+					strnum1 = strnum2;
+					save_talk_str1 = save_talk_str2;
+					break;
+				case eQuestStatus::FAILED:
+					// TODO: How to handle this?
+					return;
 			}
 			strnum2 = 0;
 			save_talk_str2 = "";

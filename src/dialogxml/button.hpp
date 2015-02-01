@@ -85,11 +85,12 @@ protected:
 	/// @param t The type of control. Should be either CTRL_LED or CTRL_BTN.
 	cButton(cDialog* parent,eControlType t);
 private:
-	bool wrapLabel;
 	bool labelWithKey;
 	std::string fromList;
 	static rectangle btnRects[13][2];
 protected:
+	/// Determines whether the button's label should be word wrapped.
+	bool wrapLabel;
 	/// The button's text colour; only used by LED and tiny buttons
 	sf::Color textClr;
 	/// The index in buttons of the texture for each button type.

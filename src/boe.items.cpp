@@ -920,6 +920,20 @@ cItem return_treasure(short loot) {
 	
 }
 
+void generate_job_bank(int which, job_bank_t& bank) {
+	std::fill(bank.jobs.begin(), bank.jobs.end(), -1);
+	bank.inited = true;
+	size_t iSlot = 0;
+	for(size_t i = 0; iSlot < 4 && i < univ.scenario.quests.size(); i++) {
+		if(univ.scenario.quests[i].bank1 != which && univ.scenario.quests[i].bank2 != which)
+			continue;
+		if(univ.party.quest_status[i] != eQuestStatus::AVAILABLE)
+			continue;
+		if(get_ran(1,1,100) <= 50 - bank.anger)
+			bank.jobs[iSlot++] = i;
+	}
+}
+
 void refresh_store_items() {
 	short i,j;
 	short loot_index[10] = {1,1,1,1,2,2,2,3,3,4};
@@ -934,6 +948,9 @@ void refresh_store_items() {
 			univ.party.magic_store_items[i][j].ident = true;
 		}
 	
+	for(i = 0; i < univ.party.job_banks.size(); i++) {
+		generate_job_bank(i, univ.party.job_banks[i]);
+	}
 }
 
 

@@ -8,6 +8,7 @@ cMonster edit_monst_abil(cMonster starting_record,short which_monst,cDialog& par
 short edit_item_type(short which_item);
 cItem edit_item_abil(cItem starting_record,short which_item,cDialog& parent);
 void edit_spec_item(short which_item);
+void edit_quest(size_t which_quest);
 void edit_save_rects();
 void edit_horses();
 void edit_add_town();

@@ -221,7 +221,10 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					case 7:
 						start_special_item_editing();
 						break;
-					case 11: // pick out
+					case 8:
+						start_quest_editing();
+						break;
+					case 12: // pick out
 						if(change_made) {
 							if(!save_check("save-section-confirm"))
 								break;
@@ -233,12 +236,12 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							set_up_main_screen();
 						}
 						break;
-					case 12: // edit outdoors
+					case 13: // edit outdoors
 						start_out_edit();
 						mouse_button_held = false;
 						return false;
 						break;
-					case 16: // pick town
+					case 17: // pick town
 						if(change_made) {
 							if(!save_check("save-section-confirm"))
 								break;
@@ -250,12 +253,12 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							set_up_main_screen();
 						}
 						break;
-					case 17: // edit town
+					case 18: // edit town
 						start_town_edit();
 						mouse_button_held = false;
 						return false;
 						break;
-					case 18:
+					case 19:
 						start_dialogue_editing(0);
 						break;
 						
@@ -381,6 +384,17 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						}
 						else edit_text_str(j,5);
 						start_string_editing(5,1);
+						break;
+					case 16:
+						if(option_hit) {
+							if(j == scenario.quests.size() - 1)
+								scenario.quests.pop_back();
+							else {
+								scenario.quests[j] = cQuest();
+								scenario.quests[j].name = "Unused Quest";
+							}
+						} else edit_quest(j);
+						start_quest_editing();
 						break;
 				}
 				mouse_button_held = false;
@@ -2925,6 +2939,7 @@ void set_up_main_screen() {
 	set_lb(-1,11,"Create New Town",0);
 	set_lb(-1,11,"Edit Scenario Text",0);
 	set_lb(-1,11,"Edit Special Items",0);
+	set_lb(-1,11,"Edit Quests",0);
 	set_lb(-1,1,"",0);
 	set_lb(-1,1,"Outdoors Options",0);
 	sprintf((char *) message,"  Section x = %d, y = %d",(short) cur_out.x,(short) cur_out.y);
@@ -3103,6 +3118,27 @@ void start_special_item_editing() {
 	else for(i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0);
 	set_lb(NLS - 3,0,"",1);
+}
+
+void start_quest_editing() {
+	int num_options = scenario.quests.size() + 1;
+	if(overall_mode < MODE_MAIN_SCREEN)
+		set_up_main_screen();
+	overall_mode = MODE_MAIN_SCREEN;
+	right_sbar->show();
+	right_sbar->setPosition(0);
+	reset_rb();
+	right_sbar->setMaximum(num_options - NRSONPAGE);
+	for(int i = 0; i < num_options; i++) {
+		std::string title;
+		if(i == scenario.quests.size())
+			title = "Create New Quest";
+		else title = scenario.quests[i].name;
+		title = std::to_string(i) + " - " + title;
+		set_rb(i, 16000 + i, title.c_str(), 0);
+	}
+	redraw_screen();
+	set_lb(NLS - 3, 1, "Command-click or right-click to delete", 1);
 }
 
 extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp

@@ -553,6 +553,14 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 			if(univ.town.monst[i].on_space(destination)) {
 				did_something = true;
 				need_redraw = true;
+				if(univ.town.monst[i].special_on_talk >= 0) {
+					short s1, s2, s3;
+					run_special(eSpecCtx::HAIL, 2, univ.town.monst[i].special_on_talk, univ.town.monst[i].cur_loc, &s1, &s2, &s3);
+					if(s3 > 0)
+						need_redraw = true;
+					if(s1 > 0)
+						break;
+				}
 				if(univ.town.monst[i].attitude % 2 == 1) {
 					add_string_to_buf("  Creature is hostile.");
 				} else if(univ.town.monst[i].summon_time > 0 || univ.town.monst[i].personality < 0) {
@@ -1344,8 +1352,7 @@ bool handle_action(sf::Event event) {
 						set_stat_window(ITEM_WIN_SPECIAL);
 						break;
 					case 7:
-						// TODO: Jobs! Or maybe quests!
-						//set_stat_window(ITEM_WIN_QUESTS);
+						set_stat_window(ITEM_WIN_QUESTS);
 						break;
 					case 8: // help
 						cChoiceDlog("help-inventory").show();
@@ -1384,7 +1391,7 @@ bool handle_action(sf::Event event) {
 								if(stat_window == ITEM_WIN_SPECIAL)
 									put_spec_item_info(spec_item_array[item_hit]);
 								else if(stat_window == ITEM_WIN_QUESTS)
-									; // TODO: Implement quests view
+									put_quest_info(spec_item_array[item_hit]);
 								else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
 								break;
 							case 5: // sell? That this code was reached indicates that the item was sellable

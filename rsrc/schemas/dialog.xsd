@@ -242,6 +242,7 @@
           </xs:attribute>
           <xs:attributeGroup ref="rect"/>
           <xs:attributeGroup ref="font"/>
+          <xs:attribute name="wrap" default="false" type="bool"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>

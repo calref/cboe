@@ -36,6 +36,14 @@ struct campaign_flag_type{
 	unsigned char idx[25][25];
 };
 
+struct job_bank_t {
+	std::array<int,6> jobs;
+	int anger = 0;
+	bool inited = false;
+};
+
+enum class eQuestStatus {AVAILABLE, STARTED, COMPLETED, FAILED};
+
 class cUniverse;
 
 class cParty : public iLiving {
@@ -85,6 +93,7 @@ public:
 	short in_horse;
 	cOutdoors::cCreature out_c[10];
 	std::array<std::array<cItem,10>,5> magic_store_items;
+	std::vector<job_bank_t> job_banks;
 	mon_num_t imprisoned_monst[4]; // Soul Crystal
 	char m_noted[256]; // has the monster been scried?
 	char m_seen[256]; // has the monster ever been seen? (this used to have the above meaning)
@@ -92,6 +101,10 @@ public:
 	std::vector<cEncNote> special_notes;
 	std::vector<cConvers> talk_save;
 	std::map<ePartyStatus,short> status;
+	// Quest stuff
+	std::map<int, eQuestStatus> quest_status;
+	std::map<int, int> quest_start; // the day the quest was started; used for quests with relative deadlines
+	std::map<int, int> quest_source; // if gotten from a job board, this is the number of the job board; otherwise -1
 	location left_at;
 	size_t left_in;
 	eDirection direction;
@@ -204,5 +217,7 @@ std::istream& operator>>(std::istream& in, eEncNoteType& type);
 std::ostream& operator<<(std::ostream& out, eEncNoteType type);
 std::istream& operator>>(std::istream& in, ePartyStatus& type);
 std::ostream& operator<<(std::ostream& out, ePartyStatus type);
+std::istream& operator>>(std::istream& in, eQuestStatus& type);
+std::ostream& operator<<(std::ostream& out, eQuestStatus type);
 
 #endif

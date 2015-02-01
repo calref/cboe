@@ -162,7 +162,7 @@ public:
 	short spec1, spec2;
 	short spec_enc_code, time_code;
 	short monster_time, personality;
-	short special_on_kill;
+	short special_on_kill, special_on_talk;
 	pic_num_t facial_pic;
 	
 	void append(legacy::creature_start_type old);

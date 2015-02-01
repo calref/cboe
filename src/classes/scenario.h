@@ -34,6 +34,17 @@ struct scenario_header_flags {
 	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
 };
 
+class cQuest {
+public:
+	short flags = 0; // 0 - absolute deadline, 1 - relative to when quest started, +10 - start quest when scenario starts
+	short deadline = -1;
+	short event = -1; // if this event occurs before the deadline, then the deadline is waived
+	short xp = 0, gold = 0; // automatically award this much XP and gold to the party when the quest is marked complete
+	short bank1 = -1, bank2 = -1; // which job bank(s) this quest is in; -1 for none
+	std::string name;
+	std::string descr;
+};
+
 class cScenario {
 public:
 	class cItemStorage {
@@ -57,7 +68,8 @@ public:
 	short flag_to_add_to_town[10][2];
 	rectangle store_item_rects[3];
 	short store_item_towns[3];
-	cSpecItem special_items[50];
+	std::array<cSpecItem,50> special_items;
+	std::vector<cQuest> quests;
 	short rating,uses_custom_graphics;
 	std::vector<ePicType> custom_graphics;
 	std::array<cMonster,256> scen_monsters;

@@ -189,6 +189,34 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		data.CloseElement("item");
 	}
 	data.CloseElement("specials");
+	for(size_t i = 0; i < scenario.quests.size(); i++) {
+		cQuest& quest = scenario.quests[i];
+		data.OpenElement("quest");
+		data.PushAttribute("start-with", boolstr(quest.flags / 10));
+		if(quest.deadline >= 0) {
+			data.OpenElement("deadline");
+			data.PushAttribute("relative", boolstr(quest.flags % 10));
+			if(quest.event >= 0)
+				data.PushAttribute("waive-if", quest.event);
+			data.PushText(quest.deadline);
+			data.CloseElement("deadline");
+		}
+		if(quest.xp > 0 || quest.gold > 0) {
+			data.OpenElement("reward");
+			if(quest.xp > 0)
+				data.PushAttribute("xp", quest.xp);
+			if(quest.gold > 0)
+				data.PushAttribute("gold", quest.gold);
+			data.CloseElement("reward");
+		}
+		if(quest.bank1 >= 0)
+			data.PushElement("bank", quest.bank1);
+		if(quest.bank2 >= 0)
+			data.PushElement("bank", quest.bank2);
+		data.PushElement("name", quest.name);
+		data.PushElement("description", quest.descr);
+		data.CloseElement("quest");
+	}
 	for(int i = 0; i < 20; i++) {
 		if(scenario.scenario_timer_times[i] > 0) {
 			data.OpenElement("timer");

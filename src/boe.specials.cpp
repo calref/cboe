@@ -1816,6 +1816,45 @@ void special_increase_age(long length, bool queue) {
 	location null_loc; // TODO: Should we pass the party's location here? It doesn't quite make sense to me though...
 	unsigned long age_before = univ.party.age - length;
 	unsigned long current_age = univ.party.age;
+	bool failed_job = false;
+	
+	for(auto p : univ.party.quest_status) {
+		if(p.second != eQuestStatus::STARTED)
+			continue;
+		cQuest& quest = univ.scenario.quests[p.first];
+		if(quest.deadline <= 0)
+			continue;
+		bool is_relative = quest.flags % 10;
+		int deadline = quest.deadline + is_relative * univ.party.quest_start[p.first];
+		if(day_reached(deadline + 1, quest.event)) {
+			p.second = eQuestStatus::FAILED;
+			if(univ.party.quest_source[p.first] >= 0) {
+				int bank = univ.party.quest_source[p.first];
+				// Safety valve in case it was given by a special node
+				if(bank >= univ.party.job_banks.size())
+					univ.party.job_banks.resize(bank + 1);
+				int add_anger = 1;
+				if(quest.flags % 10 == 1) {
+					if(quest.deadline < 20)
+						add_anger++;
+					if(quest.deadline < 10)
+						add_anger++;
+					if(quest.deadline < 5)
+						add_anger++;
+				} else if(quest.deadline - univ.party.quest_start[p.first] > 20)
+					add_anger++;
+				univ.party.job_banks[bank].anger += add_anger;
+			}
+			if(!failed_job)
+				add_string_to_buf("The deadline for one of your quests has passed.",2);
+			failed_job = true;
+		}
+	}
+	
+	// Angered job boards slowly forgive you
+	if(univ.party.age % 30 == 0)
+		for(i = 0; i < univ.party.job_banks.size(); i++)
+			move_to_zero(univ.party.job_banks[i].anger);
 	
 	if(is_town() || (is_combat() && which_combat_type == 1)) {
 		for(i = 0; i < 8; i++)
@@ -2398,6 +2437,42 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else i = -1;
 			start_talk_mode(i, spec.ex1a, spec.ex1b, spec.pic);
 			*next_spec = -1;
+			break;
+		case eSpecType::UPDATE_QUEST:
+			if(spec.ex1a < 0 || spec.ex1a >= univ.scenario.quests.size()) {
+				giveError("The scenario tried to update a non-existent quest.");
+				break;
+			}
+			if(spec.ex1b < 0 || spec.ex1b > 3) {
+				giveError("Invalid quest status (range 0 .. 3).");
+				break;
+			}
+			if(spec.ex1b == int(eQuestStatus::STARTED) && univ.party.quest_status[spec.ex1a] != eQuestStatus::STARTED) {
+				univ.party.quest_start[spec.ex1a] = calc_day();
+				univ.party.quest_source[spec.ex1a] = max(-1,spec.ex2a);
+				if(univ.party.quest_source[spec.ex1a] >= univ.party.job_banks.size())
+					univ.party.job_banks.resize(univ.party.quest_source[spec.ex1a] + 1);
+			}
+			univ.party.quest_status[spec.ex1a] = eQuestStatus(spec.ex1b);
+			switch(univ.party.quest_status[spec.ex1a]) {
+				case eQuestStatus::STARTED: add_string_to_buf("You have received a quest."); break;
+				case eQuestStatus::AVAILABLE: break; // TODO: Should this award XP/gold if the quest was previously started?
+				case eQuestStatus::FAILED:
+					add_string_to_buf("You have failed to complete a quest.");
+					if(univ.party.quest_source[spec.ex1a] >= 0 && univ.party.quest_source[spec.ex1a] < univ.party.job_banks.size())
+						univ.party.job_banks[univ.party.quest_source[spec.ex1a]].anger += spec.ex2a < 0 ? 1 : spec.ex2a;
+					break;
+				case eQuestStatus::COMPLETED:
+					add_string_to_buf("You have completed a quest!");
+					if(univ.scenario.quests[spec.ex1a].gold > 0) {
+						int gold = univ.scenario.quests[spec.ex1a].gold;
+						add_string_to_buf("  Received " + std::to_string(gold) + " as a reward.");
+						give_gold(gold, true);
+					}
+					if(univ.scenario.quests[spec.ex1a].xp > 0)
+						award_party_xp(univ.scenario.quests[spec.ex1a].xp);
+					break;
+			}
 			break;
 		default:
 			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
@@ -3457,6 +3532,18 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.ex2c == 1 && k > j) *next_spec = spec.ex1b;
 			if(spec.ex2c == 2 && k >= j) *next_spec = spec.ex1b;
 			break;
+		case eSpecType::IF_QUEST:
+			if(spec.ex1a < 0 || spec.ex1a >= univ.scenario.quests.size()) {
+				giveError("The scenario tried to update a non-existent quest.");
+				break;
+			}
+			if(spec.ex1b < 0 || spec.ex1b > 3) {
+				giveError("Invalid quest status (range 0 .. 3).");
+				break;
+			}
+			if(univ.party.quest_status[spec.ex1a] == eQuestStatus(spec.ex1b))
+				*next_spec = spec.ex1c;
+			break;
 		case eSpecType::IF_CONTEXT:
 			// TODO: Test this. In particular, test that the legacy behaviour is correct.
 			j = -1;
@@ -3579,6 +3666,10 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					break;
 				case 24: // Item or monster ability activated on being hit
 					if(which_mode == eSpecCtx::ATTACKED_RANGE)
+						*next_spec = spec.ex1c;
+					break;
+				case 25: // Initiating conversation
+					if(which_mode == eSpecCtx::HAIL)
 						*next_spec = spec.ex1c;
 					break;
 			}

@@ -507,7 +507,7 @@ enum class eSpecCtx {
 	TOWN_LOOK = 4,
 	ENTER_TOWN = 5,
 	LEAVE_TOWN = 6,
-	TALK = 7,
+	TALK = 7, // Special called during conversation
 	USE_SPEC_ITEM = 8,
 	TOWN_TIMER = 9,
 	SCEN_TIMER = 10,
@@ -525,6 +525,7 @@ enum class eSpecCtx {
 	ATTACKING_RANGE = 22, 
 	ATTACKED_MELEE = 23,
 	ATTACKED_RANGE = 24,
+	HAIL = 25, // Special called by trying to initiate conversation
 };
 
 enum class eSpecType {
@@ -574,6 +575,7 @@ enum class eSpecType {
 	APPEND_TER = 42,
 	PAUSE = 43,
 	START_TALK = 44,
+	UPDATE_QUEST = 45,
 	ONCE_GIVE_ITEM = 50,
 	ONCE_GIVE_SPEC_ITEM = 51,
 	ONCE_NULL = 52,
@@ -644,6 +646,7 @@ enum class eSpecType {
 	IF_NUM_RESPONSE = 157,
 	IF_IN_BOAT = 158,
 	IF_ON_HORSE = 159,
+	IF_QUEST = 160,
 	MAKE_TOWN_HOSTILE = 170,
 	TOWN_RUN_MISSILE = 171,
 	TOWN_MONST_ATTACK = 172,
@@ -699,13 +702,13 @@ enum class eSpecCat {
 
 inline eSpecCat getNodeCategory(eSpecType node) {
 	int code = (int) node;
-	if(code >= 0 && code <= 44)
+	if(code >= 0 && code <= 45)
 		return eSpecCat::GENERAL;
 	if(code >= 50 && code <= 63)
 		return eSpecCat::ONCE;
 	if(code >= 80 && code <= 105)
 		return eSpecCat::AFFECT;
-	if(code >= 130 && code <= 159)
+	if(code >= 130 && code <= 160)
 		return eSpecCat::IF_THEN;
 	if(code >= 170 && code <= 199)
 		return eSpecCat::TOWN;
@@ -726,6 +729,7 @@ enum class eTalkNode {
 	DEP_ON_TOWN = 6,
 	SHOP = 7,
 	TRAINING = 8,
+	JOB_BANK = 9,
 	SELL_WEAPONS = 13,
 	SELL_ARMOR = 14,
 	SELL_ITEMS = 15,
@@ -736,6 +740,7 @@ enum class eTalkNode {
 	BUY_SHIP = 20,
 	BUY_HORSE = 21,
 	BUY_SPEC_ITEM = 22,
+	RECEIVE_QUEST = 23,
 	BUY_TOWN_LOC = 24,
 	END_FORCE = 25,
 	END_FIGHT = 26,

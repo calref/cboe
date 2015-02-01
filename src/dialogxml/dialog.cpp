@@ -612,6 +612,12 @@ template<> pair<string,cLed*> cDialog::parse(Element& who /*LED*/){
 				throw xBadVal("led",name,val,attr->Row(),attr->Column(),fname);
 			}
 			p.second->setColour(clr);
+		} else if(name == "wrap") {
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true")
+				p.second->setFormat(TXT_WRAP, true);
+			else p.second->setFormat(TXT_WRAP, false);
 		}else if(name == "top"){
 			attr->GetValue(&frame.top), foundTop = true;
 		}else if(name == "left"){

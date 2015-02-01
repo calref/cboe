@@ -399,6 +399,7 @@ cTownperson::cTownperson() {
 	monster_time = 0;
 	personality = -1;
 	special_on_kill = -1;
+	special_on_talk = -1;
 }
 
 cTownperson::cTownperson(location loc, mon_num_t num, const cMonster& monst) : cTownperson() {

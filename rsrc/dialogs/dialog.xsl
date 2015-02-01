@@ -111,8 +111,10 @@
 		<xsl:if test='./@state'>
 			background-image: url('img/button/led-<xsl:value-of select='./@state'/>.png');
 		</xsl:if>
+		background-position: left top;
 		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
 		width: <xsl:value-of select='./@width'/>px;
+		height: <xsl:value-of select='./@height'/>px;
 	</xsl:attribute>
 	<xsl:value-of select='.'/>
 	</div>

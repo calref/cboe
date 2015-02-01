@@ -23,6 +23,7 @@ bool left_buttons_active = 1,right_buttons_active = 0;
 extern short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, 3 - tabbed text, +10 - button
 extern short right_button_status[NRS];
 extern std::shared_ptr<cScrollbar> right_sbar;
+// Button status:
 // 0 - clear
 // 1000 + x - terrain type x
 // 2000 + x - monster type x
@@ -34,9 +35,12 @@ extern std::shared_ptr<cScrollbar> right_sbar;
 // 8000 + x - out string x
 // 9000 + x - town string x
 // 10000 + x - scen. special item x
-// 11000 + x - charter intro c
+// 11000 + x - journal entry x
 // 12000 + x - dialogue node x
 // 13000 + x - basic dialogue node x
+// 14000 + x - outdoor sign x
+// 15000 + x - town sign x
+// 16000 + x - quest x
 
 
 // for following, lb stands for left button(s)
