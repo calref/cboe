@@ -162,11 +162,11 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	if(mode == eSpecCtx::OUT_MOVE) {
 		out_where = global_to_local(where_check);
 		
-		for(i = 0; i < 18; i++)
+		for(i = 0; i < univ.out->special_locs.size(); i++)
 			if(out_where == univ.out->special_locs[i]) {
-				*spec_num = univ.out->special_id[i];
+				*spec_num = univ.out->special_locs[i].spec;
 				// call special
-				run_special(mode,1,univ.out->special_id[i],out_where,&s1,&s2,&s3);
+				run_special(mode,1,univ.out->special_locs[i].spec,out_where,&s1,&s2,&s3);
 				if(s1 > 0)
 					can_enter = false;
 				else if(s2 > 0)
@@ -193,9 +193,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			add_string_to_buf("  Force cage!");
 			return false;
 		}
-		for(i = 0; i < 50; i++)
+		for(i = 0; i < univ.town->special_locs.size(); i++)
 			if(where_check == univ.town->special_locs[i]) {
-				*spec_num = univ.town->spec_id[i];
+				*spec_num = univ.town->special_locs[i].spec;
 				bool runSpecial = false;
 				if(!is_blocked(where_check)) runSpecial = true;
 				if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
@@ -206,7 +206,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 					runSpecial = true;
 				if(runSpecial) {
 					give_help(54,0);
-					run_special(mode,2,univ.town->spec_id[i],where_check,&s1,&s2,&s3);
+					run_special(mode,2,*spec_num,where_check,&s1,&s2,&s3);
 					if(s1 > 0)
 						can_enter = false;
 					else if(s2 > 0)
@@ -1286,14 +1286,14 @@ bool adj_town_look(location where) {
 		if(!adjacent(univ.town.p_loc,where))
 			add_string_to_buf("  Not close enough to search.");
 		else {
-			for(i = 0; i < 50; i++)
+			for(i = 0; i < univ.town->special_locs.size(); i++)
 				if(where == univ.town->special_locs[i]) {
 					if(get_blockage(univ.town->terrain(where.x,where.y)) > 0) {
 						// tell party you find something, if looking at a space they can't step in
 						add_string_to_buf("  Search: You find something!");
 					}
 					
-					run_special(eSpecCtx::TOWN_LOOK,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
+					run_special(eSpecCtx::TOWN_LOOK,2,univ.town->special_locs[i].spec,where,&s1,&s2,&s3);
 					if(s1 > 0)
 						can_open = false;
 					got_special = true;
@@ -1312,39 +1312,6 @@ bool adj_town_look(location where) {
 		return false;
 	}
 	return false;
-}
-
-// PSOE - place_special_outdoor_encounter
-// if always, stuff_done_val is NULL
-void PSOE(short which_special,unsigned char *stuff_done_val,short where_put) {
-	short i,j,graphic_num = 0;
-	
-	if(stuff_done_val != NULL) {
-		if(*stuff_done_val > 0)
-			return;
-		else *stuff_done_val = 20;
-	}
-	for(i = 0; i < 18; i++)
-		if(univ.out->special_id[i] == where_put) {
-			for(j = 0; j < 7; j++)
-				if(univ.out->special_enc[which_special].monst[j] > 0) {
-					graphic_num = get_monst_picnum(univ.out->special_enc[which_special].monst[j]);
-					j = 7;
-				}
-			//display_strings( str1a, str1b, str2a, str2b,
-			////	"Encounter!",57, graphic_num, 0);
-			draw_terrain(0);
-			pause(15);
-			//if(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].spec_code == 0)
-			//	univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special].spec_code = 1;
-			//place_outd_wand_monst(univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_locs[i],
-			//	univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_enc[which_special]);
-			
-			i = 18;
-		}
-	draw_terrain(0);
-	play_sound(61);
-	//play_sound(0);
 }
 
 void out_move_party(short x,short y) {
@@ -2119,25 +2086,23 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 
 cSpecial get_node(short cur_spec,short cur_spec_type) {
 	cSpecial dummy_node;
-	
-	dummy_node = univ.scenario.scen_specials[0];
 	dummy_node.type = eSpecType::INVALID;
 	if(cur_spec_type == 0) {
-		if(cur_spec != minmax(0,255,cur_spec)) {
+		if(cur_spec != minmax(0,univ.scenario.scen_specials.size() - 1,cur_spec)) {
 			giveError("The scenario called a scenario special node out of range.");
 			return dummy_node;
 		}
 		return univ.scenario.scen_specials[cur_spec];
 	}
 	if(cur_spec_type == 1) {
-		if(cur_spec != minmax(0,59,cur_spec)) {
+		if(cur_spec != minmax(0,univ.out->specials.size() - 1,cur_spec)) {
 			giveError("The scenario called an outdoor special node out of range.");
 			return dummy_node;
 		}
 		return univ.out->specials[cur_spec];
 	}
 	if(cur_spec_type == 2) {
-		if(cur_spec != minmax(0,99,cur_spec)) {
+		if(cur_spec != minmax(0,univ.town->specials.size() - 1,cur_spec)) {
 			giveError("The scenario called a town special node out of range.");
 			return dummy_node;
 		}

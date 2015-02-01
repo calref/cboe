@@ -38,7 +38,9 @@ void cTown::append(legacy::town_record_type& old){
 	for(i = 0; i < 50; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
-		spec_id[i] = old.spec_id[i];
+		if(old.special_locs[i].x == 100)
+			special_locs[i].spec = -1;
+		else special_locs[i].spec = old.spec_id[i];
 		cField temp;
 		temp.append(old.preset_fields[i]);
 		preset_fields.push_back(temp);
@@ -82,8 +84,7 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 		wandering_locs[i] = d_loc;
 	}
 	for(i = 0; i < 50; i++) {
-		special_locs[i] = d_loc;
-		spec_id[i] = 0;
+		special_locs[i].spec = -1;
 	}
 	lighting_type = LIGHT_NORMAL;
 	for(i = 0; i < 4; i++) {

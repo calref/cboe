@@ -163,8 +163,8 @@ location get_spec_loc(short which) {
 	location where;
 	short i;
 	
-	for(i = 0; i < 50; i++)
-		if(univ.town->spec_id[i] == which)
+	for(i = 0; i < univ.town->special_locs.size(); i++)
+		if(univ.town->special_locs[i].spec == which)
 			return univ.town->special_locs[i];
 	return where;
 }

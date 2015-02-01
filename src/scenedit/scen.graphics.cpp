@@ -1249,14 +1249,15 @@ void draw_cur_string() {
 
 bool is_special(short i,short j) {
 	short k;
+	location check(i,j);
 	
 	if(editing_town)
-		for(k = 0; k < 50; k++)
-			if((town->special_locs[k].x == i) && (town->special_locs[k].y == j))
+		for(k = 0; k < town->special_locs.size(); k++)
+			if(town->special_locs[k] == check && town->special_locs[k].spec >= 0)
 				return true;
 	if(!editing_town)
-		for(k = 0; k < 18; k++)
-			if((current_terrain->special_locs[k].x == i) && (current_terrain->special_locs[k].y == j))
+		for(k = 0; k < current_terrain->special_locs.size(); k++)
+			if(current_terrain->special_locs[k] == check && current_terrain->special_locs[k].spec >= 0)
 				return true;
 	
 	return false;

@@ -60,8 +60,7 @@ public:
 	};
 	short x,y; // Used while loading legacy scenarios.
 	ter_num_t terrain[48][48];
-	location special_locs[18];
-	unsigned short special_id[18];
+	std::array<spec_loc_t,18> special_locs;
 	location exit_locs[8];
 	short exit_dests[8];
 	location sign_locs[8];

@@ -239,8 +239,9 @@ bool cCurTown::is_spot(short x, short y) const{
 
 bool cCurTown::is_special(short x, short y) const{
 	if(x > record()->max_dim() || y > record()->max_dim()) return false;
-	for(int i = 0; i < 50; i++)
-		if(x == record()->special_locs[i].x && y == record()->special_locs[i].y)
+	location check(x,y);
+	for(int i = 0; i < record()->special_locs.size(); i++)
+		if(check == record()->special_locs[i] && record()->special_locs[i].spec >= 0)
 			return true;
 	return false;
 }

@@ -1225,29 +1225,21 @@ void erase_specials() {
 		return;
 	if(!is_town() && !is_combat())
 		return;
-	for(k = 0; k < 50; k++) {
+	for(k = 0; k < univ.town->special_locs.size(); k++) {
 		//if(univ.town->spec_id[k] >= 0) {
-		sn = univ.town->specials[univ.town->spec_id[k]];
+		sn = univ.town->specials[univ.town->special_locs[k].spec];
 		sd1 = sn.sd1; sd2 = sn.sd2;
 		if((univ.party.sd_legit(sd1,sd2)) && (PSD[sd1][sd2] == 250)) {
+			long spec = univ.town->special_locs[k].spec;
 			where = univ.town->special_locs[k];
-			if((where.x != 100) && ((where.x > univ.town->max_dim()) || (where.y > univ.town->max_dim())
-									 || (where.x < 0) || (where.y < 0))) {
+			if(spec >= 0 && (where.x > univ.town->max_dim() || where.y > univ.town->max_dim() || where.x < 0 || where.y < 0)) {
 				beep();
 				add_string_to_buf("Town corrupt. Problem fixed.");
 				print_nums(where.x,where.y,k);
-				univ.town->special_locs[k].x = 0;
+				univ.town->special_locs[k].spec = -1;
 			}
 			
-			if(where.x != 100) {
-//				switch(scenario.ter_types[univ.town->terrain(where.x,where.y)].picture) {
-//					case 207: univ.town->terrain(where.x,where.y) = 0; break;
-//					case 208: univ.town->terrain(where.x,where.y) = 170; break;
-//					case 209: univ.town->terrain(where.x,where.y) = 210; break;
-//					case 210: univ.town->terrain(where.x,where.y) = 217; break;
-//					case 211: univ.town->terrain(where.x,where.y) = 2; break;
-//					case 212: univ.town->terrain(where.x,where.y) = 36; break;
-//				}
+			if(spec >= 0) {
 				univ.town.set_spot(where.x,where.y,false);
 			}
 		}
@@ -1268,7 +1260,7 @@ void erase_out_specials() {
 		for(short j = 0; j < 2; j++)
 			if(quadrant_legal(i,j)) {
 				cOutdoors& sector = *univ.scenario.outdoors[univ.party.outdoor_corner.x + i][univ.party.outdoor_corner.y + j];
-				for(short k = 0; k < 18; k++) {
+				for(short k = 0; k < sector.special_locs.size(); k++) {
 					if(k < 8 && sector.exit_dests[k] >= 0 &&
 						univ.scenario.ter_types[sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y]].special == eTerSpec::TOWN_ENTRANCE &&
 					   (sector.exit_locs[k].x == minmax(0,47,sector.exit_locs[k].x)) &&
@@ -1283,33 +1275,23 @@ void erase_out_specials() {
 							
 						}
 					}
-					if(sector.special_id[k] < 0) continue; // TODO: Is this needed? Seems to be important, so why was it commented out?
+					if(sector.special_locs[k].spec < 0) continue; // TODO: Is this needed? Seems to be important, so why was it commented out?
 					out_num = univ.scenario.outdoors.width() * (univ.party.outdoor_corner.y + j) + univ.party.outdoor_corner.x + i;
 					
-					sn = sector.specials[sector.special_id[k]];
+					sn = sector.specials[sector.special_locs[k].spec];
 					sd1 = sn.sd1; sd2 = sn.sd2;
 					if((univ.party.sd_legit(sd1,sd2)) && (PSD[sd1][sd2] == 250)) {
 						where = sector.special_locs[k];
-						if((where.x > 48) || (where.y > 48)
-							|| (where.x < 0) || (where.y < 0)) {
+						if(where.x > 48 || where.y > 48 || where.x < 0 || where.y < 0) {
 							beep();
 							add_string_to_buf("Outdoor section corrupt. Problem fixed.");
-							sector.special_id[k] = -1; // TODO: Again, was there a reason for commenting this out?
+							sector.special_locs[k].spec = -1; // TODO: Again, was there a reason for commenting this out?
 						}
 						
 						sector.special_spot[where.x][where.y] = false;
 					}
 				}
 			}
-}
-
-// returns id # of special at where, or 50 if there is none.
-short get_town_spec_id(location where) {
-	short i = 0;
-	
-	while((univ.town->special_locs[i] != where)	&& (i < 50))
-		i++;
-	return i;
 }
 
 // TODO: I don't think we need this

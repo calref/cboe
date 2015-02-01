@@ -744,16 +744,16 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				break;
 			case MODE_COPY_SPECIAL: //copy special
 				if(editing_town) {
-					for(x = 0; x < 50; x++)
-						if((town->special_locs[x].x == spot_hit.x) && (town->special_locs[x].y == spot_hit.y)) {
-							copied_spec = town->spec_id[x];
+					for(x = 0; x < town->special_locs.size(); x++)
+						if(town->special_locs[x] == spot_hit && town->special_locs[x].spec >= 0) {
+							copied_spec = town->special_locs[x].spec;
 							x = 500;
 						}
 				}
 				if(!editing_town) {
-					for(x = 0; x < 18; x++)
-						if((current_terrain->special_locs[x].x == spot_hit.x) && (current_terrain->special_locs[x].y == spot_hit.y)) {
-							copied_spec = current_terrain->special_id[x];
+					for(x = 0; x < current_terrain->special_locs.size(); x++)
+						if(current_terrain->special_locs[x] == spot_hit && current_terrain->special_locs[x].spec >= 0) {
+							copied_spec = current_terrain->special_locs[x].spec;
 							x = 500;
 						}
 				}
@@ -768,10 +768,10 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					break;
 				}
 				if(editing_town) {
-					for(x = 0; x < 50; x++)
-						if(town->special_locs[x].x == 100) {
+					for(x = 0; x < town->special_locs.size(); x++)
+						if(town->special_locs[x].spec < 0) {
 							town->special_locs[x] = spot_hit;
-							town->spec_id[x] = copied_spec ;
+							town->special_locs[x].spec = copied_spec;
 							x = 500;
 						}
 				}
@@ -780,10 +780,10 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						cChoiceDlog("not-at-edge").show();
 						break;
 					}
-					for(x = 0; x < 18; x++)
-						if(current_terrain->special_locs[x].x == 100) {
+					for(x = 0; x < current_terrain->special_locs.size(); x++)
+						if(current_terrain->special_locs[x].spec < 0) {
 							current_terrain->special_locs[x] = spot_hit;
-							current_terrain->special_id[x] = copied_spec;
+							current_terrain->special_locs[x].spec = copied_spec;
 							x = 500;
 						}
 				}
@@ -796,16 +796,18 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				break;
 			case MODE_ERASE_SPECIAL: //erase special
 				if(editing_town) {
-					for(x = 0; x < 50; x++)
-						if((town->special_locs[x].x == spot_hit.x) && (town->special_locs[x].y == spot_hit.y)) {
-							town->special_locs[x].x = 100;
+					for(x = 0; x < town->special_locs.size(); x++)
+						if(town->special_locs[x] == spot_hit && town->special_locs[x].spec >= 0) {
+							town->special_locs[x] = {-1,-1};
+							town->special_locs[x].spec = -1;
 							x = 500;
 						}
 				}
 				if(!editing_town) {
-					for(x = 0; x < 18; x++)
-						if((current_terrain->special_locs[x].x == spot_hit.x) && (current_terrain->special_locs[x].y == spot_hit.y)) {
-							current_terrain->special_locs[x].x = 100;
+					for(x = 0; x < current_terrain->special_locs.size(); x++)
+						if(current_terrain->special_locs[x] == spot_hit && current_terrain->special_locs[x].spec >= 0) {
+							current_terrain->special_locs[x] = {-1,-1};
+							current_terrain->special_locs[x].spec = -1;
 							x = 500;
 						}
 				}
@@ -2750,9 +2752,9 @@ void place_edit_special(location loc) {
 	short i,spec;
 	
 	if(editing_town) {
-		for(i = 0; i < 50; i++)
-			if((town->special_locs[i].x == loc.x) && (town->special_locs[i].y == loc.y)) {
-				edit_spec_enc(town->spec_id[i],2,nullptr);
+		for(i = 0; i < town->special_locs.size(); i++)
+			if(town->special_locs[i] == loc && town->special_locs[i].spec >= 0) {
+				edit_spec_enc(town->special_locs[i].spec,2,nullptr);
 				i = 500;
 			}
 		if(i < 500) { // new special
@@ -2761,14 +2763,12 @@ void place_edit_special(location loc) {
 				giveError("You are out of special nodes in this town. Select Edit Special Nodes from the Town menu to clear out some of the special nodes.");
 				return;
 			}
-			for(i = 0; i < 50; i++)
-				if(town->special_locs[i].x == 100) {
-					town->special_locs[i] = loc;
-					town->spec_id[i] = spec;
-					edit_spec_enc(spec,2,nullptr);
-					
-					if(town->specials[spec].pic < 0)
-						town->special_locs[i].x = 100;
+			for(i = 0; i < town->special_locs.size(); i++)
+				if(town->special_locs[i].spec < 0) {
+					if(edit_spec_enc(spec,2,nullptr)) {
+						town->special_locs[i] = loc;
+						town->special_locs[i].spec = spec;
+					}
 					i = 500;
 				}
 			if(i < 500) {
@@ -2783,9 +2783,9 @@ void place_edit_special(location loc) {
 			cChoiceDlog("not-at-edge").show();
 			return;
 		}
-		for(i = 0; i < 18; i++)
-			if((current_terrain->special_locs[i].x == loc.x) && (current_terrain->special_locs[i].y == loc.y)) {
-				edit_spec_enc(current_terrain->special_id[i],1,nullptr);
+		for(i = 0; i < current_terrain->special_locs.size(); i++)
+			if(current_terrain->special_locs[i] == loc && current_terrain->special_locs[i].spec >= 0) {
+				edit_spec_enc(current_terrain->special_locs[i].spec,1,nullptr);
 				i = 500;
 			}
 		if(i < 500) { // new special
@@ -2794,14 +2794,12 @@ void place_edit_special(location loc) {
 				giveError("You are out of special nodes in this outdoor section. Select Edit Special Nodes from the Outdoor menu to clear out some of the special nodes.");
 				return;
 			}
-			for(i = 0; i < 18; i++)
-				if(current_terrain->special_locs[i].x == 100) {
-					current_terrain->special_locs[i] = loc;
-					current_terrain->special_id[i] = spec;
-					edit_spec_enc(spec,1,nullptr);
-					
-					if(current_terrain->specials[spec].pic < 0)
-						current_terrain->special_locs[i].x = 100;
+			for(i = 0; i < current_terrain->special_locs.size(); i++)
+				if(current_terrain->special_locs[i].spec < 0) {
+					if(edit_spec_enc(spec,1,nullptr)) {
+						current_terrain->special_locs[i] = loc;
+						current_terrain->special_locs[i].spec = spec;
+					}
 					i = 500;
 				}
 			if(i < 500) {
@@ -2817,19 +2815,19 @@ void set_special(location spot_hit) {
 	short x,y;
 	
 	if(editing_town) {
-		for(x = 0; x < 50; x++)
-			if((town->special_locs[x].x == spot_hit.x) && (town->special_locs[x].y == spot_hit.y)) {
-				y = edit_special_num(2,town->spec_id[x]);
-				if(y >= 0) town->spec_id[x] = y;
+		for(x = 0; x < town->special_locs.size(); x++)
+			if(town->special_locs[x] == spot_hit && town->special_locs[x].spec >= 0) {
+				y = edit_special_num(2,town->special_locs[x].spec);
+				if(y >= 0) town->special_locs[x].spec = y;
 				x = 500;
 			}
 		if(x < 500) {
-			for(x = 0; x < 50; x++)
-				if(town->special_locs[x].x == 100) {
+			for(x = 0; x < town->special_locs.size(); x++)
+				if(town->special_locs[x].spec < 0) {
 					y = edit_special_num(2,0);
 					if(y >= 0) {
 						town->special_locs[x] = spot_hit;
-						town->spec_id[x] = y;
+						town->special_locs[x].spec = y;
 					}
 					x = 500;
 				}
@@ -2842,19 +2840,19 @@ void set_special(location spot_hit) {
 			cChoiceDlog("not-at-edge").show();
 			return;
 		}
-		for(x = 0; x < 18; x++)
-			if((current_terrain->special_locs[x].x == spot_hit.x) && (current_terrain->special_locs[x].y == spot_hit.y)) {
-				y = edit_special_num(1,current_terrain->special_id[x]);
-				if(y >= 0) current_terrain->special_id[x] = y;
+		for(x = 0; x < current_terrain->special_locs.size(); x++)
+			if(current_terrain->special_locs[x] == spot_hit && current_terrain->special_locs[x].spec >= 0) {
+				y = edit_special_num(1,current_terrain->special_locs[x].spec);
+				if(y >= 0) current_terrain->special_locs[x].spec = y;
 				x = 500;
 			}
 		if(x < 500) {
-			for(x = 0; x < 18; x++)
-				if(current_terrain->special_locs[x].x == 100) {
-					y = edit_special_num(1,current_terrain->special_id[x]);
+			for(x = 0; x < current_terrain->special_locs.size(); x++)
+				if(current_terrain->special_locs[x].spec < 0) {
+					y = edit_special_num(1,current_terrain->special_locs[x].spec);
 					if(y >= 0) {
 						current_terrain->special_locs[x] = spot_hit;
-						current_terrain->special_id[x] = y;
+						current_terrain->special_locs[x].spec = y;
 					}
 					x = 500;
 				}
@@ -3180,8 +3178,13 @@ void start_string_editing(short mode,short just_redo_text) {
 void start_special_editing(short mode,short just_redo_text) {
 	short i;
 	char str[256];
-	short num_specs[3] = {256,60,100};
+	size_t num_specs;
 	bool draw_full = false;
+	switch(mode) {
+		case 0: num_specs = scenario.scen_specials.size(); break;
+		case 1: num_specs = current_terrain->specials.size(); break;
+		case 2: num_specs = town->specials.size(); break;
+	}
 	
 	if(just_redo_text == 0) {
 		if(overall_mode < MODE_MAIN_SCREEN)
@@ -3192,10 +3195,10 @@ void start_special_editing(short mode,short just_redo_text) {
 		right_sbar->show();
 		
 		reset_rb();
-		right_sbar->setMaximum(num_specs[mode] - NRSONPAGE);
+		right_sbar->setMaximum(num_specs - NRSONPAGE);
 	}
 	
-	for(i = 0; i < num_specs[mode]; i++) {
+	for(size_t i = 0; i < num_specs; i++) {
 		std::ostringstream strb;
 		switch(mode) {
 			case 0:

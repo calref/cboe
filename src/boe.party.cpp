@@ -1417,12 +1417,13 @@ void cast_town_spell(location where) {
 }
 
 bool cast_spell_on_space(location where, eSpell spell) {
-	short i,s1 = 0,s2 = 0,s3 = 0;
+	short s1 = 0,s2 = 0,s3 = 0;
 	
-	for(i = 0; i < 50; i++)
+	for(size_t i = 0; i < univ.town->special_locs.size(); i++)
 		if(where == univ.town->special_locs[i]) {
-			if(univ.town->specials[univ.town->spec_id[i]].type == eSpecType::IF_CONTEXT)
-				run_special(eSpecCtx::TARGET,2,univ.town->spec_id[i],where,&s1,&s2,&s3);
+			// TODO: Is there a way to skip this condition without breaking compatibility?
+			if(univ.town->specials[univ.town->special_locs[i].spec].type == eSpecType::IF_CONTEXT)
+				run_special(eSpecCtx::TARGET,2,univ.town->special_locs[i].spec,where,&s1,&s2,&s3);
 			if(s3) redraw_terrain();
 			return !s1;
 		}
