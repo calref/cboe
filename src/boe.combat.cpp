@@ -567,6 +567,15 @@ void pc_attack(short who_att,iLiving* target) {
 		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
 		r2 = get_ran(1,1,4) + dam_adj;
 		
+		if(cPlayer* pc_target = dynamic_cast<cPlayer*>(target)) {
+			// PCs get some additional defensive perks
+			// These calculations were taken straight from the monster-on-PC attack code
+			r1 += 5 * pc_target->stat_adj(eSkill::DEXTERITY);
+			r1 += pc_target->get_prot_level(eItemAbil::EVASION);
+			if(pc_target->parry < 100)
+				r1 += 5 * pc_target->parry;
+		}
+		
 		if(r1 <= hit_chance[attacker.skill(eSkill::DEXTERITY)]) {
 			size_t i_monst = univ.get_target_i(*target);
 			// TODO: Change to damage_target()
@@ -663,11 +672,18 @@ static void apply_weapon_status(eStatus status, int how_much, int dmg, iLiving& 
 		case eStatus::FORCECAGE:
 			add_string_to_buf("  " + weap_type + " emits a green flash.");
 			which_m.sleep(eStatus::FORCECAGE, 0, dmg - how_much / 2);
+			if(which_m.status[eStatus::FORCECAGE] > 0)
+				univ.town.set_force_cage(which_m.get_loc().x, which_m.get_loc().y, true);
 			break;
 		case eStatus::MARTYRS_SHIELD:
 			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
 			which_m.apply_status(eStatus::MARTYRS_SHIELD, how_much / -2);
 			break;
+	}
+	if(dynamic_cast<cPlayer*>(&which_m)) {
+		put_pc_screen();
+		if(status == eStatus::DUMB)
+			adjust_spell_menus();
 	}
 }
 
@@ -701,6 +717,15 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 	if(primary) r2 += 2; else r2 -= 1;
 	if(weap.ability == eItemAbil::WEAK_WEAPON)
 		r2 = (r2 * (10 - weap.abil_data[0])) / 10;
+	
+	if(cPlayer* pc_target = dynamic_cast<cPlayer*>(&target)) {
+		// PCs get some additional defensive perks
+		// These calculations were taken straight from the monster-on-PC attack code
+		r1 += 5 * pc_target->stat_adj(eSkill::DEXTERITY);
+		r1 += pc_target->get_prot_level(eItemAbil::EVASION);
+		if(pc_target->parry < 100)
+			r1 += 5 * pc_target->parry;
+	}
 	
 	if(weap.ability == eItemAbil::EXPLODING_WEAPON) {
 		add_string_to_buf("  The weapon produces an explosion!");
@@ -787,6 +812,8 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 				if(univ.party[who_att].has_abil_equip(eItemAbil::POISON_AUGMENT) < 24)
 					poison_amt += 2;
 				target.poison(poison_amt);
+				if(dynamic_cast<cPlayer*>(&target))
+					put_pc_screen();
 				move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
 			}
 		}
@@ -1273,7 +1300,7 @@ void do_combat_cast(location target) {
 								
 								
 							default:
-								if(!(victim = univ.target_there(target, TARG_MONST)))
+								if(!(victim = univ.target_there(target)))
 									add_string_to_buf("  Nobody there.");
 								else {
 									cCreature* cur_monst = dynamic_cast<cCreature*>(victim);
@@ -1282,12 +1309,12 @@ void do_combat_cast(location target) {
 									switch(spell_being_cast) {
 										case eSpell::ACID_SPRAY:
 											store_m_type = 0;
-											cur_monst->acid(level);
+											victim->acid(level);
 											store_sound = 24;
 											break;
 										case eSpell::PARALYZE_BEAM:
 											store_m_type = 9;
-											cur_monst->sleep(eStatus::PARALYZED,500,0);
+											victim->sleep(eStatus::PARALYZED,500,0);
 											store_sound = 24;
 											break;
 										case eSpell::UNHOLY_RAVAGING:
@@ -1296,11 +1323,15 @@ void do_combat_cast(location target) {
 											r1 = get_ran(4,1,8);
 											r2 = get_ran(1,0,2);
 											damage_monst(targ_num, 7, r1, eDamageType::MAGIC,0);
-											cur_monst->slow(4 + r2);
-											cur_monst->poison(5 + r2);
+											victim->slow(4 + r2);
+											victim->poison(5 + r2);
 											break;
 											
 										case eSpell::SCRY_MONSTER:
+											if(cur_monst == nullptr) {
+												add_string_to_buf("  Nobody there.");
+												break;
+											}
 											store_m_type = -1;
 											play_sound(52);
 											univ.party.m_noted[cur_monst->number] = true;
@@ -1309,12 +1340,21 @@ void do_combat_cast(location target) {
 											store_sound = 25;
 											break;
 										case eSpell::CAPTURE_SOUL:
+											if(cur_monst == nullptr) {
+												add_string_to_buf("  Nobody there.");
+												break;
+											}
 											store_m_type = 15;
 											record_monst(cur_monst);
 											store_sound = 25;
 											break;
 											
 										case eSpell::MINDDUEL:
+											if(cur_monst == nullptr) {
+												// TODO: Support PC-on-PC mindduels? Might be no point though...
+												add_string_to_buf("  Nobody there.");
+												break;
+											}
 											store_m_type = -1;
 											if((cur_monst->mu == 0) && (cur_monst->cl == 0))
 												add_string_to_buf("  Can't duel: no magic.");
@@ -1334,118 +1374,135 @@ void do_combat_cast(location target) {
 											
 										case eSpell::CHARM_FOE:
 											store_m_type = 14;
-											cur_monst->sleep(eStatus::CHARM,0,-1 * (bonus + caster.level / 8));
+											victim->sleep(eStatus::CHARM,0,-1 * (bonus + caster.level / 8));
 											store_sound = 24;
 											break;
 											
 										case eSpell::DISEASE:
 											store_m_type = 0;
 											r1 = get_ran(1,0,1);
-											cur_monst->disease(2 + r1 + bonus);
+											victim->disease(2 + r1 + bonus);
 											store_sound = 24;
 											break;
 											
 										case eSpell::STRENGTHEN_TARGET:
 											store_m_type = 14;
-											cur_monst->health += 20;
+											victim->heal(20);
 											store_sound = 55;
 											break;
 											
 										case eSpell::DUMBFOUND:
 											store_m_type = 14;
-											cur_monst->dumbfound(1 + bonus / 3);
+											victim->dumbfound(1 + bonus / 3);
 											store_sound = 53;
 											break;
 											
 										case eSpell::SCARE:
 											store_m_type = 11;
-											cur_monst->scare(get_ran(2 + bonus,1,6));
+											victim->scare(get_ran(2 + bonus,1,6));
 											store_sound = 54;
 											break;
 										case eSpell::FEAR:
 											store_m_type = 11;
-											cur_monst->scare(get_ran(min(20,caster.level / 2 + bonus),1,8));
+											victim->scare(get_ran(min(20,caster.level / 2 + bonus),1,8));
 											store_sound = 54;
 											break;
 											
 										case eSpell::SLOW:
 											store_m_type = 11;
 											r1 = get_ran(1,0,1);
-											cur_monst->slow(2 + r1 + bonus);
+											victim->slow(2 + r1 + bonus);
 											store_sound = 25;
 											break;
 											
 										case eSpell::POISON_MINOR: case eSpell::ARROWS_VENOM:
 											store_m_type = (spell_being_cast == eSpell::ARROWS_VENOM) ? 4 : 11;
-											cur_monst->poison(2 + bonus / 2);
+											victim->poison(2 + bonus / 2);
 											store_sound = 55;
 											break;
 										case eSpell::PARALYZE:
 											store_m_type = 9;
-											cur_monst->sleep(eStatus::PARALYZED,1000,-10);
+											victim->sleep(eStatus::PARALYZED,1000,-10);
 											store_sound = 25;
 											break;
 										case eSpell::POISON:
 											store_m_type = 11;
-											cur_monst->poison(4 + bonus / 2);
+											victim->poison(4 + bonus / 2);
 											store_sound = 55;
 											break;
 										case eSpell::POISON_MAJOR:
 											store_m_type = 11;
-											cur_monst->poison(8 + bonus / 2);
+											victim->poison(8 + bonus / 2);
 											store_sound = 55;
 											break;
 											
 										case eSpell::STUMBLE:
 											store_m_type = 8;
-											cur_monst->curse(4 + bonus);
+											victim->curse(4 + bonus);
 											store_sound = 24;
 											break;
 											
 										case eSpell::CURSE:
 											store_m_type = 8;
-											cur_monst->curse(2 + bonus);
+											victim->curse(2 + bonus);
 											store_sound = 24;
 											break;
 											
 										case eSpell::HOLY_SCOURGE:
 											store_m_type = 8;
-											cur_monst->curse(2 + caster.level / 2);
+											victim->curse(2 + caster.level / 2);
 											store_sound = 24;
 											break;
 											
 										case eSpell::TURN_UNDEAD: case eSpell::DISPEL_UNDEAD:
-											if(cur_monst->m_type != eRace::UNDEAD && cur_monst->m_type != eRace::SKELETAL) {
+											if(cur_monst != nullptr && cur_monst->m_type != eRace::UNDEAD && cur_monst->m_type != eRace::SKELETAL) {
 												add_string_to_buf("  Not undead.");
 												store_m_type = -1;
 												break;
+											} else if(cPlayer* who = dynamic_cast<cPlayer*>(victim)) {
+												if(who->race != eRace::UNDEAD && who->race != eRace::SKELETAL) {
+													add_string_to_buf("  Not undead.");
+													store_m_type = -1;
+													break;
+												}
 											}
 											store_m_type = 8;
 											r1 = get_ran(1,0,90);
-											if(r1 > hit_chance[minmax(0,19,bonus * 2 + level * 4 - (cur_monst->level / 2) + 3)])
+											if(r1 > hit_chance[minmax(0,19,bonus * 2 + level * 4 - (victim->get_level() / 2) + 3)])
 												add_string_to_buf("  Monster resisted.");
 											else {
 												r1 = get_ran((spell_being_cast == eSpell::TURN_UNDEAD) ? 2 : 6, 1, 14);
-												
-												hit_space(cur_monst->cur_loc,r1,eDamageType::UNBLOCKABLE,0,current_pc);
+												size_t i_targ = univ.get_target_i(*victim);
+												if(i_targ < 100)
+													damage_pc(i_targ, r1, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
+												else damage_monst(i_targ, current_pc, r1, eDamageType::UNBLOCKABLE, 0);
 											}
 											store_sound = 24;
 											break;
 											
 										case eSpell::RAVAGE_SPIRIT:
-											if(cur_monst->m_type != eRace::DEMON) {
+											if(cur_monst != nullptr && cur_monst->m_type != eRace::DEMON) {
 												add_string_to_buf("  Not a demon.");
 												store_m_type = -1;
 												break;
+											} else if(cPlayer* who = dynamic_cast<cPlayer*>(victim)) {
+												if(who->race != eRace::DEMON) {
+													add_string_to_buf("  Not a demon.");
+													store_m_type = -1;
+													break;
+												}
 											}
 											r1 = get_ran(1,1,100);
-											if(r1 > hit_chance[minmax(0,19,level * 4 - cur_monst->level + 10)])
+											if(r1 > hit_chance[minmax(0,19,level * 4 - victim->get_level() + 10)])
 												add_string_to_buf("  Demon resisted.");
 											else {
 												r1 = get_ran(8 + bonus * 2, 1, 11);
 												if(univ.party[spell_caster].status[eStatus::DUMB] < 0)
 													r1 += -25 * univ.party[spell_caster].status[eStatus::DUMB] / 3;
-												hit_space(cur_monst->cur_loc,r1,eDamageType::UNBLOCKABLE,0,current_pc);
+												size_t i_targ = univ.get_target_i(*victim);
+												if(i_targ < 100)
+													damage_pc(i_targ, r1, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
+												else damage_monst(i_targ, current_pc, r1, eDamageType::UNBLOCKABLE, 0);
 											}
 											store_sound = 24;
 											break;
@@ -1453,9 +1510,11 @@ void do_combat_cast(location target) {
 											add_string_to_buf("  Error: Spell " + (*spell_being_cast).name() + " not implemented for combat mode.", 4);
 											break;
 									}
-									if(store_m_type >= 0)
-										add_missile(target,store_m_type,1,
-													14 * (cur_monst->x_width - 1),18 * (cur_monst->y_width - 1));
+									if(store_m_type >= 0) {
+										int w = cur_monst ? cur_monst->x_width : 1;
+										int h = cur_monst ? cur_monst->y_width : 1;
+										add_missile(target,store_m_type,1, 14 * (w - 1),18 * (h - 1));
+									}
 									
 								}
 								break;
@@ -1480,6 +1539,9 @@ void do_combat_cast(location target) {
 	
 	handle_marked_damage();
 	combat_posing_monster = current_working_monster = -1;
+	
+	if(dynamic_cast<cPlayer*>(victim))
+		put_pc_screen();
 	
 	print_buf();
 }
@@ -1717,6 +1779,8 @@ void fire_missile(location target) {
 					if(missile_firer.has_abil_equip(eItemAbil::POISON_AUGMENT) < 24)
 						poison_amt++;
 					victim->poison(poison_amt);
+					if(dynamic_cast<cPlayer*>(victim))
+						put_pc_screen();
 				}
 				if((ammo.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
 					apply_weapon_status(eStatus(ammo.abil_data[1]), ammo.abil_data[0], r2 + spec_dam, *victim, "Missile");
@@ -2650,7 +2714,6 @@ void monster_attack(short who_att,iLiving* target) {
 			r1 += 5 * target->status[eStatus::BLESS_CURSE] - 15;
 			r1 += 5 * (attacker->status[eStatus::WEBS] / 3);
 			if(pc_target != nullptr) {
-				// TODO: Consider this stuff in PC-on-PC attacks
 				r1 += 5 * pc_target->stat_adj(eSkill::DEXTERITY);
 				r1 += pc_target->get_prot_level(eItemAbil::EVASION);
 				if(pc_target->parry < 100)
@@ -2706,6 +2769,8 @@ void monster_attack(short who_att,iLiving* target) {
 					if(i == 0 && attacker->status[eStatus::POISONED_WEAPON] > 0) {
 						short poison_amt = attacker->status[eStatus::POISONED_WEAPON];
 						target->poison(poison_amt);
+						if(dynamic_cast<cPlayer*>(target))
+							put_pc_screen();
 						move_to_zero(attacker->status[eStatus::POISONED_WEAPON]);
 					}
 					
@@ -3087,14 +3152,18 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 				case eStatus::MARTYRS_SHIELD:
 					target->apply_status(abil.second.gen.stat, -abil.second.gen.strength);
 					break;
+				case eStatus::FORCECAGE:
+					target->sleep(abil.second.gen.stat, 8, abil.second.gen.strength);
+					if(target->status[eStatus::FORCECAGE] > 0)
+						univ.town.set_force_cage(target->get_loc().x, target->get_loc().y, true);
+					break;
 				// This only works on monsters
 				case eStatus::CHARM:
 					target->sleep(abil.second.gen.stat, univ.town.monst[m_num].attitude, abil.second.gen.strength);
 					break;
-				// These three don't make sense in this context
+				// These two don't make sense in this context
 				case eStatus::MAIN:
 				case eStatus::POISONED_WEAPON:
-				case eStatus::FORCECAGE:
 					return;
 			}
 			break;
@@ -3156,6 +3225,13 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 		case eMonstAbil::MARTYRS_SHIELD: case eMonstAbil::NO_ABIL: case eMonstAbil::RADIATE:
 		case eMonstAbil::SPECIAL: case eMonstAbil::SPLITS: case eMonstAbil::SUMMON:
 			break;
+	}
+	if(pc_target != nullptr) {
+		put_pc_screen();
+		if(abil.first == eMonstAbil::STUN || abil.first == eMonstAbil::STATUS || abil.first == eMonstAbil::STATUS2) {
+			if(abil.second.gen.stat == eStatus::DUMB)
+				adjust_spell_menus();
+		}
 	}
 }
 
@@ -3522,6 +3598,12 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 	end_missile_anim();
 	handle_marked_damage();
 	
+	if(dynamic_cast<cPlayer*>(&victim)) {
+		put_pc_screen();
+		if(spell == eSpell::DUMBFOUND)
+			adjust_spell_menus();
+	}
+	
 	return acted;
 }
 
@@ -3828,6 +3910,9 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 	end_missile_anim();
 	handle_marked_damage();
 	
+	if(dynamic_cast<cPlayer*>(&victim))
+		put_pc_screen();
+	
 	return acted;
 }
 
@@ -4112,6 +4197,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 					}
 				}
 			}
+	put_pc_screen();
 	
 	fast_bang = 0;
 	
@@ -4416,9 +4502,10 @@ void handle_disease() {
 							break;
 						case 8:
 							univ.party[i].dumbfound(3);
+							adjust_spell_menus();
 							break;
 						case 9: case 10:
-							add_string_to_buf("  " + univ.party[i].name + "unaffected.");
+							add_string_to_buf("  " + univ.party[i].name + " unaffected.");
 							break;
 					}
 					r1 = get_ran(1,0,7);
@@ -4904,6 +4991,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 				i = get_ran(3,1,6);
 				univ.party[target].apply_status(eStatus::DUMB, i / -3);
 				univ.party[target].cur_sp += i * 2;
+				adjust_spell_menus();
 			}
 			break;
 		default:

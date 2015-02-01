@@ -55,4 +55,9 @@ void iLiving::clear_bad_status() {
 		status[eStatus::MAGIC_RESISTANCE] = 0;
 }
 
+void iLiving::void_sanctuary() {
+	if(status[eStatus::INVISIBLE] > 0)
+		status[eStatus::INVISIBLE] = 0;
+}
+
 void(* iLiving::print_result)(std::string) = nullptr;

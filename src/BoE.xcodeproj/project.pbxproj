@@ -61,6 +61,7 @@
 		9107074C18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		9107074D18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		9107074E18F1D18500F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
+		9117A4111A7EC06700CD6EB4 /* living.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FB1A7362D900F20F5E /* living.cpp */; };
 		91222FC11A72366D008413A5 /* spell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91597A6E1A3BEDC700BE7BF9 /* spell.cpp */; };
 		912283C90FD0E16C00B21642 /* undo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912283C80FD0E16C00B21642 /* undo.cpp */; };
 		912286F80FD330E500B21642 /* dlogutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBADA0FB91D2A001E34EA /* dlogutil.cpp */; };
@@ -1568,6 +1569,7 @@
 				91E30F2C1A74819D0057C54A /* fileio_party.cpp in Sources */,
 				91E30F2F1A7481C50057C54A /* fileio.cpp in Sources */,
 				91E30F311A748ABA0057C54A /* fileio_scen.cpp in Sources */,
+				9117A4111A7EC06700CD6EB4 /* living.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

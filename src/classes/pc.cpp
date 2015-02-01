@@ -17,6 +17,8 @@
 #include "oldstructs.h"
 #include "mathutil.hpp"
 
+extern short skill_bonus[21];
+
 void cPlayer::append(legacy::pc_record_type old){
 	int i;
 	main_status = (eMainStatus) old.main_status;
@@ -105,6 +107,232 @@ void cPlayer::drain_sp(int drain) {
 
 void cPlayer::scare(int) {
 	// TODO: Not implemented
+}
+
+void cPlayer::void_sanctuary() {
+	if(status[eStatus::INVISIBLE] > 0 && print_result)
+		print_result("You become visible!");
+	iLiving::void_sanctuary();
+}
+
+void cPlayer::heal(int amt) {
+	if(!is_alive()) return;
+	if(cur_health >= max_health) return;
+	cur_health += amt;
+	if(cur_health > max_health)
+		cur_health = max_health;
+	if(cur_health < 0)
+		cur_health = 0;
+}
+
+void cPlayer::cure(int amt) {
+	if(!is_alive()) return;
+	if(status[eStatus::POISON] <= amt)
+		status[eStatus::POISON] = 0;
+	else status[eStatus::POISON] -= amt;
+	one_sound(51);
+}
+
+// if how_much < 0, bless
+void cPlayer::curse(int how_much) {
+	if(!is_alive()) return;
+	if(how_much > 0)
+		how_much -= get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::BLESS_CURSE)) / 2;
+	apply_status(eStatus::BLESS_CURSE, -how_much);
+	if(print_result) {
+		if(how_much < 0)
+			print_result("  " + name + " blessed.");
+		else if(how_much > 0)
+			print_result("  " + name + " cursed.");
+	}
+	if(give_help) {
+		if(how_much > 0)
+			give_help(59,0);
+		else if(how_much > 0)
+			give_help(34,0);
+	}
+}
+
+void cPlayer::dumbfound(int how_much) {
+	if(!is_alive()) return;
+	short r1 = get_ran(1,0,90);
+	if(has_abil_equip(eItemAbil::WILL) < 24) {
+		if(print_result)
+			print_result("  Ring of Will glows.");
+		r1 -= 10;
+	}
+	how_much -= get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::DUMB)) / 4;
+	if(r1 < level)
+		how_much -= 2;
+	if(how_much <= 0) {
+		if(print_result)
+			print_result("  " + name + " saved.");
+		return;
+	}
+	apply_status(eStatus::DUMB, how_much);
+	if(print_result)
+		print_result("  " + name + " dumbfounded.");
+	one_sound(67);
+	if(give_help)
+		give_help(28,0);
+}
+
+void cPlayer::disease(int how_much) {
+	if(is_alive()) return;
+	short r1 = get_ran(1,1,100);
+	if(r1 < level * 2)
+		how_much -= 2;
+	if(how_much <= 0) {
+		if(print_result)
+			print_result("  " + name + " saved.");
+		return;
+	}
+	how_much -= get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE)) / 2;
+	if(traits[eTrait::FRAIL] && how_much > 1)
+		how_much++;
+	if(traits[eTrait::FRAIL] && how_much == 1 && get_ran(1,0,1) == 0)
+		how_much++;
+	apply_status(eStatus::DISEASE, how_much);
+	if(print_result)
+		print_result("  " + name + " diseased.");
+	one_sound(66);
+	if(give_help)
+		give_help(29,0);
+}
+
+void cPlayer::sleep(eStatus what_type,int how_much,int adjust) {
+	if(what_type == eStatus::CHARM) return;
+	short level = 0;
+	if(!is_alive()) return;
+	if(how_much == 0) return;
+	
+	if((what_type == eStatus::ASLEEP) &&
+	   (race == eRace::UNDEAD || race == eRace::SKELETAL || race == eRace::SLIME ||
+		race == eRace::STONE || race == eRace::PLANT))
+		return;
+	if(what_type == eStatus::ASLEEP || what_type == eStatus::PARALYZED) {
+		how_much -= get_prot_level(eItemAbil::WILL) / 2;
+		level = get_prot_level(eItemAbil::FREE_ACTION);
+		how_much -= (what_type == eStatus::ASLEEP) ? level : level * 300;
+		how_much -= get_prot_level(eItemAbil::STATUS_PROTECTION,int(what_type)) / 4;
+	}
+	
+	short r1 = get_ran(1,1,100) + adjust;
+	if(r1 < 30 + level * 2)
+		how_much = -1;
+	if(what_type == eStatus::ASLEEP && (traits[eTrait::HIGHLY_ALERT] || status[eStatus::ASLEEP] < 0))
+		how_much = -1;
+	if(how_much <= 0) {
+		if(print_result)
+			print_result("  " + name + " resisted.");
+		return;
+	}
+	status[what_type] = how_much;
+	if(print_result) {
+		if(what_type == eStatus::ASLEEP)
+			print_result("  " + name + " falls asleep.");
+		else if(what_type == eStatus::FORCECAGE)
+			print_result("  " + name + " is trapped!");
+		else print_result("  " + name + " paralyzed.");
+	}
+	if(what_type == eStatus::ASLEEP)
+		play_sound(96);
+	else play_sound(90);
+	if(what_type != eStatus::FORCECAGE)
+		ap = 0;
+	if(give_help) {
+		if(what_type == eStatus::ASLEEP)
+			give_help(30,0);
+		else if(what_type == eStatus::PARALYZED)
+			give_help(32,0);
+	}
+}
+
+// if how_much < 0, haste
+void cPlayer::slow(int how_much) {
+	if(!is_alive()) return;
+	if(how_much > 0)
+		how_much -= get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::HASTE_SLOW)) / 2;
+	apply_status(eStatus::HASTE_SLOW, -how_much);
+	if(print_result) {
+		if(how_much < 0)
+			print_result("  " + name + " hasted.");
+		else if(how_much > 0)
+			print_result("  " + name + " slowed.");
+	}
+	if(give_help)
+		give_help(35,0);
+}
+
+void cPlayer::web(int how_much) {
+	if(!is_alive()) return;
+	if(how_much > 0)
+		how_much -= get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::WEBS)) / 2;
+	apply_status(eStatus::WEBS, how_much);
+	if(print_result)
+		print_result("  " + name + " webbed.");
+	one_sound(17);
+	give_help(31,0);
+}
+
+void cPlayer::acid(int how_much) {
+	if(!is_alive()) return;
+	if(has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::ACID)) < 24) {
+		if(print_result)
+			print_result("  " + name + " resists acid.");
+		return;
+	}
+	status[eStatus::ACID] += how_much;
+	if(print_result)
+		print_result("  " + name + " covered with acid!");
+	one_sound(42);
+}
+
+void cPlayer::restore_sp(int amt) {
+	if(!is_alive()) return;
+	if(cur_sp >= max_sp) return;
+	cur_sp += amt;
+	if(cur_sp > max_sp)
+		cur_sp = max_sp;
+	if(cur_sp < 0)
+		cur_sp = 0;
+}
+
+void cPlayer::poison(int how_much) {
+	if(!is_alive()) return;
+	how_much -= get_prot_level(eItemAbil::STATUS_PROTECTION,int(eStatus::POISON)) / 2;
+	how_much -= get_prot_level(eItemAbil::FULL_PROTECTION) / 3;
+	
+	if(traits[eTrait::FRAIL] && how_much > 1)
+		how_much++;
+	if(traits[eTrait::FRAIL] && how_much == 1 && get_ran(1,0,1) == 0)
+		how_much++;
+	
+	if(how_much > 0) {
+		apply_status(eStatus::POISON, how_much);
+		if(print_result)
+			print_result("  " + name + " poisoned.");
+		one_sound(17);
+		give_help(33,0);
+	}
+}
+
+short cPlayer::stat_adj(eSkill which) const {
+	// This is one place where we use the base skill level instead of the adjusted skill level
+	// Using the adjusted skill level here would alter the original mechanics of stat-boosting items
+	short tr = skill_bonus[skills[which]];
+	if(which == eSkill::INTELLIGENCE) {
+		if(traits[eTrait::MAGICALLY_APT])
+			tr++;
+	}
+	if(which == eSkill::STRENGTH) {
+		if(traits[eTrait::STRENGTH])
+			tr++;
+	}
+	// TODO: Use ability strength?
+	if(has_abil_equip(eItemAbil::BOOST_STAT,int(which)) < 24)
+		tr++;
+	return tr;
 }
 
 bool cPlayer::is_alive() const {
@@ -779,3 +1007,5 @@ std::istream& operator >> (std::istream& in, eMainStatus& e){
 	else e = eMainStatus::ABSENT;
 	return in;
 }
+
+void(* cPlayer::give_help)(short,short) = nullptr;

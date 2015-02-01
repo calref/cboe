@@ -127,6 +127,140 @@ void cCreature::drain_sp(int drain) {
 	}
 }
 
+void cCreature::poison(int how_much) {
+	if(how_much > 0) {
+		how_much *= poison_res;
+		how_much /= 100;
+	}
+	apply_status(eStatus::POISON, how_much);
+	if(how_much >= 0)
+		spell_note((how_much == 0) ? 10 : 4);
+	else
+		spell_note(34);
+	
+}
+
+void cCreature::acid(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::ACID, how_much);
+	if(how_much >= 0)
+		spell_note(31);
+	else
+		spell_note(48);
+}
+
+void cCreature::slow(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::HASTE_SLOW, -how_much);
+	if(how_much >= 0)
+		spell_note((how_much == 0) ? 10 : 2);
+	else
+		spell_note(35);
+	
+}
+
+void cCreature::curse(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::BLESS_CURSE, -how_much);
+	if(how_much >= 0)
+		spell_note((how_much == 0) ? 10 : 5);
+	else
+		spell_note(36);
+	
+}
+
+void cCreature::web(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::WEBS, how_much);
+	if(how_much >= 0)
+		spell_note((how_much == 0) ? 10 : 19);
+	else
+		spell_note(37);
+	
+}
+
+void cCreature::scare(int how_much) {
+	how_much = magic_adjust(how_much);
+	morale -= how_much;
+	// TODO: I don't think there's currently any way to increase monster morale at the moment - add one!
+	if(how_much >= 0)
+		spell_note((how_much == 0) ? 10 : 1);
+	else
+		spell_note(47);
+	
+}
+
+void cCreature::disease(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::DISEASE, how_much);
+	if(how_much >= 0)
+		spell_note((how_much == 0) ? 10 : 25);
+	else
+		spell_note(38);
+	
+}
+
+void cCreature::dumbfound(int how_much) {
+	how_much = magic_adjust(how_much);
+	apply_status(eStatus::DUMB, how_much);
+	if(how_much >= 0)
+		spell_note((how_much == 0) ? 10 : 22);
+	else
+		spell_note(39);
+	
+}
+
+// For charm, amount is the resulting attitude of the charmed monster; if 0, attitude is 2.
+void cCreature::sleep(eStatus which_status,int amount,int penalty) {
+	if(which_status != eStatus::CHARM && which_status != eStatus::FORCECAGE && amount < 0) {
+		status[which_status] -= amount;
+		if(which_status == eStatus::PARALYZED)
+			status[which_status] = max(0, status[which_status]);
+		return;
+	}
+	
+	if((which_status == eStatus::ASLEEP) &&
+	   (m_type == eRace::UNDEAD || m_type == eRace::SKELETAL || m_type == eRace::SLIME ||
+		m_type == eRace::STONE || m_type == eRace::PLANT))
+		return;
+	short r1 = get_ran(1,1,100);
+	if(magic_res > 0) {
+		r1 *= 100;
+		r1 /= magic_res;
+	} else r1 = 200;
+	r1 += penalty;
+	if(which_status == eStatus::ASLEEP)
+		r1 -= 25;
+	if(which_status == eStatus::PARALYZED)
+		r1 -= 15;
+	if(which_status == eStatus::ASLEEP && abil[eMonstAbil::FIELD].active && abil[eMonstAbil::FIELD].gen.fld == eFieldType::CLOUD_SLEEP)
+		return;
+	
+	if(r1 > charm_odds[level / 2]) {
+		//one_sound(68);
+		spell_note(10);
+	}
+	else {
+		if(which_status == eStatus::CHARM) {
+			if(amount == 0 || amount > 3) amount = 2;
+			attitude = amount;
+			spell_note(23);
+		} else if(which_status == eStatus::FORCECAGE) {
+			status[eStatus::FORCECAGE] = 8;
+			spell_note(52);
+		} else {
+			status[which_status] = amount;
+			if(which_status == eStatus::ASLEEP && (amount >= 0))
+				spell_note(28);
+			if(which_status == eStatus::PARALYZED && (amount >= 0))
+				spell_note(30);
+			if(amount < 0)
+				spell_note(40);
+		}
+		//one_sound(53);
+	}
+}
+
 bool cCreature::is_alive() const {
 	return active > 0;
 }
