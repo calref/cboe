@@ -61,13 +61,13 @@ Unused
 Unused
 Unused
 Unused
-Unused Node Type
+Job Board
+Which job board
 Unused
 Unused
 Unused
-Unused
-Unused
-Unused
+Name of job board
+Response if job board angry
 Unused Node Type
 Unused
 Unused
@@ -159,13 +159,13 @@ Unused
 Unused
 Response if party buys it
 Response if party can't afford it
-Unused Node Type
+Receive Quest
+Which quest?
 Unused
 Unused
 Unused
-Unused
-Unused
-Unused
+Response if quest not completed
+Response after quest completed
 Reveal Town Location
 Cost to know where town is
 Number of town to reveal

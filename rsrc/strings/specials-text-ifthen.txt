@@ -478,3 +478,19 @@ Unused
 Unused
 Otherwise call this special
 --------------------
+If Quest?
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Unused
+Which Quest?
+Required Quest Status?
+If quest has that status, call this special ...
+Unused
+Unused
+Unused
+Otherwise call this special
+--------------------

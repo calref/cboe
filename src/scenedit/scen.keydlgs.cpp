@@ -198,6 +198,11 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 				strings.push_back(item.name);
 			}
 			break;
+		case STRT_QUEST:
+			for(cQuest& quest : scenario.quests) {
+				strings.push_back(quest.name);
+			}
+			break;
 		case STRT_TER:
 			for(cTerrain& ter : scenario.ter_types) {
 				strings.push_back(ter.name);
@@ -318,6 +323,9 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 			break;
 		case STRT_DIR:
 			strings = {"North", "Northease", "East", "Southeast", "South", "Southwest", "West", "Northwest", "None"};
+			break;
+		case STRT_QUEST_STATUS:
+			strings = {"Available", "Started", "Completed", "Failed"};
 			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
@@ -800,6 +808,8 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case '*': strt = STRT_CONTEXT; title = "What context?"; break;
 		case ':': strt = STRT_STAIR_MODE; title = "Select trigger limitations:"; break;
 		case 'w': strt = STRT_STATUS; title = "Select status:"; str_adj = 1; break;
+		case 'j': strt = STRT_QUEST; title = "Select a quest:"; break;
+		case 'J': strt = STRT_QUEST_STATUS; title = "Select the quest's status:"; break;
 		case '0': case '1': case '2': case '3': case '4':
 		case '5': case '6': case '7': case '8': case '9':
 			choose_string = false;
