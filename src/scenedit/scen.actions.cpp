@@ -2,6 +2,8 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <array>
+#include <string>
 #include "scen.global.h"
 #include "scenario.h"
 #include "graphtool.hpp"
@@ -74,8 +76,8 @@ bool small_any_drawn = false;
 extern bool change_made;
 
 rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
-short left_button_status[NLS]; // 0 - clear, 1 - text, 2 - title text, +10 - button
-short right_button_status[NRS];
+std::array<lb_t,NLS> left_button_status;
+std::array<rb_t,NRS> right_button_status;
 rectangle right_buttons[NRSONPAGE];
 rectangle palette_buttons_from[71];
 rectangle palette_buttons[10][6];
@@ -140,12 +142,12 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 	short i,j, x;
 	bool are_done = false;
 	std::string s2;
+	fs::path file_to_load;
 	
 	bool need_redraw = false,option_hit = false,ctrl_hit = false;
 	location spot_hit;
 	location cur_point,cur_point2;
 	long right_top;
-	short right_hit;
 	eScenMode old_mode;
 	rectangle temp_rect;
 	if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt))
@@ -155,7 +157,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 	
 	for(i = 0; i < NLS; i++)
 		if(!mouse_button_held && the_point.in(left_buttons[i][0])
-		   && (left_button_status[i] >= 10))  {
+		   && (left_button_status[i].action != LB_NO_ACTION))  {
 			draw_lb_slot(i,1);
 			play_sound(37);
 			mainPtr.display();
@@ -163,17 +165,19 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 			sf::sleep(time_in_ticks(10));
 			draw_lb_slot(i,0);
 			mainPtr.display();
-			if(overall_mode == MODE_INTRO_SCREEN) {
-				switch(i) {
-					case 3: // new
+			if(overall_mode == MODE_INTRO_SCREEN || overall_mode == MODE_MAIN_SCREEN || overall_mode == MODE_EDIT_TYPES) {
+				switch(left_button_status[i].action) {
+					case LB_NO_ACTION:
+						break;
+					case LB_NEW_SCEN:
 						if(build_scenario()){
 							overall_mode = MODE_MAIN_SCREEN;
 							set_up_main_screen();
 						}
 						break;
 						
-					case 4: // edit
-						fs::path file_to_load = nav_get_scenario();
+					case LB_LOAD_SCEN:
+						file_to_load = nav_get_scenario();
 						if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 							cur_town = scenario.last_town_edited;
 							town = scenario.towns[cur_town];
@@ -184,25 +188,16 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							update_item_menu();
 						}
 						break;
-				}
-			}
-			else if((overall_mode == MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES)) {
-				switch(i) {
-					case 0:
-						break;
-						
-					case 1:
-						break;
-					case 2: // start terrain editing
+					case LB_EDIT_TER:
 						start_terrain_editing();
 						break;
-					case 3: // start terrain editing
+					case LB_EDIT_MONST:
 						start_monster_editing(0);
 						break;
-					case 4: // start item editing
+					case LB_EDIT_ITEM:
 						start_item_editing(0);
 						break;
-					case 5: // new town
+					case LB_NEW_TOWN:
 						if(change_made) {
 							giveError("You need to save the changes made to your scenario before you can add a new town.");
 							return are_done;
@@ -214,17 +209,17 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						if(new_town(scenario.towns.size()))
 							set_up_main_screen();
 						break;
-					case 6:
+					case LB_EDIT_TEXT:
 						right_sbar->setPosition(0);
 						start_string_editing(0,0);
 						break;
-					case 7:
+					case LB_EDIT_SPECITEM:
 						start_special_item_editing();
 						break;
-					case 8:
+					case LB_EDIT_QUEST:
 						start_quest_editing();
 						break;
-					case 12: // pick out
+					case LB_LOAD_OUT:
 						if(change_made) {
 							if(!save_check("save-section-confirm"))
 								break;
@@ -236,12 +231,12 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							set_up_main_screen();
 						}
 						break;
-					case 13: // edit outdoors
+					case LB_EDIT_OUT:
 						start_out_edit();
 						mouse_button_held = false;
 						return false;
 						break;
-					case 17: // pick town
+					case LB_LOAD_TOWN:
 						if(change_made) {
 							if(!save_check("save-section-confirm"))
 								break;
@@ -253,18 +248,18 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							set_up_main_screen();
 						}
 						break;
-					case 18: // edit town
+					case LB_EDIT_TOWN:
 						start_town_edit();
 						mouse_button_held = false;
 						return false;
 						break;
-					case 19:
+					case LB_EDIT_TALK:
 						start_dialogue_editing(0);
 						break;
 						
 				}
 			}
-			if((overall_mode < MODE_MAIN_SCREEN) && (i == NLS - 1)) {
+			if((overall_mode < MODE_MAIN_SCREEN) && left_button_status[i].action == LB_RETURN) {
 				set_cursor(wand_curs);
 				set_up_main_screen();
 			}
@@ -275,10 +270,9 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 		right_top = right_sbar->getPosition();
 		for(i = 0; i < NRSONPAGE; i++)
 			if(!mouse_button_held && (the_point.in(right_buttons[i]) )
-			   && (right_button_status[i + right_top] > 0))  {
+			   && (right_button_status[i + right_top].action != RB_CLEAR))  {
 				
-				right_hit = right_button_status[i + right_top];
-				j = right_hit % 1000;
+				j = right_button_status[i + right_top].i;
 				//flash_rect(left_buttons[i][0]);
 				draw_rb_slot(i + right_top,1);
 				mainPtr.display();
@@ -288,43 +282,45 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				draw_rb_slot(i + right_top,0);
 				mainPtr.display();
 				change_made = true;
-				switch(right_hit / 1000) {
-					case 1:
+				switch(right_button_status[i + right_top].action) {
+					case RB_CLEAR:
+						break;
+					case RB_TER:
 						edit_ter_type(j);
 						update_item_menu();
 						break;
-					case 2:
+					case RB_MONST:
 						edit_monst_type(j);
 						update_item_menu();
 						start_monster_editing(1);
 						break;
-					case 3:
+					case RB_ITEM:
 						edit_item_type(j);
 						update_item_menu();
 						start_item_editing(1);
 						break;
-					case 4:
+					case RB_SCEN_SPEC:
 						if(option_hit) {
 							scenario.scen_specials[j] = cSpecial();
 						}
 						else edit_spec_enc(j,0,nullptr);
 						start_special_editing(0,1);
 						break;
-					case 5:
+					case RB_OUT_SPEC:
 						if(option_hit) {
 							current_terrain->specials[j] = cSpecial();
 						}
 						else edit_spec_enc(j,1,nullptr);
 						start_special_editing(1,1);
 						break;
-					case 6:
+					case RB_TOWN_SPEC:
 						if(option_hit) {
 							town->specials[j] = cSpecial();
 						}
 						else edit_spec_enc(j,2,nullptr);
 						start_special_editing(2,1);
 						break;
-					case 7:
+					case RB_SCEN_STR:
 						if(option_hit) {
 							s2 = get_str("scen-default", j + 161);
 							scenario.spec_strs[j] = s2;
@@ -333,7 +329,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						start_string_editing(0,1);
 						break;
 						
-					case 8:
+					case RB_OUT_STR:
 						if(option_hit) {
 							s2 = get_str("outdoor-default", j + 11);
 							current_terrain->spec_strs[j] = s2;
@@ -341,7 +337,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						else edit_text_str(j,1);
 						start_string_editing(1,1);
 						break;
-					case 9:
+					case RB_TOWN_STR:
 						if(option_hit) {
 							s2 = get_str("town-default", j + 21);
 							town->spec_strs[j] = s2;
@@ -349,11 +345,11 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						else edit_text_str(j,2);
 						start_string_editing(2,1);
 						break;
-					case 10:
+					case RB_SPEC_ITEM:
 						edit_spec_item(j);
 						start_special_item_editing();
 						break;
-					case 11:
+					case RB_JOURNAL:
 						if(option_hit) {
 							s2 = get_str("scen-default", j + 11);
 							scenario.journal_strs[j] = s2;
@@ -361,15 +357,15 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						else edit_text_str(j,3);
 						start_string_editing(3,1);
 						break;
-					case 12:
+					case RB_DIALOGUE:
 						edit_talk_node(j);
 						start_dialogue_editing(1);
 						break;
-					case 13:
+					case RB_PERSONALITY:
 						edit_basic_dlog(j);
 						start_dialogue_editing(1);
 						break;
-					case 14:
+					case RB_OUT_SIGN:
 						if(option_hit) {
 							s2 = get_str("outdoor-default", j + 101);
 							current_terrain->spec_strs[j] = s2;
@@ -377,7 +373,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						else edit_text_str(j,4);
 						start_string_editing(4,1);
 						break;
-					case 15:
+					case RB_TOWN_SIGN:
 						if(option_hit) {
 							s2 = get_str("town-default", j + 121);
 							town->spec_strs[j] = s2;
@@ -385,7 +381,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						else edit_text_str(j,5);
 						start_string_editing(5,1);
 						break;
-					case 16:
+					case RB_QUEST:
 						if(option_hit) {
 							if(j == scenario.quests.size() - 1)
 								scenario.quests.pop_back();
@@ -2909,52 +2905,49 @@ void town_entry(location spot_hit) {
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
 void set_up_start_screen() {
-	set_lb(0,2,"Blades of Exile",0);
-	set_lb(1,2,"Scenario Editor",0);
-	//set_lb(3,2,"by Jeff Vogel",0);
-	set_lb(3,11,"Make New Scenario",0);
-	set_lb(4,11,"Load Scenario",0);
-	set_lb(7,1,"To find out how to use the",0);
-	set_lb(8,1,"editor, select Getting Started ",0);
-	set_lb(9,1,"from the Help menu.",0);
-	set_lb(NLS - 5,1,"Be sure to read the file Blades",0);
-	set_lb(NLS - 4,1,"of Exile License. Using this",0);
-	set_lb(NLS - 3,1,"program implies that you agree ",0);
-	set_lb(NLS - 2,1,"with the terms of the license.",0);
-	//set_lb(NLS - 2,1,"Copyright 1997, Spiderweb Software",0);
-	//set_lb(NLS - 1,1,"All rights reserved.",0);
-	set_lb(NLS - 1,1,"Copyright 1997, All rights reserved.",0);
+	set_lb(0,LB_TITLE,LB_NO_ACTION,"Blades of Exile");
+	set_lb(1,LB_TITLE,LB_NO_ACTION,"Scenario Editor");
+	set_lb(3,LB_TEXT,LB_NEW_SCEN,"Make New Scenario");
+	set_lb(4,LB_TEXT,LB_LOAD_SCEN,"Load Scenario");
+	set_lb(7,LB_TEXT,LB_NO_ACTION,"To find out how to use the");
+	set_lb(8,LB_TEXT,LB_NO_ACTION,"editor, select Getting Started ");
+	set_lb(9,LB_TEXT,LB_NO_ACTION,"from the Help menu.");
+	set_lb(NLS - 5,LB_TEXT,LB_NO_ACTION,"Be sure to read the file Blades");
+	set_lb(NLS - 4,LB_TEXT,LB_NO_ACTION,"of Exile License. Using this");
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"program implies that you agree ");
+	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"with the terms of the license.");
+	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
 }
 
 void set_up_main_screen() {
-	char message[50];
+	std::ostringstream strb;
 	
 	reset_lb();
 	reset_rb();
-	set_lb(-1,2,"Blades of Exile",0);
-	set_lb(-1,1,"Scenario Options",0);
-	set_lb(-1,11,"Edit Terrain Types",0);
-	set_lb(-1,11,"Edit Monsters",0);
-	set_lb(-1,11,"Edit Items",0);
-	set_lb(-1,11,"Create New Town",0);
-	set_lb(-1,11,"Edit Scenario Text",0);
-	set_lb(-1,11,"Edit Special Items",0);
-	set_lb(-1,11,"Edit Quests",0);
-	set_lb(-1,1,"",0);
-	set_lb(-1,1,"Outdoors Options",0);
-	sprintf((char *) message,"  Section x = %d, y = %d",(short) cur_out.x,(short) cur_out.y);
-	set_lb(-1,1,(char *) message,0);
-	set_lb(-1,11,"Load New Section",0);
-	set_lb(-1,11,"Edit Outdoor Terrain",0);
-	set_lb(-1,1,"",0);
-	set_lb(-1,1,"Town/Dungeon Options",0);
-	sprintf(message,"  Town %d: %s",cur_town,town->town_name.c_str());
-	set_lb(-1,1,(char *) message,0);
-	set_lb(-1,11,"Load Another Town",0);
-	set_lb(-1,11,"Edit Town Terrain",0);
-	set_lb(-1,11,"Edit Town Dialogue",0);
-	//set_lb(NLS - 2,1,"Copyright 1997",0);
-	set_lb(NLS - 1,1,"Copyright 1997, All rights reserved.",0);
+	set_lb(-1,LB_TITLE,LB_NO_ACTION,"Blades of Exile");
+	set_lb(-1,LB_TEXT,LB_NO_ACTION,"Scenario Options");
+	set_lb(-1,LB_TEXT,LB_EDIT_TER,"Edit Terrain Types");
+	set_lb(-1,LB_TEXT,LB_EDIT_MONST,"Edit Monsters");
+	set_lb(-1,LB_TEXT,LB_EDIT_ITEM,"Edit Items");
+	set_lb(-1,LB_TEXT,LB_NEW_TOWN,"Create New Town");
+	set_lb(-1,LB_TEXT,LB_EDIT_TEXT,"Edit Scenario Text");
+	set_lb(-1,LB_TEXT,LB_EDIT_SPECITEM,"Edit Special Items");
+	set_lb(-1,LB_TEXT,LB_EDIT_QUEST,"Edit Quests");
+	set_lb(-1,LB_TEXT,LB_NO_ACTION,"");
+	set_lb(-1,LB_TEXT,LB_NO_ACTION,"Outdoors Options");
+	strb << "  Section x = " << cur_out.x << ", y = " << cur_out.y;
+	set_lb(-1,LB_TEXT,LB_NO_ACTION, strb.str());
+	set_lb(-1,LB_TEXT,LB_LOAD_OUT,"Load New Section");
+	set_lb(-1,LB_TEXT,LB_EDIT_OUT,"Edit Outdoor Terrain");
+	set_lb(-1,LB_TEXT,LB_NO_ACTION,"",0);
+	set_lb(-1,LB_TEXT,LB_NO_ACTION,"Town/Dungeon Options");
+	strb.str("");
+	strb << "  Town " << cur_town << ": " << town->town_name;
+	set_lb(-1,LB_TEXT,LB_NO_ACTION, strb.str());
+	set_lb(-1,LB_TEXT,LB_LOAD_TOWN,"Load Another Town");
+	set_lb(-1,LB_TEXT,LB_EDIT_TOWN,"Edit Town Terrain");
+	set_lb(-1,LB_TEXT,LB_EDIT_TALK,"Edit Town Dialogue");
+	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
 	overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
 	shut_down_menus(4);
@@ -2964,16 +2957,16 @@ void set_up_main_screen() {
 
 void start_town_edit() {
 	short i,j;
-	char message[50];
+	std::ostringstream strb;
 	small_any_drawn = false;
 	cen_x = town->max_dim() / 2;
 	cen_y = town->max_dim() / 2;
 	reset_lb();
-	sprintf(message,"Editing Town %d",cur_town);
-	set_lb(0,2,message,0);
-	set_lb(NLS - 3,1,town->town_name.c_str(),0);
-	set_lb(NLS - 2,1,"(Click border to scroll view.)",0);
-	set_lb(NLS - 1,11,"Back to Main Menu",0);
+	strb << "Editing Town " << cur_town;
+	set_lb(0,LB_TITLE,LB_NO_ACTION,strb.str());
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,town->town_name);
+	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
+	set_lb(NLS - 1,LB_TEXT,LB_RETURN,"Back to Main Menu");
 	overall_mode = MODE_DRAWING;
 	editing_town = true;
 	set_up_terrain_buttons();
@@ -2993,16 +2986,16 @@ void start_town_edit() {
 
 void start_out_edit() {
 	short i,j;
-	char message[50];
+	std::ostringstream strb;
 	small_any_drawn = false;
 	cen_x = 24;
 	cen_y = 24;
 	reset_lb();
-	sprintf(message,"Editing outdoors (%d,%d)",cur_out.x,cur_out.y);
-	set_lb(0,2,message,0);
-	set_lb(NLS - 3,1,current_terrain->out_name.c_str(),0);
-	set_lb(NLS - 2,1,"(Click border to scroll view.)",0);
-	set_lb(NLS - 1,11,"Back to Main Menu",0);
+	strb << "Editing outdoors (" << cur_out.x << ',' << cur_out.y << ")";
+	set_lb(0,LB_TITLE,LB_NO_ACTION,strb.str());
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,current_terrain->out_name);
+	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
+	set_lb(NLS - 1,LB_TEXT,LB_RETURN,"Back to Main Menu");
 	overall_mode = MODE_DRAWING;
 	editing_town = false;
 	set_up_terrain_buttons();
@@ -3027,22 +3020,11 @@ void start_terrain_editing() {
 	set_up_terrain_buttons();
 	place_location();
 	
-	set_lb(NLS - 3,0,"",1);
-	/*	SetControlValue(right_sbar,0);
-	 
-	 reset_rb();
-	 SetControlMaximum(right_sbar,256 - NRSONPAGE);
-	 for(i = 0; i < 256; i++) {
-	 sprintf((char *) str,"%d - %s",i,(char *) data_store->scen_item_list.ter_names[i]);
-	 set_rb(i,1000 + i,(char *) str,0);
-	 }
-	 for(i = 0; i < NRSONPAGE; i++)
-	 draw_rb_slot(i); */
+	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
 }
 
 void start_monster_editing(short just_redo_text) {
 	short i;
-	char str[256];
 	bool draw_full = false;
 	
 	if(overall_mode == MODE_EDIT_TYPES)
@@ -3056,19 +3038,17 @@ void start_monster_editing(short just_redo_text) {
 		right_sbar->setMaximum(255 - NRSONPAGE);
 	}
 	for(i = 1; i < 256; i++) {
-		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_monsters[i].m_name.c_str());
-		set_rb(i - 1,2000 + i,(char *) str,0);
+		set_rb(i - 1,RB_MONST, i,std::to_string(i) + " - " + scenario.scen_monsters[i].m_name);
 	}
 	if(draw_full)
 		redraw_screen();
 	else for(i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0);
-	set_lb(NLS - 3,0,"",1);
+	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
 }
 
 void start_item_editing(short just_redo_text) {
 	short i;
-	char str[256];
 	bool draw_full = false;
 	
 	if(just_redo_text == 0) {
@@ -3084,19 +3064,17 @@ void start_item_editing(short just_redo_text) {
 		right_sbar->setMaximum(400 - NRSONPAGE);
 	}
 	for(i = 0; i < 400; i++) {
-		sprintf((char *) str,"%d - %s",i,(char *) scenario.scen_items[i].full_name.c_str());
-		set_rb(i,3000 + i,(char *) str,0);
+		set_rb(i,RB_ITEM, i,std::to_string(i) + " - " + scenario.scen_items[i].full_name);
 	}
 	if(draw_full)
 		redraw_screen();
 	else for(i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0);
-	set_lb(NLS - 3,0,"",1);
+	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
 }
 
 void start_special_item_editing() {
 	short i;
-	char str[256];
 	bool draw_full = false;
 	
 	if(overall_mode < MODE_MAIN_SCREEN)
@@ -3110,14 +3088,13 @@ void start_special_item_editing() {
 	reset_rb();
 	right_sbar->setMaximum(50 - NRSONPAGE);
 	for(i = 0; i < 50; i++) {
-		sprintf((char *) str,"%d - %s",i,scenario.special_items[i].name.c_str());
-		set_rb(i,10000 + i,(char *) str,0);
+		set_rb(i,RB_SPEC_ITEM, i,std::to_string(i) + " - " + scenario.special_items[i].name);
 	}
 	if(draw_full)
 		redraw_screen();
 	else for(i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0);
-	set_lb(NLS - 3,0,"",1);
+	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
 }
 
 void start_quest_editing() {
@@ -3135,10 +3112,10 @@ void start_quest_editing() {
 			title = "Create New Quest";
 		else title = scenario.quests[i].name;
 		title = std::to_string(i) + " - " + title;
-		set_rb(i, 16000 + i, title.c_str(), 0);
+		set_rb(i, RB_QUEST, i, title);
 	}
 	redraw_screen();
-	set_lb(NLS - 3, 1, "Command-click or right-click to delete", 1);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Command-click or right-click to delete",true);
 }
 
 extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
@@ -3147,7 +3124,6 @@ extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
 // if just_redo_text not 0, simply need to update text portions
 void start_string_editing(short mode,short just_redo_text) {
 	long pos;
-	std::ostringstream str;
 	bool draw_full = false;
 	
 	if(just_redo_text == 0) {
@@ -3162,30 +3138,31 @@ void start_string_editing(short mode,short just_redo_text) {
 		right_sbar->setMaximum(num_strs(mode) - NRSONPAGE);
 	}
 	for(size_t i = 0; i < num_strs(mode); i++) {
+		std::ostringstream str;
 		switch(mode) {
 			case 0:
 				str << i << " - " << scenario.spec_strs[i].substr(0,30);
-				set_rb(i,7000 + i,str.str().c_str(),0);
+				set_rb(i,RB_SCEN_STR, i,str.str());
 				break;
 			case 1:
 				str << i << " - " << current_terrain->spec_strs[i].substr(0,30);
-				set_rb(i,8000 + i,str.str().c_str(),0);
+				set_rb(i,RB_OUT_STR, i,str.str());
 				break;
 			case 2:
 				str << i << " - " << town->spec_strs[i].substr(0,30);
-				set_rb(i,9000 + i,str.str().c_str(),0);
+				set_rb(i,RB_TOWN_STR, i,str.str());
 				break;
 			case 3:
 				str << i << " - " << scenario.journal_strs[i].substr(0,30);
-				set_rb(i,11000 + i,str.str().c_str(),0);
+				set_rb(i,RB_JOURNAL, i,str.str());
 				break;
 			case 4:
 				str << i << " - " << current_terrain->sign_strs[i].substr(0,30);
-				set_rb(i,14000 + i,str.str().c_str(),0);
+				set_rb(i,RB_OUT_SIGN, i,str.str());
 				break;
 			case 5:
 				str << i << " - " << town->sign_strs[i].substr(0,30);
-				set_rb(i,15000 + i,str.str().c_str(),0);
+				set_rb(i,RB_TOWN_SIGN, i,str.str());
 				break;
 		}
 	}
@@ -3195,7 +3172,7 @@ void start_string_editing(short mode,short just_redo_text) {
 		redraw_screen();
 	else for(int i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i + pos,0);
-	set_lb(NLS - 3,1,"Command-click to clear",1);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Command-click to clear",true);
 }
 
 // mode 0 - scen 1 - out 2 - town
@@ -3203,7 +3180,6 @@ void start_string_editing(short mode,short just_redo_text) {
 void start_special_editing(short mode,short just_redo_text) {
 	short i;
 	char str[256];
-	std::string s2;
 	short num_specs[3] = {256,60,100};
 	bool draw_full = false;
 	
@@ -3220,21 +3196,19 @@ void start_special_editing(short mode,short just_redo_text) {
 	}
 	
 	for(i = 0; i < num_specs[mode]; i++) {
+		std::ostringstream strb;
 		switch(mode) {
 			case 0:
-				s2 = (*scenario.scen_specials[i].type).name();
-				sprintf((char *) str,"%d - %-30.30s",i,s2.c_str());
-				set_rb(i,4000 + i,(char *) str,0);
+				strb << i << " - " << (*scenario.scen_specials[i].type).name();
+				set_rb(i,RB_SCEN_SPEC, i, strb.str());
 				break;
 			case 1:
-				s2 = (*current_terrain->specials[i].type).name();
-				sprintf((char *) str,"%d - %-30.30s",i,s2.c_str());
-				set_rb(i,5000 + i,(char *) str,0);
+				strb << i << " - " << (*current_terrain->specials[i].type).name();
+				set_rb(i,RB_OUT_SPEC, i, strb.str());
 				break;
 			case 2:
-				s2 = (*town->specials[i].type).name();
-				sprintf((char *) str,"%d - %-30.30s",i,s2.c_str());
-				set_rb(i,6000 + i,(char *) str,0);
+				strb << i << " - " << (*town->specials[i].type).name();
+				set_rb(i,RB_TOWN_SPEC, i, strb.str());
 				break;
 		}
 	}
@@ -3242,13 +3216,12 @@ void start_special_editing(short mode,short just_redo_text) {
 		redraw_screen();
 	else for(i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0);
-	set_lb(NLS - 3,1,"Command-click to clear",1);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Command-click to clear",true);
 }
 
 // if restoring is 1, this is just a redraw, so don't move scroll bar position
 void start_dialogue_editing(short restoring) {
 	short i,j;
-	char str[256];
 	char s[15] = "    ,      ";
 	bool draw_full = false;
 	
@@ -3265,24 +3238,24 @@ void start_dialogue_editing(short restoring) {
 		right_sbar->setMaximum(70 - NRSONPAGE);
 	}
 	for(i = 0; i < 10; i++) {
-		sprintf((char *) str,"Personality %d - %s",i + cur_town * 10,
-				town->talking.people[i].title.c_str());
-		set_rb(i,13000 + i,(char *) str,0);
+		std::ostringstream strb;
+		strb << "Personality " << (i + cur_town * 10) << " - " << town->talking.people[i].title;
+		set_rb(i,RB_PERSONALITY, i, strb.str());
 	}
 	for(i = 0; i < 60; i++) {
 		for(j = 0; j < 4; j++) {
 			s[j] = town->talking.talk_nodes[i].link1[j];
 			s[j + 6] = town->talking.talk_nodes[i].link2[j];
 		}
-		sprintf((char *) str,"Node %d - Per. %d, %s",i,
-				town->talking.talk_nodes[i].personality,s);
-		set_rb(10 + i,12000 + i,(char *) str,0);
+		std::ostringstream strb;
+		strb << "Node " << i << " - Per. " << town->talking.talk_nodes[i].personality << ", " << s;
+		set_rb(10 + i,RB_DIALOGUE, i, strb.str());
 	}
 	if(draw_full)
 		redraw_screen();
 	else for(i = 0; i < NRSONPAGE; i++)
 		draw_rb_slot(i,0);
-	set_lb(NLS - 3,0,"",1);
+	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
 }
 
 bool save_check(std::string which_dlog) {

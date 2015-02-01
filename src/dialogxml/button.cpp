@@ -53,7 +53,7 @@ cButton::cButton(cDialog& parent) :
 cButton::cButton(cDialog* parent,eControlType t) :
 	cControl(t,*parent),
 	fromList("none"),
-	wrapLabel("true") {/* This constructor is only called for LEDs. TODO: Should wrapLabel be true for LEDs? */}
+	wrapLabel(false) {/* This constructor is only called for LEDs. */}
 
 bool cButton::isClickable(){
 	return true;
