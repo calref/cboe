@@ -23,11 +23,11 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
 	for(i = 0; i < 60; i++) {
-		if(specials[i].type == eSpecType::NONE && specials[i].jumpto == -1) {
+		if(old.specials[i].type == 0 && old.specials[i].jumpto == -1) {
 			// Also make sure no specials jump to it
 			bool is_free = true;
 			for(j = 0; j < 60; j++) {
-				if(specials[j].jumpto == i) is_free = false;
+				if(old.specials[j].jumpto == i) is_free = false;
 			}
 			if(is_free) unused_special_slots.push_back(i);
 		}
@@ -110,6 +110,7 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 		wandering_locs[i].x = old.wandering_locs[i].x;
 		wandering_locs[i].y = old.wandering_locs[i].y;
 	}
+	specials.resize(60);
 	for(i = 0; i < 60; i++)
 		specials[i].append(old.specials[i]);
 }

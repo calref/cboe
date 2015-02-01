@@ -78,7 +78,7 @@ public:
 	std::array<cTerrain,256> ter_types;
 	short scenario_timer_times[20];
 	short scenario_timer_specs[20];
-	std::array<cSpecial,256> scen_specials;
+	std::vector<cSpecial> scen_specials;
 	cItemStorage storage_shortcuts[10];
 	location last_out_edited;
 	short last_town_edited;

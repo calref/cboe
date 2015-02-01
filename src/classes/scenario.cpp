@@ -146,6 +146,7 @@ void cScenario::append(legacy::scenario_data_type& old){
 	}
 	for(i = 0; i < 20; i++) scenario_timer_times[i] = old.scenario_timer_times[i];
 	for(i = 0; i < 20; i++) scenario_timer_specs[i] = old.scenario_timer_specs[i];
+	scen_specials.resize(256);
 	for(i = 0; i < 256; i++) scen_specials[i].append(old.scen_specials[i]);
 	for(i = 0; i < 10; i++) storage_shortcuts[i] = old.storage_shortcuts[i];
 	last_out_edited.x = old.last_out_edited.x;

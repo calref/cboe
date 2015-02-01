@@ -227,14 +227,8 @@ static bool pick_ter_flag(cDialog& me, std::string id, eKeyMod) {
 			else if(choice == "town") which_type = 2;
 		}
 		short spec = me["flag1"].getTextAsNum();
-		if(spec < 0 || spec > 255) {
+		if(spec < 0)
 			spec = get_fresh_spec(which_type);
-			if(spec < 0) {
-				giveError("You can't create a new special encounter because there are no more free special nodes.",
-						  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
-				return true;
-			}
-		}
 		if(edit_spec_enc(spec,which_type,&me))
 			me["flag1"].setTextToNum(spec);
 		return true;
@@ -937,14 +931,8 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string hit,cMonster& m
 		else abils.setPage(abils.getPage() + 1);
 	} else if(hit == "edit-see") {
 		short spec = me["onsee"].getTextAsNum();
-		if(spec < 0 || spec > 255) {
+		if(spec < 0)
 			spec = get_fresh_spec(0);
-			if(spec < 0) {
-				giveError("You can't create a new scenario special encounter because there are no more free special nodes.",
-						  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
-				return true;
-			}
-		}
 		if(edit_spec_enc(spec,0,&me))
 			me["onsee"].setTextToNum(spec);
 	} else if(hit == "pick-snd") {
@@ -1145,11 +1133,6 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 			case eMonstAbilTemplate::HIT_TRIGGERS:
 			case eMonstAbilTemplate::DEATH_TRIGGERS:
 				param = get_fresh_spec(0);
-				if(param < 0) {
-					giveError("You can't create a new scenario special encounter because there are no more free special nodes.",
-							  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
-					return true;
-				}
 				if(!edit_spec_enc(param,0,&me))
 					return true;
 				break;
@@ -1302,14 +1285,8 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 		if(abil == eMonstAbil::SPECIAL || abil == eMonstAbil::HIT_TRIGGER || abil == eMonstAbil::DEATH_TRIGGER)
 			abil_dlg["pick-extra1"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
 				short spec = me["extra1"].getTextAsNum();
-				if(spec < 0 || spec > 255) {
+				if(spec < 0)
 					spec = get_fresh_spec(0);
-					if(spec < 0) {
-						giveError("You can't create a new scenario special encounter because there are no more free special nodes.",
-								  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
-						return true;
-					}
-				}
 				if(edit_spec_enc(spec,0,&me))
 					me["extra1"].setTextToNum(spec);
 				return true;
@@ -1789,14 +1766,8 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "str1-choose") {
 		save_item_abils(me, item);
 		short spec = me["str1"].getTextAsNum();
-		if(spec < 0 || spec > 255) {
+		if(spec < 0)
 			spec = get_fresh_spec(0);
-			if(spec < 0) {
-				giveError("You can't create a new scenario special encounter because there are no more free special nodes.",
-						  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
-				return true;
-			}
-		}
 		if(edit_spec_enc(spec,0,&me)) {
 			item.abil_data[0] = spec;
 			me["str1"].setTextToNum(spec);
@@ -1957,18 +1928,10 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem&
 	} else if(hit == "edit-spec") {
 		if(!save_spec_item(me, item, which)) return true;
 		short spec = me["spec"].getTextAsNum();
-		if((spec < 0) || (spec >= 256)) {
+		if(spec < 0)
 			spec = get_fresh_spec(0);
-			if(spec < 0) {
-				giveError("You can't create a new special encounter because there are no more free scenario special nodes.",
-						  "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
-				return true;
-			}
+		if(edit_spec_enc(spec,0,&me))
 			me["spec"].setTextToNum(spec);
-		}
-		edit_spec_enc(spec,0,&me);
-		if(spec >= 0 && spec < 256 && scenario.scen_specials[spec].pic < 0)
-			me["spec"].setTextToNum(-1);
 		save_spec_item(me, item, which);
 		
 	}
@@ -2647,14 +2610,8 @@ static bool edit_scenario_events_event_filter(cDialog& me, std::string item_hit,
 	// item_hit is of the form editN; we need an ID of the form nodeN
 	item_hit.replace(0, 4, "node");
 	short spec = me[item_hit].getTextAsNum();
-	if(spec < 0 || spec > 255) {
+	if(spec < 0)
 		spec = get_fresh_spec(0);
-		if(spec < 0) {
-			giveError("You can't create a new scenario special encounter because there are no more free special nodes.",
-					   "To free a special node, set its type to No Special and set its Jump To special to -1.");
-			return true;
-		}
-	}
 	if(edit_spec_enc(spec,0,&me))
 		me[item_hit].setTextToNum(spec);
 	return true;

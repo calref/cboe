@@ -751,11 +751,6 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case 's': case 'S':
 			choose_string = false;
 			store = val < 0 ? get_fresh_spec(mode) : val;
-			if(store < 0) {
-				giveError("You can't create a new special encounter because there are no more free special nodes.",
-						  "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
-				return true;
-			}
 			me[field].setTextToNum(store);
 			save_spec_enc(me, edit_stack);
 			if(mode == 0)
@@ -838,15 +833,26 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	cSpecial the_node;
 	node_stack_t edit_stack;
 	
-	if(mode == 0)
+	if(mode == 0) {
+		if(which_node >= scenario.scen_specials.size()) {
+			giveError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
+			return false;
+		}
 		the_node = scenario.scen_specials[which_node];
-	else if(mode == 1)
+	} else if(mode == 1) {
+		if(which_node >= current_terrain->specials.size()) {
+			giveError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
+			return false;
+		}
 		the_node = current_terrain->specials[which_node];
-	else if(mode == 2)
+	} else if(mode == 2) {
+		if(which_node >= town->specials.size()) {
+			giveError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
+			return false;
+		}
 		the_node = town->specials[which_node];
-	if(the_node.pic < 0)
-		the_node.pic = 0;
-	
+	}
+
 	cDialog special("edit-special-node",parent);
 	special.attachClickHandlers(std::bind(commit_spec_enc, _1, _2, std::ref(edit_stack)), {"okay", "back"});
 	special.attachClickHandlers(std::bind(edit_spec_enc_type, _1, _2, std::ref(edit_stack)), {
@@ -883,11 +889,17 @@ short get_fresh_spec(short which_mode) {
 			store_node = current_terrain->specials[i];
 		if(which_mode == 2)
 			store_node = town->specials[i];
-		if(store_node.type == eSpecType::NONE && store_node.jumpto == -1 && store_node.pic == -1)
+		if(store_node.type == eSpecType::NONE && store_node.jumpto == -1)
 			return i;
 	}
 	
-	return -1;
+	switch(which_mode) {
+		case 0: scenario.scen_specials.emplace_back(); break;
+		case 1: current_terrain->specials.emplace_back(); break;
+		case 2: town->specials.emplace_back(); break;
+	}
+	
+	return num_specs;
 }
 
 static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short str_mode, short* str1, short* str2) {

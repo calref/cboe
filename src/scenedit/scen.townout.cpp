@@ -185,14 +185,8 @@ static bool edit_placed_monst_adv_time_flag(cDialog& me, std::string, bool losin
 
 static bool edit_placed_monst_adv_death(cDialog& me, cTownperson& monst) {
 	short spec = monst.special_on_kill;
-	if(spec < 0) {
+	if(spec < 0)
 		spec = get_fresh_spec(2);
-		if(spec < 0) {
-			giveError("You can't create a new town special encounter because there are no more free special nodes.",
-					  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
-			return true;
-		}
-	}
 	if(edit_spec_enc(spec,2,&me))
 		me["death"].setTextToNum(spec);
 	return true;
@@ -636,14 +630,8 @@ static bool edit_out_wand_spec(cDialog& me, std::string hit, short which, cOutdo
 	save_out_wand(me, which, wand, 100);
 	std::string fld = "on" + hit.substr(5);
 	short spec = me[fld].getTextAsNum();
-	if(spec < 0 || spec >= 60) {
+	if(spec < 0)
 		spec = get_fresh_spec(1);
-		if(spec < 0) {
-			giveError("You can't create a new special encounter because there are no more free special nodes.",
-					  "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
-			return true;
-		}
-	}
 	if(edit_spec_enc(spec,1,&me))
 		me[fld].setTextToNum(spec);
 	return true;
@@ -771,14 +759,8 @@ static void put_town_events_in_dlog(cDialog& me) {
 static bool edit_town_events_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	std::string id = item_hit.substr(4);
 	short spec = me["spec" + id].getTextAsNum();
-	if(spec < 0 || spec > 99) {
+	if(spec < 0)
 		spec = get_fresh_spec(2);
-		if(spec < 0) {
-			giveError("You can't create a new special encounter because there are no more free special nodes.",
-					   "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
-			return true;
-		}
-	}
 	if(edit_spec_enc(spec,2,&me))
 		me["spec" + id].setTextToNum(spec);
 	return true;
@@ -841,14 +823,8 @@ static void put_advanced_town_in_dlog(cDialog& me) {
 static bool edit_advanced_town_special(cDialog& me, std::string hit, eKeyMod) {
 	std::string fld = hit.substr(5);
 	short spec = me[fld].getTextAsNum();
-	if(spec < 0 || spec > 99) {
+	if(spec < 0)
 		spec = get_fresh_spec(2);
-		if(spec < 0) {
-			giveError("You can't create a new town special encounter because there are no more free special nodes.",
-					  "To free a special node, set its type to No Special and set its Jump To special to -1.", &me);
-			return true;
-		}
-	}
 	if(edit_spec_enc(spec,2,&me)) {
 		me[fld].setTextToNum(spec);
 	}
@@ -1205,14 +1181,8 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 	} else if(item_hit == "chooseA") {
 		int spec = me["extra1"].getTextAsNum();
 		int mode = talk_node.type == eTalkNode::CALL_TOWN_SPEC ? 2 : 0;
-		if(spec < 0 || spec >= 100) {
+		if(spec < 0)
 			spec = get_fresh_spec(mode);
-			if(spec < 0) {
-				giveError("You can't create a new special encounter because there are no more free special nodes.",
-						   "To free a special node, set its type to No Special and set its Jump To special to -1.",&me);
-				return true;
-			}
-		}
 		if(edit_spec_enc(spec,mode,&me))
 			me["extra1"].setTextToNum(spec);
 	}

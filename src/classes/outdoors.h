@@ -66,7 +66,7 @@ public:
 	location sign_locs[8];
 	std::array<cWandering,4> wandering, special_enc;
 	location wandering_locs[4];
-	std::array<cSpecial,60> specials;
+	std::vector<cSpecial> specials;
 	std::string out_name;
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.

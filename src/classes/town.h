@@ -88,7 +88,7 @@ public:
 	short spec_on_hostile;
 	std::array<short,8> timer_spec_times;
 	std::array<short,8> timer_specs;
-	std::array<cSpecial,100> specials;
+	std::vector<cSpecial> specials;
 	bool strong_barriers : 1;
 	bool defy_mapping : 1;
 	bool defy_scrying : 1;
