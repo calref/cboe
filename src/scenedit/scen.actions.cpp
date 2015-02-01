@@ -282,6 +282,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				draw_rb_slot(i + right_top,0);
 				mainPtr.display();
 				change_made = true;
+				size_t size_before;
+				size_t pos_before = right_sbar->getPosition();
 				switch(right_button_status[i + right_top].action) {
 					case RB_CLEAR:
 						break;
@@ -300,25 +302,61 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						start_item_editing(1);
 						break;
 					case RB_SCEN_SPEC:
+						size_before = scenario.scen_specials.size();
 						if(option_hit) {
-							scenario.scen_specials[j] = cSpecial();
+							if(j == size_before - 1)
+								scenario.scen_specials.pop_back();
+							else if(j == size_before)
+								break;
+							else scenario.scen_specials[j] = cSpecial();
+						} else {
+							if(j == size_before)
+								scenario.scen_specials.emplace_back();
+							if(!edit_spec_enc(j,0,nullptr) && j == size_before)
+								scenario.scen_specials.pop_back();
 						}
-						else edit_spec_enc(j,0,nullptr);
-						start_special_editing(0,1);
+						start_special_editing(0,size_before == scenario.scen_specials.size());
+						if(size_before > scenario.scen_specials.size())
+							pos_before--;
+						right_sbar->setPosition(pos_before);
 						break;
 					case RB_OUT_SPEC:
+						size_before = current_terrain->specials.size();
 						if(option_hit) {
-							current_terrain->specials[j] = cSpecial();
+							if(j == size_before - 1)
+								current_terrain->specials.pop_back();
+							else if(j == size_before)
+								break;
+							else current_terrain->specials[j] = cSpecial();
+						} else {
+							if(j == size_before)
+								current_terrain->specials.emplace_back();
+							if(!edit_spec_enc(j,1,nullptr) && j == size_before)
+								current_terrain->specials.pop_back();
 						}
-						else edit_spec_enc(j,1,nullptr);
-						start_special_editing(1,1);
+						start_special_editing(1,size_before == current_terrain->specials.size());
+						if(size_before > current_terrain->specials.size())
+							pos_before--;
+						right_sbar->setPosition(pos_before);
 						break;
 					case RB_TOWN_SPEC:
+						size_before = town->specials.size();
 						if(option_hit) {
-							town->specials[j] = cSpecial();
+							if(j == size_before - 1)
+								town->specials.pop_back();
+							else if(j == size_before)
+								break;
+							else town->specials[j] = cSpecial();
+						} else {
+							if(j == size_before)
+								town->specials.emplace_back();
+							if(!edit_spec_enc(j,2,nullptr) && j == size_before)
+								town->specials.pop_back();
 						}
-						else edit_spec_enc(j,2,nullptr);
-						start_special_editing(2,1);
+						start_special_editing(2,size_before == town->specials.size());
+						if(size_before > town->specials.size())
+							pos_before--;
+						right_sbar->setPosition(pos_before);
 						break;
 					case RB_SCEN_STR:
 						if(option_hit) {
@@ -2759,10 +2797,6 @@ void place_edit_special(location loc) {
 			}
 		if(i < 500) { // new special
 			spec = get_fresh_spec(2);
-			if(spec < 0) {
-				giveError("You are out of special nodes in this town. Select Edit Special Nodes from the Town menu to clear out some of the special nodes.");
-				return;
-			}
 			for(i = 0; i < town->special_locs.size(); i++)
 				if(town->special_locs[i].spec < 0) {
 					if(edit_spec_enc(spec,2,nullptr)) {
@@ -2790,10 +2824,6 @@ void place_edit_special(location loc) {
 			}
 		if(i < 500) { // new special
 			spec = get_fresh_spec(1);
-			if(spec < 0) {
-				giveError("You are out of special nodes in this outdoor section. Select Edit Special Nodes from the Outdoor menu to clear out some of the special nodes.");
-				return;
-			}
 			for(i = 0; i < current_terrain->special_locs.size(); i++)
 				if(current_terrain->special_locs[i].spec < 0) {
 					if(edit_spec_enc(spec,1,nullptr)) {
@@ -3195,7 +3225,7 @@ void start_special_editing(short mode,short just_redo_text) {
 		right_sbar->show();
 		
 		reset_rb();
-		right_sbar->setMaximum(num_specs - NRSONPAGE);
+		right_sbar->setMaximum(num_specs + 1 - NRSONPAGE);
 	}
 	
 	for(size_t i = 0; i < num_specs; i++) {
@@ -3214,6 +3244,12 @@ void start_special_editing(short mode,short just_redo_text) {
 				set_rb(i,RB_TOWN_SPEC, i, strb.str());
 				break;
 		}
+	}
+	std::string make_new = std::to_string(num_specs) + " - Create New Special";
+	switch(mode) {
+		case 0: set_rb(num_specs, RB_SCEN_SPEC, num_specs, make_new); break;
+		case 1: set_rb(num_specs, RB_OUT_SPEC, num_specs, make_new); break;
+		case 2: set_rb(num_specs, RB_TOWN_SPEC, num_specs, make_new); break;
 	}
 	if(draw_full)
 		redraw_screen();
