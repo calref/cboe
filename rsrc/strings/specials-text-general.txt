@@ -718,6 +718,22 @@ Unused
 Unused
 Unused
 --------------------
+Update Quest
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Which quest?
+New Quest Status
+Unused
+Job Board Source / Anger (see docs)
+Unused
+Unused
+Special to Jump To
+--------------------
 Special Name
 sdf1
 sdf2

@@ -2439,6 +2439,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*next_spec = -1;
 			break;
 		case eSpecType::UPDATE_QUEST:
+			check_mess = true;
 			if(spec.ex1a < 0 || spec.ex1a >= univ.scenario.quests.size()) {
 				giveError("The scenario tried to update a non-existent quest.");
 				break;

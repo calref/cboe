@@ -391,21 +391,23 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // e - Choose button to select a status effect
 // E - Choose button to select a party status effect
 // w - Choose button to select main party status effect
+// j - Choose button to select a quest
+// J - Choose button to select a quest status
 // 0..9 - Choose button to select a specific type of picture
 // (terrain, monster, dialog, talk, item, pc, field, boom, missile, status)
 static const char*const button_dict[7][11] = {
 	{ // general nodes
-		" mmmMmmmmmMmmm mmmmmm   Mmm  $ mmmmmm        ", // msg1
-		"                                             ", // msg2
-		"                                             ", // msg3
-		"          p                                 3", // pic
-		"          ?                                  ", // pictype
-		"    #         x  T i                  M cit  ", // ex1a
-		"    &        S     ss                       c", // ex1b
-		"                                             ", // ex1c
-		"                                  tt         ", // ex2a
-		"    %                              t         ", // ex2b
-		"                                             ", // ex2c
+		" mmmMmmmmmMmmm mmmmmm   Mmm  $ mmmmmm        m", // msg1
+		"                                              ", // msg2
+		"                                              ", // msg3
+		"          p                                 3 ", // pic
+		"          ?                                   ", // pictype
+		"    #         x  T i                  M cit  j", // ex1a
+		"    &        S     ss                       cJ", // ex1b
+		"                                              ", // ex1c
+		"                                  tt          ", // ex2a
+		"    %                              t          ", // ex2b
+		"                                              ", // ex2c
 	}, { // one-shot nodes
 		"mm  md  d  mmm", // msg1
 		"              ", // msg2
@@ -431,17 +433,17 @@ static const char*const button_dict[7][11] = {
 		" D                        ", // ex2b
 		" x                        ", // ex2c
 	}, { // if-then nodes
-		"                  f     $  $  ", // msg1
-		"                  s           ", // msg2
-		"                              ", // msg3
-		"                              ", // pic
-		"                              ", // pictype
-		" T I  w     APae     Qq $ *   ", // ex1a
-		"ssss  sss ssssss s s sssss =  ", // ex1b
-		"                s         ssss", // ex1c
-		"     t                 K$     ", // ex2a
-		"s   ss   s     +    s==+s  =  ", // ex2b
-		"               =           s  ", // ex2c
+		"                  f     $  $   ", // msg1
+		"                  s            ", // msg2
+		"                               ", // msg3
+		"                               ", // pic
+		"                               ", // pictype
+		" T I  w     APae     Qq $ *   j", // ex1a
+		"ssss  sss ssssss s s sssss =  J", // ex1b
+		"                s         sssss", // ex1c
+		"     t                 K$      ", // ex2a
+		"s   ss   s     +    s==+s  =   ", // ex2b
+		"               =           s   ", // ex2c
 	}, { // town nodes
 		"mmmmmmmmmmmmmmm   dddmmmmmmmmmmmm", // msg1
 		"                                 ", // msg2
