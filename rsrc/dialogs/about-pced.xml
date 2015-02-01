@@ -7,7 +7,7 @@
 	<button name='okay' type='regular' top='260' left='431'>OK</button>
 	<pict top='6' left='6' type='dlog' num='16'/>
 	<text top='6' left='50' width='338' height='34'>
-		Blades of Exile Character Editor v1.0.1 <br/>
+		Blades of Exile Character Editor v2.0 alpha<br/>
 		  Copyright 1997 Jeff Vogel, All rights reserved.
 	</text>
 	<text top='154' left='50' width='439' height='45'>

@@ -54,8 +54,8 @@ cScenario::cScenario(bool init_strings) {
 	std::string temp_str;
 	
 	format.ver[0] = 1;
-	format.min_run_ver = 1;
-	format.prog_make_ver[0] = 1;
+	format.min_run_ver = 2;
+	format.prog_make_ver[0] = 2;
 	default_ground = 1;
 	where_start.x = 24;
 	where_start.y = 24;

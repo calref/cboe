@@ -767,8 +767,7 @@ map_data buildTownMapData(size_t which) {
 }
 
 void save_scenario(fs::path toFile) {
-	// TODO: I'm not certain 1.0.0 is the correct version here?
-	scenario.format.prog_make_ver[0] = 1;
+	scenario.format.prog_make_ver[0] = 2;
 	scenario.format.prog_make_ver[1] = 0;
 	scenario.format.prog_make_ver[2] = 0;
 	// TODO: This is just a skeletal outline of what needs to be done to save the scenario
