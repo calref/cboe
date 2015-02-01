@@ -73,8 +73,7 @@ public:
 	int bg_town, bg_fight;
 	cWandering wandering[4];
 	location wandering_locs[4];
-	location special_locs[50];
-	unsigned short spec_id[50];
+	std::array<spec_loc_t,50> special_locs;
 	location sign_locs[15];
 	eLighting lighting_type;
 	location start_locs[4];

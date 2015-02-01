@@ -23,7 +23,6 @@ extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
-short num_specs[3] = {256,60,100};
 
 std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31};
 std::vector<pic_num_t> boom_pics = {0,1,2,3,4,8,16,24,32};
@@ -869,10 +868,15 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 }
 
 short get_fresh_spec(short which_mode) {
-	short i;
 	cSpecial store_node;
+	size_t num_specs;
+	switch(which_mode) {
+		case 0: num_specs = scenario.scen_specials.size(); break;
+		case 1: num_specs = current_terrain->specials.size(); break;
+		case 2: num_specs = town->specials.size(); break;
+	}
 	
-	for(i = 0; i < num_specs[which_mode]; i++) {
+	for(size_t i = 0; i < num_specs; i++) {
 		if(which_mode == 0)
 			store_node = scenario.scen_specials[i];
 		if(which_mode == 1)
@@ -1221,12 +1225,18 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 
 static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, short spec_mode) {
 	short i;
+	size_t num_specs;
+	switch(spec_mode) {
+		case 0: num_specs = scenario.scen_specials.size();
+		case 1: num_specs = current_terrain->specials.size();
+		case 2: num_specs = town->specials.size();
+	}
 	
 	if(item_hit == "cancel") me.setResult<short>(-1);
 	else if(item_hit == "okay") {
 		i = me["num"].getTextAsNum();
-		if((i < 0) || (i >= num_specs[spec_mode])) {
-			giveError("There is no special node with that number. Legal ranges are 0 to 255 for scenario specials, 0 to 59 for outdoor specials, and 0 to 99 for town specials.","",&me);
+		if(i < 0 || i >= num_specs) {
+			giveError("There is no special node with that number. The available range is 0 to " + std::to_string(num_specs - 1) + ".",&me);
 		}
 		me.setResult(i);
 		me.toast(true);

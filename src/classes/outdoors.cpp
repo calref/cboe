@@ -69,7 +69,9 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 	for(i = 0; i < 18; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
-		special_id[i] = old.special_id[i];
+		if(old.special_locs[i].x == 100)
+			special_locs[i].spec = -1;
+		else special_locs[i].spec = old.special_id[i];
 	}
 	for(i = 0; i < 8; i++){
 		exit_locs[i].x = old.exit_locs[i].x;
@@ -119,7 +121,7 @@ cOutdoors::cWandering::cWandering() {
 
 cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	short i,j;
-	location d_loc(100,0);;
+	location d_loc(100,0);
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	bg_out = bg_fight = bg_town = bg_dungeon = -1;
 	
@@ -129,12 +131,11 @@ cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario
 		}
 	
 	for(i = 0; i < 18; i++) {
-		special_locs[i] = d_loc;
+		special_locs[i].spec = -1;
 	}
 	for(i = 0; i < 8; i++) {
 		exit_locs[i] = d_loc;
 		sign_locs[i] = d_loc;
-		sign_locs[i].x = 100;
 	}
 	for(i = 0; i < 4; i++) {
 		wandering_locs[i] = locs[i];

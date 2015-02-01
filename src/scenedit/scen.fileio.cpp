@@ -686,9 +686,9 @@ map_data buildOutMapData(location which) {
 				terrain.addFeature(x, y, eMapFeature::FIELD, SPECIAL_SPOT);
 		}
 	}
-	for(size_t i = 0; i < 18; i++) {
-		if(sector.special_id[i] >= 0)
-			terrain.addFeature(sector.special_locs[i].x, sector.special_locs[i].y, eMapFeature::SPECIAL_NODE, sector.special_id[i]);
+	for(size_t i = 0; i < sector.special_locs.size(); i++) {
+		if(sector.special_locs[i].spec >= 0)
+			terrain.addFeature(sector.special_locs[i].x, sector.special_locs[i].y, eMapFeature::SPECIAL_NODE, sector.special_locs[i].spec);
 	}
 	for(size_t i = 0; i < 8; i++) {
 		if(sector.exit_dests[i] >= 0)
@@ -724,9 +724,9 @@ map_data buildTownMapData(size_t which) {
 			terrain.set(x, y, town.terrain(x,y));
 		}
 	}
-	for(size_t i = 0; i < 50; i++) {
-		if(town.spec_id[i] >= 0)
-			terrain.addFeature(town.special_locs[i].x, town.special_locs[i].y, eMapFeature::SPECIAL_NODE, town.spec_id[i]);
+	for(size_t i = 0; i < town.special_locs.size(); i++) {
+		if(town.special_locs[i].spec >= 0)
+			terrain.addFeature(town.special_locs[i].x, town.special_locs[i].y, eMapFeature::SPECIAL_NODE, town.special_locs[i].spec);
 	}
 	for(size_t i = 0; i < town.sign_strs.size(); i++) {
 		if(!town.sign_strs[i].empty())

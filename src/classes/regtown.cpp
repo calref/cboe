@@ -55,17 +55,17 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 				}
 				if(found_spec >= 0) {
 					if(!unused_special_slots.empty()) {
-						int found_spec_id = spec_id[found_spec], use_slot = unused_special_slots.back();
+						int found_spec_id = special_locs[found_spec].spec, use_slot = unused_special_slots.back();
 						unused_special_slots.pop_back();
 						cSpecial& node = specials[use_slot];
 						node.type = eSpecType::IF_IN_BOAT;
 						node.ex1b = -1; // any boat;
 						node.ex1c = -1; // do nothing
 						node.jumpto = found_spec_id; // else jump here
-						spec_id[found_spec] = use_slot;
+						special_locs[found_spec].spec = use_slot;
 					} else {
 						std::stringstream sout;
-						sout << "In town \"" << town_num << "\" at (" << i << ',' << j << "); special node ID " << spec_id[found_spec];
+						sout << "In town \"" << town_num << "\" at (" << i << ',' << j << "); special node ID " << special_locs[found_spec].spec;
 						giveError("Warning: A special node was found that could be triggered from in a boat, which is probably not what the designer intended. An attempt to fix this has failed because there were not enough unused special nodes.", sout.str());
 					}
 				}
@@ -120,17 +120,17 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 				}
 				if(found_spec >= 0) {
 					if(!unused_special_slots.empty()) {
-						int found_spec_id = spec_id[found_spec], use_slot = unused_special_slots.back();
+						int found_spec_id = special_locs[found_spec].spec, use_slot = unused_special_slots.back();
 						unused_special_slots.pop_back();
 						cSpecial& node = specials[use_slot];
 						node.type = eSpecType::IF_IN_BOAT;
 						node.ex1b = -1; // any boat;
 						node.ex1c = -1; // do nothing
 						node.jumpto = found_spec_id; // else jump here
-						spec_id[found_spec] = use_slot;
+						special_locs[found_spec].spec = use_slot;
 					} else {
 						std::stringstream sout;
-						sout << "In town " << town_num << " at (" << i << ',' << j << "); special node ID " << spec_id[found_spec];
+						sout << "In town " << town_num << " at (" << i << ',' << j << "); special node ID " << special_locs[found_spec].spec;
 						giveError("Warning: A special node was found that could be triggered from in a boat, which is probably not what the designer intended. An attempt to fix this has failed because there were not enough unused special nodes.", sout.str());
 					}
 				}
@@ -185,17 +185,17 @@ void cBigTown::append(legacy::big_tr_type& old, int town_numo){
 				}
 				if(found_spec >= 0) {
 					if(!unused_special_slots.empty()) {
-						int found_spec_id = spec_id[found_spec], use_slot = unused_special_slots.back();
+						int found_spec_id = special_locs[found_spec].spec, use_slot = unused_special_slots.back();
 						unused_special_slots.pop_back();
 						cSpecial& node = specials[use_slot];
 						node.type = eSpecType::IF_IN_BOAT;
 						node.ex1b = -1; // any boat;
 						node.ex1c = -1; // do nothing
 						node.jumpto = found_spec_id; // else jump here
-						spec_id[found_spec] = use_slot;
+						special_locs[found_spec].spec = use_slot;
 					} else {
 						std::stringstream sout;
-						sout << "In town " << town_numo << " at (" << i << ',' << j << "); special node ID " << spec_id[found_spec];
+						sout << "In town " << town_numo << " at (" << i << ',' << j << "); special node ID " << special_locs[found_spec].spec;
 						giveError("Warning: A special node was found that could be triggered from in a boat, which is probably not what the designer intended. An attempt to fix this has failed because there were not enough unused special nodes.", sout.str());
 					}
 				}
