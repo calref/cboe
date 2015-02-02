@@ -38,7 +38,7 @@ public:
 	unsigned int obj_num = 0; // ditto (formerly res1)
 	unsigned int ground_type; // ditto (formerly res2)
 	eTrimType trim_type; // ditto, mostly (formerly res3)
-	unsigned short trim_ter; // ditto
+	long trim_ter; // ditto
 	unsigned short combat_arena;
 	location obj_pos; // editor use only
 	location obj_size; // editor use only

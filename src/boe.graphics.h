@@ -58,9 +58,6 @@ void put_dialog_graphic(short graphic_num,short spec_g,rectangle draw_rect);
 void draw_startup_stats();
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter);
 
-ter_num_t get_ground_from_ter(ter_num_t ter);
-ter_num_t get_ter_from_ground(unsigned char ground);
-
 void draw_startup_anim(bool advance);
 
 #endif

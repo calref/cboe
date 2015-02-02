@@ -761,17 +761,6 @@ bool is_nature(short x, short y, unsigned short ground_t) {
 	return ground_t == univ.scenario.ter_types[ter_type].ground_type;
 }
 
-ter_num_t get_ground_from_ter(ter_num_t ter){
-	return get_ter_from_ground(univ.scenario.ter_types[ter].ground_type);
-}
-
-ter_num_t get_ter_from_ground(unsigned char ground){
-	for(int i = 0; i < 256; i++)
-		if(univ.scenario.ter_types[i].ground_type == ground)
-			return i;
-	return 0;
-}
-
 std::vector<location> forcecage_locs;
 
 //mode ... if 1, don't place on screen after redoing
@@ -904,7 +893,7 @@ void draw_terrain(short	mode) {
 				if(trim == eTrimType::WALKWAY){
 					int trim = -1;
 					unsigned short ground_t = univ.scenario.ter_types[spec_terrain].trim_ter;
-					ter_num_t ground_ter = get_ter_from_ground(ground_t);
+					ter_num_t ground_ter = univ.scenario.get_ter_from_ground(ground_t);
 					if(!loc_off_act_area(where_draw)) {
 						if(is_nature(where_draw.x - 1,where_draw.y,ground_t)){ // check left
 							if(is_nature(where_draw.x,where_draw.y - 1,ground_t)){ // check up
@@ -941,7 +930,7 @@ void draw_terrain(short	mode) {
 				}else if(spec_terrain == 65535) {
 					draw_one_terrain_spot(q,r,-1);
 				}else{
-					current_ground = get_ground_from_ter(spec_terrain);
+					current_ground = univ.scenario.get_ground_from_ter(spec_terrain);
 					draw_one_terrain_spot(q,r,spec_terrain);
 				}
 			}
