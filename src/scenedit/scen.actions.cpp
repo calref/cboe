@@ -184,6 +184,8 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				switch(left_button_status[i].action) {
 					case LB_NO_ACTION:
 						break;
+					case LB_RETURN: // Handled separately, below
+						break;
 					case LB_NEW_SCEN:
 						if(build_scenario()){
 							overall_mode = MODE_MAIN_SCREEN;
