@@ -3530,134 +3530,26 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_CONTEXT:
 			// TODO: Test this. In particular, test that the legacy behaviour is correct.
-			j = -1;
-			switch(spec.ex1a) {
-				case 0: // Out move
-					if(is_out()) {
-						j = bool(spec.ex1b); // Should block move? 1 = yes, 0 = no
-						*next_spec = spec.ex1c;
-						if(j && which_mode == eSpecCtx::OUT_MOVE)
+			if(which_mode == eSpecCtx(spec.ex1a)) {
+				if(which_mode <= eSpecCtx::COMBAT_MOVE) {
+					*a = bool(spec.ex1b); // Should block move? 1 = yes, 0 = no
+					if(*a) {
+						if(which_mode == eSpecCtx::OUT_MOVE)
 							ASB("Can't go here while outdoors.");
-					}
-					break;
-				case 1: // Town move
-					if(is_town()) {
-						j = bool(spec.ex1b); // Should block move? 1 = yes, 0 = no
-						*next_spec = spec.ex1c;
-						if(j && which_mode == eSpecCtx::TOWN_MOVE)
+						else if(which_mode == eSpecCtx::TOWN_MOVE)
 							ASB("Can't go here while in town mode.");
-					}
-					break;
-				case 2: // Combat move
-					if(is_combat()) {
-						j = bool(spec.ex1b); // Should block move? 1 = yes, 0 = no
-						*next_spec = spec.ex1c;
-						if(j && which_mode == eSpecCtx::COMBAT_MOVE)
+						else if(which_mode == eSpecCtx::COMBAT_MOVE)
 							ASB("Can't go here during combat.");
 					}
-					break;
-				case 3: // Out look
-					if(is_out()) {
-						if(which_mode == eSpecCtx::OUT_LOOK)
-							*next_spec = spec.ex1c;
-					}
-					break;
-				case 4: // Town look
-					if(is_town()) {
-						if(which_mode == eSpecCtx::TOWN_LOOK)
-							*next_spec = spec.ex1c;
-					}
-					break;
-				case 5: // Enter town
-					if(which_mode == eSpecCtx::ENTER_TOWN)
-						*next_spec = spec.ex1c;
-					break;
-				case 6: // Leave town
-					if(which_mode == eSpecCtx::LEAVE_TOWN)
-						*next_spec = spec.ex1c;
-					break;
-				case 7: // Talking
-					if(which_mode == eSpecCtx::TALK)
-						*next_spec = spec.ex1c;
-					break;
-				case 8: // Use special item
-					if(which_mode == eSpecCtx::USE_SPEC_ITEM)
-						*next_spec = spec.ex1c;
-					break;
-				case 9: // Town timer
-					if(which_mode == eSpecCtx::TOWN_TIMER)
-						*next_spec = -1;
-					break;
-				case 10: // Scenario timer
-					if(which_mode == eSpecCtx::SCEN_TIMER)
-						*next_spec = spec.ex1c;
-					else j = 0;
-					break;
-				case 11: // Party timer
-					if(which_mode == eSpecCtx::PARTY_TIMER)
-						*next_spec = spec.ex1c;
-					break;
-				case 12: // Kill monster
-					if(which_mode == eSpecCtx::KILL_MONST)
-						*next_spec = spec.ex1c;
-					break;
-				case 13: // Start outdoor encounter
-					if(which_mode == eSpecCtx::OUTDOOR_ENC)
-						*next_spec = spec.ex1c;
-					break;
-				case 14: // Flee outdoor encounter
-					if(which_mode == eSpecCtx::FLEE_ENCOUNTER)
-						*next_spec = spec.ex1c;
-					break;
-				case 15: // Win outdoor encounter
-					if(which_mode == eSpecCtx::WIN_ENCOUNTER)
-						*next_spec = spec.ex1c;
-					break;
-				case 16: // Target spell
-					if(which_mode == eSpecCtx::TARGET) {
-						// TODO: I'm not quite sure if this covers every way of determining which spell was cast
-						if(spec.ex1b == -1 || (is_town() && int(town_spell) == spec.ex1b) || (is_combat() && int(spell_being_cast) == spec.ex1b))
-							*next_spec = spec.ex1c;
-					}
-					break;
-				case 17: // Use space
-					if(which_mode == eSpecCtx::USE_SPACE)
-						*next_spec = spec.ex1c;
-					break;
-				case 18: // See monster
-					if(which_mode == eSpecCtx::SEE_MONST)
-						*next_spec = spec.ex1c;
-					break;
-				case 19: // Monster using special ability
-					if(which_mode == eSpecCtx::MONST_SPEC_ABIL)
-						*next_spec = spec.ex1c;
-					break;
-				case 20: // Town goes hostile
-					if(which_mode == eSpecCtx::TOWN_HOSTILE)
-						*next_spec = spec.ex1c;
-					break;
-				case 21: // Item ability activated on attacking
-					if(which_mode == eSpecCtx::ATTACKING_MELEE)
-						*next_spec = spec.ex1c;
-					break;
-				case 22: // Item ability activated on attacking
-					if(which_mode == eSpecCtx::ATTACKING_RANGE)
-						*next_spec = spec.ex1c;
-					break;
-				case 23: // Item or monster ability activated on being hit
-					if(which_mode == eSpecCtx::ATTACKED_MELEE)
-						*next_spec = spec.ex1c;
-					break;
-				case 24: // Item or monster ability activated on being hit
-					if(which_mode == eSpecCtx::ATTACKED_RANGE)
-						*next_spec = spec.ex1c;
-					break;
-				case 25: // Initiating conversation
-					if(which_mode == eSpecCtx::HAIL)
-						*next_spec = spec.ex1c;
-					break;
+				} else if(which_mode == eSpecCtx::TARGET && spec.ex1b >= 0) {
+					// TODO: I'm not quite sure if this covers every way of determining which spell was cast
+					if(is_town() && int(town_spell) != spec.ex1b)
+						break;
+					if(is_combat() && int(spell_being_cast) != spec.ex1b)
+						break;
+				}
+				*next_spec = spec.ex1c;
 			}
-			if(j >= 0) *a = j;
 			break;
 		case eSpecType::IF_LOOKING:
 			if(which_mode == eSpecCtx::OUT_LOOK || which_mode == eSpecCtx::TOWN_LOOK)
