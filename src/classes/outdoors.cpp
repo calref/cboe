@@ -66,6 +66,7 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 				}
 			}
 		}
+	special_locs.resize(18);
 	for(i = 0; i < 18; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
@@ -131,9 +132,6 @@ cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario
 			terrain[i][j] = 5; // formerly 0
 		}
 	
-	for(i = 0; i < 18; i++) {
-		special_locs[i].spec = -1;
-	}
 	for(i = 0; i < 8; i++) {
 		exit_locs[i] = d_loc;
 		sign_locs[i] = d_loc;

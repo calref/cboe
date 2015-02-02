@@ -83,6 +83,7 @@ struct info_rect_t : public rectangle {
 struct spec_loc_t : public location {
 	long spec;
 	
+	spec_loc_t(int x, int y, long spec) : location(x,y), spec(spec) {}
 	spec_loc_t(const location& loc) : location(loc) {}
 	spec_loc_t& operator=(const location& loc) {*this = spec_loc_t(loc); return *this;}
 	// Declaring one constructor suppresses all implicit constructors, so declare them explicitly

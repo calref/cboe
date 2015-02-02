@@ -785,17 +785,19 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					for(x = 0; x < town->special_locs.size(); x++)
 						if(town->special_locs[x] == spot_hit && town->special_locs[x].spec >= 0) {
 							copied_spec = town->special_locs[x].spec;
-							x = 500;
+							x = -1;
+							break;
 						}
 				}
 				if(!editing_town) {
 					for(x = 0; x < current_terrain->special_locs.size(); x++)
 						if(current_terrain->special_locs[x] == spot_hit && current_terrain->special_locs[x].spec >= 0) {
 							copied_spec = current_terrain->special_locs[x].spec;
-							x = 500;
+							x = -1;
+							break;
 						}
 				}
-				if(x < 500)
+				if(x < 0)
 					giveError("There wasn't a special on that spot.");
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
@@ -806,28 +808,31 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					break;
 				}
 				if(editing_town) {
-					for(x = 0; x < town->special_locs.size(); x++)
+					for(x = 0; x <= town->special_locs.size(); x++) {
+						if(x == town->special_locs.size())
+							town->special_locs.emplace_back(-1,-1,-1);
 						if(town->special_locs[x].spec < 0) {
 							town->special_locs[x] = spot_hit;
 							town->special_locs[x].spec = copied_spec;
-							x = 500;
+							break;
 						}
+					}
 				}
 				if(!editing_town) {
 					if((spot_hit.x == 0) || (spot_hit.x == 47) || (spot_hit.y == 0) || (spot_hit.y == 47)) {
 						cChoiceDlog("not-at-edge").show();
 						break;
 					}
-					for(x = 0; x < current_terrain->special_locs.size(); x++)
+					for(x = 0; x <= current_terrain->special_locs.size(); x++) {
+						if(x == current_terrain->special_locs.size())
+							current_terrain->special_locs.emplace_back(-1,-1,-1);
 						if(current_terrain->special_locs[x].spec < 0) {
 							current_terrain->special_locs[x] = spot_hit;
 							current_terrain->special_locs[x].spec = copied_spec;
-							x = 500;
+							break;
 						}
+					}
 				}
-				
-				if(x < 500)
-					giveError("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.");
 				
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
@@ -838,7 +843,13 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						if(town->special_locs[x] == spot_hit && town->special_locs[x].spec >= 0) {
 							town->special_locs[x] = {-1,-1};
 							town->special_locs[x].spec = -1;
-							x = 500;
+							if(x == town->special_locs.size() - 1) {
+								// Delete not only the last entry but any other empty entries at the end of the list
+								do {
+									town->special_locs.pop_back();
+								} while(town->special_locs.back().spec < 0);
+							}
+							break;
 						}
 				}
 				if(!editing_town) {
@@ -846,7 +857,13 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						if(current_terrain->special_locs[x] == spot_hit && current_terrain->special_locs[x].spec >= 0) {
 							current_terrain->special_locs[x] = {-1,-1};
 							current_terrain->special_locs[x].spec = -1;
-							x = 500;
+							if(x == current_terrain->special_locs.size() - 1) {
+								// Delete not only the last entry but any other empty entries at the end of the list
+								do {
+									current_terrain->special_locs.pop_back();
+								} while(current_terrain->special_locs.back().spec < 0);
+							}
+							break;
 						}
 				}
 				set_cursor(wand_curs);
@@ -2793,21 +2810,20 @@ void place_edit_special(location loc) {
 		for(i = 0; i < town->special_locs.size(); i++)
 			if(town->special_locs[i] == loc && town->special_locs[i].spec >= 0) {
 				edit_spec_enc(town->special_locs[i].spec,2,nullptr);
-				i = 500;
+				break;
 			}
-		if(i < 500) { // new special
+		if(i == town->special_locs.size()) { // new special
 			spec = get_fresh_spec(2);
-			for(i = 0; i < town->special_locs.size(); i++)
+			for(i = 0; i <= town->special_locs.size(); i++) {
+				if(i == town->special_locs.size())
+					town->special_locs.emplace_back(-1,-1,-1);
 				if(town->special_locs[i].spec < 0) {
 					if(edit_spec_enc(spec,2,nullptr)) {
 						town->special_locs[i] = loc;
 						town->special_locs[i].spec = spec;
 					}
-					i = 500;
+					break;
 				}
-			if(i < 500) {
-				giveError("Each town can have at most 50 locations with special encounters. You'll need to erase some special spaces before you can place more.");
-				return;
 			}
 		}
 	}
@@ -2820,21 +2836,20 @@ void place_edit_special(location loc) {
 		for(i = 0; i < current_terrain->special_locs.size(); i++)
 			if(current_terrain->special_locs[i] == loc && current_terrain->special_locs[i].spec >= 0) {
 				edit_spec_enc(current_terrain->special_locs[i].spec,1,nullptr);
-				i = 500;
+				break;
 			}
-		if(i < 500) { // new special
+		if(i == current_terrain->special_locs.size()) { // new special
 			spec = get_fresh_spec(1);
-			for(i = 0; i < current_terrain->special_locs.size(); i++)
+			for(i = 0; i <= current_terrain->special_locs.size(); i++) {
+				if(i == current_terrain->special_locs.size())
+					current_terrain->special_locs.emplace_back(-1,-1,-1);
 				if(current_terrain->special_locs[i].spec < 0) {
 					if(edit_spec_enc(spec,1,nullptr)) {
 						current_terrain->special_locs[i] = loc;
 						current_terrain->special_locs[i].spec = spec;
 					}
-					i = 500;
+					break;
 				}
-			if(i < 500) {
-				giveError("Each outdoor can have at most 18 locations with special encounters. You'll need to erase some special spaces before you can place more.");
-				return;
 			}
 		}
 	}
@@ -2849,20 +2864,21 @@ void set_special(location spot_hit) {
 			if(town->special_locs[x] == spot_hit && town->special_locs[x].spec >= 0) {
 				y = edit_special_num(2,town->special_locs[x].spec);
 				if(y >= 0) town->special_locs[x].spec = y;
-				x = 500;
+				break;
 			}
-		if(x < 500) {
-			for(x = 0; x < town->special_locs.size(); x++)
+		if(x == town->special_locs.size()) {
+			for(x = 0; x <= town->special_locs.size(); x++) {
+				if(x == town->special_locs.size())
+					town->special_locs.emplace_back(-1,-1,-1);
 				if(town->special_locs[x].spec < 0) {
 					y = edit_special_num(2,0);
 					if(y >= 0) {
 						town->special_locs[x] = spot_hit;
 						town->special_locs[x].spec = y;
 					}
-					x = 500;
+					break;
 				}
-			if(x < 500)
-				giveError("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.");
+			}
 		}
 	}
 	if(!editing_town) {
@@ -2874,20 +2890,21 @@ void set_special(location spot_hit) {
 			if(current_terrain->special_locs[x] == spot_hit && current_terrain->special_locs[x].spec >= 0) {
 				y = edit_special_num(1,current_terrain->special_locs[x].spec);
 				if(y >= 0) current_terrain->special_locs[x].spec = y;
-				x = 500;
+				break;
 			}
-		if(x < 500) {
-			for(x = 0; x < current_terrain->special_locs.size(); x++)
+		if(x == current_terrain->special_locs.size()) {
+			for(x = 0; x <= current_terrain->special_locs.size(); x++) {
+				if(x == current_terrain->special_locs.size())
+					current_terrain->special_locs.emplace_back(-1,-1,-1);
 				if(current_terrain->special_locs[x].spec < 0) {
 					y = edit_special_num(1,current_terrain->special_locs[x].spec);
 					if(y >= 0) {
 						current_terrain->special_locs[x] = spot_hit;
 						current_terrain->special_locs[x].spec = y;
 					}
-					x = 500;
+					break;
 				}
-			if(x < 500)
-				giveError("Each town can have at most 50 locations with special encounters. Each outdoor section can have at most 18. You'll need to erase some special spaces before you can place more.");
+			}
 		}
 	}
 	
