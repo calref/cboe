@@ -801,8 +801,7 @@ short do_look(location space) {
 short town_boat_there(location where) {
 	short i;
 	
-	// Num boats stores highest # of boat in town
-	for(i = 0; i < 30; i++)
+	for(i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].exists) && (univ.party.boats[i].which_town == univ.town.num)
 			&& (where == univ.party.boats[i].loc))
 			return i;
@@ -811,7 +810,7 @@ short town_boat_there(location where) {
 short out_boat_there(location where) {
 	short i;
 	
-	for(i = 0; i < 30; i++)
+	for(i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].exists) && (where == univ.party.boats[i].loc)
 			&& (univ.party.boats[i].which_town == 200))
 			return i;
@@ -821,8 +820,7 @@ short out_boat_there(location where) {
 short town_horse_there(location where) {
 	short i;
 	
-	// Num boats stores highest # of boat in town
-	for(i = 0; i < 30; i++)
+	for(i = 0; i < univ.party.horses.size(); i++)
 		if((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == univ.town.num)
 			&& (where == univ.party.horses[i].loc))
 			return i;
@@ -831,7 +829,7 @@ short town_horse_there(location where) {
 short out_horse_there(location where) {
 	short i;
 	
-	for(i = 0; i < 30; i++)
+	for(i = 0; i < univ.party.horses.size(); i++)
 		if((univ.party.horses[i].exists) && (where == univ.party.horses[i].loc)
 			&& (univ.party.horses[i].which_town == 200))
 			return i;

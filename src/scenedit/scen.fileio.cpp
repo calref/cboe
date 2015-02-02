@@ -690,9 +690,9 @@ map_data buildOutMapData(location which) {
 		if(sector.special_locs[i].spec >= 0)
 			terrain.addFeature(sector.special_locs[i].x, sector.special_locs[i].y, eMapFeature::SPECIAL_NODE, sector.special_locs[i].spec);
 	}
-	for(size_t i = 0; i < 8; i++) {
-		if(sector.exit_dests[i] >= 0)
-			terrain.addFeature(sector.exit_locs[i].x, sector.exit_locs[i].y, eMapFeature::TOWN, sector.exit_dests[i]);
+	for(size_t i = 0; i < sector.exit_locs.size(); i++) {
+		if(sector.exit_locs[i].spec >= 0)
+			terrain.addFeature(sector.exit_locs[i].x, sector.exit_locs[i].y, eMapFeature::TOWN, sector.exit_locs[i].spec);
 	}
 	for(size_t i = 0; i < sector.sign_strs.size(); i++) {
 		if(!sector.sign_strs[i].empty())
@@ -701,12 +701,14 @@ map_data buildOutMapData(location which) {
 	for(size_t i = 0; i < 4; i++) {
 		terrain.addFeature(sector.wandering_locs[i].x, sector.wandering_locs[i].y, eMapFeature::WANDERING, i);
 	}
-	for(size_t i = 0; i < 30; i++) {
+	for(size_t i = 0; i < scenario.boats.size(); i++) {
 		if(scenario.boats[i].which_town == 200 && scenario.boats[i].sector == which) {
 			int j = i;
 			if(scenario.boats[i].property) j *= -1;
 			terrain.addFeature(scenario.boats[i].loc.x, scenario.boats[i].loc.y, eMapFeature::HORSE, j);
 		}
+	}
+	for(size_t i = 0; i < scenario.horses.size(); i++) {
 		if(scenario.horses[i].which_town == 200 && scenario.horses[i].sector == which) {
 			int j = i;
 			if(scenario.horses[i].property) j *= -1;
@@ -747,12 +749,14 @@ map_data buildTownMapData(size_t which) {
 		if(town.creatures[i].number > 0)
 			terrain.addFeature(town.creatures[i].start_loc.x, town.creatures[i].start_loc.y, eMapFeature::CREATURE, i);
 	}
-	for(size_t i = 0; i < 30; i++) {
+	for(size_t i = 0; i < scenario.boats.size(); i++) {
 		if(scenario.boats[i].which_town == which) {
 			int j = i;
 			if(scenario.boats[i].property) j *= -1;
 			terrain.addFeature(scenario.boats[i].loc.x, scenario.boats[i].loc.y, eMapFeature::HORSE, j);
 		}
+	}
+	for(size_t i = 0; i < scenario.horses.size(); i++) {
 		if(scenario.horses[i].which_town == which) {
 			int j = i;
 			if(scenario.horses[i].property) j *= -1;
