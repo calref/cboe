@@ -167,16 +167,19 @@ public:
 								   
 	cScenario scenario;
 	cParty party;
+	std::map<long,cPlayer*> stored_pcs;
 	cCurTown town;
 	char town_maps[200][8][64]; // formerly stored_town_maps_type
 	cCurOut out;
 	char out_maps[100][6][48]; // formerly stored_outdoor_maps_type
 	fs::path file;
 	
+	void clear_stored_pcs();
 	void append(legacy::stored_town_maps_type& old);
 	void append(legacy::stored_outdoor_maps_type& old);
 	short difficulty_adjust() const;
 	explicit cUniverse(long party_type = 'dflt');
+	~cUniverse();
 	static void(* print_result)(std::string);
 };
 

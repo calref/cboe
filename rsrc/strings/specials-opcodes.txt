@@ -103,8 +103,8 @@ food
 alchemy
 party-status
 create-pc
-
-
+store-pc
+unstore-pc
 
 
 

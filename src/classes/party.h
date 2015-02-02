@@ -75,6 +75,7 @@ public:
 	};
 	// formerly party_record_type
 	// TODO: Should we make age a long long?
+	long next_pc_id = 1000;
 	unsigned long age;
 	unsigned short gold;
 	unsigned short food;
@@ -173,6 +174,7 @@ public:
 	int get_level() const;
 	
 	void new_pc(size_t spot);
+	void replace_pc(size_t spot, cPlayer* with);
 	size_t free_space();
 	void void_pcs();
 	bool save_talk(const std::string& who, const std::string& where, const std::string& str1, const std::string& str2);

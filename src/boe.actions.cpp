@@ -936,6 +936,7 @@ static void handle_victory() {
 	// This is the point at which we need to transfer any exported graphics over to the party sheet.
 	univ.exportGraphics();
 	univ.exportSummons();
+	univ.clear_stored_pcs();
 	reload_startup();
 	overall_mode = MODE_STARTUP;
 	in_scen_debug = false;

@@ -730,7 +730,11 @@ Use 0-5 to select a specific PC. To select a monster, look up its unique number 
 locating it in town, editing it, and checking the "Creature number" field. Add 100 to that
 number, and put it in this field. If the selected PC or monster does not match the
 criteria set in Extra 1a, then the selected character is not changed and the special in
-Extra 1b is called.</dd>
+Extra 1b is called. You can also put a unique PC ID (which is 1000 or greater) in this
+field. If you leave this at -1, the game will take the value in Extra 2c plus 1000 as the
+unique PC ID to select. By using a unique PC ID, you can affect a stored PC without first
+unstoring it. Setting Extra 1b to -1 should be done if you have the ID in a Stuff Done
+Flag; then you'd place a pointer to that SDF in Extra 1c.</dd>
 <dt>Uses:</dt><dd>If you want something to increase the strength of one character, call a
 Select a PC node, followed by an Affect Statistic node.</dd></dd>
 
@@ -888,7 +892,14 @@ effect. Also, Detect Life and Stealth do nothing outdoors while Flight does noth
 town.</dd></dd>
 
 <dt>Type 105: Create New PC</dt><dd>This special node adds an entirely new PC to the party.
+After this node is called, the new PC is considered to be the selected PC, and any
+subsequent Affect nodes will apply only to the new PC.
 <dl>
+<dt>Stuff Done 1, Stuff Done 2:</dt><dd>If these are set to something other than -1, this
+SDF is set to the unique ID of the new PC, minus 1000. If you want to do anything with
+this PC after the current node chain ends, you need to set these. It's not sufficient to
+just keep track of which slot the PC was placed in, because the player can rearrange their
+party at will.</dd>
 <dt>Mess3:</dt><dd>The number of a string containing the new PC's name.</dd>
 <dt>Pict:</dt><dd>The PC graphic to give to the new PC.</dd>
 <dt>Pictype:</dt><dd>A special node that will be called if the party already has 6 PCs.</dd>
@@ -899,6 +910,28 @@ town.</dd></dd>
 <dt>Extra 2b:</dt><dd>The new PC's Dexterity skill.</dd>
 <dt>Extra 2c:</dt><dd>The new PC's Intelligence skill.</dd>
 <dt>Uses:</dt><dd>This could be used to have an NPC join your party.</dd></dd>
+
+<dt>Type 106: Store PC</dt><dd>This special node removes a PC from the party and stores
+them away somewhere.
+<dl>
+<dt>Stuff Done 1, Stuff Done 2:</dt><dd>If these are set to something other than -1, this
+SDF is set to the unique ID of the stored PC, minus 1000. Only leave these unset if you
+already know the unique ID (for example, because you obtained it when creating the PC with
+the above node). If you don't know the unique ID of the stored PC, there is no way to
+unstore it.</dd>
+<dt>Extra 1a:</dt><dd>If you set this to 1, the PC is not stored, but the SDF (if present)
+is updated.</dd>
+<dt>Uses:</dt><dd>This could be used if you have an NPC that joins the party, and you want
+the NPC to leave at some point and later return to the party.</dd></dd>
+
+<dt>Type 107: Unstore PC</dt><dd>This special node takes a PC previously stored with the
+above node and, if there's space, puts it back into the party.
+<dl>
+<dt>Extra 1a:</dt><dd>The unique ID of the PC to unstore. If less than 1000, the game will
+add 1000 to it.</dd>
+<dt>Extra 1b:</dt><dd>A special node that will be called if the party already has 6
+PCs.</dd></dd>
+</dl>
 
 <h3>If-Then Specials</h3>
 <p>These special node types don't do anything by themselves. Instead, they choose from

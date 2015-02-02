@@ -682,11 +682,15 @@ cPlayer::cPlayer(cParty& party) : party(party) {
 	race = eRace::HUMAN;
 	direction = DIR_N;
 	combat_pos = {-1,-1};
+	
+	unique_id = party.next_pc_id++;
 }
 
 cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 	short i;
 	main_status = eMainStatus::ALIVE;
+	unique_id = slot + 1000;
+	party.next_pc_id = max(unique_id + 1, party.next_pc_id);
 	if(key == 'dbug'){
 		switch(slot) {
 			case 0:
@@ -855,6 +859,7 @@ void operator -= (eMainStatus& stat, eMainStatus othr){
 }
 
 void cPlayer::writeTo(std::ostream& file) const {
+	file << "UID " << unique_id << '\n';
 	file << "STATUS -1 " << main_status << '\n';
 	file << "NAME " << name << '\n';
 	file << "SKILL 19 " << max_health << '\n';
@@ -952,6 +957,9 @@ void cPlayer::readFrom(std::istream& file){
 			eStatus i;
 			sin >> i;
 			sin >> status[i];
+		} else if(cur == "UID") {
+			sin >> unique_id;
+			party.next_pc_id = max(unique_id + 1, party.next_pc_id);
 		}else if(cur == "EQUIP"){
 			int i;
 			sin >> i;
