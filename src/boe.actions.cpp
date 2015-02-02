@@ -1900,7 +1900,7 @@ bool handle_keystroke(sf::Event& event){
 				
 				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)
 					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 10) )
-					damage_monst(i, 7,1000,eDamageType::UNBLOCKABLE,0);
+					damage_monst(univ.town.monst[i], 7,1000,eDamageType::UNBLOCKABLE,0);
 			}
 			// kill_monst(&univ.town.monst[i],6);
 			draw_terrain();
@@ -2549,7 +2549,7 @@ void drop_pc(short which) {
 		return;
 	}
 	add_string_to_buf("Delete PC: OK.");
-	kill_pc(which,eMainStatus::ABSENT);
+	kill_pc(univ.party[which],eMainStatus::ABSENT);
 	for(short i = which; i < 5; i++)
 		univ.party.swap_pcs(i, i + 1);
 	univ.party[5].main_status = eMainStatus::ABSENT;

@@ -441,7 +441,7 @@ void handle_menu_choice(eMenu item_hit) {
 				if(choice < 6) {
 					std::string confirm = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
 					if(confirm == "yes")
-						kill_pc(choice,eMainStatus::ABSENT);
+						kill_pc(univ.party[choice],eMainStatus::ABSENT);
 				}
 				draw_terrain();
 			}

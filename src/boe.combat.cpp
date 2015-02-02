@@ -577,11 +577,11 @@ void pc_attack(short who_att,iLiving* target) {
 		}
 		
 		if(r1 <= hit_chance[attacker.skill(eSkill::DEXTERITY)]) {
-			size_t i_monst = univ.get_target_i(*target);
 			// TODO: Change to damage_target()
-			if(i_monst >= 100)
-				damage_monst(i_monst - 100, who_att, r2, eDamageType::WEAPON,4);
-			else damage_pc(i_monst, r2, eDamageType::WEAPON, univ.party[who_att].race, 4);
+			if(cCreature* m_target = dynamic_cast<cCreature*>(target))
+				damage_monst(*m_target, who_att, r2, eDamageType::WEAPON,4);
+			else if(cPlayer* pc_target = dynamic_cast<cPlayer*>(target))
+				damage_pc(*pc_target, r2, eDamageType::WEAPON, univ.party[who_att].race, 4);
 		}
 		else {
 			draw_terrain(2);
@@ -604,7 +604,7 @@ void pc_attack(short who_att,iLiving* target) {
 		if(target->is_shielded()) {
 			int how_much = target->get_shared_dmg(store_hp - target->get_health());
 			add_string_to_buf("  Shares damage!");
-			damage_pc(who_att, how_much, eDamageType::MAGIC,eRace::UNKNOWN,0);
+			damage_pc(attacker, how_much, eDamageType::MAGIC,eRace::UNKNOWN,0);
 		}
 	}
 	combat_posing_monster = current_working_monster = -1;
@@ -783,21 +783,21 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 		bool damaged = false;
 		if(cCreature* monst = dynamic_cast<cCreature*>(&target)) {
 			if(dmg_snd != no_dmg)
-				damaged = damaged || damage_monst(i_monst - 100, who_att, r2, eDamageType::WEAPON, dmg_snd, false);
+				damaged = damaged || damage_monst(*monst, who_att, r2, eDamageType::WEAPON, dmg_snd, false);
 			if(spec_dam)
-				damaged = damaged || damage_monst(i_monst - 100, who_att, spec_dam, eDamageType::SPECIAL, 5, false);
+				damaged = damaged || damage_monst(*monst, who_att, spec_dam, eDamageType::SPECIAL, 5, false);
 			if(bonus_dam)
-				damaged = damaged || damage_monst(i_monst - 100, who_att, bonus_dam, dmg_tp, 0, false);
+				damaged = damaged || damage_monst(*monst, who_att, bonus_dam, dmg_tp, 0, false);
 			if(damaged)
 				monst->damaged_msg(r2, spec_dam + bonus_dam);
 		} else if(cPlayer* who = dynamic_cast<cPlayer*>(&target)) {
 			eRace race = univ.party[who_att].race;
 			if(dmg_snd != no_dmg)
-				damaged = damaged || damage_pc(i_monst, r2, eDamageType::WEAPON, race, dmg_snd, false);
+				damaged = damaged || damage_pc(*who, r2, eDamageType::WEAPON, race, dmg_snd, false);
 			if(spec_dam)
-				damaged = damaged || damage_pc(i_monst, spec_dam, eDamageType::SPECIAL, race, dmg_snd, false);
+				damaged = damaged || damage_pc(*who, spec_dam, eDamageType::SPECIAL, race, dmg_snd, false);
 			if(bonus_dam)
-				damaged = damaged || damage_pc(i_monst, bonus_dam, eDamageType::SPECIAL, race, dmg_snd, false);
+				damaged = damaged || damage_pc(*who, bonus_dam, eDamageType::SPECIAL, race, dmg_snd, false);
 			if(damaged) {
 				std::string msg = "  " + who->name + " takes " + std::to_string(r2);
 				if(spec_dam + bonus_dam)
@@ -978,7 +978,7 @@ void place_target(location target) {
 }
 
 void do_combat_cast(location target) {
-	short adjust,r1,r2,targ_num,level,bonus = 1,i,item;
+	short adjust,r1,r2,level,bonus = 1,i,item;
 	snd_num_t store_sound = 0;
 	bool freebie = false,ap_taken = false,cost_taken = false;
 	short num_targets = 1;
@@ -1322,7 +1322,7 @@ void do_combat_cast(location target) {
 											store_sound = 53;
 											r1 = get_ran(4,1,8);
 											r2 = get_ran(1,0,2);
-											damage_monst(targ_num, 7, r1, eDamageType::MAGIC,0);
+											damage_monst(*cur_monst, 7, r1, eDamageType::MAGIC,0);
 											victim->slow(4 + r2);
 											victim->poison(5 + r2);
 											break;
@@ -1472,10 +1472,10 @@ void do_combat_cast(location target) {
 												add_string_to_buf("  Monster resisted.");
 											else {
 												r1 = get_ran((spell_being_cast == eSpell::TURN_UNDEAD) ? 2 : 6, 1, 14);
-												size_t i_targ = univ.get_target_i(*victim);
-												if(i_targ < 100)
-													damage_pc(i_targ, r1, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
-												else damage_monst(i_targ, current_pc, r1, eDamageType::UNBLOCKABLE, 0);
+												if(cur_monst != nullptr)
+													damage_monst(*cur_monst, current_pc, r1, eDamageType::UNBLOCKABLE, 0);
+												else if(cPlayer* who = dynamic_cast<cPlayer*>(victim))
+													damage_pc(*who, r1, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
 											}
 											store_sound = 24;
 											break;
@@ -1499,10 +1499,10 @@ void do_combat_cast(location target) {
 												r1 = get_ran(8 + bonus * 2, 1, 11);
 												if(univ.party[spell_caster].status[eStatus::DUMB] < 0)
 													r1 += -25 * univ.party[spell_caster].status[eStatus::DUMB] / 3;
-												size_t i_targ = univ.get_target_i(*victim);
-												if(i_targ < 100)
-													damage_pc(i_targ, r1, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
-												else damage_monst(i_targ, current_pc, r1, eDamageType::UNBLOCKABLE, 0);
+												if(cur_monst != nullptr)
+													damage_monst(*cur_monst, current_pc, r1, eDamageType::UNBLOCKABLE, 0);
+												else if(cPlayer* who = dynamic_cast<cPlayer*>(victim))
+													damage_pc(*who, r1, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
 											}
 											store_sound = 24;
 											break;
@@ -1551,12 +1551,12 @@ void handle_marked_damage() {
 	
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].marked_damage > 0) {
-			damage_pc(i,univ.party[i].marked_damage,eDamageType::MARKED,eRace::UNKNOWN,0);
+			damage_pc(univ.party[i],univ.party[i].marked_damage,eDamageType::MARKED,eRace::UNKNOWN,0);
 			univ.party[i].marked_damage = 0;
 		}
 	for(i = 0; i < univ.town.monst.size(); i++)
 		if(univ.town.monst[i].marked_damage > 0) {
-			damage_monst(i, current_pc, univ.town.monst[i].marked_damage, eDamageType::MARKED,0);
+			damage_monst(univ.town.monst[i], current_pc, univ.town.monst[i].marked_damage, eDamageType::MARKED,0);
 			
 			univ.town.monst[i].marked_damage = 0;
 		}
@@ -1758,15 +1758,16 @@ void fire_missile(location target) {
 					ASB("  There is a flash of light.");
 					victim->heal(r2);
 				} else if(cCreature* monst = dynamic_cast<cCreature*>(victim)) {
-					bool damaged = damage_monst(i_monst - 100, current_pc, r2, eDamageType::WEAPON,13,false);
+					bool damaged = damage_monst(*monst, current_pc, r2, eDamageType::WEAPON,13,false);
 					if(spec_dam > 0)
-						damaged = damaged || damage_monst(i_monst - 100, current_pc, spec_dam, dmg_tp, 0,false);
+						damaged = damaged || damage_monst(*monst, current_pc, spec_dam, dmg_tp, 0,false);
 					if(damaged) monst->damaged_msg(r2, spec_dam);
 				} else if(cPlayer* who = dynamic_cast<cPlayer*>(victim)) {
+					// TODO: Should the race really be included here? Maybe it's meant for melee attacks only.
 					eRace race = missile_firer.race;
-					bool damaged = damage_pc(i_monst, r2, eDamageType::WEAPON, race, 0, false);
+					bool damaged = damage_pc(*who, r2, eDamageType::WEAPON, race, 0, false);
 					if(spec_dam > 0)
-						damaged = damaged || damage_pc(i_monst, spec_dam, dmg_tp, race, 0, false);
+						damaged = damaged || damage_pc(*who, spec_dam, dmg_tp, race, 0, false);
 					if(damaged) {
 						std::string msg = "  " + who->name + " takes " + std::to_string(r2);
 						if(spec_dam) msg += '+' + std::to_string(spec_dam);
@@ -2595,7 +2596,7 @@ void do_monster_turn() {
 					printed_acid = true;
 				}
 				r1 = get_ran(cur_monst->status[eStatus::ACID],1,6);
-				damage_monst(i, 6,r1, eDamageType::MAGIC,0);
+				damage_monst(*cur_monst, 6,r1, eDamageType::MAGIC,0);
 				cur_monst->status[eStatus::ACID]--;
 			}
 			
@@ -2619,7 +2620,7 @@ void do_monster_turn() {
 						printed_poison = true;
 					}
 					r1 = get_ran(cur_monst->status[eStatus::POISON],1,6);
-					damage_monst(i, 6, r1, eDamageType::POISON,0);
+					damage_monst(*cur_monst, 6, r1, eDamageType::POISON,0);
 					cur_monst->status[eStatus::POISON]--;
 				}
 				if(cur_monst->status[eStatus::DISEASE] > 0) {  // Disease
@@ -2750,9 +2751,9 @@ void monster_attack(short who_att,iLiving* target) {
 				bool damaged = false;
 				if(m_target != nullptr) {
 					// TODO: Maybe this damage should be printed?
-					damaged = damage_monst(i_monst - 100,7,r2,dam_type,sound_type,false);
+					damaged = damage_monst(*m_target,7,r2,dam_type,sound_type,false);
 				} else if(pc_target != nullptr) {
-					damaged = damage_pc(i_monst,r2,dam_type,attacker->m_type,sound_type);
+					damaged = damage_pc(*pc_target,r2,dam_type,attacker->m_type,sound_type);
 					if(store_hp - target->get_health() <= 0)
 						damaged = false;
 				}
@@ -2763,7 +2764,7 @@ void monster_attack(short who_att,iLiving* target) {
 						int dmg = attacker->get_shared_dmg(store_hp - target->get_health());
 						add_string_to_buf("  Shares damage!");
 						int who_hit = pc_target != nullptr ? 6 : 7;
-						damage_monst(who_att, who_hit, dmg, eDamageType::MAGIC,0);
+						damage_monst(*attacker, who_hit, dmg, eDamageType::MAGIC,0);
 					}
 					
 					if(i == 0 && attacker->status[eStatus::POISONED_WEAPON] > 0) {
@@ -2983,10 +2984,10 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 			if(pc_target != nullptr) {
 				add_string_to_buf("  Hits " + pc_target->name + '.');
 				// TODO: Should we pass in the monster's actual race here?
-				damage_pc(i_monst,r2,eDamageType::WEAPON,eRace::UNKNOWN,13);
+				damage_pc(*pc_target,r2,eDamageType::WEAPON,eRace::UNKNOWN,13);
 			} else if(m_target != nullptr) {
 				m_target->spell_note(16);
-				damage_monst(i_monst - 100,7,r2,eDamageType::WEAPON,13);
+				damage_monst(*m_target,7,r2,eDamageType::WEAPON,13);
 			}
 		} else {
 			if(pc_target != nullptr)
@@ -3169,7 +3170,10 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			break;
 		case eMonstAbil::PETRIFY:
 			i = univ.town.monst[m_num].level * abil.second.gen.strength / 100;
-			target->petrify(i);
+			if(pc_target != nullptr)
+				petrify_pc(*pc_target, i);
+			else if(m_target != nullptr)
+				petrify_monst(*m_target, i);
 			break;
 		case eMonstAbil::DRAIN_SP:
 			if(pc_target != nullptr) {
@@ -3916,11 +3920,11 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 	return acted;
 }
 
-void damage_target(short target,short dam,eDamageType type) {
+void damage_target(short target,short dam,eDamageType type,short sound_type) {
 	if(target == 6) return;
 	if(target < 6)
-		damage_pc(target,dam,type,eRace::UNKNOWN,0);
-	else damage_monst(target - 100, 7, dam, type,0);
+		damage_pc(univ.party[target],dam,type,eRace::UNKNOWN,sound_type);
+	else damage_monst(univ.town.monst[target - 100], 7, dam, type,sound_type);
 }
 
 
@@ -4137,23 +4141,23 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 					switch(effect) {
 						case WALL_FORCE:
 							r1 = get_ran(2,1,6);
-							damage_pc(k,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
+							damage_pc(univ.party[k],r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 							break;
 						case WALL_FIRE:
 							r1 = get_ran(1,1,6) + 1;
-							damage_pc(k,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
+							damage_pc(univ.party[k],r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 							break;
 						case WALL_ICE:
 							r1 = get_ran(2,1,6);
-							damage_pc(k,r1,eDamageType::COLD,eRace::UNKNOWN,0);
+							damage_pc(univ.party[k],r1,eDamageType::COLD,eRace::UNKNOWN,0);
 							break;
 						case WALL_BLADES:
 							r1 = get_ran(4,1,8);
-							damage_pc(k,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
+							damage_pc(univ.party[k],r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 							break;
 						case OBJECT_BLOCK:
 							r1 = get_ran(6,1,8);
-							damage_pc(k,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
+							damage_pc(univ.party[k],r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 							break;
 						case BARRIER_CAGE:
 							univ.party[k].status[eStatus::FORCECAGE] = 8;
@@ -4192,7 +4196,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 							}
 							if(type == eDamageType::MARKED) break;
 							r1 = get_ran(dice,1,6);
-							damage_pc(k,r1,type,eRace::UNKNOWN,0);
+							damage_pc(univ.party[k],r1,type,eRace::UNKNOWN,0);
 							break;
 					}
 				}
@@ -4225,29 +4229,29 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 								break;
 							case WALL_FORCE:
 								r1 = get_ran(3,1,6);
-								damage_monst(k, who_hit, r1, eDamageType::MAGIC,0);
+								damage_monst(univ.town.monst[k], who_hit, r1, eDamageType::MAGIC,0);
 								break;
 							case WALL_FIRE:
 								r1 = get_ran(2,1,6);
-								damage_monst(k, who_hit, r1, eDamageType::FIRE,0);
+								damage_monst(univ.town.monst[k], who_hit, r1, eDamageType::FIRE,0);
 								break;
 							case CLOUD_STINK:
 								which_m->curse(get_ran(1,1,2));
 								break;
 							case WALL_ICE:
 								r1 = get_ran(3,1,6);
-								damage_monst(k, who_hit, r1, eDamageType::COLD,0);
+								damage_monst(univ.town.monst[k], who_hit, r1, eDamageType::COLD,0);
 								break;
 							case WALL_BLADES:
 								r1 = get_ran(6,1,8);
-								damage_monst(k, who_hit, r1, eDamageType::WEAPON,0);
+								damage_monst(univ.town.monst[k], who_hit, r1, eDamageType::WEAPON,0);
 								break;
 							case CLOUD_SLEEP:
 								which_m->sleep(eStatus::ASLEEP,3,0);
 								break;
 							case OBJECT_BLOCK:
 								r1 = get_ran(6,1,8);
-								damage_monst(k,who_hit,r1,eDamageType::WEAPON,0);
+								damage_monst(univ.town.monst[k],who_hit,r1,eDamageType::WEAPON,0);
 								break;
 							case BARRIER_CAGE:
 								univ.town.monst[k].status[eStatus::FORCECAGE] = 8;
@@ -4286,7 +4290,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 								}
 								if(type == eDamageType::MARKED) break;
 								r1 = get_ran(dice,1,6);
-								damage_monst(k,who_hit,r1,type,0);
+								damage_monst(univ.town.monst[k],who_hit,r1,type,0);
 								break;
 						}
 					}
@@ -4341,12 +4345,12 @@ void do_shockwave(location target) {
 	for(i = 0; i < 6; i++)
 		if((dist(target,univ.party[i].combat_pos) > 0) && (dist(target,univ.party[i].combat_pos) < 11)
 			&& univ.party[i].main_status == eMainStatus::ALIVE)
-			damage_pc(i, get_ran(2 + dist(target,univ.party[i].combat_pos) / 2, 1, 6), eDamageType::UNBLOCKABLE,eRace::UNKNOWN,0);
+			damage_pc(univ.party[i], get_ran(2 + dist(target,univ.party[i].combat_pos) / 2, 1, 6), eDamageType::UNBLOCKABLE,eRace::UNKNOWN,0);
 	for(i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) < 11)
 			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
-			damage_monst(i, current_pc, get_ran(2 + dist(target,univ.town.monst[i].cur_loc) / 2 , 1, 6), eDamageType::UNBLOCKABLE,0);
+			damage_monst(univ.town.monst[i],current_pc,get_ran(2 + dist(target,univ.town.monst[i].cur_loc) / 2,1,6),eDamageType::UNBLOCKABLE,0);
 	do_explosion_anim(5,0);
 	end_missile_anim();
 	handle_marked_damage();
@@ -4355,16 +4359,17 @@ void do_shockwave(location target) {
 void radius_damage(location target,short radius, short dam, eDamageType type) {
 	short i;
 	
+	// TODO: Why no booms in town mode?
 	if(is_town()) {
 		for(i = 0; i < 6; i++)
 			if((dist(target,univ.town.p_loc) > 0) && (dist(target,univ.town.p_loc) <= radius)
 				&& univ.party[i].main_status == eMainStatus::ALIVE)
-				damage_pc(i, dam, type,eRace::UNKNOWN,0);
+				damage_pc(univ.party[i], dam, type,eRace::UNKNOWN,0);
 		for(i = 0; i < univ.town.monst.size(); i++)
 			if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 				&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
 				&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
-				damage_monst(i, current_pc, dam, type,0);
+				damage_monst(univ.town.monst[i], current_pc, dam, type,0);
 		return;
 	}
 	
@@ -4372,12 +4377,12 @@ void radius_damage(location target,short radius, short dam, eDamageType type) {
 	for(i = 0; i < 6; i++)
 		if((dist(target,univ.party[i].combat_pos) > 0) && (dist(target,univ.party[i].combat_pos) <= radius)
 			&& univ.party[i].main_status == eMainStatus::ALIVE)
-			damage_pc(i, dam, type,eRace::UNKNOWN,0);
+			damage_pc(univ.party[i], dam, type,eRace::UNKNOWN,0);
 	for(i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
 			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
-			damage_monst(i, current_pc, dam, type,0);
+			damage_monst(univ.town.monst[i], current_pc, dam, type,0);
 	do_explosion_anim(5,0);
 	end_missile_anim();
 	handle_marked_damage();
@@ -4416,8 +4421,8 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 		if((hit_monsters) && (univ.town.monst[i].active != 0) && !stop_hitting)
 			if(univ.town.monst[i].on_space(target)) {
 				if(processing_fields)
-					damage_monst(i, 6, dam, type,0);
-				else damage_monst(i, (monsters_going) ? 7 : current_pc, dam, type,0);
+					damage_monst(univ.town.monst[i], 6, dam, type,0);
+				else damage_monst(univ.town.monst[i], (monsters_going) ? 7 : current_pc, dam, type,0);
 				stop_hitting = (hit_all == 1) ? false : true;
 			}
 	
@@ -4425,7 +4430,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE && !stop_hitting)
 				if(univ.party[i].combat_pos == target) {
-					damage_pc(i,dam,type,eRace::UNKNOWN,0);
+					damage_pc(univ.party[i],dam,type,eRace::UNKNOWN,0);
 					stop_hitting = (hit_all == 1) ? false : true;
 				}
 	if(overall_mode < MODE_COMBAT)
@@ -4457,7 +4462,7 @@ void do_poison() {
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if(univ.party[i].status[eStatus::POISON] > 0) {
 					r1 = get_ran(univ.party[i].status[eStatus::POISON],1,6);
-					damage_pc(i,r1,eDamageType::POISON,eRace::UNKNOWN,0);
+					damage_pc(univ.party[i],r1,eDamageType::POISON,eRace::UNKNOWN,0);
 					if(get_ran(1,0,8) < 6)
 						move_to_zero(univ.party[i].status[eStatus::POISON]);
 					if(get_ran(1,0,8) < 6)
@@ -4533,7 +4538,7 @@ void handle_acid() {
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				if(univ.party[i].status[eStatus::ACID] > 0) {
 					r1 = get_ran(univ.party[i].status[eStatus::ACID],1,6);
-					damage_pc(i,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
+					damage_pc(univ.party[i],r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 					move_to_zero(univ.party[i].status[eStatus::ACID]);
 				}
 		if(overall_mode < MODE_COMBAT)

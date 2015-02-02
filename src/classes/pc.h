@@ -81,8 +81,6 @@ public:
 	void avatar();
 	void drain_sp(int how_much);
 	void restore_sp(int how_much);
-	void petrify(int adj);
-	void kill(eMainStatus type = eMainStatus::DEAD);
 	
 	void combine_things();
 	void sort_items();

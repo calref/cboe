@@ -30,7 +30,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 bool monst_breathe(cCreature *caster,location targ_space,uAbility dam_type);
 bool monst_cast_mage(cCreature *caster,short targ);
 bool monst_cast_priest(cCreature *caster,short targ);
-void damage_target(short target,short dam,eDamageType type);
+void damage_target(short target,short dam,eDamageType type,short sound_type = 0);
 location find_fireball_loc(location where,short radius,short mode,short *m);
 location closest_pc_loc(location where);
 short count_levels(location where,short radius);

@@ -46,7 +46,6 @@ public:
 	virtual void avatar() = 0;
 	virtual void drain_sp(int how_much) = 0;
 	virtual void restore_sp(int how_much) = 0;
-	virtual void petrify(int adj) = 0;
 	
 	virtual int get_health() const = 0;
 	virtual int get_magic() const = 0;
