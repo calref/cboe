@@ -399,8 +399,8 @@ Unused
 Special to Jump To
 --------------------
 Create New PC
-Unused
-Unused
+Stuff Done Flag Part A
+Stuff Done Flag Part B
 First part of message
 Second part of message
 PC name
@@ -412,5 +412,37 @@ PC race
 PC strength
 PC dexterity
 PC intelligence
+Special to Jump To
+--------------------
+Store PC
+Stuff Done Flag Part A
+Stuff Done Flag Part B
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+If 1, just store ID in SDF and leave PC in party
+extra 1b
+extra 1c
+extra 2a
+extra 2b
+extra 2c
+Special to Jump To
+--------------------
+Unstore PC
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Unique ID of PC to unstore
+Special to call if no room
+Unused
+Unused
+Unused
+Unused
 Special to Jump To
 --------------------

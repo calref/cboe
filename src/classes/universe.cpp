@@ -1176,6 +1176,16 @@ short cUniverse::difficulty_adjust() const {
 	return adj;
 }
 
+cUniverse::~cUniverse() {
+	clear_stored_pcs();
+}
+
+void cUniverse::clear_stored_pcs() {
+	for(auto& p : stored_pcs)
+		delete p.second;
+	stored_pcs.clear();
+}
+
 short cCurTown::countMonsters(){
 	short to_ret = 0;
 	for(short i = 0; i < monst.size(); i++)

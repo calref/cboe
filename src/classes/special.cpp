@@ -421,17 +421,17 @@ static const char*const button_dict[7][11] = {
 		"s    s  s    S", // ex2b
 		"              ", // ex2c
 	}, { // affect pc nodes
-		"mmmmmmmmmmm       mmmmmmmm", // msg1
-		"                          ", // msg2
-		"          M              M", // msg3
-		"                         5", // pic
-		"                         s", // pictype
-		"      w q          AP  a  ", // ex1a
-		"                          ", // ex1b
-		"       e                 Q", // ex1c
-		"                  K     E ", // ex2a
-		" D                        ", // ex2b
-		" x                        ", // ex2c
+		"mmmmmmmmmmm       mmmmmmmmmm", // msg1
+		"                            ", // msg2
+		"          M              M  ", // msg3
+		"                         5  ", // pic
+		"                         s  ", // pictype
+		"      w q          AP  a    ", // ex1a
+		"                           s", // ex1b
+		"       e                 Q  ", // ex1c
+		"                  K     E   ", // ex2a
+		" D                          ", // ex2b
+		" x                          ", // ex2c
 	}, { // if-then nodes
 		"                  f     $  $   ", // msg1
 		"                  s            ", // msg2

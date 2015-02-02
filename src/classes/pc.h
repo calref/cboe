@@ -49,6 +49,7 @@ public:
 	// HACK: This is only really marked mutable so that I can use operator[] from const methods
 	mutable std::map<eTrait,bool> traits;
 	eRace race;
+	long unique_id;
 	// transient stuff
 	std::map<eSkill,eSpell> last_cast;
 	location combat_pos;

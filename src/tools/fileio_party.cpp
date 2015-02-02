@@ -329,6 +329,18 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		univ.party[i].readFrom(fin);
 	}
 	
+	// Including stored PCs
+	if(partyIn.hasFile("save/stored_pcs.txt")) {
+		std::istream& fin = partyIn.getFile("save/stored_pcs.txt");
+		long next_uid;
+		while(fin >> next_uid) {
+			std::string fname = "save/pc~" + std::to_string(next_uid) + ".txt";
+			cPlayer* stored_pc = new cPlayer(univ.party);
+			stored_pc->readFrom(partyIn.getFile(fname));
+			univ.stored_pcs[next_uid] = stored_pc;
+		}
+	}
+	
 	if(in_scen) {
 		fs::path path;
 		path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
@@ -420,6 +432,16 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 		static char fname[] = "save/pc1.txt";
 		fname[7] = i + '1';
 		univ.party[i].writeTo(partyOut.newFile(fname));
+	}
+	
+	// And stored PCs
+	if(univ.stored_pcs.size()) {
+		std::ostream& fout = partyOut.newFile("save/stored_pcs.txt");
+		for(auto p : univ.stored_pcs) {
+			std::string fname = "save/pc~" + std::to_string(p.first) + ".txt";
+			p.second->writeTo(partyOut.newFile(fname));
+			fout << p.first << '\n';
+		}
 	}
 	
 	if(in_scen) {

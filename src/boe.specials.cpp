@@ -2719,6 +2719,41 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						can_pick = false;
 					else if(spec.ex1a == 3 && univ.town.monst[monst].active > 0)
 						can_pick = false;
+				} else if(pc >= 1000 || pc == -1) { // Select PC by unique ID; might be a stored PC rather than a party member
+					if(pc == -1) pc = 1000 + spec.ex2c;
+					can_pick = false; // Assume ID is invalid unless proven otherwise
+					cPlayer* found = nullptr;
+					for(i = 0; i < 6; i++) {
+						if(univ.party[i].unique_id == pc) {
+							can_pick = true;
+							found = &univ.party[i];
+							break;
+						}
+					}
+					if(!can_pick) {
+						for(auto& p : univ.stored_pcs) {
+							if(p.first == pc && p.second->unique_id == pc) {
+								can_pick = true;
+								found = p.second;
+								break;
+							}
+						}
+					}
+					if(can_pick) {
+						// Honour the request for alive PCs only.
+						if(found->main_status == eMainStatus::ABSENT)
+							can_pick = false;
+						else if(spec.ex1a % 4 == 0 && found->main_status != eMainStatus::ALIVE)
+							can_pick = false;
+						else if(spec.ex1a == 3 && found->main_status == eMainStatus::ALIVE)
+							can_pick = false;
+						else if(spec.ex1a == 4 && found->has_space() == 24)
+							can_pick = false;
+					}
+					if(can_pick)
+						current_pc_picked_in_spec_enc = found;
+					else *next_spec = spec.ex1b;
+					break; // To avoid the call to get_target
 				} else can_pick = false; // Because it's an invalid index
 				if(can_pick)
 					current_pc_picked_in_spec_enc = &univ.get_target(pc);
@@ -3088,6 +3123,36 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			univ.party[pc_num].skills[eSkill::DEXTERITY] = spec.ex2b;
 			univ.party[pc_num].skills[eSkill::INTELLIGENCE] = spec.ex2c;
 			current_pc_picked_in_spec_enc = &univ.get_target(pc_num);
+			if(univ.party.sd_legit(spec.sd1, spec.sd2))
+				univ.party.stuff_done[spec.sd1][spec.sd2] = univ.party[pc_num].unique_id - 1000;
+			break;
+		case eSpecType::STORE_PC:
+			if(cPlayer* who = dynamic_cast<cPlayer*>(pc)) {
+				if(univ.party.sd_legit(spec.sd1, spec.sd2))
+					univ.party.stuff_done[spec.sd1][spec.sd2] = univ.party[pc_num].unique_id - 1000;
+				if(spec.ex1a == 1) break;
+				who->main_status += eMainStatus::SPLIT;
+				univ.stored_pcs[who->unique_id] = who;
+				univ.party.new_pc(pc_num);
+			}
+			break;
+		case eSpecType::UNSTORE_PC:
+			if(spec.ex1a < 1000) spec.ex1a += 1000;
+			if(univ.stored_pcs.find(spec.ex1a) == univ.stored_pcs.end()) {
+				giveError("Scenario tried to unstore a nonexistent PC!");
+				break;
+			}
+			pc_num = univ.party.free_space();
+			if(pc_num == 6) {
+				add_string_to_buf("No room for PC.");
+				*next_spec = spec.ex1b;
+				check_mess = false;
+				break;
+			}
+			univ.party.replace_pc(pc_num, univ.stored_pcs[spec.ex1a]);
+			current_pc_picked_in_spec_enc = &univ.get_target(pc_num);
+			univ.party[pc_num].main_status -= eMainStatus::SPLIT;
+			univ.stored_pcs.erase(spec.ex1a);
 			break;
 		default:
 			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");

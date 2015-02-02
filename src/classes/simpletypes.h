@@ -616,6 +616,8 @@ enum class eSpecType {
 	AFFECT_ALCHEMY = 103,
 	AFFECT_PARTY_STATUS = 104,
 	CREATE_NEW_PC = 105,
+	STORE_PC = 106,
+	UNSTORE_PC = 107,
 	IF_SDF = 130,
 	IF_TOWN_NUM = 131,
 	IF_RANDOM = 132,
@@ -706,7 +708,7 @@ inline eSpecCat getNodeCategory(eSpecType node) {
 		return eSpecCat::GENERAL;
 	if(code >= 50 && code <= 63)
 		return eSpecCat::ONCE;
-	if(code >= 80 && code <= 105)
+	if(code >= 80 && code <= 107)
 		return eSpecCat::AFFECT;
 	if(code >= 130 && code <= 160)
 		return eSpecCat::IF_THEN;

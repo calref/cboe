@@ -199,9 +199,13 @@ void cParty::append(legacy::pc_record_type(& old)[6]) {
 }
 
 void cParty::new_pc(size_t spot) {
-	if(spot < 6){
+	replace_pc(spot, new cPlayer(*this));
+}
+
+void cParty::replace_pc(size_t spot, cPlayer* with) {
+	if(spot < 6 && with != nullptr) {
 		delete adven[spot];
-		adven[spot] = new cPlayer(*this);
+		adven[spot] = with;
 	}
 }
 
@@ -483,6 +487,7 @@ void cParty::writeTo(std::ostream& file) const {
 	file << "AGE " << age << '\n';
 	file << "GOLD " << gold << '\n';
 	file << "FOOD " << food << '\n';
+	file << "NEXTID " << next_pc_id << '\n';
 	for(int i = 0; i < 310; i++)
 		for(int j = 0; j < 50; j++)
 			if(stuff_done[i][j] > 0)
@@ -676,6 +681,8 @@ void cParty::readFrom(std::istream& file){
 			sin >> gold;
 		else if(cur == "FOOD")
 			sin >> food;
+		else if(cur == "NEXTID")
+			sin >> next_pc_id;
 		else if(cur == "SDF"){
 			int i,j;
 			unsigned int n;
