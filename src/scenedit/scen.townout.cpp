@@ -1050,6 +1050,9 @@ static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>&
 				if(cre(last,0,n,"Number of items in shop cannot be such that the last item does not exist.", "", &me)) return false;
 			}
 			break;
+		case eTalkNode::RECEIVE_QUEST:
+			if(cre(talk_node.extras[0], 0, scenario.quests.size() - 1, "Quest must be an existing quest.", "", &me)) return false;
+			break;
 		case eTalkNode::ENCHANT:
 			if(cre(talk_node.extras[0],0,6,"Enchantment type must be from 0 to 6. See the documentation for a list of possible abilities.","",&me)) return false;
 			break;
@@ -1072,7 +1075,7 @@ static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>&
 		case eTalkNode::BUY_INFO: case eTalkNode::DEP_ON_TIME: case eTalkNode::REGULAR:
 		case eTalkNode::END_ALARM: case eTalkNode::END_DIE: case eTalkNode::END_FIGHT: case eTalkNode::END_FORCE:
 		case eTalkNode::IDENTIFY: case eTalkNode::SELL_ARMOR: case eTalkNode::SELL_ITEMS: case eTalkNode::SELL_WEAPONS:
-		case eTalkNode::TRAINING:
+		case eTalkNode::TRAINING: case eTalkNode::JOB_BANK:
 			break;
 	}
 	

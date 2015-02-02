@@ -1035,6 +1035,8 @@ std::string cItem::getAbilName() const {
 				case eRace::MAGICAL: sout << "Magical Beast"; break;
 				case eRace::PLANT: sout << "Plant"; break;
 				case eRace::BIRD: sout << "Bird"; break;
+				case eRace::SKELETAL: sout << "Skeleton"; break;
+				case eRace::GOBLIN: sout << "Goblin"; break;
 			}
 			sout << " Slayer";
 			break;
@@ -1164,6 +1166,8 @@ std::string cItem::getAbilName() const {
 				case eRace::MAGICAL: sout << "Magical Beasts"; break;
 				case eRace::PLANT: sout << "Plants"; break;
 				case eRace::BIRD: sout << "Birds"; break;
+				case eRace::SKELETAL: sout << "Skeleton"; break;
+				case eRace::GOBLIN: sout << "Goblin"; break;
 			}
 			break;
 		case eItemAbil::AFFECT_STATUS:
