@@ -32,7 +32,7 @@ rectangle border_rect[4];
 short current_block_edited = 0;
 short current_terrain_type = 0;
 short safety = 0;
-location spot_hit,last_spot_hit(-1,-1);
+location spot_hit,last_spot_hit(-1,-1),mouse_spot(-1,-1);
 bool sign_error_received = false;
 short copied_spec = -1;
 
@@ -135,6 +135,21 @@ void init_screen_locs() {
 		terrain_rects[i].offset(3 + (i % 17) * (terrain_rect_base.right + 1),
 			3 + (i / 17) * (terrain_rect_base.bottom + 1));
 	}
+}
+
+void update_mouse_spot(location the_point) {
+	rectangle terrain_rect = world_screen;
+	terrain_rect.inset(8,8);
+	if(terrain_rect.contains(the_point)) {
+		if(cur_viewing_mode == 0) {
+			mouse_spot.x = (the_point.x - TER_RECT_UL_X - 8) / 28;
+			mouse_spot.y = (the_point.y - TER_RECT_UL_Y - 8) / 36;
+		} else {
+			short scale = mini_map_scales[cur_viewing_mode - 1];
+			mouse_spot.x = (the_point.x - TER_RECT_UL_X - 8) / scale;
+			mouse_spot.y = (the_point.y - TER_RECT_UL_Y - 8) / scale;
+		}
+	} else mouse_spot = {-1,-1};
 }
 
 bool handle_action(location the_point,sf::Event /*event*/) {
@@ -434,32 +449,27 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				mouse_button_held = false;
 			}
 	}
-	if((overall_mode < MODE_MAIN_SCREEN)
-		&& (the_point.x > world_screen.left + 8) && (the_point.x < world_screen.right - 8)
-		&& (the_point.y > world_screen.top + 8) && (the_point.y < world_screen.bottom - 8) ) {
+	update_mouse_spot(the_point);
+	if(overall_mode < MODE_MAIN_SCREEN) {;
+		if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 		if(cur_viewing_mode == 0) {
-			i = (the_point.x - TER_RECT_UL_X - 8) / 28;
-			j = (the_point.y - TER_RECT_UL_Y - 8) / 36;
-			
-			spot_hit.x = cen_x + i - 4;
-			spot_hit.y = cen_y + j - 4;
+			spot_hit.x = cen_x + mouse_spot.x - 4;
+			spot_hit.y = cen_y + mouse_spot.y - 4;
 			if((i < 0) || (i > 8) || (j < 0) || (j > 8))
 				spot_hit.x = -1;
 		}
 		else {
 			short scale = mini_map_scales[cur_viewing_mode - 1];
-			i = (the_point.x - TER_RECT_UL_X - 8) / scale;
-			j = (the_point.y - TER_RECT_UL_Y - 8) / scale;
 			if(scale > 4) {
 				if(cen_x + 5 > 256 / scale)
-					spot_hit.x = cen_x + 5 - 256/scale + i;
-				else spot_hit.x = i;
+					spot_hit.x = cen_x + 5 - 256/scale + mouse_spot.x;
+				else spot_hit.x = mouse_spot.x;
 				if(cen_y + 5 > 324 / scale)
-					spot_hit.y = cen_y + 5 - 324/scale + j;
-				else spot_hit.y = j;
+					spot_hit.y = cen_y + 5 - 324/scale + mouse_spot.y;
+				else spot_hit.y = mouse_spot.y;
 			} else {
-				spot_hit.x = i;
-				spot_hit.y = j;
+				spot_hit.x = mouse_spot.x;
+				spot_hit.y = mouse_spot.y;
 			}
 		}
 		
@@ -929,7 +939,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 		draw_terrain();
 		
 	}
-	if(overall_mode < MODE_MAIN_SCREEN) {
 		if((the_point.in(border_rect[0])) & (cen_y > (editing_town ? 4 : 3))) {
 			cen_y--;
 			if(ctrl_hit)

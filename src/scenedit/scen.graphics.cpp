@@ -57,7 +57,7 @@ extern std::array<rb_t,NRS> right_button_status;
 short mini_map_scales[3] = {12, 6, 4};
 // TODO: What is this for?
 //extern btn_t buttons[];
-extern location cur_out;
+extern location cur_out, mouse_spot;
 
 short num_ir[3] = {12,10,4};
 
@@ -81,6 +81,7 @@ sf::Texture roads_gworld;
 sf::Texture missiles_gworld;
 sf::Texture status_gworld;
 sf::Texture pc_gworld;
+const sf::Color hilite_colour = {0xff, 0x00, 0x80, 0x40};
 extern tessel_ref_t map_pat[];
 
 // begin new stuff
@@ -670,12 +671,6 @@ void draw_terrain(){
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 					tiny_to.offset(0,-7);
 				}
-				if((t_to_draw == 7) || (t_to_draw == 10) || (t_to_draw == 13) || (t_to_draw == 16)) {
-					tiny_from = base_small_button_from;
-					tiny_from.offset(7 * (3),7 * (2));
-					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
-					tiny_to.offset(0,-7);
-				}
 				//if(is_s_d(cen_x + q - 4,cen_y + r - 4)) {
 				//}
 				if(!editing_town) {
@@ -773,6 +768,14 @@ void draw_terrain(){
 							(cen_y + r - 4 == town->creatures[x].start_loc.y) && (town->creatures[x].number != 0)) {
 						}
 					
+				}
+				if(where_draw == mouse_spot) {
+					rectangle destrec;
+					destrec.left = 8 + BITMAP_WIDTH * where_draw.x;
+					destrec.right = destrec.left + BITMAP_WIDTH;
+					destrec.top = 8 + BITMAP_HEIGHT * where_draw.y;
+					destrec.bottom = destrec.top + BITMAP_HEIGHT;
+					fill_rect(ter_draw_gworld, destrec, hilite_colour);
 				}
 			}
 		if(editing_town) {
@@ -991,9 +994,6 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 }
 
 void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size) {
-	
-	location where_draw;
-	// TODO: Update for new 12x12 map graphics, rather than 4x4
 	rectangle dest_rect = {0,0,size,size},from_rect = {0,0,12,12};
 	short picture_wanted;
 	bool drawLargeIcon = false;
@@ -1005,8 +1005,6 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 		picture_wanted = scenario.ter_types[terrain_to_draw].picture;
 	}
 	
-	where_draw.x = (char) i;
-	where_draw.y = (char) j;
 	dest_rect.offset(8 + size * i,8 + size * j);
 	if(drawLargeIcon) {
 		if(picture_wanted >= 1000)	{
@@ -1060,6 +1058,9 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 				rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
 			}
 			break;
+	}
+	if(loc(i,j) == mouse_spot) {
+		fill_rect(ter_draw_gworld, dest_rect, hilite_colour);
 	}
 }
 
