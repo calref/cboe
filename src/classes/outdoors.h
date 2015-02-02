@@ -61,9 +61,8 @@ public:
 	short x,y; // Used while loading legacy scenarios.
 	ter_num_t terrain[48][48];
 	std::vector<spec_loc_t> special_locs;
-	location exit_locs[8];
-	short exit_dests[8];
-	location sign_locs[8];
+	std::array<spec_loc_t,8> exit_locs;
+	std::array<location,8> sign_locs;
 	std::array<cWandering,4> wandering, special_enc;
 	location wandering_locs[4];
 	std::vector<cSpecial> specials;

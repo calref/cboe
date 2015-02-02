@@ -342,7 +342,7 @@ void draw_outd_boats(location center) {
 	rectangle source_rect;
 	short i;
 	
-	for(i = 0; i < 30; i++)
+	for(i = 0; i < univ.party.boats.size(); i++)
 		if((point_onscreen(center, univ.party.boats[i].loc)) && (univ.party.boats[i].exists) &&
 			(univ.party.boats[i].which_town == 200) &&
 			(can_see_light(center, univ.party.boats[i].loc,sight_obscurity) < 5) && (univ.party.in_boat != i)) {
@@ -350,7 +350,7 @@ void draw_outd_boats(location center) {
 			where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
 			Draw_Some_Item(vehicle_gworld, calc_rect(0,0), terrain_screen_gworld, where_draw, 1, 0);
 		}
-	for(i = 0; i < 30; i++)
+	for(i = 0; i < univ.party.horses.size(); i++)
 		if((point_onscreen(center, univ.party.horses[i].loc)) && (univ.party.horses[i].exists) &&
 			(univ.party.horses[i].which_town == 200) &&
 			(can_see_light(center, univ.party.horses[i].loc,sight_obscurity) < 5) && (univ.party.in_horse != i)) {
@@ -365,7 +365,7 @@ void draw_town_boat(location center) {
 	rectangle source_rect;
 	short i;
 	
-	for(i = 0; i < 30; i++)
+	for(i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].which_town == univ.town.num) &&
 			((point_onscreen(center, univ.party.boats[i].loc)) &&
 			 (can_see_light(center, univ.party.boats[i].loc,sight_obscurity) < 5) && (univ.party.in_boat != i)
@@ -374,7 +374,7 @@ void draw_town_boat(location center) {
 				where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
 				Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0);
 			}
-	for(i = 0; i < 30; i++)
+	for(i = 0; i < univ.party.horses.size(); i++)
 		if((univ.party.horses[i].which_town == univ.town.num) &&
 			((point_onscreen(center, univ.party.horses[i].loc)) &&
 			 (can_see_light(center, univ.party.horses[i].loc,sight_obscurity) < 5) && (univ.party.in_horse != i)

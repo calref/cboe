@@ -74,7 +74,7 @@ public:
 	cWandering wandering[4];
 	location wandering_locs[4];
 	std::vector<spec_loc_t> special_locs;
-	location sign_locs[15];
+	std::array<location,15> sign_locs;
 	eLighting lighting_type;
 	location start_locs[4];
 	location exit_locs[4];

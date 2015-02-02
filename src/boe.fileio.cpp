@@ -408,7 +408,7 @@ void add_outdoor_maps() { // This takes the existing outdoor map info and supple
 void fix_boats() {
 	short i;
 	
-	for(i = 0; i < 30; i++)
+	for(i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].exists) && (univ.party.boats[i].which_town == 200)) {
 			if(univ.party.boats[i].sector.x == univ.party.outdoor_corner.x)
 				univ.party.boats[i].loc.x = univ.party.boats[i].loc_in_sec.x;
@@ -421,7 +421,7 @@ void fix_boats() {
 				univ.party.boats[i].loc.y = univ.party.boats[i].loc_in_sec.y + 48;
 			else univ.party.boats[i].loc.y = 500;
 		}
-	for(i = 0; i < 30; i++)
+	for(i = 0; i < univ.party.horses.size(); i++)
 		if((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == 200)) {
 			if(univ.party.horses[i].sector.x == univ.party.outdoor_corner.x)
 				univ.party.horses[i].loc.x = univ.party.horses[i].loc_in_sec.x;

@@ -687,14 +687,14 @@ void draw_terrain(){
 				}
 				
 				if(editing_town) {
-					for(i = 0; i < 30; i++) {
+					for(i = 0; i < scenario.boats.size(); i++) {
 						if((scenario.boats[i].which_town == cur_town) &&
 							(scenario.boats[i].loc.x == cen_x + q - 4) &&
 							(scenario.boats[i].loc.y == cen_y + r - 4))
 							Draw_Some_Item(vehicle_gworld,boat_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 						
 					}
-					for(i = 0; i < 30; i++) {
+					for(i = 0; i < scenario.horses.size(); i++) {
 						source_rect = boat_rect;
 						source_rect.offset(0,36);
 						if((scenario.horses[i].which_town == cur_town) &&

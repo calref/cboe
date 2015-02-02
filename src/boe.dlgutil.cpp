@@ -866,7 +866,7 @@ void handle_talk_event(location p) {
 			}
 			else {
 				for(i = b; i <= b + c; i++)
-					if((i >= 0) && (i < 30) && (univ.party.boats[i].property)) {
+					if((i >= 0) && (i < univ.party.boats.size()) && (univ.party.boats[i].property)) {
 						univ.party.gold -= a;
 						put_pc_screen();
 						univ.party.boats[i].property = false;
@@ -892,7 +892,7 @@ void handle_talk_event(location p) {
 			}
 			else {
 				for(i = b; i <= b + c; i++)
-					if((i >= 0) && (i < 30) && (univ.party.horses[i].property)) {
+					if((i >= 0) && (i < univ.party.horses.size()) && (univ.party.horses[i].property)) {
 						univ.party.gold -= a;
 						put_pc_screen();
 						univ.party.horses[i].property = false;

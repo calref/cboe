@@ -2175,13 +2175,13 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::CHANGE_HORSE_OWNER:
 			check_mess = true;
-			if(spec.ex1a != minmax(0,29,spec.ex1a))
+			if(spec.ex1a != minmax(0,univ.party.horses.size() - 1,spec.ex1a))
 				giveError("Horse out of range.");
 			else univ.party.horses[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case eSpecType::CHANGE_BOAT_OWNER:
 			check_mess = true;
-			if(spec.ex1a != minmax(0,29,spec.ex1a))
+			if(spec.ex1a != minmax(0,univ.party.boats.size() - 1,spec.ex1a))
 				giveError("Boat out of range.");
 			else univ.party.boats[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;

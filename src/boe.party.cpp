@@ -122,17 +122,15 @@ static void init_party_scen_data() {
 	univ.party.loc_in_sec.y = univ.scenario.out_start.y;
 	univ.party.p_loc.x = univ.scenario.out_start.x;
 	univ.party.p_loc.y = univ.scenario.out_start.y;
-	for(i = 0; i < 30; i++)
-		univ.party.boats[i] = univ.scenario.boats[i];
-	for(i = 0; i < 30; i++)
-		univ.party.horses[i] = univ.scenario.horses[i];
-	for(i = 0; i < 30; i++) {
+	for(i = 0; i < univ.scenario.boats.size(); i++) {
 		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
 			if(!univ.party.boats[i].exists) {
 				univ.party.boats[i] = univ.scenario.boats[i];
 				univ.party.boats[i].exists = true;
 			}
 		}
+	}
+	for(i = 0; i < univ.scenario.horses.size(); i++) {
 		if(univ.scenario.horses[i].which_town >= 0 && univ.scenario.horses[i].loc.x >= 0) {
 			if(!univ.party.horses[i].exists) {
 				univ.party.horses[i] = univ.scenario.horses[i];

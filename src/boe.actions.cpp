@@ -456,7 +456,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 			print_buf();
 			need_reprint = false;
 			if(overall_mode == MODE_LOOK_TOWN) {
-				for(int k = 0; k < 15; k++) {
+				for(int k = 0; k < univ.town->sign_locs.size(); k++) {
 					if(destination == univ.town->sign_locs[k]) {
 						need_reprint = true;
 						if(adjacent(univ.town->sign_locs[k],univ.town.p_loc))
@@ -465,7 +465,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 					}
 				}
 			} else if(overall_mode == MODE_LOOK_OUTDOORS) {
-				for(int k = 0; k < 8; k++) {
+				for(int k = 0; k < univ.out->sign_locs.size(); k++) {
 					if(destination == univ.out->sign_locs[k]) {
 						need_reprint = true;
 						if(adjacent(univ.out->sign_locs[k],univ.party.loc_in_sec))
@@ -526,11 +526,11 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 			else if(univ.party.direction < 4) find_direction_from = 3;
 			else find_direction_from = 1;
 			
-			for(int i = 0; i < 8; i++)
+			for(int i = 0; i < univ.out->exit_locs.size(); i++)
 				if(univ.party.loc_in_sec == univ.out->exit_locs[i]) {
-					short which_t = univ.out->exit_dests[i];
+					short which_t = univ.out->exit_locs[i].spec;
 					if(which_t >= 0)
-						start_town_mode(univ.out->exit_dests[i], find_direction_from);
+						start_town_mode(univ.out->exit_locs[i].spec, find_direction_from);
 					if(is_town()) {
 						need_redraw = false;
 						i = 8;

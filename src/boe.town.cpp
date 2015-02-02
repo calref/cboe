@@ -130,10 +130,10 @@ void start_town_mode(short which_town, short entry_dir) {
 			former_town = town_number;
 			town_number += PSD[univ.scenario.flag_to_add_to_town[i][0]][univ.scenario.flag_to_add_to_town[i][1]];
 			// Now update horses & boats
-			for(i = 0; i < 30; i++)
+			for(i = 0; i < univ.party.horses.size(); i++)
 				if((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == former_town))
 					univ.party.horses[i].which_town = town_number;
-			for(i = 0; i < 30; i++)
+			for(i = 0; i < univ.party.boats.size(); i++)
 				if((univ.party.boats[i].exists) && (univ.party.boats[i].which_town == former_town))
 					univ.party.boats[i].which_town = town_number;
 		}
@@ -509,13 +509,15 @@ void start_town_mode(short which_town, short entry_dir) {
 	}
 	
 	// check horses
-	for(i = 0; i < 30; i++) {
+	for(i = 0; i < univ.party.boats.size(); i++) {
 		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
 			if(!univ.party.boats[i].exists) {
 				univ.party.boats[i] = univ.scenario.boats[i];
 				univ.party.boats[i].exists = true;
 			}
 		}
+	}
+	for(i = 0; i < univ.party.horses.size(); i++) {
 		if(univ.scenario.horses[i].which_town >= 0 && univ.scenario.horses[i].loc.x >= 0) {
 			if(!univ.party.horses[i].exists) {
 				univ.party.horses[i] = univ.scenario.horses[i];
@@ -1260,21 +1262,23 @@ void erase_out_specials() {
 		for(short j = 0; j < 2; j++)
 			if(quadrant_legal(i,j)) {
 				cOutdoors& sector = *univ.scenario.outdoors[univ.party.outdoor_corner.x + i][univ.party.outdoor_corner.y + j];
-				for(short k = 0; k < sector.special_locs.size(); k++) {
-					if(k < 8 && sector.exit_dests[k] >= 0 &&
+				for(short k = 0; k < sector.exit_locs.size(); k++) {
+					if(sector.exit_locs[k].spec >= 0 &&
 						univ.scenario.ter_types[sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y]].special == eTerSpec::TOWN_ENTRANCE &&
 					   (sector.exit_locs[k].x == minmax(0,47,sector.exit_locs[k].x)) &&
 					   (sector.exit_locs[k].y == minmax(0,47,sector.exit_locs[k].y))) {
-						if(!univ.party.can_find_town[sector.exit_dests[k]]) {
+						if(!univ.party.can_find_town[sector.exit_locs[k].spec]) {
 							univ.out[48 * i + sector.exit_locs[k].x][48 * j + sector.exit_locs[k].y] =
 								univ.scenario.ter_types[sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y]].flag1;
 						}
-						else if(univ.party.can_find_town[sector.exit_dests[k]]) {
+						else if(univ.party.can_find_town[sector.exit_locs[k].spec]) {
 							univ.out[48 * i + sector.exit_locs[k].x][48 * j + sector.exit_locs[k].y] =
 								sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y];
 							
 						}
 					}
+				}
+				for(int k = 0; k < sector.special_locs.size(); k++) {
 					if(sector.special_locs[k].spec < 0) continue; // TODO: Is this needed? Seems to be important, so why was it commented out?
 					out_num = univ.scenario.outdoors.width() * (univ.party.outdoor_corner.y + j) + univ.party.outdoor_corner.x + i;
 					

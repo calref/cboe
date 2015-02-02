@@ -262,10 +262,10 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::OWN_VEHICLES:
 			display_strings(6,7);
-			for(i = 0; i < 30; i++) {
+			for(i = 0; i < univ.party.boats.size(); i++)
 				univ.party.boats[i].property = false;
+			for(i = 0; i < univ.party.horses.size(); i++)
 				univ.party.horses[i].property = false;
-			}
 			break;
 		case eMenu::EDIT_DAY:
 			edit_day();

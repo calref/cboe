@@ -77,7 +77,7 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 	for(i = 0; i < 8; i++){
 		exit_locs[i].x = old.exit_locs[i].x;
 		exit_locs[i].y = old.exit_locs[i].y;
-		exit_dests[i] = old.exit_dests[i];
+		exit_locs[i].spec = old.exit_dests[i];
 		sign_locs[i].x = old.sign_locs[i].x;
 		sign_locs[i].y = old.sign_locs[i].y;
 		info_rect[i].top = old.info_rect[i].top;

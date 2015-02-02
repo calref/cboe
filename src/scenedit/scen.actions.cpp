@@ -754,7 +754,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				break;
 			case MODE_EDIT_SIGN: //edit sign
 				if(editing_town) {
-					for(x = 0; x < 15; x++)
+					for(x = 0; x < town->sign_locs.size(); x++)
 						if((town->sign_locs[x].x == spot_hit.x) && (town->sign_locs[x].y == spot_hit.y)) {
 							edit_sign(x,scenario.ter_types[town->terrain(spot_hit.x,spot_hit.y)].picture);
 							x = 30;
@@ -764,7 +764,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					}
 				}
 				if(!editing_town) {
-					for(x = 0; x < 8; x++)
+					for(x = 0; x < current_terrain->sign_locs.size(); x++)
 						if((current_terrain->sign_locs[x].x == spot_hit.x) && (current_terrain->sign_locs[x].y == spot_hit.y)) {
 							edit_sign(x,scenario.ter_types[current_terrain->terrain[spot_hit.x][spot_hit.y]].picture);
 							x = 30;
@@ -1854,12 +1854,12 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	l.y--;
 	
 	if(scenario.ter_types[terrain_type].special == eTerSpec::IS_A_SIGN && editing_town) {
-		for(i = 0; i < 15; i++)
+		for(i = 0; i < town->sign_locs.size(); i++)
 			if(which_sign < 0) {
 				if((town->sign_locs[i].x == l.x) && (town->sign_locs[i].y == l.y))
 					which_sign = i;
 			}
-		for(i = 0; i < 15; i++)
+		for(i = 0; i < town->sign_locs.size(); i++)
 			if(which_sign < 0) {
 				if(town->sign_locs[i].x == 100)
 					which_sign = i;
@@ -1889,12 +1889,12 @@ void set_terrain(location l,ter_num_t terrain_type) {
 			mouse_button_held = false;
 			return;
 		}
-		for(i = 0; i < 8; i++)
+		for(i = 0; i < current_terrain->sign_locs.size(); i++)
 			if(which_sign < 0) {
 				if((current_terrain->sign_locs[i].x == l.x) && (current_terrain->sign_locs[i].y == l.y))
 					which_sign = i;
 			}
-		for(i = 0; i < 8; i++)
+		for(i = 0; i < current_terrain->sign_locs.size(); i++)
 			if(which_sign < 0) {
 				if(current_terrain->sign_locs[i].x == 100)
 					which_sign = i;
@@ -2928,25 +2928,25 @@ void town_entry(location spot_hit) {
 		giveError("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.");
 		return;
 	}
-	// clean up old town entrys
-	for(x = 0; x < 8; x++)
-		if(current_terrain->exit_locs[x].x < 100) {
+	// clean up old town entries
+	for(x = 0; x < current_terrain->exit_locs.size(); x++)
+		if(current_terrain->exit_locs[x].spec >= 0) {
 			ter = current_terrain->terrain[current_terrain->exit_locs[x].x][current_terrain->exit_locs[x].y];
 			if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE)
-				current_terrain->exit_locs[x].x = 100;
+				current_terrain->exit_locs[x].spec = -1;
 		}
 	y = -2;
-	for(x = 0; x < 8; x++)
-		if((current_terrain->exit_locs[x].x == spot_hit.x) && (current_terrain->exit_locs[x].y == spot_hit.y)) {
-			y = pick_town_num("select-town-enter",current_terrain->exit_dests[x],scenario);
-			if(y >= 0) current_terrain->exit_dests[x] = y;
+	for(x = 0; x < current_terrain->exit_locs.size(); x++)
+		if(current_terrain->exit_locs[x] == spot_hit) {
+			y = pick_town_num("select-town-enter",current_terrain->exit_locs[x].spec,scenario);
+			if(y >= 0) current_terrain->exit_locs[x].spec = y;
 		}
 	if(y == -2) {
-		for(x = 0; x < 8; x++)
-			if(current_terrain->exit_locs[x].x == 100) {
+		for(x = 0; x < current_terrain->exit_locs.size(); x++)
+			if(current_terrain->exit_locs[x].spec < 0) {
 				y = pick_town_num("select-town-enter",0,scenario);
 				if(y >= 0) {
-					current_terrain->exit_dests[x] = y;
+					current_terrain->exit_locs[x].spec = y;
 					current_terrain->exit_locs[x] = spot_hit;
 				}
 				x = 500;
