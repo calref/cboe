@@ -157,6 +157,7 @@ void Handle_One_Event() {
 		case sf::Event::MouseMoved:
 			if(mouse_button_held)
 				handle_action(loc(event.mouseMove.x,event.mouseMove.y),event);
+			update_mouse_spot(loc(event.mouseMove.x,event.mouseMove.y));
 			break;
 			
 		case sf::Event::MouseButtonReleased:

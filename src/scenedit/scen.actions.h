@@ -52,6 +52,7 @@ void start_special_editing(short mode,short just_redo_text);
 void town_entry(location spot_hit);
 void start_dialogue_editing(short restoring);
 bool is_erasable_water(short i,short j);
+void update_mouse_spot(location the_point);
 
 bool monst_on_space(location loc,short m_num);
 void place_edit_special(location loc);
