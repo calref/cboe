@@ -457,7 +457,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 		if(cur_viewing_mode == 0) {
 			spot_hit.x = cen_x + mouse_spot.x - 4;
 			spot_hit.y = cen_y + mouse_spot.y - 4;
-			if((i < 0) || (i > 8) || (j < 0) || (j > 8))
+			if((mouse_spot.x < 0) || (mouse_spot.x > 8) || (mouse_spot.y < 0) || (mouse_spot.y > 8))
 				spot_hit.x = -1;
 		}
 		else {
