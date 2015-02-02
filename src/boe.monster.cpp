@@ -810,19 +810,19 @@ void monst_inflict_fields(short which_monst) {
 				// TODO: If the goal is to damage the monster by any fields it's on, why all the break statements?
 				if(univ.town.is_quickfire(where_check.x,where_check.y)) {
 					r1 = get_ran(2,1,8);
-					damage_monst(which_monst,7,r1,eDamageType::FIRE,0);
+					damage_monst(*which_m,7,r1,eDamageType::FIRE,0);
 					break;
 				}
 				if(univ.town.is_blade_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(6,1,8);
 					if(have_radiate && which_radiate != eFieldType::WALL_BLADES)
-						damage_monst(which_monst,7,r1,eDamageType::WEAPON,0);
+						damage_monst(*which_m,7,r1,eDamageType::WEAPON,0);
 					break;
 				}
 				if(univ.town.is_force_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(3,1,6);
 					if(have_radiate && which_radiate != eFieldType::WALL_FORCE)
-						damage_monst(which_monst,7,r1,eDamageType::MAGIC,0);
+						damage_monst(*which_m,7,r1,eDamageType::MAGIC,0);
 					break;
 				}
 				if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
@@ -833,7 +833,7 @@ void monst_inflict_fields(short which_monst) {
 				if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(3,1,6);
 					if(have_radiate && which_radiate != eFieldType::WALL_ICE)
-						damage_monst(which_monst,7,r1,eDamageType::COLD,0);
+						damage_monst(*which_m,7,r1,eDamageType::COLD,0);
 					break;
 				}
 				if(univ.town.is_scloud(where_check.x,where_check.y)) {
@@ -852,7 +852,7 @@ void monst_inflict_fields(short which_monst) {
 				if(univ.town.is_fire_wall(where_check.x,where_check.y)) {
 					r1 = get_ran(2,1,6);
 					if(have_radiate && which_radiate != eFieldType::WALL_FIRE)
-						damage_monst(which_monst,7,r1,eDamageType::FIRE,0);
+						damage_monst(*which_m,7,r1,eDamageType::FIRE,0);
 					break;
 				}
 				if(univ.town.is_force_cage(where_check.x,where_check.y))
@@ -874,7 +874,7 @@ void monst_inflict_fields(short which_monst) {
 				univ.town.set_barrel(where_check.x,where_check.y,false);
 				if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 					r1 = get_ran(2,1,10);
-					damage_monst(which_monst,7,r1,eDamageType::FIRE,0);
+					damage_monst(*which_m,7,r1,eDamageType::FIRE,0);
 				}
 			}
 	

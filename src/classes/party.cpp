@@ -382,11 +382,6 @@ void cParty::restore_sp(int how_much) {
 		adven[i]->restore_sp(how_much);
 }
 
-void cParty::petrify(int adj) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->petrify(adj);
-}
-
 location cParty::get_loc() const {
 	if(univ.town.num == 200)
 		return p_loc;

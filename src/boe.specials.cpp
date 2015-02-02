@@ -351,7 +351,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				hit_party(r1,dam_type);
 			fast_bang = 1;
 			if(mode == eSpecCtx::COMBAT_MOVE)
-				damage_pc(univ.get_target_i(which_pc),r1,dam_type,eRace::UNKNOWN,0);
+				damage_pc(which_pc,r1,dam_type,eRace::UNKNOWN,0);
 			else
 				boom_space(univ.party.p_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
@@ -484,7 +484,6 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 // All this does is print a message
 void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 	short r1,i;
-	size_t i_pc = univ.get_target_i(which_pc);
 	
 	if(mode != eSpecCtx::COMBAT_MOVE && mode != eSpecCtx::TOWN_MOVE && mode != eSpecCtx::OUT_MOVE) {
 		std::cout << "Note: Improper mode passed to check_special_terrain: " << int(mode) << std::endl;
@@ -496,19 +495,19 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 		add_string_to_buf("  Fire wall!");
 		r1 = get_ran(1,1,6) + 1;
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(i_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 	}
 	if(univ.town.is_force_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Force wall!");
 		r1 = get_ran(2,1,6);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(i_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 	}
 	if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Ice wall!");
 		r1 = get_ran(2,1,6);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(i_pc,r1,eDamageType::COLD,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::COLD,eRace::UNKNOWN,0);
 		if(overall_mode < MODE_COMBAT)
 			boom_space(univ.party.p_loc,overall_mode,4,r1,7);
 	}
@@ -516,28 +515,28 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 		add_string_to_buf("  Blade wall!");
 		r1 = get_ran(4,1,8);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(i_pc,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 	}
 	if(univ.town.is_quickfire(where_check.x,where_check.y)) {
 		add_string_to_buf("  Quickfire!");
 		r1 = get_ran(2,1,8);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(i_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
 	}
 	if(univ.town.is_scloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Stinking cloud!");
-		univ.party[current_pc].curse(get_ran(1,2,3));
+		which_pc.curse(get_ran(1,2,3));
 	}
 	if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Sleep cloud!");
-		univ.party[current_pc].sleep(eStatus::ASLEEP,3,0);
+		which_pc.sleep(eStatus::ASLEEP,3,0);
 	}
 	if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		add_string_to_buf("  Magic barrier!");
 		r1 = get_ran(2,1,10);
 		if(is_town()) fast_bang = 1;
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(i_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 		else hit_party(r1,eDamageType::MAGIC,0);
 		fast_bang = 0;
 	}
@@ -903,7 +902,7 @@ void use_item(short pc,short item) {
 					case eItemUse::HARM_ONE:
 						ASB("  You feel terrible.");
 						drain_pc(pc,str * 5);
-						damage_pc(pc,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
+						damage_pc(univ.party[pc],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
 						univ.party[pc].disease(2 * str);
 						univ.party[pc].dumbfound(2 * str);
 						break;
@@ -916,7 +915,7 @@ void use_item(short pc,short item) {
 						ASB("  You all feel terrible.");
 						for(i = 0; i < 6; i++) {
 							drain_pc(i,str * 5);
-							damage_pc(i,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
+							damage_pc(univ.party[i],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
 							univ.party[i].disease(2 * str);
 							univ.party[i].dumbfound(2 * str);
 						}
@@ -978,7 +977,7 @@ void use_item(short pc,short item) {
 						break;
 					case eItemUse::HARM_ONE:
 						ASB("  You feel sick.");
-						damage_pc(pc,20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
+						damage_pc(univ.party[pc],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
 						break;
 					case eItemUse::HELP_ALL:
 						ASB("  You all feel better.");
@@ -1072,7 +1071,7 @@ void use_item(short pc,short item) {
 						break;
 					case eItemUse::HARM_ONE:
 						ASB("  You feel terrible.");
-						damage_pc(pc, str*25, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
+						damage_pc(univ.party[pc], str*25, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
 						univ.party[pc].poison(str);
 						break;
 					case eItemUse::HELP_ALL:
@@ -1404,14 +1403,13 @@ void change_level(short town_num,short x,short y) {
 
 
 // Damaging and killing monsters needs to be here because several have specials attached to them.
-bool damage_monst(short which_m, short who_hit, short how_much, eDamageType dam_type, short sound_type, bool do_print) {
-	cCreature *victim;
+bool damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType dam_type, short sound_type, bool do_print) {
 	short r1,which_spot;
 	location where_put;
 	
 	//print_num(which_m,(short)univ.town.monst[which_m].m_loc.x,(short)univ.town.monst[which_m].m_loc.y);
 	
-	if(univ.town.monst[which_m].active == 0) return false;
+	if(victim.active == 0) return false;
 	
 	if(sound_type == 0) {
 		if(dam_type == eDamageType::FIRE || dam_type == eDamageType::UNBLOCKABLE)
@@ -1424,59 +1422,57 @@ bool damage_monst(short which_m, short who_hit, short how_much, eDamageType dam_
 			sound_type = 11;
 	}
 	
-	victim = &univ.town.monst[which_m];
-	
 	if(dam_type == eDamageType::MAGIC) {
-		how_much *= victim->magic_res;
+		how_much *= victim.magic_res;
 		how_much /= 100;
 	}
 	if(dam_type == eDamageType::FIRE) {
-		how_much *= victim->fire_res;
+		how_much *= victim.fire_res;
 		how_much /= 100;
 	}
 	if(dam_type == eDamageType::COLD) {
-		how_much *= victim->cold_res;
+		how_much *= victim.cold_res;
 		how_much /= 100;
 	}
 	if(dam_type == eDamageType::POISON) {
-		how_much *= victim->poison_res;
+		how_much *= victim.poison_res;
 		how_much /= 100;
 	}
 	
 	// Absorb damage?
 	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::MAGIC || dam_type == eDamageType::COLD)
-		&& victim->abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= victim->abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
-		if(32767 - victim->health > how_much)
-			victim->health = 32767;
-		else victim->health += how_much;
+		&& victim.abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= victim.abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
+		if(32767 - victim.health > how_much)
+			victim.health = 32767;
+		else victim.health += how_much;
 		ASB("  Magic absorbed.");
 		return false;
 	}
 	
 	// Saving throw
-	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::COLD) && get_ran(1,0,20) <= victim->level)
+	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::COLD) && get_ran(1,0,20) <= victim.level)
 		how_much /= 2;
-	if(dam_type == eDamageType::MAGIC && (get_ran(1,0,24) <= victim->level))
+	if(dam_type == eDamageType::MAGIC && (get_ran(1,0,24) <= victim.level))
 		how_much /= 2;
 	
 	// Invulnerable?
-	if(dam_type != eDamageType::SPECIAL && victim->invuln)
+	if(dam_type != eDamageType::SPECIAL && victim.invuln)
 		how_much = how_much / 10;
-	if(dam_type != eDamageType::SPECIAL && victim->status[eStatus::INVULNERABLE] > 0)
+	if(dam_type != eDamageType::SPECIAL && victim.status[eStatus::INVULNERABLE] > 0)
 		how_much /= 10;
 	
 	// Mag. res helps w. fire and cold
 	// TODO: Why doesn't this help with magic damage!?
 	if(dam_type == eDamageType::FIRE || dam_type == eDamageType::COLD) {
-		int magic_res = victim->status[eStatus::MAGIC_RESISTANCE];
+		int magic_res = victim.status[eStatus::MAGIC_RESISTANCE];
 		if(magic_res > 0)
 			how_much /= 2;
 		else if(magic_res < 0)
 			how_much *= 2;
 	}
 	
-	r1 = get_ran(1,0,(victim->armor * 5) / 4);
-	r1 += victim->level / 4;
+	r1 = get_ran(1,0,(victim.armor * 5) / 4);
+	r1 += victim.level / 4;
 	if(dam_type == eDamageType::WEAPON)
 		how_much -= r1;
 	
@@ -1489,8 +1485,8 @@ bool damage_monst(short which_m, short who_hit, short how_much, eDamageType dam_
 			boom_type = 0;
 		else if(dam_type == eDamageType::MAGIC)
 			boom_type = 3;
-		univ.town.monst[which_m].marked_damage += how_much;
-		add_explosion(victim->cur_loc,how_much,0,boom_type,14 * (victim->x_width - 1),18 * (victim->y_width - 1));
+		victim.marked_damage += how_much;
+		add_explosion(victim.cur_loc,how_much,0,boom_type,14 * (victim.x_width - 1),18 * (victim.y_width - 1));
 		// Note: Windows version printed an "undamaged" message here if applicable, but I don't think that's right.
 		if(how_much == 0)
 			return false;
@@ -1499,7 +1495,7 @@ bool damage_monst(short which_m, short who_hit, short how_much, eDamageType dam_
 	
 	if(how_much <= 0) {
 		if(is_combat())
-			victim->spell_note(7);
+			victim.spell_note(7);
 		if(how_much <= 0 && (dam_type == eDamageType::WEAPON || dam_type == eDamageType::UNDEAD || dam_type == eDamageType::DEMON)) {
 			draw_terrain(2);
 			play_sound(2);
@@ -1510,88 +1506,88 @@ bool damage_monst(short which_m, short who_hit, short how_much, eDamageType dam_
 	}
 	
 	if(do_print)
-		victim->damaged_msg(how_much,0);
-	victim->health = victim->health - how_much;
+		victim.damaged_msg(how_much,0);
+	victim.health = victim.health - how_much;
 	
 	if(in_scen_debug)
-		victim->health = -1;
+		victim.health = -1;
 	
 	// splitting monsters
-	if(victim->abil[eMonstAbil::SPLITS].active && victim->health > 0 && get_ran(1,1,1000) < victim->abil[eMonstAbil::SPLITS].special.extra1){
-		where_put = find_clear_spot(victim->cur_loc,1);
+	if(victim.abil[eMonstAbil::SPLITS].active && victim.health > 0 && get_ran(1,1,1000) < victim.abil[eMonstAbil::SPLITS].special.extra1){
+		where_put = find_clear_spot(victim.cur_loc,1);
 		if(where_put.x > 0)
-			if((which_spot = place_monster(victim->number,where_put)) < 90) {
-				static_cast<cTownperson&>(univ.town.monst[which_spot]) = *victim;
-				univ.town.monst[which_spot].health = victim->health;
-				victim->spell_note(27);
+			if((which_spot = place_monster(victim.number,where_put)) < 90) {
+				static_cast<cTownperson&>(univ.town.monst[which_spot]) = victim;
+				univ.town.monst[which_spot].health = victim.health;
+				victim.spell_note(27);
 			}
 	}
 	if(who_hit < 7)
 		univ.party.total_dam_done += how_much;
 	
 	// Monster damages. Make it hostile.
-	victim->active = 2;
+	victim.active = 2;
 	
 	if(dam_type != eDamageType::MARKED) {
-		if(party_can_see_monst(which_m)) {
-			boom_space(victim->cur_loc,100,boom_gr[dam_type],how_much,sound_type);
+		if(party_can_see_monst(univ.get_target_i(victim) - 100)) {
+			boom_space(victim.cur_loc,100,boom_gr[dam_type],how_much,sound_type);
 		}
 		else {
-			boom_space(victim->cur_loc,overall_mode, boom_gr[dam_type],how_much,sound_type);
+			boom_space(victim.cur_loc,overall_mode, boom_gr[dam_type],how_much,sound_type);
 		}
 	}
 	
-	if(victim->health < 0) {
-		victim->killed_msg();
+	if(victim.health < 0) {
+		victim.killed_msg();
 		kill_monst(victim,who_hit);
 	}
 	else {
 		if(how_much > 0)
-			victim->morale = victim->morale - 1;
+			victim.morale = victim.morale - 1;
 		if(how_much > 5)
-			victim->morale = victim->morale - 1;
+			victim.morale = victim.morale - 1;
 		if(how_much > 10)
-			victim->morale = victim->morale - 1;
+			victim.morale = victim.morale - 1;
 		if(how_much > 20)
-			victim->morale = victim->morale - 2;
+			victim.morale = victim.morale - 2;
 	}
 	
-	if((victim->attitude % 2 != 1) && (who_hit < 7) &&
+	if((victim.attitude % 2 != 1) && (who_hit < 7) &&
 		((processing_fields && !monsters_going) || (processing_fields && !PSD[SDF_HOSTILES_PRESENT]))) {
 		add_string_to_buf("Damaged an innocent.");
-		victim->attitude = 1;
+		victim.attitude = 1;
 		make_town_hostile();
 	}
 	
 	return true;
 }
 
-void cCreature::petrify(int strength) {
-	spell_note(9);
+void petrify_monst(cCreature& which_m,int strength) {
+	which_m.spell_note(9);
 	short r1 = get_ran(1,0,20);
-	r1 += level / 4;
-	r1 += status[eStatus::BLESS_CURSE];
+	r1 += which_m.level / 4;
+	r1 += which_m.status[eStatus::BLESS_CURSE];
 	r1 -= strength;
 	
 	// TODO: This should probably do something similar to charm_monst with the magic resistance
-	if(r1 > 14 || magic_res == 0)
-		spell_note(10);
+	if(r1 > 14 || which_m.magic_res == 0)
+		which_m.spell_note(10);
 	else {
-		spell_note(8);
-		kill_monst(this,7);
+		which_m.spell_note(8);
+		kill_monst(which_m,7,eMainStatus::STONE);
 	}
 }
 
-void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
+void kill_monst(cCreature& which_m,short who_killed,eMainStatus type) {
 	short xp,i,j,s1,s2,s3;
 	location l;
 	
-	if(isHumanoid(which_m->m_type)) {
-		if(which_m->m_type == eRace::GOBLIN)
+	if(isHumanoid(which_m.m_type)) {
+		if(which_m.m_type == eRace::GOBLIN)
 			i = 4;
 		else i = get_ran(1,0,1);
 		play_sound(29 + i);
-	} else switch(which_m->m_type) {
+	} else switch(which_m.m_type) {
 		case eRace::GIANT: play_sound(29); break;
 			// TODO: Should birds be considered beasts? If there are any birds in the bladbase, probably; otherwise, better to have new sound
 		case eRace::REPTILE: case eRace::BEAST: case eRace::DEMON: case eRace::UNDEAD: case eRace::SKELETAL: case eRace::STONE:
@@ -1601,16 +1597,16 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 	}
 	
 	// Special killing effects
-	if(univ.party.sd_legit(which_m->spec1,which_m->spec2))
-		PSD[which_m->spec1][which_m->spec2] = 1;
+	if(univ.party.sd_legit(which_m.spec1,which_m.spec2))
+		PSD[which_m.spec1][which_m.spec2] = 1;
 	
-	if(which_m->special_on_kill >= 0)
-		run_special(eSpecCtx::KILL_MONST,2,which_m->special_on_kill,which_m->cur_loc,&s1,&s2,&s3);
-	if(which_m->abil[eMonstAbil::DEATH_TRIGGER].active)
-		run_special(eSpecCtx::KILL_MONST,0,which_m->abil[eMonstAbil::DEATH_TRIGGER].special.extra1,which_m->cur_loc,&s1,&s2,&s3);
+	if(which_m.special_on_kill >= 0)
+		run_special(eSpecCtx::KILL_MONST,2,which_m.special_on_kill,which_m.cur_loc,&s1,&s2,&s3);
+	if(which_m.abil[eMonstAbil::DEATH_TRIGGER].active)
+		run_special(eSpecCtx::KILL_MONST,0,which_m.abil[eMonstAbil::DEATH_TRIGGER].special.extra1,which_m.cur_loc,&s1,&s2,&s3);
 	
-	if(!in_scen_debug && (which_m->summon_time == 0 || !which_m->party_summoned)) { // no xp for party-summoned monsters
-		xp = which_m->level * 2;
+	if(!in_scen_debug && (which_m.summon_time == 0 || !which_m.party_summoned)) { // no xp for party-summoned monsters
+		xp = which_m.level * 2;
 		if(who_killed < 6)
 			award_xp(who_killed,xp);
 		else if(who_killed == 6)
@@ -1620,19 +1616,19 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 			i = max((xp / 6),1);
 			award_party_xp(i);
 		}
-		l = which_m->cur_loc;
-		place_glands(l,which_m->number);
+		l = which_m.cur_loc;
+		place_glands(l,which_m.number);
 		
 	}
-	if(!in_scen_debug && which_m->summon_time == 0)
-		place_treasure(which_m->cur_loc, which_m->level / 2, which_m->treasure, 0);
+	if(!in_scen_debug && which_m.summon_time == 0)
+		place_treasure(which_m.cur_loc, which_m.level / 2, which_m.treasure, 0);
 	
-	i = which_m->cur_loc.x;
-	j = which_m->cur_loc.y;
+	i = which_m.cur_loc.x;
+	j = which_m.cur_loc.y;
 	if(type == eMainStatus::DUST)
 		univ.town.set_ash(i,j,true);
 	else if(type == eMainStatus::ABSENT || type == eMainStatus::STONE);
-	else switch(which_m->m_type) {
+	else switch(which_m.m_type) {
 		case eRace::DEMON:
 			univ.town.set_ash(i,j,true);
 			break;
@@ -1652,13 +1648,13 @@ void kill_monst(cCreature *which_m,short who_killed,eMainStatus type) {
 			break;
 	}
 	
-	if((is_town() || which_combat_type == 1) && which_m->summon_time == 0) {
+	if((is_town() || which_combat_type == 1) && which_m.summon_time == 0) {
 		univ.party.m_killed[univ.town.num]++;
 	}
 	
-	which_m->spec1 = 0; // make sure, if this is a spec. activated monster, it won't come back
+	which_m.spec1 = 0; // make sure, if this is a spec. activated monster, it won't come back
 	
-	which_m->active = 0;
+	which_m.active = 0;
 }
 
 // Pushes party and monsters around by moving walls and conveyor belts.
@@ -1775,7 +1771,7 @@ void push_things() {
 					}
 					if(univ.town.is_block(univ.town.p_loc.x,univ.town.p_loc.y)) {
 						ASB("You crash into the block.");
-						damage_pc(i,get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN,0);
+						damage_pc(univ.party[i],get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN,0);
 					}
 					for(k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
@@ -2761,8 +2757,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			eDamageType dam_type = (eDamageType) spec.ex2b;
 			int snd_type = spec.ex2c < 0 ? 0 : -spec.ex2c;
 			if(pc_num == 6) hit_party(r1, dam_type, snd_type);
-			else if(pc_num >= 100) damage_monst(pc_num - 100, 7, r1, dam_type, snd_type);
-			else damage_pc(pc_num,r1,dam_type,eRace::UNKNOWN, snd_type);
+			else damage_target(pc_num, r1, dam_type, snd_type);
 			break;
 		}
 		case eSpecType::AFFECT_HP:
@@ -2817,15 +2812,15 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						else switch(spec.ex1a){
 								// When passed to kill_pc, the SPLIT party status actually means "no saving throw".
 							case 0:
-								kill_pc(i,spec.ex1c > 0 ? eMainStatus::DEAD : eMainStatus::SPLIT_DEAD);
+								kill_pc(univ.party[i],spec.ex1c > 0 ? eMainStatus::DEAD : eMainStatus::SPLIT_DEAD);
 								break;
 							case 1:
-								kill_pc(i,spec.ex1c > 0 ? eMainStatus::DUST : eMainStatus::SPLIT_DUST);
+								kill_pc(univ.party[i],spec.ex1c > 0 ? eMainStatus::DUST : eMainStatus::SPLIT_DUST);
 								break;
 							case 2:
 								if(spec.ex1c > 0)
-									univ.party[i].petrify(spec.ex1c);
-								else kill_pc(i,eMainStatus::SPLIT_STONE);
+									petrify_pc(univ.party[i],spec.ex1c);
+								else kill_pc(univ.party[i],eMainStatus::SPLIT_STONE);
 								break;
 							case 3:
 								if(!is_combat() || which_combat_type != 0)
@@ -2838,7 +2833,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 									univ.party[i].main_status += eMainStatus::SPLIT;
 								break;
 							case 5:
-								kill_pc(i,spec.ex1c > 0 ? eMainStatus::ABSENT : eMainStatus::SPLIT_ABSENT);
+								kill_pc(univ.party[i],spec.ex1c > 0 ? eMainStatus::ABSENT : eMainStatus::SPLIT_ABSENT);
 								break;
 						}
 					}
@@ -2850,18 +2845,18 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					switch(spec.ex1a) {
 						case 0:
 							who.spell_note(46);
-							kill_monst(&who,7,eMainStatus::DEAD);
+							kill_monst(who,7,eMainStatus::DEAD);
 							break;
 						case 1:
 							who.spell_note(51);
-							kill_monst(&who,7,eMainStatus::DUST);
+							kill_monst(who,7,eMainStatus::DUST);
 							break;
 						case 2:
 							if(spec.ex1c > 0)
-								who.petrify(spec.ex1c);
+								petrify_monst(who,spec.ex1c);
 							else {
 								who.spell_note(8);
-								kill_monst(&who,7,eMainStatus::STONE);
+								kill_monst(who,7,eMainStatus::STONE);
 							}
 							break;
 						case 5:

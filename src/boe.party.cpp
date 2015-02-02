@@ -1476,7 +1476,7 @@ void do_mindduel(short pc_num,cCreature *monst) {
 					sout.str("");
 					sout << "  " << univ.party[pc_num].name << " is killed!";
 					add_string_to_buf(sout.str());
-					kill_pc(pc_num,eMainStatus::DEAD);
+					kill_pc(univ.party[pc_num],eMainStatus::DEAD);
 				}
 				
 			}
@@ -1493,7 +1493,7 @@ void do_mindduel(short pc_num,cCreature *monst) {
 				monst->status[eStatus::DUMB] += 2;
 				monst->spell_note(22);
 				if(monst->status[eStatus::DUMB] > 7) {
-					kill_monst(monst,pc_num);
+					kill_monst(*monst,pc_num);
 				}
 				
 			}
@@ -2321,7 +2321,7 @@ void hit_party(short how_much,eDamageType damage_type,short snd_type) {
 	
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			dummy = damage_pc(i,how_much,damage_type,eRace::UNKNOWN,snd_type);
+			dummy = damage_pc(univ.party[i],how_much,damage_type,eRace::UNKNOWN,snd_type);
 	put_pc_screen();
 }
 
@@ -2335,10 +2335,10 @@ void slay_party(eMainStatus mode) {
 	put_pc_screen();
 }
 
-bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print) {
+bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print) {
 	short i, r1,level;
 	
-	if(univ.party[which_pc].main_status != eMainStatus::ALIVE)
+	if(which_pc.main_status != eMainStatus::ALIVE)
 		return false;
 	
 	// TODO: I think there should be a way to force sound_type = 0 for UNBLOCKABLE
@@ -2355,37 +2355,37 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	
 	// armor
 	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
-		how_much -= minmax(-5,5,univ.party[which_pc].status[eStatus::BLESS_CURSE]);
+		how_much -= minmax(-5,5,which_pc.status[eStatus::BLESS_CURSE]);
 		for(i = 0; i < 24; i++) {
-			if((univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) && (univ.party[which_pc].equip[i])) {
-				if(isArmourType(univ.party[which_pc].items[i].variety)) {
-					r1 = get_ran(1,1,univ.party[which_pc].items[i].item_level);
+			if((which_pc.items[i].variety != eItemType::NO_ITEM) && (which_pc.equip[i])) {
+				if(isArmourType(which_pc.items[i].variety)) {
+					r1 = get_ran(1,1,which_pc.items[i].item_level);
 					how_much -= r1;
 					
 					// bonus for magical items
-					if(univ.party[which_pc].items[i].bonus > 0) {
-						r1 = get_ran(1,1,univ.party[which_pc].items[i].bonus);
+					if(which_pc.items[i].bonus > 0) {
+						r1 = get_ran(1,1,which_pc.items[i].bonus);
 						how_much -= r1;
-						how_much -= univ.party[which_pc].items[i].bonus / 2;
+						how_much -= which_pc.items[i].bonus / 2;
 					}
-					if(univ.party[which_pc].items[i].bonus < 0) {
-						how_much = how_much - univ.party[which_pc].items[i].bonus;
+					if(which_pc.items[i].bonus < 0) {
+						how_much = how_much - which_pc.items[i].bonus;
 					}
 					r1 = get_ran(1,1,100);
-					if(r1 < hit_chance[univ.party[which_pc].skill(eSkill::DEFENSE)] - 20)
+					if(r1 < hit_chance[which_pc.skill(eSkill::DEFENSE)] - 20)
 						how_much -= 1;
 				}
-				if(univ.party[which_pc].items[i].protection > 0) {
-					r1 = get_ran(1,1,univ.party[which_pc].items[i].protection);
+				if(which_pc.items[i].protection > 0) {
+					r1 = get_ran(1,1,which_pc.items[i].protection);
 					how_much -= r1;
 				}
-				if(univ.party[which_pc].items[i].protection < 0) {
-					r1 = get_ran(1,1,-1 * univ.party[which_pc].items[i].protection);
+				if(which_pc.items[i].protection < 0) {
+					r1 = get_ran(1,1,-1 * which_pc.items[i].protection);
 					how_much += r1;
 				}
 			}
-			if(univ.party[which_pc].items[i].ability == eItemAbil::MELEE_PROTECTION) {
-				r1 = get_ran(1,1,univ.party[which_pc].items[i].abil_data[0]);
+			if(which_pc.items[i].ability == eItemAbil::MELEE_PROTECTION) {
+				r1 = get_ran(1,1,which_pc.items[i].abil_data[0]);
 				if(damage_type == eDamageType::DEMON)
 					how_much -= max(1,r1 / 5);
 				else if(damage_type == eDamageType::UNDEAD)
@@ -2397,48 +2397,48 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	
 	// parry
 	// TODO: Used to also apply this to fire damage; is that correct?
-	if(damage_type == eDamageType::WEAPON && univ.party[which_pc].parry < 100)
-		how_much -= univ.party[which_pc].parry / 4;
+	if(damage_type == eDamageType::WEAPON && which_pc.parry < 100)
+		how_much -= which_pc.parry / 4;
 	
 	
 	if(damage_type != eDamageType::MARKED) {
 		if(PSD[SDF_EASY_MODE] > 0)
 			how_much -= 3;
 		// toughness
-		if(univ.party[which_pc].traits[eTrait::TOUGHNESS])
+		if(which_pc.traits[eTrait::TOUGHNESS])
 			how_much--;
 		// luck
-		if(get_ran(1,1,100) < 2 * (hit_chance[univ.party[which_pc].skill(eSkill::LUCK)] - 20))
+		if(get_ran(1,1,100) < 2 * (hit_chance[which_pc.skill(eSkill::LUCK)] - 20))
 			how_much -= 1;
 	}
 	
-	if((level = univ.party[which_pc].get_prot_level(eItemAbil::DAMAGE_PROTECTION,int(damage_type))) > 0) {
+	if((level = which_pc.get_prot_level(eItemAbil::DAMAGE_PROTECTION,int(damage_type))) > 0) {
 		if(damage_type == eDamageType::WEAPON) how_much -= level;
 		else how_much = how_much / 2;
 	}
 	// TODO: Do these perhaps depend on the ability strength less than they should?
-	if((level = univ.party[which_pc].get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(type_of_attacker))) > 0)
+	if((level = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(type_of_attacker))) > 0)
 		how_much = how_much / 2;
 	if(isHumanoid(type_of_attacker) && !isHuman(type_of_attacker) && type_of_attacker != eRace::HUMANOID) {
 		// If it's a slith, nephil, vahnatai, or goblin, Protection from Humanoids also helps
 		// Humanoid is explicitly excluded here because otherwise it would help twice.
-		if((level = univ.party[which_pc].get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::HUMANOID))) > 0)
+		if((level = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::HUMANOID))) > 0)
 			how_much = how_much / 2;
 	}
 	if(type_of_attacker == eRace::SKELETAL) {
 		// Protection from Undead helps with both types of undead
-		if((level = univ.party[which_pc].get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::UNDEAD))) > 0)
+		if((level = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::UNDEAD))) > 0)
 			how_much = how_much / 2;
 	}
 	
 	// invuln
-	if(damage_type != eDamageType::SPECIAL && univ.party[which_pc].status[eStatus::INVULNERABLE] > 0)
+	if(damage_type != eDamageType::SPECIAL && which_pc.status[eStatus::INVULNERABLE] > 0)
 		how_much = 0;
 	
 	// Mag. res helps w. fire and cold
 	// TODO: Why doesn't this help with magic damage!?
 	if(damage_type == eDamageType::FIRE || damage_type == eDamageType::COLD) {
-		int magic_res = univ.party[which_pc].status[eStatus::MAGIC_RESISTANCE];
+		int magic_res = which_pc.status[eStatus::MAGIC_RESISTANCE];
 		if(magic_res > 0)
 			how_much /= 2;
 		else if(magic_res < 0)
@@ -2447,13 +2447,13 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	
 	// major resistance
 	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::POISON || damage_type == eDamageType::MAGIC || damage_type == eDamageType::COLD)
-	   && ((level = univ.party[which_pc].get_prot_level(eItemAbil::FULL_PROTECTION)) > 0))
+	   && ((level = which_pc.get_prot_level(eItemAbil::FULL_PROTECTION)) > 0))
 		how_much = how_much / ((level >= 7) ? 4 : 2);
 	
 	if(boom_anim_active) {
 		if(how_much < 0)
 			how_much = 0;
-		univ.party[which_pc].marked_damage += how_much;
+		which_pc.marked_damage += how_much;
 		// It would also be nice to have a special boom type for cold.
 		short boom_type = 2;
 		if(damage_type == eDamageType::FIRE)
@@ -2462,7 +2462,7 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 			boom_type = 3;
 		if(is_town())
 			add_explosion(univ.town.p_loc,how_much,0,boom_type,0,0);
-		else add_explosion(univ.party[which_pc].combat_pos,how_much,0,boom_type,0,0);
+		else add_explosion(which_pc.combat_pos,how_much,0,boom_type,0,0);
 		if(how_much == 0)
 			return false;
 		else return true;
@@ -2476,14 +2476,14 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	}
 	else {
 		// if asleep, get bonus
-		if(univ.party[which_pc].status[eStatus::ASLEEP] > 0)
-			univ.party[which_pc].status[eStatus::ASLEEP]--;
+		if(which_pc.status[eStatus::ASLEEP] > 0)
+			which_pc.status[eStatus::ASLEEP]--;
 		
 		if(do_print)
-			add_string_to_buf("  " + univ.party[which_pc].name + " takes " + std::to_string(how_much) + '.');
+			add_string_to_buf("  " + which_pc.name + " takes " + std::to_string(how_much) + '.');
 		if(damage_type != eDamageType::MARKED) {
 			if(is_combat())
-				boom_space(univ.party[which_pc].combat_pos,overall_mode,boom_gr[damage_type],how_much,sound_type);
+				boom_space(which_pc.combat_pos,overall_mode,boom_gr[damage_type],how_much,sound_type);
 			else if(is_town())
 				boom_space(univ.town.p_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
 			else boom_space(univ.town.p_loc,100,boom_gr[damage_type],how_much,sound_type);
@@ -2494,50 +2494,45 @@ bool damage_pc(short which_pc,short how_much,eDamageType damage_type,eRace type_
 	
 	univ.party.total_dam_taken += how_much;
 	
-	if(univ.party[which_pc].cur_health >= how_much)
-		univ.party[which_pc].cur_health = univ.party[which_pc].cur_health - how_much;
-	else if(univ.party[which_pc].cur_health > 0)
-		univ.party[which_pc].cur_health = 0;
+	if(which_pc.cur_health >= how_much)
+		which_pc.cur_health = which_pc.cur_health - how_much;
+	else if(which_pc.cur_health > 0)
+		which_pc.cur_health = 0;
 	else // Check if PC can die
 		if(how_much > 25) {
-			add_string_to_buf("  " + univ.party[which_pc].name + " is obliterated.");
+			add_string_to_buf("  " + which_pc.name + " is obliterated.");
 			kill_pc(which_pc, eMainStatus::DUST);
 		}
 		else {
-			add_string_to_buf("  " + univ.party[which_pc].name + " is killed.");
+			add_string_to_buf("  " + which_pc.name + " is killed.");
 			kill_pc(which_pc,eMainStatus::DEAD);
 		}
-	if(univ.party[which_pc].cur_health == 0 && univ.party[which_pc].main_status == eMainStatus::ALIVE)
+	if(which_pc.cur_health == 0 && which_pc.main_status == eMainStatus::ALIVE)
 		play_sound(3);
 	put_pc_screen();
 	return true;
 }
 
-void cPlayer::petrify(int strength) {
+void petrify_pc(cPlayer& which_pc,int strength) {
 	std::ostringstream create_line;
 	short r1 = get_ran(1,0,20);
-	r1 += level / 4;
-	r1 += status[eStatus::BLESS_CURSE];
+	r1 += which_pc.level / 4;
+	r1 += which_pc.status[eStatus::BLESS_CURSE];
 	r1 -= strength;
 	
-	if(has_abil_equip(eItemAbil::PROTECT_FROM_PETRIFY) < 24)
+	if(which_pc.has_abil_equip(eItemAbil::PROTECT_FROM_PETRIFY) < 24)
 		r1 = 20;
 	
 	if(r1 > 14) {
-		create_line << "  " << name << "resists.";
+		create_line << "  " << which_pc.name << "resists.";
 	} else {
-		size_t i = 0;
-		for(int j = 0; j < 6; j++) {
-			if(this == &party[j])
-				i = j;
-		}
-		create_line << "  " << name << "is turned to stone.";
-		kill_pc(i,eMainStatus::STONE);
+		create_line << "  " << which_pc.name << "is turned to stone.";
+		kill_pc(which_pc,eMainStatus::STONE);
 	}
 	add_string_to_buf(create_line.str());
 }
 
-void kill_pc(short which_pc,eMainStatus type) {
+void kill_pc(cPlayer& which_pc,eMainStatus type) {
 	short i = 24;
 	bool dummy,no_save = false;
 	location item_loc;
@@ -2548,22 +2543,22 @@ void kill_pc(short which_pc,eMainStatus type) {
 	}
 	
 	if(type != eMainStatus::STONE)
-		i = univ.party[which_pc].has_abil_equip(eItemAbil::LIFE_SAVING);
+		i = which_pc.has_abil_equip(eItemAbil::LIFE_SAVING);
 	
-	int luck = univ.party[which_pc].skill(eSkill::LUCK);
+	int luck = which_pc.skill(eSkill::LUCK);
 	if(!no_save && type != eMainStatus::ABSENT && luck > 0 &&
 	   get_ran(1,1,100) < hit_chance[luck]) {
 		add_string_to_buf("  But you luck out!");
-		univ.party[which_pc].cur_health = 0;
+		which_pc.cur_health = 0;
 	}
 	else if(i == 24 || type == eMainStatus::ABSENT) {
-		if(combat_active_pc == which_pc)
+		if(combat_active_pc < 6 && &which_pc == &univ.party[combat_active_pc])
 			combat_active_pc = 6;
 		
 		for(i = 0; i < 24; i++)
-			univ.party[which_pc].equip[i] = false;
+			which_pc.equip[i] = false;
 		
-		item_loc = (overall_mode >= MODE_COMBAT) ? univ.party[which_pc].combat_pos : univ.town.p_loc;
+		item_loc = (overall_mode >= MODE_COMBAT) ? which_pc.combat_pos : univ.town.p_loc;
 		
 		if(type == eMainStatus::DEAD)
 			univ.town.set_lg_blood(item_loc.x,item_loc.y,true);
@@ -2572,19 +2567,19 @@ void kill_pc(short which_pc,eMainStatus type) {
 		
 		if(overall_mode != MODE_OUTDOORS)
 			for(i = 0; i < 24; i++)
-				if(univ.party[which_pc].items[i].variety != eItemType::NO_ITEM) {
-					dummy = place_item(univ.party[which_pc].items[i],item_loc,true);
-					univ.party[which_pc].items[i].variety = eItemType::NO_ITEM;
+				if(which_pc.items[i].variety != eItemType::NO_ITEM) {
+					dummy = place_item(which_pc.items[i],item_loc,true);
+					which_pc.items[i].variety = eItemType::NO_ITEM;
 				}
 		if(type == eMainStatus::DEAD || type == eMainStatus::DUST)
 			play_sound(21);
-		univ.party[which_pc].main_status = type;
-		univ.party[which_pc].ap = 0;
+		which_pc.main_status = type;
+		which_pc.ap = 0;
 	}
 	else {
 		add_string_to_buf("  Life saved!");
-		univ.party[which_pc].take_item(i);
-		univ.party[which_pc].heal(200);
+		which_pc.take_item(i);
+		which_pc.heal(200);
 	}
 	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
 		current_pc = first_active_pc();
