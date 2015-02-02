@@ -191,3 +191,27 @@ std::string cScenario::format_ed_version() {
 std::string cScenario::format_scen_version() {
 	return format_version(format.ver);
 }
+
+ter_num_t cScenario::get_ground_from_ter(ter_num_t ter){
+	return get_ter_from_ground(ter_types[ter].ground_type);
+}
+
+ter_num_t cScenario::get_ter_from_ground(unsigned short ground){
+	for(int i = 0; i < ter_types.size(); i++)
+		if(ter_types[i].ground_type == ground)
+			return i;
+	return 0;
+}
+
+ter_num_t cScenario::get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim) {
+	for(int i = 0; i < ter_types.size(); i++) {
+		if(ter_types[i].ground_type != ground)
+			continue;
+		if(ter_types[i].trim_ter != trim_g)
+			continue;
+		if(ter_types[i].trim_type != trim)
+			continue;
+		return i;
+	}
+	return 90;
+}

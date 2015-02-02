@@ -108,6 +108,10 @@ public:
 	std::string format_scen_version();
 	std::string format_ed_version();
 	
+	ter_num_t get_ground_from_ter(ter_num_t ter);
+	ter_num_t get_ter_from_ground(unsigned short ground);
+	ter_num_t get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim);
+	
 	cScenario& operator=(cScenario&& other);
 	cScenario(cScenario&) = delete;
 	explicit cScenario(bool init_strings = false);
