@@ -12,30 +12,38 @@
 #include <array>
 #include <string>
 #include "item.h"
+#include "pictypes.hpp" // for pic_num_t
+
+enum class eShopType {NORMAL, ALLOW_DEAD, RANDOM};
+
+enum class eShopPrompt {SHOPPING, HEALING, MAGE, PRIEST, SPELLS, ALCHEMY, TRAINING};
 
 enum class eShopItemType {
-	EMPTY = 0,
+	EMPTY,
+	// These ones must have these numbers in order for old scenarios to be ported correctly
 	ITEM = 1,
-	HEAL_WOUNDS = 700,
-	CURE_POISON = 701,
-	CURE_DISEASE = 702,
-	CURE_PARALYSIS = 703,
-	CURE_DUMBFOUNDING = 708,
-	REMOVE_CURSE = 704,
-	DESTONE = 705,
-	RAISE_DEAD = 706,
-	RESURRECT = 707,
-	MAGE_SPELL = 800,
-	PRIEST_SPELL = 900,
-	ALCHEMY = 500,
-	SKILL = 1000,
+	MAGE_SPELL = 2,
+	PRIEST_SPELL = 3,
+	ALCHEMY = 4,
+	SKILL,
+	TREASURE,
+	HEAL_WOUNDS,
+	CURE_POISON,
+	CURE_DISEASE,
+	CURE_ACID,
+	CURE_PARALYSIS,
+	REMOVE_CURSE,
+	DESTONE,
+	RAISE_DEAD,
+	RESURRECT,
+	CURE_DUMBFOUNDING,
 };
 
 struct cShopItem {
 	eShopItemType type = eShopItemType::EMPTY;
-	int cost;
 	size_t quantity;
 	cItem item;
+	int getCost(int adj);
 };
 
 class cShop {
@@ -43,21 +51,29 @@ class cShop {
 	int cost_adj;
 	std::string name;
 	eShopType type;
+	eShopPrompt prompt;
+	pic_num_t face;
 	size_t firstEmpty();
 public:
 	static const size_t INFINITE = 0;
 	cShop();
-	cShop(eShopType type, int adj, std::string name);
+	cShop(eShopType type, eShopPrompt prompt, pic_num_t pic, int adj, std::string name);
+	explicit cShop(long preset);
 	void addItem(cItem item, size_t quantity);
 	void addSpecial(eShopItemType type, int n = 0);
 	template<typename Iter> void addItems(Iter begin, Iter end, size_t quantity) {
 		while(begin != end) addItem(*begin++, quantity);
 	}
+	void replaceItem(size_t i, cShopItem newItem);
 	size_t size();
 	cShopItem getItem(size_t i) const;
 	eShopType getType() const;
 	int getCostAdjust() const;
 	std::string getName() const;
+	pic_num_t getFace() const;
+	eShopPrompt getPrompt() const;
+	void setCostAdjust(int adj);
+	void setName(std::string name);
 	void takeOne(size_t i);
 	void clearItem(size_t i);
 	void clear();

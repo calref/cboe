@@ -96,6 +96,7 @@ extern rectangle shop_done_rect;
 extern char *heal_types[];
 extern short heal_costs[8];
 extern short terrain_there[9][9];
+extern short shop_array[30];
 
 // Missile anim vars
 struct store_missile_type {
@@ -624,18 +625,6 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 			store_booms[i].boom_type = -1;
 }
 
-/*
-shop_type:
-0 - weapon shop
-1 - armor shop
-2 - misc shop
-3 - healer
-4 - food
-5-9 - magic shop
-10 - mage spells
-11 - priest spells
-12 alchemy
-*/
 void click_shop_rect(rectangle area_rect) {
 	
 	draw_shop_graphics(1,area_rect);
@@ -707,11 +696,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	
 	// Place store icon
 	if(!pressed) {
-		i = 0;
-		eShopType type = active_shop.getType();
-		if(type == eShopType::HEALING) i = 41;
-		else if(type == eShopType::MAGE || type == eShopType::PRIEST || type == eShopType::ALCHEMY)
-			i = 43;
+		i = active_shop.getFace();
 		rectangle from_rect = {0,0,32,32};
 		from_rect.offset(32 * (i % 10),32 * (i / 10));
 		rect_draw_some_item(talkfaces_gworld, from_rect, talk_gworld, face_rect);
@@ -733,20 +718,26 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	
 	style.colour = c[3];
 	std::ostringstream title;
-	switch(active_shop.getType()) {
-		case eShopType::HEALING:
+	switch(active_shop.getPrompt()) {
+		case eShopPrompt::HEALING:
 			title << "Healing for " << univ.party[current_pc].name << '.';
 			break;
-		case eShopType::MAGE:
+		case eShopPrompt::MAGE:
 			title << "Mage Spells for " << univ.party[current_pc].name << '.';
 			break;
-		case eShopType::PRIEST:
+		case eShopPrompt::PRIEST:
 			title << "Priest Spells for " << univ.party[current_pc].name << '.';
 			break;
-		case eShopType::ALCHEMY:
+		case eShopPrompt::SPELLS:
+			title << "Spells for " << univ.party[current_pc].name << '.';
+			break;
+		case eShopPrompt::TRAINING:
+			title << "Training for " << univ.party[current_pc].name << '.';
+			break;
+		case eShopPrompt::ALCHEMY:
 			title << "Buying Alchemy.";
 			break;
-		default:
+		case eShopPrompt::SHOPPING:
 			title << "Shopping for " << univ.party[current_pc].name << '.';
 			break;
 	}
@@ -759,11 +750,11 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	// Place all the items
 	for(i = 0; i < 8; i++) {
 		current_pos = i + shop_sbar->getPosition();
-		cShopItem item = active_shop.getItem(i);
+		if(shop_array[current_pos] < 0)
+			break; // theoretically, this shouldn't happen
+		cShopItem item = active_shop.getItem(shop_array[current_pos]);
 		eSpell spell; eSkill skill;
-		if(item.type == eShopItemType::EMPTY)
-			continue; // theoretically, this shouldn't happen
-		cur_cost = item.cost;
+		cur_cost = item.getCost(active_shop.getCostAdjust());
 		base_item = item.item;
 		std::string cur_name = base_item.full_name, cur_info_str;
 		rectangle from_rect, to_rect = shopping_rects[i][SHOPRECT_GRAPHIC];
@@ -805,8 +796,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_COST],cur_name,eTextMode::WRAP,style);
 		style.pointSize = 10;
 		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::WRAP,style);
-		if(active_shop.getType() != eShopType::HEALING) // Draw info button
-			rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][SHOPRECT_ITEM_HELP],pressed ? sf::BlendNone : sf::BlendAlpha);
+		rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][SHOPRECT_ITEM_HELP],pressed ? sf::BlendNone : sf::BlendAlpha);
 		
 	}
 	
@@ -818,8 +808,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	win_draw_string(talk_gworld,bottom_help_rects[0],title.str(),eTextMode::WRAP,style);
 	win_draw_string(talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",eTextMode::WRAP,style);
 	win_draw_string(talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",eTextMode::WRAP,style);
-	if(active_shop.getType() != eShopType::HEALING)
-		win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",eTextMode::WRAP,style);
+	win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",eTextMode::WRAP,style);
 	
 	undo_clip(talk_gworld);
 	talk_gworld.display();

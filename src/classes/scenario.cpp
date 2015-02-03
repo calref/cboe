@@ -176,6 +176,11 @@ void cScenario::append(legacy::scen_item_data_type& old){
 	}
 	for(i = 0; i < 256; i++)
 		ter_types[i].name = old.ter_names[i];
+	// Some default shops - the five magic shops and the healing shop.
+	cShop magic_shop('junk');
+	for(i = 0; i < 5; i++)
+		shops.push_back(magic_shop);
+	shops.push_back(cShop('heal'));
 }
 
 static std::string format_version(const unsigned char(& ver)[3]) {

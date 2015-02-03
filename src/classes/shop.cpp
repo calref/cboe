@@ -47,7 +47,38 @@ static long cost_mult[7] = {5,7,10,13,16,20,25};
 
 cShop::cShop() {}
 
-cShop::cShop(eShopType type, int adj, std::string name) : type(type), cost_adj(adj), name(name) {}
+cShop::cShop(eShopType type, eShopPrompt prompt, pic_num_t pic, int adj, std::string name):
+	cost_adj(adj),
+	name(name),
+	type(type),
+	prompt(prompt),
+	face(pic)
+{}
+
+cShop::cShop(long preset) {
+	const short loot_index[10] = {1,1,1,1,2,2,2,3,3,4};
+	
+	if(preset == 'junk') {
+		type = eShopType::RANDOM;
+		prompt = eShopPrompt::SHOPPING;
+		face = 0;
+		for(int i = 0; i < 10; i++)
+			addSpecial(eShopItemType::TREASURE, loot_index[i]);
+	} else if(preset == 'heal') {
+		type = eShopType::ALLOW_DEAD;
+		prompt = eShopPrompt::HEALING;
+		face = 41;
+		addSpecial(eShopItemType::HEAL_WOUNDS);
+		addSpecial(eShopItemType::CURE_POISON);
+		addSpecial(eShopItemType::CURE_DISEASE);
+		addSpecial(eShopItemType::CURE_PARALYSIS);
+		addSpecial(eShopItemType::CURE_DUMBFOUNDING);
+		addSpecial(eShopItemType::REMOVE_CURSE);
+		addSpecial(eShopItemType::DESTONE);
+		addSpecial(eShopItemType::RAISE_DEAD);
+		addSpecial(eShopItemType::RESURRECT);
+	}
+}
 
 size_t cShop::firstEmpty() {
 	for(size_t i = 0; i < items.size(); i++) {
@@ -70,11 +101,6 @@ void cShop::addItem(cItem item, size_t quantity) {
 	items[i].type = eShopItemType::ITEM;
 	items[i].item = item;
 	items[i].item.ident = true;
-	items[i].cost = item.value;
-	if(item.charges > 0)
-		items[i].cost *= item.charges;
-	items[i].cost *= cost_mult[cost_adj];
-	items[i].cost /= 10;
 	items[i].quantity = quantity;
 }
 
@@ -139,9 +165,9 @@ static cItem store_alchemy(short which_s) {
 
 void cShop::addSpecial(eShopItemType type, int n) {
 	// TODO: Make this a std::map instead
-	static const short heal_costs[9] = {50,30,80,100,250,500,1000,3000,100};
+	static const short heal_costs[10] = {50,30,80,90,100,250,500,1000,3000,100};
 	static const char*const heal_types[] = {
-		"Heal Damage","Cure Poison","Cure Disease","Cure Paralysis",
+		"Heal Damage","Cure Poison","Cure Disease","Cure Acid","Cure Paralysis",
 		"Uncurse Items","Cure Stoned Character","Raise Dead","Resurrection","Cure Dumbfounding"
 	};
 	if(type == eShopItemType::EMPTY) return;
@@ -158,17 +184,16 @@ void cShop::addSpecial(eShopItemType type, int n) {
 	else if(type == eShopItemType::SKILL) {
 		items[i].item.graphic_num = 108;
 		items[i].item.full_name = get_str("skills", n * 2 + 1);
+	} else if(type == eShopItemType::TREASURE) {
+		items[i].item.item_level = n;
 	} else {
 		items[i].item.graphic_num = 109;
-		items[i].item.full_name = heal_types[int(type) - 700];
+		items[i].item.full_name = heal_types[int(type) - int(eShopItemType::HEAL_WOUNDS)];
 	}
-	if(type == eShopItemType::MAGE_SPELL || type == eShopItemType::PRIEST_SPELL || type == eShopItemType::ALCHEMY)
-		items[i].cost = items[i].item.value;
-	else if(type == eShopItemType::SKILL)
-		items[i].cost = skill_g_cost[eSkill(n)] * 1.5;
-	else items[i].cost = heal_costs[int(type) - 700];
-	items[i].cost *= cost_mult[cost_adj];
-	items[i].cost /= 10;
+	if(type == eShopItemType::SKILL)
+		items[i].item.value = skill_g_cost[eSkill(n)] * 1.5;
+	else if(type >= eShopItemType::HEAL_WOUNDS)
+		items[i].item.value = heal_costs[int(type) - int(eShopItemType::HEAL_WOUNDS)];
 	items[i].quantity = 0;
 }
 
@@ -188,11 +213,32 @@ std::string cShop::getName() const {
 	return name;
 }
 
+eShopPrompt cShop::getPrompt() const {
+	return prompt;
+}
+
+pic_num_t cShop::getFace() const {
+	return face;
+}
+
+void cShop::setName(std::string newName) {
+	name = newName;
+}
+
+void cShop::setCostAdjust(int adj) {
+	cost_adj = adj;
+}
+
 void cShop::takeOne(size_t i) {
 	if(items[i].quantity == 1)
 		clearItem(i);
 	else if(items[i].quantity > 0)
 		items[i].quantity--;
+}
+
+void cShop::replaceItem(size_t i, cShopItem newItem) {
+	if(i >= 30) return;
+	items[i] = newItem;
 }
 
 void cShop::clearItem(size_t i) {
@@ -202,4 +248,13 @@ void cShop::clearItem(size_t i) {
 
 void cShop::clear() {
 	std::fill(items.begin(), items.end(), cShopItem());
+}
+
+int cShopItem::getCost(int adj) {
+	int cost = item.value;
+	if(item.charges > 0)
+		cost *= item.charges;
+	cost *= cost_mult[adj];
+	cost /= 10;
+	return cost;
 }

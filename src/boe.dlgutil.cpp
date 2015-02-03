@@ -97,29 +97,26 @@ rectangle bottom_help_rects[4] = {rectangle{356,6,368,250},rectangle{374,6,386,2
 rectangle shop_name_str = {44,6,56,200};
 rectangle shop_frame = {62,10,352,269};
 rectangle shop_done_rect = {388,212,411,275};
+short shop_array[30];
 
 short store_scen_page_on,store_num_scen;
 
 cShop active_shop;
+short active_shop_num;
 
-/*
-shop_type:
-0 - weapon shop
-1 - armor shop
-2 - misc shop
-3 - healer
-4 - food  no longer used!!!
-5-9 - magic shop
-10 - mage spells
-11 - priest spells
-12 alchemy
-*/
-void start_shop_mode(eShopType shop_type,short shop_min,short shop_max,short cost_adj,std::string store_name) {
+void start_shop_mode(short which,short cost_adj,std::string store_name) {
 	rectangle area_rect;
+	if(which < 0 || which >= univ.scenario.shops.size()) {
+		giveError("The scenario tried to place you in a nonexistent shop!");
+		return;
+	}
 	
 	// This would be a place to hide the text box, if I add it.
 	
-	active_shop = cShop(shop_type, cost_adj, store_name);
+	active_shop_num = which;
+	active_shop = univ.scenario.shops[which];
+	active_shop.setCostAdjust(cost_adj);
+	active_shop.setName(store_name);
 	
 	area_rect = talk_area_rect;
 	talk_gworld.create(area_rect.width(), area_rect.height());
@@ -127,8 +124,9 @@ void start_shop_mode(eShopType shop_type,short shop_min,short shop_max,short cos
 	store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
 	stat_screen_mode = MODE_SHOP;
+	shop_sbar->setPosition(0);
 	
-	set_up_shop_array(shop_type, shop_min, std::max(shop_min, shop_max));
+	set_up_shop_array();
 	put_background();
 	
 	draw_shop_graphics(0,area_rect);
@@ -174,17 +172,14 @@ void end_shop_mode() {
 	// TODO: I suspect REFRESH_NONE will suffice here
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
 	
-	// If it was a magic shop, we need to update the stored list of items so that bought items don't reappear
-	if(active_shop.getType() >= eShopType::MAGIC_JUNK && active_shop.getType() <= eShopType::MAGIC_GREAT) {
-		int which_shop = int(active_shop.getType()) - int(eShopType::MAGIC_JUNK);
-		int j = 0;
-		for(int i = 0; i < 30 && j < 10; i++) {
+	// If it was a random shop, we need to update the stored list of items so that bought items don't reappear
+	if(active_shop.getType() == eShopType::RANDOM) {
+		for(int i = 0; i < 30; i++) {
 			cShopItem item = active_shop.getItem(i);
-			if(item.type != eShopItemType::EMPTY)
-				univ.party.magic_store_items[which_shop][j++] = item.item;
+			if(item.type != eShopItemType::EMPTY && univ.party.magic_store_items[active_shop_num][i].variety != eItemType::NO_ITEM)
+				univ.party.magic_store_items[active_shop_num][i] = item.item;
+			else univ.party.magic_store_items[active_shop_num][i].variety = eItemType::NO_ITEM;
 		}
-		for(int i = j; i < 10; i++)
-			univ.party.magic_store_items[which_shop][i].variety = eItemType::NO_ITEM;
 	}
 }
 
@@ -212,12 +207,16 @@ void handle_shop_event(location p) {
 	p.y -= 5;
 	
 	for(i = 0; i < 8; i++) {
-		store_what_picked = i + shop_sbar->getPosition();
-		if(store_what_picked >= active_shop.size()) break;
+		store_what_picked = shop_array[i + shop_sbar->getPosition()];
+		if(store_what_picked >= 30) break;
+		if(active_shop.getItem(store_what_picked).type == eShopItemType::EMPTY)
+			break;
 		if(p.in(shopping_rects[i][SHOPRECT_ACTIVE_AREA])) {
 			click_shop_rect(shopping_rects[i][SHOPRECT_ACTIVE_AREA]);
 			handle_sale(active_shop.getItem(store_what_picked), store_what_picked);
-		} else if(p.in(shopping_rects[i][SHOPRECT_ITEM_HELP]) && active_shop.getType() != eShopType::HEALING){
+			set_up_shop_array();
+			draw_shop_graphics(false, {});
+		} else if(p.in(shopping_rects[i][SHOPRECT_ITEM_HELP])){
 			click_shop_rect(shopping_rects[i][SHOPRECT_ITEM_HELP]);
 			handle_info_request(active_shop.getItem(store_what_picked));
 		}
@@ -226,12 +225,13 @@ void handle_shop_event(location p) {
 
 void handle_sale(cShopItem item, int i) {
 	cItem base_item = item.item;
-	short cost = item.cost;
+	short cost = item.getCost(active_shop.getCostAdjust());
 	rectangle dummy_rect = {0,0,0,0};
 	size_t size_before = active_shop.size();
 	
 	switch(item.type) {
 		case eShopItemType::EMPTY: break; // Invalid
+		case eShopItemType::TREASURE: break; // Also invalid
 		case eShopItemType::ITEM:
 			switch(univ.party[current_pc].ok_to_buy(cost,base_item)) {
 				case eBuyStatus::OK:
@@ -267,6 +267,7 @@ void handle_sale(cShopItem item, int i) {
 		case eShopItemType::HEAL_WOUNDS: case eShopItemType::REMOVE_CURSE: case eShopItemType::CURE_DUMBFOUNDING:
 		case eShopItemType::CURE_POISON: case eShopItemType::CURE_DISEASE: case eShopItemType::CURE_PARALYSIS:
 		case eShopItemType::DESTONE: case eShopItemType::RAISE_DEAD: case eShopItemType::RESURRECT:
+		case eShopItemType::CURE_ACID:
 			if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
@@ -281,6 +282,9 @@ void handle_sale(cShopItem item, int i) {
 						break;
 					case eShopItemType::CURE_DISEASE:
 						univ.party[current_pc].status[eStatus::DISEASE] = 0;
+						break;
+					case eShopItemType::CURE_ACID:
+						univ.party[current_pc].status[eStatus::ACID] = 0;
 						break;
 					case eShopItemType::CURE_PARALYSIS:
 						univ.party[current_pc].status[eStatus::PARALYZED] = 0;
@@ -299,8 +303,6 @@ void handle_sale(cShopItem item, int i) {
 						break;
 					default: break; // Silence compiler warning
 				}
-				// Once you've been healed, of course you're no longer eligible for that form of healing.
-				active_shop.clearItem(i);
 			}
 			break;
 		case eShopItemType::MAGE_SPELL:
@@ -378,6 +380,7 @@ void handle_info_request(cShopItem item) {
 	
 	switch(item.type) {
 		case eShopItemType::EMPTY: break;
+		case eShopItemType::TREASURE: break;
 		case eShopItemType::ITEM:
 			display_pc_item(6,0, base_item,0);
 			break;
@@ -394,77 +397,110 @@ void handle_info_request(cShopItem item) {
 		case eShopItemType::SKILL:
 			display_skills(eSkill(base_item.item_level), nullptr);
 			break;
-		case eShopItemType::HEAL_WOUNDS: case eShopItemType::REMOVE_CURSE: case eShopItemType::CURE_DUMBFOUNDING:
-		case eShopItemType::CURE_POISON: case eShopItemType::CURE_DISEASE: case eShopItemType::CURE_PARALYSIS:
-		case eShopItemType::DESTONE: case eShopItemType::RAISE_DEAD: case eShopItemType::RESURRECT:
+		case eShopItemType::HEAL_WOUNDS:
+			cStrDlog("Select this option to restore the current PC to full health.", "", "Heal Wounds", 15, PIC_DLOG).show();
+			break;
+		case eShopItemType::REMOVE_CURSE:
+			cStrDlog("Select this option to remove any curses on any items the PC is wearing.", "", "Remove Curse", 15, PIC_DLOG).show();
+			break;
+		case eShopItemType::CURE_DUMBFOUNDING:
+			cStrDlog("Select this option to restore the PC's mind from dumbfounding.", "", "Cure Dumbfounding", 15, PIC_DLOG).show();
+			break;
+		case eShopItemType::CURE_POISON:
+			cStrDlog("Select this option purge all poison from the current PC.", "", "Cure Poison", 15, PIC_DLOG).show();
+			break;
+		case eShopItemType::CURE_DISEASE:
+			cStrDlog("Select this option purge all disease from the current PC.", "", "Cure Disease", 15, PIC_DLOG).show();
+			break;
+		case eShopItemType::CURE_ACID:
+			cStrDlog("Select this option purge all acid from the current PC.", "", "Cure Acid", 15, PIC_DLOG).show();
+			break;
+		case eShopItemType::CURE_PARALYSIS:
+			cStrDlog("Select this option to cure the current PC's paralysis.", "", "Cure Paralysis", 15, PIC_DLOG).show();
+			break;
+		case eShopItemType::DESTONE:
+			cStrDlog("Select this option to restore a PC that has been turned to stone.", "", "Destone", 15, PIC_DLOG).show();
+			break;
+		case eShopItemType::RAISE_DEAD:
+			cStrDlog("Select this option to resurrect a PC.", "", "Raise Dead", 15, PIC_DLOG).show();
+			break;
+		case eShopItemType::RESURRECT:
+			cStrDlog("Select this option to resurrect a PC that has been turned to dust.", "", "Resurrect", 15, PIC_DLOG).show();
 			break;
 	}
 }
 
-void set_up_shop_array(eShopType store_shop_type, short store_shop_min, short store_shop_max) {
-	bool cursed_item = false;
-	active_shop.clear();
-	
-	switch(store_shop_type) {
-		case eShopType::ITEMS:
-			for(int i = store_shop_min; i <= store_shop_max; i++)
-				active_shop.addItem(get_stored_item(i), cShop::INFINITE);
-			break;
-		case eShopType::HEALING:
-			if(univ.party[current_pc].cur_health < univ.party[current_pc].max_health)
-				active_shop.addSpecial(eShopItemType::HEAL_WOUNDS);
-			if(univ.party[current_pc].status[eStatus::POISON] > 0)
-				active_shop.addSpecial(eShopItemType::CURE_POISON);
-			if(univ.party[current_pc].status[eStatus::DISEASE] > 0)
-				active_shop.addSpecial(eShopItemType::CURE_DISEASE);
-			if(univ.party[current_pc].status[eStatus::PARALYZED] > 0)
-				active_shop.addSpecial(eShopItemType::CURE_PARALYSIS);
-			if(univ.party[current_pc].status[eStatus::DUMB] > 0)
-				active_shop.addSpecial(eShopItemType::CURE_DUMBFOUNDING);
-			for(int i = 0; i < 24; i++)
-				if((univ.party[current_pc].equip[i]) && (univ.party[current_pc].items[i].cursed))
-					cursed_item = true;
-			if(cursed_item) active_shop.addSpecial(eShopItemType::REMOVE_CURSE);
-			if(univ.party[current_pc].main_status == eMainStatus::STONE)
-				active_shop.addSpecial(eShopItemType::DESTONE);
-			if(univ.party[current_pc].main_status == eMainStatus::DEAD)
-				active_shop.addSpecial(eShopItemType::RAISE_DEAD);
-			if(univ.party[current_pc].main_status == eMainStatus::DUST)
-				active_shop.addSpecial(eShopItemType::RESURRECT);
-			break;
-		case eShopType::MAGIC_JUNK:
-			active_shop.addItems(univ.party.magic_store_items[0].begin(), univ.party.magic_store_items[0].end(), 1);
-			break;
-		case eShopType::MAGIC_LOUSY:
-			active_shop.addItems(univ.party.magic_store_items[1].begin(), univ.party.magic_store_items[1].end(), 1);
-			break;
-		case eShopType::MAGIC_SO_SO:
-			active_shop.addItems(univ.party.magic_store_items[2].begin(), univ.party.magic_store_items[2].end(), 1);
-			break;
-		case eShopType::MAGIC_GOOD:
-			active_shop.addItems(univ.party.magic_store_items[3].begin(), univ.party.magic_store_items[3].end(), 1);
-			break;
-		case eShopType::MAGIC_GREAT:
-			active_shop.addItems(univ.party.magic_store_items[4].begin(), univ.party.magic_store_items[4].end(), 1);
-			break;
-		case eShopType::MAGE:
-			for(int i = store_shop_min; i <= store_shop_max && i < 62; i++)
-				active_shop.addSpecial(eShopItemType::MAGE_SPELL, i);
-			break;
-		case eShopType::PRIEST:
-			for(int i = store_shop_min; i <= store_shop_max && i < 62; i++)
-				active_shop.addSpecial(eShopItemType::PRIEST_SPELL, i);
-			break;
-		case eShopType::ALCHEMY:
-			for(int i = store_shop_min; i <= store_shop_max && i < 20; i++)
-				active_shop.addSpecial(eShopItemType::ALCHEMY, i);
-			break;
-		case eShopType::SKILLS:
-			for(int i = max(0,store_shop_min); i <= min(18,store_shop_max); i++)
-				active_shop.addSpecial(eShopItemType::SKILL, i);
-			break;
+void set_up_shop_array() {
+	int i = 0;
+	for(int j = 0; i < 30 && j < 30; j++) {
+		cShopItem entry = active_shop.getItem(j);
+		switch(entry.type) {
+			case eShopItemType::ITEM:
+			case eShopItemType::MAGE_SPELL:
+			case eShopItemType::PRIEST_SPELL:
+			case eShopItemType::ALCHEMY:
+			case eShopItemType::SKILL:
+				shop_array[i++] = j;
+				break;
+			case eShopItemType::HEAL_WOUNDS:
+				if(univ.party[current_pc].cur_health < univ.party[current_pc].max_health)
+					shop_array[i++] = j;
+				break;
+			case eShopItemType::CURE_POISON:
+				if(univ.party[current_pc].status[eStatus::POISON] > 0)
+					shop_array[i++] = j;
+				break;
+			case eShopItemType::CURE_DISEASE:
+				if(univ.party[current_pc].status[eStatus::DISEASE] > 0)
+					shop_array[i++] = j;
+				break;
+			case eShopItemType::CURE_ACID:
+				if(univ.party[current_pc].status[eStatus::ACID] > 0)
+					shop_array[i++] = j;
+				break;
+			case eShopItemType::CURE_PARALYSIS:
+				if(univ.party[current_pc].status[eStatus::PARALYZED] > 0)
+					shop_array[i++] = j;
+				break;
+			case eShopItemType::CURE_DUMBFOUNDING:
+				if(univ.party[current_pc].status[eStatus::DUMB] > 0)
+					shop_array[i++] = j;
+				break;
+			case eShopItemType::DESTONE:
+				if(univ.party[current_pc].main_status == eMainStatus::STONE)
+					shop_array[i++] = j;
+				break;
+			case eShopItemType::RAISE_DEAD:
+				if(univ.party[current_pc].main_status == eMainStatus::DEAD)
+					shop_array[i++] = j;
+				break;
+			case eShopItemType::RESURRECT:
+				if(univ.party[current_pc].main_status == eMainStatus::DUST)
+					shop_array[i++] = j;
+				break;
+			case eShopItemType::REMOVE_CURSE:
+				for(int i = 0; i < 24; i++) {
+					if((univ.party[current_pc].equip[i]) && (univ.party[current_pc].items[i].cursed)) {
+						shop_array[i++] = j;
+						break;
+					}
+				}
+				break;
+			case eShopItemType::TREASURE:
+				entry.type = eShopItemType::ITEM;
+				entry.item = univ.party.magic_store_items[active_shop_num][j];
+				if(entry.item.variety == eItemType::NO_ITEM)
+					entry.type = eShopItemType::EMPTY;
+				else shop_array[i++] = j;
+				entry.quantity = 1;
+				active_shop.replaceItem(j, entry);
+				break;
+			case eShopItemType::EMPTY:
+				break;
+		}
 	}
-	shop_sbar->setMaximum(active_shop.size() - 8);
+	shop_sbar->setMaximum(i - 8);
+	std::fill(shop_array + i, shop_array + 30, -1);
 }
 
 void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic) {
@@ -704,8 +740,6 @@ void handle_talk_event(location p) {
 	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
 	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
 	
-	eShopType shop;
-	
 	switch(ttype) {
 		case eTalkNode::REGULAR:
 			break;
@@ -774,18 +808,7 @@ void handle_talk_event(location p) {
 				giveError("Invalid shop type!");
 				return;
 			}
-			shop = eShopType(d);
-			switch(shop) {
-				case eShopType::ITEMS: case eShopType::MAGE: case eShopType::PRIEST:
-					c = minmax(1,30,c);
-					break;
-				case eShopType::ALCHEMY: c = minmax(1,20,c); break;
-				case eShopType::SKILLS: c = minmax(1,19,c); break;
-				case eShopType::HEALING: case eShopType::MAGIC_JUNK: case eShopType::MAGIC_LOUSY:
-				case eShopType::MAGIC_SO_SO: case eShopType::MAGIC_GOOD: case eShopType::MAGIC_GREAT:
-					break;
-			}
-			start_shop_mode(shop,b,b + c - 1,a,save_talk_str1.c_str());
+			start_shop_mode(b,a,save_talk_str1);
 			strnum1 = -1;
 			return;
 		case eTalkNode::JOB_BANK:

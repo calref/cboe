@@ -580,13 +580,14 @@ void cParty::writeTo(std::ostream& file) const {
 		}
 	}
 	file << '\f';
-	for(int i = 0; i < 5; i++)
+	for(auto& p : magic_store_items) {
 		for(int j = 0; j < 10; j++)
-			if(magic_store_items[i][j].variety != eItemType::NO_ITEM){
-				file << "MAGICSTORE " << i << ' ' << j << '\n';
-				magic_store_items[i][j].writeTo(file);
+			if(p.second[j].variety != eItemType::NO_ITEM){
+				file << "MAGICSTORE " << p.first << ' ' << j << '\n';
+				p.second[j].writeTo(file);
 				file << '\f';
 			}
+	}
 	file << '\f';
 	for(int i = 0; i < job_banks.size(); i++) {
 		file << "JOBBANK " << i << ' ' << job_banks[i].anger << '\n';
@@ -805,6 +806,7 @@ void cParty::readFrom(std::istream& file){
 		} else if(cur == "MAGICSTORE") {
 			int i,j;
 			bin >> i >> j;
+			if(j < 0 || j >= 30) continue;
 			magic_store_items[i][j].readFrom(bin);
 		} else if(cur == "ENCOUNTER") {
 			int i;

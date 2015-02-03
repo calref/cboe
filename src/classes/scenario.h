@@ -20,6 +20,7 @@
 #include "outdoors.h"
 #include "town.h"
 #include "vector2d.hpp"
+#include "shop.hpp"
 
 namespace fs = boost::filesystem; // TODO: Centralize this namespace alias?
 
@@ -70,6 +71,7 @@ public:
 	short store_item_towns[3];
 	std::array<cSpecItem,50> special_items;
 	std::vector<cQuest> quests;
+	std::vector<cShop> shops;
 	short rating,uses_custom_graphics;
 	std::vector<ePicType> custom_graphics;
 	std::array<cMonster,256> scen_monsters;

@@ -649,10 +649,11 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		univ.party.status[ePartyStatus::DETECT_LIFE] = 0; // TODO: Yes? No? Maybe?
 		for(i = 0; i < 6; i++)
 			erase_if(univ.party[i].status, [](std::pair<const eStatus, short> kv) -> bool {
-				// TODO: These were the only statuses kept in the original code, but what about acid? Should it be kept too?
 				if(kv.first == eStatus::POISON) return false;
 				if(kv.first == eStatus::DISEASE) return false;
 				if(kv.first == eStatus::DUMB) return false;
+				if(kv.first == eStatus::ACID && kv.second > 2)
+					return false;
 				return true;
 			});
 		

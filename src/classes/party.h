@@ -93,7 +93,7 @@ public:
 	short in_boat;
 	short in_horse;
 	cOutdoors::cCreature out_c[10];
-	std::array<std::array<cItem,10>,5> magic_store_items;
+	std::map<int,std::array<cItem,30>> magic_store_items;
 	std::vector<job_bank_t> job_banks;
 	mon_num_t imprisoned_monst[4]; // Soul Crystal
 	char m_noted[256]; // has the monster been scried?

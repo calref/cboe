@@ -8,6 +8,7 @@
 #include "boe.itemdata.h"
 #include "mathutil.hpp"
 
+bool allow_junk_treasure = false;
 short loot_min[5] = {0,0,5,50,400};
 short loot_max[5] = {3,8,40,800,4000};
 extern cUniverse univ;
@@ -50,12 +51,12 @@ cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,eItemT
 		max_val += 2000;
 	}
 	for(i = 0; i < 80; i++) {
-		j = get_ran(1,0,399);
+		j = get_ran(1,0,univ.scenario.scen_items.size() - 1);
 		temp_i = get_stored_item(j);
 		if(temp_i.variety == eItemType::NO_ITEM) continue;
 		if((temp_i.variety == t1) || (temp_i.variety == t2) || (temp_i.variety == t3)) {
 			val = (temp_i.charges > 0) ? temp_i.charges * temp_i.value : temp_i.value;
-			if((val >= min_val) && (val <= max_val) && (temp_i.treas_class != 0) &&
+			if((val >= min_val) && (val <= max_val) && (temp_i.treas_class != 0 || allow_junk_treasure) &&
 				(temp_i.treas_class <= loot_max))
 				return temp_i;
 		}

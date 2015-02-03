@@ -681,7 +681,7 @@ static void handle_switch_pc(short which_pc, bool& need_redraw) {
 			set_stat_window(current_pc);
 			put_pc_screen();
 		} else add_string_to_buf("Set active: PC has no APs.");
-	} else if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::HEALING))
+	} else if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
 		add_string_to_buf("Set active: PC must be here & active.");
 	else {
 		current_pc = which_pc;
@@ -697,7 +697,7 @@ static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 		add_string_to_buf("Set active: Finish what you're doing first.");
 	else {
 		if(!is_combat()) {
-			if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALCHEMY))
+			if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
 				add_string_to_buf("Set active: PC must be here & active.");
 			else {
 				current_pc = which_pc;
@@ -708,8 +708,7 @@ static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 		}
 		set_stat_window(which_pc);
 		if(overall_mode == MODE_SHOPPING) {
-			if(active_shop.getType() == eShopType::HEALING)
-				set_up_shop_array(eShopType::HEALING, 0, 0);
+			set_up_shop_array();
 			draw_shop_graphics(0,item_screen_button_rects[which_pc]); // rect is dummy
 		}
 	}
@@ -1330,8 +1329,7 @@ bool handle_action(sf::Event event) {
 		put_pc_screen();
 		put_item_screen(stat_window,0);
 		if(overall_mode == MODE_SHOPPING) {
-			if(active_shop.getType() == eShopType::HEALING)
-				set_up_shop_array(eShopType::HEALING, 0, 0);
+			set_up_shop_array();
 			draw_shop_graphics(0,pc_buttons[0][0]);
 		}
 	}
