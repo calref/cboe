@@ -2560,10 +2560,12 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		
 		item_loc = (overall_mode >= MODE_COMBAT) ? which_pc.combat_pos : univ.town.p_loc;
 		
-		if(type == eMainStatus::DEAD)
-			univ.town.set_lg_blood(item_loc.x,item_loc.y,true);
-		else if(type == eMainStatus::DUST)
-			univ.town.set_ash(item_loc.x,item_loc.y,true);
+		if(!is_out()) {
+			if(type == eMainStatus::DEAD)
+				univ.town.set_lg_blood(item_loc.x,item_loc.y,true);
+			else if(type == eMainStatus::DUST)
+				univ.town.set_ash(item_loc.x,item_loc.y,true);
+		}
 		
 		if(overall_mode != MODE_OUTDOORS)
 			for(i = 0; i < 24; i++)
