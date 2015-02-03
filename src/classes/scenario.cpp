@@ -56,7 +56,7 @@ cScenario::cScenario(bool init_strings) {
 	format.ver[0] = 1;
 	format.min_run_ver = 2;
 	format.prog_make_ver[0] = 2;
-	default_ground = 1;
+	default_ground = 2;
 	where_start.x = 24;
 	where_start.y = 24;
 	out_start = where_start;
@@ -111,7 +111,7 @@ void cScenario::append(legacy::scenario_data_type& old){
 	int i,j;
 	difficulty = old.difficulty;
 	intro_pic = old.intro_pic;
-	default_ground = old.default_ground;
+	default_ground = old.default_ground * 2;
 	intro_mess_pic = old.intro_pic;
 	where_start.x = old.where_start.x;
 	where_start.y = old.where_start.y;
