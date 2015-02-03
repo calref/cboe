@@ -826,7 +826,8 @@ void draw_terrain(){
 		// Width available:  64 4x4 tiles, 42 6x6 tiles, or 21 12x12 tiles -- 256 pixels
 		// Height available: 81 4x4 tiles, 54 6x6 tiles, or 27 12x12 tiles -- 324 pixels
 		short size = mini_map_scales[cur_viewing_mode - 1];
-		int xMin = 0, yMin = 0, xMax = (editing_town ? town->max_dim() : 48), yMax = xMax;
+		int max_dim = (editing_town ? town->max_dim() : 48);
+		int xMin = 0, yMin = 0, xMax = max_dim, yMax = max_dim;
 		if(cen_x + 5 > 256 / size) {
 			xMin = cen_x + 5 - (256 / size);
 			xMax = cen_x + 5;
@@ -838,7 +839,9 @@ void draw_terrain(){
 		std::cout << "Drawing map for x = " << xMin << "..." << xMax << " and y = " << yMin << "..." << yMax << std::endl;
 		for(q = xMin; q < xMax; q++)
 			for(r = yMin; r < yMax; r++) {
-				t_to_draw = editing_town ? town->terrain(q,r) : current_terrain->terrain[q][r];
+				if(q - xMin < 0 || q - xMin >= max_dim || r - yMin < 0 || r - yMin >= max_dim)
+					t_to_draw = 90;
+				else t_to_draw = editing_town ? town->terrain(q,r) : current_terrain->terrain[q][r];
 				draw_one_tiny_terrain_spot(q-xMin,r-yMin,t_to_draw,size);
 				small_what_drawn[q][r] = t_to_draw;
 			}
