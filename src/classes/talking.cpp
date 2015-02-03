@@ -15,7 +15,7 @@
 
 #include "oldstructs.h"
 
-void cSpeech::append(legacy::talking_record_type& old){
+void cSpeech::append(legacy::talking_record_type& old, std::vector<shop_info_t>& shops){
 	int i,j;
 	for(i = 0; i < 200; i++)
 		strlens[i] = old.strlens[i];
@@ -51,26 +51,34 @@ void cSpeech::append(legacy::talking_record_type& old){
 				break;
 			case 7: // Item shop
 				talk_nodes[i].type = eTalkNode::SHOP;
-				talk_nodes[i].extras[3] = int(eShopType::ITEMS);
+				shops.push_back({eShopItemType::ITEM, talk_nodes[i].extras[1], talk_nodes[i].extras[2]});
+				talk_nodes[i].extras[1] = shops.size() + 5;
+				talk_nodes[i].extras[2] = 0;
 				break;
 			case 8: // Training
 				talk_nodes[i].type = eTalkNode::TRAINING;
 				break;
 			case 9: // Spell shops
-				talk_nodes[i].extras[3] = int(eShopType::MAGE);
-			if(false) // Intentional fallthrough, but suppress first line
 			case 10:
-				talk_nodes[i].extras[3] = int(eShopType::PRIEST);
 				talk_nodes[i].type = eTalkNode::SHOP;
-				talk_nodes[i].extras[1] += 30;
+				shops.push_back({
+					old.talk_nodes[i].type == 9 ? eShopItemType::MAGE_SPELL : eShopItemType::PRIEST_SPELL,
+					talk_nodes[i].extras[1] + 30,
+					talk_nodes[i].extras[2]
+				});
+				talk_nodes[i].extras[1] = shops.size() + 5;
+				talk_nodes[i].extras[2] = 0;
 				break;
 			case 11: // Alchemy shop
 				talk_nodes[i].type = eTalkNode::SHOP;
-				talk_nodes[i].extras[3] = int(eShopType::ALCHEMY);
+				shops.push_back({eShopItemType::ALCHEMY, talk_nodes[i].extras[1], talk_nodes[i].extras[2]});
+				talk_nodes[i].extras[1] = shops.size() + 5;
+				talk_nodes[i].extras[2] = 0;
 				break;
 			case 12: // Healer
 				talk_nodes[i].type = eTalkNode::SHOP;
-				talk_nodes[i].extras[3] = int(eShopType::HEALING);
+				talk_nodes[i].extras[1] = 5;
+				talk_nodes[i].extras[2] = 0;
 				break;
 			case 13: // Sell weapons
 				talk_nodes[i].type = eTalkNode::SELL_WEAPONS;
@@ -104,8 +112,7 @@ void cSpeech::append(legacy::talking_record_type& old){
 				break;
 			case 23: // Junk shop
 				talk_nodes[i].type = eTalkNode::SHOP;
-				talk_nodes[i].extras[3] = talk_nodes[i].extras[1] + int(eShopType::MAGIC_JUNK);
-				talk_nodes[i].extras[1] = 0;
+				talk_nodes[i].extras[2] = 0;
 				break;
 			case 24: // buy town location
 				talk_nodes[i].type = eTalkNode::BUY_TOWN_LOC;

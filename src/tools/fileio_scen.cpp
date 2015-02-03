@@ -17,6 +17,7 @@
 #include "regtown.h"
 #include "map_parse.hpp"
 #include "graphtool.hpp"
+#include "mathutil.hpp"
 
 #include "porting.hpp"
 #include "restypes.hpp"
@@ -32,7 +33,7 @@ void load_spec_graphics(fs::path scen_file);
 // Load old scenarios (town talk is handled by the town loading function)
 static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario);
 static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario);
-static bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy::scenario_data_type& scenario);
+static bool load_town_v1(fs::path scen_file,short which_town,cTown& the_town,legacy::scenario_data_type& scenario,std::vector<shop_info_t>& shops);
 // Load new scenarios
 static bool load_outdoors(fs::path out_base, location which_out, cOutdoors& the_out);
 static bool load_town(fs::path town_base, short which_town, cTown*& the_town);
@@ -42,6 +43,20 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario) {
 	scenario = cScenario();
 	// TODO: Implement checking to determine whether it's old or new
 	return load_scenario_v1(file_to_load, scenario);
+}
+
+static void port_shop_spec_node(cSpecial& spec, std::vector<shop_info_t>& shops) {
+	int which_shop;
+	if(spec.ex1b < 4) {
+		shops.push_back({eShopItemType(spec.ex1b + 1), spec.ex1a, spec.ex2a});
+		which_shop = shops.size() + 5;
+	} else if(spec.ex1b == 4)
+		which_shop = 5;
+	else which_shop = spec.ex1b - 5;
+	
+	spec.ex1a = which_shop;
+	spec.ex1b = spec.ex2b;
+	spec.ex2a = spec.ex2b = -1;
 }
 
 bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
@@ -140,6 +155,9 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 		}
 	}
 	
+	// Need to build a list of shops used in the scenario
+	std::vector<shop_info_t> shops;
+	
 	// Then load all the towns
 	scenario.towns.resize(scenario.format.num_towns);
 	for(int i = 0; i < scenario.format.num_towns; i++) {
@@ -148,10 +166,69 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 			case 1: scenario.towns[i] = new cMedTown(scenario); break;
 			case 2: scenario.towns[i] = new cTinyTown(scenario); break;
 		}
-		load_town_v1(scenario.scen_file, i, *scenario.towns[i], *temp_scenario);
+		load_town_v1(scenario.scen_file, i, *scenario.towns[i], *temp_scenario, shops);
 	}
 	// Enable character creation in starting town
 	scenario.towns[scenario.which_town_start]->has_tavern = true;
+	
+	// Check special nodes in case there were outdoor shops
+	for(cSpecial& spec : scenario.scen_specials) {
+		if(spec.type == eSpecType::ENTER_SHOP)
+			port_shop_spec_node(spec, shops);
+	}
+	for(cOutdoors* out : scenario.outdoors) {
+		for(cSpecial& spec : out->specials) {
+			if(spec.type == eSpecType::ENTER_SHOP)
+				port_shop_spec_node(spec, shops);
+		}
+	}
+	// We'll check town nodes too, just in case.
+	for(cTown* town : scenario.towns) {
+		for(cSpecial& spec : town->specials) {
+			if(spec.type == eSpecType::ENTER_SHOP)
+				port_shop_spec_node(spec, shops);
+		}
+	}
+	
+	// Now we have to build all those shops
+	for(shop_info_t info : shops) {
+		pic_num_t face = 0;
+		if(info.type == eShopItemType::MAGE_SPELL || info.type == eShopItemType::PRIEST_SPELL || info.type == eShopItemType::ALCHEMY)
+			face = 43;
+		else if(info.type == eShopItemType::ITEM) {
+			bool is_food_shop = true;
+			for(int i = info.first; i < info.first + info.count && i < scenario.scen_items.size(); i++) {
+				if(scenario.scen_items[i].variety != eItemType::FOOD)
+					is_food_shop = false;
+			}
+			if(is_food_shop)
+				face = 42;
+		}
+		eShopType type = eShopType::NORMAL;
+		eShopPrompt prompt = eShopPrompt::SHOPPING;
+		if(info.type == eShopItemType::MAGE_SPELL)
+			prompt = eShopPrompt::MAGE;
+		else if(info.type == eShopItemType::PRIEST_SPELL)
+			prompt = eShopPrompt::PRIEST;
+		else if(info.type == eShopItemType::ALCHEMY) {
+			prompt = eShopPrompt::ALCHEMY;
+			type = eShopType::ALLOW_DEAD;
+		}
+		cShop shop(type, prompt, face, 0, "");
+		if(info.type == eShopItemType::ITEM) {
+			int end = info.first + info.count;
+			end = min(end, scenario.scen_items.size());
+			shop.addItems(scenario.scen_items.begin() + info.first, scenario.scen_items.begin() + end, cShop::INFINITE);
+		} else {
+			int max = 62;
+			if(info.type == eShopItemType::ALCHEMY)
+				max = 20;
+			int end = min(max, info.first + info.count);
+			for(int i = info.first; i < end; i++)
+				shop.addSpecial(info.type, i);
+		}
+		scenario.shops.push_back(shop);
+	}
 	
 	delete temp_scenario;
 	delete item_data;
@@ -179,7 +256,7 @@ static long get_town_offset(short which_town, legacy::scenario_data_type& scenar
 	return len_to_jump;
 }
 
-bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy::scenario_data_type& scenario) {
+bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy::scenario_data_type& scenario, std::vector<shop_info_t>& shops) {
 	short i,n;
 	long len,len_to_jump = 0;
 	char temp_str[256];
@@ -261,7 +338,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		return false;
 	}
 	port_talk_nodes(&store_talk);
-	the_town.talking.append(store_talk);
+	the_town.talking.append(store_talk, shops);
 	
 	for(i = 0; i < 170; i++) {
 		len = (long) (the_town.talking.strlens[i]);

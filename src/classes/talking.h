@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include <string>
 #include "simpletypes.h"
+#include "shop.hpp"
 
 namespace legacy {
 	struct talking_record_type;
@@ -22,6 +23,12 @@ class cPersonality {
 public:
 	std::string title;
 	std::string look, name, job, dunno;
+};
+
+// This is used solely for porting old shops
+struct shop_info_t {
+	eShopItemType type;
+	int first, count;
 };
 
 class cSpeech { // formerly talking_record_type
@@ -39,7 +46,7 @@ public:
 	cPersonality people[10];
 	cNode talk_nodes[60];
 	
-	void append(legacy::talking_record_type& old);
+	void append(legacy::talking_record_type& old, std::vector<shop_info_t>& shops);
 	void writeTo(std::ostream& file) const;
 };
 

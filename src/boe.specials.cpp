@@ -2359,12 +2359,8 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::ENTER_SHOP:
 			get_strs(str1,str2,1,spec.m1,-1);
-			if(spec.ex2a >= 40)
-				spec.ex2a = 39;
-			if(spec.ex2a < 1)
-				spec.ex2a = 1;
-			spec.ex2b = minmax(0,6,spec.ex2b);
-			start_shop_mode(eShopType(spec.ex1b), spec.ex1a, spec.ex1a + spec.ex2a - 1, spec.ex2b, str1);
+			spec.ex1b = minmax(0,6,spec.ex2b);
+			start_shop_mode(spec.ex1a, spec.ex1b, str1);
 			*next_spec = -1;
 			break;
 		case eSpecType::STORY_DIALOG:

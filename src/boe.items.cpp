@@ -31,6 +31,7 @@ extern short stat_window,which_combat_type,current_pc;
 extern eGameMode overall_mode;
 extern sf::RenderWindow mainPtr;
 extern bool boom_anim_active;
+extern bool allow_junk_treasure;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 
@@ -934,21 +935,30 @@ void generate_job_bank(int which, job_bank_t& bank) {
 	}
 }
 
+static cItem get_random_store_item(int loot_type) {
+	cItem item = return_treasure(loot_type);
+	if(item.variety == eItemType::GOLD || item.variety == eItemType::SPECIAL || item.variety == eItemType::FOOD)
+		item = cItem();
+	item.ident = true;
+	return item;
+}
+
 void refresh_store_items() {
-	short i,j;
-	short loot_index[10] = {1,1,1,1,2,2,2,3,3,4};
-	
-	for(i = 0; i < 5; i++)
-		for(j = 0; j < 10; j++) {
-			univ.party.magic_store_items[i][j] = return_treasure(loot_index[j]);
-			if(univ.party.magic_store_items[i][j].variety == eItemType::GOLD ||
-			   univ.party.magic_store_items[i][j].variety == eItemType::SPECIAL ||
-			   univ.party.magic_store_items[i][j].variety == eItemType::FOOD)
-				univ.party.magic_store_items[i][j] = cItem();
-			univ.party.magic_store_items[i][j].ident = true;
+	for(size_t i = 0; i < univ.scenario.shops.size(); i++) {
+		if(univ.scenario.shops[i].getType() != eShopType::RANDOM)
+			continue;
+		for(int j = 0; j < 30; j++) {
+			cShopItem entry = univ.scenario.shops[i].getItem(j);
+			if(entry.type == eShopItemType::TREASURE) {
+				if(entry.item.item_level == 0)
+					allow_junk_treasure = true;
+				univ.party.magic_store_items[i][j] = get_random_store_item(entry.item.item_level);
+				allow_junk_treasure = false;
+			} else univ.party.magic_store_items[i][j] = cItem();
 		}
+	}
 	
-	for(i = 0; i < univ.party.job_banks.size(); i++) {
+	for(int i = 0; i < univ.party.job_banks.size(); i++) {
 		generate_job_bank(i, univ.party.job_banks[i]);
 	}
 }

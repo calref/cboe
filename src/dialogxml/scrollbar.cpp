@@ -36,6 +36,7 @@ void cScrollbar::setPosition(long newPos) {
 
 void cScrollbar::setMaximum(long newMax) {
 	max = ::max(1,newMax);
+	setPosition(pos);
 }
 
 void cScrollbar::setPageSize(long newSize) {

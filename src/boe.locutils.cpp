@@ -13,6 +13,7 @@ location which_party_sec;
 
 extern short which_combat_type,current_pc;
 extern eGameMode overall_mode;
+extern eGameMode store_pre_shop_mode, store_pre_talk_mode;
 extern location center;
 extern cUniverse univ;
 
@@ -41,13 +42,33 @@ void take_explored(short i,short j) {
 bool is_out() {
 	if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
 		return true;
-	else return false;
+	else if(overall_mode == MODE_SHOPPING) {
+		std::swap(overall_mode, store_pre_shop_mode);
+		bool ret = is_out();
+		std::swap(overall_mode, store_pre_shop_mode);
+		return ret;
+	} else if(overall_mode == MODE_TALKING) {
+		std::swap(overall_mode, store_pre_talk_mode);
+		bool ret = is_out();
+		std::swap(overall_mode, store_pre_talk_mode);
+		return ret;
+	} else return false;
 }
 
 bool is_town() {
 	if(((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT)) || (overall_mode == MODE_LOOK_TOWN))
 		return true;
-	else return false;
+	else if(overall_mode == MODE_SHOPPING) {
+		std::swap(overall_mode, store_pre_shop_mode);
+		bool ret = is_town();
+		std::swap(overall_mode, store_pre_shop_mode);
+		return ret;
+	} else if(overall_mode == MODE_TALKING) {
+		std::swap(overall_mode, store_pre_talk_mode);
+		bool ret = is_town();
+		std::swap(overall_mode, store_pre_talk_mode);
+		return ret;
+	} else return false;
 }
 
 bool is_combat() {

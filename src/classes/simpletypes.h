@@ -1010,20 +1010,6 @@ inline bool isPriest(eSpell spell) {
 	return code >= 100 && code < 162;
 }
 
-enum class eShopType {
-	ITEMS = 0,
-	MAGE = 1,
-	PRIEST = 2,
-	ALCHEMY = 3,
-	HEALING = 4,
-	MAGIC_JUNK = 5,
-	MAGIC_LOUSY = 6,
-	MAGIC_SO_SO = 7,
-	MAGIC_GOOD = 8,
-	MAGIC_GREAT = 9,
-	SKILLS = 10,
-};
-
 enum class eAlchemy {
 	NONE = -1,
 	CURE_WEAK = 0,
