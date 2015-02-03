@@ -135,8 +135,6 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 			sign_strs[i-120] = temp_str;
 	}
 	
-	for(i = 0; i < 200; i++)
-		talking.strlens[i] = 0;
 	for(i = 0; i < 10; i++) {
 		talking.people[i].title = "Unused";
 		talking.people[i].look = "";

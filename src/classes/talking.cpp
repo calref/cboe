@@ -17,8 +17,6 @@
 
 void cSpeech::append(legacy::talking_record_type& old, std::vector<shop_info_t>& shops){
 	int i,j;
-	for(i = 0; i < 200; i++)
-		strlens[i] = old.strlens[i];
 	for(i = 0; i < 60; i++){
 		talk_nodes[i].personality = old.talk_nodes[i].personality;
 		for(j = 0; j < 4; j++){
@@ -51,7 +49,7 @@ void cSpeech::append(legacy::talking_record_type& old, std::vector<shop_info_t>&
 				break;
 			case 7: // Item shop
 				talk_nodes[i].type = eTalkNode::SHOP;
-				shops.push_back({eShopItemType::ITEM, talk_nodes[i].extras[1], talk_nodes[i].extras[2]});
+				shops.push_back({eShopItemType::ITEM, talk_nodes[i].extras[1], talk_nodes[i].extras[2], talk_nodes[i].str1});
 				talk_nodes[i].extras[1] = shops.size() + 5;
 				talk_nodes[i].extras[2] = 0;
 				break;
@@ -64,14 +62,15 @@ void cSpeech::append(legacy::talking_record_type& old, std::vector<shop_info_t>&
 				shops.push_back({
 					old.talk_nodes[i].type == 9 ? eShopItemType::MAGE_SPELL : eShopItemType::PRIEST_SPELL,
 					talk_nodes[i].extras[1] + 30,
-					talk_nodes[i].extras[2]
+					talk_nodes[i].extras[2],
+					talk_nodes[i].str1
 				});
 				talk_nodes[i].extras[1] = shops.size() + 5;
 				talk_nodes[i].extras[2] = 0;
 				break;
 			case 11: // Alchemy shop
 				talk_nodes[i].type = eTalkNode::SHOP;
-				shops.push_back({eShopItemType::ALCHEMY, talk_nodes[i].extras[1], talk_nodes[i].extras[2]});
+				shops.push_back({eShopItemType::ALCHEMY, talk_nodes[i].extras[1], talk_nodes[i].extras[2], talk_nodes[i].str1});
 				talk_nodes[i].extras[1] = shops.size() + 5;
 				talk_nodes[i].extras[2] = 0;
 				break;

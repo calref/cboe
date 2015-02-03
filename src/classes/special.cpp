@@ -363,7 +363,6 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // T - Choose button to select a town
 // i - Choose button to select an item
 // I - Choose button to select a special item
-// # - Choose button to select store item (uses ex1b for type)
 // t - Choose button to select a terrain type
 // c - Choose button to select a monster type
 // a - Choose button to select an alchemy recipe
@@ -384,7 +383,7 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // / - Choose button to select generic stairway text
 // : - Choose stairway trigger conditions
 // L - Choose button to select a town lighting type
-// & - Choose button to select shop type
+// & - Choose button to select a shop
 // % - Choose button to select shop cost adjustment
 // { - Choose button to select a spell pattern
 // } - As above, but allows you to select which version of the rotateable field
@@ -402,11 +401,11 @@ static const char*const button_dict[7][11] = {
 		"                                              ", // msg3
 		"          p                                 3 ", // pic
 		"          ?                                   ", // pictype
-		"    #         x  T i                  M cit  j", // ex1a
-		"    &        S     ss                       cJ", // ex1b
+		"    &         x  T i                  M cit  j", // ex1a
+		"    %        S     ss                       cJ", // ex1b
 		"                                              ", // ex1c
 		"                                  tt          ", // ex2a
-		"    %                              t          ", // ex2b
+		"                                   t          ", // ex2b
 		"                                              ", // ex2c
 	}, { // one-shot nodes
 		"mm  md  d  mmm", // msg1

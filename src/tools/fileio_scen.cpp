@@ -45,10 +45,10 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario) {
 	return load_scenario_v1(file_to_load, scenario);
 }
 
-static void port_shop_spec_node(cSpecial& spec, std::vector<shop_info_t>& shops) {
+template<typename Container> static void port_shop_spec_node(cSpecial& spec, std::vector<shop_info_t>& shops, Container strs) {
 	int which_shop;
 	if(spec.ex1b < 4) {
-		shops.push_back({eShopItemType(spec.ex1b + 1), spec.ex1a, spec.ex2a});
+		shops.push_back({eShopItemType(spec.ex1b + 1), spec.ex1a, spec.ex2a, strs[spec.m1]});
 		which_shop = shops.size() + 5;
 	} else if(spec.ex1b == 4)
 		which_shop = 5;
@@ -174,19 +174,19 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	// Check special nodes in case there were outdoor shops
 	for(cSpecial& spec : scenario.scen_specials) {
 		if(spec.type == eSpecType::ENTER_SHOP)
-			port_shop_spec_node(spec, shops);
+			port_shop_spec_node(spec, shops, scenario.spec_strs);
 	}
 	for(cOutdoors* out : scenario.outdoors) {
 		for(cSpecial& spec : out->specials) {
 			if(spec.type == eSpecType::ENTER_SHOP)
-				port_shop_spec_node(spec, shops);
+				port_shop_spec_node(spec, shops, out->spec_strs);
 		}
 	}
 	// We'll check town nodes too, just in case.
 	for(cTown* town : scenario.towns) {
 		for(cSpecial& spec : town->specials) {
 			if(spec.type == eSpecType::ENTER_SHOP)
-				port_shop_spec_node(spec, shops);
+				port_shop_spec_node(spec, shops, town->spec_strs);
 		}
 	}
 	
@@ -214,7 +214,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 			prompt = eShopPrompt::ALCHEMY;
 			type = eShopType::ALLOW_DEAD;
 		}
-		cShop shop(type, prompt, face, 0, "");
+		cShop shop(type, prompt, face, 0, info.name);
 		if(info.type == eShopItemType::ITEM) {
 			int end = info.first + info.count;
 			end = min(end, scenario.scen_items.size());
@@ -338,10 +338,9 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		return false;
 	}
 	port_talk_nodes(&store_talk);
-	the_town.talking.append(store_talk, shops);
 	
 	for(i = 0; i < 170; i++) {
-		len = (long) (the_town.talking.strlens[i]);
+		len = (long) (store_talk.strlens[i]);
 		n = fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
 		if(i >= 0 && i < 10)
@@ -360,6 +359,9 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 			else the_town.talking.talk_nodes[(i-40)/2].str2 = temp_str;
 		}
 	}
+	
+	// Do this after strings are loaded because porting shops requires access to strings
+	the_town.talking.append(store_talk, shops);
 	
 	n = fclose(file_id);
 	if(n != 0) {

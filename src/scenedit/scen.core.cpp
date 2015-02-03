@@ -2518,6 +2518,7 @@ bool build_scenario() {
 	// TODO: This will probably change drastically once the new scenario format is implemented
 	
 	make_new_scenario(filename,width,height,default_town,grass);
+	scenario.shops.push_back(cShop('heal'));
 	
 	overall_mode = MODE_MAIN_SCREEN;
 	

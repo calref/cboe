@@ -70,11 +70,11 @@ Unused
 Unused
 Unused
 Unused
-Number of first item in store
-Store type (see docs. for list)
-Unused
-Number of items in store (1 .. 40)
+Which Shop
 Cost adjust (0 .. 6, lower = cheaper)
+Unused
+Unused
+Unused
 Unused
 Unused
 --------------------

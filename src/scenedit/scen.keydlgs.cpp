@@ -292,11 +292,12 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 			}
 			break;
 		case STRT_CONTEXT:
-			// TODO: This is a discontinous list, so there's probably a better way to deal with it...
 			strings = *ResMgr::get<StringRsrc>("special-contexts");
 			break;
 		case STRT_SHOP:
-			strings = {"Items", "Mage Spells", "Priest Spells", "Alchemy", "Healing", "Magic Shop: Junk", "Magic Shop: Lousy", "Magic Shop: So-so", "Magic Shop: Good", "Magic Shop: Great", "Skill Shop"};
+			for(cShop& shop : scenario.shops) {
+				strings.push_back(shop.getName());
+			}
 			break;
 		case STRT_COST_ADJ:
 			strings = {"Extremely Cheap", "Very Reasonable", "Pretty Average", "Somewhat Pricey", "Expensive", "Exorbitant", "Utterly Ridiculous"};
@@ -711,18 +712,6 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		if(type == eSpecType::CALL_GLOBAL) btn = 'S';
 		else btn = 's';
 	}
-	if(btn == '#') {
-		switch(eShopType(me["x1b"].getTextAsNum())) {
-			case eShopType::ITEMS: btn = 'i'; break;
-			case eShopType::MAGE: btn = 'A'; break;
-			case eShopType::PRIEST: btn = 'P'; break;
-			case eShopType::ALCHEMY: btn = 'a'; break;
-			case eShopType::SKILLS: btn = 'k'; break;
-			case eShopType::HEALING: case eShopType::MAGIC_GOOD: case eShopType::MAGIC_GREAT:
-			case eShopType::MAGIC_JUNK: case eShopType::MAGIC_LOUSY: case eShopType::MAGIC_SO_SO:
-				break;
-		}
-	}
 	short val = me[field].getTextAsNum(), mode = (btn == 'S' || btn == '$') ? 0 : edit_stack.top().mode, store;
 	short pictype = me["pictype"].getTextAsNum();
 	bool choose_string = true;
@@ -797,7 +786,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case '@': strt = STRT_ATTITUDE; title = "What attitude?"; break;
 		case '/': strt = STRT_STAIR; title = "Which stairway text?"; break;
 		case 'L': strt = STRT_LIGHT; title = "What lighting type?"; break;
-		case '&': strt = STRT_SHOP; title = "What shop type?"; break;
+		case '&': strt = STRT_SHOP; title = "Which shop?"; break;
 		case '%': strt = STRT_COST_ADJ; title = "What cost adjust?"; break;
 		case '*': strt = STRT_CONTEXT; title = "What context?"; break;
 		case ':': strt = STRT_STAIR_MODE; title = "Select trigger limitations:"; break;
@@ -809,11 +798,6 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			choose_string = false;
 			store = choose_graphic(val, pics[btn - '0'], &me);
 			if(store < 0) store = val;
-			break;
-		case '#':
-			choose_string = false;
-			store = val;
-			giveError("Either you have not chosen a shop type yet, or the shop type you chose doesn't allow you to customize its items.",&me);
 			break;
 		default:
 			choose_string = false;

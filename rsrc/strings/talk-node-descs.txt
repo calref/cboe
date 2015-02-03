@@ -49,9 +49,9 @@ Response if in this town ...
 Otherwise respond ...
 Shop
 Cost adjustment (0 .. 6)
-Number of first item in shop
-Total number of items in shop
-Type of shop
+Which shop
+Unused
+Unused
 Name of shop
 Unused
 Receive Training
