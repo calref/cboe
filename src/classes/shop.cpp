@@ -62,12 +62,14 @@ cShop::cShop(long preset) {
 		type = eShopType::RANDOM;
 		prompt = eShopPrompt::SHOPPING;
 		face = 0;
+		name = "Magic Shop";
 		for(int i = 0; i < 10; i++)
 			addSpecial(eShopItemType::TREASURE, loot_index[i]);
 	} else if(preset == 'heal') {
 		type = eShopType::ALLOW_DEAD;
 		prompt = eShopPrompt::HEALING;
 		face = 41;
+		name = "Healing";
 		addSpecial(eShopItemType::HEAL_WOUNDS);
 		addSpecial(eShopItemType::CURE_POISON);
 		addSpecial(eShopItemType::CURE_DISEASE);

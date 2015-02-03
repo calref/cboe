@@ -29,6 +29,7 @@ public:
 struct shop_info_t {
 	eShopItemType type;
 	int first, count;
+	std::string name;
 };
 
 class cSpeech { // formerly talking_record_type
@@ -42,7 +43,6 @@ public:
 		std::string str1, str2;
 		cNode() {std::fill(extras, extras + 4, -1);}
 	};
-	unsigned char strlens[200];
 	cPersonality people[10];
 	cNode talk_nodes[60];
 	
