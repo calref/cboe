@@ -270,7 +270,7 @@ unsigned char& cBigTown::lighting(size_t i, size_t r){
 cBigTown::cBigTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
 	for(size_t i = 0; i < max_dim(); i++)
 		for(size_t j = 0; j < max_dim(); j++) {
-			terrain(i,j) = scenario.default_ground * 2;
+			terrain(i,j) = scenario.default_ground;
 			lighting(i / 8,j) = 0;
 		}
 	init_start();
@@ -279,7 +279,7 @@ cBigTown::cBigTown(cScenario& scenario, bool init_strings) : cTown(scenario, ini
 cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
 	for(size_t i = 0; i < max_dim(); i++)
 		for(size_t j = 0; j < max_dim(); j++) {
-			terrain(i,j) = scenario.default_ground * 2;
+			terrain(i,j) = scenario.default_ground;
 			lighting(i / 8,j) = 0;
 		}
 	init_start();
@@ -288,7 +288,7 @@ cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, ini
 cTinyTown::cTinyTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
 	for(size_t i = 0; i < max_dim(); i++)
 		for(size_t j = 0; j < max_dim(); j++) {
-			terrain(i,j) = scenario.default_ground * 2;
+			terrain(i,j) = scenario.default_ground;
 			lighting(i / 8,j) = 0;
 		}
 	init_start();

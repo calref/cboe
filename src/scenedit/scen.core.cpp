@@ -26,6 +26,7 @@
 
 extern short cen_x, cen_y,cur_town;
 extern bool mouse_button_held;
+extern bool editing_town;
 extern short cur_viewing_mode;
 extern cTown* town;
 extern cOutdoors* current_terrain;
@@ -2454,9 +2455,9 @@ static bool edit_make_scen_2_event_filter(cDialog& me, std::string, eKeyMod) {
 	j = me["out-h"].getTextAsNum();
 	if(cre(j, 1,50,"Outdoors height must be between 1 and 50.","",&me)) return true;
 	if(cre(i * j, 1,100,"The total number of outdoor sections (width times height) must be between 1 and 100.","",&me)) return true;
-	i = me["town_s"].getTextAsNum();
-	j = me["town_m"].getTextAsNum();
-	k = me["town_l"].getTextAsNum();
+	i = me["town-s"].getTextAsNum();
+	j = me["town-m"].getTextAsNum();
+	k = me["town-l"].getTextAsNum();
 	if(cre(i, 0,200,"Number of small towns must be between 0 and 200.","",&me)) return true;
 	if(cre(j, 1,200,"Number of medium towns must be between 1 and 200. The first town (Town 0) must always be of medium size.","",&me)) return true;
 	if(cre(k, 0,200,"Number of large towns must be between 0 and 200.","",&me)) return true;
@@ -2473,7 +2474,7 @@ bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, 
 	new_dlog.setResult(false);
 	
 	new_dlog.run();
-	if(!new_dlog.getResult<bool>()) return false;
+	if(!new_dlog.accepted()) return false;
 	
 	out_w = new_dlog["out-w"].getTextAsNum();
 	out_h = new_dlog["out-h"].getTextAsNum();
@@ -2487,65 +2488,198 @@ bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, 
 extern fs::path progDir;
 extern eScenMode overall_mode;
 bool build_scenario() {
-	short width, height, lg, med, sm, which_town;
+	short width, height, lg, med, sm;
 	bool default_town, grass;
 	std::string filename, title;
 	short i,j;
 	cTown* warriors_grove = nullptr;
+	std::vector<cShop> warriors_grove_shops;
 	
 	if(!edit_make_scen_1(filename, title, grass))
 		return false;
 	filename += ".boes";
 	if(!edit_make_scen_2(width, height, lg, med, sm, default_town))
 		return false;
+	
 	scenario = cScenario(true);
 	scenario.scen_name = title;
-	if(!default_town) {
-		scenario.addTown<cMedTown>();
-		if(!grass)
-			for(i = 0; i < 48; i++)
-				for(j = 0; j < 48; j++)
-					town->terrain(i,j) = 0;
-	} else {
-		fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
-		if(!fs::exists(basePath)) {oopsError(40);}
-		cScenario base;
-		load_scenario(basePath, base);
-		warriors_grove = base.towns[0];
-		base.towns[0] = nullptr;
-	}
-	if(med > 0) med--;
-	// TODO: This will probably change drastically once the new scenario format is implemented
+	scenario.default_ground = grass ? 2 : 0;
 	
-	make_new_scenario(filename,width,height,default_town,grass);
+	fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
+	if(!fs::exists(basePath)) {oopsError(40);}
+	cScenario base;
+	load_scenario(basePath, base);
+	// Load in all terrains, items, and monsters
+	std::swap(scenario.ter_types, base.ter_types);
+	std::swap(scenario.scen_items, base.scen_items);
+	std::swap(scenario.scen_monsters, base.scen_monsters);
+	
+	if(default_town) {
+		warriors_grove = base.towns[0];
+		std::swap(warriors_grove_shops, base.shops);
+		base.towns[0] = nullptr;
+		if(!grass) {
+			// Go through and replace all surface terrains with similar cave terrains
+			// Note that this assumes the default terrain set is unchanged.
+			for(int x = 0; x < warriors_grove->max_dim(); x++) {
+				for(int y = 0; y < warriors_grove->max_dim(); y++) {
+					ter_num_t ter_there = warriors_grove->terrain(x,y);
+					if(ter_there >= 36 && ter_there <= 49 && ter_there != 37) // Hills
+						ter_there = 0;
+					else if(ter_there >= 50 && ter_there <= 62) // Water
+						ter_there = 71;
+					else switch(ter_there) {
+						// Mountains
+						case 22: case 23: ter_there = 5; break;
+						case 24: ter_there = 6; break;
+						case 25: ter_there = 8; break;
+						case 26: ter_there = 9; break;
+						case 27: ter_there = 11; break;
+						case 28: ter_there = 12; break;
+						case 29: ter_there = 14; break;
+						case 30: ter_there = 15; break;
+						case 31: ter_there = 17; break;
+						case 32: ter_there = 18; break;
+						case 33: ter_there = 19; break;
+						case 34: ter_there = 20; break;
+						case 35: ter_there = 21; break;
+						// Water stuff
+						case 63: case 64: ter_there = 74; break;
+						case 65: case 66: case 67: ter_there = 73; break;
+						case 68: case 69: case 70: ter_there = 72; break;
+						// Rubble
+						case 87: case 88: case 89: ter_there -= 3; break;
+						// Vegetation and stuff
+						case 2: ter_there = 0; break;
+						case 3: case 4: ter_there = 1; break;
+						case 110: case 112: ter_there = 97; break;
+						case 111: ter_there = 96; break;
+						case 113: ter_there = 91; break;
+						case 114: case 37: ter_there = 98; break;
+						case 115: ter_there = 92; break;
+						case 118: ter_there = 94; break;
+						// Artificial stuff - walkways, fences, signs
+						case 83: ter_there = 82; break;
+						case 116: case 119: ter_there = 99; break;
+						case 117: case 120: ter_there = 100; break;
+						case 121: ter_there = 106; break;
+					}
+					warriors_grove->terrain(x,y) = ter_there;
+				}
+			}
+		}
+		if(med > 0) med--;
+	}
+	
 	scenario.shops.push_back(cShop('heal'));
 	
 	overall_mode = MODE_MAIN_SCREEN;
 	
+	editing_town = false;
+	scenario.outdoors.resize(width, height);
+	for(int x = 0; x < width; x++) {
+		for(int y = 0; y < height; y++) {
+			scenario.outdoors[x][y] = new cOutdoors(scenario);
+			// Add borders
+			if(x == 0) {
+				for(int i = 0; i < 48; i++) {
+					scenario.outdoors[x][y]->terrain[0][i] = grass ? 23 : 5;
+					scenario.outdoors[x][y]->terrain[1][i] = grass ? 22 : 5;
+					scenario.outdoors[x][y]->terrain[2][i] = grass ? 22 : 5;
+					scenario.outdoors[x][y]->terrain[3][i] = grass ? 22 : 5;
+					if(grass)
+						scenario.outdoors[x][y]->terrain[4][i] = 36;
+				}
+			}
+			if(x == width - 1) {
+				for(int i = 0; i < 48; i++) {
+					scenario.outdoors[x][y]->terrain[47][i] = grass ? 23 : 5;
+					scenario.outdoors[x][y]->terrain[46][i] = grass ? 22 : 5;
+					scenario.outdoors[x][y]->terrain[45][i] = grass ? 22 : 5;
+					scenario.outdoors[x][y]->terrain[44][i] = grass ? 22 : 5;
+					if(grass)
+						scenario.outdoors[x][y]->terrain[43][i] = 36;
+				}
+			}
+			if(y == 0) {
+				for(int i = 0; i < 48; i++) {
+					scenario.outdoors[x][y]->terrain[i][0] = grass ? 23 : 5;
+					scenario.outdoors[x][y]->terrain[i][1] = grass ? 22 : 5;
+					scenario.outdoors[x][y]->terrain[i][2] = grass ? 22 : 5;
+					scenario.outdoors[x][y]->terrain[i][3] = grass ? 22 : 5;
+					if(grass && scenario.outdoors[x][y]->terrain[i][4] == 2)
+						scenario.outdoors[x][y]->terrain[i][4] = 36;
+				}
+			}
+			if(y == height - 1) {
+				for(int i = 0; i < 48; i++) {
+					scenario.outdoors[x][y]->terrain[i][47] = grass ? 23 : 5;
+					scenario.outdoors[x][y]->terrain[i][46] = grass ? 22 : 5;
+					scenario.outdoors[x][y]->terrain[i][45] = grass ? 22 : 5;
+					scenario.outdoors[x][y]->terrain[i][44] = grass ? 22 : 5;
+					if(grass && scenario.outdoors[x][y]->terrain[i][43] == 2)
+						scenario.outdoors[x][y]->terrain[i][43] = 36;
+				}
+			}
+			// Minor fixup for mountain corners
+			if(grass) {
+				if(x == 0 && y == 0) {
+					scenario.outdoors[x][y]->terrain[0][1] = 23;
+					scenario.outdoors[x][y]->terrain[0][2] = 23;
+					scenario.outdoors[x][y]->terrain[0][3] = 23;
+				}
+				if(x == 0 && y == height - 1) {
+					scenario.outdoors[x][y]->terrain[0][46] = 23;
+					scenario.outdoors[x][y]->terrain[0][45] = 23;
+					scenario.outdoors[x][y]->terrain[0][44] = 23;
+				}
+				if(x == width - 1 && y == 0) {
+					scenario.outdoors[x][y]->terrain[47][1] = 23;
+					scenario.outdoors[x][y]->terrain[47][2] = 23;
+					scenario.outdoors[x][y]->terrain[47][3] = 23;
+				}
+				if(x == width - 1 && y == height - 1) {
+					scenario.outdoors[x][y]->terrain[47][46] = 23;
+					scenario.outdoors[x][y]->terrain[47][45] = 23;
+					scenario.outdoors[x][y]->terrain[47][44] = 23;
+				}
+			}
+			current_terrain = scenario.outdoors[x][y];
+			if(x == 0 || y == 0)
+				adjust_space(loc(3,3));
+			if(x == width - 1 || y == height - 1)
+				adjust_space(loc(44,44));
+		}
+	}
 	cur_out.x = 0;
 	cur_out.y = 0;
 	current_terrain = scenario.outdoors[0][0];
+	current_terrain->terrain[24][24] = grass ? 234 : 232;
+	current_terrain->terrain[23][23] = grass ? 121 : 106;
 	
-	if(default_town && warriors_grove)
+	if(default_town && warriors_grove) {
 		scenario.towns.push_back(warriors_grove);
+		std::swap(scenario.shops, warriors_grove_shops);
+	}
 	
-	// TODO: Append i+1 to each town name
 	for(i = 0; i < lg; i++) {
 		scenario.addTown<cBigTown>();
-		town->town_name = "Large town";
+		scenario.towns.back()->town_name = "Large town " + std::to_string(i + 1);
 	}
 	for(i = 0; i < med; i++) {
 		scenario.addTown<cMedTown>();
-		town->town_name = "Medium town";
+		scenario.towns.back()->town_name = "Medium town " + std::to_string(i + 1);
 	}
 	for(i = 0; i < sm; i++) {
 		scenario.addTown<cTinyTown>();
-		town->town_name = "Small town";
+		scenario.towns.back()->town_name = "Small town " + std::to_string(i + 1);
 	}
 	cur_town = 0;
 	town = scenario.towns[0];
 	update_item_menu();
-	return false;
+	
+	save_scenario(progDir/filename);
+	return true;
 }
 
 static bool check_location_bounds(cDialog& me, std::string id, bool losing) {

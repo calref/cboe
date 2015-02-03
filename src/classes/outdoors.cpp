@@ -129,7 +129,8 @@ cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario
 	
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++) {
-			terrain[i][j] = 5; // formerly 0
+			terrain[i][j] = scenario.default_ground;
+			special_spot[i][j] = false;
 		}
 	
 	for(i = 0; i < 8; i++) {
