@@ -2236,13 +2236,6 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*a = (spec.ex1a == 0) ? 1 : 0;
 			break;
 		case eSpecType::END_SCENARIO:
-			// If party died at some point during the special node, they shouldn't get a victory.
-			// (Adapted from Windows version)
-			store_val = 6;
-			for(i = 0; i < 6; i++)
-				if(univ.party[i].main_status != eMainStatus::ALIVE)
-					store_val--;
-			if(store_val == 0) break;
 			end_scenario = true;
 			break;
 		case eSpecType::SET_POINTER:
