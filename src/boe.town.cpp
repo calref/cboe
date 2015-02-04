@@ -739,6 +739,7 @@ void start_town_combat(eDirection direction) {
 
 eDirection end_town_combat() {
 	short num_tries = 0,r1,i;
+	// TODO: Don't allow ending combat if someone is trapped in a forcecage or if two PCs are separated by an impassable wall with no way around it
 	
 	r1 = get_ran(1,0,5);
 	while(univ.party[r1].main_status != eMainStatus::ALIVE && num_tries++ < 1000)

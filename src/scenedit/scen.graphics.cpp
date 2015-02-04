@@ -1273,7 +1273,8 @@ void sort_specials() {
 bool is_spot(short i,short j){
 	if(editing_town)
 		return is_field_type(i,j,SPECIAL_SPOT);
-	else return current_terrain->special_spot[i][j];
+	else if(i >= 0 && i < 48 && j >= 0 && j < 48)
+		return current_terrain->special_spot[i][j];
 	return false;
 }
 
