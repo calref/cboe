@@ -177,7 +177,7 @@ short choose_text_res(std::string res_list,short first_t,short last_t,unsigned s
 	return dlog.show(cur_choice);
 }
 
-short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, const char* title) {
+short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std::string title) {
 	location view_loc;
 	
 	std::vector<std::string> strings;
@@ -263,6 +263,9 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 		case STRT_TRAP:
 			strings = *ResMgr::get<StringRsrc>("trap-types");
 			break;
+		case STRT_HEALING:
+			strings = *ResMgr::get<StringRsrc>("shop-specials");
+			break;
 		case STRT_BUTTON:
 			for(int btn : available_btns) {
 				strings.push_back(basic_buttons[btn].label);
@@ -326,6 +329,9 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, con
 			break;
 		case STRT_QUEST_STATUS:
 			strings = {"Available", "Started", "Completed", "Failed"};
+			break;
+		case STRT_TREASURE:
+			strings = {"0 - Junk", "1 - Lousy", "2 - So-so", "3 - Good", "4 - Great"};
 			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())

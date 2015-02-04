@@ -55,6 +55,8 @@ cShop::cShop(eShopType type, eShopPrompt prompt, pic_num_t pic, int adj, std::st
 	face(pic)
 {}
 
+cShop::cShop(std::string name) : cShop(eShopType::NORMAL, eShopPrompt::SHOPPING, 0, 0, name) {}
+
 cShop::cShop(long preset) {
 	const short loot_index[10] = {1,1,1,1,2,2,2,3,3,4};
 	
@@ -96,7 +98,7 @@ size_t cShop::size() {
 	});
 }
 
-void cShop::addItem(cItem item, size_t quantity, int chance) {
+void cShop::addItem(size_t n, cItem item, size_t quantity, int chance) {
 	size_t i = firstEmpty();
 	if(i >= items.size()) return;
 	if(item.variety == eItemType::NO_ITEM) return;
@@ -104,6 +106,7 @@ void cShop::addItem(cItem item, size_t quantity, int chance) {
 	items[i].item = item;
 	items[i].item.ident = true;
 	items[i].quantity = quantity;
+	items[i].index = n;
 	if(chance < 100)
 		items[i].quantity = min(999,quantity) + chance * 1000;
 }
@@ -168,6 +171,12 @@ static cItem store_alchemy(short which_s) {
 }
 
 void cShop::addSpecial(eShopItemType type, int n) {
+	if(type == eShopItemType::EMPTY || type == eShopItemType::CALL_SPECIAL) return;
+	if(type == eShopItemType::OPTIONAL || type == eShopItemType::ITEM) return;
+	replaceSpecial(firstEmpty(), type, n);
+}
+
+void cShop::replaceSpecial(size_t i, eShopItemType type, int n) {
 	// TODO: Make this a std::map instead
 	static const short heal_costs[10] = {50,30,80,90,100,250,500,1000,3000,100};
 	static const char*const heal_types[] = {
@@ -178,9 +187,11 @@ void cShop::addSpecial(eShopItemType type, int n) {
 	if(type == eShopItemType::ITEM) return;
 	if(type == eShopItemType::OPTIONAL) return;
 	if(type == eShopItemType::CALL_SPECIAL) return;
-	size_t i = firstEmpty();
 	if(i >= items.size()) return;
 	items[i].type = type;
+	if(type >= eShopItemType::HEAL_WOUNDS)
+		items[i].index = int(type) - int(eShopItemType::HEAL_WOUNDS);
+	else items[i].index = n;
 	if(type == eShopItemType::MAGE_SPELL)
 		items[i].item = store_mage_spells(n);
 	else if(type == eShopItemType::PRIEST_SPELL)
@@ -191,19 +202,21 @@ void cShop::addSpecial(eShopItemType type, int n) {
 		items[i].item.graphic_num = 108;
 		items[i].item.full_name = get_str("skills", n * 2 + 1);
 	} else if(type == eShopItemType::TREASURE) {
+		items[i].item.graphic_num = 45;
 		items[i].item.item_level = n;
 		items[i].item.full_name = "Treasure (type " + std::to_string(n) + ")";
 	} else if(type == eShopItemType::CLASS) {
+		items[i].item.graphic_num = 65;
 		items[i].item.special_class = n;
 		items[i].item.full_name = "Item of special class " + std::to_string(n);
 	} else {
 		items[i].item.graphic_num = 109;
-		items[i].item.full_name = heal_types[int(type) - int(eShopItemType::HEAL_WOUNDS)];
+		items[i].item.full_name = heal_types[items[i].index];
 	}
 	if(type == eShopItemType::SKILL)
 		items[i].item.value = skill_g_cost[eSkill(n)] * 1.5;
 	else if(type >= eShopItemType::HEAL_WOUNDS)
-		items[i].item.value = heal_costs[int(type) - int(eShopItemType::HEAL_WOUNDS)];
+		items[i].item.value = heal_costs[items[i].index];
 	items[i].quantity = 0;
 }
 
@@ -249,6 +262,18 @@ void cShop::setName(std::string newName) {
 
 void cShop::setCostAdjust(int adj) {
 	cost_adj = adj;
+}
+
+void cShop::setFace(pic_num_t pic) {
+	face = pic;
+}
+
+void cShop::setType(eShopType t) {
+	type = t;
+}
+
+void cShop::setPrompt(eShopPrompt p) {
+	prompt = p;
 }
 
 void cShop::takeOne(size_t i) {

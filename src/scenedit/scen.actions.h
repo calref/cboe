@@ -30,6 +30,7 @@ void start_monster_editing(short just_redo_text);
 void start_item_editing(short just_redo_text);
 void start_special_item_editing();
 void start_quest_editing();
+void start_shops_editing();
 void start_string_editing(short mode,short just_redo_text);
 void start_special_editing(short mode,short just_redo_text);
 void town_entry(location spot_hit);

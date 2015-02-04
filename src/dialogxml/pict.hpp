@@ -100,6 +100,7 @@ private:
 	void drawPresetScen(short num, rectangle to_rect);
 	void drawPresetScenLg(short num, rectangle to_rect);
 	void drawPresetItem(short num, rectangle to_rect);
+	void drawPresetTinyItem(short num, rectangle to_rect);
 	void drawPresetPc(short num, rectangle to_rect);
 	void drawPresetField(short num, rectangle to_rect);
 	void drawPresetBoom(short num, rectangle to_rect);
@@ -117,6 +118,7 @@ private:
 	void drawCustomDlogLg(short num, rectangle to_rect);
 	void drawCustomTalk(short num, rectangle to_rect);
 	void drawCustomItem(short num, rectangle to_rect);
+	void drawCustomTinyItem(short num, rectangle to_rect);
 	void drawCustomMissile(short num, rectangle to_rect);
 	void drawCustomTerMap(short num, rectangle to_rect);
 	void drawPartyMonstSm(short num, rectangle to_rect);

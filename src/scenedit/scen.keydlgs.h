@@ -12,6 +12,7 @@ enum eStrType {
 	STRT_SHOP, STRT_COST_ADJ, STRT_STAIR_MODE, STRT_TALK_NODE,
 	STRT_STATUS, STRT_SPELL_PAT, STRT_SUMMON, STRT_TALK,
 	STRT_ENCHANT, STRT_DIR, STRT_QUEST, STRT_QUEST_STATUS,
+	STRT_HEALING, STRT_TREASURE,
 };
 
 bool cre(short val,short min,short max,std::string text1,std::string text2,cDialog* parent) ;
@@ -21,7 +22,7 @@ void put_choice_pics(short g_type);
 pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent);
 short choose_background(short cur_choice, cDialog* parent);
 short choose_text_res(std::string res_list,short first_t,short last_t,unsigned short cur_choice,cDialog* parent,const char *title);
-short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent,const char* title);
+short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent,std::string title);
 void edit_text_str(short which_str,short mode);
 bool edit_spec_enc(short which_node,short mode,cDialog* parent);
 short get_fresh_spec(short which_mode);

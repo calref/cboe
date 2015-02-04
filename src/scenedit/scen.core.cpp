@@ -23,6 +23,7 @@
 #include "restypes.hpp"
 #include "stack.hpp"
 #include "spell.hpp"
+#include "mathutil.hpp"
 
 extern short cen_x, cen_y,cur_town;
 extern bool mouse_button_held;
@@ -184,6 +185,8 @@ static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld,
 			cPict& pic_ctrl = dynamic_cast<cPict&>(parent[pic_fld]);
 			if(type == PIC_TER_ANIM && pic < 1000)
 				pic += 960;
+			if(type == PIC_ITEM && pic_ctrl.getPicType() == PIC_TINY_ITEM)
+				type = PIC_TINY_ITEM;
 			pic_ctrl.setPict(pic,type);
 		}
 	}
@@ -944,11 +947,11 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string hit,cMonster& m
 	return true;
 }
 
-static short get_monst_abil_num(std::string prompt, int min, int max, cDialog& parent) {
+static short get_monst_abil_num(std::string prompt, int min, int max, cDialog& parent, int cur = -1) {
 	cDialog numPanel("get-mabil-num", &parent);
 	numPanel["okay"].attachClickHandler(std::bind(&cDialog::toast, &numPanel, false));
 	numPanel["prompt"].setText(prompt + " (" + std::to_string(min) + "-" + std::to_string(max) + ") ");
-	numPanel["number"].setTextToNum(min);
+	numPanel["number"].setTextToNum(minmax(min,max,cur));
 	numPanel.run();
 	
 	int result = numPanel["number"].getTextAsNum();
@@ -2050,6 +2053,344 @@ void edit_quest(size_t which_quest) {
 	
 	put_quest_in_dlog(quest_dlg, quest, which_quest);
 	quest_dlg.run();
+}
+
+static bool put_shop_item_in_dlog(cPict& pic, cControl& num, cControl& title, const cShop& shop, int which) {
+	cShopItem entry = shop.getItem(which);
+	num.setTextToNum(which);
+	pic.setPict(entry.item.graphic_num);
+	if(entry.type == eShopItemType::EMPTY) {
+		title.setText("");
+		return false;
+	}
+	std::string name = entry.item.full_name;
+	int amount = entry.quantity;
+	if(entry.type == eShopItemType::OPTIONAL) {
+		name += " [" + std::to_string(amount / 1000) + "% chance]";
+		amount %= 1000;
+	}
+	if(amount > 0) {
+		name = std::to_string(amount) + "x " + name;
+	}
+	title.setText(name);
+	return true;
+}
+
+static void put_shop_in_dlog(cDialog& me, const cShop& shop, size_t which_shop) {
+	me["num"].setText(std::to_string(which_shop) + " of " + std::to_string(scenario.shops.size()));
+	me["name"].setText(shop.getName());
+	
+	dynamic_cast<cPict&>(me["face"]).setPict(shop.getFace());
+	
+	dynamic_cast<cLedGroup&>(me["type"]).setSelected("t" + std::to_string(int(shop.getType()) + 1));
+	dynamic_cast<cLedGroup&>(me["prompt"]).setSelected("p" + std::to_string(int(shop.getPrompt()) + 1));
+	
+	cStack& items = dynamic_cast<cStack&>(me["items"]);
+	for(int i = 0; i < 6; i++) {
+		items.setPage(i);
+		for(int j = 0; j < 5; j++) {
+			std::string id = std::to_string(j + 1);
+			if(put_shop_item_in_dlog(dynamic_cast<cPict&>(me["pict" + id]), me["n" + id], me["item" + id], shop, i * 5 + j)) {
+				if(i == 0) {
+					me["ed" + id].show();
+					me["del" + id].show();
+				}
+			} else if(i == 0) {
+				me["ed" + id].hide();
+				me["del" + id].hide();
+			}
+			
+		}
+	}
+	items.setPage(0);
+}
+
+static bool save_shop_from_dlog(cDialog& me, cShop& shop, size_t which_shop, bool close) {
+	if(!me.toast(true)) return false;
+	
+	shop.setName(me["name"].getText());
+	shop.setType(eShopType(dynamic_cast<cLedGroup&>(me["type"]).getSelected()[1] - '1'));
+	shop.setPrompt(eShopPrompt(dynamic_cast<cLedGroup&>(me["prompt"]).getSelected()[1] - '1'));
+	shop.setFace(dynamic_cast<cPict&>(me["face"]).getPicNum());
+	// Items are filled in as they're added by the dialog, so that's all we need to do here
+	
+	scenario.shops[which_shop] = shop;
+	if(!close) me.untoast();
+	return true;
+}
+
+static bool change_shop_dlog_page(cDialog& me, std::string dir, cShop& shop, size_t& which_shop) {
+	if(!save_shop_from_dlog(me, shop, which_shop, false))
+		return true;
+	
+	if(dir == "left") {
+		if(which_shop == 0)
+			which_shop = scenario.shops.size();
+		which_shop--;
+	} else if(dir == "right") {
+		which_shop++;
+		if(which_shop == scenario.shops.size())
+			which_shop = 0;
+	}
+	
+	shop = scenario.shops[which_shop];
+	put_shop_in_dlog(me, shop, which_shop);
+	return true;
+}
+
+static bool change_shop_dlog_items_page(cDialog& me, std::string dir, const cShop& shop) {
+	cStack& items = dynamic_cast<cStack&>(me["items"]);
+	int curPage = items.getPage(), maxPage = items.getPageCount();
+	if(dir == "up") {
+		if(curPage == 0)
+			curPage = maxPage - 1;
+		else curPage--;
+	} else if(dir == "down") {
+		if(curPage == maxPage - 1)
+			curPage = 0;
+		else curPage++;
+	}
+	for(int i = 0; i < 5; i++) {
+		std::string id = std::to_string(i + 1);
+		if(shop.getItem(curPage * 5 + i).type == eShopItemType::EMPTY) {
+			me["ed" + id].hide();
+			me["del" + id].hide();
+		} else {
+			me["ed" + id].show();
+			me["del" + id].show();
+		}
+	}
+	items.setPage(curPage);
+	return true;
+}
+
+static void edit_shop_item(cDialog& parent, size_t& item, size_t& quantity, bool optional) {
+	using namespace std::placeholders;
+	int was_item = item;
+	cDialog item_dlg("edit-shop-item", &parent);
+	item_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
+	item_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
+	
+	if(optional) {
+		item_dlg["amount"].setTextToNum(quantity % 1000);
+		item_dlg["chance"].setTextToNum(quantity / 1000);
+		item_dlg["amount"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 999, "amount"));
+		item_dlg["chance"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 1, 100, "chance"));
+	} else {
+		item_dlg["amount"].setTextToNum(quantity);
+		item_dlg["chance"].hide();
+		item_dlg["chance-prompt"].hide();
+	}
+	
+	item_dlg["item"].setText(scenario.scen_items[item].full_name);
+	item_dlg["choose"].attachClickHandler([&item](cDialog& me, std::string, eKeyMod) -> bool {
+		item = choose_text(STRT_ITEM, item, &me, "Which item?");
+		me["item"].setText(scenario.scen_items[item].full_name);
+		return true;
+	});
+	
+	item_dlg.run();
+	if(item_dlg.accepted()) {
+		quantity = item_dlg["amount"].getTextAsNum();
+		if(optional)
+			quantity += 1000 * item_dlg["chance"].getTextAsNum();
+	} else item = was_item;
+}
+
+static void edit_shop_special(cDialog& parent, cItem& item, size_t& quantity) {
+	using namespace std::placeholders;
+	cDialog spec_dlg("edit-shop-special", &parent);
+	spec_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
+	spec_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
+	spec_dlg["cost"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 10000, "cost"));
+	spec_dlg["pickicon"].attachClickHandler(std::bind(pick_picture, PIC_ITEM, _1, "", "icon"));
+	
+	spec_dlg["edit"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
+		int spec = me["node"].getTextAsNum();
+		if(spec < 0) spec = get_fresh_spec(0);
+		if(edit_spec_enc(spec, 0, &me))
+			me["node"].setTextToNum(spec);
+		return true;
+	});
+	
+	spec_dlg["name"].setText(item.full_name);
+	spec_dlg["descr"].setText(item.desc);
+	spec_dlg["node"].setTextToNum(item.item_level);
+	spec_dlg["cost"].setTextToNum(item.value);
+	spec_dlg["amount"].setTextToNum(quantity);
+	dynamic_cast<cPict&>(spec_dlg["icon"]).setPict(item.graphic_num);
+	
+	spec_dlg.run();
+	if(spec_dlg.accepted()) {
+		item.full_name = spec_dlg["name"].getText();
+		item.desc = spec_dlg["descr"].getText();
+		item.item_level = spec_dlg["node"].getTextAsNum();
+		item.value = spec_dlg["cost"].getTextAsNum();
+		quantity = spec_dlg["amount"].getTextAsNum();
+		item.graphic_num = dynamic_cast<cPict&>(spec_dlg["icon"]).getPicNum();
+	}
+}
+
+static bool edit_shop_entry(cDialog& me, std::string which, cShop& shop) {
+	int btn_i = which[2] - '0';
+	int i = dynamic_cast<cStack&>(me["items"]).getPage() * 5 + btn_i - 1;
+	cShopItem entry = shop.getItem(i);
+	eStrType list;
+	std::string prompt;
+	bool need_string = true;
+	switch(entry.type) {
+		case eShopItemType::EMPTY: return true;
+		case eShopItemType::ITEM:
+		case eShopItemType::OPTIONAL:
+			edit_shop_item(me, entry.index, entry.quantity, entry.type == eShopItemType::OPTIONAL);
+			entry.item = scenario.scen_items[entry.index];
+			shop.replaceItem(i, entry);
+			need_string = false;
+			break;
+		case eShopItemType::CLASS:
+			entry.index = get_monst_abil_num("Which special class?", 1, 100, me, entry.index);
+			shop.replaceSpecial(i, eShopItemType::CLASS, entry.index);
+			need_string = false;
+			break;
+		case eShopItemType::CALL_SPECIAL:
+			edit_shop_special(me, entry.item, entry.quantity);
+			shop.replaceItem(i, entry);
+			need_string = false;
+			break;
+		case eShopItemType::MAGE_SPELL: list = STRT_MAGE; prompt = "Which mage spell?"; break;
+		case eShopItemType::PRIEST_SPELL: list = STRT_PRIEST; prompt = "Which priest spell?"; break;
+		case eShopItemType::ALCHEMY: list = STRT_ALCHEMY; prompt = "Which recipe?"; break;
+		case eShopItemType::SKILL: list = STRT_SKILL; prompt = "Which skill?"; break;
+		case eShopItemType::TREASURE: list = STRT_TREASURE; prompt = "What class of treasure?"; break;
+		case eShopItemType::CURE_ACID: case eShopItemType::CURE_DISEASE: case eShopItemType::CURE_POISON:
+		case eShopItemType::CURE_DUMBFOUNDING: case eShopItemType::CURE_PARALYSIS: case eShopItemType::DESTONE:
+		case eShopItemType::HEAL_WOUNDS: case eShopItemType::RAISE_DEAD: case eShopItemType::REMOVE_CURSE:
+		case eShopItemType::RESURRECT:
+			list = STRT_HEALING;
+			break;
+	}
+	if(need_string) {
+		entry.index = choose_text(list, entry.index, &me, prompt);
+		if(list == STRT_HEALING)
+			shop.replaceSpecial(i, eShopItemType(int(eShopItemType::HEAL_WOUNDS) + entry.index));
+		else shop.replaceSpecial(i, entry.type, entry.index);
+	}
+	std::string pic_id = which, num_id = which, title_id = which;
+	pic_id.replace(0,2,"pict"); num_id.replace(0,2,"n"); title_id.replace(0,2,"item");
+	put_shop_item_in_dlog(dynamic_cast<cPict&>(me[pic_id]), me[num_id], me[title_id], shop, i);
+	return true;
+}
+
+static bool delete_shop_entry(cDialog& me, std::string which, cShop& shop, size_t which_shop) {
+	cStack& items = dynamic_cast<cStack&>(me["items"]);
+	int page = items.getPage();
+	shop.clearItem((which[3] - '1') + 5 * page);
+	put_shop_in_dlog(me, shop, which_shop);
+	items.setPage(page);
+	change_shop_dlog_items_page(me, "stay", shop);
+	return true;
+}
+
+static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t which_shop) {
+	if(shop.size() == 30) {
+		giveError("There is no more room in this shop to add another item. Each shop can only have up to 30 items.", &me);
+		return true;
+	}
+	if(type == "item" || type == "opt") {
+		size_t which_item = 0, amount = 0;
+		edit_shop_item(me, which_item, amount, type == "opt");
+		if(scenario.scen_items[which_item].variety == eItemType::NO_ITEM)
+			return true;
+		if(scenario.scen_items[which_item].variety == eItemType::GOLD)
+			return true;
+		if(type == "item")
+			shop.addItem(which_item, scenario.scen_items[which_item], amount);
+		else shop.addItem(which_item, scenario.scen_items[which_item], amount % 1000, amount / 1000);
+	} else if(type == "spec") {
+		cItem item('spec');
+		size_t amount = 0;
+		edit_shop_special(me, item, amount);
+		if(item.item_level < 0)
+			return true;
+		shop.addSpecial(item.full_name, item.desc, item.graphic_num, item.item_level, item.value, amount);
+	} else if(type == "class") {
+		int n = get_monst_abil_num("Which special class?", 0, 100, me);
+		if(n == 0) return true;
+		shop.addSpecial(eShopItemType::CLASS, n);
+	} else {
+		eStrType list;
+		eShopItemType item;
+		std::string prompt;
+		if(type == "mage") {
+			list = STRT_MAGE;
+			item = eShopItemType::MAGE_SPELL;
+			prompt = "Which mage spell?";
+		} else if(type == "priest") {
+			list = STRT_PRIEST;
+			item = eShopItemType::PRIEST_SPELL;
+			prompt = "Which priest spell?";
+		} else if(type == "alch") {
+			list = STRT_ALCHEMY;
+			item = eShopItemType::ALCHEMY;
+			prompt = "Which recipe?";
+		} else if(type == "skill") {
+			list = STRT_SKILL;
+			item = eShopItemType::SKILL;
+			prompt = "Which skill?";
+		} else if(type == "treas") {
+			list = STRT_TREASURE;
+			item = eShopItemType::TREASURE;
+			prompt = "What class of treasure?";
+		} else if(type == "heal") {
+			list = STRT_HEALING;
+			prompt = "What kind of healing?";
+		}
+		int i = choose_text(list, -1, &me, prompt);
+		if(i == -1) return true;
+		if(list == STRT_HEALING) {
+			item = eShopItemType(int(eShopItemType::HEAL_WOUNDS) + i);
+			i = 0;
+		}
+		shop.addSpecial(item, i);
+	}
+	put_shop_in_dlog(me, shop, which_shop);
+	int atItem = shop.size() - 1;
+	int onPage = atItem / 5;
+	dynamic_cast<cStack&>(me["items"]).setPage(onPage);
+	change_shop_dlog_items_page(me, "stay", shop);
+	return true;
+}
+
+void edit_shop(size_t which_shop, cDialog* parent) {
+	using namespace std::placeholders;
+	if(which_shop == scenario.shops.size())
+		scenario.shops.emplace_back("New Shop");
+	cShop shop = scenario.shops[which_shop];
+	
+	cDialog shop_dlg("edit-shop", parent);
+	shop_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
+	shop_dlg["okay"].attachClickHandler(std::bind(save_shop_from_dlog, _1, std::ref(shop), std::ref(which_shop), true));
+	shop_dlg["pickface"].attachClickHandler(std::bind(pick_picture, PIC_TALK, _1, "", "face"));
+	shop_dlg.attachClickHandlers(std::bind(change_shop_dlog_items_page, _1, _2, std::ref(shop)), {"up", "down"});
+	shop_dlg.attachClickHandlers(std::bind(delete_shop_entry, _1, _2, std::ref(shop), std::ref(which_shop)), {"del1", "del2", "del3", "del4", "del5"});
+	shop_dlg.attachClickHandlers(std::bind(edit_shop_entry, _1, _2, std::ref(shop)), {"ed1", "ed2", "ed3", "ed4", "ed5"});
+	shop_dlg.attachClickHandlers(std::bind(add_shop_entry, _1, _2, std::ref(shop), std::ref(which_shop)), {"item", "opt", "spec", "mage", "priest", "alch", "skill", "treas", "heal", "class"});
+	shop_dlg["rand"].attachClickHandler([&shop,which_shop](cDialog& me, std::string, eKeyMod) -> bool {
+		shop = cShop('junk');
+		put_shop_in_dlog(me, shop, which_shop);
+		return true;
+	});
+	
+	if(scenario.shops.size() == 1 || parent != nullptr) {
+		shop_dlg["left"].hide();
+		shop_dlg["right"].hide();
+	} else {
+		shop_dlg.attachClickHandlers(std::bind(change_shop_dlog_page, _1, _2, std::ref(shop), std::ref(which_shop)), {"left", "right"});
+	}
+	
+	dynamic_cast<cStack&>(shop_dlg["items"]).setPageCount(6);
+	put_shop_in_dlog(shop_dlg, shop, which_shop);
+	shop_dlg.run();
 }
 
 static void put_save_rects_in_dlog(cDialog& me) {

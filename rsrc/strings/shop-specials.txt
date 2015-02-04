@@ -1,0 +1,10 @@
+Heal Wounds
+Cure Poison
+Cure Disease
+Cure Acid
+Cure Paralysis
+Remove Curse
+Destone
+Raise Dead
+Resurrect
+Cure Dumbfounding

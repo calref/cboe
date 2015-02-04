@@ -27,6 +27,7 @@ void cPict::init(){
 	drawPict()[PIC_TALK] = &cPict::drawPresetTalk;
 	drawPict()[PIC_SCEN] = &cPict::drawPresetScen;
 	drawPict()[PIC_ITEM] = &cPict::drawPresetItem;
+	drawPict()[PIC_TINY_ITEM] = &cPict::drawPresetTinyItem;
 	drawPict()[PIC_PC] = &cPict::drawPresetPc;
 	drawPict()[PIC_FIELD] = &cPict::drawPresetField;
 	drawPict()[PIC_BOOM] = &cPict::drawPresetBoom;
@@ -46,6 +47,7 @@ void cPict::init(){
 	drawPict()[PIC_CUSTOM_TALK] = &cPict::drawCustomTalk;
 	drawPict()[PIC_CUSTOM_SCEN] = &cPict::drawCustomTalk;
 	drawPict()[PIC_CUSTOM_ITEM] = &cPict::drawCustomItem;
+	drawPict()[PIC_CUSTOM_TINY_ITEM] = &cPict::drawCustomTinyItem;
 	drawPict()[PIC_CUSTOM_FULL] = &cPict::drawFullSheet;
 	drawPict()[PIC_CUSTOM_MISSILE] = &cPict::drawCustomMissile;
 	drawPict()[PIC_CUSTOM_DLOG_LG] = &cPict::drawCustomDlogLg;
@@ -176,6 +178,8 @@ ePicType operator+ (ePicType lhs, ePicTypeMod rhs){
 				case PIC_CUSTOM_ITEM:
 				case PIC_PARTY_ITEM:
 					return PIC_ITEM;
+				case PIC_CUSTOM_TINY_ITEM:
+					return PIC_TINY_ITEM;
 				case PIC_CUSTOM_FULL:
 					return PIC_FULL;
 				case PIC_CUSTOM_MISSILE:
@@ -233,6 +237,12 @@ ePicType operator+ (ePicType lhs, ePicTypeMod rhs){
 					return lhs;
 			}
 		case PIC_LARGE:
+			if(lhs == PIC_DLOG)
+				return PIC_DLOG_LG;
+			else if(lhs == PIC_CUSTOM_DLOG)
+				return PIC_CUSTOM_DLOG_LG;
+			else if(lhs == PIC_SCEN)
+				return PIC_SCEN_LG;
 			return (lhs + PIC_WIDE) + PIC_TALL;
 		case PIC_CUSTOM:
 			switch(lhs){
@@ -250,6 +260,8 @@ ePicType operator+ (ePicType lhs, ePicTypeMod rhs){
 					return PIC_CUSTOM_SCEN;
 				case PIC_ITEM:
 					return PIC_CUSTOM_ITEM;
+				case PIC_TINY_ITEM:
+					return PIC_CUSTOM_TINY_ITEM;
 				case PIC_FULL:
 					return PIC_CUSTOM_FULL;
 				case PIC_MISSILE:
@@ -330,6 +342,12 @@ ePicType operator- (ePicType lhs, ePicTypeMod rhs){
 					return lhs;
 			}
 		case PIC_LARGE:
+			if(lhs == PIC_DLOG_LG)
+				return PIC_DLOG;
+			else if(lhs == PIC_CUSTOM_DLOG_LG)
+				return PIC_CUSTOM_DLOG_LG;
+			else if(lhs == PIC_SCEN_LG)
+				return PIC_SCEN;
 			return (lhs - PIC_WIDE) - PIC_TALL;
 		case PIC_CUSTOM:
 			switch(lhs){
@@ -347,6 +365,8 @@ ePicType operator- (ePicType lhs, ePicTypeMod rhs){
 					return PIC_SCEN;
 				case PIC_CUSTOM_ITEM:
 					return PIC_ITEM;
+				case PIC_CUSTOM_TINY_ITEM:
+					return PIC_TINY_ITEM;
 				case PIC_CUSTOM_FULL:
 					return PIC_FULL;
 				case PIC_CUSTOM_MISSILE:
@@ -440,6 +460,7 @@ void cPict::recalcRect() {
 			bounds.width() = 32;
 			bounds.height() = 32;
 			break;
+		case PIC_TINY_ITEM: case PIC_CUSTOM_TINY_ITEM:
 		case PIC_MISSILE: case PIC_CUSTOM_MISSILE:
 			bounds.width() = 18;
 			bounds.height() = 18;
@@ -755,6 +776,17 @@ void cPict::drawPresetItem(short num, rectangle to_rect){
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
+void cPict::drawPresetTinyItem(short num, rectangle to_rect){
+	to_rect.right = to_rect.left + 18;
+	to_rect.bottom = to_rect.top + 18;
+	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	std::shared_ptr<sf::Texture> from_gw;
+	rectangle from_rect = {0,0,18,18};
+	from_gw = getSheet(SHEET_TINY_ITEM);
+	from_rect.offset(18 * (num % 10), 18 * (num / 10));
+	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+}
+
 void cPict::drawPresetPc(short num, rectangle to_rect){
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_PC);
 	rectangle from_rect = calc_rect(2 * (num / 8), num % 8);
@@ -968,6 +1000,16 @@ void cPict::drawCustomTalk(short num, rectangle to_rect){
 void cPict::drawCustomItem(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
+	rectangle from_rect;
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+}
+
+void cPict::drawCustomTinyItem(short num, rectangle to_rect){
+	to_rect.right = to_rect.left + 18;
+	to_rect.bottom = to_rect.top + 18;
 	rectangle from_rect;
 	sf::Texture* from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);

@@ -51,7 +51,7 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 	Iterator<Attribute> attr;
 	std::string name;
 	ePicType type;
-	bool wide = false, tall = false, custom = false;
+	bool wide = false, tall = false, custom = false, tiny = false;
 	bool foundTop = false, foundLeft = false, foundType = false, foundNum = false; // required attributes
 	rectangle frame;
 	int width = 0, height = 0;
@@ -111,6 +111,7 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			if(val == "wide") wide = true;
 			else if(val == "tall") tall = true;
 			else if(val == "large") wide = tall = true;
+			else if(val == "small") tiny = true;
 			else throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
 		}else if(name == "def-key"){
 			std::string val;
@@ -154,6 +155,9 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			else if(p.second->getPicType() == PIC_SCEN) p.second->setPict(wasPic, PIC_SCEN_LG);
 			else if(p.second->getPicType() == PIC_DLOG) p.second->setPict(wasPic, PIC_DLOG_LG);
 		}
+	} else if(tiny && type == PIC_ITEM) {
+		pic_num_t wasPic = p.second->getPicNum();
+		p.second->setPict(wasPic, PIC_TINY_ITEM);
 	}
 	frame.right = frame.left;
 	frame.bottom = frame.top;

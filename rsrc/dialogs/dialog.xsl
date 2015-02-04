@@ -29,7 +29,8 @@
 		pict
 		<xsl:if test='@framed = "true" or not(@framed)'>framed </xsl:if>
 		<xsl:value-of select='./@type'/>
-		<xsl:if test='@size = "large" and @type != "monst"'>large</xsl:if>
+		<xsl:if test='@size = "large" and @type != "monst"'> large</xsl:if>
+		<xsl:if test='@size = "small" and @type = "item"'> tiny</xsl:if>
 	</xsl:attribute>
 	<xsl:if test='/dialog/@debug = "true" and @name'>
 		<xsl:attribute name='title'>
