@@ -945,10 +945,9 @@ void draw_terrain(short	mode) {
 //				Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, loc(q,r), 1, 0);
 			// TODO: Move draw_sfx, draw_items, draw_fields, draw_spec_items, etc to here
 			
-			if(is_town() || is_combat()) {
+			if(is_town() || is_combat())
 				draw_items(where_draw);
-				draw_fields(where_draw);
-			}
+			draw_fields(where_draw);
 			//draw_monsters(where_draw);
 			//draw_vehicles(where_draw);
 			//if(is_combat) draw_pcs(where_draw); else draw_party(where_draw);

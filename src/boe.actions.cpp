@@ -1678,11 +1678,8 @@ bool handle_keystroke(sf::Event& event){
 	}
 	else if(overall_mode == MODE_SHOPPING) { // shopping keystrokes
 		if(chr2 == kb::Escape) {
-			pass_point.x = 222 + ul.x;
-			pass_point.y = 398 + ul.y;
-			pass_event.mouseButton.x = pass_point.x;
-			pass_event.mouseButton.y = pass_point.y;
-			are_done = handle_action(pass_event);
+			play_sound(37);
+			end_shop_mode();
 		}
 		for(i = 0; i < 8; i++)
 			if(chr2 == shop_chars[i]) {

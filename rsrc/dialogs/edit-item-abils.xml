@@ -38,7 +38,7 @@
 		<led name='type0' state='off' top='213' left='208' width='140'>Type 0: Junk, Not left</led>
 		<led name='type1' state='off' top='228' left='208' width='140'>Type 1: Lousy, 1 - 20 gp</led>
 		<led name='type2' state='off' top='243' left='208' width='140'>Type 2: So-so, 20-200 gp</led>
-		<led name='type3' state='off' top='258' left='208' width='140'>Type 2: Good, 200+ gp</led>
+		<led name='type3' state='off' top='258' left='208' width='140'>Type 3: Good, 200+ gp</led>
 		<led name='type4' state='off' top='273' left='208' width='140'>Type 4: Great, 2500+ gp</led>
 		<led name='type5' state='off' top='288' left='208' width='140'>Type 5: Unique/Rare, Not left</led>
 	</group>

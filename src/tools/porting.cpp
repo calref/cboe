@@ -410,7 +410,7 @@ void flip_long(int32_t *s){
 	
 }
 
-// TODO: This was because Windows stored its rect members in a different order, but since we now have our own rect class, it shouldn't be needed.
+// This is needed in order to load in old legacy Windows scenarios, which stored their rects in a different order than Mac scenario
 static void alter_rect(legacy::Rect *r) {
 	short a;
 	
