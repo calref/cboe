@@ -526,6 +526,7 @@ enum class eSpecCtx {
 	ATTACKED_MELEE = 23,
 	ATTACKED_RANGE = 24,
 	HAIL = 25, // Special called by trying to initiate conversation
+	SHOPPING = 26,
 };
 
 enum class eSpecType {

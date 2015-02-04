@@ -554,6 +554,11 @@ void cParty::writeTo(std::ostream& file) const {
 	file << "PLAYED " << scen_played << '\n';
 	for(auto p : quest_status)
 		file << "QUEST " << p.first << ' ' << p.second << ' ' << quest_start.at(p.first) << ' ' << quest_source.at(p.first) << '\n';
+	for(auto p : store_limited_stock) {
+		for(auto p2 : p.second) {
+			file << "SHOPSTOCK " << p.first << p2.first << p2.second;
+		}
+	}
 	for(auto iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
 		std::string campaign_id = maybe_quote_string(iter->first);
 		// Okay, we have the campaign ID in a state such that reading it back in will restore the original ID.
@@ -772,6 +777,9 @@ void cParty::readFrom(std::istream& file){
 			int i;
 			sin >> i;
 			sin >> quest_status[i] >> quest_start[i] >> quest_source[i];
+		} else if(cur == "SHOPSTOCK") {
+			int i, j;
+			sin >> i >> j >> store_limited_stock[i][j];
 		}else if(cur == "KILLS")
 			sin >> total_m_killed;
 		else if(cur == "DAMAGE")

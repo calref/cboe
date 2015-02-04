@@ -96,14 +96,16 @@ size_t cShop::size() {
 	});
 }
 
-void cShop::addItem(cItem item, size_t quantity) {
+void cShop::addItem(cItem item, size_t quantity, int chance) {
 	size_t i = firstEmpty();
 	if(i >= items.size()) return;
 	if(item.variety == eItemType::NO_ITEM) return;
-	items[i].type = eShopItemType::ITEM;
+	items[i].type = chance == 100 ? eShopItemType::ITEM : eShopItemType::OPTIONAL;
 	items[i].item = item;
 	items[i].item.ident = true;
 	items[i].quantity = quantity;
+	if(chance < 100)
+		items[i].quantity = min(999,quantity) + chance * 1000;
 }
 
 static cItem store_mage_spells(short which_s) {
@@ -174,6 +176,8 @@ void cShop::addSpecial(eShopItemType type, int n) {
 	};
 	if(type == eShopItemType::EMPTY) return;
 	if(type == eShopItemType::ITEM) return;
+	if(type == eShopItemType::OPTIONAL) return;
+	if(type == eShopItemType::CALL_SPECIAL) return;
 	size_t i = firstEmpty();
 	if(i >= items.size()) return;
 	items[i].type = type;
@@ -188,6 +192,10 @@ void cShop::addSpecial(eShopItemType type, int n) {
 		items[i].item.full_name = get_str("skills", n * 2 + 1);
 	} else if(type == eShopItemType::TREASURE) {
 		items[i].item.item_level = n;
+		items[i].item.full_name = "Treasure (type " + std::to_string(n) + ")";
+	} else if(type == eShopItemType::CLASS) {
+		items[i].item.special_class = n;
+		items[i].item.full_name = "Item of special class " + std::to_string(n);
 	} else {
 		items[i].item.graphic_num = 109;
 		items[i].item.full_name = heal_types[int(type) - int(eShopItemType::HEAL_WOUNDS)];
@@ -197,6 +205,18 @@ void cShop::addSpecial(eShopItemType type, int n) {
 	else if(type >= eShopItemType::HEAL_WOUNDS)
 		items[i].item.value = heal_costs[int(type) - int(eShopItemType::HEAL_WOUNDS)];
 	items[i].quantity = 0;
+}
+
+void cShop::addSpecial(std::string name, std::string descr, pic_num_t pic, int node, int cost, int quantity) {
+	size_t i = firstEmpty();
+	if(i >= items.size()) return;
+	items[i].type = eShopItemType::CALL_SPECIAL;
+	items[i].quantity = quantity;
+	items[i].item.full_name = name;
+	items[i].item.desc = descr;
+	items[i].item.graphic_num = pic;
+	items[i].item.item_level = node;
+	items[i].item.value = cost;
 }
 
 cShopItem cShop::getItem(size_t i) const {
@@ -232,9 +252,9 @@ void cShop::setCostAdjust(int adj) {
 }
 
 void cShop::takeOne(size_t i) {
-	if(items[i].quantity == 1)
-		clearItem(i);
-	else if(items[i].quantity > 0)
+	if(items[i].quantity == 1) {
+		items[i].type = eShopItemType::EMPTY;
+	} else if(items[i].quantity > 0)
 		items[i].quantity--;
 }
 

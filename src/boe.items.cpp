@@ -954,7 +954,28 @@ void refresh_store_items() {
 					allow_junk_treasure = true;
 				univ.party.magic_store_items[i][j] = get_random_store_item(entry.item.item_level);
 				allow_junk_treasure = false;
-			} else univ.party.magic_store_items[i][j] = cItem();
+				continue;
+			} else if(entry.type == eShopItemType::CLASS) {
+				std::set<int> choices;
+				for(int i = 0; i < univ.scenario.scen_items.size(); i++) {
+					if(univ.scenario.scen_items[i].special_class == entry.item.special_class)
+						choices.insert(i);
+				}
+				int choice = get_ran(1,0,choices.size());
+				if(choice < choices.size()) {
+					auto iter = choices.begin();
+					std::advance(iter, choice);
+					univ.party.magic_store_items[i][j] = univ.scenario.scen_items[*iter];
+					continue;
+				}
+			} else if(entry.type == eShopItemType::OPTIONAL) {
+				int roll = get_ran(1,1,100);
+				if(roll <= entry.quantity / 1000) {
+					univ.party.magic_store_items[i][j] = entry.item;
+					continue;
+				}
+			}
+			univ.party.magic_store_items[i][j] = cItem();
 		}
 	}
 	
