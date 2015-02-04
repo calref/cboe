@@ -1448,10 +1448,10 @@ bool handle_action(sf::Event event) {
 	if(need_redraw) draw_terrain();
 	if(need_reprint || need_redraw) print_buf();
 	
-	if(end_scenario)
-		handle_victory();
-	else if(!univ.party.is_alive())
+	if(!univ.party.is_alive())
 		handle_party_death();
+	else if(end_scenario)
+		handle_victory();
 	
 	are_done = All_Done;
 	return are_done;
