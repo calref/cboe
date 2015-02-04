@@ -10,6 +10,7 @@ enum eLBAction {
 	LB_EDIT_TEXT,
 	LB_EDIT_SPECITEM,
 	LB_EDIT_QUEST,
+	LB_EDIT_SHOPS,
 	LB_LOAD_OUT,
 	LB_EDIT_OUT,
 	LB_LOAD_TOWN,
@@ -36,6 +37,7 @@ enum eRBAction {
 	RB_OUT_SIGN = 14,
 	RB_TOWN_SIGN = 15,
 	RB_QUEST = 16,
+	RB_SHOP = 17,
 };
 
 enum eLBMode {

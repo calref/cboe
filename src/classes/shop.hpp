@@ -30,6 +30,7 @@ enum class eShopItemType {
 	CLASS,
 	OPTIONAL,
 	CALL_SPECIAL,
+	// All non-healing types must be above here and all healing types below, with HEAL_WOUNDS kept first
 	HEAL_WOUNDS,
 	CURE_POISON,
 	CURE_DISEASE,
@@ -44,8 +45,8 @@ enum class eShopItemType {
 
 struct cShopItem {
 	eShopItemType type = eShopItemType::EMPTY;
-	size_t quantity;
-	cItem item;
+	size_t quantity, index;
+	cItem item = cItem('shop');
 	int getCost(int adj);
 };
 
@@ -61,14 +62,16 @@ public:
 	static const size_t INFINITE = 0;
 	cShop();
 	cShop(eShopType type, eShopPrompt prompt, pic_num_t pic, int adj, std::string name);
+	explicit cShop(std::string name);
 	explicit cShop(long preset);
-	void addItem(cItem item, size_t quantity, int chance = 100);
+	void addItem(size_t i, cItem item, size_t quantity, int chance = 100);
 	void addSpecial(std::string name, std::string descr, pic_num_t pic, int node, int cost, int quantity);
 	void addSpecial(eShopItemType type, int n = 0);
-	template<typename Iter> void addItems(Iter begin, Iter end, size_t quantity) {
-		while(begin != end) addItem(*begin++, quantity);
+	template<typename Iter> void addItems(size_t start, Iter begin, Iter end, size_t quantity) {
+		while(begin != end) addItem(start++, *begin++, quantity);
 	}
 	void replaceItem(size_t i, cShopItem newItem);
+	void replaceSpecial(size_t i, eShopItemType type, int n = 0);
 	size_t size();
 	cShopItem getItem(size_t i) const;
 	eShopType getType() const;
@@ -78,6 +81,9 @@ public:
 	eShopPrompt getPrompt() const;
 	void setCostAdjust(int adj);
 	void setName(std::string name);
+	void setType(eShopType t);
+	void setFace(pic_num_t pic);
+	void setPrompt(eShopPrompt p);
 	void takeOne(size_t i);
 	void clearItem(size_t i);
 	void clear();

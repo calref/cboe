@@ -31,8 +31,9 @@ enum ePicType {
 	PIC_MISSILE = 12,			///< 18x18 missile graphic from the missiles sheet
 	PIC_DLOG_LG = 13,			///< 72x72 dialog graphic from the dialog sheet
 	PIC_SCEN_LG = 14,			///< 64x64 scenario graphic (currently each is on its own sheet)
-	PIC_TER_MAP = 15,			///< 12x12 map graphic... or should it be 6x6?
+	PIC_TER_MAP = 15,			///< 12x12 map graphic from the terrain map sheet, expanded to 24x24
 	PIC_STATUS = 16,			///< 12x12 status icon
+	PIC_TINY_ITEM = 17,			///< 18x18 item graphic from the small item sheet
 	PIC_MONST_WIDE = 23,		///< 56x36 monster graphic from the preset sheets, resized to fit and centred in a 28x36 space
 	PIC_MONST_TALL = 43,		///< 28x72 monster graphic from the preset sheets, resized to fit and centred in a 28x36 space
 	PIC_MONST_LG = 63,			///< 56x72 monster graphic from the preset sheets, resized to fit in a 28x36 space
@@ -46,7 +47,8 @@ enum ePicType {
 	PIC_CUSTOM_FULL = 111,		///< entire sheet graphic, drawn from scenname.exr/sheetxxx.png where xxx is the number
 	PIC_CUSTOM_MISSILE = 112,	///< 18x18 missile graphic drawn from the the custom sheets
 	PIC_CUSTOM_DLOG_LG = 113,	///< 72x72 dialog graphic from the custom sheet, taken from 8 successive slots
-	PIC_CUSTOM_TER_MAP = 115,	///< 12x12 map graphic (should it be 6x6?) taken from the custom sheet
+	PIC_CUSTOM_TER_MAP = 115,	///< 12x12 map graphic taken from the custom sheet and expanded to 24x24
+	PIC_CUSTOM_TINY_ITEM = 117,	///< 28x36 custom item graphic shrunk down into an 18x18 space
 	PIC_CUSTOM_MONST_WIDE = 123,///< 56x36 monster graphic from the custom sheets, resized to fit and centred in a 28x36 space
 	PIC_CUSTOM_MONST_TALL = 143,///< 28x72 monster graphic from the custom sheets, resized to fit and centred in a 28x36 space
 	PIC_CUSTOM_MONST_LG = 163,	///< 56x72 monster graphic from the custom sheets, resized to fit in a 28x36 space

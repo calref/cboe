@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay' debug='true'>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='8' left='50' width='150' height='17'>Editing Shop Entry</text>
+	<text top='50' left='10' width='100' height='16'>Name:</text>
+	<field name='name' top='48' left='110' width='200' height='16'/>
+	<text top='75' left='10' width='100' height='16'>Special Node:</text>
+	<field name='node' top='74' left='110' width='80' height='16'/>
+	<button name='edit' type='large' top='71' left='200'>Create/Edit</button>
+	<text top='100' left='10' width='100' height='16'>Quantity:</text>
+	<field name='amount' type='uint' top='98' left='110' width='80' height='16'/>
+	<text top='125' left='10' width='100' height='16'>Cost:</text>
+	<field name='cost' type='uint' top='123' left='110' width='80' height='16'/>
+	<text top='100' left='190' width='30' height='16'>Icon:</text>
+	<pict name='icon' type='item' size='small' num='0' top='100' left='225'/>
+	<button name='pickicon' top='96' left='247' type='regular'>Choose</button>
+	<text top='150' left='10' width='100' height='16'>Description:</text>
+	<field name='descr' top='148' left='110' width='200' height='100'/>
+	<button name='cancel' type='regular' def-key='esc' top='255' left='10'>Cancel</button>
+	<button name='okay' type='regular' top='255' left='247'>OK</button>
+</dialog>

@@ -199,6 +199,12 @@ cItem::cItem(long preset) : cItem() {
 			name = "Potion";
 			magic = true;
 			break;
+		case 'spec':
+			item_level = -1;
+			full_name = "Call Special Node";
+		case 'shop':
+			graphic_num = 105; // The blank graphic
+			break;
 	}
 }
 

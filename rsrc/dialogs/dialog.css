@@ -29,7 +29,8 @@ title {
 	border: dashed green thin;
 }
 
-.dark .text, .dark .led {
+.dark .text, .dark .led,
+.dark .button.tiny, .dark .button.push {
 	color: white;
 }
 
@@ -69,7 +70,7 @@ title {
 	height: 32px;
 }
 
-.pict.missile {
+.pict.missile, .pict.item.tiny {
 	width: 18px;
 	height: 18px;
 }

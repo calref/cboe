@@ -236,6 +236,9 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 					case LB_EDIT_QUEST:
 						start_quest_editing();
 						break;
+					case LB_EDIT_SHOPS:
+						start_shops_editing();
+						break;
 					case LB_LOAD_OUT:
 						if(change_made) {
 							if(!save_check("save-section-confirm"))
@@ -446,6 +449,14 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							}
 						} else edit_quest(j);
 						start_quest_editing();
+						break;
+					case RB_SHOP:
+						if(option_hit) {
+							if(j == scenario.shops.size() - 1)
+								scenario.shops.pop_back();
+							else scenario.shops[j] = cShop("Unused Shop");
+						} else edit_shop(j);
+						start_shops_editing();
 						break;
 				}
 				mouse_button_held = false;
@@ -2074,6 +2085,7 @@ void set_up_main_screen() {
 	set_lb(-1,LB_TEXT,LB_EDIT_TEXT,"Edit Scenario Text");
 	set_lb(-1,LB_TEXT,LB_EDIT_SPECITEM,"Edit Special Items");
 	set_lb(-1,LB_TEXT,LB_EDIT_QUEST,"Edit Quests");
+	set_lb(-1,LB_TEXT,LB_EDIT_SHOPS,"Edit Shops");
 	set_lb(-1,LB_TEXT,LB_NO_ACTION,"");
 	set_lb(-1,LB_TEXT,LB_NO_ACTION,"Outdoors Options");
 	strb << "  Section x = " << cur_out.x << ", y = " << cur_out.y;
@@ -2254,6 +2266,27 @@ void start_quest_editing() {
 		else title = scenario.quests[i].name;
 		title = std::to_string(i) + " - " + title;
 		set_rb(i, RB_QUEST, i, title);
+	}
+	redraw_screen();
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Command-click or right-click to delete",true);
+}
+
+void start_shops_editing() {
+	int num_options = scenario.shops.size() + 1;
+	if(overall_mode < MODE_MAIN_SCREEN)
+		set_up_main_screen();
+	overall_mode = MODE_MAIN_SCREEN;
+	right_sbar->show();
+	right_sbar->setPosition(0);
+	reset_rb();
+	right_sbar->setMaximum(num_options - NRSONPAGE);
+	for(int i = 0; i < num_options; i++) {
+		std::string title;
+		if(i == scenario.shops.size())
+			title = "Create New Shop";
+		else title = scenario.shops[i].getName();
+		title = std::to_string(i) + " - " + title;
+		set_rb(i, RB_SHOP, i, title);
 	}
 	redraw_screen();
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Command-click or right-click to delete",true);

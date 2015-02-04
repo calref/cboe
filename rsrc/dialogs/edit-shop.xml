@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay' debug='true'>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='8' left='50' width='200' height='17'>Editing Shop</text>
+	<text top='8' left='250' width='100' height='16'>Shop number:</text>
+	<text name='num' top='8' left='350' width='50' height='16'/>
+	<text top='50' left='10' width='100' height='16'>Shop name:</text>
+	<field name='name' top='48' left='110' width='200' height='16'/>
+	<text top='30' left='320' width='150' height='58'>
+		This is just a name to make it easier for you to identify the shop in the list of shops.
+		It's not used in-game.
+	</text>
+	<text top='70' left='10' width='100' height='16'>Shop type:</text>
+	<group name='type'>
+		<led name='t1' top='70' left='110' width='180'>Standard shop (living only)</led>
+		<led name='t2' top='90' left='110' width='180'>Healing/Alchemy (dead can shop)</led>
+		<led name='t3' top='110' left='110' width='180'>Randomly generated</led>
+	</group>
+	<text top='130' left='10' width='100' height='16'>Message to show:</text>
+	<group name='prompt'>
+		<led name='p1' top='130' left='110' width='80'>Shopping</led>
+		<led name='p2' top='150' left='110' width='80'>Healing</led>
+		<led name='p3' top='170' left='110' width='80'>Mage Spells</led>
+		<led name='p4' top='130' left='210' width='80'>Priest Spells</led>
+		<led name='p5' top='150' left='210' width='80'>Mixed Spells</led>
+		<led name='p6' top='170' left='210' width='80'>Alchemy</led>
+		<led name='p7' top='130' left='310' width='80'>Training</led>
+	</group>
+	<button name='rand' type='tiny' top='190' left='10' width='440'>
+		Click here to generate a standard random items shop.
+		(This will replace the entire shop definition.)
+	</button>
+	<text top='210' left='28' width='300' height='16'>Or edit the shop item list below:</text>
+	<stack name='items'>
+		<text name='n1' top='230' left='10' width='15' height='16'/>
+		<pict name='pict1' type='item' num='0' size='small' top='230' left='30'/>
+		<text name='item1' framed='true' top='230' left='55' width='200' height='16'/>
+		
+		<text name='n2' top='255' left='10' width='15' height='16'/>
+		<pict name='pict2' type='item' num='0' size='small' top='255' left='30'/>
+		<text name='item2' framed='true' top='255' left='55' width='200' height='16'/>
+		
+		<text name='n3' top='280' left='10' width='15' height='16'/>
+		<pict name='pict3' type='item' num='0' size='small' top='280' left='30'/>
+		<text name='item3' framed='true' top='280' left='55' width='200' height='16'/>
+		
+		<text name='n4' top='305' left='10' width='15' height='16'/>
+		<pict name='pict4' type='item' num='0' size='small' top='305' left='30'/>
+		<text name='item4' framed='true' top='305' left='55' width='200' height='16'/>
+		
+		<text name='n5' top='330' left='10' width='15' height='16'/>
+		<pict name='pict5' type='item' num='0' size='small' top='330' left='30'/>
+		<text name='item5' framed='true' top='330' left='55' width='200' height='16'/>
+	</stack>
+	<button name='ed1' type='regular' top='227' left='265'>Edit</button>
+	<button name='del1' type='regular' top='227' left='330'>Delete</button>
+	<button name='ed2' type='regular' top='252' left='265'>Edit</button>
+	<button name='del2' type='regular' top='252' left='330'>Delete</button>
+	<button name='ed3' type='regular' top='277' left='265'>Edit</button>
+	<button name='del3' type='regular' top='277' left='330'>Delete</button>
+	<button name='ed4' type='regular' top='302' left='265'>Edit</button>
+	<button name='del4' type='regular' top='302' left='330'>Delete</button>
+	<button name='ed5' type='regular' top='327' left='265'>Edit</button>
+	<button name='del5' type='regular' top='327' left='330'>Delete</button>
+	<button name='up' type='up' top='227' left='410'/>
+	<button name='down' type='down' top='327' left='410'/>
+	
+	<text top='350' left='10' width='200'>Add an item:</text>
+	<button name='item' type='regular' top='365' left='10'>Item</button>
+	<button name='mage' type='regular' top='365' left='75'>Mage</button>
+	<button name='priest' type='regular' top='365' left='140'>Priest</button>
+	<button name='alch' type='regular' top='365' left='205'>Alchemy</button>
+	<button name='skill' type='regular' top='365' left='270'>Skill</button>
+	
+	<button name='heal' type='regular' top='390' left='10'>Healing</button>
+	<button name='treas' type='regular' top='390' left='75'>Treasure</button>
+	<button name='class' type='regular' top='390' left='140'>Class</button>
+	<button name='opt' type='regular' top='390' left='205'>Optional</button>
+	<button name='spec' type='regular' top='390' left='270'>Special</button>
+	
+	<text top='360' left='370' width='100' height='16'>Shopping Face:</text>
+	<button name='pickface' type='regular' top='390' left='410'>Choose</button>
+	<pict name='face' type='talk' num='0' top='380' left='370'/>
+	
+	<button name='left' type='left' top='430' left='10'/>
+	<button name='right' type='right' top='430' left='75'/>
+	<button name='cancel' type='regular' top='430' left='345'>Cancel</button>
+	<button name='okay' type='regular' top='430' left='410'>OK</button>
+</dialog>
