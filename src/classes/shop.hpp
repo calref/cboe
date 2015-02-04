@@ -27,6 +27,9 @@ enum class eShopItemType {
 	ALCHEMY = 4,
 	SKILL,
 	TREASURE,
+	CLASS,
+	OPTIONAL,
+	CALL_SPECIAL,
 	HEAL_WOUNDS,
 	CURE_POISON,
 	CURE_DISEASE,
@@ -59,7 +62,8 @@ public:
 	cShop();
 	cShop(eShopType type, eShopPrompt prompt, pic_num_t pic, int adj, std::string name);
 	explicit cShop(long preset);
-	void addItem(cItem item, size_t quantity);
+	void addItem(cItem item, size_t quantity, int chance = 100);
+	void addSpecial(std::string name, std::string descr, pic_num_t pic, int node, int cost, int quantity);
 	void addSpecial(eShopItemType type, int n = 0);
 	template<typename Iter> void addItems(Iter begin, Iter end, size_t quantity) {
 		while(begin != end) addItem(*begin++, quantity);

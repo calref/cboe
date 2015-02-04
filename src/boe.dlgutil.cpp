@@ -126,6 +126,23 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 	stat_screen_mode = MODE_SHOP;
 	shop_sbar->setPosition(0);
 	
+	// Check if the shop's stock has been reduced yet
+	if(univ.party.store_limited_stock.find(active_shop_num) != univ.party.store_limited_stock.end()) {
+		for(auto p : univ.party.store_limited_stock[active_shop_num]) {
+			int which_item, quant_left;
+			std::tie(which_item, quant_left) = p;
+			if(which_item < 0 || which_item >= 30) continue;
+			cShopItem entry = active_shop.getItem(which_item);
+			if(entry.quantity == 0) continue; // Just in case a stray entry accidentally gets put in for an infinite stock item
+			if(quant_left == 0)
+				entry.type = eShopItemType::EMPTY;
+			else if(entry.type == eShopItemType::OPTIONAL)
+				entry.quantity = quant_left + (entry.quantity / 1000) * 1000;
+			else entry.quantity = quant_left;
+			active_shop.replaceItem(which_item, entry);
+		}
+	}
+	
 	set_up_shop_array();
 	put_background();
 	
@@ -181,6 +198,15 @@ void end_shop_mode() {
 			else univ.party.magic_store_items[active_shop_num][i].variety = eItemType::NO_ITEM;
 		}
 	}
+	// We also need to save any limited stock
+	for(int i = 0; i < 30; i++) {
+		cShopItem item = active_shop.getItem(i);
+		if(item.quantity > 0) {
+			// This means the stock is limited.
+			int left = item.type == eShopItemType::EMPTY ? 0 : item.quantity;
+			univ.party.store_limited_stock[active_shop_num][i] = left;
+		}
+	}
 }
 
 void handle_shop_event(location p) {
@@ -224,6 +250,7 @@ void handle_shop_event(location p) {
 }
 
 void handle_sale(cShopItem item, int i) {
+	short s1, s2, s3; // Dummy variables to pass to run_special
 	cItem base_item = item.item;
 	short cost = item.getCost(active_shop.getCostAdjust());
 	rectangle dummy_rect = {0,0,0,0};
@@ -232,6 +259,8 @@ void handle_sale(cShopItem item, int i) {
 	switch(item.type) {
 		case eShopItemType::EMPTY: break; // Invalid
 		case eShopItemType::TREASURE: break; // Also invalid
+		case eShopItemType::CLASS: break; // Also invalid
+		case eShopItemType::OPTIONAL: break; // Also invalid
 		case eShopItemType::ITEM:
 			switch(univ.party[current_pc].ok_to_buy(cost,base_item)) {
 				case eBuyStatus::OK:
@@ -240,8 +269,6 @@ void handle_sale(cShopItem item, int i) {
 					univ.party[current_pc].give_item(base_item,true);
 					// Magic shops have limited stock
 					active_shop.takeOne(i);
-					if(active_shop.size() != size_before)
-						shop_sbar->setMaximum(shop_sbar->getMaximum() - 1);
 					break;
 				case eBuyStatus::NO_SPACE: ASB("Can't carry any more items."); break;
 				case eBuyStatus::NEED_GOLD: ASB("Not enough cash."); break;
@@ -341,6 +368,9 @@ void handle_sale(cShopItem item, int i) {
 				give_help(41,0);
 			}
 			break;
+		case eShopItemType::CALL_SPECIAL:
+			run_special(eSpecCtx::SHOPPING, 0, base_item.item_level, {0,0}, &s1, &s2, &s3);
+			break;
 		case eShopItemType::SKILL:
 			if(base_item.item_level < 0 || base_item.item_level > 18) {
 				beep();
@@ -381,6 +411,8 @@ void handle_info_request(cShopItem item) {
 	switch(item.type) {
 		case eShopItemType::EMPTY: break;
 		case eShopItemType::TREASURE: break;
+		case eShopItemType::CLASS: break;
+		case eShopItemType::OPTIONAL: break;
 		case eShopItemType::ITEM:
 			display_pc_item(6,0, base_item,0);
 			break;
@@ -426,6 +458,9 @@ void handle_info_request(cShopItem item) {
 			break;
 		case eShopItemType::RESURRECT:
 			cStrDlog("Select this option to resurrect a PC that has been turned to dust.", "", "Resurrect", 15, PIC_DLOG).show();
+			break;
+		case eShopItemType::CALL_SPECIAL:
+			cStrDlog(base_item.desc, "", base_item.full_name, base_item.graphic_num, PIC_ITEM).show();
 			break;
 	}
 }
@@ -486,7 +521,14 @@ void set_up_shop_array() {
 					}
 				}
 				break;
+			case eShopItemType::CALL_SPECIAL:
+				if(PSD[entry.item.abil_data[0]][entry.item.abil_data[1]])
+					shop_array[i++] = j;
+				break;
+			case eShopItemType::OPTIONAL:
+				entry.quantity %= 1000;
 			case eShopItemType::TREASURE:
+			case eShopItemType::CLASS:
 				entry.type = eShopItemType::ITEM;
 				entry.item = univ.party.magic_store_items[active_shop_num][j];
 				if(entry.item.variety == eItemType::NO_ITEM)
