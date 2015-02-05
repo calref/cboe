@@ -26,6 +26,10 @@ void display_alchemy(bool allowEdit);
 bool spend_xp(short pc_num, short mode, cDialog* parent);
 // TODO: There's probably a more logical way of arranging this
 
+extern void give_help(short help1, short help2);
+extern void give_help(short help1, short help2, cDialog& parent);
+void display_skills(eSkill skill,cDialog* parent);
+
 extern cUniverse univ;
 extern short store_flags[3];
 extern short current_active_pc;
@@ -334,8 +338,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_s
 		me.setResult(false);
 		me.toast(false);
 	} else if(item_hit == "help") {
-		univ.party.help_received[10] = 0;
-//		give_help(210,11,me);
+		give_help(210,11,me);
 	} else if(item_hit == "keep") {
 		do_xp_keep(save);
 		me.setResult(true);
@@ -381,9 +384,9 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 		}
 		else {
 			if((save.g < 10) || (save.skp < 1)) {
-//				if(save.g < 10)
-//					give_help(24,0,me);
-//				else give_help(25,0,me);
+				if(save.g < 10)
+					give_help(24,0,me);
+				else give_help(25,0,me);
 			}
 			else {
 				save.g -= 10;
@@ -412,9 +415,9 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 		}
 		else {
 			if((save.g < 15) || (save.skp < 1)) {
-//				if(save.g < 15)
-//					give_help(24,0,me);
-//				else give_help(25,0,me);
+				if(save.g < 15)
+					give_help(24,0,me);
+				else give_help(25,0,me);
 			}
 			else {
 				save.sp += 1;
@@ -437,8 +440,8 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 			}
 		}
 		if(which_skill == eSkill::INVALID) return true;
-/*		if(mod_contains(mods, mod_alt)) display_skills(which_skill,&me);
-		else */{
+		if(mod_contains(mods, mod_alt)) display_skills(which_skill,&me);
+		else {
 			char dir = item_hit[item_hit.length() - 1];
 			
 			// TODO: This is a game event, so it should have a game sound, not a system alert.
@@ -460,9 +463,9 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 				}
 				else {
 					if((save.g < skill_g_cost[which_skill]) || (save.skp < skill_cost[which_skill])) {
-//						if(save.g < skill_g_cost[which_skill])
-//							give_help(24,0,me);
-//						else give_help(25,0,me);
+						if(save.g < skill_g_cost[which_skill])
+							give_help(24,0,me);
+						else give_help(25,0,me);
 					}
 					else {
 						save.skills[which_skill] += 1;
@@ -511,11 +514,7 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(save)),{"keep","cancel","left","right","help"});
 	xpDlog.attachClickHandlers(spend_xp_filter,{"sp-m","sp-p","hp-m","hp-p"});
 	
-	if(univ.party.help_received[10] == 0) {
-		// TODO: Is an initial draw even needed?
-//		cd_initial_draw(1010);
-//		give_help(10,11,xpDlog);
-	}
+	give_help(10,11,xpDlog);
 	
 	xpDlog.run();
 	
