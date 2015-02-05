@@ -18,6 +18,8 @@
 #include "map_parse.hpp"
 #include "graphtool.hpp"
 #include "mathutil.hpp"
+#include "gzstream.h"
+#include "tarball.hpp"
 
 #include "porting.hpp"
 #include "restypes.hpp"
@@ -35,14 +37,21 @@ static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario);
 static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario);
 static bool load_town_v1(fs::path scen_file,short which_town,cTown& the_town,legacy::scenario_data_type& scenario,std::vector<shop_info_t>& shops);
 // Load new scenarios
+static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario);
 static bool load_outdoors(fs::path out_base, location which_out, cOutdoors& the_out);
 static bool load_town(fs::path town_base, short which_town, cTown*& the_town);
 static bool load_town_talk(fs::path town_base, short which_town, cSpeech& the_talk);
 
 bool load_scenario(fs::path file_to_load, cScenario& scenario) {
 	scenario = cScenario();
-	// TODO: Implement checking to determine whether it's old or new
-	return load_scenario_v1(file_to_load, scenario);
+	std::string fname = file_to_load.filename().string();
+	size_t dot = fname.find_last_of('.');
+	if(fname.substr(dot) == ".boes")
+		return load_scenario_v2(file_to_load, scenario);
+	else if(fname.substr(dot) == ".exs")
+		return load_scenario_v1(file_to_load, scenario);
+	giveError("That is not a Blades of Exile scenario.");
+	return false;
 }
 
 template<typename Container> static void port_shop_spec_node(cSpecial& spec, std::vector<shop_info_t>& shops, Container strs) {
@@ -92,6 +101,9 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 			(scenario.format.flag3 == 60) && (scenario.format.flag4 == 80)) {
 	  	cur_scen_is_mac = false;
 	  	file_ok = true;
+	} else if(scenario.format.flag1 == 'O' && scenario.format.flag2 == 'B' && scenario.format.flag3 == 'O' && scenario.format.flag4 == 'E') {
+		// This means we're looking at the scenario header file of an unpacked new-format scenario.
+		return load_scenario_v2(file_to_load.parent_path(), scenario);
 	}
 	if(!file_ok) {
 		fclose(file_id);
@@ -233,6 +245,29 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	delete temp_scenario;
 	delete item_data;
 	return true;
+}
+
+bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
+	// First determine whether we're dealing with a packed or unpacked scenario.
+	bool is_packed;
+	tarball pack;
+	std::ifstream fin;
+	if(fs::is_directory(file_to_load)) { // Unpacked
+		is_packed = false;
+	} else { // Packed
+		igzstream gzin(file_to_load.string().c_str());
+		pack.readFrom(gzin);
+	}
+	auto getFile = [&](std::string relpath) -> std::istream& {
+		if(is_packed) return pack.getFile(relpath);
+		if(fin.is_open()) fin.close();
+		fin.open((file_to_load/relpath).string().c_str());
+		// TODO: Suppress the warning about returning reference to local
+		return fin;
+	};
+	// From here on, we don't have to care about whether it's packed or unpacked.
+	
+	return false;
 }
 
 static long get_town_offset(short which_town, legacy::scenario_data_type& scenario){

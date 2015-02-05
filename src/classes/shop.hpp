@@ -11,6 +11,7 @@
 
 #include <array>
 #include <string>
+#include <iosfwd>
 #include "item.h"
 #include "pictypes.hpp" // for pic_num_t
 
@@ -88,5 +89,10 @@ public:
 	void clearItem(size_t i);
 	void clear();
 };
+
+std::istream& operator>>(std::istream& in, eShopType& type);
+std::ostream& operator<<(std::ostream& out, eShopType type);
+std::istream& operator>>(std::istream& in, eShopPrompt& type);
+std::ostream& operator<<(std::ostream& out, eShopPrompt type);
 
 #endif

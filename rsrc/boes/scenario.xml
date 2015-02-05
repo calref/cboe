@@ -138,6 +138,19 @@
     	<name>Sample Quest</name>
     	<description>Your mission, if you choose to accept it, is...!!??</description>
     </quest>
+    <!-- And shops -->
+    <shop>
+    	<name>A Few Spells</name>
+    	<type>live</type>
+    	<prompt>spell</prompt>
+    	<face>43</face>
+    	<entries>
+    		<mage-spell>30</mage-spell>
+    		<mage-spell>31</mage-spell>
+    		<priest-spell>30</priest-spell>
+    		<priest-spell>31</priest-spell>
+    	</entries>
+    </shop>
   </game>
   
   <editor>
