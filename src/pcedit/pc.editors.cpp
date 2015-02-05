@@ -53,14 +53,6 @@ const char* skill_ids[19] = {
 	"trap","lock","assassin","poison","luck"
 };
 
-// Variables for spending xp
-bool talk_done = false;
-long val_for_text;
-bool keep_change = false;
-short store_h,store_sp,i,store_skp;
-unsigned short store_g;
-short store_train_mode,store_train_pc;
-
 static void put_pc_spells(cDialog& me, const short store_trait_mode) {
 	short i;
 	
@@ -261,190 +253,179 @@ void display_alchemy(bool allowEdit) {
 	}
 }
 
-// TODO: This dialog needs some kind of context system really badly to avoid the rampant globals
 // MARK: Start spend XP dialog
-static void do_xp_keep(short pc_num,short mode,std::map<eSkill,short>& store_skills) {
-	for(i = 0; i < 19; i++) {
+
+struct xp_dlog_state {
+	std::map<eSkill,short> skills;
+	int who, mode;
+	int hp, sp, g, skp;
+};
+
+static void do_xp_keep(xp_dlog_state& save) {
+	for(int i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
-		univ.party[pc_num].skills[skill] = store_skills[skill];
+		univ.party[save.who].skills[skill] = save.skills[skill];
 	}
-	univ.party[pc_num].cur_health += store_h - univ.party[pc_num].max_health;
-	univ.party[pc_num].max_health = store_h;
-	univ.party[pc_num].cur_sp += store_sp - univ.party[pc_num].max_sp;
-	univ.party[pc_num].max_sp = store_sp;
-	if(mode == 1)
-		univ.party.gold = store_g;
-	univ.party[pc_num].skill_pts = store_skp;
+	univ.party[save.who].cur_health += save.hp - univ.party[save.who].max_health;
+	univ.party[save.who].max_health = save.hp;
+	univ.party[save.who].cur_sp += save.sp - univ.party[save.who].max_sp;
+	univ.party[save.who].max_sp = save.sp;
+	if(save.mode == 1)
+		univ.party.gold = save.g;
+	univ.party[save.who].skill_pts = save.skp;
 	
 }
 
-static void draw_xp_skills(cDialog& me,std::map<eSkill,short>& store_skills) {
+static void draw_xp_skills(cDialog& me,xp_dlog_state& save) {
 	short i;
 	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
 	for(i = 0; i < 19; i++) {
 		cControl& cur = me[skill_ids[i]];
 		eSkill skill = eSkill(i);
-		if((store_skp >= skill_cost[skill]) && (store_g >= skill_g_cost[skill]))
+		if((save.skp >= skill_cost[skill]) && (save.g >= skill_g_cost[skill]))
 			cur.setColour(sf::Color::Red);
 		else cur.setColour(me.getDefTextClr());
-		cur.setTextToNum(store_skills[skill]);
+		cur.setTextToNum(save.skills[skill]);
 	}
 	
 	cControl& sp = me["sp"];
 	cControl& hp = me["hp"];
-	if((store_skp >= 1) && (store_g >= 10))
+	if((save.skp >= 1) && (save.g >= 10))
 		hp.setColour(sf::Color::Red);
 	else hp.setColour(me.getDefTextClr());
-	hp.setTextToNum(store_h);
-	if((store_skp >= 1) && (store_g >= 15))
+	hp.setTextToNum(save.hp);
+	if((save.skp >= 1) && (save.g >= 15))
 		sp.setColour(sf::Color::Red);
 	else sp.setColour(me.getDefTextClr());
-	sp.setTextToNum(store_sp);
+	sp.setTextToNum(save.sp);
 }
 
-static void update_gold_skills(cDialog& me) {
-	me["gold"].setTextToNum(((store_train_mode == 0) ? 0 : store_g));
-	me["skp"].setTextToNum(store_skp);
+static void update_gold_skills(cDialog& me, xp_dlog_state& save) {
+	me["gold"].setTextToNum(((save.mode == 0) ? 0 : save.g));
+	me["skp"].setTextToNum(save.skp);
 }
 
 
-static void do_xp_draw(cDialog& me,std::map<eSkill,short>& store_skills) {
-	short mode,pc_num;
-	
-	mode = store_train_mode;
-	pc_num = store_train_pc;
-	if(mode == 0 && univ.party[pc_num].main_status != eMainStatus::ALIVE)
+static void do_xp_draw(cDialog& me,xp_dlog_state& save) {
+	if(save.mode == 0 && univ.party[save.who].main_status != eMainStatus::ALIVE)
 		me["recipient"].setText("New PC");
-	else me["recipient"].setText(univ.party[pc_num].name);
+	else me["recipient"].setText(univ.party[save.who].name);
 	
-	for(i = 0; i < 19; i++) {
+	for(int i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
-		store_skills[skill] = univ.party[pc_num].skills[skill];
+		save.skills[skill] = univ.party[save.who].skills[skill];
 	}
-	store_h = univ.party[pc_num].max_health;
-	store_sp = univ.party[pc_num].max_sp;
-	store_g = (mode == 0) ? 20000 : univ.party.gold;
-	store_skp = univ.party[pc_num].skill_pts;
+	save.hp = univ.party[save.who].max_health;
+	save.sp = univ.party[save.who].max_sp;
+	save.g = (save.mode == 0) ? 20000 : univ.party.gold;
+	save.skp = univ.party[save.who].skill_pts;
 	
-	draw_xp_skills(me,store_skills);
+	draw_xp_skills(me,save);
 	
 	
-	update_gold_skills(me);
+	update_gold_skills(me, save);
 }
 
-static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,std::map<eSkill,short>& store_skills) {
-	short mode,pc_num;
-	bool talk_done = false;
-	
-	mode = store_train_mode;
-	pc_num = store_train_pc;
-	
+static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_state& save) {
 	if(item_hit == "cancel") {
 		// TODO: Um, I'm pretty sure this can never happen.
-		if(mode == 0 && univ.party[pc_num].main_status < eMainStatus::ABSENT)
-			univ.party[pc_num].main_status = eMainStatus::ABSENT;
+		if(save.mode == 0 && univ.party[save.who].main_status < eMainStatus::ABSENT)
+			univ.party[save.who].main_status = eMainStatus::ABSENT;
 		me.setResult(false);
-		talk_done = true;
+		me.toast(false);
 	} else if(item_hit == "help") {
 		univ.party.help_received[10] = 0;
 //		give_help(210,11,me);
 	} else if(item_hit == "keep") {
-		do_xp_keep(pc_num,mode,store_skills);
+		do_xp_keep(save);
 		me.setResult(true);
-		talk_done = true;
+		me.toast(true);
 	} else if(item_hit == "left") {
 		// TODO: Try not forcing a commit when using the arrows?
-		if(mode != 0) {
-			do_xp_keep(pc_num,mode,store_skills);
+		if(save.mode != 0) {
+			do_xp_keep(save);
 			do {
-				pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-			} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
-			store_train_pc = pc_num;
-			do_xp_draw(me,store_skills);
+				save.who = (save.who == 0) ? 5 : save.who - 1;
+			} while(univ.party[save.who].main_status != eMainStatus::ALIVE);
+			do_xp_draw(me,save);
 		} else
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 	} else if(item_hit == "right") {
 		// TODO: If they don't work in mode 0, why are they visible?
-		if(mode != 0) {
-			do_xp_keep(pc_num,mode,store_skills);
+		if(save.mode != 0) {
+			do_xp_keep(save);
 			do {
-				pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-			} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
-			store_train_pc = pc_num;
-			do_xp_draw(me,store_skills);
+				save.who = (save.who == 5) ? 0 : save.who + 1;
+			} while(univ.party[save.who].main_status != eMainStatus::ALIVE);
+			do_xp_draw(me,save);
 		} else
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
-	}
-	store_train_pc = pc_num;
-	if(talk_done) {
-		me.toast(item_hit == "keep");
 	}
 	return true;
 }
 
-static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mods,std::map<eSkill,short>& store_skills) {
-	short mode = store_train_mode, pc_num = store_train_pc;
+static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mods,xp_dlog_state& save) {
 	if(item_hit.substr(0,2) == "hp") {
 		if(mod_contains(mods, mod_alt)) {
 			cStrDlog aboutHP(get_str("help",63),"","About Health",24,PIC_DLOG,&me);
 			aboutHP.setSound(57);
 			aboutHP.show();
-		} else if(((store_h >= 250) && (item_hit[3] == 'p')) ||
-				   ((store_h == univ.party[pc_num].max_health) && (item_hit[3] == 'm') && (mode == 1)) ||
-				   ((store_h == 6) && (item_hit[3] == 'm') && (mode == 0)))
+		} else if(((save.hp >= 250) && (item_hit[3] == 'p')) ||
+				   ((save.hp == univ.party[save.who].max_health) && (item_hit[3] == 'm') && (save.mode == 1)) ||
+				   ((save.hp == 6) && (item_hit[3] == 'm') && (save.mode == 0)))
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 		else if(item_hit == "hp-m") {
-			store_g += 10;
-			store_h -= 2;
-			store_skp += 1;
+			save.g += 10;
+			save.hp -= 2;
+			save.skp += 1;
 		}
 		else {
-			if((store_g < 10) || (store_skp < 1)) {
-//				if(store_g < 10)
+			if((save.g < 10) || (save.skp < 1)) {
+//				if(save.g < 10)
 //					give_help(24,0,me);
 //				else give_help(25,0,me);
 			}
 			else {
-				store_g -= 10;
-				store_h += 2;
-				store_skp -= 1;
+				save.g -= 10;
+				save.hp += 2;
+				save.skp -= 1;
 			}
 		}
 		
-		update_gold_skills(me);
-		me["hp"].setTextToNum(store_h);
-		draw_xp_skills(me,store_skills);
+		update_gold_skills(me, save);
+		me["hp"].setTextToNum(save.hp);
+		draw_xp_skills(me,save);
 		
 	} else if(item_hit.substr(0,2) == "sp") {
 		if(mod_contains(mods, mod_alt)) {
 			cStrDlog aboutSP(get_str("help",64),"","About Spell Points",24,PIC_DLOG,&me);
 			aboutSP.setSound(57);
 			aboutSP.show();
-		} else if(((store_sp >= 150) && (item_hit[3] == 'p')) ||
-				   ((store_sp == univ.party[pc_num].max_sp) && (item_hit[3] == 'm') && (mode == 1)) ||
-				   ((store_sp == 0) && (item_hit[3] == 'm') && (mode == 0)))
+		} else if(((save.sp >= 150) && (item_hit[3] == 'p')) ||
+				   ((save.sp == univ.party[save.who].max_sp) && (item_hit[3] == 'm') && (save.mode == 1)) ||
+				   ((save.sp == 0) && (item_hit[3] == 'm') && (save.mode == 0)))
 			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 		else if(item_hit == "sp-m") {
-			store_g += 15;
-			store_sp -= 1;
-			store_skp += 1;
+			save.g += 15;
+			save.sp -= 1;
+			save.skp += 1;
 		}
 		else {
-			if((store_g < 15) || (store_skp < 1)) {
-//				if(store_g < 15)
+			if((save.g < 15) || (save.skp < 1)) {
+//				if(save.g < 15)
 //					give_help(24,0,me);
 //				else give_help(25,0,me);
 			}
 			else {
-				store_sp += 1;
-				store_g -= 15;
-				store_skp -= 1;
+				save.sp += 1;
+				save.g -= 15;
+				save.skp -= 1;
 			}
 		}
 		
-		update_gold_skills(me);
-		me["sp"].setTextToNum(store_sp);
-		draw_xp_skills(me,store_skills);
+		update_gold_skills(me, save);
+		me["sp"].setTextToNum(save.sp);
+		draw_xp_skills(me,save);
 	} else {
 		eSkill which_skill = eSkill::INVALID;
 		for(int i = 0; i < 19; i++) {
@@ -461,38 +442,38 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 			char dir = item_hit[item_hit.length() - 1];
 			
 			// TODO: This is a game event, so it should have a game sound, not a system alert.
-			if(store_skills[which_skill] >= skill_max[which_skill] && dir == 'p')
+			if(save.skills[which_skill] >= skill_max[which_skill] && dir == 'p')
 				beep();
-			else if(store_skills[which_skill] == univ.party[pc_num].skills[which_skill] && dir == 'm' && mode == 1)
+			else if(save.skills[which_skill] == univ.party[save.who].skills[which_skill] && dir == 'm' && save.mode == 1)
 				beep();
-			else if(store_skills[which_skill] == 0 && dir == 'm' && mode == 0 &&
+			else if(save.skills[which_skill] == 0 && dir == 'm' && save.mode == 0 &&
 					which_skill != eSkill::STRENGTH && which_skill != eSkill::DEXTERITY && which_skill != eSkill::INTELLIGENCE)
 				beep();
-			else if(store_skills[which_skill] == 1 && dir == 'm' && mode == 0 &&
+			else if(save.skills[which_skill] == 1 && dir == 'm' && save.mode == 0 &&
 					(which_skill == eSkill::STRENGTH || which_skill == eSkill::DEXTERITY || which_skill == eSkill::INTELLIGENCE))
 				beep();
 			else {
 				if(dir == 'm') {
-					store_g += skill_g_cost[which_skill];
-					store_skills[which_skill] -= 1;
-					store_skp += skill_cost[which_skill];
+					save.g += skill_g_cost[which_skill];
+					save.skills[which_skill] -= 1;
+					save.skp += skill_cost[which_skill];
 				}
 				else {
-					if((store_g < skill_g_cost[which_skill]) || (store_skp < skill_cost[which_skill])) {
-//						if(store_g < skill_g_cost[which_skill])
+					if((save.g < skill_g_cost[which_skill]) || (save.skp < skill_cost[which_skill])) {
+//						if(save.g < skill_g_cost[which_skill])
 //							give_help(24,0,me);
 //						else give_help(25,0,me);
 					}
 					else {
-						store_skills[which_skill] += 1;
-						store_g -= skill_g_cost[which_skill];
-						store_skp -= skill_cost[which_skill];
+						save.skills[which_skill] += 1;
+						save.g -= skill_g_cost[which_skill];
+						save.skp -= skill_cost[which_skill];
 					}
 				}
 				
-				update_gold_skills(me);
-				me[skill_ids[int(which_skill)]].setTextToNum(store_skills[which_skill]);
-				draw_xp_skills(me,store_skills);
+				update_gold_skills(me, save);
+				me[skill_ids[int(which_skill)]].setTextToNum(save.skills[which_skill]);
+				draw_xp_skills(me,save);
 			}
 		}
 	}
@@ -503,19 +484,20 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 // returns 1 if cancelled
 bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	using namespace std::placeholders;
-	store_train_pc = pc_num;
-	store_train_mode = mode;
 	
 	make_cursor_sword();
 	
-	std::map<eSkill,short> skills = univ.party[pc_num].skills;
+	xp_dlog_state save;
+	save.who = pc_num;
+	save.mode = mode;
+	save.skills = univ.party[pc_num].skills;
 	
 	cDialog xpDlog("spend-xp",parent);
 	xpDlog.addLabelFor("hp","Health (1/10)",LABEL_LEFT,75,true);
 	xpDlog.addLabelFor("sp","Spell Pts. (1/15)",LABEL_LEFT,75,true);
-	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(skills));
+	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(save));
 	std::string minus = "-m", plus = "-p";
-	for(i = 54; i < 73; i++) {
+	for(int i = 54; i < 73; i++) {
 		std::ostringstream sout;
 		eSkill skill = eSkill(i - 54);
 		sout << get_str("skills",1 + 2 * (i - 54)) << ' ' << '(';
@@ -524,9 +506,9 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 		xpDlog[skill_ids[i - 54] + minus].attachClickHandler(spend_xp_filter);
 		xpDlog[skill_ids[i - 54] + plus].attachClickHandler(spend_xp_filter);
 	}
-	do_xp_draw(xpDlog,skills);
+	do_xp_draw(xpDlog,save);
 	
-	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(skills)),{"keep","cancel","left","right","help"});
+	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(save)),{"keep","cancel","left","right","help"});
 	xpDlog.attachClickHandlers(spend_xp_filter,{"sp-m","sp-p","hp-m","hp-p"});
 	
 	if(univ.party.help_received[10] == 0) {
