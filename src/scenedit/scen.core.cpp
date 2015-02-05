@@ -626,7 +626,7 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which
 			break;
 	}
 	
-	me["type"].setText(get_str("traits",33 + int(monst.m_type) * 2));
+	me["type"].setText(get_str("traits",35 + int(monst.m_type) * 2));
 	me["type1"].setText(get_str("monster-abilities",130 + int(monst.a[0].type)));
 	me["type2"].setText(get_str("monster-abilities",130 + int(monst.a[1].type)));
 	me["type3"].setText(get_str("monster-abilities",130 + int(monst.a[2].type)));
@@ -1068,7 +1068,7 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 		switch(detail.summon.type) {
 			case eMonstSummon::TYPE: me["summon"].setText(scenario.scen_monsters[detail.summon.what].m_name); break;
 			case eMonstSummon::LEVEL: me["summon"].setTextToNum(detail.summon.what); break;
-			case eMonstSummon::SPECIES: me["summon"].setText(get_str("traits", detail.summon.what * 2 + 33)); break;
+			case eMonstSummon::SPECIES: me["summon"].setText(get_str("traits", detail.summon.what * 2 + 35)); break;
 		}
 		me["max"].setTextToNum(detail.summon.max);
 		me["min"].setTextToNum(detail.summon.min);

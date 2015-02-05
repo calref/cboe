@@ -423,7 +423,9 @@ void display_party() {
 								win_draw_string(mainPtr,pc_race_rect,"Nephilim   ",eTextMode::CENTRE,style);
 							if(univ.party[i].race == eRace::SLITH)
 								win_draw_string(mainPtr,pc_race_rect,"Slithzerikai  ",eTextMode::CENTRE,style);
-							// TODO: Vahnatai
+							if(univ.party[i].race == eRace::VAHNATAI)
+								win_draw_string(mainPtr,pc_race_rect,"Vahnatai",eTextMode::CENTRE,style);
+							// TODO: Monster races
 							// Draw in skills
 							
 							win_draw_string(mainPtr,skill_rect,"Skills:",eTextMode::WRAP,style);
@@ -651,6 +653,11 @@ void display_party() {
 							if(univ.party[i].traits[eTrait::PACIFIST])
 								if(cur_rect <= 15) {
 									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Pacifist",eTextMode::WRAP,style);
+									cur_rect++;
+								}
+							if(univ.party[i].traits[eTrait::ANAMA])
+								if(cur_rect <= 15) {
+									win_draw_string(mainPtr,pc_traits_rect[cur_rect],"Anama Member",eTextMode::WRAP,style);
 									cur_rect++;
 								}
 							style.lineHeight = 10;

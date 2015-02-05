@@ -30,6 +30,7 @@ public:
 	cSpell& withRange(int r);
 	cSpell& asLevel(int lvl);
 	cSpell& asType(eSkill type);
+	cSpell& asPeaceful();
 	cSpell& needsSelect(eSpellSelect sel = SELECT_ACTIVE);
 	cSpell& when(eSpellWhen when);
 	const cSpell& finish();
@@ -39,6 +40,7 @@ public:
 	eSpellSelect need_select;
 	eSkill type;
 	int when_cast;
+	bool peaceful = false;
 	std::string name() const;
 	bool is_priest() const;
 	static eSpell fromNum(eSkill type, int num);

@@ -662,6 +662,15 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 	short i,j,item,target,r1,adj,store;
 	location where;
 	
+	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+		add_string_to_buf("Cast: You're a pacifist!");
+		return;
+	}
+	if(univ.party[pc_num].traits[eTrait::ANAMA]) {
+		add_string_to_buf("Cast: You're an Anama!");
+		return;
+	}
+	
 	where = univ.town.p_loc;
 	play_sound(25);
 	current_spell_range = 8;
@@ -669,6 +678,8 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 	
 	adj = freebie ? 1 : univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.party[pc_num].level;
+	if(!freebie && univ.party[pc_num].race == eRace::VAHNATAI)
+		level++;
 	
 	switch(spell_num) {
 		case eSpell::LIGHT:
@@ -862,12 +873,19 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	location loc;
 	location where;
 	
+	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+		add_string_to_buf("Cast: You're a pacifist!");
+		return;
+	}
+	
 	short store_victim_health,store_caster_health,targ_damaged; // for symbiosis
 	
 	where = univ.town.p_loc;
 	
 	adj = freebie ? 1 : univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.party[pc_num].level;
+	if(!freebie && univ.party[current_pc].traits[eTrait::ANAMA])
+		level++;
 	
 	play_sound(24);
 	current_spell_range = 8;
@@ -1283,6 +1301,10 @@ void cast_town_spell(location where) {
 	ter = univ.town->terrain(where.x,where.y);
 	short adj = spell_freebie ? 1 : univ.party[who_cast].stat_adj(eSkill::INTELLIGENCE);
 	short level = spell_freebie ? store_item_spell_level : univ.party[who_cast].level;
+	if(!spell_freebie && univ.party[who_cast].race == eRace::VAHNATAI && !(*town_spell).is_priest())
+		level++;
+	if(!spell_freebie && univ.party[who_cast].traits[eTrait::ANAMA] && (*town_spell).is_priest())
+		level++;
 	
 	// TODO: Should we do this here? Or in the handling of targeting modes?
 	// (It really depends whether we want to be able to trigger it for targeting something other than a spell.)
@@ -1976,6 +1998,11 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	if(pc_casting == 6)
 		pc_casting = current_pc;
 	
+	if(type == eSkill::MAGE_SPELLS && univ.party[pc_casting].traits[eTrait::ANAMA]) {
+		add_string_to_buf("Cast: You're an Anama!");
+		return eSpell::NONE;
+	}
+	
 	if(pc_num == 6) { // See if can keep same caster
 		can_choose_caster = true;
 		if(!pc_can_cast_spell(pc_casting,type)) {
@@ -2561,10 +2588,27 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		item_loc = (overall_mode >= MODE_COMBAT) ? which_pc.combat_pos : univ.town.p_loc;
 		
 		if(!is_out()) {
-			if(type == eMainStatus::DEAD)
-				univ.town.set_lg_blood(item_loc.x,item_loc.y,true);
-			else if(type == eMainStatus::DUST)
+			if(type == eMainStatus::DUST)
 				univ.town.set_ash(item_loc.x,item_loc.y,true);
+			else switch(which_pc.race) {
+				case eRace::DEMON:
+					univ.town.set_ash(item_loc.x,item_loc.y,true);
+					break;
+				case eRace::UNDEAD:
+					break;
+				case eRace::SKELETAL:
+					univ.town.set_bones(item_loc.x,item_loc.y,true);
+					break;
+				case eRace::SLIME: case eRace::PLANT: case eRace::BUG:
+					univ.town.set_lg_slime(item_loc.x,item_loc.y,true);
+					break;
+				case eRace::STONE:
+					univ.town.set_rubble(item_loc.x,item_loc.y,true);
+					break;
+				default:
+					univ.town.set_lg_blood(item_loc.x,item_loc.y,true);
+					break;
+			}
 		}
 		
 		if(overall_mode != MODE_OUTDOORS)
