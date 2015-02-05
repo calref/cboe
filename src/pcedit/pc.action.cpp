@@ -64,7 +64,7 @@ bool handle_action(sf::Event event) {
 					pick_race_abil(&univ.party[current_active_pc],0);
 					break;
 				case 3:
-					spend_xp(current_active_pc,1,NULL);
+					spend_xp(current_active_pc,2,NULL);
 					break;
 				case 4:
 					edit_xp(&univ.party[current_active_pc]);
