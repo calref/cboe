@@ -481,6 +481,7 @@ enum class eTrait {
 	CHRONIC_DISEASE = 13,
 	BAD_BACK = 14,
 	PACIFIST = 15,
+	ANAMA = 16,
 };
 
 

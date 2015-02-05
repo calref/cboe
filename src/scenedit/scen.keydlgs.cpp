@@ -245,13 +245,13 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			strings.push_back("Maximum Spell Points");
 			break;
 		case STRT_TRAIT:
-			for(int i = 0; i < 16; i++) {
+			for(int i = 0; i < 17; i++) {
 				strings.push_back(get_str("traits", i * 2 + 1));
 			}
 			break;
 		case STRT_RACE:
 			for(int i = 0; i < 22; i++) {
-				strings.push_back(get_str("traits", i * 2 + 33));
+				strings.push_back(get_str("traits", i * 2 + 35));
 			}
 			break;
 		case STRT_PICT:

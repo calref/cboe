@@ -133,8 +133,7 @@ static void display_traits_graphics(cDialog& me) {
 		eTrait trait = eTrait(i);
 		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
 	}
-	for(i = 0; i < 5; i++) {
-		// TODO: Pacifist
+	for(i = 0; i < 7; i++) {
 		std::string id = "bad" + boost::lexical_cast<std::string>(i + 1);
 		eTrait trait = eTrait(i + 10);
 		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
@@ -161,7 +160,7 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const 
 		if(store_trait_mode == 0)
 			pc->race = race;
 		display_traits_graphics(me);
-		abil_str = 34 + int(race) * 2;
+		abil_str = 36 + int(race) * 2;
 	} else if(item_hit.substr(0,3) == "bad") {
 		int hit = item_hit[3] - '1';
 		eTrait trait = eTrait(hit + 10);
@@ -194,7 +193,7 @@ void pick_race_abil(cPlayer *pc,short mode) {
 	cDialog pickAbil("pick-race-abil");
 	pickAbil["done"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, true));
 	auto led_selector = std::bind(pick_race_select_led, _1, _2, _3, mode);
-	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5"});
+	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5", "bad6", "bad7"});
 	pickAbil.attachFocusHandlers(led_selector, {"good1", "good2", "good3", "good4", "good5"});
 	pickAbil.attachFocusHandlers(led_selector, {"good6", "good7", "good8", "good9", "good10"});
 	
@@ -277,7 +276,13 @@ static void do_xp_keep(xp_dlog_state& save) {
 	if(save.mode == 1)
 		univ.party.gold = save.g;
 	univ.party[save.who].skill_pts = save.skp;
-	
+	if(univ.party[save.who].traits[eTrait::ANAMA] && univ.party[save.who].skills[eSkill::MAGE_SPELLS] > 0 && save.mode == 1) {
+		univ.party[save.who].skills[eSkill::STRENGTH] -= 2;
+		univ.party[save.who].skills[eSkill::DEXTERITY] -= 2;
+		univ.party[save.who].skills[eSkill::INTELLIGENCE] -= 4;
+		univ.party[save.who].skills[eSkill::LUCK] = 0;
+		univ.party[save.who].traits[eTrait::ANAMA] = false;
+	}
 }
 
 static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
@@ -491,6 +496,10 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 			}
 		}
 		if(which_skill == eSkill::INVALID) return true;
+		if(which_skill == eSkill::MAGE_SPELLS && univ.party[save.who].traits[eTrait::ANAMA] && save.mode == 1) {
+			if(save.skills[eSkill::MAGE_SPELLS] == 0)
+				cStrDlog("The oaths of an Anama member include eschewing research into arcane magics. By increasing your mage spells skill, you will be in violation of this oath. If you keep this change, you will be afflicted with a terrible permanent curse.", "", "The Anama Curse", 41, PIC_TALK).show();
+ 		}
 		if(mod_contains(mods, mod_alt)) display_skills(which_skill,&me);
 		else {
 			char dir = item_hit[item_hit.length() - 1];

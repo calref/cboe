@@ -522,6 +522,11 @@ void pc_attack(short who_att,iLiving* target) {
 	if(target == nullptr) return;
 	if(attacker.status[eStatus::ASLEEP] > 0 || attacker.status[eStatus::PARALYZED] > 0)
 		return;
+	if(attacker.traits[eTrait::PACIFIST]) {
+		add_string_to_buf("Attack: You're a pacifist!");
+		print_buf();
+		return;
+	}
 	
 	attacker.last_attacked = target;
 	
@@ -577,11 +582,16 @@ void pc_attack(short who_att,iLiving* target) {
 		}
 		
 		if(r1 <= hit_chance[attacker.skill(eSkill::DEXTERITY)]) {
+			eDamageType type = eDamageType::WEAPON;
+			if(attacker.race == eRace::UNDEAD || attacker.race == eRace::SKELETAL)
+				type = eDamageType::UNDEAD;
+			else if(attacker.race == eRace::DEMON)
+				type = eDamageType::DEMON;
 			// TODO: Change to damage_target()
 			if(cCreature* m_target = dynamic_cast<cCreature*>(target))
-				damage_monst(*m_target, who_att, r2, eDamageType::WEAPON,4);
+				damage_monst(*m_target, who_att, r2, type,4);
 			else if(cPlayer* pc_target = dynamic_cast<cPlayer*>(target))
-				damage_pc(*pc_target, r2, eDamageType::WEAPON, univ.party[who_att].race, 4);
+				damage_pc(*pc_target, r2, type, univ.party[who_att].race, 4);
 		}
 		else {
 			draw_terrain(2);
@@ -1010,6 +1020,10 @@ void do_combat_cast(location target) {
 	else {
 		level = 1 + caster.level / 2;
 		bonus = caster.stat_adj(eSkill::INTELLIGENCE);
+		if(caster.race == eRace::VAHNATAI && !(*spell_being_cast).is_priest())
+			level++;
+		if(caster.traits[eTrait::ANAMA] && (*spell_being_cast).is_priest())
+			level++;
 	}
 	force_wall_position = 10;
 	
@@ -1472,6 +1486,8 @@ void do_combat_cast(location target) {
 												add_string_to_buf("  Monster resisted.");
 											else {
 												r1 = get_ran((spell_being_cast == eSpell::TURN_UNDEAD) ? 2 : 6, 1, 14);
+												if(univ.party[spell_caster].traits[eTrait::ANAMA])
+													r1 += 15;
 												if(cur_monst != nullptr)
 													damage_monst(*cur_monst, current_pc, r1, eDamageType::UNBLOCKABLE, 0);
 												else if(cPlayer* who = dynamic_cast<cPlayer*>(victim))
@@ -1499,6 +1515,8 @@ void do_combat_cast(location target) {
 												r1 = get_ran(8 + bonus * 2, 1, 11);
 												if(univ.party[spell_caster].status[eStatus::DUMB] < 0)
 													r1 += -25 * univ.party[spell_caster].status[eStatus::DUMB] / 3;
+												else if(univ.party[spell_caster].traits[eTrait::ANAMA])
+													r1 += 25;
 												if(cur_monst != nullptr)
 													damage_monst(*cur_monst, current_pc, r1, eDamageType::UNBLOCKABLE, 0);
 												else if(cPlayer* who = dynamic_cast<cPlayer*>(victim))
@@ -1564,6 +1582,11 @@ void handle_marked_damage() {
 
 void load_missile() {
 	short i,bow = 24,arrow = 24,thrown = 24,crossbow = 24,bolts = 24,no_ammo = 24;
+	
+	if(univ.party[current_pc].traits[eTrait::PACIFIST]) {
+		add_string_to_buf("Shoot: You're a pacifist!");
+		return;
+	}
 	
 	for(i = 0; i < 24; i++) {
 		if((univ.party[current_pc].equip[i]) &&
@@ -2480,7 +2503,7 @@ void do_monster_turn() {
 								seek_party (i,cur_monst->cur_loc,univ.party[move_target].combat_pos);
 								for(k = 0; k < 6; k++)
 									if(univ.party[k].parry > 99 && monst_adjacent(univ.party[k].combat_pos,i)
-									   && (cur_monst->active > 0)) {
+									   && (cur_monst->active > 0) && !univ.party[k].traits[eTrait::PACIFIST]) {
 										univ.party[k].parry = 0;
 										pc_attack(k,cur_monst);
 									}
@@ -2491,7 +2514,8 @@ void do_monster_turn() {
 								seek_party (i,cur_monst->cur_loc,univ.town.monst[move_target - 100].cur_loc);
 								for(k = 0; k < 6; k++)
 									if(univ.party[k].parry > 99 && monst_adjacent(univ.party[k].combat_pos,i)
-									   && (cur_monst->active > 0) && (cur_monst->attitude % 2 == 1)) {
+										&& (cur_monst->active > 0) && (cur_monst->attitude % 2 == 1)
+										&& !univ.party[k].traits[eTrait::PACIFIST]) {
 										univ.party[k].parry = 0;
 										pc_attack(k,cur_monst);
 									}
@@ -2519,7 +2543,7 @@ void do_monster_turn() {
 				for(k = 0; k < 6; k++)
 					if(univ.party[k].main_status == eMainStatus::ALIVE && !monst_adjacent(univ.party[k].combat_pos,i)
 					   && (pc_adj[k]) && (cur_monst->attitude % 2 == 1) && (cur_monst->active > 0) &&
-					   univ.party[k].status[eStatus::INVISIBLE] == 0) {
+					   univ.party[k].status[eStatus::INVISIBLE] == 0 && !univ.party[k].traits[eTrait::PACIFIST]) {
 						combat_posing_monster = current_working_monster = k;
 						pc_attack(k,cur_monst);
 						combat_posing_monster = current_working_monster = 100 + i;
@@ -4616,6 +4640,11 @@ bool combat_cast_mage_spell() {
 	eSpell spell_num;
 	cMonster get_monst;
 	
+	if(univ.party[current_pc].traits[eTrait::ANAMA]) {
+		add_string_to_buf("Cast: You're an Anama!");
+		return false;
+	}
+	
 	if(univ.town.is_antimagic(univ.party[current_pc].combat_pos.x,univ.party[current_pc].combat_pos.y)) {
 		add_string_to_buf("  Not in antimagic field.");
 		return false;
@@ -4640,6 +4669,11 @@ bool combat_cast_mage_spell() {
 			if(!repeat_cast_ok(eSkill::MAGE_SPELLS))
 				return false;
 			spell_num = univ.party[current_pc].last_cast[eSkill::MAGE_SPELLS];
+		}
+		
+		if(univ.party[current_pc].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+			add_string_to_buf("Cast: You're a pacifist!");
+			return false;
 		}
 		
 		if(spell_num == eSpell::SIMULACRUM) {
@@ -4689,6 +4723,8 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 	miss_num_t store_m_type = 0;
 	short bonus = freebie ? 1 : univ.party[current_pc].stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.party[current_pc].level;
+	if(!freebie && univ.party[current_pc].race == eRace::VAHNATAI)
+		level++;
 	cCreature* which_m;
 	start_missile_anim();
 	switch(spell_num) {
@@ -4855,13 +4891,16 @@ bool combat_cast_priest_spell() {
 		return false;
 	}
 	
+	if(univ.party[current_pc].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+		add_string_to_buf("Cast: You're a pacifist!");
+		return false;
+	}
+	
 	if(spell_num == eSpell::NONE) return false;
 	
 	combat_posing_monster = current_working_monster = current_pc;
 	
-	if(univ.party[current_pc].cur_sp == 0)
-		add_string_to_buf("Cast: No spell points.");
-	else if(spell_num != eSpell::NONE) {
+	if(spell_num != eSpell::NONE) {
 		print_spell_cast(spell_num,eSkill::PRIEST_SPELLS);
 		if((*spell_num).refer == REFER_YES) {
 			take_ap(5);
@@ -4895,6 +4934,8 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 	miss_num_t store_m_type = 0;
 	short bonus = freebie ? 1 : univ.party[current_pc].stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.party[current_pc].level;
+	if(!freebie && univ.party[current_pc].traits[eTrait::ANAMA])
+		level++;
 	cCreature *which_m;
 	effect_pat_type protect_pat = {{
 		{0,1,1,1,1,1,1,1,0},

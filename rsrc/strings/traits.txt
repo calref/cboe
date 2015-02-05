@@ -29,7 +29,9 @@ Chronic Disease is the worst disadvantage a character may possess. Such characte
 Bad Back
 A character with a Bad Back cannot bear to haul too much weight. Such a person cannot carry as much as he or she might have been able to otherwise.
 Pacifist
-
+A pacifist eschews combat in all its forms. They cannot attack, shoot missiles, cast spells, or use items that target an enemy or summon creatures.
+Anama Member
+Anama members have sworn off arcane magic in all its forms. They cannot cast mage spells or use items that cast mage spells. However, they also get some bonuses to priest spells.
 Human
 Human is the default species in Blades of Exile. Humans have skins of a variety of hues, and are soft, generally fragile, and incredibly resourceful.
 Nephilim
@@ -37,7 +39,7 @@ The Nephilim are a race of feline humanoids. Once common on the surface world, t
 Slithzerikai
 The Slithzerikai (sliths for short) are a race of lizard men, both strong and smart. Once unknown on the surface world, they are starting to appear there. Slith characters get bonuses to strength and intelligence, and are better at using pole weapons.
 Vahnatai
-
+The Vahnatai are a frail and spindly yet intelligent subterranean race. They get a penalty to strength and can't carry as much, but also receive a bonus to intelligence and are better at casting mage spells.
 Reptile
 
 Beast

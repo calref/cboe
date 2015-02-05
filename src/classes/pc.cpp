@@ -57,17 +57,16 @@ void cPlayer::append(legacy::pc_record_type old){
 short cPlayer::get_tnl(){
 	short tnl = 100,store_per = 100;
 	// Omitting a race from this list gives it a value of 0, thanks to the defaulting implementation of operator[]
-	// TODO: Vahnatai, pacifist
-	static std::map<const eRace, const int> rp = {{eRace::NEPHIL,12},{eRace::SLITH,20}};
+	static std::map<const eRace, const int> rp = {{eRace::NEPHIL,12},{eRace::SLITH,20},{eRace::VAHNATAI,-5}};
 	static std::map<const eTrait, const short> ap = {
 		{eTrait::TOUGHNESS,10}, {eTrait::MAGICALLY_APT,20}, {eTrait::AMBIDEXTROUS,8}, {eTrait::NIMBLE,10}, {eTrait::CAVE_LORE,4},
 		{eTrait::WOODSMAN,6}, {eTrait::GOOD_CONST,10}, {eTrait::HIGHLY_ALERT,7}, {eTrait::STRENGTH,12}, {eTrait::RECUPERATION,15},
 		{eTrait::SLUGGISH,-10}, {eTrait::MAGICALLY_INEPT,-8}, {eTrait::FRAIL,-8}, {eTrait::CHRONIC_DISEASE,-20}, {eTrait::BAD_BACK,-8},
-		{eTrait::PACIFIST,-40},
+		{eTrait::PACIFIST,-40}, {eTrait::ANAMA,-10},
 	};
 	
 	tnl = (tnl * (100 + rp[race])) / 100;
-	for(int i = 0; i < 15; i++) {
+	for(int i = 0; i < 17; i++) {
 		eTrait trait = eTrait(i);
 		if(traits[trait])
 			store_per = store_per + ap[trait];
@@ -75,7 +74,7 @@ short cPlayer::get_tnl(){
 	
 	tnl = (tnl * store_per) / 100;
 	
-	return tnl;
+	return max(tnl, 10);
 }
 
 void cPlayer::avatar() {
@@ -328,6 +327,8 @@ short cPlayer::stat_adj(eSkill which) const {
 	if(which == eSkill::STRENGTH) {
 		if(traits[eTrait::STRENGTH])
 			tr++;
+		if(race == eRace::VAHNATAI)
+			tr -= 2;
 	}
 	// TODO: Use ability strength?
 	if(has_abil_equip(eItemAbil::BOOST_STAT,int(which)) < 24)
@@ -465,7 +466,7 @@ bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
 
 short cPlayer::max_weight() const {
 	return 100 + (15 * min(skill(eSkill::STRENGTH),20)) + (traits[eTrait::STRENGTH] * 30)
-		+ (traits[eTrait::BAD_BACK] * -50);
+		+ (traits[eTrait::BAD_BACK] * -50) + (race == eRace::VAHNATAI) * -25;
 }
 
 short cPlayer::cur_weight() const {
@@ -646,10 +647,21 @@ void cPlayer::finish_create() {
 		skills[eSkill::STRENGTH] += 2;
 		skills[eSkill::INTELLIGENCE] += 1;
 	}
-	// TODO: Vahnatai
+	if(race == eRace::VAHNATAI) {
+		skills[eSkill::INTELLIGENCE] += 2;
+		// The Vahnatai signature spells
+		if(skills[eSkill::MAGE_SPELLS] >= 4)
+			mage_spells[34] = mage_spells[35] = true;
+	}
 	// Bonus spell points for spellcasters
 	max_sp += skills[eSkill::MAGE_SPELLS] * 3 + skills[eSkill::PRIEST_SPELLS] * 3;
 	cur_sp = max_sp;
+	// If they trained in mage spells but then decided to be Anama, give them back the skill points.
+	// But do it here so that they still get the bonus spell points from that training.
+	if(traits[eTrait::ANAMA] && skills[eSkill::MAGE_SPELLS] > 0) {
+		skill_pts += 6 * skills[eSkill::MAGE_SPELLS];
+		skills[eSkill::MAGE_SPELLS] = 0;
+	}
 }
 
 cPlayer::cPlayer(cParty& party) : party(party) {

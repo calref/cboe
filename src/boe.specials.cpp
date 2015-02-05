@@ -229,7 +229,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	if((!is_out()) && (overall_mode < MODE_TALKING)) {
 		check_fields(where_check,mode,which_pc);
 		
-		if(univ.town.is_web(where_check.x,where_check.y)) {
+		if(univ.town.is_web(where_check.x,where_check.y) && univ.party[current_pc].race != eRace::BUG) {
 			add_string_to_buf("  Webs!");
 			if(mode != eSpecCtx::COMBAT_MOVE) {
 				for(i = 0; i < 6; i++) {
