@@ -217,6 +217,72 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		data.PushElement("description", quest.descr);
 		data.CloseElement("quest");
 	}
+	for(size_t i = 0; i < scenario.shops.size(); i++) {
+		cShop& shop = scenario.shops[i];
+		data.OpenElement("shop");
+		data.PushElement("name", shop.getName());
+		data.PushElement("type", shop.getType());
+		data.PushElement("prompt", shop.getPrompt());
+		data.PushElement("face", shop.getFace());
+		size_t num_entries = shop.size();
+		data.OpenElement("entries");
+		for(size_t j = 0; j < num_entries; j++) {
+			cShopItem entry = shop.getItem(j);
+			int quantity = entry.quantity, chance = 100;
+			switch(entry.type) {
+				case eShopItemType::EMPTY: break;
+				case eShopItemType::OPTIONAL:
+					quantity %= 1000;
+					chance = entry.quantity / 1000;
+				case eShopItemType::ITEM:
+					data.OpenElement("item");
+					if(quantity == 0)
+						data.PushAttribute("quantity", "infinite");
+					else data.PushAttribute("quantity", quantity);
+					if(chance < 100)
+						data.PushAttribute("chance", chance);
+					data.PushText(entry.index);
+					data.CloseElement("item");
+					break;
+				case eShopItemType::CALL_SPECIAL:
+					data.OpenElement("special");
+					data.PushElement("name", entry.item.full_name);
+					data.PushElement("description", entry.item.desc);
+					data.PushElement("node", entry.item.item_level);
+					data.PushElement("quantity", entry.quantity);
+					data.PushElement("cost", entry.item.value);
+					data.PushElement("icon", entry.item.graphic_num);
+					data.CloseElement("special");
+					break;
+				case eShopItemType::MAGE_SPELL:
+					data.PushElement("mage-spell", entry.index);
+					break;
+				case eShopItemType::PRIEST_SPELL:
+					data.PushElement("priest-spell", entry.index);
+					break;
+				case eShopItemType::ALCHEMY:
+					data.PushElement("recipe", entry.index);
+					break;
+				case eShopItemType::SKILL:
+					data.PushElement("skill", entry.index);
+					break;
+				case eShopItemType::TREASURE:
+					data.PushElement("treasure", entry.index);
+					break;
+				case eShopItemType::CLASS:
+					data.PushElement("class", entry.index);
+					break;
+				case eShopItemType::CURE_ACID: case eShopItemType::CURE_DISEASE: case eShopItemType::CURE_DUMBFOUNDING:
+				case eShopItemType::CURE_PARALYSIS: case eShopItemType::CURE_POISON: case eShopItemType::DESTONE:
+				case eShopItemType::HEAL_WOUNDS: case eShopItemType::RAISE_DEAD: case eShopItemType::REMOVE_CURSE:
+				case eShopItemType::RESURRECT:
+					data.PushElement("heal", int(entry.type) - int(eShopItemType::HEAL_WOUNDS));
+					break;
+			}
+		}
+		data.CloseElement("entries");
+		data.CloseElement("shop");
+	}
 	for(int i = 0; i < 20; i++) {
 		if(scenario.scenario_timer_times[i] > 0) {
 			data.OpenElement("timer");
@@ -676,7 +742,51 @@ static void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 	data.CloseElement("town");
 }
 
-map_data buildOutMapData(location which) {
+static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk) {
+	data.OpenElement("dialogue");
+	data.PushAttribute("boes", scenario.format_ed_version());
+	for(size_t i = 0; i < 10; i++) {
+		cPersonality& who = talk.people[i];
+		data.OpenElement("personality");
+		data.PushAttribute("id", i);
+		data.PushElement("title", who.title);
+		data.PushElement("look", who.look);
+		data.PushElement("name", who.name);
+		data.PushElement("job", who.job);
+		data.CloseElement("personality");
+	}
+	for(size_t i = 0; i < 60; i++) {
+		cSpeech::cNode& node = talk.talk_nodes[i];
+		if(node.personality == -1) continue;
+		// TODO: Is it safe to assume the two links run together like this?
+		if(std::string(node.link1, 8) == "xxxxxxxx")
+			continue;
+		data.OpenElement("node");
+		data.PushAttribute("for", node.personality);
+		if(std::string(node.link1, 4) != "xxxx")
+			data.PushElement("keyword", std::string(node.link1, 4));
+		if(std::string(node.link2, 4) != "xxxx")
+			data.PushElement("keyword", std::string(node.link2, 4));
+		data.PushElement("type", int(node.type));
+		if(node.extras[0] >= 0 || node.extras[1] >= 0 || node.extras[2] >= 0 || node.extras[3] >= 0)
+			data.PushElement("param", node.extras[0]);
+		if(node.extras[1] >= 0 || node.extras[2] >= 0 || node.extras[3] >= 0)
+			data.PushElement("param", node.extras[1]);
+		if(node.extras[2] >= 0 || node.extras[3] >= 0)
+			data.PushElement("param", node.extras[2]);
+		if(node.extras[3] >= 0)
+			data.PushElement("param", node.extras[3]);
+		if(!node.str1.empty())
+			data.PushElement("text", node.str1);
+		else data.PushElement("text");
+		if(!node.str2.empty())
+			data.PushElement("text", node.str2);
+		data.CloseElement("node");
+	}
+	data.CloseElement("dialogue");
+}
+
+static map_data buildOutMapData(location which) {
 	cOutdoors& sector = *scenario.outdoors[which.x][which.y];
 	map_data terrain;
 	for(size_t x = 0; x < 48; x++) {
@@ -718,7 +828,7 @@ map_data buildOutMapData(location which) {
 	return terrain;
 }
 
-map_data buildTownMapData(size_t which) {
+static map_data buildTownMapData(size_t which) {
 	cTown& town = *scenario.towns[which];
 	map_data terrain;
 	for(size_t x = 0; x < town.max_dim(); x++) {
@@ -774,11 +884,14 @@ void save_scenario(fs::path toFile) {
 	scenario.format.prog_make_ver[0] = 2;
 	scenario.format.prog_make_ver[1] = 0;
 	scenario.format.prog_make_ver[2] = 0;
+	scenario.format.flag1 = 'O'; scenario.format.flag2 = 'B';
+	scenario.format.flag3 = 'O'; scenario.format.flag4 = 'E';
 	// TODO: This is just a skeletal outline of what needs to be done to save the scenario
 	tarball scen_file;
 	{
 		// First, write out the scenario header data. This is in a binary format identical to older scenarios.
 		std::ostream& header = scen_file.newFile("scenario/header.exs");
+		header.write(reinterpret_cast<char*>(&scenario.format), sizeof(scenario_header_flags));
 		
 		// Next, the bulk scenario data.
 		std::ostream& scen_data = scen_file.newFile("scenario/scenario.xml");
@@ -835,16 +948,18 @@ void save_scenario(fs::path toFile) {
 		writeSpecialNodes(town_spec, scenario.towns[i]->specials);
 		
 		// Don't forget the dialogue nodes.
-		std::ostream& town_talk = scen_file.newFile("scenario/towns/" + file_basename + "talk.xml");
+		std::ostream& town_talk = scen_file.newFile("scenario/towns/talk" + std::to_string(i) + ".xml");
+		writeDialogueToXml(ticpp::Printer("talk.xml", town_talk), scenario.towns[i]->talking);
 	}
-	giveError("Sorry, scenario saving is currently disabled.");
-	return;
 	
 	// Make sure it has the proper file extension
 	std::string fname = toFile.filename().string();
 	size_t dot = fname.find_last_of('.');
-	if(dot == std::string::npos || fname.substr(dot) != ".boes")
-		fname += ".boes";
+	if(dot == std::string::npos || fname.substr(dot) != ".boes") {
+		if(fname.substr(dot) == ".exs")
+			fname.replace(dot,4,".boes");
+		else fname += ".boes";
+	}
 	toFile = toFile.parent_path()/fname;
 	
 	// Now write to zip file.
