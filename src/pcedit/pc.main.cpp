@@ -336,3 +336,52 @@ bool verify_restore_quit(bool mode) {
 	save_party(file_in_mem, univ);
 	return true;
 }
+
+static void give_help(short help1,short help2,cDialog* parent) {
+	bool help_forced = false;
+	std::string str1,str2;
+	
+	if(help1 >= 200) {
+		help_forced = true;
+		help1 -= 200;
+	}
+	// This SDF is the "never show instant help" flag
+	if(univ.party.stuff_done[306][4] > 0 && !help_forced)
+		return;
+	if(univ.party.help_received[help1] > 0 && !help_forced)
+		return;
+	univ.party.help_received[help1] = 1;
+	str1 = get_str("help",help1);
+	if(help2 > 0)
+		str2 = get_str("help",help2);
+	cStrDlog display_strings(str1,str2,"Instant Help",24,PIC_DLOG, parent);
+	display_strings.setSound(57);
+	display_strings.show();
+}
+
+void give_help(short help1, short help2) {
+	give_help(help1, help2, NULL);
+}
+
+void give_help(short help1, short help2, cDialog& parent) {
+	give_help(help1, help2, &parent);
+}
+
+void display_skills(eSkill skill,cDialog* parent) {
+	extern std::map<eSkill,short> skill_cost;
+	extern std::map<eSkill,short> skill_max;
+	extern std::map<eSkill,short> skill_g_cost;
+	int skill_pos = int(skill);
+	cDialog skillDlog("skill-info", parent);
+	skillDlog["done"].attachClickHandler(std::bind(&cDialog::toast, &skillDlog, true));
+	skillDlog["name"].setText(get_str("skills",skill_pos * 2 + 1));
+	skillDlog["skp"].setTextToNum(skill_cost[skill]);
+	skillDlog["gold"].setTextToNum(skill_g_cost[skill]);
+	skillDlog["max"].setTextToNum(skill_max[skill]);
+	skillDlog["desc"].setText(get_str("skills", skill_pos * 2 + 2));
+	skillDlog["tips"].setText(get_str("tips", 1 + skill_pos));
+	skillDlog["left"].hide();
+	skillDlog["right"].hide();
+	
+	skillDlog.run();
+}
