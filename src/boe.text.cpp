@@ -709,6 +709,8 @@ short do_look(location space) {
 			add_string_to_buf("    Boat");
 		if(out_horse_there(space) < 30)
 			add_string_to_buf("    Horse");
+		if(univ.out->special_spot[space.x][space.y])
+			add_string_to_buf("    Special Encounter");
 	}
 	
 	if((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
@@ -788,6 +790,8 @@ short do_look(location space) {
 				add_string_to_buf((char *) msg.c_str());
 			}
 		}
+		if(univ.town.is_spot(space.x,space.y))
+			add_string_to_buf("    Special Encounter");
 	}
 	
 	if(!is_lit) {
@@ -805,7 +809,7 @@ short town_boat_there(location where) {
 		if((univ.party.boats[i].exists) && (univ.party.boats[i].which_town == univ.town.num)
 			&& (where == univ.party.boats[i].loc))
 			return i;
-	return 30;
+	return univ.party.boats.size();
 }
 short out_boat_there(location where) {
 	short i;
@@ -814,7 +818,7 @@ short out_boat_there(location where) {
 		if((univ.party.boats[i].exists) && (where == univ.party.boats[i].loc)
 			&& (univ.party.boats[i].which_town == 200))
 			return i;
-	return 30;
+	return univ.party.boats.size();
 }
 
 short town_horse_there(location where) {
@@ -824,7 +828,7 @@ short town_horse_there(location where) {
 		if((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == univ.town.num)
 			&& (where == univ.party.horses[i].loc))
 			return i;
-	return 30;
+	return univ.party.horses.size();
 }
 short out_horse_there(location where) {
 	short i;
@@ -833,7 +837,7 @@ short out_horse_there(location where) {
 		if((univ.party.horses[i].exists) && (where == univ.party.horses[i].loc)
 			&& (univ.party.horses[i].which_town == 200))
 			return i;
-	return 30;
+	return univ.party.horses.size();
 }
 void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
 	short i;

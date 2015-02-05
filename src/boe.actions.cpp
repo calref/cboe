@@ -419,12 +419,12 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 			}
 		} else {
 			// The above could leave you stranded in a single-tile passable area, so pausing again should re-enter the boat.
-			int boat = -1;
+			int boat = univ.party.boats.size();
 			if(overall_mode == MODE_OUTDOORS && (boat = out_boat_there(univ.party.p_loc)) < univ.party.boats.size())
 				univ.party.in_boat = boat;
 			else if(overall_mode == MODE_TOWN && (boat = town_boat_there(univ.town.p_loc)) < univ.party.boats.size())
 				univ.party.in_boat = boat;
-			if(boat >= 0)
+			if(boat < univ.party.boats.size())
 				ASB("You board the boat.");
 		}
 		put_pc_screen();
