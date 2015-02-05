@@ -280,13 +280,56 @@ static void do_xp_keep(xp_dlog_state& save) {
 	
 }
 
+static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
+	unsigned int min_level, max_level, cur_level, orig_level, cost, g_cost;
+	if(skill == eSkill::MAX_HP) {
+		min_level = 6;
+		max_level = 250;
+		cur_level = save.hp;
+		orig_level = univ.party[save.who].max_health;
+		cost = 1;
+		g_cost = 10;
+	} else if(skill == eSkill::MAX_SP) {
+		min_level = 0;
+		max_level = 150;
+		cur_level = save.sp;
+		orig_level = univ.party[save.who].max_sp;
+		cost = 1;
+		g_cost = 15;
+	} else {
+		if(skill == eSkill::STRENGTH || skill == eSkill::DEXTERITY || skill == eSkill::INTELLIGENCE)
+			min_level = 1;
+		else min_level = 0;
+		max_level = skill_max[skill];
+		cur_level = save.skills[skill];
+		orig_level = univ.party[save.who].skills[skill];
+		cost = skill_cost[skill];
+		g_cost = skill_g_cost[skill];
+	}
+	if(increase) {
+		if(cur_level == max_level)
+			return false;
+		if(save.mode < 2 && save.skp < cost)
+			return false;
+		if(save.mode == 1 && save.g < g_cost)
+			return false;
+		return true;
+	} else {
+		if(cur_level == min_level)
+			return false;
+		if(save.mode == 1 && cur_level == orig_level)
+			return false;
+		return true;
+	}
+}
+
 static void draw_xp_skills(cDialog& me,xp_dlog_state& save) {
 	short i;
 	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
 	for(i = 0; i < 19; i++) {
 		cControl& cur = me[skill_ids[i]];
 		eSkill skill = eSkill(i);
-		if((save.skp >= skill_cost[skill]) && (save.g >= skill_g_cost[skill]))
+		if(can_change_skill(skill, save, true))
 			cur.setColour(sf::Color::Red);
 		else cur.setColour(me.getDefTextClr());
 		cur.setTextToNum(save.skills[skill]);
@@ -294,11 +337,11 @@ static void draw_xp_skills(cDialog& me,xp_dlog_state& save) {
 	
 	cControl& sp = me["sp"];
 	cControl& hp = me["hp"];
-	if((save.skp >= 1) && (save.g >= 10))
+	if(can_change_skill(eSkill::MAX_HP, save, true))
 		hp.setColour(sf::Color::Red);
 	else hp.setColour(me.getDefTextClr());
 	hp.setTextToNum(save.hp);
-	if((save.skp >= 1) && (save.g >= 15))
+	if(can_change_skill(eSkill::MAX_SP, save, true))
 		sp.setColour(sf::Color::Red);
 	else sp.setColour(me.getDefTextClr());
 	sp.setTextToNum(save.sp);
@@ -373,25 +416,29 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 			cStrDlog aboutHP(get_str("help",63),"","About Health",24,PIC_DLOG,&me);
 			aboutHP.setSound(57);
 			aboutHP.show();
-		} else if(((save.hp >= 250) && (item_hit[3] == 'p')) ||
-				   ((save.hp == univ.party[save.who].max_health) && (item_hit[3] == 'm') && (save.mode == 1)) ||
-				   ((save.hp == 6) && (item_hit[3] == 'm') && (save.mode == 0)))
-			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
-		else if(item_hit == "hp-m") {
-			save.g += 10;
-			save.hp -= 2;
-			save.skp += 1;
-		}
-		else {
-			if((save.g < 10) || (save.skp < 1)) {
-				if(save.g < 10)
-					give_help(24,0,me);
-				else give_help(25,0,me);
-			}
-			else {
-				save.g -= 10;
+		} else if(item_hit[3] == 'm') {
+			if(can_change_skill(eSkill::MAX_HP, save, false)) {
+				save.hp -= 2;
+				if(save.mode < 2) {
+					save.skp += 1;
+					if(save.mode == 1)
+						save.g += 10;
+				}
+			} else beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+		} else if(item_hit[3] == 'p') {
+			if(can_change_skill(eSkill::MAX_SP, save, true)) {
 				save.hp += 2;
-				save.skp -= 1;
+				if(save.mode < 2) {
+					save.skp -= 1;
+					if(save.mode == 1)
+						save.g -= 10;
+				}
+			} else {
+				if(save.mode < 2 && save.skp < 1)
+					give_help(25,0,me);
+				else if(save.mode == 1 && save.g < 10)
+					give_help(24,0,me);
+				else beep();
 			}
 		}
 		
@@ -404,25 +451,29 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 			cStrDlog aboutSP(get_str("help",64),"","About Spell Points",24,PIC_DLOG,&me);
 			aboutSP.setSound(57);
 			aboutSP.show();
-		} else if(((save.sp >= 150) && (item_hit[3] == 'p')) ||
-				   ((save.sp == univ.party[save.who].max_sp) && (item_hit[3] == 'm') && (save.mode == 1)) ||
-				   ((save.sp == 0) && (item_hit[3] == 'm') && (save.mode == 0)))
-			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
-		else if(item_hit == "sp-m") {
-			save.g += 15;
-			save.sp -= 1;
-			save.skp += 1;
-		}
-		else {
-			if((save.g < 15) || (save.skp < 1)) {
-				if(save.g < 15)
-					give_help(24,0,me);
-				else give_help(25,0,me);
-			}
-			else {
+		} else if(item_hit[3] == 'm') {
+			if(can_change_skill(eSkill::MAX_SP, save, false)) {
+				save.sp -= 1;
+				if(save.mode < 2) {
+					save.skp += 1;
+					if(save.mode == 1)
+						save.g += 15;
+				}
+			} else beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+		} else if(item_hit[3] == 'p') {
+			if(can_change_skill(eSkill::MAX_SP, save, true)) {
 				save.sp += 1;
-				save.g -= 15;
-				save.skp -= 1;
+				if(save.mode < 2) {
+					save.skp -= 1;
+					if(save.mode == 1)
+						save.g -= 15;
+				}
+			} else {
+				if(save.mode < 2 && save.skp < 1)
+					give_help(25,0,me);
+				else if(save.mode == 1 && save.g < 15)
+					give_help(24,0,me);
+				else beep();
 			}
 		}
 		
@@ -444,47 +495,44 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 		else {
 			char dir = item_hit[item_hit.length() - 1];
 			
-			// TODO: This is a game event, so it should have a game sound, not a system alert.
-			if(save.skills[which_skill] >= skill_max[which_skill] && dir == 'p')
-				beep();
-			else if(save.skills[which_skill] == univ.party[save.who].skills[which_skill] && dir == 'm' && save.mode == 1)
-				beep();
-			else if(save.skills[which_skill] == 0 && dir == 'm' && save.mode == 0 &&
-					which_skill != eSkill::STRENGTH && which_skill != eSkill::DEXTERITY && which_skill != eSkill::INTELLIGENCE)
-				beep();
-			else if(save.skills[which_skill] == 1 && dir == 'm' && save.mode == 0 &&
-					(which_skill == eSkill::STRENGTH || which_skill == eSkill::DEXTERITY || which_skill == eSkill::INTELLIGENCE))
-				beep();
-			else {
-				if(dir == 'm') {
-					save.g += skill_g_cost[which_skill];
+			if(dir == 'm') {
+				if(can_change_skill(which_skill, save, false)) {
 					save.skills[which_skill] -= 1;
-					save.skp += skill_cost[which_skill];
-				}
-				else {
-					if((save.g < skill_g_cost[which_skill]) || (save.skp < skill_cost[which_skill])) {
-						if(save.g < skill_g_cost[which_skill])
-							give_help(24,0,me);
-						else give_help(25,0,me);
+					if(save.mode < 2) {
+						save.skp += skill_cost[which_skill];
+						if(save.mode == 1)
+							save.g += skill_g_cost[which_skill];
 					}
-					else {
-						save.skills[which_skill] += 1;
-						save.g -= skill_g_cost[which_skill];
+				} else beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+			} else if(dir == 'p') {
+				if(can_change_skill(which_skill, save, true)) {
+					save.skills[which_skill] += 1;
+					if(save.mode < 2) {
 						save.skp -= skill_cost[which_skill];
+						if(save.mode == 1)
+							save.g -= skill_g_cost[which_skill];
 					}
+				} else {
+					if(save.mode < 2 && save.skp < skill_cost[which_skill])
+						give_help(25,0,me);
+					else if(save.mode == 1 && save.g < skill_g_cost[which_skill])
+						give_help(24,0,me);
+					else beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 				}
-				
-				update_gold_skills(me, save);
-				me[skill_ids[int(which_skill)]].setTextToNum(save.skills[which_skill]);
-				draw_xp_skills(me,save);
 			}
+			
+			update_gold_skills(me, save);
+			me[skill_ids[int(which_skill)]].setTextToNum(save.skills[which_skill]);
+			draw_xp_skills(me,save);
 		}
 	}
 	return true;
 }
 
-//short mode; // 0 - create  1 - train
-// returns 1 if cancelled
+// Mode is one of the following:
+// 0 - Creating a new character (need skill points but not gold)
+// 1 - Training a character (need both skill points and gold)
+// 2 - Editing a character (need neither skill points nor gold)
 bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	using namespace std::placeholders;
 	

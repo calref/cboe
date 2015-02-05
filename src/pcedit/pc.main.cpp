@@ -302,7 +302,7 @@ void handle_menu_choice(eMenu item_hit) {
 			pick_race_abil(&univ.party[current_active_pc],0);
 			break;
 		case eMenu::EDIT_SKILLS:
-			spend_xp(current_active_pc,1,0);
+			spend_xp(current_active_pc,2,0);
 			break;
 		case eMenu::EDIT_XP:
 			edit_xp(&univ.party[current_active_pc]);
