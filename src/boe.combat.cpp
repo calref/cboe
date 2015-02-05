@@ -1534,6 +1534,8 @@ void do_combat_cast(location target) {
 										add_missile(target,store_m_type,1, 14 * (w - 1),18 * (h - 1));
 									}
 									
+									if(dynamic_cast<cPlayer*>(victim))
+										put_pc_screen();
 								}
 								break;
 						}
@@ -1557,9 +1559,6 @@ void do_combat_cast(location target) {
 	
 	handle_marked_damage();
 	combat_posing_monster = current_working_monster = -1;
-	
-	if(dynamic_cast<cPlayer*>(victim))
-		put_pc_screen();
 	
 	print_buf();
 }
