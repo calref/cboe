@@ -60,6 +60,14 @@
 			<xs:enumeration value="luck"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="useFlag">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="help-one"/>
+			<xs:enumeration value="harm-one"/>
+			<xs:enumeration value="help-all"/>
+			<xs:enumeration value="harm-all"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:element name="item">
 		<xs:complexType>
 			<xs:all>
@@ -85,7 +93,7 @@
 							<xs:element name="type" type="xs:integer"/>
 							<xs:element name="strength" type="xs:integer"/>
 							<xs:element name="data" type="xs:integer"/>
-							<xs:element name="use-flag" type="xs:integer" minOccurs="0"/>
+							<xs:element name="use-flag" type="useFlag" minOccurs="0"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

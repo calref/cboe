@@ -164,8 +164,4 @@
     For example, this states that the fourth graphic is an item. -->
     <graphics><pic index='3'>7</pic></graphics>
   </editor>
-  <!-- All the scenario strings go here -->
-  <strings/>
-  <!-- And the journal strings here -->
-  <journal/>
 </scenario>

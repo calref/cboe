@@ -48,7 +48,7 @@ template<> inline void ticpp::Printer::PushAttribute(std::string attrName, bool 
 }
 
 template<> inline void ticpp::Printer::PushElement(std::string attrName, bool attrVal) {
-	PushAttribute(attrName, attrVal ? "true" : "false");
+	PushElement(attrName, attrVal ? "true" : "false");
 }
 
 template<> inline void ticpp::Printer::PushText(bool textVal) {

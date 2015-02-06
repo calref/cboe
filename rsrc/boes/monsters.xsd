@@ -33,6 +33,8 @@
 			<xs:enumeration value="magic"/>
 			<xs:enumeration value="plant"/>
 			<xs:enumeration value="bird"/>
+			<xs:enumeration value="goblin"/>
+			<xs:enumeration value="skeletal"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="permille">
