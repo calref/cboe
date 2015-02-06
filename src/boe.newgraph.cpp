@@ -792,8 +792,14 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		style.pointSize = 12;
 		style.lineHeight = 12;
 		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_NAME],cur_name,eTextMode::WRAP,style);
-		cur_name = "Cost: " + std::to_string(cur_cost);
-		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_COST],cur_name,eTextMode::WRAP,style);
+		cur_name = std::to_string(cur_cost);
+		rectangle cost_rect = shopping_rects[i][SHOPRECT_ITEM_COST];
+		cost_rect.left = cost_rect.right - string_length(cur_name, style) - 10;
+		win_draw_string(talk_gworld,cost_rect,cur_name,eTextMode::WRAP,style);
+		cost_rect.left = cost_rect.right - 7;
+		cost_rect.top += 3;
+		cost_rect.height() = 7;
+		rect_draw_some_item(invenbtn_gworld, {0, 29, 7, 36}, talk_gworld, cost_rect, sf::BlendAlpha);
 		style.pointSize = 10;
 		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::WRAP,style);
 		rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][SHOPRECT_ITEM_HELP],pressed ? sf::BlendNone : sf::BlendAlpha);
@@ -886,8 +892,8 @@ std::string get_item_interesting_string(cItem item) {
 		case eItemType::BOLTS:
 		case eItemType::MISSILE_NO_AMMO:
 			if(item.bonus != 0)
-				sout << "Damage: 1-" << item.item_level << " + " << item.bonus << '.';
-			else sout << "Damage: 1-" << item.item_level << '.';
+				sout << "Damage: 1-" << item.item_level << " + " << item.bonus;
+			else sout << "Damage: 1-" << item.item_level;
 			break;
 		case eItemType::SHIELD:
 		case eItemType::ARMOR:
@@ -895,31 +901,32 @@ std::string get_item_interesting_string(cItem item) {
 		case eItemType::GLOVES:
 		case eItemType::SHIELD_2:
 		case eItemType::BOOTS: // TODO: Verify that this is displayed correctly
-			sout << "Blocks " << item.item_level + ((item.protection > 0) ? 1 : 0) << '-' << item.item_level + item.protection << " damage.";
+			sout << "Blocks " << item.item_level + ((item.protection > 0) ? 1 : 0) << '-' << item.item_level + item.protection << " damage";
 			break;
 		case eItemType::BOW:
 		case eItemType::CROSSBOW:
-			sout << "Bonus: +" << item.bonus << " to hit.";
+			sout << "Bonus: +" << item.bonus << " to hit";
 			break;
 		case eItemType::GOLD:
-			sout << item.item_level << " gold pieces.";
+			sout << item.item_level << " gold pieces";
 			break;
 		case eItemType::SPECIAL:
 			sout << "Special";
 			break;
 		case eItemType::FOOD:
-			sout << item.item_level << " food.";
+			sout << item.item_level << " food";
 			break;
 		case eItemType::WEAPON_POISON:
-			sout << "Poison: Does " << item.item_level << '-' << item.item_level * 6 << " damage.";
+			sout << "Poison: " << item.item_level << '-' << item.item_level * 6 << " damage";
 			break;
 		default:
 			if(item.charges > 0)
-				sout << "Uses: " << item.charges;
+				sout << "Uses: " << item.charges << '.';
 			return sout.str();
 	}
 	if(item.charges > 0)
 		sout << "; Uses: " << item.charges;
+	sout << '.';
 	return sout.str();
 }
 
