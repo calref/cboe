@@ -398,6 +398,9 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	// Do this after strings are loaded because porting shops requires access to strings
 	the_town.talking.append(store_talk, shops);
 	
+	// And lastly, calculate lighting
+	the_town.set_up_lights();
+	
 	n = fclose(file_id);
 	if(n != 0) {
 		oopsError(18, 0, 0);

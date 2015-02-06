@@ -225,8 +225,8 @@ void cTown::set_up_lights() {
 							where_lit[where.x][where.y] = true;
 			}
 		}
-	for(short i = 0; i < 8; i++)
-		for(short j = 0; j < 64; j++)
+	for(short i = 0; i < this->max_dim() / 8; i++)
+		for(short j = 0; j < this->max_dim(); j++)
 			this->lighting(i,j) = 0;
 	for(where.x = 0; where.x < this->max_dim(); where.x++)
 		for(where.y = 0; where.y < this->max_dim(); where.y++) {
