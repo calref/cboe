@@ -85,7 +85,8 @@ public:
 	/// @note Even if it returns false, the label has been attached (ie, the existing label was updated).
 	bool addLabelFor(std::string key, std::string label, eLabelPos where, short offset, bool bold);
 	/// Show the dialog and start its event loop. All dialogs are modal.
-	void run(); // cd_run_dialog
+	/// @param onopen A function to be called after the dialog is displayed but before the event loop starts.
+	void run(std::function<void(cDialog&)> onopen = nullptr); // cd_run_dialog
 	/// Get the result of the dialog.
 	/// @tparam type The result type.
 	/// @throw boost::bad_any_cast if the provided result type is different from the type set by getResult().

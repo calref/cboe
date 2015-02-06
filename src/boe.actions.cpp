@@ -1729,12 +1729,10 @@ bool handle_keystroke(sf::Event& event){
 			
 		case '?':
 			if(overall_mode == MODE_SHOPPING) {
-				univ.party.help_received[26] = 0;
 				give_help(226,27);
 				break;
 			}
 			if(overall_mode == MODE_TALKING) {
-				univ.party.help_received[5] = 0;
 				give_help(205,6);
 				break;
 			}

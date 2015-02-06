@@ -1028,7 +1028,7 @@ bool cDialog::sendInput(cKey key) {
 	return true;
 }
 
-void cDialog::run(){
+void cDialog::run(std::function<void(cDialog&)> onopen){
 	cDialog* formerTop = topWindow;
 	// TODO: The introduction of the static topWindow means I may be able to use this instead of parent->win; do I still need parent?
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);
@@ -1059,6 +1059,7 @@ void cDialog::run(){
 	makeFrontWindow(parent ? parent-> win : mainPtr);
 	makeFrontWindow(win);
 	ModalSession dlog(win, *parentWin);
+	if(onopen) onopen(*this);
 	animTimer.restart();
 	while(dialogNotToast){
 		draw();

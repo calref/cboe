@@ -147,8 +147,6 @@ static void init_party_scen_data() {
 	for(i = 0; i < 5; i++)
 		for(j = 0; j < 10; j++)
 			univ.party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
-	for(i = 0; i < 256; i++)
-		univ.party.m_seen[i] = univ.party.m_noted[i] = 0;
 //	for(i = 0; i < 50; i++)
 //		univ.party.journal_str[i] = -1;
 //	for(i = 0; i < 140; i++)
@@ -1322,7 +1320,7 @@ void cast_town_spell(location where) {
 			if(iLiving* targ = univ.target_there(where, TARG_MONST)) {
 				cCreature* monst = dynamic_cast<cCreature*>(targ);
 				if(town_spell == eSpell::SCRY_MONSTER) {
-					univ.party.m_noted[monst->number] = true;
+					univ.party.m_noted.insert(monst->number);
 					adjust_monst_menu();
 					display_monst(0,monst,0);
 				}
@@ -1886,7 +1884,6 @@ static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSk
 		put_spell_list(me, store_situation);
 		put_spell_led_buttons(me, store_situation, store_spell);
 	} else if(item_hit == "help") {
-		univ.party.help_received[7] = 0;
 		give_help(207,8,me);
 	}
 	return true;
@@ -2099,11 +2096,9 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	draw_caster_buttons(castSpell, type);
 	put_spell_led_buttons(castSpell, type, former_spell);
 	
-	if(univ.party.help_received[7] == 0) {
-		give_help(7,8,castSpell);
-	}
+	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
-	castSpell.run();
+	castSpell.run(std::bind(give_help, 7, 8, _1));
 	
 	return cSpell::fromNum(type, castSpell.getResult<short>());
 }
@@ -2205,8 +2200,7 @@ void do_alchemy() {
 
 static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "help") {
-		univ.party.help_received[20] = 0;
-		give_help(20,21,me);
+		give_help(220,21,me);
 		return true;
 	}
 	if(item_hit == "cancel")
@@ -2240,11 +2234,10 @@ eAlchemy alch_choice(short pc_num) {
 	sout << univ.party[pc_num].name;
 	sout << " (skill " << univ.party[pc_num].skill(eSkill::ALCHEMY) << ")";
 	chooseAlchemy["mixer"].setText(sout.str());
-	if(univ.party.help_received[20] == 0) {
-		give_help(20,21,chooseAlchemy);
-	}
 	
-	chooseAlchemy.run();
+	void (*give_help)(short,short,cDialog&) = ::give_help;
+	
+	chooseAlchemy.run(std::bind(give_help, 20, 21, std::ref(chooseAlchemy)));
 	return chooseAlchemy.getResult<eAlchemy>();
 }
 

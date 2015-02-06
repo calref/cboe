@@ -1348,7 +1348,7 @@ void do_combat_cast(location target) {
 											}
 											store_m_type = -1;
 											play_sound(52);
-											univ.party.m_noted[cur_monst->number] = true;
+											univ.party.m_noted.insert(cur_monst->number);
 											adjust_monst_menu();
 											display_monst(0,cur_monst,0);
 											store_sound = 25;
