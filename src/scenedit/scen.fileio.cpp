@@ -171,11 +171,11 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		}
 	}
 	for(int i = 0; i < 10; i++) {
-		if(is_minmax(0, scenario.towns.size(), scenario.town_to_add_to[i])) {
+		if(is_minmax(0, scenario.towns.size(), scenario.town_mods[i].spec)) {
 			data.OpenElement("town-flag");
-			data.PushAttribute("town", scenario.town_to_add_to[i]);
-			data.PushAttribute("add-x", scenario.flag_to_add_to_town[i][0]);
-			data.PushAttribute("add-y", scenario.flag_to_add_to_town[i][1]);
+			data.PushAttribute("town", scenario.town_mods[i].spec);
+			data.PushAttribute("add-x", scenario.town_mods[i].x);
+			data.PushAttribute("add-y", scenario.town_mods[i].y);
 			data.CloseElement("town-flag");
 		}
 	}

@@ -124,11 +124,11 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	// Now adjust town number as necessary.
 	for(i = 0; i < 10; i++)
-		if(univ.scenario.town_to_add_to[i] >= 0 && univ.scenario.town_to_add_to[i] < 200 &&
-			town_number == univ.scenario.town_to_add_to[i] &&
-			univ.party.sd_legit(univ.scenario.flag_to_add_to_town[i][0],univ.scenario.flag_to_add_to_town[i][1])) {
+		if(univ.scenario.town_mods[i].spec >= 0 && univ.scenario.town_mods[i].spec < 200 &&
+			town_number == univ.scenario.town_mods[i].spec &&
+			univ.party.sd_legit(univ.scenario.town_mods[i].x,univ.scenario.town_mods[i].y)) {
 			former_town = town_number;
-			town_number += PSD[univ.scenario.flag_to_add_to_town[i][0]][univ.scenario.flag_to_add_to_town[i][1]];
+			town_number += PSD[univ.scenario.town_mods[i].x][univ.scenario.town_mods[i].y];
 			// Now update horses & boats
 			for(i = 0; i < univ.party.horses.size(); i++)
 				if((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == former_town))

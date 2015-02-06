@@ -65,8 +65,7 @@ public:
 	short intro_mess_pic;
 	location where_start,out_sec_start,out_start;
 	size_t which_town_start;
-	short town_to_add_to[10];
-	short flag_to_add_to_town[10][2];
+	std::array<spec_loc_t,10> town_mods;
 	rectangle store_item_rects[3];
 	short store_item_towns[3];
 	std::array<cSpecItem,50> special_items;
