@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <boost/filesystem/operations.hpp>
 #include "scen.fileio.h"
 #include "scen.keydlgs.h"
 #include "graphtool.hpp"
@@ -33,7 +34,7 @@ extern bool mac_is_intel;
 
 fs::path temp_file_to_load;
 std::string last_load_file = "Blades of Exile Scenario";
-extern fs::path progDir;
+extern fs::path progDir, tempDir;
 extern bool cur_scen_is_mac;
 
 void print_write_position ();
@@ -876,6 +877,14 @@ static map_data buildTownMapData(size_t which) {
 	return terrain;
 }
 
+struct overrides_sheet {
+	const std::string& fname;
+	overrides_sheet(const std::string& fname) : fname(fname) {}
+	bool operator()(const std::string check) const {
+		return check == fname;
+	}
+};
+
 void save_scenario(fs::path toFile) {
 	scenario.format.prog_make_ver[0] = 2;
 	scenario.format.prog_make_ver[1] = 0;
@@ -946,6 +955,76 @@ void save_scenario(fs::path toFile) {
 		// Don't forget the dialogue nodes.
 		std::ostream& town_talk = scen_file.newFile("scenario/towns/talk" + std::to_string(i) + ".xml");
 		writeDialogueToXml(ticpp::Printer("talk.xml", town_talk), scenario.towns[i]->talking);
+	}
+	
+	// Now, custom graphics.
+	if(spec_scen_g.is_old) {
+		spec_scen_g.convert_sheets();
+		for(size_t i = 0; i < spec_scen_g.numSheets; i++) {
+			sf::Image sheet = spec_scen_g.sheets[i].copyToImage();
+			fs::path tempPath = tempDir/"temp.png";
+			sheet.saveToFile(tempPath.string());
+			std::ostream& pic_out = scen_file.newFile("scenario/graphics/sheet" + std::to_string(i) + ".png");
+			std::ifstream fin(tempPath.string().c_str(), std::ios::binary);
+			pic_out << fin.rdbuf();
+			fin.close();
+		}
+	} else {
+		fs::path picPath = tempDir/"scenario"/"graphics";
+		if(fs::exists(picPath) && fs::is_directory(picPath)) {
+			// First build a list of overridable sheets
+			std::set<std::string> sheet_names;
+			fs::directory_iterator sheet_iter(progDir/"graphics.exd"/"mac");
+			while(sheet_iter != fs::directory_iterator()) {
+				std::string fname = sheet_iter->path().filename().string();
+				size_t dot = fname.find_last_of('.');
+				if(fname.substr(dot) == ".png")
+					sheet_names.insert(fname);
+				sheet_iter++;
+			}
+			fs::directory_iterator dir_iter(picPath);
+			while(dir_iter != fs::directory_iterator()) {
+				std::string fname = dir_iter->path().filename().string();
+				bool is_sheet = false;
+				if(fname.substr(0,5) == "sheet") {
+					size_t dot = fname.find_last_of('.');
+					if(fname.substr(dot) == ".png" && std::all_of(fname.begin() + 5, fname.begin() + dot, isdigit)) {
+						// Looks like a valid sheet!
+						is_sheet = true;
+					}
+				} else if(std::any_of(sheet_names.begin(), sheet_names.end(), overrides_sheet(fname))) {
+					// Override sheets replace default graphic sets - they should be included as well
+					is_sheet = true;
+				}
+				if(is_sheet) {
+					std::ostream& pic_out = scen_file.newFile("scenario/graphics/" + fname);
+					std::ifstream fin(dir_iter->path().string().c_str(), std::ios::binary);
+					pic_out << fin.rdbuf();
+					fin.close();
+				}
+				dir_iter++;
+			}
+		}
+	}
+	
+	// And also sounds!
+	fs::path sndPath = tempDir/"scenario"/"sounds";
+	if(fs::exists(sndPath) && fs::is_directory(sndPath)) {
+		fs::directory_iterator dir_iter(sndPath);
+		while(dir_iter != fs::directory_iterator()) {
+			std::string fname = dir_iter->path().filename().string();
+			if(fname.substr(0,3) == "SND") {
+				size_t dot = fname.find_last_of('.');
+				if(fname.substr(dot) == ".WAV" && std::all_of(fname.begin() + 3, fname.begin() + dot, isdigit)) {
+					// Looks like a valid sound!
+					std::ostream& pic_out = scen_file.newFile("scenario/sounds/" + fname);
+					std::ifstream fin(dir_iter->path().string().c_str(), std::ios::binary);
+					pic_out << fin.rdbuf();
+					fin.close();
+				}
+			}
+			dir_iter++;
+		}
 	}
 	
 	// Make sure it has the proper file extension
