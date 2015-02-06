@@ -15,7 +15,7 @@
 #include "pc.h"
 #include "spell.hpp"
 
-const short cCreature::charm_odds[20] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0};
+const short cCreature::charm_odds[21] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0, 0};
 
 cCreature::cCreature(){
 	number = active = attitude = start_attitude = 0;

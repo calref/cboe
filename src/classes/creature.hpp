@@ -17,7 +17,7 @@
 
 class cCreature : public cMonster, public cTownperson, public iLiving {
 public:
-	static const short charm_odds[20];
+	static const short charm_odds[21];
 	short active, attitude;
 	location cur_loc;
 	short summon_time;
