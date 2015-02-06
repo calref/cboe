@@ -113,7 +113,7 @@
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="wandering" minOccurs="0">
+				<xs:element name="wandering" minOccurs="0" maxOccurs="4">
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="monster" maxOccurs="4">

@@ -291,6 +291,10 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 			data.CloseElement("timer");
 		}
 	}
+	for(size_t i = 0; i < scenario.spec_strs.size(); i++)
+		data.PushElement("string", scenario.spec_strs[i]);
+	for(size_t i = 0; i < scenario.journal_strs.size(); i++)
+		data.PushElement("journal", scenario.journal_strs[i]);
 	data.CloseElement("game");
 	data.OpenElement("editor");
 	data.PushElement("default-ground", scenario.default_ground);
@@ -325,14 +329,6 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		}
 	}
 	data.CloseElement("editor");
-	data.OpenElement("strings");
-	for(size_t i = 0; i < scenario.spec_strs.size(); i++)
-		data.PushElement("string", scenario.spec_strs[i]);
-	data.CloseElement("strings");
-	data.OpenElement("journal");
-	for(size_t i = 0; i < scenario.journal_strs.size(); i++)
-		data.PushElement("string", scenario.journal_strs[i]);
-	data.CloseElement("journal");
 	data.CloseElement("scenario");
 }
 
@@ -934,7 +930,7 @@ void save_scenario(fs::path toFile) {
 	
 	// And finally, the towns.
 	for(size_t i = 0; i < scenario.towns.size(); i++) {
-		std::string file_basename = 't' + std::to_string(i);
+		std::string file_basename = "town" + std::to_string(i);
 		// First the main data.
 		std::ostream& town = scen_file.newFile("scenario/towns/" + file_basename + ".xml");
 		writeTownToXml(ticpp::Printer(file_basename + ".xml", town), *scenario.towns[i]);

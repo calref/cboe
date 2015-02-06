@@ -293,6 +293,8 @@
 						</xs:simpleContent>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="journal" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -356,20 +358,6 @@
 				<xs:element ref="creator"/>
 				<xs:element ref="game"/>
 				<xs:element ref="editor"/>
-				<xs:element name="strings">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="journal">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="boes" type="xs:string"/>
 		</xs:complexType>

@@ -109,6 +109,15 @@
 			<xs:enumeration value="city"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="stepSound">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="step"/>
+			<xs:enumeration value="crunch"/>
+			<xs:enumeration value="squish"/>
+			<xs:enumeration value="splash"/>
+			<xs:enumeration value="none"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:element name="editor">
 		<xs:complexType>
 			<xs:all>
@@ -147,7 +156,7 @@
 				<xs:element name="boat" minOccurs="0"  type="bool"/>
 				<xs:element name="ride" minOccurs="0" type="bool"/>
 				<xs:element name="light" minOccurs="0" type="xs:integer"/>
-				<xs:element name="step-sound" minOccurs="0" type="xs:integer"/>
+				<xs:element name="step-sound" minOccurs="0" type="stepSound"/>
 				<xs:element name="trim" type="terTrim"/>
 				<xs:element name="arena" type="xs:integer"/>
 				<xs:element ref="editor" minOccurs="0"/>
