@@ -681,8 +681,8 @@ char get_fluid_trim(location where,ter_num_t ter_type) {
 // Sees if party has seen a monster of this sort, gives special messages as necessary
 void check_if_monst_seen(unsigned short m_num, location at) {\
 	// Give special messages if necessary
-	if(m_num < 10000 && !univ.party.m_seen[m_num]) {
-		univ.party.m_seen[m_num] = true;
+	if(m_num < 10000 && !univ.party.m_seen.count(m_num)) {
+		univ.party.m_seen.insert(m_num);
 		play_see_monster_str(m_num, at);
 	}
 	// Make the monster vocalize if applicable

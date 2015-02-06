@@ -348,9 +348,9 @@ static void give_help(short help1,short help2,cDialog* parent) {
 	// This SDF is the "never show instant help" flag
 	if(univ.party.stuff_done[306][4] > 0 && !help_forced)
 		return;
-	if(univ.party.help_received[help1] > 0 && !help_forced)
+	if(univ.party.help_received.count(help1) > 0 && !help_forced)
 		return;
-	univ.party.help_received[help1] = 1;
+	univ.party.help_received.insert(help1);
 	str1 = get_str("help",help1);
 	if(help2 > 0)
 		str2 = get_str("help",help2);

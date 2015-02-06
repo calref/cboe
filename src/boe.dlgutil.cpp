@@ -217,8 +217,7 @@ void handle_shop_event(location p) {
 		location loc = {p.x + ul.x, p.y + ul.y};
 		if(!help_btn->handleClick(loc))
 			return;
-		univ.party.help_received[26] = 0;
-		give_help(26,27);
+		give_help(226,27);
 		return;
 	}
 	
@@ -673,8 +672,7 @@ void handle_talk_event(location p) {
 		location loc = {p.x + ul.x, p.y + ul.y};
 		if(!help_btn->handleClick(loc))
 			return;
-		univ.party.help_received[5] = 0;
-		give_help(5,6);
+		give_help(205,6);
 		return;
 	}
 	
@@ -1134,9 +1132,7 @@ void load_prefs(){
 	PSD[SDF_GAME_SPEED] = get_int_pref("GameSpeed");
 	
 	std::vector<int> help = get_iarray_pref("ReceivedHelp");
-	for(int i : help)
-		if(i < 120)
-			univ.party.help_received[i] = 1;
+	std::copy(help.begin(), help.end(), std::inserter(univ.party.help_received, univ.party.help_received.begin()));
 }
 
 void save_prefs(bool resetHelp){
@@ -1215,8 +1211,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		else if(speed == "snail")
 			PSD[SDF_GAME_SPEED] = 3;
 		if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red) {
-			for(i = 0; i < 120; i++)
-				univ.party.help_received[i] = 0;
+			univ.party.help_received.clear();
 			reset_help = true;
 		}
 	}
@@ -1280,14 +1275,10 @@ void pick_preferences() {
 			break;
 	}
 	
-	if(univ.party.help_received[55] == 0) {
-		// TODO: Not sure if this bit is needed?
-//		cd_initial_draw(1099);
-		give_help(55,0,prefsDlog);
-	}
+	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
 	int store_display_mode = display_mode;
-	prefsDlog.run();
+	prefsDlog.run(std::bind(give_help, 55, 0, std::ref(prefsDlog)));
 	
 	if(display_mode != store_display_mode)
 		changed_display_mode = true;
@@ -1325,7 +1316,6 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 	if(item_hit == "done") {
 		me.toast(true);
 	} else if(item_hit == "help") {
-		univ.party.help_received[22] = 0;
 		give_help(222,23,me);
 	} else {
 		short which_pc = item_hit[item_hit.length()-1] - '1';
@@ -1390,11 +1380,10 @@ void edit_party() {
 	pcDialog.attachClickHandlers(edit_party_event_filter, buttons);
 	
 	put_party_stats(pcDialog);
-	if(univ.party.help_received[22] == 0) {
-		give_help(22,23,pcDialog);
-	}
+	void (*give_help)(short,short,cDialog&) = ::give_help;
+	give_help(22,23,pcDialog);
 	
-	pcDialog.run();
+	pcDialog.run(std::bind(give_help, 22, 23, std::ref(pcDialog)));
 	
 	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
 		current_pc = first_active_pc();

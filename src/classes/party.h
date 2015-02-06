@@ -97,8 +97,8 @@ public:
 	std::map<int,std::map<int,int>> store_limited_stock;
 	std::vector<job_bank_t> job_banks;
 	mon_num_t imprisoned_monst[4]; // Soul Crystal
-	char m_noted[256]; // has the monster been scried?
-	char m_seen[256]; // has the monster ever been seen? (this used to have the above meaning)
+	std::set<mon_num_t> m_noted; // has the monster been scried?
+	std::set<mon_num_t> m_seen; // has the monster ever been seen? (this used to have the above meaning)
 	std::vector<cJournal> journal;
 	std::vector<cEncNote> special_notes;
 	std::vector<cConvers> talk_save;
@@ -116,7 +116,7 @@ public:
 	short key_times[100];
 	std::vector<cTimer> party_event_timers;
 	std::array<bool,50> spec_items;
-	char help_received[120];
+	std::set<int> help_received;
 	short m_killed[200]; // monsters killed per town, I think
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	std::string scen_name;

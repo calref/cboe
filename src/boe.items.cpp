@@ -628,11 +628,9 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	}
 	put_item_graphics(itemDialog, first_item, pc_getting, itemRefs);
 	
-	if(univ.party.help_received[36] == 0) {
-		give_help(36,37,itemDialog);
-	}
+	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
-	itemDialog.run();
+	itemDialog.run(std::bind(give_help, 36, 37, _1));
 	
 	return itemDialog.getResult<bool>();
 	

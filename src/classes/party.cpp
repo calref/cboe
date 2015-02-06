@@ -108,7 +108,8 @@ void cParty::append(legacy::party_record_type& old){
 			magic_store_items[j][i].append(old.magic_store_items[j][i]);
 	}
 	for(i = 0; i < 256; i++)
-		m_noted[i] = old.m_seen[i];
+		if(old.m_seen[i])
+			m_noted.insert(i);
 	journal.reserve(50);
 	// The journal wasn't used before, so let's not bother converting it
 //	for(i = 0; i < 50; i++){
@@ -129,7 +130,8 @@ void cParty::append(legacy::party_record_type& old){
 		cConvers t;
 		t.append(old.talk_save[i], univ.scenario);
 		talk_save.push_back(t);
-		help_received[i] = old.help_received[i];
+		if(old.help_received[i])
+			help_received.insert(i);
 	}
 	direction = eDirection(old.direction);
 	at_which_save_slot = old.at_which_save_slot;
@@ -516,12 +518,10 @@ void cParty::writeTo(std::ostream& file) const {
 		file << "SPLIT_LEFT_IN " << left_in << '\n';
 		file << "SPLIT_LEFT_AT " << left_at.x << ' ' << left_at.y << '\n';
 	}
-	for(int i = 0; i < 256; i++)
-		if(m_noted[i])
-			file << "ROSTER " << i << '\n';
-	for(int i = 0; i < 256; i++)
-		if(m_seen[i])
-			file << "SEEN " << i << '\n';
+	for(int i : m_noted)
+		file << "ROSTER " << i << '\n';
+	for(int i : m_seen)
+		file << "SEEN " << i << '\n';
 	for(int i = 0; i < 4; i++)
 		if(imprisoned_monst[i] > 0)
 			file << "SOULCRYSTAL " << i << ' ' << imprisoned_monst[i] << '\n';
@@ -539,9 +539,8 @@ void cParty::writeTo(std::ostream& file) const {
 	for(int i = 0; i < 50; i++)
 		if(spec_items[i])
 			file << "ITEM " << i << '\n';
-	for(int i = 0; i < 120; i++)
-		if(help_received[i])
-			file << "HELP " << i << '\n';
+	for(int i : help_received)
+		file << "HELP " << i << '\n';
 	for(int i = 0; i < 200; i++)
 		if(m_killed[i] > 0)
 			file << "TOWNSLAUGHTER " << i << ' ' << m_killed[i] << '\n';
@@ -736,11 +735,11 @@ void cParty::readFrom(std::istream& file){
 		else if(cur == "ROSTER"){
 			int i;
 			sin >> i;
-			m_noted[i] = true;
+			m_noted.insert(i);
 		}else if(cur == "SEEN"){
 			int i;
 			sin >> i;
-			m_seen[i] = true;
+			m_seen.insert(i);
 		}else if(cur == "SOULCRYSTAL"){
 			int i;
 			sin >> i;
@@ -768,7 +767,7 @@ void cParty::readFrom(std::istream& file){
 		}else if(cur == "HELP"){
 			int i;
 			sin >> i;
-			help_received[i] = true;
+			help_received.insert(i);
 		}else if(cur == "TOWNSLAUGHTER"){
 			int i;
 			sin >> i;
