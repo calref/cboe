@@ -197,7 +197,6 @@ void handle_menu_choice(eMenu item_hit) {
 			}
 			break;
 		case eMenu::FILE_SAVE:
-			town->set_up_lights();
 			save_scenario(scenario.scen_file);
 			break;
 		case eMenu::FILE_NEW:
