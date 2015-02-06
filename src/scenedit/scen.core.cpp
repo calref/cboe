@@ -2538,15 +2538,15 @@ static bool save_add_town(cDialog& me) {
 	
 	for(i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
-		scenario.town_to_add_to[i] = me["town" + id].getTextAsNum();
-		if(cre(scenario.town_to_add_to[i],
+		scenario.town_mods[i].spec = me["town" + id].getTextAsNum();
+		if(cre(scenario.town_mods[i].spec,
 				-1,199,"Town number must be from 0 to 199 (or -1 for no effect).","",&me)) return false;
-		scenario.flag_to_add_to_town[i][0] = me["flag" + id + "-x"].getTextAsNum();
-		if(cre(scenario.flag_to_add_to_town[i][0],
+		scenario.town_mods[i].x = me["flag" + id + "-x"].getTextAsNum();
+		if(cre(scenario.town_mods[i].x,
 				0,299,"First part of flag must be from 0 to 299.","",&me)) return false;
-		scenario.flag_to_add_to_town[i][1] = me["flag" + id + "-y"].getTextAsNum();
-		if(cre(scenario.flag_to_add_to_town[i][1],
-				0,9,"Second part of flag must be from 0 to 9.","",&me)) return false;
+		scenario.town_mods[i].y = me["flag" + id + "-y"].getTextAsNum();
+		if(cre(scenario.town_mods[i].y,
+				0,49,"Second part of flag must be from 0 to 49.","",&me)) return false;
 	}
 	return true;
 }
@@ -2556,9 +2556,9 @@ static void put_add_town_in_dlog(cDialog& me) {
 	
 	for(i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
-		me["town" + id].setTextToNum(scenario.town_to_add_to[i]);
-		me["flag" + id + "-x"].setTextToNum(scenario.flag_to_add_to_town[i][0]);
-		me["flag" + id + "-y"].setTextToNum(scenario.flag_to_add_to_town[i][1]);
+		me["town" + id].setTextToNum(scenario.town_mods[i].spec);
+		me["flag" + id + "-x"].setTextToNum(scenario.town_mods[i].x);
+		me["flag" + id + "-y"].setTextToNum(scenario.town_mods[i].y);
 	}
 }
 

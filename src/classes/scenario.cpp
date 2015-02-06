@@ -65,7 +65,7 @@ cScenario::cScenario(bool init_strings) {
 	bg_town = 13;
 	bg_dungeon = 9;
 	for(i = 0; i < 10; i++) {
-		town_to_add_to[i] = -1;
+		town_mods[i].spec = -1;
 	}
 	for(i = 0; i < 3; i++) {
 		store_item_towns[i] = -1;
@@ -120,10 +120,11 @@ void cScenario::append(legacy::scenario_data_type& old){
 	out_start.x = old.out_start.x;
 	out_start.y = old.out_start.y;
 	which_town_start = old.which_town_start;
-	for(i = 0; i < 10; i++) town_to_add_to[i] = old.town_to_add_to[i];
-	for(i = 0; i < 10; i++)
-		for(j = 0; j < 2; j++)
-			flag_to_add_to_town[i][j] = old.flag_to_add_to_town[i][j];
+	for(i = 0; i < 10; i++) {
+		town_mods[i].spec = old.town_to_add_to[i];
+		town_mods[i].x = old.flag_to_add_to_town[i][0];
+		town_mods[i].y = old.flag_to_add_to_town[i][1];
+	}
 	// TODO: Combine store_item_rects and store_item_towns into a structure
 	for(i = 0; i < 3; i++) {
 		store_item_rects[i].top = old.store_item_rects[i].top;
