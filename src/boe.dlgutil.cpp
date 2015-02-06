@@ -1105,10 +1105,10 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	
 	if(town_num >= 200) {
 		town_num -= 200;
-		sign_text = univ.out->sign_strs[which_sign];
+		sign_text = univ.out->sign_locs[which_sign].text;
 	}
 	else {
-		sign_text = univ.town->sign_strs[which_sign];
+		sign_text = univ.town->sign_locs[which_sign].text;
 	}
 	sign->getControl("sign").setText(sign_text);
 	

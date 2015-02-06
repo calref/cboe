@@ -328,8 +328,8 @@ void edit_placed_item(short which_i) {
 static bool edit_sign_event_filter(cDialog& me, short which_sign) {
 	if(!me.toast(true)) return true;
 	if(editing_town)
-		town->sign_strs[which_sign] = me["text"].getText();
-	else current_terrain->sign_strs[which_sign] = me["text"].getText();
+		town->sign_locs[which_sign].text = me["text"].getText();
+	else current_terrain->sign_locs[which_sign].text = me["text"].getText();
 #if 0 // TODO: Apparently there used to be left/right buttons on this dialog.
 	if(item_hit == 3)
 		which_sign--;
@@ -358,8 +358,8 @@ void edit_sign(short which_sign,short picture) {
 	
 	sign_dlg["num"].setTextToNum(which_sign);
 	if(!editing_town)
-		sign_dlg["text"].setText(current_terrain->sign_strs[which_sign]);
-	else sign_dlg["text"].setText(town->sign_strs[which_sign]);
+		sign_dlg["text"].setText(current_terrain->sign_locs[which_sign].text);
+	else sign_dlg["text"].setText(town->sign_locs[which_sign].text);
 	
 	sign_dlg.run();
 }

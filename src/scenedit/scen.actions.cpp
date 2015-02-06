@@ -1707,7 +1707,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 				}
 			}
 		if(which_sign >= 0) {
-			town->sign_locs[which_sign] = l;
+			static_cast<location&>(town->sign_locs[which_sign]) = l;
 			edit_sign(which_sign,scenario.ter_types[terrain_type].picture);
 			sign_error_received = false;
 		}
@@ -1742,7 +1742,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 				}
 			}
 		if(which_sign >= 0) {
-			current_terrain->sign_locs[which_sign] = l;
+			static_cast<location&>(current_terrain->sign_locs[which_sign]) = l;
 			edit_sign(which_sign,scenario.ter_types[terrain_type].picture);
 			sign_error_received = false;
 		}
@@ -2331,11 +2331,11 @@ void start_string_editing(short mode,short just_redo_text) {
 				set_rb(i,RB_JOURNAL, i,str.str());
 				break;
 			case 4:
-				str << i << " - " << current_terrain->sign_strs[i].substr(0,30);
+				str << i << " - " << current_terrain->sign_locs[i].text.substr(0,30);
 				set_rb(i,RB_OUT_SIGN, i,str.str());
 				break;
 			case 5:
-				str << i << " - " << town->sign_strs[i].substr(0,30);
+				str << i << " - " << town->sign_locs[i].text.substr(0,30);
 				set_rb(i,RB_TOWN_SIGN, i,str.str());
 				break;
 		}

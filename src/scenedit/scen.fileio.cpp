@@ -588,8 +588,8 @@ static void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 	for(auto& enc : sector.wandering)
 		data.PushElement("wandering", enc);
 	data.OpenElement("signs");
-	for(auto& sign : sector.sign_strs)
-		data.PushElement("string", sign);
+	for(auto& sign : sector.sign_locs)
+		data.PushElement("string", sign.text);
 	data.CloseElement("signs");
 	data.OpenElement("descriptions");
 	for(auto& area : sector.info_rect) {
@@ -722,11 +722,11 @@ static void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		if(!area.descr.empty() && area.top < area.bottom && area.left < area.right)
 			data.PushElement("description", area);
 	}
-	for(size_t i = 0; i < town.sign_strs.size(); i++) {
-		if(town.sign_strs[i].empty()) continue;
+	for(size_t i = 0; i < town.sign_locs.size(); i++) {
+		if(town.sign_locs[i].text.empty()) continue;
 		data.OpenElement("sign");
 		data.PushAttribute("id", i);
-		data.PushText(town.sign_strs[i]);
+		data.PushText(town.sign_locs[i].text);
 		data.CloseElement("sign");
 	}
 	for(size_t i = 0; i < town.spec_strs.size(); i++) {
@@ -801,8 +801,8 @@ static map_data buildOutMapData(location which) {
 		if(sector.exit_locs[i].spec >= 0)
 			terrain.addFeature(sector.exit_locs[i].x, sector.exit_locs[i].y, eMapFeature::TOWN, sector.exit_locs[i].spec);
 	}
-	for(size_t i = 0; i < sector.sign_strs.size(); i++) {
-		if(!sector.sign_strs[i].empty())
+	for(size_t i = 0; i < sector.sign_locs.size(); i++) {
+		if(!sector.sign_locs[i].text.empty())
 			terrain.addFeature(sector.sign_locs[i].x, sector.sign_locs[i].y, eMapFeature::SIGN, i);
 	}
 	for(size_t i = 0; i < 4; i++) {
@@ -837,8 +837,8 @@ static map_data buildTownMapData(size_t which) {
 		if(town.special_locs[i].spec >= 0)
 			terrain.addFeature(town.special_locs[i].x, town.special_locs[i].y, eMapFeature::SPECIAL_NODE, town.special_locs[i].spec);
 	}
-	for(size_t i = 0; i < town.sign_strs.size(); i++) {
-		if(!town.sign_strs[i].empty())
+	for(size_t i = 0; i < town.sign_locs.size(); i++) {
+		if(!town.sign_locs[i].text.empty())
 			terrain.addFeature(town.sign_locs[i].x, town.sign_locs[i].y, eMapFeature::SIGN, i);
 	}
 	for(size_t i = 0; i < 4; i++) {
@@ -1099,8 +1099,8 @@ void scen_text_dump(){
 				if(scenario.outdoors[out_sec.x][out_sec.y]->spec_strs[i][0] != '*')
 					fout << "    Message " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->spec_strs[i] << endl;
 			for(i = 0; i < 8; i++)
-				if(scenario.outdoors[out_sec.x][out_sec.y]->sign_strs[i][0] != '*')
-					fout << "    Sign " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->sign_strs[i] << endl;
+				if(scenario.outdoors[out_sec.x][out_sec.y]->sign_locs[i].text[0] != '*')
+					fout << "    Sign " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->sign_locs[i].text << endl;
 			fout << endl;
 		}
 	}
@@ -1122,8 +1122,8 @@ void scen_text_dump(){
 				fout << "    Message " << i << ": " << scenario.towns[i]->spec_strs[i] << endl;
 		fout << "    Name: " << scenario.towns[i]->town_name << endl;
 		for(i = 0; i < 20; i++)
-			if(scenario.towns[i]->sign_strs[i][0] != '*')
-				fout << "    Sign " << i << ": " << scenario.towns[i]->sign_strs[i] << endl;
+			if(scenario.towns[i]->sign_locs[i].text[0] != '*')
+				fout << "    Sign " << i << ": " << scenario.towns[i]->sign_locs[i].text << endl;
 		fout << endl << "  Town Dialogue:" << endl;
 		for(i = 0; i < 10; i++) {
 			fout << "    Personality " << j + i << " (" << scenario.towns[i]->talking.people[i].title << "): " << endl;

@@ -74,7 +74,7 @@ public:
 	cWandering wandering[4];
 	location wandering_locs[4];
 	std::vector<spec_loc_t> special_locs;
-	std::array<location,15> sign_locs;
+	std::array<sign_loc_t,20> sign_locs;
 	eLighting lighting_type;
 	location start_locs[4];
 	location exit_locs[4];
@@ -102,7 +102,6 @@ public:
 	std::array<info_rect_t,16> room_rect;
 	std::array<std::string,3> comment;
 	std::array<std::string,100> spec_strs;
-	std::array<std::string,20> sign_strs;
 	cSpeech talking;
 	
 	virtual ~cTown(){}

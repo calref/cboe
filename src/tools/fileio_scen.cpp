@@ -362,7 +362,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		else if(i >= 20 && i < 120)
 			the_town.spec_strs[i-20] = temp_str;
 		else if(i >= 120 && i < 140)
-			the_town.sign_strs[i-120] = temp_str;
+			the_town.sign_locs[i-120].text = temp_str;
 	}
 	
 	len = sizeof(legacy::talking_record_type);
@@ -496,7 +496,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 		else if(i >= 10 && i < 100)
 			the_out.spec_strs[i-10] = temp_str;
 		else if(i >= 100 && i < 108)
-			the_out.sign_strs[i-100] = temp_str;
+			the_out.sign_locs[i-100].text = temp_str;
 	}
 	
 	n = fclose(file_id);
