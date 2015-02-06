@@ -1264,18 +1264,18 @@ void erase_out_specials() {
 		for(short j = 0; j < 2; j++)
 			if(quadrant_legal(i,j)) {
 				cOutdoors& sector = *univ.scenario.outdoors[univ.party.outdoor_corner.x + i][univ.party.outdoor_corner.y + j];
-				for(short k = 0; k < sector.exit_locs.size(); k++) {
-					if(sector.exit_locs[k].spec >= 0 &&
-						univ.scenario.ter_types[sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y]].special == eTerSpec::TOWN_ENTRANCE &&
-					   (sector.exit_locs[k].x == minmax(0,47,sector.exit_locs[k].x)) &&
-					   (sector.exit_locs[k].y == minmax(0,47,sector.exit_locs[k].y))) {
-						if(!univ.party.can_find_town[sector.exit_locs[k].spec]) {
-							univ.out[48 * i + sector.exit_locs[k].x][48 * j + sector.exit_locs[k].y] =
-								univ.scenario.ter_types[sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y]].flag1;
+				for(short k = 0; k < sector.city_locs.size(); k++) {
+					if(sector.city_locs[k].spec >= 0 &&
+						univ.scenario.ter_types[sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y]].special == eTerSpec::TOWN_ENTRANCE &&
+					   (sector.city_locs[k].x == minmax(0,47,sector.city_locs[k].x)) &&
+					   (sector.city_locs[k].y == minmax(0,47,sector.city_locs[k].y))) {
+						if(!univ.party.can_find_town[sector.city_locs[k].spec]) {
+							univ.out[48 * i + sector.city_locs[k].x][48 * j + sector.city_locs[k].y] =
+								univ.scenario.ter_types[sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y]].flag1;
 						}
-						else if(univ.party.can_find_town[sector.exit_locs[k].spec]) {
-							univ.out[48 * i + sector.exit_locs[k].x][48 * j + sector.exit_locs[k].y] =
-								sector.terrain[sector.exit_locs[k].x][sector.exit_locs[k].y];
+						else if(univ.party.can_find_town[sector.city_locs[k].spec]) {
+							univ.out[48 * i + sector.city_locs[k].x][48 * j + sector.city_locs[k].y] =
+								sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y];
 							
 						}
 					}

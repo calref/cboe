@@ -797,9 +797,9 @@ static map_data buildOutMapData(location which) {
 		if(sector.special_locs[i].spec >= 0)
 			terrain.addFeature(sector.special_locs[i].x, sector.special_locs[i].y, eMapFeature::SPECIAL_NODE, sector.special_locs[i].spec);
 	}
-	for(size_t i = 0; i < sector.exit_locs.size(); i++) {
-		if(sector.exit_locs[i].spec >= 0)
-			terrain.addFeature(sector.exit_locs[i].x, sector.exit_locs[i].y, eMapFeature::TOWN, sector.exit_locs[i].spec);
+	for(size_t i = 0; i < sector.city_locs.size(); i++) {
+		if(sector.city_locs[i].spec >= 0)
+			terrain.addFeature(sector.city_locs[i].x, sector.city_locs[i].y, eMapFeature::TOWN, sector.city_locs[i].spec);
 	}
 	for(size_t i = 0; i < sector.sign_locs.size(); i++) {
 		if(!sector.sign_locs[i].text.empty())
