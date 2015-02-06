@@ -139,8 +139,8 @@ void init_screen_locs() {
 	shopping_rects[0][SHOPRECT_ITEM_NAME].top += 4;
 	shopping_rects[0][SHOPRECT_ITEM_NAME].left += 28;
 	shopping_rects[0][SHOPRECT_ITEM_COST].top += 20;
-	// TODO: Might need to put this back to what it was (I was trying to make more room for alchemy info)
-	shopping_rects[0][SHOPRECT_ITEM_COST].left += 170;//154;
+	shopping_rects[0][SHOPRECT_ITEM_COST].left += 154;
+	shopping_rects[0][SHOPRECT_ITEM_COST].right -= 20;
 	shopping_rects[0][SHOPRECT_ITEM_EXTRA].top += 20;
 	shopping_rects[0][SHOPRECT_ITEM_EXTRA].left += 34;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].top += 3;
