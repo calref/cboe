@@ -62,7 +62,7 @@ public:
 	ter_num_t terrain[48][48];
 	std::vector<spec_loc_t> special_locs;
 	std::array<spec_loc_t,8> exit_locs;
-	std::array<location,8> sign_locs;
+	std::array<sign_loc_t,8> sign_locs;
 	std::array<cWandering,4> wandering, special_enc;
 	location wandering_locs[4];
 	std::vector<cSpecial> specials;
@@ -72,7 +72,6 @@ public:
 	std::array<info_rect_t,8> info_rect;
 	std::string comment;
 	std::array<std::string,90> spec_strs;
-	std::array<std::string,8> sign_strs;
 	bool special_spot[48][48];
 	eAmbientSound ambient_sound;
 	snd_num_t out_sound;

@@ -80,6 +80,10 @@ struct info_rect_t : public rectangle {
 	std::string descr;
 };
 
+struct sign_loc_t : public location {
+	std::string text;
+};
+
 struct spec_loc_t : public location {
 	long spec;
 	

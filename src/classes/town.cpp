@@ -76,18 +76,17 @@ void cTown::append(legacy::town_record_type& old){
 
 cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	short i;
-	location d_loc(100,0);
 	cTown::cWandering d_wan = {0,0,0,0};
 	
 	town_chop_time = -1;
 	town_chop_key = -1;
 	for(i = 0; i < 4; i++) {
 		wandering[i] = d_wan;
-		wandering_locs[i] = d_loc;
+		wandering_locs[i].x = 100;
 	}
 	lighting_type = LIGHT_NORMAL;
 	for(i = 0; i < 4; i++) {
-		start_locs[i] = d_loc;
+		start_locs[i].x = 100;
 		exit_specs[i] = -1;
 		exit_locs[i].x = -1;
 		exit_locs[i].y = -1;
@@ -96,7 +95,6 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	spec_on_entry = -1;
 	spec_on_entry_if_dead = -1;
 	for(i = 0; i < 15; i++) {
-		sign_locs[i] = d_loc;
 		sign_locs[i].x = 100;
 	}
 	for(i = 0; i < 8; i++) {
@@ -132,7 +130,7 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 		else if(i >= 20 && i < 120)
 			spec_strs[i-20] = temp_str;
 		else if(i >= 120 && i < 140)
-			sign_strs[i-120] = temp_str;
+			sign_locs[i-120].text = temp_str;
 	}
 	
 	for(i = 0; i < 10; i++) {

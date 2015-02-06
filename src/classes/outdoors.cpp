@@ -123,7 +123,6 @@ cOutdoors::cWandering::cWandering() {
 
 cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	short i,j;
-	location d_loc(100,0);
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	bg_out = bg_fight = bg_town = bg_dungeon = -1;
 	
@@ -134,8 +133,8 @@ cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario
 		}
 	
 	for(i = 0; i < 8; i++) {
-		exit_locs[i] = d_loc;
-		sign_locs[i] = d_loc;
+		exit_locs[i].x = 100;
+		sign_locs[i].x = 100;
 	}
 	for(i = 0; i < 4; i++) {
 		wandering_locs[i] = locs[i];
@@ -150,7 +149,7 @@ cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario
 		else if(i >= 10 && i < 100)
 			spec_strs[i-10] = temp_str;
 		else if(i >= 100 && i < 108)
-			sign_strs[i-100] = temp_str;
+			sign_locs[i-100].text = temp_str;
 	}
 }
 

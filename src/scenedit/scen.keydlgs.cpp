@@ -34,8 +34,8 @@ size_t num_strs(short str_mode) {
 		case 1: return current_terrain->spec_strs.size();
 		case 2: return town->spec_strs.size();
 		case 3: return scenario.journal_strs.size();
-		case 4: return current_terrain->sign_strs.size();
-		case 5: return town->sign_strs.size();
+		case 4: return current_terrain->sign_locs.size();
+		case 5: return town->sign_locs.size();
 	}
 	return 0;
 }
@@ -352,9 +352,9 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 	if(str_mode == 3)
 		scenario.journal_strs[which_str] = newVal;
 	if(str_mode == 4)
-		current_terrain->sign_strs[which_str] = newVal;
+		current_terrain->sign_locs[which_str].text = newVal;
 	if(str_mode == 5)
-		town->sign_strs[which_str] = newVal;
+		town->sign_locs[which_str].text = newVal;
 	if(item_hit == "okay") me.toast(true);
 	else if(item_hit == "left" || item_hit == "right") {
 		if(item_hit[0] == 'l')
@@ -373,9 +373,9 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 	if(str_mode == 3)
 		me["text"].setText(scenario.journal_strs[which_str]);
 	if(str_mode == 4)
-		me["text"].setText(current_terrain->sign_strs[which_str]);
+		me["text"].setText(current_terrain->sign_locs[which_str].text);
 	if(str_mode == 5)
-		me["text"].setText(town->sign_strs[which_str]);
+		me["text"].setText(town->sign_locs[which_str].text);
 	return true;
 }
 
@@ -396,9 +396,9 @@ void edit_text_str(short which_str,short mode) {
 	if(mode == 3)
 		dlog["text"].setText(scenario.journal_strs[which_str]);
 	if(mode == 4)
-		dlog["text"].setText(current_terrain->sign_strs[which_str]);
+		dlog["text"].setText(current_terrain->sign_locs[which_str].text);
 	if(mode == 5)
-		dlog["text"].setText(town->sign_strs[which_str]);
+		dlog["text"].setText(town->sign_locs[which_str].text);
 	
 	dlog.run();
 }
@@ -929,13 +929,13 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 							}
 							break;
 						case 4:
-							if(current_terrain->sign_strs[i][0] == '*') {
+							if(current_terrain->sign_locs[i].text[0] == '*') {
 								*str1 = i;
 								i = 500;
 							}
 							break;
 						case 5:
-							if(town->sign_strs[i][0] == '*') {
+							if(town->sign_locs[i].text[0] == '*') {
 								*str1 = i;
 								i = 500;
 							}
@@ -962,10 +962,10 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 						scenario.journal_strs[*str1] = str;
 						break;
 					case 4:
-						current_terrain->sign_strs[*str1] = str;
+						current_terrain->sign_locs[*str1].text = str;
 						break;
 					case 5:
-						town->sign_strs[*str1] = str;
+						town->sign_locs[*str1].text = str;
 						break;
 				}
 			}
@@ -1001,13 +1001,13 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 							}
 							break;
 						case 4:
-							if(current_terrain->sign_strs[i][0] == '*') {
+							if(current_terrain->sign_locs[i].text[0] == '*') {
 								*str2 = i;
 								i = 500;
 							}
 							break;
 						case 5:
-							if(town->sign_strs[i][0] == '*') {
+							if(town->sign_locs[i].text[0] == '*') {
 								*str2 = i;
 								i = 500;
 							}
@@ -1035,10 +1035,10 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 						scenario.journal_strs[*str2] = str;
 						break;
 					case 4:
-						current_terrain->sign_strs[*str2] = str;
+						current_terrain->sign_locs[*str2].text = str;
 						break;
 					case 5:
-						town->sign_strs[*str2] = str;
+						town->sign_locs[*str2].text = str;
 						break;
 				}
 			}
@@ -1068,9 +1068,9 @@ void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent) {
 		if(mode == 3)
 			edit["str1"].setText(scenario.journal_strs[*str1]);
 		if(mode == 4)
-			edit["str1"].setText(current_terrain->sign_strs[*str1]);
+			edit["str1"].setText(current_terrain->sign_locs[*str1].text);
 		if(mode == 5)
-			edit["str1"].setText(town->sign_strs[*str1]);
+			edit["str1"].setText(town->sign_locs[*str1].text);
 	}
 	if(str2 != nullptr) {
 		if(*str2 >= num_s_strs[mode])
@@ -1085,9 +1085,9 @@ void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent) {
 			if(mode == 3)
 				edit["str2"].setText(scenario.journal_strs[*str2]);
 			if(mode == 4)
-				edit["str2"].setText(current_terrain->sign_strs[*str2]);
+				edit["str2"].setText(current_terrain->sign_locs[*str2].text);
 			if(mode == 5)
-				edit["str2"].setText(town->sign_strs[*str2]);
+				edit["str2"].setText(town->sign_locs[*str2].text);
 		}
 	}
 	edit.run();
@@ -1116,10 +1116,10 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, sho
 					scenario.journal_strs[*str1 + i] = str;
 					break;
 				case 4:
-					current_terrain->sign_strs[*str1 + i] = str;
+					current_terrain->sign_locs[*str1 + i].text = str;
 					break;
 				case 5:
-					town->sign_strs[*str1 + i] = str;
+					town->sign_locs[*str1 + i].text = str;
 					break;
 			}
 		}
@@ -1158,11 +1158,11 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 							j = 500;
 						break;
 					case 4:
-						if(current_terrain->sign_strs[j][0] != '*')
+						if(current_terrain->sign_locs[j].text[0] != '*')
 							j = 500;
 						break;
 					case 5:
-						if(town->sign_strs[j][0] != '*')
+						if(town->sign_locs[j].text[0] != '*')
 							j = 500;
 						break;
 				}
@@ -1187,10 +1187,10 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 						scenario.journal_strs[i] = "";
 						break;
 					case 4:
-						current_terrain->sign_strs[i] = "";
+						current_terrain->sign_locs[i].text = "";
 						break;
 					case 5:
-						town->sign_strs[i] = "";
+						town->sign_locs[i].text = "";
 						break;
 				}
 			}
@@ -1216,9 +1216,9 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 			if(mode == 3)
 				edit[id].setText(scenario.journal_strs[*str1 + i]);
 			if(mode == 4)
-				edit[id].setText(current_terrain->sign_strs[*str1 + i]);
+				edit[id].setText(current_terrain->sign_locs[*str1 + i].text);
 			if(mode == 5)
-				edit[id].setText(town->sign_strs[*str1 + i]);
+				edit[id].setText(town->sign_locs[*str1 + i].text);
 		}
 	}
 	
