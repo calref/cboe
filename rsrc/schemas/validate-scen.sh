@@ -7,7 +7,7 @@ function invalid {
     exit 1
 }
 
-BOE_SCHEMAS_DIR=${BOE_SCHEMAS_DIR:-`git rev-parse --show-toplevel`/rsrc/boes}
+BOE_SCHEMAS_DIR=${BOE_SCHEMAS_DIR:-`git rev-parse --show-toplevel`/rsrc/schemas}
 
 if [[ -d $1 ]]; then
 	SCEN_PATH=$1
