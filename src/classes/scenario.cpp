@@ -74,7 +74,7 @@ cScenario::cScenario(bool init_strings) {
 		special_items[i].special = -1;
 	}
 	for(i = 0; i < 20; i++) {
-		scenario_timer_specs[i] = -1;
+		scenario_timers[i].node = -1;
 	}
 	for(i = 0; i < 400; i++) {
 		scen_items[i] = cItem();
@@ -144,8 +144,8 @@ void cScenario::append(legacy::scenario_data_type& old){
 		ter_types[i].i = i;
 		ter_types[i].append(old.ter_types[i]);
 	}
-	for(i = 0; i < 20; i++) scenario_timer_times[i] = old.scenario_timer_times[i];
-	for(i = 0; i < 20; i++) scenario_timer_specs[i] = old.scenario_timer_specs[i];
+	for(i = 0; i < 20; i++) scenario_timers[i].time = old.scenario_timer_times[i];
+	for(i = 0; i < 20; i++) scenario_timers[i].node = old.scenario_timer_specs[i];
 	scen_specials.resize(256);
 	for(i = 0; i < 256; i++) scen_specials[i].append(old.scen_specials[i]);
 	for(i = 0; i < 10; i++) storage_shortcuts[i] = old.storage_shortcuts[i];

@@ -64,8 +64,8 @@ void cTown::append(legacy::town_record_type& old){
 	spec_on_entry_if_dead = old.spec_on_entry_if_dead;
 	spec_on_hostile = -1;
 	for(i = 0; i < 8; i++){
-		timer_spec_times[i] = old.timer_spec_times[i];
-		timer_specs[i] = old.timer_specs[i];
+		timers[i].time = old.timer_spec_times[i];
+		timers[i].node = old.timer_specs[i];
 	}
 	specials.resize(100);
 	for(i = 0; i < 100; i++)
@@ -98,8 +98,8 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 		sign_locs[i].x = 100;
 	}
 	for(i = 0; i < 8; i++) {
-		timer_spec_times[i] = 0;
-		timer_specs[i] = -1;
+		timers[i].time = 0;
+		timers[i].node = -1;
 	}
 	difficulty = 0;
 	bg_town = bg_fight = -1;
