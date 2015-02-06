@@ -741,8 +741,8 @@ static bool save_town_events(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
 	for(int i = 0; i < 8; i++) {
 		std::string id = std::to_string(i + 1);
-		town->timer_spec_times[i] = me["time" + id].getTextAsNum();
-		town->timer_specs[i] = me["spec" + id].getTextAsNum();
+		town->timers[i].time = me["time" + id].getTextAsNum();
+		town->timers[i].node = me["spec" + id].getTextAsNum();
 	}
 	return true;
 }
@@ -751,8 +751,8 @@ static void put_town_events_in_dlog(cDialog& me) {
 	short i;
 	for(i = 0; i < 8; i++) {
 		std::string id = std::to_string(i + 1);
-		me["time" + id].setTextToNum(town->timer_spec_times[i]);
-		me["spec" + id].setTextToNum(town->timer_specs[i]);
+		me["time" + id].setTextToNum(town->timers[i].time);
+		me["spec" + id].setTextToNum(town->timers[i].node);
 	}
 }
 

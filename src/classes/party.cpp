@@ -89,12 +89,9 @@ void cParty::append(legacy::party_record_type& old){
 		horses[i].append(old.horses[i]);
 		cTimer t;
 		t.time = old.party_event_timers[i];
-		t.global_or_town = old.global_or_town[i];
-		t.node_to_call = old.node_to_call[i];
+		t.node_type = old.global_or_town[i];
+		t.node = old.node_to_call[i];
 		party_event_timers.push_back(t);
-//		party_event_timers[i].time = old.party_event_timers[i];
-//		party_event_timers[i].global_or_town = old.global_or_town[i];
-//		party_event_timers[i].node_to_call = old.node_to_call[i];
 	}
 	for(i = 0; i < 4; i++){
 		creature_save[i].append(old.creature_save[i]);
@@ -478,8 +475,8 @@ bool cParty::start_timer(short time, short node, short type){
 	if(party_event_timers.size() == party_event_timers.max_size()) return false; // Shouldn't be reached
 	cTimer t;
 	t.time = time;
-	t.global_or_town = type;
-	t.node_to_call = node;
+	t.node_type = type;
+	t.node = node;
 	party_event_timers.push_back(t);
 	return(true);
 }
@@ -614,8 +611,8 @@ void cParty::writeTo(std::ostream& file) const {
 	file << '\f';
 	file << '\f';
 	for(unsigned int i = 0; i < party_event_timers.size(); i++)
-		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << party_event_timers[i].global_or_town
-			 << ' ' << party_event_timers[i].node_to_call << '\f';
+		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << party_event_timers[i].node_type
+			 << ' ' << party_event_timers[i].node << '\f';
 	file << '\f';
 	for(int i = 0; i < 4; i++)
 		for(int j = 0; j < 60; j++) {
@@ -845,7 +842,7 @@ void cParty::readFrom(std::istream& file){
 			int i;
 			bin >> i;
 			cTimer timer;
-			bin >> timer.time >> timer.global_or_town >> timer.node_to_call;
+			bin >> timer.time >> timer.node_type >> timer.node;
 			party_event_timers.push_back(timer);
 		} else if(cur == "CREATURE") {
 			int i, j;

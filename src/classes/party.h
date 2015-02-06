@@ -67,12 +67,6 @@ public:
 		
 		void append(int16_t(& old)[2], const cScenario& scenario);
 	};
-	class cTimer {
-	public:
-		long time;
-		short global_or_town;
-		short node_to_call;
-	};
 	// formerly party_record_type
 	// TODO: Should we make age a long long?
 	long next_pc_id = 1000;
@@ -205,7 +199,6 @@ public:
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
-	typedef std::vector<cTimer>::iterator timerIter;
 	cParty(cUniverse& univ, long party_preset = 'dflt');
 	~cParty();
 };

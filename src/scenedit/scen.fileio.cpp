@@ -285,10 +285,10 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		data.CloseElement("shop");
 	}
 	for(int i = 0; i < 20; i++) {
-		if(scenario.scenario_timer_times[i] > 0) {
+		if(scenario.scenario_timers[i].time > 0) {
 			data.OpenElement("timer");
-			data.PushAttribute("time", scenario.scenario_timer_times[i]);
-			data.PushText(scenario.scenario_timer_specs[i]);
+			data.PushAttribute("time", scenario.scenario_timers[i].time);
+			data.PushText(scenario.scenario_timers[i].node);
 			data.CloseElement("timer");
 		}
 	}
@@ -648,10 +648,10 @@ static void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 	}
 	if(town.spec_on_hostile >= 0)
 		data.PushElement("onoffend", town.spec_on_hostile);
-	for(size_t i = 0; i < town.timer_spec_times.size() && i < town.timer_specs.size(); i++) {
+	for(size_t i = 0; i < town.timers.size(); i++) {
 		data.OpenElement("timer");
-		data.PushAttribute("freq", town.timer_spec_times[i]);
-		data.PushText(town.timer_specs[i]);
+		data.PushAttribute("freq", town.timers[i].time);
+		data.PushText(town.timers[i].node);
 		data.CloseElement("timer");
 	}
 	data.OpenElement("flags");

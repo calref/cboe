@@ -592,12 +592,9 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		to_return = univ.party.p_loc;
 		
-		for(i = univ.party.party_event_timers.size() - 1; i >= 0; i++)
-	 		if(univ.party.party_event_timers[i].global_or_town == 1) {
-				cParty::timerIter iter = univ.party.party_event_timers.begin();
-				iter += i;
-				univ.party.party_event_timers.erase(iter);
-			}
+		std::remove_if(univ.party.party_event_timers.begin(), univ.party.party_event_timers.end(), [](const cTimer& t) {
+			return t.node_type == 2;
+		});
 		
 	}
 	

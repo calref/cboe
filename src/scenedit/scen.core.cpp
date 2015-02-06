@@ -3066,8 +3066,8 @@ static bool save_scenario_events(cDialog& me, std::string, eKeyMod) {
 	
 	for(i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
-		scenario.scenario_timer_times[i] = me["time" + id].getTextAsNum();
-		scenario.scenario_timer_specs[i] = me["node" + id].getTextAsNum();
+		scenario.scenario_timers[i].time = me["time" + id].getTextAsNum();
+		scenario.scenario_timers[i].node = me["node" + id].getTextAsNum();
 	}
 	return true;
 }
@@ -3103,8 +3103,8 @@ void edit_scenario_events() {
 		evt_dlg["time" + id].attachFocusHandler(check_scenario_timer_time);
 		evt_dlg["node" + id].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 255, "The scenario special node", "-1 for no special"));
 		evt_dlg["edit" + id].attachClickHandler(edit_scenario_events_event_filter);
-		evt_dlg["time" + id].setTextToNum(scenario.scenario_timer_times[i]);
-		evt_dlg["node" + id].setTextToNum(scenario.scenario_timer_specs[i]);
+		evt_dlg["time" + id].setTextToNum(scenario.scenario_timers[i].time);
+		evt_dlg["node" + id].setTextToNum(scenario.scenario_timers[i].node);
 	}
 	
 	evt_dlg.run();

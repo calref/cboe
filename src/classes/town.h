@@ -86,8 +86,7 @@ public:
 	std::vector<cField> preset_fields;
 	short spec_on_entry,spec_on_entry_if_dead;
 	short spec_on_hostile;
-	std::array<short,8> timer_spec_times;
-	std::array<short,8> timer_specs;
+	std::array<cTimer,8> timers;
 	std::vector<cSpecial> specials;
 	bool strong_barriers : 1;
 	bool defy_mapping : 1;

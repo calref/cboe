@@ -40,6 +40,13 @@ public:
 	void writeTo(std::ostream& file, int n) const;
 };
 
+class cTimer {
+public:
+	long time;
+	bool node_type;
+	short node;
+};
+
 struct pending_special_type {
 	spec_num_t spec;
 	eSpecCtx mode;

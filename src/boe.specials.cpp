@@ -1836,14 +1836,14 @@ void special_increase_age(long length, bool queue) {
 	
 	if(is_town() || (is_combat() && which_combat_type == 1)) {
 		for(i = 0; i < 8; i++)
-			if(univ.town->timer_spec_times[i] > 0) {
-				short time = univ.town->timer_spec_times[i];
+			if(univ.town->timers[i].time > 0) {
+				short time = univ.town->timers[i].time;
 				for(unsigned long j = age_before; j <= current_age; j++)
 					if(j % time == 0) {
 						if(queue) {
 							univ.party.age = j;
-							queue_special(eSpecCtx::TOWN_TIMER, 2, univ.town->timer_specs[i], null_loc);
-						} else run_special(eSpecCtx::TOWN_TIMER,2,univ.town->timer_specs[i],null_loc,&s1,&s2,&s3);
+							queue_special(eSpecCtx::TOWN_TIMER, 2, univ.town->timers[i].node, null_loc);
+						} else run_special(eSpecCtx::TOWN_TIMER,2,univ.town->timers[i].node,null_loc,&s1,&s2,&s3);
 					}
 				stat_area = true;
 				if(s3 > 0)
@@ -1852,14 +1852,14 @@ void special_increase_age(long length, bool queue) {
 	}
 	univ.party.age = current_age;
 	for(i = 0; i < 20; i++)
-		if(univ.scenario.scenario_timer_times[i] > 0) {
-			short time = univ.scenario.scenario_timer_times[i];
+		if(univ.scenario.scenario_timers[i].time > 0) {
+			short time = univ.scenario.scenario_timers[i].time;
 			for(unsigned long j = age_before; j <= current_age; j++)
 				if(j % time == 0) {
 					if(queue) {
 						univ.party.age = j;
-						queue_special(eSpecCtx::SCEN_TIMER, 0, univ.scenario.scenario_timer_specs[i], null_loc);
-					} else run_special(eSpecCtx::SCEN_TIMER,0,univ.scenario.scenario_timer_specs[i],null_loc,&s1,&s2,&s3);
+						queue_special(eSpecCtx::SCEN_TIMER, 0, univ.scenario.scenario_timers[i].node, null_loc);
+					} else run_special(eSpecCtx::SCEN_TIMER,0,univ.scenario.scenario_timers[i].node,null_loc,&s1,&s2,&s3);
 				}
 			stat_area = true;
 			if(s3 > 0)
@@ -1869,10 +1869,10 @@ void special_increase_age(long length, bool queue) {
 	for(i = 0; i < univ.party.party_event_timers.size(); i++) {
 		if(univ.party.party_event_timers[i].time <= length) {
 			univ.party.age = age_before + univ.party.party_event_timers[i].time;
-			short which_type = univ.party.party_event_timers[i].global_or_town == 0 ? 0 : 2;
+			short which_type = univ.party.party_event_timers[i].node_type;
 			if(queue)
-				queue_special(eSpecCtx::PARTY_TIMER, which_type, univ.party.party_event_timers[i].node_to_call, null_loc);
-			else run_special(eSpecCtx::PARTY_TIMER,which_type,univ.party.party_event_timers[i].node_to_call,null_loc,&s1,&s2,&s3);
+				queue_special(eSpecCtx::PARTY_TIMER, which_type, univ.party.party_event_timers[i].node, null_loc);
+			else run_special(eSpecCtx::PARTY_TIMER,which_type,univ.party.party_event_timers[i].node,null_loc,&s1,&s2,&s3);
 			univ.party.party_event_timers[i].time = 0;
 			stat_area = true;
 			if(s3 > 0)
@@ -3972,7 +3972,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			} else change_level(univ.party.left_in, univ.party.left_at.x, univ.party.left_at.y);
 			break;
 		case eSpecType::TOWN_TIMER_START:
-			univ.party.start_timer(spec.ex1a, spec.ex1b, 1);
+			univ.party.start_timer(spec.ex1a, spec.ex1b, 2);
 			break;
 			// OBoE: Change town lighting
 		case eSpecType::TOWN_CHANGE_LIGHTING:
