@@ -2027,25 +2027,25 @@ void town_entry(location spot_hit) {
 		return;
 	}
 	// clean up old town entries
-	for(x = 0; x < current_terrain->exit_locs.size(); x++)
-		if(current_terrain->exit_locs[x].spec >= 0) {
-			ter = current_terrain->terrain[current_terrain->exit_locs[x].x][current_terrain->exit_locs[x].y];
+	for(x = 0; x < current_terrain->city_locs.size(); x++)
+		if(current_terrain->city_locs[x].spec >= 0) {
+			ter = current_terrain->terrain[current_terrain->city_locs[x].x][current_terrain->city_locs[x].y];
 			if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE)
-				current_terrain->exit_locs[x].spec = -1;
+				current_terrain->city_locs[x].spec = -1;
 		}
 	y = -2;
-	for(x = 0; x < current_terrain->exit_locs.size(); x++)
-		if(current_terrain->exit_locs[x] == spot_hit) {
-			y = pick_town_num("select-town-enter",current_terrain->exit_locs[x].spec,scenario);
-			if(y >= 0) current_terrain->exit_locs[x].spec = y;
+	for(x = 0; x < current_terrain->city_locs.size(); x++)
+		if(current_terrain->city_locs[x] == spot_hit) {
+			y = pick_town_num("select-town-enter",current_terrain->city_locs[x].spec,scenario);
+			if(y >= 0) current_terrain->city_locs[x].spec = y;
 		}
 	if(y == -2) {
-		for(x = 0; x < current_terrain->exit_locs.size(); x++)
-			if(current_terrain->exit_locs[x].spec < 0) {
+		for(x = 0; x < current_terrain->city_locs.size(); x++)
+			if(current_terrain->city_locs[x].spec < 0) {
 				y = pick_town_num("select-town-enter",0,scenario);
 				if(y >= 0) {
-					current_terrain->exit_locs[x].spec = y;
-					current_terrain->exit_locs[x] = spot_hit;
+					current_terrain->city_locs[x].spec = y;
+					current_terrain->city_locs[x] = spot_hit;
 				}
 				x = 500;
 			}

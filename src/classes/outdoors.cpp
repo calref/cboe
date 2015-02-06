@@ -75,9 +75,9 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 		else special_locs[i].spec = old.special_id[i];
 	}
 	for(i = 0; i < 8; i++){
-		exit_locs[i].x = old.exit_locs[i].x;
-		exit_locs[i].y = old.exit_locs[i].y;
-		exit_locs[i].spec = old.exit_dests[i];
+		city_locs[i].x = old.exit_locs[i].x;
+		city_locs[i].y = old.exit_locs[i].y;
+		city_locs[i].spec = old.exit_dests[i];
 		sign_locs[i].x = old.sign_locs[i].x;
 		sign_locs[i].y = old.sign_locs[i].y;
 		info_rect[i].top = old.info_rect[i].top;
@@ -133,7 +133,7 @@ cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario
 		}
 	
 	for(i = 0; i < 8; i++) {
-		exit_locs[i].x = 100;
+		city_locs[i].x = 100;
 		sign_locs[i].x = 100;
 	}
 	for(i = 0; i < 4; i++) {

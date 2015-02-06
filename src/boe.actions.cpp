@@ -526,11 +526,11 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 			else if(univ.party.direction < 4) find_direction_from = 3;
 			else find_direction_from = 1;
 			
-			for(int i = 0; i < univ.out->exit_locs.size(); i++)
-				if(univ.party.loc_in_sec == univ.out->exit_locs[i]) {
-					short which_t = univ.out->exit_locs[i].spec;
+			for(int i = 0; i < univ.out->city_locs.size(); i++)
+				if(univ.party.loc_in_sec == univ.out->city_locs[i]) {
+					short which_t = univ.out->city_locs[i].spec;
 					if(which_t >= 0)
-						start_town_mode(univ.out->exit_locs[i].spec, find_direction_from);
+						start_town_mode(univ.out->city_locs[i].spec, find_direction_from);
 					if(is_town()) {
 						need_redraw = false;
 						i = 8;
