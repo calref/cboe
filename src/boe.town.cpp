@@ -212,7 +212,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				switch(univ.town.monst[j].time_flag){
 					case eMonstTime::ALWAYS: break; // Nothing to do.
 					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
-						if((calc_day() % 3) + 3 != int(univ.town.monst[j].time_flag))
+						if((univ.party.calc_day() % 3) + 3 != int(univ.town.monst[j].time_flag))
 							univ.town.monst[j].active = 0;
 						else {
 							univ.town.monst[j].active = 1;
@@ -238,7 +238,7 @@ void start_town_mode(short which_town, short entry_dir) {
 					case eMonstTime::APPEAR_WHEN_EVENT:
 						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
 							break; // Event hasn't happened yet
-						if(calc_day() >= univ.party.key_times[univ.town.monst[j].time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
+						if(univ.party.calc_day() >= univ.party.key_times[univ.town.monst[j].time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
 							univ.town.monst[j].active = 1;
 							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
 						}
@@ -247,7 +247,7 @@ void start_town_mode(short which_town, short entry_dir) {
 					case eMonstTime::DISAPPEAR_WHEN_EVENT:
 						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
 							break; // Event hasn't happened yet
-						if(calc_day() >= univ.party.key_times[univ.town.monst[j].time_code]){
+						if(univ.party.calc_day() >= univ.party.key_times[univ.town.monst[j].time_code]){
 							univ.town.monst[j].active = 0;
 							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
 						}
@@ -302,7 +302,7 @@ void start_town_mode(short which_town, short entry_dir) {
 							univ.town.monst[i].active = 0;
 						break;
 					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
-						if((calc_day() % 3) + 3 != int(univ.town.monst[i].time_flag)) {
+						if((univ.party.calc_day() % 3) + 3 != int(univ.town.monst[i].time_flag)) {
 							univ.town.monst[i].active = 0;
 						}
 						else {
@@ -312,14 +312,14 @@ void start_town_mode(short which_town, short entry_dir) {
 					case eMonstTime::APPEAR_WHEN_EVENT:
 						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
 							univ.town.monst[i].active = 0; // Event hasn't happened yet
-						else if(calc_day() < univ.party.key_times[univ.town.monst[i].time_code])
+						else if(univ.party.calc_day() < univ.party.key_times[univ.town.monst[i].time_code])
 							univ.town.monst[i].active = 0; // This would only be reached if the time was set back (or in a legacy save)
 						break;
 						
 					case eMonstTime::DISAPPEAR_WHEN_EVENT:
 						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
 							break; // Event hasn't happened yet
-						if(calc_day() >= univ.party.key_times[univ.town.monst[i].time_code])
+						if(univ.party.calc_day() >= univ.party.key_times[univ.town.monst[i].time_code])
 							univ.town.monst[i].active = 0;
 						break;
 					case eMonstTime::APPEAR_AFTER_CHOP:

@@ -2197,7 +2197,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.ex1a != minmax(1,10,spec.ex1a))
 				giveError("Event code out of range.");
 			else if(univ.party.key_times.count(spec.ex1a) == 0)
-				univ.party.key_times[spec.ex1a] = calc_day();
+				univ.party.key_times[spec.ex1a] = univ.party.calc_day();
 			break;
 		case eSpecType::FORCED_GIVE:
 			check_mess = true;
@@ -2418,7 +2418,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			}
 			if(spec.ex1b == int(eQuestStatus::STARTED) && univ.party.quest_status[spec.ex1a] != eQuestStatus::STARTED) {
-				univ.party.quest_start[spec.ex1a] = calc_day();
+				univ.party.quest_start[spec.ex1a] = univ.party.calc_day();
 				univ.party.quest_source[spec.ex1a] = max(-1,spec.ex2a);
 				if(univ.party.quest_source[spec.ex1a] >= univ.party.job_banks.size())
 					univ.party.job_banks.resize(univ.party.quest_source[spec.ex1a] + 1);
@@ -3266,7 +3266,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						}
 			break;
 		case eSpecType::IF_DAY_REACHED:
-			if(calc_day() >= spec.ex1a)
+			if(univ.party.calc_day() >= spec.ex1a)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_FIELDS:

@@ -814,7 +814,7 @@ void journal() {
 }
 
 void add_to_journal(short event) {
-	if(univ.party.add_to_journal(univ.scenario.journal_strs[event], calc_day()))
+	if(univ.party.add_to_journal(univ.scenario.journal_strs[event], univ.party.calc_day()))
 		ASB("Something was added to your journal.");
 }
 

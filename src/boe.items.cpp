@@ -547,7 +547,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 			set_item_flag(&item);
 		} else if(item.variety == eItemType::QUEST) {
 			univ.party.quest_status[item.item_level] == eQuestStatus::STARTED;
-			univ.party.quest_start[item.item_level] = calc_day();
+			univ.party.quest_start[item.item_level] = univ.party.calc_day();
 			univ.party.quest_source[item.item_level] = -1;
 			set_item_flag(&item);
 		} else {
