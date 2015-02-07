@@ -543,7 +543,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 			set_item_flag(&item);
 			play_sound(62); // formerly force_play_sound
 		} else if(item.variety == eItemType::SPECIAL) {
-			univ.party.spec_items[item.item_level] = true;
+			univ.party.spec_items.insert(item.item_level);
 			set_item_flag(&item);
 		} else {
 			if(!allow_overload && item.item_weight() > univ.party[current_getting_pc].free_weight()) {

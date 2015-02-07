@@ -945,7 +945,7 @@ void handle_talk_event(location p) {
 			can_save_talk = false;
 			break;
 		case eTalkNode::BUY_SPEC_ITEM:
-			if(univ.party.spec_items[a]) {
+			if(univ.party.spec_items.count(a)) {
 				save_talk_str1 = "You already have it.";
 				can_save_talk = false;
 			}
@@ -955,7 +955,7 @@ void handle_talk_event(location p) {
 			else {
 				univ.party.gold -= b;
 				put_pc_screen();
-				univ.party.spec_items[a] = true;
+				univ.party.spec_items.insert(a);
 			}
 			save_talk_str2 = "";
 			break;

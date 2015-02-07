@@ -2192,7 +2192,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = true;
 			if(spec.ex1a != minmax(1,10,spec.ex1a))
 				giveError("Event code out of range.");
-			else if(univ.party.key_times[spec.ex1a] == 30000)
+			else if(univ.party.key_times.count(spec.ex1a) == 0)
 				univ.party.key_times[spec.ex1a] = calc_day();
 			break;
 		case eSpecType::FORCED_GIVE:
@@ -2505,9 +2505,9 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				giveError("Special item is out of range.");
 				set_sd = false;
 			}
-			else {
-				univ.party.spec_items[spec.ex1a] = spec.ex1b == 0;
-			}
+			else if(spec.ex1b == 0)
+				univ.party.spec_items.insert(spec.ex1a);
+			else univ.party.spec_items.erase(spec.ex1a);
 			if(stat_window == ITEM_WIN_SPECIAL)
 				set_stat_window(ITEM_WIN_SPECIAL);
 			*redraw = 1;
@@ -2573,9 +2573,9 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					give_gold(spec.ex1b,true);
 					give_food(spec.ex2a,true);
 					if((spec.m3 >= 0) && (spec.m3 < 50)) {
-						if(!univ.party.spec_items[spec.m3])
+						if(!univ.party.spec_items.count(spec.m3))
 							ASB("You get a special item.");
-						univ.party.spec_items[spec.m3] = true;
+						univ.party.spec_items.insert(spec.m3);
 						*redraw = true;
 						if(stat_window == ITEM_WIN_SPECIAL)
 							set_stat_window(ITEM_WIN_SPECIAL);
@@ -3198,7 +3198,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(spec.ex1a != minmax(0,49,spec.ex1a)) {
 				giveError("Special item is out of range.");
 			}
-			else if(univ.party.spec_items[spec.ex1a] > 0)
+			else if(univ.party.spec_items.count(spec.ex1a) > 0)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_SDF_COMPARE:

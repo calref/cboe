@@ -39,8 +39,6 @@ cParty::cParty(cUniverse& univ, long party_preset) : univ(univ) {
 	for(int i = 0; i < 5; i++)
 		for(int j = 0; j < 10; j++)
 			magic_store_items[i][j].variety = eItemType::NO_ITEM;
-	// Original code set all key times 30000. I felt this was more appropriate.
-	std::fill(key_times, key_times + 20, std::numeric_limits<short>::max());
 	
 	for(int i = 0; i < 6; i++)
 		adven[i] = new cPlayer(*this, party_preset, i);
@@ -556,12 +554,10 @@ void cParty::writeTo(std::ostream& file) const {
 	for(int i = 0; i < 200; i++)
 		if(can_find_town[i])
 			file << "TOWNVISIBLE " << i << '\n';
-	for(int i = 0; i < 100; i++)
-		if(key_times[i])
-			file << "EVENT " << i << ' ' << key_times[i] << '\n';
-	for(int i = 0; i < 50; i++)
-		if(spec_items[i])
-			file << "ITEM " << i << '\n';
+	for(auto key : key_times)
+		file << "EVENT " << key.first << ' ' << key.second << '\n';
+	for(int i : spec_items)
+		file << "ITEM " << i << '\n';
 	for(int i : help_received)
 		file << "HELP " << i << '\n';
 	for(int i = 0; i < 200; i++)
@@ -786,7 +782,7 @@ void cParty::readFrom(std::istream& file){
 		}else if(cur == "ITEM"){
 			int i;
 			sin >> i;
-			spec_items[i] = true;
+			spec_items.insert(i);
 		}else if(cur == "HELP"){
 			int i;
 			sin >> i;

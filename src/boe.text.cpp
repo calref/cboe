@@ -69,7 +69,7 @@ extern rectangle pc_buttons[6][5];
 extern bool item_area_button_active[8][6];
 extern bool pc_area_button_active[6][5];
 extern rectangle item_screen_button_rects[9];
-extern short spec_item_array[60];
+extern std::vector<int> spec_item_array;
 extern std::map<eItemAbil, short> abil_chart;
 // combat globals
 extern short item_bottom_button_active[9];
@@ -244,8 +244,7 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 			style.colour = sf::Color::Black;
 			for(i = 0; i < 8; i++) {
 				i_num = i + item_offset;
-				if(spec_item_array[i_num] >= 0) {
-					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
+				if(i_num < spec_item_array.size()) {
 					win_draw_string(item_stats_gworld,item_buttons[i][0],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
 					
 					place_item_button(3,i,4,0);
@@ -262,8 +261,7 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 			style.colour = sf::Color::Black;
 			for(i = 0; i < 8; i++) {
 				i_num = i + item_offset;
-				if(spec_item_array[i_num] >= 0) {
-					// 2nd condition above is quite kludgy, in case it gets here with array all 0's
+				if(i_num < spec_item_array.size()) {
 					win_draw_string(item_stats_gworld,item_buttons[i][0],univ.scenario.quests[spec_item_array[i_num]].name,eTextMode::WRAP,style);
 					
 					place_item_button(3,i,4,0);
@@ -516,24 +514,23 @@ void set_stat_window(short new_stat) {
 	if(stat_window < ITEM_WIN_SPECIAL && univ.party[stat_window].main_status != eMainStatus::ALIVE)
 		stat_window = first_active_pc();
 	item_sbar->setPageSize(8);
+	spec_item_array.clear();
 	switch(stat_window) {
 		case ITEM_WIN_SPECIAL:
-			for(i = 0; i < 60; i++)
-				spec_item_array[i] = -1;
-			for(i = 0; i < 50; i++) ////
-				if(univ.party.spec_items[i]) {
-					spec_item_array[array_pos] = i;
+			std::fill(spec_item_array.begin(), spec_item_array.end(), -1);
+			for(i = 0; i < univ.scenario.special_items.size(); i++)
+				if(univ.party.spec_items.count(i)) {
+					spec_item_array.push_back(i);
 					array_pos++;
 				}
 			array_pos = max(0,array_pos - 8);
 			item_sbar->setMaximum(array_pos);
 			break;
 		case ITEM_WIN_QUESTS:
-			for(i = 0; i < 60; i++)
-				spec_item_array[i] = -1;
-			for(i = 0; i < 50; i++)
+			std::fill(spec_item_array.begin(), spec_item_array.end(), -1);
+			for(i = 0; i < univ.scenario.quests.size(); i++)
 				if(univ.party.quest_status[i] == eQuestStatus::STARTED) {
-					spec_item_array[array_pos] = i;
+					spec_item_array.push_back(i);
 					array_pos++;
 				}
 			array_pos = max(0,array_pos - 8);
@@ -1147,10 +1144,12 @@ bool day_reached(unsigned short which_day, unsigned short which_event) {
 	// Windows version unconditionally added 20 days for no reason at all.
 	// Instead, let's add 10 days, but only if easy mode enabled.
 	if(PSD[SDF_EASY_MODE]) which_day += 10;
-	if(which_event > 10)
-		return false;
-	if((which_event > 0) && (univ.party.key_times[which_event] < which_day))
-		return false;
+	if(which_event > 0) {
+		if(univ.party.key_times.find(which_event) == univ.party.key_times.end())
+			return false;
+		if(univ.party.key_times[which_event] < which_day)
+			return false;
+	}
 	if(calc_day() >= which_day)
 		return true;
 	else return false;
