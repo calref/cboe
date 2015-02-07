@@ -57,7 +57,7 @@ Slow wearer
 Protect from race
 Lockpicks
 Drain missiles
-
+Call special when dropped
 
 
 
