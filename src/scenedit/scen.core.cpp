@@ -755,7 +755,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 		if(!save_monst_info(me,monst)) return false;
 		scenario.scen_monsters[which] = monst;
 		which--;
-		if(which < 1) which = scenario.scen_monsters;
+		if(which < 1) which = scenario.scen_monsters.size() - 1;
 		monst = scenario.scen_monsters[which];
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "right") {
