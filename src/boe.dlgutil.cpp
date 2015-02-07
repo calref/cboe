@@ -602,7 +602,7 @@ void end_talk_mode() {
 static void fill_job_bank(cDialog& me, job_bank_t& bank, std::string) {
 	// TODO: Maybe customize the icon?
 	// TODO: Allow custom title?
-	me["day"].setTextToNum(calc_day());
+	me["day"].setTextToNum(univ.party.calc_day());
 	for(int i = 0; i < 4; i++) {
 		std::string id = std::to_string(i + 1);
 		if(bank.jobs[i] >= 0 && bank.jobs[i] < univ.scenario.quests.size()) {
@@ -631,7 +631,7 @@ static void show_job_bank(int which_bank, std::string title) {
 		job_bank_t& bank = univ.party.job_banks[which_bank];
 		univ.party.quest_status[bank.jobs[which]] = eQuestStatus::STARTED;
 		univ.party.quest_source[bank.jobs[which]] = store_personality;
-		univ.party.quest_start[bank.jobs[which]] = calc_day();
+		univ.party.quest_start[bank.jobs[which]] = univ.party.calc_day();
 		// Now, if there are spare jobs available, fill in. Otherwise, clear space.
 		if(bank.jobs[4] >= 0)
 			std::swap(bank.jobs[which], bank.jobs[4]);
@@ -969,7 +969,7 @@ void handle_talk_event(location p) {
 				case eQuestStatus::AVAILABLE:
 					univ.party.quest_status[a] = eQuestStatus::STARTED;
 					univ.party.quest_source[a] = -1;
-					univ.party.quest_start[a] = calc_day();
+					univ.party.quest_start[a] = univ.party.calc_day();
 					break;
 				case eQuestStatus::STARTED:
 					break;

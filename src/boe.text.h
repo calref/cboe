@@ -33,7 +33,6 @@ void restore_mode();
 void through_sending();
 rectangle coord_to_rect(short i,short j);
 void make_cursor_sword() ;
-short calc_day();
 bool day_reached(unsigned short which_day, unsigned short which_event);
 void Draw_Some_Item (sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld, location target, char masked, short main_win);
 rectangle get_stat_effect_rect(int which_effect);

@@ -107,7 +107,7 @@ void put_pc_screen() {
 	// Put food, gold, day
 	win_draw_string(pc_stats_gworld,small_erase_rects[1],std::to_string(univ.party.gold),eTextMode::WRAP,style);
 	win_draw_string(pc_stats_gworld,small_erase_rects[0],std::to_string(univ.party.food),eTextMode::WRAP,style);
-	win_draw_string(pc_stats_gworld,small_erase_rects[2],std::to_string(calc_day()),eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,small_erase_rects[2],std::to_string(univ.party.calc_day()),eTextMode::WRAP,style);
 	style.colour = sf::Color::Black;
 	
 	for(i = 0; i < 6; i++) {
@@ -1150,10 +1150,6 @@ void make_cursor_sword() {
 	set_cursor(sword_curs);
 }
 
-short calc_day() {
-	return (short) ((univ.party.age) / 3700) + 1;
-}
-
 // which_day is day event should happen
 // which_event is the univ.party.key_times value to cross reference with.
 // if the key_time is reached before which_day, event won't happen
@@ -1168,7 +1164,7 @@ bool day_reached(unsigned short which_day, unsigned short which_event) {
 		if(univ.party.key_times[which_event] < which_day)
 			return false;
 	}
-	if(calc_day() >= which_day)
+	if(univ.party.calc_day() >= which_day)
 		return true;
 	else return false;
 }
