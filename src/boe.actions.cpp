@@ -34,6 +34,7 @@
 #include "cursors.hpp"
 #include "spell.hpp"
 #include "shop.hpp"
+#include "prefs.hpp"
 
 rectangle bottom_buttons[7];
 rectangle town_buttons[10];
@@ -2618,6 +2619,9 @@ void start_new_game() {
 	PSD[SDF_NO_MAPS] = 0;
 	save_maps = true;
 	
+	// Don't reset instant help just because they started a new game.
+	std::vector<int> help = get_iarray_pref("ReceivedHelp");
+	std::copy(help.begin(), help.end(), std::inserter(univ.party.help_received, univ.party.help_received.begin()));
 	// The original code called build_outdoors here, but they're not even in a scenario, so I removed it.
 	// It was probably a relic of Exile III.
 	// (It also refreshed stores... with uninitialized items.)

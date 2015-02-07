@@ -1340,7 +1340,6 @@ void edit_party() {
 	
 	put_party_stats(pcDialog);
 	void (*give_help)(short,short,cDialog&) = ::give_help;
-	give_help(22,23,pcDialog);
 	
 	pcDialog.run(std::bind(give_help, 22, 23, std::ref(pcDialog)));
 	
