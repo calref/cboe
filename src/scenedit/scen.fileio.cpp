@@ -170,7 +170,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 			data.CloseElement("store-items");
 		}
 	}
-	for(int i = 0; i < 10; i++) {
+	for(int i = 0; i < scenario.town_mods.size(); i++) {
 		if(is_minmax(0, scenario.towns.size(), scenario.town_mods[i].spec)) {
 			data.OpenElement("town-flag");
 			data.PushAttribute("town", scenario.town_mods[i].spec);
@@ -180,7 +180,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		}
 	}
 	data.OpenElement("specials");
-	for(int i = 0; i < 50; i++) {
+	for(int i = 0; i < scenario.special_items.size(); i++) {
 		data.OpenElement("item");
 		data.PushAttribute("start-with", boolstr(scenario.special_items[i].flags / 10));
 		data.PushAttribute("useable", boolstr(scenario.special_items[i].flags % 10));
@@ -1050,13 +1050,13 @@ void start_data_dump() {
 	std::ofstream fout("Scenario Data.txt");
 	fout << "Scenario data for " << scen_name << ':' << endl << endl;
 	fout << "Terrain types for " << scen_name << ':' << endl;
-	for(i = 0; i < 256; i++)
+	for(i = 0; i < scenario.ter_types.size(); i++)
 		fout << "  Terrain type " << i << ": " << scenario.ter_types[i].name << endl;
 	fout << endl << "Monster types for " << scen_name << ':' << endl;
-	for(i = 0; i < 256; i++)
+	for(i = 0; i < scenario.scen_monsters.size(); i++)
 		fout << "  Monster type " << i << ": " << scenario.scen_monsters[i].m_name << endl;
 	fout << endl << "Item types for " << scen_name << ':' << endl;
-	for(i = 0; i < 400; i++)
+	for(i = 0; i < scenario.scen_items.size(); i++)
 		fout << "  Item type " << i << ": " << scenario.scen_items[i].full_name << endl;
 	fout.close();
 }
@@ -1074,10 +1074,10 @@ void scen_text_dump(){
 	for(i = 0; i < 6; i++)
 		if(scenario.intro_strs[i][0] != '*')
 			fout << "  Intro Message " << i << ": " << scenario.intro_strs[i] << endl;
-	for(i = 0; i < 50; i++)
+	for(i = 0; i < scenario.journal_strs.size(); i++)
 		if(scenario.journal_strs[i][0] != '*')
 			fout << "  Journal Entry " << i << ": " << scenario.journal_strs[i] << endl;
-	for(i = 0; i < 50; i++)
+	for(i = 0; i < scenario.special_items.size(); i++)
 		if(scenario.special_items[i].name[0] != '*') {
 			fout << "  Special Item " << i << ':' << endl;
 			fout << "    Name: " << scenario.special_items[i].name << endl;
@@ -1098,7 +1098,7 @@ void scen_text_dump(){
 			for(i = 0; i < scenario.outdoors[out_sec.x][out_sec.y]->spec_strs.size(); i++)
 				if(scenario.outdoors[out_sec.x][out_sec.y]->spec_strs[i][0] != '*')
 					fout << "    Message " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->spec_strs[i] << endl;
-			for(i = 0; i < 8; i++)
+			for(i = 0; i < scenario.outdoors[out_sec.x][out_sec.y]->sign_locs.size(); i++)
 				if(scenario.outdoors[out_sec.x][out_sec.y]->sign_locs[i].text[0] != '*')
 					fout << "    Sign " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->sign_locs[i].text << endl;
 			fout << endl;
@@ -1121,7 +1121,7 @@ void scen_text_dump(){
 			if(scenario.towns[i]->spec_strs[i][0] != '*')
 				fout << "    Message " << i << ": " << scenario.towns[i]->spec_strs[i] << endl;
 		fout << "    Name: " << scenario.towns[i]->town_name << endl;
-		for(i = 0; i < 20; i++)
+		for(i = 0; i < scenario.towns[i]->sign_locs.size(); i++)
 			if(scenario.towns[i]->sign_locs[i].text[0] != '*')
 				fout << "    Sign " << i << ": " << scenario.towns[i]->sign_locs[i].text << endl;
 		fout << endl << "  Town Dialogue:" << endl;
@@ -1132,7 +1132,7 @@ void scen_text_dump(){
 			fout << "    job: " << scenario.towns[i]->talking.people[i].job << endl;
 			fout << "    confused: " << scenario.towns[i]->talking.people[i].dunno << endl;
 		}
-		for(i = 0; i < 60; i++) {
+		for(i = 0; i < scenario.towns[i]->talking.talk_nodes.size(); i++) {
 			if(scenario.towns[i]->talking.talk_nodes[i].str1.length() > 0)
 				fout << "    Node " << i << "a: " << scenario.towns[i]->talking.talk_nodes[i].str1 << endl;
 			if(scenario.towns[i]->talking.talk_nodes[i].str2.length() > 0)

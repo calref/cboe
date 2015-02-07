@@ -64,19 +64,19 @@ cScenario::cScenario(bool init_strings) {
 	bg_fight = 4;
 	bg_town = 13;
 	bg_dungeon = 9;
-	for(i = 0; i < 10; i++) {
+	for(i = 0; i < town_mods.size(); i++) {
 		town_mods[i].spec = -1;
 	}
 	for(i = 0; i < 3; i++) {
 		store_item_towns[i] = -1;
 	}
-	for(i = 0; i < 50; i++) {
+	for(i = 0; i < special_items.size(); i++) {
 		special_items[i].special = -1;
 	}
 	for(i = 0; i < scenario_timers.size(); i++) {
 		scenario_timers[i].node = -1;
 	}
-	for(i = 0; i < 400; i++) {
+	for(i = 0; i < scen_items.size(); i++) {
 		scen_items[i] = cItem();
 	}
 	if(!init_strings) return;

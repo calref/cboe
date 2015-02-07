@@ -2561,7 +2561,7 @@ void do_monster_turn() {
 						case eMonstSummon::LEVEL: what_summon = get_summon_monster(minmax(0, 4, abil.summon.what)); break;
 						case eMonstSummon::SPECIES:
 							for(k = 0; k < 200; k++) {
-								j = get_ran(1,0,255);
+								j = get_ran(1,0,univ.scenario.scen_monsters.size() - 1);
 								if(univ.scenario.scen_monsters[j].m_type == eRace(abil.summon.what)) {
 									what_summon = j;
 									break;

@@ -16,7 +16,7 @@ extern cUniverse univ;
 cItem get_stored_item(short which) {
 	cItem s_item;
 	
-	if((which >= 400) || (which < 0)) {
+	if((which >= univ.scenario.scen_items.size()) || (which < 0)) {
 		s_item = cItem();
 		return s_item;
 	}
