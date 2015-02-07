@@ -262,7 +262,19 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 			for(i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
-					win_draw_string(item_stats_gworld,item_buttons[i][0],univ.scenario.quests[spec_item_array[i_num]].name,eTextMode::WRAP,style);
+					int which_quest = spec_item_array[i_num] % 10000;
+					if(spec_item_array[i_num] / 10000 == 2)
+						style.colour = sf::Color::Red;
+					
+					win_draw_string(item_stats_gworld,item_buttons[i][0],univ.scenario.quests[which_quest].name,eTextMode::WRAP,style);
+					
+					if(spec_item_array[i_num] / 10000 == 1) {
+						location from, to;
+						from = to = item_buttons[i][0].centre();
+						from.x = item_buttons[i][0].left;
+						to.x = from.x + string_length(univ.scenario.quests[which_quest].name, style);
+						draw_line(item_stats_gworld, from, to, 1, sf::Color::Green);
+					}
 					
 					place_item_button(3,i,4,0);
 				}
@@ -531,6 +543,12 @@ void set_stat_window(short new_stat) {
 			for(i = 0; i < univ.scenario.quests.size(); i++)
 				if(univ.party.quest_status[i] == eQuestStatus::STARTED) {
 					spec_item_array.push_back(i);
+					array_pos++;
+				} else if(univ.party.quest_status[i] == eQuestStatus::COMPLETED) {
+					spec_item_array.push_back(i + 10000);
+					array_pos++;
+				} else if(univ.party.quest_status[i] == eQuestStatus::FAILED) {
+					spec_item_array.push_back(i + 20000);
 					array_pos++;
 				}
 			array_pos = max(0,array_pos - 8);
