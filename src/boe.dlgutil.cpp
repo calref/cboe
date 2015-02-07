@@ -75,7 +75,7 @@ std::string title_string;
 mon_num_t store_monst_type;
 short store_m_num;
 rectangle dummy_rect = {0,0,0,0};
-short strnum1,strnum2,oldstrnum1,oldstrnum2;
+bool can_save_talk;
 short store_talk_face_pic;
 int current_talk_node;
 extern std::vector<word_rect_t> talk_words;
@@ -170,8 +170,7 @@ void end_shop_mode() {
 	shop_sbar->hide();
 	done_btn->hide();
 	help_btn->hide();
-	if(store_pre_shop_mode == 20) {
-		strnum1 = strnum2 = oldstrnum1 = oldstrnum2 = 0;
+	if(store_pre_shop_mode == MODE_TALKING) {
 		place_talk_str("You conclude your business.", "", 0, dummy_rect);
 		update_last_talk(TALK_BUSINESS);
 	}
@@ -573,8 +572,7 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	
 	// Bring up and place first strings.
 	place_string1 = univ.town.cur_talk().people[personality % 10].look;
-	strnum1 = personality % 10 + 10;
-	strnum2 = 0;
+	can_save_talk = true;
 	
 	place_talk_str(place_string1, "", 0, dummy_rect);
 	
@@ -735,7 +733,7 @@ void handle_talk_event(location p) {
 			if(which_talk_entry == -1) goto SPECIAL_DUNNO;
 			break;
 		case TALK_RECORD:
-			if(strnum1 <= 0) {
+			if(!can_save_talk) {
 				beep();
 				return;
 			}
@@ -777,26 +775,22 @@ void handle_talk_event(location p) {
 	save_talk_str1 = univ.town.cur_talk().talk_nodes[which_talk_entry].str1;
 	save_talk_str2 = univ.town.cur_talk().talk_nodes[which_talk_entry].str2;
 	
-	oldstrnum1 = strnum1; oldstrnum2 = strnum2;
-	strnum1 =  40 + which_talk_entry * 2; strnum2 = 40 + which_talk_entry * 2 + 1;
+	can_save_talk = true;
 	
 	switch(ttype) {
 		case eTalkNode::REGULAR:
 			break;
 		case eTalkNode::DEP_ON_SDF:
 			if(PSD[a][b] > c) {
-				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
 			}
 			save_talk_str2 = "";
-			strnum2 = 0;
 			break;
 		case eTalkNode::SET_SDF:
 			PSD[a][b] = 1;
 			break;
 		case eTalkNode::INN:
 			if(univ.party.gold < a) {
-				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
 			}
 			else {
@@ -808,36 +802,29 @@ void handle_talk_event(location p) {
 				univ.town.p_loc.y = d;
 				center = univ.town.p_loc;
 			}
-			strnum2 = 0;
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::DEP_ON_TIME:
 			if(day_reached((unsigned char) a,0)) {
-				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
 			}
 			save_talk_str2 = "";
-			strnum2 = 0;
 			break;
 		case eTalkNode::DEP_ON_TIME_AND_EVENT:
 			if(day_reached((unsigned char) a,(unsigned char) b)) {
-				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
 			}
 			save_talk_str2 = "";
-			strnum2 = 0;
 			break;
 		case eTalkNode::DEP_ON_TOWN:
 			if(univ.town.num != a) {
-				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
 			}
 			save_talk_str2 = "";
-			strnum2 = 0;
 			break;
 		case eTalkNode::TRAINING:
 			if((get_pc = char_select_pc(0,"Train who?")) < 6) {
-				strnum1 = -1;
+				can_save_talk = false;
 				spend_xp(get_pc,1, NULL);
 			}
 			save_talk_str1 = "You conclude your training.";
@@ -849,13 +836,11 @@ void handle_talk_event(location p) {
 				return;
 			}
 			start_shop_mode(b,a,save_talk_str1);
-			strnum1 = -1;
+			can_save_talk = false;
 			return;
 		case eTalkNode::JOB_BANK:
 			if(a < univ.party.job_banks.size() && univ.party.job_banks[a].anger >= 50) {
-				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
-				strnum2 = 0;
 				save_talk_str2 = "";
 				break;
 			} else {
@@ -863,25 +848,25 @@ void handle_talk_event(location p) {
 				return;
 			}
 		case eTalkNode::SELL_WEAPONS:
-			strnum1 = -1;
+			can_save_talk = false;
 			stat_screen_mode = MODE_SELL_WEAP;
 			put_item_screen(stat_window,1);
 			give_help(42,43);
 			break;
 		case eTalkNode::SELL_ARMOR:
-			strnum1 = -1;
+			can_save_talk = false;
 			stat_screen_mode = MODE_SELL_ARMOR;
 			put_item_screen(stat_window,1);
 			give_help(42,43);
 			break;
 		case eTalkNode::SELL_ITEMS:
-			strnum1 = -1;
+			can_save_talk = false;
 			stat_screen_mode = MODE_SELL_ANY;
 			put_item_screen(stat_window,1);
 			give_help(42,43);
 			break;
 		case eTalkNode::IDENTIFY: case eTalkNode::ENCHANT:
-			strnum1 = -1;
+			can_save_talk = false;
 			stat_screen_mode = (ttype == eTalkNode::IDENTIFY) ? MODE_IDENTIFY : MODE_ENCHANT;
 			shop_identify_cost = a;
 			put_item_screen(stat_window,1);
@@ -889,7 +874,6 @@ void handle_talk_event(location p) {
 			break;
 		case eTalkNode::BUY_INFO:
 			if(univ.party.gold < a) {
-				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
 			}
 			else {
@@ -898,15 +882,13 @@ void handle_talk_event(location p) {
 				
 			}
 			save_talk_str2 = "";
-			strnum2 = 0;
 			break;
 		case eTalkNode::BUY_SDF:
 			if((univ.party.sd_legit(b,c)) && (PSD[b][c] == d)) {
 				save_talk_str1 = "You've already learned that.";
-				strnum1 = -1;
+				can_save_talk = false;
 			}
 			else if(univ.party.gold < a) {
-				strnum1 = strnum2;
 				save_talk_str1 + save_talk_str2;
 			}
 			else {
@@ -916,13 +898,10 @@ void handle_talk_event(location p) {
 					PSD[b][c] = d;
 				else giveError("Invalid Stuff Done flag called in conversation.");
 			}
-			strnum2 = 0;
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::BUY_SHIP:
 			if(univ.party.gold < a) {
-				strnum1 = strnum2;
-				strnum2 = 0;
 				save_talk_str1 = save_talk_str2;
 				save_talk_str2 = "";
 				break;
@@ -934,7 +913,6 @@ void handle_talk_event(location p) {
 						put_pc_screen();
 						univ.party.boats[i].property = false;
 						save_talk_str2 = "";
-						strnum2 = 0;
 						i = 1000;
 					}
 				if(i >= 1000)
@@ -942,13 +920,10 @@ void handle_talk_event(location p) {
 			}
 			save_talk_str1 = "There are no boats left.";
 			save_talk_str2 = "";
-			strnum1 = -1;
-			strnum2 = -1;
+			can_save_talk = false;
 			break;
 		case eTalkNode::BUY_HORSE:
 			if(univ.party.gold < a) {
-				strnum1 = strnum2;
-				strnum2 = 0;
 				save_talk_str1 = save_talk_str2;
 				save_talk_str2 = "";
 				break;
@@ -960,7 +935,6 @@ void handle_talk_event(location p) {
 						put_pc_screen();
 						univ.party.horses[i].property = false;
 						save_talk_str2 = "";
-						strnum2 = 0;
 						i = 1000;
 					}
 				if(i >= 1000)
@@ -968,24 +942,21 @@ void handle_talk_event(location p) {
 			}
 			save_talk_str1 = "There are no horses left.";
 			save_talk_str2 = "";
-			strnum1 = -1;
-			strnum2 = -1;
+			can_save_talk = false;
 			break;
 		case eTalkNode::BUY_SPEC_ITEM:
 			if(univ.party.spec_items[a]) {
 				save_talk_str1 = "You already have it.";
-				strnum1 = -1;
+				can_save_talk = false;
 			}
 			else if(univ.party.gold < b) {
 				save_talk_str1 = save_talk_str2;
-				strnum1 = strnum2;
 			}
 			else {
 				univ.party.gold -= b;
 				put_pc_screen();
 				univ.party.spec_items[a] = true;
 			}
-			strnum2 = 0;
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::RECEIVE_QUEST:
@@ -1002,14 +973,12 @@ void handle_talk_event(location p) {
 				case eQuestStatus::STARTED:
 					break;
 				case eQuestStatus::COMPLETED:
-					strnum1 = strnum2;
 					save_talk_str1 = save_talk_str2;
 					break;
 				case eQuestStatus::FAILED:
 					// TODO: How to handle this?
 					return;
 			}
-			strnum2 = 0;
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::BUY_TOWN_LOC:
@@ -1017,7 +986,6 @@ void handle_talk_event(location p) {
 				// TODO: Uh, is something supposed to happen here?
 			}
 			else if(univ.party.gold < a) {
-				strnum1 = strnum2;
 				save_talk_str1 = save_talk_str2;
 			}
 			else {
@@ -1025,7 +993,6 @@ void handle_talk_event(location p) {
 				put_pc_screen();
 				univ.party.can_find_town[b] = 1;
 			}
-			strnum2 = 0;
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::END_FORCE:
@@ -1057,14 +1024,10 @@ void handle_talk_event(location p) {
 			run_special(eSpecCtx::TALK,2,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
-				strnum1 = -1;
-				strnum2 = -1;
-				save_talk_str1 = "";
-				save_talk_str2 = "";
+				save_talk_str1 = s1 >= 0 ? univ.town->spec_strs[s1] : "";
+				save_talk_str2 = s2 >= 0 ? univ.town->spec_strs[s2] : "";
 			}
 			get_strs(save_talk_str1,save_talk_str2,2,s1,s2);
-			if(s1 >= 0) strnum1 = 2000 + s1;
-			if(s2 >= 0) strnum2 = 2000 + s2;
 			put_pc_screen();
 			put_item_screen(stat_window,0);
 			break;
@@ -1072,14 +1035,10 @@ void handle_talk_event(location p) {
 			run_special(eSpecCtx::TALK,0,a,univ.town.p_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
-				strnum1 = -1;
-				strnum2 = -1;
-				save_talk_str1 = "";
-				save_talk_str2 = "";
+				save_talk_str1 = s1 >= 0 ? univ.scenario.spec_strs[s1] : "";
+				save_talk_str2 = s2 >= 0 ? univ.scenario.spec_strs[s2] : "";
 			}
 			get_strs(save_talk_str1,save_talk_str2,0,s1,s2);
-			if(s1 >= 0) strnum1 = 3000 + s1;
-			if(s2 >= 0) strnum2 = 3000 + s2;
 			put_pc_screen();
 			put_item_screen(stat_window,0);
 			break;
