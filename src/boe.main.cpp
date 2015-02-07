@@ -68,7 +68,7 @@ bool belt_present = false;
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
 short fast_bang = false; // Note: This mostly behaves as a boolean variable, but values other than 1 are assigned to it, so I made it a short
-short spec_item_array[60];
+std::vector<int> spec_item_array;
 short current_spell_range;
 eGameMode overall_mode = MODE_STARTUP;
 bool first_update = true,anim_onscreen = false,frills_on = true,changed_display_mode = false;

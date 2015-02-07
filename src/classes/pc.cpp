@@ -427,7 +427,7 @@ bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
 		return true;
 	}
 	if(item.variety == eItemType::SPECIAL) {
-		party.spec_items[item.item_level] = true;
+		party.spec_items.insert(item.item_level);
 		if(do_print && print_result)
 			print_result("You get a special item.");
 		return true;
@@ -571,7 +571,7 @@ short cPlayer::skill(eSkill skill) const {
 
 eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 	if(item.variety == eItemType::SPECIAL) {
-		if(party.spec_items[item.item_level])
+		if(party.spec_items.count(item.item_level))
 			return eBuyStatus::HAVE_LOTS;
 	} else if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
 		for(int i = 0; i < 24; i++)

@@ -107,9 +107,9 @@ public:
 	short at_which_save_slot;
 	bool alchemy[20];
 	bool can_find_town[200];
-	short key_times[100];
+	std::map<int,int> key_times;
 	std::vector<cTimer> party_event_timers;
-	std::array<bool,50> spec_items;
+	std::set<int> spec_items;
 	std::set<int> help_received;
 	short m_killed[200]; // monsters killed per town, I think
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;

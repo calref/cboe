@@ -236,6 +236,8 @@ void start_town_mode(short which_town, short entry_dir) {
 						}
 						break;
 					case eMonstTime::APPEAR_WHEN_EVENT:
+						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
+							break; // Event hasn't happened yet
 						if(calc_day() >= univ.party.key_times[univ.town.monst[j].time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
 							univ.town.monst[j].active = 1;
 							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
@@ -243,6 +245,8 @@ void start_town_mode(short which_town, short entry_dir) {
 						break;
 						
 					case eMonstTime::DISAPPEAR_WHEN_EVENT:
+						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
+							break; // Event hasn't happened yet
 						if(calc_day() >= univ.party.key_times[univ.town.monst[j].time_code]){
 							univ.town.monst[j].active = 0;
 							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
@@ -306,11 +310,15 @@ void start_town_mode(short which_town, short entry_dir) {
 						}
 						break;
 					case eMonstTime::APPEAR_WHEN_EVENT:
-						if(calc_day() < univ.party.key_times[univ.town.monst[i].time_code])
-							univ.town.monst[i].active = 0;
+						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
+							univ.town.monst[i].active = 0; // Event hasn't happened yet
+						else if(calc_day() < univ.party.key_times[univ.town.monst[i].time_code])
+							univ.town.monst[i].active = 0; // This would only be reached if the time was set back (or in a legacy save)
 						break;
 						
 					case eMonstTime::DISAPPEAR_WHEN_EVENT:
+						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
+							break; // Event hasn't happened yet
 						if(calc_day() >= univ.party.key_times[univ.town.monst[i].time_code])
 							univ.town.monst[i].active = 0;
 						break;
@@ -402,7 +410,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				// place the preset item, if party hasn't gotten it already
 				univ.town.items.push_back(get_stored_item(univ.town->preset_items[i].code));
 				// Don't place special items if already in the party's possession
-				if(univ.town.items[j].variety == eItemType::SPECIAL && univ.party.spec_items[univ.town.items[j].item_level])
+				if(univ.town.items[j].variety == eItemType::SPECIAL && univ.party.spec_items.count(univ.town.items[j].item_level))
 					break;
 				univ.town.items[j].item_loc = univ.town->preset_items[i].loc;
 				

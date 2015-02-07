@@ -91,7 +91,7 @@ extern sf::RenderWindow mainPtr;
 extern short which_item_page[6];
 extern short store_spell_target,pc_casting;
 extern eSpell store_mage, store_priest;
-extern short spec_item_array[60];
+extern std::vector<int> spec_item_array;
 extern cUniverse univ;
 extern std::vector<word_rect_t> talk_words;
 extern bool talk_end_forced;

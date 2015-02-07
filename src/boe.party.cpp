@@ -165,8 +165,10 @@ static void init_party_scen_data() {
 	for(i = 0; i < 20; i++)
 	 	univ.party.key_times[i] = 30000;
 	univ.party.party_event_timers.clear();
-	for(i = 0; i < univ.scenario.special_items.size(); i++)
-		univ.party.spec_items[i] = univ.scenario.special_items[i].flags >= 10;
+	for(i = 0; i < univ.scenario.special_items.size(); i++) {
+		if(univ.scenario.special_items[i].flags >= 10)
+			univ.party.spec_items.insert(i);
+	}
 	for(i = 0; i < univ.scenario.quests.size(); i++) {
 		if(univ.scenario.quests[i].flags >= 10) {
 			univ.party.quest_status[i] = eQuestStatus::STARTED;
