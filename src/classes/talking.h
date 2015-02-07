@@ -44,7 +44,7 @@ public:
 		cNode() {std::fill(extras, extras + 4, -1);}
 	};
 	cPersonality people[10];
-	cNode talk_nodes[60];
+	std::array<cNode,60> talk_nodes;
 	
 	void append(legacy::talking_record_type& old, std::vector<shop_info_t>& shops);
 	void writeTo(std::ostream& file) const;

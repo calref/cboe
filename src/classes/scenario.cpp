@@ -73,7 +73,7 @@ cScenario::cScenario(bool init_strings) {
 	for(i = 0; i < 50; i++) {
 		special_items[i].special = -1;
 	}
-	for(i = 0; i < 20; i++) {
+	for(i = 0; i < scenario_timers.size(); i++) {
 		scenario_timers[i].node = -1;
 	}
 	for(i = 0; i < 400; i++) {

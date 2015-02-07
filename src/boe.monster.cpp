@@ -43,7 +43,7 @@ void create_wand_monst() {
 	short r1,r2,r3,i = 0,num_tries = 0;
 	location p_loc;
 	
-	r1 = get_ran(1,0,3);
+	r1 = get_ran(1,0,univ.out->wandering.size() - 1);
 	if(overall_mode == MODE_OUTDOORS) {
 		if(!univ.out->wandering[r1].isNull()) {
 			r2 = get_ran(1,0,3);
@@ -55,7 +55,7 @@ void create_wand_monst() {
 	} else if(!univ.town->wandering[r1].isNull() && univ.town.countMonsters() <= 50
 			  && univ.party.m_killed[univ.town.num] < univ.town->max_num_monst) {
 		// won't place wandering if more than 50 monsters
-		r2 = get_ran(1,0,3);
+		r2 = get_ran(1,0,univ.town->wandering.size() - 1);
 		while(point_onscreen(univ.town->wandering_locs[r2],univ.town.p_loc) &&
 			  !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
 			r2 = get_ran(1,0,3);

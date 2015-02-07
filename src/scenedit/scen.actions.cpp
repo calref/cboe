@@ -542,7 +542,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				}
 				else { // MODE_ROOM_RECT
 					if(editing_town) {
-						for(x = 0; x < 16; x++)
+						for(x = 0; x < town->room_rect.size(); x++)
 							if(town->room_rect[x].right == 0) {
 								static_cast<rectangle&>(town->room_rect[x]) = working_rect;
 								town->room_rect[x].descr = "";
@@ -552,7 +552,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							}
 					}
 					else {
-						for(x = 0; x < 8; x++)
+						for(x = 0; x < current_terrain->info_rect.size(); x++)
 							if(current_terrain->info_rect[x].right == 0) {
 								static_cast<rectangle&>(current_terrain->info_rect[x]) = working_rect;
 								current_terrain->info_rect[x].descr = "";
