@@ -80,7 +80,7 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	
 	town_chop_time = -1;
 	town_chop_key = -1;
-	for(i = 0; i < 4; i++) {
+	for(i = 0; i < wandering.size(); i++) {
 		wandering[i] = d_wan;
 		wandering_locs[i].x = 100;
 	}

@@ -787,7 +787,7 @@ void draw_terrain(){
 		
 		if(editing_town) {
 			// draw info rects
-			for(i = 0; i < 16; i++)
+			for(i = 0; i < town->room_rect.size(); i++)
 				if(town->room_rect[i].left > 0) {
 					draw_rect.left = 22 + 28 * (town->room_rect[i].left - cen_x + 4);
 					draw_rect.right = 22 + 28 * (town->room_rect[i].right - cen_x + 4);
@@ -804,7 +804,7 @@ void draw_terrain(){
 		}
 		if(!editing_town) {
 			// draw info rects
-			for(i = 0; i < 8; i++)
+			for(i = 0; i < current_terrain->info_rect.size(); i++)
 				if(current_terrain->info_rect[i].left > 0) {
 					draw_rect.left = 22 + 28 * (current_terrain->info_rect[i].left - cen_x + 4);
 					draw_rect.right = 22 + 28 * (current_terrain->info_rect[i].right - cen_x + 4);

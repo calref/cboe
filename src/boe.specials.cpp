@@ -1835,7 +1835,7 @@ void special_increase_age(long length, bool queue) {
 			move_to_zero(univ.party.job_banks[i].anger);
 	
 	if(is_town() || (is_combat() && which_combat_type == 1)) {
-		for(i = 0; i < 8; i++)
+		for(i = 0; i < univ.town->timers.size(); i++)
 			if(univ.town->timers[i].time > 0) {
 				short time = univ.town->timers[i].time;
 				for(unsigned long j = age_before; j <= current_age; j++)
@@ -1851,7 +1851,7 @@ void special_increase_age(long length, bool queue) {
 			}
 	}
 	univ.party.age = current_age;
-	for(i = 0; i < 20; i++)
+	for(i = 0; i < univ.scenario.scenario_timers.size(); i++)
 		if(univ.scenario.scenario_timers[i].time > 0) {
 			short time = univ.scenario.scenario_timers[i].time;
 			for(unsigned long j = age_before; j <= current_age; j++)
@@ -4342,10 +4342,16 @@ void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,s
 }
 
 void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str1,short which_str2) {
-	short num_strs[3] = {260,108,135};
+	size_t num_strs;
+	if(cur_type == 0)
+		num_strs = univ.scenario.spec_strs.size();
+	else if(cur_type == 1)
+		num_strs = univ.out->spec_strs.size();
+	else if(cur_type == 2)
+		num_strs = univ.town->spec_strs.size();
 	
-	if(((which_str1 >= 0) && (which_str1 != minmax(0,num_strs[cur_type],which_str1))) ||
-		((which_str2 >= 0) && (which_str2 != minmax(0,num_strs[cur_type],which_str2)))) {
+	if(((which_str1 >= 0) && (which_str1 != minmax(0,num_strs,which_str1))) ||
+		((which_str2 >= 0) && (which_str2 != minmax(0,num_strs,which_str2)))) {
 		giveError("The scenario attempted to access a message out of range.");
 		return;
 	}
@@ -4377,7 +4383,7 @@ void set_campaign_flag(short sdf_a, short sdf_b, short cpf_a, short cpf_b, short
 	// get_send = false: Send value in SDF to Campaign Flag
 	// get_send = true: Retrieve value from Campaign Flag and put in SDF
 	try {
-		if(str >= 0) {
+		if(str >= 0 && str < univ.scenario.spec_strs.size()) {
 			std::string cp_id = univ.scenario.spec_strs[str];
 			if(get_send)
 				univ.party.stuff_done[sdf_a][sdf_b] = univ.party.cpn_flag(cpf_a, cpf_b, cp_id);

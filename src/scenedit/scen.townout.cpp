@@ -366,7 +366,7 @@ void edit_sign(short which_sign,short picture) {
 
 static bool save_roomdescs(cDialog& me, bool isTown, std::array<bool,16> str_do_delete) {
 	if(!me.toast(true)) return true;
-	int numDescs = isTown ? 16 : 8;
+	int numDescs = isTown ? town->room_rect.size() : current_terrain->info_rect.size();
 	for(int i = 0; i < numDescs; i++) {
 		std::string id = "desc" + std::to_string(i + 1);
 		if(isTown) {
@@ -383,7 +383,7 @@ static bool save_roomdescs(cDialog& me, bool isTown, std::array<bool,16> str_do_
 }
 
 static void put_roomdescs_in_dlog(cDialog& me, bool isTown, std::array<bool,16> str_do_delete) {
-	int numDescs = isTown ? 16 : 8;
+	int numDescs = isTown ? town->room_rect.size() : current_terrain->info_rect.size();
 	for(int i = 0; i < numDescs; i++) {
 		std::string id = std::to_string(i + 1);
 		std::ostringstream str;
@@ -608,16 +608,17 @@ static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand,
 static bool edit_out_wand_event_filter(cDialog& me, std::string hit, short& which, cOutdoors::cWandering& wand, short mode) {
 	if(!me.toast(true)) return true;
 	save_out_wand(me, which, wand, mode);
+	size_t num_enc = (mode == 0) ? current_terrain->wandering.size() : current_terrain->special_enc.size();
 	if(hit == "left") {
 		me.untoast();
 		which--;
-		if(which < 0) which = 3;
+		if(which < 0) which = num_enc - 1;
 		wand = (mode == 0) ? current_terrain->wandering[which] : current_terrain->special_enc[which];
 		put_out_wand_in_dlog(me, which, wand);
 	} else if(hit == "right") {
 		me.untoast();
 		which++;
-		if(which > 3) which = 0;
+		if(which >= num_enc) which = 0;
 		wand = (mode == 0) ? current_terrain->wandering[which] : current_terrain->special_enc[which];
 		put_out_wand_in_dlog(me, which, wand);
 	}
@@ -739,7 +740,7 @@ void edit_town_details() {
 
 static bool save_town_events(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
-	for(int i = 0; i < 8; i++) {
+	for(int i = 0; i < town->timers.size(); i++) {
 		std::string id = std::to_string(i + 1);
 		town->timers[i].time = me["time" + id].getTextAsNum();
 		town->timers[i].node = me["spec" + id].getTextAsNum();
@@ -749,7 +750,7 @@ static bool save_town_events(cDialog& me, std::string, eKeyMod) {
 
 static void put_town_events_in_dlog(cDialog& me) {
 	short i;
-	for(i = 0; i < 8; i++) {
+	for(i = 0; i < town->timers.size(); i++) {
 		std::string id = std::to_string(i + 1);
 		me["time" + id].setTextToNum(town->timers[i].time);
 		me["spec" + id].setTextToNum(town->timers[i].node);
@@ -864,7 +865,7 @@ void edit_advanced_town() {
 
 static bool save_town_wand(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < town->wandering.size(); i++) {
 		std::string base_id = "group" + std::to_string(i + 1) + "-monst";
 		for(int j = 0; j < 4; j++) {
 			std::string id = base_id + std::to_string(j + 1);
@@ -875,7 +876,7 @@ static bool save_town_wand(cDialog& me, std::string, eKeyMod) {
 }
 
 static void put_town_wand_in_dlog(cDialog& me) {
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < town->wandering.size(); i++) {
 		std::string base_id = "group" + std::to_string(i + 1) + "-monst";
 		for(int j = 0; j < 4; j++) {
 			std::string id = base_id + std::to_string(j + 1);

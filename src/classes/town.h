@@ -71,7 +71,7 @@ public:
 	};
 	short town_chop_time,town_chop_key;
 	int bg_town, bg_fight;
-	cWandering wandering[4];
+	std::array<cWandering,4> wandering;
 	location wandering_locs[4];
 	std::vector<spec_loc_t> special_locs;
 	std::array<sign_loc_t,20> sign_locs;
