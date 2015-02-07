@@ -412,6 +412,9 @@ void start_town_mode(short which_town, short entry_dir) {
 				// Don't place special items if already in the party's possession
 				if(univ.town.items[j].variety == eItemType::SPECIAL && univ.party.spec_items.count(univ.town.items[j].item_level))
 					break;
+				// Don't place quest items if party already started
+				if(univ.town.items[j].variety == eItemType::QUEST && univ.party.quest_status[univ.town.items[j].item_level] != eQuestStatus::AVAILABLE)
+					break;
 				univ.town.items[j].item_loc = univ.town->preset_items[i].loc;
 				
 				// Not use the items data flags, starting with forcing an ability

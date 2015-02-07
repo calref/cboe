@@ -911,6 +911,7 @@ std::string get_item_interesting_string(cItem item) {
 			sout << item.item_level << " gold pieces";
 			break;
 		case eItemType::SPECIAL:
+		case eItemType::QUEST:
 			sout << "Special";
 			break;
 		case eItemType::FOOD:

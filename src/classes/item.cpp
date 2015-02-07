@@ -1371,8 +1371,8 @@ std::ostream& operator << (std::ostream& out, eItemType e){
 		case eItemType::FOOD: out << "food"; break;
 		case eItemType::GOLD: out << "gold"; break;
 		case eItemType::SPECIAL: out << "special"; break;
+		case eItemType::QUEST: out << "quest"; break;
 		case eItemType::NON_USE_OBJECT: out << "object"; break;
-		case eItemType::UNUSED1: out << "none"; break;
 	}
 	return out;
 }
@@ -1503,6 +1503,8 @@ std::istream& operator >> (std::istream& in, eItemType& e){
 			e = eItemType::MISSILE_NO_AMMO;
 		else if(key == "special")
 			e = eItemType::SPECIAL;
+		else if(key == "quest")
+			e = eItemType::QUEST;
 	}
 	return in;
 }

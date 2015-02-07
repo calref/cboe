@@ -389,7 +389,7 @@ void cPlayer::sort_items() {
 		{it::TOOL, 7}, {it::FOOD, 20}, {it::SHIELD, 10}, {it::ARMOR, 10}, {it::HELM, 10},
 		{it::GLOVES, 10}, {it::SHIELD_2, 10}, {it::BOOTS, 10}, {it::RING, 5}, {it::NECKLACE, 6},
 		{it::WEAPON_POISON, 4}, {it::NON_USE_OBJECT, 11}, {it::PANTS, 12}, {it::CROSSBOW, 9}, {it::BOLTS, 9},
-		{it::MISSILE_NO_AMMO, 9}, {it::UNUSED1, 20}, {it::SPECIAL, 20}
+		{it::MISSILE_NO_AMMO, 9}, {it::QUEST, 20}, {it::SPECIAL, 20}
 	};
 	bool no_swaps = false;
 	
@@ -430,6 +430,14 @@ bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
 		party.spec_items.insert(item.item_level);
 		if(do_print && print_result)
 			print_result("You get a special item.");
+		return true;
+	}
+	if(item.variety == eItemType::QUEST) {
+		party.quest_status[item.item_level] = eQuestStatus::STARTED;
+		party.quest_start[item.item_level] = party.calc_day();
+		party.quest_source[item.item_level] = -1;
+		if(do_print && print_result)
+			print_result("You get a quest.");
 		return true;
 	}
 	if(!allow_overload && item.item_weight() > free_weight()) {
@@ -572,6 +580,9 @@ short cPlayer::skill(eSkill skill) const {
 eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 	if(item.variety == eItemType::SPECIAL) {
 		if(party.spec_items.count(item.item_level))
+			return eBuyStatus::HAVE_LOTS;
+	} else if(item.variety == eItemType::QUEST) {
+		if(party.quest_status[item.item_level] != eQuestStatus::AVAILABLE)
 			return eBuyStatus::HAVE_LOTS;
 	} else if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
 		for(int i = 0; i < 24; i++)

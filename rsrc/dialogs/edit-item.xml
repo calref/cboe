@@ -55,7 +55,7 @@
 		<led name='bolt' state='off' top='154' left='448' width='90'>Bolts</led>
 		<led name='missile' state='off' top='169' left='448' width='90'>Missile (no ammo)</led>
 		<led name='special' state='off' top='184' left='448' width='90'>Special Item</led>
-		<led name='unused2' state='off' top='199' left='448' width='80'>Unused</led>
+		<led name='quest' state='off' top='199' left='448' width='80'>Quest</led>
 	</group>
 	<pict name="pic" type='dlog' num='16' top='8' left='11'/>
 	<text size='large' top='6' left='50' width='158' height='16'>Edit an Item Type</text>

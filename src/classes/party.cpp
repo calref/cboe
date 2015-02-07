@@ -415,6 +415,10 @@ location cParty::get_loc() const {
 	return univ.town.p_loc;
 }
 
+int cParty::calc_day() const {
+	return (age / 3700) + 1;
+}
+
 bool cParty::give_item(cItem item,bool do_print) {
 	for(int i = 0; i < 6; i++) {
 		if(adven[i]->give_item(item,do_print))

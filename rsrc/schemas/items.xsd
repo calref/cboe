@@ -35,6 +35,7 @@
 			<xs:enumeration value="bolts"/>
 			<xs:enumeration value="missile"/>
 			<xs:enumeration value="special"/>
+			<xs:enumeration value="quest"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="weaponType">

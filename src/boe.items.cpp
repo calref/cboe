@@ -545,6 +545,11 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 		} else if(item.variety == eItemType::SPECIAL) {
 			univ.party.spec_items.insert(item.item_level);
 			set_item_flag(&item);
+		} else if(item.variety == eItemType::QUEST) {
+			univ.party.quest_status[item.item_level] == eQuestStatus::STARTED;
+			univ.party.quest_start[item.item_level] = calc_day();
+			univ.party.quest_source[item.item_level] = -1;
+			set_item_flag(&item);
 		} else {
 			if(!allow_overload && item.item_weight() > univ.party[current_getting_pc].free_weight()) {
 				beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
@@ -935,7 +940,7 @@ void generate_job_bank(int which, job_bank_t& bank) {
 
 static cItem get_random_store_item(int loot_type) {
 	cItem item = return_treasure(loot_type);
-	if(item.variety == eItemType::GOLD || item.variety == eItemType::SPECIAL || item.variety == eItemType::FOOD)
+	if(item.variety == eItemType::GOLD || item.variety == eItemType::SPECIAL || item.variety == eItemType::FOOD || item.variety == eItemType::QUEST)
 		item = cItem();
 	item.ident = true;
 	return item;
