@@ -755,15 +755,14 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 		if(!save_monst_info(me,monst)) return false;
 		scenario.scen_monsters[which] = monst;
 		which--;
-		// TODO: Use size() once scen_monsters becomes a vector
-		if(which < 1) which = 255;
+		if(which < 1) which = scenario.scen_monsters;
 		monst = scenario.scen_monsters[which];
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "right") {
 		if(!save_monst_info(me,monst)) return false;
 		scenario.scen_monsters[which] = monst;
 		which++;
-		if(which > 255) which = 1;
+		if(which >= scenario.scen_monsters.size()) which = 1;
 		monst = scenario.scen_monsters[which];
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "picktype") {
@@ -1560,14 +1559,14 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		save_item_info(me, item);
 		scenario.scen_items[which] = item;
 		which--;
-		if(which < 0) which = 399;
+		if(which < 0) which = scenario.scen_items.size() - 1;
 		item = scenario.scen_items[which];
 		put_item_info_in_dlog(me, item, which);
 	} else if(hit == "next") {
 		save_item_info(me, item);
 		scenario.scen_items[which] = item;
 		which++;
-		if(which > 399) which = 0;
+		if(which >= scenario.scen_items.size()) which = 0;
 		item = scenario.scen_items[which];
 		put_item_info_in_dlog(me, item, which);
 	} else if(hit == "choosepic") {
@@ -1920,13 +1919,13 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem&
 	} else if(hit == "left") {
 		if(!save_spec_item(me, item, which)) return true;
 		which--;
-		if(which < 0) which = 49;
+		if(which < 0) which = scenario.special_items.size() - 1;
 		item = scenario.special_items[which];
 		put_spec_item_in_dlog(me, item, which);
 	} else if(hit == "right") {
 		if(!save_spec_item(me, item, which)) return true;
 		which++;
-		if(which > 49) which = 0;
+		if(which >= scenario.special_items.size()) which = 0;
 		item = scenario.special_items[which];
 		put_spec_item_in_dlog(me, item, which);
 	} else if(hit == "edit-spec") {
@@ -2536,7 +2535,7 @@ void edit_boats() {
 static bool save_add_town(cDialog& me) {
 	short i;
 	
-	for(i = 0; i < 10; i++) {
+	for(i = 0; i < scenario.town_mods.size(); i++) {
 		std::string id = std::to_string(i + 1);
 		scenario.town_mods[i].spec = me["town" + id].getTextAsNum();
 		if(cre(scenario.town_mods[i].spec,
@@ -2554,7 +2553,7 @@ static bool save_add_town(cDialog& me) {
 static void put_add_town_in_dlog(cDialog& me) {
 	short i;
 	
-	for(i = 0; i < 10; i++) {
+	for(i = 0; i < scenario.town_mods.size(); i++) {
 		std::string id = std::to_string(i + 1);
 		me["town" + id].setTextToNum(scenario.town_mods[i].spec);
 		me["flag" + id + "-x"].setTextToNum(scenario.town_mods[i].x);

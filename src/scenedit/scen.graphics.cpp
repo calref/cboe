@@ -495,7 +495,7 @@ void set_up_terrain_buttons() {
 	// first make terrain buttons
 	switch(draw_mode){
 		case DRAW_TERRAIN:
-			for(i = 0; i < 256; i++) {
+			for(i = 0; i < scenario.ter_types.size(); i++) {
 				ter_from = ter_from_base;
 				pic = scenario.ter_types[i].picture;
 				if(pic >= 1000) {

@@ -98,16 +98,18 @@ void init_menubar() {
 void update_item_menu() {
 	if(menuHandle == NULL) return;
 	auto& item_list = univ.scenario.scen_items;
+	int per_menu = item_list.size() / 4;
+	int per_col = per_menu / 4;
 	for(int j = 0; j < 4; j++) {
 		HMENU items_menu = GetSubMenu(menuHandle, ITEMS_MENU_POS + j);
 		while(GetMenuItemCount(items_menu)) RemoveMenu(items_menu, 0, MF_BYPOSITION);
 		if(!scen_items_loaded) {
 			AppendMenuA(items_menu, MF_STRING | MF_GRAYED, 1000, "Items Not Loaded");
-		} else for(int i = 0; i < 100; i++) {
-			cItem& item = item_list[i + j * 100];
+		} else for(int i = 0; i < per_menu; i++) {
+			cItem& item = item_list[i + j * per_menu];
 			UINT flags = MF_STRING | MF_ENABLED;
-			if(i % 25 == 0) flags |= MF_MENUBARBREAK;
-			AppendMenuA(items_menu, flags, 1000 + j * 100 + i, item.full_name.c_str());
+			if(i % per_col == 0) flags |= MF_MENUBARBREAK;
+			AppendMenuA(items_menu, flags, 1000 + j * per_menu + i, item.full_name.c_str());
 			// TODO: Also disable gold or food
 			EnableMenuItem(items_menu, i, MF_BYPOSITION | (item.variety != eItemType::NO_ITEM ? MF_ENABLED : MF_GRAYED));
 		}

@@ -123,7 +123,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	}
 	
 	// Now adjust town number as necessary.
-	for(i = 0; i < 10; i++)
+	for(i = 0; i < univ.scenario.town_mods.size(); i++)
 		if(univ.scenario.town_mods[i].spec >= 0 && univ.scenario.town_mods[i].spec < 200 &&
 			town_number == univ.scenario.town_mods[i].spec &&
 			univ.party.sd_legit(univ.scenario.town_mods[i].x,univ.scenario.town_mods[i].y)) {

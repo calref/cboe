@@ -1471,7 +1471,7 @@ void handle_keystroke(sf::Event event) {
 			
 		default:
 			if((chr >= 97) && (chr <= 122)) {
-				for(i = 0; i < 256; i++) {
+				for(i = 0; i < scenario.ter_types.size(); i++) {
 					j = current_terrain_type + i + 1;
 					j = j % 256;
 					if(scenario.ter_types[j].shortcut_key == chr) {
@@ -1582,7 +1582,7 @@ void unfrill_terrain() {
 }
 
 static ter_num_t find_object_part(unsigned char num, short x, short y, ter_num_t fallback){
-	for(int i = 0; i < 256; i++){
+	for(int i = 0; i < scenario.ter_types.size(); i++){
 		if(scenario.ter_types[i].obj_num == num &&
 		   scenario.ter_types[i].obj_pos.x == x &&
 		   scenario.ter_types[i].obj_pos.y == y)
@@ -1593,7 +1593,7 @@ static ter_num_t find_object_part(unsigned char num, short x, short y, ter_num_t
 
 ter_num_t get_ground_from_ter(ter_num_t ter){
 	unsigned char ground = scenario.ter_types[ter].ground_type;
-	for(int i = 0; i < 256; i++)
+	for(int i = 0; i < scenario.ter_types.size(); i++)
 		if(scenario.ter_types[i].ground_type == ground)
 			return i;
 	return 0;
@@ -1869,7 +1869,7 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 	
 	short x;
 	
-	if((which_item < 0) || (which_item > 399))
+	if((which_item < 0) || (which_item >= scenario.scen_items.size()))
 		return true;
 	if(scenario.scen_items[which_item].variety == eItemType::NO_ITEM)
 		return true;
@@ -2190,7 +2190,7 @@ void start_monster_editing(short just_redo_text) {
 		reset_rb();
 		right_sbar->setMaximum(255 - NRSONPAGE);
 	}
-	for(i = 1; i < 256; i++) {
+	for(i = 1; i < scenario.scen_monsters.size(); i++) {
 		set_rb(i - 1,RB_MONST, i,std::to_string(i) + " - " + scenario.scen_monsters[i].m_name);
 	}
 	if(draw_full)
@@ -2216,7 +2216,7 @@ void start_item_editing(short just_redo_text) {
 		reset_rb();
 		right_sbar->setMaximum(400 - NRSONPAGE);
 	}
-	for(i = 0; i < 400; i++) {
+	for(i = 0; i < scenario.scen_items.size(); i++) {
 		set_rb(i,RB_ITEM, i,std::to_string(i) + " - " + scenario.scen_items[i].full_name);
 	}
 	if(draw_full)
@@ -2240,7 +2240,7 @@ void start_special_item_editing() {
 	right_sbar->setPosition(0);
 	reset_rb();
 	right_sbar->setMaximum(50 - NRSONPAGE);
-	for(i = 0; i < 50; i++) {
+	for(i = 0; i < scenario.special_items.size(); i++) {
 		set_rb(i,RB_SPEC_ITEM, i,std::to_string(i) + " - " + scenario.special_items[i].name);
 	}
 	if(draw_full)
