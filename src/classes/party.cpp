@@ -163,8 +163,34 @@ void cParty::append(legacy::setup_save_type& old){
 void cParty::cConvers::append(legacy::talk_save_type old, const cScenario& scenario){
 	who_said = scenario.towns[old.personality / 10]->talking.people[old.personality % 10].title;
 	in_town = scenario.towns[old.town_num]->town_name;
-	the_str1 = scenario.towns[old.personality / 10]->spec_strs[old.str1];
-	the_str2 = scenario.towns[old.personality / 10]->spec_strs[old.str2];
+	int strnums[2] = {old.str1, old.str2};
+	std::string* strs[2] = {&the_str1, &the_str2};
+	for(int i = 0; i < 2; i++) {
+		// Okay, so there's a ton of different places where the actual strings might be found.
+		// 0 means no string
+		// 10 + n is the "look" string for the nth personality in the town (ie, n is personality % 10)
+		// 20 + n is the "name" string for the nth personality in the town
+		// 30 + n is the "job" string for the nth personality in the town
+		// 40 + 2n is the first string from the nth talk node in the town
+		// 40 + 2n + 1 is the second string from the nth talk not in the town
+		// 2000 + n is the nth town special text
+		// 3000 + n is the nth scenario special text
+		if(strnums[i] == 0) continue;
+		if(strnums[i] >= 3000)
+			strs[i]->assign(scenario.spec_strs[strnums[i] - 3000]);
+		else if(strnums[i] >= 2000)
+			strs[i]->assign(scenario.towns[old.personality / 10]->spec_strs[strnums[i] - 2000]);
+		else if(strnums[i] >= 40 && strnums[i] % 2 == 0)
+			strs[i]->assign(scenario.towns[old.personality / 10]->talking.talk_nodes[(strnums[i] - 40) / 2].str1);
+		else if(strnums[i] >= 40 && strnums[i] % 2 == 1)
+			strs[i]->assign(scenario.towns[old.personality / 10]->talking.talk_nodes[(strnums[i] - 40) / 2].str2);
+		else if(strnums[i] >= 30)
+			strs[i]->assign(scenario.towns[old.personality / 10]->talking.people[old.personality % 10].job);
+		else if(strnums[i] >= 20)
+			strs[i]->assign(scenario.towns[old.personality / 10]->talking.people[old.personality % 10].name);
+		else if(strnums[i] >= 10)
+			strs[i]->assign(scenario.towns[old.personality / 10]->talking.people[old.personality % 10].look);
+	}
 }
 
 void cParty::cEncNote::append(int16_t(& old)[2], const cScenario& scenario) {

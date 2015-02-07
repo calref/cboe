@@ -105,7 +105,7 @@ public:
 	size_t left_in;
 	eDirection direction;
 	short at_which_save_slot;
-	char alchemy[20];
+	bool alchemy[20];
 	bool can_find_town[200];
 	short key_times[100];
 	std::vector<cTimer> party_event_timers;
