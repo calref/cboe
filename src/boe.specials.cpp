@@ -1796,7 +1796,7 @@ void special_increase_age(long length, bool queue) {
 	unsigned long current_age = univ.party.age;
 	bool failed_job = false;
 	
-	for(auto p : univ.party.quest_status) {
+	for(auto& p : univ.party.quest_status) {
 		if(p.second != eQuestStatus::STARTED)
 			continue;
 		cQuest& quest = univ.scenario.quests[p.first];
@@ -1823,10 +1823,14 @@ void special_increase_age(long length, bool queue) {
 					add_anger++;
 				univ.party.job_banks[bank].anger += add_anger;
 			}
-			if(!failed_job)
-				add_string_to_buf("The deadline for one of your quests has passed.",2);
 			failed_job = true;
 		}
+	}
+	if(failed_job) {
+		add_string_to_buf("The deadline for one of your quests has passed.",2);
+		print_buf();
+		if(stat_window == ITEM_WIN_QUESTS)
+			set_stat_window(stat_window);
 	}
 	
 	// Angered job boards slowly forgive you
