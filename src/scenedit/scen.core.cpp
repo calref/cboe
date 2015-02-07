@@ -1431,8 +1431,8 @@ static void put_item_info_in_dlog(cDialog& me, cItem& item, short which) {
 			missile = true;
 			weapon = true;
 			break;
-		case eItemType::UNUSED1:
-			variety.setSelected("unused1");
+		case eItemType::QUEST:
+			variety.setSelected("quest");
 			break;
 		case eItemType::SPECIAL:
 			variety.setSelected("special");
@@ -1510,7 +1510,7 @@ static void save_item_info(cDialog& me, cItem& item) {
 	else if(variety == "xbow") item.variety = eItemType::CROSSBOW;
 	else if(variety == "bolt") item.variety = eItemType::BOLTS;
 	else if(variety == "missile") item.variety = eItemType::MISSILE_NO_AMMO;
-	else if(variety == "unused1") item.variety = eItemType::UNUSED1;
+	else if(variety == "quest") item.variety = eItemType::QUEST;
 	else if(variety == "special") item.variety = eItemType::SPECIAL;
 	item.weap_type = eSkill(me["weap-type"].getTextAsNum());
 	item.missile = me["missile"].getTextAsNum();
@@ -1599,8 +1599,8 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 			giveError("You must give the item a type (weapon, armor, etc.) before you can choose its abilities.","",&me);
 			return true;
 		}
-		if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD || item.variety == eItemType::SPECIAL) {
-			giveError("Gold, Food, and Special Items cannot be given special abilities.","",&me);
+		if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD || item.variety == eItemType::SPECIAL || item.variety == eItemType::QUEST) {
+			giveError("Gold, Food, Quests, and Special Items cannot be given special abilities.","",&me);
 			return true;
 		}
 		temp_item = edit_item_abil(item,which,me);

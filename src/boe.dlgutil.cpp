@@ -273,6 +273,7 @@ void handle_sale(cShopItem item, int i) {
 				case eBuyStatus::TOO_HEAVY: ASB("Item is too heavy."); break;
 				case eBuyStatus::HAVE_LOTS:
 					if(base_item.variety == eItemType::SPECIAL) ASB("You already own this.");
+					else if(base_item.variety == eItemType::QUEST) ASB("You already completed this.");
 					else ASB("You own too many of this.");
 					break;
 			}

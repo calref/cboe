@@ -167,6 +167,7 @@ public:
 	int get_health() const;
 	int get_magic() const;
 	int get_level() const;
+	int calc_day() const;
 	
 	void new_pc(size_t spot);
 	void replace_pc(size_t spot, cPlayer* with);
