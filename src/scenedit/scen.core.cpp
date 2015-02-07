@@ -1679,7 +1679,7 @@ static void put_item_abils_in_dlog(cDialog& me, cItem& item, short which) {
 	me["str1"].setTextToNum(item.abil_data[0]);
 	me["str2"].setTextToNum(item.abil_data[1]);
 	
-	if(item.ability == eItemAbil::CALL_SPECIAL || item.ability == eItemAbil::WEAPON_CALL_SPECIAL || item.ability == eItemAbil::HIT_CALL_SPECIAL) {
+	if(item.ability == eItemAbil::CALL_SPECIAL || item.ability == eItemAbil::WEAPON_CALL_SPECIAL || item.ability == eItemAbil::HIT_CALL_SPECIAL || item.ability == eItemAbil::DROP_CALL_SPECIAL) {
 		me["str1-choose"].show();
 		me["str1-title"].setText("Special to call");
 	} else {

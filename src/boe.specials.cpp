@@ -1173,7 +1173,7 @@ void use_item(short pc,short item) {
 			case eItemAbil::SEEKING_MISSILE: case eItemAbil::SKILL: case eItemAbil::SLAYER_WEAPON: case eItemAbil::SLOW_WEARER:
 			case eItemAbil::SMOKY_CRYSTAL: case eItemAbil::SOULSUCKER: case eItemAbil::SPEED: case eItemAbil::STATUS_PROTECTION:
 			case eItemAbil::STATUS_WEAPON: case eItemAbil::THIEVING: case eItemAbil::WEAK_WEAPON: case eItemAbil::WEAPON_CALL_SPECIAL:
-			case eItemAbil::WORMGRASS: case eItemAbil::UNUSED:
+			case eItemAbil::WORMGRASS: case eItemAbil::UNUSED: case eItemAbil::DROP_CALL_SPECIAL:
 				break;
 		}
 	}

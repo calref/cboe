@@ -979,6 +979,7 @@ std::string cItem::getAbilName() const {
 		case eItemAbil::LIGHTER_OBJECT: sout << "Lighter Object"; break;
 		case eItemAbil::HEAVIER_OBJECT: sout << "Heavier Object"; break;
 		case eItemAbil::HIT_CALL_SPECIAL: sout << "Unusual Defense Effect"; break;
+		case eItemAbil::DROP_CALL_SPECIAL: sout << "Unusual Effect When Dropped"; break;
 		case eItemAbil::LIFE_SAVING: sout << "Life Saving"; break;
 		case eItemAbil::PROTECT_FROM_PETRIFY: sout << "Protect from Petrify"; break;
 		case eItemAbil::REGENERATE: sout << "Regenerate"; break;

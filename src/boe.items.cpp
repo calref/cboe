@@ -165,13 +165,17 @@ void equip_item(short pc_num,short item_num) {
 
 
 void drop_item(short pc_num,short item_num,location where_drop) {
+	short s1, s2, s3 = 0;
+	int spec = -1;
 	std::string choice;
-	short how_many = 0;
+	short how_many = 1;
 	cItem item_store;
 	bool take_given_item = true;
 	location loc;
 	
 	item_store = univ.party[pc_num].items[item_num];
+	if(item_store.ability == eItemAbil::DROP_CALL_SPECIAL)
+		spec = item_store.abil_data[0];
 	
 	if(univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
 		add_string_to_buf("Drop: Item is cursed.");
@@ -218,6 +222,11 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 		default: //should never be reached
 			break;
 	}
+	if(spec >= 0)
+		while(how_many--)
+			run_special(eSpecCtx::DROP_ITEM, 0, spec, where_drop, &s1, &s2, &s3);
+	if(s3 > 0)
+		draw_terrain(0);
 }
 
 bool place_item(cItem item,location where,bool forced,bool contained) {

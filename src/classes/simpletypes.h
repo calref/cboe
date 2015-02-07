@@ -383,6 +383,7 @@ enum class eItemAbil {
 	PROTECT_FROM_SPECIES = 57,
 	LOCKPICKS = 58,
 	DRAIN_MISSILES = 59,
+	DROP_CALL_SPECIAL = 60,
 	// Usable
 	POISON_WEAPON = 70,
 	AFFECT_STATUS = 71,
@@ -528,6 +529,7 @@ enum class eSpecCtx {
 	ATTACKED_RANGE = 24,
 	HAIL = 25, // Special called by trying to initiate conversation
 	SHOPPING = 26,
+	DROP_ITEM = 27,
 };
 
 enum class eSpecType {
