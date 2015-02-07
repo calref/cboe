@@ -11,7 +11,7 @@ void draw_lb();
 void draw_lb_slot (short which,short mode) ;
 void draw_rb();
 void draw_rb_slot (short which,short mode) ;
-void set_up_terrain_buttons();
+void set_up_terrain_buttons(bool reset);
 void draw_terrain();
 void draw_monsts();
 rectangle get_item_template_rect (short type_wanted);
