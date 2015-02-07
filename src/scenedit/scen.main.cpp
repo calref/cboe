@@ -30,7 +30,7 @@ bool diff_depth_ok = false,mouse_button_held = false,editing_town = false;
 short cur_viewing_mode = 0;
 short cen_x, cen_y;
 eScenMode overall_mode = MODE_INTRO_SCREEN;
-std::shared_ptr<cScrollbar> right_sbar;
+std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 short mode_count = 0;
 cOutdoors* current_terrain;
 short pixel_depth,old_depth = 8;
@@ -52,6 +52,7 @@ void ding();
 
 cScenario scenario;
 rectangle right_sbar_rect;
+extern rectangle terrain_buttons_rect;
 
 //Changed to ISO C specified argument and return type.
 int main(int, char* argv[]) {
@@ -137,6 +138,14 @@ void Initialize(void) {
 	right_sbar->setBounds(right_sbar_rect);
 	right_sbar->setPageSize(NRSONPAGE - 1);
 	right_sbar->hide();
+	rectangle pal_sbar_rect = terrain_buttons_rect;
+	pal_sbar_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
+	pal_sbar_rect.left = pal_sbar_rect.right - 16;
+	pal_sbar_rect.height() = 17 * 16;
+	pal_sbar.reset(new cScrollbar(mainPtr));
+	pal_sbar->setBounds(pal_sbar_rect);
+	pal_sbar->setPageSize(16);
+	pal_sbar->hide();
 }
 
 void Handle_One_Event() {
@@ -496,6 +505,8 @@ static void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
 		sf::sleep(sf::milliseconds(10));
 		// TODO: redraw_screen should probably take the argument specifying what to update
 		redraw_screen(/*REFRESH_RIGHT_BAR*/);
+		if(overall_mode < MODE_MAIN_SCREEN || overall_mode == MODE_EDIT_TYPES)
+			set_up_terrain_buttons(false);
 	}
 }
 
@@ -509,6 +520,13 @@ void Mouse_Pressed() {
 		doneScrolling = true;
 		updater.join();
 		redraw_screen(/*REFRESH_RIGHT_BAR*/);
+	} else if(pal_sbar->isVisible() && mousePos.in(pal_sbar->getBounds())) {
+		std::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling)));
+		pal_sbar->handleClick(mousePos);
+		doneScrolling = true;
+		updater.join();
+		redraw_screen(/*REFRESH_RIGHT_BAR*/);
+		set_up_terrain_buttons(false);
 	}
 	else  // ordinary click
 		All_Done = handle_action(loc(event.mouseButton.x,event.mouseButton.y),event);

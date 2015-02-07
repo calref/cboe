@@ -68,7 +68,7 @@ extern cTown* town;
 extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
-extern std::shared_ptr<cScrollbar> right_sbar;
+extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 extern cOutdoors* current_terrain;
 extern location cur_out;
 extern sf::RenderWindow mainPtr;
@@ -132,8 +132,8 @@ void init_screen_locs() {
 	
 	for(i = 0; i < 256; i++) {
 		terrain_rects[i] = terrain_rect_base;
-		terrain_rects[i].offset(3 + (i % 17) * (terrain_rect_base.right + 1),
-			3 + (i / 17) * (terrain_rect_base.bottom + 1));
+		terrain_rects[i].offset(3 + (i % 16) * (terrain_rect_base.right + 1),
+			3 + (i / 16) * (terrain_rect_base.bottom + 1));
 	}
 }
 
@@ -1002,7 +1002,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				}
 				else {
 					edit_ter_type(i);
-					set_up_terrain_buttons();
+					set_up_terrain_buttons(true);
 				}
 				place_location();
 			}
@@ -2103,6 +2103,7 @@ void set_up_main_screen() {
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
 	overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
+	pal_sbar->hide();
 	shut_down_menus(4);
 	shut_down_menus(3);
 	redraw_screen();
@@ -2122,10 +2123,11 @@ void start_town_edit() {
 	set_lb(NLS - 1,LB_TEXT,LB_RETURN,"Back to Main Menu");
 	overall_mode = MODE_DRAWING;
 	editing_town = true;
-	set_up_terrain_buttons();
+	set_up_terrain_buttons(true);
 	shut_down_menus(4);
 	shut_down_menus(2);
 	right_sbar->hide();
+	pal_sbar->show();
 	set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
 	place_location();
 	copied_spec = -1;
@@ -2151,8 +2153,9 @@ void start_out_edit() {
 	set_lb(NLS - 1,LB_TEXT,LB_RETURN,"Back to Main Menu");
 	overall_mode = MODE_DRAWING;
 	editing_town = false;
-	set_up_terrain_buttons();
+	set_up_terrain_buttons(true);
 	right_sbar->hide();
+	pal_sbar->show();
 	shut_down_menus(4);
 	shut_down_menus(1);
 	redraw_screen();
@@ -2169,8 +2172,9 @@ void start_out_edit() {
 
 void start_terrain_editing() {
 	right_sbar->hide();
+	pal_sbar->show();
 	overall_mode = MODE_EDIT_TYPES;
-	set_up_terrain_buttons();
+	set_up_terrain_buttons(true);
 	place_location();
 	
 	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
@@ -2185,6 +2189,7 @@ void start_monster_editing(short just_redo_text) {
 	if(just_redo_text == 0) {
 		overall_mode = MODE_MAIN_SCREEN;
 		right_sbar->show();
+		pal_sbar->hide();
 		right_sbar->setPosition(0);
 		
 		reset_rb();
@@ -2211,6 +2216,7 @@ void start_item_editing(short just_redo_text) {
 			draw_full = true;
 		overall_mode = MODE_MAIN_SCREEN;
 		right_sbar->show();
+		pal_sbar->hide();
 		
 		right_sbar->setPosition(0);
 		reset_rb();
@@ -2236,6 +2242,7 @@ void start_special_item_editing() {
 		draw_full = true;
 	overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
+	pal_sbar->hide();
 	
 	right_sbar->setPosition(0);
 	reset_rb();
@@ -2256,6 +2263,7 @@ void start_quest_editing() {
 		set_up_main_screen();
 	overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
+	pal_sbar->hide();
 	right_sbar->setPosition(0);
 	reset_rb();
 	right_sbar->setMaximum(num_options - NRSONPAGE);
@@ -2277,6 +2285,7 @@ void start_shops_editing() {
 		set_up_main_screen();
 	overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
+	pal_sbar->hide();
 	right_sbar->setPosition(0);
 	reset_rb();
 	right_sbar->setMaximum(num_options - NRSONPAGE);
@@ -2307,6 +2316,7 @@ void start_string_editing(short mode,short just_redo_text) {
 			draw_full = true;
 		overall_mode = MODE_MAIN_SCREEN;
 		right_sbar->show();
+		pal_sbar->hide();
 		
 		reset_rb();
 		right_sbar->setMaximum(num_strs(mode) - NRSONPAGE);
@@ -2369,6 +2379,7 @@ void start_special_editing(short mode,short just_redo_text) {
 			draw_full = true;
 		overall_mode = MODE_MAIN_SCREEN;
 		right_sbar->show();
+		pal_sbar->hide();
 		
 		reset_rb();
 		right_sbar->setMaximum(num_specs + 1 - NRSONPAGE);
@@ -2416,6 +2427,7 @@ void start_dialogue_editing(short restoring) {
 		draw_full = true;
 	overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
+	pal_sbar->hide();
 	
 	if(restoring == 0) {
 		right_sbar->setPosition(0);

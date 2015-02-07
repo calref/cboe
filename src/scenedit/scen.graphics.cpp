@@ -49,7 +49,7 @@ extern rectangle left_button[NLS];
 extern rectangle right_buttons[NRSONPAGE];
 extern rectangle right_scrollbar_rect;
 extern rectangle right_area_rect;
-extern std::shared_ptr<cScrollbar> right_sbar;
+extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 
 extern bool left_buttons_active,right_buttons_active;
 extern std::array<lb_t,NLS> left_button_status;
@@ -415,6 +415,7 @@ void draw_main_screen() {
 		//rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,
 		//	terrain_buttons_gworld,draw_rect,0,1);
 		place_location();
+		pal_sbar->draw();
 	}
 	
 	
@@ -482,33 +483,40 @@ void draw_rb_slot (short which,short mode)  {
 	win_draw_string(mainPtr,text_rect,right_button_status[which].label,eTextMode::WRAP,style);
 }
 
-void set_up_terrain_buttons() {
+void set_up_terrain_buttons(bool reset) {
 	short i,j,pic,small_i;
 	rectangle ter_from,ter_from_base = {0,0,36,28};
 	rectangle tiny_from,tiny_to;
 	
 	rectangle palette_from,palette_to = palette_button_base;
 	
+	if(reset) pal_sbar->setPosition(0);
+	pal_sbar->setMaximum((scenario.ter_types.size() / 16) - 15);
+	if(overall_mode != MODE_EDIT_TYPES)
+		pal_sbar->setMaximum(pal_sbar->getMaximum() - 1);
+	
 	tileImage(terrain_buttons_gworld,terrain_buttons_rect,bg[17]);
 	frame_rect(terrain_buttons_gworld, terrain_buttons_rect, sf::Color::Black);
+	int first = pal_sbar->getPosition() * 16;
+	int end = min(first + 256, scenario.ter_types.size());
  	
 	// first make terrain buttons
 	switch(draw_mode){
 		case DRAW_TERRAIN:
-			for(i = 0; i < scenario.ter_types.size(); i++) {
+			for(i = first; i < end; i++) {
 				ter_from = ter_from_base;
 				pic = scenario.ter_types[i].picture;
 				if(pic >= 1000) {
 					sf::Texture* source_gworld;
 					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic % 1000);
 					rect_draw_some_item(*source_gworld,
-										ter_from,terrain_buttons_gworld,terrain_rects[i]);
+										ter_from,terrain_buttons_gworld,terrain_rects[i - first]);
 				}
 				else if(pic < 960)	{
 					pic = pic % 50;
 					ter_from.offset(28 * (pic % 10), 36 * (pic / 10));
 					rect_draw_some_item(terrain_gworld[scenario.ter_types[i].picture/50],
-										ter_from,terrain_buttons_gworld,terrain_rects[i]);
+										ter_from,terrain_buttons_gworld,terrain_rects[i - first]);
 				}
 				else {
 					pic = (pic - 560) % 50;
@@ -517,19 +525,13 @@ void set_up_terrain_buttons() {
 					ter_from.top = 36 * (pic % 5);
 					ter_from.bottom = ter_from.top + 36;
 					rect_draw_some_item(anim_gworld,
-										ter_from,terrain_buttons_gworld,terrain_rects[i]);
+										ter_from,terrain_buttons_gworld,terrain_rects[i - first]);
 					
 				}
 				small_i = get_small_icon(i);
-//				if(i == 82)
-//					small_i = 3;
-//				if(i == 83)
-//					small_i = 2;
-//				if((i == 7) || (i == 10) || (i == 13) || (i == 16))
-//					small_i = 23;
 				tiny_from = base_small_button_from;
 				tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
-				tiny_to = terrain_rects[i];
+				tiny_to = terrain_rects[i - first];
 				tiny_to.top = tiny_to.bottom - 7;
 				tiny_to.left = tiny_to.right - 7;
 				if(small_i > 0 && small_i < 255)
