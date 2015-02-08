@@ -29,7 +29,6 @@ class cScrollbar : public cControl {
 	} pressedPart;
 	click_callback_t onClick;
 	static sf::Texture scroll_gw;
-	static tessel_ref_t bar_tessel[2];
 public:
 	/// @copydoc cDialog::init()
 	static void init();
