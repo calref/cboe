@@ -12,7 +12,6 @@
 #include "mathutil.hpp"
 
 sf::Texture cScrollbar::scroll_gw;
-tessel_ref_t cScrollbar::bar_tessel[2];
 
 cScrollbar::cScrollbar(cDialog& parent) : cControl(CTRL_SCROLL, parent) {}
 
@@ -20,10 +19,6 @@ cScrollbar::cScrollbar(sf::RenderWindow& parent) : cControl(CTRL_SCROLL, parent)
 
 void cScrollbar::init() {
 	scroll_gw.loadFromImage(*ResMgr::get<ImageRsrc>("dlogscroll"));
-	rectangle bar_rect = {0,48,16,64};
-	bar_tessel[0] = prepareForTiling(scroll_gw, bar_rect);
-	bar_rect.offset(0,16);
-	bar_tessel[1] = prepareForTiling(scroll_gw, bar_rect);
 }
 
 bool cScrollbar::isClickable(){
@@ -156,7 +151,7 @@ sf::Color cScrollbar::getColour() throw(xUnsupportedProp) {
 
 void cScrollbar::draw() {
 	if(!isVisible()) return;
-	static const rectangle up_rect = {0,0,16,16}, down_rect = {0,16,16,32}, thumb_rect = {0,32,16,48};
+	static const rectangle up_rect = {0,0,16,16}, down_rect = {0,16,16,32}, thumb_rect = {0,32,16,48}, bar_rect = {0,48,16,64};
 	int bar_height = frame.height() - 32;
 	inWindow->setActive();
 	rectangle draw_rect = frame, from_rect = up_rect;
@@ -165,10 +160,17 @@ void cScrollbar::draw() {
 		from_rect.offset(0,16);
 	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
 	if(pos > 0) {
-		draw_rect.top = draw_rect.bottom;
-		draw_rect.height() = pos * (bar_height - 16) / max;
-		bool pressed = depressed && pressedPart == PART_PGUP;
-		tileImage(*inWindow, draw_rect, bar_tessel[pressed]);
+		from_rect = bar_rect;
+		int top = draw_rect.bottom, height = pos * (bar_height - 16) / max;
+		if(depressed && pressedPart == PART_PGUP)
+			from_rect.offset(0,16);
+		draw_rect.top = top;
+		while(draw_rect.top - top < height) {
+			draw_rect.bottom = draw_rect.top + 16;
+			rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+			draw_rect.top = draw_rect.bottom;
+		}
+		draw_rect.bottom = top + height;
 	}
 	draw_rect.top = draw_rect.bottom;
 	draw_rect.height() = 16;
@@ -177,10 +179,17 @@ void cScrollbar::draw() {
 		from_rect.offset(0,16);
 	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
 	if(pos < max) {
-		draw_rect.top = draw_rect.bottom;
-		draw_rect.bottom = frame.bottom - 16;
-		bool pressed = depressed && pressedPart == PART_PGDN;
-		tileImage(*inWindow, draw_rect, bar_tessel[pressed]);
+		from_rect = bar_rect;
+		int top = draw_rect.bottom, bottom = frame.bottom - 16;
+		if(depressed && pressedPart == PART_PGDN)
+			from_rect.offset(0,16);
+		draw_rect.top = top;
+		while(draw_rect.top < bottom) {
+			draw_rect.bottom = draw_rect.top + 16;
+			rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+			draw_rect.top = draw_rect.bottom;
+		}
+		draw_rect.bottom = bottom;
 	}
 	draw_rect = frame;
 	draw_rect.top = draw_rect.bottom - 16;
