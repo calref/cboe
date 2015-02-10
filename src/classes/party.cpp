@@ -641,7 +641,7 @@ void cParty::writeTo(std::ostream& file) const {
 			 << ' ' << party_event_timers[i].node << '\f';
 	file << '\f';
 	for(int i = 0; i < 4; i++)
-		for(int j = 0; j < 60; j++) {
+		for(int j = 0; j < creature_save[i].size(); j++) {
 			if(creature_save[i][j].active > 0) {
 				file << "CREATURE " << i << ' ' << j << '\n';
 				creature_save[i][j].writeTo(file);
@@ -873,7 +873,7 @@ void cParty::readFrom(std::istream& file){
 		} else if(cur == "CREATURE") {
 			int i, j;
 			bin >> i >> j;
-			creature_save[i][j].active = true;
+			creature_save[i].init(j);
 			creature_save[i][j].readFrom(bin);
 		} else if(cur == "STORED") {
 			int i, j;

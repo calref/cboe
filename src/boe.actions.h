@@ -1,6 +1,6 @@
 
 #ifndef BOE_GAME_ACTIONS_H
-#define BOE_GAME_ACTIOSN_H
+#define BOE_GAME_ACTIONS_H
 
 #include <SFML/Window/Event.hpp>
 #include "location.h"

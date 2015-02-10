@@ -750,13 +750,13 @@ public:
 		float t = i * divSz;
 		switch(i / points) {
 			case 0: // top left corner
-				return {r + r*sin(t + pi), r + r*cos(t + pi)};
+				return {r + r*sinf(t + pi), r + r*cosf(t + pi)};
 			case 1: // bottom left corner
-				return {r + r*cos(t + half_pi), h - r + r*sin(t - half_pi)};
+				return {r + r*cosf(t + half_pi), h - r + r*sinf(t - half_pi)};
 			case 2: // bottom right corner
-				return {w - r + r*cos(t + half_pi), h - r - r*sin(t + half_pi)};
+				return {w - r + r*cosf(t + half_pi), h - r - r*sinf(t + half_pi)};
 			case 3: // top right corner
-				return {w - r - r*cos(t - half_pi), r + r*sin(t - half_pi)};
+				return {w - r - r*cosf(t - half_pi), r + r*sinf(t - half_pi)};
 		}
 		// Unreachable
 		std::cerr << "Whoops, rounded rectangle had bad point!" << std::endl;
