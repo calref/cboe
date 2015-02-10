@@ -31,6 +31,11 @@ cCreature& cPopulation::operator[](size_t n){
 	return dudes[n];
 }
 
+void cPopulation::init(size_t n) {
+	if(n >= dudes.size()) dudes.resize(n + 1);
+	dudes[n].active = 1;
+}
+
 // This function combines a cTownperson from a scenario town record with a cMonster from the scenario record
 // into a cCreature, and prepares it for use in-game according to the user's preferences and party strength
 // replaces return_monster_template() from boe.monsters.cpp

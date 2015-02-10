@@ -887,10 +887,9 @@ void cPlayer::writeTo(std::ostream& file) const {
 	file << "NAME " << name << '\n';
 	file << "SKILL 19 " << max_health << '\n';
 	file << "SKILL 20 " << max_sp << '\n';
-	for(int i = 0; i < 19; i++) {
-		eSkill skill = eSkill(i);
-		if(skills.at(skill) > 0)
-			file << "SKILL " << i << ' ' << skills.at(skill) << '\n';
+	for(auto p : skills) {
+		if(p.second > 0)
+			file << "SKILL " << int(p.first) << ' ' << p.second << '\n';
 	}
 	file << "HEALTH " << cur_health << '\n';
 	file << "MANA " << cur_sp << '\n';

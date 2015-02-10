@@ -37,6 +37,7 @@ public:
 	short friendly;
 	
 	void append(legacy::creature_list_type old);
+	void init(size_t n);
 	void assign(size_t n, const cTownperson& other, const cMonster& base, bool easy, int difficulty_adjust);
 	void readFrom(std::istream& in, size_t n);
 	size_t size() const {return dudes.size();}
