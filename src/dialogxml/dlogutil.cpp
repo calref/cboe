@@ -14,6 +14,7 @@
 #include <boost/lexical_cast.hpp>
 #include "dialog.hpp"
 #include "dlogutil.hpp"
+#include "winutil.hpp"
 #include "mathutil.hpp"
 #include <array>
 #include "message.hpp"
@@ -515,6 +516,18 @@ void cStrDlog::show(){
 
 void giveError(std::string str1, std::string str2, cDialog* parent){
 	cStrDlog error(str1,str2,"Error!!!",25,PIC_DLOG,parent);
+	error->getControl("record").setText("Copy");
+	error.setRecordHandler([](cDialog& me) {
+		std::string error = me["str1"].getText();
+		try {
+			std::string error2 = me["str2"].getText();
+			error += "\n\n" + error2;
+		} catch(std::invalid_argument) {}
+		for(char& c : error) {
+			if(c == '|') c = '\n';
+		}
+		set_clipboard(error);
+	});
 	error.show();
 }
 
