@@ -29,6 +29,20 @@ Apart from minor bugfixes, it should not be altered. The src/ directory
 is to be the official codebase now. As of the time of this writing, it
 has a few major issues on Windows which are being worked on.
 
+CBOE relies on a few libraries, and XCode needs to be told where they are. The graphics library we're using is SFML, which is a Framework that can be found [here](http://www.sfml-dev.org/). They need to be linked in the Project Build Phases menu. Then, it needs to be included in the Project Build Settings, under Apple LLVM Custom Compiler Flags -> Other C++ Flags, and should have this added to the end:
+
+    -framework SFML
+
+The other dependency is Boost, a C++ library, which can be found [here](http://www.boost.org/), however the most straightforward way to install it is via homebrew or some similar package manager. Wherever you put it, XCode needs to be linked to it via the Project Build Settings, under Linking->Other Linking flags, which should look similar to this:
+
+    -lboost_filesystem -lboost_system -L/usr/local/Cellar/boost/1.57.0/lib
+
+With the path in the third include being wherever you put the boost lib folder. In the same place we put the framework flag for SFML, the boost includes should be included, as such:
+
+    -isystem/user/local/Cellar/boost/1.57.0/include
+
+Again, the filepath just needs to point to Boost's includes.
+
 Helpful Links
 -------------
 * [Jenkins Server](http://te.calref.net:8080/) - Runs a build after
