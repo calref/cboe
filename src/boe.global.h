@@ -36,25 +36,9 @@
 #define	CDST	cd_set_text_edit_str
 #define	CDSN	cd_set_text_edit_num
 
-struct scen_header_type {
-	unsigned char flag1, flag2, flag3, flag4;
-	unsigned char ver[3],min_run_ver,prog_make_ver[3],num_towns;
-	unsigned char out_width,out_height,difficulty,intro_pic,rating;
-};
-
-struct scen_header_str_type{
+struct scen_header_type{
+	int intro_pic, rating, difficulty, ver[3], prog_make_ver[3];
 	std::string name, who1, who2, file;
-};
-
-class cScenarioList {
-	std::vector<scen_header_type> d;
-	std::vector<scen_header_str_type> s;
-public:
-	void clear() {d.clear(); s.clear();}
-	size_t size() {return d.size();}
-	void push_back(scen_header_type& head, scen_header_str_type& strs) {d.push_back(head); s.push_back(strs);}
-	scen_header_type& data(size_t i) {return d.at(i);}
-	scen_header_str_type& strs(size_t i) {return s.at(i);}
 };
 
 struct effect_pat_type {

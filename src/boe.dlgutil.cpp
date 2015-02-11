@@ -57,7 +57,7 @@ extern cUniverse univ;
 extern sf::Texture pc_gworld;
 extern std::map<eSkill,short> skill_max;
 
-extern cScenarioList scen_headers;
+extern std::vector<scen_header_type> scen_headers;
 
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
@@ -1398,18 +1398,18 @@ static void put_scen_info(cDialog& me) {
 		sout.str("");
 		sout << i + 1;
 		std::string n = sout.str();
-		if(scen_headers.size() > (store_scen_page_on * 3 + i) && scen_headers.data(store_scen_page_on * 3 + i).flag1 != 0) {
+		if(scen_headers.size() > (store_scen_page_on * 3 + i)) {
 			me["pic" + n].show();
-			dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers.data(store_scen_page_on * 3 + i).intro_pic);
+			dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers[store_scen_page_on * 3 + i].intro_pic);
 			sout.str("");
-			sout << scen_headers.strs(store_scen_page_on * 3 + i).name;
-			sout << " v" << int(scen_headers.data(store_scen_page_on * 3 + i).ver[0]);
-			sout << '.' << int(scen_headers.data(store_scen_page_on * 3 + i).ver[1]);
-			sout << '.' << int(scen_headers.data(store_scen_page_on * 3 + i).ver[2]);
-			sout << " - |  Difficulty: " << difficulty[scen_headers.data(store_scen_page_on * 3 + i).difficulty];
-			sout << ", Rating: " << ratings[scen_headers.data(store_scen_page_on * 3 + i).rating];
-			sout << " |" << scen_headers.strs(store_scen_page_on * 3 + i).who1;
-			sout << " |" << scen_headers.strs(store_scen_page_on * 3 + i).who2;
+			sout << scen_headers[store_scen_page_on * 3 + i].name;
+			sout << " v" << int(scen_headers[store_scen_page_on * 3 + i].ver[0]);
+			sout << '.' << int(scen_headers[store_scen_page_on * 3 + i].ver[1]);
+			sout << '.' << int(scen_headers[store_scen_page_on * 3 + i].ver[2]);
+			sout << " - |  Difficulty: " << difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty];
+			sout << ", Rating: " << ratings[scen_headers[store_scen_page_on * 3 + i].rating];
+			sout << " |" << scen_headers[store_scen_page_on * 3 + i].who1;
+			sout << " |" << scen_headers[store_scen_page_on * 3 + i].who2;
 			me["desc" + n].setText(sout.str());
 			me["start" + n].show();
 		}
