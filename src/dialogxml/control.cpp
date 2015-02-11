@@ -241,9 +241,9 @@ static unsigned char removeShift(unsigned char c){
 	return afterUnShift[c - ' '];
 }
 
-void cControl::setTextToKey(){
+void cControl::setTextToKey() {
 	if(key.spec); // TODO: Handle this case
-	else{
+	else {
 		unsigned char c = key.c;
 		if(key.mod - mod_shift != key.mod) c = applyShift(c);
 		else c = removeShift(c);

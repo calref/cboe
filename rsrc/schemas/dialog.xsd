@@ -156,7 +156,7 @@
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:string">
-          <xs:attribute name="name" type="xs:ID"/>
+          <xs:attribute name="name" type="xs:token"/>
           <xs:attribute name="type" default="text">
             <xs:simpleType>
               <xs:restriction base="xs:token">
@@ -180,7 +180,7 @@
           <xs:complexType/>
         </xs:element>
       </xs:sequence>
-      <xs:attribute name="name" type="xs:ID"/>
+      <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="framed" default="false" type="bool"/>
       <xs:attributeGroup ref="font"/>
       <xs:attributeGroup ref="keys"/>
@@ -191,7 +191,7 @@
   </xs:element>
   <xs:element name="pict">
     <xs:complexType>
-      <xs:attribute name="name" type="xs:ID"/>
+      <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="type" use="required" type="picttype"/>
       <xs:attribute name="custom" default="false" type="bool"/>
       <xs:attribute name="framed" default="true" type="bool"/>
@@ -218,7 +218,7 @@
           <xs:complexType/>
         </xs:element>
       </xs:sequence>
-      <xs:attribute name="name" use="required" type="xs:ID"/>
+      <xs:attribute name="name" use="required" type="xs:token"/>
       <xs:attribute name="type" use="required" type="btntype"/>
       <xs:attribute name="wrap" default="false" type="bool"/>
       <xs:attributeGroup ref="keys"/>
@@ -230,7 +230,7 @@
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:string">
-          <xs:attribute name="name" use="required" type="xs:ID"/>
+          <xs:attribute name="name" use="required" type="xs:token"/>
           <xs:attribute name="state" default="off">
             <xs:simpleType>
               <xs:restriction base="xs:token">
@@ -252,7 +252,7 @@
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="led"/>
       </xs:sequence>
-      <xs:attribute name="name" type="xs:ID"/>
+      <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="fromlist" default="none" type="xs:string"/>
     </xs:complexType>
   </xs:element>
@@ -266,7 +266,7 @@
         <xs:element ref="led"/>
         <xs:element ref="group"/>
       </xs:choice>
-      <xs:attribute name="name" type="xs:ID"/>
+      <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="pages" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
@@ -291,11 +291,15 @@
       </xs:attribute>
       <xs:attribute name="debug" default="false" type="bool"/>
       <xs:attribute name="fore" default="black"/>
-      <xs:attribute name="defbtn" type="xs:IDREF"/>
+      <xs:attribute name="defbtn" type="xs:token"/>
     </xs:complexType>
     <xs:unique name="FieldTabOrder">
       <xs:selector xpath="*" />
       <xs:field xpath="@tab-order" />
+    </xs:unique>
+    <xs:unique name='uniqueID'>
+      <xs:selector xpath='*'/>
+      <xs:field xpath='@name'/>
     </xs:unique>
   </xs:element>
 </xs:schema>
