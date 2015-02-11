@@ -989,12 +989,12 @@ void save_scenario(fs::path toFile) {
 			pic_out << fin.rdbuf();
 			fin.close();
 		}
-	} else {
+	} else if(spec_scen_g) {
 		fs::path picPath = tempDir/"scenario"/"graphics";
 		if(fs::exists(picPath) && fs::is_directory(picPath)) {
 			// First build a list of overridable sheets
 			std::set<std::string> sheet_names;
-			fs::directory_iterator sheet_iter(progDir/"graphics.exd"/"mac");
+			fs::directory_iterator sheet_iter(progDir/"Scenario Editor"/"graphics.exd"/"mac");
 			while(sheet_iter != fs::directory_iterator()) {
 				std::string fname = sheet_iter->path().filename().string();
 				size_t dot = fname.find_last_of('.');

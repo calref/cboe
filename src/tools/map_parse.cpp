@@ -24,14 +24,14 @@ map_data load_map(std::istream& fin, bool isTown) {
 		int n = 0, col = 0;
 		eMapFeature curFeature = eMapFeature::NONE;
 		// vehicle_owned = true means the party owns it
-		bool vehicle_owned;
+		bool vehicle_owned, found_something;
 		for(char c : line) {
 			if(c == '#') break; // Found a comment
+			if(isblank(c)) continue;
+			found_something = true;
 			if(isdigit(c)) {
 				n *= 10;
 				n += c - '0';
-			} else if(isblank(c)) {
-				continue;
 			} else if(c == '^' && isTown) {
 				data.addFeature(col, row, eMapFeature::ENTRANCE_NORTH);
 			} else if(c == '<' && isTown) {
@@ -85,6 +85,7 @@ map_data load_map(std::istream& fin, bool isTown) {
 				}
 			}
 		}
+		row++;
 	}
 	return data;
 }
@@ -126,9 +127,9 @@ void map_data::writeTo(std::ostream& out) {
 	unsigned int width = std::accumulate(grid.begin(), grid.end(), 0, [](size_t m, std::vector<int>& v){
 		return std::max(m, v.size());
 	});
-	for(unsigned int x = 0; x < width; x++) {
+	for(unsigned int y = 0; y < height; y++) {
 		bool first = true;
-		for(unsigned int y = 0; y < height; y++) {
+		for(unsigned int x = 0; x < width; x++) {
 			if(!first) out << ',';
 			first = false;
 			out << grid[y][x];
