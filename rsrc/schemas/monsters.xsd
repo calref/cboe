@@ -192,6 +192,7 @@
 			<xs:sequence>
 				<xs:element ref="monster" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
+			<xs:attribute name="boes" type="xs:string" use="required"/>
 		</xs:complexType>
 		<xs:unique name='monsterIds'>
 			<xs:selector xpath='monster'/>

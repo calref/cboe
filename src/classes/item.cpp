@@ -1519,7 +1519,7 @@ std::istream& operator >> (std::istream& in, eItemUse& e){
 		if(i > 0 && i < 4)
 			e = (eItemUse) i;
 	} catch(boost::bad_lexical_cast) {
-		if(key == "help-on")
+		if(key == "help-one")
 			e = eItemUse::HELP_ONE;
 		else if(key == "harm-one")
 			e = eItemUse::HARM_ONE;

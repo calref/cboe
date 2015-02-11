@@ -128,7 +128,10 @@
     <!-- Where in that outdoor section you start -->
     <sector-start x="20" y="20"/>
     <!-- Definitions of special items, if any -->
-    <specials/>
+    <special-item start-with='true'>
+    	<name>My Special Item</name>
+    	<description>It's so useful!</description>
+    </special-item>
     <!-- Define quests here -->
     <quest start-with='false'>
     	<!-- Quests can have a deadline, and an event that waives the deadline -->

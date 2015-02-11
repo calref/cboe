@@ -12,10 +12,7 @@
 #include <vector>
 #include <map>
 #include <iosfwd>
-#include <boost/filesystem/path.hpp>
 #include "location.h"
-
-namespace fs = boost::filesystem;
 
 enum class eMapFeature {
 	NONE, // Special value, won't appear in the map.
@@ -51,6 +48,6 @@ public:
 	void writeTo(std::ostream& out);
 };
 
-map_data load_map(fs::path path, bool isTown);
+map_data load_map(std::istream& stream, bool isTown);
 
 #endif

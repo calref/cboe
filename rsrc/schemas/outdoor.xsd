@@ -57,53 +57,43 @@
 				</xs:element>
 				<xs:element name="encounter" type="encounter" minOccurs="0" maxOccurs="4"/>
 				<xs:element name="wandering" type="encounter" minOccurs="0" maxOccurs="4"/>
-				<xs:element name="signs">
+				<xs:element name="sign" minOccurs="0" maxOccurs="unbounded">
 					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="string" minOccurs="0" maxOccurs="unbounded">
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:string">
-											<xs:attribute name="id" type="xs:integer"/>
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="id" type="xs:integer" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="descriptions">
+				<xs:element name="area" minOccurs="0" maxOccurs="unbounded">
 					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="area" minOccurs="0" maxOccurs="unbounded">
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:string">
-											<xs:attributeGroup ref="rect"/>
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attributeGroup ref="rect"/>
+							</xs:extension>
+						</xs:simpleContent>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="strings">
+				<xs:element name="string" minOccurs="0" maxOccurs="unbounded">
 					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="string" minOccurs="0" maxOccurs="unbounded">
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:string">
-											<xs:attribute name="id" type="xs:integer"/>
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="id" type="xs:integer" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="boes" type="xs:string"/>
+			<xs:attribute name="boes" type="xs:string" use="required"/>
 		</xs:complexType>
+		<xs:unique name='stringIds'>
+			<xs:selector xpath='string'/>
+			<xs:field xpath='@id'/>
+		</xs:unique>
+		<xs:unique name='signIds'>
+			<xs:selector xpath='sign'/>
+			<xs:field xpath='@id'/>
+		</xs:unique>
 	</xs:element>
 </xs:schema>
