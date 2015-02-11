@@ -2102,17 +2102,20 @@ void load_spec_graphics_v1(fs::path scen_file) {
 			spec_scen_g.sheets[0].loadFromImage(graphics_store);
 		}
 	}
+	reload_core_graphics();
 }
 
 void load_spec_graphics_v2(int num_sheets) {
-	if(num_sheets == 0) return;
 	spec_scen_g.clear();
-	spec_scen_g.sheets = new sf::Texture[num_sheets];
-	spec_scen_g.numSheets = num_sheets;
-	while(num_sheets--) {
+	if(num_sheets > 0) {
+		spec_scen_g.sheets = new sf::Texture[num_sheets];
+		spec_scen_g.numSheets = num_sheets;
+	}
+	while(num_sheets-- > 0) {
 		std::string name = "sheet" + std::to_string(num_sheets);
 		spec_scen_g.sheets[num_sheets].loadFromImage(*ResMgr::get<ImageRsrc>(name));
 	}
+	reload_core_graphics();
 }
 
 void reload_core_graphics() {
