@@ -37,7 +37,7 @@ extern sf::RenderWindow mini_map;
 extern short which_combat_type;
 extern short cur_town_talk_loaded;
 extern cUniverse univ;
-cScenarioList scen_headers;
+std::vector<scen_header_type> scen_headers;
 extern bool mac_is_intel;
 
 bool loaded_yet = false, got_nagged = false,ae_loading = false;
@@ -465,14 +465,6 @@ void build_scen_headers() {
 	std::cout << progDir << '\n' << scenDir << std::endl;
 	scen_headers.clear();
 	fs::directory_iterator iter(scenDir);
-	// TODO: Double-check that kFSIterateFlat is identical to the behaviour of Boost's directory_iterator
-#if 0
-	err = FSOpenIterator(&folderRef, kFSIterateFlat, &iter);
-	if(err != noErr){
-		printf("Error opening iterator!\n");
-		return;
-	}
-#endif
 	
 	while(iter != fs::directory_iterator()) {
 		fs::file_status stat = iter->status();
@@ -486,59 +478,64 @@ void build_scen_headers() {
 }
 
 // This is only called at startup, when bringing headers of active scenarios.
-// This wipes out the scenario record, so be sure not to call it while in an active scenario.
 bool load_scenario_header(fs::path file/*,short header_entry*/){
 	bool file_ok = false;
-	long len;
-	bool mac_header = true;
 	
-	// TODO: This will only accept old-format scenarios!
-	// TODO: Rewrite using ifstream, or maybe ifstream_buf
-	FILE* file_id = fopen(file.string().c_str(), "rb");
-	if(file_id == NULL) {
-		return false;
-	}
-	scen_header_type curScen;
-	len = (long) sizeof(scen_header_type);
-	if(fread(&curScen, len, 1, file_id) < 1){
-		fclose(file_id); return false;
-	}
-	if((curScen.flag1 == 10) && (curScen.flag2 == 20)
-		&& (curScen.flag3 == 30)
-		&& (curScen.flag4 == 40)) {
-	  	file_ok = true;
-	  	mac_header = true;
-	} else
-		if((curScen.flag1 == 20) && (curScen.flag2 == 40)
-			&& (curScen.flag3 == 60)
-			&& (curScen.flag4 == 80)) {
-			file_ok = true;
-			mac_header = false;
+	std::string fname = file.filename().string();
+	int dot = fname.find_first_of('.');
+	if(dot == std::string::npos)
+		return false; // If it has no file extension, it's not a valid scenario.
+	if(fname.substr(dot) == ".exs") {
+		std::ifstream fin(file.string(), std::ios::binary);
+		if(fin.fail()) return false;
+		scenario_header_flags curScen;
+		long len = (long) sizeof(scenario_header_flags);
+		if(!fin.read((char*)&curScen, len)) return false;
+		if(curScen.flag1 == 10 && curScen.flag2 == 20 && curScen.flag3 == 30 && curScen.flag4 == 40)
+			file_ok = true; // Legacy Mac scenario
+		else if(curScen.flag1 == 20 && curScen.flag2 == 40 && curScen.flag3 == 60 && curScen.flag4 == 80)
+			file_ok = true; // Legacy Windows scenario
+		else if(curScen.flag1 == 'O' && curScen.flag2 == 'B' && curScen.flag3 == 'O' && curScen.flag4 == 'E')
+			file_ok = true; // Unpacked OBoE scenario
+	} else if(fname.substr(dot) == ".boes") {
+		if(fs::is_directory(file)) {
+			if(fs::exists(file/"header.exs"))
+				return load_scenario_header(file/"header.exs");
+		} else {
+			unsigned char magic[2];
+			std::ifstream fin(file.string(), std::ios::binary);
+			if(fin.fail()) return false;
+			if(!fin.read((char*)magic, 2)) return false;
+			// Check for the gzip magic number
+			if(magic[0] == 0x1f && magic[1] == 0x8b)
+				file_ok = true;
 		}
-	if(!file_ok) {
-		fclose(file_id);
-		return false;
 	}
+	if(!file_ok) return false;
 	
-	// So file is OK, so load in string data and close it.
-	fclose(file_id);
+	// So file is (probably) OK, so load in string data and close it.
 	cScenario temp_scenario;
-	load_scenario(file, temp_scenario);
-	
-	scen_header_str_type scen_strs;
-	scen_strs.name = temp_scenario.scen_name;
-	scen_strs.who1 = temp_scenario.who_wrote[0];
-	scen_strs.who2 = temp_scenario.who_wrote[1];
-	std::string curScenarioName(file.filename().string());
-	scen_strs.file = curScenarioName;
-	
-	if(scen_strs.file == "valleydy.exs" ||
-	   scen_strs.file == "stealth.exs" ||
-	   scen_strs.file == "zakhazi.exs"/* ||
-	   scen_strs.file == "busywork.exs" */)
+	if(!load_scenario(file, temp_scenario))
 		return false;
 	
-	scen_headers.push_back(curScen,scen_strs);
+	scen_header_type scen_head;
+	scen_head.name = temp_scenario.scen_name;
+	scen_head.who1 = temp_scenario.who_wrote[0];
+	scen_head.who2 = temp_scenario.who_wrote[1];
+	scen_head.file = fname;
+	scen_head.intro_pic = temp_scenario.intro_pic;
+	scen_head.rating = temp_scenario.rating;
+	scen_head.difficulty = temp_scenario.difficulty;
+	std::copy(temp_scenario.format.ver, temp_scenario.format.ver + 3, scen_head.ver);
+	std::copy(temp_scenario.format.prog_make_ver, temp_scenario.format.prog_make_ver + 3, scen_head.prog_make_ver);
+	
+	if(scen_head.file.substr(0,dot) == "valleydy" ||
+	   scen_head.file.substr(0,dot) == "stealth" ||
+	   scen_head.file.substr(0,dot) == "zakhazi"/* ||
+	   scen_strs.file.substr(0,dot) == "busywork" */)
+		return false;
+	
+	scen_headers.push_back(scen_head);
 	
 	return true;
 }

@@ -27,7 +27,7 @@ extern bool play_sounds,party_in_memory;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
 extern location ul;
-extern cScenarioList scen_headers;;
+extern std::vector<scen_header_type> scen_headers;
 extern cUniverse univ;
 extern eGameMode overall_mode;
 
@@ -94,11 +94,11 @@ bool handle_startup_press(location the_point) {
 					
 					scen = pick_a_scen();
 					if(scen < 0) break;
-					if(scen_headers.data(scen).prog_make_ver[0] >= 2) {
+					if(scen_headers[scen].prog_make_ver[0] > 2 || scen_headers[scen].prog_make_ver[1] > 0) {
 						cChoiceDlog("scen-version-mismatch").show();
 						break;
 					}
-					scen_name = scen_headers.strs(scen).file;
+					scen_name = scen_headers[scen].file;
 					put_party_in_scen(scen_name);
 					break;
 			}
