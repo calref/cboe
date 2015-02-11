@@ -10,14 +10,10 @@
 		<monster friendly="true">27</monster>
 	</wandering>
 	
-	<signs>
-		<string id="0">This is a sample sign!</string>
-	</signs>
+	<sign id="0">This is a sample sign!</sign>
 	
 	<!-- outdoor description rects -->
-	<descriptions>
-		<area top="32" left="32" bottom="36" right="36">This is an area description!</area>
-	</descriptions>
+	<area top="32" left="32" bottom="36" right="36">This is an area description!</area>
 	
-	<strings/>
+	<string id="0">This is a special encounter string!</string>
 </sector>

@@ -24,7 +24,7 @@
   
   <!-- Wandering monsters; optional -->
   <wandering>
-    <monster group="0">21</monster>
+    <monster>21</monster>
   </wandering>
 
   <sign id="0">This is a sample sign!</sign>
@@ -45,6 +45,6 @@
   </creature>
   
   <!-- town description rects -->
-  <description top="32" left="32" bottom="36" right="36">This is an area description!</description>
+  <area top="32" left="32" bottom="36" right="36">This is an area description!</area>
   
 </town>

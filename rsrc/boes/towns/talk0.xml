@@ -2,6 +2,7 @@
 <dialogue boes="1.0">
 	<!-- Basic personalities -->
 	<personality id="0">
+		<title>Bill</title>
 		<look>You see a small, strange creature.</look>
 		<name>"I'm Bill!"</name>
 		<job>"Job? What's that?"</job>

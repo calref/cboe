@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<terrains>
+<terrains boes='2.0.0'>
 	<terrain id='2'>
 		<name>Grass</name>
 		<!-- The picture, and the automap picture -->
@@ -19,12 +19,12 @@
 			<type>0</type>
 			<!-- Can include flags here, if necessary -->
 		</special>
+		<!-- Base terrain type -->
+		<ground>2</ground>
 		<!-- Editor information -->
 		<editor>
 			<!-- Shortcut key -->
 			<shortcut>g</shortcut>
-			<!-- Base terrain type -->
-			<ground>2</ground>
 		</editor>
 	</terrain>
 </terrains>

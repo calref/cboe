@@ -10,12 +10,14 @@
 
 #include <fstream>
 #include <boost/filesystem/operations.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "dlogutil.hpp"
 
 #include "scenario.h"
 #include "regtown.h"
 #include "map_parse.hpp"
+#include "special_parse.hpp"
 #include "graphtool.hpp"
 #include "mathutil.hpp"
 #include "gzstream.h"
@@ -29,20 +31,34 @@ extern sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_
 extern sf::Texture dlogpics_gworld,monst_gworld[],terrain_gworld[],anim_gworld,talkfaces_gworld,pc_gworld;
 extern sf::Texture status_gworld, vehicle_gworld, small_ter_gworld;
 extern cCustomGraphics spec_scen_g;
-//fs::path progDir, tempDir;
+extern fs::path tempDir;
 
-void load_spec_graphics(fs::path scen_file);
+void load_spec_graphics_v1(fs::path scen_file);
+void load_spec_graphics_v2(int num_sheets);
+void reload_core_graphics();
 // Load old scenarios (town talk is handled by the town loading function)
 static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario);
 static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario);
 static bool load_town_v1(fs::path scen_file,short which_town,cTown& the_town,legacy::scenario_data_type& scenario,std::vector<shop_info_t>& shops);
 // Load new scenarios
 static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario);
-static bool load_outdoors(fs::path out_base, location which_out, cOutdoors& the_out);
-static bool load_town(fs::path town_base, short which_town, cTown*& the_town);
-static bool load_town_talk(fs::path town_base, short which_town, cSpeech& the_talk);
 
 bool load_scenario(fs::path file_to_load, cScenario& scenario) {
+	// Before loading a scenario, we may need to pop scenario resource paths.
+	fs::path graphics_path = ResMgr::popPath<ImageRsrc>();
+	for(auto p : graphics_path) {
+		if(p.string() == "graphics.exd") {
+			ResMgr::pushPath<ImageRsrc>(graphics_path);
+			break;
+		}
+	}
+	fs::path sounds_path = ResMgr::popPath<SoundRsrc>();
+	for(auto p : sounds_path) {
+		if(p.string() == "sounds.exa") {
+			ResMgr::pushPath<SoundRsrc>(sounds_path);
+			break;
+		}
+	}
 	scenario = cScenario();
 	std::string fname = file_to_load.filename().string();
 	size_t dot = fname.find_last_of('.');
@@ -156,7 +172,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	scenario.ter_types[23].fly_over = false;
 	
 	scenario.scen_file = file_to_load;
-	load_spec_graphics(scenario.scen_file);
+	load_spec_graphics_v1(scenario.scen_file);
 	
 	// Now load all the outdoor sectors
 	scenario.outdoors.resize(temp_scenario->out_width, temp_scenario->out_height);
@@ -247,9 +263,1473 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	return true;
 }
 
+static ticpp::Document xmlDocFromStream(std::istream& stream, std::string name) {
+	std::string contents;
+	stream.seekg(0, std::ios::end);
+	contents.reserve(stream.tellg());
+	stream.seekg(0, std::ios::beg);
+	contents.assign(std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>());
+	ticpp::Document doc(name);
+	doc.Parse(contents);
+	return doc;
+}
+
+static std::tuple<int,int,int> parse_version(std::string str) {
+	int maj = 0, min = 0, rev = 0;
+	int at_which_part = 0;
+	for(char c : str) {
+		if(isdigit(c)) {
+			if(at_which_part == 0) {
+				maj *= 10;
+				maj += c - '0';
+			} else if(at_which_part == 1) {
+				min *= 10;
+				min += c - '0';
+			} else if(at_which_part == 2) {
+				rev *= 10;
+				rev += c - '0';
+			}
+		} else if(c == '.' && at_which_part == 0)
+			at_which_part = 1;
+		else if(c == '.' && at_which_part == 1)
+			at_which_part = 2;
+		else throw std::string("Invalid version string: " + str);
+	}
+	return std::make_tuple(maj, min, rev);
+}
+
+template<typename T = int>
+static location readLocFromXml(ticpp::Element& data, std::string prefix = "", std::string extra = "", T* extra_val = nullptr) {
+	using namespace ticpp;
+	Iterator<Attribute> attr;
+	std::string type, name, fname;
+	data.GetDocument()->GetValue(&fname);
+	data.GetValue(&type);
+	location pos = {-1000, -1000};
+	for(attr = attr.begin(&data); attr != attr.end(); attr++) {
+		attr->GetName(&name);
+		if(name == prefix + "x")
+			attr->GetValue(&pos.x);
+		else if(name == prefix + "y")
+			attr->GetValue(&pos.y);
+		else if(name == extra && extra_val != nullptr)
+			attr->GetValue(extra_val);
+		else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+	}
+	if(pos.x == -1000)
+		throw xMissingAttr(type, prefix + "x", data.Row(), data.Column(), fname);
+	if(pos.y == -1000)
+		throw xMissingAttr(type, prefix + "y", data.Row(), data.Column(), fname);
+	return pos;
+}
+
+template<typename T = int>
+static rectangle readRectFromXml(ticpp::Element& data, std::string prefix = "", std::string extra = "", T* extra_val=nullptr) {
+	using namespace ticpp;
+	Iterator<Attribute> attr;
+	std::string type, name, fname;
+	data.GetDocument()->GetValue(&fname);
+	data.GetValue(&type);
+	rectangle rect = {-1000, -1000, -1000, -1000};
+	for(attr = attr.begin(&data); attr != attr.end(); attr++) {
+		attr->GetName(&name);
+		if(name == prefix + "top")
+			attr->GetValue(&rect.top);
+		else if(name == prefix + "left")
+			attr->GetValue(&rect.left);
+		else if(name == prefix + "bottom")
+			attr->GetValue(&rect.bottom);
+		else if(name == prefix + "right")
+			attr->GetValue(&rect.right);
+		else if(name == extra && extra_val != nullptr)
+			attr->GetValue(extra_val);
+		else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+	}
+	if(rect.top == -1000)
+		throw xMissingAttr(type, prefix + "top", data.Row(), data.Column(), fname);
+	if(rect.left == -1000)
+		throw xMissingAttr(type, prefix + "left", data.Row(), data.Column(), fname);
+	if(rect.bottom == -1000)
+		throw xMissingAttr(type, prefix + "bottom", data.Row(), data.Column(), fname);
+	if(rect.right == -1000)
+		throw xMissingAttr(type, prefix + "right", data.Row(), data.Column(), fname);
+	return rect;
+}
+
+static void readSpecItemFromXml(ticpp::Element& data, cSpecItem& item) {
+	using namespace ticpp;
+	std::string type, name, val, fname;
+	data.GetDocument()->GetValue(&fname);
+	data.GetValue(&type);
+	item.special = -1;
+	item.flags = 0;
+	Iterator<Attribute> attr;
+	for(attr = attr.begin(&data); attr != attr.end(); attr++) {
+		attr->GetName(&name);
+		if(name == "special") {
+			attr->GetValue(&item.special);
+		} else if(name == "start-with") {
+			attr->GetValue(&val);
+			if(val == "true")
+				item.flags += 10;
+		} else if(name == "useable") {
+			attr->GetValue(&val);
+			if(val == "true")
+				item.flags += 1;
+		} else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+	}
+	Iterator<Element> elem;
+	for(elem = elem.begin(&data); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type == "name") {
+			elem->GetText(&item.name, false);
+		} else if(type == "description") {
+			elem->GetText(&item.descr, false);
+		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+	}
+}
+
+static void readQuestFromXml(ticpp::Element& data, cQuest& quest) {
+	using namespace ticpp;
+	std::string type, name, val, fname;
+	data.GetDocument()->GetValue(&fname);
+	data.GetValue(&type);
+	quest.flags = 0;
+	Iterator<Attribute> attr;
+	for(attr = attr.begin(&data); attr != attr.end(); attr++) {
+		attr->GetName(&name);
+		if(name == "start-with") {
+			attr->GetValue(&val);
+			if(val == "true")
+				quest.flags += 10;
+		} else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+	}
+	Iterator<Element> elem;
+	int banks_found = 0;
+	for(elem = elem.begin(&data); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type == "deadline") {
+			for(attr = attr.begin(elem.Get()); attr != attr.end(); attr++) {
+				attr->GetName(&name);
+				if(name == "relative") {
+					attr->GetValue(&val);
+					if(val == "true")
+						quest.flags += 1;
+				} else if(name == "waive-if")
+					attr->GetValue(&quest.event);
+				else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+			}
+			elem->GetText(&quest.deadline);
+		} else if(type == "reward") {
+			for(attr = attr.begin(elem.Get()); attr != attr.end(); attr++) {
+				attr->GetName(&name);
+				if(name == "xp")
+					attr->GetValue(&quest.xp);
+				else if(name == "gold")
+					attr->GetValue(&quest.gold);
+				else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+			}
+		} else if(type == "bank") {
+			if(banks_found == 0)
+				elem->GetText(&quest.bank1);
+			else if(banks_found == 1)
+				elem->GetText(&quest.bank2);
+			else throw xBadNode(name, elem->Row(), elem->Column(), fname);
+			banks_found++;
+		} else if(type == "name") {
+			elem->GetText(&quest.name, false);
+		} else if(type == "description") {
+			elem->GetText(&quest.descr, false);
+		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+	}
+}
+
+static void readShopFromXml(ticpp::Element& data, cShop& shop, cScenario& scen) {
+	using namespace ticpp;
+	std::string type, name, val, fname;
+	data.GetDocument()->GetValue(&fname);
+	data.GetValue(&type);
+	Iterator<Element> elem;
+	for(elem = elem.begin(&data); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type == "name") {
+			elem->GetText(&val, false);
+			shop.setName(val);
+		} else if(type == "type") {
+			elem->GetText(&val);
+			shop.setType(boost::lexical_cast<eShopType>(val));
+		} else if(type == "prompt") {
+			elem->GetText(&val);
+			shop.setPrompt(boost::lexical_cast<eShopPrompt>(val));
+		} else if(type == "face") {
+			pic_num_t face;
+			elem->GetText(face);
+			shop.setFace(face);
+		} else if(type == "entries") {
+			int entries_found = 0;
+			Iterator<Element> entry;
+			for(entry = entry.begin(elem.Get()); entry != entry.end(); entry++) {
+				entry->GetValue(&type);
+				if(entries_found >= 30)
+					throw xBadNode(type, entry->Row(), entry->Column(), fname);
+				if(type == "item") {
+					int amount, num, chance;
+					std::string title, descr;
+					Iterator<Attribute> attr;
+					for(attr = attr.begin(entry.Get()); attr != attr.end(); attr++) {
+						attr->GetName(&name);
+						if(name == "quantity") {
+							attr->GetValue(&val);
+							if(val == "infinite")
+								amount = 0;
+							else amount = boost::lexical_cast<int>(val);
+						} else if(name == "chance") {
+							attr->GetValue(&chance);
+						} else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+					}
+					entry->GetText(&num);
+					shop.addItem(num, scen.scen_items[num], amount, chance);
+				} else if(type == "special") {
+					int amount, node, cost, icon;
+					std::string title, descr;
+					Iterator<Attribute> attr;
+					for(attr = attr.begin(entry.Get()); attr != attr.end(); attr++) {
+						attr->GetName(&name);
+						if(name == "quantity") {
+							attr->GetValue(&val);
+							if(val == "infinite")
+								amount = 0;
+							else amount = boost::lexical_cast<int>(val);
+						} else if(name == "cost") {
+							attr->GetValue(&cost);
+						} else if(name == "node") {
+							attr->GetValue(&node);
+						} else if(name == "icon") {
+							attr->GetValue(&icon);
+						} else if(name == "name") {
+							attr->GetValue(&title);
+						} else if(name == "description") {
+							attr->GetValue(&descr);
+						} else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+					}
+					shop.addSpecial(name, descr, icon, node, cost, amount);
+				} else {
+					eShopItemType itype;
+					int n = 0;
+					if(type == "mage-spell") {
+						itype = eShopItemType::MAGE_SPELL;
+						entry->GetText(&n);
+					} else if(type == "priest-spell") {
+						itype = eShopItemType::MAGE_SPELL;
+						entry->GetText(&n);
+					} else if(type == "recipe") {
+						itype = eShopItemType::MAGE_SPELL;
+						entry->GetText(&n);
+					} else if(type == "skill") {
+						itype = eShopItemType::MAGE_SPELL;
+						entry->GetText(&n);
+					} else if(type == "treasure") {
+						itype = eShopItemType::MAGE_SPELL;
+						entry->GetText(&n);
+					} else if(type == "mage-spell") {
+						itype = eShopItemType::MAGE_SPELL;
+						entry->GetText(&n);
+					} else if(type == "heal") {
+						entry->GetText(&n);
+						itype = eShopItemType(n + int(eShopItemType::HEAL_WOUNDS));
+						n = 0;
+					} else throw xBadNode(type, entry->Row(), entry->Column(), fname);
+					shop.addSpecial(itype, n);
+				}
+			}
+		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+	}
+}
+
+static void readTimerFromXml(ticpp::Element& data, cTimer& timer) {
+	using namespace ticpp;
+	std::string type, name, fname;
+	data.GetDocument()->GetValue(&fname);
+	data.GetValue(&type);
+	timer.time = -1000;
+	Iterator<Attribute> attr;
+	for(attr = attr.begin(&data); attr != attr.end(); attr++) {
+		attr->GetName(&name);
+		if(name == "freq")
+			attr->GetValue(&timer.time);
+		else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+	}
+	if(timer.time == -1000)
+		throw xMissingAttr(type, "freq", data.Row(), data.Column(), fname);
+	data.GetText(&timer.node);
+}
+
+void initialXmlRead(ticpp::Document& data, std::string root_tag, int& maj, int& min, int& rev, std::string& fname) {
+	// This checks that the root tag is correct and reads the format version from the boes attribute.
+	using namespace ticpp;
+	maj = -1, min = -1, rev = -1; // These are currently unused, but eventually might be used if the format changes
+	std::string type, name, val;
+	data.GetValue(&fname);
+	data.FirstChildElement()->GetValue(&type);
+	if(type != root_tag) throw xBadNode(type,data.FirstChildElement()->Row(),data.FirstChildElement()->Column(),fname);
+	Iterator<Attribute> attr;
+	for(attr = attr.begin(data.FirstChildElement()); attr != attr.end(); attr++) {
+		attr->GetName(&name);
+		attr->GetValue(&val);
+		if(name == "boes") {
+			std::tie(maj, min, rev) = parse_version(val);
+			if(maj < 2) {
+				giveError("This scenario specifies an invalid format version. Loading will be attempted as if it were version 2.0.0, but there is a possibility that there could be errors.");
+				maj = 2;
+				min = rev = 0;
+			}
+		} else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+	}
+	if(maj < 0 || min < 0 || rev < 0)
+		throw xMissingAttr(type, "boes", data.FirstChildElement()->Row(), data.FirstChildElement()->Column(), fname);
+}
+
+static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
+	using namespace ticpp;
+	int maj, min, rev;
+	std::string fname, type, name, val;
+	initialXmlRead(data, "scenario", maj, min, rev, fname);
+	Iterator<Attribute> attr;
+	Iterator<Element> elem;
+	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type == "title") {
+			elem->GetText(&scenario.scen_name, false);
+		} else if(type == "icon") {
+			// TODO: This element can have some attributes on it.
+			elem->GetText(&scenario.intro_pic);
+		} else if(type == "id") {
+			elem->GetText(&scenario.campaign_id, false);
+		} else if(type == "version") {
+			elem->GetText(&val);
+			int maj, min, rev;
+			std::tie(maj, min, rev) = parse_version(val);
+			scenario.format.ver[0] = maj;
+			scenario.format.ver[1] = min;
+			scenario.format.ver[2] = rev;
+		} else if(type == "language") {
+			// This is currently unused; there's nowhere to store the value, and it's hardcoded to "en-US" on save
+		} else if(type == "author") {
+			// TODO: Store name and email in separate locations
+			std::string name, email;
+			elem->FirstChild("name")->GetValue(&name);
+			elem->FirstChild("email")->GetValue(&email);
+			scenario.contact_info = name + " " + email;
+		} else if(type == "text") {
+			Iterator<Element> info;
+			int found_teasers = 0, found_intro = 0;
+			for(info = info.begin(elem.Get()); info != info.end(); info++) {
+				info->GetValue(&type);
+				if(type == "teaser") {
+					if(found_teasers >= 2)
+						throw xBadNode(type,info->Row(),info->Column(),fname);
+					info->GetText(&scenario.who_wrote[found_teasers], false);
+					found_teasers++;
+				} else if(type == "icon") {
+					info->GetText(&scenario.intro_mess_pic);
+				} else if(type == "intro-msg") {
+					if(found_intro >= 6)
+						throw xBadNode(type,info->Row(),info->Column(),fname);
+					info->GetText(&scenario.intro_strs[found_intro], false);
+					found_intro++;
+				}
+			}
+		} else if(type == "ratings") {
+			elem->FirstChildElement("content")->GetText(&val);
+			if(val == "g") scenario.rating = 0;
+			else if(val == "pg") scenario.rating = 1;
+			else if(val == "r") scenario.rating = 2;
+			else if(val == "nc17") scenario.rating = 3;
+			else throw xBadVal(type, "content", val, elem->FirstChild("content")->Row(), elem->FirstChild("content")->Column(), fname);
+			elem->FirstChildElement("difficulty")->GetText(&scenario.difficulty);
+			// TODO: Verify difficulty is in range 1..4
+		} else if(type == "flags") {
+			Iterator<Element> flag;
+			for(flag = flag.begin(elem.Get()); flag != flag.end(); flag++) {
+				flag->GetValue(&type);
+				if(type == "adjust-difficulty") {
+					flag->GetText(&val);
+					scenario.adjust_diff = val == "true";
+				} else if(type == "custom-graphics") {
+					flag->GetText(&val);
+					scenario.uses_custom_graphics = val == "true";
+				} else if(type == "legacy") {
+					flag->GetText(&val);
+					scenario.is_legacy = val == "true";
+				} else throw xBadNode(type,flag->Row(),flag->Column(),fname);
+			}
+		} else if(type == "creator") {
+			elem->FirstChildElement("version")->GetText(&val);
+			int maj, min, rev;
+			std::tie(maj, min, rev) = parse_version(val);
+			scenario.format.prog_make_ver[0] = maj;
+			scenario.format.prog_make_ver[1] = min;
+			scenario.format.prog_make_ver[2] = rev;
+			// TODO: Type field (verify that it's "oboe"?) and OS field
+		} else if(type == "game") {
+			Iterator<Element> game;
+			int store_rects = 0, town_mods = 0, spec_items = 0, quests = 0, shops = 0, timers = 0, strs = 0, journals = 0;
+			for(game = game.begin(elem.Get()); game != game.end(); game++) {
+				game->GetValue(&type);
+				if(type == "num-towns") {
+					int num;
+					game->GetText(&num);
+					scenario.towns.resize(num);
+				} else if(type == "out-width") {
+					int w;
+					game->GetText(&w);
+					scenario.outdoors.resize(w, scenario.outdoors.height());
+				} else if(type == "out-height") {
+					int h;
+					game->GetText(&h);
+					scenario.outdoors.resize(scenario.outdoors.width(), h);
+				} else if(type == "start-town") {
+					game->GetText(&scenario.which_town_start);
+					// TODO: Make sure town is valid
+				} else if(type == "town-start") {
+					scenario.where_start = readLocFromXml(*game);
+				} else if(type == "outdoor-start") {
+					scenario.out_sec_start = readLocFromXml(*game);
+				} else if(type == "sector-start") {
+					scenario.out_start = readLocFromXml(*game);
+				} else if(type == "store-items") {
+					if(store_rects >= 3)
+						throw xBadNode(type,game->Row(),game->Column(),fname);
+					auto town_p = &scenario.store_item_towns[store_rects];
+					scenario.store_item_rects[store_rects] = readRectFromXml(*game, "", "town", town_p);
+					store_rects++;
+				} else if(type == "town-flag") {
+					if(town_mods >= 10)
+						throw xBadNode(type,game->Row(),game->Column(),fname);
+					auto town_p = &scenario.town_mods[town_mods].spec;
+					location& loc = scenario.town_mods[town_mods];
+					loc = readLocFromXml(*game, "add-", "town", town_p);
+					// TODO: Make sure town is valid
+					town_mods++;
+				} else if(type == "special-item") {
+					if(spec_items >= 50)
+						throw xBadNode(type,game->Row(),game->Column(),fname);
+					readSpecItemFromXml(*game, scenario.special_items[spec_items]);
+					spec_items++;
+				} else if(type == "quest") {
+					scenario.quests.emplace_back();
+					readQuestFromXml(*game, scenario.quests[quests]);
+					quests++;
+				} else if(type == "shop") {
+					scenario.shops.emplace_back();
+					readShopFromXml(*game, scenario.shops[shops], scenario);
+					shops++;
+				} else if(type == "timer") {
+					if(timers >= 20)
+						throw xBadNode(type,game->Row(),game->Column(),fname);
+					readTimerFromXml(*game, scenario.scenario_timers[timers]);
+					timers++;
+				} else if(type == "string") {
+					if(strs >= 100)
+						throw xBadNode(type,game->Row(),game->Column(),fname);
+					game->GetText(&scenario.spec_strs[strs], false);
+					strs++;
+				} else if(type == "journal") {
+					if(journals >= 50)
+						throw xBadNode(type,game->Row(),game->Column(),fname);
+					game->GetText(&scenario.journal_strs[journals], false);
+					journals++;
+				} else throw xBadNode(type, game->Row(), game->Column(), fname);
+			}
+		} else if(type == "editor") {
+			Iterator<Element> edit;
+			int num_storage = 0, num_pics = 0;
+			for(edit = edit.begin(elem.Get()); edit != edit.end(); edit++) {
+				edit->GetValue(&type);
+				if(type == "default-ground") {
+					edit->GetText(&scenario.default_ground);
+				} else if(type == "last-out-section") {
+					scenario.last_out_edited = readLocFromXml(*edit);
+				} else if(type == "last-town") {
+					edit->GetText(&scenario.last_town_edited);
+				} else if(type == "graphics") {
+					if(num_pics > 0)
+						throw xBadNode(type, edit->Row(), edit->Column(), fname);
+					Iterator<Element> pic;
+					for(pic = pic.begin(edit.Get()); pic != pic.end(); pic++) {
+						pic->GetValue(&type);
+						if(type != "pic")
+							throw xBadNode(type, pic->Row(), pic->Column(), fname);
+						int i = -1, pictype;
+						pic->GetText(&pictype);
+						for(attr = attr.begin(pic.Get()); attr != attr.end(); attr++) {
+							attr->GetName(&name);
+							if(name != "index")
+								throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+							attr->GetValue(&i);
+							if(i >= scenario.custom_graphics.size())
+								scenario.custom_graphics.resize(i + 1);
+						}
+						if(i < 0)
+							throw xMissingAttr(type, "index", pic->Row(), pic->Column(), fname);
+						scenario.custom_graphics[i] = ePicType(pictype);
+						num_pics++;
+					}
+				} else if(type == "storage") {
+					if(num_storage >= 10)
+						throw xBadNode(type, edit->Row(), edit->Column(), fname);
+					int num_items = 0;
+					Iterator<Element> store;
+					for(store = store.begin(edit.Get()); store != store.end(); store++) {
+						store->GetValue(&type);
+						if(type == "on-terrain") {
+							store->GetText(&scenario.storage_shortcuts[num_storage].ter_type);
+						} else if(type == "is-property") {
+							store->GetText(&val);
+							if(val == "true")
+								scenario.storage_shortcuts[num_storage].property = true;
+						} else if(type == "item") {
+							if(num_items >= 10)
+								throw xBadNode(type, store->Row(), store->Column(), fname);
+							store->GetText(&scenario.storage_shortcuts[num_storage].item_num[num_items]);
+							bool found_chance = false;
+							for(attr = attr.begin(store.Get()); attr != attr.end(); attr++) {
+								attr->GetName(&name);
+								if(name == "chance") {
+									found_chance = true;
+									attr->GetValue(&scenario.storage_shortcuts[num_storage].item_odds[num_items]);
+								} else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+							}
+							if(!found_chance)
+								throw xMissingAttr(type, "chance", store->Row(), store->Column(), fname);
+							num_items++;
+						}
+					}
+					num_storage++;
+				} else throw xBadNode(type, edit->Row(), edit->Column(), fname);
+			}
+		} else throw xBadNode(type,elem->Row(),elem->Column(),fname);
+	}
+}
+
+static void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
+	using namespace ticpp;
+	int maj, min, rev;
+	std::string fname, type, name, val;
+	initialXmlRead(data, "terrains", maj, min, rev, fname);
+	Iterator<Attribute> attr;
+	Iterator<Element> elem;
+	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type != "terrain")
+			throw xBadNode(type, elem->Row(), elem->Column(), fname);
+		int which_ter;
+		elem->GetAttribute("id", &which_ter);
+		cTerrain& the_ter = scenario.ter_types[which_ter];
+		Iterator<Element> ter;
+		for(ter = ter.begin(elem.Get()); ter != ter.end(); ter++) {
+			ter->GetValue(&type);
+			if(type == "name") {
+				ter->GetText(&the_ter.name, false);
+			} else if(type == "pic") {
+				ter->GetText(&the_ter.picture);
+			} else if(type == "map") {
+				ter->GetText(&the_ter.map_pic);
+			} else if(type == "blockage") {
+				ter->GetText(&the_ter.blockage);
+			} else if(type == "special") {
+				int num_flags = 0;
+				Iterator<Element> spec;
+				for(spec = spec.begin(ter.Get()); spec != spec.end(); spec++) {
+					spec->GetValue(&type);
+					if(type == "type") {
+						spec->GetText(&the_ter.special);
+					} else if(type == "flag") {
+						if(num_flags == 0)
+							spec->GetText(&the_ter.flag1);
+						else if(num_flags == 1)
+							spec->GetText(&the_ter.flag2);
+						else if(num_flags == 2)
+							spec->GetText(&the_ter.flag3);
+						else throw xBadNode(type, spec->Row(), spec->Column(), fname);
+					} else throw xBadNode(type, spec->Row(), spec->Column(), fname);
+				}
+			} else if(type == "transform") {
+				ter->GetText(&the_ter.trans_to_what);
+			} else if(type == "fly") {
+				ter->GetText(&val);
+				if(val == "true")
+					the_ter.fly_over = true;
+			} else if(type == "boat") {
+				ter->GetText(&val);
+				if(val == "true")
+					the_ter.boat_over = true;
+			} else if(type == "ride") {
+				ter->GetText(&val);
+				if(val != "true")
+					the_ter.block_horse = true;
+			} else if(type == "light") {
+				ter->GetText(&the_ter.light_radius);
+			} else if(type == "step-sound") {
+				ter->GetText(&the_ter.step_sound);
+			} else if(type == "trim") {
+				ter->GetText(&the_ter.trim_type);
+			} else if(type == "trim-for") {
+				ter->GetText(&the_ter.trim_ter);
+			} else if(type == "ground") {
+				ter->GetText(&the_ter.ground_type);
+			} else if(type == "arena") {
+				ter->GetText(&the_ter.combat_arena);
+			} else if(type == "editor") {
+				Iterator<Element> edit;
+				for(edit = edit.begin(ter.Get()); edit != edit.end(); edit++) {
+					edit->GetValue(&type);
+					if(type == "shortcut") {
+						val.clear();
+						edit->GetText(&val, false);
+						the_ter.shortcut_key = val.empty() ? 0 : val[0];
+					} else if(type == "object") {
+						Iterator<Element> obj;
+						for(obj = obj.begin(edit.Get()); obj != obj.end(); obj++) {
+							obj->GetValue(&type);
+							if(type == "num") {
+								obj->GetText(&the_ter.obj_num);
+							} else if(type == "pos") {
+								the_ter.obj_pos = readLocFromXml(*obj);
+							} else if(type == "size") {
+								the_ter.obj_size = readLocFromXml(*obj);
+							} else throw xBadNode(type, obj->Row(), obj->Column(), fname);
+						}
+					} else throw xBadNode(type, edit->Row(), edit->Column(), fname);
+				}
+			} else throw xBadNode(type, ter->Row(), ter->Column(), fname);
+		}
+	}
+}
+
+static void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
+	using namespace ticpp;
+	int maj, min, rev;
+	std::string fname, type, name, val;
+	initialXmlRead(data, "items", maj, min, rev, fname);
+	Iterator<Attribute> attr;
+	Iterator<Element> elem;
+	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type != "item")
+			throw xBadNode(type, elem->Row(), elem->Column(), fname);
+		int which_item;
+		elem->GetAttribute("id", &which_item);
+		cItem& the_item = scenario.scen_items[which_item];
+		Iterator<Element> item;
+		for(item = item.begin(elem.Get()); item != item.end(); item++) {
+			item->GetValue(&type);
+			if(type == "variety") {
+				item->GetText(&the_item.variety);
+			} else if(type == "level") {
+				item->GetText(&the_item.item_level);
+			} else if(type == "awkward") {
+				item->GetText(&the_item.awkward);
+			} else if(type == "bonus") {
+				item->GetText(&the_item.bonus);
+			} else if(type == "protection") {
+				item->GetText(&the_item.protection);
+			} else if(type == "charges") {
+				item->GetText(&the_item.charges);
+			} else if(type == "weapon-type") {
+				item->GetText(&the_item.weap_type);
+			} else if(type == "missile-type") {
+				item->GetText(&the_item.missile);
+			} else if(type == "pic") {
+				item->GetText(&the_item.graphic_num);
+			} else if(type == "flag") {
+				item->GetText(&the_item.type_flag);
+			} else if(type == "value") {
+				item->GetText(&the_item.value);
+			} else if(type == "weight") {
+				item->GetText(&the_item.weight);
+			} else if(type == "class") {
+				item->GetText(&the_item.special_class);
+			} else if(type == "name") {
+				item->GetText(&the_item.name, false);
+			} else if(type == "full-name") {
+				item->GetText(&the_item.full_name, false);
+			} else if(type == "treasure") {
+				item->GetText(&the_item.treas_class);
+			} else if(type == "ability") {
+				Iterator<Element> abil;
+				for(abil = abil.begin(item.Get()); abil != abil.end(); abil++) {
+					abil->GetValue(&type);
+					if(type == "type") {
+						abil->GetText(&the_item.ability);
+					} else if(type == "strength") {
+						abil->GetText(&the_item.abil_data[0]);
+					} else if(type == "data") {
+						abil->GetText(&the_item.abil_data[1]);
+					} else if(type == "use-flag") {
+						abil->GetText(&the_item.magic_use_type);
+					} else throw xBadNode(type, abil->Row(), abil->Column(), fname);
+				}
+			} else if(type == "properties") {
+				Iterator<Element> prop;
+				for(prop = prop.begin(item.Get()); prop != prop.end(); prop++) {
+					prop->GetValue(&type);
+					prop->GetText(&val);
+					bool state = val == "true";
+					if(type == "identified") {
+						the_item.ident = state;
+					} else if(type == "magic") {
+						the_item.magic = state;
+					} else if(type == "cursed") {
+						the_item.cursed = state;
+					} else if(type == "concealed") {
+						the_item.concealed = state;
+					} else if(type == "enchanted") {
+						the_item.enchanted = state;
+					} else if(type == "unsellable") {
+						the_item.unsellable = state;
+					} else throw xBadNode(type, prop->Row(), prop->Column(), fname);
+				}
+			} else if(type == "description") {
+				item->GetText(&the_item.desc, false);
+			} else throw xBadNode(type, item->Row(), item->Column(), fname);
+		}
+	}
+}
+
+static std::pair<int,int> parseDice(std::string str, std::string elem, std::string attr, std::string fname, int row, int col) {
+	int count = 0, sides = 0;
+	bool found_d = false;
+	for(char c : str) {
+		if(isdigit(c)) {
+			if(found_d) {
+				sides *= 10;
+				sides += c - '0';
+			} else {
+				count *= 10;
+				count += c - '0';
+			}
+		} else if(!found_d)
+			found_d = true;
+		else throw xBadVal(elem, attr, str, row, col, fname);
+	}
+	return {count, sides};
+}
+
+static void readMonstAbilFromXml(ticpp::Element& data, cMonster& monst) {
+	using namespace ticpp;
+	std::string fname, type, name, val;
+	data.GetDocument()->GetValue(&fname);
+	data.GetValue(&type);
+	if(type == "invisible") monst.invisible = true;
+	else if(type == "guard") monst.guard = true;
+	else {
+		eMonstAbil abil_type = eMonstAbil::NO_ABIL;
+		Iterator<Attribute> attr;
+		for(attr = attr.begin(&data); attr != attr.end(); attr++) {
+			attr->GetName(&name);
+			if(name != "type")
+				throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+			attr->GetValue(&val);
+			attr->GetValue(&abil_type);
+			if(abil_type == eMonstAbil::NO_ABIL || monst.abil[abil_type].active)
+				throw xBadVal(type, name, val, attr->Row(), attr->Column(), fname);
+		}
+		if(abil_type == eMonstAbil::NO_ABIL)
+			throw xMissingAttr(type, "type", data.Row(), data.Column(), fname);
+		uAbility& abil = monst.abil[abil_type];
+		Iterator<Element> elem;
+		if(type == "general") {
+			auto& general = abil.gen;
+			for(elem = elem.begin(&data); elem != elem.end(); elem++) {
+				elem->GetValue(&type);
+				if(type == "type") {
+					elem->GetText(&general.type);
+				} else if(type == "missile") {
+					elem->GetText(&general.pic);
+				} else if(type == "strength") {
+					elem->GetText(&general.strength);
+				} else if(type == "range") {
+					elem->GetText(&general.range);
+				} else if(type == "extra") {
+					int n;
+					elem->GetText(&n);
+					// Even though it's cast to eFieldType here, it should work correctly if later retrieved as eDamageType or eStatus.
+					general.fld = eFieldType(n);
+				} else if(type == "chance") {
+					long double percent;
+					elem->GetText(&percent);
+					general.odds = percent * 10;
+				} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			}
+		} else if(type == "missile") {
+			auto& missile = abil.missile;
+			for(elem = elem.begin(&data); elem != elem.end(); elem++) {
+				elem->GetValue(&type);
+				if(type == "type") {
+					elem->GetText(&missile.type);
+				} else if(type == "missile") {
+					elem->GetText(&missile.pic);
+				} else if(type == "strength") {
+					elem->GetText(&val);
+					std::tie(missile.dice, missile.sides) = parseDice(val, type, xBadVal::CONTENT, fname, elem->Row(), elem->Column());
+				} else if(type == "skill") {
+					elem->GetText(&missile.skill);
+				} else if(type == "range") {
+					elem->GetText(&missile.range);
+				} else if(type == "chance") {
+					long double percent;
+					elem->GetText(&percent);
+					missile.odds = percent * 10;
+				} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			}
+		} else if(type == "summon") {
+			auto& summon = abil.summon;
+			for(elem = elem.begin(&data); elem != elem.end(); elem++) {
+				elem->GetValue(&type);
+				if(type == "type") {
+					elem->GetText(&summon.type);
+				} else if(type == "min") {
+					elem->GetText(&summon.min);
+				} else if(type == "max") {
+					elem->GetText(&summon.max);
+				} else if(type == "duration") {
+					elem->GetText(&summon.len);
+				} else if(type == "chance") {
+					long double percent;
+					elem->GetText(&percent);
+					summon.chance = percent * 10;
+				} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			}
+		} else if(type == "radiate") {
+			auto& radiate = abil.radiate;
+			for(elem = elem.begin(&data); elem != elem.end(); elem++) {
+				elem->GetValue(&type);
+				if(type == "type") {
+					elem->GetText(&radiate.type);
+				} else if(type == "chance") {
+					long double percent;
+					elem->GetText(&percent);
+					radiate.chance = percent * 10;
+				} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			}
+		} else if(type == "special") {
+			auto& special = abil.special;
+			int num_params = 0;
+			for(elem = elem.begin(&data); elem != elem.end(); elem++) {
+				elem->GetValue(&type);
+				if(num_params >= 3 || type != "param")
+					throw xBadNode(type, elem->Row(), elem->Column(), fname);
+				if(num_params == 0)
+					elem->GetText(&special.extra1);
+				else if(num_params == 1)
+					elem->GetText(&special.extra2);
+				else if(num_params == 2)
+					elem->GetText(&special.extra3);
+				num_params++;
+			}
+		}
+	}
+}
+
+static void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
+	using namespace ticpp;
+	int maj, min, rev;
+	std::string fname, type, name, val;
+	initialXmlRead(data, "monsters", maj, min, rev, fname);
+	Iterator<Attribute> attr;
+	Iterator<Element> elem;
+	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type != "monster")
+			throw xBadNode(type, elem->Row(), elem->Column(), fname);
+		int which_monst;
+		elem->GetAttribute("id", &which_monst);
+		if(which_monst == 0)
+			throw xBadVal(type, "id", "0", elem->Row(), elem->Column(), fname);
+		cMonster& the_mon = scenario.scen_monsters[which_monst];
+		Iterator<Attribute> attr;
+		Iterator<Element> monst;
+		for(monst = monst.begin(elem.Get()); monst != monst.end(); monst++) {
+			monst->GetValue(&type);
+			if(type == "name") {
+				monst->GetText(&the_mon.m_name, false);
+			} else if(type == "level") {
+				monst->GetText(&the_mon.level);
+			} else if(type == "armor") {
+				monst->GetText(&the_mon.armor);
+			} else if(type == "skill") {
+				monst->GetText(&the_mon.skill);
+			} else if(type == "hp") {
+				monst->GetText(&the_mon.m_health);
+			} else if(type == "speed") {
+				monst->GetText(&the_mon.speed);
+			} else if(type == "treasure") {
+				monst->GetText(&the_mon.treasure);
+			} else if(type == "mage") {
+				monst->GetText(&the_mon.mu);
+			} else if(type == "priest") {
+				monst->GetText(&the_mon.cl);
+			} else if(type == "race") {
+				monst->GetText(&the_mon.m_type);
+			} else if(type == "abilities") {
+				Iterator<Element> abil;
+				for(abil = abil.begin(monst.Get()); abil != abil.end(); abil++) {
+					readMonstAbilFromXml(*abil, the_mon);
+				}
+			} else if(type == "attacks") {
+				int num_attacks = 0;
+				Iterator<Element> atk;
+				for(atk = atk.begin(monst.Get()); atk != atk.end(); atk++) {
+					atk->GetValue(&type);
+					if(num_attacks >= 3 || type != "attack")
+						throw xBadNode(type, atk->Row(), atk->Column(), fname);
+					cMonster::cAttack& the_atk = the_mon.a[num_attacks];
+					atk->GetText(&val);
+					std::tie(the_atk.dice, the_atk.sides) = parseDice(val, type, xBadVal::CONTENT, fname, atk->Row(), atk->Column());
+					for(attr = attr.begin(atk.Get()); attr != attr.end(); attr++) {
+						attr->GetName(&name);
+						if(name != "type")
+							throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+						attr->GetValue(&the_atk.type);
+					}
+					num_attacks++;
+				}
+			} else if(type == "pic") {
+				monst->GetText(&the_mon.picture_num);
+				for(attr = attr.begin(monst.Get()); attr != attr.end(); attr++) {
+					attr->GetName(&name);
+					if(name == "w")
+						attr->GetValue(&the_mon.x_width);
+					else if(name == "h")
+						attr->GetValue(&the_mon.y_width);
+					else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+				}
+			} else if(type == "default-face") {
+				monst->GetText(&the_mon.default_facial_pic);
+			} else if(type == "onsight") {
+				monst->GetText(&the_mon.see_spec);
+			} else if(type == "voice") {
+				monst->GetText(&the_mon.ambient_sound);
+			} else if(type == "summon") {
+				monst->GetText(&the_mon.summon_type);
+			} else if(type == "attitude") {
+				monst->GetText(&the_mon.default_attitude);
+			} else if(type == "immunity") {
+				Iterator<Element> resist;
+				for(resist = resist.begin(monst.Get()); resist != resist.end(); resist++) {
+					resist->GetValue(&type);
+					if(type == "fire") {
+						resist->GetText(&the_mon.fire_res);
+					} else if(type == "cold") {
+						resist->GetText(&the_mon.cold_res);
+					} else if(type == "poison") {
+						resist->GetText(&the_mon.poison_res);
+					} else if(type == "magic") {
+						resist->GetText(&the_mon.magic_res);
+					} else if(type == "all") {
+						resist->GetText(&val);
+						if(val == "true")
+							the_mon.invuln = true;
+					} else if(type == "fear") {
+						resist->GetText(&val);
+						if(val == "true")
+							the_mon.mindless = true;
+					} else throw xBadNode(type, resist->Row(), resist->Column(), fname);
+				}
+			} else if(type == "loot") {
+				Iterator<Element> loot;
+				for(loot = loot.begin(monst.Get()); loot != loot.end(); loot++) {
+					loot->GetValue(&type);
+					if(type == "type") {
+						loot->GetText(&the_mon.corpse_item);
+					} else if(type == "chance") {
+						loot->GetText(&the_mon.corpse_item_chance);
+					} else throw xBadNode(type, loot->Row(), loot->Column(), fname);
+				}
+			} else throw xBadNode(type, monst->Row(), monst->Column(), fname);
+		}
+	}
+}
+
+static void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
+	using namespace ticpp;
+	int maj, min, rev;
+	std::string fname, type, name, val;
+	initialXmlRead(data, "sector", maj, min, rev, fname);
+	int num_rects = 0, num_encs = 0, num_wand = 0;
+	Iterator<Element> elem;
+	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type == "name") {
+			elem->GetText(&out.out_name, false);
+		} else if(type == "comment") {
+			elem->GetText(&out.comment, false);
+		} else if(type == "sound") {
+			elem->GetText(&val);
+			if(val == "birds")
+				out.ambient_sound = eAmbientSound::AMBIENT_BIRD;
+			else if(val == "drip")
+				out.ambient_sound = eAmbientSound::AMBIENT_DRIP;
+			else {
+				out.ambient_sound = eAmbientSound::AMBIENT_CUSTOM;
+				out.out_sound = boost::lexical_cast<int>(val);
+			}
+		} else if(type == "encounter" || type == "wandering") {
+			int& count = type == "encounter" ? num_encs : num_wand;
+			if(count >= 4)
+				throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			auto& enc_list = type == "encounter" ? out.special_enc : out.wandering;
+			int num_hostile = 0, num_friendly = 0;
+			Iterator<Attribute> attr;
+			Iterator<Element> enc;
+			for(enc = enc.begin(elem.Get()); enc != enc.end(); enc++) {
+				enc->GetValue(&type);
+				if(type == "monster") {
+					bool is_friendly = false;
+					for(attr = attr.begin(enc.Get()); attr != attr.end(); attr++) {
+						attr->GetName(&name);
+						if(name != "friendly")
+							throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+						attr->GetValue(&val);
+						if(val == "true")
+							is_friendly = true;
+					}
+					if((is_friendly && num_friendly >= 3) || (!is_friendly && num_hostile >= 7))
+						throw xBadNode(name, enc->Row(), enc->Column(), fname);
+					if(is_friendly) {
+						enc->GetText(&enc_list[count].friendly[num_friendly]);
+						num_friendly++;
+					} else {
+						enc->GetText(&enc_list[count].monst[num_hostile]);
+						num_hostile++;
+					}
+				} else if(type == "onmeet") {
+					enc->GetText(&enc_list[count].spec_on_meet);
+				} else if(type == "onflee") {
+					enc->GetText(&enc_list[count].spec_on_flee);
+				} else if(type == "onwin") {
+					enc->GetText(&enc_list[count].spec_on_win);
+				} else if(type == "sdf") {
+					location sdf = readLocFromXml(*enc);
+					enc_list[count].end_spec1 = sdf.x;
+					enc_list[count].end_spec2 = sdf.y;
+				} else throw xBadNode(type, enc->Row(), enc->Column(), fname);
+			}
+			count++;
+		} else if(type == "sign") {
+			int sign;
+			elem->GetAttribute("id", &sign);
+			elem->GetText(&out.sign_locs[sign].text, false);
+		} else if(type == "area") {
+			if(num_rects >= 8)
+				throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			static_cast<rectangle&>(out.info_rect[num_rects]) = readRectFromXml(*elem);
+			elem->GetText(&out.info_rect[num_rects].descr, false);
+			num_rects++;
+		} else if(type == "string") {
+			int str;
+			elem->GetAttribute("id", &str);
+			elem->GetText(&out.spec_strs[str], false);
+		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+	}
+}
+
+static void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
+	static const std::string dirs = "nwse";
+	using namespace ticpp;
+	int maj, min, rev;
+	std::string fname, type, name, val;
+	initialXmlRead(data, "town", maj, min, rev, fname);
+	int num_cmt = 0, num_timers = 0, num_wand = 0, num_rects = 0;
+	bool found_size = false;
+	Iterator<Attribute> attr;
+	Iterator<Element> elem;
+	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type == "size") {
+			elem->GetText(&val);
+			if(val == "32") {
+				town = new cTinyTown(scen);
+			} else if(val == "48") {
+				town = new cMedTown(scen);
+			} else if(val == "64") {
+				town = new cBigTown(scen);
+			} else throw xBadVal(type, xBadVal::CONTENT, val, elem->Row(), elem->Column(), fname);
+			found_size = true;
+		} else if(!found_size) {
+			throw xBadNode(type, elem->Row(), elem->Column(), fname);
+		} else if(type == "name") {
+			elem->GetText(&town->town_name, false);
+		} else if(type == "comment") {
+			if(num_cmt >= 3)
+				throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			elem->GetText(&town->comment[num_cmt], false);
+			num_cmt++;
+		} else if(type == "bounds") {
+			town->in_town_rect = readRectFromXml(*elem);
+		} else if(type == "difficulty") {
+			elem->GetText(&town->difficulty);
+		} else if(type == "lighting") {
+			elem->GetText(&town->lighting_type);
+		} else if(type == "onenter") {
+			elem->GetAttribute("condition", &val);
+			if(val == "alive")
+				elem->GetText(&town->spec_on_entry);
+			else if(val == "dead")
+				elem->GetText(&town->spec_on_entry_if_dead);
+			else throw xBadVal(type, "condition", val, elem->Row(), elem->Column(), fname);
+		} else if(type == "exit") {
+			location loc = readLocFromXml(*elem, "", "dir", &val);
+			size_t which = dirs.find_first_of(val);
+			if(which == std::string::npos)
+				throw xBadVal(type, "dir", val, elem->Row(), elem->Column(), fname);
+			town->exit_locs[which] = loc;
+		} else if(type == "onexit") {
+			elem->GetAttribute("dir", &val);
+			size_t which = dirs.find_first_of(val);
+			if(which == std::string::npos)
+				throw xBadVal(type, "dir", val, elem->Row(), elem->Column(), fname);
+			elem->GetText(&town->exit_specs[which]);
+		} else if(type == "onoffend") {
+			elem->GetText(&town->spec_on_hostile);
+		} else if(type == "timer") {
+			if(num_timers >= 8)
+				throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			readTimerFromXml(*elem, town->timers[num_timers]);
+			num_timers++;
+		} else if(type == "flags") {
+			Iterator<Element> flag;
+			for(flag = flag.begin(elem.Get()); flag != flag.end(); flag++) {
+				flag->GetValue(&type);
+				if(type == "chop") {
+					flag->GetAttribute("day", &town->town_chop_time);
+					flag->GetAttribute("event", &town->town_chop_key);
+					flag->GetAttribute("kills", &town->max_num_monst);
+				} else if(type == "hidden") {
+					flag->GetText(&val);
+					if(val == "true")
+						town->is_hidden = true;
+				} else if(type == "strong-barriers") {
+					flag->GetText(&val);
+					if(val == "true")
+						town->strong_barriers = true;
+				} else if(type == "defy-mapping") {
+					flag->GetText(&val);
+					if(val == "true")
+						town->defy_mapping = true;
+				} else if(type == "defy-scrying") {
+					flag->GetText(&val);
+					if(val == "true")
+						town->defy_scrying = true;
+				} else throw xBadNode(type, flag->Row(), flag->Column(), fname);
+			}
+		} else if(type == "wandering") {
+			int num_monst = 0;
+			Iterator<Element> monst;
+			for(monst = monst.begin(elem.Get()); monst != monst.end(); monst++) {
+				monst->GetValue(&type);
+				if(num_monst >= 4 || type != "monster")
+					throw xBadNode(type, monst->Row(), monst->Column(), fname);
+				monst->GetText(&town->wandering[num_wand].monst[num_monst]);
+				num_monst++;
+			}
+			num_wand++;
+		} else if(type == "sign") {
+			int sign;
+			elem->GetAttribute("id", &sign);
+			elem->GetText(&town->sign_locs[sign].text, false);
+		} else if(type == "string") {
+			int str;
+			elem->GetAttribute("id", &str);
+			elem->GetText(&town->spec_strs[str], false);
+		} else if(type == "item") {
+			int which_item;
+			elem->GetAttribute("id", &which_item);
+			if(which_item >= town->preset_items.size())
+				town->preset_items.resize(which_item + 1);
+			cTown::cItem& item = town->preset_items[which_item];
+			Iterator<Element> preset;
+			for(preset = preset.begin(elem.Get()); preset != preset.end(); preset++) {
+				preset->GetValue(&type);
+				if(type == "type") {
+					preset->GetText(&item.code);
+				} else if(type == "mod") {
+					preset->GetText(&item.ability);
+				} else if(type == "charges") {
+					preset->GetText(&item.charges);
+				} else if(type == "always") {
+					preset->GetText(&val);
+					if(val == "true")
+						item.always_there = true;
+				} else if(type == "property") {
+					preset->GetText(&val);
+					if(val == "true")
+						item.property = true;
+				} else if(type == "contained") {
+					preset->GetText(&val);
+					if(val == "true")
+						item.contained = true;
+				} else throw xBadNode(type, preset->Row(), preset->Column(), fname);
+			}
+		} else if(type == "creature") {
+			int who;
+			elem->GetAttribute("id", &who);
+			if(who >= town->creatures.size())
+				town->creatures.resize(who + 1);
+			cTownperson& npc = town->creatures[who];
+			Iterator<Element> monst;
+			for(monst = monst.begin(elem.Get()); monst != monst.end(); monst++) {
+				monst->GetValue(&type);
+				if(type == "type") {
+					monst->GetText(&npc.number);
+				} else if(type == "attitude") {
+					monst->GetText(&npc.start_attitude);
+				} else if(type == "mobility") {
+					monst->GetText(&npc.mobility);
+				} else if(type == "sdf") {
+					location sdf = readLocFromXml(*monst);
+					npc.spec1 = sdf.x;
+					npc.spec2 = sdf.y;
+				} else if(type == "encounter") {
+					monst->GetText(&npc.spec_enc_code);
+				} else if(type == "time") {
+					monst->GetAttribute("type", &npc.time_flag);
+					Element* first_param = monst->FirstChildElement("param");
+					first_param->GetText(&npc.monster_time);
+					try {
+						first_param->NextSiblingElement("param")->GetText(&npc.time_code);
+					} catch(ticpp::Exception) {}
+				} else if(type == "face") {
+					monst->GetText(&npc.facial_pic);
+				} else if(type == "personality") {
+					monst->GetText(&npc.personality);
+				} else if(type == "onkill") {
+					monst->GetText(&npc.special_on_kill);
+				} else if(type == "ontalk") {
+					monst->GetText(&npc.special_on_talk);
+				} else throw xBadNode(type, monst->Row(), monst->Column(), fname);
+			}
+		} else if(type == "area") {
+			if(num_rects >= 16)
+				throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			static_cast<rectangle&>(town->room_rect[num_rects]) = readRectFromXml(*elem);
+			elem->GetText(&town->room_rect[num_rects].descr, false);
+			num_rects++;
+		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+	}
+}
+
+static void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_num) {
+	using namespace ticpp;
+	int maj, min, rev;
+	std::string fname, type, name, val;
+	initialXmlRead(data, "dialogue", maj, min, rev, fname);
+	int num_nodes = 0;
+	Iterator<Attribute> attr;
+	Iterator<Element> elem;
+	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type == "personality") {
+			int id;
+			elem->GetAttribute("id", &id);
+			if(id < town_num * 10 || id >= (town_num + 1) * 10)
+				throw xBadVal(type, "id", std::to_string(id), elem->Row(), elem->Column(), fname);
+			id %= 10;
+			Iterator<Element> who;
+			for(who = who.begin(elem.Get()); who != who.end(); who++) {
+				who->GetValue(&type);
+				if(type == "title") {
+					who->GetText(&talk.people[id].title, false);
+				} else if(type == "look") {
+					who->GetText(&talk.people[id].look, false);
+				} else if(type == "name") {
+					who->GetText(&talk.people[id].name, false);
+				} else if(type == "job") {
+					who->GetText(&talk.people[id].job, false);
+				} else if(type == "unknown") {
+					who->GetText(&talk.people[id].dunno, false);
+				} else throw xBadNode(type, who->Row(), who->Column(), fname);
+			}
+		} else if(type == "node") {
+			elem->GetAttribute("for", &talk.talk_nodes[num_nodes].personality);
+			int num_keys = 0, num_params = 0, num_strs = 0;
+			Iterator<Element> node;
+			for(node = node.begin(elem.Get()); node != node.end(); node++) {
+				node->GetValue(&type);
+				if(type == "keyword") {
+					val.clear();
+					node->GetText(&val, false);
+					while(val.length() < 4) val += 'x';
+					if(num_keys == 0)
+						std::copy(val.begin(), val.begin() + 4, talk.talk_nodes[num_nodes].link1);
+					else if(num_keys == 1)
+						std::copy(val.begin(), val.begin() + 4, talk.talk_nodes[num_nodes].link2);
+					else throw xBadNode(type, node->Row(), node->Column(), fname);
+					num_keys++;
+				} else if(type == "type") {
+					int type;
+					node->GetText(&type);
+					talk.talk_nodes[num_nodes].type = eTalkNode(type);
+				} else if(type == "param") {
+					if(num_params >= 4)
+						throw xBadNode(type, node->Row(), node->Column(), fname);
+					node->GetText(&talk.talk_nodes[num_nodes].extras[num_params]);
+					num_params++;
+				} else if(type == "text") {
+					if(num_strs == 0)
+						node->GetText(&talk.talk_nodes[num_nodes].str1, false);
+					else if(num_strs == 1)
+						node->GetText(&talk.talk_nodes[num_nodes].str2, false);
+					else throw xBadNode(type, node->Row(), node->Column(), fname);
+					num_strs++;
+				} else throw xBadNode(type, node->Row(), node->Column(), fname);
+			}
+			num_nodes++;
+		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+	}
+}
+
+static void loadOutMapData(map_data&& data, location which, cScenario& scen) {
+	cOutdoors& out = *scen.outdoors[which.x][which.y];
+	int num_towns = 0;
+	for(int x = 0; x < 48; x++) {
+		for(int y = 0; y < 48; y++) {
+			out.terrain[x][y] = data.get(x,y);
+			auto features = data.getFeatures(x,y);
+			for(auto feat : features) {
+				bool is_boat = false;
+				cVehicle* what;
+				switch(feat.first) {
+						// Special values
+					case eMapFeature::NONE: case eMapFeature::VEHICLE:
+						break;
+						// Town-only features
+					case eMapFeature::ENTRANCE_EAST: case eMapFeature::ENTRANCE_NORTH: case eMapFeature::ENTRANCE_SOUTH:
+					case eMapFeature::ENTRANCE_WEST: case eMapFeature::ITEM: case eMapFeature::CREATURE:
+						break;
+					case eMapFeature::TOWN:
+						out.city_locs[num_towns].x = x;
+						out.city_locs[num_towns].y = y;
+						out.city_locs[num_towns].spec = feat.second;
+						num_towns++;
+						break;
+					case eMapFeature::SPECIAL_NODE:
+						out.special_locs.push_back({x, y, feat.second});
+						break;
+					case eMapFeature::BOAT:
+						is_boat = true;
+					case eMapFeature::HORSE:
+						what = &(is_boat ? scen.boats : scen.horses)[feat.second % 10000];
+						what->which_town = 200;
+						what->sector = which;
+						what->loc_in_sec = loc(x,y);
+						what->property = feat.second >= 10000;
+						break;
+					case eMapFeature::FIELD:
+						if(feat.second == SPECIAL_SPOT)
+							out.special_spot[x][y] = true;
+						break;
+					case eMapFeature::SIGN:
+						if(feat.second >= out.sign_locs.size())
+							break;
+						static_cast<location&>(out.sign_locs[feat.second]) = loc(x,y);
+						break;
+					case eMapFeature::WANDERING:
+						if(feat.second < 0 || feat.second >= 4)
+							break;
+						out.wandering_locs[feat.second] = loc(x,y);
+						break;
+				}
+			}
+		}
+	}
+}
+
+static void loadTownMapData(map_data&& data, int which, cScenario& scen) {
+	cTown& town = *scen.towns[which];
+	for(int x = 0; x < town.max_dim(); x++) {
+		for(int y = 0; y < town.max_dim(); y++) {
+			town.terrain(x,y) = data.get(x,y);
+			auto features = data.getFeatures(x,y);
+			for(auto feat : features) {
+				bool is_boat = false;
+				cVehicle* what;
+				switch(feat.first) {
+						// Special values
+					case eMapFeature::NONE: case eMapFeature::VEHICLE:
+						break;
+						// Outdoor-only features
+					case eMapFeature::TOWN: break;
+					case eMapFeature::SPECIAL_NODE:
+						town.special_locs.push_back({x, y, feat.second});
+						break;
+					case eMapFeature::BOAT:
+						is_boat = true;
+					case eMapFeature::HORSE:
+						what = &(is_boat ? scen.boats : scen.horses)[feat.second % 10000];
+						what->which_town = which;
+						what->loc = loc(x,y);
+						what->property = feat.second >= 10000;
+						break;
+					case eMapFeature::SIGN:
+						if(feat.second >= town.sign_locs.size())
+							break;
+						static_cast<location&>(town.sign_locs[feat.second]) = loc(x,y);
+						break;
+					case eMapFeature::WANDERING:
+						if(feat.second < 0 || feat.second >= 4)
+							break;
+						town.wandering_locs[feat.second] = loc(x,y);
+						break;
+					case eMapFeature::ENTRANCE_SOUTH:
+						town.start_locs[0] = loc(x,y);
+						break;
+					case eMapFeature::ENTRANCE_WEST:
+						town.start_locs[1] = loc(x,y);
+						break;
+					case eMapFeature::ENTRANCE_NORTH:
+						town.start_locs[2] = loc(x,y);
+						break;
+					case eMapFeature::ENTRANCE_EAST:
+						town.start_locs[3] = loc(x,y);
+						break;
+					case eMapFeature::FIELD:
+						town.preset_fields.emplace_back();
+						town.preset_fields.back().loc = loc(x,y);
+						town.preset_fields.back().type = eFieldType(feat.second);
+						break;
+					case eMapFeature::ITEM:
+						if(feat.second >= town.preset_items.size())
+							break;
+						town.preset_items[feat.second].loc = loc(x,y);
+						break;
+					case eMapFeature::CREATURE:
+						if(feat.second >= town.creatures.size())
+							break;
+						town.creatures[feat.second].start_loc = loc(x,y);
+						break;
+				}
+			}
+		}
+	}
+}
+
+static void readSpecialNodesFromStream(std::istream& stream, std::vector<cSpecial>& nodes) {
+	std::string contents;
+	stream.seekg(0, std::ios::end);
+	contents.reserve(stream.tellg());
+	stream.seekg(0, std::ios::beg);
+	contents.assign(std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>());
+	auto loaded = SpecialParser().parse(contents);
+	nodes.resize(loaded.rbegin()->first + 1);
+	for(auto p : loaded)
+		nodes[p.first] = p.second;
+}
+
 bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 	// First determine whether we're dealing with a packed or unpacked scenario.
-	bool is_packed;
+	bool is_packed = true;
 	tarball pack;
 	std::ifstream fin;
 	if(fs::is_directory(file_to_load)) { // Unpacked
@@ -261,13 +1741,117 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 	auto getFile = [&](std::string relpath) -> std::istream& {
 		if(is_packed) return pack.getFile(relpath);
 		if(fin.is_open()) fin.close();
+		fin.clear();
 		fin.open((file_to_load/relpath).string().c_str());
 		// TODO: Suppress the warning about returning reference to local
 		return fin;
 	};
 	// From here on, we don't have to care about whether it's packed or unpacked.
+	TiXmlBase::SetCondenseWhiteSpace(true); // Make sure this is enabled, because the dialog engine disables it
+	{
+		// First, load up the binary header data.
+		std::istream& header = getFile("scenario/header.exs");
+		header.read(reinterpret_cast<char*>(&scenario.format), sizeof(scenario_header_flags));
+		
+		// Then, the main scenario data.
+		std::istream& scen_data = getFile("scenario/scenario.xml");
+		readScenarioFromXml(xmlDocFromStream(scen_data, "scenario.xml"), scenario);
+		
+		// Next, terrain types...
+		std::istream& terrain = getFile("scenario/terrain.xml");
+		readTerrainFromXml(xmlDocFromStream(terrain, "terrain.xml"), scenario);
+		
+		// ...items...
+		std::istream& items = getFile("scenario/items.xml");
+		readItemsFromXml(xmlDocFromStream(items, "items.xml"), scenario);
+		
+		// ...and monsters.
+		std::istream& monsters = getFile("scenario/monsters.xml");
+		readMonstersFromXml(xmlDocFromStream(monsters, "monsters.xml"), scenario);
+		
+		// Finally, the special nodes.
+		std::istream& nodes = getFile("scenario/scenario.spec");
+		readSpecialNodesFromStream(nodes, scenario.scen_specials);
+	}
 	
-	return false;
+	// Next, read the outdoors. Note that the space has already been reserved for them.
+	for(size_t x = 0; x < scenario.outdoors.width(); x++) {
+		for(size_t y = 0; y < scenario.outdoors.height(); y++) {
+			scenario.outdoors[x][y] = new cOutdoors(scenario);
+			std::string file_basename = "out" + std::to_string(x) + '~' + std::to_string(y);
+			// First the main data.
+			std::istream& outdoors = getFile("scenario/out/" + file_basename + ".xml");
+			readOutdoorsFromXml(xmlDocFromStream(outdoors, file_basename + ".xml"), *scenario.outdoors[x][y]);
+			
+			// Then the map.
+			std::istream& out_map = getFile("scenario/out/" + file_basename + ".map");
+			loadOutMapData(load_map(out_map, false), loc(x,y), scenario);
+			
+			// And the special nodes.
+			std::istream& out_spec = getFile("scenario/out/" + file_basename + ".spec");
+			readSpecialNodesFromStream(out_spec, scenario.outdoors[x][y]->specials);
+		}
+	}
+	
+	// And finally, the towns. Again, the space has already been reserved - that's how we know how many there are.
+	for(size_t i = 0; i < scenario.towns.size(); i++) {
+		std::string file_basename = "town" + std::to_string(i);
+		// First the main data.
+		std::istream& town = getFile("scenario/towns/" + file_basename + ".xml");
+		readTownFromXml(xmlDocFromStream(town, file_basename + ".xml"), scenario.towns[i], scenario);
+		
+		// Then the map.
+		std::istream& town_map = getFile("scenario/towns/" + file_basename + ".map");
+		loadTownMapData(load_map(town_map, true), i, scenario);
+		
+		// And the special nodes.
+		std::istream& town_spec = getFile("scenario/towns/" + file_basename + ".spec");
+		readSpecialNodesFromStream(town_spec, scenario.towns[i]->specials);
+		
+		// Don't forget the dialogue nodes.
+		std::istream& town_talk = getFile("scenario/towns/talk" + std::to_string(i) + ".xml");
+		readDialogueFromXml(xmlDocFromStream(town_talk, "talk.xml"), scenario.towns[i]->talking, i);
+	}
+	
+	// One last thing - custom graphics and sounds.
+	// First figure out where they are in the filesystem. The implementation of this depends on whether the scenario is packed.
+	int num_graphic_sheets = 0;
+	if(is_packed) {
+		int i = 0;
+		std::string fname;
+		while(fname = "scenario/graphics/sheet" + std::to_string(i) + ".png", pack.hasFile(fname)) {
+			fs::path path = tempDir/fname;
+			fs::create_directories(path.parent_path());
+			std::istream& graphic = pack.getFile(fname);
+			std::ofstream fout(path.string().c_str());
+			fout << graphic.rdbuf();
+			i++;
+		}
+		if(i > 0)
+			ResMgr::pushPath<ImageRsrc>(tempDir/"scenario"/"graphics");
+		num_graphic_sheets = i;
+		i = 0;
+		while(fname = "scenario/sounds/SND" + std::to_string(i) + ".WAV", pack.hasFile(fname)) {
+			fs::path path = tempDir/fname;
+			fs::create_directories(path.parent_path());
+			std::istream& snd = pack.getFile(fname);
+			std::ofstream fout(path.string().c_str());
+			fout << snd.rdbuf();
+			i++;
+		}
+		if(i > 0)
+			ResMgr::pushPath<SoundRsrc>(tempDir/"scenario"/"sounds");
+	} else {
+		if(fs::is_directory(file_to_load/"graphics"))
+			ResMgr::pushPath<ImageRsrc>(file_to_load/"graphics");
+		if(fs::is_directory(file_to_load/"sounds"))
+			ResMgr::pushPath<SoundRsrc>(file_to_load/"sounds");
+		std::string fname;
+		while(fname = "sheet" + std::to_string(num_graphic_sheets) + ".png", fs::exists(file_to_load/"graphics"/fname))
+			num_graphic_sheets++;
+	}
+	load_spec_graphics_v2(num_graphic_sheets);
+	return true;
 }
 
 static long get_town_offset(short which_town, legacy::scenario_data_type& scenario){
@@ -409,31 +1993,6 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	return true;
 }
 
-bool load_town(fs::path town_base, short which_town, cTown*& the_town) {
-	// TODO: This stuff goes in load_scenario() now
-	//	fs::path town_base = scenario.scen_file/"towns";
-	std::string base_fname = "t" + std::to_string(which_town), fname;
-	// TODO: Implement all this.
-	// First load the main town data.
-	fname = base_fname + ".xml";
-	// Next, load in the town map.
-	fname = base_fname + ".map";
-	map_data map = load_map(town_base/fname, true);
-	// Then load the town's special nodes.
-	fname = base_fname + ".spec";
-	// Load the town's special encounter strings
-	fname = base_fname + ".txt";
-	// And finally, load the town's dialogue nodes.
-	load_town_talk(town_base, which_town, the_town->talking);
-	return false;
-}
-
-bool load_town_talk(fs::path town_base, short which_town, cSpeech& the_talk) {
-	// TODO: Implement this.
-	std::string fname = "t" + std::to_string(which_town) + "talk.xml";
-	return false;
-}
-
 static long get_outdoors_offset(location& which_out, legacy::scenario_data_type& scenario){
 	int i,j,out_sec_num;
 	long len_to_jump,store;
@@ -506,37 +2065,18 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	return true;
 }
 
-bool load_outdoors(fs::path out_base, location which_out,cOutdoors& the_out) {
-	// TODO: This bit goes in load_scenario() now
-	//	fs::path town_base = scenario.scen_file/"outdoors";
-	std::string base_fname = "tut" + std::to_string(which_out.x) + "~" + std::to_string(which_out.y), fname;
-	// TODO: Implement all this.
-	// First load the main sector data.
-	fname = base_fname + ".xml";
-	// Next, load in the sector map.
-	fname = base_fname + ".map";
-	map_data map = load_map(out_base/fname, false);
-	// Then load the sector's special nodes.
-	fname = base_fname + ".spec";
-	// Load the sector's special encounter strings
-	fname = base_fname + ".txt";
-	return false;
-}
-
 #ifdef __APPLE__
 bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store);
 #endif
 
-void load_spec_graphics(fs::path scen_file) {
+void load_spec_graphics_v1(fs::path scen_file) {
 	static const char*const noGraphics = "The game will still work without the custom graphics, but some things will not look right.";
-	short i;
 	fs::path path(scen_file);
 	std::cout << "Loading scenario graphics... (" << path  << ")\n";
 	// Tried path.replace_extension, but that only deleted the extension, so I have to do it manually
 	std::string filename = path.stem().string();
 	path = path.parent_path();
 	if(spec_scen_g) spec_scen_g.clear();
-	// TODO: Load new-style sheets
 	{
 		static sf::Image graphics_store;
 		bool foundGraphics = false;
@@ -560,11 +2100,22 @@ void load_spec_graphics(fs::path scen_file) {
 			spec_scen_g.is_old = true;
 			spec_scen_g.sheets = new sf::Texture[1];
 			spec_scen_g.sheets[0].loadFromImage(graphics_store);
-		} else {
-			// Check for new-style graphics
 		}
-	}//else{}
-	
+	}
+}
+
+void load_spec_graphics_v2(int num_sheets) {
+	if(num_sheets == 0) return;
+	spec_scen_g.clear();
+	spec_scen_g.sheets = new sf::Texture[num_sheets];
+	spec_scen_g.numSheets = num_sheets;
+	while(num_sheets--) {
+		std::string name = "sheet" + std::to_string(num_sheets);
+		spec_scen_g.sheets[num_sheets].loadFromImage(*ResMgr::get<ImageRsrc>(name));
+	}
+}
+
+void reload_core_graphics() {
 	// TODO: This should really reload ALL textures...
 	// Now load regular graphics
 	items_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("objects"));
@@ -576,12 +2127,12 @@ void load_spec_graphics(fs::path scen_file) {
 	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
 	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
 	
-	for(i = 0; i < NUM_MONST_SHEETS; i++){
+	for(int i = 0; i < NUM_MONST_SHEETS; i++){
 		std::ostringstream sout;
 		sout << "monst" << i + 1;
 		monst_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
 	}
-	for(i = 0; i < NUM_TER_SHEETS; i++){
+	for(int i = 0; i < NUM_TER_SHEETS; i++){
 		std::ostringstream sout;
 		sout << "ter" << i + 1;
 		terrain_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));

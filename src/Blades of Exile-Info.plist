@@ -176,26 +176,6 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.exr</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>boeresources</string>
-			<key>CFBundleTypeName</key>
-			<string>Resource File</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.spidweb.bladesofexile.resources</string>
-			</array>
-			<key>LSTypeIsPackage</key>
-			<true/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
 				<string>.dlg</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>

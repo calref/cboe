@@ -15,15 +15,15 @@
 
 using namespace std;
 
-map_data load_map(fs::path path, bool isTown) {
+map_data load_map(std::istream& fin, bool isTown) {
 	map_data data;
-	ifstream fin(path.string());
 	int row = 0;
 	while(!fin.eof()) {
 		std::string line;
 		getline(fin, line);
 		int n = 0, col = 0;
 		eMapFeature curFeature = eMapFeature::NONE;
+		// vehicle_owned = true means the party owns it
 		bool vehicle_owned;
 		for(char c : line) {
 			if(c == '#') break; // Found a comment
@@ -32,20 +32,20 @@ map_data load_map(fs::path path, bool isTown) {
 				n += c - '0';
 			} else if(isblank(c)) {
 				continue;
-			} else if(c == '^') {
+			} else if(c == '^' && isTown) {
 				data.addFeature(col, row, eMapFeature::ENTRANCE_NORTH);
-			} else if(c == '<') {
+			} else if(c == '<' && isTown) {
 				data.addFeature(col, row, eMapFeature::ENTRANCE_WEST);
-			} else if(c == 'v') {
+			} else if(c == 'v' && isTown) {
 				data.addFeature(col, row, eMapFeature::ENTRANCE_SOUTH);
-			} else if(c == '>') {
+			} else if(c == '>' && isTown) {
 				data.addFeature(col, row, eMapFeature::ENTRANCE_EAST);
 			} else {
 				if(curFeature == eMapFeature::NONE)
 					data.set(col, row, n);
 				else {
 					if((curFeature == eMapFeature::BOAT || curFeature == eMapFeature::HORSE) && !vehicle_owned)
-						n *= -1;
+						n += 10000;
 					data.addFeature(col, row, curFeature, n);
 				}
 				n = 0;

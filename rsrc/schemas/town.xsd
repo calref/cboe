@@ -116,33 +116,25 @@
 				<xs:element name="wandering" minOccurs="0" maxOccurs="4">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="monster" maxOccurs="4">
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:integer">
-											<xs:attribute name="group" type="xs:integer"/>
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
+							<xs:element name="monster" type="xs:integer" maxOccurs="4"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 				<xs:choice maxOccurs="unbounded">
-					<xs:element name="sign">
+					<xs:element name="sign" minOccurs="0" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:simpleContent>
 								<xs:extension base="xs:string">
-									<xs:attribute name="id" type="xs:integer"/>
+									<xs:attribute name="id" type="xs:integer" use="required"/>
 								</xs:extension>
 							</xs:simpleContent>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="string">
+					<xs:element name="string" minOccurs="0" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:simpleContent>
 								<xs:extension base="xs:string">
-									<xs:attribute name="id" type="xs:integer"/>
+									<xs:attribute name="id" type="xs:integer" use="required"/>
 								</xs:extension>
 							</xs:simpleContent>
 						</xs:complexType>
@@ -177,7 +169,7 @@
 										<xs:sequence>
 											<xs:element name="param" maxOccurs="2" type="xs:integer"/>
 										</xs:sequence>
-										<xs:attribute name="type">
+										<xs:attribute name="type" use="required">
 											<xs:simpleType>
 												<xs:restriction base="xs:string">
 													<xs:enumeration value="always"/>
@@ -197,11 +189,12 @@
 								<xs:element name="face" type="xs:integer" minOccurs="0"/>
 								<xs:element name="personality" type="xs:integer" minOccurs="0"/>
 								<xs:element name="onkill" type="xs:integer" minOccurs="0"/>
+								<xs:element name="ontalk" type="xs:integer" minOccurs="0"/>
 							</xs:all>
 							<xs:attribute name="id" type="xs:integer"/>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="description">
+					<xs:element name="area">
 						<xs:complexType>
 							<xs:simpleContent>
 								<xs:extension base="xs:string">
@@ -212,7 +205,7 @@
 					</xs:element>
 				</xs:choice>
 			</xs:sequence>
-			<xs:attribute name="boes" type="xs:string"/>
+			<xs:attribute name="boes" type="xs:string" use="required"/>
 			<xs:attribute name="type">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
@@ -222,5 +215,13 @@
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
+		<xs:unique name='stringIds'>
+			<xs:selector xpath='string'/>
+			<xs:field xpath='@id'/>
+		</xs:unique>
+		<xs:unique name='signIds'>
+			<xs:selector xpath='sign'/>
+			<xs:field xpath='@id'/>
+		</xs:unique>
 	</xs:element>
 </xs:schema>

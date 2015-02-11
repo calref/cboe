@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<monsters>
+<monsters boes='2.0.0'>
 	<monster id="7">
 		<!-- The monster's name -->
 		<name>Cave Cow</name>

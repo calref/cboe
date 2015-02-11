@@ -175,18 +175,8 @@ namespace ResMgr {
 	/// @tparam type The type of resource the path applies to.
 	/// @return The removed path from the top of the stack.
 	template<typename type> fs::path popPath() {
-		fs::path path = resPool<type>::resPaths.top();
-//		std::map<std::string,std::string>::iterator mapiter;
-//		std::deque<std::string> toDestroy;
-//		std::deque<std::string>::iterator iter;
-//		for(mapiter = resPool<type>::pathFound().begin();
-//			mapiter != resPool<type>::pathFound().end();
-//			mapiter++)
-//			if(mapiter->second == path)
-//				toDestroy.push_back(mapiter->first);
-//		for(iter = toDestroy.begin(); iter != toDestroy.end(); iter++)
-//			resPool<type>::resources().erase(*iter);
-		resPool<type>::resPaths.pop();
+		fs::path path = resPool<type>::resPaths().top();
+		resPool<type>::resPaths().pop();
 		return path;
 	}
 	
