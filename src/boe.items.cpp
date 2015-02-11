@@ -764,7 +764,7 @@ void place_glands(location where,mon_num_t m_type) {
 }
 
 void reset_item_max() {
-	while(univ.town.items.back().variety == eItemType::NO_ITEM)
+	while(!univ.town.items.empty() && univ.town.items.back().variety == eItemType::NO_ITEM)
 		univ.town.items.pop_back();
 }
 

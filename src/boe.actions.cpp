@@ -2152,7 +2152,8 @@ void do_load() {
 void post_load() {
 	current_switch = 6;
 	
-	reset_item_max();
+	if(!is_out())
+		reset_item_max();
 	
 	if(overall_mode == MODE_OUTDOORS)
 		update_explored(univ.party.p_loc);
