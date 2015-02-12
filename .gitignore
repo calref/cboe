@@ -29,8 +29,8 @@ Win32/*/obj
 .config.vars
 
 # XCode Junk Files
-src/*.xcodeproj/xcuserdata
-src/*.xcodeproj/*.xcworkspace/xcuserdata
+src/*.xcodeproj/**/xcuserdata
+src/*.xcodeproj/**/*.xccheckout
 src/*.xcodeproj/*.mode*
 src/*.xcodeproj/*.pbxuser
 
