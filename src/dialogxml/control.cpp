@@ -247,9 +247,10 @@ void cControl::setTextToKey(){
 		unsigned char c = key.c;
 		if(key.mod - mod_shift != key.mod) c = applyShift(c);
 		else c = removeShift(c);
-		if(key.mod - mod_ctrl != key.mod) lbl = "^" + c;
-		else if(key.mod - mod_alt != key.mod) lbl = "*" + c;
-		else lbl = c;
+		lbl.clear();
+		if(key.mod - mod_ctrl != key.mod) lbl += '^';
+		else if(key.mod - mod_alt != key.mod) lbl = '*';
+		lbl += c;
 	}
 	if(isVisible()) draw();
 }
