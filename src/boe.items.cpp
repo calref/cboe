@@ -981,7 +981,7 @@ void refresh_store_items() {
 					univ.party.magic_store_items[i][j] = univ.scenario.scen_items[*iter];
 					continue;
 				}
-			} else if(entry.type == eShopItemType::OPTIONAL) {
+			} else if(entry.type == eShopItemType::OPT_ITEM) {
 				int roll = get_ran(1,1,100);
 				if(roll <= entry.quantity / 1000) {
 					univ.party.magic_store_items[i][j] = entry.item;

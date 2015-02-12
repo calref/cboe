@@ -2064,7 +2064,7 @@ static bool put_shop_item_in_dlog(cPict& pic, cControl& num, cControl& title, co
 	}
 	std::string name = entry.item.full_name;
 	int amount = entry.quantity;
-	if(entry.type == eShopItemType::OPTIONAL) {
+	if(entry.type == eShopItemType::OPT_ITEM) {
 		name += " [" + std::to_string(amount / 1000) + "% chance]";
 		amount %= 1000;
 	}
@@ -2240,8 +2240,8 @@ static bool edit_shop_entry(cDialog& me, std::string which, cShop& shop) {
 	switch(entry.type) {
 		case eShopItemType::EMPTY: return true;
 		case eShopItemType::ITEM:
-		case eShopItemType::OPTIONAL:
-			edit_shop_item(me, entry.index, entry.quantity, entry.type == eShopItemType::OPTIONAL);
+		case eShopItemType::OPT_ITEM:
+			edit_shop_item(me, entry.index, entry.quantity, entry.type == eShopItemType::OPT_ITEM);
 			entry.item = scenario.scen_items[entry.index];
 			shop.replaceItem(i, entry);
 			need_string = false;

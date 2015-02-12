@@ -19,9 +19,6 @@
 #include "fileio.hpp"
 #include "spell.hpp"
 
-static uAbility test;
-static_assert(&test.active == &test.missile.active, "uAbility union has incorrect layout");
-
 void cMonster::append(legacy::monster_record_type& old){
 	level = old.level;
 	//m_name = old.m_name;

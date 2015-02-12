@@ -1238,7 +1238,8 @@ void erase_specials() {
 	if(!is_town() && !is_combat())
 		return;
 	for(k = 0; k < univ.town->special_locs.size(); k++) {
-		//if(univ.town->spec_id[k] >= 0) {
+		if(univ.town->special_locs[k].spec < 0 || univ.town->special_locs[k].spec >= univ.town->specials.size())
+			continue;
 		sn = univ.town->specials[univ.town->special_locs[k].spec];
 		sd1 = sn.sd1; sd2 = sn.sd2;
 		if((univ.party.sd_legit(sd1,sd2)) && (PSD[sd1][sd2] == 250)) {
@@ -1255,9 +1256,6 @@ void erase_specials() {
 				univ.town.set_spot(where.x,where.y,false);
 			}
 		}
-		
-		
-		//}
 	}
 }
 

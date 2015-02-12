@@ -12,7 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\classes\creatlist.h" />
+    <ClInclude Include="..\..\classes\creature.hpp" />
     <ClInclude Include="..\..\classes\item.h" />
+    <ClInclude Include="..\..\classes\living.hpp" />
     <ClInclude Include="..\..\classes\location.h" />
     <ClInclude Include="..\..\classes\monster.h" />
     <ClInclude Include="..\..\classes\outdoors.h" />
@@ -67,7 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\classes\creatlist.cpp" />
+    <ClCompile Include="..\..\classes\creature.cpp" />
     <ClCompile Include="..\..\classes\item.cpp" />
+    <ClCompile Include="..\..\classes\living.cpp" />
     <ClCompile Include="..\..\classes\location.cpp" />
     <ClCompile Include="..\..\classes\monster.cpp" />
     <ClCompile Include="..\..\classes\outdoors.cpp" />
@@ -104,6 +108,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\tools\fileio.cpp" />
+    <ClCompile Include="..\..\tools\fileio_party.cpp" />
+    <ClCompile Include="..\..\tools\fileio_scen.cpp" />
     <ClCompile Include="..\..\tools\graphtool.cpp" />
     <ClCompile Include="..\..\tools\gzstream\gzstream.cpp" />
     <ClCompile Include="..\..\tools\map_parse.cpp" />
@@ -154,7 +160,7 @@
       <AdditionalIncludeDirectories>..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4800;4290;4244;4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;4290;4244;4996;4018</DisableSpecificWarnings>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
     </ClCompile>
@@ -180,7 +186,7 @@
       <AdditionalIncludeDirectories>..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
-      <DisableSpecificWarnings>4800;4290;4244;4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;4290;4244;4996;4018</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

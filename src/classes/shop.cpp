@@ -103,7 +103,7 @@ void cShop::addItem(size_t n, cItem item, size_t quantity, int chance) {
 	size_t i = firstEmpty();
 	if(i >= items.size()) return;
 	if(item.variety == eItemType::NO_ITEM) return;
-	items[i].type = chance == 100 ? eShopItemType::ITEM : eShopItemType::OPTIONAL;
+	items[i].type = chance == 100 ? eShopItemType::ITEM : eShopItemType::OPT_ITEM;
 	items[i].item = item;
 	items[i].item.ident = true;
 	items[i].quantity = quantity;
@@ -173,7 +173,7 @@ static cItem store_alchemy(short which_s) {
 
 void cShop::addSpecial(eShopItemType type, int n) {
 	if(type == eShopItemType::EMPTY || type == eShopItemType::CALL_SPECIAL) return;
-	if(type == eShopItemType::OPTIONAL || type == eShopItemType::ITEM) return;
+	if(type == eShopItemType::OPT_ITEM || type == eShopItemType::ITEM) return;
 	replaceSpecial(firstEmpty(), type, n);
 }
 
@@ -186,7 +186,7 @@ void cShop::replaceSpecial(size_t i, eShopItemType type, int n) {
 	};
 	if(type == eShopItemType::EMPTY) return;
 	if(type == eShopItemType::ITEM) return;
-	if(type == eShopItemType::OPTIONAL) return;
+	if(type == eShopItemType::OPT_ITEM) return;
 	if(type == eShopItemType::CALL_SPECIAL) return;
 	if(i >= items.size()) return;
 	items[i].type = type;

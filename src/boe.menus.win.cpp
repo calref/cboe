@@ -131,7 +131,7 @@ void adjust_monst_menu() {
 		on_monst_menu[i] = -1;
 	}
 	for(i = 1; i < 256; i++) {
-		if((i == 1) || (univ.party.m_noted[i] > 0)) {
+		if(i == 1 || univ.party.m_noted.count(i) > 0) {
 			on_monst_menu[monst_pos] = i;
 			monst_pos++;
 		}

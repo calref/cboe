@@ -136,7 +136,7 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 			if(entry.quantity == 0) continue; // Just in case a stray entry accidentally gets put in for an infinite stock item
 			if(quant_left == 0)
 				entry.type = eShopItemType::EMPTY;
-			else if(entry.type == eShopItemType::OPTIONAL)
+			else if(entry.type == eShopItemType::OPT_ITEM)
 				entry.quantity = quant_left + (entry.quantity / 1000) * 1000;
 			else entry.quantity = quant_left;
 			active_shop.replaceItem(which_item, entry);
@@ -258,7 +258,7 @@ void handle_sale(cShopItem item, int i) {
 		case eShopItemType::EMPTY: break; // Invalid
 		case eShopItemType::TREASURE: break; // Also invalid
 		case eShopItemType::CLASS: break; // Also invalid
-		case eShopItemType::OPTIONAL: break; // Also invalid
+		case eShopItemType::OPT_ITEM: break; // Also invalid
 		case eShopItemType::ITEM:
 			switch(univ.party[current_pc].ok_to_buy(cost,base_item)) {
 				case eBuyStatus::OK:
@@ -411,7 +411,7 @@ void handle_info_request(cShopItem item) {
 		case eShopItemType::EMPTY: break;
 		case eShopItemType::TREASURE: break;
 		case eShopItemType::CLASS: break;
-		case eShopItemType::OPTIONAL: break;
+		case eShopItemType::OPT_ITEM: break;
 		case eShopItemType::ITEM:
 			display_pc_item(6,0, base_item,0);
 			break;
@@ -524,7 +524,7 @@ void set_up_shop_array() {
 				if(PSD[entry.item.abil_data[0]][entry.item.abil_data[1]])
 					shop_array[i++] = j;
 				break;
-			case eShopItemType::OPTIONAL:
+			case eShopItemType::OPT_ITEM:
 				entry.quantity %= 1000;
 			case eShopItemType::TREASURE:
 			case eShopItemType::CLASS:

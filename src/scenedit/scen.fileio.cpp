@@ -230,7 +230,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 			int quantity = entry.quantity, chance = 100;
 			switch(entry.type) {
 				case eShopItemType::EMPTY: break;
-				case eShopItemType::OPTIONAL:
+				case eShopItemType::OPT_ITEM:
 					quantity %= 1000;
 					chance = entry.quantity / 1000;
 				case eShopItemType::ITEM:
