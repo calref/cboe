@@ -43,7 +43,7 @@ public:
 class cTimer {
 public:
 	long time;
-	bool node_type;
+	short node_type;
 	short node;
 };
 

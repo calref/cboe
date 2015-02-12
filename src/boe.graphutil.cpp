@@ -499,23 +499,6 @@ void draw_party_symbol(location center) {
 	}
 }
 
-// Give the position of the monster graphic in the picture resource
-// Will store monsters the same in Exile's II and III
-//short mode; // 0 - left  1 - right  2 - both
-rectangle get_monster_rect (unsigned short type_wanted,short mode) {
-	rectangle store_rect;
-	short i;
-	
-	i = (short) type_wanted;
-	i = i % 20;
-	store_rect.top = 0 + BITMAP_HEIGHT * (i % 10) ;
-	store_rect.bottom = store_rect.top + BITMAP_HEIGHT;
-	store_rect.left = 0 + (i / 10) * BITMAP_WIDTH * 2 + ((mode != 1) ? 0 : 28);
-	store_rect.right = store_rect.left + BITMAP_WIDTH * ((mode == 2) ? 2 : 1);
-	
-	return store_rect;
-}
-
 // Give the position of the monster graphic in the template in memory
 //mode; // 0 - left  1 - right  +10 - combat mode
 rectangle get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_part) {

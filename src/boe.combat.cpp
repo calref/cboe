@@ -1773,8 +1773,7 @@ void fire_missile(location target) {
 			if(r1 > hit_chance[skill])
 				add_string_to_buf("  Missed.");
 			else if((victim = univ.target_there(target))) {
-				size_t i_monst = univ.get_target_i(*victim);
-				eDamageType dmg_tp = eDamageType::SPECIAL;
+				eDamageType dmg_tp = eDamageType::SPECIAL; // size_t i_monst = univ.get_target_i(*victim);
 				spec_dam = calc_spec_dam(ammo.ability,ammo.abil_data[0],ammo.abil_data[1],*victim,dmg_tp);
 				if(ammo.ability == eItemAbil::HEALING_WEAPON) {
 					ASB("  There is a flash of light.");
@@ -1964,7 +1963,7 @@ bool pick_next_pc() {
 
 
 void combat_run_monst() {
-	short i,item,item_level;
+	short i,item; //,item_level;
 	bool update_stat = false;
 	
 	
@@ -2138,12 +2137,6 @@ void do_monster_turn() {
 	short i,j,k,num_monst, target,r1,move_target;
 	cCreature *cur_monst;
 	bool pc_adj[6];
-	short abil_range[40] = {
-		0,6,8,8,10, 10,10,8,6,8, 6,0,0,0,6, 0,0,0,0,4, 10,0,0,6,0,
-		0,0,0,0,0, 0,0,8,6,9, 0,0,0,0,0};
-	short abil_odds[40] = {
-		0,5,7,6,6, 5,5,6,6,6, 6,0,0,0,4, 0,0,0,0,4, 8,0,0,7,0,
-		0,0,0,0,0, 0,0,7,5,6, 0,0,0,0,0};
 	
 	monsters_going = true; // This affects how graphics are drawn.
 	
@@ -2915,9 +2908,9 @@ void monster_attack(short who_att,iLiving* target) {
 
 //short target; // 100 +  - monster is target
 void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> abil,location source,iLiving* target) {
-	short r1,r2,dam[40] = {
+	short i,j,r2;/*,dam[40] = {
 		0,1,2,3,4, 6,8,7,0,0, 0,0,0,0,0, 0,0,0,0,0,
-		8,0,0,0,0, 0,0,0,0,0, 0,0,0,0,6, 0,0,0,0,0},i,j;
+		8,0,0,0,0, 0,0,0,0,0, 0,0,0,0,6, 0,0,0,0,0},//*/
 	location targ_space;
 	
 	if(target == nullptr) return;

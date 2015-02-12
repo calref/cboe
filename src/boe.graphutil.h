@@ -13,7 +13,6 @@ void draw_pcs(location center,short mode);
 void draw_outd_boats(location center);
 void draw_town_boat(location center) ;
 void draw_party_symbol(location center);
-rectangle get_monster_rect (pic_num_t type_wanted,short mode) ;
 rectangle get_monster_template_rect (pic_num_t type_wanted,short mode,short which_part) ;
 rectangle get_item_template_rect (short type_wanted);
 bool is_fluid(ter_num_t ter_type);

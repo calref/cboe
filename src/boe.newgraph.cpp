@@ -753,7 +753,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		if(shop_array[current_pos] < 0)
 			break; // theoretically, this shouldn't happen
 		cShopItem item = active_shop.getItem(shop_array[current_pos]);
-		eSpell spell; eSkill skill;
+		eSpell spell;
 		cur_cost = item.getCost(active_shop.getCostAdjust());
 		base_item = item.item;
 		std::string cur_name = base_item.full_name, cur_info_str;

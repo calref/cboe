@@ -483,7 +483,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 // In town mode, process_fields() is responsible for actually dealing the damage
 // All this does is print a message
 void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
-	short r1,i;
+	short r1;//,i;
 	
 	if(mode != eSpecCtx::COMBAT_MOVE && mode != eSpecCtx::TOWN_MOVE && mode != eSpecCtx::OUT_MOVE) {
 		std::cout << "Note: Improper mode passed to check_special_terrain: " << int(mode) << std::endl;
@@ -565,7 +565,7 @@ void use_item(short pc,short item) {
 	eItemUse type;
 	eSpell spell;
 	location user_loc;
-	cCreature *which_m;
+//	cCreature *which_m;
 	extern effect_pat_type single;
 	eItemAbil abil = univ.party[pc].items[item].ability;
 	level = univ.party[pc].items[item].item_level;
@@ -3468,7 +3468,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			i = 0;
 			if(spec.ex1a == -1)
 				i = current_pc_picked_in_spec_enc->is_alive();
-			else if(cPlayer* who = dynamic_cast<cPlayer*>(current_pc_picked_in_spec_enc)) {
+			else if(dynamic_cast<cPlayer*>(current_pc_picked_in_spec_enc)) {
 				int pc = univ.get_target_i(*current_pc_picked_in_spec_enc);
 				eMainStatus stat;
 				switch(spec.ex1a) {
