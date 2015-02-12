@@ -200,6 +200,12 @@
     <ClInclude Include="..\..\oldstructs.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\classes\creature.hpp">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\classes\living.hpp">
+      <Filter>Classes\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\classes\creatlist.cpp">
@@ -342,6 +348,18 @@
     </ClCompile>
     <ClCompile Include="..\..\tools\debugout.win.cpp">
       <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\fileio_party.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\fileio_scen.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\creature.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\classes\living.cpp">
+      <Filter>Classes\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

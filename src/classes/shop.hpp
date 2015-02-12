@@ -15,6 +15,11 @@
 #include "item.h"
 #include "pictypes.hpp" // for pic_num_t
 
+// Windows headers are really annoying with their defined constants.
+#ifdef INFINITE
+#undef INFINITE
+#endif
+
 enum class eShopType {NORMAL, ALLOW_DEAD, RANDOM};
 
 enum class eShopPrompt {SHOPPING, HEALING, MAGE, PRIEST, SPELLS, ALCHEMY, TRAINING};
@@ -29,7 +34,7 @@ enum class eShopItemType {
 	SKILL,
 	TREASURE,
 	CLASS,
-	OPTIONAL,
+	OPT_ITEM,
 	CALL_SPECIAL,
 	// All non-healing types must be above here and all healing types below, with HEAL_WOUNDS kept first
 	HEAL_WOUNDS,

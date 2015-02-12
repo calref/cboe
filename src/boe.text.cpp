@@ -982,7 +982,7 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 	while(last < str.length() && str[last] == text_buffer[prev_pointer].line[last])
 		last++;
 	while(text_buffer[prev_pointer].line[--last] == ' ');
-	bool is_dup;
+	bool is_dup = false;
 	if(last == new_last) {
 		size_t i, num_pos = 0;
 		enum {begin, f_space, f_lparen, f_x, f_num, f_rparen, err} state = begin;
