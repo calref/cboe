@@ -387,11 +387,21 @@ void handle_menu_choice(eMenu item_hit) {
 			draw_startup(0);
 			menu_activate();
 			break;
+		case eMenu::FILE_ABORT:
+			if(overall_mode != MODE_STARTUP) {
+				std::string choice = cChoiceDlog("abort-game",{"okay","cancel"}).show();
+				if (choice=="cancel") return;
+				reload_startup();
+				overall_mode = MODE_STARTUP;
+			}
+			party_in_memory = false;
+			draw_startup(0);
+			menu_activate();
+			break;
 		case eMenu::PREFS:
 			pick_preferences();
 			break;
 		case eMenu::QUIT:
-			
 			if(overall_mode == MODE_STARTUP) {
 				if(party_in_memory) {
 					std::string choice = cChoiceDlog("quit-confirm-save", {"save","quit","cancel"}).show();
@@ -567,6 +577,7 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::ABOUT_PRIEST:
 			give_help(209,0);
 			break;
+		case eMenu::ABOUT_MONSTERS: break;
 	}
 	if(!dialogToShow.empty())
 		cChoiceDlog(dialogToShow).show();

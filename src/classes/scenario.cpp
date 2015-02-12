@@ -108,7 +108,7 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 
 void cScenario::append(legacy::scenario_data_type& old){
 	is_legacy = true;
-	int i,j;
+	int i;//,j;
 	difficulty = old.difficulty;
 	intro_pic = old.intro_pic;
 	default_ground = old.default_ground * 2;

@@ -668,12 +668,12 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 			case MODE_PLACE_CREATURE:
 				for(i = 0; i < town->creatures.size(); i++)
 					if(town->creatures[i].number == 0) {
-						town->creatures[i] = {spot_hit, mode_count, scenario.scen_monsters[mode_count]};
+						town->creatures[i] = {spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]};
 						last_placed_monst = town->creatures[i];
 						break;
 					}
 				if(i == town->creatures.size()) { // Placement failed
-					town->creatures.push_back({spot_hit, mode_count, scenario.scen_monsters[mode_count]});
+					town->creatures.push_back({spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]});
 					last_placed_monst = town->creatures.back();
 				}
 				overall_mode = MODE_DRAWING;
@@ -1866,7 +1866,8 @@ void adjust_space(location l) {
 
 bool place_item(location spot_hit,short which_item,bool property,bool always,short odds)  {
 	// odds 0 - 100, with 100 always
-	
+	(void) property;
+	(void) always;
 	short x;
 	
 	if((which_item < 0) || (which_item >= scenario.scen_items.size()))
@@ -2362,8 +2363,7 @@ void start_string_editing(short mode,short just_redo_text) {
 // mode 0 - scen 1 - out 2 - town
 // if just_redo_text not 0, simply need to update text portions
 void start_special_editing(short mode,short just_redo_text) {
-	short i;
-	char str[256];
+	short i; // char str[256];
 	size_t num_specs;
 	bool draw_full = false;
 	switch(mode) {

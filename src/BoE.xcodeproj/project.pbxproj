@@ -297,6 +297,12 @@
 		91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8F318FF069A007026CE /* pc.appleevents.mm */; };
 		91FDB57B1A4E77CA00DE5983 /* shop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FDB5791A4E774E00DE5983 /* shop.cpp */; };
 		91FDB57C1A4E77CA00DE5983 /* shop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FDB5791A4E774E00DE5983 /* shop.cpp */; };
+		DCCA42001A8C467000E6A9A5 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		DCCA42021A8C467800E6A9A5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
+		DCCA42031A8C469400E6A9A5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
+		DCCA42041A8C46A600E6A9A5 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		DCCA42051A8C46B500E6A9A5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
+		DCCA42061A8C46BE00E6A9A5 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -720,6 +726,7 @@
 		91FCC8F318FF069A007026CE /* pc.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.appleevents.mm; sourceTree = "<group>"; };
 		91FDB5771A4E71A900DE5983 /* shop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shop.hpp; sourceTree = "<group>"; };
 		91FDB5791A4E774E00DE5983 /* shop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shop.cpp; sourceTree = "<group>"; };
+		DCCA42011A8C467800E6A9A5 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -727,6 +734,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCCA42041A8C46A600E6A9A5 /* SFML.framework in Frameworks */,
+				DCCA42031A8C469400E6A9A5 /* libz.dylib in Frameworks */,
 				914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA618E7E50D007B6799 /* OpenGL.framework in Frameworks */,
 				914B2ABF18E7E543007B6799 /* sndfile.framework in Frameworks */,
@@ -742,6 +751,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCCA42021A8C467800E6A9A5 /* libz.dylib in Frameworks */,
+				DCCA42001A8C467000E6A9A5 /* SFML.framework in Frameworks */,
 				914B2AA418E7E509007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA718E7E50E007B6799 /* OpenGL.framework in Frameworks */,
 				914B2AC018E7E544007B6799 /* sndfile.framework in Frameworks */,
@@ -757,6 +768,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCCA42061A8C46BE00E6A9A5 /* SFML.framework in Frameworks */,
+				DCCA42051A8C46B500E6A9A5 /* libz.dylib in Frameworks */,
 				914B2AA518E7E50A007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA818E7E50E007B6799 /* OpenGL.framework in Frameworks */,
 				914B2AC118E7E544007B6799 /* sndfile.framework in Frameworks */,
@@ -991,6 +1004,7 @@
 		914B2AA018E7E4A3007B6799 /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DCCA42011A8C467800E6A9A5 /* libz.dylib */,
 				914B2AA118E7E500007B6799 /* Cocoa.framework */,
 				914B2AA218E7E500007B6799 /* OpenGL.framework */,
 				91F6F8E218F87F3700E3EA15 /* SFML.framework */,
@@ -1706,11 +1720,12 @@
 					"-Werror=return-type",
 					"-Werror=parentheses",
 					"-Werror=dangling-else",
+					"-isystem/usr/local/Cellar/boost/1.57.0/include",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_filesystem",
 					"-lboost_system",
-					"-lz",
+					"-L/usr/local/Cellar/boost/1.57.0/lib",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "\"$(PROJECT_DIR)/misc/\"";
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -1761,11 +1776,12 @@
 					"-Werror=return-type",
 					"-Werror=parentheses",
 					"-Werror=dangling-else",
+					"-isystem/usr/local/Cellar/boost/1.57.0/include",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_filesystem",
 					"-lboost_system",
-					"-lz",
+					"-L/usr/local/Cellar/boost/1.57.0/lib",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "\"$(PROJECT_DIR)/misc/\"";
 				WARNING_CFLAGS = (
@@ -1779,6 +1795,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1795,6 +1815,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				INFOPLIST_FILE = "Blades of Exile-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -1830,6 +1854,10 @@
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Scenario Editor";
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1848,6 +1876,10 @@
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Scenario Editor";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = "pcedit/Blades of Exile Character Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -1863,6 +1895,10 @@
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/Scenario Editor";
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1881,6 +1917,10 @@
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/Scenario Editor";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = "scenedit/BoE Scenario Editor-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";

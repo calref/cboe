@@ -1125,7 +1125,6 @@ void save_prefs(bool resetHelp){
 
 static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	bool did_cancel = false,reset_help = false;
-	short i;
 	
 	if(id == "okay") {
 		me.toast(true);
