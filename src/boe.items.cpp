@@ -231,7 +231,8 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 
 bool place_item(cItem item,location where,bool forced,bool contained) {
 	short i;
-	
+    (void) forced;
+    
 	if(contained && !is_container(where))
 		contained = false;
 	
@@ -555,7 +556,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 			univ.party.spec_items.insert(item.item_level);
 			set_item_flag(&item);
 		} else if(item.variety == eItemType::QUEST) {
-			univ.party.quest_status[item.item_level] == eQuestStatus::STARTED;
+			univ.party.quest_status[item.item_level] = eQuestStatus::STARTED;
 			univ.party.quest_start[item.item_level] = univ.party.calc_day();
 			univ.party.quest_source[item.item_level] = -1;
 			set_item_flag(&item);
