@@ -26,6 +26,12 @@ static int16_t extract_word(char* ptr) {
 	return s;
 }
 
+static int32_t extract_long(char* ptr) {
+	int32_t s = *(int32_t*) ptr;
+	flip_long(&s);
+	return s;
+}
+
 template<typename T>
 static typename std::make_unsigned<T>::type to_unsigned(T val) {
 	return *reinterpret_cast<typename std::make_unsigned<T>::type*>(&val);
@@ -168,42 +174,75 @@ static legacy::Rect loadPixMapData(ptr_guard<char>& picData, ptr_guard<unsigned 
 	return bounds;
 }
 
-static rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelStore) {
+static rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelStore, int& error) {
 	HLock(resHandle);
 	// TODO: Use picSize to ensure I don't go out of bounds
 	size_t picSize = GetHandleSize(resHandle);
 	ptr_guard<char> picData(*resHandle, *resHandle + picSize);
 	picData += 2; // Skip picture size field
-	picData += sizeof(legacy::Rect); // Skip picture frame field (actual frame is stored later)
+	// Next is the bounding rect.
+	rectangle picFrame;
+	picFrame.top = extract_word(picData); picData += 2;
+	picFrame.left = extract_word(picData); picData += 2;
+	picFrame.bottom = extract_word(picData); picData += 2;
+	picFrame.right = extract_word(picData); picData += 2;
 	if(strncmp(picData, "\0\x11\x02\xff", 4) != 0) // QuickDraw version code (version 2)
 		oopsError(1);
 	picData += 4; // Skip version field
 	if(strncmp(picData, "\x0c\0", 2) != 0) // Header opcode
 		oopsError(2);
-	picData += 2 + 4; // Skip header opcode and picture size (which is -1)
-	rectangle picFrame;
-	// Next is the bounding rect with 4-byte components
-	// However, they are fixed-point, so the second 2 bytes are fractional
-	// We'll ignore that part.
-	picFrame.top = extract_word(picData); picData += 4;
-	picFrame.left = extract_word(picData); picData += 4;
-	picFrame.bottom = extract_word(picData); picData += 4;
-	picFrame.right = extract_word(picData); picData += 4;
-	// We're using this info solely to initialize the target data array.
-	// I'm not sure I have the components in the right order, but for this, it doesn't actually matter
+	picData += 2 + 24; // Skip header opcode and payload
+	// Initialize the target data array using the picture's bounding rect
 	size_t picDataSize = picFrame.height() * picFrame.width() * 4; // Four bytes per pixel
 	pixelStore = new unsigned char[picDataSize];
 	ptr_guard<unsigned char> pixels(pixelStore, pixelStore + picDataSize);
-	// Then 4 reserved bytes
-	picData += 4;
 	legacy::Rect bounds;
 	// Now we need to skip any superfluous opcodes until we get to pixel data - opcode 90, 91, 98, or 99
 	// We're assuming it's stored as pixel data, so any other opcodes will just be ignored
 	bool done = false;
 	while(!done) {
 		// All opcodes have a first byte of 0 (other than the header opcode)
+		// If we find one that doesn't, it's a reserved opcode, so just skip it.
+		if(*picData != 0) {
+			unsigned char hi = *(unsigned char*)picData++;
+			picData++; // low byte doesn't affect data size
+			if(hi == 0x01) picData += 2;
+			else if(hi >= 0x02 && hi <= 0x0B)
+				picData += 4;
+			else if(hi >= 0x0C && hi <= 0x7E)
+				picData += 24;
+			else if(hi == 0x7F) picData += 254;
+			else if(hi >= 0x81) {
+				unsigned long len = extract_long(picData);
+				if(hi == 0x82 && (picData[-1] == 0 || picData[-1] == 1)) {
+					// QuickTime image data (0 = compressed, 1 = uncompressed)
+					if(picData[-1] == 1) {
+						// This is relatively easy; it's encoded as a standard QD opcode
+						// So all we really need to do is skip the QT header data
+						picData += 4 + 2 + 36; // Fixed-length header data - length, version, matrix
+						size_t matteSize = extract_long(picData);
+						picData += 4 + 8; // matte size and rect
+						if(matteSize > 0) {
+							// TODO: Not quite sure about the size of the matte image description
+							picData += 4 + matteSize;
+						}
+						// At this point, we should be at a normal image opcode, so just end here and let the next loop grab it
+					} else {
+						// This is much harder - the image is compressed.
+						// I'm not sure how to handle it, so for now I'll put up an error.
+						error = 2;
+						HUnlock(resHandle);
+						return {0,0,0,0};
+					}
+				} else picData += 4 + len;
+			}
+			// There may be a byte of padding to align it to word boundaries.
+			picData.align(sizeof(int16_t), sizeof(int16_t));
+			continue;
+		}
 		picData++;
-		switch(*(unsigned char*)picData++) {
+		unsigned char code = *(unsigned char*)picData++;
+		switch(code) {
 			case 0x00: // Nop
 			case 0x1C: // HiliteMode
 			case 0x1E: // DefHilite
@@ -349,11 +388,18 @@ static rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelSto
 			case 0x13: // PnPixPat
 			case 0x14: // FillPixPat
 				// argument is a pixpat
+				// This is a complicated type that I don't want to deal with; I'll implement it if it ever causes problems.
+				std::cerr << "Unknown PICT opcode: " << std::hex << unsigned(picData[-1]) << std::dec << std::endl;
+				error = 1;
+				HUnlock(resHandle);
+				return {0,0,0,0};
 			case 0x1A: // RGBFgCol
 			case 0x1B: // RGBBkCol
 			case 0x1D: // HiliteColor
 			case 0x1F: // OpColor
 				// argument is an RGB colour
+				picData += 6;
+				break;
 			case 0x70: // FramePoly
 			case 0x71: // PaintPoly
 			case 0x72: // ErasePoly
@@ -361,11 +407,15 @@ static rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelSto
 			case 0x74: // FillPoly
 			case 0x75: case 0x76: case 0x77: // Reserved
 				// argument is a polygon
+				// First two bytes hold the data size of the polygon.
+				picData += extract_word(picData);
+				break;
 			default:
-				// These are mostly reserved opcodes whose first field is a two-byte length
-				// I don't want to deal with them, and it's highly unlikely they'll come up.
-				// Thus, just give an error if they do.
-				oopsError(9);
+				// These are reserved opcodes whose first field is a length
+				if((code >= 0xA2 && code <= 0xAF) || (code >= 0x9A && code <= 0x9F))
+					picData += extract_word(picData);
+				else if(code >= 0xD0 && code <= 0xFE)
+					picData += extract_long(picData);
 				break;
 		}
 		// There may be a byte of padding to align it to word boundaries.
@@ -378,6 +428,11 @@ static rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelSto
 bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store); // Suppress "no prototype" warning
 bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 	static const char*const noGraphics = "The game will still work without the custom graphics, but some things will not look right.";
+	static const std::string errStrings[] = {
+		"The resource did not contain any pixel data.",
+		"The resource contained a PixPat instruction, which isn't currently supported by the PICT loader.",
+		"The resource contained compressed QuickTime image data, which isn't currently supported by the PICT loader.",
+	};
 	// TODO: There's no way around it; I'll have to read resource files for this section.
 	FSRef file;
 	ResFileRefNum custRef;
@@ -410,11 +465,12 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 		return false;
 	}
 	unsigned char* data = NULL;
-	rectangle picFrame = loadFromPictResource(resHandle, data);
+	int error = 0;
+	rectangle picFrame = loadFromPictResource(resHandle, data, error);
 	CloseResFile(custRef);
 	if(picFrame.width() <= 0 || picFrame.height() <= 0) {
 		if(data != NULL) delete[] data;
-		giveError("An old-style .meg graphics file was found, but an error occurred while reading it.",noGraphics);
+		giveError("An old-style .meg graphics file was found, but an error occurred while reading it: " + errStrings[error],noGraphics);
 		return false;
 	}
 	graphics_store.create(picFrame.width(), picFrame.height(), data);

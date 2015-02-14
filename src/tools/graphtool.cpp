@@ -403,14 +403,23 @@ rectangle calc_rect(short i, short j){
 	return base_rect;
 }
 
+extern sf::Texture fields_gworld;
 graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
+	static graf_pos dummy = {&fields_gworld, {72,0,108,28}};
+	if(party && !party_sheet) return dummy;
+	else if(!party && !is_old && (which_rect / 100) >= numSheets)
+		return dummy;
+	else if(numSheets == 0) return dummy;
 	short sheet = which_rect / 100;
 	if(is_old || party) sheet = 0;
 	else which_rect %= 100;
 	rectangle store_rect = {0,0,36,28};
 	
 	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
-	return std::make_pair(party ? party_sheet.get() : &sheets[sheet],store_rect);
+	sf::Texture* the_sheet = party ? party_sheet.get() : &sheets[sheet];
+	rectangle test(*the_sheet);
+	if((store_rect | test) != store_rect) return dummy;
+	return std::make_pair(the_sheet,store_rect);
 }
 
 size_t cCustomGraphics::count(bool party) {

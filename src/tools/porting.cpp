@@ -410,15 +410,10 @@ void flip_long(int32_t *s){
 	
 }
 
-// This is needed in order to load in old legacy Windows scenarios, which stored their rects in a different order than Mac scenario
+// This is needed in order to load in old legacy Windows scenarios, which stored their rects in a different order than Mac scenarios
 static void alter_rect(legacy::Rect *r) {
-	short a;
-	
-	a = r->top;
-	r->top = r->left;
-	r->left = a;
-	a = r->bottom;
-	r->bottom = r->right;
+	std::swap(r->top, r->left);
+	std::swap(r->bottom, r->right);
 }
 
 void flip_rect(legacy::Rect* s) {
