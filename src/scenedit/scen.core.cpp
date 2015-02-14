@@ -2831,7 +2831,7 @@ bool build_scenario() {
 	short width, height, lg, med, sm;
 	bool default_town, grass;
 	std::string filename, title;
-	short i,j;
+	short i;
 	cTown* warriors_grove = nullptr;
 	std::vector<cShop> warriors_grove_shops;
 	

@@ -727,6 +727,11 @@ std::string uAbility::to_string(eMonstAbil key) const {
 			break;
 		case eMonstAbilCat::GENERAL:
 			switch(key) {
+					// These first few aren't general-category abilities; they're included here just to silence compiler warnings
+				case eMonstAbil::NO_ABIL: case eMonstAbil::MISSILE: case eMonstAbil::SPLITS: case eMonstAbil::MARTYRS_SHIELD:
+				case eMonstAbil::ABSORB_SPELLS: case eMonstAbil::MISSILE_WEB: case eMonstAbil::RAY_HEAT: case eMonstAbil::SPECIAL:
+				case eMonstAbil::HIT_TRIGGER: case eMonstAbil::DEATH_TRIGGER: case eMonstAbil::RADIATE: case eMonstAbil::SUMMON:
+					break;
 				case eMonstAbil::STUN: sout << "Stunning"; break;
 				case eMonstAbil::PETRIFY: sout << "Petrifying"; break;
 				case eMonstAbil::DRAIN_SP: sout << "Spell point drain"; break;

@@ -88,12 +88,8 @@ public:
 	short spec_on_hostile;
 	std::array<cTimer,8> timers;
 	std::vector<cSpecial> specials;
-	bool strong_barriers : 1;
-	bool defy_mapping : 1;
-	bool defy_scrying : 1;
-	bool is_hidden : 1;
-	bool has_tavern : 1;
-	char : 3;
+	bool strong_barriers, defy_mapping, defy_scrying;
+	bool is_hidden, has_tavern;
 	short difficulty;
 	std::string town_name;
 	// Using std::array here so we can have .size()

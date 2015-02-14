@@ -323,7 +323,7 @@ void display_pc_item(short pc_num,short item,cItem si,cDialog* parent) {
 static void put_monst_info(cDialog& me, const cCreature& store_m) {
 	std::string store_text;
 	std::string str;
-	short i; //abil
+	short i;
 	
 	cPict& pic = dynamic_cast<cPict&>(me["pic"]);
 	if(store_m.invisible)

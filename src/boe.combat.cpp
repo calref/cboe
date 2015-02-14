@@ -1773,7 +1773,7 @@ void fire_missile(location target) {
 			if(r1 > hit_chance[skill])
 				add_string_to_buf("  Missed.");
 			else if((victim = univ.target_there(target))) {
-				eDamageType dmg_tp = eDamageType::SPECIAL; // size_t i_monst = univ.get_target_i(*victim);
+				eDamageType dmg_tp = eDamageType::SPECIAL;
 				spec_dam = calc_spec_dam(ammo.ability,ammo.abil_data[0],ammo.abil_data[1],*victim,dmg_tp);
 				if(ammo.ability == eItemAbil::HEALING_WEAPON) {
 					ASB("  There is a flash of light.");
@@ -1963,7 +1963,7 @@ bool pick_next_pc() {
 
 
 void combat_run_monst() {
-	short i,item; //,item_level;
+	short i,item;
 	bool update_stat = false;
 	
 	
@@ -2906,11 +2906,8 @@ void monster_attack(short who_att,iLiving* target) {
 	
 }
 
-//short target; // 100 +  - monster is target
 void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> abil,location source,iLiving* target) {
-	short i,j,r2;/*,dam[40] = {
-		0,1,2,3,4, 6,8,7,0,0, 0,0,0,0,0, 0,0,0,0,0,
-		8,0,0,0,0, 0,0,0,0,0, 0,0,0,0,6, 0,0,0,0,0},//*/
+	short i,j,r2;
 	location targ_space;
 	
 	if(target == nullptr) return;
