@@ -32,6 +32,7 @@
 #define IDM_SCEN_LEAVE                  126
 #define IDM_SCEN_SDF                    127
 #define IDM_HELP                        128
+#define IDM_ABOUT                       129
 
 // Next default values for new objects
 // 
@@ -40,6 +41,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        105
 #define _APS_NEXT_COMMAND_VALUE         40010
 #define _APS_NEXT_CONTROL_VALUE         1001
-#define _APS_NEXT_SYMED_VALUE           129
+#define _APS_NEXT_SYMED_VALUE           130
 #endif
 #endif

@@ -73,7 +73,7 @@ void init_menubar() {
 		eMenu::NONE, eMenu::LEAVE_SCENARIO, eMenu::SET_SDF,
 	};
 	static const eMenu help_choices[] = {
-		eMenu::ABOUT,
+		eMenu::ABOUT, eMenu::HELP_TOC
 	};
 	
 	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
