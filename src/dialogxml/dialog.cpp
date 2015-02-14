@@ -1052,18 +1052,18 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	}
 	// Sometimes it seems like the Cocoa menu handling clobbers the active rendering context.
 	// For whatever reason, delaying 100 milliseconds appears to fix this.
-	sf::sleep(sf::milliseconds(100));
+	sf::sleep(sf::milliseconds(100));	// So this little section of code is a real-life valley
+	win.create(sf::VideoMode(1,1),"");	// of dying things. Instantiating a window and then closing
+	win.close();						// it seems to fix the update error, because magic.
 	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
 	draw();
-	win.setVisible(true);
 	makeFrontWindow(parent ? parent-> win : mainPtr);
 	makeFrontWindow(win);
-	ModalSession dlog(win, *parentWin);
-	if(onopen) onopen(*this);
-	animTimer.restart();
-	while(dialogNotToast){
-		draw();
-		dlog.pumpEvents();
+	ModalSession dlog(win, *parentWin);	// This is a loose modal session, as it doesn't prevent you
+	if(onopen) onopen(*this);			// from clicking away, but it does prevent editing other
+	animTimer.restart();				// dialogs, and it also keeps this window on top even when
+	while(dialogNotToast){				// it loses focus.
+		draw(); // dlog.pumpEvents();
 		if(!win.pollEvent(currentEvent)) continue;
 		location where;
 		switch(currentEvent.type){
