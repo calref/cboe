@@ -644,14 +644,18 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				}
 			}
 		} else if(type == "ratings") {
-			elem->FirstChildElement("content")->GetText(&val);
+			Element* content = elem->FirstChildElement("content");
+			Element* difficulty = elem->FirstChildElement("difficulty");
+			content->GetText(&val);
 			if(val == "g") scenario.rating = 0;
 			else if(val == "pg") scenario.rating = 1;
 			else if(val == "r") scenario.rating = 2;
 			else if(val == "nc17") scenario.rating = 3;
-			else throw xBadVal(type, "content", val, elem->FirstChild("content")->Row(), elem->FirstChild("content")->Column(), fname);
-			elem->FirstChildElement("difficulty")->GetText(&scenario.difficulty);
-			// TODO: Verify difficulty is in range 1..4
+			else throw xBadVal("content", xBadVal::CONTENT, val, content->Row(), content->Column(), fname);
+			difficulty->GetText(&scenario.difficulty);
+			if(scenario.difficulty < 1 || scenario.difficulty > 4)
+				throw xBadVal("difficulty", xBadVal::CONTENT, std::to_string(scenario.difficulty), difficulty->Row(),difficulty->Column(), fname);
+			scenario.difficulty--;
 		} else if(type == "flags") {
 			Iterator<Element> flag;
 			for(flag = flag.begin(elem.Get()); flag != flag.end(); flag++) {
