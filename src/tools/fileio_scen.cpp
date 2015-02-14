@@ -61,6 +61,7 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario) {
 	}
 	scenario = cScenario();
 	std::string fname = file_to_load.filename().string();
+	std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
 	size_t dot = fname.find_last_of('.');
 	if(fname.substr(dot) == ".boes")
 		return load_scenario_v2(file_to_load, scenario);
@@ -73,6 +74,9 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario) {
 template<typename Container> static void port_shop_spec_node(cSpecial& spec, std::vector<shop_info_t>& shops, Container strs) {
 	int which_shop;
 	if(spec.ex1b < 4) {
+		// Safeguard against invalid data
+		if(spec.ex1a < 0)
+			spec.ex1a = 1;
 		shops.push_back({eShopItemType(spec.ex1b + 1), spec.ex1a, spec.ex2a, strs[spec.m1]});
 		which_shop = shops.size() + 5;
 	} else if(spec.ex1b == 4)
