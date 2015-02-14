@@ -1762,6 +1762,7 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 			#pragma clang diagnostic pop
 		#endif
 	};
+	scenario.scen_file = file_to_load;
 	// From here on, we don't have to care about whether it's packed or unpacked.
 	TiXmlBase::SetCondenseWhiteSpace(true); // Make sure this is enabled, because the dialog engine disables it
 	{
