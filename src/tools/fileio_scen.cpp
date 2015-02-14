@@ -1751,8 +1751,16 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 		if(fin.is_open()) fin.close();
 		fin.clear();
 		fin.open((file_to_load/relpath).string().c_str());
-		// TODO: Suppress the warning about returning reference to local
+		// Yes, we're returning a reference to a local variable, but it's safe here,
+		// because the local is in the enclosing scope and this lambda exists within the same scope.
+		#ifdef __clang__
+			#pragma clang diagnostic push
+			#pragma clang diagnostic ignored "-Wreturn-stack-address"
+		#endif
 		return fin;
+		#ifdef __clang__
+			#pragma clang diagnostic pop
+		#endif
 	};
 	// From here on, we don't have to care about whether it's packed or unpacked.
 	TiXmlBase::SetCondenseWhiteSpace(true); // Make sure this is enabled, because the dialog engine disables it

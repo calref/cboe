@@ -93,8 +93,7 @@ public:
 	// This'll make the transition smoother once it becomes a vector.
 	std::array<std::string,50> journal_strs;
 	std::array<std::string,101> spec_strs;
-	bool adjust_diff : 1;
-	char : 7;
+	bool adjust_diff;
 	bool is_legacy;
 	fs::path scen_file; // transient
 	vector2d<cOutdoors*> outdoors;

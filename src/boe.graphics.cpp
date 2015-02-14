@@ -1445,7 +1445,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	location where_draw(4,4);
 	rectangle source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
 	short del_len;
-	short x_adj = 0,y_adj = 0; //,which_m;
+	short x_adj = 0,y_adj = 0;
 	short sound_lookup[20] = {
 		97,69,70,71,72, 73,55,75,42,86,
 		87,88,89,98,0, 0,0,0,0,0};

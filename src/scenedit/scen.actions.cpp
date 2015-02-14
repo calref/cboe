@@ -1866,8 +1866,6 @@ void adjust_space(location l) {
 
 bool place_item(location spot_hit,short which_item,bool property,bool always,short odds)  {
 	// odds 0 - 100, with 100 always
-	(void) property;
-	(void) always;
 	short x;
 	
 	if((which_item < 0) || (which_item >= scenario.scen_items.size()))
@@ -1880,6 +1878,8 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 		if(town->preset_items[x].code < 0) {
 			town->preset_items[x] = {spot_hit, which_item, scenario.scen_items[which_item]};
 			town->preset_items[x].contained = container_there(spot_hit);
+			town->preset_items[x].property = property;
+			town->preset_items[x].always_there = always;
 			return true;
 		}
 	town->preset_items.push_back({spot_hit, which_item, scenario.scen_items[which_item]});
@@ -2363,7 +2363,7 @@ void start_string_editing(short mode,short just_redo_text) {
 // mode 0 - scen 1 - out 2 - town
 // if just_redo_text not 0, simply need to update text portions
 void start_special_editing(short mode,short just_redo_text) {
-	short i; // char str[256];
+	short i;
 	size_t num_specs;
 	bool draw_full = false;
 	switch(mode) {

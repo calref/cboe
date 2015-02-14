@@ -337,6 +337,11 @@ bool verify_restore_quit(bool mode) {
 	return true;
 }
 
+// These functions are duplicated here because they're used in the training dialog.
+void give_help(short help1, short help2);
+void give_help(short help1, short help2, cDialog& parent);
+void display_skills(eSkill skill,cDialog* parent);
+
 static void give_help(short help1,short help2,cDialog* parent) {
 	bool help_forced = false;
 	std::string str1,str2;

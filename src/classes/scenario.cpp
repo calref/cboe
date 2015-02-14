@@ -108,7 +108,7 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 
 void cScenario::append(legacy::scenario_data_type& old){
 	is_legacy = true;
-	int i;//,j;
+	int i;
 	difficulty = old.difficulty;
 	intro_pic = old.intro_pic;
 	default_ground = old.default_ground * 2;
@@ -124,6 +124,7 @@ void cScenario::append(legacy::scenario_data_type& old){
 		town_mods[i].spec = old.town_to_add_to[i];
 		town_mods[i].x = old.flag_to_add_to_town[i][0];
 		town_mods[i].y = old.flag_to_add_to_town[i][1];
+		storage_shortcuts[i] = old.storage_shortcuts[i];
 	}
 	// TODO: Combine store_item_rects and store_item_towns into a structure
 	for(i = 0; i < 3; i++) {
@@ -131,25 +132,30 @@ void cScenario::append(legacy::scenario_data_type& old){
 		store_item_rects[i].left = old.store_item_rects[i].left;
 		store_item_rects[i].bottom = old.store_item_rects[i].bottom;
 		store_item_rects[i].right = old.store_item_rects[i].right;
+		store_item_towns[i] = old.store_item_towns[i];
 	}
-	for(i = 0; i < 3; i++) store_item_towns[i] = old.store_item_towns[i];
-	for(i = 0; i < 50; i++) special_items[i].flags = old.special_items[i];
-	for(i = 0; i < 50; i++) special_items[i].special = old.special_item_special[i];
+	for(i = 0; i < 50; i++) {
+		special_items[i].flags = old.special_items[i];
+		special_items[i].special = old.special_item_special[i];
+	}
 	rating = old.rating;
 	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
-	for(i = 0; i < 256; i++) scen_monsters[i].append(old.scen_monsters[i]);
-	for(i = 0; i < 30; i++) boats[i].append(old.scen_boats[i]);
-	for(i = 0; i < 30; i++) horses[i].append(old.scen_horses[i]);
+	for(i = 0; i < 30; i++) {
+		boats[i].append(old.scen_boats[i]);
+		horses[i].append(old.scen_horses[i]);
+	}
+	scen_specials.resize(256);
 	for(i = 0; i < 256; i++){
 		ter_types[i].i = i;
 		ter_types[i].append(old.ter_types[i]);
+		scen_monsters[i].append(old.scen_monsters[i]);
+		scen_specials[i].append(old.scen_specials[i]);
 	}
-	for(i = 0; i < 20; i++) scenario_timers[i].time = old.scenario_timer_times[i];
-	for(i = 0; i < 20; i++) scenario_timers[i].node = old.scenario_timer_specs[i];
-	scen_specials.resize(256);
-	for(i = 0; i < 256; i++) scen_specials[i].append(old.scen_specials[i]);
-	for(i = 0; i < 10; i++) storage_shortcuts[i] = old.storage_shortcuts[i];
+	for(i = 0; i < 20; i++) {
+		scenario_timers[i].time = old.scenario_timer_times[i];
+		scenario_timers[i].node = old.scenario_timer_specs[i];
+	}
 	last_out_edited.x = old.last_out_edited.x;
 	last_out_edited.y = old.last_out_edited.y;
 	last_town_edited = old.last_town_edited;

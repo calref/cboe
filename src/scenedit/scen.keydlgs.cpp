@@ -95,13 +95,13 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 	std::vector<pic_num_t> all_pics;
 	size_t total_pics = 0;
 	cPictChoice* pic_dlg = nullptr;
-	switch(g_type) {
+	switch(g_type + PIC_PRESET) {
 		case PIC_TER: total_pics = 859; break;
 		case PIC_TER_ANIM: total_pics = 20; break;
 		case PIC_DLOG: total_pics = 44; break;
 		case PIC_TALK: total_pics = 84; break;
 		case PIC_SCEN: total_pics = 30; break;
-		case PIC_ITEM: total_pics = 123; break;
+		case PIC_ITEM: case PIC_TINY_ITEM: total_pics = 123; break;
 		case PIC_PC: total_pics = 36; break;
 		case PIC_FIELD: all_pics = field_pics; break;
 		case PIC_BOOM: all_pics = boom_pics; break;
@@ -110,6 +110,10 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 		case PIC_STATUS: total_pics = 27; break;
 		case PIC_SCEN_LG: total_pics = 4; break;
 		case PIC_TER_MAP: total_pics = 980; break;
+		case PIC_FULL: return NO_PIC; // TODO: Is it even possible to do a pict selection dialog for this?
+		default:
+			std::cerr << "Picture type " << (g_type + PIC_PRESET) << " is missing case in choose_graphic." << std::endl;
+			return NO_PIC;
 		case PIC_MONST: case PIC_MONST_WIDE:
 		case PIC_MONST_TALL: case PIC_MONST_LG:
 			std::vector<std::pair<pic_num_t,ePicType>> pics;
@@ -409,8 +413,8 @@ static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, short
 		me.toast(true);
 		std::string str = me["area"].getText().substr(0,29);
 		if(str_mode == 0)
-			current_terrain->info_rect[which_str].descr;
-		else town->room_rect[which_str].descr;
+			current_terrain->info_rect[which_str].descr = str;
+		else town->room_rect[which_str].descr = str;
 	} else if(item_hit == "cancel") {
 		me.setResult(false);
 		me.toast(false);

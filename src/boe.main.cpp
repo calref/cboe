@@ -577,7 +577,9 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::ABOUT_PRIEST:
 			give_help(209,0);
 			break;
-		case eMenu::ABOUT_MONSTERS: break;
+		case eMenu::ABOUT_MONSTERS:
+			give_help(212,0);
+			break;
 	}
 	if(!dialogToShow.empty())
 		cChoiceDlog(dialogToShow).show();

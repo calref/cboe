@@ -123,11 +123,7 @@ public:
 	unsigned int fire_res;
 	unsigned int cold_res;
 	unsigned int poison_res;
-	bool mindless : 1;
-	bool invuln : 1;
-	bool invisible : 1;
-	bool guard : 1;
-	char : 4;
+	bool mindless, invuln, invisible, guard;
 	unsigned int x_width,y_width;
 	unsigned int default_attitude;
 	unsigned int summon_type;
