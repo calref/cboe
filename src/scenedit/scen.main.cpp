@@ -193,7 +193,11 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::FILE_OPEN:
 			if(change_made && !save_check("save-before-load"))
 				break;
-			file_to_load = nav_get_scenario();
+		if(false)
+		case eMenu::FILE_REVERT:
+			if(change_made && cChoiceDlog("save-before-revert", {"revert", "cancel"}).show() == "cancel")
+				break;
+			file_to_load = item_hit == eMenu::FILE_OPEN ? nav_get_scenario() : scenario.scen_file;
 			if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 				cur_town = scenario.last_town_edited;
 				town = scenario.towns[cur_town];
@@ -213,6 +217,12 @@ void handle_menu_choice(eMenu item_hit) {
 				overall_mode = MODE_MAIN_SCREEN;
 				set_up_main_screen();
 			}
+			break;
+		case eMenu::FILE_CLOSE:
+			if(!save_check("save-before-close"))
+				break;
+			overall_mode = MODE_INTRO_SCREEN;
+			set_up_start_screen();
 			break;
 		case eMenu::QUIT: // quit
 			if(!save_check("save-before-quit"))

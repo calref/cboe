@@ -588,16 +588,36 @@ std::istream& operator >> (std::istream& in, eMonstTime& e){
 	return in;
 }
 
-std::ostream& operator << (std::ostream& out, eDirection e) {
-	return out << (int)e;
+std::ostream& operator<<(std::ostream& out, eDirection dir) {
+	switch(dir) {
+		case DIR_N: out << "n"; break;
+		case DIR_NE: out << "ne"; break;
+		case DIR_E: out << "e"; break;
+		case DIR_SE: out << "se"; break;
+		case DIR_S: out << "s"; break;
+		case DIR_SW: out << "sw"; break;
+		case DIR_W: out << "w"; break;
+		case DIR_NW: out << "nw"; break;
+		case DIR_HERE: out << "?"; break;
+	}
+	return out;
 }
 
-std::istream& operator >> (std::istream& in, eDirection& e) {
-	int i;
-	in >> i;
-	if(i >= 0 && i < 8)
-		e = (eDirection)i;
-	else e = DIR_HERE;
+std::istream& operator>>(std::istream& in, eDirection& dir) {
+	std::string str;
+	in >> str;
+	if(str == "n") dir = DIR_N;
+	else if(str == "ne") dir = DIR_NE;
+	else if(str == "e") dir = DIR_E;
+	else if(str == "se") dir = DIR_SE;
+	else if(str == "s") dir = DIR_S;
+	else if(str == "sw") dir = DIR_SW;
+	else if(str == "w") dir = DIR_W;
+	else if(str == "nw") dir = DIR_NW;
+	else if(str == "?") dir = DIR_HERE;
+	else if(str.length() == 1 && str[0] >= 0 && str[0] < 8)
+		dir = eDirection(str[0]);
+	else in.setstate(std::ios::failbit);
 	return in;
 }
 

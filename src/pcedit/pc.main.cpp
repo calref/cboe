@@ -53,7 +53,7 @@ void Handle_One_Event();
 void Handle_Activate();
 void Handle_Update();
 void Mouse_Pressed();
-bool verify_restore_quit(bool mode);
+bool verify_restore_quit(std::string dlog);
 void set_up_apple_events();
 extern bool cur_scen_is_mac;
 extern fs::path progDir;
@@ -132,7 +132,7 @@ void Handle_One_Event() {
 			break;
 			
 		case sf::Event::Closed:
-			All_Done = verify_restore_quit(false);
+			All_Done = verify_restore_quit("save-quit");
 			break;
 			
 		default:
@@ -145,7 +145,7 @@ void Mouse_Pressed() {
 	
 	try_to_end = handle_action(event);
 	if(try_to_end)
-		All_Done = verify_restore_quit(false);
+		All_Done = verify_restore_quit("save-quit");
 }
 
 static void display_strings(short nstr, pic_num_t pic) {
@@ -170,8 +170,12 @@ void handle_menu_choice(eMenu item_hit) {
 			if(!file.empty()) save_party(file, univ);
 			break;
 		case eMenu::FILE_OPEN:
-			if(verify_restore_quit(true)){
-				file = nav_get_party();
+			i = verify_restore_quit("save-open");
+		if(false)
+		case eMenu::FILE_REVERT:
+			i = cChoiceDlog("save-revert", {"okay", "cancel"}).show() == "okay";
+			if(i) {
+				file = item_hit == eMenu::FILE_OPEN ? nav_get_party() : file_in_mem;
 				if(!file.empty()) {
 					if(load_party(file, univ)) {
 						file_in_mem = file;
@@ -184,8 +188,12 @@ void handle_menu_choice(eMenu item_hit) {
 				menu_activate();
 			}
 			break;
+		case eMenu::FILE_CLOSE:
+			if(verify_restore_quit("save-close"))
+				file_in_mem = "";
+			break;
 		case eMenu::QUIT:
-			All_Done = verify_restore_quit(false);
+			All_Done = verify_restore_quit("save-quit");
 			break;
 		case eMenu::EDIT_GOLD:
 			edit_gold_or_food(0);
@@ -310,6 +318,9 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::SET_SDF:
 			edit_stuff_done();
 			break;
+		case eMenu::HELP_TOC:
+			launchURL("https://calref.net/~sylae/boe-doc/game/Editor.html");
+			break;
 	}
 }
 
@@ -321,13 +332,12 @@ void handle_item_menu(int item_hit) {
 	univ.party[current_active_pc].give_item(store_i,false);
 }
 
-//short mode; // 0 - quit  1- restore
-bool verify_restore_quit(bool mode) {
+bool verify_restore_quit(std::string dlog) {
 	std::string choice;
 	
 	if(file_in_mem.empty())
 		return true;
-	cChoiceDlog verify(mode ? "save-open" : "save-quit", {"save", "quit", "cancel"});
+	cChoiceDlog verify(dlog, {"save", "quit", "cancel"});
 	choice = verify.show();
 	if(choice == "cancel")
 		return false;

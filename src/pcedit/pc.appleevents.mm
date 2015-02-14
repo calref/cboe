@@ -7,8 +7,9 @@
 //
 
 #include <Cocoa/Cocoa.h>
+#include <string>
 
-extern bool verify_restore_quit(bool mode);
+extern bool verify_restore_quit(std::string dlog);
 extern bool All_Done;
 
 typedef NSAppleEventDescriptor AEDescr;
@@ -37,7 +38,7 @@ void set_up_apple_events() {
 -(void)handleQuit:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply {
 	(void) theAppleEvent; // Suppress "unused parameter" warning
 	(void) reply;
-	All_Done = verify_restore_quit(0);
+	All_Done = verify_restore_quit("save-quit");
 }
 @end
 
