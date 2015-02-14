@@ -222,6 +222,9 @@ void handle_menu_choice(eMenu item_hit) {
 			if(!save_check("save-before-close"))
 				break;
 			overall_mode = MODE_INTRO_SCREEN;
+			right_sbar->hide();
+			pal_sbar->hide();
+			shut_down_menus(0);
 			set_up_start_screen();
 			break;
 		case eMenu::QUIT: // quit
