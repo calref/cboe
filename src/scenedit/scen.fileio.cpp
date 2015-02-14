@@ -977,6 +977,19 @@ void save_scenario(fs::path toFile) {
 		writeDialogueToXml(ticpp::Printer("talk.xml", town_talk), scenario.towns[i]->talking, i);
 	}
 	
+	// Alright. At this point, check to see if the scenario was unpacked.
+	if(fs::is_directory(toFile)) {
+		// If it was, we just need to save each file to its respective location
+		// There's no need to worry about custom graphics or sounds, either.
+		// And if it's unpacked, it can't possibly be legacy, so graphics don't need conversion.
+		for(auto& file : scen_file) {
+			std::string fname = file.filename.substr(9);
+			std::ofstream fout((toFile/fname).string());
+			fout << file.contents.rdbuf();
+		}
+		return;
+	}
+	
 	// Now, custom graphics.
 	if(spec_scen_g.is_old) {
 		spec_scen_g.convert_sheets();
@@ -1055,6 +1068,7 @@ void save_scenario(fs::path toFile) {
 			fname.replace(dot,4,".boes");
 		else fname += ".boes";
 	}
+	scenario.scen_file = fname;
 	toFile = toFile.parent_path()/fname;
 	
 	// Now write to zip file.

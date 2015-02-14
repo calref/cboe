@@ -53,6 +53,8 @@ public:
 	void newDirectory(std::string dname);
 	std::istream& getFile(std::string fname);
 	bool hasFile(std::string fname);
+	std::deque<tarfile>::iterator begin() {return files.begin();}
+	std::deque<tarfile>::iterator end() {return files.end();}
 };
 
 
