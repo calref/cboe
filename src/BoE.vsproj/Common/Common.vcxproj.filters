@@ -206,6 +206,9 @@
     <ClInclude Include="..\..\classes\living.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\tools\menu_accel.win.hpp">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\classes\creatlist.cpp">
@@ -360,6 +363,9 @@
     </ClCompile>
     <ClCompile Include="..\..\classes\living.cpp">
       <Filter>Classes\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\menu_accel.win.cpp">
+      <Filter>Tools\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

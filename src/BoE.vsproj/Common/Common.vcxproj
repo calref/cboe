@@ -55,6 +55,7 @@
     <ClInclude Include="..\..\tools\gzstream\gzstream.h" />
     <ClInclude Include="..\..\tools\map_parse.hpp" />
     <ClInclude Include="..\..\tools\mathutil.hpp" />
+    <ClInclude Include="..\..\tools\menu_accel.win.hpp" />
     <ClInclude Include="..\..\tools\porting.hpp" />
     <ClInclude Include="..\..\tools\prefs.hpp" />
     <ClInclude Include="..\..\tools\resmgr\resmgr.hpp" />
@@ -114,6 +115,7 @@
     <ClCompile Include="..\..\tools\gzstream\gzstream.cpp" />
     <ClCompile Include="..\..\tools\map_parse.cpp" />
     <ClCompile Include="..\..\tools\mathutil.cpp" />
+    <ClCompile Include="..\..\tools\menu_accel.win.cpp" />
     <ClCompile Include="..\..\tools\porting.cpp" />
     <ClCompile Include="..\..\tools\prefs.win.cpp" />
     <ClCompile Include="..\..\tools\soundtool.cpp" />

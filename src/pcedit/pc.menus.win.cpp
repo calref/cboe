@@ -5,6 +5,7 @@
 #include "Resource.h"
 #include "universe.h"
 #include "winutil.hpp"
+#include "menu_accel.win.hpp"
 
 // Include this last because some #defines in the Windows headers cause compile errors in my headers.
 // Fortunately they're on symbols not used in this file, so this should work.
@@ -25,17 +26,29 @@ extern bool scen_items_loaded;
 extern fs::path file_in_mem;
 LONG_PTR mainProc;
 HMENU menuHandle = NULL;
+accel_table_t accel;
 std::map<int,eMenu> menuChoices;
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
 
 void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
+	static char title[256];
 	MENUITEMINFOA item;
 	item.cbSize = sizeof(MENUITEMINFOA);
-	item.fMask = MIIM_ID | MIIM_FTYPE;
+	item.cch = 255;
+	item.dwTypeData = title;
+	item.fMask = MIIM_ID | MIIM_FTYPE | MIIM_STRING;
 	GetMenuItemInfoA(menu, i++, true, &item);
 	if(item.fType == MFT_SEPARATOR) return;
 	menuChoices[item.wID] = cmd;
+	// Now set up the accelerator, if any
+	std::string item_name = item.dwTypeData;
+	size_t pos = item_name.find_last_of('\t');
+	if(pos == std::string::npos) return;
+	pos++;
+	if(pos >= item_name.size()) return;
+	std::string key_name = item_name.substr(pos);
+	accel.add(item.wID, key_name);
 }
 
 void init_menubar() {
@@ -93,6 +106,8 @@ void init_menubar() {
 	i = 0;
 	for(eMenu opt : help_choices)
 		setMenuCommand(help_menu, i++, opt);
+
+	accel.build();
 }
 
 void update_item_menu() {
@@ -137,6 +152,11 @@ void menu_activate() {
 #include "cursors.hpp"
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
+	MSG msg = {handle, message, wParam, lParam};
+	if(HIWORD(wParam) != 1 || message != WM_COMMAND) {
+		if(TranslateAccelerator(handle, accel.handle, &msg))
+			return 0;
+	}
 	if(message == WM_COMMAND) {
 		int cmd = LOWORD(wParam);
 		if(cmd >= 1000) { // Item menus
