@@ -4,7 +4,6 @@
 //
 #define IDR_MENU1                       101
 #define IDM_FILE_NEW                    101
-#define IDR_ACCELERATOR1                102
 #define IDM_FILE_OPEN                   102
 #define IDM_FILE_CLOSE                  103
 #define IDM_FILE_SAVE                   104

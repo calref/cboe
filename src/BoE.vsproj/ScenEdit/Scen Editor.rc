@@ -90,7 +90,7 @@ BEGIN
         MENUITEM "&Scenario Details",           IDM_SCEN_DETAILS
         MENUITEM "Scenario Intr&o Text",        IDM_SCEN_INTRO
         MENUITEM "Set Starting &Location",      IDM_SCEN_START
-        MENUITEM "Classify Custom &Graphics"    IDM_SCEN_CUSTOM_PICS
+        MENUITEM "Classify Custom &Graphics",   IDM_SCEN_CUSTOM_PICS
         MENUITEM SEPARATOR
         MENUITEM "Advanced:",                   IDM_SCEN_NEW_TOWN, GRAYED
         MENUITEM "  Edit Special &Nodes",       IDM_SCEN_ADV_SPECIALS
@@ -213,39 +213,6 @@ BEGIN
         MENUITEM "&Testing Your Scenario",      IDM_HELP_TEST
         MENUITEM "&Distributing Your Scenario", IDM_HELP_DISTRIBUTE
     END
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Accelerator
-//
-
-IDR_ACCELERATOR1 ACCELERATORS
-BEGIN
-    VK_F1,          801,                    VIRTKEY 
-    "^O",           1,                      ASCII   
-    "^S",           2,                      ASCII   
-    "^N",           3,                      ASCII   
-    "^Q",           5,                      ASCII   
-    "^B",           214,                    ASCII   
-    "^U",           311,                    ASCII   
-    "^T",           401,                    ASCII   
-    "^R",           402,                    ASCII   
-    "^L",           403,                    ASCII   
-    "^E",           404,                    ASCII   
-    "^F",           405,                    ASCII   
-    "^G",           406,                    ASCII   
-    "^M",           407,                    ASCII   
-    "\t",           408,                    ASCII   
-    "^J",           409,                    ASCII   
-    "^K",           410,                    ASCII   
-    "^P",           414,                    ASCII   
-    VK_TAB,         408,                    VIRTKEY, CONTROL, NOINVERT
-    VK_LEFT,        409,                    VIRTKEY, CONTROL, NOINVERT
-    VK_RIGHT,       410,                    VIRTKEY, CONTROL, NOINVERT
-    VK_UP,          412,                    VIRTKEY, CONTROL, NOINVERT
-    VK_DOWN,        413,                    VIRTKEY, CONTROL, NOINVERT
 END
 
 #endif    // English (United States) resources

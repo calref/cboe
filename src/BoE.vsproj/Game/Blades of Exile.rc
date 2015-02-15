@@ -22,6 +22,7 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -108,23 +109,6 @@ BEGIN
         MENUITEM "Hints, Bugs, and Comments",   IDM_HELP_HINTS
         MENUITEM "Spell Casting Help",          IDM_HELP_SPELLS
     END
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Accelerator
-//
-
-IDC_BLADESOFEXILE ACCELERATORS
-BEGIN
-    "^O",           IDM_FILE_OPEN,          ASCII,  NOINVERT
-    "^S",           IDM_FILE_SAVE,          ASCII,  NOINVERT
-    "^N",           IDM_FILE_NEW,           ASCII,  NOINVERT
-    "^Q",           IDM_FILE_QUIT,          ASCII,  NOINVERT
-    "^A",           IDM_ACTIONS_ALCHEMY,    ASCII,  NOINVERT
-    "^W",           IDM_ACTIONS_WAIT,       ASCII,  NOINVERT
-    "^M",           IDM_ACTIONS_MAP,        ASCII,  NOINVERT
 END
 
 
