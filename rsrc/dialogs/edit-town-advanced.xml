@@ -56,13 +56,13 @@
 	<field name='bg-town' top='274' left='160' width='80' height='16'/>
 	<button name='pick-fight' type='tiny' top='302' left='30' width='120'>Combat Background:</button>
 	<field name='bg-fight' top='298' left='160' width='80' height='16'/>
-	<text top='319' left='50' width='100' height='16'>Town Properties:</text>
-	<led name='hidden' font='plain' top='336' left='50' width='450'>
+	<text top='319' left='30' width='100' height='16'>Town Properties:</text>
+	<led name='hidden' font='plain' top='336' left='30' width='450'>
 		Town hidden?
-		(This town cannot be seen until it's made visible with a special encounter.)
+		(Can't be seen until it's made visible with a special encounter.)
 	</led>
-	<led name='nomap' font='plain' top='353' left='50' width='200'>No automap in this town</led>
-	<led name='noscry' font='plain' top='370' left='50' width='200'>Defy scrying (Magic Map doesn't work)</led>
-	<led name='barrier' font='plain' top='387' left='50' width='220'>Magical barriers are stronger in this town</led>
-	<led name='tavern' font='plain' top='404' left='50' width='220'>You can create new PCs in this town</led>
+	<led name='nomap' font='plain' top='353' left='30' width='200'>No automap in this town</led>
+	<led name='noscry' font='plain' top='370' left='30' width='200'>Defy scrying (Magic Map doesn't work)</led>
+	<led name='barrier' font='plain' top='387' left='30' width='220'>Magical barriers are stronger in this town</led>
+	<led name='tavern' font='plain' top='404' left='30' width='220'>You can create new PCs in this town</led>
 </dialog>

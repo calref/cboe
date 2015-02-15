@@ -6,7 +6,6 @@
 #define IDM_FILE_OPEN                   101
 #define IDM_FILE_CLOSE                  102
 #define IDM_FILE_SAVE                   103
-#define IDR_ACCELERATOR1                104
 #define IDM_FILE_SAVE_AS                104
 #define IDM_FILE_REVERT                 105
 #define IDM_FILE_QUIT                   106
