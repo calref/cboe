@@ -19,6 +19,7 @@
 #include "oldstructs.h"
 #include "spell.hpp"
 #include "graphtool.hpp" // for get_str()
+#include "fileio.hpp"
 
 extern const std::multiset<eItemType> equippable = {
 	eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::BOW, eItemType::ARROW, eItemType::THROWN_MISSILE,
@@ -1263,8 +1264,8 @@ void cItem::writeTo(std::ostream& file, std::string prefix) const {
 	file << prefix << "WEIGHT " << weight << '\n';
 	file << prefix << "SPEC " << special_class << '\n';
 	file << prefix << "AT " << item_loc.x << ' ' << item_loc.y << '\n';
-	file << prefix << "FULLNAME " << full_name << '\n';
-	file << prefix << "NAME " << name << '\n';
+	file << prefix << "FULLNAME " << maybe_quote_string(full_name) << '\n';
+	file << prefix << "NAME " << maybe_quote_string(name) << '\n';
 	file << prefix << "TREASURE " << treas_class << '\n';
 	if(ident) file << prefix << "IDENTIFIED\n";
 	if(property) file << prefix << "PROPERTY\n";
@@ -1299,13 +1300,8 @@ void cItem::readFrom(std::istream& sin){
 		else if(cur == "WEIGHT") sin >> weight;
 		else if(cur == "SPEC") sin >> special_class;
 		else if(cur == "AT") sin >> item_loc.x >> item_loc.y;
-		else if(cur == "FULLNAME"){
-			getline(sin,cur);
-			full_name = cur;
-		}else if(cur == "NAME"){
-			getline(sin,cur);
-			name = cur;
-		}
+		else if(cur == "FULLNAME") full_name = read_maybe_quoted_string(sin);
+		else if(cur == "NAME") name = read_maybe_quoted_string(sin);
 		else if(cur == "TREASURE") sin >> treas_class;
 		else if(cur == "IDENTIFIED") ident = true;
 		else if(cur == "PROPERTY") property = true;
