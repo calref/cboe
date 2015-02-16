@@ -86,14 +86,23 @@ void check_for_intel() {
 std::string read_maybe_quoted_string(std::istream& from) {
 	std::string result;
 	from >> std::ws;
-	if(from.peek() == '"' ||  from.peek() == '\'') {
+	if(from.peek() == '"' || from.peek() == '\'') {
 		char delim = from.get();
 		getline(from, result, delim);
 		if(result.empty()) return result;
 		while(result[result.length() - 1] == '\\') {
-			result += delim;
+			result[result.length() - 1] = delim;
 			std::string nextPart;
 			getline(from, nextPart, delim);
+			// Collapse any double backslashes; remove any single backslashes
+			for(std::string::iterator iter = nextPart.begin(); iter != nextPart.end(); iter++) {
+				if(iter[0] == '\\' && iter + 1 != nextPart.end() && iter[1] != '\\') {
+					iter = nextPart.erase(iter);
+					// After this, iter points to the second of the two backslashes, so
+					// when incremented by the loop, it'll point to the character after the backslashes.
+				}
+			}
+			// Note that this does not support escaping the single quotes in strings delimited by double quotes, and vice versa.
 			result += nextPart;
 		}
 	} else from >> result;
