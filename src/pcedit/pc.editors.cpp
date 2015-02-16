@@ -126,8 +126,10 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 static void display_traits_graphics(cDialog& me) {
 	short i,store;
 	
-	std::string race = "race" + boost::lexical_cast<std::string>(int(store_pc->race) + 1);
-	dynamic_cast<cLedGroup&>(me["race"]).setSelected(race);
+	if(store_pc->race <= eRace::VAHNATAI) {
+		std::string race = "race" + boost::lexical_cast<std::string>(int(store_pc->race) + 1);
+		dynamic_cast<cLedGroup&>(me["race"]).setSelected(race);
+	}
 	for(i = 0; i < 10; i++) {
 		std::string id = "good" + boost::lexical_cast<std::string>(i + 1);
 		eTrait trait = eTrait(i);
@@ -182,7 +184,7 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const 
 }
 
 //mode; // 0 - edit  1 - just display  2 - can't change race
-void pick_race_abil(cPlayer *pc,short mode) {
+void pick_race_abil(cPlayer *pc,short mode,cDialog* parent) {
 	using namespace std::placeholders;
 	static const char*const start_str1 = "Click on button by name for description.";
 	static const char*const start_str2 = "Click on advantage button to add/remove.";
@@ -190,7 +192,7 @@ void pick_race_abil(cPlayer *pc,short mode) {
 	store_pc = pc;
 	make_cursor_sword();
 	
-	cDialog pickAbil("pick-race-abil");
+	cDialog pickAbil("pick-race-abil",parent);
 	pickAbil["done"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, true));
 	auto led_selector = std::bind(pick_race_select_led, _1, _2, _3, mode);
 	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5", "bad6", "bad7"});
