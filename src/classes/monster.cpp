@@ -489,7 +489,7 @@ std::istream& operator >> (std::istream& in, eRace& e){
 	e = eRace::HUMANOID;
 	try {
 		int i = boost::lexical_cast<int>(key);
-		if(i > 0 && i < 20)
+		if(i >= 0 && i < 20)
 			e = (eRace) i;
 	} catch(boost::bad_lexical_cast) {
 		if(key == "human")
