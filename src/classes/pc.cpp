@@ -16,6 +16,7 @@
 #include "universe.h"
 #include "oldstructs.h"
 #include "mathutil.hpp"
+#include "fileio.hpp"
 
 extern short skill_bonus[21];
 
@@ -884,7 +885,7 @@ void operator -= (eMainStatus& stat, eMainStatus othr){
 void cPlayer::writeTo(std::ostream& file) const {
 	file << "UID " << unique_id << '\n';
 	file << "STATUS -1 " << main_status << '\n';
-	file << "NAME " << name << '\n';
+	file << "NAME " << maybe_quote_string(name) << '\n';
 	file << "SKILL 19 " << max_health << '\n';
 	file << "SKILL 20 " << max_sp << '\n';
 	for(auto p : skills) {
@@ -947,7 +948,7 @@ void cPlayer::readFrom(std::istream& file){
 			if(i == eStatus::MAIN) sin >> main_status;
 			else sin >> status[i];
 		}else if(cur == "NAME")
-			sin >> name;
+			name = read_maybe_quoted_string(sin);
 		else if(cur == "SKILL"){
 			int i;
 			sin >> i;
