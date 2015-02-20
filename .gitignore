@@ -57,6 +57,9 @@ src/tools/*.sbproj
 src/doxy/html/
 src/doxy/doxy_warnings.txt
 
+# Mac junk files
+.DS_Store
+
 # Windows junk files
 Thumbs.db
 
