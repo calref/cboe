@@ -53,6 +53,7 @@ Section "Blades of Exile" Section1
 	File "..\Release\Blades of Exile.exe"
 	; Required DLLs
 	File "..\Release\libsndfile-1.dll"
+	File "..\Release\openal32.dll"
 	File "..\Release\sfml-audio-2.dll"
 	File "..\Release\sfml-graphics-2.dll"
 	File "..\Release\sfml-system-2.dll"

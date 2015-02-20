@@ -62,6 +62,7 @@ extern cCustomGraphics spec_scen_g;
 extern sf::RenderWindow mini_map;
 bool map_visible = false;
 extern bool show_startup_splash;
+extern std::string save_talk_str1, save_talk_str2;
 
 rectangle		menuBarRect;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
@@ -575,7 +576,8 @@ void redraw_screen(int refresh) {
 			draw_startup(0);
 			break;
 		case MODE_TALKING:
-			if(refresh & REFRESH_DLOG); // TODO: Should call place_talk_str, but we don't have the strings
+			if(refresh & REFRESH_DLOG)
+				place_talk_str(save_talk_str1, save_talk_str2, 0, rectangle());
 			refresh_talking();
 			break;
 		case MODE_SHOPPING:

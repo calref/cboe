@@ -378,16 +378,17 @@ void set_town_attitude(short lo,short hi,short att) {
 		return;
 	give_help(53,0);
 	univ.town.monst.friendly = 1;
+	long long num_monst = univ.town.monst.size();
 	
 	// Nice smart indexing, like Python :D
-	if(lo <= -univ.town.monst.size())
+	if(lo <= -num_monst)
 		lo = 0;
 	if(lo < 0)
-		lo = univ.town.monst.size() + lo;
-	if(hi <= -univ.town.monst.size())
+		lo = num_monst + lo;
+	if(hi <= -num_monst)
 		hi = 0;
 	if(hi < 0)
-		hi = univ.town.monst.size() + hi;
+		hi = num_monst + hi;
 	if(hi < lo)
 		std::swap(lo, hi);
 	
@@ -970,9 +971,9 @@ void refresh_store_items() {
 				continue;
 			} else if(entry.type == eShopItemType::CLASS) {
 				std::set<int> choices;
-				for(int i = 0; i < univ.scenario.scen_items.size(); i++) {
-					if(univ.scenario.scen_items[i].special_class == entry.item.special_class)
-						choices.insert(i);
+				for(int k = 0; k < univ.scenario.scen_items.size(); k++) {
+					if(univ.scenario.scen_items[k].special_class == entry.item.special_class)
+						choices.insert(k);
 				}
 				int choice = get_ran(1,0,choices.size());
 				if(choice < choices.size()) {

@@ -242,7 +242,7 @@ void display_alchemy(bool allowEdit) {
 		if(!allowEdit)
 			showAlch->getControl(id).attachClickHandler(&cLed::noAction);
 		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));
-		if(univ.party.alchemy[i] > 0)
+		if(univ.party.alchemy[i])
 			led.setState(led_red);
 		else led.setState(led_off);
 	}

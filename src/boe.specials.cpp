@@ -3529,7 +3529,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(i > 0) *next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_RECIPE:
-			if(i < 0 || i >= 20) {
+			if(spec.ex1a < 0 || spec.ex1a >= 20) {
 				giveError("Alchemy recipe out of range (0 - 19).");
 				break;
 			}
@@ -3734,7 +3734,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = -1;
 			}
 			else {
-				if(handle_lever(loc(PSD[SDF_SPEC_LOC_X], PSD[SDF_SPEC_LOC_Y])) > 0)
+				if(handle_lever(loc(PSD[SDF_SPEC_LOC_X], PSD[SDF_SPEC_LOC_Y])))
 					*next_spec = spec.ex1b;
 			}
 			break;
