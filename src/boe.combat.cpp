@@ -843,7 +843,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 				target.drain_sp(weap.abil_data[0]);
 			if(before > target.get_magic()) {
 				add_string_to_buf("  Blade drains energy.");
-				univ.party[who_att].restore_sp((before > target.get_magic()) / 3);
+				univ.party[who_att].restore_sp(before / 3);
 			}
 		} else if(weap.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
 			short s1,s2,s3;
@@ -1027,11 +1027,6 @@ void do_combat_cast(location target) {
 	}
 	force_wall_position = 10;
 	
-	// TODO: Should we do this here? Or in the handling of targeting modes?
-	// (It really depends whether we want to be able to trigger it for targeting something other than a spell.)
-	if(adjust <= 4 && !cast_spell_on_space(target, spell_being_cast))
-		return; // The special node intercepted and cancelled regular spell behaviour.
-	
 	caster.void_sanctuary();
 	if(overall_mode == MODE_SPELL_TARGET) {
 		spell_targets[0] = target;
@@ -1066,8 +1061,14 @@ void do_combat_cast(location target) {
 				caster.cur_sp -= store_sum_monst_cost;
 				cost_taken = true;
 			}
-			
-			if((adjust = can_see_light(caster.combat_pos,target,sight_obscurity)) > 4) {
+
+			adjust = can_see_light(caster.combat_pos, target, sight_obscurity);
+			// TODO: Should we do this here? Or in the handling of targeting modes?
+			// (It really depends whether we want to be able to trigger it for targeting something other than a spell.)
+			if(adjust <= 4 && !cast_spell_on_space(target, spell_being_cast))
+				continue; // The special node intercepted and cancelled regular spell behaviour.
+
+			if(adjust > 4) {
 				add_string_to_buf("  Can't see target.");
 			}
 			else if(loc_off_act_area(target)) {
