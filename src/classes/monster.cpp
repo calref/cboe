@@ -1008,7 +1008,8 @@ void cMonster::readFrom(std::istream& file) {
 			m_name = read_maybe_quoted_string(line);
 		} else if(cur == "ATTACK") {
 			int which;
-			line >> which >> a[which].dice >> a[which].sides >> a[which].type;
+			line >> which;
+			line >> a[which].dice >> a[which].sides >> a[which].type;
 			which--;
 		} else if(cur == "SIZE") {
 			line >> temp1 >> temp2;

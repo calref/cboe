@@ -51,3 +51,4 @@ if %Config% == "Debug" (
 
 xcopy "%DllSrcDir%\zlib1.dll" %TargetDir% /s /y /i /d
 xcopy "%DllSrcDir%\libsndfile-1.dll" %TargetDir% /s /y /i /d
+xcopy "%DllSrcDir%\openal32.dll" %TargetDir% /s /y /i /d

@@ -123,21 +123,8 @@ BEGIN
     POPUP "&Help"
     BEGIN
         MENUITEM "About Blades of Exile Editor", IDM_ABOUT
-        MENUITEM "Blades of Exile Editor Help",  IDM_HELP
+        MENUITEM "Blades of Exile Editor Help", IDM_HELP
     END
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Accelerator
-//
-
-IDR_ACCELERATOR1 ACCELERATORS
-BEGIN
-    "^O",           2,                      ASCII   
-    "^S",           1,                      ASCII   
-    "^Q",           4,                      ASCII   
 END
 
 #endif    // English (United States) resources
