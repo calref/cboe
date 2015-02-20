@@ -467,7 +467,7 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop, cScenario& scen) 
 			shop.setPrompt(boost::lexical_cast<eShopPrompt>(val));
 		} else if(type == "face") {
 			pic_num_t face;
-			elem->GetText(face);
+			elem->GetText(&face);
 			shop.setFace(face);
 		} else if(type == "entries") {
 			int entries_found = 0;
