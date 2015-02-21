@@ -27,7 +27,7 @@ xcopy %ResourceDir%\fonts %TargetDir%\data\fonts /s /y /i /d
 xcopy %ResourceDir%\strings %TargetDir%\data\strings /s /y /i /d
 
 @echo Copying shaders...
-xcopy %1\..\..\tools\mask.* %TargetDir%\data\shaders /s /y /i /d
+xcopy %ResourceDir%\..\src\tools\mask.* %TargetDir%\data\shaders /s /y /i /d
 
 @echo Copying base scenarios...
 xcopy %ResourceDir%\"Blades of Exile Bases" %ScenEdDir%\"Blades of Exile Base" /s /y /i /d
