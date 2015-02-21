@@ -48,46 +48,44 @@ static void register_main_patterns();
 void init_graph_tool(){
 	fs::path shaderPath = progDir/"data"/"shaders";
 	fs::path fragPath = shaderPath/"mask.frag", vertPath = shaderPath/"mask.vert";
-	std::ifstream fin;
 	
 	do {
+		std::ifstream fin;
+		std::cerr << "Loading fragment shader from " << fragPath.string() << std::endl;
+		fin.open(fragPath.string().c_str());
+		if(!fin.good()) {
+			std::cerr << std_fmterr << ": Error loading fragment shader" << std::endl;
+			break;
+		}
+		fin.seekg(0, std::ios::end);
+		int size = fin.tellg();
+		fin.seekg(0);
+		char* fbuf = new char[size + 1];
+		fbuf[size] = 0;
+		fin.read(fbuf, size);
+		fbuf[fin.gcount()] = 0;
+		fin.close();
 
-	std::cerr << "Loading fragment shader from " << fragPath.string() << std::endl;
-	fin.open(fragPath.string().c_str());
-	if(!fin.good()) {
-		std::cerr << std_fmterr << ": Error loading fragment shader" << std::endl;
-		break;
-	}
-	fin.seekg(0, std::ios::end);
-	int size = fin.tellg();
-	fin.seekg(0);
-	char* fbuf = new char[size + 1];
-	fbuf[size] = 0;
-	fin.read(fbuf, size);
-	fbuf[fin.gcount()] = 0;
-	fin.close();
-
-	std::cerr << "Loading vertex shader from " << vertPath.string() << std::endl;
-	fin.open(vertPath.string().c_str());
-	if(!fin.good()) {
-		std::cerr << std_fmterr << ": Error loading vertex shader" << std::endl;
-		delete[] fbuf;
-		break;
-	}
-	fin.seekg(0, std::ios::end);
-	size = fin.tellg();
-	fin.seekg(0);
-	char* vbuf = new char[size + 1];
-	vbuf[size] = 0;
-	fin.read(vbuf, size);
-	vbuf[fin.gcount()] = 0;
+		std::cerr << "Loading vertex shader from " << vertPath.string() << std::endl;
+		fin.open(vertPath.string().c_str());
+		if(!fin.good()) {
+			std::cerr << std_fmterr << ": Error loading vertex shader" << std::endl;
+			delete[] fbuf;
+			break;
+		}
+		fin.seekg(0, std::ios::end);
+		size = fin.tellg();
+		fin.seekg(0);
+		char* vbuf = new char[size + 1];
+		vbuf[size] = 0;
+		fin.read(vbuf, size);
+		vbuf[fin.gcount()] = 0;
 	
-	if(!maskShader.loadFromMemory(vbuf, fbuf)) {
-		std::cerr << "Error: Failed to load shaders from " << shaderPath << "\nVertex:\n" << vbuf << "\nFragment:\n" << fbuf << std::endl;
-	}
-	delete[] fbuf;
-	delete[] vbuf;
-
+		if(!maskShader.loadFromMemory(vbuf, fbuf)) {
+			std::cerr << "Error: Failed to load shaders from " << shaderPath << "\nVertex:\n" << vbuf << "\nFragment:\n" << fbuf << std::endl;
+		}
+		delete[] fbuf;
+		delete[] vbuf;
 	} while(false);
 	int i;
 	// TODO: The duplication of location here shouldn't be necessary
