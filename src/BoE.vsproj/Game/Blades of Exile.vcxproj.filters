@@ -94,11 +94,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\Win32\game\Resources\BLADEXIL.ICO">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\boe.actions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -165,5 +160,10 @@
     <ClCompile Include="..\..\oldstructs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\rsrc\icons\win\BOE Icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -123,9 +123,6 @@
     <ResourceCompile Include="Blades of Exile.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\Win32\game\Resources\BLADEXIL.ICO" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\boe.actions.cpp" />
     <ClCompile Include="..\..\boe.combat.cpp" />
     <ClCompile Include="..\..\boe.dlgutil.cpp" />
@@ -158,6 +155,9 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\rsrc\icons\win\BOE Icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
