@@ -89,9 +89,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Image Include="..\..\..\Win32\scenedit\BLSCENED.ICO" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\scenedit\scen.actions.cpp" />
     <ClCompile Include="..\..\scenedit\scen.btnmg.cpp" />
     <ClCompile Include="..\..\scenedit\scen.core.cpp" />
@@ -126,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Scen Editor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\rsrc\icons\win\BOE Editor.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

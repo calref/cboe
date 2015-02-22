@@ -15,11 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\Win32\scenedit\BLSCENED.ICO">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\scenedit\scen.actions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,5 +79,10 @@
     <ResourceCompile Include="Scen Editor.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\rsrc\icons\win\BOE Editor.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
