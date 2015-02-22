@@ -142,6 +142,9 @@
 		915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915325161A2E1DA8000A9A1C /* oldstructs.cpp */; };
 		915325391A2E5F36000A9A1C /* specials_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915325181A2E37EE000A9A1C /* specials_parse.cpp */; };
 		9153253B1A2E5F37000A9A1C /* specials_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915325181A2E37EE000A9A1C /* specials_parse.cpp */; };
+		9153C79E1A994A0D00D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		9153C79F1A994A1300D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		9153C7A01A994A1700D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		91597A6F1A3C021400BE7BF9 /* spell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91597A6E1A3BEDC700BE7BF9 /* spell.cpp */; };
 		91597A701A3C021600BE7BF9 /* spell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91597A6E1A3BEDC700BE7BF9 /* spell.cpp */; };
 		915E090A1A316EE3008BDF00 /* map_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915E09081A316D89008BDF00 /* map_parse.cpp */; };
@@ -450,6 +453,7 @@
 				91ACCE7919002E5F00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */,
 				91ACCE7A19002E5F00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */,
 				91ACCE7B19002E5F00FAEF8B /* sndfile.framework in Copy Libraries and Frameworks */,
+				9153C79E1A994A0D00D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */,
 				919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */,
 				919DDC0019006CF9003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
 				919DDC0119006CF9003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
@@ -467,6 +471,7 @@
 				91ACCE891900344B00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */,
 				91ACCE8B1900344B00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */,
 				91ACCE8C1900344B00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */,
+				9153C79F1A994A1300D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */,
 				91ACCE8D1900344B00FAEF8B /* sndfile.framework in Copy Libraries and Frameworks */,
 				919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */,
 				919DDBFE19006CF6003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
@@ -485,6 +490,7 @@
 				91ACCE941900346C00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */,
 				91ACCE961900346C00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */,
 				91ACCE971900346C00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */,
+				9153C7A01A994A1700D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */,
 				91ACCE981900346C00FAEF8B /* sndfile.framework in Copy Libraries and Frameworks */,
 				919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */,
 				919DDBFC19006CF2003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
