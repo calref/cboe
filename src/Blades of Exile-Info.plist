@@ -9,7 +9,7 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.SAV</string>
+				<string>SAV</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boesave</string>
@@ -29,8 +29,8 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.boe</string>
-				<string>.mac</string>
+				<string>boe</string>
+				<string>mac</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boesave</string>
@@ -54,7 +54,7 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.bmp</string>
+				<string>bmp</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boegraphics</string>
@@ -70,7 +70,7 @@
 				<string>BMP</string>
 			</array>
 			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>None</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.microsoft.bmp</string>
@@ -83,7 +83,7 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.meg</string>
+				<string>meg</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boegraphics</string>
@@ -94,7 +94,7 @@
 				<string>beGR</string>
 			</array>
 			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>None</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.spidweb.bladesofexile.oldgraphics</string>
@@ -127,7 +127,7 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.exg</string>
+				<string>exg</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boesave</string>
@@ -151,8 +151,8 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.exs</string>
-				<string>.boes</string>
+				<string>exs</string>
+				<string>boes</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boescenario</string>
@@ -163,7 +163,7 @@
 				<string>BETM</string>
 			</array>
 			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>None</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.spidweb.bladesofexile.scenario</string>
@@ -176,14 +176,14 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.dlg</string>
+				<string>dlg</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boeresources</string>
 			<key>CFBundleTypeName</key>
 			<string>EncounterDialog</string>
 			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>None</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.spidweb.bladesofexile.dialog</string>
@@ -196,14 +196,14 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.exd</string>
+				<string>exd</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boegraphics</string>
 			<key>CFBundleTypeName</key>
 			<string>Preset Graphics</string>
 			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>None</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.spidweb.bladesofexile.graphics</string>
@@ -216,14 +216,14 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>.exa</string>
+				<string>exa</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boesounds</string>
 			<key>CFBundleTypeName</key>
 			<string>Preset Sounds</string>
 			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>None</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.spidweb.bladesofexile.sounds</string>
@@ -248,5 +248,74 @@
 	<string>blx!</string>
 	<key>CFBundleVersion</key>
 	<string>2.0b1</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.role-playing-games</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>org.gnu.gnu-zip-tar-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Blades of Exile Scenario</string>
+			<key>UTTypeIconFile</key>
+			<string>boescenario</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.spidweb.bladesofexile.scenario</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<array/>
+				<key>public.filename-extension</key>
+				<array>
+					<string>exs</string>
+					<string>boes</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>org.gnu.gnu-zip-tar-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Blades of Exile Saved Game</string>
+			<key>UTTypeIconFile</key>
+			<string>boesave</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.spidweb.bladesofexile.savegame</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>exg</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.apple.resource-map</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Blades of Exile Scenario Graphics</string>
+			<key>UTTypeIconFile</key>
+			<string>boegraphics</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.spidweb.bladesofexile.oldgraphics</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>meg</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
