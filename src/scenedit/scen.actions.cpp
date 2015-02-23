@@ -1332,6 +1332,7 @@ void handle_keystroke(sf::Event event) {
 	using Key = sf::Keyboard::Key;
 	
 	Key keypad[10] = {kb::Numpad0,kb::Numpad1,kb::Numpad2,kb::Numpad3,kb::Numpad4,kb::Numpad5,kb::Numpad6,kb::Numpad7,kb::Numpad8,kb::Numpad9};
+	Key arrows[4] = {kb::Down, kb::Left, kb::Right, kb::Up};
 	// TODO: The repetition of location shouldn't be needed here!
 	location terrain_click[10] = {location{0,0},		// 0
 		location{6,356}, location{140,356}, location{270,356},
@@ -1350,7 +1351,7 @@ void handle_keystroke(sf::Event event) {
 		return;
 	
 	for(i = 0; i < 10; i++)
-		if(chr2 == keypad[i]) {
+		if(chr2 == keypad[i] || (i % 2 == 0 && i > 0 && chr2 == arrows[i / 2 - 1])) {
 			if(i == 0) {
 				chr = 'z';
 			}
