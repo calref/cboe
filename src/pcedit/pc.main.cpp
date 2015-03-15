@@ -319,7 +319,7 @@ void handle_menu_choice(eMenu item_hit) {
 			edit_stuff_done();
 			break;
 		case eMenu::HELP_TOC:
-			launchURL("https://calref.net/~sylae/boe-doc/game/Editor.html");
+			launchURL("https://blades.calref.net/doc/game/Editor.html");
 			break;
 	}
 }

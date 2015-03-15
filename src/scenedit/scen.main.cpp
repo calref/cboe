@@ -468,7 +468,7 @@ void handle_menu_choice(eMenu item_hit) {
 			isHelp = true;
 			break;
 		case eMenu::HELP_TOC:
-			launchURL("https://calref.net/~sylae/boe-doc/editor/About.html");
+			launchURL("https://blades.calref.net/doc/editor/About.html");
 			break;
 		case eMenu::HELP_START:
 			helpDlog = "help-editing";
