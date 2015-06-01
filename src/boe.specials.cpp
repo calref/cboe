@@ -2200,7 +2200,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::FORCED_GIVE:
 			check_mess = true;
-			if(!univ.party.forced_give(spec.ex1a,eItemAbil::NONE) && spec.ex1b >= 0)
+			if(!univ.party.forced_give(spec.ex1a + 10000 * spec.ex2a,eItemAbil::NONE) && spec.ex1b >= 0)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::BUY_ITEMS_OF_TYPE:
@@ -3001,6 +3001,63 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					else univ.party[i].skills[skill] = minmax(0, skill_max[skill], univ.party[i].skills[skill] + adj);
 				}
 			break;
+		case eSpecType::AFFECT_LEVEL:
+			if(pc_num >= 100) {
+				int lvl = pc->get_level();
+				if(spec.ex1b == 0)
+					lvl += spec.ex1a;
+				else lvl -= spec.ex1a;
+				dynamic_cast<cCreature*>(pc)->level = lvl;
+			} else for(i = 0; i < 6; i++)
+				if(pc_num == 6 || pc_num == i) {
+					int cur = univ.party[i].get_level();
+					int lvl = cur;
+					if(spec.ex1b == 0)
+						lvl += spec.ex1a;
+					else lvl -= spec.ex1a;
+					univ.party[i].level = lvl;
+				}
+			break;
+		case eSpecType::AFFECT_MORALE:
+			pc->scare(spec.ex1a * (spec.ex1b != 0 ? 1 : -1));
+			break;
+		case eSpecType::AFFECT_MONST_ATT:
+			if(pc_num < 100) break;
+			if(spec.ex1a < 0 || spec.ex1a > 2) {
+				giveError("Invalid monster attack (0-2)");
+				break;
+			}
+			if(spec.ex2a == 0) {
+				dynamic_cast<cCreature*>(pc)->a[spec.ex1a].dice += spec.ex1b;
+				dynamic_cast<cCreature*>(pc)->a[spec.ex1a].dice += spec.ex1c;
+			} else {
+				dynamic_cast<cCreature*>(pc)->a[spec.ex1a].dice -= spec.ex1b;
+				dynamic_cast<cCreature*>(pc)->a[spec.ex1a].dice -= spec.ex1c;
+			}
+			break;
+		case eSpecType::AFFECT_MONST_STAT:
+			if(pc_num < 100) break;
+			if(spec.ex2a < 0 || spec.ex2a > 7) {
+				giveError("Invalid monster stat (0-7)");
+				break;
+			}
+			i = spec.ex1a;
+			if(spec.ex1b > 0)
+				i = -i;
+			switch(spec.ex2a) {
+				case 0: dynamic_cast<cCreature*>(pc)->m_health += i; break;
+				case 1: dynamic_cast<cCreature*>(pc)->max_mp += i; break;
+				case 2: dynamic_cast<cCreature*>(pc)->armor += i; break;
+				case 3: dynamic_cast<cCreature*>(pc)->skill += i; break;
+				case 4: dynamic_cast<cCreature*>(pc)->speed += i; break;
+				case 5: dynamic_cast<cCreature*>(pc)->mu += i; break;
+				case 6: dynamic_cast<cCreature*>(pc)->cl += i; break;
+				case 7: dynamic_cast<cCreature*>(pc)->magic_res += i; break;
+				case 8: dynamic_cast<cCreature*>(pc)->fire_res += i; break;
+				case 9: dynamic_cast<cCreature*>(pc)->cold_res += i; break;
+				case 10:dynamic_cast<cCreature*>(pc)->poison_res += i; break;
+			}
+			break;
 		case eSpecType::AFFECT_MAGE_SPELL:
 			if(pc_num >= 100) break;
 			if(spec.ex1a != minmax(0,61,spec.ex1a)) {
@@ -3041,6 +3098,15 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				break;
 			}
 			univ.party.alchemy[spec.ex1a] = true;
+			break;
+		case eSpecType::AFFECT_SOUL_CRYSTAL:
+			if(pc_num < 100) break;
+			if(spec.ex1a == 0)
+				record_monst(dynamic_cast<cCreature*>(pc), spec.ex1b);
+			else for(i = 0; i < 4; i++) {
+				if(univ.party.imprisoned_monst[i] == dynamic_cast<cCreature*>(pc)->number)
+					univ.party.imprisoned_monst[i] = 0;
+			}
 			break;
 		case eSpecType::AFFECT_PARTY_STATUS:
 			if(spec.ex2a < 0 || spec.ex2a > 3) break;
