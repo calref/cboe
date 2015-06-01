@@ -19,9 +19,7 @@ enum {
 	SCEN_MENU_POS = 2,
 	TOWN_MENU_POS = 3,
 	OUT_MENU_POS = 4,
-	ITEMS_MENU_POS = 6,
-	MONST_MENU_POS = 11,
-	HELP_MENU_POS = 15,
+	HELP_MENU_POS = 6,
 };
 
 extern sf::RenderWindow mainPtr;
@@ -130,29 +128,6 @@ void init_menubar() {
 	accel.build();
 }
 
-void update_item_menu() {
-	if(menuHandle == NULL) return;
-	for(int j = 0; j < 5; j++) {
-		HMENU item_menu = GetSubMenu(menuHandle, ITEMS_MENU_POS + j);
-		while(GetMenuItemCount(item_menu)) RemoveMenu(item_menu, 0, MF_BYPOSITION);
-		for(int i = 0; i < 80; i++) {
-			UINT flags = MF_STRING | MF_ENABLED;
-			if(i % 20 == 0) flags |= MF_MENUBARBREAK;
-			AppendMenuA(item_menu, flags, 10000 + i + j * 80, scenario.scen_items[i + j * 80].full_name.c_str());
-		}
-	}
-	for(int j = 0; j < 4; j++) {
-		HMENU mon_menu = GetSubMenu(menuHandle, MONST_MENU_POS + j);
-		while(GetMenuItemCount(mon_menu)) RemoveMenu(mon_menu, 0, MF_BYPOSITION);
-		for(int i = 0; i < 64; i++) {
-			UINT flags = MF_STRING | MF_ENABLED;
-			if(i % 32 == 0) flags |= MF_MENUBARBREAK;
-			AppendMenuA(mon_menu, flags, 20000 + i + j * 64, scenario.scen_monsters[i + j * 64].m_name.c_str());
-		}
-	}
-	DrawMenuBar(mainPtr.getSystemHandle());
-}
-
 void shut_down_menus(short mode) {
 	if(menuHandle == NULL) return;
 	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
@@ -161,10 +136,6 @@ void shut_down_menus(short mode) {
 		EnableMenuItem(menuHandle, SCEN_MENU_POS, MF_GRAYED | MF_BYPOSITION);
 		EnableMenuItem(menuHandle, TOWN_MENU_POS, MF_GRAYED | MF_BYPOSITION);
 		EnableMenuItem(menuHandle, OUT_MENU_POS, MF_GRAYED | MF_BYPOSITION);
-		for(int i = 0; i < 5; i++)
-			EnableMenuItem(menuHandle, ITEMS_MENU_POS + i, MF_GRAYED | MF_BYPOSITION);
-		for(int i = 0; i < 4; i++)
-			EnableMenuItem(menuHandle, MONST_MENU_POS + i, MF_GRAYED | MF_BYPOSITION);
 	}
 	std::shared_ptr<char> buf(new char[256]);
 	MENUITEMINFOA info;
@@ -176,10 +147,6 @@ void shut_down_menus(short mode) {
 		EnableMenuItem(menuHandle, SCEN_MENU_POS, MF_ENABLED | MF_BYPOSITION);
 		EnableMenuItem(menuHandle, TOWN_MENU_POS, MF_ENABLED | MF_BYPOSITION);
 		EnableMenuItem(menuHandle, OUT_MENU_POS, MF_ENABLED | MF_BYPOSITION);
-		for(int i = 0; i < 5; i++)
-			EnableMenuItem(menuHandle, ITEMS_MENU_POS + i, MF_ENABLED | MF_BYPOSITION);
-		for(int i = 0; i < 4; i++)
-			EnableMenuItem(menuHandle, MONST_MENU_POS + i, MF_ENABLED | MF_BYPOSITION);
 
 		HMENU town_menu = GetSubMenu(menuHandle, TOWN_MENU_POS);
 		for(int i = 0; i < GetMenuItemCount(town_menu); i++) {
@@ -199,11 +166,6 @@ void shut_down_menus(short mode) {
 		}
 	}
 	if((mode == 1) || (mode == 3)) {
-		for(int i = 0; i < 5; i++)
-			EnableMenuItem(menuHandle, ITEMS_MENU_POS + i, MF_GRAYED | MF_BYPOSITION);
-		for(int i = 0; i < 4; i++)
-			EnableMenuItem(menuHandle, MONST_MENU_POS + i, MF_GRAYED | MF_BYPOSITION);
-
 		HMENU town_menu = GetSubMenu(menuHandle, TOWN_MENU_POS);
 		for(int i = 0; i < GetMenuItemCount(town_menu); i++) {
 			info.cch = 256;

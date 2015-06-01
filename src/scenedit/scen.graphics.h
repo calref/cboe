@@ -17,7 +17,6 @@ void draw_monsts();
 rectangle get_item_template_rect (short type_wanted);
 void draw_items();
 void force_tiny_redraw();
-void redraw_selected_ter();
 void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw);
 void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size);
 void Draw_Some_Item(sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,location target,sf::BlendMode mode = sf::BlendNone);

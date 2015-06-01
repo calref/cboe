@@ -30,7 +30,7 @@ void cScrollbar::setPosition(long newPos) {
 }
 
 void cScrollbar::setMaximum(long newMax) {
-	max = ::max(1,newMax);
+	max = ::max(0,newMax);
 	setPosition(pos);
 }
 
@@ -65,6 +65,7 @@ bool cScrollbar::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods) 
 }
 
 bool cScrollbar::handleClick(location where) {
+	if(max == 0) return false;
 	sf::Event e;
 	bool done = false, clicked = false;
 	inWindow->setActive();
@@ -172,13 +173,15 @@ void cScrollbar::draw() {
 		}
 		draw_rect.bottom = top + height;
 	}
-	draw_rect.top = draw_rect.bottom;
-	draw_rect.height() = 16;
-	from_rect = thumb_rect;
-	if(depressed && pressedPart == PART_THUMB)
-		from_rect.offset(0,16);
-	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
-	if(pos < max) {
+	if(max > 0) {
+		draw_rect.top = draw_rect.bottom;
+		draw_rect.height() = 16;
+		from_rect = thumb_rect;
+		if(depressed && pressedPart == PART_THUMB)
+			from_rect.offset(0,16);
+		rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+	}
+	if(pos < max || max == 0) {
 		from_rect = bar_rect;
 		int top = draw_rect.bottom, bottom = frame.bottom - 16;
 		if(depressed && pressedPart == PART_PGDN)

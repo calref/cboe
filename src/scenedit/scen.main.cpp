@@ -205,7 +205,6 @@ void handle_menu_choice(eMenu item_hit) {
 				current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 				overall_mode = MODE_MAIN_SCREEN;
 				change_made = false;
-				update_item_menu();
 				set_up_main_screen();
 			}
 			break;
@@ -495,22 +494,6 @@ void handle_menu_choice(eMenu item_hit) {
 	}
 	if(isHelp)
 		cChoiceDlog(helpDlog).show();
-}
-
-void handle_item_menu(int item_hit) {
-	if(scenario.scen_items[item_hit].variety == eItemType::NO_ITEM) {
-		giveError("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.");
-		return;
-	}
-	overall_mode = MODE_PLACE_ITEM;
-	set_string("Place the item.","Select item location");
-	mode_count = item_hit;
-}
-
-void handle_monst_menu(int item_hit) {
-	overall_mode = MODE_PLACE_CREATURE;
-	set_string("Place the monster.","Select monster location");
-	mode_count = item_hit;
 }
 
 static void handleUpdateWhileScrolling(volatile bool& doneScrolling) {

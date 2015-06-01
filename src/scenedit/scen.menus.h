@@ -10,7 +10,6 @@
 #define BoE_scen_menus_h
 
 void init_menubar();
-void update_item_menu();
 void shut_down_menus(short mode);
 
 enum class eMenu {
@@ -34,8 +33,6 @@ enum class eMenu {
 	OUT_SPECIALS, OUT_TEXT, OUT_SIGNS,
 };
 
-void handle_item_menu(int item_hit);
-void handle_monst_menu(int item_hit);
 void handle_menu_choice(eMenu item_hit);
 
 #endif
