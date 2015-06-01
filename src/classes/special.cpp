@@ -365,6 +365,7 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // I - Choose button to select a special item
 // t - Choose button to select a terrain type
 // c - Choose button to select a monster type
+// C - Choose button to select a monster statistic
 // a - Choose button to select an alchemy recipe
 // A - Choose button to select a mage spell
 // P - Choose button to select a priest spell
@@ -420,7 +421,7 @@ static const char*const button_dict[7][11] = {
 		"s    s  s    S", // ex2b
 		"              ", // ex2c
 	}, { // affect pc nodes
-		"mmmmmmmmmmm       mmmmmmmmmm", // msg1
+		"mmmmmmmmmmmmm  mmmmmmmmmmmmm", // msg1
 		"                            ", // msg2
 		"          M              M  ", // msg3
 		"                         5  ", // pic
@@ -428,7 +429,7 @@ static const char*const button_dict[7][11] = {
 		"      w q          AP  a    ", // ex1a
 		"                           s", // ex1b
 		"       e                 Q  ", // ex1c
-		"                  K     E   ", // ex2a
+		"                 CK     E   ", // ex2a
 		" D                          ", // ex2b
 		" x                          ", // ex2c
 	}, { // if-then nodes

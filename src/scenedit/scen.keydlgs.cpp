@@ -337,6 +337,12 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 		case STRT_TREASURE:
 			strings = {"0 - Junk", "1 - Lousy", "2 - So-so", "3 - Good", "4 - Great"};
 			break;
+		case STRT_MONST_STAT:
+			strings = {
+				"Maximum Health", "Maximum Magic Points", "Armor", "Skill", "Speed", "Mage Spells", "Priest Spells",
+				"Magic Resistance", "Fire Resistance", "Cold Resistance", "Poison Resistance",
+			};
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = -1;
@@ -780,6 +786,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case 'I': strt = STRT_SPEC_ITEM; title = "Which special item?"; break;
 		case 't': strt = STRT_TER; title = "Which terrain?"; break;
 		case 'c': strt = STRT_MONST; title = "Which monster?"; break;
+		case 'C': strt = STRT_MONST_STAT; title = "Which statistic?"; break;
 		case 'a': strt = STRT_ALCHEMY; title = "Which recipe?"; break;
 		case 'A': strt = STRT_MAGE; title = "Which spell?"; break;
 		case 'P': strt = STRT_PRIEST; title = "Which spell?"; break;
