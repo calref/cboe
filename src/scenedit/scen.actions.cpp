@@ -463,495 +463,494 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 			}
 	}
 	update_mouse_spot(the_point);
-	if(overall_mode < MODE_MAIN_SCREEN) {;
+	if(overall_mode < MODE_MAIN_SCREEN) {
 		if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
-		if(cur_viewing_mode == 0) {
-			spot_hit.x = cen_x + mouse_spot.x - 4;
-			spot_hit.y = cen_y + mouse_spot.y - 4;
-			if((mouse_spot.x < 0) || (mouse_spot.x > 8) || (mouse_spot.y < 0) || (mouse_spot.y > 8))
-				spot_hit.x = -1;
-		}
-		else {
-			short scale = mini_map_scales[cur_viewing_mode - 1];
-			if(scale > 4) {
-				if(cen_x + 5 > 256 / scale)
-					spot_hit.x = cen_x + 5 - 256/scale + mouse_spot.x;
-				else spot_hit.x = mouse_spot.x;
-				if(cen_y + 5 > 324 / scale)
-					spot_hit.y = cen_y + 5 - 324/scale + mouse_spot.y;
-				else spot_hit.y = mouse_spot.y;
-			} else {
-				spot_hit.x = mouse_spot.x;
-				spot_hit.y = mouse_spot.y;
+			if(cur_viewing_mode == 0) {
+				spot_hit.x = cen_x + mouse_spot.x - 4;
+				spot_hit.y = cen_y + mouse_spot.y - 4;
+				if((mouse_spot.x < 0) || (mouse_spot.x > 8) || (mouse_spot.y < 0) || (mouse_spot.y > 8))
+					spot_hit.x = -1;
 			}
-		}
-		
-		if((mouse_button_held) && (spot_hit.x == last_spot_hit.x) &&
-			(spot_hit.y == last_spot_hit.y))
-			return are_done;
-		else last_spot_hit = spot_hit;
-		if(!mouse_button_held)
-			last_spot_hit = spot_hit;
-		
-		old_mode = overall_mode;
-		change_made = true;
-		
-		if((spot_hit.x < 0) || (spot_hit.x > ((editing_town) ? town->max_dim() - 1 : 47)) ||
-			(spot_hit.y < 0) || (spot_hit.y > ((editing_town) ? town->max_dim() - 1 : 47))) ;
-		else switch(overall_mode) {
-			case MODE_DRAWING:
-				if((!mouse_button_held && terrain_matches(spot_hit.x,spot_hit.y,current_terrain_type)) ||
-					(mouse_button_held && erasing_mode)) {
-					set_terrain(spot_hit,current_ground);
-					set_cursor(wand_curs);
-					erasing_mode = true;
-					mouse_button_held = true;
+			else {
+				short scale = mini_map_scales[cur_viewing_mode - 1];
+				if(scale > 4) {
+					if(cen_x + 5 > 256 / scale)
+						spot_hit.x = cen_x + 5 - 256/scale + mouse_spot.x;
+					else spot_hit.x = mouse_spot.x;
+					if(cen_y + 5 > 324 / scale)
+						spot_hit.y = cen_y + 5 - 324/scale + mouse_spot.y;
+					else spot_hit.y = mouse_spot.y;
+				} else {
+					spot_hit.x = mouse_spot.x;
+					spot_hit.y = mouse_spot.y;
 				}
-				else {
-					mouse_button_held = true;
-					set_cursor(wand_curs);
-			 		set_terrain(spot_hit,current_terrain_type);
-					erasing_mode = false;
-				}
-				break;
-				
-			case MODE_ROOM_RECT: case MODE_SET_TOWN_RECT: case MODE_HOLLOW_RECT: case MODE_FILLED_RECT:
-				if(mouse_button_held)
-					break;
-				if(mode_count == 2) {
-					working_rect.left = spot_hit.x;
-				 	working_rect.top = spot_hit.y;
-					mode_count = 1;
-					set_cursor(bottomright_curs);
-					set_string("Now select lower right corner","");
-					break;
-				}
-				working_rect.right = spot_hit.x;
-			 	working_rect.bottom = spot_hit.y;
-				if((overall_mode == 1) || (overall_mode == MODE_FILLED_RECT)) {
-					change_rect_terrain(working_rect,current_terrain_type,20,0);
-					change_made = true;
-				}
-				else if(overall_mode == MODE_HOLLOW_RECT) {
-					change_rect_terrain(working_rect,current_terrain_type,20,1);
-					change_made = true;
-				}
-				else if(overall_mode == MODE_SET_TOWN_RECT) {
-					town->in_town_rect = working_rect;
-					change_made = true;
-				}
-				else { // MODE_ROOM_RECT
-					if(editing_town) {
-						for(x = 0; x < town->room_rect.size(); x++)
-							if(town->room_rect[x].right == 0) {
-								static_cast<rectangle&>(town->room_rect[x]) = working_rect;
-								town->room_rect[x].descr = "";
-								if(!edit_area_rect_str(x,1))
-									town->room_rect[x].right = 0;
-								x = 500;
-							}
+			}
+			
+			if((mouse_button_held) && (spot_hit.x == last_spot_hit.x) &&
+				(spot_hit.y == last_spot_hit.y))
+				return are_done;
+			else last_spot_hit = spot_hit;
+			if(!mouse_button_held)
+				last_spot_hit = spot_hit;
+			
+			old_mode = overall_mode;
+			change_made = true;
+			
+			if((spot_hit.x < 0) || (spot_hit.x > ((editing_town) ? town->max_dim() - 1 : 47)) ||
+				(spot_hit.y < 0) || (spot_hit.y > ((editing_town) ? town->max_dim() - 1 : 47))) ;
+			else switch(overall_mode) {
+				case MODE_DRAWING:
+					if((!mouse_button_held && terrain_matches(spot_hit.x,spot_hit.y,current_terrain_type)) ||
+					   (mouse_button_held && erasing_mode)) {
+						set_terrain(spot_hit,current_ground);
+						set_cursor(wand_curs);
+						erasing_mode = true;
+						mouse_button_held = true;
 					}
 					else {
-						for(x = 0; x < current_terrain->info_rect.size(); x++)
-							if(current_terrain->info_rect[x].right == 0) {
-								static_cast<rectangle&>(current_terrain->info_rect[x]) = working_rect;
-								current_terrain->info_rect[x].descr = "";
-								if(!edit_area_rect_str(x,0))
-									current_terrain->info_rect[x].right = 0;
-								x = 500;
-							}
-						
-					}
-					if(x < 500)
-						giveError("You have placed the maximum number of area rectangles (16 in town, 8 outdoors).");
-					else change_made = true;
-				}
-				overall_mode = MODE_DRAWING;
-				set_cursor(wand_curs);
-				break;
-			case MODE_SET_WANDER_POINTS:
-				if(mouse_button_held)
-					break;
-				if(!editing_town) {
-					current_terrain->wandering_locs[mode_count - 1].x = spot_hit.x;
-					current_terrain->wandering_locs[mode_count - 1].y = spot_hit.y;
-				}
-				if(editing_town) {
-					town->wandering_locs[mode_count - 1].x = spot_hit.x;
-					town->wandering_locs[mode_count - 1].y = spot_hit.y;
-				}
-				mode_count--;
-				switch(mode_count) {
-					case 3:
-						set_string("Place second wandering monster arrival point","");
-						break;
-					case 2:
-						set_string("Place third wandering monster arrival point","");
-						break;
-					case 1:
-						set_string("Place fourth wandering monster arrival point","");
-						break;
-					case 0:
-						overall_mode = MODE_DRAWING;
+						mouse_button_held = true;
 						set_cursor(wand_curs);
-						set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
-						break;
-				}
-				break;
-				
-			case MODE_LARGE_PAINTBRUSH:
-				mouse_button_held = true;
-				change_circle_terrain(spot_hit,4,current_terrain_type,20);
-				break;
-			case MODE_SMALL_PAINTBRUSH:
-				mouse_button_held = true;
-				change_circle_terrain(spot_hit,1,current_terrain_type,20);
-				break;
-			case MODE_LARGE_SPRAYCAN:
-				mouse_button_held = true;
-				shy_change_circle_terrain(spot_hit,4,current_terrain_type,1);
-				break;
-			case MODE_SMALL_SPRAYCAN:
-				mouse_button_held = true;
-				shy_change_circle_terrain(spot_hit,2,current_terrain_type,1);
-				break;
-			case MODE_ERASER: // erase
-				change_circle_terrain(spot_hit,2,current_ground,20);
-				mouse_button_held = true;
-				break;
-			case MODE_PLACE_ITEM:
-				for(x = 0; x < town->preset_items.size(); x++)
-					if(town->preset_items[x].code < 0) {
-						town->preset_items[x] = {spot_hit, mode_count, scenario.scen_items[mode_count]};
-						if(container_there(spot_hit)) town->preset_items[x].contained = true;
-						store_place_item = town->preset_items[x];
-						break;
+						set_terrain(spot_hit,current_terrain_type);
+						erasing_mode = false;
 					}
-				if(x == town->preset_items.size()) {
-					town->preset_items.push_back({spot_hit, mode_count, scenario.scen_items[mode_count]});
-					if(container_there(spot_hit)) town->preset_items.back().contained = true;
-					store_place_item = town->preset_items.back();
-				}
-				
-				overall_mode = MODE_DRAWING;
-				set_cursor(wand_curs);
-				set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
-				break;
-			case MODE_EDIT_ITEM:
-				for(x = 0; x < town->preset_items.size(); x++)
-					if((spot_hit.x == town->preset_items[x].loc.x) &&
-						(spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
-						edit_placed_item(x);
-						store_place_item = town->preset_items[x];
-					}
-				overall_mode = MODE_DRAWING;
-				set_cursor(wand_curs);
-				break;
-			case MODE_PLACE_SAME_CREATURE:
-				if(last_placed_monst.number == 0) {
-					giveError("Either no monster has been placed, or the last time you tried to place a monster the operation failed.");
 					break;
-				}
-				for(i = 0; i < town->creatures.size(); i++)
-					if(town->creatures[i].number == 0) {
-						town->creatures[i] = last_placed_monst;
-						town->creatures[i].start_loc = spot_hit;
+					
+				case MODE_ROOM_RECT: case MODE_SET_TOWN_RECT: case MODE_HOLLOW_RECT: case MODE_FILLED_RECT:
+					if(mouse_button_held)
+						break;
+					if(mode_count == 2) {
+						working_rect.left = spot_hit.x;
+						working_rect.top = spot_hit.y;
+						mode_count = 1;
+						set_cursor(bottomright_curs);
+						set_string("Now select lower right corner","");
 						break;
 					}
-				if(i == town->creatures.size()) { // Placement failed
-					town->creatures.push_back(last_placed_monst);
-					town->creatures.back().start_loc = spot_hit;
-				}
-				overall_mode = MODE_DRAWING;
-				set_cursor(wand_curs);
-				break;
-			case MODE_PLACE_CREATURE:
-				for(i = 0; i < town->creatures.size(); i++)
-					if(town->creatures[i].number == 0) {
-						town->creatures[i] = {spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]};
-						last_placed_monst = town->creatures[i];
+					working_rect.right = spot_hit.x;
+					working_rect.bottom = spot_hit.y;
+					if((overall_mode == 1) || (overall_mode == MODE_FILLED_RECT)) {
+						change_rect_terrain(working_rect,current_terrain_type,20,0);
+						change_made = true;
+					}
+					else if(overall_mode == MODE_HOLLOW_RECT) {
+						change_rect_terrain(working_rect,current_terrain_type,20,1);
+						change_made = true;
+					}
+					else if(overall_mode == MODE_SET_TOWN_RECT) {
+						town->in_town_rect = working_rect;
+						change_made = true;
+					}
+					else { // MODE_ROOM_RECT
+						if(editing_town) {
+							for(x = 0; x < town->room_rect.size(); x++)
+								if(town->room_rect[x].right == 0) {
+									static_cast<rectangle&>(town->room_rect[x]) = working_rect;
+									town->room_rect[x].descr = "";
+									if(!edit_area_rect_str(x,1))
+										town->room_rect[x].right = 0;
+									x = 500;
+								}
+						}
+						else {
+							for(x = 0; x < current_terrain->info_rect.size(); x++)
+								if(current_terrain->info_rect[x].right == 0) {
+									static_cast<rectangle&>(current_terrain->info_rect[x]) = working_rect;
+									current_terrain->info_rect[x].descr = "";
+									if(!edit_area_rect_str(x,0))
+										current_terrain->info_rect[x].right = 0;
+									x = 500;
+								}
+							
+						}
+						if(x < 500)
+							giveError("You have placed the maximum number of area rectangles (16 in town, 8 outdoors).");
+						else change_made = true;
+					}
+					overall_mode = MODE_DRAWING;
+					set_cursor(wand_curs);
+					break;
+				case MODE_SET_WANDER_POINTS:
+					if(mouse_button_held)
+						break;
+					if(!editing_town) {
+						current_terrain->wandering_locs[mode_count - 1].x = spot_hit.x;
+						current_terrain->wandering_locs[mode_count - 1].y = spot_hit.y;
+					}
+					if(editing_town) {
+						town->wandering_locs[mode_count - 1].x = spot_hit.x;
+						town->wandering_locs[mode_count - 1].y = spot_hit.y;
+					}
+					mode_count--;
+					switch(mode_count) {
+						case 3:
+							set_string("Place second wandering monster arrival point","");
+							break;
+						case 2:
+							set_string("Place third wandering monster arrival point","");
+							break;
+						case 1:
+							set_string("Place fourth wandering monster arrival point","");
+							break;
+						case 0:
+							overall_mode = MODE_DRAWING;
+							set_cursor(wand_curs);
+							set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
+							break;
+					}
+					break;
+					
+				case MODE_LARGE_PAINTBRUSH:
+					mouse_button_held = true;
+					change_circle_terrain(spot_hit,4,current_terrain_type,20);
+					break;
+				case MODE_SMALL_PAINTBRUSH:
+					mouse_button_held = true;
+					change_circle_terrain(spot_hit,1,current_terrain_type,20);
+					break;
+				case MODE_LARGE_SPRAYCAN:
+					mouse_button_held = true;
+					shy_change_circle_terrain(spot_hit,4,current_terrain_type,1);
+					break;
+				case MODE_SMALL_SPRAYCAN:
+					mouse_button_held = true;
+					shy_change_circle_terrain(spot_hit,2,current_terrain_type,1);
+					break;
+				case MODE_ERASER: // erase
+					change_circle_terrain(spot_hit,2,current_ground,20);
+					mouse_button_held = true;
+					break;
+				case MODE_PLACE_ITEM:
+					for(x = 0; x < town->preset_items.size(); x++)
+						if(town->preset_items[x].code < 0) {
+							town->preset_items[x] = {spot_hit, mode_count, scenario.scen_items[mode_count]};
+							if(container_there(spot_hit)) town->preset_items[x].contained = true;
+							store_place_item = town->preset_items[x];
+							break;
+						}
+					if(x == town->preset_items.size()) {
+						town->preset_items.push_back({spot_hit, mode_count, scenario.scen_items[mode_count]});
+						if(container_there(spot_hit)) town->preset_items.back().contained = true;
+						store_place_item = town->preset_items.back();
+					}
+					
+					overall_mode = MODE_DRAWING;
+					set_cursor(wand_curs);
+					set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
+					break;
+				case MODE_EDIT_ITEM:
+					for(x = 0; x < town->preset_items.size(); x++)
+						if((spot_hit.x == town->preset_items[x].loc.x) &&
+						   (spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
+							edit_placed_item(x);
+							store_place_item = town->preset_items[x];
+						}
+					overall_mode = MODE_DRAWING;
+					set_cursor(wand_curs);
+					break;
+				case MODE_PLACE_SAME_CREATURE:
+					if(last_placed_monst.number == 0) {
+						giveError("Either no monster has been placed, or the last time you tried to place a monster the operation failed.");
 						break;
 					}
-				if(i == town->creatures.size()) { // Placement failed
-					town->creatures.push_back({spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]});
-					last_placed_monst = town->creatures.back();
-				}
-				overall_mode = MODE_DRAWING;
-				set_cursor(wand_curs);
-				break;
-				
-			case MODE_PLACE_NORTH_ENTRANCE: case MODE_PLACE_EAST_ENTRANCE:
-			case MODE_PLACE_SOUTH_ENTRANCE: case MODE_PLACE_WEST_ENTRANCE:
-				town->start_locs[overall_mode - 10].x = spot_hit.x;
-				town->start_locs[overall_mode - 10].y = spot_hit.y;
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_WEB:
-				make_field_type(spot_hit.x,spot_hit.y,FIELD_WEB);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_CRATE:
-				make_field_type(spot_hit.x,spot_hit.y,OBJECT_CRATE);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_BARREL:
-				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BARREL);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_FIRE_BARRIER:
-				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FIRE);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_FORCE_BARRIER:
-				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FORCE);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_QUICKFIRE:
-				make_field_type(spot_hit.x,spot_hit.y,FIELD_QUICKFIRE);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_STONE_BLOCK:
-				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BLOCK);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_FORCECAGE:
-				make_field_type(spot_hit.x,spot_hit.y,BARRIER_CAGE);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_TOGGLE_SPECIAL_DOT:
-				if(!editing_town){
-					current_terrain->special_spot[spot_hit.x][spot_hit.y] = !current_terrain->special_spot[spot_hit.x][spot_hit.y];
+					for(i = 0; i < town->creatures.size(); i++)
+						if(town->creatures[i].number == 0) {
+							town->creatures[i] = last_placed_monst;
+							town->creatures[i].start_loc = spot_hit;
+							break;
+						}
+					if(i == town->creatures.size()) { // Placement failed
+						town->creatures.push_back(last_placed_monst);
+						town->creatures.back().start_loc = spot_hit;
+					}
+					overall_mode = MODE_DRAWING;
+					set_cursor(wand_curs);
+					break;
+				case MODE_PLACE_CREATURE:
+					for(i = 0; i < town->creatures.size(); i++)
+						if(town->creatures[i].number == 0) {
+							town->creatures[i] = {spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]};
+							last_placed_monst = town->creatures[i];
+							break;
+						}
+					if(i == town->creatures.size()) { // Placement failed
+						town->creatures.push_back({spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]});
+						last_placed_monst = town->creatures.back();
+					}
+					overall_mode = MODE_DRAWING;
+					set_cursor(wand_curs);
+					break;
+					
+				case MODE_PLACE_NORTH_ENTRANCE: case MODE_PLACE_EAST_ENTRANCE:
+				case MODE_PLACE_SOUTH_ENTRANCE: case MODE_PLACE_WEST_ENTRANCE:
+					town->start_locs[overall_mode - 10].x = spot_hit.x;
+					town->start_locs[overall_mode - 10].y = spot_hit.y;
+					set_cursor(wand_curs);
 					overall_mode = MODE_DRAWING;
 					break;
-				}
-				make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_CLEAR_FIELDS:
-				for(int i = 8; i <= BARRIER_CAGE; i++)
-					take_field_type(spot_hit.x,spot_hit.y, eFieldType(i));
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_SFX:
-				make_field_type(spot_hit.x,spot_hit.y,eFieldType(SFX_SMALL_BLOOD + mode_count));
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_EYEDROPPER:
-				if(editing_town)
-					set_new_terrain(town->terrain(spot_hit.x,spot_hit.y));
-				else set_new_terrain(current_terrain->terrain[spot_hit.x][spot_hit.y]);
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_SAME_ITEM:
-				if(store_place_item.code < 0) {
-					giveError("Either no item has been placed, or the last time you tried to place an item the operation failed.");
+				case MODE_PLACE_WEB:
+					make_field_type(spot_hit.x,spot_hit.y,FIELD_WEB);
+					overall_mode = MODE_DRAWING;
 					break;
-				}
-				for(x = 0; x < town->preset_items.size(); x++)
-					if(town->preset_items[x].code < 0) {
-						town->preset_items[x] = store_place_item;
-						town->preset_items[x].loc = spot_hit;
-						town->preset_items[x].contained = container_there(spot_hit);
+				case MODE_PLACE_CRATE:
+					make_field_type(spot_hit.x,spot_hit.y,OBJECT_CRATE);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_PLACE_BARREL:
+					make_field_type(spot_hit.x,spot_hit.y,OBJECT_BARREL);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_PLACE_FIRE_BARRIER:
+					make_field_type(spot_hit.x,spot_hit.y,BARRIER_FIRE);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_PLACE_FORCE_BARRIER:
+					make_field_type(spot_hit.x,spot_hit.y,BARRIER_FORCE);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_PLACE_QUICKFIRE:
+					make_field_type(spot_hit.x,spot_hit.y,FIELD_QUICKFIRE);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_PLACE_STONE_BLOCK:
+					make_field_type(spot_hit.x,spot_hit.y,OBJECT_BLOCK);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_PLACE_FORCECAGE:
+					make_field_type(spot_hit.x,spot_hit.y,BARRIER_CAGE);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_TOGGLE_SPECIAL_DOT:
+					if(!editing_town){
+						current_terrain->special_spot[spot_hit.x][spot_hit.y] = !current_terrain->special_spot[spot_hit.x][spot_hit.y];
+						overall_mode = MODE_DRAWING;
 						break;
 					}
-				if(x == town->preset_items.size()) {
-					town->preset_items.push_back(store_place_item);
-					town->preset_items.back().loc = spot_hit;
-					town->preset_items.back().contained = container_there(spot_hit);
-				}
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_EDIT_SIGN: //edit sign
-				if(editing_town) {
-					for(x = 0; x < town->sign_locs.size(); x++)
-						if((town->sign_locs[x].x == spot_hit.x) && (town->sign_locs[x].y == spot_hit.y)) {
-							edit_sign(x,scenario.ter_types[town->terrain(spot_hit.x,spot_hit.y)].picture);
-							x = 30;
-						}
-					if(x == 15) {
-						giveError("Either this space is not a sign, or you have already placed too many signs on this level.");
-					}
-				}
-				if(!editing_town) {
-					for(x = 0; x < current_terrain->sign_locs.size(); x++)
-						if((current_terrain->sign_locs[x].x == spot_hit.x) && (current_terrain->sign_locs[x].y == spot_hit.y)) {
-							edit_sign(x,scenario.ter_types[current_terrain->terrain[spot_hit.x][spot_hit.y]].picture);
-							x = 30;
-						}
-					if(x == 8) {
-						giveError("Either this space is not a sign, or you have already placed too many signs on this level.");
-					}
-				}
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_EDIT_CREATURE: //edit monst
-				for(x = 0; x < town->creatures.size(); x++)
-					if(monst_on_space(spot_hit,x)) {
-						edit_placed_monst(x);
-						last_placed_monst = town->creatures[x];
-					}
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_EDIT_SPECIAL: //make special
-				place_edit_special(spot_hit);
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_COPY_SPECIAL: //copy special
-				if(editing_town) {
-					for(x = 0; x < town->special_locs.size(); x++)
-						if(town->special_locs[x] == spot_hit && town->special_locs[x].spec >= 0) {
-							copied_spec = town->special_locs[x].spec;
-							x = -1;
-							break;
-						}
-				}
-				if(!editing_town) {
-					for(x = 0; x < current_terrain->special_locs.size(); x++)
-						if(current_terrain->special_locs[x] == spot_hit && current_terrain->special_locs[x].spec >= 0) {
-							copied_spec = current_terrain->special_locs[x].spec;
-							x = -1;
-							break;
-						}
-				}
-				if(x < 0)
-					giveError("There wasn't a special on that spot.");
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PASTE_SPECIAL: //paste special
-				if(copied_spec < 0) {
-					giveError("You need to select a special to copy first.");
+					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT);
+					overall_mode = MODE_DRAWING;
 					break;
-				}
-				if(editing_town) {
-					for(x = 0; x <= town->special_locs.size(); x++) {
-						if(x == town->special_locs.size())
-							town->special_locs.emplace_back(-1,-1,-1);
-						if(town->special_locs[x].spec < 0) {
-							town->special_locs[x] = spot_hit;
-							town->special_locs[x].spec = copied_spec;
-							break;
-						}
-					}
-				}
-				if(!editing_town) {
-					if((spot_hit.x == 0) || (spot_hit.x == 47) || (spot_hit.y == 0) || (spot_hit.y == 47)) {
-						cChoiceDlog("not-at-edge").show();
+				case MODE_CLEAR_FIELDS:
+					for(int i = 8; i <= BARRIER_CAGE; i++)
+						take_field_type(spot_hit.x,spot_hit.y, eFieldType(i));
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_PLACE_SFX:
+					make_field_type(spot_hit.x,spot_hit.y,eFieldType(SFX_SMALL_BLOOD + mode_count));
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_EYEDROPPER:
+					if(editing_town)
+						set_new_terrain(town->terrain(spot_hit.x,spot_hit.y));
+					else set_new_terrain(current_terrain->terrain[spot_hit.x][spot_hit.y]);
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_PLACE_SAME_ITEM:
+					if(store_place_item.code < 0) {
+						giveError("Either no item has been placed, or the last time you tried to place an item the operation failed.");
 						break;
 					}
-					for(x = 0; x <= current_terrain->special_locs.size(); x++) {
-						if(x == current_terrain->special_locs.size())
-							current_terrain->special_locs.emplace_back(-1,-1,-1);
-						if(current_terrain->special_locs[x].spec < 0) {
-							current_terrain->special_locs[x] = spot_hit;
-							current_terrain->special_locs[x].spec = copied_spec;
+					for(x = 0; x < town->preset_items.size(); x++)
+						if(town->preset_items[x].code < 0) {
+							town->preset_items[x] = store_place_item;
+							town->preset_items[x].loc = spot_hit;
+							town->preset_items[x].contained = container_there(spot_hit);
 							break;
 						}
+					if(x == town->preset_items.size()) {
+						town->preset_items.push_back(store_place_item);
+						town->preset_items.back().loc = spot_hit;
+						town->preset_items.back().contained = container_there(spot_hit);
 					}
-				}
-				
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_ERASE_SPECIAL: //erase special
-				if(editing_town) {
-					for(x = 0; x < town->special_locs.size(); x++)
-						if(town->special_locs[x] == spot_hit && town->special_locs[x].spec >= 0) {
-							town->special_locs[x] = {-1,-1};
-							town->special_locs[x].spec = -1;
-							if(x == town->special_locs.size() - 1) {
-								// Delete not only the last entry but any other empty entries at the end of the list
-								do {
-									town->special_locs.pop_back();
-								} while(town->special_locs.back().spec < 0);
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_EDIT_SIGN: //edit sign
+					if(editing_town) {
+						for(x = 0; x < town->sign_locs.size(); x++)
+							if((town->sign_locs[x].x == spot_hit.x) && (town->sign_locs[x].y == spot_hit.y)) {
+								edit_sign(x,scenario.ter_types[town->terrain(spot_hit.x,spot_hit.y)].picture);
+								x = 30;
 							}
-							break;
+						if(x == 15) {
+							giveError("Either this space is not a sign, or you have already placed too many signs on this level.");
 						}
-				}
-				if(!editing_town) {
-					for(x = 0; x < current_terrain->special_locs.size(); x++)
-						if(current_terrain->special_locs[x] == spot_hit && current_terrain->special_locs[x].spec >= 0) {
-							current_terrain->special_locs[x] = {-1,-1};
-							current_terrain->special_locs[x].spec = -1;
-							if(x == current_terrain->special_locs.size() - 1) {
-								// Delete not only the last entry but any other empty entries at the end of the list
-								do {
-									current_terrain->special_locs.pop_back();
-								} while(current_terrain->special_locs.back().spec < 0);
+					}
+					if(!editing_town) {
+						for(x = 0; x < current_terrain->sign_locs.size(); x++)
+							if((current_terrain->sign_locs[x].x == spot_hit.x) && (current_terrain->sign_locs[x].y == spot_hit.y)) {
+								edit_sign(x,scenario.ter_types[current_terrain->terrain[spot_hit.x][spot_hit.y]].picture);
+								x = 30;
 							}
+						if(x == 8) {
+							giveError("Either this space is not a sign, or you have already placed too many signs on this level.");
+						}
+					}
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_EDIT_CREATURE: //edit monst
+					for(x = 0; x < town->creatures.size(); x++)
+						if(monst_on_space(spot_hit,x)) {
+							edit_placed_monst(x);
+							last_placed_monst = town->creatures[x];
+						}
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_EDIT_SPECIAL: //make special
+					place_edit_special(spot_hit);
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_COPY_SPECIAL: //copy special
+					if(editing_town) {
+						for(x = 0; x < town->special_locs.size(); x++)
+							if(town->special_locs[x] == spot_hit && town->special_locs[x].spec >= 0) {
+								copied_spec = town->special_locs[x].spec;
+								x = -1;
+								break;
+							}
+					}
+					if(!editing_town) {
+						for(x = 0; x < current_terrain->special_locs.size(); x++)
+							if(current_terrain->special_locs[x] == spot_hit && current_terrain->special_locs[x].spec >= 0) {
+								copied_spec = current_terrain->special_locs[x].spec;
+								x = -1;
+								break;
+							}
+					}
+					if(x < 0)
+						giveError("There wasn't a special on that spot.");
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_PASTE_SPECIAL: //paste special
+					if(copied_spec < 0) {
+						giveError("You need to select a special to copy first.");
+						break;
+					}
+					if(editing_town) {
+						for(x = 0; x <= town->special_locs.size(); x++) {
+							if(x == town->special_locs.size())
+								town->special_locs.emplace_back(-1,-1,-1);
+							if(town->special_locs[x].spec < 0) {
+								town->special_locs[x] = spot_hit;
+								town->special_locs[x].spec = copied_spec;
+								break;
+							}
+						}
+					}
+					if(!editing_town) {
+						if((spot_hit.x == 0) || (spot_hit.x == 47) || (spot_hit.y == 0) || (spot_hit.y == 47)) {
+							cChoiceDlog("not-at-edge").show();
 							break;
 						}
-				}
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_PLACE_SPECIAL: //edit special
-				set_special(spot_hit);
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_EDIT_TOWN_ENTRANCE: //edit town entry
-				town_entry(spot_hit);
-				overall_mode = MODE_DRAWING;
-				set_cursor(wand_curs);
-				break;
-			case MODE_SET_OUT_START: //edit out start loc
-				if(cChoiceDlog("set-out-start-confirm", {"okay", "cancel"}).show() == "cancel")
+						for(x = 0; x <= current_terrain->special_locs.size(); x++) {
+							if(x == current_terrain->special_locs.size())
+								current_terrain->special_locs.emplace_back(-1,-1,-1);
+							if(current_terrain->special_locs[x].spec < 0) {
+								current_terrain->special_locs[x] = spot_hit;
+								current_terrain->special_locs[x].spec = copied_spec;
+								break;
+							}
+						}
+					}
+					
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
 					break;
-				if((spot_hit.x != minmax(4,43,spot_hit.x)) ||
-					(spot_hit.y != minmax(4,43,spot_hit.y))) {
-					giveError("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.");
+				case MODE_ERASE_SPECIAL: //erase special
+					if(editing_town) {
+						for(x = 0; x < town->special_locs.size(); x++)
+							if(town->special_locs[x] == spot_hit && town->special_locs[x].spec >= 0) {
+								town->special_locs[x] = {-1,-1};
+								town->special_locs[x].spec = -1;
+								if(x == town->special_locs.size() - 1) {
+									// Delete not only the last entry but any other empty entries at the end of the list
+									do {
+										town->special_locs.pop_back();
+									} while(town->special_locs.back().spec < 0);
+								}
+								break;
+							}
+					}
+					if(!editing_town) {
+						for(x = 0; x < current_terrain->special_locs.size(); x++)
+							if(current_terrain->special_locs[x] == spot_hit && current_terrain->special_locs[x].spec >= 0) {
+								current_terrain->special_locs[x] = {-1,-1};
+								current_terrain->special_locs[x].spec = -1;
+								if(x == current_terrain->special_locs.size() - 1) {
+									// Delete not only the last entry but any other empty entries at the end of the list
+									do {
+										current_terrain->special_locs.pop_back();
+									} while(current_terrain->special_locs.back().spec < 0);
+								}
+								break;
+							}
+					}
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
 					break;
-				}
-				scenario.out_sec_start.x = cur_out.x;
-				scenario.out_sec_start.y = cur_out.y;
-				scenario.out_start = spot_hit;
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				change_made = true;
-				break;
-			case MODE_ERASE_CREATURE: //delete monst
-				for(x = 0; x < 60; x++)
-					if(monst_on_space(spot_hit,x)) {
-						town->creatures[x].number = 0;
+				case MODE_PLACE_SPECIAL: //edit special
+					set_special(spot_hit);
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_EDIT_TOWN_ENTRANCE: //edit town entry
+					town_entry(spot_hit);
+					overall_mode = MODE_DRAWING;
+					set_cursor(wand_curs);
+					break;
+				case MODE_SET_OUT_START: //edit out start loc
+					if(cChoiceDlog("set-out-start-confirm", {"okay", "cancel"}).show() == "cancel")
+						break;
+					if((spot_hit.x != minmax(4,43,spot_hit.x)) || (spot_hit.y != minmax(4,43,spot_hit.y))) {
+						giveError("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.");
 						break;
 					}
-				while(town->creatures.back().number == 0)
-					town->creatures.pop_back();
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_ERASE_ITEM: // delete item
-				for(x = 0; x < town->preset_items.size(); x++)
-					if((spot_hit.x == town->preset_items[x].loc.x) &&
-						(spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
-						town->preset_items[x].code = -1;
-						break;
-					}
-				while(town->preset_items.back().code == -1)
-					town->preset_items.pop_back();
-				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_SET_TOWN_START: // TODO: Implement this
-				break;
-			case MODE_INTRO_SCREEN:
-			case MODE_EDIT_TYPES:
-			case MODE_MAIN_SCREEN:
-				break; // Nothing to do here, of course.
+					scenario.out_sec_start.x = cur_out.x;
+					scenario.out_sec_start.y = cur_out.y;
+					scenario.out_start = spot_hit;
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					change_made = true;
+					break;
+				case MODE_ERASE_CREATURE: //delete monst
+					for(x = 0; x < 60; x++)
+						if(monst_on_space(spot_hit,x)) {
+							town->creatures[x].number = 0;
+							break;
+						}
+					while(town->creatures.back().number == 0)
+						town->creatures.pop_back();
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_ERASE_ITEM: // delete item
+					for(x = 0; x < town->preset_items.size(); x++)
+						if((spot_hit.x == town->preset_items[x].loc.x) &&
+							(spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
+							town->preset_items[x].code = -1;
+							break;
+						}
+					while(town->preset_items.back().code == -1)
+						town->preset_items.pop_back();
+					set_cursor(wand_curs);
+					overall_mode = MODE_DRAWING;
+					break;
+				case MODE_SET_TOWN_START: // TODO: Implement this
+					break;
+				case MODE_INTRO_SCREEN:
+				case MODE_EDIT_TYPES:
+				case MODE_MAIN_SCREEN:
+					break; // Nothing to do here, of course.
+			}
+			if((overall_mode == MODE_DRAWING) && (old_mode != MODE_DRAWING))
+				set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
+			draw_terrain();
+			
 		}
-		if((overall_mode == MODE_DRAWING) && (old_mode != MODE_DRAWING))
-			set_string("Drawing mode",(char*)scenario.ter_types[current_terrain_type].name.c_str());
-		draw_terrain();
-		
-	}
 		if((the_point.in(border_rect[0])) & (cen_y > (editing_town ? 4 : 3))) {
 			cen_y--;
 			if(ctrl_hit)
