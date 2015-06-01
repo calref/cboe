@@ -152,10 +152,10 @@ Unused
 Unused
 How many AP
 0 - give, 1 = take
-extra 1c
-extra 2a
-extra 2b
-extra 2c
+Unused
+Unused
+Unused
+Unused
 Special to Jump To
 --------------------
 Affect Name
@@ -174,16 +174,32 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Affect Level
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Number of levels
+0 - add levels, 1 - remove
 Unused
 Unused
 Unused
 Unused
+Special to Jump To
+--------------------
+Affect Morale
+Unused
+Unused
+First part of message
+Second part of message
 Unused
 Unused
 Unused
-Unused
-Unused
+Amount to change
+0 - increase, 1 - decrease
 Unused
 Unused
 Unused
@@ -222,66 +238,50 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Affect Soul Crystal
+Unused
+Unused
+First part of message
+Second part of message
 Unused
 Unused
 Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Special to Jump To
---------------------
-Unused Node
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
+0 - record, 1 - erase
+0 - allow resist, 1 - force
 Unused
 Unused
 Unused
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Affect Monster Attack
+Unused
+Unused
+First part of message
+Second part of message
 Unused
 Unused
 Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
+Attack to change (0 ... 2)
+Amount to change dice
+Amount to change sides
+0 - increase, 1 - decrease
 Unused
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Affect Monster Statistic
+Unused
+Unused
+First part of message
+Second part of message
 Unused
 Unused
 Unused
+Amount to change
+0 - increase, 1 - decrease
 Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
+Which stat (0 ... 10)
 Unused
 Unused
 Special to Jump To
