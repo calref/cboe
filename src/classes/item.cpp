@@ -1392,50 +1392,49 @@ std::istream& operator >> (std::istream& in, eSkill& e){
 	std::string key;
 	in >> key;
 	e = eSkill::INVALID;
-	try {
+	if(key == "str")
+		e = eSkill::STRENGTH;
+	else if(key == "dex")
+		e = eSkill::DEXTERITY;
+	else if(key == "int")
+		e = eSkill::INTELLIGENCE;
+	else if(key == "edged")
+		e = eSkill::EDGED_WEAPONS;
+	else if(key == "bashing")
+		e = eSkill::BASHING_WEAPONS;
+	else if(key == "pole")
+		e = eSkill::POLE_WEAPONS;
+	else if(key == "thrown")
+		e = eSkill::THROWN_MISSILES;
+	else if(key == "archery")
+		e = eSkill::ARCHERY;
+	else if(key == "defense")
+		e = eSkill::DEFENSE;
+	else if(key == "mage")
+		e = eSkill::MAGE_SPELLS;
+	else if(key == "priest")
+		e = eSkill::PRIEST_SPELLS;
+	else if(key == "mage-lore")
+		e = eSkill::MAGE_LORE;
+	else if(key == "alchemy")
+		e = eSkill::ALCHEMY;
+	else if(key == "item-lore")
+		e = eSkill::ITEM_LORE;
+	else if(key == "traps")
+		e = eSkill::DISARM_TRAPS;
+	else if(key == "lockpick")
+		e = eSkill::LOCKPICKING;
+	else if(key == "assassin")
+		e = eSkill::ASSASSINATION;
+	else if(key == "poison")
+		e = eSkill::POISON;
+	else if(key == "luck")
+		e = eSkill::LUCK;
+	else try {
 		int i = boost::lexical_cast<int>(key);
 		if(i >= 0 && i < 19)
 			e = (eSkill) i;
-	} catch(boost::bad_lexical_cast) {
-		if(key == "str")
-			e = eSkill::STRENGTH;
-		else if(key == "dex")
-			e = eSkill::DEXTERITY;
-		else if(key == "int")
-			e = eSkill::INTELLIGENCE;
-		else if(key == "edged")
-			e = eSkill::EDGED_WEAPONS;
-		else if(key == "bashing")
-			e = eSkill::BASHING_WEAPONS;
-		else if(key == "pole")
-			e = eSkill::POLE_WEAPONS;
-		else if(key == "thrown")
-			e = eSkill::THROWN_MISSILES;
-		else if(key == "archery")
-			e = eSkill::ARCHERY;
-		else if(key == "defense")
-			e = eSkill::DEFENSE;
-		else if(key == "mage")
-			e = eSkill::MAGE_SPELLS;
-		else if(key == "priest")
-			e = eSkill::PRIEST_SPELLS;
-		else if(key == "mage-lore")
-			e = eSkill::MAGE_LORE;
-		else if(key == "alchemy")
-			e = eSkill::ALCHEMY;
-		else if(key == "item-lore")
-			e = eSkill::ITEM_LORE;
-		else if(key == "traps")
-			e = eSkill::DISARM_TRAPS;
-		else if(key == "lockpick")
-			e = eSkill::LOCKPICKING;
-		else if(key == "assassin")
-			e = eSkill::ASSASSINATION;
-		else if(key == "poison")
-			e = eSkill::POISON;
-		else if(key == "luck")
-			e = eSkill::LUCK;
-	}
+	} catch(boost::bad_lexical_cast) {}
 	return in;
 }
 
@@ -1443,66 +1442,67 @@ std::istream& operator >> (std::istream& in, eItemType& e){
 	std::string key;
 	in >> key;
 	e = eItemType::NO_ITEM;
-	try {
+	if(key == "weapon-1hand")
+		e = eItemType::ONE_HANDED;
+	else if(key == "weapon-2hand")
+		e = eItemType::TWO_HANDED;
+	else if(key == "gold")
+		e = eItemType::GOLD;
+	else if(key == "bow")
+		e = eItemType::BOW;
+	else if(key == "arrow")
+		e = eItemType::ARROW;
+	else if(key == "thrown-missile")
+		e = eItemType::THROWN_MISSILE;
+	else if(key == "potion")
+		e = eItemType::POTION;
+	else if(key == "scroll")
+		e = eItemType::SCROLL;
+	else if(key == "wand")
+		e = eItemType::WAND;
+	else if(key == "tool")
+		e = eItemType::TOOL;
+	else if(key == "food")
+		e = eItemType::FOOD;
+	else if(key == "shield")
+		e = eItemType::SHIELD;
+	else if(key == "shield2")
+		e = eItemType::SHIELD_2;
+	else if(key == "armor")
+		e = eItemType::ARMOR;
+	else if(key == "helm")
+		e = eItemType::HELM;
+	else if(key == "gloves")
+		e = eItemType::GLOVES;
+	else if(key == "boots")
+		e = eItemType::BOOTS;
+	else if(key == "ring")
+		e = eItemType::RING;
+	else if(key == "necklace")
+		e = eItemType::NECKLACE;
+	else if(key == "poison")
+		e = eItemType::WEAPON_POISON;
+	else if(key == "object")
+		e = eItemType::NON_USE_OBJECT;
+	else if(key == "pants")
+		e = eItemType::PANTS;
+	else if(key == "crossbow")
+		e = eItemType::CROSSBOW;
+	else if(key == "bolts")
+		e = eItemType::BOLTS;
+	else if(key == "missile")
+		e = eItemType::MISSILE_NO_AMMO;
+	else if(key == "special")
+		e = eItemType::SPECIAL;
+	else if(key == "quest")
+		e = eItemType::QUEST;
+	else if(key == "none")
+		e = eItemType::NO_ITEM;
+	else try {
 		int i = boost::lexical_cast<int>(key);
 		if(i > 0 && i < 28)
 			e = (eItemType) i;
-	} catch(boost::bad_lexical_cast) {
-		if(key == "weapon-1hand")
-			e = eItemType::ONE_HANDED;
-		else if(key == "weapon-2hand")
-			e = eItemType::TWO_HANDED;
-		else if(key == "gold")
-			e = eItemType::GOLD;
-		else if(key == "bow")
-			e = eItemType::BOW;
-		else if(key == "arrow")
-			e = eItemType::ARROW;
-		else if(key == "thrown-missile")
-			e = eItemType::THROWN_MISSILE;
-		else if(key == "potion")
-			e = eItemType::POTION;
-		else if(key == "scroll")
-			e = eItemType::SCROLL;
-		else if(key == "wand")
-			e = eItemType::WAND;
-		else if(key == "tool")
-			e = eItemType::TOOL;
-		else if(key == "food")
-			e = eItemType::FOOD;
-		else if(key == "shield")
-			e = eItemType::SHIELD;
-		else if(key == "shield2")
-			e = eItemType::SHIELD_2;
-		else if(key == "armor")
-			e = eItemType::ARMOR;
-		else if(key == "helm")
-			e = eItemType::HELM;
-		else if(key == "gloves")
-			e = eItemType::GLOVES;
-		else if(key == "boots")
-			e = eItemType::BOOTS;
-		else if(key == "ring")
-			e = eItemType::RING;
-		else if(key == "necklace")
-			e = eItemType::NECKLACE;
-		else if(key == "poison")
-			e = eItemType::WEAPON_POISON;
-		else if(key == "object")
-			e = eItemType::NON_USE_OBJECT;
-		else if(key == "pants")
-			e = eItemType::PANTS;
-		else if(key == "crossbow")
-			e = eItemType::CROSSBOW;
-		else if(key == "bolts")
-			e = eItemType::BOLTS;
-		else if(key == "missile")
-			e = eItemType::MISSILE_NO_AMMO;
-		else if(key == "special")
-			e = eItemType::SPECIAL;
-		else if(key == "quest")
-			e = eItemType::QUEST;
-	}
+	} catch(boost::bad_lexical_cast) {}
 	return in;
 }
 
@@ -1510,20 +1510,19 @@ std::istream& operator >> (std::istream& in, eItemUse& e){
 	std::string key;
 	in >> key;
 	e = eItemUse::HELP_ONE;
-	try {
+	if(key == "help-one")
+		e = eItemUse::HELP_ONE;
+	else if(key == "harm-one")
+		e = eItemUse::HARM_ONE;
+	else if(key == "help-all")
+		e = eItemUse::HELP_ALL;
+	else if(key == "harm-all")
+		e = eItemUse::HARM_ALL;
+	else try {
 		int i = boost::lexical_cast<int>(key);
 		if(i > 0 && i < 4)
 			e = (eItemUse) i;
-	} catch(boost::bad_lexical_cast) {
-		if(key == "help-one")
-			e = eItemUse::HELP_ONE;
-		else if(key == "harm-one")
-			e = eItemUse::HARM_ONE;
-		else if(key == "help-all")
-			e = eItemUse::HELP_ALL;
-		else if(key == "harm-all")
-			e = eItemUse::HARM_ALL;
-	}
+	} catch(boost::bad_lexical_cast) {}
 	return in;
 }
 

@@ -487,56 +487,55 @@ std::istream& operator >> (std::istream& in, eRace& e){
 	std::string key;
 	in >> key;
 	e = eRace::HUMANOID;
-	try {
+	if(key == "human")
+		e = eRace::HUMAN;
+	else if(key == "nephil")
+		e = eRace::NEPHIL;
+	else if(key == "slith")
+		e = eRace::SLITH;
+	else if(key == "vahnatai")
+		e = eRace::VAHNATAI;
+	else if(key == "humanoid")
+		e = eRace::HUMANOID;
+	else if(key == "beast")
+		e = eRace::BEAST;
+	else if(key == "bird")
+		e = eRace::BIRD;
+	else if(key == "bug")
+		e = eRace::BUG;
+	else if(key == "demon")
+		e = eRace::DEMON;
+	else if(key == "dragon")
+		e = eRace::DRAGON;
+	else if(key == "giant")
+		e = eRace::GIANT;
+	else if(key == "important")
+		e = eRace::IMPORTANT;
+	else if(key == "mage")
+		e = eRace::MAGE;
+	else if(key == "priest")
+		e = eRace::PRIEST;
+	else if(key == "magic")
+		e = eRace::MAGICAL;
+	else if(key == "plant")
+		e = eRace::PLANT;
+	else if(key == "reptile")
+		e = eRace::REPTILE;
+	else if(key == "slime")
+		e = eRace::SLIME;
+	else if(key == "stone")
+		e = eRace::STONE;
+	else if(key == "undead")
+		e = eRace::UNDEAD;
+	else if(key == "skeletal")
+		e = eRace::SKELETAL;
+	else if(key == "goblin")
+		e = eRace::GOBLIN;
+	else try {
 		int i = boost::lexical_cast<int>(key);
 		if(i >= 0 && i < 20)
 			e = (eRace) i;
-	} catch(boost::bad_lexical_cast) {
-		if(key == "human")
-			e = eRace::HUMAN;
-		else if(key == "nephil")
-			e = eRace::NEPHIL;
-		else if(key == "slith")
-			e = eRace::SLITH;
-		else if(key == "vahnatai")
-			e = eRace::VAHNATAI;
-		else if(key == "humanoid")
-			e = eRace::HUMANOID;
-		else if(key == "beast")
-			e = eRace::BEAST;
-		else if(key == "bird")
-			e = eRace::BIRD;
-		else if(key == "bug")
-			e = eRace::BUG;
-		else if(key == "demon")
-			e = eRace::DEMON;
-		else if(key == "dragon")
-			e = eRace::DRAGON;
-		else if(key == "giant")
-			e = eRace::GIANT;
-		else if(key == "important")
-			e = eRace::IMPORTANT;
-		else if(key == "mage")
-			e = eRace::MAGE;
-		else if(key == "priest")
-			e = eRace::PRIEST;
-		else if(key == "magic")
-			e = eRace::MAGICAL;
-		else if(key == "plant")
-			e = eRace::PLANT;
-		else if(key == "reptile")
-			e = eRace::REPTILE;
-		else if(key == "slime")
-			e = eRace::SLIME;
-		else if(key == "stone")
-			e = eRace::STONE;
-		else if(key == "undead")
-			e = eRace::UNDEAD;
-		else if(key == "skeletal")
-			e = eRace::SKELETAL;
-		else if(key == "goblin")
-			e = eRace::GOBLIN;
-	}
+	} catch(boost::bad_lexical_cast) {}
 	return in;
 }
 
@@ -559,32 +558,31 @@ std::istream& operator >> (std::istream& in, eMonstTime& e){
 	std::string key;
 	in >> key;
 	e = eMonstTime::ALWAYS;
-	try {
+	if(key == "always")
+		e = eMonstTime::ALWAYS;
+	else if(key == "after-day")
+		e = eMonstTime::APPEAR_ON_DAY;
+	else if(key == "until-day")
+		e = eMonstTime::DISAPPEAR_ON_DAY;
+	else if(key == "travel-a")
+		e = eMonstTime::SOMETIMES_A;
+	else if(key == "travel-b")
+		e = eMonstTime::SOMETIMES_B;
+	else if(key == "travel-c")
+		e = eMonstTime::SOMETIMES_C;
+	else if(key == "after-event")
+		e = eMonstTime::APPEAR_WHEN_EVENT;
+	else if(key == "until-event")
+		e = eMonstTime::DISAPPEAR_WHEN_EVENT;
+	else if(key == "after-death")
+		e = eMonstTime::APPEAR_AFTER_CHOP;
+	else try {
 		int i = boost::lexical_cast<int>(key);
 		if(i >= 0 && i != 3 && i < 6)
 			e = eMonstTime(i);
 		else if(i > 6 && i <= 8)
 			e = eMonstTime(i - 1);
-	} catch(boost::bad_lexical_cast) {
-		if(key == "always")
-			e = eMonstTime::ALWAYS;
-		else if(key == "after-day")
-			e = eMonstTime::APPEAR_ON_DAY;
-		else if(key == "until-day")
-			e = eMonstTime::DISAPPEAR_ON_DAY;
-		else if(key == "travel-a")
-			e = eMonstTime::SOMETIMES_A;
-		else if(key == "travel-b")
-			e = eMonstTime::SOMETIMES_B;
-		else if(key == "travel-c")
-			e = eMonstTime::SOMETIMES_C;
-		else if(key == "after-event")
-			e = eMonstTime::APPEAR_WHEN_EVENT;
-		else if(key == "until-event")
-			e = eMonstTime::DISAPPEAR_WHEN_EVENT;
-		else if(key == "after-death")
-			e = eMonstTime::APPEAR_AFTER_CHOP;
-	}
+	} catch(boost::bad_lexical_cast) {}
 	return in;
 }
 
