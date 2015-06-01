@@ -1096,7 +1096,10 @@ void record_monst(cCreature *which_m) {
 	}
 }
 
-short place_monster(mon_num_t which,location where) {
+short place_monster(mon_num_t which,location where,bool forced) {
+	// TODO: Currently "forced" is only used by special nodes. Should it be used in other places?
+	if(!forced && univ.target_there(where, TARG_MONST) != nullptr)
+		return univ.town.monst.size();
 	short i = 0;
 	
 	while(i < univ.town.monst.size() && (univ.town.monst[i].active != 0 || univ.town.monst[i].spec_enc_code > 0)) {

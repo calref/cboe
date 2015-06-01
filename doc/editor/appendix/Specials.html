@@ -815,7 +815,7 @@ monster, this has no effect.
 <dt>Note:</dt><dd>Adding or removing a trait sets the experience needed to level up to the
 value it would have been if they had always had that trait, though it does not alter the
 PC's level. Also, always set Extra 1b to 0 to give a trait, even if it's a harmful
-one.</dd>
+one.</dd></dd>
 
 <dt>Type 89: Affect Action Points</dt><dd>Adds or removes action points.
 <dl>
@@ -1121,7 +1121,7 @@ barriers, or similar transient objects exist in the current town.
 <dl>
 <dt>Extra 1a, Extra 1b, Extra 2a, Extra 2b:</dt><dd>The rectangle to check. This works
 just like a Rectangle special; see that section for details.</dd>
-<dt>Stuff Done:</dt>The minimum and maximum number of fields needed.</dd>
+<dt>Stuff Done:</dt><dd>The minimum and maximum number of fields needed.</dd>
 <dt>Mess1:</dt><dd> The type of field or other object to check for. Note that 0 and 9 are
 not valid values. Click the Choose button to select the field you want to check for.
 <dt>Mess2:</dt><dd>The game counts the number of the selected field that exist within the
@@ -1283,7 +1283,39 @@ messages. If you don't want a message displayed, just leave these at -1.</dd></d
 <dl>
 
 <dt>Type 170: Town Hostile</dt><dd>When called, all friendly people in the town
-immediately turn hostile.</dd>
+immediately turn hostile. This node can also be used for other mass attitude changes.
+Extra 1a and Extra 1b indicate the endpoints of a range of monsters to affect (counting
+based on their internal location in the game), and Extra 2a is the target attitude.
+<dl>
+<dt>Note:</dt><dd>This node may yet change drastically, so you should be wary of using it
+for anything other than its original purpose.</dd></dd>
+
+<dt>Type 171: Run Missile Animation</dt><dd>This node animates a missile attack originating
+from one space and ending on another space.
+<dl>
+<dt>Pic:</dt><dd>The number of the missile animation to use.</dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the source location.</dd>
+<dt>Extra 2a, Extra 2b:</dt><dd>The x and y coordinates of the target location. If there
+is a multispace monster on that location, the missile target is adjusted to target the
+centre of the monster rather than the centre of this space.</dd>
+<dt>Extra 1c:</dt><dd>Determines how the missile's path is calculated. Allowed values are
+0 or 1. <!-- TODO: Determine what the difference actually is. --></dd>
+<dt>Extra 2c:</dt><dd>The number of a sound to play during the animation.</dd></dd>
+
+<dt>Type 172: Animate Monster Attack</dt><dd>This node causes a monster to enter its attack pose. The monster can be specified in one of two ways.
+<dl>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the monster is on.</dd>
+<dt><u>OR</u> Extra 1a:</dt><dd>The number of the monster that should attack, plus 100. Or
+0-5 to animate a party member. To use this method, leave Extra 1b at -1.</dd></dd>
+
+<dt>Type 173: Animate Fake Damage Splash</dt><dd>This node draws a splash effect on a space
+to indicate that it has been attacked, along with an optional number indicating the amount
+of damage supposedly dealt.
+<dl>
+<dt>Extra 1a, Extra 1b:</dt><dd>The location to draw the effect on.</dd>
+<dt>Extra 2a:</dt><dd>Type of damage to show.</dd>
+<dt>Extra 2b:</dt><dd>Amount of damage to show. If 0, no number is drawn.</dd>
+<dt>Extra 1c:</dt><dd>If 0, play the default sound for the chosen damage type. Otherwise, override it with a different sound.</dd></dd>
 
 <dt>Type 174: Move Party</dt><dd>The party is moved to a new location. The party cannot be
 moved while in combat ... if the party is in combat mode, they will not be allowed to
@@ -1291,7 +1323,8 @@ enter the space, and the special encounter ends immediately.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to move them to.</dd>
 <dt>Extra 2a:</dt><dd>If 0, they are simply moved. If non-zero, they are teleported (i.e.
-there is a noise and a pretty flash of light).</dd></dd>
+there is a noise and a pretty flash of light). This is ignored if the special is called
+while talking.</dd></dd>
 
 <dt>Type 175: Hit Space</dt><dd>Everything within the specified space takes damage.
 <dl>
@@ -1326,8 +1359,9 @@ has no other affect.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space for the explosion to
 appear on.</dd>
-<dt>Extra 2a:</dt><dd>The type of explosion. 0 - fire 1 - electricity 2 -
-teleportation</dd>
+<dt>Extra 2a:</dt><dd>The type of explosion. 0 - fire 1 -
+teleportation 2 - electricity (blue) 3 - electricity (yellow)</dd>
+<dt>Extra 2b:</dt><dd>If left at 0, the burst is a simple explosion. If set to 1, a larger burst is used for an even flashier effect.</dd>
 <dt>Note:</dt><dd>This does nothing if called when in talking mode.</dd></dd>
 
 <dt>Type 180: Make Wandering Monster</dt><dd>A group of wandering monsters appears (at one
@@ -1340,20 +1374,18 @@ selected space.
 <dt>Extra 2a:</dt><dd>The number of the creature to place. Press the Choose button to
 select the monster.</dd>
 <dt>Extra 2b:</dt><dd>If this is 0, if no creature can go there (for example, a creature
-is already there), nothing happens. If nonzero, the placement is forced.</dd>
-<dt>Note:</dt><dd>There can be at most 60 creatures in a town/dungeon level at any one
-time.</dd></dd>
+is already there), nothing happens. If nonzero, the placement is forced.</dd></dd>
 
-<dt>Type 182: Destroy Monster</dt><dd>All creatures of the given type in the dungeon are
-instantly removed.
+<dt>Type 182: Destroy Monster</dt><dd>Any creatures on the given space are removed.
 <dl>
-<dt>Extra 1a:</dt><dd>The type of creature to remove.</dd></dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates to clear of monsters.</dd></dd>
 
 <dt>Type 183: Destroy all Monsters</dt><dd>Most or all of the creatures in the dungeon
 disappear.
 <dl>
-<dt>Extra 1a:</dt><dd>If this is 0, all creatures disappear. If 1, only friendly creatures
-disappear. If 2, only hostile creatures disappear.</dd></dd>
+<dt>Extra 1a:</dt><dd>The type of creature to remove. Click the Choose button to select
+one, or use one of the following special values. If this is 0, all creatures disappear.
+If -1, only friendly creatures disappear. If -2, only hostile creatures disappear.</dd></dd>
 
 <dt>Type 184: Generic Lever</dt><dd>A dialog box comes up saying the party has found a
 lever, and asking if they want to pull it. The dialog buttons are Yes and No. If the No
@@ -1388,29 +1420,34 @@ placed in in the new town.</dd>
 <dt>Extra 2a:</dt><dd>The number of the town to place them in.</dd>
 <dt>Extra 2b:</dt><dd>Determines what text appears in the dialog. 0 - stairs up, 1 -
 stairs down, 2 - path slopes up, 3 - path slopes down, 4 - slimy stairway up, 5 - slimy
-stairway down, 6 - dark passage up, 7 - dark passage down.</dd></dd>
+stairway down, 6 - dark passage up, 7 - dark passage down, 8+ - no dialog (stairway
+is forced).</dd>
+<dt>Extra 2c:</dt><dd>If left at 0, the party can only enter while walking in town mode
+(as described in the note for Generic Portal). If set to 1 or 2, the encounter can be
+activated in combat mode. If set to 2 or 3, the encounter can be activated by other
+actions, such as searching the space, using the space, targeting a spell on the space,
+etc.</dd></dd>
 
 <dt>Type 188: Lever</dt><dd>A dialog box comes up with text you supply (saying, perhaps,
-they've found a lever). The picture in the dialog box is of a terrain type you choose. The
-dialog buttons are Yes and No. If the No button is pressed, the Jump To special is used.
+they've found a lever). The dialog buttons are Yes and No.
+If the No button is pressed, the Jump To special is used.
 If the Yes button is pushed, the terrain in the special space is turned to its Transform
 To What type (if this special is called while looking or moving, not talking), and the
 special node specified in Extra 1b is called.
 <dl>
 <dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box.
 Press the Create/Edit button to edit the text.</dd>
-<dt>Pict:</dt><dd>This is the number of the terrain type to display. To select a picture,
-press the Select Picture button.</dd>
-<dt>Extra 1b:</dt><dd>The special node to call is Yes is pushed.</dd></dd>
+<dt>Pict, Pictype:</dt><dd>This specifies the picture to display. To select a picture,
+press the Choose Picture button.</dd>
+<dt>Extra 1b:</dt><dd>The special node to call if Yes is pushed.</dd></dd>
 
 <dt>Type 189: Portal</dt><dd>A dialog box comes up (saying, perhaps, they've found a
-teleporter). The picture in the dialog box is a dialog picture you choose. The dialog
-buttons are Enter and Leave.
+teleporter). The dialog buttons are Enter and Leave.
 <dl>
 <dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog
 box.</dt><dd>Press the Create/Edit button to edit the text.</dd>
-<dt>Pict:</dt><dd>This is the number of the dialog picture to display. To select a
-picture, press the Select Picture button.</dd>
+<dt>Pict, Pictype:</dt><dd>This specifies the picture to display. To select a picture,
+press the Choose Picture button.</dd>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is
 teleported to if the player pushes Enter.</dd>
 <dt>Note:</dt><dd>Like all party moving special nodes, if this is called any time besides
@@ -1418,20 +1455,22 @@ when walking in town mode, the special encounter ends immediately, and, if movin
 party is not allowed to enter the space.</dd></dd>
 
 <dt>Type 190: Stairway</dt><dd>A dialog comes up text you supply (saying, perhaps, they've
-found a stairway). The picture in the dialog box is a dialog picture you choose. The
-dialog buttons are Climb and Leave. If the Leave button is pressed, the Jump To special is
+found a stairway). The dialog buttons are Climb and Leave.
+If the Leave button is pressed, the Jump To special is
 used, and the party is not allowed to enter the space. If the Climb button is pushed, the
 party is moved to another town.
 <dl>
 <dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box.
 Press the Create/Edit button to edit the text.</dd>
-<dt>Pict:</dt><dd>This is the number of the dialog picture to display. To select a
-picture, press the Select Picture button.</dd>
+<dt>Pict, Pictype:</dt><dd>This specifies the picture to display. To select a picture,
+press the Choose Picture button.</dd>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is to be
 placed in in the new town.</dd>
 <dt>Extra 2a:</dt><dd>The number of the town to place them in.</dd>
 <dt>Extra 2b:</dt><dd>If this is set to 1, the stairway is forced. No dialog box appears.
-Instead, the party is immediately moved to the different level.</dd></dd>
+Instead, the party is immediately moved to the different level.</dd>
+<dt>Extra 2c:</dt><dd>This has the same effect as on a Generic Stairway (see above for
+details).</dd></dd>
 
 <dt>Type 191: Relocate Outdoors</dt><dd>Changes the outdoors location of the party.
 <dl>
@@ -1465,19 +1504,30 @@ permanently.
 <p>If this node is called at any time besides in town mode, while walking or looking, the
 special encounter ends immediately and this node is ignored.</p>
 <p>When this node is used, if the player sends a PC off alone, the special encounter ends
-immediately. Only is the player hits Cancel is the Jump To node used.</p>
+immediately. Only if the player hits Cancel is the Jump To node used.</p>
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates to place the alone character
 in.</dd>
 <dt>Extra 2a:</dt><dd>If 0, nothing else happens. If non-zero, a teleportation noise plays
-when the party is split up.</dd></dd>
+when the party is split up.</dd>
+<dt>Note</dt><dd>The three rules above are good guidelines to follow and were absolutely
+necessary in the original version of the game. However, with the updated version, you
+can break some of them if you really know what you're doing. The game now keeps track of
+the town the split occurred in, so leaving town while split will not cause problems, but
+you should make sure the party can't loop back around to where they split from (or reach
+another Split Party node). Additionally, it's possible to use the Kill/Raise node to
+reunite the party, instead of the Reunite Party node; however, you still need to call
+Reunite Party with Extra 2a set to 1 so that the game stops tracking the location at
+which they split up.</dd></dd>
 
 <dt>Type 194: Reunite Party</dt><dd>If the party is not split up, this node is ignored. If
 the party is split up, the lone character is moved back to where the party was when it was
 split up, the party is rejoined, and the special encounter ends.
 <dl>
 <dt>Extra 1a:</dt><dd>If 0, nothing else happens. If non-zero, a teleportation noise plays
-when the party is split up.</dd></dd>
+when the party is split up.</dd>
+<dt>Extra 2a:</dt><dd>If 0, the party is returned to where they split up at. Otherwise,
+the party remains at their current location.</dd></dd>
 
 <dt>Type 195: Start Town Timer</dt><dd>One of the party's town encounter timers is
 activated. Each move taken, the timer goes down by 1. When it runs out, a town special
@@ -1488,6 +1538,99 @@ however, the timer cleared and no special happens.
 30000)</dd>
 <dt>Extra 2b:</dt><dd>The town special node to call when the timer runs out. If left at No
 Special, nothing happens.</dd></dd>
+
+<dt>Type 196: Change Lighting Level</dt><dd>This node changes the current light level of
+the town and/or party.
+<dl>
+<dt>Extra 1a:</dt><dd>If left at -1, no change. Otherwise, set the lighting mode of the
+town (the value normally set in Town Details).</dd>
+<dt>Extra 2a:</dt><dd>The amount by which to adjust the party's light level (as is
+normally obtained from spells, lamps, etc).</dd>
+<dt>Extra 2b:</dt><dd>If 0, increase light level. Otherwise, decrease it.</dd></dd>
+
+<dt>Type 197: Set Attitude</dt><dd>Change the attitude of a single monster.
+<dl>
+<dt>Extra 1a:</dt><dd>The number of the monster to affect. This is its unique ID within
+the town, which is shown at the top right of the Edit Placed Creature dialog.</dd>
+<dt>Extra 1b:</dt><dd>The new attitude.</dd></dd>
+
+<dt>Type 198: Centre on Space</dt><dd>Centres the terrain view on the specified space, as
+if the player had selected the Look command and scrolled the view there. Note that, if you
+want to show areas that would not be visible to the party from the current location, you
+must also use the Lift Fog node.
+<dl>
+<dt>Extra 1a, Extra 1b:</dt><dd>The location to centre on. If either is -1, the view is
+reset to centre on the active character.</dd></dd>
+
+<dt>Type 199: Lift Fog</dt><dd>Lift the fog of war so that spaces out of the party's line
+of sight become fully visible. The fog is automatically restored at the end of the current
+turn (after monsters make their move).
+<dl>
+<dt>Extra 1a:</dt><dd>If 1, lift the fog. If 0, restore it.</dd></dd>
+
+<dt>Type 200: Initiate Targeting Mode</dt><dd>This advanced node hooks into the native
+Blades of Exile targeting engine to allow the player to select one or more targets. The
+options are slightly different depending on whether the node is called during combat.
+<p>When not in combat (ie, just wandering around town), it only supports selecting a
+single target, and the rotateable wall area is not available. The player can select any
+space in sight regardless of range.
+<p>When in combat mode, the options increase. You can specify a maximum number of targets,
+allowing the player to select several locations as with the Arrow spells. However, this
+cannot be combined with the rotateable wall area, which is only supported in single-target
+mode. You can also limit the player to selecting targets within a particular range.
+<p>The special node sequence ends upon entering target mode. Once targeting is completed,
+a new special node sequence begins, starting from the node specified in JumpTo. If
+multiple targets were selected, this node sequence is repeated for each target. However,
+if you chose an area other than single space, the sequence is called only for the location
+clicked, not repeated for other locations within the covered area. If you want to affect
+these additional locations, you must calculate them yourself. Since there is currently no
+way to check which orientation of the rotateable wall was selected, there is not much
+point in using it unless you are using one of the Place Pattern nodes to produce the
+effect.
+<p>The two Place Pattern nodes (below) automatically affect all spaces within the covered
+area, and passing -1 as the pattern type means it uses the current pattern, which works
+correctly even for the rotateable wall.
+<dl>
+<dt>Extra 1a:</dt><dd>The spell pattern to use.
+0 - single space,
+1 - 3x3 square,
+2 - 2x2 square,
+3 - 3x3 square excluding centre,
+4 - circle radius 2,
+5 - circle radius 3,
+6 - 5 spaces in a cross,
+7 - rotateable 2x8 wall</dd>
+<dt>Extra 1b:</dt><dd>Maximum range (combat mode only)</dd>
+<dt>Extra 1c:</dt><dd>Maximum number of targets (combat mode only)</dd>
+<dt>JumpTo:</dt><dd>This node is called once for every selected target.</dd></dd>
+
+<dt>Type 201: Place Pattern (Fields/Objects)</dt><dd>Places fields according to a preset
+spell pattern relative to a specified space.
+<dl>
+<dt>Extra 1a, Extra 1b:</dt><dd>Key space of the pattern (usually the centre space).</dd>
+<dt>Extra 1c:</dt><dd>The spell pattern to use.
+-1 - use current pattern (only works when called through the Targeting Mode special node)
+0 - single space,
+1 - 3x3 square,
+2 - 2x2 square,
+3 - 3x3 square excluding centre,
+4 - circle radius 2,
+5 - circle radius 3,
+6 - 5 spaces in a cross,
+7-13 - rotateable 2x8 wall in various orientation</dd>
+<dt>Extra 2a</dt><dd>The field type to place</dd></dd>
+
+<dt>Type 202: Place Pattern (Direct Damage)</dt><dd>Deals damage according to a preset
+spell pattern relative to a specified space.
+<dl>
+<dt>Extra 1a, Extra 1b, Extra 1c:</dt><dd>Same as above node.</dd>
+<dt>Extra 2a</dt><dd>The type of damage to deal</dd>
+<dt></dt><dd>The amount of damage to deal. This is the number of six-sided dice to roll to
+calculate the damage.</dd>
+<dt></dt><dd>If 0, it will animate each affected creature sequentially using simply booms,
+similar to what happens when fields are placed and creatures take damage as a result. If
+1, all damage will be animated simultaneously using fully-animated explosions, similar to
+what happens when casting spells such as Fireball or Divine Thud.</dd></dd>
 </dl>
 
 <h4>Rectangle Specials:</h4>

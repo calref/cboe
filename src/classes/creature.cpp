@@ -184,7 +184,6 @@ void cCreature::web(int how_much) {
 void cCreature::scare(int how_much) {
 	how_much = magic_adjust(how_much);
 	morale -= how_much;
-	// TODO: I don't think there's currently any way to increase monster morale at the moment - add one!
 	if(how_much >= 0)
 		spell_note((how_much == 0) ? 10 : 1);
 	else

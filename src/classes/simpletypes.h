@@ -716,7 +716,7 @@ inline eSpecCat getNodeCategory(eSpecType node) {
 		return eSpecCat::AFFECT;
 	if(code >= 130 && code <= 160)
 		return eSpecCat::IF_THEN;
-	if(code >= 170 && code <= 199)
+	if(code >= 170 && code <= 202)
 		return eSpecCat::TOWN;
 	if(code >= 210 && code <= 218)
 		return eSpecCat::RECT;
