@@ -1514,7 +1514,7 @@ bool damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType 
 	if(victim.abil[eMonstAbil::SPLITS].active && victim.health > 0 && get_ran(1,1,1000) < victim.abil[eMonstAbil::SPLITS].special.extra1){
 		where_put = find_clear_spot(victim.cur_loc,1);
 		if(where_put.x > 0)
-			if((which_spot = place_monster(victim.number,where_put)) < 90) {
+			if((which_spot = place_monster(victim.number,where_put)) < univ.town.monst.size()) {
 				static_cast<cTownperson&>(univ.town.monst[which_spot]) = victim;
 				univ.town.monst[which_spot].health = victim.health;
 				victim.spell_note(27);
@@ -3705,7 +3705,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_PLACE_MONST:
-			place_monster(spec.ex2a,l);
+			place_monster(spec.ex2a,l,spec.ex2b);
 			*redraw = 1;
 			break;
 		case eSpecType::TOWN_DESTROY_MONST:
@@ -4047,6 +4047,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			redraw_screen(REFRESH_TERRAIN);
 			break;
 		case eSpecType::TOWN_START_TARGETING:
+			*next_spec = -1;
 			if(spec.ex1a < 0 || spec.ex1a > 7) {
 				giveError("Invalid spell pattern (0 - 7).");
 				break;
@@ -4061,7 +4062,6 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				start_fancy_spell_targeting(eSpell::NONE, true, spec.ex1b, eSpellPat(spec.ex1a), spec.ex1c);
 			else start_spell_targeting(eSpell::NONE, true, spec.ex1b, eSpellPat(spec.ex1a));
 			spell_caster = spec.jumpto;
-			*next_spec = -1;
 			break;
 		case eSpecType::TOWN_SPELL_PAT_FIELD:
 			if(spec.ex1c < -1 || spec.ex1c > 14) {

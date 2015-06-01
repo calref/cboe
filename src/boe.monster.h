@@ -32,7 +32,7 @@ bool monster_placid(short m_num);
 void monst_inflict_fields(short which_monst);
 bool monst_check_special_terrain(location where_check,short mode,short which_monst);
 void record_monst(cCreature *which_m);
-short place_monster(mon_num_t which,location where);
+short place_monster(mon_num_t which,location where,bool forced=false);
 bool summon_monster(mon_num_t which,location where,short duration,short given_attitude,bool by_party);
 void activate_monsters(short code,short attitude);
 short get_encumberance(short pc_num);
