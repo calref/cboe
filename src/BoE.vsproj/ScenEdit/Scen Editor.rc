@@ -168,42 +168,6 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Repeat Printing of Last &File\tCtrl+P", 414
     END
-    POPUP "&I1"
-    BEGIN
-        MENUITEM "Dummy",                       600
-    END
-    POPUP "&I2"
-    BEGIN
-        MENUITEM "Dummy",                       601
-    END
-    POPUP "&I3"
-    BEGIN
-        MENUITEM "Dummy",                       602
-    END
-    POPUP "&I4"
-    BEGIN
-        MENUITEM "Dummy",                       603
-    END
-    POPUP "&I5"
-    BEGIN
-        MENUITEM "Dummy",                       604
-    END
-    POPUP "&M1"
-    BEGIN
-        MENUITEM "Dummy",                       608
-    END
-    POPUP "&M2"
-    BEGIN
-        MENUITEM "Dummy",                       609
-    END
-    POPUP "&M3"
-    BEGIN
-        MENUITEM "Dummy",                       610
-    END
-    POPUP "&M4"
-    BEGIN
-        MENUITEM "Dummy",                       611
-    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&Index\tF1",                  IDM_HELP_INDEX

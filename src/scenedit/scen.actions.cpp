@@ -26,6 +26,7 @@
 
 extern char current_string[256];
 extern short mini_map_scales[3];
+extern eDrawMode draw_mode;
 rectangle world_screen;
 // border rects order: top, left, bottom, right //
 rectangle border_rect[4];
@@ -202,7 +203,6 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 							overall_mode = MODE_MAIN_SCREEN;
 							set_up_main_screen();
-							update_item_menu();
 						}
 						break;
 					case LB_EDIT_TER:
@@ -309,16 +309,13 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 						break;
 					case RB_TER:
 						edit_ter_type(j);
-						update_item_menu();
 						break;
 					case RB_MONST:
 						edit_monst_type(j);
-						update_item_menu();
 						start_monster_editing(1);
 						break;
 					case RB_ITEM:
 						edit_item_type(j);
-						update_item_menu();
 						start_item_editing(1);
 						break;
 					case RB_SCEN_SPEC:
@@ -997,7 +994,25 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				temp_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y );
 				flash_rect(temp_rect);
 				if(overall_mode < MODE_MAIN_SCREEN) {
-					set_new_terrain(i);
+					switch(draw_mode) {
+						case DRAW_TERRAIN:
+							set_new_terrain(i);
+							break;
+						case DRAW_ITEM:
+							if(scenario.scen_items[mode_count].variety == eItemType::NO_ITEM) {
+								giveError("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.");
+								break;
+							}
+							overall_mode = MODE_PLACE_ITEM;
+							mode_count = i;
+							set_string("Place the item:",scenario.scen_items[mode_count].full_name.c_str());
+							break;
+						case DRAW_MONST:
+							overall_mode = MODE_PLACE_CREATURE;
+							mode_count = i + 1;
+							set_string("Place the monster:",scenario.scen_monsters[mode_count].m_name.c_str());
+							break;
+					}
 				}
 				else {
 					edit_ter_type(i);
@@ -1274,6 +1289,18 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 							mode_count = 7;
 							set_cursor(wand_curs);
 							break;
+						case 109: // Terrain palette
+							draw_mode = DRAW_TERRAIN;
+							set_up_terrain_buttons(true);
+							break;
+						case 209: // Item palette
+							draw_mode = DRAW_ITEM;
+							set_up_terrain_buttons(true);
+							break;
+						case 309: // Monster palette
+							draw_mode = DRAW_MONST;
+							set_up_terrain_buttons(true);
+							break;
 					}
 				}
 			}
@@ -1317,7 +1344,6 @@ void swap_terrain() {
 
 void set_new_terrain(ter_num_t selected_terrain) {
 	current_terrain_type = selected_terrain;
-	redraw_selected_ter();
 //	if(selected_terrain < 2)
 //		current_ground = 0;
 //	else if(selected_terrain < 5)

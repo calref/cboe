@@ -259,7 +259,7 @@ cTown::cItem::cItem() {
 }
 
 cTown::cItem::cItem(location loc, short num, ::cItem& item) : cItem() {
-	loc = loc;
+	this->loc = loc;
 	code = num;
 	if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD)
 		charges = get_ran(1,4,6);

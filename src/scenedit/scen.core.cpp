@@ -3016,7 +3016,6 @@ bool build_scenario() {
 	}
 	cur_town = 0;
 	town = scenario.towns[0];
-	update_item_menu();
 	
 	save_scenario(progDir/filename);
 	return true;
