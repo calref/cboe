@@ -1066,11 +1066,13 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	return can_enter;
 }
 
-void record_monst(cCreature *which_m) {
+void record_monst(cCreature* which_m, bool forced) {
 	short r1;
 	
 	r1 = get_ran(1,1,100);
 	r1 = (r1 * 7) / 10;
+	
+	if(forced) r1 = 0;
 	
 	if((which_m->x_width > 1) || (which_m->y_width > 1)) {
 		ASB("Capture Soul: Monster is too big.");

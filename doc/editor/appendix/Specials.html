@@ -224,9 +224,13 @@ no room in their inventory.
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Extra 1a:</dt><dd>The number of the item to give. Press the Choose button to pick an
 item.</dd>
-<dt>Extra 2b:</dt><dd>The special to jump to if the item is not successfully given (if all
-the parties item slots are full). If No Special is given, the Jump To special is used as
+<dt>Extra 1b:</dt><dd>The special to jump to if the item is not successfully given (if all
+the party's item slots are full). If No Special is given, the Jump To special is used as
 usual.</dd>
+<dt>Extra 2a:</dt><dd>If 1, the item is given pre-equipped, without checking to see if
+this is legal. This should only be used if you know exactly what else they have equipped,
+for example if you are creating a joined NPC or if you previously stripped them of their
+items.</dd>
 <dt>Uses:</dt><dd>If you want the party to get an item after winning a combat outdoors,
 use a Forced Give. This makes sure that if it is at all possible, they get it.</dd>
 <dt>Uses 2:</dt><dd>Use this is the party is given an item during a talking special
@@ -825,6 +829,52 @@ one.</dd></dd>
 <dt>Type 90: Affect Name</dt><dd>Alters a PC or monster name.
 <dl>
 <dt>Mess3:</dt><dd>The number of the string containing the new name.</dd></dd>
+
+<dt>Type 91: Affect Level</dt><dd>Alters the experience level of a monster or PC.
+<dl>
+<dt>Extra 1a:</dt><dd>The number of levels to add/remove.</dd>
+<dt>Extra 1b:</dt><dd>If 0, gains levels. Otherwise, removes.</dd>
+<dt>Note:</dt>Use sparingly, especially when draining. If affecting a PC, this does not
+change skill points or amount of experience.</dd>
+
+<dt>Type 92: Affect Morale</dt><dd>Changes a monster's morale. If the target is not a
+monster, this has no effect. Decreasing morale is the same as a Fear spell.
+<dl>
+<dt>Extra 1a:</dt><dd>The amount to increase/decrease morale.</dd>
+<dt>Extra 1b: If 0, increases. Otherwise, decreases.</dd></dd>
+
+<dt>Type 95: Affect Soul Crystal</dt><dd>Records the currently targeted monster in the
+party's soul crystal, or erases it if there is already a monster of the same kind recorded.
+If the current target is not a monster, this has no effect. If you know the type of the
+monster you want to record, then you need to first place one on the map, record it in the
+soul crystal, and finally remove it from the map.
+<dl>
+<dt>Extra 1a:</dt><dd>If 0, records. Otherwise, erases.</dd>
+<dt>Extra 1b:</dt><dd>If 0, the monster is given a chance to resist. If 1, the capture is
+forced.</dd>
+<dt>Note:</dt><dd>Recording a monster works exactly as a successful casting of Capture
+Soul on it, meaning that a random existing monster will be erased if necessary to make
+room. Multispace monsters, monsters of the Important race, and monsters with the Splits
+special ability will not be recorded.</dd></dd>
+
+<dt>Type 96: Affect Monster Attack</dt><dd>Changes the strength of one of a monster's
+attacks. If the target is not a monster, this has no effect.
+<dl>
+<dt>Extra 1a:</dt><dd>The attack to change. (Range 0 ... 2)</dd>
+<dt>Extra 1b:</dt><dd>The amount to change the number of dice. (0 to leave it
+unchanged.)</dd>
+<dt>Extra 1c:</dt><dd>The amount to change the number of sides. (0 to leave it
+unchanged.)</dd>
+<dt>Extra 2a:</dt><dd>If 0, increase strength. Otherwise, decrease.</dd></dd>
+
+<dt>Type 97: Affect Monster Statistic</dt><dd>Changes one of a monster's inherent
+statistics. If the target is not a monster, this has no effect.
+<dl>
+<dt>Extra 1a:</dt><dd>The amount to increase/decrease. (Range 0 ... 7)</dd>
+<dt>Extra 1b:</dt><dd>If 0, increase. Otherwise, decrease.</dd>
+<dt>Extra 2a:</dt><dd>The statistic to increase/decrease: 0 - max health, 1 - max magic,
+2 - armor, 3 - skill, 4 - speed, 5 - mage spells, 6 - priest spells, 7 - magic resistance,
+8 - fire resistance, 9 - cold resistance, 10 - poison resistance</dd></dd>
 
 <dt>Type 98: Affect Statistic</dt><dd>Changes the character's statistics (e.g. Strength,
 Mage Spells, etc.)
@@ -1480,7 +1530,7 @@ the party in.</dd>
 sector (Range 0 ... 47, 0 ... 47)</dd>
 <dt>Uses:</dt><dd>If, when the party leaves at the north end of a dungeon, you want them
 to be in a different location in the outdoors from where they were when the entered, place
-a special node of this type just before the north exit (where theyre forced to step on
+a special node of this type just before the north exit (where they're forced to step on
 it).</dd>
 <dt>Note:</dt><dd>When this node is called, there is a delay while the new outdoors
 section is loaded into memory. Try not to call it too often.</dd></dd>

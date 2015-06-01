@@ -430,6 +430,11 @@ bool cParty::give_item(cItem item,bool do_print) {
 // TODO: Utilize the second parameter in special node processing
 // if abil > 0, force abil, else ignore
 bool cParty::forced_give(item_num_t item_num,eItemAbil abil,short dat) {
+	bool force_equip = false;
+	if(item_num >= 10000) {
+		item_num -= 10000;
+		force_equip = true;
+	}
 	if(item_num < 0 || item_num >= univ.scenario.scen_items.size())
 		return true;
 	cItem item = univ.scenario.scen_items[item_num];
@@ -442,6 +447,8 @@ bool cParty::forced_give(item_num_t item_num,eItemAbil abil,short dat) {
 		for(int j = 0; j < 24; j++)
 			if(adven[i]->main_status == eMainStatus::ALIVE && adven[i]->items[j].variety == eItemType::NO_ITEM) {
 				adven[i]->items[j] = item;
+				if(force_equip)
+					adven[i]->equip[j] = true;
 				
 				if(print_result) {
 					std::ostringstream announce;
