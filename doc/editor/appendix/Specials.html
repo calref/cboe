@@ -1634,8 +1634,9 @@ what happens when casting spells such as Fireball or Divine Thud.</dd></dd>
 </dl>
 
 <h4>Rectangle Specials:</h4>
-<p>The remaining Town Special nodes all do things to a rectangle of terrain in the town
-you select. For these nodes, the values have slightly different meanings than before:</p>
+<p>These nodes all do things to a rectangle of terrain that you select. Most of them work
+both in town and outdoors, but the first few only work in town. For these nodes, the
+values have slightly different meanings than before:</p>
 <dt>Extra 1a, Extra 1b, Extra 2a, Extra 2b:</dt><dd>For each of these specials, Extra 1a
 and Extra 1b are the top and left of the rectangle. Extra 2a and Extra 2b are the bottom
 and right of the rectangle.
@@ -1651,77 +1652,40 @@ non-zero, only the outside edges of the rectangle are affected.</dd>
 
 <dl>
 
-<dt>Type 200: Place Fire Wall </dt><dd>Fills the rectangle with walls of fire.
+<dt>Type 210: Place Field/Object/Sfx</dt><dd>Fills the rectangle with some sort of field,
+barrier, object, or sfx. This only works in town.
 <dl>
-<dt>Stuff Done 1:</dt><dd>The percentage chance that each space will be filled with fire.
-(Range 0 ... 100)</dd>
+<dt>Stuff Done 1:</dt><dd>The percentage chance that each space will be filled with the
+selected field type. (Range 0 ... 100) If you select 32 ("cleanse") as the field type,
+however, this has a different meaning - 0 means that fire and force barriers, barrels,
+crates, webs, and pushable stone blocks will be left alone, while 1 indicates they should
+be erased.</dd>
+<dt>Stuff Done 2:</dt><dd>The type of field (1 - force, 2 - fire, 3 - antimagic,
+4 - stink, 5 - ice, 6 - blades, 7 - sleep, 15 - quickfire), object (8 - pushable stone block,
+10 - web, 11 - crate, 12 - barrel, 13 - fire barrier, 14 - force barrier, 24 - forcecage),
+or sfx (16 - sm blood, 17 - med blood, 18 - lg blood, 19 - sm slime, 20 - lg slime,
+21 - ash, 22 - bones, 23 - stones) to place, or one of the special values (32 - cleanse,
+33 - smash fragile walls like Move Mountains).</dd>
 <dt>Note:</dt><dd>Fields are never placed on spaces that contain walls, or other
 impenetrable terrain.</dd></dd>
 
-<dt>Type 201: Place Force Wall </dt><dd>Fills the rectangle with walls of force.
+<dt>Type 211: Set Explored</dt><dd>This node alters your map, marking spaces as having
+been explored or not.
 <dl>
-<dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd></dd>
-
-<dt>Type 202: Place Ice Wall </dt><dd>Fills the rectangle with walls of cold.
-<dl>
-<dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd></dd>
-
-<dt>Type 203: Place Blade Wall </dt><dd>Fills the rectangle with walls of blades.
-<dl>
-<dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd></dd>
-
-<dt>Type 204: Place Stinking Cloud</dt><dd>Fills the rectangle with stinking clouds.
-<dl>
-<dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd></dd>
-
-<dt>Type 205: Place Sleep Field </dt><dd>Fills the rectangle with sleep fields.
-<dl>
-<dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd></dd>
-
-<dt>Type 206: Place Quickfire </dt><dd>Fills the rectangle with quickfire.
-<dl>
-<dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd>
-<dt>Note:</dt><dd>Be careful with this stuff. Always give the party a chance to escape.
-Also, quickfire can't move through secret doors. Place a few around the quickfire area so
-the whole dungeon doesn't get flooded with fire.</dd></dd>
-
-<dt>Type 207: Place Fire Barrier </dt><dd>Fills the rectangle with fire barriers.
-<dl>
-<dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd></dd>
-
-<dt>Type 208: Place Force Barrier </dt><dd>Fills the rectangle with force barriers.
-<dl>
-<dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd>
-<dt>Note:</dt><dd>Don't block the party in with these. If they don't have the Dispel
-Barrier spell, they'll be trapped.</dd></dd>
-
-<dt>Type 209: Cleanse Rectangle</dt><dd>Removes all fields, walls, clouds, etc. in the
-rectangle.
-<dl>
-<dt>Stuff Done 1:</dt><dd>If 0, leave Fire and Force barriers, barrels, crates, and webs
-alone. If non-zero, erase them too.</dd></dd>
-
-<dt>Type 210: Place sfx</dt><dd>Fills the rectangle with a special effect (blood, slime,
-bone chips, etc.).
-<dl>
-<dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd>
-<dt>Stuff Done 2:</dt><dd>The type of effect (0 - small blood, 1 - medium blood, 2 - large
-blood, 3 - small slime, 4 - big slime, 5 - ash, 6 - bones, 7 - rubble).</dd></dd>
-
-<dt>Type 211: Place barrels, etc.</dt><dd>Fills the rectangle with a permanent effect
-(webs, barrels, crates)
-<dl>
-<dt>Stuff Done 1:</dt><dd>As in Place Fire Wall, above.</dd>
-<dt>Stuff Done 2:</dt><dd>The type of effect (0 - web, 1 - barrel, 2 - crate).</dd></dd>
+<dt>Stuff Done 1:</dt><dd>If 0, mark the area as unexplored; if 1, mark it as
+explored.</dd></dd>
 
 <dt>Type 212: Move Items</dt><dd>Moves all of the items in the rectangle to a specified
-space. Items inside containers are not moved.
+space. Items inside containers are not moved. This only works in town.
 <dl>
 <dt>Stuff Done 1, Stuff Done 2:</dt><dd>The x and y coordinates of the space to move the
-items to.</dd></dd>
+items to.</dd>
+<dt>Mess 3:</dt><dd>If 0, place items on the ground. If this is 1 and the target space has
+a container on it (including a movable container such as a barrel), the items are instead
+placed in the container.</dd></dd>
 
 <dt>Type 213: Destroy Items</dt><dd>Destroys all of the items in the rectangle. Be careful
-not to destroy something the party needs to finish the scenario.</dd>
+not to destroy something the party needs to finish the scenario. Only works in town.</dd>
 
 <dt>Type 214: Change Rectangle Terrain</dt><dd>Changes the terrain in the rectangle to a
 given terrain type.
@@ -1758,12 +1722,6 @@ special encounter, once done, each node calls the Jump To node.</p>
 <dt>Type 225: Make Outdoor Wandering</dt><dd>A group of wandering monsters appears (at one
 of the designated wandering monster sites).</dd>
 
-<dt>Type 226: Change Out Terrain</dt><dd>Changes an outdoor space to a given terrain type.
-<dl>
-<dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
-<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired space.</dd>
-<dt>Extra 2a:</dt><dd>The number of the terrain type to change it to.</dd></dd>
-
 <dt>Type 227: Place Outdoor Encounter</dt><dd>Places a special outdoor wandering encounter
 in a random open space near the party. This can be accompanied by one or two messages, if
 you wish.
@@ -1777,23 +1735,6 @@ accompanied by one or two messages, if you wish.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired space.</dd></dd>
-
-<dt>Type 229: Outdoor Store</dt><dd>You can places stores outside using this special node
-type. When called, the special encounter ends immediately, and the party is not allowed to
-enter the space they were moving into. The game immediately goes into shopping mode.</p>
-<p>In fields Extra 1a and Extra 1b, enter the number of the first item in the scenarios
-item list that the store sells, and the total number of items the store sells. If the
-numbers given are, for example, 50 and 10, the store sells items 50-59 from your scenarios
-item list.</p>
-<dl>
-<dt>Mess1:</dt><dd>This message is the name of the store the party has found.</dd>
-<dt>Extra 1a:</dt><dd>The number of the item. This is the first item in the stores item
-list. Press the Choose button to pick an item.</dd>
-<dt>Extra 1b:</dt><dd>The type of store. (0 - items, 1 - mage spells, 2 - priest spells, 3
-- alchemy, 4 - healing)</dd>
-<dt>Extra 2a:</dt><dd>The number of items in the store. (Range 1 ... 40)</dd>
-<dt>Extra 2b:</dt><dd>The item cost adjuster, a number from 0 (very cheap) to 6 (very
-expensive). See chapter 11 (Dialogue) for the complete list of cost adjustments.</dd></dd>
 </dl>
 
 </div>
