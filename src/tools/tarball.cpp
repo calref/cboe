@@ -64,6 +64,7 @@ void tarball::writeTo(std::ostream& out) {
 		entry.contents.seekg(0);
 		entry.header = generateTarHeader(entry.filename, size);
 		out.write((char*)&entry.header, sizeof(header_posix_ustar));
+		if(size == 0) continue;
 		out << entry.contents.rdbuf();
 		if(padLength < 512)
 			out.write(padding, padLength);

@@ -860,6 +860,7 @@ static void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
 						else if(num_flags == 2)
 							spec->GetText(&the_ter.flag3);
 						else throw xBadNode(type, spec->Row(), spec->Column(), fname);
+						num_flags++;
 					} else throw xBadNode(type, spec->Row(), spec->Column(), fname);
 				}
 			} else if(type == "transform") {
@@ -1730,6 +1731,7 @@ static void readSpecialNodesFromStream(std::istream& stream, std::vector<cSpecia
 	stream.seekg(0, std::ios::beg);
 	contents.assign(std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>());
 	auto loaded = SpecialParser().parse(contents);
+	if(loaded.size() == 0) return; // If there were no nodes, we're already done here.
 	nodes.resize(loaded.rbegin()->first + 1);
 	for(auto p : loaded)
 		nodes[p.first] = p.second;

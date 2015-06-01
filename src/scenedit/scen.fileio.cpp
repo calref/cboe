@@ -371,7 +371,7 @@ static void writeTerrainToXml(ticpp::Printer&& data) {
 		data.CloseElement("special");
 		
 		data.OpenElement("editor");
-		if(ter.shortcut_key > 0)
+		if(ter.shortcut_key > 0 && ter.shortcut_key < '\x7f')
 			data.PushElement("shortcut", ter.shortcut_key);
 		if(ter.obj_num > 0) {
 			data.OpenElement("object");
