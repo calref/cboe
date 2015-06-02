@@ -65,6 +65,7 @@ public:
 	short intro_mess_pic;
 	location where_start,out_sec_start,out_start;
 	size_t which_town_start;
+	spec_num_t init_spec;
 	std::array<spec_loc_t,10> town_mods;
 	rectangle store_item_rects[3];
 	short store_item_towns[3];
@@ -80,6 +81,7 @@ public:
 	std::array<cTimer,20> scenario_timers;
 	std::vector<cSpecial> scen_specials;
 	cItemStorage storage_shortcuts[10];
+	// These two \/ are populated at load time and then never used again
 	location last_out_edited;
 	short last_town_edited;
 	scenario_header_flags format;

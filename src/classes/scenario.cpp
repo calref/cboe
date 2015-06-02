@@ -56,6 +56,7 @@ cScenario::cScenario(bool init_strings) {
 	format.ver[0] = 1;
 	format.min_run_ver = 2;
 	format.prog_make_ver[0] = 2;
+	init_spec = -1;
 	default_ground = 2;
 	where_start.x = 24;
 	where_start.y = 24;

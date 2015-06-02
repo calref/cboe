@@ -155,6 +155,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 	data.PushElement("num-towns", scenario.towns.size());
 	data.PushElement("out-width", scenario.outdoors.width());
 	data.PushElement("out-height", scenario.outdoors.height());
+	data.PushElement("on-init", scenario.init_spec);
 	data.PushElement("start-town", scenario.which_town_start);
 	data.PushElement("town-start", scenario.where_start);
 	data.PushElement("outdoor-start", scenario.out_sec_start);
@@ -307,8 +308,8 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 	data.CloseElement("game");
 	data.OpenElement("editor");
 	data.PushElement("default-ground", scenario.default_ground);
-	data.PushElement("last-out-section", scenario.last_out_edited);
-	data.PushElement("last-town", scenario.last_town_edited);
+	data.PushElement("last-out-section", cur_out);
+	data.PushElement("last-town", cur_town);
 	if(!scenario.custom_graphics.empty()) {
 		data.OpenElement("graphics");
 		for(size_t i = 0; i < scenario.custom_graphics.size(); i++) {
@@ -1068,8 +1069,8 @@ void save_scenario(fs::path toFile) {
 			fname.replace(dot,4,".boes");
 		else fname += ".boes";
 	}
-	scenario.scen_file = fname;
 	toFile = toFile.parent_path()/fname;
+	scenario.scen_file = toFile;
 	
 	// Now write to zip file.
 	ogzstream zout(toFile.string().c_str());

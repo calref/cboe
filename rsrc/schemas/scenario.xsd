@@ -181,6 +181,7 @@
 				<xs:element name="num-towns" type="xs:integer"/>
 				<xs:element name="out-width" type="xs:integer"/>
 				<xs:element name="out-height" type="xs:integer"/>
+				<xs:element name="on-init" type="xs:integer"/>
 				<xs:element name="start-town" type="xs:integer"/>
 				<xs:element name="town-start">
 					<xs:complexType>
