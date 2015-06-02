@@ -101,8 +101,8 @@ union uAbility {
 class cMonster {
 public:
 	struct cAttack{
-		unsigned short dice, sides;
-		eMonstMelee type;
+		unsigned short dice = 0, sides = 0;
+		eMonstMelee type = eMonstMelee::SWING;
 	};
 	unsigned int level;
 	std::string m_name;

@@ -781,9 +781,9 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 		}
 	} else if(hit == "picktype2") {
 		if(!save_monst_info(me,monst)) return false;
-		i = choose_text_res("monster-abilities",130,139,int(monst.a[1].type),&me,"Choose Attack 2 & 3 Type:");
+		i = choose_text_res("monster-abilities",130,139,int(monst.a[1].type),&me,"Choose Attack 2 Type:");
 		if(i >= 0) {
-			monst.a[1].type = monst.a[2].type = eMonstMelee(i);
+			monst.a[1].type = eMonstMelee(i);
 			put_monst_info_in_dlog(me,monst,which);
 		}
 	} else if(hit == "picktype3") {

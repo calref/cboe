@@ -86,6 +86,7 @@ cItem::cItem(){
 	graphic_num = 0;
 	ability = eItemAbil::NONE;
 	abil_data[0] = 0;
+	abil_data[1] = 0;
 	type_flag = 0;
 	is_special = 0;
 	value = 0;
