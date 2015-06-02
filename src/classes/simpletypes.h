@@ -530,6 +530,7 @@ enum class eSpecCtx {
 	HAIL = 25, // Special called by trying to initiate conversation
 	SHOPPING = 26,
 	DROP_ITEM = 27,
+	STARTUP = 28,
 };
 
 enum class eSpecType {

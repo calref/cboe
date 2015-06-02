@@ -17,6 +17,7 @@
 #include "boe.infodlg.h"
 #include "boe.items.h"
 #include <cstring>
+#include <queue>
 #include "boe.party.h"
 #include "boe.monster.h"
 #include "boe.town.h"
@@ -72,6 +73,7 @@ extern short current_ground;
 extern location golem_m_locs[16];
 extern cUniverse univ;
 extern sf::Texture pc_gworld;
+extern std::queue<pending_special_type> special_queue;
 
 // First icon is displayed for positive values, second for negative, if -1 no negative icon.
 // This omits two special cases - major poison, and normal speed; they are hard-coded.
@@ -273,6 +275,8 @@ void put_party_in_scen(std::string scen_name) {
 	current_pc = first_active_pc();
 	force_town_enter(univ.scenario.which_town_start,univ.scenario.where_start);
 	start_town_mode(univ.scenario.which_town_start,9);
+	while(!special_queue.empty())
+		special_queue.pop(); // Preserve legacy behaviour of not calling the "enter town" node at scenario start
 	center = univ.scenario.where_start;
 	update_explored(univ.scenario.where_start);
 	overall_mode = MODE_TOWN;
@@ -290,6 +294,8 @@ void put_party_in_scen(std::string scen_name) {
 			custom_choice_dialog(strs,univ.scenario.intro_mess_pic,PIC_SCEN,buttons) ;
 			j = 6;
 		}
+	short k;
+	run_special(eSpecCtx::STARTUP, 0, univ.scenario.init_spec, loc(0,0), &i, &j, &k);
 	give_help(1,2);
 	
 	// Compatibility flags

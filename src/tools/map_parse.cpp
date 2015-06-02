@@ -24,11 +24,10 @@ map_data load_map(std::istream& fin, bool isTown) {
 		int n = 0, col = 0;
 		eMapFeature curFeature = eMapFeature::NONE;
 		// vehicle_owned = true means the party owns it
-		bool vehicle_owned, found_something;
+		bool vehicle_owned;
 		for(char c : line) {
 			if(c == '#') break; // Found a comment
 			if(isblank(c)) continue;
-			found_something = true;
 			if(isdigit(c)) {
 				n *= 10;
 				n += c - '0';
@@ -84,6 +83,13 @@ map_data load_map(std::istream& fin, bool isTown) {
 					// TODO: This is an error!
 				}
 			}
+		}
+		if(curFeature == eMapFeature::NONE)
+			data.set(col, row, n);
+		else {
+			if((curFeature == eMapFeature::BOAT || curFeature == eMapFeature::HORSE) && !vehicle_owned)
+				n += 10000;
+			data.addFeature(col, row, curFeature, n);
 		}
 		row++;
 	}

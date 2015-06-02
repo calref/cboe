@@ -1953,7 +1953,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		case eSpecCtx::TALK: case eSpecCtx::USE_SPEC_ITEM: case eSpecCtx::TOWN_HOSTILE:
 		case eSpecCtx::TOWN_TIMER: case eSpecCtx::SCEN_TIMER: case eSpecCtx::PARTY_TIMER:
 		case eSpecCtx::OUTDOOR_ENC: case eSpecCtx::FLEE_ENCOUNTER: case eSpecCtx::WIN_ENCOUNTER:
-		case eSpecCtx::DROP_ITEM: case eSpecCtx::SHOPPING:
+		case eSpecCtx::DROP_ITEM: case eSpecCtx::SHOPPING: case eSpecCtx::STARTUP:
 			// Default behaviour - select entire party, or active member if split or in combat
 			if(is_combat()) current_pc_picked_in_spec_enc = &univ.party[current_pc];
 			else {

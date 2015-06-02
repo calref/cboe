@@ -696,6 +696,8 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					int h;
 					game->GetText(&h);
 					scenario.outdoors.resize(scenario.outdoors.width(), h);
+				} else if(type == "on-init") {
+					game->GetText(&scenario.init_spec);
 				} else if(type == "start-town") {
 					game->GetText(&scenario.which_town_start);
 					// TODO: Make sure town is valid

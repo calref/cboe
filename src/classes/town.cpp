@@ -94,6 +94,7 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	max_num_monst = 30000;
 	spec_on_entry = -1;
 	spec_on_entry_if_dead = -1;
+	spec_on_hostile = -1;
 	for(i = 0; i < 15; i++) {
 		sign_locs[i].x = 100;
 	}

@@ -542,8 +542,8 @@ static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edi
 	int mode = edit_stack.top().mode, node = edit_stack.top().which;
 	switch(mode) {
 		case 0: scenario.scen_specials[node] = edit_stack.top().node; break;
-		case 1: town->specials[node] = edit_stack.top().node; break;
-		case 2: current_terrain->specials[node] = edit_stack.top().node; break;
+		case 1: current_terrain->specials[node] = edit_stack.top().node; break;
+		case 2: town->specials[node] = edit_stack.top().node; break;
 	}
 	edit_stack.pop();
 	if(item_hit == "okay") {

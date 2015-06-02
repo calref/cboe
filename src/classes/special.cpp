@@ -29,8 +29,10 @@ cSpecial::cSpecial(){
 	m3 = -1;
 	ex1a = -1;
 	ex1b = -1;
+	ex1c = -1;
 	ex2a = -1;
 	ex2b = -1;
+	ex2c = -1;
 	jumpto = -1;
 }
 
