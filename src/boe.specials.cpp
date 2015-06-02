@@ -1876,6 +1876,7 @@ void special_increase_age(long length, bool queue) {
 				queue_special(eSpecCtx::PARTY_TIMER, which_type, univ.party.party_event_timers[i].node, null_loc);
 			else run_special(eSpecCtx::PARTY_TIMER,which_type,univ.party.party_event_timers[i].node,null_loc,&s1,&s2,&s3);
 			univ.party.party_event_timers[i].time = 0;
+			univ.party.party_event_timers[i].node = -1;
 			stat_area = true;
 			if(s3 > 0)
 				redraw = true;

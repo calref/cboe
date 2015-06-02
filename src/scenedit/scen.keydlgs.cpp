@@ -538,7 +538,8 @@ static void save_spec_enc(cDialog& me, node_stack_t& edit_stack) {
 }
 
 static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
-	save_spec_enc(me, edit_stack);
+	if(item_hit != "unwind")
+		save_spec_enc(me, edit_stack);
 	int mode = edit_stack.top().mode, node = edit_stack.top().which;
 	switch(mode) {
 		case 0: scenario.scen_specials[node] = edit_stack.top().node; break;
@@ -734,7 +735,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 	eStrType strt;
 	short str_adj = 0;
 	const char* title;
-	cSpecial node_to_change_to;
+	cSpecial* node_to_change_to;
 	switch(btn) {
 		case 'm':
 			choose_string = false;
@@ -759,14 +760,14 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			me[field].setTextToNum(store);
 			save_spec_enc(me, edit_stack);
 			if(mode == 0)
-				node_to_change_to = scenario.scen_specials[store];
+				node_to_change_to = &scenario.scen_specials[store];
 			else if(mode == 1)
-				node_to_change_to = current_terrain->specials[store];
+				node_to_change_to = &current_terrain->specials[store];
 			else if(mode == 2)
-				node_to_change_to = town->specials[store];
-			if(node_to_change_to.pic < 0)
-				node_to_change_to.pic = 0;
-			edit_stack.push({store,mode,node_to_change_to});
+				node_to_change_to = &town->specials[store];
+			if(node_to_change_to->pic < 0)
+				node_to_change_to->pic = 0;
+			edit_stack.push({store,mode,*node_to_change_to});
 			put_spec_enc_in_dlog(me, edit_stack);
 			me["back"].show();
 			return true;
@@ -890,7 +891,7 @@ short get_fresh_spec(short which_mode) {
 			store_node = current_terrain->specials[i];
 		if(which_mode == 2)
 			store_node = town->specials[i];
-		if(store_node.type == eSpecType::NONE && store_node.jumpto == -1)
+		if(store_node.type == eSpecType::NONE && store_node.jumpto == -1 && store_node.pic < 0)
 			return i;
 	}
 	

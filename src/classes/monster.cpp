@@ -381,6 +381,8 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 cMonster::cMonster(){
 	magic_res = poison_res = fire_res = cold_res = 100;
 	// TODO: Fill in
+	level = m_health = armor = skill = speed = 0;
+	mu = cl = 0;
 	see_spec = -1;
 }
 
