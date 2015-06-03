@@ -2688,8 +2688,8 @@ static bool save_scen_details(cDialog& me, std::string, eKeyMod) {
 	scenario.adjust_diff = dynamic_cast<cLed&>(me["adjust"]).getState() != led_red;
 	for(i = 0; i < 3; i++)
 		scenario.format.ver[i] = me["ver" + std::to_string(i + 1)].getTextAsNum();
-	scenario.who_wrote[0] = me["who1"].getText().substr(0, 60);
-	scenario.who_wrote[1] = me["who2"].getText().substr(0, 60);
+	scenario.who_wrote[0] = me["who1"].getText().substr(0, 100);
+	scenario.who_wrote[1] = me["who2"].getText().substr(0, 100);
 	scenario.contact_info = me["contact"].getText().substr(0, 256);
 	scenario.campaign_id = me["cpnid"].getText();
 	scenario.bg_out = boost::lexical_cast<int>(me["bg-out"].getText().substr(10));
