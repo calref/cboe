@@ -1049,6 +1049,7 @@ static void readMonstAbilFromXml(ticpp::Element& data, cMonster& monst) {
 		if(abil_type == eMonstAbil::NO_ABIL)
 			throw xMissingAttr(type, "type", data.Row(), data.Column(), fname);
 		uAbility& abil = monst.abil[abil_type];
+		abil.active = true;
 		Iterator<Element> elem;
 		if(type == "general") {
 			auto& general = abil.gen;
@@ -2134,6 +2135,7 @@ void load_spec_graphics_v2(int num_sheets) {
 	}
 	while(num_sheets-- > 0) {
 		std::string name = "sheet" + std::to_string(num_sheets);
+		ResMgr::free<ImageRsrc>(name);
 		spec_scen_g.sheets[num_sheets].loadFromImage(*ResMgr::get<ImageRsrc>(name));
 	}
 	reload_core_graphics();

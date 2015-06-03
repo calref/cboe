@@ -996,7 +996,7 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 				if(overall_mode < MODE_MAIN_SCREEN) {
 					switch(draw_mode) {
 						case DRAW_TERRAIN:
-							set_new_terrain(i);
+							set_new_terrain(pal_sbar->getPosition() * 16 + i);
 							break;
 						case DRAW_ITEM:
 							if(scenario.scen_items[mode_count].variety == eItemType::NO_ITEM) {
@@ -1004,12 +1004,12 @@ bool handle_action(location the_point,sf::Event /*event*/) {
 								break;
 							}
 							overall_mode = MODE_PLACE_ITEM;
-							mode_count = i;
+							mode_count = pal_sbar->getPosition() * 16 + i;
 							set_string("Place the item:",scenario.scen_items[mode_count].full_name.c_str());
 							break;
 						case DRAW_MONST:
 							overall_mode = MODE_PLACE_CREATURE;
-							mode_count = i + 1;
+							mode_count = pal_sbar->getPosition() * 16 + i + 1;
 							set_string("Place the monster:",scenario.scen_monsters[mode_count].m_name.c_str());
 							break;
 					}

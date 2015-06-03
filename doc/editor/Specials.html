@@ -211,7 +211,11 @@ flag. Put the two parts of the required stuff done flag in these two text areas.
 <p><b>Message 1-3, Pict, Pict type -</b> Some special nodes display a piece of text on the
 screen. Other special nodes display a dialog box, with text in the middle and a picture in
 the upper left corner. The numbers for these messages and the number of the picture to
-display can be put in these text fields.</p>
+display can be put in these text fields. When attaching a simple text message (two
+strings) to some other type of node, keep in mind that the text will display <i>after</i>
+the main action of the node. For example, a Missile Animation node with attached text
+messages will show the missile, then display the text. Similarly, a Pause special node will
+display the text after the delay is complete.</p>
 <p>Each picture and each text message has a number associated with it (for example, every
 town has 100 text messages, numbered from 0 to 99). Most of the time, you really dont want
 to have to worry about these. Fortunately, there is an easier way to deal with this. Press

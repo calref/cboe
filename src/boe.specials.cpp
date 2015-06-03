@@ -1789,10 +1789,19 @@ void special_increase_age(long length, bool queue) {
 	unsigned short i;
 	short s1,s2,s3;
 	bool redraw = false,stat_area = false;
-	location null_loc; // TODO: Should we pass the party's location here? It doesn't quite make sense to me though...
+	location trigger_loc;
 	unsigned long age_before = univ.party.age - length;
 	unsigned long current_age = univ.party.age;
 	bool failed_job = false;
+	
+	if(is_combat()) {
+		extern short combat_active_pc;
+		trigger_loc = univ.party[combat_active_pc].combat_pos;
+	} else if(is_town()) {
+		trigger_loc = univ.town.p_loc;
+	} else if(is_out()) {
+		trigger_loc = univ.party.p_loc;
+	}
 	
 	for(auto& p : univ.party.quest_status) {
 		if(p.second != eQuestStatus::STARTED)
@@ -1844,8 +1853,8 @@ void special_increase_age(long length, bool queue) {
 					if(j % time == 0) {
 						if(queue) {
 							univ.party.age = j;
-							queue_special(eSpecCtx::TOWN_TIMER, 2, univ.town->timers[i].node, null_loc);
-						} else run_special(eSpecCtx::TOWN_TIMER,2,univ.town->timers[i].node,null_loc,&s1,&s2,&s3);
+							queue_special(eSpecCtx::TOWN_TIMER, 2, univ.town->timers[i].node, trigger_loc);
+						} else run_special(eSpecCtx::TOWN_TIMER,2,univ.town->timers[i].node,trigger_loc,&s1,&s2,&s3);
 					}
 				stat_area = true;
 				if(s3 > 0)
@@ -1860,8 +1869,8 @@ void special_increase_age(long length, bool queue) {
 				if(j % time == 0) {
 					if(queue) {
 						univ.party.age = j;
-						queue_special(eSpecCtx::SCEN_TIMER, 0, univ.scenario.scenario_timers[i].node, null_loc);
-					} else run_special(eSpecCtx::SCEN_TIMER,0,univ.scenario.scenario_timers[i].node,null_loc,&s1,&s2,&s3);
+						queue_special(eSpecCtx::SCEN_TIMER, 0, univ.scenario.scenario_timers[i].node, trigger_loc);
+					} else run_special(eSpecCtx::SCEN_TIMER,0,univ.scenario.scenario_timers[i].node,trigger_loc,&s1,&s2,&s3);
 				}
 			stat_area = true;
 			if(s3 > 0)
@@ -1873,8 +1882,8 @@ void special_increase_age(long length, bool queue) {
 			univ.party.age = age_before + univ.party.party_event_timers[i].time;
 			short which_type = univ.party.party_event_timers[i].node_type;
 			if(queue)
-				queue_special(eSpecCtx::PARTY_TIMER, which_type, univ.party.party_event_timers[i].node, null_loc);
-			else run_special(eSpecCtx::PARTY_TIMER,which_type,univ.party.party_event_timers[i].node,null_loc,&s1,&s2,&s3);
+				queue_special(eSpecCtx::PARTY_TIMER, which_type, univ.party.party_event_timers[i].node, trigger_loc);
+			else run_special(eSpecCtx::PARTY_TIMER,which_type,univ.party.party_event_timers[i].node,trigger_loc,&s1,&s2,&s3);
 			univ.party.party_event_timers[i].time = 0;
 			univ.party.party_event_timers[i].node = -1;
 			stat_area = true;
@@ -2248,7 +2257,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else try {
 				if(spec.sd1 < 0 && spec.sd2 < 0)
 					univ.party.clear_ptr(spec.ex1a);
-				else univ.party.set_ptr(spec.sd1,spec.sd2,spec.ex1a);
+				else univ.party.set_ptr(spec.ex1a,spec.sd1,spec.sd2);
 			} catch(std::range_error x) {
 				giveError(x.what());
 			}

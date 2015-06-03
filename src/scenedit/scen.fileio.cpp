@@ -1003,25 +1003,26 @@ void save_scenario(fs::path toFile) {
 			pic_out << fin.rdbuf();
 			fin.close();
 		}
-	} else if(spec_scen_g) {
+	} else {
 		fs::path picPath = tempDir/"scenario"/"graphics";
 		if(fs::exists(picPath) && fs::is_directory(picPath)) {
 			// First build a list of overridable sheets
 			std::set<std::string> sheet_names;
 			fs::directory_iterator sheet_iter(progDir/"Scenario Editor"/"graphics.exd"/"mac");
-			while(sheet_iter != fs::directory_iterator()) {
+			for(; sheet_iter != fs::directory_iterator(); sheet_iter++) {
 				std::string fname = sheet_iter->path().filename().string();
 				size_t dot = fname.find_last_of('.');
+				if(dot == std::string::npos) continue;
 				if(fname.substr(dot) == ".png")
 					sheet_names.insert(fname);
-				sheet_iter++;
 			}
 			fs::directory_iterator dir_iter(picPath);
-			while(dir_iter != fs::directory_iterator()) {
+			for(; dir_iter != fs::directory_iterator(); dir_iter++) {
 				std::string fname = dir_iter->path().filename().string();
 				bool is_sheet = false;
 				if(fname.substr(0,5) == "sheet") {
 					size_t dot = fname.find_last_of('.');
+					if(dot == std::string::npos) continue;
 					if(fname.substr(dot) == ".png" && std::all_of(fname.begin() + 5, fname.begin() + dot, isdigit)) {
 						// Looks like a valid sheet!
 						is_sheet = true;
@@ -1036,7 +1037,6 @@ void save_scenario(fs::path toFile) {
 					pic_out << fin.rdbuf();
 					fin.close();
 				}
-				dir_iter++;
 			}
 		}
 	}

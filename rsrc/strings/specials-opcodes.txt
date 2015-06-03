@@ -88,13 +88,13 @@ status
 traits
 ap
 name
+level
+morale
+soul-crystal
 
 
-
-
-
-
-
+monst-attack
+monst-statistic
 statistic
 spell-mage
 spell-priest
