@@ -526,3 +526,35 @@ How many dice? (calculated in d6's)
 0 - sequential simple booms, 1 - simultaneous animated booms
 Special to Jump To
 --------------------
+Relocate Creature
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+X destination or differential
+Y destination or differential
+Unused
+Which creature
+Positioning mode
+Delay
+Special to Jump To
+--------------------
+Place Label
+Unused
+Unused
+Label text
+Unused
+Unused
+Unused
+Unused
+X coordinate, or which creature
+Y coordinate, or -1 for creature
+Unused
+0 - Align top, 1 - align centre
+Delay
+Unused
+Special to Jump To
+--------------------

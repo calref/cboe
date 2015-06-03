@@ -1,6 +1,7 @@
 
 #include <cstring>
 #include <cstdio>
+#include <list>
 
 #include "boe.global.h"
 
@@ -35,6 +36,7 @@ extern eGameMode overall_mode;
 extern short current_spell_range;
 extern bool anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
 extern bool flushingInput;
+extern bool cartoon_happening, fog_lifted;
 extern short anim_step;
 extern effect_pat_type current_pat;
 extern location ul;
@@ -66,12 +68,6 @@ extern std::string save_talk_str1, save_talk_str2;
 
 rectangle		menuBarRect;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
-
-short terrain_there[9][9]; // this is an optimization variabel. Keeps track of what terrain
-// is in the terrain spot, so things don't get redrawn.
-// 0 - 299 just terrain graphic in place
-// 300 - blackness
-// -1 - nothign worth saving
 
 long anim_ticks = 0;
 
@@ -214,9 +210,6 @@ void plop_fancy_startup() {
 	
 //	for(i = 0;i < 8; i++)
 //		OffsetRect(&trim_rects[i],61,37);
-	for(i = 0; i < 9; i++)
-		for(j = 0; j < 9; j++)
-			terrain_there[i][j] = -1;
 	
 	win_to_rects[5].offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
 	win_to_rects[2].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
@@ -764,6 +757,7 @@ bool is_nature(short x, short y, unsigned short ground_t) {
 }
 
 std::vector<location> forcecage_locs;
+extern std::list<text_label_t> posted_labels;
 
 //mode ... if 1, don't place on screen after redoing
 // if 2, only redraw over active monst
@@ -886,6 +880,8 @@ void draw_terrain(short	mode) {
 			}
 			spot_seen[q][r] = can_draw;
 			
+			if(fog_lifted) can_draw = true;
+			
 			if((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
 				if(is_combat()) anim_ticks = 0;
 				
@@ -987,6 +983,12 @@ void draw_terrain(short	mode) {
 	// TODO: Move into the above loop to eliminate global variable
 	for(location fc_loc : forcecage_locs)
 		Draw_Some_Item(fields_gworld,calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
+	// Draw any posted labels, then clear them out
+	clip_rect(terrain_screen_gworld, {13, 13, 337, 265});
+	for(text_label_t lbl : posted_labels)
+		draw_text_label(lbl);
+	undo_clip(terrain_screen_gworld);
+	posted_labels.clear();
 	
 	// Now do the light mask thing
 	apply_light_mask(false);
@@ -1207,8 +1209,6 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	if(!frills_on)
 		return;
 	
-	terrain_there[q][r] = -1;
-	
 	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
 	if(pic < 960){
 		from_gworld = &terrain_gworld[pic / 50];
@@ -1326,8 +1326,6 @@ void place_road(short q,short r,location where, bool here) {
 	};
 	draw_loc.x = q;
 	draw_loc.y = r;
-	
-	terrain_there[q][r] = -1;
 	
 	if(here){
 		if(where.y > 0)

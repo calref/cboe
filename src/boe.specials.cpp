@@ -51,6 +51,7 @@ extern short combat_posing_monster;
 
 bool can_draw_pcs = true;
 bool fog_lifted = false;
+bool cartoon_happening = false;
 
 std::map<eDamageType,int> boom_gr = {
 	{eDamageType::WEAPON, 3},
@@ -69,6 +70,14 @@ short store_item_spell_level = 10;
 iLiving* current_pc_picked_in_spec_enc = nullptr;
 extern std::map<eSkill,short> skill_max;
 bool special_in_progress = false;
+
+static void start_cartoon() {
+	if(!cartoon_happening && !is_combat()) {
+		for(int i = 0; i < 6; i++)
+			univ.party[i].combat_pos = univ.town.p_loc;
+	}
+	cartoon_happening = true;
+}
 
 // 0 - can't use 1 - combat only 2 - town only 3 - town & combat only  4 - everywhere  5 - outdoor
 // + 10 - mag. inept can use
@@ -4116,6 +4125,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::TOWN_SET_CENTER:
 			if(l.x >= 0 && l.y >= 0) center = l;
 			else center = is_combat() ? univ.party[current_pc].combat_pos : univ.town.p_loc;
+			start_cartoon();
 			redraw_screen(REFRESH_TERRAIN);
 			break;
 		case eSpecType::TOWN_LIFT_FOG:
@@ -4187,6 +4197,65 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				do_explosion_anim(0, 0);
 				end_missile_anim();
 			}
+			break;
+		case eSpecType::TOWN_RELOCATE_CREATURE:
+			if(spec.ex2b > 4) {
+				giveError("Invalid positioning mode (0-4)");
+				break;
+			}
+			if(spec.ex2a < 0)
+				i = univ.get_target_i(*current_pc_picked_in_spec_enc);
+			else i = spec.ex2a;
+			if(spec.ex2b > 1) {
+				if(spec.ex2b <= 3) l.x *= -1;
+				if(spec.ex2b >= 3) l.y *= -1;
+			}
+			if(i < 6) {
+				start_cartoon();
+				if(spec.ex2b == 0)
+					univ.party[i].combat_pos = l;
+				else {
+					univ.party[i].combat_pos.x += l.x;
+					univ.party[i].combat_pos.y += l.y;
+				}
+			} else if(i >= 100) {
+				i -= 100;
+				if(spec.ex2b == 0)
+					univ.town.monst[i].cur_loc = l;
+				else {
+					univ.town.monst[i].cur_loc.x += l.x;
+					univ.town.monst[i].cur_loc.y += l.y;
+				}
+			} else {
+				giveError("Invalid positioning target!");
+				break;
+			}
+			redraw_screen(REFRESH_TERRAIN);
+			if(spec.ex2c > 0)
+				sf::sleep(sf::milliseconds(spec.ex2c));
+			*redraw = 1;
+			break;
+		case eSpecType::TOWN_PLACE_LABEL:
+			check_mess = false;
+			if(l.y < 0) {
+				if(l.x < 0)
+					l.x = univ.get_target_i(*current_pc_picked_in_spec_enc);
+				if(l.x < 6)
+					l = (is_combat() || cartoon_happening) ? univ.party[l.x].combat_pos : univ.town.p_loc;
+				else if(l.x == 6)
+					l = univ.town.p_loc;
+				else if(l.x >= 100 && l.x - 100 < univ.town.monst.size())
+					l = univ.town.monst[l.x - 100].cur_loc;
+				else {
+					giveError("Invalid label target!");
+					break;
+				}
+			}
+			get_strs(strs[0], strs[1], cur_spec_type, spec.m1, spec.m1);
+			place_text_label(strs[0], l, spec.ex2a);
+			redraw_screen(REFRESH_TERRAIN);
+			if(spec.ex2b > 0) // TODO: Add preferences setting to increase this delay, for slow readers
+				sf::sleep(sf::seconds(spec.ex2b));
 			break;
 		default:
 			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");

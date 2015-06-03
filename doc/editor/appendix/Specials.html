@@ -1616,7 +1616,9 @@ reset to centre on the active character.</dd></dd>
 of sight become fully visible. The fog is automatically restored at the end of the current
 turn (after monsters make their move).
 <dl>
-<dt>Extra 1a:</dt><dd>If 1, lift the fog. If 0, restore it.</dd></dd>
+<dt>Extra 1a:</dt><dd>If 1, lift the fog. If 0, restore it.</dd>
+<dt>Note:</dt><dd>If needed, you can also use this to force the screen to be redrawn (just
+specify the current fog setting).</dd></dd>
 
 <dt>Type 200: Initiate Targeting Mode</dt><dd>This advanced node hooks into the native
 Blades of Exile targeting engine to allow the player to select one or more targets. The
@@ -1681,6 +1683,39 @@ calculate the damage.</dd>
 similar to what happens when fields are placed and creatures take damage as a result. If
 1, all damage will be animated simultaneously using fully-animated explosions, similar to
 what happens when casting spells such as Fireball or Divine Thud.</dd></dd>
+
+<dt>Type 203: Relocate Creature</dt><dd>This node forces a single creature to relocate to
+a different space. Useful for cutscenes. It can handle either absolute or relative
+movement.
+However, it does not currently check that it is legal for the creature to be on that
+space.
+This can split the party into its individual members temporarily, similar to combat mode,
+but they return to the party's original location once the node sequence ends.
+<dl>
+<dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates or differentials.</dd>
+<dt>Extra 2a:</dt><dd>The creature to relocate - 0-5 for party members, 100+x for a
+specific monster, -1 for the currently selected target.</dd>
+<dt>Extra 2b:</dt><dd>If 0, Extra 1a and 1b are taken as absolute coordinates. If 1, they
+are added to the x and y coordinates, respectively. 2 or 3 means the x coordinate is
+instead subtracted, while 3 or 4 means the y coordinate is instead subtracted.</dd>
+<dt>Extra 2c:</dt><dd>If positive, this specifies a delay in milliseconds after the
+creature
+is repositioned.</dd></dd>
+
+<dt>Type 204:</dt><dd>This node places a text label on the terrain screen, for example to
+indicate someone speaking. The label lasts only until the screen is next updated, but you
+can optionally specify a delay to ensure there is time to read it.
+<dl>
+<dt>Mess 1:</dt><dd>The number of the message to display.</dd>
+<dt>Extra 1a, Extra 1b:</dt><dd>The X and Y coordinates of the location to place the
+message. If Extra 1b is left at -1, Extra 1a instead specifies the number of a creature at
+whose location the message should be placed (0-5 for party members, 6 for party location,
+100+x for other creatures). If both are left at -1, the current targeted PC from the
+Select PC node is used.</dd>
+<dt>Extra 2a:</dt><dd>If 1, the text is centred vertically on the space. If 0, it appears
+at the top of the space.</dd>
+<dt>Extra 2b:</dt><dd>If positive, this specifies a delay in seconds after the label is
+placed.</dd></dd>
 </dl>
 
 <h4>Rectangle Specials:</h4>

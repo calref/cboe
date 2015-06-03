@@ -200,8 +200,8 @@ lift-fog
 start-target
 spell-pat-field
 spell-pat-boom
-
-
+relocate
+label
 
 
 
