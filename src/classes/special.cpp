@@ -390,6 +390,7 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // % - Choose button to select shop cost adjustment
 // { - Choose button to select a spell pattern
 // } - As above, but allows you to select which version of the rotateable field
+// ^ - Choose button to select a positioning mode
 // e - Choose button to select a status effect
 // E - Choose button to select a party status effect
 // w - Choose button to select main party status effect
@@ -447,17 +448,17 @@ static const char*const button_dict[7][11] = {
 		"s   ss   s     +    s==+s  =   ", // ex2b
 		"               =           s   ", // ex2c
 	}, { // town nodes
-		"mmmmmmmmmmmmmmm   dddmmmmmmmmmmmm", // msg1
-		"                                 ", // msg2
-		"                                 ", // msg3
-		" 8                ppp            ", // pic
-		"                  ???            ", // pictype
-		"            c             L   {  ", // ex1a
-		"              s s s      s @     ", // ex1b
-		"                               }}", // ex1c
-		"@  7     !  c    T  T i        FD", // ex2a
-		"     DD          /               ", // ex2b
-		" x x             :  :            ", // ex2c
+		"mmmmmmmmmmmmmmm   dddmmmmmmmmmmmmmM", // msg1
+		"                                   ", // msg2
+		"                                   ", // msg3
+		" 8                ppp              ", // pic
+		"                  ???              ", // pictype
+		"            c             L   {    ", // ex1a
+		"              s s s      s @       ", // ex1b
+		"                               }}  ", // ex1c
+		"@  7     !  c    T  T i        FD  ", // ex2a
+		"     DD          /               ^ ", // ex2b
+		" x x             :  :              ", // ex2c
 	}, { // rectangle nodes
 		"mmmmmmmmm", // msg1
 		"         ", // msg2

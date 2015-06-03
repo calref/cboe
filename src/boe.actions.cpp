@@ -61,6 +61,7 @@ short num_chirps_played = 0;
 extern rectangle startup_button[6];
 extern bool flushingInput;
 extern bool fog_lifted;
+extern bool cartoon_happening;
 bool ghost_mode;
 rectangle startup_top;
 
@@ -1446,7 +1447,9 @@ bool handle_action(sf::Event event) {
 	// MARK: Handle non-PC stuff (like monsters) if the party actually did something
 	if(did_something) handle_monster_actions(need_redraw, need_reprint);
 	if(fog_lifted) need_redraw = true;
+	if(cartoon_happening) need_redraw = true;
 	fog_lifted = false;
+	cartoon_happening = false;
 	if(need_redraw) draw_terrain();
 	if(need_reprint || need_redraw) print_buf();
 	

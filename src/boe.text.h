@@ -37,3 +37,10 @@ bool day_reached(unsigned short which_day, unsigned short which_event);
 void Draw_Some_Item (sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld, location target, char masked, short main_win);
 rectangle get_stat_effect_rect(int which_effect);
 
+struct text_label_t {
+	rectangle text_rect;
+	std::string str;
+};
+
+void place_text_label(std::string string, location at, bool centred);
+void draw_text_label(const text_label_t& label);

@@ -687,6 +687,8 @@ enum class eSpecType {
 	TOWN_START_TARGETING = 200,
 	TOWN_SPELL_PAT_FIELD = 201,
 	TOWN_SPELL_PAT_BOOM = 202,
+	TOWN_RELOCATE_CREATURE = 203,
+	TOWN_PLACE_LABEL = 204,
 	RECT_PLACE_FIELD = 210,
 	RECT_SET_EXPLORED = 211,
 	RECT_MOVE_ITEMS = 212,
@@ -717,7 +719,7 @@ inline eSpecCat getNodeCategory(eSpecType node) {
 		return eSpecCat::AFFECT;
 	if(code >= 130 && code <= 160)
 		return eSpecCat::IF_THEN;
-	if(code >= 170 && code <= 202)
+	if(code >= 170 && code <= 204)
 		return eSpecCat::TOWN;
 	if(code >= 210 && code <= 218)
 		return eSpecCat::RECT;

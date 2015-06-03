@@ -2,6 +2,7 @@
 #define	TEXT_BUF_LEN	70
 
 #include <sstream>
+#include <list>
 
 #include "boe.global.h"
 
@@ -52,12 +53,13 @@ extern tessel_ref_t bg[];
 extern short dest_personalities[40];
 extern location source_locs[6];
 extern location dest_locs[40] ;
+extern location center;
 
 extern sf::Texture tiny_obj_gworld,invenbtn_gworld,status_gworld;
 extern cCustomGraphics spec_scen_g;
 extern sf::Texture pc_gworld;
 extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
-extern short terrain_there[9][9];
+extern sf::RenderTexture terrain_screen_gworld;
 
 // game globals
 extern location ul;
@@ -1117,7 +1119,6 @@ void Draw_Some_Item (sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarg
 	if((supressing_some_spaces) && (target != ok_space[0]) &&
 		(target != ok_space[1]) && (target != ok_space[2]) && (target != ok_space[3]))
 		return;
-	terrain_there[target.x][target.y] = -1;
 	
 	destrec = coord_to_rect(target.x,target.y);
 	if(main_win == 1) destrec.offset(ul.x + 5,ul.y + 5);
@@ -1131,6 +1132,49 @@ void Draw_Some_Item (sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarg
 			rect_draw_some_item(src_gworld, src_rect, targ_gworld, destrec, sf::BlendAlpha);
 		else rect_draw_some_item(src_gworld, src_rect, targ_gworld, destrec, sf::BlendNone);
 	}
+}
+
+std::list<text_label_t> posted_labels;
+
+void place_text_label(std::string string, location at, bool centred) {
+	TextStyle style;
+	style.font = FONT_PLAIN;
+	short height = 0;
+	short width = string_length(string, style, &height);
+	at.x -= center.x - 4;
+	at.x *= 28;
+	at.x += 14;
+	at.x -= width / 2;
+	
+	at.y -= center.y - 4;
+	at.y *= 36;
+	if(centred)
+		at.y += 18;
+	if(at.y == 0) at.y = 36;
+	else at.y -= height;
+	
+	rectangle text_rect(at, loc(at.x + width, at.y + height));
+	text_rect.offset(-min(at.x,0),-min(at.y,0)); // If it's longer, make it off-centre to keep it onscreen.
+	text_rect.offset(13,13);
+	posted_labels.push_back({text_rect, string});
+}
+
+void draw_text_label(const text_label_t& label) {
+	sf::Color back_clr = {64, 64, 64, 42};
+	TextStyle style;
+	style.font = FONT_PLAIN;
+	style.colour = sf::Color::White;
+	rectangle back_rect = label.text_rect, text_rect = label.text_rect;
+	back_rect.inset(-7,-7);
+	back_rect.offset(0,-2);
+	for(int i = 0; i <= 3; i++) {
+		fill_roundrect(terrain_screen_gworld, back_rect, 7, back_clr);
+		back_rect.inset(2,2);
+		back_clr.a *= 1.5;
+	}
+	//text_rect.offset(0, -text_rect.height() + 1);
+	text_rect.offset(0, -5);
+	win_draw_string(terrain_screen_gworld, text_rect, label.str, eTextMode::LEFT_TOP, style);
 }
 
 // TODO: This seems to duplicate logic found in graphtool to get a rect from a picture index

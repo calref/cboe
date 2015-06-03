@@ -65,8 +65,8 @@ Your spell points are what you expend to cast spells. Each spell drains away som
 Some doors can't be opened no matter what you try. For example, portcullises can almost never be opened by picking locks or bashing.
 
 
-
-
+A special node just triggered, and since you previously enabled it, you are now in step-through mode. Take a look at the transcript - it gives you the node that is about to execute, together with the type and number (useful if you need to locate it in the editor).
+To execute that node, simply press any key (or click the mouse button). After the node has executed, if it calls another one, you will see it in the transcript. Keep pressing a key to step through the nodes. If you wish to exit step-through mode in the middle of a node sequence, simply press Escape.
 
 
 

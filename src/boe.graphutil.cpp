@@ -23,6 +23,7 @@ extern sf::RenderWindow mainPtr;
 extern rectangle	windRect;
 extern short stat_window;
 extern bool give_delays;
+extern bool cartoon_happening;
 extern eGameMode overall_mode;
 extern short current_spell_range;
 extern bool anim_onscreen,play_sounds,frills_on,startup_loaded;
@@ -34,7 +35,6 @@ extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x
 extern sf::RenderTexture terrain_screen_gworld;
 extern sf::Texture items_gworld,tiny_obj_gworld,pc_gworld,monst_gworld[NUM_MONST_SHEETS];
 extern sf::Texture fields_gworld,anim_gworld,vehicle_gworld,terrain_gworld[NUM_TER_SHEETS];
-extern short terrain_there[9][9];
 extern std::queue<pending_special_type> special_queue;
 
 extern location ul;
@@ -77,20 +77,13 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 	where_draw = calc_rect(i,j);
  	where_draw.offset(13,13);
  	if(terrain_to_draw == -1) {
- 		if(terrain_there[i][j] == 300) {
- 			return;
-		}
- 		terrain_there[i][j] = 300;
 		fill_rect(terrain_screen_gworld, where_draw, sf::Color::Black);
 		return;
 	}
  	
 	if(terrain_to_draw >= 10000) { // force using a specific graphic
 		terrain_to_draw -= 10000;
- 		if(terrain_there[i][j] == terrain_to_draw)
- 			return;
 		source_gworld = &terrain_gworld[terrain_to_draw / 50];
- 		terrain_there[i][j] = terrain_to_draw;
 		terrain_to_draw %= 50;
 		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
 		anim_type = -1;
@@ -98,25 +91,19 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 2000) { // custom
 		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 2000 + (anim_ticks % 4));
 		anim_type = 0;
-		terrain_there[i][j] = -1;
 	}
 	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 1000) { // custom
 		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 1000);
-		terrain_there[i][j] = -1;
 	}
 	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 960) { // animated
 		source_gworld = &anim_gworld;
 		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
 		source_rect = calc_rect(4 * ((terrain_to_draw - 960) / 5) + (anim_ticks % 4),(terrain_to_draw - 960) % 5);
-		terrain_there[i][j] = -1;
 		anim_type = 0;
 	}
 	else {
-		if(terrain_there[i][j] == univ.scenario.ter_types[terrain_to_draw].picture) return;
-		terrain_there[i][j] = univ.scenario.ter_types[terrain_to_draw].picture;
 		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
 		source_gworld = &terrain_gworld[terrain_to_draw / 50];
- 		terrain_there[i][j] = terrain_to_draw;
 		terrain_to_draw %= 50;
 		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
 		anim_type = -1;
@@ -152,7 +139,6 @@ void draw_monsters() {
 					(can_see_light(univ.party.p_loc, univ.party.out_c[i].m_loc,sight_obscurity) < 5)) {
 					where_draw.x = univ.party.out_c[i].m_loc.x - univ.party.p_loc.x + 4;
 					where_draw.y = univ.party.out_c[i].m_loc.y - univ.party.p_loc.y + 4;
-					terrain_there[where_draw.x][where_draw.y] = -1;
 					
 					for(j = 0; univ.party.out_c[i].what_monst.monst[j] == 0 && j < 7; j++);
 					
@@ -250,7 +236,7 @@ void draw_pcs(location center,short mode) {
 	for(i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			if(point_onscreen(center, univ.party[i].combat_pos) &&
-			   (/*cartoon_happening ||*/ party_can_see(univ.party[i].combat_pos) < 6)){
+			   (cartoon_happening || party_can_see(univ.party[i].combat_pos) < 6)){
 				where_draw.x = univ.party[i].combat_pos.x - center.x + 4;
 				where_draw.y = univ.party[i].combat_pos.y - center.y + 4;
 				sf::Texture* from_gw;
@@ -315,18 +301,15 @@ void draw_items(location where){
 				sf::Texture* src_gw;
 				graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(univ.town.items[i].graphic_num - 10000, true);
 				to_rect = coord_to_rect(where_draw.x,where_draw.y);
-				terrain_there[where_draw.x][where_draw.y] = -1;
 				rect_draw_some_item(*src_gw,from_rect,terrain_screen_gworld,to_rect,sf::BlendAlpha);
 			}else if(univ.town.items[i].graphic_num >= 1000){
 				sf::Texture* src_gw;
 				graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(univ.town.items[i].graphic_num - 1000);
 				to_rect = coord_to_rect(where_draw.x,where_draw.y);
-				terrain_there[where_draw.x][where_draw.y] = -1;
 				rect_draw_some_item(*src_gw,from_rect,terrain_screen_gworld,to_rect,sf::BlendAlpha);
 			}else{
 				from_rect = get_item_template_rect(univ.town.items[i].graphic_num);
 				to_rect = coord_to_rect(where_draw.x,where_draw.y);
-				terrain_there[where_draw.x][where_draw.y] = -1;
 				if(univ.town.items[i].graphic_num >= 55) {
 					to_rect.inset(5,9);
 					rect_draw_some_item(tiny_obj_gworld, from_rect, terrain_screen_gworld, to_rect,sf::BlendAlpha);
@@ -458,7 +441,7 @@ void draw_party_symbol(location center) {
 		return;
 	if((is_town()) && (univ.town.p_loc.x > 70))
 		return;
-	if(overall_mode == MODE_LOOK_TOWN) {
+	if(overall_mode == MODE_LOOK_TOWN || cartoon_happening) {
 		target.x += univ.town.p_loc.x - center.x;
 		target.y += univ.town.p_loc.y - center.y;
 	}

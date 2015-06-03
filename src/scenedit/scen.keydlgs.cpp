@@ -343,6 +343,9 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 				"Magic Resistance", "Fire Resistance", "Cold Resistance", "Poison Resistance",
 			};
 			break;
+		case STRT_POS_MODE:
+			strings = {"Absolute Position", "Move Southeast", "Move Southwest", "Move Northwest", "Move Northeast"};
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = -1;
@@ -807,6 +810,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case '&': strt = STRT_SHOP; title = "Which shop?"; break;
 		case '%': strt = STRT_COST_ADJ; title = "What cost adjust?"; break;
 		case '*': strt = STRT_CONTEXT; title = "What context?"; break;
+		case '^': strt = STRT_POS_MODE; title = "Select positioning mode:"; break;
 		case ':': strt = STRT_STAIR_MODE; title = "Select trigger limitations:"; break;
 		case 'w': strt = STRT_STATUS; title = "Select status:"; str_adj = 1; break;
 		case 'j': strt = STRT_QUEST; title = "Select a quest:"; break;

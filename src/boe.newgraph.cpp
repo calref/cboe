@@ -62,7 +62,6 @@ extern std::shared_ptr<cButton> done_btn, help_btn;
 extern location center;
 extern location store_anim_ul;
 extern char light_area[13][13];
-extern short terrain_there[9][9];
 extern char unexplored_area[13][13];
 extern tessel_ref_t bw_pats[6];
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
@@ -95,7 +94,6 @@ extern rectangle shop_frame ;
 extern rectangle shop_done_rect;
 extern char *heal_types[];
 extern short heal_costs[8];
-extern short terrain_there[9][9];
 extern short shop_array[30];
 
 // Missile anim vars
@@ -146,11 +144,6 @@ void apply_unseen_mask() {
 				to_rect.offset(-28 + i * 28,-36 + 36 * j);
 				to_rect |= big_to;
 				tileImage(terrain_screen_gworld, to_rect, bw_pats[3], sf::BlendAlpha);
-				for(k = i - 2; k < i + 1; k++)
-					for(l = j - 2; l < j + 1; l++)
-						if((k >= 0) && (l >= 0) && (k < 9) && (l < 9) && ((k != i - 1) || (l != j - 1)))
-							terrain_there[k][l] = -1;
-				
 			}
 }
 
@@ -200,11 +193,6 @@ void apply_light_mask(bool onWindow) {
 				light_area[i][j] = 3;
 			}
 	
-	for(i = 2; i < 11; i++)
-		for(j = 2; j < 11; j++) {
-			if(light_area[i][j] == 1)
-				terrain_there[i - 2][j - 2] = -1;
-		}
 	for(i = 0; i < 13; i++)
 		for(j = 0; j < 13; j++)
 			if(last_light_mask[i][j] != light_area[i][j])

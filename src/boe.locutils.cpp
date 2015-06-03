@@ -16,6 +16,7 @@ extern eGameMode overall_mode;
 extern eGameMode store_pre_shop_mode, store_pre_talk_mode;
 extern location center;
 extern cUniverse univ;
+extern bool cartoon_happening;
 
 location light_locs[40];
 short num_lights = 0;
@@ -56,7 +57,7 @@ bool is_out() {
 }
 
 bool is_town() {
-	if(((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT)) || (overall_mode == MODE_LOOK_TOWN))
+	if((overall_mode > MODE_OUTDOORS && overall_mode < MODE_COMBAT) || overall_mode == MODE_LOOK_TOWN || cartoon_happening)
 		return true;
 	else if(overall_mode == MODE_SHOPPING) {
 		std::swap(overall_mode, store_pre_shop_mode);
