@@ -3172,8 +3172,7 @@ bool check_for_interrupt(){
 	if((kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl)) && kb::isKeyPressed(kb::C))
 		interrupt = true;
 	if(interrupt) {
-		// TODO: A customized dialog with a more appropriate message
-		cChoiceDlog confirm("quit-confirm-nosave", {"quit","cancel"});
+		cChoiceDlog confirm("confirm-interrupt", {"quit","cancel"});
 		if(confirm.show() == "quit") return true;
 	}
 	return false;

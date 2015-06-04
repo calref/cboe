@@ -850,6 +850,10 @@ void draw_terrain(){
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FIRE)) {
 						from_rect = calc_rect(8,4);
 						Draw_Some_Item(anim_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						tiny_from = base_small_button_from;
+						tiny_from.offset(7 * 0,7 * 5);
+						rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
+						tiny_to.offset(0,-7);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_QUICKFIRE)) {
 						from_rect = calc_rect(7,1);
@@ -858,6 +862,10 @@ void draw_terrain(){
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FORCE)) {
 						from_rect = calc_rect(10,4);
 						Draw_Some_Item(anim_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						tiny_from = base_small_button_from;
+						tiny_from.offset(7 * 1,7 * 5);
+						rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
+						tiny_to.offset(0,-7);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_BLOCK)) {
 						from_rect = calc_rect(3,0);

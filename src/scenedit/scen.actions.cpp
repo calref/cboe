@@ -2203,6 +2203,7 @@ void start_terrain_editing() {
 	right_sbar->hide();
 	pal_sbar->show();
 	overall_mode = MODE_EDIT_TYPES;
+	draw_mode = DRAW_TERRAIN;
 	set_up_terrain_buttons(true);
 	place_location();
 	

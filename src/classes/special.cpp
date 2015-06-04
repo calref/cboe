@@ -456,7 +456,7 @@ static const char*const button_dict[7][11] = {
 		"            c             L   {    ", // ex1a
 		"              s s s      s @       ", // ex1b
 		"                               }}  ", // ex1c
-		"@  7     !  c    T  T i        FD  ", // ex2a
+		"@  7     ! c     T  T i        FD  ", // ex2a
 		"     DD          /               ^ ", // ex2b
 		" x x             :  :              ", // ex2c
 	}, { // rectangle nodes

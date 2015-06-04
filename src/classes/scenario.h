@@ -89,7 +89,7 @@ public:
 	std::array<cItem,400> scen_items;
 	std::string scen_name;
 	std::string who_wrote[2];
-	std::string contact_info;
+	std::string contact_info[2];
 	std::string intro_strs[6];
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.

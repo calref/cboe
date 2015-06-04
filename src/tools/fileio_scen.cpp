@@ -159,7 +159,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 		else if(i == 1 || i == 2)
 			scenario.who_wrote[i-1] = temp_str;
 		else if(i == 3)
-			scenario.contact_info = temp_str;
+			scenario.contact_info[1] = temp_str;
 		else if(i >= 4 && i < 10)
 			scenario.intro_strs[i-4] = temp_str;
 		else if(i >= 10 && i < 60)
@@ -619,11 +619,8 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		} else if(type == "language") {
 			// This is currently unused; there's nowhere to store the value, and it's hardcoded to "en-US" on save
 		} else if(type == "author") {
-			// TODO: Store name and email in separate locations
-			std::string name, email;
-			elem->FirstChild("name")->GetValue(&name);
-			elem->FirstChild("email")->GetValue(&email);
-			scenario.contact_info = name + " " + email;
+			elem->FirstChildElement("name")->GetText(&scenario.contact_info[0], false);
+			elem->FirstChildElement("email")->GetText(&scenario.contact_info[1], false);
 		} else if(type == "text") {
 			Iterator<Element> info;
 			int found_teasers = 0, found_intro = 0;
@@ -763,6 +760,7 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				} else if(type == "last-town") {
 					edit->GetText(&scenario.last_town_edited);
 				} else if(type == "graphics") {
+					static const std::set<int> valid_pictypes = {1,2,3,4,5,7,10,11,12,13,15,16,23,43,63};
 					if(num_pics > 0)
 						throw xBadNode(type, edit->Row(), edit->Column(), fname);
 					Iterator<Element> pic;
@@ -772,6 +770,7 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 							throw xBadNode(type, pic->Row(), pic->Column(), fname);
 						int i = -1, pictype;
 						pic->GetText(&pictype);
+						if(pictype == 0) continue; // As a special case, treat 0 as equivalent to 11 (ie, unclassified)
 						for(attr = attr.begin(pic.Get()); attr != attr.end(); attr++) {
 							attr->GetName(&name);
 							if(name != "index")
@@ -782,6 +781,8 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 						}
 						if(i < 0)
 							throw xMissingAttr(type, "index", pic->Row(), pic->Column(), fname);
+						if(!valid_pictypes.count(pictype))
+							throw xBadVal(type, "pic", std::to_string(pictype), pic->Row(), pic->Column(), fname);
 						scenario.custom_graphics[i] = ePicType(pictype);
 						num_pics++;
 					}

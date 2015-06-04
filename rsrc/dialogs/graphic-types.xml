@@ -16,16 +16,16 @@
 	<text name='num8' top='48' left='264' width='28' height='16'/>
 	<text name='num9' top='48' left='300' width='28' height='16'/>
 	<text name='num10' top='48' left='336' width='28' height='16'/>
-	<pict name='pic1' type='ter' num='0' top='68' left='12'/>
-	<pict name='pic2' type='ter' num='1' top='68' left='48'/>
-	<pict name='pic3' type='ter' num='2' top='68' left='84'/>
-	<pict name='pic4' type='ter' num='3' top='68' left='120'/>
-	<pict name='pic5' type='ter' num='4' top='68' left='156'/>
-	<pict name='pic6' type='ter' num='5' top='68' left='192'/>
-	<pict name='pic7' type='ter' num='6' top='68' left='228'/>
-	<pict name='pic8' type='ter' num='7' top='68' left='264'/>
-	<pict name='pic9' type='ter' num='8' top='68' left='300'/>
-	<pict name='pic10' type='ter' num='9' top='68' left='336'/>
+	<pict name='pic1' type='item' num='0' top='68' left='12'/>
+	<pict name='pic2' type='item' num='1' top='68' left='48'/>
+	<pict name='pic3' type='item' num='2' top='68' left='84'/>
+	<pict name='pic4' type='item' num='3' top='68' left='120'/>
+	<pict name='pic5' type='item' num='4' top='68' left='156'/>
+	<pict name='pic6' type='item' num='5' top='68' left='192'/>
+	<pict name='pic7' type='item' num='6' top='68' left='228'/>
+	<pict name='pic8' type='item' num='7' top='68' left='264'/>
+	<pict name='pic9' type='item' num='8' top='68' left='300'/>
+	<pict name='pic10' type='item' num='9' top='68' left='336'/>
 	<group name='type1'>
 		<led name='ter1' top='110' left='20'/>
 		<led name='anim1' top='125' left='20'/>

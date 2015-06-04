@@ -190,6 +190,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			for(cMonster& monst : scenario.scen_monsters) {
 				strings.push_back(monst.m_name);
 			}
+			strings.erase(strings.begin()); // First monster is not a valid monster
 			break;
 		case STRT_ITEM:
 			for(cItem& item : scenario.scen_items) {
@@ -260,9 +261,6 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			break;
 		case STRT_PICT:
 			strings = *ResMgr::get<StringRsrc>("picture-types");
-			break;
-		case STRT_SND:
-			strings = *ResMgr::get<StringRsrc>("sound-names");
 			break;
 		case STRT_TRAP:
 			strings = *ResMgr::get<StringRsrc>("trap-types");
@@ -708,6 +706,16 @@ pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {
 	return made_choice ? item_hit : prev;
 }
 
+snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {
+	// TODO: Somehow find a way to include custom sounds in this list
+	if(cur < 0) cur = 0;
+	cStringChoice snd_dlg(*ResMgr::get<StringRsrc>("sound-names"), title, parent);
+	snd_dlg.attachSelectHandler([](cStringChoice&, int n) {
+		play_sound(-n);
+	});
+	return snd_dlg.show(cur);
+}
+
 static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
 	static const ePicType pics[10] = {
 		PIC_TER, PIC_MONST, PIC_DLOG, PIC_TALK, PIC_ITEM,
@@ -789,7 +797,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case 'i': strt = STRT_ITEM; title = "Which item?"; break;
 		case 'I': strt = STRT_SPEC_ITEM; title = "Which special item?"; break;
 		case 't': strt = STRT_TER; title = "Which terrain?"; break;
-		case 'c': strt = STRT_MONST; title = "Which monster?"; break;
+		case 'c': strt = STRT_MONST; title = "Which monster?"; str_adj = -1; break;
 		case 'C': strt = STRT_MONST_STAT; title = "Which statistic?"; break;
 		case 'a': strt = STRT_ALCHEMY; title = "Which recipe?"; break;
 		case 'A': strt = STRT_MAGE; title = "Which spell?"; break;
@@ -800,7 +808,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case 'T': strt = STRT_TOWN; title = "Which town?"; break;
 		case 'b': strt = STRT_BUTTON; title = "Which button?"; break;
 		case '?': strt = STRT_PICT; title = "Which picture type?"; str_adj = -1; break;
-		case 'x': strt = STRT_SND; title = "Which sound?"; break;
+		case 'x': choose_string = false; store = choose_sound(val, &me); break;
 		case 'X': strt = STRT_TRAP; title = "What trap type?"; break;
 		case '=': strt = STRT_CMP; title = "What comparison method?"; str_adj = 2; break;
 		case '+': strt = STRT_ACCUM; title = "What accumulation method?"; str_adj = 1; break;
