@@ -278,6 +278,7 @@ std::ostream& operator<< (std::ostream& out, eLighting light) {
 
 std::istream& operator>> (std::istream& in, eLighting& light) {
 	std::string key;
+	in >> key;
 	if(key == "lit") light = LIGHT_NORMAL;
 	else if(key == "dark") light = LIGHT_DARK;
 	else if(key == "drains") light = LIGHT_DRAINS;

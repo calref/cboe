@@ -836,6 +836,7 @@ static void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
 		int which_ter;
 		elem->GetAttribute("id", &which_ter);
 		cTerrain& the_ter = scenario.ter_types[which_ter];
+		the_ter = cTerrain();
 		Iterator<Element> ter;
 		for(ter = ter.begin(elem.Get()); ter != ter.end(); ter++) {
 			ter->GetValue(&type);
@@ -878,7 +879,7 @@ static void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
 			} else if(type == "ride") {
 				ter->GetText(&val);
 				if(val != "true")
-					the_ter.block_horse = true;
+					the_ter.block_horse = false;
 			} else if(type == "light") {
 				ter->GetText(&the_ter.light_radius);
 			} else if(type == "step-sound") {
@@ -932,6 +933,7 @@ static void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 		int which_item;
 		elem->GetAttribute("id", &which_item);
 		cItem& the_item = scenario.scen_items[which_item];
+		the_item = cItem();
 		Iterator<Element> item;
 		for(item = item.begin(elem.Get()); item != item.end(); item++) {
 			item->GetValue(&type);
@@ -1120,9 +1122,7 @@ static void readMonstAbilFromXml(ticpp::Element& data, cMonster& monst) {
 				if(type == "type") {
 					elem->GetText(&radiate.type);
 				} else if(type == "chance") {
-					long double percent;
-					elem->GetText(&percent);
-					radiate.chance = percent * 10;
+					elem->GetText(&radiate.chance);
 				} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
 			}
 		} else if(type == "special") {
@@ -1160,6 +1160,7 @@ static void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 		if(which_monst == 0)
 			throw xBadVal(type, "id", "0", elem->Row(), elem->Column(), fname);
 		cMonster& the_mon = scenario.scen_monsters[which_monst];
+		the_mon = cMonster();
 		Iterator<Attribute> attr;
 		Iterator<Element> monst;
 		for(monst = monst.begin(elem.Get()); monst != monst.end(); monst++) {

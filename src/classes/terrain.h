@@ -24,25 +24,25 @@ enum class eStepSnd {STEP, SQUISH, CRUNCH, NONE, SPLASH};
 class cTerrain {
 public:
 	std::string name;
-	pic_num_t picture;
-	eTerObstruct blockage;
-	int flag1, flag2, flag3;
-	eTerSpec special;
-	ter_num_t trans_to_what;
-	bool fly_over;
-	bool boat_over;
-	bool block_horse;
-	unsigned int light_radius;
-	eStepSnd step_sound;
-	unsigned char shortcut_key; // for editor use only
-	unsigned int obj_num = 0; // ditto (formerly res1)
-	unsigned int ground_type; // ditto (formerly res2)
-	eTrimType trim_type; // ditto, mostly (formerly res3)
-	long trim_ter; // ditto
-	unsigned short combat_arena;
+	pic_num_t picture = 0;
+	eTerObstruct blockage = eTerObstruct::CLEAR;
+	int flag1 = 0, flag2 = 0, flag3 = 0;
+	eTerSpec special = eTerSpec::NONE;
+	ter_num_t trans_to_what = 0;
+	bool fly_over = false;
+	bool boat_over = false;
+	bool block_horse = false;
+	unsigned int light_radius = 0;
+	eStepSnd step_sound = eStepSnd::STEP;
+	unsigned char shortcut_key = 0; // for editor use only
+	unsigned int obj_num = 0; // ditto
+	unsigned int ground_type = 0; // ditto
+	eTrimType trim_type = eTrimType::NONE; // ditto, mostly
+	long trim_ter = 0; // ditto
+	unsigned short combat_arena = 0;
 	location obj_pos; // editor use only
 	location obj_size; // editor use only
-	pic_num_t map_pic;
+	pic_num_t map_pic = -1;
 	unsigned short i; // for temporary use in porting
 	
 	void append(legacy::terrain_type_type& old);

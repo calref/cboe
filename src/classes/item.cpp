@@ -87,6 +87,7 @@ cItem::cItem(){
 	ability = eItemAbil::NONE;
 	abil_data[0] = 0;
 	abil_data[1] = 0;
+	missile = 0;
 	type_flag = 0;
 	is_special = 0;
 	value = 0;
@@ -1378,8 +1379,8 @@ std::ostream& operator << (std::ostream& out, eItemType e){
 std::ostream& operator << (std::ostream& out, eItemUse e){
 	switch(e) {
 		case eItemUse::HELP_ONE: out << "help-one"; break;
-		case eItemUse::HELP_ALL: out << "harm-one"; break;
-		case eItemUse::HARM_ONE: out << "help-all"; break;
+		case eItemUse::HELP_ALL: out << "help-all"; break;
+		case eItemUse::HARM_ONE: out << "harm-one"; break;
 		case eItemUse::HARM_ALL: out << "harm-all"; break;
 	}
 	return out;
