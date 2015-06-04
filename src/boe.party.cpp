@@ -1444,6 +1444,7 @@ void cast_town_spell(location where) {
 	}
 }
 
+// TODO: Currently, the node is called before any spell-specific behaviour (eg missiles) occurs.
 bool cast_spell_on_space(location where, eSpell spell) {
 	short s1 = 0,s2 = 0,s3 = 0;
 	

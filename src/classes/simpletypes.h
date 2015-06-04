@@ -334,6 +334,10 @@ inline bool isWeaponType(eItemType type) {
 	return (code >= 1 && code <= 6 && code != 3) || (code >= 23 && code <= 25);
 }
 
+inline bool isMissileType(eItemType type) {
+	return type == eItemType::ARROW || type == eItemType::BOLTS || type == eItemType::THROWN_MISSILE || type == eItemType::MISSILE_NO_AMMO;
+}
+
 /*      items[i].ability      */
 enum class eItemAbil {
 	// Weapon abilities

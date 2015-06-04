@@ -403,7 +403,8 @@ static void writeItemsToXml(ticpp::Printer&& data) {
 			data.PushElement("charges", item.charges);
 		if(isWeaponType(item.variety) && item.variety != eItemType::ARROW && item.variety != eItemType::BOLTS)
 			data.PushElement("weapon-type", item.weap_type);
-		data.PushElement("missile-type", item.missile);
+		if(item.missile > 0 || isMissileType(item.variety))
+			data.PushElement("missile-type", item.missile);
 		data.PushElement("pic", item.graphic_num);
 		if(item.type_flag > 0)
 			data.PushElement("flag", item.type_flag);
@@ -447,7 +448,7 @@ static void writeMonstersToXml(ticpp::Printer&& data) {
 		data.PushAttribute("id", i);
 		cMonster& monst = scenario.scen_monsters[i];
 		data.PushElement("name", monst.m_name);
-		if(monst.default_facial_pic >= 0)
+		if(monst.default_facial_pic > 0)
 			data.PushElement("default-face", monst.default_facial_pic);
 		
 		data.OpenElement("pic");
@@ -486,11 +487,11 @@ static void writeMonstersToXml(ticpp::Printer&& data) {
 		if(monst.magic_res != 100)
 			data.PushElement("magic", monst.magic_res);
 		if(monst.fire_res != 100)
-			data.PushElement("fire", monst.magic_res);
+			data.PushElement("fire", monst.fire_res);
 		if(monst.cold_res != 100)
-			data.PushElement("cold", monst.magic_res);
+			data.PushElement("cold", monst.cold_res);
 		if(monst.poison_res != 100)
-			data.PushElement("poison", monst.magic_res);
+			data.PushElement("poison", monst.poison_res);
 		if(monst.mindless) data.PushElement("fear", true);
 		if(monst.invuln) data.PushElement("all", true);
 		data.CloseElement("immunity");
