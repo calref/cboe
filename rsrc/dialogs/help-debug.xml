@@ -26,6 +26,7 @@
 		  = - Heal, increase magic skills<br/>
 		  &lt; - Make one day pass<br/>
 		  &gt; - Reset towns (excludes the one you're in, if any)<br/>
+		  ! - Toggle Special Node Step-through Mode<br/>
 		  / - Bring up this list<br/>
 	</text>
 	<button name='okay' type='regular' top='280' left='387'>OK</button>

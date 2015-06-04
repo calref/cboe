@@ -27,7 +27,7 @@
 extern eStatMode stat_screen_mode;
 extern bool give_delays;
 extern eGameMode overall_mode;
-extern bool play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug,ghost_mode;
+extern bool play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug,ghost_mode,node_step_through;
 extern location center;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
@@ -69,6 +69,7 @@ void finish_load_party(){
 	party_in_memory = true;
 	in_scen_debug = false;
 	ghost_mode = false;
+	node_step_through = false;
 	
 	// now if not in scen, this is it.
 	if(!in_scen) {

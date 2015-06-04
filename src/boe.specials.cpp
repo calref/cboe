@@ -36,7 +36,7 @@ extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
 extern short which_combat_type,current_pc,stat_window;
 extern location center;
-extern bool in_scen_debug,belt_present,processing_fields,monsters_going,boom_anim_active;
+extern bool in_scen_debug,node_step_through,belt_present,processing_fields,monsters_going,boom_anim_active;
 extern effect_pat_type single,t,square,radius2,radius3,small_square,open_square,field[8];
 extern effect_pat_type current_pat;
 extern cOutdoors::cWandering store_wandering_special;
@@ -2027,6 +2027,22 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		next_spec = -1;
 		cur_node = get_node(cur_spec,cur_spec_type);
 		
+		if(node_step_through) {
+			give_help(68,69);
+			std::string debug = "Step: ";
+			debug += (*cur_node.type).name();
+			debug += " - ";
+			debug += std::to_string(cur_spec);
+			add_string_to_buf(debug);
+			redraw_screen(REFRESH_TRANS);
+			sf::Event evt;
+			while(true) {
+				if(mainPtr.pollEvent(evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed))
+					break;
+			}
+			if(evt.type == sf::Event::KeyPressed && evt.key.code == sf::Keyboard::Escape)
+				node_step_through = false;
+		}
 		
 		// Convert pointer values to reference values
 		// TODO: Might need to make a database of which nodes don't allow pointers in which slots.
