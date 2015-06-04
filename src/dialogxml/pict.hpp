@@ -119,6 +119,7 @@ private:
 	void drawCustomTalk(short num, rectangle to_rect);
 	void drawCustomItem(short num, rectangle to_rect);
 	void drawCustomTinyItem(short num, rectangle to_rect);
+	void drawCustomBoom(short num, rectangle to_rect);
 	void drawCustomMissile(short num, rectangle to_rect);
 	void drawCustomTerMap(short num, rectangle to_rect);
 	void drawPartyMonstSm(short num, rectangle to_rect);

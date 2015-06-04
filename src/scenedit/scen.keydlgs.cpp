@@ -669,18 +669,25 @@ pic_num_t choose_damage_type(short cur, cDialog* parent) {
 }
 
 static pic_num_t choose_boom_type(short cur, cDialog* parent) {
-	static const char*const boomNames[] = {"Fire", "Magic/Cold/Electricity", "Teleport", "Magic/Electricity"};
-	static const std::vector<pic_num_t> pics = {12,28,20,36};
+	static const char*const boomNames[] = {"Fire", "Teleport", "Magic/Cold/Electricity", "Magic/Electricity", "Custom Explosion"};
+	static const int preset_booms = 4;
+	std::vector<pic_num_t> pics;
+	for(int i = 0; i < preset_booms; i++) pics.push_back(i + 8);
+	for(int i = 0; i < scenario.custom_graphics.size(); i++) {
+		if(scenario.custom_graphics[i] == PIC_BOOM)
+			pics.push_back(1000 + i);
+	}
 	short prev = cur;
-	if(cur < 0 || cur >= pics.size()) cur = 0;
+	if(cur < 0 || (cur >= preset_booms && cur < 1000) || (cur >= 1000 && cur - 1000 < pics.size() - preset_booms))
+	   cur = 0;
 	cPictChoice pic_dlg(pics, PIC_BOOM, parent);
 	pic_dlg->getControl("prompt").setText("Select a boom type:");
-	pic_dlg->getControl("help").setText(boomNames[cur]);
+	pic_dlg->getControl("help").setText(boomNames[std::min<short>(cur,4)]);
 	pic_dlg.attachSelectHandler([](cPictChoice& me, int n) {
-		me->getControl("help").setText(boomNames[n]);
+		me->getControl("help").setText(boomNames[std::min<short>(n,4)]);
 	});
 	bool made_choice = pic_dlg.show(cur);
-	size_t item_hit = pic_dlg.getSelected();
+	size_t item_hit = pic_dlg.getPicChosen();
 	return made_choice ? item_hit : prev;
 }
 

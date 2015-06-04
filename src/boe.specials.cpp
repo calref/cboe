@@ -3798,8 +3798,8 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(which_mode == eSpecCtx::TALK)
 				break;
 			if(spec.ex2b == 1)
-				mondo_boom(l,spec.ex2a);
-			else run_a_boom(l,spec.ex2a,0,0);
+				mondo_boom(l,spec.ex2a,spec.ex2c);
+			else run_a_boom(l,spec.ex2a,0,0,spec.ex2c);
 			break;
 		case eSpecType::TOWN_CREATE_WANDERING:
 			create_wand_monst();

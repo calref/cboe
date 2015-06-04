@@ -44,6 +44,7 @@ enum ePicType {
 	PIC_CUSTOM_TALK = 105,		///< 32x32 talking portrait drawn from two 16x32 halves in the custom sheets
 	PIC_CUSTOM_SCEN = 106,		///< 32x32 scenario portrait loading from scenname.exr/scenario.png
 	PIC_CUSTOM_ITEM = 107,		///< 28x36 custom item graphic from the custom sheets
+	PIC_CUSTOM_BOOM = 110,		///< 28x36 custom explosion graphic (8 frames)
 	PIC_CUSTOM_FULL = 111,		///< entire sheet graphic, drawn from scenname.exr/sheetxxx.png where xxx is the number
 	PIC_CUSTOM_MISSILE = 112,	///< 18x18 missile graphic drawn from the the custom sheets
 	PIC_CUSTOM_DLOG_LG = 113,	///< 72x72 dialog graphic from the custom sheet, taken from 8 successive slots
