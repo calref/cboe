@@ -62,7 +62,7 @@ extern rectangle startup_button[6];
 extern bool flushingInput;
 extern bool fog_lifted;
 extern bool cartoon_happening;
-bool ghost_mode;
+bool ghost_mode, node_step_through;
 rectangle startup_top;
 
 bool item_area_button_active[8][6];
@@ -2015,6 +2015,17 @@ bool handle_keystroke(sf::Event& event){
 			print_buf();
 			for(i = 0; i < 4; i++)
 				univ.party.creature_save[i].which_town = 200;
+			break;
+		case '!':
+			if(!in_scen_debug) break;
+			if(node_step_through) {
+				node_step_through = false;
+				add_string_to_buf("Debug: Step-through disabled");
+			} else {
+				node_step_through = true;
+				add_string_to_buf("Debug: Step-through enabled");
+			}
+			print_buf();
 			break;
 		case '/':
 			if(!in_scen_debug) break;
