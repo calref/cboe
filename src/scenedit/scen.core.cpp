@@ -257,7 +257,7 @@ static bool pick_ter_flag(cDialog& me, std::string id, eKeyMod) {
 			if(which == 1)
 				i = choose_text(STRT_TER, i, &me, "Change to what terrain?");
 			else if(which == 2)
-				i = choose_text(STRT_SND, i, &me, "Select the sound to play when it changes:");
+				i = choose_sound(i, &me, "Select the sound to play when it changes:");
 			else return true;
 			break;
 		case eTerSpec::DAMAGING:
@@ -940,7 +940,7 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string hit,cMonster& m
 			me["onsee"].setTextToNum(spec);
 	} else if(hit == "pick-snd") {
 		int i = me["snd"].getTextAsNum();
-		i = choose_text(STRT_SND, i, &me, "Select monster vocalization sound:");
+		i = choose_sound(i, &me, "Select monster vocalization sound:");
 		me["snd"].setTextToNum(i);
 	}
 	return true;
@@ -2690,7 +2690,7 @@ static bool save_scen_details(cDialog& me, std::string, eKeyMod) {
 		scenario.format.ver[i] = me["ver" + std::to_string(i + 1)].getTextAsNum();
 	scenario.who_wrote[0] = me["who1"].getText().substr(0, 100);
 	scenario.who_wrote[1] = me["who2"].getText().substr(0, 100);
-	scenario.contact_info = me["contact"].getText().substr(0, 256);
+	scenario.contact_info[1] = me["contact"].getText().substr(0, 256);
 	scenario.campaign_id = me["cpnid"].getText();
 	scenario.bg_out = boost::lexical_cast<int>(me["bg-out"].getText().substr(10));
 	scenario.bg_town = boost::lexical_cast<int>(me["bg-town"].getText().substr(10));
@@ -2707,7 +2707,7 @@ static void put_scen_details_in_dlog(cDialog& me) {
 		me["ver" + std::to_string(i + 1)].setTextToNum(scenario.format.ver[i]);
 	me["who1"].setText(scenario.who_wrote[0]);
 	me["who2"].setText(scenario.who_wrote[1]);
-	me["contact"].setText(scenario.contact_info);
+	me["contact"].setText(scenario.contact_info[1]);
 	me["cpnid"].setText(scenario.campaign_id);
 	me["bg-out"].setText("Outdoors: " + std::to_string(scenario.bg_out));
 	me["bg-town"].setText("In towns: " + std::to_string(scenario.bg_town));
@@ -3116,7 +3116,7 @@ static void fill_custom_pics_types(cDialog& me, std::vector<ePicType>& pics, pic
 		std::string id = std::to_string(i - first + 1);
 		cLedGroup& grp = dynamic_cast<cLedGroup&>(me["type" + id]);
 		cPict& pic = dynamic_cast<cPict&>(me["pic" + id]);
-		pic.setPict(i, PIC_CUSTOM_TER);
+		pic.setPict(i, PIC_CUSTOM_ITEM);
 		cControl& num = me["num" + id];
 		num.setTextToNum(1000 + i);
 		switch(pics[i]) {
@@ -3164,6 +3164,10 @@ static void fill_custom_pics_types(cDialog& me, std::vector<ePicType>& pics, pic
 			case PIC_MISSILE:
 				grp.setSelected("miss" + id);
 				break;
+			case PIC_STATUS: // Not currently supported, but reserve for later
+				break;
+			default: // Fix any potential errors
+				pics[i] = PIC_FULL;
 			case PIC_FULL:
 				grp.setSelected("none" + id);
 				break;

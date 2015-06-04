@@ -528,7 +528,7 @@ void outdoor_details() {
 		eAmbientSound choice = eAmbientSound(hit[3] - '1');
 		if(choice == AMBIENT_CUSTOM) {
 			int i = prev == "snd4" ? current_terrain->out_sound : -1;
-			i = choose_text(STRT_SND, i, &me, "Choose ambient sound:");
+			i = choose_sound(i, &me, "Choose ambient sound:");
 			if(i < 0) {
 				lg.setSelected(prev);
 				return false;

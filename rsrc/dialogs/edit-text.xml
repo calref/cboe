@@ -2,8 +2,8 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
 	<field name='text' type='text' top='34' left='55' width='293' height='98'/>
-	<button name='left' type='left' def-key='left' top='141' left='6'/>
-	<button name='right' type='right' def-key='right' top='141' left='69'/>
+	<button name='left' type='left' top='141' left='6'/>
+	<button name='right' type='right' top='141' left='69'/>
 	<text name='num' top='8' left='315' width='40' height='14'/>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='138' height='17'>Editing text:</text>

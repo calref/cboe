@@ -316,6 +316,7 @@ static cKey divineFunction(cKey key) {
 	} else {
 		eSpecKey former = key.k;
 		if(mod_contains(key.mod, mod_ctrl)) {
+			key.mod -= mod_ctrl;
 #ifdef __APPLE__
 			if(key.k == key_left) key.k = key_home;
 			else if(key.k == key_right) key.k = key_end;
@@ -333,6 +334,7 @@ static cKey divineFunction(cKey key) {
 			else if(key.k == key_bsp) key.k = key_word_bsp;
 #else
 		} else if(mod_contains(key.mod, mod_alt)) {
+			key.mod -= mod_alt;
 			if(key.k == key_up) key.k = key_pgup;
 			else if(key.k == key_down) key.k = key_pgdn;
 			else if(key.k == key_left) key.k = key_word_left;
@@ -341,6 +343,7 @@ static cKey divineFunction(cKey key) {
 			else if(key.k == key_bsp) key.k = key_word_bsp;
 #endif
 		} else if(mod_contains(key.mod, mod_shift)) {
+			key.mod -= mod_shift;
 			if(key.k == key_insert) key.k = key_paste;
 			else if(key.k == key_del) key.k = key_cut;
 		}
@@ -392,7 +395,7 @@ void cTextField::handleInput(cKey key) {
 			if(new_ip == contents.length()) break;
 			if(key.k == key_word_right) {
 				new_ip++;
-				while(new_ip < contents.length() && contents[new_ip + 1] != ' ')
+				while(new_ip < contents.length() && contents[new_ip] != ' ')
 					new_ip++;
 			} else new_ip++;
 			(select ? selectionPoint : insertionPoint) = new_ip;
@@ -404,17 +407,20 @@ void cTextField::handleInput(cKey key) {
 		case key_bsp: case key_word_bsp:
 			if(haveSelection) {
 				if(key.k == key_word_bsp)
-					handleInput({true, key_word_right, mod_shift});
+					handleInput({true, key_word_left, mod_shift});
 				auto begin = contents.begin() + std::min(selectionPoint, insertionPoint);
 				auto end = contents.begin() + std::max(selectionPoint, insertionPoint);
 				auto result = contents.erase(begin, end);
 				selectionPoint = insertionPoint = result - contents.begin();
 			} else if(key.k == key_word_bsp) {
 				cKey selectKey = key;
-				selectKey.k = key_left;
+				selectKey.k = key_word_left;
+				selectKey.mod = mod_shift;
+				key.k = key_bsp;
 				handleInput(selectKey);
 				if(selectionPoint != insertionPoint)
 					handleInput(key);
+				return;
 			} else {
 				if(insertionPoint == 0) break;
 				contents.erase(insertionPoint - 1,1);
@@ -424,17 +430,20 @@ void cTextField::handleInput(cKey key) {
 		case key_del: case key_word_del:
 			if(haveSelection) {
 				if(key.k == key_word_del)
-					handleInput({true, key_word_left, mod_shift});
+					handleInput({true, key_word_right, mod_shift});
 				auto begin = contents.begin() + std::min(selectionPoint, insertionPoint);
 				auto end = contents.begin() + std::max(selectionPoint, insertionPoint);
 				auto result = contents.erase(begin, end);
 				selectionPoint = insertionPoint = result - contents.begin();
 			} else if(key.k == key_word_del) {
 				cKey selectKey = key;
-				selectKey.k = key_left;
+				selectKey.k = key_word_right;
+				selectKey.mod = mod_shift;
+				key.k = key_del;
 				handleInput(selectKey);
 				if(selectionPoint != insertionPoint)
 					handleInput(key);
+				return;
 			} else {
 				if(insertionPoint == contents.length()) break;
 				contents.erase(insertionPoint,1);

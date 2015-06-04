@@ -119,9 +119,8 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 	data.PushElement("version", scenario.format_scen_version());
 	data.PushElement("language", "en-US");
 	data.OpenElement("author");
-	data.PushElement("name", scenario.contact_info);
-	// TODO: Store name and email in separate fields.
-	data.PushElement("email", "");
+	data.PushElement("name", scenario.contact_info[0]);
+	data.PushElement("email", scenario.contact_info[1]);
 	data.CloseElement("author");
 	data.OpenElement("text");
 	data.PushElement("teaser", scenario.who_wrote[0]);
@@ -313,7 +312,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 	if(!scenario.custom_graphics.empty()) {
 		data.OpenElement("graphics");
 		for(size_t i = 0; i < scenario.custom_graphics.size(); i++) {
-			if(scenario.custom_graphics[i] == PIC_FULL) continue;
+			if(scenario.custom_graphics[i] == PIC_FULL || scenario.custom_graphics[i] == 0) continue;
 			data.OpenElement("pic");
 			data.PushAttribute("index", i);
 			data.PushText(scenario.custom_graphics[i]);

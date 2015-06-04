@@ -2101,7 +2101,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		num_nodes++;
 		
 		if(check_for_interrupt()){
-			add_string_to_buf("The special encounter was interrupted. The scenario may be in an unexpected state; it is recommended that you reload from a saved game.", 3);
+			add_string_to_buf("SPECIAL ENCOUNTER INTERRUPTED.", 3);
 			next_spec = -1;
 		}
 	}

@@ -81,13 +81,14 @@ cScenario::cScenario(bool init_strings) {
 		scen_items[i] = cItem();
 	}
 	if(!init_strings) return;
+	contact_info[0] = "Name not given";
 	for(i = 0; i < 270; i++) {
 		temp_str = get_str("scen-default",i + 1);
 		if(i == 0) scen_name = temp_str;
 		else if(i == 1 || i == 2)
 			who_wrote[i-1] = temp_str;
 		else if(i == 3)
-			contact_info = temp_str;
+			contact_info[1] = temp_str;
 		else if(i >= 4 && i < 10)
 			intro_strs[i-4] = temp_str;
 		else if(i >= 10 && i < 60)

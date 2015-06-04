@@ -47,13 +47,13 @@ namespace ResMgr {
 	template<> inline CursorRsrc* resLoader<CursorRsrc>::operator() (std::string fname) {
 		// TODO: Store the hotspots on disk instead of hardcoded here
 		static const std::map<std::string,location> cursor_hs = {
-			{"wand", {1, 4}}, {"eyedropper", {14, 1}}, {"brush", {13, 5}}, {"spraycan", {8, 8}},
-			{"eraser", {8, 8}}, {"topleft", {8, 8}}, {"bottomright", {8, 8}}, {"hand", {0, 14}},
-			{"NW", {3, 12}}, {"N", {7, 13}}, {"NE", {3, 12}},
-			{"W", {3, 9}}, {"wait", {8, 8}}, {"E", {8, 3}},
-			{"SW", {3, 12}}, {"S", {7, 13}}, {"SE", {3, 12}},
-			{"sword", {1, 1}}, {"boot", {7, 3}}, {"drop", {0, 14}}, {"target", {8, 8}},
-			{"talk", {6, 7}}, {"key", {3, 2}}, {"look", {7, 6}}, {"watch", {7,8}},
+			{"wand", {4, 1}}, {"eyedropper", {1, 14}}, {"brush", {5, 13}}, {"spraycan", {8, 8}},
+			{"eraser", {8, 8}}, {"topleft", {8, 8}}, {"bottomright", {8, 8}}, {"hand", {14, 0}},
+			{"NW", {3, 3}}, {"N", {9, 3}}, {"NE", {12, 3}},
+			{"W", {2, 7}}, {"wait", {8, 8}}, {"E", {14, 7}},
+			{"SW", {3, 12}}, {"S", {9, 12}}, {"SE", {12, 12}},
+			{"sword", {1, 1}}, {"boot", {2, 6}}, {"drop", {14, 0}}, {"target", {8, 8}},
+			{"talk", {2, 13}}, {"key", {3, 2}}, {"look", {7, 6}}, {"watch", {8,8}},
 		};
 		fs::path fpath = resPool<CursorRsrc>::rel2abs(fname + ".gif");
 		fs::path hotpath = resPool<CursorRsrc>::rel2abs(fname + ".hot");
