@@ -285,7 +285,7 @@ void run_a_missile(location from,location fire_to,miss_num_t miss_type,short pat
 	end_missile_anim();
 }
 
-void run_a_boom(location boom_where,short type,short x_adj,short y_adj) {
+void run_a_boom(location boom_where,short type,short x_adj,short y_adj,short snd) {
 	
 //	if((cartoon_happening) && (anim_step < 140))
 //		return;
@@ -293,17 +293,17 @@ void run_a_boom(location boom_where,short type,short x_adj,short y_adj) {
 		return;
 	start_missile_anim();
 	add_explosion(boom_where,-1,0,type, x_adj, y_adj);
-	do_explosion_anim(5,0);
+	do_explosion_anim(5,0,snd);
 	end_missile_anim();
 }
 
-void mondo_boom(location l,short type) {
+void mondo_boom(location l,short type,short snd) {
 	short i;
 	
 	start_missile_anim();
 	for(i = 0; i < 12; i++)
 		add_explosion(l,-1,1,type,0,0);
-	do_explosion_anim(5,0);
+	do_explosion_anim(5,0,snd);
 	
 	end_missile_anim();
 }
@@ -509,7 +509,7 @@ short get_missile_direction(location origin_point,location the_point) {
 
 // sound_num currently ignored
 // special_draw - 0 normal 1 - first half 2 - second half
-void do_explosion_anim(short /*sound_num*/,short special_draw) {
+void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	rectangle active_area_rect,to_rect,from_rect;
 	rectangle base_rect = {0,0,36,28},text_rect;
 	short i,temp_val,temp_val2;
@@ -572,8 +572,12 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 		else if(special_draw < 2)
 			explode_place_rect[i] = rectangle();
 	
-	if(special_draw < 2)
-		play_sound(-1 * boom_type_sound[cur_boom_type]);
+	if(special_draw < 2) {
+		snd_num_t snd_num = snd;
+		if(snd == -1 && cur_boom_type < 4)
+			snd_num = boom_type_sound[cur_boom_type];
+		play_sound(-1 * snd_num);
+	}
 	
 	// Now, at last, do explosion
 	for(t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
@@ -583,10 +587,15 @@ void do_explosion_anim(short /*sound_num*/,short special_draw) {
 		for(i = 0; i < 30; i++)
 			if(store_booms[i].boom_type >= 0) {
 				if((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
-					from_rect = base_rect;
-					from_rect.offset(28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
-					rect_draw_some_item(boom_gworld,from_rect,
-										mainPtr,explode_place_rect[i],sf::BlendAlpha);
+					if(cur_boom_type >= 1000) {
+						sf::Texture* src_gworld;
+						graf_pos_ref(src_gworld, from_rect) = spec_scen_g.find_graphic(cur_boom_type - 1000 + t);
+						rect_draw_some_item(*src_gworld, from_rect, mainPtr, explode_place_rect[i], sf::BlendAlpha);
+					} else {
+						from_rect = base_rect;
+						from_rect.offset(28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
+						rect_draw_some_item(boom_gworld,from_rect,mainPtr,explode_place_rect[i],sf::BlendAlpha);
+					}
 					
 					if(store_booms[i].val_to_place > 0) {
 						text_rect = explode_place_rect[i];

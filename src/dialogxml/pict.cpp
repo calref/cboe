@@ -49,6 +49,7 @@ void cPict::init(){
 	drawPict()[PIC_CUSTOM_ITEM] = &cPict::drawCustomItem;
 	drawPict()[PIC_CUSTOM_TINY_ITEM] = &cPict::drawCustomTinyItem;
 	drawPict()[PIC_CUSTOM_FULL] = &cPict::drawFullSheet;
+	drawPict()[PIC_CUSTOM_BOOM] = &cPict::drawCustomBoom;
 	drawPict()[PIC_CUSTOM_MISSILE] = &cPict::drawCustomMissile;
 	drawPict()[PIC_CUSTOM_DLOG_LG] = &cPict::drawCustomDlogLg;
 	drawPict()[PIC_CUSTOM_TER_MAP] = &cPict::drawCustomTerMap;
@@ -199,6 +200,8 @@ ePicType operator+ (ePicType lhs, ePicTypeMod rhs){
 					return PIC_PC;
 				case PIC_CUSTOM_TER_MAP:
 					return PIC_TER_MAP;
+				case PIC_CUSTOM_BOOM:
+					return PIC_BOOM;
 				default:
 					return lhs;
 			}
@@ -264,6 +267,8 @@ ePicType operator+ (ePicType lhs, ePicTypeMod rhs){
 					return PIC_CUSTOM_TINY_ITEM;
 				case PIC_FULL:
 					return PIC_CUSTOM_FULL;
+				case PIC_BOOM:
+					return PIC_CUSTOM_BOOM;
 				case PIC_MISSILE:
 					return PIC_CUSTOM_MISSILE;
 				case PIC_DLOG_LG:
@@ -369,6 +374,8 @@ ePicType operator- (ePicType lhs, ePicTypeMod rhs){
 					return PIC_TINY_ITEM;
 				case PIC_CUSTOM_FULL:
 					return PIC_FULL;
+				case PIC_CUSTOM_BOOM:
+					return PIC_BOOM;
 				case PIC_CUSTOM_MISSILE:
 					return PIC_MISSILE;
 				case PIC_CUSTOM_DLOG_LG:
@@ -447,7 +454,7 @@ void cPict::recalcRect() {
 		case PIC_ITEM: case PIC_CUSTOM_ITEM: case PIC_PARTY_ITEM:
 		case PIC_PC: case PIC_PARTY_PC:
 		case PIC_FIELD:
-		case PIC_BOOM:
+		case PIC_BOOM: case PIC_CUSTOM_BOOM:
 			bounds.width() = 28;
 			bounds.height() = 36;
 			break;
@@ -807,6 +814,8 @@ void cPict::drawPresetField(short num, rectangle to_rect){
 
 void cPict::drawPresetBoom(short num, rectangle to_rect){
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_BOOM);
+	if(num >= 8)
+		num = 8 * (num - 7) + animFrame % 8;
 	rectangle from_rect = calc_rect(num % 8, num / 8);
 	// TODO: Be smarter about this - we know the first row is static booms and subsequent rows are animated booms.
 	to_rect.right = to_rect.left + 28;
@@ -1013,6 +1022,16 @@ void cPict::drawCustomTinyItem(short num, rectangle to_rect){
 	rectangle from_rect;
 	sf::Texture* from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+}
+
+void cPict::drawCustomBoom(short num, rectangle to_rect){
+	to_rect.right = to_rect.left + 28;
+	to_rect.bottom = to_rect.top + 36;
+	rectangle from_rect;
+	sf::Texture* from_gw;
+	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num + animFrame % 8);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
