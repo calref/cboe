@@ -193,8 +193,6 @@ void cTextField::draw(){
 	fill_rect(*inWindow, outline, sf::Color::White);
 	frame_rect(*inWindow, outline, sf::Color::Black);
 	std::string contents = getText();
-	rectangle rect = frame;
-	rect.inset(2,2);
 	TextStyle style;
 	style.font = FONT_PLAIN;
 	style.pointSize = 12;
@@ -203,7 +201,9 @@ void cTextField::draw(){
 	size_t ip_offset = 0;
 	hilite_t hilite = {insertionPoint, selectionPoint};
 	if(selectionPoint < insertionPoint) std::swap(hilite.first,hilite.second);
-	if(haveFocus && contents.length() > 1) {
+	if(haveFocus && contents.length() > 1 && changeMade) {
+		text_rect = frame;
+		text_rect.inset(2,2);
 		// Determine which line the insertion and selection points are on
 		clip_rect(*inWindow, {0,0,0,0}); // To prevent drawing
 		hilite_t tmp_hilite = hilite;
@@ -211,7 +211,7 @@ void cTextField::draw(){
 		std::string dummy_str = contents + "  ";
 		if(tmp_hilite.first >= tmp_hilite.second)
 			tmp_hilite.second = tmp_hilite.first + 1;
-		std::vector<rectangle> rects = draw_string_hilite(*inWindow, rect, dummy_str, style, {tmp_hilite}, {0,0,0});
+		std::vector<rectangle> rects = draw_string_hilite(*inWindow, text_rect, dummy_str, style, {tmp_hilite}, {0,0,0});
 		if(!rects.empty()) {
 			// We only care about the first and last rects. Furthermore, we only really need one point
 			location ip_pos = rects[0].centre(), sp_pos = rects[rects.size() - 1].centre();
@@ -220,23 +220,24 @@ void cTextField::draw(){
 			// We do this by first ensuring the insertion point is visible, then doing the same
 			// for the selection point.
 			while(!ip_pos.in(frame)) {
-				rect.offset(0,-14);
+				text_rect.offset(0,-14);
 				ip_pos.y -= 14;
 				sp_pos.y -= 14;
 			}
 			while(!sp_pos.in(frame)) {
 				int shift = selectionPoint < insertionPoint ? 14 : -14;
-				rect.offset(0,shift);
+				text_rect.offset(0,shift);
 				ip_pos.y += shift;
 				sp_pos.y += shift;
 			}
 		}
 		undo_clip(*inWindow);
 	}
+	changeMade = false;
 	clip_rect(*inWindow, frame);
 	ip_col = ip_row = -1;
 	if(haveFocus) {
-		snippets = draw_string_sel(*inWindow, rect, contents, style, {hilite}, hiliteClr);
+		snippets = draw_string_sel(*inWindow, text_rect, contents, style, {hilite}, hiliteClr);
 		int iSnippet = -1, sum = 0;
 		ip_offset = insertionPoint;
 		for(size_t i = 0; i < snippets.size(); i++) {
@@ -264,7 +265,11 @@ void cTextField::draw(){
 		// Record it so that we can calculate up/down arrow key results
 		ip_col = ip_offset;
 		ip_row = iSnippet;
-	} else win_draw_string(*inWindow, rect, contents, eTextMode::WRAP, style);
+	} else {
+		rectangle text_rect = frame;
+		text_rect.inset(2,2);
+		win_draw_string(*inWindow, text_rect, contents, eTextMode::WRAP, style);
+	}
 	undo_clip(*inWindow);
 }
 
@@ -359,6 +364,7 @@ static cKey divineFunction(cKey key) {
 }
 
 void cTextField::handleInput(cKey key) {
+	changeMade = true;
 	bool select = mod_contains(key.mod, mod_shift);
 	bool haveSelection = insertionPoint != selectionPoint;
 	key = divineFunction(key);
@@ -502,16 +508,14 @@ void cTextField::handleInput(cKey key) {
 			break;
 		case key_pgup:
 			if(snippets[ip_row].at.y != snippets[0].at.y) {
-				int linesVisible = getBounds().height() / 16;
-				int x = snippets[ip_row].at.x + ip_col, y = snippets[ip_row].at.y - 15 * linesVisible + 5;
+				int x = snippets[ip_row].at.x + ip_col, y = frame.top + 2;
 				set_ip(loc(x,y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
 				if(!select) selectionPoint = insertionPoint;
 			}
 			break;
 		case key_pgdn:
 			if(snippets[ip_row].at.y != snippets.back().at.y) {
-				int linesVisible = getBounds().height() / 16;
-				int x = snippets[ip_row].at.x + ip_col, y = snippets[ip_row].at.y + 15 * linesVisible + 5;
+				int x = snippets[ip_row].at.x + ip_col, y = frame.bottom - 2;
 				set_ip(loc(x,y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
 				if(!select) selectionPoint = insertionPoint;
 			}
