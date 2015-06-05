@@ -8,21 +8,32 @@
 
 #include "undo.hpp"
 
+cAction::~cAction() {}
+
 cUndoList::cUndoList(){
 	lastSave = cur = theList.begin();
 }
 
-size_t cUndoList::maxUndoSize = 0;
+size_t cUndoList::maxUndoSize = 50;
 
-// TODO: These functions should have error checking to ensure they do not access an out of bounds action
 void cUndoList::undo(){
+	if(noUndo()) return;
 	(*cur)->undo();
-	cur--;
+	cur++;
 }
 
 void cUndoList::redo(){
-	cur++;
+	if(noRedo()) return;
+	cur--;
 	(*cur)->redo();
+}
+
+bool cUndoList::noUndo() {
+	return cur == theList.end();
+}
+
+bool cUndoList::noRedo() {
+	return cur == theList.begin();
 }
 
 void cUndoList::save(){
@@ -33,8 +44,18 @@ void cUndoList::revert(){
 	while(cur != lastSave) undo();
 }
 
-void cUndoList::add(cAction* what){
-	theList.push_back(what);
+void cUndoList::clear() {
+	theList.clear();
+}
+
+void cUndoList::add(action_ptr what){
+	if(!what) return;
+	theList.erase(theList.begin(), cur);
+	theList.push_front(what);
 	num_actions++;
-	while(num_actions > maxUndoSize) theList.pop_front(), num_actions--;
+	while(num_actions > maxUndoSize) {
+		theList.pop_back();
+		num_actions--;
+	}
+	cur = theList.begin();
 }
