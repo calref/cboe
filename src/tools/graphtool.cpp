@@ -51,7 +51,6 @@ void init_graph_tool(){
 	
 	do {
 		std::ifstream fin;
-		std::cerr << "Loading fragment shader from " << fragPath.string() << std::endl;
 		fin.open(fragPath.string().c_str());
 		if(!fin.good()) {
 			std::cerr << std_fmterr << ": Error loading fragment shader" << std::endl;
@@ -66,7 +65,6 @@ void init_graph_tool(){
 		fbuf[fin.gcount()] = 0;
 		fin.close();
 
-		std::cerr << "Loading vertex shader from " << vertPath.string() << std::endl;
 		fin.open(vertPath.string().c_str());
 		if(!fin.good()) {
 			std::cerr << std_fmterr << ": Error loading vertex shader" << std::endl;

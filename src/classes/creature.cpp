@@ -357,7 +357,6 @@ void cCreature::readFrom(std::istream& file) {
 	while(file) {
 		std::string cur;
 		getline(file, cur);
-		std::cout << "Parsing line in town.txt: " << cur << std::endl;
 		std::istringstream line(cur);
 		line >> cur;
 		if(cur == "MONSTER")
