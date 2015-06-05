@@ -827,6 +827,7 @@ void draw_terrain(short	mode) {
 			else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
 		}
 	
+	forcecage_locs.clear();
 	for(q = 0; q < 9; q++) {
 		for(r = 0; r < 9; r++) {
 			where_draw = (is_out()) ? univ.party.p_loc : center;
