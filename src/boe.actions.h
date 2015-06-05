@@ -14,6 +14,7 @@ bool someone_awake();
 void handle_menu_spell(short spell_picked,short spell_type) ;
 void initiate_outdoor_combat(short i);
 bool handle_keystroke(sf::Event& event);
+bool handle_scroll(sf::Event& event);
 void do_load();
 void post_load();
 void do_save(short mode);

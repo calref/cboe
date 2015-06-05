@@ -259,6 +259,11 @@ void Handle_One_Event() {
 			}
 			break;
 			
+		case sf::Event::MouseWheelMoved:
+			if(flushingInput) return;
+			handle_scroll(event);
+			break;
+			
 		case sf::Event::GainedFocus:
 			Handle_Update();
 			makeFrontWindow(mainPtr);

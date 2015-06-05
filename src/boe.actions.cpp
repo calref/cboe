@@ -80,6 +80,7 @@ long dummy;
 short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 extern cShop active_shop;
 
+extern rectangle shop_frame;
 extern short cen_x, cen_y, stat_window;//,pc_moves[6];
 extern bool give_delays;
 extern eGameMode overall_mode;
@@ -1259,8 +1260,7 @@ bool handle_action(sf::Event event) {
 	// MARK: End: click in terrain
 	
 	// MARK: Begin: Screen shift
-	if(overall_mode == MODE_SPELL_TARGET ||  overall_mode == MODE_FIRING || overall_mode == MODE_THROWING
-	   || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_LOOK_COMBAT || overall_mode == MODE_LOOK_TOWN) {
+	if(scrollableModes.count(overall_mode)) {
 		if(the_point.in(border_rect[0]) && center.y > univ.town->in_town_rect.top && center.y > 4) {
 			center.y--;
 			need_redraw = true;
@@ -2150,6 +2150,33 @@ bool handle_keystroke(sf::Event& event){
 	}
 	spell_forced = false;
 	return are_done;
+}
+
+bool handle_scroll(sf::Event& event) {
+	rectangle status_panel_rect = {0,0,144,271}, text_panel_rect = {0,0,138,271};
+	status_panel_rect.offset(ul);
+	status_panel_rect.offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
+	text_panel_rect.offset(ul);
+	text_panel_rect.offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
+	fill_rect(mainPtr, world_screen, sf::Color::Magenta);
+	location pos(event.mouseWheel.x, event.mouseWheel.y);
+	int amount = event.mouseWheel.delta;
+	if(item_sbar->isVisible() && pos.in(status_panel_rect)) {
+		item_sbar->setPosition(item_sbar->getPosition() - amount);
+		redraw_screen(REFRESH_INVEN);
+	} else if(text_sbar->isVisible() && pos.in(text_panel_rect)) {
+		text_sbar->setPosition(text_sbar->getPosition() - amount);
+		redraw_screen(REFRESH_TRANS);
+	} else if(shop_sbar->isVisible() && pos.in(shop_frame)) {
+		shop_sbar->setPosition(shop_sbar->getPosition() - amount);
+		redraw_screen(REFRESH_DLOG);
+	} else if(scrollableModes.count(overall_mode) && pos.in(world_screen)) {
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+			center.x -= amount;
+		else center.y -= amount;
+		redraw_screen(REFRESH_TERRAIN);
+	}
+	return true;
 }
 
 void do_load() {

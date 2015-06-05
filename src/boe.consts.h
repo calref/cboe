@@ -9,6 +9,8 @@
 #ifndef BOE_GAME_CONSTS_H
 #define BOE_GAME_CONSTS_H
 
+#include <set>
+
 /*
  This file contain numerous constans in form of #defines.
  Almost all of these constants cannot be changed because
@@ -78,6 +80,15 @@ enum eGameMode {
 	MODE_STARTUP = 45,
 	MODE_RESTING = 50,
 	MODE_CUTSCENE = 51, // for future use
+};
+
+static const std::set<eGameMode> scrollableModes = {
+	MODE_SPELL_TARGET,
+	MODE_FIRING,
+	MODE_THROWING,
+	MODE_FANCY_TARGET,
+	MODE_LOOK_COMBAT,
+	MODE_LOOK_TOWN
 };
 
 enum eStatMode {

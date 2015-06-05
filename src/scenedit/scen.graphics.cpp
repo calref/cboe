@@ -48,7 +48,6 @@ extern sf::Texture bg_gworld;
 extern rectangle left_button[NLS];
 extern rectangle right_buttons[NRSONPAGE];
 extern rectangle right_scrollbar_rect;
-extern rectangle right_area_rect;
 extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 
 extern bool left_buttons_active,right_buttons_active;

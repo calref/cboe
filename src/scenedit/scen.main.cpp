@@ -169,6 +169,10 @@ void Handle_One_Event() {
 			update_mouse_spot(loc(event.mouseMove.x,event.mouseMove.y));
 			break;
 			
+		case sf::Event::MouseWheelMoved:
+			handle_scroll(event);
+			break;
+			
 		case sf::Event::MouseButtonReleased:
 			mouse_button_held = false;
 			break;

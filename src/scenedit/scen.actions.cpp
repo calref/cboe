@@ -59,7 +59,7 @@ cTown::cItem store_place_item;
 short flood_count = 0;
 
 rectangle terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
-
+extern rectangle terrain_buttons_rect;
 
 extern short cen_x, cen_y, cur_town;
 extern eScenMode overall_mode;
@@ -1513,6 +1513,30 @@ void handle_keystroke(sf::Event event) {
 	if(store_ter != current_terrain_type)
 		draw_terrain();
 	mouse_button_held = false;
+}
+
+bool handle_scroll(sf::Event& event) {
+	rectangle pal_rect = terrain_buttons_rect, right_area_rect = {0,0,RIGHT_AREA_HEIGHT,RIGHT_AREA_WIDTH};
+	right_area_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
+	pal_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
+	pal_rect.height() = 16 * 17 + 2;
+	fill_rect(mainPtr, right_area_rect, sf::Color::Magenta);
+	location pos(event.mouseWheel.x, event.mouseWheel.y);
+	int amount = event.mouseWheel.delta;
+	if(right_sbar->isVisible() && pos.in(right_area_rect)) {
+		right_sbar->setPosition(right_sbar->getPosition() - amount);
+		redraw_screen();
+	} else if(pal_sbar->isVisible() && pos.in(pal_rect)) {
+		pal_sbar->setPosition(pal_sbar->getPosition() - amount);
+		set_up_terrain_buttons(false);
+		redraw_screen();
+	} else if(overall_mode < MODE_MAIN_SCREEN && pos.in(world_screen)) {
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+			cen_x -= amount;
+		else cen_y -= amount;
+		redraw_screen();
+	}
+	return true;
 }
 
 void shy_change_circle_terrain(location center,short radius,ter_num_t terrain_type,short probability) {
