@@ -36,7 +36,7 @@ bool All_Done = false;
 sf::Event event;
 sf::RenderWindow mainPtr;
 short had_text_freeze = 0,num_fonts;
-bool app_started_normally = false, skip_boom_delay = false;
+bool skip_boom_delay = false;
 bool first_startup_update = true;
 bool diff_depth_ok = false,first_sound_played = false,spell_forced = false,startup_loaded = false;
 bool save_maps = true,party_in_memory = false;
@@ -50,7 +50,7 @@ location store_anim_ul;
 cUniverse univ;
 
 bool gInBackground = false;
-bool flushingInput = false;
+bool flushingInput = false, ae_loading = false;
 long start_time;
 
 short on_spell_menu[2][62];
@@ -74,7 +74,7 @@ eGameMode overall_mode = MODE_STARTUP;
 bool first_update = true,anim_onscreen = false,frills_on = true,changed_display_mode = false;
 short stat_window = 0,store_modifier;
 bool monsters_going = false,boom_anim_active = false;
-bool give_delays = false;
+bool give_delays = false, finished_init = false;
 
 sf::RenderWindow mini_map;
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
@@ -121,6 +121,7 @@ int main(int /*argc*/, char* argv[]) {
 		
 		init_buf();
 		
+		check_for_intel();
 		set_up_apple_events();
 		make_cursor_watch();
 		plop_fancy_startup();
@@ -142,11 +143,15 @@ int main(int /*argc*/, char* argv[]) {
 			tip_of_day();
 		game_run_before = true;
 		
-		check_for_intel();
-		
 		init_mini_map();
-		menu_activate();
+		finished_init = true;
 		
+		if(ae_loading) {
+			finish_load_party();
+			post_load();
+		}
+		
+		menu_activate();
 		restore_cursor();
 		while(!All_Done)
 			Handle_One_Event();
@@ -210,8 +215,7 @@ void Handle_One_Event() {
 		animTimer.restart();
 		draw_terrain();
 	}
-	if((animTimer.getElapsedTime().asMilliseconds() > twentyTicks) && (overall_mode == MODE_STARTUP)
-	   && app_started_normally) {
+	if((animTimer.getElapsedTime().asMilliseconds() > twentyTicks) && (overall_mode == MODE_STARTUP)) {
 		animTimer.restart();
 		draw_startup_anim(true);
 	}

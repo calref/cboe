@@ -18,54 +18,31 @@ extern void finish_load_party();
 extern void end_startup();
 extern void post_load();
 
-extern bool app_started_normally, ae_loading, startup_loaded, All_Done;
+extern bool ae_loading, startup_loaded, All_Done, party_in_memory, finished_init;
 extern eGameMode overall_mode;
 extern cUniverse univ;
 
 typedef NSAppleEventDescriptor AEDescr;
 
-@interface AppleEventHandler : NSObject
--(void)handleOpenApp:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply;
--(void)handleOpenDoc:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply;
--(void)handleQuit:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply;
+@interface AppleEventHandler : NSObject<NSApplicationDelegate>
+-(BOOL)application:(NSApplication*) app openFile:(NSString*) file;
+-(NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication*) sender;
 @end
 
 void set_up_apple_events(); // Suppress "no prototype" warning
 void set_up_apple_events() {
 	AppleEventHandler* aeHandler = [[AppleEventHandler alloc] init];
-	NSAppleEventManager* AEmgr = [NSAppleEventManager sharedAppleEventManager];
-	[AEmgr setEventHandler: aeHandler andSelector: @selector(handleOpenApp:withReply:)
-		forEventClass: kCoreEventClass andEventID: kAEOpenApplication];
-	[AEmgr setEventHandler: aeHandler andSelector: @selector(handleOpenDoc:withReply:)
-		forEventClass: kCoreEventClass andEventID: kAEOpenDocuments];
-	[AEmgr setEventHandler: aeHandler andSelector: @selector(handleQuit:withReply:)
-		forEventClass: kCoreEventClass andEventID: kAEQuitApplication];
+	[[NSApplication sharedApplication] setDelegate: aeHandler];
 }
 
-// TODO: Not sure, do I need to do anything with the reply event?
+// TODO: What if they're already in a scenario? It should ask for confirmation, right?
+// (Need to figure out cChoiceDlog bug first, though, as it would crash here just like it does on the quit event.)
 @implementation AppleEventHandler
--(void)handleOpenApp:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply {
-	(void) theAppleEvent; // Suppress "unused parameter" warning
-	(void) reply;
-	app_started_normally = true;
-}
-
--(void)handleOpenDoc:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply {
-	(void) theAppleEvent; // Suppress "unused parameter" warning
-	(void) reply;
-	NSAppleEventDescriptor* docList = [theAppleEvent paramDescriptorForKeyword: keyDirectObject];
-	if(docList == nil) return;
-	
-	long itemsInList = [docList numberOfItems];
-	if(itemsInList == 0) return;
-	
-	NSAppleEventDescriptor* fileDesc = [docList descriptorAtIndex: 1];
-	if(fileDesc == nil) return;
-	// TODO: I'm not entirely sure that a file specifier is convertable to a string.
-	NSString* file = [fileDesc stringValue];
+-(BOOL)application:(NSApplication*) app openFile:(NSString*) file {
+	(void) app; // Suppress "unused parameter" warning
 	if(file == nil) {
 		std::cerr << "Error: filename was nil" << std::endl;
-		return;
+		return FALSE;
 	}
 	
 	unsigned long len = [file length], sz = len + 1;
@@ -75,36 +52,39 @@ void set_up_apple_events() {
 	std::string fileName;
 	std::copy(msg.get(), msg.get() + len, std::inserter(fileName, fileName.begin()));
 	
-	ae_loading = true;
-	load_party(fileName, univ);
-	finish_load_party();
-	ae_loading = false;
+	if(!load_party(fileName, univ))
+		return FALSE;
 	
+	if(!finished_init) {
+		ae_loading = true;
+		overall_mode = MODE_STARTUP;
+	} else finish_load_party();
 	if(overall_mode != MODE_STARTUP && startup_loaded)
 		end_startup();
-	if(overall_mode != MODE_STARTUP) {
+	if(overall_mode != MODE_STARTUP)
 		post_load();
-	}
+	return TRUE;
 }
 
--(void)handleQuit:(AEDescr*)theAppleEvent withReply: (AEDescr*)reply {
-	(void) theAppleEvent; // Suppress "unused parameter" warning
-	(void) reply;
-	if(overall_mode == MODE_STARTUP) {
+// TODO: Something about the cChoiceDlog causes this to crash... AFTER returning.
+-(NSApplicationTerminateReply)applicationShouldTerminate: (NSApplication*)sender {
+	(void) sender; // Suppress "unused parameter" warning
+	if(overall_mode == MODE_STARTUP && !party_in_memory) {
 		All_Done = true;
-		return;
+		return NSTerminateNow;
 	}
 	
-	if(overall_mode < MODE_TALK_TOWN) {
+	if(overall_mode < MODE_TALK_TOWN || (overall_mode == MODE_STARTUP && party_in_memory)) {
 		std::string choice = cChoiceDlog("quit-confirm-save", {"save", "quit", "cancel"}).show();
-		if(choice == "cancel") return; // TODO: Need to make sure the quit is actually cancelled here
+		if(choice == "cancel") return NSTerminateCancel;
 		if(choice == "save")
 			save_party(univ.file, univ);
 	} else {
 		std::string choice = cChoiceDlog("quit-confirm-nosave", {"quit", "cancel"}).show();
-		if(choice == "cancel") return; // TODO: Need to make sure the quit is actually cancelled here
+		if(choice == "cancel") return NSTerminateCancel;
 	}
 	
 	All_Done = true;
+	return NSTerminateNow;
 }
 @end
