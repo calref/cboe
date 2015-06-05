@@ -152,7 +152,7 @@ void apply_light_mask(bool onWindow) {
 	rectangle temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
 	rectangle big_to = {13,13,337,265};
 	short i,j;
-	bool is_dark = false,same_mask = true;
+	bool same_mask = true;
 	if(PSD[SDF_NO_FRILLS] > 0 || fog_lifted)
 		return;
 	if(is_out() || overall_mode == MODE_RESTING)
@@ -167,15 +167,6 @@ void apply_light_mask(bool onWindow) {
 	}
 	
 	// Process the light array
-	for(i = 2; i < 11; i++)
-		for(j = 2; j < 11; j++)
-			if(light_area[i][j] == 0) is_dark = true;
-	if(!is_dark) {
-		for(i = 2; i < 11; i++)
-			for(j = 2; j < 11; j++)
-				last_light_mask[i][j] = 0;
-		return;
-	}
 	for(i = 1; i < 12; i++)
 		for(j = 1; j < 12; j++)
 			if((light_area[i - 1][j - 1] >= 1) && (light_area[i + 1][j - 1] >= 1) &&
@@ -201,6 +192,14 @@ void apply_light_mask(bool onWindow) {
 	if(same_mask) {
 		return;
 	}
+	
+	std::cout << "Current light mask:\n";
+	for(i = 0; i < 13; i++) {
+		for(j = 0; j < 13; j++)
+			std::cout << int(light_area[j][i]) << ' ';
+		std::cout << '\n';
+	}
+	
 	dark_mask_region.clear();
 	dark_mask_region.addRect(big_to);
 	for(i = 0; i < 13; i++)
@@ -218,6 +217,8 @@ void apply_light_mask(bool onWindow) {
 			if(light_area[i][j] == 3) {
 				paint_rect = base_rect;
 				paint_rect.offset(13 + 28 * (i - 2),13 + 36 * (j - 2));
+				paint_rect.right += 28;
+				paint_rect.bottom += 36;
 				Region temp_rect_rgn;
 				temp_rect_rgn.addRect(paint_rect);
 				dark_mask_region -= temp_rect_rgn;

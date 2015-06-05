@@ -1727,6 +1727,8 @@ static void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 			}
 		}
 	}
+	// Don't forget to set up lighting!
+	town.set_up_lights();
 }
 
 static void readSpecialNodesFromStream(std::istream& stream, std::vector<cSpecial>& nodes) {

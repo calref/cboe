@@ -469,6 +469,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		std::string key = sout.str() + "-key";
 		key_stash[0] = 'a' + i;
 		
+		// TODO: Rework this so that no exceptions are required
 		try {
 			if(item_array.at(i + first_item_shown)->variety == eItemType::NO_ITEM)
 				throw std::out_of_range("");

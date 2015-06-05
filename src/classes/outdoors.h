@@ -51,7 +51,7 @@ public:
 	};
 	class cCreature { // formerly outdoor_creature_type
 	public:
-		bool exists;
+		bool exists = false;
 		short direction;
 		cWandering what_monst;
 		location which_sector,m_loc,home_sector; // home_sector is the sector it was spawned in
