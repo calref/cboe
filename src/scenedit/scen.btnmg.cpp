@@ -16,7 +16,6 @@ extern rectangle right_sbar_rect;
 rectangle left_button[NLS];
 extern rectangle right_buttons[NRSONPAGE];
 rectangle right_scrollbar_rect;
-rectangle right_area_rect;
 extern short current_rs_top;
 
 bool left_buttons_active = 1,right_buttons_active = 0;

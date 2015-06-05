@@ -1548,8 +1548,7 @@ void draw_pointing_arrows() {
 		rectangle{346,100,354,108},rectangle{346,170,354,178},rectangle{140,274,148,282},rectangle{212,274,220,282}};
 	short i;
 	
-	if((monsters_going) || /*(overall_mode <= MODE_TOWN) ||*/ (overall_mode <= MODE_COMBAT)
-		|| (overall_mode == MODE_LOOK_OUTDOORS))
+	if(monsters_going || !scrollableModes.count(overall_mode))
 		return;
 	for(i = 0; i < 4; i++) {
 		rect_draw_some_item(terrain_screen_gworld.getTexture(),sources[i],dests[i * 2],ul,sf::BlendAlpha);

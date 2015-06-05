@@ -40,8 +40,6 @@ extern short had_text_freeze;
 extern eStatMode stat_screen_mode;
 
 // graphics globals
-extern rectangle status_panel_rect,status_panel_title_rect;
-extern rectangle	text_panel_rect;
 extern short which_combat_type,stat_window;
 extern eGameMode overall_mode;
 extern sf::RenderWindow mainPtr;
