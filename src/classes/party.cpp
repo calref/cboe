@@ -39,7 +39,8 @@ cParty::cParty(cUniverse& univ, long party_preset) : univ(univ) {
 	for(int i = 0; i < 5; i++)
 		for(int j = 0; j < 10; j++)
 			magic_store_items[i][j].variety = eItemType::NO_ITEM;
-	
+	for(int i = 0; i < 10; i++)
+		out_c[i].exists = false;
 	for(int i = 0; i < 6; i++)
 		adven[i] = new cPlayer(*this, party_preset, i);
 }

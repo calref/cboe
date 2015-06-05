@@ -119,6 +119,8 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 cOutdoors::cWandering::cWandering() {
 	spec_on_meet = spec_on_win = spec_on_flee = -1;
 	end_spec1 = end_spec2 = -1;
+	std::fill(monst.begin(), monst.end(), 0);
+	std::fill(friendly.begin(), friendly.end(), 0);
 }
 
 cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario) {
