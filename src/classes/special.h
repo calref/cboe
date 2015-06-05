@@ -65,7 +65,7 @@ struct node_properties_t {
 	std::string ex1a_lbl() const, ex1b_lbl() const, ex1c_lbl() const, ex1a_hlp() const, ex1b_hlp() const, ex1c_hlp() const;
 	std::string ex2a_lbl() const, ex2b_lbl() const, ex2c_lbl() const, ex2a_hlp() const, ex2b_hlp() const, ex2c_hlp() const;
 	std::string jmp_lbl() const, jmp_hlp() const;
-	char m1_btn, m2_btn, m3_btn, p_btn, pt_btn;
+	char sd1_btn, sd2_btn, m1_btn, m2_btn, m3_btn, p_btn, pt_btn;
 	char x1a_btn, x1b_btn, x1c_btn, x2a_btn, x2b_btn, x2c_btn;
 	node_properties_t() {}
 	node_properties_t(std::initializer_list<std::function<void(node_properties_t)>>);
