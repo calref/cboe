@@ -40,7 +40,7 @@ extern cUniverse univ;
 std::vector<scen_header_type> scen_headers;
 extern bool mac_is_intel;
 
-bool loaded_yet = false, got_nagged = false,ae_loading = false;
+bool loaded_yet = false, got_nagged = false;
 std::string last_load_file = "Blades of Exile Save";
 fs::path file_to_load;
 fs::path store_file_reply;
