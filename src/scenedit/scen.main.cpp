@@ -35,7 +35,7 @@ short mode_count = 0;
 cOutdoors* current_terrain;
 short pixel_depth,old_depth = 8;
 
-bool change_made = false;
+bool change_made = false, ae_loading = false;
 
 // Numbers of current areas being edited
 short cur_town;
@@ -53,6 +53,8 @@ void ding();
 cScenario scenario;
 rectangle right_sbar_rect;
 extern rectangle terrain_buttons_rect;
+
+extern void set_up_apple_events();
 
 //Changed to ISO C specified argument and return type.
 int main(int, char* argv[]) {
@@ -72,6 +74,9 @@ int main(int, char* argv[]) {
 		cDialog::doAnimations = true;
 		init_graph_tool();
 		
+		check_for_intel();
+		set_up_apple_events();
+		
 		cen_x = 18;
 		cen_y = 18;
 		
@@ -84,11 +89,13 @@ int main(int, char* argv[]) {
 		Set_up_win();
 		init_screen_locs();
 		
-		shut_down_menus(0);
+		if(ae_loading)
+			set_up_main_screen();
+		else {
+			shut_down_menus(0);
+			set_up_start_screen();
+		}
 		
-		set_up_start_screen();
-		
-		check_for_intel();
 		redraw_screen();
 		
 		while(!All_Done)
@@ -149,6 +156,7 @@ void Initialize(void) {
 }
 
 void Handle_One_Event() {
+	ae_loading = false;
 	Handle_Update();
 	
 	if(!mainPtr.waitEvent(event)) return;
