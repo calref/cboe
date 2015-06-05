@@ -643,6 +643,7 @@ void set_up_terrain_buttons(bool reset) {
 			case DRAW_ITEM:
 				pic = scenario.scen_items[i].graphic_num;
 				tiny_to = terrain_rects[i - first];
+				frame_rect(terrain_buttons_gworld, tiny_to, sf::Color::Black);
 				if(pic >= 1000) {
 					sf::Texture* source_gworld;
 					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic % 1000);

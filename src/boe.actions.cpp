@@ -759,7 +759,10 @@ static void handle_give_item(short item_hit, bool& did_something, bool& need_red
 }
 
 static void handle_drop_item(short item_hit, bool& need_redraw) {
-	if(!prime_time())
+	if(overall_mode == MODE_DROP_TOWN || overall_mode == MODE_DROP_COMBAT) {
+		add_string_to_buf("Drop item: Cancelled");
+		overall_mode = is_town() ? MODE_TOWN : MODE_COMBAT;
+	} else if(!prime_time())
 		add_string_to_buf("Drop item: Finish what you're doing first.");
 	else if(is_out())
 		drop_item(stat_window,item_hit,univ.party.p_loc);
