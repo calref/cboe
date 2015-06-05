@@ -60,7 +60,6 @@ namespace ResMgr {
 			std::stack<fs::path> tmpPaths = resPaths();
 			while(!tmpPaths.empty()) {
 				fs::path thisPath = tmpPaths.top()/path;
-				std::cout << "Testing " << thisPath << "...\n";
 				if(fs::exists(thisPath)) {
 					pathFound()[path] = tmpPaths.top();
 					return thisPath;
@@ -166,7 +165,6 @@ namespace ResMgr {
 	/// @tparam type The type of resource the path applies to.
 	/// @param path The path at which resources of this type may be found.
 	template<typename type> void pushPath(fs::path path) {
-		printf("Pushing path %s in %s...\n",path.string().c_str(),__FUNCTION__);
 		resPool<type>::resPaths().push(path);
 		if(resPool<type>::resPaths().empty()) std::cerr << "A problem occurred.\n";
 	}

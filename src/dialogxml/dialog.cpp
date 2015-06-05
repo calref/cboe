@@ -838,7 +838,6 @@ void cDialog::loadFromFile(std::string path){
 	fname = path;
 	fs::path cPath = progDir/"data"/"dialogs"/path;
 	try{
-		std::cout << "Loading dialog from: " << cPath << std::endl;
 		TiXmlBase::SetCondenseWhiteSpace(false);
 		Document xml(cPath.string().c_str());
 		xml.LoadFile();
@@ -975,7 +974,6 @@ void cDialog::loadFromFile(std::string path){
 void cDialog::recalcRect(){
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
-		std::cout << typeid(*(iter->second)).name() << " \"" << iter->first << "\"\n";
 		rectangle frame = iter->second->getBounds();
 		if(frame.right > winRect.right)
 			winRect.right = frame.right;
