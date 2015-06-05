@@ -94,7 +94,9 @@ void cTextField::set_ip(location clickLoc, int cTextField::* insertionPoint) {
 		snippet.setPosition(snippets[foundSnippet].at);
 		size_t charClicked = snippets[foundSnippet].text.length();
 		// Find character clicked. By now we know the Y position is okay, so just check X.
-		for(size_t i = 0; i < snippets[foundSnippet].text.length(); i++) {
+		if(clickLoc.x <= snippet.findCharacterPos(0).x)
+			charClicked = 0;
+		else for(size_t i = 0; i < snippets[foundSnippet].text.length(); i++) {
 			if(clickLoc.x > snippet.findCharacterPos(i).x) charClicked = i;
 			else break;
 		}
@@ -232,6 +234,7 @@ void cTextField::draw(){
 		undo_clip(*inWindow);
 	}
 	clip_rect(*inWindow, frame);
+	ip_col = ip_row = -1;
 	if(haveFocus) {
 		snippets = draw_string_sel(*inWindow, rect, contents, style, {hilite}, hiliteClr);
 		int iSnippet = -1, sum = 0;
@@ -258,6 +261,9 @@ void cTextField::draw(){
 //			printf("Blink off (%d); ", ip_timer.getElapsedTime().asMilliseconds());
 			ip_timer.restart();
 		}
+		// Record it so that we can calculate up/down arrow key results
+		ip_col = ip_offset;
+		ip_row = iSnippet;
 	} else win_draw_string(*inWindow, rect, contents, eTextMode::WRAP, style);
 	undo_clip(*inWindow);
 }
@@ -356,6 +362,9 @@ void cTextField::handleInput(cKey key) {
 	bool select = mod_contains(key.mod, mod_shift);
 	bool haveSelection = insertionPoint != selectionPoint;
 	key = divineFunction(key);
+	TextStyle style;
+	style.font = FONT_PLAIN;
+	style.pointSize = 12;
 	size_t new_ip;
 	std::string contents = getText();
 	if(!key.spec) {
@@ -402,7 +411,30 @@ void cTextField::handleInput(cKey key) {
 			if(!select) selectionPoint = insertionPoint;
 			break;
 		case key_up:
+			if(haveSelection && !select)
+				selectionPoint = insertionPoint = std::min(selectionPoint,insertionPoint);
+			if(snippets[ip_row].at.y == snippets[0].at.y) {
+				key.k = key_top;
+				if(select) key.mod += mod_shift;
+				handleInput(key);
+			} else {
+				int x = snippets[ip_row].at.x + ip_col, y = snippets[ip_row].at.y - 10;
+				set_ip(loc(x,y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
+				if(!select) selectionPoint = insertionPoint;
+			}
+			break;
 		case key_down:
+			if(haveSelection && !select)
+				selectionPoint = insertionPoint = std::max(selectionPoint,insertionPoint);
+			if(snippets[ip_row].at.y == snippets.back().at.y) {
+				key.k = key_bottom;
+				if(select) key.mod += mod_shift;
+				handleInput(key);
+			} else {
+				int x = snippets[ip_row].at.x + ip_col, y = snippets[ip_row].at.y + 20;
+				set_ip(loc(x,y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
+				if(!select) selectionPoint = insertionPoint;
+			}
 			break;
 		case key_bsp: case key_word_bsp:
 			if(haveSelection) {
@@ -450,17 +482,39 @@ void cTextField::handleInput(cKey key) {
 			}
 			break;
 		case key_top:
-			if(select) selectionPoint = 0;
-			else insertionPoint = 0;
+			if(current_action) history.add(current_action), current_action.reset();
+			if(!select) insertionPoint = 0;
+			selectionPoint = 0;
 			break;
 		case key_bottom:
-			if(select) selectionPoint = contents.length();
-			else insertionPoint = contents.length();
+			if(current_action) history.add(current_action), current_action.reset();
+			if(!select) insertionPoint = contents.length();
+			selectionPoint = contents.length();
 			break;
 		case key_end:
+			new_ip = snippets[ip_row].at.x + string_length(snippets[ip_row].text, style);
+			set_ip(loc(new_ip, snippets[ip_row].at.y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
+			if(!select) selectionPoint = insertionPoint;
+			break;
 		case key_home:
+			set_ip(snippets[ip_row].at, select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
+			if(!select) selectionPoint = insertionPoint;
+			break;
 		case key_pgup:
+			if(snippets[ip_row].at.y != snippets[0].at.y) {
+				int linesVisible = getBounds().height() / 16;
+				int x = snippets[ip_row].at.x + ip_col, y = snippets[ip_row].at.y - 15 * linesVisible + 5;
+				set_ip(loc(x,y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
+				if(!select) selectionPoint = insertionPoint;
+			}
+			break;
 		case key_pgdn:
+			if(snippets[ip_row].at.y != snippets.back().at.y) {
+				int linesVisible = getBounds().height() / 16;
+				int x = snippets[ip_row].at.x + ip_col, y = snippets[ip_row].at.y + 15 * linesVisible + 5;
+				set_ip(loc(x,y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
+				if(!select) selectionPoint = insertionPoint;
+			}
 			break;
 		case key_copy:
 		case key_cut:
