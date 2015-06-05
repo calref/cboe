@@ -1023,7 +1023,7 @@ void use_item(short pc,short item) {
 					increase_light(50 * str);
 				} else {
 					ASB("  It gets darker.");
-					increase_light(-50 & str);
+					increase_light(-50 * str);
 				}
 				break;
 			case eItemAbil::AFFECT_PARTY_STATUS:

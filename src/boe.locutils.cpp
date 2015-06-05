@@ -16,7 +16,7 @@ extern eGameMode overall_mode;
 extern eGameMode store_pre_shop_mode, store_pre_talk_mode;
 extern location center;
 extern cUniverse univ;
-extern bool cartoon_happening;
+extern bool cartoon_happening, fog_lifted;
 
 location light_locs[40];
 short num_lights = 0;
@@ -238,6 +238,7 @@ bool is_container(location loc) {
 }
 
 void update_explored(location dest) {
+	if(cartoon_happening) return;
 	location shortdest,look;
 	
 	location look2;
@@ -543,6 +544,8 @@ short party_can_see(location where) {
 			return 1;
 		else return 6;
 	}
+	if(fog_lifted)
+		return point_onscreen(univ.town.p_loc,where) ? 1 : 6;
 	if(is_town()) {
 		if( ((point_onscreen(univ.town.p_loc,where)) || (overall_mode == MODE_LOOK_TOWN)) && (pt_in_light(univ.town.p_loc,where) )
 			&& (can_see_light(univ.town.p_loc,where,sight_obscurity) < 5))

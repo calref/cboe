@@ -602,7 +602,7 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		to_return = univ.party.p_loc;
 		
-		std::remove_if(univ.party.party_event_timers.begin(), univ.party.party_event_timers.end(), [](const cTimer& t) {
+		erase_if(univ.party.party_event_timers, [](const cTimer& t) {
 			return t.node_type == 2;
 		});
 		

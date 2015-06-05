@@ -4057,9 +4057,9 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 	
 	// First actually make barriers, then draw them, then inflict damaging effects.
 	for(i = minmax(0,univ.town->max_dim() - 1,center.x - 4); i <= minmax(0,univ.town->max_dim() - 1,center.x + 4); i++)
-		for(j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++)
-			if(sight_obscurity(i,j) < 5) {
-				effect = pat.pattern[i - center.x + 4][j - center.y + 4];
+		for(j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++) {
+			effect = pat.pattern[i - center.x + 4][j - center.y + 4];
+			if(effect == FIELD_SMASH || sight_obscurity(i,j) < 5) {
 				switch(effect) {
 					case FIELD_WEB:
 						web_space(i,j);
@@ -4138,6 +4138,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 						break;
 				}
 			}
+		}
 	draw_terrain(0);
 	if(is_town()) // now make things move faster if in town
 		fast_bang = 2;

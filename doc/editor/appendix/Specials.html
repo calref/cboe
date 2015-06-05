@@ -1068,7 +1068,8 @@ taken.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
 <dt>Uses:</dt><dd>If someone is selling, say, Strength improvement, you can first use this
 to see if the party has enough gold to afford it.</dd>
-<dt>Note:</dt><dd>This node (and the next four) are the only If-Then nodes that (potentially) actually have an effect in the game.</dd></dd>
+<dt>Note:</dt><dd>This node (and the next four) are the only If-Then nodes that
+(potentially) actually have an effect in the game.</dd></dd>
 
 <dt>Type 138: Has Food?</dt><dd>Result depends on whether the party has enough food.
 <dl>
@@ -1290,8 +1291,19 @@ is called.
 
 <dt>Type 156: If Context?</dt><dd>Result depends on how the special node was called.
 <dl>
-<dt>Extra 1a:</dt><dd>The context to test for. Click Choose to select one. If you want to check whether the party is in town, in combat, or outdoors, you probably want one of the first three options. To test for Ritual of Sanctification, use the Targeting Spell option and set Extra 1b to 108. Most of these contexts arise from special nodes assigned while editing monsters, items, town details, and other things, rather than special nodes assigned to a terrain space.</dd>
-<dt>Extra 1b:</dt><dd>The meaning of this field depends on the context. Usually it's not used. For the three movement contexts, 0 means you can enter the space and 1 means you can't. For the targeting spell context, setting this to something other than -1 means that the special in Extra 1c will only be called if the spell that was cast is equal to the spell that has the given number. Add 100 to indicate a priest spell. Item-only spells such as Wrack or Strengthen Target can also be tested for; just enter the same spell ID you would enter for the item ability.</dd></dd>
+<dt>Extra 1a:</dt><dd>The context to test for. Click Choose to select one. If you want to
+check whether the party is in town, in combat, or outdoors, you probably want one of the
+first three options. To test for Ritual of Sanctification, use the Targeting Spell option
+and set Extra 1b to 108. Most of these contexts arise from special nodes assigned while
+editing monsters, items, town details, and other things, rather than special nodes
+assigned to a terrain space.</dd>
+<dt>Extra 1b:</dt><dd>The meaning of this field depends on the context. Usually it's not
+used. For the three movement contexts, 0 means you can enter the space and 1 means you
+can't. For the targeting spell context, setting this to something other than -1 means that
+the special in Extra 1c will only be called if the spell that was cast is equal to the
+spell that has the given number. Add 100 to indicate a priest spell. Item-only spells such
+as Wrack or Strengthen Target can also be tested for; just enter the same spell ID you
+would enter for the item ability.</dd></dd>
 
 <dt>Type 157: If Numeric Response?</dt><dd>Result depends on a number entered by the player.
 <!-- TODO: Document this. -->
