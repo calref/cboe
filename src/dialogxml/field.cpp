@@ -373,6 +373,9 @@ void cTextField::handleInput(cKey key) {
 	style.pointSize = 12;
 	size_t new_ip;
 	std::string contents = getText();
+	if(current_action && hist_timer.getElapsedTime().asSeconds() > 5.0f)
+		history.add(current_action), current_action.reset();
+	hist_timer.restart();
 	if(!key.spec) {
 		if(haveSelection) {
 			cKey deleteKey = key;
@@ -381,12 +384,21 @@ void cTextField::handleInput(cKey key) {
 			handleInput(deleteKey);
 			contents = getText();
 		}
+		if(aTextInsert* ins = dynamic_cast<aTextInsert*>(current_action.get()))
+			ins->append(key.c);
+		else {
+			if(current_action) history.add(current_action);
+			aTextInsert* new_ins = new aTextInsert(*this, insertionPoint);
+			new_ins->append(key.c);
+			current_action.reset(new_ins);
+		}
 		contents.insert(contents.begin() + insertionPoint, char(key.c));
 		selectionPoint = ++insertionPoint;
 	} else switch(key.k) {
 		case key_enter: break; // Shouldn't be receiving this anyway
 			// TODO: Implement all the other special keys
 		case key_left: case key_word_left:
+			if(current_action) history.add(current_action), current_action.reset();
 			if(haveSelection && !select) {
 				selectionPoint = insertionPoint = std::min(selectionPoint,insertionPoint);
 				break;
@@ -402,6 +414,7 @@ void cTextField::handleInput(cKey key) {
 			if(!select) selectionPoint = insertionPoint;
 			break;
 		case key_right: case key_word_right:
+			if(current_action) history.add(current_action), current_action.reset();
 			if(haveSelection && !select) {
 				selectionPoint = insertionPoint = std::max(selectionPoint,insertionPoint);
 				break;
@@ -417,6 +430,7 @@ void cTextField::handleInput(cKey key) {
 			if(!select) selectionPoint = insertionPoint;
 			break;
 		case key_up:
+			if(current_action) history.add(current_action), current_action.reset();
 			if(haveSelection && !select)
 				selectionPoint = insertionPoint = std::min(selectionPoint,insertionPoint);
 			if(snippets[ip_row].at.y == snippets[0].at.y) {
@@ -430,6 +444,7 @@ void cTextField::handleInput(cKey key) {
 			}
 			break;
 		case key_down:
+			if(current_action) history.add(current_action), current_action.reset();
 			if(haveSelection && !select)
 				selectionPoint = insertionPoint = std::max(selectionPoint,insertionPoint);
 			if(snippets[ip_row].at.y == snippets.back().at.y) {
@@ -443,13 +458,20 @@ void cTextField::handleInput(cKey key) {
 			}
 			break;
 		case key_bsp: case key_word_bsp:
+		case key_del: case key_word_del:
 			if(haveSelection) {
 				if(key.k == key_word_bsp)
 					handleInput({true, key_word_left, mod_shift});
+				else if(key.k == key_word_del)
+					handleInput({true, key_word_right, mod_shift});
 				auto begin = contents.begin() + std::min(selectionPoint, insertionPoint);
 				auto end = contents.begin() + std::max(selectionPoint, insertionPoint);
+				std::string removed(begin, end);
 				auto result = contents.erase(begin, end);
+				bool dir = insertionPoint < selectionPoint;
 				selectionPoint = insertionPoint = result - contents.begin();
+				if(current_action) history.add(current_action), current_action.reset();
+				history.add(action_ptr(new aTextDelete(*this, std::min(selectionPoint, insertionPoint), removed, dir)));
 			} else if(key.k == key_word_bsp) {
 				cKey selectKey = key;
 				selectKey.k = key_word_left;
@@ -459,20 +481,19 @@ void cTextField::handleInput(cKey key) {
 				if(selectionPoint != insertionPoint)
 					handleInput(key);
 				return;
-			} else {
+			} else if(key.k == key_bsp) {
 				if(insertionPoint == 0) break;
+				char c = contents[insertionPoint - 1];
 				contents.erase(insertionPoint - 1,1);
 				selectionPoint = --insertionPoint;
-			}
-			break;
-		case key_del: case key_word_del:
-			if(haveSelection) {
-				if(key.k == key_word_del)
-					handleInput({true, key_word_right, mod_shift});
-				auto begin = contents.begin() + std::min(selectionPoint, insertionPoint);
-				auto end = contents.begin() + std::max(selectionPoint, insertionPoint);
-				auto result = contents.erase(begin, end);
-				selectionPoint = insertionPoint = result - contents.begin();
+				if(aTextDelete* del = dynamic_cast<aTextDelete*>(current_action.get()))
+					del->append_front(c);
+				else {
+					if(current_action) history.add(current_action);
+					aTextDelete* new_del = new aTextDelete(*this, insertionPoint + 1, insertionPoint + 1);
+					new_del->append_front(c);
+					current_action.reset(new_del);
+				}
 			} else if(key.k == key_word_del) {
 				cKey selectKey = key;
 				selectKey.k = key_word_right;
@@ -482,9 +503,18 @@ void cTextField::handleInput(cKey key) {
 				if(selectionPoint != insertionPoint)
 					handleInput(key);
 				return;
-			} else {
+			} else if(key.k == key_del) {
 				if(insertionPoint == contents.length()) break;
+				char c = contents[insertionPoint];
 				contents.erase(insertionPoint,1);
+				if(aTextDelete* del = dynamic_cast<aTextDelete*>(current_action.get()))
+					del->append_back(c);
+				else {
+					if(current_action) history.add(current_action);
+					aTextDelete* new_del = new aTextDelete(*this, insertionPoint, insertionPoint);
+					new_del->append_back(c);
+					current_action.reset(new_del);
+				}
 			}
 			break;
 		case key_top:
@@ -498,15 +528,18 @@ void cTextField::handleInput(cKey key) {
 			selectionPoint = contents.length();
 			break;
 		case key_end:
+			if(current_action) history.add(current_action), current_action.reset();
 			new_ip = snippets[ip_row].at.x + string_length(snippets[ip_row].text, style);
 			set_ip(loc(new_ip, snippets[ip_row].at.y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
 			if(!select) selectionPoint = insertionPoint;
 			break;
 		case key_home:
+			if(current_action) history.add(current_action), current_action.reset();
 			set_ip(snippets[ip_row].at, select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
 			if(!select) selectionPoint = insertionPoint;
 			break;
 		case key_pgup:
+			if(current_action) history.add(current_action), current_action.reset();
 			if(snippets[ip_row].at.y != snippets[0].at.y) {
 				int x = snippets[ip_row].at.x + ip_col, y = frame.top + 2;
 				set_ip(loc(x,y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
@@ -514,6 +547,7 @@ void cTextField::handleInput(cKey key) {
 			}
 			break;
 		case key_pgdn:
+			if(current_action) history.add(current_action), current_action.reset();
 			if(snippets[ip_row].at.y != snippets.back().at.y) {
 				int x = snippets[ip_row].at.x + ip_col, y = frame.bottom - 2;
 				set_ip(loc(x,y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
@@ -522,6 +556,7 @@ void cTextField::handleInput(cKey key) {
 			break;
 		case key_copy:
 		case key_cut:
+			if(current_action) history.add(current_action), current_action.reset();
 			set_clipboard(contents.substr(std::min(insertionPoint,selectionPoint), abs(insertionPoint - selectionPoint)));
 			if(key.k == key_cut) {
 				cKey deleteKey = key;
@@ -531,20 +566,30 @@ void cTextField::handleInput(cKey key) {
 			}
 			break;
 		case key_paste:
+			if(current_action) history.add(current_action), current_action.reset();
 			if(!get_clipboard().empty()) {
-				cKey deleteKey = {true, key_bsp, mod_none};
-				handleInput(deleteKey);
+				if(haveSelection) {
+					cKey deleteKey = {true, key_bsp, mod_none};
+					handleInput(deleteKey);
+				}
 				contents = getText();
 				std::string toInsert = get_clipboard();
 				contents.insert(insertionPoint, toInsert);
+				history.add(action_ptr(new aTextInsert(*this, insertionPoint, toInsert)));
 				insertionPoint += toInsert.length();
 				selectionPoint = insertionPoint;
 			}
 			break;
 		case key_undo:
+			if(current_action) history.add(current_action), current_action.reset();
+			history.undo();
+			return;
 		case key_redo:
-			break;
+			if(current_action) history.add(current_action), current_action.reset();
+			history.redo();
+			return;
 		case key_selectall:
+			if(current_action) history.add(current_action), current_action.reset();
 			selectionPoint = 0;
 			insertionPoint = contents.length();
 			break;
@@ -560,6 +605,59 @@ void cTextField::handleInput(cKey key) {
 	setText(contents);
 	insertionPoint = ip;
 	selectionPoint = sp;
+}
+
+aTextInsert::aTextInsert(cTextField& in, int at, std::string text) : cAction("insert text"), in(in), at(at), text(text) {}
+
+void aTextInsert::undo() {
+	std::string contents = in.getText();
+	auto del_start = contents.begin() + at;
+	auto del_end = del_start + text.length();
+	auto result = contents.erase(del_start, del_end);
+	in.setText(contents);
+	in.selectionPoint = in.insertionPoint = result - contents.begin();
+}
+
+void aTextInsert::redo() {
+	std::string contents = in.getText();
+	contents.insert(at, text);
+	in.setText(contents);
+	in.selectionPoint = in.insertionPoint = at + text.length();
+}
+
+void aTextInsert::append(char c) {
+	text += c;
+}
+
+aTextDelete::aTextDelete(cTextField& in, int start, int end) : cAction("delete text"), in(in), start(start), end(end), ip(0) {}
+
+aTextDelete::aTextDelete(cTextField& in, int start, std::string content, bool from_start) : cAction("delete text"), in(in), start(start), end(start + content.size()), text(content), ip(from_start ? 0 : content.size()) {}
+
+void aTextDelete::undo() {
+	std::string contents = in.getText();
+	contents.insert(start, text);
+	in.setText(contents);
+	in.selectionPoint = in.insertionPoint = start + ip;
+}
+
+void aTextDelete::redo() {
+	std::string contents = in.getText();
+	auto del_start = contents.begin() + start;
+	auto del_end = contents.begin() + end;
+	auto result = contents.erase(del_start, del_end);
+	in.setText(contents);
+	in.selectionPoint = in.insertionPoint = result - contents.begin();
+}
+
+void aTextDelete::append_front(char c) {
+	text = c + text;
+	start--;
+	ip++;
+}
+
+void aTextDelete::append_back(char c) {
+	text += c;
+	end++;
 }
 
 cControl::storage_t cTextField::store() {

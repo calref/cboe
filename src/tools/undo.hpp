@@ -10,27 +10,38 @@
  */
 
 #include <list>
+#include <memory>
+#include <string>
 
 class cAction {
+	std::string actname;
+protected:
+	bool done = false;
 public:
-	virtual void undo() = 0; // undoes this action if it has not already been undone
-	virtual void redo() = 0; // redoes this action if it has been undone
-	virtual bool isDone() = 0; // checks to see whether the action has been undone; returns false if it has
-	virtual std::string getActionName() = 0; // returns the name of this action for display in the Edit menu
+	cAction(std::string name) : actname(name) {}
+	virtual void undo() = 0; ///< Undoes this action if it has not already been undone
+	virtual void redo() = 0; ///< Redoes this action if it has been undone
+	bool isDone() {return done;}; ///< checks to see whether the action has been undone; returns false if it has
+	std::string getActionName() {return actname;} ///< returns the name of this action for display in the Edit menu
 	virtual ~cAction();
 };
 
+using action_ptr = std::shared_ptr<cAction>;
+
 class cUndoList {
-	std::list<cAction*> theList;
-	std::list<cAction*>::iterator cur, lastSave;
-	size_t num_actions;
+	std::list<action_ptr> theList;
+	std::list<action_ptr>::iterator cur, lastSave;
+	size_t num_actions = 0;
 public:
 	cUndoList();
-	void undo(); // undoes the current action and decrements the cur pointer
-	void redo(); // increments the cur pointer and redoes the current action
-	void save(); // sets the last saved action to the current action
-	void revert(); // undoes all actions back to (but excluding) the last saved action
-	void add(cAction* what);
+	void undo(); ///< Undoes the current action and decrements the cur pointer
+	void redo(); ///< Increments the cur pointer and redoes the current action
+	void save(); ///< Sets the last saved action to the current action
+	void revert(); ///< Undoes all actions back to (but excluding) the last saved action
+	void clear(); ///< Clears the list
+	bool noUndo(); ///< Check whether there's an action to undo
+	bool noRedo(); ///< Check whether there's an action to redo
+	void add(action_ptr what);
 	static size_t maxUndoSize;
 };
 

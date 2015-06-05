@@ -70,6 +70,8 @@ public:
 	long tabOrder = 0;
 private:
 	void set_ip(location clickLoc, int cTextField::* insertionPoint);
+	cUndoList history;
+	action_ptr current_action;
 	eFldType field_type;
 	focus_callback_t onFocus;
 	bool haveFocus;
@@ -77,10 +79,37 @@ private:
 	int selectionPoint;
 	sf::Color color;
 	bool ip_visible;
-	sf::Clock ip_timer;
+	sf::Clock ip_timer, hist_timer;
 	bool changeMade = true;
 	rectangle text_rect;
 	std::vector<snippet_t> snippets;
 	int ip_row, ip_col;
+	friend class aTextInsert;
+	friend class aTextDelete;
 };
+
+class aTextInsert : public cAction {
+	cTextField& in;
+	int at;
+	std::string text;
+public:
+	aTextInsert(cTextField& in, int at, std::string text = "");
+	void undo(), redo();
+	void append(char c);
+	~aTextInsert() {}
+};
+
+class aTextDelete : public cAction {
+	cTextField& in;
+	int start, end, ip;
+	std::string text;
+public:
+	aTextDelete(cTextField& in, int start, int end);
+	aTextDelete(cTextField& in, int start, std::string content, bool from_start);
+	void undo(), redo();
+	void append_front(char c);
+	void append_back(char c);
+	~aTextDelete() {}
+};
+
 #endif
