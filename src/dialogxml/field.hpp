@@ -78,5 +78,6 @@ private:
 	bool ip_visible;
 	sf::Clock ip_timer;
 	std::vector<snippet_t> snippets;
+	int ip_row, ip_col;
 };
 #endif
