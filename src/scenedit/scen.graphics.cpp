@@ -89,8 +89,7 @@ rectangle start_button_from = {120,70,127,91};
 rectangle base_small_button_from = {120,0,127,7};
 extern rectangle palette_buttons[10][6];
 extern rectangle palette_buttons_from[71];
-extern short town_buttons[6][10], out_buttons[6][10];
-extern bool good_palette_buttons[2][6][10];
+extern ePalBtn town_buttons[6][10], out_buttons[6][10];
 rectangle palette_button_base = {0,0,18,25};
 rectangle terrain_buttons_rect = {0,0,410,294};
 extern rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
@@ -287,8 +286,6 @@ void Set_up_win () {
 		for(j = 0; j < 6; j++) {
 			palette_buttons[i][j] = palette_button_base;
 			palette_buttons[i][j].offset(i * 25, j * 17);
-			if(i == 10 || !good_palette_buttons[1][j][i+1])
-				palette_buttons[i][j].right++;
 		}
 	for(i = 0; i < 10; i++)
 		for(j = /*2*/0; j < 6; j++)
@@ -677,16 +674,14 @@ void set_up_terrain_buttons(bool reset) {
 		//printf("terrain_rects[255].bottom = %i\n", terrain_rects[255].bottom);
 		for(i = 0; i < 10; i++){
 			for(j = 0; j < 6; j++){
-				if(editing_town && town_buttons[j][i] >= 0)
-					palette_from = palette_buttons_from[town_buttons[j][i]];
-				else if(!editing_town && out_buttons[j][i] >= 0)
-					palette_from = palette_buttons_from[out_buttons[j][i]];
-				else palette_from = palette_button_base;
+				auto cur_palette_buttons = editing_town ? town_buttons : out_buttons;
+				if(cur_palette_buttons[j][i] != PAL_BLANK)
+					palette_from = palette_buttons_from[cur_palette_buttons[j][i]];
 				//printf("palette_from = {top = %i, left = %i, bottom = %i, right = %i\n",
 				//	   palette_from.top, palette_from.left, palette_from.bottom, palette_from.right);
 				//printf("palette_to = {top = %i, left = %i, bottom = %i, right = %i\n",
 				//	   palette_to.top, palette_to.left, palette_to.bottom, palette_to.right);
-				if(good_palette_buttons[editing_town][j][i]){
+				if(cur_palette_buttons[j][i] != PAL_BLANK){
 					//printf("Drawing button %i at col %i, row %i\n",editing_town?town_buttons[j][i]:out_buttons[j][i],i,j);
 					rect_draw_some_item(editor_mixed,palette_from,terrain_buttons_gworld,palette_to,sf::BlendAlpha);
 				}

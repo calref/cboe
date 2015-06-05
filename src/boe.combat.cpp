@@ -5197,8 +5197,10 @@ void process_force_cage(location loc, short i, short adjust) {
 			which_m.status[eStatus::FORCECAGE] = 0;
 		} else which_m.status[eStatus::FORCECAGE] = 8;
 	} else if(i < 0) {
+		/* For now, forcecages without occupants will be permanent. Might change this later.
 		if(get_ran(1,1,100) < 35)
 			univ.town.set_force_cage(loc.x,loc.y,false);
+		 */
 	} else if(i < 6) {
 		cPlayer& who = univ.party[i];
 		// We want to make sure everyone has a chance of eventually breaking a cage, because it never ends on its own,
