@@ -516,14 +516,16 @@ static std::map<eSpecType, node_properties_t> loadProps() {
 		props.p_btn = button_dict[j][3][k];
 		props.pt_btn = button_dict[j][4][k];
 		if(category != eSpecCat::RECT) {
+			props.sd1_btn = ' ';
 			props.x1a_btn = button_dict[j][5][k];
 			props.x1b_btn = button_dict[j][6][k];
-		}
+		} else props.sd1_btn = button_dict[j][5][k];
 		props.x1c_btn = button_dict[j][7][k];
 		if(category != eSpecCat::RECT) {
+			props.sd2_btn = ' ';
 			props.x2a_btn = button_dict[j][8][k];
 			props.x2b_btn = button_dict[j][9][k];
-		}
+		} else props.sd2_btn = button_dict[j][8][k];
 		props.x2c_btn = button_dict[j][10][k];
 		if(category == eSpecCat::RECT) {
 			props.x1a_btn = props.x2a_btn = ' ';

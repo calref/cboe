@@ -457,24 +457,22 @@ typedef std::stack<editing_node_t> node_stack_t;
 static void setup_node_field(cDialog& me, std::string field, short value, std::string label, char buttonType) {
 	me[field + "-lbl"].setText(label);
 	me[field].setTextToNum(value);
+	bool is_sdf = field.substr(0,3) == "sdf";
 	std::string button = field + "-edit";
-	try { // Just make sure the button exists before fiddling with it.
-		me.getControl(button);
-	} catch(std::invalid_argument) {
-		return;
-	}
 	switch(buttonType) {
 		case ' ':
 			me[button].hide();
 			break;
-		case 'm': case 'M': case'$': case 'd': // messages
+		case 'm': case 'M': case '$': case 'd': // messages
 		case 's': case 'S': // specials
 			me[button].show();
+			if(is_sdf) break;
 			me[button].setText("Create/Edit");
 			dynamic_cast<cButton&>(me[button]).setBtnType(BTN_LG);
 			break;
 		default:
 			me[button].show();
+			if(is_sdf) break;
 			me[button].setText("Choose");
 			dynamic_cast<cButton&>(me[button]).setBtnType(BTN_REG);
 			break;
@@ -499,8 +497,8 @@ static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
 	
 	node_properties_t info = *spec.type;
 	// Set up the labels, fields, and buttons
-	setup_node_field(me, "sdf1", spec.sd1, info.sdf1_lbl(), ' ');
-	setup_node_field(me, "sdf2", spec.sd2, info.sdf2_lbl(), ' ');
+	setup_node_field(me, "sdf1", spec.sd1, info.sdf1_lbl(), info.sd1_btn);
+	setup_node_field(me, "sdf2", spec.sd2, info.sdf2_lbl(), info.sd2_btn);
 	
 	setup_node_field(me, "msg1", spec.m1, info.msg1_lbl(), info.m1_btn);
 	setup_node_field(me, "msg2", spec.m2, info.msg2_lbl(), info.m2_btn);
@@ -731,7 +729,8 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 	std::string field = item_hit.substr(0, item_hit.find_first_of('-'));
 	char btn;
 	eSpecType type = edit_stack.top().node.type;
-	if(field.substr(0,3) == "sdf") return true;
+	if(field == "sdf1") btn = (*type).sd1_btn;
+	else if(field == "sdf2") btn = (*type).sd2_btn;
 	else if(field == "msg1") btn = (*type).m1_btn;
 	else if(field == "msg2") btn = (*type).m2_btn;
 	else if(field == "msg3") btn = (*type).m3_btn;
@@ -882,6 +881,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	special.attachClickHandlers(std::bind(edit_spec_enc_value, _1, _2, std::ref(edit_stack)), {
 		"msg1-edit", "msg2-edit", "msg3-edit", "pict-edit", "pictype-edit", "jump-edit",
 		"x1a-edit", "x1b-edit", "x1c-edit", "x2a-edit", "x2b-edit", "x2c-edit",
+		"sdf1-edit", "sdf2-edit",
 	});
 	special["cancel"].attachClickHandler(std::bind(discard_spec_enc, _1, std::ref(edit_stack)));
 	
