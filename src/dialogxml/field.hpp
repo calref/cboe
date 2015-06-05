@@ -15,6 +15,7 @@
 #include <string>
 #include "control.hpp"
 #include "graphtool.hpp"
+#include "undo.hpp"
 
 /// The field's expected input type.
 enum eFldType {
@@ -77,6 +78,8 @@ private:
 	sf::Color color;
 	bool ip_visible;
 	sf::Clock ip_timer;
+	bool changeMade = true;
+	rectangle text_rect;
 	std::vector<snippet_t> snippets;
 	int ip_row, ip_col;
 };
