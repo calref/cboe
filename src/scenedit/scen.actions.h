@@ -1,11 +1,11 @@
 void init_current_terrain();
 void init_screen_locs();
-bool handle_action(location the_point,sf::Event event);
+void handle_action(location the_point,sf::Event event);
 void flash_rect(rectangle to_flash);
 void swap_terrain();
 void set_new_terrain(ter_num_t selected_terrain);
 void handle_keystroke(sf::Event event);
-bool handle_scroll(sf::Event& event);
+void handle_scroll(sf::Event& event);
 void get_wandering_monst();
 void get_town_info();
 void get_sign_resource();
