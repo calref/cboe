@@ -13,7 +13,6 @@
 
 extern rectangle right_sbar_rect;
 
-rectangle left_button[NLS];
 extern rectangle right_buttons[NRSONPAGE];
 rectangle right_scrollbar_rect;
 extern short current_rs_top;

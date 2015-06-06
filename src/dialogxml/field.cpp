@@ -232,8 +232,8 @@ void cTextField::draw(){
 			}
 		}
 		undo_clip(*inWindow);
+		changeMade = false;
 	}
-	changeMade = false;
 	clip_rect(*inWindow, frame);
 	ip_col = ip_row = -1;
 	if(haveFocus) {
