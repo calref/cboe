@@ -538,6 +538,7 @@ void edit_ter_type(ter_num_t which) {
 	ter_dlg["pict"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,2999,"terrain graphic"));
 	ter_dlg["pickpict"].attachClickHandler(std::bind(pick_picture,PIC_TER,_1,"pict","graphic"));
 	ter_dlg["pickanim"].attachClickHandler(std::bind(pick_picture,PIC_TER_ANIM,_1,"pict","graphic"));
+	ter_dlg["pickmap"].attachClickHandler(std::bind(pick_picture,PIC_TER_MAP,_1,"map","seemap"));
 	ter_dlg["light"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,10,"light radius"));
 	ter_dlg["trans"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,scenario.ter_types.size() - 1,"\"transform to what?\""));
 	ter_dlg["ground"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,255,"ground type"));

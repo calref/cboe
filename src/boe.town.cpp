@@ -1446,9 +1446,9 @@ void draw_map(bool need_refresh) {
 					if(pic >= 1000) {
 						if(spec_scen_g) {
 							//print_nums(0,99,pic);
-							pic = pic % 1000;
 							sf::Texture* src_gw;
 							if(drawLargeIcon) {
+								pic = pic % 1000;
 								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
 								rect_draw_some_item(*src_gw,custom_from,map_gworld,draw_rect);
 							} else {

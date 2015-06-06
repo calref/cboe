@@ -201,7 +201,7 @@ void cTextField::draw(){
 	size_t ip_offset = 0;
 	hilite_t hilite = {insertionPoint, selectionPoint};
 	if(selectionPoint < insertionPoint) std::swap(hilite.first,hilite.second);
-	if(haveFocus && contents.length() > 1 && changeMade) {
+	if(haveFocus && contents.length() >= 1 && changeMade) {
 		text_rect = frame;
 		text_rect.inset(2,2);
 		// Determine which line the insertion and selection points are on
