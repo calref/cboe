@@ -53,30 +53,30 @@
 	
 	<text size='large' top='238' left='8' height='14' width='175'>Special properties:</text>
 	<group name="prop">
-		<led name='prop0' top='254' left='8' state='off' width='116'>None</led>
-		<led name='prop1' top='269' left='8' state='off' width='116'>Change when step on</led>
-		<led name='prop2' top='284' left='8' state='off' width='116'>Damaging terrain</led>
-		<led name='prop3' top='299' left='8' state='off' width='116'>Is a bridge</led>
-		<led name='prop4' top='314' left='8' state='off' width='116'>Change while occupied</led>
-		<led name='prop5' top='329' left='8' state='off' width='116'>Dangerous terrain</led>
-		<led name='prop6' top='344' left='8' state='off' width='116'>Reserved</led>
-		<led name='prop7' top='359' left='8' state='off' width='116'>Crumbling terrain</led>
-		<led name='prop8' top='254' left='146' state='off' width='116'>Lockable terrain</led>
-		<led name='prop9' top='269' left='146' state='off' width='116'>Unlockable terrain</led>
-		<led name='prop10' top='284' left='146' state='off' width='116'>Reserved</led>
-		<led name='prop11' top='299' left='146' state='off' width='116'>Is a sign</led>
-		<led name='prop12' top='314' left='146' state='off' width='116'>Call special when step</led>
-		<led name='prop13' top='329' left='146' state='off' width='116'>Reserved</led>
-		<led name='prop14' top='344' left='146' state='off' width='116'>Is a container</led>
-		<led name='prop15' top='359' left='146' state='off' width='116'>Wilderness (Caves)</led>
-		<led name='prop16' top='254' left='285' state='off' width='116'>Wilderness (Surface)</led>
-		<led name='prop17' top='269' left='285' state='off' width='116'>Waterfall (Caves)</led>
-		<led name='prop18' top='284' left='285' state='off' width='116'>Waterfall (Surface)</led>
-		<led name='prop19' top='299' left='285' state='off' width='116'>Conveyor Belt</led>
-		<led name='prop20' top='314' left='285' state='off' width='116'>Blocked to monsters</led>
-		<led name='prop21' top='329' left='285' state='off' width='116'>Town entrance</led>
-		<led name='prop22' top='344' left='285' state='off' width='116'>Change when used</led>
-		<led name='prop23' top='359' left='285' state='off' width='116'>Call special when used</led>
+		<led name='prop0' top='254' left='8' state='off' width='124'>None</led>
+		<led name='prop1' top='269' left='8' state='off' width='124'>Change when step on</led>
+		<led name='prop2' top='284' left='8' state='off' width='124'>Damaging terrain</led>
+		<led name='prop3' top='299' left='8' state='off' width='124'>Is a bridge</led>
+		<led name='prop4' top='314' left='8' state='off' width='124'>Change while occupied</led>
+		<led name='prop5' top='329' left='8' state='off' width='124'>Dangerous terrain</led>
+		<led name='prop6' top='344' left='8' state='off' width='124'>Reserved</led>
+		<led name='prop7' top='359' left='8' state='off' width='124'>Crumbling terrain</led>
+		<led name='prop8' top='254' left='158' state='off' width='124'>Lockable terrain</led>
+		<led name='prop9' top='269' left='158' state='off' width='124'>Unlockable terrain</led>
+		<led name='prop10' top='284' left='158' state='off' width='124'>Reserved</led>
+		<led name='prop11' top='299' left='158' state='off' width='124'>Is a sign</led>
+		<led name='prop12' top='314' left='158' state='off' width='124'>Call special when step</led>
+		<led name='prop13' top='329' left='158' state='off' width='124'>Reserved</led>
+		<led name='prop14' top='344' left='158' state='off' width='124'>Is a container</led>
+		<led name='prop15' top='359' left='158' state='off' width='124'>Wilderness (Caves)</led>
+		<led name='prop16' top='254' left='308' state='off' width='124'>Wilderness (Surface)</led>
+		<led name='prop17' top='269' left='308' state='off' width='124'>Waterfall (Caves)</led>
+		<led name='prop18' top='284' left='308' state='off' width='124'>Waterfall (Surface)</led>
+		<led name='prop19' top='299' left='308' state='off' width='124'>Conveyor Belt</led>
+		<led name='prop20' top='314' left='308' state='off' width='124'>Blocked to monsters</led>
+		<led name='prop21' top='329' left='308' state='off' width='124'>Town entrance</led>
+		<led name='prop22' top='344' left='308' state='off' width='124'>Change when used</led>
+		<led name='prop23' top='359' left='308' state='off' width='124'>Call special when used</led>
 	</group>
 	<text top='385' left='9' height='14' width='91'>Extra values:</text>
 	<text name='flag1text' framed='true' top='385' left='109' height='14' width='209'>*flag1</text>
@@ -95,13 +95,15 @@
 	<button name='pickarena' type='regular' top='299' left='467'>Choose</button>
 	<button name='picktown' type='regular' top='299' left='532'>Custom</button>
 	<button name='object' top='344' left='467' type='large'>Object Details</button>
-	<text top='410' left='470' width='60' height='14'>Map icon:</text>
-	<pict name='seemap' top='400' left='550' type='map' num='0'/>
-	<field name='map' top='431' left='475' width='100' height='16'/>
+	<text top='63' left='430' width='60' height='14'>Map icon:</text>
+	<pict name='seemap' top='86' left='465' type='map' num='0'/>
+	<field name='map' top='62' left='495' width='80' height='16'/>
+	<button name='pickmap' type='regular' top='86' left='495'>Choose</button>
+	<text top='110' left='431' height='32' width='157'>(Enter -1 to scale down the large picture)</text>
 	<button name='done' type='regular' def-key='enter' top='455' left='517'>OK</button>
 	<button name='cancel' type='regular' def-key='esc' top='455' left='451'>Cancel</button>
 	<button name='left' type='left' top='455' left='11'/>
 	<button name='right' type='right' top='455' left='74'/>
-	<text top='7' left='451' height='131' width='137'>Enter properties for this terrain type. For a detailed description of the fields, see the documentation. Note that, for terrain types 90 and below, only changes to the picture and shortcut key will be recorded.</text>
+	<text top='7' left='431' height='50' width='157'>Enter properties for this terrain type. For a detailed description of the fields, see the documentation.</text>
 	<button name='help' type='help' def-key='/' key-mod='shift' top='5' left='588'/>
 </dialog>

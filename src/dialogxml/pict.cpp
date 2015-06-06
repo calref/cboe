@@ -122,9 +122,9 @@ void cPict::setPict(pic_num_t num, ePicType type){
 			picNum -= 10000;
 			picType += PIC_PARTY;
 		} else {
+			picType += PIC_CUSTOM;
 			if(picType != PIC_CUSTOM_TER_MAP)
 				picNum %= 1000;
-			picType += PIC_CUSTOM;
 		}
 	}
 	recalcRect();
