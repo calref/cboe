@@ -125,6 +125,7 @@ void init_screen_locs() {
 void update_mouse_spot(location the_point) {
 	rectangle terrain_rect = world_screen;
 	terrain_rect.inset(8,8);
+	terrain_rect.right -= 4;
 	if(terrain_rect.contains(the_point)) {
 		if(cur_viewing_mode == 0) {
 			mouse_spot.x = (the_point.x - TER_RECT_UL_X - 8) / 28;
@@ -1531,8 +1532,8 @@ bool handle_scroll(sf::Event& event) {
 		redraw_screen();
 	} else if(overall_mode < MODE_MAIN_SCREEN && pos.in(world_screen)) {
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
-			cen_x -= amount;
-		else cen_y -= amount;
+			cen_x = minmax(4, town->max_dim() - 5, cen_x - amount);
+		else cen_y = minmax(4, town->max_dim() - 5, cen_y - amount);
 		redraw_screen();
 	}
 	return true;
@@ -2204,6 +2205,7 @@ void start_out_edit() {
 	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
 	set_lb(NLS - 1,LB_TEXT,LB_RETURN,"Back to Main Menu");
 	overall_mode = MODE_DRAWING;
+	draw_mode = DRAW_TERRAIN;
 	editing_town = false;
 	set_up_terrain_buttons(true);
 	right_sbar->hide();

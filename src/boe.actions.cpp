@@ -2175,8 +2175,8 @@ bool handle_scroll(sf::Event& event) {
 		redraw_screen(REFRESH_DLOG);
 	} else if(scrollableModes.count(overall_mode) && pos.in(world_screen)) {
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
-			center.x -= amount;
-		else center.y -= amount;
+			center.x = minmax(4, univ.town->max_dim() - 5, center.x - amount);
+		else center.y = minmax(4, univ.town->max_dim() - 5, center.y - amount);
 		redraw_screen(REFRESH_TERRAIN);
 	}
 	return true;

@@ -45,7 +45,6 @@ extern bool editing_town;
 extern cScenario scenario;
 extern rectangle world_screen;
 extern sf::Texture bg_gworld;
-extern rectangle left_button[NLS];
 extern rectangle right_buttons[NRSONPAGE];
 extern rectangle right_scrollbar_rect;
 extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
@@ -93,7 +92,7 @@ extern ePalBtn town_buttons[6][10], out_buttons[6][10];
 rectangle palette_button_base = {0,0,18,25};
 rectangle terrain_buttons_rect = {0,0,410,294};
 extern rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
-rectangle left_button_base = {5,5,21,200};
+rectangle left_button_base = {5,5,21,280};
 rectangle right_button_base = {RIGHT_AREA_UL_Y,RIGHT_AREA_UL_X,17,RIGHT_AREA_UL_Y};
 rectangle terrain_rect = {0,0,340,272};
 char current_string[256] = "";
@@ -887,13 +886,30 @@ void draw_terrain(){
 						}
 					
 				}
-				if(where_draw == mouse_spot) {
-					rectangle destrec;
-					destrec.left = 8 + BITMAP_WIDTH * where_draw.x;
-					destrec.right = destrec.left + BITMAP_WIDTH;
-					destrec.top = 8 + BITMAP_HEIGHT * where_draw.y;
-					destrec.bottom = destrec.top + BITMAP_HEIGHT;
-					fill_rect(ter_draw_gworld, destrec, hilite_colour);
+				if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
+					bool need_hilite = false, large_hilite = false;
+					int d = dist(where_draw, mouse_spot);
+					if(overall_mode == MODE_SMALL_PAINTBRUSH && d <= 1) {
+						need_hilite = true;
+						large_hilite = true;
+					} else if((overall_mode == MODE_ERASER || overall_mode == MODE_SMALL_SPRAYCAN) && d <= 2) {
+						need_hilite = true;
+						large_hilite = true;
+					} else if((overall_mode == MODE_LARGE_PAINTBRUSH || overall_mode == MODE_LARGE_SPRAYCAN) && d <= 4) {
+						need_hilite = true;
+						large_hilite = true;
+					} else if(where_draw == mouse_spot)
+						need_hilite = true;
+					if(need_hilite) {
+						rectangle destrec;
+						destrec.left = 8 + BITMAP_WIDTH * where_draw.x;
+						destrec.right = destrec.left + BITMAP_WIDTH;
+						destrec.top = 8 + BITMAP_HEIGHT * where_draw.y;
+						destrec.bottom = destrec.top + BITMAP_HEIGHT;
+						fill_rect(ter_draw_gworld, destrec, hilite_colour);
+						if(large_hilite && where_draw == mouse_spot)
+							fill_rect(ter_draw_gworld, destrec, hilite_colour);
+					}
 				}
 			}
 		if(editing_town) {
@@ -1176,8 +1192,26 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 			}
 			break;
 	}
-	if(loc(i,j) == mouse_spot) {
-		fill_rect(ter_draw_gworld, dest_rect, hilite_colour);
+	if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
+		location where_draw(i,j);
+		bool need_hilite = false, large_hilite = false;
+		int d = dist(where_draw, mouse_spot);
+		if(overall_mode == MODE_SMALL_PAINTBRUSH && d <= 1) {
+			need_hilite = true;
+			large_hilite = true;
+		} else if((overall_mode == MODE_ERASER || overall_mode == MODE_SMALL_SPRAYCAN) && d <= 2) {
+			need_hilite = true;
+			large_hilite = true;
+		} else if((overall_mode == MODE_LARGE_PAINTBRUSH || overall_mode == MODE_LARGE_SPRAYCAN) && d <= 4) {
+			need_hilite = true;
+			large_hilite = true;
+		} else if(where_draw == mouse_spot)
+			need_hilite = true;
+		if(need_hilite) {
+			fill_rect(ter_draw_gworld, dest_rect, hilite_colour);
+			if(large_hilite && where_draw == mouse_spot)
+				fill_rect(ter_draw_gworld, dest_rect, hilite_colour);
+		}
 	}
 }
 
