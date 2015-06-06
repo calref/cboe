@@ -2427,7 +2427,7 @@ void do_monster_turn() {
 									   pick_abil,cur_monst->cur_loc,&univ.get_target(target));
 					if(pick_abil.first == eMonstAbil::MISSILE) {
 						if(pick_abil.second.missile.type == eMonstMissile::ARROW || pick_abil.second.missile.type == eMonstMissile::BOLT
-						   || pick_abil.second.missile.type == eMonstMissile::SPINE)
+						   || pick_abil.second.missile.type == eMonstMissile::SPINE || pick_abil.second.missile.type == eMonstMissile::BOULDER)
 							take_m_ap(3,cur_monst);
 						else take_m_ap(2,cur_monst);
 					} else if(pick_abil.first == eMonstAbil::RAY_HEAT)
@@ -2931,6 +2931,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 		switch(abil.second.missile.type) {
 			case eMonstMissile::ARROW:
 			case eMonstMissile::BOLT:
+			case eMonstMissile::RAPID_ARROW:
 				snd = 12;
 				if(pc_target != nullptr)
 					add_string_to_buf("  Shoots at " + pc_target->name + '.');
@@ -2962,6 +2963,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 					m_target->spell_note(53);
 				break;
 			case eMonstMissile::ROCK:
+			case eMonstMissile::BOULDER:
 				if(pc_target != nullptr)
 					add_string_to_buf("  Throws rock at " + pc_target->name + '.');
 				else if(m_target != nullptr)
@@ -2974,7 +2976,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 					m_target->spell_note(54);
 				break;
 		}
-		if(abil.second.missile.type == eMonstMissile::ARROW || abil.second.missile.type == eMonstMissile::BOLT)
+		if(abil.second.missile.type == eMonstMissile::ARROW || abil.second.missile.type == eMonstMissile::RAPID_ARROW || abil.second.missile.type == eMonstMissile::BOLT)
 			snd = 12;
 		if(abil.second.missile.pic < 0) play_sound(snd);
 		else run_a_missile(source, targ_space, abil.second.missile.pic, 1, snd, 0, 0, 100);
