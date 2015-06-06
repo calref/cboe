@@ -50,7 +50,7 @@ enum class eMonstAbilTemplate {
 
 enum class eMonstMelee {SWING, CLAW, BITE, SLIME, PUNCH, STING, CLUB, BURN, HARM, STAB};
 
-enum class eMonstMissile {DART, ARROW, SPEAR, ROCK, RAZORDISK, SPINE, KNIFE, BOLT};
+enum class eMonstMissile {DART, ARROW, SPEAR, ROCK, RAZORDISK, SPINE, KNIFE, BOLT, BOULDER, RAPID_ARROW};
 
 enum class eMonstGen {RAY, TOUCH, GAZE, BREATH, SPIT};
 

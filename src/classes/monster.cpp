@@ -150,13 +150,13 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::SPEAR, 5, 3, 7, 6, 8, 625};
 			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::THROWS_ROCKS1:
-			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ROCK, 12, 4, 7, 8, 10, 625};
+			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::BOULDER, 12, 4, 7, 8, 10, 625};
 			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::THROWS_ROCKS2:
-			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ROCK, 12, 6, 7, 12, 10, 500};
+			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::BOULDER, 12, 6, 7, 12, 10, 500};
 			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::THROWS_ROCKS3:
-			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ROCK, 12, 8, 7, 16, 10, 500};
+			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::BOULDER, 12, 8, 7, 16, 10, 500};
 			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::THROWS_RAZORDISKS:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::RAZORDISK, 7, 7, 7, 14, 8, 625};
@@ -165,7 +165,7 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::KNIFE, 10, 2, 7, 2, 6, 500};
 			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::GOOD_ARCHER:
-			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::ARROW, 3, 8, 7, 16, 10, 875};
+			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::RAPID_ARROW, 3, 8, 7, 16, 10, 875};
 			return abil.find(eMonstAbil::MISSILE);
 		case eMonstAbilTemplate::SHOOTS_SPINES:
 			abil[eMonstAbil::MISSILE].missile = {true, eMonstMissile::SPINE, 5, 6, 7, 12, 9, 625};
@@ -628,6 +628,7 @@ std::istream& operator>>(std::istream& in, eDirection& dir) {
 	return in;
 }
 
+// TODO: Turn all of these into symbolic enumerators!
 std::ostream& operator << (std::ostream& out, eFieldType e) {
 	return out << (int)e;
 }
@@ -701,7 +702,7 @@ std::ostream& operator << (std::ostream& out, eMonstMissile e) {
 std::istream& operator >> (std::istream& in, eMonstMissile& e) {
 	int i;
 	in >> i;
-	if(i >= 0 && i <= int(eMonstMissile::BOLT))
+	if(i >= 0 && i <= int(eMonstMissile::RAPID_ARROW))
 		e = (eMonstMissile)i;
 	else e = eMonstMissile::ARROW;
 	return in;
@@ -732,6 +733,9 @@ std::string uAbility::to_string(eMonstAbil key) const {
 				case eMonstMissile::ARROW:
 					sout << "Shoots arrows (" << missile.dice << 'd' << missile.sides << ')';
 					break;
+				case eMonstMissile::RAPID_ARROW:
+					sout << "Good archer (" << missile.dice << 'd' << missile.sides << ')';
+					break;
 				case eMonstMissile::BOLT:
 					sout << "Shoots bolts (" << missile.dice << 'd' << missile.sides << ')';
 					break;
@@ -739,6 +743,9 @@ std::string uAbility::to_string(eMonstAbil key) const {
 					sout << "Throws spears (" << missile.dice << 'd' << missile.sides << ')';
 					break;
 				case eMonstMissile::ROCK:
+					sout << "Throws stones (" << missile.dice << 'd' << missile.sides << ')';
+					break;
+				case eMonstMissile::BOULDER:
 					sout << "Throws rocks (" << missile.dice << 'd' << missile.sides << ')';
 					break;
 				case eMonstMissile::RAZORDISK:

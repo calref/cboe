@@ -968,7 +968,7 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 	me["type"].setText(get_str("monster-abilities", 79 + int(abil)));
 	// Action points
 	if(cat == eMonstAbilCat::MISSILE) {
-		if(detail.missile.type == eMonstMissile::ARROW || detail.missile.type == eMonstMissile::BOLT || detail.missile.type == eMonstMissile::SPINE)
+		if(detail.missile.type == eMonstMissile::ARROW || detail.missile.type == eMonstMissile::BOLT || detail.missile.type == eMonstMissile::SPINE || detail.missile.type == eMonstMissile::RAPID_ARROW)
 			me["ap"].setTextToNum(3);
 		else me["ap"].setTextToNum(2);
 	} else if(cat == eMonstAbilCat::GENERAL) {
