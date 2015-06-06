@@ -535,9 +535,7 @@ void Mouse_Pressed() {
 		updater.join();
 		redraw_screen(/*REFRESH_RIGHT_BAR*/);
 		set_up_terrain_buttons(false);
-	}
-	else  // ordinary click
-		All_Done = handle_action(loc(event.mouseButton.x,event.mouseButton.y),event);
+	} else handle_action(loc(event.mouseButton.x,event.mouseButton.y),event);
 }
 
 void close_program() {
