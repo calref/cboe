@@ -943,13 +943,14 @@ static void put_basic_dlog_in_dlog(cDialog& me, const short which) {
 }
 
 static bool edit_basic_dlog_event_filter(cDialog& me, std::string hit, short& which) {
-	if(hit == "left") {
-		save_basic_dlog(me, which);
+	save_basic_dlog(me, which);
+	if(hit == "okay")
+		me.toast(true);
+	else if(hit == "left") {
 		which--;
 		if(which < 0) which = 9;
 		put_basic_dlog_in_dlog(me, which);
-	} else { // right
-		save_basic_dlog(me, which);
+	} else if(hit == "right") {
 		which++;
 		if(which > 9) which = 0;
 		put_basic_dlog_in_dlog(me, which);
@@ -961,9 +962,8 @@ void edit_basic_dlog(short personality) {
 	using namespace std::placeholders;
 	
 	cDialog person_dlg("edit-personality");
-	person_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &person_dlg, true));
 	person_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &person_dlg, false));
-	person_dlg.attachClickHandlers(std::bind(edit_basic_dlog_event_filter, _1, _2, std::ref(personality)), {"left", "right"});
+	person_dlg.attachClickHandlers(std::bind(edit_basic_dlog_event_filter, _1, _2, std::ref(personality)), {"left", "right", "okay"});
 	
 	put_basic_dlog_in_dlog(person_dlg, personality);
 	
@@ -999,11 +999,13 @@ static bool check_talk_key(cDialog& me, std::string item_hit, bool losing) {
 	return true;
 }
 
-static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>& talk_edit_stack) {
+typedef std::pair<short, cSpeech::cNode> node_ref_t;
+
+static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack, bool close_dlg, bool commit) {
 	if(!me.toast(true)) return false;
-	if(item_hit != "okay") me.untoast();
+	if(!close_dlg) me.untoast();
 	
-	cSpeech::cNode& talk_node = town->talking.talk_nodes[talk_edit_stack.top()];
+	cSpeech::cNode& talk_node = talk_edit_stack.top().second;
 	
 	talk_node.personality = me["who"].getTextAsNum();
 	
@@ -1069,12 +1071,13 @@ static bool save_talk_node(cDialog& me, std::string item_hit, std::stack<short>&
 	talk_node.str1 = me["str1"].getText();
 	talk_node.str2 = me["str2"].getText();
 	
-	town->talking.talk_nodes[talk_edit_stack.top()] = talk_node;
+	if(commit)
+		town->talking.talk_nodes[talk_edit_stack.top().first] = talk_node;
 	return true;
 }
 
-static void put_talk_node_in_dlog(cDialog& me, std::stack<short>& talk_edit_stack) {
-	cSpeech::cNode& talk_node = town->talking.talk_nodes[talk_edit_stack.top()];
+static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit_stack) {
+	cSpeech::cNode& talk_node =talk_edit_stack.top().second;
 	
 	me["who"].setTextToNum(talk_node.personality);
 	
@@ -1108,15 +1111,15 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<short>& talk_edit_stac
 	else me["back"].hide();
 }
 
-static bool talk_node_back(cDialog& me, std::stack<short>& talk_edit_stack) {
-	if(!save_talk_node(me, "back", talk_edit_stack)) return true;
+static bool talk_node_back(cDialog& me, std::stack<node_ref_t>& talk_edit_stack) {
+	if(!save_talk_node(me, talk_edit_stack, false, true)) return true;
 	talk_edit_stack.pop();
 	put_talk_node_in_dlog(me, talk_edit_stack);
 	return true;
 }
 
-static bool talk_node_branch(cDialog& me, std::stack<short>& talk_edit_stack) {
-	if(!save_talk_node(me, "new", talk_edit_stack)) return true;
+static bool talk_node_branch(cDialog& me, std::stack<node_ref_t>& talk_edit_stack) {
+	if(!save_talk_node(me, talk_edit_stack, false, true)) return true;
 	
 	int spec = -1;
 	for(int j = 0; j < 60; j++)
@@ -1130,21 +1133,22 @@ static bool talk_node_branch(cDialog& me, std::stack<short>& talk_edit_stack) {
 		return true;
 	}
 	
-	talk_edit_stack.push(spec);
+	talk_edit_stack.push({spec, town->talking.talk_nodes[spec]});
 	put_talk_node_in_dlog(me, talk_edit_stack);
 	return true;
 }
 
-static bool select_talk_node_type(cDialog& me, std::stack<short>& talk_edit_stack) {
-	short i = short(town->talking.talk_nodes[talk_edit_stack.top()].type);
+static bool select_talk_node_type(cDialog& me, std::stack<node_ref_t>& talk_edit_stack) {
+	save_talk_node(me, talk_edit_stack, false, false);
+	short i = short(talk_edit_stack.top().second.type);
 	i = choose_text(STRT_TALK_NODE, i, &me, "What Talking Node type?");
-	town->talking.talk_nodes[talk_edit_stack.top()].type = eTalkNode(i);
+	talk_edit_stack.top().second.type = eTalkNode(i);
 	put_talk_node_in_dlog(me, talk_edit_stack);
 	return true;
 }
 
-static bool select_talk_node_value(cDialog& me, std::string item_hit, const std::stack<short>& talk_edit_stack) {
-	const auto& talk_node = town->talking.talk_nodes[talk_edit_stack.top()];
+static bool select_talk_node_value(cDialog& me, std::string item_hit, const std::stack<node_ref_t>& talk_edit_stack) {
+	const auto& talk_node = talk_edit_stack.top().second;
 	if(item_hit == "chooseB") {
 		int i = me["extra2"].getTextAsNum();
 		i = choose_text(STRT_SHOP,i,&me,"Which shop?");
@@ -1163,12 +1167,11 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 void edit_talk_node(short which_node) {
 	using namespace std::placeholders;
 	
-	std::stack<short> talk_edit_stack;
-	talk_edit_stack.push(which_node);
-	cSpeech::cNode talk_node = town->talking.talk_nodes[which_node];
+	std::stack<node_ref_t> talk_edit_stack;
+	talk_edit_stack.push({which_node, town->talking.talk_nodes[which_node]});
 	
 	cDialog talk_dlg("edit-talk-node");
-	talk_dlg["okay"].attachClickHandler(std::bind(save_talk_node, _1, _2, std::ref(talk_edit_stack)));
+	talk_dlg["okay"].attachClickHandler(std::bind(save_talk_node, _1, std::ref(talk_edit_stack), true, true));
 	talk_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &talk_dlg, false));
 	talk_dlg["back"].attachClickHandler(std::bind(talk_node_back, _1, std::ref(talk_edit_stack)));
 	talk_dlg["new"].attachClickHandler(std::bind(talk_node_branch, _1, std::ref(talk_edit_stack)));
