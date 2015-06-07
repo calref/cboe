@@ -17,6 +17,7 @@
 #include "simpletypes.h"
 #include "graphtool.hpp"
 #include "living.hpp"
+#include "spell.hpp"
 
 namespace legacy {
 	struct monster_record_type;
@@ -90,6 +91,7 @@ union uAbility {
 		bool active;
 		eFieldType type;
 		int chance;
+		eSpellPat pat;
 	} radiate;
 	struct {
 		bool active;

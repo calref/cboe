@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class="navbar">
+<script src='../nav.js' type='application/javascript'></script>
+<noscript>Javascript required for the navbar.</noscript>
+</div>
+<div class="content">
+
+<h1>Appendix 5 - Monster Abilities</h1>
+
+<p>When adding a new monster ability, you may have noticed that there are fourteen custom
+options to choose from at the end of the list. These options don't fill in the ability
+parameters with a template; they just present you immediately with the full ability
+dialog. You can also get there by editing an existing ability.</p>
+<p>This appendix covers all the options you can get in the ability editing dialog.</p>
+<p>Note: If you add a custom ability and want to cancel it, you have to click Delete,
+rather than Cancel. Clicking Cancel will cause the ability to be added with default values
+(generally all zeroes).</p>
+
+<h2>The Basics</h2>
+
+<p>When editing any monster ability, you'll see four informational fields.</p>
+
+<ul>
+<li><b>Monster</b> - This is here to remind you what the monster is you're editing an
+ability for.</li<
+<li><b>Display name</b> - Shows the ability's name as it will be shown in-game, for
+example when casting Scry Monster.</li>
+<li><b>Ability Type</b> - The type of ability. This was set when you added the ability and
+cannot be changed. (If you want to change it, you'll have to add a new ability and delete
+the old one.)</li>
+<li><b>Action Points</b> - Shows the number of action points the ability consumes when the
+monster activates it. This is usually based on the type and subtype, but sometimes you can
+set it directly.</li>
+<li><b>Subtype</b> - Most abilities allow you to choose a subtype. Click Choose to select
+from a list. The options depend on the ability type.</li>
+<li><b>Delete</b> - You can delete the ability by clicking this button.</li>
+</ul>
+
+<h2>Missile Abilities</h2>
+
+<p>Monsters will not use most missile abilities when adjacent to their target. Missile
+abilities offer the following "subtypes":</p>
+
+<ul>
+<li>Darts</li>
+<li>Bow and Arrows</li>
+<li>Spears</li>
+<li>Rocks or Stones</li>
+<li>Razordisks</li>
+<li>Spines - can be used while adjacent</li>
+<li>Knives</li>
+<li>Crossbow and Bolts</li>
+<li>Rocks or Boulders - uses an extra action point compared to stones</li>
+<li>Rapid Bow and Arrows - uses one less action point than regular bow</li>
+</ul>
+
+<p>In addition, you can set the following properties:</p>
+
+<ul>
+<li><b>Missile Graphic</b> - Click Choose to select your missile graphic from the
+list.</li>
+<li><b>Dice, Sides</b> - This works the same as the monster's regular attacks.</li>
+<li><b>Range</b> - The maximum range at which the ability can function, in tiles.</li>
+<li><b>Chance</b> - The per mille chance (ie, out of 1000) that the monster chooses to use
+this ability.</li>
+<li><b>Skill</b> - This is similar to the monster's skill level, affecting their chance of
+hitting.</li>
+</ul>
+
+<h2>General Abilities</h2>
+
+<p>General abilities cover several categories with a variety of effects. Some of these are
+obvious, others less so. Even when ranged, monsters will also use most of these abilities
+while adjacent to their target. The following is a list of all ability types classified as
+general, using the terminology from the Add Ability page:</p>
+
+<ul>
+<li><b>Damage</b> - Deals direct damage. Ability strength indicates the number of dice;
+the number of sides is determined by the subtype (ray/gaze - d6, breath - d8, touch/spit -
+d10).</li>
+<li><b>Damage (full attack)</b> - Like damage, but takes 4 action points when used as a
+breath weapon ability. If used as a touch attack, it's identical to damage. You get this
+type by selecting a simple breath weapon (fire, ice, electricity, or darkness).</li>
+<li><b>Status Effect</b> - Afflicts the target with some status effect. Ability strength
+is the amount inflicted.</li>
+<li><b>Field</b> - Places fields around the target. Ability strength indicates the size of
+the affected area; press Choose to select one. Note that the open square will not damage
+the target itself.</li>
+<li><b>Petrification</b> - Turns target to stone. Ability strength affects the chance of
+resisting.</li>
+<li><b>SP drain</b> - Drains spell points. Ability strength is the percentage of spell
+points drained.</li>
+<li><b>XP drain</b> - Drains experience. Draining experience does not affect your level,
+but you'll need to regain the experience before you can gain a level. Ability strength is
+the amount drained.</li>
+<li><b>Death</b> - Kills the target by dealing a very large amount of damage. Ability
+strength indicates the number of d10's to roll (it's multiplied by 10, so a strength of 1
+means 10d10).</li>
+<li><b>Steal food/gold</b> - Drains your food or gold. Ability strength is the maximum
+amount to drain (a random number less than or equal is taken).</li>
+<li><b>Undead stat</b> - This is similar to status effect, but is also negated by the
+life-saving item ability.</li>
+<li><b>Weapon stat</b> - This is the same as status effect, except when used as a touch
+attack. In that case, it can only occur on attack 1, never on attacks 2 or 3. You could
+use this for a beast with a disease-ridden bite or an assassin with a poisoned blade.</li>
+</ul>
+
+<p>They offer the following "subtypes":</p>
+
+<ul>
+<li>Ray
+<li>Touch - no range, occurs as part of normal melee attack</li>
+<li>Gaze
+<li>Breath
+<li>Spit - can't be used while adjacent</li>
+</ul>
+
+<p>Note that a non-ranged attack could be made using Ray, Gaze, or Breath simply by
+limiting the range to 1, but this still differs from a Touch attack because the latter
+accompanies the plain damage of the monster's regular attack.</p>
+
+<p>In addition, you can set the following properties:</p>
+
+<ul>
+<li><b>Missile Graphic</b> - Click Choose to select your missile graphic from the
+list.</li>
+<li><b>Range</b> - The maximum range at which the ability can function, in tiles.</li>
+<li><b>Chance</b> - The per mille chance (ie, out of 1000) that the monster chooses to use
+this ability.</li>
+<li><b>Strength</b> - This determines how powerful the ability is. Its exact effect
+depends on the ability type.</li>
+<li><b>Damage, Status, or Field Type</b> - Additional information for some ability types;
+the meaning is obvious. Click Choose to select one from a list.</li>
+</ul>
+
+<h2>Radiate Field Abilities</h2>
+
+<p>Monsters that radiate fields are automatically immune to their own fields. Since
+radiate abilities are passive, they take no action points. A radiate ability provides no
+subtypes; the only editable parameters are as follows:</p>
+
+<ul>
+<li><b>Field Type</b> - The type of field to radiate. You can pick anything, but keep in
+mind that when the radiation is activated, an area centred on the creature is filled with
+fields, so generally something like barriers or forcecages is a poor choice.</li>
+<li><b>Radiate Chance</b> - The percent chance each turn of the ability activating.</li>
+<li><b>Affected Area</b> - The area to effect. Click Choose to select one.</li>
+</ul>
+
+<h2>Summoning Abilities</h2>
+
+<p>Since summon abilities are passive, they take no action points to activate. They do
+have the following subtypes:</p>
+
+<ul>
+<li><b>Specific</b> - Always summons a specific type of creature that you choose.</li>
+<li><b>Strength</b> - Summons a creature based on its summon strength, just like the
+general summoning spells.</li>
+<li><b>Race</b> - Summons a creature based on its race. This form can potentially result
+in wildly different levels, so use it with caution.</li>
+</ul>
+
+<p>You can specify the following parameters for a summoning ability:</p>
+
+<ul>
+<li><b>Monster, race, etc</b> - Specify what sort of creature to summon by clicking the
+Choose button.</li>
+<li><b>Max, min</b> - The number of monsters summoned will be a random number in this
+range.</li>
+<li><b>Duration</b> - You can specify how long the summoned monsters will remain.</li>
+<li><b>Chance</b> - The percent chance each turn of summoning.</li>
+</ul>
+
+<h2>Other Abilities</h2>
+
+<p>There are several other abilities that can be added to monsters. They don't have a
+dedicated "Custom Ability" option, but you can edit them after adding for some increased
+customization. (The special node abilities assume you'll want to do this and automatically
+open the edit window once you've saved the node.)</p>
+
+<ul>
+<li><b>Splits when hit</b> - You can specify the per mille chance of the monster splitting
+each time it is hit.</li>
+<li><b>Permanent martyr's shield</b> - You can specify the per mille chance of the
+martyr's shield activating each time the monster is hit.</li>
+<li><b>Absorb spells</b> - You can specify the per mille chance of spells being absorbed
+each time the monster is subject to them. Normally, the monster gains health proportional
+to the damage that would have been dealt; however, some non-damaging effects can also be
+absorbed, and in that case the monster gains a fixed amount of health that you specify
+here.</li>
+<li><b>Shoots webs</b> - This is a legacy support type, but you can nevertheless specify
+the range of the ability and the per mille chance of the monster deciding to use it. It
+differs from a general field ability in that the monster will use it even if adjacent to
+the target.</li>
+<li><b>Heat ray</b> - This is a legacy support type, but you can nevertheless specify the
+range, strength (in number of d6's), and per mille chance of the monster deciding to use
+it. It differs from a standard damage ray in that it costs only one action point. It does
+not allow you to customize the damage type; it always deals fire damage.</li>
+<li><b>Special action</b> - This calls a special node as part of the monster's action. You
+can specify how many action points it costs as well as the per mille chance of the monster
+deciding to use it. Of course, from here you can also edit the special node that is
+called.</li>
+<li><b>Death/hit special</b> - This calls a special node when the monster dies or when it
+is hit. It does not have any options (other than specifying which node to call). Of
+course, from here you can edit the special node that is called.</li>
+</ul>
+
+</div>
+</body>
+</html>

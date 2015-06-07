@@ -24,6 +24,7 @@ document.write('\
 <ol style="list-style-type:upper-alpha">\
 <li><a href="appendix/Specials.html">Special Encounter Node Types</a></li>\
 <li><a href="appendix/Items.html">Item Ability Types</a></li>\
+<li><a href="appendix/Monsters.html">Monster Ability Types</a></li>\
 <li><a href="appendix/Terrain.html">Starting Terrain Types</a></li>\
 <li><a href="appendix/Sounds.html">Blades Sound Effects</a></li>\
 <li><a href="appendix/Messages.html">Text Messages</a></li>\

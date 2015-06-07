@@ -356,7 +356,10 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 		if(i > 4) break; // TODO: Support showing more than just the first four abilities
 		if(!abil.second.active) continue;
 		std::string id = "abil" + std::to_string(i);
-		me[id].setText(abil.second.to_string(abil.first));
+		std::string name = abil.second.to_string(abil.first);
+		if(abil.first == eMonstAbil::SUMMON && abil.second.summon.type == eMonstSummon::TYPE)
+			name.replace(name.find("%s"), 2, univ.scenario.scen_monsters[abil.second.summon.what].m_name);
+		me[id].setText(name);
 		i++;
 	}
 	
