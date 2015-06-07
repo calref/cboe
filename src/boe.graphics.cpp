@@ -197,7 +197,6 @@ void adjust_window_mode() {
 void plop_fancy_startup() {
 	sf::Texture pict_to_draw;
 	sf::Event event;
-	short i,j;
 	
 	rectangle whole_window,from_rect;
 	rectangle logo_from = {0,0,350,350};

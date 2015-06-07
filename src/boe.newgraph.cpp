@@ -118,7 +118,7 @@ char last_light_mask[13][13];
 
 void apply_unseen_mask() {
 	rectangle base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
-	short i,j,k,l;
+	short i,j;
 	bool need_bother = false;
 	
 	if(PSD[SDF_NO_FRILLS] > 0 || fog_lifted)

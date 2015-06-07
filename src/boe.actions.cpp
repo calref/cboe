@@ -1603,7 +1603,7 @@ void initiate_outdoor_combat(short i) {
 	for(m = 0; m < 6; m++)
 		for(n = 0; n < 24; n++)
 			if(univ.party[m].main_status != eMainStatus::ALIVE && univ.party[m].items[n].variety != eItemType::NO_ITEM) {
-				place_item(univ.party[m].items[n],to_place,true);
+				place_item(univ.party[m].items[n],to_place);
 				univ.party[m].items[n].variety = eItemType::NO_ITEM;
 			}
 	

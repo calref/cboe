@@ -10,7 +10,7 @@ void give_food(short amount,bool print_result);
 short take_food(short amount,bool print_result);
 void equip_item(short pc_num,short item_num);
 void drop_item(short pc_num,short item_num,location where_drop);
-bool place_item(cItem item,location where,bool forced,bool contained = false);
+bool place_item(cItem item,location where,bool try_contained = false);
 void give_thing(short pc_num, short item_num);
 short dist_from_party(location where);
 void set_item_flag(cItem *item);
