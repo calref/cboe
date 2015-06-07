@@ -36,6 +36,7 @@ cParty::cParty(cUniverse& univ, long party_preset) : univ(univ) {
 	p_loc.y = 84;
 	in_boat = -1;
 	in_horse = -1;
+	std::fill(magic_ptrs.begin(), magic_ptrs.end(), 0);
 	for(int i = 0; i < 5; i++)
 		for(int j = 0; j < 10; j++)
 			magic_store_items[i][j].variety = eItemType::NO_ITEM;
@@ -529,6 +530,8 @@ void cParty::writeTo(std::ostream& file) const {
 				file << "SDF " << i << ' ' << j << ' ' << unsigned(stuff_done[i][j]) << '\n';
 	for(auto iter = pointers.begin(); iter != pointers.end(); iter++)
 		file << "POINTER " << iter->first << ' ' << iter->second.first << ' ' << iter->second.second << '\n';
+	for(int i = 0; i < magic_ptrs.size(); i++)
+		file << "POINTER " << i << ' ' << int(magic_ptrs[i]) << '\n';
 	for(int i = 0; i < 200; i++)
 		if(item_taken[i][0] > 0 || item_taken[i][1] > 0 || item_taken[i][2] > 0 || item_taken[i][3] > 0 ||
 		   item_taken[i][4] > 0 || item_taken[i][5] > 0 || item_taken[i][6] > 0 || item_taken[i][7] > 0) {
@@ -731,8 +734,13 @@ void cParty::readFrom(std::istream& file){
 			}
 		} else if(cur == "POINTER") {
 			int i,j,k;
-			sin >> i >> j >> k;
-			pointers[i] = std::make_pair(j,k);
+			sin >> i >> j;
+			if(i >= 10 && i < 100) {
+				magic_ptrs[i-10] = j;
+			} else if(i >= 100 && i < 200) {
+				sin >> k;
+				pointers[i] = std::make_pair(j,k);
+			}
 		} else if(cur == "STATUS") {
 			ePartyStatus stat;
 			int n;
@@ -983,11 +991,17 @@ void cParty::clear_ptr(unsigned short p) {
 	} else throw std::range_error("Attempted to assign a pointer out of range (100 to 199)");
 }
 
-void cParty::force_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy){
-	pointers[p] = std::make_pair(sdfx,sdfy);
+void cParty::force_ptr(unsigned short p, unsigned short val){
+	if(p < 10 || p >= 100)
+		throw std::range_error("Magic pointer out of range (10..99)");
+	magic_ptrs[p-10] = val;
 }
 
 unsigned char cParty::get_ptr(unsigned short p){
+	if(p < 10 || p >= 200)
+		throw std::range_error("Attempted to access a nonexistent pointer (10..199)");
+	if(p < 100)
+		return magic_ptrs[p-10];
 	auto iter = pointers.find(p);
 	if(iter == pointers.end()) return 0;
 	return stuff_done[iter->second.first][iter->second.second];

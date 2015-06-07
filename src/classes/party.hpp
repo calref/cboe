@@ -74,6 +74,7 @@ public:
 	unsigned short gold;
 	unsigned short food;
 	unsigned char stuff_done[310][50];
+	std::array<unsigned char,90> magic_ptrs;
 	unsigned char item_taken[200][8];
 	short light_level;
 	location outdoor_corner;
@@ -129,7 +130,7 @@ private:
 public:
 	
 	void set_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy);
-	void force_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy);
+	void force_ptr(unsigned short p, unsigned short val);
 	void clear_ptr(unsigned short p);
 	unsigned char get_ptr(unsigned short p);
 	

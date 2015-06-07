@@ -847,12 +847,9 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 			}
 		} else if(weap.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
 			short s1,s2,s3;
-			univ.party.force_ptr(21, 301, 5);
-			univ.party.force_ptr(22, 301, 6);
-			univ.party.force_ptr(20, 301, 7);
-			PSD[SDF_SPEC_TARGLOC_X] = target.get_loc().x;
-			PSD[SDF_SPEC_TARGLOC_Y] = target.get_loc().y;
-			PSD[SDF_SPEC_TARGET] = i_monst;
+			univ.party.force_ptr(21, target.get_loc().x);
+			univ.party.force_ptr(22, target.get_loc().y);
+			univ.party.force_ptr(20, i_monst);
 			run_special(eSpecCtx::ATTACKING_MELEE, 0, weap.abil_data[0],univ.party[who_att].combat_pos, &s1, &s2, &s3);
 		}
 	}
@@ -1826,32 +1823,23 @@ void fire_missile(location target) {
 				} else if(ammo.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
 					// TODO: Should this be checked on the missile as well as on the ammo? (Provided they're different.)
 					short s1,s2,s3;
-					univ.party.force_ptr(21, 301, 5);
-					univ.party.force_ptr(22, 301, 6);
-					univ.party.force_ptr(20, 301, 7);
-					PSD[SDF_SPEC_TARGLOC_X] = victim->get_loc().x;
-					PSD[SDF_SPEC_TARGLOC_Y] = victim->get_loc().y;
-					PSD[SDF_SPEC_TARGET] = univ.get_target_i(*victim);
+					univ.party.force_ptr(21, victim->get_loc().x);
+					univ.party.force_ptr(22, victim->get_loc().y);
+					univ.party.force_ptr(20, univ.get_target_i(*victim));
 					run_special(eSpecCtx::ATTACKING_RANGE, 0, missile.abil_data[0], missile_firer.combat_pos, &s1, &s2, &s3);
 				}
 				cCreature* monst; cPlayer* pc; int spec_item;
 				if((monst = dynamic_cast<cCreature*>(victim)) && monst->abil[eMonstAbil::HIT_TRIGGER].active) {
 					short s1,s2,s3;
-					univ.party.force_ptr(21, 301, 5);
-					univ.party.force_ptr(22, 301, 6);
-					univ.party.force_ptr(20, 301, 7);
-					PSD[SDF_SPEC_TARGLOC_X] = monst->cur_loc.x;
-					PSD[SDF_SPEC_TARGLOC_Y] = monst->cur_loc.y;
-					PSD[SDF_SPEC_TARGET] = univ.get_target_i(*monst);
+					univ.party.force_ptr(21, monst->cur_loc.x);
+					univ.party.force_ptr(22, monst->cur_loc.y);
+					univ.party.force_ptr(20, univ.get_target_i(*monst));
 					run_special(eSpecCtx::ATTACKED_RANGE, 0, monst->abil[eMonstAbil::HIT_TRIGGER].special.extra1, missile_firer.combat_pos, &s1, &s2, &s3);
 				} else if((pc = dynamic_cast<cPlayer*>(victim)) && (spec_item = pc->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL)) < 24) {
 					short s1,s2,s3;
-					univ.party.force_ptr(21, 301, 5);
-					univ.party.force_ptr(22, 301, 6);
-					univ.party.force_ptr(20, 301, 7);
-					PSD[SDF_SPEC_TARGLOC_X] = pc->combat_pos.x;
-					PSD[SDF_SPEC_TARGLOC_Y] = pc->combat_pos.y;
-					PSD[SDF_SPEC_TARGET] = univ.get_target_i(*pc);
+					univ.party.force_ptr(21, pc->combat_pos.x);
+					univ.party.force_ptr(22, pc->combat_pos.y);
+					univ.party.force_ptr(20, univ.get_target_i(*pc));
 					run_special(eSpecCtx::ATTACKED_RANGE, 0, pc->items[spec_item].abil_data[0], missile_firer.combat_pos, &s1, &s2, &s3);
 				}
 			}
@@ -2444,14 +2432,11 @@ void do_monster_turn() {
 					uAbility abil = cur_monst->abil[eMonstAbil::SPECIAL];
 					short s1, s2, s3;
 					special_called = true;
-					univ.party.force_ptr(21, 301, 5);
-					univ.party.force_ptr(22, 301, 6);
-					univ.party.force_ptr(20, 301, 7);
-					PSD[SDF_SPEC_TARGLOC_X] = targ_space.x;
-					PSD[SDF_SPEC_TARGLOC_Y] = targ_space.y;
+					univ.party.force_ptr(21, targ_space.x);
+					univ.party.force_ptr(22, targ_space.y);
 					if(target < 6)
-						PSD[SDF_SPEC_TARGET] = 11 + target; // ready to be passed to SELECT_TARGET node
-					else PSD[SDF_SPEC_TARGET] = target; // ready to be passed to SELECT_TARGET node
+						univ.party.force_ptr(20, 11 + target); // ready to be passed to SELECT_TARGET node
+					else univ.party.force_ptr(20, target); // ready to be passed to SELECT_TARGET node
 					run_special(eSpecCtx::MONST_SPEC_ABIL,0,abil.special.extra1,cur_monst->cur_loc,&s1,&s2,&s3);
 					take_m_ap(abil.special.extra2,cur_monst);
 				}
@@ -2899,21 +2884,15 @@ void monster_attack(short who_att,iLiving* target) {
 					int spec_item;
 					if(pc_target != nullptr && (spec_item = pc_target->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL)) < 24) {
 						short s1,s2,s3;
-						univ.party.force_ptr(21, 301, 5);
-						univ.party.force_ptr(22, 301, 6);
-						univ.party.force_ptr(20, 301, 7);
-						PSD[SDF_SPEC_TARGLOC_X] = target->get_loc().x;
-						PSD[SDF_SPEC_TARGLOC_Y] = target->get_loc().y;
-						PSD[SDF_SPEC_TARGET] = i_monst;
+						univ.party.force_ptr(21, target->get_loc().x);
+						univ.party.force_ptr(22, target->get_loc().y);
+						univ.party.force_ptr(20, i_monst);
 						run_special(eSpecCtx::ATTACKED_MELEE, 0, pc_target->items[spec_item].abil_data[0], attacker->cur_loc, &s1, &s2, &s3);
 					} else if(m_target != nullptr && m_target->abil[eMonstAbil::HIT_TRIGGER].active) {
 						short s1,s2,s3;
-						univ.party.force_ptr(21, 301, 5);
-						univ.party.force_ptr(22, 301, 6);
-						univ.party.force_ptr(20, 301, 7);
-						PSD[SDF_SPEC_TARGLOC_X] = target->get_loc().x;
-						PSD[SDF_SPEC_TARGLOC_Y] = target->get_loc().y;
-						PSD[SDF_SPEC_TARGET] = i_monst;
+						univ.party.force_ptr(21, target->get_loc().x);
+						univ.party.force_ptr(22, target->get_loc().y);
+						univ.party.force_ptr(20, i_monst);
 						run_special(eSpecCtx::ATTACKED_MELEE, 0, m_target->abil[eMonstAbil::HIT_TRIGGER].special.extra1, attacker->cur_loc, &s1, &s2, &s3);
 					}
 				}
@@ -3043,22 +3022,16 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 			if(spec_item < 24) {
 				short s1,s2,s3;
 				// TODO: This force_ptr...run_special code is almost duplicated in several places; maybe make a call_attack_spec subroutine!
-				univ.party.force_ptr(21, 301, 5);
-				univ.party.force_ptr(22, 301, 6);
-				univ.party.force_ptr(20, 301, 7);
-				PSD[SDF_SPEC_TARGLOC_X] = target->get_loc().x;
-				PSD[SDF_SPEC_TARGLOC_Y] = target->get_loc().y;
-				PSD[SDF_SPEC_TARGET] = i_monst;
+				univ.party.force_ptr(21, target->get_loc().x);
+				univ.party.force_ptr(22, target->get_loc().y);
+				univ.party.force_ptr(20, i_monst);
 				run_special(eSpecCtx::ATTACKED_RANGE, 0, pc_target->items[spec_item].abil_data[0], univ.town.monst[m_num].cur_loc, &s1, &s2, &s3);
 			}
 		} else if(m_target != nullptr && m_target->abil[eMonstAbil::HIT_TRIGGER].active) {
 			short s1,s2,s3;
-			univ.party.force_ptr(21, 301, 5);
-			univ.party.force_ptr(22, 301, 6);
-			univ.party.force_ptr(20, 301, 7);
-			PSD[SDF_SPEC_TARGLOC_X] = m_target->cur_loc.x;
-			PSD[SDF_SPEC_TARGLOC_Y] = m_target->cur_loc.y;
-			PSD[SDF_SPEC_TARGET] = i_monst;
+			univ.party.force_ptr(21, m_target->cur_loc.x);
+			univ.party.force_ptr(22, m_target->cur_loc.y);
+			univ.party.force_ptr(20, i_monst);
 			run_special(eSpecCtx::ATTACKED_RANGE, 0, m_target->abil[eMonstAbil::HIT_TRIGGER].special.extra1, univ.town.monst[m_num].cur_loc, &s1, &s2, &s3);
 		}
 	} else if(abil.first == eMonstAbil::MISSILE_WEB) {

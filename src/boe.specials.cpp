@@ -2002,22 +2002,10 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 	}
 	
 	// Store the special's location in reserved pointers
-	univ.party.force_ptr(10, 301, 0);
-	univ.party.force_ptr(11, 301, 1);
-	// And put the location there
-	PSD[SDF_SPEC_LOC_X] = spec_loc.x;
-	PSD[SDF_SPEC_LOC_Y] = spec_loc.y;
+	univ.party.force_ptr(10, spec_loc.x);
+	univ.party.force_ptr(11, spec_loc.y);
 	// Also store the terrain type on that location
-	univ.party.force_ptr(12, 301, 2);
-	PSD[SDF_SPEC_TER] = coord_to_ter(spec_loc.x, spec_loc.y);
-	// And a reference to the string buffer
-	univ.party.force_ptr(8, 301, 3);
-	PSD[SDF_SPEC_STRBUF] = std::find_if(
-		univ.scenario.spec_strs.begin(),
-		univ.scenario.spec_strs.end(),
-		[](std::string& a) {
-			return &a == &univ.scenario.get_buf();
-		}) - univ.scenario.spec_strs.begin();
+	univ.party.force_ptr(12, coord_to_ter(spec_loc.x, spec_loc.y));
 
 	
 	while(next_spec >= 0) {
@@ -2399,35 +2387,35 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			story_dialog(str1, spec.m2, spec.m3, cur_spec_type, spec.pic, ePicType(spec.pictype));
 			break;
 		case eSpecType::CLEAR_BUF:
-			univ.scenario.get_buf().clear();
+			univ.get_buf().clear();
 			break;
 		case eSpecType::APPEND_STRING:
 			get_strs(str1,str1,cur_spec_type,spec.ex1a,-1);
-			univ.scenario.get_buf() += str1;
+			univ.get_buf() += str1;
 			break;
 		case eSpecType::APPEND_NUM:
-			univ.scenario.get_buf() += std::to_string(spec.ex1a);
+			univ.get_buf() += std::to_string(spec.ex1a);
 			break;
 		case eSpecType::APPEND_MONST:
 			if(spec.ex1a == 0) {
 				int pc = univ.get_target_i(*current_pc_picked_in_spec_enc);
 				if(pc == 6)
-					univ.scenario.get_buf() += "Your party";
+					univ.get_buf() += "Your party";
 				else if(pc < 100)
-					univ.scenario.get_buf() += univ.party[pc].name;
+					univ.get_buf() += univ.party[pc].name;
 				else if(!is_out())
-					univ.scenario.get_buf() += univ.town.monst[pc - 100].m_name;
-			} else univ.scenario.get_buf() += univ.scenario.scen_monsters[spec.ex1a].m_name;
+					univ.get_buf() += univ.town.monst[pc - 100].m_name;
+			} else univ.get_buf() += univ.scenario.scen_monsters[spec.ex1a].m_name;
 			break;
 		case eSpecType::APPEND_ITEM:
 			if(spec.ex1b == 1)
-				univ.scenario.get_buf() += univ.scenario.scen_items[spec.ex1a].full_name;
+				univ.get_buf() += univ.scenario.scen_items[spec.ex1a].full_name;
 			else if(spec.ex1b == 2)
-				univ.scenario.get_buf() += get_item_interesting_string(univ.scenario.scen_items[spec.ex1a]);
-			else univ.scenario.get_buf() += univ.scenario.scen_items[spec.ex1a].name;
+				univ.get_buf() += get_item_interesting_string(univ.scenario.scen_items[spec.ex1a]);
+			else univ.get_buf() += univ.scenario.scen_items[spec.ex1a].name;
 			break;
 		case eSpecType::APPEND_TER:
-			univ.scenario.get_buf() += univ.scenario.ter_types[spec.ex1a].name;
+			univ.get_buf() += univ.scenario.ter_types[spec.ex1a].name;
 			break;
 		case eSpecType::PAUSE:
 			if(spec.ex1a < 0) break;
@@ -2659,7 +2647,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				bool disarmed = run_trap(j,eTrapType(spec.ex1a),spec.ex1b,spec.ex2a);
 				if(!disarmed && spec.ex1a == TRAP_CUSTOM) {
 					if(spec.jumpto >= 0)
-						queue_special(which_mode, cur_spec_type, spec.jumpto, loc(PSD[SDF_SPEC_LOC_X], PSD[SDF_SPEC_LOC_Y]));
+						queue_special(which_mode, cur_spec_type, spec.jumpto, loc(univ.party.get_ptr(10), univ.party.get_ptr(11)));
 					*next_spec = spec.ex2b;
 					*next_spec_type = 0;
 				}
@@ -3840,7 +3828,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = -1;
 			}
 			else {
-				if(handle_lever(loc(PSD[SDF_SPEC_LOC_X], PSD[SDF_SPEC_LOC_Y])))
+				if(handle_lever(loc(univ.party.get_ptr(10), univ.party.get_ptr(11))))
 					*next_spec = spec.ex1b;
 			}
 			break;
@@ -3929,8 +3917,9 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				i = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
 				if(i == 1) {*next_spec = -1;}
 				else {
-					ter = coord_to_ter(PSD[SDF_SPEC_LOC_X], PSD[SDF_SPEC_LOC_Y]);
-					alter_space(PSD[SDF_SPEC_LOC_X], PSD[SDF_SPEC_LOC_Y],univ.scenario.ter_types[ter].trans_to_what);
+					int x = univ.party.get_ptr(10), y = univ.party.get_ptr(11);
+					ter = coord_to_ter(x, y);
+					alter_space(x,y,univ.scenario.ter_types[ter].trans_to_what);
 					*next_spec = spec.ex1b;
 				}
 			}
@@ -4560,6 +4549,10 @@ void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str
 			break;
 	}
 	
+	if(which_str1 == -8)
+		str1 = univ.get_buf();
+	if(which_str2 == -8)
+		str2 = univ.get_buf();
 }
 
 // This function sets/retrieves values to/from campaign flags

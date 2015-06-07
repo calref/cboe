@@ -147,8 +147,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			break;
 			
 		case TRAP_CUSTOM:
-			univ.party.force_ptr(5, 301, 4);
-			PSD[SDF_SPEC_TRAPLVL] = trap_level;
+			univ.party.force_ptr(15, trap_level);
 			break;
 			
 		default:
