@@ -14,19 +14,19 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Force Town Entry
+Unused
+Unused
+First part of message
+Second part of message
 Unused
 Unused
 Unused
+Town to enter
+Direction of entry
 Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
+X coordinate to enter at (-1 default)
+Y coordinate to enter at (-1 default)
 Unused
 Special to Jump To
 --------------------

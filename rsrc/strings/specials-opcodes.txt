@@ -92,7 +92,7 @@ level
 morale
 soul-crystal
 
-
+monst-target
 monst-attack
 monst-statistic
 statistic
@@ -223,6 +223,6 @@ rect-unlock
 
 
 make-out-wandering
-
+force-town
 make-out-monst
 out-move-party

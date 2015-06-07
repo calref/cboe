@@ -396,6 +396,7 @@ std::istream& operator >> (std::istream& in, eSpecType& e) {
 // w - Choose button to select main party status effect
 // j - Choose button to select a quest
 // J - Choose button to select a quest status
+// < - Choose button to select a cardinal direction
 // 0..9 - Choose button to select a specific type of picture
 // (terrain, monster, dialog, talk, item, pc, field, boom, missile, status)
 static const char*const button_dict[7][11] = {
@@ -472,13 +473,13 @@ static const char*const button_dict[7][11] = {
 		"         ", // unused
 		"         ", // ex2c
 	}, { // outdoors nodes
-		"  mm", // msg1
+		" mmm", // msg1
 		"    ", // msg2
 		"    ", // msg3
 		"    ", // pic
 		"    ", // pictype
-		"    ", // ex1a
-		"    ", // ex1b
+		" T  ", // ex1a
+		" <  ", // ex1b
 		"    ", // ex1c
 		"    ", // ex2a
 		"    ", // ex2b

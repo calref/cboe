@@ -829,6 +829,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case 'w': strt = STRT_STATUS; title = "Select status:"; str_adj = 1; break;
 		case 'j': strt = STRT_QUEST; title = "Select a quest:"; break;
 		case 'J': strt = STRT_QUEST_STATUS; title = "Select the quest's status:"; break;
+		case '<': strt = STRT_DIR; title = "Select the direction:"; break;
 		case '0': case '1': case '2': case '3': case '4':
 		case '5': case '6': case '7': case '8': case '9':
 			choose_string = false;
