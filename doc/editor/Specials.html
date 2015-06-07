@@ -71,8 +71,6 @@ special node. In addition, there are a number of reserved pointers that are set 
 circumstances. Rather than referencing a Stuff Done Flag, these refer to special values of
 the encounter itself. The reserved pointers are:</p>
 <ol start=''>
-<li value='5'>If the special node was called to determine the result of a custom trap
-effect, this pointer refers to the trap level.</li>
 <li value='8'>This can be used anywhere a scenario message is expected to refer to the
 special string buffer. The contents of the special string buffer can be manipulated using
 the Clear Buffer special node and various Append To Buffer special nodes.</li>
@@ -80,6 +78,8 @@ the Clear Buffer special node and various Append To Buffer special nodes.</li>
 on.</li>
 <li>This contains the Y coordinate of the space the special node was triggered on.</li>
 <li>This contains the terrain type of the space the special node was triggered on.</li>
+<li value='15'>If the special node was called to determine the result of a custom trap
+effect, this pointer refers to the trap level.</li>
 <li value='20'>When a special node is called during an attack, this contains the number of
 the targeted creature, ready to be passed to a Select Target special node.</li>
 <li>When a special node is called during an attack, this contains the X coordinate of the

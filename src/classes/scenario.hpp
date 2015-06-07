@@ -101,7 +101,6 @@ public:
 	vector2d<cOutdoors*> outdoors;
 	std::vector<cTown*> towns;
 	template<typename Town> void addTown() {towns.push_back(new Town(*this, true));}
-	std::string& get_buf() {return spec_strs[100];}
 	
 	void append(legacy::scenario_data_type& old);
 	void append(legacy::scen_item_data_type& old);

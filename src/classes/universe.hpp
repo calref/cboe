@@ -157,6 +157,7 @@ class cUniverse{
 	pic_num_t addGraphic(pic_num_t pic, ePicType type);
 	void check_monst(cMonster& monst);
 	void check_item(cItem& item);
+	std::string strbuf;
 public:
 	void exportSummons();
 	void exportGraphics();
@@ -164,7 +165,8 @@ public:
 	iLiving& get_target(size_t which);
 	iLiving* target_there(location pos, eTargetType type = TARG_ANY);
 	size_t get_target_i(iLiving& who);
-								   
+	std::string get_buf() {return strbuf;}
+				
 	cScenario scenario;
 	cParty party;
 	std::map<long,cPlayer*> stored_pcs;

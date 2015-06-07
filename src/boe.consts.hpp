@@ -25,14 +25,6 @@
 #define NUM_OF_HORSES		30
 
 /* stuff done flags */
-#define SDF_SPEC_LOC_X			301][0 // For special nodes to access the trigger location
-#define SDF_SPEC_LOC_Y			301][1
-#define SDF_SPEC_TER			301][2
-#define SDF_SPEC_STRBUF			301][3
-#define SDF_SPEC_TRAPLVL		301][4
-#define SDF_SPEC_TARGLOC_X		301][5
-#define SDF_SPEC_TARGLOC_Y		301][6
-#define SDF_SPEC_TARGET			301][7
 #define SDF_SKIP_STARTUP		305][4 // preferably deprecated
 #define SDF_LESS_SOUND			305][5
 #define SDF_NO_TARGET_LINE		305][6

@@ -416,7 +416,10 @@ given in the Transform To What field, it is changed to that terrain type.
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to
 transform.</dd></dd>
 
-<dt>Type 37: Clear String Buffer</dt><dd>Clears the string buffer.</dd>
+<dt>Type 37: Clear String Buffer</dt><dd>Clears the string buffer. It's best to always do
+this before you use the buffer. The buffer is never automatically cleared, but it is not
+saved, so if the user reloads from a saved game, anything that was in the buffer may be
+lost.</dd>
 
 <dt>Type 38: Append String to Buffer</dt><dd>Appends a literal string to the string buffer.
 <dl>
