@@ -13,6 +13,7 @@
 #include <map>
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 #include <boost/lexical_cast.hpp>
 
 #include "oldstructs.h"
@@ -305,28 +306,28 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 			return abil.find(eMonstAbil::DEATH_TRIGGER);
 			// Radiate abilities
 		case eMonstAbilTemplate::RADIATE_FIRE:
-			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_FIRE, param};
+			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_FIRE, param, PAT_SQ};
 			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_ICE:
-			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_ICE, param};
+			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_ICE, param, PAT_SQ};
 			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_SHOCK:
-			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_FORCE, param};
+			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_FORCE, param, PAT_SQ};
 			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_ANTIMAGIC:
-			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::FIELD_ANTIMAGIC, param};
+			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::FIELD_ANTIMAGIC, param, PAT_SQ};
 			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_SLEEP:
-			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::CLOUD_SLEEP, param};
+			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::CLOUD_SLEEP, param, PAT_SQ};
 			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_STINK:
-			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::CLOUD_STINK, param};
+			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::CLOUD_STINK, param, PAT_SQ};
 			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_BLADE:
-			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_BLADES, param};
+			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::WALL_BLADES, param, PAT_SQ};
 			return abil.find(eMonstAbil::RADIATE);
 		case eMonstAbilTemplate::RADIATE_WEB:
-			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::FIELD_WEB, param};
+			abil[eMonstAbil::RADIATE].radiate = {true, eFieldType::FIELD_WEB, param, PAT_SQ};
 			return abil.find(eMonstAbil::RADIATE);
 			// Advanced abilities
 		case eMonstAbilTemplate::CUSTOM_MISSILE:
@@ -772,7 +773,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 				case eMonstAbil::DRAIN_XP: sout << "Draining"; break;
 				case eMonstAbil::KILL: sout << "Death"; break;
 				case eMonstAbil::STEAL_FOOD: sout << "Steals food"; break;
-				case eMonstAbil::STEAL_GOLD: sout << "Steals gold!"; break;
+				case eMonstAbil::STEAL_GOLD: sout << "Steals gold"; break;
 				case eMonstAbil::FIELD:
 					switch(gen.fld) {
 						case eFieldType::SPECIAL_EXPLORED:
@@ -878,7 +879,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 		case eMonstAbilCat::SPECIAL:
 			switch(key) {
 				case eMonstAbil::SPLITS:
-					sout << "Splits when hit (" << special.extra1 << "% chance)";
+					sout << "Splits when hit (" << std::fixed << std::setprecision(1) << double(special.extra1) / 10 << "% chance)";
 					break;
 				case eMonstAbil::MARTYRS_SHIELD:
 					sout << "Permanent martyr's shield";
@@ -893,9 +894,13 @@ std::string uAbility::to_string(eMonstAbil key) const {
 					sout << "Heat ray (" << special.extra3 << "d6)";
 					break;
 				case eMonstAbil::SPECIAL:
+					sout << "Unusual ability (active)";
+					break;
 				case eMonstAbil::DEATH_TRIGGER:
+					sout << "Unusual ability (death)";
+					break;
 				case eMonstAbil::HIT_TRIGGER:
-					sout << "Unusual ability";
+					sout << "Unusual ability (passive)";
 					break;
 					// Non-special abilities
 				case eMonstAbil::STUN: case eMonstAbil::NO_ABIL: case eMonstAbil::RADIATE: case eMonstAbil::SUMMON:
@@ -906,8 +911,49 @@ std::string uAbility::to_string(eMonstAbil key) const {
 			}
 			break;
 		case eMonstAbilCat::SUMMON:
-			// TODO: Somehow look up the name of the monster to be summoned
-			sout << "Summons " << summon.min << '-' << summon.max << ' ' << "monst-name" << "s (" << summon.chance << "% chance)";
+			sout << "Summons " << summon.min << '-' << summon.max << ' ';
+			switch(summon.type) {
+				case eMonstSummon::TYPE:
+					sout << "%s";
+					break;
+				case eMonstSummon::SPECIES:
+					switch(eRace(summon.what)) {
+						case eRace::BEAST: sout << "beasts"; break;
+						case eRace::BIRD: sout << "birds"; break;
+						case eRace::BUG: sout << "bugs"; break;
+						case eRace::DEMON: sout << "demons"; break;
+						case eRace::DRAGON: sout << "dragons"; break;
+						case eRace::GIANT: sout << "giants"; break;
+						case eRace::GOBLIN: sout << "goblins"; break;
+						case eRace::HUMAN: sout << "humans"; break;
+						case eRace::HUMANOID: sout << "humanoids"; break;
+						case eRace::IMPORTANT: sout << "VIPs"; break;
+						case eRace::MAGE: sout << "mages"; break;
+						case eRace::MAGICAL: sout << "magical beings"; break;
+						case eRace::NEPHIL: sout << "nephilim"; break;
+						case eRace::PLANT: sout << "plants"; break;
+						case eRace::PRIEST: sout << "priests"; break;
+						case eRace::REPTILE: sout << "reptiles"; break;
+						case eRace::SKELETAL: sout << "skeletal undead"; break;
+						case eRace::SLIME: sout << "slimes"; break;
+						case eRace::SLITH: sout << "sliths"; break;
+						case eRace::STONE: sout << "mineral beings"; break;
+						case eRace::UNDEAD: sout << "undead"; break;
+						case eRace::UNKNOWN: sout << "monsters"; break;
+						case eRace::VAHNATAI: sout << "vahnatai"; break;
+					}
+					break;
+				case eMonstSummon::LEVEL:
+					switch(summon.what) {
+						case 0: sout << "cannon fodder"; break;
+						case 1: sout << "minor allies"; break;
+						case 2: sout << "allies"; break;
+						case 3: sout << "major allies"; break;
+						case 4: sout << "protectors"; break;
+					}
+					break;
+			}
+			sout << " (" << summon.chance << "% chance)";
 			break;
 		case eMonstAbilCat::RADIATE:
 			sout << "Radiates ";

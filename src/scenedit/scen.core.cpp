@@ -874,7 +874,10 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& monst) {
 				me["abil-edit" + id].setText("Add");
 			}
 		} else if(i % 4 == 3) abils.addPage();
-		me["abil-name" + id].setText(abil.second.to_string(abil.first));
+		std::string name = abil.second.to_string(abil.first);
+		if(abil.first == eMonstAbil::SUMMON && abil.second.summon.type == eMonstSummon::TYPE)
+			name.replace(name.find("%s"), 2, scenario.scen_monsters[abil.second.summon.what].m_name);
+		me["abil-name" + id].setText(name);
 		me["abil-edit" + id].setText("Edit");
 		i++;
 	}
@@ -963,12 +966,15 @@ static short get_monst_abil_num(std::string prompt, int min, int max, cDialog& p
 static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil, uAbility detail) {
 	eMonstAbilCat cat = getMonstAbilCategory(abil);
 	me["monst"].setText(monst.m_name);
+	std::string name = detail.to_string(abil);
+	if(abil == eMonstAbil::SUMMON && detail.summon.type == eMonstSummon::TYPE)
+		name.replace(name.find("%s"), 2, scenario.scen_monsters[detail.summon.what].m_name);
 	me["name"].setText(detail.to_string(abil));
 	// These names start at line 80 in the strings file, but the first valid ability is ID 1, so add 79.
 	me["type"].setText(get_str("monster-abilities", 79 + int(abil)));
 	// Action points
 	if(cat == eMonstAbilCat::MISSILE) {
-		if(detail.missile.type == eMonstMissile::ARROW || detail.missile.type == eMonstMissile::BOLT || detail.missile.type == eMonstMissile::SPINE || detail.missile.type == eMonstMissile::RAPID_ARROW)
+		if(detail.missile.type == eMonstMissile::ARROW || detail.missile.type == eMonstMissile::BOLT || detail.missile.type == eMonstMissile::SPINE || detail.missile.type == eMonstMissile::BOULDER)
 			me["ap"].setTextToNum(3);
 		else me["ap"].setTextToNum(2);
 	} else if(cat == eMonstAbilCat::GENERAL) {
@@ -1005,9 +1011,11 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 			me["missile"].show();
 			me["pick-missile"].show();
 			me["missile-pic"].show();
-			me["missile-touch"].hide();
+			if(cat != eMonstAbilCat::MISSILE)
+				me["missile-touch"].hide();
 			me["range"].show();
-			me["range-touch"].hide();
+			if(cat != eMonstAbilCat::MISSILE)
+				me["range-touch"].hide();
 		}
 		miss_num_t missile;
 		int range;
@@ -1036,6 +1044,8 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 		if(abil == eMonstAbil::FIELD)
 			me["extra"].setTextToNum(int(detail.gen.fld));
 		else me["field"].setTextToNum(int(detail.radiate.type));
+		if(cat == eMonstAbilCat::RADIATE)
+			me["pat"].setTextToNum(int(detail.radiate.pat));
 	}
 	// Other type-specific fields
 	if(cat == eMonstAbilCat::MISSILE) {
@@ -1101,6 +1111,7 @@ static void save_monst_abil_detail(cDialog& me, eMonstAbil abil, uAbility& detai
 		detail.summon.chance = me["odds"].getTextAsNum();
 	} else if(cat == eMonstAbilCat::RADIATE) {
 		detail.radiate.chance = me["odds"].getTextAsNum();
+		detail.radiate.pat = eSpellPat(me["pat"].getTextAsNum());
 	} else if(cat == eMonstAbilCat::SPECIAL) {
 		detail.special.extra1 = me["extra1"].getTextAsNum();
 		detail.special.extra2 = me["extra2"].getTextAsNum();
@@ -1167,10 +1178,10 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 				return true;
 			}
 		}
-		size_t iShow = std::distance(monst.abil.begin(), iter);
-		dynamic_cast<cStack&>(me["abils"]).setPage(iShow / 4);
 		if(tmpl < eMonstAbilTemplate::CUSTOM_MISSILE && tmpl != eMonstAbilTemplate::SPECIAL) {
 			put_monst_abils_in_dlog(me, monst);
+			size_t iShow = std::distance(monst.abil.begin(), iter);
+			dynamic_cast<cStack&>(me["abils"]).setPage(iShow / 4);
 			return true;
 		}
 	} else {
@@ -1211,7 +1222,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 	
 	if(cat == eMonstAbilCat::MISSILE || cat == eMonstAbilCat::GENERAL || cat == eMonstAbilCat::SUMMON) {
 		int first, last;
-		if(cat == eMonstAbilCat::MISSILE) first = 110, last = 117;
+		if(cat == eMonstAbilCat::MISSILE) first = 110, last = 119;
 		else if(cat == eMonstAbilCat::GENERAL) first = 120, last = 124;
 		else if(cat == eMonstAbilCat::SUMMON) first = 150, last = 152;
 		abil_dlg["pick-subtype"].attachClickHandler([&,cat,first,last](cDialog& me,std::string,eKeyMod) -> bool {
@@ -1270,17 +1281,26 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 			fill_monst_abil_detail(me, monst, abil, abil_params);
 			return true;
 		});
+		abil_dlg["pick-pat"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
+			save_monst_abil_detail(me, abil, abil_params);
+			int i = abil_params.radiate.pat;
+			i = choose_text(STRT_SPELL_PAT, i, &me, "Which spell pattern?");
+			abil_params.radiate.pat = eSpellPat(i);
+			fill_monst_abil_detail(me, monst, abil, abil_params);
+			return true;
+		});
 	} else if(cat == eMonstAbilCat::SUMMON) {
 		abil_dlg["pick-summon"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
 			save_monst_abil_detail(me, abil, abil_params);
 			int i = abil_params.summon.what;
 			eStrType type;
 			switch(abil_params.summon.type) {
-				case eMonstSummon::TYPE: type = STRT_MONST; break;
+				case eMonstSummon::TYPE: type = STRT_MONST; i--; break;
 				case eMonstSummon::LEVEL: type = STRT_SUMMON; break;
 				case eMonstSummon::SPECIES: type = STRT_RACE; break;
 			}
 			i = choose_text(type, i, &me, "Summon what?");
+			if(type == STRT_MONST) i++;
 			abil_params.summon.what = i;
 			fill_monst_abil_detail(me, monst, abil, abil_params);
 			return true;
@@ -1312,6 +1332,8 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 	if(abil_dlg.accepted())
 		iter->second = abil_params;
 	put_monst_abils_in_dlog(me, monst);
+	size_t iShow = std::distance(monst.abil.begin(), iter);
+	dynamic_cast<cStack&>(me["abils"]).setPage(iShow / 4);
 	return true;
 }
 

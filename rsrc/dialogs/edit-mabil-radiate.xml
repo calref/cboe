@@ -17,6 +17,10 @@
 	<text top='164' left='10' width='120' height='16'>Radiate Chance:</text>
 	<field name='odds' top='162' left='120' width='50' height='16'/>
 	
+	<text top='192' left='10' width='100' height='16'>Area Affected:</text>
+	<field name='pat' top='190' left='120' width='50' height='16'/>
+	<button name='pick-pat' type='regular' top='187' left='180'>Choose</button>
+	
 	<button name='okay' type='regular' top='216' left='330'>OK</button>
 	<button name='cancel' type='regular' def-key='esc' top='216' left='265'>Cancel</button>
 	<button name='delete' type='regular' top='216' left='10'>Delete</button>

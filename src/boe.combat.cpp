@@ -2545,8 +2545,35 @@ void do_monster_turn() {
 			
 			// Place fields for monsters that create them. Only done when monst sees foe
 			if(target != 6 && can_see_light(cur_monst->cur_loc,targ_space,sight_obscurity) < 5) {
-				if(cur_monst->abil[eMonstAbil::RADIATE].active && get_ran(1,1,100) < cur_monst->abil[eMonstAbil::RADIATE].radiate.chance)
-					place_spell_pattern(square, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
+				if(cur_monst->abil[eMonstAbil::RADIATE].active && get_ran(1,1,100) < cur_monst->abil[eMonstAbil::RADIATE].radiate.chance) {
+					switch(cur_monst->abil[eMonstAbil::RADIATE].radiate.pat) {
+						case PAT_SINGLE:
+							place_spell_pattern(single, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
+							break;
+						case PAT_SMSQ:
+							place_spell_pattern(small_square, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
+							break;
+						case PAT_SQ:
+							place_spell_pattern(square, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
+							break;
+						case PAT_OPENSQ:
+							place_spell_pattern(open_square, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
+							break;
+						case PAT_RAD2:
+							place_spell_pattern(radius2, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
+							break;
+						case PAT_RAD3:
+							place_spell_pattern(radius3, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
+							break;
+						case PAT_PLUS:
+							place_spell_pattern(t, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
+							break;
+						case PAT_WALL:
+							int dir = (cur_monst->direction + 6) % 8;
+							place_spell_pattern(field[dir], cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
+							break;
+					}
+				}
 				if(cur_monst->abil[eMonstAbil::SUMMON].active && get_ran(1,1,100) < cur_monst->abil[eMonstAbil::SUMMON].summon.chance) {
 					uAbility abil = cur_monst->abil[eMonstAbil::SUMMON];
 					mon_num_t what_summon = 0;

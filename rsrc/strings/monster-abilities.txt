@@ -96,6 +96,7 @@ Absorb spells
 Web missile
 Heat ray (costs 1 action point)
 Call special node
+Call special when hit
 Death triggers special
 Radiate fields
 Summon aid
@@ -106,17 +107,16 @@ Summon aid
 
 
 
-
 Darts
 Bow/Arrows
 Spears
-Rocks
+Rocks/Stones
 Razordisks
 Spines
 Knives
 Crossbow/Bolts
-
-
+Rocks/Boulders
+Bow/Arrows (Rapid)
 Ray
 Touch
 Gaze
@@ -160,7 +160,7 @@ Summon random creature of species
 Chance of Activating
 
 
-
+Chance of Activating
 
 
 Chance of Activating
