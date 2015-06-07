@@ -446,6 +446,9 @@ void start_town_mode(short which_town, short entry_dir) {
 				else
 					univ.town.items[j].property = univ.town->preset_items[i].property;
 				univ.town.items[j].contained = univ.town->preset_items[i].contained;
+				int x = univ.town.items[j].item_loc.x, y = univ.town.items[j].item_loc.y;
+				if(univ.town.items[j].contained && (univ.town.is_barrel(x,y) || univ.town.is_crate(x,y)))
+					univ.town.items[j].held = true;
 				univ.town.items[j].is_special = i + 1;
 			}
 	
@@ -508,7 +511,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			continue;
 		for(n = 0; n < 24; n++)
 			if(univ.party[m].items[n].variety != eItemType::NO_ITEM) {
-				place_item(univ.party[m].items[n],univ.town.p_loc,true);
+				place_item(univ.party[m].items[n],univ.town.p_loc);
 				univ.party[m].items[n].variety = eItemType::NO_ITEM;
 			}
 	}

@@ -96,7 +96,7 @@ cItem::cItem(){
 	item_loc.x = 0;
 	item_loc.y = 0;
 	treas_class = 0;
-	ident = property = magic = contained = false;
+	ident = property = magic = contained = held = false;
 	cursed = concealed = enchanted = unsellable = false;
 }
 
@@ -923,7 +923,7 @@ void cItem::append(legacy::item_record_type& old){
 	contained = old.item_properties & 8;
 	cursed = old.item_properties & 16;
 	concealed = old.item_properties & 32;
-	enchanted = false;
+	enchanted = held = false;
 	unsellable = old.item_properties & 16;
 	// Set missile, if needed
 	if(variety == eItemType::ARROW || variety == eItemType::BOLTS) {
@@ -1273,6 +1273,7 @@ void cItem::writeTo(std::ostream& file, std::string prefix) const {
 	if(property) file << prefix << "PROPERTY\n";
 	if(magic) file << prefix << "MAGIC\n";
 	if(contained) file << prefix << "CONTAINED\n";
+	if(held) file << prefix << "HELD\n";
 	if(cursed) file << prefix << "CURSED\n";
 	if(concealed) file << prefix << "CONCEALED\n";
 	if(enchanted) file << prefix << "ENCHANTED\n";
@@ -1309,6 +1310,7 @@ void cItem::readFrom(std::istream& sin){
 		else if(cur == "PROPERTY") property = true;
 		else if(cur == "MAGIC") magic = true;
 		else if(cur == "CONTAINED") contained = true;
+		else if(cur == "HELD") held = true;
 		else if(cur == "CURSED") cursed = true;
 		else if(cur == "CONCEALED") concealed = true;
 		else if(cur == "ENCHANTED") enchanted = true;

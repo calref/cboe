@@ -204,20 +204,12 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 					take_given_item = false;
 				item_store.charges = how_many;
 			}
-			if(is_container(loc))
-				item_store.contained = true;
-			if(!place_item(item_store,loc,false)) {
-				add_string_to_buf("Drop: Too many items on ground");
-				item_store.contained = false;
-			}
-			else {
-				if(item_store.contained)
-					add_string_to_buf("Drop: Item put away");
-				else add_string_to_buf("Drop: OK");
-				univ.party[pc_num].items[item_num].charges -= how_many;
-				if(take_given_item)
-					univ.party[pc_num].take_item(item_num);
-			}
+			if(place_item(item_store,loc,true))
+				add_string_to_buf("Drop: Item put away");
+			else add_string_to_buf("Drop: OK");
+			univ.party[pc_num].items[item_num].charges -= how_many;
+			if(take_given_item)
+				univ.party[pc_num].take_item(item_num);
 			break;
 		default: //should never be reached
 			break;
@@ -229,26 +221,29 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 		draw_terrain(0);
 }
 
-bool place_item(cItem item,location where,bool forced,bool contained) {
+bool place_item(cItem item,location where,bool contained) {
 	short i;
-    (void) forced;
     
 	if(contained && !is_container(where))
 		contained = false;
+	
+	bool is_pushable_ctr = contained && (univ.town.is_barrel(where.x,where.y) || univ.town.is_crate(where.x,where.y));
 	
 	for(i = 0; i < univ.town.items.size(); i++)
 		if(univ.town.items[i].variety == eItemType::NO_ITEM) {
 			univ.town.items[i] = item;
 			univ.town.items[i].item_loc = where;
 			univ.town.items[i].contained = contained;
+			univ.town.items[i].held = is_pushable_ctr;
 			reset_item_max();
-			return true;
+			return univ.town.items[i].contained;
 		}
 	univ.town.items.push_back(item);
 	univ.town.items.back().item_loc = where;
 	univ.town.items.back().contained = contained;
+	univ.town.items.back().held = is_pushable_ctr;
 	reset_item_max();
-	return true;
+	return univ.town.items.back().contained;
 }
 
 void give_thing(short pc_num, short item_num) {
@@ -762,7 +757,7 @@ void place_glands(location where,mon_num_t m_type) {
 	
 	if((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,1,100) < monst.corpse_item_chance)) {
 		store_i = get_stored_item(monst.corpse_item);
-		place_item(store_i,where,false);
+		place_item(store_i,where);
 	}
 }
 
@@ -835,7 +830,7 @@ void place_treasure(location where,short level,short loot,short mode) {
 		r1 = get_ran(1,1,9);
 		if(((loot > 1) && (r1 < 7)) || ((loot == 1) && (r1 < 5)) || (mode == 1)
 			|| ((r1 < 6) && (univ.party.get_level() < 30)) || (loot > 2) )
-			place_item(new_item,where,false);
+			place_item(new_item,where);
 	}
 	for(j = 0; j < 5; j++) {
 		r1 = get_ran(1,1,100);
@@ -891,7 +886,7 @@ void place_treasure(location where,short level,short loot,short mode) {
 					if((univ.party[i].main_status == eMainStatus::ALIVE)
 					   && get_ran(1,1,100) < id_odds[univ.party[i].skill(eSkill::ITEM_LORE)])
 						new_item.ident = true;
-				place_item(new_item,where,false);
+				place_item(new_item,where);
 			}
 		}
 	}

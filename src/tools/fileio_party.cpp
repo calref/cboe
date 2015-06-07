@@ -266,6 +266,17 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		univ.append(town_maps);
 		univ.append(o_maps);
 		univ.town.append(sfx, misc_i);
+		// Check items in crates/barrels
+		for(int i = 0; i < univ.town->max_dim(); i++) {
+			for(int j = 0; j < univ.town->max_dim(); j++) {
+				if(univ.town.is_barrel(i,j) || univ.town.is_crate(i,j)) {
+					for(cItem item : univ.town.items) {
+						if(item.item_loc == loc(i,j) && item.contained)
+							item.held = true;
+					}
+				}
+			}
+		}
 	}
 	
 	return true;

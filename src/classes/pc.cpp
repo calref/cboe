@@ -454,6 +454,7 @@ bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
 	else {
 		item.property = false;
 		item.contained = false;
+		item.held = false;
 		items[free_space] = item;
 		
 		if(do_print && print_result) {

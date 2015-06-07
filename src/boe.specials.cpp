@@ -266,7 +266,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				univ.town.set_crate(to_loc.x,to_loc.y,true);
 			for(i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && (univ.town.items[i].contained))
+				   && univ.town.items[i].contained && univ.town.items[i].held)
 					univ.town.items[i].item_loc = to_loc;
 		}
 		if(univ.town.is_barrel(where_check.x,where_check.y)) {
@@ -277,7 +277,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				univ.town.set_barrel(to_loc.x,to_loc.y,true);
 			for(i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && (univ.town.items[i].contained))
+				   && univ.town.items[i].contained && univ.town.items[i].held)
 					univ.town.items[i].item_loc = to_loc;
 		}
 		if(univ.town.is_block(where_check.x,where_check.y)) {
@@ -285,7 +285,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			to_loc = push_loc(from_loc,where_check);
 			univ.town.set_block(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
-				univ.town.set_block(to_loc.x,to_loc.y,false);
+				univ.town.set_block(to_loc.x,to_loc.y,true);
 		}
 	}
 	
@@ -1223,7 +1223,7 @@ bool use_space(location where) {
 		univ.town.set_crate(to_loc.x,to_loc.y,true);
 		for(i = 0; i < univ.town.items.size(); i++)
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
-			   && (univ.town.items[i].contained))
+			   && univ.town.items[i].contained && univ.town.items[i].held)
 			 	univ.town.items[i].item_loc = to_loc;
 	}
 	if(univ.town.is_barrel(where.x,where.y)) {
@@ -1237,7 +1237,7 @@ bool use_space(location where) {
 		univ.town.set_barrel(to_loc.x,to_loc.y,true);
 		for(i = 0; i < univ.town.items.size(); i++)
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where
-			   && (univ.town.items[i].contained))
+			   && univ.town.items[i].contained && univ.town.items[i].held)
 			 	univ.town.items[i].item_loc = to_loc;
 	}
 	if(univ.town.is_block(where.x,where.y)) {
@@ -1743,9 +1743,9 @@ void push_things() {
 				hit_party(get_ran(1, 1, 6), eDamageType::WEAPON);
 			}
 			for(k = 0; k < univ.town.items.size(); k++)
-				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
+				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].held
 				   && (univ.town.items[k].item_loc == univ.town.p_loc))
-					univ.town.items[k].contained = false;
+					univ.town.items[k].contained = univ.town.items[k].held = false;
 			redraw = true;
 		}
 	}
@@ -1781,9 +1781,9 @@ void push_things() {
 						damage_pc(univ.party[i],get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN,0);
 					}
 					for(k = 0; k < univ.town.items.size(); k++)
-						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
+						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].held
 						   && (univ.town.items[k].item_loc == univ.party[i].combat_pos))
-							univ.town.items[k].contained = false;
+							univ.town.items[k].contained = univ.town.items[k].held = false;
 					redraw = true;
 				}
 			}
@@ -4022,7 +4022,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_PLACE_ITEM:
 			store_i = get_stored_item(spec.ex2a);
-			place_item(store_i,l,true,spec.ex2b);
+			place_item(store_i,l,spec.ex2b);
 			break;
 		case eSpecType::TOWN_SPLIT_PARTY:
 			if(which_mode == eSpecCtx::TALK)
@@ -4358,8 +4358,11 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
 							univ.town.items[k].item_loc.x = spec.sd1;
 							univ.town.items[k].item_loc.y = spec.sd2;
-							if(i && spec.m3)
-								univ.town.items[k].contained = true;
+							if(i && spec.m3) {
+								univ.town.items[k].contained = is_container(univ.town.items[k].item_loc);
+								if(univ.town.is_crate(spec.sd1,spec.sd2) || univ.town.is_barrel(spec.sd1,spec.sd2))
+									univ.town.items[k].held = true;
+							}
 						}
 					break;
 				case eSpecType::RECT_DESTROY_ITEMS:

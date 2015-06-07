@@ -1946,6 +1946,8 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 		}
 	town->preset_items.push_back({spot_hit, which_item, scenario.scen_items[which_item]});
 	town->preset_items.back().contained = container_there(spot_hit);
+	town->preset_items.back().property = property;
+	town->preset_items.back().always_there = always;
 	return true;
 }
 

@@ -43,7 +43,7 @@ public:
 	std::string full_name;
 	std::string name;
 	unsigned int treas_class;
-	bool ident, property, magic, contained, cursed, concealed, enchanted, unsellable;
+	bool ident, property, magic, contained, held, cursed, concealed, enchanted, unsellable;
 	std::string desc;
 	unsigned char rec_treas_class() const;
 	short item_weight() const;

@@ -869,7 +869,7 @@ void monst_inflict_fields(short which_monst) {
 					for(k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
 						   && (univ.town.items[k].item_loc == where_check))
-							univ.town.items[k].contained = false;
+							univ.town.items[k].contained = univ.town.items[k].held = false;
 				univ.town.set_crate(where_check.x,where_check.y,false);
 				univ.town.set_barrel(where_check.x,where_check.y,false);
 				if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
@@ -986,7 +986,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 				univ.town.set_crate(to_loc.x,to_loc.y, true);
 			for(i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && (univ.town.items[i].contained))
+				   && univ.town.items[i].contained && univ.town.items[i].held)
 					univ.town.items[i].item_loc = to_loc;
 		}
 	}
@@ -1000,7 +1000,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 				univ.town.set_barrel(to_loc.x,to_loc.y,true);
 			for(i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && (univ.town.items[i].contained))
+				   && univ.town.items[i].contained && univ.town.items[i].held)
 					univ.town.items[i].item_loc = to_loc;
 			
 		}

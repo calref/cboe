@@ -2200,7 +2200,7 @@ void do_alchemy() {
 			store_i.graphic_num += get_ran(1,0,2);
 			if(!univ.party[pc_num].give_item(store_i,false)) {
 				add_string_to_buf("No room in inventory. Potion placed on floor.", 2);
-				place_item(store_i,univ.town.p_loc,true);
+				place_item(store_i,univ.town.p_loc);
 			}
 			else add_string_to_buf("Alchemy: Successful.");
 		}
@@ -2618,7 +2618,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		if(overall_mode != MODE_OUTDOORS)
 			for(i = 0; i < 24; i++)
 				if(which_pc.items[i].variety != eItemType::NO_ITEM) {
-					dummy = place_item(which_pc.items[i],item_loc,true);
+					dummy = place_item(which_pc.items[i],item_loc);
 					which_pc.items[i].variety = eItemType::NO_ITEM;
 				}
 		if(type == eMainStatus::DEAD || type == eMainStatus::DUST)
