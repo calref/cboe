@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include "boe.consts.h"
+#include "boe.consts.hpp"
 
 #define DRAG_EDGE		15
 

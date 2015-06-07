@@ -6,13 +6,13 @@
 //
 //
 
-#include "scenario.h" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "scenario.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include <memory>
 #include <algorithm>
 #include <iostream>
 #include "fileio.hpp"
-#include "scen.actions.h"
+#include "scen.actions.hpp"
 
 //extern bool ae_loading, startup_loaded, All_Done, party_in_memory, finished_init;
 extern cScenario scenario;

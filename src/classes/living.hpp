@@ -12,8 +12,8 @@
 #include <map>
 #include <string>
 
-#include "location.h"
-#include "simpletypes.h"
+#include "location.hpp"
+#include "simpletypes.hpp"
 
 class iLiving {
 public:

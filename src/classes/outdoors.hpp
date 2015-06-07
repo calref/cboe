@@ -13,10 +13,10 @@
 #include <iosfwd>
 #include <array>
 
-#include "location.h"
-#include "special.h"
-#include "simpletypes.h"
-#include "monster.h"
+#include "location.hpp"
+#include "special.hpp"
+#include "simpletypes.hpp"
+#include "monster.hpp"
 
 namespace legacy {
 	struct out_wandering_type;

@@ -6,14 +6,14 @@
  *
  */
 
-#include "vehicle.h"
+#include "vehicle.hpp"
 
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 
 cVehicle::cVehicle() :
 	//loc(0,0),

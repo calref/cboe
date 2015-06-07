@@ -12,13 +12,13 @@
 #include <iosfwd>
 #include <array>
 #include <boost/filesystem/path.hpp>
-#include "terrain.h"
-#include "monster.h"
-#include "vehicle.h"
-#include "item.h"
-#include "special.h"
-#include "outdoors.h"
-#include "town.h"
+#include "terrain.hpp"
+#include "monster.hpp"
+#include "vehicle.hpp"
+#include "item.hpp"
+#include "special.hpp"
+#include "outdoors.hpp"
+#include "town.hpp"
 #include "vector2d.hpp"
 #include "shop.hpp"
 

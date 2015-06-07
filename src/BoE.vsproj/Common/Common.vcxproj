@@ -11,27 +11,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\classes\creatlist.h" />
+    <ClInclude Include="..\..\classes\creatlist.hpp" />
     <ClInclude Include="..\..\classes\creature.hpp" />
-    <ClInclude Include="..\..\classes\item.h" />
+    <ClInclude Include="..\..\classes\item.hpp" />
     <ClInclude Include="..\..\classes\living.hpp" />
-    <ClInclude Include="..\..\classes\location.h" />
-    <ClInclude Include="..\..\classes\monster.h" />
-    <ClInclude Include="..\..\classes\outdoors.h" />
-    <ClInclude Include="..\..\classes\party.h" />
-    <ClInclude Include="..\..\classes\pc.h" />
-    <ClInclude Include="..\..\classes\regtown.h" />
-    <ClInclude Include="..\..\classes\scenario.h" />
+    <ClInclude Include="..\..\classes\location.hpp" />
+    <ClInclude Include="..\..\classes\monster.hpp" />
+    <ClInclude Include="..\..\classes\outdoors.hpp" />
+    <ClInclude Include="..\..\classes\party.hpp" />
+    <ClInclude Include="..\..\classes\pc.hpp" />
+    <ClInclude Include="..\..\classes\regtown.hpp" />
+    <ClInclude Include="..\..\classes\scenario.hpp" />
     <ClInclude Include="..\..\classes\shop.hpp" />
-    <ClInclude Include="..\..\classes\simpletypes.h" />
-    <ClInclude Include="..\..\classes\special.h" />
+    <ClInclude Include="..\..\classes\simpletypes.hpp" />
+    <ClInclude Include="..\..\classes\special.hpp" />
     <ClInclude Include="..\..\classes\spell.hpp" />
-    <ClInclude Include="..\..\classes\talking.h" />
-    <ClInclude Include="..\..\classes\terrain.h" />
-    <ClInclude Include="..\..\classes\tmpltown.h" />
-    <ClInclude Include="..\..\classes\town.h" />
-    <ClInclude Include="..\..\classes\universe.h" />
-    <ClInclude Include="..\..\classes\vehicle.h" />
+    <ClInclude Include="..\..\classes\talking.hpp" />
+    <ClInclude Include="..\..\classes\terrain.hpp" />
+    <ClInclude Include="..\..\classes\tmpltown.hpp" />
+    <ClInclude Include="..\..\classes\town.hpp" />
+    <ClInclude Include="..\..\classes\universe.hpp" />
+    <ClInclude Include="..\..\classes\vehicle.hpp" />
     <ClInclude Include="..\..\dialogxml\button.hpp" />
     <ClInclude Include="..\..\dialogxml\control.hpp" />
     <ClInclude Include="..\..\dialogxml\dialog.hpp" />
@@ -48,7 +48,7 @@
     <ClInclude Include="..\..\dialogxml\xml-parser\tinystr.h" />
     <ClInclude Include="..\..\dialogxml\xml-parser\tinyxml.h" />
     <ClInclude Include="..\..\dialogxml\xml-parser\tinyprint.hpp" />
-    <ClInclude Include="..\..\oldstructs.h" />
+    <ClInclude Include="..\..\oldstructs.hpp" />
     <ClInclude Include="..\..\tools\cursors.hpp" />
     <ClInclude Include="..\..\tools\fileio.hpp" />
     <ClInclude Include="..\..\tools\graphtool.hpp" />

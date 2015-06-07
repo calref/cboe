@@ -4,17 +4,17 @@
 #include <cstring>
 #include <array>
 #include <string>
-#include "scen.global.h"
-#include "scenario.h"
+#include "scen.global.hpp"
+#include "scenario.hpp"
 #include "graphtool.hpp"
-#include "scen.graphics.h"
-#include "scen.actions.h"
+#include "scen.graphics.hpp"
+#include "scen.actions.hpp"
 #include "soundtool.hpp"
-#include "scen.core.h"
-#include "scen.fileio.h"
-#include "scen.keydlgs.h"
-#include "scen.townout.h"
-#include "scen.menus.h"
+#include "scen.core.hpp"
+#include "scen.fileio.hpp"
+#include "scen.keydlgs.hpp"
+#include "scen.townout.hpp"
+#include "scen.menus.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
 #include "winutil.hpp"
@@ -22,7 +22,7 @@
 #include "scrollbar.hpp"
 #include "dlogutil.hpp"
 
-#include "scen.btnmg.h"
+#include "scen.btnmg.hpp"
 
 extern char current_string[256];
 extern short mini_map_scales[3];

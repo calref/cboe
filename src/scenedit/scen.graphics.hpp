@@ -1,5 +1,5 @@
 
-#include "simpletypes.h"
+#include "simpletypes.hpp"
 
 void Set_up_win ();
 void run_startup_g();

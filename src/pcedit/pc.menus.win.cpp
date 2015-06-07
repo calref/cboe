@@ -1,9 +1,9 @@
 
-#include "pc.menus.h"
+#include "pc.menus.hpp"
 #include <map>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Resource.h"
-#include "universe.h"
+#include "universe.hpp"
 #include "winutil.hpp"
 #include "menu_accel.win.hpp"
 

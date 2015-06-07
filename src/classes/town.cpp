@@ -6,15 +6,15 @@
  *
  */
 
-#include "town.h"
+#include "town.hpp"
 
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "scenario.h"
-#include "oldstructs.h"
+#include "scenario.hpp"
+#include "oldstructs.hpp"
 #include "mathutil.hpp"
 
 void cTown::append(legacy::big_tr_type&, int){}

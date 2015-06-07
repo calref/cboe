@@ -7,8 +7,8 @@
  */
 
 #include <cstdint>
-#include "oldstructs.h"
-#include "location.h"
+#include "oldstructs.hpp"
+#include "location.hpp"
 
 void flip_long(int32_t *s);
 void flip_spec_node(legacy::special_node_type *spec);

@@ -6,12 +6,12 @@
 //
 //
 
-#include "universe.h" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include <memory>
 #include <algorithm>
 #include "fileio.hpp"
-#include "boe.global.h"
+#include "boe.global.hpp"
 #include "dlogutil.hpp"
 
 extern void finish_load_party();

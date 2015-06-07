@@ -14,7 +14,7 @@
 #include "dlogutil.hpp"
 #include "gzstream.h"
 
-#include "universe.h"
+#include "universe.hpp"
 #include "graphtool.hpp"
 
 #include "porting.hpp"

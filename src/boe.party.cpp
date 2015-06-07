@@ -1,37 +1,37 @@
 
 #include <iostream>
 
-#include "boe.global.h"
+#include "boe.global.hpp"
 
 #include <array>
 #include <map>
 
-#include "universe.h"
+#include "universe.hpp"
 
-#include "boe.fileio.h"
-#include "boe.graphics.h"
-#include "boe.graphutil.h"
-#include "boe.newgraph.h"
-#include "boe.specials.h"
-#include "boe.itemdata.h"
-#include "boe.infodlg.h"
-#include "boe.items.h"
+#include "boe.fileio.hpp"
+#include "boe.graphics.hpp"
+#include "boe.graphutil.hpp"
+#include "boe.newgraph.hpp"
+#include "boe.specials.hpp"
+#include "boe.itemdata.hpp"
+#include "boe.infodlg.hpp"
+#include "boe.items.hpp"
 #include <cstring>
 #include <queue>
-#include "boe.party.h"
-#include "boe.monster.h"
-#include "boe.town.h"
-#include "boe.combat.h"
-#include "boe.locutils.h"
-#include "boe.text.h"
+#include "boe.party.hpp"
+#include "boe.monster.hpp"
+#include "boe.town.hpp"
+#include "boe.combat.hpp"
+#include "boe.locutils.hpp"
+#include "boe.text.hpp"
 #include "soundtool.hpp"
-#include "boe.main.h"
+#include "boe.main.hpp"
 #include "graphtool.hpp"
 #include "mathutil.hpp"
 #include "dlogutil.hpp"
 #include "winutil.hpp"
 #include "fileio.hpp"
-#include "boe.menus.h"
+#include "boe.menus.hpp"
 #include "restypes.hpp"
 #include <boost/lexical_cast.hpp>
 #include "button.hpp"

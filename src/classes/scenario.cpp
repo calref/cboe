@@ -6,14 +6,14 @@
  *
  */
 
-#include "scenario.h"
+#include "scenario.hpp"
 
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 
 cScenario::~cScenario() {
 	destroy_terrain();

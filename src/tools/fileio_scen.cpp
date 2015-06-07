@@ -14,8 +14,8 @@
 
 #include "dlogutil.hpp"
 
-#include "scenario.h"
-#include "regtown.h"
+#include "scenario.hpp"
+#include "regtown.hpp"
 #include "map_parse.hpp"
 #include "special_parse.hpp"
 #include "graphtool.hpp"

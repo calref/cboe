@@ -1,10 +1,10 @@
 
 #include <iomanip>
-#include "pc.global.h"
-#include "universe.h"
-#include "pc.graphics.h"
-#include "pc.editors.h"
-#include "pc.action.h"
+#include "pc.global.hpp"
+#include "universe.hpp"
+#include "pc.graphics.hpp"
+#include "pc.editors.hpp"
+#include "pc.action.hpp"
 #include "soundtool.hpp"
 #include "graphtool.hpp"
 #include "dlogutil.hpp"

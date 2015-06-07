@@ -6,7 +6,7 @@
  *
  */
 
-#include "tmpltown.h"
+#include "tmpltown.hpp"
 
 #include <string>
 #include <vector>

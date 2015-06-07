@@ -44,31 +44,31 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\scenedit\scen.actions.h">
+    <ClInclude Include="..\..\scenedit\scen.actions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.btnmg.h">
+    <ClInclude Include="..\..\scenedit\scen.btnmg.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.core.h">
+    <ClInclude Include="..\..\scenedit\scen.core.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.fileio.h">
+    <ClInclude Include="..\..\scenedit\scen.fileio.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.global.h">
+    <ClInclude Include="..\..\scenedit\scen.global.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.graphics.h">
+    <ClInclude Include="..\..\scenedit\scen.graphics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.keydlgs.h">
+    <ClInclude Include="..\..\scenedit\scen.keydlgs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.menus.h">
+    <ClInclude Include="..\..\scenedit\scen.menus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.townout.h">
+    <ClInclude Include="..\..\scenedit\scen.townout.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">

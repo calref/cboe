@@ -11,7 +11,7 @@
 
 #include <iosfwd>
 #include <string>
-#include "simpletypes.h"
+#include "simpletypes.hpp"
 #include "shop.hpp"
 
 namespace legacy {

@@ -1,18 +1,18 @@
 
 #include <cstring>
-#include "scen.global.h"
-#include "scenario.h"
+#include "scen.global.hpp"
+#include "scenario.hpp"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <boost/filesystem/operations.hpp>
-#include "scen.fileio.h"
-#include "scen.keydlgs.h"
+#include "scen.fileio.hpp"
+#include "scen.keydlgs.hpp"
 #include "graphtool.hpp"
-#include "scen.core.h"
+#include "scen.core.hpp"
 #include "soundtool.hpp"
 #include "mathutil.hpp"
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 #include "fileio.hpp"
 #include "dlogutil.hpp"
 #include "tarball.hpp"

@@ -6,7 +6,7 @@
  *
  */
 
-#include "party.h"
+#include "party.hpp"
 
 #include <string>
 #include <vector>
@@ -14,10 +14,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "scenario.h"
-#include "universe.h"
+#include "scenario.hpp"
+#include "universe.hpp"
 #include "dlogutil.hpp"
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 #include "fileio.hpp"
 #include "mathutil.hpp"
 

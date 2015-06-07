@@ -21,70 +21,70 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.actions.h">
+    <ClInclude Include="..\..\boe.actions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.combat.h">
+    <ClInclude Include="..\..\boe.combat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.consts.h">
+    <ClInclude Include="..\..\boe.consts.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.dlgutil.h">
+    <ClInclude Include="..\..\boe.dlgutil.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.fileio.h">
+    <ClInclude Include="..\..\boe.fileio.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.global.h">
+    <ClInclude Include="..\..\boe.global.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.graphics.h">
+    <ClInclude Include="..\..\boe.graphics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.graphutil.h">
+    <ClInclude Include="..\..\boe.graphutil.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.infodlg.h">
+    <ClInclude Include="..\..\boe.infodlg.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.itemdata.h">
+    <ClInclude Include="..\..\boe.itemdata.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.items.h">
+    <ClInclude Include="..\..\boe.items.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.locutils.h">
+    <ClInclude Include="..\..\boe.locutils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.main.h">
+    <ClInclude Include="..\..\boe.main.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.menus.h">
+    <ClInclude Include="..\..\boe.menus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.monster.h">
+    <ClInclude Include="..\..\boe.monster.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.newgraph.h">
+    <ClInclude Include="..\..\boe.newgraph.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.party.h">
+    <ClInclude Include="..\..\boe.party.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.specials.h">
+    <ClInclude Include="..\..\boe.specials.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.startup.h">
+    <ClInclude Include="..\..\boe.startup.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.text.h">
+    <ClInclude Include="..\..\boe.text.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.town.h">
+    <ClInclude Include="..\..\boe.town.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\boe.townspec.h">
+    <ClInclude Include="..\..\boe.townspec.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

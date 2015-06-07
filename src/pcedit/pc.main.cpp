@@ -1,18 +1,18 @@
 
 #include <iostream>
 #include <cstring>
-#include "pc.global.h"
-#include "universe.h"
-#include "pc.graphics.h"
-#include "pc.editors.h"
-#include "pc.action.h"
-#include "pc.fileio.h"
+#include "pc.global.hpp"
+#include "universe.hpp"
+#include "pc.graphics.hpp"
+#include "pc.editors.hpp"
+#include "pc.action.hpp"
+#include "pc.fileio.hpp"
 #include "soundtool.hpp"
 #include "graphtool.hpp"
-#include "boe.consts.h"
+#include "boe.consts.hpp"
 #include "dlogutil.hpp"
 #include "fileio.hpp"
-#include "pc.menus.h"
+#include "pc.menus.hpp"
 #include "winutil.hpp"
 #include "cursors.hpp"
 

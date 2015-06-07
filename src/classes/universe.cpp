@@ -6,7 +6,7 @@
  *
  */
 
-#include "universe.h"
+#include "universe.hpp"
 
 #include <string>
 #include <vector>
@@ -14,8 +14,8 @@
 #include <sstream>
 #include <stack>
 
-#include "regtown.h"
-#include "oldstructs.h"
+#include "regtown.hpp"
+#include "oldstructs.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
 

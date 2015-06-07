@@ -18,7 +18,7 @@
 
 #include "dlogutil.hpp"
 #include "porting.hpp"
-#include "location.h"
+#include "location.hpp"
 
 static int16_t extract_word(char* ptr) {
 	int16_t s = *(int16_t*) ptr;

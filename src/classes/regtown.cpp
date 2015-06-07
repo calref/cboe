@@ -6,16 +6,16 @@
  *
  */
 
-#include "regtown.h"
+#include "regtown.hpp"
 
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "scenario.h"
+#include "scenario.hpp"
 #include "dlogutil.hpp"
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 #include "fileio.hpp"
 
 void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){

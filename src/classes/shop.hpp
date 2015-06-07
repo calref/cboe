@@ -12,7 +12,7 @@
 #include <array>
 #include <string>
 #include <iosfwd>
-#include "item.h"
+#include "item.hpp"
 #include "pictypes.hpp" // for pic_num_t
 
 // Windows headers are really annoying with their defined constants.

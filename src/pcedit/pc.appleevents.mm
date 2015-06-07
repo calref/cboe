@@ -6,12 +6,12 @@
 //
 //
 
-#include "universe.h" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include <string>
 #include "fileio.hpp"
-#include "pc.menus.h"
-#include "pc.fileio.h"
+#include "pc.menus.hpp"
+#include "pc.fileio.hpp"
 
 extern bool verify_restore_quit(std::string dlog);
 extern bool All_Done, party_in_scen, scen_items_loaded;

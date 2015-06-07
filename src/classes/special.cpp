@@ -6,9 +6,7 @@
  *
  */
 
-#include "special.h"
-
-#include "special.h"
+#include "special.hpp"
 #include <string>
 #include <vector>
 #include <map>
@@ -16,7 +14,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include "dlogutil.hpp"
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 
 cSpecial::cSpecial(){
 	type = eSpecType::NONE;

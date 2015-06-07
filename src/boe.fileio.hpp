@@ -3,8 +3,8 @@
 #define BOE_GAME_FILEIO_H
 
 #include <boost/filesystem/path.hpp>
-#include "location.h"
-#include "simpletypes.h"
+#include "location.hpp"
+#include "simpletypes.hpp"
 
 namespace fs = boost::filesystem; // TODO: Centralize this alias!
 

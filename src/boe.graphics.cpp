@@ -3,30 +3,30 @@
 #include <cstdio>
 #include <list>
 
-#include "boe.global.h"
+#include "boe.global.hpp"
 
-#include "universe.h"
-#include "boe.graphics.h"
-#include "boe.newgraph.h"
-#include "boe.graphutil.h"
-#include "boe.monster.h"
-#include "boe.locutils.h"
-#include "boe.text.h"
+#include "universe.hpp"
+#include "boe.graphics.hpp"
+#include "boe.newgraph.hpp"
+#include "boe.graphutil.hpp"
+#include "boe.monster.hpp"
+#include "boe.locutils.hpp"
+#include "boe.text.hpp"
 #include "graphtool.hpp"
 #include "soundtool.hpp"
 #include "mathutil.hpp"
 #include "button.hpp"
 
-#include "boe.party.h"
-#include "boe.town.h"
-#include "boe.items.h"
-#include "boe.dlgutil.h"
-#include "boe.infodlg.h"
+#include "boe.party.hpp"
+#include "boe.town.hpp"
+#include "boe.items.hpp"
+#include "boe.dlgutil.hpp"
+#include "boe.infodlg.hpp"
 
 #include "scrollbar.hpp"
 
 #include "restypes.hpp"
-#include "boe.menus.h"
+#include "boe.menus.hpp"
 #include "winutil.hpp"
 
 extern sf::RenderWindow mainPtr;

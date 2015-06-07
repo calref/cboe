@@ -2,10 +2,10 @@
 #ifndef BOE_GAME_INFODLG_H
 #define BOE_GAME_INFODLG_H
 
-#include "simpletypes.h"
-#include "item.h"
-#include "monster.h"
-#include "pc.h"
+#include "simpletypes.hpp"
+#include "item.hpp"
+#include "monster.hpp"
+#include "pc.hpp"
 #include "creature.hpp"
 
 class cDialog;

@@ -12,12 +12,12 @@
 #include <vector>
 #include <iosfwd>
 #include <array>
-#include "simpletypes.h"
-#include "location.h"
-#include "special.h"
-#include "monster.h"
-#include "talking.h"
-#include "item.h"
+#include "simpletypes.hpp"
+#include "location.hpp"
+#include "special.hpp"
+#include "monster.hpp"
+#include "talking.hpp"
+#include "item.hpp"
 
 namespace legacy {
 	struct town_record_type;

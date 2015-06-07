@@ -43,61 +43,61 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\classes\creatlist.h">
+    <ClInclude Include="..\..\classes\creatlist.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\item.h">
+    <ClInclude Include="..\..\classes\item.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\location.h">
+    <ClInclude Include="..\..\classes\location.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\monster.h">
+    <ClInclude Include="..\..\classes\monster.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\outdoors.h">
+    <ClInclude Include="..\..\classes\outdoors.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\party.h">
+    <ClInclude Include="..\..\classes\party.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\pc.h">
+    <ClInclude Include="..\..\classes\pc.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\regtown.h">
+    <ClInclude Include="..\..\classes\regtown.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\scenario.h">
+    <ClInclude Include="..\..\classes\scenario.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\classes\shop.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\simpletypes.h">
+    <ClInclude Include="..\..\classes\simpletypes.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\special.h">
+    <ClInclude Include="..\..\classes\special.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\classes\spell.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\talking.h">
+    <ClInclude Include="..\..\classes\talking.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\terrain.h">
+    <ClInclude Include="..\..\classes\terrain.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\tmpltown.h">
+    <ClInclude Include="..\..\classes\tmpltown.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\town.h">
+    <ClInclude Include="..\..\classes\town.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\universe.h">
+    <ClInclude Include="..\..\classes\universe.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\vehicle.h">
+    <ClInclude Include="..\..\classes\vehicle.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\dialogxml\xml-parser\ticpp.h">
@@ -197,7 +197,7 @@
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\targetver.h" />
-    <ClInclude Include="..\..\oldstructs.h">
+    <ClInclude Include="..\..\oldstructs.hpp">
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\classes\creature.hpp">

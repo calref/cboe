@@ -10,10 +10,10 @@
 #define BoE_creature_hpp
 
 #include <iosfwd>
-#include "location.h"
-#include "monster.h"
+#include "location.hpp"
+#include "monster.hpp"
 #include "living.hpp"
-#include "simpletypes.h"
+#include "simpletypes.hpp"
 
 class cCreature : public cMonster, public cTownperson, public iLiving {
 public:

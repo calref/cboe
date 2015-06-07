@@ -12,8 +12,8 @@
 #include <string>
 #include <iosfwd>
 
-#include "location.h"
-#include "simpletypes.h"
+#include "location.hpp"
+#include "simpletypes.hpp"
 
 namespace legacy { struct item_record_type; };
 

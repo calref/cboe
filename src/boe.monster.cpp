@@ -1,18 +1,18 @@
 
 #include <cstdio>
 
-#include "boe.global.h"
+#include "boe.global.hpp"
 
-#include "universe.h"
-#include "boe.locutils.h"
-#include "boe.monster.h"
-#include "boe.text.h"
-#include "boe.specials.h"
-#include "boe.items.h"
+#include "universe.hpp"
+#include "boe.locutils.hpp"
+#include "boe.monster.hpp"
+#include "boe.text.hpp"
+#include "boe.specials.hpp"
+#include "boe.items.hpp"
 #include "soundtool.hpp"
-#include "boe.graphics.h"
-#include "boe.newgraph.h"
-#include "boe.main.h"
+#include "boe.graphics.hpp"
+#include "boe.newgraph.hpp"
+#include "boe.main.hpp"
 #include "mathutil.hpp"
 #include "graphtool.hpp"
 

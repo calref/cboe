@@ -14,7 +14,7 @@
 #include <iosfwd>
 
 #include "soundtool.hpp"
-#include "simpletypes.h"
+#include "simpletypes.hpp"
 #include "graphtool.hpp"
 #include "living.hpp"
 #include "spell.hpp"

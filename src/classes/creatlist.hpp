@@ -9,7 +9,7 @@
 #ifndef BOE_DATA_CREATLIST_H
 #define BOE_DATA_CREATLIST_H
 
-#include "monster.h"
+#include "monster.hpp"
 #include <iosfwd>
 #include "creature.hpp"
 

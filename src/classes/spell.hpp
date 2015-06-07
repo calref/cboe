@@ -10,7 +10,7 @@
 #define BoE_DATA_SPELL_HPP
 
 #include <map>
-#include <simpletypes.h>
+#include "simpletypes.hpp"
 
 enum eSpellRefer {REFER_YES, REFER_IMMED, REFER_TARGET, REFER_FANCY};
 enum eSpellSelect {SELECT_NO, SELECT_ACTIVE, SELECT_ANY};
