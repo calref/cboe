@@ -857,6 +857,11 @@ Soul on it, meaning that a random existing monster will be erased if necessary t
 room. Multispace monsters, monsters of the Important race, and monsters with the Splits
 special ability will not be recorded.</dd></dd>
 
+<dt>Type 95: Affect Monster Target</dt><dd>Changes the monster's current target. If the
+target is not a monster, this has no effect.
+<dl>
+<dt>Extra 1a:</dt><dd>The new target (same as Extra 1b in Select a Target)</dd></dd>
+
 <dt>Type 96: Affect Monster Attack</dt><dd>Changes the strength of one of a monster's
 attacks. If the target is not a monster, this has no effect.
 <dl>
@@ -1822,6 +1827,13 @@ special encounter, once done, each node calls the Jump To node.</p>
 
 <dt>Type 225: Make Outdoor Wandering</dt><dd>A group of wandering monsters appears (at one
 of the designated wandering monster sites).</dd>
+
+<dt>Type 226: Force Town Entry</dt><dd>The party is immediately placed in the specified town at the specified location.
+<dl>
+<dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
+<dt>Extra 1a:</dt><dd>The town to enter.</dd>
+<dt>Extra 1b:</dt><dd>You can specify a direction here to use one of the preset town entry points. If you do this, leave the location at (-1,-1).</dd>
+<dt>Extra 2a, Extra 2b:</dt><dd>The location to place the party at in the town.</dd></dd>
 
 <dt>Type 227: Place Outdoor Encounter</dt><dd>Places a special outdoor wandering encounter
 in a random open space near the party. This can be accompanied by one or two messages, if

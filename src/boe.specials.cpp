@@ -3247,6 +3247,11 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			univ.party[pc_num].main_status -= eMainStatus::SPLIT;
 			univ.stored_pcs.erase(spec.ex1a);
 			break;
+		case eSpecType::AFFECT_MONST_TARG:
+			if(pc_num < 100) break;
+			// TODO: Verify this actually works! It's possible the monster ignores this and just recalculates its target each turn.
+			dynamic_cast<cCreature*>(pc)->target = spec.ex1a;
+			break;
 		default:
 			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
@@ -4429,6 +4434,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	std::string str1, str2;
 	cSpecial spec;
 	location l;
+	int i;
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
@@ -4456,6 +4462,17 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			out_move_party(spec.ex1a,spec.ex1b);
 			*redraw = 1;
 			*a = 1;
+			break;
+		case eSpecType::OUT_FORCE_TOWN:
+			l = {spec.ex2a, spec.ex2b};
+			if(l.x < 0 || l.y < 0 || l.x >= 64 || l.y >= 64)
+				i = 9;
+			else if(spec.ex1b == 0) i = 2;
+			else if(spec.ex1b == 4) i = 0;
+			else if(spec.ex1b < 4) i = 3;
+			else i = 1;
+			if(i == 9) force_town_enter(spec.ex1a, l);
+			start_town_mode(spec.ex1a, i);
 			break;
 		default:
 			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");

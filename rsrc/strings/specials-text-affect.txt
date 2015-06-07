@@ -222,15 +222,15 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Affect Monster Target
+Unused
+Unused
+First part of message
+Second part of message
 Unused
 Unused
 Unused
-Unused
-Unused
-Unused
-Unused
-Unused
+New target (0-5 PC, 100+x monster x)
 Unused
 Unused
 Unused
