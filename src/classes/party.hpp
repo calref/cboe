@@ -14,12 +14,12 @@
 #include <array>
 #include <map>
 #include <set>
-#include "vehicle.h"
-#include "creatlist.h"
-#include "item.h"
-#include "pc.h"
-#include "outdoors.h"
-#include "monster.h"
+#include "vehicle.hpp"
+#include "creatlist.hpp"
+#include "item.hpp"
+#include "pc.hpp"
+#include "outdoors.hpp"
+#include "monster.hpp"
 #include "living.hpp"
 
 namespace legacy {

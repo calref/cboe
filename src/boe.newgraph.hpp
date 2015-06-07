@@ -1,8 +1,8 @@
 
 #include <string>
 #include <SFML/Graphics/RenderTarget.hpp>
-#include "location.h"
-#include "item.h"
+#include "location.hpp"
+#include "item.hpp"
 
 struct word_rect_t {
 	std::string word;

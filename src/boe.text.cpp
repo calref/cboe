@@ -4,11 +4,11 @@
 #include <sstream>
 #include <list>
 
-#include "boe.global.h"
+#include "boe.global.hpp"
 
-#include "universe.h"
-#include "boe.text.h"
-#include "boe.locutils.h"
+#include "universe.hpp"
+#include "boe.text.hpp"
+#include "boe.locutils.hpp"
 #include "mathutil.hpp"
 #include "graphtool.hpp"
 #include "scrollbar.hpp"

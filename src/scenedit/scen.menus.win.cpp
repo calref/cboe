@@ -1,9 +1,9 @@
 
-#include "scen.menus.h"
+#include "scen.menus.hpp"
 #include <map>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Resource.h"
-#include "scenario.h"
+#include "scenario.hpp"
 #include "winutil.hpp"
 #include "menu_accel.win.hpp"
 

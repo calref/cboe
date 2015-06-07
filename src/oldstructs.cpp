@@ -6,7 +6,7 @@
 //
 //
 
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 #include <fstream>
 #include <iostream>
 #ifndef _WIN32

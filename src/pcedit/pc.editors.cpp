@@ -1,8 +1,8 @@
 
-#include "pc.graphics.h"
-#include "pc.global.h"
-#include "universe.h"
-#include "pc.editors.h"
+#include "pc.graphics.hpp"
+#include "pc.global.hpp"
+#include "universe.hpp"
+#include "pc.editors.hpp"
 #include "graphtool.hpp"
 #include "dialog.hpp"
 #include "control.hpp"

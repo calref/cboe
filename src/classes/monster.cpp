@@ -6,7 +6,7 @@
  *
  */
 
-#include "monster.h"
+#include "monster.hpp"
 
 #include <string>
 #include <vector>
@@ -16,7 +16,7 @@
 #include <iomanip>
 #include <boost/lexical_cast.hpp>
 
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 #include "fileio.hpp"
 #include "spell.hpp"
 

@@ -2,13 +2,13 @@
 #include <cstring>
 #include <cstdio>
 
-#include "pc.global.h"
-#include "universe.h"
-#include "pc.fileio.h"
-#include "pc.graphics.h"
+#include "pc.global.hpp"
+#include "universe.hpp"
+#include "pc.fileio.hpp"
+#include "pc.graphics.hpp"
 #include "graphtool.hpp"
 #include "soundtool.hpp"
-#include "pc.editors.h"
+#include "pc.editors.hpp"
 #include "mathutil.hpp"
 #include "dlogutil.hpp"
 #include "restypes.hpp"

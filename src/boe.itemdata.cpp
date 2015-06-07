@@ -2,10 +2,10 @@
 #include <cstdio>
 #include <cstring>
 
-#include "boe.global.h"
+#include "boe.global.hpp"
 
-#include "universe.h"
-#include "boe.itemdata.h"
+#include "universe.hpp"
+#include "boe.itemdata.hpp"
 #include "mathutil.hpp"
 
 bool allow_junk_treasure = false;

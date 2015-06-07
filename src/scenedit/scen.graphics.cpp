@@ -2,24 +2,24 @@
 #include <cstdio>
 #include <sstream>
 #include <cstring>
-#include "scen.global.h"
-#include "scenario.h"
+#include "scen.global.hpp"
+#include "scenario.hpp"
 #include "graphtool.hpp"
-#include "scen.graphics.h"
+#include "scen.graphics.hpp"
 #include <cmath>
-#include "scen.keydlgs.h"
+#include "scen.keydlgs.hpp"
 #include "soundtool.hpp"
 #include "mathutil.hpp"
-#include "boe.consts.h" // TODO: Put these constants in a global file
+#include "boe.consts.hpp" // TODO: Put these constants in a global file
 
 #include "dialog.hpp"
 
-#include "scen.core.h"
-#include "scen.townout.h"
+#include "scen.core.hpp"
+#include "scen.townout.hpp"
 #include "scrollbar.hpp"
 #include "restypes.hpp"
 
-#include "scen.btnmg.h"
+#include "scen.btnmg.hpp"
 
 void load_main_screen();
 void load_terrain_template();

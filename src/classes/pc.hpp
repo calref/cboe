@@ -14,8 +14,8 @@
 #include <iosfwd>
 #include <array>
 
-#include "simpletypes.h"
-#include "item.h"
+#include "simpletypes.hpp"
+#include "item.hpp"
 #include "pictypes.hpp"
 #include "living.hpp"
 

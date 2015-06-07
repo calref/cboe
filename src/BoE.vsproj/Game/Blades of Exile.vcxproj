@@ -95,28 +95,28 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\boe.actions.h" />
-    <ClInclude Include="..\..\boe.combat.h" />
-    <ClInclude Include="..\..\boe.consts.h" />
-    <ClInclude Include="..\..\boe.dlgutil.h" />
-    <ClInclude Include="..\..\boe.fileio.h" />
-    <ClInclude Include="..\..\boe.global.h" />
-    <ClInclude Include="..\..\boe.graphics.h" />
-    <ClInclude Include="..\..\boe.graphutil.h" />
-    <ClInclude Include="..\..\boe.infodlg.h" />
-    <ClInclude Include="..\..\boe.itemdata.h" />
-    <ClInclude Include="..\..\boe.items.h" />
-    <ClInclude Include="..\..\boe.locutils.h" />
-    <ClInclude Include="..\..\boe.main.h" />
-    <ClInclude Include="..\..\boe.menus.h" />
-    <ClInclude Include="..\..\boe.monster.h" />
-    <ClInclude Include="..\..\boe.newgraph.h" />
-    <ClInclude Include="..\..\boe.party.h" />
-    <ClInclude Include="..\..\boe.specials.h" />
-    <ClInclude Include="..\..\boe.startup.h" />
-    <ClInclude Include="..\..\boe.text.h" />
-    <ClInclude Include="..\..\boe.town.h" />
-    <ClInclude Include="..\..\boe.townspec.h" />
+    <ClInclude Include="..\..\boe.actions.hpp" />
+    <ClInclude Include="..\..\boe.combat.hpp" />
+    <ClInclude Include="..\..\boe.consts.hpp" />
+    <ClInclude Include="..\..\boe.dlgutil.hpp" />
+    <ClInclude Include="..\..\boe.fileio.hpp" />
+    <ClInclude Include="..\..\boe.global.hpp" />
+    <ClInclude Include="..\..\boe.graphics.hpp" />
+    <ClInclude Include="..\..\boe.graphutil.hpp" />
+    <ClInclude Include="..\..\boe.infodlg.hpp" />
+    <ClInclude Include="..\..\boe.itemdata.hpp" />
+    <ClInclude Include="..\..\boe.items.hpp" />
+    <ClInclude Include="..\..\boe.locutils.hpp" />
+    <ClInclude Include="..\..\boe.main.hpp" />
+    <ClInclude Include="..\..\boe.menus.hpp" />
+    <ClInclude Include="..\..\boe.monster.hpp" />
+    <ClInclude Include="..\..\boe.newgraph.hpp" />
+    <ClInclude Include="..\..\boe.party.hpp" />
+    <ClInclude Include="..\..\boe.specials.hpp" />
+    <ClInclude Include="..\..\boe.startup.hpp" />
+    <ClInclude Include="..\..\boe.text.hpp" />
+    <ClInclude Include="..\..\boe.town.hpp" />
+    <ClInclude Include="..\..\boe.townspec.hpp" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>

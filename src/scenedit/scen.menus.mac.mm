@@ -6,8 +6,8 @@
 //
 //
 
-#include "scen.menus.h"
-#include "scenario.h" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "scen.menus.hpp"
+#include "scenario.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include "winutil.hpp"
 

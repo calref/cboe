@@ -12,8 +12,8 @@
 #include <iosfwd>
 #include <string>
 #include <functional>
-#include "simpletypes.h"
-#include "location.h"
+#include "simpletypes.hpp"
+#include "location.hpp"
 
 namespace legacy { struct special_node_type; };
 

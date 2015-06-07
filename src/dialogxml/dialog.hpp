@@ -22,7 +22,7 @@
 
 #include "ticpp.h"
 #include "dialog.keys.hpp"
-#include "location.h"
+#include "location.hpp"
 #include <boost/any.hpp>
 
 class cControl;

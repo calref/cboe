@@ -10,9 +10,9 @@
 
 #include <iostream>
 #include <sstream>
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 #include "mathutil.hpp"
-#include "pc.h"
+#include "pc.hpp"
 #include "spell.hpp"
 
 const short cCreature::charm_odds[21] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0, 0};

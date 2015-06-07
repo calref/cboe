@@ -1,12 +1,12 @@
 
 #include <cstdio>
 
-#include "pc.graphics.h"
-#include "pc.global.h"
-#include "universe.h"
-#include "pc.editors.h"
-#include "pc.fileio.h"
-#include "pc.action.h"
+#include "pc.graphics.hpp"
+#include "pc.global.hpp"
+#include "universe.hpp"
+#include "pc.editors.hpp"
+#include "pc.fileio.hpp"
+#include "pc.action.hpp"
 #include "graphtool.hpp"
 #include "soundtool.hpp"
 #include "mathutil.hpp"

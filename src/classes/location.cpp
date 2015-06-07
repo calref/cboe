@@ -6,7 +6,7 @@
  *
  */
 
-#include "location.h"
+#include "location.hpp"
 #include "mathutil.hpp"
 
 bool operator == (location p1,location p2){

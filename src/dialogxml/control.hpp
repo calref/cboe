@@ -20,7 +20,7 @@
 #include <boost/any.hpp>
 #include "dialog.hpp"
 
-#include "location.h"
+#include "location.hpp"
 
 //struct cPict {
 //	short pict;

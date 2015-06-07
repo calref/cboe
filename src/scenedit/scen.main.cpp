@@ -2,24 +2,24 @@
 #include <cstdio>
 #include <thread>
 
-#include "scen.global.h"
-#include "scenario.h"
+#include "scen.global.hpp"
+#include "scenario.hpp"
 #include "graphtool.hpp"
-#include "scen.graphics.h"
-#include "scen.actions.h"
-#include "scen.fileio.h"
-#include "scen.btnmg.h"
+#include "scen.graphics.hpp"
+#include "scen.actions.hpp"
+#include "scen.fileio.hpp"
+#include "scen.btnmg.hpp"
 #include "soundtool.hpp"
-#include "scen.townout.h"
-#include "scen.core.h"
-#include "scen.keydlgs.h"
+#include "scen.townout.hpp"
+#include "scen.core.hpp"
+#include "scen.keydlgs.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
 #include "scrollbar.hpp"
 #include "winutil.hpp"
 #include "cursors.hpp"
 #include "dlogutil.hpp"
-#include "scen.menus.h"
+#include "scen.menus.hpp"
 
 /* Globals */
 bool  All_Done = false;

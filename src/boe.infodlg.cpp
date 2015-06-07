@@ -2,22 +2,22 @@
 #include <cstdio>
 #include <map>
 
-#include "boe.global.h"
+#include "boe.global.hpp"
 
-#include "universe.h"
+#include "universe.hpp"
 
-#include "boe.graphics.h"
-#include "boe.newgraph.h"
-#include "boe.items.h"
+#include "boe.graphics.hpp"
+#include "boe.newgraph.hpp"
+#include "boe.items.hpp"
 #include <cstring>
-#include "boe.monster.h"
-#include "boe.party.h"
-#include "boe.locutils.h"
-#include "boe.text.h"
+#include "boe.monster.hpp"
+#include "boe.party.hpp"
+#include "boe.locutils.hpp"
+#include "boe.text.hpp"
 #include "soundtool.hpp"
-#include "boe.infodlg.h"
-#include "boe.fileio.h"
-#include "boe.main.h"
+#include "boe.infodlg.hpp"
+#include "boe.fileio.hpp"
+#include "boe.main.hpp"
 #include "mathutil.hpp"
 #include "dlogutil.hpp"
 #include "fileio.hpp"

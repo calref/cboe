@@ -13,8 +13,8 @@
 #include <sstream>
 #include <iostream>
 
-#include "universe.h"
-#include "oldstructs.h"
+#include "universe.hpp"
+#include "oldstructs.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
 

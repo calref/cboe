@@ -2,10 +2,10 @@
 #ifndef BOE_GAME_COMBAT_H
 #define BOE_GAME_COMBAT_H
 
-#include "location.h"
-#include "monster.h"
-#include "outdoors.h"
-#include "boe.global.h"
+#include "location.hpp"
+#include "monster.hpp"
+#include "outdoors.hpp"
+#include "boe.global.hpp"
 #include "spell.hpp"
 
 void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terrain,short num_walls);

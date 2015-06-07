@@ -2,13 +2,13 @@
 #include <cstring>
 #include <cstdio>
 
-#include "scen.global.h"
+#include "scen.global.hpp"
 #include <array>
 #include <string>
 #include "graphtool.hpp"
-#include "scen.graphics.h"
+#include "scen.graphics.hpp"
 #include <cmath>
-#include "scen.btnmg.h"
+#include "scen.btnmg.hpp"
 #include "scrollbar.hpp"
 
 extern rectangle right_sbar_rect;

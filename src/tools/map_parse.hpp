@@ -12,7 +12,7 @@
 #include <vector>
 #include <map>
 #include <iosfwd>
-#include "location.h"
+#include "location.hpp"
 
 enum class eMapFeature {
 	NONE, // Special value, won't appear in the map.

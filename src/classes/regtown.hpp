@@ -11,10 +11,10 @@
 
 #include <iosfwd>
 
-#include "town.h"
-#include "simpletypes.h"
-#include "location.h"
-#include "monster.h"
+#include "town.hpp"
+#include "simpletypes.hpp"
+#include "location.hpp"
+#include "monster.hpp"
 
 namespace legacy {
 	struct big_tr_type;

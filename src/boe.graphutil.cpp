@@ -4,16 +4,16 @@
 #include <cstdio>
 #include <queue>
 
-#include "boe.global.h"
+#include "boe.global.hpp"
 
-#include "universe.h"
-#include "boe.graphutil.h"
-#include "boe.text.h"
-#include "boe.locutils.h"
-#include "boe.graphics.h"
-#include "boe.infodlg.h"
-#include "boe.monster.h"
-#include "boe.specials.h"
+#include "universe.hpp"
+#include "boe.graphutil.hpp"
+#include "boe.text.hpp"
+#include "boe.locutils.hpp"
+#include "boe.graphics.hpp"
+#include "boe.infodlg.hpp"
+#include "boe.monster.hpp"
+#include "boe.specials.hpp"
 #include "soundtool.hpp"
 #include "graphtool.hpp"
 #include "mathutil.hpp"

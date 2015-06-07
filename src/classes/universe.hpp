@@ -14,13 +14,13 @@
 #include <set>
 #include <array>
 #include <boost/filesystem/path.hpp>
-#include "party.h"
-#include "creatlist.h"
-#include "item.h"
-#include "town.h"
-#include "talking.h"
-#include "simpletypes.h"
-#include "scenario.h"
+#include "party.hpp"
+#include "creatlist.hpp"
+#include "item.hpp"
+#include "town.hpp"
+#include "talking.hpp"
+#include "simpletypes.hpp"
+#include "scenario.hpp"
 #include "pictypes.hpp"
 
 namespace fs = boost::filesystem; // TODO: Centralize this namespace alias?

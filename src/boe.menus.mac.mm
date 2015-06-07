@@ -6,14 +6,14 @@
 //
 //
 
-#include "boe.menus.h"
+#include "boe.menus.hpp"
 
-#include "universe.h" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include <sstream>
-#include "boe.party.h"
-#include "boe.infodlg.h"
-#include "boe.consts.h"
+#include "boe.party.hpp"
+#include "boe.infodlg.hpp"
+#include "boe.consts.hpp"
 #include "spell.hpp"
 
 extern short on_spell_menu[2][62];

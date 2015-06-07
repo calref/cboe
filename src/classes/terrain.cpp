@@ -6,16 +6,16 @@
  *
  */
 
-#include "terrain.h"
+#include "terrain.hpp"
 
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 #include "graphtool.hpp" // for NO_PIC
-#include "boe.consts.h" // TODO: Put these constants in a global file
+#include "boe.consts.hpp" // TODO: Put these constants in a global file
 
 void cTerrain::append(legacy::terrain_type_type& old){
 	static const short arenas[274] = {

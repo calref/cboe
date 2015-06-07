@@ -3,7 +3,7 @@
 
 #include <string>
 #include "dialog.hpp"
-#include "simpletypes.h"
+#include "simpletypes.hpp"
 #include "shop.hpp"
 
 void start_shop_mode(short which,short cost_adj,std::string store_name);

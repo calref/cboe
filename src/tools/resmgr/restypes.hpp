@@ -20,7 +20,7 @@
 #include <map>
 #include <boost/filesystem/path.hpp>
 #include "cursors.hpp"
-#include "location.h"
+#include "location.hpp"
 
 using ImageRsrc = sf::Image;
 using CursorRsrc = Cursor;

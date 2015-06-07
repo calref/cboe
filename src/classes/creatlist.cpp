@@ -6,14 +6,14 @@
  *
  */
 
-#include "creatlist.h"
+#include "creatlist.hpp"
 
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 
 void cPopulation::append(legacy::creature_list_type old){
 	dudes.resize(60);

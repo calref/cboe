@@ -6,7 +6,7 @@
  *
  */
 
-#include "outdoors.h"
+#include "outdoors.hpp"
 
 #include <string>
 #include <vector>
@@ -14,8 +14,8 @@
 #include <sstream>
 
 #include "dlogutil.hpp"
-#include "oldstructs.h"
-#include "scenario.h"
+#include "oldstructs.hpp"
+#include "scenario.hpp"
 
 void cOutdoors::append(legacy::outdoor_record_type& old){
 	int i,j;

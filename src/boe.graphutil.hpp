@@ -3,8 +3,8 @@
 #define BOE_GAME_GRAPHUTIL_H
 
 #include "pict.hpp"
-#include "location.h"
-#include "simpletypes.h"
+#include "location.hpp"
+#include "simpletypes.hpp"
 
 void draw_one_terrain_spot (short i,short j,short terrain_to_draw);
 void draw_monsters();

@@ -97,12 +97,12 @@
     <ClCompile Include="..\..\pcedit\pc.menus.win.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\pcedit\pc.action.h" />
-    <ClInclude Include="..\..\pcedit\pc.editors.h" />
-    <ClInclude Include="..\..\pcedit\pc.fileio.h" />
-    <ClInclude Include="..\..\pcedit\pc.global.h" />
-    <ClInclude Include="..\..\pcedit\pc.graphics.h" />
-    <ClInclude Include="..\..\pcedit\pc.menus.h" />
+    <ClInclude Include="..\..\pcedit\pc.action.hpp" />
+    <ClInclude Include="..\..\pcedit\pc.editors.hpp" />
+    <ClInclude Include="..\..\pcedit\pc.fileio.hpp" />
+    <ClInclude Include="..\..\pcedit\pc.global.hpp" />
+    <ClInclude Include="..\..\pcedit\pc.graphics.hpp" />
+    <ClInclude Include="..\..\pcedit\pc.menus.hpp" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

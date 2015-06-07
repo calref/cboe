@@ -6,10 +6,10 @@
 //
 //
 
-#include "pc.menus.h"
-#include "universe.h" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "pc.menus.hpp"
+#include "universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
-#include "item.h"
+#include "item.hpp"
 
 #ifndef __APPLE__
 #error pc.menus.mm is Mac-specific code; try compiling pc.menus.win.cpp instead

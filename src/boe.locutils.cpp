@@ -1,11 +1,11 @@
 
 #include "mathutil.hpp"
-#include "boe.global.h"
+#include "boe.global.hpp"
 
-#include "universe.h"
-#include "boe.locutils.h"
-#include "boe.text.h"
-#include "boe.monster.h"
+#include "universe.hpp"
+#include "boe.locutils.hpp"
+#include "boe.text.hpp"
+#include "boe.monster.hpp"
 
 bool combat_pt_in_light();
 location obs_sec;

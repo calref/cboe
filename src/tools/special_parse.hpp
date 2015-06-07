@@ -9,7 +9,7 @@
 #ifndef BoE_special_parse_hpp
 #define BoE_special_parse_hpp
 
-#include "special.h"
+#include "special.hpp"
 #include <boost/spirit/include/classic.hpp>
 
 enum eParseError {

@@ -6,14 +6,14 @@
  *
  */
 
-#include "talking.h"
+#include "talking.hpp"
 
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "oldstructs.h"
+#include "oldstructs.hpp"
 
 void cSpeech::append(legacy::talking_record_type& old, std::vector<shop_info_t>& shops){
 	int i,j;

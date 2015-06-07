@@ -11,10 +11,10 @@
 
 #include <iosfwd>
 
-#include "location.h"
-#include "monster.h"
-#include "simpletypes.h"
-#include "regtown.h"
+#include "location.hpp"
+#include "monster.hpp"
+#include "simpletypes.hpp"
+#include "regtown.hpp"
 
 class cTemplTown : public virtual cTown {
 public:

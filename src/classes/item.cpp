@@ -6,7 +6,7 @@
  *
  */
 
-#include "item.h"
+#include "item.hpp"
 
 #include <string>
 #include <vector>
@@ -15,8 +15,8 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
-#include "boe.consts.h" // TODO: If this is needed here, maybe it shouldn't be in the "boe" namespace
-#include "oldstructs.h"
+#include "boe.consts.hpp" // TODO: If this is needed here, maybe it shouldn't be in the "boe" namespace
+#include "oldstructs.hpp"
 #include "spell.hpp"
 #include "graphtool.hpp" // for get_str()
 #include "fileio.hpp"

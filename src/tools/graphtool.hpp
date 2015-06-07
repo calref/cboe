@@ -15,7 +15,7 @@
 #include <functional>
 #include <boost/filesystem/path.hpp>
 #include <SFML/Graphics.hpp>
-#include "location.h"
+#include "location.hpp"
 #include "pictypes.hpp"
 
 namespace fs = boost::filesystem;

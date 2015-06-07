@@ -35,22 +35,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\pcedit\pc.action.h">
+    <ClInclude Include="..\..\pcedit\pc.action.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\pcedit\pc.editors.h">
+    <ClInclude Include="..\..\pcedit\pc.editors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\pcedit\pc.fileio.h">
+    <ClInclude Include="..\..\pcedit\pc.fileio.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\pcedit\pc.global.h">
+    <ClInclude Include="..\..\pcedit\pc.global.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\pcedit\pc.graphics.h">
+    <ClInclude Include="..\..\pcedit\pc.graphics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\pcedit\pc.menus.h">
+    <ClInclude Include="..\..\pcedit\pc.menus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">

@@ -3,8 +3,8 @@
 #define BOE_GAME_ACTIONS_H
 
 #include <SFML/Window/Event.hpp>
-#include "location.h"
-#include "simpletypes.h"
+#include "location.hpp"
+#include "simpletypes.hpp"
 
 void init_screen_locs();
 bool prime_time();

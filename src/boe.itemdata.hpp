@@ -2,7 +2,7 @@
 #ifndef BOE_GAME_ITEMDATA_H
 #define BOE_GAME_ITEMDATA_H
 
-#include "item.h"
+#include "item.hpp"
 
 cItem get_stored_item(short which);
 cItem get_food();

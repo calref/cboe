@@ -1,13 +1,13 @@
 
-#include "boe.menus.h"
+#include "boe.menus.hpp"
 #include <map>
 #include <sstream>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Resource.h"
-#include "universe.h"
-#include "boe.party.h"
-#include "boe.infodlg.h"
-#include "boe.consts.h"
+#include "universe.hpp"
+#include "boe.party.hpp"
+#include "boe.infodlg.hpp"
+#include "boe.consts.hpp"
 #include "spell.hpp"
 #include "winutil.hpp"
 #include "menu_accel.win.hpp"

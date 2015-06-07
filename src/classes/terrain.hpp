@@ -12,9 +12,9 @@
 #include <string>
 #include <iosfwd>
 
-#include "simpletypes.h"
+#include "simpletypes.hpp"
 #include "pictypes.hpp"
-#include "location.h"
+#include "location.hpp"
 #include "soundtool.hpp" // for snd_num_t
 
 namespace legacy { struct terrain_type_type; };

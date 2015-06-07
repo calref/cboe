@@ -4,12 +4,12 @@
 #include <map>
 #include <numeric>
 #include <boost/lexical_cast.hpp>
-#include "scen.global.h"
-#include "scenario.h"
+#include "scen.global.hpp"
+#include "scenario.hpp"
 #include "graphtool.hpp"
-#include "scen.graphics.h"
-#include "scen.keydlgs.h"
-#include "scen.core.h"
+#include "scen.graphics.hpp"
+#include "scen.keydlgs.hpp"
+#include "scen.core.hpp"
 #include "dlogutil.hpp"
 #include "restypes.hpp"
 #include "spell.hpp"
