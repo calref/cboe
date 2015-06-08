@@ -1,3 +1,6 @@
+
+#include "scen.global.hpp"
+
 void init_current_terrain();
 void init_screen_locs();
 void handle_action(location the_point,sf::Event event);
@@ -27,12 +30,12 @@ void set_up_main_screen();
 void start_town_edit();
 void start_out_edit();
 void start_terrain_editing();
-void start_monster_editing(short just_redo_text);
-void start_item_editing(short just_redo_text);
-void start_special_item_editing();
-void start_quest_editing();
-void start_shops_editing();
-void start_string_editing(short mode,short just_redo_text);
+void start_monster_editing(bool just_redo_text);
+void start_item_editing(bool just_redo_text);
+void start_special_item_editing(bool just_redo_text);
+void start_quest_editing(bool just_redo_text);
+void start_shops_editing(bool just_redo_text);
+void start_string_editing(eStrMode mode,short just_redo_text);
 void start_special_editing(short mode,short just_redo_text);
 void town_entry(location spot_hit);
 void start_dialogue_editing(short restoring);

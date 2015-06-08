@@ -1,4 +1,7 @@
 
+#ifndef BOE_SCEN_GLOBAL_HPP
+#define BOE_SCEN_GLOBAL_HPP
+
 #define DRAG_EDGE		15
 
 #define	DISPLAY_LEFT	23
@@ -11,7 +14,7 @@
 
 #define NLS	25
 // number of left slots for buttons
-#define	NRS	400
+#define	NRS	right_button_status.size()
 // number of right slots for scrolling list
 #define NRSONPAGE	33
 // number of right slots for scrolling list on page at 1 time
@@ -69,6 +72,7 @@ enum eScenMode {
 	MODE_SET_OUT_START = 47,
 	MODE_ERASE_CREATURE = 48,
 	MODE_ERASE_ITEM = 49,
+	MODE_ERASE_TOWN_ENTRANCE = 50,
 	MODE_MAIN_SCREEN = 60,
 	MODE_INTRO_SCREEN = 61,
 	MODE_EDIT_TYPES = 62, // currently only used for editing terrain, but I'd like to use it for editing monsters and items too.
@@ -78,6 +82,12 @@ enum eDrawMode {
 	DRAW_TERRAIN = 0,
 	DRAW_MONST = 1,
 	DRAW_ITEM = 2,
+};
+
+enum eStrMode {
+	STRS_SCEN, STRS_OUT, STRS_TOWN, STRS_JOURNAL,
+	STRS_OUT_SIGN, STRS_TOWN_SIGN,
+	STRS_OUT_RECT, STRS_TOWN_RECT,
 };
 
 enum ePalBtn {
@@ -90,3 +100,5 @@ enum ePalBtn {
 	PAL_SFX_SB = 50, PAL_SFX_MB = 51, PAL_SFX_LB = 52, PAL_SFX_SS = 53, PAL_SFX_LS = 54, PAL_SFX_ASH = 55, PAL_SFX_BONE = 56, PAL_SFX_ROCK = 57,
 	PAL_ARROW_UP = 9, PAL_ARROW_DOWN = 69, PAL_TERRAIN = 29, PAL_ITEM = 39, PAL_MONST = 49,
 };
+
+#endif

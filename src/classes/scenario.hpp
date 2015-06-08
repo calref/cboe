@@ -69,15 +69,15 @@ public:
 	std::array<spec_loc_t,10> town_mods;
 	rectangle store_item_rects[3];
 	short store_item_towns[3];
-	std::array<cSpecItem,50> special_items;
+	std::vector<cSpecItem> special_items;
 	std::vector<cQuest> quests;
 	std::vector<cShop> shops;
 	short rating,uses_custom_graphics;
 	std::vector<ePicType> custom_graphics;
-	std::array<cMonster,256> scen_monsters;
+	std::vector<cMonster> scen_monsters;
 	std::array<cVehicle,30> boats;
 	std::array<cVehicle,30> horses;
-	std::array<cTerrain,256> ter_types;
+	std::vector<cTerrain> ter_types;
 	std::array<cTimer,20> scenario_timers;
 	std::vector<cSpecial> scen_specials;
 	cItemStorage storage_shortcuts[10];
@@ -86,21 +86,19 @@ public:
 	short last_town_edited;
 	scenario_header_flags format;
 	std::string campaign_id; // A hopefully unique identifier to specify the campaign this scenario is a part of.
-	std::array<cItem,400> scen_items;
+	std::vector<cItem> scen_items;
 	std::string scen_name;
 	std::string who_wrote[2];
 	std::string contact_info[2];
 	std::string intro_strs[6];
-	// Using std::array here so we can have .size()
-	// This'll make the transition smoother once it becomes a vector.
-	std::array<std::string,50> journal_strs;
-	std::array<std::string,101> spec_strs;
+	std::vector<std::string> journal_strs;
+	std::vector<std::string> spec_strs;
 	bool adjust_diff;
 	bool is_legacy;
 	fs::path scen_file; // transient
 	vector2d<cOutdoors*> outdoors;
 	std::vector<cTown*> towns;
-	template<typename Town> void addTown() {towns.push_back(new Town(*this, true));}
+	template<typename Town> void addTown() {towns.push_back(new Town(*this));}
 	
 	void append(legacy::scenario_data_type& old);
 	void append(legacy::scen_item_data_type& old);
@@ -112,9 +110,13 @@ public:
 	ter_num_t get_ter_from_ground(unsigned short ground);
 	ter_num_t get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim);
 	
+	bool is_ter_used(ter_num_t ter);
+	bool is_monst_used(mon_num_t monst);
+	bool is_item_used(item_num_t item);
+	
 	cScenario& operator=(cScenario&& other);
 	cScenario(cScenario&) = delete;
-	explicit cScenario(bool init_strings = false);
+	explicit cScenario();
 	~cScenario();
 };
 

@@ -51,7 +51,7 @@ extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 
 extern bool left_buttons_active,right_buttons_active;
 extern std::array<lb_t,NLS> left_button_status;
-extern std::array<rb_t,NRS> right_button_status;
+extern std::vector<rb_t> right_button_status;
 short mini_map_scales[3] = {12, 6, 4};
 // TODO: What is this for?
 //extern btn_t buttons[];
@@ -453,7 +453,7 @@ void draw_lb_slot (short which,short mode)  {
 
 void draw_rb() {
 	long pos = right_sbar->getPosition();
-	for(long i = pos; i < pos + NRSONPAGE; i++)
+	for(long i = pos; i < pos + NRSONPAGE && i < NRS; i++)
 		draw_rb_slot(i,0);
 }
 
@@ -463,7 +463,7 @@ void draw_rb_slot (short which,short mode)  {
  	long pos;
  	
  	pos = right_sbar->getPosition();
-	if((which < pos) || (which >= pos + NRSONPAGE))
+	if(which < pos || which >= pos + NRSONPAGE || which >= NRS)
 		return;
 	
  	tileImage(mainPtr,right_buttons[which - pos],bg[17]);
@@ -480,7 +480,7 @@ void draw_rb_slot (short which,short mode)  {
 
 void set_up_terrain_buttons(bool reset) {
 	short i,j,pic,small_i;
-	rectangle ter_from,ter_from_base = {0,0,36,28};
+	rectangle ter_from,ter_from_base = {0,0,36,28}, ter_plus_from = {120,123,136,139};
 	rectangle tiny_from,tiny_to;
 	
 	rectangle palette_from,palette_to = palette_button_base;
@@ -488,23 +488,28 @@ void set_up_terrain_buttons(bool reset) {
 	switch(draw_mode) {
 		case DRAW_TERRAIN: max = scenario.ter_types.size(); break;
 		case DRAW_ITEM: max = scenario.scen_items.size(); break;
-		case DRAW_MONST: max = scenario.scen_monsters.size(); break;
+		case DRAW_MONST: max = scenario.scen_monsters.size(); max--; break;
 		default: return;
 	}
+	if(overall_mode == MODE_EDIT_TYPES) max++;
 	
 	if(reset) pal_sbar->setPosition(0);
-	pal_sbar->setMaximum((max / 16) - 16);
+	pal_sbar->setMaximum((max - 241) / 16);
 	
 	tileImage(terrain_buttons_gworld,terrain_buttons_rect,bg[17]);
 	frame_rect(terrain_buttons_gworld, terrain_buttons_rect, sf::Color::Black);
 	int first = pal_sbar->getPosition() * 16;
-	if(draw_mode == DRAW_MONST) first++;
+	if(draw_mode == DRAW_MONST) first++, max++;
 	int end = min(first + 256, max);
  	
 	// first make terrain buttons
 	for(i = first; i < end; i++) {
 		switch(draw_mode){
 			case DRAW_TERRAIN:
+				if(i == scenario.ter_types.size()) {
+					rect_draw_some_item(editor_mixed, ter_plus_from, terrain_buttons_gworld, terrain_rects[i - first]);
+					break;
+				}
 				ter_from = ter_from_base;
 				pic = scenario.ter_types[i].picture;
 				if(pic >= 1000) {
@@ -767,6 +772,15 @@ void draw_terrain(){
 					tiny_to.offset(0,-7);
 				}
 				small_i = get_small_icon(t_to_draw);
+				// Special case for towns
+				if(small_i == 22 && !editing_town) {
+					bool have_town = false;
+					for(i = 0; i < current_terrain->city_locs.size(); i++) {
+						if(current_terrain->city_locs[i] == which_pt)
+							have_town = true;
+					}
+					if(!have_town) small_i += 3;
+				}
 				tiny_from = base_small_button_from;
 				tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
 				if(small_i > 0) {

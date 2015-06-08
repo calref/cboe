@@ -85,6 +85,6 @@
 	
 	<button name='left' type='left' top='430' left='10'/>
 	<button name='right' type='right' top='430' left='75'/>
-	<button name='cancel' type='regular' top='430' left='345'>Cancel</button>
+	<button name='cancel' type='regular' def-key='esc' top='430' left='345'>Cancel</button>
 	<button name='okay' type='regular' top='430' left='410'>OK</button>
 </dialog>

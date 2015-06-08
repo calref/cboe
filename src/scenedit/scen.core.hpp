@@ -2,14 +2,14 @@
 class cDialog;
 
 void edit_custom_pics_types();
-void edit_ter_type(ter_num_t which_ter);
-short edit_monst_type(short which_monst);
+bool edit_ter_type(ter_num_t which_ter);
+bool edit_monst_type(short which_monst);
 cMonster edit_monst_abil(cMonster starting_record,short which_monst,cDialog& parent);
-short edit_item_type(short which_item);
+bool edit_item_type(short which_item);
 cItem edit_item_abil(cItem starting_record,short which_item,cDialog& parent);
-void edit_spec_item(short which_item);
-void edit_quest(size_t which_quest);
-void edit_shop(size_t which_shop, cDialog* parent = nullptr);
+bool edit_spec_item(short which_item);
+bool edit_quest(size_t which_quest);
+bool edit_shop(size_t which_shop, cDialog* parent = nullptr);
 void edit_save_rects();
 void edit_horses();
 void edit_add_town();

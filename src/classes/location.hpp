@@ -78,10 +78,26 @@ struct rectangle {
 
 struct info_rect_t : public rectangle {
 	std::string descr;
+	
+	info_rect_t(int t, int l, int b, int r, const std::string& s) : rectangle(t,l,b,r), descr(s) {}
+	info_rect_t(const rectangle& r) : rectangle(r) {}
+	// Declaring one constructor suppresses all implicit constructors, so declare them explicitly
+	info_rect_t() = default;
+	info_rect_t(const info_rect_t& other) = default;
+	// Ditto for assignment operator
+	info_rect_t& operator=(const info_rect_t& other) = default;
 };
 
 struct sign_loc_t : public location {
 	std::string text;
+	
+	sign_loc_t(int x, int y, const std::string& s) : location(x,y), text(s) {}
+	sign_loc_t(const location& loc) : location(loc) {}
+	// Declaring one constructor suppresses all implicit constructors, so declare them explicitly
+	sign_loc_t() = default;
+	sign_loc_t(const sign_loc_t& other) = default;
+	// Ditto for assignment operator
+	sign_loc_t& operator=(const sign_loc_t& other) = default;
 };
 
 struct spec_loc_t : public location {

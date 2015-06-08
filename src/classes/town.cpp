@@ -46,6 +46,7 @@ void cTown::append(legacy::town_record_type& old){
 		temp.append(old.preset_fields[i]);
 		preset_fields.push_back(temp);
 	}
+	sign_locs.resize(15);
 	for(i = 0; i < 15; i++){
 		sign_locs[i].x = old.sign_locs[i].x;
 		sign_locs[i].y = old.sign_locs[i].y;
@@ -74,7 +75,7 @@ void cTown::append(legacy::town_record_type& old){
 	strong_barriers = defy_scrying = defy_mapping = false;
 }
 
-cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
+cTown::cTown(cScenario& scenario) : scenario(scenario) {
 	short i;
 	cTown::cWandering d_wan = {0,0,0,0};
 	
@@ -95,9 +96,6 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	spec_on_entry = -1;
 	spec_on_entry_if_dead = -1;
 	spec_on_hostile = -1;
-	for(i = 0; i < 15; i++) {
-		sign_locs[i].x = 100;
-	}
 	for(i = 0; i < 8; i++) {
 		timers[i].time = 0;
 		timers[i].node = -1;
@@ -105,34 +103,11 @@ cTown::cTown(cScenario& scenario, bool init_strings) : scenario(scenario) {
 	difficulty = 0;
 	bg_town = bg_fight = -1;
 	strong_barriers = defy_scrying = defy_mapping = is_hidden = has_tavern = false;
-	for(i = 0; i < 60; i++) {
-		talking.talk_nodes[i].personality = -1;
-		talking.talk_nodes[i].type = eTalkNode::REGULAR;
-		talking.talk_nodes[i].extras[0] = 0;
-		talking.talk_nodes[i].extras[1] = 0;
-		talking.talk_nodes[i].extras[2] = 0;
-		talking.talk_nodes[i].extras[3] = -1;
-		talking.talk_nodes[i].str1 = "";
-		talking.talk_nodes[i].str2 = "";
-		for(int j = 0; j < 4; j++) {
-			talking.talk_nodes[i].link1[j] = 'x';
-			talking.talk_nodes[i].link2[j] = 'x';
-		}
-	}
-	if(!init_strings) return;
-	std::string temp_str;
-	for(i = 0; i < 180; i++) {
-		temp_str = get_str("town-default",i + 1);
-		if(i == 0) town_name = temp_str;
-		else if(i >= 1 && i < 17)
-			room_rect[i-1].descr = temp_str;
-		else if(i >= 17 && i < 20)
-			comment[i-17] = temp_str;
-		else if(i >= 20 && i < 120)
-			spec_strs[i-20] = temp_str;
-		else if(i >= 120 && i < 140)
-			sign_locs[i-120].text = temp_str;
-	}
+	
+	town_name = "Town name";
+	comment[0] = "Comment 1";
+	comment[1] = "Comment 2";
+	comment[2] = "Comment 3";
 	
 	for(i = 0; i < 10; i++) {
 		talking.people[i].title = "Unused";

@@ -36,15 +36,19 @@ class cSpeech { // formerly talking_record_type
 public:
 	class cNode { // formerly talking_node_type
 	public:
-		short personality;
-		eTalkNode type;
+		short personality = -1;
+		eTalkNode type = eTalkNode::REGULAR;
 		char link1[4],link2[4];
 		short extras[4];
 		std::string str1, str2;
-		cNode() {std::fill(extras, extras + 4, -1);}
+		cNode() {
+			std::fill(extras, extras + 4, -1);
+			std::fill(link1, link1 + 4, 'x');
+			std::fill(link2, link2 + 4, 'x');
+		}
 	};
 	cPersonality people[10];
-	std::array<cNode,60> talk_nodes;
+	std::vector<cNode> talk_nodes;
 	
 	void append(legacy::talking_record_type& old, std::vector<shop_info_t>& shops);
 	void writeTo(std::ostream& file) const;

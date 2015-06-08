@@ -34,7 +34,6 @@ short current_block_edited = 0;
 short current_terrain_type = 0;
 short safety = 0;
 location spot_hit,last_spot_hit(-1,-1),mouse_spot(-1,-1);
-bool sign_error_received = false;
 short copied_spec = -1;
 
 cTown::cItem store_place_item;
@@ -61,7 +60,7 @@ extern bool change_made;
 
 rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
 std::array<lb_t,NLS> left_button_status;
-std::array<rb_t,NRS> right_button_status;
+std::vector<rb_t> right_button_status;
 rectangle right_buttons[NRSONPAGE];
 rectangle palette_buttons_from[71];
 rectangle palette_buttons[10][6];
@@ -198,16 +197,16 @@ static bool handle_lb_action(location the_point) {
 						break;
 					case LB_EDIT_TEXT:
 						right_sbar->setPosition(0);
-						start_string_editing(0,0);
+						start_string_editing(STRS_SCEN,0);
 						break;
 					case LB_EDIT_SPECITEM:
-						start_special_item_editing();
+						start_special_item_editing(false);
 						break;
 					case LB_EDIT_QUEST:
-						start_quest_editing();
+						start_quest_editing(false);
 						break;
 					case LB_EDIT_SHOPS:
-						start_shops_editing();
+						start_shops_editing(false);
 						break;
 					case LB_LOAD_OUT:
 						if(change_made) {
@@ -259,7 +258,7 @@ static bool handle_lb_action(location the_point) {
 
 static bool handle_rb_action(location the_point, bool option_hit) {
 	long right_top = right_sbar->getPosition();
-	for(int i = 0; i < NRSONPAGE; i++)
+	for(int i = 0; i < NRSONPAGE && i + right_top < NRS; i++)
 		if(!mouse_button_held && (the_point.in(right_buttons[i]) )
 		   && (right_button_status[i + right_top].action != RB_CLEAR))  {
 			
@@ -278,16 +277,61 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 			switch(right_button_status[i + right_top].action) {
 				case RB_CLEAR:
 					break;
-				case RB_TER:
-					edit_ter_type(j);
-					break;
 				case RB_MONST:
-					edit_monst_type(j);
-					start_monster_editing(1);
+					size_before = scenario.scen_monsters.size();
+					if(option_hit) {
+						if(j == size_before - 1 && !scenario.is_monst_used(j))
+							scenario.scen_monsters.pop_back();
+						else if(j == size_before) {
+							scenario.scen_monsters.resize(size_before + 8);
+							for(; j < scenario.scen_monsters.size(); j++)
+								scenario.scen_monsters[j].m_name = "New Monster";
+						} else {
+							scenario.scen_monsters[j] = cMonster();
+							scenario.scen_monsters[j].m_name = "Unused Monster";
+						}
+					} else {
+						if(j == size_before) {
+							scenario.scen_monsters.emplace_back();
+							scenario.scen_monsters.back().m_name = "New Monster";
+						}
+						if(!edit_monst_type(j) && j == size_before && scenario.scen_monsters.back().m_name == "New Monster")
+							scenario.scen_monsters.pop_back();
+					}
+					start_monster_editing(size_before == scenario.scen_monsters.size());
+					if(size_before > scenario.scen_monsters.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 				case RB_ITEM:
-					edit_item_type(j);
-					start_item_editing(1);
+					size_before = scenario.scen_items.size();
+					if(option_hit) {
+						if(j == size_before - 1 && !scenario.is_item_used(j))
+							scenario.scen_items.pop_back();
+						else if(j == size_before) {
+							scenario.scen_items.resize(size_before + 8);
+							for(; j < scenario.scen_items.size(); j++) {
+								scenario.scen_items[j].full_name = "New Item";
+								scenario.scen_items[j].name = "Item";
+							}
+						} else {
+							scenario.scen_items[j] = cItem();
+							scenario.scen_items[j].full_name = "Unused Item";
+							scenario.scen_items[j].name = "Item";
+						}
+					} else {
+						if(j == size_before) {
+							scenario.scen_items.emplace_back();
+							scenario.scen_items.back().full_name = "New Item";
+							scenario.scen_items.back().name = "Item";
+						}
+						if(!edit_item_type(j) && j == size_before && scenario.scen_items.back().name == "New Item")
+							scenario.scen_items.pop_back();
+					}
+					start_item_editing(size_before == scenario.scen_items.size());
+					if(size_before > scenario.scen_items.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 				case RB_SCEN_SPEC:
 					size_before = scenario.scen_specials.size();
@@ -300,8 +344,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					} else {
 						if(j == size_before)
 							scenario.scen_specials.emplace_back();
-						if(!edit_spec_enc(j,0,nullptr) && j == size_before)
-							scenario.scen_specials.pop_back();
+						edit_spec_enc(j,0,nullptr);
 					}
 					start_special_editing(0,size_before == scenario.scen_specials.size());
 					if(size_before > scenario.scen_specials.size())
@@ -319,8 +362,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					} else {
 						if(j == size_before)
 							current_terrain->specials.emplace_back();
-						if(!edit_spec_enc(j,1,nullptr) && j == size_before)
-							current_terrain->specials.pop_back();
+						edit_spec_enc(j,1,nullptr);
 					}
 					start_special_editing(1,size_before == current_terrain->specials.size());
 					if(size_before > current_terrain->specials.size())
@@ -338,8 +380,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					} else {
 						if(j == size_before)
 							town->specials.emplace_back();
-						if(!edit_spec_enc(j,2,nullptr) && j == size_before)
-							town->specials.pop_back();
+						edit_spec_enc(j,2,nullptr);
 					}
 					start_special_editing(2,size_before == town->specials.size());
 					if(size_before > town->specials.size())
@@ -347,55 +388,205 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					right_sbar->setPosition(pos_before);
 					break;
 				case RB_SCEN_STR:
-					if(option_hit)
-						scenario.spec_strs[j] = get_str("scen-default", j + 161);
-					else edit_text_str(j,0);
-					start_string_editing(0,1);
+					size_before = scenario.spec_strs.size();
+					if(option_hit) {
+						if(j == size_before - 1)
+							scenario.spec_strs.pop_back();
+						else if(j == size_before)
+							scenario.spec_strs.resize(size_before + 8, "*");
+						else scenario.spec_strs[j] = "*";
+					} else {
+						if(j == size_before)
+							scenario.spec_strs.emplace_back("*");
+						if(!edit_text_str(j,STRS_SCEN) && j == size_before && scenario.spec_strs[j] == "*")
+							scenario.spec_strs.pop_back();
+					}
+					start_string_editing(STRS_SCEN,size_before == scenario.spec_strs.size());
+					if(size_before > scenario.spec_strs.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
-					
 				case RB_OUT_STR:
-					if(option_hit)
-						current_terrain->spec_strs[j] = get_str("outdoor-default", j + 11);
-					else edit_text_str(j,1);
-					start_string_editing(1,1);
+					size_before = current_terrain->spec_strs.size();
+					if(option_hit) {
+						if(j == size_before - 1)
+							current_terrain->spec_strs.pop_back();
+						else if(j == size_before)
+							current_terrain->spec_strs.resize(size_before + 8, "*");
+						else current_terrain->spec_strs[j] = "*";
+					} else {
+						if(j == size_before)
+							current_terrain->spec_strs.emplace_back("*");
+						if(!edit_text_str(j,STRS_OUT) && j == size_before && current_terrain->spec_strs[j] == "*")
+							current_terrain->spec_strs.pop_back();
+					}
+					start_string_editing(STRS_OUT,size_before == current_terrain->spec_strs.size());
+					if(size_before > current_terrain->spec_strs.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 				case RB_TOWN_STR:
-					if(option_hit)
-						town->spec_strs[j] = get_str("town-default", j + 21);
-					else edit_text_str(j,2);
-					start_string_editing(2,1);
+					size_before = town->spec_strs.size();
+					if(option_hit) {
+						if(j == size_before - 1)
+							town->spec_strs.pop_back();
+						else if(j == size_before)
+							town->spec_strs.resize(size_before + 8, "*");
+						else town->spec_strs[j] = "*";
+					} else {
+						if(j == size_before)
+							town->spec_strs.emplace_back("*");
+						if(!edit_text_str(j,STRS_TOWN) && j == size_before && town->spec_strs[j] == "*")
+							town->spec_strs.pop_back();
+					}
+					start_string_editing(STRS_TOWN,size_before == town->spec_strs.size());
+					if(size_before > town->spec_strs.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 				case RB_SPEC_ITEM:
-					edit_spec_item(j);
-					start_special_item_editing();
+					size_before = scenario.special_items.size();
+					if(option_hit) {
+						if(j == size_before - 1)
+							scenario.special_items.pop_back();
+						else if(j == size_before)
+							break;
+						else {
+							scenario.special_items[j] = cSpecItem();
+							scenario.special_items[j].name = "Unused Special Item";
+						}
+					} else {
+						if(j == size_before) {
+							scenario.special_items.emplace_back();
+							scenario.special_items.back().name = "New Special Item";
+						}
+						if(!edit_spec_item(j) && j == size_before)
+							scenario.special_items.pop_back();
+					}
+					start_special_item_editing(size_before == scenario.special_items.size());
+					if(size_before > scenario.special_items.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 				case RB_JOURNAL:
-					if(option_hit)
-						scenario.journal_strs[j] = get_str("scen-default", j + 11);
-					else edit_text_str(j,3);
-					start_string_editing(3,1);
+					size_before = scenario.journal_strs.size();
+					if(option_hit) {
+						if(j == size_before - 1)
+							scenario.journal_strs.pop_back();
+						else if(j == size_before)
+							scenario.journal_strs.resize(size_before + 8, "*");
+						else scenario.journal_strs[j] = "*";
+					} else {
+						if(j == size_before)
+							scenario.journal_strs.emplace_back("*");
+						if(!edit_text_str(j,STRS_JOURNAL) && j == size_before && scenario.journal_strs[j] == "*")
+							scenario.journal_strs.pop_back();
+					}
+					start_string_editing(STRS_JOURNAL,size_before == scenario.journal_strs.size());
+					if(size_before > scenario.journal_strs.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 				case RB_DIALOGUE:
-					edit_talk_node(j);
-					start_dialogue_editing(1);
+					size_before = town->talking.talk_nodes.size();
+					if(option_hit) {
+						if(j == size_before)
+							break;
+						town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + j);
+					} else {
+						if(j == size_before)
+							town->talking.talk_nodes.emplace_back();
+						// TODO: Mustn't do this if the Create New button was clicked to make more nodes! Ditto with special nodes.
+						if(edit_talk_node(j) == town->talking.talk_nodes.size() - 1)
+							town->talking.talk_nodes.pop_back();
+					}
+					start_dialogue_editing(size_before == town->talking.talk_nodes.size());
+					if(size_before > town->talking.talk_nodes.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 				case RB_PERSONALITY:
 					edit_basic_dlog(j);
 					start_dialogue_editing(1);
 					break;
 				case RB_OUT_SIGN:
-					if(option_hit)
-						current_terrain->spec_strs[j] = get_str("outdoor-default", j + 101);
-					else edit_text_str(j,4);
-					start_string_editing(4,1);
+					size_before = current_terrain->sign_locs.size();
+					if(option_hit) {
+						if(j == size_before - 1)
+							current_terrain->sign_locs.pop_back();
+						else if(j == size_before)
+							break;
+						else current_terrain->sign_locs[j] = {-1, -1, "*"};
+					} else {
+						if(j == size_before)
+							current_terrain->sign_locs.emplace_back(-1,-1,"*");
+						if(!edit_text_str(j,STRS_OUT_SIGN) && j == size_before && current_terrain->sign_locs[j].text == "*")
+							current_terrain->sign_locs.pop_back();
+					}
+					start_string_editing(STRS_OUT_SIGN,size_before == current_terrain->sign_locs.size());
+					if(size_before > current_terrain->sign_locs.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 				case RB_TOWN_SIGN:
-					if(option_hit)
-						town->spec_strs[j] = get_str("town-default", j + 121);
-					else edit_text_str(j,5);
-					start_string_editing(5,1);
+					size_before = town->sign_locs.size();
+					if(option_hit) {
+						if(j == size_before - 1)
+							town->sign_locs.pop_back();
+						else if(j == size_before)
+							break;
+						else town->sign_locs[j] = {-1, -1, "*"};
+					} else {
+						if(j == size_before)
+							town->sign_locs.emplace_back(-1,-1,"*");
+						if(!edit_text_str(j,STRS_TOWN_SIGN) && j == size_before && town->sign_locs[j].text == "*")
+							town->sign_locs.pop_back();
+					}
+					start_string_editing(STRS_TOWN_SIGN,size_before == town->sign_locs.size());
+					if(size_before > town->sign_locs.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
+					break;
+				case RB_OUT_RECT:
+					size_before = current_terrain->info_rect.size();
+					if(option_hit) {
+						if(j == size_before - 1)
+							current_terrain->info_rect.pop_back();
+						else if(j == size_before)
+							break;
+						else current_terrain->info_rect[j] = {0, 0, 0, 0, "*"};
+					} else {
+						if(j == size_before)
+							current_terrain->info_rect.emplace_back(0,0,0,0,"*");
+						if(!edit_text_str(j,STRS_OUT_RECT) && j == size_before && current_terrain->info_rect[j].descr == "*")
+							current_terrain->info_rect.pop_back();
+					}
+					start_string_editing(STRS_OUT_RECT,size_before == current_terrain->info_rect.size());
+					if(size_before > current_terrain->info_rect.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
+					break;
+				case RB_TOWN_RECT:
+					size_before = town->room_rect.size();
+					if(option_hit) {
+						if(j == size_before - 1)
+							town->room_rect.pop_back();
+						else if(j == size_before)
+							break;
+						else town->room_rect[j] = {0, 0, 0, 0, "*"};
+					} else {
+						if(j == size_before)
+							town->room_rect.emplace_back(0,0,0,0,"*");
+						if(!edit_text_str(j,STRS_TOWN_RECT) && j == size_before && town->room_rect[j].descr == "*")
+							town->room_rect.pop_back();
+					}
+					start_string_editing(STRS_TOWN_RECT,size_before == town->room_rect.size());
+					if(size_before > town->room_rect.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 				case RB_QUEST:
+					size_before = scenario.quests.size();
 					if(option_hit) {
 						if(j == scenario.quests.size() - 1)
 							scenario.quests.pop_back();
@@ -403,18 +594,32 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							scenario.quests[j] = cQuest();
 							scenario.quests[j].name = "Unused Quest";
 						}
-					} else edit_quest(j);
-					start_quest_editing();
+					} else {
+						if(!edit_quest(j) && j == size_before && scenario.quests[j].name == "New Quest")
+							scenario.quests.pop_back();
+					}
+					start_quest_editing(size_before == scenario.quests.size());
+					if(size_before > scenario.quests.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 				case RB_SHOP:
+					size_before = scenario.shops.size();
 					if(option_hit) {
 						if(j == scenario.shops.size() - 1)
 							scenario.shops.pop_back();
 						else scenario.shops[j] = cShop("Unused Shop");
-					} else edit_shop(j);
-					start_shops_editing();
+					} else {
+						if(!edit_shop(j) && j == size_before && scenario.shops[j].getName() == "New Shop")
+							scenario.shops.pop_back();
+					}
+					start_shops_editing(size_before == scenario.shops.size());
+					if(size_before > scenario.shops.size())
+						pos_before--;
+					right_sbar->setPosition(pos_before);
 					break;
 			}
+			change_made = true;
 			mouse_button_held = false;
 			return true;
 		}
@@ -507,8 +712,13 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 								town->room_rect[x].descr = "";
 								if(!edit_area_rect_str(x,1))
 									town->room_rect[x].right = 0;
-								x = 500;
+								break;
 							}
+						if(x == town->room_rect.size()) {
+							town->room_rect.emplace_back(working_rect);
+							if(!edit_area_rect_str(x,1))
+								town->room_rect.pop_back();
+						}
 					}
 					else {
 						for(x = 0; x < current_terrain->info_rect.size(); x++)
@@ -517,13 +727,15 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 								current_terrain->info_rect[x].descr = "";
 								if(!edit_area_rect_str(x,0))
 									current_terrain->info_rect[x].right = 0;
-								x = 500;
+								break;
 							}
-						
+						if(x == current_terrain->info_rect.size()) {
+							current_terrain->info_rect.emplace_back(working_rect);
+							if(!edit_area_rect_str(x,0))
+								current_terrain->info_rect.pop_back();
+						}
 					}
-					if(x < 500)
-						giveError("You have placed the maximum number of area rectangles (16 in town, 8 outdoors).");
-					else change_made = true;
+					change_made = true;
 				}
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
@@ -729,10 +941,11 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					for(x = 0; x < town->sign_locs.size(); x++)
 						if((town->sign_locs[x].x == spot_hit.x) && (town->sign_locs[x].y == spot_hit.y)) {
 							edit_sign(x,scenario.ter_types[town->terrain(spot_hit.x,spot_hit.y)].picture);
-							x = 30;
+							break;
 						}
-					if(x == 15) {
-						giveError("Either this space is not a sign, or you have already placed too many signs on this level.");
+					if(x == town->sign_locs.size()) {
+						town->sign_locs.emplace_back(spot_hit);
+						edit_sign(x,scenario.ter_types[town->terrain(spot_hit.x,spot_hit.y)].picture);
 					}
 				}
 				if(!editing_town) {
@@ -741,8 +954,9 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 							edit_sign(x,scenario.ter_types[current_terrain->terrain[spot_hit.x][spot_hit.y]].picture);
 							x = 30;
 						}
-					if(x == 8) {
-						giveError("Either this space is not a sign, or you have already placed too many signs on this level.");
+					if(x == current_terrain->sign_locs.size()) {
+						current_terrain->sign_locs.emplace_back(spot_hit);
+						edit_sign(x,scenario.ter_types[town->terrain(spot_hit.x,spot_hit.y)].picture);
 					}
 				}
 				set_cursor(wand_curs);
@@ -861,6 +1075,15 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				overall_mode = MODE_DRAWING;
 				set_cursor(wand_curs);
 				break;
+			case MODE_ERASE_TOWN_ENTRANCE:
+				for(x = current_terrain->city_locs.size() - 1; x >= 0; x--) {
+					if(current_terrain->city_locs[x] == spot_hit)
+						current_terrain->city_locs.erase(current_terrain->city_locs.begin() + x);
+				}
+				set_cursor(wand_curs);
+				overall_mode = MODE_DRAWING;
+				change_made = true;
+				break;
 			case MODE_SET_OUT_START: //edit out start loc
 				if(cChoiceDlog("set-out-start-confirm", {"okay", "cancel"}).show() == "cancel")
 					break;
@@ -876,7 +1099,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				change_made = true;
 				break;
 			case MODE_ERASE_CREATURE: //delete monst
-				for(x = 0; x < 60; x++)
+				for(x = 0; x < town->creatures.size(); x++)
 					if(monst_on_space(spot_hit,x)) {
 						town->creatures[x].number = 0;
 						break;
@@ -947,36 +1170,65 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 	return false;
 }
 
-static bool handle_terpal_action(location cur_point) {
+static bool handle_terpal_action(location cur_point, bool option_hit) {
 	for(int i = 0; i < 256; i++)
 		if(cur_point.in(terrain_rects[i])) {
+			int k = pal_sbar->getPosition() * 16 + i;
 			rectangle temp_rect = terrain_rects[i];
 			temp_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y );
 			flash_rect(temp_rect);
 			if(overall_mode < MODE_MAIN_SCREEN) {
 				switch(draw_mode) {
 					case DRAW_TERRAIN:
-						set_new_terrain(pal_sbar->getPosition() * 16 + i);
+						set_new_terrain(k);
 						break;
 					case DRAW_ITEM:
-						if(scenario.scen_items[mode_count].variety == eItemType::NO_ITEM) {
+						if(k >= scenario.scen_items.size())
+							break;
+						if(scenario.scen_items[k].variety == eItemType::NO_ITEM) {
 							giveError("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.");
 							break;
 						}
 						overall_mode = MODE_PLACE_ITEM;
-						mode_count = pal_sbar->getPosition() * 16 + i;
+						mode_count = k;
 						set_string("Place the item:",scenario.scen_items[mode_count].full_name.c_str());
 						break;
 					case DRAW_MONST:
+						if(k + 1 >= scenario.scen_monsters.size())
+							break;
 						overall_mode = MODE_PLACE_CREATURE;
-						mode_count = pal_sbar->getPosition() * 16 + i + 1;
+						mode_count = k + 1;
 						set_string("Place the monster:",scenario.scen_monsters[mode_count].m_name.c_str());
 						break;
 				}
 			}
 			else {
-				edit_ter_type(i);
-				set_up_terrain_buttons(true);
+				short size_before = scenario.ter_types.size(), pos_before = pal_sbar->getPosition();
+				i += pos_before * 16;
+				if(option_hit) {
+					if(i == size_before - 1 && !scenario.is_ter_used(i))
+						scenario.ter_types.pop_back();
+					else if(i == size_before) {
+						scenario.ter_types.resize(size_before + 16);
+						for(; i < scenario.ter_types.size(); i++)
+							scenario.ter_types[i].name = "New Terrain";
+					} else {
+						scenario.ter_types[i] = cTerrain();
+						scenario.ter_types[i].name = "Unused Terrain";
+					}
+				} else {
+					if(i == size_before) {
+						scenario.ter_types.emplace_back();
+						scenario.ter_types.back().name = "New Terrain";
+					}
+					if(!edit_ter_type(i) && i == size_before && scenario.ter_types.back().name == "New Terrain")
+						scenario.ter_types.pop_back();
+				}
+				if(size_before / 16 > scenario.ter_types.size() / 16)
+					pos_before--;
+				pal_sbar->setPosition(pos_before);
+				set_up_terrain_buttons(false);
+				change_made = true;
 			}
 			place_location();
 			return true;
@@ -1077,6 +1329,15 @@ static bool handle_toolpal_action(location cur_point2) {
 						set_string("Set town entrance","Select town to edit");
 						set_cursor(hand_curs);
 						overall_mode = MODE_EDIT_TOWN_ENTRANCE;
+						break;
+					case PAL_ERASE_TOWN:
+						if(editing_town) {
+							set_string("Can only erase town entrances outdoors","");
+							break;
+						}
+						set_string("Erase town entrance","Select town to erase");
+						set_cursor(eraser_curs);
+						overall_mode = MODE_ERASE_TOWN_ENTRANCE;
 						break;
 					case PAL_EDIT_ITEM:
 						if(!editing_town) {
@@ -1315,7 +1576,7 @@ void handle_action(location the_point,sf::Event /*event*/) {
 		cur_point.x -= RIGHT_AREA_UL_X;
 		cur_point.y -= RIGHT_AREA_UL_Y;
 		
-		if(handle_terpal_action(cur_point))
+		if(handle_terpal_action(cur_point, option_hit))
 			return;
 		cur_point2 = cur_point;
 		cur_point2.x -= 5;
@@ -1357,6 +1618,7 @@ void swap_terrain() {
 }
 
 void set_new_terrain(ter_num_t selected_terrain) {
+	if(selected_terrain >= scenario.ter_types.size()) return;
 	current_terrain_type = selected_terrain;
 //	if(selected_terrain < 2)
 //		current_ground = 0;
@@ -1758,8 +2020,8 @@ void set_terrain(location l,ter_num_t terrain_type) {
 				if((town->sign_locs[i].x == l.x) && (town->sign_locs[i].y == l.y))
 					which_sign = i;
 			}
-		for(i = 0; i < town->sign_locs.size(); i++)
-			if(which_sign < 0) {
+		if(which_sign < 0) {
+			for(i = 0; i < town->sign_locs.size(); i++)
 				if(town->sign_locs[i].x == 100)
 					which_sign = i;
 				else {
@@ -1767,19 +2029,13 @@ void set_terrain(location l,ter_num_t terrain_type) {
 					if(scenario.ter_types[ter].special != eTerSpec::IS_A_SIGN)
 						which_sign = i;
 				}
-			}
-		if(which_sign >= 0) {
-			static_cast<location&>(town->sign_locs[which_sign]) = l;
-			edit_sign(which_sign,scenario.ter_types[terrain_type].picture);
-			sign_error_received = false;
 		}
-		else {
-			town->terrain(l.x,l.y) = current_ground;
-			if(!sign_error_received) {
-				giveError("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.");
-				sign_error_received = true;
-			}
+		if(which_sign < 0) {
+			which_sign = town->sign_locs.size();
+			town->sign_locs.emplace_back();
 		}
+		static_cast<location&>(town->sign_locs[which_sign]) = l;
+		edit_sign(which_sign,scenario.ter_types[terrain_type].picture);
 		mouse_button_held = false;
 	}
 	if(scenario.ter_types[terrain_type].special == eTerSpec::IS_A_SIGN && !editing_town) {
@@ -1793,8 +2049,8 @@ void set_terrain(location l,ter_num_t terrain_type) {
 				if((current_terrain->sign_locs[i].x == l.x) && (current_terrain->sign_locs[i].y == l.y))
 					which_sign = i;
 			}
-		for(i = 0; i < current_terrain->sign_locs.size(); i++)
-			if(which_sign < 0) {
+		if(which_sign < 0) {
+			for(i = 0; i < current_terrain->sign_locs.size(); i++)
 				if(current_terrain->sign_locs[i].x == 100)
 					which_sign = i;
 				else {
@@ -1802,19 +2058,13 @@ void set_terrain(location l,ter_num_t terrain_type) {
 					if(scenario.ter_types[ter].special != eTerSpec::IS_A_SIGN)
 						which_sign = i;
 				}
-			}
-		if(which_sign >= 0) {
-			static_cast<location&>(current_terrain->sign_locs[which_sign]) = l;
-			edit_sign(which_sign,scenario.ter_types[terrain_type].picture);
-			sign_error_received = false;
 		}
-		else {
-			current_terrain->terrain[l.x][l.y] = current_ground;
-			if(!sign_error_received) {
-				giveError("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.");
-				sign_error_received = true;
-			}
+		if(which_sign < 0) {
+			which_sign = current_terrain->sign_locs.size();
+			current_terrain->sign_locs.emplace_back();
 		}
+		static_cast<location&>(current_terrain->sign_locs[which_sign]) = l;
+		edit_sign(which_sign,scenario.ter_types[terrain_type].picture);
 		mouse_button_held = false;
 	}
 }
@@ -2114,8 +2364,13 @@ void town_entry(location spot_hit) {
 				}
 				x = 500;
 			}
-		if(y == -2)
-			giveError("You can't set more than 8 town entrances in any outdoor section.");
+		if(y == -2) {
+			y = pick_town_num("select-town-enter",0,scenario);
+			if(y >= 0) {
+				current_terrain->city_locs.emplace_back(spot_hit);
+				current_terrain->city_locs.back().spec = y;
+			}
+		}
 	}
 }
 
@@ -2249,36 +2504,37 @@ void start_terrain_editing() {
 	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
 }
 
-void start_monster_editing(short just_redo_text) {
+void start_monster_editing(bool just_redo_text) {
+	int num_options = scenario.scen_monsters.size() + 1;
 	short i;
-	bool draw_full = false;
 	
-	if(overall_mode == MODE_EDIT_TYPES)
-		draw_full = true;
-	if(just_redo_text == 0) {
+	if(!just_redo_text) {
 		overall_mode = MODE_MAIN_SCREEN;
 		right_sbar->show();
 		pal_sbar->hide();
 		right_sbar->setPosition(0);
 		
 		reset_rb();
-		right_sbar->setMaximum(255 - NRSONPAGE);
+		right_sbar->setMaximum(num_options - 1 - NRSONPAGE);
 	}
-	for(i = 1; i < scenario.scen_monsters.size(); i++) {
-		set_rb(i - 1,RB_MONST, i,std::to_string(i) + " - " + scenario.scen_monsters[i].m_name);
+	for(i = 1; i < num_options; i++) {
+		std::string title;
+		if(i == scenario.scen_monsters.size())
+			title = "Create New Monster";
+		else title = scenario.scen_monsters[i].m_name;
+		title = std::to_string(i) + " - " + title;
+		set_rb(i - 1,RB_MONST, i, title);
 	}
-	if(draw_full)
-		redraw_screen();
-	else for(i = 0; i < NRSONPAGE; i++)
-		draw_rb_slot(i,0);
-	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
+	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"Alt-click to delete",true);
+	redraw_screen();
 }
 
-void start_item_editing(short just_redo_text) {
+void start_item_editing(bool just_redo_text) {
+	int num_options = scenario.scen_items.size() + 1;
 	short i;
 	bool draw_full = false;
 	
-	if(just_redo_text == 0) {
+	if(!just_redo_text) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();
 		if(overall_mode == MODE_EDIT_TYPES)
@@ -2289,53 +2545,59 @@ void start_item_editing(short just_redo_text) {
 		
 		right_sbar->setPosition(0);
 		reset_rb();
-		right_sbar->setMaximum(400 - NRSONPAGE);
+		right_sbar->setMaximum(num_options - NRSONPAGE);
 	}
-	for(i = 0; i < scenario.scen_items.size(); i++) {
-		set_rb(i,RB_ITEM, i,std::to_string(i) + " - " + scenario.scen_items[i].full_name);
+	for(i = 0; i < num_options; i++) {
+		std::string title;
+		if(i == scenario.scen_items.size())
+			title = "Create New Item";
+		else title = scenario.scen_items[i].full_name;
+		title = std::to_string(i) + " - " + title;
+		set_rb(i,RB_ITEM, i, title);
 	}
-	if(draw_full)
-		redraw_screen();
-	else for(i = 0; i < NRSONPAGE; i++)
-		draw_rb_slot(i,0);
-	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
+	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"Alt-click to delete",true);
+	redraw_screen();
 }
 
-void start_special_item_editing() {
+void start_special_item_editing(bool just_redo_text) {
+	int num_options = scenario.special_items.size() + 1;
 	short i;
-	bool draw_full = false;
 	
-	if(overall_mode < MODE_MAIN_SCREEN)
-		set_up_main_screen();
-	if(overall_mode == MODE_EDIT_TYPES)
-		draw_full = true;
-	overall_mode = MODE_MAIN_SCREEN;
-	right_sbar->show();
-	pal_sbar->hide();
-	
-	right_sbar->setPosition(0);
-	reset_rb();
-	right_sbar->setMaximum(50 - NRSONPAGE);
-	for(i = 0; i < scenario.special_items.size(); i++) {
-		set_rb(i,RB_SPEC_ITEM, i,std::to_string(i) + " - " + scenario.special_items[i].name);
+	if(!just_redo_text) {
+		if(overall_mode < MODE_MAIN_SCREEN)
+			set_up_main_screen();
+		overall_mode = MODE_MAIN_SCREEN;
+		right_sbar->show();
+		pal_sbar->hide();
+		
+		right_sbar->setPosition(0);
+		reset_rb();
+		right_sbar->setMaximum(num_options - NRSONPAGE);
 	}
-	if(draw_full)
-		redraw_screen();
-	else for(i = 0; i < NRSONPAGE; i++)
-		draw_rb_slot(i,0);
-	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
+	for(i = 0; i < num_options; i++) {
+		std::string title;
+		if(i == scenario.special_items.size())
+			title = "Create New Special Item";
+		else title = scenario.special_items[i].name;
+		title = std::to_string(i) + " - " + title;
+		set_rb(i,RB_SPEC_ITEM, i, title);
+	}
+	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"Alt-click to delete",true);
+	redraw_screen();
 }
 
-void start_quest_editing() {
+void start_quest_editing(bool just_redo_text) {
 	int num_options = scenario.quests.size() + 1;
-	if(overall_mode < MODE_MAIN_SCREEN)
-		set_up_main_screen();
-	overall_mode = MODE_MAIN_SCREEN;
-	right_sbar->show();
-	pal_sbar->hide();
-	right_sbar->setPosition(0);
-	reset_rb();
-	right_sbar->setMaximum(num_options - NRSONPAGE);
+	if(!just_redo_text) {
+		if(overall_mode < MODE_MAIN_SCREEN)
+			set_up_main_screen();
+		overall_mode = MODE_MAIN_SCREEN;
+		right_sbar->show();
+		pal_sbar->hide();
+		right_sbar->setPosition(0);
+		reset_rb();
+		right_sbar->setMaximum(num_options - NRSONPAGE);
+	}
 	for(int i = 0; i < num_options; i++) {
 		std::string title;
 		if(i == scenario.quests.size())
@@ -2344,20 +2606,22 @@ void start_quest_editing() {
 		title = std::to_string(i) + " - " + title;
 		set_rb(i, RB_QUEST, i, title);
 	}
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
 	redraw_screen();
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Command-click or right-click to delete",true);
 }
 
-void start_shops_editing() {
+void start_shops_editing(bool just_redo_text) {
 	int num_options = scenario.shops.size() + 1;
-	if(overall_mode < MODE_MAIN_SCREEN)
-		set_up_main_screen();
-	overall_mode = MODE_MAIN_SCREEN;
-	right_sbar->show();
-	pal_sbar->hide();
-	right_sbar->setPosition(0);
-	reset_rb();
-	right_sbar->setMaximum(num_options - NRSONPAGE);
+	if(!just_redo_text) {
+		if(overall_mode < MODE_MAIN_SCREEN)
+			set_up_main_screen();
+		overall_mode = MODE_MAIN_SCREEN;
+		right_sbar->show();
+		pal_sbar->hide();
+		right_sbar->setPosition(0);
+		reset_rb();
+		right_sbar->setMaximum(num_options - NRSONPAGE);
+	}
 	for(int i = 0; i < num_options; i++) {
 		std::string title;
 		if(i == scenario.shops.size())
@@ -2366,31 +2630,29 @@ void start_shops_editing() {
 		title = std::to_string(i) + " - " + title;
 		set_rb(i, RB_SHOP, i, title);
 	}
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
 	redraw_screen();
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Command-click or right-click to delete",true);
 }
 
 extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
 
 // mode 0 - scen 1 - out 2 - town 3 - journal
 // if just_redo_text not 0, simply need to update text portions
-void start_string_editing(short mode,short just_redo_text) {
+void start_string_editing(eStrMode mode,short just_redo_text) {
 	long pos;
-	bool draw_full = false;
 	
 	if(just_redo_text == 0) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();
-		if(overall_mode == MODE_EDIT_TYPES)
-			draw_full = true;
 		overall_mode = MODE_MAIN_SCREEN;
 		right_sbar->show();
 		pal_sbar->hide();
 		
 		reset_rb();
-		right_sbar->setMaximum(num_strs(mode) - NRSONPAGE);
+		right_sbar->setMaximum(num_strs(mode) + 1 - NRSONPAGE);
 	}
-	for(size_t i = 0; i < num_strs(mode); i++) {
+	size_t num_strs = ::num_strs(mode);
+	for(size_t i = 0; i < num_strs; i++) {
 		std::ostringstream str;
 		switch(mode) {
 			case 0:
@@ -2417,23 +2679,37 @@ void start_string_editing(short mode,short just_redo_text) {
 				str << i << " - " << town->sign_locs[i].text.substr(0,30);
 				set_rb(i,RB_TOWN_SIGN, i,str.str());
 				break;
+			case 6:
+				str << i << " - " << current_terrain->info_rect[i].descr.substr(0,30);
+				set_rb(i,RB_OUT_RECT, i,str.str());
+				break;
+			case 7:
+				str << i << " - " << town->room_rect[i].descr.substr(0,30);
+				set_rb(i,RB_TOWN_RECT, i,str.str());
+				break;
 		}
+	}
+	std::string make_new = std::to_string(num_strs) + " - Create New String";
+	switch(mode) {
+		case 0: set_rb(num_strs, RB_SCEN_STR, num_strs, make_new); break;
+		case 1: set_rb(num_strs, RB_OUT_STR, num_strs, make_new); break;
+		case 2: set_rb(num_strs, RB_TOWN_STR, num_strs, make_new); break;
+		case 3: set_rb(num_strs, RB_JOURNAL, num_strs, make_new); break;
+		case 4: set_rb(num_strs, RB_OUT_SIGN, num_strs, make_new); break;
+		case 5: set_rb(num_strs, RB_TOWN_SIGN, num_strs, make_new); break;
+		case 6: set_rb(num_strs, RB_OUT_RECT, num_strs, make_new); break;
+		case 7: set_rb(num_strs, RB_TOWN_RECT, num_strs, make_new); break;
 	}
 	
 	pos = right_sbar->getPosition();
-	if(draw_full)
-		redraw_screen();
-	else for(int i = 0; i < NRSONPAGE; i++)
-		draw_rb_slot(i + pos,0);
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Command-click to clear",true);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+	redraw_screen();
 }
 
 // mode 0 - scen 1 - out 2 - town
 // if just_redo_text not 0, simply need to update text portions
 void start_special_editing(short mode,short just_redo_text) {
-	short i;
 	size_t num_specs;
-	bool draw_full = false;
 	switch(mode) {
 		case 0: num_specs = scenario.scen_specials.size(); break;
 		case 1: num_specs = current_terrain->specials.size(); break;
@@ -2443,8 +2719,6 @@ void start_special_editing(short mode,short just_redo_text) {
 	if(just_redo_text == 0) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();
-		if(overall_mode == MODE_EDIT_TYPES)
-			draw_full = true;
 		overall_mode = MODE_MAIN_SCREEN;
 		right_sbar->show();
 		pal_sbar->hide();
@@ -2476,23 +2750,17 @@ void start_special_editing(short mode,short just_redo_text) {
 		case 1: set_rb(num_specs, RB_OUT_SPEC, num_specs, make_new); break;
 		case 2: set_rb(num_specs, RB_TOWN_SPEC, num_specs, make_new); break;
 	}
-	if(draw_full)
-		redraw_screen();
-	else for(i = 0; i < NRSONPAGE; i++)
-		draw_rb_slot(i,0);
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Command-click to clear",true);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+	redraw_screen();
 }
 
 // if restoring is 1, this is just a redraw, so don't move scroll bar position
 void start_dialogue_editing(short restoring) {
 	short i,j;
 	char s[15] = "    ,      ";
-	bool draw_full = false;
 	
 	if(overall_mode < MODE_MAIN_SCREEN)
 		set_up_main_screen();
-	if(overall_mode == MODE_EDIT_TYPES)
-		draw_full = true;
 	overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
 	pal_sbar->hide();
@@ -2507,7 +2775,8 @@ void start_dialogue_editing(short restoring) {
 		strb << "Personality " << (i + cur_town * 10) << " - " << town->talking.people[i].title;
 		set_rb(i,RB_PERSONALITY, i, strb.str());
 	}
-	for(i = 0; i < 60; i++) {
+	size_t n_nodes = town->talking.talk_nodes.size();
+	for(i = 0; i < n_nodes; i++) {
 		for(j = 0; j < 4; j++) {
 			s[j] = town->talking.talk_nodes[i].link1[j];
 			s[j + 6] = town->talking.talk_nodes[i].link2[j];
@@ -2516,11 +2785,9 @@ void start_dialogue_editing(short restoring) {
 		strb << "Node " << i << " - Per. " << town->talking.talk_nodes[i].personality << ", " << s;
 		set_rb(10 + i,RB_DIALOGUE, i, strb.str());
 	}
-	if(draw_full)
-		redraw_screen();
-	else for(i = 0; i < NRSONPAGE; i++)
-		draw_rb_slot(i,0);
-	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
+	set_rb(10 + n_nodes, RB_DIALOGUE, n_nodes, "Create New Node");
+	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"Alt-click node to delete",true);
+	redraw_screen();
 }
 
 bool save_check(std::string which_dlog) {

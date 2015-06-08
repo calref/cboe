@@ -28,7 +28,7 @@ std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27
 std::vector<pic_num_t> boom_pics = {0,1,2,3,4,8,16,24,32};
 std::vector<pic_num_t> lgdlog_pics = {0,72};
 
-size_t num_strs(short str_mode) {
+size_t num_strs(eStrMode str_mode) {
 	switch(str_mode) {
 		case 0: return scenario.spec_strs.size();
 		case 1: return current_terrain->spec_strs.size();
@@ -36,8 +36,71 @@ size_t num_strs(short str_mode) {
 		case 3: return scenario.journal_strs.size();
 		case 4: return current_terrain->sign_locs.size();
 		case 5: return town->sign_locs.size();
+		case 6: return current_terrain->info_rect.size();
+		case 7: return town->room_rect.size();
 	}
 	return 0;
+}
+
+static void ensure_str(eStrMode str_mode, size_t which) {
+	if(which >= num_strs(str_mode)) {
+		switch(str_mode) {
+			case 0: scenario.spec_strs.resize(which + 1, "*"); break;
+			case 1: current_terrain->spec_strs.resize(which + 1, "*"); break;
+			case 2: town->spec_strs.resize(which + 1, "*"); break;
+			case 3: scenario.journal_strs.resize(which + 1, "*"); break;
+			case 4: current_terrain->sign_locs.resize(which + 1, {-1, -1, "*"}); break;
+			case 5: town->sign_locs.resize(which + 1, {-1, -1, "*"}); break;
+			case 6: current_terrain->info_rect.resize(which + 1, {-1, -1, -1, -1, "*"}); break;
+			case 7: town->room_rect.resize(which + 1, {-1, -1, -1, -1, "*"}); break;
+		}
+	}
+}
+
+static std::string& fetch_str(eStrMode str_mode, size_t which) {
+	ensure_str(str_mode, which);
+	switch(str_mode) {
+		case 0: return scenario.spec_strs[which];
+		case 1: return current_terrain->spec_strs[which];
+		case 2: return town->spec_strs[which];
+		case 3: return scenario.journal_strs[which];
+		case 4: return current_terrain->sign_locs[which].text;
+		case 5: return town->sign_locs[which].text;
+		case 6: return current_terrain->info_rect[which].descr;
+		case 7: return town->room_rect[which].descr;
+	}
+	throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-5)";
+}
+
+static std::string str_info(eStrMode str_mode, size_t which) {
+	ensure_str(str_mode, which);
+	std::ostringstream sout;
+	switch(str_mode) {
+		case 0: case 1: case 2: case 3:
+			sout << which;
+			break;
+		case 4:
+			sout << "(" << current_terrain->sign_locs[which].x;
+			sout << ", " << current_terrain->sign_locs[which].y << ")";
+			break;
+		case 5:
+			sout << "(" << town->sign_locs[which].x;
+			sout << ", " << town->sign_locs[which].y << ")";
+			break;
+		case 6:
+			sout << "(" << current_terrain->info_rect[which].left;
+			sout << ", " << current_terrain->info_rect[which].top;
+			sout << ")|(" << current_terrain->info_rect[which].right;
+			sout << ", " << current_terrain->info_rect[which].bottom << ")";
+			break;
+		case 7:
+			sout << "(" << town->room_rect[which].left;
+			sout << ", " << town->room_rect[which].top;
+			sout << ")|(" << town->room_rect[which].right;
+			sout << ", " << town->room_rect[which].bottom << ")";
+			break;
+	}
+	return sout.str();
 }
 
 //cre = check range error
@@ -352,20 +415,9 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 	return dlog.show(cur_choice);
 }
 
-static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, short str_mode) {
+static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, eStrMode str_mode) {
 	std::string newVal = me["text"].getText();
-	if(str_mode == 0)
-		scenario.spec_strs[which_str] = newVal;
-	if(str_mode == 1)
-		current_terrain->spec_strs[which_str] = newVal;
-	if(str_mode == 2)
-		town->spec_strs[which_str] = newVal;
-	if(str_mode == 3)
-		scenario.journal_strs[which_str] = newVal;
-	if(str_mode == 4)
-		current_terrain->sign_locs[which_str].text = newVal;
-	if(str_mode == 5)
-		town->sign_locs[which_str].text = newVal;
+	fetch_str(str_mode, which_str) = newVal;
 	if(item_hit == "okay") me.toast(true);
 	else if(item_hit == "left" || item_hit == "right") {
 		if(item_hit[0] == 'l')
@@ -374,44 +426,24 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 		if(which_str < 0) which_str = num_strs(str_mode) - 1;
 		if(which_str >= num_strs(str_mode)) which_str = 0;
 	}
-	me["num"].setTextToNum(which_str);
-	if(str_mode == 0)
-		me["text"].setText(scenario.spec_strs[which_str]);
-	if(str_mode == 1)
-		me["text"].setText(current_terrain->spec_strs[which_str]);
-	if(str_mode == 2)
-		me["text"].setText(town->spec_strs[which_str]);
-	if(str_mode == 3)
-		me["text"].setText(scenario.journal_strs[which_str]);
-	if(str_mode == 4)
-		me["text"].setText(current_terrain->sign_locs[which_str].text);
-	if(str_mode == 5)
-		me["text"].setText(town->sign_locs[which_str].text);
+	me["num"].setText(str_info(str_mode, which_str));
+	me["text"].setText(fetch_str(str_mode, which_str));
 	return true;
 }
 
-// mode 0 - scen 1 - out 2 - town
-void edit_text_str(short which_str,short mode) {
+bool edit_text_str(short which_str,eStrMode mode) {
 	using namespace std::placeholders;
+	short first = which_str;
 	
 	cDialog dlog("edit-text");
 	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, std::ref(which_str), mode), {"okay", "left", "right"});
+	dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	
-	dlog["num"].setTextToNum(which_str);
-	if(mode == 0)
-		dlog["text"].setText(scenario.spec_strs[which_str]);
-	if(mode == 1)
-		dlog["text"].setText(current_terrain->spec_strs[which_str]);
-	if(mode == 2)
-		dlog["text"].setText(town->spec_strs[which_str]);
-	if(mode == 3)
-		dlog["text"].setText(scenario.journal_strs[which_str]);
-	if(mode == 4)
-		dlog["text"].setText(current_terrain->sign_locs[which_str].text);
-	if(mode == 5)
-		dlog["text"].setText(town->sign_locs[which_str].text);
+	dlog["num"].setText(str_info(mode, which_str));
+	dlog["text"].setText(fetch_str(mode, which_str));
 	
 	dlog.run();
+	return dlog.accepted() || which_str != first;
 }
 
 static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, short which_str, short str_mode) {
@@ -560,14 +592,30 @@ static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edi
 }
 
 static bool discard_spec_enc(cDialog& me, node_stack_t& edit_stack) {
-	if(edit_stack.size() > 1) {
-		std::string action = cChoiceDlog("discard-special-node", {"save", "cancel", "revert"}).show();
+	std::string action = "revert";
+	int stack_size = edit_stack.size();
+	if(stack_size > 1) {
+		action = cChoiceDlog("discard-special-node", {"save", "cancel", "revert"}).show();
 		if(action == "save") return true;
-		if(action == "cancel") return me.toast(false);
-		edit_stack.pop();
-		if(edit_stack.size() == 1)
-			me["back"].hide();
-	} else me.toast(false);
+	}
+	auto cur = edit_stack.top();
+	auto& list = cur.mode == 0 ? scenario.scen_specials : (cur.mode == 1 ? current_terrain->specials : town->specials);
+	if(cur.which == list.size() - 1 && list[cur.which].type == eSpecType::NONE && list[cur.which].jumpto == -1)
+		list.pop_back();
+	edit_stack.pop();
+	if(action == "cancel") {
+		while(!edit_stack.empty()) {
+			auto cur = edit_stack.top();
+			auto& list = cur.mode == 0 ? scenario.scen_specials : (cur.mode == 1 ? current_terrain->specials : town->specials);
+			if(cur.which == list.size() - 1 && list[cur.which].type == eSpecType::NONE && list[cur.which].jumpto == -1)
+				list.pop_back();
+			edit_stack.pop();
+		}
+	} else if(edit_stack.size() == 1)
+		me["back"].hide();
+	if(edit_stack.empty())
+		me.toast(false);
+	else put_spec_enc_in_dlog(me, edit_stack);
 	return true;
 }
 
@@ -757,19 +805,19 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case 'm':
 			choose_string = false;
 			store = me["msg2"].getTextAsNum();
-			edit_spec_text(mode, &val, &store, &me);
+			edit_spec_text(eStrMode(mode), &val, &store, &me);
 			me["msg2"].setTextToNum(store);
 			store = val;
 			break;
 		case 'M': case '$':
 			choose_string = false;
-			edit_spec_text(mode, &val, nullptr, &me);
+			edit_spec_text(eStrMode(mode), &val, nullptr, &me);
 			store = val;
 			break;
 		case 'd':
 			choose_string = false;
 			store = val;
-			edit_dialog_text(mode, &store, &me);
+			edit_dialog_text(eStrMode(mode), &store, &me);
 			break;
 		case 's': case 'S':
 			choose_string = false;
@@ -859,18 +907,24 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 			giveError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
+		if(scenario.scen_specials[which_node].pic < 0)
+			scenario.scen_specials[which_node].pic = 0;
 		the_node = scenario.scen_specials[which_node];
 	} else if(mode == 1) {
 		if(which_node >= current_terrain->specials.size()) {
 			giveError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
+		if(current_terrain->specials[which_node].pic < 0)
+			current_terrain->specials[which_node].pic = 0;
 		the_node = current_terrain->specials[which_node];
 	} else if(mode == 2) {
 		if(which_node >= town->specials.size()) {
 			giveError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
+		if(town->specials[which_node].pic < 0)
+			town->specials[which_node].pic = 0;
 		the_node = town->specials[which_node];
 	}
 
@@ -924,7 +978,7 @@ short get_fresh_spec(short which_mode) {
 	return num_specs;
 }
 
-static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short str_mode, short* str1, short* str2) {
+static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eStrMode str_mode, short* str1, short* str2) {
 	std::string str;
 	size_t i;
 	
@@ -933,46 +987,13 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 		if(!str.empty()) {
 			if(*str1 < 0) {
 				size_t n = num_strs(str_mode);
-				for(i = 0; i < n; i++)
-					switch(str_mode) {
-						case 0:
-							// TODO: This could overwrite a string if it's unlucky enough to start with *
-							if(scenario.spec_strs[i][0] == '*') {
-								*str1 = i;
-								i = 500;
-							}
-							break;
-						case 1:
-							if(current_terrain->spec_strs[i][0] == '*') {
-								*str1 = i;
-								i = 500;
-							}
-							break;
-						case 2:
-							if(town->spec_strs[i][0] == '*') {
-								*str1 = i;
-								i = 500;
-							}
-							break;
-						case 3:
-							if(scenario.journal_strs[i][0] == '*') {
-								*str1 = i;
-								i = 500;
-							}
-							break;
-						case 4:
-							if(current_terrain->sign_locs[i].text[0] == '*') {
-								*str1 = i;
-								i = 500;
-							}
-							break;
-						case 5:
-							if(town->sign_locs[i].text[0] == '*') {
-								*str1 = i;
-								i = 500;
-							}
-							break;
+				for(i = 0; i < n; i++) {
+					std::string& str = fetch_str(str_mode, i);
+					if(!str.empty() && str[0] == '*') {
+						*str1 = i;
+						i = 500;
 					}
+				}
 				if(i < 500) {
 					giveError("There are no more free message slots.",
 							  "To free up some slots, go into Edit Town/Out/Scenario Text to clear some messages.", &me);
@@ -980,72 +1001,20 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 				}
 			}
 			if(*str1 >= 0) {
-				switch(str_mode) {
-					case 0:
-						scenario.spec_strs[*str1] = str;
-						break;
-					case 1:
-						current_terrain->spec_strs[*str1] = str;
-						break;
-					case 2:
-						town->spec_strs[*str1] = str;
-						break;
-					case 3:
-						scenario.journal_strs[*str1] = str;
-						break;
-					case 4:
-						current_terrain->sign_locs[*str1].text = str;
-						break;
-					case 5:
-						town->sign_locs[*str1].text = str;
-						break;
-				}
+				fetch_str(str_mode, *str1) = str;
 			}
 		}
 		str = str2 == nullptr ? "" : me["str2"].getText();
 		if(!str.empty()) {
 			if(*str2 < 0) {
 				size_t n = num_strs(str_mode);
-				for(i = 160; i < n; i++)
-					switch(str_mode) {
-						case 0:
-							if(scenario.spec_strs[i][0] == '*') {
-								*str2 = i;
-								i = 500;
-							}
-							break;
-						case 1:
-							if(current_terrain->spec_strs[i][0] == '*') {
-								*str2 = i;
-								i = 500;
-							}
-							break;
-						case 2:
-							if(town->spec_strs[i][0] == '*') {
-								*str2 = i;
-								i = 500;
-							}
-							break;
-						case 3:
-							if(scenario.journal_strs[i][0] == '*') {
-								*str2 = i;
-								i = 500;
-							}
-							break;
-						case 4:
-							if(current_terrain->sign_locs[i].text[0] == '*') {
-								*str2 = i;
-								i = 500;
-							}
-							break;
-						case 5:
-							if(town->sign_locs[i].text[0] == '*') {
-								*str2 = i;
-								i = 500;
-							}
-							break;
-							
+				for(i = 0; i < n; i++) {
+					std::string& str = fetch_str(str_mode, i);
+					if(!str.empty() && str[0] == '*') {
+						*str2 = i;
+						i = 500;
 					}
+				}
 				if(i < 500) {
 					giveError("There are no more free message slots.",
 							  "To free up some slots, go into Edit Town/Out/Scenario Text to clear some messages.", &me);
@@ -1053,26 +1022,7 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 				}
 			}
 			if(*str2 >= 0) {
-				switch(str_mode) {
-					case 0:
-						scenario.spec_strs[*str2] = str;
-						break;
-					case 1:
-						current_terrain->spec_strs[*str2] = str;
-						break;
-					case 2:
-						town->spec_strs[*str2] = str;
-						break;
-					case 3:
-						scenario.journal_strs[*str2] = str;
-						break;
-					case 4:
-						current_terrain->sign_locs[*str2].text = str;
-						break;
-					case 5:
-						town->sign_locs[*str2].text = str;
-						break;
-				}
+				fetch_str(str_mode, *str2) = str;
 			}
 		}
 		me.toast(true);
@@ -1081,51 +1031,28 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, short
 }
 
 // mode 0 - scen 1 - out 2 - town
-void edit_spec_text(short mode,short *str1,short *str2,cDialog* parent) {
+void edit_spec_text(eStrMode mode,short *str1,short *str2,cDialog* parent) {
 	using namespace std::placeholders;
-	short num_s_strs[3] = {100,90,100};
 	
 	cDialog edit(str2 ? "edit-special-text" : "edit-special-text-sm", parent);
 	edit.attachClickHandlers(std::bind(edit_spec_text_event_filter, _1, _2, mode, str1, str2), {"okay", "cancel"});
 	
-	if(*str1 >= num_s_strs[mode])
+	if(*str1 >= num_strs(mode))
 		*str1 = -1;
 	if(*str1 >= 0){
-		if(mode == 0)
-			edit["str1"].setText(scenario.spec_strs[*str1]);
-		if(mode == 1)
-			edit["str1"].setText(current_terrain->spec_strs[*str1]);
-		if(mode == 2)
-			edit["str1"].setText(town->spec_strs[*str1]);
-		if(mode == 3)
-			edit["str1"].setText(scenario.journal_strs[*str1]);
-		if(mode == 4)
-			edit["str1"].setText(current_terrain->sign_locs[*str1].text);
-		if(mode == 5)
-			edit["str1"].setText(town->sign_locs[*str1].text);
+		edit["str1"].setText(fetch_str(mode, *str1));
 	}
 	if(str2 != nullptr) {
-		if(*str2 >= num_s_strs[mode])
+		if(*str2 >= num_strs(mode))
 			*str2 = -1;
 		if(*str2 >= 0){
-			if(mode == 0)
-				edit["str2"].setText(scenario.spec_strs[*str2]);
-			if(mode == 1)
-				edit["str2"].setText(current_terrain->spec_strs[*str2]);
-			if(mode == 2)
-				edit["str2"].setText(town->spec_strs[*str2]);
-			if(mode == 3)
-				edit["str2"].setText(scenario.journal_strs[*str2]);
-			if(mode == 4)
-				edit["str2"].setText(current_terrain->sign_locs[*str2].text);
-			if(mode == 5)
-				edit["str2"].setText(town->sign_locs[*str2].text);
+			edit["str2"].setText(fetch_str(mode, *str2));
 		}
 	}
 	edit.run();
 }
 
-static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, short str_mode, short* str1){
+static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, eStrMode str_mode, short* str1){
 	std::string str;
 	short i;
 	
@@ -1134,26 +1061,7 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, sho
 			std::string id = "str" + std::to_string(i + 1);
 			str = me[id].getText();
 			if(i == 0 && str.empty()) break;
-			switch(str_mode) {
-				case 0:
-					scenario.spec_strs[*str1 + i] = str;
-					break;
-				case 1:
-					current_terrain->spec_strs[*str1 + i] = str;
-					break;
-				case 2:
-					town->spec_strs[*str1 + i] = str;
-					break;
-				case 3:
-					scenario.journal_strs[*str1 + i] = str;
-					break;
-				case 4:
-					current_terrain->sign_locs[*str1 + i].text = str;
-					break;
-				case 5:
-					town->sign_locs[*str1 + i].text = str;
-					break;
-			}
+			fetch_str(str_mode, *str1 + i) = str;
 		}
 		me.toast(true);
 	} else me.toast(false);
@@ -1161,71 +1069,29 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, sho
 }
 
 // mode 0 - scen 1 - out 2 - town
-void edit_dialog_text(short mode,short *str1,cDialog* parent) {
+void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 	size_t i,j;
-	short num_s_strs[3] = {100,90,100};
 	
-	if(*str1 >= num_s_strs[mode] - 6)
+	if(*str1 >= num_strs(mode) - 6)
 		*str1 = -1;
 	// first, assign the 6 strs for the dialog.
 	if(*str1 < 0) {
 		size_t n = num_strs(mode);
-		for(i = 160; i < n - 6; i++) {
-			for(j = i; j < i + 6; j++)
-				switch(mode) {
-					case 0:
-						if(scenario.spec_strs[j][0] != '*')
-							j = 500;
-						break;
-					case 1:
-						if(current_terrain->spec_strs[j][0] != '*')
-							j = 500;
-						break;
-					case 2:
-						if(town->spec_strs[j][0] != '*')
-							j = 500;
-						break;
-					case 3:
-						if(scenario.journal_strs[j][0] != '*')
-							j = 500;
-						break;
-					case 4:
-						if(current_terrain->sign_locs[j].text[0] != '*')
-							j = 500;
-						break;
-					case 5:
-						if(town->sign_locs[j].text[0] != '*')
-							j = 500;
-						break;
-				}
-			if(j < 500) {
+		for(i = 0; i < n; i++) {
+			for(j = i; j < i + 6 && j < n; j++) {
+				std::string str = fetch_str(mode, j);
+				if(!str.empty() && str[0] != '*')
+					j = 5000;
+			}
+			if(j < 5000) {
 				*str1 = i;
-				i = 500;
+				i = 5000;
 			}
 		}
-		if(*str1 >= 0)
-			for(short i = *str1; i < *str1 + 6; i++) {
-				switch(mode) {
-					case 0:
-						scenario.spec_strs[i] = "";
-						break;
-					case 1:
-						current_terrain->spec_strs[i] = "";
-						break;
-					case 2:
-						town->spec_strs[i] = "";
-						break;
-					case 3:
-						scenario.journal_strs[i] = "";
-						break;
-					case 4:
-						current_terrain->sign_locs[i].text = "";
-						break;
-					case 5:
-						town->sign_locs[i].text = "";
-						break;
-				}
-			}
+		if(*str1 >= 0) {
+			for(short i = *str1; i < *str1 + 6; i++)
+				fetch_str(mode, i).clear();
+		}
 	}
 	if(*str1 < 0) {
 		giveError("To create a dialog, you need 6 consecutive unused messages. To free up 6 messages, select Edit Out/Town/Scenario Text from the menus.","",parent);
@@ -1236,21 +1102,10 @@ void edit_dialog_text(short mode,short *str1,cDialog* parent) {
 	cDialog edit("edit-dialog-text",parent);
 	edit.attachClickHandlers(std::bind(edit_dialog_text_event_filter, _1, _2, mode, str1), {"okay", "cancel"});
 	
-	if(*str1 >= 0){
+	if(*str1 >= 0) {
 		for(i = 0; i < 6; i++) {
 			std::string id = "str" + std::to_string(i + 1);
-			if(mode == 0)
-				edit[id].setText(scenario.spec_strs[*str1 + i]);
-			if(mode == 1)
-				edit[id].setText(current_terrain->spec_strs[*str1 + i]);
-			if(mode == 2)
-				edit[id].setText(town->spec_strs[*str1 + i]);
-			if(mode == 3)
-				edit[id].setText(scenario.journal_strs[*str1 + i]);
-			if(mode == 4)
-				edit[id].setText(current_terrain->sign_locs[*str1 + i].text);
-			if(mode == 5)
-				edit[id].setText(town->sign_locs[*str1 + i].text);
+			edit[id].setText(fetch_str(mode, *str1 + i));
 		}
 	}
 	

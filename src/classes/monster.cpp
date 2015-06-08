@@ -382,16 +382,17 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 cMonster::cMonster(){
 	magic_res = poison_res = fire_res = cold_res = 100;
 	mindless = invuln = guard = invisible = false;
-	level = m_health = armor = skill = speed = 0;
+	level = m_health = armor = skill = 0;
+	speed = 4;
 	default_facial_pic = default_attitude = 0;
 	ambient_sound = 0;
 	corpse_item = corpse_item_chance = treasure = 0;
 	mu = cl = 0;
 	summon_type = 0;
-	picture_num = 0;
+	picture_num = 149;
 	x_width = y_width = 1;
 	see_spec = -1;
-	m_type = eRace::UNKNOWN;
+	m_type = eRace::HUMAN;
 }
 
 cTownperson::cTownperson() {

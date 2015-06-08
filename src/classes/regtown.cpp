@@ -74,6 +74,7 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 				}
 			}
 		}
+	room_rect.resize(16);
 	for(i = 0; i < 16; i++) {
 		room_rect[i].top = old.room_rect[i].top;
 		room_rect[i].left = old.room_rect[i].left;
@@ -142,6 +143,7 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 				}
 			}
 		}
+	room_rect.resize(16);
 	for(i = 0; i < 16; i++) {
 		room_rect[i].top = old.room_rect[i].top;
 		room_rect[i].left = old.room_rect[i].left;
@@ -210,6 +212,7 @@ void cBigTown::append(legacy::big_tr_type& old, int town_num){
 				}
 			}
 		}
+	room_rect.resize(16);
 	for(i = 0; i < 16; i++) {
 		room_rect[i].top = old.room_rect[i].top;
 		room_rect[i].left = old.room_rect[i].left;
@@ -270,7 +273,7 @@ unsigned char& cBigTown::lighting(size_t i, size_t r){
 	return light[i][r];
 }
 
-cBigTown::cBigTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
+cBigTown::cBigTown(cScenario& scenario) : cTown(scenario) {
 	for(size_t i = 0; i < max_dim(); i++)
 		for(size_t j = 0; j < max_dim(); j++) {
 			terrain(i,j) = scenario.default_ground;
@@ -279,7 +282,7 @@ cBigTown::cBigTown(cScenario& scenario, bool init_strings) : cTown(scenario, ini
 	init_start();
 }
 
-cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
+cMedTown::cMedTown(cScenario& scenario) : cTown(scenario) {
 	for(size_t i = 0; i < max_dim(); i++)
 		for(size_t j = 0; j < max_dim(); j++) {
 			terrain(i,j) = scenario.default_ground;
@@ -288,7 +291,7 @@ cMedTown::cMedTown(cScenario& scenario, bool init_strings) : cTown(scenario, ini
 	init_start();
 }
 
-cTinyTown::cTinyTown(cScenario& scenario, bool init_strings) : cTown(scenario, init_strings) {
+cTinyTown::cTinyTown(cScenario& scenario) : cTown(scenario) {
 	for(size_t i = 0; i < max_dim(); i++)
 		for(size_t j = 0; j < max_dim(); j++) {
 			terrain(i,j) = scenario.default_ground;
