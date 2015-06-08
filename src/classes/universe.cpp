@@ -176,7 +176,7 @@ bool cCurTown::prep_talk(short which) {
 
 void cCurTown::prep_arena() {
 	if(arena != nullptr) delete arena;
-	arena = new cMedTown(univ.scenario, false);
+	arena = new cMedTown(univ.scenario);
 }
 
 cCurTown::~cCurTown() {
