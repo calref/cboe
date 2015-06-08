@@ -473,6 +473,8 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop, cScenario& scen) 
 			elem->GetText(&face);
 			shop.setFace(face);
 		} else if(type == "entries") {
+			cItem dummy_item;
+			dummy_item.variety = eItemType::GOLD;
 			int entries_found = 0;
 			Iterator<Element> entry;
 			for(entry = entry.begin(elem.Get()); entry != entry.end(); entry++) {
@@ -480,7 +482,7 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop, cScenario& scen) 
 				if(entries_found >= 30)
 					throw xBadNode(type, entry->Row(), entry->Column(), fname);
 				if(type == "item") {
-					int amount, num, chance;
+					int amount, num, chance = 100;
 					std::string title, descr;
 					Iterator<Attribute> attr;
 					for(attr = attr.begin(entry.Get()); attr != attr.end(); attr++) {
@@ -495,7 +497,7 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop, cScenario& scen) 
 						} else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
 					}
 					entry->GetText(&num);
-					shop.addItem(num, scen.scen_items[num], amount, chance);
+					shop.addItem(num, dummy_item, amount, chance);
 				} else if(type == "special") {
 					int amount, node, cost, icon;
 					std::string title, descr;
@@ -527,19 +529,19 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop, cScenario& scen) 
 						itype = eShopItemType::MAGE_SPELL;
 						entry->GetText(&n);
 					} else if(type == "priest-spell") {
-						itype = eShopItemType::MAGE_SPELL;
+						itype = eShopItemType::PRIEST_SPELL;
 						entry->GetText(&n);
 					} else if(type == "recipe") {
-						itype = eShopItemType::MAGE_SPELL;
+						itype = eShopItemType::ALCHEMY;
 						entry->GetText(&n);
 					} else if(type == "skill") {
-						itype = eShopItemType::MAGE_SPELL;
+						itype = eShopItemType::SKILL;
 						entry->GetText(&n);
 					} else if(type == "treasure") {
-						itype = eShopItemType::MAGE_SPELL;
+						itype = eShopItemType::TREASURE;
 						entry->GetText(&n);
-					} else if(type == "mage-spell") {
-						itype = eShopItemType::MAGE_SPELL;
+					} else if(type == "class") {
+						itype = eShopItemType::CLASS;
 						entry->GetText(&n);
 					} else if(type == "heal") {
 						entry->GetText(&n);
@@ -1015,6 +1017,9 @@ static void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 			} else throw xBadNode(type, item->Row(), item->Column(), fname);
 		}
 	}
+	// Once we have the items, we have to go back and fill in the shops
+	for(cShop& shop : scenario.shops)
+		shop.refreshItems(scenario.scen_items);
 }
 
 static std::pair<int,int> parseDice(std::string str, std::string elem, std::string attr, std::string fname, int row, int col) {
