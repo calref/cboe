@@ -198,11 +198,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	}
 	if(message == WM_COMMAND) {
 		int cmd = LOWORD(wParam);
-		if(cmd >= 10000 && cmd < 20000) { // Item menus
-			handle_item_menu(cmd - 10000);
-		} else if(cmd >= 20000 && cmd < 30000) { // Monster menus
-			handle_monst_menu(cmd - 20000);
-		} else handle_menu_choice(menuChoices[cmd]);
+		handle_menu_choice(menuChoices[cmd]);
 	} else if(message == WM_SETCURSOR) {
 		// Windows resets the cursor to an arrow whenever the mouse moves, unless we do this.
 		// Note: By handling this message, sf::Window::setMouseCursorVisible() will NOT work.
