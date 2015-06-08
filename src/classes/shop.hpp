@@ -78,6 +78,7 @@ public:
 	}
 	void replaceItem(size_t i, cShopItem newItem);
 	void replaceSpecial(size_t i, eShopItemType type, int n = 0);
+	void refreshItems(std::vector<cItem>& fromList);
 	size_t size();
 	cShopItem getItem(size_t i) const;
 	eShopType getType() const;

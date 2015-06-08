@@ -112,6 +112,14 @@ void cShop::addItem(size_t n, cItem item, size_t quantity, int chance) {
 		items[i].quantity = min(999,quantity) + chance * 1000;
 }
 
+void cShop::refreshItems(std::vector<cItem>& fromList) {
+	// The purpose of this is to load in the actual item data from the scenario list
+	for(size_t i = 0; i < items.size(); i++) {
+		if(items[i].type == eShopItemType::ITEM || items[i].type == eShopItemType::OPT_ITEM)
+			items[i].item = fromList[items[i].index];
+	}
+}
+
 static cItem store_mage_spells(short which_s) {
 	cItem spell('spel');
 	static const short cost[62] = {
