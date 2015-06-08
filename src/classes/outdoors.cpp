@@ -89,26 +89,6 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 		info_rect[i].right = old.info_rect[i].right;
 	}
 	for(i = 0; i < 4; i++){
-//		for(j = 0; j < 7; j++){
-//			wandering[i].monst[j] = old.wandering[i].monst[j];
-//			special_enc[i].monst[j] = old.special_enc[i].monst[j];
-//		}
-//		for(j = 0; j < 3; j++){
-//			wandering[i].fristd::endly[j] = old.wandering[i].fristd::endly[j];
-//			special_enc[i].fristd::endly[j] = old.special_enc[i].fristd::endly[j];
-//		}
-//		wandering[i].spec_on_meet = old.wandering[i].spec_on_meet;
-//		special_enc[i].spec_on_meet = old.special_enc[i].spec_on_meet;
-//		wandering[i].spec_on_win = old.wandering[i].spec_on_win;
-//		special_enc[i].spec_on_win = old.special_enc[i].spec_on_win;
-//		wandering[i].spec_on_flee = old.wandering[i].spec_on_flee;
-//		special_enc[i].spec_on_flee = old.special_enc[i].spec_on_flee;
-//		wandering[i].cant_flee = old.wandering[i].cant_flee;
-//		special_enc[i].cant_flee = old.special_enc[i].cant_flee;
-//		wandering[i].end_spec1 = old.wandering[i].end_spec1;
-//		special_enc[i].end_spec1 = old.special_enc[i].end_spec1;
-//		wandering[i].end_spec2 = old.wandering[i].end_spec2;
-//		special_enc[i].end_spec2 = old.special_enc[i].end_spec2;
 		wandering[i].append(old.wandering[i]);
 		special_enc[i].append(old.special_enc[i]);
 		wandering_locs[i].x = old.wandering_locs[i].x;
