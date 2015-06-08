@@ -941,6 +941,7 @@ void draw_terrain(){
 					draw_rect.right = 22 + 28 * (town->room_rect[i].right - cen_x + 4);
 					draw_rect.top = 24 + 36 * (town->room_rect[i].top - cen_y + 4);
 					draw_rect.bottom = 24 + 36 * (town->room_rect[i].bottom - cen_y + 4);
+					draw_rect.inset(-10, -13);
 					frame_rect(ter_draw_gworld, draw_rect, sf::Color::Red);
 				}
 			// draw border rect
@@ -948,6 +949,7 @@ void draw_terrain(){
 			draw_rect.right = 21 + 28 * (town->in_town_rect.right - cen_x + 4);
 			draw_rect.top = 25 + 36 * (town->in_town_rect.top - cen_y + 4);
 			draw_rect.bottom = 25 + 36 * (town->in_town_rect.bottom - cen_y + 4);
+			draw_rect.inset(10, 13);
 			frame_rect(ter_draw_gworld, draw_rect, sf::Color::White);
 		}
 		if(!editing_town) {
@@ -958,6 +960,7 @@ void draw_terrain(){
 					draw_rect.right = 22 + 28 * (current_terrain->info_rect[i].right - cen_x + 4);
 					draw_rect.top = 24 + 36 * (current_terrain->info_rect[i].top - cen_y + 4);
 					draw_rect.bottom = 24 + 36 * (current_terrain->info_rect[i].bottom - cen_y + 4);
+					draw_rect.inset(-10, -13);
 					frame_rect(ter_draw_gworld, draw_rect, sf::Color::Red);
 				}
 		}
