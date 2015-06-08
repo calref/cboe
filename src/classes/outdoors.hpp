@@ -61,23 +61,23 @@ public:
 	short x,y; // Used while loading legacy scenarios.
 	ter_num_t terrain[48][48];
 	std::vector<spec_loc_t> special_locs;
-	std::array<spec_loc_t,8> city_locs;
-	std::array<sign_loc_t,8> sign_locs;
+	std::vector<spec_loc_t> city_locs;
+	std::vector<sign_loc_t> sign_locs;
 	std::array<cWandering,4> wandering, special_enc;
 	location wandering_locs[4];
 	std::vector<cSpecial> specials;
 	std::string out_name;
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.
-	std::array<info_rect_t,8> info_rect;
+	std::vector<info_rect_t> info_rect;
 	std::string comment;
-	std::array<std::string,90> spec_strs;
+	std::vector<std::string> spec_strs;
 	bool special_spot[48][48];
 	eAmbientSound ambient_sound;
 	snd_num_t out_sound;
 	int bg_out, bg_fight, bg_town, bg_dungeon;
 	
-	explicit cOutdoors(cScenario& scenario, bool init_strings = false);
+	explicit cOutdoors(cScenario& scenario);
 	void append(legacy::outdoor_record_type& old);
 };
 

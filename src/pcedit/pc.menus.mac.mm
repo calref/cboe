@@ -113,7 +113,7 @@ void update_item_menu() {
 		[items_menu[j] removeAllItems];
 		if(!scen_items_loaded) {
 			[[items_menu[j] addItemWithTitle: @"Items Not Loaded" action: @selector(itemMenu:) keyEquivalent: @""] setEnabled: NO];
-		} else for(int i = 0; i < per_menu; i++) {
+		} else for(int i = 0; i < per_menu && i + j * per_menu < item_list.size(); i++) {
 			ItemWrapper* item = [ItemWrapper withItem: i + per_menu * j];
 			NSString* item_name = [NSString stringWithCString: item_list[i + j * per_menu].full_name.c_str() encoding: NSASCIIStringEncoding];
 			NSMenuItem* choice = [items_menu[j] addItemWithTitle: item_name action: @selector(itemMenu:) keyEquivalent: @""];

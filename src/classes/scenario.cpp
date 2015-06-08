@@ -49,7 +49,7 @@ cScenario& cScenario::operator=(cScenario&& other) {
 	return *this = const_cast<const cScenario&>(other);
 }
 
-cScenario::cScenario(bool init_strings) {
+cScenario::cScenario() {
 	short i;
 	std::string temp_str;
 	
@@ -71,34 +71,14 @@ cScenario::cScenario(bool init_strings) {
 	for(i = 0; i < 3; i++) {
 		store_item_towns[i] = -1;
 	}
-	for(i = 0; i < special_items.size(); i++) {
-		special_items[i].special = -1;
-	}
 	for(i = 0; i < scenario_timers.size(); i++) {
 		scenario_timers[i].node = -1;
 	}
-	for(i = 0; i < scen_items.size(); i++) {
-		scen_items[i] = cItem();
-	}
-	if(!init_strings) return;
+	scen_name = "Scen name";
+	who_wrote[0] = "Who wrote 1";
+	who_wrote[1] = "Who wrote 2";
 	contact_info[0] = "Name not given";
-	for(i = 0; i < 270; i++) {
-		temp_str = get_str("scen-default",i + 1);
-		if(i == 0) scen_name = temp_str;
-		else if(i == 1 || i == 2)
-			who_wrote[i-1] = temp_str;
-		else if(i == 3)
-			contact_info[1] = temp_str;
-		else if(i >= 4 && i < 10)
-			intro_strs[i-4] = temp_str;
-		else if(i >= 10 && i < 60)
-			journal_strs[i-10] = temp_str;
-		else if(i >= 60 && i < 160) {
-			if(i % 2 == 0) special_items[(i-60)/2].name = temp_str;
-			else special_items[(i-60)/2].descr = temp_str;
-		} else if(i >= 260) continue; // These were never ever used, for some reason.
-		else spec_strs[i-160] = temp_str;
-	}
+	contact_info[1] = "Contact info";
 }
 
 cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
@@ -136,6 +116,7 @@ void cScenario::append(legacy::scenario_data_type& old){
 		store_item_rects[i].right = old.store_item_rects[i].right;
 		store_item_towns[i] = old.store_item_towns[i];
 	}
+	special_items.resize(50);
 	for(i = 0; i < 50; i++) {
 		special_items[i].flags = old.special_items[i];
 		special_items[i].special = old.special_item_special[i];
@@ -147,7 +128,9 @@ void cScenario::append(legacy::scenario_data_type& old){
 		boats[i].append(old.scen_boats[i]);
 		horses[i].append(old.scen_horses[i]);
 	}
+	ter_types.resize(256);
 	scen_specials.resize(256);
+	scen_monsters.resize(256);
 	for(i = 0; i < 256; i++){
 		ter_types[i].i = i;
 		ter_types[i].append(old.ter_types[i]);
@@ -174,6 +157,7 @@ cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_stora
 
 void cScenario::append(legacy::scen_item_data_type& old){
 	short i;
+	scen_items.resize(400);
 	for(i = 0; i < 400; i++)
 		scen_items[i].append(old.scen_items[i]);
 	for(i = 0; i < 256; i++) {
@@ -228,4 +212,74 @@ ter_num_t cScenario::get_trim_terrain(unsigned short ground, unsigned short trim
 		return i;
 	}
 	return 90;
+}
+
+bool cScenario::is_ter_used(ter_num_t ter) {
+	if(ter >= ter_types.size()) return false;
+	if(ter <= 90) return true;
+	for(int sx = 0; sx < outdoors.width(); sx++) {
+		for(int sy = 0; sy < outdoors.height(); sy++) {
+			for(int x = 0; x < 48; x++) {
+				for(int y = 0; y < 48; y++) {
+					if(outdoors[sx][sy]->terrain[x][y] == ter)
+						return true;
+				}
+			}
+		}
+	}
+	for(int i = 0; i < towns.size(); i++) {
+		for(int x = 0; x < towns[i]->max_dim(); x++) {
+			for(int y = 0; y < towns[i]->max_dim(); y++) {
+				if(towns[i]->terrain(x,y) == ter)
+					return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool cScenario::is_monst_used(mon_num_t monst) {
+	if(monst >= scen_monsters.size()) return false;
+	for(int sx = 0; sx < outdoors.width(); sx++) {
+		for(int sy = 0; sy < outdoors.height(); sy++) {
+			for(int i = 0; i < outdoors[sx][sy]->wandering.size(); i++) {
+				for(int j = 0; j < outdoors[sx][sy]->wandering[i].monst.size(); j++) {
+					if(outdoors[sx][sy]->wandering[i].monst[j] == monst)
+						return true;
+				}
+				for(int j = 0; j < outdoors[sx][sy]->wandering[i].friendly.size(); j++) {
+					if(outdoors[sx][sy]->wandering[i].friendly[j] == monst)
+						return true;
+				}
+			}
+			for(int i = 0; i < outdoors[sx][sy]->special_enc.size(); i++) {
+				for(int j = 0; j < outdoors[sx][sy]->special_enc[i].monst.size(); j++) {
+					if(outdoors[sx][sy]->special_enc[i].monst[j] == monst)
+						return true;
+				}
+				for(int j = 0; j < outdoors[sx][sy]->special_enc[i].friendly.size(); j++) {
+					if(outdoors[sx][sy]->special_enc[i].friendly[j] == monst)
+						return true;
+				}
+			}
+		}
+	}
+	for(int i = 0; i < towns.size(); i++) {
+		for(int j = 0; j < towns[i]->creatures.size(); j++) {
+			if(towns[i]->creatures[j].number == monst)
+				return true;
+		}
+	}
+	return false;
+}
+
+bool cScenario::is_item_used(item_num_t item) {
+	if(item >= scen_items.size()) return false;
+	for(int i = 0; i < towns.size(); i++) {
+		for(int j = 0; j < towns[i]->preset_items.size(); j++) {
+			if(towns[i]->preset_items[j].code == item)
+				return true;
+		}
+	}
+	return false;
 }

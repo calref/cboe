@@ -74,6 +74,9 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 			special_locs[i].spec = -1;
 		else special_locs[i].spec = old.special_id[i];
 	}
+	city_locs.resize(8);
+	sign_locs.resize(8);
+	info_rect.resize(8);
 	for(i = 0; i < 8; i++){
 		city_locs[i].x = old.exit_locs[i].x;
 		city_locs[i].y = old.exit_locs[i].y;
@@ -123,7 +126,7 @@ cOutdoors::cWandering::cWandering() {
 	std::fill(friendly.begin(), friendly.end(), 0);
 }
 
-cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario) {
+cOutdoors::cOutdoors(cScenario& scenario) : scenario(scenario) {
 	short i,j;
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	bg_out = bg_fight = bg_town = bg_dungeon = -1;
@@ -134,25 +137,11 @@ cOutdoors::cOutdoors(cScenario& scenario, bool init_strings) : scenario(scenario
 			special_spot[i][j] = false;
 		}
 	
-	for(i = 0; i < 8; i++) {
-		city_locs[i].x = 100;
-		sign_locs[i].x = 100;
-	}
 	for(i = 0; i < 4; i++) {
 		wandering_locs[i] = locs[i];
 	}
-	if(!init_strings) return;
-	std::string temp_str;
-	for(i = 0; i < 120; i++) {
-		temp_str = get_str("outdoor-default",i + 1);
-		if(i == 0) out_name = temp_str;
-		else if(i == 9) comment = temp_str;
-		else if(i < 9) info_rect[i-1].descr = temp_str;
-		else if(i >= 10 && i < 100)
-			spec_strs[i-10] = temp_str;
-		else if(i >= 100 && i < 108)
-			sign_locs[i-100].text = temp_str;
-	}
+	out_name = "Area name";
+	comment = "Comment";
 }
 
 void cOutdoors::cWandering::append(legacy::out_wandering_type old){

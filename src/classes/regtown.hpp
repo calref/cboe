@@ -31,7 +31,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	
-	explicit cBigTown(cScenario& scenario, bool init_strings = false);
+	explicit cBigTown(cScenario& scenario);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 };
@@ -45,7 +45,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	
-	explicit cMedTown(cScenario& scenario, bool init_strings = false);
+	explicit cMedTown(cScenario& scenario);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 };
@@ -59,7 +59,7 @@ public:
 	unsigned char& lighting(size_t i, size_t r);
 	size_t max_dim() const;
 	
-	explicit cTinyTown(cScenario& scenario, bool init_strings = false);
+	explicit cTinyTown(cScenario& scenario);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
 };

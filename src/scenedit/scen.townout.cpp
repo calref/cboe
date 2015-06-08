@@ -364,74 +364,6 @@ void edit_sign(short which_sign,short picture) {
 	sign_dlg.run();
 }
 
-static bool save_roomdescs(cDialog& me, bool isTown, std::array<bool,16> str_do_delete) {
-	if(!me.toast(true)) return true;
-	int numDescs = isTown ? town->room_rect.size() : current_terrain->info_rect.size();
-	for(int i = 0; i < numDescs; i++) {
-		std::string id = "desc" + std::to_string(i + 1);
-		if(isTown) {
-			town->room_rect[i].descr = me[id].getText().substr(0,30);
-			if(str_do_delete[i])
-				town->room_rect[i].right = 0;
-		} else {
-			current_terrain->info_rect[i].descr = me[id].getText().substr(0,30);
-			if(str_do_delete[i])
-				current_terrain->info_rect[i].right = 0;
-		}
-	}
-	return true;
-}
-
-static void put_roomdescs_in_dlog(cDialog& me, bool isTown, std::array<bool,16> str_do_delete) {
-	int numDescs = isTown ? town->room_rect.size() : current_terrain->info_rect.size();
-	for(int i = 0; i < numDescs; i++) {
-		std::string id = std::to_string(i + 1);
-		std::ostringstream str;
-		bool active = true;
-		if(isTown && town->room_rect[i].right == 0) active = false;
-		if(!isTown && current_terrain->info_rect[i].right == 0) active = false;
-		if(str_do_delete[i]) active = false;
-		if(!active) {
-			str << "Not yet placed.";
-			me["del" + id].hide();
-		} else if(isTown) {
-			me["desc" + id].setText(town->room_rect[i].descr);
-			str << "X = " << town->room_rect[i].left << ", Y = " << town->room_rect[i].top;
-		} else {
-			me["desc" + id].setText(current_terrain->info_rect[i].descr);
-			str << "X = " << current_terrain->info_rect[i].left << ", Y = " << current_terrain->info_rect[i].top;
-		}
-		me["rect" + id].setText(str.str());
-	}
-}
-
-static bool delete_roomdesc(cDialog& me, std::string id, bool isTown, std::array<bool,16> str_do_delete) {
-	int item_hit = boost::lexical_cast<int>(id.substr(3));
-	me["desc" + id.substr(3)].setText("");
-	str_do_delete[item_hit - 1] = true;
-	put_roomdescs_in_dlog(me, isTown, str_do_delete);
-	return true;
-}
-
-void edit_roomdescs(bool town) {
-	using namespace std::placeholders;
-	std::array<bool,16> str_do_delete = {0};
-	int numDescs = town ? 16 : 8;
-	
-	cDialog room_dlg(town ? "edit-town-roomdescs" : "edit-out-roomdescs");
-	room_dlg["okay"].attachClickHandler(std::bind(save_roomdescs, _1, town, str_do_delete));
-	room_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &room_dlg, false));
-	for(int i = 0; i < numDescs; i++) {
-		std::string id = std::to_string(i + 1);
-		room_dlg["del" + id].attachClickHandler(std::bind(delete_roomdesc, _1, _2, town, str_do_delete));
-//		room_dlg["str" + id].attachFocusHandler(check_roomdesc_len);
-	}
-	
-	put_roomdescs_in_dlog(room_dlg, town, str_do_delete);
-	
-	room_dlg.run();
-}
-
 static bool save_town_num(cDialog& me, std::string, eKeyMod) {
 	if(me.toast(true)) me.setResult<short>(me["town"].getTextAsNum());
 	return true;
@@ -1122,15 +1054,15 @@ static bool talk_node_branch(cDialog& me, std::stack<node_ref_t>& talk_edit_stac
 	if(!save_talk_node(me, talk_edit_stack, false, true)) return true;
 	
 	int spec = -1;
-	for(int j = 0; j < 60; j++)
+	for(int j = 0; j < town->talking.talk_nodes.size(); j++)
 		if(town->talking.talk_nodes[j].personality == -1 && strnicmp(town->talking.talk_nodes[j].link1, "xxxx", 4) == 0) {
 			spec = j;
 			break;
 		}
 	
 	if(spec < 0) {
-		giveError("You have used all 60 available talk nodes. To create fresh dialogue, go back and reuse an old one.", &me);
-		return true;
+		spec = town->talking.talk_nodes.size();
+		town->talking.talk_nodes.emplace_back();
 	}
 	
 	talk_edit_stack.push({spec, town->talking.talk_nodes[spec]});
@@ -1164,7 +1096,8 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 	return true;
 }
 
-void edit_talk_node(short which_node) {
+// Returns -1 if accepted, otherwise the node that was cancelled
+short edit_talk_node(short which_node) {
 	using namespace std::placeholders;
 	
 	std::stack<node_ref_t> talk_edit_stack;
@@ -1183,6 +1116,7 @@ void edit_talk_node(short which_node) {
 	put_talk_node_in_dlog(talk_dlg, talk_edit_stack);
 	
 	talk_dlg.run();
+	return talk_dlg.accepted() ? -1 : talk_edit_stack.top().first;
 }
 
 static void put_out_loc_in_dlog(cDialog& me, location cur_loc) {

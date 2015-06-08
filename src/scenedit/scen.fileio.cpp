@@ -777,7 +777,7 @@ static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_nu
 		cSpeech::cNode& node = talk.talk_nodes[i];
 		if(node.personality == -1) continue;
 		// TODO: Is it safe to assume the two links run together like this?
-		if(std::string(node.link1, 8) == "xxxxxxxx")
+		if(std::string(node.link1, 8) == "xxxxxxxx" && node.str1.empty() && node.str2.empty())
 			continue;
 		data.OpenElement("node");
 		data.PushAttribute("for", node.personality);

@@ -120,7 +120,7 @@ void update_item_menu() {
 		while(GetMenuItemCount(items_menu)) RemoveMenu(items_menu, 0, MF_BYPOSITION);
 		if(!scen_items_loaded) {
 			AppendMenuA(items_menu, MF_STRING | MF_GRAYED, 1000, "Items Not Loaded");
-		} else for(int i = 0; i < per_menu; i++) {
+		} else for(int i = 0; i < per_menu && i + j * per_menu < item_list.size(); i++) {
 			cItem& item = item_list[i + j * per_menu];
 			UINT flags = MF_STRING | MF_ENABLED;
 			if(i % per_col == 0) flags |= MF_MENUBARBREAK;

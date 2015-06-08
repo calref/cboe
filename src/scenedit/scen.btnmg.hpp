@@ -21,7 +21,6 @@ enum eLBAction {
 
 enum eRBAction {
 	RB_CLEAR = 0,
-	RB_TER = 1,
 	RB_MONST = 2,
 	RB_ITEM = 3,
 	RB_SCEN_SPEC = 4,
@@ -38,6 +37,8 @@ enum eRBAction {
 	RB_TOWN_SIGN = 15,
 	RB_QUEST = 16,
 	RB_SHOP = 17,
+	RB_OUT_RECT = 18,
+	RB_TOWN_RECT = 19,
 };
 
 enum eLBMode {

@@ -151,6 +151,9 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	scenario.append(*item_data);
 	
 	// TODO: Consider skipping the fread and assignment when len is 0
+	scenario.special_items.resize(50);
+	scenario.journal_strs.resize(50);
+	scenario.spec_strs.resize(100);
 	for(i = 0; i < 270; i++) {
 		len = (long) (temp_scenario->scen_str_len[i]);
 		n = fread(temp_str, len, 1, file_id);
@@ -678,7 +681,7 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 			// TODO: Type field (verify that it's "oboe"?) and OS field
 		} else if(type == "game") {
 			Iterator<Element> game;
-			int store_rects = 0, town_mods = 0, spec_items = 0, quests = 0, shops = 0, timers = 0, strs = 0, journals = 0;
+			int store_rects = 0, town_mods = 0, spec_items = 0, quests = 0, shops = 0, timers = 0, strnum;
 			for(game = game.begin(elem.Get()); game != game.end(); game++) {
 				game->GetValue(&type);
 				if(type == "num-towns") {
@@ -719,8 +722,7 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					// TODO: Make sure town is valid
 					town_mods++;
 				} else if(type == "special-item") {
-					if(spec_items >= 50)
-						throw xBadNode(type,game->Row(),game->Column(),fname);
+					scenario.special_items.emplace_back();
 					readSpecItemFromXml(*game, scenario.special_items[spec_items]);
 					spec_items++;
 				} else if(type == "quest") {
@@ -737,15 +739,15 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					readTimerFromXml(*game, scenario.scenario_timers[timers]);
 					timers++;
 				} else if(type == "string") {
-					if(strs >= 100)
-						throw xBadNode(type,game->Row(),game->Column(),fname);
-					game->GetText(&scenario.spec_strs[strs], false);
-					strs++;
+					game->GetAttribute("id", &strnum);
+					if(strnum >= scenario.spec_strs.size())
+						scenario.spec_strs.resize(strnum + 1);
+					game->GetText(&scenario.spec_strs[strnum], false);
 				} else if(type == "journal") {
-					if(journals >= 50)
-						throw xBadNode(type,game->Row(),game->Column(),fname);
-					game->GetText(&scenario.journal_strs[journals], false);
-					journals++;
+					game->GetAttribute("id", &strnum);
+					if(strnum >= scenario.journal_strs.size())
+						scenario.journal_strs.resize(strnum + 1);
+					game->GetText(&scenario.journal_strs[strnum], false);
 				} else throw xBadNode(type, game->Row(), game->Column(), fname);
 			}
 		} else if(type == "editor") {
@@ -836,6 +838,8 @@ static void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
 			throw xBadNode(type, elem->Row(), elem->Column(), fname);
 		int which_ter;
 		elem->GetAttribute("id", &which_ter);
+		if(which_ter >= scenario.ter_types.size())
+			scenario.ter_types.resize(which_ter + 1);
 		cTerrain& the_ter = scenario.ter_types[which_ter];
 		the_ter = cTerrain();
 		Iterator<Element> ter;
@@ -933,6 +937,8 @@ static void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 			throw xBadNode(type, elem->Row(), elem->Column(), fname);
 		int which_item;
 		elem->GetAttribute("id", &which_item);
+		if(which_item >= scenario.scen_items.size())
+			scenario.scen_items.resize(which_item + 1);
 		cItem& the_item = scenario.scen_items[which_item];
 		the_item = cItem();
 		Iterator<Element> item;
@@ -1160,6 +1166,8 @@ static void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 		elem->GetAttribute("id", &which_monst);
 		if(which_monst == 0)
 			throw xBadVal(type, "id", "0", elem->Row(), elem->Column(), fname);
+		if(which_monst >= scenario.scen_monsters.size())
+			scenario.scen_monsters.resize(which_monst + 1);
 		cMonster& the_mon = scenario.scen_monsters[which_monst];
 		the_mon = cMonster();
 		Iterator<Attribute> attr;
@@ -1334,16 +1342,20 @@ static void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
 		} else if(type == "sign") {
 			int sign;
 			elem->GetAttribute("id", &sign);
+			if(sign >= out.sign_locs.size())
+				out.sign_locs.resize(sign + 1);
 			elem->GetText(&out.sign_locs[sign].text, false);
 		} else if(type == "area") {
-			if(num_rects >= 8)
-				throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			if(num_rects >= out.info_rect.size())
+				out.info_rect.resize(num_rects + 1);
 			static_cast<rectangle&>(out.info_rect[num_rects]) = readRectFromXml(*elem);
 			elem->GetText(&out.info_rect[num_rects].descr, false);
 			num_rects++;
 		} else if(type == "string") {
 			int str;
 			elem->GetAttribute("id", &str);
+			if(str >= out.spec_strs.size())
+				out.spec_strs.resize(str + 1);
 			elem->GetText(&out.spec_strs[str], false);
 		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
 	}
@@ -1452,10 +1464,14 @@ static void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& sce
 		} else if(type == "sign") {
 			int sign;
 			elem->GetAttribute("id", &sign);
+			if(sign >= town->sign_locs.size())
+				town->sign_locs.resize(sign + 1);
 			elem->GetText(&town->sign_locs[sign].text, false);
 		} else if(type == "string") {
 			int str;
 			elem->GetAttribute("id", &str);
+			if(str >= town->spec_strs.size())
+				town->spec_strs.resize(str + 1);
 			elem->GetText(&town->spec_strs[str], false);
 		} else if(type == "item") {
 			int which_item;
@@ -1525,8 +1541,8 @@ static void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& sce
 				} else throw xBadNode(type, monst->Row(), monst->Column(), fname);
 			}
 		} else if(type == "area") {
-			if(num_rects >= 16)
-				throw xBadNode(type, elem->Row(), elem->Column(), fname);
+			if(num_rects >= town->room_rect.size())
+				town->room_rect.resize(num_rects + 1);
 			static_cast<rectangle&>(town->room_rect[num_rects]) = readRectFromXml(*elem);
 			elem->GetText(&town->room_rect[num_rects].descr, false);
 			num_rects++;
@@ -1566,6 +1582,8 @@ static void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_
 				} else throw xBadNode(type, who->Row(), who->Column(), fname);
 			}
 		} else if(type == "node") {
+			if(num_nodes >= talk.talk_nodes.size())
+				talk.talk_nodes.resize(num_nodes + 1);
 			elem->GetAttribute("for", &talk.talk_nodes[num_nodes].personality);
 			int num_keys = 0, num_params = 0, num_strs = 0;
 			Iterator<Element> node;
@@ -1623,6 +1641,7 @@ static void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 					case eMapFeature::ENTRANCE_WEST: case eMapFeature::ITEM: case eMapFeature::CREATURE:
 						break;
 					case eMapFeature::TOWN:
+						out.city_locs.emplace_back();
 						out.city_locs[num_towns].x = x;
 						out.city_locs[num_towns].y = y;
 						out.city_locs[num_towns].spec = feat.second;
@@ -1960,6 +1979,9 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 			break;
 	}
 	
+	the_town.spec_strs.resize(100);
+	the_town.sign_locs.resize(20);
+	the_town.room_rect.resize(16);
 	for(i = 0; i < 140; i++) {
 		len = (long) (store_town.strlens[i]);
 		n = fread(temp_str, len, 1, file_id);
@@ -1984,6 +2006,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	}
 	port_talk_nodes(&store_talk);
 	
+	the_town.talking.talk_nodes.resize(60);
 	for(i = 0; i < 170; i++) {
 		len = (long) (store_talk.strlens[i]);
 		n = fread(temp_str, len, 1, file_id);
@@ -2071,6 +2094,9 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	the_out.y = which_out.y;
 	port_out(&store_out);
 	the_out.append(store_out);
+	the_out.spec_strs.resize(90);
+	the_out.sign_locs.resize(8);
+	the_out.info_rect.resize(8);
 	for(i = 0; i < 108; i++) {
 		len = (long) (store_out.strlens[i]);
 		n = fread(temp_str, len, 1, file_id);

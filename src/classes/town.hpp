@@ -74,7 +74,7 @@ public:
 	std::array<cWandering,4> wandering;
 	location wandering_locs[4];
 	std::vector<spec_loc_t> special_locs;
-	std::array<sign_loc_t,20> sign_locs;
+	std::vector<sign_loc_t> sign_locs;
 	eLighting lighting_type;
 	location start_locs[4];
 	location exit_locs[4];
@@ -94,9 +94,9 @@ public:
 	std::string town_name;
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.
-	std::array<info_rect_t,16> room_rect;
+	std::vector<info_rect_t> room_rect;
 	std::array<std::string,3> comment;
-	std::array<std::string,100> spec_strs;
+	std::vector<std::string> spec_strs;
 	cSpeech talking;
 	
 	virtual ~cTown(){}
@@ -111,7 +111,7 @@ public:
 	void set_up_lights();
 	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
 	
-	explicit cTown(cScenario& scenario, bool init_strings = false);
+	explicit cTown(cScenario& scenario);
 	void append(legacy::town_record_type& old);
 	virtual void writeTerrainTo(std::ostream& file) = 0;
 	virtual void readTerrainFrom(std::istream& file) = 0;

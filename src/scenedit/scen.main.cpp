@@ -306,11 +306,11 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::SCEN_TEXT:
 			right_sbar->setPosition(0);
-			start_string_editing(0,0);
+			start_string_editing(STRS_SCEN,0);
 			break;
 		case eMenu::SCEN_JOURNALS:
 			right_sbar->setPosition(0);
-			start_string_editing(3,0);
+			start_string_editing(STRS_JOURNAL,0);
 			break;
 		case eMenu::TOWN_IMPORT:
 			if(change_made) {
@@ -399,8 +399,8 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 			break;
 		case eMenu::TOWN_AREAS:
-			edit_roomdescs(true);
-			change_made = true;
+			right_sbar->setPosition(0);
+			start_string_editing(STRS_TOWN_RECT,0);
 			break;
 		case eMenu::TOWN_ITEMS_RANDOM:
 			if(cChoiceDlog("add-random-items", {"okay", "cancel"}).show() == "cancel")
@@ -428,11 +428,11 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::TOWN_TEXT:
 			right_sbar->setPosition(0);
-			start_string_editing(2,0);
+			start_string_editing(STRS_TOWN,0);
 			break;
 		case eMenu::TOWN_SIGNS:
 			right_sbar->setPosition(0);
-			start_string_editing(5,0);
+			start_string_editing(STRS_TOWN_SIGN,0);
 			break;
 		case eMenu::TOWN_ADVANCED:
 			edit_advanced_town();
@@ -455,8 +455,8 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 			break;
 		case eMenu::OUT_AREAS:
-			edit_roomdescs(false);
-			change_made = true;
+			right_sbar->setPosition(0);
+			start_string_editing(STRS_OUT_RECT,0);
 			break;
 		case eMenu::OUT_START:
 			overall_mode = MODE_SET_OUT_START;
@@ -468,11 +468,11 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::OUT_TEXT:
 			right_sbar->setPosition(0);
-			start_string_editing(1,0);
+			start_string_editing(STRS_OUT,0);
 			break;
 		case eMenu::OUT_SIGNS:
 			right_sbar->setPosition(0);
-			start_string_editing(4,0);
+			start_string_editing(STRS_OUT_SIGN,0);
 			break;
 		case eMenu::ABOUT:
 			helpDlog = "about-scened";

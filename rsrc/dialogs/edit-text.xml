@@ -1,12 +1,13 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
-	<field name='text' type='text' top='34' left='55' width='293' height='98'/>
-	<button name='left' type='left' top='141' left='6'/>
-	<button name='right' type='right' top='141' left='69'/>
-	<text name='num' top='8' left='315' width='40' height='14'/>
+<dialog defbtn='okay' debug='true'>
+	<field name='text' type='text' top='40' left='55' width='293' height='98'/>
+	<button name='left' type='left' top='147' left='6'/>
+	<button name='right' type='right' top='147' left='69'/>
+	<text name='num' top='8' left='300' width='55' height='28'/>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='138' height='17'>Editing text:</text>
-	<text name='num-lbl' top='8' left='197' width='111' height='14'>Text number:</text>
-	<button name='okay' type='regular' top='141' left='279'>OK</button>
+	<text name='num-lbl' top='8' left='197' width='100' height='14'>Text number:</text>
+	<button name='cancel' type='regular' def-key='esc' top='147' left='214'>Cancel</button>
+	<button name='okay' type='regular' top='147' left='279'>OK</button>
 </dialog>

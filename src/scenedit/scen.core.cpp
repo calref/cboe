@@ -531,8 +531,9 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 	return true;
 }
 
-void edit_ter_type(ter_num_t which) {
+bool edit_ter_type(ter_num_t which) {
 	using namespace std::placeholders;
+	ter_num_t first = which;
 	cDialog ter_dlg("edit-terrain");
 	// Attach handlers
 	ter_dlg["pict"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,2999,"terrain graphic"));
@@ -563,6 +564,7 @@ void edit_ter_type(ter_num_t which) {
 	});
 	fill_ter_info(ter_dlg,which);
 	ter_dlg.run();
+	return ter_dlg.accepted() || which != first;
 }
 
 static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which) {
@@ -811,8 +813,9 @@ static bool pick_monst_picture(cDialog& me) {
 	return result;
 }
 
-short edit_monst_type(short which) {
+bool edit_monst_type(short which) {
 	using namespace std::placeholders;
+	mon_num_t first = which;
 	cMonster monst = scenario.scen_monsters[which];
 	
 	cDialog monst_dlg("edit-monster");
@@ -829,12 +832,19 @@ short edit_monst_type(short which) {
 	monst_dlg["priest"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 7, "priest spells"));
 	monst_dlg["treas"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 4, "treasure"));
 	monst_dlg.attachFocusHandlers(check_monst_dice,{"dice1","dice2","dice3","sides1","sides2","sides3"});
-	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(monst),std::ref(which)),{"okay","abils","left","right","picktype","picktype1","picktype2","picktype3"});
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(monst),std::ref(which)),{"okay","abils","picktype","picktype1","picktype2","picktype3"});
+	
+	if(scenario.scen_monsters.size() == 1){
+		monst_dlg["left"].hide();
+		monst_dlg["right"].hide();
+	} else {
+		monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(monst),std::ref(which)),{"left","right"});
+	}
 	
 	put_monst_info_in_dlog(monst_dlg, monst, which);
 	
 	monst_dlg.run();
-	return 0;
+	return monst_dlg.accepted() || first != which;
 }
 
 static void put_monst_abils_in_dlog(cDialog& me, cMonster& monst) {
@@ -1665,8 +1675,10 @@ static bool change_item_variety(cDialog& me, std::string group, const cItem& ite
 	return true;
 }
 
-short edit_item_type(short which) {
+bool edit_item_type(short which) {
 	using namespace std::placeholders;
+	if(which == scenario.scen_items.size())
+		scenario.scen_items.resize(which + 1);
 	cItem item = scenario.scen_items[which];
 	
 	cDialog item_dlg("edit-item");
@@ -1680,12 +1692,19 @@ short edit_item_type(short which) {
 	item_dlg["weight"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 250, "Weight"));
 	item_dlg["class"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Special Class"));
 	item_dlg["variety"].attachFocusHandler(std::bind(change_item_variety, _1, _2, std::ref(item)));
-	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"okay", "cancel", "prev", "next", "abils", "choosepic", "choosetp", "choosemiss", "desc"});
+	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"okay", "cancel", "abils", "choosepic", "choosetp", "choosemiss", "desc"});
+	
+	if(scenario.scen_items.size() == 1) {
+		item_dlg["prev"].hide();
+		item_dlg["next"].hide();
+	} else {
+		item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"prev", "next"});
+	}
 	
 	put_item_info_in_dlog(item_dlg, item, which);
 	
 	item_dlg.run();
-	return 0;
+	return item_dlg.accepted();
 }
 
 static void put_item_abils_in_dlog(cDialog& me, cItem& item, short which) {
@@ -1964,18 +1983,28 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem&
 	return true;
 }
 
-void edit_spec_item(short which_item) {
+bool edit_spec_item(short which_item) {
+	short first = which_item;
 	using namespace std::placeholders;
 	cSpecItem item = scenario.special_items[which_item];
 	
 	cDialog item_dlg("edit-special-item");
 	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 255, "Scenario special node called", "-1 for no special"));
-	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"okay", "cancel", "clear", "edit-spec", "left", "right"});
+	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"okay", "cancel", "clear", "edit-spec"});
+	
+	if(scenario.special_items.size() == 1) {
+		item_dlg["left"].hide();
+		item_dlg["right"].hide();
+	} else {
+		item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"left", "right"});
+	}
 	
 	put_spec_item_in_dlog(item_dlg, item, which_item);
 	item_dlg["clear"].hide();
 	
 	item_dlg.run();
+	
+	return item_dlg.accepted() || first != which_item;
 }
 
 static void put_quest_in_dlog(cDialog& me, const cQuest& quest, size_t which_quest) {
@@ -2043,7 +2072,7 @@ static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, 
 	return true;
 }
 
-void edit_quest(size_t which_quest) {
+bool edit_quest(size_t which_quest) {
 	using namespace std::placeholders;
 	if(which_quest == scenario.quests.size()) {
 		scenario.quests.resize(which_quest + 1);
@@ -2075,6 +2104,7 @@ void edit_quest(size_t which_quest) {
 	
 	put_quest_in_dlog(quest_dlg, quest, which_quest);
 	quest_dlg.run();
+	return quest_dlg.accepted();
 }
 
 static bool put_shop_item_in_dlog(cPict& pic, cControl& num, cControl& title, const cShop& shop, int which) {
@@ -2383,7 +2413,7 @@ static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t wh
 	return true;
 }
 
-void edit_shop(size_t which_shop, cDialog* parent) {
+bool edit_shop(size_t which_shop, cDialog* parent) {
 	using namespace std::placeholders;
 	if(which_shop == scenario.shops.size())
 		scenario.shops.emplace_back("New Shop");
@@ -2413,6 +2443,7 @@ void edit_shop(size_t which_shop, cDialog* parent) {
 	dynamic_cast<cStack&>(shop_dlg["items"]).setPageCount(6);
 	put_shop_in_dlog(shop_dlg, shop, which_shop);
 	shop_dlg.run();
+	return shop_dlg.accepted();
 }
 
 static void put_save_rects_in_dlog(cDialog& me) {
@@ -2864,7 +2895,7 @@ bool build_scenario() {
 	if(!edit_make_scen_2(width, height, lg, med, sm, default_town))
 		return false;
 	
-	scenario = cScenario(true);
+	scenario = cScenario();
 	scenario.scen_name = title;
 	scenario.default_ground = grass ? 2 : 0;
 	

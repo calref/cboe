@@ -19,7 +19,7 @@ extern short current_rs_top;
 
 bool left_buttons_active = 1,right_buttons_active = 0;
 extern std::array<lb_t,NLS> left_button_status;
-extern std::array<rb_t,NRS> right_button_status;
+extern std::vector<rb_t> right_button_status;
 extern std::shared_ptr<cScrollbar> right_sbar;
 
 // for following, lb stands for left button(s)
@@ -64,20 +64,12 @@ void set_lb(short slot, eLBMode mode, eLBAction action, std::string label, bool 
 
 
 void init_rb() {
-	short i;
-	
 	right_sbar->setPosition(0);
-	for(i = 0; i < NRS; i++) {
-		right_button_status[i] = {RB_CLEAR, 0, ""};
-	}
+	right_button_status.clear();
 }
 
 void reset_rb() {
-	short i;
-	
-	for(i = 0; i < NRS; i++) {
-		right_button_status[i] = {RB_CLEAR, 0, ""};
-	}
+	right_button_status.clear();
 	draw_rb();
 	right_sbar->setMaximum(0);
 	right_sbar->setPosition(0);
@@ -92,11 +84,11 @@ void set_rb(short slot, eRBAction action, int n, std::string label, bool do_draw
 		for(i = 0; i < NRS; i++)
 			if(right_button_status[i].action == RB_CLEAR) {
 				slot = i;
-				i = NRS + 5000;
+				break;
 			}
-		if(i < NRS + 5000)
-			return;
 	}
+	if(slot >= NRS)
+		right_button_status.resize(slot + 1);
 	right_button_status[slot].action = action;
 	right_button_status[slot].i = n;
 	right_button_status[slot].label = label;
