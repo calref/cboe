@@ -165,5 +165,8 @@
     <Image Include="..\..\..\rsrc\icons\win\BOE Icon.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\..\rsrc\icons\win\BOE Save.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
