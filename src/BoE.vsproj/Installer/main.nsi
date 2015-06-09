@@ -114,9 +114,10 @@ Section -FinishSection
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString" "$INSTDIR\uninstall.exe"
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 	
-	!insertmacro APP_ASSOCIATE "exg" "BladesofExile.SaveGame" "Blades of Exile saved game" "$INSTDIR\Blades of Exile.exe,1" "" '$INSTDIR\myapp.exe "%1"'
-	!insertmacro APP_ASSOCIATE_ADDVERB "BladesOfExile.SaveGame" "edit" "" '$INSTDIR\Character Editor.exe "%1"'
-	!insertmacro APP_ASSOCIATE "boes" "BladesofExile.Scenario" "Blades of Exile scenario" "$INSTDIR\Blades of Exile.exe,2" "" '$INSTDIR\Scenario Editor.exe "%1"'
+	!insertmacro APP_ASSOCIATE "exg" "BladesofExile.SaveGame" "Blades of Exile saved game" "$INSTDIR\Blades of Exile.exe,1" "" '"$INSTDIR\Blades of Exile.exe" "%1"'
+	!insertmacro APP_ASSOCIATE_ADDVERB "BladesOfExile.SaveGame" "edit" "" '"$INSTDIR\Char Editor.exe" "%1"'
+	!insertmacro APP_ASSOCIATE "boes" "BladesofExile.Scenario" "Blades of Exile scenario" "$INSTDIR\Blades of Exile.exe,2" "" '"$INSTDIR\Scen Editor.exe" "%1"'
+	!insertmacro APP_ASSOCIATE "exs" "BladesofExile.OldScenario" "Blades of Exile scenario" "$INSTDIR\Blades of Exile.exe,2" "" '"$INSTDIR\Scen Editor.exe" "%1"'
 	!insertmacro UPDATEFILEASSOC
 	
 ;	WriteRegStr HKCR ".exg" "" "BladesOfExile.SaveGame"
