@@ -168,5 +168,8 @@
     <Image Include="..\..\..\rsrc\icons\win\BOE Save.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\..\rsrc\icons\win\BOE Scenario.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

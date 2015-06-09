@@ -159,6 +159,7 @@
   <ItemGroup>
     <Image Include="..\..\..\rsrc\icons\win\BOE Icon.ico" />
     <Image Include="..\..\..\rsrc\icons\win\BOE Save.ico" />
+    <Image Include="..\..\..\rsrc\icons\win\BOE Scenario.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
