@@ -235,12 +235,6 @@ ModalSession::~ModalSession() {
 	RedrawWindow(parent->getSystemHandle(), NULL, NULL, RDW_NOCHILDREN | RDW_UPDATENOW);
 }
 
-void set_up_apple_events() {
-	// TODO: Probably nothing to do here on Windows?
-	// Basically what might possibly happen here is to set up stuff to handle dragging a file onto the application icon.
-	// The Mac version also handles requests from the operating system for the application to quit.
-}
-
 int getMenubarHeight() {
 	return GetSystemMetrics(SM_CYMENU);
 }

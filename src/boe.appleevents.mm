@@ -29,8 +29,8 @@ typedef NSAppleEventDescriptor AEDescr;
 -(NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication*) sender;
 @end
 
-void set_up_apple_events(); // Suppress "no prototype" warning
-void set_up_apple_events() {
+void set_up_apple_events(int argc, char* argv[]); // Suppress "no prototype" warning
+void set_up_apple_events(int, char*[]) {
 	AppleEventHandler* aeHandler = [[AppleEventHandler alloc] init];
 	[[NSApplication sharedApplication] setDelegate: aeHandler];
 }

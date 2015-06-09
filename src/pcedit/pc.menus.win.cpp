@@ -170,3 +170,21 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	}
 	return CallWindowProc(reinterpret_cast<WNDPROC>(mainProc), handle, message, wParam, lParam);
 }
+
+#include "fileio.hpp"
+#include "pc.fileio.hpp"
+
+extern bool party_in_scen, scen_items_loaded;
+extern fs::path file_in_mem;
+void set_up_apple_events(int argc, char* argv[]) {
+	if(argc > 1) {
+		if(load_party(argv[1], univ)) {
+			file_in_mem = argv[1];
+			party_in_scen = !univ.party.scen_name.empty();
+			if(!party_in_scen) load_base_item_defs();
+			scen_items_loaded = true;
+			update_item_menu();
+			menu_activate();
+		}
+	}
+}
