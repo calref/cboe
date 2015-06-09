@@ -17,5 +17,8 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="Makefile.mak" />
+    <None Include="fileassoc.nsh">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

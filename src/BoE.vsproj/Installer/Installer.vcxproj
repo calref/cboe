@@ -53,6 +53,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="data.nsi" />
+    <None Include="fileassoc.nsh" />
     <None Include="gen-data.py">
       <FileType>Script</FileType>
     </None>

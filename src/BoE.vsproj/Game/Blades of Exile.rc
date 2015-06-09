@@ -33,6 +33,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // remains consistent on all systems.
 IDI_BLADESOFEXILE       ICON                    "../../../rsrc/icons/win/BOE Icon.ico"
 IDI_BOESAVE             ICON                    "../../../rsrc/icons/win/BoE Save.ico"
+IDI_BOESCEN             ICON                    "../../../rsrc/icons/win/BoE Scenario.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

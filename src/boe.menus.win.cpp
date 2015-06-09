@@ -3,7 +3,7 @@
 #include <map>
 #include <sstream>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "Resource.h"
+#include "boeresource.h"
 #include "universe.hpp"
 #include "boe.party.hpp"
 #include "boe.infodlg.hpp"

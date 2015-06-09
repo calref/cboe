@@ -147,6 +147,7 @@ Section Uninstall
 	
 	!insertmacro APP_UNASSOCIATE "exg" "BladesOfExile.SaveGame"
 	!insertmacro APP_UNASSOCIATE "boes" "BladesOfExile.Scenario"
+	!insertmacro APP_UNASSOCIATE "exs" "BladesOfExile.OldScenario"
 	!insertmacro UPDATEFILEASSOC
 
 	; Delete self
@@ -168,7 +169,7 @@ Section Uninstall
 	Delete "$INSTDIR\sfml-system-2.dll"
 	Delete "$INSTDIR\sfml-window-2.dll"
 	Delete "$INSTDIR\zlib1.dll"
-	Delete "$INSTDIR\openal.dll"
+	Delete "$INSTDIR\openal32.dll"
 	RMDir /r "$INSTDIR\data"
 	RMDir /r "$INSTDIR\Scenario Editor\graphics.exd"
 	RMDir /r "$INSTDIR\Scenario Editor\sounds.exa"
