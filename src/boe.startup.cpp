@@ -11,7 +11,7 @@
 #include "boe.graphutil.hpp"
 #include "boe.items.hpp"
 #include "boe.party.hpp"
-#include "boe.party.hpp"
+#include "boe.main.hpp"
 #include "soundtool.hpp"
 #include "fileio.hpp"
 #include "dlogutil.hpp"
