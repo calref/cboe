@@ -1873,8 +1873,9 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 			fs::path path = tempDir/fname;
 			fs::create_directories(path.parent_path());
 			std::istream& graphic = pack.getFile(fname);
-			std::ofstream fout(path.string().c_str());
+			std::ofstream fout(path.string().c_str(), std::ios::binary);
 			fout << graphic.rdbuf();
+			fout.close();
 			i++;
 		}
 		if(i > 0)
@@ -1885,8 +1886,9 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 			fs::path path = tempDir/fname;
 			fs::create_directories(path.parent_path());
 			std::istream& snd = pack.getFile(fname);
-			std::ofstream fout(path.string().c_str());
+			std::ofstream fout(path.string().c_str(), std::ios::binary);
 			fout << snd.rdbuf();
+			fout.close();
 			i++;
 		}
 		if(i > 0)

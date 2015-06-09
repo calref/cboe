@@ -77,6 +77,7 @@ void tarball::readFrom(std::istream& in) {
 		files.push_back(tarfile());
 		header_posix_ustar& header = files.back().header;
 		in.read((char*)&header, sizeof(header_posix_ustar));
+		if(in.eof()) break; // Because it seems MSVC doesn't set the EOFbit until a read fails? Or something?
 		files.back().filename = header.name;
 		unsigned long long size;
 		sscanf(header.size, "%llo", &size);
@@ -103,10 +104,8 @@ std::ostream& tarball::newFile(std::string fname) {
 
 std::istream& tarball::getFile(std::string fname) {
 	for(tarfile& entry : files) {
-		if(entry.filename == fname) {
-			entry.contents.seekg(0);
+		if(entry.filename == fname)
 			return entry.contents;
-		}
 	}
 	// If the file doesn't exist, return an empty stream
 	static std::istringstream empty;
