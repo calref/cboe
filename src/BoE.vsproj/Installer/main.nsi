@@ -10,6 +10,9 @@ InstallDir "$PROGRAMFILES\Blades of Exile"
 InstallDirRegKey HKLM "Software\${APPNAME}" ""
 OutFile "Release\Install-OBoE.exe"
 
+; File association helpers
+!include "fileassoc.nsh"
+
 ; Modern interface settings
 !include "MUI.nsh"
 
@@ -69,6 +72,7 @@ Section "Blades of Exile" Section1
 	File "..\Release\Blades of Exile Scenarios\ZAKHAZI.BMP"
 	File "..\Release\Blades of Exile Scenarios\zakhazi.exs"
 	!include data.nsi
+	SetShellVarContext all
 	CreateShortCut "$DESKTOP\Blades of Exile.lnk" "$INSTDIR\Blades of Exile.exe"
 	CreateDirectory "$SMPROGRAMS\Blades of Exile"
 	CreateShortCut "$SMPROGRAMS\Blades of Exile\Blades of Exile.lnk" "$INSTDIR\Blades of Exile.exe"
@@ -83,6 +87,7 @@ Section "Character Editor" Section2
 	; Set Section Files and Shortcuts
 	SetOutPath "$INSTDIR\"
 	File "..\Release\Char Editor.exe"
+	SetShellVarContext all
 	CreateShortCut "$SMPROGRAMS\Blades of Exile\Character Editor.lnk" "$INSTDIR\Char Editor.exe"
 
 SectionEnd
@@ -97,6 +102,7 @@ Section "Scenario Editor" Section3
 	File "..\Release\Scen Editor.exe"
 	SetOutPath "$INSTDIR\Scenario Editor\Blades of Exile Base\"
 	File "..\Release\Scenario Editor\Blades of Exile Base\bladbase.exs"
+	SetShellVarContext all
 	CreateShortCut "$SMPROGRAMS\Blades of Exile\Scenario Editor.lnk" "$INSTDIR\Scen Editor.exe"
 
 SectionEnd
@@ -107,6 +113,20 @@ Section -FinishSection
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME}"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString" "$INSTDIR\uninstall.exe"
 	WriteUninstaller "$INSTDIR\uninstall.exe"
+	
+	!insertmacro APP_ASSOCIATE "exg" "BladesofExile.SaveGame" "Blades of Exile saved game" "$INSTDIR\Blades of Exile.exe,1" "" '$INSTDIR\myapp.exe "%1"'
+	!insertmacro APP_ASSOCIATE_ADDVERB "BladesOfExile.SaveGame" "edit" "" '$INSTDIR\Character Editor.exe "%1"'
+	!insertmacro APP_ASSOCIATE "boes" "BladesofExile.Scenario" "Blades of Exile scenario" "$INSTDIR\Blades of Exile.exe,2" "" '$INSTDIR\Scenario Editor.exe "%1"'
+	!insertmacro UPDATEFILEASSOC
+	
+;	WriteRegStr HKCR ".exg" "" "BladesOfExile.SaveGame"
+;	WriteRegStr HKCR ".boes" "" "BladesOfExile.Scenario"
+	
+;	WriteRegStr HKCR "MPC.avi" "" "AVI File"
+;	WriteRegStr HKCR "MPC.avi\shell" "" "Open"
+;	WriteRegStr HKCR "MPC.avi\shell\open\command" "" '"$INSTDIR\Blades of Exile.exe" "%1"'
+;	WriteRegStr HKCR "MPC.avi\DefaultIcon" "" "$INSTDIR\Blades of Exile.exe,1" 
+	
 
 SectionEnd
 
@@ -123,16 +143,13 @@ Section Uninstall
 	;Remove from registry...
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 	DeleteRegKey HKLM "SOFTWARE\${APPNAME}"
+	
+	!insertmacro APP_UNASSOCIATE "exg" "BladesOfExile.SaveGame"
+	!insertmacro APP_UNASSOCIATE "boes" "BladesOfExile.Scenario"
+	!insertmacro UPDATEFILEASSOC
 
 	; Delete self
 	Delete "$INSTDIR\uninstall.exe"
-
-	; Delete Shortcuts
-	Delete "$DESKTOP\Blades of Exile.lnk"
-	Delete "$SMPROGRAMS\Blades of Exile\Blades of Exile.lnk"
-	Delete "$SMPROGRAMS\Blades of Exile\Uninstall.lnk"
-	Delete "$SMPROGRAMS\Blades of Exile\Character Editor.lnk"
-	Delete "$SMPROGRAMS\Blades of Exile\Scenario Editor.lnk"
 
 	; Clean up Blades of Exile
 	Delete "$INSTDIR\Blades of Exile.exe"
@@ -150,6 +167,7 @@ Section Uninstall
 	Delete "$INSTDIR\sfml-system-2.dll"
 	Delete "$INSTDIR\sfml-window-2.dll"
 	Delete "$INSTDIR\zlib1.dll"
+	Delete "$INSTDIR\openal.dll"
 	RMDir /r "$INSTDIR\data"
 	RMDir /r "$INSTDIR\Scenario Editor\graphics.exd"
 	RMDir /r "$INSTDIR\Scenario Editor\sounds.exa"
@@ -162,11 +180,19 @@ Section Uninstall
 	Delete "$INSTDIR\Scenario Editor\Blades of Exile Base\bladbase.exs"
 
 	; Remove remaining directories
-	RMDir "$SMPROGRAMS\Blades of Exile\"
 	RMDir "$INSTDIR\Blades of Exile Scenarios\"
 	RMDir "$INSTDIR\Scenario Editor\Blades of Exile Base\"
 	RMDir "$INSTDIR\Scenario Editor\"
 	RMDir "$INSTDIR\"
+
+	; Delete Shortcuts
+	SetShellVarContext all
+	Delete "$DESKTOP\Blades of Exile.lnk"
+	Delete "$SMPROGRAMS\Blades of Exile\Blades of Exile.lnk"
+	Delete "$SMPROGRAMS\Blades of Exile\Uninstall.lnk"
+	Delete "$SMPROGRAMS\Blades of Exile\Character Editor.lnk"
+	Delete "$SMPROGRAMS\Blades of Exile\Scenario Editor.lnk"
+	RMDir "$SMPROGRAMS\Blades of Exile\"
 
 SectionEnd
 
