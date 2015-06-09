@@ -117,7 +117,7 @@
     <ClInclude Include="..\..\boe.text.hpp" />
     <ClInclude Include="..\..\boe.town.hpp" />
     <ClInclude Include="..\..\boe.townspec.hpp" />
-    <ClInclude Include="Resource.h" />
+    <ClInclude Include="boeresource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Blades of Exile.rc" />

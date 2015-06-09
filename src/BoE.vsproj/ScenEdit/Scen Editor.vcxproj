@@ -109,7 +109,7 @@
     <ClInclude Include="..\..\scenedit\scen.keydlgs.hpp" />
     <ClInclude Include="..\..\scenedit\scen.menus.hpp" />
     <ClInclude Include="..\..\scenedit\scen.townout.hpp" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="scenresource.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
