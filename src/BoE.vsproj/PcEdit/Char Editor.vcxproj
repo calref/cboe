@@ -103,7 +103,7 @@
     <ClInclude Include="..\..\pcedit\pc.global.hpp" />
     <ClInclude Include="..\..\pcedit\pc.graphics.hpp" />
     <ClInclude Include="..\..\pcedit\pc.menus.hpp" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="pcresource.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\Win32\scenedit\BLSCENED.ICO" />

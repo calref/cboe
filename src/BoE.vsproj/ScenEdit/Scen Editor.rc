@@ -1,6 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "resource.h"
+#include "scenresource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ IDI_BLADESOFEXILE       ICON                    "../../../rsrc/icons/win/BOE Edi
 
 1 TEXTINCLUDE 
 BEGIN
-    "resource.h\0"
+    "scenresource.h\0"
 END
 
 2 TEXTINCLUDE 

@@ -53,7 +53,7 @@
     <ClInclude Include="..\..\pcedit\pc.menus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="pcresource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -71,7 +71,7 @@
     <ClInclude Include="..\..\scenedit\scen.townout.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="scenresource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
