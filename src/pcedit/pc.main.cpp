@@ -54,14 +54,14 @@ void Handle_Activate();
 void Handle_Update();
 void Mouse_Pressed();
 bool verify_restore_quit(std::string dlog);
-void set_up_apple_events();
+void set_up_apple_events(int argc, char* argv[]);
 extern bool cur_scen_is_mac;
 extern fs::path progDir;
 short specials_res_id;
 char start_name[256];
 
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
-int main(int /*argc*/, char* argv[]) {
+int main(int argc, char* argv[]) {
 	try {
 		init_directories(argv[0]);
 		init_menubar();
@@ -72,7 +72,7 @@ int main(int /*argc*/, char* argv[]) {
 		init_graph_tool();
 		init_snd_tool();
 		
-		set_up_apple_events();
+		set_up_apple_events(argc, argv);
 		
 		cDialog::init();
 		redraw_screen();

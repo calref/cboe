@@ -54,10 +54,10 @@ cScenario scenario;
 rectangle right_sbar_rect;
 extern rectangle terrain_buttons_rect;
 
-extern void set_up_apple_events();
+extern void set_up_apple_events(int argc, char* argv[]);
 
 //Changed to ISO C specified argument and return type.
-int main(int, char* argv[]) {
+int main(int argc, char* argv[]) {
 	try {
 		
 		init_directories(argv[0]);
@@ -75,7 +75,7 @@ int main(int, char* argv[]) {
 		init_graph_tool();
 		
 		check_for_intel();
-		set_up_apple_events();
+		set_up_apple_events(argc, argv);
 		
 		cen_x = 18;
 		cen_y = 18;

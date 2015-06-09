@@ -103,7 +103,7 @@ short store_current_pc = 0;
 
 sf::Clock animTimer;
 
-int main(int /*argc*/, char* argv[]) {
+int main(int argc, char* argv[]) {
 #if 0
 	void debug_oldstructs();
 	debug_oldstructs();
@@ -121,7 +121,7 @@ int main(int /*argc*/, char* argv[]) {
 		init_buf();
 		
 		check_for_intel();
-		set_up_apple_events();
+		set_up_apple_events(argc, argv);
 		make_cursor_watch();
 		plop_fancy_startup();
 		
