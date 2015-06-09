@@ -451,7 +451,7 @@ static void readQuestFromXml(ticpp::Element& data, cQuest& quest) {
 	}
 }
 
-static void readShopFromXml(ticpp::Element& data, cShop& shop, cScenario& scen) {
+static void readShopFromXml(ticpp::Element& data, cShop& shop) {
 	using namespace ticpp;
 	std::string type, name, val, fname;
 	data.GetDocument()->GetValue(&fname);
@@ -733,7 +733,7 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					quests++;
 				} else if(type == "shop") {
 					scenario.shops.emplace_back();
-					readShopFromXml(*game, scenario.shops[shops], scenario);
+					readShopFromXml(*game, scenario.shops[shops]);
 					shops++;
 				} else if(type == "timer") {
 					if(timers >= 20)

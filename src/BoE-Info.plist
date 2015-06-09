@@ -83,56 +83,12 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>meg</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>boegraphics</string>
-			<key>CFBundleTypeName</key>
-			<string>LegacyMacGraphics</string>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>beGR</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>None</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.spidweb.bladesofexile.oldgraphics</string>
-			</array>
-			<key>LSTypeIsPackage</key>
-			<false/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeIconFile</key>
-			<string>boesounds</string>
-			<key>CFBundleTypeName</key>
-			<string>LegacySounds</string>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>beSN</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.spidweb.bladesofexile.oldsounds</string>
-			</array>
-			<key>LSTypeIsPackage</key>
-			<false/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
 				<string>exg</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>boesave</string>
 			<key>CFBundleTypeName</key>
-			<string>Saved Game</string>
+			<string>Blades of Exile Saved Game</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>game</string>
@@ -157,7 +113,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>boescenario</string>
 			<key>CFBundleTypeName</key>
-			<string>Scenario</string>
+			<string>Blades of Exile Scenario</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>BETM</string>
@@ -201,7 +157,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>boegraphics</string>
 			<key>CFBundleTypeName</key>
-			<string>Preset Graphics</string>
+			<string>Blades of Exile Graphics</string>
 			<key>CFBundleTypeRole</key>
 			<string>None</string>
 			<key>LSItemContentTypes</key>
@@ -221,7 +177,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>boesounds</string>
 			<key>CFBundleTypeName</key>
-			<string>Preset Sounds</string>
+			<string>Blades of Exile Sounds</string>
 			<key>CFBundleTypeRole</key>
 			<string>None</string>
 			<key>LSItemContentTypes</key>
@@ -268,7 +224,9 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>com.apple.ostype</key>
-				<array/>
+				<array>
+					<string>BETM</string>
+				</array>
 				<key>public.filename-extension</key>
 				<array>
 					<string>exs</string>
@@ -291,6 +249,10 @@
 			<string>com.spidweb.bladesofexile.savegame</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>com.apple.ostype</key>
+				<array>
+					<string>beSV</string>
+				</array>
 				<key>public.filename-extension</key>
 				<array>
 					<string>exg</string>
@@ -313,6 +275,46 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>meg</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.apple.package</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Blades of Exile Graphics</string>
+			<key>UTTypeIconFile</key>
+			<string>boegraphics</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.spidweb.bladesofexile.graphics</string>
+			<key>UTTypeReferenceURL</key>
+			<string></string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>exd</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.apple.package</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Blades of Exile Sounds</string>
+			<key>UTTypeIconFile</key>
+			<string>boesounds</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.spidweb.bladesofexile.sounds</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>exa</string>
 				</array>
 			</dict>
 		</dict>
