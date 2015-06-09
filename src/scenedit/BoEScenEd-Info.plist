@@ -35,7 +35,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string>BoE Scenario Editor</string>
+	<string>BoEScenEd</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.spidweb.boesceneditor</string>
 	<key>CFBundleInfoDictionaryVersion</key>

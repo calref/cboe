@@ -160,10 +160,10 @@
 		9179A4671A48683100FEF872 /* stack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9179A4641A48681800FEF872 /* stack.cpp */; };
 		91870F81190C8C1C0081C150 /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
 		91870F83190C8C1F0081C150 /* tarball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3D81902AD78001686E4 /* tarball.cpp */; };
-		91870F84190C90980081C150 /* scen.menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 914CA49F190C4E9200B6ADD1 /* scen.menu.xib */; };
+		91870F84190C90980081C150 /* scenedit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 914CA49F190C4E9200B6ADD1 /* scenedit.xib */; };
 		919086E01A65CA300071F7A0 /* tinyprint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919086DF1A65C8E30071F7A0 /* tinyprint.cpp */; };
 		919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */; };
-		9192C12018F2745C0088A580 /* menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9192C11E18F271920088A580 /* menu.xib */; };
+		9192C12018F2745C0088A580 /* game.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9192C11E18F271920088A580 /* game.xib */; };
 		919DDBFC19006CF2003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
 		919DDBFD19006CF2003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system.dylib */; };
 		919DDBFE19006CF6003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
@@ -219,7 +219,7 @@
 		91ACCE971900346C00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
 		91ACCE981900346C00FAEF8B /* sndfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
-		91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */; };
+		91B3EF470F969F1700BF5B67 /* BoEScenEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */; };
 		91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* pc.main.cpp */; };
 		91B3EF490F969F2300BF5B67 /* pc.action.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF060F969BD300BF5B67 /* pc.action.cpp */; };
 		91B3EF4A0F969F2300BF5B67 /* pc.editors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF070F969BD300BF5B67 /* pc.editors.cpp */; };
@@ -296,7 +296,7 @@
 		91F6F8F618F8DE6300E3EA15 /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
 		91F6F8F718F8DE6300E3EA15 /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
 		91F6F8F818F8DE6300E3EA15 /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
-		91FCC8D818FE28CC007026CE /* pc.menu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8D718FE28CC007026CE /* pc.menu.xib */; };
+		91FCC8D818FE28CC007026CE /* pcedit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8D718FE28CC007026CE /* pcedit.xib */; };
 		91FCC8DC18FE2CE8007026CE /* pc.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */; };
 		91FCC8F118FEEDC6007026CE /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
 		91FCC8F218FEEFE0007026CE /* pc.editors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF070F969BD300BF5B67 /* pc.editors.cpp */; };
@@ -505,9 +505,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2B8F435C0C0973680012E4A8 /* BoE.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = BoE.icns; sourceTree = "<group>"; };
+		2B8F435C0C0973680012E4A8 /* BoE.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoE.icns; path = icons/mac/BoE.icns; sourceTree = "<group>"; };
 		2BF04AC10BF518D4006C0831 /* Blades of Exile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Blades of Exile-Info.plist"; sourceTree = "<group>"; };
+		2BF04AC30BF518D4006C0831 /* BoE-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BoE-Info.plist"; sourceTree = SOURCE_ROOT; };
 		2BF04ACB0BF51923006C0831 /* boe.main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = boe.main.cpp; sourceTree = "<group>"; };
 		2BF04ACC0BF51923006C0831 /* boe.main.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = boe.main.hpp; sourceTree = "<group>"; };
 		2BF04ACD0BF51923006C0831 /* boe.graphutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = boe.graphutil.cpp; sourceTree = "<group>"; };
@@ -573,10 +573,10 @@
 		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
 		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = undo.cpp; sourceTree = "<group>"; };
 		912287850FD41A2300B21642 /* simpletypes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = simpletypes.hpp; sourceTree = "<group>"; };
-		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boescenario.icns; sourceTree = SOURCE_ROOT; };
-		91279BB30F9D03B6007B0D52 /* boesave.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boesave.icns; sourceTree = "<group>"; };
-		91279BB40F9D03B7007B0D52 /* boesounds.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boesounds.icns; sourceTree = "<group>"; };
-		91279BB50F9D03B7007B0D52 /* boegraphics.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boegraphics.icns; sourceTree = "<group>"; };
+		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boescenario.icns; path = ../rsrc/icons/mac/boescenario.icns; sourceTree = SOURCE_ROOT; };
+		91279BB30F9D03B6007B0D52 /* boesave.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boesave.icns; path = icons/mac/boesave.icns; sourceTree = "<group>"; };
+		91279BB40F9D03B7007B0D52 /* boesounds.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boesounds.icns; path = icons/mac/boesounds.icns; sourceTree = "<group>"; };
+		91279BB50F9D03B7007B0D52 /* boegraphics.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boegraphics.icns; path = icons/mac/boegraphics.icns; sourceTree = "<group>"; };
 		91279BE00F9D0F73007B0D52 /* location.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = location.hpp; sourceTree = "<group>"; };
 		91279BE10F9D0F73007B0D52 /* location.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = location.cpp; sourceTree = "<group>"; };
 		91279C570F9D1253007B0D52 /* scenario.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scenario.hpp; sourceTree = "<group>"; };
@@ -600,7 +600,7 @@
 		913D05B50FA1E9E300184C18 /* party.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = party.cpp; sourceTree = "<group>"; };
 		913D05BA0FA1EA0A00184C18 /* pc.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pc.hpp; sourceTree = "<group>"; };
 		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.cpp; sourceTree = "<group>"; };
-		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = boeresources.icns; sourceTree = "<group>"; };
+		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boeresources.icns; path = icons/mac/boeresources.icns; sourceTree = "<group>"; };
 		913FB40A1A5C90840067B9D2 /* pictypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pictypes.hpp; sourceTree = "<group>"; };
 		914698FA1A7362C200F20F5E /* living.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = living.hpp; sourceTree = "<group>"; };
 		914698FB1A7362D900F20F5E /* living.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = living.cpp; sourceTree = "<group>"; };
@@ -615,7 +615,7 @@
 		914B2BB518E892AA007B6799 /* dialog-converting.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dialog-converting.txt"; path = "dialogxml/dialog-converting.txt"; sourceTree = SOURCE_ROOT; };
 		914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = scen.menus.mac.mm; sourceTree = "<group>"; };
 		914CA4641909B00100B6ADD1 /* scen.menus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scen.menus.hpp; sourceTree = "<group>"; };
-		914CA49F190C4E9200B6ADD1 /* scen.menu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = scen.menu.xib; sourceTree = "<group>"; };
+		914CA49F190C4E9200B6ADD1 /* scenedit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = scenedit.xib; path = menus/scenedit.xib; sourceTree = "<group>"; };
 		915325161A2E1DA8000A9A1C /* oldstructs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = oldstructs.cpp; path = ../oldstructs.cpp; sourceTree = "<group>"; };
 		915325181A2E37EE000A9A1C /* specials_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = specials_parse.cpp; sourceTree = "<group>"; };
 		91597A6C1A3BED2D00BE7BF9 /* spell.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = spell.hpp; sourceTree = "<group>"; };
@@ -637,7 +637,7 @@
 		919145FF18E63B70005CF3A4 /* winutil.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = winutil.mac.mm; sourceTree = "<group>"; };
 		9191460018E63D8E005CF3A4 /* scrollbar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrollbar.cpp; sourceTree = "<group>"; };
 		9191460118E6591F005CF3A4 /* boe.menus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = boe.menus.hpp; sourceTree = "<group>"; };
-		9192C11E18F271920088A580 /* menu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = menu.xib; sourceTree = "<group>"; };
+		9192C11E18F271920088A580 /* game.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = game.xib; path = ../rsrc/menus/game.xib; sourceTree = "<group>"; };
 		919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = /usr/local/lib/libboost_filesystem.dylib; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
@@ -653,8 +653,8 @@
 		91AC620A0FA2853700EEAE67 /* creatlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creatlist.cpp; sourceTree = "<group>"; };
 		91ACCE82190032E000FAEF8B /* fix_dylibs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = fix_dylibs.sh; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.consts.hpp; sourceTree = "<group>"; };
-		91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "BoE Scenario Editor-Info.plist"; sourceTree = "<group>"; };
-		91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "BoE Scenario Editor.icns"; sourceTree = "<group>"; };
+		91B3EED90F969BA700BF5B67 /* BoEScenEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoEScenEd-Info.plist"; path = "scenedit/BoEScenEd-Info.plist"; sourceTree = SOURCE_ROOT; };
+		91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoEScenEd.icns; path = icons/mac/BoEScenEd.icns; sourceTree = "<group>"; };
 		91B3EEDE0F969BA700BF5B67 /* scen.global.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scen.global.hpp; sourceTree = "<group>"; };
 		91B3EEE00F969BA700BF5B67 /* scen.keydlgs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scen.keydlgs.hpp; sourceTree = "<group>"; };
 		91B3EEE10F969BA700BF5B67 /* scen.core.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scen.core.hpp; sourceTree = "<group>"; };
@@ -681,8 +681,8 @@
 		91B3EF070F969BD300BF5B67 /* pc.editors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.editors.cpp; sourceTree = "<group>"; };
 		91B3EF080F969BD300BF5B67 /* pc.fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.fileio.cpp; sourceTree = "<group>"; };
 		91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.graphics.cpp; sourceTree = "<group>"; };
-		91B3EF110F969BD300BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = BoECharEd.icns; sourceTree = "<group>"; };
-		91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Blades of Exile Character Editor-Info.plist"; sourceTree = "<group>"; };
+		91B3EF110F969BD300BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoECharEd.icns; path = icons/mac/BoECharEd.icns; sourceTree = "<group>"; };
+		91B3EF130F969BD300BF5B67 /* BoECharEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoECharEd-Info.plist"; path = "pcedit/BoECharEd-Info.plist"; sourceTree = SOURCE_ROOT; };
 		91B3EF180F969C2200BF5B67 /* Blades of Exile Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		91B3EF250F969CE300BF5B67 /* bladbase.exs */ = {isa = PBXFileReference; lastKnownFileType = file; name = bladbase.exs; path = "../rsrc/Blades of Exile Bases/bladbase.exs"; sourceTree = "<group>"; };
 		91B3EF3F0F969F0000BF5B67 /* BoE Scenario Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Scenario Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -729,7 +729,7 @@
 		91F6F8E118F87F3700E3EA15 /* sfml-window.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-window.framework"; path = "/Library/Frameworks/sfml-window.framework"; sourceTree = "<absolute>"; };
 		91F6F8E218F87F3700E3EA15 /* SFML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SFML.framework; path = /Library/Frameworks/SFML.framework; sourceTree = "<absolute>"; };
 		91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qdpict.cpp; sourceTree = "<group>"; };
-		91FCC8D718FE28CC007026CE /* pc.menu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = pc.menu.xib; sourceTree = "<group>"; };
+		91FCC8D718FE28CC007026CE /* pcedit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = pcedit.xib; path = menus/pcedit.xib; sourceTree = "<group>"; };
 		91FCC8DA18FE2CCA007026CE /* pc.menus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pc.menus.hpp; sourceTree = "<group>"; };
 		91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.menus.mac.mm; sourceTree = "<group>"; };
 		91FCC8F318FF069A007026CE /* pc.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.appleevents.mm; sourceTree = "<group>"; };
@@ -1045,12 +1045,13 @@
 			isa = PBXGroup;
 			children = (
 				91279BAD0F9CFCBA007B0D52 /* boescenario.icns */,
-				91B3EED90F969BA700BF5B67 /* BoE Scenario Editor-Info.plist */,
-				91B3EEDB0F969BA700BF5B67 /* BoE Scenario Editor.icns */,
-				914CA49F190C4E9200B6ADD1 /* scen.menu.xib */,
+				91B3EED90F969BA700BF5B67 /* BoEScenEd-Info.plist */,
+				91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */,
+				914CA49F190C4E9200B6ADD1 /* scenedit.xib */,
 			);
 			name = rsrc;
-			sourceTree = "<group>";
+			path = ../rsrc;
+			sourceTree = SOURCE_ROOT;
 		};
 		91B3EEDC0F969BA700BF5B67 /* headers */ = {
 			isa = PBXGroup;
@@ -1127,11 +1128,12 @@
 			isa = PBXGroup;
 			children = (
 				91B3EF110F969BD300BF5B67 /* BoECharEd.icns */,
-				91B3EF130F969BD300BF5B67 /* Blades of Exile Character Editor-Info.plist */,
-				91FCC8D718FE28CC007026CE /* pc.menu.xib */,
+				91B3EF130F969BD300BF5B67 /* BoECharEd-Info.plist */,
+				91FCC8D718FE28CC007026CE /* pcedit.xib */,
 			);
 			name = rsrc;
-			sourceTree = "<group>";
+			path = ../rsrc;
+			sourceTree = SOURCE_ROOT;
 		};
 		91B3EF220F969CA300BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
@@ -1245,11 +1247,12 @@
 				913D6C040FC57A8E00E12527 /* boeresources.icns */,
 				91279BB50F9D03B7007B0D52 /* boegraphics.icns */,
 				2B8F435C0C0973680012E4A8 /* BoE.icns */,
-				2BF04AC30BF518D4006C0831 /* Blades of Exile-Info.plist */,
-				9192C11E18F271920088A580 /* menu.xib */,
+				2BF04AC30BF518D4006C0831 /* BoE-Info.plist */,
+				9192C11E18F271920088A580 /* game.xib */,
 			);
 			name = rsrc;
-			sourceTree = "<group>";
+			path = ../rsrc;
+			sourceTree = SOURCE_ROOT;
 		};
 		91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */ = {
 			isa = PBXGroup;
@@ -1368,7 +1371,7 @@
 				91279BB70F9D03B7007B0D52 /* boesounds.icns in Resources */,
 				91279BB80F9D03B7007B0D52 /* boegraphics.icns in Resources */,
 				913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */,
-				9192C12018F2745C0088A580 /* menu.xib in Resources */,
+				9192C12018F2745C0088A580 /* game.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1377,7 +1380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */,
-				91FCC8D818FE28CC007026CE /* pc.menu.xib in Resources */,
+				91FCC8D818FE28CC007026CE /* pcedit.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1385,9 +1388,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91B3EF470F969F1700BF5B67 /* BoE Scenario Editor.icns in Resources */,
+				91B3EF470F969F1700BF5B67 /* BoEScenEd.icns in Resources */,
 				91279BAE0F9CFCBA007B0D52 /* boescenario.icns in Resources */,
-				91870F84190C90980081C150 /* scen.menu.xib in Resources */,
+				91870F84190C90980081C150 /* scenedit.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1814,7 +1817,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = "Blades of Exile-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/BoE-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PRODUCT_NAME = "Blades of Exile";
@@ -1832,7 +1835,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				INFOPLIST_FILE = "Blades of Exile-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/BoE-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PRODUCT_NAME = "Blades of Exile";
@@ -1873,7 +1876,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = "pcedit/Blades of Exile Character Editor-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/pcedit/BoECharEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PRODUCT_NAME = "Blades of Exile Character Editor";
@@ -1893,7 +1896,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_MODEL_TUNING = G5;
-				INFOPLIST_FILE = "pcedit/Blades of Exile Character Editor-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/pcedit/BoECharEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "\"$(PROJECT_DIR)/misc/\"";
 				PRODUCT_NAME = "Blades of Exile Character Editor";
@@ -1914,7 +1917,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = "scenedit/BoE Scenario Editor-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/scenedit/BoEScenEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = "BoE Scenario Editor";
 				SDKROOT = "";
@@ -1934,7 +1937,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_MODEL_TUNING = G5;
-				INFOPLIST_FILE = "scenedit/BoE Scenario Editor-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/scenedit/BoEScenEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = "BoE Scenario Editor";
 				SDKROOT = "";
