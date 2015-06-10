@@ -1069,7 +1069,7 @@ void refresh_talking() {
 
 short scan_for_response(const char *str) {
 	cSpeech talk = univ.town.cur_talk();
-	for(short i = 0; i < 60; i++) { // 60 response in each bunch
+	for(short i = 0; i < talk.talk_nodes.size(); i++) {
 		cSpeech::cNode node = talk.talk_nodes[i];
 		short personality = node.personality;
 		if(personality == -1) continue;

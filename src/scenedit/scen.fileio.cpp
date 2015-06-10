@@ -773,7 +773,7 @@ static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_nu
 		data.PushElement("job", who.job);
 		data.CloseElement("personality");
 	}
-	for(size_t i = 0; i < 60; i++) {
+	for(size_t i = 0; i < talk.talk_nodes.size(); i++) {
 		cSpeech::cNode& node = talk.talk_nodes[i];
 		if(node.personality == -1) continue;
 		// TODO: Is it safe to assume the two links run together like this?

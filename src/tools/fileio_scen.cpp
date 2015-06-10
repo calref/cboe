@@ -77,7 +77,10 @@ template<typename Container> static void port_shop_spec_node(cSpecial& spec, std
 		// Safeguard against invalid data
 		if(spec.ex1a < 0)
 			spec.ex1a = 1;
-		shops.push_back({eShopItemType(spec.ex1b + 1), spec.ex1a, spec.ex2a, strs[spec.m1]});
+		std::string title;
+		if(spec.m1 >= 0 && spec.m1 <= strs.size())
+			title = strs[spec.m1];
+		shops.push_back({eShopItemType(spec.ex1b + 1), spec.ex1a, spec.ex2a, title});
 		which_shop = shops.size() + 5;
 	} else if(spec.ex1b == 4)
 		which_shop = 5;

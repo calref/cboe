@@ -56,7 +56,7 @@ std::vector<int> get_iarray_pref(std::string keypath) {
 }
 
 void clear_pref(std::string keypath) {
-	[[NSUserDefaults standardUserDefaults] setNilValueForKey: convertKey(keypath)];
+	[[NSUserDefaults standardUserDefaults] setValue: nil forKey: convertKey(keypath)];
 }
 
 bool sync_prefs() {

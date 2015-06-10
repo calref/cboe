@@ -956,7 +956,7 @@ void place_target(location target) {
 			add_string_to_buf("  Can't see target.");
 			return;
 		}
-		if(dist(univ.party[current_pc].combat_pos,target) > (*spell_being_cast).range)  {
+		if(dist(univ.party[current_pc].combat_pos,target) > current_spell_range)  {
 			add_string_to_buf("  Target out of range.");
 			return;
 		}
@@ -1096,7 +1096,7 @@ void do_combat_cast(location target) {
 				boom_targ[i] = target;
 				switch(spell_being_cast) {
 					case eSpell::NONE: // Not a spell but a special node targeting
-						run_special(eSpecCtx::TARGET, which_combat_type + 1, spell_caster, target, &r1, &r2, &item);
+						run_special(eSpecCtx::TARGET, spell_caster / 1000, spell_caster % 1000, target, &r1, &r2, &item);
 						if(item > 0) redraw_screen(REFRESH_ALL);
 						break;
 					case eSpell::GOO: case eSpell::WEB: case eSpell::GOO_BOMB:
@@ -1316,6 +1316,7 @@ void do_combat_cast(location target) {
 											caster.status[eStatus::FORCECAGE] = 0;
 											// Of course, it can also get you into one. If that happens, force cage syncing will fix it.
 										}
+										break;
 									default:
 										add_string_to_buf("  Error: Summoning spell " + (*spell_being_cast).name() + " not implemented for combat mode.", 4);
 										break;
