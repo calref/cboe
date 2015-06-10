@@ -812,7 +812,11 @@ set Extra 1b to 0 if you want to help the party or 1 if you want to harm them.
 <dt>Extra 1a:</dt><dd>The amount to change. (Usually ranges is 0 ... 8; Martyr's Shield is
 0 ... 10, and paralysis is 0 ... 5000)</dd>
 <dt>Extra 1b:</dt><dd>If 0, helps. Otherwise, harms.</dd>
-<dt>Extra 1c:</dt><dd>Which status effect. Press the Choose button to select one.</dd></dd>
+<dt>Extra 1c:</dt><dd>Which status effect. Press the Choose button to select one.</dd>
+<dt>Note:</dt><dd>If you affect their forcecage status, a forcecage barrier will
+automatically be placed on the space. However, if you reduce their forcecage status to 0,
+it won't work because being in a forcecage barrier will reset their status. To free them
+from a forcecage, you should instead use Place Fields with the "Cleanse" type.</dd></dd>
 
 <dt>Type 88: Affect Traits</dt><dd>Adds or removes a special trait. If the target is a
 monster, this has no effect.
@@ -1776,7 +1780,12 @@ or sfx (16 - sm blood, 17 - med blood, 18 - lg blood, 19 - sm slime, 20 - lg sli
 21 - ash, 22 - bones, 23 - stones) to place, or one of the special values (32 - cleanse,
 33 - smash fragile walls like Move Mountains).</dd>
 <dt>Note:</dt><dd>Fields are never placed on spaces that contain walls, or other
-impenetrable terrain.</dd></dd>
+impenetrable terrain.</dd>
+<dt>Note:</dt><dd>Though you can place a forcecage around a creature using this, if you
+know which creature you want it's better to use Affect Status which allows you to control
+how long the forcecage will last (unless they manage to break it). If you want to free
+them from a forcecage, on the other hand, use this node with the special value 32
+("Cleanse").</dd></dd>
 
 <dt>Type 211: Set Explored</dt><dd>This node alters your map, marking spaces as having
 been explored or not.

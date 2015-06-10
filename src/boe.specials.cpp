@@ -192,16 +192,16 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		return false; // TODO: Maybe replace eTrimType::CITY check with a blockage == clear/special && is_special() check?
 	}
 	
+	if(univ.town.is_force_barr(where_check.x,where_check.y)) {
+		add_string_to_buf("  Magic barrier!");
+		can_enter = false;
+	}
+	if(univ.town.is_force_cage(where_check.x,where_check.y)) {
+		add_string_to_buf("  Force cage!");
+		can_enter = false;
+	}
 	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
-	   && (univ.town.is_special(where_check.x,where_check.y))) {
-		if(univ.town.is_force_barr(where_check.x,where_check.y)) {
-			add_string_to_buf("  Magic barrier!");
-			return false;
-		}
-		if(univ.town.is_force_cage(where_check.x,where_check.y)) {
-			add_string_to_buf("  Force cage!");
-			return false;
-		}
+		&& can_enter && univ.town.is_special(where_check.x,where_check.y)) {
 		for(i = 0; i < univ.town->special_locs.size(); i++)
 			if(where_check == univ.town->special_locs[i]) {
 				*spec_num = univ.town->special_locs[i].spec;
@@ -249,14 +249,6 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			else univ.party[current_pc].web(get_ran(1,2,3));
 			put_pc_screen();
 			univ.town.set_web(where_check.x,where_check.y,false);
-		}
-		if(univ.town.is_force_barr(where_check.x,where_check.y)) {
-			add_string_to_buf("  Magic barrier!");
-			can_enter = false;
-		}
-		if(univ.town.is_force_cage(where_check.x,where_check.y)) {
-			add_string_to_buf("  Force cage!");
-			can_enter = false;
 		}
 		if(univ.town.is_crate(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the crate.");
@@ -426,9 +418,6 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 							case eStatus::FORCECAGE:
 								if(is_out()) break;
 								univ.party[i].sleep(eStatus::FORCECAGE,ter_flag1,ter_flag1 / 2);
-								if(univ.party[i].status[eStatus::FORCECAGE] > 0)
-									univ.town.set_force_cage(univ.party[i].get_loc().x, univ.party[i].get_loc().y, true);
-								// TODO: Do we need to process fields here? Or is it done after returning from this function?
 								break;
 							case eStatus::MAIN: case eStatus::CHARM: // These magic values are illegal in this context
 								break;
@@ -549,11 +538,6 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 		else hit_party(r1,eDamageType::MAGIC,0);
 		fast_bang = 0;
 	}
-	if(univ.town.is_force_cage(where_check.x,where_check.y)) {
-		if(which_pc.status[eStatus::FORCECAGE] == 0)
-			add_string_to_buf("  Trapped in force cage!");
-		which_pc.status[eStatus::FORCECAGE] = 8;
-	} else which_pc.status[eStatus::FORCECAGE] = 0;
 	put_pc_screen();
 }
 
@@ -883,8 +867,6 @@ void use_item(short pc,short item) {
 								break;
 							case eItemUse::HARM_ONE:
 								univ.party[pc].sleep(eStatus::FORCECAGE, str, str / 2);
-								if(univ.party[pc].status[eStatus::FORCECAGE] > 0)
-									univ.town.set_force_cage(univ.party[pc].get_loc().x, univ.party[pc].get_loc().y, true);
 								break;
 							case eItemUse::HELP_ALL:
 								for(i = 0; i < 6; i++)
@@ -892,13 +874,11 @@ void use_item(short pc,short item) {
 								break;
 							case eItemUse::HARM_ALL:
 								univ.party.sleep(eStatus::FORCECAGE, str, str / 2);
-								for(i = 0; i < 6; i++)
-									if(univ.party[i].status[eStatus::FORCECAGE] > 0)
-										univ.town.set_force_cage(univ.party[i].get_loc().x, univ.party[i].get_loc().y, true);
 								break;
 						}
 						break;
 				}
+				break;
 			case eItemAbil::BLISS_DOOM:
 				switch(type) {
 					case eItemUse::HELP_ONE:
@@ -1339,6 +1319,10 @@ void teleport_party(short x,short y,short mode) {
 	if(mode == 0 || mode == 2) fadeOut = true;
 	if(mode == 0 || mode == 3) fadeIn = true;
 	
+	// Clear forcecage status
+	for(int i = 0; i < 6; i++)
+		univ.party[i].status[eStatus::FORCECAGE] = 0;
+	
 	if(is_combat())
 		mode = 1;
 	
@@ -1402,6 +1386,10 @@ void change_level(short town_num,short x,short y) {
 		giveError("The scenario special encounter tried to put you into a town that doesn't exist.");
 		return;
 	}
+	
+	// Clear forcecage status
+	for(int i = 0; i < 6; i++)
+		univ.party[i].status[eStatus::FORCECAGE] = 0;
 	
 	force_town_enter(town_num,l);
 	end_town_mode(1,l);
@@ -1722,6 +1710,7 @@ void push_things() {
 			case DIR_W: l.x--; break;
 		}
 		if(l != univ.town.p_loc) {
+			// TODO: Will this push you into a placed forcecage or barrier? Should it?
 			ASB("You get pushed.");
 			if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
 				draw_terrain(0);
@@ -2922,7 +2911,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::AFFECT_STATUS:
-			switch(eStatus(spec.ex2a)) {
+			switch(eStatus(spec.ex1c)) {
 				case eStatus::POISON:
 					if(spec.ex1b == 0)
 						pc->cure(spec.ex1a);
@@ -2997,10 +2986,15 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						pc->apply_status(eStatus::ACID, -spec.ex1a);
 					else pc->acid(spec.ex1a);
 					break;
+				case eStatus::FORCECAGE:
+					if(is_out()) break;
+					if(spec.ex1b == 0)
+						pc->apply_status(eStatus::FORCECAGE, -spec.ex1a);
+					else pc->sleep(eStatus::FORCECAGE, spec.ex1a, 10);
+					break;
 					// Invalid values
 				case eStatus::MAIN:
 				case eStatus::CHARM:
-				case eStatus::FORCECAGE:
 					break;
 			}
 			put_pc_screen();
@@ -3888,7 +3882,12 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							break;
 						} else {
 							was_active = current_pc;
-							univ.party.direction = end_town_combat();
+							eDirection dir = end_town_combat();
+							if(dir == DIR_HERE) {
+								ASB("Can't change level now.");
+								break;
+							}
+							univ.party.direction = dir;
 						}
 					}
 					*a = 1;
@@ -4067,6 +4066,10 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				univ.town.p_loc = univ.party.left_at;
 				update_explored(univ.town.p_loc);
 				center = univ.town.p_loc;
+				
+				// Clear forcecage status
+				for(int i = 0; i < 6; i++)
+					univ.party[i].status[eStatus::FORCECAGE] = 0;
 			} else change_level(univ.party.left_in, univ.party.left_at.x, univ.party.left_at.y);
 			break;
 		case eSpecType::TOWN_TIMER_START:

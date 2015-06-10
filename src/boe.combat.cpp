@@ -384,6 +384,7 @@ bool pc_combat_move(location destination) {
 	
 	if(monst_hit == nullptr && univ.party[current_pc].status[eStatus::FORCECAGE] > 0) {
 		add_string_to_buf("Move: Can't escape.");
+		add_string_to_buf("  (Try doing something else.)");
 		return false;
 	}
 	
@@ -570,6 +571,10 @@ void pc_attack(short who_att,iLiving* target) {
 		
 		r1 = get_ran(1,1,100) + hit_adj - 20;
 		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
+		if(univ.party[current_pc].status[eStatus::FORCECAGE] > 0)
+			r1 += 3;
+		if(target->status[eStatus::FORCECAGE] > 0)
+			r1 += 1;
 		r2 = get_ran(1,1,4) + dam_adj;
 		
 		if(cPlayer* pc_target = dynamic_cast<cPlayer*>(target)) {
@@ -681,9 +686,7 @@ static void apply_weapon_status(eStatus status, int how_much, int dmg, iLiving& 
 			break;
 		case eStatus::FORCECAGE:
 			add_string_to_buf("  " + weap_type + " emits a green flash.");
-			which_m.sleep(eStatus::FORCECAGE, 0, dmg - how_much / 2);
-			if(which_m.status[eStatus::FORCECAGE] > 0)
-				univ.town.set_force_cage(which_m.get_loc().x, which_m.get_loc().y, true);
+			which_m.sleep(eStatus::FORCECAGE, how_much, dmg - how_much / 2);
 			break;
 		case eStatus::MARTYRS_SHIELD:
 			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
@@ -716,6 +719,12 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 	// Ambidextrous?
 	if(primary != 1 && !attacker.traits[eTrait::AMBIDEXTROUS])
 		r1 += 25;
+	
+	// Forcecage penalties (reduced for pole weapons)
+	if(attacker.status[eStatus::FORCECAGE] > 0)
+		r1 += what_skill == eSkill::POLE_WEAPONS ? 1 : 3;
+	if(target.status[eStatus::FORCECAGE] > 0)
+		r1 += 1;
 	
 	if(primary) {
 		// race adj.
@@ -1303,6 +1312,9 @@ void do_combat_cast(location target) {
 										else {
 											add_string_to_buf("  Flash step!");
 											caster.combat_pos = target;
+											// This can get you out of a forcecage without breaking it
+											caster.status[eStatus::FORCECAGE] = 0;
+											// Of course, it can also get you into one. If that happens, force cage syncing will fix it.
 										}
 									default:
 										add_string_to_buf("  Error: Summoning spell " + (*spell_being_cast).name() + " not implemented for combat mode.", 4);
@@ -1866,11 +1878,43 @@ void fire_missile(location target) {
 	print_buf();
 }
 
+static bool sync_force_cages() {
+	static const int fc_multipliers[10] = {1, 1, 1, 1, 2, 2, 2, 3, 3, 4};
+	bool was_change = false;
+	// This goes through the list of creatures and places forcecage barriers on any spaces containing someone with forcecage status.
+	// If anyone is on a forcecage barrier but doesn't have forcecage status, they are given it.
+	for(int i = 0; i < 6; i++) {
+		cPlayer& who = univ.party[i];
+		location loc = who.get_loc();
+		if(who.status[eStatus::FORCECAGE] > 0) {
+			was_change = true;
+			univ.town.set_force_cage(loc.x, loc.y, true);
+		} else if(univ.town.is_force_cage(loc.x, loc.y) && who.status[eStatus::FORCECAGE] == 0) {
+			was_change = true;
+			who.status[eStatus::FORCECAGE] = get_ran(2, 2, 7) * fc_multipliers[get_ran(1,1,10)];
+		}
+	}
+	for(int i = 0; i < univ.town.monst.size(); i++) {
+		cCreature& who = univ.town.monst[i];
+		location loc = who.get_loc();
+		if(who.status[eStatus::FORCECAGE] > 0) {
+			was_change = true;
+			univ.town.set_force_cage(loc.x, loc.y, true);
+		} else if(univ.town.is_force_cage(loc.x, loc.y) && who.status[eStatus::FORCECAGE] == 0) {
+			was_change = true;
+			who.status[eStatus::FORCECAGE] = get_ran(2, 2, 7) * fc_multipliers[get_ran(1,1,10)];
+		}
+	}
+	return was_change;
+}
+
 // Select next active PC and, if necessary, run monsters
 // if monsters go or PC switches (i.e. if need redraw above), return true
 bool combat_next_step() {
 	bool to_return = false;
 	short store_pc; // will print current pc name is active pc changes
+	
+	to_return = sync_force_cages();
 	
 	store_pc = current_pc;
 	while(pick_next_pc()) {
@@ -2024,7 +2068,7 @@ void combat_run_monst() {
 				if(isStatusNegative(status))
 					how_much *= -1;
 				switch(status) {
-					case eStatus::MAIN: case eStatus::FORCECAGE: case eStatus::CHARM:
+					case eStatus::MAIN: case eStatus::CHARM:
 						continue; // Not valid in this context.
 					case eStatus::HASTE_SLOW:
 						if(how_much > 0) add_string_to_buf("An item hastes you!");
@@ -2077,6 +2121,12 @@ void combat_run_monst() {
 						if(how_much > 0) add_string_to_buf("An item covers you in acid!");
 						else if(univ.party[i].status[eStatus::ACID] > 0)
 							add_string_to_buf("An item neutralizes the acid!");
+						break;
+					case eStatus::FORCECAGE:
+						if(how_much > 0) add_string_to_buf("An item entraps you!");
+						else if(-how_much > univ.party[i].status[eStatus::FORCECAGE])
+							add_string_to_buf("An item frees you!");
+						else add_string_to_buf("An item weakens the barrier!");
 						break;
 					case eStatus::POISONED_WEAPON:
 						if(how_much > 0) {
@@ -2743,6 +2793,10 @@ void monster_attack(short who_att,iLiving* target) {
 			r1 -= 5 * min(8, attacker->status[eStatus::BLESS_CURSE]);
 			r1 += 5 * target->status[eStatus::BLESS_CURSE] - 15;
 			r1 += 5 * (attacker->status[eStatus::WEBS] / 3);
+			if(attacker->status[eStatus::FORCECAGE] > 0)
+				r1 += 3; // TODO: PCs have reduced penalty for pole weapons; any way to mirror that here?
+			if(target->status[eStatus::FORCECAGE] > 0)
+				r1 += 1;
 			if(pc_target != nullptr) {
 				r1 += 5 * pc_target->stat_adj(eSkill::DEXTERITY);
 				r1 += pc_target->get_prot_level(eItemAbil::EVASION);
@@ -3171,8 +3225,6 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 					break;
 				case eStatus::FORCECAGE:
 					target->sleep(abil.second.gen.stat, 8, abil.second.gen.strength);
-					if(target->status[eStatus::FORCECAGE] > 0)
-						univ.town.set_force_cage(target->get_loc().x, target->get_loc().y, true);
 					break;
 				// This only works on monsters
 				case eStatus::CHARM:
@@ -4176,9 +4228,6 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 							r1 = get_ran(6,1,8);
 							damage_pc(univ.party[k],r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 							break;
-						case BARRIER_CAGE:
-							univ.party[k].status[eStatus::FORCECAGE] = 8;
-							break;
 						default:
 							eDamageType type = eDamageType::MARKED;
 							unsigned short dice;
@@ -4271,7 +4320,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 								damage_monst(univ.town.monst[k],who_hit,r1,eDamageType::WEAPON,0);
 								break;
 							case BARRIER_CAGE:
-								univ.town.monst[k].status[eStatus::FORCECAGE] = 8;
+								univ.town.monst[k].status[eStatus::FORCECAGE] = max(8, univ.town.monst[k].status[eStatus::FORCECAGE]);
 								break;
 							default:
 								eDamageType type = eDamageType::MARKED;
@@ -5186,34 +5235,55 @@ void spell_cast_hit_return() {
 	}
 }
 
+void break_force_cage(location loc) {
+	for(int j = 0; j < 6; j++) {
+		if(univ.party[j].get_loc() == loc)
+			univ.party[j].status[eStatus::FORCECAGE] = 0;
+	}
+	for(int j = 0; j < univ.town.monst.size(); j++) {
+		if(univ.town.monst[j].get_loc() == loc)
+			univ.town.monst[j].status[eStatus::FORCECAGE] = 0;
+	}
+	univ.town.set_force_cage(loc.x, loc.y, false);
+}
+
 void process_force_cage(location loc, short i, short adjust) {
 	if(!univ.town.is_force_cage(loc.x,loc.y)) return;
 	if(i >= 100) {
 		short m = i - 100;
 		cCreature& which_m = univ.town.monst[m];
+		move_to_zero(which_m.status[eStatus::FORCECAGE]);
+		if(which_m.status[eStatus::FORCECAGE] == 0) {
+			add_string_to_buf("  Force cage flickers out.");
+			break_force_cage(loc);
+			return;
+		}
 		if(which_m.attitude % 2 == 1 && get_ran(1,1,100) < which_m.mu * 10 + which_m.cl * 4 + 5 + adjust) {
 			// TODO: This sound is not right
 			play_sound(60);
 			which_m.spell_note(50);
-			univ.town.set_force_cage(loc.x,loc.y,false);
-			which_m.status[eStatus::FORCECAGE] = 0;
-		} else which_m.status[eStatus::FORCECAGE] = 8;
+			break_force_cage(loc);
+		}
 	} else if(i < 0) {
-		/* For now, forcecages without occupants will be permanent. Might change this later.
-		if(get_ran(1,1,100) < 35)
-			univ.town.set_force_cage(loc.x,loc.y,false);
-		 */
+		// Force cages without occupants can last a very long time
+		if(get_ran(1,1,1000) == 1)
+			break_force_cage(loc);
 	} else if(i < 6) {
 		cPlayer& who = univ.party[i];
+		move_to_zero(who.status[eStatus::FORCECAGE]);
+		if(who.status[eStatus::FORCECAGE] == 0) {
+			add_string_to_buf("  Force cage flickers out.");
+			break_force_cage(loc);
+			return;
+		}
 		// We want to make sure everyone has a chance of eventually breaking a cage, because it never ends on its own,
 		// and because being trapped unconditionally prevents you from ending combat mode.
 		short bonus = 5 + who.skill(eSkill::MAGE_LORE) + adjust;
 		if(get_ran(1,1,100) < who.skill(eSkill::MAGE_SPELLS)*10 + who.skill(eSkill::PRIEST_SPELLS)*4 + bonus) {
 			play_sound(60);
 			add_string_to_buf("  " + who.name + " breaks force cage.");
-			univ.town.set_force_cage(loc.x,loc.y,false);
-			who.status[eStatus::FORCECAGE] = 0;
-		} else who.status[eStatus::FORCECAGE] = 8;
+			break_force_cage(loc);
+		}
 	}
 }
 
@@ -5261,6 +5331,8 @@ void process_fields() {
 	for(i = 0; i < univ.town.monst.size(); i++)
 		if(univ.town.monst[i].active > 0)
 			monst_inflict_fields(i);
+	
+	sync_force_cages();
 	
 	// First fry PCs, then call to handle damage to monsters
 	processing_fields = true; // this, in hit_space, makes damage considered to come from whole party
@@ -5322,8 +5394,12 @@ void process_fields() {
 			if(univ.town.is_force_cage(i,j)) {
 				loc.x = i; loc.y = j;
 				short who = univ.get_target_i(*univ.target_there(loc));
-				if(who == 6) who = -1;
 				process_force_cage(loc, who);
+				// If we got a PC, check the others too, in case they're on the same space
+				while(++who > 0 && who < 6 && univ.town.is_force_cage(i,j)) {
+					loc = univ.party[who].get_loc();
+					process_force_cage(loc, who);
+				}
 			}
 		}
 	

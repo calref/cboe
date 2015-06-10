@@ -173,6 +173,7 @@ public:
 	void new_pc(size_t spot);
 	void replace_pc(size_t spot, cPlayer* with);
 	size_t free_space();
+	size_t count(eMainStatus type = eMainStatus::ALIVE);
 	void void_pcs();
 	bool save_talk(const std::string& who, const std::string& where, const std::string& str1, const std::string& str2);
 	bool add_to_journal(const std::string& event, short day);

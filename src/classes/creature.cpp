@@ -213,9 +213,9 @@ void cCreature::dumbfound(int how_much) {
 
 // For charm, amount is the resulting attitude of the charmed monster; if 0, attitude is 2.
 void cCreature::sleep(eStatus which_status,int amount,int penalty) {
-	if(which_status != eStatus::CHARM && which_status != eStatus::FORCECAGE && amount < 0) {
+	if(which_status != eStatus::CHARM && amount < 0) {
 		status[which_status] -= amount;
-		if(which_status == eStatus::PARALYZED)
+		if(which_status != eStatus::ASLEEP)
 			status[which_status] = max(0, status[which_status]);
 		return;
 	}
@@ -230,6 +230,8 @@ void cCreature::sleep(eStatus which_status,int amount,int penalty) {
 		r1 /= magic_res;
 	} else r1 = 200;
 	r1 += penalty;
+	if(which_status == eStatus::FORCECAGE && (mu > 0 || cl > 0))
+		r1 += 5;
 	if(which_status == eStatus::ASLEEP)
 		r1 -= 25;
 	if(which_status == eStatus::PARALYZED)
@@ -247,7 +249,7 @@ void cCreature::sleep(eStatus which_status,int amount,int penalty) {
 			attitude = amount;
 			spell_note(23);
 		} else if(which_status == eStatus::FORCECAGE) {
-			status[eStatus::FORCECAGE] = 8;
+			status[eStatus::FORCECAGE] = amount;
 			spell_note(52);
 		} else {
 			status[which_status] = amount;

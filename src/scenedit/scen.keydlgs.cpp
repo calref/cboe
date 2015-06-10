@@ -742,10 +742,10 @@ pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {
 	static const char*const status[] = {
 		"Poisoned Weapon", "Bless/Curse", "Poison", "Haste/Slow", "Invulnerable",
 		"Magic Resist/Amplify", "Webs", "Disease", "Sanctuary", "Dumbfounding/Enlightening",
-		"Martyr's Shield", "Sleep/Hyperactivity", "Paralysis", "Acid"
+		"Martyr's Shield", "Sleep/Hyperactivity", "Paralysis", "Acid", "Forcecage",
 	};
 	static const char*const pstatus[] = {"Stealth", "Flight", "Detect Life", "Firewalk"};
-	static const std::vector<pic_num_t> status_pics = {4,2,0,6,5,9,10,11,12,13,14,15,16,17};
+	static const std::vector<pic_num_t> status_pics = {4,2,0,6,5,9,10,11,12,13,14,15,16,17,20};
 	static const std::vector<pic_num_t> pstatus_pics = {25,23,24,26};
 	short prev = cur;
 	if(cur < 0 || cur >= (party ? pstatus_pics : status_pics).size()) cur = 0;

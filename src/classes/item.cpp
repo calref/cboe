@@ -1109,7 +1109,6 @@ std::string cItem::getAbilName() const {
 				case eStatus::POISONED_WEAPON:
 				case eStatus::INVULNERABLE:
 				case eStatus::MARTYRS_SHIELD:
-				case eStatus::FORCECAGE:
 				case eStatus::CHARM:
 				case eStatus::INVISIBLE:
 					break; // These have no negative aspect, so protection from them isn't implemented
@@ -1123,6 +1122,7 @@ std::string cItem::getAbilName() const {
 				case eStatus::DUMB: sout << "Dumbfounding"; break;
 				case eStatus::ASLEEP: sout << "Sleep"; break;
 				case eStatus::PARALYZED: sout << "Paralysis"; break;
+				case eStatus::FORCECAGE: sout << "Forcecage"; break;
 			}
 			break;
 		case eItemAbil::BOOST_STAT:
@@ -1132,9 +1132,8 @@ std::string cItem::getAbilName() const {
 			sout << "Occasional ";
 			switch(eStatus(abil_data[1])) {
 				case eStatus::MAIN: break; // Invalid
-				case eStatus::FORCECAGE:
 				case eStatus::CHARM: // Doesn't affect PCs
-					break; // TODO: Not implemented?
+				case eStatus::FORCECAGE: sout << (harmful ? "Entrapment" : "Release"); break;
 				case eStatus::DISEASE: sout << (harmful ? "Disease" : "Cure Disease"); break;
 				case eStatus::HASTE_SLOW: sout << (harmful ? "Slow" : "Haste"); break;
 				case eStatus::BLESS_CURSE: sout << (harmful ? "Curse" : "Bless"); break;

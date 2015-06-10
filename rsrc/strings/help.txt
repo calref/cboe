@@ -43,7 +43,7 @@ This person has looked over your items and maybe offered to buy some of them. Cl
 Merchants will only buy items that have been identified. If you want to sell something, you may need to find a sage to identify it (such as Habecker in Fort Emergence).
 This character will, for a fee, identify some of your items whose nature is, as yet, unknown to you. Click on the 'ID' button by the item to get it identified.
 This merchant has offered to magically improve one of your weapons. Click on the 'Ench' button by the weapon to pay for this service. You can only augment identified weapons that aren't magic already.
-
+One of your characters has just been trapped in a forcecage. This will hold the character in place but not prevent them from fighting, though melee combat will be hindered. If you have no other action to take, just pause repeatedly (click on the PC or type '5' on the keypad) and the cage will eventually break or expire.
 You have just opened a door. To open any door, walk into it. Some walls have secret doors in them. To search a wall for secret doors, walk into it. Many special things are hidden in the dungeons.
 You have just entered combat mode! To start using a weapon, click on that weapon's name. Your characters will now move one at a time ... to attack a bad guy, walk into it. For more information on combat mechanics, type '?'.
 When fighting early in the game, when you're still weak, rely heavily on magical spells (make sure to have a character with Mage Spells skill of 3). Your melee people won't be strong for a while. Hit the 'End' button to leave combat.

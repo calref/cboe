@@ -23,6 +23,7 @@
 #include "boe.town.hpp"
 #include "boe.combat.hpp"
 #include "boe.locutils.hpp"
+#include "boe.combat.hpp"
 #include "boe.text.hpp"
 #include "soundtool.hpp"
 #include "boe.main.hpp"
@@ -1026,6 +1027,9 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			}
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			// Clear forcecage status
+			for(int i = 0; i < 6; i++)
+				univ.party[i].status[eStatus::FORCECAGE] = 0;
 			add_string_to_buf("  You are moved... ");
 			force_town_enter(univ.scenario.which_town_start,univ.scenario.where_start);
 			start_town_mode(univ.scenario.which_town_start,9);
@@ -1431,7 +1435,7 @@ void cast_town_spell(location where) {
 				}
 			} else if(univ.town.is_force_cage(where.x,where.y)) {
 				add_string_to_buf("  Cage broken.");
-				univ.town.set_force_cage(where.x,where.y,false);
+				break_force_cage(where);
 			}
 			
 			else add_string_to_buf("  No barrier there.");
@@ -1572,7 +1576,7 @@ void dispel_fields(short i,short j,short mode) {
 		univ.town.set_blade_wall(i,j,false);
 	r1 = get_ran(1,1,12) + mode;
 	if(r1 < 3)
-		univ.town.set_force_cage(i,j,false);
+		break_force_cage(loc(i,j));
 }
 
 bool pc_can_cast_spell(short pc_num,eSkill type) {

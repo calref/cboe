@@ -30,6 +30,8 @@ void iLiving::apply_status(eStatus which, int how_much) {
 		hi = 10;
 	else if(which == eStatus::PARALYZED)
 		hi = 5000;
+	else if(which == eStatus::FORCECAGE)
+		hi = 1000;
 	
 	if(allow_negative.count(which))
 		lo = -hi;

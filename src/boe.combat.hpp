@@ -61,6 +61,7 @@ void start_fancy_spell_targeting(eSpell num, bool freebie = false, int spell_ran
 void spell_cast_hit_return();
 void process_fields();
 void process_force_cage(location loc, short i, short bonus = 0);
+void break_force_cage(location loc);
 void scloud_space(short m,short n);
 void web_space(short m,short n);
 void sleep_cloud_space(short m,short n);
