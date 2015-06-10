@@ -10,7 +10,7 @@ bool create_pc(short spot,cDialog* parent_num);
 bool take_sp(short pc_num,short amt);
 void increase_light(short amt);
 void award_party_xp(short amt);
-void award_xp(short pc_num,short amt);
+void award_xp(short pc_num,short amt,bool force = false);
 void drain_pc(short which_pc,short how_much);
 short check_party_stat(eSkill which_stat, short mode);
 bool poison_weapon( short pc_num, short how_much,bool safe);

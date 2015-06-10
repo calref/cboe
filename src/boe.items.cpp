@@ -1019,7 +1019,8 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 }
 
 short get_num_response(short min, short max, std::string prompt) {
-	std::ostringstream sout(prompt);
+	std::ostringstream sout;
+	sout << prompt;
 	
 	make_cursor_sword();
 	

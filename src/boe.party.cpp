@@ -114,7 +114,7 @@ static void init_party_scen_data() {
 	univ.party.age = 0;
 	store_help = PSD[SDF_NO_INSTANT_HELP];
 	for(i = 0; i < 310; i++)
-		for(j = 0; j < 10; j++)
+		for(j = 0; j < 50; j++)
 			PSD[i][j] = 0;
 	PSD[SDF_NO_INSTANT_HELP] = store_help;
 	univ.party.light_level = 0;
@@ -384,7 +384,7 @@ void award_party_xp(short amt) {
 			award_xp(i,amt);
 }
 
-void award_xp(short pc_num,short amt) {
+void award_xp(short pc_num,short amt,bool force) {
 	short adjust,add_hp;
 	short xp_percent[30] = {
 		150,120,100,90,80,70,60,50,50,50,
@@ -394,7 +394,7 @@ void award_xp(short pc_num,short amt) {
 		univ.party[pc_num].level = 50;
 		return;
 	}
-	if(amt > 200) { // debug
+	if(!force && amt > 200) { // debug
 		beep();
 		ASB("Oops! Too much xp!");
 		ASB("Report this!");
@@ -1327,7 +1327,7 @@ void cast_town_spell(location where) {
 		add_string_to_buf("  Can't see target.");
 	else switch(town_spell) {
 		case eSpell::NONE: // Not a spell but a special node targeting
-			run_special(eSpecCtx::TARGET, 2, spell_caster, where, &r1, &adjust, &store);
+			run_special(eSpecCtx::TARGET, spell_caster / 1000, spell_caster % 1000, where, &r1, &adjust, &store);
 			if(store > 0) redraw_screen(REFRESH_ALL);
 			break;
 		case eSpell::SCRY_MONSTER: case eSpell::CAPTURE_SOUL:

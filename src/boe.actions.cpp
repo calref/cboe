@@ -1946,12 +1946,16 @@ bool handle_keystroke(sf::Event& event){
 			print_buf();
 			break;
 			
-		case 'I': // TODO: Seems useless?
-//			if(!in_scen_debug) break;
-//			sout << "Debug: The party's age is " << univ.party.age;
-//			add_string_to_buf(sout.str());
-//			add_string_to_buf("Debug: Reset map."); // Surely this won't work?
-//			print_buf();
+		case 'I':
+			if(!in_scen_debug) break;
+			i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?");
+			j = univ.scenario.scen_items[i].ident;
+			univ.scenario.scen_items[i].ident = true;
+			univ.party.give_item(univ.scenario.scen_items[i], true);
+			univ.scenario.scen_items[i].ident = j;
+			print_buf();
+			put_item_screen(stat_window, false);
+			put_pc_screen(); // In case the item was food or gold
 			break;
 			
 		case 'Q':
@@ -2493,13 +2497,19 @@ void increase_age() {
 	if(is_out()) {
 		if(univ.party.age % 80 == 0) {
 			univ.party.restore_sp(2);
+			for(i = 0; i < 6; i++)
+				if(univ.party[i].status[eStatus::DUMB] < 0)
+					univ.party[i].status[eStatus::DUMB]++;
 		}
 	}
 	else {
 		if(univ.party.age % 40 == 0) {
-			for(i = 0; i < 6; i++)
+			for(i = 0; i < 6; i++) {
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp > univ.party[i].max_sp)
 					univ.party[i].cur_sp--; // Bonus SP wears off
+				if(univ.party[i].status[eStatus::DUMB] < 0)
+					univ.party[i].status[eStatus::DUMB]++;
+			}
 			univ.party.restore_sp(1);
 		}
 	}
@@ -2824,7 +2834,7 @@ bool outd_move_party(location destination,bool forced) {
 	if(check_f)
 		forced = true;
 	if(in_scen_debug && ghost_mode)
-		forced = true;
+		forced = keep_going = true;
 	if(spec_num == 50)
 		forced = true;
 	
@@ -3022,25 +3032,12 @@ bool town_move_party(location destination,short forced) {
 		return false;
 	}
 	
-	if(in_scen_debug && ghost_mode)
-		forced = true;
-	
-	// remove if not registered
-	/*
-	if((scenario.out_width != 3) || (scenario.out_height != 3) ||
-		(scenario.num_towns != 21) || (scenario.town_size[3] != 1) || (scenario.town_size[9] != 0)) {
-		ASB("Blades of Exile must be registered");
-		ASB("before you can play scenarios besides");
-		ASB("the unmodified Valley of Dying things.");
-		print_buf();
-		return false;
-	}
-	*/
-	
 	if(univ.target_there(destination, TARG_MONST) == nullptr)
 		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,univ.party[0],&spec_num,&check_f);
 	if(check_f)
 		forced = true;
+	if(in_scen_debug && ghost_mode)
+		forced = keep_going = true;
 	
 	if(spec_num == 50)
 		forced = true;

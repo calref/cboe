@@ -2129,7 +2129,6 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	std::string str1,str2;
 	short store_val = 0,i,j;
 	cSpecial spec;
-	short mess_adj[3] = {160,10,0};
 	
 	spec = cur_node;
 	*next_spec = cur_node.jumpto;
@@ -2137,7 +2136,8 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	switch(cur_node.type) {
 		case eSpecType::NONE: break; // null spec
 		case eSpecType::SET_SDF:
-			check_mess = true; setsd(cur_node.sd1,cur_node.sd2,cur_node.ex1a);
+			check_mess = true;
+			setsd(cur_node.sd1,cur_node.sd2,cur_node.ex1a);
 			break;
 		case eSpecType::INC_SDF:
 			check_mess = true;
@@ -2148,8 +2148,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = true;
 			break;
 		case eSpecType::DISPLAY_SM_MSG:
-			get_strs(str1,str2, cur_spec_type,cur_node.m1 + mess_adj[cur_spec_type],
-					 cur_node.m2 + mess_adj[cur_spec_type]);
+			get_strs(str1,str2, cur_spec_type,cur_node.m1,cur_node.m2);
 			if(cur_node.m1 >= 0)
 				add_string_to_buf(str1, 4);
 			if(cur_node.m2 >= 0)
@@ -2327,8 +2326,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::PRINT_NUMS:
 			if(!in_scen_debug) break;
 			check_mess = false;
-			get_strs(str1,str2, cur_spec_type,cur_node.m1 + mess_adj[cur_spec_type],
-					 cur_node.m2 + mess_adj[cur_spec_type]);
+			get_strs(str1,str2, cur_spec_type,cur_node.m1, cur_node.m2);
 			if(cur_node.m1 >= 0)
 				ASB("debug: " + str1, 7);
 			if(cur_node.m2 >= 0)
@@ -2823,7 +2821,8 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(pc_num >= 100) break;
 			for(i = 0; i < 6; i++)
 				if(pc_num == 6 || pc_num == i) {
-					if(spec.ex1b == 0) award_xp(i,spec.ex1a); else drain_pc(i,spec.ex1a);
+					if(spec.ex1b == 0) award_xp(i,spec.ex1a,true);
+					else drain_pc(i,spec.ex1a);
 				}
 			break;
 		case eSpecType::AFFECT_SKILL_PTS:
@@ -4160,7 +4159,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else if(spec.ex1c > 1)
 				start_fancy_spell_targeting(eSpell::NONE, true, spec.ex1b, eSpellPat(spec.ex1a), spec.ex1c);
 			else start_spell_targeting(eSpell::NONE, true, spec.ex1b, eSpellPat(spec.ex1a));
-			spell_caster = spec.jumpto;
+			spell_caster = spec.jumpto + cur_spec_type * 1000;
 			break;
 		case eSpecType::TOWN_SPELL_PAT_FIELD:
 			if(spec.ex1c < -1 || spec.ex1c > 14) {
