@@ -215,9 +215,12 @@ void cPlayer::sleep(eStatus what_type,int how_much,int adjust) {
 		level = get_prot_level(eItemAbil::FREE_ACTION);
 		how_much -= (what_type == eStatus::ASLEEP) ? level : level * 300;
 		how_much -= get_prot_level(eItemAbil::STATUS_PROTECTION,int(what_type)) / 4;
-	}
+	} else if(what_type == eStatus::FORCECAGE)
+		how_much -= 1 + get_prot_level(eItemAbil::STATUS_PROTECTION,int(what_type)) / 8;
 	
 	short r1 = get_ran(1,1,100) + adjust;
+	if(what_type == eStatus::FORCECAGE)
+		r1 -= stat_adj(eSkill::MAGE_LORE);
 	if(r1 < 30 + level * 2)
 		how_much = -1;
 	if(what_type == eStatus::ASLEEP && (traits[eTrait::HIGHLY_ALERT] || status[eStatus::ASLEEP] < 0))
@@ -245,6 +248,8 @@ void cPlayer::sleep(eStatus what_type,int how_much,int adjust) {
 			give_help(30,0);
 		else if(what_type == eStatus::PARALYZED)
 			give_help(32,0);
+		else if(what_type == eStatus::FORCECAGE)
+			give_help(46,0);
 	}
 }
 

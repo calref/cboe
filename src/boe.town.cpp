@@ -333,6 +333,12 @@ void start_town_mode(short which_town, short entry_dir) {
 					case eMonstTime::ALWAYS:
 						break;
 				}
+				
+				if(univ.town.monst[i].active) {
+					// In forcecage?
+					if(univ.town.is_force_cage(univ.town.monst[i].cur_loc.x, univ.town.monst[i].cur_loc.y))
+						univ.town.monst[i].status[eStatus::FORCECAGE] = 1000;
+				}
 			}
 		}
 	}
@@ -749,7 +755,23 @@ void start_town_combat(eDirection direction) {
 
 eDirection end_town_combat() {
 	short num_tries = 0,r1,i;
-	// TODO: Don't allow ending combat if someone is trapped in a forcecage or if two PCs are separated by an impassable wall with no way around it
+	int in_cage = 0;
+	location cage_loc;
+	bool same_cage = true;
+	for(int i = 0; i < 6; i++) {
+		if(univ.party[i].status[eStatus::FORCECAGE] > 0) {
+			if(in_cage == 0)
+				cage_loc = univ.party[i].get_loc();
+			in_cage++;
+		}
+		if(univ.party[i].get_loc() != cage_loc)
+			same_cage = false;
+	}
+	if(in_cage != 0 && in_cage != univ.party.count() && !same_cage) {
+		add_string_to_buf("  Someone trapped.");
+		return DIR_HERE;
+	}
+	// TODO: Don't allow ending combat if two PCs are separated by an impassable wall with no way around it
 	
 	r1 = get_ran(1,0,5);
 	while(univ.party[r1].main_status != eMainStatus::ALIVE && num_tries++ < 1000)
@@ -767,6 +789,17 @@ eDirection end_town_combat() {
 }
 
 void place_party(short direction) {
+	bool in_cage = false;
+	for(int n = 0; n < 6; n++)
+		if(univ.party[n].status[eStatus::FORCECAGE])
+			in_cage = true;
+	
+	if(in_cage) {
+		for(int n = 0; n < 6; n++)
+			univ.party[n].combat_pos = univ.town.p_loc;
+		return;
+	}
+	
 	bool spot_ok[14] = {true,true,true,true,true,true,true,
 		true,true,true,true,true,true,true};
 	location pos_locs[14];

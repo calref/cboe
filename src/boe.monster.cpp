@@ -6,6 +6,7 @@
 #include "universe.hpp"
 #include "boe.locutils.hpp"
 #include "boe.monster.hpp"
+#include "boe.combat.hpp"
 #include "boe.text.hpp"
 #include "boe.specials.hpp"
 #include "boe.items.hpp"
@@ -856,8 +857,7 @@ void monst_inflict_fields(short which_monst) {
 					break;
 				}
 				if(univ.town.is_force_cage(where_check.x,where_check.y))
-					univ.town.monst[which_monst].status[eStatus::FORCECAGE] = 8;
-				else univ.town.monst[which_monst].status[eStatus::FORCECAGE] = 0;
+					process_force_cage(where_check, univ.get_target_i(*which_m));
 			}
 	if(univ.town.monst[which_monst].active > 0)
 		for(i = 0; i < univ.town.monst[which_monst].x_width; i++)

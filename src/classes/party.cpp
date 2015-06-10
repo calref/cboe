@@ -241,6 +241,14 @@ size_t cParty::free_space() {
 	return 6;
 }
 
+size_t cParty::count(eMainStatus type) {
+	size_t sz = 0;
+	for(int i = 0; i < 6; i++)
+		if(adven[i]->main_status == type)
+			sz++;
+	return sz;
+}
+
 void cParty::swap_pcs(size_t a, size_t b) {
 	if(a < 6 && b < 6)
 		std::swap(adven[a], adven[b]);
@@ -387,6 +395,21 @@ void cParty::dumbfound(int how_much) {
 }
 
 void cParty::sleep(eStatus type, int how_much, int adj) {
+	if(type == eStatus::FORCECAGE) {
+		int who = 0;
+		int best = 0;
+		for(int i = 0; i < 6; i++) {
+			int cur = adven[i]->skill(eSkill::MAGE_LORE) + adven[i]->skill(eSkill::MAGE_SPELLS) + adven[i]->skill(eSkill::PRIEST_SPELLS);
+			if(adven[i]->is_alive() && cur > best) {
+				best = cur;
+				who = i;
+			}
+		}
+		adven[who]->sleep(type, how_much, adj);
+		for(int i = 0; i < 6; i++)
+			adven[i]->status[eStatus::FORCECAGE] = adven[who]->status[eStatus::FORCECAGE];
+		return;
+	}
 	for(int i = 0; i < 6; i++)
 		adven[i]->sleep(type, how_much, adj);
 }
@@ -1039,9 +1062,11 @@ bool cParty::start_split(short x,short y,snd_num_t noise,short who) {
 	left_in = univ.town.num;
 	univ.town.p_loc.x = x;
 	univ.town.p_loc.y = y;
-	for(i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++) {
 		if(i != who)
 			adven[i]->main_status += eMainStatus::SPLIT;
+		adven[i]->status[eStatus::FORCECAGE] = 0;
+	}
 	play_sound(noise);
 	return true;
 }

@@ -891,7 +891,13 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 				set_stat_window(current_pc);
 			} else add_string_to_buf("Can't end combat yet.");
 		} else {
-			univ.party.direction = end_town_combat();
+			eDirection dir = end_town_combat();
+			if(dir == DIR_HERE) {
+				add_string_to_buf("Failed to end combat.");
+				need_reprint = true;
+				return;
+			}
+			univ.party.direction = dir;
 			center = univ.town.p_loc;
 			set_stat_window(current_pc);
 			redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT | REFRESH_STATS);
@@ -1450,7 +1456,13 @@ bool handle_action(sf::Event event) {
 	// MARK: Handle non-PC stuff (like monsters) if the party actually did something
 	if(did_something) handle_monster_actions(need_redraw, need_reprint);
 	if(fog_lifted) need_redraw = true;
-	if(cartoon_happening) need_redraw = true;
+	if(cartoon_happening) {
+		need_redraw = true;
+		if(!is_combat()) {
+			for(int i = 0; i < 6; i++)
+				univ.party[i].combat_pos = {-1,-1};
+		}
+	}
 	fog_lifted = false;
 	cartoon_happening = false;
 	if(need_redraw) draw_terrain();
