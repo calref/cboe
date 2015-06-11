@@ -54,8 +54,8 @@ public:
 	public:
 		location loc;
 		short code,ability;
-		int charges;
-		bool always_there, property, contained;
+		int charges = -1;
+		bool always_there = false, property = false, contained = false;
 		
 		void append(legacy::preset_item_type old);
 		cItem();

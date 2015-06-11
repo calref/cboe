@@ -1142,7 +1142,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 			case eMonstAbilTemplate::SUMMON_5:
 			case eMonstAbilTemplate::SUMMON_20:
 			case eMonstAbilTemplate::SUMMON_50:
-				param = choose_text(STRT_MONST, 0, &me, "Summon which monster?");
+				param = choose_text(STRT_MONST, 1, &me, "Summon which monster?") + 1;
 				break;
 			case eMonstAbilTemplate::SPECIAL:
 			case eMonstAbilTemplate::HIT_TRIGGERS:
@@ -1498,7 +1498,11 @@ static void put_item_info_in_dlog(cDialog& me, cItem& item, short which) {
 	me["value"].setTextToNum(item.value);
 	me["weight"].setTextToNum(item.weight);
 	me["class"].setTextToNum(item.special_class);
-	me["abilname"].setText(item.getAbilName());
+	
+	std::string abil = item.getAbilName();
+	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING)
+		abil.replace(abil.find("%s"), 2, scenario.scen_monsters[item.abil_data[1]].m_name);
+	me["abilname"].setText(abil);
 }
 
 static void save_item_info(cDialog& me, cItem& item) {
@@ -1629,6 +1633,7 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		temp_item = edit_item_abil(item,which,me);
 		if(temp_item.variety != eItemType::NO_ITEM)
 			item = temp_item;
+		put_item_info_in_dlog(me, item, which);
 	}
 	return true;
 }
@@ -1836,7 +1841,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 				break;
 			case eItemAbil::SUMMONING:
 			case eItemAbil::MASS_SUMMONING:
-				i = choose_text(STRT_MONST, i, &me, "Summon which monster type?");
+				i = choose_text(STRT_MONST, i - 1, &me, "Summon which monster type?") + 1;
 				break;
 			default: return true;
 		}
