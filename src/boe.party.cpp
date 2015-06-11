@@ -50,6 +50,7 @@ short combat_percent[20] = {
 short who_cast,which_pc_displayed;
 eSpell town_spell;
 extern bool spell_freebie;
+extern short spec_target_type, spec_target_fail, spec_target_options;
 bool spell_button_active[90];
 
 extern short fast_bang;
@@ -1304,6 +1305,8 @@ void cast_town_spell(location where) {
 		(where.y <= univ.town->in_town_rect.top) ||
 		(where.y >= univ.town->in_town_rect.bottom)) {
 		add_string_to_buf("  Can't target outside town.");
+		if(town_spell == eSpell::NONE)
+			run_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, where, &r1, &store, &adjust);
 		return;
 	}
 	
@@ -1320,14 +1323,25 @@ void cast_town_spell(location where) {
 	
 	// TODO: Should we do this here? Or in the handling of targeting modes?
 	// (It really depends whether we want to be able to trigger it for targeting something other than a spell.)
-	if(adjust <= 4 && !cast_spell_on_space(where, town_spell))
-		return; // The special node intercepted and cancelled regular spell behaviour.
+	if(adjust <= 4 && !cast_spell_on_space(where, town_spell)) {
+		// The special node intercepted and cancelled regular spell behaviour.
+		queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, where);
+		return;
+	}
+	if(spec_target_options / 10 == 1 && univ.town.is_antimagic(where.x,where.y)) {
+		add_string_to_buf("  Target in antimagic field.");
+		queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, where);
+		return;
+	}
+	
+	bool failed = town_spell == eSpell::NONE && adjust > 4;
 	
 	if(adjust > 4)
 		add_string_to_buf("  Can't see target.");
 	else switch(town_spell) {
 		case eSpell::NONE: // Not a spell but a special node targeting
-			run_special(eSpecCtx::TARGET, spell_caster / 1000, spell_caster % 1000, where, &r1, &adjust, &store);
+			r1 = store = 0;
+			run_special(eSpecCtx::TARGET, spec_target_type, spell_caster, where, &r1, &adjust, &store);
 			if(store > 0) redraw_screen(REFRESH_ALL);
 			break;
 		case eSpell::SCRY_MONSTER: case eSpell::CAPTURE_SOUL:
@@ -1446,6 +1460,8 @@ void cast_town_spell(location where) {
 			break;
 			
 	}
+	if(failed)
+		queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, where);
 }
 
 // TODO: Currently, the node is called before any spell-specific behaviour (eg missiles) occurs.

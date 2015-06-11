@@ -98,6 +98,7 @@ union uAbility {
 		int extra1, extra2, extra3;
 	} special;
 	std::string to_string(eMonstAbil myKey) const;
+	int get_ap_cost(eMonstAbil key) const;
 };
 
 class cMonster {

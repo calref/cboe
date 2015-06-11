@@ -98,7 +98,7 @@ location center;
 short current_pc;
 short combat_active_pc;
 effect_pat_type current_pat;
-short spell_caster, missile_firer,current_monst_tactic;
+short missile_firer,current_monst_tactic;
 short store_current_pc = 0;
 
 sf::Clock animTimer;

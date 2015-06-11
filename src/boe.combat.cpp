@@ -43,10 +43,11 @@ extern bool in_scen_debug;
 extern short fast_bang;
 extern short store_current_pc;
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
-extern short spell_caster, missile_firer,current_monst_tactic;
+extern short missile_firer,current_monst_tactic;
 eSpell spell_being_cast;
 bool spell_freebie;
 short missile_inv_slot, ammo_inv_slot;
+short spell_caster, spec_target_type, spec_target_fail, spec_target_options;
 short force_wall_position = 10; //  10 -> no force wall
 bool processing_fields = true;
 short futzing;
@@ -860,6 +861,8 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 			univ.party.force_ptr(22, target.get_loc().y);
 			univ.party.force_ptr(20, i_monst);
 			run_special(eSpecCtx::ATTACKING_MELEE, 0, weap.abil_data[0],univ.party[who_att].combat_pos, &s1, &s2, &s3);
+			if(s1 > 0)
+				univ.party[who_att].ap += 4;
 		}
 	}
 	else {
@@ -946,6 +949,11 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,iLiving& monst,
 
 void place_target(location target) {
 	short i;
+	bool allow_obstructed = false, allow_antimagic = false;
+	if(spell_being_cast == eSpell::DISPEL_BARRIER || (spell_being_cast == eSpell::NONE && spec_target_options % 10 == 1))
+		allow_obstructed = true;
+	if(spell_being_cast == eSpell::NONE && spec_target_options / 10 == 2)
+		allow_antimagic = true;
 	
  	if(num_targets_left > 0) {
 		if(loc_off_act_area(target)) {
@@ -960,11 +968,11 @@ void place_target(location target) {
 			add_string_to_buf("  Target out of range.");
 			return;
 		}
-		if(sight_obscurity(target.x,target.y) == 5 && spell_being_cast != eSpell::DISPEL_BARRIER) {
+		if(!allow_obstructed && sight_obscurity(target.x,target.y) == 5) {
 			add_string_to_buf("  Target space obstructed.");
 			return;
 		}
-		if(univ.town.is_antimagic(target.x,target.y)) {
+		if(univ.town.is_antimagic(target.x,target.y) && !allow_antimagic) {
 			add_string_to_buf("  Target in antimagic field.");
 			return;
 		}
@@ -1010,6 +1018,11 @@ void do_combat_cast(location target) {
 	mon_num_t summon;
 	iLiving* victim;
 	cPlayer& caster = univ.party[current_pc];
+	bool allow_obstructed = false, allow_antimagic = false;
+	if(spell_being_cast == eSpell::DISPEL_BARRIER || (spell_being_cast == eSpell::NONE && spec_target_options % 10 == 1))
+		allow_obstructed = true;
+	if(spell_being_cast == eSpell::NONE && spec_target_options / 10 == 2)
+		allow_antimagic = false;
 	
 	location ashes_loc;
 	
@@ -1071,8 +1084,12 @@ void do_combat_cast(location target) {
 			adjust = can_see_light(caster.combat_pos, target, sight_obscurity);
 			// TODO: Should we do this here? Or in the handling of targeting modes?
 			// (It really depends whether we want to be able to trigger it for targeting something other than a spell.)
-			if(adjust <= 4 && !cast_spell_on_space(target, spell_being_cast))
+			if(adjust <= 4 && !cast_spell_on_space(target, spell_being_cast)) {
+				queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, target);
 				continue; // The special node intercepted and cancelled regular spell behaviour.
+			}
+			
+			bool failed = spell_being_cast == eSpell::NONE;
 
 			if(adjust > 4) {
 				add_string_to_buf("  Can't see target.");
@@ -1080,13 +1097,14 @@ void do_combat_cast(location target) {
 			else if(loc_off_act_area(target)) {
 				add_string_to_buf("  Space not in town.");
 			}
-			else if(dist(caster.combat_pos,target) > (*spell_being_cast).range)
+			else if(dist(caster.combat_pos,target) > current_spell_range)
 				add_string_to_buf("  Target out of range.");
-			else if(sight_obscurity(target.x,target.y) == 5 && spell_being_cast != eSpell::DISPEL_BARRIER)
+			else if(sight_obscurity(target.x,target.y) == 5 && !allow_obstructed)
 				add_string_to_buf("  Target space obstructed.");
-			else if(univ.town.is_antimagic(target.x,target.y))
+			else if(univ.town.is_antimagic(target.x,target.y) && !allow_antimagic)
 				add_string_to_buf("  Target in antimagic field.");
 			else {
+				failed = false;
 				if(!ap_taken) {
 					if(!freebie)
 						take_ap(5);
@@ -1096,7 +1114,9 @@ void do_combat_cast(location target) {
 				boom_targ[i] = target;
 				switch(spell_being_cast) {
 					case eSpell::NONE: // Not a spell but a special node targeting
-						run_special(eSpecCtx::TARGET, spell_caster / 1000, spell_caster % 1000, target, &r1, &r2, &item);
+						r1 = item = 0;
+						run_special(eSpecCtx::TARGET, spec_target_type, spell_caster, target, &r1, &r2, &item);
+						failed = r1;
 						if(item > 0) redraw_screen(REFRESH_ALL);
 						break;
 					case eSpell::GOO: case eSpell::WEB: case eSpell::GOO_BOMB:
@@ -1552,6 +1572,8 @@ void do_combat_cast(location target) {
 						}
 				}
 			}
+			if(failed)
+				queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, target);
 		}
 	
 	do_missile_anim((num_targets > 1) ? 35 : 60,caster.combat_pos,store_sound);
@@ -1840,6 +1862,8 @@ void fire_missile(location target) {
 					univ.party.force_ptr(22, victim->get_loc().y);
 					univ.party.force_ptr(20, univ.get_target_i(*victim));
 					run_special(eSpecCtx::ATTACKING_RANGE, 0, missile.abil_data[0], missile_firer.combat_pos, &s1, &s2, &s3);
+					if(s1 > 0)
+						missile_firer.ap += (overall_mode == MODE_FIRING) ? 3 : 2;
 				}
 				cCreature* monst; cPlayer* pc; int spec_item;
 				if((monst = dynamic_cast<cCreature*>(victim)) && monst->abil[eMonstAbil::HIT_TRIGGER].active) {
@@ -1848,12 +1872,16 @@ void fire_missile(location target) {
 					univ.party.force_ptr(22, monst->cur_loc.y);
 					univ.party.force_ptr(20, univ.get_target_i(*monst));
 					run_special(eSpecCtx::ATTACKED_RANGE, 0, monst->abil[eMonstAbil::HIT_TRIGGER].special.extra1, missile_firer.combat_pos, &s1, &s2, &s3);
+					if(s1 > 0)
+						missile_firer.ap += (overall_mode == MODE_FIRING) ? 3 : 2;
 				} else if((pc = dynamic_cast<cPlayer*>(victim)) && (spec_item = pc->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL)) < 24) {
 					short s1,s2,s3;
 					univ.party.force_ptr(21, pc->combat_pos.x);
 					univ.party.force_ptr(22, pc->combat_pos.y);
 					univ.party.force_ptr(20, univ.get_target_i(*pc));
 					run_special(eSpecCtx::ATTACKED_RANGE, 0, pc->items[spec_item].abil_data[0], missile_firer.combat_pos, &s1, &s2, &s3);
+					if(s1 > 0)
+						missile_firer.ap += (overall_mode == MODE_FIRING) ? 3 : 2;
 				}
 			}
 		}
@@ -2464,16 +2492,7 @@ void do_monster_turn() {
 					print_monst_name(cur_monst->number);
 					monst_fire_missile(i/*,cur_monst->skill*/,cur_monst->status[eStatus::BLESS_CURSE],
 									   pick_abil,cur_monst->cur_loc,&univ.get_target(target));
-					if(pick_abil.first == eMonstAbil::MISSILE) {
-						if(pick_abil.second.missile.type == eMonstMissile::ARROW || pick_abil.second.missile.type == eMonstMissile::BOLT
-						   || pick_abil.second.missile.type == eMonstMissile::SPINE || pick_abil.second.missile.type == eMonstMissile::BOULDER)
-							take_m_ap(3,cur_monst);
-						else take_m_ap(2,cur_monst);
-					} else if(pick_abil.first == eMonstAbil::RAY_HEAT)
-						take_m_ap(1,cur_monst);
-					else if(pick_abil.first == eMonstAbil::DAMAGE2)
-						take_m_ap(4,cur_monst);
-					else take_m_ap(3,cur_monst);
+					take_m_ap(pick_abil.second.get_ap_cost(pick_abil.first), cur_monst);
 					had_monst = true;
 					acted_yet = true;
 				}
@@ -2489,7 +2508,8 @@ void do_monster_turn() {
 						univ.party.force_ptr(20, 11 + target); // ready to be passed to SELECT_TARGET node
 					else univ.party.force_ptr(20, target); // ready to be passed to SELECT_TARGET node
 					run_special(eSpecCtx::MONST_SPEC_ABIL,0,abil.special.extra1,cur_monst->cur_loc,&s1,&s2,&s3);
-					take_m_ap(abil.special.extra2,cur_monst);
+					if(s1 <= 0)
+						take_m_ap(abil.special.extra2,cur_monst);
 				}
 			} // Special attacks
 			
@@ -2943,12 +2963,16 @@ void monster_attack(short who_att,iLiving* target) {
 						univ.party.force_ptr(22, target->get_loc().y);
 						univ.party.force_ptr(20, i_monst);
 						run_special(eSpecCtx::ATTACKED_MELEE, 0, pc_target->items[spec_item].abil_data[0], attacker->cur_loc, &s1, &s2, &s3);
+						if(s1 > 0)
+							attacker->ap += 4;
 					} else if(m_target != nullptr && m_target->abil[eMonstAbil::HIT_TRIGGER].active) {
 						short s1,s2,s3;
 						univ.party.force_ptr(21, target->get_loc().x);
 						univ.party.force_ptr(22, target->get_loc().y);
 						univ.party.force_ptr(20, i_monst);
 						run_special(eSpecCtx::ATTACKED_MELEE, 0, m_target->abil[eMonstAbil::HIT_TRIGGER].special.extra1, attacker->cur_loc, &s1, &s2, &s3);
+						if(s1 > 0)
+							attacker->ap += 4;
 					}
 				}
 			}
@@ -3081,6 +3105,8 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 				univ.party.force_ptr(22, target->get_loc().y);
 				univ.party.force_ptr(20, i_monst);
 				run_special(eSpecCtx::ATTACKED_RANGE, 0, pc_target->items[spec_item].abil_data[0], univ.town.monst[m_num].cur_loc, &s1, &s2, &s3);
+				if(s1 > 0)
+					univ.town.monst[m_num].ap += abil.second.get_ap_cost(abil.first);
 			}
 		} else if(m_target != nullptr && m_target->abil[eMonstAbil::HIT_TRIGGER].active) {
 			short s1,s2,s3;
@@ -3088,6 +3114,8 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 			univ.party.force_ptr(22, m_target->cur_loc.y);
 			univ.party.force_ptr(20, i_monst);
 			run_special(eSpecCtx::ATTACKED_RANGE, 0, m_target->abil[eMonstAbil::HIT_TRIGGER].special.extra1, univ.town.monst[m_num].cur_loc, &s1, &s2, &s3);
+			if(s1 > 0)
+				univ.town.monst[m_num].ap += abil.second.get_ap_cost(abil.first);
 		}
 	} else if(abil.first == eMonstAbil::MISSILE_WEB) {
 		if(pc_target != nullptr)
@@ -5100,7 +5128,8 @@ void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat 
 	spell_freebie = freebie;
 	
 	add_string_to_buf("  Target spell.");
-	if(isMage(num))
+	if(num == eSpell::NONE);
+	else if(isMage(num))
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	overall_mode = MODE_SPELL_TARGET;
@@ -5163,7 +5192,8 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 	for(i = 0; i < 8; i++)
 		spell_targets[i] = null_loc;
 	add_string_to_buf("  Target spell.");
-	if(isMage(num))
+	if(num == eSpell::NONE);
+	else if(isMage(num))
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	add_string_to_buf("  (Hit space to cast.)");

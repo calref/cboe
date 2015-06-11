@@ -248,7 +248,6 @@ void handle_shop_event(location p) {
 }
 
 void handle_sale(cShopItem item, int i) {
-	short s1, s2, s3; // Dummy variables to pass to run_special
 	cItem base_item = item.item;
 	short cost = item.getCost(active_shop.getCostAdjust());
 	rectangle dummy_rect = {0,0,0,0};
@@ -368,7 +367,13 @@ void handle_sale(cShopItem item, int i) {
 			}
 			break;
 		case eShopItemType::CALL_SPECIAL:
-			run_special(eSpecCtx::SHOPPING, 0, base_item.item_level, {0,0}, &s1, &s2, &s3);
+			if(univ.party.gold < cost)
+				ASB("Not enough gold.");
+			else {
+				short s1, s2, s3;
+				run_special(eSpecCtx::SHOPPING, 0, base_item.item_level, {0,0}, &s1, &s2, &s3);
+				if(s1 <= 0) take_gold(cost,false);
+			}
 			break;
 		case eShopItemType::SKILL:
 			if(base_item.item_level < 0 || base_item.item_level > 18) {
