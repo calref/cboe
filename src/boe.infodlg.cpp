@@ -225,7 +225,10 @@ static void put_item_info(cDialog& me,const cItem& s_i) {
 		if(s_i.concealed) {
 			me["abil"].setText("???");
 		} else {
-			me["abil"].setText(s_i.getAbilName());
+			std::string abil = s_i.getAbilName();
+			if(s_i.ability == eItemAbil::SUMMONING || s_i.ability == eItemAbil::MASS_SUMMONING)
+				abil.replace(abil.find("%s"), 2, univ.scenario.scen_monsters[s_i.abil_data[1]].m_name);
+			me["abil"].setText(abil);
 		}
 	}
 	if(s_i.charges > 0)

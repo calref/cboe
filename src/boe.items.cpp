@@ -204,9 +204,10 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 					take_given_item = false;
 				item_store.charges = how_many;
 			}
-			if(place_item(item_store,loc,true))
+			if(place_item(item_store,loc,true)) {
 				add_string_to_buf("Drop: Item put away");
-			else add_string_to_buf("Drop: OK");
+				spec = -1; // Don't call drop specials if it was put away
+			} else add_string_to_buf("Drop: OK");
 			univ.party[pc_num].items[item_num].charges -= how_many;
 			if(take_given_item)
 				univ.party[pc_num].take_item(item_num);
@@ -465,9 +466,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		key_stash[0] = 'a' + i;
 		
 		// TODO: Rework this so that no exceptions are required
-		try {
-			if(item_array.at(i + first_item_shown)->variety == eItemType::NO_ITEM)
-				throw std::out_of_range("");
+		if(i + first_item_shown < item_array.size() && item_array[i + first_item_shown]->variety != eItemType::NO_ITEM) {
 			// display an item in window
 			me[pict].show();
 			item = *item_array[i + first_item_shown];
@@ -480,7 +479,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 			me[detail].setText(get_item_interesting_string(item));
 			me[weight].setText("Weight: " + std::to_string(item.item_weight()));
 			me[key].setText(key_stash);
-		} catch(std::out_of_range) { // erase the spot
+		} else { // erase the spot
 			me[pict].hide();
 			me[name].setText("");
 			me[detail].setText("");

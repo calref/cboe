@@ -73,7 +73,7 @@ static bool edit_placed_monst_event_filter(cDialog& me, std::string hit, cTownpe
 		town->creatures[which].number = 0;
 	} else if(hit == "type-edit") {
 		get_placed_monst_in_dlog(me, monst);
-		i = choose_text(STRT_MONST,monst.number,&me,"Choose Which Monster:");
+		i = choose_text(STRT_MONST,monst.number-1,&me,"Choose Which Monster:") + 1;
 		if(i >= 0) {
 			monst.number = i;
 			put_placed_monst_in_dlog(me, monst, which);
@@ -238,11 +238,11 @@ static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const
 	
 	if(base.variety == eItemType::GOLD || base.variety == eItemType::FOOD) {
 		me["charges-lbl"].setText("Amount:");
-	} else if(base.charges == 0) {
+	} else if(base.charges == 0 && item.ability != 3) {
 		me["charges-lbl"].hide();
 		me["charges"].hide();
 	} else {
-		me["charges-lbl"].setText("Charges:||(-1 = default)");
+		me["charges-lbl"].setText("Charges:|(-1 = default)");
 	}
 	
 	if(base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED) {
@@ -274,6 +274,7 @@ static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short
 	item.always_there = dynamic_cast<cLed&>(me["always"]).getState() != led_off;
 	item.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
 	item.contained = dynamic_cast<cLed&>(me["contained"]).getState() != led_off;
+	item.ability = me["abil"].getTextAsNum();
 	
 	town->preset_items[which] = item;
 	return true;
@@ -288,16 +289,17 @@ static bool edit_placed_item_type(cDialog& me, cTown::cItem& item, const short w
 	return true;
 }
 
-static bool edit_placed_item_abil(cDialog& me, cTown::cItem& item, const short which) {
+static bool edit_placed_item_abil(cDialog& me, std::string item_hit, cTown::cItem& item, const short which) {
+	item.charges = me["charges"].getTextAsNum();
 	cItem& base = scenario.scen_items[item.code];
 	short i = item.ability;
-	if(base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED) {
+	if(item_hit == "abil") { // User entered a number directly
+		i = me["abil"].getTextAsNum();
+	} else if(base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED) {
 		i = choose_text(STRT_ENCHANT, item.ability, &me, "Which enchantment?");
 	}
-	if(i >= 0) {
-		item.ability = i;
-		put_placed_item_in_dlog(me, item, which);
-	}
+	if(i >= -1) item.ability = i;
+	put_placed_item_in_dlog(me, item, which);
 	return true;
 }
 
@@ -317,8 +319,8 @@ void edit_placed_item(short which_i) {
 	item_dlg["okay"].attachClickHandler(std::bind(get_placed_item_in_dlog, _1, std::ref(item), which_i));
 	item_dlg["choose"].attachClickHandler(std::bind(edit_placed_item_type, _1, std::ref(item), which_i));
 	item_dlg["del"].attachClickHandler(std::bind(edit_placed_item_delete, _1, which_i));
-	item_dlg["abil-choose"].attachClickHandler(std::bind(edit_placed_item_abil, _1, std::ref(item), which_i));
-	item_dlg["abil"].attachFocusHandler(std::bind(put_placed_item_in_dlog, _1, std::ref(item), which_i));
+	item_dlg["abil-choose"].attachClickHandler(std::bind(edit_placed_item_abil, _1, _2, std::ref(item), which_i));
+	item_dlg["abil"].attachFocusHandler(std::bind(edit_placed_item_abil, _1, _2, std::ref(item), which_i));
 	
 	put_placed_item_in_dlog(item_dlg, item, which_i);
 	
@@ -576,10 +578,10 @@ static bool edit_out_wand_monst(cDialog& me, std::string hit, short which, cOutd
 	std::string fld = hit.substr(7);
 	short i;
 	if(fld[0] == 'f') {
-		i = choose_text(STRT_MONST,wand.monst[fld[3] - '0'],&me,"Choose Which Monster:");
+		i = choose_text(STRT_MONST,wand.monst[fld[3] - '0']-1,&me,"Choose Which Monster:") + 1;
 		if(i >= 0) wand.monst[fld[3] - '0'] = i;
 	} else if(fld[0] == 'a') {
-		i = choose_text(STRT_MONST,wand.friendly[fld[4] - '0'],&me,"Choose Which Monster:");
+		i = choose_text(STRT_MONST,wand.friendly[fld[4] - '0']-1,&me,"Choose Which Monster:") + 1;
 		if(i >= 0) wand.friendly[fld[4] - '0'] = i;
 	}
 	me[fld].setText(scenario.scen_monsters[i].m_name);
@@ -828,7 +830,7 @@ static bool edit_town_wand_event_filter(cDialog& me, std::string item_hit, eKeyM
 	std::string base_id = "group" + std::to_string(group) + "-monst";
 	for(int i = 0; i < 4; i++) {
 		std::string id = base_id + std::to_string(i + 1);
-		short n = choose_text(STRT_MONST, town->wandering[group].monst[i], &me, titles[i]);
+		short n = choose_text(STRT_MONST, town->wandering[group].monst[i] - 1, &me, titles[i]) + 1;
 		if(n == town->wandering[group].monst[i]) break;
 		me[id].setTextToNum(n);
 	}

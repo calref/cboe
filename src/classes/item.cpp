@@ -1237,11 +1237,10 @@ std::string cItem::getAbilName() const {
 			if(party) sout << " All";
 			break;
 		case eItemAbil::SUMMONING:
-			// TODO: Figure out a way to wedge the monster name in here.
-			sout << "Summons " << "monst-names";
+			sout << "Summons %s";
 			break;
 		case eItemAbil::MASS_SUMMONING:
-			sout << "Mass summon " << "monst-names";
+			sout << "Mass summon %s";
 			break;
 	}
 	return sout.str();

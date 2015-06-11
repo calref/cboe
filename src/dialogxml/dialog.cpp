@@ -1044,7 +1044,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 			return ctrl.second->isVisible();
 		});
 		if(iter != tabOrder.end()) {
-			iter->second->triggerFocusHandler(*this, tabOrder[0].first, false);
+			iter->second->triggerFocusHandler(*this, iter->first, false);
 			currentFocus = iter->first;
 		}
 	}
