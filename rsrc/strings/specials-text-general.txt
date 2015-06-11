@@ -174,7 +174,7 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Can't Enter
+Prevent Action
 Unused
 Unused
 First part of message
@@ -182,7 +182,7 @@ Second part of message
 Unused
 Unused
 Unused
-0 - can enter, 1 - no enter
+0 - allow, 1 - prevent
 Unused
 Unused
 0 - don't force, 1 - force if blocked

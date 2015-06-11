@@ -989,6 +989,41 @@ std::string uAbility::to_string(eMonstAbil key) const {
 	return sout.str();
 }
 
+// Returns the action point cost, or one of the following magic values:
+//  0 - passive ability
+// -1 - part of normal attack
+// -256 - unknown (error)
+int uAbility::get_ap_cost(eMonstAbil key) const {
+	switch(key) {
+		case eMonstAbil::MISSILE:
+			switch(missile.type) {
+				case eMonstMissile::ARROW: case eMonstMissile::BOLT: case eMonstMissile::SPINE: case eMonstMissile::BOULDER:
+					return 3;
+				default:
+					return 2;
+			}
+		case eMonstAbil::RAY_HEAT:
+			return 1;
+		case eMonstAbil::DAMAGE2:
+			return 4;
+		case eMonstAbil::DAMAGE: case eMonstAbil::STATUS: case eMonstAbil::STATUS2: case eMonstAbil::STUN:
+		case eMonstAbil::FIELD: case eMonstAbil::PETRIFY: case eMonstAbil::DRAIN_SP: case eMonstAbil::DRAIN_XP:
+		case eMonstAbil::KILL: case eMonstAbil::STEAL_FOOD: case eMonstAbil::STEAL_GOLD:
+			return gen.type == eMonstGen::TOUCH ? -1 : 3;
+		case eMonstAbil::MISSILE_WEB:
+			return 3;
+		case eMonstAbil::SPECIAL:
+			return special.extra2;
+		case eMonstAbil::ABSORB_SPELLS: case eMonstAbil::DEATH_TRIGGER: case eMonstAbil::HIT_TRIGGER:
+		case eMonstAbil::MARTYRS_SHIELD: case eMonstAbil::RADIATE: case eMonstAbil::SPLITS:
+		case eMonstAbil::SUMMON:
+			return 0;
+		case eMonstAbil::NO_ABIL:
+			return -256;
+	}
+//	return -256;
+}
+
 void cMonster::writeTo(std::ostream& file) const {
 	file << "MONSTER " << maybe_quote_string(m_name) << '\n';
 	file << "LEVEL " << int(level) << '\n';

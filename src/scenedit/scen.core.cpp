@@ -983,24 +983,14 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 	// These names start at line 80 in the strings file, but the first valid ability is ID 1, so add 79.
 	me["type"].setText(get_str("monster-abilities", 79 + int(abil)));
 	// Action points
-	if(cat == eMonstAbilCat::MISSILE) {
-		if(detail.missile.type == eMonstMissile::ARROW || detail.missile.type == eMonstMissile::BOLT || detail.missile.type == eMonstMissile::SPINE || detail.missile.type == eMonstMissile::BOULDER)
-			me["ap"].setTextToNum(3);
-		else me["ap"].setTextToNum(2);
-	} else if(cat == eMonstAbilCat::GENERAL) {
-		if(detail.gen.type == eMonstGen::TOUCH)
+	if(abil != eMonstAbil::RADIATE && abil != eMonstAbil::RADIATE) {
+		int ap = detail.get_ap_cost(abil);
+		if(ap == 0)
+			me["ap"].setText("0 (passive ability)");
+		else if(ap == -1)
 			me["ap"].setText("0 (part of standard attack)");
-		else if(abil == eMonstAbil::DAMAGE2)
-			me["ap"].setTextToNum(4);
-		else me["ap"].setTextToNum(3);
-	} else if(abil == eMonstAbil::RAY_HEAT)
-		me["ap"].setTextToNum(1);
-	else if(abil == eMonstAbil::MISSILE_WEB)
-		me["ap"].setTextToNum(3);
-	else if(abil == eMonstAbil::SPECIAL)
-		me["ap"].setTextToNum(detail.special.extra2);
-	else if(cat == eMonstAbilCat::SPECIAL)
-		me["ap"].setText("0 (passive ability)");
+		else me["ap"].setTextToNum(ap);
+	}
 	// Subtype
 	if(cat == eMonstAbilCat::MISSILE)
 		me["subtype"].setText(get_str("monster-abilities", 110 + int(detail.missile.type)));

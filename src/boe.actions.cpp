@@ -278,6 +278,7 @@ bool prime_time() {
 
 static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint) {
 	short store_sp[6];
+	extern short spec_target_type, spec_target_fail;
 	if(!someone_awake()) {
 		ASB("Everyone's asleep/paralyzed.");
 		need_reprint = true;
@@ -302,6 +303,9 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 		overall_mode = MODE_TOWN;
 		need_redraw = true;
 		need_reprint = true;
+		extern eSpell town_spell;
+		if(town_spell == eSpell::NONE)
+			queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, univ.town.p_loc);
 	} else if(overall_mode == MODE_COMBAT) {
 		if(which_type == eSkill::MAGE_SPELLS) {
 			did_something = combat_cast_mage_spell();
@@ -319,6 +323,9 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 		center = univ.party[current_pc].combat_pos;
 		pause(10);
 		need_redraw = true;
+		extern eSpell spell_being_cast;
+		if(spell_being_cast == eSpell::NONE)
+			queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, univ.party[current_pc].combat_pos);
 	}
 	put_pc_screen();
 	put_item_screen(stat_window,0);

@@ -41,7 +41,7 @@ extern effect_pat_type single,t,square,radius2,radius3,small_square,open_square,
 extern effect_pat_type current_pat;
 extern cOutdoors::cWandering store_wandering_special;
 extern eSpell spell_being_cast, town_spell;
-extern short spell_caster;
+extern short spell_caster, spec_target_fail, spec_target_type, spec_target_options;
 extern sf::RenderWindow mini_map;
 extern short fast_bang;
 extern bool end_scenario;
@@ -192,11 +192,11 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		return false; // TODO: Maybe replace eTrimType::CITY check with a blockage == clear/special && is_special() check?
 	}
 	
-	if(univ.town.is_force_barr(where_check.x,where_check.y)) {
+	if(mode != eSpecCtx::OUT_MOVE && univ.town.is_force_barr(where_check.x,where_check.y)) {
 		add_string_to_buf("  Magic barrier!");
 		can_enter = false;
 	}
-	if(univ.town.is_force_cage(where_check.x,where_check.y)) {
+	if(mode != eSpecCtx::OUT_MOVE && univ.town.is_force_cage(where_check.x,where_check.y)) {
 		add_string_to_buf("  Force cage!");
 		can_enter = false;
 	}
@@ -1076,6 +1076,8 @@ void use_item(short pc,short item) {
 			case eItemAbil::CALL_SPECIAL:
 				// TODO: Should this have its own separate eSpecCtx?
 				run_special(eSpecCtx::USE_SPEC_ITEM,0,str,user_loc,&sp[0],&sp[1],&sp[2]);
+				if(sp[0] > 0)
+					take_charge = false;
 				break;
 				
 			case eItemAbil::CAST_SPELL:
@@ -4159,7 +4161,16 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else if(spec.ex1c > 1)
 				start_fancy_spell_targeting(eSpell::NONE, true, spec.ex1b, eSpellPat(spec.ex1a), spec.ex1c);
 			else start_spell_targeting(eSpell::NONE, true, spec.ex1b, eSpellPat(spec.ex1a));
-			spell_caster = spec.jumpto + cur_spec_type * 1000;
+			spell_caster = spec.jumpto;
+			spec_target_type = cur_spec_type;
+			spec_target_fail = spec.ex2a;
+			spec_target_options = 0;
+			if(spec.ex2b > 0)
+				spec_target_options += 1;
+			if(spec.ex2c > 0)
+				spec_target_options += 20;
+			else if(spec.ex2c == 0)
+				spec_target_options += 10;
 			break;
 		case eSpecType::TOWN_SPELL_PAT_FIELD:
 			if(spec.ex1c < -1 || spec.ex1c > 14) {

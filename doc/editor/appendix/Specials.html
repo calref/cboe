@@ -133,8 +133,27 @@ one at a time.
 <dt>Mess2, Mess3:</dt><dd>The number of the first and last string to show in the dialog.</dd>
 <dt>Pict, Pictype:</dt><dd>Specifies the icon to show in the dialog.</dd></dd>
 
-<dt>Type 11: Can't Enter</dt><dd>If the party is walking, they are not allowed to enter
-the space. This can be accompanied by one or two messages, if you wish.
+<dt>Type 11: Prevent Action</dt><dd>If the party is walking, they are not allowed to enter
+the space. This can be accompanied by one or two messages, if you wish. If called in other
+circumstances, this node prevents the action that called the node. The following actions
+are preventable in this manner:
+<ul>
+<li>Movement</li>
+<li>Using an item - if it's a normal (not special) item, no charge will be deducted</li>
+<li>Monster special actions - no AP will be deducted</li>
+<li>Looking - you will not be allowed to search, but you can't prevent the party from
+seeing what the space is</li>
+<li>Talking - even if the creature has a personality, talk mode will not start</li>
+<li>Attacking - the attack will occur normally, but no AP will be deducted from the
+attacker</li>
+<li>Shop Items - gold will not be deducted</li>
+<!--<li>Dropping - TODO: currently unsupported, but maybe should be supported?</li> -->
+<li>Targeting - if a spell is being targeted, the spell effect will be cancelled. However,
+they will still lose their spell points. If the targeting was initiated by a special node,
+that node's failure option will trigger, potentially calling another special node.</li>
+<li>Encountering wandering monsters - the encounter will be prevented altogether, similar
+to if the monsters had fled.</li>
+</ul>
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage. If the party is not moving, no messages are
 displayed.</dd>
@@ -160,7 +179,9 @@ encounter on the pillar, and have a node of this type be the first special node
 called. Set Extra 1a to 0 and Extra 2a to 1.</dd>
 <dt>Note:</dt><dd>This doesn't have to be the last node in a chain. If this is the first
 special node called, the party is still kept from entering the space... unless another
-node of the same type undoes it.</dd></dd>
+node of the same type undoes it. The only exception to this is forced passage, as the node
+usually won't even be called if the space is impassable.</dd>
+<dt>Warning:</dt><dd>Don't call this while talking. It will mess up your dialogue strings.</dd></dd>
 
 <dt>Type 12: Change Time</dt><dd>This special node sets the adventure time forward.
 <dl>
@@ -1681,6 +1702,18 @@ correctly even for the rotateable wall.
 7 - rotateable 2x8 wall</dd>
 <dt>Extra 1b:</dt><dd>Maximum range (combat mode only)</dd>
 <dt>Extra 1c:</dt><dd>Maximum number of targets (combat mode only)</dd>
+<dt>Extra 2a:</dt><dd>A special node to call if the targeting fails because the player
+selected an invalid space, or because a special node on the space cancelled it.</dd>
+<dt>Extra 2b:</dt><dd>Set this to 1 if you'd like the user to be able to select spaces
+that are opaque (like the spell Dispel Barrier). This only has an effect in combat mode,
+as town targeting places no such restriction.</dd>
+<dt>Extra 2c:</dt><dd>Set this to 1 if you'd like the user to be able to target spaces
+that are covered by an antimagic field. In order to preserve the meaning of antimagic
+fields, it's recommended that you never use this unless the associated action is not
+intended to be magical. Set it to 0 to prevent the user from targeting spaces in an
+antimagic field. If left at -1, the default is used, which is to allow it in town mode but
+not in combat. (This is probably a relic of the extremely limited selection of spells that
+can be targeted in town mode.)</dd>
 <dt>JumpTo:</dt><dd>This node is called once for every selected target.</dd></dd>
 
 <dt>Type 201: Place Pattern (Fields/Objects)</dt><dd>Places fields according to a preset

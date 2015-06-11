@@ -489,9 +489,9 @@ Unused
 Which spell pattern? (0 - single space)
 Max range? (ignored outside combat mode)
 Max targets? (>1 only in combat)
-Unused
-Unused
-Unused
+Special Called if Targeting Fails
+if 1, allow obstructed spaces
+if 1, allow targeting in antimagic fields
 Special to Call for Each Target
 --------------------
 Place Fields in Spell Pattern
