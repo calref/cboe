@@ -48,9 +48,8 @@ Section "Blades of Exile" Section1
 	; Install Visual Studio Redistributables
 	File "..\Release\VCRedistInstall.exe"
 	MessageBox MB_OK "Blades of Exile Installer will now launch the Microsoft Visual C++ \
-		Redistributable installer, which is required to complete the installation. If it is already installed, \
-		you may safely cancel."
-	ExecWait '$INSTDIR\VCRedistInstall.exe'
+		Redistributable installer, which is required to complete the installation."
+	ExecWait '$INSTDIR\VCRedistInstall.exe /passive'
 	Delete "$INSTDIR\VCRedistInstall.exe"
 	; The executable file itself
 	File "..\Release\Blades of Exile.exe"
