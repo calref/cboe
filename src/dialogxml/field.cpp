@@ -118,15 +118,27 @@ void cTextField::set_ip(location clickLoc, int cTextField::* insertionPoint) {
 }
 
 bool cTextField::handleClick(location clickLoc) {
-	// TODO: Set the insertion point, handle selection, etc
 	if(!haveFocus && parent && !parent->setFocus(this)) return true;
 	haveFocus = true;
 	redraw(); // This ensures the snippets array is populated.
+	std::string contents = getText();
+	bool hadSelection = selectionPoint != insertionPoint;
+	bool is_double = click_timer.getElapsedTime().asMilliseconds() < 500;
+	click_timer.restart();
 	bool is_shift = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
 	set_ip(clickLoc, is_shift ? &cTextField::selectionPoint : &cTextField::insertionPoint);
 	if(!is_shift) selectionPoint = insertionPoint;
+	if(is_double && !is_shift && !hadSelection) {
+		cKey key = {true, key_word_right, mod_none};
+		if(insertionPoint < contents.size() && contents[insertionPoint] != ' ')
+			handleInput(key);
+		key.k = key_word_left;
+		key.mod += mod_shift;
+		handleInput(key);
+	}
 	bool done = false;
 	sf::Event e;
+	int initial_ip = insertionPoint, initial_sp = selectionPoint;
 	while(!done) {
 		redraw();
 		if(!inWindow->pollEvent(e)) continue;
@@ -136,6 +148,17 @@ bool cTextField::handleClick(location clickLoc) {
 			restore_cursor();
 			location newLoc(e.mouseMove.x, e.mouseMove.y);
 			set_ip(newLoc, &cTextField::selectionPoint);
+			if(is_double) {
+				if(selectionPoint > initial_ip) {
+					insertionPoint = initial_sp;
+					while(selectionPoint < contents.length() && contents[selectionPoint] != ' ')
+						selectionPoint++;
+				} else {
+					insertionPoint = initial_ip;
+					while(selectionPoint > 0 && contents[selectionPoint - 1] != ' ')
+						selectionPoint--;
+				}
+			}
 		}
 	}
 	redraw();

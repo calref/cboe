@@ -79,7 +79,7 @@ private:
 	int selectionPoint;
 	sf::Color color;
 	bool ip_visible;
-	sf::Clock ip_timer, hist_timer;
+	sf::Clock ip_timer, hist_timer, click_timer;
 	bool changeMade = true;
 	rectangle text_rect;
 	std::vector<snippet_t> snippets;
