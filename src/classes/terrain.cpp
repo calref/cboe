@@ -18,6 +18,16 @@
 #include "boe.consts.hpp" // TODO: Put these constants in a global file
 
 void cTerrain::append(legacy::terrain_type_type& old){
+	static const std::set<int> archetypes = {
+		// This lists graphics that represent the archetypal terrains for each ground type
+		// One line per graphics sheet; last line is the animated sheet
+		0, 2, 5, 18, 32, 46,
+		74, 88,
+		100, 110, 123,
+		157, 163,
+		215, 216,
+		400, 404,
+	};
 	static const short arenas[274] = {
 		1, 1, 0, 0, 0, 1, 1, 1, 1, 1,			//  0 - grassy field
 		1, 1, 1, 1, 1, 1, 1, 1, 2, 2,			//  1 - ordinary cave
@@ -58,11 +68,11 @@ void cTerrain::append(legacy::terrain_type_type& old){
 		12,0, 0, 13,13,13,13,13,13,13,  13,13,13,13,13,13,13,13,13,13,
 		13,13,13,13,13,13,13,13,13,13,  13,13,13,13,13,13,13,14,14,14,
 		14,14,14,15,15,15,15,15,15,15,  15,15,15,15,15,15,15,15,0, 0,
-		0, 16,0, 0, 0, 0, 0, 0, 0, 1,   1, 1, 3, 3, 3, 3, 1, 1, 1, 1,
-		1, 1, 0, 1, 4, 1, 1, 0, 13,14,  15,1, 4, 13,13,17,17,0, 17,17,
-		17,17,17,17,17,17,0, 1, 18,19,  13,20,0, 13,0, 0, 0, 0, 0, 0,
+		0, 1 ,0, 0, 0, 0, 0, 0, 0, 1,   1, 1, 3, 3, 3, 3, 1, 1, 1, 1,
+		1, 1, 0, 1, 4, 1, 1, 0, 13,14,  15,1, 4, 13,13,16,17,0, 16,16,
+		16,16,17,17,17,17,0, 1, 18,19,  13,20,0, 13,0, 0, 0, 0, 0, 0,
 		2, 2, 2, 2, 0, 0, 15,15,15,15,  15,13,13,1, 1, 1, 1, 1, 1, 4,
-		6, 6, 6, 6, 7, 6, 0, 21,22,23,  24,0, 13,13
+		6, 6, 6, 6, 7, 6, 0, 0, 0, 0,   0, 0, 13,13
 	};
 	static const short trims[274] = {
 		0, 0, 0, 0, 0, 0, 2, 3, 4, 5,   6, 7, 8, 9, 10,11,12,13,0, 0,
@@ -97,6 +107,8 @@ void cTerrain::append(legacy::terrain_type_type& old){
 		99,99,99,99,99,2, 99,99,99,99,  99,99,99,99,
 	};
 	picture = old.picture;
+	// This is a weird expression, but necessary, because all archetypes except lava lack a special ability
+	is_archetype = archetypes.count(picture) && (old.special == 0) == (old.picture != 404);
 	blockage = (eTerObstruct) old.blockage;
 	if(picture < 260){
 		combat_arena = arenas[picture];

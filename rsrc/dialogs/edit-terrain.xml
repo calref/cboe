@@ -27,6 +27,7 @@
 	<led name='flight' top='150' left='26' state='off' width='120' font='bold'>Can fly over?</led>
 	<led name='boat' top='150' left='154' state='off' width='120' font='bold'>Can boat over?</led>
 	<led name='horse' top='150' left='307' state='off' width='120' font='bold'>Blocked to horses?</led>
+	<led name='arch' top='150' left='447' state='off' width='120' font='bold'>Archetype?</led>
 	<text top='165' left='8' height='14' width='91'>Step sound:</text>
 	<group name='sound'>
 		<led name="step" top='167' left='102' state='off' width='60'>Footstep</led>

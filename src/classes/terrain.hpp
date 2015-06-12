@@ -32,6 +32,7 @@ public:
 	bool fly_over = false;
 	bool boat_over = false;
 	bool block_horse = false;
+	bool is_archetype = false;
 	unsigned int light_radius = 0;
 	eStepSnd step_sound = eStepSnd::STEP;
 	unsigned char shortcut_key = 0; // for editor use only

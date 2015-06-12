@@ -153,6 +153,7 @@
 				<xs:element name="fly" minOccurs="0" type="bool"/>
 				<xs:element name="boat" minOccurs="0"  type="bool"/>
 				<xs:element name="ride" minOccurs="0" type="bool"/>
+				<xs:element name="archetype" minOccurs="0" type="bool"/>
 				<xs:element name="light" minOccurs="0" type="xs:integer"/>
 				<xs:element name="step-sound" minOccurs="0" type="stepSound"/>
 				<xs:element name="trim" type="terTrim"/>

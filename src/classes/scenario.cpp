@@ -195,10 +195,15 @@ ter_num_t cScenario::get_ground_from_ter(ter_num_t ter){
 }
 
 ter_num_t cScenario::get_ter_from_ground(unsigned short ground){
+	ter_num_t archetype = -1;
 	for(int i = 0; i < ter_types.size(); i++)
-		if(ter_types[i].ground_type == ground)
-			return i;
-	return 0;
+		if(ter_types[i].ground_type == ground) {
+			if(ter_types[i].is_archetype)
+				return i;
+			else if(archetype < 0)
+				archetype = i;
+		}
+	return std::max(archetype, ter_num_t());
 }
 
 ter_num_t cScenario::get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim) {
