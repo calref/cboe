@@ -889,7 +889,11 @@ static void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
 			} else if(type == "ride") {
 				ter->GetText(&val);
 				if(val != "true")
-					the_ter.block_horse = false;
+					the_ter.block_horse = true;
+			} else if(type == "archetype") {
+				ter->GetText(&val);
+				if(val == "true")
+					the_ter.is_archetype = true;
 			} else if(type == "light") {
 				ter->GetText(&the_ter.light_radius);
 			} else if(type == "step-sound") {

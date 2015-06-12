@@ -46,5 +46,3 @@ void place_edit_special(location loc);
 void set_special(location spot_hit);
 bool save_check(std::string which_dlog);
 
-ter_num_t get_ground_from_ter(ter_num_t ter);
-bool terrain_matches(unsigned char x, unsigned char y, ter_num_t ter);

@@ -356,6 +356,7 @@ static void writeTerrainToXml(ticpp::Printer&& data) {
 		data.PushElement("fly", ter.fly_over);
 		data.PushElement("boat", ter.boat_over);
 		data.PushElement("ride", !ter.block_horse);
+		data.PushElement("archetype", ter.is_archetype);
 		data.PushElement("light", ter.light_radius);
 		data.PushElement("step-sound", ter.step_sound);
 		data.PushElement("trim", ter.trim_type);

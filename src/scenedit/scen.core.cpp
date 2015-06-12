@@ -119,7 +119,8 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 	ter.trans_to_what = me["trans"].getTextAsNum();
 	ter.fly_over = dynamic_cast<cLed&>(me["flight"]).getState() == led_red;
 	ter.boat_over = dynamic_cast<cLed&>(me["boat"]).getState() == led_red;
-	ter.block_horse = dynamic_cast<cLed&>(me["horse"]).getState();
+	ter.block_horse = dynamic_cast<cLed&>(me["horse"]).getState() == led_red;
+	ter.is_archetype = dynamic_cast<cLed&>(me["arch"]).getState() == led_red;
 	ter.light_radius = me["light"].getTextAsNum();
 	
 	std::string sound = dynamic_cast<cLedGroup&>(me["sound"]).getSelected();
@@ -412,18 +413,10 @@ static void fill_ter_info(cDialog& me, short ter){
 				break;
 		}
 	}
-	if(ter_type.fly_over){
-		cLed& led_ctrl = dynamic_cast<cLed&>(me["flight"]);
-		led_ctrl.setState(led_red);
-	}
-	if(ter_type.boat_over){
-		cLed& led_ctrl = dynamic_cast<cLed&>(me["boat"]);
-		led_ctrl.setState(led_red);
-	}
-	if(ter_type.block_horse){
-		cLed& led_ctrl = dynamic_cast<cLed&>(me["horse"]);
-		led_ctrl.setState(led_red);
-	}
+	dynamic_cast<cLed&>(me["flight"]).setState(ter_type.fly_over ? led_red : led_off);
+	dynamic_cast<cLed&>(me["boat"]).setState(ter_type.boat_over ? led_red : led_off);
+	dynamic_cast<cLed&>(me["horse"]).setState(ter_type.block_horse ? led_red : led_off);
+	dynamic_cast<cLed&>(me["arch"]).setState(ter_type.is_archetype ? led_red : led_off);
 	me["flag1"].setTextToNum(ter_type.flag1);
 	me["flag2"].setTextToNum(ter_type.flag2);
 	me["flag3"].setTextToNum(ter_type.flag3);
