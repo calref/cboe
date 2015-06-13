@@ -47,48 +47,205 @@
 	<xs:element name="general">
 		<xs:complexType>
 			<xs:all>
-				<xs:element name="type" type="xs:integer"/>
+				<xs:element name="type">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="ray"/>
+							<xs:enumeration value="touch"/>
+							<xs:enumeration value="gaze"/>
+							<xs:enumeration value="breath"/>
+							<xs:enumeration value="spit"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
 				<xs:element name="missile" type="xs:integer" minOccurs="0"/>
 				<xs:element name="strength" type="xs:integer"/>
 				<xs:element name="range" type="xs:integer" minOccurs="0"/>
 				<xs:element name="chance" type="permille"/>
-				<xs:element name="extra" type="xs:integer" minOccurs="0"/>
+				<xs:element name="extra" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<!-- Status effects -->
+							<xs:enumeration value="poison-weap"/>
+							<xs:enumeration value="bless-curse"/>
+							<xs:enumeration value="poison"/>
+							<xs:enumeration value="haste-slow"/>
+							<xs:enumeration value="magic"/>
+							<xs:enumeration value="web"/>
+							<xs:enumeration value="disease"/>
+							<xs:enumeration value="invis"/>
+							<xs:enumeration value="dumb-smart"/>
+							<xs:enumeration value="martyr"/>
+							<xs:enumeration value="sleep"/>
+							<xs:enumeration value="paralysis"/>
+							<xs:enumeration value="acid"/>
+							<xs:enumeration value="cage"/>
+							<xs:enumeration value="charm"/>
+							<!-- Fields -->
+							<xs:enumeration value="wall-force"/>
+							<xs:enumeration value="wall-fire"/>
+							<xs:enumeration value="field-antimagic"/>
+							<xs:enumeration value="cloud-stink"/>
+							<xs:enumeration value="wall-ice"/>
+							<xs:enumeration value="wall-blades"/>
+							<xs:enumeration value="cloud-sleep"/>
+							<xs:enumeration value="obj-block"/>
+							<xs:enumeration value="field-web"/>
+							<xs:enumeration value="obj-crate"/>
+							<xs:enumeration value="obj-barrel"/>
+							<xs:enumeration value="barr-fire"/>
+							<xs:enumeration value="barr-force"/>
+							<xs:enumeration value="field-quickfire"/>
+							<xs:enumeration value="sfx-sm-bld"/>
+							<xs:enumeration value="sfx-med-bld"/>
+							<xs:enumeration value="sfx-lg-bld"/>
+							<xs:enumeration value="sfx-sm-slm"/>
+							<xs:enumeration value="sfx-lg-slm"/>
+							<xs:enumeration value="sfx-ash"/>
+							<xs:enumeration value="sfx-bone"/>
+							<xs:enumeration value="sfx-rock"/>
+							<xs:enumeration value="barr-cage"/>
+							<!-- Not sure if these special pseudo-fields should be allowed -->
+							<xs:enumeration value="dispel"/>
+							<xs:enumeration value="smash"/>
+							<!-- Damage types -->
+							<xs:enumeration value="weap"/>
+							<xs:enumeration value="fire"/>
+							<xs:enumeration value="poison"/>
+							<xs:enumeration value="magic"/>
+							<xs:enumeration value="unblockable"/>
+							<xs:enumeration value="cold"/>
+							<xs:enumeration value="undead"/>
+							<xs:enumeration value="demon"/>
+							<xs:enumeration value="spec"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
 			</xs:all>
-			<xs:attribute name="type" type="xs:integer" use="required"/>
+			<xs:attribute name="type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="dmg"/>
+						<xs:enumeration value="dmg2"/>
+						<xs:enumeration value="status"/>
+						<xs:enumeration value="status2"/>
+						<xs:enumeration value="field"/>
+						<xs:enumeration value="petrify"/>
+						<xs:enumeration value="drain-sp"/>
+						<xs:enumeration value="drain-xp"/>
+						<xs:enumeration value="steal-food"/>
+						<xs:enumeration value="steal-gold"/>
+						<xs:enumeration value="kill"/>
+						<xs:enumeration value="stun"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="missile">
 		<xs:complexType>
 			<xs:all>
-				<xs:element name="type" type="xs:integer"/>
+				<xs:element name="type">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="arrow"/>
+							<xs:enumeration value="arrow++"/>
+							<xs:enumeration value="dart"/>
+							<xs:enumeration value="spear"/>
+							<xs:enumeration value="stone"/>
+							<xs:enumeration value="star"/>
+							<xs:enumeration value="spine"/>
+							<xs:enumeration value="knife"/>
+							<xs:enumeration value="bolt"/>
+							<xs:enumeration value="boulder"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
 				<xs:element name="missile" type="xs:integer"/>
 				<xs:element name="strength" type="dice"/>
 				<xs:element name="skill" type="xs:integer"/>
 				<xs:element name="range" type="xs:integer"/>
 				<xs:element name="chance" type="permille"/>
 			</xs:all>
-			<xs:attribute name="type" type="xs:integer" use="required"/>
+			<xs:attribute name="type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="missile"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="summon">
 		<xs:complexType>
 			<xs:all>
-				<xs:element name="type" type="xs:integer"/>
+				<xs:element name="type">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="type"/>
+							<xs:enumeration value="lvl"/>
+							<xs:enumeration value="race"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
 				<xs:element name="min" type="xs:integer"/>
 				<xs:element name="max" type="xs:integer"/>
 				<xs:element name="duration" type="xs:integer"/>
 				<xs:element name="chance" type="permille"/>
 			</xs:all>
-			<xs:attribute name="type" type="xs:integer" use="required"/>
+			<xs:attribute name="type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="summon"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="radiate">
 		<xs:complexType>
 			<xs:all>
-				<xs:element name="type" type="xs:integer"/>
+				<xs:element name="type">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="wall-force"/>
+							<xs:enumeration value="wall-fire"/>
+							<xs:enumeration value="field-antimagic"/>
+							<xs:enumeration value="cloud-stink"/>
+							<xs:enumeration value="wall-ice"/>
+							<xs:enumeration value="wall-blades"/>
+							<xs:enumeration value="cloud-sleep"/>
+							<xs:enumeration value="obj-block"/>
+							<xs:enumeration value="field-web"/>
+							<xs:enumeration value="obj-crate"/>
+							<xs:enumeration value="obj-barrel"/>
+							<xs:enumeration value="barr-fire"/>
+							<xs:enumeration value="barr-force"/>
+							<xs:enumeration value="field-quickfire"/>
+							<xs:enumeration value="sfx-sm-bld"/>
+							<xs:enumeration value="sfx-med-bld"/>
+							<xs:enumeration value="sfx-lg-bld"/>
+							<xs:enumeration value="sfx-sm-slm"/>
+							<xs:enumeration value="sfx-lg-slm"/>
+							<xs:enumeration value="sfx-ash"/>
+							<xs:enumeration value="sfx-bone"/>
+							<xs:enumeration value="sfx-rock"/>
+							<xs:enumeration value="barr-cage"/>
+							<!-- Not sure if these special pseudo-fields should be allowed -->
+							<xs:enumeration value="dispel"/>
+							<xs:enumeration value="smash"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
 				<xs:element name="chance" type="permille"/>
 			</xs:all>
-			<xs:attribute name="type" type="xs:integer" use="required"/>
+			<xs:attribute name="type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="radiate"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="special">
@@ -96,14 +253,42 @@
 			<xs:sequence>
 				<xs:element name="param" type="xs:integer" minOccurs="0" maxOccurs="3"/>
 			</xs:sequence>
-			<xs:attribute name="type" type="xs:integer" use="required"/>
+			<xs:attribute name="type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="splits"/>
+						<xs:enumeration value="martyr"/>
+						<xs:enumeration value="absorb"/>
+						<xs:enumeration value="old-web"/>
+						<xs:enumeration value="old-heat"/>
+						<xs:enumeration value="spec-act"/>
+						<xs:enumeration value="spec-hit"/>
+						<xs:enumeration value="spec-death"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="attack">
 		<xs:complexType>
 			<xs:simpleContent>
 				<xs:extension base="dice">
-					<xs:attribute name="type" type="xs:integer" use="required"/>
+					<xs:attribute name="type" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="swing"/>
+								<xs:enumeration value="claw"/>
+								<xs:enumeration value="bite"/>
+								<xs:enumeration value="slime"/>
+								<xs:enumeration value="punch"/>
+								<xs:enumeration value="sting"/>
+								<xs:enumeration value="club"/>
+								<xs:enumeration value="burn"/>
+								<xs:enumeration value="harm"/>
+								<xs:enumeration value="stab"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:extension>
 			</xs:simpleContent>
 		</xs:complexType>

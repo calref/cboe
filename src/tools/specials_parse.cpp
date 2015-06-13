@@ -244,7 +244,7 @@ void test_special_parse(std::string file) {
 	std::ofstream fout(file + ".out");
 	for(auto p : specials) {
 		fout << "Special node ID " << p.first << ":\n";
-		fout << "  Type: " << p.second.type << '\n';
+		fout << "  Type: " << (*p.second.type).opcode() << '\n';
 		fout << "  SDF: (" << p.second.sd1 << ',' << p.second.sd2 << ")\n";
 		fout << "  Message: (" << p.second.m1 << ',' << p.second.m2 << ',' << p.second.m3 << ")\n";
 		fout << "  Pic: " << p.second.pic << '@' << p.second.pictype << '\n';

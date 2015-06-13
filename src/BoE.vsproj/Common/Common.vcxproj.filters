@@ -214,6 +214,9 @@
     <ClCompile Include="..\..\classes\creatlist.cpp">
       <Filter>Classes\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\classes\estreams.cpp">
+      <Filter>Classes\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\classes\item.cpp">
       <Filter>Classes\Source Files</Filter>
     </ClCompile>

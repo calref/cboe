@@ -1085,10 +1085,11 @@ static void readMonstAbilFromXml(ticpp::Element& data, cMonster& monst) {
 				} else if(type == "range") {
 					elem->GetText(&general.range);
 				} else if(type == "extra") {
-					int n;
-					elem->GetText(&n);
-					// Even though it's cast to eFieldType here, it should work correctly if later retrieved as eDamageType or eStatus.
-					general.fld = eFieldType(n);
+					if(abil_type == eMonstAbil::DAMAGE || abil_type == eMonstAbil::DAMAGE2)
+						elem->GetText(&general.dmg);
+					else if(abil_type == eMonstAbil::FIELD)
+						elem->GetText(&general.fld);
+					else elem->GetText(&general.stat);
 				} else if(type == "chance") {
 					long double percent;
 					elem->GetText(&percent);

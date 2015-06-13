@@ -20,35 +20,6 @@
 #undef INFINITE
 #endif
 
-enum class eShopType {NORMAL, ALLOW_DEAD, RANDOM};
-
-enum class eShopPrompt {SHOPPING, HEALING, MAGE, PRIEST, SPELLS, ALCHEMY, TRAINING};
-
-enum class eShopItemType {
-	EMPTY,
-	// These ones must have these numbers in order for old scenarios to be ported correctly
-	ITEM = 1,
-	MAGE_SPELL = 2,
-	PRIEST_SPELL = 3,
-	ALCHEMY = 4,
-	SKILL,
-	TREASURE,
-	CLASS,
-	OPT_ITEM,
-	CALL_SPECIAL,
-	// All non-healing types must be above here and all healing types below, with HEAL_WOUNDS kept first
-	HEAL_WOUNDS,
-	CURE_POISON,
-	CURE_DISEASE,
-	CURE_ACID,
-	CURE_PARALYSIS,
-	REMOVE_CURSE,
-	DESTONE,
-	RAISE_DEAD,
-	RESURRECT,
-	CURE_DUMBFOUNDING,
-};
-
 struct cShopItem {
 	eShopItemType type = eShopItemType::EMPTY;
 	size_t quantity, index;

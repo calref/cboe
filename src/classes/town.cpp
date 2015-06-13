@@ -240,24 +240,3 @@ cTown::cItem::cItem(location loc, short num, ::cItem& item) : cItem() {
 	if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD)
 		charges = get_ran(1,4,6);
 }
-
-std::ostream& operator<< (std::ostream& out, eLighting light) {
-	switch(light) {
-		case LIGHT_NORMAL: out << "lit"; break;
-		case LIGHT_DARK: out << "dark"; break;
-		case LIGHT_DRAINS: out << "drains"; break;
-		case LIGHT_NONE: out << "none"; break;
-	}
-	return out;
-}
-
-std::istream& operator>> (std::istream& in, eLighting& light) {
-	std::string key;
-	in >> key;
-	if(key == "lit") light = LIGHT_NORMAL;
-	else if(key == "dark") light = LIGHT_DARK;
-	else if(key == "drains") light = LIGHT_DRAINS;
-	else if(key == "none") light = LIGHT_NONE;
-	else in.fail();
-	return in;
-}

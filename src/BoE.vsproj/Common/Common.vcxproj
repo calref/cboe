@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\classes\creatlist.cpp" />
     <ClCompile Include="..\..\classes\creature.cpp" />
+    <ClCompile Include="..\..\classes\estreams.cpp" />
     <ClCompile Include="..\..\classes\item.cpp" />
     <ClCompile Include="..\..\classes\living.cpp" />
     <ClCompile Include="..\..\classes\location.cpp" />
