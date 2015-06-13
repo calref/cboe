@@ -42,8 +42,6 @@ struct job_bank_t {
 	bool inited = false;
 };
 
-enum class eQuestStatus {AVAILABLE, STARTED, COMPLETED, FAILED};
-
 class cUniverse;
 
 class cParty : public iLiving {

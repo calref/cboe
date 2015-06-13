@@ -333,20 +333,6 @@ void cSpecial::append(legacy::special_node_type& old){
 	}
 }
 
-std::ostream& operator << (std::ostream& out, eSpecType e) {
-	return out << (int) e;
-}
-
-// TODO: This should probably understand symbolic names as well?
-std::istream& operator >> (std::istream& in, eSpecType& e) {
-	int i;
-	in >> i;
-	e = (eSpecType) i;
-	if(getNodeCategory(e) == eSpecCat::INVALID)
-		e = eSpecType::INVALID;
-	return in;
-}
-
 // Key:
 // space - no button
 // m - Create/Edit button to edit message pair (covers msg1 and msg2 together)

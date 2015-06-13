@@ -1030,18 +1030,4 @@ void cPlayer::readFrom(std::istream& file){
 	}
 }
 
-std::ostream& operator << (std::ostream& out, eMainStatus e){
-	return out << (int) e;
-}
-
-// TODO: This should probably understand symbolic names as well as the numbers?
-std::istream& operator >> (std::istream& in, eMainStatus& e){
-	int i;
-	in >> i;
-	if(i > 0 && i < 18 && i !=8 && i != 9)
-		e = (eMainStatus) i;
-	else e = eMainStatus::ABSENT;
-	return in;
-}
-
 void(* cPlayer::give_help)(short,short) = nullptr;

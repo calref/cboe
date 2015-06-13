@@ -19,8 +19,6 @@
 
 namespace legacy { struct terrain_type_type; };
 
-enum class eStepSnd {STEP, SQUISH, CRUNCH, NONE, SPLASH};
-
 class cTerrain {
 public:
 	std::string name;

@@ -49,19 +49,6 @@ enum class eMonstAbilTemplate {
 	CUSTOM_DAMAGE2,
 };
 
-enum class eMonstMelee {SWING, CLAW, BITE, SLIME, PUNCH, STING, CLUB, BURN, HARM, STAB};
-
-enum class eMonstMissile {DART, ARROW, SPEAR, ROCK, RAZORDISK, SPINE, KNIFE, BOLT, BOULDER, RAPID_ARROW};
-
-enum class eMonstGen {RAY, TOUCH, GAZE, BREATH, SPIT};
-
-enum class eMonstSummon {TYPE, LEVEL, SPECIES};
-
-inline eDirection& operator++ (eDirection& me, int) {
-	if(me == DIR_HERE) return me = DIR_N;
-	else return me = (eDirection)(1 + (int)me);
-}
-
 union uAbility {
 	bool active;
 	struct {
@@ -141,14 +128,6 @@ public:
 	cMonster();
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
-};
-
-enum class eMonstTime {
-	ALWAYS,
-	APPEAR_ON_DAY, DISAPPEAR_ON_DAY,
-	SOMETIMES_C, SOMETIMES_A, SOMETIMES_B,
-	APPEAR_WHEN_EVENT, DISAPPEAR_WHEN_EVENT,
-	APPEAR_AFTER_CHOP,
 };
 
 class cTownperson {

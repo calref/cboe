@@ -17,9 +17,6 @@
 
 namespace legacy { struct item_record_type; };
 
-enum class eItemUse {HELP_ONE, HARM_ONE, HELP_ALL, HARM_ALL};
-enum class eEnchant {PLUS_ONE, PLUS_TWO, PLUS_THREE, SHOOT_FLAME, FLAMING, PLUS_FIVE, BLESSED};
-
 class cItem {
 public:
 	eItemType variety;

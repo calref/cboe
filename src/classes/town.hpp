@@ -30,13 +30,6 @@ namespace legacy {
 	struct preset_field_type;
 };
 
-enum eLighting {
-	LIGHT_NORMAL = 0,
-	LIGHT_DARK = 1,
-	LIGHT_DRAINS = 2,
-	LIGHT_NONE = 3,
-};
-
 class cScenario;
 
 class cTown { // formerly town_record_type

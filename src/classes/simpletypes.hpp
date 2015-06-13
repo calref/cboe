@@ -16,7 +16,7 @@ typedef signed short spec_num_t;
 typedef signed short item_num_t;
 typedef unsigned short str_num_t;
 
-// Directions!
+// MARK: Directions!
 enum eDirection {
 	DIR_N = 0,
 	DIR_NE = 1,
@@ -28,6 +28,13 @@ enum eDirection {
 	DIR_NW = 7,
 	DIR_HERE = 8,
 };
+
+inline eDirection& operator++ (eDirection& me, int) {
+	if(me == DIR_HERE) return me = DIR_N;
+	else return me = (eDirection)(1 + (int)me);
+}
+
+enum class eQuestStatus {AVAILABLE, STARTED, COMPLETED, FAILED};
 
 enum class eMainStatus {
 	ABSENT = 0, // absent, empty slot
@@ -190,6 +197,14 @@ enum class eMonstAbil {
 	SUMMON,
 };
 
+enum class eMonstMelee {SWING, CLAW, BITE, SLIME, PUNCH, STING, CLUB, BURN, HARM, STAB};
+
+enum class eMonstMissile {DART, ARROW, SPEAR, ROCK, RAZORDISK, SPINE, KNIFE, BOLT, BOULDER, RAPID_ARROW};
+
+enum class eMonstGen {RAY, TOUCH, GAZE, BREATH, SPIT};
+
+enum class eMonstSummon {TYPE, LEVEL, SPECIES};
+
 enum class eMonstAbilCat {
 	INVALID, MISSILE, GENERAL, SUMMON, RADIATE, SPECIAL
 };
@@ -209,6 +224,14 @@ inline eMonstAbilCat getMonstAbilCategory(eMonstAbil what) {
 		return eMonstAbilCat::SUMMON;
 	return eMonstAbilCat::INVALID;
 }
+
+enum class eMonstTime {
+	ALWAYS,
+	APPEAR_ON_DAY, DISAPPEAR_ON_DAY,
+	SOMETIMES_C, SOMETIMES_A, SOMETIMES_B,
+	APPEAR_WHEN_EVENT, DISAPPEAR_WHEN_EVENT,
+	APPEAR_AFTER_CHOP,
+};
 
 /* Terrains Special Properties : scenario.ter_types[i].special */      //complete
 
@@ -288,6 +311,8 @@ inline bool blocksMove(eTerObstruct block) {
 	return code > 2;
 }
 
+enum class eStepSnd {STEP, SQUISH, CRUNCH, NONE, SPLASH};
+
 /*      items[i].variety    a.k.a item type (in editor)      */
 enum class eItemType {
 	NO_ITEM = 0,
@@ -337,6 +362,10 @@ inline bool isWeaponType(eItemType type) {
 inline bool isMissileType(eItemType type) {
 	return type == eItemType::ARROW || type == eItemType::BOLTS || type == eItemType::THROWN_MISSILE || type == eItemType::MISSILE_NO_AMMO;
 }
+
+enum class eItemUse {HELP_ONE, HARM_ONE, HELP_ALL, HARM_ALL};
+
+enum class eEnchant {PLUS_ONE, PLUS_TWO, PLUS_THREE, SHOOT_FLAME, FLAMING, PLUS_FIVE, BLESSED};
 
 /*      items[i].ability      */
 enum class eItemAbil {
@@ -763,6 +792,36 @@ enum class eTalkNode {
 	CALL_SCEN_SPEC = 30,
 };
 
+enum class eShopType {NORMAL, ALLOW_DEAD, RANDOM};
+
+enum class eShopPrompt {SHOPPING, HEALING, MAGE, PRIEST, SPELLS, ALCHEMY, TRAINING};
+
+enum class eShopItemType {
+	EMPTY,
+	// These ones must have these numbers in order for old scenarios to be ported correctly
+	ITEM = 1,
+	MAGE_SPELL = 2,
+	PRIEST_SPELL = 3,
+	ALCHEMY = 4,
+	SKILL,
+	TREASURE,
+	CLASS,
+	OPT_ITEM,
+	CALL_SPECIAL,
+	// All non-healing types must be above here and all healing types below, with HEAL_WOUNDS kept first
+	HEAL_WOUNDS,
+	CURE_POISON,
+	CURE_DISEASE,
+	CURE_ACID,
+	CURE_PARALYSIS,
+	REMOVE_CURSE,
+	DESTONE,
+	RAISE_DEAD,
+	RESURRECT,
+	CURE_DUMBFOUNDING,
+};
+
+// MARK: eEncNoteType
 enum eEncNoteType {
 	NOTE_SCEN,
 	NOTE_OUT,
@@ -1043,6 +1102,14 @@ enum class eAlchemy {
 	STRENGTH = 17,
 	BLISS = 18,
 	POWER_STRONG = 19,
+};
+
+// MARK: eLighting
+enum eLighting {
+	LIGHT_NORMAL = 0,
+	LIGHT_DARK = 1,
+	LIGHT_DRAINS = 2,
+	LIGHT_NONE = 3,
 };
 
 #endif

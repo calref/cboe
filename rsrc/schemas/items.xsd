@@ -91,7 +91,13 @@
 				<xs:element name="ability" minOccurs="0">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="type" type="xs:integer"/>
+							<xs:element name="type">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:pattern value="[a-z-]+"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
 							<xs:element name="strength" type="xs:integer"/>
 							<xs:element name="data" type="xs:integer"/>
 							<xs:element name="use-flag" type="useFlag" minOccurs="0"/>
