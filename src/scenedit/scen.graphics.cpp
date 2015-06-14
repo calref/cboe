@@ -316,17 +316,21 @@ void Set_up_win () {
 }
 
 void run_startup_g() {
+	sf::Event event;
 	rectangle pict_rect = {0,0,480,640}, dest_rect;
 	sf::Texture pict_to_draw;
 	dest_rect = pict_rect;
 	
 	dest_rect.offset(-25,-25);
 	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("edsplash"));
-	rect_draw_some_item(pict_to_draw, pict_rect, mainPtr, dest_rect, sf::BlendAlpha);
-	mainPtr.display();
+	for(int i = 0; i < 10; i++) {
+		mainPtr.clear(sf::Color::Black);
+		rect_draw_some_item(pict_to_draw, pict_rect, mainPtr, dest_rect, sf::BlendAlpha);
+		mainPtr.display();
+		mainPtr.pollEvent(event);
+	}
 	play_sound(-95);
 	sf::Clock timer;
-	sf::Event event;
 	while(timer.getElapsedTime() < time_in_ticks(120)) {
 		mainPtr.pollEvent(event);
 		if(event.type == sf::Event::KeyPressed || event.type == sf::Event::MouseButtonPressed)
