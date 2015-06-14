@@ -237,14 +237,17 @@ void plop_fancy_startup() {
 	
 	int delay = 220;
 	if(show_startup_splash){
-		mainPtr.clear(sf::Color::Black);
-		intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
-		pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("startsplash"));
-		from_rect = rectangle(pict_to_draw);
-		rect_draw_some_item(pict_to_draw, from_rect, mainPtr, intro_from);
+		for(int k = 0; k < 5; k++) {
+			mainPtr.clear(sf::Color::Black);
+			intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
+			pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("startsplash"));
+			from_rect = rectangle(pict_to_draw);
+			rect_draw_some_item(pict_to_draw, from_rect, mainPtr, intro_from);
+			mainPtr.display();
+			mainPtr.pollEvent(event);
+		}
 	} else delay = 60;
 	delay = time_in_ticks(delay).asMilliseconds();
-	mainPtr.display();
 	sf::Clock timer;
 	if(show_startup_splash) play_sound(-22);
 	
