@@ -728,18 +728,18 @@ class EllipseShape : public sf::Shape {
 	int points;
 	float a, b;
 public:
-	explicit EllipseShape(sf::Vector2f size, unsigned int points = 30) : points(points) {
+	explicit EllipseShape(sf::Vector2f size, std::size_t points = 30) : points(points) {
 		a = size.x / 2.0f;
 		b = size.y / 2.0f;
 		divSz = 2 * pi<float>() / points;
 		update();
 	}
 	
-	unsigned int getPointCount() const override {
+	std::size_t getPointCount() const override {
 		return points;
 	}
 	
-	sf::Vector2f getPoint(unsigned int i) const override {
+	sf::Vector2f getPoint(std::size_t i) const override {
 		float t = i * divSz;
 		return sf::Vector2f(a + a*sin(t), b + b*cos(t));
 	}
@@ -752,7 +752,7 @@ class RoundRectShape : public sf::Shape {
 	int points;
 	float w,h,r;
 public:
-	RoundRectShape(sf::Vector2f size, float cornerRadius, unsigned int points = 32) : points(points / 4) {
+	RoundRectShape(sf::Vector2f size, float cornerRadius, std::size_t points = 32) : points(points / 4) {
 		w = size.x;
 		h = size.y;
 		r = cornerRadius;
@@ -760,11 +760,11 @@ public:
 		update();
 	}
 	
-	unsigned int getPointCount() const override {
+	std::size_t getPointCount() const override {
 		return points * 4;
 	}
 	
-	sf::Vector2f getPoint(unsigned int i) const override {
+	sf::Vector2f getPoint(std::size_t i) const override {
 		const float pi = ::pi<float>();
 		const float half_pi = 0.5 * pi;
 		float t = i * divSz;
