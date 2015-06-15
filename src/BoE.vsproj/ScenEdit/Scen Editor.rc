@@ -90,6 +90,7 @@ BEGIN
         MENUITEM "&Scenario Details",           IDM_SCEN_DETAILS
         MENUITEM "Scenario Intr&o Text",        IDM_SCEN_INTRO
         MENUITEM "Set Starting &Location",      IDM_SCEN_START
+        MENUITEM "Edit Custom Graphic Sheets",  IDM_SCEN_CUSTOM_SHEETS
         MENUITEM "Classify Custom &Graphics",   IDM_SCEN_CUSTOM_PICS
         MENUITEM SEPARATOR
         MENUITEM "Advanced:",                   IDM_SCEN_NEW_TOWN, GRAYED

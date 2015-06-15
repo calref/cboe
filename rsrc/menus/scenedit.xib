@@ -373,6 +373,14 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
+								<object class="NSMenuItem" id="121323895">
+									<reference key="NSMenu" ref="399390342"/>
+									<string key="NSTitle">Edit Custom Graphic Sheets</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
 								<object class="NSMenuItem" id="963208893">
 									<reference key="NSMenu" ref="399390342"/>
 									<string key="NSTitle">Classify Custom Graphics</string>
@@ -1239,6 +1247,7 @@
 							<reference ref="949025402"/>
 							<reference ref="72958416"/>
 							<reference ref="963208893"/>
+							<reference ref="121323895"/>
 						</array>
 						<reference key="parent" ref="741259600"/>
 					</object>
@@ -1592,6 +1601,11 @@
 						<reference key="object" ref="963208893"/>
 						<reference key="parent" ref="399390342"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">888</int>
+						<reference key="object" ref="121323895"/>
+						<reference key="parent" ref="399390342"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1698,12 +1712,13 @@
 				<string key="885.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="886.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="887.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="888.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">887</int>
+			<int key="maxID">888</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

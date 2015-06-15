@@ -4,6 +4,7 @@
 #include <functional>
 #include <numeric>
 #include <algorithm>
+#include <unordered_map>
 #include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
 #include "scenario.hpp"
@@ -24,6 +25,7 @@
 #include "stack.hpp"
 #include "spell.hpp"
 #include "mathutil.hpp"
+#include "winutil.hpp"
 
 extern short cen_x, cen_y,cur_town;
 extern bool mouse_button_held;
@@ -3304,4 +3306,104 @@ void edit_custom_pics_types() {
 		pic_dlg["right"].hide();
 	}
 	pic_dlg.run();
+}
+
+void set_dlg_custom_sheet(cDialog& me, size_t sheet) {
+	me["num"].setTextToNum(sheet);
+	dynamic_cast<cPict&>(me["sheet"]).setPict(sheet, PIC_FULL);
+}
+
+void edit_custom_sheets() {
+	// TODO: What about "disconnected" sheets? eg, we have sheets 0-6, but also sheet 100.
+	// First, make sure we even have custom graphics! Also make sure they're not legacy format.
+	if(spec_scen_g.numSheets < 1) {
+	} else if(spec_scen_g.is_old) {
+		spec_scen_g.convert_sheets();
+	}
+	
+	set_cursor(watch_curs);
+	
+	// Get image data from the sheets in memory
+	size_t cur = 0;
+	std::unordered_map<size_t, sf::Image> sheets;
+	for(size_t i = 0; i < spec_scen_g.numSheets; i++) {
+		sheets[i] = spec_scen_g.sheets[i].copyToImage();
+	}
+	auto sheetsSave = sheets;
+	
+	using namespace std::placeholders;
+	
+	cDialog pic_dlg("graphic-sheets");
+	pic_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
+	pic_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
+	pic_dlg["copy"].attachClickHandler([&sheets,&cur](cDialog&, std::string, eKeyMod) -> bool {
+		set_clipboard_img(sheets[cur]);
+		return true;
+	});
+	pic_dlg["paste"].attachClickHandler([&sheets,&cur](cDialog&, std::string, eKeyMod) -> bool {
+		auto img = get_clipboard_img();
+		if(img == nullptr) {
+			beep();
+			return true;
+		}
+		sheets[cur] = *img;
+		spec_scen_g.replace_sheet(cur, *img);
+		return true;
+	});
+	pic_dlg["open"].attachClickHandler([&sheets,&cur](cDialog&, std::string, eKeyMod) -> bool {
+		fs::path fpath = nav_get_rsrc({"png", "bmp", "jpg", "jpeg", "gif", "psd"});
+		if(fpath.empty()) return true;
+		sf::Image img;
+		if(!img.loadFromFile(fpath.string().c_str())) {
+			beep();
+			return true;
+		}
+		sheets[cur] = img;
+		spec_scen_g.replace_sheet(cur, img);
+		return true;
+	});
+	pic_dlg["save"].attachClickHandler([&sheets,&cur](cDialog&, std::string, eKeyMod) -> bool {
+		fs::path fpath = nav_put_rsrc({"png", "bmp", "jpg", "jpeg"});
+		if(fpath.empty()) return true;
+		sheets[cur].saveToFile(fpath.string().c_str());
+		return true;
+	});
+	
+	// TODO: These buttons not implemented yet
+	pic_dlg["new"].hide();
+	pic_dlg["del"].hide();
+	
+	if(spec_scen_g.numSheets == 1) {
+		pic_dlg["left"].hide();
+		pic_dlg["right"].hide();
+	} else pic_dlg.attachClickHandlers([&sheets,&cur](cDialog& me, std::string dir, eKeyMod) -> bool {
+		if(dir == "left") {
+			if(cur == 0)
+				cur = spec_scen_g.numSheets - 1;
+			else cur--;
+		} else if(dir == "right") {
+			cur++;
+			if(cur >= spec_scen_g.numSheets)
+				cur = 0;
+		} else return true;
+		set_dlg_custom_sheet(me, cur);
+		return true;
+	}, {"left", "right"});
+	
+	set_dlg_custom_sheet(pic_dlg, cur);
+	shut_down_menus(5); // So that cmd+O, cmd+N, cmd+S can work
+	pic_dlg.run();
+	
+	// Now, we need to restore the sheets if they pressed cancel
+	if(!pic_dlg.accepted()) {
+		for(auto p : sheetsSave) {
+			spec_scen_g.replace_sheet(p.first, p.second);
+		}
+	}
+	
+	// Restore menus
+	shut_down_menus(4);
+	if(overall_mode <= MODE_MAIN_SCREEN)
+		shut_down_menus(editing_town ? 2 : 1);
+	else shut_down_menus(3);
 }

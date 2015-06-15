@@ -296,6 +296,10 @@ void handle_menu_choice(eMenu item_hit) {
 			set_starting_loc();
 			change_made = true;
 			break;
+		case eMenu::SCEN_SHEETS:
+			edit_custom_sheets();
+			change_made = true;
+			break;
 		case eMenu::SCEN_PICS:
 			edit_custom_pics_types();
 			change_made = true;

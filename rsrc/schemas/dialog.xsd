@@ -194,6 +194,7 @@
       <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="type" use="required" type="picttype"/>
       <xs:attribute name="custom" default="false" type="bool"/>
+      <xs:attribute name="scaled" default="false" type="bool"/>
       <xs:attribute name="framed" default="true" type="bool"/>
       <xs:attribute name="size">
         <xs:simpleType>

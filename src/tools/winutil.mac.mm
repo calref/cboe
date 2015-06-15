@@ -8,6 +8,7 @@
 
 #include "winutil.hpp"
 #include <Cocoa/Cocoa.h>
+#include <AppKit/NSBitmapImageRep.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
@@ -141,6 +142,36 @@ std::string get_clipboard() {
 	return [[str stringByReplacingOccurrencesOfString: @"\n" withString: @"|"] cStringUsingEncoding: NSUTF8StringEncoding];
 }
 
+void set_clipboard_img(sf::Image& img) {
+	if(!img.getPixelsPtr()) return;
+	sf::Vector2u sz = img.getSize();
+	size_t data_sz = (sz.x * sz.y * 4);
+	NSBitmapImageRep* bmp = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: nullptr
+			pixelsWide: sz.x pixelsHigh: sz.y bitsPerSample: 8 samplesPerPixel: 4
+			hasAlpha: true isPlanar: false colorSpaceName: NSCalibratedRGBColorSpace
+			bytesPerRow: sz.x * 4 bitsPerPixel: 32
+		];
+	std::copy(img.getPixelsPtr(), img.getPixelsPtr() + data_sz, [bmp bitmapData]);
+	NSImage * image = [[NSImage alloc] initWithSize: NSMakeSize(sz.x, sz.y)];
+	[image addRepresentation: bmp];
+	NSArray* contents = [NSArray arrayWithObject: image];
+	NSPasteboard* pb = [NSPasteboard generalPasteboard];
+	[pb clearContents];
+	[pb writeObjects: contents];
+}
+
+static sf::Image* sfImageFromNSImage(NSImage* inImage);
+
+std::unique_ptr<sf::Image> get_clipboard_img() {
+	std::unique_ptr<sf::Image> ret;
+	NSPasteboard* pb = [NSPasteboard generalPasteboard];
+	if(![NSImage canInitWithPasteboard: pb])
+		return ret; // a null pointer
+	NSImage* img = [[NSImage alloc] initWithPasteboard: pb];
+	ret.reset(sfImageFromNSImage(img));
+	return ret;
+}
+
 void beep() {
 	NSBeep();
 }
@@ -156,54 +187,13 @@ int getMenubarHeight() {
 
 NSOpenPanel* dlg_get_scen;
 NSOpenPanel* dlg_get_game;
+NSOpenPanel* dlg_get_rsrc;
 NSSavePanel* dlg_put_scen;
 NSSavePanel* dlg_put_game;
+NSSavePanel* dlg_put_rsrc;
 extern sf::RenderWindow mainPtr;
 
 // TODO: I'm not sure if I'll need delegates to enable selection of files with no file extension that have file creator types?
-//Boolean scen_file_filter(AEDesc* item, void* info, void * dummy, NavFilterModes filterMode){
-//	if(item->descriptorType == typeFSRef){
-//		OSErr err;
-//		FSRef the_file;
-//		FSCatalogInfo cat_info;
-//		FSSpec file_spec;
-//		AEGetDescData(item,&the_file,AEGetDescDataSize(item));
-//		err = FSGetCatalogInfo (&the_file,kFSCatInfoFinderInfo,&cat_info,NULL,&file_spec,NULL);
-//		if(err != noErr) return false;
-//		FileInfo* file_info = (FileInfo*) &cat_info.finderInfo;
-//		if(file_info->fileType == 'BETM') return true;
-//		for(int i = 0; i < 64; i++){
-//			if(file_spec.name[i] == '.')
-//				if(file_spec.name[i + 1] == 'e' || file_spec.name[i + 1] == 'E')
-//					if(file_spec.name[i + 1] == 'x' || file_spec.name[i + 1] == 'X')
-//						if(file_spec.name[i + 1] == 's' || file_spec.name[i + 1] == 'S')
-//							return true;
-//		}
-//	}
-//	return false;
-//}
-//
-//Boolean party_file_filter(AEDesc* item, void* info, void * dummy, NavFilterModes filterMode){
-//	if(item->descriptorType == typeFSRef){
-//		OSErr err;
-//		FSRef the_file;
-//		FSCatalogInfo cat_info;
-//		FSSpec file_spec;
-//		AEGetDescData(item,&the_file,AEGetDescDataSize(item));
-//		err = FSGetCatalogInfo (&the_file,kFSCatInfoFinderInfo,&cat_info,NULL,&file_spec,NULL);
-//		if(err != noErr) return false;
-//		FileInfo* file_info = (FileInfo*) &cat_info.finderInfo;
-//		if(file_info->fileType == 'beSV') return true;
-//		for(int i = 0; i < 64; i++){
-//			if(file_spec.name[i] == '.')
-//				if(file_spec.name[i + 1] == 'e' || file_spec.name[i + 1] == 'E')
-//					if(file_spec.name[i + 1] == 'x' || file_spec.name[i + 1] == 'X')
-//						if(file_spec.name[i + 1] == 'g' || file_spec.name[i + 1] == 'G')
-//							return true;
-//		}
-//	}
-//	return false;
-//}
 
 void init_fileio(){
 	dlg_get_scen = [NSOpenPanel openPanel];
@@ -218,6 +208,11 @@ void init_fileio(){
 	[dlg_get_game setTitle: @"Load Game"];
 	[dlg_get_game retain];
 	
+	dlg_get_rsrc = [NSOpenPanel openPanel];
+	[dlg_get_rsrc setMessage: @"Select a resource to import:"];
+	[dlg_get_rsrc setTitle: @"Import Resource"];
+	[dlg_get_rsrc retain];
+	
 	dlg_put_scen = [NSSavePanel savePanel];
 	[dlg_put_scen setAllowedFileTypes: [NSArray arrayWithObjects: @"boes", nil]];
 	[dlg_put_scen setMessage: @"Select a location to save the scenario:"];
@@ -229,6 +224,11 @@ void init_fileio(){
 	[dlg_put_game setMessage: @"Select a location to save your game:"];
 	[dlg_put_game setTitle: @"Save Game"];
 	[dlg_put_game retain];
+	
+	dlg_put_rsrc = [NSSavePanel savePanel];
+	[dlg_put_rsrc setMessage: @"Select a location to export the resource:"];
+	[dlg_put_rsrc setTitle: @"Export Resource"];
+	[dlg_put_rsrc retain];
 }
 
 fs::path nav_get_scenario() {
@@ -272,4 +272,72 @@ fs::path nav_put_party(fs::path def) {
 	if(gotFile)
 		return fs::path([[[[dlg_put_game URL] absoluteURL] path] UTF8String]);
 	return "";
+}
+
+fs::path nav_get_rsrc(std::initializer_list<std::string> extensions) {
+	NSMutableArray* allowTypes = [NSMutableArray arrayWithCapacity: extensions.size()];
+	for(std::string ext : extensions) {
+		NSString* the_ext = [NSString stringWithUTF8String: ext.c_str()];
+		[allowTypes addObject: the_ext];
+	}
+	[dlg_get_rsrc setAllowedFileTypes: allowTypes];
+	bool gotFile = [dlg_get_rsrc runModal] != NSFileHandlingPanelCancelButton;
+	if(gotFile)
+		return fs::path([[[[dlg_get_rsrc URL] absoluteURL] path] UTF8String]);
+	return "";
+}
+
+fs::path nav_put_rsrc(std::initializer_list<std::string> extensions, fs::path def) {
+	if(!def.empty()) {
+		// TODO: Hopefully requesting UTF-8 doesn't break anything...
+		[dlg_put_rsrc setNameFieldStringValue:[NSString stringWithUTF8String: def.filename().c_str()]];
+		[dlg_put_rsrc setDirectoryURL:[NSURL URLWithString:[NSString stringWithUTF8String: def.parent_path().c_str()]]];
+	}
+	NSMutableArray* allowTypes = [NSMutableArray arrayWithCapacity: extensions.size()];
+	for(std::string ext : extensions) {
+		NSString* the_ext = [NSString stringWithUTF8String: ext.c_str()];
+		[allowTypes addObject: the_ext];
+	}
+	[dlg_put_rsrc setAllowedFileTypes: allowTypes];
+	bool gotFile = [dlg_put_rsrc runModal] != NSFileHandlingPanelCancelButton;
+	if(gotFile)
+		return fs::path([[[[dlg_put_rsrc URL] absoluteURL] path] UTF8String]);
+	return "";
+}
+
+// Utility function for converting an NSImage into the RGBA format that SFML uses
+// Adapted from <https://mikeash.com/pyblog/friday-qa-2012-08-31-obtaining-and-interpreting-image-data.html>
+sf::Image* sfImageFromNSImage(NSImage *image) {
+	int width = [image size].width;
+	int height = [image size].height;
+	
+	if(width < 1 || height < 1)
+		return nil;
+	
+	NSBitmapImageRep* rep = [[NSBitmapImageRep alloc]
+							initWithBitmapDataPlanes: NULL
+							pixelsWide: width
+							pixelsHigh: height
+							bitsPerSample: 8
+							samplesPerPixel: 4
+							hasAlpha: YES
+							isPlanar: NO
+							colorSpaceName: NSCalibratedRGBColorSpace
+							bytesPerRow: width * 4
+							bitsPerPixel: 32];
+	
+	NSGraphicsContext *ctx = [NSGraphicsContext graphicsContextWithBitmapImageRep: rep];
+	
+	[NSGraphicsContext saveGraphicsState];
+	[NSGraphicsContext setCurrentContext: ctx];
+	
+	[image drawAtPoint: NSZeroPoint fromRect: NSZeroRect operation: NSCompositeCopy fraction: 1.0];
+	
+	[ctx flushGraphics];
+	[NSGraphicsContext restoreGraphicsState];
+	
+	sf::Image* sfi = new sf::Image;
+	sfi->create(width, height, (UInt8*) [rep bitmapData]);
+	
+	return sfi;
 }

@@ -513,6 +513,17 @@ void cCustomGraphics::convert_sheets() {
 	}
 }
 
+void cCustomGraphics::replace_sheet(size_t num, sf::Image& newSheet) {
+	if(num >= numSheets) return; // TODO: Fail silently? Is that a good idea?
+	sheets[num].loadFromImage(newSheet);
+	// Then we need to do some extra stuff to ensure the dialog engine also sees the change
+	extern fs::path tempDir;
+	std::string sheetname = "sheet" + std::to_string(num);
+	fs::path tmpPath = tempDir/"scenario/graphics"/(sheetname + ".png");
+	newSheet.saveToFile(tmpPath.string().c_str());
+	ResMgr::free<ImageRsrc>(sheetname);
+}
+
 // TODO: This doesn't belong in this file
 std::string get_str(std::string list, short j){
 	if(j == 0) return list;
