@@ -50,7 +50,7 @@ function clean {
 function build {
 	mkdir -p obj exe/bin 'exe/Blades of Exile/data'
 	mkdir -p 'exe/Blades of Exile/Blades of Exile Scenarios/'
-	mkdir -p 'exe/Blades of Exile/Scenario Editor/Blades of Exile Base'
+	mkdir -p 'exe/Blades of Exile/Scenario Editor/'
 	echo "$COMMON_SRC" > test.txt
 	export COMMON_SRC BOE_SRC ED_SRC PC_SRC PLATFORM
 	make all

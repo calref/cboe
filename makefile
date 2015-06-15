@@ -72,7 +72,7 @@ game: exe/bin/boe resources game-menus
 
 pced: exe/bin/pced resources pc-menus
 
-scened: exe/bin/scened resources scen-menus
+scened: exe/bin/scened resources scen-menus bases
 
 resources: sounds.exa graphics.exd strings dialogs fonts scenarios shaders
 
@@ -98,6 +98,9 @@ fonts:
 
 scenarios:
 	cp -fp 'rsrc/Blades of Exile Scenarios'/*.{exs,meg} 'exe/Blades of Exile/Blades of Exile Scenarios/'
+
+bases:
+	mkdir -p 'exe/Blades of Exile/Scenario Editor/Blades of Exile Base'
 	cp -fp 'rsrc/Blades of Exile Bases'/*.exs 'exe/Blades of Exile/Scenario Editor/Blades of Exile Base'
 
 clean:
