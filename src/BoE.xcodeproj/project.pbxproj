@@ -137,9 +137,6 @@
 		914B2AA618E7E50D007B6799 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
 		914B2AA718E7E50E007B6799 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
 		914B2AA818E7E50E007B6799 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
-		914B2ABF18E7E543007B6799 /* sndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
-		914B2AC018E7E544007B6799 /* sndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
-		914B2AC118E7E544007B6799 /* sndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
 		914B2AC618E7E6EB007B6799 /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
 		914CA45819074E0100B6ADD1 /* scen.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */; };
 		915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915325161A2E1DA8000A9A1C /* oldstructs.cpp */; };
@@ -153,6 +150,36 @@
 		915E090A1A316EE3008BDF00 /* map_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915E09081A316D89008BDF00 /* map_parse.cpp */; };
 		915E090B1A316EE4008BDF00 /* map_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915E09081A316D89008BDF00 /* map_parse.cpp */; };
 		915E090C1A317E2E008BDF00 /* map_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915E09081A316D89008BDF00 /* map_parse.cpp */; };
+		9178235D1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
+		9178235E1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
+		9178235F1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
+		917823641B2F3226007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
+		917823651B2F322B007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
+		917823661B2F3231007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
+		917823681B2F32DD007F3444 /* vorbisfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
+		917823691B2F32DD007F3444 /* vorbisfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
+		9178236A1B2F32DD007F3444 /* vorbisfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
+		9178236B1B2F32E3007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
+		9178236C1B2F32E9007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
+		9178236D1B2F32EC007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
+		9178236F1B2F331D007F3444 /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
+		917823701B2F331D007F3444 /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
+		917823711B2F331D007F3444 /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
+		917823721B2F3320007F3444 /* vorbis.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
+		917823731B2F3324007F3444 /* vorbis.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
+		917823741B2F3327007F3444 /* vorbis.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
+		917823761B2F334C007F3444 /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
+		917823771B2F334C007F3444 /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
+		917823781B2F334C007F3444 /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
+		917823791B2F334E007F3444 /* ogg.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
+		9178237A1B2F3353007F3444 /* ogg.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
+		9178237B1B2F3359007F3444 /* ogg.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
+		9178237D1B2F33E9007F3444 /* FLAC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
+		9178237E1B2F33E9007F3444 /* FLAC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
+		9178237F1B2F33E9007F3444 /* FLAC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
+		917823801B2F33EB007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
+		917823811B2F33F1007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
+		917823821B2F33F5007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
 		9179A4601A42988500FEF872 /* sounds.exa in Copy Sounds and Graphics */ = {isa = PBXBuildFile; fileRef = 9179A45F1A42988200FEF872 /* sounds.exa */; };
 		9179A4611A42988800FEF872 /* graphics.exd in Copy Sounds and Graphics */ = {isa = PBXBuildFile; fileRef = 9179A45E1A42986200FEF872 /* graphics.exd */; };
 		9179A4651A48683100FEF872 /* stack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9179A4641A48681800FEF872 /* stack.cpp */; };
@@ -207,17 +234,14 @@
 		91ACCE7719002E5F00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
 		91ACCE7919002E5F00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
 		91ACCE7A19002E5F00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
-		91ACCE7B19002E5F00FAEF8B /* sndfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
 		91ACCE881900344B00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91ACCE891900344B00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
 		91ACCE8B1900344B00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
 		91ACCE8C1900344B00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
-		91ACCE8D1900344B00FAEF8B /* sndfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
 		91ACCE931900346C00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91ACCE941900346C00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
 		91ACCE961900346C00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
 		91ACCE971900346C00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
-		91ACCE981900346C00FAEF8B /* sndfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AAE18E7E529007B6799 /* sndfile.framework */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF470F969F1700BF5B67 /* BoEScenEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */; };
 		91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* pc.main.cpp */; };
@@ -458,9 +482,13 @@
 				91ACCE7719002E5F00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */,
 				91ACCE7919002E5F00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */,
 				91ACCE7A19002E5F00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */,
-				91ACCE7B19002E5F00FAEF8B /* sndfile.framework in Copy Libraries and Frameworks */,
 				9153C79E1A994A0D00D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */,
 				919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */,
+				9178237B1B2F3359007F3444 /* ogg.framework in Copy Libraries and Frameworks */,
+				917823721B2F3320007F3444 /* vorbis.framework in Copy Libraries and Frameworks */,
+				917823641B2F3226007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */,
+				9178236D1B2F32EC007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */,
+				917823801B2F33EB007F3444 /* FLAC.framework in Copy Libraries and Frameworks */,
 				919DDC0019006CF9003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
 				919DDC0119006CF9003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
 			);
@@ -478,8 +506,12 @@
 				91ACCE8B1900344B00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */,
 				91ACCE8C1900344B00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */,
 				9153C79F1A994A1300D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */,
-				91ACCE8D1900344B00FAEF8B /* sndfile.framework in Copy Libraries and Frameworks */,
 				919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */,
+				9178237A1B2F3353007F3444 /* ogg.framework in Copy Libraries and Frameworks */,
+				917823731B2F3324007F3444 /* vorbis.framework in Copy Libraries and Frameworks */,
+				917823651B2F322B007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */,
+				9178236C1B2F32E9007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */,
+				917823811B2F33F1007F3444 /* FLAC.framework in Copy Libraries and Frameworks */,
 				919DDBFE19006CF6003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
 				919DDBFF19006CF6003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
 			);
@@ -497,8 +529,12 @@
 				91ACCE961900346C00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */,
 				91ACCE971900346C00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */,
 				9153C7A01A994A1700D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */,
-				91ACCE981900346C00FAEF8B /* sndfile.framework in Copy Libraries and Frameworks */,
 				919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */,
+				917823791B2F334E007F3444 /* ogg.framework in Copy Libraries and Frameworks */,
+				917823741B2F3327007F3444 /* vorbis.framework in Copy Libraries and Frameworks */,
+				9178236B1B2F32E3007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */,
+				917823661B2F3231007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */,
+				917823821B2F33F5007F3444 /* FLAC.framework in Copy Libraries and Frameworks */,
 				919DDBFC19006CF2003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
 				919DDBFD19006CF2003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
 			);
@@ -614,7 +650,6 @@
 		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsd; path = schemas/dialog.xsd; sourceTree = "<group>"; };
 		914B2AA118E7E500007B6799 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		914B2AA218E7E500007B6799 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
-		914B2AAE18E7E529007B6799 /* sndfile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = sndfile.framework; path = /Library/Frameworks/sndfile.framework; sourceTree = "<absolute>"; };
 		914B2BB518E892AA007B6799 /* dialog-converting.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dialog-converting.txt"; path = "dialogxml/dialog-converting.txt"; sourceTree = SOURCE_ROOT; };
 		914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = scen.menus.mac.mm; sourceTree = "<group>"; };
 		914CA4641909B00100B6ADD1 /* scen.menus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scen.menus.hpp; sourceTree = "<group>"; };
@@ -625,6 +660,11 @@
 		91597A6E1A3BEDC700BE7BF9 /* spell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spell.cpp; sourceTree = "<group>"; };
 		915E09071A316D6A008BDF00 /* map_parse.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = map_parse.hpp; sourceTree = "<group>"; };
 		915E09081A316D89008BDF00 /* map_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = map_parse.cpp; sourceTree = "<group>"; };
+		9178235C1B2EA0C5007F3444 /* vorbisenc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbisenc.framework; path = ../../../../../../Library/Frameworks/vorbisenc.framework; sourceTree = "<group>"; };
+		917823671B2F32DD007F3444 /* vorbisfile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbisfile.framework; path = ../../../../../../Library/Frameworks/vorbisfile.framework; sourceTree = "<group>"; };
+		9178236E1B2F331D007F3444 /* vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbis.framework; path = ../../../../../../Library/Frameworks/vorbis.framework; sourceTree = "<group>"; };
+		917823751B2F334C007F3444 /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = ../../../../../../Library/Frameworks/ogg.framework; sourceTree = "<group>"; };
+		9178237C1B2F33E9007F3444 /* FLAC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FLAC.framework; path = ../../../../../../Library/Frameworks/FLAC.framework; sourceTree = "<group>"; };
 		9179A45E1A42986200FEF872 /* graphics.exd */ = {isa = PBXFileReference; lastKnownFileType = folder; path = graphics.exd; sourceTree = "<group>"; };
 		9179A45F1A42988200FEF872 /* sounds.exa */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds.exa; sourceTree = "<group>"; };
 		9179A4621A47D4E200FEF872 /* vector2d.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vector2d.hpp; sourceTree = "<group>"; };
@@ -751,12 +791,16 @@
 				DCCA42031A8C469400E6A9A5 /* libz.dylib in Frameworks */,
 				914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA618E7E50D007B6799 /* OpenGL.framework in Frameworks */,
-				914B2ABF18E7E543007B6799 /* sndfile.framework in Frameworks */,
 				91F6F8E318F87F3700E3EA15 /* sfml-audio.framework in Frameworks */,
 				91F6F8E618F87F3700E3EA15 /* sfml-graphics.framework in Frameworks */,
 				91F6F8EC18F87F3700E3EA15 /* sfml-system.framework in Frameworks */,
 				91F6F8EF18F87F3700E3EA15 /* sfml-window.framework in Frameworks */,
 				919DDC0A1900750D003E7FED /* freetype.framework in Frameworks */,
+				9178235D1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */,
+				917823681B2F32DD007F3444 /* vorbisfile.framework in Frameworks */,
+				9178236F1B2F331D007F3444 /* vorbis.framework in Frameworks */,
+				917823761B2F334C007F3444 /* ogg.framework in Frameworks */,
+				9178237D1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -768,12 +812,16 @@
 				DCCA42001A8C467000E6A9A5 /* SFML.framework in Frameworks */,
 				914B2AA418E7E509007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA718E7E50E007B6799 /* OpenGL.framework in Frameworks */,
-				914B2AC018E7E544007B6799 /* sndfile.framework in Frameworks */,
 				91F6F8E418F87F3700E3EA15 /* sfml-audio.framework in Frameworks */,
 				91F6F8E718F87F3700E3EA15 /* sfml-graphics.framework in Frameworks */,
 				91F6F8ED18F87F3700E3EA15 /* sfml-system.framework in Frameworks */,
 				91F6F8F018F87F3700E3EA15 /* sfml-window.framework in Frameworks */,
 				919DDC0B1900750D003E7FED /* freetype.framework in Frameworks */,
+				9178235E1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */,
+				917823691B2F32DD007F3444 /* vorbisfile.framework in Frameworks */,
+				917823701B2F331D007F3444 /* vorbis.framework in Frameworks */,
+				917823771B2F334C007F3444 /* ogg.framework in Frameworks */,
+				9178237E1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -785,12 +833,16 @@
 				DCCA42051A8C46B500E6A9A5 /* libz.dylib in Frameworks */,
 				914B2AA518E7E50A007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA818E7E50E007B6799 /* OpenGL.framework in Frameworks */,
-				914B2AC118E7E544007B6799 /* sndfile.framework in Frameworks */,
 				91F6F8E518F87F3700E3EA15 /* sfml-audio.framework in Frameworks */,
 				91F6F8E818F87F3700E3EA15 /* sfml-graphics.framework in Frameworks */,
 				91F6F8EE18F87F3700E3EA15 /* sfml-system.framework in Frameworks */,
 				91F6F8F118F87F3700E3EA15 /* sfml-window.framework in Frameworks */,
 				919DDC0C1900750D003E7FED /* freetype.framework in Frameworks */,
+				9178235F1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */,
+				9178236A1B2F32DD007F3444 /* vorbisfile.framework in Frameworks */,
+				917823711B2F331D007F3444 /* vorbis.framework in Frameworks */,
+				917823781B2F334C007F3444 /* ogg.framework in Frameworks */,
+				9178237F1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1026,8 +1078,12 @@
 				91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */,
 				91F6F8E018F87F3700E3EA15 /* sfml-system.framework */,
 				91F6F8E118F87F3700E3EA15 /* sfml-window.framework */,
-				914B2AAE18E7E529007B6799 /* sndfile.framework */,
 				919DDC091900750D003E7FED /* freetype.framework */,
+				917823751B2F334C007F3444 /* ogg.framework */,
+				9178236E1B2F331D007F3444 /* vorbis.framework */,
+				9178235C1B2EA0C5007F3444 /* vorbisenc.framework */,
+				917823671B2F32DD007F3444 /* vorbisfile.framework */,
+				9178237C1B2F33E9007F3444 /* FLAC.framework */,
 				919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */,
 				919DDBFB19006CC9003E7FED /* libboost_system.dylib */,
 				91ACCE82190032E000FAEF8B /* fix_dylibs.sh */,
@@ -1734,6 +1790,7 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
@@ -1790,6 +1847,7 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
