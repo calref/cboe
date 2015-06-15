@@ -112,7 +112,7 @@
     <ClInclude Include="..\..\dialogxml\xml-parser\tinyxml.h">
       <Filter>DialogXML\TinyXML</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dialogxml\xml-parser\tinyprint.hpp">
+    <ClInclude Include="..\..\dialogxml\xml-parser\tinyprint.h">
       <Filter>DialogXML\TinyXML</Filter>
     </ClInclude>
     <ClInclude Include="..\..\dialogxml\button.hpp">

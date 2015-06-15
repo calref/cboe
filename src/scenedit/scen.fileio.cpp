@@ -17,7 +17,7 @@
 #include "dlogutil.hpp"
 #include "tarball.hpp"
 #include "gzstream.h"
-#include "tinyprint.hpp"
+#include "tinyprint.h"
 #include "map_parse.hpp"
 
 #define	DONE_BUTTON_ITEM	1

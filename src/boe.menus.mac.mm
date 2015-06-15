@@ -101,7 +101,7 @@ void init_menubar() {
 	if(inited) return;
 	inited = true;
 	NSApplication* app = [NSApplication sharedApplication];
-	[NSBundle loadNibNamed: @"menu" owner: app];
+	[NSBundle loadNibNamed: @"game" owner: app];
 	menu_bar_handle = [app mainMenu];
 	
 	apple_menu = [[menu_bar_handle itemWithTitle: @"Blades of Exile"] submenu];
