@@ -92,12 +92,14 @@ bool cPict::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 void cPict::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	if(prop == TXT_FRAME) drawFramed = val;
 	else if(prop == TXT_FRAMESTYLE) frameStyle = val;
+	else if(prop == TXT_WRAP) drawScaled = !val;
 	else throw xUnsupportedProp(prop);
 }
 
 short cPict::getFormat(eFormat prop) throw(xUnsupportedProp){
 	if(prop == TXT_FRAME) return drawFramed;
 	else if(prop == TXT_FRAMESTYLE) return frameStyle;
+	else if(prop == TXT_WRAP) return !drawScaled;
 	else throw xUnsupportedProp(prop);
 }
 
@@ -828,8 +830,10 @@ void cPict::drawFullSheet(short num, rectangle to_rect){
 	rectangle from_rect;
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_FULL, num);
 	from_rect = rectangle(*from_gw);
-	to_rect.right = to_rect.left + (from_rect.right - from_rect.left);
-	to_rect.bottom = to_rect.top + (from_rect.bottom - from_rect.top);
+	if(!drawScaled) {
+		to_rect.right = to_rect.left + (from_rect.right - from_rect.left);
+		to_rect.bottom = to_rect.top + (from_rect.bottom - from_rect.top);
+	}
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
 }
 

@@ -105,6 +105,10 @@ template<> pair<string,cPict*> cDialog::parse(Element& who /*pict*/){
 			std::string val;
 			attr->GetValue(&val);
 			if(val == "true") custom = true;
+		}else if(name == "scaled"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true") p.second->setFormat(TXT_WRAP, false);
 		}else if(name == "size"){
 			std::string val;
 			attr->GetValue(&val);

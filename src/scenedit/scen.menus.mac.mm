@@ -52,7 +52,7 @@ void init_menubar() {
 		eMenu::EDIT_CUT, eMenu::EDIT_COPY, eMenu::EDIT_PASTE, eMenu::EDIT_DELETE, eMenu::EDIT_SELECT_ALL,
 	};
 	static const eMenu scen_choices[] = {
-		eMenu::TOWN_CREATE, eMenu::NONE, eMenu::SCEN_DETAILS, eMenu::SCEN_INTRO, eMenu::TOWN_START, eMenu::SCEN_PICS, eMenu::NONE, eMenu::NONE,
+		eMenu::TOWN_CREATE, eMenu::NONE, eMenu::SCEN_DETAILS, eMenu::SCEN_INTRO, eMenu::TOWN_START, eMenu::SCEN_SHEETS, eMenu::SCEN_PICS, eMenu::NONE, eMenu::NONE,
 		eMenu::SCEN_SPECIALS, eMenu::SCEN_TEXT, eMenu::SCEN_JOURNALS, eMenu::TOWN_IMPORT, eMenu::SCEN_SAVE_ITEM_RECTS,
 		eMenu::SCEN_HORSES, eMenu::SCEN_BOATS, eMenu::TOWN_VARYING, eMenu::SCEN_TIMERS, eMenu::SCEN_ITEM_SHORTCUTS,
 		eMenu::TOWN_DELETE, eMenu::SCEN_DATA_DUMP, eMenu::SCEN_TEXT_DUMP,
@@ -96,6 +96,7 @@ void init_menubar() {
 }
 
 // mode 0 - initial shut down, 1 - no town, 2 - no out, 3 - no town or out 4 - all menus on
+// 5 - disable file/edit menus
 // TODO: Use an enum here
 void shut_down_menus(short mode) {
 	if(mode == 0) {
@@ -105,6 +106,8 @@ void shut_down_menus(short mode) {
 		[[menu_bar_handle itemWithTitle: @"Outdoors"] setEnabled: NO];
 	}
 	if(mode == 4) {
+		[[menu_bar_handle itemWithTitle: @"File"] setEnabled: YES];
+		[[menu_bar_handle itemWithTitle: @"Edit"] setEnabled: YES];
 		[[file_menu itemWithTitle: @"Save"] setEnabled: YES];
 		[[menu_bar_handle itemWithTitle: @"Scenario"] setEnabled: YES];
 		[[menu_bar_handle itemWithTitle: @"Town"] setEnabled: YES];
@@ -129,6 +132,10 @@ void shut_down_menus(short mode) {
 		for(id item in [out_menu itemArray])
 			if([[item title] length] > 0 && [[item title] characterAtIndex: 0] != ' ')
 				[item setEnabled: NO];
+	}
+	if(mode == 5) {
+		[[menu_bar_handle itemWithTitle: @"File"] setEnabled: NO];
+		[[menu_bar_handle itemWithTitle: @"Edit"] setEnabled: NO];
 	}
 }
 

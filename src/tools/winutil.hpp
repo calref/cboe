@@ -11,6 +11,7 @@
 
 #include <boost/filesystem/path.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Graphics/Image.hpp>
 
 namespace fs = boost::filesystem; // TODO: Centralize this alias
 
@@ -26,12 +27,18 @@ fs::path nav_get_party();
 fs::path nav_put_party(fs::path def = "");
 fs::path nav_get_scenario();
 fs::path nav_put_scenario(fs::path def = "");
+fs::path nav_get_rsrc(std::initializer_list<std::string> extensions);
+fs::path nav_put_rsrc(std::initializer_list<std::string> extensions, fs::path def = "");
 
 // Deal with text snippets in the clipboard.
 // If the clipboard contains something other than text,
 // get_clipboard should return an empty string.
 void set_clipboard(std::string text);
 std::string get_clipboard();
+
+// Deal with images in the clipboard, returning null if no image found
+void set_clipboard_img(sf::Image& img);
+std::unique_ptr<sf::Image> get_clipboard_img();
 
 void beep();
 

@@ -87,7 +87,7 @@ private:
 	static short animFrame;
 	pic_num_t picNum;
 	ePicType picType;
-	bool clickable, drawFramed;
+	bool clickable, drawFramed, drawScaled;
 	void drawPresetTer(short num, rectangle to_rect);
 	void drawPresetTerAnim(short num, rectangle to_rect);
 	void drawPresetMonstSm(short num, rectangle to_rect);
