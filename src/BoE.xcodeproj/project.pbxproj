@@ -633,7 +633,7 @@
 		917B573F100B956C0096C978 /* undo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = undo.hpp; sourceTree = "<group>"; };
 		918D59A718EA513900735B66 /* dialog.keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dialog.keys.hpp; sourceTree = "<group>"; };
 		919086DF1A65C8E30071F7A0 /* tinyprint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyprint.cpp; sourceTree = "<group>"; };
-		919086E11A65D3250071F7A0 /* tinyprint.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tinyprint.hpp; sourceTree = "<group>"; };
+		919086E11A65D3250071F7A0 /* tinyprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyprint.h; sourceTree = "<group>"; };
 		919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = boe.appleevents.mm; sourceTree = "<group>"; };
 		919145FD18E3C750005CF3A4 /* scrollbar.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scrollbar.hpp; sourceTree = "<group>"; };
 		919145FE18E63B41005CF3A4 /* winutil.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = winutil.hpp; sourceTree = "<group>"; };
@@ -878,7 +878,7 @@
 				910BBA2F0FB8C470001E34EA /* ticpprc.h */,
 				910BBA290FB8C459001E34EA /* tinystr.h */,
 				910BBA2B0FB8C459001E34EA /* tinyxml.h */,
-				919086E11A65D3250071F7A0 /* tinyprint.hpp */,
+				919086E11A65D3250071F7A0 /* tinyprint.h */,
 				919086DF1A65C8E30071F7A0 /* tinyprint.cpp */,
 			);
 			path = "xml-parser";

@@ -1,16 +1,35 @@
 #!/bin/sh
 # cboe build - paul_erdos 2015-06-14
 
-SRC=`ls src/*.{cpp,mm} | grep -v '.win' &&
-	ls src/classes/*.cpp | grep -v '.win' &&
-	ls src/dialogxml/*.cpp | grep -v '.win' &&
-	ls src/dialogxml/xml-parser/*.cpp | grep -v '.win' &&
-	ls src/tools/*.{cpp,mm} | grep -v '.win' &&
-	ls src/tools/gzstream/*.cpp | grep -v '.win'`
-SRC=`echo $SRC src/pcedit/pc.editors.cpp`
+COMMON_SRC=`
+	ls src/classes/*.cpp | grep -v '\.win' |
+		sed -E 's/es\/([^\/]*)\.cpp$/_\1.o/ ; s/src/obj/' &&
+	ls src/dialogxml/*.cpp | grep -v '\.win' |
+		sed -E 's/xml\/([^\/]*)\.cpp$/_\1.o/ ; s/src/obj/' &&
+	ls src/dialogxml/xml-parser/*.cpp | grep -v '\.win' |
+		sed 's/dialogxml\/xml-parser\/// ; s/\.cpp/.o/ ; s/src/obj/' &&
+	ls src/tools/*.{cpp,mm} | grep -v '\.win' |
+		sed -E 's/\/([^\/]*)\.(cpp|mm)$/_\1.o/ ; s/src/obj/'
+`
+BOE_SRC=`
+	ls src/boe.*.{cpp,mm} | grep -v '.win' |
+		sed -E 's/\.(cpp|mm)$/.o/ ; s/src/obj/'
+`
+ED_SRC=`
+	ls src/scenedit/scen.*.{cpp,mm} | grep -v '\.win' |
+		sed -E 's/scenedit\/// ; s/\.(cpp|mm)$/.o/ ; s/src/obj/'
+`
+PC_SRC=`
+	ls src/pcedit/pc.*.{cpp,mm} | grep -v '\.win' |
+		sed -E 's/pcedit\/// ; s/\.(cpp|mm)$/.o/ ; s/src/obj/'
+`
+COMMON_SRC=`echo $COMMON_SRC`
+BOE_SRC=`echo $BOE_SRC src/pcedit/pc.editors.cpp`
+ED_SRC=`echo $ED_SRC`
+PC_SRC=`echo $PC_SRC`
 
 function usage {
-	echo "usage: build [-chrw]"
+	echo "usage: $0 [-chrw]"
 }
 
 function help {
@@ -23,11 +42,13 @@ function help {
 }
 
 function clean {
-	rm obj/
+	rm -rf obj/ exe/
 }
 
 function build {
-	make game "SRC=$SRC"
+	mkdir -p obj exe
+	echo "$COMMON_SRC" > test.txt
+	make game "COMMON_SRC=$COMMON_SRC" "BOE_SRC=$BOE_SRC"
 }
 
 if [ $# -gt 0 ]; then
