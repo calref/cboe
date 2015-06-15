@@ -46,7 +46,7 @@ void init_menubar() {
 	inited = true;
 	
 	NSApplication* app = [NSApplication sharedApplication];
-	[NSBundle loadNibNamed: @"pc.menu" owner: app];
+	[NSBundle loadNibNamed: @"pcedit" owner: app];
 	menu_bar_handle = [app mainMenu];
 	
 	apple_menu = [[menu_bar_handle itemWithTitle: @"BoE Character Editor"] submenu];

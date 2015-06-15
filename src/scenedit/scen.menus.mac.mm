@@ -33,7 +33,7 @@ void init_menubar() {
 	inited = true;
 	
 	NSApplication* app = [NSApplication sharedApplication];
-	[NSBundle loadNibNamed: @"scen.menu" owner: app];
+	[NSBundle loadNibNamed: @"scenedit" owner: app];
 	menu_bar_handle = [app mainMenu];
 	
 	app_menu = [[menu_bar_handle itemWithTitle: @"BoE Scenario Editor"] submenu];

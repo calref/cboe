@@ -6,7 +6,7 @@
 //
 //
 
-#include "tinyprint.hpp"
+#include "tinyprint.h"
 #include <stdexcept>
 
 using namespace ticpp;
