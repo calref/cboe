@@ -10,6 +10,8 @@ LIB=/usr/local/lib
 boost_lib=-lboost_filesystem -lboost_system -L$LIB
 boost_include=-I/usr/local/include/boost
 
+include $(PLATFORM).make
+
 all: game pced scened
 
 obj/gzstream.o: src/tools/gzstream/gzstream.cpp src/tools/gzstream/gzstream.h
@@ -66,11 +68,11 @@ exe/bin/pced: obj/common.o $(PC_SRC)
 exe/bin/scened: obj/common.o $(ED_SRC)
 	$(CC) $(CFLAGS) $(CINCLUDES) $^ -o exe/bin/scened $(LIBFLAGS)
 
-game: exe/bin/boe resources
+game: exe/bin/boe resources game-menus
 
-pced: exe/bin/pced resources
+pced: exe/bin/pced resources pc-menus
 
-scened: exe/bin/scened resources
+scened: exe/bin/scened resources scen-menus
 
 resources: sounds.exa graphics.exd strings dialogs fonts scenarios shaders
 
