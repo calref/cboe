@@ -26,7 +26,10 @@ Win32/*/obj
 *.depend
 *blades.ini
 
-.config.vars
+# build.sh output directories and files
+obj/
+exe/
+configvars.make
 
 # XCode Junk Files
 src/*.xcodeproj/**/xcuserdata
