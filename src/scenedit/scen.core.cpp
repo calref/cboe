@@ -3308,17 +3308,49 @@ void edit_custom_pics_types() {
 	pic_dlg.run();
 }
 
-void set_dlg_custom_sheet(cDialog& me, size_t sheet) {
+static void set_dlg_custom_sheet(cDialog& me, size_t sheet) {
 	me["num"].setTextToNum(sheet);
 	dynamic_cast<cPict&>(me["sheet"]).setPict(sheet, PIC_FULL);
 }
 
+extern fs::path tempDir;
 void edit_custom_sheets() {
-	// TODO: What about "disconnected" sheets? eg, we have sheets 0-6, but also sheet 100.
+	int max_pic = -1;
+	std::vector<int> all_pics;
+	fs::path pic_dir = tempDir/"scenario/graphics";
+	if(!fs::exists(pic_dir)) fs::create_directories(pic_dir);
+	for(fs::directory_iterator iter(pic_dir); iter != fs::directory_iterator(); iter++) {
+		std::string fname = iter->path().filename().string().c_str();
+		int dot = fname.find_last_of('.');
+		if(fname.substr(0,5) == "sheet" && fname.substr(dot) == ".png" && std::all_of(fname.begin()+5, fname.begin()+dot, isdigit)) {
+			int this_pic = boost::lexical_cast<int>(fname.substr(5,dot-5));
+			max_pic = max(max_pic, this_pic);
+			all_pics.push_back(this_pic);
+		}
+	}
+	
 	// First, make sure we even have custom graphics! Also make sure they're not legacy format.
-	if(spec_scen_g.numSheets < 1) {
+	bool must_init_spec_g = false;
+	if(max_pic < 0) {
+		if(cChoiceDlog("have-no-pics", {"cancel", "new"}).show() == "cancel")
+			return;
+		must_init_spec_g = true;
+	} else if(max_pic >= 0 && spec_scen_g.numSheets < 1) {
+		if(cChoiceDlog("have-only-full-pics", {"cancel", "new"}).show() == "new")
+			must_init_spec_g = true;
 	} else if(spec_scen_g.is_old) {
+		if(cChoiceDlog("convert-pics-now", {"cancel", "convert"}).show() == "cancel")
+			return;
 		spec_scen_g.convert_sheets();
+	}
+	
+	if(must_init_spec_g) {
+		spec_scen_g.clear();
+		spec_scen_g.sheets = new sf::Texture[1];
+		spec_scen_g.numSheets = 1;
+		spec_scen_g.sheets[0].create(280, 360);
+		spec_scen_g.sheets[0].copyToImage().saveToFile((pic_dir/"sheet0.png").string().c_str());
+		all_pics.insert(all_pics.begin(), 0);
 	}
 	
 	set_cursor(watch_curs);
@@ -3336,21 +3368,35 @@ void edit_custom_sheets() {
 	cDialog pic_dlg("graphic-sheets");
 	pic_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	pic_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
-	pic_dlg["copy"].attachClickHandler([&sheets,&cur](cDialog&, std::string, eKeyMod) -> bool {
+	pic_dlg["copy"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
+		if(cur >= spec_scen_g.numSheets) {
+			fs::path fromPath = pic_dir/("sheet" + std::to_string(all_pics[cur]) + ".png");
+			sf::Image img;
+			img.loadFromFile(fromPath.string().c_str());
+			set_clipboard_img(img);
+			return true;
+		}
 		set_clipboard_img(sheets[cur]);
 		return true;
 	});
-	pic_dlg["paste"].attachClickHandler([&sheets,&cur](cDialog&, std::string, eKeyMod) -> bool {
+	pic_dlg["paste"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
 		auto img = get_clipboard_img();
 		if(img == nullptr) {
 			beep();
+			return true;
+		}
+		if(cur >= spec_scen_g.numSheets) {
+			std::string resName = "sheet" + std::to_string(all_pics[cur]);
+			fs::path toPath = pic_dir/(resName + ".png");
+			img->saveToFile(toPath.string().c_str());
+			ResMgr::free<ImageRsrc>(resName);
 			return true;
 		}
 		sheets[cur] = *img;
 		spec_scen_g.replace_sheet(cur, *img);
 		return true;
 	});
-	pic_dlg["open"].attachClickHandler([&sheets,&cur](cDialog&, std::string, eKeyMod) -> bool {
+	pic_dlg["open"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
 		fs::path fpath = nav_get_rsrc({"png", "bmp", "jpg", "jpeg", "gif", "psd"});
 		if(fpath.empty()) return true;
 		sf::Image img;
@@ -3358,39 +3404,133 @@ void edit_custom_sheets() {
 			beep();
 			return true;
 		}
+		if(cur >= spec_scen_g.numSheets) {
+			std::string resName = "sheet" + std::to_string(all_pics[cur]);
+			fs::path toPath = pic_dir/(resName + ".png");
+			img.saveToFile(toPath.string().c_str());
+			ResMgr::free<ImageRsrc>(resName);
+			return true;
+		}
 		sheets[cur] = img;
 		spec_scen_g.replace_sheet(cur, img);
 		return true;
 	});
-	pic_dlg["save"].attachClickHandler([&sheets,&cur](cDialog&, std::string, eKeyMod) -> bool {
+	pic_dlg["save"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
 		fs::path fpath = nav_put_rsrc({"png", "bmp", "jpg", "jpeg"});
 		if(fpath.empty()) return true;
+		if(cur >= spec_scen_g.numSheets) {
+			fs::path fromPath = pic_dir/("sheet" + std::to_string(all_pics[cur]) + ".png");
+			sf::Image img;
+			img.loadFromFile(fromPath.string().c_str());
+			img.saveToFile(fpath.string().c_str());
+			return true;
+		}
 		sheets[cur].saveToFile(fpath.string().c_str());
 		return true;
 	});
+	pic_dlg["new"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog& me, std::string, eKeyMod) -> bool {
+		cChoiceDlog pickNum("add-new-sheet", {"cancel", "new"}, &me);
+		pickNum->getControl("num").setTextToNum(spec_scen_g.numSheets);
+		if(pickNum.show() == "cancel") return true;
+		int newSheet = pickNum->getControl("num").getTextAsNum();
+		fs::path sheetPath = pic_dir/("sheet" + std::to_string(newSheet) + ".png");
+		if(newSheet == spec_scen_g.numSheets) {
+			sf::Texture* wasSheets = spec_scen_g.sheets;
+			spec_scen_g.sheets = new sf::Texture[spec_scen_g.numSheets + 1];
+			std::copy_n(wasSheets, spec_scen_g.numSheets, spec_scen_g.sheets);
+			spec_scen_g.sheets[newSheet].create(280,360);
+			spec_scen_g.sheets[newSheet].copyToImage().saveToFile(sheetPath.string().c_str());
+			spec_scen_g.numSheets++;
+			auto iter = all_pics.insert(std::upper_bound(all_pics.begin(), all_pics.end(), newSheet), newSheet);
+			cur = iter - all_pics.begin();
+		} else {
+			auto iter = std::lower_bound(all_pics.begin(), all_pics.end(), newSheet);
+			if(*iter == newSheet) {
+				giveError("Sorry, but that sheet already exists! Try creating a sheet with a different number.", "Sheet number: " + std::to_string(newSheet), &me);
+				return true;
+			}
+			iter = all_pics.insert(iter, newSheet);
+			cur = iter - all_pics.begin();
+			sf::Image img;
+			img.create(280, 360);
+			img.saveToFile(sheetPath.string().c_str());
+		}
+		me["left"].show();
+		me["right"].show();
+		set_dlg_custom_sheet(me, all_pics[cur]);
+		return true;
+	});
+	pic_dlg["del"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog& me, std::string, eKeyMod) -> bool {
+		int which_pic = all_pics[cur];
+		if(which_pic < spec_scen_g.numSheets) {
+			std::string choice = "del";
+			if(which_pic < spec_scen_g.numSheets - 1)
+				choice = cChoiceDlog("must-delete-in-order", {"cancel", "del", "move"}, &me).show();
+			if(choice == "cancel") return true;
+			sf::Texture* wasSheets = spec_scen_g.sheets;
+			if(choice == "move") {
+				spec_scen_g.sheets = new sf::Texture[spec_scen_g.numSheets-1];
+				std::copy_n(wasSheets, which_pic, spec_scen_g.sheets);
+				std::copy(wasSheets + which_pic + 1, wasSheets + spec_scen_g.numSheets, spec_scen_g.sheets + which_pic);
+				spec_scen_g.numSheets--;
+				for(; which_pic < spec_scen_g.numSheets; which_pic++) {
+					fs::path from = pic_dir/("sheet" + std::to_string(which_pic + 1) + ".png");
+					fs::path to = pic_dir/("sheet" + std::to_string(which_pic) + ".png");
+					if(!fs::exists(from)) continue; // Just in case
+					fs::remove(to);
+					fs::rename(from, to);
+					ResMgr::free<ImageRsrc>("sheet" + std::to_string(which_pic));
+				}
+				auto end = std::find(all_pics.begin() + cur, all_pics.end(), which_pic - 1);
+				if(end != all_pics.end())
+					all_pics.erase(end);
+				else {
+					// This shouldn't be reached
+					std::cerr << "Whoops! Somehow failed to remove the index of the deleted sheet!" << std::endl;
+				}
+			} else if(choice == "del") {
+				all_pics.erase(all_pics.begin() + cur);
+				spec_scen_g.numSheets = which_pic;
+				spec_scen_g.sheets = new sf::Texture[which_pic];
+				std::copy_n(wasSheets, which_pic, spec_scen_g.sheets);
+				ResMgr::free<ImageRsrc>("sheet" + std::to_string(which_pic));
+			}
+			delete[] wasSheets;
+		}
+		fs::path fpath = pic_dir/("sheet" + std::to_string(which_pic) + ".png");
+		if(fs::exists(fpath)) fs::remove(fpath);
+		if(all_pics.size() == 1) {
+			me["left"].hide();
+			me["right"].hide();
+		} else if(all_pics.empty()) {
+			cStrDlog("You've just deleted the last custom graphics sheet, so this dialog will now close. If you want to add more sheets, you can of course reopen the dialog.", "", "Last Sheet Deleted", 16, PIC_DLOG).show();
+			me.toast(true);
+			return true;
+		}
+		if(cur > 0) cur--;
+		set_dlg_custom_sheet(me, all_pics[cur]);
+		return true;
+	});
 	
-	// TODO: These buttons not implemented yet
-	pic_dlg["new"].hide();
-	pic_dlg["del"].hide();
-	
-	if(spec_scen_g.numSheets == 1) {
+	if(all_pics.size() == 1) {
 		pic_dlg["left"].hide();
 		pic_dlg["right"].hide();
-	} else pic_dlg.attachClickHandlers([&sheets,&cur](cDialog& me, std::string dir, eKeyMod) -> bool {
+	}
+	pic_dlg.attachClickHandlers([&sheets,&cur,&all_pics](cDialog& me, std::string dir, eKeyMod) -> bool {
 		if(dir == "left") {
 			if(cur == 0)
-				cur = spec_scen_g.numSheets - 1;
+				cur = all_pics.size() - 1;
 			else cur--;
 		} else if(dir == "right") {
 			cur++;
-			if(cur >= spec_scen_g.numSheets)
+			if(cur >= all_pics.size())
 				cur = 0;
 		} else return true;
-		set_dlg_custom_sheet(me, cur);
+		set_dlg_custom_sheet(me, all_pics[cur]);
 		return true;
 	}, {"left", "right"});
 	
-	set_dlg_custom_sheet(pic_dlg, cur);
+	set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
 	shut_down_menus(5); // So that cmd+O, cmd+N, cmd+S can work
 	pic_dlg.run();
 	
@@ -3408,8 +3548,7 @@ void edit_custom_sheets() {
 	else shut_down_menus(3);
 }
 
-extern fs::path tempDir;
-static bool edit_custom_sound_action(cDialog& me, std::string action, int curPage, int& max_snd) {
+static bool edit_custom_sound_action(cDialog& me, std::string action, std::vector<std::string>& snd_names, int curPage, int& max_snd) {
 	size_t a_len = action.length();
 	int which_snd = (curPage + 1) * 100 + (action[a_len-1] - '0');
 	action.erase(action.end() - 1);
@@ -3423,7 +3562,10 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, int curPag
 	if(action == "play") {
 		play_sound(-which_snd);
 	} else if(action == "del") {
-		// TODO: Implement this action
+		if(which_snd - 100 < snd_names.size())
+			snd_names[which_snd - 100].clear();
+		fs::remove(sndfile);
+		me["name" + std::to_string(which_snd % 10)].setText("");
 	} else if(action == "open") {
 		fs::path fpath = nav_get_rsrc({"wav"});
 		if(fpath.empty()) return true;
@@ -3448,7 +3590,7 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, int curPag
 	return true;
 }
 
-static void fill_custom_sounds_page(cDialog& me, const std::vector<std::string>& snd_names, int& curPage, int& max_snd, bool firstTime) {
+static void fill_custom_sounds_page(cDialog& me, std::vector<std::string>& snd_names, int& curPage, int& max_snd, bool firstTime) {
 	for(int i = 0; i < 10; i++) {
 		int which_snd = (curPage + 1) * 100 + i;
 		std::string id = std::to_string(i);
@@ -3458,7 +3600,7 @@ static void fill_custom_sounds_page(cDialog& me, const std::vector<std::string>&
 				"play" + id, "del" + id,
 				"open" + id, "save" + id,
 			};
-			me.attachClickHandlers(std::bind(edit_custom_sound_action, _1, _2, std::ref(curPage), std::ref(max_snd)), buttons);
+			me.attachClickHandlers(std::bind(edit_custom_sound_action, _1, _2, std::ref(snd_names), std::ref(curPage), std::ref(max_snd)), buttons);
 		}
 		me["num" + id].setTextToNum(which_snd);
 		if(which_snd - 100 < snd_names.size())
@@ -3496,8 +3638,8 @@ void edit_custom_sounds() {
 	}
 	
 	int curPage = 0;
-	fill_custom_sounds_page(snd_dlg, scenario.snd_names, curPage, max_snd, true);
 	auto snd_names = scenario.snd_names;
+	fill_custom_sounds_page(snd_dlg, snd_names, curPage, max_snd, true);
 	
 	if(max_snd < 110) {
 		snd_dlg["left"].hide();
