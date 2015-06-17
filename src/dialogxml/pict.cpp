@@ -493,6 +493,7 @@ void cPict::recalcRect() {
 			break;
 		case PIC_FULL:
 		case PIC_CUSTOM_FULL:
+			if(drawScaled) break;
 			auto sheet = getSheet(SHEET_FULL, picNum);
 			sf::Vector2u sz = sheet->getSize();
 			bounds.width() = sz.x;

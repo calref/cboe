@@ -1881,29 +1881,37 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 	int num_graphic_sheets = 0;
 	if(is_packed) {
 		fs::remove_all(tempDir/"scenario");
-		int i = 0;
-		std::string fname;
-		while(fname = "scenario/graphics/sheet" + std::to_string(i) + ".png", pack.hasFile(fname)) {
+		std::bitset<65536> have_pic = {0};
+		for(auto& file : pack) {
+			std::string fname = file.filename;
+			int dot = fname.find_last_of('.');
+			if(fname.substr(0,23) == "scenario/graphics/sheet") {
+				if(fname.substr(dot,4) != ".png") continue;
+				if(!std::all_of(fname.begin() + 23, fname.begin() + dot, isdigit)) continue;
+				int i = boost::lexical_cast<int>(fname.substr(23, dot - 23));
+				if(i >= 65536) continue;
+				have_pic[i] = true;
+			} else if(fname.substr(0,18) == "scenario/graphics/") {
+				if(fname.substr(dot,4) != ".png") continue;
+				// This would be an override sheet, one that replaces one of the preset sheets.
+				// Or at least, we're going to assume it is. If it's not, there's no harm done
+				// (except possibly storing a sheet that will never be used).
+				// TODO: A way to edit these sheets in the scenario editor?
+			} else if(fname.substr(0,19) == "scenario/sounds/SND") {
+				if(fname.substr(dot,4) != ".wav") continue;
+				if(!std::all_of(fname.begin() + 19, fname.begin() + dot, isdigit)) continue;
+			} else continue;
 			fs::path path = tempDir/fname;
 			fs::create_directories(path.parent_path());
-			std::istream& graphic = pack.getFile(fname);
+			std::istream& f = pack.getFile(fname);
 			std::ofstream fout(path.string().c_str(), std::ios::binary);
-			fout << graphic.rdbuf();
+			fout << f.rdbuf();
 			fout.close();
-			i++;
 		}
+		// This is a bit of trickery to get it to only count the first consecutive range of sheets
+		while(have_pic[num_graphic_sheets])
+			num_graphic_sheets++;
 		ResMgr::pushPath<ImageRsrc>(tempDir/"scenario"/"graphics");
-		num_graphic_sheets = i;
-		i = 100;
-		while(fname = "scenario/sounds/SND" + std::to_string(i) + ".wav", pack.hasFile(fname)) {
-			fs::path path = tempDir/fname;
-			fs::create_directories(path.parent_path());
-			std::istream& snd = pack.getFile(fname);
-			std::ofstream fout(path.string().c_str(), std::ios::binary);
-			fout << snd.rdbuf();
-			fout.close();
-			i++;
-		}
 		ResMgr::pushPath<SoundRsrc>(tempDir/"scenario"/"sounds");
 	} else {
 		if(fs::is_directory(file_to_load/"graphics"))
