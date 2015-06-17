@@ -68,11 +68,11 @@ exe/bin/pced: obj/common.o $(PC_SRC)
 exe/bin/scened: obj/common.o $(ED_SRC)
 	$(CC) $(CFLAGS) $(CINCLUDES) $^ -o exe/bin/scened $(LIBFLAGS)
 
-game: exe/bin/boe resources game-menus
+game: exe/bin/boe resources game-bundle
 
-pced: exe/bin/pced resources pc-menus
+pced: exe/bin/pced resources pc-bundle
 
-scened: exe/bin/scened resources scen-menus bases
+scened: exe/bin/scened resources scen-bundle bases
 
 resources: sounds.exa graphics.exd strings dialogs fonts scenarios shaders
 
@@ -87,14 +87,16 @@ graphics.exd:
 	cp -Rfp rsrc/graphics.exd 'exe/Blades of Exile/Scenario Editor/'
 
 strings:
-	cp -Rfp rsrc/strings/ 'exe/Blades of Exile/data/'
+	mkdir -p 'exe/Blades of Exile/data/strings'
+	cp -fp rsrc/strings/*.txt 'exe/Blades of Exile/data/strings/'
 
 dialogs:
 	mkdir -p 'exe/Blades of Exile/data/dialogs'
 	cp -fp rsrc/dialogs/*.xml 'exe/Blades of Exile/data/dialogs/'
 
 fonts:
-	cp -Rfp rsrc/fonts/ 'exe/Blades of Exile/data/'
+	mkdir -p 'exe/Blades of Exile/data/fonts/'
+	cp -fp rsrc/fonts/*.ttf 'exe/Blades of Exile/data/fonts/'
 
 scenarios:
 	cp -fp 'rsrc/Blades of Exile Scenarios'/*.{exs,meg} 'exe/Blades of Exile/Blades of Exile Scenarios/'
