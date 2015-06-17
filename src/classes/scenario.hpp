@@ -93,6 +93,7 @@ public:
 	std::string intro_strs[6];
 	std::vector<std::string> journal_strs;
 	std::vector<std::string> spec_strs;
+	std::vector<std::string> snd_names;
 	bool adjust_diff;
 	bool is_legacy;
 	fs::path scen_file; // transient

@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='light' defbtn='okay'>
+	<pict type='dlog' num='16' top='6' left='6'/>
+	<text size='large' top='18' left='50' width='250' height='17'>Edit Custom Sounds:</text>
+	
+	<text top='48' left='10' width='50' height='16'>Sound #</text>
+	<text top='48' left='65' width='200' height='16'>Name</text>
+	
+	<text name='num0' top='68' left='10' width='50' height='16'/>
+	<text name='num1' top='98' left='10' width='50' height='16'/>
+	<text name='num2' top='128' left='10' width='50' height='16'/>
+	<text name='num3' top='158' left='10' width='50' height='16'/>
+	<text name='num4' top='188' left='10' width='50' height='16'/>
+	<text name='num5' top='218' left='10' width='50' height='16'/>
+	<text name='num6' top='248' left='10' width='50' height='16'/>
+	<text name='num7' top='278' left='10' width='50' height='16'/>
+	<text name='num8' top='308' left='10' width='50' height='16'/>
+	<text name='num9' top='338' left='10' width='50' height='16'/>
+	
+	<field name='name0' top='67' left='65' width='200' height='16'/>
+	<field name='name1' top='97' left='65' width='200' height='16'/>
+	<field name='name2' top='127' left='65' width='200' height='16'/>
+	<field name='name3' top='157' left='65' width='200' height='16'/>
+	<field name='name4' top='187' left='65' width='200' height='16'/>
+	<field name='name5' top='217' left='65' width='200' height='16'/>
+	<field name='name6' top='247' left='65' width='200' height='16'/>
+	<field name='name7' top='277' left='65' width='200' height='16'/>
+	<field name='name8' top='307' left='65' width='200' height='16'/>
+	<field name='name9' top='337' left='65' width='200' height='16'/>
+	
+	<button name='open0' type='regular' top='66' left='275'>Import</button>
+	<button name='open1' type='regular' top='96' left='275'>Import</button>
+	<button name='open2' type='regular' top='126' left='275'>Import</button>
+	<button name='open3' type='regular' top='156' left='275'>Import</button>
+	<button name='open4' type='regular' top='186' left='275'>Import</button>
+	<button name='open5' type='regular' top='216' left='275'>Import</button>
+	<button name='open6' type='regular' top='246' left='275'>Import</button>
+	<button name='open7' type='regular' top='276' left='275'>Import</button>
+	<button name='open8' type='regular' top='306' left='275'>Import</button>
+	<button name='open9' type='regular' top='336' left='275'>Import</button>
+
+	<button name='save0' type='regular' top='66' left='340'>Export</button>
+	<button name='save1' type='regular' top='96' left='340'>Export</button>
+	<button name='save2' type='regular' top='126' left='340'>Export</button>
+	<button name='save3' type='regular' top='156' left='340'>Export</button>
+	<button name='save4' type='regular' top='186' left='340'>Export</button>
+	<button name='save5' type='regular' top='216' left='340'>Export</button>
+	<button name='save6' type='regular' top='246' left='340'>Export</button>
+	<button name='save7' type='regular' top='276' left='340'>Export</button>
+	<button name='save8' type='regular' top='306' left='340'>Export</button>
+	<button name='save9' type='regular' top='336' left='340'>Export</button>
+	
+	<button name='play0' type='regular' top='66' left='405'>Play</button>
+	<button name='play1' type='regular' top='96' left='405'>Play</button>
+	<button name='play2' type='regular' top='126' left='405'>Play</button>
+	<button name='play3' type='regular' top='156' left='405'>Play</button>
+	<button name='play4' type='regular' top='186' left='405'>Play</button>
+	<button name='play5' type='regular' top='216' left='405'>Play</button>
+	<button name='play6' type='regular' top='246' left='405'>Play</button>
+	<button name='play7' type='regular' top='276' left='405'>Play</button>
+	<button name='play8' type='regular' top='306' left='405'>Play</button>
+	<button name='play9' type='regular' top='336' left='405'>Play</button>
+	
+	<button name='del0' type='regular' top='66' left='470'>Delete</button>
+	<button name='del1' type='regular' top='96' left='470'>Delete</button>
+	<button name='del2' type='regular' top='126' left='470'>Delete</button>
+	<button name='del3' type='regular' top='156' left='470'>Delete</button>
+	<button name='del4' type='regular' top='186' left='470'>Delete</button>
+	<button name='del5' type='regular' top='216' left='470'>Delete</button>
+	<button name='del6' type='regular' top='246' left='470'>Delete</button>
+	<button name='del7' type='regular' top='276' left='470'>Delete</button>
+	<button name='del8' type='regular' top='306' left='470'>Delete</button>
+	<button name='del9' type='regular' top='336' left='470'>Delete</button>
+	
+	<text top='364' left='20' width='500' height='34'>
+		The Cancel button only discards changes made to the sound names.
+		If you import a sound, that change is immediately saved, so Cancel
+		will not discard it.
+	</text>
+	<button name='left' type='left' def-key='left' top='386' left='20'/>
+	<button name='right' type='right' def-key='right' top='386' left='85'/>
+	<button name='cancel' type='regular' def-key='esc' top='386' left='405'>Cancel</button>
+	<button name='okay' type='regular' top='386' left='470'>OK</button>
+</dialog>
