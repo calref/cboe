@@ -351,6 +351,15 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="sound" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="id" type="xs:integer" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

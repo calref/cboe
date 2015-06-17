@@ -304,6 +304,10 @@ void handle_menu_choice(eMenu item_hit) {
 			edit_custom_pics_types();
 			change_made = true;
 			break;
+		case eMenu::SCEN_SNDS:
+			edit_custom_sounds();
+			change_made = true;
+			break;
 		case eMenu::SCEN_SPECIALS:
 			right_sbar->setPosition(0);
 			start_special_editing(0,0);

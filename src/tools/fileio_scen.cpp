@@ -757,7 +757,7 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 			}
 		} else if(type == "editor") {
 			Iterator<Element> edit;
-			int num_storage = 0, num_pics = 0;
+			int num_storage = 0, num_pics = 0, sndnum = 0;
 			for(edit = edit.begin(elem.Get()); edit != edit.end(); edit++) {
 				edit->GetValue(&type);
 				if(type == "default-ground") {
@@ -766,6 +766,11 @@ static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					scenario.last_out_edited = readLocFromXml(*edit);
 				} else if(type == "last-town") {
 					edit->GetText(&scenario.last_town_edited);
+				} else if(type == "sound") {
+					edit->GetAttribute("id", &sndnum);
+					if(sndnum >= scenario.snd_names.size())
+						scenario.snd_names.resize(sndnum + 1);
+					edit->GetText(&scenario.snd_names[sndnum], false);
 				} else if(type == "graphics") {
 					static const std::set<int> valid_pictypes = {1,2,3,4,5,7,10,11,12,13,15,16,23,43,63};
 					if(num_pics > 0)
@@ -1875,6 +1880,7 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 	// First figure out where they are in the filesystem. The implementation of this depends on whether the scenario is packed.
 	int num_graphic_sheets = 0;
 	if(is_packed) {
+		fs::remove_all(tempDir/"scenario");
 		int i = 0;
 		std::string fname;
 		while(fname = "scenario/graphics/sheet" + std::to_string(i) + ".png", pack.hasFile(fname)) {
@@ -1886,11 +1892,10 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 			fout.close();
 			i++;
 		}
-		if(i > 0)
-			ResMgr::pushPath<ImageRsrc>(tempDir/"scenario"/"graphics");
+		ResMgr::pushPath<ImageRsrc>(tempDir/"scenario"/"graphics");
 		num_graphic_sheets = i;
-		i = 0;
-		while(fname = "scenario/sounds/SND" + std::to_string(i) + ".WAV", pack.hasFile(fname)) {
+		i = 100;
+		while(fname = "scenario/sounds/SND" + std::to_string(i) + ".wav", pack.hasFile(fname)) {
 			fs::path path = tempDir/fname;
 			fs::create_directories(path.parent_path());
 			std::istream& snd = pack.getFile(fname);
@@ -1899,8 +1904,7 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 			fout.close();
 			i++;
 		}
-		if(i > 0)
-			ResMgr::pushPath<SoundRsrc>(tempDir/"scenario"/"sounds");
+		ResMgr::pushPath<SoundRsrc>(tempDir/"scenario"/"sounds");
 	} else {
 		if(fs::is_directory(file_to_load/"graphics"))
 			ResMgr::pushPath<ImageRsrc>(file_to_load/"graphics");

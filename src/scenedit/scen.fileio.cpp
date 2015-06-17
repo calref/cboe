@@ -337,6 +337,13 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 			data.CloseElement("storage");
 		}
 	}
+	for(int i = 0; i < scenario.snd_names.size(); i++) {
+		if(scenario.snd_names[i].empty()) continue;
+		data.OpenElement("sound");
+		data.PushAttribute("id", i);
+		data.PushText(scenario.snd_names[i]);
+		data.CloseElement("sound");
+	}
 	data.CloseElement("editor");
 	data.CloseElement("scenario");
 }
@@ -1050,7 +1057,7 @@ void save_scenario(fs::path toFile) {
 			std::string fname = dir_iter->path().filename().string();
 			if(fname.substr(0,3) == "SND") {
 				size_t dot = fname.find_last_of('.');
-				if(fname.substr(dot) == ".WAV" && std::all_of(fname.begin() + 3, fname.begin() + dot, isdigit)) {
+				if(fname.substr(dot) == ".wav" && std::all_of(fname.begin() + 3, fname.begin() + dot, isdigit)) {
 					// Looks like a valid sound!
 					std::ostream& pic_out = scen_file.newFile("scenario/sounds/" + fname);
 					std::ifstream fin(dir_iter->path().string().c_str(), std::ios::binary);

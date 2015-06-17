@@ -3407,3 +3407,120 @@ void edit_custom_sheets() {
 		shut_down_menus(editing_town ? 2 : 1);
 	else shut_down_menus(3);
 }
+
+extern fs::path tempDir;
+static bool edit_custom_sound_action(cDialog& me, std::string action, int curPage, int& max_snd) {
+	size_t a_len = action.length();
+	int which_snd = (curPage + 1) * 100 + (action[a_len-1] - '0');
+	action.erase(action.end() - 1);
+	fs::path sndpath = tempDir/"scenario/sounds";
+	std::string sndbasenm = "SND" + std::to_string(which_snd);
+	fs::path sndfile = sndpath/(sndbasenm + ".wav");
+	if(action != "open" && !fs::exists(sndfile)) {
+		beep();
+		return true;
+	}
+	if(action == "play") {
+		play_sound(-which_snd);
+	} else if(action == "del") {
+		// TODO: Implement this action
+	} else if(action == "open") {
+		fs::path fpath = nav_get_rsrc({"wav"});
+		if(fpath.empty()) return true;
+		sf::SoundBuffer snd;
+		if(!snd.loadFromFile(fpath.string().c_str())) {
+			beep();
+			return true;
+		}
+		fs::copy_file(fpath, sndfile, fs::copy_option::overwrite_if_exists);
+		ResMgr::free<SoundRsrc>(which_snd);
+		if(which_snd > max_snd)
+			max_snd = which_snd;
+		if(max_snd % 10 == 9) {
+			me["left"].show();
+			me["right"].show();
+		}
+	} else if(action == "save") {
+		fs::path fpath = nav_put_rsrc({"wav"});
+		if(fpath.empty()) return true;
+		fs::copy_file(sndfile, fpath, fs::copy_option::overwrite_if_exists);
+	}
+	return true;
+}
+
+static void fill_custom_sounds_page(cDialog& me, const std::vector<std::string>& snd_names, int& curPage, int& max_snd, bool firstTime) {
+	for(int i = 0; i < 10; i++) {
+		int which_snd = (curPage + 1) * 100 + i;
+		std::string id = std::to_string(i);
+		if(firstTime) {
+			using namespace std::placeholders;
+			std::vector<std::string> buttons = {
+				"play" + id, "del" + id,
+				"open" + id, "save" + id,
+			};
+			me.attachClickHandlers(std::bind(edit_custom_sound_action, _1, _2, std::ref(curPage), std::ref(max_snd)), buttons);
+		}
+		me["num" + id].setTextToNum(which_snd);
+		if(which_snd - 100 < snd_names.size())
+			me["name" + id].setText(snd_names[which_snd - 100]);
+	}
+}
+
+static void get_sound_names_from_dlg(cDialog& me, std::vector<std::string>& snd_names, int curPage) {
+	for(int i = 9; i >= 0; i--) {
+		std::string id = "name" + std::to_string(i);
+		size_t index = curPage * 100 + i;
+		std::string name = me[id].getText();
+		if(!name.empty()) {
+			if(snd_names.size() <= index)
+				snd_names.resize(index + 1);
+			snd_names[index] = name;
+		} else if(index < snd_names.size())
+			snd_names[index].clear();
+	}
+}
+
+void edit_custom_sounds() {
+	cDialog snd_dlg("edit-sounds");
+	snd_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &snd_dlg, false));
+	snd_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &snd_dlg, true));
+	
+	int max_snd = 99;
+	fs::path snd_dir = tempDir/"scenario/sounds";
+	if(!fs::exists(snd_dir)) fs::create_directories(snd_dir);
+	for(fs::directory_iterator iter(snd_dir); iter != fs::directory_iterator(); iter++) {
+		std::string fname = iter->path().filename().string().c_str();
+		int dot = fname.find_last_of('.');
+		if(fname.substr(0,3) == "snd" && fname.substr(dot) == ".wav" && std::all_of(fname.begin()+3, fname.begin()+dot, isdigit))
+			max_snd = max(max_snd, boost::lexical_cast<int>(fname.substr(3,dot-3)));
+	}
+	
+	int curPage = 0;
+	fill_custom_sounds_page(snd_dlg, scenario.snd_names, curPage, max_snd, true);
+	auto snd_names = scenario.snd_names;
+	
+	if(max_snd < 110) {
+		snd_dlg["left"].hide();
+		snd_dlg["right"].hide();
+	}
+	snd_dlg.attachClickHandlers([&curPage,&max_snd,&snd_names](cDialog& me, std::string dir, eKeyMod) -> bool {
+		get_sound_names_from_dlg(me, snd_names, curPage);
+		if(dir == "left") {
+			if(curPage == 0)
+				curPage = max_snd / 10 - 10;
+			else curPage--;
+		} else if(dir == "right") {
+			curPage++;
+			if(curPage > max_snd / 10 - 10)
+				curPage = 0;
+		} else return true;
+		fill_custom_sounds_page(me, snd_names, curPage, max_snd, false);
+		return true;
+	}, {"left", "right"});
+	
+	snd_dlg.run();
+	if(snd_dlg.accepted()) {
+		get_sound_names_from_dlg(snd_dlg, snd_names, curPage);
+		snd_names.swap(scenario.snd_names);
+	}
+}

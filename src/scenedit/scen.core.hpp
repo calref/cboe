@@ -1,6 +1,7 @@
 
 class cDialog;
 
+void edit_custom_sounds();
 void edit_custom_sheets();
 void edit_custom_pics_types();
 bool edit_ter_type(ter_num_t which_ter);

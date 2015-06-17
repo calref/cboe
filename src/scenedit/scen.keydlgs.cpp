@@ -761,9 +761,10 @@ pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {
 }
 
 snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {
-	// TODO: Somehow find a way to include custom sounds in this list
 	if(cur < 0) cur = 0;
-	cStringChoice snd_dlg(*ResMgr::get<StringRsrc>("sound-names"), title, parent);
+	StringRsrc snd_names = *ResMgr::get<StringRsrc>("sound-names");
+	std::copy(scenario.snd_names.begin(), scenario.snd_names.end(), std::back_inserter(snd_names));
+	cStringChoice snd_dlg(snd_names, title, parent);
 	snd_dlg.attachSelectHandler([](cStringChoice&, int n) {
 		play_sound(-n);
 	});
