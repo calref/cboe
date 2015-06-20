@@ -3,9 +3,10 @@
 #include <iostream>
 #include <Windows.h>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Image.hpp>
 
 extern sf::RenderWindow mainPtr;
-OPENFILENAMEA getParty, getScen, putParty, putScen;
+OPENFILENAMEA getParty, getScen, getRsrc, putParty, putScen, putRsrc;
 
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
 // The proper way would involve use of the TextEntered event
@@ -106,7 +107,7 @@ void init_fileio() {
 	base_dlg.hwndOwner = mainPtr.getSystemHandle();
 	base_dlg.nFilterIndex = 1;
 	base_dlg.Flags = OFN_DONTADDTORECENT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
-	getParty = getScen = putParty = putScen = base_dlg;
+	getParty = getScen = getRsrc = putParty = putScen = putRsrc = base_dlg;
 	// Open saved game dialog
 	getParty.lpstrFilter = LPCTSTR("Blades of Exile Saved Games\0*.exg\0Legacy Saved Games\0*.mac;*.boe;*.SAV\0");
 	getParty.lpstrTitle = LPCTSTR("Load Game");
@@ -114,6 +115,10 @@ void init_fileio() {
 	// Open scenario dialog
 	getScen.lpstrFilter = LPCTSTR("Blades of Exile Scenarios\0*.boes\0Legacy or Unpacked Scenarios\0*.exs\0");
 	getScen.lpstrTitle = LPCTSTR("Open Scenario");
+	getScen.Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+	// Import resource dialog
+	getRsrc.lpstrTitle = LPCTSTR("Import Resource");
+	getRsrc.Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
 	// Save game dialog
 	putParty.lpstrFilter = LPCTSTR("Blades of Exile Saved Games\0*.exg\0");
 	putParty.lpstrTitle = LPCTSTR("Save Game");
@@ -121,6 +126,10 @@ void init_fileio() {
 	// Save scenario dialog
 	putScen.lpstrFilter = LPCTSTR("Blades of Exile Scenario\0*.boes\0");
 	putScen.lpstrTitle = LPCTSTR("Save Scenario");
+	putScen.Flags |= OFN_OVERWRITEPROMPT;
+	// Export resource dialog
+	putRsrc.lpstrTitle = LPCTSTR("Export Resource");
+	putRsrc.Flags |= OFN_OVERWRITEPROMPT;
 }
 
 static std::string runFileDlog(OPENFILENAMEA& dlg, const std::string& file, bool save) {
@@ -186,6 +195,44 @@ fs::path nav_put_scenario(fs::path def) {
 	return runFileDlog(putScen, def.string(), true);
 }
 
+static std::unique_ptr<CHAR, std::default_delete<CHAR[]>> extListToFilter(std::initializer_list<std::string> extList) {
+	std::string title, filter;
+	if(extList.size() == 0) {
+		title = "All files";
+		filter = "*.*";
+	} else {
+		if(*extList.begin() == "png") title = "Image resources";
+		else if(*extList.begin() == "wav") title = "Sound resources";
+		else title = "Resources";
+		bool first = true;
+		for(std::string ext : extList) {
+			if(!first) filter += ';';
+			first = false;
+			filter += "*.";
+			filter += ext;
+		}
+	}
+	size_t len = title.size() + filter.size() + 3; // The 3 is for the null terminators
+	CHAR* str = new CHAR[len];
+	std::fill_n(str, len, 0);
+	auto end = std::copy_n(title.begin(), title.size(), str);
+	end++;
+	std::copy_n(filter.begin(), filter.size(), end);
+	return std::unique_ptr<CHAR, std::default_delete<CHAR[]>>(str);
+}
+
+fs::path nav_get_rsrc(std::initializer_list<std::string> extensions) {
+	auto filter = extListToFilter(extensions);
+	getRsrc.lpstrFilter = LPCTSTR(filter.get());
+	return runFileDlog(getRsrc, "", false);
+}
+
+fs::path nav_put_rsrc(std::initializer_list<std::string> extensions, fs::path def) {
+	auto filter = extListToFilter(extensions);
+	putRsrc.lpstrFilter = LPCTSTR(filter.get());
+	return runFileDlog(putRsrc, def.string(), true);
+}
+
 void set_clipboard(std::string text) {
 	if(text.empty()) return;
 	if(!OpenClipboard(mainPtr.getSystemHandle())) return;
@@ -207,6 +254,106 @@ std::string get_clipboard() {
 	GlobalUnlock(hData);
 	CloseClipboard();
 	return contents;
+}
+
+static void printErr(std::string msg) {
+	char str[256];
+	str[255] = 0;
+	FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), 0, str, 255, NULL);
+	std::cerr << msg << ": " << str << std::endl;
+}
+
+void set_clipboard_img(sf::Image& img) {
+	if(img.getSize().x == 0 && img.getSize().y == 0) return;
+	size_t pxSize = img.getSize().x * img.getSize().y * 4;
+	HGLOBAL data = GlobalAlloc(GMEM_MOVEABLE | GMEM_ZEROINIT, sizeof(BITMAPV5HEADER) + pxSize);
+	if(data == NULL) {
+		printErr("Error allocating bitmap");
+		return;
+	}
+	BITMAPV5HEADER* info = (BITMAPV5HEADER*) GlobalLock(data);
+	if(info == NULL) {
+		printErr("Error accessing bitmap");
+		GlobalFree(data);
+		return;
+	}
+	info->bV5Size = sizeof(BITMAPV5HEADER);
+	info->bV5Width = img.getSize().x;
+	info->bV5Height = -img.getSize().y;
+	info->bV5Planes = 1;
+	info->bV5BitCount = 32;
+	info->bV5Compression = BI_BITFIELDS;
+	info->bV5SizeImage = pxSize;
+	info->bV5RedMask   = 0x000000ff;
+	info->bV5GreenMask = 0x0000ff00;
+	info->bV5BlueMask  = 0x00ff0000;
+	info->bV5AlphaMask = 0xff000000;
+	std::copy_n(img.getPixelsPtr(), pxSize, reinterpret_cast<sf::Uint8*>(info + 1));
+	if(!OpenClipboard(mainPtr.getSystemHandle())) {
+		printErr("Error opening clipboard");
+		GlobalFree(data);
+		return;
+	}
+	if(!EmptyClipboard()) {
+		printErr("Error emptying clipboard");
+		GlobalFree(data);
+	}
+	auto result = SetClipboardData(CF_DIBV5, data);
+	if(result == NULL) {
+		printErr("Error setting clipboard");
+		GlobalFree(data);
+	}
+	CloseClipboard();
+}
+
+std::unique_ptr<sf::Image> get_clipboard_img() {
+	if(!OpenClipboard(NULL)) return nullptr;
+	HGLOBAL hData = GetClipboardData(CF_DIBV5);
+	// TODO: Probably need to ignore all the below stuff and read the image based on the values in the BITMAPV5HEADER...
+	// If the bitmap is compressed as PNG or something, I can probably use img.loadFromMemory, otherwise manually decompress?
+	HDC dc = CreateCompatibleDC(GetDC(NULL));
+	if(dc == NULL) {
+		CloseClipboard();
+		return nullptr;
+	}
+	std::unique_ptr<sf::Image> img;
+	//HBITMAP bmp = (HBITMAP)GlobalLock(hData);
+	BITMAPV5HEADER* hdr = (BITMAPV5HEADER*) GlobalLock(hData);
+	if(hdr->bV5BitCount == 32) {
+		if(hdr->bV5Compression == BI_RGB || hdr->bV5Compression == BI_BITFIELDS) {
+			DWORD32* data = (DWORD32*) (hdr + 1);
+			int rShift = 0, gShift = 0, bShift = 0, aShift = 0;
+			if(hdr->bV5RedMask)
+				rShift = log2(hdr->bV5RedMask & (-hdr->bV5RedMask));
+			if(hdr->bV5GreenMask)
+				gShift = log2(hdr->bV5GreenMask & (-hdr->bV5GreenMask));
+			if(hdr->bV5BlueMask)
+				bShift = log2(hdr->bV5BlueMask & (-hdr->bV5BlueMask));
+			if(hdr->bV5AlphaMask)
+				aShift = log2(hdr->bV5AlphaMask & (-hdr->bV5AlphaMask));
+			img.reset(new sf::Image);
+			img->create(hdr->bV5Width, hdr->bV5Height);
+			for(int y = 0; y < abs(hdr->bV5Height); y++) {
+				for(int x = 0; x < hdr->bV5Width; x++) {
+					sf::Color clr;
+					clr.r = (*data & hdr->bV5RedMask) >> rShift;
+					clr.g = (*data & hdr->bV5GreenMask) >> gShift;
+					clr.b = (*data & hdr->bV5BlueMask) >> bShift;
+					if(hdr->bV5AlphaMask)
+						clr.a = (*data & hdr->bV5AlphaMask) >> aShift;
+					if(hdr->bV5Height < 0)
+						img->setPixel(x, y, clr);
+					else img->setPixel(x, hdr->bV5Height - y - 1, clr);
+					data++;
+				}
+			}
+		}
+	}
+CLEANUP:
+	GlobalUnlock(hData);
+	CloseClipboard();
+	ReleaseDC(NULL, dc);
+	return img;
 }
 
 void beep() {
