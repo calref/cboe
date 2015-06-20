@@ -466,6 +466,7 @@ void build_scen_headers() {
 	std::cout << progDir << '\n' << scenDir << std::endl;
 	scen_headers.clear();
 	fs::directory_iterator iter(scenDir);
+	make_cursor_watch();
 	
 	while(iter != fs::directory_iterator()) {
 		fs::file_status stat = iter->status();
@@ -475,6 +476,17 @@ void build_scen_headers() {
 	}
 	if(scen_headers.size() == 0) { // no scens present
 		// TODO: Should something be done here?
+	} else {
+		std::sort(scen_headers.begin(), scen_headers.end(), [](scen_header_type hdr_a, scen_header_type hdr_b) -> bool {
+			std::string a = hdr_a.name, b = hdr_b.name;
+			std::transform(a.begin(), a.end(), a.begin(), tolower);
+			std::transform(b.begin(), b.end(), b.begin(), tolower);
+			if(a.substr(0,2) == "a ") a.erase(a.begin(), a.begin() + 2);
+			else if(a.substr(0,4) == "the ") a.erase(a.begin(), a.begin() + 4);
+			if(b.substr(0,2) == "a ") b.erase(b.begin(), b.begin() + 2);
+			else if(b.substr(0,4) == "the ") b.erase(b.begin(), b.begin() + 4);
+			return a < b;
+		});
 	}
 }
 
