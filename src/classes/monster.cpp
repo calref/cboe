@@ -749,7 +749,7 @@ int uAbility::get_ap_cost(eMonstAbil key) const {
 		case eMonstAbil::NO_ABIL:
 			return -256;
 	}
-//	return -256;
+	return -256;
 }
 
 void cMonster::writeTo(std::ostream& file) const {
