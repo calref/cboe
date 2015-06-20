@@ -498,7 +498,9 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 	int dot = fname.find_first_of('.');
 	if(dot == std::string::npos)
 		return false; // If it has no file extension, it's not a valid scenario.
-	if(fname.substr(dot) == ".exs") {
+	std::string file_ext = fname.substr(dot);
+	std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), tolower);
+	if(file_ext == ".exs") {
 		std::ifstream fin(file.string(), std::ios::binary);
 		if(fin.fail()) return false;
 		scenario_header_flags curScen;
@@ -510,7 +512,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 			file_ok = true; // Legacy Windows scenario
 		else if(curScen.flag1 == 'O' && curScen.flag2 == 'B' && curScen.flag3 == 'O' && curScen.flag4 == 'E')
 			file_ok = true; // Unpacked OBoE scenario
-	} else if(fname.substr(dot) == ".boes") {
+	} else if(file_ext == ".boes") {
 		if(fs::is_directory(file)) {
 			if(fs::exists(file/"header.exs"))
 				return load_scenario_header(file/"header.exs");
