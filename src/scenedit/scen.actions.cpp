@@ -1992,6 +1992,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 			unsigned int ground_there = scenario.ter_types[ter_there].ground_type;
 			if(ground_there != main_ground && ground_there != trim_ground) {
 				ter_num_t new_ter = scenario.get_ter_from_ground(trim_ground);
+				if(new_ter > scenario.ter_types.size()) continue;
 				cTerrain& ter_type = scenario.ter_types[new_ter];
 				// We need to be very cautious here.
 				// Only make the change if the terrain already there is the archetype for the ground type

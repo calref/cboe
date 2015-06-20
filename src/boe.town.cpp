@@ -1306,7 +1306,7 @@ void erase_out_specials() {
 			if(quadrant_legal(i,j)) {
 				cOutdoors& sector = *univ.scenario.outdoors[univ.party.outdoor_corner.x + i][univ.party.outdoor_corner.y + j];
 				for(short k = 0; k < sector.city_locs.size(); k++) {
-					if(sector.city_locs[k].spec >= 0 &&
+					if(sector.city_locs[k].spec >= 0 && sector.city_locs[k].x < 48 &&
 						univ.scenario.ter_types[sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y]].special == eTerSpec::TOWN_ENTRANCE &&
 					   (sector.city_locs[k].x == minmax(0,47,sector.city_locs[k].x)) &&
 					   (sector.city_locs[k].y == minmax(0,47,sector.city_locs[k].y))) {
