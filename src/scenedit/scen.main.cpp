@@ -1,6 +1,6 @@
 
 #include <cstdio>
-#include <thread>
+#include <boost/thread.hpp>
 
 #include "scen.global.hpp"
 #include "scenario.hpp"
@@ -531,13 +531,13 @@ void Mouse_Pressed() {
 	location mousePos(event.mouseButton.x, event.mouseButton.y);
 	volatile bool doneScrolling = false;
 	if(right_sbar->isVisible() && mousePos.in(right_sbar->getBounds())) {
-		std::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling)));
+		boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling)));
 		right_sbar->handleClick(mousePos);
 		doneScrolling = true;
 		updater.join();
 		redraw_screen(/*REFRESH_RIGHT_BAR*/);
 	} else if(pal_sbar->isVisible() && mousePos.in(pal_sbar->getBounds())) {
-		std::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling)));
+		boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling)));
 		pal_sbar->handleClick(mousePos);
 		doneScrolling = true;
 		updater.join();
