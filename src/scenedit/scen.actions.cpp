@@ -1247,6 +1247,7 @@ static bool handle_toolpal_action(location cur_point2) {
 				temp_rect.offset(RIGHT_AREA_UL_X + 5, RIGHT_AREA_UL_Y + terrain_rects[255].bottom + 5);
 				flash_rect(temp_rect);
 				switch(cur_palette_buttons[j][i]) {
+					case PAL_ARROW_UP: case PAL_ARROW_DOWN: // These two might never be used.
 					case PAL_BLANK: break;
 					case PAL_PENCIL:
 						set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);

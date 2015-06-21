@@ -510,7 +510,7 @@ void handle_menu_choice(eMenu item_hit) {
 	if(isEdit) {
 		if(!cDialog::sendInput(editKey)) {
 			// Handle non-dialog edit operations here.
-			switch(editKey.k) {}
+			// switch(editKey.k) {}
 		}
 	}
 	if(isHelp)

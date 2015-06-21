@@ -24,7 +24,8 @@ extern bool change_made, ae_loading;
 
 @interface AppleEventHandler : NSObject<NSApplicationDelegate>
 -(BOOL)application:(NSApplication*) app openFile:(NSString*) file;
--(NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication*) sender;
+// TODO: Handle quit event by putting up quit dialog
+//-(NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication*) sender;
 @end
 
 void set_up_apple_events(int argc, char* argv[]); // Suppress "no prototype" warning
