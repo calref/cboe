@@ -59,11 +59,15 @@ void cSpecial::append(legacy::special_node_type& old){
 	// Now apply any needed conversions.
 	switch(old.type) {
 		case 55: case 58: case 189: // Large dialogs with 36x36 dialog graphics
+			if(pic >= 700 && pic < 1000)
+				pic -= 700;
 			pictype = PIC_DLOG;
 			m3 = m2;
 			m2 = -1;
 			break;
 		case 57: case 60: // Large dialogs with monster graphics
+			if(pic >= 400 && pic < 1000)
+				pic -= 400;
 			pictype = PIC_MONST;
 			m3 = m2;
 			m2 = -1;
