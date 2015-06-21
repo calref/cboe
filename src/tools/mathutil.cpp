@@ -23,14 +23,6 @@ short get_ran (short times,short  min,short  max){
 	return to_ret;
 }
 
-short s_pow(short x,short y){
-	return (short) pow((double) x, (double) y);
-}
-
-short s_sqrt(short val) {
-	return (short) sqrt((double)(val));
-}
-
 short max(short a,short b){
 	if(a > b)
 		return a;

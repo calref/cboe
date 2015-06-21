@@ -161,7 +161,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	// Set up map, using stored map
 	for(i = 0; i < univ.town->max_dim(); i++)
 		for(j = 0; j < univ.town->max_dim(); j++) {
-			if(univ.town_maps[univ.town.num][i / 8][j] & (char)(s_pow(2,i % 8)))
+			if(univ.town_maps[univ.town.num][i / 8][j] & (char)(1 << i % 8))
 				make_explored(i,j);
 			
 			if(univ.town->terrain(i,j) == 0)
@@ -406,7 +406,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	for(i = 0; i < univ.town->preset_items.size(); i++)
 		if((univ.town->preset_items[i].code >= 0)
-			&& (((univ.party.item_taken[univ.town.num][i / 8] & s_pow(2,i % 8)) == 0) ||
+			&& (((univ.party.item_taken[univ.town.num][i / 8] & (1 << i % 8)) == 0) ||
 			(univ.town->preset_items[i].always_there))) {
 				j = univ.town.items.size();
 				// place the preset item, if party hasn't gotten it already
@@ -603,7 +603,7 @@ location end_town_mode(short switching_level,location destination) { // returns 
 			for(j = 0; j < univ.town->max_dim(); j++)
 				if(is_explored(i,j)) {
 					univ.town_maps[univ.town.num][i / 8][j] = univ.town_maps[univ.town.num][i / 8][j] |
-					(char) (s_pow(2,i % 8));
+					(char) (1 << i % 8);
 				}
 		
 		to_return = univ.party.p_loc;
