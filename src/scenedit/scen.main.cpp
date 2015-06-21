@@ -1,4 +1,5 @@
 
+#define BOOST_NO_CXX11_NUMERIC_LIMITS // Because my libc++ is old and not quite standard-compliant, which breaks Boost.Thread
 #include <cstdio>
 #include <boost/thread.hpp>
 

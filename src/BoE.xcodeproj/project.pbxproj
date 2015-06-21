@@ -64,6 +64,9 @@
 		9107074C18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		9107074D18F1D18400F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
 		9107074E18F1D18500F7BD7F /* scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9191460018E63D8E005CF3A4 /* scrollbar.cpp */; };
+		910D9CA41B36439100414B17 /* libboost_thread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
+		910D9CA51B36439100414B17 /* libboost_thread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
+		910D9CA61B36439100414B17 /* libboost_thread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
 		9117A4111A7EC06700CD6EB4 /* living.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FB1A7362D900F20F5E /* living.cpp */; };
 		91222FC11A72366D008413A5 /* spell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91597A6E1A3BEDC700BE7BF9 /* spell.cpp */; };
 		912283C90FD0E16C00B21642 /* undo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912283C80FD0E16C00B21642 /* undo.cpp */; };
@@ -609,6 +612,7 @@
 		910BBAB90FB91ADB001E34EA /* message.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = message.cpp; sourceTree = "<group>"; };
 		910BBAD90FB91D2A001E34EA /* dlogutil.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dlogutil.hpp; sourceTree = "<group>"; };
 		910BBADA0FB91D2A001E34EA /* dlogutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlogutil.cpp; sourceTree = "<group>"; };
+		910D9CA31B36439100414B17 /* libboost_thread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_thread.dylib; path = ../../../../../../usr/local/lib/libboost_thread.dylib; sourceTree = "<group>"; };
 		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
 		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = undo.cpp; sourceTree = "<group>"; };
 		912287850FD41A2300B21642 /* simpletypes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = simpletypes.hpp; sourceTree = "<group>"; };
@@ -801,6 +805,7 @@
 				9178236F1B2F331D007F3444 /* vorbis.framework in Frameworks */,
 				917823761B2F334C007F3444 /* ogg.framework in Frameworks */,
 				9178237D1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
+				910D9CA41B36439100414B17 /* libboost_thread.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -822,6 +827,7 @@
 				917823701B2F331D007F3444 /* vorbis.framework in Frameworks */,
 				917823771B2F334C007F3444 /* ogg.framework in Frameworks */,
 				9178237E1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
+				910D9CA51B36439100414B17 /* libboost_thread.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -843,6 +849,7 @@
 				917823711B2F331D007F3444 /* vorbis.framework in Frameworks */,
 				917823781B2F334C007F3444 /* ogg.framework in Frameworks */,
 				9178237F1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
+				910D9CA61B36439100414B17 /* libboost_thread.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1086,6 +1093,7 @@
 				9178237C1B2F33E9007F3444 /* FLAC.framework */,
 				919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */,
 				919DDBFB19006CC9003E7FED /* libboost_system.dylib */,
+				910D9CA31B36439100414B17 /* libboost_thread.dylib */,
 				91ACCE82190032E000FAEF8B /* fix_dylibs.sh */,
 			);
 			name = "Linked Frameworks";
