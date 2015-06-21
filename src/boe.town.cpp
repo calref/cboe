@@ -106,13 +106,11 @@ void start_town_mode(short which_town, short entry_dir) {
 	bool monsters_loaded = false,town_toast = false;
 	location loc;
 	unsigned short temp;
-	//bool play_town_sound = false;
+	bool play_town_sound = false;
 	
 	if(town_force < 200)
 		which_town = town_force;
-//	else if(PSD[304][9] == 0) {
-//		play_town_sound = true;
-//	}
+	else play_town_sound = true;
 	
 	former_town = town_number = which_town;
 	
@@ -150,13 +148,12 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	univ.town.num = town_number;
 	
-//	if(play_town_sound) {
-	if(univ.town->lighting_type > 0)
-		play_sound(95);
-	else play_sound(16);
-	
-//	}
-	
+	if(play_town_sound) {
+		if(univ.town->lighting_type > 0)
+			play_sound(95);
+		else play_sound(16);
+	}
+
 	// TODO: This means cleared webs reappear, for example. Is that right?
 	univ.town.place_preset_fields();
 	
