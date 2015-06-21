@@ -3,6 +3,7 @@
 #include "boe.global.hpp"
 #include "universe.hpp"
 
+#define BOOST_NO_CXX11_NUMERIC_LIMITS // Because my libc++ is old and not quite standard-compliant, which breaks Boost.Thread
 #include <boost/thread.hpp>
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
