@@ -350,25 +350,25 @@ void save_outdoor_maps() {
 			if(univ.out.out_e[i][j] > 0)
 				univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] =
 					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] |
-						(char) (s_pow(2,i % 8));
+						(char) (1 << i % 8);
 			if(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width()) {
 				if(univ.out.out_e[i + 48][j] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] =
 						univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] |
-							(char) (s_pow(2,i % 8));
+							(char) (1 << i % 8);
 			}
 			if(univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) {
 				if(univ.out.out_e[i][j + 48] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] =
 						univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] |
-							(char) (s_pow(2,i % 8));
+							(char) (1 << i % 8);
 			}
 			if((univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) &&
 				(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width())) {
 				if(univ.out.out_e[i + 48][j + 48] > 0)
 					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] =
 						univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] |
-							(char) (s_pow(2,i % 8));
+							(char) (1 << i % 8);
 			}
 		}
 }
@@ -380,25 +380,25 @@ void add_outdoor_maps() { // This takes the existing outdoor map info and supple
 		for(j = 0; j < 48; j++) {
 			if((univ.out.out_e[i][j] == 0) &&
 				((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] &
-				  (char) (s_pow(2,i % 8))) != 0))
+				  (char) (1 << i % 8)) != 0))
 			 	univ.out.out_e[i][j] = 1;
 			if(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width()) {
 				if((univ.out.out_e[i + 48][j] == 0) &&
 					((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] &
-					  (char) (s_pow(2,i % 8))) != 0))
+					  (char) (1 << i % 8)) != 0))
 				 	univ.out.out_e[i + 48][j] = 1;
 			}
 			if(univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) {
 				if((univ.out.out_e[i][j + 48] == 0) &&
 					((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] &
-					  (char) (s_pow(2,i % 8))) != 0))
+					  (char) (1 << i % 8)) != 0))
 				 	univ.out.out_e[i][j + 48] = 1;
 			}
 			if((univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) &&
 				(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width())) {
 				if((univ.out.out_e[i + 48][j + 48] == 0) &&
 					((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] &
-					  (char) (s_pow(2,i % 8))) != 0))
+					  (char) (1 << i % 8)) != 0))
 				 	univ.out.out_e[i + 48][j + 48] = 1;
 			}
 		}

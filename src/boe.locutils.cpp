@@ -491,7 +491,7 @@ bool pt_in_light(location from_where,location to_where) { // Assumes, of course,
 	if((to_where.x < 0) || (to_where.x >= univ.town->max_dim())
 		|| (to_where.y < 0) || (to_where.y >= univ.town->max_dim()))
 		return true;
-	if(univ.town->lighting(to_where.x / 8,to_where.y) & (char) (s_pow(2,to_where.x % 8)))
+	if(univ.town->lighting(to_where.x / 8,to_where.y) & (char) (1 << to_where.x % 8))
 		return true;
 	
 	if(dist(from_where,to_where) <= light_radius())
@@ -508,7 +508,7 @@ bool combat_pt_in_light(location to_where) {
 	if((to_where.x < 0) || (to_where.x >= univ.town->max_dim())
 		|| (to_where.y < 0) || (to_where.y >= univ.town->max_dim()))
 		return true;
-	if(univ.town->lighting(to_where.x / 8,to_where.y) & (char) (s_pow(2,to_where.x % 8)))
+	if(univ.town->lighting(to_where.x / 8,to_where.y) & (char) (1 << to_where.x % 8))
 		return true;
 	
 	rad = light_radius();

@@ -307,7 +307,7 @@ void set_item_flag(cItem* item) {
 	if((item->is_special > 0) && (item->is_special < 65)) {
 		item->is_special--;
 		univ.party.item_taken[univ.town.num][item->is_special / 8] =
-			univ.party.item_taken[univ.town.num][item->is_special / 8] | s_pow(2,item->is_special % 8);
+			univ.party.item_taken[univ.town.num][item->is_special / 8] | (1 << item->is_special % 8);
 		item->is_special = 0;
 	}
 }

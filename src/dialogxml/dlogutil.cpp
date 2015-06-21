@@ -349,7 +349,7 @@ void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned shor
 	for(unsigned int i = 0; i < strings.size(); i++)
 		total_len += string_length(strings[i], style);
 	total_len = total_len * 12;
-	str_width = s_sqrt(total_len) + 20;
+	str_width = sqrt(total_len) + 20;
 	//print_nums(0,total_len,str_width);
 	if(str_width < 340)
 		str_width = 340;
