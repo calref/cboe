@@ -1813,7 +1813,6 @@
 				OTHER_LDFLAGS = (
 					"-lboost_filesystem",
 					"-lboost_system",
-					"-L/usr/local/Cellar/boost/1.57.0/lib",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "\"$(PROJECT_DIR)/misc/\"";
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -1870,7 +1869,6 @@
 				OTHER_LDFLAGS = (
 					"-lboost_filesystem",
 					"-lboost_system",
-					"-L/usr/local/Cellar/boost/1.57.0/lib",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "\"$(PROJECT_DIR)/misc/\"";
 				WARNING_CFLAGS = (

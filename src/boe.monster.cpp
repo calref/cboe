@@ -1019,6 +1019,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	}
 	
 	switch(ter_abil) {
+		case eTerSpec::NONE: break;
 			// changing ter
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			can_enter = false;
@@ -1051,6 +1052,13 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 					return univ.town.monst[which_monst].invuln;
 			}
 			// TODO: Should it check any other terrain specials?
+		case eTerSpec::BED: case eTerSpec::BRIDGE: case eTerSpec::CALL_SPECIAL_WHEN_USED: case eTerSpec::CHANGE_WHEN_USED:
+		case eTerSpec::CONVEYOR: case eTerSpec::CRUMBLING: case eTerSpec::IS_A_CONTAINER: case eTerSpec::IS_A_SIGN:
+		case eTerSpec::LOCKABLE: case eTerSpec::UNLOCKABLE:
+		case eTerSpec::UNUSED1: case eTerSpec::UNUSED2: case eTerSpec::UNUSED3:
+		case eTerSpec::WILDERNESS_CAVE: case eTerSpec::WILDERNESS_SURFACE:
+		case eTerSpec::CALL_SPECIAL: case eTerSpec::DANGEROUS: // Maybe these two should do something?
+			break;
 	}
 	
 	// Action may change terrain, so update what's been seen
