@@ -974,7 +974,7 @@ static void handle_party_death() {
 	for(int i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::FLED)
 			univ.party[i].main_status = eMainStatus::ALIVE;
-	if(is_combat()) {
+	if(is_combat() && univ.party.is_alive()) {
 		// TODO: Should this only happen in outdoor combat? Or should we allow fleeing town during combat?
 		end_town_mode(0,univ.town.p_loc);
 		add_string_to_buf("End combat.");
