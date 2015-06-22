@@ -1965,7 +1965,9 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		case eSpecCtx::OUTDOOR_ENC: case eSpecCtx::FLEE_ENCOUNTER: case eSpecCtx::WIN_ENCOUNTER:
 		case eSpecCtx::DROP_ITEM: case eSpecCtx::SHOPPING: case eSpecCtx::STARTUP:
 			// Default behaviour - select entire party, or active member if split or in combat
-			if(is_combat()) current_pc_picked_in_spec_enc = &univ.party[current_pc];
+			// We also have a legacy flag - originally, it always defaulted to whole party
+			if(is_combat() && !PSD[SDF_COMBAT_SELECT_PARTY])
+				current_pc_picked_in_spec_enc = &univ.party[current_pc];
 			else {
 				if(univ.party.is_split() && cur_node.type != eSpecType::AFFECT_DEADNESS)
 					current_pc_picked_in_spec_enc = &univ.party.pc_present();

@@ -25,6 +25,7 @@
 #define NUM_OF_HORSES		30
 
 /* stuff done flags */
+#define SDF_COMBAT_SELECT_PARTY	305][3
 #define SDF_SKIP_STARTUP		305][4 // preferably deprecated
 #define SDF_LESS_SOUND			305][5
 #define SDF_NO_TARGET_LINE		305][6
