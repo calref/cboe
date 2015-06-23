@@ -143,7 +143,9 @@ are preventable in this manner:
 <li>Monster special actions - no AP will be deducted</li>
 <li>Looking - you will not be allowed to search, but you can't prevent the party from
 seeing what the space is</li>
-<li>Talking - even if the creature has a personality, talk mode will not start</li>
+<li>Talking - if called while trying to start a conversation, talk mode will not start
+even if the creature has a personality; if called during talk mode, it forces the
+conversation to end</li>
 <li>Attacking - the attack will occur normally, but no AP will be deducted from the
 attacker</li>
 <li>Shop Items - gold will not be deducted</li>
@@ -180,8 +182,7 @@ called. Set Extra 1a to 0 and Extra 2a to 1.</dd>
 <dt>Note:</dt><dd>This doesn't have to be the last node in a chain. If this is the first
 special node called, the party is still kept from entering the space... unless another
 node of the same type undoes it. The only exception to this is forced passage, as the node
-usually won't even be called if the space is impassable.</dd>
-<dt>Warning:</dt><dd>Don't call this while talking. It will mess up your dialogue strings.</dd></dd>
+usually won't even be called if the space is impassable.</dd></dd>
 
 <dt>Type 12: Change Time</dt><dd>This special node sets the adventure time forward.
 <dl>

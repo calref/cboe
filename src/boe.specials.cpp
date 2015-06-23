@@ -2164,13 +2164,14 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = true;break;
 		case eSpecType::CANT_ENTER:
 			check_mess = true;
-			if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE) {
-				if(spec.ex1a != 0)
-					*a = 1;
-				else {
-					*a = 0;
-					if(spec.ex2a != 0) *b = 1;
-				}
+			if(which_mode == eSpecCtx::TALK) {
+				extern bool talk_end_forced;
+				talk_end_forced = spec.ex1a;
+			} else if(spec.ex1a != 0)
+				*a = 1;
+			else {
+				*a = 0;
+				if(spec.ex2a != 0) *b = 1;
 			}
 			break;
 		case eSpecType::CHANGE_TIME:
