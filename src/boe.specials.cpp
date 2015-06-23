@@ -2161,7 +2161,8 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::FLIP_SDF:
 			setsd(cur_node.sd1,cur_node.sd2,
 				  ((PSD[cur_node.sd1][cur_node.sd2] == 0) ? 1 : 0) );
-			check_mess = true;break;
+			check_mess = true;
+			break;
 		case eSpecType::CANT_ENTER:
 			check_mess = true;
 			if(which_mode == eSpecCtx::TALK) {
