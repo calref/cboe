@@ -348,10 +348,23 @@ void draw_startup_stats() {
 			pc_rect.offset(60 + 232 * (i / 3) - 9,95 + 45 * (i % 3));
 			
 			if(univ.party[i].main_status != eMainStatus::ABSENT) {
-				from_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
-				to_rect = party_to,
+				to_rect = party_to;
 				to_rect.offset(pc_rect.left,pc_rect.top);
-				rect_draw_some_item(pc_gworld,from_rect,to_rect,ul,sf::BlendAlpha);
+				pic_num_t pic = univ.party[i].which_graphic;
+				if(pic >= 1000) {
+					sf::Texture* gw;
+					graf_pos_ref(gw, from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
+					rect_draw_some_item(*gw,from_rect,to_rect,ul,sf::BlendAlpha);
+				} else if(pic >= 100) {
+					pic -= 100;
+					// Note that we assume it's a 1x1 graphic.
+					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
+					from_rect = get_monster_template_rect(pic, 0, 0);
+					rect_draw_some_item(monst_gworld[m_pic_index[pic].i / 20],from_rect,to_rect,ul,sf::BlendAlpha);
+				} else {
+					from_rect = calc_rect(2 * (pic / 8), pic % 8);
+					rect_draw_some_item(pc_gworld,from_rect,to_rect,ul,sf::BlendAlpha);
+				}
 				
 				style.pointSize = 14;
 				pc_rect.offset(35,0);

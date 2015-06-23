@@ -1018,7 +1018,7 @@ void cUniverse::exportGraphics() {
 	// The party sheet can contain the following types of graphics:
 	// - Monster graphics for monsters summoned by custom items or captured in the party's soul crystal
 	// - Item graphics for custom items that the party has in their possession or in their saved item rectangles
-	// - Custom PC graphics - TODO: Rendering support for custom PC graphics
+	// - Custom PC graphics
 	// TODO: Missile graphics for custom monsters
 	// So basically, almost all the graphics are linked to items.
 	used_graphics.clear();

@@ -530,7 +530,10 @@ static void display_pc_info(cDialog& me, const short pc) {
 	me["skp"].setTextToNum(univ.party[pc].skill_pts);
 	store = univ.party[pc].level * univ.party[pc].get_tnl();
 	me["progress"].setTextToNum(store);
-	dynamic_cast<cPict&>(me["pic"]).setPict(univ.party[pc].which_graphic,PIC_PC); // TODO: Was adding 800 needed, or a relic?
+	pic_num_t pic = univ.party[pc].which_graphic;
+	if(pic >= 100 && pic < 1000)
+		dynamic_cast<cPict&>(me["pic"]).setPict(pic - 100,PIC_MONST);
+	else dynamic_cast<cPict&>(me["pic"]).setPict(pic,PIC_PC);
 	
 	// Fight bonuses
 	for(i = 0; i < 24; i++)

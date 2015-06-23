@@ -206,6 +206,10 @@ void Set_up_win () {
 	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
 	buttons_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcedbuttons"));
 	pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
+	for(int i = 0; i < NUM_MONST_SHEETS; i++) {
+		std::string id = "monst" + std::to_string(i + 1);
+		monst_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(id));
+	}
 }
 
 static void draw_main_screen();
@@ -357,7 +361,7 @@ void draw_items() {
 //short clear_first; // 1 - redraw over what's already there, 0 - don't redraw over
 void display_party() {
 	short i,k,string_num, cur_rect=0;
-	rectangle from_base = {0,0,36,28},from_rect,no_party_rect,temp_rect;
+	rectangle from_rect,no_party_rect,temp_rect;
 	
 	TextStyle style;
 	style.lineHeight = 10;
@@ -386,10 +390,25 @@ void display_party() {
 			// pc_record_type is the records that contains chaarcters
 			// main_status determins 0 - not exist, 1 - alive, OK, 2 - dead, 3 - stoned, 4 - dust
 			if(univ.party[i].main_status != eMainStatus::ABSENT) { // PC exists?
-				from_rect = from_base;
 				// draw PC graphic
-				from_rect.offset(56 * (univ.party[i].which_graphic / 8),36 * (univ.party[i].which_graphic % 8));
-				rect_draw_some_item(pc_gworld,from_rect,mainPtr,pc_area_buttons[i][1],sf::BlendAlpha);
+				pic_num_t pic = univ.party[i].which_graphic;
+				sf::Texture* from_gw;
+				if(pic >= 1000) {
+					bool isParty = pic >= 10000;
+					pic_num_t need_pic = pic % 1000;
+					graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(need_pic, isParty);
+				} else if(pic >= 100) {
+					// Note that we assume it's a 1x1 graphic.
+					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
+					pic_num_t need_pic = pic - 100;
+					pic_num_t picture_wanted = m_pic_index[need_pic].i % 20;
+					from_rect = calc_rect(2 * (picture_wanted / 10), picture_wanted % 10);
+					from_gw = &monst_gworld[m_pic_index[need_pic].i / 20];
+				} else {
+					from_rect = calc_rect(2 * (pic / 8), pic % 8);
+					from_gw = &pc_gworld;
+				}
+				rect_draw_some_item(*from_gw,from_rect,mainPtr,pc_area_buttons[i][1],sf::BlendAlpha);
 				
 				//frame_dlog_rect(GetWindowPort(mainPtr),pc_area_buttons[i][1],0);
 				// draw name

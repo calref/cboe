@@ -5,7 +5,7 @@
 #include <list>
 
 #include "boe.global.hpp"
-
+#include "boe.graphutil.hpp"
 #include "universe.hpp"
 #include "boe.text.hpp"
 #include "boe.locutils.hpp"
@@ -55,7 +55,7 @@ extern location center;
 
 extern sf::Texture tiny_obj_gworld,invenbtn_gworld,status_gworld;
 extern cCustomGraphics spec_scen_g;
-extern sf::Texture pc_gworld;
+extern sf::Texture pc_gworld, monst_gworld[NUM_MONST_SHEETS];
 extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
 extern sf::RenderTexture terrain_screen_gworld;
 
@@ -505,9 +505,25 @@ void place_item_bottom_buttons() {
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
 			rect_draw_some_item(invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
-			pc_from_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
+			pic_num_t pic = univ.party[i].which_graphic;
+			sf::Texture* from_gw;
+			if(pic >= 1000) {
+				bool isParty = pic >= 10000;
+				pic_num_t need_pic = pic % 1000;
+				graf_pos_ref(from_gw, pc_from_rect) = spec_scen_g.find_graphic(need_pic, isParty);
+			} else if(pic >= 100) {
+				// Note that we assume it's a 1x1 graphic.
+				// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
+				pic_num_t need_pic = pic - 100;
+				int mode = 0;
+				pc_from_rect = get_monster_template_rect(need_pic, mode, 0);
+				from_gw = &monst_gworld[m_pic_index[need_pic].i / 20];
+			} else {
+				pc_from_rect = calc_rect(2 * (pic / 8), pic % 8);
+				from_gw = &pc_gworld;
+			}
 			to_rect.inset(2,2);
-			rect_draw_some_item(pc_gworld, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+			rect_draw_some_item(*from_gw, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 		}
 		else item_bottom_button_active[i] = false;
 	}
