@@ -498,6 +498,8 @@ void cCustomGraphics::convert_sheets() {
 	numSheets = num_graphics / 100;
 	if(num_graphics % 100) numSheets++;
 	sheets = new sf::Texture[numSheets];
+	extern fs::path tempDir;
+	fs::path pic_dir = tempDir/"scenario/graphics";
 	for(size_t i = 0; i < numSheets; i++) {
 		sf::IntRect subrect;
 		subrect.top = i * 280;
@@ -510,7 +512,11 @@ void cCustomGraphics::convert_sheets() {
 		
 		sheets[i].create(280, 360);
 		sheets[i].update(sheet);
+
+		fs::path sheetPath = pic_dir/("sheet" + std::to_string(i) + ".png");
+		sheets[i].copyToImage().saveToFile(sheetPath.string().c_str());
 	}
+	ResMgr::pushPath<ImageRsrc>(pic_dir);
 }
 
 void cCustomGraphics::replace_sheet(size_t num, sf::Image& newSheet) {

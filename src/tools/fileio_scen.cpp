@@ -2150,6 +2150,8 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store);
 
 void load_spec_graphics_v1(fs::path scen_file) {
 	static const char*const noGraphics = "The game will still work without the custom graphics, but some things will not look right.";
+	fs::remove_all(tempDir/"scenario/graphics");
+	fs::remove_all(tempDir/"scenario/sounds");
 	fs::path path(scen_file);
 	std::cout << "Loading scenario graphics... (" << path  << ")\n";
 	// Tried path.replace_extension, but that only deleted the extension, so I have to do it manually
