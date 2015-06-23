@@ -378,7 +378,6 @@ bool pc_combat_move(location destination) {
 	short s1,s2,i,monst_exist;
 	bool keep_going = true,forced = false,check_f = false;
 	location monst_loc,store_loc;
-	short spec_num;
 	eDirection dir;
 	
 	iLiving* monst_hit = univ.target_there(destination, TARG_MONST);
@@ -390,7 +389,7 @@ bool pc_combat_move(location destination) {
 	}
 	
 	if(monst_hit == nullptr)
-		keep_going = check_special_terrain(destination,eSpecCtx::COMBAT_MOVE,univ.party[current_pc],&spec_num,&check_f);
+		keep_going = check_special_terrain(destination,eSpecCtx::COMBAT_MOVE,univ.party[current_pc],&check_f);
 	if(check_f)
 		forced = true;
 	
@@ -452,7 +451,7 @@ bool pc_combat_move(location destination) {
 			switch_pc.combat_pos = store_loc;
 			univ.party[current_pc].direction = dir;
 			take_ap(1);
-			check_special_terrain(store_loc,eSpecCtx::COMBAT_MOVE,switch_pc,&spec_num,&check_f);
+			check_special_terrain(store_loc,eSpecCtx::COMBAT_MOVE,switch_pc,&check_f);
 			move_sound(univ.town->terrain(destination.x,destination.y),univ.party[current_pc].ap);
 			return true;
 		}

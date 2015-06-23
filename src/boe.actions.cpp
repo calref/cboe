@@ -2831,19 +2831,17 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 }
 
 bool outd_move_party(location destination,bool forced) {
-	short boat_num,horse_num,spec_num;
+	short boat_num,horse_num;
 	location real_dest, sector_p_in;
 	bool keep_going = true,check_f;
 	location store_corner,store_iwc;
 	ter_num_t ter;
 	
-	keep_going = check_special_terrain(destination,eSpecCtx::OUT_MOVE,univ.party[0],&spec_num,&check_f);
+	keep_going = check_special_terrain(destination,eSpecCtx::OUT_MOVE,univ.party[0],&check_f);
 	if(check_f)
 		forced = true;
 	if(in_scen_debug && ghost_mode)
 		forced = keep_going = true;
-	if(spec_num == 50)
-		forced = true;
 	
 	// If not blocked and not put in town by a special, process move
 	if(keep_going && overall_mode == MODE_OUTDOORS) {
@@ -3030,7 +3028,7 @@ bool outd_move_party(location destination,bool forced) {
 
 bool town_move_party(location destination,short forced) {
 	bool keep_going = true;
-	short boat_there,horse_there,spec_num;
+	short boat_there,horse_there;
 	ter_num_t ter;
 	bool check_f = false;
 	
@@ -3040,14 +3038,12 @@ bool town_move_party(location destination,short forced) {
 	}
 	
 	if(univ.target_there(destination, TARG_MONST) == nullptr)
-		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,univ.party[0],&spec_num,&check_f);
+		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,univ.party[0],&check_f);
 	if(check_f)
 		forced = true;
 	if(in_scen_debug && ghost_mode)
 		forced = keep_going = true;
 	
-	if(spec_num == 50)
-		forced = true;
 	ter = univ.town->terrain(destination.x,destination.y);
 	
 	if(keep_going) {
