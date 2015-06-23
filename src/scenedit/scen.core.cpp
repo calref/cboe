@@ -3140,7 +3140,8 @@ void edit_scenario_events() {
 	
 	cDialog evt_dlg("edit-scenario-events");
 	evt_dlg["okay"].attachClickHandler(save_scenario_events);
-	for(int i = 0; i < scenario.scenario_timers.size(); i++) {
+	// TODO: There are 20 events, not 10; allow editing the rest?
+	for(int i = 0; i < scenario.scenario_timers.size() && i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		evt_dlg["time" + id].attachFocusHandler(check_scenario_timer_time);
 		evt_dlg["node" + id].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 255, "The scenario special node", "-1 for no special"));
