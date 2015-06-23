@@ -499,7 +499,10 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			std::ostringstream sout;
 			sout << "pc" << i + 1 << "-g";
-			dynamic_cast<cPict&>(me[sout.str()]).setPict(univ.party[i].which_graphic);
+			pic_num_t pic = univ.party[i].which_graphic;
+			if(pic >= 100 && pic < 1000)
+				dynamic_cast<cPict&>(me[sout.str()]).setPict(pic - 100,PIC_MONST);
+			else dynamic_cast<cPict&>(me[sout.str()]).setPict(pic,PIC_PC);
 		}
 }
 

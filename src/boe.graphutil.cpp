@@ -224,7 +224,6 @@ void play_see_monster_str(unsigned short m, location monst_loc) {
 
 //short mode; // 0 - put pcs in gworld  1 - only rectangle around active pc
 void draw_pcs(location center,short mode) {
-	short i;
 	rectangle source_rect,active_pc_rect;
 	location where_draw;
 	
@@ -233,23 +232,41 @@ void draw_pcs(location center,short mode) {
 	if(!can_draw_pcs)
 		return;
 	
-	for(i = 0; i < 6; i++)
+	// Draw current pc on top
+	int pcs[6] = {0,1,2,3,4,5};
+	if(current_pc < 6)
+		std::swap(pcs[5], pcs[current_pc]);
+	
+	for(int j = 0; j < 6; j++) {
+		int i = pcs[j];
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			if(point_onscreen(center, univ.party[i].combat_pos) &&
 			   (cartoon_happening || party_can_see(univ.party[i].combat_pos) < 6)){
 				where_draw.x = univ.party[i].combat_pos.x - center.x + 4;
 				where_draw.y = univ.party[i].combat_pos.y - center.y + 4;
 				sf::Texture* from_gw;
-				if(univ.party[i].which_graphic >= 1000) {
-					bool isParty = univ.party[i].which_graphic >= 10000;
-					pic_num_t need_pic = univ.party[i].which_graphic % 1000;
+				pic_num_t pic = univ.party[i].which_graphic;
+				if(pic >= 1000) {
+					bool isParty = pic >= 10000;
+					pic_num_t need_pic = pic % 1000;
 					if(univ.party[i].direction >= 4)
 						need_pic++;
 					if(combat_posing_monster == i)
 						need_pic += 2;
 					graf_pos_ref(from_gw, source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
+				} else if(pic >= 100) {
+					// Note that we assume it's a 1x1 graphic.
+					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
+					pic_num_t need_pic = pic - 100;
+					int mode = 0;
+					if(univ.party[current_pc].direction >= 4)
+						mode++;
+					if(combat_posing_monster == i)
+						mode += 10;
+					source_rect = get_monster_template_rect(need_pic, mode, 0);
+					from_gw = &monst_gworld[m_pic_index[need_pic].i / 20];
 				} else {
-					source_rect = calc_rect(2 * (univ.party[i].which_graphic / 8), univ.party[i].which_graphic % 8);
+					source_rect = calc_rect(2 * (pic / 8), pic % 8);
 					if(univ.party[i].direction >= 4)
 						source_rect.offset(28,0);
 					if(combat_posing_monster == i)
@@ -271,19 +288,6 @@ void draw_pcs(location center,short mode) {
 					frame_roundrect(mainPtr, active_pc_rect, 8, sf::Color::Magenta);
 				}
 			}
-	
-	// Draw current pc on top
-	if(point_onscreen(center, univ.party[current_pc].combat_pos) && univ.party[current_pc].main_status == eMainStatus::ALIVE) {
-		where_draw.x = univ.party[current_pc].combat_pos.x - center.x + 4;
-		where_draw.y = univ.party[current_pc].combat_pos.y - center.y + 4;
-		source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[current_pc].which_graphic % 8);
-		if(univ.party[current_pc].direction >= 4)
-			source_rect.offset(28,0);
-		if(combat_posing_monster == current_pc)
-			source_rect.offset(0,288);
-		
-		if(mode == 0)
-			Draw_Some_Item(pc_gworld, source_rect, terrain_screen_gworld, where_draw, 1, 0);
 	}
 }
 
@@ -449,14 +453,24 @@ void draw_party_symbol(location center) {
 	if((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
 		i = first_active_pc();
 		sf::Texture* from_gw;
-		if(univ.party[i].which_graphic >= 1000) {
-			bool isParty = univ.party[i].which_graphic >= 10000;
-			pic_num_t need_pic = univ.party[i].which_graphic % 1000;
+		pic_num_t pic = univ.party[i].which_graphic;
+		if(pic >= 1000) {
+			bool isParty = pic >= 10000;
+			pic_num_t need_pic = pic % 1000;
 			if(univ.party[i].direction >= 4)
 				need_pic++;
 			graf_pos_ref(from_gw, source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
+		} else if(pic >= 100) {
+			// Note that we assume it's a 1x1 graphic.
+			// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
+			pic_num_t need_pic = pic - 100;
+			int mode = 0;
+			if(univ.party[current_pc].direction >= 4)
+				mode++;
+			source_rect = get_monster_template_rect(need_pic, mode, 0);
+			from_gw = &monst_gworld[m_pic_index[need_pic].i / 20];
 		} else {
-			source_rect = calc_rect(2 * (univ.party[current_pc].which_graphic / 8), univ.party[i].which_graphic % 8);
+			source_rect = calc_rect(2 * (pic / 8), pic % 8);
 			if(univ.party[current_pc].direction >= 4)
 				source_rect.offset(28,0);
 			from_gw = &pc_gworld;
@@ -485,7 +499,6 @@ void draw_party_symbol(location center) {
 // Give the position of the monster graphic in the template in memory
 //mode; // 0 - left  1 - right  +10 - combat mode
 rectangle get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_part) {
-	rectangle store_rect = {0,0,36,28};
 	short adj = 0;
 	
 	if(mode >= 10) {
