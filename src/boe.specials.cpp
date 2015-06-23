@@ -1785,7 +1785,7 @@ void push_things() {
 }
 
 void special_increase_age(long length, bool queue) {
-	unsigned short i;
+	size_t i;
 	short s1,s2,s3;
 	bool redraw = false,stat_area = false;
 	location trigger_loc;
@@ -1876,13 +1876,14 @@ void special_increase_age(long length, bool queue) {
 				redraw = true;
 		}
 	univ.party.age = current_age;
-	for(i = 0; i < univ.party.party_event_timers.size(); i++) {
-		if(univ.party.party_event_timers[i].time <= length) {
-			univ.party.age = age_before + univ.party.party_event_timers[i].time;
-			short which_type = univ.party.party_event_timers[i].node_type;
+	auto party_timers = univ.party.party_event_timers;
+	for(i = 0; i < party_timers.size(); i++) {
+		if(party_timers[i].time <= length) {
+			univ.party.age = age_before + party_timers[i].time;
+			short which_type = party_timers[i].node_type;
 			if(queue)
-				queue_special(eSpecCtx::PARTY_TIMER, which_type, univ.party.party_event_timers[i].node, trigger_loc);
-			else run_special(eSpecCtx::PARTY_TIMER,which_type,univ.party.party_event_timers[i].node,trigger_loc,&s1,&s2,&s3);
+				queue_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc);
+			else run_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc, &s1, &s2, &s3);
 			univ.party.party_event_timers[i].time = 0;
 			univ.party.party_event_timers[i].node = -1;
 			stat_area = true;
