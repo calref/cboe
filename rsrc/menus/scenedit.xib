@@ -222,6 +222,15 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
+								<object class="NSMenuItem" id="1044668105">
+									<reference key="NSMenu" ref="720053764"/>
+									<string key="NSTitle">Save as…</string>
+									<string key="NSKeyEquiv">S</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
 								<object class="NSMenuItem" id="579971712">
 									<reference key="NSMenu" ref="720053764"/>
 									<string key="NSTitle">Revert to Saved</string>
@@ -1026,6 +1035,7 @@
 							<reference ref="776162233"/>
 							<reference ref="425164168"/>
 							<reference ref="579971712"/>
+							<reference ref="1044668105"/>
 						</array>
 						<reference key="parent" ref="379814623"/>
 					</object>
@@ -1620,6 +1630,11 @@
 						<reference key="object" ref="368560496"/>
 						<reference key="parent" ref="399390342"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">890</int>
+						<reference key="object" ref="1044668105"/>
+						<reference key="parent" ref="720053764"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1728,12 +1743,13 @@
 				<string key="887.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="888.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="889.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="890.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">889</int>
+			<int key="maxID">890</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

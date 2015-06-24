@@ -2793,69 +2793,81 @@ void edit_scen_details() {
 	info_dlg.run();
 }
 
-static bool edit_make_scen_1_event_filter(cDialog& me, std::string, eKeyMod) {
-	short i,j;
-	
-	std::string str = me["file"].getText();
-	j = str.length();
-	if(j == 0) {
-		giveError("You've left the file name empty.","",&me);
-		return true;
-	}
-	if(j > 50) {
-		giveError("The file name can be at most 50 characters long.","",&me);
-		return true;
-	}
-	for(i = 0; i < j; i++)
-		if((str[i] < 97) || (str[i] > 122)) {
-			giveError("The file name must consist of only lower case letters.","",&me);
-			return true;
-		}
-	me.setResult(true);
-	me.toast(true);
-	return true;
-}
-
-bool edit_make_scen_1(std::string& filename,std::string& title,bool& grass) {
+bool edit_make_scen_1(std::string& author,std::string& title,bool& grass) {
 	cDialog new_dlog("make-scenario1");
-	new_dlog["okay"].attachClickHandler(edit_make_scen_1_event_filter);
+	new_dlog["okay"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, true));
 	new_dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, false));
-	new_dlog.setResult(false);
 	
 	new_dlog.run();
-	if(!new_dlog.getResult<bool>()) return false;
+	if(!new_dlog.accepted()) return false;
 	
 	title = new_dlog["name"].getText();
-	filename = new_dlog["file"].getText();
+	author = new_dlog["author"].getText();
 	grass = dynamic_cast<cLed&>(new_dlog["surface"]).getState() != led_off;
 	return true;
 }
 
-static bool edit_make_scen_2_event_filter(cDialog& me, std::string, eKeyMod) {
-	short i,j,k;
-	
-	i = me["out-w"].getTextAsNum();
-	if(cre(i, 1,50,"Outdoors width must be between 1 and 50.","",&me)) return true;
-	j = me["out-h"].getTextAsNum();
-	if(cre(j, 1,50,"Outdoors height must be between 1 and 50.","",&me)) return true;
-	if(cre(i * j, 1,100,"The total number of outdoor sections (width times height) must be between 1 and 100.","",&me)) return true;
-	i = me["town-s"].getTextAsNum();
-	j = me["town-m"].getTextAsNum();
-	k = me["town-l"].getTextAsNum();
-	if(cre(i, 0,200,"Number of small towns must be between 0 and 200.","",&me)) return true;
-	if(cre(j, 1,200,"Number of medium towns must be between 1 and 200. The first town (Town 0) must always be of medium size.","",&me)) return true;
-	if(cre(k, 0,200,"Number of large towns must be between 0 and 200.","",&me)) return true;
-	if(cre(i + j + k, 1,200,"The total number of towns must be from 1 to 200 (you must have at least 1 town).","",&me)) return true;
-	
-	me.toast(true);
+static bool make_scen_check_out(cDialog& me, std::string which, bool losing) {
+	if(!losing) return true;
+	int w = me["out-w"].getTextAsNum(), h = me["out-h"].getTextAsNum();
+	if(w < 0 || w > 50 || h < 0 || h > 50) {
+		std::ostringstream error;
+		error << "Outdoors ";
+		if(which == "out-w")
+			error << "width";
+		else if(which == "out-h")
+			error << "height";
+		error << " must be between 1 and 50.";
+		giveError(error.str(), &me);
+		return false;
+	}
+	int total = w * h;
+	if(total < 1 || total > 50) {
+		giveError("The total number of outdoor sections (width times height) must be between 1 and 100.", &me);
+		return false;
+	}
+	return true;
+}
+
+static bool make_scen_check_towns(cDialog& me, std::string which, bool losing) {
+	if(!losing) return true;
+	int sm = me["town-s"].getTextAsNum(), med = me["town-m"].getTextAsNum(), lg = me["town-l"].getTextAsNum();
+	if(sm < 0 || sm > 200 || med < 0 || med > 200 || lg < 0 || lg > 200) {
+		std::ostringstream error;
+		error << "Number of ";
+		if(which == "town-s")
+			error << "small";
+		else if(which == "town-m")
+			error << "medium";
+		else if(which == "town-l")
+			error << "large";
+		error << " must be between 0 and 200";
+		giveError(error.str(), &me);
+		return false;
+	}
+	// TODO: Shouldn't this only be checked when exiting the dialog? At least for the case of no towns.
+	int total = sm + med + lg;
+	if(total < 1 || total > 200) {
+		giveError("The total number of towns must be from 1 to 200 (you must have at least 1 town).", &me);
+		return false;
+	}
 	return true;
 }
 
 bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, short& town_s, bool& def_town) {
 	cDialog new_dlog("make-scenario2");
-	new_dlog["okay"].attachClickHandler(edit_make_scen_2_event_filter);
+	new_dlog["okay"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, true));
 	new_dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, false));
-	new_dlog.setResult(false);
+	new_dlog.attachFocusHandlers(make_scen_check_out, {"out-w", "out-h"});
+	new_dlog.attachFocusHandlers(make_scen_check_towns, {"town-s", "town-m", "town-l"});
+	new_dlog["warrior-grove"].attachFocusHandler([](cDialog& me, std::string, bool losing) -> bool {
+		if(losing) return true;
+		if(me["town-m"].getTextAsNum() < 1) {
+			giveError("Warrior's Grove replaces your first medium town. As such, you must have at least one medium town in order to use it.", &me);
+			return false;
+		}
+		return true;
+	});
 	
 	new_dlog.run();
 	if(!new_dlog.accepted()) return false;
@@ -2865,7 +2877,7 @@ bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, 
 	town_l = new_dlog["town-l"].getTextAsNum();
 	town_m = new_dlog["town-m"].getTextAsNum();
 	town_s = new_dlog["town-s"].getTextAsNum();
-	def_town = dynamic_cast<cLed&>(new_dlog["warrior-grove"]).getState();
+	def_town = dynamic_cast<cLed&>(new_dlog["warrior-grove"]).getState() != led_off;
 	return true;
 }
 
@@ -2874,19 +2886,19 @@ extern eScenMode overall_mode;
 bool build_scenario() {
 	short width, height, lg, med, sm;
 	bool default_town, grass;
-	std::string filename, title;
+	std::string author, title;
 	short i;
 	cTown* warriors_grove = nullptr;
 	std::vector<cShop> warriors_grove_shops;
 	
-	if(!edit_make_scen_1(filename, title, grass))
+	if(!edit_make_scen_1(author, title, grass))
 		return false;
-	filename += ".boes";
 	if(!edit_make_scen_2(width, height, lg, med, sm, default_town))
 		return false;
 	
 	scenario = cScenario();
 	scenario.scen_name = title;
+	scenario.contact_info[0] = author;
 	scenario.default_ground = grass ? 2 : 0;
 	
 	fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
@@ -3061,7 +3073,8 @@ bool build_scenario() {
 	cur_town = 0;
 	town = scenario.towns[0];
 	
-	save_scenario(progDir/filename);
+	scenario.scen_file.clear();
+	save_scenario();
 	return true;
 }
 

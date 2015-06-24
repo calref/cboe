@@ -73,7 +73,7 @@ void init_menubar() {
 	inited = true;
 	
 	static const eMenu file_choices[] = {
-		eMenu::FILE_NEW, eMenu::FILE_OPEN, eMenu::NONE, eMenu::FILE_CLOSE, eMenu::FILE_SAVE, eMenu::FILE_REVERT, eMenu::NONE, eMenu::QUIT,
+		eMenu::FILE_NEW, eMenu::FILE_OPEN, eMenu::NONE, eMenu::FILE_CLOSE, eMenu::FILE_SAVE, eMenu::FILE_SAVE_AS, eMenu::FILE_REVERT, eMenu::NONE, eMenu::QUIT,
 	};
 	static const eMenu edit_choices[] = {
 		eMenu::EDIT_UNDO, eMenu::EDIT_REDO, eMenu::NONE,

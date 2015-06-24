@@ -2,13 +2,12 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog skin='light' defbtn='okay' debug='true'>
 	<field name='name' top='34' left='351' width='125' height='32'>Scenario name</field>
-	<field name='file' top='96' left='351' width='125' height='16'>filename</field>
+	<field name='author' top='96' left='351' width='125' height='16'>Your name</field>
 	<button name='okay' type='regular' top='205' left='424'>OK</button>
 	<text size='large' top='6' left='50' width='194' height='14'>Create a new scenario:</text>
 	<text top='76' left='52' width='292' height='56'>
-		What is the file name for your new scenario? 
-		(max. length 8 characters, letters only) <br/>
-		  Examples: thorham, dragonq
+		What is your name, for crediting purposes? <br/>
+		  This will be stored in the scenario but cannot easily be changed later.
 	</text>
 	<text top='32' left='52' width='292' height='40'>
 		What is the name of your new scenario? 
