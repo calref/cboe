@@ -874,6 +874,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case '&': strt = STRT_SHOP; title = "Which shop?"; break;
 		case '%': strt = STRT_COST_ADJ; title = "What cost adjust?"; break;
 		case '*': strt = STRT_CONTEXT; title = "What context?"; break;
+		case '~': strt = STRT_ENCHANT; title = "Which enchantment?"; break;
 		case '^': strt = STRT_POS_MODE; title = "Select positioning mode:"; break;
 		case ':': strt = STRT_STAIR_MODE; title = "Select trigger limitations:"; break;
 		case 'w': strt = STRT_STATUS; title = "Select status:"; str_adj = 1; break;

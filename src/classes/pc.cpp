@@ -419,8 +419,14 @@ void cPlayer::sort_items() {
 	}
 }
 
-bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
+bool cPlayer::give_item(cItem item, int flags) {
+	if(main_status != eMainStatus::ALIVE)
+		return false;
+	
 	short free_space;
+	bool do_print = flags & GIVE_DO_PRINT;
+	bool allow_overload = flags & GIVE_ALLOW_OVERLOAD;
+	int equip_type = flags & GIVE_EQUIP_FORCE;
 	
 	if(item.variety == eItemType::NO_ITEM)
 		return true;
@@ -474,6 +480,59 @@ bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
 			else announce << item.full_name;
 			announce << '.';
 			print_result(announce.str());
+		}
+		
+		if(equip_type != 0 && equippable.count(item.variety)) {
+			if(!equip_item(free_space, false) && equip_type != GIVE_EQUIP_SOFT) {
+				int exclude = 0;
+				if(num_hands_to_use.count(item.variety))
+					exclude = 100;
+				else exclude = excluding_types[item.variety];
+				int rem1 = 24, rem2 = 24;
+				for(int i = 0; i < 24; i++) {
+					if(i == free_space) continue;
+					if(!equip[i]) continue;
+					int check_exclude = 0;
+					if(num_hands_to_use.count(items[i].variety))
+						check_exclude = 100;
+					else check_exclude = excluding_types[items[i].variety];
+					if(exclude != check_exclude) continue;
+					if(exclude == 0 && item.variety != items[i].variety)
+						continue;
+					if(exclude == 100) {
+						if(rem1 == 24) {
+							if(item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED || rem2 < 24)
+								rem1 = i;
+							if(rem1 < 24) continue;
+						}
+						if(rem2 == 24) {
+							if(item.variety == eItemType::SHIELD || item.variety == eItemType::SHIELD_2 || rem1 < 24)
+								rem2 = i;
+						}
+					} else if(rem1 < 24)
+						rem1 = i;
+				}
+				bool can_rem1 = rem1 < 24 && (!items[rem1].cursed || equip_type == GIVE_EQUIP_FORCE);
+				bool can_rem2 = rem2 < 24 && (!items[rem2].cursed || equip_type == GIVE_EQUIP_FORCE);
+				if(exclude == 100) {
+					if(item.variety == eItemType::TWO_HANDED) {
+						if(can_rem1) equip[rem1] = false;
+						if(can_rem2) equip[rem2] = false;
+					} else if(item.variety == eItemType::ONE_HANDED) {
+						if(can_rem1) equip[rem1] = false;
+						else if(can_rem2) equip[rem2] = false;
+					} else { // It's a shield
+						if(can_rem2 && items[rem2].variety != item.variety)
+							equip[rem2] = false;
+						else if(can_rem1 && items[rem1].variety != item.variety)
+							equip[rem1] = false;
+					}
+					if((rem1 == weap_poisoned && !equip[rem1]) || (rem2 == weap_poisoned && !equip[rem2]))
+						status[eStatus::POISONED_WEAPON] = 0;
+				} else if(can_rem1)
+					equip[rem1] = false;
+				equip_item(free_space, false);
+			}
 		}
 		
 		combine_things();

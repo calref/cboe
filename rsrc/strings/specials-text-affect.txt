@@ -222,20 +222,20 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Unused Node
+Give Equipment
 Unused
 Unused
+First part of message
+Second part of message
 Unused
+Special to call if inventory full
 Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
-Unused
+Which item
+Which enchantment (if weapon)
+Number of charges (-1 = default)
+ID? (-1 - normal, 0 - no, 1 - yes, 2 - full)
+Cursed? (-1 - default, 0 - no, 1 - yes)
+Equip? (-1 - no, 0 - soft, 1 - try, 2 - force)
 Special to Jump To
 --------------------
 Affect Monster Target
