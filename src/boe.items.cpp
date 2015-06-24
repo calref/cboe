@@ -482,7 +482,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 		if(item_hit >= item_array.size()) return true;
 		item = *item_array[item_hit];
 		if(item.property) {
-			if(me.getResult<bool>()) {
+			if(!me.getResult<bool>()) {
 				std::string choice = cChoiceDlog("steal-item",{"steal","leave"}).show();
 				if(choice == "leave") return true;
 				me.setResult(true);
@@ -596,6 +596,7 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	
 	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
+	itemDialog.setResult(false); // The result is set to true if the player steals something
 	itemDialog.run(std::bind(give_help, 36, 37, _1));
 	
 	return itemDialog.getResult<bool>();
