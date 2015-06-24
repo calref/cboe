@@ -182,7 +182,7 @@ public:
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 	
-	bool give_item(cItem item,bool do_print);
+	bool give_item(cItem item,int flags);
 	bool forced_give(item_num_t item_num,eItemAbil abil,short dat = -1);
 	bool has_abil(eItemAbil abil, short dat = -1);
 	bool take_abil(eItemAbil abil, short dat = -1);

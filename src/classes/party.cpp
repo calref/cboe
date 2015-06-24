@@ -445,9 +445,9 @@ int cParty::calc_day() const {
 	return (age / 3700) + 1;
 }
 
-bool cParty::give_item(cItem item,bool do_print) {
+bool cParty::give_item(cItem item,int flags) {
 	for(int i = 0; i < 6; i++) {
-		if(adven[i]->give_item(item,do_print))
+		if(adven[i]->give_item(item,flags))
 			return true;
 	}
 	return false;

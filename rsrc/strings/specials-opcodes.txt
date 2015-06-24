@@ -91,7 +91,7 @@ name
 level
 morale
 soul-crystal
-
+give-item
 monst-target
 monst-attack
 monst-statistic

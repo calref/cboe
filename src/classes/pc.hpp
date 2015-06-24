@@ -23,6 +23,15 @@ namespace legacy { struct pc_record_type; };
 
 enum class eBuyStatus {OK, NO_SPACE, NEED_GOLD, TOO_HEAVY, HAVE_LOTS};
 
+enum {
+	GIVE_DO_PRINT = 1,
+	GIVE_ALLOW_OVERLOAD = 2,
+	// These three are mutually exclusive:
+	GIVE_EQUIP_SOFT = 4,
+	GIVE_EQUIP_TRY = 8,
+	GIVE_EQUIP_FORCE = 12,
+};
+
 class cParty;
 
 class cPlayer : public iLiving {
@@ -85,7 +94,7 @@ public:
 	
 	void combine_things();
 	void sort_items();
-	bool give_item(cItem item, bool do_print, bool allow_overload = false);
+	bool give_item(cItem item, int flags);
 	bool equip_item(int which_item, bool do_print);
 	bool unequip_item(int which_item, bool do_print);
 	void take_item(int which_item);

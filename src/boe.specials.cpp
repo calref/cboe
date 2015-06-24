@@ -3254,6 +3254,31 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			// TODO: Verify this actually works! It's possible the monster ignores this and just recalculates its target each turn.
 			dynamic_cast<cCreature*>(pc)->target = spec.ex1a;
 			break;
+		case eSpecType::GIVE_ITEM:
+			if(pc_num >= 100) break;
+			if(spec.ex1a >= 0 && spec.ex1a < univ.scenario.scen_items.size()) {
+				cItem to_give = univ.scenario.scen_items[spec.ex1a];
+				if(spec.ex1b >= 0 && spec.ex1b <= 6) {
+					// TODO: This array and accompanying calculation is now duplicated here, in start_town_mode(), and in place_buy_button()
+					const short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
+					int val = max(aug_cost[spec.ex1b] * 100, to_give.value * (5 + aug_cost[spec.ex1b]));
+					to_give.enchant_weapon(eEnchant(spec.ex1b), val);
+				}
+				if(to_give.charges > 0 && spec.ex1c >= 0)
+					to_give.charges = spec.ex1c;
+				if(spec.ex2a == 1) to_give.ident = true;
+				else if(spec.ex2a == 0) to_give.ident = false;
+				if(spec.ex2b == 1) to_give.cursed = to_give.unsellable = true;
+				else if(spec.ex2b == 0) to_give.cursed = to_give.unsellable = false;
+				int equip_type = 0;
+				if(spec.ex2c == 0) equip_type = GIVE_EQUIP_SOFT;
+				else if(spec.ex2c == 1) equip_type = GIVE_EQUIP_TRY;
+				else if(spec.ex2c >= 2) equip_type = GIVE_EQUIP_FORCE;
+				for(i = 0; i < 6; i++)
+					if(pc_num == 6 || pc_num == i)
+						univ.party[i].give_item(to_give, equip_type | GIVE_ALLOW_OVERLOAD);
+			}
+			break;
 		default:
 			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
