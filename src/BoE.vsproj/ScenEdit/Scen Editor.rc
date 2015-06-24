@@ -68,6 +68,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Close Scenario\tCtrl+W",      IDM_FILE_CLOSE
         MENUITEM "&Save Scenario\tCtrl+S",      IDM_FILE_SAVE
+        MENUITEM "Save &As\tCtrl+Shift+S",      IDM_FILE_SAVE_AS
         MENUITEM "Revert to Saved",             IDM_FILE_REVERT
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tCtrl+Q",               IDM_FILE_QUIT

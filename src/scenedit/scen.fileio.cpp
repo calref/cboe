@@ -19,6 +19,7 @@
 #include "gzstream.h"
 #include "tinyprint.h"
 #include "map_parse.hpp"
+#include "winutil.hpp"
 
 #define	DONE_BUTTON_ITEM	1
 
@@ -914,7 +915,16 @@ struct overrides_sheet {
 	}
 };
 
-void save_scenario(fs::path toFile) {
+void save_scenario(bool rename) {
+	fs::path toFile = scenario.scen_file;
+	if(rename || toFile.empty()) {
+		fs::path def = scenario.scen_file;
+		if(def.empty())
+			def = progDir/"Blades of Exile Scenarios/myscenario.boes";
+		toFile = nav_put_scenario(def);
+		if(toFile.empty()) return;
+	}
+	
 	scenario.format.prog_make_ver[0] = 2;
 	scenario.format.prog_make_ver[1] = 0;
 	scenario.format.prog_make_ver[2] = 0;
@@ -1072,8 +1082,13 @@ void save_scenario(fs::path toFile) {
 	// Make sure it has the proper file extension
 	std::string fname = toFile.filename().string();
 	size_t dot = fname.find_last_of('.');
-	if(dot == std::string::npos || fname.substr(dot) != ".boes") {
-		if(dot != std::string::npos && fname.substr(dot) == ".exs")
+	std::string ext;
+	if(dot != std::string::npos) {
+		ext = fname.substr(dot);
+		std::transform(ext.begin(), ext.end(), ext.begin(), tolower);
+	}
+	if(ext != ".boes") {
+		if(ext == ".exs")
 			fname.replace(dot,4,".boes");
 		else fname += ".boes";
 	}

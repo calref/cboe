@@ -196,6 +196,7 @@ void Handle_Update() {
 	restore_cursor();
 }
 
+extern fs::path progDir;
 void handle_menu_choice(eMenu item_hit) {
 	bool isEdit = false, isHelp = false;
 	std::string helpDlog;
@@ -222,7 +223,10 @@ void handle_menu_choice(eMenu item_hit) {
 			}
 			break;
 		case eMenu::FILE_SAVE:
-			save_scenario(scenario.scen_file);
+			save_scenario();
+			break;
+		case eMenu::FILE_SAVE_AS:
+			save_scenario(true);
 			break;
 		case eMenu::FILE_NEW:
 			if(build_scenario()) {

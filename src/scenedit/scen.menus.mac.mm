@@ -45,7 +45,7 @@ void init_menubar() {
 	help_menu = [[menu_bar_handle itemWithTitle: @"Help"] submenu];
 	
 	static const eMenu file_choices[] = {
-		eMenu::FILE_NEW, eMenu::FILE_OPEN, eMenu::NONE, eMenu::FILE_CLOSE, eMenu::FILE_SAVE, eMenu::FILE_REVERT,
+		eMenu::FILE_NEW, eMenu::FILE_OPEN, eMenu::NONE, eMenu::FILE_CLOSE, eMenu::FILE_SAVE, eMenu::FILE_SAVE_AS, eMenu::FILE_REVERT,
 	};
 	static const eMenu edit_choices[] = {
 		eMenu::EDIT_UNDO, eMenu::EDIT_REDO, eMenu::NONE,

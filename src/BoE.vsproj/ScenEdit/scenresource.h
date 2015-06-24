@@ -68,6 +68,7 @@
 #define IDM_SCEN_CUSTOM_PICS            163
 #define IDM_SCEN_CUSTOM_SHEETS          164
 #define IDM_SCEN_CUSTOM_SNDS            165
+#define IDM_FILE_SAVE_AS                166
 
 // Next default values for new objects
 // 
@@ -76,6 +77,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        103
 #define _APS_NEXT_COMMAND_VALUE         40014
 #define _APS_NEXT_CONTROL_VALUE         1001
-#define _APS_NEXT_SYMED_VALUE           166
+#define _APS_NEXT_SYMED_VALUE           167
 #endif
 #endif

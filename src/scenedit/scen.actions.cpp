@@ -2802,7 +2802,7 @@ bool save_check(std::string which_dlog) {
 	else if(choice == "cancel")
 		return false;
 	town->set_up_lights();
-	save_scenario(scenario.scen_file);
+	save_scenario();
 	return true;
 }
 
