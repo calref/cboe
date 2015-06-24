@@ -440,7 +440,7 @@ static const char*const button_dict[7][11] = {
 		"                                   ", // msg3
 		" 8                ppp              ", // pic
 		"                  ???              ", // pictype
-		"            c             L   {    ", // ex1a
+		"             c            L   {    ", // ex1a
 		"              s s s      s @       ", // ex1b
 		"                               }}  ", // ex1c
 		"@  7     ! c     T  T i        FD  ", // ex2a
