@@ -86,6 +86,8 @@ public:
 	void combine_things();
 	void sort_items();
 	bool give_item(cItem item, bool do_print, bool allow_overload = false);
+	bool equip_item(int which_item, bool do_print);
+	bool unequip_item(int which_item, bool do_print);
 	void take_item(int which_item);
 	void remove_charge(int which_item);
 	short has_space() const;

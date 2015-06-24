@@ -99,65 +99,14 @@ short take_food(short amount,bool print_result) {
 }
 
 void equip_item(short pc_num,short item_num) {
-	unsigned short num_equipped_of_this_type = 0;
-	unsigned short num_hands_occupied = 0;
-	short i;
-	short equip_item_type = 0;
-	
 	if(overall_mode == MODE_COMBAT && univ.party[pc_num].items[item_num].variety == eItemType::FOOD)
 		add_string_to_buf("Equip: Not in combat");
 	else {
-		
-		// unequip
-		if(univ.party[pc_num].equip[item_num]) {
-			if(univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
-				add_string_to_buf("Equip: Item is cursed.");
-			else {
-				univ.party[pc_num].equip[item_num] = false;
-				add_string_to_buf("Equip: Unequipped");
-				if(univ.party[pc_num].weap_poisoned == item_num && univ.party[pc_num].status[eStatus::POISONED_WEAPON] > 0) {
-					add_string_to_buf("  Poison lost.");
-					univ.party[pc_num].status[eStatus::POISONED_WEAPON] = 0;
-				}
-			}
-		}
-		
-		else {  // equip
-			if(!equippable.count(univ.party[pc_num].items[item_num].variety))
-				add_string_to_buf("Equip: Can't equip this item.");
-			else {
-				for(i = 0; i < 24; i++)
-					if(univ.party[pc_num].equip[i]) {
-						if(univ.party[pc_num].items[i].variety == univ.party[pc_num].items[item_num].variety)
-							num_equipped_of_this_type++;
-						num_hands_occupied = num_hands_occupied + num_hands_to_use.count(univ.party[pc_num].items[i].variety);
-					}
-				
-				
-				equip_item_type = excluding_types[univ.party[pc_num].items[item_num].variety];
-				// Now if missile is already equipped, no more missiles
-				if(equip_item_type > 0) {
-					for(i = 0; i < 24; i++)
-						if((univ.party[pc_num].equip[i]) && (excluding_types[univ.party[pc_num].items[i].variety] == equip_item_type)) {
-							add_string_to_buf("Equip: You have something of this type equipped.", 2);
-							return;
-						}
-				}
-				
-				size_t hands_free = 2 - num_hands_occupied;
-				if(is_combat() && univ.party[pc_num].items[item_num].variety == eItemType::ARMOR)
-					add_string_to_buf("Equip: Not armor in combat");
-				else if(hands_free < num_hands_to_use.count(univ.party[pc_num].items[item_num].variety))
-					add_string_to_buf("Equip: Not enough free hands");
-				else if(equippable.count(univ.party[pc_num].items[item_num].variety) <= num_equipped_of_this_type)
-					add_string_to_buf("Equip: Can't equip another");
-				else {
-					univ.party[pc_num].equip[item_num] = true;
-					add_string_to_buf("Equip: OK");
-				}
-			}
-			
-		}
+		if(univ.party[pc_num].equip[item_num])
+			univ.party[pc_num].unequip_item(item_num, true);
+		else if(is_combat() && univ.party[pc_num].items[item_num].variety == eItemType::ARMOR)
+			add_string_to_buf("Equip: Not armor in combat");
+		else univ.party[pc_num].equip_item(item_num, true);
 	}
 	if(stat_window == pc_num)
 		put_item_screen(stat_window,1);
@@ -569,7 +518,10 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 			
 			set_item_flag(&item);
 			play_sound(0); // formerly force_play_sound
-			univ.party[current_getting_pc].give_item(item, false, allow_overload);
+			int flags = GIVE_DO_PRINT;
+			if(allow_overload)
+				flags |= GIVE_ALLOW_OVERLOAD;
+			univ.party[current_getting_pc].give_item(item, flags);
 		}
 		*item_array[item_hit] = cItem();
 		item_array.erase(item_array.begin() + item_hit);
