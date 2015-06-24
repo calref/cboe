@@ -2217,7 +2217,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::FORCED_GIVE:
 			check_mess = true;
-			if(!univ.party.forced_give(spec.ex1a + 10000 * spec.ex2a,eItemAbil::NONE) && spec.ex1b >= 0)
+			if(!univ.party.forced_give(spec.ex1a,eItemAbil::NONE) && spec.ex1b >= 0)
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::BUY_ITEMS_OF_TYPE:
