@@ -2840,7 +2840,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(pc_num >= 100) break;
 			for(i = 0; i < 6; i++)
 				if(pc_num == 6 || pc_num == i) {
-					if(spec.ex1b == 0) award_xp(i,spec.ex1a,true);
+					if(spec.ex1a < 0)
+						univ.party[i].experience = univ.party[i].level * univ.party[i].get_tnl();
+					else if(spec.ex1b == 0) award_xp(i,spec.ex1a,true);
 					else drain_pc(i,spec.ex1a);
 				}
 			break;
