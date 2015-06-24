@@ -14,7 +14,7 @@
 	<text size='large' top='6' left='50' width='156' height='17'>Scenario Details</text>
 	<text top='22' left='50' width='300' height='40'>
 		This is where you can write the text that is displayed to the player upon starting the scenario.
-		You can also pick your scenario’s icon.
+		You can also pick your scenario's icon.
 	</text>
 	<text size='large' top='63' left='50' width='120' height='14'>Introductory text:</text>
 	<text top='22' left='360' width='149' height='14'>Scenario icon number:</text>

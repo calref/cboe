@@ -35,7 +35,7 @@
 		There can be up to 24 boats in your scenario,
 		each of which must start in some town.
 		The boats can start as the parties property, if you want.
-		If the town is left at -1, the boat won’t exist.
+		If the town is left at -1, the boat won't exist.
 	</text>
 	<text top='70' left='199' width='106' height='14'>Town to start in</text>
 	<text top='64' left='310' width='76' height='25'>X Location in town</text>

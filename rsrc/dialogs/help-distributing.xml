@@ -7,18 +7,18 @@
 	<button name='okay' type='regular' top='284' left='403'>OK</button>
 	<pict type='dlog' num='16' top='6' left='6'/>
 	<text top='22' left='50' width='413' height='56'>
-		When you’ve completed your scenario, you probably want to give other people the chance to play through it.
-		It’s a big kick letting other people run around in your own fantasy world, get stuck at your puzzles, and kill your creations.
+		When you've completed your scenario, you probably want to give other people the chance to play through it.
+		It's a big kick letting other people run around in your own fantasy world, get stuck at your puzzles, and kill your creations.
 	</text>
 	<text top='79' left='50' width='414' height='54'>
 		The easiest way to release a scenario is to send it over to Spiderweb Software.
 		Go to www.spidweb.com.
-		There’s a scenario upload area there.
+		There's a scenario upload area there.
 		Alternately, mail it to us on disk (PO Box 85659, Seattle, WA 98145).
 	</text>
 	<text top='134' left='50' width='412' height='40'>
 		Before you send a scenario, however, be sure to read the License Agreement (in the file Blades of Exile License).
-		It says a lot of big no-no’s and describes your (and our) rights for your scenario.
+		It says a lot of big no-no's and describes your (and our) rights for your scenario.
 	</text>
 	<text top='175' left='50' width='418' height='54'>
 		Also look for information on the Blades of Exile Scenario Contest.
@@ -27,7 +27,7 @@
 	</text>
 	<text top='230' left='50' width='418' height='52'>
 		Finally, if your scenario is really, really good, we might like to sell it as a stand-alone.
-		If we’re interested, you can actually make money from your work!
+		If we're interested, you can actually make money from your work!
 		To take a shot at this, just send us your scenario before releasing it.
 	</text>
 	<text top='4' left='50' width='312' height='16'>BLADES OF EXILE - DISTRIBUTING YOUR SCENARIO</text>

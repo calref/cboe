@@ -30,7 +30,7 @@
 	<text top='88' left='244' width='118' height='25'>Town special node to call.</text>
 	<text top='216' left='4' width='106' height='120'>
 		Note: If you leave the time between calls at 0, no special node is called.
-		Don’t have special nodes called too often ... it slows the game down.
+		Don't have special nodes called too often ... it slows the game down.
 	</text>
 	<button name='edit1' type='large' top='119' left='325'>Create/Edit</button>
 	<button name='edit2' type='large' top='147' left='325'>Create/Edit</button>
