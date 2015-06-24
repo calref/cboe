@@ -1931,7 +1931,7 @@ static void put_spec_item_in_dlog(cDialog& me, cSpecItem& item, short which) {
 }
 
 static bool save_spec_item(cDialog& me, cSpecItem& item, short which) {
-	item.name = me["name"].getText().substr(0,25);
+	item.name = me["name"].getText();
 	item.descr = me["descr"].getText();
 	item.special = me["spec"].getTextAsNum();
 	item.flags = 0;
