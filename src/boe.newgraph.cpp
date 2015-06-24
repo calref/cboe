@@ -844,10 +844,10 @@ static void place_talk_face() {
 		cPict::drawAt(mainPtr, face_rect, store_talk_face_pic, PIC_CUSTOM_TALK, false);
 	}
 	else {
-		short i = get_monst_picnum(store_monst_type);
-		if(face_to_draw == NO_PIC)
+		if(face_to_draw == NO_PIC) {
+			short i = get_monst_picnum(store_monst_type);
 			cPict::drawAt(mainPtr, face_rect, i, get_monst_pictype(store_monst_type), false);
-		else cPict::drawAt(mainPtr, face_rect, face_to_draw, PIC_TALK, false);
+		} else cPict::drawAt(mainPtr, face_rect, face_to_draw, PIC_TALK, false);
 	}
 }
 
