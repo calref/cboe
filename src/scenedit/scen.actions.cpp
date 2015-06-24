@@ -994,7 +994,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 							break;
 						}
 				}
-				if(x < 0)
+				if(x != -1)
 					giveError("There wasn't a special on that spot.");
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;

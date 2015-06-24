@@ -792,8 +792,15 @@ void draw_terrain(){
 				}
 				
 				if(is_special(cen_x + q - 4,cen_y + r - 4)) {
+					int x = cen_x + q - 4, y = cen_y + r - 4;
+					std::vector<spec_loc_t>& spec_list = editing_town ? town->special_locs : current_terrain->special_locs;
+					int num_spec = std::count_if(spec_list.begin(), spec_list.end(), [x,y](spec_loc_t which) {
+						return which.spec >= 0 && which.x == x && which.y == y;
+					});
 					tiny_from = base_small_button_from;
-					tiny_from.offset(7 * (7),7 * (0));
+					if(num_spec > 1)
+						tiny_from.offset(7 * (7),7 * (4));
+					else tiny_from.offset(7 * (7),7 * (0));
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 					tiny_to.offset(0,-7);
 				}
