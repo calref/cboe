@@ -18,6 +18,10 @@
 #include "mathutil.hpp"
 #include "fileio.hpp"
 
+extern const std::multiset<eItemType> equippable;
+extern const std::multiset<eItemType> num_hands_to_use;
+extern std::map<const eItemType, const short> excluding_types;
+
 extern short skill_bonus[21];
 
 void cPlayer::append(legacy::pc_record_type old){
@@ -477,6 +481,72 @@ bool cPlayer::give_item(cItem item, bool do_print, bool allow_overload) {
 		return true;
 	}
 	return false;
+}
+
+bool cPlayer::equip_item(int which_item, bool do_print) {
+	if(!equippable.count(items[which_item].variety)) {
+		if(do_print && print_result)
+			print_result("Equip: Can't equip this item.");
+		return false;
+	}
+	unsigned short num_this_type = 0, hands_occupied = 0;
+	for(int i = 0; i < 24; i++)
+		if(equip[i]) {
+			if(items[i].variety == items[which_item].variety)
+				num_this_type++;
+			hands_occupied += num_hands_to_use.count(items[i].variety);
+		}
+	
+	
+	short equip_item_type = excluding_types[items[which_item].variety];
+	// Now if missile is already equipped, no more missiles
+	if(equip_item_type > 0) {
+		for(int i = 0; i < 24; i++)
+			if(equip[i] && excluding_types[items[i].variety] == equip_item_type) {
+				if(do_print && print_result) {
+					print_result("Equip: You have something of this type");
+					print_result("  equipped.");
+				}
+				return false;
+			}
+	}
+	
+	size_t hands_free = 2 - hands_occupied;
+	if(hands_free < num_hands_to_use.count(items[which_item].variety)) {
+		if(do_print && print_result)
+			print_result("Equip: Not enough free hands");
+		return false;
+	} else if(equippable.count(items[which_item].variety) <= num_this_type) {
+		if(do_print && print_result)
+			print_result("Equip: Can't equip another");
+		return false;
+	}
+	equip[which_item] = true;
+	if(do_print && print_result)
+		print_result("Equip: OK");
+	return true;
+}
+
+bool cPlayer::unequip_item(int which_item, bool do_print) {
+	if(!equip[which_item]) {
+		if(do_print && print_result)
+			print_result("Equip: Not equipped");
+		return false;
+	}
+	if(items[which_item].cursed) {
+		if(do_print && print_result)
+			print_result("Equip: Item is cursed.");
+		return false;
+	}
+	equip[which_item] = false;
+	if(do_print && print_result)
+		print_result("Equip: Unequipped");
+	if(weap_poisoned == which_item && status[eStatus::POISONED_WEAPON] > 0) {
+		if(do_print && print_result)
+			print_result("  Poison lost.");
+		status[eStatus::POISONED_WEAPON] = 0;
+	}
+	return true;
 }
 
 short cPlayer::max_weight() const {
