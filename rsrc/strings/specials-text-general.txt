@@ -734,6 +734,38 @@ Unused
 Unused
 Special to Jump To
 --------------------
+Swap String Buffer
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Which string buffer?
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
+Alter Sign Text
+Unused
+Unused
+First part of message
+Second part of message
+Unused
+Unused
+Unused
+Which sign?
+Unused
+Unused
+Unused
+Unused
+Unused
+Special to Jump To
+--------------------
 Special Name
 sdf1
 sdf2

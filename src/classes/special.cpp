@@ -387,17 +387,17 @@ void cSpecial::append(legacy::special_node_type& old){
 // (terrain, monster, dialog, talk, item, pc, field, boom, missile, status)
 static const char*const button_dict[7][11] = {
 	{ // general nodes
-		" mmmMmmmmmMmmm mmmmmm   Mmm  $ mmmmmm        m", // msg1
-		"                                              ", // msg2
-		"                                              ", // msg3
-		"          p                                 3 ", // pic
-		"          ?                                   ", // pictype
-		"    &         x  T i                  M cit  j", // ex1a
-		"    %        S     ss                       cJ", // ex1b
-		"                                              ", // ex1c
-		"                                  tt          ", // ex2a
-		"                                   t          ", // ex2b
-		"                                              ", // ex2c
+		" mmmMmmmmmMmmm mmmmmm   Mmm  $ mmmmmm        mmm", // msg1
+		"                                                ", // msg2
+		"                                                ", // msg3
+		"          p                                 3   ", // pic
+		"          ?                                     ", // pictype
+		"    &         x  T i                  M cit  j  ", // ex1a
+		"    %        S     ss                       cJ  ", // ex1b
+		"                                                ", // ex1c
+		"                                  tt            ", // ex2a
+		"                                   t            ", // ex2b
+		"                                                ", // ex2c
 	}, { // one-shot nodes
 		"mm  md  d  mmm", // msg1
 		"              ", // msg2

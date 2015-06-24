@@ -43,8 +43,8 @@ append-ter
 pause
 start-talk
 quest
-
-
+swap-buf
+sign-buf
 
 
 once-give-item
