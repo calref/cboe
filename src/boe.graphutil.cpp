@@ -457,7 +457,7 @@ void draw_party_symbol(location center) {
 		if(pic >= 1000) {
 			bool isParty = pic >= 10000;
 			pic_num_t need_pic = pic % 1000;
-			if(univ.party[i].direction >= 4)
+			if(univ.party.direction >= 4)
 				need_pic++;
 			graf_pos_ref(from_gw, source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
 		} else if(pic >= 100) {
@@ -465,13 +465,13 @@ void draw_party_symbol(location center) {
 			// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
 			pic_num_t need_pic = pic - 100;
 			int mode = 0;
-			if(univ.party[current_pc].direction >= 4)
+			if(univ.party.direction >= 4)
 				mode++;
 			source_rect = get_monster_template_rect(need_pic, mode, 0);
 			from_gw = &monst_gworld[m_pic_index[need_pic].i / 20];
 		} else {
 			source_rect = calc_rect(2 * (pic / 8), pic % 8);
-			if(univ.party[current_pc].direction >= 4)
+			if(univ.party.direction >= 4)
 				source_rect.offset(28,0);
 			from_gw = &pc_gworld;
 		}
