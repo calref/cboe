@@ -12,7 +12,7 @@
 	<text top='32' left='52' width='292' height='40'>
 		What is the name of your new scenario? 
 		(max. length 30 characters) <br/>
-		   Examples: ‘Hammer of Thor’, ‘Dragon’s Quest’
+		   Examples: 'Hammer of Thor', 'Dragon's Quest'
 	</text>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<button name='cancel' type='regular' top='205' left='358' def-key='esc'>Cancel</button>

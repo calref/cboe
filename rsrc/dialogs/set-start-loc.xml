@@ -10,7 +10,7 @@
 	<text top='25' left='50' width='371' height='41'>
 		Enter the town the party will start the scenario in.
 		Also enter the x-y location in the town to place the party at.
-		Don’t forget to place that town somewhere in your scenario.
+		Don't forget to place that town somewhere in your scenario.
 	</text>
 	<text size='large' top='6' left='50' width='256' height='17'>Starting Location</text>
 	<text top='105' left='50' width='120' height='14'>Start location:  X =</text>

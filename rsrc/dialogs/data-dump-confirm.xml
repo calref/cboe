@@ -5,7 +5,7 @@
 	<button name='cancel' type='regular' def-key='esc' top='74' left='190'>Cancel</button>
 	<pict type='dlog' num='16' top='6' left='6'/>
 	<text top='6' left='49' width='271' height='66'>
-		Lists of all the terrain types, monster types, and item types in your scenario are about to be put in a file called ‘Scenario data’.
+		Lists of all the terrain types, monster types, and item types in your scenario are about to be put in a file called 'Scenario data'.
 		You can then print out this file to ast as a handy reference while designing your scenario.
 	</text>
 </dialog>

@@ -37,8 +37,8 @@
 		Leave the town at -1 to make the horse not exist.
 	</text>
 	<text top='65' left='50' width='439' height='41'>
-		Note that horses can’t walk over certain terrain types (like floors).
-		Be careful not to place horses where they’re stuck and can’t get out.
+		Note that horses can't walk over certain terrain types (like floors).
+		Be careful not to place horses where they're stuck and can't get out.
 		This makes them sad.
 	</text>
 	<text top='113' left='199' width='106' height='14'>Town to start in</text>

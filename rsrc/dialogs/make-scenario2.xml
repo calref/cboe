@@ -33,7 +33,7 @@
 	<text top='295' left='117' width='181' height='15'>Number of small towns:</text>
 	<text size='large' top='331' left='59' width='235' height='16'>Place a starter town?</text>
 	<text top='348' left='70' width='383' height='53'>
-		If this option is selected, Town number 0 in your scenario is ‘Warrior’s Grove,’ a predesigned town with shops, inns, etc. 
+		If this option is selected, Town number 0 in your scenario is 'Warrior's Grove,' a predesigned town with shops, inns, etc. 
 		This is a GREAT place to start for beginner scenario designers, and lets you put off designing characters.
 	</text>
 	<text top='406' left='119' width='134' height='15'>Include starter town</text>

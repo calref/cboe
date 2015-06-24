@@ -4,7 +4,7 @@
 	<button name='okay' type='regular' top='84' left='251'>OK</button>
 	<pict top='8' left='8' type='dlog' num='16'/>
 	<text top='3' left='52' width='257' height='79'>
-		Selecting this option removes your party from the scenario they’re currently in.
+		Selecting this option removes your party from the scenario they're currently in.
 		All of their progress in that adventure is forgotten ...
 		if you want to play it again, you will need to start over from the very beginning.
 	</text>
