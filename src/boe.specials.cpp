@@ -2410,6 +2410,19 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::APPEND_TER:
 			univ.get_buf() += univ.scenario.ter_types[spec.ex1a].name;
 			break;
+		case eSpecType::SWAP_STR_BUF:
+			univ.swap_buf(spec.ex1a);
+			break;
+		case eSpecType::STR_BUF_TO_SIGN:
+			if(spec.ex1a < 0) break;
+			if(is_out()) {
+				if(spec.ex1a >= univ.out->sign_locs.size()) break;
+				std::swap(univ.out->sign_locs[spec.ex1a].text, univ.get_buf());
+			} else {
+				if(spec.ex1a >= univ.town->sign_locs.size()) break;
+				std::swap(univ.town->sign_locs[spec.ex1a].text, univ.get_buf());
+			}
+			break;
 		case eSpecType::PAUSE:
 			if(spec.ex1a < 0) break;
 			redraw_screen(REFRESH_TERRAIN | REFRESH_STATS);

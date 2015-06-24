@@ -158,6 +158,7 @@ class cUniverse{
 	void check_monst(cMonster& monst);
 	void check_item(cItem& item);
 	std::string strbuf;
+	std::map<int,std::string> extrabufs;
 public:
 	void exportSummons();
 	void exportGraphics();
@@ -165,7 +166,9 @@ public:
 	iLiving& get_target(size_t which);
 	iLiving* target_there(location pos, eTargetType type = TARG_ANY);
 	size_t get_target_i(iLiving& who);
-	std::string get_buf() {return strbuf;}
+	
+	std::string& get_buf() {return strbuf;}
+	void swap_buf(int newbuf) {std::swap(strbuf, extrabufs[newbuf]);}
 				
 	cScenario scenario;
 	cParty party;
