@@ -990,10 +990,10 @@ static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack,
 			if(cre(talk_node.extras[0],0,49,"The special item must be in the legal range (0 - 49).","",&me)) return false;
 			break;
 		case eTalkNode::CALL_TOWN_SPEC:
-			if(cre(talk_node.extras[0],-1,99,"The town special node called must be in the legal range (0 - 99), or -1 for No Special.","",&me)) return false;
+			if(cre(talk_node.extras[0],-1,town->specials.size(),"The town special node called must be in the legal range (0 - 99), or -1 for No Special.","",&me)) return false;
 			break;
 		case eTalkNode::CALL_SCEN_SPEC:
-			if(cre(talk_node.extras[0],-1,255,"The scenario special node called must be in the legal range (0 - 255), or -1 for No Special.","",&me)) return false;
+			if(cre(talk_node.extras[0],-1,scenario.scen_specials.size(),"The scenario special node called must be in the legal range (0 - 255), or -1 for No Special.","",&me)) return false;
 			break;
 		case eTalkNode::BUY_INFO: case eTalkNode::DEP_ON_TIME: case eTalkNode::REGULAR:
 		case eTalkNode::END_ALARM: case eTalkNode::END_DIE: case eTalkNode::END_FIGHT: case eTalkNode::END_FORCE:
