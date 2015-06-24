@@ -530,7 +530,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 	
 	// So file is (probably) OK, so load in string data and close it.
 	cScenario temp_scenario;
-	if(!load_scenario(file, temp_scenario))
+	if(!load_scenario(file, temp_scenario, true))
 		return false;
 	
 	scen_header_type scen_head;

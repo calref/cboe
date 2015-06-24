@@ -37,13 +37,13 @@ void load_spec_graphics_v1(fs::path scen_file);
 void load_spec_graphics_v2(int num_sheets);
 void reload_core_graphics();
 // Load old scenarios (town talk is handled by the town loading function)
-static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario);
+static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_header);
 static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario);
 static bool load_town_v1(fs::path scen_file,short which_town,cTown& the_town,legacy::scenario_data_type& scenario,std::vector<shop_info_t>& shops);
 // Load new scenarios
-static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario);
+static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_header);
 
-bool load_scenario(fs::path file_to_load, cScenario& scenario) {
+bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header) {
 	// Before loading a scenario, we may need to pop scenario resource paths.
 	fs::path graphics_path = ResMgr::popPath<ImageRsrc>();
 	for(auto p : graphics_path) {
@@ -64,9 +64,9 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario) {
 	std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
 	size_t dot = fname.find_last_of('.');
 	if(fname.substr(dot) == ".boes")
-		return load_scenario_v2(file_to_load, scenario);
+		return load_scenario_v2(file_to_load, scenario, only_header);
 	else if(fname.substr(dot) == ".exs")
-		return load_scenario_v1(file_to_load, scenario);
+		return load_scenario_v1(file_to_load, scenario, only_header);
 	giveError("That is not a Blades of Exile scenario.");
 	return false;
 }
@@ -91,7 +91,7 @@ template<typename Container> static void port_shop_spec_node(cSpecial& spec, std
 	spec.ex2a = spec.ex2b = -1;
 }
 
-bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
+bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_header){
 	short i,n;
 	bool file_ok = false;
 	long len;
@@ -126,7 +126,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	  	file_ok = true;
 	} else if(scenario.format.flag1 == 'O' && scenario.format.flag2 == 'B' && scenario.format.flag3 == 'O' && scenario.format.flag4 == 'E') {
 		// This means we're looking at the scenario header file of an unpacked new-format scenario.
-		return load_scenario_v2(file_to_load.parent_path(), scenario);
+		return load_scenario_v2(file_to_load.parent_path(), scenario, only_header);
 	}
 	if(!file_ok) {
 		fclose(file_id);
@@ -182,6 +182,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario){
 	scenario.ter_types[23].fly_over = false;
 	
 	scenario.scen_file = file_to_load;
+	if(only_header) return true;
 	load_spec_graphics_v1(scenario.scen_file);
 	
 	// Now load all the outdoor sectors
@@ -1781,7 +1782,7 @@ static void readSpecialNodesFromStream(std::istream& stream, std::vector<cSpecia
 		nodes[p.first] = p.second;
 }
 
-bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
+bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_header) {
 	// First determine whether we're dealing with a packed or unpacked scenario.
 	bool is_packed = true;
 	tarball pack;
@@ -1819,6 +1820,8 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario) {
 		// Then, the main scenario data.
 		std::istream& scen_data = getFile("scenario/scenario.xml");
 		readScenarioFromXml(xmlDocFromStream(scen_data, "scenario.xml"), scenario);
+		
+		if(only_header) return true;
 		
 		// Next, terrain types...
 		std::istream& terrain = getFile("scenario/terrain.xml");
