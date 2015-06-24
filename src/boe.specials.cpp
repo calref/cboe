@@ -3186,7 +3186,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::AFFECT_NAME:
-			get_strs(str, str, 0, spec.m3, -1);
+			get_strs(str, str, cur_spec_type, spec.m3, -1);
 			if(cPlayer* who = dynamic_cast<cPlayer*>(pc))
 				who->name = str;
 			else if(cCreature* monst = dynamic_cast<cCreature*>(pc))
@@ -3207,7 +3207,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				check_mess = false;
 				break;
 			}
-			get_strs(str, str, 0, spec.m3, -1);
+			get_strs(str, str, cur_spec_type, spec.m3, -1);
 			univ.party.new_pc(pc_num);
 			univ.party[pc_num].name = str;
 			univ.party[pc_num].which_graphic = spec.pic;
