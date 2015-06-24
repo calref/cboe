@@ -628,7 +628,7 @@ void give_pc_info(short pc_num) {
 	
 	cDialog pcInfo("pc-info");
 	pcInfo.attachClickHandlers(std::bind(give_pc_info_event_filter, _1, _2, std::ref(pc_num)), {"done", "left", "right"});
-	pcInfo.attachClickHandlers(give_pc_extra_info, {"seemage", "seepriest", "trait", "alch"});
+	pcInfo.attachClickHandlers(std::bind(give_pc_extra_info, _1, _2, std::ref(pc_num)), {"seemage", "seepriest", "trait", "alch"});
 	
 	for(i = 0; i < 19; i++) {
 		std::string lbl= "lbl" + boost::lexical_cast<std::string>(i + 1);
