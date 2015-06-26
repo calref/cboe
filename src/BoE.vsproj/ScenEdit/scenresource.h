@@ -69,6 +69,8 @@
 #define IDM_SCEN_CUSTOM_SHEETS          164
 #define IDM_SCEN_CUSTOM_SNDS            165
 #define IDM_FILE_SAVE_AS                166
+#define IDM_SCEN_RESIZE_OUTDOORS        167
+#define IDM_SCEN_ADV_IMPORT_OUT         168
 
 // Next default values for new objects
 // 
@@ -77,6 +79,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        103
 #define _APS_NEXT_COMMAND_VALUE         40014
 #define _APS_NEXT_CONTROL_VALUE         1001
-#define _APS_NEXT_SYMED_VALUE           167
+#define _APS_NEXT_SYMED_VALUE           169
 #endif
 #endif

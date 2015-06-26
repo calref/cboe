@@ -34,7 +34,7 @@ enum eAmbientSound {
 };
 
 class cOutdoors {
-	cScenario& scenario;
+	cScenario* scenario;
 public:
 	class cWandering { // formerly out_wandering_type
 	public:
@@ -79,6 +79,7 @@ public:
 	
 	explicit cOutdoors(cScenario& scenario);
 	void append(legacy::outdoor_record_type& old);
+	void reattach(cScenario& to);
 };
 
 #endif

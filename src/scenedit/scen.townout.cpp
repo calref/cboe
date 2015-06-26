@@ -1121,7 +1121,7 @@ short edit_talk_node(short which_node) {
 	return talk_dlg.accepted() ? -1 : talk_edit_stack.top().first;
 }
 
-static void put_out_loc_in_dlog(cDialog& me, location cur_loc) {
+static void put_out_loc_in_dlog(cDialog& me, location cur_loc, cScenario& scenario) {
 	std::ostringstream str;
 	str << "X = " << cur_loc.x;
 	me["x"].setText(str.str());
@@ -1131,7 +1131,7 @@ static void put_out_loc_in_dlog(cDialog& me, location cur_loc) {
 	me["title"].setText(scenario.outdoors[cur_loc.x][cur_loc.y]->out_name);
 }
 
-static bool pick_out_event_filter(cDialog& me, std::string item_hit, location& cur_loc) {
+static bool pick_out_event_filter(cDialog& me, std::string item_hit, location& cur_loc, cScenario& scenario) {
 	if(item_hit == "xminus") {
 		if(cur_loc.x == 0) beep();
 		else cur_loc.x--;
@@ -1145,12 +1145,16 @@ static bool pick_out_event_filter(cDialog& me, std::string item_hit, location& c
 		if(cur_loc.y >= scenario.outdoors.height() - 1) beep();
 		else cur_loc.y++;
 	} else if(item_hit == "choose") {
-		int i = cur_loc.x * scenario.outdoors.width() + cur_loc.y;
+		int i = cur_loc.x * scenario.outdoors.height() + cur_loc.y;
+		if(&scenario != &::scenario)
+			scenario.outdoors.swap(::scenario.outdoors);
 		i = choose_text(STRT_SECTOR, i, &me, "Which sector?");
-		cur_loc.x = i / scenario.outdoors.width();
-		cur_loc.y = i % scenario.outdoors.width();
+		if(&scenario != &::scenario)
+			scenario.outdoors.swap(::scenario.outdoors);
+		cur_loc.x = i / scenario.outdoors.height();
+		cur_loc.y = i % scenario.outdoors.height();
 	}
-	put_out_loc_in_dlog(me, cur_loc);
+	put_out_loc_in_dlog(me, cur_loc, scenario);
 	return true;
 }
 
@@ -1161,25 +1165,28 @@ static bool finish_pick_out(cDialog& me, bool okay, location& cur_loc, location 
 	return true;
 }
 
-location pick_out(location default_loc) {
+location pick_out(location default_loc,cScenario& scenario) {
 	using namespace std::placeholders;
 	location prev_loc = default_loc;
+	if(default_loc.x < 0)
+		default_loc.x = 0;
+	if(default_loc.y < 0)
+		default_loc.y = 0;
 	
 	cDialog out_dlg("select-sector");
 	out_dlg["okay"].attachClickHandler(std::bind(finish_pick_out, _1, true, std::ref(default_loc), prev_loc));
 	out_dlg["cancel"].attachClickHandler(std::bind(finish_pick_out, _1, false, std::ref(default_loc), prev_loc));
-	out_dlg.attachClickHandlers(std::bind(pick_out_event_filter, _1, _2, std::ref(default_loc)), {"xplus", "xminus", "yplus", "yminus", "choose"});
+	out_dlg.attachClickHandlers(std::bind(pick_out_event_filter, _1, _2, std::ref(default_loc), std::ref(scenario)), {"xplus", "xminus", "yplus", "yminus", "choose"});
 	
 	out_dlg["width"].setTextToNum(scenario.outdoors.width());
 	out_dlg["height"].setTextToNum(scenario.outdoors.height());
-	put_out_loc_in_dlog(out_dlg, default_loc);
+	put_out_loc_in_dlog(out_dlg, default_loc, scenario);
 	
 	out_dlg.run();
 	return default_loc;
 }
 
 bool new_town(short which_town) {
-	std::cout << "Town creation currently disabled.\n";
 	short i,j;
 	
 	cChoiceDlog new_dlg("new-town", {"okay", "cancel"});
@@ -1222,13 +1229,171 @@ void delete_last_town() {
 	delete last_town;
 }
 
-cTown* pick_import_town(short def) {
+cTown* pick_import_town() {
 	cScenario temp_scenario;
 	fs::path path = nav_get_scenario();
 	load_scenario(path, temp_scenario);
-	short town_num = pick_town_num("select-import-town", def, temp_scenario);
+	short town_num = pick_town_num("select-import-town", 0, temp_scenario);
 	if(town_num < 0) return nullptr;
 	cTown* town = temp_scenario.towns[town_num];
 	temp_scenario.towns[town_num] = nullptr;
 	return town;
+}
+
+using loc_set = std::set<location, loc_compare>;
+static void fill_resize_outdoors(cDialog& me, int top, int left, int right, int bottom, loc_set& del) {
+	me["top"].setTextToNum(top);
+	me["left"].setTextToNum(left);
+	me["right"].setTextToNum(right);
+	me["bottom"].setTextToNum(bottom);
+	
+	me["w-new"].setTextToNum(scenario.outdoors.width() + left + right);
+	me["h-new"].setTextToNum(scenario.outdoors.height() + top + bottom);
+	if(left >= 0 && right >= 0 && top >= 0 && bottom >= 0)
+		me["delete"].setText("(none)");
+	else {
+		del.clear();
+		while(left < 0) {
+			for(int y = 0; y < scenario.outdoors.height(); y++)
+				del.insert(loc(-left - 1, y));
+			left++;
+		}
+		while(top < 0) {
+			for(int x = 0; x < scenario.outdoors.width(); x++)
+				del.insert(loc(x, -top - 1));
+			top++;
+		}
+		while(right < 0) {
+			for(int y = 0; y < scenario.outdoors.height(); y++)
+				del.insert(loc(scenario.outdoors.width() + right, y));
+			right++;
+		}
+		while(bottom < 0) {
+			for(int x = 0; x < scenario.outdoors.width(); x++)
+				del.insert(loc(x, scenario.outdoors.height() + bottom));
+			bottom++;
+		}
+		std::ostringstream list;
+		for(location l : del) {
+			list << '(' << l.x << ", " << l.y << ") " << scenario.outdoors[l.x][l.y]->out_name << '|';
+		}
+		me["delete"].setText(list.str());
+	}
+}
+
+static bool resize_outdoors_filter(cDialog& me, std::string btn, rectangle& mod, loc_set& del) {
+	int dir = btn.back() == 'p' ? 1 : -1;
+	btn.erase(btn.end() - 2, btn.end());
+	
+	// Make sure the change won't put the width/height below 1 or over 50
+	if(btn == "top" || btn == "bottom") {
+		int h = scenario.outdoors.height() + mod.top + mod.bottom;
+		if((dir == 1 && h >= 50) || (dir == -1 && h <= 1)) {
+			beep();
+			return true;
+		}
+	} else if(btn == "left" || btn == "right") {
+		int w = scenario.outdoors.width() + mod.left + mod.right;
+		if((dir == 1 && w >= 50) || (dir == -1 && w <= 1)) {
+			beep();
+			return true;
+		}
+	} else return true; // Should be unreachable
+	
+	if(btn == "top")
+		mod.top += dir;
+	else if(btn == "left")
+		mod.left += dir;
+	else if(btn == "right")
+		mod.right += dir;
+	else if(btn == "bottom")
+		mod.bottom += dir;
+	
+	fill_resize_outdoors(me, mod.top, mod.left, mod.right, mod.bottom, del);
+	return true;
+}
+
+bool resize_outdoors() {
+	using namespace std::placeholders;
+	loc_set del;
+	rectangle mod;
+	cDialog size_dlg("resize-outdoors");
+	size_dlg["w-old"].setTextToNum(scenario.outdoors.width());
+	size_dlg["h-old"].setTextToNum(scenario.outdoors.height());
+	fill_resize_outdoors(size_dlg, mod.top, mod.left, mod.right, mod.bottom, del);
+	
+	size_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &size_dlg, true));
+	size_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &size_dlg, false));
+	size_dlg.attachClickHandlers(std::bind(resize_outdoors_filter, _1, _2, std::ref(mod), std::ref(del)), {
+		"top-p", "top-m", "left-p", "left-m", "right-p", "right-m", "bottom-p", "bottom-m"
+	});
+	
+	size_dlg.run();
+	if(!size_dlg.accepted()) return false;
+	
+	for(location l : del) {
+		delete scenario.outdoors[l.x][l.y];
+		scenario.outdoors[l.x][l.y] = nullptr;
+	}
+	
+	size_t old_w = scenario.outdoors.width(), old_h = scenario.outdoors.height();
+	size_t new_w = old_w + mod.left + mod.right, new_h = old_h + mod.top + mod.bottom;
+	
+	if(new_w > old_w)
+		scenario.outdoors.resize(new_w, scenario.outdoors.height());
+	if(new_h > old_h)
+		scenario.outdoors.resize(scenario.outdoors.width(), new_h);
+	
+	if(mod.top > 0) {
+		int y = new_h - mod.top;
+		while(y--) {
+			scenario.outdoors.row(y + mod.top) = std::move(scenario.outdoors.row(y));
+		}
+	} else if(mod.top < 0) {
+		for(int y = -mod.top; y < old_h; y++) {
+			scenario.outdoors.row(y + mod.top) = std::move(scenario.outdoors.row(y));
+		}
+	}
+	
+	if(mod.left > 0) {
+		int x = new_w - mod.left;
+		while(x--) {
+			scenario.outdoors.col(x + mod.left) = std::move(scenario.outdoors.col(x));
+		}
+	} else if(mod.left < 0) {
+		for(int x = -mod.left; x < old_w; x++) {
+			scenario.outdoors.col(x + mod.left) = std::move(scenario.outdoors.col(x));
+		}
+	}
+	
+	scenario.outdoors.resize(new_w, new_h);
+	for(int y = 0; y < new_h; y++) {
+		for(int x = 0; x < new_w; x++) {
+			if(scenario.outdoors[x][y] == nullptr)
+				scenario.outdoors[x][y] = new cOutdoors(scenario);
+		}
+	}
+	
+	// Update current location - point to same sector if possible
+	cur_out.x += mod.left;
+	cur_out.y += mod.top;
+	if(cur_out.x >= new_w || cur_out.x < 0)
+		cur_out.x = 0;
+	if(cur_out.y >= new_h || cur_out.y < 0)
+		cur_out.y = 0;
+	current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
+	
+	return true;
+}
+
+cOutdoors* pick_import_out() {
+	cScenario temp_scenario;
+	fs::path path = nav_get_scenario();
+	load_scenario(path, temp_scenario);
+	location sector = pick_out({-1,-1},temp_scenario);
+	if(sector.x < 0 && sector.y < 0)
+		return nullptr;
+	cOutdoors* out = temp_scenario.outdoors[sector.x][sector.y];
+	temp_scenario.outdoors[sector.x][sector.y] = nullptr;
+	return out;
 }

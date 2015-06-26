@@ -11,8 +11,6 @@
 
 // Tried using boost::multi_array, but it kept causing weird issues, so I decided to make my own.
 // TODO: Fill out missing members (should have equivalents for most of the stuff in std::vector)
-// TODO: Add row-wise access using the included row_ref, and support for row/column assignment
-// (These would be very useful for implementing a resize outdoors function in the scenario editor.)
 
 #include <vector>
 
@@ -33,6 +31,26 @@ public:
 		Type& operator[](size_t x) {
 			return ref.data[ref.w * y + x];
 		}
+		const Type& operator[](size_t x) const {
+			return ref.data[ref.w * y + x];
+		}
+		row_ref operator=(row_ref&& other) {
+			row_ref& me = *this;
+			for(int i = 0; i < ref.width(); i++) {
+				me[i] = std::move(other[i]);
+				other[i] = Type();
+			}
+			return me;
+		}
+		row_ref operator=(const row_ref& other) {
+			row_ref& me = *this;
+			for(int i = 0; i < ref.width(); i++) {
+				me[i] = other[i];
+			}
+			return me;
+		}
+		// Seems like defining a move assignment operator deletes the copy constructor. Don't want that.
+		row_ref(const row_ref&) = default;
 	};
 	class col_ref {
 		friend class vector2d<Type, Alloc>;
@@ -43,6 +61,26 @@ public:
 		Type& operator[](size_t y) {
 			return ref.data[ref.w * y + x];
 		}
+		const Type& operator[](size_t y) const {
+			return ref.data[ref.w * y + x];
+		}
+		col_ref operator=(col_ref&& other) {
+			col_ref& me = *this;
+			for(int i = 0; i < ref.height(); i++) {
+				me[i] = std::move(other[i]);
+				other[i] = Type();
+			}
+			return me;
+		}
+		col_ref operator=(const col_ref& other) {
+			col_ref& me = *this;
+			for(int i = 0; i < ref.height(); i++) {
+				me[i] = other[i];
+			}
+			return me;
+		}
+		// Seems like defining a move assignment operator deletes the copy constructor. Don't want that.
+		col_ref(const col_ref&) = default;
 	};
 	class const_row_ref {
 		friend class vector2d<Type, Alloc>;
@@ -70,6 +108,18 @@ public:
 	const_col_ref operator[](size_t x) const {
 		return const_col_ref(*this, x);
 	}
+	col_ref col(size_t x) {
+		return col_ref(*this, x);
+	}
+	const_col_ref col(size_t x) const {
+		return const_col_ref(*this, x);
+	}
+	row_ref row(size_t x) {
+		return row_ref(*this, x);
+	}
+	const_row_ref row(size_t x) const {
+		return const_row_ref(*this, x);
+	}
 	size_t width() const {
 		return w;
 	}
@@ -86,8 +136,27 @@ public:
 		return data.size();
 	}
 	void resize(size_t width, size_t height) {
+		if(w > width) {
+			size_t dx = w - width;
+			for(int y = 1; y < h; y++) {
+				std::move(data.begin() + w * y, data.begin() + w * (y + 1) - dx, data.begin() + width * y);
+			}
+		}
+		size_t old_w = w, old_h = h;
 		w = width; h = height;
 		data.resize(w * h);
+		if(old_w < width) {
+			size_t dx = width - old_w;
+			for(int y = old_h - 1; y > 0; y--) {
+				std::move_backward(data.begin() + old_w * y, data.begin() + old_w * (y + 1), data.begin() + w * (y + 1) - dx);
+				std::fill_n(data.begin() + old_w + w * (y - 1), dx, Type());
+			}
+		}
+	}
+	void swap(vector2d& other) {
+		data.swap(other.data);
+		std::swap(w, other.w);
+		std::swap(h, other.h);
 	}
 	bool empty() const {
 		return data.empty();

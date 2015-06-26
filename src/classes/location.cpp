@@ -41,6 +41,13 @@ location loc(){
 	return location();
 }
 
+bool loc_compare::operator()(location a, location b) const {
+	// This is just a lexicographical ordering.
+	if(a.x != b.x) return a.x < b.x;
+	if(a.y != b.y) return a.y < b.y;
+	return false;
+}
+
 bool location::in(rectangle r){
 	if(y >= r.top && y <= r.bottom && x >= r.left && x <= r.right)
 		return true;

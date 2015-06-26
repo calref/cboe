@@ -28,6 +28,10 @@ struct location {
 	}
 };
 
+struct loc_compare {
+	bool operator()(location a, location b) const;
+};
+
 class rectangle_size_delegate {
 	friend struct rectangle;
 	rectangle& forRect;

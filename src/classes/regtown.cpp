@@ -39,12 +39,12 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 		for(j = 0; j < 32; j++) {
 			ter[i][j] = old.terrain[i][j];
 			light[i / 8][j] = old.lighting[i / 8][j];
-			if(scenario.ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
+			if(scenario->ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
 			}
-			if(scenario.ter_types[ter[i][j]].boat_over) {
+			if(scenario->ter_types[ter[i][j]].boat_over) {
 				// Try to fix specials that could be triggered while in a boat
 				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
 				int found_spec = -1;
@@ -108,12 +108,12 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 		for(j = 0; j < 48; j++) {
 			ter[i][j] = old.terrain[i][j];
 			light[i / 8][j] = old.lighting[i / 8][j];
-			if(scenario.ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
+			if(scenario->ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
 			}
-			if(scenario.ter_types[ter[i][j]].boat_over) {
+			if(scenario->ter_types[ter[i][j]].boat_over) {
 				// Try to fix specials that could be triggered while in a boat
 				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
 				int found_spec = -1;
@@ -177,12 +177,12 @@ void cBigTown::append(legacy::big_tr_type& old, int town_num){
 		for(j = 0; j < 64; j++) {
 			ter[i][j] = old.terrain[i][j];
 			light[i / 8][j] = old.lighting[i / 8][j];
-			if(scenario.ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
+			if(scenario->ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
 			}
-			if(scenario.ter_types[ter[i][j]].boat_over) {
+			if(scenario->ter_types[ter[i][j]].boat_over) {
 				// Try to fix specials that could be triggered while in a boat
 				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
 				int found_spec = -1;
