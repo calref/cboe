@@ -262,10 +262,11 @@ void put_party_in_scen(std::string scen_name) {
 		univ.party.m_killed[i] = 0;
 	univ.party.party_event_timers.clear();
 	
-	fs::path path;
-	path = progDir/"Blades of Exile Scenarios";
-	path /= scen_name;
-	std::cout<<"Searching for scenario at:\n"<<path<<'\n';
+	fs::path path = locate_scenario(scen_name);
+	if(path.empty()) {
+		giveError("Could not find scenario!");
+		return;
+	}
 	if(!load_scenario(path, univ.scenario))
 		return;
 	

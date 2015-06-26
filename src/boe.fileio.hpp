@@ -29,6 +29,7 @@ void end_data_dump();
 short onm(char x_sector,char y_sector);
 void build_scen_headers();
 bool load_scenario_header(fs::path filename/*,short header_entry*/);
+fs::path locate_scenario(std::string scen_name);
 
   void alter_rect(rectangle *r);
 

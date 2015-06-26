@@ -460,15 +460,48 @@ void start_data_dump() {
 	}
 }
 
+fs::path locate_scenario(std::string scen_name) {
+	std::transform(scen_name.begin(), scen_name.end(), scen_name.begin(), tolower);
+	fs::path scenDir = progDir/"Blades of Exile Scenarios", scenPath;
+	for(fs::recursive_directory_iterator iter(scenDir); iter != fs::recursive_directory_iterator(); iter++) {
+		fs::file_status stat = iter->status();
+		std::string fname = iter->path().filename().string().c_str();
+		std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
+		if(fname == "header.exs") {
+			if(scen_name != "header.exs") continue;
+			// We want to support a scenario whose main filename is header.exs, just in case.
+			// However, any unpacked scenarios would have a header.exs.
+			// So, skip them if they're in a .boes folder.
+			fname = iter->path().parent_path().filename().string().c_str();
+			std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
+			size_t dot = fname.find_first_of('.');
+			if(dot != std::string::npos && fname.substr(dot) == ".boes")
+				continue;
+		}
+		if(fname != scen_name) continue;
+		size_t dot = fname.find_first_of('.');
+		if(dot == std::string::npos) continue;
+		if(fname.substr(dot) == ".exs" && stat.type() == fs::regular_file) {
+			scenPath = iter->path();
+			break;
+		}
+		if(fname.substr(dot) == ".boes" && (stat.type() == fs::regular_file || stat.type() == fs::directory_file)) {
+			scenPath = iter->path();
+			break;
+		}
+	}
+	return scenPath;
+}
+
 void build_scen_headers() {
 	fs::path scenDir = progDir;
 	scenDir /= "Blades of Exile Scenarios";
 	std::cout << progDir << '\n' << scenDir << std::endl;
 	scen_headers.clear();
-	fs::directory_iterator iter(scenDir);
+	fs::recursive_directory_iterator iter(scenDir);
 	make_cursor_watch();
 	
-	while(iter != fs::directory_iterator()) {
+	while(iter != fs::recursive_directory_iterator()) {
 		fs::file_status stat = iter->status();
 		if(stat.type() == fs::regular_file)
 			load_scenario_header(iter->path());

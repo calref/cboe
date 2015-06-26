@@ -1787,11 +1787,19 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 	bool is_packed = true;
 	tarball pack;
 	std::ifstream fin;
+	if(!fs::exists(file_to_load)) {
+		giveError("The scenario could not be found.");
+		return false;
+	}
 	if(fs::is_directory(file_to_load)) { // Unpacked
 		is_packed = false;
 	} else { // Packed
 		igzstream gzin(file_to_load.string().c_str());
 		pack.readFrom(gzin);
+		if(gzin.bad()) {
+			giveError("There was an error loading the scenario.");
+			return false;
+		}
 	}
 	auto getFile = [&](std::string relpath) -> std::istream& {
 		if(is_packed) return pack.getFile(relpath);
