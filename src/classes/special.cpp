@@ -68,6 +68,7 @@ void cSpecial::append(legacy::special_node_type& old){
 		case 57: case 60: // Large dialogs with monster graphics
 			if(pic >= 400 && pic < 1000)
 				pic -= 400;
+			if(pic == 122) pic = 119;
 			pictype = PIC_MONST;
 			m3 = m2;
 			m2 = -1;

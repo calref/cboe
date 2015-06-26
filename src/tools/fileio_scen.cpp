@@ -2153,6 +2153,8 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store);
 
 void load_spec_graphics_v1(fs::path scen_file) {
 	static const char*const noGraphics = "The game will still work without the custom graphics, but some things will not look right.";
+	fs::remove_all(tempDir/"scenario/graphics");
+	fs::remove_all(tempDir/"scenario/sounds");
 	fs::path path(scen_file);
 	std::cout << "Loading scenario graphics... (" << path  << ")\n";
 	// Tried path.replace_extension, but that only deleted the extension, so I have to do it manually
@@ -2181,7 +2183,13 @@ void load_spec_graphics_v1(fs::path scen_file) {
 			graphics_store.createMaskFromColor(sf::Color::White);
 			spec_scen_g.is_old = true;
 			spec_scen_g.sheets = new sf::Texture[1];
-			spec_scen_g.sheets[0].loadFromImage(graphics_store);
+			spec_scen_g.numSheets = 1;
+			if(!spec_scen_g.sheets[0].loadFromImage(graphics_store)) {
+				giveError("An error occurred while converting old-style graphics into the new format.",noGraphics);
+				spec_scen_g.is_old = false;
+				spec_scen_g.numSheets = 0;
+				delete[] spec_scen_g.sheets;
+			}
 		}
 	}
 	reload_core_graphics();
