@@ -156,13 +156,14 @@ static short get_small_icon(ter_num_t ter){
 					icon = 38;
 					break;
 				case eDamageType::UNDEAD:
-					icon = 18;
+					icon = 8;
 					break;
 				case eDamageType::DEMON:
-					icon = 19;
+					icon = 9;
 					break;
 				case eDamageType::SPECIAL:
-					// TODO: Need icon for this and possibly new icons for undead/demon
+					// TODO: Need icon for this and possibly new icons for undead/demon/unblockable
+					icon = 39;
 					break;
 				case eDamageType::MARKED: // Invalid
 					break;
@@ -175,6 +176,7 @@ static short get_small_icon(ter_num_t ter){
 			icon = -1;
 			break;
 		case eTerSpec::DANGEROUS:
+			icon = 45;
 			switch((eStatus)scenario.ter_types[ter].flag3){
 				case eStatus::POISONED_WEAPON: // TODO: Do something here
 					break;
@@ -211,6 +213,7 @@ static short get_small_icon(ter_num_t ter){
 				case eStatus::FORCECAGE:
 					// TODO: Need icon for this
 				case eStatus::MAIN: case eStatus::CHARM:
+					icon = -1;
 					break; // Nothing to do here; these values are "magic" and should not be used
 			}
 			break;
@@ -236,7 +239,7 @@ static short get_small_icon(ter_num_t ter){
 			break;
 		case eTerSpec::WATERFALL_CAVE:
 		case eTerSpec::WATERFALL_SURFACE:
-			icon = -1;
+			icon = 46;
 			break;
 		case eTerSpec::CONVEYOR:
 			switch(scenario.ter_types[ter].flag1){ // TODO: Consider the other four possible directions
@@ -261,10 +264,14 @@ static short get_small_icon(ter_num_t ter){
 			icon = 22;
 			break;
 		case eTerSpec::CHANGE_WHEN_USED:
-			icon = -1;
+			icon = 48;
 			break;
 		case eTerSpec::CALL_SPECIAL_WHEN_USED:
 			icon = scenario.ter_types[ter].flag3;
+			break;
+		case eTerSpec::WILDERNESS_CAVE:
+		case eTerSpec::WILDERNESS_SURFACE:
+			icon = 0;
 			break;
 		default:
 			icon = -1;
@@ -543,7 +550,7 @@ void set_up_terrain_buttons(bool reset) {
 				tiny_to = terrain_rects[i - first];
 				tiny_to.top = tiny_to.bottom - 7;
 				tiny_to.left = tiny_to.right - 7;
-				if(small_i > 0 && small_i < 255)
+				if(small_i >= 0 && small_i < 255)
 					rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to);
 				break;
 			case DRAW_MONST:
@@ -786,7 +793,7 @@ void draw_terrain(){
 				}
 				tiny_from = base_small_button_from;
 				tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
-				if(small_i > 0) {
+				if(small_i >= 0) {
 					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
 					tiny_to.offset(0,-7);
 				}
@@ -1338,7 +1345,7 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	tiny_to.left = tiny_to.right - 7;
 	rectangle tiny_from = base_small_button_from;
 	tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
-	if(small_i > 0 && small_i < 255)
+	if(small_i >= 0 && small_i < 255)
 		rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to);
 }
 
