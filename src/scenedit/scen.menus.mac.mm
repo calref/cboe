@@ -52,8 +52,9 @@ void init_menubar() {
 		eMenu::EDIT_CUT, eMenu::EDIT_COPY, eMenu::EDIT_PASTE, eMenu::EDIT_DELETE, eMenu::EDIT_SELECT_ALL,
 	};
 	static const eMenu scen_choices[] = {
-		eMenu::TOWN_CREATE, eMenu::NONE, eMenu::SCEN_DETAILS, eMenu::SCEN_INTRO, eMenu::TOWN_START, eMenu::SCEN_SHEETS, eMenu::SCEN_PICS, eMenu::SCEN_SNDS, eMenu::NONE, eMenu::NONE,
-		eMenu::SCEN_SPECIALS, eMenu::SCEN_TEXT, eMenu::SCEN_JOURNALS, eMenu::TOWN_IMPORT, eMenu::SCEN_SAVE_ITEM_RECTS,
+		eMenu::TOWN_CREATE, eMenu::OUT_RESIZE, eMenu::NONE,
+		eMenu::SCEN_DETAILS, eMenu::SCEN_INTRO, eMenu::TOWN_START, eMenu::SCEN_SHEETS, eMenu::SCEN_PICS, eMenu::SCEN_SNDS, eMenu::NONE, eMenu::NONE,
+		eMenu::SCEN_SPECIALS, eMenu::SCEN_TEXT, eMenu::SCEN_JOURNALS, eMenu::TOWN_IMPORT, eMenu::OUT_IMPORT, eMenu::SCEN_SAVE_ITEM_RECTS,
 		eMenu::SCEN_HORSES, eMenu::SCEN_BOATS, eMenu::TOWN_VARYING, eMenu::SCEN_TIMERS, eMenu::SCEN_ITEM_SHORTCUTS,
 		eMenu::TOWN_DELETE, eMenu::SCEN_DATA_DUMP, eMenu::SCEN_TEXT_DUMP,
 	};

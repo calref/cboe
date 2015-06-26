@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog skin='dark' defbtn='okay'>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' top='8' left='50' width='200' height='17'>Resize/Shift Outdoors</text>
+	
+	<text top='30' left='100' width='60' height='16'>Extend top</text>
+	<text name='top' framed='true' top='50' left='100' width='60' height='16'>0</text>
+	<button name='top-m' type='small' top='72' left='109'>-</button>
+	<button name='top-p' type='small' top='72' left='135'>+</button>
+	
+	<text top='120' left='10' width='60' height='16'>Extend left</text>
+	<text name='left' framed='true' top='140' left='10' width='60' height='16'>0</text>
+	<button name='left-m' type='small' top='162' left='19'>-</button>
+	<button name='left-p' type='small' top='162' left='45'>+</button>
+	
+	<text top='120' left='190' width='70' height='16'>Extend right</text>
+	<text name='right' framed='true' top='140' left='190' width='60' height='16'>0</text>
+	<button name='right-m' type='small' top='162' left='199'>-</button>
+	<button name='right-p' type='small' top='162' left='225'>+</button>
+	
+	<text top='210' left='100' width='80' height='16'>Extend bottom</text>
+	<text name='bottom' framed='true' top='230' left='100' width='60' height='16'>0</text>
+	<button name='bottom-m' type='small' top='252' left='109'>-</button>
+	<button name='bottom-p' type='small' top='252' left='135'>+</button>
+	
+	<text framed='true' top='110' left='90' width='80' height='80'/>
+	
+	<text top='115' left='95' width='80' height='16'>Width:</text>
+	<text name='w-old' top='130' left='95' width='20' height='16'/>
+	<text top='130' left='120' width='20' height='16'>--&gt;</text>
+	<text name='w-new' top='130' left='145' width='20' height='16'/>
+	
+	<text top='155' left='95' width='80' height='16'>Height:</text>
+	<text name='h-old' top='170' left='95' width='20' height='16'/>
+	<text top='170' left='120' width='20' height='16'>--&gt;</text>
+	<text name='h-new' top='170' left='145' width='20' height='16'/>
+	
+	<text top='30' left='270' width='200' height='16'>Sections to be deleted:</text>
+	<text name='delete' framed='true' top='50' left='270' width='200' height='200'/>
+	<button name='okay' type='regular' top='270' left='407'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='270' left='342'>Cancel</button>
+</dialog>

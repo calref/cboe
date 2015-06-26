@@ -32,10 +32,6 @@ enum class eMapFeature {
 	FIELD,
 };
 
-struct loc_compare {
-	bool operator()(location a, location b) const;
-};
-
 class map_data {
 	std::vector<std::vector<int>> grid;
 	using feature_t = std::pair<eMapFeature,int>;

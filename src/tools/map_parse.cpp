@@ -160,10 +160,3 @@ void map_data::writeTo(std::ostream& out) {
 		out << '\n';
 	}
 }
-
-bool loc_compare::operator()(location a, location b) const {
-	// This is just a lexicographical ordering.
-	if(a.x != b.x) return a.x < b.x;
-	if(a.y != b.y) return a.y < b.y;
-	return false;
-}

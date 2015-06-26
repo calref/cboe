@@ -214,7 +214,7 @@ static bool handle_lb_action(location the_point) {
 							if(!save_check("save-section-confirm"))
 								break;
 						}
-						spot_hit = pick_out(cur_out);
+						spot_hit = pick_out(cur_out, scenario);
 						if(spot_hit != cur_out) {
 							cur_out = spot_hit;
 							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];

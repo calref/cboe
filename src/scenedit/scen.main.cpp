@@ -289,6 +289,12 @@ void handle_menu_choice(eMenu item_hit) {
 				set_up_main_screen();
 			change_made = true;
 			break;
+		case eMenu::OUT_RESIZE:
+			if(resize_outdoors())
+				change_made = true;
+			if(overall_mode == MODE_MAIN_SCREEN)
+				set_up_main_screen();
+			break;
 		case eMenu::SCEN_DETAILS:
 			edit_scen_details();
 			change_made = true;
@@ -327,12 +333,28 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::TOWN_IMPORT:
 			if(change_made) {
-				giveError("You need to save the changes made to your scenario before you can add a new town.");
+				giveError("You need to save the changes made to your scenario before you can import a town.");
 				return;
 			}
-			if(cTown* town = pick_import_town(0)) {
+			if(cTown* town = pick_import_town()) {
+				town->reattach(scenario);
 				delete scenario.towns[cur_town];
 				scenario.towns[cur_town] = town;
+				::town = town;
+				change_made = true;
+				redraw_screen();
+			}
+			break;
+		case eMenu::OUT_IMPORT:
+			if(change_made) {
+				giveError("You need to save the changes made to your scenario before you can import a sector.");
+				return;
+			}
+			if(cOutdoors* out = pick_import_out()) {
+				out->reattach(scenario);
+				delete scenario.outdoors[cur_out.x][cur_out.y];
+				scenario.outdoors[cur_out.x][cur_out.y] = out;
+				current_terrain = out;
 				change_made = true;
 				redraw_screen();
 			}

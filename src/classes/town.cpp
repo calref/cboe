@@ -75,7 +75,7 @@ void cTown::append(legacy::town_record_type& old){
 	strong_barriers = defy_scrying = defy_mapping = false;
 }
 
-cTown::cTown(cScenario& scenario) : scenario(scenario) {
+cTown::cTown(cScenario& scenario) : scenario(&scenario) {
 	short i;
 	cTown::cWandering d_wan = {0,0,0,0};
 	
@@ -191,7 +191,7 @@ void cTown::set_up_lights() {
 		for(short j = 0; j < this->max_dim(); j++) {
 			l.x = i;
 			l.y = j;
-			rad = scenario.ter_types[this->terrain(i,j)].light_radius;
+			rad = scenario->ter_types[this->terrain(i,j)].light_radius;
 			if(rad > 0) {
 				for(where.x = std::max(0,i - rad); where.x < min(this->max_dim(),short(i + rad + 1)); where.x++)
 					for(where.y = std::max(0,j - rad); where.y < min(this->max_dim(),short(j + rad + 1)); where.y++)
@@ -216,7 +216,7 @@ short cTown::light_obscurity(short x,short y) {
 	
 	what_terrain = this->terrain(x,y);
 	
-	store = scenario.ter_types[what_terrain].blockage;
+	store = scenario->ter_types[what_terrain].blockage;
 	if(store == eTerObstruct::BLOCK_SIGHT || store == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 		return 5;
 	if(store == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
@@ -239,4 +239,8 @@ cTown::cItem::cItem(location loc, short num, ::cItem& item) : cItem() {
 	code = num;
 	if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD)
 		charges = get_ran(1,4,6);
+}
+
+void cTown::reattach(cScenario& scen) {
+	scenario = &scen;
 }

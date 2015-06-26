@@ -2965,6 +2965,7 @@ bool build_scenario() {
 			}
 		}
 		if(med > 0) med--;
+		warriors_grove->reattach(scenario);
 	}
 	
 	scenario.shops.push_back(cShop('heal'));

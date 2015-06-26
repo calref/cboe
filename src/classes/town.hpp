@@ -34,7 +34,7 @@ class cScenario;
 
 class cTown { // formerly town_record_type
 protected:
-	cScenario& scenario;
+	cScenario* scenario;
 public:
 	class cWandering { // formerly wandering_type
 	public:
@@ -106,6 +106,7 @@ public:
 	
 	explicit cTown(cScenario& scenario);
 	void append(legacy::town_record_type& old);
+	void reattach(cScenario& to);
 	virtual void writeTerrainTo(std::ostream& file) = 0;
 	virtual void readTerrainFrom(std::istream& file) = 0;
 };

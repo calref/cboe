@@ -35,7 +35,7 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++){
 			terrain[i][j] = old.terrain[i][j];
-			if(scenario.ter_types[terrain[i][j]].i == 3000) // marker to indicate it used to be a special spot
+			if(scenario->ter_types[terrain[i][j]].i == 3000) // marker to indicate it used to be a special spot
 				special_spot[i][j] = true;
 			else special_spot[i][j] = false;
 			// Convert roads that crossed grass/hill boundaries
@@ -49,19 +49,19 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 			if(old.terrain[i][j] == 81 && i > 0 && i < 47 && j > 0 && j < 47) {
 				if(old.terrain[i+1][j] == 81) {
 					ter_num_t connect = old.terrain[i-1][j];
-					if(connect == 80 || scenario.ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
 						terrain[i][j] = 44;
 				} else if(old.terrain[i-1][j] == 81) {
 					ter_num_t connect = old.terrain[i+1][j];
-					if(connect == 80 || scenario.ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
 						terrain[i][j] = 40;
 				} else if(old.terrain[i][j+1] == 81) {
 					ter_num_t connect = old.terrain[i][j-1];
-					if(connect == 80 || scenario.ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
 						terrain[i][j] = 42;
 				} else if(old.terrain[i][j-1] == 81) {
 					ter_num_t connect = old.terrain[i][j+1];
-					if(connect == 80 || scenario.ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
 						terrain[i][j] = 38;
 				}
 			}
@@ -106,7 +106,7 @@ cOutdoors::cWandering::cWandering() {
 	std::fill(friendly.begin(), friendly.end(), 0);
 }
 
-cOutdoors::cOutdoors(cScenario& scenario) : scenario(scenario) {
+cOutdoors::cOutdoors(cScenario& scenario) : scenario(&scenario) {
 	short i,j;
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	bg_out = bg_fight = bg_town = bg_dungeon = -1;
@@ -191,4 +191,8 @@ bool cOutdoors::cWandering::isNull(){
 		if(monst[i] != 0)
 			return false;
 	return true;
+}
+
+void cOutdoors::reattach(cScenario& scen) {
+	scenario = &scen;
 }
