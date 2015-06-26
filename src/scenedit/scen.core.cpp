@@ -3053,6 +3053,7 @@ bool build_scenario() {
 	current_terrain = scenario.outdoors[0][0];
 	current_terrain->terrain[24][24] = grass ? 234 : 232;
 	current_terrain->terrain[23][23] = grass ? 121 : 106;
+	current_terrain->city_locs.push_back({24, 24, 0});
 	
 	if(default_town && warriors_grove) {
 		scenario.towns.push_back(warriors_grove);
