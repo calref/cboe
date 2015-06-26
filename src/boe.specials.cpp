@@ -3266,17 +3266,21 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				}
 				if(to_give.charges > 0 && spec.ex1c >= 0)
 					to_give.charges = spec.ex1c;
-				if(spec.ex2a == 1) to_give.ident = true;
+				if(spec.ex2a == 1 || spec.ex2a == 2) to_give.ident = true;
 				else if(spec.ex2a == 0) to_give.ident = false;
+				if(spec.ex2a == 2) to_give.concealed = false;
 				if(spec.ex2b == 1) to_give.cursed = to_give.unsellable = true;
 				else if(spec.ex2b == 0) to_give.cursed = to_give.unsellable = false;
 				int equip_type = 0;
 				if(spec.ex2c == 0) equip_type = GIVE_EQUIP_SOFT;
 				else if(spec.ex2c == 1) equip_type = GIVE_EQUIP_TRY;
 				else if(spec.ex2c >= 2) equip_type = GIVE_EQUIP_FORCE;
+				bool success = true;
 				for(i = 0; i < 6; i++)
 					if(pc_num == 6 || pc_num == i)
-						univ.party[i].give_item(to_give, equip_type | GIVE_ALLOW_OVERLOAD);
+						success = success && univ.party[i].give_item(to_give, equip_type | GIVE_ALLOW_OVERLOAD);
+				if(!success)
+					*next_spec = spec.pic;
 			}
 			break;
 		default:
