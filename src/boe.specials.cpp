@@ -116,8 +116,7 @@ bool handle_wandering_specials (short /*which*/,short mode) {
 
 // returns true if can enter this space
 // sets forced to true if definitely can enter
-bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,short *spec_num,
-						   bool *forced) {
+bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,bool *forced) {
 	ter_num_t ter;
 	short r1,i,door_pc,pic_type = 0,ter_pic = 0;
 	eTerSpec ter_special;
@@ -128,7 +127,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	location out_where,from_loc,to_loc;
 	short s1 = 0,s2 = 0,s3 = 0;
 	
-	*spec_num = -1;
+	short spec_num = -1;
 	*forced = false;
 	
 	switch(mode) {
@@ -173,9 +172,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		
 		for(i = 0; i < univ.out->special_locs.size(); i++)
 			if(out_where == univ.out->special_locs[i]) {
-				*spec_num = univ.out->special_locs[i].spec;
+				spec_num = univ.out->special_locs[i].spec;
 				// call special
-				run_special(mode,1,univ.out->special_locs[i].spec,out_where,&s1,&s2,&s3);
+				run_special(mode,1,spec_num,out_where,&s1,&s2,&s3);
 				if(s1 > 0)
 					can_enter = false;
 				else if(s2 > 0)
@@ -204,18 +203,18 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		&& can_enter && univ.town.is_special(where_check.x,where_check.y)) {
 		for(i = 0; i < univ.town->special_locs.size(); i++)
 			if(where_check == univ.town->special_locs[i]) {
-				*spec_num = univ.town->special_locs[i].spec;
+				spec_num = univ.town->special_locs[i].spec;
 				bool runSpecial = false;
 				if(!is_blocked(where_check)) runSpecial = true;
 				if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
 				if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
-				if(univ.town->specials[*spec_num].type == eSpecType::CANT_ENTER)
+				if(univ.town->specials[spec_num].type == eSpecType::CANT_ENTER)
 					runSpecial = true;
 				if(!PSD[SDF_NO_BOAT_SPECIALS] && univ.party.in_boat >= 0 && univ.scenario.ter_types[ter].boat_over)
 					runSpecial = true;
 				if(runSpecial) {
 					give_help(54,0);
-					run_special(mode,2,*spec_num,where_check,&s1,&s2,&s3);
+					run_special(mode,2,spec_num,where_check,&s1,&s2,&s3);
 					if(s1 > 0)
 						can_enter = false;
 					else if(s2 > 0)
@@ -1786,7 +1785,7 @@ void push_things() {
 }
 
 void special_increase_age(long length, bool queue) {
-	unsigned short i;
+	size_t i;
 	short s1,s2,s3;
 	bool redraw = false,stat_area = false;
 	location trigger_loc;
@@ -1877,13 +1876,14 @@ void special_increase_age(long length, bool queue) {
 				redraw = true;
 		}
 	univ.party.age = current_age;
-	for(i = 0; i < univ.party.party_event_timers.size(); i++) {
-		if(univ.party.party_event_timers[i].time <= length) {
-			univ.party.age = age_before + univ.party.party_event_timers[i].time;
-			short which_type = univ.party.party_event_timers[i].node_type;
+	auto party_timers = univ.party.party_event_timers;
+	for(i = 0; i < party_timers.size(); i++) {
+		if(party_timers[i].time <= length) {
+			univ.party.age = age_before + party_timers[i].time;
+			short which_type = party_timers[i].node_type;
 			if(queue)
-				queue_special(eSpecCtx::PARTY_TIMER, which_type, univ.party.party_event_timers[i].node, trigger_loc);
-			else run_special(eSpecCtx::PARTY_TIMER,which_type,univ.party.party_event_timers[i].node,trigger_loc,&s1,&s2,&s3);
+				queue_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc);
+			else run_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc, &s1, &s2, &s3);
 			univ.party.party_event_timers[i].time = 0;
 			univ.party.party_event_timers[i].node = -1;
 			stat_area = true;

@@ -3346,17 +3346,19 @@ void edit_custom_sheets() {
 	
 	// First, make sure we even have custom graphics! Also make sure they're not legacy format.
 	bool must_init_spec_g = false;
-	if(max_pic < 0) {
+	if(spec_scen_g.is_old) {
+		if(cChoiceDlog("convert-pics-now", {"cancel", "convert"}).show() == "cancel")
+			return;
+		spec_scen_g.convert_sheets();
+		all_pics.resize(spec_scen_g.numSheets);
+		std::iota(all_pics.begin(), all_pics.end(), 0);
+	} else if(max_pic < 0) {
 		if(cChoiceDlog("have-no-pics", {"cancel", "new"}).show() == "cancel")
 			return;
 		must_init_spec_g = true;
 	} else if(max_pic >= 0 && spec_scen_g.numSheets < 1) {
 		if(cChoiceDlog("have-only-full-pics", {"cancel", "new"}).show() == "new")
 			must_init_spec_g = true;
-	} else if(spec_scen_g.is_old) {
-		if(cChoiceDlog("convert-pics-now", {"cancel", "convert"}).show() == "cancel")
-			return;
-		spec_scen_g.convert_sheets();
 	}
 	
 	if(must_init_spec_g) {
