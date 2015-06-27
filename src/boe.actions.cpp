@@ -1687,7 +1687,10 @@ bool handle_keystroke(sf::Event& event){
 		if(kb::isKeyPressed(kb::Up)) chr2 = kb::Numpad9;
 		else if(kb::isKeyPressed(kb::Down)) chr2 = kb::Numpad3;
 		else chr2 = kb::Numpad6;
-	}
+	} else if(chr2 == kb::Home) chr2 = kb::Numpad7;
+	else if(chr2 == kb::End) chr2 = kb::Numpad1;
+	else if(chr2 == kb::PageUp) chr2 = kb::Numpad9;
+	else if(chr2 == kb::PageDown) chr2 = kb::Numpad3;
 	
 	sf::Event pass_event = {sf::Event::MouseButtonPressed};
 	if(overall_mode == MODE_TALKING) {
