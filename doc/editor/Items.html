@@ -47,7 +47,7 @@ reserved for the preset items.</li>
 <li><b>Special Class (Advanced):</b> Some special nodes (like Have Item With Class?) check
 to see if the party has a special item. Set an item's special class here (0 for no special
 class).
-<p>For example, an item Boat Ticket can have special class 1, and a special node
+<br>For example, an item Boat Ticket can have special class 1, and a special node
 which checks if the party has a ticket can check for special class 1. Note that items with
 a non-zero special class are taken away from the party when they leave the
 scenario.</li>
@@ -66,6 +66,91 @@ description of the item.</li>
 
 <p>An item can also have special abilities, like providing resistance to fire, or being a
 demon slaying weapon. To set an item's special ability, press the Abilities button.</li>
+
+<h2>Item Types</h2>
+
+<p>Though the item types are mostly self-explanatory, a few of them are less obvious.
+Thus, a detailed look at them is reasonable.</p>
+
+<dl>
+<dt>No Item</dt>
+<dd>This is intended for items that have been deleted - since items are referenced by
+their index in a list, anything that changes the index of an item is something to avoid,
+so when an item (other than the last in the list) is deleted, the editor just sets its
+type to No Item.</dd>
+<dt>1-Hand weapon</dt>
+<dt>2-Hand weapn</dt>
+<dd>Weapons are wielded in the hand. The item level indicates the amount of damage the
+weapon does (specifically, the size of the die). They cannot have reagent abilities.</dd>
+<dt>Gold</dt>
+<dd>Gold is a type of item that only appears on the ground. When you pick it up, it is
+transformed into currency rather than appearing in your inventory. It cannot have special
+abilities.</dd>
+<dt>Food</dt>
+<dd>Food is a type of item that only appears on the ground. When you pick it up, it is
+transformed into rations rather than appearing in your inventory. It cannot have special
+abilities.</dd>
+<dt>Bow</dt>
+<dd>Bows are wielded in one hand. They cannot have reagent abilities.</dd>
+<dt>Arrows</dt>
+<dd>Arrows are wielded in your ammo slot. They can only have weapon abilities. Their
+weight is multiplied by their charges.</dd>
+<dt>Thrown missile</dt>
+<dd>Thrown missiles are wielded in one hand. They can only have weapon abilities. Their
+weight is multiplied by their charges.</dd>
+<dt>Potion/Magic Item</dt>
+<dt>Scroll/Magic Item</dt>
+<dt>Wand</dt>
+<dd>Potions, scrolls, and wands cannot be equipped. They can only have usable abilities. When a potion is used, a drinking sound is played; also, a potion's weight is multiplied by its charges. Other than this, the only difference between potions, scrolls, and wands is how they're chosen for random treasure generation.</dd>
+<dt>Tool</dt>
+<dd>Tools are equipped in a unique tool slot. They can have general or usable
+abilities.</dd>
+<dt>Shield</dt><dt>Shield 2</dt>
+<dd>Shields are equipped in one hand. The item level determines the maximum amount of
+damage it can block. There is no difference between the two shield types, except that you
+can only have two shields equipped if they are of different types. Shields can only have
+general or usable abilities.</dd>
+<dt>Armor</dt>
+<dd>Armor is worn on your torso. The item level determines the maximum amount of damage it
+can block. You cannot put it on in combat, though you can take it off. Armor can only have
+general or usable abilities.</dd>
+<dt>Helm</dt>
+<dd>Helms are worn on your head. The item level determines the maximum amount of damage it
+can block. Helms can only have general or usable abilities.</dd>
+<dt>Gloves</dt>
+<dd>Gloves are worn on your hands. The item level determines the maximum amount of damage
+it can block. Gloves can only have general or usable abilities.</dd>
+<dt>Boots</dt>
+<dd>Boots are worn on your feet. The item level determines the maximum amount of damage it
+can block. Boots can only have general or usable abilities.</dd>
+<dt>Ring</dt>
+<dd>Rings are worn on a finger. You can wear up to two rings. Rings can only have general
+or usable abilities.</dd>
+<dt>Necklace</dt>
+<dd>Rings are worn on the neck. Necklaces can only have general or usable abilities.</dd>
+<dt>Weapon Poison</dt>
+<dd>Poison cannot be equipped. It can only have usable abilities.</dd>
+<dt>Non-Use Object</dt>
+<dd>Non-use objects cannot be equipped. They can only have usable or reagent
+abilities.</dd>
+<dt>Pants</dt>
+<dd>Pants are worn on the legs. They are not counted as armour - their item level has no
+effect on damage. (The protection field does, of course.) Pants can only have general or
+usable abilities.</dd>
+<dt>Crossbow</dt>
+<dd>Crossbows are wielded in one hand. They cannot have reagent abilities.</dd>
+<dt>Bolts</dt>
+<dd>Bolts are wielded in your ammo slot. They can only have weapon abilities. Their weight
+is multiplied by their charges.</dd>
+<dt>Missile (no ammo)</dt>
+<dd>Missiles are wielded in one hand. They cannot have reagent abilities.</dd>
+<dt>Special Item</dt>
+<dd>This type of item only appears on the ground. When you pick it up, you instead gain
+the special item specified as the item level.</dd>
+<dt>Quest</dt>
+<dd>This type of item only appears on the ground. When you pick it up, you instead gain
+the quest specified as the item level.</dd>
+</dl>
 
 <h2>Setting Item Abilities (Advanced)</h2>
 
@@ -98,7 +183,7 @@ amount of charges goes down by one. When there are no charges left, the item dis
 The name of inherent ability types that require charges have a (c) after them. The value of
 these items is calculated the same way as for Usable abilities.</p>
 <p>There are four different classes of item ability type, each with its own properties and
-varieties of items that can possess it. Three of these classes are inherent abilities. THe
+varieties of items that can possess it. Three of these classes are inherent abilities. The
 categories are listed below:</p>
 
 <ul>

@@ -506,6 +506,20 @@ level of that job board. You can set Extra 2a if you want to increase the anger 
 more. A job board won't offer any jobs if its anger level is 50 or more.</li>
 </ol>
 </dd></dd>
+
+<dt>Type 46: Swap String Buffer</dt><dd>This special node swaps the active string buffer
+with a secondary string buffer. Keep in mind that these changes are not saved with the
+saved game.
+<dl>
+<dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
+<dt>Extra 1a:</dt><dd>The buffer to swap with.</dd></dd>
+
+<dt>Type 47: Alter Sign Text</dt><dd>This special node swaps contents of the active string
+buffer with the text of a sign on the map. Keep in mind that these changes are not saved
+with the saved game.
+<dl>
+<dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
+<dt>Extra 1a:</dt><dd>The sign to swap with.</dd></dd>
 </dl>
 
 <h3>One-Shot Specials</h3>
@@ -870,7 +884,7 @@ monster, this has no effect. Decreasing morale is the same as a Fear spell.
 <dt>Extra 1a:</dt><dd>The amount to increase/decrease morale.</dd>
 <dt>Extra 1b: If 0, increases. Otherwise, decreases.</dd></dd>
 
-<dt>Type 95: Affect Soul Crystal</dt><dd>Records the currently targeted monster in the
+<dt>Type 93: Affect Soul Crystal</dt><dd>Records the currently targeted monster in the
 party's soul crystal, or erases it if there is already a monster of the same kind recorded.
 If the current target is not a monster, this has no effect. If you know the type of the
 monster you want to record, then you need to first place one on the map, record it in the
@@ -883,6 +897,40 @@ forced.</dd>
 Soul on it, meaning that a random existing monster will be erased if necessary to make
 room. Multispace monsters, monsters of the Important race, and monsters with the Splits
 special ability will not be recorded.</dd></dd>
+
+<dt>Type 94: Give Equipment</dt><dd>Gives some equipment to the currently targeted PC. If
+the target is a monster, this has no effect. This is different from the Forced Give or
+One-Time Give nodes in that you can choose which PC receives it; it also provides
+additional options.
+<dl>
+<dt>Pict:</dt><dd>If the target PC's inventory is full, this special node is called. It is
+not called if the item is too heavy for the PC to carry (in that case, the item is given
+anyway). This would also be called if you tried to give an item to a dead or absent
+PC.</dd>
+<dt>Extra 1a:</dt><dd>The item to give. Press Choose to select one.</dd>
+<dt>Extra 1b:</dt><dd>If the item is a weapon, you can optionally add an enchantment.
+Press Choose to select one, or leave at -1 for none.</dd>
+<dt>Extra 1c:</dt><dd>If the item has charges, you can specify a different number than the
+default. Leave at -1 to use the default. If the item doesn't normally have charges, this
+is ignored. (But keep in mind that certain enchantments give charges.)</dd>
+<dt>Extra 2a:</dt><dd>You can force whether the item is identified using this field. If
+left at -1, the default setting in the item properties is used. Set to 0 to force it to be
+unidentified, or 1 to force it to be unidentified. If you set it to 2, it will be fully
+identified, even revealing the concealed ability (if any).</dd>
+<dt>Extra 2b:</dt><dd>You can force whether the item is cursed using this field. Leave at
+-1 to use the default setting, or set to 0 to force uncursed, 1 to force cursed.</dd>
+<dt>Extra 2c:</dt><dd>You can cause the item to be automatically equipped using this
+field. Leave at -1 to suppress this behaviour, or choose from the following options:
+<ol start='0'>
+<li><i>Soft equip</i> - as if the player had attempted to equip it normally. If there is any
+restriction preventing it from being equipped, such as having something else of the same
+kind equipped, then the item will not be equipped.</li>
+<li><i>Try to equip</i> - as if the player had unequipped any blocking items and then
+equipped it. The only thing that will prevent it from being equipped is if there was a
+cursed item of the same kind equipped.</li>
+<li><i>Force equip</i> - the item will be equipped, no matter what. Any items that were of
+the same type will be unequipped, even if they were cursed.</li>
+</ol></dd></dd>
 
 <dt>Type 95: Affect Monster Target</dt><dd>Changes the monster's current target. If the
 target is not a monster, this has no effect.

@@ -16,16 +16,16 @@
 <p>One of the best ways to put your own personal spin on your scenario is to give it your
 own graphics. You can provide your own graphics for monsters, items, terrain (animated or
 not), dialog pictures (36 x 36), talk portraits (32 x 32), terrain map icons (12 x 12),
-and missile animations (18 x 18).</p>
+ missile animations (18 x 18), and explosion animations (36 x 36).</p>
 
 <p>To create your own graphics, you need to use a painting program. The basic dimension of
-customized graphics is 28 x 36. The custom graphics must be arranged in image which are
-180 pixels wide and 360 pixels tall. The images must be named sheetX.png where X is a
+customized graphics is 28 x 36. The custom graphics must be arranged in image which is
+280 pixels wide and 360 pixels tall. The images must be named sheetX.png where X is a
 number starting from 0. Each image is called a "sheet". Each sheet contains up to 100
 individual icons. For the game to recognize them, they must be placed inside your scenario
 archive, in a subdirectory called "graphics". You can have up to 10 sheets without issues.
-If you have more, certain types of graphics can't be placed on the additional sheets. Only
-items, dialog pictures, and talk pictures can go on sheets after the tenth one.</p>
+If you have more, certain types of graphics can't be placed on the additional sheets.
+Monsters, terrain, and terrain map icons cannot go on sheets after the tenth one.</p>
 
 <p>Also, if you place files in the graphics directory with the same name as any of the
 graphics sheets used by the game, they will override the default sheet by that name. This
@@ -37,7 +37,7 @@ is considered to have 10 slots. The first ten slots are in the top row, the next
 are in the next row, and so on. The upper left graphic is considered slot 0. The top row
 contains slots 0 to 9 (numbered left to right), the second row contains slots 11 to 20,
 and so on. Each sheet contains 100 slots; thus, slots 0 to 99 are on sheet 0, slots 100 to
-199 or on sheet 1, and so forth.</p>
+199 are on sheet 1, and so forth.</p>
 
 <p>If you don't like having to do the calculations to figure out which graphic is in which
 slot, select Classify Custom Graphics from the Scenario menu, and go through your custom
@@ -55,6 +55,7 @@ background.</p>
 
 <p>Once you have your graphics sheet, the easiest way to get it into the scenario is to
 select "Edit Custom Graphic Sheets" from the "Scenario" menu and either paste the image in
+(this currently doesn't work properly on Windows, though)
 or click "Import" to load it in from a file. You may also need to click "New" first to
 ensure the target sheet actually exists.</p>
 
@@ -69,13 +70,17 @@ custom sheets slots. To give a terrain type this graphic, add 1000 to the number
 slot the graphic is in, and put that number in the Terrain Picture field on the editing
 terrain window.</p>
 <p>To use this graphic as the dialog picture in a dialog (created by a special node),
-select Display Dialog (Terrain pic) as the special node type. Add 1000 to the slot the
+put 1 in the Picture Type field. Add 1000 to the slot the
 graphic is in, and put that number in the Pict spot.</p>
 
 <p><b>Terrain (animated) -</b> Animated terrain has four different graphics. Put the 4
 graphics in 4 consecutive custom sheet slots. To give a terrain type this graphic, add
 2000 to the number of the slot the first of the four graphics is in, and put that number
 in the Terrain Picture field on the editing terrain window.</p>
+<p>To use this graphic as the dialog picture in a dialog (created by a special node),
+put 2 in the Picture Type field. Add 2000 to the slot the graphic is in, and put that
+number in the Pict spot. Or, since animations aren't played in dialogs, just treat it
+like a non-animated terrain.</p>
 
 <p><b>Monster (1 x 1) - </b>There are 4 graphics needed: monster facing right, monster
 facing left, monster attacking facing right, and monster attacking facing left. Put these
@@ -83,7 +88,7 @@ facing left, monster attacking facing right, and monster attacking facing left. 
 1000 to the number of the slot the first of the four graphics is in, and put that number
 in the Monster Picture field on the editing monster window.</p>
 <p>To use this graphic as the dialog picture in a dialog (created by a special node),
-select Display Dialog (Monster pic) as the special node type. Add 1000 to the slot the
+put 3 in the Picture Type field. Add 1000 to the slot the
 first of the 4 graphics is in, and put that number in the Pict spot.</p>
 
 <p><b>Monster (2 x 1) -</b> There are 8 graphics needed: the left half and then the right
@@ -91,31 +96,58 @@ half of the monster facing right, the left half and then the right half of the m
 facing left, the 2 parts of the monster attacking facing right, and the 2 parts of the
 monster attacking facing left. Put these 8 graphics in 8 consecutive custom sheet slots.
 To give a monster type this graphic (and make it a 2 x 1 monster), add 2000 to the number
-of the slot the first of the four graphics is in, and put that number in the Monster
+of the slot the first of the eight graphics is in, and put that number in the Monster
 Picture field on the editing monster window.</p>
+<p>To use this graphic as the dialog picture in a dialog (created by a special node),
+put 3 in the Picture Type field. Add 2000 to the slot the
+first of the 8 graphics is in, and put that number in the Pict spot.</p>
 
 <p><b>Monster (1 x 2), Monster (2 x 2) -</b> These 2 graphics require 8 and 16 custom
 sheet slots. Put the parts of the monster facing right, then facing left, then attacking
 right, then attacking left, with the parts arranged left to right and top to bottom. To
 give a monster type this graphic, add 3000 (if 1 x 2) or 4000 (if 2 x 2) to the number of
-the slot the first of the four graphics is in, and put that number in the Monster Picture
+the slot the first of the graphics is in, and put that number in the Monster Picture
 field on the editing monster window.</p>
+<p>To use this graphic as the dialog picture in a dialog (created by a special node),
+put 3 in the Picture Type field. Add 3000 (if 1 x 2) or 4000 (if 2 x 2) to the slot the
+first of the graphics is in, and put that number in the Pict spot.</p>
+
+<p>Note that, when using larger monster graphics in a dialog, they will be shrunk down to
+fit into a 28x36 space, similar to what happens when they are used for an outdoor
+wandering encounter. This size change will preserve aspect ratio and centre the graphic in
+the available space.</p>
+
+<p><b>Monster (1 x 2), Monster (2 x 2) -</b> These 2 graphics require 8 and 16 custom
+sheet slots. Put the parts of the monster facing right, then facing left, then attacking
+right, then attacking left, with the parts arranged left to right and top to bottom. To
+give a monster type this graphic, add 3000 (if 1 x 2) or 4000 (if 2 x 2) to the number of
+the slot the first of the graphics is in, and put that number in the Monster Picture
+field on the editing monster window.</p>
+<p>To use this graphic as the dialog picture in a dialog (created by a special node),
+put 3 in the Picture Type field. Add 3000 (if 1 x 2) or 4000 (if 2 x 2) to the slot the
+first of the graphics is in, and put that number in the Pict spot.</p>
 
 <p><b>Dialog Picture -</b> You can put a custom 36 x 36 graphic in the upper left corner
 of a dialog box. Split the graphic into 2 18 x 36 halves, and put the 2 graphics in 2
 consecutive custom sheet slots (pushed into the upper left corner).</p>
 <p>To use this graphic as the dialog picture in a dialog (created by a special node),
-select Display Dialog (Dialog pic) as the special node type. Add 1000 to the slot the left
+put 4 in the Picture Type field. Add 1000 to the slot the left
 half is in, and put that number in the Pict spot.</p>
 
 <p><b>Item - </b>An item graphic takes up one 28 x 36 slot. Add 1000 to the slot the
 graphic is in, and put that number in the Item Picture field on the editing items window.</p>
+<p>To use this graphic as the dialog picture in a dialog (created by a special node),
+put 7 in the Picture Type field. Add 1000 to the slot the left
+half is in, and put that number in the Pict spot.</p>
 
 <p><b>Face in Dialogue - </b>You can customize the face of a character the party is
 talking to. A dialogue face is a 32x32 graphic. Split the graphic into 2 16x32 halves, and
 put them in two adjacent slots (left half in one slot, and then the right half in the next
 slot). Add 1000 to the slot the left half is in, and put that number in the Facial Graphic
 space in the Editing a Townsperson/Monster window.</p>
+<p>To use this graphic as the dialog picture in a dialog (created by a special node),
+put 5 in the Picture Type field. Add 1000 to the slot the left
+half is in, and put that number in the Pict spot.</p>
 
 <p><b>Missile Animation - </b>You can assign custom missile animations for missile weapons
 and monster abilities. A missile animation consists of 8 separate 18x18 graphics, one for
@@ -140,9 +172,12 @@ map icon text field in the Editing Terrain window. Example: Suppose you have map
 the slot at row 5, column 3 of sheet 2, and you want to use the left middle icon in that
 slot for a terrain. The number you put in the map icon text field would be 2253.</p>
 <p></p>
+
 <p>For examples of using custom graphics, look at the scenarios that came with Blades of
 Exile. The three Blades of Exile scenarios, between them, contain examples of Custom
 Sheets with all of the different sorts of custom graphics.</p>
+<!-- TODO: Not yet true - still need examples of map icons, missiles, and explosions in the
+preset scenarios! -->
 </div>
 </body>
 </html>

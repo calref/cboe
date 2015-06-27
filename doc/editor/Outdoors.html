@@ -43,7 +43,8 @@ terrain view.</li>
 <li><em>Editing Buttons</em> - These buttons activate the many useful features the
 scenario editor has. To find out what they do, read the section Editing Buttons.</li>
 <li><em>Current Terrain</em> - The terrain type currently being drawn is shown to the
-right of the editing buttons.</li>
+right of the editing buttons. The second terrain shown there is the erase terrain, which
+will be used by the eraser tool or when you click a terrain of the same type on the map.</li>
 </ul>
 
 <h2>Editing Terrain</h2>
@@ -56,16 +57,15 @@ walls, click on the wall icon to the right, move the cursor onto the terrain are
 the mouse button, and hold it down. Move the cursor in the shape of the desired wall, and
 release the button when done.</p>
 <p>if you click onto a spot of terrain which is the same as the terrain you are painting,
-the spot will be erased, and replaced with a spot of ground. This spot of ground will be
-either cave floor or grass (whichever one you last placed).</p>
+the spot will be erased, and replaced with a spot of ground.</p>
 <p>There are two very important shortcuts available when drawing terrain, which make the
 job much less painful. First, the Blades of Exile editor will automatically adjust cave
 walls, mountains, hills, and water so that the edges line up properly (for example, if you
 draw a 3 x 3 square of cave wall, the editor will automatically place cave wall corner
 terrain in the corners of the square). Along similar lines, because mountains must be
 edged by hills to look right, when you draw mountains, ground around the mountains will be
-replaced by hills. Also, when you draw one half of a two space pile of rubble, the editor
-will automatically fill in the other half.</p>
+replaced by hills. Also, when you draw one piece of a multi-space tile, such as a large
+pile of rubble, the editor will automatically fill in the other pieces.</p>
 <p>The second shortcut is the customizable keyboard shortcuts available for the terrain
 types. For example, when you press w repeatedly, the currently drawn terrain will cycle
 through the 3 different sorts of basic walls. See the chapter on Editing Terrain Types to
@@ -101,8 +101,8 @@ bottom row of terrain spots in the next outdoor section to the north. You can't 
 row - it's just there to help you line the terrain up.</p>
 <p>Rectangles with special descriptions are marked in the terrain screen as red
 rectangles.</p>
-<p>Two terrain types that require special care are grass and cave walkways (near the end
-of the fifth row). The corners of walkways are rounded off when the game draws them. When
+<p>Two terrain types that require special care are grass and cave walkways (near the start
+of the sixth row). The corners of walkways are rounded off when the game draws them. When
 cave walkways (the first of the two, marked with a C) are rounded off, it is with cave
 floor. When grass walkways (the second of the two, marked with a G) are rounded off, grass
 is drawn. Make sure to only use cave walkways around cave floor, and grass walkways around
@@ -111,7 +111,7 @@ grass floor.</p> <!-- TODO: Didn't this get redone? -->
 <h2>Editing Buttons</h2>
 
 <div class="figure">
-<img src="../img/edoutbtns.gif" alt="Terrain Editing Buttons">
+<img src="../img/edoutbtns.png" alt="Terrain Editing Buttons">
 <p>Figure 1: Terrain Editing Buttons</p>
 </div>
 <p>There are 23 different buttons for use while editing the outdoors (see figure above for
@@ -126,6 +126,8 @@ circle). The spray can will only place the terrain on ground. It won't spray ont
 floor, etc.</li>
 <li>Small Spraycan: Spray a random sprinkling of terrain (area to spray on is a 3 diameter
 circle).</li>
+<li>Eraser: Replace a 3x3 square around the area selected with the current ground (cave
+floor or grass, depending on which you last drew).</li>
 <li>Eyedropper: Click on a terrain spot to make that spot the current terrain.</li>
 <li>Empty Rectangle: Create a rectangle of the current terrain. Only the edges of the
 rectangle are drawn with that terrain. The inside is left alone. To place a rectangle,
@@ -133,11 +135,13 @@ press this button, select the upper left corner of the rectangle (on the terrain
 and then select the lower right corner.</li>
 <li>Full Rectangle: Like Empty Rectangle, except that the rectangle selected is filled
 with the current terrain.</li>
-<li>Change View: Change the terrain view from zoomed in to zoomed out, and back again.
-When zoomed out, you can't see monsters or items, but you can get an overall look at your
-work. Also, you probably only want to use the large paintbrush in this view.</li>
-<li>Eraser: Replace a 3x3 square around the area selected with the current ground (cave
-floor or grass, depending on which you last drew).</li>
+<li>Set Town Entry: Set the town that is entered when the party walks into a
+town/dungeon/tower space in the outdoors. To place a town, draw a town spot in your
+outdoor section, press this button, click on the town, and enter the number of the town to
+be entered.</li>
+<li>Clear Town Entry: Clear any town entry set on the selected space. Even if it is a
+town, the party will not enter town when walking into a space whose town entry has been
+cleared.</li>
 <li>Edit Sign Text: Change the text on a sign. Press this button, and then click on the
 sign to edit.</li>
 <li>Set Area Description: Each outdoor section can have up to eight rectangles with brief
@@ -152,18 +156,14 @@ on the four spots in your terrain. Be careful not to place these spaces in water
 mountains, or other inaccessible spots.</li>
 <li>Replace Terrain: You can have the program go through your terrain and randomly change
 spots of one terrain type to another (for example, to make a forest, you can change grass
-to trees). To do so, press this button.</li>
-<li> When you do, a dialog box will come up. Enter the number of the terrain to change in
+to trees). To do so, press this button.<br>
+When you do, a dialog box will come up. Enter the number of the terrain to change in
 the first box (to select a terrain type, press the Choose button), the terrain to change
 it to in the second box, and the chance of any given spot being changed in the third box
 (0-100, 0 being never and 100 being always). Press OK to do the replacement.</li>
-<li>Set Town Entry: Set the town that is entered when the party walks into a
-town/dungeon/tower space in the outdoors. To place a town, draw a town spot in your
-outdoor section, press this button, click on the town, and enter the number of the town to
-be entered.</li>
-<li>Edit Item: Not used in outdoor editing.</li>
-<li>Duplicate Item: Not used in outdoor editing.</li>
-<li>Erase Item: Not used in outdoor editing.</li>
+<li>Change View: Change the terrain view from zoomed in to zoomed out, and back again.
+When zoomed out, you can't see monsters or items, but you can get an overall look at your
+work. Also, you probably only want to use the large paintbrush in this view.</li>
 <li>Place/Edit Special Encounter (Advanced) : To place a special encounter on a space,
 press this button and click on the space. To edit a special encounter, press this button,
 and click on the special encounter. To find out about special encounters, read the Special
@@ -180,6 +180,8 @@ terrain, so that the nodes aren't called when the party steps there.</li>
 on a space. When you press this button and click on a space, you will be asked for the
 number of an outdoor special node. The node you give will be called when the party steps
 on this space.</li>
+<li>Toggle Special Spot (Advanced) : Toggles whether there is a white special encounter
+dot on the space.</li>
 </ol>
 
 <h2>The Outdoor Menu</h2>
@@ -202,7 +204,7 @@ give the terrain a little more varied appearance.</li>
 into ordinary grass, and cave floor with small mushrooms back to cave floor.</li>
 <li><b>Edit Area Descriptions -</b> Select this to edit the eight rectangles with brief
 area descriptions (to find out how to place these, read Set Area Description, above).
-Press the Delete buttons to remove rectangles, or edit the text in the text areas.</li>
+Alt-click to remove rectangles, or click to edit the text.</li>
 <li><b>Set Starting Location - </b>You need to set a location in the outdoors for the party
 to be at when they leave the town they start in. To set this, select this option, and
 click on the appropriate space in the outdoors.</li>
@@ -211,7 +213,10 @@ the outdoor sections special nodes are listed to the right. Click on a node to e
 it.</li>
 <li><b>Edit Outdoor Text (Advanced) -</b> This moves you to the main screen, where all of
 the outdoor section's text messages are listed to the right. Click on a message to edit it,
-or command click (right click in Windows) to clear it.</li>
+or alt click to clear it.</li>
+<li><b>Edit Outdoor Signs (Advanced) -</b> This moves you to the main screen, where all of
+the outdoor section's signs are listed to the right. Click on a message to edit it,
+or alt click to clear it.</li>
 </ul>
 
 <h2>Outdoor Details</h2>

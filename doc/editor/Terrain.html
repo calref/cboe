@@ -14,10 +14,12 @@
 
 <p>Your default scenario comes with 256 premade terrain types, number 0 to 255 (which are
 listed in the Appendices). However, you can also customize the terrain types to suit your
-scenario. Click on Edit Terrain Types to bring up all of the terrain icons, and click on a
+scenario, or add new ones of your own.
+Click on Edit Terrain Types to bring up all of the terrain icons, and click on a
 terrain type to bring up the terrain editing window.</p>
-<p>The first 90 terrain types (0 to 89) are fixed by the game. The only thing you can
-change in these is the picture. You can do what you want with terrain types 91 - 255.</p>
+<p>The first 91 terrain types (0 to 90), as well as a few others, are used by the game
+when generating terrain for outdoor combat arenas. As such, it is recommended that you
+change only the picture.</p>
 
 <h2>Defining Terrain Types</h2>
 
@@ -153,7 +155,7 @@ the intensity of the effect (usually a number from -8 to 8; depending on the sta
 effect, negative intensities might be either good or bad). Extra 2 is the percentage
 chance of being affected, a number from 0 to 100 (0 meaning never, and 100 meaning
 always). Extra 3 is the status effect to inflict.</li>
-<li>Crumbling - If Extra 2 is 0 or 1, it turns into the terrain in Extra 1 when Move
+<li><b>Crumbling</b> - If Extra 2 is 0 or 1, it turns into the terrain in Extra 1 when Move
 Mountains or Shatter is cast on this space. If Extra 2 is 1 or 2, it turns into the
 terrain in Extra 1 when quickfire attempts to spread into this space.</li>
 <li><b>Lockable Terrain -</b> Indicates a terrain type that can be locked. This only comes
@@ -176,7 +178,7 @@ be the text that is displayed.</li>
 0, a scenario special is called. If Extra 2 is 1, an outdoor special is called if stepped
 on outdoors; otherwise a town special is called. The number in Extra 1 is the number of
 the special encounter node to call.
-<li>Warning: If you create a terrain type with this special property, using it in more
+<br><b>Warning:</b> If you create a terrain type with this special property, using it in more
 than one area can have unpredictable effects. If you, for example, have a terrain type
 with this property that calls town special encounter 29, make sure every town you use that
 terrain type in has a sensible special encounter in slot 29.</li>

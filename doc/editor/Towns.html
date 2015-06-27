@@ -21,16 +21,28 @@ chapter for a diagram of button positions). Most of these buttons have the same 
 they do when editing outdoors. The buttons which work differently are described to the
 right.</p>
 <div class="figure">
-<img src='../img/edtownbtns.gif' alt="Outdoor Editing Buttons">
-<p>Figure 1: Outdoor Editing Buttons</p>
+<img src='../img/edtownbtns.png' alt="Town Editing Buttons">
+<p>Figure 1: Town Editing Buttons</p>
 </div>
-<ol start="12">
+<ol start="10">
+<li>Set North Entry: Use these to set the space the party starts in when they enter the
+town from the outdoors. When the party enters the town from due north or due south, they
+start at the north and south entry spaces. If they enter from the east, northeast, or
+southeast, the start at the east entry space. If they enter from the west, northwest, or
+southwest, the start at the west entry space.</li>
+<li>Set West Entry: See above.</li>
+<li>Set South Entry: See above.</li>
+<li>Set East Entry: See above.</li>
+<li>Edit Sign: Works like in outdoor sections.</li>
 <li>Set Area Description: Works like in outdoor sections, except that you now get 16
 rectangles to edit.</li>
 <li>Place Wandering Monster Location: Towns, like outdoor sections, have 4 wandering
 monster arrival points, which can be chosen here. Make sure to choose places with open
 area around them, so that theres room for the monsters to appear.</li>
-<li value="16">Edit Item: Edit an item you've already placed. Press this button and then
+<li value='19'>Pick Terrain: Shows the terrains in the palette above the tool buttons.</li>
+<li value='25'>Place Special Spot: Place a special spot on the map. In town mode, this
+button only places the spot; use Clear Space to remove it.</li>
+<li>Edit Item: Edit an item you've already placed. Press this button and then
 click on the item to edit. A dialog will come up. To change the item, press the Choose
 button. If the item is gold, food, or has charges, you can use the text area to set the
 amount of gold or food, or the number of charges (leave at -1 for it to be ignored). If
@@ -43,28 +55,23 @@ selected, the item is considered to be in a barrel, crate, dresser, etc. The
 exact duplicate of the last item placed/edited is placed. The <span class="key">/</span>
 key is a shortcut for this button.</li>
 <li>Erase Item: Use to erase all items in a space.</li>
-<li value="24">Edit Monster: Press this and click on a monster to change its properties.
+<li>Pick Item: Shows the items in the palette above the tool buttons.</li>
+<li value="30">Edit Monster: Press this and click on a monster to change its properties.
 For more information, read Placing and Editing Monsters, later in the chapter. The 
 <span class='key'>,</span> key is a keyboard shortcut.</li>
 <li>Duplicate Monster: Press and click a terrain space to place an exact duplicate of the
 last placed/edited monster. The <span class="key">`</span> key is a keyboard
 shortcut.</li>
 <li>Erase Monster: Erase a placed monster.</li>
-<li>Set North Entry: Use these to set the space the party starts in when they enter the
-town from the outdoors. When the party enters the town from due north or due south, they
-start at the north and south entry spaces. If they enter from the east, northeast, or
-southeast, the start at the east entry space. If they enter from the west, northwest, or
-southwest, the start at the west entry space.</li>
-<li>Set West Entry: See above.</li>
-<li>Set South Entry: See above.</li>
-<li>Set East Entry: See above.</li>
+<li>Pick Monster: Shows the monsters in the palette above the tool buttons.</li>
 <li>Place Web</li>
 <li>Place Crate</li>
 <li>Place Barrel</li>
+<li>Place Stone Block</li>
 <li>Place Fire Barrier</li>
 <li>Place Force Barrier</li>
-<li>Place Quickfire: Places these objects/fields in the selected space. Each town can have
-at most 50 of these items or special effects (see below).</li>
+<li>Place Quickfire</li>
+<li>Place Forcecage: Places these objects/fields in the selected space.</li>
 <li>Clear Space: Clear all fields, webs, barrels, crates, and special effects from a
 space.</li>
 <li>Place Small Blood Stain</li>
@@ -74,7 +81,7 @@ space.</li>
 <li>Place Large Slime Pool</li>
 <li>Place Dust</li>
 <li>Place Bones</li>
-<li>Place Rubble:These are the eight special effects, things that have no game purpose but
+<li>Place Rubble: These are the eight special effects, things that have no game purpose but
 enhance the atmosphere of the level.</li>
 </ol>
 
@@ -106,8 +113,9 @@ this feature.</li>
 <li><em>Set All Items Not Property</em>: All items in the town that are marked as someone
 elses property become safe for the party to get.</li>
 <li><em>Clear All Items</em>: Erase all items in the town.</li>
-<li><em>Edit Special Nodes, Edit Town Text (Advanced)</em>: Takes you to the main screen,
-where you can directly edit the special nodes and the town text respectively.</li>
+<li><em>Edit Special Nodes, Edit Town Text, Edit Town Signs (Advanced)</em>: Takes you to
+the main screen, where you can directly edit the special nodes, the town text, and town
+signs respectively.</li>
 <li><em>Advanced Town Details (Advanced)</em>: These are described below.</li>
 <li><em>Set Town Event Times (Advanced)</em>: You can have special nodes called at regular
 time intervals while the party is in the town. Select this option, and a dialog box will
@@ -181,14 +189,15 @@ not affect the True Sight spell.</li>
 through magical barriers in this town, and the Dispel Barrier spell has a lower chance of
 breaking them as well.</li>
 <li><em>Create New PCs</em>: Set this flag to allow the player to add a new PC while in
-this town. Generally, this is set in the starting town, but you may also want to set it in
-other towns, especially if you can't return to the starting town later.</li>
+this town. Generally, this should be set in the starting town, but you may also want to set
+it in other towns, especially if you can't return to the starting town later.</li>
 </ul>
 
 <h2>Placing Items</h2>
 
-<p>You can place preset items in towns for the party to find. To place an item, select one
-from the I1 - I5 menus, and click on the space to place it on. To edit a placed item,
+<p>You can place preset items in towns for the party to find. To place an item, click the
+sword icon at the right of the tool palette, select an item from the grid above, and click
+on the space to place it on. To edit a placed item,
 press the Edit Item button (in the lower right hand corner) and click on the item to
 edit. While editing an item, you can click the Delete button to remove it from the town.</p>
 <p>When you select an item to edit, the Editing Preset Item window will come up. You can
@@ -198,7 +207,7 @@ other item with charges) enter the new amount in the Amount or Charges Text fiel
 melee weapon, you can set it to be enchanted by clicking the Choose button next to the
 Enchantment field. Finally, there are three options at the bottom of this window:</p>
 <ul>
-<li><em>Always Here</em>: Normally,when the party takes an item,it won't be there the next
+<li><em>Always Here</em>: Normally, when the party takes an item, it won't be there the next
 time they enter the town. If this option is selected, the item will be there every time
 they enter the town.</li>
 <li><em>Someone's Property</em>: If the party takes this item and a friendly person sees
@@ -206,13 +215,16 @@ them do it, the town will become hostile.</li>
 <li><em>Contained In Something</em>: This item is contained inside a barrel, dresser, etc.
 and can't be taken until the party looks inside. When an item is placed onto a contained,
 this option is automatically selected for you. If you select this option and the item is
-not inside a container, the party won't be able to see or get it.</li>
+not inside a container, the party won't be able to see or get it.
+Note that if there's both a container and a crate/barrel on the space, the item will
+always be inside the crate/barrel, not the container.</li>
 </ul>
 
 <h2>Placing And Editing Monsters</h2>
 
-<p>Placing and editing monsters works like editing items. Select a monster, from the M1 -
-M4 menus, and click on the spot for it to appear in. Each monster has a default attitude
+<p>Placing and editing monsters works like editing items. Click the person icon at the
+right of the tool palette, select a monster from the grid above, and click on the spot for
+it to appear in. Each monster has a default attitude
 (friendly, hostile, etc.), which is set in the monster type editing screen. The monster
 has this attitude when it appears.</p>
 <p>To edit a monster, press the Edit Monster button (in the lower right hand corner) and
@@ -220,10 +232,11 @@ click on the monster. The monster dialog window has several options:</p>
 
 <ul>
 <li><em>Creature Type</em>: Press to select a new monster type.</li>
-<li><em>Creature Starting Attitude</em>: Select Friendly (won't attack), Friendly, Will
-Fight (won't fight party, and will fight bad monsters), Hostile, Type A (will attack the
-party, and monsters of type Hostile Type B), and Hostile, Type B (will attack the party,
-and monsters of type Hostile Type A).</li>
+<li><em>Creature Starting Attitude</em>: Select
+Friendly, Docile (won't attack);
+Friendly, Will Fight (won't fight party, and will fight bad monsters);
+Hostile, Type A (will attack the party, and monsters of type Hostile Type B); or
+Hostile, Type B (will attack the party, and monsters of type Hostile Type A).</li>
 <li><em>Creature Can Move</em>: If no, monster can't move.</li>
 <li><em>Personality</em>: If left at -1, the creature can't be talked to. Otherwise, see
 chapter on Dialogue.</li>
@@ -241,7 +254,8 @@ button to set them.</p>
 appear in the town. These mainly depend on what day it is, and what special events have
 occurred. For a more detailed description of how time works, read the chapter on Passing
 Time.</p>
-<p>Note that, if the town has been abandoned, creatures never appear.</p>
+<p>Note that, if the town has been abandoned, creatures never appear, with one exception
+mentioned below.</p>
 <p>There are two text editing areas after these buttons, where you will enter the days the
 creatures appear/disappear and the events they're linked to. The first area will always get
 a day, and the second area will get the number of a special event (0 - 9, with 0 meaning
@@ -268,16 +282,26 @@ it is supposed to die is reached without the event that should prevent it occurr
 Creatures with this set are the only creatures that will exist in a dead town.</li>
 <li><em>Special Encounter Group (Advanced)</em>: You can specify that a creature in a town
 will not be there at first, but will be brought into being by a special encounter. You can
-have 10 different groups of these creatures, who will be brought into being by calling a
+have several different groups of these creatures, who will be brought into being by calling a
 special node of the type One-Time Place Town Encounter.</li>
 <li><em>Special Node to Call When Killed (Advanced)</em>: Give the number of a town
-special node to call when the creature is killed (or -1 for none).</li>
+special node to call when the creature is killed (or -1 for none). Or click Create/Edit to
+edit the node.</li>
 <li><em>Linked Stuff Done Flag (Advanced)</em>: Give the two parts of a Stuff Done flag.
 If this flag is non-zero, the creature wont be here. If it is 0, the creature will be
 here, but, should the creature die, the flag will be set to 1. This can be used for a
 monster you only want the party to be able to kill once.</li>
 
 </ul>
+
+<h2>Special Icons</h2>
+<div class="figure">
+<img src='../img/editorsymbols.gif' alt="Display Symbols">
+<p>Figure 2: Meanings of the Display Symbols</p>
+</div>
+<p> The terrain icons to the right and the terrain spaces in the terrain editing area
+often have small icons, which represent special properties of the spaces/terrain
+types:</p>
 </div>
 </body>
 </html>
