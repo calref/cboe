@@ -5,6 +5,7 @@
 
 #define BOOST_NO_CXX11_NUMERIC_LIMITS // Because my libc++ is old and not quite standard-compliant, which breaks Boost.Thread
 #include <boost/thread.hpp>
+#include <boost/filesystem/operations.hpp>
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
@@ -364,6 +365,7 @@ void close_program() {
 	sync_prefs();
 }
 
+extern fs::path progDir;
 void handle_menu_choice(eMenu item_hit) {
 	std::string dialogToShow;
 	sf::Event dummyEvent = {sf::Event::KeyPressed};
@@ -580,7 +582,9 @@ void handle_menu_choice(eMenu item_hit) {
 			make_cursor_sword();
 			break;
 		case eMenu::HELP_TOC:
-			launchURL("https://blades.calref.net/doc/game/Contents.html");
+			if(fs::is_directory(progDir/"doc"))
+				launchURL("file://" + (progDir/"doc/game/Contents.html").string());
+			else launchURL("https://blades.calref.net/doc/game/Contents.html");
 			break;
 		case eMenu::ABOUT_MAGE:
 		case eMenu::ABOUT_PRIEST:

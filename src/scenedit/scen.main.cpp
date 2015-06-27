@@ -2,6 +2,7 @@
 #define BOOST_NO_CXX11_NUMERIC_LIMITS // Because my libc++ is old and not quite standard-compliant, which breaks Boost.Thread
 #include <cstdio>
 #include <boost/thread.hpp>
+#include <boost/filesystem/operations.hpp>
 
 #include "scen.global.hpp"
 #include "scenario.hpp"
@@ -514,7 +515,9 @@ void handle_menu_choice(eMenu item_hit) {
 			isHelp = true;
 			break;
 		case eMenu::HELP_TOC:
-			launchURL("https://blades.calref.net/doc/editor/About.html");
+			if(fs::is_directory(progDir/"doc"))
+				launchURL("file://" + (progDir/"doc/editor/About.html").string());
+			else launchURL("https://blades.calref.net/doc/editor/About.html");
 			break;
 		case eMenu::HELP_START:
 			helpDlog = "help-editing";
