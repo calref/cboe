@@ -731,6 +731,7 @@ void handle_talk_event(location p) {
 			if(which_talk_entry < 0) which_talk_entry = scan_for_response("heal");
 			if(which_talk_entry < 0) which_talk_entry = scan_for_response("iden");
 			if(which_talk_entry < 0) which_talk_entry = scan_for_response("trai");
+			if(which_talk_entry < 0) which_talk_entry = scan_for_response("ench");
 			if(which_talk_entry == -1) goto SPECIAL_DUNNO;
 			break;
 		case TALK_SELL:
