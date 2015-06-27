@@ -48,7 +48,7 @@
 	<text name='num' top='97' left='180' width='35' height='14'/>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text name='title' size='large' top='6' left='50' width='191' height='15'>Outdoor Wandering Encounter:</text>
-	<text top='22' left='50' width='502' height='17'>
+	<text top='22' left='50' width='502' height='30'>
 		Enter the characteristics for this outdoor encounter.
 		There are four different wandering and special encounter slots.
 		To edit the others, use the arrow buttons.
