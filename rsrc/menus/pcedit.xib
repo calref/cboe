@@ -379,14 +379,6 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
-								<object class="NSMenuItem" id="807827245">
-									<reference key="NSMenu" ref="551880289"/>
-									<string key="NSTitle">Own All Boats/Horses</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="229763992"/>
-									<reference key="NSMixedImage" ref="909111550"/>
-								</object>
 							</array>
 							<bool key="NSNoAutoenable">YES</bool>
 						</object>
@@ -447,6 +439,14 @@
 								<object class="NSMenuItem" id="145927507">
 									<reference key="NSMenu" ref="779223651"/>
 									<string key="NSTitle">Add Town Maps</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
+								<object class="NSMenuItem" id="807827245">
+									<reference key="NSMenu" ref="779223651"/>
+									<string key="NSTitle">Own All Boats/Horses</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="229763992"/>
@@ -823,7 +823,6 @@
 							<reference ref="619546963"/>
 							<reference ref="607085164"/>
 							<reference ref="35616607"/>
-							<reference ref="807827245"/>
 							<reference ref="885300113"/>
 							<reference ref="426558583"/>
 							<reference ref="119197894"/>
@@ -896,6 +895,7 @@
 							<reference ref="528940421"/>
 							<reference ref="556155026"/>
 							<reference ref="892605041"/>
+							<reference ref="807827245"/>
 						</array>
 						<reference key="parent" ref="416266767"/>
 					</object>
@@ -994,11 +994,6 @@
 						<reference key="parent" ref="551880289"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">817</int>
-						<reference key="object" ref="807827245"/>
-						<reference key="parent" ref="551880289"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">813</int>
 						<reference key="object" ref="528940421"/>
 						<reference key="parent" ref="779223651"/>
@@ -1042,6 +1037,11 @@
 						<int key="objectID">866</int>
 						<reference key="object" ref="56062367"/>
 						<reference key="parent" ref="551880289"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">817</int>
+						<reference key="object" ref="807827245"/>
+						<reference key="parent" ref="779223651"/>
 					</object>
 				</array>
 			</object>

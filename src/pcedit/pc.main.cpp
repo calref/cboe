@@ -257,13 +257,10 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 			
 		case eMenu::LEAVE_SCENARIO:
-			if(!party_in_scen) {
-				display_strings(25,15);
-				break;
-			}
 			if(cChoiceDlog("leave-scenario",{"okay","cancel"}).show() != "okay")
 				break;
 			remove_party_from_scen();
+			menu_activate();
 			break;
 		case eMenu::EDIT_ALCHEMY:
 			display_alchemy(true);
@@ -279,10 +276,6 @@ void handle_menu_choice(eMenu item_hit) {
 			edit_day();
 			break;
 		case eMenu::ADD_OUT_MAPS:
-			if(!party_in_scen) {
-				display_strings(25,15);
-				break;
-			}
 			display_strings(13,15);
 			for(i = 0; i < 100; i++)
 				for(j = 0; j < 6; j++)
@@ -290,10 +283,6 @@ void handle_menu_choice(eMenu item_hit) {
 						univ.out_maps[i][j][k] = 255;
 			break;
 		case eMenu::ADD_TOWN_MAPS:
-			if(!party_in_scen) {
-				display_strings(25,15);
-				break;
-			}
 			display_strings(14,15);
 			for(i = 0; i < 200; i++)
 				for(j = 0; j < 8; j++)

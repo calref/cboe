@@ -90,7 +90,6 @@ BEGIN
         MENUITEM "Edit XP",                     IDM_PARTY_XP
         MENUITEM SEPARATOR
         MENUITEM "Reunite Party",               IDM_PARTY_REUNITE
-        MENUITEM "Own All Boats/Horses",        IDM_PARTY_VEHICLES
     END
     POPUP "&Scenario Editing"
     BEGIN
@@ -100,6 +99,7 @@ BEGIN
         MENUITEM "Make Towns Forget You",       IDM_SCEN_TOWN_RESET
         MENUITEM "Add All Town Maps",           IDM_SCEN_TOWN_MAP
         MENUITEM "Add All Outdoor Maps",        IDM_SCEN_OUT_MAP
+        MENUITEM "Own All Boats/Horses",        IDM_PARTY_VEHICLES
         MENUITEM SEPARATOR
         MENUITEM "Remove Party From Scenario",  IDM_SCEN_LEAVE
         MENUITEM "Set Stuff Done Flag",         IDM_SCEN_SDF

@@ -19,7 +19,7 @@ using MenuHandle = NSMenu*;
 
 extern cUniverse univ;
 extern fs::path file_in_mem;
-extern bool scen_items_loaded;
+extern bool scen_items_loaded, party_in_scen;
 MenuHandle menu_bar_handle;
 MenuHandle apple_menu, file_menu, reg_menu, extra_menu, items_menu[4];
 
@@ -65,10 +65,10 @@ void init_menubar() {
 		eMenu::EDIT_GOLD, eMenu::EDIT_FOOD, eMenu::EDIT_ALCHEMY, eMenu::NONE,
 		eMenu::HEAL_DAMAGE, eMenu::RESTORE_MANA, eMenu::RAISE_DEAD, eMenu::CURE_CONDITIONS, eMenu::NONE,
 		eMenu::EDIT_MAGE, eMenu::EDIT_PRIEST, eMenu::EDIT_TRAITS, eMenu::EDIT_SKILLS, eMenu::EDIT_XP, eMenu::NONE,
-		eMenu::REUNITE_PARTY, eMenu::OWN_VEHICLES,
+		eMenu::REUNITE_PARTY,
 	};
 	static const eMenu scen_choices[] = {
-		eMenu::EDIT_DAY, eMenu::NONE, eMenu::LEAVE_TOWN, eMenu::RESET_TOWNS, eMenu::ADD_OUT_MAPS, eMenu::ADD_TOWN_MAPS,
+		eMenu::EDIT_DAY, eMenu::NONE, eMenu::LEAVE_TOWN, eMenu::RESET_TOWNS, eMenu::ADD_OUT_MAPS, eMenu::ADD_TOWN_MAPS, eMenu::OWN_VEHICLES,
 		eMenu::NONE, eMenu::LEAVE_SCENARIO, eMenu::SET_SDF,
 	};
 	
@@ -101,7 +101,7 @@ void menu_activate() {
 		for(int i = 3; i < [file_menu numberOfItems]; i++)
 			[[file_menu itemAtIndex: i] setEnabled: YES];
 		[[menu_bar_handle itemWithTitle: @"Edit Party"] setEnabled: YES];
-		[[menu_bar_handle itemWithTitle: @"Scenario Edit"] setEnabled: YES];
+		[[menu_bar_handle itemWithTitle: @"Scenario Edit"] setEnabled: party_in_scen];
 	}
 }
 
