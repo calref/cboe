@@ -206,6 +206,19 @@ SectionEnd
 ;Uninstall section
 Section Uninstall
 
+	FindWindow $0 "SFML_Window" "Blades of Exile"
+	IsWindow $0 0 +3
+		MessageBox MB_ABORTRETRYIGNORE|MB_ICONSTOP "You can't uninstall now because Blades of Exile is currently running. Quit Blades of Exile, and then try again." IDRETRY -2 IDIGNORE +2
+		Abort
+	FindWindow $0 "SFML_Window" "Blades of Exile Character Editor"
+	IsWindow $0 0 +3
+		MessageBox MB_ABORTRETRYIGNORE|MB_ICONSTOP "You can't uninstall now because the Blades of Exile Character Editor is currently running. Quit the Character Editor, and then try again." IDRETRY -2 IDIGNORE +2
+		Abort
+	FindWindow $0 "SFML_Window" "Blades of Exile Scenario Editor"
+	IsWindow $0 0 +3
+		MessageBox MB_ABORTRETRYIGNORE|MB_ICONSTOP "You can't uninstall now because the Blades of Exile Scenario Editor is currently running. Quit the Scenario Editor, and then try again." IDRETRY -2 IDIGNORE +2
+		Abort
+
 	;Remove from registry...
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 	DeleteRegKey HKLM "SOFTWARE\${APPNAME}"
