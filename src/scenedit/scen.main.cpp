@@ -516,8 +516,8 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::HELP_TOC:
 			if(fs::is_directory(progDir/"doc"))
-				launchURL("file://" + (progDir/"doc/editor/About.html").string());
-			else launchURL("https://blades.calref.net/doc/editor/About.html");
+				launchURL("file://" + (progDir/"doc/editor/Contents.html").string());
+			else launchURL("https://blades.calref.net/doc/editor/Contents.html");
 			break;
 		case eMenu::HELP_START:
 			helpDlog = "help-editing";
