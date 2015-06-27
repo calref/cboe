@@ -1092,11 +1092,11 @@ void draw_items() {
 			if((where_draw.x >= 0) && (where_draw.x <= 8) &&
 				(where_draw.y >= 0) && (where_draw.y <= 8))  {
 				
-				// TODO: Item pics start at 1000 now instead of 150
-				if(pic_num >= 150) {
+				if(pic_num >= 1000) {
 					sf::Texture* source_gworld;
-					graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(pic_num - 150);
+					graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(pic_num - 1000);
 					dest_rect = calc_rect(where_draw.x,where_draw.y);
+					dest_rect.offset(8,8);
 					rect_draw_some_item(*source_gworld, source_rect, ter_draw_gworld, dest_rect, sf::BlendAlpha);
 				}
 				else {
