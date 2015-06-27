@@ -123,7 +123,7 @@ BEGIN
     POPUP "&Help"
     BEGIN
         MENUITEM "About Blades of Exile Editor", IDM_ABOUT
-        MENUITEM "Blades of Exile Editor Help", IDM_HELP
+        MENUITEM "Blades of Exile Editor Help\tF1", IDM_HELP
     END
 END
 
