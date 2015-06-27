@@ -207,10 +207,12 @@ void cTerrain::append(legacy::terrain_type_type& old){
 		case 12:
 			special = eTerSpec::CALL_SPECIAL;
 			flag2 = 1; // local special
+			flag3 = -1;
 			break;
 		case 13:
 			special = eTerSpec::CALL_SPECIAL;
 			flag2 = 0; // global special
+			flag3 = -1;
 			break;
 		case 14:
 			special = eTerSpec::IS_A_CONTAINER;
@@ -257,6 +259,7 @@ void cTerrain::append(legacy::terrain_type_type& old){
 		case 23:
 			special = eTerSpec::CALL_SPECIAL_WHEN_USED;
 			flag2 = 0; // global special
+			flag3 = -1;
 			break;
 	}
 	trans_to_what = old.trans_to_what;
