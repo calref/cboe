@@ -38,6 +38,7 @@ span.key { /* Just to make things easier to read */
   padding:0 2px;
   clear:none;
   font-family:monospace;
+  border-radius: 3px;
 }
 
 .figure {
@@ -55,4 +56,19 @@ span.key { /* Just to make things easier to read */
   left: 12em;
   right: 2em;
   top: 1em
+}
+
+dt {
+	font-weight: bold;
+	margin-top: 0px;
+}
+
+dd dl {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+dd dt {
+	font-weight: normal;
+	font-style: italic;
 }
