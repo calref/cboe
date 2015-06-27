@@ -106,6 +106,71 @@ Section "Scenario Editor" Section3
 
 SectionEnd
 
+Section /o "Documentation" Section4
+
+	; Set Section properties
+	SetOverwrite on
+
+	; Set Section Files and Shortcuts
+	SetOutPath "$INSTDIR\doc\game"
+	File "..\..\..\doc\game\Contents.html"
+	File "..\..\..\doc\game\About.html"
+	File "..\..\..\doc\game\Tips.html"
+	File "..\..\..\doc\game\Intro.html"
+	File "..\..\..\doc\game\Screen.html"
+	File "..\..\..\doc\game\Menus.html"
+	File "..\..\..\doc\game\Town.html"
+	File "..\..\..\doc\game\Outdoors.html"
+	File "..\..\..\doc\game\Combat.html"
+	File "..\..\..\doc\game\Misc.html"
+	File "..\..\..\doc\game\Mage.html"
+	File "..\..\..\doc\game\Priest.html"
+	File "..\..\..\doc\game\Hints.html"
+	File "..\..\..\doc\game\Valleydy.html"
+	File "..\..\..\doc\game\Editor.html"
+	File "..\..\..\doc\game\Credits.html"
+	File "..\..\..\doc\game\Licensing.html"
+	File "..\..\..\doc\game\nav.js"
+	File "..\..\..\doc\game\style.css"
+	SetOutPath "$INSTDIR\doc\editor"
+	File "..\..\..\doc\editor\Contents.html"
+	File "..\..\..\doc\editor\About.html"
+	File "..\..\..\doc\editor\Building.html"
+	File "..\..\..\doc\editor\Editing.html"
+	File "..\..\..\doc\editor\Outdoors.html"
+	File "..\..\..\doc\editor\Towns.html"
+	File "..\..\..\doc\editor\Terrain.html"
+	File "..\..\..\doc\editor\Monsters.html"
+	File "..\..\..\doc\editor\Items.html"
+	File "..\..\..\doc\editor\Advanced.html"
+	File "..\..\..\doc\editor\Specials.html"
+	File "..\..\..\doc\editor\Dialogue.html"
+	File "..\..\..\doc\editor\Graphics.html"
+	File "..\..\..\doc\editor\Testing.html"
+	File "..\..\..\doc\editor\nav.js"
+	File "..\..\..\doc\editor\style.css"
+	SetOutPath "$INSTDIR\doc\editor\appendix"
+	File "..\..\..\doc\editor\appendix\Specials.html"
+	File "..\..\..\doc\editor\appendix\Items.html"
+	File "..\..\..\doc\editor\appendix\Monsters.html"
+	File "..\..\..\doc\editor\appendix\Terrain.html"
+	File "..\..\..\doc\editor\appendix\Sounds.html"
+	File "..\..\..\doc\editor\appendix\Messages.html"
+	File "..\..\..\doc\editor\appendix\Magic.html"
+	File "..\..\..\doc\editor\appendix\Examples.html"
+	SetOutPath "$INSTDIR\doc\img"
+	File "..\..\..\doc\img\background.gif"
+	File "..\..\..\doc\img\boe.gif"
+	File "..\..\..\doc\img\editormainmenu.png"
+	File "..\..\..\doc\img\editorsymbols.gif"
+	File "..\..\..\doc\img\edoutbtns.png"
+	File "..\..\..\doc\img\edtownbtns.png"
+	File "..\..\..\doc\img\invenbtn.gif"
+	File "..\..\..\doc\img\pcbtn.gif"
+	File "..\..\..\doc\img\terscr.gif"
+
+SectionEnd
+
 Section -FinishSection
 
 	WriteRegStr HKLM "Software\${APPNAME}" "" "$INSTDIR"
@@ -135,6 +200,7 @@ SectionEnd
 	!insertmacro MUI_DESCRIPTION_TEXT ${Section1} "Install the Blades of Exile game and the four scenarios created by Jeff Vogel, the game's original creator."
 	!insertmacro MUI_DESCRIPTION_TEXT ${Section2} "Allows you to edit saved games. You can use this to cheat, or to build a stronger party to enter a harder scenario."
 	!insertmacro MUI_DESCRIPTION_TEXT ${Section3} "Allows you to create your own adventures!"
+	!insertmacro MUI_DESCRIPTION_TEXT ${Section4} "Install an offline copy of the Blades of Exile documentation."
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;Uninstall section
@@ -169,6 +235,7 @@ Section Uninstall
 	Delete "$INSTDIR\sfml-window-2.dll"
 	Delete "$INSTDIR\zlib1.dll"
 	Delete "$INSTDIR\openal32.dll"
+	RMDir /r "$INSTDIR\doc"
 	RMDir /r "$INSTDIR\data"
 	RMDir /r "$INSTDIR\Scenario Editor\graphics.exd"
 	RMDir /r "$INSTDIR\Scenario Editor\sounds.exa"
