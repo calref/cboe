@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-  <title>Blades of Exile Editor Documentation [14-A1] Special Encounter Node Types</title>
+  <title>Special Encounter Node Types - BoE Scenario Editor Guide</title>
   <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
 <body>
@@ -11,18 +11,28 @@
 </div>
 <div class="content">
 
-<h2>Appendix 1 - Special Encounter Node Types</h2>
+<h1>Appendix A - Special Encounter Node Types</h1>
 
-<p>These are the many types of special encounter nodes. They are divided into six
+<p>These are the many types of special encounter nodes. They are divided into seven
 different categories, and given with examples and descriptions of what the various editing
 fields do.</p>
 
-<h3>General Use Specials</h3>
+<ul>
+<li><a href='#gen'>General Use Specials</a></li>
+<li><a href='#once'>One-Shot Specials</a></li>
+<li><a href='#affect'>Affect PC/Party/Monster Specials</a></li>
+<li><a href='#cond'>If-Then Specials</a></li>
+<li><a href='#town'>Town Mode Specials</a></li>
+<li><a href='#rect'>Rectangle Specials</a></li>
+<li><a href='#outdoor'>Outdoor Mode Specials</a></li>
+</ul>
+
+<h2 id='gen'>General Use Specials</h2>
 <p>This is the class of special encounters which can be called at practically any time.
 Most of them can always be called. A few can't - these are noted in the encounter
 description.</p>
 
-<h4>General notes</h4>
+<h3>General notes</h3>
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>Some of these nodes change a Stuff Done flag. A
 Stuff Done flag is described by two values: Stuff done 1 and Stuff done 2. The legal range
@@ -522,7 +532,7 @@ with the saved game.
 <dt>Extra 1a:</dt><dd>The sign to swap with.</dd></dd>
 </dl>
 
-<h3>One-Shot Specials</h3>
+<h2 id='once'>One-Shot Specials</h2>
 
 <p>This is the class of specials you generally only want to occur one time, such as giving
 items.</p>
@@ -537,7 +547,7 @@ Special, and the specified Stuff Done flag in that node is 250, then the white d
 disappears. Thus, specials that don't do anything anymore aren't marked by a special
 dot.</p>
 
-<h4>General notes:</h4>
+<h3>General notes:</h3>
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>All of these nodes change a Stuff Done flag. A
 Stuff Done flag is described by two values: Stuff done 1 and Stuff done 2. The legal range
@@ -703,7 +713,7 @@ the trap.</dd>
 must disarm the trap to be able to take any of the items in the chest.</dd></dd>
 </dl>
 
-<h3>Affect PC/Party/Monster Specials</h3>
+<h2 id='affect'>Affect PC/Party/Monster Specials</h2>
 <p>All of these special encounters do something to one character, to the party, or to a
 monster. Who they affect depends on several factors.</p>
 <p>Special node 80 (Select a Target) asks the player to select one of their PCs. Once this
@@ -723,7 +733,7 @@ affect the whole party; they ignore the currently selected target.</p>
 <p>Note that when one of these specials does something bad (e.g. diseases or poisons) a
 character, all resistances (e.g. protection from poison rings) apply.</p>
 
-<h4>General notes:</h4>
+<h3>General notes:</h3>
 <dt>Stuff done 1, Stuff done 2:</dt><dd> None of these special node types use these
 fields.</dd>
 <dt>Mess 1, Mess 2:</dt><dd>All of these special node types (except Select a PC) can
@@ -1055,7 +1065,7 @@ add 1000 to it.</dd>
 PCs.</dd></dd>
 </dl>
 
-<h3>If-Then Specials</h3>
+<h2 id='cond'>If-Then Specials</h2>
 <p>These special node types don't do anything by themselves. Instead, they choose from
 several choices which node to call next. For example, if you want something to happen when
 the party has the Crown of Might and something different to happen when they don't, you
@@ -1409,14 +1419,14 @@ completed, 3 - failed), the special in Extra 1c is called.</dd>
 <dt>Jumpto:</dt><dd>Otherwise, this special is called.</dd></dd>
 </dl>
 
-<h3>Town Mode Specials</h3>
+<h2 id='town'>Town Mode Specials</h2>
 <p>These special nodes only have an effect in town mode (where most of the game takes
 place). If called outdoors, all of these nodes immediately jump to the Jump To
 special.</p>
 <p>For all of these special types, unless the description specifically says it ends the
 special encounter, once done, each node calls the Jump To node.</p>
 
-<h4>General notes:</h4>
+<h3>General notes:</h3>
 <dl>
 <dt>Mess 1, Mess 2:</dt><dd>All of these special node types can display one or two
 messages. If you don't want a message displayed, just leave these at -1.</dd></dd>
@@ -1825,7 +1835,7 @@ at the top of the space.</dd>
 placed.</dd></dd>
 </dl>
 
-<h4>Rectangle Specials:</h4>
+<h2 id='rect'>Rectangle Specials</h2>
 <p>These nodes all do things to a rectangle of terrain that you select. Most of them work
 both in town and outdoors, but the first few only work in town. For these nodes, the
 values have slightly different meanings than before:</p>
@@ -1911,7 +1921,7 @@ unlockable (or unlockable and bashable), it becomes unlocked (i.e. is changed to
 locked terrain type).</dd>
 </dl>
 
-<h3>Outdoor Mode Specials</h3>
+<h2 id='outdoor'>Outdoor Mode Specials</h2>
 <p>These special nodes only have an effect in outdoor mode. If called anywhere but
 outdoors, all of these nodes immediately jump to the Jump To special.</p>
 <p>For all of these special types, unless the description specifically says it ends the

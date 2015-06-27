@@ -25,7 +25,7 @@ press Select Monster, click on the monster, and put the personality number in th
 Personality area. Now that the personality is there, you just need to write the
 dialogue.</p>
 
-<h2>Writing Dialogue</h2>
+<h2 id='intro'>Writing Dialogue</h2>
 
 <p>Press Edit Town Dialogue to edit a town's 10 personalities. A character always responds
 to name, look, and job, and has a response for when the party asks about something weird.
@@ -77,11 +77,11 @@ press Go Back.</p>
 text can each be 256 characters long, there isn't room for more than 400 characters on the
 talking screen. Test your dialogue to make sure it is all fitting.</p>
 
-<h2>Special Node Types</h2>
+<h2 id='nodes'>Dialogue Node Types</h2>
 
 <p>The talking node types (and the meanings of the A, B, C, and D fields) are:</p>
 
-<h3>Basic Conversation Talking Nodes</h3>
+<h3 id='nodes-basic'>Basic Conversation Talking Nodes</h3>
 
 <p>These are the basic talking node types, the talking nodes you will use the most
 often.</p>
@@ -106,7 +106,7 @@ the quality of the inn (Range 0 ... 3). If the party can afford it, the characte
 Text 1, and the party is moved to (C,D). Otherwise, they are told Text 2 and conversation
 continues.</p>
 
-<h3>If-Then Talking Nodes</h3>
+<h3 id='nodes-cond'>If-Then Talking Nodes</h3>
 
 <p>What the character says when one of these talking nodes is called depends on
 circumstances, such as what town the party is in or whether a certain Stuff Done flag has
@@ -122,7 +122,7 @@ on passing time).</p>
 <p><b>Node Type 6 - Depends On Town</b> Response depends on what town the party is in. If
 the party is in town A, the response is Text 1. Otherwise, its Text 2.</p>
 
-<h3>Shopping Talking Nodes</h3>
+<h3 id='nodes-shop'>Shopping Talking Nodes</h3>
 
 <p>When one of these nodes is a response, conversation temporarily ends, and a different
 sort of screen appears.</p>
@@ -156,7 +156,7 @@ show. If the job board is angry at you for failing too many jobs, no job board w
 shown and the response will be Text 2. Text 1 is currently ignored, but reserved to be a
 name for the job board.</p>
 
-<h3>Item Button Talking Nodes</h3>
+<h3 id='nodes-button'>Item Button Talking Nodes</h3>
 
 <p>Each of these talking node types makes a button appear by certain items in the PC
 Inventory Screen. Pressing these buttons does something with the item, such as sell it or
@@ -177,7 +177,7 @@ by all of the character's identified, non-magical weapons. A is the sort of ench
 party can buy (0 - +1, 1 - +2, 2 - +3, 3 - shoot flame spells, 4 - flaming weapon, 5 - +5,
 6 - blessed)</p>
 
-<h3>Buying Talking Nodes</h3>
+<h3 id='nodes-buy'>Buying Talking Nodes</h3>
 
 <p>All of these talking nodes try to sell the party something (such as the location of a
 town) but are not regular shops, and don't bring up a shopping screen.</p>
@@ -231,7 +231,7 @@ and they will be able to see and enter town/dungeon number B. Otherwise, they ar
 Text 2. If the party already knows where this town is, no gold is taken.</p>
 <p>Note: If you set the cost to 0, the party is always told where the town is.</p>
 
-<h3>End Conversation Talking Nodes</h3>
+<h3 id='nodes-end'>End Conversation Talking Nodes</h3>
 
 <p>When one of these node types is the response to something the player asks, the
 conversation ends immediately. Only the Record and Bye buttons at the bottom will be
@@ -249,7 +249,7 @@ character has a Go Away Permanently Stuff Done flag chosen for it, that flag is 
 and the character will disappear permanently.</p>
 <p>Uses: A dying character who tells the party one last thing and expires.</p>
 
-<h3>Special Encounter Talking Nodes</h3>
+<h3 id='nodes-spec'>Special Encounter Talking Nodes</h3>
 
 <p>These highly important node types provide the way to have elaborate special encounters
 embedded in conversations. When a talking node of one of these types is the response, a
@@ -293,7 +293,7 @@ in the Scenario special node list instead of the Town special node list.</p>
 <p>Note: If a town special is called, only a town message will be shown. If a scenario
 node is called, a scenario message will be shown.</p>
 
-<h2>The Buy and Sell Buttons</h2>
+<h2 id='buy-sell'>The Buy and Sell Buttons</h2>
 
 <p>When the game is in talk mode, there are Buy and Sell buttons at the bottom of the
 talking area. The player will expect that, when the former is pressed, the game will go
@@ -308,7 +308,7 @@ this word.</p>
 "training"), and "ench" (for "enchant"), in that order. So, if your character responds to
 one of those, you don't need to also make them respond to "purc".</p>
 
-<h2>Defining Shops</h2>
+<h2 id='shop'>Defining Shops</h2>
 
 <p>To edit shop definitions, click Edit Shops on the main screen and select a shop from
 the list on the right, or click Create New to make a new one. A dialog comes up, showing
