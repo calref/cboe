@@ -576,11 +576,11 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 	scen_head.difficulty = temp_scenario.difficulty;
 	std::copy(temp_scenario.format.ver, temp_scenario.format.ver + 3, scen_head.ver);
 	std::copy(temp_scenario.format.prog_make_ver, temp_scenario.format.prog_make_ver + 3, scen_head.prog_make_ver);
+
+	fname = fname.substr(0,dot);
+	std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
 	
-	if(scen_head.file.substr(0,dot) == "valleydy" ||
-	   scen_head.file.substr(0,dot) == "stealth" ||
-	   scen_head.file.substr(0,dot) == "zakhazi"/* ||
-	   scen_strs.file.substr(0,dot) == "busywork" */)
+	if(fname == "valleydy" || fname == "stealth" || fname == "zakhazi"/* || fname == "busywork" */)
 		return false;
 	
 	scen_headers.push_back(scen_head);
