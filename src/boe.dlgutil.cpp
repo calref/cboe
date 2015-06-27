@@ -372,7 +372,10 @@ void handle_sale(cShopItem item, int i) {
 			else {
 				short s1, s2, s3;
 				run_special(eSpecCtx::SHOPPING, 0, base_item.item_level, {0,0}, &s1, &s2, &s3);
-				if(s1 <= 0) take_gold(cost,false);
+				if(s1 <= 0) {
+					take_gold(cost,false);
+					active_shop.takeOne(i);
+				}
 			}
 			break;
 		case eShopItemType::SKILL:
