@@ -31,7 +31,7 @@ called, they are all created in the same way, and Blades of Exile runs through t
 same way. Before this will make much sense, though, there needs to be some background on
 how exactly special encounters work.</p>
 
-<h2>Special Nodes</h2>
+<h2 id='intro'>Special Nodes</h2>
 
 <p>The basic ingredient of a special encounter is called a special node. Each town and
 outdoor section has a list of special nodes, and the scenario itself has a bunch of them
@@ -56,7 +56,7 @@ three long.</p>
 a set of global nodes. This multitude of special nodes will be the clay with which you can
 sculpt a wild, elaborate adventure.</p>
 
-<h2>Pointers (Advanced)</h2>
+<h2 id='pointer'>Pointers (Advanced)</h2>
 
 <p>Pointers are an advanced feature of the special node engine. A pointer is a negative
 number that references a Stuff Done Flag, allowing you to directly use the value of a
@@ -88,7 +88,7 @@ targeted space.</li>
 targeted space.</li>
 </ol>
 
-<h2>Simple Examples</h2>
+<h2 id='example'>Simple Examples</h2>
 
 <p>Confused yet? Understandable. Creating a special encounter is a lot like writing a
 short computer program. Writing computer programs is not incredibly difficult, but it does
@@ -148,7 +148,7 @@ see the text. After the encounter, notice that the white spot has disappeared. W
 put a One Shot special on a space with a white spot, Blades of Exile will make the spot
 disappear after the special has been visited.</p>
 
-<h3>Third Example:</h3>
+<h3>Third Example</h3>
 
 <p>Finally, we will create the earlier example of a chain of specials. This encounter will
 put up a text message, damage the party, and poison them as well.</p>
@@ -190,7 +190,7 @@ stairways to move the party from one level to another, or fill areas with fire b
 ice walls. Read on, to find out the basics of special nodes, and how to work with
 them.</p>
 
-<h2>The Editing Dialog</h2>
+<h2 id='edit'>The Editing Dialog</h2>
 
 <p>There are almost 200 different sorts of special nodes. These nodes, their effects, and
 the values you need to give to determine exactly what they do are listed in the Special
@@ -255,7 +255,7 @@ will be assigned a new node. Make that node the desired type (in this case, Dama
 Party), and set the Jump To field in the new node to 17. Voila! The chain is now 3 nodes
 long.</p>
 
-<h2>Other Ways to Edit Specials</h2>
+<h2 id='other'>Other Ways to Edit Specials</h2>
 
 <p>When you select Edit Special Nodes from the Scenario, Town, or Outdoor menus, you will
 see a list of all of the scenario, current town, or current outdoor section nodes. Click
@@ -266,7 +266,7 @@ remember the number of the first special node in the chain, and enter it into th
 appropriate place (such as Special To Call When Town Entered in the Advanced Town
 Properties window).</p>
 
-<h2>What Nodes are Called When</h2>
+<h2 id='calling'>What Nodes are Called When</h2>
 
 <p>If you put a special encounter on the ground in town, it is called when the party walks
 onto it. If you put a special encounter on a space the party can't walk onto, it is called
@@ -299,7 +299,7 @@ scenario (select Set Scenario Event Timers from the Scenario menu).</p>
 <p>Very importantly, you can have special nodes called during conversation. This is
 described in more detail in the chapter on dialogue.</p>
 
-<h2>Time Passing</h2>
+<h2 id='time'>Time Passing</h2>
 
 <p>When a party begins a scenario, the scenario will be set on day 1, and they won't have
 done anything or completed any quests. As time passes and the party does things, you might
