@@ -21,7 +21,7 @@ OutFile "Release\Install-OBoE.exe"
 
 ; These ensure that you don't have to "agree" to the license to continue
 !define MUI_LICENSEPAGE_TEXT_BOTTOM "Press the Install button to Continue"
-!define MUI_LICENSEPAGE_BUTTON "Install"
+!define MUI_LICENSEPAGE_BUTTON "&Install"
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "..\..\..\LICENSE.txt"
