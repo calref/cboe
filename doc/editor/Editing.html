@@ -21,9 +21,13 @@ aren't interested in making more complicated scenarios.</p>
 
 <p>You use the File menu to load new scenarios and save scenarios youve edited.</p>
 <ul>
-<li><em>Open...</em> - Select this option to load in a new scenario.</li>
-<li><em>Save</em> - This saves your changes.</li>
 <li><em>New Scenario...</em> - This makes a new scenario.</li>
+<li><em>Open...</em> - Select this option to load in a new scenario.</li>
+<li><em>Close</em> - Closes the currently-open scenario and returns to the start screen.</li>
+<li><em>Save</em> - This saves your changes.</li>
+<li><em>Save As...</em> - Like above, but also lets you choose where to save it.</li>
+<li><em>Revert to Saved</em> - Reloads your scenario from disk, reverting any changes
+you've made since you last saved. It will ask you for confirmation first.</li>
 <li><em>Quit</em> - This closes the program. If you've made any changes, you will be asked
 if you would like to save first.</li>
 </ul>
@@ -36,14 +40,13 @@ Mac can be run on a Windows machine, and vice versa.</p>
 <p>When you make a new scenario, two dialog boxes will come up, asking you for
 information about the scenario to make:</p>
 
-<p><b>First Dialog</b>: Enter the name of your scenario and the file name of the scenario
-(which must be at most eight characters long, all letters). To make the terrain for the
+<p><b>First Dialog</b>: Enter the name of your scenario and your name for credit purposes
+(not yet used). To make the terrain for the
 surface be grass and mountains (as opposed to cave), press the small button. When done,
 press OK, or Cancel to stop the process.</p>
 
 <p><b>Second Dialog</b>: Enter the width and height, in 48 x 48 sections, of the outdoors.
-This can't be changed later, so choose carefully (outdoor sections are small, so you may
-want to make it a little larger than you think you will need).</p>
+This can be changed later, but keep in mind that outdoor sections are small.</p>
 
 <p>In the second section, enter the number of towns the scenario will start with, of the
 three different sizes. The large towns will be placed first, followed by the medium towns
@@ -54,7 +57,9 @@ scenario to have Warrior's Grove, this will always be town 0.</p>
 <p>Finally, select Include Starter Town to have one of your Medium Towns (town 0) be
 Warrior's Grove, a pre-made town.</p>
 
-<p>Finally, you will be asked for a final go-ahead, and your scenario will be built.</p>
+<p>Finally, you will be asked for a final go-ahead, and your scenario will be built. Note
+that cancelling from the Save dialog does not cancel the creation of your scenario; it
+just skips saving it to disk,</p>
 
 <h2>The Scenario Menu</h2>
 
@@ -64,6 +69,14 @@ Warrior's Grove, a pre-made town.</p>
 <li><em>Create New Town</em> - This tacks a new town onto the end of your scenario's town
 list. If you currently have 8 towns, for example, the new town will be town number 8 (your
 9th town). Creating a new town is described later in this section.</li>
+<li><em>Resize Outdoors</em> - This resizes your outdoors, adding or deleting sections as
+needed. You can extend or shrink the outdoors in any of the four directions, but keep in
+mind that if you extend or shrink along the left or top, references to outdoor sections
+(for example, in special nodes) will now refer to a different section (or worse, a section
+that no longer exists). The dialog displays a list of the outdoor sections that would be
+deleted by your change. If possible, the outdoor section currently loaded is unchanged by
+this operation, but if that section is deleted, then section (0,0) will be loaded
+instead.</li>
 <li><em>Scenario Details</em> - This dialog sets the information the player will see when
 they're choosing your scenario in the Custom Scenario Window in the game. You can set your
 scenario's version (it starts at 1.0.0), a brief description (each bit of text can be at
@@ -85,15 +98,21 @@ location in that town.</li>
 of the scenario's special nodes are listed to the right. Click on a node to edit it.</li>
 <li><em>Edit Scenario Text (Advanced)</em> - This moves you to the main screen, where all
 of the scenario's text messages are listed to the right. Click on a message to edit it, or
-command click (right click in Windows) to clear it.</li>
+alt click to clear it.</li>
+<li><em>Edit Journal Entries (Advanced)</em> - This moves you to the main screen, where all
+of the scenario's journal entries are listed to the right. Click on a message to edit it, or
+alt click to clear it.</li>
 <li><em>Import Town (Advanced)</em> - You can import a town from another scenario (or the
 same scenario). The town pulled in will be copied over the current town in memory. After
-selecting this option, you will be asked the number of the town to import, and then to
-select the scenario to import it from (you can select the scenario you are working on).
-Finally, you need to put in the password of the scenario you are opening. The scenario
-will be loaded in, and the selected town will be copied over your current town. The town
-selected must be of the same size (small, medium, large) as the current town.</li>
-<li><em>Edit Saved Item Rectangle (Advanced)</em> - You can set three rectangles in towns
+selecting this option, you will be asked to select a scenario to import it from (you can
+select the scenario you are working on, but keep in mind that it'll be loaded from disk,
+so some changes may not have been applied), and then to select the number of the town to
+import. The scenario will be loaded in, and the selected town will be copied over your
+current town. The town selected doesn't need to be of the same size (small, medium, large)
+as the current town.</li>
+<li><em>Import Outdoor Sector (Advanced)</em> - This works pretty much the same as Import
+Town (above), but replaces the current outdoor section instead.</li>
+<li><em>Edit Saved Item Rectangles (Advanced)</em> - You can set three rectangles in towns
 where the party's items can be stored (i.e. they won't disappear when they leave town).
 Enter the number of the town, and the top, left, bottom, and right of the rectangle where
 the items will be remembered. To have no rectangle, leave the town number at -1. The three
@@ -141,7 +160,7 @@ types, items, and monsters will be dumped into a text file titled Scenario data.
 <li><em>Do Full Text Dump (Advanced)</em> - It is also often very convenient to have a
 complete printout of all the text in a scenario, especially for proof-reading. Select this,
 and all of the scenario's special messages will be dumped into a file titled Scenario Text.
-This will take a while - be patient.</li>
+This may take a while - be patient.</li>
 </ul>
 
 <h3>Making a New Town</h3>
@@ -156,7 +175,7 @@ can create a new town.</p>
 
 <h2>The Main Menu</h2>
 <div class="figure">
-<img src="../img/editormainmenu.gif" alt="The Main Menu"></p>
+<img src="../img/editormainmenu.png" alt="The Main Menu"></p>
 <p>Figure 1: The Main Menu</p>
 </div>
 <p>The main menu is the first screen that comes up when you load or create a new scenario,
@@ -179,6 +198,12 @@ Scenario menu.</li>
 <li><em>Edit Special Items (Advanced) -</em> When pressed, all of the special items appear
 in the right hand side of the screen. Click on a special item to edit it. For more
 information on special items, see below.</li>
+<li><em>Edit Quests (Advanced) -</em> When pressed, all of the scenario's quests appear in
+the right hand side of the screen. Click on a quest to edit it. For more information on
+quests, see below.</li>
+<li><em>Edit Shops (Advanced) -</em> When pressed, all of the scenario's shops appear in the right
+hand side of the screen. Click on a shop to edit it. For more information on shops, see
+the chapter on dialogue.</li>
 <li><em>Load New Section -</em> At any given time, the scenario editor will only have one
 outdoor section and one town active. To load another outdoor section for editing, press
 this button.<br>
@@ -194,20 +219,29 @@ town.</li>
 <li><em>Edit Town Dialogue (Advanced)</em> - When pressed, all of the dialogue nodes will
 appear to the right. For more information on how to edit dialogue, see the chapter in the
 next section on dialogue.</li>
-
-<li><em>Special Items (Advanced):</em> - Each scenario can have up to 50 special items.
-These are given to the party during special encounters, and other special encounters can
-check for their presence. A key to a locked door might be a special item, and when the
-door is reached, the party will only be let through if they have that item. To edit a
-special item, click on Edit Special Items on the main screen, and click on one of the 50
-special items to the right. A dialog box will come up, in which you can edit the items
-information. The first two text areas are for the items name and description (the
-description appears when the payer uses the Special Item screen). If you want the party to
-start with the item, click the first button. If you want them to be able to use it, click
-the second button. When a special item is used, the game will call a given Scenario
-special node. To create or edit this special node, press the Create/Edit button. Special
-encounters are described in great depth in the next section.</li>
 </ul>
+
+<h2>Special Items (Advanced)</h2>
+
+<p>Special items are given to the party during special encounters, and other special encounters can check for their presence. A key to a locked door might be a special item, and when the door is reached, the party will only be let through if they have that item.
+
+<p>To edit a special item, click on Edit Special Items on the main screen, and click on one of the special items to the right, or click Create New to make a new one. A dialog box will come up, in which you can edit the item's information.
+
+<p>The first two text areas are for the item's name and description (the description appears when the player uses the Special Item screen). If you want the party to start with the item, click the first button. If you want them to be able to use it, click the second button. When a special item is used, the game will call a given Scenario special node. To create or edit this special node, press the Create/Edit button. Special encounters are described in great depth in the next section.</li>
+
+<h2>Quests (Advanced)</h2>
+
+<p>Quests give a way to remind the party what they need to do next. They can also be used to create a job bank, similar to Exile III.
+
+<p>To edit a quest, click on Edit Quests on the main screen, and click on one of the quests to the right, or click Create New to make a new one. A dialog box will come up, in which you can edit the quest's information.
+
+<p>The first two text boxes are the most important, giving the quest's name and description (the description appears when the player uses the Quests/Jobs screen). If you want the party to start with the quest active, click the second button on the right.
+
+<p>Quests can be given a deadline. If the quest is not completed before the deadline, it will be considered failed, and the reward will not be granted even if it is completed anyway. If you want the quest to have a deadline, enter the day in the Must Be completed By field. If you click the first button to the right, the deadline instead gives the number of days they have to complete the quest. You can also specify an event - if the event occurs before the deadline, the player will be able to complete the quest even after the deadline passes.
+
+<p>You can specify a default reward for the quest, in XP and gold. This will automatically be given to the player when the quest is marked as completed. If you want some other reward (such as an item), you'll need to script it with special nodes.
+
+<p>If the quest is a job that should be offered at a job bank, click the third button on the right. Two more fields will appear. Each contains the number of a job bank in which this quest may appear. Enter a number in at least one of the fields. Then, when creating the job bank, enter the same number in the Which Job Bank field.
 
 </div>
 </body>

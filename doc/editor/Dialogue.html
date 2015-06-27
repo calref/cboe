@@ -52,10 +52,12 @@ given for one key word (as opposed to two) you can leave one of the fields set t
 xxxx.</p>
 <p>If one character has redundant talking nodes (i.e. two nodes which respond to asking
 about fish) the earlier one is used.</p>
+<!--
 <p>If the talking node is for a store of some sort (buying or selling) and the player
 presses the Buy or Sell button, this node will be used as a response. Again, if one
 character sells two sorts of things, the earlier one will be used should the player hit
 the Buy button.</p>
+-->
 <p>Example: You set the first field to swor and the second to demo. Then this talking node
 will be used as a response when the player asks this character about sword, demon,
 demonstration, Sworgenov.</p>
@@ -122,14 +124,15 @@ the party is in town A, the response is Text 1. Otherwise, its Text 2.</p>
 
 <h3>Shopping Talking Nodes</h3>
 
-<p>When one of these nodes is a response, conversation temporarily ends, and a different sort of screen appears.</p>
+<p>When one of these nodes is a response, conversation temporarily ends, and a different
+sort of screen appears.</p>
 
 <p><b>Node Type 7 - Shop</b> A shopping screen appears. When the party is done shopping
 (and the player hits the done button), talking resumes. A is the cost adjustment (Range 0
 ... 6, see below). B is the number of the shop (shop 0 is usually the standard healing
 shop; but if the scenario was created with an older version of the BoE Scenario Editor,
 0-4 are the magic random item shops and 5 is the standard healing shop). C and D are
-ignored Text 1 is the name of the shop.</p>
+ignored and Text 1 is the name of the shop.</p>
 <p>The meaning of the cost adjustments are:</p>
 <ol start='0'>
 <li>Extremely Cheap</li>
@@ -170,7 +173,7 @@ sell all their identified items.</p>
 identify all their items. A is the cost to identify.</p>
 <p><b>Node Type 17 - Enchant Weapons</b> Enables the part to spend money to have their
 weapons augmented. The character responds Text 1, and Enchant buttons (with costs) appear
-by all of the characters identified, non-magical weapons. A is the sort of enchantment the
+by all of the character's identified, non-magical weapons. A is the sort of enchantment the
 party can buy (0 - +1, 1 - +2, 2 - +3, 3 - shoot flame spells, 4 - flaming weapon, 5 - +5,
 6 - blessed)</p>
 
@@ -191,7 +194,8 @@ is set to D. Otherwise, the text in Text 2 is the response.</p>
 there's a treasure hidden in a tree. Old Man McGee tells them that it's there when asked
 about tree, but he charges 50 gold for the knowledge. When Old Man McGee is asked about
 tree, use a talking node of this type as a response, with A set to 50, B set to 100, C set
-to 2, and D set to 1. Write in Text 2 Old Man McGee's acerbic response if the party doesn't
+to 2, and D set to 1. Write in Text 2 Old Man McGee's acerbic response if the party
+doesn't
 have 50 gold.</p>
 <p><b>Node Type 20 - Ship Shop</b> Sells the party a boat. A is the cost of the boat. B is
 the number of the first boat sold in the shop (from the scenario's boat list). C is the
@@ -203,7 +207,7 @@ character's response is "There are no boats left".</p>
 <p>Example: If A is 100, B is 5,C is 1, and the party has 100 gold, if the party doesn't
 already own boat 5, it becomes their property and they're out 100 gold.</p>
 <p><b>Node Type 21 - Horse Shop </b> Sells the party a horse. A is the cost of the horse.
-B is the number of the first horse sold in the shop (from the scenarios horse list). C is
+B is the number of the first horse sold in the shop (from the scenario's horse list). C is
 the total number of horses sold in the shop, taken from the list of horses in the game,
 starting with B. If the party buys a horse, one horse in the given range becomes their
 property. Text 1 is the response if the party buys a horse. Text 2 is the response if the
@@ -257,7 +261,9 @@ is".). What the character says in response to the player's question is determine
 Mess 1 and Mess 2 fields in the special nodes called. How this works is described
 below.</p>
 
-<p><b>Node Type 29 - Call Town Special</b> Calls Town Special Node A, and does what it says. This special encounter can do anything but damage the party or other monsters or move the party.</p>
+<p><b>Node Type 29 - Call Town Special</b> Calls Town Special Node A, and does what it
+says. This special encounter can do anything but damage the party or other monsters or
+move the party.</p>
 <p>Displaying messages in special encounters works differently in talking special
 encounters. If the special node(s) called bring up a dialog box, it is displayed normally
 (over the talking screen). However, if one or two messages are selected in one of the
@@ -266,7 +272,7 @@ encounter wasn't called while talking). Instead, the one or two messages selecte
 special node will become the character's response while talking. If no messages are ever
 selected in the special nodes, the character says the text in Text 1 and Text 2.</p>
 <p>There is one serious limitation to using talking nodes of this type. The special
-encounter will only work correctly if the personality is one of the current towns 10
+encounter will only work correctly if the personality is one of the current town's 10
 personalities. For example, the 10 personalities for town 5 are 50-59. A talking special
 encounter for personality 55 will only work correctly when the party is in town 5. If you
 placed personality 55 in town 6 and the party triggered a special encounter while talking
@@ -297,14 +303,64 @@ the character will offer to buy items (if he or she is so inclined).</p>
 Thus, you should have every shopkeeper respond to this word. Similarly, pressing the Sell
 button is equivalent to asking about sell. Any character who buys things should respond to
 this word.</p>
+<p>However, if the player presses the Buy button and the character doesn't respond to
+"purc", the engine will also try "sale", "heal", "iden" (for "identify"), "trai" (for
+"training"), and "ench" (for "enchant"), in that order. So, if your character responds to
+one of those, you don't need to also make them respond to "purc".</p>
 
-<h2>Item Order in Shops</h2>
+<h2>Defining Shops</h2>
 
-<p>Items can only be sold in shops in the order they appear in your scenario's item list.
-A shop can only sell, say, items 117-125 from the item list, not items 117, 121, and 131.
-If you want to customize the items in a shop (so that it only sells strong poison, steel
-chain mail, and rings of protection), edit the items in the item list so that those items
-appear next to each other.</p>
+<p>To edit shop definitions, click Edit Shops on the main screen and select a shop from
+the list on the right, or click Create New to make a new one. A dialog comes up, showing
+the contents of the shop and giving a number of options.</p>
+
+<p>The top half of the dialog lets you set various properties of the shop:</p>
+
+<ul>
+<li><b>Shop name:</b> Enter a name to use for the shop, so that you can identify it in the
+scenario editor. When the shop is used in-game, the dialogue or special node will override
+this name, so it won't be seen - thus, it could include information for you to distinguish
+it from other similar shops.</li>
+<li><b>Shop type:</b> The first two options determine whether things can be purchase while
+a dead character is active. If the shop contains anything other than alchemy or healing,
+you probably shouldn't use the second option (and don't add Resurrect to the shop unless
+you do use the second option). The third option allows the shop to contain
+randomly-generated items. Use this type if you have any shop items that involve random
+chance. Note that this also prevents dead characters from buying.</li>
+<li><b>Message:</b> This lets you set the message shown at the top of the shop. Pick the
+one that best matches the shop's contents.</li>
+<li><b>Standard random items shop:</b> The original Blades of Exile included five random
+item shops which could contain almost anything, but they no longer exist by default. If
+you want to create one, simply click this button and click OK. That's it - you don't have
+to do any extra work. Of course, you could instead make your own random items shop that
+uses different rules.</li>
+<li><b>Shopping Face:</b> Select the dialog face that will appear while shopping
+here.</li>
+</ul>
+
+<p>The bottom half of the dialog lets you manage the contents of the shop. Use the arrow
+buttons to navigate between pages of buttons. A shop cannot have more than 30 items, so
+there are six pages. If there are items already there, you can edit or delete them with
+the corresponding buttons. You can add more items using the buttons along the bottom.</p>
+
+<p>Most types of items will simply let you select from a list. Regular items also let you
+specify a quantity, and optional items offer a quantity and a percentage chance. The most
+complicated option available is Special. When you click that to add a new item (or when
+you edit an existing special purchase), a dialog comes up presenting several options:</p>
+
+<ul>
+<li><b>Name:</b> The name of the item that will appear in the shop.</li>
+<li><b>Special Node:</b> When this item is purchased, the special node will be
+called.</li>
+<li><b>Quantity:</b> The maximum number of times this item can be purchased. If left at 0,
+there is no limit.</li>
+<li><b>Cost:</b> The amount of gold taken. Whether the gold is taken (and the quantity
+reduced) depends on the special node - if it calls a Prevent Action node, then neither
+will occur.</li>
+<li><b>Icon:</b> The item icon to display for this purchase.</li>
+<li><b>Description:</b> Some text that will be displayed if the player clicks on the Info
+button for this purchase.</li>
+</ul>
 
 </div>
 </body>
