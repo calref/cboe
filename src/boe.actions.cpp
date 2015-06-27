@@ -1797,9 +1797,15 @@ bool handle_keystroke(sf::Event& event){
 				pass_event.mouseButton.x = pass_point.x + ul.x;
 				pass_event.mouseButton.y = pass_point.y + ul.y;
 				are_done = handle_action(pass_event);
-			}
-			if(overall_mode == MODE_SPELL_TARGET)
+			} else if(overall_mode == MODE_SPELL_TARGET)
 				spell_cast_hit_return();
+			else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
+				pass_point.x = terrain_click[5].x + ul.x;
+				pass_point.y = terrain_click[5].y + ul.y;
+				pass_event.mouseButton.x = pass_point.x;
+				pass_event.mouseButton.y = pass_point.y;
+				are_done = handle_action(pass_event);
+			}
 			break;
 			
 			
