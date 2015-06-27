@@ -1896,6 +1896,8 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 		for(auto& file : pack) {
 			std::string fname = file.filename;
 			int dot = fname.find_last_of('.');
+			if(dot == std::string::npos)
+				continue; // No file extension? Can't be important.
 			if(fname.substr(0,23) == "scenario/graphics/sheet") {
 				if(fname.substr(dot,4) != ".png") continue;
 				if(!std::all_of(fname.begin() + 23, fname.begin() + dot, isdigit)) continue;
