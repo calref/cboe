@@ -46,9 +46,11 @@ class cEnumLookup {
 public:
 	cEnumLookup(const std::initializer_list<const char*> strings) : root(0) {
 		size_t i = 0;
-		for(std::string str : strings)
+		for(std::string str : strings) {
 			if(!str.empty())
-				insert(str, i++);
+				insert(str, i);
+			i++;
+		}
 	}
 	void insert(const std::string& str, unsigned long val) {
 		size_t i = 0;
