@@ -1310,6 +1310,8 @@ bool handle_action(sf::Event event) {
 		for(int i = 0; i < 6; i++)
 			for(int j = 0; j < 5; j++)
 				if(pc_area_button_active[i][j] && point_in_area.in(pc_buttons[i][j])) {
+					if((j == 1 || j == 2) && !univ.party[i].is_alive())
+						break;
 					pc_buttons[i][j].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
 					arrow_button_click(pc_buttons[i][j]);
 					pc_buttons[i][j].offset(-PC_WIN_UL_X,-PC_WIN_UL_Y);
