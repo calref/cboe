@@ -22,7 +22,7 @@ enum {
 
 extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
-extern bool scen_items_loaded;
+extern bool scen_items_loaded, party_in_scen;
 extern fs::path file_in_mem;
 LONG_PTR mainProc;
 HMENU menuHandle = NULL;
@@ -79,10 +79,10 @@ void init_menubar() {
 		eMenu::EDIT_GOLD, eMenu::EDIT_FOOD, eMenu::EDIT_ALCHEMY, eMenu::NONE,
 		eMenu::HEAL_DAMAGE, eMenu::RESTORE_MANA, eMenu::RAISE_DEAD, eMenu::CURE_CONDITIONS, eMenu::NONE,
 		eMenu::EDIT_MAGE, eMenu::EDIT_PRIEST, eMenu::EDIT_TRAITS, eMenu::EDIT_SKILLS, eMenu::EDIT_XP, eMenu::NONE,
-		eMenu::REUNITE_PARTY, eMenu::OWN_VEHICLES,
+		eMenu::REUNITE_PARTY,
 	};
 	static const eMenu scen_choices[] = {
-		eMenu::EDIT_DAY, eMenu::NONE, eMenu::LEAVE_TOWN, eMenu::RESET_TOWNS, eMenu::ADD_OUT_MAPS, eMenu::ADD_TOWN_MAPS,
+		eMenu::EDIT_DAY, eMenu::NONE, eMenu::LEAVE_TOWN, eMenu::RESET_TOWNS, eMenu::ADD_OUT_MAPS, eMenu::ADD_TOWN_MAPS, eMenu::OWN_VEHICLES,
 		eMenu::NONE, eMenu::LEAVE_SCENARIO, eMenu::SET_SDF,
 	};
 	static const eMenu help_choices[] = {
@@ -142,7 +142,7 @@ void menu_activate() {
 			EnableMenuItem(file_menu, i, MF_BYPOSITION | MF_GRAYED);
 	} else {
 		EnableMenuItem(menuHandle, PARTY_MENU_POS, MF_BYPOSITION | MF_ENABLED);
-		EnableMenuItem(menuHandle, SCEN_MENU_POS, MF_BYPOSITION | MF_ENABLED);
+		EnableMenuItem(menuHandle, SCEN_MENU_POS, MF_BYPOSITION | (party_in_scen ? MF_ENABLED : MF_GRAYED));
 		for(int i = 1; i < GetMenuItemCount(file_menu) - 1; i++)
 			EnableMenuItem(file_menu, i, MF_BYPOSITION | MF_ENABLED);
 	}

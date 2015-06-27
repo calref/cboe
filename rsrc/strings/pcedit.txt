@@ -22,6 +22,5 @@ The Tower of Magi timer is not currently running, so this will have no effect.
 You now have a bit more time before the Tower of Magi timer runs out. This time can be used to accumulate potions, train, and do other things to help you survive. Note that the Tower of Magi messages will eventually repeat themselves.
 If your characters became addicted to Skribbane herb, the addiction is now cured.
 You are now able to see all dungeons and towns, whether or not someone has told you about them.
-You can only use this feature if the current party is in a scenario.
 
 

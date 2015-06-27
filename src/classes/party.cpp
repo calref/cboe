@@ -115,20 +115,22 @@ void cParty::append(legacy::party_record_type& old){
 //		journal.push_back(j);
 //		spec_items[i] = old.spec_items[i];
 //	}
-	special_notes.reserve(140);
-	for(i = 0; i < 140; i++){
-		if(old.special_notes_str[i][0] <= 0) continue;
-		cEncNote n;
-		n.append(old.special_notes_str[i], univ.scenario);
-		special_notes.push_back(n);
-	}
-	talk_save.reserve(120);
-	for(i = 0; i < 120; i++){
-		cConvers t;
-		t.append(old.talk_save[i], univ.scenario);
-		talk_save.push_back(t);
-		if(old.help_received[i])
-			help_received.insert(i);
+	if(!scen_name.empty()) {
+		special_notes.reserve(140);
+		for(i = 0; i < 140; i++){
+			if(old.special_notes_str[i][0] <= 0) continue;
+			cEncNote n;
+			n.append(old.special_notes_str[i], univ.scenario);
+			special_notes.push_back(n);
+		}
+		talk_save.reserve(120);
+		for(i = 0; i < 120; i++){
+			cConvers t;
+			t.append(old.talk_save[i], univ.scenario);
+			talk_save.push_back(t);
+			if(old.help_received[i])
+				help_received.insert(i);
+		}
 	}
 	direction = eDirection(old.direction);
 	at_which_save_slot = old.at_which_save_slot;
