@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <boost/filesystem/operations.hpp>
 #include "pc.global.hpp"
 #include "universe.hpp"
 #include "pc.graphics.hpp"
@@ -308,7 +309,9 @@ void handle_menu_choice(eMenu item_hit) {
 			edit_stuff_done();
 			break;
 		case eMenu::HELP_TOC:
-			launchURL("https://blades.calref.net/doc/game/Editor.html");
+			if(fs::is_directory(progDir/"doc"))
+				launchURL("file://" + (progDir/"doc/game/Editor.html").string());
+			else launchURL("https://blades.calref.net/doc/game/Editor.html");
 			break;
 	}
 }
