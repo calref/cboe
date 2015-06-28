@@ -1979,7 +1979,7 @@ bool edit_spec_item(short which_item) {
 	cSpecItem item = scenario.special_items[which_item];
 	
 	cDialog item_dlg("edit-special-item");
-	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 255, "Scenario special node called", "-1 for no special"));
+	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, scenario.scen_specials.size(), "Scenario special node called", "-1 for no special"));
 	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"okay", "cancel", "clear", "edit-spec"});
 	
 	if(scenario.special_items.size() == 1) {
@@ -3159,7 +3159,7 @@ void edit_scenario_events() {
 	for(int i = 0; i < scenario.scenario_timers.size() && i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		evt_dlg["time" + id].attachFocusHandler(check_scenario_timer_time);
-		evt_dlg["node" + id].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 255, "The scenario special node", "-1 for no special"));
+		evt_dlg["node" + id].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, scenario.scen_specials.size(), "The scenario special node", "-1 for no special"));
 		evt_dlg["edit" + id].attachClickHandler(edit_scenario_events_event_filter);
 		evt_dlg["time" + id].setTextToNum(scenario.scenario_timers[i].time);
 		evt_dlg["node" + id].setTextToNum(scenario.scenario_timers[i].node);
