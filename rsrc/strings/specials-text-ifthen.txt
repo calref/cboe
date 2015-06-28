@@ -310,7 +310,7 @@ Unused
 Unused
 Unused
 Unused
-Unused
+1 - include dead characters, otherwise no
 If party size sufficient, call this special ...
 Unused
 0 - Exact size, 1 - Minimum size
