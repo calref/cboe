@@ -497,9 +497,8 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					} else {
 						if(j == size_before)
 							town->talking.talk_nodes.emplace_back();
-						// TODO: Mustn't do this if the Create New button was clicked to make more nodes! Ditto with special nodes.
-						if(edit_talk_node(j) == town->talking.talk_nodes.size() - 1)
-							town->talking.talk_nodes.pop_back();
+						if((j = edit_talk_node(j)) >= 0 && town->talking.talk_nodes[j].personality == -1)
+							town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + j);
 					}
 					start_dialogue_editing(size_before == town->talking.talk_nodes.size());
 					if(size_before > town->talking.talk_nodes.size())
