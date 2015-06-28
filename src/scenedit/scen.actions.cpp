@@ -2500,7 +2500,7 @@ void start_terrain_editing() {
 	set_up_terrain_buttons(true);
 	place_location();
 	
-	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"",true);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete/clear",true);
 }
 
 void start_monster_editing(bool just_redo_text) {
@@ -2524,7 +2524,7 @@ void start_monster_editing(bool just_redo_text) {
 		title = std::to_string(i) + " - " + title;
 		set_rb(i - 1,RB_MONST, i, title);
 	}
-	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"Alt-click to delete",true);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
 	redraw_screen();
 }
 
@@ -2554,7 +2554,7 @@ void start_item_editing(bool just_redo_text) {
 		title = std::to_string(i) + " - " + title;
 		set_rb(i,RB_ITEM, i, title);
 	}
-	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"Alt-click to delete",true);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
 	redraw_screen();
 }
 
@@ -2581,7 +2581,7 @@ void start_special_item_editing(bool just_redo_text) {
 		title = std::to_string(i) + " - " + title;
 		set_rb(i,RB_SPEC_ITEM, i, title);
 	}
-	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"Alt-click to delete",true);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
 	redraw_screen();
 }
 
@@ -2785,7 +2785,7 @@ void start_dialogue_editing(short restoring) {
 		set_rb(10 + i,RB_DIALOGUE, i, strb.str());
 	}
 	set_rb(10 + n_nodes, RB_DIALOGUE, n_nodes, "Create New Node");
-	set_lb(NLS - 3,LB_CLEAR,LB_NO_ACTION,"Alt-click node to delete",true);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click node to delete",true);
 	redraw_screen();
 }
 
