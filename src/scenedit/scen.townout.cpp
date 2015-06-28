@@ -152,7 +152,7 @@ static bool get_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst) {
 	monst.time_code = me["extra2"].getTextAsNum();
   	if(cre(monst.time_code,0,10,"Event code must be 0 (for no event) or from 1 to 10.","",&me)) return false;
 	monst.special_on_kill = me["death"].getTextAsNum();
-  	if(cre(monst.special_on_kill,-1,99,"Town special node number must be from 0 to 99 (or -1 for no special).","",&me)) return false;
+  	if(cre(monst.special_on_kill,-1,town->specials.size(),"Town special node number must be from 0 to 99 (or -1 for no special).","",&me)) return false;
 	monst.spec1 = me["sdfx"].getTextAsNum();
   	if(cre(monst.spec1,-1,299,"First part of special flag must be -1 (if this is to be ignored) or from 0 to 299.","",&me)) return false;
 	monst.spec2 = me["sdfy"].getTextAsNum();
@@ -707,7 +707,7 @@ void edit_town_events() {
 	cDialog evt_dlg("edit-town-events");
 	evt_dlg["okay"].attachClickHandler(save_town_events);
 	evt_dlg.attachClickHandlers(edit_town_events_event_filter, {"edit1", "edit2", "edit3", "edit4", "edit5", "edit6", "edit7", "edit8"});
-	evt_dlg.attachFocusHandlers(std::bind(check_range_msg, _1, _2, _3, -1, 99, "The town special node", "-1 for no special"), {"spec1", "spec2", "spec3", "spec4", "spec5", "spec6", "spec7", "spec8"});
+	evt_dlg.attachFocusHandlers(std::bind(check_range_msg, _1, _2, _3, -1, town->specials.size(), "The town special node", "-1 for no special"), {"spec1", "spec2", "spec3", "spec4", "spec5", "spec6", "spec7", "spec8"});
 	
 	put_town_events_in_dlog(evt_dlg);
 	
@@ -773,7 +773,7 @@ void edit_advanced_town() {
 	town_dlg["okay"].attachClickHandler(save_advanced_town);
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	auto loc_check = std::bind(check_range_msg, _1, _2, _3, -1, 47, "The town exit coordinates", "-1 if you want them ignored");
-	auto spec_check = std::bind(check_range_msg, _1, _2, _3, -1, 99, _4, "-1 for no special");
+	auto spec_check = std::bind(check_range_msg, _1, _2, _3, -1, town->specials.size(), _4, "-1 for no special");
 	town_dlg.attachFocusHandlers(std::bind(spec_check, _1, _2, _3, "The town exit special"), {"onexit1", "onexit2", "onexit3", "onexit4"});
 	town_dlg.attachFocusHandlers(std::bind(spec_check, _1, _2, _3, "The town entry special"), {"onenter", "onenterdead"});
 	town_dlg["onhostile"].attachFocusHandler(std::bind(spec_check, _1, _2, _3, "The town hostile special"));
