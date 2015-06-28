@@ -370,6 +370,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if(get_ran(1,1,100) <= ter_flag2) {
 						switch((eStatus)ter_flag3){
+								// TODO: Should we disallow some statuses when outdoors?
 							case eStatus::POISONED_WEAPON: // TODO: Do something here
 								if(get_ran(1,1,100) > 60) add_string_to_buf("It's eerie here...");
 								break;

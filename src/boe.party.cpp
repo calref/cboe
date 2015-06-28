@@ -2467,6 +2467,7 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 	}
 	
 	if((level = which_pc.get_prot_level(eItemAbil::DAMAGE_PROTECTION,int(damage_type))) > 0) {
+		// TODO: Why does this not depend on the ability strength if it's not weapon damage?
 		if(damage_type == eDamageType::WEAPON) how_much -= level;
 		else how_much = how_much / 2;
 	}

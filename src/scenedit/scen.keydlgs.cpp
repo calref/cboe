@@ -165,6 +165,7 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 		case PIC_TALK: total_pics = 84; break;
 		case PIC_SCEN: total_pics = 30; break;
 		case PIC_ITEM: case PIC_TINY_ITEM: total_pics = 135; break;
+		// TODO: Include small monster graphics in the PC pic picker
 		case PIC_PC: total_pics = 36; break;
 		case PIC_FIELD: all_pics = field_pics; break;
 		case PIC_BOOM: all_pics = boom_pics; break;
