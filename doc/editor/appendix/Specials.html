@@ -451,16 +451,25 @@ lost.</dd>
 
 <dt>Type 38: Append String to Buffer</dt><dd>Appends a literal string to the string buffer.
 <dl>
+<dt>Pict:</dt><dd>If set to 1, a space will be inserted between the current contents of
+the buffer and the new contents. This is necessary because trailing and leading spaces
+are stripped from strings.</dd>
 <dt>Extra 1a:</dt><dd>The number of the string to append.</dd></dd>
 
 <dt>Type 39: Append Number to Buffer</dt><dd>Appends a literal number to the string buffer.
 <dl>
+<dt>Pict:</dt><dd>If set to 1, a space will be inserted between the current contents of
+the buffer and the new contents. This is necessary because trailing and leading spaces
+are stripped from strings.</dd>
 <dt>Extra 1a:</dt><dd>The number to append. You might want to reference a pointer
 here.</dd></dd>
 
 <dt>Type 40: Append Monster/PC Name to Buffer</dt><dd>Appends the name of a monster or PC
 to the string buffer.
 <dl>
+<dt>Pict:</dt><dd>If set to 1, a space will be inserted between the current contents of
+the buffer and the new contents. This is necessary because trailing and leading spaces
+are stripped from strings.</dd>
 <dt>Extra 1a:</dt><dd>The number of the monster type whose name you want to append. If
 left at 0, the game will instead use the currently selected target from the Select Target
 node, which can be either a monster or a PC.</dd></dd>
@@ -468,6 +477,9 @@ node, which can be either a monster or a PC.</dd></dd>
 <dt>Type 41: Append Item Name to Buffer</dt><dd>Appends the name of an item type to the
 string buffer.
 <dl>
+<dt>Pict:</dt><dd>If set to 1, a space will be inserted between the current contents of
+the buffer and the new contents. This is necessary because trailing and leading spaces
+are stripped from strings.</dd>
 <dt>Extra 1a:</dt><dd>The number of the item type whose name you want to append.</dd>
 <dt>Extra 1b:</dt><dd>If 0, append the unidentified name. If 1, append the full identified
 name. If 2, don't append the name; instead append the info string that would be shown for
@@ -476,6 +488,9 @@ the item in a shop or get items dialog.</dd></dd>
 <dt>Type 42: Append Terrain Name to Buffer</dt><dd>Appends the name of a terrain type to
 the string buffer.
 <dl>
+<dt>Pict:</dt><dd>If set to 1, a space will be inserted between the current contents of
+the buffer and the new contents. This is necessary because trailing and leading spaces
+are stripped from strings.</dd>
 <dt>Extra 1a:</dt><dd>The number of the terrain type whose name you want to
 append.</dd></dd>
 
