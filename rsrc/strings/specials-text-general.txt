@@ -612,7 +612,7 @@ Unused
 Unused
 Unused
 Unused
-Unused
+If 1, put a space before it
 Unused
 String to append
 Unused
@@ -628,7 +628,7 @@ Unused
 Unused
 Unused
 Unused
-Unused
+If 1, put a space before it
 Unused
 Number to append
 Unused
@@ -644,7 +644,7 @@ Unused
 Unused
 Unused
 Unused
-Unused
+If 1, put a space before it
 Unused
 Monster type, or 0 to used selected PC
 Unused
@@ -660,7 +660,7 @@ Unused
 Unused
 Unused
 Unused
-Unused
+If 1, put a space before it
 Unused
 Item type
 0 - unidentified, 1 - full identified name
@@ -676,7 +676,7 @@ Unused
 Unused
 Unused
 Unused
-Unused
+If 1, put a space before it
 Unused
 Terrain type
 Unused

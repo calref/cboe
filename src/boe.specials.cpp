@@ -2384,12 +2384,15 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::APPEND_STRING:
 			get_strs(str1,str1,cur_spec_type,spec.ex1a,-1);
+			if(spec.pic) univ.get_buf() += ' ';
 			univ.get_buf() += str1;
 			break;
 		case eSpecType::APPEND_NUM:
+			if(spec.pic) univ.get_buf() += ' ';
 			univ.get_buf() += std::to_string(spec.ex1a);
 			break;
 		case eSpecType::APPEND_MONST:
+			if(spec.pic) univ.get_buf() += ' ';
 			if(spec.ex1a == 0) {
 				int pc = univ.get_target_i(*current_pc_picked_in_spec_enc);
 				if(pc == 6)
@@ -2401,6 +2404,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			} else univ.get_buf() += univ.scenario.scen_monsters[spec.ex1a].m_name;
 			break;
 		case eSpecType::APPEND_ITEM:
+			if(spec.pic) univ.get_buf() += ' ';
 			if(spec.ex1b == 1)
 				univ.get_buf() += univ.scenario.scen_items[spec.ex1a].full_name;
 			else if(spec.ex1b == 2)
@@ -2408,6 +2412,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			else univ.get_buf() += univ.scenario.scen_items[spec.ex1a].name;
 			break;
 		case eSpecType::APPEND_TER:
+			if(spec.pic) univ.get_buf() += ' ';
 			univ.get_buf() += univ.scenario.ter_types[spec.ex1a].name;
 			break;
 		case eSpecType::SWAP_STR_BUF:
