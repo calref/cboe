@@ -3457,11 +3457,11 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_PARTY_SIZE:
 			if(spec.ex2a < 1) {
-				if(party_size(spec.ex2b) == spec.ex1a)
+				if(party_size(spec.ex1a <= 0) == spec.ex2b)
 					*next_spec = spec.ex1b;
 			}
 			else {
-				if(party_size(spec.ex2b) >= spec.ex1a)
+				if(party_size(spec.ex1a <= 0) >= spec.ex2b)
 					*next_spec = spec.ex1b;
 			}
 			break;
