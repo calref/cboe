@@ -772,6 +772,8 @@ short do_look(location space) {
 			add_string_to_buf("    Antimagic Field");
 		if(univ.town.is_scloud(space.x,space.y))
 			add_string_to_buf("    Stinking Cloud");
+		if(univ.town.is_sleep_cloud(space.x,space.y))
+			add_string_to_buf("    Sleep Cloud");
 		if(univ.town.is_ice_wall(space.x,space.y))
 			add_string_to_buf("    Ice Wall");
 		if(univ.town.is_blade_wall(space.x,space.y))
