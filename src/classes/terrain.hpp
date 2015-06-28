@@ -24,7 +24,7 @@ public:
 	std::string name;
 	pic_num_t picture = 0;
 	eTerObstruct blockage = eTerObstruct::CLEAR;
-	int flag1 = 0, flag2 = 0, flag3 = 0;
+	int flag1 = -1, flag2 = 0, flag3 = 0;
 	eTerSpec special = eTerSpec::NONE;
 	ter_num_t trans_to_what = 0;
 	bool fly_over = false;
