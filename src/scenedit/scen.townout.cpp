@@ -184,7 +184,7 @@ static bool edit_placed_monst_adv_time_flag(cDialog& me, std::string, bool losin
 }
 
 static bool edit_placed_monst_adv_death(cDialog& me, cTownperson& monst) {
-	short spec = monst.special_on_kill;
+	short spec = me["death"].getTextAsNum();
 	if(spec < 0)
 		spec = get_fresh_spec(2);
 	if(edit_spec_enc(spec,2,&me))
