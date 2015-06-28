@@ -5520,6 +5520,7 @@ void take_m_ap(short num,cCreature *monst) {
 	monst->ap = max(0,monst->ap - num);
 }
 
+// TODO: This is used nowhere. Should it be?
 void add_new_action(short pc_num) {
 	if(pc_num < 6)
 		univ.party[pc_num].ap++;
