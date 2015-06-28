@@ -677,7 +677,7 @@ short cPlayer::get_prot_level(eItemAbil abil, short dat) const {
 		if(items[i].ability != abil) continue;
 		if(!equip[i]) continue;
 		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
-		sum += items[i].abil_data[1];
+		sum += items[i].abil_data[0];
 	}
 	return sum; // TODO: Should we return -1 if the sum is 0?
 	
