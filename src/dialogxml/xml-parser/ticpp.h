@@ -263,6 +263,12 @@ namespace ticpp
 										<< "\nLine: " << doc->ErrorRow()
 										<< "\nColumn: " << doc->ErrorCol();
 					}
+					else
+					{
+						full_message 	<< "\nFile: " << (strlen( doc->Value() ) > 0 ? doc->Value() : "<unnamed-file>")
+										<< "\nLine: " << node->Row()
+										<< "\nColumn: " << node->Column();
+					}
 				}
 			}
 			#endif

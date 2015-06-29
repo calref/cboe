@@ -15,8 +15,9 @@
 
 using namespace std;
 
-map_data load_map(std::istream& fin, bool isTown) {
+map_data load_map(std::istream& fin, bool isTown, std::string name) {
 	map_data data;
+	data.file = name;
 	int row = 0;
 	while(!fin.eof()) {
 		std::string line;
@@ -31,14 +32,22 @@ map_data load_map(std::istream& fin, bool isTown) {
 			if(isdigit(c)) {
 				n *= 10;
 				n += c - '0';
-			} else if(c == '^' && isTown) {
-				data.addFeature(col, row, eMapFeature::ENTRANCE_NORTH);
-			} else if(c == '<' && isTown) {
-				data.addFeature(col, row, eMapFeature::ENTRANCE_WEST);
-			} else if(c == 'v' && isTown) {
-				data.addFeature(col, row, eMapFeature::ENTRANCE_SOUTH);
-			} else if(c == '>' && isTown) {
-				data.addFeature(col, row, eMapFeature::ENTRANCE_EAST);
+			} else if(c == '^') {
+				if(isTown)
+					data.addFeature(col, row, eMapFeature::ENTRANCE_NORTH);
+				else throw xMapParseError(map_out_has_town_dir, c, row, col, name);
+			} else if(c == '<') {
+				if(isTown)
+					data.addFeature(col, row, eMapFeature::ENTRANCE_WEST);
+				else throw xMapParseError(map_out_has_town_dir, c, row, col, name);
+			} else if(c == 'v') {
+				if(isTown)
+					data.addFeature(col, row, eMapFeature::ENTRANCE_SOUTH);
+				else throw xMapParseError(map_out_has_town_dir, c, row, col, name);
+			} else if(c == '>') {
+				if(isTown)
+					data.addFeature(col, row, eMapFeature::ENTRANCE_EAST);
+				else throw xMapParseError(map_out_has_town_dir, c, row, col, name);
 			} else {
 				if(curFeature == eMapFeature::NONE)
 					data.set(col, row, n);
@@ -80,7 +89,7 @@ map_data load_map(std::istream& fin, bool isTown) {
 					col++;
 					curFeature = eMapFeature::NONE;
 				} else {
-					// TODO: This is an error!
+					throw xMapParseError(map_bad_feature, c, row, col, name);
 				}
 			}
 		}
@@ -159,4 +168,43 @@ void map_data::writeTo(std::ostream& out) {
 		}
 		out << '\n';
 	}
+}
+
+const char*const xMapParseError::messages[NUM_MAP_ERR] = {
+	"Unrecognized map feature character found: ",
+	"Outdoors map has illegal town entrance direction feature: ",
+	"Outdoors map has illegal field type: ",
+};
+
+xMapParseError::xMapParseError(eMapError err, char c, int line, int col, std::string file) :
+	err(err),
+	c(c),
+	line(line),
+	col(col),
+	file(file),
+	msg(nullptr) {}
+
+xMapParseError::~xMapParseError() throw() {
+	if(msg != nullptr)
+		delete[] msg;
+}
+
+const char* xMapParseError::what() const throw() {
+	if(msg == nullptr) {
+		char* s = new(std::nothrow) char[201];
+		std::fill_n(s, 201, 0);
+		size_t len = strlen(messages[err]);
+		strncpy(s, messages[err], std::min<int>(201, len + 1));
+		if(err == map_out_bad_field) {
+			if(c < 100 && len < 200)
+				s[len++] = c / 100;
+			if(c < 10 && len < 200)
+				s[len++] = c / 10;
+			if(len < 200)
+				s[len++] = c % 10;
+		} else s[len++] = c;
+		s[len] = 0;
+		msg = s;
+	}
+	return msg;
 }

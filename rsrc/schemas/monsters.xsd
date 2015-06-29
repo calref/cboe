@@ -70,6 +70,7 @@
 							<xs:enumeration value="bless-curse"/>
 							<xs:enumeration value="poison"/>
 							<xs:enumeration value="haste-slow"/>
+							<xs:enumeration value="invuln"/>
 							<xs:enumeration value="magic"/>
 							<xs:enumeration value="web"/>
 							<xs:enumeration value="disease"/>
@@ -105,7 +106,6 @@
 							<xs:enumeration value="sfx-bone"/>
 							<xs:enumeration value="sfx-rock"/>
 							<xs:enumeration value="barr-cage"/>
-							<!-- Not sure if these special pseudo-fields should be allowed -->
 							<xs:enumeration value="dispel"/>
 							<xs:enumeration value="smash"/>
 							<!-- Damage types -->
@@ -231,7 +231,6 @@
 							<xs:enumeration value="sfx-bone"/>
 							<xs:enumeration value="sfx-rock"/>
 							<xs:enumeration value="barr-cage"/>
-							<!-- Not sure if these special pseudo-fields should be allowed -->
 							<xs:enumeration value="dispel"/>
 							<xs:enumeration value="smash"/>
 						</xs:restriction>

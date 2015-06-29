@@ -1421,21 +1421,21 @@ xBadNode::xBadNode(std::string t, int r, int c, std::string dlg) throw() :
 	msg(NULL),
 	dlg(dlg) {}
 
-const char* xBadNode::what() throw() {
+const char* xBadNode::what() const throw() {
 	if(msg == NULL){
 		char* s = new (nothrow) char[200];
 		if(s == NULL){
 			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
-		sprintf(s,"XML Parse Error: Unknown element %s encountered (dialog %s, line %d, column %d).",type.c_str(),dlg.c_str(),row,col);
+		sprintf(s,"XML Parse Error: Unknown element %s encountered (file %s, line %d, column %d).",type.c_str(),dlg.c_str(),row,col);
 		msg = s;
 	}
 	return msg;
 }
 
 xBadNode::~xBadNode() throw(){
-	if(msg != NULL) delete msg;
+	if(msg != NULL) delete[] msg;
 }
 
 xBadAttr::xBadAttr(std::string t, std::string n, int r, int c, std::string dlg) throw() :
@@ -1446,21 +1446,21 @@ xBadAttr::xBadAttr(std::string t, std::string n, int r, int c, std::string dlg) 
 	msg(NULL),
 	dlg(dlg) {}
 
-const char* xBadAttr::what() throw() {
+const char* xBadAttr::what() const throw() {
 	if(msg == NULL){
 		char* s = new (nothrow) char[200];
 		if(s == NULL){
 			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
-		sprintf(s,"XML Parse Error: Unknown attribute %s encountered on element %s (dialog %s, line %d, column %d).",name.c_str(),type.c_str(),dlg.c_str(),row,col);
+		sprintf(s,"XML Parse Error: Unknown attribute %s encountered on element %s (file %s, line %d, column %d).",name.c_str(),type.c_str(),dlg.c_str(),row,col);
 		msg = s;
 	}
 	return msg;
 }
 
 xBadAttr::~xBadAttr() throw(){
-	if(msg != NULL) delete msg;
+	if(msg != NULL) delete[] msg;
 }
 
 xMissingAttr::xMissingAttr(std::string t, std::string n, int r, int c, std::string dlg) throw() :
@@ -1471,21 +1471,46 @@ xMissingAttr::xMissingAttr(std::string t, std::string n, int r, int c, std::stri
 	msg(NULL),
 	dlg(dlg) {}
 
-const char* xMissingAttr::what() throw() {
+const char* xMissingAttr::what() const throw() {
 	if(msg == NULL){
 		char* s = new (nothrow) char[200];
 		if(s == NULL){
 			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
-		sprintf(s,"XML Parse Error: Required attribute %s missing on element %s (dialog %s, line %d, column %d).",name.c_str(),type.c_str(),dlg.c_str(),row,col);
+		sprintf(s,"XML Parse Error: Required attribute %s missing on element %s (file %s, line %d, column %d).",name.c_str(),type.c_str(),dlg.c_str(),row,col);
 		msg = s;
 	}
 	return msg;
 }
 
 xMissingAttr::~xMissingAttr() throw(){
-	if(msg != NULL) delete msg;
+	if(msg != NULL) delete[] msg;
+}
+
+xMissingElem::xMissingElem(std::string p, std::string t, int r, int c, std::string dlg) throw() :
+	parent(p),
+	name(t),
+	row(r),
+	col(c),
+	msg(NULL),
+	dlg(dlg) {}
+
+const char* xMissingElem::what() const throw() {
+	if(msg == NULL){
+		char* s = new (nothrow) char[200];
+		if(s == NULL){
+			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
+			abort();
+		}
+		sprintf(s,"XML Parse Error: Required element %s missing in element %s (file %s, line %d, column %d).",name.c_str(),parent.c_str(),dlg.c_str(),row,col);
+		msg = s;
+	}
+	return msg;
+}
+
+xMissingElem::~xMissingElem() throw(){
+	if(msg != NULL) delete[] msg;
 }
 
 xBadVal::xBadVal(std::string t, std::string n, std::string v, int r, int c, std::string dlg) throw() :
@@ -1497,21 +1522,21 @@ xBadVal::xBadVal(std::string t, std::string n, std::string v, int r, int c, std:
 	msg(NULL),
 	dlg(dlg) {}
 
-const char* xBadVal::what() throw() {
+const char* xBadVal::what() const throw() {
 	if(msg == NULL){
 		char* s = new (nothrow) char[200];
 		if(s == NULL){
 			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
-		sprintf(s,"XML Parse Error: Invalid value %s for attribute %s encountered on element %s (dialog %s, line %d, column %d).",val.c_str(),name.c_str(),type.c_str(),dlg.c_str(),row,col);
+		sprintf(s,"XML Parse Error: Invalid value %s for attribute %s encountered on element %s (file %s, line %d, column %d).",val.c_str(),name.c_str(),type.c_str(),dlg.c_str(),row,col);
 		msg = s;
 	}
 	return msg;
 }
 
 xBadVal::~xBadVal() throw(){
-	if(msg != NULL) delete msg;
+	if(msg != NULL) delete[] msg;
 }
 
 bool cDialog::doAnimations = false;

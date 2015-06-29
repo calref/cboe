@@ -173,7 +173,9 @@ static bool handle_lb_action(location the_point) {
 							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 							overall_mode = MODE_MAIN_SCREEN;
 							set_up_main_screen();
-						}
+						} else if(!file_to_load.empty())
+							// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
+							set_up_start_screen();
 						break;
 					case LB_EDIT_TER:
 						start_terrain_editing();

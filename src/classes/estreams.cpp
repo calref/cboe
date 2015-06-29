@@ -20,10 +20,10 @@ class cEnumLookup {
 	struct node {
 		char c;
 		mutable boost::ptr_set<node> next;
-		mutable boost::optional<unsigned long> value;
+		mutable boost::optional<long long> value;
 		node(char c) : c(c) {}
-		node(char c, unsigned long v) : c(c), value(v) {}
-		bool find(unsigned long val, std::string& result) const {
+		node(char c, long long v) : c(c), value(v) {}
+		bool find(long long val, std::string& result) const {
 			if(value && *value == val) {
 				if(c >= ' ') result.push_back(c);
 				return true;
@@ -52,7 +52,7 @@ public:
 			i++;
 		}
 	}
-	void insert(const std::string& str, unsigned long val) {
+	void insert(const std::string& str, long long val) {
 		size_t i = 0;
 		const node* cur = &root;
 		while(i < str.size()) {
@@ -67,7 +67,7 @@ public:
 		cur->value = val;
 		size_cached = false;
 	}
-	unsigned long get(const std::string& str, unsigned long def = 0) const {
+	unsigned long get(const std::string& str, long long def = 0) const {
 		size_t i = 0;
 		const node* cur = &root;
 		while(i < str.size()) {
@@ -81,15 +81,14 @@ public:
 			return *cur->value;
 		return def;
 	}
-	std::string find(unsigned long val, std::string def = "") const {
+	std::string find(long long val, std::string def = "") const {
 		std::string result;
 		if(root.find(val,result)) {
-			std::reverse(result.begin(), result.end());
-			return result;
+			return std::string(result.rbegin(), result.rend());
 		}
 		return def;
 	}
-	bool contains(unsigned long val) const {
+	bool contains(long long val) const {
 		if(find(val).empty()) return false;
 		return true;
 	}
@@ -114,20 +113,22 @@ template<typename E> void writeEnum(std::ostream& out, E val, cEnumLookup& tbl, 
 	out << tbl.find(int(val), def);
 }
 
-template<typename E> void readEnum(std::istream& in, E& to, cEnumLookup& tbl, E def = E()) {
+template<typename E> bool readEnum(std::istream& in, E& to, cEnumLookup& tbl, E def = E()) {
 	std::string key;
 	in >> key;
-	bool have_num = true;
-	for(char c : key) {
-		if(!isdigit(c)) {
-			have_num = false;
-			break;
-		}
-	}
+	if(in.fail() || key.empty()) return false;
+	bool have_num = (isdigit(key[0]) || key[0] == '-') && std::all_of(key.begin() + 1, key.end(), isdigit);
+	bool valid = true;
 	if(have_num) {
 		int n = boost::lexical_cast<int>(key);
-		to = tbl.contains(n) ? E(n) : def;
-	} else to = E(tbl.get(key, int(def)));
+		bool valid = tbl.contains(n);
+		to = valid ? E(n) : def;
+	} else {
+		to = E(tbl.get(key, int(def)));
+		if(to == def && key != tbl.find(int(def)))
+			valid = false;
+	}
+	return valid;
 }
 
 // These operators have their prototypes declared all over the place, but I'm not including those headers, so silence the warnings
@@ -148,7 +149,8 @@ std::ostream& operator << (std::ostream& out, eSkill e) {
 }
 
 std::istream& operator >> (std::istream& in, eSkill& e){
-	readEnum(in, e, skill_names, eSkill::EDGED_WEAPONS);
+	if(!readEnum(in, e, skill_names, eSkill::EDGED_WEAPONS))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -166,7 +168,8 @@ std::ostream& operator << (std::ostream& out, eItemType e) {
 }
 
 std::istream& operator >> (std::istream& in, eItemType& e) {
-	readEnum(in, e, item_types, eItemType::NO_ITEM);
+	if(!readEnum(in, e, item_types, eItemType::NO_ITEM))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -180,7 +183,8 @@ std::ostream& operator << (std::ostream& out, eItemUse e) {
 }
 
 std::istream& operator >> (std::istream& in, eItemUse& e){
-	readEnum(in, e, item_uses, eItemUse::HELP_ONE);
+	if(!readEnum(in, e, item_uses, eItemUse::HELP_ONE))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -209,16 +213,23 @@ std::ostream& operator << (std::ostream& out, eItemAbil e) {
 }
 
 std::istream& operator >> (std::istream& in, eItemAbil& e){
-	readEnum(in, e, item_abils, eItemAbil::NONE);
+	if(!readEnum(in, e, item_abils, eItemAbil::NONE))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
 // MARK: eStatus
 
 cEnumLookup pc_status = {
-	"poison-weap", "bless-curse", "poison", "haste-slow", "magic", "web", "disease", "invis", "dumb-smart",
+	"poison-weap", "bless-curse", "poison", "haste-slow", "invuln", "magic", "web", "disease", "invis", "dumb-smart",
 	"martyr", "sleep", "paralysis", "acid", "cage", "charm",
 };
+
+struct finish_status_init {
+	finish_status_init() {
+		pc_status.insert("main", -1);
+	}
+} finish_status_init;
 
 std::ostream& operator << (std::ostream& out, eStatus e){
 	writeEnum(out, e, pc_status, "main");
@@ -226,7 +237,8 @@ std::ostream& operator << (std::ostream& out, eStatus e){
 }
 
 std::istream& operator >> (std::istream& in, eStatus& e){
-	readEnum(in, e, pc_status, eStatus::MAIN);
+	if(!readEnum(in, e, pc_status, eStatus::MAIN))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -244,7 +256,8 @@ std::ostream& operator << (std::ostream& out, eRace e){
 }
 
 std::istream& operator >> (std::istream& in, eRace& e){
-	readEnum(in, e, race_names, eRace::HUMANOID);
+	if(!readEnum(in, e, race_names, eRace::HUMANOID))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -262,7 +275,8 @@ std::ostream& operator << (std::ostream& out, eMonstTime e){
 }
 
 std::istream& operator >> (std::istream& in, eMonstTime& e){
-	readEnum(in, e, monst_times, eMonstTime::ALWAYS);
+	if(!readEnum(in, e, monst_times, eMonstTime::ALWAYS))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -276,7 +290,8 @@ std::ostream& operator<<(std::ostream& out, eDirection dir) {
 }
 
 std::istream& operator>>(std::istream& in, eDirection& dir) {
-	readEnum(in, dir, dirs, DIR_HERE);
+	if(!readEnum(in, dir, dirs, DIR_HERE))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -296,7 +311,8 @@ std::ostream& operator << (std::ostream& out, eFieldType e) {
 }
 
 std::istream& operator >> (std::istream& in, eFieldType& e) {
-	readEnum(in, e, field_names, FIELD_DISPEL);
+	if(!readEnum(in, e, field_names, FIELD_DISPEL))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -312,7 +328,8 @@ std::ostream& operator << (std::ostream& out, eDamageType e) {
 }
 
 std::istream& operator >> (std::istream& in, eDamageType& e) {
-	readEnum(in, e, dmg_names, eDamageType::MARKED);
+	if(!readEnum(in, e, dmg_names, eDamageType::MARKED))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -330,7 +347,8 @@ std::ostream& operator << (std::ostream& out, eMonstAbil e) {
 }
 
 std::istream& operator >> (std::istream& in, eMonstAbil& e) {
-	readEnum(in, e, monst_abils, eMonstAbil::NO_ABIL);
+	if(!readEnum(in, e, monst_abils, eMonstAbil::NO_ABIL))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -344,7 +362,8 @@ std::ostream& operator << (std::ostream& out, eMonstGen e) {
 }
 
 std::istream& operator >> (std::istream& in, eMonstGen& e) {
-	readEnum(in, e, monst_abil_types, eMonstGen::TOUCH);
+	if(!readEnum(in, e, monst_abil_types, eMonstGen::TOUCH))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -358,7 +377,8 @@ std::ostream& operator << (std::ostream& out, eMonstMelee e) {
 }
 
 std::istream& operator >> (std::istream& in, eMonstMelee& e) {
-	readEnum(in, e, monst_melee, eMonstMelee::PUNCH);
+	if(!readEnum(in, e, monst_melee, eMonstMelee::PUNCH))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -372,7 +392,8 @@ std::ostream& operator << (std::ostream& out, eMonstMissile e) {
 }
 
 std::istream& operator >> (std::istream& in, eMonstMissile& e) {
-	readEnum(in, e, monst_missiles, eMonstMissile::ARROW);
+	if(!readEnum(in, e, monst_missiles, eMonstMissile::ARROW))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -386,7 +407,8 @@ std::ostream& operator << (std::ostream& out, eMonstSummon e) {
 }
 
 std::istream& operator >> (std::istream& in, eMonstSummon& e) {
-	readEnum(in, e, monst_summons, eMonstSummon::TYPE);
+	if(!readEnum(in, e, monst_summons, eMonstSummon::TYPE))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -395,7 +417,8 @@ std::istream& operator >> (std::istream& in, eMonstSummon& e) {
 cEnumLookup note_types = {"SCEN", "OUT", "TOWN"};
 
 std::istream& operator>>(std::istream& in, eEncNoteType& type) {
-	readEnum(in, type, note_types, NOTE_SCEN);
+	if(!readEnum(in, type, note_types, NOTE_SCEN))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -409,7 +432,8 @@ std::ostream& operator<<(std::ostream& out, eEncNoteType type) {
 cEnumLookup party_status = {"STEALTH", "FLIGHT", "DETECT", "FIREWALK"};
 
 std::istream& operator>>(std::istream& in, ePartyStatus& type) {
-	readEnum(in, type, party_status, ePartyStatus::STEALTH);
+	if(!readEnum(in, type, party_status, ePartyStatus::STEALTH))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -423,7 +447,8 @@ std::ostream& operator<<(std::ostream& out, ePartyStatus type) {
 cEnumLookup quest_status = {"avail", "start", "done", "fail"};
 
 std::istream& operator>>(std::istream& in, eQuestStatus& type) {
-	readEnum(in, type, quest_status, eQuestStatus::AVAILABLE);
+	if(!readEnum(in, type, quest_status, eQuestStatus::AVAILABLE))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -445,7 +470,8 @@ std::ostream& operator << (std::ostream& out, eMainStatus e){
 }
 
 std::istream& operator >> (std::istream& in, eMainStatus& e){
-	readEnum(in, e, main_status, eMainStatus::ABSENT);
+	if(!readEnum(in, e, main_status, eMainStatus::ABSENT))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -454,7 +480,8 @@ std::istream& operator >> (std::istream& in, eMainStatus& e){
 cEnumLookup shop_types = {"live", "dead", "rand"};
 
 std::istream& operator>>(std::istream& in, eShopType& type) {
-	readEnum(in, type, shop_types, eShopType::NORMAL);
+	if(!readEnum(in, type, shop_types, eShopType::NORMAL))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -468,7 +495,8 @@ std::ostream& operator<<(std::ostream& out, eShopType type) {
 cEnumLookup shop_prompts = {"shop", "heal", "mage", "priest", "spell", "alch", "train"};
 
 std::istream& operator>>(std::istream& in, eShopPrompt& type) {
-	readEnum(in, type, shop_prompts, eShopPrompt::SHOPPING);
+	if(!readEnum(in, type, shop_prompts, eShopPrompt::SHOPPING))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -491,7 +519,8 @@ std::ostream& operator << (std::ostream& out, eTerSpec e){
 }
 
 std::istream& operator >> (std::istream& in, eTerSpec& e){
-	readEnum(in, e, ter_types, eTerSpec::NONE);
+	if(!readEnum(in, e, ter_types, eTerSpec::NONE))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -508,7 +537,8 @@ std::ostream& operator << (std::ostream& out, eTrimType e){
 }
 
 std::istream& operator >> (std::istream& in, eTrimType& e){
-	readEnum(in, e, ter_trims, eTrimType::NONE);
+	if(!readEnum(in, e, ter_trims, eTrimType::NONE))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -522,7 +552,8 @@ std::ostream& operator<< (std::ostream& out, eTerObstruct block) {
 }
 
 std::istream& operator >> (std::istream& in, eTerObstruct& e){
-	readEnum(in, e, ter_blocks, eTerObstruct::CLEAR);
+	if(!readEnum(in, e, ter_blocks, eTerObstruct::CLEAR))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -536,7 +567,8 @@ std::ostream& operator<< (std::ostream& out, eStepSnd snd) {
 }
 
 std::istream& operator >> (std::istream& in, eStepSnd& e){
-	readEnum(in, e, step_snds, eStepSnd::STEP);
+	if(!readEnum(in, e, step_snds, eStepSnd::STEP))
+		in.setstate(std::ios::failbit);
 	return in;
 }
 
@@ -550,6 +582,7 @@ std::ostream& operator<< (std::ostream& out, eLighting light) {
 }
 
 std::istream& operator>> (std::istream& in, eLighting& light) {
-	readEnum(in, light, light_types, LIGHT_NORMAL);
+	if(!readEnum(in, light, light_types, LIGHT_NORMAL))
+		in.setstate(std::ios::failbit);
 	return in;
 }

@@ -204,10 +204,10 @@ private:
 };
 
 /// Thrown when an invalid element is found while parsing an XML dialog definition.
-class xBadNode : std::exception {
+class xBadNode : public std::exception {
 	std::string type, dlg;
 	int row, col;
-	const char* msg;
+	mutable const char* msg;
 public:
 	/// Construct a new exception.
 	/// @param t The tag name of the invalid element.
@@ -217,14 +217,14 @@ public:
 	xBadNode(std::string t, int r, int c, std::string dlg) throw();
 	~xBadNode() throw();
 	/// @return The error message.
-	const char* what() throw();
+	const char* what() const throw();
 };
 
 /// Thrown when an invalid attribute is found while parsing an XML dialog definition.
-class xBadAttr : std::exception {
+class xBadAttr : public std::exception {
 	std::string type, name, dlg;
 	int row, col;
-	const char* msg;
+	mutable const char* msg;
 public:
 	/// Construct a new exception.
 	/// @param t The tag name of the element with the invalid attribute.
@@ -235,14 +235,14 @@ public:
 	xBadAttr(std::string t,std::string n, int r, int c, std::string dlg) throw();
 	~xBadAttr() throw();
 	/// @return The error message.
-	const char* what() throw();
+	const char* what() const throw();
 };
 
 /// Thrown when an element is missing a required attribute while parsing an XML dialog definition.
-class xMissingAttr : std::exception {
+class xMissingAttr : public std::exception {
 	std::string type, name, dlg;
 	int row, col;
-	const char* msg;
+	mutable const char* msg;
 public:
 	/// Construct a new exception.
 	/// @param t The tag name of the element with the missing attribute.
@@ -253,14 +253,32 @@ public:
 	xMissingAttr(std::string t,std::string n, int r, int c, std::string dlg) throw();
 	~xMissingAttr() throw();
 	/// @return The error message.
-	const char* what() throw();
+	const char* what() const throw();
+};
+
+/// Thrown when a required element is missing while parsing an XML dialog definition.
+class xMissingElem : public std::exception {
+	std::string parent, name, dlg;
+	int row, col;
+	mutable const char* msg;
+public:
+	/// Construct a new exception.
+	/// @param p The tag name of the parent element.
+	/// @param t The tag name of the missing element.
+	/// @param r The line number of the element in the source.
+	/// @param c The column number of the element in the source.
+	/// @param dlg The name of the file in which the element occurred.
+	xMissingElem(std::string p, std::string t, int r, int c, std::string dlg) throw();
+	~xMissingElem() throw();
+	/// @return The error message.
+	const char* what() const throw();
 };
 
 /// Thrown when an invalid value is found anywhere within an element's or attribute's content.
-class xBadVal : std::exception {
+class xBadVal : public std::exception {
 	std::string type, name, val, dlg;
 	int row, col;
-	const char* msg;
+	mutable const char* msg;
 public:
 	/// A magic value to indicate errors in an element's content, rather than an attribute's content.
 	static const char*const CONTENT;
@@ -275,7 +293,7 @@ public:
 	xBadVal(std::string t,std::string n,std::string v, int r, int c, std::string dlg) throw();
 	~xBadVal() throw();
 	/// @return The error message.
-	const char* what() throw();
+	const char* what() const throw();
 };
 
 #endif
