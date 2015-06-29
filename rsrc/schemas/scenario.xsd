@@ -167,7 +167,7 @@
 							<xs:element name='description' type='xs:string'/>
 							<xs:element name='node' type='xs:integer'/>
 							<xs:element name='quantity' type='shop-amount'/>
-							<xs:element name='cost' type='xs:integer'/>
+							<xs:element name='cost' type='xs:integer' minOccurs="0"/>
 							<xs:element name='icon' type='xs:integer'/>
 						</xs:all>
 					</xs:complexType>
@@ -181,7 +181,7 @@
 				<xs:element name="num-towns" type="xs:integer"/>
 				<xs:element name="out-width" type="xs:integer"/>
 				<xs:element name="out-height" type="xs:integer"/>
-				<xs:element name="on-init" type="xs:integer"/>
+				<xs:element name="on-init" type="xs:integer" minOccurs="0"/>
 				<xs:element name="start-town" type="xs:integer"/>
 				<xs:element name="town-start">
 					<xs:complexType>

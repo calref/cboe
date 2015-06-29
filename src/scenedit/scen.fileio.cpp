@@ -249,7 +249,9 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 					data.PushElement("name", entry.item.full_name);
 					data.PushElement("description", entry.item.desc);
 					data.PushElement("node", entry.item.item_level);
-					data.PushElement("quantity", entry.quantity);
+					if(entry.quantity == 0)
+						data.PushElement("quantity", "infinite");
+					else data.PushElement("quantity", entry.quantity);
 					data.PushElement("cost", entry.item.value);
 					data.PushElement("icon", entry.item.graphic_num);
 					data.CloseElement("special");

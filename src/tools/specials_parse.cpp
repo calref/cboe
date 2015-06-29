@@ -27,11 +27,15 @@ std::map<size_t, cSpecial> SpecialParser::specials;
 spirit::symbols<> SpecialParser::defn;
 Rule SpecialParser::ws, SpecialParser::comment, SpecialParser::symbol, SpecialParser::symbol_ch, SpecialParser::eol;
 Rule SpecialParser::datcode, SpecialParser::command, SpecialParser::def_line, SpecialParser::cmd_line;
+Rule SpecialParser::eq, SpecialParser::cmd_1st, SpecialParser::cmd_2nd, SpecialParser::cmd_3rd, SpecialParser::op_assign;
 Rule SpecialParser::init_line, SpecialParser::null_line;
 Rule SpecialParser::op_line, SpecialParser::cmd_block, SpecialParser::nodes_file;
 int SpecialParser::lineno, SpecialParser::last_line_start;
 SpecialParser::Iter SpecialParser::file_start;
+eParseError SpecialParser::last_err = NUM_PARSE_ERR;
 Err SpecialParser::err(generic_error);
+Err SpecialParser::assert_op(expect_op), SpecialParser::assert_sym(expect_sym), SpecialParser::assert_dat(expect_dat);
+Err SpecialParser::assert_eq(expect_eq), SpecialParser::assert_int(expect_int), SpecialParser::assert_val(expect_val);
 Guard SpecialParser::guard;
 
 SpecialParser::SpecialParser() {
@@ -42,24 +46,29 @@ SpecialParser::SpecialParser() {
 	symbol_ch = chset<>("A-Za-z$_-");
 	symbol = symbol_ch >> *symbol_ch;
 	eol = eol_p[_(next_line)];
+	eq = assert_eq(ch_p('='));
 	
 	datcode = str_p("sdf")[_(for_sdf)] | str_p("pic")[_(for_pic)] | str_p("msg")[_(for_msg)] |
 		str_p("ex1")[_(for_ex1)] | str_p("ex2")[_(for_ex2)] | str_p("goto")[_(for_goto)];
 	
-	command = datcode >> +ws >> (int_p[_(set_first)] | defn[_(set_first)]) >>
-		!(*ws >> ch_p(',') >> *ws >> (int_p[_(set_second)] | defn[_(set_second)]) >>
-		!(*ws >> ch_p(',') >> *ws >> (int_p[_(set_third)] | defn[_(set_third)])));
+	cmd_1st = assert_val(int_p[_(set_first)] | defn[_(set_first)])[_(maybe_throw)];
+	cmd_2nd = assert_val(int_p[_(set_second)] | defn[_(set_second)])[_(maybe_throw)];
+	cmd_3rd = assert_val(int_p[_(set_third)] | defn[_(set_third)])[_(maybe_throw)];
+	command = guard(assert_dat(datcode))[_(check_error)] >> +ws >> cmd_1st
+		>> !(*ws >> ch_p(',') >> *ws >> cmd_2nd >> !(*ws >> ch_p(',') >> *ws >> cmd_3rd));
 	
 	null_line = !comment >> eol;
 	init_line = null_line | def_line;
-	def_line = str_p("def") >> +ws >> symbol[_(prep_add_symbol)] >> *ws >> ch_p('=') >> *ws >> int_p[_(add_symbol)] >> *ws >> !comment >> eol;
-	cmd_line = command >> *ws >> !comment >> eol;
-	op_line = ch_p('@') >> opcode[_(set_type)] >> *ws >> !(ch_p('=') >> *ws >> int_p[_(skip_to)]) >> *ws >> !comment >> eol;
+	def_line = str_p("def") >> +ws >> assert_sym(symbol)[_(prep_add_symbol)] >> *ws
+		>> eq >> *ws >> assert_int(int_p)[_(add_symbol)] >> *ws >> !comment >> err(eol);
+	cmd_line = command >> *ws >> !comment >> err(eol);
+	op_assign = guard(eq >> *ws >> assert_int(int_p[_(skip_to)]))[_(check_error)];
+	op_line = ch_p('@') >> assert_op(opcode[_(set_type)]) >> *ws >> !op_assign >> *ws >> !comment >> err(eol);
 	
 	cmd_block = eps_p[_(init_block)] >> op_line >> *(*ws >> (cmd_line | def_line | null_line));
 	
 	// TODO: This fails if the file doesn't end in a newline.
-	nodes_file = /*guard*/err(eps_p[_(init_file)] >> *(*ws >> init_line) >> *cmd_block[_(add_command)] >> end_p);//[_(on_error)];
+	nodes_file = err(eps_p[_(init_file)] >> *(*ws >> init_line) >> *cmd_block[_(add_command)] >> end_p);
 	
 	// Debugging. If BOOST_SPIRIT_DEBUG not defined, all these expand to nothing.
 	BOOST_SPIRIT_DEBUG_NODE(ws);
@@ -67,13 +76,18 @@ SpecialParser::SpecialParser() {
 	BOOST_SPIRIT_DEBUG_NODE(comment);
 	BOOST_SPIRIT_DEBUG_NODE(symbol);
 	BOOST_SPIRIT_DEBUG_NODE(symbol_ch);
+	BOOST_SPIRIT_DEBUG_NODE(eq);
 	BOOST_SPIRIT_DEBUG_NODE(datcode);
 	BOOST_SPIRIT_DEBUG_NODE(command);
+	BOOST_SPIRIT_DEBUG_NODE(cmd_1st);
+	BOOST_SPIRIT_DEBUG_NODE(cmd_2nd);
+	BOOST_SPIRIT_DEBUG_NODE(cmd_3rd);
 	BOOST_SPIRIT_DEBUG_NODE(def_line);
 	BOOST_SPIRIT_DEBUG_NODE(cmd_line);
 	BOOST_SPIRIT_DEBUG_NODE(init_line);
 	BOOST_SPIRIT_DEBUG_NODE(null_line);
 	BOOST_SPIRIT_DEBUG_NODE(op_line);
+	BOOST_SPIRIT_DEBUG_NODE(op_assign);
 	BOOST_SPIRIT_DEBUG_NODE(cmd_block);
 	BOOST_SPIRIT_DEBUG_NODE(nodes_file);
 	
@@ -82,8 +96,12 @@ SpecialParser::SpecialParser() {
 
 #undef _
 
-auto SpecialParser::on_error(const Rule::scanner_t&, spirit::parser_error<eParseError, Iter>) -> ErrStatus {
-	return ErrStatus(ErrStatus::fail);
+auto SpecialParser::check_error(const Rule::scanner_t&, spirit::parser_error<eParseError, Iter> e) -> ErrStatus {
+	if(e.descriptor == expect_dat && (*e.where == '@' || *e.where == 0 || *e.where == '#' || isspace(*e.where)))
+		return ErrStatus(ErrStatus::fail);
+	if(e.descriptor == expect_eq && (isspace(*e.where) || *e.where == '#'))
+		return ErrStatus(ErrStatus::fail);
+	return ErrStatus(ErrStatus::rethrow);
 }
 
 static void init_specials_parse() {
@@ -104,12 +122,34 @@ static void init_specials_parse() {
 	}
 }
 
+void SpecialParser::maybe_throw(Iter start, Iter) {
+	if(last_err != NUM_PARSE_ERR) {
+		Iter tmp = start;
+		// Do some fiddling so that we can locate the parser position as close to the error as possible
+		while(*start != '\n' && *start != 0)
+			start++;
+		if(*start == 0) start--;
+		while(isspace(*start))
+			start--;
+		while(!isspace(*start) && *start != ',')
+			start--;
+		if(isdigit(*start))
+			start++;
+		spirit::throw_(tmp, last_err);
+	}
+	last_err = NUM_PARSE_ERR;
+}
+
 void SpecialParser::init_file(Iter start, Iter) {
 	file_start = start;
 	specials.clear();
+	// For some reason, symbol tables don't have a "clear" option, so reconstruct it instead.
+	defn.~symbols();
+	new(&defn) spirit::symbols<>;
 	cur_node = -1;
 	lineno = 1;
 	last_line_start = 0;
+	last_err = NUM_PARSE_ERR;
 }
 
 void SpecialParser::next_line(Iter, Iter end) {
@@ -139,6 +179,8 @@ void SpecialParser::init_block(Iter, Iter) {
 
 void SpecialParser::prep_add_symbol(Iter start, Iter end) {
 	temp_symbol.assign(start, end);
+	if(find(defn, temp_symbol.c_str()) != nullptr)
+		spirit::throw_(start, double_def);
 }
 
 void SpecialParser::add_symbol(int i) {
@@ -190,8 +232,7 @@ void SpecialParser::set_first(int i) {
 		case 3: curSpec.ex1a = i; break;
 		case 4: curSpec.ex2a = i; break;
 		case 5: curSpec.jumpto = i; break;
-		// TODO: Figure out how to get an iterator to the matched number
-		//default: throw spirit::parser_error(start, generic_error);
+		default: last_err = expect_nl;
 	}
 }
 
@@ -202,8 +243,7 @@ void SpecialParser::set_second(int i) {
 		case 2: curSpec.m2 = i; break;
 		case 3: curSpec.ex1b = i; break;
 		case 4: curSpec.ex2b = i; break;
-		// TODO: Figure out how to get an iterator to the matched number
-		//default: throw spirit::parser_error(start, generic_error);
+		default: last_err = expect_nl;
 	}
 }
 
@@ -212,14 +252,14 @@ void SpecialParser::set_third(int i) {
 		case 2: curSpec.m3 = i; break;
 		case 3: curSpec.ex1c = i; break;
 		case 4: curSpec.ex2c = i; break;
-		// TODO: Figure out how to get an iterator to the matched number
-		//default: throw spirit::parser_error(start, generic_error);
+		default: last_err = expect_nl;
 	}
 }
 
-std::map<size_t,cSpecial> SpecialParser::parse(std::string code) {
+std::map<size_t,cSpecial> SpecialParser::parse(std::string code, std::string context) {
 	static bool inited = false;
 	if(!inited) init_specials_parse();
+	code += '\n';
 	const char* code_raw = code.c_str();
 	try {
 		auto result = spirit::parse(code_raw, nodes_file);
@@ -227,11 +267,62 @@ std::map<size_t,cSpecial> SpecialParser::parse(std::string code) {
 	} catch(spirit::parser_error<eParseError> x) {
 		int offset = x.where - code_raw;
 		int col = offset - last_line_start;
-		(void) col; // Mark the variable unused
 		std::cerr << "Parse error on line " << lineno << std::endl;
+		std::string found;
+		auto iter = x.where;
+		while(iter != code_raw + code.length() && !isspace(*iter) && *iter != '=')
+			found += *iter++;
+		throw xSpecParseError(found, x.descriptor, lineno, col, context);
 	}
 	return specials;
 }
+
+const char*const xSpecParseError::messages[NUM_PARSE_ERR] = {
+	"Unable to parse special node due to unexpected token - ",
+	"Redefinition of symbol ",
+	"opcode",
+	"identifier",
+	"one of ['sdf', 'msg', 'pic', 'ex1', 'ex2', 'goto']",
+	"'='",
+	"integer",
+	"value (integer or known symbol)",
+	"end of line",
+};
+
+xSpecParseError::xSpecParseError(std::string found, eParseError expect, int line, int col, std::string file) :
+	found(found),
+	err(expect),
+	line(line),
+	col(col),
+	file(file),
+	msg(nullptr) {}
+
+xSpecParseError::~xSpecParseError() throw() {
+	if(msg != nullptr)
+		delete[] msg;
+}
+
+const char* xSpecParseError::what() const throw() {
+	if(msg == nullptr) {
+		std::stringstream msgbld;
+		if(err > double_def)
+			msgbld << "Expected ";
+		msgbld << messages[err];
+		if(err > double_def)
+			msgbld << " but ";
+		if(err != double_def)
+			msgbld << "found ";
+		msgbld << "'" << found << "' (in " << file << '@' << line << ':' << col << ')';
+		size_t len = msgbld.tellp();
+		msgbld.seekg(0);
+		char* s = new(std::nothrow) char[len + 10];
+		std::fill_n(s, len + 10, 0);
+		std::copy(std::istreambuf_iterator<char>(msgbld), std::istreambuf_iterator<char>(), s);
+		msg = s;
+	}
+	return msg;
+}
+
 
 void test_special_parse(std::string file); // Suppress "no prototype" warning
 void test_special_parse(std::string file) {
@@ -240,7 +331,7 @@ void test_special_parse(std::string file) {
 	code << fin.rdbuf();
 	fin.close();
 	SpecialParser parser;
-	auto specials = parser.parse(code.str());
+	auto specials = parser.parse(code.str(), file);
 	std::ofstream fout(file + ".out");
 	for(auto p : specials) {
 		fout << "Special node ID " << p.first << ":\n";

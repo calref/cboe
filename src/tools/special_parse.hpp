@@ -14,12 +14,15 @@
 
 enum eParseError {
 	generic_error,
+	double_def,
 	expect_op,
-	expect_def,
+	expect_sym,
 	expect_dat,
 	expect_eq,
 	expect_int,
 	expect_val,
+	expect_nl,
+	NUM_PARSE_ERR
 };
 
 namespace spirit = boost::spirit::classic;
@@ -47,6 +50,7 @@ class SpecialParser {
 	static void set_second(int i);
 	static void set_third(int i);
 	static void next_line(Iter, Iter);
+	static void maybe_throw(Iter, Iter);
 	static std::string temp_symbol;
 	static int cur_node, cur_fld;
 	static cSpecial curSpec;
@@ -54,15 +58,29 @@ class SpecialParser {
 	static Iter file_start;
 	static std::map<size_t, cSpecial> specials;
 	static spirit::symbols<> defn;
-	static Rule ws, comment, symbol, symbol_ch, eol;
+	static Rule ws, eq, comment, symbol, symbol_ch, eol, op_assign;
 	static Rule datcode, command, init_line, null_line, def_line, cmd_line, op_line, cmd_block, nodes_file;
-	static Err err;
+	static Rule cmd_1st, cmd_2nd, cmd_3rd;
+	static Err err, assert_op, assert_sym, assert_dat, assert_eq, assert_int, assert_val;
 	static Guard guard;
 	static bool grammar_built;
-	static ErrStatus on_error(const Rule::scanner_t&, spirit::parser_error<eParseError, Iter>);
+	static ErrStatus check_error(const Rule::scanner_t&, spirit::parser_error<eParseError, Iter>);
+	static eParseError last_err;
 public:
 	SpecialParser();
-	std::map<size_t,cSpecial> parse(std::string code);
+	std::map<size_t,cSpecial> parse(std::string code, std::string context);
+};
+
+class xSpecParseError : public std::exception {
+	static const char*const messages[NUM_PARSE_ERR];
+	eParseError err;
+	int line, col;
+	std::string found, file;
+	mutable const char* msg;
+public:
+	xSpecParseError(std::string found, eParseError expect, int line, int col, std::string file);
+	~xSpecParseError() throw();
+	const char* what() const throw();
 };
 
 #endif
