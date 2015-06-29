@@ -385,6 +385,7 @@ void cSpecial::append(legacy::special_node_type& old){
 // J - Choose button to select a quest status
 // < - Choose button to select a cardinal direction
 // ~ - Choose button to select a weapon enchantment
+// _ - Choose button to select a full sheet
 // 0..9 - Choose button to select a specific type of picture
 // (terrain, monster, dialog, talk, item, pc, field, boom, missile, status)
 static const char*const button_dict[7][11] = {
@@ -394,7 +395,7 @@ static const char*const button_dict[7][11] = {
 		"                                                ", // msg3
 		"          p                                 3   ", // pic
 		"          ?                                     ", // pictype
-		"    &         x  T i                  M cit  j  ", // ex1a
+		"    &         x  T i    _             M cit  j  ", // ex1a
 		"    %        S     ss                       cJ  ", // ex1b
 		"                                                ", // ex1c
 		"                                  tt            ", // ex2a

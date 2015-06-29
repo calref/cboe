@@ -26,7 +26,7 @@ extern cCustomGraphics spec_scen_g;
 
 std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31};
 std::vector<pic_num_t> boom_pics = {0,1,2,3,4};
-std::vector<pic_num_t> lgdlog_pics = {0,72};
+std::vector<pic_num_t> lgdlog_pics = {0,32};
 
 size_t num_strs(eStrMode str_mode) {
 	switch(str_mode) {
@@ -154,6 +154,7 @@ short choose_background(short cur_choice, cDialog* parent) {
 
 // TODO: I have two functions that do this. (The other one is pick_picture.)
 pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
+	extern fs::path tempDir;
 	int i = 0;
 	std::vector<pic_num_t> all_pics;
 	size_t total_pics = 0;
@@ -174,7 +175,25 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 		case PIC_STATUS: total_pics = 27; break;
 		case PIC_SCEN_LG: total_pics = 4; break;
 		case PIC_TER_MAP: total_pics = 980; break;
-		case PIC_FULL: return NO_PIC; // TODO: Is it even possible to do a pict selection dialog for this?
+		case PIC_FULL:
+			if(!fs::is_directory(tempDir/"scenario/graphics")) {
+				giveError("You have no custom graphics, so it's not possible to select this kind of picture!",parent);
+				return NO_PIC;
+			}
+			for(fs::directory_iterator iter(tempDir/"scenario/graphics"); iter != fs::directory_iterator(); iter++) {
+				std::string fname = iter->path().filename().string().c_str();
+				size_t dot = fname.find_last_of('.');
+				if(dot == std::string::npos) continue;
+				std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
+				if(fname.substr(dot) != ".png") continue;
+				size_t digit = fname.find_first_of("0123456789");
+				if(digit == std::string::npos) continue;
+				if(fname.substr(0, digit) != "sheet") continue;
+				all_pics.push_back(boost::lexical_cast<pic_num_t>(fname.substr(digit, dot - digit)));
+			}
+			std::sort(all_pics.begin(), all_pics.end());
+			pic_dlg = new cPictChoice(all_pics, g_type, parent); // To suppress adding custom pics
+			break;
 		default:
 			std::cerr << "Picture type " << (g_type + PIC_PRESET) << " is missing case in choose_graphic." << std::endl;
 			return NO_PIC;
@@ -773,9 +792,10 @@ snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {
 }
 
 static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
-	static const ePicType pics[10] = {
+	static const ePicType pics[11] = {
 		PIC_TER, PIC_MONST, PIC_DLOG, PIC_TALK, PIC_ITEM,
-		PIC_PC, PIC_FIELD, PIC_BOOM, PIC_MISSILE, PIC_STATUS
+		PIC_PC, PIC_FIELD, PIC_BOOM, PIC_MISSILE, PIC_STATUS,
+		PIC_FULL
 	};
 	std::string field = item_hit.substr(0, item_hit.find_first_of('-'));
 	char btn;
@@ -884,8 +904,9 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case '<': strt = STRT_DIR; title = "Select the direction:"; break;
 		case '0': case '1': case '2': case '3': case '4':
 		case '5': case '6': case '7': case '8': case '9':
+		case '_':
 			choose_string = false;
-			store = choose_graphic(val, pics[btn - '0'], &me);
+			store = choose_graphic(val, pics[btn == '_' ? 10 : btn - '0'], &me);
 			if(store < 0) store = val;
 			break;
 		default:

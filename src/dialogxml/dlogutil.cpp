@@ -22,8 +22,6 @@
 // TODO: This should probably be a source file instead of a header
 #include "dlogutil.buttons.hpp" // must be included here and only here
 
-const size_t cPictChoice::per_page = 36;
-
 cPictChoice::cPictChoice(const std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : cPictChoice(pics.begin(), pics.end(), t, parent) {}
 
 cPictChoice::cPictChoice(const std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg("choose-pict",parent) {
@@ -100,7 +98,19 @@ void cPictChoice::fillPage(){
 		cPict& pic = dynamic_cast<cPict&>(dlg[sout.str()]);
 		if(page * per_page + i < picts.size()){
 			pic.show();
-			pic.setPict(picts[per_page * page + i].first, picts[per_page * page + i].second);
+			ePicType tp = picts[per_page * page + i].second;
+			pic.setPict(picts[per_page * page + i].first, tp);
+			rectangle b = pic.getBounds();
+			if(tp == PIC_DLOG_LG || tp == PIC_CUSTOM_DLOG_LG || tp == PIC_SCEN_LG) {
+				pic.setFormat(TXT_WRAP, false);
+				b.width() /= 2;
+				b.height() /= 2;
+			} else if(tp == PIC_FULL) {
+				pic.setFormat(TXT_WRAP, false);
+				b.width() = 40;
+				b.height() = 40;
+			} else pic.setFormat(TXT_WRAP, true);
+			pic.setBounds(b);
 		}else pic.hide();
 	}
 }
@@ -152,8 +162,6 @@ ePicType cPictChoice::getPicChosenType() {
 size_t cPictChoice::getSelected() {
 	return cur;
 }
-
-const size_t cStringChoice::per_page = 40;
 
 cStringChoice::cStringChoice(
 		std::vector<std::string>& strs,
