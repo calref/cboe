@@ -156,7 +156,7 @@ public:
 /// A dialog that presents a list of strings with LEDs and allows you to choose one.
 /// The list may span several pages.
 class cStringChoice {
-	static const size_t per_page;
+	static const size_t per_page = 40;
 	cDialog dlg;
 	bool onLeft();
 	bool onRight();
@@ -197,7 +197,7 @@ public:
 
 /// Like cStringChoice, but presents a list of icons rather than strings.
 class cPictChoice {
-	static const size_t per_page;
+	static const size_t per_page = 36;
 	bool didAccept;
 	cDialog dlg;
 	void attachHandlers();
