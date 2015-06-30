@@ -45,7 +45,6 @@ void cSpecial::writeTo(std::ostream& file, int n) const {
 }
 
 void cSpecial::append(legacy::special_node_type& old){
-	type = (eSpecType)old.type;
 	sd1 = old.sd1;
 	sd2 = old.sd2;
 	pic = old.pic;
@@ -58,6 +57,111 @@ void cSpecial::append(legacy::special_node_type& old){
 	jumpto = old.jumpto;
 	// Now apply any needed conversions.
 	switch(old.type) {
+		case 0: type = eSpecType::NONE; break;
+		case 1: type = eSpecType::SET_SDF; break;
+		case 2: type = eSpecType::INC_SDF; break;
+		case 3: type = eSpecType::DISPLAY_MSG; break;
+			// node 4 was "secret passage", handled later
+		case 5: type = eSpecType::DISPLAY_SM_MSG; break;
+		case 6: type = eSpecType::FLIP_SDF; break;
+			// 7, 8, 9, 10 were out/town/combat/look block
+		case 11: type = eSpecType::CANT_ENTER; break;
+		case 12: type = eSpecType::CHANGE_TIME; break;
+		case 13: type = eSpecType::SCEN_TIMER_START; break;
+		case 14: type = eSpecType::PLAY_SOUND; break;
+		case 15: type = eSpecType::CHANGE_HORSE_OWNER; break;
+		case 16: type = eSpecType::CHANGE_BOAT_OWNER; break;
+		case 17: type = eSpecType::SET_TOWN_VISIBILITY; break;
+		case 18: type = eSpecType::MAJOR_EVENT_OCCURRED; break;
+		case 19: type = eSpecType::FORCED_GIVE; break;
+		case 20: type = eSpecType::BUY_ITEMS_OF_TYPE; break;
+		case 21: type = eSpecType::CALL_GLOBAL; break;
+		case 22: type = eSpecType::SET_SDF_ROW; break;
+		case 23: type = eSpecType::COPY_SDF; break;
+			// 24 was ritual of sanctification
+		case 25: type = eSpecType::REST; break;
+		case 26: type = eSpecType::WANDERING_WILL_FIGHT; break;
+		case 27: type = eSpecType::END_SCENARIO; break;
+			// 28-49 were undefined
+		case 50: type = eSpecType::ONCE_GIVE_ITEM; break;
+		case 51: type = eSpecType::ONCE_GIVE_SPEC_ITEM; break;
+		case 52: type = eSpecType::ONCE_NULL;
+		case 53: type = eSpecType::ONCE_SET_SDF; break;
+		case 54: type = eSpecType::ONCE_DISPLAY_MSG; break;
+			// 55,56,57 were standard dialogs
+			// 58,59,60 were give item dialogs
+		case 61: type = eSpecType::ONCE_OUT_ENCOUNTER; break;
+		case 62: type = eSpecType::ONCE_TOWN_ENCOUNTER; break;
+			// 63 was trap
+			// 64-79 were undefined
+		case 80: type = eSpecType::SELECT_TARGET; break;
+		case 81: type = eSpecType::DAMAGE; break;
+		case 82: type = eSpecType::AFFECT_HP; break;
+		case 83: type = eSpecType::AFFECT_SP; break;
+		case 84: type = eSpecType::AFFECT_XP; break;
+		case 85: type = eSpecType::AFFECT_SKILL_PTS; break;
+		case 86: type = eSpecType::AFFECT_DEADNESS; break;
+			// 87-97 were various "affect status" nodes
+		case 98: type = eSpecType::AFFECT_STAT; break;
+			// 99 and 199 were "affect mage/priest spell"
+		case 101: type = eSpecType::AFFECT_GOLD; break;
+		case 102: type = eSpecType::AFFECT_FOOD; break;
+		case 103: type = eSpecType::AFFECT_ALCHEMY; break;
+			// 104-106 were various affect stealth/firewalk/flight
+			// 107-129 were undefined
+		case 130: type = eSpecType::IF_SDF; break;
+		case 131: type = eSpecType::IF_TOWN_NUM; break;
+		case 132: type = eSpecType::IF_RANDOM; break;
+		case 133: type = eSpecType::IF_HAVE_SPECIAL_ITEM; break;
+		case 134: type = eSpecType::IF_SDF_COMPARE; break;
+			// 135, 136 were if town/out terrain
+			// 137-146 were various if-have and if-have+take
+		case 147: type = eSpecType::IF_DAY_REACHED; break;
+			// 148 and 149 were if barrels/crates
+		case 150: type = eSpecType::IF_EVENT_OCCURRED; break;
+			// 151 and 152 were if cave lore/woodsman
+			// 153 was if mage lore
+			// 154 was if text response
+		case 155: type = eSpecType::IF_SDF_EQ; break;
+			// 156-169 were undefined
+		case 170: type = eSpecType::MAKE_TOWN_HOSTILE; break;
+			// 171-173 were change/swap/transform terrain
+		case 174: type = eSpecType::TOWN_MOVE_PARTY; break;
+		case 175: type = eSpecType::TOWN_HIT_SPACE; break;
+		case 176: type = eSpecType::TOWN_EXPLODE_SPACE; break;
+		case 177: type = eSpecType::TOWN_LOCK_SPACE; break;
+		case 178: type = eSpecType::TOWN_UNLOCK_SPACE; break;
+		case 179: type = eSpecType::TOWN_SFX_BURST; break;
+		case 180: type = eSpecType::TOWN_CREATE_WANDERING; break;
+		case 181: type = eSpecType::TOWN_PLACE_MONST; break;
+			// 182 and 183 were destroy monster
+		case 184: type = eSpecType::TOWN_GENERIC_LEVER; break;
+		case 185: type = eSpecType::TOWN_GENERIC_PORTAL; break;
+		case 186: type = eSpecType::TOWN_GENERIC_BUTTON; break;
+		case 187: type = eSpecType::TOWN_GENERIC_STAIR; break;
+			// 188 was town lever
+			// 189 was town portal
+			// 190 was town stair
+		case 191: type = eSpecType::TOWN_RELOCATE; break;
+		case 192: type = eSpecType::TOWN_PLACE_ITEM; break;
+			// 193, 194 were split/reunite party
+		case 195: type = eSpecType::TOWN_TIMER_START; break;
+			// 196-199 were undefined
+			// 200-211 were various rect place fields
+		case 212: type = eSpecType::RECT_MOVE_ITEMS; break;
+		case 213: type = eSpecType::RECT_DESTROY_ITEMS; break;
+		case 214: type = eSpecType::RECT_CHANGE_TER; break;
+		case 215: type = eSpecType::RECT_SWAP_TER; break;
+		case 216: type = eSpecType::RECT_TRANS_TER; break;
+		case 217: type = eSpecType::RECT_LOCK; break;
+		case 218: type = eSpecType::RECT_UNLOCK; break;
+			// 219-224 were undefined
+		case 225: type = eSpecType::OUT_MAKE_WANDER; break;
+			// 226 was change terrain
+		case 227: type = eSpecType::OUT_PLACE_ENCOUNTER; break;
+		case 228: type = eSpecType::OUT_MOVE_PARTY; break;
+			// 229 was outdoor shop
+			// 230-255 were undefined
 		case 55: case 58: case 189: // Large dialogs with 36x36 dialog graphics
 			if(pic >= 700 && pic < 1000)
 				pic -= 700;
@@ -333,6 +437,8 @@ void cSpecial::append(legacy::special_node_type& old){
 		case 197:
 			type = eSpecType::TOWN_SET_ATTITUDE;
 			break;
+		default:
+			giveError("Unrecognized node type found: " + std::to_string(old.type));
 	}
 }
 
