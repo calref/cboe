@@ -842,7 +842,7 @@ void place_party(short direction) {
 					where_in_a++;
 				how_many_ok--;
 //				if(how_many_ok > 1) {
-				while(!spot_ok[where_in_a])
+				while(!spot_ok[where_in_a] && where_in_a < 14)
 					where_in_a++;
 //				}
 			}

@@ -1878,7 +1878,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 			giveError("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 30, 58, int(item.ability), &me, "Choose General Ability (inherent)");
+		i = choose_text_res("item-abilities", 30, 60, int(item.ability), &me, "Choose General Ability (inherent)");
 		if(i < 0) return true;
 		item.ability = eItemAbil(i + 30);
 		put_item_abils_in_dlog(me, item, which);
