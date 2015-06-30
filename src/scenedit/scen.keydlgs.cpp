@@ -427,7 +427,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			};
 			break;
 		case STRT_POS_MODE:
-			strings = {"Absolute Position", "Move Southeast", "Move Southwest", "Move Northwest", "Move Northeast"};
+			strings = {"Absolute Position", "Move Southeast", "Move Southwest", "Move Northwest", "Move Northeast", "Nearest"};
 			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())

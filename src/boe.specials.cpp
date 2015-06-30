@@ -4276,13 +4276,40 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::TOWN_RELOCATE_CREATURE:
-			if(spec.ex2b > 4) {
-				giveError("Invalid positioning mode (0-4)");
+			if(spec.ex2b > 5) {
+				giveError("Invalid positioning mode (0-5)");
 				break;
 			}
 			if(spec.ex2a < 0)
 				i = univ.get_target_i(*current_pc_picked_in_spec_enc);
 			else i = spec.ex2a;
+			if(spec.ex2b == 5) {
+				spec.ex2b = 0;
+				if(i >= 100) {
+					std::set<location, loc_compare> checked;
+					std::queue<location> to_check;
+					cCreature& who = dynamic_cast<cCreature&>(univ.get_target(i));
+					location cur_check = l;
+					for(int tries = 0; tries < 100 && !monst_can_be_there(cur_check, i - 100); tries++) {
+						for(int x = -1; x <= 1; x++) {
+							for(int y = -1; y <= 1; y++) {
+								if(x == 0 && y == 0)
+									continue;
+								location next(l.x+x,l.y+y);
+								if(next.x < 0 || next.y < 0 || next.x >= univ.town->max_dim() || next.y >= univ.town->max_dim())
+									continue;
+								if(!checked.count(next))
+									to_check.push(next);
+								checked.insert(cur_check);
+							}
+						}
+						cur_check = to_check.front();
+						to_check.pop();
+					}
+					if(monst_can_be_there(cur_check, i - 100))
+						l = cur_check;
+				}
+			}
 			if(spec.ex2b > 1) {
 				if(spec.ex2b <= 3) l.x *= -1;
 				if(spec.ex2b >= 3) l.y *= -1;
