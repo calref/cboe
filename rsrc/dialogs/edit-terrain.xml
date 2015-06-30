@@ -95,7 +95,7 @@
 	<field name='arena' top='275' left='467' height='16' width='64'/>
 	<button name='pickarena' type='regular' top='299' left='467'>Choose</button>
 	<button name='picktown' type='regular' top='299' left='532'>Custom</button>
-	<button name='object' top='344' left='467' type='large'>Object Details</button>
+	<button name='object' top='344' left='467' type='large'>Object Detail</button>
 	<text top='63' left='430' width='60' height='14'>Map icon:</text>
 	<pict name='seemap' top='86' left='465' type='map' num='0'/>
 	<field name='map' top='62' left='495' width='80' height='16'/>

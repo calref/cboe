@@ -3364,13 +3364,13 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_HAS_GOLD:
 			if(univ.party.gold >= spec.ex1a) {
-				if(spec.ex2a) take_gold(spec.ex1a,true);
+				if(spec.ex2a > 0) take_gold(spec.ex1a,true);
 				*next_spec = spec.ex1b;
 			}
 			break;
 		case eSpecType::IF_HAS_FOOD:
 			if(univ.party.food >= spec.ex1a) {
-				if(spec.ex2a) take_food(spec.ex1a,true);
+				if(spec.ex2a > 0) take_food(spec.ex1a,true);
 				*next_spec = spec.ex1b;
 			}
 			break;
@@ -3382,14 +3382,14 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].special_class == (unsigned)spec.ex2a
 				   && l == univ.town.items[i].item_loc) {
 					*next_spec = spec.ex2b;
-					if(spec.ex2c) {
+					if(spec.ex2c > 0) {
 						*redraw = 1;
 						univ.town.items[i].variety = eItemType::NO_ITEM;
 					}
 				}
 			break;
 		case eSpecType::IF_HAVE_ITEM_CLASS:
-			if(univ.party.check_class(spec.ex1a,spec.ex2a))
+			if(univ.party.check_class(spec.ex1a,spec.ex2a > 0))
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_EQUIP_ITEM_CLASS:
@@ -3399,7 +3399,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
 						   && univ.party[i].equip[j]) {
 							*next_spec = spec.ex1b;
-							if(spec.ex2c) {
+							if(spec.ex2a > 0) {
 								*redraw = 1;
 								univ.party[i].take_item(j);
 								if(i == stat_window)
