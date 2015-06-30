@@ -2670,12 +2670,13 @@ void handle_death() {
 	
 }
 
-void start_new_game() {
+void start_new_game(bool force) {
 	short i;
 	std::string choice;
 	using kb = sf::Keyboard;
 	
-	choice = cChoiceDlog("new-party",{"okay","cancel"}).show();
+	if(!force)
+		choice = cChoiceDlog("new-party",{"okay","cancel"}).show();
 	if(choice == "cancel")
 		return;
 	
@@ -2711,7 +2712,8 @@ void start_new_game() {
 	// It was probably a relic of Exile III.
 	// (It also refreshed stores... with uninitialized items.)
 	
-	edit_party();
+	if(!force)
+		edit_party();
 	
 	// if no PCs left, forget it
 	for(i = 0 ; i < 6; i++)
@@ -2727,9 +2729,10 @@ void start_new_game() {
 			univ.party[i].finish_create();
 		}
 	}
+	party_in_memory = true;
+	if(force) return;
 	fs::path file = nav_put_party();
 	if(!file.empty()) save_party(file, univ);
-	party_in_memory = true;
 }
 
 location get_cur_direction(location the_point) {

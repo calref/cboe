@@ -23,7 +23,7 @@ void handle_hunting();
 void switch_pc(short which);
 void drop_pc(short which);
 void handle_death();
-void start_new_game();
+void start_new_game(bool force = false);
 location get_cur_direction(location the_point);
 bool outd_move_party(location destination,bool forced);
 bool town_move_party(location destination,short forced);
