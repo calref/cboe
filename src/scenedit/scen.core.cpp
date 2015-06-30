@@ -1243,6 +1243,8 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 			int i = -1;
 			if(abil == eMonstAbil::FIELD) {
 				i = int(abil_params.gen.fld);
+				// Although SMASH/DISPEL is supported, the AI doesn't understand how to use it.
+				// Thus I won't expose it in the UI.
 				i = choose_field_type(i, &me, false);
 				abil_params.gen.fld = eFieldType(i);
 			} else if(abil == eMonstAbil::DAMAGE || abil == eMonstAbil::DAMAGE2) {
@@ -1271,7 +1273,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 		abil_dlg["pick-field"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
 			save_monst_abil_detail(me, abil, abil_params);
 			int i = abil_params.radiate.type;
-			i = choose_field_type(i, &me, false);
+			i = choose_field_type(i, &me, true);
 			abil_params.radiate.type = eFieldType(i);
 			fill_monst_abil_detail(me, monst, abil, abil_params);
 			return true;
