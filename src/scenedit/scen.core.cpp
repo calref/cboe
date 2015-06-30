@@ -3332,10 +3332,12 @@ static void set_dlg_custom_sheet(cDialog& me, size_t sheet) {
 }
 
 extern fs::path tempDir;
+extern std::string scenario_temp_dir_name;
+
 void edit_custom_sheets() {
 	int max_pic = -1;
 	std::vector<int> all_pics;
-	fs::path pic_dir = tempDir/"scenario/graphics";
+	fs::path pic_dir = tempDir/scenario_temp_dir_name/"graphics";
 	if(!fs::exists(pic_dir)) fs::create_directories(pic_dir);
 	for(fs::directory_iterator iter(pic_dir); iter != fs::directory_iterator(); iter++) {
 		std::string fname = iter->path().filename().string().c_str();
@@ -3572,7 +3574,7 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, std::vecto
 	size_t a_len = action.length();
 	int which_snd = (curPage + 1) * 100 + (action[a_len-1] - '0');
 	action.erase(action.end() - 1);
-	fs::path sndpath = tempDir/"scenario/sounds";
+	fs::path sndpath = tempDir/scenario_temp_dir_name/"sounds";
 	std::string sndbasenm = "SND" + std::to_string(which_snd);
 	fs::path sndfile = sndpath/(sndbasenm + ".wav");
 	if(action != "open" && !fs::exists(sndfile)) {
@@ -3648,7 +3650,7 @@ void edit_custom_sounds() {
 	snd_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &snd_dlg, true));
 	
 	int max_snd = 99;
-	fs::path snd_dir = tempDir/"scenario/sounds";
+	fs::path snd_dir = tempDir/scenario_temp_dir_name/"sounds";
 	if(!fs::exists(snd_dir)) fs::create_directories(snd_dir);
 	for(fs::directory_iterator iter(snd_dir); iter != fs::directory_iterator(); iter++) {
 		std::string fname = iter->path().filename().string().c_str();

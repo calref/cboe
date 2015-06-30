@@ -489,6 +489,7 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 	*last_src = temp.getTexture();
 }
 
+extern std::string scenario_temp_dir_name;
 void cCustomGraphics::convert_sheets() {
 	if(!is_old) return;
 	int num_graphics = count();
@@ -499,7 +500,7 @@ void cCustomGraphics::convert_sheets() {
 	if(num_graphics % 100) numSheets++;
 	sheets = new sf::Texture[numSheets];
 	extern fs::path tempDir;
-	fs::path pic_dir = tempDir/"scenario/graphics";
+	fs::path pic_dir = tempDir/scenario_temp_dir_name/"graphics";
 	for(size_t i = 0; i < numSheets; i++) {
 		sf::IntRect subrect;
 		subrect.top = i * 280;
@@ -525,7 +526,7 @@ void cCustomGraphics::replace_sheet(size_t num, sf::Image& newSheet) {
 	// Then we need to do some extra stuff to ensure the dialog engine also sees the change
 	extern fs::path tempDir;
 	std::string sheetname = "sheet" + std::to_string(num);
-	fs::path tmpPath = tempDir/"scenario/graphics"/(sheetname + ".png");
+	fs::path tmpPath = tempDir/scenario_temp_dir_name/"graphics"/(sheetname + ".png");
 	newSheet.saveToFile(tmpPath.string().c_str());
 	ResMgr::free<ImageRsrc>(sheetname);
 }

@@ -153,6 +153,7 @@ short choose_background(short cur_choice, cDialog* parent) {
 }
 
 // TODO: I have two functions that do this. (The other one is pick_picture.)
+extern std::string scenario_temp_dir_name;
 pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 	extern fs::path tempDir;
 	int i = 0;
@@ -176,11 +177,11 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 		case PIC_SCEN_LG: total_pics = 4; break;
 		case PIC_TER_MAP: total_pics = 980; break;
 		case PIC_FULL:
-			if(!fs::is_directory(tempDir/"scenario/graphics")) {
+			if(!fs::is_directory(tempDir/scenario_temp_dir_name/"graphics")) {
 				giveError("You have no custom graphics, so it's not possible to select this kind of picture!",parent);
 				return NO_PIC;
 			}
-			for(fs::directory_iterator iter(tempDir/"scenario/graphics"); iter != fs::directory_iterator(); iter++) {
+			for(fs::directory_iterator iter(tempDir/scenario_temp_dir_name/"graphics"); iter != fs::directory_iterator(); iter++) {
 				std::string fname = iter->path().filename().string().c_str();
 				size_t dot = fname.find_last_of('.');
 				if(dot == std::string::npos) continue;
