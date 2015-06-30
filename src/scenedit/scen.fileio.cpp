@@ -917,6 +917,7 @@ struct overrides_sheet {
 	}
 };
 
+std::string scenario_temp_dir_name = "ed_scenario";
 void save_scenario(bool rename) {
 	fs::path toFile = scenario.scen_file;
 	if(rename || toFile.empty()) {
@@ -1024,7 +1025,7 @@ void save_scenario(bool rename) {
 			fin.close();
 		}
 	} else {
-		fs::path picPath = tempDir/"scenario"/"graphics";
+		fs::path picPath = tempDir/scenario_temp_dir_name/"graphics";
 		if(fs::exists(picPath) && fs::is_directory(picPath)) {
 			// First build a list of overridable sheets
 			std::set<std::string> sheet_names;
@@ -1062,7 +1063,7 @@ void save_scenario(bool rename) {
 	}
 	
 	// And also sounds!
-	fs::path sndPath = tempDir/"scenario"/"sounds";
+	fs::path sndPath = tempDir/scenario_temp_dir_name/"sounds";
 	if(fs::exists(sndPath) && fs::is_directory(sndPath)) {
 		fs::directory_iterator dir_iter(sndPath);
 		while(dir_iter != fs::directory_iterator()) {

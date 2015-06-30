@@ -1957,6 +1957,7 @@ static void readSpecialNodesFromStream(std::istream& stream, std::vector<cSpecia
 		nodes[p.first] = p.second;
 }
 
+extern std::string scenario_temp_dir_name;
 bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_header) {
 	// First determine whether we're dealing with a packed or unpacked scenario.
 	bool is_packed = true;
@@ -1977,7 +1978,7 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 		}
 	}
 	auto getFile = [&](std::string relpath) -> std::istream& {
-		if(is_packed) return pack.getFile(relpath);
+		if(is_packed) return pack.getFile("scenario/" + relpath);
 		if(fin.is_open()) fin.close();
 		fin.clear();
 		fin.open((file_to_load/relpath).string().c_str());
@@ -1997,29 +1998,29 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 	TiXmlBase::SetCondenseWhiteSpace(true); // Make sure this is enabled, because the dialog engine disables it
 	{
 		// First, load up the binary header data.
-		std::istream& header = getFile("scenario/header.exs");
+		std::istream& header = getFile("header.exs");
 		header.read(reinterpret_cast<char*>(&scenario.format), sizeof(scenario_header_flags));
 		
 		// Then, the main scenario data.
-		std::istream& scen_data = getFile("scenario/scenario.xml");
+		std::istream& scen_data = getFile("scenario.xml");
 		readScenarioFromXml(xmlDocFromStream(scen_data, "scenario.xml"), scenario);
 		
 		if(only_header) return true;
 		
 		// Next, terrain types...
-		std::istream& terrain = getFile("scenario/terrain.xml");
+		std::istream& terrain = getFile("terrain.xml");
 		readTerrainFromXml(xmlDocFromStream(terrain, "terrain.xml"), scenario);
 		
 		// ...items...
-		std::istream& items = getFile("scenario/items.xml");
+		std::istream& items = getFile("items.xml");
 		readItemsFromXml(xmlDocFromStream(items, "items.xml"), scenario);
 		
 		// ...and monsters.
-		std::istream& monsters = getFile("scenario/monsters.xml");
+		std::istream& monsters = getFile("monsters.xml");
 		readMonstersFromXml(xmlDocFromStream(monsters, "monsters.xml"), scenario);
 		
 		// Finally, the special nodes.
-		std::istream& nodes = getFile("scenario/scenario.spec");
+		std::istream& nodes = getFile("scenario.spec");
 		readSpecialNodesFromStream(nodes, scenario.scen_specials, "scenario.spec");
 	}
 	
@@ -2029,15 +2030,15 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 			scenario.outdoors[x][y] = new cOutdoors(scenario);
 			std::string file_basename = "out" + std::to_string(x) + '~' + std::to_string(y);
 			// First the main data.
-			std::istream& outdoors = getFile("scenario/out/" + file_basename + ".xml");
+			std::istream& outdoors = getFile("out/" + file_basename + ".xml");
 			readOutdoorsFromXml(xmlDocFromStream(outdoors, file_basename + ".xml"), *scenario.outdoors[x][y]);
 			
 			// Then the map.
-			std::istream& out_map = getFile("scenario/out/" + file_basename + ".map");
+			std::istream& out_map = getFile("out/" + file_basename + ".map");
 			loadOutMapData(load_map(out_map, false, file_basename + ".map"), loc(x,y), scenario);
 			
 			// And the special nodes.
-			std::istream& out_spec = getFile("scenario/out/" + file_basename + ".spec");
+			std::istream& out_spec = getFile("out/" + file_basename + ".spec");
 			readSpecialNodesFromStream(out_spec, scenario.outdoors[x][y]->specials, file_basename + ".spec");
 		}
 	}
@@ -2046,19 +2047,19 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 	for(size_t i = 0; i < scenario.towns.size(); i++) {
 		std::string file_basename = "town" + std::to_string(i);
 		// First the main data.
-		std::istream& town = getFile("scenario/towns/" + file_basename + ".xml");
+		std::istream& town = getFile("towns/" + file_basename + ".xml");
 		readTownFromXml(xmlDocFromStream(town, file_basename + ".xml"), scenario.towns[i], scenario);
 		
 		// Then the map.
-		std::istream& town_map = getFile("scenario/towns/" + file_basename + ".map");
+		std::istream& town_map = getFile("towns/" + file_basename + ".map");
 		loadTownMapData(load_map(town_map, true, file_basename + ".map"), i, scenario);
 		
 		// And the special nodes.
-		std::istream& town_spec = getFile("scenario/towns/" + file_basename + ".spec");
+		std::istream& town_spec = getFile("towns/" + file_basename + ".spec");
 		readSpecialNodesFromStream(town_spec, scenario.towns[i]->specials, file_basename + ".spec");
 		
 		// Don't forget the dialogue nodes.
-		std::istream& town_talk = getFile("scenario/towns/talk" + std::to_string(i) + ".xml");
+		std::istream& town_talk = getFile("towns/talk" + std::to_string(i) + ".xml");
 		readDialogueFromXml(xmlDocFromStream(town_talk, "talk.xml"), scenario.towns[i]->talking, i);
 	}
 	
@@ -2066,7 +2067,7 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 	// First figure out where they are in the filesystem. The implementation of this depends on whether the scenario is packed.
 	int num_graphic_sheets = 0;
 	if(is_packed) {
-		fs::remove_all(tempDir/"scenario");
+		fs::remove_all(tempDir/scenario_temp_dir_name);
 		std::bitset<65536> have_pic = {0};
 		for(auto& file : pack) {
 			std::string fname = file.filename;
@@ -2089,9 +2090,10 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 				if(fname.substr(dot,4) != ".wav") continue;
 				if(!std::all_of(fname.begin() + 19, fname.begin() + dot, isdigit)) continue;
 			} else continue;
-			fs::path path = tempDir/fname;
+			fname = fname.substr(9);
+			fs::path path = tempDir/scenario_temp_dir_name/fname;
 			fs::create_directories(path.parent_path());
-			std::istream& f = pack.getFile(fname);
+			std::istream& f = file.contents;
 			std::ofstream fout(path.string().c_str(), std::ios::binary);
 			fout << f.rdbuf();
 			fout.close();
@@ -2099,8 +2101,8 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 		// This is a bit of trickery to get it to only count the first consecutive range of sheets
 		while(have_pic[num_graphic_sheets])
 			num_graphic_sheets++;
-		ResMgr::pushPath<ImageRsrc>(tempDir/"scenario"/"graphics");
-		ResMgr::pushPath<SoundRsrc>(tempDir/"scenario"/"sounds");
+		ResMgr::pushPath<ImageRsrc>(tempDir/scenario_temp_dir_name/"graphics");
+		ResMgr::pushPath<SoundRsrc>(tempDir/scenario_temp_dir_name/"sounds");
 	} else {
 		if(fs::is_directory(file_to_load/"graphics"))
 			ResMgr::pushPath<ImageRsrc>(file_to_load/"graphics");
@@ -2338,8 +2340,8 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store);
 
 void load_spec_graphics_v1(fs::path scen_file) {
 	static const char*const noGraphics = "The game will still work without the custom graphics, but some things will not look right.";
-	fs::remove_all(tempDir/"scenario/graphics");
-	fs::remove_all(tempDir/"scenario/sounds");
+	fs::remove_all(tempDir/scenario_temp_dir_name/"graphics");
+	fs::remove_all(tempDir/scenario_temp_dir_name/"sounds");
 	fs::path path(scen_file);
 	std::cout << "Loading scenario graphics... (" << path  << ")\n";
 	// Tried path.replace_extension, but that only deleted the extension, so I have to do it manually

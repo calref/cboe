@@ -65,6 +65,7 @@ bool give_intro_hint = true;
 bool in_scen_debug = false;
 bool show_startup_splash = true;
 bool belt_present = false;
+std::string scenario_temp_dir_name = "scenario";
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
