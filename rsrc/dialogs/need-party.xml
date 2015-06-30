@@ -7,5 +7,6 @@
 	<text top='6' left='49' width='273' height='43'>
 		You can't start a scenario until you have a party loaded.
 		Click the Load Game or Make New Party button to get a group of adventurers.
+		Or, hold the Alt key to use a preset party.
 	</text>
 </dialog>

@@ -34,8 +34,10 @@ rectangle startup_button[6];
 
 // TODO: Always returns false, so make it void
 bool handle_startup_press(location the_point) {
+	using kb = sf::Keyboard;
 	std::string scen_name;
 	short i,scen;
+	bool force_party = false;
 	
 	the_point.x -= ul.x;
 	the_point.y -= ul.y;
@@ -68,12 +70,20 @@ bool handle_startup_press(location the_point) {
 					
 				case STARTBTN_JOIN: // regular scen
 					if(!party_in_memory) {
-						cChoiceDlog("need-party").show();
-						break;
+						if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt)) {
+							force_party = true;
+							start_new_game(true);
+						} else {
+							cChoiceDlog("need-party").show();
+							break;
+						}
 					}
 					scen = pick_prefab_scen();
-					if(scen < 0)
+					if(scen < 0) {
+						if(force_party)
+							party_in_memory = false;
 						break;
+					}
 					
 					switch(scen) {
 						case 0: scen_name = "valleydy.exs"; break;
@@ -83,22 +93,37 @@ bool handle_startup_press(location the_point) {
 							//case 3: sprintf(univ.party.scen_name,"busywork.exs"); break;
 					}
 					put_party_in_scen(scen_name);
+					if(force_party && scen_name != univ.party.scen_name)
+						party_in_memory = false;
 					break;
 					
 				case STARTBTN_CUSTOM: // custom
 					if(!party_in_memory) {
-						cChoiceDlog("need-party").show();
-						break;
+						if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt)) {
+							force_party = true;
+							start_new_game(true);
+						} else {
+							cChoiceDlog("need-party").show();
+							break;
+						}
 					}
 					
 					scen = pick_a_scen();
-					if(scen < 0) break;
+					if(scen < 0) {
+						if(force_party)
+							party_in_memory = false;
+						break;
+					}
 					if(scen_headers[scen].prog_make_ver[0] > 2 || scen_headers[scen].prog_make_ver[1] > 0) {
+						if(force_party)
+							party_in_memory = false;
 						cChoiceDlog("scen-version-mismatch").show();
 						break;
 					}
 					scen_name = scen_headers[scen].file;
 					put_party_in_scen(scen_name);
+					if(force_party && scen_name != univ.party.scen_name)
+						party_in_memory = false;
 					break;
 			}
 		}
