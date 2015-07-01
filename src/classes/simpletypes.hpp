@@ -594,7 +594,7 @@ enum class eSpecType {
 	COPY_SDF = 23,
 	DISPLAY_PICTURE = 24,
 	REST = 25,
-	WANDERING_WILL_FIGHT = 26,
+	TITLED_MSG = 26,
 	END_SCENARIO = 27, // add "win/lose" option
 	SET_POINTER = 28,
 	SET_CAMP_FLAG = 29,

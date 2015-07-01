@@ -2152,6 +2152,10 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::DISPLAY_MSG:
 			check_mess = true;
 			break;
+		case eSpecType::TITLED_MSG:
+			get_strs(str1,str2, cur_spec_type, cur_node.m3, -1);
+			handle_message(which_mode, cur_spec_type, cur_node.m1, cur_node.m2, a, b, str1, cur_node.pic, ePicType(cur_node.pictype));
+			break;
 		case eSpecType::DISPLAY_SM_MSG:
 			get_strs(str1,str2, cur_spec_type,cur_node.m1,cur_node.m2);
 			if(cur_node.m1 >= 0)
@@ -2250,11 +2254,6 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::REST:
 			check_mess = true;
 			do_rest(spec.ex1a, spec.ex1b, spec.ex1b);
-			break;
-		case eSpecType::WANDERING_WILL_FIGHT:
-			if(which_mode != eSpecCtx::OUTDOOR_ENC)
-				break;
-			*a = (spec.ex1a == 0) ? 1 : 0;
 			break;
 		case eSpecType::END_SCENARIO:
 			end_scenario = true;
@@ -4575,7 +4574,11 @@ void setsd(short a,short b,short val) {
 	PSD[a][b] = val;
 }
 
-void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,short *a,short *b) {
+void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,short *a,short *b,std::string title,pic_num_t pic,ePicType pt) {
+	if(pic == -1) {
+		pic = univ.scenario.intro_pic;
+		pt = PIC_SCEN;
+	}
 	eEncNoteType note_type;
 	switch(cur_type) {
 		case 0:
@@ -4602,7 +4605,7 @@ void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,s
 	where1 = is_out() ? univ.party.outdoor_corner.x + univ.party.i_w_c.x : univ.town.num;
 	where2 = is_out() ? univ.party.outdoor_corner.y + univ.party.i_w_c.y : univ.town.num;
 	std::string placename = is_out() ? univ.out->out_name : univ.town->town_name;
-	cStrDlog display_strings(str1.c_str(), str2.c_str(),"",univ.scenario.intro_pic,PIC_SCEN,0);
+	cStrDlog display_strings(str1.c_str(), str2.c_str(),title,pic,pt,0);
 	display_strings.setSound(57);
 	display_strings.setRecordHandler(cStringRecorder(note_type).string1(mess1).string2(mess2).from(where1,where2).at(placename));
 	display_strings.show();

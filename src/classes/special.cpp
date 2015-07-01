@@ -80,7 +80,7 @@ void cSpecial::append(legacy::special_node_type& old){
 		case 23: type = eSpecType::COPY_SDF; break;
 			// 24 was ritual of sanctification
 		case 25: type = eSpecType::REST; break;
-		case 26: type = eSpecType::WANDERING_WILL_FIGHT; break;
+		case 26: type = eSpecType::CANT_ENTER; break; // originally wandering will fight
 		case 27: type = eSpecType::END_SCENARIO; break;
 			// 28-49 were undefined
 		case 50: type = eSpecType::ONCE_GIVE_ITEM; break;
@@ -498,9 +498,9 @@ static const char*const button_dict[7][11] = {
 	{ // general nodes
 		" mmmMmmmmmMmmm mmmmmm   Mmm  $ mmmmmm        mmm", // msg1
 		"                                                ", // msg2
-		"                                                ", // msg3
-		"          p                                 3   ", // pic
-		"          ?                                     ", // pictype
+		"                          M                     ", // msg3
+		"          p               p                 3   ", // pic
+		"          ?               ?                     ", // pictype
 		"    &         x  T i    _             M cit  j  ", // ex1a
 		"    %        S     ss                       cJ  ", // ex1b
 		"                                                ", // ex1c

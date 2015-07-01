@@ -26,7 +26,7 @@ cSpecial get_node(short cur_spec,short cur_spec_type);
 void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
 void setsd(short a,short b,short val);
-void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,short *a,short *b);
+void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,short*a,short*b,std::string title="",pic_num_t pic=-1,ePicType pt=PIC_SCEN);
 void get_strs(std::string& str1, std::string& str2,short cur_type,short which_str1,short which_str2) ;
 void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
