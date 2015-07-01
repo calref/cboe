@@ -7044,7 +7044,9 @@ namespace Catch {
     SourceLineInfo::SourceLineInfo( char const* _file, std::size_t _line )
     :   file( _file ),
         line( _line )
-    {}
+    {
+		file = file.substr(file.find("../") + 2);
+	}
     SourceLineInfo::SourceLineInfo( SourceLineInfo const& other )
     :   file( other.file ),
         line( other.line )
