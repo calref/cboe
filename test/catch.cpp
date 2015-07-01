@@ -10,3 +10,9 @@ sf::Texture tiny_obj_gworld, vehicle_gworld;
 sf::RenderWindow mainPtr;
 fs::path scenario_temp_dir_name = "test_scenario";
 cCustomGraphics spec_scen_g;
+
+// And these are referenced from the scenario code, though not used in test cases
+#include "scenario.hpp"
+location cur_out;
+short cur_town;
+cScenario scenario;
