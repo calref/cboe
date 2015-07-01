@@ -15,6 +15,14 @@
 
 #include "oldstructs.hpp"
 
+void cScenario::reset_version() {
+	format.prog_make_ver[0] = 2;
+	format.prog_make_ver[1] = 0;
+	format.prog_make_ver[2] = 0;
+	format.flag1 = 'O'; format.flag2 = 'B';
+	format.flag3 = 'O'; format.flag4 = 'E';
+}
+
 cScenario::~cScenario() {
 	destroy_terrain();
 }

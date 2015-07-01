@@ -41,6 +41,9 @@ extern bool cur_scen_is_mac;
 void print_write_position ();
 void load_spec_graphics();
 
+// These aren't static solely so that the test cases can access them.
+void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario);
+
 template<typename Container> static void writeSpecialNodes(std::ostream& fout, Container nodes) {
 	static_assert(std::is_same<typename Container::value_type, cSpecial>::value,
 		"writeSpecialNodes must be instantiated with a container of special nodes");
@@ -111,7 +114,7 @@ static bool is_minmax(int lo, int hi, int val) {
 	return minmax(lo, hi, val) == val;
 }
 
-static void writeScenarioToXml(ticpp::Printer&& data) {
+void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.OpenElement("scenario");
 	data.PushAttribute("boes", scenario.format_ed_version());
 	data.PushElement("title", scenario.scen_name);
@@ -161,7 +164,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 	data.PushElement("outdoor-start", scenario.out_sec_start);
 	data.PushElement("sector-start", scenario.out_start);
 	for(int i = 0; i < 3; i++) {
-		if(is_minmax(0, scenario.towns.size(), scenario.store_item_towns[i])) {
+		if(scenario.store_item_towns[i] >= 0) {
 			data.OpenElement("store-items");
 			data.PushAttribute("top", scenario.store_item_rects[i].top);
 			data.PushAttribute("left", scenario.store_item_rects[i].left);
@@ -172,7 +175,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		}
 	}
 	for(int i = 0; i < scenario.town_mods.size(); i++) {
-		if(is_minmax(0, scenario.towns.size(), scenario.town_mods[i].spec)) {
+		if(scenario.town_mods[i].spec >= 0) {
 			data.OpenElement("town-flag");
 			data.PushAttribute("town", scenario.town_mods[i].spec);
 			data.PushAttribute("add-x", scenario.town_mods[i].x);
@@ -286,7 +289,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		data.CloseElement("shop");
 	}
 	for(int i = 0; i < scenario.scenario_timers.size(); i++) {
-		if(scenario.scenario_timers[i].time >= 0) {
+		if(scenario.scenario_timers[i].time > 0 && scenario.scenario_timers[i].node >= 0) {
 			data.OpenElement("timer");
 			data.PushAttribute("freq", scenario.scenario_timers[i].time);
 			data.PushText(scenario.scenario_timers[i].node);
@@ -917,7 +920,7 @@ struct overrides_sheet {
 	}
 };
 
-std::string scenario_temp_dir_name = "ed_scenario";
+extern std::string scenario_temp_dir_name;
 void save_scenario(bool rename) {
 	fs::path toFile = scenario.scen_file;
 	if(rename || toFile.empty()) {
@@ -928,11 +931,7 @@ void save_scenario(bool rename) {
 		if(toFile.empty()) return;
 	}
 	
-	scenario.format.prog_make_ver[0] = 2;
-	scenario.format.prog_make_ver[1] = 0;
-	scenario.format.prog_make_ver[2] = 0;
-	scenario.format.flag1 = 'O'; scenario.format.flag2 = 'B';
-	scenario.format.flag3 = 'O'; scenario.format.flag4 = 'E';
+	scenario.reset_version();
 	// TODO: This is just a skeletal outline of what needs to be done to save the scenario
 	tarball scen_file;
 	{
@@ -942,7 +941,7 @@ void save_scenario(bool rename) {
 		
 		// Next, the bulk scenario data.
 		std::ostream& scen_data = scen_file.newFile("scenario/scenario.xml");
-		writeScenarioToXml(ticpp::Printer("scenario.xml", scen_data));
+		writeScenarioToXml(ticpp::Printer("scenario.xml", scen_data), scenario);
 		
 		// Then the terrains...
 		std::ostream& terrain = scen_file.newFile("scenario/terrain.xml");

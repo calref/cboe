@@ -1595,6 +1595,7 @@ static void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& sce
 			if(num_timers >= 8)
 				throw xBadNode(type, elem->Row(), elem->Column(), fname);
 			readTimerFromXml(*elem, town->timers[num_timers]);
+			town->timers[num_timers].node_type = 2;
 			num_timers++;
 		} else if(type == "flags") {
 			Iterator<Element> flag;

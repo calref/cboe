@@ -11,6 +11,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <iosfwd>
 
 struct rectangle;
 
@@ -135,5 +136,11 @@ location loc();
 rectangle rect();
 rectangle rect(location tl, location br);
 rectangle rect(int top, int left, int bottom, int right);
+
+std::ostream& operator<< (std::ostream& out, location l);
+std::ostream& operator<< (std::ostream& out, spec_loc_t l);
+std::ostream& operator<< (std::ostream& out, sign_loc_t l);
+std::ostream& operator<< (std::ostream& out, rectangle r);
+std::ostream& operator<< (std::ostream& out, info_rect_t r);
 
 #endif
