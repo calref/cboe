@@ -23,7 +23,7 @@ set-sdf-row
 copy-sdf
 disp-pict
 rest
-set-wander-fight
+title-msg
 end-scen
 set-ptr
 set-cpn-flag
