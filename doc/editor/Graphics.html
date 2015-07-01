@@ -16,7 +16,7 @@
 <p>One of the best ways to put your own personal spin on your scenario is to give it your
 own graphics. You can provide your own graphics for monsters, items, terrain (animated or
 not), dialog pictures (36 x 36), talk portraits (32 x 32), terrain map icons (12 x 12),
- missile animations (18 x 18), and explosion animations (36 x 36).</p>
+ missile animations (18 x 18), and explosion animations (28 x 36).</p>
 
 <p>To create your own graphics, you need to use a painting program. The basic dimension of
 customized graphics is 28 x 36. The custom graphics must be arranged in image which is
@@ -117,16 +117,6 @@ fit into a 28x36 space, similar to what happens when they are used for an outdoo
 wandering encounter. This size change will preserve aspect ratio and centre the graphic in
 the available space.</p>
 
-<p><b>Monster (1 x 2), Monster (2 x 2) -</b> These 2 graphics require 8 and 16 custom
-sheet slots. Put the parts of the monster facing right, then facing left, then attacking
-right, then attacking left, with the parts arranged left to right and top to bottom. To
-give a monster type this graphic, add 3000 (if 1 x 2) or 4000 (if 2 x 2) to the number of
-the slot the first of the graphics is in, and put that number in the Monster Picture
-field on the editing monster window.</p>
-<p>To use this graphic as the dialog picture in a dialog (created by a special node),
-put 3 in the Picture Type field. Add 3000 (if 1 x 2) or 4000 (if 2 x 2) to the slot the
-first of the graphics is in, and put that number in the Pict spot.</p>
-
 <p><b>Dialog Picture -</b> You can put a custom 36 x 36 graphic in the upper left corner
 of a dialog box. Split the graphic into 2 18 x 36 halves, and put the 2 graphics in 2
 consecutive custom sheet slots (pushed into the upper left corner).</p>
@@ -168,7 +158,7 @@ slot the north and south graphics are in, and put that number in the text field 
 missile graphic is requested.</p>
 
 <p><b>Explosion - </b>You can play custom explosion animations using the Do Sfx Burst
-special node type. An explosion animation consists of 8 full-sized frames with transparent
+special node type. An explosion animation consists of 8 full-sized (28x36) frames with transparent
 backgrounds, which must be present in order in the graphics sheet. Add 1000 to the slot of the first frame, and put that number in the text field where the explosion type is
 required.</p>
 
