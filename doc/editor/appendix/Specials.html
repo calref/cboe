@@ -189,6 +189,9 @@ example, a guard won't let them), use this node.</dd>
 <dt>Uses:</dt><dd>Suppose you want a pillar the party can walk through. Place a special
 encounter on the pillar, and have a node of this type be the first special node
 called. Set Extra 1a to 0 and Extra 2a to 1.</dd>
+<dt>Uses:</dt><dd>Suppose a group of soldiers outdoors will only attack the party if they
+have the stolen Wand of Balloo. If they don't have it, use this node with Extra 1a set to
+0. If you don't call a special node of this type, the soldiers will attack.</dd>
 <dt>Note:</dt><dd>This doesn't have to be the last node in a chain. If this is the first
 special node called, the party is still kept from entering the space... unless another
 node of the same type undoes it. The only exception to this is forced passage, as the node
@@ -323,17 +326,11 @@ time passes, and their health and spell points are restored.
 <dt>Extra 1a:</dt><dd>The number of ticks that pass (a day is 3000 ticks)</dd>
 <dt>Extra 1b:</dt><dd>The amount of health and spell points to restore.</dd></dd>
 
-<dt>Type 26: Wandering Will Fight</dt><dd>This special node only has an effect if called
-when the party has just encountered a group of monsters outdoors. If called at any other
-time, it has no effect. The node determines whether the monsters in the group will
-actually attack the party or not.
+<dt>Type 26: Display Message with Title</dt><dd>This is similar to a Display Message node,
+but lets you specify a title string and choose an icon.
 <dl>
-<dt>Extra 1a:</dt><dd>If this is set to 0, the monsters will not attack the party, and the
-outdoor encounter will simply end. If its non-zero, the monsters will attack the
-party.</dd>
-<dt>Uses:</dt><dd>Suppose a group of soldiers outdoors will only attack the party if they
-have the stolen Wand of Balloo. If they don't have it, use this node with Extra 1a set to
-0. If you don't call a special node of this type, the soldiers will attack.</dd></dd>
+<dt>Mess 3:</dt><dd>The number of the string to use as a title. Click Create/Edit to edit it. Note that the space allotted for the title is just one line, so keep it short.</dd>
+<dt>Pic, Pictype</dt><dd>Specify the picture you want to show with the message.</dd></dd>
 
 <dt>Type 27: End Scenario</dt><dd>Every scenario should call a node of this type at least
 once. When called, the scenario immediately ends, and the player will be returned to the

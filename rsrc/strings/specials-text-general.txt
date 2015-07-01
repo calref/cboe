@@ -414,15 +414,15 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Wandering will fight
+Display Message with Title
 Unused
 Unused
+First part of message
+Second part of message
+Message title
+Picture
+Type of picture
 Unused
-Unused
-Unused
-Unused
-Unused
-0 - no attack, 1 - attack
 Unused
 Unused
 Unused
