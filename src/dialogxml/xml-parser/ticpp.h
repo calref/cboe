@@ -1361,7 +1361,7 @@ namespace ticpp
 		/**
 		Constructor.
 		*/
-		Text();
+		explicit Text(bool cdata = false);
 
 		/**
 		Constructor.
@@ -1373,7 +1373,7 @@ namespace ticpp
 		Constructor.
 		@overload
 		*/
-		Text( const std::string& value );
+		Text( const std::string& value, bool cdata = false );
 
 		/**
 		Streams value into a string and creates a Text with it.
@@ -1385,10 +1385,19 @@ namespace ticpp
 		@see TiXmlText
         */
 		template < class T >
-			Text( const T& value )
+			Text( const T& value, bool cdata = false )
 				: NodeImp< TiXmlText >( new TiXmlText( ToString( value ) ) )
 		{
 			m_impRC->InitRef();
+			if(cdata) m_tiXmlPointer->SetCDATA(true);
+		}
+		
+		void SetCdata(bool cdata) {
+			m_tiXmlPointer->SetCDATA(cdata);
+		}
+		
+		bool isCdata() const {
+			return m_tiXmlPointer->CDATA();
 		}
 	};
 

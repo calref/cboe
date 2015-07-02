@@ -129,4 +129,52 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.special_items[0].name == "Test Special Item");
 		CHECK(scen.special_items[0].descr == "This is a special item description!");
 	}
+	SECTION("With some empty strings, only trailing ones are stripped") {
+		scen.spec_strs.resize(12);
+		scen.spec_strs[3] = "Hello World!";
+		scen.spec_strs[9] = "Goodbye World!";
+		scen.journal_strs.resize(19);
+		scen.journal_strs[7] = "My best journal!";
+		scen.intro_strs[4] = "Another intro string!";
+		in_and_out("empty strings", scen);
+		CHECK(scen.spec_strs.size() == 10);
+		CHECK(scen.spec_strs[3] == "Hello World!");
+		CHECK(scen.spec_strs[9] == "Goodbye World!");
+		CHECK(scen.journal_strs.size() == 8);
+		CHECK(scen.journal_strs[7] == "My best journal!");
+		CHECK(scen.intro_strs[4] == "Another intro string!");
+	}
+	SECTION("Whitespace is collapsed in short strings but not in long strings") {
+		scen.scen_name = "Test    Scenario   with extra spaces";
+		scen.who_wrote[0] = "Teaser   the      first!";
+		scen.who_wrote[1] = "   Teaser the        second  !    ";
+		scen.spec_strs.push_back("      ");
+		scen.spec_strs.push_back("   What  is this...   ?");
+		scen.journal_strs.push_back("  Do not   collapse  this      journal.");
+		scen.intro_strs[1] = "An intro string!      With extra spaces!";
+		scen.special_items.emplace_back();
+		scen.special_items[0].name = "A special    space-filled      item!";
+		scen.special_items[0].descr = "A special item...      with extra spaces!";
+		scen.quests.emplace_back();
+		scen.quests[0].name = "A quest    filled     with      spaces...      ";
+		scen.quests[0].descr = "A quest...      with extra spaces!";
+		scen.snd_names.push_back("A    sound    full of    spaces!");
+		in_and_out("whitespace", scen);
+		CHECK(scen.scen_name == "Test Scenario with extra spaces");
+		CHECK(scen.who_wrote[0] == "Teaser the first!");
+		CHECK(scen.who_wrote[1] == "Teaser the second !");
+		CHECK(scen.spec_strs.size() == 2);
+		CHECK(scen.spec_strs[0] == "      ");
+		CHECK(scen.spec_strs[1] == "   What  is this...   ?");
+		CHECK(scen.journal_strs.size() == 1);
+		CHECK(scen.journal_strs[0] == "  Do not   collapse  this      journal.");
+		CHECK(scen.intro_strs[1] == "An intro string!      With extra spaces!");
+		CHECK(scen.special_items.size() == 1);
+		CHECK(scen.special_items[0].name == "A special space-filled item!");
+		CHECK(scen.special_items[0].descr == "A special item...      with extra spaces!");
+		CHECK(scen.quests.size() == 1);
+		CHECK(scen.quests[0].name == "A quest filled with spaces...");
+		CHECK(scen.quests[0].descr == "A quest...      with extra spaces!");
+		CHECK(scen.snd_names[0] == "A sound full of spaces!");
+	}
 }

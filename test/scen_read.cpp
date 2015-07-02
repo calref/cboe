@@ -38,4 +38,9 @@ TEST_CASE("Loading a new-format scenario record") {
 		doc = xmlDocFromStream(fin, "missing_toplevel.xml");
 		REQUIRE_THROWS_AS(readScenarioFromXml(std::move(doc), scen), xMissingElem);
 	}
+	SECTION("When there are too many intro strings") {
+		fin.open("files/scenario/intro_overflow.xml");
+		doc = xmlDocFromStream(fin, "intro_overflow.xml");
+		REQUIRE_THROWS_AS(readScenarioFromXml(std::move(doc), scen), xBadNode);
+	}
 }

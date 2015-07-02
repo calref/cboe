@@ -758,17 +758,19 @@ Comment::Comment( const std::string& comment )
 
 //*****************************************************************************
 
-Text::Text()
+Text::Text(bool cdata)
 : NodeImp< TiXmlText >( new TiXmlText("") )
 {
 	m_impRC->InitRef();
+	if(cdata) m_tiXmlPointer->SetCDATA(true);
 }
 
 
-Text::Text( const std::string& value )
+Text::Text( const std::string& value, bool cdata )
 : NodeImp< TiXmlText >( new TiXmlText( value ) )
 {
 	m_impRC->InitRef();
+	if(cdata) m_tiXmlPointer->SetCDATA(true);
 }
 
 Text::Text( TiXmlText* text )
