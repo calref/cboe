@@ -32,12 +32,12 @@ namespace ticpp {
 		template<typename T> void PushAttribute(std::string attrName, T attrVal) {
 			openElements.top()->SetAttribute(attrName, boost::lexical_cast<std::string>(attrVal));
 		}
-		template<typename T> void PushText(T textVal) {
-			PushNode(new Text(boost::lexical_cast<std::string>(textVal)));
+		template<typename T> void PushText(T textVal, bool cdata = false) {
+			PushNode(new Text(boost::lexical_cast<std::string>(textVal), cdata));
 		}
-		template<typename T> void PushElement(std::string tagName, T elemVal) {
+		template<typename T> void PushElement(std::string tagName, T elemVal, bool cdata = false) {
 			OpenElement(tagName);
-			PushText(elemVal);
+			PushText(elemVal, cdata);
 			CloseElement(tagName);
 		}
 	};
@@ -47,12 +47,12 @@ template<> inline void ticpp::Printer::PushAttribute(std::string attrName, bool 
 	PushAttribute(attrName, attrVal ? "true" : "false");
 }
 
-template<> inline void ticpp::Printer::PushElement(std::string attrName, bool attrVal) {
-	PushElement(attrName, attrVal ? "true" : "false");
+template<> inline void ticpp::Printer::PushElement(std::string attrName, bool attrVal, bool cdata) {
+	PushElement(attrName, attrVal ? "true" : "false", cdata);
 }
 
-template<> inline void ticpp::Printer::PushText(bool textVal) {
-	PushText(textVal ? "true" : "false");
+template<> inline void ticpp::Printer::PushText(bool textVal, bool cdata) {
+	PushText(textVal ? "true" : "false", cdata);
 }
 
 #endif
