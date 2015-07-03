@@ -99,6 +99,7 @@ template<typename Container> static void port_shop_spec_node(cSpecial& spec, std
 	spec.ex2a = spec.ex2b = -1;
 }
 
+static const std::string err_prefix = "Error loading Blades of Exile Scenario: ";
 bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_header){
 	short i,n;
 	bool file_ok = false;
@@ -109,9 +110,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	// TODO: Convert this (and all the others in this file) to use C++ streams
 	FILE* file_id = fopen(file_to_load.string().c_str(),"rb");
 	if(file_id == NULL) {
-		// TODO: The third parameter to oopsError is supposed to specify whether we're in the scenario editor or the game, but I don't think this code knows that.
-		// TODO: Alternatively, nuke oopsError and just use giveError. It's more informative, anyway.
-		oopsError(10, 0, 0);
+		giveError(err_prefix + "Could not open file.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -119,7 +118,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	
 	if(fread(&scenario.format, len, 1, file_id) < 1){
 		fclose(file_id);
-		oopsError(11, 0, 0);
+		giveError(err_prefix + "Failed to read scenario header.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -146,7 +145,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	n = fread(temp_scenario, len, 1, file_id);
 	if(n < 1){
 		fclose(file_id);
-		oopsError(12, 0, 0);
+		giveError(err_prefix + "Failed to read scenario data.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_scenario(temp_scenario);
@@ -154,7 +153,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	n = fread(item_data, len, 1, file_id);
 	if(n < 1){
 		fclose(file_id);
-		oopsError(13, 0, 0);
+		giveError(err_prefix + "Failed to read scenario items.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_item_list(item_data);
@@ -2153,7 +2152,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	
 	FILE* file_id = fopen(scen_file.string().c_str(), "rb");
 	if(file_id == NULL) {
-		oopsError(14, 0, 0);
+		giveError(err_prefix + "Could not open file for reading town data.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2161,7 +2160,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	n = fseek(file_id, len_to_jump, SEEK_SET);
 	if(n != 0) {
 		fclose(file_id);
-		oopsError(15, 0, 0);
+		giveError(err_prefix + "Failure seeking to town record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2169,7 +2168,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	n = fread(&store_town, len, 1, file_id);
 	if(n < 1) {
 		fclose(file_id);
-		oopsError(16, 0, 0);
+		giveError(err_prefix + "Could not read town record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_town(&store_town);
@@ -2222,7 +2221,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	n = fread(&store_talk, len, 1, file_id);
 	if(n < 1) {
 		fclose(file_id);
-		oopsError(17, 0, 0);
+		giveError(err_prefix + "Could not read dialogue record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_talk_nodes(&store_talk);
@@ -2257,7 +2256,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	
 	n = fclose(file_id);
 	if(n != 0) {
-		oopsError(18, 0, 0);
+		giveError(err_prefix + "An error occurred while closing the file.", boost::lexical_cast<std::string>(std_fmterr));
 	}
 	
 	return true;
@@ -2291,7 +2290,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	
 	FILE* file_id = fopen(scen_file.string().c_str(), "rb");
 	if(file_id == NULL) {
-		oopsError(32, 0, 0);
+		giveError(err_prefix + "Could not open file for reading outdoor data.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2299,7 +2298,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	n = fseek(file_id, len_to_jump, SEEK_SET);
 	if(n != 0) {
 		fclose(file_id);
-		oopsError(33, 0, 0);
+		giveError(err_prefix + "Failure seeking to outdoor record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2307,7 +2306,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	n = fread(&store_out, len, 1, file_id);
 	if(n < 1) {
 		fclose(file_id);
-		oopsError(34, 0, 0);
+		giveError(err_prefix + "Could not read outdoor record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2333,7 +2332,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	
 	n = fclose(file_id);
 	if(n != 0) {
-		oopsError(35, 0, 0);
+		giveError(err_prefix + "Something went wrong when closing the file.", boost::lexical_cast<std::string>(std_fmterr));
 	}
 	return true;
 }

@@ -264,8 +264,3 @@ void giveError(std::string str1, std::string str2, cDialog* parent = NULL);
 /// @param str1 The string in the error dialog.
 /// @param parent Optionally, a parent dialog.
 void giveError(std::string str1, cDialog* parent = NULL);
-/// Shows a generic error dialog and exits.
-/// @param error An arbitrary code intended to be used for locating the error in the source.
-/// @param code A code indicating the result of a failed action that triggered the error.
-/// @param mode 0 for scenario editor, 1 for game, 2 for pc editor
-void oopsError(short error,short code = 0, short mode = 0);
