@@ -434,7 +434,7 @@ void draw_startup_stats() {
 	pc_rect.left = pc_rect.right - 300;
 	// TODO: Should replace this with a more appropriate copyright string
 	// Windows replaced it with "That is not dead which can eternally lie..." - I don't think that's quite appropriate though.
-	win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v1.0.2",eTextMode::WRAP,style,ul);
+	win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v" + oboeVersionString(),eTextMode::WRAP,style,ul);
 }
 
 

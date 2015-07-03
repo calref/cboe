@@ -122,7 +122,4 @@ public:
 	~cScenario();
 };
 
-// OBoE Current Version
-const unsigned long long OBOE_CURRENT_VERSION = 0x020000; // MMmmff; M - major, m - minor, f - bugfix
-
 #endif
