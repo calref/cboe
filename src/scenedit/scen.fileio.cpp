@@ -785,7 +785,7 @@ static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_nu
 		cPersonality& who = talk.people[i];
 		data.OpenElement("personality");
 		data.PushAttribute("id", i + 10 * town_num);
-		data.PushElement("title", who.title, true);
+		data.PushElement("title", who.title);
 		data.PushElement("look", who.look, true);
 		data.PushElement("name", who.name, true);
 		data.PushElement("job", who.job, true);
