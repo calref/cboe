@@ -15,6 +15,16 @@
 #include <boost/ptr_container/ptr_set.hpp>
 #include "simpletypes.hpp"
 
+std::string oboeVersionString() {
+	unsigned short M, m, f;
+	M = OBOE_CURRENT_VERSION >> 16;
+	m = (OBOE_CURRENT_VERSION & 0xff00) >> 8;
+	f = OBOE_CURRENT_VERSION & 0xff;
+	std::ostringstream sout;
+	sout << M << '.' << m << '.' << f;
+	return sout.str();
+}
+
 // A simple lookup map based on the concept of a trie
 class cEnumLookup {
 	struct node {
