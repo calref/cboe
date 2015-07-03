@@ -37,11 +37,17 @@ static typename std::make_unsigned<T>::type to_unsigned(T val) {
 	return *reinterpret_cast<typename std::make_unsigned<T>::type*>(&val);
 }
 
+static const std::string err_prefix = "Error reading QuickDraw PICT resource: ";
+
 template<typename T> class ptr_guard {
 	T* the_ptr;
 	T*const guard;
 	void boundcheck() {
-		if(the_ptr > guard) oopsError(127, the_ptr - guard);
+		if(the_ptr > guard) {
+			std::string overflow = std::to_string(the_ptr - guard);
+			giveError(err_prefix + "read pointer reached end of buffer", overflow);
+			throw std::runtime_error(overflow);
+		}
 	}
 public:
 	ptr_guard(T* begin, T* end) : the_ptr(begin), guard(end) {}
@@ -63,7 +69,11 @@ public:
 		boundcheck();
 	}
 	T& operator[](size_t i) {
-		if(the_ptr + i > guard) oopsError(128, i - (guard - the_ptr));
+		if(the_ptr + i > guard) {
+			std::string overflow = std::to_string(i - (guard - the_ptr));
+			giveError(err_prefix + "attempt to index beyond buffer", overflow);
+			throw std::runtime_error(overflow);
+		}
 		return the_ptr[i];
 	}
 	template<typename T2> explicit operator T2*() {return (T2*)the_ptr;}
@@ -75,7 +85,10 @@ public:
 static void loadColourTable(ptr_guard<char>& picData, sf::Color(& clut)[256], int numColours) {
 	while(numColours >= 0) {
 		int i = extract_word(picData);
-		if(i > 256) oopsError(5);
+		if(i > 256) {
+			giveError(err_prefix + " Found too many colours in 'clut'", std::to_string(i));
+			throw std::runtime_error(std::to_string(i));
+		}
 		picData += 2;
 		clut[i].r = to_unsigned(extract_word(picData)) / 256;
 		picData += 2;
@@ -150,12 +163,18 @@ static legacy::Rect loadPixMapData(ptr_guard<char>& picData, ptr_guard<unsigned 
 	picData += 2 + 2 + 4; // Skip version, packType, and packSize
 	picData += 4 + 4; // Skip hRes and vRes
 	picData += 2 + 2; // Skip pixelType and pixelSize
-	if(picData[-1] != 8) oopsError(3);
+	if(picData[-1] != 8) {
+		giveError(err_prefix + "Unsupported pixel type found.");
+		throw std::runtime_error("pixelType");
+	}
 	picData += 2 + 2; // Skip cmpCount and cmpSize
 	picData += 4 + 4 + 4; // Skip planeBytes, pbTable, pmReserved
 	picData += 4 + 2; // Skip ctSeed and ctFlags
 	int numColours = extract_word(picData);
-	if(numColours >= 256) oopsError(4);
+	if(numColours >= 256) {
+		giveError(err_prefix + "More than 256 colours found.");
+		throw std::runtime_error(std::to_string(numColours));
+	}
 	picData += 2;
 	sf::Color clut[256];
 	loadColourTable(picData, clut, numColours);
@@ -186,11 +205,15 @@ static rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelSto
 	picFrame.left = extract_word(picData); picData += 2;
 	picFrame.bottom = extract_word(picData); picData += 2;
 	picFrame.right = extract_word(picData); picData += 2;
-	if(strncmp(picData, "\0\x11\x02\xff", 4) != 0) // QuickDraw version code (version 2)
-		oopsError(1);
+	if(strncmp(picData, "\0\x11\x02\xff", 4) != 0) { // QuickDraw version code (version 2)
+		giveError("Missing QuickDraw 2 version code");
+		throw std::runtime_error("QD2 version");
+	}
 	picData += 4; // Skip version field
-	if(strncmp(picData, "\x0c\0", 2) != 0) // Header opcode
-		oopsError(2);
+	if(strncmp(picData, "\x0c\0", 2) != 0) { // Header opcode
+		giveError("Missing QuickDraw 2 header opcode");
+		throw std::runtime_error("QD2 header");
+	}
 	picData += 2 + 24; // Skip header opcode and payload
 	// Initialize the target data array using the picture's bounding rect
 	size_t picDataSize = picFrame.height() * picFrame.width() * 4; // Four bytes per pixel
@@ -461,12 +484,20 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 	}
 	if(resHandle == NULL) {
 		CloseResFile(custRef);
-		giveError("An old-style .meg graphics file was found, but an error occurred while loading it.",noGraphics);
+		giveError("An old-style .meg graphics file was found, but an error occurred while fetching the PICT resource of ID 1.",noGraphics);
 		return false;
 	}
 	unsigned char* data = NULL;
 	int error = 0;
-	rectangle picFrame = loadFromPictResource(resHandle, data, error);
+	rectangle picFrame;
+	try {
+		picFrame = loadFromPictResource(resHandle, data, error);
+	} catch(std::runtime_error&) {
+		CloseResFile(custRef);
+		if(data != NULL) delete[] data;
+		giveError("An old-style .meg graphics file was found, but an error occurred while loading the PICT resource of ID 1.",noGraphics);
+		return false;
+	}
 	CloseResFile(custRef);
 	if(picFrame.width() <= 0 || picFrame.height() <= 0) {
 		if(data != NULL) delete[] data;

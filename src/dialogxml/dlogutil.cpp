@@ -542,18 +542,3 @@ void giveError(std::string str1, std::string str2, cDialog* parent){
 void giveError(std::string str1, cDialog* parent) {
 	giveError(str1, "", parent);
 }
-
-void oopsError(short error, short code, short mode){
-	std::ostringstream error_str1, error_str2;
-	static const char* progname[3] = {"the scenario editor", "Blades of Exile", "the PC editor"};
-	static const char* filetname[3] = {"scenario", "game", "game"};
-	
-	error_str1 << "The program encountered an error while loading/saving/creating the " << filetname[mode]
-		<< ". To prevent future problems, the program will now terminate. Trying again may solve the problem.";
-	// TODO: Update this error message - giving more memory is no longer an option in OSX.
-	error_str2 << "Giving " << progname[mode] << " more memory might also help. Be sure to back your " << filetname[mode] << " up often. Error number: " << error << ".";
-	if(code != 0)
-		error_str2 << " Result code: " << code << ".";
-	giveError(error_str1.str(),error_str2.str(),NULL);
-	exit(1);
-}
