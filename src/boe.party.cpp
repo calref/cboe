@@ -2618,6 +2618,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		if(!is_out()) {
 			if(type == eMainStatus::DUST)
 				univ.town.set_ash(item_loc.x,item_loc.y,true);
+			else if(type == eMainStatus::ABSENT);
 			else switch(which_pc.race) {
 				case eRace::DEMON:
 					univ.town.set_ash(item_loc.x,item_loc.y,true);
