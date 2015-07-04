@@ -2904,7 +2904,10 @@ bool build_scenario() {
 	scenario.default_ground = grass ? 2 : 0;
 	
 	fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
-	if(!fs::exists(basePath)) {oopsError(40);}
+	if(!fs::exists(basePath)) {
+		giveError("Blades of Exile Base could not be found.");
+		return false;
+	}
 	cScenario base;
 	load_scenario(basePath, base);
 	// Load in all terrains, items, and monsters
