@@ -1361,7 +1361,7 @@ void place_location() {
 	erase_rect.bottom = erase_rect.top + 12;
 	tileImage(terrain_buttons_gworld, erase_rect,bg[17]);
 	
-	location moveTo(5 ,terrain_rects[255].top + 15);
+	location moveTo(5, terrain_rects[255].top + 18);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
 	if(overall_mode < MODE_MAIN_SCREEN)
@@ -1375,7 +1375,7 @@ void place_location() {
 	win_draw_string(terrain_buttons_gworld, draw_rect, sout.str(), eTextMode::LEFT_TOP, style);
 	sout.str("");
 	
-	moveTo = location(260 ,terrain_rects[255].top + 15);
+	moveTo = location(260 ,terrain_rects[255].top + 18);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
 	sout << current_terrain_type;
@@ -1389,11 +1389,11 @@ void place_location() {
 	tileImage(terrain_buttons_gworld, erase_rect,bg[17]);
 	
 	if(overall_mode < MODE_MAIN_SCREEN) {
-		moveTo = location(5,terrain_rects[255].bottom + 118);
+		moveTo = location(5,terrain_rects[255].bottom + 121);
 		draw_rect = text_rect;
 		draw_rect.offset(moveTo);
 		win_draw_string(terrain_buttons_gworld, draw_rect, current_string[0], eTextMode::LEFT_TOP, style);
-		moveTo = location(RIGHT_AREA_WIDTH / 2,terrain_rects[255].bottom + 118);
+		moveTo = location(RIGHT_AREA_WIDTH / 2,terrain_rects[255].bottom + 121);
 		draw_rect = text_rect;
 		draw_rect.offset(moveTo);
 		win_draw_string(terrain_buttons_gworld, draw_rect, current_string[1], eTextMode::LEFT_TOP, style);

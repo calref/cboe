@@ -88,7 +88,7 @@ void put_pc_screen() {
 	short i = 0,j;
 	rectangle erase_rect = {17,2,98,269},to_draw_rect,from_rect;
 	// TODO: The duplication of rectangle here shouldn't be necessary...
-	rectangle small_erase_rects[3] = {rectangle{101,34,114,76},rectangle{101,106,114,147},rectangle{101,174,114,201}};
+	rectangle small_erase_rects[3] = {rectangle{103,34,114,76},rectangle{103,106,114,147},rectangle{103,174,114,201}};
 	rectangle bottom_bar_rect = {99,0,116,271};
 	rectangle info_from = {0,1,12,13};
 	
@@ -121,11 +121,11 @@ void put_pc_screen() {
 			
 			std::ostringstream sout;
 			sout << i + 1 << ". " << univ.party[i].name;
-			win_draw_string(pc_stats_gworld,pc_buttons[i][0],sout.str(),eTextMode::WRAP,style);
+			win_draw_string(pc_stats_gworld,pc_buttons[i][PCBTN_NAME],sout.str(),eTextMode::WRAP,style);
 			style.italic = false;
 			style.colour = sf::Color::Black;
 			
-			to_draw_rect = pc_buttons[i][1];
+			to_draw_rect = pc_buttons[i][PCBTN_HP];
 			to_draw_rect.right += 20;
 			sout.str("");
 			switch(univ.party[i].main_status) {
@@ -135,13 +135,13 @@ void put_pc_screen() {
 					else if(univ.party[i].cur_health > univ.party[i].max_health)
 						style.colour = {0xff,0x80,0}; // Orange
 					else style.colour = sf::Color::Red;
-					win_draw_string( pc_stats_gworld,pc_buttons[i][1],std::to_string(univ.party[i].cur_health),eTextMode::WRAP,style);
+					win_draw_string( pc_stats_gworld,pc_buttons[i][PCBTN_HP],std::to_string(univ.party[i].cur_health),eTextMode::WRAP,style);
 					if(univ.party[i].cur_sp == univ.party[i].max_sp)
 						style.colour = sf::Color::Blue;
 					else if(univ.party[i].cur_sp > univ.party[i].max_sp)
 						style.colour = {0,0xff,0x80}; // Teal
 					else style.colour = sf::Color::Magenta;
-					win_draw_string( pc_stats_gworld,pc_buttons[i][2],std::to_string(univ.party[i].cur_sp),eTextMode::WRAP,style);
+					win_draw_string( pc_stats_gworld,pc_buttons[i][PCBTN_SP],std::to_string(univ.party[i].cur_sp),eTextMode::WRAP,style);
 					draw_pc_effects(i);
 					break;
 				case eMainStatus::DEAD:
@@ -174,8 +174,8 @@ void put_pc_screen() {
 			//rect_draw_some_item(mixed_gworld,info_from,pc_stats_gworld,pc_buttons[i][3],1,0);
 			//rect_draw_some_item(mixed_gworld,switch_from,pc_stats_gworld,pc_buttons[i][4],1,0);
 			// do faster!
-			to_draw_rect = pc_buttons[i][3];
-			to_draw_rect.right = pc_buttons[i][4].right + 1;
+			to_draw_rect = pc_buttons[i][PCBTN_INFO];
+			to_draw_rect.right = pc_buttons[i][PCBTN_TRADE].right + 1;
 			from_rect = info_from;
 			from_rect.right = from_rect.left + to_draw_rect.right - to_draw_rect.left;
 			rect_draw_some_item(invenbtn_gworld,from_rect,pc_stats_gworld,to_draw_rect,sf::BlendAlpha);
@@ -220,7 +220,10 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 	if(suppress_buttons == 0)
 		for(i = 0; i < 6; i++)
 			tileImage(item_stats_gworld, item_screen_button_rects[i],bg[7]);
-	tileImage(item_stats_gworld, upper_frame_rect,bg[7]);
+	erase_rect = upper_frame_rect;
+	erase_rect.top = 0;
+	erase_rect.left = 0;
+	tileImage(item_stats_gworld, erase_rect,bg[7]);
 	
 	// Draw buttons at bottom
 	if(suppress_buttons == 0) {
@@ -236,16 +239,16 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 	
 	TextStyle style;
 	style.lineHeight = 10;
+	style.font = FONT_BOLD;
+	style.colour = sf::Color::Yellow;
 	switch(screen_num) {
 		case ITEM_WIN_SPECIAL:
-			style.font = FONT_BOLD;
-			style.colour = sf::Color::White;
 			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
 			for(i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
-					win_draw_string(item_stats_gworld,item_buttons[i][0],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
+					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
 					
 					place_item_button(3,i,4,0);
 					if((univ.scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
@@ -255,8 +258,6 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 			}
 			break;
 		case ITEM_WIN_QUESTS:
-			style.font = FONT_BOLD;
-			style.colour = sf::Color::White;
 			win_draw_string(item_stats_gworld,upper_frame_rect,"Quests/Jobs:",eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
 			for(i = 0; i < 8; i++) {
@@ -266,12 +267,12 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 					if(spec_item_array[i_num] / 10000 == 2)
 						style.colour = sf::Color::Red;
 					
-					win_draw_string(item_stats_gworld,item_buttons[i][0],univ.scenario.quests[which_quest].name,eTextMode::WRAP,style);
+					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.scenario.quests[which_quest].name,eTextMode::WRAP,style);
 					
 					if(spec_item_array[i_num] / 10000 == 1) {
 						location from, to;
-						from = to = item_buttons[i][0].centre();
-						from.x = item_buttons[i][0].left;
+						from = to = item_buttons[i][ITEMBTN_NAME].centre();
+						from.x = item_buttons[i][ITEMBTN_NAME].left;
 						to.x = from.x + string_length(univ.scenario.quests[which_quest].name, style);
 						draw_line(item_stats_gworld, from, to, 1, sf::Color::Green);
 					}
@@ -283,22 +284,20 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 			
 		default: // on an items page
 			pc = screen_num;
-			style.colour = sf::Color::White;
-			style.font = FONT_PLAIN;
 			sout.str("");;
 			sout << univ.party[pc].name << " inventory:",
 			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
-			style.font = FONT_BOLD;
 			
 			for(i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				sout.str("");
 				sout << i_num + 1 << '.';
-				win_draw_string(item_stats_gworld,item_buttons[i][0],sout.str(),eTextMode::WRAP,style);
+				win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],sout.str(),eTextMode::WRAP,style);
 				
- 				dest_rect = item_buttons[i][0];
+ 				dest_rect = item_buttons[i][ITEMBTN_NAME];
 				dest_rect.left += 36;
+				dest_rect.top -= 2;
 				
 				if(univ.party[pc].items[i_num].variety == eItemType::NO_ITEM) {
 					
@@ -335,8 +334,8 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 						((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
 						place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic
 						if(abil_chart[univ.party[pc].items[i_num].ability]) // place use if can
-							place_item_button(10,i,1,0);
-						else place_item_button(11,i,1,0);
+							place_item_button(ITEMBTN_NORM,i,1,0);
+						else place_item_button(ITEMBTN_ALL,i,1,0);
 					}
 					else {
 						place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic
@@ -473,21 +472,23 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 		item_area_button_active[which_slot][which_button_position] = true;
 		rect_draw_some_item(invenbtn_gworld, item_buttons_from[which_button_to_put], item_stats_gworld, item_buttons[which_slot][which_button_position], sf::BlendAlpha);
 	}
-	if(which_button_to_put == 10) { // this means put all 4
+	if(which_button_to_put == ITEMBTN_ALL) { // this means put all 4
 		item_area_button_active[which_slot][1] = true;
 		item_area_button_active[which_slot][2] = true;
 		item_area_button_active[which_slot][3] = true;
 		item_area_button_active[which_slot][4] = true;
-		from_rect = item_buttons_from[0]; from_rect.right = item_buttons_from[3].right;
+		from_rect = item_buttons_from[0];
+		from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][1];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
 		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 	}
-	if(which_button_to_put == 11) { // this means put right 3
+	if(which_button_to_put == ITEMBTN_NORM) { // this means put right 3
 		item_area_button_active[which_slot][2] = true;
 		item_area_button_active[which_slot][3] = true;
 		item_area_button_active[which_slot][4] = true;
-		from_rect = item_buttons_from[1]; from_rect.right = item_buttons_from[3].right;
+		from_rect = item_buttons_from[1];
+		from_rect.right = item_buttons_from[3].right;
 		to_rect = item_buttons[which_slot][2];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
 		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
@@ -632,7 +633,7 @@ rectangle get_stat_effect_rect(int code) {
 }
 
 void draw_pc_effects(short pc) {
-	rectangle dest_rect = {18,15,30,27},dlog_dest_rect = {66,354,78,366};
+	rectangle dest_rect = {18,15,30,27};
 	short right_limit = 250;
 	short name_width;
 	

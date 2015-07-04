@@ -431,7 +431,7 @@ void draw_startup_stats() {
 	pc_rect = startup_from[0];
 	pc_rect.offset(5,5);
 	pc_rect.top = pc_rect.bottom - 25;
-	pc_rect.left = pc_rect.right - 300;
+	pc_rect.left = pc_rect.right - 270;
 	// TODO: Should replace this with a more appropriate copyright string
 	// Windows replaced it with "That is not dead which can eternally lie..." - I don't think that's quite appropriate though.
 	win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v" + oboeVersionString(),eTextMode::WRAP,style,ul);
@@ -460,15 +460,13 @@ void draw_start_button(short which_position,short which_button) {
 	style.pointSize = 24;
 	to_rect = startup_button[which_position];
 	//to_rect.left += 80;
-	to_rect.offset(10, 10);
+	to_rect.offset(10, 5);
 	if(which_button == 5)
 		which_button = 4;
 	// In the 0..65535 range, this was 14472 + (12288 * which_button)
 	base_color.b += (48 * which_button);
 	style.colour = base_color;
 	style.lineHeight = 18;
-	if(which_position == 3)
-		to_rect.offset(-7,0);
 	win_draw_string(mainPtr,to_rect,button_labels[which_position],eTextMode::CENTRE,style,ul);
 }
 
@@ -728,11 +726,12 @@ void put_text_bar(std::string str) {
 	style.pointSize = 12;
 	style.lineHeight = 12;
 	rectangle to_rect = rectangle(text_bar_gworld);
-	to_rect.top += 5;
-	// TODO: Not sure what the line height should be, so I just picked something
+	to_rect.top += 7;
+	to_rect.left += 5;
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
 	if(!monsters_going) {
+		to_rect.top -= 2;
 		to_rect.left = to_rect.right - 15;
 		to_rect.width() = 12;
 		to_rect.height() = 12;

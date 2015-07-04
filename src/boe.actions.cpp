@@ -214,6 +214,7 @@ void init_screen_locs() {
 	item_buttons[0][ITEMBTN_SPEC] = item_buttons[0][ITEMBTN_NAME];
 	item_buttons[0][ITEMBTN_SPEC].left = 173;
 	item_buttons[0][ITEMBTN_SPEC].right = 232;
+	item_buttons[0][ITEMBTN_NAME].top += 3;
 	for(i = 1; i < 8; i++)
 		for(j = 0; j < 6; j++) {
 			item_buttons[i][j] = item_buttons[0][j];
@@ -250,6 +251,7 @@ void init_screen_locs() {
 	pc_buttons[0][PCBTN_TRADE] = pc_buttons[0][PCBTN_NAME];
 	pc_buttons[0][PCBTN_TRADE].left = 253;
 	pc_buttons[0][PCBTN_TRADE].right = 262;
+	pc_buttons[0][PCBTN_NAME].top += 3;
 	for(i = 1; i < 6; i++)
 		for(j = 0; j < 5; j++) {
 			pc_buttons[i][j] = pc_buttons[0][j];

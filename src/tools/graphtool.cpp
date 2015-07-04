@@ -393,6 +393,10 @@ void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::stri
 			fill_rect(dest_window, bounds, options.hilite_bg);
 		} else str_to_draw.setColor(options.style.colour);
 		dest_window.draw(str_to_draw);
+		if(options.style.font == FONT_BOLD) {
+			str_to_draw.move(1, 0);
+			dest_window.draw(str_to_draw);
+		}
 	}
 }
 

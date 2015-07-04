@@ -28,7 +28,7 @@ extern rectangle pc_info_rect;
 extern rectangle name_rect;
 
 extern rectangle pc_race_rect;
-extern rectangle edit_rect[5][2];
+extern rectangle edit_rect[5];
 
 bool handle_action(sf::Event event) {
 	short i;
@@ -50,7 +50,7 @@ bool handle_action(sf::Event event) {
 			redraw_screen();
 		}
 	for(i = 0; i < 5; i++)
-		if((the_point.in(edit_rect[i][0])) &&
+		if((the_point.in(edit_rect[i])) &&
 		   (univ.party[current_active_pc].main_status != eMainStatus::ABSENT)) {
 			do_button_action(0,i + 10);
 			switch(i) {
