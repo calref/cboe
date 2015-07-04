@@ -186,6 +186,8 @@ enum eTrapType {
 #define ITEMBTN_DROP		3
 #define ITEMBTN_INFO		4
 #define ITEMBTN_SPEC		5 // Sell, Identify, or Enchant
+#define ITEMBTN_ALL			10 // use, give, drop, info
+#define ITEMBTN_NORM		11 // give, drop, info
 
 // PC button rects
 #define PCBTN_NAME			0

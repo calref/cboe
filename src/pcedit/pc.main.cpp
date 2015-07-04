@@ -28,11 +28,11 @@ rectangle hp_sp_rect;   // Holds hit points and spells points for pc
 rectangle skill_rect;	// Holds "Skills:" string
 rectangle pc_skills_rect[19]; //Holds current pc's  skill levels
 rectangle status_rect;  //Holds the string "Status:"
-rectangle pc_status_rect[10]; //Holds first 8 effects on pc
+rectangle pc_status_rect[15]; //Holds first 8 effects on pc
 rectangle traits_rect; //Holds the string "Traits:"
-rectangle pc_traits_rect[16]; //Holds pc traits
+rectangle pc_traits_rect[17]; //Holds pc traits
 rectangle pc_race_rect; //Holds current pc's race
-rectangle edit_rect[5][2]; //Buttons that bring up pc edit dialog boxs
+rectangle edit_rect[5]; //Buttons that bring up pc edit dialog boxs
 std::string scenario_temp_dir_name = "pc_scenario";
 
 short current_active_pc = 0;
