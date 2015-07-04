@@ -1348,7 +1348,7 @@ void do_combat_cast(location target) {
 									add_string_to_buf("  Nobody there.");
 								else {
 									cCreature* cur_monst = dynamic_cast<cCreature*>(victim);
-									if(cur_monst->attitude % 2 != 1 && spell_being_cast != eSpell::SCRY_MONSTER && spell_being_cast != eSpell::CAPTURE_SOUL)
+									if(cur_monst && cur_monst->attitude % 2 != 1 && spell_being_cast != eSpell::SCRY_MONSTER && spell_being_cast != eSpell::CAPTURE_SOUL)
 										make_town_hostile();
 									switch(spell_being_cast) {
 										case eSpell::ACID_SPRAY:
