@@ -21,7 +21,6 @@ extern bool diff_depth_ok;
 
 short which_pc_displayed,store_pc_trait_mode,store_which_to_edit;
 extern short current_active_pc;
-char empty_string[256] = "                                                ";
 extern rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 extern rectangle pc_info_rect;
@@ -55,10 +54,10 @@ bool handle_action(sf::Event event) {
 			do_button_action(0,i + 10);
 			switch(i) {
 				case 0:
-					display_pc(current_active_pc,0,NULL);
+					display_pc(current_active_pc,10,NULL);
 					break;
 				case 1:
-			 		display_pc(current_active_pc,1,NULL);
+			 		display_pc(current_active_pc,11,NULL);
 					break;
 				case 2:
 					pick_race_abil(&univ.party[current_active_pc],0);

@@ -22,7 +22,7 @@
  * boe.infodlg.h and boe.party.h.
  */
 void display_pc(short pc_num,short mode,cDialog* parent);
-void display_alchemy(bool allowEdit);
+void display_alchemy(bool allowEdit,cDialog* parent);
 bool spend_xp(short pc_num, short mode, cDialog* parent);
 // TODO: There's probably a more logical way of arranging this
 
@@ -57,8 +57,9 @@ const char* skill_ids[19] = {
 	"trap","lock","assassin","poison","luck"
 };
 
-static void put_pc_spells(cDialog& me, const short store_trait_mode) {
+static void put_pc_spells(cDialog& me, short store_trait_mode) {
 	short i;
+	store_trait_mode %= 10;
 	
 	for(i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
@@ -113,8 +114,10 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	
 	for(i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-		label_str = get_str("magic-names", i + (mode == 0 ? 1 : 101));
+		label_str = get_str("magic-names", i + (mode % 10 == 0 ? 1 : 101));
 		pcInfo[id].setText(label_str);
+		if(mode < 10)
+			pcInfo[id].attachClickHandler(&cLed::noAction);
 	}
 	put_pc_spells(pcInfo, mode);
 	
@@ -226,12 +229,12 @@ extern const eItemAbil alch_ingred2[20] = {
 	eItemAbil::ASPTONGUE,eItemAbil::EMBERF,eItemAbil::EMBERF,eItemAbil::ASPTONGUE,eItemAbil::EMBERF,
 };
 
-void display_alchemy(bool allowEdit) {
+void display_alchemy(bool allowEdit,cDialog* parent) {
 	short i;
 	
 	make_cursor_sword();
 	
-	cChoiceDlog showAlch("pc-alchemy-info", {"done"});
+	cChoiceDlog showAlch("pc-alchemy-info", {"done"}, parent);
 	
 	for(i = 0; i < 20; i++) {
 		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);

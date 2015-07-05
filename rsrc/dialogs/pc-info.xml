@@ -69,7 +69,7 @@
 	<text name='hp' top='69' left='325' width='155' height='18'/>
 	<text top='89' left='314' width='75' height='19'>Spell Pts.</text>
 	<text name='sp' top='108' left='325' width='155' height='18'/>
-	<button name='alchemy' type='large' top='339' left='176'>Alchemy</button>
+	<button name='seealch' type='large' top='339' left='176'>Alchemy</button>
 	<text name='weight' framed='true' top='285' left='11' width='387' height='17'/>
 	<text size='large' top='29' left='382' width='62' height='16'>Skill Pts.:</text>
 	<text name='skp' size='large' top='29' left='445' width='32' height='16'/>

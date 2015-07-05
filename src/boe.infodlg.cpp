@@ -615,7 +615,7 @@ static bool give_pc_extra_info(cDialog& me, std::string item_hit, const short pc
 	if(item_hit == "seemage") display_pc(pc,0,&me);
 	else if(item_hit == "seepriest") display_pc(pc,1,&me);
 	else if(item_hit == "trait") pick_race_abil(&univ.party[pc],1,&me);
-	else if(item_hit == "alch") display_alchemy(false);
+	else if(item_hit == "seealch") display_alchemy(false,&me);
 	return true;
 }
 
@@ -628,7 +628,7 @@ void give_pc_info(short pc_num) {
 	
 	cDialog pcInfo("pc-info");
 	pcInfo.attachClickHandlers(std::bind(give_pc_info_event_filter, _1, _2, std::ref(pc_num)), {"done", "left", "right"});
-	pcInfo.attachClickHandlers(std::bind(give_pc_extra_info, _1, _2, std::ref(pc_num)), {"seemage", "seepriest", "trait", "alch"});
+	pcInfo.attachClickHandlers(std::bind(give_pc_extra_info, _1, _2, std::ref(pc_num)), {"seemage", "seepriest", "trait", "seealch"});
 	
 	for(i = 0; i < 19; i++) {
 		std::string lbl= "lbl" + boost::lexical_cast<std::string>(i + 1);
