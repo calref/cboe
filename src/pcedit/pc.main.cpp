@@ -292,10 +292,10 @@ void handle_menu_choice(eMenu item_hit) {
 						univ.town_maps[i][j][k] = 255;
 			break;
 		case eMenu::EDIT_MAGE:
-			display_pc(current_active_pc,0,0);
+			display_pc(current_active_pc,10,0);
 			break;
 		case eMenu::EDIT_PRIEST:
-			display_pc(current_active_pc,1,0);
+			display_pc(current_active_pc,11,0);
 			break;
 		case eMenu::EDIT_TRAITS:
 			pick_race_abil(&univ.party[current_active_pc],0);
