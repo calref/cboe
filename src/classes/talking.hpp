@@ -54,4 +54,7 @@ public:
 	void writeTo(std::ostream& file) const;
 };
 
+std::ostream& operator<< (std::ostream& out, eTalkNode node);
+std::istream& operator>> (std::istream& in, eTalkNode& node);
+
 #endif
