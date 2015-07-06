@@ -222,7 +222,8 @@ void handle_menu_choice(eMenu item_hit) {
 				overall_mode = MODE_MAIN_SCREEN;
 				change_made = false;
 				set_up_main_screen();
-			}
+			} else if(!file_to_load.empty())
+				set_up_start_screen(); // Failed to load file, dump to start
 			break;
 		case eMenu::FILE_SAVE:
 			save_scenario();
