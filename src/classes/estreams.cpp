@@ -596,3 +596,23 @@ std::istream& operator>> (std::istream& in, eLighting& light) {
 		in.setstate(std::ios::failbit);
 	return in;
 }
+
+// MARK: eTalkNode
+
+cEnumLookup talk_nodes = {
+	"reg","if-sdf","set-sdf","inn","if-time","if-event","if-town","shop","train","jobs",
+	"","","","sell-weap","sell-prot","sell-any","id","ench","buy-info","buy-sdf",
+	"buy-ship","buy-horse","buy-spec-item","quest","buy-town","end-force","end-fight","end-alarm","end-die","call-local",
+	"call-global",
+};
+
+std::ostream& operator<< (std::ostream& out, eTalkNode node) {
+	writeEnum(out, node, talk_nodes, "reg");
+	return out;
+}
+
+std::istream& operator>> (std::istream& in, eTalkNode& node) {
+	if(!readEnum(in, node, talk_nodes, eTalkNode::REGULAR))
+		in.setstate(std::ios::failbit);
+	return in;
+}

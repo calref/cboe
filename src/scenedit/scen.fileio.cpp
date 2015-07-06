@@ -786,9 +786,9 @@ static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_nu
 		data.OpenElement("personality");
 		data.PushAttribute("id", i + 10 * town_num);
 		data.PushElement("title", who.title);
-		data.PushElement("look", who.look, true);
-		data.PushElement("name", who.name, true);
-		data.PushElement("job", who.job, true);
+		data.PushElement("look", who.look, !who.look.empty());
+		data.PushElement("name", who.name, !who.look.empty());
+		data.PushElement("job", who.job, !who.look.empty());
 		if(!who.dunno.empty())
 			data.PushElement("unknown", who.dunno, true);
 		data.CloseElement("personality");
@@ -805,7 +805,7 @@ static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_nu
 			data.PushElement("keyword", std::string(node.link1, 4));
 		if(std::string(node.link2, 4) != "xxxx")
 			data.PushElement("keyword", std::string(node.link2, 4));
-		data.PushElement("type", int(node.type));
+		data.PushElement("type", node.type);
 		if(node.extras[0] >= 0 || node.extras[1] >= 0 || node.extras[2] >= 0 || node.extras[3] >= 0)
 			data.PushElement("param", node.extras[0]);
 		if(node.extras[1] >= 0 || node.extras[2] >= 0 || node.extras[3] >= 0)

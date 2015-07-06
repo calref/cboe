@@ -1789,9 +1789,7 @@ static void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_
 					else throw xBadNode(type, node->Row(), node->Column(), fname);
 					num_keys++;
 				} else if(type == "type") {
-					int type;
-					node->GetText(&type);
-					talk.talk_nodes[num_nodes].type = eTalkNode(type);
+					node->GetText(&talk.talk_nodes[num_nodes].type);
 					got_type = true;
 				} else if(type == "param") {
 					if(num_params >= 4)

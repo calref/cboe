@@ -139,7 +139,7 @@
 							</xs:simpleContent>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="item">
+					<xs:element name="item" minOccurs="0">
 						<xs:complexType>
 							<xs:all>
 								<xs:element name="type" type="xs:integer"/>
@@ -152,7 +152,7 @@
 							<xs:attribute name="id" type="xs:integer"/>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="creature">
+					<xs:element name="creature" minOccurs="0">
 						<xs:complexType>
 							<xs:all>
 								<xs:element name="type" type="xs:integer"/>
