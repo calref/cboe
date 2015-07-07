@@ -1398,7 +1398,6 @@ void tip_of_day() {
 static void put_scen_info(cDialog& me) {
 	unsigned int i;
 	std::ostringstream sout;
-	const char *ratings[] = {"G","PG","R","NC-17"};
 	const char *difficulty[] = {"Low","Medium","High","Very High"};
 	
 	for(i = 0; i < 3; i++) {
@@ -1415,7 +1414,7 @@ static void put_scen_info(cDialog& me) {
 			sout << '.' << int(scen_headers[store_scen_page_on * 3 + i].ver[1]);
 			sout << '.' << int(scen_headers[store_scen_page_on * 3 + i].ver[2]);
 			sout << " - |  Difficulty: " << difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty];
-			sout << ", Rating: " << ratings[scen_headers[store_scen_page_on * 3 + i].rating];
+			sout << ", Rating: " << scen_headers[store_scen_page_on * 3 + i].rating;
 			sout << " |" << scen_headers[store_scen_page_on * 3 + i].who1;
 			sout << " |" << scen_headers[store_scen_page_on * 3 + i].who2;
 			me["desc" + n].setText(sout.str());

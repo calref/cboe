@@ -653,6 +653,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		} else if(type == "icon") {
 			// TODO: This element can have some attributes on it.
 			elem->GetText(&scenario.intro_pic);
+			scenario.intro_mess_pic = scenario.intro_pic;
 		} else if(type == "id") {
 			elem->GetText(&scenario.campaign_id, false);
 		} else if(type == "version") {
@@ -689,12 +690,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		} else if(type == "ratings") {
 			Element* content = elem->FirstChildElement("content");
 			Element* difficulty = elem->FirstChildElement("difficulty");
-			content->GetText(&val);
-			if(val == "g") scenario.rating = 0;
-			else if(val == "pg") scenario.rating = 1;
-			else if(val == "r") scenario.rating = 2;
-			else if(val == "nc17") scenario.rating = 3;
-			else throw xBadVal("content", xBadVal::CONTENT, val, content->Row(), content->Column(), fname);
+			content->GetText(&scenario.rating);
 			difficulty->GetText(&scenario.difficulty);
 			if(scenario.difficulty < 1 || scenario.difficulty > 4)
 				throw xBadVal("difficulty", xBadVal::CONTENT, std::to_string(scenario.difficulty), difficulty->Row(),difficulty->Column(), fname);

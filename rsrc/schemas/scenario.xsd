@@ -57,10 +57,10 @@
 				<xs:element name="content">
 					<xs:simpleType>
 						<xs:restriction base="xs:token">
-							<xs:enumeration value="g"/>
-							<xs:enumeration value="pg"/>
-							<xs:enumeration value="r"/>
-							<xs:enumeration value="nc17"/>
+							<xs:enumeration value="G"/>
+							<xs:enumeration value="PG"/>
+							<xs:enumeration value="R"/>
+							<xs:enumeration value="NC-17"/>
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>

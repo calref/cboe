@@ -69,7 +69,7 @@ cScenario::cScenario() {
 	where_start.x = 24;
 	where_start.y = 24;
 	out_start = where_start;
-	rating = 0;
+	rating = eContentRating::G;
 	difficulty = 0;
 	intro_pic = intro_mess_pic = 0;
 	adjust_diff = true;
@@ -133,7 +133,7 @@ void cScenario::append(legacy::scenario_data_type& old){
 		special_items[i].flags = old.special_items[i];
 		special_items[i].special = old.special_item_special[i];
 	}
-	rating = old.rating;
+	rating = eContentRating(old.rating);
 	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
 	for(i = 0; i < 30; i++) {
