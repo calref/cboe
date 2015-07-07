@@ -757,7 +757,6 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					game->GetText(&scenario.init_spec);
 				} else if(type == "start-town") {
 					game->GetText(&scenario.which_town_start);
-					// TODO: Make sure town is valid
 				} else if(type == "town-start") {
 					scenario.where_start = readLocFromXml(*game);
 				} else if(type == "outdoor-start") {
@@ -776,7 +775,6 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					auto town_p = &scenario.town_mods[town_mods].spec;
 					location& loc = scenario.town_mods[town_mods];
 					loc = readLocFromXml(*game, "add-", "town", town_p);
-					// TODO: Make sure town is valid
 					town_mods++;
 				} else if(type == "special-item") {
 					scenario.special_items.emplace_back();
