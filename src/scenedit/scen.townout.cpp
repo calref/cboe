@@ -39,7 +39,7 @@ static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const shor
 	me["num"].setTextToNum(which);
 	me["type"].setText(scenario.scen_monsters[monst.number].m_name);
 	// TODO: Make attitude an enum
-	dynamic_cast<cLedGroup&>(me["attitude"]).setSelected("att" + std::to_string(monst.start_attitude + 1));
+	dynamic_cast<cLedGroup&>(me["attitude"]).setSelected(boost::lexical_cast<std::string>(monst.start_attitude));
 	dynamic_cast<cLedGroup&>(me["mobility"]).setSelected("mob" + std::to_string(monst.mobility + 1));
 	me["talk"].setTextToNum(monst.personality);
 	me["picnum"].setTextToNum(monst.facial_pic);
@@ -52,7 +52,7 @@ static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const shor
 }
 
 static void get_placed_monst_in_dlog(cDialog& me, cTownperson& store_placed_monst) {
-	store_placed_monst.start_attitude = dynamic_cast<cLedGroup&>(me["attitude"]).getSelected()[3] - '1';
+	store_placed_monst.start_attitude = boost::lexical_cast<eAttitude>(dynamic_cast<cLedGroup&>(me["attitude"]).getSelected());
 	store_placed_monst.mobility = dynamic_cast<cLedGroup&>(me["mobility"]).getSelected()[3] - '1';
 	store_placed_monst.personality = me["talk"].getTextAsNum();
 	store_placed_monst.facial_pic = me["picnum"].getTextAsNum();

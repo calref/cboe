@@ -15,10 +15,10 @@
 	<button name='pict-edit' type='regular' top='186' left='471'>Choose</button>
 	<text size='large' top='6' left='50' width='156' height='17'>Editing a townsperson/monster</text>
 	<group name='attitude'>
-		<led name='att1' top='97' left='242' width='100'>Friendly, Docile</led>
-		<led name='att2' top='113' left='242' width='100'>Hostile, Type A</led>
-		<led name='att3' top='97' left='377' width='100'>Friendly, Will Fight</led>
-		<led name='att4' top='113' left='377' width='100'>Hostile, Type B</led>
+		<led name='docile' top='97' left='242' width='100'>Friendly, Docile</led>
+		<led name='hostile-a' top='113' left='242' width='100'>Hostile, Type A</led>
+		<led name='friendly' top='97' left='377' width='100'>Friendly, Will Fight</led>
+		<led name='hostile-b' top='113' left='377' width='100'>Hostile, Type B</led>
 	</group>
 	<group name='mobility'>
 		<led name='mob1' top='133' left='224'>No</led>
