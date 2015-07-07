@@ -610,16 +610,16 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which
 	
 	cLedGroup& attitude = dynamic_cast<cLedGroup&>(me["attitude"]);
 	switch(monst.default_attitude) {
-		case 0:
+		case eAttitude::DOCILE:
 			attitude.setSelected("docile");
 			break;
-		case 1:
+		case eAttitude::HOSTILE_A:
 			attitude.setSelected("A");
 			break;
-		case 2:
+		case eAttitude::FRIENDLY:
 			attitude.setSelected("friendly");
 			break;
-		case 3:
+		case eAttitude::HOSTILE_B:
 			attitude.setSelected("B");
 			break;
 	}
@@ -727,10 +727,10 @@ static bool save_monst_info(cDialog& me, cMonster& monst) {
 	monst.default_facial_pic = me["talk"].getTextAsNum();
 	monst.treasure = me["treas"].getTextAsNum();
 	std::string def_att = dynamic_cast<cLedGroup&>(me["attitude"]).getSelected();
-	if(def_att == "docile") monst.default_attitude = 0;
-	else if(def_att == "friendly") monst.default_attitude = 2;
-	else if(def_att == "A") monst.default_attitude = 1;
-	else if(def_att == "B") monst.default_attitude = 3;
+	if(def_att == "docile") monst.default_attitude = eAttitude::DOCILE;
+	else if(def_att == "friendly") monst.default_attitude = eAttitude::FRIENDLY;
+	else if(def_att == "A") monst.default_attitude = eAttitude::HOSTILE_A;
+	else if(def_att == "B") monst.default_attitude = eAttitude::HOSTILE_B;
 	return true;
 }
 
@@ -2729,7 +2729,12 @@ static bool save_scen_details(cDialog& me, std::string, eKeyMod) {
 		scenario.difficulty = difficulty.getSelected()[3] - '1';
 	}{
 		cLedGroup& rating = dynamic_cast<cLedGroup&>(me["rating"]);
-		scenario.rating = rating.getSelected()[4] - '1';
+		switch(rating.getSelected()[4]) {
+			case '1': scenario.rating = eContentRating::G; break;
+			case '2': scenario.rating = eContentRating::PG; break;
+			case '3': scenario.rating = eContentRating::R; break;
+			case '4': scenario.rating = eContentRating::NC17; break;
+		}
 	}
 	scenario.adjust_diff = dynamic_cast<cLed&>(me["adjust"]).getState() != led_red;
 	for(i = 0; i < 3; i++)
