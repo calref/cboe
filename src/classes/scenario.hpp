@@ -72,7 +72,8 @@ public:
 	std::vector<cSpecItem> special_items;
 	std::vector<cQuest> quests;
 	std::vector<cShop> shops;
-	short rating,uses_custom_graphics;
+	short uses_custom_graphics;
+	eContentRating rating;
 	std::vector<ePicType> custom_graphics;
 	std::vector<cMonster> scen_monsters;
 	std::array<cVehicle,30> boats;
@@ -121,5 +122,8 @@ public:
 	explicit cScenario();
 	~cScenario();
 };
+
+std::istream& operator>> (std::istream& in, eContentRating& rating);
+std::ostream& operator<< (std::ostream& out, eContentRating rating);
 
 #endif

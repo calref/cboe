@@ -38,6 +38,8 @@ inline eDirection& operator++ (eDirection& me, int) {
 	else return me = (eDirection)(1 + (int)me);
 }
 
+enum eContentRating {G, PG, R, NC17};
+
 enum class eQuestStatus {AVAILABLE, STARTED, COMPLETED, FAILED};
 
 enum class eMainStatus {

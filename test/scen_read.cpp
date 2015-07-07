@@ -63,6 +63,11 @@ TEST_CASE("Loading a new-format scenario record") {
 		doc = xmlDocFromStream(fin, "missing_rating.xml");
 		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), Exception);
 	}
+	SECTION("When the scenario content rating is invalid") {
+		fin.open("files/scenario/bad_rating.xml");
+		doc = xmlDocFromStream(fin, "bad_rating.xml");
+		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), Exception);
+	}
 	SECTION("When there are too many teaser strings") {
 		fin.open("files/scenario/extra_teaser.xml");
 		doc = xmlDocFromStream(fin, "extra_teaser.xml");
@@ -114,5 +119,51 @@ TEST_CASE("Loading a new-format scenario record") {
 			doc = xmlDocFromStream(fin, "bad_graphics5.xml");
 			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadVal);
 		}
+	}
+	SECTION("With the minimal required data") {
+		fin.open("files/scenario/minimal.xml");
+		doc = xmlDocFromStream(fin, "minimal.xml");
+		REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
+		CHECK(scen.scen_name == "Test Scenario");
+		CHECK(scen.intro_pic == 7);
+		CHECK(scen.campaign_id == "campaign");
+		CHECK(scen.format.prog_make_ver[0] == 2);
+		CHECK(scen.format.prog_make_ver[1] == 5);
+		CHECK(scen.format.prog_make_ver[2] == 3);
+		CHECK(scen.format.ver[0] == 2);
+		CHECK(scen.format.ver[1] == 6);
+		CHECK(scen.format.ver[2] == 7);
+		// TODO: Check language
+		CHECK(scen.contact_info[0] == "BoE Test Suite");
+		CHECK(scen.contact_info[1] == "nowhere@example.com");
+		CHECK(scen.who_wrote[0] == "Teaser 1");
+		CHECK(scen.who_wrote[1] == "Teaser 2");
+		CHECK(scen.intro_mess_pic == 7);
+		CHECK(scen.intro_strs[0] == "Welcome!!!    To the test scenario!");
+		CHECK(scen.rating == eContentRating::R);
+		CHECK(scen.difficulty == 2); // Difficulty is 3, but it's stored as 2 (0-3 instead of 1-4)
+		CHECK(scen.adjust_diff == true);
+		CHECK(scen.is_legacy == false);
+		CHECK(scen.uses_custom_graphics == false);
+		CHECK(scen.towns.size() == 3);
+		CHECK(scen.outdoors.width() == 2);
+		CHECK(scen.outdoors.height() == 1);
+		CHECK(scen.which_town_start == 7);
+		CHECK(scen.where_start == loc(24,28));
+		CHECK(scen.out_sec_start == loc(1,3));
+		CHECK(scen.out_start == loc(12,21));
+		CHECK(scen.default_ground == 2);
+		CHECK(scen.last_out_edited == loc(0,0));
+		CHECK(scen.last_town_edited == 0);
+	}
+	SECTION("With a special item") {
+		fin.open("files/scenario/special_item.xml");
+		doc = xmlDocFromStream(fin, "special_item.xml");
+		REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
+		CHECK(scen.special_items.size() == 1);
+		CHECK(scen.special_items[0].name == "My Special Item");
+		CHECK(scen.special_items[0].descr == "Special Item  --  Description!");
+		CHECK(scen.special_items[0].flags == 0);
+		CHECK(scen.special_items[0].special == -1);
 	}
 }

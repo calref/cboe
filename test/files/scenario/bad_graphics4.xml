@@ -15,7 +15,7 @@
         <intro-msg>Welcome to the test scenario!</intro-msg>
     </text>
     <ratings>
-        <content>r</content>
+        <content>R</content>
         <difficulty>3</difficulty>
     </ratings>
     <flags>

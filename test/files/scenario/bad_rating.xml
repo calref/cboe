@@ -15,17 +15,7 @@
         <intro-msg>Welcome to the test scenario!</intro-msg>
     </text>
     <ratings>
-        <content>R</content>
+    	<content>Q</content>
         <difficulty>3</difficulty>
     </ratings>
-    <flags>
-        <adjust-difficulty>true</adjust-difficulty>
-        <legacy>false</legacy>
-        <custom-graphics>false</custom-graphics>
-    </flags>
-    <creator>
-        <type>unknown</type>
-        <version>2.0.0</version>
-        <os></os>
-    </creator>
 </scenario>

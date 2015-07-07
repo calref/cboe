@@ -50,7 +50,7 @@ TEST_CASE("Saving a scenario record") {
 	scen.contact_info[0] = "BoE Test Suite";
 	scen.contact_info[1] = "nowhere@example.com";
 	scen.intro_strs[0] = "Welcome to the test scenario!";
-	scen.rating = 2;
+	scen.rating = eContentRating::R;
 	scen.difficulty = 2;
 	scen.which_town_start = 7;
 	scen.where_start = {24,28};
@@ -72,7 +72,7 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.contact_info[0] == "BoE Test Suite");
 		CHECK(scen.contact_info[1] == "nowhere@example.com");
 		CHECK(scen.intro_strs[0] == "Welcome to the test scenario!");
-		CHECK(scen.rating == 2);
+		CHECK(scen.rating == eContentRating::R);
 		CHECK(scen.difficulty == 2);
 		CHECK(scen.which_town_start == 7);
 		CHECK(scen.where_start == loc(24,28));

@@ -59,4 +59,5 @@ TEST_CASE("Enum text conversions") {
 	test_enum(LIGHT_NORMAL, "lit", LIGHT_NONE, "none");
 	test_enum(eTalkNode::REGULAR, "reg", eTalkNode::JOB_BANK, "jobs", eTalkNode::SELL_WEAPONS, "sell-weap", eTalkNode::CALL_SCEN_SPEC, "call-global");
 	test_enum(eAttitude::DOCILE, "docile", eAttitude::HOSTILE_B, "hostile-b");
+	test_enum(eContentRating::G, "G", eContentRating::NC17, "NC-17");
 }

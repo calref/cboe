@@ -9,11 +9,7 @@
         <name>BoE Test Suite</name>
         <email>nowhere@example.com</email>
     </author>
-    <text>
-        <teaser>Teaser 1</teaser>
-        <teaser>Teaser 2</teaser>
-        <intro-msg>Welcome to the test scenario!</intro-msg>
-    </text>
+    <text/>
     <ratings>
         <content>R</content>
         <difficulty>3</difficulty>
@@ -36,6 +32,14 @@
         <town-start x="24" y="28" />
         <outdoor-start x="1" y="3" />
         <sector-start x="12" y="21" />
+        <special-item>
+        	<name>My Special Item</name>
+        	<description><![CDATA[Special Item  --  Description!]]></description>
+        </special-item>
     </game>
-    <editor/>
+    <editor>
+        <default-ground>2</default-ground>
+        <last-out-section x="0" y="0" />
+        <last-town>0</last-town>
+    </editor>
 </scenario>

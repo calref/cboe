@@ -138,12 +138,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	}
 	data.CloseElement("text");
 	data.OpenElement("ratings");
-	switch(scenario.rating) {
-		case 0: data.PushElement("content", "g"); break;
-		case 1: data.PushElement("content", "pg"); break;
-		case 2: data.PushElement("content", "r"); break;
-		case 3: data.PushElement("content", "nc17"); break;
-	}
+	data.PushElement("content", scenario.rating);
 	data.PushElement("difficulty", scenario.difficulty + 1);
 	data.CloseElement("ratings");
 	data.OpenElement("flags");

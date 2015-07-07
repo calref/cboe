@@ -631,3 +631,18 @@ std::istream& operator>> (std::istream& in, eAttitude& att) {
 		in.setstate(std::ios::failbit);
 	return in;
 }
+
+// MARK: eContentRating
+
+cEnumLookup rating_strs = {"G", "PG", "R", "NC-17"};
+
+std::ostream& operator<< (std::ostream& out, eContentRating rating) {
+	writeEnum(out, rating, rating_strs, "docile");
+	return out;
+}
+
+std::istream& operator>> (std::istream& in, eContentRating& rating) {
+	if(!readEnum(in, rating, rating_strs, eContentRating::G))
+		in.setstate(std::ios::failbit);
+	return in;
+}
