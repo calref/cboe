@@ -705,19 +705,13 @@ short do_look(location space) {
 				&& (univ.town.monst[i].picture_num != 0)) {
 				
 				
-				msg = get_m_name(univ.town.monst[i].number);
-				if(univ.town.monst[i].health < univ.town.monst[i].m_health) {
-					if(!univ.town.monst[i].is_friendly())
-						msg = "    Wounded " + msg + " (H)";
-					else msg = "    Wounded " + msg + " (F)";
-				}
-				else {
-					if(!univ.town.monst[i].is_friendly())
-						msg = "    " + msg + " (H)";
-					else msg = "    " + msg + " (F)";
-				}
+				msg = "    ";
+				if(univ.town.monst[i].health < univ.town.monst[i].m_health)
+					msg += "Wounded ";
+				msg += get_m_name(univ.town.monst[i].number);
+				msg += univ.town.monst[i].is_friendly() ? " (F)" : " (H)";
 				
-				add_string_to_buf((char *) msg.c_str());
+				add_string_to_buf(msg.c_str());
 				
 			}
 	}
@@ -729,7 +723,7 @@ short do_look(location space) {
 					if(univ.party.out_c[i].what_monst.monst[j] != 0) {
 						msg = get_m_name(univ.party.out_c[i].what_monst.monst[j]);
 						msg = "    " + msg;
-						add_string_to_buf((char *) msg.c_str());
+						add_string_to_buf(msg.c_str());
 						j = 7;
 						
 					}
