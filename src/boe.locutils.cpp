@@ -526,7 +526,7 @@ bool party_sees_a_monst() { // Returns true is a hostile monster is in sight.
 	
 	for(i = 0; i < univ.town.monst.size(); i++) {
 		if(univ.town.monst[i].active > 0)
-			if((univ.town.monst[i].attitude == 1) &&
+			if(!univ.town.monst[i].is_friendly() &&
 				(party_can_see_monst(i)))
 				return true;
 	}

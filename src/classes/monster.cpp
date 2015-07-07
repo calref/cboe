@@ -126,7 +126,7 @@ void cMonster::append(legacy::monster_record_type& old){
 	else poison_res = 100;
 	x_width = old.x_width;
 	y_width = old.y_width;
-	default_attitude = old.default_attitude;
+	default_attitude = eAttitude(old.default_attitude);
 	summon_type = old.summon_type;
 	default_facial_pic = old.default_facial_pic;
 	if(default_facial_pic == 0)
@@ -384,7 +384,8 @@ cMonster::cMonster(){
 	mindless = invuln = guard = invisible = false;
 	level = m_health = armor = skill = 0;
 	speed = 4;
-	default_facial_pic = default_attitude = 0;
+	default_facial_pic = 0;
+	default_attitude = eAttitude::DOCILE;
 	ambient_sound = 0;
 	corpse_item = corpse_item_chance = treasure = 0;
 	mu = cl = 0;
@@ -419,7 +420,7 @@ cTownperson::cTownperson(location loc, mon_num_t num, const cMonster& monst) : c
 
 void cTownperson::append(legacy::creature_start_type old){
 	number = old.number;
-	start_attitude = old.start_attitude;
+	start_attitude = eAttitude(old.start_attitude);
 	start_loc.x = old.start_loc.x;
 	start_loc.y = old.start_loc.y;
 	mobility = old.mobile;
@@ -851,6 +852,8 @@ void cMonster::readFrom(std::istream& file) {
 			line >> picture_num;
 		else if(cur == "SOUND")
 			line >> ambient_sound;
+		else if(cur == "ATTITUDE")
+			line >> default_attitude;
 		else {
 			line >> temp1;
 			if(cur == "LEVEL")
@@ -869,8 +872,6 @@ void cMonster::readFrom(std::istream& file) {
 				cl = temp1;
 			else if(cur == "TREASURE")
 				treasure = temp1;
-			else if(cur == "ATTITUDE")
-				default_attitude = temp1;
 			else if(cur == "SUMMON")
 				summon_type = temp1;
 		}

@@ -616,3 +616,18 @@ std::istream& operator>> (std::istream& in, eTalkNode& node) {
 		in.setstate(std::ios::failbit);
 	return in;
 }
+
+// MARK: eAttitude
+
+cEnumLookup attitude_strs = {"docile", "hostile-a", "friendly", "hostile-b"};
+
+std::ostream& operator<< (std::ostream& out, eAttitude att) {
+	writeEnum(out, att, attitude_strs, "docile");
+	return out;
+}
+
+std::istream& operator>> (std::istream& in, eAttitude& att) {
+	if(!readEnum(in, att, attitude_strs, eAttitude::DOCILE))
+		in.setstate(std::ios::failbit);
+	return in;
+}

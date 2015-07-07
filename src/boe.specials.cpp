@@ -97,6 +97,7 @@ bool handle_wandering_specials (short /*which*/,short mode) {
 	// (I'm pretty sure it is, but I should verify it somehow.)
 	// (It's either that or univ.party.p_loc.)
 	short s1 = 0,s2 = 0,s3 = 0;
+	// TODO: If s2 > 0, encounter is forced (monsters don't flee even if they're weak)
 	
 	if((mode == 0) && (store_wandering_special.spec_on_meet >= 0)) { // When encountering
 		run_special(eSpecCtx::OUTDOOR_ENC,1,store_wandering_special.spec_on_meet,univ.party.loc_in_sec,&s1,&s2,&s3);
@@ -1133,14 +1134,14 @@ void use_item(short pc,short item) {
 				else do_mage_spell(current_pc, spell, true);
 				break;
 			case eItemAbil::SUMMONING:
-				if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,str,2,true))
+				if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,str,eAttitude::FRIENDLY,true))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::MASS_SUMMONING:
 				r1 = get_ran(str,1,4);
 				j = get_ran(1,3,5);
 				for(i = 0; i < j; i++)
-					if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,r1,2,true))
+					if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,r1,eAttitude::FRIENDLY,true))
 						add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::QUICKFIRE:
@@ -1549,10 +1550,10 @@ bool damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType 
 			victim.morale = victim.morale - 2;
 	}
 	
-	if((victim.attitude % 2 != 1) && (who_hit < 7) &&
-		((processing_fields && !monsters_going) || (processing_fields && !PSD[SDF_HOSTILES_PRESENT]))) {
+	if(victim.is_friendly() && who_hit < 7 &&
+		((!processing_fields && !monsters_going) || (processing_fields && !PSD[SDF_HOSTILES_PRESENT]))) {
 		add_string_to_buf("Damaged an innocent.");
-		victim.attitude = 1;
+		victim.attitude = eAttitude::HOSTILE_A;
 		make_town_hostile();
 	}
 	
@@ -3793,7 +3794,11 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		return;
 	switch(cur_node.type) {
 		case eSpecType::MAKE_TOWN_HOSTILE:
-			set_town_attitude(spec.ex1a,spec.ex1b,spec.ex2a);
+			if(spec.ex2a < 0 || spec.ex2a > 3){
+				giveError("Invalid attitude (0-Friendly Docile, 1-Hostile A, 2-Friendly Will Fight, 3-Hostile B).");
+				break;
+			}
+			set_town_attitude(spec.ex1a,spec.ex1b,eAttitude(spec.ex2a));
 			break;
 		case eSpecType::TOWN_MOVE_PARTY:
 			if(is_combat()) {
@@ -3862,8 +3867,8 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			for(i = 0; i < univ.town.monst.size(); i++)
 				if(univ.town.monst[i].active > 0 &&
 					(univ.town.monst[i].number == spec.ex1a || spec.ex1a == 0 ||
-					 (spec.ex1a == -1 && univ.town.monst[i].attitude % 2 == 0) ||
-					 (spec.ex1a == -2 && univ.town.monst[i].attitude % 2 == 1))) {
+					(spec.ex1a == -1 && univ.town.monst[i].is_friendly()) ||
+					(spec.ex1a == -2 && !univ.town.monst[i].is_friendly()))) {
 						univ.town.monst[i].active = 0;
 					}
 			*redraw = 1;
@@ -4148,11 +4153,11 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				giveError("Tried to change the attitude of a nonexistent monster (should be 0...59).");
 				break;
 			}
-			if((spec.ex1b < 0) || (spec.ex1b > 3)){
+			if(spec.ex1b < 0 || spec.ex1b > 3){
 				giveError("Invalid attitude (0-Friendly Docile, 1-Hostile A, 2-Friendly Will Fight, 3-Hostile B).");
 				break;
 			}
-			univ.town.monst[spec.ex1a].attitude = spec.ex1b;
+			univ.town.monst[spec.ex1a].attitude = eAttitude(spec.ex1b);
 			break;
 		case eSpecType::TOWN_RUN_MISSILE:
 			if(which_mode == eSpecCtx::TALK)

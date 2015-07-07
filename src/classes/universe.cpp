@@ -32,7 +32,6 @@ void cCurTown::append(legacy::current_town_type& old){
 	for(int i = 0; i < 64; i++)
 		for(int j = 0; j < 64; j++)
 			fields[i][j] = old.explored[i][j];
-	hostile = old.hostile;
 	monst.append(old.monst);
 	in_boat = old.in_boat;
 	p_loc.x = old.p_loc.x;
@@ -775,7 +774,7 @@ void cCurOut::readFrom(std::istream& file) {
 void cCurTown::writeTo(std::ostream& file) const {
 	file << "TOWN " << num << '\n';
 	file << "DIFFICULTY " << difficulty << '\n';
-	if(hostile) file << "HOSTILE" << '\n';
+	if(monst.hostile) file << "HOSTILE" << '\n';
 	file << "INBOAT " << in_boat << '\n';
 	file << "AT " << p_loc.x << ' ' << p_loc.y << '\n';
 	file << '\f';
@@ -817,7 +816,7 @@ void cCurTown::readFrom(std::istream& file){
 		else if(cur == "DIFFICULTY")
 			sin >> difficulty;
 		else if(cur == "HOSTILE")
-			hostile = true;
+			monst.hostile = true;
 		else if(cur == "INBOAT")
 			sin >> in_boat;
 		else if(cur == "AT")

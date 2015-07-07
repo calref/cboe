@@ -268,7 +268,7 @@ short get_item(location place,short pc_num,bool check_container) {
 	short mass_get = 1;
 	
 	for(i = 0; i < univ.town.monst.size(); i++)
-		if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude == 1)
+		if(univ.town.monst[i].active > 0 && !univ.town.monst[i].is_friendly()
 			&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 			mass_get = 0;
 	
@@ -288,7 +288,7 @@ short get_item(location place,short pc_num,bool check_container) {
 	if(item_near)
 		if(display_item(place,pc_num,mass_get,check_container)) { // if true, there was a theft
 			for(i = 0; i < univ.town.monst.size(); i++)
-				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 != 1)
+				if(univ.town.monst[i].active > 0 && univ.town.monst[i].is_friendly()
 					&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 					make_town_hostile();
 					add_string_to_buf("Your crime was seen!");
@@ -309,20 +309,19 @@ short get_item(location place,short pc_num,bool check_container) {
 }
 
 void make_town_hostile() {
-	set_town_attitude(0, -1, 1);
+	set_town_attitude(0, -1, eAttitude::HOSTILE_A);
 	return;
 }
 
 // Set Attitude node adapted from *i, meant to replace make_town_hostile node
-// att is any valid monster attitude (so, 0..3)
-void set_town_attitude(short lo,short hi,short att) {
+void set_town_attitude(short lo,short hi,eAttitude att) {
 	short i,num;
 	short a[3] = {}; // Dummy values to pass to run_special.
 	
 	if(which_combat_type == 0)
 		return;
 	give_help(53,0);
-	univ.town.monst.friendly = 1;
+	univ.town.monst.hostile = true;
 	long long num_monst = univ.town.monst.size();
 	
 	// Nice smart indexing, like Python :D
@@ -342,8 +341,8 @@ void set_town_attitude(short lo,short hi,short att) {
 			univ.town.monst[i].attitude = att;
 			num = univ.town.monst[i].number;
 			// If made hostile, make mobile
-			if(att == 1 || att == 3) {
-				
+			if(!univ.town.monst[i].is_friendly()) {
+				univ.town.monst.hostile = true;
 				univ.town.monst[i].mobility = 1;
 				// If a "guard", give a power boost
 				if(univ.scenario.scen_monsters[num].guard) {
@@ -359,7 +358,7 @@ void set_town_attitude(short lo,short hi,short att) {
 	
 	// In some towns, doin' this'll getcha' killed.
 	// (Or something else! Killing the party would be the responsibility of whatever special node is called.)
-	if((att == 1 || att == 3) && univ.town->spec_on_hostile >= 0)
+	if(univ.town.monst.hostile && univ.town->spec_on_hostile >= 0)
 		run_special(eSpecCtx::TOWN_HOSTILE, 2, univ.town->spec_on_hostile, univ.party.p_loc, &a[0], &a[1], &a[2]);
 }
 

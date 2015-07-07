@@ -142,6 +142,7 @@ public:
 	
 	bool is_alive() const;
 	bool is_friendly() const;
+	bool is_friendly(const iLiving& other) const;
 	bool is_shielded() const;
 	int get_shared_dmg(int base_dmg) const;
 	location get_loc() const;

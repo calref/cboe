@@ -34,7 +34,7 @@ class cPopulation { // formerly creature_list_type
 	std::vector<cCreature> dudes;
 public:
 	short which_town;
-	short friendly;
+	bool hostile;
 	
 	void append(legacy::creature_list_type old);
 	void init(size_t n);

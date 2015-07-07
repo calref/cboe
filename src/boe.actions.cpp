@@ -573,7 +573,7 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 					if(s1 > 0)
 						break;
 				}
-				if(univ.town.monst[i].attitude % 2 == 1) {
+				if(!univ.town.monst[i].is_friendly()) {
 					add_string_to_buf("  Creature is hostile.");
 				} else if(univ.town.monst[i].summon_time > 0 || univ.town.monst[i].personality < 0) {
 					short small_talk = 1;
@@ -1929,10 +1929,10 @@ bool handle_keystroke(sf::Event& event){
 		case 'K':
 			if(!in_scen_debug) break;
 			for(i = 0; i < univ.town.monst.size(); i++) {
-				if((is_combat()) && (univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1))
+				if(is_combat() && univ.town.monst[i].active > 0 && !univ.town.monst[i].is_friendly())
 					univ.town.monst[i].active = 0;
 				
-				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)
+				if(univ.town.monst[i].active > 0 && !univ.town.monst[i].is_friendly()
 					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 10) )
 					damage_monst(univ.town.monst[i], 7,1000,eDamageType::UNBLOCKABLE,0);
 			}
