@@ -18,7 +18,8 @@
 const short cCreature::charm_odds[21] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0, 0};
 
 cCreature::cCreature(){
-	number = active = attitude = start_attitude = 0;
+	number = active = 0;
+	attitude = start_attitude = eAttitude::DOCILE;
 	start_loc.x = start_loc.y = cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;
 	mobility = 1;
 	summon_time  = 0;
@@ -34,7 +35,7 @@ cCreature::cCreature(int num) : cCreature() {
 
 void cCreature::append(legacy::creature_data_type old){
 	active = old.active;
-	attitude = old.attitude;
+	attitude = eAttitude(old.attitude);
 	number = old.number;
 	cur_loc.x = old.m_loc.x;
 	cur_loc.y = old.m_loc.y;
@@ -46,7 +47,7 @@ void cCreature::append(legacy::creature_data_type old){
 		summon_time -= 100;
 	} else party_summoned = true;
 	number = old.monst_start.number;
-	start_attitude = old.monst_start.start_attitude;
+	start_attitude = eAttitude(old.monst_start.start_attitude);
 	start_loc.x = old.monst_start.start_loc.x;
 	start_loc.y = old.monst_start.start_loc.y;
 	mobility = old.monst_start.mobile;
@@ -245,8 +246,8 @@ void cCreature::sleep(eStatus which_status,int amount,int penalty) {
 	}
 	else {
 		if(which_status == eStatus::CHARM) {
-			if(amount == 0 || amount > 3) amount = 2;
-			attitude = amount;
+			if(amount <= 0 || amount > 3) amount = 2;
+			attitude = eAttitude(amount);
 			spell_note(23);
 		} else if(which_status == eStatus::FORCECAGE) {
 			status[eStatus::FORCECAGE] = amount;
@@ -269,7 +270,18 @@ bool cCreature::is_alive() const {
 }
 
 bool cCreature::is_friendly() const {
-	return attitude % 2 == 0;
+	return attitude == eAttitude::DOCILE || attitude == eAttitude::FRIENDLY;
+}
+
+bool cCreature::is_friendly(const iLiving& other) const {
+	if(is_friendly() != other.is_friendly())
+		return false;
+	if(const cCreature* monst = dynamic_cast<const cCreature*>(&other)) {
+		if(!is_friendly()) return attitude == monst->attitude;
+	}
+	// If we get this far, both monsters are friendly to the player.
+	// (Or, maybe the other is a player rather than a monster.)
+	return true;
 }
 
 location cCreature::get_loc() const {
@@ -366,9 +378,7 @@ void cCreature::readFrom(std::istream& file) {
 		else if(cur == "ATTITUDE")
 			line >> attitude;
 		else if(cur == "STARTATT") {
-			unsigned int i;
-			line >> i;
-			start_attitude = i;
+			line >> start_attitude;
 		} else if(cur == "STARTLOC")
 			line >> start_loc.x >> start_loc.y;
 		else if(cur == "LOCATION")

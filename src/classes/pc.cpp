@@ -357,6 +357,18 @@ bool cPlayer::is_friendly() const {
 	return true;
 }
 
+bool cPlayer::is_friendly(const iLiving& other) const {
+	if(status[eStatus::CHARM] > 0) {
+		if(other.is_friendly()) return false;
+		// TODO: If charmed players becomes a thing, they should match the attitude (A or B) of whoever charmed them
+		if(const cCreature* monst = dynamic_cast<const cCreature*>(&other))
+			return monst->attitude == eAttitude::HOSTILE_A;
+		// If we get here, the other is also a charmed player.
+		return true;
+	}
+	return other.is_friendly();
+}
+
 bool cPlayer::is_shielded() const {
 	if(status[eStatus::MARTYRS_SHIELD] > 0)
 		return true;

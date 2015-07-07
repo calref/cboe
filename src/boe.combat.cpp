@@ -288,13 +288,13 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 		how_many = nums[i];
 		if(encounter.what_monst.monst[i] != 0)
 			for(j = 0; j < how_many; j++)
-				set_up_monst(0,encounter.what_monst.monst[i]);
+				set_up_monst(eAttitude::HOSTILE_A,encounter.what_monst.monst[i]);
 	}
 	for(i = 0; i < 3; i++) {
 		how_many = nums[i + 7];
 		if(encounter.what_monst.friendly[i] != 0)
 			for(j = 0; j < how_many; j++)
-				set_up_monst(1,encounter.what_monst.friendly[i]);
+				set_up_monst(eAttitude::FRIENDLY,encounter.what_monst.friendly[i]);
 	}
 	
 	// place PCs
@@ -324,7 +324,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 			
 			univ.town.monst[i].cur_loc.x  = get_ran(1,15,25);
 			univ.town.monst[i].cur_loc.y  = get_ran(1,14,18);
-			if(univ.town.monst[i].attitude == 2)
+			if(univ.town.monst[i].attitude == eAttitude::FRIENDLY)
 				univ.town.monst[i].cur_loc.y += 9;
 			else if((univ.town.monst[i].mu > 0) || (univ.town.monst[i].cl > 0))
 				univ.town.monst[i].cur_loc.y -= 4;//max(12,univ.town.monst[i].m_loc.y - 4);
@@ -335,7 +335,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 				   (num_tries++ < 50)) {
 				univ.town.monst[i].cur_loc.x = get_ran(1,15,25);
 				univ.town.monst[i].cur_loc.y = get_ran(1,14,18);
-				if(univ.town.monst[i].attitude == 2)
+				if(univ.town.monst[i].attitude == eAttitude::FRIENDLY)
 					univ.town.monst[i].cur_loc.y += 9;
 				else if((univ.town.monst[i].mu > 0) || (univ.town.monst[i].cl > 0))
 					univ.town.monst[i].cur_loc.y -= 4;//max(12,univ.town.monst[i].m_loc.y - 4);
@@ -421,15 +421,13 @@ bool pc_combat_move(location destination) {
 		}
 		else if(monst_hit != nullptr) {
 			// s2 = 2 here appears to mean "go ahead and attack", while s2 = 1 means "cancel attack".
-			// Then s1 % 2 == 1 means the monster is hostile to the party.
-			s1 = dynamic_cast<cCreature*>(monst_hit)->attitude;
-			if(s1 % 2 == 1) s2 = 2;
+			if(!monst_hit->is_friendly()) s2 = 2;
 			else {
 				std::string result = cChoiceDlog("attack-friendly",{"cancel","attack"}).show();
 				if(result == "cancel") s2 = 1;
 				else if(result == "attack") s2 = 2;
 			}
-			if((s2 == 2) && (s1 % 2 != 1))
+			if(s2 == 2 && monst_hit->is_friendly())
 				make_town_hostile();
 			if(s2 == 2) {
 				univ.party[current_pc].last_attacked = monst_hit;
@@ -466,7 +464,7 @@ bool pc_combat_move(location destination) {
 				s1 = current_pc;
 				if((monst_exist > 0) && (monst_adjacent(univ.party[current_pc].combat_pos,i))
 					&& !monst_adjacent(destination,i) &&
-					(univ.town.monst[i].attitude % 2 == 1) &&
+					!univ.town.monst[i].is_friendly() &&
 					univ.town.monst[i].status[eStatus::ASLEEP] <= 0 &&
 					univ.town.monst[i].status[eStatus::PARALYZED] <= 0) {
 					combat_posing_monster = current_working_monster = 100 + i;
@@ -1270,59 +1268,59 @@ void do_combat_cast(location target) {
 								switch(spell_being_cast) {
 									case eSpell::SIMULACRUM:
 										r2 = get_ran(3,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster(store_sum_monst,target,r2,2,true))
+										if(!summon_monster(store_sum_monst,target,r2,eAttitude::FRIENDLY,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_BEAST:
 										r2 = get_ran(3,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
+										if((summon == 0) || (!summon_monster(summon,target,r2,eAttitude::FRIENDLY,true)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_WEAK:
 										r2 = get_ran(4,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
+										if((summon == 0) || (!summon_monster(summon,target,r2,eAttitude::FRIENDLY,true)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON: case eSpell::SUMMON_AID:
 										r2 = get_ran(5,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
+										if((summon == 0) || (!summon_monster(summon,target,r2,eAttitude::FRIENDLY,true)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_MAJOR: case eSpell::SUMMON_AID_MAJOR:
 										r2 = get_ran(7,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if((summon == 0) || (!summon_monster(summon,target,r2,2,true)))
+										if((summon == 0) || (!summon_monster(summon,target,r2,eAttitude::FRIENDLY,true)))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::DEMON:
 										r2 = get_ran(5,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster(85,target,r2,2,true))
+										if(!summon_monster(85,target,r2,eAttitude::FRIENDLY,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_RAT:
 										r1 = get_ran(3,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster(80,target,r1,2,true))
+										if(!summon_monster(80,target,r1,eAttitude::FRIENDLY,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 										
 									case eSpell::SUMMON_SPIRIT:
 										r2 = get_ran(2,1,5) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster(125,target,r2,2,true))
+										if(!summon_monster(125,target,r2,eAttitude::FRIENDLY,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::STICKS_TO_SNAKES:
 										r1 = get_ran(1,0,7);
 										r2 = get_ran(2,1,5) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster((r1 == 1) ? 100 : 99,target,r2,2,true))
+										if(!summon_monster((r1 == 1) ? 100 : 99,target,r2,eAttitude::FRIENDLY,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_HOST: // host
 										r2 = get_ran(2,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster((i == 0) ? 126 : 125,target,r2,2,true))
+										if(!summon_monster((i == 0) ? 126 : 125,target,r2,eAttitude::FRIENDLY,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::SUMMON_GUARDIAN: // guardian
 										r2 = get_ran(6,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
-										if(!summon_monster(122,target,r2,2,true))
+										if(!summon_monster(122,target,r2,eAttitude::FRIENDLY,true))
 											add_string_to_buf("  Summon failed.");
 										break;
 									case eSpell::FLASH_STEP:
@@ -1348,7 +1346,7 @@ void do_combat_cast(location target) {
 									add_string_to_buf("  Nobody there.");
 								else {
 									cCreature* cur_monst = dynamic_cast<cCreature*>(victim);
-									if(cur_monst && cur_monst->attitude % 2 != 1 && spell_being_cast != eSpell::SCRY_MONSTER && spell_being_cast != eSpell::CAPTURE_SOUL)
+									if(cur_monst && cur_monst->is_friendly() && spell_being_cast != eSpell::SCRY_MONSTER && spell_being_cast != eSpell::CAPTURE_SOUL)
 										make_town_hostile();
 									switch(spell_being_cast) {
 										case eSpell::ACID_SPRAY:
@@ -2216,7 +2214,7 @@ void do_monster_turn() {
 		cur_monst = &univ.town.monst[i];
 		
 		// See if hostile monster notices party, during combat
-		if((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1) && (overall_mode == MODE_COMBAT)) {
+		if(cur_monst->active == 1 && !cur_monst->is_friendly() && overall_mode == MODE_COMBAT) {
 			r1 = get_ran(1,1,100); // Check if see PCs first
 			// TODO: Hang on, isn't stealth supposed to get better as you level up?
 			r1 += (univ.party.status[ePartyStatus::STEALTH] > 0) ? 45 : 0;
@@ -2229,12 +2227,12 @@ void do_monster_turn() {
 					cur_monst->active = 2;
 				}
 		}
-		if((cur_monst->active == 1) && (cur_monst->attitude % 2 == 1)) {
+		if(cur_monst->active == 1 && !cur_monst->is_friendly()) {
 			// Now it looks for PC-friendly monsters
 			// dist check is for efficiency
 			for(j = 0; j < univ.town.monst.size(); j++)
 				if((univ.town.monst[j].active > 0) &&
-					(univ.town.monst[j].attitude % 2 != 1) &&
+					univ.town.monst[j].is_friendly() &&
 					(dist(cur_monst->cur_loc,univ.town.monst[j].cur_loc) <= 6) &&
 					(can_see_light(cur_monst->cur_loc,univ.town.monst[j].cur_loc,sight_obscurity) < 5))
 					cur_monst->active = 2;
@@ -2242,9 +2240,9 @@ void do_monster_turn() {
 		
 		// See if friendly, fighting monster see hostile monster. If so, make mobile
 		// dist check is for efficiency
-		if((cur_monst->active == 1) && (cur_monst->attitude == 2)) {
+		if(cur_monst->active == 1 && cur_monst->attitude == eAttitude::FRIENDLY) {
 			for(j = 0; j < univ.town.monst.size(); j++)
-				if((univ.town.monst[j].active > 0) && (univ.town.monst[j].attitude % 2 == 1) &&
+				if(univ.town.monst[j].active > 0 && !univ.town.monst[j].is_friendly() &&
 					(dist(cur_monst->cur_loc,univ.town.monst[j].cur_loc) <= 6)
 					&& (can_see_light(cur_monst->cur_loc,univ.town.monst[j].cur_loc,sight_obscurity) < 5)) {
 					cur_monst->active = 2;
@@ -2256,7 +2254,7 @@ void do_monster_turn() {
 		cur_monst->ap = 0;
 		if(cur_monst->active == 2) { // Begin action loop for angry, active monsters
 			// First note that hostile monsters are around.
-			if(cur_monst->attitude % 2 == 1)
+			if(!cur_monst->is_friendly())
 				PSD[SDF_HOSTILES_PRESENT] = 30;
 			
 			// Give monster its action points
@@ -2347,8 +2345,8 @@ void do_monster_turn() {
 			// Draw w. monster in center, if can see
 			if((cur_monst->ap > 0) && (is_combat())
 				// First make sure it has a target and is close, if not, don't bother
-				&& (cur_monst->attitude > 0) && (cur_monst->picture_num > 0)
-				&& ((target != 6) || (cur_monst->attitude % 2 == 1))
+				&& cur_monst->attitude != eAttitude::DOCILE
+				&& (target != 6 || !cur_monst->is_friendly())
 				&& (party_can_see_monst(i)) ) {
 				center_on_monst = true;
 				center = cur_monst->cur_loc;
@@ -2396,12 +2394,9 @@ void do_monster_turn() {
 					if(acted_yet) take_m_ap(1,cur_monst);
 				}
 			}
-			if((target != 6) && (cur_monst->attitude > 0)
+			if(target != 6 && cur_monst->attitude != eAttitude::DOCILE
 				&& (monst_can_see(i,targ_space))
 				&& (can_see_monst(targ_space,i))) { // Begin spec. attacks
-				
-//				sprintf((char *)create_line,"%d: %d  %d  %d",i,cur_monst->breath,cur_monst->mu,cur_monst->cl);
-//				add_string_to_buf((char *)create_line);
 				
 				// Basic breath weapons
 				if(cur_monst->abil[eMonstAbil::DAMAGE2].active && cur_monst->abil[eMonstAbil::DAMAGE2].gen.type == eMonstGen::BREATH
@@ -2518,11 +2513,11 @@ void do_monster_turn() {
 				bool do_attack = false;
 				if(dynamic_cast<cPlayer*>(&who)) {
 					// Attack a PC only if hostile
-					if(cur_monst->attitude % 2 == 1)
+					if(!cur_monst->is_friendly())
 						do_attack = true;
 				} else if(dynamic_cast<cCreature*>(&who)) {
 					// Attack a monster only if not docile
-					if(cur_monst->attitude > 0)
+					if(cur_monst->attitude != eAttitude::DOCILE)
 						do_attack = true;
 				}
 				if(do_attack) {
@@ -2546,7 +2541,7 @@ void do_monster_turn() {
 					if(monst_hate_spot(i,&move_targ)) // First, maybe move out of dangerous space
 						seek_party (i,cur_monst->cur_loc,move_targ);
 					else { // spot is OK, so go nuts
-						if((cur_monst->attitude % 2 == 1) && (move_target < 6)) // Monsters seeking party do so
+						if(!cur_monst->is_friendly() && move_target < 6) // Monsters seeking party do so
 							if(univ.party[move_target].main_status == eMainStatus::ALIVE) {
 								seek_party (i,cur_monst->cur_loc,univ.party[move_target].combat_pos);
 								for(k = 0; k < 6; k++)
@@ -2562,14 +2557,14 @@ void do_monster_turn() {
 								seek_party (i,cur_monst->cur_loc,univ.town.monst[move_target - 100].cur_loc);
 								for(k = 0; k < 6; k++)
 									if(univ.party[k].parry > 99 && monst_adjacent(univ.party[k].combat_pos,i)
-										&& (cur_monst->active > 0) && (cur_monst->attitude % 2 == 1)
+										&& cur_monst->active > 0 && !cur_monst->is_friendly()
 										&& !univ.party[k].traits[eTrait::PACIFIST]) {
 										univ.party[k].parry = 0;
 										pc_attack(k,cur_monst);
 									}
 							}
 						
-						if(cur_monst->attitude == 0) {
+						if(cur_monst->attitude == eAttitude::DOCILE) {
 							acted_yet = rand_move(i);
 							futzing++;
 						}
@@ -2590,7 +2585,7 @@ void do_monster_turn() {
 			if((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING))
 				for(k = 0; k < 6; k++)
 					if(univ.party[k].main_status == eMainStatus::ALIVE && !monst_adjacent(univ.party[k].combat_pos,i)
-					   && (pc_adj[k]) && (cur_monst->attitude % 2 == 1) && (cur_monst->active > 0) &&
+						&& pc_adj[k] && !cur_monst->is_friendly() && cur_monst->active > 0 &&
 					   univ.party[k].status[eStatus::INVISIBLE] == 0 && !univ.party[k].traits[eTrait::PACIFIST]) {
 						combat_posing_monster = current_working_monster = k;
 						pc_attack(k,cur_monst);
@@ -2661,7 +2656,7 @@ void do_monster_turn() {
 			
 			combat_posing_monster = current_working_monster = -1;
 			// Redraw monster after it goes
-			if((cur_monst->attitude > 0) && (cur_monst->active > 0) && (cur_monst->ap == 0)
+			if(cur_monst->attitude != eAttitude::DOCILE && cur_monst->active > 0 && cur_monst->ap == 0
 				&& (is_combat()) && (cur_monst->picture_num > 0) && (party_can_see_monst(i) )) {
 				center = cur_monst->cur_loc;
 				draw_terrain(0);
@@ -2805,8 +2800,8 @@ void monster_attack(short who_att,iLiving* target) {
 //			add_string_to_buf((char *) create_line);
 			
 			// if target monster friendly to party, make able to attack
-			if(m_target != nullptr && m_target->attitude == 0)
-				m_target->attitude = 2;
+			if(m_target != nullptr && m_target->attitude == eAttitude::DOCILE)
+				m_target->attitude = eAttitude::FRIENDLY;
 			
 			// Attack roll
 			r1 = get_ran(1,1,100);
@@ -3256,7 +3251,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 					break;
 				// This only works on monsters
 				case eStatus::CHARM:
-					target->sleep(abil.second.gen.stat, univ.town.monst[m_num].attitude, abil.second.gen.strength);
+					target->sleep(abil.second.gen.stat, int(univ.town.monst[m_num].attitude), abil.second.gen.strength);
 					break;
 				// These two don't make sense in this context
 				case eStatus::MAIN:
@@ -3435,8 +3430,8 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 	
 	level = minmax(1,7,caster->mu - caster->status[eStatus::DUMB]) - 1;
 	
-	target = find_fireball_loc(caster->cur_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
-	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->cur_loc,3) : -1 * count_levels(caster->cur_loc,3);
+	target = find_fireball_loc(caster->cur_loc,1,caster->is_friendly(),&target_levels);
+	friend_levels_near = caster->is_friendly() ? count_levels(caster->cur_loc,3) : -1 * count_levels(caster->cur_loc,3);
 	
 	if((caster->health * 4 < caster->m_health) && (get_ran(1,0,10) < 9))
 		spell = emer_spells[level][3];
@@ -3484,14 +3479,10 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 		return false;
 	
 	// How about shockwave? Good idea?
-	if(spell == eSpell::SHOCKWAVE && caster->attitude % 2 != 1)
+	if(spell == eSpell::SHOCKWAVE && caster->is_friendly())
 		spell = eSpell::SUMMON_MAJOR;
-	if(spell == eSpell::SHOCKWAVE && caster->attitude % 2 == 1 && count_levels(caster->cur_loc,10) < 45)
+	if(spell == eSpell::SHOCKWAVE && !caster->is_friendly() && count_levels(caster->cur_loc,10) < 45)
 		spell = eSpell::SUMMON_MAJOR;
-	
-//	sprintf((char *)create_line,"m att %d trg %d trg2 x%dy%d spl %d mp %d tl:%d ",caster->attitude,targ,
-//		(short)target.x,(short)target.y,spell,caster->mp,target_levels);
-//	add_string_to_buf((char *) create_line);
 	
 	l = caster->cur_loc;
 	if(caster->direction < 4 && caster->x_width > 1)
@@ -3613,15 +3604,12 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::SLOW_GROUP:
 				play_sound(25);
-				if(caster->attitude % 2 == 1)
+				if(!caster->is_friendly())
 					for(i = 0; i < 6; i++)
 						if(pc_near(i,caster->cur_loc,8))
 							univ.party[i].slow(2 + caster->level / 4);
 				for(i = 0; i < univ.town.monst.size(); i++) {
-					if((univ.town.monst[i].active != 0) &&
-						(((univ.town.monst[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) ||
-						 ((univ.town.monst[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
-						 ((univ.town.monst[i].attitude % 2 == 1) && (caster->attitude != univ.town.monst[i].attitude)))
+					if(univ.town.monst[i].active != 0 && !caster->is_friendly(univ.town.monst[i])
 						&& (dist(caster->cur_loc,univ.town.monst[i].cur_loc) <= 7))
 						univ.town.monst[i].slow(2 + caster->level / 4);
 				}
@@ -3761,8 +3749,8 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 	
 	eSpell spell;
 	
-	target = find_fireball_loc(caster->cur_loc,1,(caster->attitude % 2 == 1) ? 0 : 1,&target_levels);
-	friend_levels_near = (caster->attitude % 2 != 1) ? count_levels(caster->cur_loc,3) : -1 * count_levels(caster->cur_loc,3);
+	target = find_fireball_loc(caster->cur_loc,1,caster->is_friendly(),&target_levels);
+	friend_levels_near = caster->is_friendly() ? count_levels(caster->cur_loc,3) : -1 * count_levels(caster->cur_loc,3);
 	
 	if((caster->health * 4 < caster->m_health) && (get_ran(1,0,10) < 9))
 		spell = emer_spells[level][3];
@@ -3918,7 +3906,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				play_sound(24);
 				r1 = get_ran(2,0,2);
 				r2 = get_ran(1,0,2);
-				if(caster->attitude % 2 == 1)
+				if(!caster->is_friendly())
 					for(i = 0; i < 6; i++)
 						if(pc_near(i,caster->cur_loc,8)) {
 							if(spell == eSpell::CURSE_ALL)
@@ -3927,10 +3915,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 								univ.party[i].disease(2 + r2);
 						}
 				for(i = 0; i < univ.town.monst.size(); i++) {
-					if((univ.town.monst[i].active != 0) &&
-						(((univ.town.monst[i].attitude % 2 == 1) && (caster->attitude % 2 != 1)) ||
-						 ((univ.town.monst[i].attitude % 2 != 1) && (caster->attitude % 2 == 1)) ||
-						 ((univ.town.monst[i].attitude % 2 == 1) && (caster->attitude != univ.town.monst[i].attitude)))
+					if(univ.town.monst[i].active != 0 && !caster->is_friendly(univ.town.monst[i])
 						&& (dist(caster->cur_loc,univ.town.monst[i].cur_loc) <= 7)) {
 						if(spell == eSpell::CURSE_ALL)
 							univ.town.monst[i].curse(2 + r1);
@@ -4064,7 +4049,7 @@ short count_levels(location where,short radius) {
 	
 	for(i = 0; i < univ.town.monst.size(); i++)
 		if(monst_near(i,where,radius,0)) {
-			if(univ.town.monst[i].attitude % 2 == 1)
+			if(!univ.town.monst[i].is_friendly())
 				store = store - univ.town.monst[i].level;
 			else store = store + univ.town.monst[i].level;
 		}
@@ -4674,7 +4659,7 @@ bool out_monst_all_dead() {
 	short i;
 	
 	for(i = 0; i < univ.town.monst.size(); i++)
-		if((univ.town.monst[i].active > 0) && (univ.town.monst[i].attitude % 2 == 1)) {
+		if(univ.town.monst[i].active > 0 && !univ.town.monst[i].is_friendly()) {
 			//print_nums(5555,i,univ.town.monst[i].number);
 			//print_nums(5555,univ.town.monst[i].m_loc.x,univ.town.monst[i].m_loc.y);
 			return false;
@@ -4886,7 +4871,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 					break;
 			}
 			for(i = 0; i < univ.town.monst.size(); i++) {
-				if((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 == 1)
+				if(univ.town.monst[i].active != 0 && !univ.town.monst[i].is_friendly()
 					&& (dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= (*spell_num).range)
 					&& (can_see_light(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 					which_m = &univ.town.monst[i];
@@ -5053,7 +5038,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 				univ.party[current_pc].cur_sp -= (*spell_num).cost;
 			store_sound = 24;
 			for(i = 0; i < univ.town.monst.size(); i++) {
-				if((univ.town.monst[i].active != 0) &&(univ.town.monst[i].attitude % 2 == 1) &&
+				if(univ.town.monst[i].active != 0 && !univ.town.monst[i].is_friendly() &&
 					(dist(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc) <= (*spell_num).range)) {
 					// TODO: Should this ^ also check that you can see each target? ie can_see_light(...) < 5
 					// --> can_see_light(univ.party[current_pc].combat_pos,univ.town.monst[i].cur_loc,sight_obscurity)
@@ -5288,7 +5273,7 @@ void process_force_cage(location loc, short i, short adjust) {
 			break_force_cage(loc);
 			return;
 		}
-		if(which_m.attitude % 2 == 1 && get_ran(1,1,100) < which_m.mu * 10 + which_m.cl * 4 + 5 + adjust) {
+		if(!which_m.is_friendly() && get_ran(1,1,100) < which_m.mu * 10 + which_m.cl * 4 + 5 + adjust) {
 			// TODO: This sound is not right
 			play_sound(60);
 			which_m.spell_note(50);

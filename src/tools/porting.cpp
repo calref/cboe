@@ -242,7 +242,7 @@ void port_party(legacy::party_record_type* old){
 	}
 	for(i = 0; i < 4; i++){
 		flip_short(&old->creature_save[i].which_town);
-		flip_short(&old->creature_save[i].friendly);
+		flip_short(&old->creature_save[i].hostile);
 		for(j = 0; j < 60; j++){
 			flip_short(&old->creature_save[i].dudes[j].active);
 			flip_short(&old->creature_save[i].dudes[j].attitude);
@@ -342,7 +342,7 @@ void port_c_town(legacy::current_town_type* old){
 	flip_short(&old->difficulty);
 	port_town(&old->town);
 	flip_short(&old->monst.which_town);
-	flip_short(&old->monst.friendly);
+	flip_short(&old->monst.hostile);
 	for(j = 0; j < 60; j++){
 		flip_short(&old->monst.dudes[j].active);
 		flip_short(&old->monst.dudes[j].attitude);

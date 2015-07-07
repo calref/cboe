@@ -18,7 +18,8 @@
 class cCreature : public cMonster, public cTownperson, public iLiving {
 public:
 	static const short charm_odds[21];
-	short active, attitude;
+	short active;
+	eAttitude attitude;
 	location cur_loc;
 	short summon_time;
 	bool party_summoned;
@@ -53,6 +54,7 @@ public:
 	
 	bool is_alive() const;
 	bool is_friendly() const;
+	bool is_friendly(const iLiving& other) const;
 	bool is_shielded() const;
 	int get_shared_dmg(int base_dmg) const;
 	location get_loc() const;

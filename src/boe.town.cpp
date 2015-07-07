@@ -172,9 +172,8 @@ void start_town_mode(short which_town, short entry_dir) {
 				univ.town.belt_present = true;
 		}
 	
-	univ.town.hostile = 0;
 	univ.town.monst.which_town = town_number;
-	univ.town.monst.friendly = 0;
+	univ.town.monst.hostile = false;
 	
 	at_which_save_slot = univ.party.at_which_save_slot;
 	
@@ -361,7 +360,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			add_string_to_buf("Area has been abandoned.");
 			for(i = 0; i < univ.town.monst.size(); i++)
 				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].active < 10) &&
-					(univ.town.monst[i].attitude % 2 == 1))
+					!univ.town.monst[i].is_friendly())
 					univ.town.monst[i].active += 10;
 			town_toast = true;
 		}

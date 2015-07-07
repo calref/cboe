@@ -115,7 +115,7 @@ public:
 	unsigned int poison_res;
 	bool mindless, invuln, invisible, guard;
 	unsigned int x_width,y_width;
-	unsigned int default_attitude;
+	eAttitude default_attitude;
 	unsigned int summon_type;
 	pic_num_t default_facial_pic;
 	pic_num_t picture_num;
@@ -133,7 +133,7 @@ public:
 class cTownperson {
 public:
 	mon_num_t number;
-	unsigned int start_attitude;
+	eAttitude start_attitude;
 	location start_loc;
 	unsigned short mobility;
 	eMonstTime time_flag;
@@ -170,5 +170,7 @@ std::ostream& operator << (std::ostream& out, eFieldType e);
 std::istream& operator >> (std::istream& in, eFieldType& e);
 std::ostream& operator << (std::ostream& out, eMonstTime e);
 std::istream& operator >> (std::istream& in, eMonstTime& e);
+std::ostream& operator<< (std::ostream& out, eAttitude node);
+std::istream& operator>> (std::istream& in, eAttitude& node);
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att);
 #endif

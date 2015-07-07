@@ -17,7 +17,7 @@ void set_item_flag(cItem *item);
 short get_item(location place,short pc_num,bool check_container);
 
 void make_town_hostile();
-void set_town_attitude(short lo,short hi,short att);
+void set_town_attitude(short lo,short hi,eAttitude att);
 bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short pc_getting, bool overload = false);
 bool display_item(location from_loc,short pc_num,short mode, bool check_container);
 short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) ;

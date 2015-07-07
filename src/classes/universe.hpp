@@ -45,7 +45,6 @@ public:
 	// formerly current_town_type
 	size_t num; // 200 if outdoors (my addition)
 	short difficulty;
-	bool hostile;
 	cPopulation monst;
 	bool in_boat; // is this really needed?
 	location p_loc;

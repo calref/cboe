@@ -245,7 +245,7 @@ namespace legacy {
 	struct creature_list_type {
 		creature_data_type dudes[60];
 		int16_t which_town;
-		int16_t friendly;
+		int16_t hostile;
 	};
 	
 	struct outdoor_creature_type {

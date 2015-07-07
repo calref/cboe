@@ -163,15 +163,14 @@ void get_monst_dims(mon_num_t monst,short *width, short *height) {
 }
 
 // Used to set up monsters for outdoor wandering encounters.
-//mode; // 0 - unfriendly  1 - friendly & fightin'
-void set_up_monst(short mode,mon_num_t m_num) {
+void set_up_monst(eAttitude mode,mon_num_t m_num) {
 	short which = univ.town.monst.size();
 	
 	cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
 	univ.town.monst.assign(which, cCreature(m_num), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
 	univ.town.monst[which].active = 2;
 	univ.town.monst[which].summon_time = 0;
-	univ.town.monst[which].attitude = mode + 1;
+	univ.town.monst[which].attitude = mode;
 	univ.town.monst[which].mobility = 1;
 }
 
@@ -195,7 +194,7 @@ void do_monsters() {
 							target = 6;
 						else target = select_active_pc();
 					}
-					if((univ.town.monst[i].attitude % 2 != 1) && (target < 6))
+					if(univ.town.monst[i].is_friendly() && target < 6)
 						target = 6;
 				}
 				univ.town.monst[i].target = target;
@@ -203,18 +202,19 @@ void do_monsters() {
 //				add_string_to_buf((char *) debug);
 				
 				if((univ.town.monst[i].active == 2)
-					|| ((univ.town.monst[i].active != 0) && (univ.town.monst[i].attitude % 2 != 1))) {
+					|| (univ.town.monst[i].active != 0 && univ.town.monst[i].is_friendly())) {
 					acted_yet = false;
-					if(((univ.town.monst[i].attitude == 0) || (univ.town.monst[i].target == 6)) && (univ.town.hostile == 0)) {
+					// TODO: I don't think this univ.town.hostile flag is ever actually set.
+					if((univ.town.monst[i].attitude == eAttitude::DOCILE || univ.town.monst[i].target == 6) && !univ.town.monst.hostile) {
 						if(univ.town.monst[i].mobility == 1) { // OK, it doesn't see the party or
 							// isn't nasty, and the town isn't totally hostile.
-							if((univ.town.monst[i].attitude % 2 != 1) || (get_ran(1,0,1) == 0)) {
+							if(univ.town.monst[i].is_friendly() || get_ran(1,0,1) == 0) {
 								acted_yet = rand_move(i);
 							}
 							else acted_yet = seek_party(i,univ.town.monst[i].cur_loc,univ.town.p_loc);
 						}
 					}
-					if((univ.town.monst[i].attitude > 0) || (univ.town.hostile == 1)) {
+					if(univ.town.monst[i].attitude != eAttitude::DOCILE || univ.town.monst.hostile) {
 						if((univ.town.monst[i].mobility == 1) && (univ.town.monst[i].target != 6)) {
 							l1 = univ.town.monst[i].cur_loc;
 							l2 = (univ.town.monst[i].target <= 6) ? univ.town.p_loc : univ.town.monst[target - 100].cur_loc;
@@ -236,7 +236,7 @@ void do_monsters() {
 				
 				
 				// Make hostile monsters active
-				if((univ.town.monst[i].active == 1) && (univ.town.monst[i].attitude % 2 == 1)
+				if(univ.town.monst[i].active == 1 && !univ.town.monst[i].is_friendly()
 					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 8)) {
 					r1 = get_ran(1,1,100);
 					r1 += (univ.party.status[ePartyStatus::STEALTH] > 0) ? 46 : 0;
@@ -343,9 +343,9 @@ short monst_pick_target(short which_m) {
 	
 	// First, any chance target is screwed?
 	if(univ.town.monst[which_m].target >= 100) {
-		if(((cur_monst->attitude % 2 == 1) &&
-			 (univ.town.monst[univ.town.monst[which_m].target - 100].attitude == cur_monst->attitude)) ||
-			((cur_monst->attitude % 2 == 0) && (univ.town.monst[univ.town.monst[which_m].target - 100].attitude % 2 == 0)))
+		if((!cur_monst->is_friendly() &&
+			(univ.town.monst[univ.town.monst[which_m].target - 100].attitude == cur_monst->attitude)) ||
+			(cur_monst->is_friendly() && univ.town.monst[univ.town.monst[which_m].target - 100].is_friendly()))
 			univ.town.monst[which_m].target = 6;
 		else if(univ.town.monst[univ.town.monst[which_m].target - 100].active == 0)
 			univ.town.monst[which_m].target = 6;
@@ -354,7 +354,7 @@ short monst_pick_target(short which_m) {
 		if(univ.party[univ.town.monst[which_m].target].main_status != eMainStatus::ALIVE || get_ran(1,0,3) == 1)
 			univ.town.monst[which_m].target = 6;
 	
-	if((is_combat()) && (cur_monst->attitude % 2 == 1)) {
+	if(is_combat() && !cur_monst->is_friendly()) {
 		if(spell_caster < 6)
 			if((get_ran(1,1,5) < 5) && (monst_can_see(which_m,univ.party[spell_caster].combat_pos))
 				&& univ.party[spell_caster].main_status == eMainStatus::ALIVE)
@@ -387,10 +387,10 @@ short monst_pick_target(short which_m) {
 		return 6;
 	
 	if(is_town()) {
-		if(cur_monst->attitude % 2 == 0) {
+		if(cur_monst->is_friendly()) {
 			return targ_m;
 		}
-		if((targ_m == 6) && (cur_monst->attitude % 2 == 1))
+		if(targ_m == 6 && !cur_monst->is_friendly())
 			return 0;
 		if(dist(cur_monst->cur_loc,univ.town.monst[targ_m - 100].cur_loc) <
 			dist(cur_monst->cur_loc,univ.town.p_loc))
@@ -413,10 +413,7 @@ short monst_pick_target_monst(cCreature *which_m) {
 	short min_dist = 1000,i,cur_targ = 6;
 	
 	for(i = 0; i < univ.town.monst.size(); i++) {
-		if((univ.town.monst[i].active > 0) && // alive
-			(((which_m->attitude % 2 == 1) && (univ.town.monst[i].attitude % 2 == 0)) ||
-			 ((which_m->attitude % 2 == 0) && (univ.town.monst[i].attitude % 2 == 1)) ||
-			 ((which_m->attitude % 2 == 1) && (univ.town.monst[i].attitude != which_m->attitude))) && // they hate each other
+		if(univ.town.monst[i].active > 0 && !which_m->is_friendly(univ.town.monst[i]) && // allve + they hate each other
 			((dist(which_m->cur_loc,univ.town.monst[i].cur_loc) < min_dist) ||
 			 ((dist(which_m->cur_loc,univ.town.monst[i].cur_loc) == min_dist) && (get_ran(1,0,7) < 4))) &&
 			(monst_can_see(i,univ.town.monst[i].cur_loc)) ) {
@@ -431,7 +428,7 @@ short monst_pick_target_monst(cCreature *which_m) {
 short monst_pick_target_pc(short m_num,cCreature *which_m) {
 	short num_tries = 0,r1,store_targ = 6;
 	
-	if(which_m->attitude % 2 == 0)
+	if(which_m->is_friendly())
 		return 6;
 	if(is_town())
 		return 0;
@@ -483,12 +480,11 @@ short closest_pc(location where) {
 }
 
 //mode;  // 1 - closest hostile to PCs  2 - closest friendly to PCs
-short closest_monst(location where,short mode) {
+short closest_monst(location where,bool friendly) {
 	short how_close = 200,i,store = 6;
 	
 	for(i = 0; i < univ.town.monst.size(); i++)
-		if((((univ.town.monst[i].attitude % 2 == 1) && (mode == 1)) ||
-			 ((univ.town.monst[i].attitude % 2 == 0) && (mode == 2)))
+		if(univ.town.monst[i].is_friendly() == friendly
 			&& (dist(where,univ.town.monst[i].cur_loc) < how_close)) {
 			store = i;
 			how_close = dist(where,univ.town.monst[i].cur_loc);
@@ -503,14 +499,14 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 	monst_loc = univ.town.monst[which_m].cur_loc;
 	
 	// First, take care of friendly monsters.
-	if(univ.town.monst[which_m].attitude % 2 == 0) {
+	if(univ.town.monst[which_m].is_friendly()) {
 		if(orig_target >= 100)
 			if((univ.town.monst[orig_target - 100].active > 0) &&
 				(monst_adjacent(univ.town.monst[orig_target - 100].cur_loc,which_m)))
 				return orig_target;
 		for(i = 0; i < univ.town.monst.size(); i++)
 			if((univ.town.monst[i].active > 0) &&
-				(univ.town.monst[i].attitude % 2 == 1) &&
+				!univ.town.monst[i].is_friendly() &&
 				(monst_adjacent(univ.town.monst[i].cur_loc,which_m)))
 				return i + 100;
 		return orig_target;
@@ -541,7 +537,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 	// Check for a nice, adjacent, friendly monster and maybe attack
 	for(i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].active > 0) &&
-			(univ.town.monst[i].attitude % 2 == 0) &&
+			univ.town.monst[i].is_friendly() &&
 			(monst_adjacent(univ.town.monst[i].cur_loc,which_m)) &&
 			(get_ran(1,0,2) < 2))
 			return i + 100;
@@ -782,8 +778,8 @@ bool town_move_monster(short num,location dest) {
 }
 
 bool monster_placid(short m_num) {
-	if((univ.town.monst[m_num].attitude == 0) ||
-		((univ.town.monst[m_num].attitude == 2) && (PSD[SDF_HOSTILES_PRESENT] == 0))) {
+	if(univ.town.monst[m_num].attitude == eAttitude::DOCILE ||
+	   (univ.town.monst[m_num].attitude == eAttitude::FRIENDLY && PSD[SDF_HOSTILES_PRESENT] == 0)) {
 		return true;
 	} else {
 		return false;
@@ -920,7 +916,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	guts += which_m->health / 20;
 	if(mage)
 		guts = guts / 2;
-	if(which_m->attitude == 0)
+	if(which_m->attitude == eAttitude::DOCILE)
 		guts = guts / 2;
 	
 	if((univ.town.is_antimagic(where_check.x,where_check.y)) && (mage))
@@ -953,7 +949,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		if(guts < 3) return false;
 	}
 	if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
-		if((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->mu * 10 + which_m->cl * 4))) {
+		if(!which_m->is_friendly() && get_ran(1,1,100) < which_m->mu * 10 + which_m->cl * 4) {
 			// TODO: Are these barrier sounds right?
 			play_sound(60);
 			which_m->spell_note(49);
@@ -967,7 +963,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		}
 	}
 	if(univ.town.is_force_barr(where_check.x,where_check.y)) { /// Not in big towns
-		if((which_m->attitude % 2 == 1) && (get_ran(1,1,100) < (which_m->mu * 10 + which_m->cl * 4))
+		if(!which_m->is_friendly() && get_ran(1,1,100) < which_m->mu * 10 + which_m->cl * 4
 			&& (!univ.town->strong_barriers)) {
 			play_sound(60);
 			which_m->spell_note(49);
@@ -1123,8 +1119,9 @@ short place_monster(mon_num_t which,location where,bool forced) {
 	// One effect is resetting max health to ignore difficulty_adjust()
 	static_cast<cMonster&>(univ.town.monst[i]) = monst;
 	univ.town.monst[i].attitude = monst.default_attitude;
-	if(univ.town.monst[i].attitude % 2 == 0)
-		univ.town.monst[i].attitude = 1;
+	// TODO: Huh? Why does it disallow friendly monster placements?
+	if(univ.town.monst[i].is_friendly())
+		univ.town.monst[i].attitude = eAttitude::HOSTILE_A;
 	univ.town.monst[i].mobility = 1;
 	univ.town.monst[i].active = 2;
 	univ.town.monst[i].cur_loc = where;
@@ -1141,7 +1138,7 @@ short place_monster(mon_num_t which,location where,bool forced) {
 // returns true if placement was successful
 //which; // if in town, this is caster loc., if in combat, this is where to try
 // to put monster
-bool summon_monster(mon_num_t which,location where,short duration,short given_attitude,bool by_party) {
+bool summon_monster(mon_num_t which,location where,short duration,eAttitude given_attitude,bool by_party) {
 	location loc;
 	short spot;
 	

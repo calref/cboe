@@ -24,7 +24,8 @@ public:
 	short marked_damage = 0; // for use during animations
 	
 	virtual bool is_alive() const = 0;
-	virtual bool is_friendly() const = 0;
+	virtual bool is_friendly() const = 0; // Return true if friendly to the party.
+	virtual bool is_friendly(const iLiving& other) const = 0; // Return true if friendly to living entity
 	virtual bool is_shielded() const = 0; // Checks for martyr's shield in any form - status, monster abil, item abil
 	virtual int get_shared_dmg(int base_dmg) const = 0; // And this goes with the above.
 	

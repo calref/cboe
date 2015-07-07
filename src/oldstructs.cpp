@@ -319,7 +319,7 @@ void debug_oldstructs() {
 	STRUCT_INFO(creature_list_type);
 	MEM_INFO(creature_list_type,dudes);
 	MEM_INFO(creature_list_type,which_town);
-	MEM_INFO(creature_list_type,friendly);
+	MEM_INFO(creature_list_type,hostile);
 	STRUCT_INFO(outdoor_creature_type);
 	MEM_INFO(outdoor_creature_type,exists);
 	MEM_INFO(outdoor_creature_type,direction);

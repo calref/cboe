@@ -707,12 +707,12 @@ short do_look(location space) {
 				
 				msg = get_m_name(univ.town.monst[i].number);
 				if(univ.town.monst[i].health < univ.town.monst[i].m_health) {
-					if(univ.town.monst[i].attitude % 2 == 1)
+					if(!univ.town.monst[i].is_friendly())
 						msg = "    Wounded " + msg + " (H)";
 					else msg = "    Wounded " + msg + " (F)";
 				}
 				else {
-					if(univ.town.monst[i].attitude % 2 == 1)
+					if(!univ.town.monst[i].is_friendly())
 						msg = "    " + msg + " (H)";
 					else msg = "    " + msg + " (F)";
 				}

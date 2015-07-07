@@ -320,6 +320,10 @@ bool cParty::is_friendly() const {
 	return true;
 }
 
+bool cParty::is_friendly(const iLiving& other) const {
+	return other.is_friendly();
+}
+
 bool cParty::is_shielded() const {
 	return false;
 }
@@ -582,6 +586,11 @@ void cParty::writeTo(std::ostream& file) const {
 			file << "SOULCRYSTAL " << i << ' ' << imprisoned_monst[i] << '\n';
 	file << "DIRECTION " << direction << '\n';
 	file << "WHICHSLOT " << at_which_save_slot << '\n';
+	for(int i = 0; i < 4; i++) {
+		file << "TOWNSAVE " << i << ' ' << creature_save[i].which_town;
+		if(creature_save[i].hostile) file << " HOSTILE";
+		file << '\n';
+	}
 	for(int i = 0; i < 20; i++)
 		if(alchemy[i])
 			file << "ALCHEMY " << i << '\n';
@@ -809,6 +818,11 @@ void cParty::readFrom(std::istream& file){
 			int i;
 			sin >> i;
 			alchemy[i] = true;
+		} else if(cur == "TOWNSAVE") {
+			int i;
+			std::string str;
+			bin >> i >> creature_save[i].which_town >> str;
+			creature_save[i].hostile = str == "HOSTILE";
 		} else if(cur == "TOWNVISIBLE") {
 			int i;
 			sin >> i;

@@ -171,6 +171,10 @@ enum class ePartyStatus {
 	FIREWALK,
 };
 
+enum class eAttitude {
+	DOCILE, HOSTILE_A, FRIENDLY, HOSTILE_B
+};
+
 enum class eMonstAbil {
 	NO_ABIL,
 	MISSILE,

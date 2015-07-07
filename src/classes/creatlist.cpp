@@ -20,7 +20,7 @@ void cPopulation::append(legacy::creature_list_type old){
 	for(int i = 0; i < 60; i++)
 		dudes[i].append(old.dudes[i]);
 	which_town = old.which_town;
-	friendly = old.friendly;
+	hostile = old.hostile;
 }
 
 const cCreature& cPopulation::operator[](size_t n) const {
