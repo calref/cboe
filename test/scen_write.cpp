@@ -111,9 +111,9 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.scenario_timers[0].node == 3);
 		CHECK(scen.scenario_timers[0].node_type == 0); // This is inferred by the fact that it's in the scenario file
 		CHECK(scen.scenario_timers[0].time == 30000);
-		CHECK(scen.spec_strs.size() == 1);
+		REQUIRE(scen.spec_strs.size() == 1);
 		CHECK(scen.spec_strs[0] == "This is a sample special string!");
-		CHECK(scen.journal_strs.size() == 1);
+		REQUIRE(scen.journal_strs.size() == 1);
 		CHECK(scen.journal_strs[0] == "This is a sample journal string!");
 	}
 	SECTION("With a special item") {
@@ -123,11 +123,46 @@ TEST_CASE("Saving a scenario record") {
 		scen.special_items[0].name = "Test Special Item";
 		scen.special_items[0].descr = "This is a special item description!";
 		in_and_out("special item", scen);
-		CHECK(scen.special_items.size() == 1);
+		REQUIRE(scen.special_items.size() == 1);
 		CHECK(scen.special_items[0].flags == 11);
 		CHECK(scen.special_items[0].special == 2);
 		CHECK(scen.special_items[0].name == "Test Special Item");
 		CHECK(scen.special_items[0].descr == "This is a special item description!");
+	}
+	SECTION("With a quest") {
+		scen.quests.resize(3);
+		scen.quests[0].flags = 11;
+		scen.quests[0].bank1 = 2;
+		scen.quests[0].deadline = 12;
+		scen.quests[0].event = 3;
+		scen.quests[0].xp = 5200;
+		scen.quests[0].name = "Test Quest";
+		scen.quests[0].descr = "This is a quest description! It has an absolute deadline which is waived by an event, and an XP reward. It's also in a job bank.";
+		scen.quests[1].flags = 10;
+		scen.quests[1].gold = 220;
+		scen.quests[1].name = "Test Quest 2";
+		scen.quests[1].descr = "This is another quest description! It has no deadline, and a monetary reward.";
+		scen.quests[2].flags = 1;
+		scen.quests[2].deadline = 12;
+		scen.quests[2].bank2 = 4;
+		scen.quests[2].name = "Test Quest 3";
+		scen.quests[2].descr = "And now another quest description! This one has a relative deadline and no reward, but it's in a job bank.";
+		in_and_out("quest", scen);
+		REQUIRE(scen.quests.size() == 3);
+		CHECK(scen.quests[0].flags == 11);
+		CHECK(scen.quests[0].bank1 == 2);
+		CHECK(scen.quests[0].deadline == 12);
+		CHECK(scen.quests[0].event == 3);
+		CHECK(scen.quests[0].xp == 5200);
+		CHECK(scen.quests[0].name == "Test Quest");
+		CHECK(scen.quests[1].flags == 10);
+		CHECK(scen.quests[1].gold == 220);
+		CHECK(scen.quests[1].name == "Test Quest 2");
+		CHECK(scen.quests[2].flags == 1);
+		CHECK(scen.quests[2].deadline == 12);
+		CHECK(scen.quests[2].bank1 == 4); // bank2 moves into bank1
+		CHECK(scen.quests[2].bank2 == -1);
+		CHECK(scen.quests[2].name == "Test Quest 3");
 	}
 	SECTION("With some empty strings, only trailing ones are stripped") {
 		scen.spec_strs.resize(12);
@@ -137,10 +172,10 @@ TEST_CASE("Saving a scenario record") {
 		scen.journal_strs[7] = "My best journal!";
 		scen.intro_strs[4] = "Another intro string!";
 		in_and_out("empty strings", scen);
-		CHECK(scen.spec_strs.size() == 10);
+		REQUIRE(scen.spec_strs.size() == 10);
 		CHECK(scen.spec_strs[3] == "Hello World!");
 		CHECK(scen.spec_strs[9] == "Goodbye World!");
-		CHECK(scen.journal_strs.size() == 8);
+		REQUIRE(scen.journal_strs.size() == 8);
 		CHECK(scen.journal_strs[7] == "My best journal!");
 		CHECK(scen.intro_strs[4] == "Another intro string!");
 	}
@@ -163,16 +198,16 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.scen_name == "Test Scenario with extra spaces");
 		CHECK(scen.who_wrote[0] == "Teaser the first!");
 		CHECK(scen.who_wrote[1] == "Teaser the second !");
-		CHECK(scen.spec_strs.size() == 2);
+		REQUIRE(scen.spec_strs.size() == 2);
 		CHECK(scen.spec_strs[0] == "      ");
 		CHECK(scen.spec_strs[1] == "   What  is this...   ?");
-		CHECK(scen.journal_strs.size() == 1);
+		REQUIRE(scen.journal_strs.size() == 1);
 		CHECK(scen.journal_strs[0] == "  Do not   collapse  this      journal.");
 		CHECK(scen.intro_strs[1] == "An intro string!      With extra spaces!");
-		CHECK(scen.special_items.size() == 1);
+		REQUIRE(scen.special_items.size() == 1);
 		CHECK(scen.special_items[0].name == "A special space-filled item!");
 		CHECK(scen.special_items[0].descr == "A special item...      with extra spaces!");
-		CHECK(scen.quests.size() == 1);
+		REQUIRE(scen.quests.size() == 1);
 		CHECK(scen.quests[0].name == "A quest filled with spaces...");
 		CHECK(scen.quests[0].descr == "A quest...      with extra spaces!");
 		CHECK(scen.snd_names[0] == "A sound full of spaces!");
