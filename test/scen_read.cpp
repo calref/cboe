@@ -183,4 +183,63 @@ TEST_CASE("Loading a new-format scenario record") {
 			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingElem);
 		}
 	}
+	SECTION("With a quest") {
+		SECTION("Valid minimal quest") {
+			fin.open("files/scenario/quest.xml");
+			doc = xmlDocFromStream(fin, "quest.xml");
+			REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
+			REQUIRE(scen.quests.size() == 1);
+			CHECK(scen.quests[0].name == "My Silly Quest");
+			CHECK(scen.quests[0].descr == " It is!   The best quest!   ");
+			CHECK(scen.quests[0].flags == 0);
+			CHECK(scen.quests[0].gold == 0);
+			CHECK(scen.quests[0].xp == 0);
+			CHECK(scen.quests[0].bank1 == -1);
+			CHECK(scen.quests[0].bank2 == -1);
+			CHECK(scen.quests[0].deadline == -1);
+			CHECK(scen.quests[0].event == -1);
+		}
+		SECTION("Valid quest, more complex") {
+			fin.open("files/scenario/quest2.xml");
+			doc = xmlDocFromStream(fin, "quest2.xml");
+			REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
+			REQUIRE(scen.quests.size() == 1);
+			CHECK(scen.quests[0].gold == 150);
+			CHECK(scen.quests[0].xp == 1500);
+			CHECK(scen.quests[0].deadline == 50);
+			CHECK(scen.quests[0].event == 5);
+			CHECK(scen.quests[0].bank1 == 1);
+			CHECK(scen.quests[0].bank2 == -1);
+		}
+		SECTION("Invalid attribute") {
+			fin.open("files/scenario/quest-bad_attr.xml");
+			doc = xmlDocFromStream(fin, "quest-bad_attr.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadAttr);
+		}
+		SECTION("Invalid element") {
+			fin.open("files/scenario/quest-bad_elem.xml");
+			doc = xmlDocFromStream(fin, "quest-bad_elem.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+		SECTION("Missing name") {
+			fin.open("files/scenario/quest-missing_elem.xml");
+			doc = xmlDocFromStream(fin, "quest-missing_elem.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingElem);
+		}
+		SECTION("Invalid deadline") {
+			fin.open("files/scenario/quest-bad_deadline.xml");
+			doc = xmlDocFromStream(fin, "quest-bad_deadline.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadAttr);
+		}
+		SECTION("Invalid reward") {
+			fin.open("files/scenario/quest-bad_reward.xml");
+			doc = xmlDocFromStream(fin, "quest-bad_reward.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadAttr);
+		}
+		SECTION("Too many banks") {
+			fin.open("files/scenario/quest-extra_bank.xml");
+			doc = xmlDocFromStream(fin, "quest-extra_bank.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+	}
 }
