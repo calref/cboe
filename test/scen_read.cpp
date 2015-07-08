@@ -5,6 +5,7 @@
 #include "dialog.hpp"
 #include "catch.hpp"
 #include "scenario.hpp"
+#include "restypes.hpp"
 
 using namespace std;
 using namespace ticpp;
@@ -240,6 +241,65 @@ TEST_CASE("Loading a new-format scenario record") {
 			fin.open("files/scenario/quest-extra_bank.xml");
 			doc = xmlDocFromStream(fin, "quest-extra_bank.xml");
 			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+	}
+	SECTION("With a shop") {
+		// Loading shops requires strings to be available
+		// Here we fetch them from the rsrc dir, rather than the data dir
+		ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+		SECTION("Valid shop") {
+			fin.open("files/scenario/shop.xml");
+			doc = xmlDocFromStream(fin, "shop.xml");
+			REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
+			REQUIRE(scen.shops.size() == 1);
+			REQUIRE(scen.shops[0].size() == 13);
+			CHECK(scen.shops[0].getFace() == 0);
+			CHECK(scen.shops[0].getName() == "The Shop of Everything");
+			CHECK(scen.shops[0].getType() == eShopType::NORMAL);
+			CHECK(scen.shops[0].getPrompt() == eShopPrompt::SHOPPING);
+			CHECK(scen.shops[0].getItem(0).type == eShopItemType::ITEM);
+			CHECK(scen.shops[0].getItem(0).quantity == 3);
+			CHECK(scen.shops[0].getItem(0).index == 10);
+			CHECK(scen.shops[0].getItem(1).type == eShopItemType::ITEM);
+			CHECK(scen.shops[0].getItem(1).quantity == 0);
+			CHECK(scen.shops[0].getItem(1).index == 11);
+			CHECK(scen.shops[0].getItem(2).type == eShopItemType::OPT_ITEM);
+			CHECK(scen.shops[0].getItem(2).quantity == 42000);
+			CHECK(scen.shops[0].getItem(2).index == 12);
+			CHECK(scen.shops[0].getItem(3).type == eShopItemType::MAGE_SPELL);
+			CHECK(scen.shops[0].getItem(3).item.item_level == 30);
+			CHECK(scen.shops[0].getItem(4).type == eShopItemType::PRIEST_SPELL);
+			CHECK(scen.shops[0].getItem(4).item.item_level == 31);
+			CHECK(scen.shops[0].getItem(5).type == eShopItemType::ALCHEMY);
+			CHECK(scen.shops[0].getItem(5).item.item_level == 14);
+			CHECK(scen.shops[0].getItem(6).type == eShopItemType::SKILL);
+			CHECK(scen.shops[0].getItem(6).item.item_level == 9);
+			CHECK(scen.shops[0].getItem(7).type == eShopItemType::TREASURE);
+			CHECK(scen.shops[0].getItem(7).item.item_level == 2);
+			CHECK(scen.shops[0].getItem(8).type == eShopItemType::CLASS);
+			CHECK(scen.shops[0].getItem(8).item.special_class == 147);
+			CHECK(scen.shops[0].getItem(9).type == eShopItemType::CURE_DISEASE);
+			CHECK(scen.shops[0].getItem(10).type == eShopItemType::CALL_SPECIAL);
+			CHECK(scen.shops[0].getItem(10).quantity == 42);
+			CHECK(scen.shops[0].getItem(10).item.graphic_num == 0);
+			CHECK(scen.shops[0].getItem(10).item.item_level == 100);
+			CHECK(scen.shops[0].getItem(10).item.value == 0);
+			CHECK(scen.shops[0].getItem(10).item.full_name == "Special Shop Item the First");
+			CHECK(scen.shops[0].getItem(10).item.desc == " Haha! It's a magic purchase!");
+			CHECK(scen.shops[0].getItem(11).type == eShopItemType::CALL_SPECIAL);
+			CHECK(scen.shops[0].getItem(11).quantity == 0);
+			CHECK(scen.shops[0].getItem(11).item.graphic_num == 12);
+			CHECK(scen.shops[0].getItem(11).item.item_level == 101);
+			CHECK(scen.shops[0].getItem(11).item.value == 0);
+			CHECK(scen.shops[0].getItem(11).item.full_name == "Special Shop Item the Second");
+			CHECK(scen.shops[0].getItem(11).item.desc == "Another magic purchase!");
+			CHECK(scen.shops[0].getItem(12).type == eShopItemType::CALL_SPECIAL);
+			CHECK(scen.shops[0].getItem(12).quantity == 1);
+			CHECK(scen.shops[0].getItem(12).item.graphic_num == 9);
+			CHECK(scen.shops[0].getItem(12).item.item_level == 102);
+			CHECK(scen.shops[0].getItem(12).item.value == 12000);
+			CHECK(scen.shops[0].getItem(12).item.full_name == "Special Shop Item the Third");
+			CHECK(scen.shops[0].getItem(12).item.desc == "Yay for the magic purchase!");
 		}
 	}
 }

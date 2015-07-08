@@ -209,6 +209,7 @@ void cShop::replaceSpecial(size_t i, eShopItemType type, int n) {
 		items[i].item = store_alchemy(n);
 	else if(type == eShopItemType::SKILL) {
 		items[i].item.graphic_num = 108;
+		items[i].item.item_level = n;
 		items[i].item.full_name = get_str("skills", n * 2 + 1);
 	} else if(type == eShopItemType::TREASURE) {
 		items[i].item.graphic_num = 45;
