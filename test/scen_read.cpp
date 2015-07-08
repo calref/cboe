@@ -157,13 +157,30 @@ TEST_CASE("Loading a new-format scenario record") {
 		CHECK(scen.last_town_edited == 0);
 	}
 	SECTION("With a special item") {
-		fin.open("files/scenario/special_item.xml");
-		doc = xmlDocFromStream(fin, "special_item.xml");
-		REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
-		CHECK(scen.special_items.size() == 1);
-		CHECK(scen.special_items[0].name == "My Special Item");
-		CHECK(scen.special_items[0].descr == "Special Item  --  Description!");
-		CHECK(scen.special_items[0].flags == 0);
-		CHECK(scen.special_items[0].special == -1);
+		SECTION("Valid") {
+			fin.open("files/scenario/special_item.xml");
+			doc = xmlDocFromStream(fin, "special_item.xml");
+			REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
+			CHECK(scen.special_items.size() == 1);
+			CHECK(scen.special_items[0].name == "My Special Item");
+			CHECK(scen.special_items[0].descr == "Special Item  --  Description!");
+			CHECK(scen.special_items[0].flags == 0);
+			CHECK(scen.special_items[0].special == -1);
+		}
+		SECTION("Invalid attribute") {
+			fin.open("files/scenario/special_item-bad_attr.xml");
+			doc = xmlDocFromStream(fin, "special_item-bad_attr.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadAttr);
+		}
+		SECTION("Invalid element") {
+			fin.open("files/scenario/special_item-bad_elem.xml");
+			doc = xmlDocFromStream(fin, "special_item-bad_elem.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+		SECTION("Missing name") {
+			fin.open("files/scenario/special_item-missing_elem.xml");
+			doc = xmlDocFromStream(fin, "special_item-missing_elem.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingElem);
+		}
 	}
 }
