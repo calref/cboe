@@ -1,0 +1,1 @@
+This folder is just here to dump temporary output files from the test cases.
