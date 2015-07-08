@@ -47,7 +47,13 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="keyword" minOccurs="1" maxOccurs="2" type="xs:string"/>
-				<xs:element name="type" type="xs:token"/>
+				<xs:element name="type">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:pattern value="[a-z-]+"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
 				<xs:element name="param" minOccurs="0" maxOccurs="4" type="xs:integer"/>
 				<xs:element name="text" minOccurs="1" maxOccurs="2" type="xs:string"/>
 			</xs:sequence>
