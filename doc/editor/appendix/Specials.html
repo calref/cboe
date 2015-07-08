@@ -3,6 +3,7 @@
 <head>
   <title>Special Encounter Node Types - BoE Scenario Editor Guide</title>
   <link rel="stylesheet" type="text/css" href="../style.css">
+  <script src='nav.js' type='application/javascript'></script>
 </head>
 <body>
 <div class="navbar">
@@ -45,7 +46,7 @@ specifies the next node to be called. If this value is negative, the special enc
 ends. There are a few exceptions to this, which are noted in the encounter description.</dd>
 </dl>
 
-<dl>
+<dl class='autolink'>
 
 <dt>Type 0: No special</dt><dd>This is the default setting for all special nodes. It does
 nothing. If the Jump To field contains a non-negative number, the encounter jumps to that
@@ -89,7 +90,6 @@ town.</p>
 <dt>Extra 1a:</dt><dd>The number of the shop.</dd>
 <dt>Extra 1b:</dt><dd>The item cost adjuster, a number from 0 (very cheap) to 6 (very
 expensive). See chapter 11 (Dialogue) for the complete list of cost adjustments.</dd></dd>
-</dl>
 
 <dt>Type 5: Display Small Message</dt><dd>A text message is displayed on one (or two)
 line(s) of the text area (in the lower right hand corner). Don't make the displayed
@@ -572,7 +572,7 @@ flag for the called node is 250, the special encounter ends and the Jump To fiel
 ignored.</dd>
 </dl>
 
-<dl>
+<dl class='autolink'>
 
 <dt>Type 50: Give Item</dt><dd>An item is given to the party (specifically, to the first
 character who can carry it). Gold and food can also be given. If the party cannot carry
@@ -758,7 +758,7 @@ only affects the active PC. Otherwise, it affects the whole party. (Exception to
 the Do Damage node type)</dd>
 <dt>Jump To:</dt><dd>All of these special node types use this field.</dd>
 
-<dl>
+<dl class='autolink'>
 
 <dt>Type 80: Select a Target</dt><dd>Brings up a window asking the player to select a living
 character. Once this is called, any Affect nodes during this special encounter only affect
@@ -1090,7 +1090,7 @@ selected in both of these fields, the Jump To special node is called.</p>
 special node, either always or as an option. This will be explicitly mentioned where it
 applies.</p>
 
-<dl>
+<dl class='autolink'>
 
 <dt>Type 130: Stuff Done Flag?</dt><dd>Calls new nodes depending on the value of a given
 Stuff Done flag. If the Stuff Done flag is greater than the value of Extra 1a, the special
@@ -1444,7 +1444,7 @@ special encounter, once done, each node calls the Jump To node.</p>
 messages. If you don't want a message displayed, just leave these at -1.</dd></dd>
 </dl>
 
-<dl>
+<dl class='autolink'>
 
 <dt>Type 170: Town Hostile</dt><dd>When called, all friendly people in the town
 immediately turn hostile. This node can also be used for other mass attitude changes.
@@ -1831,9 +1831,9 @@ instead subtracted, while 3 or 4 means the y coordinate is instead subtracted.</
 creature
 is repositioned.</dd></dd>
 
-<dt>Type 204:</dt><dd>This node places a text label on the terrain screen, for example to
-indicate someone speaking. The label lasts only until the screen is next updated, but you
-can optionally specify a delay to ensure there is time to read it.
+<dt>Type 204: Place Label</dt><dd>This node places a text label on the terrain screen, for
+example to indicate someone speaking. The label lasts only until the screen is next
+updated, but you can optionally specify a delay to ensure there is time to read it.
 <dl>
 <dt>Mess 1:</dt><dd>The number of the message to display.</dd>
 <dt>Extra 1a, Extra 1b:</dt><dd>The X and Y coordinates of the location to place the
@@ -1865,7 +1865,7 @@ is called, as usual. If both are left at -1, no message is displayed.</dd>
 <dt>Pict:</dt><dd>If this is 0 (the default), the entire rectangle is affected. If
 non-zero, only the outside edges of the rectangle are affected.</dd>
 
-<dl>
+<dl class='autolink'>
 
 <dt>Type 210: Place Field/Object/Sfx</dt><dd>Fills the rectangle with some sort of field,
 barrier, object, or sfx. This only works in town.
@@ -1934,10 +1934,13 @@ locked terrain type).</dd>
 </dl>
 
 <h2 id='outdoor'>Outdoor Mode Specials</h2>
+
 <p>These special nodes only have an effect in outdoor mode. If called anywhere but
 outdoors, all of these nodes immediately jump to the Jump To special.</p>
 <p>For all of these special types, unless the description specifically says it ends the
 special encounter, once done, each node calls the Jump To node.</p>
+
+<dl class='autolink'>
 
 <dt>Type 225: Make Outdoor Wandering</dt><dd>A group of wandering monsters appears (at one
 of the designated wandering monster sites).</dd>

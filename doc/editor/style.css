@@ -58,3 +58,13 @@ dd dt {
 	font-weight: normal;
 	font-style: italic;
 }
+
+.nav-jump {
+	padding: 0px;
+}
+
+.nav-jump > li {
+	cursor: pointer;
+	color: green;
+	text-decoration: underline;
+}
