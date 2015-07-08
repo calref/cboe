@@ -6,6 +6,7 @@
 #include "catch.hpp"
 #include "scenario.hpp"
 #include "regtown.hpp"
+#include "restypes.hpp"
 
 using namespace std;
 using namespace ticpp;
@@ -163,6 +164,78 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.quests[2].bank1 == 4); // bank2 moves into bank1
 		CHECK(scen.quests[2].bank2 == -1);
 		CHECK(scen.quests[2].name == "Test Quest 3");
+	}
+	SECTION("With a shop") {
+		// Loading/building shops requires strings to be available
+		// Here we fetch them from the rsrc dir, rather than the data dir
+		ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+		cItem dummy_item('alch');
+		scen.shops.resize(3);
+		scen.shops[0] = cShop('junk');
+		scen.shops[1] = cShop('heal');
+		scen.shops[2].setName("The Test Shop");
+		scen.shops[2].setType(eShopType::NORMAL);
+		scen.shops[2].setPrompt(eShopPrompt::SHOPPING);
+		scen.shops[2].setFace(17);
+		scen.shops[2].addItem(1, dummy_item, 0);
+		scen.shops[2].addItem(2, dummy_item, 5, 10);
+		scen.shops[2].addSpecial(eShopItemType::ALCHEMY, 3);
+		scen.shops[2].addSpecial(eShopItemType::CLASS, 4);
+		scen.shops[2].addSpecial(eShopItemType::CURE_ACID);
+		scen.shops[2].addSpecial(eShopItemType::CURE_POISON);
+		scen.shops[2].addSpecial(eShopItemType::MAGE_SPELL, 5);
+		scen.shops[2].addSpecial(eShopItemType::PRIEST_SPELL, 6);
+		scen.shops[2].addSpecial(eShopItemType::REMOVE_CURSE);
+		scen.shops[2].addSpecial(eShopItemType::SKILL, 7);
+		scen.shops[2].addSpecial(eShopItemType::TREASURE, 0);
+		scen.shops[2].addSpecial("Magic!", "This is magic!", 24, 100, 12, 1);
+		in_and_out("shops", scen);
+		REQUIRE(scen.shops.size() == 3);
+		REQUIRE(scen.shops[0].size() == 10);
+		CHECK(scen.shops[0].getItem(0).type == eShopItemType::TREASURE);
+		CHECK(scen.shops[0].getItem(0).item.item_level == 1);
+		CHECK(scen.shops[0].getItem(4).item.item_level == 2);
+		CHECK(scen.shops[0].getItem(7).item.item_level == 3);
+		CHECK(scen.shops[0].getItem(9).item.item_level == 4);
+		REQUIRE(scen.shops[1].size() == 9);
+		CHECK(scen.shops[1].getItem(0).type == eShopItemType::HEAL_WOUNDS);
+		CHECK(scen.shops[1].getItem(1).type == eShopItemType::CURE_POISON);
+		CHECK(scen.shops[1].getItem(2).type == eShopItemType::CURE_DISEASE);
+		CHECK(scen.shops[1].getItem(3).type == eShopItemType::CURE_PARALYSIS);
+		CHECK(scen.shops[1].getItem(4).type == eShopItemType::CURE_DUMBFOUNDING);
+		CHECK(scen.shops[1].getItem(5).type == eShopItemType::REMOVE_CURSE);
+		CHECK(scen.shops[1].getItem(6).type == eShopItemType::DESTONE);
+		CHECK(scen.shops[1].getItem(7).type == eShopItemType::RAISE_DEAD);
+		CHECK(scen.shops[1].getItem(8).type == eShopItemType::RESURRECT);
+		REQUIRE(scen.shops[2].size() == 12);
+		CHECK(scen.shops[2].getItem(0).type == eShopItemType::ITEM);
+		CHECK(scen.shops[2].getItem(0).index == 1);
+		CHECK(scen.shops[2].getItem(0).quantity == 0);
+		CHECK(scen.shops[2].getItem(1).type == eShopItemType::OPT_ITEM);
+		CHECK(scen.shops[2].getItem(1).index == 2);
+		CHECK(scen.shops[2].getItem(1).quantity == 10005);
+		CHECK(scen.shops[2].getItem(2).type == eShopItemType::ALCHEMY);
+		CHECK(scen.shops[2].getItem(2).item.item_level == 3);
+		CHECK(scen.shops[2].getItem(3).type == eShopItemType::CLASS);
+		CHECK(scen.shops[2].getItem(3).item.special_class == 4);
+		CHECK(scen.shops[2].getItem(4).type == eShopItemType::CURE_ACID);
+		CHECK(scen.shops[2].getItem(5).type == eShopItemType::CURE_POISON);
+		CHECK(scen.shops[2].getItem(6).type == eShopItemType::MAGE_SPELL);
+		CHECK(scen.shops[2].getItem(6).item.item_level == 5);
+		CHECK(scen.shops[2].getItem(7).type == eShopItemType::PRIEST_SPELL);
+		CHECK(scen.shops[2].getItem(7).item.item_level == 6);
+		CHECK(scen.shops[2].getItem(8).type == eShopItemType::REMOVE_CURSE);
+		CHECK(scen.shops[2].getItem(9).type == eShopItemType::SKILL);
+		CHECK(scen.shops[2].getItem(9).item.item_level == 7);
+		CHECK(scen.shops[2].getItem(10).type == eShopItemType::TREASURE);
+		CHECK(scen.shops[2].getItem(10).item.item_level == 0);
+		CHECK(scen.shops[2].getItem(11).type == eShopItemType::CALL_SPECIAL);
+		CHECK(scen.shops[2].getItem(11).quantity == 1);
+		CHECK(scen.shops[2].getItem(11).item.value == 12);
+		CHECK(scen.shops[2].getItem(11).item.item_level == 100);
+		CHECK(scen.shops[2].getItem(11).item.graphic_num == 24);
+		CHECK(scen.shops[2].getItem(11).item.full_name == "Magic!");
+		CHECK(scen.shops[2].getItem(11).item.desc == "This is magic!");
 	}
 	SECTION("With some empty strings, only trailing ones are stripped") {
 		scen.spec_strs.resize(12);

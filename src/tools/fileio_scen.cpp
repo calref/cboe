@@ -554,7 +554,7 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop) {
 					}
 					if(!reqs.empty())
 						throw xMissingElem("special", *reqs.begin(), entry->Row(), entry->Column(), fname);
-					shop.addSpecial(name, descr, icon, node, cost, amount);
+					shop.addSpecial(title, descr, icon, node, cost, amount);
 				} else {
 					eShopItemType itype;
 					int n = 0;
