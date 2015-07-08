@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<scenario boes="2.0.0">
+    <title>Test Scenario</title>
+    <icon>0</icon>
+    <id>campaign</id>
+    <version>2.6.7</version>
+    <language>en-US</language>
+    <author>
+        <name>BoE Test Suite</name>
+        <email>nowhere@example.com</email>
+    </author>
+    <text>
+        <teaser>Teaser 1</teaser>
+        <teaser>Teaser 2</teaser>
+        <intro-msg>Welcome to the test scenario!</intro-msg>
+    </text>
+    <ratings>
+        <content>R</content>
+        <difficulty>3</difficulty>
+    </ratings>
+    <flags>
+        <adjust-difficulty>true</adjust-difficulty>
+        <legacy>false</legacy>
+        <custom-graphics>false</custom-graphics>
+    </flags>
+    <creator>
+        <type>oboe</type>
+        <version>2.0.0</version>
+        <os></os>
+    </creator>
+    <game>
+        <num-towns>0</num-towns>
+        <out-width>0</out-width>
+        <out-height>0</out-height>
+        <start-town>7</start-town>
+        <town-start x="24" y="28" />
+        <outdoor-start x="1" y="3" />
+        <sector-start x="12" y="21" />
+        <shop>
+        	<name>Bad Shop</name>
+        	<type>live</type>
+        	<prompt>shop</prompt>
+        	<face>0</face>
+        	<entries>
+        		<special>
+        			<quantity>1</quantity>
+        			<value>12000</value>
+        			<node>102</node>
+        			<icon>9</icon>
+        			<name>Invalid Shop Special Item</name>
+        			<description><![CDATA[Oops! Should be cost, not value!]]></description>
+        		</special>
+        	</entries>
+        </shop>
+    </game>
+    <editor>
+        <default-ground>2</default-ground>
+        <last-out-section x="0" y="0" />
+        <last-town>0</last-town>
+    </editor>
+</scenario>

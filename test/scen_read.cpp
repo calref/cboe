@@ -301,5 +301,30 @@ TEST_CASE("Loading a new-format scenario record") {
 			CHECK(scen.shops[0].getItem(12).item.full_name == "Special Shop Item the Third");
 			CHECK(scen.shops[0].getItem(12).item.desc == "Yay for the magic purchase!");
 		}
+		SECTION("Too many items") {
+			fin.open("files/scenario/shop-overflow.xml");
+			doc = xmlDocFromStream(fin, "shop-overflow.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+		SECTION("Invalid attribute on regular item") {
+			fin.open("files/scenario/shop-bad_item.xml");
+			doc = xmlDocFromStream(fin, "shop-bad_item.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadAttr);
+		}
+		SECTION("Invalid element in special item") {
+			fin.open("files/scenario/shop-bad_spec.xml");
+			doc = xmlDocFromStream(fin, "shop-bad_spec.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+		SECTION("Missing element in special item") {
+			fin.open("files/scenario/shop-incomplete_spec.xml");
+			doc = xmlDocFromStream(fin, "shop-incomplete_spec.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingElem);
+		}
+		SECTION("Invalid entry type") {
+			fin.open("files/scenario/shop-bad_entry.xml");
+			doc = xmlDocFromStream(fin, "shop-bad_entry.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
 	}
 }

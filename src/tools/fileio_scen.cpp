@@ -510,6 +510,7 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop) {
 				entry->GetValue(&type);
 				if(entries_found >= 30)
 					throw xBadNode(type, entry->Row(), entry->Column(), fname);
+				entries_found++;
 				if(type == "item") {
 					int amount, num, chance = 100;
 					std::string title, descr;
@@ -550,7 +551,7 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop) {
 							attr->GetText(&title, false);
 						} else if(name == "description") {
 							attr->GetText(&descr, false);
-						} else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+						} else throw xBadNode(name, attr->Row(), attr->Column(), fname);
 					}
 					if(!reqs.empty())
 						throw xMissingElem("special", *reqs.begin(), entry->Row(), entry->Column(), fname);
