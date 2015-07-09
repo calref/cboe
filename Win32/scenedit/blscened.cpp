@@ -345,8 +345,7 @@ RECT r;
        	    else if (store_ter.picture >= 400 && store_ter.picture < 1000)
 			    csp(813,14,store_ter.picture - 100, 0);
 
-            if(do_choose_anim == TRUE){
-                put_choice_pics();
+            if(do_choose_anim == TRUE){                put_choice_pics();
 			    }
             }
         }
@@ -969,13 +968,13 @@ Boolean handle_menu (short item, HMENU menu)
 		break;
 
 				// Extra Help
-		case 801: // help file
+		case 2001: // help file
 			WinHelp(mainPtr,"Scenario Editor.hlp",HELP_CONTENTS,0L);
 			break;
-		case 802: fancy_choice_dialog(986,0); break; // started
-		case 803: fancy_choice_dialog(1000,0); break; // testing
-		case 804: fancy_choice_dialog(1001,0); break; // distributing
-		case 805:
+		case 2002: fancy_choice_dialog(986,0); break; // started
+		case 2003: fancy_choice_dialog(1000,0); break; // testing
+		case 2004: fancy_choice_dialog(1001,0); break; // distributing
+		case 2005:
 		fancy_choice_dialog(1062,0);
 		break;
 
