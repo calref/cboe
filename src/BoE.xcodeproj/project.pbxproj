@@ -243,6 +243,8 @@
 		91C749B81A2D6670008E0E10 /* strings in Copy Strings */ = {isa = PBXBuildFile; fileRef = 91C749B71A2D6432008E0E10 /* strings */; };
 		91C749BA1A2D670D008E0E10 /* dialogs in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91C749B91A2D66F7008E0E10 /* dialogs */; };
 		91C763D91B4C50710086D879 /* enums.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C763D81B4C4BB30086D879 /* enums.cpp */; };
+		91C763DB1B4EE77F0086D879 /* map_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C763DA1B4EE6E00086D879 /* map_read.cpp */; };
+		91C763DD1B4EE7950086D879 /* map_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C763DC1B4EE7950086D879 /* map_write.cpp */; };
 		91CC173C1B421CA0003D9A69 /* catch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91CC17391B421CA0003D9A69 /* catch.cpp */; };
 		91CC173E1B421CA0003D9A69 /* scen_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91CC173B1B421CA0003D9A69 /* scen_write.cpp */; };
 		91CC17491B422D5C003D9A69 /* scen_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91CC173A1B421CA0003D9A69 /* scen_read.cpp */; };
@@ -733,6 +735,8 @@
 		91C749B71A2D6432008E0E10 /* strings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = strings; sourceTree = "<group>"; };
 		91C749B91A2D66F7008E0E10 /* dialogs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dialogs; sourceTree = "<group>"; };
 		91C763D81B4C4BB30086D879 /* enums.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = enums.cpp; sourceTree = "<group>"; };
+		91C763DA1B4EE6E00086D879 /* map_read.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = map_read.cpp; sourceTree = "<group>"; };
+		91C763DC1B4EE7950086D879 /* map_write.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = map_write.cpp; sourceTree = "<group>"; };
 		91CC172D1B421C0A003D9A69 /* boe_test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = boe_test; sourceTree = BUILT_PRODUCTS_DIR; };
 		91CC17391B421CA0003D9A69 /* catch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = catch.cpp; sourceTree = "<group>"; };
 		91CC173A1B421CA0003D9A69 /* scen_read.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_read.cpp; sourceTree = "<group>"; };
@@ -1300,6 +1304,8 @@
 				91CC173A1B421CA0003D9A69 /* scen_read.cpp */,
 				91CC173B1B421CA0003D9A69 /* scen_write.cpp */,
 				91C763D81B4C4BB30086D879 /* enums.cpp */,
+				91C763DA1B4EE6E00086D879 /* map_read.cpp */,
+				91C763DC1B4EE7950086D879 /* map_write.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1791,6 +1797,8 @@
 				91CC17491B422D5C003D9A69 /* scen_read.cpp in Sources */,
 				91BC33981B4481EF0008882C /* scen.fileio.cpp in Sources */,
 				91C763D91B4C50710086D879 /* enums.cpp in Sources */,
+				91C763DB1B4EE77F0086D879 /* map_read.cpp in Sources */,
+				91C763DD1B4EE7950086D879 /* map_write.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
