@@ -20,7 +20,6 @@ enum class eMapFeature {
 	SIGN,
 	WANDERING,
 	TOWN,
-	VEHICLE, // Another special value that shouldn't appear in the map
 	BOAT,
 	HORSE,
 	ENTRANCE_NORTH,

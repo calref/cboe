@@ -15,8 +15,8 @@ extern Document xmlDocFromStream(istream& stream, string name);
 extern void readScenarioFromXml(Document&& data, cScenario& scenario);
 extern void writeScenarioToXml(Printer&& data, cScenario& scenario);
 
-static void in_and_out(std::string name, cScenario& scen) {
-	std::string fpath = "junk/";
+static void in_and_out(string name, cScenario& scen) {
+	string fpath = "junk/";
 	fpath += name;
 	fpath += ".xml";
 	ofstream fout;

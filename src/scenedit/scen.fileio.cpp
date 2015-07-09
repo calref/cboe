@@ -43,6 +43,8 @@ void load_spec_graphics();
 
 // These aren't static solely so that the test cases can access them.
 void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario);
+map_data buildOutMapData(location which, cScenario& scenario);
+map_data buildTownMapData(size_t which, cScenario& scenario);
 
 template<typename Container> static void writeSpecialNodes(std::ostream& fout, Container nodes) {
 	static_assert(std::is_same<typename Container::value_type, cSpecial>::value,
@@ -819,7 +821,7 @@ static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_nu
 	data.CloseElement("dialogue");
 }
 
-static map_data buildOutMapData(location which) {
+map_data buildOutMapData(location which, cScenario& scenario) {
 	cOutdoors& sector = *scenario.outdoors[which.x][which.y];
 	map_data terrain;
 	for(size_t x = 0; x < 48; x++) {
@@ -847,21 +849,21 @@ static map_data buildOutMapData(location which) {
 	for(size_t i = 0; i < scenario.boats.size(); i++) {
 		if(scenario.boats[i].which_town == 200 && scenario.boats[i].sector == which) {
 			int j = i;
-			if(scenario.boats[i].property) j += 10000;
+			if(scenario.boats[i].property) j *= -1;
 			terrain.addFeature(scenario.boats[i].loc.x, scenario.boats[i].loc.y, eMapFeature::HORSE, j);
 		}
 	}
 	for(size_t i = 0; i < scenario.horses.size(); i++) {
 		if(scenario.horses[i].which_town == 200 && scenario.horses[i].sector == which) {
 			int j = i;
-			if(scenario.horses[i].property) j += 10000;
+			if(scenario.horses[i].property) j *= -1;
 			terrain.addFeature(scenario.horses[i].loc.x, scenario.horses[i].loc.y, eMapFeature::HORSE, j);
 		}
 	}
 	return terrain;
 }
 
-static map_data buildTownMapData(size_t which) {
+map_data buildTownMapData(size_t which, cScenario& scenario) {
 	cTown& town = *scenario.towns[which];
 	map_data terrain;
 	for(size_t x = 0; x < town.max_dim(); x++) {
@@ -971,7 +973,7 @@ void save_scenario(bool rename) {
 			
 			// Then the map.
 			std::ostream& out_map = scen_file.newFile("scenario/out/" + file_basename + ".map");
-			buildOutMapData(loc(x,y)).writeTo(out_map);
+			buildOutMapData(loc(x,y), scenario).writeTo(out_map);
 			
 			// And the special nodes.
 			std::ostream& out_spec = scen_file.newFile("scenario/out/" + file_basename + ".spec");
@@ -988,7 +990,7 @@ void save_scenario(bool rename) {
 		
 		// Then the map.
 		std::ostream& town_map = scen_file.newFile("scenario/towns/" + file_basename + ".map");
-		buildTownMapData(i).writeTo(town_map);
+		buildTownMapData(i, scenario).writeTo(town_map);
 		
 		// And the special nodes.
 		std::ostream& town_spec = scen_file.newFile("scenario/towns/" + file_basename + ".spec");

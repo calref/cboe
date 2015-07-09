@@ -53,7 +53,7 @@ map_data load_map(std::istream& fin, bool isTown, std::string name) {
 					data.set(col, row, n);
 				else {
 					if((curFeature == eMapFeature::BOAT || curFeature == eMapFeature::HORSE) && !vehicle_owned)
-						n += 10000;
+						n *= -1;
 					data.addFeature(col, row, curFeature, n);
 				}
 				n = 0;
@@ -71,18 +71,16 @@ map_data load_map(std::istream& fin, bool isTown, std::string name) {
 					curFeature = eMapFeature::FIELD;
 				} else if(c == '$') {
 					curFeature = eMapFeature::CREATURE;
-				} else if(c == '~') {
-					curFeature = eMapFeature::VEHICLE;
-				} else if(c == 'h' && curFeature == eMapFeature::VEHICLE) {
+				} else if(c == 'h') {
 					vehicle_owned = true;
 					curFeature = eMapFeature::HORSE;
-				} else if(c == 'H' && curFeature == eMapFeature::VEHICLE) {
+				} else if(c == 'H') {
 					vehicle_owned = false;
 					curFeature = eMapFeature::HORSE;
-				} else if(c == 'b' && curFeature == eMapFeature::VEHICLE) {
+				} else if(c == 'b') {
 					vehicle_owned = true;
 					curFeature = eMapFeature::BOAT;
-				} else if(c == 'B' && curFeature == eMapFeature::VEHICLE) {
+				} else if(c == 'B') {
 					vehicle_owned = false;
 					curFeature = eMapFeature::BOAT;
 				} else if(c == ',') {
@@ -97,7 +95,7 @@ map_data load_map(std::istream& fin, bool isTown, std::string name) {
 			data.set(col, row, n);
 		else {
 			if((curFeature == eMapFeature::BOAT || curFeature == eMapFeature::HORSE) && !vehicle_owned)
-				n += 10000;
+				n *= -1;
 			data.addFeature(col, row, curFeature, n);
 		}
 		row++;
@@ -150,7 +148,7 @@ void map_data::writeTo(std::ostream& out) {
 			out << grid[y][x];
 			for(auto feat : getFeatures(x,y)) {
 				switch(feat.first) {
-					case eMapFeature::NONE: case eMapFeature::VEHICLE: break;
+					case eMapFeature::NONE: break;
 					case eMapFeature::SPECIAL_NODE: out << ':' << feat.second; break;
 					case eMapFeature::SIGN: out << '!' << feat.second; break;
 					case eMapFeature::WANDERING: out << '*' << feat.second; break;
@@ -161,8 +159,8 @@ void map_data::writeTo(std::ostream& out) {
 					case eMapFeature::ENTRANCE_NORTH: out << '^'; break;
 					case eMapFeature::ENTRANCE_SOUTH: out << 'v'; break;
 					case eMapFeature::ENTRANCE_WEST: out << '<'; break;
-					case eMapFeature::BOAT: out << (feat.second < 0 ? 'b' : 'B') << abs(feat.second); break;
-					case eMapFeature::HORSE: out << (feat.second < 0 ? 'h' : 'H') << abs(feat.second); break;
+					case eMapFeature::BOAT: out << (feat.second > 0 ? 'b' : 'B') << abs(feat.second); break;
+					case eMapFeature::HORSE: out << (feat.second > 0 ? 'h' : 'H') << abs(feat.second); break;
 				}
 			}
 		}

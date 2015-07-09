@@ -45,6 +45,8 @@ static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool on
 // Some of these are non-static so that the test cases can access them.
 ticpp::Document xmlDocFromStream(std::istream& stream, std::string name);
 void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario);
+void loadOutMapData(map_data&& data, location which, cScenario& scen);
+void loadTownMapData(map_data&& data, int which, cScenario& scen);
 
 bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header) {
 	// Before loading a scenario, we may need to pop scenario resource paths.
@@ -1811,7 +1813,7 @@ static void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_
 	}
 }
 
-static void loadOutMapData(map_data&& data, location which, cScenario& scen) {
+void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 	cOutdoors& out = *scen.outdoors[which.x][which.y];
 	int num_towns = 0;
 	for(int x = 0; x < 48; x++) {
@@ -1823,7 +1825,7 @@ static void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 				cVehicle* what;
 				switch(feat.first) {
 						// Special values
-					case eMapFeature::NONE: case eMapFeature::VEHICLE:
+					case eMapFeature::NONE:
 						break;
 						// Town-only features
 					case eMapFeature::ENTRANCE_EAST: case eMapFeature::ENTRANCE_NORTH: case eMapFeature::ENTRANCE_SOUTH:
@@ -1842,11 +1844,11 @@ static void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 					case eMapFeature::BOAT:
 						is_boat = true;
 					case eMapFeature::HORSE:
-						what = &(is_boat ? scen.boats : scen.horses)[feat.second % 10000];
+						what = &(is_boat ? scen.boats : scen.horses)[abs(feat.second)];
 						what->which_town = 200;
 						what->sector = which;
 						what->loc_in_sec = loc(x,y);
-						what->property = feat.second >= 10000;
+						what->property = feat.second < 0;
 						break;
 					case eMapFeature::FIELD:
 						if(feat.second == SPECIAL_SPOT)
@@ -1869,7 +1871,7 @@ static void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 	}
 }
 
-static void loadTownMapData(map_data&& data, int which, cScenario& scen) {
+void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 	cTown& town = *scen.towns[which];
 	for(int x = 0; x < town.max_dim(); x++) {
 		for(int y = 0; y < town.max_dim(); y++) {
@@ -1880,7 +1882,7 @@ static void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 				cVehicle* what;
 				switch(feat.first) {
 						// Special values
-					case eMapFeature::NONE: case eMapFeature::VEHICLE:
+					case eMapFeature::NONE:
 						break;
 						// Outdoor-only features
 					case eMapFeature::TOWN: break;
@@ -1890,10 +1892,10 @@ static void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 					case eMapFeature::BOAT:
 						is_boat = true;
 					case eMapFeature::HORSE:
-						what = &(is_boat ? scen.boats : scen.horses)[feat.second % 10000];
+						what = &(is_boat ? scen.boats : scen.horses)[abs(feat.second)];
 						what->which_town = which;
 						what->loc = loc(x,y);
-						what->property = feat.second >= 10000;
+						what->property = feat.second < 0;
 						break;
 					case eMapFeature::SIGN:
 						if(feat.second >= town.sign_locs.size())
