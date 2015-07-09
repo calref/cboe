@@ -1110,7 +1110,7 @@ void start_data_dump() {
 	short i;
 	using std::endl;
 	std::string scen_name = scenario.scen_name;
-	std::ofstream fout("Scenario Data.txt");
+	std::ofstream fout((scenario.scen_file.parent_path()/(scen_name + " Data.txt")).string().c_str());
 	fout << "Scenario data for " << scen_name << ':' << endl << endl;
 	fout << "Terrain types for " << scen_name << ':' << endl;
 	for(i = 0; i < scenario.ter_types.size(); i++)
@@ -1125,81 +1125,97 @@ void start_data_dump() {
 }
 
 void scen_text_dump(){
-	short i;
 	using std::endl;
-	location out_sec;
-	std::ofstream fout("Scenario Text.txt");
+	std::ofstream fout((scenario.scen_file.parent_path()/(scenario.scen_name + " Text.txt")).string().c_str());
 	fout << "Scenario text for " << scenario.scen_name << ':' << endl << endl;
 	fout << "Scenario Text:" << endl;
 	fout << "Who Wrote 1: " << scenario.who_wrote[0] << endl;
 	fout << "Who Wrote 2: " << scenario.who_wrote[1] << endl;
-	fout << "Contact Info: " << scenario.contact_info << endl;
-	for(i = 0; i < 6; i++)
+	fout << "Contact Info: " << scenario.contact_info[0] << "    " << scenario.contact_info[1] << endl;
+	for(short i = 0; i < 6; i++)
 		if(scenario.intro_strs[i][0] != '*')
 			fout << "  Intro Message " << i << ": " << scenario.intro_strs[i] << endl;
-	for(i = 0; i < scenario.journal_strs.size(); i++)
+	for(short i = 0; i < scenario.journal_strs.size(); i++)
 		if(scenario.journal_strs[i][0] != '*')
 			fout << "  Journal Entry " << i << ": " << scenario.journal_strs[i] << endl;
-	for(i = 0; i < scenario.special_items.size(); i++)
+	for(short i = 0; i < scenario.special_items.size(); i++)
 		if(scenario.special_items[i].name[0] != '*') {
 			fout << "  Special Item " << i << ':' << endl;
 			fout << "    Name: " << scenario.special_items[i].name << endl;
 			fout << "    Description: " << scenario.special_items[i].descr << endl;
 		}
-	for(i = 0; i < scenario.spec_strs.size(); i++)
+	for(short i = 0; i < scenario.quests.size(); i++) {
+		fout << "  Quest " << i << ':' << endl;
+		fout << "    Name: " << scenario.quests[i].name << endl;
+		fout << "    Description: " << scenario.quests[i].descr << endl;
+	}
+	for(short i = 0; i < scenario.shops.size(); i++ ) {
+		fout << "  Shop " << i << ':' << endl;
+		fout << "    Name: " << scenario.shops[i].getName() << endl;
+		for(short j = 0; j < scenario.shops[i].size(); j++) {
+			cShopItem it = scenario.shops[i].getItem(j);
+			if(it.type == eShopItemType::CALL_SPECIAL) {
+				fout << "    Entry " << j << ':' << endl;
+				fout << "      Name: " << it.item.full_name << endl;
+				fout << "      Description: " << it.item.desc << endl;
+			}
+		}
+	}
+	for(short i = 0; i < scenario.spec_strs.size(); i++)
 		if(scenario.spec_strs[i][0] != '*')
 			fout << "  Message " << i << ": " << scenario.spec_strs[i] << endl;
+	for(short i = 0; i < scenario.scen_items.size(); i++) {
+		if(!scenario.scen_items[i].desc.empty())
+			fout << "  Item description " << i << ": " << scenario.scen_items[i].desc << endl;
+	}
 	fout << endl << "Outdoor Sections Text:" << endl << endl;
-	for(out_sec.x = 0; out_sec.x < scenario.outdoors.width(); out_sec.x++) {
-		for(out_sec.y = 0; out_sec.y < scenario.outdoors.height(); out_sec.y++) {
-			fout << "  Section (x = " << (short)out_sec.x << ", y = " << (short)out_sec.y << "):" << endl;
-			fout << "    Name: " << scenario.outdoors[out_sec.x][out_sec.y]->out_name;
-			fout << "    Comment: " << scenario.outdoors[out_sec.x][out_sec.y]->comment;
-			for(i = 0; i < scenario.outdoors[out_sec.x][out_sec.y]->info_rect.size(); i++)
-				if(scenario.outdoors[out_sec.x][out_sec.y]->info_rect[i].descr[0] != '*')
-					fout << "    Area Rectangle " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->info_rect[i].descr << endl;
-			for(i = 0; i < scenario.outdoors[out_sec.x][out_sec.y]->spec_strs.size(); i++)
-				if(scenario.outdoors[out_sec.x][out_sec.y]->spec_strs[i][0] != '*')
-					fout << "    Message " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->spec_strs[i] << endl;
-			for(i = 0; i < scenario.outdoors[out_sec.x][out_sec.y]->sign_locs.size(); i++)
-				if(scenario.outdoors[out_sec.x][out_sec.y]->sign_locs[i].text[0] != '*')
-					fout << "    Sign " << i << ": " << scenario.outdoors[out_sec.x][out_sec.y]->sign_locs[i].text << endl;
+	for(short x = 0; x < scenario.outdoors.width(); x++) {
+		for(short y = 0; y < scenario.outdoors.height(); y++) {
+			fout << "  Section (x = " << x << ", y = " << y << "):" << endl;
+			fout << "    Name: " << scenario.outdoors[x][y]->out_name << endl;
+			fout << "    Comment: " << scenario.outdoors[x][y]->comment << endl;
+			for(short i = 0; i < scenario.outdoors[x][y]->info_rect.size(); i++)
+				if(scenario.outdoors[x][y]->info_rect[i].descr[0] != '*')
+					fout << "    Area Rectangle " << i << ": " << scenario.outdoors[x][y]->info_rect[i].descr << endl;
+			for(short i = 0; i < scenario.outdoors[x][y]->spec_strs.size(); i++)
+				if(scenario.outdoors[x][y]->spec_strs[i][0] != '*')
+					fout << "    Message " << i << ": " << scenario.outdoors[x][y]->spec_strs[i] << endl;
+			for(short i = 0; i < scenario.outdoors[x][y]->sign_locs.size(); i++)
+				if(scenario.outdoors[x][y]->sign_locs[i].text[0] != '*')
+					fout << "    Sign " << i << ": " << scenario.outdoors[x][y]->sign_locs[i].text << endl;
 			fout << endl;
 		}
 	}
 	fout << "Town Text:" << endl << endl;
 	for(short j = 0; j < scenario.towns.size(); j++) {
 		fout << "  Town " << j << ':' << endl;
+		fout << "    Name: " << scenario.towns[j]->town_name << endl;
+		for(short i = 0; i < 3; i++)
+			if(scenario.towns[j]->comment[i][0] != '*')
+				fout << "    Comment: " << scenario.towns[j]->comment[i] << endl;
 		fout << "  Town Messages:" << endl;
-		fout << "    Name: " << scenario.towns[i]->town_name << endl;
-		for(i = 0; i < scenario.towns[i]->room_rect.size(); i++)
-			if(scenario.towns[i]->room_rect[i].descr[0] != '*')
-				fout << "    Area Rectangle " << i << ": " << scenario.towns[i]->room_rect[i].descr << endl;
-		fout << "    Name: " << scenario.towns[i]->town_name << endl;
-		for(i = 0; i < 3; i++)
-			if(scenario.towns[i]->comment[i][0] != '*')
-				fout << "    Comment " << i << ": " << scenario.towns[i]->comment[i] << endl;
-		fout << "    Name: " << scenario.towns[i]->town_name << endl;
-		for(i = 0; i < scenario.towns[i]->spec_strs.size(); i++)
-			if(scenario.towns[i]->spec_strs[i][0] != '*')
-				fout << "    Message " << i << ": " << scenario.towns[i]->spec_strs[i] << endl;
-		fout << "    Name: " << scenario.towns[i]->town_name << endl;
-		for(i = 0; i < scenario.towns[i]->sign_locs.size(); i++)
-			if(scenario.towns[i]->sign_locs[i].text[0] != '*')
-				fout << "    Sign " << i << ": " << scenario.towns[i]->sign_locs[i].text << endl;
+		for(short i = 0; i < scenario.towns[j]->room_rect.size(); i++)
+			if(scenario.towns[j]->room_rect[i].descr[0] != '*')
+				fout << "    Area Rectangle " << i << ": " << scenario.towns[j]->room_rect[i].descr << endl;
+		for(short i = 0; i < scenario.towns[j]->spec_strs.size(); i++)
+			if(scenario.towns[j]->spec_strs[i][0] != '*')
+				fout << "    Message " << i << ": " << scenario.towns[j]->spec_strs[i] << endl;
+		for(short i = 0; i < scenario.towns[j]->sign_locs.size(); i++)
+			if(scenario.towns[j]->sign_locs[i].text[0] != '*')
+				fout << "    Sign " << i << ": " << scenario.towns[j]->sign_locs[i].text << endl;
 		fout << endl << "  Town Dialogue:" << endl;
-		for(i = 0; i < 10; i++) {
-			fout << "    Personality " << j + i << " (" << scenario.towns[i]->talking.people[i].title << "): " << endl;
-			fout << "    look: " << scenario.towns[i]->talking.people[i].look << endl;
-			fout << "    name: " << scenario.towns[i]->talking.people[i].name << endl;
-			fout << "    job: " << scenario.towns[i]->talking.people[i].job << endl;
-			fout << "    confused: " << scenario.towns[i]->talking.people[i].dunno << endl;
+		for(short i = 0; i < 10; i++) {
+			fout << "    Personality " << j + i << " (" << scenario.towns[j]->talking.people[i].title << "): " << endl;
+			fout << "      look: " << scenario.towns[j]->talking.people[i].look << endl;
+			fout << "      name: " << scenario.towns[j]->talking.people[i].name << endl;
+			fout << "      job: " << scenario.towns[j]->talking.people[i].job << endl;
+			fout << "      confused: " << scenario.towns[j]->talking.people[i].dunno << endl;
 		}
-		for(i = 0; i < scenario.towns[i]->talking.talk_nodes.size(); i++) {
-			if(scenario.towns[i]->talking.talk_nodes[i].str1.length() > 0)
-				fout << "    Node " << i << "a: " << scenario.towns[i]->talking.talk_nodes[i].str1 << endl;
-			if(scenario.towns[i]->talking.talk_nodes[i].str2.length() > 0)
-				fout << "    Node " << i << "b: " << scenario.towns[i]->talking.talk_nodes[i].str2 << endl;
+		for(short i = 0; i < scenario.towns[j]->talking.talk_nodes.size(); i++) {
+			if(scenario.towns[j]->talking.talk_nodes[i].str1.length() > 0)
+				fout << "    Node " << i << "a: " << scenario.towns[j]->talking.talk_nodes[i].str1 << endl;
+			if(scenario.towns[j]->talking.talk_nodes[i].str2.length() > 0)
+				fout << "    Node " << i << "b: " << scenario.towns[j]->talking.talk_nodes[i].str2 << endl;
 		}
 		fout << endl;
 	}
