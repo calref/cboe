@@ -37,6 +37,7 @@ short mode_count = 0;
 cOutdoors* current_terrain;
 short pixel_depth,old_depth = 8;
 
+std::string scenario_temp_dir_name = "ed_scenario";
 bool change_made = false, ae_loading = false;
 
 // Numbers of current areas being edited

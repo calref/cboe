@@ -42,9 +42,9 @@ public:
 
 class cTimer {
 public:
-	long time;
-	short node_type;
-	short node;
+	long time = 0;
+	short node_type = 0;
+	short node = -1;
 };
 
 struct pending_special_type {

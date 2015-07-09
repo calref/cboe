@@ -66,5 +66,10 @@ src/doxy/doxy_warnings.txt
 # Windows junk files
 Thumbs.db
 
+# Test case junk files
+test/junk/*.xml
+test/junk/*.spec
+test/junk/*.map
+
 # Misc
 oldstructs.txt

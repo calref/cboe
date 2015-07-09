@@ -8,6 +8,7 @@
 
 #include "location.hpp"
 #include "mathutil.hpp"
+#include <iostream>
 
 bool operator == (location p1,location p2){
 	if((p1.x == p2.x) & (p1.y == p2.y))
@@ -186,3 +187,30 @@ rectangle rect(int top, int left, int bottom, int right) {
 	return rectangle(top, left, bottom, right);
 }
 
+std::ostream& operator<< (std::ostream& out, location l) {
+	out << '(' << l.x << ',' << l.y << ')';
+	return out;
+}
+
+std::ostream& operator<< (std::ostream& out, spec_loc_t l) {
+	out << static_cast<location&>(l);
+	out << ':' << l.spec;
+	return out;
+}
+
+std::ostream& operator<< (std::ostream& out, sign_loc_t l) {
+	out << static_cast<location&>(l);
+	out << " -- \"" << l.text << '"';
+	return out;
+}
+
+std::ostream& operator<< (std::ostream& out, rectangle r) {
+	out << "{" << r.topLeft() << " - " << r.bottomRight() << '}';
+	return out;
+}
+
+std::ostream& operator<< (std::ostream& out, info_rect_t r) {
+	out << static_cast<rectangle&>(r);
+	out << " -- \"" << r.descr << '"';
+	return out;
+}

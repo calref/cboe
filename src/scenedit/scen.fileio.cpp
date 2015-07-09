@@ -41,6 +41,9 @@ extern bool cur_scen_is_mac;
 void print_write_position ();
 void load_spec_graphics();
 
+// These aren't static solely so that the test cases can access them.
+void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario);
+
 template<typename Container> static void writeSpecialNodes(std::ostream& fout, Container nodes) {
 	static_assert(std::is_same<typename Container::value_type, cSpecial>::value,
 		"writeSpecialNodes must be instantiated with a container of special nodes");
@@ -53,14 +56,14 @@ static std::string boolstr(bool b) {
 	return b ? "true" : "false";
 }
 
-template<> void ticpp::Printer::PushElement(std::string tagName, location pos) {
+template<> void ticpp::Printer::PushElement(std::string tagName, location pos, bool) {
 	OpenElement(tagName);
 	PushAttribute("x", pos.x);
 	PushAttribute("y", pos.y);
 	CloseElement(tagName);
 }
 
-template<> void ticpp::Printer::PushElement(std::string tagName, rectangle rect) {
+template<> void ticpp::Printer::PushElement(std::string tagName, rectangle rect, bool) {
 	OpenElement(tagName);
 	PushAttribute("top", rect.top);
 	PushAttribute("left", rect.left);
@@ -69,7 +72,7 @@ template<> void ticpp::Printer::PushElement(std::string tagName, rectangle rect)
 	CloseElement(tagName);
 }
 
-template<> void ticpp::Printer::PushElement(std::string tagName, cMonster::cAttack attack) {
+template<> void ticpp::Printer::PushElement(std::string tagName, cMonster::cAttack attack, bool) {
 	OpenElement(tagName);
 	PushAttribute("type", attack.type);
 	std::ostringstream strength;
@@ -78,7 +81,7 @@ template<> void ticpp::Printer::PushElement(std::string tagName, cMonster::cAtta
 	CloseElement(tagName);
 }
 
-template<> void ticpp::Printer::PushElement(std::string tagName, cOutdoors::cWandering enc) {
+template<> void ticpp::Printer::PushElement(std::string tagName, cOutdoors::cWandering enc, bool) {
 	OpenElement(tagName);
 	PushAttribute("can-flee", !enc.cant_flee);
 	for(size_t i = 0; i < enc.monst.size(); i++) {
@@ -97,21 +100,17 @@ template<> void ticpp::Printer::PushElement(std::string tagName, cOutdoors::cWan
 	CloseElement(tagName);
 }
 
-template<> void ticpp::Printer::PushElement(std::string tagName, info_rect_t rect) {
+template<> void ticpp::Printer::PushElement(std::string tagName, info_rect_t rect, bool cdata) {
 	OpenElement(tagName);
 	PushAttribute("top", rect.top);
 	PushAttribute("left", rect.left);
 	PushAttribute("bottom", rect.bottom);
 	PushAttribute("right", rect.right);
-	PushText(rect.descr);
+	PushText(rect.descr, cdata);
 	CloseElement(tagName);
 }
 
-static bool is_minmax(int lo, int hi, int val) {
-	return minmax(lo, hi, val) == val;
-}
-
-static void writeScenarioToXml(ticpp::Printer&& data) {
+void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.OpenElement("scenario");
 	data.PushAttribute("boes", scenario.format_ed_version());
 	data.PushElement("title", scenario.scen_name);
@@ -128,8 +127,15 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 	data.PushElement("teaser", scenario.who_wrote[1]);
 	if(scenario.intro_pic != scenario.intro_mess_pic)
 		data.PushElement("icon", scenario.intro_mess_pic);
-	for(int i = 0; i < 6; i++)
-		data.PushElement("intro-msg", scenario.intro_strs[i]);
+	{
+		int last = -1;
+		for(int i = 0; i < 6; i++) {
+			if(!scenario.intro_strs[i].empty())
+				last = i;
+		}
+		for(int i = 0; i <= last; i++)
+			data.PushElement("intro-msg", scenario.intro_strs[i], true);
+	}
 	data.CloseElement("text");
 	data.OpenElement("ratings");
 	switch(scenario.rating) {
@@ -155,13 +161,14 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 	data.PushElement("num-towns", scenario.towns.size());
 	data.PushElement("out-width", scenario.outdoors.width());
 	data.PushElement("out-height", scenario.outdoors.height());
-	data.PushElement("on-init", scenario.init_spec);
+	if(scenario.init_spec >= 0)
+		data.PushElement("on-init", scenario.init_spec);
 	data.PushElement("start-town", scenario.which_town_start);
 	data.PushElement("town-start", scenario.where_start);
 	data.PushElement("outdoor-start", scenario.out_sec_start);
 	data.PushElement("sector-start", scenario.out_start);
 	for(int i = 0; i < 3; i++) {
-		if(is_minmax(0, scenario.towns.size(), scenario.store_item_towns[i])) {
+		if(scenario.store_item_towns[i] >= 0) {
 			data.OpenElement("store-items");
 			data.PushAttribute("top", scenario.store_item_rects[i].top);
 			data.PushAttribute("left", scenario.store_item_rects[i].left);
@@ -172,7 +179,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		}
 	}
 	for(int i = 0; i < scenario.town_mods.size(); i++) {
-		if(is_minmax(0, scenario.towns.size(), scenario.town_mods[i].spec)) {
+		if(scenario.town_mods[i].spec >= 0) {
 			data.OpenElement("town-flag");
 			data.PushAttribute("town", scenario.town_mods[i].spec);
 			data.PushAttribute("add-x", scenario.town_mods[i].x);
@@ -186,7 +193,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		data.PushAttribute("useable", boolstr(scenario.special_items[i].flags % 10));
 		data.PushAttribute("special", scenario.special_items[i].special);
 		data.PushElement("name", scenario.special_items[i].name);
-		data.PushElement("description", scenario.special_items[i].descr);
+		data.PushElement("description", scenario.special_items[i].descr, true);
 		data.CloseElement("special-item");
 	}
 	for(size_t i = 0; i < scenario.quests.size(); i++) {
@@ -214,7 +221,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		if(quest.bank2 >= 0)
 			data.PushElement("bank", quest.bank2);
 		data.PushElement("name", quest.name);
-		data.PushElement("description", quest.descr);
+		data.PushElement("description", quest.descr, true);
 		data.CloseElement("quest");
 	}
 	for(size_t i = 0; i < scenario.shops.size(); i++) {
@@ -247,7 +254,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 				case eShopItemType::CALL_SPECIAL:
 					data.OpenElement("special");
 					data.PushElement("name", entry.item.full_name);
-					data.PushElement("description", entry.item.desc);
+					data.PushElement("description", entry.item.desc, true);
 					data.PushElement("node", entry.item.item_level);
 					if(entry.quantity == 0)
 						data.PushElement("quantity", "infinite");
@@ -286,7 +293,7 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		data.CloseElement("shop");
 	}
 	for(int i = 0; i < scenario.scenario_timers.size(); i++) {
-		if(scenario.scenario_timers[i].time >= 0) {
+		if(scenario.scenario_timers[i].time > 0 && scenario.scenario_timers[i].node >= 0) {
 			data.OpenElement("timer");
 			data.PushAttribute("freq", scenario.scenario_timers[i].time);
 			data.PushText(scenario.scenario_timers[i].node);
@@ -297,14 +304,14 @@ static void writeScenarioToXml(ticpp::Printer&& data) {
 		if(scenario.spec_strs[i].empty()) continue;
 		data.OpenElement("string");
 		data.PushAttribute("id", i);
-		data.PushText(scenario.spec_strs[i]);
+		data.PushText(scenario.spec_strs[i], true);
 		data.CloseElement("string");
 	}
 	for(size_t i = 0; i < scenario.journal_strs.size(); i++) {
 		if(scenario.journal_strs[i].empty()) continue;
 		data.OpenElement("journal");
 		data.PushAttribute("id", i);
-		data.PushText(scenario.journal_strs[i]);
+		data.PushText(scenario.journal_strs[i], true);
 		data.CloseElement("journal");
 	}
 	data.CloseElement("game");
@@ -443,7 +450,7 @@ static void writeItemsToXml(ticpp::Printer&& data) {
 			data.PushElement("use-flag", item.magic_use_type);
 			data.CloseElement("ability");
 		}
-		if(!item.desc.empty()) data.PushElement("description", item.desc);
+		if(!item.desc.empty()) data.PushElement("description", item.desc, true);
 		data.CloseElement("item");
 	}
 	data.CloseElement("items");
@@ -614,7 +621,7 @@ static void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 		if(sector.sign_locs[i].text.empty()) continue;
 		data.OpenElement("sign");
 		data.PushAttribute("id", i);
-		data.PushText(sector.sign_locs[i].text);
+		data.PushText(sector.sign_locs[i].text, true);
 		data.CloseElement("sign");
 	}
 	for(auto& area : sector.info_rect) {
@@ -625,7 +632,7 @@ static void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 		if(sector.spec_strs[i].empty()) continue;
 		data.OpenElement("string");
 		data.PushAttribute("id", i);
-		data.PushText(sector.spec_strs[i]);
+		data.PushText(sector.spec_strs[i], true);
 		data.CloseElement("string");
 	}
 	data.CloseElement("sector");
@@ -758,14 +765,14 @@ static void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		if(town.sign_locs[i].text.empty()) continue;
 		data.OpenElement("sign");
 		data.PushAttribute("id", i);
-		data.PushText(town.sign_locs[i].text);
+		data.PushText(town.sign_locs[i].text, true);
 		data.CloseElement("sign");
 	}
 	for(size_t i = 0; i < town.spec_strs.size(); i++) {
 		if(town.spec_strs[i].empty()) continue;
 		data.OpenElement("string");
 		data.PushAttribute("id", i);
-		data.PushText(town.spec_strs[i]);
+		data.PushText(town.spec_strs[i], true);
 		data.CloseElement("string");
 	}
 	data.CloseElement("town");
@@ -778,10 +785,12 @@ static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_nu
 		cPersonality& who = talk.people[i];
 		data.OpenElement("personality");
 		data.PushAttribute("id", i + 10 * town_num);
-		data.PushElement("title", who.title);
-		data.PushElement("look", who.look);
-		data.PushElement("name", who.name);
-		data.PushElement("job", who.job);
+		data.PushElement("title", who.title, true);
+		data.PushElement("look", who.look, true);
+		data.PushElement("name", who.name, true);
+		data.PushElement("job", who.job, true);
+		if(!who.dunno.empty())
+			data.PushElement("unknown", who.dunno, true);
 		data.CloseElement("personality");
 	}
 	for(size_t i = 0; i < talk.talk_nodes.size(); i++) {
@@ -806,10 +815,10 @@ static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_nu
 		if(node.extras[3] >= 0)
 			data.PushElement("param", node.extras[3]);
 		if(!node.str1.empty())
-			data.PushElement("text", node.str1);
+			data.PushElement("text", node.str1, true);
 		else data.PushElement("text");
 		if(!node.str2.empty())
-			data.PushElement("text", node.str2);
+			data.PushElement("text", node.str2, true);
 		data.CloseElement("node");
 	}
 	data.CloseElement("dialogue");
@@ -917,7 +926,7 @@ struct overrides_sheet {
 	}
 };
 
-std::string scenario_temp_dir_name = "ed_scenario";
+extern std::string scenario_temp_dir_name;
 void save_scenario(bool rename) {
 	fs::path toFile = scenario.scen_file;
 	if(rename || toFile.empty()) {
@@ -928,11 +937,7 @@ void save_scenario(bool rename) {
 		if(toFile.empty()) return;
 	}
 	
-	scenario.format.prog_make_ver[0] = 2;
-	scenario.format.prog_make_ver[1] = 0;
-	scenario.format.prog_make_ver[2] = 0;
-	scenario.format.flag1 = 'O'; scenario.format.flag2 = 'B';
-	scenario.format.flag3 = 'O'; scenario.format.flag4 = 'E';
+	scenario.reset_version();
 	// TODO: This is just a skeletal outline of what needs to be done to save the scenario
 	tarball scen_file;
 	{
@@ -942,7 +947,7 @@ void save_scenario(bool rename) {
 		
 		// Next, the bulk scenario data.
 		std::ostream& scen_data = scen_file.newFile("scenario/scenario.xml");
-		writeScenarioToXml(ticpp::Printer("scenario.xml", scen_data));
+		writeScenarioToXml(ticpp::Printer("scenario.xml", scen_data), scenario);
 		
 		// Then the terrains...
 		std::ostream& terrain = scen_file.newFile("scenario/terrain.xml");

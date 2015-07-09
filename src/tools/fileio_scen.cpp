@@ -42,6 +42,9 @@ static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& t
 static bool load_town_v1(fs::path scen_file,short which_town,cTown& the_town,legacy::scenario_data_type& scenario,std::vector<shop_info_t>& shops);
 // Load new scenarios
 static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_header);
+// Some of these are non-static so that the test cases can access them.
+ticpp::Document xmlDocFromStream(std::istream& stream, std::string name);
+void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario);
 
 bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header) {
 	// Before loading a scenario, we may need to pop scenario resource paths.
@@ -279,7 +282,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	return true;
 }
 
-static ticpp::Document xmlDocFromStream(std::istream& stream, std::string name) {
+ticpp::Document xmlDocFromStream(std::istream& stream, std::string name) {
 	std::string contents;
 	stream.seekg(0, std::ios::end);
 	contents.reserve(stream.tellg());
@@ -631,7 +634,7 @@ static void initialXmlRead(ticpp::Document& data, std::string root_tag, int& maj
 		throw xMissingAttr(type, "boes", data.FirstChildElement()->Row(), data.FirstChildElement()->Column(), fname);
 }
 
-static void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
+void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 	using namespace ticpp;
 	int maj, min, rev;
 	std::string fname, type, name, val;
@@ -1592,6 +1595,7 @@ static void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& sce
 			if(num_timers >= 8)
 				throw xBadNode(type, elem->Row(), elem->Column(), fname);
 			readTimerFromXml(*elem, town->timers[num_timers]);
+			town->timers[num_timers].node_type = 2;
 			num_timers++;
 		} else if(type == "flags") {
 			Iterator<Element> flag;

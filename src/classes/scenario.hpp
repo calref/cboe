@@ -67,8 +67,8 @@ public:
 	size_t which_town_start;
 	spec_num_t init_spec;
 	std::array<spec_loc_t,10> town_mods;
-	rectangle store_item_rects[3];
-	short store_item_towns[3];
+	std::array<rectangle,3> store_item_rects;
+	std::array<short,3> store_item_towns;
 	std::vector<cSpecItem> special_items;
 	std::vector<cQuest> quests;
 	std::vector<cShop> shops;
@@ -115,6 +115,7 @@ public:
 	bool is_monst_used(mon_num_t monst);
 	bool is_item_used(item_num_t item);
 	
+	void reset_version();
 	cScenario& operator=(cScenario&& other);
 	cScenario(cScenario&) = delete;
 	explicit cScenario();

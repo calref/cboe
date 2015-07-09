@@ -220,10 +220,31 @@
 		91B3EF590F969F3000BF5B67 /* scen.townout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */; };
 		91B3EF5A0F969F3000BF5B67 /* scen.btnmg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */; };
 		91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */; };
+		91BC33821B4388E80008882C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
+		91BC33831B4388E80008882C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
+		91BC33841B4388E80008882C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
+		91BC33851B4388E80008882C /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		91BC33861B4388E80008882C /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
+		91BC33871B4388E80008882C /* sfml-graphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
+		91BC33881B4388E80008882C /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
+		91BC33891B4388E80008882C /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
+		91BC338A1B4388E80008882C /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
+		91BC338B1B4388E80008882C /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
+		91BC338C1B4388E80008882C /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
+		91BC338D1B4388E80008882C /* vorbisenc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
+		91BC338E1B4388E80008882C /* vorbisfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
+		91BC338F1B4388E80008882C /* FLAC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
+		91BC33901B4388E80008882C /* libboost_filesystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
+		91BC33911B4388E80008882C /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system.dylib */; };
+		91BC33921B4388E80008882C /* libboost_thread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
+		91BC33981B4481EF0008882C /* scen.fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF20F969BA700BF5B67 /* scen.fileio.cpp */; };
 		91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91BFA3D61901B024001686E4 /* mask.vert */; };
 		91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */; };
 		91C749B81A2D6670008E0E10 /* strings in Copy Strings */ = {isa = PBXBuildFile; fileRef = 91C749B71A2D6432008E0E10 /* strings */; };
 		91C749BA1A2D670D008E0E10 /* dialogs in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91C749B91A2D66F7008E0E10 /* dialogs */; };
+		91CC173C1B421CA0003D9A69 /* catch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91CC17391B421CA0003D9A69 /* catch.cpp */; };
+		91CC173E1B421CA0003D9A69 /* scen_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91CC173B1B421CA0003D9A69 /* scen_write.cpp */; };
+		91CC17491B422D5C003D9A69 /* scen_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91CC173A1B421CA0003D9A69 /* scen_read.cpp */; };
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
 		91EF052C1904D099001BEF85 /* bold.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 91EF05291904D082001BEF85 /* bold.ttf */; };
 		91EF052D1904D099001BEF85 /* plain.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 91EF052A1904D082001BEF85 /* plain.ttf */; };
@@ -301,6 +322,20 @@
 			remoteInfo = Common;
 		};
 		9169C3081B379E8B0041002B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 919CC22C1B37721400273FDA;
+			remoteInfo = "Common-Party";
+		};
+		91BC33931B4390E40008882C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 919CC23A1B3772B700273FDA;
+			remoteInfo = Common;
+		};
+		91BC33951B4390E60008882C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
 			proxyType = 1;
@@ -686,6 +721,7 @@
 		91B3F10F0F9779D000BF5B67 /* soundtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = soundtool.cpp; sourceTree = "<group>"; };
 		91B3F11D0F97801F00BF5B67 /* mathutil.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mathutil.hpp; sourceTree = "<group>"; };
 		91B3F11E0F97801F00BF5B67 /* mathutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mathutil.cpp; sourceTree = "<group>"; };
+		91BC33971B439BEA0008882C /* files */ = {isa = PBXFileReference; lastKnownFileType = folder; path = files; sourceTree = "<group>"; };
 		91BFA3D61901B024001686E4 /* mask.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.vert; sourceTree = "<group>"; };
 		91BFA3D81902AD78001686E4 /* tarball.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tarball.cpp; sourceTree = "<group>"; };
 		91BFA3D91902ADD5001686E4 /* tarball.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tarball.hpp; sourceTree = "<group>"; };
@@ -695,6 +731,11 @@
 		91C688E70FD702B9000F6D01 /* cursors.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = cursors.mac.mm; sourceTree = "<group>"; };
 		91C749B71A2D6432008E0E10 /* strings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = strings; sourceTree = "<group>"; };
 		91C749B91A2D66F7008E0E10 /* dialogs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dialogs; sourceTree = "<group>"; };
+		91CC172D1B421C0A003D9A69 /* boe_test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = boe_test; sourceTree = BUILT_PRODUCTS_DIR; };
+		91CC17391B421CA0003D9A69 /* catch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = catch.cpp; sourceTree = "<group>"; };
+		91CC173A1B421CA0003D9A69 /* scen_read.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_read.cpp; sourceTree = "<group>"; };
+		91CC173B1B421CA0003D9A69 /* scen_write.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_write.cpp; sourceTree = "<group>"; };
+		91CC173F1B421CAA003D9A69 /* catch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = catch.hpp; sourceTree = "<group>"; };
 		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
 		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
 		91D635AC0F90E7B500674AB3 /* valleydy.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.exs; sourceTree = "<group>"; };
@@ -814,6 +855,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		91CC172A1B421C0A003D9A69 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91BC33821B4388E80008882C /* libz.dylib in Frameworks */,
+				91BC33831B4388E80008882C /* Cocoa.framework in Frameworks */,
+				91BC33841B4388E80008882C /* OpenGL.framework in Frameworks */,
+				91BC33851B4388E80008882C /* SFML.framework in Frameworks */,
+				91BC33861B4388E80008882C /* sfml-audio.framework in Frameworks */,
+				91BC33871B4388E80008882C /* sfml-graphics.framework in Frameworks */,
+				91BC33881B4388E80008882C /* sfml-system.framework in Frameworks */,
+				91BC33891B4388E80008882C /* sfml-window.framework in Frameworks */,
+				91BC338A1B4388E80008882C /* freetype.framework in Frameworks */,
+				91BC338B1B4388E80008882C /* ogg.framework in Frameworks */,
+				91BC338C1B4388E80008882C /* vorbis.framework in Frameworks */,
+				91BC338D1B4388E80008882C /* vorbisenc.framework in Frameworks */,
+				91BC338E1B4388E80008882C /* vorbisfile.framework in Frameworks */,
+				91BC338F1B4388E80008882C /* FLAC.framework in Frameworks */,
+				91BC33901B4388E80008882C /* libboost_filesystem.dylib in Frameworks */,
+				91BC33911B4388E80008882C /* libboost_system.dylib in Frameworks */,
+				91BC33921B4388E80008882C /* libboost_thread.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -825,11 +890,13 @@
 				91B3EF380F969E4A00BF5B67 /* osx */,
 				91B3EEF90F969BBD00BF5B67 /* CharEd */,
 				91B3EECD0F969B7000BF5B67 /* ScenEd */,
+				91CC17281B421BD5003D9A69 /* test */,
 				91B3EF220F969CA300BF5B67 /* rsrc */,
 				914B2AA018E7E4A3007B6799 /* Linked Frameworks */,
 				9169C31B1B37A5D50041002B /* Blades of Exile.app */,
 				9169C31D1B37A5D50041002B /* Blades of Exile Character Editor.app */,
 				9169C31F1B37A5D50041002B /* BoE Scenario Editor.app */,
+				91CC172D1B421C0A003D9A69 /* boe_test */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1205,6 +1272,35 @@
 			path = gzstream;
 			sourceTree = "<group>";
 		};
+		91CC17281B421BD5003D9A69 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				91CC17371B421C83003D9A69 /* headers */,
+				91CC17381B421C92003D9A69 /* src */,
+				91BC33971B439BEA0008882C /* files */,
+			);
+			name = test;
+			path = ../test;
+			sourceTree = "<group>";
+		};
+		91CC17371B421C83003D9A69 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				91CC173F1B421CAA003D9A69 /* catch.hpp */,
+			);
+			name = headers;
+			sourceTree = "<group>";
+		};
+		91CC17381B421C92003D9A69 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				91CC17391B421CA0003D9A69 /* catch.cpp */,
+				91CC173A1B421CA0003D9A69 /* scen_read.cpp */,
+				91CC173B1B421CA0003D9A69 /* scen_write.cpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
 		91D62F2C0F8EB7AB00674AB3 /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -1407,6 +1503,24 @@
 			productReference = 9169C31F1B37A5D50041002B /* BoE Scenario Editor.app */;
 			productType = "com.apple.product-type.application";
 		};
+		91CC172C1B421C0A003D9A69 /* boe_test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 91CC17341B421C0A003D9A69 /* Build configuration list for PBXNativeTarget "boe_test" */;
+			buildPhases = (
+				91CC17291B421C0A003D9A69 /* Sources */,
+				91CC172A1B421C0A003D9A69 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				91BC33941B4390E40008882C /* PBXTargetDependency */,
+				91BC33961B4390E60008882C /* PBXTargetDependency */,
+			);
+			name = boe_test;
+			productName = boe_test;
+			productReference = 91CC172D1B421C0A003D9A69 /* boe_test */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1435,6 +1549,7 @@
 				91B3EF170F969C2200BF5B67 /* Blades of Exile Character Editor */,
 				91B3EF3E0F969F0000BF5B67 /* BoE Scenario Editor */,
 				91EBE9DA0F9A33A1002356F2 /* All */,
+				91CC172C1B421C0A003D9A69 /* boe_test */,
 			);
 		};
 /* End PBXProject section */
@@ -1664,6 +1779,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		91CC17291B421C0A003D9A69 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91CC173C1B421CA0003D9A69 /* catch.cpp in Sources */,
+				91CC173E1B421CA0003D9A69 /* scen_write.cpp in Sources */,
+				91CC17491B422D5C003D9A69 /* scen_read.cpp in Sources */,
+				91BC33981B4481EF0008882C /* scen.fileio.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1706,6 +1832,16 @@
 			isa = PBXTargetDependency;
 			target = 919CC22C1B37721400273FDA /* Common-Party */;
 			targetProxy = 9169C3081B379E8B0041002B /* PBXContainerItemProxy */;
+		};
+		91BC33941B4390E40008882C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 919CC23A1B3772B700273FDA /* Common */;
+			targetProxy = 91BC33931B4390E40008882C /* PBXContainerItemProxy */;
+		};
+		91BC33961B4390E60008882C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 919CC22C1B37721400273FDA /* Common-Party */;
+			targetProxy = 91BC33951B4390E60008882C /* PBXContainerItemProxy */;
 		};
 		91EBE9DE0F9A33A6002356F2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2050,6 +2186,31 @@
 			};
 			name = Release;
 		};
+		91CC17351B421C0A003D9A69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = (
+					"-lboost_system",
+					"-lboost_filesystem",
+					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
+					"-lCommon",
+					"-lCommon-Party",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		91CC17361B421C0A003D9A69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		91EBE9DB0F9A33A1002356F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2129,6 +2290,15 @@
 			buildConfigurations = (
 				91B3EF420F969F0100BF5B67 /* Debug */,
 				91B3EF430F969F0100BF5B67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		91CC17341B421C0A003D9A69 /* Build configuration list for PBXNativeTarget "boe_test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				91CC17351B421C0A003D9A69 /* Debug */,
+				91CC17361B421C0A003D9A69 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
