@@ -105,7 +105,7 @@ are not yet supported.)
 * `h` - Indicates a horse that belongs to the party. Argument is the index of the horse in
 the global list.
 * `H` - As above, except the horse does not belong to the party.
-* `b` - Indicates a boat that belongs to the party. Argument is the index of the horse in
+* `b` - Indicates a boat that belongs to the party. Argument is the index of the boat in
 the global list.
 * `B` - As above, except the boat does not belong to the party.
 
@@ -116,12 +116,19 @@ All XML documents used in the scenario format require a `boes` attribute on thei
 node, which should be set to `2.0.0`. This is a way to indicate the _format version_; if
 the format ever changes, the value of this attribute will also be changed.
 
+Some elements that contain text content are automatically wrapped in a `CDATA` declaration
+by the scenario editor. The rest are never wrapped in a `CDATA` declaration. As a result,
+while the game will correctly load `CDATA` declarations in any text element, it's only
+safe to use them in elements where the scenario editor would use one.
+
 There are some types that are common:
 
 * Booleans - a boolean is one of the strings "`true`" or "`false`".
 * Points - a point is an element with two attributes, `x` and `y`. It has no content.
-* Rects - a rect is an element with four attributes: `top`, `left`, `bottom`, and `right`. It has no content
-* Timers - a timer is an element whose content is the node to call, with an attribute `freq` specifying how many moves to wait between calls.
+* Rects - a rect is an element with four attributes: `top`, `left`, `bottom`, and `right`.
+It has no content
+* Timers - a timer is an element whose content is the number of the node to call, with an
+attribute `freq` specifying how many moves to wait between calls.
 
 Scenario Header
 ---------------
@@ -257,5 +264,47 @@ shop ID 0. Shops require the following subtags:
 of this element in a `CDATA` declaration.
 * `<journal>` - (max unbounded) A journal string. The scenario editor wraps the contents
 of this element in a `CDATA` declaration.
+
+The `<editor>` element can have the following child tags:
+
+* `<default-ground>` - (required) The default ground used for new areas. Currently this is
+set to 0 or 2 at scenario creation, and no way to change it is offered in the scenario
+editor UI.
+* `<last-out-section>` - (required) The most-recently-edited outdoor sector, as a point.
+* `<last-town>` - (required) The number of the most-recently-edited town.
+* `<graphics>` - Stores the classification of your custom graphics. For each classified
+graphic, a `<pic>` child element is used, with an `index` property specifying the number
+of the graphic (_sheet_ * 100 + _row_ * 10 + _col_). The content of this element specifies
+the type of graphic as an integer; the following values are valid:
+	* 0 or 11 - This specifies that the graphic is either unused or part of another
+	graphic that starts in an earlier slot. However, this is also the default for any
+	slots that don't have a `<pic>` element referencing them.
+	* 1 - Specifies that the slot contains a non-animated terrain graphic.
+	* 2 - Specifies that the slot contains the first from of an animated terrain graphic.
+	* 15 - Specifies that the slot contains six terrain map icons.
+	* 3 - Specifies that the slot contains the first frame of a single-space monster.
+	* 23 - Specifies that the slot contains the left half of the first frame of a wide
+	two-space monster.
+	* 43 - Specifies that the slot contains the top half of the first frame of a tall
+	two-space monster.
+	* 63 - Specifies that the slot contains the top left quadrant of the first frame of a
+	four-space monster.
+	* 4 - Specifies that the slot contains the left half of a dialog graphic.
+	* 13 - Specifies that the slot contains the left half of the top left quadrant of a
+	dialog graphic.
+	* 5 - Specifies that the slot contains the left half of a talk portrait.
+	* 7 - Specifies that the slot contains a full-space item graphic.
+	* 10 - Specifies that the slot contains the first frame of an animated explosion.
+	* 12 - Specifies that the slot contains the first two frames of a missile animation.
+* `<storage>` - (max 10) Defines one quick item placement shortcut. It has the following
+subtags:
+	* `<on-terrain>` - Specifies the terrain type to which this shortcut applies.
+	* `<is-property>` - A boolean specifying whether the items in this shortcut should
+	belong to someone other than the party.
+	* `<item>` - (max 10) Specifies which item to place. It has a required `chance`
+	attribute to give the chance of placing this item.
+* `<sound>` - (max unbounded) Gives a name for a custom sound (ID 100 or greater). These
+names are used when showing the Pick Sound dialog in various places. The required `id`
+attribute specifies which sound it applies to.
 
 (...more to come...)
