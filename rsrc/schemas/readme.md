@@ -307,4 +307,187 @@ subtags:
 names are used when showing the Pick Sound dialog in various places. The required `id`
 attribute specifies which sound it applies to.
 
+Terrain Types
+-------------
+
+The _terrain.xml_ file stores the definitions of all terrain types in the scenario. The
+only toplevel tag is `<terrain>`, of which there can be any number. The `<terrain>`
+element also has a required `id` attribute which must be unique. The following tags are
+allowed in a `<terrain>` element:
+
+* `<name>` - (required) The name of the terrain type.
+* `<pic>` - (required) The terrain's graphic number.
+* `<map>` - (required) The terrain's map graphic.
+* `<blockage>` - (required) The terrain's blockage level. Must be one of `none`, `move`,
+`monsters`, `sight`, `move-and-shoot`, `move-and-sight`.
+* `<special>` - (required) The terrain's special ability. This element requires a `<type>`
+subtag which holds a string representing the type of ability (for a list of valid values,
+search for `eTerSpec` in [estreams.cpp](../../src/classes/estreams.cpp)). It can also
+contain up to three `<flag>` fields which hold the integer values of the three terrain
+special flags, in order.
+* `<transform>` - The terrain type to transform to when a Transform special node is
+invoked.
+* `<fly>` - A boolean indicating whether the terrain can be flown over.
+* `<boat>` - A boolean indicating whether the terrain can be boated over.
+* `<ride>` - A boolean indicating whether horses can be ridden across the terrain. Note
+that this is the inverse of the "Blocked to Horses" flag in the scenario editor.
+* `<archetype>` - A boolean indicating whether this terrain should be considered the
+archetype for its ground type. There should be exactly one archetype for a given ground
+type.
+* `<light>` - An integer specifying the radius of light emitted by this terrain.
+* `<step-sound>` - The sound to play when you step on this terrain. Must be one of `step`,
+`crunch`, `squish`, `splash`, `none`.
+* `<trim>` - (required) The trim type of this terrain. Must be one of `none`, `wall`, `s`,
+`n`, `e`, `w`, `sw`, `ne`, `se`, `nw`, `sw-inner`, `ne-inner`, `se-inner`, `nw-inner`,
+`frills`, `road`, `walkway`, `waterfall`, `city`.
+* `<arena>` - (required) The combat arena to use if outdoor combat is initiated while the
+party is on this space.
+* `<ground>` - The ground type of this terrain.
+* `<trim-for>` - The ground type of the terrain for which this terrain is a trim.
+* `<editor>` - Some editor-specific settings. It supports the following subtags:
+	* `<shortcut>` - The shortcut key to select this terrain (should be a letter).
+	* `<object>` - Information about a large multi-space object, such as a pentacle or
+	large pile of rubble - when you place one part of the object, the editor uses this
+	information to place the remaining parts at the same time. It requires three subtags:
+	`<num>`, which carries a unique integer identifying the object; `<pos>`, which is a
+	point indicating the location of this terrain within the object's whole; and `<size>`,
+	a point specifying the size of the object.
+
+Item Types
+----------
+
+The _items.xml_ file stores the definitions of all the items in the scenario. The only
+toplevel tag is `<item>`, of which there can be any number. The `<item>` element also has
+a required `id` attribute which must be unique. The following tags are allowed in a
+`<item>` element:
+
+* `<variety>` - (required) A string indicating the type of item this is. For a list of
+valid values, search for `eItemType` in [estreams.cpp](../../src/classes/estreams.cpp).
+* `<level>` - (required) The item level.
+* `<awkward>` - The item's encumbrance level.
+* `<bonus>` - The item's bonus.
+* `<protection>` - The item's protection level.
+* `<charges>` - The number of charges the item usually has.
+* `<weapon-type>` - The key skill for the weapon (only if it's melee weapon, bow,
+crossbow, or missile with no ammo). For a list of valid values, search for `eSkill` in
+[estreams.cpp](../../src/classes/estreams.cpp).
+* `<missile-type>` - The missile animation to use (only if it's actually a missile -
+arrows, bolts, thrown missiles, or missiles with no ammo).
+* `<pic>` - (required) The graphic to use.
+* `<flag>` - The item's type flag.
+* `<value>` - (required) The item's monetary value.
+* `<weight>` - (required) The item's weight.
+* `<class>` - The item's special class.
+* `<name>` - The item's short (unidentified) name.
+* `<full-name>` - The item's full (identified) name.
+* `<treasire>` - The item's treasure class.
+* `<ability>` - The item's special ability. This element requires three subtags:
+	* `<type>` - The type of ability, as a string. For a list of valid values, search for
+	`eItemAbil` in [estreams.cpp](../../src/classes/estreams.cpp).
+	* `<strength>` - The item's ability strength.
+	* `<data>` - The item's ability data.
+	* `<use-flag>` - (optional) The item's magic use flag. Must be one of `harm-one`,
+	`help-one`, `harm-all`, `help-all`.
+* `<properties>` - Contains several boolean subtags specifying properties of this item.
+Recognized subtags are `<identified>` (indicating it is _always_ identified), `<magic>`,
+`<cursed>`, `<concealed>`, `<enchanted>`, `<unsellable>`. Note that the editor UI gives no
+access to the `<enchanted>` flag.
+* `<description>` - A description of the item. The scenario editor wraps the contents of
+this element in a `CDATA` declaration.
+
+Monster Types
+-------------
+
+The _monsters.xml_ file stores the definitions of all the monsters in the scenario. The
+only toplevel tag is `<monster>`, of which there can be any number. The `<monster>`
+element also has a required `id` attribute which must be unique. The following tags are
+allowed in a `<monster>` element:
+
+* `<name>` - (required) The name of the monster.
+* `<level>` - (required) The monster's level.
+* `<armor>` - (required) The monster's armor rating.
+* `<skill>` - (required) The monster's melee combat skill.
+* `<hp>` - (required) The monster's maximum hit points.
+* `<speed>` - (required) The monster's base action points.
+* `<treasure>` - The treasure class the monster drops upon death.
+* `<mage>` - The monster's mage spells skill.
+* `<priest>` - The monster's priest spells skill.
+* `<race>` - The monster's species. For a list of valid values, search for `eRace` in
+[estreams.cpp](../../src/classes/estreams.cpp).
+* `<abilities>` - The monster's special abilities.
+* `<attacks>` - The monster's melee attacks. This can contain up to three `<attack>`
+elements, the contents of which are a dice expression (eg `3d6`). The `<attack>` element
+also requires a `type` attribute specifying the type of attack. For a list of valid
+values, search for `eMonstMelee` in [estreams.cpp](../../src/classes/estreams.cpp).
+* `<pic>` - (required) The monster's graphic.
+* `<default-face>` - The monster's default talking portrait.
+* `<onsight>` - A special node to call the first time the party sights a monster of this
+type.
+* `<voice>` - A sound to occasionally play when this monster is in sight.
+* `<summon>` - The monster's summoning level.
+* `<attitude>` - The monster's default attitude. Must be one of `friendly`, `docile`,
+`hostile-a`, `hostile-b`.
+* `<immunity>` - The monster's immunities. It can contain two boolean subtags (`<all>`,
+indicating invulnerability, and `<fear>`, indicating the "mindless" ability) and four
+integer subtags (`<fire>`, `<cold>`, `<poison>`, `<magic>`).
+* `<loot>` - Specifies an item that the monster drops on death. The `<type>` subtags
+specifies which item while the `<chance>` subtag specifies the likelihood of dropping it.
+
+The `<abilities>` tag can have any of the following subtags:
+
+* `<invisible>` - An empty element whose presence indicates that the monster is
+permanently invisible.
+* `<guard>` - An empty subtag whose presence indicates that the monster will seek out the
+party if the town goes hostile.
+* `<general>` - Requires the following attributes and subtags:
+	* `type=` - Must be one of `dmg`, `dmg2`, `status`, `status2`, `field`, `petrify`,
+	`drain-sp`, `drain-xp`, `steal-food`, `steal-gold`, `kill`, `stun`.
+	* `<type>` - Must be one of `ray`, `touch`, `gaze`, `breath`, `spit`.
+	* `<missile>` - (not if `<type>touch</type>`) The missile graphic.
+	* `<strength>` - The ability strength.
+	* `<range>` - (not if `<type>touch</touch>`) The ability range.
+	* `<chance>` - Percentage chance of activating the ability. Tenths are supported (eg
+	12.5).
+	* `<extra>` - (only if `type="dmg"`, `type="dmg2"`) The type of damage to deal. Must
+	be one of `weap`, `fire`, `poison`, `magic`, `unblockable`, `cold`, `undead`, `demon`,
+	`spec`.
+	* `<extra>` - (only if `type="status"`, `type="status2"`, `type="stun"`) The type of
+	status effect to afflict. For a list of valid values, search for `eStatus` in
+	[estreams.cpp](../../src/classes/estreams.cpp).
+	* `<extra>` - (only if `type="field"`) The type of field to create. For a list of
+	valid values, search for `eFieldType` in [estreams.cpp](../../src/classes/estreams.cpp),
+	but note that `explored` and `spec-spot` are not allowed.
+* `<missile>` - Requires the following attributes and subtags:
+	* `type=` - Must be `missile`.
+	* `<type>` - Must be one of `arrow`, `arrow++`, `dart`, `spear`, `stone`, `star`,
+	`spine`, `knife`, `bolt`, `boulder`.
+	* `<missile>` - The missile graphic.
+	* `<strength>` - The ability strength.
+	* `<skill>` - The monster's missile weapons skill.
+	* `<range>` - The ability range.
+	* `<chance>` - Percentage chance of activating the ability. Tenths are supported (eg
+	12.5).
+* `<summon>` - Requires the following attributes and subtags:
+	* `type=` - Must be `summon`.
+	* `<type>` - Must be one of `type`, `lvl`, `race`.
+	* `<min>`, `<max>` - Specifies how many helpers to summon.
+	* `<duration>` - How long the helpers will stay.
+	* `<chance>` - Percentage chance of activating the ability. Tenths are supported (eg
+	12.5).
+* `<radiate>` - Requires the following attributes and subtags:
+	* `type=` - Myst be `radiate`.
+	* `<type>` - The type of field to radiate. For a list of valid values, search for
+	`eFieldType` in [estreams.cpp](../../src/classes/estreams.cpp), but note that
+	`explored` and `spec-spot` are not allowed.
+	* `<chance>` - Percentage chance of activating the ability. Tenths are supported (eg
+	12.5).
+* `<special>` - Requires the following attributes and subtags:
+	* `type=` - Must be one of `splits`, `martyr`, `absorb`, `old-web`, `old-heat`,
+	`spec-act`, `spec-hit`, `spec-death`.
+	* `<param>` - (optional, max 3) A parameter for the ability. The meaning of this
+	depends on the value of the `type` attribute.
+
+As mentioned, each of the above elements (except the first two) has a required `type`
+attribute. There can only be one element with a given value of `type`.
+
 (...more to come...)
