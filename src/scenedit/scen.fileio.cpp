@@ -748,8 +748,10 @@ static void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		if(preset.time_flag != eMonstTime::ALWAYS) {
 			data.OpenElement("time");
 			data.PushAttribute("type", preset.time_flag);
-			data.PushElement("param", preset.monster_time);
-			data.PushElement("param", preset.time_code);
+			if(preset.time_flag == eMonstTime::APPEAR_ON_DAY || preset.time_flag == eMonstTime::DISAPPEAR_ON_DAY || preset.time_flag == eMonstTime::APPEAR_WHEN_EVENT || preset.time_flag == eMonstTime::DISAPPEAR_WHEN_EVENT)
+				data.PushElement("day", preset.monster_time);
+			if(preset.time_flag == eMonstTime::APPEAR_WHEN_EVENT || preset.time_flag == eMonstTime::DISAPPEAR_WHEN_EVENT)
+				data.PushElement("event", preset.time_code);
 			data.CloseElement("time");
 		}
 		data.CloseElement("creature");

@@ -157,7 +157,7 @@
 								<xs:element name="property" type="bool" minOccurs="0"/>
 								<xs:element name="contained" type="bool" minOccurs="0"/>
 							</xs:all>
-							<xs:attribute name="id" type="xs:integer"/>
+							<xs:attribute name="id" type="xs:integer" use="required"/>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="creature" minOccurs="0">
@@ -174,9 +174,10 @@
 								<xs:element name="encounter" type="xs:integer" minOccurs="0"/>
 								<xs:element name="time" minOccurs="0">
 									<xs:complexType>
-										<xs:sequence>
-											<xs:element name="param" maxOccurs="2" type="xs:integer"/>
-										</xs:sequence>
+										<xs:all>
+											<xs:element name="day" minOccurs="0" type="xs:integer"/>
+											<xs:element name="event" minOccurs="0" type="xs:integer"/>
+										</xs:all>
 										<xs:attribute name="type" use="required">
 											<xs:simpleType>
 												<xs:restriction base="xs:string">
@@ -199,7 +200,7 @@
 								<xs:element name="onkill" type="xs:integer" minOccurs="0"/>
 								<xs:element name="ontalk" type="xs:integer" minOccurs="0"/>
 							</xs:all>
-							<xs:attribute name="id" type="xs:integer"/>
+							<xs:attribute name="id" type="xs:integer" use="required"/>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="area">
