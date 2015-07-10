@@ -355,7 +355,13 @@
 					<xs:complexType>
 						<xs:simpleContent>
 							<xs:extension base="xs:string">
-								<xs:attribute name="id" type="xs:integer" use="required"/>
+								<xs:attribute name="id" use="required">
+									<xs:simpleType>
+										<xs:restriction base="xs:integer">
+											<xs:minInclusive value="100"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
 							</xs:extension>
 						</xs:simpleContent>
 					</xs:complexType>

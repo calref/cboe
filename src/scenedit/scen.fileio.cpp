@@ -347,7 +347,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	for(int i = 0; i < scenario.snd_names.size(); i++) {
 		if(scenario.snd_names[i].empty()) continue;
 		data.OpenElement("sound");
-		data.PushAttribute("id", i);
+		data.PushAttribute("id", i + 100);
 		data.PushText(scenario.snd_names[i]);
 		data.CloseElement("sound");
 	}

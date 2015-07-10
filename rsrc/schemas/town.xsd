@@ -14,6 +14,14 @@
 			<xs:enumeration value="w"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="monsterAttitude">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="docile"/>
+			<xs:enumeration value="friendly"/>
+			<xs:enumeration value="hostile-a"/>
+			<xs:enumeration value="hostile-b"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:attributeGroup name="rect">
 		<xs:attribute name="top" use="required" type="xs:integer"/>
 		<xs:attribute name="left" use="required" type="xs:integer"/>
@@ -156,7 +164,7 @@
 						<xs:complexType>
 							<xs:all>
 								<xs:element name="type" type="xs:integer"/>
-								<xs:element name="attitude" type="xs:integer"/>
+								<xs:element name="attitude" type="monsterAttitude"/>
 								<xs:element name="mobility" type="xs:integer"/>
 								<xs:element name="sdf" minOccurs="0">
 									<xs:complexType>

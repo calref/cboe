@@ -37,6 +37,14 @@
 			<xs:enumeration value="skeletal"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="monsterAttitude">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="docile"/>
+			<xs:enumeration value="friendly"/>
+			<xs:enumeration value="hostile-a"/>
+			<xs:enumeration value="hostile-b"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="permille">
 		<xs:restriction base="xs:decimal">
 			<xs:fractionDigits value="1"/>
@@ -346,7 +354,7 @@
 				<xs:element name="onsight" minOccurs="0" type="xs:integer"/>
 				<xs:element name="voice" minOccurs="0" type="xs:integer"/>
 				<xs:element name="summon" minOccurs="0" type="xs:integer"/>
-				<xs:element name="attitude" type="xs:integer"/>
+				<xs:element name="attitude" type="monsterAttitude"/>
 				<xs:element name="immunity">
 					<xs:complexType>
 						<xs:all>

@@ -821,6 +821,9 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					edit->GetText(&scenario.last_town_edited);
 				} else if(type == "sound") {
 					edit->GetAttribute("id", &sndnum);
+					if(sndnum < 100)
+						throw xBadVal(type, "id", std::to_string(sndnum), edit->Row(), edit->Column(), fname);
+					sndnum -= 100;
 					if(sndnum >= scenario.snd_names.size())
 						scenario.snd_names.resize(sndnum + 1);
 					edit->GetText(&scenario.snd_names[sndnum], false);
