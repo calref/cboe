@@ -1778,14 +1778,14 @@ void handle_keystroke(sf::Event event) {
 			break;
 			
 		default:
-			if((chr >= 97) && (chr <= 122)) {
+			if(chr >= 'a' && chr <= 'z') {
 				for(i = 0; i < scenario.ter_types.size(); i++) {
 					j = current_terrain_type + i + 1;
-					j = j % 256;
+					j = j % scenario.ter_types.size();
 					if(scenario.ter_types[j].shortcut_key == chr) {
 						set_new_terrain(j);
 						place_location();
-						i = 256;
+						break;
 					}
 				}
 				
