@@ -43,6 +43,12 @@ for speech in $SCEN_PATH/towns/talk*.xml; do
 	check-file dialogue "$speech"
 done
 
+if [[ -d $SCEN_PATH/dialogs/ ]]; then
+	for dlog in $SCEN_PATH/dialogs/*.xml; do
+		check-file dialog "$dlog"
+	done
+fi
+
 if [[ $SCEN_PATH = scenario ]]; then
 	rm -rf scenario
 fi
