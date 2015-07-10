@@ -34,9 +34,7 @@ the following files:
 		* out*X*~*Y*.map - Contains the map data for outdoors sector (_X_,_Y_).
 	* graphics/ - (optional)
 		* sheet*X*.png - (optional) Custom graphics sheet ID _X_.
-		* objects.png, tinyobj.png, fields.png, trim.png, booms.png, missiles.png,
-		dlogpics.png, staticons.png, teranim.png, talkportraits.png, pcs.png, vehicle.png,
-		termap.png - (optional) Overrides the default graphic sheets of the same name.
+		* «various» (optional) Override the default graphic sheets of the same name.
 	* sounds/ - (optional)
 		* SND*X*.wav - (optional) A custom sound with ID _X_. If _X_ < 100, the sound will
 		override the default sound with the same ID.
@@ -47,6 +45,9 @@ If you have a _scenario_ directory with the proper structure, it can be turned i
 valid scenario with the following shell command:
 
 	tar -zcf scenname.boes scenario
+
+(This should work on the Windows command-line too, assuming you have `tar.exe` installed
+and in the `%PATH%` or current directory.)
 
 Special Nodes
 -------------
@@ -72,8 +73,8 @@ In addition, `nop` is also a valid opcode.
 A `«comment»` is any sequence of characters starting with the `#` character and ending
 with a newline.
 
-Note that, although the format supports defined constants using `def`, the scenario never
-writes defined constants.
+Note that, although the format supports defined constants using `def`, the scenario editor
+never writes defined constants.
 
 Map Data
 --------
@@ -599,4 +600,89 @@ subtags:
 	* `<onkill>` - A special node to call when this creature dies.
 	* `<ontalk>` - A special node to call when attempting to talk to this creature.
 
-(...more to come...)
+Conversations
+-------------
+
+The _talk**N**.xml_ files (where **N** is substituted with number of the town) store most
+of the dialogue for a single town. The root element is `<dialogue>`. It contains up to 10
+`<personality>` subtags, followed by any number of `<node>` subtags.
+
+The `<personality>` element requires the following subtags:
+* `<title>` - The name of the person.
+* `<look>` - The person's response to "look". The scenario editor wraps the contents of
+this element in a `CDATA` declaration.
+* `<name>` - The person's response to "name". The scenario editor wraps the contents of
+this element in a `CDATA` declaration.
+* `<job>` - The person's response to "job". The scenario editor wraps the contents of this
+element in a `CDATA` declaration.
+* `<unknown>` - The person's response when they don't have a response. The scenario editor
+wraps the contents of this element in a `CDATA` declaration.
+
+A `<personality>` element requires an `id` subtag with a value in the closed interval
+[10*N*, 10(*N* + 1) - 1], where _N_ is the town number encoded into the filename. 
+
+The `<node>` element requires the following subtags:
+* `<keyword>` - (max 2) A four-letter keyword that triggers this node.
+* `<type>` - The type of node, as a string. For a list of valid values, search for
+eTalkNode in [estreams.cpp](../../src/classes/estreams.cpp).
+* `<param>` - (optional, max 4) These elements specify, in order, the A, B, C, D
+parameters of the node.
+* `<text>` - (max 2) One text response string.  The scenario editor wraps the contents of
+this element in a `CDATA` declaration.
+
+A `<node>` element requires a `for` subtag which must either reference the `id` subtag on
+a `<personality>` element in the same file or contain one of the values `-1` or `-2`. Note
+that a node with `for="-1"` is an unused node which is usually stripped out when saving
+(unless it contains at least one non-empty `<text>`).
+
+Custom Dialogs
+--------------
+
+There's a detailed description of the dialog format [here](../../src/doxy/mainpage.md).
+However, when support for custom dialogs is actually implemented, there will probably be
+additional restrictions, which will then be documented here.
+
+Custom Sounds and Graphics
+--------------------------
+
+You can include custom graphics sheets by naming the files _sheet**X**.png_, where **X**
+is an integer starting from 0. There are two types of custom graphics sheets. The first
+contiguous range of sheets are taken as _primary sheets_ and used for locating arbitrary
+custom graphics. Any additional sheets are only accessible as _full sheets_ in a Display
+Picture special node. Primary sheets should always be 280x360; full sheets can be any size
+you like.
+
+For example, if you have the following files in the _graphics/_ subdirectory of the
+scenario package:
+- sheet0.png
+- sheet1.png
+- sheet2.png
+- sheet10.png
+
+Then you have access to custom graphics slots 0-299 (0-99 on _sheet0.png_, 100-199 on
+_sheet1.png_, 200-299 on _sheet2.png_), but you can't reference custom graphics slots
+1000-1099, even though you have a _sheet10.png_. However, you can reference sheet 10
+directly in a Display Picture special node.
+
+You can also override preset graphics by putting a file in the _graphics/_ directory whose
+name exactly matches one of the preset graphics files. The following preset graphics
+sheets can currently be overridden by including a file with the same name inside the
+scenario package:
+- objects.png
+- tinyobj.png
+- fields.png
+- trim.png
+- booms.png
+- missiles.png
+- dlogpics.png
+- staticons.png
+- teranim.png
+- talkportraits.png
+- pcs.png
+- vehicle.png
+- termap.png
+
+You can include custom sounds by naming the files _SND**X**.png_, where **X** is an
+integer starting from 0. Sounds with IDs 0-99 will override the preset sound of the same
+ID, so usually you'll want to start your sounds at ID 100. The scenario editor won't allow
+you to add sounds with IDs less than 100.
