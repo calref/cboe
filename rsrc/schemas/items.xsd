@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:simpleType name="bool">
-		<xs:restriction base="xs:token">
-			<xs:enumeration value="true"/>
-			<xs:enumeration value="false"/>
-		</xs:restriction>
-	</xs:simpleType>
+	<xs:include schemaLocation="common.xsd"/>
 	<xs:simpleType name="itemVariety">
 		<xs:restriction base="xs:token">
 			<xs:enumeration value="none"/>

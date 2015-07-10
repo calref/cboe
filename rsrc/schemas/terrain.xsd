@@ -1,29 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:simpleType name="bool">
-		<xs:restriction base="xs:token">
-			<xs:enumeration value="true"/>
-			<xs:enumeration value="false"/>
-		</xs:restriction>
-	</xs:simpleType>
+	<xs:include schemaLocation="common.xsd"/>
 	<xs:complexType name="point">
-		<xs:attribute name="x" use="required" type="xs:integer"/>
-		<xs:attribute name="y" use="required" type="xs:integer"/>
+		<xs:attributeGroup ref="point"/>
 	</xs:complexType>
 	<xs:simpleType name="key">
 		<xs:union>
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:enumeration value="0"/>
-					<xs:enumeration value="1"/>
-					<xs:enumeration value="2"/>
-					<xs:enumeration value="3"/>
-					<xs:enumeration value="4"/>
-					<xs:enumeration value="5"/>
-					<xs:enumeration value="6"/>
-					<xs:enumeration value="7"/>
-					<xs:enumeration value="8"/>
-					<xs:enumeration value="9"/>
 					<xs:enumeration value="a"/>
 					<xs:enumeration value="b"/>
 					<xs:enumeration value="c"/>
@@ -50,28 +34,6 @@
 					<xs:enumeration value="x"/>
 					<xs:enumeration value="y"/>
 					<xs:enumeration value="z"/>
-					<xs:enumeration value="`"/>
-					<xs:enumeration value="-"/>
-					<xs:enumeration value="="/>
-					<xs:enumeration value="["/>
-					<xs:enumeration value="]"/>
-					<xs:enumeration value="\"/>
-					<xs:enumeration value=";"/>
-					<xs:enumeration value="'"/>
-					<xs:enumeration value=","/>
-					<xs:enumeration value="."/>
-					<xs:enumeration value="/"/>
-					<xs:enumeration value="left"/>
-					<xs:enumeration value="right"/>
-					<xs:enumeration value="up"/>
-					<xs:enumeration value="down"/>
-					<xs:enumeration value="esc"/>
-					<xs:enumeration value="enter"/>
-					<xs:enumeration value="return"/>
-					<xs:enumeration value="tab"/>
-					<xs:enumeration value="help"/>
-					<xs:enumeration value="space"/>
-					<xs:enumeration value="none"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:union>

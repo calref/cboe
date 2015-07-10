@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:simpleType name="bool">
-		<xs:restriction base="xs:token">
-			<xs:enumeration value="true"/>
-			<xs:enumeration value="false"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:attributeGroup name="rect">
-		<xs:attribute name="top" use="required" type="xs:integer"/>
-		<xs:attribute name="left" use="required" type="xs:integer"/>
-		<xs:attribute name="bottom" use="required" type="xs:integer"/>
-		<xs:attribute name="right" use="required" type="xs:integer"/>
-	</xs:attributeGroup>
-	<xs:attributeGroup name="point">
-		<xs:attribute name="x" use="required" type="xs:integer"/>
-		<xs:attribute name="y" use="required" type="xs:integer"/>
-	</xs:attributeGroup>
+	<xs:include schemaLocation="common.xsd"/>
 	<xs:complexType name="encounter">
 		<xs:sequence>
 			<xs:element name="monster" minOccurs="1" maxOccurs="10">
