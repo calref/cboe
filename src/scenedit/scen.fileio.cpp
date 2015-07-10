@@ -794,7 +794,8 @@ static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_nu
 	}
 	for(size_t i = 0; i < talk.talk_nodes.size(); i++) {
 		cSpeech::cNode& node = talk.talk_nodes[i];
-		if(node.personality == -1) continue;
+		// Don't drop unused nodes if they still contain text
+		if(node.personality == -1 && node.str1.empty() && node.str2.empty()) continue;
 		// TODO: Is it safe to assume the two links run together like this?
 		if(std::string(node.link1, 8) == "xxxxxxxx" && node.str1.empty() && node.str2.empty())
 			continue;
