@@ -1705,11 +1705,10 @@ static void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& sce
 					monst->GetText(&npc.spec_enc_code);
 				} else if(type == "time") {
 					monst->GetAttribute("type", &npc.time_flag);
-					Element* first_param = monst->FirstChildElement("param");
-					first_param->GetText(&npc.monster_time);
-					try {
-						first_param->NextSiblingElement("param")->GetText(&npc.time_code);
-					} catch(ticpp::Exception) {}
+					Element* param = monst->FirstChildElement("day", false);
+					if(param) param->GetText(&npc.monster_time);
+					param = monst->FirstChildElement("event", false);
+					if(param) param->GetText(&npc.time_code);
 				} else if(type == "face") {
 					monst->GetText(&npc.facial_pic);
 				} else if(type == "personality") {
