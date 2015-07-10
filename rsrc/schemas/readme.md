@@ -133,8 +133,8 @@ attribute `freq` specifying how many moves to wait between calls.
 Scenario Header
 ---------------
 
-The _scenario.xml_ file stores most of the global scenario data. The following toplevel
-tags are required:
+The _scenario.xml_ file stores most of the global scenario data. The root element is
+`<scenario>`, and the following toplevel tags are required:
 
 * `<title>` - Contains the scenario name.
 * `<icon>` - Contains an integer specifying the scenario icon.
@@ -311,9 +311,9 @@ Terrain Types
 -------------
 
 The _terrain.xml_ file stores the definitions of all terrain types in the scenario. The
-only toplevel tag is `<terrain>`, of which there can be any number. The `<terrain>`
-element also has a required `id` attribute which must be unique. The following tags are
-allowed in a `<terrain>` element:
+root element is `<terrains>`, and the only toplevel tag is `<terrain>`, of which there can
+be any number. The `<terrain>` element also has a required `id` attribute which must be
+unique. The following tags are allowed in a `<terrain>` element:
 
 * `<name>` - (required) The name of the terrain type.
 * `<pic>` - (required) The terrain's graphic number.
@@ -356,10 +356,10 @@ party is on this space.
 Item Types
 ----------
 
-The _items.xml_ file stores the definitions of all the items in the scenario. The only
-toplevel tag is `<item>`, of which there can be any number. The `<item>` element also has
-a required `id` attribute which must be unique. The following tags are allowed in a
-`<item>` element:
+The _items.xml_ file stores the definitions of all the items in the scenario. The root
+element is `<items>`, and the only toplevel tag is `<item>`, of which there can be any
+number. The `<item>` element also has a required `id` attribute which must be unique. The
+following tags are allowed in a `<item>` element:
 
 * `<variety>` - (required) A string indicating the type of item this is. For a list of
 valid values, search for `eItemType` in [estreams.cpp](../../src/classes/estreams.cpp).
@@ -399,9 +399,9 @@ Monster Types
 -------------
 
 The _monsters.xml_ file stores the definitions of all the monsters in the scenario. The
-only toplevel tag is `<monster>`, of which there can be any number. The `<monster>`
-element also has a required `id` attribute which must be unique. The following tags are
-allowed in a `<monster>` element:
+root element is `<monsters>`, and the only toplevel tag is `<monster>`, of which there can
+be any number. The `<monster>` element also has a required `id` attribute which must be
+unique. The following tags are allowed in a `<monster>` element:
 
 * `<name>` - (required) The name of the monster.
 * `<level>` - (required) The monster's level.
@@ -489,5 +489,114 @@ party if the town goes hostile.
 
 As mentioned, each of the above elements (except the first two) has a required `type`
 attribute. There can only be one element with a given value of `type`.
+
+Outdoors Header
+---------------
+
+The _out**X**~**Y**.xml_ files (where **X** and **Y** are substituted with the _x_ and _y_
+coordinates of the section) store most of the data for a single outdoor sector. The root
+element is `<sector>`, and the following toplevel tags are allowed:
+
+* `<name>` - (required) The name of the outdoor sector.
+* `<comment>` - A comment on the sector for the scenario designer (only seen in the
+editor).
+* `<sound>` - The ambient sound that is occasionally played while wandering through the
+sector. May be an integer sound ID or one of the special values `birds` or `drip`.
+* `<encounter>`, `<wandering>` - (max 4 of each) An outdoors encounter. These are
+identical in structure; the only difference is that `<wandering>` encounters will
+occasionally be spawned at the wandering encounter arrival points, while `<encounter>` is
+spawned by a special node. Allows the following attributes and subtags:
+	* `can-flee=` - A boolean indicating whether the encounter is permitted to flee if the
+	party is too strong.
+	* `<monster>` - (required, max 10) Specifies one of the monsters in this encounter.
+	How many of this monster spawn is determined by the position of this `<monster>`
+	element relative to the other `<monster>` elements. This supports a boolean `friendly`
+	attribute.	You can have at most 3 with `friendly="true"` and at most 7 with
+	`friendly="false"` (the	default).
+	* `<onmeet>` - A special node to call when the encounter starts.
+	* `<onwin>` - A special node to call when the encounter is beaten.
+	* `<onflee>` - A special node to call when the party flees the encounter.
+	* `<sdf>` - The SDF to prevent the encounter, as a point.
+* `<sign>` - (max unbounded) The text of a particular sign. Requires an `id` attribute to
+specify which sign it applies to. The scenario editor wraps the contents of this element
+in a `CDATA` declaration.
+* `<area>` - (max unbounded) The definition of an area description rect. This is a rect
+type, but it also contains the area name as its content.
+* `<string>` - (max unbounded) A string for use by outdoor special nodes. Requires an `id`
+attribute to specify which string it is. The scenario editor wraps the contents of this
+element in a `CDATA` declaration.
+
+Town Header
+-----------
+
+The _town**N**.xml_ files (where **N** is substituted with number of the town) store most
+of the data for a single town. The root element is `<town>`, and the following toplevel
+tags are allowed:
+
+* `<size>` - (required, must be first) The size of the town. Must be one of `32`, `48`,
+`64`.
+* `<name>` - (required) The town name.
+* `<comment>` - (max 3) A comment on the town for the scenario designer (only seen in the
+editor).
+* `<bounds>` - (required) A rectangle indicating the usable area of the town - stepping on
+the border of this rectangle will cause the party to leave town.
+* `<difficulty>` - (required) An integer indicating the difficulty of this town.
+* `<lighting>` - (required) The town's lighting type. Must be one of `lit`, `dark`,
+`drains`, `none`.
+* `<onenter>` - (max 2) A special node to call when the party enters this town. It can
+have a `condition` attribute which can be either `alive` (the default) or `dead`.
+* `<exit>` - (max 4) A point at which the party will end up at when exiting the town in
+the direction indicated by the `dir` attribute (which can be one of `n`, `e`, `w`, `s`).
+* `<onexit>` - (max 4) A special node to call when the party exists the town in the
+direction indicated by the `dir` attribute.
+* `<onoffend>` - A special node to call when the player makes the town hostile.
+* `<timer>` - (max 8) A town timer.
+* `<flags>` - (required) Several town flags, mostly booleans. Supports the following
+subtags:
+	* `<chop>` - Information about how the town dies, given in the attributes `day`,
+	`event`, (which work together to determine if it dies) and `kills` (which is a
+	separate check).
+	* `<hidden>`
+	* `<strong-barriers>`
+	* `<defy-mapping>`
+	* `<defy-scrying>`
+* `<wandering>` - (max 4) Definition of a wandering monster group. It can contain up to 4
+`<monster>` subtags specifying a monster to appear as part of the group. The first may
+appear twice.
+* `<sign>` - (max unbounded) The text of a particular sign. Requires an `id` attribute to
+specify which sign it applies to. The scenario editor wraps the contents of this element
+in a `CDATA` declaration.
+* `<area>` - (max unbounded) The definition of an area description rect. This is a rect
+type, but it also contains the area name as its content.
+* `<string>` - (max unbounded) A string for use by town special nodes. Requires an `id`
+attribute to specify which string it is. The scenario editor wraps the contents of this
+element in a `CDATA` declaration.
+* `<item>` - (max unbounded) The definition of a placed item. It requires an `id`
+attribute specifying its position in the list of placed items, and allows the following
+subtags:
+	* `<type>` - (required) The type of item.
+	* `<mod>` - A modifier for the item (for example, an enchantment)
+	* `<charges>` - The number of charges.
+	* `<always>` - A boolean indicating whether it always respawns.
+	* `<property>` - A boolean indicating whether it belongs to someone other than the
+	player.
+	* `<contained>` - A boolean indicating whether it is in a container.
+* `<creature>` - (max unbounded) The definition of a placed monster. It requires an `id`
+attribute specifying its position in the list of placed monsters, and allows the following
+subtags:
+	* `<type>` - (required) The type of monster.
+	* `<attitude>` - (required) The creature's starting attitude.
+	* `<mobility>` - (required) The creature's mobility setting (currently 0 or 1).
+	* `<sdf>` - (optional) An SDF to set when the creature dies, as a point.
+	* `<encounter>` - (optional) The special encounter group number this creature belongs
+	to. If it's 0, the creature doesn't belong to a special group.
+	* `<time>` - (optional) When the monster appears. It requires a `type` attribute (one
+	of `always`, `after-day`, `until-day`, `travel-a`, `travel-b`, `travel-c`,
+	`after-event`, `until-event`, `after-chop`) and sometimes a `<day>` and/or `<event>`
+	subtag.
+	* `<face>` - The talking portrait to use for this creature.
+	* `<personality>` - The talking personality to use for this creature.
+	* `<onkill>` - A special node to call when this creature dies.
+	* `<ontalk>` - A special node to call when attempting to talk to this creature.
 
 (...more to come...)
