@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:simpleType name="bool">
-    <xs:restriction base="xs:token">
-      <xs:enumeration value="true"/>
-      <xs:enumeration value="false"/>
-    </xs:restriction>
-  </xs:simpleType>
+  <xs:include schemaLocation="common.xsd"/>
   <xs:simpleType name="picttype">
     <xs:restriction base="xs:token">
       <xs:enumeration value="blank"/>
@@ -119,7 +114,7 @@
       </xs:simpleType>
     </xs:list>
   </xs:simpleType>
-  <xs:attributeGroup name="rect">
+  <xs:attributeGroup name="rect-size">
     <xs:attribute name="top" use="required" type="xs:integer"/>
     <xs:attribute name="left" use="required" type="xs:integer"/>
     <xs:attribute name="width" type="xs:integer"/>
@@ -168,7 +163,7 @@
             </xs:simpleType>
           </xs:attribute>
           <xs:attribute name="tab-order" type="xs:integer"/>
-          <xs:attributeGroup ref="rect"/>
+          <xs:attributeGroup ref="rect-size"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -186,7 +181,7 @@
       <xs:attributeGroup ref="keys"/>
       <xs:attribute name="clickable" default="false" type="bool"/>
       <xs:attribute name="fromlist" default="none" type="xs:string"/>
-      <xs:attributeGroup ref="rect"/>
+      <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="pict">
@@ -209,7 +204,7 @@
       <xs:attributeGroup ref="keys"/>
       <xs:attribute name="clickable" default="false" type="bool"/>
       <xs:attribute name="num" use="required" type="xs:integer"/>
-      <xs:attributeGroup ref="rect"/>
+      <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="button">
@@ -224,7 +219,7 @@
       <xs:attribute name="wrap" default="false" type="bool"/>
       <xs:attributeGroup ref="keys"/>
       <xs:attribute name="fromlist" default="none" type="xs:string"/>
-      <xs:attributeGroup ref="rect"/>
+      <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="led">
@@ -241,7 +236,7 @@
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
-          <xs:attributeGroup ref="rect"/>
+          <xs:attributeGroup ref="rect-size"/>
           <xs:attributeGroup ref="font"/>
           <xs:attribute name="wrap" default="false" type="bool"/>
         </xs:extension>
