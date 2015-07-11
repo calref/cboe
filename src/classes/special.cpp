@@ -168,6 +168,9 @@ void cSpecial::append(legacy::special_node_type& old){
 			pictype = PIC_DLOG;
 			m3 = m2;
 			m2 = -1;
+			if(old.type == 55) type = eSpecType::ONCE_DIALOG;
+			else if(old.type == 58) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
+			else type = eSpecType::TOWN_PORTAL;
 			break;
 		case 57: case 60: // Large dialogs with monster graphics
 			if(pic >= 400 && pic < 1000)
@@ -185,8 +188,10 @@ void cSpecial::append(legacy::special_node_type& old){
 			m2 = -1;
 			if(old.type == 56) type = eSpecType::ONCE_DIALOG;
 			else if(old.type == 59) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
+			else type = eSpecType::TOWN_LEVER;
 			break;
 		case 190: // Large stairway dialog
+			type = eSpecType::TOWN_STAIR;
 			pic = 19;
 			pictype = PIC_DLOG;
 			m3 = m2;
@@ -210,6 +215,8 @@ void cSpecial::append(legacy::special_node_type& old){
 			ex1b = 108; // Spell ID for ritual of sanctification, as seen in cast_town_spell()
 			break;
 		case 99: case 100: // Add mage/priest spell TODO: Merge these by adding 100 if it's a priest spell
+			if(old.type == 99) type = eSpecType::AFFECT_MAGE_SPELL;
+			else type = eSpecType::AFFECT_PRIEST_SPELL;
 			ex1a += 30;
 			ex1b = 0; // Meaning give spell, not take
 			break;
@@ -247,6 +254,7 @@ void cSpecial::append(legacy::special_node_type& old){
 			ex2b = 0;
 			break;
 		case 154: // text response
+			type = eSpecType::IF_TEXT_RESPONSE;
 			ex1a -= 160;
 			break;
 		case 229: // Outdoor store - fix spell IDs
@@ -299,9 +307,11 @@ void cSpecial::append(legacy::special_node_type& old){
 			ex1a = -ex1a;
 			break;
 		case 193: // Split party
+			type = eSpecType::TOWN_SPLIT_PARTY;
 			if(ex2a > 0) ex2a = 10;
 			break;
 		case 194: // Reunite party
+			type = eSpecType::TOWN_REUNITE_PARTY;
 			if(ex1a > 0) ex1a = 10;
 			ex2a = 0;
 			break;
