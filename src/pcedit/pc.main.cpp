@@ -265,7 +265,7 @@ void handle_menu_choice(eMenu item_hit) {
 			menu_activate();
 			break;
 		case eMenu::EDIT_ALCHEMY:
-			display_alchemy(true);
+			display_alchemy(true, nullptr);
 			break;
 		case eMenu::OWN_VEHICLES:
 			display_strings(6,7);
