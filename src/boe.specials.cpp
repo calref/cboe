@@ -2055,6 +2055,15 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		}
 		switch(getNodeCategory(cur_node.type)) {
 			case eSpecCat::GENERAL:
+				if(cur_node.type == eSpecType::NONE && in_scen_debug) {
+					std::string type("???");
+					switch(cur_spec_type) {
+						case 0: type = "scenario"; break;
+						case 1: type = "outdoors" ; break;
+						case 2: type = "town"; break;
+					}
+					add_string_to_buf("Warning: Null " + type + " special called (ID " + std::to_string(cur_spec) + ") - was this intended?", 4);
+				}
 				general_spec(which_mode,cur_node,cur_spec_type,&next_spec,&next_spec_type,a,b,redraw);
 				break;
 			case eSpecCat::ONCE:
