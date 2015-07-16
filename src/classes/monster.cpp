@@ -135,7 +135,6 @@ void cMonster::append(legacy::monster_record_type& old){
 	picture_num = old.picture_num;
 	if(picture_num == 122) picture_num = 119;
 	see_spec = -1;
-	ambient_sound = 0;
 }
 
 std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate what, int param) {
@@ -386,7 +385,7 @@ cMonster::cMonster(){
 	speed = 4;
 	default_facial_pic = 0;
 	default_attitude = eAttitude::DOCILE;
-	ambient_sound = 0;
+	ambient_sound = -1;
 	corpse_item = corpse_item_chance = treasure = 0;
 	mu = cl = 0;
 	summon_type = 0;
