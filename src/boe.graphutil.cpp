@@ -658,18 +658,19 @@ char get_fluid_trim(location where,ter_num_t ter_type) {
 }
 
 // Sees if party has seen a monster of this sort, gives special messages as necessary
-void check_if_monst_seen(unsigned short m_num, location at) {\
+void check_if_monst_seen(unsigned short m_num, location at) {
 	// Give special messages if necessary
 	if(m_num < 10000 && !univ.party.m_seen.count(m_num)) {
 		univ.party.m_seen.insert(m_num);
 		play_see_monster_str(m_num, at);
 	}
 	// Make the monster vocalize if applicable
-	snd_num_t sound;
+	snd_num_t sound = -1;
 	if(m_num >= 10000)
 		sound = univ.party.summons[m_num - 10000].ambient_sound;
 	else sound = univ.scenario.scen_monsters[m_num].ambient_sound;
-	if(get_ran(1,1,100) < 10) play_sound(-sound);
+	if(sound < std::numeric_limits<snd_num_t>::max() && get_ran(1,1,100) < 10)
+		play_sound(-sound);
 }
 
 void play_ambient_sound(){ // TODO: Maybe add a system for in-town ambient sounds

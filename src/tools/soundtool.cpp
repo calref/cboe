@@ -17,10 +17,9 @@
 #include "restypes.hpp"
 #include "mathutil.hpp"
 
-std::shared_ptr<sf::SoundBuffer> sound_handles[NUM_SOUNDS];
 sf::Sound chan[4];
-const char numchannel = 4;
-char channel;
+const int numchannel = 4;
+int channel;
 short snd_played[4];
 
 bool play_sounds = true;
@@ -33,14 +32,6 @@ std::unordered_set<int> always_async = {
 	78,79,80,81,82,
 	83,85,91
 };
-std::unordered_set<int> load_on_init = {
-	0,1,6,10,11,
-	12,14,27,34,37,
-	47,48,49,50,55,
-	61,69,70,71,72,
-	73,74,75,85,86,
-	87,88,89,99
-};
 std::unordered_map<int,int> sound_delay = {
 	{24,25},{25,25},{34,8},{37,8},{43,10},
 	{44,20},{61,13}
@@ -52,7 +43,7 @@ static bool sound_going(snd_num_t which_s) {
 	
 	for(i = 0; i < 4; i++)
 		if(snd_played[i] == which_s)
-			return true;
+			return chan[i].getStatus() == sf::Sound::Playing;
 	return false;
 }
 
@@ -64,12 +55,6 @@ static std::string sound_to_fname_map(snd_num_t snd_num) {
 
 void init_snd_tool(){
 	ResMgr::setIdMapFn<SoundRsrc>(sound_to_fname_map);
-	
-	// TODO: Might need sound 0, not sure
-	for(int i : load_on_init) {
-		if(i == 0) continue;
-		sound_handles[i] = ResMgr::get<SoundRsrc>(i);
-	}
 }
 
 void play_sound(short which, short how_many_times) { // if < 0, play asynch
@@ -91,9 +76,8 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	
 	if(channel >= numchannel) channel = 0;
 	
-	if(!sound_going(abs(which)) && load_on_init.find(abs(which)) == load_on_init.end())
+	if(!sound_going(abs(which)))
 		sndhandle = ResMgr::get<SoundRsrc>(abs(which));
-	else sndhandle = sound_handles[abs(which)];
 	
 	if(which > 0)
  		if(always_async.find(which) != always_async.end())
