@@ -906,8 +906,8 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 			priest_spells[i] = true;
 			mage_spells[i] = true;
 		}
-		//which_graphic = num * 3 + 1;	// 1, 4, 7, 10, 13, 16
-		which_graphic = slot + 4;		// 4, 5, 6, 7,  8,  9
+		which_graphic = slot * 3 + 1;	// 1, 4, 7, 10, 13, 16
+		if(slot == 2) which_graphic++;
 		weap_poisoned = 24; // was 16, as an E2 relic
 		
 		for(i = 0; i < 10; i++) {
