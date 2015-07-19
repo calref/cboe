@@ -1525,14 +1525,19 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	if(damage > 0 && dest_rect.right - dest_rect.left >= 28 && dest_rect.bottom - dest_rect.top >= 36) {
 		TextStyle style;
 		style.lineHeight = 10;
-		//text_rect = coord_to_rect(where_draw.x,where_draw.y);
-		//OffsetRect(&text_rect,x_adj,y_adj);
 		text_rect = dest_rect;
-		text_rect.top += 10;
-		if((damage < 10) && (dest_rect.right - dest_rect.left > 19))
-			text_rect.left += 10;
-		text_rect.offset(-4,-5);
-		win_draw_string(mainPtr,text_rect,std::to_string(damage),eTextMode::CENTRE,style,ul);
+		text_rect.top += 13;
+		text_rect.height() = 10;
+		text_rect.offset(x_adj,y_adj);
+		std::string dam_str = std::to_string(damage);
+		style.colour = sf::Color::White;
+		text_rect.offset(-1,-1);
+		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style,ul);
+		text_rect.offset(2,2);
+		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style,ul);
+		style.colour = sf::Color::Black;
+		text_rect.offset(-1,-1);
+		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style,ul);
 	}
 	mainPtr.display();
 	play_sound((skip_boom_delay?-1:1)*sound_to_play);

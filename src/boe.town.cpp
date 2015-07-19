@@ -1249,7 +1249,7 @@ void bash_door(location where,short pc_num) {
 	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
 	if(unlock_adjust >= 5 || r1 > (unlock_adjust * 15 + 40) || univ.scenario.ter_types[terrain].flag3 != 1)  {
 		add_string_to_buf("  Didn't work.");
-		damage_pc(univ.party[pc_num],get_ran(1,1,4),eDamageType::UNBLOCKABLE,eRace::UNKNOWN,0);
+		damage_pc(univ.party[pc_num],get_ran(1,1,4),eDamageType::SPECIAL,eRace::UNKNOWN,0);
 	}
 	else {
 		add_string_to_buf("  Lock breaks.");

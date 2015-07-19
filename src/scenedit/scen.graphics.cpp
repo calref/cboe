@@ -149,6 +149,7 @@ static short get_small_icon(ter_num_t ter){
 				case eDamageType::MAGIC:
 					icon = 39;
 					break;
+				case eDamageType::SPECIAL:
 				case eDamageType::UNBLOCKABLE:
 					icon = 39;
 					break;
@@ -161,10 +162,7 @@ static short get_small_icon(ter_num_t ter){
 				case eDamageType::DEMON:
 					icon = 9;
 					break;
-				case eDamageType::SPECIAL:
-					// TODO: Need icon for this and possibly new icons for undead/demon/unblockable
-					icon = 39;
-					break;
+					// TODO: Possibly new icons for undead/demon/unblockable
 				case eDamageType::MARKED: // Invalid
 					break;
 			}

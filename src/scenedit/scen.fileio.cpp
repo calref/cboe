@@ -498,14 +498,11 @@ static void writeMonstersToXml(ticpp::Printer&& data) {
 		data.CloseElement("attacks");
 		
 		data.OpenElement("immunity");
-		if(monst.magic_res != 100)
-			data.PushElement("magic", monst.magic_res);
-		if(monst.fire_res != 100)
-			data.PushElement("fire", monst.fire_res);
-		if(monst.cold_res != 100)
-			data.PushElement("cold", monst.cold_res);
-		if(monst.poison_res != 100)
-			data.PushElement("poison", monst.poison_res);
+		for(int i = 0; i < 8; i++) {
+			eDamageType dmg = eDamageType(i);
+			if(monst.resist[dmg] != 100)
+				data.PushElement(boost::lexical_cast<std::string>(dmg), monst.resist[dmg]);
+		}
 		if(monst.mindless) data.PushElement("fear", true);
 		if(monst.invuln) data.PushElement("all", true);
 		data.CloseElement("immunity");

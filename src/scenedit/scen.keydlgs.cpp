@@ -720,12 +720,12 @@ short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
 	return made_choice ? item_hit : prev;
 }
 
-pic_num_t choose_damage_type(short cur, cDialog* parent) {
-	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Unblockable", "Cold", "Undead", "Demon", "Special"};
+pic_num_t choose_damage_type(short cur, cDialog* parent, bool allow_spec) {
+	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Weird", "Cold", "Undead", "Demon", "Unblockable"};
 	static const std::vector<pic_num_t> pics = {3,0,2,1,1,4,3,3,1};
 	short prev = cur;
 	if(cur < 0 || cur >= pics.size()) cur = 0;
-	cPictChoice pic_dlg(pics, PIC_BOOM, parent);
+	cPictChoice pic_dlg(pics.begin(), pics.end() - !allow_spec, PIC_BOOM, parent);
 	pic_dlg->getControl("prompt").setText("Select a damage type:");
 	pic_dlg->getControl("help").setText(damageNames[cur]);
 	pic_dlg.attachSelectHandler([](cPictChoice& me, int n) {
@@ -737,8 +737,8 @@ pic_num_t choose_damage_type(short cur, cDialog* parent) {
 }
 
 static pic_num_t choose_boom_type(short cur, cDialog* parent) {
-	static const char*const boomNames[] = {"Fire", "Teleport", "Magic/Cold/Electricity", "Magic/Electricity", "Custom Explosion"};
 	static const int preset_booms = 4;
+	static const char*const boomNames[preset_booms+1] = {"Fire", "Teleport", "Magic/Cold/Electricity", "Magic/Electricity", "Custom Explosion"};
 	std::vector<pic_num_t> pics;
 	for(int i = 0; i < preset_booms; i++) pics.push_back(i + 8);
 	for(int i = 0; i < scenario.custom_graphics.size(); i++) {
@@ -750,9 +750,9 @@ static pic_num_t choose_boom_type(short cur, cDialog* parent) {
 	   cur = 0;
 	cPictChoice pic_dlg(pics, PIC_BOOM, parent);
 	pic_dlg->getControl("prompt").setText("Select a boom type:");
-	pic_dlg->getControl("help").setText(boomNames[std::min<short>(cur,4)]);
+	pic_dlg->getControl("help").setText(boomNames[std::min<short>(cur,preset_booms)]);
 	pic_dlg.attachSelectHandler([](cPictChoice& me, int n) {
-		me->getControl("help").setText(boomNames[std::min<short>(n,4)]);
+		me->getControl("help").setText(boomNames[std::min<short>(n,preset_booms)]);
 	});
 	bool made_choice = pic_dlg.show(cur);
 	size_t item_hit = pic_dlg.getPicChosen();
@@ -867,7 +867,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			if(store < 0) store = val;
 			break;
 		case 'f': case 'F': choose_string = false; store = choose_field_type(val, &me, btn == 'F'); break;
-		case 'D': choose_string = false; store = choose_damage_type(val, &me); break;
+		case 'D': choose_string = false; store = choose_damage_type(val, &me, true); break;
 		case '!': choose_string = false; store = choose_boom_type(val, &me); break;
 		case 'e': choose_string = false; store = choose_status_effect(val, false, &me); break;
 		case 'E': choose_string = false; store = choose_status_effect(val, true, &me); break;

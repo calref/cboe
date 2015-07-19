@@ -1016,8 +1016,8 @@ std::string cItem::getAbilName() const {
 				case eDamageType::WEAPON: sout << "Enhanced"; break;
 				case eDamageType::UNDEAD: sout << "Necrotic"; break;
 				case eDamageType::DEMON: sout << "Unholy"; break;
+				case eDamageType::SPECIAL:
 				case eDamageType::UNBLOCKABLE: sout << "Dark"; break;
-				case eDamageType::SPECIAL: sout << "Assassin's"; break;
 				case eDamageType::MARKED: break; // Invalid
 			}
 			sout << " Weapon";
@@ -1058,10 +1058,10 @@ std::string cItem::getAbilName() const {
 				case eDamageType::MAGIC: sout << "in sparks"; break;
 				case eDamageType::POISON: sout << "into slime"; break;
 				case eDamageType::WEAPON: sout << "in shrapnel"; break;
+				case eDamageType::SPECIAL:
 				case eDamageType::UNBLOCKABLE: sout << "in darkness"; break;
 				case eDamageType::UNDEAD: sout.str("Implodes"); break;
 				case eDamageType::DEMON: sout << "into corruption"; break;
-				case eDamageType::SPECIAL: sout << "into energy"; break;
 				case eDamageType::MARKED: break; // Invalid
 			}
 			break;
@@ -1096,8 +1096,8 @@ std::string cItem::getAbilName() const {
 				case eDamageType::DEMON: sout << "Demon"; break;
 				case eDamageType::UNDEAD: sout << "Undead"; break;
 				case eDamageType::POISON: sout << "Poison"; break;
+				case eDamageType::SPECIAL:
 				case eDamageType::UNBLOCKABLE: sout << "Darkness"; break;
-				case eDamageType::SPECIAL: sout << "Assassin's"; break;
 				case eDamageType::MARKED: break; // Invalid
 			}
 			sout << " Protection";
