@@ -329,7 +329,7 @@ std::istream& operator >> (std::istream& in, eFieldType& e) {
 // MARK: eDamageType
 
 cEnumLookup dmg_names = {
-	"weap", "fire", "poison", "magic", "unblockable", "cold", "undead", "demon", "spec",
+	"weap", "fire", "poison", "magic", "weird", "cold", "undead", "demon", "spec",
 };
 
 std::ostream& operator << (std::ostream& out, eDamageType e) {

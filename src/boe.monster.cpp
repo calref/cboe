@@ -292,32 +292,32 @@ bool monst_hate_spot(short which_m,location *good_loc) {
 	else if(univ.town.is_ice_wall(loc.x,loc.y)) {
 		hate_spot = true;
 		if(have_radiate && which_radiate == eFieldType::WALL_ICE) hate_spot = false;
-		else if(univ.town.monst[which_m].cold_res == 0) hate_spot = false;
+		else if(univ.town.monst[which_m].resist[eDamageType::COLD] == 0) hate_spot = false;
 	}
 	// Hate fire wall?
 	else if(univ.town.is_fire_wall(loc.x,loc.y)) {
 		hate_spot = true;
 		if(have_radiate && which_radiate == eFieldType::WALL_FIRE) hate_spot = false;
-		else if(univ.town.monst[which_m].fire_res == 0) hate_spot = false;
+		else if(univ.town.monst[which_m].resist[eDamageType::FIRE] == 0) hate_spot = false;
 	}
 	// Note: Monsters used to enter shock walls even if they were merely resistant to magic
 	// Hate shock wall?
 	else if(univ.town.is_force_wall(loc.x,loc.y)) {
 		hate_spot = true;
 		if(have_radiate && which_radiate == eFieldType::WALL_FORCE) hate_spot = false;
-		else if(univ.town.monst[which_m].magic_res == 0) hate_spot = false;
+		else if(univ.town.monst[which_m].resist[eDamageType::MAGIC] == 0) hate_spot = false;
 	}
 	// Hate stink cloud?
 	else if(univ.town.is_scloud(loc.x,loc.y)) {
 		hate_spot = true;
 		if(have_radiate && which_radiate == eFieldType::CLOUD_STINK) hate_spot = false;
-		else if(univ.town.monst[which_m].magic_res <= 50) hate_spot = false;
+		else if(univ.town.monst[which_m].resist[eDamageType::MAGIC] <= 50) hate_spot = false;
 	}
 	// Hate sleep cloud?
 	else if(univ.town.is_sleep_cloud(loc.x,loc.y)) {
 		hate_spot = true;
 		if(have_radiate && which_radiate == eFieldType::CLOUD_SLEEP) hate_spot = false;
-		else if(univ.town.monst[which_m].magic_res <= 50) hate_spot = false;
+		else if(univ.town.monst[which_m].resist[eDamageType::MAGIC] <= 50) hate_spot = false;
 	}
 	// Hate antimagic?
 	else if(univ.town.is_antimagic(loc.x,loc.y)) {
@@ -1035,18 +1035,9 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			break;
 			
 		case eTerSpec::DAMAGING:
-			switch(eDamageType(univ.scenario.ter_types[ter].flag3)) {
-				case eDamageType::FIRE:
-					return univ.town.monst[which_monst].fire_res == 0;
-				case eDamageType::COLD:
-					return univ.town.monst[which_monst].cold_res == 0;
-				case eDamageType::MAGIC:
-					return univ.town.monst[which_monst].magic_res == 0;
-				case eDamageType::POISON:
-					return univ.town.monst[which_monst].poison_res == 0;
-				default:
-					return univ.town.monst[which_monst].invuln;
-			}
+			if(univ.town.monst[which_monst].resist[eDamageType(univ.scenario.ter_types[ter].flag3)] == 0)
+				return true;
+			else return univ.town.monst[which_monst].invuln;
 			// TODO: Should it check any other terrain specials?
 		case eTerSpec::BED: case eTerSpec::BRIDGE: case eTerSpec::CALL_SPECIAL_WHEN_USED: case eTerSpec::CHANGE_WHEN_USED:
 		case eTerSpec::CONVEYOR: case eTerSpec::CRUMBLING: case eTerSpec::IS_A_CONTAINER: case eTerSpec::IS_A_SIGN:

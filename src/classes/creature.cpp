@@ -131,8 +131,8 @@ void cCreature::drain_sp(int drain) {
 }
 
 void cCreature::poison(int how_much) {
-	if(how_much > 0) {
-		how_much *= poison_res;
+	if(how_much != 0) {
+		how_much *= resist[eDamageType::POISON];
 		how_much /= 100;
 	}
 	apply_status(eStatus::POISON, how_much);
@@ -226,9 +226,9 @@ void cCreature::sleep(eStatus which_status,int amount,int penalty) {
 		m_type == eRace::STONE || m_type == eRace::PLANT))
 		return;
 	short r1 = get_ran(1,1,100);
-	if(magic_res > 0) {
+	if(resist[eDamageType::MAGIC] > 0) {
 		r1 *= 100;
-		r1 /= magic_res;
+		r1 /= resist[eDamageType::MAGIC];
 	} else r1 = 200;
 	r1 += penalty;
 	if(which_status == eStatus::FORCECAGE && (mu > 0 || cl > 0))
@@ -314,7 +314,7 @@ int cCreature::magic_adjust(int how_much) {
 		return 0;
 	}
 	// TODO: Magic resistance status effect?
-	how_much *= magic_res;
+	how_much *= resist[eDamageType::MAGIC];
 	how_much /= 100;
 	return how_much;
 }

@@ -105,25 +105,25 @@ void cMonster::append(legacy::monster_record_type& old){
 	corpse_item = old.corpse_item;
 	corpse_item_chance = old.corpse_item_chance;
 	if(old.immunities & 2)
-		magic_res = 0;
+		resist[eDamageType::MAGIC] = 0;
 	else if(old.immunities & 1)
-		magic_res = 50;
-	else magic_res = 100;
+		resist[eDamageType::MAGIC] = 50;
+	else resist[eDamageType::MAGIC] = 100;
 	if(old.immunities & 8)
-		fire_res = 0;
+		resist[eDamageType::FIRE] = 0;
 	else if(old.immunities & 4)
-		fire_res = 50;
-	else fire_res = 100;
+		resist[eDamageType::FIRE] = 50;
+	else resist[eDamageType::FIRE] = 100;
 	if(old.immunities & 32)
-		cold_res = 0;
+		resist[eDamageType::COLD] = 0;
 	else if(old.immunities & 16)
-		cold_res = 50;
-	else cold_res = 100;
+		resist[eDamageType::COLD] = 50;
+	else resist[eDamageType::COLD] = 100;
 	if(old.immunities & 128)
-		poison_res = 0;
+		resist[eDamageType::POISON] = 0;
 	else if(old.immunities & 64)
-		poison_res = 50;
-	else poison_res = 100;
+		resist[eDamageType::POISON] = 50;
+	else resist[eDamageType::POISON] = 100;
 	x_width = old.x_width;
 	y_width = old.y_width;
 	default_attitude = eAttitude(old.default_attitude);
@@ -379,7 +379,12 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 }
 
 cMonster::cMonster(){
-	magic_res = poison_res = fire_res = cold_res = 100;
+	for(int i = 0; i <= 8; i++) {
+		eDamageType dmg = eDamageType(i);
+		resist[dmg] = 100;
+	}
+	// And just in case something weird happens:
+	resist[eDamageType::MARKED] = 100;
 	mindless = invuln = guard = invisible = false;
 	level = m_health = armor = skill = 0;
 	speed = 4;
@@ -536,12 +541,12 @@ std::string uAbility::to_string(eMonstAbil key) const {
 						case eDamageType::FIRE: sout << "Fiery"; break;
 						case eDamageType::COLD: sout << "Icy"; break;
 						case eDamageType::MAGIC: sout << "Shock"; break;
+						case eDamageType::SPECIAL:
 						case eDamageType::UNBLOCKABLE: sout << "Wounding"; break;
 						case eDamageType::POISON: sout << "Pain"; break;
 						case eDamageType::WEAPON: sout << "Stamina drain"; break;
 						case eDamageType::DEMON: sout << "Unholy"; break;
 						case eDamageType::UNDEAD: sout << "Necrotic"; break;
-						case eDamageType::SPECIAL: sout << "Assassinating"; break;
 						case eDamageType::MARKED: break; // Invalid
 					}
 					break;
@@ -766,7 +771,11 @@ void cMonster::writeTo(std::ostream& file) const {
 	file << "RACE " << m_type << '\n';
 	file << "TREASURE" << int(treasure) << '\n';
 	file << "CORPSEITEM " << corpse_item << ' ' << corpse_item_chance << '\n';
-	file << "IMMUNE " << magic_res << '\t' << fire_res << '\t' << cold_res << '\t' << poison_res << '\n';
+	for(int i = 0; i < 8; i++) {
+		eDamageType dmg = eDamageType(i);
+		if(resist.at(dmg) != 100)
+			file << "IMMUNE " << dmg << '\t' << resist.at(dmg) << '\n';
+	}
 	file << "SIZE " << int(x_width) << ' ' << int(y_width) << '\n';
 	file << "ATTITUDE " << int(default_attitude) << '\n';
 	file << "SUMMON " << int(summon_type) << '\n';
@@ -839,9 +848,10 @@ void cMonster::readFrom(std::istream& file) {
 			line >> temp1 >> temp2;
 			x_width = temp1;
 			y_width = temp2;
-		} else if(cur == "IMMUNE")
-			line >> magic_res >> fire_res >> cold_res >> poison_res;
-		else if(cur == "RACE")
+		} else if(cur == "IMMUNE") {
+			eDamageType dmg;
+			line >> dmg >> resist[dmg];
+		} else if(cur == "RACE")
 			line >> m_type;
 		else if(cur == "CORPSEITEM")
 			line >> corpse_item >> corpse_item_chance;

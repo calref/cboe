@@ -109,10 +109,7 @@ public:
 	mutable std::map<eMonstAbil, uAbility> abil;
 	item_num_t corpse_item;
 	short corpse_item_chance;
-	unsigned int magic_res;
-	unsigned int fire_res;
-	unsigned int cold_res;
-	unsigned int poison_res;
+	std::map<eDamageType, int> resist;
 	bool mindless, invuln, invisible, guard;
 	unsigned int x_width,y_width;
 	eAttitude default_attitude;

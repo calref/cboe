@@ -116,7 +116,7 @@
 							<xs:enumeration value="fire"/>
 							<xs:enumeration value="poison"/>
 							<xs:enumeration value="magic"/>
-							<xs:enumeration value="unblockable"/>
+							<xs:enumeration value="weird"/>
 							<xs:enumeration value="cold"/>
 							<xs:enumeration value="undead"/>
 							<xs:enumeration value="demon"/>
@@ -357,6 +357,10 @@
 							<xs:element name="cold" type="xs:integer" minOccurs="0"/>
 							<xs:element name="poison" type="xs:integer" minOccurs="0"/>
 							<xs:element name="magic" type="xs:integer" minOccurs="0"/>
+							<xs:element name="weap" type="xs:integer" minOccurs="0"/>
+							<xs:element name="weird" type="xs:integer" minOccurs="0"/>
+							<xs:element name="undead" type="xs:integer" minOccurs="0"/>
+							<xs:element name="demon" type="xs:integer" minOccurs="0"/>
 							<xs:element name="all" type="bool" minOccurs="0"/>
 							<xs:element name="fear" type="bool" minOccurs="0"/>
 						</xs:all>

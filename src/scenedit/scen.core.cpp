@@ -265,7 +265,7 @@ static bool pick_ter_flag(cDialog& me, std::string id, eKeyMod) {
 			break;
 		case eTerSpec::DAMAGING:
 			if(which == 3)
-				i = choose_damage_type(i, &me);
+				i = choose_damage_type(i, &me, false);
 			else return true;
 			break;
 		case eTerSpec::DANGEROUS:
@@ -846,10 +846,10 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& monst) {
 	
 	me["loot-item"].setTextToNum(monst.corpse_item);
 	me["loot-chance"].setTextToNum(monst.corpse_item_chance);
-	me["magic-res"].setTextToNum(monst.magic_res);
-	me["fire-res"].setTextToNum(monst.fire_res);
-	me["cold-res"].setTextToNum(monst.cold_res);
-	me["poison-res"].setTextToNum(monst.poison_res);
+	me["magic-res"].setTextToNum(monst.resist[eDamageType::MAGIC]);
+	me["fire-res"].setTextToNum(monst.resist[eDamageType::FIRE]);
+	me["cold-res"].setTextToNum(monst.resist[eDamageType::COLD]);
+	me["poison-res"].setTextToNum(monst.resist[eDamageType::POISON]);
 	me["onsee"].setTextToNum(monst.see_spec);
 	me["snd"].setTextToNum(monst.ambient_sound);
 	
@@ -910,10 +910,10 @@ static bool save_monst_abils(cDialog& me, cMonster& monst) {
 	
  	monst.corpse_item = me["loot-item"].getTextAsNum();
 	monst.corpse_item_chance = me["loot-chance"].getTextAsNum();
-	monst.magic_res = me["magic-res"].getTextAsNum();
-	monst.fire_res = me["fire-res"].getTextAsNum();
-	monst.cold_res = me["cold-res"].getTextAsNum();
-	monst.poison_res = me["poison-res"].getTextAsNum();
+	monst.resist[eDamageType::MAGIC] = me["magic-res"].getTextAsNum();
+	monst.resist[eDamageType::FIRE] = me["fire-res"].getTextAsNum();
+	monst.resist[eDamageType::COLD] = me["cold-res"].getTextAsNum();
+	monst.resist[eDamageType::POISON] = me["poison-res"].getTextAsNum();
 	monst.see_spec = me["onsee"].getTextAsNum();
 	monst.ambient_sound = me["snd"].getTextAsNum();
 	
@@ -1249,7 +1249,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 				abil_params.gen.fld = eFieldType(i);
 			} else if(abil == eMonstAbil::DAMAGE || abil == eMonstAbil::DAMAGE2) {
 				i = int(abil_params.gen.dmg);
-				i = choose_damage_type(i, &me);
+				i = choose_damage_type(i, &me, false);
 				abil_params.gen.dmg = eDamageType(i);
 			} else if(abil == eMonstAbil::STATUS || abil == eMonstAbil::STATUS2 || abil == eMonstAbil::STUN) {
 				i = int(abil_params.gen.stat);
@@ -1816,7 +1816,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 			case eItemAbil::DAMAGING_WEAPON:
 			case eItemAbil::EXPLODING_WEAPON:
 			case eItemAbil::DAMAGE_PROTECTION:
-				i = choose_damage_type(i, &me);
+				i = choose_damage_type(i, &me, false);
 				break;
 			case eItemAbil::STATUS_WEAPON:
 			case eItemAbil::STATUS_PROTECTION:

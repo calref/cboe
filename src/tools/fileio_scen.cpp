@@ -1394,15 +1394,7 @@ static void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 				Iterator<Element> resist;
 				for(resist = resist.begin(monst.Get()); resist != resist.end(); resist++) {
 					resist->GetValue(&type);
-					if(type == "fire") {
-						resist->GetText(&the_mon.fire_res);
-					} else if(type == "cold") {
-						resist->GetText(&the_mon.cold_res);
-					} else if(type == "poison") {
-						resist->GetText(&the_mon.poison_res);
-					} else if(type == "magic") {
-						resist->GetText(&the_mon.magic_res);
-					} else if(type == "all") {
+					if(type == "all") {
 						resist->GetText(&val);
 						if(val == "true")
 							the_mon.invuln = true;
@@ -1410,7 +1402,12 @@ static void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 						resist->GetText(&val);
 						if(val == "true")
 							the_mon.mindless = true;
-					} else throw xBadNode(type, resist->Row(), resist->Column(), fname);
+					} else try {
+						eDamageType dmg = boost::lexical_cast<eDamageType>(type);
+						resist->GetText(&the_mon.resist[dmg]);
+					} catch(boost::bad_lexical_cast x) {
+						throw xBadNode(type, resist->Row(), resist->Column(), fname);
+					}
 				}
 			} else if(type == "loot") {
 				std::set<std::string> reqs = {"type", "chance"};

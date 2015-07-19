@@ -34,7 +34,7 @@ bool edit_area_rect_str(short which_str,short mode);
 void make_cursor_sword() ;
 size_t num_strs(eStrMode str_mode);
 
-pic_num_t choose_damage_type(short cur, cDialog* parent);
+pic_num_t choose_damage_type(short cur, cDialog* parent, bool allow_spec);
 short choose_field_type(short cur, cDialog* parent, bool includeSpec);
 pic_num_t choose_status_effect(short cur, bool party, cDialog* parent);
 snd_num_t choose_sound(short cur, cDialog* parent, std::string title = "Which sound?");

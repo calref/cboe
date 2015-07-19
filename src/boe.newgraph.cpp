@@ -551,6 +551,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	TextStyle style;
 	style.font = FONT_BOLD;
 	style.pointSize = 10;
+	style.lineHeight = 10;
 	mainPtr.setActive();
 	
 	// init missile paths
@@ -600,14 +601,17 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 					
 					if(store_booms[i].val_to_place > 0) {
 						text_rect = explode_place_rect[i];
-						text_rect.top += 4;
-						text_rect.left -= 10;
-						if(store_booms[i].val_to_place < 10)
-							text_rect.left += 8;
+						text_rect.top += 13;
+						text_rect.height() = 10;
+						std::string dam_str = std::to_string(store_booms[i].val_to_place);
 						style.colour = sf::Color::White;
-						style.lineHeight = 12;
-						win_draw_string(mainPtr,text_rect,std::to_string(store_booms[i].val_to_place),eTextMode::CENTRE,style);
+						text_rect.offset(-1,-1);
+						win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
+						text_rect.offset(2,2);
+						win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
 						style.colour = sf::Color::Black;
+						text_rect.offset(-1,-1);
+						win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
 						mainPtr.setActive();
 					}
 				}

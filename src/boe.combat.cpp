@@ -814,7 +814,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 			if(spec_dam)
 				damaged = damaged || damage_pc(*who, spec_dam, eDamageType::SPECIAL, race, dmg_snd, false);
 			if(bonus_dam)
-				damaged = damaged || damage_pc(*who, bonus_dam, eDamageType::SPECIAL, race, dmg_snd, false);
+				damaged = damaged || damage_pc(*who, bonus_dam, dmg_tp, race, dmg_snd, false);
 			if(damaged) {
 				std::string msg = "  " + who->name + " takes " + std::to_string(r2);
 				if(spec_dam + bonus_dam)
@@ -879,6 +879,8 @@ short calc_spec_dam(eItemAbil abil,short abil_str,short abil_dat,iLiving& monst,
 	if(abil == eItemAbil::DAMAGING_WEAPON) {
 		store += get_ran(abil_str,1,6);
 		dmg_type = eDamageType(abil_dat);
+		if(dmg_type >= eDamageType::SPECIAL)
+			dmg_type = eDamageType::UNBLOCKABLE;
 	} else if(abil == eItemAbil::SLAYER_WEAPON) {
 		eRace race = eRace::UNKNOWN;
 		if(cCreature* who = dynamic_cast<cCreature*>(&monst))
@@ -2905,12 +2907,12 @@ void monster_attack(short who_att,iLiving* target) {
 									case eDamageType::FIRE: add_string_to_buf("  Burning touch!"); break;
 									case eDamageType::COLD: add_string_to_buf("  Freezing touch!"); break;
 									case eDamageType::MAGIC: add_string_to_buf("  Shocking touch!"); break;
+									case eDamageType::SPECIAL:
 									case eDamageType::UNBLOCKABLE: add_string_to_buf("  Eerie touch!"); break;
 									case eDamageType::POISON: add_string_to_buf("  Slimy touch!"); break;
 									case eDamageType::WEAPON: add_string_to_buf("  Drains stamina!"); break;
 									case eDamageType::UNDEAD: add_string_to_buf("  Chilling touch!"); break;
 									case eDamageType::DEMON: add_string_to_buf("  Unholy touch!"); break;
-									case eDamageType::SPECIAL: add_string_to_buf("  Assassinates!"); break;
 								}
 								break;
 							case eMonstAbil::STATUS2:
@@ -3187,6 +3189,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 	if(target == nullptr) return;
 	if(!target->is_alive()) return;
 	location targ_space = target->get_loc();
+	eDamageType dmg_tp;
 	
 	cPlayer* pc_target = dynamic_cast<cPlayer*>(target);
 	cCreature* m_target = dynamic_cast<cCreature*>(target);
@@ -3202,7 +3205,10 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			r1 = get_ran(abil.second.gen.strength, 1, i);
 			i = univ.get_target_i(*target);
 			start_missile_anim();
-			damage_target(i, r1, abil.second.gen.dmg);
+			dmg_tp = abil.second.gen.dmg;
+			if(dmg_tp >= eDamageType::SPECIAL)
+				dmg_tp = eDamageType::UNBLOCKABLE;
+			damage_target(i, r1, dmg_tp);
 			do_explosion_anim(5, 0);
 			end_missile_anim();
 			handle_marked_damage();

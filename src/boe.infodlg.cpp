@@ -387,10 +387,10 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 	me["mage"].setTextToNum(store_m.mu);
 	me["priest"].setTextToNum(store_m.cl);
 	// Immunities
-	me["magic-res"].setText(std::to_string(100 - store_m.magic_res) + '%');
-	me["fire-res"].setText(std::to_string(100 - store_m.fire_res) + '%');
-	me["cold-res"].setText(std::to_string(100 - store_m.cold_res) + '%');
-	me["poison-res"].setText(std::to_string(100 - store_m.poison_res) + '%');
+	me["magic-res"].setText(std::to_string(100 - store_m.resist.at(eDamageType::MAGIC)) + '%');
+	me["fire-res"].setText(std::to_string(100 - store_m.resist.at(eDamageType::FIRE)) + '%');
+	me["cold-res"].setText(std::to_string(100 - store_m.resist.at(eDamageType::COLD)) + '%');
+	me["poison-res"].setText(std::to_string(100 - store_m.resist.at(eDamageType::POISON)) + '%');
 	dynamic_cast<cLed&>(me["mindless"]).setState(store_m.mindless ? led_red : led_off);
 	dynamic_cast<cLed&>(me["invuln"]).setState(store_m.invuln ? led_red : led_off);
 	dynamic_cast<cLed&>(me["guard"]).setState(store_m.guard ? led_red : led_off);

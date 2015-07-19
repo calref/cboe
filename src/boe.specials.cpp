@@ -326,6 +326,8 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 					add_string_to_buf("  You feel cold!");
 					pic_type = 4;
 					break;
+				case eDamageType::SPECIAL:
+					dam_type = eDamageType::UNBLOCKABLE;
 				case eDamageType::MAGIC:
 				case eDamageType::UNBLOCKABLE:
 					add_string_to_buf("  Something shocks you!");
@@ -344,7 +346,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 					add_string_to_buf("  A dark wind blows through you!");
 					pic_type = 1; // TODO: Verify that this is correct
 					break;
-				default:
+				case eDamageType::MARKED:
 					break;
 			}
 			if(r1 < 0) break; // "It doesn't affect you."
@@ -1024,7 +1026,7 @@ void use_item(short pc,short item) {
 									pause(150);
 								} else if(i > 1) {
 									add_string_to_buf("  You plummet to the ground.");
-									hit_party(get_ran(i,1,12), eDamageType::UNBLOCKABLE);
+									hit_party(get_ran(i,1,12), eDamageType::SPECIAL);
 								} else add_string_to_buf("  You land safely.");
 							} else add_string_to_buf("  You start to descend.");
 							break;
@@ -1420,20 +1422,8 @@ bool damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType 
 			sound_type = 11;
 	}
 	
-	if(dam_type == eDamageType::MAGIC) {
-		how_much *= victim.magic_res;
-		how_much /= 100;
-	}
-	if(dam_type == eDamageType::FIRE) {
-		how_much *= victim.fire_res;
-		how_much /= 100;
-	}
-	if(dam_type == eDamageType::COLD) {
-		how_much *= victim.cold_res;
-		how_much /= 100;
-	}
-	if(dam_type == eDamageType::POISON) {
-		how_much *= victim.poison_res;
+	if(dam_type < eDamageType::SPECIAL) {
+		how_much *= victim.resist[dam_type];
 		how_much /= 100;
 	}
 	
@@ -1469,10 +1459,12 @@ bool damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType 
 			how_much *= 2;
 	}
 	
-	r1 = get_ran(1,0,(victim.armor * 5) / 4);
-	r1 += victim.level / 4;
-	if(dam_type == eDamageType::WEAPON)
+	// TODO: So, player armour blocks demon/undead damage, but monster armour doesn't?
+	if(dam_type == eDamageType::WEAPON) {
+		r1 = get_ran(1,0,(victim.armor * 5) / 4);
+		r1 += victim.level / 4;
 		how_much -= r1;
+	}
 	
 	if(boom_anim_active) {
 		if(how_much < 0)
@@ -1568,7 +1560,7 @@ void petrify_monst(cCreature& which_m,int strength) {
 	r1 -= strength;
 	
 	// TODO: This should probably do something similar to charm_monst with the magic resistance
-	if(r1 > 14 || which_m.magic_res == 0)
+	if(r1 > 14 || which_m.resist[eDamageType::MAGIC] == 0)
 		which_m.spell_note(10);
 	else {
 		which_m.spell_note(8);
@@ -3104,10 +3096,6 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				case 4: dynamic_cast<cCreature*>(pc)->speed += i; break;
 				case 5: dynamic_cast<cCreature*>(pc)->mu += i; break;
 				case 6: dynamic_cast<cCreature*>(pc)->cl += i; break;
-				case 7: dynamic_cast<cCreature*>(pc)->magic_res += i; break;
-				case 8: dynamic_cast<cCreature*>(pc)->fire_res += i; break;
-				case 9: dynamic_cast<cCreature*>(pc)->cold_res += i; break;
-				case 10:dynamic_cast<cCreature*>(pc)->poison_res += i; break;
 			}
 			break;
 		case eSpecType::AFFECT_MAGE_SPELL:

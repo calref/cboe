@@ -540,6 +540,7 @@ enum class eDamageType {
 	COLD = 5,
 	UNDEAD = 6,
 	DEMON = 7,
+	// Keep these two last
 	SPECIAL = 8, // Completely unblockable damage from assassination skill
 	MARKED = 10,
 };
