@@ -249,8 +249,24 @@ void put_party_in_scen(std::string scen_name) {
 	}
 	for(j = 0; j < 6; j++)
 	 	for(i = 23; i >= 0; i--) {
-			univ.party[j].items[i].special_class = 0;
-			if(univ.party[j].items[i].ability == eItemAbil::CALL_SPECIAL) {
+			cItem& thisItem = univ.party[j].items[i];
+			thisItem.special_class = 0;
+			if(thisItem.ability == eItemAbil::CALL_SPECIAL) {
+				univ.party[j].take_item(i);
+				item_took = true;
+			} else if(thisItem.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
+				univ.party[j].take_item(i);
+				item_took = true;
+			} else if(thisItem.ability == eItemAbil::HIT_CALL_SPECIAL) {
+				univ.party[j].take_item(i);
+				item_took = true;
+			} else if(thisItem.ability == eItemAbil::DROP_CALL_SPECIAL) {
+				univ.party[j].take_item(i);
+				item_took = true;
+			} else if(thisItem.ability == eItemAbil::PROTECT_FROM_SPECIES && thisItem.abil_data[1] == int(eRace::IMPORTANT)) {
+				univ.party[j].take_item(i);
+				item_took = true;
+			} else if(thisItem.ability == eItemAbil::SLAYER_WEAPON && thisItem.abil_data[1] == int(eRace::IMPORTANT)) {
 				univ.party[j].take_item(i);
 				item_took = true;
 			}
