@@ -509,12 +509,16 @@ std::shared_ptr<sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 		case NUM_SHEET_TYPES:
 			break;
 		case SHEET_TER:
+			if(n >= NUM_TER_SHEETS)
+				return nullptr;
 			sout << "ter" << n + 1;
 			break;
 		case SHEET_TER_ANIM:
 			sout << "teranim";
 			break;
 		case SHEET_MONST:
+			if(n >= NUM_MONST_SHEETS)
+				return nullptr;
 			sout << "monst" << n + 1;
 			break;
 		case SHEET_DLOG:
@@ -612,6 +616,7 @@ void cPict::draw(){
 
 void cPict::drawPresetTer(short num, rectangle to_rect){
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_TER, num / 50);
+	if(!from_gw) return;
 	num = num % 50;
 	rectangle from_rect = calc_rect(num % 10, num / 10);
 	if(to_rect.right - to_rect.left > 28)
@@ -648,6 +653,7 @@ static rectangle calcDefMonstRect(short i, short animFrame){
 void cPict::drawPresetMonstSm(short num, rectangle to_rect){
 	short m_start_pic = m_pic_index[num].i;
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
+	if(!from_gw) return;
 	m_start_pic = m_start_pic % 20;
 	rectangle from_rect = calcDefMonstRect(m_start_pic, animFrame);
 	to_rect.right = to_rect.left + 28;
@@ -663,12 +669,14 @@ void cPict::drawPresetMonstWide(short num, rectangle to_rect){
 	
 	short m_start_pic = m_pic_index[num].i;
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
+	if(!from_gw) return;
 	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
+	if(!from_gw) return;
 	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(14,0);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
@@ -682,12 +690,14 @@ void cPict::drawPresetMonstTall(short num, rectangle to_rect){
 	
 	short m_start_pic = m_pic_index[num].i;
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
+	if(!from_gw) return;
 	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(to_rect.left + 7,to_rect.top);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
+	if(!from_gw) return;
 	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(0,18);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
@@ -701,24 +711,28 @@ void cPict::drawPresetMonstLg(short num, rectangle to_rect){
 	
 	short m_start_pic = m_pic_index[num].i;
 	std::shared_ptr<sf::Texture> from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
+	if(!from_gw) return;
 	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(to_rect.left,to_rect.top);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
+	if(!from_gw) return;
 	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(14,0);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 2;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
+	if(!from_gw) return;
 	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(-14,18);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 3;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
+	if(!from_gw) return;
 	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(14,0);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
