@@ -733,15 +733,6 @@ extern const std::vector<m_pic_index_t> m_pic_index = {
 	{196, 1, 1},
 	{197, 1, 1},
 	{198, 1, 1},
-	{0, 1, 1},
-	{45, 1, 1},
-	{199, 1, 1},
-	{200, 1, 1},
-	{201, 1, 1},
-	{202, 1, 1},
-	{203, 1, 1},
-	//180
-	{204, 1, 1},
 };
 
 // TODO: Put these classes in a header?

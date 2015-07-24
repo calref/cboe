@@ -404,6 +404,8 @@ void cItem::append(legacy::item_record_type& old){
 		graphic_num += 850;
 	else if(graphic_num == 59) // duplicate mushroom graphic
 		graphic_num = 74;
+	else if(graphic_num == 17) // gauntlets moved to tinyobj
+		graphic_num = 133;
 	else if(graphic_num >= 45) // small graphics were moved up to make a bit more room for new large graphics
 		graphic_num += 10;
 	abil_data[0] = old.ability_strength;

@@ -301,6 +301,7 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			obj_size.y = 1;
 			break;
 		case 247:
+			picture = 210;
 			obj_num = 3;
 			obj_pos.x = 0;
 			obj_pos.y = 0;
@@ -308,6 +309,7 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			obj_size.y = 2;
 			break;
 		case 248:
+			picture = 211;
 			obj_num = 3;
 			obj_pos.x = 1;
 			obj_pos.y = 0;
@@ -315,6 +317,7 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			obj_size.y = 2;
 			break;
 		case 249:
+			picture = 212;
 			obj_num = 3;
 			obj_pos.x = 0;
 			obj_pos.y = 1;
@@ -322,6 +325,7 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			obj_size.y = 2;
 			break;
 		case 250:
+			picture = 213;
 			obj_num = 3;
 			obj_pos.x = 1;
 			obj_pos.y = 1;
@@ -357,10 +361,25 @@ void cTerrain::append(legacy::terrain_type_type& old){
 		case 216:
 		case 218: case 219: case 220: case 221:
 		case 222: case 223: case 224: case 225:
-			picture = 215;
+			picture = 216;
 			break;
 		case 233:
 			picture = 137;
+			break;
+		case 213:
+			picture = 214;
+			break;
+		case 214:
+			picture = 215;
+			break;
+		case 246:
+			picture = 209;
+			break;
+		case 251:
+			picture = 207;
+			break;
+		case 252:
+			picture = 208;
 			break;
 	};
 	if(picture < 1000) map_pic = picture;

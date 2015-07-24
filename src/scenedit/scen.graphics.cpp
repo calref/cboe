@@ -347,12 +347,12 @@ void run_startup_g() {
 void load_graphics(){
 	int i;
 	
-	for(i = 0; i < 11; i++){
+	for(i = 0; i < NUM_MONST_SHEETS; i++){
 		std::ostringstream sout;
 		sout << "monst" << i + 1;
 		monst_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
 	}
-	for(i = 0; i < 7; i++){
+	for(i = 0; i < NUM_TER_SHEETS; i++){
 		std::ostringstream sout;
 		sout << "ter" << i + 1;
 		terrain_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
