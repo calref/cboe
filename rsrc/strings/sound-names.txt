@@ -97,4 +97,4 @@ Enter Dungeon
 Sleep
 Normal Ouch
 Missile Hit
-No Sound
+Little Boom
