@@ -58,7 +58,7 @@ std::map<eDamageType,int> boom_gr = {
 	{eDamageType::FIRE, 0},
 	{eDamageType::POISON, 2},
 	{eDamageType::MAGIC, 1},
-	{eDamageType::UNBLOCKABLE, 1},
+	{eDamageType::UNBLOCKABLE, 5},
 	{eDamageType::COLD, 4},
 	{eDamageType::UNDEAD, 3},
 	{eDamageType::DEMON, 3},
@@ -1469,12 +1469,13 @@ bool damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType 
 	if(boom_anim_active) {
 		if(how_much < 0)
 			how_much = 0;
-		// It would also be nice to have a special boom type for cold.
 		short boom_type = 2;
 		if(dam_type == eDamageType::FIRE)
 			boom_type = 0;
-		else if(dam_type == eDamageType::MAGIC)
-			boom_type = 3;
+		else if(dam_type == eDamageType::UNBLOCKABLE)
+			boom_type = 4;
+		else if(dam_type == eDamageType::COLD)
+			boom_type = 5;
 		victim.marked_damage += how_much;
 		add_explosion(victim.cur_loc,how_much,0,boom_type,14 * (victim.x_width - 1),18 * (victim.y_width - 1));
 		// Note: Windows version printed an "undamaged" message here if applicable, but I don't think that's right.

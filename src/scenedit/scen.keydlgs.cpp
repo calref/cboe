@@ -25,7 +25,7 @@ extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 
 std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31};
-std::vector<pic_num_t> boom_pics = {0,1,2,3,4};
+std::vector<pic_num_t> boom_pics = {0,1,2,3,4,5};
 std::vector<pic_num_t> lgdlog_pics = {0,32};
 
 size_t num_strs(eStrMode str_mode) {
@@ -722,7 +722,7 @@ short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
 
 pic_num_t choose_damage_type(short cur, cDialog* parent, bool allow_spec) {
 	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Weird", "Cold", "Undead", "Demon", "Unblockable"};
-	static const std::vector<pic_num_t> pics = {3,0,2,1,1,4,3,3,1};
+	static const std::vector<pic_num_t> pics = {3,0,2,1,5,4,3,3,1};
 	short prev = cur;
 	if(cur < 0 || cur >= pics.size()) cur = 0;
 	cPictChoice pic_dlg(pics.begin(), pics.end() - !allow_spec, PIC_BOOM, parent);
@@ -737,8 +737,12 @@ pic_num_t choose_damage_type(short cur, cDialog* parent, bool allow_spec) {
 }
 
 static pic_num_t choose_boom_type(short cur, cDialog* parent) {
-	static const int preset_booms = 4;
-	static const char*const boomNames[preset_booms+1] = {"Fire", "Teleport", "Magic/Cold/Electricity", "Magic/Electricity", "Custom Explosion"};
+	static const int preset_booms = 6;
+	static const char*const boomNames[preset_booms+1] = {
+		"Fire", "Teleport", "Magic/Electricity",
+		"Magic/Electricity", "Weird", "Cold",
+		"Custom Explosion"
+	};
 	std::vector<pic_num_t> pics;
 	for(int i = 0; i < preset_booms; i++) pics.push_back(i + 8);
 	for(int i = 0; i < scenario.custom_graphics.size(); i++) {
