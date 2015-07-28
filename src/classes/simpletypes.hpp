@@ -398,7 +398,7 @@ enum class eItemAbil {
 	// General abilities
 	DAMAGE_PROTECTION = 30,
 	FULL_PROTECTION = 31,
-	MELEE_PROTECTION = 32,
+	UNUSED2 = 32,
 	EVASION = 33,
 	MARTYRS_SHIELD = 34,
 	ENCUMBERING = 35,

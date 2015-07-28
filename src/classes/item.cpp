@@ -958,7 +958,7 @@ std::string cItem::getAbilName() const {
 	bool party = abil_group();
 	std::ostringstream sout;
 	switch(ability) {
-		case eItemAbil::UNUSED: break; // Invalid
+		case eItemAbil::UNUSED: case eItemAbil::UNUSED2: break; // Invalid
 		case eItemAbil::NONE: sout << "No ability"; break;
 		case eItemAbil::HEALING_WEAPON: sout << "Heals target"; break;
 		case eItemAbil::RETURNING_MISSILE: sout << "Returning missile"; break;
@@ -971,7 +971,6 @@ std::string cItem::getAbilName() const {
 		case eItemAbil::CAUSES_FEAR: sout << "Causes Fear"; break;
 		case eItemAbil::WEAPON_CALL_SPECIAL: sout << "Unusual Attack Effect"; break;
 		case eItemAbil::FULL_PROTECTION: sout << "Full Protection"; break;
-		case eItemAbil::MELEE_PROTECTION: sout << "Melee Protection"; break;
 		case eItemAbil::EVASION: sout << "Evasion"; break;
 		case eItemAbil::MARTYRS_SHIELD: sout << "Martyr's Shield"; break;
 		case eItemAbil::ENCUMBERING: sout << "Awkward Weapon"; break;

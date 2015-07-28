@@ -29,7 +29,7 @@ Call special when attacking
 
 Protection from damage type
 Full protection
-Protection from melee damage
+Unused
 Evasion
 Martyr's shield
 Awkward weapon
