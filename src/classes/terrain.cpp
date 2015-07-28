@@ -358,7 +358,7 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			i = 3000;
 			break;
 		// Misc
-		case 216:
+		case 215:
 		case 218: case 219: case 220: case 221:
 		case 222: case 223: case 224: case 225:
 			picture = 216;
