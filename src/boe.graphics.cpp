@@ -74,8 +74,8 @@ long anim_ticks = 0;
 // 0 - terrain   1 - buttons   2 - pc stats
 // 3 - item stats   4 - text bar   5 - text area (not right)
 // TODO: The duplication of rectangle here shouldn't be necessary...
-rectangle win_from_rects[6] = {rectangle{0,0,351,279},rectangle{0,0,37,258},rectangle{0,0,115,288},rectangle{0,0,143,288},rectangle{0,0,21,279},rectangle{0,0,0,288}};
-rectangle win_to_rects[6] = {rectangle{5,5,356,284},rectangle{383,5,420,263},rectangle{0,0,116,271},rectangle{0,0,144,271},rectangle{358,5,379,284},rectangle{0,0,138,256}};
+rectangle win_from_rects[6] = {rectangle{0,0,350,278},rectangle{0,0,37,258},rectangle{0,0,115,288},rectangle{0,0,143,288},rectangle{0,0,21,279},rectangle{0,0,0,288}};
+rectangle win_to_rects[6] = {rectangle{5,5,356,284},rectangle{383,5,421,271},rectangle{0,0,116,271},rectangle{0,0,144,271},rectangle{358,5,379,284},rectangle{0,0,138,256}};
 
 // 0 - title  1 - button  2 - credits  3 - base button
 rectangle startup_from[4] = {rectangle{0,0,274,602},rectangle{274,0,322,301},rectangle{0,301,67,579},rectangle{274,301,314,341}}; ////
@@ -470,18 +470,16 @@ void draw_start_button(short which_position,short which_button) {
 	win_draw_string(mainPtr,to_rect,button_labels[which_position],eTextMode::CENTRE,style,ul);
 }
 
-void main_button_click(rectangle button_rect) {
-	button_rect.offset(ul);
+void main_button_click(int which_button) {
 	mainPtr.setActive();
-	clip_rect(mainPtr, button_rect);
 	// TODO: Mini-event loop so that the click doesn't happen until releasing the mouse button
 	
-	draw_buttons(1);
+	draw_buttons(which_button);
 	mainPtr.display();
 	if(play_sounds)
 		play_sound(37);
 	else sf::sleep(time_in_ticks(5));
-	draw_buttons(0);
+	draw_buttons(-1);
 	undo_clip(mainPtr);
 }
 
@@ -595,7 +593,7 @@ void redraw_screen(int refresh) {
 			if(refresh & REFRESH_BAR)
 				draw_text_bar();
 			refresh_text_bar();
-			draw_buttons(0);
+			draw_buttons(-1);
 			break;
 	}
 	if(overall_mode == MODE_COMBAT)
@@ -648,31 +646,80 @@ void put_background() {
 	tileImage(mainPtr, rectangle(mainPtr), bg_pict);
 }
 
-//mode; // 0 - regular   1 - button action
+// mode; -1 - all buttons, normal; otherwise draw this button pressed
 void draw_buttons(short mode) {
-	rectangle	source_rect = {0,0,37,258}, dest_rec;	bool spec_draw = false;
+	rectangle lg_rect = {0,0,38,38}, sm_rect[2] = {{0,38,19,76}, {19,38,38,76}}, dest_rec;
+	static const int MAX_TOOLBAR_BUTTONS = 14;
+	static const location null_loc(-1,-1);
+	static const location out_buttons[MAX_TOOLBAR_BUTTONS] = {
+		{0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {5,1}, null_loc, null_loc, null_loc, null_loc, null_loc, null_loc, null_loc
+	};
+	static const location town_buttons[MAX_TOOLBAR_BUTTONS] = {
+		{0,0}, {1,0}, {2,0}, {2,1}, {3,1}, {4,2}, {5,2}, {4,1}, null_loc, null_loc, null_loc, null_loc, null_loc, null_loc
+	};
+	static const location combat_buttons[MAX_TOOLBAR_BUTTONS] = {
+		{0,0}, {1,0}, {2,0}, {0,1}, {1,1}, {0,2}, {2,2}, {1,2}, {3,2}, null_loc, null_loc, null_loc, null_loc, null_loc
+	};
+	extern rectangle bottom_buttons[MAX_TOOLBAR_BUTTONS];
 	
-	if(mode == 1) {
-		spec_draw = true;
-		mode -= 100;
+	auto& toolbar = is_combat() ? combat_buttons : (is_town() ? town_buttons : out_buttons);
+	
+	static bool inited = false;
+	static sf::RenderTexture button_gw;
+	if(!inited) {
+		inited = true;
+		button_gw.create(266,38);
 	}
 	
-	if(is_combat()) { // TODO: Draw buttons one at a time instead of singly
-		source_rect.top += 37;
-		source_rect.bottom += 37;
+	dest_rec = lg_rect;
+	
+	bool bottom_half = false;
+	std::fill_n(bottom_buttons, MAX_TOOLBAR_BUTTONS, rectangle());
+	for(int i = 0; i < MAX_TOOLBAR_BUTTONS && toolbar[i] != null_loc; i++) {
+		rectangle source_rect = {0, 0, 32, 32};
+		rectangle to_rect = dest_rec, btn_rect, icon_rect;
+		source_rect.offset(32 * toolbar[i].x, 38 + 32 * toolbar[i].y);
+		if(toolbar[i].y == 2) {
+			// Small button
+			btn_rect = sm_rect[bottom_half];
+			source_rect.height() = 13;
+			to_rect.height() = 19;
+			if(bottom_half) {
+				to_rect.offset(0,19);
+				bottom_half = false;
+			} else bottom_half = true;
+			icon_rect = {3,3,13,13};
+		} else {
+			// Large button
+			btn_rect = lg_rect;
+			if(bottom_half) {
+				dest_rec.offset(38,0);
+				bottom_half = false;
+			}
+			icon_rect = {3,3,32,32};
+		}
+		if(mode == -1) {
+			rect_draw_some_item(buttons_gworld, btn_rect, button_gw, to_rect);
+			to_rect.inset(3,3);
+			rect_draw_some_item(buttons_gworld, source_rect, button_gw, to_rect, sf::BlendAlpha);
+			to_rect.inset(-3,-3);
+		}
+		to_rect.offset(win_to_rects[1].topLeft());
+		to_rect.offset(ul);
+		if(i == mode)
+			fill_rect(mainPtr, to_rect, sf::Color::Blue);
+		else fill_rect(mainPtr, to_rect, sf::Color::Black);
+		bottom_buttons[i] = to_rect;
+		if(toolbar[i].y != 2 || !bottom_half) {
+			dest_rec.offset(38,0);
+			bottom_half = false;
+		}
 	}
-	if(is_town()) {
-		source_rect.top += 74;
-		source_rect.bottom += 74;
-	}
+	button_gw.display();
 	
 	dest_rec = win_to_rects[1];
 	dest_rec.offset(ul);
-	
-	if(spec_draw)
-		fill_rect(mainPtr, dest_rec, sf::Color::Blue);
-	else fill_rect(mainPtr, dest_rec, sf::Color::Black);
-	rect_draw_some_item(buttons_gworld, source_rect, mainPtr, dest_rec, sf::BlendAdd);
+	rect_draw_some_item(button_gw.getTexture(), rectangle(button_gw), mainPtr, dest_rec, sf::BlendAdd);
 }
 
 void draw_text_bar() {
@@ -1559,10 +1606,10 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 void draw_pointing_arrows() {
 	// TODO: The duplication of rectangle here shouldn't be necessary...
 	rectangle sources[4] = {
-		rectangle{352,28,360,36}, // up
-		rectangle{352,10,360,18}, // left
-		rectangle{352,01,360,9}, // down
-		rectangle{352,19,360,27}  // right
+		rectangle{351,28,359,36}, // up
+		rectangle{351,10,359,18}, // left
+		rectangle{351,01,359,9}, // down
+		rectangle{351,19,359,27}  // right
 	};
 	rectangle dests[8] = {rectangle{7,100,15,108},rectangle{7,170,15,178},rectangle{140,7,148,15},rectangle{212,7,220,15},
 		rectangle{346,100,354,108},rectangle{346,170,354,178},rectangle{140,274,148,282},rectangle{212,274,220,282}};

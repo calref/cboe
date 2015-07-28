@@ -36,9 +36,7 @@
 #include "shop.hpp"
 #include "prefs.hpp"
 
-rectangle bottom_buttons[7];
-rectangle town_buttons[10];
-rectangle combat_buttons[9];
+rectangle bottom_buttons[14];
 rectangle world_screen = {23, 23, 346, 274};
 // TODO: The duplication of rectangle here shouldn't be necessary...
 rectangle item_screen_button_rects[9] = {
@@ -175,24 +173,6 @@ void init_screen_locs() {
 		for(k = 0; k < 6; k++)
 			for(l = 0; l < 48; l++)
 				univ.out_maps[i][k][l] = 0;
-	
-	for(i = 0; i < 7; i++) {
-		bottom_buttons[i].top = 383;
-		bottom_buttons[i].bottom = 420;
-		bottom_buttons[i].left = 5 + (i * 37);
-		bottom_buttons[i].right = bottom_buttons[i].left + 36;
-		town_buttons[i] = bottom_buttons[i];
-	}
-	
-	for(i = 0; i < 5; i++) {
-		combat_buttons[i] = bottom_buttons[i];
-	}
-	town_buttons[7] = bottom_buttons[6];
-	town_buttons[5] = medium_buttons[0];
-	town_buttons[6] = medium_buttons[1];
-	for(i = 5; i < 9; i++) {
-		combat_buttons[i] = medium_buttons[i - 5];
-	}
 	
 	// name, use, give, drip, info, sell/id   each one 13 down
 	item_buttons[0][ITEMBTN_NAME].top = 17;
@@ -1041,37 +1021,29 @@ bool handle_action(sf::Event event) {
 	switch(overall_mode) {
 		case MODE_OUTDOORS: case MODE_LOOK_OUTDOORS:
 			cur_loc = univ.party.p_loc;
-			for(int i = 0; i < 7; i++)
+			for(int i = 0; i < 14; i++)
 				if(the_point.in(bottom_buttons[i])) {
 					button_hit = i;
 					if(!spell_forced)
-						main_button_click(bottom_buttons[i]);
+						main_button_click(i);
 				}
 			break;
 			
 		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE_TOWN: case MODE_LOOK_TOWN:
 		case MODE_DROP_TOWN: case MODE_BASH_TOWN:
+		case MODE_COMBAT: case MODE_SPELL_TARGET: case MODE_FIRING: case MODE_THROWING:
+		case MODE_FANCY_TARGET: case MODE_DROP_COMBAT: case MODE_LOOK_COMBAT:
 			cur_loc = center;
-			for(int i = 0; i < 8; i++)
-				if(the_point.in(town_buttons[i])) {
+			for(int i = 0; i < 14; i++)
+				if(the_point.in(bottom_buttons[i])) {
 					button_hit = i;
 					if(!spell_forced)
-						main_button_click(town_buttons[i]);
+						main_button_click(i);
 				}
 			break;
 			
 		case MODE_TALKING: case MODE_SHOPPING: break;
 			
-		case MODE_COMBAT: case MODE_SPELL_TARGET: case MODE_FIRING: case MODE_THROWING:
-		case MODE_FANCY_TARGET: case MODE_DROP_COMBAT: case MODE_LOOK_COMBAT:
-			cur_loc = center;
-			for(int i = 0; i < 9; i++)
-				if(the_point.in(combat_buttons[i])) {
-					button_hit = i;
-					if(!spell_forced)
-						main_button_click(combat_buttons[i]);
-				}
-			break;
 		case MODE_STARTUP: case MODE_RESTING: case MODE_CUTSCENE:
 			// If we get here during these modes, something is probably not right, so bail out
 			add_string_to_buf("Unexpected game state!");
