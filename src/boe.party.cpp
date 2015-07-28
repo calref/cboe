@@ -2455,14 +2455,6 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 					how_much += r1;
 				}
 			}
-			if(which_pc.items[i].ability == eItemAbil::MELEE_PROTECTION) {
-				r1 = get_ran(1,1,which_pc.items[i].abil_data[0]);
-				if(damage_type == eDamageType::DEMON)
-					how_much -= max(1,r1 / 5);
-				else if(damage_type == eDamageType::UNDEAD)
-					how_much -= max(1,r1 / 4);
-				else how_much -= max(1,r1 / 2);
-			}
 		}
 	}
 	
