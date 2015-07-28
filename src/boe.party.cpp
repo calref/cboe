@@ -2522,8 +2522,10 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 		short boom_type = 2;
 		if(damage_type == eDamageType::FIRE)
 			boom_type = 0;
-		else if(damage_type == eDamageType::MAGIC)
-			boom_type = 3;
+		else if(damage_type == eDamageType::UNBLOCKABLE)
+			boom_type = 4;
+		else if(damage_type == eDamageType::COLD)
+			boom_type = 5;
 		if(is_town())
 			add_explosion(univ.town.p_loc,how_much,0,boom_type,0,0);
 		else add_explosion(which_pc.combat_pos,how_much,0,boom_type,0,0);

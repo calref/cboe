@@ -1473,7 +1473,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 //		return;
 	if((mode != 100) && (party_can_see(where) == 6))
 		return;
-	if((type < 0) || (type > 4))
+	if(type < 0 || type > 5)
 		return;
 	if((boom_anim_active) && (type != 3))
 		return;
