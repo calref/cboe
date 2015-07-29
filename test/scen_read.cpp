@@ -19,8 +19,8 @@ TEST_CASE("Loading a new-format scenario record") {
 	Document doc;
 	fin.exceptions(ios::badbit);
 	
-	SECTION("When the version attribute is missing") {
-		fin.open("files/scenario/bad_root.xml");
+	SECTION("When the root tag is wrong") {
+		fin.open("files/bad_root.xml");
 		doc = xmlDocFromStream(fin, "bad_root.xml");
 		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
 	}
@@ -326,5 +326,6 @@ TEST_CASE("Loading a new-format scenario record") {
 			doc = xmlDocFromStream(fin, "shop-bad_entry.xml");
 			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
 		}
+		ResMgr::popPath<StringRsrc>();
 	}
 }

@@ -1,0 +1,11 @@
+<items boes="2.0.0">
+	<item id='0'>
+		<variety>weapon-1hand</variety>
+		<level>3</level>
+		<pic>0</pic>
+		<value>100</value>
+		<weight>10</weight>
+		<full-name>Test Sword</full-name>
+		<name>Sword</name>
+	</item>
+</items>

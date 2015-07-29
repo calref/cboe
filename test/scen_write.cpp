@@ -248,6 +248,7 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.shops[2].getItem(11).item.graphic_num == 24);
 		CHECK(scen.shops[2].getItem(11).item.full_name == "Magic!");
 		CHECK(scen.shops[2].getItem(11).item.desc == "This is magic!");
+		ResMgr::popPath<StringRsrc>();
 	}
 	SECTION("With some empty strings, only trailing ones are stripped") {
 		scen.spec_strs.resize(12);

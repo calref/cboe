@@ -1,0 +1,7 @@
+<monsters boes="2.0.0">
+	<monster id='1'>
+		<immunity>
+			<unholy>50</unholy>
+		</immunity>
+	</monster>
+</monsters>

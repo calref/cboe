@@ -1,0 +1,10 @@
+<monsters boes="2.0.0">
+	<monster id='1'>
+		<attacks>
+			<attack type='swing'>1d4</attack>
+			<attack type='swing'>1d4</attack>
+			<attack type='swing'>1d4</attack>
+			<attack type='swing'>1d4</attack>
+		</attacks>
+	</monster>
+</monsters>

@@ -1,0 +1,7 @@
+<monsters boes="2.0.0">
+	<monster id='1'>
+		<attacks>
+			<attack type='swing'>bad</attack>
+		</attacks>
+	</monster>
+</monsters>

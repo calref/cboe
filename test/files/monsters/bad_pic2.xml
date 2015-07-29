@@ -1,0 +1,5 @@
+<monsters boes="2.0.0">
+	<monster id='1'>
+		<pic h='1' v='1'>5</pic>
+	</monster>
+</monsters>
