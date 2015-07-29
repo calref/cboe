@@ -1,0 +1,19 @@
+<monsters boes="2.0.0">
+	<monster id='1'>
+		<name>Test Monster</name>
+		<level>1</level>
+		<armor>0</armor>
+		<skill>1</skill>
+		<hp>10</hp>
+		<speed>4</speed>
+		<race>humanoid</race>
+		<attacks>
+			<attack type='swing'>d10</attack>
+			<attack type='punch'>2d4</attack>
+			<attack type='burn'>1d8</attack>
+		</attacks>
+		<pic h='1' w='1'>0</pic>
+		<attitude>hostile-a</attitude>
+		<immunity/>
+	</monster>
+</monsters>

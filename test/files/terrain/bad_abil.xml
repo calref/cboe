@@ -1,0 +1,7 @@
+<terrains boes="2.0.0">
+	<terrain id='0'>
+		<special>
+			<type>bad</type>
+		</special>
+	</terrain>
+</terrains>

@@ -45,6 +45,9 @@ static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool on
 // Some of these are non-static so that the test cases can access them.
 ticpp::Document xmlDocFromStream(std::istream& stream, std::string name);
 void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario);
+void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario);
+void readItemsFromXml(ticpp::Document&& data, cScenario& scenario);
+void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario);
 void loadOutMapData(map_data&& data, location which, cScenario& scen);
 void loadTownMapData(map_data&& data, int which, cScenario& scen);
 
@@ -899,7 +902,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		throw xMissingElem("scenario", *reqs.begin(), data.FirstChildElement()->Row(), data.FirstChildElement()->Column(), fname);
 }
 
-static void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
+void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
 	using namespace ticpp;
 	int maj, min, rev;
 	std::string fname, type, name, val;
@@ -1014,7 +1017,7 @@ static void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
 	}
 }
 
-static void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
+void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 	using namespace ticpp;
 	int maj, min, rev;
 	std::string fname, type, name, val;
@@ -1090,20 +1093,22 @@ static void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 				Iterator<Element> prop;
 				for(prop = prop.begin(item.Get()); prop != prop.end(); prop++) {
 					prop->GetValue(&type);
-					prop->GetText(&val);
-					bool state = val == "true";
+					auto state = [&prop,&val]() -> bool {
+						prop->GetText(&val);
+						return val == "true";
+					};
 					if(type == "identified") {
-						the_item.ident = state;
+						the_item.ident = state();
 					} else if(type == "magic") {
-						the_item.magic = state;
+						the_item.magic = state();
 					} else if(type == "cursed") {
-						the_item.cursed = state;
+						the_item.cursed = state();
 					} else if(type == "concealed") {
-						the_item.concealed = state;
+						the_item.concealed = state();
 					} else if(type == "enchanted") {
-						the_item.enchanted = state;
+						the_item.enchanted = state();
 					} else if(type == "unsellable") {
-						the_item.unsellable = state;
+						the_item.unsellable = state();
 					} else throw xBadNode(type, prop->Row(), prop->Column(), fname);
 				}
 			} else if(type == "description") {
@@ -1130,10 +1135,14 @@ static std::pair<int,int> parseDice(std::string str, std::string elem, std::stri
 				count *= 10;
 				count += c - '0';
 			}
-		} else if(!found_d && c == 'd')
+		} else if(!found_d && c == 'd') {
 			found_d = true;
+			if(count == 0) count = 1;
+		}
 		else throw xBadVal(elem, attr, str, row, col, fname);
 	}
+	if(!found_d)
+		throw xBadVal(elem, attr, str, row, col, fname);
 	return {count, sides};
 }
 
@@ -1291,7 +1300,7 @@ static void readMonstAbilFromXml(ticpp::Element& data, cMonster& monst) {
 	}
 }
 
-static void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
+void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 	using namespace ticpp;
 	int maj, min, rev;
 	std::string fname, type, name, val;
