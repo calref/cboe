@@ -3378,9 +3378,10 @@ void edit_custom_sheets() {
 		spec_scen_g.clear();
 		spec_scen_g.sheets = new sf::Texture[1];
 		spec_scen_g.numSheets = 1;
-		spec_scen_g.sheets[0].create(280, 360);
+		spec_scen_g.init_sheet(0);
 		spec_scen_g.sheets[0].copyToImage().saveToFile((pic_dir/"sheet0.png").string().c_str());
 		all_pics.insert(all_pics.begin(), 0);
+		ResMgr::pushPath<ImageRsrc>(pic_dir);
 	}
 	
 	set_cursor(watch_curs);
@@ -3468,7 +3469,7 @@ void edit_custom_sheets() {
 			sf::Texture* wasSheets = spec_scen_g.sheets;
 			spec_scen_g.sheets = new sf::Texture[spec_scen_g.numSheets + 1];
 			std::copy_n(wasSheets, spec_scen_g.numSheets, spec_scen_g.sheets);
-			spec_scen_g.sheets[newSheet].create(280,360);
+			spec_scen_g.init_sheet(newSheet);
 			spec_scen_g.sheets[newSheet].copyToImage().saveToFile(sheetPath.string().c_str());
 			spec_scen_g.numSheets++;
 			auto iter = all_pics.insert(std::upper_bound(all_pics.begin(), all_pics.end(), newSheet), newSheet);

@@ -535,6 +535,22 @@ void cCustomGraphics::replace_sheet(size_t num, sf::Image& newSheet) {
 	ResMgr::free<ImageRsrc>(sheetname);
 }
 
+void cCustomGraphics::init_sheet(size_t num) {
+	sheets[num].create(280,360);
+	sf::Image fill1, fill2;
+	fill1.create(28,36,{0xff,0xff,0xc0});
+	fill2.create(28,36,{0xc0,0xff,0xc0});
+	for(int y = 0; y < 10; y++) {
+		for(int x = 0; x < 10; x++) {
+			if(x % 2 == y % 2) {
+				sheets[num].update(fill1.getPixelsPtr(), 28, 36, x * 28, y * 36);
+			} else {
+				sheets[num].update(fill2.getPixelsPtr(), 28, 36, x * 28, y * 36);
+			}
+		}
+	}
+}
+
 // TODO: This doesn't belong in this file
 std::string get_str(std::string list, short j){
 	if(j == 0) return list;
