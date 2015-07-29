@@ -28,7 +28,7 @@ map_data load_map(std::istream& fin, bool isTown, std::string name) {
 		bool vehicle_owned;
 		for(char c : line) {
 			if(c == '#') break; // Found a comment
-			if(isblank(c)) continue;
+			if(c == ' ' || c == '\t') continue;
 			if(isdigit(c)) {
 				n *= 10;
 				n += c - '0';
