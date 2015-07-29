@@ -83,6 +83,7 @@ struct cCustomGraphics {
 	graf_pos find_graphic(pic_num_t pic, bool party = false);
 	size_t count(bool party = false);
 	void replace_sheet(size_t num, sf::Image& newSheet);
+	void init_sheet(size_t num);
 };
 
 struct snippet_t {
