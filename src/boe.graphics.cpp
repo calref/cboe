@@ -662,7 +662,7 @@ void draw_buttons(short mode) {
 	};
 	extern rectangle bottom_buttons[MAX_TOOLBAR_BUTTONS];
 	
-	auto& toolbar = is_combat() ? combat_buttons : (is_town() ? town_buttons : out_buttons);
+	const location* toolbar = is_combat() ? combat_buttons : (is_town() ? town_buttons : out_buttons);
 	
 	static bool inited = false;
 	static sf::RenderTexture button_gw;
