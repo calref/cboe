@@ -43,6 +43,9 @@ void load_spec_graphics();
 
 // These aren't static solely so that the test cases can access them.
 void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario);
+void writeTerrainToXml(ticpp::Printer&& data, cScenario& scenario);
+void writeItemsToXml(ticpp::Printer&& data, cScenario& scenario);
+void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario);
 map_data buildOutMapData(location which, cScenario& scenario);
 map_data buildTownMapData(size_t which, cScenario& scenario);
 
@@ -355,7 +358,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.CloseElement("scenario");
 }
 
-static void writeTerrainToXml(ticpp::Printer&& data) {
+void writeTerrainToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.OpenElement("terrains");
 	data.PushAttribute("boes", scenario.format_ed_version());
 	for(size_t i = 0; i < scenario.ter_types.size(); i++) {
@@ -401,7 +404,7 @@ static void writeTerrainToXml(ticpp::Printer&& data) {
 	data.CloseElement("terrains");
 }
 
-static void writeItemsToXml(ticpp::Printer&& data) {
+void writeItemsToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.OpenElement("items");
 	data.PushAttribute("boes", scenario.format_ed_version());
 	for(size_t i = 0; i < scenario.scen_items.size(); i++) {
@@ -453,7 +456,7 @@ static void writeItemsToXml(ticpp::Printer&& data) {
 	data.CloseElement("items");
 }
 
-static void writeMonstersToXml(ticpp::Printer&& data) {
+void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 	std::ostringstream str;
 	data.OpenElement("monsters");
 	data.PushAttribute("boes", scenario.format_ed_version());
@@ -948,15 +951,15 @@ void save_scenario(bool rename) {
 		
 		// Then the terrains...
 		std::ostream& terrain = scen_file.newFile("scenario/terrain.xml");
-		writeTerrainToXml(ticpp::Printer("terrain.xml", terrain));
+		writeTerrainToXml(ticpp::Printer("terrain.xml", terrain), scenario);
 		
 		// ...items...
 		std::ostream& items = scen_file.newFile("scenario/items.xml");
-		writeItemsToXml(ticpp::Printer("items.xml", items));
+		writeItemsToXml(ticpp::Printer("items.xml", items), scenario);
 		
 		// ...and monsters
 		std::ostream& monsters = scen_file.newFile("scenario/monsters.xml");
-		writeMonstersToXml(ticpp::Printer("monsters.xml", monsters));
+		writeMonstersToXml(ticpp::Printer("monsters.xml", monsters), scenario);
 		
 		// And the special nodes.
 		std::ostream& scen_spec = scen_file.newFile("scenario/scenario.spec");
