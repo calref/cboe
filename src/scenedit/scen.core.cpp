@@ -1613,10 +1613,12 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		desc_dlg["left"].hide();
 		desc_dlg["right"].hide();
 		desc_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &desc_dlg, true));
+		desc_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &desc_dlg, false));
 		desc_dlg["text"].setText(item.desc);
 		desc_dlg["num-lbl"].setText(item.full_name);
 		desc_dlg.run();
-		item.desc = desc_dlg["text"].getText();
+		if(desc_dlg.accepted())
+			item.desc = desc_dlg["text"].getText();
 	} else if(hit == "abils") {
 		save_item_info(me, item);
 		if(item.variety == eItemType::NO_ITEM) {
