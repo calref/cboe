@@ -1019,20 +1019,12 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eStrM
 				size_t n = num_strs(str_mode);
 				for(i = 0; i < n; i++) {
 					std::string& str = fetch_str(str_mode, i);
-					if(!str.empty() && str[0] == '*') {
-						*str1 = i;
-						i = 500;
-					}
+					if(!str.empty() && str[0] == '*')
+						break;
 				}
-				if(i < 500) {
-					giveError("There are no more free message slots.",
-							  "To free up some slots, go into Edit Town/Out/Scenario Text to clear some messages.", &me);
-					return true;
-				}
+				*str1 = i;
 			}
-			if(*str1 >= 0) {
-				fetch_str(str_mode, *str1) = str;
-			}
+			fetch_str(str_mode, *str1) = str;
 		}
 		str = str2 == nullptr ? "" : me["str2"].getText();
 		if(!str.empty()) {
@@ -1040,20 +1032,12 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eStrM
 				size_t n = num_strs(str_mode);
 				for(i = 0; i < n; i++) {
 					std::string& str = fetch_str(str_mode, i);
-					if(!str.empty() && str[0] == '*') {
-						*str2 = i;
-						i = 500;
-					}
+					if(!str.empty() && str[0] == '*')
+						break;
 				}
-				if(i < 500) {
-					giveError("There are no more free message slots.",
-							  "To free up some slots, go into Edit Town/Out/Scenario Text to clear some messages.", &me);
-					return true;
-				}
+				*str2 = i;
 			}
-			if(*str2 >= 0) {
-				fetch_str(str_mode, *str2) = str;
-			}
+			fetch_str(str_mode, *str2) = str;
 		}
 		me.toast(true);
 	} else me.toast(false);
@@ -1108,20 +1092,17 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 	if(*str1 < 0) {
 		size_t n = num_strs(mode);
 		for(i = 0; i < n; i++) {
-			for(j = i; j < i + 6 && j < n; j++) {
+			for(j = i; j < i + 6; j++) {
 				std::string str = fetch_str(mode, j);
 				if(!str.empty() && str[0] != '*')
-					j = 5000;
+					break;
 			}
-			if(j < 5000) {
-				*str1 = i;
-				i = 5000;
-			}
+			if(j == i + 6)
+				break;
 		}
-		if(*str1 >= 0) {
-			for(short i = *str1; i < *str1 + 6; i++)
-				fetch_str(mode, i).clear();
-		}
+		*str1 = i;
+		for(short i = *str1; i < *str1 + 6; i++)
+			fetch_str(mode, i).clear();
 	}
 	if(*str1 < 0) {
 		giveError("To create a dialog, you need 6 consecutive unused messages. To free up 6 messages, select Edit Out/Town/Scenario Text from the menus.","",parent);
