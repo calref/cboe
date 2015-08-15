@@ -279,7 +279,7 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) {
 	
 	if((pc_pos_x != minmax(0,47,pc_pos_x)) || (pc_pos_y != minmax(0,47,pc_pos_y)) ||
 		(out_x != minmax(0,univ.scenario.outdoors.width() - 1,out_x)) || (out_y != minmax(0,univ.scenario.outdoors.height() - 1,out_y))) {
-		giveError("The scenario has tried to place you in an out of bounds outdoor location.");
+		showError("The scenario has tried to place you in an out of bounds outdoor location.");
 		return;
 	}
 	

@@ -260,14 +260,14 @@ static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short
 	
 	item.charges = me["charges"].getTextAsNum();
 	if(item.charges < -1 || item.charges > 2500) {
-		giveError("Number of charges/amount of gold or food must be from 0 to 2500.",
+		showError("Number of charges/amount of gold or food must be from 0 to 2500.",
 				  "If an item with charges (not gold or food) leave this at -1 for the item to have the default number of charges.",&me);
 		return true;
 	}
 	
 	eItemType type = scenario.scen_items[item.code].variety;
 	if(item.charges == 0 && (type == eItemType::GOLD || type == eItemType::FOOD)) {
-		giveError("You must assign gold or food an amount of at least 1.","",&me);
+		showError("You must assign gold or food an amount of at least 1.","",&me);
 		return false;
 	}
 	
@@ -911,7 +911,7 @@ static bool check_talk_personality(cDialog& me, std::string item_hit, bool losin
 		std::ostringstream message;
 		message << "The legal range for personalities in this town is from ";
 		message << cur_town * 10 << " to " << cur_town * 10 + 9 << ".";
-		giveError("Personalities in talk nodes must be -1 (for unused node), -2 (all personalities use) or in the legal range of personalities in this town.", message.str(), &me);
+		showError("Personalities in talk nodes must be -1 (for unused node), -2 (all personalities use) or in the legal range of personalities in this town.", message.str(), &me);
 		return false;
 	}
 	return true;
@@ -927,7 +927,7 @@ static bool check_talk_key(cDialog& me, std::string item_hit, bool losing) {
 			passes = false;
 	}
 	if(!passes) {
-		giveError("The words this node is the response to must be 4 characters long, and all characters must be lower case letters.", &me);
+		showError("The words this node is the response to must be 4 characters long, and all characters must be lower case letters.", &me);
 		return false;
 	}
 	return true;

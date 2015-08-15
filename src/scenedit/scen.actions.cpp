@@ -188,11 +188,11 @@ static bool handle_lb_action(location the_point) {
 						break;
 					case LB_NEW_TOWN:
 						if(change_made) {
-							giveError("You need to save the changes made to your scenario before you can add a new town.");
+							showError("You need to save the changes made to your scenario before you can add a new town.");
 							return true;
 						}
 						if(scenario.towns.size() >= 200) {
-							giveError("You have reached the limit of 200 towns you can have in one scenario.");
+							showError("You have reached the limit of 200 towns you can have in one scenario.");
 							return true;
 						}
 						if(new_town(scenario.towns.size()))
@@ -822,7 +822,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			case MODE_PLACE_SAME_CREATURE:
 				if(last_placed_monst.number == 0) {
-					giveError("Either no monster has been placed, or the last time you tried to place a monster the operation failed.");
+					showError("Either no monster has been placed, or the last time you tried to place a monster the operation failed.");
 					break;
 				}
 				for(i = 0; i < town->creatures.size(); i++)
@@ -920,7 +920,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			case MODE_PLACE_SAME_ITEM:
 				if(store_place_item.code < 0) {
-					giveError("Either no item has been placed, or the last time you tried to place an item the operation failed.");
+					showError("Either no item has been placed, or the last time you tried to place an item the operation failed.");
 					break;
 				}
 				for(x = 0; x < town->preset_items.size(); x++)
@@ -996,13 +996,13 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						}
 				}
 				if(x != -1)
-					giveError("There wasn't a special on that spot.");
+					showError("There wasn't a special on that spot.");
 				set_cursor(wand_curs);
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PASTE_SPECIAL: //paste special
 				if(copied_spec < 0) {
-					giveError("You need to select a special to copy first.");
+					showError("You need to select a special to copy first.");
 					break;
 				}
 				if(editing_town) {
@@ -1090,7 +1090,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				if(cChoiceDlog("set-out-start-confirm", {"okay", "cancel"}).show() == "cancel")
 					break;
 				if((spot_hit.x != minmax(4,43,spot_hit.x)) || (spot_hit.y != minmax(4,43,spot_hit.y))) {
-					giveError("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.");
+					showError("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.");
 					break;
 				}
 				scenario.out_sec_start.x = cur_out.x;
@@ -1188,7 +1188,7 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 						if(k >= scenario.scen_items.size())
 							break;
 						if(scenario.scen_items[k].variety == eItemType::NO_ITEM) {
-							giveError("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.");
+							showError("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.");
 							break;
 						}
 						overall_mode = MODE_PLACE_ITEM;
@@ -2222,7 +2222,7 @@ void place_items_in_town() {
 				}
 		}
 	if(place_failed)
-		giveError("Not all of the random items could be placed. The preset item per town limit of 64 was reached.");
+		showError("Not all of the random items could be placed. The preset item per town limit of 64 was reached.");
 	draw_terrain();
 }
 
@@ -2339,7 +2339,7 @@ void town_entry(location spot_hit) {
 	
 	ter = current_terrain->terrain[spot_hit.x][spot_hit.y];
 	if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
-		giveError("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.");
+		showError("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.");
 		return;
 	}
 	// clean up old town entries

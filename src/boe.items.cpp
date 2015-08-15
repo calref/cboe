@@ -989,7 +989,7 @@ short get_num_response(short min, short max, std::string prompt) {
 			if(!losing) return true;
 			int val = me["number"].getTextAsNum();
 			if(val < min || val > max) {
-				giveError("Number out of range!");
+				showError("Number out of range!");
 				return false;
 			}
 			return true;

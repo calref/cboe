@@ -161,13 +161,13 @@ int main(int argc, char* argv[]) {
 		close_program();
 		return 0;
 	} catch(std::exception& x) {
-		giveError(x.what());
+		showFatalError(x.what());
 		throw;
 	} catch(std::string& x) {
-		giveError(x);
+		showFatalError(x);
 		throw;
 	} catch(...) {
-		giveError("An unknown error occurred!");
+		showFatalError("An unknown error occurred!");
 		throw;
 	}
 }

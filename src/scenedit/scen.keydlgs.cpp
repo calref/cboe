@@ -106,7 +106,7 @@ static std::string str_info(eStrMode str_mode, size_t which) {
 //cre = check range error
 bool cre(short val,short min,short max,std::string text1,std::string text2,cDialog* parent) {
 	if((val < min) || (val > max)) {
-		giveError(text1,text2,parent);
+		showError(text1,text2,parent);
 		return true;
 	}
 	return false;
@@ -178,7 +178,7 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 		case PIC_TER_MAP: total_pics = 977; break;
 		case PIC_FULL:
 			if(!fs::is_directory(tempDir/scenario_temp_dir_name/"graphics")) {
-				giveError("You have no custom graphics, so it's not possible to select this kind of picture!",parent);
+				showError("You have no custom graphics, so it's not possible to select this kind of picture!",parent);
 				return NO_PIC;
 			}
 			for(fs::directory_iterator iter(tempDir/scenario_temp_dir_name/"graphics"); iter != fs::directory_iterator(); iter++) {
@@ -917,7 +917,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		default:
 			choose_string = false;
 			store = val;
-			giveError("Whoops! Unknown edit type! (" + (btn + std::string(")")), "", &me);
+			showError("Whoops! Unknown edit type! (" + (btn + std::string(")")), "", &me);
 			break;
 	}
 	if(choose_string)
@@ -934,7 +934,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	
 	if(mode == 0) {
 		if(which_node >= scenario.scen_specials.size()) {
-			giveError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
+			showError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
 		if(scenario.scen_specials[which_node].pic < 0)
@@ -942,7 +942,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		the_node = scenario.scen_specials[which_node];
 	} else if(mode == 1) {
 		if(which_node >= current_terrain->specials.size()) {
-			giveError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
+			showError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
 		if(current_terrain->specials[which_node].pic < 0)
@@ -950,7 +950,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		the_node = current_terrain->specials[which_node];
 	} else if(mode == 2) {
 		if(which_node >= town->specials.size()) {
-			giveError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
+			showError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
 		if(town->specials[which_node].pic < 0)
@@ -1105,7 +1105,7 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 			fetch_str(mode, i).clear();
 	}
 	if(*str1 < 0) {
-		giveError("To create a dialog, you need 6 consecutive unused messages. To free up 6 messages, select Edit Out/Town/Scenario Text from the menus.","",parent);
+		showError("To create a dialog, you need 6 consecutive unused messages. To free up 6 messages, select Edit Out/Town/Scenario Text from the menus.","",parent);
 		return;
 	}
 	
@@ -1136,7 +1136,7 @@ static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, sho
 	else if(item_hit == "okay") {
 		i = me["num"].getTextAsNum();
 		if(i < 0 || i >= num_specs) {
-			giveError("There is no special node with that number. The available range is 0 to " + std::to_string(num_specs - 1) + ".",&me);
+			showWarning("There is no special node with that number. The available range is 0 to " + std::to_string(num_specs - 1) + ".","The node has been set anyway. To create it, select Edit Special Nodes from the menu, scroll to the bottom, and select Create new Node.",&me);
 		}
 		me.setResult(i);
 		me.toast(true);
@@ -1163,7 +1163,7 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 	if(item_hit == "okay") {
 		scenario.intro_pic = me["picnum"].getTextAsNum();
 		if(scenario.intro_pic > 29) {
-			giveError("Intro picture number is out of range.","",&me);
+			showError("Intro picture number is out of range.","",&me);
 			return true;
 		}
 		for(i = 0; i < 6; i++) {

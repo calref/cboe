@@ -107,13 +107,13 @@ int main(int argc, char* argv[]) {
 		close_program();
 		return 0;
 	} catch(std::exception& x) {
-		giveError(x.what());
+		showFatalError(x.what());
 		throw;
 	} catch(std::string& x) {
-		giveError(x);
+		showFatalError(x);
 		throw;
 	} catch(...) {
-		giveError("An unknown error occurred!");
+		showFatalError("An unknown error occurred!");
 		throw;
 	}
 }
@@ -281,11 +281,11 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::TOWN_CREATE:
 			if(change_made) {
-				giveError("You need to save the changes made to your scenario before you can add a new town.");
+				showError("You need to save the changes made to your scenario before you can add a new town.");
 				return;
 			}
 			if(scenario.towns.size() >= 200) {
-				giveError("You have reached the limit of 200 towns you can have in one scenario.");
+				showError("You have reached the limit of 200 towns you can have in one scenario.");
 				return;
 			}
 			if(new_town(scenario.towns.size()))
@@ -336,7 +336,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::TOWN_IMPORT:
 			if(change_made) {
-				giveError("You need to save the changes made to your scenario before you can import a town.");
+				showError("You need to save the changes made to your scenario before you can import a town.");
 				return;
 			}
 			if(cTown* town = pick_import_town()) {
@@ -350,7 +350,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::OUT_IMPORT:
 			if(change_made) {
-				giveError("You need to save the changes made to your scenario before you can import a sector.");
+				showError("You need to save the changes made to your scenario before you can import a sector.");
 				return;
 			}
 			if(cOutdoors* out = pick_import_out()) {
@@ -387,19 +387,19 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::TOWN_DELETE:
 			if(change_made) {
-				giveError("You need to save the changes made to your scenario before you can delete a town.");
+				showError("You need to save the changes made to your scenario before you can delete a town.");
 				return;
 			}
 			if(scenario.towns.size() == 1) {
-				giveError("You can't delete the last town in a scenario. All scenarios must have at least 1 town.");
+				showError("You can't delete the last town in a scenario. All scenarios must have at least 1 town.");
 				return;
 			}
 			if(scenario.towns.size() - 1 == cur_town) {
-				giveError("You can't delete the last town in a scenario while you're working on it. Load a different town, and try this again.");
+				showError("You can't delete the last town in a scenario while you're working on it. Load a different town, and try this again.");
 				return;
 			}
 			if(scenario.towns.size() - 1 == scenario.which_town_start) {
-				giveError("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.");
+				showError("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.");
 				return;
 			}
 			if(cChoiceDlog("delete-town-confirm", {"okay", "cancel"}).show() == "okay")

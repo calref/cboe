@@ -522,8 +522,8 @@ void cStrDlog::show(){
 	dlg.run();
 }
 
-void giveError(std::string str1, std::string str2, cDialog* parent){
-	cStrDlog error(str1,str2,"Error!!!",25,PIC_DLOG,parent);
+static void giveError(pic_num_t pic, std::string title, std::string str1, std::string str2, cDialog* parent) {
+	cStrDlog error(str1,str2,title,pic,PIC_DLOG,parent);
 	error->getControl("record").setText("Copy");
 	error.setRecordHandler([](cDialog& me) {
 		std::string error = me["str1"].getText();
@@ -539,6 +539,26 @@ void giveError(std::string str1, std::string str2, cDialog* parent){
 	error.show();
 }
 
-void giveError(std::string str1, cDialog* parent) {
-	giveError(str1, "", parent);
+void showError(std::string str1, cDialog* parent) {
+	showError(str1, "", parent);
+}
+
+void showError(std::string str1, std::string str2, cDialog* parent) {
+	giveError(25, "Error", str1, str2, parent);
+}
+
+void showWarning(std::string str1, cDialog* parent) {
+	showWarning(str1, "", parent);
+}
+
+void showWarning(std::string str1, std::string str2, cDialog* parent) {
+	giveError(24, "Warning", str1, str2, parent);
+}
+
+void showFatalError(std::string str1, cDialog* parent) {
+	showFatalError(str1, "", parent);
+}
+
+void showFatalError(std::string str1, std::string str2, cDialog* parent) {
+	giveError(25, "Error!!!", str1, str2, parent);
 }

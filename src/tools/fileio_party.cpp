@@ -54,7 +54,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	// the three flags still follow that.
 	FILE* file_id = fopen(file_to_load.string().c_str(), "rb");
 	if(file_id == NULL) {
-		giveError("Loading Blades of Exile save file failed.");
+		showError("Loading Blades of Exile save file failed.");
 		return false;
 	}
 	
@@ -63,7 +63,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	n = fread(&flags, len, 1, file_id);
 	if(n < 1) {
 		fclose(file_id);
-		giveError("This is not a Blades of Exile save file.");
+		showError("This is not a Blades of Exile save file.");
 		return false;
 	}
 	
@@ -142,7 +142,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 		case new_oboe:
 			return load_party_v2(file_to_load, univ, town_restore, in_scen, maps_there);
 		case unknown:
-			giveError("This is not a Blades of Exile save file.");
+			showError("This is not a Blades of Exile save file.");
 			return false;
 	}
 	
@@ -306,7 +306,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	{ // Load main party data first
 		std::istream& fin = partyIn.getFile("save/party.txt");
 		if(!fin) {
-			giveError("Loading Blades of Exile save file failed.");
+			showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
 		univ.party.readFrom(fin);
@@ -315,7 +315,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	{ // Then the "setup" array
 		std::istream& fin = partyIn.getFile("save/setup.dat");
 		if(!fin) {
-			giveError("Loading Blades of Exile save file failed.");
+			showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
 		uint16_t magic;
@@ -334,7 +334,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		fname[7] = i + '1';
 		std::istream& fin = partyIn.getFile(fname);
 		if(!fin) {
-			giveError("Loading Blades of Exile save file failed.");
+			showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
 		univ.party[i].readFrom(fin);
@@ -363,7 +363,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 			// Load town data
 			std::istream& fin = partyIn.getFile("save/town.txt");
 			if(!fin) {
-				giveError("Loading Blades of Exile save file failed.");
+				showError("Loading Blades of Exile save file failed.");
 				return false;
 			}
 			univ.town.readFrom(fin);
@@ -382,7 +382,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		// Load outdoors data
 		std::istream& fin = partyIn.getFile("save/out.txt");
 		if(!fin) {
-			giveError("Loading Blades of Exile save file failed.");
+			showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
 		univ.out.readFrom(fin);
@@ -406,7 +406,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 			spec_scen_g.party_sheet.reset(new sf::Texture);
 			spec_scen_g.party_sheet->create(party_sheet.getSize().x, party_sheet.getSize().y);
 			spec_scen_g.party_sheet->update(party_sheet);
-		} else giveError("There was an error loading the party custom graphics.");
+		} else showWarning("There was an error loading the party custom graphics.");
 	}
 	
 	return true;
