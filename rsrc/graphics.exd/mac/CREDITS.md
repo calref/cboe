@@ -53,26 +53,36 @@ rearranged a little:
 In fields.png, the first four graphics were created by ADoS.
 The rest are original BoE graphics.
 
+The buttons in edbuttons.png were created by ADoS. Some were based on original BoE
+buttons, some were based on buttons by Celtic Minstrel (some of which were themselves
+based on original BoE buttons), and some are original. The tiny icons are either original
+BoE or created by Celtic Minstrel (some based on the originals).
+
 Some sheets are entirely original:
 
 - dlogscroll.png created by Jewels (pressed versions made by Celtic Minstrel)
 
-For terrain graphics, most are original BoE graphics, except for the following:
+For terrain graphics, most are original BoE graphics, except for the following (some of
+which are based on original BoE graphics):
 
 - On ter5.png, graphics 20-23 and 33 are by Mistb0rn. Graphics 18, 19, 25 are by ADoS.
 Graphics 24 and 46-49 were monster graphics in original BoE.
 - ter6.png is entirely by Mistb0rn.
-- ter7.png is by Mistb0rn, except the small trees (54 and 46) which are by Celtic Minstrel.
-- On ter8.png, graphics 0, 1, 5, 6, 10, 11, 15, 16 are by Celtic Minstrel; 48 and 49 are by
-Wyrmfire; and the rest are by Mistb0rn.
+- ter7.png is by Mistb0rn, except the small trees (54 and 46) which are by Celtic
+Minstrel.
+- On ter8.png, graphics 0, 1, 5, 6, 10, 11, 15, 16 are by Celtic Minstrel; 48 and 49 are
+by
+Wyrmfire; 18 and 19 are by ADoS; and the rest are by Mistb0rn.
 - ter9.png is entirely by Wyrmfire.
-- On ter10.png, graphics 0-5, 8-19 are by Wyrmfire, and the rest are by Mistb0rn (but based
+- On ter10.png, graphics 0-5, 8-19 are by Wyrmfire, and the rest are by Mistb0rn (but
+based
 on Wyrmfire's graphics).
 - On ter11.png, graphics 0-22 are by Mistb0rn.
 - On teranim.png, graphic 15 is by Mistb0rn and graphic 16 is by Wyrmfire.
 - termap.png currently just contains directly shrunken versions of the other sheets.
 
-For monster graphics, most are original BoE graphics, except for the following:
+For monster graphics, most are original BoE graphics, except for the following (some of
+which are based on original BoE graphics):
 
 - The last graphic in monst5.png (the statue) is adapted from Exile III (though BoE had a
 nearly-identical one).
@@ -88,5 +98,6 @@ For item graphics, most are original BoE graphics, except for the following:
 startanim.png has been heavily modified with new text, but the actual pictures in it are
 still all original BoE graphics.
 
-In staticons.png, the last three rows (except the blue M shield) are from Blades of Avernum.
+In staticons.png, the last three rows (except the blue M shield) are from Blades of
+Avernum.
 The rest are original BoE graphics.
