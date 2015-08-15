@@ -1200,9 +1200,9 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 	cDialog abil_dlg("edit-mabil-" + which_dlg, &me);
 	abil_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
 	abil_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
-	abil_dlg["delete"].attachClickHandler([&monst,iter](cDialog& me,std::string,eKeyMod){
+	abil_dlg["delete"].attachClickHandler([&monst,&iter](cDialog& me,std::string,eKeyMod){
 		// TODO: Show confirmation first?
-		return me.toast(false), monst.abil.erase(iter), true;
+		return me.toast(false), iter = monst.abil.erase(iter), true;
 	});
 	auto onfocus = [&](cDialog& me,std::string,bool losing) -> bool {
 		if(!losing) return true;
@@ -1329,8 +1329,11 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 	if(abil_dlg.accepted())
 		iter->second = abil_params;
 	put_monst_abils_in_dlog(me, monst);
-	size_t iShow = std::distance(monst.abil.begin(), iter);
-	dynamic_cast<cStack&>(me["abils"]).setPage(iShow / 4);
+	if(monst.abil.size() > 0) {
+		cStack& stk = dynamic_cast<cStack&>(me["abils"]);
+		size_t iShow = iter == monst.abil.end() ? stk.getPageCount() - 1 : std::distance(monst.abil.begin(), iter) / 4;
+		stk.setPage(iShow);
+	}
 	return true;
 }
 
