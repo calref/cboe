@@ -2205,7 +2205,6 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 void place_items_in_town() {
 	location l;
 	short i,j,k,x;
-	bool place_failed = false;
 	
 	for(i = 0; i < town->max_dim(); i++)
 		for(j = 0; j < town->max_dim(); j++) {
@@ -2215,14 +2214,11 @@ void place_items_in_town() {
 			for(k = 0; k < 10; k++)
 				if(town->terrain(i,j) == scenario.storage_shortcuts[k].ter_type) {
 					for(x = 0; x < 10; x++)
-						if(place_item(l,scenario.storage_shortcuts[k].item_num[x],
-									   scenario.storage_shortcuts[k].property,false,
-									   scenario.storage_shortcuts[k].item_odds[x]) == false)
-							place_failed = true;
+						place_item(l,scenario.storage_shortcuts[k].item_num[x],
+								   scenario.storage_shortcuts[k].property,false,
+								   scenario.storage_shortcuts[k].item_odds[x]);
 				}
 		}
-	if(place_failed)
-		showError("Not all of the random items could be placed. The preset item per town limit of 64 was reached.");
 	draw_terrain();
 }
 
