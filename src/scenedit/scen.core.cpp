@@ -2913,10 +2913,13 @@ bool build_scenario() {
 	scenario.contact_info[0] = author;
 	scenario.default_ground = grass ? 2 : 0;
 	
-	fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
+	fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.boes";
 	if(!fs::exists(basePath)) {
-		showError("Blades of Exile Base could not be found.");
-		return false;
+		basePath = basePath.parent_path()/"bladbase.exs";
+		if(!fs::exists(basePath)) {
+			showError("Blades of Exile Base could not be found.");
+			return false;
+		}
 	}
 	cScenario base;
 	load_scenario(basePath, base);
