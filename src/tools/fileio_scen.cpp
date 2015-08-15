@@ -77,10 +77,10 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header)
 		else if(fname.substr(dot) == ".exs")
 			return load_scenario_v1(file_to_load, scenario, only_header);
 	} catch(std::exception& x) {
-		giveError("There was an error loading the scenario. The details of the error are given below; you may be able to decompress the scenario package, fix the error, and repack it.", x.what());
+		showError("There was an error loading the scenario. The details of the error are given below; you may be able to decompress the scenario package, fix the error, and repack it.", x.what());
 		return false;
 	}
-	giveError("That is not a Blades of Exile scenario.");
+	showError("That is not a Blades of Exile scenario.");
 	return false;
 }
 
@@ -115,7 +115,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	// TODO: Convert this (and all the others in this file) to use C++ streams
 	FILE* file_id = fopen(file_to_load.string().c_str(),"rb");
 	if(file_id == NULL) {
-		giveError(err_prefix + "Could not open file.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Could not open file.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -123,7 +123,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	
 	if(fread(&scenario.format, len, 1, file_id) < 1){
 		fclose(file_id);
-		giveError(err_prefix + "Failed to read scenario header.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Failed to read scenario header.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -142,7 +142,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	}
 	if(!file_ok) {
 		fclose(file_id);
-		giveError("This is not a legitimate Blades of Exile scenario.");
+		showError("This is not a legitimate Blades of Exile scenario.");
 		return false;
 	}
 	
@@ -150,7 +150,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	n = fread(temp_scenario, len, 1, file_id);
 	if(n < 1){
 		fclose(file_id);
-		giveError(err_prefix + "Failed to read scenario data.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Failed to read scenario data.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_scenario(temp_scenario);
@@ -158,7 +158,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	n = fread(item_data, len, 1, file_id);
 	if(n < 1){
 		fclose(file_id);
-		giveError(err_prefix + "Failed to read scenario items.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Failed to read scenario items.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_item_list(item_data);
@@ -629,7 +629,7 @@ static void initialXmlRead(ticpp::Document& data, std::string root_tag, int& maj
 		if(name == "boes") {
 			std::tie(maj, min, rev) = parse_version(val);
 			if(maj < 2) {
-				giveError("This scenario specifies an invalid format version. Loading will be attempted as if it were version 2.0.0, but there is a possibility that there could be errors.");
+				showError("This scenario specifies an invalid format version. Loading will be attempted as if it were version 2.0.0, but there is a possibility that there could be errors.");
 				maj = 2;
 				min = rev = 0;
 			}
@@ -1970,7 +1970,7 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 	tarball pack;
 	std::ifstream fin;
 	if(!fs::exists(file_to_load)) {
-		giveError("The scenario could not be found.");
+		showError("The scenario could not be found.");
 		return false;
 	}
 	if(fs::is_directory(file_to_load)) { // Unpacked
@@ -1979,7 +1979,7 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 		igzstream gzin(file_to_load.string().c_str());
 		pack.readFrom(gzin);
 		if(gzin.bad()) {
-			giveError("There was an error loading the scenario.");
+			showError("There was an error loading the scenario.");
 			return false;
 		}
 	}
@@ -2155,7 +2155,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	
 	FILE* file_id = fopen(scen_file.string().c_str(), "rb");
 	if(file_id == NULL) {
-		giveError(err_prefix + "Could not open file for reading town data.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Could not open file for reading town data.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2163,7 +2163,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	n = fseek(file_id, len_to_jump, SEEK_SET);
 	if(n != 0) {
 		fclose(file_id);
-		giveError(err_prefix + "Failure seeking to town record.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Failure seeking to town record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2171,7 +2171,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	n = fread(&store_town, len, 1, file_id);
 	if(n < 1) {
 		fclose(file_id);
-		giveError(err_prefix + "Could not read town record.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Could not read town record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_town(&store_town);
@@ -2224,7 +2224,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	n = fread(&store_talk, len, 1, file_id);
 	if(n < 1) {
 		fclose(file_id);
-		giveError(err_prefix + "Could not read dialogue record.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Could not read dialogue record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_talk_nodes(&store_talk);
@@ -2259,7 +2259,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	
 	n = fclose(file_id);
 	if(n != 0) {
-		giveError(err_prefix + "An error occurred while closing the file.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "An error occurred while closing the file.", boost::lexical_cast<std::string>(std_fmterr));
 	}
 	
 	return true;
@@ -2293,7 +2293,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	
 	FILE* file_id = fopen(scen_file.string().c_str(), "rb");
 	if(file_id == NULL) {
-		giveError(err_prefix + "Could not open file for reading outdoor data.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Could not open file for reading outdoor data.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2301,7 +2301,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	n = fseek(file_id, len_to_jump, SEEK_SET);
 	if(n != 0) {
 		fclose(file_id);
-		giveError(err_prefix + "Failure seeking to outdoor record.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Failure seeking to outdoor record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2309,7 +2309,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	n = fread(&store_out, len, 1, file_id);
 	if(n < 1) {
 		fclose(file_id);
-		giveError(err_prefix + "Could not read outdoor record.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Could not read outdoor record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2335,7 +2335,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	
 	n = fclose(file_id);
 	if(n != 0) {
-		giveError(err_prefix + "Something went wrong when closing the file.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Something went wrong when closing the file.", boost::lexical_cast<std::string>(std_fmterr));
 	}
 	return true;
 }
@@ -2367,7 +2367,7 @@ void load_spec_graphics_v1(fs::path scen_file) {
 			if(fs::exists(gpath)) {
 				if(graphics_store.loadFromFile(gpath.string()))
 					foundGraphics = true;
-				else giveError("An old-style .bmp graphics file was found, but there was an error reading from the file.",noGraphics);
+				else showWarning("An old-style .bmp graphics file was found, but there was an error reading from the file.",noGraphics);
 			}
 		}
 		if(foundGraphics) {
@@ -2378,7 +2378,7 @@ void load_spec_graphics_v1(fs::path scen_file) {
 			spec_scen_g.sheets = new sf::Texture[1];
 			spec_scen_g.numSheets = 1;
 			if(!spec_scen_g.sheets[0].loadFromImage(graphics_store)) {
-				giveError("An error occurred while converting old-style graphics into the new format.",noGraphics);
+				showWarning("An error occurred while converting old-style graphics into the new format.",noGraphics);
 				spec_scen_g.is_old = false;
 				spec_scen_g.numSheets = 0;
 				delete[] spec_scen_g.sheets;

@@ -45,7 +45,7 @@ template<typename T> class ptr_guard {
 	void boundcheck() {
 		if(the_ptr > guard) {
 			std::string overflow = std::to_string(the_ptr - guard);
-			giveError(err_prefix + "read pointer reached end of buffer", overflow);
+			showError(err_prefix + "read pointer reached end of buffer", overflow);
 			throw std::runtime_error(overflow);
 		}
 	}
@@ -71,7 +71,7 @@ public:
 	T& operator[](size_t i) {
 		if(the_ptr + i > guard) {
 			std::string overflow = std::to_string(i - (guard - the_ptr));
-			giveError(err_prefix + "attempt to index beyond buffer", overflow);
+			showError(err_prefix + "attempt to index beyond buffer", overflow);
 			throw std::runtime_error(overflow);
 		}
 		return the_ptr[i];
@@ -86,7 +86,7 @@ static void loadColourTable(ptr_guard<char>& picData, sf::Color(& clut)[256], in
 	while(numColours >= 0) {
 		int i = extract_word(picData);
 		if(i > 256) {
-			giveError(err_prefix + " Found too many colours in 'clut'", std::to_string(i));
+			showError(err_prefix + " Found too many colours in 'clut'", std::to_string(i));
 			throw std::runtime_error(std::to_string(i));
 		}
 		picData += 2;
@@ -164,7 +164,7 @@ static legacy::Rect loadPixMapData(ptr_guard<char>& picData, ptr_guard<unsigned 
 	picData += 4 + 4; // Skip hRes and vRes
 	picData += 2 + 2; // Skip pixelType and pixelSize
 	if(picData[-1] != 8) {
-		giveError(err_prefix + "Unsupported pixel type found.");
+		showError(err_prefix + "Unsupported pixel type found.");
 		throw std::runtime_error("pixelType");
 	}
 	picData += 2 + 2; // Skip cmpCount and cmpSize
@@ -172,7 +172,7 @@ static legacy::Rect loadPixMapData(ptr_guard<char>& picData, ptr_guard<unsigned 
 	picData += 4 + 2; // Skip ctSeed and ctFlags
 	int numColours = extract_word(picData);
 	if(numColours >= 256) {
-		giveError(err_prefix + "More than 256 colours found.");
+		showError(err_prefix + "More than 256 colours found.");
 		throw std::runtime_error(std::to_string(numColours));
 	}
 	picData += 2;
@@ -206,12 +206,12 @@ static rectangle loadFromPictResource(Handle resHandle, unsigned char*& pixelSto
 	picFrame.bottom = extract_word(picData); picData += 2;
 	picFrame.right = extract_word(picData); picData += 2;
 	if(strncmp(picData, "\0\x11\x02\xff", 4) != 0) { // QuickDraw version code (version 2)
-		giveError("Missing QuickDraw 2 version code");
+		showError("Missing QuickDraw 2 version code");
 		throw std::runtime_error("QD2 version");
 	}
 	picData += 4; // Skip version field
 	if(strncmp(picData, "\x0c\0", 2) != 0) { // Header opcode
-		giveError("Missing QuickDraw 2 header opcode");
+		showError("Missing QuickDraw 2 header opcode");
 		throw std::runtime_error("QD2 header");
 	}
 	picData += 2 + 24; // Skip header opcode and payload
@@ -466,25 +466,25 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 		err = FSGetResourceForkName(&rsrc);
 		err = FSOpenResourceFile(&file, rsrc.length, rsrc.unicode, fsRdPerm, &custRef);
 		if(err != noErr) {
-			giveError("An old-style .meg graphics file was found, but neither data nor resource fork could be read.",noGraphics);
+			showError("An old-style .meg graphics file was found, but neither data nor resource fork could be read.",noGraphics);
 			return false;
 		}
 	}
 	int nPicts = Count1Resources('PICT');
 	if(nPicts < 1) {
 		CloseResFile(custRef);
-		giveError("An old-style .meg graphics file was found, but it did not contain any PICT resources.",noGraphics);
+		showError("An old-style .meg graphics file was found, but it did not contain any PICT resources.",noGraphics);
 		return false;
 	}
 	Handle resHandle = Get1Resource('PICT', 1);
 	if(ResError() == resNotFound) {
 		CloseResFile(custRef);
-		giveError("An old-style .meg graphics file was found, but it did not contain a PICT resource of ID 1.",noGraphics);
+		showError("An old-style .meg graphics file was found, but it did not contain a PICT resource of ID 1.",noGraphics);
 		return false;
 	}
 	if(resHandle == NULL) {
 		CloseResFile(custRef);
-		giveError("An old-style .meg graphics file was found, but an error occurred while fetching the PICT resource of ID 1.",noGraphics);
+		showError("An old-style .meg graphics file was found, but an error occurred while fetching the PICT resource of ID 1.",noGraphics);
 		return false;
 	}
 	unsigned char* data = NULL;
@@ -495,13 +495,13 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 	} catch(std::runtime_error&) {
 		CloseResFile(custRef);
 		if(data != NULL) delete[] data;
-		giveError("An old-style .meg graphics file was found, but an error occurred while loading the PICT resource of ID 1.",noGraphics);
+		showError("An old-style .meg graphics file was found, but an error occurred while loading the PICT resource of ID 1.",noGraphics);
 		return false;
 	}
 	CloseResFile(custRef);
 	if(picFrame.width() <= 0 || picFrame.height() <= 0) {
 		if(data != NULL) delete[] data;
-		giveError("An old-style .meg graphics file was found, but an error occurred while reading it: " + errStrings[error],noGraphics);
+		showError("An old-style .meg graphics file was found, but an error occurred while reading it: " + errStrings[error],noGraphics);
 		return false;
 	}
 	graphics_store.create(picFrame.width(), picFrame.height(), data);

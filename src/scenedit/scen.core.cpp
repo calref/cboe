@@ -92,7 +92,7 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 		case eTerSpec::CALL_SPECIAL:
 		case eTerSpec::CALL_SPECIAL_WHEN_USED:
 			if(spec_type < 0 || spec_type > 1) {
-				giveError("Special type must be either 0 or 1.", &me);
+				showError("Special type must be either 0 or 1.", &me);
 				return false;
 			}
 			if(!check_range(me, "flag1", true, 0, (spec_type == 0 ? num_glob : num_loc) - 1, "Special to call")) return false;
@@ -157,7 +157,7 @@ bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long ma
 		std::ostringstream sout;
 		sout << fld_name << " must be from " << min_val << " to " << max_val;
 		if(!xtra.empty()) sout << ' ' << '(' << xtra << ')';
-		giveError(sout.str(), "", &me);
+		showError(sout.str(), "", &me);
 		return false;
 	}
 	return true;
@@ -455,10 +455,10 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 		if(fld != "id") {
 			int i = me[fld].getTextAsNum();
 			if(i > 4 || (i == 4 && (fld == "x" || fld == "y"))) {
-				giveError("Terrain objects cannot be larger than 4x4 tiles.", &me);
+				showError("Terrain objects cannot be larger than 4x4 tiles.", &me);
 				return false;
 			} else if(id > 0 && i == 0 && (fld == "w" || fld == "h")) {
-				giveError("Width and height cannot be zero.", &me);
+				showError("Width and height cannot be zero.", &me);
 				return false;
 			}
 		} else {
@@ -490,7 +490,7 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 		int x = me["x"].getTextAsNum(), y = me["y"].getTextAsNum();
 		int w = me["w"].getTextAsNum(), h = me["h"].getTextAsNum();
 		if(x >= w || y >= h) {
-			giveError("X and Y must be less than width and height, respectively.", &me);
+			showError("X and Y must be less than width and height, respectively.", &me);
 			me.untoast();
 			return true;
 		}
@@ -1162,7 +1162,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 		iter = monst.addAbil(tmpl, param);
 		// Normally it'll never return end(), but if a new template was added and not implemented, it would.
 		if(iter == monst.abil.end()) {
-			giveError("Failed to add the new ability. When reporting this, mention which ability you tried to add.", &me);
+			showError("Failed to add the new ability because the ability was not implemented. When reporting this, mention which ability you tried to add.", &me);
 			return true;
 		}
 		if(save_abils.find(iter->first) != save_abils.end() && save_abils[iter->first].active) {
@@ -1559,7 +1559,7 @@ static void save_item_info(cDialog& me, cItem& item) {
 	if((cat == eItemAbilCat::USABLE || cat == eItemAbilCat::REAGENT) && item.charges == 0)
 		item.charges = 1;
 	if(was_charges != item.charges)
-		giveError("Due to either the selected special ability or the presence of a type flag, this item's charges have been set to 1.", &me);
+		showError("Due to either the selected special ability or the presence of a type flag, this item's charges have been set to 1.", &me);
 }
 
 static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& item, short& which) {
@@ -1569,7 +1569,7 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 	bool valid = true;
 	if(variety.substr(0,6) == "unused") valid = false;
 	if(!valid && hit != "cancel" && hit.substr(0,6) != "choose") {
-		giveError("The Unused item varieties are reserved for later expansions, and can't be used now.","",&me);
+		showError("The Unused item varieties are reserved for later expansions, and can't be used now.","",&me);
 		return true;
 	}
 	
@@ -1622,11 +1622,11 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "abils") {
 		save_item_info(me, item);
 		if(item.variety == eItemType::NO_ITEM) {
-			giveError("You must give the item a type (weapon, armor, etc.) before you can choose its abilities.","",&me);
+			showError("You must give the item a type (weapon, armor, etc.) before you can choose its abilities.","",&me);
 			return true;
 		}
 		if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD || item.variety == eItemType::SPECIAL || item.variety == eItemType::QUEST) {
-			giveError("Gold, Food, Quests, and Special Items cannot be given special abilities.","",&me);
+			showError("Gold, Food, Quests, and Special Items cannot be given special abilities.","",&me);
 			return true;
 		}
 		temp_item = edit_item_abil(item,which,me);
@@ -1859,7 +1859,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "weapon") {
 		save_item_abils(me, item);
 		if(!isWeaponType(item.variety)) {
-			giveError("You can only give an ability of this sort to a weapon.","",&me);
+			showError("You can only give an ability of this sort to a weapon.","",&me);
 			return true;
 		}
 		i = choose_text_res("item-abilities", 1, 14, int(item.ability), &me, "Choose Weapon Ability (inherent)");
@@ -1868,7 +1868,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 		if(abil >= eItemAbil::RETURNING_MISSILE && abil <= eItemAbil::SEEKING_MISSILE) {
 			if(item.variety != eItemType::THROWN_MISSILE && item.variety != eItemType::ARROW &&
 				item.variety != eItemType::BOLTS && item.variety != eItemType::MISSILE_NO_AMMO) {
-				giveError("You can only give this ability to a missile.",&me);
+				showError("You can only give this ability to a missile.",&me);
 				return true;
 			}
 		}
@@ -1877,7 +1877,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "general") {
 		save_item_abils(me, item);
 		if(equippable.count(item.variety) == 0 || item.variety == eItemType::ARROW || item.variety == eItemType::THROWN_MISSILE || item.variety == eItemType::BOLTS){
-			giveError("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).",&me);
+			showError("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).",&me);
 			return true;
 		}
 		i = choose_text_res("item-abilities", 30, 60, int(item.ability), &me, "Choose General Ability (inherent)");
@@ -1887,7 +1887,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "usable") {
 		save_item_abils(me, item);
 		if((item.variety == eItemType::ARROW) || (item.variety == eItemType::THROWN_MISSILE) || (item.variety == eItemType::BOLTS)){
-			giveError("You can't give an ability of this sort to a missile.",&me);
+			showError("You can't give an ability of this sort to a missile.",&me);
 			return true;
 		}
 		i = choose_text_res("item-abilities", 70, 84, int(item.ability), &me, "Choose Usable Ability");
@@ -1897,7 +1897,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "reagent") {
 		save_item_abils(me, item);
 		if(item.variety != eItemType::NON_USE_OBJECT){
-			giveError("You can only give an ability of this sort to an item of type Non-Use Object.",&me);
+			showError("You can only give an ability of this sort to an item of type Non-Use Object.",&me);
 			return true;
 		}
 		i = choose_text_res("item-abilities", 150, 160, int(item.ability), &me, "Choose Reagent Ability");
@@ -2339,7 +2339,7 @@ static bool delete_shop_entry(cDialog& me, std::string which, cShop& shop, size_
 
 static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t which_shop) {
 	if(shop.size() == 30) {
-		giveError("There is no more room in this shop to add another item. Each shop can only have up to 30 items.", &me);
+		showError("There is no more room in this shop to add another item. Each shop can only have up to 30 items.", &me);
 		return true;
 	}
 	if(type == "item" || type == "opt") {
@@ -2465,7 +2465,7 @@ static bool save_save_rects(cDialog& me) {
 		scenario.store_item_rects[i].right = me["right" + id].getTextAsNum();
 		scenario.store_item_towns[i] = me["town" + id].getTextAsNum();
 		if((scenario.store_item_towns[i] < -1) || (scenario.store_item_towns[i] >= 200)) {
-			giveError("Towns must be in 0 to 200 range (or -1 for no save items rectangle).","",&me);
+			showError("Towns must be in 0 to 200 range (or -1 for no save items rectangle).","",&me);
 			return false;
 		}
 	}
@@ -2478,7 +2478,7 @@ static bool save_save_rects(cDialog& me) {
 		((scenario.store_item_towns[2] == scenario.store_item_towns[0]) &&
 		 (scenario.store_item_towns[2] >= 0) && (scenario.store_item_towns[0] >= 0))
 		) {
-		giveError("The three towns towns with saved item rectangles must be different.","",&me);
+		showError("The three towns towns with saved item rectangles must be different.","",&me);
 		return false;
 	}
 	return true;
@@ -2827,12 +2827,12 @@ static bool make_scen_check_out(cDialog& me, std::string which, bool losing) {
 		else if(which == "out-h")
 			error << "height";
 		error << " must be between 1 and 50.";
-		giveError(error.str(), &me);
+		showError(error.str(), &me);
 		return false;
 	}
 	int total = w * h;
 	if(total < 1 || total > 50) {
-		giveError("The total number of outdoor sections (width times height) must be between 1 and 100.", &me);
+		showError("The total number of outdoor sections (width times height) must be between 1 and 100.", &me);
 		return false;
 	}
 	return true;
@@ -2851,13 +2851,13 @@ static bool make_scen_check_towns(cDialog& me, std::string which, bool losing) {
 		else if(which == "town-l")
 			error << "large";
 		error << " must be between 0 and 200";
-		giveError(error.str(), &me);
+		showError(error.str(), &me);
 		return false;
 	}
 	// TODO: Shouldn't this only be checked when exiting the dialog? At least for the case of no towns.
 	int total = sm + med + lg;
 	if(total < 1 || total > 200) {
-		giveError("The total number of towns must be from 1 to 200 (you must have at least 1 town).", &me);
+		showError("The total number of towns must be from 1 to 200 (you must have at least 1 town).", &me);
 		return false;
 	}
 	return true;
@@ -2872,7 +2872,7 @@ bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, 
 	new_dlog["warrior-grove"].attachFocusHandler([](cDialog& me, std::string, bool losing) -> bool {
 		if(losing) return true;
 		if(me["town-m"].getTextAsNum() < 1) {
-			giveError("Warrior's Grove replaces your first medium town. As such, you must have at least one medium town in order to use it.", &me);
+			showError("Warrior's Grove replaces your first medium town. As such, you must have at least one medium town in order to use it.", &me);
 			return false;
 		}
 		return true;
@@ -2912,7 +2912,7 @@ bool build_scenario() {
 	
 	fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
 	if(!fs::exists(basePath)) {
-		giveError("Blades of Exile Base could not be found.");
+		showError("Blades of Exile Base could not be found.");
 		return false;
 	}
 	cScenario base;
@@ -3097,7 +3097,7 @@ static bool check_location_bounds(cDialog& me, std::string id, bool losing) {
 	short town_num = me["town-num"].getTextAsNum();
 	short dim = me[id].getTextAsNum();
 	if(dim < 0 || dim >= scenario.towns[town_num]->max_dim()) {
-		giveError("This coordinate is not inside the bounds of the town.");
+		showError("This coordinate is not inside the bounds of the town.");
 		return false;
 	}
 	return true;
@@ -3145,7 +3145,7 @@ static bool check_scenario_timer_time(cDialog& me, std::string id, bool losing) 
 	if(!losing) return true;
 	int val = me[id].getTextAsNum();
 	if(val > 0 && val % 10 != 0) {
-		giveError("All scenario event times must be multiples of 10 (e.g. 100, 150, 1000, etc.).");
+		showError("All scenario event times must be multiples of 10 (e.g. 100, 150, 1000, etc.).");
 		return false;
 	}
 	return true;
@@ -3312,7 +3312,7 @@ static bool change_pics_page(cDialog& me, std::string hit, std::vector<ePicType>
 
 void edit_custom_pics_types() {
 	if(spec_scen_g.count() == 0) {
-		giveError("You don't have any custom graphics to classify!");
+		showError("You don't have any custom graphics to classify!");
 		return;
 	}
 	using namespace std::placeholders;
@@ -3479,7 +3479,7 @@ void edit_custom_sheets() {
 		} else {
 			auto iter = std::lower_bound(all_pics.begin(), all_pics.end(), newSheet);
 			if(*iter == newSheet) {
-				giveError("Sorry, but that sheet already exists! Try creating a sheet with a different number.", "Sheet number: " + std::to_string(newSheet), &me);
+				showError("Sorry, but that sheet already exists! Try creating a sheet with a different number.", "Sheet number: " + std::to_string(newSheet), &me);
 				return true;
 			}
 			iter = all_pics.insert(iter, newSheet);

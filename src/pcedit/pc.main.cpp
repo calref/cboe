@@ -85,13 +85,13 @@ int main(int argc, char* argv[]) {
 			Handle_One_Event();
 		return 0;
 	} catch(std::exception& x) {
-		giveError(x.what());
+		showFatalError(x.what());
 		throw;
 	} catch(std::string& x) {
-		giveError(x);
+		showFatalError(x);
 		throw;
 	} catch(...) {
-		giveError("An unknown error occurred!");
+		showFatalError("An unknown error occurred!");
 		throw;
 	}
 }
@@ -220,7 +220,7 @@ void handle_menu_choice(eMenu item_hit) {
 			}
 			if(univ.party.left_in != size_t(-1) && univ.party.left_in != univ.town.num) {
 				std::string need_town = univ.scenario.towns[univ.party.left_in]->town_name;
-				giveError("You can't reunite your party when you're in a different town than you split up in.", "Return to the following town in-game and then try again: " + need_town);
+				showError("You can't reunite your party when you're in a different town than you split up in.", "Return to the following town in-game and then try again: " + need_town);
 				break;
 			}
 			cChoiceDlog("reunited").show();
@@ -323,7 +323,7 @@ void handle_item_menu(int item_hit) {
 	store_i = univ.scenario.scen_items[item_hit];
 	store_i.ident = true;
 	if(!univ.party[current_active_pc].give_item(store_i,GIVE_ALLOW_OVERLOAD))
-		giveError("Sorry, that PC has no free inventory slots left! You'll have to either drop something or give it to a different PC.");
+		showError("Sorry, that PC has no free inventory slots left! You'll have to either drop something or give it to a different PC.");
 }
 
 bool verify_restore_quit(std::string dlog) {

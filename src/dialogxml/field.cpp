@@ -47,7 +47,7 @@ bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFoc
 				{FLD_UINT, "a positive integer"},
 				{FLD_REAL, "a number"},
 			};
-			giveError("You need to enter " + typeNames.at(field_type) + "!","",parent);
+			showError("You need to enter " + typeNames.at(field_type) + "!","",parent);
 			return false;
 		}
 	}

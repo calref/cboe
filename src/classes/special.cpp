@@ -432,7 +432,7 @@ void cSpecial::append(legacy::special_node_type& old){
 			// These are ones that were added in the Windows version but only recently added to the Mac version.
 		case 28:
 			type = eSpecType::DISPLAY_PICTURE;
-			giveError("Warning: This scenario contains a Display Picture special node created by the 'Classic Windows' version of the game. Although this version of the game also supports a Display Picture node, the format is incompatible, and automatic conversion is impossible.", "If this is not your scenario, consider contacting the scenario designer to get this fixed.");
+			showWarning("This scenario contains a Display Picture special node created by the 'Classic Windows' version of the game. Although this version of the game also supports a Display Picture node, the format is incompatible, and automatic conversion is impossible.", "If this is not your scenario, consider contacting the scenario designer to get this fixed.");
 			ex1a = 0;
 			break;
 		case 29:
@@ -451,7 +451,7 @@ void cSpecial::append(legacy::special_node_type& old){
 			break;
 		default:
 			if(old.type >= 0 && old.type < 255)
-				giveError("Unrecognized node type found: " + std::to_string(old.type));
+				showError("Unrecognized node type found: " + std::to_string(old.type));
 			else std::cout << "Unrecognized node type found: " + std::to_string(old.type)
 				<< "\n\tNote: This could indicate corruption in the scenario, but more likely is just a result of garbage data in unused nodes or in the memory structures they were read into. The unrecognized node type has been replaced with invalid type -1.";
 	}

@@ -255,12 +255,32 @@ public:
 };
 #endif
 
-/// Shows a simple error dialog.
+/// Shows a simple error dialog for an unrecoverable condition.
 /// @param str1 The first string in the error dialog.
 /// @param str2 The second string in the error dialog.
 /// @param parent Optionally, a parent dialog.
-void giveError(std::string str1, std::string str2, cDialog* parent = NULL);
-/// Shows a simple error dialog.
+void showFatalError(std::string str1, std::string str2, cDialog* parent = NULL);
+/// Shows a simple error dialog for an unrecoverable condition.
 /// @param str1 The string in the error dialog.
 /// @param parent Optionally, a parent dialog.
-void giveError(std::string str1, cDialog* parent = NULL);
+void showFatalError(std::string str1, cDialog* parent = NULL);
+
+/// Shows a simple error dialog for a recoverable condition.
+/// @param str1 The first string in the error dialog.
+/// @param str2 The second string in the error dialog.
+/// @param parent Optionally, a parent dialog.
+void showError(std::string str1, std::string str2, cDialog* parent = NULL);
+/// Shows a simple error dialog for a recoverable condition.
+/// @param str1 The string in the error dialog.
+/// @param parent Optionally, a parent dialog.
+void showError(std::string str1, cDialog* parent = NULL);
+
+/// Shows a simple warning message dialog.
+/// @param str1 The first string in the warning dialog.
+/// @param str2 The second string in the warning dialog.
+/// @param parent Optionally, a parent dialog.
+void showWarning(std::string str1, std::string str2, cDialog* parent = NULL);
+/// Shows a simple warning message dialog.
+/// @param str1 The string in the warning dialog.
+/// @param parent Optionally, a parent dialog.
+void showWarning(std::string str1, cDialog* parent = NULL);

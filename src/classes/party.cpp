@@ -758,7 +758,7 @@ void cParty::readFrom(std::istream& file){
 			unsigned long long version;
 			sin >> std::hex >> version >> std::dec;
 			if(version > OBOE_CURRENT_VERSION) {
-				giveError("Warning: this game appears to have been created with a newer version of Blades of Exile than you are running. Exile will do its best to load the saved game anyway, but there may be loss of information.");
+				showWarning("This game appears to have been created with a newer version of Blades of Exile than you are running. Exile will do its best to load the saved game anyway, but there may be loss of information.");
 			}
 		} else if(cur == "POINTER") {
 			int i,j,k;

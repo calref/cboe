@@ -107,7 +107,7 @@ short active_shop_num;
 void start_shop_mode(short which,short cost_adj,std::string store_name) {
 	rectangle area_rect;
 	if(which < 0 || which >= univ.scenario.shops.size()) {
-		giveError("The scenario tried to place you in a nonexistent shop!");
+		showError("The scenario tried to place you in a nonexistent shop!");
 		return;
 	}
 	
@@ -333,7 +333,7 @@ void handle_sale(cShopItem item, int i) {
 		case eShopItemType::MAGE_SPELL:
 			if((base_item.item_level < 0) || (base_item.item_level > 61)) {
 				beep();
-				giveError("Error: The scenario tried to sell you an invalid mage spell!");
+				showError("The scenario tried to sell you an invalid mage spell!");
 				break;
 			}
 			if(univ.party[current_pc].mage_spells[base_item.item_level])
@@ -351,7 +351,7 @@ void handle_sale(cShopItem item, int i) {
 		case eShopItemType::PRIEST_SPELL:
 			if((base_item.item_level < 0) || (base_item.item_level > 61)) {
 				beep();
-				giveError("Error: The scenario tried to sell you an invalid priest spell!");
+				showError("The scenario tried to sell you an invalid priest spell!");
 				break;
 			}
 			if(univ.party[current_pc].priest_spells[base_item.item_level])
@@ -381,7 +381,7 @@ void handle_sale(cShopItem item, int i) {
 		case eShopItemType::SKILL:
 			if(base_item.item_level < 0 || base_item.item_level > 18) {
 				beep();
-				giveError("Error: The scenario tried to sell you an invalid skill!");
+				showError("The scenario tried to sell you an invalid skill!");
 				break;
 			}
 			eSkill skill = eSkill(base_item.item_level);
@@ -842,7 +842,7 @@ void handle_talk_event(location p) {
 			
 		case eTalkNode::SHOP:
 			if(d < 0 || d > 11) {
-				giveError("Invalid shop type!");
+				showError("Invalid shop type!");
 				return;
 			}
 			start_shop_mode(b,a,save_talk_str1);
@@ -906,7 +906,7 @@ void handle_talk_event(location p) {
 				put_pc_screen();
 				if(univ.party.sd_legit(b,c))
 					PSD[b][c] = d;
-				else giveError("Invalid Stuff Done flag called in conversation.");
+				else showError("Invalid Stuff Done flag called in conversation.");
 			}
 			save_talk_str2 = "";
 			break;
@@ -971,7 +971,7 @@ void handle_talk_event(location p) {
 			break;
 		case eTalkNode::RECEIVE_QUEST:
 			if(a < 0 || a >= univ.scenario.quests.size()) {
-				giveError("Tried to give a nonexistent quest!");
+				showError("Tried to give a nonexistent quest!");
 				return;
 			}
 			switch(univ.party.quest_status[a]) {
@@ -1128,7 +1128,7 @@ void save_prefs(bool resetHelp){
 	
 	bool success = sync_prefs();
 	if(!success){
-		giveError("There was a problem writing to the preferences file. When the game is next run the preferences will revert to their previously set values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.");
+		showWarning("There was a problem writing to the preferences file. When the game is next run the preferences will revert to their previously set values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.");
 	}
 }
 

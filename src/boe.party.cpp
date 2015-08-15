@@ -280,7 +280,7 @@ void put_party_in_scen(std::string scen_name) {
 	
 	fs::path path = locate_scenario(scen_name);
 	if(path.empty()) {
-		giveError("Could not find scenario!");
+		showError("Could not find scenario!");
 		return;
 	}
 	if(!load_scenario(path, univ.scenario))
@@ -656,7 +656,7 @@ void give_party_spell(short which) {
 	bool sound_done = false;
 	
 	if((which < 0) || (which > 161) || ((which > 61) && (which < 100))) {
-		giveError("The scenario has tried to give you a non-existant spell.");
+		showError("The scenario has tried to give you a non-existant spell.");
 		return;}
 	
 	// TODO: This seems like the wrong sounds

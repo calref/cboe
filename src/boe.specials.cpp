@@ -1388,7 +1388,7 @@ void change_level(short town_num,short x,short y) {
 	location l(x,y);
 	
 	if((town_num < 0) || (town_num >= univ.scenario.towns.size())) {
-		giveError("The scenario special encounter tried to put you into a town that doesn't exist.");
+		showError("The scenario special encounter tried to put you into a town that doesn't exist.");
 		return;
 	}
 	
@@ -2108,21 +2108,21 @@ cSpecial get_node(short cur_spec,short cur_spec_type) {
 	dummy_node.type = eSpecType::INVALID;
 	if(cur_spec_type == 0) {
 		if(cur_spec != minmax(0,univ.scenario.scen_specials.size() - 1,cur_spec)) {
-			giveError("The scenario called a scenario special node out of range.");
+			showError("The scenario called a scenario special node out of range.");
 			return dummy_node;
 		}
 		return univ.scenario.scen_specials[cur_spec];
 	}
 	if(cur_spec_type == 1) {
 		if(cur_spec != minmax(0,univ.out->specials.size() - 1,cur_spec)) {
-			giveError("The scenario called an outdoor special node out of range.");
+			showError("The scenario called an outdoor special node out of range.");
 			return dummy_node;
 		}
 		return univ.out->specials[cur_spec];
 	}
 	if(cur_spec_type == 2) {
 		if(cur_spec != minmax(0,univ.town->specials.size() - 1,cur_spec)) {
-			giveError("The scenario called a town special node out of range.");
+			showError("The scenario called a town special node out of range.");
 			return dummy_node;
 		}
 		return univ.town->specials[cur_spec];
@@ -2200,26 +2200,26 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::CHANGE_HORSE_OWNER:
 			check_mess = true;
 			if(spec.ex1a != minmax(0,univ.party.horses.size() - 1,spec.ex1a))
-				giveError("Horse out of range.");
+				showError("Horse out of range.");
 			else univ.party.horses[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case eSpecType::CHANGE_BOAT_OWNER:
 			check_mess = true;
 			if(spec.ex1a != minmax(0,univ.party.boats.size() - 1,spec.ex1a))
-				giveError("Boat out of range.");
+				showError("Boat out of range.");
 			else univ.party.boats[spec.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case eSpecType::SET_TOWN_VISIBILITY:
 			check_mess = true;
 			if(spec.ex1a != minmax(0,univ.scenario.towns.size() - 1,spec.ex1a))
-				giveError("Town out of range.");
+				showError("Town out of range.");
 			else univ.party.can_find_town[spec.ex1a] = spec.ex2a;
 			*redraw = true;
 			break;
 		case eSpecType::MAJOR_EVENT_OCCURRED:
 			check_mess = true;
 			if(spec.ex1a != minmax(1,10,spec.ex1a))
-				giveError("Event code out of range.");
+				showError("Event code out of range.");
 			else if(univ.party.key_times.count(spec.ex1a) == 0)
 				univ.party.key_times[spec.ex1a] = univ.party.calc_day();
 			break;
@@ -2246,12 +2246,12 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::SET_SDF_ROW:
 			if(spec.sd1 != minmax(0,299,spec.sd1))
-				giveError("Stuff Done flag out of range.");
+				showError("Stuff Done flag out of range.");
 			else for(i = 0; i < 50; i++) PSD[spec.sd1][i] = spec.ex1a;
 			break;
 		case eSpecType::COPY_SDF:
 			if(!univ.party.sd_legit(spec.sd1,spec.sd2) || !univ.party.sd_legit(spec.ex1a,spec.ex1b))
-				giveError("Stuff Done flag out of range.");
+				showError("Stuff Done flag out of range.");
 			else PSD[spec.sd1][spec.sd2] = PSD[spec.ex1a][spec.ex1b];
 			break;
 		case eSpecType::REST:
@@ -2263,18 +2263,18 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::SET_POINTER:
 			if(spec.ex1a < 0)
-				giveError("Attempted to assign a pointer out of range (100..199)");
+				showError("Attempted to assign a pointer out of range (100..199)");
 			else try {
 				if(spec.sd1 < 0 && spec.sd2 < 0)
 					univ.party.clear_ptr(spec.ex1a);
 				else univ.party.set_ptr(spec.ex1a,spec.sd1,spec.sd2);
 			} catch(std::range_error x) {
-				giveError(x.what());
+				showError(x.what());
 			}
 			break;
 		case eSpecType::SET_CAMP_FLAG:
 			if(!univ.party.sd_legit(spec.sd1,spec.sd2))
-				giveError("Stuff Done flag out of range (x - 0..299, y - 0..49).");
+				showError("Stuff Done flag out of range (x - 0..299, y - 0..49).");
 			else {
 				set_campaign_flag(spec.sd1,spec.sd2,spec.ex1a,spec.ex1b,spec.m1,spec.ex2a);
 			}
@@ -2446,11 +2446,11 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::UPDATE_QUEST:
 			check_mess = true;
 			if(spec.ex1a < 0 || spec.ex1a >= univ.scenario.quests.size()) {
-				giveError("The scenario tried to update a non-existent quest.");
+				showError("The scenario tried to update a non-existent quest.");
 				break;
 			}
 			if(spec.ex1b < 0 || spec.ex1b > 3) {
-				giveError("Invalid quest status (range 0 .. 3).");
+				showError("Invalid quest status (range 0 .. 3).");
 				break;
 			}
 			if(spec.ex1b == int(eQuestStatus::STARTED) && univ.party.quest_status[spec.ex1a] != eQuestStatus::STARTED) {
@@ -2481,7 +2481,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		default:
-			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
 	}
 	if(check_mess) {
@@ -2542,7 +2542,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::ONCE_GIVE_SPEC_ITEM:
 			if(spec.ex1a != minmax(0,49,spec.ex1a)) {
-				giveError("Special item is out of range.");
+				showError("Special item is out of range.");
 				set_sd = false;
 			}
 			else if(spec.ex1b == 0)
@@ -2577,7 +2577,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				buttons[1] = spec.ex2a;
 			}
 			if((buttons[0] < 0) && (buttons[1] < 0)) {
-				giveError("Dialog box ended up with no buttons.");
+				showError("Dialog box ended up with no buttons.");
 				break;
 			}
 			i = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
@@ -2626,7 +2626,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::ONCE_OUT_ENCOUNTER:
 			if(spec.ex1a != minmax(0,3,spec.ex1a)) {
-				giveError("Special outdoor enc. is out of range. Must be 0-3.");
+				showError("Special outdoor enc. is out of range. Must be 0-3.");
 				set_sd = false;
 			}
 			else {
@@ -2670,7 +2670,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::ONCE_DISPLAY_MSG:
 			break; // Nothing to do here, but need to include it to prevent the below error from showing.
 		default:
-			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
 	}
 	if(check_mess) {
@@ -3032,7 +3032,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::AFFECT_STAT:
 			if(pc_num >= 100) break;
 			if(spec.ex2a != minmax(0,20,spec.ex2a)) {
-				giveError("Skill is out of range.");
+				showError("Skill is out of range.");
 				break;
 			}
 			for(i = 0; i < 6; i++)
@@ -3069,7 +3069,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::AFFECT_MONST_ATT:
 			if(pc_num < 100) break;
 			if(spec.ex1a < 0 || spec.ex1a > 2) {
-				giveError("Invalid monster attack (0-2)");
+				showError("Invalid monster attack (0-2)");
 				break;
 			}
 			if(spec.ex2a == 0) {
@@ -3083,7 +3083,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::AFFECT_MONST_STAT:
 			if(pc_num < 100) break;
 			if(spec.ex2a < 0 || spec.ex2a > 7) {
-				giveError("Invalid monster stat (0-7)");
+				showError("Invalid monster stat (0-7)");
 				break;
 			}
 			i = spec.ex1a;
@@ -3102,7 +3102,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::AFFECT_MAGE_SPELL:
 			if(pc_num >= 100) break;
 			if(spec.ex1a != minmax(0,61,spec.ex1a)) {
-				giveError("Mage spell is out of range (0 - 61). See docs.");
+				showError("Mage spell is out of range (0 - 61). See docs.");
 				break;
 			}
 			for(i = 0; i < 6; i++)
@@ -3112,7 +3112,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::AFFECT_PRIEST_SPELL:
 			if(pc_num >= 100) break;
 			if(spec.ex1a != minmax(0,61,spec.ex1a)) {
-				giveError("Priest spell is out of range (0 - 61). See docs.");
+				showError("Priest spell is out of range (0 - 61). See docs.");
 				break;
 			}
 			for(i = 0; i < 6; i++)
@@ -3135,7 +3135,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_ALCHEMY:
 			if(spec.ex1a != minmax(0,19,spec.ex1a)) {
-				giveError("Alchemy is out of range.");
+				showError("Alchemy is out of range.");
 				break;
 			}
 			univ.party.alchemy[spec.ex1a] = true;
@@ -3164,7 +3164,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::AFFECT_TRAITS:
 			if(pc_num >= 100) break;
 			if(spec.ex1a < 0 || spec.ex1a > 15) {
-				giveError("Trait is out of range (0 - 15).");
+				showError("Trait is out of range (0 - 15).");
 				break;
 			}
 			for(i = 0; i < 6; i++)
@@ -3201,7 +3201,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::CREATE_NEW_PC:
 			if(spec.ex1c < 0 || spec.ex1c > 19) {
-				giveError("Race out of range (0 - 19).");
+				showError("Race out of range (0 - 19).");
 				break;
 			}
 			pc_num = univ.party.free_space();
@@ -3238,7 +3238,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::UNSTORE_PC:
 			if(spec.ex1a < 1000) spec.ex1a += 1000;
 			if(univ.stored_pcs.find(spec.ex1a) == univ.stored_pcs.end()) {
-				giveError("Scenario tried to unstore a nonexistent PC!");
+				showError("Scenario tried to unstore a nonexistent PC!");
 				break;
 			}
 			pc_num = univ.party.free_space();
@@ -3288,7 +3288,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		default:
-			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
 	}
 	if(check_mess) {
@@ -3340,7 +3340,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_HAVE_SPECIAL_ITEM:
 			if(spec.ex1a != minmax(0,49,spec.ex1a)) {
-				giveError("Special item is out of range.");
+				showError("Special item is out of range.");
 			}
 			else if(univ.party.spec_items.count(spec.ex1a) > 0)
 				*next_spec = spec.ex1b;
@@ -3350,7 +3350,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(PSD[spec.ex1a][spec.ex1b] < PSD[spec.sd1][spec.sd2])
 					*next_spec = spec.ex2b;
 			}
-			else giveError("A Stuff Done flag is out of range.");
+			else showError("A Stuff Done flag is out of range.");
 			break;
 		case eSpecType::IF_TER_TYPE:
 			l.x = spec.ex1a; l.y = spec.ex1b;
@@ -3412,7 +3412,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::IF_FIELDS:
 			if(is_out()) break;
 			if(!isValidField(spec.m1, false)) {
-				giveError("Scenario tried to check for invalid field type (1...24)");
+				showError("Scenario tried to check for invalid field type (1...24)");
 				break;
 			}
 			i = 0;
@@ -3470,7 +3470,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_SPECIES:
 			if(spec.ex1a < 0 || spec.ex1a > 21) {
-				giveError("Species out of range (0-21)");
+				showError("Species out of range (0-21)");
 				break;
 			}
 			i = 0;
@@ -3486,7 +3486,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_TRAIT:
 			if(spec.ex1a < 0 || spec.ex1a > 15) {
-				giveError("Invalid trait (0...15)");
+				showError("Invalid trait (0...15)");
 				break;
 			}
 			j = min(spec.ex2a,party_size(true));
@@ -3501,11 +3501,11 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_STATISTIC:
 			if((spec.ex2a < 0 || spec.ex2a > 20) && (spec.ex2a < 100 || spec.ex2a > 104)) {
-				giveError("Attempted to check an invalid statistic (0...20 or 100...104).");
+				showError("Attempted to check an invalid statistic (0...20 or 100...104).");
 				break;
 			}
 			if(spec.ex2b < -1 || spec.ex2b > 3) {
-				giveError("Invalid statistic-checking mode (-1...3); will fall back to cumulative check.");
+				showError("Invalid statistic-checking mode (-1...3); will fall back to cumulative check.");
 				spec.ex2b = 0;
 			}
 			
@@ -3671,7 +3671,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_RECIPE:
 			if(spec.ex1a < 0 || spec.ex1a >= 20) {
-				giveError("Alchemy recipe out of range (0 - 19).");
+				showError("Alchemy recipe out of range (0 - 19).");
 				break;
 			}
 			if(univ.party.alchemy[spec.ex1a])
@@ -3679,7 +3679,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_STATUS:
 			if(spec.ex1a < 0 || spec.ex1a > 14) {
-				giveError("Invalid status effect (0...14)");
+				showError("Invalid status effect (0...14)");
 				break;
 			}
 			if(dynamic_cast<cParty*>(current_pc_picked_in_spec_enc)) {
@@ -3711,11 +3711,11 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_QUEST:
 			if(spec.ex1a < 0 || spec.ex1a >= univ.scenario.quests.size()) {
-				giveError("The scenario tried to update a non-existent quest.");
+				showError("The scenario tried to update a non-existent quest.");
 				break;
 			}
 			if(spec.ex1b < 0 || spec.ex1b > 3) {
-				giveError("Invalid quest status (range 0 .. 3).");
+				showError("Invalid quest status (range 0 .. 3).");
 				break;
 			}
 			if(univ.party.quest_status[spec.ex1a] == eQuestStatus(spec.ex1b))
@@ -3757,7 +3757,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1c;
 			break;
 		default:
-			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
 	}
 	if(check_mess) {
@@ -3793,7 +3793,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 	switch(cur_node.type) {
 		case eSpecType::MAKE_TOWN_HOSTILE:
 			if(spec.ex2a < 0 || spec.ex2a > 3){
-				giveError("Invalid attitude (0-Friendly Docile, 1-Hostile A, 2-Friendly Will Fight, 3-Hostile B).");
+				showError("Invalid attitude (0-Friendly Docile, 1-Hostile A, 2-Friendly Will Fight, 3-Hostile B).");
 				break;
 			}
 			set_town_attitude(spec.ex1a,spec.ex1b,eAttitude(spec.ex2a));
@@ -4148,11 +4148,11 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_SET_ATTITUDE:
 			if((spec.ex1a < 0) || (spec.ex1a > 59)){
-				giveError("Tried to change the attitude of a nonexistent monster (should be 0...59).");
+				showError("Tried to change the attitude of a nonexistent monster (should be 0...59).");
 				break;
 			}
 			if(spec.ex1b < 0 || spec.ex1b > 3){
-				giveError("Invalid attitude (0-Friendly Docile, 1-Hostile A, 2-Friendly Will Fight, 3-Hostile B).");
+				showError("Invalid attitude (0-Friendly Docile, 1-Hostile A, 2-Friendly Will Fight, 3-Hostile B).");
 				break;
 			}
 			univ.town.monst[spec.ex1a].attitude = eAttitude(spec.ex1b);
@@ -4205,7 +4205,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::TOWN_START_TARGETING:
 			*next_spec = -1;
 			if(spec.ex1a < 0 || spec.ex1a > 7) {
-				giveError("Invalid spell pattern (0 - 7).");
+				showError("Invalid spell pattern (0 - 7).");
 				break;
 			}
 			if(spec.ex1c > 1 && !is_combat()) {
@@ -4230,11 +4230,11 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_SPELL_PAT_FIELD:
 			if(spec.ex1c < -1 || spec.ex1c > 14) {
-				giveError("Invalid spell pattern (-1 - 14).");
+				showError("Invalid spell pattern (-1 - 14).");
 				break;
 			}
 			if((spec.ex2a < 1 || spec.ex2a == 9 || spec.ex2a > 24) && spec.ex2a != 32 && spec.ex2a != 33) {
-				giveError("Invalid field type (see docs).");
+				showError("Invalid field type (see docs).");
 				break;
 			}
 			switch(spec.ex1c) {
@@ -4252,11 +4252,11 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_SPELL_PAT_BOOM:
 			if(spec.ex1c < -1 || spec.ex1c > 14) {
-				giveError("Invalid spell pattern (-1 - 14).");
+				showError("Invalid spell pattern (-1 - 14).");
 				break;
 			}
 			if(spec.ex2a < 0 || spec.ex2a > 7) {
-				giveError("Invalid damage type (0 - 7).");
+				showError("Invalid damage type (0 - 7).");
 				break;
 			}
 			switch(spec.ex1c) {
@@ -4279,7 +4279,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_RELOCATE_CREATURE:
 			if(spec.ex2b > 5) {
-				giveError("Invalid positioning mode (0-5)");
+				showError("Invalid positioning mode (0-5)");
 				break;
 			}
 			if(spec.ex2a < 0)
@@ -4333,7 +4333,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					univ.town.monst[i].cur_loc.y += l.y;
 				}
 			} else {
-				giveError("Invalid positioning target!");
+				showError("Invalid positioning target!");
 				break;
 			}
 			redraw_screen(REFRESH_TERRAIN);
@@ -4353,7 +4353,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				else if(l.x >= 100 && l.x - 100 < univ.town.monst.size())
 					l = univ.town.monst[l.x - 100].cur_loc;
 				else {
-					giveError("Invalid label target!");
+					showError("Invalid label target!");
 					break;
 				}
 			}
@@ -4364,7 +4364,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				sf::sleep(sf::seconds(spec.ex2b));
 			break;
 		default:
-			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
 	}
 	if(check_mess) {
@@ -4395,7 +4395,7 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					if(is_out())
 						return;
 					if(!isValidField(spec.sd2, true)) {
-						giveError("Scenario tried to place an invalid field type (1...24)");
+						showError("Scenario tried to place an invalid field type (1...24)");
 						goto END; // Break out of the switch AND both loops, but still handle messages
 					}
 					if(spec.sd2 == FIELD_DISPEL || get_ran(1,1,100) <= spec.sd1)
@@ -4503,7 +4503,7 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					else take_explored(l.x, l.y);
 					break;
 				default:
-					giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+					showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 					break;
 			}
 		}
@@ -4533,7 +4533,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::OUT_PLACE_ENCOUNTER:
 			if(spec.ex1a != minmax(0,3,spec.ex1a)) {
-				giveError("Special outdoor enc. is out of range. Must be 0-3.");
+				showError("Special outdoor enc. is out of range. Must be 0-3.");
 				//set_sd = false;
 			}
 			else {
@@ -4560,7 +4560,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			start_town_mode(spec.ex1a, i);
 			break;
 		default:
-			giveError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
 			break;
 	}
 	
@@ -4571,7 +4571,7 @@ void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 
 void setsd(short a,short b,short val) {
 	if(!univ.party.sd_legit(a,b)) {
-		giveError("The scenario attempted to change an out of range Stuff Done flag.");
+		showError("The scenario attempted to change an out of range Stuff Done flag.");
 		return;
 	}
 	PSD[a][b] = val;
@@ -4625,7 +4625,7 @@ void get_strs(std::string& str1,std::string& str2,short cur_type,short which_str
 	
 	if(((which_str1 >= 0) && (which_str1 != minmax(0,num_strs,which_str1))) ||
 		((which_str2 >= 0) && (which_str2 != minmax(0,num_strs,which_str2)))) {
-		giveError("The scenario attempted to access a message out of range.");
+		showError("The scenario attempted to access a message out of range.");
 		return;
 	}
 	switch(cur_type) {
@@ -4673,6 +4673,6 @@ void set_campaign_flag(short sdf_a, short sdf_b, short cpf_a, short cpf_b, short
 				univ.party.cpn_flag(cpf_a, cpf_b) = univ.party.stuff_done[sdf_a][sdf_b];
 		}
 	} catch(std::range_error x) {
-		giveError(x.what());
+		showError(x.what());
 	}
 }
