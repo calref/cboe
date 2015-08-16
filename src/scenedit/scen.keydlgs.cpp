@@ -161,7 +161,7 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 	size_t total_pics = 0;
 	cPictChoice* pic_dlg = nullptr;
 	switch(g_type + PIC_PRESET) {
-		case PIC_TER: total_pics = 523; break;
+		case PIC_TER: total_pics = 539; break;
 		case PIC_TER_ANIM: total_pics = 17; break;
 		case PIC_DLOG: total_pics = 44; break;
 		case PIC_TALK: total_pics = 84; break;
