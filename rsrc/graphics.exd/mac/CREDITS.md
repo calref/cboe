@@ -72,13 +72,11 @@ Graphics 24 and 46-49 were monster graphics in original BoE.
 Minstrel.
 - On ter8.png, graphics 0, 1, 5, 6, 10, 11, 15, 16 are by Celtic Minstrel; 48 and 49 are
 by
-Wyrmfire; 18 and 19 are by ADoS; and the rest are by Mistb0rn.
-- ter9.png is entirely by Wyrmfire.
-- On ter10.png, graphics 0-5, 8-19 are by Wyrmfire, and the rest are by Mistb0rn (but
-based
-on Wyrmfire's graphics).
-- On ter11.png, graphics 0-22 are by Mistb0rn.
-- On teranim.png, graphic 15 is by Mistb0rn and graphic 16 is by Wyrmfire.
+- ter9.png is entirely by ADoS (some based on original BoE graphics).
+- On ter10.png, the base ice tiles (graphics 1 and 2) are by Mistb0rn and the rest is by
+ADoS (based on those tiles and original BoE graphics) with some tweaks by Celtic Minstrel.
+- ter11.png is entirely by ADoS.
+- On teranim.png, graphic 15 is by Mistb0rn and graphic 16 is by ADoS.
 - termap.png currently just contains directly shrunken versions of the other sheets.
 
 For monster graphics, most are original BoE graphics, except for the following (some of
@@ -92,8 +90,8 @@ background flooring.
 
 For item graphics, most are original BoE graphics, except for the following:
 
-- The last row of objects.png are by ADoS, as is graphic 17.
-- On tinyobj.png, graphics 17 and 45-49 are by ADoS.
+- The last two rows of objects.png are by ADoS, as is graphic 17.
+- On tinyobj.png, graphics 17, 45-54, and 134-138 are by ADoS.
 
 startanim.png has been heavily modified with new text, but the actual pictures in it are
 still all original BoE graphics.
