@@ -12,7 +12,7 @@
 
 #define	NUM_DLOG_B		53
 
-#define NLS	25
+#define NLS	26
 // number of left slots for buttons
 #define	NRS	right_button_status.size()
 // number of right slots for scrolling list

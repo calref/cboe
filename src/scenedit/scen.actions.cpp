@@ -21,6 +21,7 @@
 #include "cursors.hpp"
 #include "scrollbar.hpp"
 #include "dlogutil.hpp"
+#include "gitrev.hpp"
 
 #include "scen.btnmg.hpp"
 
@@ -2371,6 +2372,21 @@ void town_entry(location spot_hit) {
 	}
 }
 
+static std::string version() {
+	static std::string version;
+	if(version.empty()) {
+		std::ostringstream sout;
+		sout << "Version " << oboeVersionString();
+#if defined(GIT_REVISION) && defined(GIT_TAG_REVISION)
+		if(strcmp(GIT_REVISION, GIT_TAG_REVISION) != 0) {
+			sout << " [" << GIT_REVISION << "]";
+		}
+#endif
+		version = sout.str();
+	}
+	return version;
+}
+
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
 void set_up_start_screen() {
@@ -2383,11 +2399,12 @@ void set_up_start_screen() {
 	set_lb(7,LB_TEXT,LB_NO_ACTION,"To find out how to use the");
 	set_lb(8,LB_TEXT,LB_NO_ACTION,"editor, select Getting Started ");
 	set_lb(9,LB_TEXT,LB_NO_ACTION,"from the Help menu.");
-	set_lb(NLS - 5,LB_TEXT,LB_NO_ACTION,"Be sure to read the file Blades");
-	set_lb(NLS - 4,LB_TEXT,LB_NO_ACTION,"of Exile License. Using this");
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"program implies that you agree ");
-	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"with the terms of the license.");
-	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
+	set_lb(NLS - 6,LB_TEXT,LB_NO_ACTION,"Be sure to read the file Blades");
+	set_lb(NLS - 5,LB_TEXT,LB_NO_ACTION,"of Exile License. Using this");
+	set_lb(NLS - 4,LB_TEXT,LB_NO_ACTION,"program implies that you agree ");
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"with the terms of the license.");
+	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
+	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
 }
 
 void set_up_main_screen() {
@@ -2419,7 +2436,8 @@ void set_up_main_screen() {
 	set_lb(-1,LB_TEXT,LB_LOAD_TOWN,"Load Another Town");
 	set_lb(-1,LB_TEXT,LB_EDIT_TOWN,"Edit Town Terrain");
 	set_lb(-1,LB_TEXT,LB_EDIT_TALK,"Edit Town Dialogue");
-	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
+	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
+	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
 	overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
 	pal_sbar->hide();
@@ -2438,8 +2456,8 @@ void start_town_edit() {
 	strb << "Editing Town " << cur_town;
 	set_lb(0,LB_TITLE,LB_NO_ACTION,strb.str());
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,town->town_name);
-	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
-	set_lb(NLS - 1,LB_TEXT,LB_RETURN,"Back to Main Menu");
+	set_lb(NLS - 2,LB_TEXT,LB_RETURN,"Back to Main Menu");
+	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
 	overall_mode = MODE_DRAWING;
 	editing_town = true;
 	set_up_terrain_buttons(true);
@@ -2468,8 +2486,8 @@ void start_out_edit() {
 	strb << "Editing outdoors (" << cur_out.x << ',' << cur_out.y << ")";
 	set_lb(0,LB_TITLE,LB_NO_ACTION,strb.str());
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,current_terrain->out_name);
-	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
-	set_lb(NLS - 1,LB_TEXT,LB_RETURN,"Back to Main Menu");
+	set_lb(NLS - 2,LB_TEXT,LB_RETURN,"Back to Main Menu");
+	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
 	overall_mode = MODE_DRAWING;
 	draw_mode = DRAW_TERRAIN;
 	editing_town = false;

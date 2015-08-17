@@ -28,6 +28,7 @@
 #include "restypes.hpp"
 #include "boe.menus.hpp"
 #include "winutil.hpp"
+#include "gitrev.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern short stat_window;
@@ -426,15 +427,23 @@ void draw_startup_stats() {
 		}
 	}
 	
+	std::ostringstream sout;
+	sout << "Copyright 1997, All Rights Reserved, v" << oboeVersionString();
+#if defined(GIT_REVISION) && defined(GIT_TAG_REVISION)
+	if(strcmp(GIT_REVISION, GIT_TAG_REVISION) != 0) {
+		sout << " [" << GIT_REVISION << "]";
+	}
+#endif
+	std::string copyright = sout.str();
 	style.font = FONT_BOLD;
 	style.pointSize = 10;
 	pc_rect = startup_from[0];
 	pc_rect.offset(5,5);
 	pc_rect.top = pc_rect.bottom - 25;
-	pc_rect.left = pc_rect.right - 270;
+	pc_rect.left = pc_rect.right - string_length(copyright, style) - 45;
 	// TODO: Should replace this with a more appropriate copyright string
 	// Windows replaced it with "That is not dead which can eternally lie..." - I don't think that's quite appropriate though.
-	win_draw_string(mainPtr,pc_rect,"Copyright 1997, All Rights Reserved, v" + oboeVersionString(),eTextMode::WRAP,style,ul);
+	win_draw_string(mainPtr, pc_rect, copyright, eTextMode::WRAP, style, ul);
 }
 
 
