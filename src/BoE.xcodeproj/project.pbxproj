@@ -19,6 +19,7 @@
 				914701A618F62A52008A6DC9 /* Copy Fonts */,
 				914B2BB718E8BF99007B6799 /* Validate Dialog Definitions */,
 				914B2B9518E8008A007B6799 /* Copy Dialog Definitions */,
+				91C2A6E01B823C7B00346948 /* Generate Git Revision Information */,
 			);
 			dependencies = (
 			);
@@ -736,6 +737,8 @@
 		91BFA3D91902ADD5001686E4 /* tarball.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tarball.hpp; sourceTree = "<group>"; };
 		91BFA3DE19033E01001686E4 /* gzstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gzstream.cpp; sourceTree = "<group>"; };
 		91BFA3DF19033E01001686E4 /* gzstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzstream.h; sourceTree = "<group>"; };
+		91C2A6E11B823CCD00346948 /* gitrev.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = gitrev.sh; sourceTree = "<group>"; };
+		91C2A6E21B8244F700346948 /* gitrev.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gitrev.hpp; sourceTree = "<group>"; };
 		91C688E60FD702B9000F6D01 /* cursors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cursors.hpp; sourceTree = "<group>"; };
 		91C688E70FD702B9000F6D01 /* cursors.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = cursors.mac.mm; sourceTree = "<group>"; };
 		91C749B71A2D6432008E0E10 /* strings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = strings; sourceTree = "<group>"; };
@@ -1086,6 +1089,7 @@
 			children = (
 				91C688E60FD702B9000F6D01 /* cursors.hpp */,
 				91E5C7A50F9F615400C21460 /* fileio.hpp */,
+				91C2A6E21B8244F700346948 /* gitrev.hpp */,
 				91B3F1090F9779C300BF5B67 /* graphtool.hpp */,
 				915E09071A316D6A008BDF00 /* map_parse.hpp */,
 				91B3F11D0F97801F00BF5B67 /* mathutil.hpp */,
@@ -1272,6 +1276,7 @@
 		91B3F0FF0F97797200BF5B67 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				91C2A6E11B823CCD00346948 /* gitrev.sh */,
 				91BFA3DC19033E00001686E4 /* gzstream */,
 				912DFE8718E24B0B00B00D75 /* resmgr */,
 				910BBA130FB8BE66001E34EA /* dialogxml */,
@@ -1676,6 +1681,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = ./fix_dylibs.sh;
+		};
+		91C2A6E01B823C7B00346948 /* Generate Git Revision Information */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Git Revision Information";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = ./tools/gitrev.sh;
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
