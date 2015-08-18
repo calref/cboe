@@ -23,6 +23,8 @@ void setWindowFloating(sf::Window& win, bool floating);
 void init_fileio();
 void launchURL(std::string url);
 
+std::string get_os_version();
+
 fs::path nav_get_party();
 fs::path nav_put_party(fs::path def = "");
 fs::path nav_get_scenario();
