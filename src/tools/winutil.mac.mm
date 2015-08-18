@@ -10,6 +10,7 @@
 #include <Cocoa/Cocoa.h>
 #include <AppKit/NSBitmapImageRep.h>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <sstream>
 
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
 // The proper way would involve use of the TextEntered event
@@ -87,6 +88,14 @@ char keyToChar(sf::Keyboard::Key key, bool isShift) {
 		default: break;
 	}
 	return 0;
+}
+
+std::string get_os_version() {
+	NSProcessInfo* info = [NSProcessInfo processInfo];
+	std::ostringstream os;
+	os << "Apple Mac OS X ";
+	os << [[info operatingSystemVersionString] cStringUsingEncoding:NSASCIIStringEncoding];
+	return os.str();
 }
 
 void makeFrontWindow(sf::Window& win) {

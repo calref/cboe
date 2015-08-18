@@ -154,8 +154,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.OpenElement("creator");
 	data.PushElement("type", "oboe");
 	data.PushElement("version", scenario.format_ed_version());
-	// TODO: fill <os> element
-	data.PushElement("os", "");
+	data.PushElement("os", get_os_version());
 	data.CloseElement("creator");
 	data.OpenElement("game");
 	data.PushElement("num-towns", scenario.towns.size());
