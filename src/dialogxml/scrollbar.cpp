@@ -68,7 +68,6 @@ bool cScrollbar::handleClick(location where) {
 	if(max == 0) return false;
 	sf::Event e;
 	bool done = false, clicked = false;
-	inWindow->setActive();
 	depressed = true;
 	int bar_height = frame.height() - 32;
 	rectangle thumbRect = frame;

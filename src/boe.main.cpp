@@ -335,18 +335,21 @@ void Mouse_Pressed() {
 		location mousePos(event.mouseButton.x, event.mouseButton.y);
 		volatile bool doneScrolling = false;
 		if(mousePos.in(text_sbar->getBounds())) {
+			mainPtr.setActive(false);
 			boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling), REFRESH_TRANS));
 			text_sbar->handleClick(mousePos);
 			doneScrolling = true;
 			updater.join();
 			redraw_screen(REFRESH_TRANS);
 		} else if(mousePos.in(item_sbar->getBounds())) {
+			mainPtr.setActive(false);
 			boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling), REFRESH_INVEN));
 			item_sbar->handleClick(mousePos);
 			doneScrolling = true;
 			updater.join();
 			redraw_screen(REFRESH_INVEN);
 		} else if(overall_mode == MODE_SHOPPING && mousePos.in(shop_sbar->getBounds())) {
+			mainPtr.setActive(false);
 			boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling), REFRESH_DLOG));
 			shop_sbar->handleClick(mousePos);
 			doneScrolling = true;
