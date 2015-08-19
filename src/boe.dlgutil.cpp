@@ -473,6 +473,10 @@ void handle_info_request(cShopItem item) {
 }
 
 void set_up_shop_array() {
+	#ifdef _MSC_VER
+		#pragma warning(push)
+		#pragma warning(disable:4258)
+	#endif
 	int i = 0;
 	for(int j = 0; i < 30 && j < 30; j++) {
 		cShopItem entry = active_shop.getItem(j);
@@ -548,6 +552,9 @@ void set_up_shop_array() {
 				break;
 		}
 	}
+	#ifdef _MSC_VER
+		#pragma warning(pop)
+	#endif
 	shop_sbar->setMaximum(i - 8);
 	std::fill(shop_array + i, shop_array + 30, -1);
 }

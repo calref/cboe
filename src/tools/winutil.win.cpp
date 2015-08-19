@@ -352,7 +352,8 @@ void set_clipboard_img(sf::Image& img) {
 	}
 	info->bV5Size = sizeof(BITMAPV5HEADER);
 	info->bV5Width = img.getSize().x;
-	info->bV5Height = -img.getSize().y;
+	info->bV5Height = img.getSize().y;
+	info->bV5Height *= -1;
 	info->bV5Planes = 1;
 	info->bV5BitCount = 32;
 	info->bV5Compression = BI_BITFIELDS;

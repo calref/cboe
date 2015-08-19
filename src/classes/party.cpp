@@ -821,7 +821,8 @@ void cParty::readFrom(std::istream& file){
 		} else if(cur == "TOWNSAVE") {
 			int i;
 			std::string str;
-			bin >> i >> creature_save[i].which_town >> str;
+			bin >> i;
+			bin >> creature_save[i].which_town >> str;
 			creature_save[i].hostile = str == "HOSTILE";
 		} else if(cur == "TOWNVISIBLE") {
 			int i;
