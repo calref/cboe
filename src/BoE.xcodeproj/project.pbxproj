@@ -1694,7 +1694,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = ./tools/gitrev.sh;
+			shellScript = "export PATH=/opt/local/bin:$PATH\n./tools/gitrev.sh";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
