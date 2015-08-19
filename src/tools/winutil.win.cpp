@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Image.hpp>
+#include <sstream>
 
 extern sf::RenderWindow mainPtr;
 OPENFILENAMEA getParty, getScen, getRsrc, putParty, putScen, putRsrc;
@@ -84,6 +85,78 @@ char keyToChar(sf::Keyboard::Key key, bool isShift) {
 	default: break;
 	}
 	return 0;
+}
+
+std::string get_os_version() {
+	// Copied and tweaked from Battle for Wesnoth
+	static const std::string base = "Microsoft Windows";
+
+	OSVERSIONINFOEXA v;
+	v.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXA);
+
+	if(!GetVersionEx(reinterpret_cast<OSVERSIONINFO*>(&v))) {
+		return base;
+	}
+
+	const DWORD vnum = v.dwMajorVersion * 100 + v.dwMinorVersion;
+	std::ostringstream version;
+	version << base << ' ';
+
+	switch(vnum) {
+	case 500:
+		version << "2000";
+		break;
+	case 501:
+		version << "XP";
+		break;
+	case 502:
+		// This will misidentify XP x64 but who really cares?
+		version << "Server 2003";
+		break;
+	case 600:
+		if(v.wProductType == VER_NT_WORKSTATION) {
+			version << "Vista";
+		} else {
+			version << "Server 2008";
+		}
+		break;
+	case 601:
+		if(v.wProductType == VER_NT_WORKSTATION) {
+			version << "7";
+		} else {
+			version << "Server 2008 R2";
+		}
+		break;
+	case 602:
+		if(v.wProductType == VER_NT_WORKSTATION) {
+			version << "8";
+		} else {
+			version << "Server 2012";
+		}
+		break;
+	case 603:
+		if(v.wProductType == VER_NT_WORKSTATION) {
+			version << "8.1";
+		} else {
+			version << "Server 2012 R2";
+		}
+		break;
+	case 1000:
+		if(v.wProductType == VER_NT_WORKSTATION) {
+			version << "10";
+			break;
+		} // else fallback to default
+	default:
+		if(v.wProductType != VER_NT_WORKSTATION) {
+			version << "Server";
+		}
+	}
+
+	if(v.szCSDVersion && *v.szCSDVersion) {
+		version << ' ' << v.szCSDVersion;
+	}
+
+	return version.str();
 }
 
 void makeFrontWindow(sf::Window& win) {
