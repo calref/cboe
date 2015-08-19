@@ -898,7 +898,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 }
 
 void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
-	short r1,r2, target, i,item,store,adj,x,y;
+	short r1,r2, target,item,store,adj,x,y;
 	location loc;
 	location where;
 	
@@ -972,7 +972,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			r1 = level / 6 + adj / 3 + get_ran(1,0,1);
-			for(i = 0; i < r1; i++) {
+			for(int i = 0; i < r1; i++) {
 				r2 = get_ran(1,0,7);
 				store = get_ran(2,1,5) + adj;
 				if(!summon_monster((r2 == 1) ? 100 : 99,where,store,eAttitude::FRIENDLY,true))
@@ -985,7 +985,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			store = get_ran(2,1,4) + adj;
 			if(!summon_monster(126,where,store,eAttitude::FRIENDLY,true))
 				add_string_to_buf("  Summon failed.");
-			for(i = 0; i < 4; i++)	{
+			for(int i = 0; i < 4; i++)	{
 				store = get_ran(2,1,4) + adj;
 				if(!summon_monster(125,where,store,eAttitude::FRIENDLY,true))
 					add_string_to_buf("  Summon failed.");
@@ -1188,7 +1188,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					}
 					else sout << " wasn't stoned.";
 				} else if(spell_num == eSpell::CURSE_REMOVE) {
-					for(i = 0; i < 24; i++)
+					for(int i = 0; i < 24; i++)
 						if(univ.party[target].items[i].cursed){
 							r1 = get_ran(1,0,200) - 10 * adj;
 							if(r1 < 60) {
@@ -1215,7 +1215,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 							}
 							else {
 								univ.party[target].main_status = eMainStatus::ALIVE;
-								for(i = 0; i < 3; i++)
+								for(int i = 0; i < 3; i++)
 									if(get_ran(1,0,2) < 2) {
 										eSkill skill = eSkill(i);
 										univ.party[target].skills[skill] -= (univ.party[target].skills[skill] > 1) ? 1 : 0;
@@ -1230,7 +1230,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					} else if(spell_num == eSpell::RESURRECT) {
 						if(univ.party[target].main_status != eMainStatus::ALIVE) {
 							univ.party[target].main_status = eMainStatus::ALIVE;
-							for(i = 0; i < 3; i++)
+							for(int i = 0; i < 3; i++)
 								if(get_ran(1,0,2) < 1) {
 									eSkill skill = eSkill(i);
 									univ.party[target].skills[skill] -= (univ.party[target].skills[skill] > 1) ? 1 : 0;
@@ -1285,7 +1285,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					break;
 			}
 			
-			for(i = 0; i < 6; i++)
+			for(int i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if(spell_num == eSpell::SANCTUARY_MASS) {
 						store = get_ran(0,1,3) + level / 6 + adj;
