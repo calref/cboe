@@ -126,7 +126,6 @@ Section /o "Documentation" Section4
 	File "..\..\..\doc\game\Mage.html"
 	File "..\..\..\doc\game\Priest.html"
 	File "..\..\..\doc\game\Hints.html"
-	File "..\..\..\doc\game\Valleydy.html"
 	File "..\..\..\doc\game\Editor.html"
 	File "..\..\..\doc\game\Credits.html"
 	File "..\..\..\doc\game\Licensing.html"
