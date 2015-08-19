@@ -1208,6 +1208,7 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 			else {
 				short size_before = scenario.ter_types.size(), pos_before = pal_sbar->getPosition();
 				i += pos_before * 16;
+				if(i > size_before) return true;
 				if(option_hit) {
 					if(i == size_before - 1 && !scenario.is_ter_used(i))
 						scenario.ter_types.pop_back();
