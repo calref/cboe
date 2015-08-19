@@ -52,3 +52,10 @@ if %Config% == "Debug" (
 xcopy "%DllSrcDir%\zlib1.dll" %TargetDir% /s /y /i /d
 xcopy "%DllSrcDir%\libsndfile-1.dll" %TargetDir% /s /y /i /d
 xcopy "%DllSrcDir%\openal32.dll" %TargetDir% /s /y /i /d
+
+@echo Generating git revision information...
+
+cd %ResourceDir%\..\src
+
+rem TODO: Unfortunately this hardcodes the location of bash.
+c:\bin\Git\bin\bash.exe tools/gitrev.sh
