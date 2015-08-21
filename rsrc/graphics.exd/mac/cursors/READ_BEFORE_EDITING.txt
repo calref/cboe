@@ -1,0 +1,10 @@
+When editing the GIF files in this folder, you need to be aware how the hotspot is stored.
+Each of these GIF files encodes the cursor's hotspot into a GIF comment with the following
+syntax (case-sensitive):
+
+	Hotspot(x,y)
+
+where x and y are substituted with the actual integer coordinates. There should be no extra
+spaces anywhere in that. (However, anything after the closing parenthesis will be ignored.)
+
+If you edit any of these images, be sure to update the hotspot if necessary!
