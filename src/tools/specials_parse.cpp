@@ -104,6 +104,13 @@ auto SpecialParser::check_error(const Rule::scanner_t&, spirit::parser_error<ePa
 	return ErrStatus(ErrStatus::rethrow);
 }
 
+static void warn_missing_opcode(unsigned short i) {
+	static std::set<unsigned short> warned;
+	if(!warned.count(i))
+		std::cout << "Warning: Missing opcode definition for special node type with ID " << i << std::endl;
+	warned.insert(i);
+}
+
 static void init_specials_parse() {
 	opcode.add((*eSpecType::NONE).opcode().c_str(), eSpecType::NONE);
 	// Fill in all the opcodes and check for missing types.
@@ -117,7 +124,7 @@ static void init_specials_parse() {
 		eSpecCat category = getNodeCategory(check);
 		if(category == eSpecCat::INVALID) continue;
 		if((*check).opcode().empty())
-			std::cout << "Warning: Missing opcode definition for special node type with ID " << i << std::endl;
+			warn_missing_opcode(i);
 		else opcode.add((*check).opcode().c_str(), check);
 	}
 }
