@@ -42,43 +42,54 @@ namespace ResMgr {
 	}
 	
 	/// Load a cursor from a GIF file.
-	/// The cursor's hotspot location is stored in a .hot file, as plaintext:
-	/// simply the X value followed by the Y value, separated by whitespace.
+	/// The cursor's hotspot location is stored in a GIF comment, with the following syntax (case-sensitive):
+	/// "Hotspot(x,y)"
 	template<> inline CursorRsrc* resLoader<CursorRsrc>::operator() (std::string fname) {
-		// TODO: Store the hotspots on disk instead of hardcoded here
-		static const std::map<std::string,location> cursor_hs = {
-			{"wand", {4, 1}}, {"eyedropper", {1, 14}}, {"brush", {5, 13}}, {"spraycan", {8, 8}},
-			{"eraser", {8, 8}}, {"topleft", {8, 8}}, {"bottomright", {8, 8}}, {"hand", {14, 0}},
-			{"NW", {3, 3}}, {"N", {9, 3}}, {"NE", {12, 3}},
-			{"W", {2, 7}}, {"wait", {8, 8}}, {"E", {14, 7}},
-			{"SW", {3, 12}}, {"S", {9, 12}}, {"SE", {12, 12}},
-			{"sword", {1, 1}}, {"boot", {2, 6}}, {"drop", {14, 0}}, {"target", {8, 8}},
-			{"talk", {2, 13}}, {"key", {3, 2}}, {"look", {7, 6}}, {"watch", {8,8}},
-		};
 		fs::path fpath = resPool<CursorRsrc>::rel2abs(fname + ".gif");
-		fs::path hotpath = resPool<CursorRsrc>::rel2abs(fname + ".hot");
-		int x = 0, y = 0;
-		if(fs::exists(hotpath)) {
-			std::ifstream fin(hotpath.c_str());
-			fin >> x >> y;
-			fin.close();
-		} else {
-			auto entry = cursor_hs.find(fname);
-			if(entry == cursor_hs.end())
-				std::cerr << "Cursor hotspot missing: " << fname << std::endl;
-			else {
-				std::cerr << "Cursor hotspot missing (using fallback value): " << fname << std::endl;
-				location hs = entry->second;
-				x = hs.x; y = hs.y;
+		if(!fs::exists(fpath))
+			throw xResMgrErr("Failed to load GIF cursor: " + fname);
+		int x = 0, y = 0, f_sz;
+		std::ifstream fin(fpath.c_str(), std::ios::binary);
+		fin.seekg(0, std::ios::end);
+		f_sz = fin.tellg();
+		fin.clear();
+		fin.seekg(0, std::ios::beg);
+		bool found_hotspot = false;
+		while(fin && !found_hotspot) {
+			unsigned char c = fin.get();
+			if(c != 0x21) continue;
+			c = fin.get();
+			if(c != 0xfe) continue;
+			// If we get here, we've probably found a GIF comment
+			std::string str;
+			int count;
+			found_hotspot = true;
+			do {
+				count = fin.get();
+				if(count + fin.tellg() >= f_sz) {
+					found_hotspot = false;
+					break;
+				}
+				std::copy_n(std::istream_iterator<std::string::value_type>(fin), count, std::back_inserter(str));
+			} while(count > 0);
+			if(found_hotspot) {
+				if(str.substr(0,7) == "Hotspot") {
+					size_t open_paren = str.find_first_of('('), comma = str.find_first_of(','), close_paren = str.find_first_of(')');
+					std::string x_str = str.substr(open_paren + 1, comma - open_paren - 1);
+					std::string y_str = str.substr(comma + 1, close_paren - comma - 1);
+					x = std::stoi(x_str);
+					y = std::stoi(y_str);
+				} else found_hotspot = false;
 			}
 		}
+		if(!found_hotspot)
+			std::cerr << "Cursor hotspot missing: " << fname << std::endl;
 		// TODO: Handle errors?
 		CursorRsrc* cur = new Cursor(fpath.string(),x,y);
 		return cur;
-		throw xResMgrErr("Failed to load GIF cursor: " + fname);
 	}
 	
-	/// Load a font form a TTF file.
+	/// Load a font from a TTF file.
 	template<> inline FontRsrc* resLoader<FontRsrc>::operator() (std::string fname) {
 		fs::path fpath = resPool<FontRsrc>::rel2abs(fname + ".ttf");
 		FontRsrc* theFont = new FontRsrc;
