@@ -322,6 +322,7 @@ static void handleUpdateWhileScrolling(volatile bool& doneScrolling, int refresh
 		sf::sleep(sf::milliseconds(10));
 		redraw_screen(refresh);
 	}
+	mainPtr.setActive(false);
 }
 
 // TODO: Pass the event object around instead of keeping a global one

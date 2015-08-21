@@ -556,6 +556,7 @@ static void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
 		if(overall_mode < MODE_MAIN_SCREEN || overall_mode == MODE_EDIT_TYPES)
 			set_up_terrain_buttons(false);
 	}
+	mainPtr.setActive(false);
 }
 
 void Mouse_Pressed() {
