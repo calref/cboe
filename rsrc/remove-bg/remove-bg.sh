@@ -50,7 +50,7 @@ if [ -z `which convert` ]; then
 	exit
 fi
 
-if [ ! -e $2 -o ! -e $3 -o ! -e $4 ]; then
+if [ ! -e "$2" -o ! -e "$3" -o ! -e "$4" ]; then
 	echo 'Error! Could not find one of the input files!'
 	echo 'Make sure you spelled them all correctly.'
 	exit
@@ -58,10 +58,10 @@ fi
 
 convert \
 	-size $1 canvas:white -alpha set \
-	$2 $3 -channel A -fx "@calc-alpha.fx" \
-	$2 $3 -channel RGB -fx "@apply-alpha.fx" \
+	"$2" "$3" -channel A -fx "@calc-alpha.fx" \
+	"$2" "$3" -channel RGB -fx "@apply-alpha.fx" \
 	intermediate.png 2>| im_error.txt
 
-convert intermediate.png $3 $4 -composite $5
+convert intermediate.png "$3" "$4" -composite "$5"
 
 rm intermediate.png
