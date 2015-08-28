@@ -1,0 +1,8 @@
+<sector boes="2.0.0">
+	<encounter>
+		<monster friendly='true'>0</monster>
+		<monster friendly='true'>0</monster>
+		<monster friendly='true'>0</monster>
+		<monster friendly='true'>0</monster>
+	</encounter>
+</sector>
