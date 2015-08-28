@@ -1,0 +1,13 @@
+<town boes="2.0.0">
+	<size>32</size>
+	<name>Hello World</name>
+	<timer freq='10'>0</timer>
+	<timer freq='10'>0</timer>
+	<timer freq='10'>0</timer>
+	<timer freq='10'>0</timer>
+	<timer freq='10'>0</timer>
+	<timer freq='10'>0</timer>
+	<timer freq='10'>0</timer>
+	<timer freq='10'>0</timer>
+	<timer freq='10'>0</timer>
+</town>

@@ -1,0 +1,8 @@
+<town boes="2.0.0">
+	<size>32</size>
+	<name>Test Town</name>
+	<bounds top='4' left='4' right='28' bottom='28'/>
+	<difficulty>1</difficulty>
+	<lighting>lit</lighting>
+	<flags/>
+</town>

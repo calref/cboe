@@ -1,0 +1,7 @@
+<town boes="2.0.0">
+	<size>32</size>
+	<name>Hello World</name>
+	<wandering>
+		<creature/>
+	</wandering>
+</town>

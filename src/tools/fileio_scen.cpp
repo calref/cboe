@@ -48,6 +48,9 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario);
 void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario);
 void readItemsFromXml(ticpp::Document&& data, cScenario& scenario);
 void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario);
+void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out);
+void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen);
+void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_num);
 void loadOutMapData(map_data&& data, location which, cScenario& scen);
 void loadTownMapData(map_data&& data, int which, cScenario& scen);
 
@@ -1439,7 +1442,7 @@ void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 	}
 }
 
-static void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
+void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
 	using namespace ticpp;
 	int maj, min, rev;
 	std::string fname, type, name, val;
@@ -1533,7 +1536,7 @@ static void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
 		throw xMissingElem("sector", "name", data.FirstChildElement()->Row(), data.FirstChildElement()->Column(), fname);
 }
 
-static void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
+void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 	static const std::string dirs = "nwse";
 	using namespace ticpp;
 	int maj, min, rev;
@@ -1736,10 +1739,10 @@ static void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& sce
 		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
 	}
 	if(!reqs.empty())
-		throw xMissingElem("item", *reqs.begin(), data.FirstChildElement()->Row(), data.FirstChildElement()->Column(), fname);
+		throw xMissingElem("town", *reqs.begin(), data.FirstChildElement()->Row(), data.FirstChildElement()->Column(), fname);
 }
 
-static void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_num) {
+void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_num) {
 	using namespace ticpp;
 	int maj, min, rev;
 	std::string fname, type, name, val;

@@ -40,7 +40,7 @@
 	<xs:element name="dialogue">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="personality" maxOccurs="10"/>
+				<xs:element ref="personality" minOccurs="0" maxOccurs="10"/>
 				<xs:element ref="node" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="boes" type="xs:string" use="required"/>
