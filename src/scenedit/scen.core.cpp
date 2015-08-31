@@ -69,7 +69,7 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 			if(!check_range(me, "flag3", true, 0, 8, "Damage type")) return false;
 			break;
 		case eTerSpec::DANGEROUS:
-			if(!check_range(me, "flag1", true, 0, 8, "Strength")) return false;
+			if(!check_range(me, "flag1", true, -8, 8, "Strength")) return false;
 			if(!check_range(me, "flag2", true, 0, 100, "Percentage chance")) return false;
 			if(!check_range(me, "flag3", true, 0, 14, "Status type")) return false;
 			break;
@@ -254,8 +254,11 @@ static bool pick_ter_flag(cDialog& me, std::string id, eKeyMod) {
 	sel >> prop;
 	switch(prop) {
 		case eTerSpec::NONE:
-			// TODO: Could have a pick graphic dialog for the editor icon, but that requires adding a new graphic type
-			return true;
+		case eTerSpec::CALL_SPECIAL: case eTerSpec::CALL_SPECIAL_WHEN_USED:
+			if((which == 1) == (prop == eTerSpec::NONE))
+				i = choose_text_res("tiny-icons", 1, 137, i + 1, &me, "Which tiny icon?");
+			else return true;
+			break;
 		case eTerSpec::CHANGE_WHEN_STEP_ON: case eTerSpec::CHANGE_WHEN_USED:
 			if(which == 1)
 				i = choose_text(STRT_TER, i, &me, "Change to what terrain?");
@@ -288,7 +291,6 @@ static bool pick_ter_flag(cDialog& me, std::string id, eKeyMod) {
 				i = choose_text(STRT_TER, i, &me, prop == eTerSpec::TOWN_ENTRANCE ? "Terrain type when hidden:" : "Terrain to change to:");
 			else return true;
 			break;
-		case eTerSpec::CALL_SPECIAL: case eTerSpec::CALL_SPECIAL_WHEN_USED:
 		case eTerSpec::UNUSED1: case eTerSpec::UNUSED2: case eTerSpec::UNUSED3:
 		case eTerSpec::WILDERNESS_CAVE: case eTerSpec::WILDERNESS_SURFACE:
 		case eTerSpec::BRIDGE: case eTerSpec::IS_A_SIGN: case eTerSpec::IS_A_CONTAINER: case eTerSpec::BLOCKED_TO_MONSTERS:
@@ -313,7 +315,7 @@ static bool fill_ter_flag_info(cDialog& me, std::string id, bool losing){
 	me["editspec"].hide();
 	switch(prop) {
 		case eTerSpec::NONE:
-			me["pickflag1"].hide(); // TODO: Could have a pick graphic dialog for the editor icon, but that requires adding a new graphic type
+			me["pickflag1"].show();
 			break;
 		case eTerSpec::CHANGE_WHEN_STEP_ON: case eTerSpec::CHANGE_WHEN_USED:
 			me["pickflag1"].show();
@@ -327,6 +329,7 @@ static bool fill_ter_flag_info(cDialog& me, std::string id, bool losing){
 			me["pickflag1"].show();
 			break;
 		case eTerSpec::CALL_SPECIAL: case eTerSpec::CALL_SPECIAL_WHEN_USED:
+			me["pickflag3"].show();
 			me["editspec"].show();
 			break;
 		case eTerSpec::UNUSED1: case eTerSpec::UNUSED2: case eTerSpec::UNUSED3:

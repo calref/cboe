@@ -134,17 +134,17 @@ void cTerrain::append(legacy::terrain_type_type& old){
 		case 0:
 			if(i == 7 || i == 10 || i == 13 || i == 16){
 				special = eTerSpec::NONE;
-				flag1 = 23;
+				flag1 = 87;
 				flag2 = flag3 = 0;
 			}else if(picture == 215 || (picture >= 218 && picture <= 221)){
 				picture = 215;
 				special = eTerSpec::NONE;
-				flag1 = 3;
+				flag1 = 63;
 				flag2 = flag3 = 0;
 			}else if(picture == 216 || (picture >= 222 && picture <= 225)){
 				picture = 215;
 				special = eTerSpec::NONE;
-				flag1 = 2;
+				flag1 = 62;
 				flag2 = flag3 = 0;
 			}else if(picture == 143) {
 				special = eTerSpec::BED;
