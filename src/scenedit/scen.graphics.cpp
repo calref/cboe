@@ -278,6 +278,61 @@ static short get_small_icon(ter_num_t ter){
 	return icon;
 }
 
+static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
+	std::vector<short> icons;
+	// draw start icon, if starting point
+	if(editing_town && cur_town == scenario.which_town_start && scenario.where_start == at) {
+		icons.push_back(-1);
+	}
+	if(!editing_town && scenario.out_sec_start == cur_out && scenario.out_start == at) {
+		icons.push_back(-1);
+	}
+	short ter_small_i = get_small_icon(t_to_draw);
+	// Special case for towns
+	if(ter_small_i == 22 && !editing_town) {
+		bool have_town = false;
+		for(size_t i = 0; i < current_terrain->city_locs.size(); i++) {
+			if(current_terrain->city_locs[i] == at)
+				have_town = true;
+		}
+		if(!have_town) ter_small_i += 3;
+	}
+	if(ter_small_i >= 0)
+		icons.push_back(ter_small_i);
+	
+	if(is_special(at.x, at.y)) {
+		std::vector<spec_loc_t>& spec_list = editing_town ? town->special_locs : current_terrain->special_locs;
+		int num_spec = std::count_if(spec_list.begin(), spec_list.end(), [at](spec_loc_t which) {
+			return which.spec >= 0 && which.x == at.x && which.y == at.y;
+		});
+		if(num_spec > 1)
+			icons.push_back(47);
+		else icons.push_back(7);
+	}
+	if(editing_town) {
+		for(size_t i = 0; i < 4; i++)
+			if(at == town->start_locs[i]) {
+				icons.push_back(16 + i);
+			}
+		for(size_t i = 0; i < 4; i++)
+			if(at == town->wandering_locs[i]) {
+				icons.push_back(12);
+			}
+		if(is_field_type(at.x, at.y, BARRIER_FIRE)) {
+			icons.push_back(50);
+		}
+		if(is_field_type(at.x, at.y, BARRIER_FORCE)) {
+			icons.push_back(51);
+		}
+	} else {
+		for(size_t i = 0; i < 4; i++)
+			if(at == current_terrain->wandering_locs[i]) {
+				icons.push_back(12);
+			}
+	}
+	return icons;
+}
+
 void Set_up_win () {
 	short i,j;
 	for(i = 0; i < 70; i++){
@@ -709,7 +764,7 @@ void draw_terrain(){
 	location which_pt,where_draw;
 	rectangle draw_rect,clipping_rect = {8,8,332,260};
 	ter_num_t t_to_draw;
-	rectangle source_rect,tiny_to,tiny_to_base = {37,29,44,36},tiny_from,from_rect,to_rect;
+	rectangle source_rect,tiny_to,tiny_to_base = {37,29,44,36},from_rect,to_rect;
 	rectangle boat_rect = {0,0,36,28};
 	
 	if(overall_mode >= MODE_MAIN_SCREEN)
@@ -755,109 +810,41 @@ void draw_terrain(){
 				which_pt.x = cen_x + q - 4;
 				which_pt.y =cen_y + r - 4;
 				
-				tiny_to = tiny_to_base;
-				tiny_to.offset(28 * q, 36 * r);
-				
-				// draw start icon, if starting point
-				if((editing_town) &&
-					(cur_town == scenario.which_town_start) && (scenario.where_start.x == cen_x + q - 4)
-					&& (scenario.where_start.y == cen_y + r - 4)) {
-					from_rect = start_button_from;
-					to_rect = tiny_to;
-					to_rect.left -= 14;
-					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect);
-					tiny_to.offset(0,-7);
-				}
-				if(!editing_town
-					&& (scenario.out_sec_start.x == cur_out.x)
-					&& (scenario.out_sec_start.y == cur_out.y)
-					&& (scenario.out_start.x == cen_x + q - 4)
-					&& (scenario.out_start.y == cen_y + r - 4)) {
-					from_rect = start_button_from;
-					to_rect = tiny_to;
-					to_rect.left -= 14;
-					rect_draw_some_item(editor_mixed,from_rect,ter_draw_gworld,to_rect);
-					tiny_to.offset(0,-7);
-				}
-				small_i = get_small_icon(t_to_draw);
-				// Special case for towns
-				if(small_i == 22 && !editing_town) {
-					bool have_town = false;
-					for(i = 0; i < current_terrain->city_locs.size(); i++) {
-						if(current_terrain->city_locs[i] == which_pt)
-							have_town = true;
-					}
-					if(!have_town) small_i += 3;
-				}
-				tiny_from = base_small_button_from;
-				tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
-				if(small_i >= 0) {
-					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
-					tiny_to.offset(0,-7);
-				}
-				
-				if(is_special(cen_x + q - 4,cen_y + r - 4)) {
-					int x = cen_x + q - 4, y = cen_y + r - 4;
-					std::vector<spec_loc_t>& spec_list = editing_town ? town->special_locs : current_terrain->special_locs;
-					int num_spec = std::count_if(spec_list.begin(), spec_list.end(), [x,y](spec_loc_t which) {
-						return which.spec >= 0 && which.x == x && which.y == y;
-					});
-					tiny_from = base_small_button_from;
-					if(num_spec > 1)
-						tiny_from.offset(7 * (7),7 * (4));
-					else tiny_from.offset(7 * (7),7 * (0));
-					rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
-					tiny_to.offset(0,-7);
-				}
-				//if(is_s_d(cen_x + q - 4,cen_y + r - 4)) {
-				//}
+				// TODO: I'm not quite sure whether these should be testing loc or loc_in_sec
 				if(!editing_town) {
-					for(i = 0; i < 4; i++)
-						if((cen_x + q - 4 == current_terrain->wandering_locs[i].x) &&
-							(cen_y + r - 4 == current_terrain->wandering_locs[i].y)) {
-							tiny_from = base_small_button_from;
-							tiny_from.offset(7 * (2),7 * (1));
-							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
-							tiny_to.offset(0,-7);
-							i = 4;
-						}
-					
-				}
-				
-				if(editing_town) {
 					for(i = 0; i < scenario.boats.size(); i++) {
-						if((scenario.boats[i].which_town == cur_town) &&
-							(scenario.boats[i].loc.x == cen_x + q - 4) &&
-							(scenario.boats[i].loc.y == cen_y + r - 4))
+						if(scenario.boats[i].which_town == 200 &&
+						   scenario.boats[i].sector == cur_out &&
+						   scenario.boats[i].loc == which_pt)
 							Draw_Some_Item(vehicle_gworld,boat_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 						
 					}
 					for(i = 0; i < scenario.horses.size(); i++) {
 						source_rect = boat_rect;
 						source_rect.offset(0,36);
-						if((scenario.horses[i].which_town == cur_town) &&
-							(scenario.horses[i].loc.x == cen_x + q - 4) &&
-							(scenario.horses[i].loc.y == cen_y + r - 4))
+						if(scenario.horses[i].which_town == 200 &&
+						   scenario.horses[i].sector == cur_out &&
+						   scenario.horses[i].loc == which_pt)
 							Draw_Some_Item(vehicle_gworld,source_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 						
 					}
-					for(i = 0; i < 4; i++)
-						if((cen_x + q - 4 == town->start_locs[i].x) &&
-							(cen_y + r - 4 == town->start_locs[i].y)) {
-							tiny_from = base_small_button_from;
-							tiny_from.offset(7 * (6 + i),7 * (1));
-							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
-							tiny_to.offset(0,-7);
-						}
-					for(i = 0; i < 4; i++)
-						if((cen_x + q - 4 == town->wandering_locs[i].x) &&
-							(cen_y + r - 4 == town->wandering_locs[i].y)) {
-							tiny_from = base_small_button_from;
-							tiny_from.offset(7 * (2),7 * (1));
-							rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
-							tiny_to.offset(0,-7);
-							i = 4;
-						}
+				}
+				
+				if(editing_town) {
+					for(i = 0; i < scenario.boats.size(); i++) {
+						if(scenario.boats[i].which_town == cur_town &&
+						   scenario.boats[i].loc == which_pt)
+							Draw_Some_Item(vehicle_gworld,boat_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						
+					}
+					for(i = 0; i < scenario.horses.size(); i++) {
+						source_rect = boat_rect;
+						source_rect.offset(0,36);
+						if(scenario.horses[i].which_town == cur_town &&
+						   scenario.horses[i].loc == which_pt)
+							Draw_Some_Item(vehicle_gworld,source_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						
+					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_WEB)) {
 						from_rect = calc_rect(5,0);
 						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
@@ -873,10 +860,6 @@ void draw_terrain(){
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FIRE)) {
 						from_rect = calc_rect(8,4);
 						Draw_Some_Item(anim_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
-						tiny_from = base_small_button_from;
-						tiny_from.offset(7 * 0,7 * 5);
-						rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
-						tiny_to.offset(0,-7);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_QUICKFIRE)) {
 						from_rect = calc_rect(7,1);
@@ -885,10 +868,6 @@ void draw_terrain(){
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FORCE)) {
 						from_rect = calc_rect(10,4);
 						Draw_Some_Item(anim_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
-						tiny_from = base_small_button_from;
-						tiny_from.offset(7 * 1,7 * 5);
-						rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to);
-						tiny_to.offset(0,-7);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_BLOCK)) {
 						from_rect = calc_rect(3,0);
@@ -905,16 +884,33 @@ void draw_terrain(){
 							Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
 						}
 					}
-					for(x = 0; x < town->preset_items.size(); x++)
-						if((cen_x + q - 4 == town->preset_items[x].loc.x) &&
-							(cen_y + r - 4 == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
-						}
-					for(x = 0; x < town->creatures.size(); x++)
-						if((cen_x + q - 4 == town->creatures[x].start_loc.x) &&
-							(cen_y + r - 4 == town->creatures[x].start_loc.y) && (town->creatures[x].number != 0)) {
-						}
-					
 				}
+				
+				tiny_to = tiny_to_base;
+				tiny_to.offset(28 * q, 36 * r);
+				
+				// Tiny icons
+				std::vector<short> icons = get_small_icons(loc(cen_x + q - 4, cen_y + r - 4), t_to_draw);
+				
+				if(!icons.empty()) {
+					rectangle tiny_from_base = {120, 0, 127, 7};
+					for(short icon : icons) {
+						rectangle tiny_from = tiny_from_base;
+						if(icon == -1) {
+							tiny_from.offset(10 * 7, 0);
+							tiny_from.right += 14;
+							tiny_to.left -= 14;
+							
+						} else {
+							tiny_from.offset((icon % 10) * 7, (icon / 10) * 7);
+							
+						}
+						rect_draw_some_item(editor_mixed, tiny_from, ter_draw_gworld, tiny_to);
+						if(icon == -1) tiny_to.left += 14;
+						tiny_to.offset(0, -7);
+					}
+				}
+				
 				if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 					bool need_hilite = false, large_hilite = false;
 					int d = dist(where_draw, mouse_spot);
