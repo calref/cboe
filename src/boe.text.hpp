@@ -2,7 +2,7 @@
 
 void put_pc_screen();
 void place_buy_button(short position,short pc_num,short item_num);
-void put_item_screen(short screen_num,short suppress_buttons);
+void put_item_screen(short screen_num);
 void place_item_bottom_buttons();
 void set_stat_window(short new_stat);
 void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val);

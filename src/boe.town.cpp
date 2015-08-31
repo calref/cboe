@@ -1223,7 +1223,7 @@ void pick_lock(location where,short pc_num) {
 			add_string_to_buf("  Pick breaks.");
 			univ.party[pc_num].remove_charge(which_item);
 			if(stat_window == pc_num)
-				put_item_screen(stat_window,1);
+				put_item_screen(stat_window);
 		}
 		play_sound(41);
 	}

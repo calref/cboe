@@ -154,7 +154,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			add_string_to_buf("ERROR: Invalid trap type."); // should never be reached
 	}
 	put_pc_screen();
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 	return false;
 }
 

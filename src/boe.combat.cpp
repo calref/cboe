@@ -1409,7 +1409,7 @@ void do_combat_cast(location target) {
 												else {
 													caster.remove_charge(item);
 													if(stat_window == current_pc)
-														put_item_screen(stat_window,1);
+														put_item_screen(stat_window);
 													do_mindduel(current_pc,cur_monst);
 												}
 											}
@@ -1895,7 +1895,7 @@ void fire_missile(location target) {
 			if(ammo.charges <= 0)
 				missile_firer.take_item(ammo_inv_slot);
 			if(current_pc == stat_window)
-				put_item_screen(stat_window,1);
+				put_item_screen(stat_window);
 		}
 	}
 	
@@ -4691,7 +4691,7 @@ void end_combat() {
 	current_pc = store_current_pc;
 	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
 		current_pc = first_active_pc();
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 	draw_buttons(0);
 }
 

@@ -479,7 +479,7 @@ void handle_menu_choice(eMenu item_hit) {
 			if(choice < 6)
 				pick_pc_name(choice,NULL);
 			put_pc_screen();
-			put_item_screen(stat_window,0);
+			put_item_screen(stat_window);
 			break;
 			
 			
@@ -505,7 +505,7 @@ void handle_menu_choice(eMenu item_hit) {
 			}
 			print_buf();
 			put_pc_screen();
-			put_item_screen(stat_window,0);
+			put_item_screen(stat_window);
 			break;
 			
 		case eMenu::OPTIONS_JOURNAL:

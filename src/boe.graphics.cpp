@@ -103,7 +103,7 @@ sf::RenderTexture item_stats_gworld;
 sf::RenderTexture text_area_gworld;
 sf::RenderTexture terrain_screen_gworld;
 sf::RenderTexture text_bar_gworld;
-sf::Texture orig_text_bar_gworld;
+sf::Texture orig_text_bar_gworld, orig_item_stats_gworld, orig_pc_stats_gworld;
 sf::Texture buttons_gworld;
 sf::Texture items_gworld;
 sf::Texture tiny_obj_gworld;
@@ -572,6 +572,8 @@ void load_main_screen() {
 	loadImageToRenderTexture(item_stats_gworld, "inventory");
 	loadImageToRenderTexture(text_area_gworld, "transcript");
 	loadImageToRenderTexture(text_bar_gworld, "textbar");
+	orig_pc_stats_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("statarea"));
+	orig_item_stats_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("inventory"));
 	orig_text_bar_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("textbar"));
 	buttons_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("buttons"));
 }
@@ -580,7 +582,7 @@ void redraw_screen(int refresh) {
 	// We may need to update some of the offscreen textures
 	if(refresh & REFRESH_TERRAIN) draw_terrain(1);
 	if(refresh & REFRESH_STATS) put_pc_screen();
-	if(refresh & REFRESH_INVEN) put_item_screen(stat_window, 0);
+	if(refresh & REFRESH_INVEN) put_item_screen(stat_window);
 	if(refresh & REFRESH_TRANS) print_buf();
 	
 	put_background();
