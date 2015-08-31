@@ -804,8 +804,15 @@ void draw_terrain(){
 				}
 				draw_one_terrain_spot(q,r,t_to_draw);
 				
+				rectangle destrec;
+				
+				destrec.left = 8 + BITMAP_WIDTH * where_draw.x;
+				destrec.right = destrec.left + BITMAP_WIDTH;
+				destrec.top = 8 + BITMAP_HEIGHT * where_draw.y;
+				destrec.bottom = destrec.top + BITMAP_HEIGHT;
+				
 				if(is_spot(cen_x + q - 4,cen_y + r - 4))
-					Draw_Some_Item(fields_gworld, calc_rect(4, 0), ter_draw_gworld, where_draw, sf::BlendAlpha);
+					rect_draw_some_item(fields_gworld, calc_rect(4, 0), ter_draw_gworld, destrec, sf::BlendAlpha);
 				
 				which_pt.x = cen_x + q - 4;
 				which_pt.y =cen_y + r - 4;
@@ -816,7 +823,7 @@ void draw_terrain(){
 						if(scenario.boats[i].which_town == 200 &&
 						   scenario.boats[i].sector == cur_out &&
 						   scenario.boats[i].loc == which_pt)
-							Draw_Some_Item(vehicle_gworld,boat_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+							rect_draw_some_item(vehicle_gworld,boat_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 						
 					}
 					for(i = 0; i < scenario.horses.size(); i++) {
@@ -825,7 +832,7 @@ void draw_terrain(){
 						if(scenario.horses[i].which_town == 200 &&
 						   scenario.horses[i].sector == cur_out &&
 						   scenario.horses[i].loc == which_pt)
-							Draw_Some_Item(vehicle_gworld,source_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+							rect_draw_some_item(vehicle_gworld,source_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 						
 					}
 				}
@@ -834,7 +841,7 @@ void draw_terrain(){
 					for(i = 0; i < scenario.boats.size(); i++) {
 						if(scenario.boats[i].which_town == cur_town &&
 						   scenario.boats[i].loc == which_pt)
-							Draw_Some_Item(vehicle_gworld,boat_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+							rect_draw_some_item(vehicle_gworld,boat_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 						
 					}
 					for(i = 0; i < scenario.horses.size(); i++) {
@@ -842,46 +849,46 @@ void draw_terrain(){
 						source_rect.offset(0,36);
 						if(scenario.horses[i].which_town == cur_town &&
 						   scenario.horses[i].loc == which_pt)
-							Draw_Some_Item(vehicle_gworld,source_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+							rect_draw_some_item(vehicle_gworld,source_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 						
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_WEB)) {
 						from_rect = calc_rect(5,0);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						rect_draw_some_item(fields_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_CRATE)) {
 						from_rect = calc_rect(6,0);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						rect_draw_some_item(fields_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_BARREL)) {
 						from_rect = calc_rect(7,0);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						rect_draw_some_item(fields_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FIRE)) {
 						from_rect = calc_rect(8,4);
-						Draw_Some_Item(anim_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						rect_draw_some_item(anim_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_QUICKFIRE)) {
 						from_rect = calc_rect(7,1);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						rect_draw_some_item(fields_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FORCE)) {
 						from_rect = calc_rect(10,4);
-						Draw_Some_Item(anim_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						rect_draw_some_item(anim_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_BLOCK)) {
 						from_rect = calc_rect(3,0);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						rect_draw_some_item(fields_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_CAGE)) {
 						from_rect = calc_rect(0,0);
-						Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+						rect_draw_some_item(fields_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 					}
 					for(i = 0; i < 8; i++) {
 						eFieldType sfx = eFieldType(SFX_SMALL_BLOOD + i);
 						if(is_field_type(cen_x + q - 4,cen_y + r - 4,sfx)) {
 							from_rect = calc_rect(i,3);
-							Draw_Some_Item(fields_gworld,from_rect,ter_draw_gworld,where_draw,sf::BlendAlpha);
+							rect_draw_some_item(fields_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 						}
 					}
 				}
@@ -926,11 +933,6 @@ void draw_terrain(){
 					} else if(where_draw == mouse_spot)
 						need_hilite = true;
 					if(need_hilite) {
-						rectangle destrec;
-						destrec.left = 8 + BITMAP_WIDTH * where_draw.x;
-						destrec.right = destrec.left + BITMAP_WIDTH;
-						destrec.top = 8 + BITMAP_HEIGHT * where_draw.y;
-						destrec.bottom = destrec.top + BITMAP_HEIGHT;
 						fill_rect(ter_draw_gworld, destrec, hilite_colour);
 						if(large_hilite && where_draw == mouse_spot)
 							fill_rect(ter_draw_gworld, destrec, hilite_colour);
@@ -1035,7 +1037,6 @@ void draw_monsts() {
 					graf_pos_ref(from_gworld, source_rect) = spec_scen_g.find_graphic((scenario.scen_monsters[town->creatures[i].number].picture_num + k) % 1000);
 					store_loc.x += k % width;
 					store_loc.y += k / width;
-					Draw_Some_Item(*from_gworld, source_rect, ter_draw_gworld, store_loc, sf::BlendAlpha);
 				}
 				else if(scenario.scen_monsters[town->creatures[i].number].picture_num < 1000) {
 					m_start_pic = m_pic_index[scenario.scen_monsters[town->creatures[i].number].picture_num].i + k;
@@ -1044,8 +1045,21 @@ void draw_monsts() {
 					source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 					store_loc.x += k % width;
 					store_loc.y += k / width;
-					Draw_Some_Item(*from_gworld, source_rect, ter_draw_gworld, store_loc, sf::BlendAlpha);
 				}
+				
+				if(store_loc.x < 0 || store_loc.x > 8 || store_loc.y < 0 || store_loc.y > 8)
+					continue;
+				
+				rectangle destrec;
+				destrec.left = 8 + BITMAP_WIDTH * store_loc.x;
+				destrec.right = destrec.left + BITMAP_WIDTH;
+				destrec.top = 8 + BITMAP_HEIGHT * store_loc.y;
+				destrec.bottom = destrec.top + BITMAP_HEIGHT;
+				
+				destrec.left = destrec.right - (source_rect.right - source_rect.left);
+				destrec.top = destrec.bottom - (source_rect.bottom - source_rect.top);
+				
+				rect_draw_some_item(*from_gworld, source_rect, ter_draw_gworld, destrec, sf::BlendAlpha);
 			}
 		}
 }
@@ -1126,11 +1140,10 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	short picture_wanted;
 	sf::Texture* source_gworld;
 	
+	if(i < 0 || i > 8 || j < 0 || j > 8)
+		return;
+	
 	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
-//	if(picture_wanted >= 1000) {
-//		terrain_to_draw = 90;
-//		picture_wanted = 74;
-//	}
 	
 	where_draw.x = (char) i;
 	where_draw.y = (char) j;
@@ -1151,7 +1164,13 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 		source_gworld = &terrain_gworld[picture_wanted / 50];
 	}
 	
-	Draw_Some_Item(*source_gworld, source_rect, ter_draw_gworld, where_draw);
+	rectangle destrec;
+	destrec.left = 8 + BITMAP_WIDTH * where_draw.x;
+	destrec.right = destrec.left + BITMAP_WIDTH;
+	destrec.top = 8 + BITMAP_HEIGHT * where_draw.y;
+	destrec.bottom = destrec.top + BITMAP_HEIGHT;
+	
+	rect_draw_some_item(*source_gworld, source_rect, ter_draw_gworld, destrec);
 }
 
 void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size) {
@@ -1241,25 +1260,6 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 				fill_rect(ter_draw_gworld, dest_rect, hilite_colour);
 		}
 	}
-}
-
-/* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
- object is ptr. to bitmap to be drawn, and masking is for Copybits. */
-// TODO: Wait, why is targ_gworld unused?
-void Draw_Some_Item(sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& /*targ_gworld*/,location target,sf::BlendMode mode) {
-	rectangle	destrec;
-	
-	if((target.x < 0) || (target.x > 8) || (target.y < 0) || (target.y > 8))
-		return;
-	destrec.left = 8 + BITMAP_WIDTH * target.x;
-	destrec.right = destrec.left + BITMAP_WIDTH;
-	destrec.top = 8 + BITMAP_HEIGHT * target.y;
-	destrec.bottom = destrec.top + BITMAP_HEIGHT;
-	
-	destrec.left = destrec.right - (src_rect.right - src_rect.left);
-	destrec.top = destrec.bottom - (src_rect.bottom - src_rect.top);
-	
-	rect_draw_some_item(src_gworld,src_rect,ter_draw_gworld,destrec,mode);
 }
 
 /* Input terrain currently trying to draw. Get back rectangle in terrain template containing
