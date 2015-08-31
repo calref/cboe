@@ -7,19 +7,75 @@
 	 -->
 	<button name='okay' type='regular' top='372' left='405'>OK</button>
 	<pict type='dlog' num='24' top='8' left='8'/>
-	<text top='12' left='52' width='235' height='16'>BLADES OF EXILE HELP: PARTY STATUS SCREEN</text>
+	<text top='12' left='52' width='245' height='16'>BLADES OF EXILE HELP: PARTY STATUS SCREEN</text>
 	<text top='29' left='61' width='394' height='33'>
 		This area lists the names of your party members, their health and magic points, and two buttons:
 	</text>
 	<text top='151' left='61' width='379' height='16'>
 		After each PCs name are graphics to show its status:
 	</text>
+	
+	<pict type='status' num='8' top='170' left='10'/>
+	<pict type='status' num='7' top='188' left='10'/>
+	<pict type='status' num='6' top='206' left='10'/>
+	<pict type='status' num='0' top='224' left='10'/>
+	<pict type='status' num='1' top='242' left='10'/>
+	<pict type='status' num='21' top='260' left='10'/>
+	<pict type='status' num='26' top='278' left='10'/>
+	<text font='plain' top='170' left='26' width='100' height='12'>Slowed</text>
+	<text font='plain' top='188' left='26' width='100' height='12'>Normal Speed</text>
+	<text font='plain' top='206' left='26' width='100' height='12'>Hasted</text>
+	<text font='plain' top='224' left='26' width='100' height='12'>Poisoned</text>
+	<text font='plain' top='242' left='26' width='100' height='12'>Very Poisoned</text>
+	<text font='plain' top='260' left='26' width='100' height='12'>Hyperactive</text>
+	<text font='plain' top='278' left='26' width='100' height='12'>Stealthy</text>
+	
+	<pict type='status' num='2' top='170' left='130'/>
+	<pict type='status' num='3' top='188' left='130'/>
+	<pict type='status' num='4' top='206' left='130'/>
+	<pict type='status' num='11' top='224' left='130'/>
+	<pict type='status' num='10' top='242' left='130'/>
+	<pict type='status' num='20' top='260' left='130'/>
+	<pict type='status' num='25' top='278' left='130'/>
+	<text font='plain' top='170' left='146' width='100' height='12'>Blessed</text>
+	<text font='plain' top='188' left='146' width='100' height='12'>Cursed</text>
+	<text font='plain' top='206' left='146' width='100' height='12'>Poisoned Weapon</text>
+	<text font='plain' top='224' left='146' width='100' height='12'>Diseased</text>
+	<text font='plain' top='242' left='146' width='100' height='12'>Webbed</text>
+	<text font='plain' top='260' left='146' width='100' height='12'>Forcecage</text>
+	<text font='plain' top='278' left='146' width='100' height='12'>Firewalking</text>
+	
+	<pict type='status' num='9' top='170' left='250'/>
+	<pict type='status' num='12' top='188' left='250'/>
+	<pict type='status' num='5' top='206' left='250'/>
+	<pict type='status' num='14' top='224' left='250'/>
+	<pict type='status' num='13' top='242' left='250'/>
+	<pict type='status' num='23' top='260' left='250'/>
+	<text font='plain' top='170' left='266' width='100' height='12'>Magic Resistant</text>
+	<text font='plain' top='188' left='266' width='100' height='12'>Invisible</text>
+	<text font='plain' top='206' left='266' width='100' height='12'>Invulnerable</text>
+	<text font='plain' top='224' left='266' width='100' height='12'>Martyr's Shield</text>
+	<text font='plain' top='242' left='266' width='100' height='12'>Dumbfounded</text>
+	<text font='plain' top='260' left='266' width='100' height='12'>Flying</text>
+	
+	<pict type='status' num='15' top='170' left='370'/>
+	<pict type='status' num='16' top='188' left='370'/>
+	<pict type='status' num='17' top='206' left='370'/>
+	<pict type='status' num='19' top='224' left='370'/>
+	<pict type='status' num='18' top='242' left='370'/>
+	<pict type='status' num='24' top='260' left='370'/>
+	<text font='plain' top='170' left='386' width='100' height='12'>Asleep</text>
+	<text font='plain' top='188' left='386' width='100' height='12'>Paralyzed</text>
+	<text font='plain' top='206' left='386' width='100' height='12'>Covered With Acid</text>
+	<text font='plain' top='224' left='386' width='100' height='12'>Magic Attractor</text>
+	<text font='plain' top='242' left='386' width='100' height='12'>Enlightened</text>
+	<text font='plain' top='260' left='386' width='100' height='12'>Detecting Life</text>
+	
 	<pict type='full' num='1200' top='66' left='168' width='106' height='29'/>
 	<text top='102' left='61' width='401' height='46'>
 		To have two PCs switch places, click on their switch places buttons.
 		To get a full description of a character, click on the '?' button.
 	</text>
-	<pict type='full' num='1500' top='173' left='53' width='426' height='124'/>
 	<text top='306' left='61' width='401' height='65'>
 		Active PC:
 		The character whose name is in italics is the active character.

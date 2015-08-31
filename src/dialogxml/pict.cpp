@@ -586,9 +586,6 @@ std::shared_ptr<sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 				case 1402:
 					sout << "townhelp";
 					break;
-				case 1500:
-					sout << "staticonhelp";
-					break;
 				default:
 					// TODO: The scenario should be allowed to define a sheet1100.png without it being ignored in favour of invenhelp.png
 					sout << "sheet" << n;
@@ -881,6 +878,11 @@ void cPict::drawStatusIcon(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 12;
 	to_rect.bottom = to_rect.top + 12;
 	from_rect.offset(12 * (num % 3), 12 * (num / 3));
+	if(getFormat(TXT_FRAME)) {
+		rectangle pat_rect = to_rect;
+		pat_rect.inset(-1,-1);
+		tileImage(*inWindow, pat_rect, bg[6]);
+	}
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
