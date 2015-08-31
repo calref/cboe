@@ -900,6 +900,7 @@ void draw_terrain(){
 				std::vector<short> icons = get_small_icons(loc(cen_x + q - 4, cen_y + r - 4), t_to_draw);
 				
 				if(!icons.empty()) {
+					bool has_start = icons[0] == -1;
 					rectangle tiny_from_base = {120, 0, 127, 7};
 					for(short icon : icons) {
 						rectangle tiny_from = tiny_from_base;
@@ -915,6 +916,10 @@ void draw_terrain(){
 						rect_draw_some_item(editor_mixed, tiny_from, ter_draw_gworld, tiny_to);
 						if(icon == -1) tiny_to.left += 14;
 						tiny_to.offset(0, -7);
+						// Now check to see if it's overflowing our space
+						if(tiny_to.top < destrec.top) {
+							tiny_to.offset(-7, 7 * (has_start ? 4 : 5));
+						}
 					}
 				}
 				
