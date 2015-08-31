@@ -54,6 +54,12 @@ void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_num);
 void loadOutMapData(map_data&& data, location which, cScenario& scen);
 void loadTownMapData(map_data&& data, int which, cScenario& scen);
 
+static std::string get_file_error() {
+	std::ostringstream sout;
+	sout << std_fmterr;
+	return sout.str();
+}
+
 bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header) {
 	// Before loading a scenario, we may need to pop scenario resource paths.
 	fs::path graphics_path = ResMgr::popPath<ImageRsrc>();
@@ -118,15 +124,15 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	// TODO: Convert this (and all the others in this file) to use C++ streams
 	FILE* file_id = fopen(file_to_load.string().c_str(),"rb");
 	if(file_id == NULL) {
-		showError(err_prefix + "Could not open file.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Could not open file.", get_file_error());
 		return false;
 	}
 	
 	len = (long) sizeof(scenario_header_flags);
 	
 	if(fread(&scenario.format, len, 1, file_id) < 1){
+		showError(err_prefix + "Failed to read scenario header.", get_file_error());
 		fclose(file_id);
-		showError(err_prefix + "Failed to read scenario header.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -152,16 +158,16 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	len = (long) sizeof(legacy::scenario_data_type);
 	n = fread(temp_scenario, len, 1, file_id);
 	if(n < 1){
+		showError(err_prefix + "Failed to read scenario data.", get_file_error());
 		fclose(file_id);
-		showError(err_prefix + "Failed to read scenario data.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_scenario(temp_scenario);
 	len = sizeof(legacy::scen_item_data_type); // item data
 	n = fread(item_data, len, 1, file_id);
 	if(n < 1){
+		showError(err_prefix + "Failed to read scenario items.", get_file_error());
 		fclose(file_id);
-		showError(err_prefix + "Failed to read scenario items.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_item_list(item_data);
@@ -2158,23 +2164,23 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	
 	FILE* file_id = fopen(scen_file.string().c_str(), "rb");
 	if(file_id == NULL) {
-		showError(err_prefix + "Could not open file for reading town data.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Could not open file for reading town data.", get_file_error());
 		return false;
 	}
 	
 	len_to_jump = get_town_offset(which_town, scenario);
 	n = fseek(file_id, len_to_jump, SEEK_SET);
 	if(n != 0) {
+		showError(err_prefix + "Failure seeking to town record.", get_file_error());
 		fclose(file_id);
-		showError(err_prefix + "Failure seeking to town record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
 	len = sizeof(legacy::town_record_type);
 	n = fread(&store_town, len, 1, file_id);
 	if(n < 1) {
+		showError(err_prefix + "Could not read town record.", get_file_error());
 		fclose(file_id);
-		showError(err_prefix + "Could not read town record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_town(&store_town);
@@ -2226,8 +2232,8 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	len = sizeof(legacy::talking_record_type);
 	n = fread(&store_talk, len, 1, file_id);
 	if(n < 1) {
+		showError(err_prefix + "Could not read dialogue record.", get_file_error());
 		fclose(file_id);
-		showError(err_prefix + "Could not read dialogue record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	port_talk_nodes(&store_talk);
@@ -2262,7 +2268,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	
 	n = fclose(file_id);
 	if(n != 0) {
-		showError(err_prefix + "An error occurred while closing the file.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "An error occurred while closing the file.", get_file_error());
 	}
 	
 	return true;
@@ -2296,23 +2302,23 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	
 	FILE* file_id = fopen(scen_file.string().c_str(), "rb");
 	if(file_id == NULL) {
-		showError(err_prefix + "Could not open file for reading outdoor data.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Could not open file for reading outdoor data.", get_file_error());
 		return false;
 	}
 	
 	len_to_jump = get_outdoors_offset(which_out, scenario);
 	n = fseek(file_id, len_to_jump, SEEK_SET);
 	if(n != 0) {
+		showError(err_prefix + "Failure seeking to outdoor record.", get_file_error());
 		fclose(file_id);
-		showError(err_prefix + "Failure seeking to outdoor record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
 	len = sizeof(legacy::outdoor_record_type);
 	n = fread(&store_out, len, 1, file_id);
 	if(n < 1) {
+		showError(err_prefix + "Could not read outdoor record.", get_file_error());
 		fclose(file_id);
-		showError(err_prefix + "Could not read outdoor record.", boost::lexical_cast<std::string>(std_fmterr));
 		return false;
 	}
 	
@@ -2338,7 +2344,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	
 	n = fclose(file_id);
 	if(n != 0) {
-		showError(err_prefix + "Something went wrong when closing the file.", boost::lexical_cast<std::string>(std_fmterr));
+		showError(err_prefix + "Something went wrong when closing the file.", get_file_error());
 	}
 	return true;
 }
