@@ -195,6 +195,11 @@ void put_pc_screen() {
 				pc_area_button_active[i][j] = 0;
 		}
 	}
+	
+	rectangle help_from_rect = {46,60,59,76};
+	to_draw_rect = {101,251,114,267};
+	rect_draw_some_item(invenbtn_gworld, help_from_rect, pc_stats_gworld, to_draw_rect, sf::BlendAlpha);
+	
 	pc_stats_gworld.display();
 	
 	// Sometimes this gets called when character is slain. when that happens, if items for
