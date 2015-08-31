@@ -83,7 +83,7 @@ const sf::Color hilite_colour = {0xff, 0x00, 0x80, 0x40};
 extern tessel_ref_t map_pat[];
 
 // begin new stuff
-rectangle blue_button_from = {120,91,134,107};
+rectangle blue_button_from = {120,235,134,251};
 rectangle start_button_from = {120,70,127,91};
 rectangle base_small_button_from = {120,0,127,7};
 extern rectangle palette_buttons[10][6];
@@ -133,143 +133,165 @@ static short get_small_icon(ter_num_t ter){
 			icon = scenario.ter_types[ter].flag1;
 			break;
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
-			icon = 23;
+			icon = 87;
 			break;
 		case eTerSpec::DAMAGING:
 			switch(eDamageType(scenario.ter_types[ter].flag3)) {
 				case eDamageType::WEAPON:
-					icon = 40;
+					icon = 16;
 					break;
 				case eDamageType::FIRE:
-					icon = 37;
+					icon = 18;
 					break;
 				case eDamageType::POISON:
-					icon = 43;
+					icon = 17;
 					break;
 				case eDamageType::MAGIC:
-					icon = 39;
+					icon = 20;
 					break;
 				case eDamageType::SPECIAL:
+					icon = 22;
+					break;
 				case eDamageType::UNBLOCKABLE:
-					icon = 39;
+					icon = 21;
 					break;
 				case eDamageType::COLD:
-					icon = 38;
+					icon = 19;
 					break;
 				case eDamageType::UNDEAD:
-					icon = 8;
+					icon = 25;
 					break;
 				case eDamageType::DEMON:
-					icon = 9;
+					icon = 23;
 					break;
-					// TODO: Possibly new icons for undead/demon/unblockable
 				case eDamageType::MARKED: // Invalid
 					break;
 			}
 			break;
 		case eTerSpec::BRIDGE:
-			icon = 42;
+			icon = 82;
 			break;
 		case eTerSpec::BED:
 			icon = -1;
 			break;
 		case eTerSpec::DANGEROUS:
-			icon = 45;
+			icon = 12;
 			switch((eStatus)scenario.ter_types[ter].flag3){
 				case eStatus::POISONED_WEAPON: // TODO: Do something here
 					break;
-				case eStatus::BLESS_CURSE: // TODO: Do something here (check flag1 to determine whether bless or curse)
+				case eStatus::BLESS_CURSE:
+					icon = scenario.ter_types[ter].flag1 > 0 ? 4 : 5;
 					break;
 				case eStatus::POISON:
-					icon = 35;
+					if(scenario.ter_types[ter].flag1 > 0)
+						icon = 1;
 					break;
-				case eStatus::HASTE_SLOW: // TODO: Do something here (check flag1 to determine whether haste or slow)
+				case eStatus::HASTE_SLOW:
+					icon = scenario.ter_types[ter].flag1 > 0 ? 6 : 7;
 					break;
 				case eStatus::INVULNERABLE: // TODO: Do something here
 					break;
 				case eStatus::MAGIC_RESISTANCE: // TODO: Do something here
 					break;
-				case eStatus::WEBS: // TODO: Do something here
+				case eStatus::WEBS:
+					if(scenario.ter_types[ter].flag1 > 0)
+						icon = 52;
 					break;
 				case eStatus::DISEASE:
-					icon = 33;
+					if(scenario.ter_types[ter].flag1 > 0)
+						icon = 0;
 					break;
 				case eStatus::INVISIBLE: // TODO: Do something here
 					break;
-				case eStatus::DUMB: // TODO: Do something here
+				case eStatus::DUMB:
+					icon = scenario.ter_types[ter].flag1 > 0 ? 8 : 9;
 					break;
 				case eStatus::MARTYRS_SHIELD: // TODO: Do something here
 					break;
 				case eStatus::ASLEEP:
-					icon = 44;
+					if(scenario.ter_types[ter].flag1 > 0)
+						icon = 3;
 					break;
 				case eStatus::PARALYZED: // TODO: Do something here
 					break;
 				case eStatus::ACID:
-					icon = 41;
+					if(scenario.ter_types[ter].flag1 > 0)
+						icon = 2;
 					break;
 				case eStatus::FORCECAGE:
-					// TODO: Need icon for this
+					if(scenario.ter_types[ter].flag1 > 0)
+						icon = 43;
+					break;
 				case eStatus::MAIN: case eStatus::CHARM:
 					icon = -1;
 					break; // Nothing to do here; these values are "magic" and should not be used
 			}
 			break;
 		case eTerSpec::CRUMBLING:
-			icon = 34;
+			icon = 98;
 			break;
 		case eTerSpec::LOCKABLE:
-			icon = 30;
+			icon = 94;
 			break;
 		case eTerSpec::UNLOCKABLE:
 			if(scenario.ter_types[ter].flag2 >= 5)
-				icon = (scenario.ter_types[ter].flag2 == 10) ? 32 : 31;
-			else icon = 30;
+				icon = (scenario.ter_types[ter].flag2 == 10) ? 96 : 95;
+			else icon = 94;
 			break;
 		case eTerSpec::IS_A_SIGN:
-			icon = 26;
+			icon = 92;
 			break;
 		case eTerSpec::CALL_SPECIAL:
+		case eTerSpec::CALL_SPECIAL_WHEN_USED:
 			icon = scenario.ter_types[ter].flag3;
 			break;
 		case eTerSpec::IS_A_CONTAINER:
-			icon = 36;
+			icon = 93;
 			break;
 		case eTerSpec::WATERFALL_CAVE:
 		case eTerSpec::WATERFALL_SURFACE:
-			icon = 46;
+			icon = 91;
 			break;
 		case eTerSpec::CONVEYOR:
-			switch(scenario.ter_types[ter].flag1){ // TODO: Consider the other four possible directions
+			switch(scenario.ter_types[ter].flag1){
 				case DIR_N:
-					icon = 27;
+					icon = 78;
+					break;
+				case DIR_NE:
+					icon = 79;
+					break;
+				case DIR_NW:
+					icon = 77;
 					break;
 				case DIR_E:
-					icon = 28;
+					icon = 80;
 					break;
 				case DIR_S:
-					icon = 29;
+					icon = 74;
+					break;
+				case DIR_SE:
+					icon = 81;
+					break;
+				case DIR_SW:
+					icon = 75;
 					break;
 				case DIR_W:
-					icon = 20;
+					icon = 76;
 					break;
 			}
 			break;
 		case eTerSpec::BLOCKED_TO_MONSTERS:
-			icon = 21;
+			icon = 28;
 			break;
 		case eTerSpec::TOWN_ENTRANCE:
-			icon = 22;
+			icon = 84;
 			break;
 		case eTerSpec::CHANGE_WHEN_USED:
-			icon = 48;
-			break;
-		case eTerSpec::CALL_SPECIAL_WHEN_USED:
-			icon = scenario.ter_types[ter].flag3;
+			icon = 97;
 			break;
 		case eTerSpec::WILDERNESS_CAVE:
 		case eTerSpec::WILDERNESS_SURFACE:
-			icon = 0;
+			icon = 90;
 			break;
 		default:
 			icon = -1;
@@ -289,13 +311,13 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 	}
 	short ter_small_i = get_small_icon(t_to_draw);
 	// Special case for towns
-	if(ter_small_i == 22 && !editing_town) {
+	if(ter_small_i == 84 && !editing_town) {
 		bool have_town = false;
 		for(size_t i = 0; i < current_terrain->city_locs.size(); i++) {
 			if(current_terrain->city_locs[i] == at)
 				have_town = true;
 		}
-		if(!have_town) ter_small_i += 3;
+		if(!have_town) ter_small_i++;
 	}
 	if(ter_small_i >= 0)
 		icons.push_back(ter_small_i);
@@ -306,28 +328,30 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 			return which.spec >= 0 && which.x == at.x && which.y == at.y;
 		});
 		if(num_spec > 1)
-			icons.push_back(47);
-		else icons.push_back(7);
+			icons.push_back(89);
+		else icons.push_back(88);
 	}
 	if(editing_town) {
+		if(scenario.ter_types[t_to_draw].light_radius > 0)
+			icons.push_back(83);
 		for(size_t i = 0; i < 4; i++)
 			if(at == town->start_locs[i]) {
-				icons.push_back(16 + i);
+				icons.push_back(70 + i);
 			}
 		for(size_t i = 0; i < 4; i++)
 			if(at == town->wandering_locs[i]) {
-				icons.push_back(12);
+				icons.push_back(86);
 			}
 		if(is_field_type(at.x, at.y, BARRIER_FIRE)) {
-			icons.push_back(50);
+			icons.push_back(33);
 		}
 		if(is_field_type(at.x, at.y, BARRIER_FORCE)) {
-			icons.push_back(51);
+			icons.push_back(34);
 		}
 	} else {
 		for(size_t i = 0; i < 4; i++)
 			if(at == current_terrain->wandering_locs[i]) {
-				icons.push_back(12);
+				icons.push_back(86);
 			}
 	}
 	return icons;
@@ -498,7 +522,7 @@ void draw_lb_slot (short which,short mode)  {
 		text_rect.left += 18;
 		from_rect = blue_button_from;
 		if(mode > 0)
-			from_rect.offset(from_rect.right - from_rect.left,0);
+			from_rect.offset(0,from_rect.height());
 		rect_draw_some_item(editor_mixed,from_rect,left_buttons[which][1],location{0,0});
 	}
 	if(left_button_status[which].mode == LB_INDENT)
@@ -543,7 +567,7 @@ void draw_rb_slot (short which,short mode)  {
 
 void set_up_terrain_buttons(bool reset) {
 	short i,j,pic,small_i;
-	rectangle ter_from,ter_from_base = {0,0,36,28}, ter_plus_from = {120,123,136,139};
+	rectangle ter_from,ter_from_base = {0,0,36,28}, ter_plus_from = {148,235,164,251};
 	rectangle tiny_from,tiny_to;
 	
 	rectangle palette_from,palette_to = palette_button_base;
@@ -599,7 +623,7 @@ void set_up_terrain_buttons(bool reset) {
 				}
 				small_i = get_small_icon(i);
 				tiny_from = base_small_button_from;
-				tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
+				tiny_from.offset(7 * (small_i % 30),7 * (small_i / 30));
 				tiny_to = terrain_rects[i - first];
 				tiny_to.top = tiny_to.bottom - 7;
 				tiny_to.left = tiny_to.right - 7;
@@ -760,7 +784,7 @@ void set_up_terrain_buttons(bool reset) {
 }
 
 void draw_terrain(){
-	short q,r,x,i,small_i;
+	short q,r,i;
 	location which_pt,where_draw;
 	rectangle draw_rect,clipping_rect = {8,8,332,260};
 	ter_num_t t_to_draw;
@@ -905,13 +929,11 @@ void draw_terrain(){
 					for(short icon : icons) {
 						rectangle tiny_from = tiny_from_base;
 						if(icon == -1) {
-							tiny_from.offset(10 * 7, 0);
+							tiny_from.offset(30 * 7, 0);
 							tiny_from.right += 14;
 							tiny_to.left -= 14;
-							
 						} else {
-							tiny_from.offset((icon % 10) * 7, (icon / 10) * 7);
-							
+							tiny_from.offset((icon % 30) * 7, (icon / 30) * 7);
 						}
 						rect_draw_some_item(editor_mixed, tiny_from, ter_draw_gworld, tiny_to);
 						if(icon == -1) tiny_to.left += 14;
@@ -1343,7 +1365,7 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	tiny_to.top = tiny_to.bottom - 7;
 	tiny_to.left = tiny_to.right - 7;
 	rectangle tiny_from = base_small_button_from;
-	tiny_from.offset(7 * (small_i % 10),7 * (small_i / 10));
+	tiny_from.offset(7 * (small_i % 30),7 * (small_i / 30));
 	if(small_i >= 0 && small_i < 255)
 		rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to);
 }

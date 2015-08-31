@@ -1,0 +1,137 @@
+Causes disease
+Causes poison
+Causes acid
+Causes sleep
+Causes bless
+Causes curse
+Causes haste
+Causes slow
+Causes dumbfound
+Causes enlightenment
+Causes flight
+Causes firewalk
+Causes/cures a status effect
+Barrel
+Crate
+Stone block
+Causes physical damage
+Causes poison damage
+Causes fire damage
+Causes cold damage
+Causes magic damage
+Causes weird damage
+Causes unblockable damage
+Causes demonic damage
+Causes damage
+Causes undead damage
+Trap
+Sanctifiable
+Blocked to monsters
+Moves party
+Death
+Combat
+Loot
+Fire barrier
+Force barrier
+Force field
+Fire field
+Antimagic field
+Stinking cloud
+Ice field
+Blade field
+Sleep cloud
+Quickfire
+Forcecage
+Small blood
+Medium blood
+Large blood
+Small slime
+Large slime
+Bones
+Rocks
+Ashes
+Webs
+Bone
+Ash pile
+Blue E (???)
+Can fly over
+Can't fly over
+Can boat over
+Can't boat over
+Can ride over
+Can't ride over
+Grass walkway
+Dark cave walkway
+Light cave walkway
+Hills walkway
+Sand walkway
+Snow walkway
+Floor(?) walkway
+Water(?) walkway
+North town entrance
+East town entrance
+South town entrance
+West town entrance
+Pushes south
+Pushes southwest
+Pushes west
+Pushes northwest
+Pushes north
+Pushes northeast
+Pushes east
+Pushes southeast
+Bridge
+Emits light
+Town entrance
+Town entrance not set
+Wandering monster arrival point
+Change on step / Secret passage
+Special node (single)
+Special node (multiple)
+Wilderness
+Waterfall
+Sign
+Container
+Locked
+Magically locked
+Impassably locked
+Change when used
+Fragile
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
+Y
+Z
+?
+!

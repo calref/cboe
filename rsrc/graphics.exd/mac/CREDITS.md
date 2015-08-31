@@ -21,7 +21,6 @@ rearranged a little:
 - dlogbtnsm.png
 - dlogbtntall.png
 - dlogpics.png
-- edbuttons.png (except the ones that are completely new)
 - edsplash.png
 - fighthelp.png
 - invenbtns.png (the coin was cropped from an item graphic)
@@ -99,3 +98,7 @@ still all original BoE graphics.
 In staticons.png, the last three rows (except the blue M shield) are from Blades of
 Avernum.
 The rest are original BoE graphics.
+
+Most of edbuttons.png is by ADoS. A few of the tiny icons are by Celtic Minstrel or
+unchanged from original BoE. Most of the palette buttons are based on original BoE. The
+blue button is unchanged from original BoE; the + button is by Celtic Minstrel.
