@@ -95,8 +95,7 @@ For item graphics, most are original BoE graphics, except for the following:
 startanim.png has been heavily modified with new text, but the actual pictures in it are
 still all original BoE graphics.
 
-In staticons.png, the last three rows (except the blue M shield) are from Blades of
-Avernum.
+In staticons.png, the last four rows are by ADoS, some with tweaks by Celtic Minstrel.
 The rest are original BoE graphics.
 
 Most of edbuttons.png is by ADoS. A few of the tiny icons are by Celtic Minstrel or

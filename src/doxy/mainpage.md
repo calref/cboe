@@ -191,7 +191,6 @@ default) or `large`.
 	* 1400 - The outdoor toolbar help frame.
 	* 1401 - The combat toolbar help frame.
 	* 1402 - The town toolbar help frame.
-	* 1500 - The stat icons help frame.
 
 The `<field>` tag
 -----------------
