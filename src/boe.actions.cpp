@@ -310,7 +310,7 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 			queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, univ.party[current_pc].combat_pos);
 	}
 	put_pc_screen();
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 }
 
 static void handle_rest(bool& need_redraw, bool& need_reprint) {
@@ -606,7 +606,7 @@ static void handle_target_space(location destination, bool& did_something, bool&
 	else if(is_combat() && overall_mode != MODE_FANCY_TARGET)
 		overall_mode = MODE_COMBAT;
 	put_pc_screen();
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 }
 
 static void handle_drop_item(location destination, bool& need_redraw) {
@@ -629,7 +629,7 @@ static void handle_drop_item(location destination, bool& need_redraw) {
 	}
 	need_redraw = true;
 	put_pc_screen();
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 }
 
 static void handle_use_space(location destination, bool& did_something, bool& need_redraw) {
@@ -639,7 +639,7 @@ static void handle_use_space(location destination, bool& did_something, bool& ne
 	overall_mode = MODE_TOWN;
 	need_redraw = true;
 	put_pc_screen();
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 }
 
 static void handle_bash_pick(location destination, bool& did_something, bool& need_redraw, bool isBash) {
@@ -660,7 +660,7 @@ static void handle_bash_pick(location destination, bool& did_something, bool& ne
 	overall_mode = MODE_TOWN;
 	need_redraw = true;
 	put_pc_screen();
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 }
 
 static void handle_switch_pc(short which_pc, bool& need_redraw) {
@@ -781,7 +781,7 @@ static void handle_item_shop_action(short item_hit) {
 			univ.party.gold += store_selling_values[i];
 			ASB("You sell your item.");
 			univ.party[stat_window].take_item(item_hit);
-			put_item_screen(stat_window,1);
+			put_item_screen(stat_window);
 			break;
 		case MODE_ENCHANT:
 			if(!take_gold(store_selling_values[i],false))
@@ -925,7 +925,7 @@ static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_
 		take_ap(4);
 	}
 	if(j > 0) {
-		put_item_screen(stat_window, 0);
+		put_item_screen(stat_window);
 		put_pc_screen();
 		need_redraw = true;
 		did_something = true;
@@ -977,7 +977,7 @@ static void handle_party_death() {
 	menu_activate();
 	draw_terrain();
 	put_pc_screen();
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 	if(!univ.party.is_alive()) {
 		play_sound(13);
 		handle_death();
@@ -1322,7 +1322,7 @@ bool handle_action(sf::Event event) {
 				}
 		need_reprint = true;
 		put_pc_screen();
-		put_item_screen(stat_window,0);
+		put_item_screen(stat_window);
 		if(overall_mode == MODE_SHOPPING) {
 			set_up_shop_array();
 			draw_shop_graphics(0,pc_buttons[0][0]);
@@ -1396,7 +1396,7 @@ bool handle_action(sf::Event event) {
 					}
 		}
 		put_pc_screen();
-		put_item_screen(stat_window,0);
+		put_item_screen(stat_window);
 		need_reprint = true;
 	}
 	
@@ -1796,10 +1796,10 @@ bool handle_keystroke(sf::Event& event){
 		case 'z':
 			if(((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT)) {
 				set_stat_window(current_pc);
-				put_item_screen(stat_window,0);
+				put_item_screen(stat_window);
 			} else {
 				set_stat_window(0);
-				put_item_screen(stat_window,0);
+				put_item_screen(stat_window);
 			}
 			break;
 			
@@ -1946,7 +1946,7 @@ bool handle_keystroke(sf::Event& event){
 			univ.party.give_item(univ.scenario.scen_items[i], true);
 			univ.scenario.scen_items[i].ident = j;
 			print_buf();
-			put_item_screen(stat_window, false);
+			put_item_screen(stat_window);
 			put_pc_screen(); // In case the item was food or gold
 			break;
 			

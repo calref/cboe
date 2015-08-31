@@ -829,7 +829,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				else {
 					univ.party[pc_num].remove_charge(item);
 					if(stat_window == pc_num)
-						put_item_screen(stat_window,1);
+						put_item_screen(stat_window);
 					univ.party[pc_num].cur_sp -= (*spell_num).cost;
 					add_string_to_buf("  As the sapphire dissolves, you have a vision.", 2);
 				}
@@ -2244,7 +2244,7 @@ void do_alchemy() {
 			}
 			else add_string_to_buf("Alchemy: Successful.");
 		}
-		put_item_screen(stat_window,0);
+		put_item_screen(stat_window);
 	}
 	
 }

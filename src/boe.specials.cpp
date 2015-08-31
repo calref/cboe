@@ -182,7 +182,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 					*forced = true;
 				erase_out_specials();
 				put_pc_screen();
-				put_item_screen(stat_window,0);
+				put_item_screen(stat_window);
 			}
 	}
 	
@@ -223,7 +223,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				}
 			}
 		put_pc_screen();
-		put_item_screen(stat_window,0);
+		put_item_screen(stat_window);
 	}
 	
 	// TODO: Just verify that yes, it works with this and doesn't work without it.
@@ -1174,10 +1174,10 @@ void use_item(short pc,short item) {
 	if((take_charge) && (univ.party[pc].items[item].charges > 0))
 		univ.party[pc].remove_charge(item);
 	if(stat_window == pc)
-		put_item_screen(stat_window,1);
+		put_item_screen(stat_window);
 	if(!take_charge) {
 		draw_terrain(0);
-		put_item_screen(stat_window,0);
+		put_item_screen(stat_window);
 	}
 }
 
@@ -1289,7 +1289,7 @@ bool adj_town_look(location where) {
 						can_open = false;
 					got_special = true;
 				}
-			put_item_screen(stat_window,0);
+			put_item_screen(stat_window);
 		}
 	}
 	if(is_container(where) && item_there && can_open) {
@@ -1889,7 +1889,7 @@ void special_increase_age(long length, bool queue) {
 	univ.party.age = current_age;
 	if(stat_area) {
 		put_pc_screen();
-		put_item_screen(stat_window,0);
+		put_item_screen(stat_window);
 	}
 	if(redraw)
 		draw_terrain(0);
@@ -3401,7 +3401,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 								*redraw = 1;
 								univ.party[i].take_item(j);
 								if(i == stat_window)
-									put_item_screen(stat_window,1);
+									put_item_screen(stat_window);
 							}
 						}
 			break;

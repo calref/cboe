@@ -148,7 +148,7 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 	
 	draw_shop_graphics(0,area_rect);
 	
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 	give_help(26,27);
 }
 
@@ -183,7 +183,7 @@ void end_shop_mode() {
 		update_explored(center);
 	}
 	stat_screen_mode = MODE_INVEN;
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 	put_pc_screen();
 	// TODO: I suspect REFRESH_NONE will suffice here
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
@@ -408,7 +408,7 @@ void handle_sale(cShopItem item, int i) {
 	draw_shop_graphics(0,dummy_rect);
 	print_buf();
 	put_pc_screen();
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 }
 
 
@@ -592,7 +592,7 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	
 	place_talk_str(place_string1, "", 0, dummy_rect);
 	
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 	give_help(5,6);
 	
 }
@@ -608,7 +608,7 @@ void end_talk_mode() {
 	}
 	help_btn->hide();
 	stat_screen_mode = MODE_INVEN;
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 	put_pc_screen();
 	// TODO: I suspect REFRESH_NONE will suffice here
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
@@ -867,26 +867,26 @@ void handle_talk_event(location p) {
 		case eTalkNode::SELL_WEAPONS:
 			can_save_talk = false;
 			stat_screen_mode = MODE_SELL_WEAP;
-			put_item_screen(stat_window,1);
+			put_item_screen(stat_window);
 			give_help(42,43);
 			break;
 		case eTalkNode::SELL_ARMOR:
 			can_save_talk = false;
 			stat_screen_mode = MODE_SELL_ARMOR;
-			put_item_screen(stat_window,1);
+			put_item_screen(stat_window);
 			give_help(42,43);
 			break;
 		case eTalkNode::SELL_ITEMS:
 			can_save_talk = false;
 			stat_screen_mode = MODE_SELL_ANY;
-			put_item_screen(stat_window,1);
+			put_item_screen(stat_window);
 			give_help(42,43);
 			break;
 		case eTalkNode::IDENTIFY: case eTalkNode::ENCHANT:
 			can_save_talk = false;
 			stat_screen_mode = (ttype == eTalkNode::IDENTIFY) ? MODE_IDENTIFY : MODE_ENCHANT;
 			shop_identify_cost = a;
-			put_item_screen(stat_window,1);
+			put_item_screen(stat_window);
 			give_help(ttype == eTalkNode::IDENTIFY ? 44 : 45,0);
 			break;
 		case eTalkNode::BUY_INFO:
@@ -1046,7 +1046,7 @@ void handle_talk_event(location p) {
 			}
 			get_strs(save_talk_str1,save_talk_str2,2,s1,s2);
 			put_pc_screen();
-			put_item_screen(stat_window,0);
+			put_item_screen(stat_window);
 			break;
 		case eTalkNode::CALL_SCEN_SPEC:
 			run_special(eSpecCtx::TALK,0,a,univ.town.p_loc,&s1,&s2,&s3);
@@ -1057,7 +1057,7 @@ void handle_talk_event(location p) {
 			}
 			get_strs(save_talk_str1,save_talk_str2,0,s1,s2);
 			put_pc_screen();
-			put_item_screen(stat_window,0);
+			put_item_screen(stat_window);
 			break;
 	}
 	

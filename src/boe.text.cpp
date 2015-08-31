@@ -53,7 +53,7 @@ extern location source_locs[6];
 extern location dest_locs[40] ;
 extern location center;
 
-extern sf::Texture tiny_obj_gworld,invenbtn_gworld,status_gworld;
+extern sf::Texture tiny_obj_gworld,invenbtn_gworld,status_gworld,orig_item_stats_gworld,orig_pc_stats_gworld;
 extern cCustomGraphics spec_scen_g;
 extern sf::Texture pc_gworld, monst_gworld[NUM_MONST_SHEETS];
 extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
@@ -87,27 +87,37 @@ extern std::map<eStatus, std::pair<short, short>> statIcons;
 void put_pc_screen() {
 	short i = 0,j;
 	rectangle erase_rect = {17,2,98,269},to_draw_rect,from_rect;
-	// TODO: The duplication of rectangle here shouldn't be necessary...
-	rectangle small_erase_rects[3] = {rectangle{103,34,114,76},rectangle{103,106,114,147},rectangle{103,174,114,201}};
+	rectangle food_rect[2] = {{103,34,114,76}, {103,3,114,40}};
+	rectangle gold_rect[2] = {{103,106,114,147}, {103,75,114,104}};
+	rectangle day_rect[2] = {{103,174,114,201}, {103,147,114,172}};
+	rectangle title_rects[3] = {{4,4,16,180}, {4,184,16,214}, {4,214,16,237}};
 	rectangle bottom_bar_rect = {99,0,116,271};
 	rectangle info_from = {0,1,12,13};
 	
 	pc_stats_gworld.setActive();
 	
 	// First clean up gworld with pretty patterns
+	rect_draw_some_item(orig_pc_stats_gworld, rectangle(orig_pc_stats_gworld), pc_stats_gworld, rectangle(pc_stats_gworld));
 	tileImage(pc_stats_gworld, erase_rect,bg[6]);
-	for(i = 0; i < 3; i++)
-		tileImage(pc_stats_gworld, small_erase_rects[i],bg[7]);
 	
 	TextStyle style;
 	style.font = FONT_BOLD;
-	style.pointSize = 12;
-	style.colour = sf::Color::White;
+	style.pointSize = 10;
+	style.colour = sf::Color::Yellow;
 	style.lineHeight = 10;
+	win_draw_string(pc_stats_gworld,food_rect[1],"Food:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,gold_rect[1],"Gold:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,day_rect[1],"Day:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,title_rects[0],"Party stats:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,title_rects[1],"HP:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,title_rects[2],"SP:",eTextMode::WRAP,style);
+	
+	style.colour = sf::Color::White;
+	style.pointSize = 12;
 	// Put food, gold, day
-	win_draw_string(pc_stats_gworld,small_erase_rects[1],std::to_string(univ.party.gold),eTextMode::WRAP,style);
-	win_draw_string(pc_stats_gworld,small_erase_rects[0],std::to_string(univ.party.food),eTextMode::WRAP,style);
-	win_draw_string(pc_stats_gworld,small_erase_rects[2],std::to_string(univ.party.calc_day()),eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,food_rect[0],std::to_string(univ.party.food),eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,gold_rect[0],std::to_string(univ.party.gold),eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld,day_rect[0],std::to_string(univ.party.calc_day()),eTextMode::WRAP,style);
 	style.colour = sf::Color::Black;
 	
 	for(i = 0; i < 6; i++) {
@@ -204,8 +214,7 @@ void put_pc_screen() {
 //						4 - in shop, selling armor
 //						5 - in shop, selling all
 //						6 - in shop, augmenting weapon,shop_identify_cost is type
-// if suppress_buttons > 0, save time by not redrawing buttons
-void put_item_screen(short screen_num,short suppress_buttons) {
+void put_item_screen(short screen_num) {
 	std::ostringstream sout;
 	long i_num;
 	long item_offset;
@@ -216,21 +225,10 @@ void put_item_screen(short screen_num,short suppress_buttons) {
 	item_stats_gworld.setActive();
 	
 	// First clean up gworld with pretty patterns
+	rect_draw_some_item(orig_item_stats_gworld, rectangle(orig_item_stats_gworld), item_stats_gworld, rectangle(item_stats_gworld));
 	tileImage(item_stats_gworld, erase_rect,bg[6]);
-	if(suppress_buttons == 0)
-		for(i = 0; i < 6; i++)
-			tileImage(item_stats_gworld, item_screen_button_rects[i],bg[7]);
-	erase_rect = upper_frame_rect;
-	erase_rect.top = 0;
-	erase_rect.left = 0;
-	tileImage(item_stats_gworld, erase_rect,bg[7]);
 	
 	// Draw buttons at bottom
-	if(suppress_buttons == 0) {
-		for(i = 0; i < 6; i++)
-			tileImage(item_stats_gworld, item_screen_button_rects[i],bg[7]);
-	}
-	
 	item_offset = item_sbar->getPosition();
 	
 	for(i = 0; i < 8; i++)
@@ -500,6 +498,11 @@ void place_item_bottom_buttons() {
 	rectangle spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76};
 	// TODO: What about when the buttons are pressed?
 	short i;
+	TextStyle style;
+	style.lineHeight = 10;
+	style.pointSize = 12;
+	style.font = FONT_BOLD;
+	style.colour = sf::Color::Yellow;
 	
 	for(i = 0; i < 6; i++) {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
@@ -525,6 +528,12 @@ void place_item_bottom_buttons() {
 			}
 			to_rect.inset(2,2);
 			rect_draw_some_item(*from_gw, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+			std::string numeral = std::to_string(i + 1);
+			short width = string_length(numeral, style);
+			// Offset "6" down two pixels to make it line up, because it has an ascender in this font
+			// Offset "1" - "4" down as well because they're not shorter and it looks a bit better
+			to_rect.offset(-width - 5, i != 4 ? 2 : 0);
+			win_draw_string(item_stats_gworld, to_rect, numeral, eTextMode::LEFT_TOP, style);
 		}
 		else item_bottom_button_active[i] = false;
 	}
@@ -576,7 +585,7 @@ void set_stat_window(short new_stat) {
 			break;
 	}
 	item_sbar->setPosition(0);
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 	
 }
 

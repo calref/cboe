@@ -109,7 +109,7 @@ void equip_item(short pc_num,short item_num) {
 		else univ.party[pc_num].equip_item(item_num, true);
 	}
 	if(stat_window == pc_num)
-		put_item_screen(stat_window,1);
+		put_item_screen(stat_window);
 }
 
 
@@ -563,7 +563,7 @@ bool display_item(location from_loc,short /*pc_num*/,short mode, bool check_cont
 		stole_something = show_get_items("Getting all adjacent items:", item_array, current_getting_pc);
 	else stole_something = show_get_items("Getting all nearby items:", item_array, current_getting_pc);
 	
-	put_item_screen(stat_window,0);
+	put_item_screen(stat_window);
 	put_pc_screen();
 	
 	return stole_something;
