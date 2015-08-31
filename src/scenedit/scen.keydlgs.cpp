@@ -127,7 +127,7 @@ short choose_background(short cur_choice, cDialog* parent) {
 			to = {0x00, 0x00, 0x80};
 		else if(which == 11)
 			to = {0xC0, 0x40, 0xFF};
-		else if(which <= 5 || which == 7 || which == 9 || which == 15)
+		else if(which <= 5 || which == 9 || which == 15)
 			to = sf::Color::White;
 		bg_dlg["title"].setColour(to);
 		for(int i = 0; i < 21; i++)

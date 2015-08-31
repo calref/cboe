@@ -51,37 +51,6 @@ extern sf::RenderTexture map_gworld;
 extern sf::Texture small_ter_gworld;
 // In the 0..65535 range, this colour was {65535,65535,52428}
 sf::Color parchment = {255,255,205};
-extern tessel_ref_t map_pat[];
-
-// TODO: Add blue cave graphics to these arrays?
-unsigned char map_pats[256] = {
-	1,1,2,2,2,7,7,7,7,7, ////
-	7,7,7,7,7,7,7,7,3,3,
-	3,3,3,3,3,3,3,3,3,3,
-	3,3,5,5,5,5,5,5,5,5,
-	5,5,5,5,5,5,4,4,4,4,
-	4,4,4,4,4,4,4,4,4,0, // 50
-	0,0,0,0,0,0,0,24,24,24,
-	16,16,25,25,0,0,0,0,18,8,
-	8,9,2,15,15,10,10,10,6,0,
-	0,0,0,0,0,0,0,0,0,0,
-	19,0,0,0,0,0,0,0,0,0, // 100
-	23,0,0,0,0,0,0,0,0,0,
-	0,0,0,11,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,12,0,0, // 150
-	0,0,0,13,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,18,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0, // 200
-	0,0,0,0,0,17,17,0,17,17,
-	17,17,17,17,17,17,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0};// 250
-unsigned char anim_map_pats[18] = {14,0,0,0,22, 0,0,21,20,21, 20,0,0,0,0, 0,0,0};
 
 long pause_dummy;
 
@@ -1502,22 +1471,13 @@ void draw_map(bool need_refresh) {
 							custom_from = calc_rect(pic % 10, pic / 10);
 							rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
 						}
-					} else switch(pic >= 960 ? anim_map_pats[pic - 960] : map_pats[pic]) {
-						case 0: case 10: case 11:
-							if(univ.scenario.ter_types[what_ter].picture < 960)
-								ter_temp_from.offset(12 * (univ.scenario.ter_types[what_ter].picture % 20),
-													 12 * (univ.scenario.ter_types[what_ter].picture / 20));
-							else ter_temp_from.offset(12 * 20,
-													  12 * (univ.scenario.ter_types[what_ter].picture - 960));
-							rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
-							break;
-							
-						default:
-							if(((pic >= 960) ? anim_map_pats[pic - 960] : map_pats[pic]) < 30) {
-								tileImage(map_gworld, draw_rect,map_pat[((pic >= 960) ? anim_map_pats[pic - 960] : map_pats[pic]) - 1]);
-								break;
-							}
-							break;
+					} else {
+						if(univ.scenario.ter_types[what_ter].picture < 960)
+							ter_temp_from.offset(12 * (univ.scenario.ter_types[what_ter].picture % 20),
+												 12 * (univ.scenario.ter_types[what_ter].picture / 20));
+						else ter_temp_from.offset(12 * 20,
+												  12 * (univ.scenario.ter_types[what_ter].picture - 960));
+						rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
 					}
 				}
 			}

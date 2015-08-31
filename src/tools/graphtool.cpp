@@ -31,12 +31,9 @@
 using boost::math::constants::pi;
 
 rectangle bg_rects[21];
-rectangle map_pat_rects[30];
-rectangle bw_rects[6];
 tessel_ref_t bg[21];
-tessel_ref_t map_pat[30];
 tessel_ref_t bw_pats[6];
-sf::Texture bg_gworld;
+sf::Texture bg_gworld, bw_gworld;
 bool use_win_graphics = false;
 sf::Shader maskShader;
 extern fs::path progDir;
@@ -109,41 +106,17 @@ void init_graph_tool(){
 	}
 	rectangle tmp_rect = bg_rects[19];
 	tmp_rect.offset(0, 64);
-	bg_rects[0] = bg_rects[1] = bg_rects[18] = map_pat_rects[7] = tmp_rect;
+	bg_rects[0] = bg_rects[1] = bg_rects[18] = bg_rects[7] = tmp_rect;
 	bg_rects[0].right -= 32;
 	bg_rects[0].bottom -= 32;
 	bg_rects[1].left += 32;
 	bg_rects[1].bottom -= 32;
 	bg_rects[18].right -= 32;
 	bg_rects[18].top += 32;
-	map_pat_rects[7].left += 32;
-	map_pat_rects[7].top += 32;
-	tmp_rect.offset(0, 64);
-	map_pat_rects[8] = map_pat_rects[23] = map_pat_rects[26] = tmp_rect;
-	map_pat_rects[8].right -= 32;
-	map_pat_rects[8].bottom -= 32;
-	map_pat_rects[23].left += 32;
-	map_pat_rects[23].right -= 16;
-	map_pat_rects[23].bottom -= 32;
-	map_pat_rects[26].left += 32 + 16;
-	map_pat_rects[26].bottom -= 32;
-	tmp_rect.offset(0, 64);
-	bg_rects[7] = tmp_rect;
-	bg_rects[7].bottom = bg_rects[7].top + 16;
-	tmp_rect.offset(0, -32);
-	tmp_rect.right = tmp_rect.left + 8;
-	tmp_rect.bottom = tmp_rect.top + 8;
-	for(i = 0; i < 26; i++){
-		map_pat_rects[map_i[i]] = tmp_rect;
-		map_pat_rects[map_i[i]].offset(8 * (i % 8),8 * (i / 8));
-		// Note: 8 * (i / 8) != i, despite appearances, due to integer rounding
-	}
-	tmp_rect = map_pat_rects[29];
-	for(i = 0; i < 6; i++) {
-		tmp_rect.offset(8, 0);
-		bw_rects[i] = tmp_rect;
-	}
+	bg_rects[7].left += 32;
+	bg_rects[7].top += 32;
 	bg_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pixpats"));
+	bw_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("bwpats"));
 	register_main_patterns();
 }
 
@@ -1036,14 +1009,13 @@ void flushTessels(sf::Texture& alteredImg) {
 }
 
 static void register_main_patterns() {
-	for(int i = 0; i < 30; i++) {
-		if(i < 21) {
-			if(i < 6) {
-				bw_pats[i] = prepareForTiling(bg_gworld, bw_rects[i]);
-			}
-			bg[i] = prepareForTiling(bg_gworld, bg_rects[i]);
+	rectangle bw_rect = {0,0,8,8};
+	for(int i = 0; i < 21; i++) {
+		if(i < 6) {
+			bw_pats[i] = prepareForTiling(bw_gworld, bw_rect);
+			bw_rect.offset(8,0);
 		}
-		map_pat[i] = prepareForTiling(bg_gworld, map_pat_rects[i]);
+		bg[i] = prepareForTiling(bg_gworld, bg_rects[i]);
 	}
 }
 
