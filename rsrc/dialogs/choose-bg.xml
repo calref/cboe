@@ -12,7 +12,7 @@
 		<led name='led5' top='114' left='8' width='180'>Rough dark grey stone</led>
 		<led name='led6' top='129' left='8' width='180'>Black stone / Basalt</led>
 		<led name='led7' top='144' left='8' width='180'>White stone / Chalk</led>
-		<led name='led8' top='159' left='8' width='180'>Text bar pattern</led>
+		<led name='led8' top='159' left='8' width='180'>Light grey stone</led>
 		<led name='led9' top='174' left='8' width='180'>Wood mosaic / parquet floor</led>
 		<led name='led10' top='189' left='8' width='180'>Dark / petrified wood</led>
 		<led name='led11' top='204' left='8' width='180'>Medium stone / Granite</led>
@@ -21,8 +21,8 @@
 		<led name='led13' top='69' left='216' width='180'>Grey marble</led>
 		<led name='led14' top='84' left='216' width='180'>Mosaic tiles</led>
 		<led name='led15' top='99' left='216' width='180'>Veined rock / Marble</led>
-		<led name='led16' top='114' left='216' width='180'>Pitted / Laye#088 stone</led>
-		<led name='led17' top='129' left='216' width='180'>Light grey stone</led>
+		<led name='led16' top='114' left='216' width='180'>Pitted / Cracked stone</led>
+		<led name='led17' top='129' left='216' width='180'>Light grey stone with highlights</led>
 		<led name='led18' top='144' left='216' width='180'>White marble</led>
 		<led name='led19' top='159' left='216' width='180'>Reddish-grey texture</led>
 		<led name='led20' top='174' left='216' width='180'>Light wood grain</led>

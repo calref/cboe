@@ -80,7 +80,6 @@ sf::Texture missiles_gworld;
 sf::Texture status_gworld;
 sf::Texture pc_gworld;
 const sf::Color hilite_colour = {0xff, 0x00, 0x80, 0x40};
-extern tessel_ref_t map_pat[];
 
 // begin new stuff
 rectangle blue_button_from = {120,235,134,251};
@@ -97,31 +96,6 @@ rectangle right_button_base = {RIGHT_AREA_UL_Y,RIGHT_AREA_UL_X,17,RIGHT_AREA_UL_
 rectangle terrain_rect = {0,0,340,272};
 std::string current_string[2];
 extern rectangle terrain_rects[256];
-
-short map_pats[220] = {50,50,1,1,1,6,6,6,6,6,
-	6,6,6,6,6,6,6,6,2,2,
-	2,2,2,2,2,2,2,2,2,2,
-	2,2,4,4,4,4,4,4,4,4,
-	4,4,4,4,4,4,3,3,3,3,
-	3,3,3,3,3,3,3,3,3,0, // 50
-	0,0,0,0,0,0,0,23,23,23,
-	15,15,50,50,0,0,0,0,0,7,
-	7,8,8,14,14,9,9,9,5,5,
-	0,0,0,0,0,0,0,0,0,0,
-	18,18,0,0,0,0,0,0,0,0, // 100
-	22,22,0,0,0,0,0,0,0,0,
-	0,0,0,10,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,11,0,0, // 150
-	0,0,0,12,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0, // 200
-	0,0,0,0,0,0,0,0,0,0
-};
-
 
 unsigned char small_what_drawn[64][64];
 extern bool small_any_drawn;
@@ -1225,46 +1199,23 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 			from_rect = calc_rect(picture_wanted % 10, picture_wanted / 10);
 		}
 		rect_draw_some_item(*source_gworld, from_rect, ter_draw_gworld, dest_rect);
-	} else switch(picture_wanted) {
-			
-		case 0: case 1: case 73: case 72:
-			tileImage(ter_draw_gworld, dest_rect,map_pat[0]);
-			break;
-		case 2: case 3: case 4:
-			tileImage(ter_draw_gworld, dest_rect,map_pat[1]);
-			break;
-			
-		default:
-			if((picture_wanted < 170) && (map_pats[picture_wanted] > 0)) {
-				tileImage(ter_draw_gworld, dest_rect,map_pat[map_pats[picture_wanted]]);
-			}
-			else if(picture_wanted >= 1000)	{
-				sf::Texture* from_gw;
-				graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
-				from_rect.right = from_rect.left + 12;
-				from_rect.bottom = from_rect.top + 12;
-				picture_wanted /= 1000; picture_wanted--;
-				from_rect.offset((picture_wanted / 3) * 12, (picture_wanted % 3) * 12);
-				rect_draw_some_item(*from_gw, from_rect, ter_draw_gworld, dest_rect);
-			}
-			else if(picture_wanted >= 960)	{
-				picture_wanted -= 960;
-				if(picture_wanted == 0) tileImage(ter_draw_gworld, dest_rect,map_pat[13]);
-				else if(picture_wanted == 4) tileImage(ter_draw_gworld, dest_rect,map_pat[21]);
-				else if(picture_wanted == 7) tileImage(ter_draw_gworld, dest_rect,map_pat[20]);
-				else if(picture_wanted == 8) tileImage(ter_draw_gworld, dest_rect,map_pat[19]);
-				else if(picture_wanted == 9) tileImage(ter_draw_gworld, dest_rect,map_pat[20]);
-				else if(picture_wanted == 10) tileImage(ter_draw_gworld, dest_rect,map_pat[19]);
-				else {
-					from_rect.offset(12 * 20, (picture_wanted - 960) * 12);
-					rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
-				}
-			}
-			else {
-				from_rect.offset((picture_wanted % 20) * 12,(picture_wanted / 20) * 12);
-				rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
-			}
-			break;
+	} else {
+		if(picture_wanted >= 1000) {
+			sf::Texture* from_gw;
+			graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
+			from_rect.right = from_rect.left + 12;
+			from_rect.bottom = from_rect.top + 12;
+			picture_wanted /= 1000; picture_wanted--;
+			from_rect.offset((picture_wanted / 3) * 12, (picture_wanted % 3) * 12);
+			rect_draw_some_item(*from_gw, from_rect, ter_draw_gworld, dest_rect);
+		} else if(picture_wanted >= 960) {
+			picture_wanted -= 960;
+			from_rect.offset(12 * 20, (picture_wanted - 960) * 12);
+			rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
+		} else {
+			from_rect.offset((picture_wanted % 20) * 12,(picture_wanted / 20) * 12);
+			rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
+		}
 	}
 	if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 		location where_draw(i,j);

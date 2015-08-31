@@ -54,7 +54,6 @@ extern std::shared_ptr<cButton> done_btn, help_btn;
 extern sf::Texture bg_gworld;
 extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect,startup_top;
 extern rectangle talk_area_rect, word_place_rect;
-extern tessel_ref_t map_pat[];
 extern location store_anim_ul;
 extern long register_flag;
 extern long ed_flag,ed_key;
