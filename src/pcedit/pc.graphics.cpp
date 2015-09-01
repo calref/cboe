@@ -47,8 +47,7 @@ short store_str2a;
 short store_str2b;
 short store_which_string_dlog;
 short store_page_on,store_num_i;
-// TODO: The duplication of rectangle here shouldn't be necessary...
-rectangle ed_buttons_from[2] = {rectangle{0,0,57,57},rectangle{0,57,57,114}};
+rectangle ed_buttons_from[2] = {{0,0,57,57},{0,57,57,114}};
 short current_pressed_button = -1;
 cCustomGraphics spec_scen_g; // not actually needed; just here to silence compiler because it's referenced in fileio.h
 // (actually, it WILL be needed eventually; the same is true about most of the rest of these.)

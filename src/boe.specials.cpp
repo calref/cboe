@@ -4290,7 +4290,6 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				if(i >= 100) {
 					std::set<location, loc_compare> checked;
 					std::queue<location> to_check;
-					cCreature& who = dynamic_cast<cCreature&>(univ.get_target(i));
 					location cur_check = l;
 					for(int tries = 0; tries < 100 && !monst_can_be_there(cur_check, i - 100); tries++) {
 						for(int x = -1; x <= 1; x++) {

@@ -92,8 +92,7 @@ extern std::vector<word_rect_t> talk_words;
 // talk_area_rect and talk_help_rect used for this too
 eGameMode store_pre_shop_mode;
 extern rectangle shopping_rects[8][7];
-// TODO: The duplication of rectangle here shouldn't be necessary...
-rectangle bottom_help_rects[4] = {rectangle{356,6,368,250},rectangle{374,6,386,270},rectangle{386,6,398,250},rectangle{398,6,410,250}};
+rectangle bottom_help_rects[4] = {{356,6,368,250},{374,6,386,270},{386,6,398,250},{398,6,410,250}};
 rectangle shop_name_str = {44,6,56,200};
 rectangle shop_frame = {62,10,352,269};
 rectangle shop_done_rect = {388,212,411,275};

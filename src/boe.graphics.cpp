@@ -73,16 +73,12 @@ long anim_ticks = 0;
 
 // 0 - terrain   1 - buttons   2 - pc stats
 // 3 - item stats   4 - text bar   5 - text area (not right)
-// TODO: The duplication of rectangle here shouldn't be necessary...
-rectangle win_from_rects[6] = {rectangle{0,0,350,278},rectangle{0,0,37,258},rectangle{0,0,115,288},rectangle{0,0,143,288},rectangle{0,0,21,279},rectangle{0,0,0,288}};
-rectangle win_to_rects[6] = {rectangle{5,5,356,284},rectangle{383,5,421,271},rectangle{0,0,116,271},rectangle{0,0,144,271},rectangle{358,5,379,284},rectangle{0,0,138,256}};
+rectangle win_from_rects[6] = {{0,0,350,278},{0,0,37,258},{0,0,115,288},{0,0,143,288},{0,0,21,279},{0,0,0,288}};
+rectangle win_to_rects[6] = {{5,5,356,284},{383,5,421,271},{0,0,116,271},{0,0,144,271},{358,5,379,284},{0,0,138,256}};
 
 // 0 - title  1 - button  2 - credits  3 - base button
-rectangle startup_from[4] = {rectangle{0,0,274,602},rectangle{274,0,322,301},rectangle{0,301,67,579},rectangle{274,301,314,341}}; ////
+rectangle startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}};
 extern rectangle startup_button[6];
-
-//	rectangle trim_rects[8] = {{0,0,5,28},{31,0,36,28},{0,0,36,5},{0,24,36,28},
-//						{0,0,5,5},{0,24,5,28},{31,24,36,28},{31,0,36,5}};
 
 rectangle	top_left_rec = {0,0,36,28};
 short which_graphic_index[6] = {50,50,50,50,50,50};
@@ -1241,17 +1237,16 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	// 50 - walkway bl, 51 - walkway tl, 52 - walkway tr, 53 - walkway br
 	// 54 - walkway top, 55 - walkway right, 56 - walkway bottom, 57 - walkway left
 	// 58 - lone walkway
-	// TODO: The duplication of rectangle here shouldn't be necessary...
 	static rectangle trim_rects[12] = {
-		rectangle{0,0,36,14}, rectangle{0,0,36,14},
-		rectangle{0,0,18,28}, rectangle{0,0,18,28},
-		rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14},
-		rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14}, rectangle{0,0,18,14},
+		{0,0,36,14}, {0,0,36,14},
+		{0,0,18,28}, {0,0,18,28},
+		{0,0,18,14}, {0,0,18,14}, {0,0,18,14}, {0,0,18,14},
+		{0,0,18,14}, {0,0,18,14}, {0,0,18,14}, {0,0,18,14},
 	};
 	static rectangle walkway_rects[9] = {
-		rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28},
-		rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28}, rectangle{0,0,36,28},
-		rectangle{0,0,36,28},
+		{0,0,36,28}, {0,0,36,28}, {0,0,36,28}, {0,0,36,28},
+		{0,0,36,28}, {0,0,36,28}, {0,0,36,28}, {0,0,36,28},
+		{0,0,36,28},
 	};
 	static std::unique_ptr<sf::Texture> trim_masks[12], walkway_masks[9];
 	rectangle from_rect = {0,0,36,28},to_rect;
@@ -1379,22 +1374,19 @@ void place_road(short q,short r,location where, bool here) {
 	location draw_loc;
 	ter_num_t ter = coord_to_ter(where.x, where.y);
 	rectangle to_rect;
-	//rectangle road_rects[2] = {{76,112,80,125},{72,144,90,148}}; // 0 - rl partial  1 - ud partial
-	// TODO: The duplication of rectangle here shouldn't be necessary...
 	static const rectangle road_rects[4] = {
-		rectangle{4,112,8,125},	// horizontal partial
-		rectangle{0,144,18,148},	// vertical partial
-		rectangle{0,112,4,140},	// horizontal full
-		rectangle{0,140,36,144},	// vertical full
+		{4,112,8,125},	// horizontal partial
+		{0,144,18,148},	// vertical partial
+		{0,112,4,140},	// horizontal full
+		{0,140,36,144},	// vertical full
 	};
-	//rectangle road_dest_rects[4] = {{0,12,18,16},{16,15,20,28},{18,12,36,16},{16,0,20,13}}; // top right bottom left
 	static const rectangle road_dest_rects[6] = {
-		rectangle{0,12,18,16},	// top
-		rectangle{16,15,20,28},	// right
-		rectangle{18,12,36,16},	// bottom
-		rectangle{16,0,20,13},	// left
-		rectangle{0,12,36,16},	// top + bottom
-		rectangle{16,0,20,28},	// right + left
+		{0,12,18,16},	// top
+		{16,15,20,28},	// right
+		{18,12,36,16},	// bottom
+		{16,0,20,13},	// left
+		{0,12,36,16},	// top + bottom
+		{16,0,20,28},	// right + left
 	};
 	draw_loc.x = q;
 	draw_loc.y = r;
@@ -1614,15 +1606,16 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 
 
 void draw_pointing_arrows() {
-	// TODO: The duplication of rectangle here shouldn't be necessary...
 	rectangle sources[4] = {
-		rectangle{351,28,359,36}, // up
-		rectangle{351,10,359,18}, // left
-		rectangle{351,01,359,9}, // down
-		rectangle{351,19,359,27}  // right
+		{351,28,359,36}, // up
+		{351,10,359,18}, // left
+		{351,01,359,9}, // down
+		{351,19,359,27}  // right
 	};
-	rectangle dests[8] = {rectangle{7,100,15,108},rectangle{7,170,15,178},rectangle{140,7,148,15},rectangle{212,7,220,15},
-		rectangle{346,100,354,108},rectangle{346,170,354,178},rectangle{140,274,148,282},rectangle{212,274,220,282}};
+	rectangle dests[8] = {
+		{7,100,15,108},{7,170,15,178},{140,7,148,15},{212,7,220,15},
+		{346,100,354,108},{346,170,354,178},{140,274,148,282},{212,274,220,282}
+	};
 	short i;
 	
 	if(monsters_going || !scrollableModes.count(overall_mode))
