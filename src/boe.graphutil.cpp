@@ -56,8 +56,7 @@ extern location ok_space[4];
 extern bool can_draw_pcs;
 extern cCustomGraphics spec_scen_g;
 
-// TODO: The duplication of rectangle here shouldn't be necessary...
-rectangle boat_rects[4] = {rectangle{0,0,36,28}, rectangle{0,28,36,56},rectangle{0,56,36,84},rectangle{0,84,36,112}};
+rectangle boat_rects[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
 bool gave_no_g_error = false;
 
 //short dest; // 0 - terrain gworld   1 - screen
@@ -124,12 +123,11 @@ void draw_monsters() {
 	location where_draw,store_loc;
 	short picture_wanted;
 	ter_num_t ter;
-	// TODO: The duplication of rectangle here shouldn't be necessary...
 	rectangle monst_rects[4][4] = {
-		{rectangle{0,0,36,28}},
-		{rectangle{0,7,18,21},rectangle{18,7,36,21}},
-		{rectangle{9,0,27,14},rectangle{9,14,27,28}},
-		{rectangle{0,0,18,14},rectangle{0,14,18,28},rectangle{18,0,36,14},rectangle{18,14,36,28}}
+		{{0,0,36,28}},
+		{{0,7,18,21},{18,7,36,21}},
+		{{9,0,27,14},{9,14,27,28}},
+		{{0,0,18,14},{0,14,18,28},{18,0,36,14},{18,14,36,28}}
 	};
 	
 	if(is_out())

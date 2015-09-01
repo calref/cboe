@@ -29,10 +29,10 @@ bool save_mess_given = false;
 
 rectangle status_panel_clip_rect = {11, 299, 175, 495},item_panel_clip_rect = {11,297,175,463};
 
-// TODO: The duplication of rectangle here shouldn't be necessary...
 rectangle item_buttons_from[7] = {
-	rectangle{11,0,24,14},rectangle{11,14,24,28},rectangle{11,28,24,42},rectangle{11,42,24,56},
-	rectangle{24,0,36,30},rectangle{24,30,36,60},rectangle{36,0,48,30}};
+	{11,0,24,14},{11,14,24,28},{11,28,24,42},{11,42,24,56},
+	{24,0,36,30},{24,30,36,60},{36,0,48,30}
+};
 
 eGameMode store_mode;
 
@@ -367,8 +367,7 @@ void put_item_screen(short screen_num) {
 
 void place_buy_button(short position,short pc_num,short item_num) {
 	rectangle dest_rect,source_rect;
-	// TODO: The duplication of rectangle here shouldn't be necessary...
-	rectangle button_sources[3] = {rectangle{24,0,36,30},rectangle{36,0,48,30},rectangle{48,0,60,30}};
+	rectangle button_sources[3] = {{24,0,36,30},{36,0,48,30},{48,0,60,30}};
 	short val_to_place;
 	// TODO: This is now duplicated here and in start_town_mode()
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
@@ -607,8 +606,7 @@ short first_active_pc() {
 void refresh_stat_areas(short mode) {
 	short i;
 	sf::BlendMode x;
-	// TODO: The duplication of rectangle here shouldn't be necessary...
-	rectangle dest_rect,parts_of_area_to_draw[3] = {rectangle{0,0,17,271},rectangle{16,0,123,256},rectangle{123,0,144,271}};
+	rectangle dest_rect,parts_of_area_to_draw[3] = {{0,0,17,271},{16,0,123,256},{123,0,144,271}};
 	
 	dest_rect = rectangle(pc_stats_gworld);
 	rectangle oldRect = dest_rect;

@@ -38,17 +38,21 @@
 
 rectangle bottom_buttons[14];
 rectangle world_screen = {23, 23, 346, 274};
-// TODO: The duplication of rectangle here shouldn't be necessary...
 rectangle item_screen_button_rects[9] = {
-	rectangle{125,10,141,28},rectangle{125,40,141,58},rectangle{125,68,141,86},rectangle{125,98,141,116},rectangle{125,126,141,144},rectangle{125,156,141,174},
-	rectangle{126,176,141,211},
-	rectangle{126,213,141,248},
-	rectangle{127,251,140,267}};
+	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
+	{126,176,141,211},
+	{126,213,141,248},
+	{127,251,140,267}
+};
 
-rectangle border_rect[4] = {rectangle{5, 5, 15, 283}, rectangle{5, 5, 355, 15},
-	rectangle{345, 5, 355, 283}, rectangle{5, 273, 355, 283}};
-rectangle medium_buttons[4] = {rectangle{383,190,401,225}, rectangle{402, 190, 420, 225},
-	rectangle{383, 227, 401, 263}, rectangle{402, 227,420, 263}}; ;
+rectangle border_rect[4] = {
+	{5, 5, 15, 283}, {5, 5, 355, 15},
+	{345, 5, 355, 283}, {5, 273, 355, 283}
+};
+rectangle medium_buttons[4] = {
+	{383,190,401,225}, {402, 190, 420, 225},
+	{383, 227, 401, 263}, {402, 227,420, 263}
+};
 
 rectangle item_buttons[8][6];
 // name, use, give, drip, info, sell/id
@@ -1615,11 +1619,16 @@ bool handle_keystroke(sf::Event& event){
 	using kb = sf::Keyboard;
 	using Key = sf::Keyboard::Key;
 	
-	Key keypad[10] = {kb::Numpad0,kb::Numpad1,kb::Numpad2,kb::Numpad3,kb::Numpad4,kb::Numpad5,kb::Numpad6,kb::Numpad7,kb::Numpad8,kb::Numpad9};
-	// TODO: The duplication of location here shouldn't be necessary...
-	location terrain_click[10] = {location{150,185},location{120,215},location{150,215},location{180,215},
-		location{120,185},location{150,185},location{180,185},
-		location{120,155},location{150,155},location{180,135}};
+	Key keypad[10] = {
+		kb::Numpad0,kb::Numpad1,kb::Numpad2,kb::Numpad3,
+		kb::Numpad4,kb::Numpad5,kb::Numpad6,
+		kb::Numpad7,kb::Numpad8,kb::Numpad9
+	};
+	location terrain_click[10] = {
+		{150,185},{120,215},{150,215},{180,215},
+		{120,185},{150,185},{180,185},
+		{120,155},{150,155},{180,135}
+	};
 	Key talk_chars[9] = {kb::L,kb::N,kb::J,kb::B,kb::S,kb::R,kb::D,kb::G,kb::A};
 	Key shop_chars[8] = {kb::A,kb::B,kb::C,kb::D,kb::E,kb::F,kb::G,kb::H};
 	

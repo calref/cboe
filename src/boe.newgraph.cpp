@@ -662,10 +662,11 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	short i;
 	// In the 0..65535 range, these blue components were: 0, 32767, 14535, 26623, 59391
 	// The green components on the second line were 40959 and 24575
-	// TODO: The duplication of sf::Color here shouldn't be necessary...
 	// TODO: The Windows version appears to use completely different colours?
-	sf::Color c[7] = {sf::Color{0,0,0},sf::Color{0,0,128},sf::Color{0,0,57},sf::Color{0,0,104},sf::Color{0,0,232},
-		sf::Color{0,160,0},sf::Color{0,96,0}};
+	sf::Color c[7] = {
+		{0,0,0},{0,0,128},{0,0,57},{0,0,104},{0,0,232},
+		{0,160,0},{0,96,0}
+	};
 	rectangle shopper_name = {44,6,56,260};
 	long current_pos;
 	
@@ -945,9 +946,10 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	// In the 0..65535 range, these blue components were: 0, 32767, 14535, 26623, 59391
 	// The green components on the second line were 40959 and 24575
-	// TODO: The duplication of sf::Color here shouldn't be necessary...
-	sf::Color c[8] = {sf::Color{0,0,0},sf::Color{0,0,128},sf::Color{0,0,57},sf::Color{0,0,104},sf::Color{0,0,232},
-		sf::Color{0,160,0},sf::Color{0,96,0},sf::Color(160,0,20)};
+	sf::Color c[8] = {
+		{0,0,0},{0,0,128},{0,0,57},{0,0,104},{0,0,232},
+		{0,160,0},{0,96,0},{160,0,20}
+	};
 	
 	talk_gworld.setActive();
 	

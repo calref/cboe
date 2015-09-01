@@ -918,29 +918,28 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		race = eRace::HUMAN;
 		direction = DIR_N;
 	}else if(key == 'dflt'){
-		// TODO: The duplication of std::map<eSkill,short> shouldn't be needed here
 		static std::map<eSkill, short> pc_stats[6] = {
-			std::map<eSkill,short>{
+			{
 				{eSkill::STRENGTH,8}, {eSkill::DEXTERITY,6}, {eSkill::INTELLIGENCE,2},
 				{eSkill::EDGED_WEAPONS,6}, {eSkill::ITEM_LORE,1}, {eSkill::ASSASSINATION,2},
-			}, std::map<eSkill,short>{
+			}, {
 				{eSkill::STRENGTH,8}, {eSkill::DEXTERITY,7}, {eSkill::INTELLIGENCE,2},
 				{eSkill::POLE_WEAPONS,6}, {eSkill::THROWN_MISSILES,3}, {eSkill::DEFENSE,3},
 				{eSkill::POISON,2},
-			}, std::map<eSkill,short>{
+			}, {
 				{eSkill::STRENGTH,8}, {eSkill::DEXTERITY,6}, {eSkill::INTELLIGENCE,2},
 				{eSkill::EDGED_WEAPONS,3}, {eSkill::BASHING_WEAPONS,3}, {eSkill::ARCHERY,2},
 				{eSkill::DISARM_TRAPS,4}, {eSkill::LOCKPICKING,4}, {eSkill::POISON,2}, {eSkill::LUCK,1},
-			}, std::map<eSkill,short>{
+			}, {
 				{eSkill::STRENGTH,3}, {eSkill::DEXTERITY,2}, {eSkill::INTELLIGENCE,6},
 				{eSkill::EDGED_WEAPONS,2}, {eSkill::THROWN_MISSILES,2},
 				{eSkill::MAGE_SPELLS,3}, {eSkill::MAGE_LORE,3}, {eSkill::ITEM_LORE,1},
-			}, std::map<eSkill,short>{
+			}, {
 				{eSkill::STRENGTH,2}, {eSkill::DEXTERITY,2}, {eSkill::INTELLIGENCE,6},
 				{eSkill::EDGED_WEAPONS,3}, {eSkill::THROWN_MISSILES,2},
 				{eSkill::MAGE_SPELLS,2}, {eSkill::PRIEST_SPELLS,1}, {eSkill::MAGE_LORE,4},
 				{eSkill::LUCK,1},
-			}, std::map<eSkill,short>{
+			}, {
 				{eSkill::STRENGTH,2}, {eSkill::DEXTERITY,2}, {eSkill::INTELLIGENCE,6},
 				{eSkill::BASHING_WEAPONS,2}, {eSkill::THROWN_MISSILES,2}, {eSkill::DEFENSE,1},
 				{eSkill::PRIEST_SPELLS,3}, {eSkill::MAGE_LORE,3}, {eSkill::ALCHEMY,2},
@@ -950,14 +949,13 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		static const short pc_sp[6] = {0,0,0,20,20,21};
 		static const short pc_graphics[6] = {3,32,29,16,23,14};
 		static const short pc_race[6] = {0,2,1,0,0,0};
-		// TODO: The duplication of std::set<eTrait> should not be necessary here
 		static const std::set<eTrait> pc_t[6] = {
-			std::set<eTrait>{eTrait::AMBIDEXTROUS, eTrait::GOOD_CONST, eTrait::MAGICALLY_INEPT},
-			std::set<eTrait>{eTrait::TOUGHNESS, eTrait::WOODSMAN, eTrait::SLUGGISH},
-			std::set<eTrait>{eTrait::NIMBLE, eTrait::FRAIL},
-			std::set<eTrait>{eTrait::MAGICALLY_APT},
-			std::set<eTrait>{eTrait::CAVE_LORE, eTrait::GOOD_CONST, eTrait::HIGHLY_ALERT, eTrait::BAD_BACK},
-			std::set<eTrait>{eTrait::MAGICALLY_APT},
+			{eTrait::AMBIDEXTROUS, eTrait::GOOD_CONST, eTrait::MAGICALLY_INEPT},
+			{eTrait::TOUGHNESS, eTrait::WOODSMAN, eTrait::SLUGGISH},
+			{eTrait::NIMBLE, eTrait::FRAIL},
+			{eTrait::MAGICALLY_APT},
+			{eTrait::CAVE_LORE, eTrait::GOOD_CONST, eTrait::HIGHLY_ALERT, eTrait::BAD_BACK},
+			{eTrait::MAGICALLY_APT},
 		};
 		
 		main_status = eMainStatus::ALIVE;
