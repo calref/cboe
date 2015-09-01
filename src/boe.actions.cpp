@@ -2053,7 +2053,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 		case 'a':
 			if(overall_mode < MODE_TALK_TOWN) {
-				pass_point.x = (overall_mode == MODE_OUTDOORS) ? 170 : 221;
+				pass_point.x = (overall_mode == MODE_OUTDOORS) ? 180 : 221;
 				pass_point.y = 405;
 				pass_event.mouseButton.x = pass_point.x + ul.x;
 				pass_event.mouseButton.y = pass_point.y + ul.y;
@@ -2084,7 +2084,7 @@ bool handle_keystroke(sf::Event& event){
 			if((overall_mode == MODE_COMBAT) ||
 				((overall_mode == MODE_FIRING)  && (chr == 's')) ||
 				((overall_mode == MODE_THROWING)  && (chr == 's')) ) {
-				pass_point.x = (chr == 's') ? 205 : 240;
+				pass_point.x = (chr == 's') ? 215 : 250;
 				pass_point.y = (chr == 'e') ? 390 : 406;
 				pass_event.mouseButton.x = pass_point.x + ul.x;
 				pass_event.mouseButton.y = pass_point.y + ul.y;
@@ -2100,6 +2100,7 @@ bool handle_keystroke(sf::Event& event){
 				if(chr == 'm') j = 0;
 				else if(chr == 'p') j = 1;
 			}
+			// TODO: There's several weird things about this conditional. Why 'f' when the key to initiate this is 's'? Why is it checking for 't' (though that can never be true)?
 			if(chr == 'f' && (overall_mode == MODE_FIRING || overall_mode == MODE_THROWING || chr == 't')) // cancel missile
 				j = 6;
 			if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
@@ -2155,7 +2156,7 @@ bool handle_keystroke(sf::Event& event){
 						break;
 					case 'f':
 						if(overall_mode != MODE_TOWN) return false;
-						j = 6;
+						j = 7;
 						break;
 				}
 			}
