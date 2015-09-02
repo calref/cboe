@@ -181,13 +181,14 @@ static bool pick_picture(ePicType type, cDialog& parent, std::string result_fld,
 	pic_num_t pic = choose_graphic(cur_sel, type, &parent);
 	if(pic != NO_PIC){
 		if(result_fld != ""){
+			pic_num_t show_pic = pic;
+			if(type == PIC_TER_ANIM && show_pic < 1000)
+				show_pic += 960;
 			cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);
-			fld_ctrl.setTextToNum(pic);
+			fld_ctrl.setTextToNum(show_pic);
 		}
 		if(pic_fld != ""){
 			cPict& pic_ctrl = dynamic_cast<cPict&>(parent[pic_fld]);
-			if(type == PIC_TER_ANIM && pic < 1000)
-				pic += 960;
 			if(type == PIC_ITEM && pic_ctrl.getPicType() == PIC_TINY_ITEM)
 				type = PIC_TINY_ITEM;
 			pic_ctrl.setPict(pic,type);
