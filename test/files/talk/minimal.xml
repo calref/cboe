@@ -1,0 +1,8 @@
+<dialogue boes="2.0.0">
+	<personality id='0'>
+		<title>Billy Kumquat</title>
+		<look>You see a small boy juggling fruit.</look>
+		<name>"I'm Billy Kumquat!"</name>
+		<job>"I juggle!"</job>
+	</personality>
+</dialogue>
