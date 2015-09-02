@@ -161,8 +161,8 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 	size_t total_pics = 0;
 	cPictChoice* pic_dlg = nullptr;
 	switch(g_type + PIC_PRESET) {
-		case PIC_TER: total_pics = 539; break;
-		case PIC_TER_ANIM: total_pics = 17; break;
+		case PIC_TER: total_pics = 600; break;
+		case PIC_TER_ANIM: total_pics = 28; break;
 		case PIC_DLOG: total_pics = 44; break;
 		case PIC_TALK: total_pics = 84; break;
 		case PIC_SCEN: total_pics = 30; break;
@@ -175,7 +175,7 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 		case PIC_MISSILE: total_pics = 16; break;
 		case PIC_STATUS: total_pics = 27; break;
 		case PIC_SCEN_LG: total_pics = 4; break;
-		case PIC_TER_MAP: total_pics = 977; break;
+		case PIC_TER_MAP: total_pics = 988; break;
 		case PIC_FULL:
 			if(!fs::is_directory(tempDir/scenario_temp_dir_name/"graphics")) {
 				showError("You have no custom graphics, so it's not possible to select this kind of picture!",parent);
