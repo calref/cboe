@@ -526,7 +526,7 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop) {
 					throw xBadNode(type, entry->Row(), entry->Column(), fname);
 				entries_found++;
 				if(type == "item") {
-					int amount, num, chance = 100;
+					int amount = -1, num, chance = 100;
 					std::string title, descr;
 					Iterator<Attribute> attr;
 					for(attr = attr.begin(entry.Get()); attr != attr.end(); attr++) {
@@ -538,8 +538,12 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop) {
 							else amount = boost::lexical_cast<int>(val);
 						} else if(name == "chance") {
 							attr->GetValue(&chance);
+							if(amount == -1)
+							   amount = 1;
 						} else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
 					}
+					if(amount == -1)
+						amount = 0;
 					entry->GetText(&num);
 					shop.addItem(num, dummy_item, amount, chance);
 				} else if(type == "special") {
@@ -896,7 +900,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 							if(!found_chance)
 								throw xMissingAttr(type, "chance", store->Row(), store->Column(), fname);
 							num_items++;
-						}
+						} else throw xBadNode(type, store->Row(), store->Column(), fname);
 					}
 					if(!reqs.empty())
 						throw xMissingElem("storage", *reqs.begin(), edit->Row(), edit->Column(), fname);
