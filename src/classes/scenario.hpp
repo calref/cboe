@@ -81,7 +81,7 @@ public:
 	std::vector<cTerrain> ter_types;
 	std::array<cTimer,20> scenario_timers;
 	std::vector<cSpecial> scen_specials;
-	cItemStorage storage_shortcuts[10];
+	std::array<cItemStorage,10> storage_shortcuts;
 	// These two \/ are populated at load time and then never used again
 	location last_out_edited;
 	short last_town_edited;

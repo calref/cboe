@@ -74,6 +74,7 @@
         			<name>Special Shop Item the Third</name>
         			<description><![CDATA[Yay for the magic purchase!]]></description>
         		</special>
+        		<item>89</item>
         	</entries>
         </shop>
     </game>

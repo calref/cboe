@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<scenario boes="2.1.5">
+    <title>Test Scenario</title>
+    <icon>7</icon>
+    <id>campaign</id>
+    <version>2.6.7</version>
+    <language>en-US</language>
+    <author>
+        <name>BoE Test Suite</name>
+        <email>nowhere@example.com</email>
+    </author>
+    <text>
+        <teaser>Teaser 1</teaser>
+        <teaser>Teaser 2</teaser>
+        <intro-msg><![CDATA[Welcome!!!    To the test scenario!]]></intro-msg>
+    </text>
+    <ratings>
+        <content>R</content>
+        <difficulty>3</difficulty>
+    </ratings>
+    <flags>
+        <adjust-difficulty>true</adjust-difficulty>
+        <legacy>false</legacy>
+        <custom-graphics>false</custom-graphics>
+    </flags>
+    <creator>
+        <type>oboe</type>
+        <version>2.5.3</version>
+        <os></os>
+    </creator>
+    <game>
+        <num-towns>3</num-towns>
+        <out-width>2</out-width>
+        <out-height>1</out-height>
+        <start-town>7</start-town>
+        <town-start x="24" y="28" />
+        <outdoor-start x="1" y="3" />
+        <sector-start x="12" y="21" />
+        <town-flag add-x="16" add-y="21"/>
+    </game>
+    <editor>
+        <default-ground>2</default-ground>
+        <last-out-section x="0" y="0" />
+        <last-town>0</last-town>
+    </editor>
+</scenario>

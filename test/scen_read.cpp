@@ -156,6 +156,53 @@ TEST_CASE("Loading a new-format scenario record") {
 		CHECK(scen.default_ground == 2);
 		CHECK(scen.last_out_edited == loc(0,0));
 		CHECK(scen.last_town_edited == 0);
+		CHECK(scen.init_spec == -1);
+	}
+	SECTION("With a different icon in the intro dialog") {
+		fin.open("files/scenario/intro.xml");
+		doc = xmlDocFromStream(fin, "intro.xml");
+		REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
+		CHECK(scen.intro_pic == 7);
+		CHECK(scen.intro_mess_pic == 12);
+	}
+	SECTION("With some optional game data") {
+		fin.open("files/scenario/optional.xml");
+		doc = xmlDocFromStream(fin, "optional.xml");
+		REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
+		CHECK(scen.init_spec == 5);;
+		REQUIRE(scen.store_item_rects.size() >= 1);
+		REQUIRE(scen.store_item_rects.size() >= 1);
+		CHECK(scen.store_item_rects[0] == rectangle(12,13,20,36));
+		CHECK(scen.store_item_towns[0] == 0);
+		REQUIRE(scen.town_mods.size() >= 1);
+		CHECK(scen.town_mods[0] == loc(16,21));
+		CHECK(scen.town_mods[0].spec == 1);
+		REQUIRE(scen.scenario_timers.size() >= 1);
+		CHECK(scen.scenario_timers[0].time == 100);
+		CHECK(scen.scenario_timers[0].node == 15);
+		CHECK(scen.scenario_timers[0].node_type == 0);
+	}
+	SECTION("With an invalid town mod flag") {
+		SECTION("Missing X") {
+			fin.open("files/scenario/bad_townmod1.xml");
+			doc = xmlDocFromStream(fin, "bad_townmod1.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingAttr);
+		}
+		SECTION("Missing Y") {
+			fin.open("files/scenario/bad_townmod2.xml");
+			doc = xmlDocFromStream(fin, "bad_townmod2.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingAttr);
+		}
+		SECTION("Missing town") {
+			fin.open("files/scenario/bad_townmod3.xml");
+			doc = xmlDocFromStream(fin, "bad_townmod3.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingAttr);
+		}
+		SECTION("Invalid attribtue") {
+			fin.open("files/scenario/bad_townmod4.xml");
+			doc = xmlDocFromStream(fin, "bad_townmod4.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadAttr);
+		}
 	}
 	SECTION("With a special item") {
 		SECTION("Valid") {
@@ -252,7 +299,7 @@ TEST_CASE("Loading a new-format scenario record") {
 			doc = xmlDocFromStream(fin, "shop.xml");
 			REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
 			REQUIRE(scen.shops.size() == 1);
-			REQUIRE(scen.shops[0].size() == 13);
+			REQUIRE(scen.shops[0].size() == 14);
 			CHECK(scen.shops[0].getFace() == 0);
 			CHECK(scen.shops[0].getName() == "The Shop of Everything");
 			CHECK(scen.shops[0].getType() == eShopType::NORMAL);
@@ -264,7 +311,7 @@ TEST_CASE("Loading a new-format scenario record") {
 			CHECK(scen.shops[0].getItem(1).quantity == 0);
 			CHECK(scen.shops[0].getItem(1).index == 11);
 			CHECK(scen.shops[0].getItem(2).type == eShopItemType::OPT_ITEM);
-			CHECK(scen.shops[0].getItem(2).quantity == 42000);
+			CHECK(scen.shops[0].getItem(2).quantity == 42001);
 			CHECK(scen.shops[0].getItem(2).index == 12);
 			CHECK(scen.shops[0].getItem(3).type == eShopItemType::MAGE_SPELL);
 			CHECK(scen.shops[0].getItem(3).item.item_level == 30);
@@ -300,6 +347,9 @@ TEST_CASE("Loading a new-format scenario record") {
 			CHECK(scen.shops[0].getItem(12).item.value == 12000);
 			CHECK(scen.shops[0].getItem(12).item.full_name == "Special Shop Item the Third");
 			CHECK(scen.shops[0].getItem(12).item.desc == "Yay for the magic purchase!");
+			CHECK(scen.shops[0].getItem(13).type == eShopItemType::ITEM);
+			CHECK(scen.shops[0].getItem(13).quantity == 0);
+			CHECK(scen.shops[0].getItem(13).index == 89);
 		}
 		SECTION("Too many items") {
 			fin.open("files/scenario/shop-overflow.xml");
@@ -327,5 +377,47 @@ TEST_CASE("Loading a new-format scenario record") {
 			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
 		}
 		ResMgr::popPath<StringRsrc>();
+	}
+	SECTION("With item storage shortcuts") {
+		SECTION("Valid") {
+			fin.open("files/scenario/storage.xml");
+			doc = xmlDocFromStream(fin, "storage.xml");
+			REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
+			REQUIRE(scen.storage_shortcuts.size() >= 1);
+			CHECK(scen.storage_shortcuts[0].ter_type == 64);
+			CHECK(scen.storage_shortcuts[0].property);
+			CHECK(scen.storage_shortcuts[0].item_num[0] == 46);
+			CHECK(scen.storage_shortcuts[0].item_odds[0] == 25);
+		}
+		SECTION("Missing terrain") {
+			fin.open("files/scenario/storage-missing_ter.xml");
+			doc = xmlDocFromStream(fin, "storage-missing_ter.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingElem);
+		}
+		SECTION("Missing chance") {
+			fin.open("files/scenario/storage-missing_chance.xml");
+			doc = xmlDocFromStream(fin, "storage-missing_chance.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingAttr);
+		}
+		SECTION("Invalid attribute") {
+			fin.open("files/scenario/storage-bad_attr.xml");
+			doc = xmlDocFromStream(fin, "storage-bad_attr.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadAttr);
+		}
+		SECTION("Invalid subtag") {
+			fin.open("files/scenario/storage-bad_node.xml");
+			doc = xmlDocFromStream(fin, "storage-bad_node.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+		SECTION("Too many items") {
+			fin.open("files/scenario/storage-too_many_items.xml");
+			doc = xmlDocFromStream(fin, "storage-too_many_items.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+		SECTION("Too many shortcuts") {
+			fin.open("files/scenario/storage-too_many.xml");
+			doc = xmlDocFromStream(fin, "storage-too_many.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
 	}
 }
