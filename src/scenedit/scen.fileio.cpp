@@ -46,6 +46,9 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario);
 void writeTerrainToXml(ticpp::Printer&& data, cScenario& scenario);
 void writeItemsToXml(ticpp::Printer&& data, cScenario& scenario);
 void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario);
+void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector);
+void writeTownToXml(ticpp::Printer&& data, cTown& town);
+void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_num);
 map_data buildOutMapData(location which, cScenario& scenario);
 map_data buildTownMapData(size_t which, cScenario& scenario);
 
@@ -597,7 +600,7 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.CloseElement("monsters");
 }
 
-static void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
+void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 	data.OpenElement("sector");
 	data.PushAttribute("boes", scenario.format_ed_version());
 	data.PushElement("name", sector.out_name);
@@ -609,10 +612,14 @@ static void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 		case AMBIENT_DRIP: data.PushElement("sound", "drip"); break;
 		case AMBIENT_CUSTOM: data.PushElement("sound", sector.out_sound); break;
 	}
-	for(auto& enc : sector.special_enc)
-		data.PushElement("encounter", enc);
-	for(auto& enc : sector.wandering)
-		data.PushElement("wandering", enc);
+	for(auto& enc : sector.special_enc) {
+		if(!enc.isNull())
+			data.PushElement("encounter", enc);
+	}
+	for(auto& enc : sector.wandering) {
+		if(!enc.isNull())
+			data.PushElement("wandering", enc);
+	}
 	for(size_t i = 0; i < sector.sign_locs.size(); i++) {
 		if(sector.sign_locs[i].text.empty()) continue;
 		data.OpenElement("sign");
@@ -634,7 +641,7 @@ static void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 	data.CloseElement("sector");
 }
 
-static void writeTownToXml(ticpp::Printer&& data, cTown& town) {
+void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 	static const char directions[] = {'n', 'w', 's', 'e'};
 	data.OpenElement("town");
 	data.PushAttribute("boes", scenario.format_ed_version());
@@ -679,7 +686,7 @@ static void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 	if(town.spec_on_hostile >= 0)
 		data.PushElement("onoffend", town.spec_on_hostile);
 	for(size_t i = 0; i < town.timers.size(); i++) {
-		if(town.timers[i].time < 0) continue;
+		if(town.timers[i].time < 0 || town.timers[i].node < 0) continue;
 		data.OpenElement("timer");
 		data.PushAttribute("freq", town.timers[i].time);
 		data.PushText(town.timers[i].node);
@@ -776,7 +783,7 @@ static void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 	data.CloseElement("town");
 }
 
-static void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_num) {
+void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_num) {
 	data.OpenElement("dialogue");
 	data.PushAttribute("boes", scenario.format_ed_version());
 	for(size_t i = 0; i < 10; i++) {

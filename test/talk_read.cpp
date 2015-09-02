@@ -111,4 +111,14 @@ TEST_CASE("Loading a town dialogue definition") {
 		doc = xmlDocFromStream(fin, "node_too_many_strings.xml");
 		REQUIRE_THROWS_AS(readDialogueFromXml(move(doc), talk, 0), xBadNode);
 	}
+	
+	SECTION("With the minimal required information for a personality") {
+		fin.open("files/talk/minimal.xml");
+		doc = xmlDocFromStream(fin, "minimal.xml");
+		REQUIRE_NOTHROW(readDialogueFromXml(move(doc), talk, 0));
+		CHECK(talk.people[0].title == "Billy Kumquat");
+		CHECK(talk.people[0].look == "You see a small boy juggling fruit.");
+		CHECK(talk.people[0].name == "\"I'm Billy Kumquat!\"");
+		CHECK(talk.people[0].job == "\"I juggle!\"");
+	}
 }
