@@ -66,6 +66,13 @@
 		911A14031B8FAFC600900FD9 /* town_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6EC1B8FA91400346948 /* town_read.cpp */; };
 		911A14041B8FB00300900FD9 /* talk_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */; };
 		911A14051B8FB00600900FD9 /* out_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6ED1B8FA9FB00346948 /* out_read.cpp */; };
+		911F2D991B98F43B00E3102E /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D981B98F43B00E3102E /* libCommon.a */; };
+		911F2D9A1B98F43C00E3102E /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D981B98F43B00E3102E /* libCommon.a */; };
+		911F2D9B1B98F43C00E3102E /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D981B98F43B00E3102E /* libCommon.a */; };
+		911F2D9C1B98F43C00E3102E /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D981B98F43B00E3102E /* libCommon.a */; };
+		911F2D9E1B98F44700E3102E /* libCommon-Party.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D9D1B98F44700E3102E /* libCommon-Party.a */; };
+		911F2D9F1B98F44700E3102E /* libCommon-Party.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D9D1B98F44700E3102E /* libCommon-Party.a */; };
+		911F2DA01B98F44700E3102E /* libCommon-Party.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D9D1B98F44700E3102E /* libCommon-Party.a */; };
 		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
 		91279BAE0F9CFCBA007B0D52 /* boescenario.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BAD0F9CFCBA007B0D52 /* boescenario.icns */; };
@@ -610,6 +617,8 @@
 		910BBAD90FB91D2A001E34EA /* dlogutil.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dlogutil.hpp; sourceTree = "<group>"; };
 		910BBADA0FB91D2A001E34EA /* dlogutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlogutil.cpp; sourceTree = "<group>"; };
 		910D9CA31B36439100414B17 /* libboost_thread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_thread.dylib; path = ../../../../../../usr/local/lib/libboost_thread.dylib; sourceTree = "<group>"; };
+		911F2D981B98F43B00E3102E /* libCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCommon.a; path = lib/libCommon.a; sourceTree = "<group>"; };
+		911F2D9D1B98F44700E3102E /* libCommon-Party.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libCommon-Party.a"; path = "lib/libCommon-Party.a"; sourceTree = "<group>"; };
 		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
 		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = undo.cpp; sourceTree = "<group>"; };
 		912287850FD41A2300B21642 /* simpletypes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = simpletypes.hpp; sourceTree = "<group>"; };
@@ -827,6 +836,8 @@
 				917823761B2F334C007F3444 /* ogg.framework in Frameworks */,
 				9178237D1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
 				910D9CA41B36439100414B17 /* libboost_thread.dylib in Frameworks */,
+				911F2D991B98F43B00E3102E /* libCommon.a in Frameworks */,
+				911F2D9E1B98F44700E3102E /* libCommon-Party.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -863,6 +874,8 @@
 				917823771B2F334C007F3444 /* ogg.framework in Frameworks */,
 				9178237E1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
 				910D9CA51B36439100414B17 /* libboost_thread.dylib in Frameworks */,
+				911F2D9A1B98F43C00E3102E /* libCommon.a in Frameworks */,
+				911F2D9F1B98F44700E3102E /* libCommon-Party.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -885,6 +898,7 @@
 				917823781B2F334C007F3444 /* ogg.framework in Frameworks */,
 				9178237F1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
 				910D9CA61B36439100414B17 /* libboost_thread.dylib in Frameworks */,
+				911F2D9B1B98F43C00E3102E /* libCommon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -909,6 +923,8 @@
 				91BC33901B4388E80008882C /* libboost_filesystem.dylib in Frameworks */,
 				91BC33911B4388E80008882C /* libboost_system.dylib in Frameworks */,
 				91BC33921B4388E80008882C /* libboost_thread.dylib in Frameworks */,
+				911F2D9C1B98F43C00E3102E /* libCommon.a in Frameworks */,
+				911F2DA01B98F44700E3102E /* libCommon-Party.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -926,10 +942,7 @@
 				91CC17281B421BD5003D9A69 /* test */,
 				91B3EF220F969CA300BF5B67 /* rsrc */,
 				914B2AA018E7E4A3007B6799 /* Linked Frameworks */,
-				9169C31B1B37A5D50041002B /* Blades of Exile.app */,
-				9169C31D1B37A5D50041002B /* Blades of Exile Character Editor.app */,
-				9169C31F1B37A5D50041002B /* BoE Scenario Editor.app */,
-				91CC172D1B421C0A003D9A69 /* boe_test */,
+				911F2DA11B98F45100E3102E /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -995,6 +1008,19 @@
 			);
 			path = "xml-parser";
 			sourceTree = "<group>";
+		};
+		911F2DA11B98F45100E3102E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				911F2D981B98F43B00E3102E /* libCommon.a */,
+				911F2D9D1B98F44700E3102E /* libCommon-Party.a */,
+				9169C31B1B37A5D50041002B /* Blades of Exile.app */,
+				9169C31D1B37A5D50041002B /* Blades of Exile Character Editor.app */,
+				9169C31F1B37A5D50041002B /* BoE Scenario Editor.app */,
+				91CC172D1B421C0A003D9A69 /* boe_test */,
+			);
+			name = Products;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		91279BAB0F9CFB18007B0D52 /* classes */ = {
 			isa = PBXGroup;
@@ -1973,6 +1999,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib/\"";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1990,7 +2017,6 @@
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
 				);
-				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "-L\"$(BUILD_DIR)/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/\"";
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
@@ -2034,6 +2060,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib/\"";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -2050,7 +2077,6 @@
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
 				);
-				OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1 = "-L\"$(BUILD_DIR)/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/\"";
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
 					"-Wno-long-long",
@@ -2070,6 +2096,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/BoE-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
@@ -2093,6 +2120,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/BoE-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
@@ -2125,8 +2153,7 @@
 		919CC22F1B37721400273FDA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
-				EXECUTABLE_PREFIX = lib;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2139,9 +2166,8 @@
 		919CC2301B37721400273FDA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -2149,8 +2175,7 @@
 		919CC23C1B3772B700273FDA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
-				EXECUTABLE_PREFIX = lib;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2163,9 +2188,8 @@
 		919CC23D1B3772B700273FDA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -2182,6 +2206,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/pcedit/BoECharEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
@@ -2207,6 +2232,7 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/pcedit/BoECharEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
@@ -2232,6 +2258,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/scenedit/BoEScenEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
@@ -2256,6 +2283,7 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/scenedit/BoEScenEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
@@ -2275,6 +2303,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
@@ -2289,6 +2318,7 @@
 		91CC17361B421C0A003D9A69 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
