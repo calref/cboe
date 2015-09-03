@@ -38,16 +38,18 @@ static void in_and_out(string name, map_data& map, bool town) {
 }
 
 static void in_and_out(cScenario& scen, bool town) {
+	map_data map = town ? buildTownMapData(0, scen) : buildOutMapData(loc(0,0), scen);
+	// Reconstruct the scenario, to ensure that it doesn't just pass due to old data still being around
+	scen.~cScenario();
+	new(&scen) cScenario();
+	scen.ter_types.resize(50);
 	if(town) {
-		map_data map = buildTownMapData(0, scen);
 		// Reconstruct the town, to ensure that it doesn't just pass due to old data still being around
-		delete scen.towns[0];
-		scen.towns[0] = new cTinyTown(scen);
+		scen.addTown<cTinyTown>();
 		loadTownMapData(move(map), 0, scen);
 	} else {
-		map_data map = buildOutMapData(loc(0,0), scen);
 		// Reconstruct the sector, to ensure that it doesn't just pass due to old data still being around
-		delete scen.outdoors[0][0];
+		scen.outdoors.resize(1,1);
 		scen.outdoors[0][0] = new cOutdoors(scen);
 		loadOutMapData(move(map), loc(0,0), scen);
 	}
@@ -118,6 +120,56 @@ TEST_CASE("Building map data") {
 				CAPTURE(ter);
 				CHECK(scen.towns[0]->terrain(x, y) == ter);
 			}
+		}
+	}
+	SECTION("With vehicles") {
+		scen.boats[0].property = true;
+		scen.boats[0].loc = {1,1};
+		scen.boats[1].property = false;
+		scen.boats[1].loc = {2,2};
+		scen.horses[0].property = true;
+		scen.horses[0].loc = {3,3};
+		scen.horses[1].property = false;
+		scen.horses[1].loc = {4,4};
+		SECTION("Outdoors") {
+			scen.boats[0].which_town = scen.horses[0].which_town = 200;
+			scen.boats[1].which_town = scen.horses[1].which_town = 200;
+			scen.boats[0].sector = scen.horses[0].sector = {0,0};
+			scen.boats[1].sector = scen.horses[1].sector = {0,0};
+			in_and_out(scen, false);
+			CHECK(scen.boats[0].property);
+			CHECK(scen.boats[0].loc == loc(1,1));
+			CHECK(scen.boats[0].which_town == 200);
+			CHECK(scen.boats[0].sector == loc(0,0));
+			CHECK_FALSE(scen.boats[1].property);
+			CHECK(scen.boats[1].loc == loc(2,2));
+			CHECK(scen.boats[1].which_town == 200);
+			CHECK(scen.boats[1].sector == loc(0,0));
+			CHECK(scen.horses[0].property);
+			CHECK(scen.horses[0].loc == loc(3,3));
+			CHECK(scen.horses[0].which_town == 200);
+			CHECK(scen.horses[0].sector == loc(0,0));
+			CHECK_FALSE(scen.horses[1].property);
+			CHECK(scen.horses[1].loc == loc(4,4));
+			CHECK(scen.horses[1].which_town == 200);
+			CHECK(scen.horses[1].sector == loc(0,0));
+		}
+		SECTION("In town") {
+			scen.boats[0].which_town = scen.horses[0].which_town = 0;
+			scen.boats[1].which_town = scen.horses[1].which_town = 0;
+			in_and_out(scen, true);
+			CHECK(scen.boats[0].property);
+			CHECK(scen.boats[0].loc == loc(1,1));
+			CHECK(scen.boats[0].which_town == 0);
+			CHECK_FALSE(scen.boats[1].property);
+			CHECK(scen.boats[1].loc == loc(2,2));
+			CHECK(scen.boats[1].which_town == 0);
+			CHECK(scen.horses[0].property);
+			CHECK(scen.horses[0].loc == loc(3,3));
+			CHECK(scen.horses[0].which_town == 0);
+			CHECK_FALSE(scen.horses[1].property);
+			CHECK(scen.horses[1].loc == loc(4,4));
+			CHECK(scen.horses[1].which_town == 0);
 		}
 	}
 }

@@ -857,14 +857,14 @@ map_data buildOutMapData(location which, cScenario& scenario) {
 	}
 	for(size_t i = 0; i < scenario.boats.size(); i++) {
 		if(scenario.boats[i].which_town == 200 && scenario.boats[i].sector == which) {
-			int j = i;
+			int j = i + 1;
 			if(scenario.boats[i].property) j *= -1;
-			terrain.addFeature(scenario.boats[i].loc.x, scenario.boats[i].loc.y, eMapFeature::HORSE, j);
+			terrain.addFeature(scenario.boats[i].loc.x, scenario.boats[i].loc.y, eMapFeature::BOAT, j);
 		}
 	}
 	for(size_t i = 0; i < scenario.horses.size(); i++) {
 		if(scenario.horses[i].which_town == 200 && scenario.horses[i].sector == which) {
-			int j = i;
+			int j = i + 1;
 			if(scenario.horses[i].property) j *= -1;
 			terrain.addFeature(scenario.horses[i].loc.x, scenario.horses[i].loc.y, eMapFeature::HORSE, j);
 		}
@@ -905,14 +905,14 @@ map_data buildTownMapData(size_t which, cScenario& scenario) {
 	}
 	for(size_t i = 0; i < scenario.boats.size(); i++) {
 		if(scenario.boats[i].which_town == which) {
-			int j = i;
+			int j = i + 1;
 			if(scenario.boats[i].property) j *= -1;
-			terrain.addFeature(scenario.boats[i].loc.x, scenario.boats[i].loc.y, eMapFeature::HORSE, j);
+			terrain.addFeature(scenario.boats[i].loc.x, scenario.boats[i].loc.y, eMapFeature::BOAT, j);
 		}
 	}
 	for(size_t i = 0; i < scenario.horses.size(); i++) {
 		if(scenario.horses[i].which_town == which) {
-			int j = i;
+			int j = i + 1;
 			if(scenario.horses[i].property) j *= -1;
 			terrain.addFeature(scenario.horses[i].loc.x, scenario.horses[i].loc.y, eMapFeature::HORSE, j);
 		}

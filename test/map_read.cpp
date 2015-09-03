@@ -37,14 +37,14 @@ TEST_CASE("Loading map data from file") {
 	SECTION("With vehicles") {
 		fin.open("files/maps/vehicles.map");
 		map = load_map(fin, true, "vehicles.map");
-		test.emplace_back(make_pair(eMapFeature::HORSE, 1));
+		test.emplace_back(make_pair(eMapFeature::HORSE, 2));
 		CHECK(map.getFeatures(0, 0) == test);
-		test[0].second = -2;
+		test[0].second = -3;
 		CHECK(map.getFeatures(1, 0) == test);
 		test[0].first = eMapFeature::BOAT;
-		test[0].second = 3;
+		test[0].second = 4;
 		CHECK(map.getFeatures(2, 0) == test);
-		test[0].second = -4;
+		test[0].second = -5;
 		CHECK(map.getFeatures(3, 0) == test);
 	}
 }
@@ -85,20 +85,20 @@ TEST_CASE("Interpreting loaded map data") {
 			CHECK_FALSE(scen.horses[1].property);
 			CHECK(scen.horses[1].sector == loc(0,0));
 			CHECK(scen.horses[1].which_town == 200);
-			CHECK(scen.horses[1].loc_in_sec == loc(0,0));
+			CHECK(scen.horses[1].loc == loc(0,0));
 			CHECK(scen.horses[2].property);
 			CHECK(scen.horses[2].sector == loc(0,0));
 			CHECK(scen.horses[2].which_town == 200);
-			CHECK(scen.horses[2].loc_in_sec == loc(1,0));
+			CHECK(scen.horses[2].loc == loc(1,0));
 			REQUIRE(scen.boats.size() >= 5);
 			CHECK_FALSE(scen.boats[3].property);
 			CHECK(scen.boats[3].sector == loc(0,0));
 			CHECK(scen.boats[3].which_town == 200);
-			CHECK(scen.boats[3].loc_in_sec == loc(2,0));
+			CHECK(scen.boats[3].loc == loc(2,0));
 			CHECK(scen.boats[4].property);
 			CHECK(scen.boats[4].sector == loc(0,0));
 			CHECK(scen.boats[4].which_town == 200);
-			CHECK(scen.boats[4].loc_in_sec == loc(3,0));
+			CHECK(scen.boats[4].loc == loc(3,0));
 		}
 		SECTION("In town") {
 			map = load_map(fin, true, "vehicles.map");
