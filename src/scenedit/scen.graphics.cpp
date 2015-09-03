@@ -815,7 +815,6 @@ void draw_terrain(){
 				which_pt.x = cen_x + q - 4;
 				which_pt.y =cen_y + r - 4;
 				
-				// TODO: I'm not quite sure whether these should be testing loc or loc_in_sec
 				if(!editing_town) {
 					for(i = 0; i < scenario.boats.size(); i++) {
 						if(scenario.boats[i].which_town == 200 &&
