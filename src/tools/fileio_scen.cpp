@@ -64,14 +64,14 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header)
 	// Before loading a scenario, we may need to pop scenario resource paths.
 	fs::path graphics_path = ResMgr::popPath<ImageRsrc>();
 	for(auto p : graphics_path) {
-		if(p.string() == "graphics.exd") {
+		if(p.string() == "graphics") {
 			ResMgr::pushPath<ImageRsrc>(graphics_path);
 			break;
 		}
 	}
 	fs::path sounds_path = ResMgr::popPath<SoundRsrc>();
 	for(auto p : sounds_path) {
-		if(p.string() == "sounds.exa") {
+		if(p.string() == "sounds") {
 			ResMgr::pushPath<SoundRsrc>(sounds_path);
 			break;
 		}

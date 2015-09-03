@@ -7,30 +7,32 @@ set VCDir=%~f3
 
 set ResourceDir=%SolutionDir%%Config%\..\..\..\rsrc
 set TargetDir=%SolutionDir%%Config%
-set ScenEdDir=%TargetDir%\"Scenario Editor"
 set DllSrcDir=%VCDir%bin
 @echo on
 
 @echo Copying graphics...
-xcopy %ResourceDir%\graphics.exd %ScenEdDir%\graphics.exd /s /y /i /d
+xcopy %ResourceDir%\graphics\*.png %TargetDir%\data\graphics /s /y /i /d
+
+@echo Copying cursors...
+xcopy %ResourceDir%\cursors\*.gif %TargetDir%\data\cursors /s /y /i /d
 
 @echo Copying sound effects...
-xcopy %ResourceDir%\sounds.exa %ScenEdDir%\sounds.exa /s /y /i /d
+xcopy %ResourceDir%\sounds\*.WAV %TargetDir%\data\sounds /s /y /i /d
 
 @echo Copying dialog definitions...
 xcopy %ResourceDir%\dialogs\*.xml %TargetDir%\data\dialogs /s /y /i /d
 
 @echo Copying fonts...
-xcopy %ResourceDir%\fonts %TargetDir%\data\fonts /s /y /i /d
+xcopy %ResourceDir%\fonts\*.ttf %TargetDir%\data\fonts /s /y /i /d
 
 @echo Copying string lists...
-xcopy %ResourceDir%\strings %TargetDir%\data\strings /s /y /i /d
+xcopy %ResourceDir%\strings\*.txt %TargetDir%\data\strings /s /y /i /d
 
 @echo Copying shaders...
 xcopy %ResourceDir%\..\src\tools\mask.* %TargetDir%\data\shaders /s /y /i /d
 
 @echo Copying base scenarios...
-xcopy %ResourceDir%\"Blades of Exile Bases" %ScenEdDir%\"Blades of Exile Base" /s /y /i /d
+xcopy %ResourceDir%\"Blades of Exile Bases" %TargetDir%\"Blades of Exile Base" /s /y /i /d
 
 @echo Copying scenario files...
 xcopy %ResourceDir%\"Blades of Exile Scenarios"\*.exs %TargetDir%\"Blades of Exile Scenarios" /s /y /i /d

@@ -933,12 +933,13 @@ struct overrides_sheet {
 };
 
 extern std::string scenario_temp_dir_name;
+extern const fs::path scenDir;
 void save_scenario(bool rename) {
 	fs::path toFile = scenario.scen_file;
 	if(rename || toFile.empty()) {
 		fs::path def = scenario.scen_file;
 		if(def.empty())
-			def = progDir/"Blades of Exile Scenarios/myscenario.boes";
+			def = scenDir/"myscenario.boes";
 		toFile = nav_put_scenario(def);
 		if(toFile.empty()) return;
 	}
@@ -1040,7 +1041,7 @@ void save_scenario(bool rename) {
 		if(fs::exists(picPath) && fs::is_directory(picPath)) {
 			// First build a list of overridable sheets
 			std::set<std::string> sheet_names;
-			fs::directory_iterator sheet_iter(progDir/"Scenario Editor"/"graphics.exd"/"mac");
+			fs::directory_iterator sheet_iter(progDir/"data"/"graphics");
 			for(; sheet_iter != fs::directory_iterator(); sheet_iter++) {
 				std::string fname = sheet_iter->path().filename().string();
 				size_t dot = fname.find_last_of('.');

@@ -15,7 +15,7 @@
 #include "cursors.hpp"
 
 bool mac_is_intel;
-fs::path progDir, tempDir;
+fs::path progDir, tempDir, scenDir;
 
 // Cursors included here so that they needn't be unnecessarily duplicated in platform-specific files
 cursor_type current_cursor = sword_curs;
@@ -36,13 +36,12 @@ void init_directories(const char* exec_path) {
 	progDir = progDir.parent_path().parent_path().parent_path();
 #endif
 	progDir = progDir.parent_path();
-	if(progDir.filename() == "Scenario Editor") progDir = progDir.parent_path();
 	// Initialize the resource manager paths
-	ResMgr::pushPath<ImageRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac");
-	ResMgr::pushPath<CursorRsrc>(progDir/"Scenario Editor"/"graphics.exd"/"mac"/"cursors");
+	ResMgr::pushPath<ImageRsrc>(progDir/"data"/"graphics");
+	ResMgr::pushPath<CursorRsrc>(progDir/"data"/"cursors");
 	ResMgr::pushPath<FontRsrc>(progDir/"data"/"fonts");
 	ResMgr::pushPath<StringRsrc>(progDir/"data"/"strings");
-	ResMgr::pushPath<SoundRsrc>(progDir/"Scenario Editor"/"sounds.exa");
+	ResMgr::pushPath<SoundRsrc>(progDir/"data"/"sounds");
 	
 	// We need a location for temporary files, primarily for loading and saving operations
 	// The scenario editor may also use this location as "scratch space"
@@ -57,6 +56,7 @@ void init_directories(const char* exec_path) {
 	tempDir /= ".oboe/blades";
 #endif // __APPLE__
 #endif // _Win32||_Win64
+	scenDir = tempDir/"Scenarios";
 	tempDir /= "Temporary Files";
 	
 	// Depending on the build environment, we may need to redirect stdout and stderr.
