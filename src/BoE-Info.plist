@@ -149,46 +149,6 @@
 			<key>NSPersistentStoreTypeKey</key>
 			<string>XML</string>
 		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>exd</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>boegraphics</string>
-			<key>CFBundleTypeName</key>
-			<string>Blades of Exile Graphics</string>
-			<key>CFBundleTypeRole</key>
-			<string>None</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.spidweb.bladesofexile.graphics</string>
-			</array>
-			<key>LSTypeIsPackage</key>
-			<true/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>exa</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>boesounds</string>
-			<key>CFBundleTypeName</key>
-			<string>Blades of Exile Sounds</string>
-			<key>CFBundleTypeRole</key>
-			<string>None</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.spidweb.bladesofexile.sounds</string>
-			</array>
-			<key>LSTypeIsPackage</key>
-			<true/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
@@ -275,46 +235,6 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>meg</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>com.apple.package</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Blades of Exile Graphics</string>
-			<key>UTTypeIconFile</key>
-			<string>boegraphics</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.spidweb.bladesofexile.graphics</string>
-			<key>UTTypeReferenceURL</key>
-			<string></string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>exd</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>com.apple.package</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Blades of Exile Sounds</string>
-			<key>UTTypeIconFile</key>
-			<string>boesounds</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.spidweb.bladesofexile.sounds</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>exa</string>
 				</array>
 			</dict>
 		</dict>

@@ -14,11 +14,8 @@
 				91A0B15F1900FFDA00EF438F /* Copy Shaders */,
 				912CF3560FE4494C0063B614 /* Copy Scenarios */,
 				91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */,
-				912CF36D0FE44A2A0063B614 /* Copy Sounds and Graphics */,
-				9192C13918F32E6E0088A580 /* Copy Strings */,
-				914701A618F62A52008A6DC9 /* Copy Fonts */,
 				914B2BB718E8BF99007B6799 /* Validate Dialog Definitions */,
-				914B2B9518E8008A007B6799 /* Copy Dialog Definitions */,
+				914B2B9518E8008A007B6799 /* Copy Data Files */,
 				91C2A6E01B823C7B00346948 /* Generate Git Revision Information */,
 			);
 			dependencies = (
@@ -73,6 +70,10 @@
 		911F2D9E1B98F44700E3102E /* libCommon-Party.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D9D1B98F44700E3102E /* libCommon-Party.a */; };
 		911F2D9F1B98F44700E3102E /* libCommon-Party.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D9D1B98F44700E3102E /* libCommon-Party.a */; };
 		911F2DA01B98F44700E3102E /* libCommon-Party.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D9D1B98F44700E3102E /* libCommon-Party.a */; };
+		911F2DA61B98FF5600E3102E /* fonts in Copy Data Files */ = {isa = PBXBuildFile; fileRef = 911F2DA51B98FF2700E3102E /* fonts */; };
+		911F2DA71B98FF5600E3102E /* cursors in Copy Data Files */ = {isa = PBXBuildFile; fileRef = 911F2DA21B98FF2300E3102E /* cursors */; };
+		911F2DA81B98FF5600E3102E /* graphics in Copy Data Files */ = {isa = PBXBuildFile; fileRef = 911F2DA31B98FF2300E3102E /* graphics */; };
+		911F2DA91B98FF5600E3102E /* sounds in Copy Data Files */ = {isa = PBXBuildFile; fileRef = 911F2DA41B98FF2300E3102E /* sounds */; };
 		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
 		91279BAE0F9CFCBA007B0D52 /* boescenario.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BAD0F9CFCBA007B0D52 /* boescenario.icns */; };
@@ -88,8 +89,6 @@
 		912CF3660FE449900063B614 /* zakhazi.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
 		912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 912DFE8E18E2872300B00D75 /* boe.menus.mac.mm */; };
 		913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */ = {isa = PBXBuildFile; fileRef = 913D6C040FC57A8E00E12527 /* boeresources.icns */; };
-		914701A718F62ABF008A6DC9 /* dungeon.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 914701A418F629D4008A6DC9 /* dungeon.ttf */; };
-		914701A818F62AC0008A6DC9 /* maidenword.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 914701A518F629D4008A6DC9 /* maidenword.ttf */; };
 		914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
 		914B2AA418E7E509007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
 		914B2AA518E7E50A007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
@@ -134,8 +133,6 @@
 		917823801B2F33EB007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
 		917823811B2F33F1007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
 		917823821B2F33F5007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
-		9179A4601A42988500FEF872 /* sounds.exa in Copy Sounds and Graphics */ = {isa = PBXBuildFile; fileRef = 9179A45F1A42988200FEF872 /* sounds.exa */; };
-		9179A4611A42988800FEF872 /* graphics.exd in Copy Sounds and Graphics */ = {isa = PBXBuildFile; fileRef = 9179A45E1A42986200FEF872 /* graphics.exd */; };
 		91870F84190C90980081C150 /* scenedit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 914CA49F190C4E9200B6ADD1 /* scenedit.xib */; };
 		919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */; };
 		9192C12018F2745C0088A580 /* game.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9192C11E18F271920088A580 /* game.xib */; };
@@ -251,8 +248,7 @@
 		91BC33981B4481EF0008882C /* scen.fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF20F969BA700BF5B67 /* scen.fileio.cpp */; };
 		91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91BFA3D61901B024001686E4 /* mask.vert */; };
 		91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */; };
-		91C749B81A2D6670008E0E10 /* strings in Copy Strings */ = {isa = PBXBuildFile; fileRef = 91C749B71A2D6432008E0E10 /* strings */; };
-		91C749BA1A2D670D008E0E10 /* dialogs in Copy Dialog Definitions */ = {isa = PBXBuildFile; fileRef = 91C749B91A2D66F7008E0E10 /* dialogs */; };
+		91C749BA1A2D670D008E0E10 /* dialogs in Copy Data Files */ = {isa = PBXBuildFile; fileRef = 91C749B91A2D66F7008E0E10 /* dialogs */; };
 		91C763D91B4C50710086D879 /* enums.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C763D81B4C4BB30086D879 /* enums.cpp */; };
 		91C763DB1B4EE77F0086D879 /* map_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C763DA1B4EE6E00086D879 /* map_read.cpp */; };
 		91C763DD1B4EE7950086D879 /* map_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C763DC1B4EE7950086D879 /* map_write.cpp */; };
@@ -263,8 +259,6 @@
 		91E381461B97673700F69B81 /* town_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E381451B97671E00F69B81 /* town_write.cpp */; };
 		91E381481B97677900F69B81 /* talk_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E381471B97675900F69B81 /* talk_write.cpp */; };
 		91E3814A1B97679800F69B81 /* out_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E381491B97678D00F69B81 /* out_write.cpp */; };
-		91EF052C1904D099001BEF85 /* bold.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 91EF05291904D082001BEF85 /* bold.ttf */; };
-		91EF052D1904D099001BEF85 /* plain.ttf in Copy Fonts */ = {isa = PBXBuildFile; fileRef = 91EF052A1904D082001BEF85 /* plain.ttf */; };
 		91EF27731B693D3900666469 /* ter_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91EF27721B693D3800666469 /* ter_read.cpp */; };
 		91EF27751B693D4800666469 /* ter_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91EF27741B693D4800666469 /* ter_write.cpp */; };
 		91EF27771B693D5500666469 /* item_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91EF27761B693D5500666469 /* item_read.cpp */; };
@@ -406,52 +400,19 @@
 			name = "Copy Scenarios";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		912CF36D0FE44A2A0063B614 /* Copy Sounds and Graphics */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "Scenario Editor";
-			dstSubfolderSpec = 16;
-			files = (
-				9179A4601A42988500FEF872 /* sounds.exa in Copy Sounds and Graphics */,
-				9179A4611A42988800FEF872 /* graphics.exd in Copy Sounds and Graphics */,
-			);
-			name = "Copy Sounds and Graphics";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		914701A618F62A52008A6DC9 /* Copy Fonts */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = data/fonts;
-			dstSubfolderSpec = 16;
-			files = (
-				914701A718F62ABF008A6DC9 /* dungeon.ttf in Copy Fonts */,
-				914701A818F62AC0008A6DC9 /* maidenword.ttf in Copy Fonts */,
-				91EF052C1904D099001BEF85 /* bold.ttf in Copy Fonts */,
-				91EF052D1904D099001BEF85 /* plain.ttf in Copy Fonts */,
-			);
-			name = "Copy Fonts";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		914B2B9518E8008A007B6799 /* Copy Dialog Definitions */ = {
+		914B2B9518E8008A007B6799 /* Copy Data Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = data;
 			dstSubfolderSpec = 16;
 			files = (
-				91C749BA1A2D670D008E0E10 /* dialogs in Copy Dialog Definitions */,
+				91C749BA1A2D670D008E0E10 /* dialogs in Copy Data Files */,
+				911F2DA61B98FF5600E3102E /* fonts in Copy Data Files */,
+				911F2DA71B98FF5600E3102E /* cursors in Copy Data Files */,
+				911F2DA81B98FF5600E3102E /* graphics in Copy Data Files */,
+				911F2DA91B98FF5600E3102E /* sounds in Copy Data Files */,
 			);
-			name = "Copy Dialog Definitions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9192C13918F32E6E0088A580 /* Copy Strings */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = data;
-			dstSubfolderSpec = 16;
-			files = (
-				91C749B81A2D6670008E0E10 /* strings in Copy Strings */,
-			);
-			name = "Copy Strings";
+			name = "Copy Data Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		91A0B15F1900FFDA00EF438F /* Copy Shaders */ = {
@@ -469,7 +430,7 @@
 		91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "Scenario Editor/Blades of Exile Base";
+			dstPath = "Blades of Exile Base";
 			dstSubfolderSpec = 16;
 			files = (
 				91ACCE6418FFB61A00FAEF8B /* bladbase.exs in Copy Base Scenarios */,
@@ -619,6 +580,10 @@
 		910D9CA31B36439100414B17 /* libboost_thread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_thread.dylib; path = ../../../../../../usr/local/lib/libboost_thread.dylib; sourceTree = "<group>"; };
 		911F2D981B98F43B00E3102E /* libCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCommon.a; path = lib/libCommon.a; sourceTree = "<group>"; };
 		911F2D9D1B98F44700E3102E /* libCommon-Party.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libCommon-Party.a"; path = "lib/libCommon-Party.a"; sourceTree = "<group>"; };
+		911F2DA21B98FF2300E3102E /* cursors */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cursors; sourceTree = "<group>"; };
+		911F2DA31B98FF2300E3102E /* graphics */ = {isa = PBXFileReference; lastKnownFileType = folder; path = graphics; sourceTree = "<group>"; };
+		911F2DA41B98FF2300E3102E /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
+		911F2DA51B98FF2700E3102E /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
 		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = undo.cpp; sourceTree = "<group>"; };
 		912287850FD41A2300B21642 /* simpletypes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = simpletypes.hpp; sourceTree = "<group>"; };
@@ -655,8 +620,6 @@
 		914698FB1A7362D900F20F5E /* living.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = living.cpp; sourceTree = "<group>"; };
 		914698FD1A747BED00F20F5E /* creature.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = creature.hpp; sourceTree = "<group>"; };
 		914698FE1A747C4500F20F5E /* creature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creature.cpp; sourceTree = "<group>"; };
-		914701A418F629D4008A6DC9 /* dungeon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = dungeon.ttf; sourceTree = "<group>"; };
-		914701A518F629D4008A6DC9 /* maidenword.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = maidenword.ttf; sourceTree = "<group>"; };
 		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsd; path = schemas/dialog.xsd; sourceTree = "<group>"; };
 		914B2AA118E7E500007B6799 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		914B2AA218E7E500007B6799 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
@@ -678,8 +641,6 @@
 		9178236E1B2F331D007F3444 /* vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbis.framework; path = ../../../../../../Library/Frameworks/vorbis.framework; sourceTree = "<group>"; };
 		917823751B2F334C007F3444 /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = ../../../../../../Library/Frameworks/ogg.framework; sourceTree = "<group>"; };
 		9178237C1B2F33E9007F3444 /* FLAC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FLAC.framework; path = ../../../../../../Library/Frameworks/FLAC.framework; sourceTree = "<group>"; };
-		9179A45E1A42986200FEF872 /* graphics.exd */ = {isa = PBXFileReference; lastKnownFileType = folder; path = graphics.exd; sourceTree = "<group>"; };
-		9179A45F1A42988200FEF872 /* sounds.exa */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds.exa; sourceTree = "<group>"; };
 		9179A4621A47D4E200FEF872 /* vector2d.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vector2d.hpp; sourceTree = "<group>"; };
 		9179A4631A4867E200FEF872 /* stack.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = stack.hpp; sourceTree = "<group>"; };
 		9179A4641A48681800FEF872 /* stack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stack.cpp; sourceTree = "<group>"; };
@@ -792,8 +753,6 @@
 		91E5C7B70F9F619D00C21460 /* talking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talking.cpp; sourceTree = "<group>"; };
 		91EC480E18FBAA8700BB1E86 /* prefs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = prefs.hpp; sourceTree = "<group>"; };
 		91EC481018FBABB100BB1E86 /* prefs.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = prefs.mac.mm; sourceTree = "<group>"; };
-		91EF05291904D082001BEF85 /* bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = bold.ttf; sourceTree = "<group>"; };
-		91EF052A1904D082001BEF85 /* plain.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = plain.ttf; sourceTree = "<group>"; };
 		91EF27721B693D3800666469 /* ter_read.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ter_read.cpp; sourceTree = "<group>"; };
 		91EF27741B693D4800666469 /* ter_write.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ter_write.cpp; sourceTree = "<group>"; };
 		91EF27761B693D5500666469 /* item_read.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item_read.cpp; sourceTree = "<group>"; };
@@ -1143,17 +1102,6 @@
 			name = headers;
 			sourceTree = "<group>";
 		};
-		914701A318F629D4008A6DC9 /* fonts */ = {
-			isa = PBXGroup;
-			children = (
-				91EF05291904D082001BEF85 /* bold.ttf */,
-				914701A418F629D4008A6DC9 /* dungeon.ttf */,
-				914701A518F629D4008A6DC9 /* maidenword.ttf */,
-				91EF052A1904D082001BEF85 /* plain.ttf */,
-			);
-			path = fonts;
-			sourceTree = "<group>";
-		};
 		914B2AA018E7E4A3007B6799 /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1290,9 +1238,10 @@
 				914701A918F64A85008A6DC9 /* dialog.xsd */,
 				91C749B71A2D6432008E0E10 /* strings */,
 				91C749B91A2D66F7008E0E10 /* dialogs */,
-				914701A318F629D4008A6DC9 /* fonts */,
-				9179A45F1A42988200FEF872 /* sounds.exa */,
-				9179A45E1A42986200FEF872 /* graphics.exd */,
+				911F2DA51B98FF2700E3102E /* fonts */,
+				911F2DA21B98FF2300E3102E /* cursors */,
+				911F2DA31B98FF2300E3102E /* graphics */,
+				911F2DA41B98FF2300E3102E /* sounds */,
 				91B3EF250F969CE300BF5B67 /* bladbase.exs */,
 				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
 				914B2BB518E892AA007B6799 /* dialog-converting.txt */,
@@ -2197,7 +2146,6 @@
 		91B3EF1B0F969C2300BF5B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Scenario Editor";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2223,7 +2171,6 @@
 		91B3EF1C0F969C2300BF5B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Scenario Editor";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2249,7 +2196,6 @@
 		91B3EF420F969F0100BF5B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Scenario Editor";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2274,7 +2220,6 @@
 		91B3EF430F969F0100BF5B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Scenario Editor";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (

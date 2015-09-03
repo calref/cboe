@@ -99,8 +99,8 @@ Section "Scenario Editor" Section3
 	; Set Section Files and Shortcuts
 	SetOutPath "$INSTDIR\"
 	File "..\Release\Scen Editor.exe"
-	SetOutPath "$INSTDIR\Scenario Editor\Blades of Exile Base\"
-	File "..\Release\Scenario Editor\Blades of Exile Base\bladbase.exs"
+	SetOutPath "$INSTDIR\Blades of Exile Base\"
+	File "..\Release\Blades of Exile Base\bladbase.exs"
 	SetShellVarContext all
 	CreateShortCut "$SMPROGRAMS\Blades of Exile\Scenario Editor.lnk" "$INSTDIR\Scen Editor.exe"
 
@@ -249,20 +249,17 @@ Section Uninstall
 	Delete "$INSTDIR\openal32.dll"
 	RMDir /r "$INSTDIR\doc"
 	RMDir /r "$INSTDIR\data"
-	RMDir /r "$INSTDIR\Scenario Editor\graphics.exd"
-	RMDir /r "$INSTDIR\Scenario Editor\sounds.exa"
 
 	; Clean up Character Editor
 	Delete "$INSTDIR\Char Editor.exe"
 
 	; Clean up Scenario Editor
 	Delete "$INSTDIR\Scen Editor.exe"
-	Delete "$INSTDIR\Scenario Editor\Blades of Exile Base\bladbase.exs"
+	Delete "$INSTDIR\Blades of Exile Base\bladbase.exs"
 
 	; Remove remaining directories
 	RMDir "$INSTDIR\Blades of Exile Scenarios\"
-	RMDir "$INSTDIR\Scenario Editor\Blades of Exile Base\"
-	RMDir "$INSTDIR\Scenario Editor\"
+	RMDir "$INSTDIR\Blades of Exile Base\"
 	RMDir "$INSTDIR\"
 
 	; Delete Shortcuts

@@ -62,6 +62,6 @@ void remove_party_from_scen() {
 }
 
 void load_base_item_defs(){
-	fs::path basePath = progDir/"Scenario Editor"/"Blades of Exile Base"/"bladbase.exs";
+	fs::path basePath = progDir/"Blades of Exile Base"/"bladbase.exs";
 	scen_items_loaded = load_scenario(basePath, univ.scenario);
 }

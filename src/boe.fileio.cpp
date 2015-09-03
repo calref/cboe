@@ -460,9 +460,15 @@ void start_data_dump() {
 	}
 }
 
+extern const fs::path scenDir;
 fs::path locate_scenario(std::string scen_name) {
+	fs::create_directories(scenDir);
 	std::transform(scen_name.begin(), scen_name.end(), scen_name.begin(), tolower);
-	fs::path scenDir = progDir/"Blades of Exile Scenarios", scenPath;
+	size_t dot = scen_name.find_first_of('.');
+	std::string base_name = scen_name.substr(0,dot);
+	if(base_name == "valleydy" || base_name == "stealth" || base_name == "zakhazi"/* || base_name == "busywork" */)
+		return progDir/"Blades of Exile Scenarios"/scen_name;
+	fs::path scenPath;
 	for(fs::recursive_directory_iterator iter(scenDir); iter != fs::recursive_directory_iterator(); iter++) {
 		fs::file_status stat = iter->status();
 		std::string fname = iter->path().filename().string().c_str();
@@ -494,8 +500,7 @@ fs::path locate_scenario(std::string scen_name) {
 }
 
 void build_scen_headers() {
-	fs::path scenDir = progDir;
-	scenDir /= "Blades of Exile Scenarios";
+	fs::create_directories(scenDir);
 	std::cout << progDir << '\n' << scenDir << std::endl;
 	scen_headers.clear();
 	fs::recursive_directory_iterator iter(scenDir);

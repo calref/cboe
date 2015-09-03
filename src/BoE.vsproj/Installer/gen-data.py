@@ -17,9 +17,9 @@ files = {
 	'data/strings': '*.txt',
 	'data/fonts': '*.ttf',
 	'data/shaders': ['mask.frag', 'mask.vert'],
-	'Scenario Editor/graphics.exd/mac': '*.png',
-	'Scenario Editor/graphics.exd/mac/cursors': '*.gif',
-	'Scenario Editor/sounds.exa': '*.WAV',
+	'data/graphics': '*.png',
+	'data/cursors': '*.gif',
+	'data/sounds': '*.WAV',
 }
 
 for path, pattern in files.items():
