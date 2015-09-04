@@ -1,0 +1,33 @@
+<terrains boes="2.0.0">
+	<terrain id='0'>
+		<name>Test Terrain</name>
+		<pic>0</pic>
+		<map>0</map>
+		<blockage>move</blockage>
+		<transform>10</transform>
+		<fly>true</fly>
+		<boat>true</boat>
+		<ride>false</ride>
+		<archetype>true</archetype>
+		<light>3</light>
+		<step-sound>splash</step-sound>
+		<ground>2</ground>
+		<trim>none</trim>
+		<trim-for>1</trim-for>
+		<arena>0</arena>
+		<special>
+			<type>dmg</type>
+			<flag>4</flag>
+			<flag>6</flag>
+			<flag>3</flag>
+		</special>
+		<editor>
+			<shortcut>u</shortcut>
+			<object>
+				<num>1</num>
+				<pos x='0' y='0'/>
+				<size x='2' y='1'/>
+			</object>
+		</editor>
+	</terrain>
+</terrains>

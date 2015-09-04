@@ -1,0 +1,9 @@
+<terrains boes="2.0.0">
+	<terrain id='0'>
+		<editor>
+			<object>
+				<number>1</number>
+			</object>
+		</editor>
+	</terrain>
+</terrains>

@@ -89,6 +89,21 @@ TEST_CASE("Loading a terrain type definition") {
 		doc = xmlDocFromStream(fin, "bad_abil_tag.xml");
 		REQUIRE_THROWS_AS(readTerrainFromXml(move(doc), scen), xBadNode);
 	}
+	SECTION("With an incomplete object definition") {
+		fin.open("files/terrain/object_missing.xml");
+		doc = xmlDocFromStream(fin, "object_missing.xml");
+		REQUIRE_THROWS_AS(readTerrainFromXml(move(doc), scen), xMissingElem);
+	}
+	SECTION("With an invalid object definition") {
+		fin.open("files/terrain/object_bad.xml");
+		doc = xmlDocFromStream(fin, "object_bad.xml");
+		REQUIRE_THROWS_AS(readTerrainFromXml(move(doc), scen), xBadNode);
+	}
+	SECTION("With an invalid editor subtag") {
+		fin.open("files/terrain/bad_editor.xml");
+		doc = xmlDocFromStream(fin, "bad_editor.xml");
+		REQUIRE_THROWS_AS(readTerrainFromXml(move(doc), scen), xBadNode);
+	}
 	SECTION("With the minimal required data") {
 		fin.open("files/terrain/minimal.xml");
 		doc = xmlDocFromStream(fin, "minimal.xml");
@@ -99,7 +114,35 @@ TEST_CASE("Loading a terrain type definition") {
 		CHECK(scen.ter_types[0].map_pic == 0);
 		CHECK(scen.ter_types[0].combat_arena == 0);
 		CHECK(scen.ter_types[0].blockage == eTerObstruct::BLOCK_MOVE);
+		CHECK(scen.ter_types[0].ground_type == 0);
 		CHECK(scen.ter_types[0].trim_type == eTrimType::NONE);
 		CHECK(scen.ter_types[0].special == eTerSpec::NONE);
+		CHECK(scen.ter_types[0].step_sound == eStepSnd::STEP);
+		CHECK_FALSE(scen.ter_types[0].fly_over);
+		CHECK_FALSE(scen.ter_types[0].boat_over);
+		CHECK_FALSE(scen.ter_types[0].block_horse);
+		CHECK_FALSE(scen.ter_types[0].is_archetype);
+	}
+	SECTION("With all possible data") {
+		fin.open("files/terrain/full.xml");
+		doc = xmlDocFromStream(fin, "full.xml");
+		REQUIRE_NOTHROW(readTerrainFromXml(move(doc), scen));
+		CHECK(scen.ter_types[0].special == eTerSpec::DAMAGING);
+		CHECK(scen.ter_types[0].flag1 == 4);
+		CHECK(scen.ter_types[0].flag2 == 6);
+		CHECK(scen.ter_types[0].flag3 == 3);
+		CHECK(scen.ter_types[0].trans_to_what == 10);
+		CHECK(scen.ter_types[0].fly_over);
+		CHECK(scen.ter_types[0].boat_over);
+		CHECK(scen.ter_types[0].block_horse);
+		CHECK(scen.ter_types[0].is_archetype);
+		CHECK(scen.ter_types[0].light_radius == 3);
+		CHECK(scen.ter_types[0].step_sound == eStepSnd::SPLASH);
+		CHECK(scen.ter_types[0].ground_type == 2);
+		CHECK(scen.ter_types[0].trim_ter == 1);
+		CHECK(scen.ter_types[0].shortcut_key == 'u');
+		CHECK(scen.ter_types[0].obj_num == 1);
+		CHECK(scen.ter_types[0].obj_pos == loc(0,0));
+		CHECK(scen.ter_types[0].obj_size == loc(2,1));
 	}
 }
