@@ -1902,11 +1902,8 @@ void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 				bool is_boat = false;
 				cVehicle* what;
 				switch(feat.first) {
-						// Special values
-					case eMapFeature::NONE:
-						break;
-						// Outdoor-only features
-					case eMapFeature::TOWN: break;
+					case eMapFeature::NONE: break; // Special value
+					case eMapFeature::TOWN: break; // Outdoor-only feature
 					case eMapFeature::SPECIAL_NODE:
 						town.special_locs.push_back({x, y, feat.second});
 						break;

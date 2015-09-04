@@ -19,9 +19,11 @@ map_data load_map(std::istream& fin, bool isTown, std::string name) {
 	map_data data;
 	data.file = name;
 	int row = 0;
-	while(!fin.eof()) {
+	while(fin) {
 		std::string line;
 		getline(fin, line);
+		if(line.empty() && !fin.eof())
+			continue;
 		int n = 0, col = 0;
 		eMapFeature curFeature = eMapFeature::NONE;
 		// vehicle_owned = true means the party owns it

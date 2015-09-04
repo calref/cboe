@@ -61,6 +61,7 @@ public:
 		
 		void append(legacy::preset_field_type old);
 		cField() : type(FIELD_DISPEL) {}
+		cField(location l, eFieldType t) : loc(l), type(t) {}
 	};
 	short town_chop_time,town_chop_key;
 	int bg_town, bg_fight;

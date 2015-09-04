@@ -91,6 +91,60 @@ TEST_CASE("Saving map data to file") {
 		test[0].second = -4;
 		CHECK(map.getFeatures(3, 3) == test);
 	}
+	SECTION("With fields") {
+		map.addFeature(0, 0, eMapFeature::FIELD, FIELD_WEB);
+		map.addFeature(1, 1, eMapFeature::FIELD, SPECIAL_SPOT);
+		map.addFeature(2, 2, eMapFeature::FIELD, BARRIER_CAGE);
+		map.addFeature(3, 3, eMapFeature::FIELD, OBJECT_BLOCK);
+		in_and_out("fields", map, true);
+		test.emplace_back(make_pair(eMapFeature::FIELD, FIELD_WEB));
+		CHECK(map.getFeatures(0, 0) == test);
+		test[0].second = SPECIAL_SPOT;
+		CHECK(map.getFeatures(1, 1) == test);
+		test[0].second = BARRIER_CAGE;
+		CHECK(map.getFeatures(2, 2) == test);
+		test[0].second = OBJECT_BLOCK;
+		CHECK(map.getFeatures(3, 3) == test);
+	}
+	SECTION("With town entrance") {
+		map.addFeature(0, 0, eMapFeature::TOWN, 4);
+		in_and_out("town entry loc", map, false);
+		test.emplace_back(make_pair(eMapFeature::TOWN, 4));
+		CHECK(map.getFeatures(0, 0) == test);
+	}
+	SECTION("With town start points") {
+		map.addFeature(0, 0, eMapFeature::ENTRANCE_EAST);
+		map.addFeature(1, 1, eMapFeature::ENTRANCE_NORTH);
+		map.addFeature(2, 2, eMapFeature::ENTRANCE_SOUTH);
+		map.addFeature(3, 3, eMapFeature::ENTRANCE_WEST);
+		in_and_out("town start loc", map, true);
+		test.emplace_back(make_pair(eMapFeature::ENTRANCE_EAST, 0));
+		CHECK(map.getFeatures(0, 0) == test);
+		test[0].first = eMapFeature::ENTRANCE_NORTH;
+		CHECK(map.getFeatures(1, 1) == test);
+		test[0].first = eMapFeature::ENTRANCE_SOUTH;
+		CHECK(map.getFeatures(2, 2) == test);
+		test[0].first = eMapFeature::ENTRANCE_WEST;
+		CHECK(map.getFeatures(3, 3) == test);
+	}
+	SECTION("With misc features") {
+		map.addFeature(0, 0, eMapFeature::SIGN);
+		map.addFeature(1, 1, eMapFeature::ITEM);
+		map.addFeature(2, 2, eMapFeature::CREATURE);
+		map.addFeature(3, 3, eMapFeature::SPECIAL_NODE);
+		map.addFeature(4, 4, eMapFeature::WANDERING);
+		in_and_out("misc", map, true);
+		test.emplace_back(make_pair(eMapFeature::SIGN, 0));
+		CHECK(map.getFeatures(0, 0) == test);
+		test[0].first = eMapFeature::ITEM;
+		CHECK(map.getFeatures(1, 1) == test);
+		test[0].first = eMapFeature::CREATURE;
+		CHECK(map.getFeatures(2, 2) == test);
+		test[0].first = eMapFeature::SPECIAL_NODE;
+		CHECK(map.getFeatures(3, 3) == test);
+		test[0].first = eMapFeature::WANDERING;
+		CHECK(map.getFeatures(4, 4) == test);
+	}
 }
 
 TEST_CASE("Building map data") {
@@ -171,5 +225,92 @@ TEST_CASE("Building map data") {
 			CHECK(scen.horses[1].loc == loc(4,4));
 			CHECK(scen.horses[1].which_town == 0);
 		}
+	}
+	SECTION("With fields") {
+		scen.towns[0]->preset_fields.emplace_back(loc(0,0), FIELD_WEB);
+		scen.towns[0]->preset_fields.emplace_back(loc(1,1), OBJECT_BLOCK);
+		scen.towns[0]->preset_fields.emplace_back(loc(2,2), BARRIER_CAGE);
+		scen.towns[0]->preset_fields.emplace_back(loc(3,3), SPECIAL_SPOT);
+		in_and_out(scen, true);
+		REQUIRE(scen.towns[0]->preset_fields.size() == 4);
+		static const std::map<eFieldType, location> check = {
+			{OBJECT_BLOCK, {1,1}}, {SPECIAL_SPOT, {3,3}}, {FIELD_WEB, {0,0}}, {BARRIER_CAGE, {2,2}},
+		};
+		set<eFieldType> found;
+		for(const auto& fld : scen.towns[0]->preset_fields) {
+			if(found.count(fld.type))
+				FAIL("Error: Two fields of the same type found!");
+			found.insert(fld.type);
+			CAPTURE(fld.type);
+			CAPTURE(fld.loc);
+			CAPTURE(check.at(fld.type));
+			CHECK(fld.loc == check.at(fld.type));
+		}
+		if(found.size() != check.size())
+			FAIL("Error: A field is missing!");
+	}
+	SECTION("With town entrance") {
+		scen.outdoors[0][0]->city_locs.emplace_back(5, 6, 7);
+		in_and_out(scen, false);
+		REQUIRE(scen.outdoors[0][0]->city_locs.size() == 1);
+		CHECK(scen.outdoors[0][0]->city_locs[0] == loc(5,6));
+		CHECK(scen.outdoors[0][0]->city_locs[0].spec == 7);
+	}
+	SECTION("With town entry points") {
+		int i = 0;
+		for(auto& start : scen.towns[0]->start_locs) {
+			start.x = i++;
+			start.y = i++;
+		}
+		in_and_out(scen, true);
+		i = 0;
+		for(const auto& start : scen.towns[0]->start_locs) {
+			CAPTURE(i);
+			CHECK(start == loc(i, i+1));
+			i += 2;
+		}
+	}
+	SECTION("With placed special node") {
+		scen.towns[0]->special_locs.emplace_back(12, 13, 14);
+		in_and_out(scen, true);
+		REQUIRE(scen.towns[0]->special_locs.size() == 1);
+		CHECK(scen.towns[0]->special_locs[0] == loc(12,13));
+		CHECK(scen.towns[0]->special_locs[0].spec == 14);
+	}
+	SECTION("With wandering arrival points") {
+		int i = 0;
+		for(auto& start : scen.towns[0]->wandering_locs) {
+			start.x = i++;
+			start.y = i++;
+		}
+		in_and_out(scen, true);
+		i = 0;
+		for(const auto& start : scen.towns[0]->wandering_locs) {
+			CAPTURE(i);
+			CHECK(start == loc(i, i+1));
+			i += 2;
+		}
+	}
+	SECTION("With placed item") {
+		scen.towns[0]->preset_items.emplace_back();
+		scen.towns[0]->preset_items[0].loc = {22,12};
+		scen.towns[0]->preset_items[0].code = 1;
+		map_data map = buildTownMapData(0, scen);
+		std::vector<std::pair<eMapFeature,int>> test = {{eMapFeature::ITEM, 0}};
+		CHECK(map.getFeatures(22, 12) == test);
+	}
+	SECTION("With placed creature") {
+		scen.towns[0]->creatures.emplace_back();
+		scen.towns[0]->creatures[0].start_loc = {9,18};
+		scen.towns[0]->creatures[0].number = 1;
+		map_data map = buildTownMapData(0, scen);
+		std::vector<std::pair<eMapFeature,int>> test = {{eMapFeature::CREATURE, 0}};
+		CHECK(map.getFeatures(9, 18) == test);
+	}
+	SECTION("With a sign") {
+		scen.towns[0]->sign_locs.emplace_back(7,11," ");
+		map_data map = buildTownMapData(0, scen);
+		std::vector<std::pair<eMapFeature,int>> test = {{eMapFeature::SIGN, 0}};
+		CHECK(map.getFeatures(7, 11) == test);
 	}
 }
