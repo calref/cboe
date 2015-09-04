@@ -59,4 +59,40 @@ TEST_CASE("Saving terrain types") {
 		CHECK(scen.ter_types[0].flag1 == -1);
 		CHECK(scen.ter_types[0].step_sound == eStepSnd::STEP);
 	}
+	SECTION("With all information") {
+		scen.ter_types[0].flag1 = 1;
+		scen.ter_types[0].flag2 = 2;
+		scen.ter_types[0].flag3 = 3;
+		scen.ter_types[0].trans_to_what = 100;
+		scen.ter_types[0].fly_over = true;
+		scen.ter_types[0].boat_over = true;
+		scen.ter_types[0].block_horse = true;
+		scen.ter_types[0].is_archetype = true;
+		scen.ter_types[0].light_radius = 3;
+		scen.ter_types[0].step_sound = eStepSnd::SPLASH;
+		scen.ter_types[0].ground_type = 2;
+		scen.ter_types[0].trim_ter = 1;
+		scen.ter_types[0].shortcut_key = 'u';
+		scen.ter_types[0].obj_num = 1;
+		scen.ter_types[0].obj_pos = loc(0,0);
+		scen.ter_types[0].obj_size = loc(2,1);
+		in_and_out("basic", scen);
+		REQUIRE(scen.ter_types.size() == 1);
+		CHECK(scen.ter_types[0].flag1 == 1);
+		CHECK(scen.ter_types[0].flag2 == 2);
+		CHECK(scen.ter_types[0].flag3 == 3);
+		CHECK(scen.ter_types[0].trans_to_what == 100);
+		CHECK(scen.ter_types[0].fly_over);
+		CHECK(scen.ter_types[0].boat_over);
+		CHECK(scen.ter_types[0].block_horse);
+		CHECK(scen.ter_types[0].is_archetype);
+		CHECK(scen.ter_types[0].light_radius == 3);
+		CHECK(scen.ter_types[0].step_sound == eStepSnd::SPLASH);
+		CHECK(scen.ter_types[0].ground_type == 2);
+		CHECK(scen.ter_types[0].trim_ter == 1);
+		CHECK(scen.ter_types[0].shortcut_key == 'u');
+		CHECK(scen.ter_types[0].obj_num == 1);
+		CHECK(scen.ter_types[0].obj_pos == loc(0,0));
+		CHECK(scen.ter_types[0].obj_size == loc(2,1));
+	}
 }
