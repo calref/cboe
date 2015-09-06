@@ -68,7 +68,7 @@ cScenario::cScenario() {
 	default_ground = 2;
 	where_start.x = 24;
 	where_start.y = 24;
-	out_start = where_start;
+	out_start = where_start = loc(24,24);
 	rating = eContentRating::G;
 	difficulty = 0;
 	intro_pic = intro_mess_pic = 0;
