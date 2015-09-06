@@ -74,6 +74,7 @@
 		911F2DA71B98FF5600E3102E /* cursors in Copy Data Files */ = {isa = PBXBuildFile; fileRef = 911F2DA21B98FF2300E3102E /* cursors */; };
 		911F2DA81B98FF5600E3102E /* graphics in Copy Data Files */ = {isa = PBXBuildFile; fileRef = 911F2DA31B98FF2300E3102E /* graphics */; };
 		911F2DA91B98FF5600E3102E /* sounds in Copy Data Files */ = {isa = PBXBuildFile; fileRef = 911F2DA41B98FF2300E3102E /* sounds */; };
+		911F2DAA1B9AA9BC00E3102E /* strings in Copy Data Files */ = {isa = PBXBuildFile; fileRef = 91C749B71A2D6432008E0E10 /* strings */; };
 		9127903E0F9B7F49007B0D52 /* boe.actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04ACF0BF51923006C0831 /* boe.actions.cpp */; };
 		9127903F0F9B7F50007B0D52 /* boe.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AD30BF51923006C0831 /* boe.graphics.cpp */; };
 		91279BAE0F9CFCBA007B0D52 /* boescenario.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BAD0F9CFCBA007B0D52 /* boescenario.icns */; };
@@ -409,6 +410,7 @@
 				91C749BA1A2D670D008E0E10 /* dialogs in Copy Data Files */,
 				911F2DA61B98FF5600E3102E /* fonts in Copy Data Files */,
 				911F2DA71B98FF5600E3102E /* cursors in Copy Data Files */,
+				911F2DAA1B9AA9BC00E3102E /* strings in Copy Data Files */,
 				911F2DA81B98FF5600E3102E /* graphics in Copy Data Files */,
 				911F2DA91B98FF5600E3102E /* sounds in Copy Data Files */,
 			);

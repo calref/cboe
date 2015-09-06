@@ -530,6 +530,23 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 	return true;
 }
 
+static bool play_ter_step_sound(cDialog& me, std::string id, bool losing) {
+	if(losing) return true;
+	std::string clicked = dynamic_cast<cLedGroup&>(me[id]).getSelected();
+	if(clicked == "step") {
+		play_sound(49);
+		sf::sleep(sf::milliseconds(200));
+		play_sound(50);
+	} else if(clicked == "squish") {
+		play_sound(55);
+	} else if(clicked == "crunch") {
+		play_sound(47);
+	} else if(clicked == "splash") {
+		play_sound(17);
+	}
+	return true;
+}
+
 bool edit_ter_type(ter_num_t which) {
 	using namespace std::placeholders;
 	ter_num_t first = which;
@@ -553,6 +570,7 @@ bool edit_ter_type(ter_num_t which) {
 	ter_dlg["picktrim"].attachClickHandler(std::bind(pick_string,"trim-names", _1, "trim", ""));
 	ter_dlg["pickarena"].attachClickHandler(std::bind(pick_string,"arena-names", _1, "arena", ""));
 	ter_dlg["help"].attachClickHandler(std::bind(show_help, "ter-type-help", _1, 16));
+	ter_dlg["sound"].attachFocusHandler(play_ter_step_sound);
 	ter_dlg.attachClickHandlers(pick_ter_flag, {"pickflag1", "pickflag2", "pickflag3", "editspec", "picktrans"});
 	ter_dlg["picktown"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
 		int i = me["arena"].getTextAsNum();
