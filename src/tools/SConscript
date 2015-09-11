@@ -1,0 +1,35 @@
+
+Import("env platform")
+
+tools = Split("""
+	fileio_scen.cpp
+	fileio.cpp
+	graphtool.cpp
+	map_parse.cpp
+	mathutil.cpp
+	porting.cpp
+	soundtool.cpp
+	specials_parse.cpp
+	tarball.cpp
+	undo.cpp
+	gzstream/gzstream.cpp
+""")
+
+if str(platform) == "darwin":
+	tools.extend(Split("""
+		cursors.mac.mm
+		prefs.mac.mm
+		qdpict.cpp
+		winutil.mac.mm
+	"""))
+elif str(platform) == "windows":
+	tools.extend(Split("""
+		cursors.win.cpp
+		menu_accel.win.cpp
+		prefs.win.cpp
+		winutil.win.cpp
+	"""))
+
+tools_obj = env.StaticLibrary("#build/lib/tools", tools)
+
+Return("tools_obj")

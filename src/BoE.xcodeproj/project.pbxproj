@@ -636,7 +636,7 @@
 		915E09071A316D6A008BDF00 /* map_parse.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = map_parse.hpp; sourceTree = "<group>"; };
 		915E09081A316D89008BDF00 /* map_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = map_parse.cpp; sourceTree = "<group>"; };
 		9169C31B1B37A5D50041002B /* Blades of Exile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9169C31D1B37A5D50041002B /* Blades of Exile Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9169C31D1B37A5D50041002B /* BoE Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9169C31F1B37A5D50041002B /* BoE Scenario Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Scenario Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9178235C1B2EA0C5007F3444 /* vorbisenc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbisenc.framework; path = ../../../../../../Library/Frameworks/vorbisenc.framework; sourceTree = "<group>"; };
 		917823671B2F32DD007F3444 /* vorbisfile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbisfile.framework; path = ../../../../../../Library/Frameworks/vorbisfile.framework; sourceTree = "<group>"; };
@@ -976,7 +976,7 @@
 				911F2D981B98F43B00E3102E /* libCommon.a */,
 				911F2D9D1B98F44700E3102E /* libCommon-Party.a */,
 				9169C31B1B37A5D50041002B /* Blades of Exile.app */,
-				9169C31D1B37A5D50041002B /* Blades of Exile Character Editor.app */,
+				9169C31D1B37A5D50041002B /* BoE Character Editor.app */,
 				9169C31F1B37A5D50041002B /* BoE Scenario Editor.app */,
 				91CC172D1B421C0A003D9A69 /* boe_test */,
 			);
@@ -1506,7 +1506,7 @@
 			);
 			name = "Blades of Exile Character Editor";
 			productName = "Blades of Exile Character Editor";
-			productReference = 9169C31D1B37A5D50041002B /* Blades of Exile Character Editor.app */;
+			productReference = 9169C31D1B37A5D50041002B /* BoE Character Editor.app */;
 			productType = "com.apple.product-type.application";
 		};
 		91B3EF3E0F969F0000BF5B67 /* BoE Scenario Editor */ = {
@@ -2165,7 +2165,7 @@
 					"-lCommon",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "-L\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/\"";
-				PRODUCT_NAME = "Blades of Exile Character Editor";
+				PRODUCT_NAME = "BoE Character Editor";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2190,7 +2190,7 @@
 					"-lCommon",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "-L\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/\"";
-				PRODUCT_NAME = "Blades of Exile Character Editor";
+				PRODUCT_NAME = "BoE Character Editor";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

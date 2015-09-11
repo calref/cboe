@@ -1,0 +1,8 @@
+
+Import("env platform party_classes common_sources")
+
+test_sources = Glob("""*.cpp""") + Split("""
+	#src/scenedit/scen.fileio.cpp
+""")
+
+test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources)
