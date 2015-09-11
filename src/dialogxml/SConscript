@@ -1,0 +1,6 @@
+
+Import("env")
+
+dlog_util = env.StaticLibrary("#build/lib/dlogutil", Glob("*.cpp") + Glob("xml-parser/*.cpp"))
+
+Return("dlog_util")

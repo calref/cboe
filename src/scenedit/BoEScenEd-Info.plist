@@ -33,7 +33,7 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
+	<string>BoE Scenario Editor</string>
 	<key>CFBundleIconFile</key>
 	<string>BoEScenEd</string>
 	<key>CFBundleIdentifier</key>

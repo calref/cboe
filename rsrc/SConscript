@@ -1,0 +1,20 @@
+
+import os.path as path
+
+Import("env data_dir install_dir")
+
+# Data
+
+env.Install(data_dir, Dir("cursors"))
+env.Install(data_dir, Dir("dialogs"))
+env.Install(data_dir, Dir("fonts"))
+env.Install(data_dir, Dir("graphics"))
+env.Install(data_dir, Dir("sounds"))
+env.Install(data_dir, Dir("strings"))
+
+env.Install(path.join(data_dir, "shaders"), Glob("#src/tools/mask.*"))
+
+# Scenarios
+
+env.Install(path.join(install_dir, "Blades of Exile Scenarios"), Glob("Blades of Exile Scenarios/*.exs") + Glob("Blades of Exile Scenarios/*.meg"))
+env.Install(path.join(install_dir, "Blades of Exile Base"), Glob("Blades of Exile Bases/*.exs"))

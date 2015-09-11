@@ -1,0 +1,6 @@
+
+import os.path as path
+
+Import("env install_dir")
+
+env.Install(path.join(install_dir, "docs"), [Dir('editor'), Dir('game'), Dir('img')])

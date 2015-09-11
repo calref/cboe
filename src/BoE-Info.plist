@@ -151,7 +151,7 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
+	<string>Blades of Exile</string>
 	<key>CFBundleIconFile</key>
 	<string>BoE</string>
 	<key>CFBundleIdentifier</key>

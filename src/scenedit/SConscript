@@ -1,0 +1,37 @@
+
+Import("env platform common_sources install_dir")
+
+scened_sources = Split("""
+	scen.actions.cpp
+	scen.btnmg.cpp
+	scen.core.cpp
+	scen.fileio.cpp
+	scen.graphics.cpp
+	scen.keydlgs.cpp
+	scen.main.cpp
+	scen.townout.cpp
+""")
+
+if str(platform) == "darwin":
+	scened_sources.extend(Split("""
+		scen.appleevents.mm
+		scen.menus.mac.mm
+	"""))
+elif str(platform) == "windows":
+	scened_sources.extend(Split("""
+		scen.menus.win.cpp
+	"""))
+
+scened = env.Program("#build/bin/BoE Scenario Editor", common_sources + scened_sources)
+
+if str(platform) == "darwin":
+	scened_info = {
+		'nib': '#rsrc/menus/scenedit',
+		'plist': 'BoEScenEd-Info.plist',
+		'creator': 'BlEd',
+		'icons': 'boescenario BoEScenEd',
+	}
+elif str(platform) == "windows":
+	pass
+
+env.Package(scened, install_dir, scened_info)

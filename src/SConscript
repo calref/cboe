@@ -1,0 +1,50 @@
+
+Import("env platform common_sources party_classes install_dir")
+
+game_sources = Split("""
+	boe.actions.cpp
+	boe.combat.cpp
+	boe.dlgutil.cpp
+	boe.fileio.cpp
+	boe.graphics.cpp
+	boe.graphutil.cpp
+	boe.infodlg.cpp
+	boe.itemdata.cpp
+	boe.items.cpp
+	boe.locutils.cpp
+	boe.main.cpp
+	boe.monster.cpp
+	boe.newgraph.cpp
+	boe.party.cpp
+	boe.specials.cpp
+	boe.startup.cpp
+	boe.text.cpp
+	boe.town.cpp
+	boe.townspec.cpp
+	pcedit/pc.editors.cpp
+	tools/fileio_party.cpp
+""")
+
+if str(platform) == "darwin":
+	game_sources.extend(Split("""
+		boe.appleevents.mm
+		boe.menus.mac.mm
+	"""))
+elif str(platform) == "windows":
+	game_sources.extend(Split("""
+		boe.menus.win.cpp
+	"""))
+
+boe = env.Program("#build/bin/Blades of Exile", common_sources + party_classes + game_sources)
+
+if str(platform) == "darwin":
+	boe_info = {
+		'nib': '#rsrc/menus/game',
+		'plist': 'BoE-Info.plist',
+		'creator': 'blx!',
+		'icons': 'BoE boegraphics boeresources boesave boesounds',
+	}
+elif str(platform) == "windows":
+	pass
+
+env.Package(boe, install_dir, boe_info)

@@ -1,0 +1,35 @@
+
+Import("env platform common_sources party_classes install_dir")
+
+pced_sources = Split("""
+	pc.action.cpp
+	pc.editors.cpp
+	pc.fileio.cpp
+	pc.graphics.cpp
+	pc.main.cpp
+	../tools/fileio_party.cpp
+""")
+
+if str(platform) == "darwin":
+	pced_sources.extend(Split("""
+		pc.appleevents.mm
+		pc.menus.mac.mm
+	"""))
+elif str(platform) == "windows":
+	pced_sources.extend(Split("""
+		pc.menus.win.cpp
+	"""))
+
+pced = env.Program("#build/bin/BoE Character Editor", common_sources + party_classes + pced_sources)
+
+if str(platform) == "darwin":
+	pced_info = {
+		'nib': '#rsrc/menus/pcedit',
+		'plist': 'BoECharEd-Info.plist',
+		'creator': 'blxe',
+		'icons': 'BoECharEd',
+	}
+elif str(platform) == "windows":
+	pass
+
+env.Package(pced, install_dir, pced_info)
