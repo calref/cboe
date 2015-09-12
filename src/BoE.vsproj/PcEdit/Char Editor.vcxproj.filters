@@ -53,7 +53,7 @@
     <ClInclude Include="..\..\pcedit\pc.menus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pcresource.h">
+    <ClInclude Include="..\..\..\rsrc\menus\pcresource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -63,7 +63,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Char Editor.rc">
+    <ResourceCompile Include="..\..\..\rsrc\menus\CharEditor.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

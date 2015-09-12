@@ -196,7 +196,6 @@
     <ClInclude Include="..\..\tools\gzstream\gzstream.h">
       <Filter>Tools\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\targetver.h" />
     <ClInclude Include="..\..\oldstructs.hpp">
       <Filter>Classes</Filter>
     </ClInclude>
