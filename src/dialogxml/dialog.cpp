@@ -8,7 +8,6 @@
 
 #include <cmath>
 #include <stdexcept>
-#include <boost/type_traits/is_pointer.hpp>
 #include "dialog.hpp"
 #include "graphtool.hpp"
 #include "soundtool.hpp"
