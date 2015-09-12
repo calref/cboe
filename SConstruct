@@ -39,11 +39,8 @@ else:
 		echo -e "\n#define GIT_REVISION \"\"\n#define GIT_TAG \"\"\n#define GIT_TAG_REVISION \"\"\n" > #TARGET
 	""")
 
-env.Append(CONFIGUREDIR='#build/conf', CONFIGURELOG='#build/conf/config.log')
-# We don't run any configuration tests yet, but we probably will eventually
-
 if str(platform) == "darwin":
-	env.Append(CPPFLAGS="-std=c++11 -stdlib=libc++")
+	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++")
 	env["CC"] = 'clang'
 	env["CXX"] = 'clang++'
 	env.Append(BUILDERS={
@@ -67,6 +64,40 @@ elif str(platform) == "windows":
 		env.Install("#build/Blades of Exile/", source)
 
 env.AddMethod(build_app_package, "Package")
+
+env['CONFIGUREDIR'] = '#build/conf'
+env['CONFIGURELOG'] = '#build/conf/config.log'
+conf = Configure(env)
+
+if not conf.CheckLib('z'):
+	print 'zlib must be installed!'
+	Exit(1)
+
+def check_lib(lib, disp):
+	if not conf.CheckLib(lib, language='C++', autoadd=False):
+		print disp, 'must be installed!'
+		Exit(1)
+
+def check_header(header, disp):
+	if not conf.CheckCXXHeader(header, '<>'):
+		print disp, 'must be installed!'
+		Exit(1)
+
+check_header('boost/lexical_cast.hpp', 'Boost.LexicalCast')
+check_header('boost/optional.hpp', 'Boost.Optional')
+check_header('boost/ptr_container/ptr_container.hpp', 'Boost.PointerContainer')
+check_header('boost/any.hpp', 'Boost.Any')
+check_header('boost/math_fwd.hpp', 'Boost.Math')
+check_header('boost/spirit/include/classic.hpp', 'Boost.Spirit.Classic')
+check_lib('boost_system', 'Boost.System')
+check_lib('boost_filesystem', 'Boost.Filesystem')
+check_lib('boost_thread', 'Boost.Thread')
+check_lib('sfml-system', 'SFML-system')
+check_lib('sfml-window', 'SFML-window')
+check_lib('sfml-audio', 'SFML-audio')
+check_lib('sfml-graphics', 'SFML-graphics')
+
+env = conf.Finish()
 
 env.Append(CPPDEFINES="TIXML_USE_TICPP")
 
@@ -94,7 +125,7 @@ bundled_libs = Split("""
 	sfml-window
 """)
 
-env.Append(LIBS = bundled_libs + ["z"])
+env.Append(LIBS = bundled_libs)
 
 if str(platform) == "darwin":
 	env.Append(LIBS=Split("""
