@@ -1,5 +1,6 @@
 
 import os.path as path
+import os
 import subprocess
 
 platform = ARGUMENTS.get('OS', Platform())
@@ -40,7 +41,7 @@ else:
 	""")
 
 if str(platform) == "darwin":
-	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++")
+	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++", RPATH='../Frameworks')
 	env["CC"] = 'clang'
 	env["CXX"] = 'clang++'
 	env.Append(BUILDERS={
@@ -49,7 +50,14 @@ if str(platform) == "darwin":
 			suffix = ".nib",
 			src_suffix = ".xib"
 		)
-	})
+	}, LIBPATH=Split("""
+		/usr/lib
+		/usr/local/lib
+	"""), FRAMEWORKPATH=Split("""
+		/System/Library/Frameworks
+		/Library/Frameworks
+		%s/Library/Frameworks
+	""" % os.environ['HOME']))
 	def build_app_package(env, source, build_dir, info):
 		source_name = source[0].name
 		pkg_path = path.join(build_dir, "%s.app/Contents/" % source_name)
@@ -59,11 +67,70 @@ if str(platform) == "darwin":
 		env.Install(path.join(pkg_path, "Resources"), icons + nib)
 		env.InstallAs(path.join(pkg_path, "Info.plist"), info['plist'])
 		env.Command(path.join(pkg_path, 'PkgInfo'), '', action="echo 'APPL%s' > $TARGET" % info['creator'])
+	def change_install_name(lib, source, target):
+		subprocess.call(["install_name_tool", "-change", source, target, lib])
+	system_prefixes = ('/System', '/usr/lib')
+	def is_user_lib(lib):
+		return all(not lib.startswith(x) for x in system_prefixes)
+	def get_deps_for(source):
+		deps = subprocess.check_output(['otool', '-L', source]).splitlines()[1:]
+		deps = map(str.strip, deps)
+		deps = filter(is_user_lib, deps)
+		deps = [x.split()[0] for x in deps]
+		return deps
+	def check_deps(source):
+		direct_deps = get_deps_for(source)
+		deps = set()
+		for i in xrange(len(direct_deps)):
+			dep = direct_deps[i]
+			if dep.startswith('@rpath/'):
+				direct_deps[i] = dep = dep.split('/', 1)[1]
+				if dep.startswith('../Frameworks/'):
+					direct_deps[i] = dep = dep.split('/', 2)[2]
+			else:
+				pass#change_install_name(dep, path.join('@rpath', dep), source)
+			if dep == source:
+				continue
+			deps.add(dep)
+		return deps
+	def split_path(lib):
+		while '.' not in path.basename(lib):
+			lib = path.dirname(lib)
+		return path.dirname(lib), path.basename(lib)
+	def bundle_libraries_for(target, source, env):
+		if not path.exists(target[0].path):
+			Execute(Mkdir(target))
+		deps = check_deps(source[0].path)
+		for dep in deps:
+			if 'framework' in dep:
+				paths = Split(env["FRAMEWORKPATH"])
+			else:
+				paths = env["LIBPATH"]
+			for search_path in paths:
+				check_path = path.join(search_path, dep)
+				if path.exists(check_path):
+					check_path = path.realpath(check_path)
+					src_dir, basefile = split_path(check_path)
+					src_path = path.join(src_dir, basefile)
+					dest_path = path.join(target[0].path, basefile)
+					if path.exists(dest_path):
+						break
+					Execute(Copy(dest_path, src_path))
+					bundle_libraries_for(target, [File(check_path)], env)
+					break
 elif str(platform) == "windows":
 	def build_app_package(env, source, build_dir, info):
 		env.Install("#build/Blades of Exile/", source)
 
 env.AddMethod(build_app_package, "Package")
+
+# Allow user to specify additional library/include paths
+env.Append(
+	LIBPATH = ARGUMENTS.get('LIBPATH', '').split(path.pathsep),
+	INCLUDEPATH = ARGUMENTS.get('INCLUDEPATH', '').split(path.pathsep)
+)
+if str(platform) == 'darwin':
+	env.Append(FRAMEWORKPATH=ARGUMENTS.get('FRAMEWORKPATH', '').split(path.pathsep))
 
 env['CONFIGUREDIR'] = '#build/conf'
 env['CONFIGURELOG'] = '#build/conf/config.log'
@@ -170,4 +237,19 @@ SConscript([
 data_dir = path.join(install_dir, "/data")
 Export("data_dir")
 SConscript(["rsrc/SConscript", "doc/SConscript"])
+
+# Bundle required frameworks and libraries
+
+if str(platform) == "darwin":
+	targets = [
+		"Blades of Exile",
+		"BoE Character Editor",
+		"BoE Scenario Editor",
+	]
+	for targ in targets:
+		target_dir = path.join(install_dir, targ + '.app', 'Contents/Frameworks')
+		binary = path.join(install_dir, targ + '.app', 'Contents/MacOS', targ)
+		env.Command(Dir(target_dir), binary, [Delete(target_dir), bundle_libraries_for])
+elif str(platform) == "windows":
+	lib_dirs = [install_dir]
 
