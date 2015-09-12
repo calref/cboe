@@ -1,5 +1,6 @@
 
 import os.path as path
+import subprocess
 
 platform = ARGUMENTS.get('OS', Platform())
 
@@ -13,6 +14,30 @@ if str(platform) not in ("darwin", "windows"):
 env = Environment()
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
+
+# This command generates the header with git revision information
+def gen_gitrev(env, target, source):
+	revid = subprocess.check_output(["git", "rev-parse", "HEAD"]);
+	fulltag = subprocess.check_output(["git", "tag", "--sort=v:refname"]).split('\n')[-1]
+	tagrev = subprocess.check_output(["git", "rev-parse", fulltag]) if fulltag else ""
+	with open(target[0].path, 'w') as gitrev_hpp:
+		print >>gitrev_hpp
+		print >>gitrev_hpp, '#define GIT_REVISION "' + revid[0:7] + '"'
+		print >>gitrev_hpp, '#define GIT_TAG "' + fulltag + '"'
+		print >>gitrev_hpp, '#define GIT_TAG_REVISION "' + tagrev[0:7] + '"'
+		print >>gitrev_hpp
+if path.exists(".git"):
+	git_refs = ['.git/HEAD']
+	with open('.git/HEAD') as git_head:
+		git_head = git_head.read().split()
+		if git_head[0] == 'ref:':
+			git_refs.append(path.join('.git', git_head[1]))
+	env.Command('src/tools/gitrev.hpp', git_refs, gen_gitrev)
+else:
+	# Zipped source downloads from github do not include the repo (probably a good thing)
+	env.Command('src/tools/gitrev.hpp', '', """
+		echo -e "\n#define GIT_REVISION \"\"\n#define GIT_TAG \"\"\n#define GIT_TAG_REVISION \"\"\n" > #TARGET
+	""")
 
 env.Append(CONFIGUREDIR='#build/conf', CONFIGURELOG='#build/conf/config.log')
 # We don't run any configuration tests yet, but we probably will eventually
