@@ -71,18 +71,18 @@
     <ClInclude Include="..\..\scenedit\scen.townout.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="scenresource.h">
+    <ClInclude Include="..\..\..\rsrc\menus\scenresource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Scen Editor.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\rsrc\icons\win\BOE Editor.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\rsrc\menus\ScenEditor.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

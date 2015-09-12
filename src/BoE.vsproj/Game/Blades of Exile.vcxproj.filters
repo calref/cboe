@@ -84,14 +84,9 @@
     <ClInclude Include="..\..\boe.townspec.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="boeresource.h">
+    <ClInclude Include="..\..\..\rsrc\menus\boeresource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Blades of Exile.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\boe.actions.cpp">
@@ -171,5 +166,10 @@
     <Image Include="..\..\..\rsrc\icons\win\BOE Scenario.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\rsrc\menus\BladesOfExile.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
