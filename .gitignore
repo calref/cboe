@@ -52,6 +52,7 @@ src/*.vsproj/*/ipch/
 # SCons junk files
 .sconsign.dblite
 build/
+deps/
 
 # Generated NSIS script file
 src/*.vsproj/Installer/data.nsi

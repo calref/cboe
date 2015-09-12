@@ -131,6 +131,29 @@ env.Append(
 )
 if str(platform) == 'darwin':
 	env.Append(FRAMEWORKPATH=ARGUMENTS.get('FRAMEWORKPATH', '').split(path.pathsep))
+	# If any package managers are installed, add their dirs too.
+	if subprocess.call(['which', '-s', 'port']) == 0: # MacPorts
+		env.Append(
+			LIBPATH = '/opt/local/lib',
+			INCLUDEPATH = '/opt/local/include',
+			FRAMEWORKPATH = '/opt/local/Library/Frameworks'
+		)
+	if subprocess.call(['which', '-s', 'fink']) == 0: # Fink
+		env.Append(
+			LIBPATH = '/sw/lib',
+			INCLUDEPATH = '/sw/include'
+		)
+	# HomeBrew apparently creates symlinks in /usr/local, so no special handling needed?
+
+# Sometimes it's easier just to copy the dependencies into the repo dir
+# We try to auto-detect this.
+if path.exists('deps/lib'):
+	env.Append(LIBPATH='deps/lib')
+	if str(platform) == 'darwin':
+		env.Append(FRAMEWORKPATH='deps/lib')
+
+if path.exists('deps/include'):
+	env.Append(INCLUDEPATH='deps/include')
 
 env['CONFIGUREDIR'] = '#build/conf'
 env['CONFIGURELOG'] = '#build/conf/config.log'
