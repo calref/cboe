@@ -29,27 +29,53 @@ Apart from minor bugfixes, it should not be altered. The src/ directory
 is to be the official codebase now. As of the time of this writing, it
 has a few major issues on Windows which are being worked on.
 
-CBOE relies on a few libraries, and XCode needs to be told where they are. The graphics
-library we're using is SFML, which is a Framework that can be found
-[here](http://www.sfml-dev.org/). They need to be linked in the Project Build Phases menu.
-You might also need to include zlib in the same place, but being that it's a builtin lib,
-that might be handled automatically in future builds.
+Building
+--------
 
-The other dependency is Boost, a C++ library, which can be found
-[here](http://www.boost.org/), however the most straightforward way to install it is via
-homebrew or some similar package manager. Wherever you put it, XCode needs to be linked to
-it via the Project Build Settings, under Linking->Other Linking flags, which should look
-similar to this:
+There are currently four ways to build Blades of Exile:
+
+- The build.sh shell-script, which builds and runs a Makefile.
+- XCode 4 or later
+- Microsoft Visual Studio 2013 or later
+- scons
+
+The officially supported method is scons. The script is currently a work-in-progress and
+as such may be a little fragile, but we're working on that. With luck, just running
+`scons` will simply do the right thing and build a working executable under _build/Blades
+of Exile_. If not, though, you may have to adjust a few things.
+
+You can pass the following parameters to scons:
+
+- OS=windows|darwin - Override platform auto-detection (only partially implemented)
+- LIBPATH=pathlist - Specify where to look for non-system dynamic libraries to link
+  against.
+- FRAMEWORKPATH=pathlist (Mac only) - Specify where to look for non-system frameworks.
+- INCLUDEPATH=pathlist - Specify where to look for non-system header files.
+
+If you can't get that to work, you can copy the required dependencies into _deps/lib_ (for
+dynamic libraries and frameworks) or _deps/include_ (for headers). That means that
+_deps/include_ would have two subfolders _boost/_ and _SFML/_.
+
+The following dependencies are required:
+
+- [SFML](http://www.sfml-dev.org/) - all components except sfml-net.
+- [Boost](http://www.boost.org/) - Filesystem, System, and Thread, plus several header-only
+  libraries; if you're picky, you can run scons and see it enumerate exactly which
+  libraries are needed
+- ZLib - This is included with the system on the Mac, but you may need to install it if
+  compiling on Windows.
+
+If you're using XCode, you may need to adjust the project file settings to specify the
+correct place to search. For example, if you installed Boost via Homebrew, you may need to
+add something like the following to the Project Build Settings, under Linking->Other
+Linking Flags:
 
     -lboost_filesystem -lboost_system -L/usr/local/Cellar/boost/1.57.0/lib
 
-With the path in the third include being wherever you put the boost lib folder. The
-includes need to be flagged in the Project Build Settings, under Apple LLVM Custom
-Compiler Flags -> Other C++ Flags, flags to which you should append something like this:
+Again with Homebrew, you may also need to add the following to Apple LLVM Custom
+Compiler Flags -> Other C++ Flags:
 
     -isystem/usr/local/Cellar/boost/1.57.0/include
-
-Again, the filepath just needs to point to Boost's includes.
 
 Helpful Links
 -------------
