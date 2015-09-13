@@ -460,7 +460,7 @@ void start_data_dump() {
 	}
 }
 
-extern const fs::path scenDir;
+extern fs::path scenDir;
 fs::path locate_scenario(std::string scen_name) {
 	fs::create_directories(scenDir);
 	std::transform(scen_name.begin(), scen_name.end(), scen_name.begin(), tolower);
