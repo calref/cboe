@@ -199,13 +199,13 @@ POPUP "&I1"
 */
  POPUP "&Help"
  {
-  MENUITEM "&Index\tF1", 801
+  MENUITEM "&Index\tF1", 2001
   MENUITEM SEPARATOR
-  MENUITEM "&Getting Started", 802
-  MENUITEM "&Testing Your Scenario", 803
-  MENUITEM "&Distributing Your Scenario", 804
+  MENUITEM "&Getting Started", 2002
+  MENUITEM "&Testing Your Scenario", 2003
+  MENUITEM "&Distributing Your Scenario", 2004
   MENUITEM SEPARATOR
-  MENUITEM "&About Blades Scenario Editor", 805
+  MENUITEM "&About Blades Scenario Editor", 2005
  }
 
 
