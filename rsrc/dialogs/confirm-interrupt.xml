@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='dark' defbtn='cancel'>
 	<pict type='dlog' num='23' top='9' left='9'/>
 	<text top='5' left='51' width='255' height='72'>

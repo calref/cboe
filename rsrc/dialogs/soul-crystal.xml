@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='dark' defbtn='cancel'>
 	<button name='cancel' type='regular' def-key='esc' top='145' left='238'>Cancel</button>
 	<!--

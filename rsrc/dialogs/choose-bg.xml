@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog defbtn='done'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text name='title' size='large' top='6' left='50' width='256' height='14'>Select background pattern:</text>

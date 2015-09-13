@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='dark' defbtn='load'>
 	<!--
 	 TODO: This dialog should use a pict of type=dlog and size=large

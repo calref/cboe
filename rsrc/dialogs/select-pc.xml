@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='dark' defbtn='cancel'>
 	<text top='190' left='11' width='184' height='18'>Hit a button or type '1'-'6'.</text>
 	<pict type='dlog' num='6' top='8' left='8'/>

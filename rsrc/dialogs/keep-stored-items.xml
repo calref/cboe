@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='dark' defbtn='yes'>
 	<button name='yes' type='regular' def-key='y' top='64' left='246'>Yes</button>
 	<button name='no' type='regular' def-key='n' top='64' left='180'>No</button>

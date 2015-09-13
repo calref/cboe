@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='light' defbtn='okay'>
 	<pict type='dlog' num='16' top='6' left='6'/>
 	<text size='large' top='18' left='50' width='250' height='17'>Classify Custom Graphics:</text>

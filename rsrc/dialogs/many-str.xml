@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog defbtn='done'>
 	<!-- Unexpected picture item -->
 	<pict name='pict' type='dlog' num='24' top='9' left='9'/>

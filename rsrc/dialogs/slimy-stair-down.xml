@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='dark' defbtn='leave'>
 	<button name='leave' type='regular' top='45' left='243'>Leave</button>
 	<button name='climb' type='regular' top='45' left='177'>Climb</button>

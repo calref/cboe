@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='dark' defbtn='save'>
 	<pict type='dlog' num='23' top='9' left='9'/>
 	<text size='large' top='5' left='52' width='254' height='18'>Do you want to save before quitting?</text>

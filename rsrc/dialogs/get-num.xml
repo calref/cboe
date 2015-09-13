@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--<!DOCTYPE dialog SYSTEM	"dialog.dtd">-->
 <dialog skin='dark' defbtn='okay'>
 	<field name="number" type='int' top='33' left='90' width='75' height='16'/>
 	<pict type='dlog' num='2' top='8' left='8'/>
