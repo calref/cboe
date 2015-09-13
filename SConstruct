@@ -125,6 +125,7 @@ elif str(platform) == "win32":
 		env.Append(
 			LINKFLAGS='/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup /MACHINE:X86',
 			CXXFLAGS='/EHsc /MD',
+			LIBPATH=("C:\Program Files (x86)\Microsoft Visual Studio " + env['MSVC_VERSION'] + "\VC\lib"),
 			LIBS=Split("""
 				kernel32
 				user32
