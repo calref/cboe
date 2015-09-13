@@ -933,7 +933,7 @@ struct overrides_sheet {
 };
 
 extern std::string scenario_temp_dir_name;
-extern const fs::path scenDir;
+extern fs::path scenDir;
 void save_scenario(bool rename) {
 	fs::path toFile = scenario.scen_file;
 	if(rename || toFile.empty()) {
@@ -945,7 +945,6 @@ void save_scenario(bool rename) {
 	}
 	
 	scenario.reset_version();
-	// TODO: This is just a skeletal outline of what needs to be done to save the scenario
 	tarball scen_file;
 	{
 		// First, write out the scenario header data. This is in a binary format identical to older scenarios.
