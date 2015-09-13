@@ -1,7 +1,7 @@
 
 #include "winutil.hpp"
 #include <iostream>
-#include <Windows.h>
+#include <windows.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <sstream>

@@ -1,6 +1,6 @@
 
 #include "cursors.hpp"
-#include <Windows.h>
+#include <windows.h>
 #include <exception>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "restypes.hpp"

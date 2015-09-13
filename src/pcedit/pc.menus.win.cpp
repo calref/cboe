@@ -9,7 +9,7 @@
 
 // Include this last because some #defines in the Windows headers cause compile errors in my headers.
 // Fortunately they're on symbols not used in this file, so this should work.
-#include <Windows.h>
+#include <windows.h>
 
 // This is the index of each menu on the menubar
 enum {

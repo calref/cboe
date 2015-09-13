@@ -13,7 +13,7 @@
 #include <OpenGl/GL.h>
 #else
 #ifdef _WIN32
-#include <Windows.h>
+#include <windows.h>
 #endif
 #include <GL/GL.h>
 #endif

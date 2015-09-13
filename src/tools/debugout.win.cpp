@@ -1,7 +1,7 @@
 
 #include <sstream>
 #include <iostream>
-#include <Windows.h>
+#include <windows.h>
 
 // Debugger streambuf adapted from here: <http://www.codeproject.com/Articles/1053/Using-an-output-stream-for-debugging>
 
