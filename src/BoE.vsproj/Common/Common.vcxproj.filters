@@ -41,6 +41,9 @@
     <Filter Include="DialogXML\TinyXML">
       <UniqueIdentifier>{b705522f-daf8-4db2-9cec-f5ae249e595e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\dialogs">
+      <UniqueIdentifier>{5d335c3d-6ae4-4d05-b007-69721325a967}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\classes\creatlist.hpp">
@@ -369,5 +372,544 @@
     <ClCompile Include="..\..\tools\menu_accel.win.cpp">
       <Filter>Tools\Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\..\rsrc\dialogs\1str.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\1str-lg.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\1str-title.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\1str-title-lg.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\2str.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\2str-lg.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\2str-title.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\2str-title-lg.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\abort-game.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\about-boe.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\about-pced.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\about-scened.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\add-new-sheet.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\add-random-items.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\adventure-notes.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\attack-friendly.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\basic-button.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\basic-lever.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\basic-portal.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\basic-slope-down.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\basic-slope-up.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\basic-stair-down.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\basic-stair-up.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\basic-trap.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\boat-bridge.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\cast-spell.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\change-terrain.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\choose-bg.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\choose-pict.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\choose-string.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\clear-items-confirm.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\confirm-interrupt.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\congrats-save.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\convert-pics-now.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\dark-slope-down.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\dark-slope-up.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\data-dump-confirm.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\delete-pc-confirm.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\delete-town-confirm.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\discard-special-node.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\drop-item-confirm.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-boats.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-day.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-dialog-text.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-horses.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-intro.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-item.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-item-abils.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-item-shortcut.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-mabil-general.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-mabil-missile.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-mabil-radiate.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-mabil-special.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-mabil-summon.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-monster.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-monster-abils.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-outdoor-details.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-outdoor-encounter.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-party.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-personality.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-placed-item.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-quest.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-save-rects.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-scenario-details.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-scenario-events.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-shop.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-shop-item.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-shop-special.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-sign.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-sounds.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-special-assign.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-special-item.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-special-node.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-special-text.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-special-text-sm.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-talk-node.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-ter-obj.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-terrain.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-text.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-town-advanced.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-town-details.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-town-events.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-townperson.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-townperson-advanced.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-town-varying.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-town-wandering.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\edit-xp.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\event-journal.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\get-items.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\get-mabil-num.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\get-num.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\get-response.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\graphic-sheets.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\graphic-types.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\have-no-pics.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\have-only-full-pics.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-combat.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-contest.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-debug.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-distributing.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-editing.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-fields.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-hints.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-inventory.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-magic.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-outdoor.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-party.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-testing.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\help-town.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\inventory-full.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\item-info.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\job-board.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\keep-stored-items.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\leave-scenario.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\leave-town.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\locked-door-action.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\make-scenario1.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\make-scenario2.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\many-str.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\monster-info.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\must-delete-in-order.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\need-party.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\new-party.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\new-town.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\no-scenarios.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\not-at-edge.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\not-split.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\party-death.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\pc-alchemy-info.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\pc-info.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\pc-spell-info.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\pick-pc-name.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\pick-potion.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\pick-prefab-scen.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\pick-race-abil.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\pick-scenario.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\pick-spec-type.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\preferences.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\quest-info.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\quit-confirm-nosave.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\quit-confirm-save.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\removed-special-items.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\resize-outdoors.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\restart-game.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\reunited.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\reunite-first.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\save-before-close.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\save-before-load.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\save-before-quit.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\save-before-revert.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\save-close.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\save-open.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\save-quit.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\save-revert.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\save-section-confirm.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\scen-version-mismatch.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\select-import-town.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\select-pc.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\select-sector.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\select-town-edit.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\select-town-enter.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\set-area-desc.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\set-not-owned.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\set-out-start-confirm.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\set-sdf.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\set-start-loc.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\show-map.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\skill-info.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\slimy-stair-down.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\slimy-stair-up.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\soul-crystal.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\spell-info.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\spend-xp.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\steal-item.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\talk-notes.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\text-dump-confirm.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\tip-of-day.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\view-sign.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
+    <Xml Include="..\..\..\rsrc\dialogs\welcome.xml">
+      <Filter>Resource Files\dialogs</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
