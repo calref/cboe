@@ -12,4 +12,5 @@ else:
 
 env.Install("#build/test/", test)
 env.Install("#build/test/", Dir("#test/files"))
+env.Install("#build/rsrc/", Dir("#rsrc/strings"))
 env.Command("#build/test/junk/", '', 'mkdir "' + Dir("#build/test/junk").path + '"')
