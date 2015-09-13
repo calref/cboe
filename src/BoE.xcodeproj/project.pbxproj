@@ -183,7 +183,7 @@
 		919CC2771B37741500273FDA /* map_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915E09081A316D89008BDF00 /* map_parse.cpp */; };
 		919CC2781B37741A00273FDA /* porting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D005A0F9FEEC200184C18 /* porting.cpp */; };
 		919CC2791B37742200273FDA /* prefs.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91EC481018FBABB100BB1E86 /* prefs.mac.mm */; };
-		919CC27A1B37742800273FDA /* qdpict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */; };
+		919CC27A1B37742800273FDA /* qdpict.mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F6F8F518F8DE6300E3EA15 /* qdpict.mac.cpp */; };
 		919CC27B1B37742D00273FDA /* soundtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3F10F0F9779D000BF5B67 /* soundtool.cpp */; };
 		919CC27C1B37743200273FDA /* specials_parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915325181A2E37EE000A9A1C /* specials_parse.cpp */; };
 		919CC27D1B37743700273FDA /* tarball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91BFA3D81902AD78001686E4 /* tarball.cpp */; };
@@ -767,7 +767,7 @@
 		91F6F8E018F87F3700E3EA15 /* sfml-system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-system.framework"; path = "/Library/Frameworks/sfml-system.framework"; sourceTree = "<absolute>"; };
 		91F6F8E118F87F3700E3EA15 /* sfml-window.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-window.framework"; path = "/Library/Frameworks/sfml-window.framework"; sourceTree = "<absolute>"; };
 		91F6F8E218F87F3700E3EA15 /* SFML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SFML.framework; path = /Library/Frameworks/SFML.framework; sourceTree = "<absolute>"; };
-		91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qdpict.cpp; sourceTree = "<group>"; };
+		91F6F8F518F8DE6300E3EA15 /* qdpict.mac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qdpict.mac.cpp; sourceTree = "<group>"; };
 		91FCC8D718FE28CC007026CE /* pcedit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = pcedit.xib; path = menus/pcedit.xib; sourceTree = "<group>"; };
 		91FCC8DA18FE2CCA007026CE /* pc.menus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pc.menus.hpp; sourceTree = "<group>"; };
 		91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.menus.mac.mm; sourceTree = "<group>"; };
@@ -1071,7 +1071,7 @@
 				915E09081A316D89008BDF00 /* map_parse.cpp */,
 				913D005A0F9FEEC200184C18 /* porting.cpp */,
 				91EC481018FBABB100BB1E86 /* prefs.mac.mm */,
-				91F6F8F518F8DE6300E3EA15 /* qdpict.cpp */,
+				91F6F8F518F8DE6300E3EA15 /* qdpict.mac.cpp */,
 				91B3F10F0F9779D000BF5B67 /* soundtool.cpp */,
 				915325181A2E37EE000A9A1C /* specials_parse.cpp */,
 				91BFA3D81902AD78001686E4 /* tarball.cpp */,
@@ -1782,7 +1782,7 @@
 				919CC2771B37741500273FDA /* map_parse.cpp in Sources */,
 				919CC2781B37741A00273FDA /* porting.cpp in Sources */,
 				919CC2791B37742200273FDA /* prefs.mac.mm in Sources */,
-				919CC27A1B37742800273FDA /* qdpict.cpp in Sources */,
+				919CC27A1B37742800273FDA /* qdpict.mac.cpp in Sources */,
 				919CC27B1B37742D00273FDA /* soundtool.cpp in Sources */,
 				919CC27C1B37743200273FDA /* specials_parse.cpp in Sources */,
 				919CC27D1B37743700273FDA /* tarball.cpp in Sources */,

@@ -16,19 +16,9 @@ tools = Split("""
 """)
 
 if str(platform) == "darwin":
-	tools.extend(Split("""
-		cursors.mac.mm
-		prefs.mac.mm
-		qdpict.cpp
-		winutil.mac.mm
-	"""))
+	tools.extend(Glob("*.mac.*"))
 elif str(platform) == "win32":
-	tools.extend(Split("""
-		cursors.win.cpp
-		menu_accel.win.cpp
-		prefs.win.cpp
-		winutil.win.cpp
-	"""))
+	tools.extend(Glob("*.win.cpp"))
 
 tools_obj = env.StaticLibrary("#build/lib/tools", tools)
 

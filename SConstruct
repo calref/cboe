@@ -268,7 +268,7 @@ Export("env platform")
 
 # The VariantDir directives near the top mean that the SConscript files are
 # copied from src/ and test/ into build/obj/ and build/obj/test respectively.
-# Thus, any edits to them should be made there.
+# Thus, any edits to them should be made to the originals in src/ or test/.
 # However, when referencing them we have to reference the copies.
 
 # Gather common sources
