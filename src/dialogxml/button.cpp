@@ -207,14 +207,14 @@ void cLed::attachFocusHandler(focus_callback_t f) throw(){
 }
 
 bool cLed::triggerFocusHandler(cDialog& me, std::string id, bool losing){
-	if(onFocus != NULL) return onFocus(me,id,losing);
+	if(onFocus != nullptr) return onFocus(me,id,losing);
 	return true;
 }
 
 bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 	bool result;
 	eLedState oldState = state;
-	if(onClick != NULL) result = onClick(me,id,mods);
+	if(onClick != nullptr) result = onClick(me,id,mods);
 	else{ // simple state toggle
 		switch(state){
 			case led_red:
@@ -394,7 +394,7 @@ bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 }
 
 bool cLedGroup::triggerFocusHandler(cDialog& me, std::string id, bool losingFocus){
-	if(onFocus != NULL) return onFocus(me,id,losingFocus);
+	if(onFocus != nullptr) return onFocus(me,id,losingFocus);
 	return true;
 }
 

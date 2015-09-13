@@ -502,7 +502,7 @@ cStrDlog& cStrDlog::setSound(snd_num_t snd){
 }
 
 cStrDlog& cStrDlog::setRecordHandler(record_callback_t rec){
-	if(rec == NULL){
+	if(rec == nullptr){
 		hasRecord = false;
 		dlg["record"].hide();
 	}else{

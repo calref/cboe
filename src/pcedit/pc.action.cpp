@@ -54,16 +54,16 @@ bool handle_action(sf::Event event) {
 			do_button_action(0,i + 10);
 			switch(i) {
 				case 0:
-					display_pc(current_active_pc,10,NULL);
+					display_pc(current_active_pc,10,nullptr);
 					break;
 				case 1:
-			 		display_pc(current_active_pc,11,NULL);
+			 		display_pc(current_active_pc,11,nullptr);
 					break;
 				case 2:
 					pick_race_abil(&univ.party[current_active_pc],0);
 					break;
 				case 3:
-					spend_xp(current_active_pc,2,NULL);
+					spend_xp(current_active_pc,2,nullptr);
 					break;
 				case 4:
 					edit_xp(&univ.party[current_active_pc]);

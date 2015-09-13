@@ -44,7 +44,7 @@ public:
 	/// @param pic The icon to show at the top left.
 	/// @param t The type of icon to show.
 	/// @param parent Optionally, a parent dialog.
-	cStrDlog(std::string str1,std::string str2,std::string title,pic_num_t pic,ePicType t,cDialog* parent = NULL);
+	cStrDlog(std::string str1,std::string str2,std::string title,pic_num_t pic,ePicType t,cDialog* parent = nullptr);
 	/// Set a sound to be played when the dialog is shown.
 	/// @param num The sound number.
 	/// @return This object, for method-call chaining.
@@ -78,18 +78,18 @@ protected:
 	bool onClick(cDialog& me, std::string id);
 	/// Create a choice dialog, but don't initialize it.
 	/// @param p Optionally, a parent dialog.
-	explicit cChoiceDlog(cDialog* p = NULL);
+	explicit cChoiceDlog(cDialog* p = nullptr);
 public:
 	/// Create a choice dialog with just one button.
 	/// @param file The file to load the dialog definition from.
 	/// @param p Optionally, a parent dialog.
 	/// @note The dialog definition file must include a button whose name attribute is "okay".
-	explicit cChoiceDlog(std::string file, cDialog* p = NULL);
+	explicit cChoiceDlog(std::string file, cDialog* p = nullptr);
 	/// Create a choice dialog with several buttons.
 	/// @param file The file to load the dialog definition from.
 	/// @param buttons A list of the buttons to handle. All of them must be defined in the file.
 	/// @param p Optionally, a parent dialog.
-	cChoiceDlog(std::string file, std::vector<std::string> buttons, cDialog* p = NULL);
+	cChoiceDlog(std::string file, std::vector<std::string> buttons, cDialog* p = nullptr);
 	/// Reference the cDialog powering this choice dialog, perhaps to customize details of it.
 	/// @return A pointer to the dialog.
 	cDialog* operator->();
@@ -133,21 +133,21 @@ public:
 	/// @param pic The icon to show at the top left.
 	/// @param t The type of the icon.
 	/// @param parent Optionally, a parent dialog.
-	cThreeChoice(std::vector<std::string>& strings, cBasicButtonType button, pic_num_t pic, ePicType t, cDialog* parent = NULL);
+	cThreeChoice(std::vector<std::string>& strings, cBasicButtonType button, pic_num_t pic, ePicType t, cDialog* parent = nullptr);
 	/// Create a dialog with up to three buttons.
 	/// @param strings A list of the strings to place in the dialog.
 	/// @param buttons A list of the button specifications.
 	/// @param pic The icon to show at the top left.
 	/// @param t The type of the icon.
 	/// @param parent Optionally, a parent dialog.
-	cThreeChoice(std::vector<std::string>& strings, std::array<cBasicButtonType, 3>& buttons, pic_num_t pic, ePicType t, cDialog* parent = NULL);
+	cThreeChoice(std::vector<std::string>& strings, std::array<cBasicButtonType, 3>& buttons, pic_num_t pic, ePicType t, cDialog* parent = nullptr);
 	/// Create a dialog with up to three buttons.
 	/// @param strings A list of the strings to place in the dialog.
 	/// @param buttons A list of the index of the button; this is an index into available_btns which is in turn used to index basic_buttons.
 	/// @param pic The icon to show at the top left.
 	/// @param t The type of the icon.
 	/// @param parent Optionally, a parent dialog.
-	cThreeChoice(std::vector<std::string>& strings, std::array<short, 3>& buttons, pic_num_t pic, ePicType t, cDialog* parent = NULL);
+	cThreeChoice(std::vector<std::string>& strings, std::array<short, 3>& buttons, pic_num_t pic, ePicType t, cDialog* parent = nullptr);
 	/// @copydoc cChoiceDlog::show()
 	/// @note The unique key in this case is the label specified in the button specification.
 	std::string show();
@@ -174,14 +174,14 @@ public:
 	/// @param strs A list of all strings in the dialog.
 	/// @param title The title to show in the dialog.
 	/// @param parent Optionally, a parent dialog.
-	explicit cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent = NULL);
+	explicit cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent = nullptr);
 	/// Initializes a dialog from an iterator pair.
 	/// @param begin An iterator to the first string in the dialog.
 	/// @param end An iterator to one past the last string in the dialog.
 	/// @param title The title to show in the dialog.
 	/// @param parent Optionally, a parent dialog.
 	/// @note Currently, only vector iterators are supported.
-	cStringChoice(std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end, std::string title, cDialog* parent = NULL);
+	cStringChoice(std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end, std::string title, cDialog* parent = nullptr);
 	/// Attach a handler to be called when the selected item changes.
 	/// @param f A function that takes a reference to the dialog and the index of the newly selected item.
 	void attachSelectHandler(std::function<void(cStringChoice&,int)> f);
@@ -216,23 +216,23 @@ public:
 	/// @param pics A list of all icons in the dialog.
 	/// @param t The type of icons to show; all icons are assumed to be of the same type.
 	/// @param parent Optionally, a parent dialog.
-	cPictChoice(const std::vector<pic_num_t>& pics, ePicType t, cDialog* parent = NULL);
+	cPictChoice(const std::vector<pic_num_t>& pics, ePicType t, cDialog* parent = nullptr);
 	/// Initializes a dialog from a list of icons.
 	/// @param pics A list of all icons in the dialog as {num,type} pairs.
 	/// @param parent Optionally, a parent dialog.
-	cPictChoice(const std::vector<std::pair<pic_num_t,ePicType>>& pics, cDialog* parent = NULL);
+	cPictChoice(const std::vector<std::pair<pic_num_t,ePicType>>& pics, cDialog* parent = nullptr);
 	/// Initializes a dialog from an iterator pair.
 	/// @param begin An iterator to the first icon in the dialog.
 	/// @param end An iterator to one past the last icon in the dialog.
 	/// @param t The type of icons to show; all icons are assumed to be of the same type.
 	/// @param parent Optionally, a parent dialog.
-	cPictChoice(std::vector<pic_num_t>::const_iterator begin, std::vector<pic_num_t>::const_iterator end, ePicType t, cDialog* parent = NULL);
+	cPictChoice(std::vector<pic_num_t>::const_iterator begin, std::vector<pic_num_t>::const_iterator end, ePicType t, cDialog* parent = nullptr);
 	/// Initializes a dialog from an index pair.
 	/// @param first The number of the first icon in the dialog.
 	/// @param last The number of the last icon in the dialog.
 	/// @param t The type of icons to show; all icons are assumed to be of the same type.
 	/// @param parent Optionally, a parent dialog.
-	cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* parent = NULL);
+	cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* parent = nullptr);
 	/// Attach a handler to be called when the selected item changes.
 	/// @param f A function that takes a reference to the dialog and the index of the newly selected item.
 	void attachSelectHandler(std::function<void(cPictChoice&,int)> f);
@@ -259,28 +259,28 @@ public:
 /// @param str1 The first string in the error dialog.
 /// @param str2 The second string in the error dialog.
 /// @param parent Optionally, a parent dialog.
-void showFatalError(std::string str1, std::string str2, cDialog* parent = NULL);
+void showFatalError(std::string str1, std::string str2, cDialog* parent = nullptr);
 /// Shows a simple error dialog for an unrecoverable condition.
 /// @param str1 The string in the error dialog.
 /// @param parent Optionally, a parent dialog.
-void showFatalError(std::string str1, cDialog* parent = NULL);
+void showFatalError(std::string str1, cDialog* parent = nullptr);
 
 /// Shows a simple error dialog for a recoverable condition.
 /// @param str1 The first string in the error dialog.
 /// @param str2 The second string in the error dialog.
 /// @param parent Optionally, a parent dialog.
-void showError(std::string str1, std::string str2, cDialog* parent = NULL);
+void showError(std::string str1, std::string str2, cDialog* parent = nullptr);
 /// Shows a simple error dialog for a recoverable condition.
 /// @param str1 The string in the error dialog.
 /// @param parent Optionally, a parent dialog.
-void showError(std::string str1, cDialog* parent = NULL);
+void showError(std::string str1, cDialog* parent = nullptr);
 
 /// Shows a simple warning message dialog.
 /// @param str1 The first string in the warning dialog.
 /// @param str2 The second string in the warning dialog.
 /// @param parent Optionally, a parent dialog.
-void showWarning(std::string str1, std::string str2, cDialog* parent = NULL);
+void showWarning(std::string str1, std::string str2, cDialog* parent = nullptr);
 /// Shows a simple warning message dialog.
 /// @param str1 The string in the warning dialog.
 /// @param parent Optionally, a parent dialog.
-void showWarning(std::string str1, cDialog* parent = NULL);
+void showWarning(std::string str1, cDialog* parent = nullptr);

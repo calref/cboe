@@ -52,7 +52,7 @@ bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFoc
 		}
 	}
 	bool passed = true;
-	if(onFocus != NULL) passed = onFocus(me,id,losingFocus);
+	if(onFocus != nullptr) passed = onFocus(me,id,losingFocus);
 	if(passed) haveFocus = !losingFocus;
 	if(haveFocus && insertionPoint < 0)
 		insertionPoint = getText().length();

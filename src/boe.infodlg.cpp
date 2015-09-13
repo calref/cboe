@@ -427,7 +427,7 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreat
 	return true;
 }
 
-//creature_data_type *which_m; // if NULL, show full roster
+//creature_data_type *which_m; // if nullptr, show full roster
 //short mode; // if 1, full roster, else use monster from store_m
 void display_monst(short array_pos,cCreature *which_m,short mode) {
 	using namespace std::placeholders;
@@ -851,7 +851,7 @@ static void give_help(short help1,short help2,cDialog* parent) {
 }
 
 void give_help(short help1, short help2) {
-	give_help(help1, help2, NULL);
+	give_help(help1, help2, nullptr);
 }
 
 void give_help(short help1, short help2, cDialog& parent) {

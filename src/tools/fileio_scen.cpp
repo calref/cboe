@@ -123,7 +123,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	legacy::scen_item_data_type *item_data = new legacy::scen_item_data_type;
 	// TODO: Convert this (and all the others in this file) to use C++ streams
 	FILE* file_id = fopen(file_to_load.string().c_str(),"rb");
-	if(file_id == NULL) {
+	if(file_id == nullptr) {
 		showError(err_prefix + "Could not open file.", get_file_error());
 		return false;
 	}
@@ -2164,7 +2164,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	legacy::tiny_tr_type tiny_t;
 	
 	FILE* file_id = fopen(scen_file.string().c_str(), "rb");
-	if(file_id == NULL) {
+	if(file_id == nullptr) {
 		showError(err_prefix + "Could not open file for reading town data.", get_file_error());
 		return false;
 	}
@@ -2302,7 +2302,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	legacy::outdoor_record_type store_out;
 	
 	FILE* file_id = fopen(scen_file.string().c_str(), "rb");
-	if(file_id == NULL) {
+	if(file_id == nullptr) {
 		showError(err_prefix + "Could not open file for reading outdoor data.", get_file_error());
 		return false;
 	}

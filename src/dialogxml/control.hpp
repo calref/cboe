@@ -230,7 +230,7 @@ protected:
 	/// May be null, if the control was created via cControl(eControlType,sf::RenderWindow&).
 	cDialog* parent;
 	/// This control's labelling control.
-	cControl* labelCtrl = NULL;
+	cControl* labelCtrl = nullptr;
 	/// The parent window of the control.
 	/// This is for use in implementing draw().
 	sf::RenderWindow* inWindow;

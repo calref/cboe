@@ -324,7 +324,7 @@ sf::Image* sfImageFromNSImage(NSImage *image) {
 		return nil;
 	
 	NSBitmapImageRep* rep = [[NSBitmapImageRep alloc]
-							initWithBitmapDataPlanes: NULL
+							initWithBitmapDataPlanes: nil
 							pixelsWide: width
 							pixelsHigh: height
 							bitsPerSample: 8

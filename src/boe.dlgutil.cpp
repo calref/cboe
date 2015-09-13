@@ -841,7 +841,7 @@ void handle_talk_event(location p) {
 		case eTalkNode::TRAINING:
 			if((get_pc = char_select_pc(0,"Train who?")) < 6) {
 				can_save_talk = false;
-				spend_xp(get_pc,1, NULL);
+				spend_xp(get_pc,1, nullptr);
 			}
 			save_talk_str1 = "You conclude your training.";
 			return;

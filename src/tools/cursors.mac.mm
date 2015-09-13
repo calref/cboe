@@ -14,12 +14,12 @@
 extern cursor_type current_cursor;
 
 static NSImage* imageFromURL(CFURLRef url){
-	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(url, NULL);
+	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(url, nullptr);
 	CGImageRef theImage = nil;
 	
 	if(imageSource == nil) return nil;
 	
-	theImage = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
+	theImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nullptr);
 	if(theImage == nil) return nil;
 	
 	CFRelease( imageSource );
@@ -44,8 +44,8 @@ static NSImage* imageFromURL(CFURLRef url){
 
 Cursor::Cursor(fs::path path, float hotSpotX, float hotSpotY){
 	FSRef ref;
-	FSPathMakeRef((UInt8*)path.c_str(), &ref, NULL);
-	CFURLRef imgPath = CFURLCreateFromFSRef(NULL, &ref);
+	FSPathMakeRef((UInt8*)path.c_str(), &ref, nullptr);
+	CFURLRef imgPath = CFURLCreateFromFSRef(nullptr, &ref);
 	
 	NSImage *img = imageFromURL(imgPath);
 	NSCursor *cursor = [[NSCursor alloc] initWithImage:img hotSpot:NSMakePoint(hotSpotX, hotSpotY)];

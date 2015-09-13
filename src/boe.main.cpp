@@ -178,7 +178,7 @@ void Initialize(void) {
 	//	and date into the seed.  Since it is always incrementing the starting seed
 	//	will always be different.  Don't for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
-	srand(time(NULL));
+	srand(time(nullptr));
 	
 	load_prefs();
 	text_sbar.reset(new cScrollbar(mainPtr));
@@ -453,7 +453,7 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::OPTIONS_PC_GRAPHIC:
 			choice = char_select_pc(1,"New graphic for who?");
 			if(choice < 6)
-				pick_pc_graphic(choice,1,NULL);
+				pick_pc_graphic(choice,1,nullptr);
 			draw_terrain();
 			break;
 			
@@ -477,7 +477,7 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::OPTIONS_RENAME_PC:
 			choice = char_select_pc(1,"Rename who?");
 			if(choice < 6)
-				pick_pc_name(choice,NULL);
+				pick_pc_name(choice,nullptr);
 			put_pc_screen();
 			put_item_screen(stat_window);
 			break;
@@ -499,7 +499,7 @@ void handle_menu_choice(eMenu item_hit) {
 			}
 			if(univ.town->has_tavern) {
 				give_help(56,0);
-				create_pc(6,NULL);
+				create_pc(6,nullptr);
 			} else {
 				add_string_to_buf("Add PC: You cannot add new characters in this town. Try in the town you started in.", 2);
 			}
@@ -605,7 +605,7 @@ void handle_menu_choice(eMenu item_hit) {
 
 //  TODO: Let this function take a cMonster* instead of the item_hit
 void handle_monster_info_menu(int item_hit) {
-	display_monst(item_hit - 1, NULL,1);
+	display_monst(item_hit - 1, nullptr,1);
 }
 
 static cursor_type get_mode_cursor(){

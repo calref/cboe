@@ -50,13 +50,13 @@ const char* xHandlerNotSupported::what(){
 
 xUnsupportedProp::xUnsupportedProp(eFormat prop) throw(){
 	whichProp = prop;
-	msg = NULL;
+	msg = nullptr;
 }
 xUnsupportedProp::~xUnsupportedProp() throw(){
-	if(msg != NULL) delete msg;
+	if(msg != nullptr) delete msg;
 }
 const char* xUnsupportedProp::what() throw(){
-	if(msg == NULL){
+	if(msg == nullptr){
 		msg = new char[62];
 		std::string s;
 		switch(whichProp){
@@ -266,7 +266,7 @@ void cControl::detachKey(){
 
 cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), type(t), visible(true), key({false, 0, mod_none}), frameStyle(0) {}
 
-cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(NULL), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}), frameStyle(0) {}
+cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(nullptr), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}), frameStyle(0) {}
 
 bool cControl::triggerClickHandler(cDialog&, std::string, eKeyMod){
 	return true;

@@ -60,7 +60,7 @@ void cScrollbar::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported
 
 bool cScrollbar::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods) {
 	// TODO: Implement detection of scrolling stuff, maybe even dragging the thumb
-	if(onClick != NULL) return onClick(me,id,mods);
+	if(onClick != nullptr) return onClick(me,id,mods);
 	return false;
 }
 

@@ -65,12 +65,12 @@ using hilite_t = std::pair<size_t,size_t>;
 
 struct cCustomGraphics {
 	size_t numSheets;
-	sf::Texture* sheets = NULL;
+	sf::Texture* sheets = nullptr;
 	std::shared_ptr<sf::Texture> party_sheet;
 	bool is_old = false;
 	void clear() {
-		if(sheets != NULL) delete[] sheets;
-		sheets = NULL;
+		if(sheets != nullptr) delete[] sheets;
+		sheets = nullptr;
 	}
 	~cCustomGraphics() {
 		clear();

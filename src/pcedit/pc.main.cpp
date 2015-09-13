@@ -106,7 +106,7 @@ void Initialize(void) {
 	//	and date into the seed.  Since it is always incrementing the starting seed
 	//	will always be different.  Don’t for each call of Random, or the sequence
 	//	will no longer be random.  Only needed once, here in the init.
-	srand(time(NULL));
+	srand(time(nullptr));
 	
 	//	Make a new window for drawing in, and it must be a color window.
 	//	The window is full screen size, made smaller to make it more visible.
@@ -369,7 +369,7 @@ static void give_help(short help1,short help2,cDialog* parent) {
 }
 
 void give_help(short help1, short help2) {
-	give_help(help1, help2, NULL);
+	give_help(help1, help2, nullptr);
 }
 
 void give_help(short help1, short help2, cDialog& parent) {

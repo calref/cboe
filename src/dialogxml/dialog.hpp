@@ -58,11 +58,11 @@ public:
 	static short defaultBackground;
 	/// Create a new dialog with no items.
 	/// @param p Optionally, a parent dialog.
-	explicit cDialog(cDialog* p = NULL);
+	explicit cDialog(cDialog* p = nullptr);
 	/// Creates a new dialog, loading its definition from a file.
 	/// @param path The name of the file to load. It must be in the game's dialogs directory.
 	/// @param p Optionally, a parent dialog.
-	explicit cDialog(std::string path, cDialog* p = NULL); // cd_create_dialog
+	explicit cDialog(std::string path, cDialog* p = nullptr); // cd_create_dialog
 	~cDialog(); // cd_kill_dialog
 	/// Add a new control to the dialog.
 	/// @param what A pointer to the control, which should already be constructed.

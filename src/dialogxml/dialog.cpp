@@ -1360,7 +1360,7 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 	}
 	labelCtrl->setText(label);
 	labelCtrl->setFormat(TXT_FONT, bold ? FONT_BOLD : FONT_PLAIN);
-	if(bg == BG_DARK && dynamic_cast<cButton*>(&ctrl) != NULL)
+	if(bg == BG_DARK && dynamic_cast<cButton*>(&ctrl) != nullptr)
 		labelCtrl->setColour(defTextClr);
 	else labelCtrl->setColour(ctrl.getColour());
 	ctrl.setLabelCtrl(labelCtrl);
@@ -1417,13 +1417,13 @@ xBadNode::xBadNode(std::string t, int r, int c, std::string dlg) throw() :
 	type(t),
 	row(r),
 	col(c),
-	msg(NULL),
+	msg(nullptr),
 	dlg(dlg) {}
 
 const char* xBadNode::what() const throw() {
-	if(msg == NULL){
+	if(msg == nullptr){
 		char* s = new (nothrow) char[200];
-		if(s == NULL){
+		if(s == nullptr){
 			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
@@ -1434,7 +1434,7 @@ const char* xBadNode::what() const throw() {
 }
 
 xBadNode::~xBadNode() throw(){
-	if(msg != NULL) delete[] msg;
+	if(msg != nullptr) delete[] msg;
 }
 
 xBadAttr::xBadAttr(std::string t, std::string n, int r, int c, std::string dlg) throw() :
@@ -1442,13 +1442,13 @@ xBadAttr::xBadAttr(std::string t, std::string n, int r, int c, std::string dlg) 
 	name(n),
 	row(r),
 	col(c),
-	msg(NULL),
+	msg(nullptr),
 	dlg(dlg) {}
 
 const char* xBadAttr::what() const throw() {
-	if(msg == NULL){
+	if(msg == nullptr){
 		char* s = new (nothrow) char[200];
-		if(s == NULL){
+		if(s == nullptr){
 			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
@@ -1459,7 +1459,7 @@ const char* xBadAttr::what() const throw() {
 }
 
 xBadAttr::~xBadAttr() throw(){
-	if(msg != NULL) delete[] msg;
+	if(msg != nullptr) delete[] msg;
 }
 
 xMissingAttr::xMissingAttr(std::string t, std::string n, int r, int c, std::string dlg) throw() :
@@ -1467,13 +1467,13 @@ xMissingAttr::xMissingAttr(std::string t, std::string n, int r, int c, std::stri
 	name(n),
 	row(r),
 	col(c),
-	msg(NULL),
+	msg(nullptr),
 	dlg(dlg) {}
 
 const char* xMissingAttr::what() const throw() {
-	if(msg == NULL){
+	if(msg == nullptr){
 		char* s = new (nothrow) char[200];
-		if(s == NULL){
+		if(s == nullptr){
 			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
@@ -1484,7 +1484,7 @@ const char* xMissingAttr::what() const throw() {
 }
 
 xMissingAttr::~xMissingAttr() throw(){
-	if(msg != NULL) delete[] msg;
+	if(msg != nullptr) delete[] msg;
 }
 
 xMissingElem::xMissingElem(std::string p, std::string t, int r, int c, std::string dlg) throw() :
@@ -1492,13 +1492,13 @@ xMissingElem::xMissingElem(std::string p, std::string t, int r, int c, std::stri
 	name(t),
 	row(r),
 	col(c),
-	msg(NULL),
+	msg(nullptr),
 	dlg(dlg) {}
 
 const char* xMissingElem::what() const throw() {
-	if(msg == NULL){
+	if(msg == nullptr){
 		char* s = new (nothrow) char[200];
-		if(s == NULL){
+		if(s == nullptr){
 			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
@@ -1509,7 +1509,7 @@ const char* xMissingElem::what() const throw() {
 }
 
 xMissingElem::~xMissingElem() throw(){
-	if(msg != NULL) delete[] msg;
+	if(msg != nullptr) delete[] msg;
 }
 
 xBadVal::xBadVal(std::string t, std::string n, std::string v, int r, int c, std::string dlg) throw() :
@@ -1518,13 +1518,13 @@ xBadVal::xBadVal(std::string t, std::string n, std::string v, int r, int c, std:
 	val(v),
 	row(r),
 	col(c),
-	msg(NULL),
+	msg(nullptr),
 	dlg(dlg) {}
 
 const char* xBadVal::what() const throw() {
-	if(msg == NULL){
+	if(msg == nullptr){
 		char* s = new (nothrow) char[200];
-		if(s == NULL){
+		if(s == nullptr){
 			std::cerr << "Allocation of memory for error message failed, bailing out..." << std::endl;
 			abort();
 		}
@@ -1535,7 +1535,7 @@ const char* xBadVal::what() const throw() {
 }
 
 xBadVal::~xBadVal() throw(){
-	if(msg != NULL) delete[] msg;
+	if(msg != nullptr) delete[] msg;
 }
 
 bool cDialog::doAnimations = false;

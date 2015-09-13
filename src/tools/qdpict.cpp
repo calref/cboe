@@ -459,8 +459,8 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 	// TODO: There's no way around it; I'll have to read resource files for this section.
 	FSRef file;
 	ResFileRefNum custRef;
-	OSErr err = FSPathMakeRef((const UInt8*)gpath.c_str(), &file, NULL);
-	err = FSOpenResourceFile(&file, 0, NULL, fsRdPerm, &custRef);
+	OSErr err = FSPathMakeRef((const UInt8*)gpath.c_str(), &file, nullptr);
+	err = FSOpenResourceFile(&file, 0, nullptr, fsRdPerm, &custRef);
 	if(err != noErr) { // TODO: Is the error that would be returned if the resources were stored in the resource fork?
 		HFSUniStr255 rsrc;
 		err = FSGetResourceForkName(&rsrc);
@@ -482,29 +482,29 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 		showError("An old-style .meg graphics file was found, but it did not contain a PICT resource of ID 1.",noGraphics);
 		return false;
 	}
-	if(resHandle == NULL) {
+	if(resHandle == nullptr) {
 		CloseResFile(custRef);
 		showError("An old-style .meg graphics file was found, but an error occurred while fetching the PICT resource of ID 1.",noGraphics);
 		return false;
 	}
-	unsigned char* data = NULL;
+	unsigned char* data = nullptr;
 	int error = 0;
 	rectangle picFrame;
 	try {
 		picFrame = loadFromPictResource(resHandle, data, error);
 	} catch(std::runtime_error&) {
 		CloseResFile(custRef);
-		if(data != NULL) delete[] data;
+		if(data != nullptr) delete[] data;
 		showError("An old-style .meg graphics file was found, but an error occurred while loading the PICT resource of ID 1.",noGraphics);
 		return false;
 	}
 	CloseResFile(custRef);
 	if(picFrame.width() <= 0 || picFrame.height() <= 0) {
-		if(data != NULL) delete[] data;
+		if(data != nullptr) delete[] data;
 		showError("An old-style .meg graphics file was found, but an error occurred while reading it: " + errStrings[error],noGraphics);
 		return false;
 	}
 	graphics_store.create(picFrame.width(), picFrame.height(), data);
-	if(data != NULL) delete[] data;
+	if(data != nullptr) delete[] data;
 	return true;
 }

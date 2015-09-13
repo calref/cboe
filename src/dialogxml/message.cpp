@@ -15,7 +15,7 @@ extern sf::Texture bg_gworld;
 
 void cTextMsg::attachClickHandler(click_callback_t f) throw(){
 	onClick = f;
-	clickable = onClick != NULL;
+	clickable = onClick != nullptr;
 }
 
 void cTextMsg::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported){
@@ -23,7 +23,7 @@ void cTextMsg::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported){
 }
 
 bool cTextMsg::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
-	if(onClick != NULL) return onClick(me,id,mods);
+	if(onClick != nullptr) return onClick(me,id,mods);
 	return false;
 }
 

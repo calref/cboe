@@ -53,7 +53,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	// but if the first flag is 0x0B0E, we have a new-format save
 	// the three flags still follow that.
 	FILE* file_id = fopen(file_to_load.string().c_str(), "rb");
-	if(file_id == NULL) {
+	if(file_id == nullptr) {
 		showError("Loading Blades of Exile save file failed.");
 		return false;
 	}
