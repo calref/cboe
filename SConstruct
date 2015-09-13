@@ -327,5 +327,4 @@ elif str(platform) == "win32":
 				for targ in target_dirs:
 					env.Install(targ, src_file)
 				break
-	#env.Command(install_dir, 'Blades of Exile.exe', [Delete(Glob(path.join(install_dir, '*.dll'))), bundle_libraries_for])
 
