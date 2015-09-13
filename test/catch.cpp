@@ -8,7 +8,7 @@ sf::Texture fields_gworld, anim_gworld, boom_gworld, dlogpics_gworld, items_gwor
 sf::Texture pc_gworld, roads_gworld, small_ter_gworld, status_gworld, talkfaces_gworld, terrain_gworld[NUM_TER_SHEETS];
 sf::Texture tiny_obj_gworld, vehicle_gworld;
 sf::RenderWindow mainPtr;
-fs::path scenario_temp_dir_name = "test_scenario";
+std::string scenario_temp_dir_name = "test_scenario";
 cCustomGraphics spec_scen_g;
 
 // And these are referenced from the scenario code, though not used in test cases

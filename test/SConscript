@@ -2,7 +2,14 @@
 Import("env platform party_classes common_sources")
 
 test_sources = Glob("""*.cpp""") + Split("""
-	#src/scenedit/scen.fileio.cpp
+	#build/obj/scenedit/scen.fileio.cpp
 """)
 
-test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources)
+if str(platform) == "win32" and 'msvc' in env["TOOLS"]:
+	test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources, LINKFLAGS='/nologo /SUBSYSTEM:CONSOLE /MACHINE:X86')
+else:
+	test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources)
+
+env.Install("#build/test/", test)
+env.Install("#build/test/", Dir("#test/files"))
+env.Command("#build/test/junk/", '', 'mkdir "' + Dir("#build/test/junk").path + '"')
