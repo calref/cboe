@@ -22,7 +22,7 @@ if str(platform) == "darwin":
 		qdpict.cpp
 		winutil.mac.mm
 	"""))
-elif str(platform) == "windows":
+elif str(platform) == "win32":
 	tools.extend(Split("""
 		cursors.win.cpp
 		menu_accel.win.cpp

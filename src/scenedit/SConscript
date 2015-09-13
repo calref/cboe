@@ -17,10 +17,11 @@ if str(platform) == "darwin":
 		scen.appleevents.mm
 		scen.menus.mac.mm
 	"""))
-elif str(platform) == "windows":
+elif str(platform) == "win32":
 	scened_sources.extend(Split("""
 		scen.menus.win.cpp
 	"""))
+	scened_sources.extend(env.RES('#rsrc/menus/ScenEditor.rc'))
 
 scened = env.Program("#build/bin/BoE Scenario Editor", common_sources + scened_sources)
 
@@ -31,7 +32,7 @@ if str(platform) == "darwin":
 		'creator': 'BlEd',
 		'icons': 'boescenario BoEScenEd',
 	}
-elif str(platform) == "windows":
-	pass
+elif str(platform) == "win32":
+	scened_info = {}
 
 env.Package(scened, install_dir, scened_info)
