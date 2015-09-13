@@ -1,7 +1,9 @@
 
+from __future__ import print_function
 import os.path as path
+import subprocess
 
-Import("env data_dir install_dir")
+Import("env platform data_dir install_dir")
 
 # Data
 
@@ -18,3 +20,27 @@ env.Install(path.join(data_dir, "shaders"), Glob("#src/tools/mask.*"))
 
 env.Install(path.join(install_dir, "Blades of Exile Scenarios"), Glob("Blades of Exile Scenarios/*.exs") + Glob("Blades of Exile Scenarios/*.meg"))
 env.Install(path.join(install_dir, "Blades of Exile Base"), Glob("Blades of Exile Bases/*.exs"))
+
+if str(platform) != "win32" and subprocess.call(['which', '-s', 'xmllint']) == 0:
+	have_xmllint = True
+	xmllint_command = ('xmllint', '--nonet', '--noout', '--schema', '../schemas/dialog.xsd')
+
+if have_xmllint: # This is separate so that alternate xml validators could be user
+	def validate_dialogs(target, source, env):
+		sources = source
+		PIPE = subprocess.PIPE
+		with open(target[0].path, 'w') as log:
+			for source in sources:
+				src_name = path.basename(source.path)
+				if src_name == 'dialog.xsd':
+					continue
+				cmd_line = xmllint_command + (src_name,)
+				print(*cmd_line)
+				p = subprocess.Popen(cmd_line,
+					bufsize=1, stdin=PIPE, stdout=PIPE, stderr=PIPE,
+					cwd=Dir('rsrc/dialogs').abspath
+				)
+				out, err = p.communicate()
+				print(err, end='')
+				print(err, file=log)
+	env.Command('#build/dialogs.log', Glob('dialogs/*.xml') + ['schemas/dialog.xsd'], validate_dialogs)
