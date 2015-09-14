@@ -14,7 +14,7 @@ if str(platform) not in ("darwin", "win32"):
 
 print 'Building for:', platform
 
-env = Environment(TARGET_ARCH='x86')
+env = Environment(TARGET_ARCH='x86',ENV=os.environ)
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
 
@@ -331,4 +331,21 @@ elif str(platform) == "win32":
 					for targ in target_dirs:
 						env.Install(targ, src_file)
 					break
+	# Extra: Microsoft redistributable libraries installer
+	if 'msvc' in env["TOOLS"]:
+		if path.exists("dep/VCRedistInstall.exe"):
+			env.Install("build/Blades of Exile/", "dep/VCRedistInstall.exe")
+		else:
+			print "WARNING: Cannot find installer for the MSVC redistributable libraries for your version of Visual Studio."
+			print "Please download it from Microsoft's website and place it at:"
+			print "      dep/VCRedistInstall.exe"
+			# Create it so its lack doesn't cause makensis to break
+			# (Because the installer is an optional component.)
+			open("build/Blades of Exile/VCRedistInstall.exe", 'w').close()
 
+if str(platform) == "darwin":
+	# TODO: Build a disk image package
+	env.VariantDir("#build/pkg", "pkg/mac")
+elif str(platform) == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
+	env.VariantDir("#build/pkg", "pkg/win")
+SConscript("build/pkg/SConscript")

@@ -4,11 +4,18 @@
 !define APPNAME "Blades of Exile"
 !define APPNAMEANDVERSION "Blades of Exile 1.0 beta"
 
+; This specifies the build output dir to copy files from
+; It uses /ifndef so it can be overridden from the commandline
+; The default is the scons output directory
+!ifndef RELEASE_DIR
+	!define RELEASE_DIR "..\..\build\Blades of Exile"
+!endif
+
 ; Main Install settings
 Name "${APPNAMEANDVERSION}"
 InstallDir "$PROGRAMFILES\Blades of Exile"
 InstallDirRegKey HKLM "Software\${APPNAME}" ""
-OutFile "Release\Install-OBoE.exe"
+OutFile "Install-OBoE.exe"
 
 ; File association helpers
 !include "fileassoc.nsh"
@@ -24,7 +31,7 @@ OutFile "Release\Install-OBoE.exe"
 !define MUI_LICENSEPAGE_BUTTON "&Install"
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "..\..\..\LICENSE.txt"
+!insertmacro MUI_PAGE_LICENSE "..\..\LICENSE.txt"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
@@ -46,30 +53,32 @@ Section "Blades of Exile" Section1
 	; Set Section Files and Shortcuts
 	SetOutPath "$INSTDIR\"
 	; Install Visual Studio Redistributables
-	File "..\Release\VCRedistInstall.exe"
-	MessageBox MB_OK "Blades of Exile Installer will now launch the Microsoft Visual C++ \
-		Redistributable installer, which is required to complete the installation."
-	ExecWait '$INSTDIR\VCRedistInstall.exe /passive'
-	Delete "$INSTDIR\VCRedistInstall.exe"
+	!ifdef MSVC
+		File "${RELEASE_DIR}\VCRedistInstall.exe"
+		MessageBox MB_OK "Blades of Exile Installer will now launch the Microsoft Visual C++ \
+			Redistributable installer, which is required to complete the installation."
+		ExecWait '$INSTDIR\VCRedistInstall.exe /passive'
+		Delete "$INSTDIR\VCRedistInstall.exe"
+	!endif
 	; The executable file itself
-	File "..\Release\Blades of Exile.exe"
+	File "${RELEASE_DIR}\Blades of Exile.exe"
 	; Required DLLs
-	File "..\Release\libsndfile-1.dll"
-	File "..\Release\openal32.dll"
-	File "..\Release\sfml-audio-2.dll"
-	File "..\Release\sfml-graphics-2.dll"
-	File "..\Release\sfml-system-2.dll"
-	File "..\Release\sfml-window-2.dll"
-	File "..\Release\zlib1.dll"
+	File "${RELEASE_DIR}\libsndfile-1.dll"
+	File "${RELEASE_DIR}\openal32.dll"
+	File "${RELEASE_DIR}\sfml-audio-2.dll"
+	File "${RELEASE_DIR}\sfml-graphics-2.dll"
+	File "${RELEASE_DIR}\sfml-system-2.dll"
+	File "${RELEASE_DIR}\sfml-window-2.dll"
+	File "${RELEASE_DIR}\zlib1.dll"
 	; Scenarios
 	SetOutPath "$INSTDIR\Blades of Exile Scenarios"
-	File "..\Release\Blades of Exile Scenarios\busywork.exs"
-	File "..\Release\Blades of Exile Scenarios\STEALTH.BMP"
-	File "..\Release\Blades of Exile Scenarios\stealth.exs"
-	File "..\Release\Blades of Exile Scenarios\VALLEYDY.BMP"
-	File "..\Release\Blades of Exile Scenarios\valleydy.exs"
-	File "..\Release\Blades of Exile Scenarios\ZAKHAZI.BMP"
-	File "..\Release\Blades of Exile Scenarios\zakhazi.exs"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\busywork.exs"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\STEALTH.BMP"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\stealth.exs"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\VALLEYDY.BMP"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\valleydy.exs"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\ZAKHAZI.BMP"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\zakhazi.exs"
 	!include data.nsi
 	SetShellVarContext all
 	CreateShortCut "$DESKTOP\Blades of Exile.lnk" "$INSTDIR\Blades of Exile.exe"
@@ -85,9 +94,9 @@ Section "Character Editor" Section2
 
 	; Set Section Files and Shortcuts
 	SetOutPath "$INSTDIR\"
-	File "..\Release\Char Editor.exe"
+	File "${RELEASE_DIR}\BoE Character Editor.exe"
 	SetShellVarContext all
-	CreateShortCut "$SMPROGRAMS\Blades of Exile\Character Editor.lnk" "$INSTDIR\Char Editor.exe"
+	CreateShortCut "$SMPROGRAMS\Blades of Exile\Character Editor.lnk" "$INSTDIR\BoE Character Editor.exe"
 
 SectionEnd
 
@@ -98,11 +107,11 @@ Section "Scenario Editor" Section3
 
 	; Set Section Files and Shortcuts
 	SetOutPath "$INSTDIR\"
-	File "..\Release\Scen Editor.exe"
+	File "${RELEASE_DIR}\BoE Scenario Editor.exe"
 	SetOutPath "$INSTDIR\Blades of Exile Base\"
-	File "..\Release\Blades of Exile Base\bladbase.exs"
+	File "${RELEASE_DIR}\Blades of Exile Base\bladbase.exs"
 	SetShellVarContext all
-	CreateShortCut "$SMPROGRAMS\Blades of Exile\Scenario Editor.lnk" "$INSTDIR\Scen Editor.exe"
+	CreateShortCut "$SMPROGRAMS\Blades of Exile\Scenario Editor.lnk" "$INSTDIR\BoE Scenario Editor.exe"
 
 SectionEnd
 
@@ -113,60 +122,60 @@ Section /o "Documentation" Section4
 
 	; Set Section Files and Shortcuts
 	SetOutPath "$INSTDIR\doc\game"
-	File "..\..\..\doc\game\Contents.html"
-	File "..\..\..\doc\game\About.html"
-	File "..\..\..\doc\game\Tips.html"
-	File "..\..\..\doc\game\Intro.html"
-	File "..\..\..\doc\game\Screen.html"
-	File "..\..\..\doc\game\Menus.html"
-	File "..\..\..\doc\game\Town.html"
-	File "..\..\..\doc\game\Outdoors.html"
-	File "..\..\..\doc\game\Combat.html"
-	File "..\..\..\doc\game\Misc.html"
-	File "..\..\..\doc\game\Mage.html"
-	File "..\..\..\doc\game\Priest.html"
-	File "..\..\..\doc\game\Hints.html"
-	File "..\..\..\doc\game\Editor.html"
-	File "..\..\..\doc\game\Credits.html"
-	File "..\..\..\doc\game\Licensing.html"
-	File "..\..\..\doc\game\nav.js"
-	File "..\..\..\doc\game\style.css"
+	File "..\..\doc\game\Contents.html"
+	File "..\..\doc\game\About.html"
+	File "..\..\doc\game\Tips.html"
+	File "..\..\doc\game\Intro.html"
+	File "..\..\doc\game\Screen.html"
+	File "..\..\doc\game\Menus.html"
+	File "..\..\doc\game\Town.html"
+	File "..\..\doc\game\Outdoors.html"
+	File "..\..\doc\game\Combat.html"
+	File "..\..\doc\game\Misc.html"
+	File "..\..\doc\game\Mage.html"
+	File "..\..\doc\game\Priest.html"
+	File "..\..\doc\game\Hints.html"
+	File "..\..\doc\game\Editor.html"
+	File "..\..\doc\game\Credits.html"
+	File "..\..\doc\game\Licensing.html"
+	File "..\..\doc\game\nav.js"
+	File "..\..\doc\game\style.css"
 	SetOutPath "$INSTDIR\doc\editor"
-	File "..\..\..\doc\editor\Contents.html"
-	File "..\..\..\doc\editor\About.html"
-	File "..\..\..\doc\editor\Building.html"
-	File "..\..\..\doc\editor\Editing.html"
-	File "..\..\..\doc\editor\Outdoors.html"
-	File "..\..\..\doc\editor\Towns.html"
-	File "..\..\..\doc\editor\Terrain.html"
-	File "..\..\..\doc\editor\Monsters.html"
-	File "..\..\..\doc\editor\Items.html"
-	File "..\..\..\doc\editor\Advanced.html"
-	File "..\..\..\doc\editor\Specials.html"
-	File "..\..\..\doc\editor\Dialogue.html"
-	File "..\..\..\doc\editor\Graphics.html"
-	File "..\..\..\doc\editor\Testing.html"
-	File "..\..\..\doc\editor\nav.js"
-	File "..\..\..\doc\editor\style.css"
+	File "..\..\doc\editor\Contents.html"
+	File "..\..\doc\editor\About.html"
+	File "..\..\doc\editor\Building.html"
+	File "..\..\doc\editor\Editing.html"
+	File "..\..\doc\editor\Outdoors.html"
+	File "..\..\doc\editor\Towns.html"
+	File "..\..\doc\editor\Terrain.html"
+	File "..\..\doc\editor\Monsters.html"
+	File "..\..\doc\editor\Items.html"
+	File "..\..\doc\editor\Advanced.html"
+	File "..\..\doc\editor\Specials.html"
+	File "..\..\doc\editor\Dialogue.html"
+	File "..\..\doc\editor\Graphics.html"
+	File "..\..\doc\editor\Testing.html"
+	File "..\..\doc\editor\nav.js"
+	File "..\..\doc\editor\style.css"
 	SetOutPath "$INSTDIR\doc\editor\appendix"
-	File "..\..\..\doc\editor\appendix\Specials.html"
-	File "..\..\..\doc\editor\appendix\Items.html"
-	File "..\..\..\doc\editor\appendix\Monsters.html"
-	File "..\..\..\doc\editor\appendix\Terrain.html"
-	File "..\..\..\doc\editor\appendix\Sounds.html"
-	File "..\..\..\doc\editor\appendix\Messages.html"
-	File "..\..\..\doc\editor\appendix\Magic.html"
-	File "..\..\..\doc\editor\appendix\Examples.html"
+	File "..\..\doc\editor\appendix\Specials.html"
+	File "..\..\doc\editor\appendix\Items.html"
+	File "..\..\doc\editor\appendix\Monsters.html"
+	File "..\..\doc\editor\appendix\Terrain.html"
+	File "..\..\doc\editor\appendix\Sounds.html"
+	File "..\..\doc\editor\appendix\Messages.html"
+	File "..\..\doc\editor\appendix\Magic.html"
+	File "..\..\doc\editor\appendix\Examples.html"
 	SetOutPath "$INSTDIR\doc\img"
-	File "..\..\..\doc\img\background.gif"
-	File "..\..\..\doc\img\boe.gif"
-	File "..\..\..\doc\img\editormainmenu.png"
-	File "..\..\..\doc\img\editorsymbols.gif"
-	File "..\..\..\doc\img\edoutbtns.png"
-	File "..\..\..\doc\img\edtownbtns.png"
-	File "..\..\..\doc\img\invenbtn.gif"
-	File "..\..\..\doc\img\pcbtn.gif"
-	File "..\..\..\doc\img\terscr.gif"
+	File "..\..\doc\img\background.gif"
+	File "..\..\doc\img\boe.gif"
+	File "..\..\doc\img\editormainmenu.png"
+	File "..\..\doc\img\editorsymbols.gif"
+	File "..\..\doc\img\edoutbtns.png"
+	File "..\..\doc\img\edtownbtns.png"
+	File "..\..\doc\img\invenbtn.gif"
+	File "..\..\doc\img\pcbtn.gif"
+	File "..\..\doc\img\terscr.gif"
 
 SectionEnd
 

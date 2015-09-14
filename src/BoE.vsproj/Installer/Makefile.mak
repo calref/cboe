@@ -1,14 +1,14 @@
 
-all: Release\Install-OBoE.exe
+all: Install-OBoE.exe Makefile.mak
 
-Release\Install-OBoE.exe: main.nsi data.nsi
-	makensis main.nsi
+Install-OBoE.exe: ..\..\..\pkg\win\main.nsi ..\..\..\pkg\win\data.nsi
+	makensis /DMSVC /DRELEASE_DIR=..\..\src\BoE.vsproj\Release ..\..\..\pkg\win\main.nsi
 
-data.nsi: gen-data.py
-	python gen-data.py > data.nsi
+..\..\..\pkg\win\data.nsi: ..\..\..\pkg\win\gen-data.py
+	python ..\..\..\pkg\win\gen-data.py ..\Release > ..\..\..\pkg\win\data.nsi
 
 clean:
-	del data.nsi
-	del Release\Install-OBoE.exe
+	del ..\..\..\pkg\win\data.nsi
+	del Install-OBoE.exe
 
 rebuild: clean all

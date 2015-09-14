@@ -57,7 +57,7 @@ build/
 deps/
 
 # Generated NSIS script file
-src/*.vsproj/Installer/data.nsi
+pkg/win/data.nsi
 
 # Shader Builder projects
 # It's an sqlite3 database and not particularly important, so exclude it
