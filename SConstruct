@@ -320,11 +320,15 @@ elif str(platform) == "win32":
 	target_dirs = ["#build/Blades of Exile", "#build/test"]
 	for lib in bundled_libs:
 		for lpath in env['LIBPATH']:
-			if 'Visual Studio' in lpath:
-				lpath = lpath.replace('lib', 'bin')
 			src_file = path.join(lpath, lib + ".dll")
 			if path.exists(src_file):
 				for targ in target_dirs:
 					env.Install(targ, src_file)
 				break
+			elif 'lib' in lpath:
+				src_file = path.join(lpath.replace('lib', 'bin'), lib + ".dll")
+				if path.exists(src_file):
+					for targ in target_dirs:
+						env.Install(targ, src_file)
+					break
 
