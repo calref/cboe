@@ -149,7 +149,7 @@ env.AddMethod(build_app_package, "Package")
 # Allow user to specify additional library/include paths
 env.Append(
 	LIBPATH = ARGUMENTS.get('LIBPATH', '').split(path.pathsep),
-	CPPPATH = ARGUMENTS.get('CPPPATH', '').split(path.pathsep)
+	CPPPATH = ARGUMENTS.get('INCLUDEPATH', '').split(path.pathsep)
 )
 if str(platform) == 'darwin':
 	env.Append(FRAMEWORKPATH=ARGUMENTS.get('FRAMEWORKPATH', '').split(path.pathsep))
