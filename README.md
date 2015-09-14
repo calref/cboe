@@ -24,11 +24,6 @@ you check into the repository.
 Please do not commit any binaries, junk files, or anything that doesn't
 compile.
 
-The Win32/ directory should be considered "frozen" from this point on.
-Apart from minor bugfixes, it should not be altered. The src/ directory
-is to be the official codebase now. As of the time of this writing, it
-has a few major issues on Windows which are being worked on.
-
 Building
 --------
 
