@@ -47,8 +47,10 @@ cParty::cParty(cUniverse& univ, long party_preset) : univ(univ) {
 }
 
 cParty::~cParty() {
-	for(int i = 0; i < 6; i++)
+	for(int i = 0; i < 6; i++) {
 		delete adven[i];
+		adven[i] = nullptr;
+	}
 }
 
 void cParty::append(legacy::party_record_type& old){
@@ -821,8 +823,8 @@ void cParty::readFrom(std::istream& file){
 		} else if(cur == "TOWNSAVE") {
 			int i;
 			std::string str;
-			bin >> i;
-			bin >> creature_save[i].which_town >> str;
+			sin >> i;
+			sin >> creature_save[i].which_town >> str;
 			creature_save[i].hostile = str == "HOSTILE";
 		} else if(cur == "TOWNVISIBLE") {
 			int i;

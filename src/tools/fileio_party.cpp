@@ -282,6 +282,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	return true;
 }
 
+extern fs::path scenDir;
 bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there){
 	if(!fs::exists(tempDir)) fs::create_directories(tempDir);
 	fs::path tempPath = tempDir/"loadtemp.exg";
@@ -354,7 +355,9 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	
 	if(in_scen) {
 		fs::path path;
-		path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
+		path = scenDir/univ.party.scen_name;
+		if(!fs::exists(path))
+			path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
 		
 		if(!load_scenario(path, univ.scenario))
 			return false;

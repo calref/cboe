@@ -64,14 +64,14 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header)
 	// Before loading a scenario, we may need to pop scenario resource paths.
 	fs::path graphics_path = ResMgr::popPath<ImageRsrc>();
 	for(auto p : graphics_path) {
-		if(p.string() == "graphics") {
+		if(p.string() == "data") {
 			ResMgr::pushPath<ImageRsrc>(graphics_path);
 			break;
 		}
 	}
 	fs::path sounds_path = ResMgr::popPath<SoundRsrc>();
 	for(auto p : sounds_path) {
-		if(p.string() == "sounds") {
+		if(p.string() == "data") {
 			ResMgr::pushPath<SoundRsrc>(sounds_path);
 			break;
 		}
@@ -80,7 +80,10 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header)
 	std::string fname = file_to_load.filename().string();
 	std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
 	size_t dot = fname.find_last_of('.');
-	try {
+	if(dot == std::string::npos) {
+		showError("That is not a Blades of Exile scenario.");
+		return false;
+	}  else try {
 		if(fname.substr(dot) == ".boes")
 			return load_scenario_v2(file_to_load, scenario, only_header);
 		else if(fname.substr(dot) == ".exs")

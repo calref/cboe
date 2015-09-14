@@ -85,13 +85,6 @@ void finish_load_party(){
 		return;
 	}
 	
-	fs::path path;
-	path = progDir/"Blades of Exile Scenarios";
-	path /= univ.party.scen_name;
-	std::cout<<"Searching for scenario at:\n"<<path<<'\n';
-	if(!load_scenario(path, univ.scenario))
-		return;
-	
 	// Saved creatures may not have had their monster attributes saved
 	// Make sure that they know what they are!
 	// Cast to cMonster base class and assign, to avoid clobbering other attributes
