@@ -1,0 +1,35 @@
+<items boes="2.0.0">
+	<item id='0'>
+		<variety>weapon-1hand</variety>
+		<level>3</level>
+		<pic>0</pic>
+		<value>100</value>
+		<weight>10</weight>
+		<full-name>Test Sword</full-name>
+		<name>Sword</name>
+		<awkward>1</awkward>
+		<bonus>5</bonus>
+		<protection>4</protection>
+		<charges>20</charges>
+		<weapon-type>defense</weapon-type>
+		<missile-type>3</missile-type>
+		<flag>9</flag>
+		<class>400</class>
+		<treasure>2</treasure>
+		<ability>
+			<type>poison-aug</type>
+			<strength>6</strength>
+			<data>42</data>
+			<use-flag>harm-one</use-flag>
+		</ability>
+		<properties>
+			<identified>true</identified>
+			<magic>true</magic>
+			<cursed>true</cursed>
+			<concealed>true</concealed>
+			<enchanted>true</enchanted>
+			<unsellable>true</unsellable>
+		</properties>
+		<description>This is a silly, silly description.</description>
+	</item>
+</items>

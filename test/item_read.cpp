@@ -107,4 +107,30 @@ TEST_CASE("Loading an item type definition") {
 		CHECK(scen.scen_items[0].value == 100);
 		CHECK(scen.scen_items[0].weight == 10);
 	}
+	SECTION("With all possible data") {
+		fin.open("files/items/full.xml");
+		doc = xmlDocFromStream(fin, "full.xml");
+		REQUIRE_NOTHROW(readItemsFromXml(move(doc), scen));
+		REQUIRE(scen.scen_items.size() >= 1);
+		CHECK(scen.scen_items[0].awkward == 1);
+		CHECK(scen.scen_items[0].bonus == 5);
+		CHECK(scen.scen_items[0].protection == 4);
+		CHECK(scen.scen_items[0].charges == 20);
+		CHECK(scen.scen_items[0].weap_type == eSkill::DEFENSE);
+		CHECK(scen.scen_items[0].missile == 3);
+		CHECK(scen.scen_items[0].type_flag == 9);
+		CHECK(scen.scen_items[0].special_class == 400);
+		CHECK(scen.scen_items[0].treas_class == 2);
+		CHECK(scen.scen_items[0].ability == eItemAbil::POISON_AUGMENT);
+		CHECK(scen.scen_items[0].abil_data[0] == 6);
+		CHECK(scen.scen_items[0].abil_data[1] == 42);
+		CHECK(scen.scen_items[0].magic_use_type == eItemUse::HARM_ONE);
+		CHECK(scen.scen_items[0].ident);
+		CHECK(scen.scen_items[0].magic);
+		CHECK(scen.scen_items[0].cursed);
+		CHECK(scen.scen_items[0].concealed);
+		CHECK(scen.scen_items[0].enchanted);
+		CHECK(scen.scen_items[0].unsellable);
+		CHECK(scen.scen_items[0].desc == "This is a silly, silly description.");
+	}
 }
