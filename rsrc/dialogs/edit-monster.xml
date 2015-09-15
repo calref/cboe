@@ -23,8 +23,8 @@
 	<field name='treas' top='273' left='513' width='55' height='16'/>
 	<button name='okay' type='regular' top='367' left='600'>OK</button>
 	<button name='cancel' type='regular' def-key='esc' top='367' left='527'>Cancel</button>
-	<button name='left' type='left' def-key='left' top='367' left='335'/>
-	<button name='right' type='right' def-key='right' top='367' left='398'/>
+	<button name='left' type='left' top='367' left='335'/>
+	<button name='right' type='right' top='367' left='398'/>
 	<button name='abils' type='large' top='337' left='561'>Abilities</button>
 	<button name='pickicon' type='large' top='53' left='201'>Select Icon</button>
 	<button name='picktype' type='regular' top='250' left='264'>Choose</button>
