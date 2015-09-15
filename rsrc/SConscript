@@ -26,6 +26,8 @@ elif str(platform) == "win32":
 env.Install(path.join(install_dir, "Blades of Exile Scenarios"), Glob("Blades of Exile Scenarios/*.exs") + scen_gfx)
 env.Install(path.join(install_dir, "Blades of Exile Base"), Glob("Blades of Exile Bases/*.exs"))
 
+# Validate dialogs
+
 have_xmllint = False
 
 if ((str(platform) != "win32" and subprocess.call(['which', '-s', 'xmllint']) == 0) or
@@ -55,3 +57,31 @@ if have_xmllint: # This is separate so that alternate xml validators could be us
 		env.ValidateDialogXml(path.join("#build/dialogs", dlg), path.join("dialogs", dlg))
 else:
 	print("Note: Skipping XML dialog validation since no validator tool was found.")
+
+# Assign custom icons
+
+if str(platform) == "darwin":
+	def set_dir_icon(env, target, source):
+		env.Command(target, source, action = [
+			Mkdir("build/rsrc/icons"),
+			"sips -i $SOURCE --out build/rsrc/icons/${SOURCE.file}",
+			"DeRez -only icns build/rsrc/icons/${SOURCE.file} > \
+				build/rsrc/icons/${SOURCE.filebase}.rsrc",
+			"Rez -append build/rsrc/icons/${SOURCE.filebase}.rsrc -o $TARGET",
+			"SetFile -a C ${TARGET.dir}",
+			"chflags hidden $TARGET",
+		])
+	env.AddMethod(set_dir_icon, "SetDirIcon")
+	icons = {
+		'': 'boeresources.icns',
+		'dialogs/': 'boeresources.icns',
+		'strings/': 'boeresources.icns',
+		'cursors/': 'boegraphics.icns',
+		'graphics/': 'boegraphics.icns',
+		'sounds/': 'boesounds.icns',
+	}
+	for dir, icon in icons.items():
+		env.SetDirIcon(
+			path.join("#build/Blades of Exile/data", dir, 'Icon\r'),
+			path.join("icons/mac/", icon)
+		)
