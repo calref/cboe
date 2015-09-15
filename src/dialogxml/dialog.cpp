@@ -1288,8 +1288,7 @@ bool cDialog::accepted() {
 }
 
 bool cDialog::setFocus(cTextField* newFocus, bool force) {
-	// TODO: Should check that there IS a currently focused field (which might not be the case if there are no fields at all).
-	if(!force) {
+	if(!force && !currentFocus.empty()) {
 		if(!this->getControl(currentFocus).triggerFocusHandler(*this, currentFocus, true)) return false;
 	}
 	if(newFocus == nullptr) {
