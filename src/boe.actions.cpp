@@ -2254,6 +2254,7 @@ void do_save(short mode) {
 		save_party(univ.file, univ);
 	}
 	
+	add_string_to_buf("Save: Game saved");
 	
 	pause(6);
 	redraw_screen(REFRESH_TEXT);
