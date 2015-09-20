@@ -76,7 +76,7 @@ public:
 	rectangle in_town_rect;
 	std::vector<cItem> preset_items;
 	std::vector<cTownperson> creatures;
-	short max_num_monst;
+	long max_num_monst;
 	std::vector<cField> preset_fields;
 	short spec_on_entry,spec_on_entry_if_dead;
 	short spec_on_hostile;
@@ -104,6 +104,7 @@ public:
 	void init_start();
 	void set_up_lights();
 	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
+	bool is_cleaned_out(long m_killed);
 	
 	explicit cTown(cScenario& scenario);
 	void append(legacy::town_record_type& old);

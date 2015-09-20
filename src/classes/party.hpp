@@ -110,7 +110,7 @@ public:
 	std::vector<cTimer> party_event_timers;
 	std::set<int> spec_items;
 	std::set<int> help_received;
-	short m_killed[200]; // monsters killed per town, I think
+	long m_killed[200]; // monsters killed per town
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	std::string scen_name;
 private:

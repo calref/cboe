@@ -179,6 +179,11 @@ bool cTown::cWandering::isNull(){
 	return true;
 }
 
+bool cTown::is_cleaned_out(long m_killed) {
+	if(max_num_monst < 0) return false;
+	return m_killed >= max_num_monst;
+}
+
 void cTown::set_up_lights() {
 	using namespace std::placeholders;
 	short rad;

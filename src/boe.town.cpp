@@ -221,7 +221,7 @@ void start_town_mode(short which_town, short entry_dir) {
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
 							univ.town.monst[i].active += 10;
-						else if(univ.party.m_killed[univ.town.num] > univ.town->max_num_monst)
+						else if(univ.town->is_cleaned_out(univ.party.m_killed[univ.town.num]))
 							univ.town.monst[i].active += 10;
 						else univ.town.monst[i].active = 0;
 						if(univ.town.monst[i].active >= 10)
@@ -291,7 +291,7 @@ void start_town_mode(short which_town, short entry_dir) {
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
 							univ.town.monst[i].active += 10;
-						else if(univ.party.m_killed[univ.town.num] > univ.town->max_num_monst)
+						else if(univ.town->is_cleaned_out(univ.party.m_killed[univ.town.num]))
 							univ.town.monst[i].active += 10;
 						else univ.town.monst[i].active = 0;
 						break;
@@ -320,7 +320,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	
 	// Thrash town?
-	if(univ.party.m_killed[univ.town.num] > univ.town->max_num_monst) {
+	if(univ.town->is_cleaned_out(univ.party.m_killed[univ.town.num])) {
 		town_toast = true;
 		add_string_to_buf("Area has been cleaned out.");
 	}

@@ -54,7 +54,7 @@ void create_wand_monst() {
 				place_outd_wand_monst(univ.out->wandering_locs[r2], univ.out->wandering[r1],0);
 		}
 	} else if(!univ.town->wandering[r1].isNull() && univ.town.countMonsters() <= 50
-			  && univ.party.m_killed[univ.town.num] < univ.town->max_num_monst) {
+			  && !univ.town->is_cleaned_out(univ.party.m_killed[univ.town.num])) {
 		// won't place wandering if more than 50 monsters
 		r2 = get_ran(1,0,univ.town->wandering.size() - 1);
 		while(point_onscreen(univ.town->wandering_locs[r2],univ.town.p_loc) &&
