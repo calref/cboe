@@ -574,6 +574,7 @@ static bool edit_out_wand_spec(cDialog& me, std::string hit, short which, cOutdo
 
 static bool edit_out_wand_monst(cDialog& me, std::string hit, short which, cOutdoors::cWandering wand) {
 	if(!me.toast(true)) return true;
+	me.untoast();
 	save_out_wand(me, which, wand, 100);
 	std::string fld = hit.substr(7);
 	short i;
