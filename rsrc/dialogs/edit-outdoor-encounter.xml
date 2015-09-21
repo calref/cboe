@@ -68,7 +68,7 @@
 	<text size='large' top='114' left='11' width='191' height='17'>Monsters in encounter:</text>
 	<text size='large' top='152' left='350' width='191' height='17'>Advanced encounter traits:</text>
 	<text top='197' left='352' width='194' height='14'>Special called when enc. starts</text>
-	<text top='240' left='352' width='194' height='14'>Special called when party winds</text>
+	<text top='240' left='352' width='194' height='14'>Special called when party wins</text>
 	<text top='283' left='352' width='194' height='14'>Special called if party flees</text>
 	<text top='326' left='352' width='103' height='33'>Stuff done flag to eliminate encounter</text>
 	<text top='168' left='364' width='170' height='27'>Note: Ignore these if you aren't sure what they do.</text>

@@ -14,7 +14,7 @@ Killed a monster
 Entered outdoor combat
 Fled outdoor encounter
 Won outdoor encounter
-Targetung spell
+Targeting spell
 Using space
 Seeing a monster for the first time
 Monster using special ability
