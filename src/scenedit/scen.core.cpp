@@ -2841,31 +2841,11 @@ bool edit_make_scen_1(std::string& author,std::string& title,bool& grass) {
 	return true;
 }
 
-static bool make_scen_check_out(cDialog& me, std::string which, bool losing) {
-	if(!losing) return true;
-	int w = me["out-w"].getTextAsNum(), h = me["out-h"].getTextAsNum();
-	if(w < 0 || w > 50 || h < 0 || h > 50) {
-		std::ostringstream error;
-		error << "Outdoors ";
-		if(which == "out-w")
-			error << "width";
-		else if(which == "out-h")
-			error << "height";
-		error << " must be between 1 and 50.";
-		showError(error.str(), &me);
-		return false;
-	}
-	int total = w * h;
-	if(total < 1 || total > 50) {
-		showError("The total number of outdoor sections (width times height) must be between 1 and 100.", &me);
-		return false;
-	}
-	return true;
-}
-
 static bool make_scen_check_towns(cDialog& me, std::string which, bool losing) {
 	if(!losing) return true;
+	bool have_wg = dynamic_cast<cLed&>(me["warrior-grove"]).getState() != led_off;
 	int sm = me["town-s"].getTextAsNum(), med = me["town-m"].getTextAsNum(), lg = me["town-l"].getTextAsNum();
+	if(have_wg) med++;
 	if(sm < 0 || sm > 200 || med < 0 || med > 200 || lg < 0 || lg > 200) {
 		std::ostringstream error;
 		error << "Number of ";
@@ -2876,6 +2856,8 @@ static bool make_scen_check_towns(cDialog& me, std::string which, bool losing) {
 		else if(which == "town-l")
 			error << "large";
 		error << " must be between 0 and 200";
+		if(have_wg && which == "town-m")
+			error << " (including Warrior's Grove)";
 		showError(error.str(), &me);
 		return false;
 	}
@@ -2892,12 +2874,12 @@ bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, 
 	cDialog new_dlog("make-scenario2");
 	new_dlog["okay"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, true));
 	new_dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, false));
-	new_dlog.attachFocusHandlers(make_scen_check_out, {"out-w", "out-h"});
 	new_dlog.attachFocusHandlers(make_scen_check_towns, {"town-s", "town-m", "town-l"});
 	new_dlog["warrior-grove"].attachFocusHandler([](cDialog& me, std::string, bool losing) -> bool {
 		if(losing) return true;
-		if(me["town-m"].getTextAsNum() < 1) {
-			showError("Warrior's Grove replaces your first medium town. As such, you must have at least one medium town in order to use it.", &me);
+		int sm = me["town-s"].getTextAsNum(), med = me["town-m"].getTextAsNum(), lg = me["town-l"].getTextAsNum();
+		if(sm + med + lg >= 200) {
+			showError("Warrior's Grove is in addition to any towns listed above. As such, you need to request less than 200 towns if you want to use Warrior's Grove.", &me);
 			return false;
 		}
 		return true;
