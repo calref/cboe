@@ -17,7 +17,7 @@
 #include "restypes.hpp"
 #include "mathutil.hpp"
 
-sf::Sound chan[4];
+std::shared_ptr<sf::Sound> chan[4];
 const int numchannel = 4;
 int channel;
 short snd_played[4];
@@ -43,7 +43,7 @@ static bool sound_going(snd_num_t which_s) {
 	
 	for(i = 0; i < 4; i++)
 		if(snd_played[i] == which_s)
-			return chan[i].getStatus() == sf::Sound::Playing;
+			return chan[i]->getStatus() == sf::Sound::Playing;
 	return false;
 }
 
@@ -53,8 +53,14 @@ static std::string sound_to_fname_map(snd_num_t snd_num) {
 	return sout.str();
 }
 
+static void exit_snd_tool() {
+	for(auto& ch : chan) ch.reset();
+}
+
 void init_snd_tool(){
+	for(auto& ch : chan) ch.reset(new sf::Sound);
 	ResMgr::setIdMapFn<SoundRsrc>(sound_to_fname_map);
+	atexit(exit_snd_tool);
 }
 
 void play_sound(short which, short how_many_times) { // if < 0, play asynch
@@ -84,11 +90,11 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 			which *= -1;
 	
  	if(sndhandle) {
-		chan[channel] = sf::Sound(*sndhandle);
-		chan[channel].play();
+		chan[channel].reset(new sf::Sound(*sndhandle));
+		chan[channel]->play();
 		
 		if(which > 0) {
-			while(chan[channel].getStatus() == sf::Sound::Playing);
+			while(chan[channel]->getStatus() == sf::Sound::Playing);
 		}
 		snd_played[channel] = abs(which);
 	}
