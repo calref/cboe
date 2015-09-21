@@ -1,4 +1,6 @@
 
+import subprocess
+
 Import("env platform party_classes common_sources")
 
 test_sources = Glob("""*.cpp""") + Split("""
@@ -10,7 +12,14 @@ if str(platform) == "win32" and 'msvc' in env["TOOLS"]:
 else:
 	test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources)
 
+def run_tests(env,target,source):
+   import subprocess
+   app = str(source[0].abspath)
+   if not subprocess.call(app):
+      open(target[0].abspath,'w').write("PASSED\n")
+
 env.Install("#build/test/", test)
 env.Install("#build/test/", Dir("#test/files"))
 env.Install("#build/rsrc/", Dir("#rsrc/strings"))
 env.Command("#build/test/junk/", '', 'mkdir "' + Dir("#build/test/junk").path + '"')
+env.Command("#build/test/passed", test, run_tests, chdir=True)
