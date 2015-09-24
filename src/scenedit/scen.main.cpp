@@ -136,8 +136,7 @@ void Initialize(void) {
 	
 	windRect.inset((windRect.right - 584) / 2,(windRect.bottom - height) / 2);
 	windRect.offset(0,18);
-	// TODO: I think it should have a close button as well
-	mainPtr.create(sf::VideoMode(windRect.width(), windRect.height()), "Blades of Exile Scenario Editor", sf::Style::Titlebar);
+	mainPtr.create(sf::VideoMode(windRect.width(), windRect.height()), "Blades of Exile Scenario Editor", sf::Style::Titlebar | sf::Style::Close);
 	mainPtr.setPosition(windRect.topLeft());
 	init_menubar();
 	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
@@ -186,6 +185,12 @@ void Handle_One_Event() {
 			
 		case sf::Event::MouseButtonReleased:
 			mouse_button_held = false;
+			break;
+			
+		case sf::Event::Closed:
+			if(!save_check("save-before-quit"))
+				break;
+			All_Done = true;
 			break;
 			
 		default:
