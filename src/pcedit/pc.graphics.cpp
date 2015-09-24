@@ -11,6 +11,7 @@
 #include "restypes.hpp"
 #include "message.hpp"
 #include "mathutil.hpp"
+#include "gitrev.hpp"
 
 extern cUniverse univ;
 
@@ -273,8 +274,18 @@ void draw_main_screen() {
 		win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",eTextMode::WRAP,style);
 	style.pointSize = 10;
 	style.font = FONT_PLAIN;
-	dest_rect.offset(280,0);
-	win_draw_string(mainPtr,dest_rect,"Created in 1997 by Spiderweb Software, Inc.",eTextMode::WRAP,style);
+	std::ostringstream sout;
+	sout << "Created in 1997 by Spiderweb Software, Inc. v" << oboeVersionString();
+#if defined(GIT_REVISION) && defined(GIT_TAG_REVISION)
+	if(strcmp(GIT_REVISION, GIT_TAG_REVISION) != 0) {
+		sout << " [" << GIT_REVISION << "]";
+	}
+#endif
+	std::string copyright = sout.str();
+	//dest_rect.offset(270,0);
+	dest_rect.right = mainPtr.getSize().x - 5;
+	dest_rect.left = dest_rect.right - string_length(copyright, style) - 5;
+	win_draw_string(mainPtr,dest_rect,copyright,eTextMode::WRAP,style);
 	
 	
 	reg_rect = whole_win_rect;
