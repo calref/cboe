@@ -2774,6 +2774,7 @@ static bool save_scen_details(cDialog& me, std::string, eKeyMod) {
 	scenario.bg_town = boost::lexical_cast<int>(me["bg-town"].getText().substr(10));
 	scenario.bg_dungeon = boost::lexical_cast<int>(me["bg-dungeon"].getText().substr(13));
 	scenario.bg_fight = boost::lexical_cast<int>(me["bg-fight"].getText().substr(11));
+	scenario.init_spec = me["oninit"].getTextAsNum();
 	return true;
 }
 
@@ -2791,6 +2792,15 @@ static void put_scen_details_in_dlog(cDialog& me) {
 	me["bg-town"].setText("In towns: " + std::to_string(scenario.bg_town));
 	me["bg-dungeon"].setText("In dungeons: " + std::to_string(scenario.bg_dungeon));
 	me["bg-fight"].setText("In combat: " + std::to_string(scenario.bg_fight));
+	me["oninit"].setTextToNum(scenario.init_spec);
+}
+
+static bool edit_scen_init_spec(cDialog& me, std::string, eKeyMod) {
+	int spec = me["oninit"].getTextAsNum();
+	if(spec < 0) spec = get_fresh_spec(0);
+	if(edit_spec_enc(spec, 0, &me))
+		me["oninit"].setTextToNum(spec);
+	return true;
 }
 
 static bool edit_scen_default_bgs(cDialog& me, std::string which, eKeyMod) {
@@ -2821,6 +2831,7 @@ void edit_scen_details() {
 	cDialog info_dlg("edit-scenario-details");
 	info_dlg["okay"].attachClickHandler(save_scen_details);
 	info_dlg.attachClickHandlers(edit_scen_default_bgs, {"bg-out", "bg-town", "bg-dungeon", "bg-fight"});
+	info_dlg["pickinit"].attachClickHandler(edit_scen_init_spec);
 	
 	put_scen_details_in_dlog(info_dlg);
 	

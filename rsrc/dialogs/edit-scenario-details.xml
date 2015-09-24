@@ -7,7 +7,7 @@
 	<field name='who1' top='104' left='181' width='243' height='47'/>
 	<field name='who2' top='159' left='181' width='243' height='47'/>
 	<field name='contact' top='214' left='181' width='243' height='65'/>
-	<button name='okay' type='regular' top='500' left='395'>OK</button>
+	<button name='okay' type='regular' top='528' left='395'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text top='23' left='50' width='372' height='53'>
 		This is where you can define the various pieces of information the user will see when deciding whether or not to play your scenario.
@@ -36,18 +36,21 @@
 		<led name='lvl4' state='off' top='339' left='281' width='94'>Very High Level (30+)</led>
 	</group>
 	<led name='adjust' top='356' left='50' size='small' width='350'>Adjust difficulty if played by a party stronger than recommended</led>
-	<text top='379' left='50' width='120' height='14'>Campaign ID:</text>
-	<field name='cpnid' top='378' left='181' width='100' height='16'/>
-	<text top='402' left='50' width='400' height='44'>
+	<text top='379' left='50' width='120' height='14'>Special on Start:</text>
+	<field name='oninit' top='378' left='181' width='100' height='16'/>
+	<button name='pickinit' type='large' top='374' left='290'>Create/Edit</button>
+	<text top='407' left='50' width='120' height='14'>Campaign ID:</text>
+	<field name='cpnid' top='406' left='181' width='100' height='16'/>
+	<text top='430' left='50' width='400' height='44'>
 		If your scenario is part of a campaign of several scenarios,
 		the ID specified here makes it easy to carry information from one scenario to the next.
 		It should be the same in each scenario in the series.
 	</text>
-	<text top='456' left='50' width='120' height='60'>Default backgrounds:<br/>
+	<text top='484' left='50' width='120' height='60'>Default backgrounds:<br/>
 		Set the default patterns to be shown behind the game screen.
 	</text>
-	<button name='bg-out' type='tiny' top='456' left='180' width='100'>Outdoors:</button>
-	<button name='bg-town' type='tiny' top='473' left='180' width='100'>In towns:</button>
-	<button name='bg-dungeon' type='tiny' top='490' left='180' width='100'>In dungeons:</button>
-	<button name='bg-fight' type='tiny' top='507' left='180' width='100'>In combat:</button>
+	<button name='bg-out' type='tiny' top='484' left='180' width='100'>Outdoors:</button>
+	<button name='bg-town' type='tiny' top='501' left='180' width='100'>In towns:</button>
+	<button name='bg-dungeon' type='tiny' top='518' left='180' width='100'>In dungeons:</button>
+	<button name='bg-fight' type='tiny' top='535' left='180' width='100'>In combat:</button>
 </dialog>

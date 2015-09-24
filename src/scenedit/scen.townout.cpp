@@ -131,6 +131,7 @@ static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst, const 
 	me["extra2"].setTextToNum(monst.time_code);
 	me["group"].setTextToNum(monst.spec_enc_code);
 	me["death"].setTextToNum(monst.special_on_kill);
+	me["hail"].setTextToNum(monst.special_on_talk);
 	me["sdfx"].setTextToNum(monst.spec1);
 	me["sdfy"].setTextToNum(monst.spec2);
 }
@@ -153,6 +154,8 @@ static bool get_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst) {
   	if(cre(monst.time_code,0,10,"Event code must be 0 (for no event) or from 1 to 10.","",&me)) return false;
 	monst.special_on_kill = me["death"].getTextAsNum();
   	if(cre(monst.special_on_kill,-1,town->specials.size(),"Town special node number must be from 0 to 99 (or -1 for no special).","",&me)) return false;
+	monst.special_on_talk = me["hail"].getTextAsNum();
+  	if(cre(monst.special_on_talk,-1,town->specials.size(),"Town special node number must be from 0 to 99 (or -1 for no special).","",&me)) return false;
 	monst.spec1 = me["sdfx"].getTextAsNum();
   	if(cre(monst.spec1,-1,299,"First part of special flag must be -1 (if this is to be ignored) or from 0 to 299.","",&me)) return false;
 	monst.spec2 = me["sdfy"].getTextAsNum();
@@ -183,12 +186,21 @@ static bool edit_placed_monst_adv_time_flag(cDialog& me, std::string, bool losin
 	return true;
 }
 
-static bool edit_placed_monst_adv_death(cDialog& me, cTownperson& monst) {
+static bool edit_placed_monst_adv_death(cDialog& me) {
 	short spec = me["death"].getTextAsNum();
 	if(spec < 0)
 		spec = get_fresh_spec(2);
 	if(edit_spec_enc(spec,2,&me))
 		me["death"].setTextToNum(spec);
+	return true;
+}
+
+static bool edit_placed_monst_adv_hail(cDialog& me) {
+	short spec = me["hail"].getTextAsNum();
+	if(spec < 0)
+		spec = get_fresh_spec(2);
+	if(edit_spec_enc(spec,2,&me))
+		me["hail"].setTextToNum(spec);
 	return true;
 }
 
@@ -198,7 +210,8 @@ cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& par
 	cDialog edit("edit-townperson-advanced", &parent);
 	edit["okay"].attachClickHandler(std::bind(edit_placed_monst_adv_event_filter, _1, _2, std::ref(initial)));
 	edit["cancel"].attachClickHandler(std::bind(edit_placed_monst_adv_event_filter, _1, _2, std::ref(initial)));
-	edit["editdeath"].attachClickHandler(std::bind(edit_placed_monst_adv_death, _1, std::ref(initial)));
+	edit["editdeath"].attachClickHandler(std::bind(edit_placed_monst_adv_death, _1));
+	edit["edithail"].attachClickHandler(std::bind(edit_placed_monst_adv_hail, _1));
 	edit["time"].attachFocusHandler(edit_placed_monst_adv_time_flag);
 	
 	put_placed_monst_adv_in_dlog(edit,initial,which);
