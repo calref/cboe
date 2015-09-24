@@ -71,20 +71,29 @@ Again with Homebrew, you may also need to add the following to Apple LLVM Custom
 Compiler Flags -> Other C++ Flags:
 
     -isystem/usr/local/Cellar/boost/1.57.0/include
+    
+Notes and oddities:
+
+- The XCode build uses SFML frameworks, while the scons build on the Mac uses
+  SFML dynamic libraries.
+- On Windows, scons assumes that Boost is statically linked and thus does not copy
+  the dlls into the program directory. However, on the Mac, scons links dynamically with
+  Boost.
 
 Helpful Links
 -------------
 * [Jenkins Server](http://te.calref.net:8080/) - Runs a build after
-every push
+  every push
 * [BoE Forum at Spiderweb
-Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-
-of-exile/)
+  Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-
+  of-exile/)
 * [Original Game
-Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where
-it all began. Warning: Terrifying code.
+  Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where
+  it all began. Warning: Terrifying code.
 * [Ormus's Code](http://info.wsisiz.edu.pl/~kowalsg0/) - The basis for
-most, if not all, of the Win32 work.
+  most, if not all, of the older Win32 work (prior to the SFML port).
+  However, the current Win32 code is not based on it anymore.
 * [Experimental Builds](http://celmin.pwcsite.com/oboe/?C=M;O=D) - will be put
-up whenever Celtic Minstrel feels like it.
+  up whenever Celtic Minstrel feels like it.
 * [Blades File Dump](http://blades.calref.net/) - A spot to quickly add
-project files; mostly contains older binaries from the Google Code page.
+  project files; mostly contains older binaries from the Google Code page.
