@@ -1243,6 +1243,9 @@ std::string cItem::getAbilName() const {
 		case eItemAbil::MASS_SUMMONING:
 			sout << "Mass summon %s";
 			break;
+		case eItemAbil::MESSAGE:
+			sout << "Readable";
+			break;
 	}
 	return sout.str();
 }

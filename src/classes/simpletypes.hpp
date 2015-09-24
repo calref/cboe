@@ -443,6 +443,7 @@ enum class eItemAbil {
 	SUMMONING = 82,
 	MASS_SUMMONING = 83,
 	QUICKFIRE = 84,
+	MESSAGE = 85,
 	// Reagents
 	HOLLY = 150, // Holly/Toadstool
 	COMFREY = 151, // Comfrey Root

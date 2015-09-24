@@ -82,7 +82,7 @@ Call special when used
 Summoning
 Mass summoning
 Quickfire
-
+Readable item
 
 
 

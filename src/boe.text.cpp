@@ -322,7 +322,7 @@ void put_item_screen(short screen_num) {
 					else { /// Don't place # of charges when Sell button up and space tight
 						sout << univ.party[pc].items[i_num].full_name << ' ';
 						// TODO: Why are bashing weapons excluded from this?
-						if(univ.party[pc].items[i_num].charges > 0 && univ.party[pc].items[i_num].weap_type != eSkill::BASHING_WEAPONS
+						if(univ.party[pc].items[i_num].charges > 0 && univ.party[pc].items[i_num].ability != eItemAbil::MESSAGE
 						   && (stat_screen_mode == MODE_INVEN || stat_screen_mode == MODE_SHOP))
 							sout << '(' << int(univ.party[pc].items[i_num].charges) << ')';
 					}

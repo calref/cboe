@@ -1915,7 +1915,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 			showError("You can't give an ability of this sort to a missile.",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 70, 84, int(item.ability), &me, "Choose Usable Ability");
+		i = choose_text_res("item-abilities", 70, 85, int(item.ability), &me, "Choose Usable Ability");
 		if(i < 0) return true;
 		item.ability = eItemAbil(i + 70);
 		put_item_abils_in_dlog(me, item, which);

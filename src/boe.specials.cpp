@@ -85,7 +85,7 @@ std::map<eItemAbil, short> abil_chart = {
 	{eItemAbil::POISON_WEAPON,13}, {eItemAbil::AFFECT_STATUS,3}, {eItemAbil::BLISS_DOOM,3}, {eItemAbil::AFFECT_EXPERIENCE,4},
 	{eItemAbil::AFFECT_SKILL_POINTS,4}, {eItemAbil::AFFECT_HEALTH,4}, {eItemAbil::AFFECT_SPELL_POINTS,4},
 	{eItemAbil::LIGHT,13}, {eItemAbil::AFFECT_PARTY_STATUS,3}, {eItemAbil::HEALTH_POISON,4},
-	{eItemAbil::CALL_SPECIAL,4}, {eItemAbil::CAST_SPELL,4},
+	{eItemAbil::CALL_SPECIAL,4}, {eItemAbil::CAST_SPELL,4}, {eItemAbil::MESSAGE,14},
 };
 
 // which is unused
@@ -557,6 +557,7 @@ void use_item(short pc,short item) {
 	bool take_charge = true,inept_ok = false;
 	short level,i,j,item_use_code,str,r1;
 	short sp[3] = {}; // Dummy values to pass to run_special; not actually used
+	std::string str1, str2; // Used by books
 	eStatus status;
 	eItemUse type;
 	eSpell spell;
@@ -1149,6 +1150,18 @@ void use_item(short pc,short item) {
 			case eItemAbil::QUICKFIRE:
 				add_string_to_buf("Fire pours out!");
 				univ.town.set_quickfire(user_loc.x,user_loc.y,true);
+				break;
+			case eItemAbil::MESSAGE:
+				take_charge = false;
+				j = univ.party[pc].items[item].desc.find("|||");
+				str1 = univ.party[pc].items[item].desc.substr(j + 3);
+				j = str1.find("|||");
+				if(j != std::string::npos) {
+					str2 = str1.substr(j + 3);
+					str1 = str1.substr(0, j);
+				}
+				j = univ.party[pc].items[item].graphic_num;
+				cStrDlog(str1, str2, "Reading " + univ.party[pc].items[item].name, j, PIC_ITEM).show();
 				break;
 				// Now for all the non-usable abilities. These are enumerated here so that the compiler can catch if we've missed one.
 			case eItemAbil::ACCURACY: case eItemAbil::ANTIMAGIC_WEAPON: case eItemAbil::ASPTONGUE: case eItemAbil::BOOST_MAGIC:

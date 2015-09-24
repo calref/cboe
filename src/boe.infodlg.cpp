@@ -216,7 +216,7 @@ static void put_item_info(cDialog& me,const cItem& s_i) {
 	
 	me["name"].setText(s_i.full_name);
 	me["weight"].setTextToNum(s_i.item_weight());
-	me["desc"].setText(s_i.desc);
+	me["desc"].setText(s_i.desc.substr(0,s_i.desc.find("|||")));
 	
 	// TODO: This calculation (value for an item with charges) should be in a member function of cItem
 	me["val"].setTextToNum((s_i.charges > 0) ? s_i.value * s_i.charges : s_i.value);

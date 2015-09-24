@@ -928,7 +928,7 @@ std::string get_item_interesting_string(cItem item) {
 			got_string = false;
 			break;
 	}
-	if(item.charges > 0) {
+	if(item.charges > 0 && item.ability != eItemAbil::MESSAGE) {
 		if(got_string) sout << "; ";
 		sout << "Uses: " << item.charges;
 	}

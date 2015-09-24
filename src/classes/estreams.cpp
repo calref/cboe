@@ -209,7 +209,7 @@ cEnumLookup item_abils = {
 	"regen", "poison-aug", "radiant", "will", "freedom", "speed", "slow", "prot-race", "lockpick", "missile-drain",
 	"spec-drop", "", "", "", "", "", "", "", "", "",
 	"use-poison", "use-status", "use-spell", "bliss-doom", "use-xp", "use-skillpt", "use-hp", "use-sp", "use-light", "use-party-stat",
-	"major-heal", "spec-use", "use-summon", "use-summon-mass", "use-quickfire", "", "", "", "", "",
+	"major-heal", "spec-use", "use-summon", "use-summon-mass", "use-quickfire", "use-read", "", "", "", "",
 	"", "", "", "", "", "", "", "", "", "",    "", "", "", "", "", "", "", "", "", "",
 	"", "", "", "", "", "", "", "", "", "",    "", "", "", "", "", "", "", "", "", "",
 	"", "", "", "", "", "", "", "", "", "",    "", "", "", "", "", "", "", "", "", "",
