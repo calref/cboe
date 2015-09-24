@@ -1198,6 +1198,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 				break;
 			default: // To silence warning of unhandled enum values
 				break;
+			case sf::Event::GainedFocus:
 			case sf::Event::MouseMoved:
 				bool inField = false;
 				for(auto& ctrl : controls) {

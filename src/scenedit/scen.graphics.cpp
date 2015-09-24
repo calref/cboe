@@ -379,6 +379,7 @@ void run_startup_g() {
 	sf::Texture pict_to_draw;
 	dest_rect = pict_rect;
 	
+	set_cursor(watch_curs);
 	dest_rect.offset(-25,-25);
 	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("edsplash"));
 	for(int i = 0; i < 10; i++) {
@@ -386,9 +387,12 @@ void run_startup_g() {
 		rect_draw_some_item(pict_to_draw, pict_rect, mainPtr, dest_rect, sf::BlendAlpha);
 		mainPtr.display();
 		mainPtr.pollEvent(event);
+		if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
+			set_cursor(watch_curs);
 	}
 	play_sound(-95);
 	sf::Clock timer;
+	set_cursor(wand_curs);
 	while(timer.getElapsedTime() < time_in_ticks(120)) {
 		mainPtr.pollEvent(event);
 		if(event.type == sf::Event::KeyPressed || event.type == sf::Event::MouseButtonPressed)

@@ -222,6 +222,8 @@ void plop_fancy_startup() {
 		
 		mainPtr.display();
 		mainPtr.pollEvent(event);
+		if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
+			make_cursor_watch();
 	}
 	play_sound(95); // Was originally negative, meaning async
 	
@@ -241,12 +243,15 @@ void plop_fancy_startup() {
 			rect_draw_some_item(pict_to_draw, from_rect, mainPtr, intro_from);
 			mainPtr.display();
 			mainPtr.pollEvent(event);
+			if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
+				make_cursor_watch();
 		}
 	} else delay = 60;
 	delay = time_in_ticks(delay).asMilliseconds();
 	sf::Clock timer;
 	if(show_startup_splash) play_sound(-22);
 	
+	make_cursor_sword();
 	while(timer.getElapsedTime().asMilliseconds() < delay) {
 		if(mainPtr.pollEvent(event)) {
 			if(event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::KeyPressed)

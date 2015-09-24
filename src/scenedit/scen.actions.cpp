@@ -2406,6 +2406,7 @@ void set_up_start_screen() {
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"with the terms of the license.");
 	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
+	set_cursor(wand_curs);
 }
 
 void set_up_main_screen() {
@@ -2439,6 +2440,7 @@ void set_up_main_screen() {
 	set_lb(-1,LB_TEXT,LB_EDIT_TALK,"Edit Town Dialogue");
 	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
+	set_cursor(wand_curs);
 	overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
 	pal_sbar->hide();

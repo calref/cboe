@@ -258,6 +258,9 @@ void Handle_One_Event() {
 			make_cursor_sword();
 			break;
 			
+		case sf::Event::GainedFocus:
+			Handle_Update();
+			makeFrontWindow(mainPtr);
 		case sf::Event::MouseMoved:
 			if(!gInBackground) {
 				location where(event.mouseMove.x, event.mouseMove.y);
@@ -268,11 +271,6 @@ void Handle_One_Event() {
 		case sf::Event::MouseWheelMoved:
 			if(flushingInput) return;
 			handle_scroll(event);
-			break;
-			
-		case sf::Event::GainedFocus:
-			Handle_Update();
-			makeFrontWindow(mainPtr);
 			break;
 			
 		case sf::Event::Closed:

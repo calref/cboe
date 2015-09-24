@@ -287,6 +287,7 @@ void put_party_in_scen(std::string scen_name) {
 		showError("Could not find scenario!");
 		return;
 	}
+	make_cursor_watch();
 	if(!load_scenario(path, univ.scenario))
 		return;
 	
