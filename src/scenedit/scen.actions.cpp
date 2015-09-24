@@ -2813,12 +2813,12 @@ bool save_check(std::string which_dlog) {
 	
 	if(!change_made)
 		return true;
-	change_made = false;
 	choice = cChoiceDlog(which_dlog, {"save","revert","cancel"}).show();
 	if(choice == "revert")
 		return true;
 	else if(choice == "cancel")
 		return false;
+	change_made = false;
 	town->set_up_lights();
 	save_scenario();
 	return true;
