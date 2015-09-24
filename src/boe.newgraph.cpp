@@ -886,6 +886,7 @@ std::string get_item_interesting_string(cItem item) {
 	if(item.cursed) {
 		return "Cursed item.";
 	}
+	bool got_string = true;
 	std::ostringstream sout;
 	switch(item.variety) {
 		case eItemType::ONE_HANDED:
@@ -924,12 +925,13 @@ std::string get_item_interesting_string(cItem item) {
 			sout << "Poison: " << item.item_level << '-' << item.item_level * 6 << " damage";
 			break;
 		default:
-			if(item.charges > 0)
-				sout << "Uses: " << item.charges << '.';
-			return sout.str();
+			got_string = false;
+			break;
 	}
-	if(item.charges > 0)
-		sout << "; Uses: " << item.charges;
+	if(item.charges > 0) {
+		if(got_string) sout << "; ";
+		sout << "Uses: " << item.charges;
+	}
 	sout << '.';
 	return sout.str();
 }

@@ -408,8 +408,10 @@ void start_town_mode(short which_town, short entry_dir) {
 				
 				if(univ.town->preset_items[i].charges > 0) {
 					eItemType variety = univ.town.items[j].variety;
-					if(univ.town.items[j].charges > 0 || variety == eItemType::GOLD || variety == eItemType::FOOD)
+					if(univ.town.items[j].charges > 0)
 						univ.town.items[j].charges = univ.town->preset_items[i].charges;
+					else if(variety == eItemType::GOLD || variety == eItemType::FOOD)
+						univ.town.items[j].item_level = univ.town->preset_items[i].charges;
 				}
 				
 				if(town_toast)
