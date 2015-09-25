@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
 		cUniverse::print_result = iLiving::print_result = add_string_to_buf;
 		cPlayer::give_help = give_help;
 		init_graph_tool();
-		Initialize();
+		init_snd_tool();
 		init_fileio();
 		
 		init_buf();
@@ -126,11 +126,10 @@ int main(int argc, char* argv[]) {
 		check_for_intel();
 		set_up_apple_events(argc, argv);
 		make_cursor_watch();
+		Initialize();
 		plop_fancy_startup();
-		
 		init_screen_locs();
 		
-		init_snd_tool();
 		cDialog::init();
 		
 		flushingInput = true;

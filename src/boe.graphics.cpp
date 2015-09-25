@@ -155,6 +155,7 @@ void adjust_window_mode() {
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	hideMenuBar();
 	int menubarHeight = getMenubarHeight();
+	bool firstTime = !mainPtr.isOpen();
 	
 	// TODO: Make display_mode an enum
 	if(display_mode == 5) {
@@ -181,7 +182,7 @@ void adjust_window_mode() {
 	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
 	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 #endif
-	redraw_screen(REFRESH_NONE);
+	if(!firstTime) redraw_screen(REFRESH_NONE);
 	if(text_sbar) {
 		text_sbar->relocate({ul.x + 546,ul.y + 283});
 		item_sbar->relocate({ul.x + 546,ul.y + 146});
@@ -204,7 +205,6 @@ void plop_fancy_startup() {
 	
 	if(display_mode != 5) {
 		hideMenuBar();
-		mainPtr.setMouseCursorVisible(false);
 	}
 	
 //	for(i = 0;i < 8; i++)
@@ -239,9 +239,9 @@ void plop_fancy_startup() {
 	
 	int delay = 220;
 	if(show_startup_splash){
+		intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
 		for(int k = 0; k < 5; k++) {
 			mainPtr.clear(sf::Color::Black);
-			intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
 			pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("startsplash"));
 			from_rect = rectangle(pict_to_draw);
 			rect_draw_some_item(pict_to_draw, from_rect, mainPtr, intro_from);

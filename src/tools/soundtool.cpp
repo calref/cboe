@@ -90,7 +90,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 			which *= -1;
 	
  	if(sndhandle) {
-		chan[channel].reset(new sf::Sound(*sndhandle));
+		chan[channel]->setBuffer(*sndhandle);
 		chan[channel]->play();
 		
 		if(which > 0) {
