@@ -286,7 +286,7 @@ bool is_blocked(location to_check) {
 		}
 		if(to_check == univ.party.p_loc)
 			return true;
-		for(i = 0; i < 20; i++)
+		for(i = 0; i < univ.party.out_c.size(); i++)
 			if((univ.party.out_c[i].exists))
 				if(univ.party.out_c[i].m_loc == to_check)
 					return true;
