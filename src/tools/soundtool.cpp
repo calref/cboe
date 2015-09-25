@@ -38,7 +38,7 @@ std::unordered_map<int,int> sound_delay = {
 };
 short store_last_sound_played;
 
-static bool sound_going(snd_num_t which_s) {
+bool sound_going(snd_num_t which_s) {
 	short i;
 	
 	for(i = 0; i < 4; i++)

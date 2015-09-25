@@ -19,11 +19,8 @@ enum {
 };
 
 void adjust_window_mode();
-void plop_fancy_startup();
 void init_startup();
 void reload_startup();
-void init_animation();
-void next_animation_step() ;
 void draw_startup(short but_type);
 void draw_anim();
 void place_anim(); 

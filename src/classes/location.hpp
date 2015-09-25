@@ -54,8 +54,8 @@ struct rectangle {
 	rectangle();
 	rectangle(location tl, location br);
 	rectangle(int t, int l, int b, int r);
-	explicit rectangle(sf::Texture& texture);
-	explicit rectangle(sf::RenderTarget& texture);
+	explicit rectangle(const sf::Texture& texture);
+	explicit rectangle(const sf::RenderTarget& texture);
 	template<typename T>
 	rectangle(sf::Rect<T> other) : rectangle(other.top, other.left, other.top + other.height, other.left + other.width) {}
 	template<typename T>

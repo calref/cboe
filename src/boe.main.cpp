@@ -106,45 +106,21 @@ short store_current_pc = 0;
 
 sf::Clock animTimer;
 
+static void init_boe(int, char*[]);
+
 int main(int argc, char* argv[]) {
 #if 0
 	void debug_oldstructs();
 	debug_oldstructs();
 #endif
 	try{
-		init_directories(argv[0]);
-		init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
-		sync_prefs();
-		cUniverse::print_result = iLiving::print_result = add_string_to_buf;
-		cPlayer::give_help = give_help;
-		init_graph_tool();
-		init_snd_tool();
-		init_fileio();
-		
-		init_buf();
-		
-		check_for_intel();
-		set_up_apple_events(argc, argv);
-		make_cursor_watch();
-		Initialize();
-		plop_fancy_startup();
-		init_screen_locs();
-		
-		cDialog::init();
-		
-		flushingInput = true;
-		
-		init_spell_menus();
-		
-		mainPtr.display();
+		init_boe(argc, argv);
 		
 		if(!game_run_before)
 			cChoiceDlog("welcome").show();
 		else if(give_intro_hint)
 			tip_of_day();
 		game_run_before = true;
-		
-		init_mini_map();
 		finished_init = true;
 		
 		if(ae_loading) {
@@ -171,36 +147,62 @@ int main(int argc, char* argv[]) {
 	}
 }
 
-void Initialize(void) {
-	//	To make the Random sequences truly random, we need to make the seed start
-	//	at a different number.  An easy way to do this is to put the current time
-	//	and date into the seed.  Since it is always incrementing the starting seed
-	//	will always be different.  Don't for each call of Random, or the sequence
-	//	will no longer be random.  Only needed once, here in the init.
-	srand(time(nullptr));
-	
+static void init_sbar(std::shared_ptr<cScrollbar>& sbar, rectangle rect, int max, int pgSz, int start = 0) {
+	sbar.reset(new cScrollbar(mainPtr));
+	sbar->setBounds(rect);
+	sbar->setMaximum(max);
+	sbar->setPosition(start);
+	sbar->setPageSize(pgSz);
+	sbar->hide();
+}
+
+static void init_btn(std::shared_ptr<cButton>& btn, eBtnType type) {
+	btn.reset(new cButton(mainPtr));
+	btn->setBtnType(type);
+	btn->hide();
+}
+
+void init_boe(int argc, char* argv[]) {
+	init_directories(argv[0]);
+	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
+	sync_prefs();
 	load_prefs();
-	text_sbar.reset(new cScrollbar(mainPtr));
-	text_sbar->setBounds(sbar_rect);
-	text_sbar->setMaximum(58);
-	text_sbar->setPosition(58);
-	text_sbar->setPageSize(11);
-	item_sbar.reset(new cScrollbar(mainPtr));
-	item_sbar->setBounds(item_sbar_rect);
-	item_sbar->setMaximum(16);
-	item_sbar->setPageSize(8);
-	shop_sbar.reset(new cScrollbar(mainPtr));
-	shop_sbar->setBounds(shop_sbar_rect);
-	shop_sbar->setMaximum(16);
-	shop_sbar->setPageSize(8);
-	shop_sbar->hide();
-	done_btn.reset(new cButton(mainPtr));
-	done_btn->setBtnType(BTN_DONE);
-	done_btn->hide();
-	help_btn.reset(new cButton(mainPtr));
-	help_btn->setBtnType(BTN_HELP);
-	help_btn->hide();
+	init_graph_tool();
+	init_snd_tool();
 	adjust_window_mode();
+	// If we don't do this now it'll flash white to start with
+	mainPtr.clear(sf::Color::Black);
+	mainPtr.display();
+	
+	make_cursor_watch();
+	boost::thread init_thread([]() {
+		init_buf();
+		check_for_intel();
+		srand(time(nullptr));
+		init_sbar(text_sbar, sbar_rect, 58, 11, 58);
+		init_sbar(item_sbar, item_sbar_rect, 16, 8);
+		init_sbar(shop_sbar, shop_sbar_rect, 16, 8);
+		init_btn(done_btn, BTN_DONE);
+		init_btn(help_btn, BTN_HELP);
+		init_screen_locs();
+		Set_up_win();
+		init_startup();
+		cDialog::init();
+		flushingInput = true;
+	});
+	show_logo();
+	if(show_startup_splash)
+		plop_fancy_startup();
+	init_thread.join();
+	
+	cUniverse::print_result = iLiving::print_result = add_string_to_buf;
+	cPlayer::give_help = give_help;
+	set_up_apple_events(argc, argv);
+	init_fileio();
+	init_spell_menus();
+	init_mini_map();
+	redraw_screen(REFRESH_NONE);
+	showMenuBar();
 }
 
 void Handle_One_Event() {

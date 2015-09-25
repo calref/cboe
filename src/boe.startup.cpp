@@ -18,6 +18,7 @@
 #include "winutil.hpp"
 #include "boe.menus.hpp"
 #include "mathutil.hpp"
+#include "restypes.hpp"
 
 #include <vector>
 using std::vector;
@@ -128,6 +129,69 @@ bool handle_startup_press(location the_point) {
 			}
 		}
 	return false;
+}
+
+extern int display_mode;
+extern bool show_startup_splash;
+
+void draw_splash(const sf::Texture& splash, rectangle dest_rect) {
+	rectangle from_rect = rectangle(splash);
+	mainPtr.clear(sf::Color::Black);
+	rect_draw_some_item(splash, from_rect, mainPtr, dest_rect);
+	mainPtr.display();
+}
+
+void handle_splash_events() {
+	extern sf::Event event;
+	if(!mainPtr.pollEvent(event)) return;
+	if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
+		make_cursor_watch();
+}
+
+void show_logo() {
+	sf::Texture pict_to_draw;
+	
+	rectangle whole_window,from_rect;
+	rectangle logo_from = {0,0,350,350};
+	
+	if(display_mode != 5)
+		hideMenuBar();
+	
+	whole_window = rectangle(mainPtr);
+	logo_from.offset((whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
+	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("spidlogo"));
+	from_rect = rectangle(pict_to_draw);
+	
+	play_sound(-95);
+	// TODO: Looping 10 times here is a bit of a hack; fix it
+	while(sound_going(95)) {
+		draw_splash(pict_to_draw, logo_from);
+		handle_splash_events();
+	}
+	if(!show_startup_splash) {
+		int delay = time_in_ticks(60).asMilliseconds();
+		sf::Clock timer;
+		while(timer.getElapsedTime().asMilliseconds() < delay)
+			handle_splash_events();
+	}
+}
+
+void plop_fancy_startup() {
+	sf::Texture pict_to_draw;
+	rectangle whole_window,from_rect;
+	rectangle intro_from = {0,0,480,640};
+	whole_window = rectangle(mainPtr);
+	int delay = time_in_ticks(220).asMilliseconds();
+	intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
+	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("startsplash"));
+	
+	play_sound(-22);
+	sf::Clock timer;
+	
+	while(timer.getElapsedTime().asMilliseconds() < delay) {
+		draw_splash(pict_to_draw, intro_from);
+		handle_splash_events();
+	}
 }
 
 /*

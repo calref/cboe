@@ -194,91 +194,12 @@ void adjust_window_mode() {
 	showMenuBar();
 }
 
-// TODO: Move to boe.startup.cpp
-void plop_fancy_startup() {
-	sf::Texture pict_to_draw;
-	sf::Event event;
-	
-	rectangle whole_window,from_rect;
-	rectangle logo_from = {0,0,350,350};
-	rectangle intro_from = {0,0,480,640};
-	
-	if(display_mode != 5) {
-		hideMenuBar();
-	}
-	
-//	for(i = 0;i < 8; i++)
-//		OffsetRect(&trim_rects[i],61,37);
-	
-	win_to_rects[5].offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
-	win_to_rects[2].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
-	win_to_rects[3].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-	
-	whole_window = rectangle(mainPtr);
-	logo_from.offset((whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
-	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("spidlogo"));
-	from_rect = rectangle(pict_to_draw);
-	// TODO: Looping 10 times here is a bit of a hack; fix it
-	for(int k = 0; k < 10; k++) {
-		make_cursor_watch();
-		mainPtr.clear(sf::Color::Black);
-		rect_draw_some_item(pict_to_draw, from_rect, mainPtr, logo_from);
-		
-		mainPtr.display();
-		mainPtr.pollEvent(event);
-		if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
-			make_cursor_watch();
-	}
-	play_sound(95); // Was originally negative, meaning async
-	
-	// Do bulk of graphics loading!!!
-	
-	Set_up_win();
-	
-	init_startup();
-	
-	int delay = 220;
-	if(show_startup_splash){
-		intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
-		for(int k = 0; k < 5; k++) {
-			mainPtr.clear(sf::Color::Black);
-			pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("startsplash"));
-			from_rect = rectangle(pict_to_draw);
-			rect_draw_some_item(pict_to_draw, from_rect, mainPtr, intro_from);
-			mainPtr.display();
-			mainPtr.pollEvent(event);
-			if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
-				make_cursor_watch();
-		}
-	} else delay = 60;
-	delay = time_in_ticks(delay).asMilliseconds();
-	sf::Clock timer;
-	if(show_startup_splash) play_sound(-22);
-	
-	make_cursor_sword();
-	while(timer.getElapsedTime().asMilliseconds() < delay) {
-		if(mainPtr.pollEvent(event)) {
-			if(event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::KeyPressed)
-				break;
-		}
-	}
-	if(display_mode != 5) {
-		showMenuBar();
-		mainPtr.setMouseCursorVisible(true);
-	}
-}
-
 void init_startup() {
 	startup_loaded = true;
 	startup_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("startup"));
 	startup_button_orig.loadFromImage(*ResMgr::get<ImageRsrc>("startbut"));
 	anim_mess.loadFromImage(*ResMgr::get<ImageRsrc>("startanim"));
 }
-
-void init_animation() {}
-
-void next_animation_step() {}
-
 
 void draw_startup(short but_type) {
 	rectangle to_rect;
@@ -552,11 +473,11 @@ void Set_up_win () {
 	rectangle pc_rect = {0,0,216,113};
 	rectangle r;
 	
-	// TODO: I think this is a relic of the Exile III demo screen at the main menu; we don't actually need to load it until the function below
-	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
+	win_to_rects[5].offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
+	win_to_rects[2].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
+	win_to_rects[3].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 	
 	// Create and initialize map gworld
-	
 	if(!map_gworld.create(map_rect.width(), map_rect.height())) {
 		play_sound(2,3);
 		exit(1);
@@ -572,6 +493,7 @@ void load_main_screen() {
 		return;
 	
 	invenbtn_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("invenbtns"));
+	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
 	loadImageToRenderTexture(pc_stats_gworld, "statarea");
 	loadImageToRenderTexture(item_stats_gworld, "inventory");
 	loadImageToRenderTexture(text_area_gworld, "transcript");
