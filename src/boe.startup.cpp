@@ -134,13 +134,6 @@ bool handle_startup_press(location the_point) {
 extern int display_mode;
 extern bool show_startup_splash;
 
-void draw_splash(const sf::Texture& splash, rectangle dest_rect) {
-	rectangle from_rect = rectangle(splash);
-	mainPtr.clear(sf::Color::Black);
-	rect_draw_some_item(splash, from_rect, mainPtr, dest_rect);
-	mainPtr.display();
-}
-
 void handle_splash_events() {
 	extern sf::Event event;
 	if(!mainPtr.pollEvent(event)) return;
@@ -165,13 +158,13 @@ void show_logo() {
 	play_sound(-95);
 	// TODO: Looping 10 times here is a bit of a hack; fix it
 	while(sound_going(95)) {
-		draw_splash(pict_to_draw, logo_from);
+		draw_splash(pict_to_draw, mainPtr, logo_from);
 		handle_splash_events();
 	}
 	if(!show_startup_splash) {
-		int delay = time_in_ticks(60).asMilliseconds();
+		sf::Time delay = time_in_ticks(60);
 		sf::Clock timer;
-		while(timer.getElapsedTime().asMilliseconds() < delay)
+		while(timer.getElapsedTime() < delay)
 			handle_splash_events();
 	}
 }
@@ -181,15 +174,15 @@ void plop_fancy_startup() {
 	rectangle whole_window,from_rect;
 	rectangle intro_from = {0,0,480,640};
 	whole_window = rectangle(mainPtr);
-	int delay = time_in_ticks(220).asMilliseconds();
+	sf::Time delay = time_in_ticks(220);
 	intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
 	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("startsplash"));
 	
 	play_sound(-22);
 	sf::Clock timer;
 	
-	while(timer.getElapsedTime().asMilliseconds() < delay) {
-		draw_splash(pict_to_draw, intro_from);
+	while(timer.getElapsedTime() < delay) {
+		draw_splash(pict_to_draw, mainPtr, intro_from);
 		handle_splash_events();
 	}
 }

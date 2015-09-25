@@ -113,6 +113,13 @@ void init_graph_tool(){
 	register_main_patterns();
 }
 
+void draw_splash(const sf::Texture& splash, sf::RenderWindow& targ, rectangle dest_rect) {
+	rectangle from_rect = rectangle(splash);
+	targ.clear(sf::Color::Black);
+	rect_draw_some_item(splash, from_rect, targ, dest_rect);
+	targ.display();
+}
+
 static void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode);
 
 void rect_draw_some_item(sf::RenderTarget& targ_gworld,rectangle targ_rect) {

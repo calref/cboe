@@ -46,7 +46,7 @@ short cur_town;
 location cur_out;
 
 /* Prototypes */
-void Initialize(void);
+static void init_scened(int, char*[]);
 void Handle_One_Event();
 void Handle_Activate();
 void Handle_Update();
@@ -64,34 +64,7 @@ extern void set_up_apple_events(int argc, char* argv[]);
 int main(int argc, char* argv[]) {
 	try {
 		
-		init_directories(argv[0]);
-		init_menubar();
-		
-		init_current_terrain();
-		Initialize();
-		init_fileio();
-		init_snd_tool();
-		load_graphics();
-		
-		cDialog::init();
-		cDialog::defaultBackground = cDialog::BG_LIGHT;
-		cDialog::doAnimations = true;
-		init_graph_tool();
-		
-		check_for_intel();
-		set_up_apple_events(argc, argv);
-		
-		cen_x = 18;
-		cen_y = 18;
-		
-		run_startup_g();
-		init_lb();
-		init_rb();
-		
-		make_cursor_sword();
-		
-		Set_up_win();
-		init_screen_locs();
+		init_scened(argc, argv);
 		
 		if(ae_loading)
 			set_up_main_screen();
@@ -99,8 +72,6 @@ int main(int argc, char* argv[]) {
 			shut_down_menus(0);
 			set_up_start_screen();
 		}
-		
-		redraw_screen();
 		
 		while(!All_Done)
 			Handle_One_Event();
@@ -119,16 +90,20 @@ int main(int argc, char* argv[]) {
 	}
 }
 
-void Initialize(void) {
-	//	To make the Random sequences truly random, we need to make the seed start
-	//	at a different number.  An easy way to do this is to put the current time
-	//	and date into the seed.  Since it is always incrementing the starting seed
-	//	will always be different.  Don’t for each call of Random, or the sequence
-	//	will no longer be random.  Only needed once, here in the init.
-	srand(time(nullptr));
+static void init_sbar(std::shared_ptr<cScrollbar>& sbar, rectangle rect, int pgSz) {
+	sbar.reset(new cScrollbar(mainPtr));
+	sbar->setBounds(rect);
+	sbar->setPageSize(pgSz);
+	sbar->hide();
+}
+
+void init_scened(int argc, char* argv[]) {
+	init_directories(argv[0]);
+	init_menubar();
+	// TODO: Sync and load prefs
+	init_graph_tool();
+	init_snd_tool();
 	
-	//	Make a new window for drawing in, and it must be a color window.
-	//	The window is full screen size, made smaller to make it more visible.
 	sf::VideoMode mode = sf::VideoMode::getDesktopMode();
 	rectangle windRect;
 	windRect.width() = mode.width;
@@ -143,23 +118,45 @@ void Initialize(void) {
 	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
 	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 #endif
-	init_menubar();
-	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
-	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
-	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
-	right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
-	right_sbar.reset(new cScrollbar(mainPtr));
-	right_sbar->setBounds(right_sbar_rect);
-	right_sbar->setPageSize(NRSONPAGE - 1);
-	right_sbar->hide();
-	rectangle pal_sbar_rect = terrain_buttons_rect;
-	pal_sbar_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
-	pal_sbar_rect.left = pal_sbar_rect.right - 16;
-	pal_sbar_rect.height() = 17 * 16;
-	pal_sbar.reset(new cScrollbar(mainPtr));
-	pal_sbar->setBounds(pal_sbar_rect);
-	pal_sbar->setPageSize(16);
-	pal_sbar->hide();
+	mainPtr.clear(sf::Color::Black);
+	mainPtr.display();
+	
+	set_cursor(watch_curs);
+	boost::thread init_thread([]() {
+		init_current_terrain();
+		check_for_intel();
+		srand(time(nullptr));
+		
+		cen_x = 18;
+		cen_y = 18;
+		
+		right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
+		right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
+		right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
+		right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
+		rectangle pal_sbar_rect = terrain_buttons_rect;
+		pal_sbar_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
+		pal_sbar_rect.left = pal_sbar_rect.right - 16;
+		pal_sbar_rect.height() = 17 * 16;
+		
+		init_sbar(right_sbar, right_sbar_rect, NRSONPAGE - 1);
+		init_sbar(pal_sbar, pal_sbar_rect, 16);
+		init_lb();
+		init_rb();
+	
+		Set_up_win();
+		init_screen_locs();
+		load_graphics();
+		cDialog::init();
+	});
+	run_startup_g();
+	init_thread.join();
+	
+	cDialog::defaultBackground = cDialog::BG_LIGHT;
+	cDialog::doAnimations = true;
+	set_up_apple_events(argc, argv);
+	init_fileio();
+	redraw_screen();
 }
 
 void Handle_One_Event() {

@@ -12,7 +12,6 @@ void move_sound(ter_num_t ter,short step);
 void incidental_noises(bool on_surface);
 void pause(short length);
 bool handle_startup_press(location the_point);
-void draw_splash(const sf::Texture& splash, rectangle dest_rect);
 void handle_splash_events();
 void show_logo();
 void plop_fancy_startup();
