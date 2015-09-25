@@ -23,10 +23,9 @@ extern short store_flags[3];
 extern sf::Texture button_num_gworld,bg_gworld;
 extern short current_active_pc;
 
-sf::Texture title_gworld,pc_gworld,dlogpics_gworld;
+sf::Texture title_gworld,icon_gworld,pc_gworld,dlogpics_gworld;
 sf::Texture buttons_gworld,invenbtn_gworld,status_gworld;
 rectangle whole_win_rect = {0,0,440,590};
-rectangle title_from = {0,0,70,380};
 extern rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 extern rectangle pc_info_rect; // Frame that holds a pc's basic info and items
@@ -194,6 +193,7 @@ void init_main_buttons() {
 
 void Set_up_win () {
 	title_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcedtitle"));
+	icon_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("icon"));
 	invenbtn_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("invenbtns"));
 	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
 	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
@@ -226,20 +226,24 @@ static void frame_dlog_rect(sf::RenderWindow& target, rectangle rect) {
 }
 
 void draw_main_screen() {
-	rectangle	source_rect, dest_rec,dest_rect;
+	rectangle source_rect,dest_rec,dest_rect;
 	rectangle reg_rect;
 	
 	tileImage(mainPtr,whole_win_rect,bg[12]); // fill whole window with background texture
-	dest_rec = source_rect = title_from; // initializes, to draw title
-	// title_from is a rectangle constant
-	dest_rec.offset(20,0);
 	
+	dest_rec = source_rect = rectangle(icon_gworld);
+	dest_rec.offset(23, 16);
+	rect_draw_some_item(icon_gworld,source_rect,mainPtr,dest_rec);
+
+	dest_rec = source_rect = rectangle(title_gworld);
+	dest_rec.offset(66, 0);
 	rect_draw_some_item(title_gworld,source_rect,mainPtr,dest_rec,sf::BlendAlpha);
 	
 	TextStyle style;
 	style.lineHeight = 10;
 	if(!file_in_mem.empty()) {
 		dest_rect = dest_rec;
+		dest_rect.left = 20;
 		dest_rect.top = dest_rect.bottom - 10;
 		dest_rect.bottom = dest_rect.top + 12;
 		style.pointSize = 12;
