@@ -16,6 +16,7 @@
 #include "pc.menus.hpp"
 #include "winutil.hpp"
 #include "cursors.hpp"
+#include "restypes.hpp"
 
 cUniverse univ;
 
@@ -112,6 +113,8 @@ void Initialize(void) {
 	//	The window is full screen size, made smaller to make it more visible.
 	int height = 440 + getMenubarHeight();
 	mainPtr.create(sf::VideoMode(590, height), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
+	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
+	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	init_menubar();
 }
 

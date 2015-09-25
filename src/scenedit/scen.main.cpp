@@ -22,6 +22,7 @@
 #include "cursors.hpp"
 #include "dlogutil.hpp"
 #include "scen.menus.hpp"
+#include "restypes.hpp"
 
 /* Globals */
 bool  All_Done = false;
@@ -138,6 +139,8 @@ void Initialize(void) {
 	windRect.offset(0,18);
 	mainPtr.create(sf::VideoMode(windRect.width(), windRect.height()), "Blades of Exile Scenario Editor", sf::Style::Titlebar | sf::Style::Close);
 	mainPtr.setPosition(windRect.topLeft());
+	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
+	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	init_menubar();
 	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
 	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
