@@ -139,8 +139,10 @@ void Initialize(void) {
 	windRect.offset(0,18);
 	mainPtr.create(sf::VideoMode(windRect.width(), windRect.height()), "Blades of Exile Scenario Editor", sf::Style::Titlebar | sf::Style::Close);
 	mainPtr.setPosition(windRect.topLeft());
+#ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
 	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
 	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+#endif
 	init_menubar();
 	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
 	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;

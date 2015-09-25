@@ -113,8 +113,10 @@ void Initialize(void) {
 	//	The window is full screen size, made smaller to make it more visible.
 	int height = 440 + getMenubarHeight();
 	mainPtr.create(sf::VideoMode(590, height), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
+#ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
 	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
 	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+#endif
 	init_menubar();
 }
 
