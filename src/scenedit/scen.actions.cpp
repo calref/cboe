@@ -2410,6 +2410,7 @@ void set_up_start_screen() {
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"with the terms of the license.");
 	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
+	change_made = false;
 	set_cursor(wand_curs);
 }
 
