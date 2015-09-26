@@ -133,6 +133,7 @@ namespace ResMgr {
 	/// @tparam type The type of the resource to fetch.
 	/// @param name The key of the resource to fetch (usually the filename without an extension).
 	/// @return A smart pointer to the fetched resource.
+	/// @throw xResMgrErr if the resource could not be found or there was an error loading it.
 	template<typename type> std::shared_ptr<type> get(std::string name) {
 		if(resPool<type>::resources().find(name) != resPool<type>::resources().end()) {
 			if(resPool<type>::pathFound().find(name) != resPool<type>::pathFound().end()) {
@@ -164,6 +165,30 @@ namespace ResMgr {
 		std::string name = resPool<type>::mapFn()(id);
 		if(name == "") throw xResMgrErr("Invalid resource ID.");
 		return get<type>(name);
+	}
+	
+	/// Check if a resource with the given name exists.
+	/// Calling this causes the path to be remembered, same as with get<type>(std::string).
+	/// @tparam type The type of the resource to fetch.
+	/// @param name The key of the resource to fetch (usually the filename without an extension).
+	/// @return True if it exists, false otherwise.
+	template<typename type> bool have(std::string name) {
+		if(resPool<type>::resources().find(name) != resPool<type>::resources().end())
+			return true;
+		resLoader<type> load;
+		return resPool<type>::find(name, load.file_ext).is_absolute();
+	}
+	
+	/// Check if a resource with the given numerical ID exists
+	/// In order for this to work, an ID map function must have first been set with setIdMapFn().
+	/// @tparam type The type of the resource to fetch.
+	/// @param id The numerical ID of the resource to fetch.
+	/// @throw xResMgrErr if the ID map function returned an empty string.
+	/// @throw std::bad_function_call if the ID map function was not set
+	template<typename type> bool have(int id) {
+		std::string name = resPool<type>::mapFn()(id);
+		if(name == "") throw xResMgrErr("Invalid resource ID.");
+		return have<type>(name);
 	}
 	
 	/// Push a new path onto the path resolution stack

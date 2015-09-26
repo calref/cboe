@@ -73,7 +73,7 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	std::shared_ptr<sf::SoundBuffer> sndhandle;
 	if(!play_sounds || how_many_times == 0) return;
 	
-	if(abs(which) > NUM_SOUNDS) {
+	if(abs(which) >= 100 && !ResMgr::have<SoundRsrc>(abs(which))) {
 		std::cerr << "Error: Sound #" << abs(which) << " does not exist." << std::endl;
 		return;
 	}

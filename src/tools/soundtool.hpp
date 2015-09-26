@@ -11,8 +11,6 @@
 
 #include <SFML/Audio.hpp>
 
-const int NUM_SOUNDS = 100;
-
 typedef unsigned short snd_num_t;
 void init_snd_tool();
 bool sound_going(snd_num_t which_s);
