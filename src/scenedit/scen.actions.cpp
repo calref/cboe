@@ -2391,6 +2391,7 @@ static std::string version() {
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
 void set_up_start_screen() {
+	reset_lb();
 	reset_rb();
 	set_lb(0,LB_TITLE,LB_NO_ACTION,"Blades of Exile");
 	set_lb(1,LB_TITLE,LB_NO_ACTION,"Scenario Editor");
@@ -2411,6 +2412,7 @@ void set_up_start_screen() {
 void set_up_main_screen() {
 	std::ostringstream strb;
 	
+	reset_lb();
 	reset_rb();
 	set_lb(-1,LB_TITLE,LB_NO_ACTION,"Blades of Exile");
 	set_lb(-1,LB_TEXT,LB_NO_ACTION,"Scenario Options");
