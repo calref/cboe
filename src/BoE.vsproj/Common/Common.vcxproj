@@ -118,6 +118,7 @@
     <ClCompile Include="..\..\tools\menu_accel.win.cpp" />
     <ClCompile Include="..\..\tools\porting.cpp" />
     <ClCompile Include="..\..\tools\prefs.win.cpp" />
+    <ClCompile Include="..\..\tools\resmgr\restypes.cpp" />
     <ClCompile Include="..\..\tools\soundtool.cpp" />
     <ClCompile Include="..\..\tools\specials_parse.cpp" />
     <ClCompile Include="..\..\tools\tarball.cpp" />

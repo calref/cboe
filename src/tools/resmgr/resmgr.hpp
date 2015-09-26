@@ -23,7 +23,9 @@
 /// Resources include sounds, images, fonts, and cursors.
 ///
 /// To implement a new resource type, all you have to do is specialize
-/// @a ResMgr::resLoader::operator() for the desired resource type.
+/// @a ResMgr::resLoader::operator() and declare @a ResMgr::resLoader::file_ext
+/// for the desired resource type. The operator() receives the
+/// full file path with the extension already applied.
 namespace ResMgr {
 	namespace fs = boost::filesystem;
 	/// The signature of an ID map function.
@@ -56,12 +58,13 @@ namespace ResMgr {
 		/// Convert a relative path to an absolute path by checking the current search path stack.
 		/// @param path The path to resolve.
 		/// @return The resolved absolute path, or the relative path unchanged if resolution failed.
-		static fs::path rel2abs(fs::path path) {
+		static fs::path find(std::string name, std::string ext) {
+			fs::path path = name + "." + ext;
 			std::stack<fs::path> tmpPaths = resPaths();
 			while(!tmpPaths.empty()) {
 				fs::path thisPath = tmpPaths.top()/path;
 				if(fs::exists(thisPath)) {
-					pathFound()[path] = tmpPaths.top();
+					pathFound()[name] = thisPath;
 					return thisPath;
 				}
 				tmpPaths.pop();
@@ -78,10 +81,12 @@ namespace ResMgr {
 	/// @tparam type The type of resource.
 	template<typename type> struct resLoader {
 		/// Load a resource of this type from the given file.
-		/// @param fname The path to the resource; this will be an absolute path unless resolution failed.
+		/// @param fpath The path to the resource; this will be an absolute path unless resolution failed.
 		/// @return A pointer to the loaded resource. The resource manager takes responsibility for freeing it,
 		/// so it must be a pointer allocated with `new` rather than `new[]`.
-		type* operator() (std::string fname);
+		type* operator() (fs::path path);
+		/// The standard file extension for this resource type;
+		static const std::string file_ext;
 	};
 	
 	/// Thrown if an error occurs while loading a resource.
@@ -131,19 +136,19 @@ namespace ResMgr {
 	template<typename type> std::shared_ptr<type> get(std::string name) {
 		if(resPool<type>::resources().find(name) != resPool<type>::resources().end()) {
 			if(resPool<type>::pathFound().find(name) != resPool<type>::pathFound().end()) {
+				resLoader<type> load;
 				std::string curPath = resPool<type>::pathFound()[name].string();
-				std::string checkPath = resPool<type>::rel2abs(name).string();
-				checkPath = checkPath.substr(0,curPath.length());
+				std::string checkPath = resPool<type>::find(name, load.file_ext).string();
 				if(checkPath != curPath) {
 					free<type>(name);
-					return get<type>(name);
+					type* tmp = load(checkPath);
+					return resPool<type>::resources()[name] = std::shared_ptr<type>(tmp);
 				}
 			}
 			return resPool<type>::resources()[name];
 		} else {
-			type* tmp;
 			resLoader<type> load;
-			tmp = load(name);
+			type* tmp = load(resPool<type>::find(name, load.file_ext));
 			return resPool<type>::resources()[name] = std::shared_ptr<type>(tmp);
 		}
 	}

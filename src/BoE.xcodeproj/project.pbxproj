@@ -137,6 +137,7 @@
 		91870F84190C90980081C150 /* scenedit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 914CA49F190C4E9200B6ADD1 /* scenedit.xib */; };
 		919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */; };
 		9192C12018F2745C0088A580 /* game.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9192C11E18F271920088A580 /* game.xib */; };
+		91960ED41BB6157A008AF8F4 /* restypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91960ED31BB613E5008AF8F4 /* restypes.cpp */; };
 		919CC2481B3772F300273FDA /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
 		919CC2491B3772FB00273FDA /* creature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FE1A747C4500F20F5E /* creature.cpp */; };
 		919CC24B1B37730300273FDA /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
@@ -657,6 +658,7 @@
 		9191460018E63D8E005CF3A4 /* scrollbar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrollbar.cpp; sourceTree = "<group>"; };
 		9191460118E6591F005CF3A4 /* boe.menus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = boe.menus.hpp; sourceTree = "<group>"; };
 		9192C11E18F271920088A580 /* game.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = game.xib; path = ../rsrc/menus/game.xib; sourceTree = "<group>"; };
+		91960ED31BB613E5008AF8F4 /* restypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = restypes.cpp; sourceTree = "<group>"; };
 		919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = /usr/local/lib/libboost_filesystem.dylib; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
@@ -999,6 +1001,7 @@
 			children = (
 				912DFE8918E24B4C00B00D75 /* resmgr.hpp */,
 				912DFE8A18E24B4C00B00D75 /* restypes.hpp */,
+				91960ED31BB613E5008AF8F4 /* restypes.cpp */,
 			);
 			path = resmgr;
 			sourceTree = "<group>";
@@ -1788,6 +1791,7 @@
 				919CC27D1B37743700273FDA /* tarball.cpp in Sources */,
 				919CC27E1B37743B00273FDA /* undo.cpp in Sources */,
 				919CC27F1B37744000273FDA /* winutil.mac.mm in Sources */,
+				91960ED41BB6157A008AF8F4 /* restypes.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

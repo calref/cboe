@@ -333,6 +333,9 @@
     <ClCompile Include="..\..\tools\porting.cpp">
       <Filter>Tools\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\tools\resmgr\restypes.cpp">
+      <Filter>Tools\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\tools\soundtool.cpp">
       <Filter>Tools\Source Files</Filter>
     </ClCompile>

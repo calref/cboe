@@ -33,8 +33,7 @@ extern std::ostream& std_fmterr(std::ostream& out);
 
 namespace ResMgr {
 	/// Load an image from a PNG file.
-	template<> inline ImageRsrc* resLoader<ImageRsrc>::operator() (std::string fname) {
-		fs::path fpath = resPool<ImageRsrc>::rel2abs(fname + ".png");
+	template<> inline ImageRsrc* resLoader<ImageRsrc>::operator() (fs::path fpath) {
 		ImageRsrc* img = new ImageRsrc();
 		if(img->loadFromFile(fpath.string())) return img;
 		delete img;
@@ -44,10 +43,9 @@ namespace ResMgr {
 	/// Load a cursor from a GIF file.
 	/// The cursor's hotspot location is stored in a GIF comment, with the following syntax (case-sensitive):
 	/// "Hotspot(x,y)"
-	template<> inline CursorRsrc* resLoader<CursorRsrc>::operator() (std::string fname) {
-		fs::path fpath = resPool<CursorRsrc>::rel2abs(fname + ".gif");
+	template<> inline CursorRsrc* resLoader<CursorRsrc>::operator() (fs::path fpath) {
 		if(!fs::exists(fpath))
-			throw xResMgrErr("Failed to load GIF cursor: " + fname);
+			throw xResMgrErr("Failed to load GIF cursor: " + fpath.string());
 		int x = 0, y = 0, f_sz;
 		std::ifstream fin(fpath.c_str(), std::ios::binary);
 		fin.seekg(0, std::ios::end);
@@ -83,18 +81,15 @@ namespace ResMgr {
 			}
 		}
 		if(!found_hotspot)
-			std::cerr << "Cursor hotspot missing: " << fname << std::endl;
+			std::cerr << "Cursor hotspot missing: " << fpath.string() << std::endl;
 		// TODO: Handle errors?
 		CursorRsrc* cur = new Cursor(fpath.string(),x,y);
 		return cur;
 	}
 	
 	/// Load a font from a TTF file.
-	template<> inline FontRsrc* resLoader<FontRsrc>::operator() (std::string fname) {
-		fs::path fpath = resPool<FontRsrc>::rel2abs(fname + ".ttf");
+	template<> inline FontRsrc* resLoader<FontRsrc>::operator() (fs::path fpath) {
 		FontRsrc* theFont = new FontRsrc;
-		if(theFont->loadFromFile(fpath.string())) return theFont;
-		fpath = resPool<FontRsrc>::rel2abs(fname + ".otf");
 		if(theFont->loadFromFile(fpath.string())) return theFont;
 		delete theFont;
 		throw xResMgrErr("Failed to find font: " + fpath.string());
@@ -103,8 +98,7 @@ namespace ResMgr {
 	/// Load a list of strings from a TXT file.
 	/// Each line in the file becomes one string in the resulting list.
 	/// (Empty lines are included too.)
-	template<> inline StringRsrc* resLoader<StringRsrc>::operator() (std::string fname) {
-		fs::path fpath = resPool<StringRsrc>::rel2abs(fname + ".txt");
+	template<> inline StringRsrc* resLoader<StringRsrc>::operator() (fs::path fpath) {
 		std::ifstream fin(fpath.c_str());
 		if(fin.fail()) {
 			std::cerr << std_fmterr << ": Error opening file";
@@ -120,8 +114,7 @@ namespace ResMgr {
 	}
 	
 	/// Load a sound from a WAV file.
-	template<> inline SoundRsrc* resLoader<SoundRsrc>::operator() (std::string fname) {
-		fs::path fpath = resPool<SoundRsrc>::rel2abs(fname + ".wav");
+	template<> inline SoundRsrc* resLoader<SoundRsrc>::operator() (fs::path fpath) {
 		SoundRsrc* snd = new SoundRsrc;
 		if(snd->loadFromFile(fpath.string())) return snd;
 		delete snd;
