@@ -865,54 +865,56 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			case MODE_PLACE_WEB:
 				make_field_type(spot_hit.x,spot_hit.y,FIELD_WEB);
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_PLACE_CRATE:
 				make_field_type(spot_hit.x,spot_hit.y,OBJECT_CRATE);
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_PLACE_BARREL:
 				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BARREL);
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_PLACE_FIRE_BARRIER:
 				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FIRE);
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_PLACE_FORCE_BARRIER:
 				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FORCE);
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_PLACE_QUICKFIRE:
 				make_field_type(spot_hit.x,spot_hit.y,FIELD_QUICKFIRE);
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_PLACE_STONE_BLOCK:
 				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BLOCK);
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_PLACE_FORCECAGE:
 				make_field_type(spot_hit.x,spot_hit.y,BARRIER_CAGE);
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_TOGGLE_SPECIAL_DOT:
 				if(!editing_town){
-					current_terrain->special_spot[spot_hit.x][spot_hit.y] = !current_terrain->special_spot[spot_hit.x][spot_hit.y];
-					overall_mode = MODE_DRAWING;
+					if(!mouse_button_held)
+						mode_count = !current_terrain->special_spot[spot_hit.x][spot_hit.y];
+					current_terrain->special_spot[spot_hit.x][spot_hit.y] = mode_count;
+					mouse_button_held = true;
 					break;
 				}
 				make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT);
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_CLEAR_FIELDS:
 				for(int i = 8; i <= BARRIER_CAGE; i++)
 					take_field_type(spot_hit.x,spot_hit.y, eFieldType(i));
 				set_cursor(wand_curs);
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_PLACE_SFX:
 				make_field_type(spot_hit.x,spot_hit.y,eFieldType(SFX_SMALL_BLOOD + mode_count));
-				overall_mode = MODE_DRAWING;
+				mouse_button_held = true;
 				break;
 			case MODE_EYEDROPPER:
 				if(editing_town)

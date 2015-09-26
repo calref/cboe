@@ -33,7 +33,7 @@ enum eScenMode {
 	MODE_ROOM_RECT = 3,
 	MODE_PLACE_ITEM = 4,
 	MODE_EDIT_ITEM = 5,
-	MODE_TOGGLE_SPECIAL_DOT = 6, // I suspect that's what this was for, anyway – it currently does nothing
+	MODE_TOGGLE_SPECIAL_DOT = 6,
 	MODE_SET_TOWN_START = 7, // unused; for something I'd like to add
 	MODE_PLACE_SAME_CREATURE = 8,
 	MODE_SET_TOWN_RECT = 9,

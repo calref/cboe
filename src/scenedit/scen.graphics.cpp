@@ -1373,9 +1373,9 @@ void place_location() {
 	
 	if(overall_mode < MODE_MAIN_SCREEN) {
 		place_selected_terrain(current_terrain_type, draw_rect);
+		extern short mode_count;
 		if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE) {
 			rectangle to_rect = draw_rect;
-			extern short mode_count;
 			picture_wanted = scenario.scen_monsters[mode_count].picture_num;
 			if(picture_wanted >= 4000) {
 				picture_wanted %= 1000;
@@ -1471,7 +1471,6 @@ void place_location() {
 				}
 			}
 		} else if(overall_mode == MODE_PLACE_ITEM || overall_mode == MODE_PLACE_SAME_ITEM) {
-			extern short mode_count;
 			picture_wanted = scenario.scen_items[mode_count].graphic_num;
 			if(picture_wanted >= 1000) {
 				sf::Texture* source_gworld;
@@ -1486,6 +1485,36 @@ void place_location() {
 				tiny_from.offset((picture_wanted % 10) * 18,(picture_wanted / 10) * 18);
 				rect_draw_some_item(tiny_obj_gworld,tiny_from,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 			}
+		} else if(overall_mode == MODE_TOGGLE_SPECIAL_DOT) {
+			source_rect = calc_rect(4, 0);
+			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+		} else if(overall_mode == MODE_PLACE_FORCECAGE) {
+			source_rect = calc_rect(0, 0);
+			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+		} else if(overall_mode == MODE_PLACE_WEB) {
+			source_rect = calc_rect(5, 0);
+			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+		} else if(overall_mode == MODE_PLACE_CRATE) {
+			source_rect = calc_rect(6, 0);
+			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+		} else if(overall_mode == MODE_PLACE_BARREL) {
+			source_rect = calc_rect(7, 0);
+			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+		} else if(overall_mode == MODE_PLACE_FIRE_BARRIER) {
+			source_rect = calc_rect(8, 4);
+			rect_draw_some_item(anim_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+		} else if(overall_mode == MODE_PLACE_FORCE_BARRIER) {
+			source_rect = calc_rect(8, 4);
+			rect_draw_some_item(anim_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+		} else if(overall_mode == MODE_PLACE_QUICKFIRE) {
+			source_rect = calc_rect(7, 1);
+			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+		} else if(overall_mode == MODE_PLACE_STONE_BLOCK) {
+			source_rect = calc_rect(3, 0);
+			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+		} else if(overall_mode == MODE_PLACE_SFX) {
+			source_rect = calc_rect(mode_count, 3);
+			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		}
 		draw_rect.offset(0,40);
 		place_selected_terrain(current_ground, draw_rect);
