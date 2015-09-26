@@ -384,4 +384,12 @@ void cTerrain::append(legacy::terrain_type_type& old){
 	};
 	if(picture < 1000) map_pic = picture;
 	else map_pic = NO_PIC;
+	if(i == 1)
+		frill_for = 0, frill_chance = 10;
+	else if(i == 3)
+		frill_for = 2, frill_chance = 15;
+	else if(i == 4)
+		frill_for = 2, frill_chance = 10;
+	else if(i == 37)
+		frill_for = 36, frill_chance = 25;
 }

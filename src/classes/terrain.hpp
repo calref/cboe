@@ -38,6 +38,8 @@ public:
 	unsigned int ground_type = 0; // ditto
 	eTrimType trim_type = eTrimType::NONE; // ditto, mostly
 	long trim_ter = 0; // ditto
+	long frill_for = -1;
+	unsigned short frill_chance = 0;
 	unsigned short combat_arena = 0;
 	location obj_pos; // editor use only
 	location obj_size; // editor use only

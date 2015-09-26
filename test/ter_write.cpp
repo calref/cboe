@@ -73,10 +73,12 @@ TEST_CASE("Saving terrain types") {
 		scen.ter_types[0].ground_type = 2;
 		scen.ter_types[0].trim_ter = 1;
 		scen.ter_types[0].shortcut_key = 'u';
+		scen.ter_types[0].frill_for = 5;
+		scen.ter_types[0].frill_chance = 15;
 		scen.ter_types[0].obj_num = 1;
 		scen.ter_types[0].obj_pos = loc(0,0);
 		scen.ter_types[0].obj_size = loc(2,1);
-		in_and_out("basic", scen);
+		in_and_out("full", scen);
 		REQUIRE(scen.ter_types.size() == 1);
 		CHECK(scen.ter_types[0].flag1 == 1);
 		CHECK(scen.ter_types[0].flag2 == 2);
@@ -91,8 +93,16 @@ TEST_CASE("Saving terrain types") {
 		CHECK(scen.ter_types[0].ground_type == 2);
 		CHECK(scen.ter_types[0].trim_ter == 1);
 		CHECK(scen.ter_types[0].shortcut_key == 'u');
+		CHECK(scen.ter_types[0].frill_for == 5);
+		CHECK(scen.ter_types[0].frill_chance == 15);
 		CHECK(scen.ter_types[0].obj_num == 1);
 		CHECK(scen.ter_types[0].obj_pos == loc(0,0));
 		CHECK(scen.ter_types[0].obj_size == loc(2,1));
+	}
+	SECTION("With default frill chance") {
+		scen.ter_types[0].frill_for = 5;
+		scen.ter_types[0].frill_chance = 10;
+		in_and_out("default_frill", scen);
+		CHECK(scen.ter_types[0].frill_chance == 10);
 	}
 }

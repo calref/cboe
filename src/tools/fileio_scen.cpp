@@ -1008,6 +1008,9 @@ void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
 						val.clear();
 						edit->GetText(&val, false);
 						the_ter.shortcut_key = val.empty() ? 0 : val[0];
+					} else if(type == "frill") {
+						edit->GetText(&the_ter.frill_for);
+						edit->GetAttributeOrDefault("chance", &the_ter.frill_chance, 10);
 					} else if(type == "object") {
 						std::set<std::string> reqs = {"num", "pos", "size"};
 						Iterator<Element> obj;

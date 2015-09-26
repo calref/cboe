@@ -393,6 +393,13 @@ void writeTerrainToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.OpenElement("editor");
 		if(ter.shortcut_key > 0 && ter.shortcut_key < '\x7f')
 			data.PushElement("shortcut", ter.shortcut_key);
+		if(ter.frill_for >= 0) {
+			data.OpenElement("frill");
+			if(ter.frill_chance != 10)
+				data.PushAttribute("chance", ter.frill_chance);
+			data.PushText(ter.frill_for);
+			data.CloseElement("frill");
+		}
 		if(ter.obj_num > 0) {
 			data.OpenElement("object");
 			data.PushElement("num", ter.obj_num);

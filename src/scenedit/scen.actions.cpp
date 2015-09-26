@@ -1882,14 +1882,13 @@ void frill_up_terrain() {
 		for(j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
 			terrain_type = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 			
-			if((terrain_type == 2) && (get_ran(1,1,20) < 3))
-				terrain_type = 3;
-			if((terrain_type == 2) && (get_ran(1,1,20) < 2))
-				terrain_type = 4;
-			if((terrain_type == 0) && (get_ran(1,1,20) < 2))
-				terrain_type = 1;
-			if((terrain_type == 36) && (get_ran(1,1,20) < 5))
-				terrain_type = 37;
+			for(size_t k = 0; k < scenario.ter_types.size(); k++) {
+				if(terrain_type == k) continue;
+				cTerrain& ter = scenario.ter_types[k];
+				if(terrain_type == ter.frill_for && get_ran(1,1,100) < ter.frill_chance)
+					terrain_type = k;
+			}
+			
 			if(editing_town)
 				town->terrain(i,j) = terrain_type;
 			else current_terrain->terrain[i][j] = terrain_type;
@@ -1904,14 +1903,11 @@ void unfrill_terrain() {
 	for(i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
 		for(j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
 			terrain_type = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
-			if(terrain_type == 3)
-				terrain_type = 2;
-			if(terrain_type == 4)
-				terrain_type = 2;
-			if(terrain_type == 1)
-				terrain_type = 0;
-			if(terrain_type == 37)
-				terrain_type = 36;
+			cTerrain& ter = scenario.ter_types[terrain_type];
+			
+			if(ter.frill_for >= 0)
+				terrain_type = ter.frill_for;
+			
 			if(editing_town)
 				town->terrain(i,j) = terrain_type;
 			else current_terrain->terrain[i][j] = terrain_type;

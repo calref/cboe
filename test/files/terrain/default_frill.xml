@@ -1,0 +1,16 @@
+<terrains boes="2.0.0">
+	<terrain id='0'>
+		<name>Test Terrain</name>
+		<pic>0</pic>
+		<map>0</map>
+		<blockage>move</blockage>
+		<trim>none</trim>
+		<arena>0</arena>
+		<special>
+			<type>none</type>
+		</special>
+		<editor>
+			<frill>0</frill>
+		</editor>
+	</terrain>
+</terrains>

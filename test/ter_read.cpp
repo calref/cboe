@@ -104,6 +104,13 @@ TEST_CASE("Loading a terrain type definition") {
 		doc = xmlDocFromStream(fin, "bad_editor.xml");
 		REQUIRE_THROWS_AS(readTerrainFromXml(move(doc), scen), xBadNode);
 	}
+	SECTION("With a default-chance frill reference") {
+		fin.open("files/terrain/default_frill.xml");
+		doc = xmlDocFromStream(fin, "default_frill.xml");
+		REQUIRE_NOTHROW(readTerrainFromXml(move(doc), scen));
+		CHECK(scen.ter_types[0].frill_for == 0);
+		CHECK(scen.ter_types[0].frill_chance == 10);
+	}
 	SECTION("With the minimal required data") {
 		fin.open("files/terrain/minimal.xml");
 		doc = xmlDocFromStream(fin, "minimal.xml");
@@ -141,6 +148,8 @@ TEST_CASE("Loading a terrain type definition") {
 		CHECK(scen.ter_types[0].ground_type == 2);
 		CHECK(scen.ter_types[0].trim_ter == 1);
 		CHECK(scen.ter_types[0].shortcut_key == 'u');
+		CHECK(scen.ter_types[0].frill_for == 9);
+		CHECK(scen.ter_types[0].frill_chance == 30);
 		CHECK(scen.ter_types[0].obj_num == 1);
 		CHECK(scen.ter_types[0].obj_pos == loc(0,0));
 		CHECK(scen.ter_types[0].obj_size == loc(2,1));
