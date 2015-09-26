@@ -794,6 +794,10 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_ITEM:
+				// If we just placed this item there, forget it
+				if(mouse_button_held && store_place_item.loc == spot_hit)
+					break;
+				mouse_button_held = true;
 				for(x = 0; x < town->preset_items.size(); x++)
 					if(town->preset_items[x].code < 0) {
 						town->preset_items[x] = {spot_hit, mode_count, scenario.scen_items[mode_count]};
@@ -806,10 +810,6 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					if(container_there(spot_hit)) town->preset_items.back().contained = true;
 					store_place_item = town->preset_items.back();
 				}
-				
-				overall_mode = MODE_DRAWING;
-				set_cursor(wand_curs);
-				set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
 				break;
 			case MODE_EDIT_ITEM:
 				for(x = 0; x < town->preset_items.size(); x++)
@@ -840,6 +840,10 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				set_cursor(wand_curs);
 				break;
 			case MODE_PLACE_CREATURE:
+				// If we just placed this same creature here, forget it
+				if(mouse_button_held && last_placed_monst.start_loc == spot_hit)
+					break;
+				mouse_button_held = true;
 				for(i = 0; i < town->creatures.size(); i++)
 					if(town->creatures[i].number == 0) {
 						town->creatures[i] = {spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]};
@@ -850,8 +854,6 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					town->creatures.push_back({spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]});
 					last_placed_monst = town->creatures.back();
 				}
-				overall_mode = MODE_DRAWING;
-				set_cursor(wand_curs);
 				break;
 				
 			case MODE_PLACE_NORTH_ENTRANCE: case MODE_PLACE_EAST_ENTRANCE:
