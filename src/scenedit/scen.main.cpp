@@ -419,7 +419,6 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::SCEN_TEXT_DUMP:
 			if(cChoiceDlog("text-dump-confirm", {"okay", "cancel"}).show() == "okay")
 				scen_text_dump();
-			redraw_screen();
 			break;
 		case eMenu::TOWN_DETAILS:
 			edit_town_details();
@@ -553,6 +552,7 @@ void handle_menu_choice(eMenu item_hit) {
 	}
 	if(isHelp)
 		cChoiceDlog(helpDlog).show();
+	redraw_screen();
 }
 
 // This is here to try and fix a major graphical bug while scrolling on WINE
