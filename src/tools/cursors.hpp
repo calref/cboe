@@ -39,6 +39,7 @@ enum cursor_type {
 	talk_curs = 21,
 	key_curs = 22,
  	look_curs = 23,
+	bucket_curs,
 	watch_curs,
 	text_curs, // Keep this one last
 };
@@ -58,14 +59,14 @@ void set_cursor(cursor_type which_curs);
 void restore_cursor();
 
 // Filenames for the cursors
-static const char*const cursors[25] = {
+static const char*const cursors[26] = {
 	"wand", "eyedropper", "brush", "spraycan",
 	"eraser", "topleft", "bottomright", "hand",
 	"NW", "N", "NE",
 	"W", "wait", "E",
 	"SW", "S", "SE",
 	"sword", "boot", "drop", "target",
-	"talk", "key", "look", "watch",
+	"talk", "key", "look", "bucket", "watch",
 };
 
 #endif

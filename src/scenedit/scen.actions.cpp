@@ -4,6 +4,7 @@
 #include <cstring>
 #include <array>
 #include <string>
+#include <stack>
 #include "scen.global.hpp"
 #include "scenario.hpp"
 #include "graphtool.hpp"
@@ -68,7 +69,7 @@ rectangle palette_buttons[10][6];
 short current_rs_top = 0;
 
 ePalBtn out_buttons[6][10] = {
-	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BLANK},
+	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
 	{PAL_EDIT_TOWN, PAL_ERASE_TOWN, PAL_BLANK, PAL_BLANK, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_BLANK},
 	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
 	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
@@ -77,7 +78,7 @@ ePalBtn out_buttons[6][10] = {
 };
 
 ePalBtn town_buttons[6][10] = {
-	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BLANK},
+	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
 	{PAL_ENTER_N, PAL_ENTER_W, PAL_ENTER_S, PAL_ENTER_E, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_TERRAIN},
 	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_EDIT_ITEM, PAL_SAME_ITEM, PAL_ERASE_ITEM, PAL_ITEM},
 	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_EDIT_MONST, PAL_SAME_MONST, PAL_ERASE_MONST, PAL_MONST},
@@ -793,6 +794,11 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				change_circle_terrain(spot_hit,2,current_ground,20);
 				mouse_button_held = true;
 				break;
+			case MODE_FLOOD_FILL:
+				if(mouse_button_held) break;
+				flood_fill_terrain(spot_hit, current_terrain_type);
+				mouse_button_held = true;
+				break;
 			case MODE_PLACE_ITEM:
 				// If we just placed this item there, forget it
 				if(mouse_button_held && store_place_item.loc == spot_hit)
@@ -1289,13 +1295,18 @@ static bool handle_toolpal_action(location cur_point2) {
 					case PAL_RECT_HOLLOW:
 						overall_mode = MODE_HOLLOW_RECT;
 						if(false) // Skip next statement
-							case PAL_RECT_FILLED:
+					case PAL_RECT_FILLED:
 							overall_mode = MODE_FILLED_RECT;
 						mode_count = 2;
 						set_cursor(topleft_curs);
 						if(i == 6)
 							set_string("Fill rectangle (hollow)","Select upper left corner");
 						else set_string("Fill rectangle (solid)","Select upper left corner");
+						break;
+					case PAL_BUCKET:
+						overall_mode = MODE_FLOOD_FILL;
+						set_cursor(bucket_curs);
+						set_string("Flood fill", scenario.ter_types[current_terrain_type].name);
 						break;
 					case PAL_ZOOM: // switch view
 						cur_viewing_mode = (cur_viewing_mode + 1) % 4;
@@ -1872,6 +1883,32 @@ void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bo
 				&& ((hollow) || (get_ran(1,1,20) <= probability)))
 				set_terrain(l,terrain_type);
 		}
+}
+
+void flood_fill_terrain(location start, ter_num_t terrain_type) {
+	static const int dx[4] = {0, 1, 0, -1};
+	static const int dy[4] = {-1, 0, 1, 0};
+	ter_num_t to_replace = editing_town ? town->terrain(start.x, start.y) : current_terrain->terrain[start.x][start.y];
+	std::stack<location> to_visit;
+	std::set<location, loc_compare> visited;
+	to_visit.push(start);
+	
+	while(!to_visit.empty()) {
+		location this_loc = to_visit.top();
+		to_visit.pop();
+		visited.insert(this_loc);
+		for(int i = 0; i < 4; i++) {
+			location adj_loc = this_loc;
+			adj_loc.x += dx[i];
+			adj_loc.y += dy[i];
+			ter_num_t check = editing_town ? town->terrain(adj_loc.x, adj_loc.y) : current_terrain->terrain[adj_loc.x][adj_loc.y];
+			if(check == to_replace && !visited.count(adj_loc))
+				to_visit.push(adj_loc);
+		}
+		if(editing_town)
+			town->terrain(this_loc.x, this_loc.y) = terrain_type;
+		else current_terrain->terrain[this_loc.x][this_loc.y] = terrain_type;
+	}
 }
 
 void frill_up_terrain() {
