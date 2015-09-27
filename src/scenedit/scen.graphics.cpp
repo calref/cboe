@@ -928,6 +928,29 @@ void draw_terrain(){
 						large_hilite = true;
 					} else if(where_draw == mouse_spot)
 						need_hilite = true;
+					else if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE) {
+						extern short mode_count;
+						cMonster& monst = scenario.scen_monsters[mode_count];
+						for(int x = 0; x < monst.x_width; x++) {
+							for(int y = 0; y < monst.y_width; y++) {
+								location this_spot = {where_draw.x - x, where_draw.y - y};
+								if(this_spot == mouse_spot)
+									need_hilite = true;
+							}
+						}
+					} else if(overall_mode == MODE_DRAWING) {
+						cTerrain& ter = scenario.ter_types[current_terrain_type];
+						if(ter.obj_num > 0) {
+							// TODO: Don't do this if auto-completion of large terrain objects is disabled
+							for(int x = 0; x < ter.obj_size.x; x++) {
+								for(int y = 0; y < ter.obj_size.y; y++) {
+									location this_spot = {where_draw.x - x + ter.obj_pos.x, where_draw.y - y + ter.obj_pos.y};
+									if(this_spot == mouse_spot)
+										need_hilite = true;
+								}
+							}
+						}
+					}
 					if(need_hilite) {
 						fill_rect(ter_draw_gworld, destrec, hilite_colour);
 						if(large_hilite && where_draw == mouse_spot)
