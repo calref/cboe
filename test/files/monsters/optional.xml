@@ -1,0 +1,27 @@
+<monsters boes="2.0.0">
+	<monster id='1'>
+		<name>Test Monster</name>
+		<level>1</level>
+		<armor>0</armor>
+		<skill>2</skill>
+		<hp>10</hp>
+		<speed>4</speed>
+		<race>humanoid</race>
+		<attacks/>
+		<pic h='1' w='1'>5</pic>
+		<attitude>hostile-a</attitude>
+		<immunity/>
+        <default-face>12</default-face>
+        <speed>3</speed>
+        <summon>3</summon>
+        <treasure>4</treasure>
+        <mage>1</mage>
+        <priest>2</priest>
+        <voice>42</voice>
+        <onsight>91</onsight>
+        <loot>
+            <type>128</type>
+            <chance>35</chance>
+        </loot>
+	</monster>
+</monsters>

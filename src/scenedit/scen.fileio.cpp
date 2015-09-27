@@ -572,17 +572,21 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 					case eMonstAbilCat::SUMMON:
 						data.OpenElement("summon");
 						data.PushAttribute("type", abil);
-						data.PushElement("type", param.summon.type);
+						if(param.summon.type == eMonstSummon::SPECIES)
+							data.PushElement("race", eRace(param.summon.what));
+						else data.PushElement(boost::lexical_cast<std::string>(param.summon.type), param.summon.what);
 						data.PushElement("min", param.summon.min);
 						data.PushElement("max", param.summon.max);
 						data.PushElement("duration", param.summon.len);
-						data.PushElement("chance", param.summon.chance);
+						str << std::fixed << std::setprecision(1) << float(param.summon.chance)/10;
+						data.PushElement("chance", str.str());
 						data.CloseElement("summon");
 						break;
 					case eMonstAbilCat::RADIATE:
 						data.OpenElement("radiate");
 						data.PushAttribute("type", abil);
 						data.PushElement("type", param.radiate.type);
+						data.PushElement("pattern", param.radiate.pat);
 						data.PushElement("chance", param.radiate.chance);
 						data.CloseElement("radiate");
 						break;

@@ -1,0 +1,25 @@
+<monsters boes="2.0.0">
+	<monster id='1'>
+		<name>Test Monster</name>
+		<level>1</level>
+		<armor>0</armor>
+		<skill>2</skill>
+		<hp>10</hp>
+		<speed>4</speed>
+		<race>humanoid</race>
+		<attacks/>
+		<pic h='1' w='1'>5</pic>
+		<attitude>hostile-a</attitude>
+		<immunity/>
+		<abilities>
+			<missile type='missile'>
+				<type>arrow</type>
+				<missile>3</missile>
+				<strength>2d6</strength>
+				<skill>8</skill>
+				<range>10</range>
+				<chance>80</chance>
+			</missile>
+		</abilities>
+	</monster>
+</monsters>

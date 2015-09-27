@@ -1261,14 +1261,12 @@ static void readMonstAbilFromXml(ticpp::Element& data, cMonster& monst) {
 		} else if(type == "summon") {
 			if(getMonstAbilCategory(abil_type) != eMonstAbilCat::SUMMON)
 				throw xBadVal(type, "type", val, data.Row(), data.Column(), fname);
-			std::set<std::string> reqs = {"type", "min", "max", "duration", "chance"};
+			std::set<std::string> reqs = {"type+what", "min", "max", "duration", "chance"};
 			auto& summon = abil.summon;
 			for(elem = elem.begin(&data); elem != elem.end(); elem++) {
 				elem->GetValue(&type);
 				reqs.erase(type);
-				if(type == "type") {
-					elem->GetText(&summon.type);
-				} else if(type == "min") {
+				if(type == "min") {
 					elem->GetText(&summon.min);
 				} else if(type == "max") {
 					elem->GetText(&summon.max);
@@ -1278,7 +1276,17 @@ static void readMonstAbilFromXml(ticpp::Element& data, cMonster& monst) {
 					long double percent;
 					elem->GetText(&percent);
 					summon.chance = percent * 10;
-				} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+				} else {
+					if(type == "type" || type == "lvl") {
+						elem->GetText(&summon.what);
+					} else if(type == "race") {
+						eRace race;
+						elem->GetText(&race);
+						summon.what = (mon_num_t) race;
+					} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
+					reqs.erase("type+what");
+					summon.type = boost::lexical_cast<eMonstSummon>(type);
+				}
 			}
 			if(!reqs.empty())
 				throw xMissingElem("summon", *reqs.begin(), data.Row(), data.Column(), fname);
@@ -1287,11 +1295,14 @@ static void readMonstAbilFromXml(ticpp::Element& data, cMonster& monst) {
 				throw xBadVal(type, "type", val, data.Row(), data.Column(), fname);
 			std::set<std::string> reqs = {"type", "chance"};
 			auto& radiate = abil.radiate;
+			radiate.pat = PAT_SQ; // Default radiate pattern is 3x3 square
 			for(elem = elem.begin(&data); elem != elem.end(); elem++) {
 				elem->GetValue(&type);
 				reqs.erase(type);
 				if(type == "type") {
 					elem->GetText(&radiate.type);
+				} else if(type == "pattern") {
+					elem->GetText(&radiate.pat);
 				} else if(type == "chance") {
 					elem->GetText(&radiate.chance);
 				} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
@@ -1315,7 +1326,7 @@ static void readMonstAbilFromXml(ticpp::Element& data, cMonster& monst) {
 					elem->GetText(&special.extra3);
 				num_params++;
 			}
-		}
+		} else throw xBadNode(type, data.Row(), data.Column(), fname);
 	}
 }
 

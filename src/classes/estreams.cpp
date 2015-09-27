@@ -14,6 +14,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/ptr_container/ptr_set.hpp>
 #include "simpletypes.hpp"
+#include "spell.hpp"
 
 std::string oboeVersionString() {
 	unsigned short M, m, f;
@@ -643,6 +644,23 @@ std::ostream& operator<< (std::ostream& out, eContentRating rating) {
 
 std::istream& operator>> (std::istream& in, eContentRating& rating) {
 	if(!readEnum(in, rating, rating_strs, eContentRating::G))
+		in.setstate(std::ios::failbit);
+	return in;
+}
+
+// MARK: eSpellPat
+
+cEnumLookup spell_pat_strs = {
+	"single", "square", "small-square", "open-square", "radius-2", "radius-3", "plus", "wall",
+};
+
+std::ostream& operator<< (std::ostream& out, eSpellPat pat) {
+	writeEnum(out, pat, spell_pat_strs, "single");
+	return out;
+}
+
+std::istream& operator>> (std::istream& in, eSpellPat& pat) {
+	if(!readEnum(in, pat, spell_pat_strs, PAT_SINGLE))
 		in.setstate(std::ios::failbit);
 	return in;
 }

@@ -170,4 +170,7 @@ std::istream& operator >> (std::istream& in, eMonstTime& e);
 std::ostream& operator<< (std::ostream& out, eAttitude node);
 std::istream& operator>> (std::istream& in, eAttitude& node);
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att);
+std::ostream& operator<< (std::ostream& out, eSpellPat pat);
+std::istream& operator>> (std::istream& in, eSpellPat& pat);
+
 #endif

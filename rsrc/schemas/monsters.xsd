@@ -40,6 +40,18 @@
 			<xs:enumeration value="hostile-b"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="spellPattern">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="single"/>
+			<xs:enumeration value="square"/>
+			<xs:enumeration value="small-square"/>
+			<xs:enumeration value="open-square"/>
+			<xs:enumeration value="radius-2"/>
+			<xs:enumeration value="radius-3"/>
+			<xs:enumeration value="plus"/>
+			<xs:enumeration value="wall"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="permille">
 		<xs:restriction base="xs:decimal">
 			<xs:fractionDigits value="1"/>
@@ -182,15 +194,11 @@
 	<xs:element name="summon">
 		<xs:complexType>
 			<xs:all>
-				<xs:element name="type">
-					<xs:simpleType>
-						<xs:restriction base="xs:string">
-							<xs:enumeration value="type"/>
-							<xs:enumeration value="lvl"/>
-							<xs:enumeration value="race"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
+				<xs:choice minOccurs="1" maxOccurs="1">
+					<xs:element name="type" type="xs:integer"/>
+					<xs:element name="lvl" type="xs:integer"/>
+					<xs:element name="race" type="species"/>
+				</xs:choice>
 				<xs:element name="min" type="xs:integer"/>
 				<xs:element name="max" type="xs:integer"/>
 				<xs:element name="duration" type="xs:integer"/>
@@ -239,6 +247,7 @@
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>
+				<xs:element name="pattern" type="spellPattern" minOccurs="0"/>
 				<xs:element name="chance" type="permille"/>
 			</xs:all>
 			<xs:attribute name="type" use="required">
