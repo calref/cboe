@@ -151,6 +151,7 @@ void init_scened(int argc, char* argv[]) {
 	});
 	run_startup_g();
 	init_thread.join();
+	set_cursor(wand_curs);
 	
 	cDialog::defaultBackground = cDialog::BG_LIGHT;
 	cDialog::doAnimations = true;
@@ -431,7 +432,6 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::TOWN_BOUNDARIES:
 			overall_mode = MODE_SET_TOWN_RECT;
 			mode_count = 2;
-			set_cursor(topleft_curs);
 			set_string("Set town boundary","Select upper left corner");
 			break;
 		case eMenu::FRILL:
