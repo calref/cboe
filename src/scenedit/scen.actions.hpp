@@ -14,7 +14,6 @@ void get_town_info();
 void get_sign_resource();
 void set_info_strings();
 cTown::cItem edit_item(cTown::cItem item);
-void shy_change_circle_terrain(location center,short radius,ter_num_t terrain_type,short probability);
 void change_circle_terrain(location center,short radius,ter_num_t terrain_type,short probability);
 void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bool hollow);
 void flood_fill_terrain(location start, ter_num_t terrain_type);

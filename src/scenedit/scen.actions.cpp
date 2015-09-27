@@ -784,11 +784,11 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			case MODE_LARGE_SPRAYCAN:
 				mouse_button_held = true;
-				shy_change_circle_terrain(spot_hit,4,current_terrain_type,1);
+				change_circle_terrain(spot_hit,4,current_terrain_type,1);
 				break;
 			case MODE_SMALL_SPRAYCAN:
 				mouse_button_held = true;
-				shy_change_circle_terrain(spot_hit,2,current_terrain_type,1);
+				change_circle_terrain(spot_hit,2,current_terrain_type,1);
 				break;
 			case MODE_ERASER: // erase
 				change_circle_terrain(spot_hit,2,current_ground,20);
@@ -1836,23 +1836,6 @@ void handle_scroll(sf::Event& event) {
 		else cen_y = minmax(4, town->max_dim() - 5, cen_y - amount);
 		redraw_screen();
 	}
-}
-
-void shy_change_circle_terrain(location center,short radius,ter_num_t terrain_type,short probability) {
-	// prob is 0 - 20, 0 no, 20 always
-	location l;
-	short i,j;
-	ter_num_t ter;
-	
-	for(i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
-		for(j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
-			l.x = i;
-			l.y = j;
-			ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
-			if((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability)
-				&& (ter < 5))
-				set_terrain(l,terrain_type);
-		}
 }
 
 void change_circle_terrain(location center,short radius,ter_num_t terrain_type,short probability) {
