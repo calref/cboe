@@ -3113,42 +3113,6 @@ bool build_scenario() {
 	return true;
 }
 
-static bool check_location_bounds(cDialog& me, std::string id, bool losing) {
-	if(!losing) return true;
-	short town_num = me["town-num"].getTextAsNum();
-	short dim = me[id].getTextAsNum();
-	if(dim < 0 || dim >= scenario.towns[town_num]->max_dim()) {
-		showError("This coordinate is not inside the bounds of the town.");
-		return false;
-	}
-	return true;
-}
-
-static bool set_starting_loc_filter(cDialog& me, std::string, eKeyMod) {
-	if(me.toast(true)) {
-		scenario.which_town_start = me["town-num"].getTextAsNum();
-		scenario.where_start.x = me["town-x"].getTextAsNum();
-		scenario.where_start.y = me["town-y"].getTextAsNum();
-	}
-	return true;
-}
-
-void set_starting_loc() {
-	using namespace std::placeholders;
-	
-	cDialog loc_dlg("set-start-loc");
-	loc_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &loc_dlg, false));
-	loc_dlg["okay"].attachClickHandler(set_starting_loc_filter);
-	loc_dlg["town-num"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "The starting town"));
-	loc_dlg.attachFocusHandlers(check_location_bounds, {"town-x", "town-y"});
-	
-	loc_dlg["town-num"].setTextToNum(scenario.which_town_start);
-	loc_dlg["town-x"].setTextToNum(scenario.where_start.x);
-	loc_dlg["town-y"].setTextToNum(scenario.where_start.y);
-	
-	loc_dlg.run();
-}
-
 static bool save_scenario_events(cDialog& me, std::string, eKeyMod) {
 	short i;
 	

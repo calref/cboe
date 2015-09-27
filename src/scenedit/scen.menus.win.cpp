@@ -81,14 +81,15 @@ void init_menubar() {
 	};
 	static const eMenu scen_choices[] = {
 		eMenu::TOWN_CREATE, eMenu::OUT_RESIZE, eMenu::NONE,
-		eMenu::SCEN_DETAILS, eMenu::SCEN_INTRO, eMenu::TOWN_START, eMenu::SCEN_SHEETS, eMenu::SCEN_PICS, eMenu::SCEN_SNDS, eMenu::NONE, eMenu::NONE,
+		eMenu::SCEN_DETAILS, eMenu::SCEN_INTRO, eMenu::SCEN_SHEETS, eMenu::SCEN_PICS, eMenu::SCEN_SNDS, eMenu::NONE, eMenu::NONE,
 		eMenu::SCEN_SPECIALS, eMenu::SCEN_TEXT, eMenu::SCEN_JOURNALS, eMenu::TOWN_IMPORT, eMenu::OUT_IMPORT, eMenu::SCEN_SAVE_ITEM_RECTS,
 		eMenu::SCEN_HORSES, eMenu::SCEN_BOATS, eMenu::TOWN_VARYING, eMenu::SCEN_TIMERS, eMenu::SCEN_ITEM_SHORTCUTS,
 		eMenu::TOWN_DELETE, eMenu::SCEN_DATA_DUMP, eMenu::SCEN_TEXT_DUMP,
 	};
 	static const eMenu town_choices[] = {
 		eMenu::TOWN_DETAILS, eMenu::TOWN_WANDERING, eMenu::TOWN_BOUNDARIES, eMenu::FRILL, eMenu::UNFRILL, eMenu::TOWN_AREAS,
-		eMenu::NONE, eMenu::TOWN_ITEMS_RANDOM, eMenu::TOWN_ITEMS_NOT_PROPERTY, eMenu::TOWN_ITEMS_CLEAR, eMenu::NONE, eMenu::NONE,
+		eMenu::NONE, eMenu::TOWN_START, eMenu::TOWN_ITEMS_RANDOM, eMenu::TOWN_ITEMS_NOT_PROPERTY, eMenu::TOWN_ITEMS_CLEAR,
+		eMenu::NONE, eMenu::NONE,
 		eMenu::TOWN_SPECIALS, eMenu::TOWN_TEXT, eMenu::TOWN_SIGNS, eMenu::TOWN_ADVANCED, eMenu::TOWN_TIMERS,
 	};
 	static const eMenu out_choices[] = {

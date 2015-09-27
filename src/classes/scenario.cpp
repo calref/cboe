@@ -66,6 +66,7 @@ cScenario::cScenario() {
 	format.prog_make_ver[0] = 2;
 	init_spec = -1;
 	default_ground = 2;
+	which_town_start = 0;
 	where_start.x = 24;
 	where_start.y = 24;
 	out_start = where_start = loc(24,24);

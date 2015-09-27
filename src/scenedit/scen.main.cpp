@@ -315,8 +315,8 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 			break;
 		case eMenu::TOWN_START:
-			set_starting_loc();
-			change_made = true;
+			overall_mode = MODE_SET_TOWN_START;
+			set_string("Select party starting location.","");
 			break;
 		case eMenu::SCEN_SHEETS:
 			edit_custom_sheets();

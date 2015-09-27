@@ -3,12 +3,12 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1070</int>
 		<string key="IBDocument.SystemVersion">11G63</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2844</string>
+		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1138.51</string>
 		<string key="IBDocument.HIToolboxVersion">569.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">2844</string>
+			<string key="NS.object.0">3084</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSCustomObject</string>
@@ -382,14 +382,6 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
-								<object class="NSMenuItem" id="646438288">
-									<reference key="NSMenu" ref="399390342"/>
-									<string key="NSTitle">Set Starting Location</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="229763992"/>
-									<reference key="NSMixedImage" ref="909111550"/>
-								</object>
 								<object class="NSMenuItem" id="1072664025">
 									<reference key="NSMenu" ref="399390342"/>
 									<string key="NSTitle">Edit Custom Graphic Sheets</string>
@@ -613,6 +605,14 @@
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
 									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
+								<object class="NSMenuItem" id="646438288">
+									<reference key="NSMenu" ref="61689393"/>
+									<string key="NSTitle">Set Starting Location</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="229763992"/>
@@ -1262,7 +1262,6 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="142725490"/>
 							<reference ref="610226442"/>
-							<reference ref="646438288"/>
 							<reference ref="547366333"/>
 							<reference ref="799771914"/>
 							<reference ref="1007446984"/>
@@ -1322,6 +1321,7 @@
 							<reference ref="654574897"/>
 							<reference ref="156465632"/>
 							<reference ref="2020849"/>
+							<reference ref="646438288"/>
 						</array>
 						<reference key="parent" ref="12009264"/>
 					</object>
@@ -1366,11 +1366,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">804</int>
 						<reference key="object" ref="610226442"/>
-						<reference key="parent" ref="399390342"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">805</int>
-						<reference key="object" ref="646438288"/>
 						<reference key="parent" ref="399390342"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -1662,6 +1657,11 @@
 						<int key="objectID">892</int>
 						<reference key="object" ref="327378958"/>
 						<reference key="parent" ref="399390342"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">805</int>
+						<reference key="object" ref="646438288"/>
+						<reference key="parent" ref="61689393"/>
 					</object>
 				</array>
 			</object>

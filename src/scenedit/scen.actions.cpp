@@ -1140,9 +1140,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				overall_mode = MODE_DRAWING;
 				change_made = true;
 				break;
-			case MODE_SET_OUT_START: //edit out start loc
-				if(cChoiceDlog("set-out-start-confirm", {"okay", "cancel"}).show() == "cancel")
-					break;
+			case MODE_SET_OUT_START:
 				if((spot_hit.x != minmax(4,43,spot_hit.x)) || (spot_hit.y != minmax(4,43,spot_hit.y))) {
 					showError("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.");
 					break;
@@ -1174,7 +1172,15 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					town->preset_items.pop_back();
 				overall_mode = MODE_DRAWING;
 				break;
-			case MODE_SET_TOWN_START: // TODO: Implement this
+			case MODE_SET_TOWN_START:
+				if(!town->in_town_rect.contains(spot_hit)) {
+					showError("You can't put the starting location outside the town boundaries.");
+					break;
+				}
+				scenario.which_town_start = cur_town;
+				scenario.where_start = spot_hit;
+				overall_mode = MODE_DRAWING;
+				change_made = true;
 				break;
 			case MODE_INTRO_SCREEN:
 			case MODE_EDIT_TYPES:
