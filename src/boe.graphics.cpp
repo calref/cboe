@@ -443,7 +443,12 @@ void reload_startup() {
 	init_startup();
 	
 	startup_loaded = true;
-	//load_main_screen();
+	
+	text_sbar->hide();
+	item_sbar->hide();
+	shop_sbar->hide();
+	done_btn->hide();
+	help_btn->hide();
 }
 
 void end_startup() {
@@ -456,6 +461,9 @@ void end_startup() {
 	
 	startup_loaded = false;
 	load_main_screen();
+	
+	text_sbar->show();
+	item_sbar->show();
 }
 
 static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
@@ -541,12 +549,12 @@ void redraw_screen(int refresh) {
 		if(!is_out())
 			draw_targeting_line(sf::Mouse::getPosition(mainPtr));
 		refresh_stat_areas(0);
-		text_sbar->draw();
-		item_sbar->draw();
-		shop_sbar->draw();
-		done_btn->draw();
-		help_btn->draw();
 	}
+	text_sbar->draw();
+	item_sbar->draw();
+	shop_sbar->draw();
+	done_btn->draw();
+	help_btn->draw();
 	mainPtr.display();
 }
 

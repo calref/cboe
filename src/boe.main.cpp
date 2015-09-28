@@ -169,6 +169,14 @@ void init_boe(int argc, char* argv[]) {
 	load_prefs();
 	init_graph_tool();
 	init_snd_tool();
+	
+	cDialog::init();
+	init_sbar(text_sbar, sbar_rect, 58, 11, 58);
+	init_sbar(item_sbar, item_sbar_rect, 16, 8);
+	init_sbar(shop_sbar, shop_sbar_rect, 16, 8);
+	init_btn(done_btn, BTN_DONE);
+	init_btn(help_btn, BTN_HELP);
+	
 	adjust_window_mode();
 	// If we don't do this now it'll flash white to start with
 	mainPtr.clear(sf::Color::Black);
@@ -179,15 +187,9 @@ void init_boe(int argc, char* argv[]) {
 		init_buf();
 		check_for_intel();
 		srand(time(nullptr));
-		init_sbar(text_sbar, sbar_rect, 58, 11, 58);
-		init_sbar(item_sbar, item_sbar_rect, 16, 8);
-		init_sbar(shop_sbar, shop_sbar_rect, 16, 8);
-		init_btn(done_btn, BTN_DONE);
-		init_btn(help_btn, BTN_HELP);
 		init_screen_locs();
 		Set_up_win();
 		init_startup();
-		cDialog::init();
 		flushingInput = true;
 	});
 	show_logo();
