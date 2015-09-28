@@ -18,11 +18,11 @@
 #include "oldstructs.hpp"
 #include "fileio.hpp"
 
-void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
+void cTinyTown::append(legacy::tiny_tr_type& old, int){
 	int i,j;
-	cField the_field;
-    (void)town_num;
+	cField the_field, the_road;
 	the_field.type = SPECIAL_SPOT;
+	the_road.type = SPECIAL_ROAD;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
 	for(i = 0; i < 100; i++) {
@@ -43,6 +43,37 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
+			}
+			if(scenario->ter_types[ter[i][j]].i == 3001) { // marker to indicate it used to be a road
+				the_road.loc.x = i;
+				the_road.loc.y = j;
+				preset_fields.push_back(the_road);
+			}
+			// Convert roads that crossed grass/hill boundaries
+			// It won't catch ones that sit exactly at the edge, though; in that case they'd need manual fixing
+			// For simplicity we assume the non-hill space is either a city or a grass road
+			// Terrain types used here:
+			// 80 - grass road    81 - hill road
+			// 38 - hill/grass    40 - hill|grass    42 - grass/hill    44 - grass|hill
+			// where / means "over" and | means "beside"
+			if(old.terrain[i][j] == 81 && i > 0 && i < 47 && j > 0 && j < 47) {
+				if(old.terrain[i+1][j] == 81) {
+					ter_num_t connect = old.terrain[i-1][j];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 44;
+				} else if(old.terrain[i-1][j] == 81) {
+					ter_num_t connect = old.terrain[i+1][j];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 40;
+				} else if(old.terrain[i][j+1] == 81) {
+					ter_num_t connect = old.terrain[i][j-1];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 42;
+				} else if(old.terrain[i][j-1] == 81) {
+					ter_num_t connect = old.terrain[i][j+1];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 38;
+				}
 			}
 			if(scenario->ter_types[ter[i][j]].boat_over) {
 				// Try to fix specials that could be triggered while in a boat
@@ -87,11 +118,11 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int town_num){
 	}
 }
 
-void cMedTown::append(legacy::ave_tr_type& old, int town_num){
+void cMedTown::append(legacy::ave_tr_type& old, int){
 	int i,j;
-	cField the_field;
-    (void)town_num;         // Silencing Warnings until towns have numbers
+	cField the_field, the_road;
 	the_field.type = SPECIAL_SPOT;
+	the_road.type = SPECIAL_ROAD;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
 	for(i = 0; i < 100; i++) {
@@ -112,6 +143,37 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
+			}
+			if(scenario->ter_types[ter[i][j]].i == 3001) { // marker to indicate it used to be a road
+				the_road.loc.x = i;
+				the_road.loc.y = j;
+				preset_fields.push_back(the_road);
+			}
+			// Convert roads that crossed grass/hill boundaries
+			// It won't catch ones that sit exactly at the edge, though; in that case they'd need manual fixing
+			// For simplicity we assume the non-hill space is either a city or a grass road
+			// Terrain types used here:
+			// 80 - grass road    81 - hill road
+			// 38 - hill/grass    40 - hill|grass    42 - grass/hill    44 - grass|hill
+			// where / means "over" and | means "beside"
+			if(old.terrain[i][j] == 81 && i > 0 && i < 47 && j > 0 && j < 47) {
+				if(old.terrain[i+1][j] == 81) {
+					ter_num_t connect = old.terrain[i-1][j];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 44;
+				} else if(old.terrain[i-1][j] == 81) {
+					ter_num_t connect = old.terrain[i+1][j];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 40;
+				} else if(old.terrain[i][j+1] == 81) {
+					ter_num_t connect = old.terrain[i][j-1];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 42;
+				} else if(old.terrain[i][j-1] == 81) {
+					ter_num_t connect = old.terrain[i][j+1];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 38;
+				}
 			}
 			if(scenario->ter_types[ter[i][j]].boat_over) {
 				// Try to fix specials that could be triggered while in a boat
@@ -156,11 +218,11 @@ void cMedTown::append(legacy::ave_tr_type& old, int town_num){
 	}
 }
 
-void cBigTown::append(legacy::big_tr_type& old, int town_num){
+void cBigTown::append(legacy::big_tr_type& old, int){
 	int i,j;
-    (void)town_num;
-	cField the_field;
+	cField the_field, the_road;
 	the_field.type = SPECIAL_SPOT;
+	the_road.type = SPECIAL_ROAD;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
 	for(i = 0; i < 100; i++) {
@@ -181,6 +243,37 @@ void cBigTown::append(legacy::big_tr_type& old, int town_num){
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
+			}
+			if(scenario->ter_types[ter[i][j]].i == 3001) { // marker to indicate it used to be a road
+				the_road.loc.x = i;
+				the_road.loc.y = j;
+				preset_fields.push_back(the_road);
+			}
+			// Convert roads that crossed grass/hill boundaries
+			// It won't catch ones that sit exactly at the edge, though; in that case they'd need manual fixing
+			// For simplicity we assume the non-hill space is either a city or a grass road
+			// Terrain types used here:
+			// 80 - grass road    81 - hill road
+			// 38 - hill/grass    40 - hill|grass    42 - grass/hill    44 - grass|hill
+			// where / means "over" and | means "beside"
+			if(old.terrain[i][j] == 81 && i > 0 && i < 47 && j > 0 && j < 47) {
+				if(old.terrain[i+1][j] == 81) {
+					ter_num_t connect = old.terrain[i-1][j];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 44;
+				} else if(old.terrain[i-1][j] == 81) {
+					ter_num_t connect = old.terrain[i+1][j];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 40;
+				} else if(old.terrain[i][j+1] == 81) {
+					ter_num_t connect = old.terrain[i][j-1];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 42;
+				} else if(old.terrain[i][j-1] == 81) {
+					ter_num_t connect = old.terrain[i][j+1];
+					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+						ter[i][j] = 38;
+				}
 			}
 			if(scenario->ter_types[ter[i][j]].boat_over) {
 				// Try to fix specials that could be triggered while in a boat

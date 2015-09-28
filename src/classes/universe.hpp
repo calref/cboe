@@ -92,7 +92,7 @@ public:
 	bool is_bones(short x, short y) const;
 	bool is_rubble(short x, short y) const;
 	bool is_force_cage(short x, short y) const;
-//	bool is_trim(short x, short y, char t) const;
+	bool is_road(short x, short y) const;
 	bool set_explored(short x, short y, bool b);
 	bool set_force_wall(short x, short y, bool b);
 	bool set_fire_wall(short x, short y, bool b);
@@ -118,7 +118,7 @@ public:
 	bool set_bones(short x, short y, bool b);
 	bool set_rubble(short x, short y, bool b);
 	bool set_force_cage(short x, short y, bool b);
-//	bool set_trim(short x, short y, char t, bool b);
+	bool set_road(short x, short y, bool b);
 	bool is_impassable(short x, short y);
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
@@ -132,6 +132,10 @@ public:
 	char expl[96][96]; // formerly out_info_type
 	ter_num_t out[96][96];
 	unsigned char out_e[96][96];
+	
+	// These take global coords (ie 0..95)
+	bool is_spot(int x, int y);
+	bool is_road(int x, int y);
 	
 	void append(legacy::out_info_type& old);
 	

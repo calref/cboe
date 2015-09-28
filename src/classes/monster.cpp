@@ -512,6 +512,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 					switch(gen.fld) {
 						case eFieldType::SPECIAL_EXPLORED:
 						case eFieldType::SPECIAL_SPOT:
+						case eFieldType::SPECIAL_ROAD:
 							break; // These are invalid field types
 						case eFieldType::CLOUD_SLEEP: sout << "Sleep"; break;
 						case eFieldType::CLOUD_STINK: sout << "Foul"; break;
@@ -694,6 +695,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 			switch(radiate.type) {
 				case eFieldType::SPECIAL_EXPLORED:
 				case eFieldType::SPECIAL_SPOT:
+				case eFieldType::SPECIAL_ROAD:
 					break; // These are invalid field types
 				case eFieldType::WALL_BLADES: sout << "blade fields"; break;
 				case eFieldType::WALL_FIRE: sout << "fire fields"; break;

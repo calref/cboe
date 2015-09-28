@@ -920,10 +920,6 @@ void draw_terrain(short	mode) {
 					draw_one_terrain_spot(q,r,trim < 0 ? spec_terrain : ground_ter);
 					if(trim >= 0)
 						draw_trim(q,r,trim + 50,spec_terrain);
-				}else if(trim == eTrimType::ROAD || trim == eTrimType::N || trim == eTrimType::S ||
-						 trim == eTrimType::W || trim == eTrimType::E) {
-					draw_one_terrain_spot(q,r,spec_terrain);
-					place_road(q,r,where_draw,trim == eTrimType::ROAD);
 				}else if(spec_terrain == 65535) {
 					draw_one_terrain_spot(q,r,-1);
 				}else{
@@ -944,6 +940,11 @@ void draw_terrain(short	mode) {
 			
 			if(is_town() || is_combat())
 				draw_items(where_draw);
+			if(is_out() && univ.out.out_e[where_draw.x][where_draw.y] && univ.out.is_road(where_draw.x,where_draw.y))
+				place_road(q,r,where_draw,true);
+			else if(is_town() && univ.town.is_explored(where_draw.x,where_draw.y) && univ.town.is_road(where_draw.x, where_draw.y))
+				place_road(q,r,where_draw,true);
+			else place_road(q,r,where_draw,false);
 			draw_fields(where_draw);
 			//draw_monsters(where_draw);
 			//draw_vehicles(where_draw);
@@ -1236,11 +1237,16 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 }
 
 
-bool extend_road_terrain(ter_num_t ter) {
+static bool extend_road_terrain(int x, int y) {
+	if(is_out() && univ.out.is_road(x,y))
+	   return true;
+	if(is_town() && univ.town.is_road(x,y))
+		return true;
+	ter_num_t ter = coord_to_ter(x,y);
 	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
 	eTerSpec spec = univ.scenario.ter_types[ter].special;
 	ter_num_t flag = univ.scenario.ter_types[ter].flag1;
-	if(trim == eTrimType::ROAD || trim == eTrimType::CITY || trim == eTrimType::WALKWAY)
+	if(trim == eTrimType::CITY || trim == eTrimType::WALKWAY)
 		return true;
 	if(spec == eTerSpec::BRIDGE)
 		return true;
@@ -1261,108 +1267,73 @@ static bool can_build_roads_on(ter_num_t ter) {
 	return true;
 }
 
-static bool superextend_road_terrain(int x, int y) {
-	// Connect road to trim?
-	ter_num_t ter = coord_to_ter(x,y);
-	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
-	if(trim == eTrimType::N || trim == eTrimType::S) {
-		ter_num_t up = coord_to_ter(x,y-1);
-		ter_num_t down = coord_to_ter(x,y+1);
-		eTrimType trimUp = univ.scenario.ter_types[up].trim_type;
-		eTrimType trimDn = univ.scenario.ter_types[down].trim_type;
-		if((trimUp == eTrimType::ROAD || trimUp == eTrimType::CITY) && (trimDn == eTrimType::ROAD || trimDn == eTrimType::CITY))
-			return can_build_roads_on(ter);
-		if((trimUp == eTrimType::ROAD || trimUp == eTrimType::CITY) && trim == eTrimType::N && trimDn == eTrimType::S)
-			return can_build_roads_on(ter);
-		if((trimDn == eTrimType::ROAD || trimDn == eTrimType::CITY) && trim == eTrimType::S && trimUp == eTrimType::N)
-			return can_build_roads_on(ter);
-	} else if(trim == eTrimType::E || trim == eTrimType::W) {
-		ter_num_t left = coord_to_ter(x-1,y);
-		ter_num_t right = coord_to_ter(x+1,y);
-		eTrimType trimLeft = univ.scenario.ter_types[left].trim_type;
-		eTrimType trimRight = univ.scenario.ter_types[right].trim_type;
-		if((trimLeft == eTrimType::ROAD || trimLeft == eTrimType::CITY) && (trimRight == eTrimType::ROAD || trimRight == eTrimType::CITY))
-			return can_build_roads_on(ter);
-		if((trimLeft == eTrimType::ROAD || trimLeft == eTrimType::CITY) && trim == eTrimType::W && trimRight == eTrimType::E)
-			return can_build_roads_on(ter);
-		if((trimRight == eTrimType::ROAD || trimRight == eTrimType::CITY) && trim == eTrimType::E && trimLeft == eTrimType::W)
-			return can_build_roads_on(ter);
-	}
-	return false;
-}
-
 static bool connect_roads(ter_num_t ter){
 	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
 	eTerSpec spec = univ.scenario.ter_types[ter].special;
-	if(trim == eTrimType::ROAD || trim == eTrimType::CITY)
+	if(trim == eTrimType::CITY)
 		return true;
 	if(spec == eTerSpec::TOWN_ENTRANCE && trim != eTrimType::NONE)
 		return true; // cave entrance, most likely
 	return false;
 }
 
-void place_road(short q,short r,location where, bool here) {
-	location draw_loc;
-	ter_num_t ter = coord_to_ter(where.x, where.y);
+void place_road(short q,short r,location where,bool here) {
 	rectangle to_rect;
-	static const rectangle road_rects[4] = {
+	static const rectangle road_rects[5] = {
 		{4,112,8,125},	// horizontal partial
 		{0,144,18,148},	// vertical partial
 		{0,112,4,140},	// horizontal full
 		{0,140,36,144},	// vertical full
+		{8,112,12,116},	// central spot
 	};
-	static const rectangle road_dest_rects[6] = {
+	static const rectangle road_dest_rects[7] = {
 		{0,12,18,16},	// top
 		{16,15,20,28},	// right
 		{18,12,36,16},	// bottom
 		{16,0,20,13},	// left
 		{0,12,36,16},	// top + bottom
 		{16,0,20,28},	// right + left
+		{16,12,20,16},	// central spot
 	};
-	draw_loc.x = q;
-	draw_loc.y = r;
 	
 	if(here){
-		if(where.y > 0)
-			ter = coord_to_ter(where.x,where.y - 1);
-		if((where.y == 0) || extend_road_terrain(ter) || superextend_road_terrain(where.x, where.y - 1)) {
+		to_rect = road_dest_rects[6];
+		to_rect.offset(13 + q * 28,13 + r * 36);
+		rect_draw_some_item(roads_gworld, road_rects[4], terrain_screen_gworld, to_rect);
+		
+		if((where.y == 0) || extend_road_terrain(where.x, where.y - 1)) {
 			to_rect = road_dest_rects[0];
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect);
 		}
 		
-		if(((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim() - 1)))
-			ter = coord_to_ter(where.x + 1,where.y);
 		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1))
-			|| extend_road_terrain(ter) || superextend_road_terrain(where.x + 1, where.y)) {
+			|| extend_road_terrain(where.x + 1, where.y)) {
 			to_rect = road_dest_rects[1];
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect);
 		}
 		
-		if(((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim() - 1)))
-			ter = coord_to_ter(where.x,where.y + 1);
 		if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1))
-			|| extend_road_terrain(ter) || superextend_road_terrain(where.x, where.y + 1)) {
+			|| extend_road_terrain(where.x, where.y + 1)) {
 			to_rect = road_dest_rects[2];
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect);
 		}
 		
-		if(where.x > 0)
-			ter = coord_to_ter(where.x - 1,where.y);
-		if((where.x == 0) || extend_road_terrain(ter) || superextend_road_terrain(where.x - 1, where.y)) {
+		if((where.x == 0) || extend_road_terrain(where.x - 1, where.y)) {
 			to_rect = road_dest_rects[3];
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect);
 		}
 	}else{
+		// TODO: I suspect this branch is now irrelevant.
+		ter_num_t ter = coord_to_ter(where.x, where.y);
 		ter_num_t ref = coord_to_ter(where.x,where.y);
 		bool horz = false, vert = false;
 		eTrimType trim = univ.scenario.ter_types[ref].trim_type;
 		if(where.y > 0)
 			ter = coord_to_ter(where.x,where.y - 1);
-		// TODO: ter could be uninitialized here!
 		eTrimType vertTrim = univ.scenario.ter_types[ter].trim_type;
 		if((where.y == 0) || connect_roads(ter))
 			vert = can_build_roads_on(ref);

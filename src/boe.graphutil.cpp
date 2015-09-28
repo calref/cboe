@@ -377,8 +377,7 @@ void draw_fields(location where){
 	if(party_can_see(where) >= 6) return;
 	location where_draw(4 + where.x - center.x, 4 + where.y - center.y);
 	if(is_out()){
-		where = global_to_local(where);
-		if(univ.out->special_spot[where.x][where.y])
+		if(univ.out.is_spot(where.x,where.y))
 			Draw_Some_Item(fields_gworld,calc_rect(4,0),terrain_screen_gworld,where_draw,1,0);
 		return;
 	}

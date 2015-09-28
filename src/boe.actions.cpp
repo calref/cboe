@@ -1592,7 +1592,7 @@ void initiate_outdoor_combat(short i) {
 	
 //	Delay((long) 100,&dummy);
 	
-	start_outdoor_combat(univ.party.out_c[i], univ.out[univ.party.p_loc.x][univ.party.p_loc.y],count_walls(univ.party.p_loc));
+	start_outdoor_combat(univ.party.out_c[i], univ.party.p_loc,count_walls(univ.party.p_loc));
 	
 	univ.party.out_c[i].exists = false;
 	

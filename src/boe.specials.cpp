@@ -3433,7 +3433,9 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				for(k = spec.ex1a; k < min(spec.ex2a, univ.town->max_dim()); k++) {
 					switch(eFieldType(spec.m1)) {
 						// These values are not allowed
-						case SPECIAL_EXPLORED: case SPECIAL_SPOT: case FIELD_DISPEL: case FIELD_SMASH: break;
+						case SPECIAL_EXPLORED: case SPECIAL_SPOT: case SPECIAL_ROAD:
+						case FIELD_DISPEL: case FIELD_SMASH:
+							break;
 						// Walls
 						case WALL_FIRE: i += univ.town.is_fire_wall(i,j); break;
 						case WALL_FORCE: i += univ.town.is_force_wall(i,j); break;
@@ -4413,7 +4415,7 @@ void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					if(spec.sd2 == FIELD_DISPEL || get_ran(1,1,100) <= spec.sd1)
 						switch(eFieldType(spec.sd2)) {
 							// These values are not allowed.
-							case SPECIAL_EXPLORED: case SPECIAL_SPOT: break;
+							case SPECIAL_EXPLORED: case SPECIAL_SPOT: case SPECIAL_ROAD: break;
 							// Walls
 							case WALL_FIRE: univ.town.set_fire_wall(i,j,true); break;
 							case WALL_FORCE: univ.town.set_force_wall(i,j,true); break;

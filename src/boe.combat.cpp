@@ -252,7 +252,7 @@ bool center_on_monst;
 
 
 
-void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terrain,short num_walls) {
+void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short num_walls) {
 	short i,j,how_many,num_tries = 0;
 	short low[10] = {15,7,4,3,2,1,1,7,2,1};
 	short high[10] = {30,10,6,5,3,2,1,10,4,1};
@@ -280,7 +280,8 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,ter_num_t in_which_terr
 	univ.town.prep_arena();
 	univ.town->in_town_rect = town_rect;
 	
-	create_out_combat_terrain(in_which_terrain,num_walls,0);
+	ter_num_t in_which_terrain = univ.out[where.x][where.y];
+	create_out_combat_terrain(in_which_terrain,num_walls,univ.out.is_road(where.x,where.y));
 	
 	univ.town.monst.clear();
 	

@@ -104,10 +104,13 @@ void cCurTown::place_preset_fields() {
 	for(size_t i = 0; i < record()->preset_fields.size(); i++) {
 		switch(record()->preset_fields[i].type){
 			case OBJECT_BLOCK:
-				univ.town.set_block(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				set_block(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
 			case SPECIAL_SPOT:
 				set_spot(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
+				break;
+			case SPECIAL_ROAD:
+				set_road(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
 			case FIELD_WEB:
 				set_web(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
@@ -234,6 +237,10 @@ bool cCurTown::is_block(short x, short y) const{ // currently unused
 
 bool cCurTown::is_spot(short x, short y) const{
 	return fields[x][y] & SPECIAL_SPOT;
+}
+
+bool cCurTown::is_road(short x, short y) const{
+	return fields[x][y] & SPECIAL_ROAD;
 }
 
 bool cCurTown::is_special(short x, short y) const{
@@ -460,6 +467,13 @@ bool cCurTown::set_spot(short x, short y, bool b){
 	if(x > record()->max_dim() || y > record()->max_dim()) return false;
 	if(b) fields[x][y] |=  SPECIAL_SPOT;
 	else  fields[x][y] &= ~SPECIAL_SPOT;
+	return true;
+}
+
+bool cCurTown::set_road(short x, short y, bool b){
+	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(b) fields[x][y] |=  SPECIAL_ROAD;
+	else  fields[x][y] &= ~SPECIAL_ROAD;
 	return true;
 }
 
@@ -862,6 +876,24 @@ cCurOut::cCurOut(cUniverse& univ) : univ(univ) {}
 cOutdoors* cCurOut::operator->() {
 	short x = univ.party.outdoor_corner.x + univ.party.i_w_c.x, y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 	return univ.scenario.outdoors[x][y];
+}
+
+bool cCurOut::is_spot(int x, int y) {
+	int sector_x = 0, sector_y = 0;
+	if(x >= 48) sector_x++, x -= 48;
+	if(y >= 48) sector_y++, y -= 48;
+	sector_x += univ.party.outdoor_corner.x;
+	sector_y += univ.party.outdoor_corner.y;
+	return univ.scenario.outdoors[sector_x][sector_y]->special_spot[x][y];
+}
+
+bool cCurOut::is_road(int x, int y) {
+	int sector_x = 0, sector_y = 0;
+	if(x >= 48) sector_x++, x -= 48;
+	if(y >= 48) sector_y++, y -= 48;
+	sector_x += univ.party.outdoor_corner.x;
+	sector_y += univ.party.outdoor_corner.y;
+	return univ.scenario.outdoors[sector_x][sector_y]->roads[x][y];
 }
 
 cUniverse::cUniverse(long party_type) : party(*this, party_type), out(*this), town(*this) {}

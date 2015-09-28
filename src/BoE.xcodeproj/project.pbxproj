@@ -1966,6 +1966,7 @@
 					"-Werror=return-type",
 					"-Werror=parentheses",
 					"-Werror=dangling-else",
+					"-Werror=array-bounds",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2026,6 +2027,7 @@
 					"-Werror=return-type",
 					"-Werror=parentheses",
 					"-Werror=dangling-else",
+					"-Werror=array-bounds",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system",

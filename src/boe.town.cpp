@@ -821,8 +821,7 @@ void place_party(short direction) {
 	}
 }
 
-// spec_code is encounter's spec_code
-void create_out_combat_terrain(short ter_type,short num_walls,short /*spec_code*/) {
+void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 	short i,j,k,r1,arena;
 	static const short ter_base[20] = {
 		2,0,36,50,71,     0,0,0, 0,2,
@@ -953,7 +952,6 @@ void create_out_combat_terrain(short ter_type,short num_walls,short /*spec_code*
 	
 	univ.town->terrain(0,0) = ter_base[arena];
 	
-	bool is_road = univ.scenario.ter_types[ter_type].trim_type == eTrimType::ROAD;
 	bool is_bridge = (arena == 3 || arena == 4);
 	
 	if(arena == 3 || (is_road && surface_arenas.count(arena))) {
@@ -1480,6 +1478,12 @@ void draw_map(bool need_refresh) {
 						else ter_temp_from.offset(12 * 20,
 												  12 * (univ.scenario.ter_types[what_ter].picture - 960));
 						rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
+					}
+					
+					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
+						extern sf::Texture roads_gworld;
+						draw_rect.inset(1,1);
+						rect_draw_some_item(roads_gworld,{8,112,12,116},map_gworld,draw_rect);
 					}
 				}
 			}

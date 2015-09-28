@@ -805,6 +805,8 @@ void draw_terrain(){
 				destrec.top = 8 + BITMAP_HEIGHT * where_draw.y;
 				destrec.bottom = destrec.top + BITMAP_HEIGHT;
 				
+				if(is_road(cen_x + q - 4,cen_y + r - 4))
+					rect_draw_some_item(fields_gworld, calc_rect(0, 2), ter_draw_gworld, destrec, sf::BlendAlpha);
 				if(is_spot(cen_x + q - 4,cen_y + r - 4))
 					rect_draw_some_item(fields_gworld, calc_rect(4, 0), ter_draw_gworld, destrec, sf::BlendAlpha);
 				
@@ -1025,7 +1027,7 @@ void draw_terrain(){
 				if(q - xMin < 0 || q - xMin >= max_dim || r - yMin < 0 || r - yMin >= max_dim)
 					t_to_draw = 90;
 				else t_to_draw = editing_town ? town->terrain(q,r) : current_terrain->terrain[q][r];
-				draw_one_tiny_terrain_spot(q-xMin,r-yMin,t_to_draw,size);
+				draw_one_tiny_terrain_spot(q-xMin,r-yMin,t_to_draw,size,is_road(q,r));
 				small_what_drawn[q][r] = t_to_draw;
 			}
 		small_any_drawn = true;
@@ -1192,7 +1194,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	rect_draw_some_item(*source_gworld, source_rect, ter_draw_gworld, destrec);
 }
 
-void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size) {
+void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size,bool road) {
 	rectangle dest_rect = {0,0,size,size},from_rect = {0,0,12,12};
 	short picture_wanted;
 	bool drawLargeIcon = false;
@@ -1234,6 +1236,12 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 			from_rect.offset((picture_wanted % 20) * 12,(picture_wanted / 20) * 12);
 			rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
 		}
+	}
+	if(road) {
+		rectangle road_rect = dest_rect;
+		int border = (size - 4) / 2;
+		road_rect.inset(border,border);
+		rect_draw_some_item(editor_mixed, {120, 231, 124, 235}, ter_draw_gworld, road_rect);
 	}
 	if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 		location where_draw(i,j);
@@ -1594,6 +1602,14 @@ bool is_spot(short i,short j){
 		return is_field_type(i,j,SPECIAL_SPOT);
 	else if(i >= 0 && i < 48 && j >= 0 && j < 48)
 		return current_terrain->special_spot[i][j];
+	return false;
+}
+
+bool is_road(short i,short j){
+	if(editing_town)
+		return is_field_type(i,j,SPECIAL_ROAD);
+	else if(i >= 0 && i < 48 && j >= 0 && j < 48)
+		return current_terrain->roads[i][j];
 	return false;
 }
 

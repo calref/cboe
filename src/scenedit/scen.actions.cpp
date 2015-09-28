@@ -72,7 +72,7 @@ ePalBtn out_buttons[6][10] = {
 	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
 	{PAL_EDIT_TOWN, PAL_ERASE_TOWN, PAL_BLANK, PAL_BLANK, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_BLANK},
 	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
-	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
+	{PAL_BLANK, PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
 	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
 	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
 };
@@ -81,7 +81,7 @@ ePalBtn town_buttons[6][10] = {
 	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
 	{PAL_ENTER_N, PAL_ENTER_W, PAL_ENTER_S, PAL_ENTER_E, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_TERRAIN},
 	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_EDIT_ITEM, PAL_SAME_ITEM, PAL_ERASE_ITEM, PAL_ITEM},
-	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_EDIT_MONST, PAL_SAME_MONST, PAL_ERASE_MONST, PAL_MONST},
+	{PAL_BLANK, PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_EDIT_MONST, PAL_SAME_MONST, PAL_ERASE_MONST, PAL_MONST},
 	{PAL_WEB, PAL_CRATE, PAL_BARREL, PAL_BLOCK, PAL_FIRE_BARR, PAL_FORCE_BARR, PAL_QUICKFIRE, PAL_FORCECAGE, PAL_ERASE_FIELD, PAL_BLANK},
 	{PAL_SFX_SB, PAL_SFX_MB, PAL_SFX_LB, PAL_SFX_SS, PAL_SFX_LS, PAL_SFX_ASH, PAL_SFX_BONE, PAL_SFX_ROCK, PAL_BLANK, PAL_BLANK},
 };
@@ -133,7 +133,8 @@ static cursor_type get_edit_cursor() {
 		case MODE_PLACE_WEB: case MODE_PLACE_CRATE: case MODE_PLACE_BARREL:
 		case MODE_PLACE_STONE_BLOCK: case MODE_PLACE_FIRE_BARRIER:
 		case MODE_PLACE_FORCE_BARRIER: case MODE_PLACE_QUICKFIRE:
-		case MODE_TOGGLE_SPECIAL_DOT: case MODE_PLACE_FORCECAGE: case MODE_PLACE_SFX:
+		case MODE_PLACE_FORCECAGE: case MODE_PLACE_SFX:
+		case MODE_TOGGLE_SPECIAL_DOT: case MODE_TOGGLE_ROAD:
 			
 		case MODE_DRAWING:
 			return wand_curs;
@@ -968,6 +969,17 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT);
 				mouse_button_held = true;
 				break;
+			case MODE_TOGGLE_ROAD:
+				if(!editing_town){
+					if(!mouse_button_held)
+						mode_count = !current_terrain->roads[spot_hit.x][spot_hit.y];
+					current_terrain->roads[spot_hit.x][spot_hit.y] = mode_count;
+					mouse_button_held = true;
+					break;
+				}
+				make_field_type(spot_hit.x, spot_hit.y, SPECIAL_ROAD);
+				mouse_button_held = true;
+				break;
 			case MODE_CLEAR_FIELDS:
 				for(int i = 8; i <= BARRIER_CAGE; i++)
 					take_field_type(spot_hit.x,spot_hit.y, eFieldType(i));
@@ -1493,6 +1505,10 @@ static bool handle_toolpal_action(location cur_point2) {
 					case PAL_SPEC_SPOT:
 						set_string(editing_town ? "Place special spot" : "Toggle special spot","Select location");
 						overall_mode = MODE_TOGGLE_SPECIAL_DOT;
+						break;
+					case PAL_ROAD:
+						set_string(editing_town ? "Place roads" : "Toggle roads", "Select location");
+						overall_mode = MODE_TOGGLE_ROAD;
 						break;
 					case PAL_FORCECAGE:
 						set_string("Place forcecage","Select location");

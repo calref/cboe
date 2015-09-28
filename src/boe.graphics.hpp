@@ -39,7 +39,6 @@ void put_text_bar(std::string str);
 void draw_terrain(short	mode = 0);
 void place_trim(short q,short r,location where,ter_num_t ter_type);
 void draw_trim(short q,short r,short which_trim,short which_mode);
-bool extend_road_terrain(ter_num_t ter);
 void place_road(short q,short r,location where,bool here);
 void draw_rest_screen();
 void boom_space(location where,short mode,short type,short damage,short sound);

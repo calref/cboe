@@ -301,7 +301,6 @@ enum class eTrimType {
 	S, SE, E, NE, N, NW, W, SW,
 	NE_INNER, SE_INNER, SW_INNER, NW_INNER,
 	FRILLS = 14, // like on lava and underground water; no trim_ter required
-	ROAD = 15, // the game will treat it like a road space and draw roads; no trim_ter required
 	WALKWAY = 16, // the game will draw walkway corners; trim_ter is base terrain to draw on
 	WATERFALL = 17, // special case for waterfalls
 	CITY = 18, // the game will join roads up to this space but not draw roads on the space
@@ -872,6 +871,7 @@ enum eFieldType {
 	SFX_BONES = 22,
 	SFX_RUBBLE = 23,
 	BARRIER_CAGE = 24,
+	SPECIAL_ROAD = 25,
 	// From here on are special values that don't index anything.
 	// Thus, they start at 32.
 	FIELD_DISPEL = 32, // Dispel field
