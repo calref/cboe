@@ -39,6 +39,11 @@ TEST_CASE("Loading a new-format scenario record") {
 		doc = xmlDocFromStream(fin, "missing_toplevel.xml");
 		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingElem);
 	}
+	SECTION("When an invalid toplevel element is present") {
+		fin.open("files/scenario/bad_toplevel.xml");
+		doc = xmlDocFromStream(fin, "bad_toplevel.xml");
+		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+	}
 	SECTION("When there are too many intro strings") {
 		fin.open("files/scenario/intro_overflow.xml");
 		doc = xmlDocFromStream(fin, "intro_overflow.xml");
@@ -69,6 +74,11 @@ TEST_CASE("Loading a new-format scenario record") {
 		doc = xmlDocFromStream(fin, "bad_rating.xml");
 		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), Exception);
 	}
+	SECTION("When the scenario difficulty is invalid") {
+		fin.open("files/scenario/bad_difficulty.xml");
+		doc = xmlDocFromStream(fin, "bad_difficulty.xml");
+		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadVal);
+	}
 	SECTION("When there are too many teaser strings") {
 		fin.open("files/scenario/extra_teaser.xml");
 		doc = xmlDocFromStream(fin, "extra_teaser.xml");
@@ -78,6 +88,11 @@ TEST_CASE("Loading a new-format scenario record") {
 		fin.open("files/scenario/missing_flags.xml");
 		doc = xmlDocFromStream(fin, "missing_flags.xml");
 		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingElem);
+	}
+	SECTION("When a flag is invalid") {
+		fin.open("files/scenario/bad_flag.xml");
+		doc = xmlDocFromStream(fin, "bad_flag.xml");
+		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
 	}
 	SECTION("When it's not OBoE format") {
 		fin.open("files/scenario/bad_format.xml");
@@ -120,6 +135,21 @@ TEST_CASE("Loading a new-format scenario record") {
 			doc = xmlDocFromStream(fin, "bad_graphics5.xml");
 			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadVal);
 		}
+	}
+	SECTION("With an invalid game subtag") {
+		fin.open("files/scenario/bad_game_node.xml");
+		doc = xmlDocFromStream(fin, "bad_game_node.xml");
+		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+	}
+	SECTION("With an invalid editor subtag") {
+		fin.open("files/scenario/bad_editor_node.xml");
+		doc = xmlDocFromStream(fin, "bad_editor_node.xml");
+		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+	}
+	SECTION("With a sound name for a preset sound") {
+		fin.open("files/scenario/bad_snd_name.xml");
+		doc = xmlDocFromStream(fin, "bad_snd_name.xml");
+		REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadVal);
 	}
 	SECTION("With the minimal required data") {
 		fin.open("files/scenario/minimal.xml");
@@ -181,6 +211,8 @@ TEST_CASE("Loading a new-format scenario record") {
 		CHECK(scen.scenario_timers[0].time == 100);
 		CHECK(scen.scenario_timers[0].node == 15);
 		CHECK(scen.scenario_timers[0].node_type == 0);
+		REQUIRE(scen.snd_names.size() >= 1);
+		CHECK(scen.snd_names[0] == "The name of my custom sound");
 	}
 	SECTION("With an invalid town mod flag") {
 		SECTION("Missing X") {
@@ -202,6 +234,65 @@ TEST_CASE("Loading a new-format scenario record") {
 			fin.open("files/scenario/bad_townmod4.xml");
 			doc = xmlDocFromStream(fin, "bad_townmod4.xml");
 			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadAttr);
+		}
+		SECTION("Too many") {
+			fin.open("files/scenario/too_many_flags.xml");
+			doc = xmlDocFromStream(fin, "too_many_flags.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+	}
+	SECTION("With an invalid save rectangle") {
+		SECTION("With invalid attribute") {
+			fin.open("files/scenario/rect_bad_attr.xml");
+			doc = xmlDocFromStream(fin, "rect_bad_attr.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadAttr);
+		}
+		SECTION("Missing top") {
+			fin.open("files/scenario/rect_missing_top.xml");
+			doc = xmlDocFromStream(fin, "rect_missing_top.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingAttr);
+		}
+		SECTION("Missing left") {
+			fin.open("files/scenario/rect_missing_left.xml");
+			doc = xmlDocFromStream(fin, "rect_missing_left.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingAttr);
+		}
+		SECTION("Missing bottom") {
+			fin.open("files/scenario/rect_missing_bottom.xml");
+			doc = xmlDocFromStream(fin, "rect_missing_bottom.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingAttr);
+		}
+		SECTION("Missing right") {
+			fin.open("files/scenario/rect_missing_right.xml");
+			doc = xmlDocFromStream(fin, "rect_missing_right.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingAttr);
+		}
+		SECTION("Missing town") {
+			fin.open("files/scenario/rect_missing_town.xml");
+			doc = xmlDocFromStream(fin, "rect_missing_town.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingAttr);
+		}
+		SECTION("Too many") {
+			fin.open("files/scenario/too_many_rects.xml");
+			doc = xmlDocFromStream(fin, "too_many_rects.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+	}
+	SECTION("With an invalid timer") {
+		SECTION("With invalid attribute") {
+			fin.open("files/scenario/timer_bad_attr.xml");
+			doc = xmlDocFromStream(fin, "timer_bad_attr.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadAttr);
+		}
+		SECTION("Missing frequency") {
+			fin.open("files/scenario/timer_missing_freq.xml");
+			doc = xmlDocFromStream(fin, "timer_missing_freq.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingAttr);
+		}
+		SECTION("Too many") {
+			fin.open("files/scenario/too_many_timers.xml");
+			doc = xmlDocFromStream(fin, "too_many_timers.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
 		}
 	}
 	SECTION("With a special item") {
@@ -375,6 +466,16 @@ TEST_CASE("Loading a new-format scenario record") {
 			fin.open("files/scenario/shop-bad_entry.xml");
 			doc = xmlDocFromStream(fin, "shop-bad_entry.xml");
 			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+		SECTION("Invalid toplevel tag") {
+			fin.open("files/scenario/shop-bad_node.xml");
+			doc = xmlDocFromStream(fin, "shop-bad_node.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+		}
+		SECTION("Missing required tag") {
+			fin.open("files/scenario/shop-missing_node.xml");
+			doc = xmlDocFromStream(fin, "shop-missing_node.xml");
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingElem);
 		}
 		ResMgr::popPath<StringRsrc>();
 	}

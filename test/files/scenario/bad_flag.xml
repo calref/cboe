@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<scenario boes="2.1.5">
+    <title>Test Scenario</title>
+    <icon>7</icon>
+    <id>campaign</id>
+    <version>2.6.7</version>
+    <language>en-US</language>
+    <author>
+        <name>BoE Test Suite</name>
+        <email>nowhere@example.com</email>
+    </author>
+    <text>
+        <teaser>Teaser 1</teaser>
+        <teaser>Teaser 2</teaser>
+        <intro-msg><![CDATA[Welcome!!!    To the test scenario!]]></intro-msg>
+    </text>
+    <ratings>
+        <content>R</content>
+        <difficulty>3</difficulty>
+    </ratings>
+    <flags>
+        <bad/>
+    </flags>
+</scenario>

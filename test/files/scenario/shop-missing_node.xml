@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<scenario boes="2.1.5">
+<scenario boes="2.0.0">
     <title>Test Scenario</title>
-    <icon>7</icon>
+    <icon>0</icon>
     <id>campaign</id>
     <version>2.6.7</version>
     <language>en-US</language>
@@ -12,7 +12,7 @@
     <text>
         <teaser>Teaser 1</teaser>
         <teaser>Teaser 2</teaser>
-        <intro-msg><![CDATA[Welcome!!!    To the test scenario!]]></intro-msg>
+        <intro-msg>Welcome to the test scenario!</intro-msg>
     </text>
     <ratings>
         <content>R</content>
@@ -25,26 +25,22 @@
     </flags>
     <creator>
         <type>oboe</type>
-        <version>2.5.3</version>
+        <version>2.0.0</version>
         <os></os>
     </creator>
     <game>
-        <num-towns>3</num-towns>
-        <out-width>2</out-width>
-        <out-height>1</out-height>
+        <num-towns>0</num-towns>
+        <out-width>0</out-width>
+        <out-height>0</out-height>
         <start-town>7</start-town>
         <town-start x="24" y="28" />
         <outdoor-start x="1" y="3" />
         <sector-start x="12" y="21" />
-        <on-init>5</on-init>
-        <store-items town="0" top="12" left="13" bottom="20" right="36"/>
-        <town-flag town="1" add-x="16" add-y="21"/>
-        <timer freq="100">15</timer>
+        <shop>
+        	<name>The Shop of Everything</name>
+        	<type>live</type>
+        	<prompt>shop</prompt>
+        	<entries/>
+        </shop>
     </game>
-    <editor>
-        <default-ground>2</default-ground>
-        <last-out-section x="0" y="0" />
-        <last-town>0</last-town>
-        <sound id='100'>The name of my custom sound</sound>
-    </editor>
 </scenario>

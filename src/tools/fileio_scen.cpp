@@ -828,7 +828,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		} else if(type == "editor") {
 			std::set<std::string> reqs = {"default-ground", "last-out-section", "last-town"};
 			Iterator<Element> edit;
-			int num_storage = 0, num_pics = 0, sndnum = 0;
+			int num_storage = 0, num_pics = 0;
 			for(edit = edit.begin(elem.Get()); edit != edit.end(); edit++) {
 				edit->GetValue(&type);
 				reqs.erase(type);
@@ -839,6 +839,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				} else if(type == "last-town") {
 					edit->GetText(&scenario.last_town_edited);
 				} else if(type == "sound") {
+					int sndnum = 0;
 					edit->GetAttribute("id", &sndnum);
 					if(sndnum < 100)
 						throw xBadVal(type, "id", std::to_string(sndnum), edit->Row(), edit->Column(), fname);

@@ -29,22 +29,6 @@
         <os></os>
     </creator>
     <game>
-        <num-towns>3</num-towns>
-        <out-width>2</out-width>
-        <out-height>1</out-height>
-        <start-town>7</start-town>
-        <town-start x="24" y="28" />
-        <outdoor-start x="1" y="3" />
-        <sector-start x="12" y="21" />
-        <on-init>5</on-init>
-        <store-items town="0" top="12" left="13" bottom="20" right="36"/>
-        <town-flag town="1" add-x="16" add-y="21"/>
-        <timer freq="100">15</timer>
+        <store-items bad='0'/>
     </game>
-    <editor>
-        <default-ground>2</default-ground>
-        <last-out-section x="0" y="0" />
-        <last-town>0</last-town>
-        <sound id='100'>The name of my custom sound</sound>
-    </editor>
 </scenario>
