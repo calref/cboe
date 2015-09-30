@@ -92,6 +92,7 @@ template<> void ticpp::Printer::PushElement(std::string tagName, cMonster::cAtta
 template<> void ticpp::Printer::PushElement(std::string tagName, cOutdoors::cWandering enc, bool) {
 	OpenElement(tagName);
 	PushAttribute("can-flee", !enc.cant_flee);
+	PushAttribute("force", enc.forced);
 	for(size_t i = 0; i < enc.monst.size(); i++) {
 		PushElement("monster", enc.monst[i]);
 	}
@@ -719,6 +720,8 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		data.PushElement("defy-scrying", true);
 	if(town.is_hidden)
 		data.PushElement("hidden", true);
+	if(town.has_tavern)
+		data.PushElement("tavern", true);
 	data.CloseElement("flags");
 	for(int i = 0; i < town.wandering.size(); i++) {
 		if(town.wandering[i].isNull()) continue;
@@ -849,6 +852,8 @@ map_data buildOutMapData(location which, cScenario& scenario) {
 			terrain.set(x, y, sector.terrain[x][y]);
 			if(sector.special_spot[x][y])
 				terrain.addFeature(x, y, eMapFeature::FIELD, SPECIAL_SPOT);
+			if(sector.roads[x][y])
+				terrain.addFeature(x, y, eMapFeature::FIELD, SPECIAL_ROAD);
 		}
 	}
 	for(size_t i = 0; i < sector.special_locs.size(); i++) {

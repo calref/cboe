@@ -117,6 +117,7 @@ cOutdoors::cOutdoors(cScenario& scenario) : scenario(&scenario) {
 		for(j = 0; j < 48; j++) {
 			terrain[i][j] = scenario.default_ground;
 			special_spot[i][j] = false;
+			roads[i][j] = false;
 		}
 	
 	for(i = 0; i < 4; i++) {
@@ -134,7 +135,8 @@ void cOutdoors::cWandering::append(legacy::out_wandering_type old){
 	spec_on_meet = old.spec_on_meet;
 	spec_on_win = old.spec_on_win;
 	spec_on_flee = old.spec_on_flee;
-	cant_flee = old.cant_flee;
+	cant_flee = old.cant_flee % 10 == 1;
+	forced = old.cant_flee >= 10;
 	end_spec1 = old.end_spec1;
 	end_spec2 = old.end_spec2;
 }
@@ -157,7 +159,7 @@ void cOutdoors::cWandering::writeTo(std::ostream& file, std::string prefix) cons
 	file << prefix << "MEET " << spec_on_meet << '\n';
 	file << prefix << "WIN " << spec_on_win << '\n';
 	file << prefix << "FLEE " << spec_on_flee << '\n';
-	file << prefix << "FLAGS " << cant_flee << '\n';
+	file << prefix << "FLAGS " << cant_flee << ' ' << forced << '\n';
 	file << prefix << "SDF " << end_spec1 << ' ' << end_spec2 << '\n';
 }
 
@@ -182,7 +184,7 @@ void cOutdoors::cWandering::readFrom(std::istream& file){
 		else if(cur == "FLEE")
 			sin >> spec_on_flee;
 		else if(cur == "FLAGS")
-			sin >> cant_flee;
+			sin >> cant_flee >> forced;
 		else if(cur == "SDF")
 			sin >> end_spec1 >> end_spec2;
 	}

@@ -38,7 +38,7 @@ protected:
 public:
 	class cWandering { // formerly wandering_type
 	public:
-		mon_num_t monst[4];
+		std::array<mon_num_t,4> monst;
 		
 		bool isNull();
 		void append(legacy::wandering_type old);

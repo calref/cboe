@@ -1501,6 +1501,17 @@ void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
 			auto& enc_list = type == "encounter" ? out.special_enc : out.wandering;
 			int num_hostile = 0, num_friendly = 0;
 			Iterator<Attribute> attr;
+			for(attr = attr.begin(elem.Get()); attr != attr.end(); attr++) {
+				std::string name, strval;
+				attr->GetName(&name);
+				attr->GetValue(&strval);
+				bool val = strval == "true";
+				if(name == "can-flee")
+					enc_list[count].cant_flee = !val;
+				else if(name == "force")
+					enc_list[count].forced = val;
+				else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
+			}
 			Iterator<Element> enc;
 			for(enc = enc.begin(elem.Get()); enc != enc.end(); enc++) {
 				std::string type;
@@ -1656,6 +1667,10 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 					flag->GetText(&val);
 					if(val == "true")
 						town->defy_scrying = true;
+				} else if(type == "tavern") {
+					flag->GetText(&val);
+					if(val == "true")
+						town->has_tavern = true;
 				} else throw xBadNode(type, flag->Row(), flag->Column(), fname);
 			}
 		} else if(type == "wandering") {
@@ -1891,6 +1906,8 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 					case eMapFeature::FIELD:
 						if(feat.second == SPECIAL_SPOT)
 							out.special_spot[x][y] = true;
+						else if(feat.second == SPECIAL_ROAD)
+							out.roads[x][y] = true;
 						else throw xMapParseError(map_out_bad_field, feat.second, y, x, data.file);
 						break;
 					case eMapFeature::SIGN:

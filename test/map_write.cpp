@@ -106,6 +106,15 @@ TEST_CASE("Saving map data to file") {
 		test[0].second = OBJECT_BLOCK;
 		CHECK(map.getFeatures(3, 3) == test);
 	}
+	SECTION("With fields outdoors") {
+		map.addFeature(0, 0, eMapFeature::FIELD, SPECIAL_SPOT);
+		map.addFeature(1, 1, eMapFeature::FIELD, SPECIAL_ROAD);
+		in_and_out("fields outdoors", map, false);
+		test.emplace_back(make_pair(eMapFeature::FIELD, SPECIAL_SPOT));
+		CHECK(map.getFeatures(0, 0) == test);
+		test[0].second = SPECIAL_ROAD;
+		CHECK(map.getFeatures(1, 1) == test);
+	}
 	SECTION("With town entrance") {
 		map.addFeature(0, 0, eMapFeature::TOWN, 4);
 		in_and_out("town entry loc", map, false);
@@ -248,6 +257,13 @@ TEST_CASE("Building map data") {
 		}
 		if(found.size() != check.size())
 			FAIL("Error: A field is missing!");
+	}
+	SECTION("With fields outdoors") {
+		scen.outdoors[0][0]->special_spot[0][0] = true;
+		scen.outdoors[0][0]->roads[1][1] = true;
+		in_and_out(scen, false);
+		CHECK(scen.outdoors[0][0]->special_spot[0][0]);
+		CHECK(scen.outdoors[0][0]->roads[1][1]);
 	}
 	SECTION("With town entrance") {
 		scen.outdoors[0][0]->city_locs.emplace_back(5, 6, 7);

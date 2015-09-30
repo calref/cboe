@@ -121,4 +121,35 @@ TEST_CASE("Loading a town dialogue definition") {
 		CHECK(talk.people[0].name == "\"I'm Billy Kumquat!\"");
 		CHECK(talk.people[0].job == "\"I juggle!\"");
 	}
+	SECTION("A full personality with several nodes") {
+		fin.open("files/talk/full.xml");
+		doc = xmlDocFromStream(fin, "full.xml");
+		REQUIRE_NOTHROW(readDialogueFromXml(move(doc), talk, 0));
+		CHECK(talk.people[0].dunno == "\"No clue!\"");
+		REQUIRE(talk.talk_nodes.size() == 4);
+		CHECK(talk.talk_nodes[0].personality == 0);
+		CHECK(string(talk.talk_nodes[0].link1, 4) == "jugg");
+		CHECK(talk.talk_nodes[0].type == eTalkNode::REGULAR);
+		CHECK(talk.talk_nodes[0].str1 == "\"It's fun!\"");
+		CHECK(talk.talk_nodes[1].personality == 0);
+		CHECK(string(talk.talk_nodes[1].link1, 4) == "info");
+		CHECK(talk.talk_nodes[1].type == eTalkNode::BUY_SDF);
+		CHECK(talk.talk_nodes[1].extras[0] == 1);
+		CHECK(talk.talk_nodes[1].extras[1] == 2);
+		CHECK(talk.talk_nodes[1].extras[2] == 3);
+		CHECK(talk.talk_nodes[1].str1 == "\"There's a treasure hidden in the old tree!\"");
+		CHECK(talk.talk_nodes[1].str2 == "\"For a gold piece I'll tell you something interesting!\"");
+		CHECK(talk.talk_nodes[2].personality == 0);
+		CHECK(string(talk.talk_nodes[2].link1, 4) == "purc");
+		CHECK(talk.talk_nodes[2].type == eTalkNode::SHOP);
+		CHECK(talk.talk_nodes[2].extras[0] == 0);
+		CHECK(talk.talk_nodes[2].extras[1] == 4);
+		CHECK(talk.talk_nodes[2].str1 == "Billy Kumquat's Oddest Fruit");
+		CHECK(talk.talk_nodes[3].personality == 0);
+		CHECK(string(talk.talk_nodes[3].link1, 4) == "kumq");
+		CHECK(talk.talk_nodes[3].type == eTalkNode::RECEIVE_QUEST);
+		CHECK(talk.talk_nodes[3].extras[0] == 5);
+		CHECK(talk.talk_nodes[3].str1 == "\"I'll reward you if you find me some bigger kumquats!\"");
+		CHECK(talk.talk_nodes[3].str2 == "\"Thanks for finding the bigger kumquats!\"");
+	}
 }

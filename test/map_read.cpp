@@ -98,6 +98,17 @@ TEST_CASE("Loading map data from file") {
 		CHECK(map.getFeatures(2, 5) == test);
 		test[0].second = BARRIER_CAGE;
 		CHECK(map.getFeatures(3, 5) == test);
+		test[0].second = SPECIAL_ROAD;
+		CHECK(map.getFeatures(0, 6) == test);
+	}
+	SECTION("With fields outdoors") {
+		fin.open("files/maps/fields_out.map");
+		map = load_map(fin, false, "fields_out.map");
+		test.emplace_back(make_pair(eMapFeature::FIELD, SPECIAL_SPOT));
+		CHECK(map.getFeatures(2, 2) == test);
+		test[0].second = SPECIAL_ROAD;
+		CHECK(map.getFeatures(2, 3) == test);
+		CHECK(map.getFeatures(2, 4) == test);
 	}
 	SECTION("With town entrance") {
 		fin.open("files/maps/towns_out.map");
@@ -215,7 +226,6 @@ TEST_CASE("Interpreting loaded map data") {
 		fin.open("files/maps/fields.map");
 		map = load_map(fin, true, "fields.map");
 		loadTownMapData(move(map), 0, scen);
-		REQUIRE(scen.towns[0]->preset_fields.size() == 24);
 		static const std::map<eFieldType, location> check = {
 			{WALL_FORCE, {0,0}}, {WALL_FIRE, {1,0}}, {FIELD_ANTIMAGIC, {2,0}}, {CLOUD_STINK, {3,0}},
 			{WALL_ICE, {0,1}}, {WALL_BLADES, {1,1}}, {CLOUD_SLEEP, {2,1}}, {OBJECT_BLOCK, {3,1}},
@@ -223,7 +233,10 @@ TEST_CASE("Interpreting loaded map data") {
 			{BARRIER_FIRE, {0,3}}, {BARRIER_FORCE, {1,3}}, {FIELD_QUICKFIRE, {2,3}}, {SFX_SMALL_BLOOD, {3,3}},
 			{SFX_MEDIUM_BLOOD, {0,4}}, {SFX_LARGE_BLOOD, {1,4}}, {SFX_SMALL_SLIME, {2,4}}, {SFX_LARGE_SLIME, {3,4}},
 			{SFX_ASH, {0,5}}, {SFX_BONES, {1,5}}, {SFX_RUBBLE, {2,5}}, {BARRIER_CAGE, {3,5}},
+			{SPECIAL_ROAD, {0,6}},
 		};
+		CAPTURE(check.size());
+		REQUIRE(scen.towns[0]->preset_fields.size() == check.size());
 		set<eFieldType> found;
 		for(const auto& fld : scen.towns[0]->preset_fields) {
 			if(found.count(fld.type))
@@ -236,6 +249,14 @@ TEST_CASE("Interpreting loaded map data") {
 		}
 		if(found.size() != check.size())
 			FAIL("Error: A field is missing!");
+	}
+	SECTION("With fields outdoors") {
+		fin.open("files/maps/fields_out.map");
+		map = load_map(fin, false, "fields_out.map");
+		loadOutMapData(move(map), loc(0,0), scen);
+		CHECK(scen.outdoors[0][0]->special_spot[2][2]);
+		CHECK(scen.outdoors[0][0]->roads[2][3]);
+		CHECK(scen.outdoors[0][0]->roads[2][4]);
 	}
 	SECTION("With town entrance") {
 		fin.open("files/maps/towns_out.map");

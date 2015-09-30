@@ -1,5 +1,3 @@
 <sector boes="2.0.0">
-	<encounter>
-		<monster human='false'/>
-	</encounter>
+	<encounter bad='no'/>
 </sector>

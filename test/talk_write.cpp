@@ -49,5 +49,48 @@ TEST_CASE("Saving dialogue") {
 		CHECK(talk.people[0].name == "\"My name is John Smith. How do you do?\"");
 		CHECK(talk.people[0].job == "\"Isn't it obvious? I test things!\"");
 	}
+	SECTION("With some nodes") {
+		talk.people[0].dunno = "\"I have no idea.\"";
+		talk.talk_nodes.resize(4);
+		strncpy(talk.talk_nodes[0].link1, "sell", 4);
+		talk.talk_nodes[0].type = eTalkNode::SELL_ITEMS;
+		talk.talk_nodes[0].str1 = "\"Ah, you have unwanted items? Never fear, I can take those off your hands!\"";
+		strncpy(talk.talk_nodes[1].link1, "iden", 4);
+		talk.talk_nodes[1].type = eTalkNode::IDENTIFY;
+		talk.talk_nodes[1].extras[0] = 10;
+		talk.talk_nodes[1].str1 = "\"Yes, I can identify your items for a mere 10 gold per item!\"";
+		strncpy(talk.talk_nodes[2].link1, "test", 4);
+		talk.talk_nodes[2].type = eTalkNode::RECEIVE_QUEST;
+		talk.talk_nodes[2].extras[0] = 4;
+		talk.talk_nodes[2].str1 = "\"Yes! In fact, you can help me to test things!\"";
+		talk.talk_nodes[2].str2 = "\"Thanks for the help!\"";
+		strncpy(talk.talk_nodes[3].link1, "boat", 4);
+		talk.talk_nodes[3].type = eTalkNode::BUY_SHIP;
+		talk.talk_nodes[3].extras[0] = 0;
+		talk.talk_nodes[3].extras[1] = 5;
+		talk.talk_nodes[3].extras[2] = 1;
+		talk.talk_nodes[3].str1 = "\"You need a boat? Then you are in luck! I just happen to have a boat!\"";
+		in_and_out("full", talk);
+		CHECK(talk.people[0].dunno == "\"I have no idea.\"");
+		REQUIRE(talk.talk_nodes.size() == 4);
+		CHECK(string(talk.talk_nodes[0].link1, 4) ==  "sell");
+		CHECK(talk.talk_nodes[0].type == eTalkNode::SELL_ITEMS);
+		CHECK(talk.talk_nodes[0].str1 == "\"Ah, you have unwanted items? Never fear, I can take those off your hands!\"");
+		CHECK(string(talk.talk_nodes[1].link1, 4) == "iden");
+		CHECK(talk.talk_nodes[1].type == eTalkNode::IDENTIFY);
+		CHECK(talk.talk_nodes[1].extras[0] == 10);
+		CHECK(talk.talk_nodes[1].str1 == "\"Yes, I can identify your items for a mere 10 gold per item!\"");
+		CHECK(string(talk.talk_nodes[2].link1, 4) == "test");
+		CHECK(talk.talk_nodes[2].type == eTalkNode::RECEIVE_QUEST);
+		CHECK(talk.talk_nodes[2].extras[0] == 4);
+		CHECK(talk.talk_nodes[2].str1 == "\"Yes! In fact, you can help me to test things!\"");
+		CHECK(talk.talk_nodes[2].str2 == "\"Thanks for the help!\"");
+		CHECK(string(talk.talk_nodes[3].link1, 4) == "boat");
+		CHECK(talk.talk_nodes[3].type == eTalkNode::BUY_SHIP);
+		CHECK(talk.talk_nodes[3].extras[0] == 0);
+		CHECK(talk.talk_nodes[3].extras[1] == 5);
+		CHECK(talk.talk_nodes[3].extras[2] == 1);
+		CHECK(talk.talk_nodes[3].str1 == "\"You need a boat? Then you are in luck! I just happen to have a boat!\"");
+	}
 }
 

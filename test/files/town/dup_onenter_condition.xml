@@ -1,0 +1,6 @@
+<town boes="2.0.0">
+	<size>32</size>
+	<name>Hello World</name>
+	<onenter condition='alive'>1</onenter>
+	<onenter condition='alive'>2</onenter>
+</town>

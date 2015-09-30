@@ -520,8 +520,8 @@ static void put_out_wand_in_dlog(cDialog& me, short which, const cOutdoors::cWan
 		// TODO: Wait a second, if 0 is no monster, does that mean it's impossible to use monster 0? Should 1 be subtracted here?
 		else me[id].setText(scenario.scen_monsters[wand.friendly[i]].m_name);
 	}
-	dynamic_cast<cLed&>(me["no-flee"]).setState(wand.cant_flee % 10 == 1 ? led_red : led_off);
-	dynamic_cast<cLed&>(me["forced"]).setState(wand.cant_flee >= 10 ? led_red : led_off);
+	dynamic_cast<cLed&>(me["no-flee"]).setState(wand.cant_flee ? led_red : led_off);
+	dynamic_cast<cLed&>(me["forced"]).setState(wand.forced ? led_red : led_off);
 	me["onmeet"].setTextToNum(wand.spec_on_meet);
 	me["onwin"].setTextToNum(wand.spec_on_win);
 	me["onflee"].setTextToNum(wand.spec_on_flee);
@@ -536,11 +536,8 @@ static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand,
 	wand.end_spec1 = me["endx"].getTextAsNum();
 	wand.end_spec2 = me["endy"].getTextAsNum();
 	
-	wand.cant_flee = 0;
-	if(dynamic_cast<cLed&>(me["forced"]).getState() != led_off)
-		wand.cant_flee += 10;
-	if(dynamic_cast<cLed&>(me["no-flee"]).getState() != led_off)
-		wand.cant_flee += 1;
+	wand.forced = dynamic_cast<cLed&>(me["forced"]).getState() != led_off;
+	wand.cant_flee = dynamic_cast<cLed&>(me["no-flee"]).getState() != led_off;
 	
 	switch(mode) {
 		case 0:

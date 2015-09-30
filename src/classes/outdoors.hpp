@@ -40,8 +40,9 @@ public:
 	public:
 		std::array<mon_num_t,7> monst;
 		std::array<mon_num_t,3> friendly;
-		short spec_on_meet,spec_on_win,spec_on_flee,cant_flee;
+		short spec_on_meet,spec_on_win,spec_on_flee;
 		short end_spec1,end_spec2;
+		bool cant_flee, forced;
 		
 		bool isNull();
 		void append(legacy::out_wandering_type old);

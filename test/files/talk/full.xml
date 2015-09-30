@@ -1,0 +1,37 @@
+<dialogue boes="2.0.0">
+	<personality id='0'>
+		<title>Billy Kumquat</title>
+		<look>You see a small boy juggling fruit.</look>
+		<name>"I'm Billy Kumquat!"</name>
+		<job>"I juggle!"</job>
+		<unknown>"No clue!"</unknown>
+	</personality>
+	<node for='0'>
+		<keyword>jugg</keyword>
+		<type>reg</type>
+		<text>"It's fun!"</text>
+	</node>
+	<node for='0'>
+		<keyword>info</keyword>
+		<type>buy-sdf</type>
+		<param>1</param>
+		<param>2</param>
+		<param>3</param>
+		<text>"There's a treasure hidden in the old tree!"</text>
+		<text>"For a gold piece I'll tell you something interesting!"</text>
+	</node>
+	<node for='0'>
+		<keyword>purc</keyword>
+		<type>shop</type>
+		<param>0</param>
+		<param>4</param>
+		<text>Billy Kumquat's Oddest Fruit</text>
+	</node>
+	<node for='0'>
+		<keyword>kumq</keyword>
+		<type>quest</type>
+		<param>5</param>
+		<text>"I'll reward you if you find me some bigger kumquats!"</text>
+		<text>"Thanks for finding the bigger kumquats!"</text>
+	</node>
+</dialogue>

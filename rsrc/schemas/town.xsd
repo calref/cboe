@@ -95,6 +95,7 @@
 							<xs:element name="strong-barriers" minOccurs="0" type="bool"/>
 							<xs:element name="defy-mapping" minOccurs="0" type="bool"/>
 							<xs:element name="defy-scrying" minOccurs="0" type="bool"/>
+							<xs:element name="tavern" minOccurs="0" type="bool"/>
 						</xs:all>
 					</xs:complexType>
 				</xs:element>

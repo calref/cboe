@@ -1,0 +1,26 @@
+<sector boes="2.0.0">
+	<name>Test Sector</name>
+	<comment>Hello World!</comment>
+	<sound>birds</sound>
+	<encounter can-flee='false' force='true'>
+		<monster>12</monster>
+		<monster friendly='true'>15</monster>
+		<onmeet>90</onmeet>
+		<onwin>92</onwin>
+		<onflee>84</onflee>
+		<sdf x='202' y='19'/>
+	</encounter>
+	<wandering can-flee='false' force='true'>
+		<monster>12</monster>
+		<monster friendly='true'>15</monster>
+		<onmeet>90</onmeet>
+		<onwin>92</onwin>
+		<onflee>84</onflee>
+		<sdf x='202' y='19'/>
+	</wandering>
+	<sign id='7'>The best sign ever!</sign>
+	<area top='4' left='8' bottom='9' right='12'>
+		<![CDATA[Some random area       Amazing!]]>
+	</area>
+	<string id='9'>A random special string</string>
+</sector>

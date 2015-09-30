@@ -51,6 +51,11 @@ TEST_CASE("Loading a town definition") {
 		doc = xmlDocFromStream(fin, "size_not_first.xml");
 		REQUIRE_THROWS_AS(readTownFromXml(move(doc), town, scen), xBadNode);
 	}
+	SECTION("When the size is invalid") {
+		fin.open("files/town/bad_size.xml");
+		doc = xmlDocFromStream(fin, "bad_size.xml");
+		REQUIRE_THROWS_AS(readTownFromXml(move(doc), town, scen), xBadVal);
+	}
 	SECTION("When there is an invalid toplevel node") {
 		fin.open("files/town/bad_toplevel.xml");
 		doc = xmlDocFromStream(fin, "bad_toplevel.xml");
@@ -64,6 +69,11 @@ TEST_CASE("Loading a town definition") {
 	SECTION("When the onenter condition is invalid") {
 		fin.open("files/town/bad_onenter_condition.xml");
 		doc = xmlDocFromStream(fin, "bad_onenter_condition.xml");
+		REQUIRE_THROWS_AS(readTownFromXml(move(doc), town, scen), xBadVal);
+	}
+	SECTION("When the onenter condition is duplicated") {
+		fin.open("files/town/dup_onenter_condition.xml");
+		doc = xmlDocFromStream(fin, "dup_onenter_condition.xml");
 		REQUIRE_THROWS_AS(readTownFromXml(move(doc), town, scen), xBadVal);
 	}
 	SECTION("When the onexit direction is invalid") {
@@ -125,6 +135,61 @@ TEST_CASE("Loading a town definition") {
 		CHECK(town->in_town_rect == rect(4, 4, 28, 28));
 		CHECK(town->difficulty == 1);
 		CHECK(town->lighting_type == LIGHT_NORMAL);
+	}
+	SECTION("With all possible data") {
+		fin.open("files/town/full.xml");
+		doc = xmlDocFromStream(fin, "full.xml");
+		REQUIRE_NOTHROW(readTownFromXml(move(doc), town, scen));
+		CHECK(town->comment[0] == "This is a silly little comment.");
+		CHECK(town->spec_on_entry == 12);
+		CHECK(town->spec_on_entry_if_dead == 13);
+		CHECK(town->exit_locs[0] == loc(4,16));
+		CHECK(town->exit_specs[0] == 52);
+		CHECK(town->spec_on_hostile == 42);
+		CHECK(town->town_chop_time == 18);
+		CHECK(town->town_chop_key == 4);
+		CHECK(town->max_num_monst == 50000);
+		CHECK(town->is_hidden);
+		CHECK(town->strong_barriers);
+		CHECK(town->has_tavern);
+		CHECK(town->defy_mapping);
+		CHECK(town->defy_scrying);
+		REQUIRE(town->timers.size() >= 1);
+		CHECK(town->timers[0].node_type == 2);
+		CHECK(town->timers[0].node == 15);
+		CHECK(town->timers[0].time == 100);
+		REQUIRE(town->wandering.size() >= 1);
+		CHECK(town->wandering[0].monst[0] == 40);
+		CHECK(town->wandering[0].monst[1] == 41);
+		CHECK(town->wandering[0].monst[2] == 42);
+		CHECK(town->wandering[0].monst[3] == 43);
+		REQUIRE(town->sign_locs.size() >= 2);
+		CHECK(town->sign_locs[1].text == "This is a sample sign.");
+		REQUIRE(town->spec_strs.size() >= 8);
+		CHECK(town->spec_strs[7] == "Here is a town string.");
+		REQUIRE(town->preset_items.size() >= 3);
+		CHECK(town->preset_items[2].code == 120);
+		CHECK(town->preset_items[2].ability == 2);
+		CHECK(town->preset_items[2].charges == 17);
+		CHECK(town->preset_items[2].always_there);
+		CHECK(town->preset_items[2].property);
+		CHECK(town->preset_items[2].contained);
+		REQUIRE(town->creatures.size() >= 13);
+		CHECK(town->creatures[12].number == 140);
+		CHECK(town->creatures[12].start_attitude == eAttitude::HOSTILE_B);
+		CHECK(town->creatures[12].mobility == 1);
+		CHECK(town->creatures[12].spec1 == 12);
+		CHECK(town->creatures[12].spec2 == 13);
+		CHECK(town->creatures[12].spec_enc_code == 50);
+		CHECK(town->creatures[12].time_flag == eMonstTime::APPEAR_WHEN_EVENT);
+		CHECK(town->creatures[12].monster_time == 17);
+		CHECK(town->creatures[12].time_code == 14);
+		CHECK(town->creatures[12].facial_pic == 142);
+		CHECK(town->creatures[12].personality == 1);
+		CHECK(town->creatures[12].special_on_kill == 80);
+		CHECK(town->creatures[12].special_on_talk == 81);
+		REQUIRE(town->room_rect.size() >= 1);
+		CHECK(town->room_rect[0].descr == "This  is  a  sample  area  description.");
 	}
 	
 	delete town;

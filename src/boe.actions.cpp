@@ -1498,7 +1498,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 				create_wand_monst();
 			for(int i = 0; i < 10; i++)
 				if(univ.party.out_c[i].exists)
-					if((adjacent(univ.party.p_loc,univ.party.out_c[i].m_loc) || univ.party.out_c[i].what_monst.cant_flee >= 10)
+					if((adjacent(univ.party.p_loc,univ.party.out_c[i].m_loc) || univ.party.out_c[i].what_monst.forced)
 					   && univ.party.in_boat < 0 && !flying()) {
 						store_wandering_special = univ.party.out_c[i].what_monst;
 						if(handle_wandering_specials(0,0))
@@ -1584,7 +1584,7 @@ void initiate_outdoor_combat(short i) {
 	
 	// Is combat too easy?
 	if((univ.party.get_level() > ((out_enc_lev_tot(i) * 5) / 3) ) && (out_enc_lev_tot(i) < 200)
-		&& (univ.party.out_c[i].what_monst.cant_flee % 10 != 1)) {
+		&& !univ.party.out_c[i].what_monst.cant_flee) {
 		add_string_to_buf("Combat: Monsters fled!");
 		univ.party.out_c[i].exists = false;
 		return;

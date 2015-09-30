@@ -1,0 +1,56 @@
+<town boes="2.0.0">
+	<size>32</size>
+	<name>Test Town</name>
+	<comment>This is a silly little comment.</comment>
+	<bounds top='4' left='4' right='28' bottom='28'/>
+	<difficulty>1</difficulty>
+	<lighting>lit</lighting>
+	<onenter condition='alive'>12</onenter>
+	<onenter condition='dead'>13</onenter>
+	<exit dir='n' x='4' y='16'/>
+	<onexit dir='n'>52</onexit>
+	<onoffend>42</onoffend>
+	<timer freq='100'>15</timer>
+	<flags>
+		<chop day='18' event='4' kills='50000'/>
+		<hidden>true</hidden>
+		<strong-barriers>true</strong-barriers>
+		<defy-mapping>true</defy-mapping>
+		<defy-scrying>true</defy-scrying>
+		<tavern>true</tavern>
+	</flags>
+	<wandering>
+		<monster>40</monster>
+		<monster>41</monster>
+		<monster>42</monster>
+		<monster>43</monster>
+	</wandering>
+	<sign id='1'>This is a sample sign.</sign>
+	<string id='7'>Here is a town string.</string>
+	<item id='2'>
+		<type>120</type>
+		<mod>2</mod>
+		<charges>17</charges>
+		<always>true</always>
+		<property>true</property>
+		<contained>true</contained>
+	</item>
+	<creature id='12'>
+		<type>140</type>
+		<attitude>hostile-b</attitude>
+		<mobility>1</mobility>
+		<sdf x='12' y='13'/>
+		<encounter>50</encounter>
+		<time type='after-event'>
+			<day>17</day>
+			<event>14</event>
+		</time>
+		<face>142</face>
+		<personality>1</personality>
+		<onkill>80</onkill>
+		<ontalk>81</ontalk>
+	</creature>
+	<area top='14' left='16' bottom='20' right='22'>
+		<![CDATA[This  is  a  sample  area  description.]]>
+	</area>
+</town>
