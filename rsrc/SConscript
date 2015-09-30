@@ -7,12 +7,12 @@ Import("env platform data_dir install_dir")
 
 # Data
 
-env.Install(data_dir, Dir("cursors"))
-env.Install(data_dir, Dir("dialogs"))
-env.Install(data_dir, Dir("fonts"))
-env.Install(data_dir, Dir("graphics"))
-env.Install(data_dir, Dir("sounds"))
-env.Install(data_dir, Dir("strings"))
+env.Install(path.join(data_dir, "cursors"), Glob("cursors/*.gif"))
+env.Install(path.join(data_dir, "dialogs"), Glob("dialogs/*.xml"))
+env.Install(path.join(data_dir, "fonts"), Glob("fonts/*.ttf"))
+env.Install(path.join(data_dir, "graphics"), Glob("graphics/*.png"))
+env.Install(path.join(data_dir, "sounds"), Glob("sounds/*.WAV"))
+env.Install(path.join(data_dir, "strings"), Glob("strings/*.txt"))
 
 env.Install(path.join(data_dir, "shaders"), Glob("#src/tools/mask.*"))
 

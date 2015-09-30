@@ -13,6 +13,7 @@ tools = Split("""
 	tarball.cpp
 	undo.cpp
 	gzstream/gzstream.cpp
+	resmgr/restypes.cpp
 """)
 
 if str(platform) == "darwin":

@@ -19,7 +19,7 @@ def run_tests(env,target,source):
       open(target[0].abspath,'w').write("PASSED\n")
 
 env.Install("#build/test/", test)
-env.Install("#build/test/", Dir("#test/files"))
-env.Install("#build/rsrc/", Dir("#rsrc/strings"))
+env.AlwaysBuild(env.Install("#build/test/", Dir("#test/files")))
+env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/strings")))
 env.Command("#build/test/junk/", '', 'mkdir "' + Dir("#build/test/junk").path + '"')
 env.Command("#build/test/passed", test, run_tests, chdir=True)
