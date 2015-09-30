@@ -131,7 +131,7 @@ bool handle_startup_press(location the_point) {
 	return false;
 }
 
-extern int display_mode;
+extern short display_mode;
 extern bool show_startup_splash;
 
 void handle_splash_events() {

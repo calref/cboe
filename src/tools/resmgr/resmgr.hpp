@@ -175,8 +175,7 @@ namespace ResMgr {
 	template<typename type> bool have(std::string name) {
 		if(resPool<type>::resources().find(name) != resPool<type>::resources().end())
 			return true;
-		resLoader<type> load;
-		return resPool<type>::find(name, load.file_ext).is_absolute();
+		return resPool<type>::find(name, resLoader<type>::file_ext).is_absolute();
 	}
 	
 	/// Check if a resource with the given numerical ID exists
