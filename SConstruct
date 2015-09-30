@@ -177,60 +177,61 @@ if path.exists('deps/lib'):
 if path.exists('deps/include'):
 	env.Append(CPPPATH='deps/include')
 
-env['CONFIGUREDIR'] = '#build/conf'
-env['CONFIGURELOG'] = '#build/conf/config.log'
-conf = Configure(env)
+if not env.GetOption('clean'):
+	env['CONFIGUREDIR'] = '#build/conf'
+	env['CONFIGURELOG'] = '#build/conf/config.log'
+	conf = Configure(env)
 
-if not conf.CheckLib('zlib' if str(platform) == "win32" else 'z'):
-	print 'zlib must be installed!'
-	Exit(1)
+	if not conf.CheckLib('zlib' if str(platform) == "win32" else 'z'):
+		print 'zlib must be installed!'
+		Exit(1)
 
-def check_lib(lib, disp, suffixes=[], versions=[]):
-	if str(platform) == "win32" and lib.startswith("boost"):
-		lib = "lib" + lib
-	possible_names = [lib]
-	if str(platform) == "win32":
-		if 'msvc' in env['TOOLS']:
-			vc_suffix = '-vc' + env['MSVC_VERSION'].replace('.','')
-			possible_names.append(lib + vc_suffix)
-	n = len(possible_names)
-	for i in xrange(n):
-		for suff in suffixes:
-			possible_names.append(possible_names[i] + suff)
-	for test in possible_names:
-		if conf.CheckLib(test, language='C++'):
-			bundled_libs.append(test)
-			return # Success!
-		for ver in versions:
-			if conf.CheckLib(test + ver, language='C++'):
-				bundled_libs.append(test + ver)
+	def check_lib(lib, disp, suffixes=[], versions=[]):
+		if str(platform) == "win32" and lib.startswith("boost"):
+			lib = "lib" + lib
+		possible_names = [lib]
+		if str(platform) == "win32":
+			if 'msvc' in env['TOOLS']:
+				vc_suffix = '-vc' + env['MSVC_VERSION'].replace('.','')
+				possible_names.append(lib + vc_suffix)
+		n = len(possible_names)
+		for i in xrange(n):
+			for suff in suffixes:
+				possible_names.append(possible_names[i] + suff)
+		for test in possible_names:
+			if conf.CheckLib(test, language='C++'):
+				bundled_libs.append(test)
 				return # Success!
-	print disp, 'must be installed!'
-	Exit(1)
-
-def check_header(header, disp):
-	if not conf.CheckCXXHeader(header, '<>'):
+			for ver in versions:
+				if conf.CheckLib(test + ver, language='C++'):
+					bundled_libs.append(test + ver)
+					return # Success!
 		print disp, 'must be installed!'
 		Exit(1)
 
-boost_versions = ['-1_55', '-1_56', '-1_57', '-1_58'] # This is a bit of a hack. :(
-bundled_libs = []
+	def check_header(header, disp):
+		if not conf.CheckCXXHeader(header, '<>'):
+			print disp, 'must be installed!'
+			Exit(1)
 
-check_header('boost/lexical_cast.hpp', 'Boost.LexicalCast')
-check_header('boost/optional.hpp', 'Boost.Optional')
-check_header('boost/ptr_container/ptr_container.hpp', 'Boost.PointerContainer')
-check_header('boost/any.hpp', 'Boost.Any')
-check_header('boost/math_fwd.hpp', 'Boost.Math')
-check_header('boost/spirit/include/classic.hpp', 'Boost.Spirit.Classic')
-check_lib('boost_system', 'Boost.System', ['-mt'], boost_versions)
-check_lib('boost_filesystem', 'Boost.Filesystem', ['-mt'], boost_versions)
-check_lib('boost_thread', 'Boost.Thread', ['-mt'], boost_versions)
-check_lib('sfml-system', 'SFML-system')
-check_lib('sfml-window', 'SFML-window')
-check_lib('sfml-audio', 'SFML-audio')
-check_lib('sfml-graphics', 'SFML-graphics')
+	boost_versions = ['-1_55', '-1_56', '-1_57', '-1_58'] # This is a bit of a hack. :(
+	bundled_libs = []
 
-env = conf.Finish()
+	check_header('boost/lexical_cast.hpp', 'Boost.LexicalCast')
+	check_header('boost/optional.hpp', 'Boost.Optional')
+	check_header('boost/ptr_container/ptr_container.hpp', 'Boost.PointerContainer')
+	check_header('boost/any.hpp', 'Boost.Any')
+	check_header('boost/math_fwd.hpp', 'Boost.Math')
+	check_header('boost/spirit/include/classic.hpp', 'Boost.Spirit.Classic')
+	check_lib('boost_system', 'Boost.System', ['-mt'], boost_versions)
+	check_lib('boost_filesystem', 'Boost.Filesystem', ['-mt'], boost_versions)
+	check_lib('boost_thread', 'Boost.Thread', ['-mt'], boost_versions)
+	check_lib('sfml-system', 'SFML-system')
+	check_lib('sfml-window', 'SFML-window')
+	check_lib('sfml-audio', 'SFML-audio')
+	check_lib('sfml-graphics', 'SFML-graphics')
+
+	env = conf.Finish()
 
 env.Append(CPPDEFINES="TIXML_USE_TICPP")
 
