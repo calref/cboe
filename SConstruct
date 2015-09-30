@@ -177,10 +177,14 @@ if path.exists('deps/lib'):
 if path.exists('deps/include'):
 	env.Append(CPPPATH='deps/include')
 
+env['CONFIGUREDIR'] = '#build/conf'
+env['CONFIGURELOG'] = '#build/conf/config.log'
 if not env.GetOption('clean'):
-	env['CONFIGUREDIR'] = '#build/conf'
-	env['CONFIGURELOG'] = '#build/conf/config.log'
 	conf = Configure(env)
+	
+	if not conf.CheckCC() or not conf.CheckCXX():
+		print "There's a problem with your compiler!"
+		Exit(1)
 
 	if not conf.CheckLib('zlib' if str(platform) == "win32" else 'z'):
 		print 'zlib must be installed!'
