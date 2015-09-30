@@ -932,8 +932,8 @@
 				910BBAB80FB91ADB001E34EA /* message.hpp */,
 				910BBAA80FB8F733001E34EA /* pict.hpp */,
 				913FB40A1A5C90840067B9D2 /* pictypes.hpp */,
-				9179A4631A4867E200FEF872 /* stack.hpp */,
 				919145FD18E3C750005CF3A4 /* scrollbar.hpp */,
+				9179A4631A4867E200FEF872 /* stack.hpp */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -948,8 +948,8 @@
 				910BBAB50FB91A26001E34EA /* field.cpp */,
 				910BBAB90FB91ADB001E34EA /* message.cpp */,
 				910BBAA90FB8F733001E34EA /* pict.cpp */,
-				9179A4641A48681800FEF872 /* stack.cpp */,
 				9191460018E63D8E005CF3A4 /* scrollbar.cpp */,
+				9179A4641A48681800FEF872 /* stack.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -958,16 +958,16 @@
 			isa = PBXGroup;
 			children = (
 				910BBA270FB8C459001E34EA /* ticpp.cpp */,
-				910BBA2E0FB8C459001E34EA /* tinystr.cpp */,
-				910BBA2A0FB8C459001E34EA /* tinyxml.cpp */,
-				910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */,
-				910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */,
 				910BBA280FB8C459001E34EA /* ticpp.h */,
 				910BBA2F0FB8C470001E34EA /* ticpprc.h */,
-				910BBA290FB8C459001E34EA /* tinystr.h */,
-				910BBA2B0FB8C459001E34EA /* tinyxml.h */,
-				919086E11A65D3250071F7A0 /* tinyprint.h */,
 				919086DF1A65C8E30071F7A0 /* tinyprint.cpp */,
+				919086E11A65D3250071F7A0 /* tinyprint.h */,
+				910BBA2E0FB8C459001E34EA /* tinystr.cpp */,
+				910BBA290FB8C459001E34EA /* tinystr.h */,
+				910BBA2A0FB8C459001E34EA /* tinyxml.cpp */,
+				910BBA2B0FB8C459001E34EA /* tinyxml.h */,
+				910BBA2C0FB8C459001E34EA /* tinyxmlerror.cpp */,
+				910BBA2D0FB8C459001E34EA /* tinyxmlparser.cpp */,
 			);
 			path = "xml-parser";
 			sourceTree = "<group>";
@@ -1000,8 +1000,8 @@
 			isa = PBXGroup;
 			children = (
 				912DFE8918E24B4C00B00D75 /* resmgr.hpp */,
-				912DFE8A18E24B4C00B00D75 /* restypes.hpp */,
 				91960ED31BB613E5008AF8F4 /* restypes.cpp */,
+				912DFE8A18E24B4C00B00D75 /* restypes.hpp */,
 			);
 			path = resmgr;
 			sourceTree = "<group>";
@@ -1011,6 +1011,7 @@
 			children = (
 				91AC620A0FA2853700EEAE67 /* creatlist.cpp */,
 				914698FE1A747C4500F20F5E /* creature.cpp */,
+				91E1862B1B2B2AC0006A99EA /* estreams.cpp */,
 				91279D3D0F9D1D6A007B0D52 /* item.cpp */,
 				914698FB1A7362D900F20F5E /* living.cpp */,
 				91279BE10F9D0F73007B0D52 /* location.cpp */,
@@ -1029,7 +1030,6 @@
 				91E5C7980F9F60EC00C21460 /* town.cpp */,
 				91AC61C50FA2729900EEAE67 /* universe.cpp */,
 				91279C750F9D15E5007B0D52 /* vehicle.cpp */,
-				91E1862B1B2B2AC0006A99EA /* estreams.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1048,8 +1048,8 @@
 				913D05BA0FA1EA0A00184C18 /* pc.hpp */,
 				91AC607E0FA26A3B00EEAE67 /* regtown.hpp */,
 				91279C570F9D1253007B0D52 /* scenario.hpp */,
-				912287850FD41A2300B21642 /* simpletypes.hpp */,
 				91FDB5771A4E71A900DE5983 /* shop.hpp */,
+				912287850FD41A2300B21642 /* simpletypes.hpp */,
 				91279CC50F9D1A02007B0D52 /* special.hpp */,
 				91597A6C1A3BED2D00BE7BF9 /* spell.hpp */,
 				91E5C7B60F9F619D00C21460 /* talking.hpp */,
@@ -1070,8 +1070,10 @@
 				91E30F2A1A74819B0057C54A /* fileio_party.cpp */,
 				91E5C7A60F9F615400C21460 /* fileio_scen.cpp */,
 				91B3F10A0F9779C300BF5B67 /* graphtool.cpp */,
-				91B3F11E0F97801F00BF5B67 /* mathutil.cpp */,
 				915E09081A316D89008BDF00 /* map_parse.cpp */,
+				91A0B15A1900F73E00EF438F /* mask.frag */,
+				91BFA3D61901B024001686E4 /* mask.vert */,
+				91B3F11E0F97801F00BF5B67 /* mathutil.cpp */,
 				913D005A0F9FEEC200184C18 /* porting.cpp */,
 				91EC481018FBABB100BB1E86 /* prefs.mac.mm */,
 				91F6F8F518F8DE6300E3EA15 /* qdpict.mac.cpp */,
@@ -1080,8 +1082,6 @@
 				91BFA3D81902AD78001686E4 /* tarball.cpp */,
 				912283C80FD0E16C00B21642 /* undo.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
-				91A0B15A1900F73E00EF438F /* mask.frag */,
-				91BFA3D61901B024001686E4 /* mask.vert */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1098,10 +1098,10 @@
 				913D00590F9FEEC200184C18 /* porting.hpp */,
 				91EC480E18FBAA8700BB1E86 /* prefs.hpp */,
 				91B3F10E0F9779D000BF5B67 /* soundtool.hpp */,
-				91BFA3D91902ADD5001686E4 /* tarball.hpp */,
-				9179A4621A47D4E200FEF872 /* vector2d.hpp */,
 				91F06E8F1A2EBEE70038E902 /* special_parse.hpp */,
+				91BFA3D91902ADD5001686E4 /* tarball.hpp */,
 				917B573F100B956C0096C978 /* undo.hpp */,
+				9179A4621A47D4E200FEF872 /* vector2d.hpp */,
 				919145FE18E63B41005CF3A4 /* winutil.hpp */,
 			);
 			name = headers;
@@ -1165,8 +1165,8 @@
 				91B3EEDE0F969BA700BF5B67 /* scen.global.hpp */,
 				91B3EEE50F969BA700BF5B67 /* scen.graphics.hpp */,
 				91B3EEE00F969BA700BF5B67 /* scen.keydlgs.hpp */,
-				91B3EEE60F969BA700BF5B67 /* scen.townout.hpp */,
 				914CA4641909B00100B6ADD1 /* scen.menus.hpp */,
+				91B3EEE60F969BA700BF5B67 /* scen.townout.hpp */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -1182,8 +1182,8 @@
 				91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */,
 				91B3EEEE0F969BA700BF5B67 /* scen.keydlgs.cpp */,
 				91B3EEEB0F969BA700BF5B67 /* scen.main.cpp */,
-				91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */,
 				914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */,
+				91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1229,8 +1229,8 @@
 		91B3EF0D0F969BD300BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
-				91B3EF110F969BD300BF5B67 /* BoECharEd.icns */,
 				91B3EF130F969BD300BF5B67 /* BoECharEd-Info.plist */,
+				91B3EF110F969BD300BF5B67 /* BoECharEd.icns */,
 				91FCC8D718FE28CC007026CE /* pcedit.xib */,
 			);
 			name = rsrc;
@@ -1310,23 +1310,23 @@
 			isa = PBXGroup;
 			children = (
 				91CC17391B421CA0003D9A69 /* catch.cpp */,
-				91CC173A1B421CA0003D9A69 /* scen_read.cpp */,
-				91CC173B1B421CA0003D9A69 /* scen_write.cpp */,
 				91C763D81B4C4BB30086D879 /* enums.cpp */,
-				91C763DA1B4EE6E00086D879 /* map_read.cpp */,
-				91C763DC1B4EE7950086D879 /* map_write.cpp */,
-				91EF27721B693D3800666469 /* ter_read.cpp */,
-				91EF27741B693D4800666469 /* ter_write.cpp */,
 				91EF27761B693D5500666469 /* item_read.cpp */,
 				91EF27781B693D5F00666469 /* item_write.cpp */,
+				91C763DA1B4EE6E00086D879 /* map_read.cpp */,
+				91C763DC1B4EE7950086D879 /* map_write.cpp */,
 				91EF277A1B693D6E00666469 /* monst_read.cpp */,
 				91EF277C1B693D7D00666469 /* monst_write.cpp */,
-				91C2A6EC1B8FA91400346948 /* town_read.cpp */,
-				91E381451B97671E00F69B81 /* town_write.cpp */,
-				91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */,
-				91E381471B97675900F69B81 /* talk_write.cpp */,
 				91C2A6ED1B8FA9FB00346948 /* out_read.cpp */,
 				91E381491B97678D00F69B81 /* out_write.cpp */,
+				91CC173A1B421CA0003D9A69 /* scen_read.cpp */,
+				91CC173B1B421CA0003D9A69 /* scen_write.cpp */,
+				91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */,
+				91E381471B97675900F69B81 /* talk_write.cpp */,
+				91EF27721B693D3800666469 /* ter_read.cpp */,
+				91EF27741B693D4800666469 /* ter_write.cpp */,
+				91C2A6EC1B8FA91400346948 /* town_read.cpp */,
+				91E381451B97671E00F69B81 /* town_write.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1390,12 +1390,12 @@
 		91D62F2E0F8EB80200674AB3 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				2BF04AC30BF518D4006C0831 /* BoE-Info.plist */,
+				2B8F435C0C0973680012E4A8 /* BoE.icns */,
+				91279BB50F9D03B7007B0D52 /* boegraphics.icns */,
+				913D6C040FC57A8E00E12527 /* boeresources.icns */,
 				91279BB30F9D03B6007B0D52 /* boesave.icns */,
 				91279BB40F9D03B7007B0D52 /* boesounds.icns */,
-				913D6C040FC57A8E00E12527 /* boeresources.icns */,
-				91279BB50F9D03B7007B0D52 /* boegraphics.icns */,
-				2B8F435C0C0973680012E4A8 /* BoE.icns */,
-				2BF04AC30BF518D4006C0831 /* BoE-Info.plist */,
 				9192C11E18F271920088A580 /* game.xib */,
 			);
 			name = rsrc;
