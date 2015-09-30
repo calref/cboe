@@ -345,8 +345,11 @@ elif str(platform) == "win32":
 			open("build/Blades of Exile/VCRedistInstall.exe", 'w').close()
 
 if str(platform) == "darwin":
-	# TODO: Build a disk image package
 	env.VariantDir("#build/pkg", "pkg/mac")
 elif str(platform) == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
 	env.VariantDir("#build/pkg", "pkg/win")
 SConscript("build/pkg/SConscript")
+
+# Cleanup
+
+env.Clean('.', 'build')
