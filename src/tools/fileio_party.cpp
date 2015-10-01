@@ -26,7 +26,7 @@ extern cCustomGraphics spec_scen_g;
 
 // Load saved games
 static bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool must_port);
-static bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there);
+static bool load_party_v2(fs::path file_to_load, cUniverse& univ);
 
 bool load_party(fs::path file_to_load, cUniverse& univ){
 	bool town_restore = false;
@@ -36,8 +36,8 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	typedef unsigned short ushort;
 	
 	long len;
-	short vers,n;
-	struct {ushort a; ushort b; ushort c; ushort d; ushort e;} flags;
+	short n;
+	struct {ushort a; ushort b; ushort c; ushort d;} flags;
 	
 	// TODO: Putting these flags in hex would make some things a bit clearer
 	static const unsigned short mac_flags[3][2] = {
@@ -67,28 +67,10 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 		return false;
 	}
 	
-	if(mac_is_intel && flags.a == 0x0B0E){ // new format
+	if(mac_is_intel && flags.a == 0x8B1F){ // Gzip header (new format)
 		format = new_oboe;
-		if(flags.b == mac_flags[0][1]) town_restore = true;
-		else if(flags.b != mac_flags[0][0]) format = unknown;
-		if(flags.c == mac_flags[1][0]) in_scen = true;
-		else if(flags.c != mac_flags[1][1]) format = unknown;
-		if(flags.d == mac_flags[2][1]) maps_there = true;
-		else if(flags.d != mac_flags[2][0]) format = unknown;
-		vers = flags.e;
-	}else if(!mac_is_intel && flags.a == 0x0E0B){ // new format
+	}else if(!mac_is_intel && flags.a == 0x1F8B){ // Gzip header (new format)
 		format = new_oboe;
-		flip_short((short*)&flags.b);
-		flip_short((short*)&flags.c);
-		flip_short((short*)&flags.d);
-		flip_short((short*)&flags.e);
-		if(flags.b == mac_flags[0][1]) town_restore = true;
-		else if(flags.b != mac_flags[0][0]) format = unknown;
-		if(flags.c == mac_flags[1][0]) in_scen = true;
-		else if(flags.c != mac_flags[1][1]) format = unknown;
-		if(flags.d == mac_flags[2][1]) maps_there = true;
-		else if(flags.d != mac_flags[2][0]) format = unknown;
-		vers = flags.e;
 	}else if(flags.a == mac_flags[0][0] || flags.a == mac_flags[0][1]){ // old format
 		if(mac_is_intel){ // it's actually a windows save
 			flip_short((short*)&flags.a);
@@ -140,7 +122,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 		case old_win:
 			return load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, !mac_is_intel);
 		case new_oboe:
-			return load_party_v2(file_to_load, univ, town_restore, in_scen, maps_there);
+			return load_party_v2(file_to_load, univ);
 		case unknown:
 			showError("This is not a Blades of Exile save file.");
 			return false;
@@ -283,20 +265,8 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 }
 
 extern fs::path scenDir;
-bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there){
-	if(!fs::exists(tempDir)) fs::create_directories(tempDir);
-	fs::path tempPath = tempDir/"loadtemp.exg";
-	
-	{ // First, strip off the header and save to a temporary location.
-		std::ifstream fin(file_to_load.c_str(), std::ios_base::binary);
-		std::ofstream fout(tempPath.c_str(), std::ios_base::binary);
-		fin.seekg(10);
-		fout << fin.rdbuf();
-		fin.close();
-		fout.close();
-	}
-	
-	igzstream zin(tempPath.string().c_str());
+bool load_party_v2(fs::path file_to_load, cUniverse& univ){
+	igzstream zin(file_to_load.string().c_str());
 	tarball partyIn;
 	partyIn.readFrom(zin);
 	zin.close();
@@ -353,7 +323,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		}
 	}
 	
-	if(in_scen) {
+	if(!univ.party.scen_name.empty()) {
 		fs::path path;
 		path = scenDir/univ.party.scen_name;
 		if(!fs::exists(path))
@@ -362,7 +332,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		if(!load_scenario(path, univ.scenario))
 			return false;
 		
-		if(town_restore) {
+		if(partyIn.hasFile("save/town.txt")) {
 			// Load town data
 			std::istream& fin = partyIn.getFile("save/town.txt");
 			if(!fin) {
@@ -371,16 +341,13 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 			}
 			univ.town.readFrom(fin);
 			
-			if(maps_there) {
-				// Read town maps
-				std::istream& fin = partyIn.getFile("save/townmaps.dat");
-				// TODO: Warn if maps missing
-				for(int i = 0; i < 200; i++)
-					for(int j = 0; j < 8; j++)
-						for(int k = 0; k < 64; k++)
-							univ.town_maps[i][j][k] = fin.get();
-			}
-		}
+			// Read town maps
+			std::istream& fin2 = partyIn.getFile("save/townmaps.dat");
+			for(int i = 0; i < 200; i++)
+				for(int j = 0; j < 8; j++)
+					for(int k = 0; k < 64; k++)
+						univ.town_maps[i][j][k] = fin2.get();
+		} else univ.town.num = 200;
 		
 		// Load outdoors data
 		std::istream& fin = partyIn.getFile("save/out.txt");
@@ -390,15 +357,12 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		}
 		univ.out.readFrom(fin);
 		
-		if(maps_there) {
-			// Read outdoor maps
-			std::istream& fin = partyIn.getFile("save/outmaps.dat");
-			// TODO: Warn if maps missing
-			for(int i = 0; i < 100; i++)
-				for(int j = 0; j < 6; j++)
-					for(int k = 0; k < 48; k++)
-						univ.out_maps[i][j][k] = fin.get();
-		}
+		// Read outdoor maps
+		std::istream& fin2 = partyIn.getFile("save/outmaps.dat");
+		for(int i = 0; i < 100; i++)
+			for(int j = 0; j < 6; j++)
+				for(int k = 0; k < 48; k++)
+					univ.out_maps[i][j][k] = fin2.get();
 	} else univ.party.scen_name = "";
 	
 	if(partyIn.hasFile("save/export.png")) {
@@ -417,18 +381,12 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 
 //mode;  // 0 - normal  1 - save as
 bool save_party(fs::path dest_file, const cUniverse& univ) {
-	if(!fs::exists(tempDir)) fs::create_directories(tempDir);
-	
 	// Make sure it has the proper file extension
 	std::string fname = dest_file.filename().string();
 	size_t dot = fname.find_last_of('.');
 	if(dot == std::string::npos || fname.substr(dot) != ".exg")
 		fname += ".exg";
 	dest_file = dest_file.parent_path()/fname;
-	
-	bool in_scen = univ.party.scen_name != "";
-	bool in_town = univ.town.num < 200;
-	bool save_maps = !univ.party.stuff_done[306][0];
 	
 	tarball partyOut;
 	
@@ -458,32 +416,28 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 		}
 	}
 	
-	if(in_scen) {
-		if(in_town) {
+	if(!univ.party.scen_name.empty()) {
+		if(univ.town.num < 200) {
 			// Write the current town data
 			univ.town.writeTo(partyOut.newFile("save/town.txt"));
 			
-			if(save_maps) {
-				// Write the town map data
-				std::ostream& fout = partyOut.newFile("save/townmaps.dat");
-				for(int i = 0; i < 200; i++)
-					for(int j = 0; j < 8; j++)
-						for(int k = 0; k < 64; k++)
-							fout.put(univ.town_maps[i][j][k]);
-			}
+			// Write the town map data
+			std::ostream& fout = partyOut.newFile("save/townmaps.dat");
+			for(int i = 0; i < 200; i++)
+				for(int j = 0; j < 8; j++)
+					for(int k = 0; k < 64; k++)
+						fout.put(univ.town_maps[i][j][k]);
 		}
 		
 		// Write the current outdoors data
 		univ.out.writeTo(partyOut.newFile("save/out.txt"));
 		
-		if(save_maps) {
-			// Write the outdoors map data
-			std::ostream& fout = partyOut.newFile("save/outmaps.dat");
-			for(int i = 0; i < 100; i++)
-				for(int j = 0; j < 6; j++)
-					for(int k = 0; k < 48; k++)
-						fout.put(univ.out_maps[i][j][k]);
-		}
+		// Write the outdoors map data
+		std::ostream& fout = partyOut.newFile("save/outmaps.dat");
+		for(int i = 0; i < 100; i++)
+			for(int j = 0; j < 6; j++)
+				for(int k = 0; k < 48; k++)
+					fout.put(univ.out_maps[i][j][k]);
 	}
 	
 	if(spec_scen_g.party_sheet) {
@@ -498,30 +452,9 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	}
 	
 	// Write out the compressed data
-	fs::path tempPath = tempDir/"savetemp.exg";
-	ogzstream zout(tempPath.string().c_str());
+	ogzstream zout(dest_file.string().c_str());
 	partyOut.writeTo(zout);
 	zout.close();
-	
-	// Now add the header. We use the temporary file because we want the header to be uncompressed.
-	int16_t flags[] = {
-		0x0B0E, // to indicate new format
-		static_cast<short>(in_town ? 1342 : 5790), // is the party in town?
-		static_cast<short>(in_scen ? 100 : 200), // is the party in a scenario?
-		static_cast<short>(save_maps ? 5567 : 3422), // is the save maps feature enabled?
-		OBOE_CURRENT_VERSION >> 8, // current version number, major and minor revisions only
-		// Version 1 indicates a beta format that may not be supported in the final release
-	};
-	if(!mac_is_intel) // must flip all the flags to little-endian
-		for(int i = 0; i < 5; i++)
-			flip_short(&flags[i]);
-	
-	std::ifstream fin(tempPath.c_str(), std::ios_base::binary);
-	std::ofstream fout(dest_file.c_str(), std::ios_base::binary);
-	fout.write((char*) flags, 10);
-	fout << fin.rdbuf();
-	fin.close();
-	fout.close();
 	return true;
 }
 

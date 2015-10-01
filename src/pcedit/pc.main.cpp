@@ -47,8 +47,6 @@ fs::path file_in_mem;
 bool party_in_scen = false;
 bool scen_items_loaded = false;
 
-short store_flags[3];
-
 /* Prototypes */
 int main(int argc, char* argv[]);
 void Initialize(void);
