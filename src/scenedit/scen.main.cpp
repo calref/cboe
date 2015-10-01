@@ -151,7 +151,7 @@ void init_scened(int argc, char* argv[]) {
 	});
 	run_startup_g();
 	init_thread.join();
-	set_cursor(wand_curs);
+	set_cursor(sword_curs);
 	
 	cDialog::defaultBackground = cDialog::BG_LIGHT;
 	cDialog::doAnimations = true;
