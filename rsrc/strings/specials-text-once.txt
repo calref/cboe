@@ -1,4 +1,4 @@
-Give Item
+One-Time Give Item
 Stuff Done Flag Part A
 Stuff Done Flag Part B
 First part of message
@@ -14,7 +14,7 @@ Special if item not given
 Unused
 Special to Jump To
 --------------------
-Give Special Item
+One-Time Give Special Item
 Stuff Done Flag Part A
 Stuff Done Flag Part B
 First part of message
@@ -78,7 +78,7 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Display Dialog
+One-Time Display Dialog
 Stuff Done Flag Part A
 Stuff Done Flag Part B
 Number of first message in dialog
@@ -126,7 +126,7 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Give Item Dialog
+One-Time Give Item Dialog
 Stuff Done Flag Part A
 Stuff Done Flag Part B
 Number of first message in dialog
@@ -206,7 +206,7 @@ Unused
 Unused
 Special to Jump To
 --------------------
-Trap
+One-Time Trap
 Stuff Done Flag Part A
 Stuff Done Flag Part B
 First part of message
