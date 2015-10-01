@@ -504,16 +504,19 @@ void cItem::append(legacy::item_record_type& old){
 			break;
 		case 38: // Strength
 			ability = eItemAbil::BOOST_STAT;
+			desc = "Original ability strength was " + std::to_string(abil_data[0]);
 			abil_data[0] = 1;
 			abil_data[1] = int(eSkill::STRENGTH);
 			break;
 		case 39: // Dexterity
 			ability = eItemAbil::BOOST_STAT;
+			desc = "Original ability strength was " + std::to_string(abil_data[0]);
 			abil_data[0] = 1;
 			abil_data[1] = int(eSkill::DEXTERITY);
 			break;
 		case 40: // Intelligence
 			ability = eItemAbil::BOOST_STAT;
+			desc = "Original ability strength was " + std::to_string(abil_data[0]);
 			abil_data[0] = 1;
 			abil_data[1] = int(eSkill::INTELLIGENCE);
 			break;
@@ -569,9 +572,13 @@ void cItem::append(legacy::item_record_type& old){
 			break;
 		case 55:
 			ability = eItemAbil::SPEED;
+			abil_data[1] = abil_data[0];
+			abil_data[0] = abil_data[0] / 7 + 1;
 			break;
 		case 56:
 			ability = eItemAbil::SLOW_WEARER;
+			abil_data[1] = abil_data[0];
+			abil_data[0] = abil_data[0] / 5;
 			break;
 		case 57: // Protect from undead
 			ability = eItemAbil::DAMAGE_PROTECTION;

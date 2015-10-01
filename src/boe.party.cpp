@@ -2690,8 +2690,8 @@ void set_pc_moves() {
 			univ.party[i].ap = minmax(1,8,univ.party[i].ap - (r / 3));
 			
 			if(int speed = univ.party[i].get_prot_level(eItemAbil::SPEED))
-				univ.party[i].ap += speed / 7 + 1;
-			univ.party[i].ap -= univ.party[i].get_prot_level(eItemAbil::SLOW_WEARER) / 5;
+				univ.party[i].ap += speed;
+			univ.party[i].ap -= univ.party[i].get_prot_level(eItemAbil::SLOW_WEARER);
 			
 			if(univ.party[i].status[eStatus::HASTE_SLOW] < 0 && univ.party.age % 2 == 1) // slowed?
 				univ.party[i].ap = 0;
