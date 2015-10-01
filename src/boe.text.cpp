@@ -743,6 +743,8 @@ short do_look(location space) {
 			}
 		}
 		
+		if(univ.out->roads[space.x][space.y])
+			add_string_to_buf("    Road");
 		if(out_boat_there(space) < 30)
 			add_string_to_buf("    Boat");
 		if(out_horse_there(space) < 30)
@@ -752,6 +754,8 @@ short do_look(location space) {
 	}
 	
 	if((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
+		if(univ.town.is_road(space.x,space.y))
+			add_string_to_buf("    Track");
 		if(town_boat_there(space) < 30)
 			add_string_to_buf("    Boat");
 		if(town_horse_there(space) < 30)
