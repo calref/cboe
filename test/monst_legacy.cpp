@@ -7,7 +7,7 @@
 //
 
 #include <catch.hpp>
-#include "monster.hpp"
+#include "creature.hpp"
 #include "oldstructs.hpp"
 
 TEST_CASE("Converting monsters from legacy scenarios") {
@@ -645,5 +645,116 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 			CHECK(new_monst.abil[eMonstAbil::DAMAGE2].active);
 			CHECK(new_monst.abil[eMonstAbil::DRAIN_XP].active);
 		}
+	}
+}
+
+TEST_CASE("Converting placed monsters from legacy scenarios") {
+	legacy::creature_start_type old_monst = {12, 1, {4,4}, 1, 0, 0, 0, 5, 7, 8, 0, 0, 13, 9, 27};
+	cTownperson new_monst;
+	
+	SECTION("Basic info") {
+		new_monst.append(old_monst);
+		CHECK(new_monst.number == 12);
+		CHECK(new_monst.start_attitude == eAttitude::HOSTILE_A);
+		CHECK(new_monst.start_loc == loc(4,4));
+		CHECK(new_monst.mobility == 1);
+		CHECK(new_monst.spec1 == 5);
+		CHECK(new_monst.spec2 == 7);
+		CHECK(new_monst.spec_enc_code == 8);
+		CHECK(new_monst.personality == 13);
+		CHECK(new_monst.special_on_kill == 9);
+		CHECK(new_monst.facial_pic == 26);
+	}
+	SECTION("With time flag") {
+		old_monst.monster_time = 17;
+		old_monst.time_code = 19;
+		SECTION("Appear on day") {
+			old_monst.time_flag = 1;
+			new_monst.append(old_monst);
+			CHECK(new_monst.time_flag == eMonstTime::APPEAR_ON_DAY);
+		}
+		SECTION("Disappear on day") {
+			old_monst.time_flag = 2;
+			new_monst.append(old_monst);
+			CHECK(new_monst.time_flag == eMonstTime::DISAPPEAR_ON_DAY);
+		}
+		SECTION("Sometimes A") {
+			old_monst.time_flag = 4;
+			new_monst.append(old_monst);
+			CHECK(new_monst.time_flag == eMonstTime::SOMETIMES_A);
+		}
+		SECTION("Sometimes B") {
+			old_monst.time_flag = 5;
+			new_monst.append(old_monst);
+			CHECK(new_monst.time_flag == eMonstTime::SOMETIMES_B);
+		}
+		SECTION("Sometimes C") {
+			old_monst.time_flag = 6;
+			new_monst.append(old_monst);
+			CHECK(new_monst.time_flag == eMonstTime::SOMETIMES_C);
+		}
+		SECTION("Appear when event") {
+			old_monst.time_flag = 7;
+			new_monst.append(old_monst);
+			CHECK(new_monst.time_flag == eMonstTime::APPEAR_WHEN_EVENT);
+		}
+		SECTION("Disappear when event") {
+			old_monst.time_flag = 8;
+			new_monst.append(old_monst);
+			CHECK(new_monst.time_flag == eMonstTime::DISAPPEAR_WHEN_EVENT);
+		}
+		CHECK(new_monst.monster_time == 17);
+		CHECK(new_monst.time_code == 19);
+	}
+}
+
+TEST_CASE("Converting monsters from legacy saves") {
+	legacy::monster_record_type old_monst_base = {
+		0, 5, "Test Monster",
+		45, 50, 20, 25,
+		8, 10,
+		{108, 212, 306},
+		2, 1, 3, 4, 2, 2, 1, 0, 0, 3, 0, 0,
+		40, 50,
+		142, 75,
+		{0, 0, 5, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0},
+		0, 0x44, 1, 1, 0, 0,
+		2, 1, 52, 0, 0, 0,
+		21,
+	};
+	legacy::creature_start_type old_monst_start = {12, 1, {4,4}, 1, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 27};
+	legacy::creature_data_type old_monst = {1, 3, 11, 0, {7,8}, old_monst_base, 0, 0, old_monst_start};
+	cCreature new_monst;
+	
+	SECTION("Basic info") {
+		new_monst.append(old_monst);
+		CHECK(new_monst.m_name == "Test Monster");
+		CHECK(new_monst.health == 45);
+		CHECK(new_monst.m_health == 50);
+		CHECK(new_monst.mp == 20);
+		CHECK(new_monst.max_mp == 25);
+		CHECK(new_monst.morale == 40);
+		CHECK(new_monst.m_morale == 50);
+		CHECK(new_monst.ap == 2);
+		CHECK(new_monst.direction == DIR_N);
+		CHECK(new_monst.status[eStatus::POISON] == 5);
+		CHECK(new_monst.status[eStatus::WEBS] == 7);
+		CHECK(new_monst.number == 12);
+		CHECK(new_monst.active == 1);
+		CHECK(new_monst.attitude == eAttitude::HOSTILE_B);
+		CHECK(new_monst.cur_loc == loc(7,8));
+		CHECK(new_monst.mobility == 1);
+	}
+	SECTION("Summoned by party") {
+		old_monst.summoned = 20;
+		new_monst.append(old_monst);
+		CHECK(new_monst.summon_time == 20);
+		CHECK(new_monst.party_summoned);
+	}
+	SECTION("Summoned by monster") {
+		old_monst.summoned = 120;
+		new_monst.append(old_monst);
+		CHECK(new_monst.summon_time == 20);
+		CHECK_FALSE(new_monst.party_summoned);
 	}
 }
