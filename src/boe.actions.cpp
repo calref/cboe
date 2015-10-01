@@ -87,7 +87,7 @@ extern short cen_x, cen_y, stat_window;//,pc_moves[6];
 extern bool give_delays;
 extern eGameMode overall_mode;
 extern location	to_create;
-extern bool All_Done,play_sounds,frills_on,spell_forced,save_maps,monsters_going;
+extern bool All_Done,play_sounds,frills_on,spell_forced,monsters_going;
 extern bool party_in_memory,in_scen_debug;
 
 // game info globals
@@ -2685,10 +2685,6 @@ void start_new_game(bool force) {
 	// Destroy party graphics
 	extern cCustomGraphics spec_scen_g;
 	spec_scen_g.party_sheet.reset();
-	
-	// Default is save maps
-	PSD[SDF_NO_MAPS] = 0;
-	save_maps = true;
 	
 	// Don't reset instant help just because they started a new game.
 	std::vector<int> help = get_iarray_pref("ReceivedHelp");

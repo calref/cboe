@@ -40,7 +40,7 @@ short had_text_freeze = 0,num_fonts;
 bool skip_boom_delay = false;
 bool first_startup_update = true;
 bool diff_depth_ok = false,first_sound_played = false,spell_forced = false,startup_loaded = false;
-bool save_maps = true,party_in_memory = false;
+bool party_in_memory = false;
 std::shared_ptr<cScrollbar> text_sbar, item_sbar, shop_sbar;
 std::shared_ptr<cButton> done_btn, help_btn;
 rectangle sbar_rect = {283,546,421,562};

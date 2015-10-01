@@ -27,7 +27,7 @@
 extern eStatMode stat_screen_mode;
 extern bool give_delays;
 extern eGameMode overall_mode;
-extern bool play_sounds,sys_7_avail,save_maps,party_in_memory,in_scen_debug,ghost_mode,node_step_through;
+extern bool play_sounds,sys_7_avail,party_in_memory,in_scen_debug,ghost_mode,node_step_through;
 extern location center;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
@@ -145,9 +145,6 @@ void finish_load_party(){
 		flip_sound();
 	}
 	give_delays = PSD[SDF_NO_FRILLS];
-	if(PSD[SDF_NO_MAPS] == 0)
-		save_maps = true;
-	else save_maps = false;
 	
 	in_scen_debug = false;
 }

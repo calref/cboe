@@ -60,7 +60,7 @@ extern eGameMode overall_mode;
 extern fs::path progDir;
 extern location center;
 extern sf::RenderWindow mainPtr;
-extern bool spell_forced,save_maps,boom_anim_active;
+extern bool spell_forced,boom_anim_active;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting;

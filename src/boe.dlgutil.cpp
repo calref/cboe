@@ -46,7 +46,7 @@ extern short display_mode,current_pc;
 extern eStatMode stat_screen_mode;
 extern long register_flag;
 extern long ed_flag,ed_key;
-extern bool save_maps,give_delays;
+extern bool give_delays;
 extern location center;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
@@ -1096,7 +1096,6 @@ void load_prefs(){
 	game_run_before = get_bool_pref("GameRunBefore");
 	skip_boom_delay = get_bool_pref("SkipBoomDelay");
 	
-	PSD[SDF_NO_MAPS] = !get_bool_pref("SaveAutoMap", true);
 	PSD[SDF_NO_FRILLS] = !get_bool_pref("DrawTerrainFrills", true);
 	PSD[SDF_NO_INSTANT_HELP] = !get_bool_pref("ShowInstantHelp", true);
 	PSD[SDF_NO_TER_ANIM] = !get_bool_pref("DrawTerrainAnimation", true);
@@ -1119,7 +1118,6 @@ void save_prefs(bool resetHelp){
 	set_pref("SkipBoomDelay", skip_boom_delay);
 	
 	if(overall_mode == MODE_STARTUP) {
-		set_pref("SaveAutoMap", !PSD[SDF_NO_MAPS]);
 		set_pref("DrawTerrainFrills", !PSD[SDF_NO_FRILLS]);
 		set_pref("ShowInstantHelp", !PSD[SDF_NO_INSTANT_HELP]);
 		set_pref("DrawTerrainAnimation", !PSD[SDF_NO_TER_ANIM]);
@@ -1157,7 +1155,6 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		else if(cur_display_mode == "bl") display_mode = 3;
 		else if(cur_display_mode == "br") display_mode = 4;
 		else if(cur_display_mode == "win") display_mode = 5;
-		PSD[SDF_NO_MAPS] = dynamic_cast<cLed&>(me["nomaps"]).getState() != led_off;
 		PSD[SDF_NO_SOUNDS] = dynamic_cast<cLed&>(me["nosound"]).getState() != led_off;
 		play_sounds = !PSD[SDF_NO_SOUNDS];
 		PSD[SDF_NO_FRILLS] = dynamic_cast<cLed&>(me["nofrills"]).getState() != led_off;
@@ -1189,7 +1186,6 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 			reset_help = true;
 		}
 	}
-	save_maps = 1 - PSD[SDF_NO_MAPS];
 	give_delays = PSD[SDF_NO_FRILLS];
 	save_prefs(reset_help);
 	return true;
@@ -1223,7 +1219,6 @@ void pick_preferences() {
 			break;
 	}
 	
-	dynamic_cast<cLed&>(prefsDlog["nomaps"]).setState(PSD[SDF_NO_MAPS] ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(!play_sounds ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["nofrills"]).setState(PSD[SDF_NO_FRILLS] ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["repeatdesc"]).setState(PSD[SDF_ROOM_DESCS_AGAIN] ? led_red : led_off);
