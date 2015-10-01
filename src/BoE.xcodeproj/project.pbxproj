@@ -140,6 +140,7 @@
 		91960ED41BB6157A008AF8F4 /* restypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91960ED31BB613E5008AF8F4 /* restypes.cpp */; };
 		919B13A21BBCDF14009905A4 /* monst_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A11BBCDE18009905A4 /* monst_legacy.cpp */; };
 		919B13A41BBD8854009905A4 /* item_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A31BBD8849009905A4 /* item_legacy.cpp */; };
+		919B13A61BBDE986009905A4 /* spec_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A51BBDE985009905A4 /* spec_legacy.cpp */; };
 		919CC2481B3772F300273FDA /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
 		919CC2491B3772FB00273FDA /* creature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FE1A747C4500F20F5E /* creature.cpp */; };
 		919CC24B1B37730300273FDA /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
@@ -663,6 +664,7 @@
 		91960ED31BB613E5008AF8F4 /* restypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = restypes.cpp; sourceTree = "<group>"; };
 		919B13A11BBCDE18009905A4 /* monst_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = monst_legacy.cpp; sourceTree = "<group>"; };
 		919B13A31BBD8849009905A4 /* item_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item_legacy.cpp; sourceTree = "<group>"; };
+		919B13A51BBDE985009905A4 /* spec_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spec_legacy.cpp; sourceTree = "<group>"; };
 		919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = /usr/local/lib/libboost_filesystem.dylib; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
@@ -1327,6 +1329,7 @@
 				91E381491B97678D00F69B81 /* out_write.cpp */,
 				91CC173A1B421CA0003D9A69 /* scen_read.cpp */,
 				91CC173B1B421CA0003D9A69 /* scen_write.cpp */,
+				919B13A51BBDE985009905A4 /* spec_legacy.cpp */,
 				91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */,
 				91E381471B97675900F69B81 /* talk_write.cpp */,
 				91EF27721B693D3800666469 /* ter_read.cpp */,
@@ -1856,6 +1859,7 @@
 				91E3814A1B97679800F69B81 /* out_write.cpp in Sources */,
 				919B13A21BBCDF14009905A4 /* monst_legacy.cpp in Sources */,
 				919B13A41BBD8854009905A4 /* item_legacy.cpp in Sources */,
+				919B13A61BBDE986009905A4 /* spec_legacy.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
