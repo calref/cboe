@@ -22,7 +22,8 @@
 
 void cMonster::append(legacy::monster_record_type& old){
 	level = old.level;
-	//m_name = old.m_name;
+	m_name = std::string((char*) old.m_name, 26);
+	m_name.erase(m_name.begin() + m_name.find_first_of('\0'), m_name.end());
 	m_health = old.m_health;
 	armor = old.armor;
 	skill = old.skill;
@@ -47,8 +48,8 @@ void cMonster::append(legacy::monster_record_type& old){
 		case 2: addAbil(eMonstAbilTemplate::SHOOTS_ARROWS); break;
 		case 3: addAbil(eMonstAbilTemplate::THROWS_SPEARS); break;
 		case 4: addAbil(eMonstAbilTemplate::THROWS_ROCKS1); break;
-		case 5: addAbil(eMonstAbilTemplate::THROWS_ROCKS1); break;
-		case 6: addAbil(eMonstAbilTemplate::THROWS_ROCKS1); break;
+		case 5: addAbil(eMonstAbilTemplate::THROWS_ROCKS2); break;
+		case 6: addAbil(eMonstAbilTemplate::THROWS_ROCKS3); break;
 		case 7: addAbil(eMonstAbilTemplate::THROWS_RAZORDISKS); break;
 		case 8: addAbil(eMonstAbilTemplate::RAY_PETRIFY); break;
 		case 9: addAbil(eMonstAbilTemplate::RAY_SP_DRAIN); break;
@@ -247,11 +248,11 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::DUMB;
 			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::TOUCH_PARALYSIS:
-			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 0, 500};
+			abil[eMonstAbil::STATUS].gen = {true, eMonstGen::TOUCH, -1, 500};
 			abil[eMonstAbil::STATUS].gen.stat = eStatus::PARALYZED;
 			return abil.find(eMonstAbil::STATUS);
 		case eMonstAbilTemplate::TOUCH_PETRIFY:
-			abil[eMonstAbil::PETRIFY].gen = {true, eMonstGen::TOUCH, -1, 0, 25};
+			abil[eMonstAbil::PETRIFY].gen = {true, eMonstGen::TOUCH, -1, 25};
 			return abil.find(eMonstAbil::PETRIFY);
 		case eMonstAbilTemplate::TOUCH_DEATH:
 			abil[eMonstAbil::KILL].gen = {true, eMonstGen::TOUCH, -1, 2, 0, 667};
@@ -263,7 +264,7 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 			if(what == eMonstAbilTemplate::TOUCH_ICY)
 				return abil.find(eMonstAbil::DAMAGE);
 		case eMonstAbilTemplate::TOUCH_XP_DRAIN:
-			abil[eMonstAbil::DRAIN_XP].gen = {true, eMonstGen::TOUCH, -1, 0, 150};
+			abil[eMonstAbil::DRAIN_XP].gen = {true, eMonstGen::TOUCH, -1, 150};
 			return abil.find(eMonstAbil::DRAIN_XP);
 		case eMonstAbilTemplate::TOUCH_STUN:
 			abil[eMonstAbil::STUN].gen = {true, eMonstGen::TOUCH, -1, 2, 0, 667};
@@ -286,13 +287,13 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 			abil[eMonstAbil::ABSORB_SPELLS].special = {true, 1000, 3, 0};
 			return abil.find(eMonstAbil::ABSORB_SPELLS);
 		case eMonstAbilTemplate::SUMMON_5:
-			abil[eMonstAbil::SUMMON].summon = {true, eMonstSummon::TYPE, static_cast<mon_num_t>(param), 1, 1, 130, 5};
+			abil[eMonstAbil::SUMMON].summon = {true, eMonstSummon::TYPE, static_cast<mon_num_t>(param), 1, 1, 130, 50};
 			return abil.find(eMonstAbil::SUMMON);
 		case eMonstAbilTemplate::SUMMON_20:
-			abil[eMonstAbil::SUMMON].summon = {true, eMonstSummon::TYPE, static_cast<mon_num_t>(param), 1, 1, 130, 20};
+			abil[eMonstAbil::SUMMON].summon = {true, eMonstSummon::TYPE, static_cast<mon_num_t>(param), 1, 1, 130, 200};
 			return abil.find(eMonstAbil::SUMMON);
 		case eMonstAbilTemplate::SUMMON_50:
-			abil[eMonstAbil::SUMMON].summon = {true, eMonstSummon::TYPE, static_cast<mon_num_t>(param), 1, 1, 130, 50};
+			abil[eMonstAbil::SUMMON].summon = {true, eMonstSummon::TYPE, static_cast<mon_num_t>(param), 1, 1, 130, 500};
 			return abil.find(eMonstAbil::SUMMON);
 		case eMonstAbilTemplate::SPECIAL:
 			abil[eMonstAbil::SPECIAL].special = {true, param, 1};
