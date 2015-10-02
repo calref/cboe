@@ -393,7 +393,7 @@ rectangle calc_rect(short i, short j){
 
 extern sf::Texture fields_gworld;
 graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
-	static graf_pos dummy = {&fields_gworld, {72,0,108,28}};
+	static graf_pos dummy = {&fields_gworld, {72,140,108,28}};
 	if(party && !party_sheet) return dummy;
 	else if(!party && !is_old && (which_rect / 100) >= numSheets)
 		return dummy;
@@ -406,7 +406,7 @@ graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
 	sf::Texture* the_sheet = party ? party_sheet.get() : &sheets[sheet];
 	rectangle test(*the_sheet);
-	if((store_rect | test) != store_rect) return dummy;
+	if((store_rect & test) != store_rect) return dummy;
 	return std::make_pair(the_sheet,store_rect);
 }
 
@@ -927,7 +927,7 @@ void Region::setStencil(sf::RenderWindow& where) {
 }
 
 void clip_rect(sf::RenderTarget& where, rectangle rect) {
-	rect |= rectangle(where); // Make sure we don't draw out of bounds
+	rect &= rectangle(where); // Make sure we don't draw out of bounds
 	// TODO: Make sure this works for the scissor test...
 	setActiveRenderTarget(where);
 	glEnable(GL_SCISSOR_TEST);
@@ -1027,7 +1027,7 @@ void tileImage(sf::RenderTarget& target, rectangle area, tessel_ref_t tessel, sf
 	rectangle clipArea = area;
 	area.left -= area.left % tesselInfo.srcRect.width();
 	area.top -= area.top % tesselInfo.srcRect.height();
-	area |= rectangle(target); // Make sure we don't draw out of bounds
+	area &= rectangle(target); // Make sure we don't draw out of bounds
 	
 	sf::RectangleShape tesselShape(sf::Vector2f(area.width(),area.height()));
 	tesselShape.setTexture(&tesselInfo.tessel->getTexture());

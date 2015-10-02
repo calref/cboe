@@ -142,7 +142,7 @@ void apply_unseen_mask() {
 				
 				to_rect = base_rect;
 				to_rect.offset(-28 + i * 28,-36 + 36 * j);
-				to_rect |= big_to;
+				to_rect &= big_to;
 				tileImage(terrain_screen_gworld, to_rect, bw_pats[3], sf::BlendAlpha);
 			}
 }

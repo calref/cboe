@@ -65,8 +65,8 @@ bool operator != (rectangle r1, rectangle r2) {
 	return !(r1 == r2);
 }
 
-rectangle operator|(rectangle one, rectangle two) {
-	return one |= two;
+rectangle operator&(rectangle one, rectangle two) {
+	return one &= two;
 }
 
 rectangle rectunion(rectangle one, rectangle two) {
@@ -167,7 +167,7 @@ void rectangle::inset(int dh, int dv) {
 	top += dv; bottom -= dv;
 }
 
-rectangle& rectangle::operator|=(rectangle other) {
+rectangle& rectangle::operator&=(rectangle other) {
 	left = std::max(left, other.left);
 	top = std::max(top, other.top);
 	right = std::min(right, other.right);

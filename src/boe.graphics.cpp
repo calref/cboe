@@ -1474,7 +1474,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	dest_rect.offset(where_draw.x * 28,where_draw.y * 36);
 	source_rect = store_rect = dest_rect;
 	dest_rect.offset(x_adj,y_adj);
-	dest_rect |= big_to;
+	dest_rect &= big_to;
 	
 	dest_rect.offset(win_to_rects[0].left,win_to_rects[0].top);
 	
@@ -1631,7 +1631,7 @@ void draw_targeting_line(location where_curs) {
 				redraw_rect.right = max(where_curs.x,k) + 4;
 				redraw_rect.top = min(where_curs.y,l) - 4;
 				redraw_rect.bottom = max(where_curs.y,l) + 4;
-				redraw_rect2 = redraw_rect | terrain_rect;
+				redraw_rect2 = redraw_rect & terrain_rect;
 				
 				// Now place targeting pattern
 				for(i = 0; i < 9; i++)

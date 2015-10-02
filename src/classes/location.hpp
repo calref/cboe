@@ -74,7 +74,7 @@ struct rectangle {
 	template<typename T>
 	void offset(sf::Vector2<T> diff) {offset(diff.x,diff.y);}
 	void inset(int dh, int dv);
-	rectangle& operator|=(rectangle other);
+	rectangle& operator&=(rectangle other);
 	template<typename T>
 	operator typename sf::template Rect<T>() {
 		return sf::Rect<T>(left, top, width(), height());
@@ -126,7 +126,7 @@ bool operator != (location p1,location p2);
 bool operator == (rectangle r1, rectangle r2);
 bool operator != (rectangle r1, rectangle r2);
 // TODO: This isn't a union, because it returns a rectangle.
-rectangle operator|(rectangle one, rectangle two);
+rectangle operator&(rectangle one, rectangle two);
 rectangle rectunion(rectangle one, rectangle two);
 short dist(location p1,location p2);
 short vdist(location p1,location p2);
