@@ -141,6 +141,9 @@
 		919B13A21BBCDF14009905A4 /* monst_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A11BBCDE18009905A4 /* monst_legacy.cpp */; };
 		919B13A41BBD8854009905A4 /* item_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A31BBD8849009905A4 /* item_legacy.cpp */; };
 		919B13A61BBDE986009905A4 /* spec_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A51BBDE985009905A4 /* spec_legacy.cpp */; };
+		919B13AA1BBE2B71009905A4 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
+		919B13AB1BBE2B71009905A4 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
+		919B13AC1BBE2B71009905A4 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
 		919CC2481B3772F300273FDA /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
 		919CC2491B3772FB00273FDA /* creature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FE1A747C4500F20F5E /* creature.cpp */; };
 		919CC24B1B37730300273FDA /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
@@ -665,6 +668,8 @@
 		919B13A11BBCDE18009905A4 /* monst_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = monst_legacy.cpp; sourceTree = "<group>"; };
 		919B13A31BBD8849009905A4 /* item_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item_legacy.cpp; sourceTree = "<group>"; };
 		919B13A51BBDE985009905A4 /* spec_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spec_legacy.cpp; sourceTree = "<group>"; };
+		919B13A71BBE297B009905A4 /* scrollpane.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scrollpane.hpp; sourceTree = "<group>"; };
+		919B13A81BBE2B54009905A4 /* scrollpane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrollpane.cpp; sourceTree = "<group>"; };
 		919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = /usr/local/lib/libboost_filesystem.dylib; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
@@ -939,6 +944,7 @@
 				910BBAA80FB8F733001E34EA /* pict.hpp */,
 				913FB40A1A5C90840067B9D2 /* pictypes.hpp */,
 				919145FD18E3C750005CF3A4 /* scrollbar.hpp */,
+				919B13A71BBE297B009905A4 /* scrollpane.hpp */,
 				9179A4631A4867E200FEF872 /* stack.hpp */,
 			);
 			name = headers;
@@ -955,6 +961,7 @@
 				910BBAB90FB91ADB001E34EA /* message.cpp */,
 				910BBAA90FB8F733001E34EA /* pict.cpp */,
 				9191460018E63D8E005CF3A4 /* scrollbar.cpp */,
+				919B13A81BBE2B54009905A4 /* scrollpane.cpp */,
 				9179A4641A48681800FEF872 /* stack.cpp */,
 			);
 			name = src;
@@ -1733,6 +1740,7 @@
 				912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */,
 				919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */,
 				915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */,
+				919B13AC1BBE2B71009905A4 /* scrollpane.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1814,6 +1822,7 @@
 				91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */,
 				91FCC8DC18FE2CE8007026CE /* pc.menus.mac.mm in Sources */,
 				91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */,
+				919B13AB1BBE2B71009905A4 /* scrollpane.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1831,6 +1840,7 @@
 				91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */,
 				914CA45819074E0100B6ADD1 /* scen.menus.mac.mm in Sources */,
 				91034D211B225E4A008F01C1 /* scen.appleevents.mm in Sources */,
+				919B13AA1BBE2B71009905A4 /* scrollpane.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

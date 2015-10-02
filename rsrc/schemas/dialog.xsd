@@ -266,6 +266,21 @@
       <xs:attribute name="pages" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
+  <xs:element name="pane">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="field"/>
+        <xs:element ref="text"/>
+        <xs:element ref="pict"/>
+        <xs:element ref="button"/>
+        <xs:element ref="led"/>
+        <xs:element ref="group"/>
+      </xs:choice>
+      <xs:attribute name="name" type="xs:token"/>
+      <xs:attribute name="framed" default="true" type="bool"/>
+      <xs:attributeGroup ref="rect-size"/>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="dialog">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -276,6 +291,7 @@
         <xs:element ref="led"/>
         <xs:element ref="group"/>
         <xs:element ref="stack"/>
+        <xs:element ref="pane"/>
       </xs:choice>
       <xs:attribute name="skin" default="dark">
         <xs:simpleType>

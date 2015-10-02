@@ -40,12 +40,17 @@ class rectangle_size_delegate {
 	int rectangle::* b2;
 	rectangle_size_delegate(rectangle& rect, int rectangle::* first, int rectangle::* last);
 public:
-	operator int();
+	operator int() const;
 	rectangle_size_delegate& operator=(int val);
 	rectangle_size_delegate& operator+=(int val);
 	rectangle_size_delegate& operator-=(int val);
 	rectangle_size_delegate& operator*=(int val);
 	rectangle_size_delegate& operator/=(int val);
+	rectangle_size_delegate& operator=(const rectangle_size_delegate& val);
+	rectangle_size_delegate& operator+=(const rectangle_size_delegate& val);
+	rectangle_size_delegate& operator-=(const rectangle_size_delegate& val);
+	rectangle_size_delegate& operator*=(const rectangle_size_delegate& val);
+	rectangle_size_delegate& operator/=(const rectangle_size_delegate& val);
 };
 
 struct rectangle {

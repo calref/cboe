@@ -47,6 +47,7 @@ enum eControlType {
 	CTRL_GROUP,	///< A LED radiobutton-like group
 	CTRL_STACK,	///< A group of controls that represents one element in an array
 	CTRL_SCROLL,///< A scrollbar
+	CTRL_PANE,	///< A scroll pane
 };
 
 /// The signature of a click handler.
@@ -146,6 +147,9 @@ public:
 	/// Check if this control is visible.
 	/// @return true if it's visible
 	bool isVisible(); // cd_get_active
+	/// Check if this control is a container which contains other controls.
+	/// @return true if it's a container
+	virtual bool isContainer() {return false;}
 	/// Set if this control is active. A control is normally active when the mouse button is held down within its bounding rect.
 	/// @param active true if it should be active, false if not
 	void setActive(bool active); // "active" here means "selected", so if it's a button, draw it pressed
@@ -270,6 +274,26 @@ protected:
 private:
 	friend class cDialog; // TODO: This is only so it can access parseColour... hack!
 	eControlType type;
+};
+
+class cContainer : public cControl {
+public:
+	/// Create a new container control attached to an arbitrary window, rather than a dialog.
+	/// @param t The type of the control.
+	/// @param p The parent window.
+	cContainer(eControlType t, sf::RenderWindow& p) : cControl(t, p) {}
+	/// Create a new container control attached to a dialog.
+	/// @param t The type of the control.
+	/// @param p The parent dialog.
+	cContainer(eControlType t, cDialog& p) : cControl(t, p) {}
+	/// Get a reference to a child control.
+	/// @param id The unique key of the control.
+	/// @throw std::invalid_argument if the control does not exist.
+	/// @return a reference to the requested control.
+	virtual cControl& getChild(std::string id) = 0;
+	/// @copydoc getChild()
+	cControl& operator[](std::string id) {return getChild(id);}
+	bool isContainer() {return true;}
 };
 
 #endif

@@ -439,7 +439,7 @@ void cLed::restore(storage_t to) {
 }
 
 cLedGroup::cLedGroup(cDialog& parent) :
-	cControl(CTRL_GROUP,parent),
+	cContainer(CTRL_GROUP,parent),
 	fromList("none") {}
 
 cButton::~cButton() {}
@@ -691,7 +691,7 @@ bool cLedGroup::isClickable(){
 	return true;
 }
 
-cLed& cLedGroup::operator[](std::string id){
+cLed& cLedGroup::getChild(std::string id){
 	ledIter iter = choices.find(id);
 	if(iter == choices.end()) throw std::invalid_argument(id + " does not exist in the ledgroup.");
 	return *(iter->second);

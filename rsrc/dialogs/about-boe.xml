@@ -9,13 +9,15 @@
 		Blades of Exile v2.0 alpha <br/>
 		  Copyright 1997-8, Spiderweb Software, Inc., All rights reserved.
 	</text>
-	<text top='42' left='50' width='434' height='67'>
-		CREDITS: <br/>
-		   Concept, Design, Programming: Jeff Vogel <br/>
-		   Graphics: Andrew Hunter (Wormius@aol.com) <br/>
-		   Business Manager: Mariann Krizsan (krizsan@spidweb.com)<br/>
-		   Title Screen: James Ernest (ernest@speakeasy.org)
-	</text>
+	<pane top='42' left='50' width='400' height='67'>
+		<text top='42' left='50' width='400' height='67'>
+			CREDITS: <br/>
+			   Concept, Design, Programming: Jeff Vogel <br/>
+			   Graphics: Andrew Hunter (Wormius@aol.com) <br/>
+			   Business Manager: Mariann Krizsan (krizsan@spidweb.com)<br/>
+			   Title Screen: James Ernest (ernest@speakeasy.org)
+		</text>
+	</pane>
 	<text top='110' left='50' width='410' height='51'>
 		Blades of Exile is brought to you by Spiderweb Software - <br/>
 		   "Where our aberrations become your reality." <br/>

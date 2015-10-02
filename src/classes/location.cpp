@@ -96,7 +96,7 @@ bool rectangle::contains(int x, int y) {
 rectangle_size_delegate::rectangle_size_delegate(rectangle& rect, int rectangle::* first, int rectangle::* last) :
 	forRect(rect), b1(first), b2(last) {}
 
-rectangle_size_delegate::operator int() {
+rectangle_size_delegate::operator int() const {
 	return forRect.*b2 - forRect.*b1;
 }
 
@@ -123,6 +123,26 @@ rectangle_size_delegate& rectangle_size_delegate::operator*=(int val) {
 rectangle_size_delegate& rectangle_size_delegate::operator/=(int val) {
 	*this = *this / val;
 	return *this;
+}
+
+rectangle_size_delegate& rectangle_size_delegate::operator=(const rectangle_size_delegate& val) {
+	return operator=(int(val));
+}
+
+rectangle_size_delegate& rectangle_size_delegate::operator+=(const rectangle_size_delegate& val) {
+	return operator+=(int(val));
+}
+
+rectangle_size_delegate& rectangle_size_delegate::operator-=(const rectangle_size_delegate& val) {
+	return operator-=(int(val));
+}
+
+rectangle_size_delegate& rectangle_size_delegate::operator*=(const rectangle_size_delegate& val) {
+	return operator*=(int(val));
+}
+
+rectangle_size_delegate& rectangle_size_delegate::operator/=(const rectangle_size_delegate& val) {
+	return operator/=(int(val));
 }
 
 rectangle_size_delegate rectangle::width() {

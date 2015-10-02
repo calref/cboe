@@ -17,6 +17,7 @@
 #include "dlogutil.hpp"
 #include "winutil.hpp"
 #include "stack.hpp"
+#include "scrollpane.hpp"
 #include "fileio.hpp"
 
 extern short cen_x, cen_y, overall_mode;
@@ -1260,9 +1261,12 @@ static void fill_resize_outdoors(cDialog& me, int top, int left, int right, int 
 	
 	me["w-new"].setTextToNum(scenario.outdoors.width() + left + right);
 	me["h-new"].setTextToNum(scenario.outdoors.height() + top + bottom);
-	if(left >= 0 && right >= 0 && top >= 0 && bottom >= 0)
+	
+	rectangle txtBounds = me["delete"].getBounds();
+	if(left >= 0 && right >= 0 && top >= 0 && bottom >= 0) {
 		me["delete"].setText("(none)");
-	else {
+		txtBounds.height() = 10;
+	} else {
 		del.clear();
 		while(left < 0) {
 			for(int y = 0; y < scenario.outdoors.height(); y++)
@@ -1285,11 +1289,16 @@ static void fill_resize_outdoors(cDialog& me, int top, int left, int right, int 
 			bottom++;
 		}
 		std::ostringstream list;
+		auto txtHeight = txtBounds.height();
+		txtHeight = 0;
 		for(location l : del) {
 			list << '(' << l.x << ", " << l.y << ") " << scenario.outdoors[l.x][l.y]->out_name << '|';
+			txtHeight += 10;
 		}
 		me["delete"].setText(list.str());
 	}
+	me["delete"].setBounds(txtBounds);
+	dynamic_cast<cScrollPane&>(me["scroll"]).recalcRect();
 }
 
 static bool resize_outdoors_filter(cDialog& me, std::string btn, rectangle& mod, loc_set& del) {

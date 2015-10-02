@@ -160,8 +160,7 @@ private:
 /// so calling the LED group's getSelected() method will still return the previous selection.
 /// However, when the focus handler of the LED group is called, the selection _has_ been updated.,
 /// so getSelected() will return the new selection. (This is the reason for the getPreviousSelection() method.)
-class cLedGroup : public cControl {
-	std::vector<cLed> btns;
+class cLedGroup : public cContainer {
 	click_callback_t onClick;
 	focus_callback_t onFocus;
 	std::map<std::string,cLed*> choices;
@@ -220,7 +219,7 @@ public:
 	/// @param id The unique key of the choice.
 	/// @return A reference to the LED object.
 	/// @throw std::invalid_argument if the choice does not exist in the group.
-	cLed& operator[](std::string id);
+	cLed& getChild(std::string id);
 	/// Set the currently selected LED in this group.
 	/// @param id The unique key of the choice.
 	/// @throw std::invalid_argument if the choice does not exist in the group.

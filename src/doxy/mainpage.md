@@ -209,12 +209,23 @@ The `<stack>` tag
 -----------------
 
 The `<stack>` tag groups elements that represent a single entry in an array.
-It can contain any elements except for nested `<stack>` elements.
+It can contain any elements except for nested `<stack>` or `<pane>` elements.
 
 The `<stack>` tag accepts the following attributes:
 
 * `pages` - The initial number of pages in the stack. This can also be
 set programmatically.
+
+The `<pane>` tag
+----------------
+
+The `<pane>` tag groups elements into a scrollable subpane.
+It can contain any elements except for nested `<stack>` or `<pane>` elements.
+
+The `<pane>` tag accepts the following attributes:
+
+* `framed` - Specifies whether a frame is drawn around the pane. Can
+be either `true` or `false`; defaults to `true`.
 
 Keyboard Shortcuts
 ------------------

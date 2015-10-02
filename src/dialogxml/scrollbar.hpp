@@ -63,7 +63,7 @@ public:
 	/// in the area between the arrow buttons and the scrollbar thumb.
 	long getPageSize();
 	/// Set the scrollbar thumb's current position.
-	/// @param to The current position.
+	/// @param to The new position.
 	void setPosition(long to);
 	/// Set the scrollbar thumb's maximum value.
 	/// @param to The maximum value.

@@ -37,7 +37,9 @@
 	<text name='h-new' top='170' left='145' width='20' height='16'/>
 	
 	<text top='30' left='270' width='200' height='16'>Sections to be deleted:</text>
-	<text name='delete' framed='true' top='50' left='270' width='200' height='200'/>
+	<pane name="scroll" framed='true' top='50' left='270' width='200' height='200'>
+		<text name='delete' top='50' left='270' width='200'/>
+	</pane>
 	<button name='okay' type='regular' top='270' left='407'>OK</button>
 	<button name='cancel' type='regular' def-key='esc' top='270' left='342'>Cancel</button>
 </dialog>

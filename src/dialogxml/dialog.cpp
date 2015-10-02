@@ -18,6 +18,7 @@ using namespace ticpp;
 #include "field.hpp"
 #include "message.hpp"
 #include "scrollbar.hpp"
+#include "scrollpane.hpp"
 #include "stack.hpp"
 #include "winutil.hpp"
 #include "mathutil.hpp"
@@ -241,6 +242,11 @@ void cDialog::loadFromFile(std::string path){
 				controls.insert(parsed);
 				// Now, if it contains any fields, their tab order must be accounted for
 				parsed.second->fillTabOrder(specificTabs, reverseTabs);
+			} else if(type == "pane") {
+				auto parsed = parse<cScrollPane>(*node);
+				controls.insert(parsed);
+				// TODO: Now, if it contains any fields, their tab order must be accounted for
+				//parsed.second->fillTabOrder(specificTabs, reverseTabs);
 			} else throw xBadNode(type,node->Row(),node->Column(),fname);
 		}
 		// Sort by tab order
@@ -903,10 +909,10 @@ cControl& cDialog::getControl(std::string id) {
 	
 	iter = controls.begin();
 	while(iter != controls.end()){
-		if(iter->second->getType() == CTRL_GROUP){
+		if(iter->second->isContainer()){
 			try{
-				cLedGroup* tmp = (cLedGroup*) (iter->second);
-				return tmp->operator[](id);
+				cContainer* tmp = (cContainer*) (iter->second);
+				return tmp->getChild(id);
 			}catch(std::invalid_argument) {}
 		}
 		iter++;

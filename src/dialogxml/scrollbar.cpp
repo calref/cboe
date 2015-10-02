@@ -13,7 +13,7 @@
 
 sf::Texture cScrollbar::scroll_gw;
 
-cScrollbar::cScrollbar(cDialog& parent) : cControl(CTRL_SCROLL, parent) {}
+cScrollbar::cScrollbar(cDialog& parent) : cControl(CTRL_SCROLL, parent), pos(0), max(0), pgsz(10) {}
 
 cScrollbar::cScrollbar(sf::RenderWindow& parent) : cControl(CTRL_SCROLL, parent), pos(0), max(0), pgsz(10) {}
 
@@ -210,6 +210,7 @@ std::string cScrollbar::parse(ticpp::Element& who, std::string fname) {
 cControl::storage_t cScrollbar::store() {
 	storage_t storage = cControl::store();
 	storage["scroll-pos"] = pos;
+	storage["scroll-max"] = max;
 	return storage;
 }
 
@@ -217,5 +218,7 @@ void cScrollbar::restore(storage_t to) {
 	cControl::restore(to);
 	if(to.find("scroll-pos") != to.end())
 		pos = boost::any_cast<int>(to["scroll-pos"]);
+	if(to.find("scroll-max") != to.end())
+		pos = boost::any_cast<int>(to["scroll-max"]);
 	else pos = 0;
 }
