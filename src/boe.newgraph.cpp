@@ -1076,6 +1076,7 @@ void refresh_talking() {
 }
 
 short scan_for_response(const char *str) {
+	if(strnicmp(str, "    ", 4) == 1) return -1;
 	cSpeech talk = univ.town.cur_talk();
 	for(short i = 0; i < talk.talk_nodes.size(); i++) {
 		cSpeech::cNode node = talk.talk_nodes[i];

@@ -817,13 +817,13 @@ void writeDialogueToXml(ticpp::Printer&& data, cSpeech& talk, int town_num) {
 		// Don't drop unused nodes if they still contain text
 		if(node.personality == -1 && node.str1.empty() && node.str2.empty()) continue;
 		// TODO: Is it safe to assume the two links run together like this?
-		if(std::string(node.link1, 8) == "xxxxxxxx" && node.str1.empty() && node.str2.empty())
+		if(std::string(node.link1, 8) == "        " && node.str1.empty() && node.str2.empty())
 			continue;
 		data.OpenElement("node");
 		data.PushAttribute("for", node.personality);
-		if(std::string(node.link1, 4) != "xxxx")
+		if(std::string(node.link1, 4) != "    ")
 			data.PushElement("keyword", std::string(node.link1, 4));
-		if(std::string(node.link2, 4) != "xxxx")
+		if(std::string(node.link2, 4) != "    ")
 			data.PushElement("keyword", std::string(node.link2, 4));
 		data.PushElement("type", node.type);
 		if(node.extras[0] >= 0 || node.extras[1] >= 0 || node.extras[2] >= 0 || node.extras[3] >= 0)

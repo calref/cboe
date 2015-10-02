@@ -43,8 +43,8 @@ public:
 		std::string str1, str2;
 		cNode() {
 			std::fill(extras, extras + 4, -1);
-			std::fill(link1, link1 + 4, 'x');
-			std::fill(link2, link2 + 4, 'x');
+			std::fill(link1, link1 + 4, ' ');
+			std::fill(link2, link2 + 4, ' ');
 		}
 	};
 	cPersonality people[10];

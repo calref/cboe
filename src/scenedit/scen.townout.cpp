@@ -1068,7 +1068,7 @@ static bool talk_node_branch(cDialog& me, std::stack<node_ref_t>& talk_edit_stac
 	
 	int spec = -1;
 	for(int j = 0; j < town->talking.talk_nodes.size(); j++)
-		if(town->talking.talk_nodes[j].personality == -1 && strnicmp(town->talking.talk_nodes[j].link1, "xxxx", 4) == 0) {
+		if(town->talking.talk_nodes[j].personality == -1 && strnicmp(town->talking.talk_nodes[j].link1, "     ", 4) == 0) {
 			spec = j;
 			break;
 		}
