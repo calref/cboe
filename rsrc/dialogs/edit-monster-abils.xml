@@ -15,6 +15,7 @@
 	<text top='246' left='273' width='40' height='16'>Poison:</text>
 	<field name='poison-res' top='245' left='320' width='80' height='16'/>
 	<led name='mindless' top='215' left='415' width='70'>Mindless</led>
+	<led name='amorph' top='230' left='415' width='70'>Amorphous</led>
 	<led name='invuln' top='245' left='415' width='70'>Invulnerable</led>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='158' height='16'>Edit Monster Abilities</text>

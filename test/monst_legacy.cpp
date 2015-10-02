@@ -271,6 +271,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::SPLITS].active);
 			CHECK(new_monst.abil[eMonstAbil::SPLITS].special.extra1 == 1000);
+			CHECK(new_monst.amorphous);
 		}
 		SECTION("Mindless") {
 			old_monst.spec_skill = 13;

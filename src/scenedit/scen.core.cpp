@@ -875,6 +875,8 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& monst) {
 	me["onsee"].setTextToNum(monst.see_spec);
 	me["snd"].setTextToNum(monst.ambient_sound);
 	
+	if(monst.amorphous)
+		dynamic_cast<cLed&>(me["amorph"]).setState(led_red);
 	if(monst.mindless)
 		dynamic_cast<cLed&>(me["mindless"]).setState(led_red);
 	if(monst.invuln)
@@ -939,6 +941,7 @@ static bool save_monst_abils(cDialog& me, cMonster& monst) {
 	monst.see_spec = me["onsee"].getTextAsNum();
 	monst.ambient_sound = me["snd"].getTextAsNum();
 	
+	monst.amorphous = dynamic_cast<cLed&>(me["amorph"]).getState() != led_off;
 	monst.mindless = dynamic_cast<cLed&>(me["mindless"]).getState() != led_off;
 	monst.invuln = dynamic_cast<cLed&>(me["invuln"]).getState() != led_off;
 	monst.invisible = dynamic_cast<cLed&>(me["invis"]).getState() != led_off;

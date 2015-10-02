@@ -13,6 +13,7 @@
 		<immunity>
 			<all>true</all>
 			<fear>true</fear>
+			<assassinate>true</assassinate>
 			<fire>10</fire>
 			<cold>20</cold>
 			<magic>30</magic>

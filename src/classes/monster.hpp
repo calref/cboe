@@ -110,7 +110,7 @@ public:
 	item_num_t corpse_item;
 	short corpse_item_chance;
 	std::map<eDamageType, int> resist;
-	bool mindless, invuln, invisible, guard;
+	bool mindless, invuln, invisible, guard, amorphous;
 	unsigned int x_width,y_width;
 	eAttitude default_attitude;
 	unsigned int summon_type;

@@ -97,6 +97,7 @@ TEST_CASE("Saving monster types") {
 		scen.scen_monsters[1].treasure = 4;
 		scen.scen_monsters[1].corpse_item = 128;
 		scen.scen_monsters[1].corpse_item_chance = 35;
+		scen.scen_monsters[1].amorphous = true;
 		scen.scen_monsters[1].mindless = true;
 		scen.scen_monsters[1].invuln = true;
 		scen.scen_monsters[1].invisible = true;
@@ -112,6 +113,7 @@ TEST_CASE("Saving monster types") {
 		CHECK(scen.scen_monsters[1].treasure == 4);
 		CHECK(scen.scen_monsters[1].corpse_item == 128);
 		CHECK(scen.scen_monsters[1].corpse_item_chance == 35);
+		CHECK(scen.scen_monsters[1].amorphous);
 		CHECK(scen.scen_monsters[1].mindless);
 		CHECK(scen.scen_monsters[1].invuln);
 		CHECK(scen.scen_monsters[1].invisible);

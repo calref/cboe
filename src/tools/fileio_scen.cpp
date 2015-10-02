@@ -1442,6 +1442,10 @@ void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 						resist->GetText(&val);
 						if(val == "true")
 							the_mon.mindless = true;
+					} else if(type == "assassinate") {
+						resist->GetText(&val);
+						if(val == "true")
+							the_mon.amorphous = true;
 					} else try {
 						eDamageType dmg = boost::lexical_cast<eDamageType>(type);
 						resist->GetText(&the_mon.resist[dmg]);

@@ -156,6 +156,7 @@ TEST_CASE("Loading a monster type definition") {
 		doc = xmlDocFromStream(fin, "immunity.xml");
 		REQUIRE_NOTHROW(readMonstersFromXml(move(doc), scen));
 		REQUIRE(scen.scen_monsters.size() >= 2);
+		CHECK(scen.scen_monsters[1].amorphous);
 		CHECK(scen.scen_monsters[1].mindless);
 		CHECK(scen.scen_monsters[1].invuln);
 		CHECK(scen.scen_monsters[1].resist[eDamageType::FIRE] == 10);

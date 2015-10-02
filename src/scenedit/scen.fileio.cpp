@@ -517,6 +517,7 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 				data.PushElement(boost::lexical_cast<std::string>(dmg), monst.resist[dmg]);
 		}
 		if(monst.mindless) data.PushElement("fear", true);
+		if(monst.amorphous) data.PushElement("assassinate", true);
 		if(monst.invuln) data.PushElement("all", true);
 		data.CloseElement("immunity");
 		

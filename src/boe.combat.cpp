@@ -765,7 +765,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 		if(primary) {
 			bool splits = false;
 			if(cCreature* who = dynamic_cast<cCreature*>(&target))
-				splits = who->abil[eMonstAbil::SPLITS].active;
+				splits = who->amorphous;
 			// assassinate
 			r1 = get_ran(1,1,100);
 			int assassin = univ.party[who_att].skill(eSkill::ASSASSINATION);

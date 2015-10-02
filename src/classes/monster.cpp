@@ -279,6 +279,7 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 			// Misc abilities
 		case eMonstAbilTemplate::SPLITS:
 			abil[eMonstAbil::SPLITS].special = {true, 1000, 0, 0};
+			amorphous = true;
 			return abil.find(eMonstAbil::SPLITS);
 		case eMonstAbilTemplate::MARTYRS_SHIELD:
 			abil[eMonstAbil::MARTYRS_SHIELD].special = {true, 1000, 100, 0};
@@ -386,7 +387,7 @@ cMonster::cMonster(){
 	}
 	// And just in case something weird happens:
 	resist[eDamageType::MARKED] = 100;
-	mindless = invuln = guard = invisible = false;
+	amorphous = mindless = invuln = guard = invisible = false;
 	level = m_health = armor = skill = 0;
 	speed = 4;
 	default_facial_pic = 0;

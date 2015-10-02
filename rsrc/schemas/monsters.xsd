@@ -372,6 +372,7 @@
 							<xs:element name="demon" type="xs:integer" minOccurs="0"/>
 							<xs:element name="all" type="bool" minOccurs="0"/>
 							<xs:element name="fear" type="bool" minOccurs="0"/>
+							<xs:element name="assassinate" type="bool" minOccurs="0"/>
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
