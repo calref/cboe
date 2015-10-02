@@ -600,8 +600,10 @@ void handle_menu_choice(eMenu item_hit) {
 			give_help(212,0);
 			break;
 	}
-	if(!dialogToShow.empty())
-		cChoiceDlog(dialogToShow).show();
+	if(!dialogToShow.empty()) {
+		cChoiceDlog dlog(dialogToShow);
+		dlog.show();
+	}
 }
 
 //  TODO: Let this function take a cMonster* instead of the item_hit

@@ -59,8 +59,8 @@ void cScrollPane::recalcRect() {
 	globalFrame.inset(-4,-4);
 	frame.left = globalFrame.left;
 	frame.right = globalFrame.right;
-	scroll.setMaximum(globalFrame.height() - frame.height());
-	scroll.setPageSize(100);
+	scroll.setMaximum((globalFrame.height() - frame.height()) / 5);
+	scroll.setPageSize((frame.height() - 5) / 5);
 	rectangle scrollFrame;
 	scrollFrame.left = frame.right;
 	scrollFrame.top = frame.top;
@@ -143,7 +143,7 @@ void cScrollPane::draw() {
 	for(auto& ctrl : contents) {
 		rectangle localBounds = ctrl.second->getBounds();
 		rectangle globalBounds = localBounds;
-		globalBounds.offset(0, -scroll.getPosition());
+		globalBounds.offset(0, -5 * scroll.getPosition());
 		ctrl.second->setBounds(globalBounds);
 		ctrl.second->draw();
 		ctrl.second->setBounds(localBounds);
@@ -184,14 +184,14 @@ std::string cScrollPane::parse(ticpp::Element& who, std::string fname) {
 	if(!foundTop) throw xMissingAttr("pane","top",who.Row(),who.Column(),fname);
 	if(!foundLeft) throw xMissingAttr("pane","left",who.Row(),who.Column(),fname);
 	if(width > 0) {
-		frame.right = frame.left + width;
+		frame.width() = width;
 	}else{
 		throw xMissingAttr("pane","width",who.Row(),who.Column(),fname);
 	}
 	if(height > 0) {
-		frame.bottom = frame.top + height;
+		frame.height() = height;
 	}else{
-		frame.bottom = frame.top + 10;
+		frame.height() = 10;
 	}
 	setBounds(frame);
 	for(node = node.begin(&who); node != node.end(); node++) {
