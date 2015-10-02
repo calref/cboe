@@ -18,19 +18,7 @@ namespace legacy {
 	struct creature_data_type;
 };
 
-class cPopulation { // formerly creature_list_type
-//	class cCreature { // formerly creature_data_type
-//	public:
-//		short active, attitude;
-//		unsigned char number;
-//		location m_loc;
-//		cMonster m_d;
-//		bool mobile;
-//		short summoned;
-//		cTown::cCreature monst_start;
-//		
-//		cCreature& operator = (legacy::creature_data_type old);
-//	};
+class cPopulation {
 	std::vector<cCreature> dudes;
 public:
 	short which_town;

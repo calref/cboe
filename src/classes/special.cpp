@@ -452,7 +452,7 @@ void cSpecial::append(legacy::special_node_type& old){
 		default:
 			if(old.type >= 0 && old.type < 255)
 				showError("Unrecognized node type found: " + std::to_string(old.type));
-			else std::cout << "Unrecognized node type found: " + std::to_string(old.type)
+			else std::cout << "Unrecognized node type found: " << old.type
 				<< "\n\tNote: This could indicate corruption in the scenario, but more likely is just a result of garbage data in unused nodes or in the memory structures they were read into. The unrecognized node type has been replaced with invalid type -1.";
 	}
 }
