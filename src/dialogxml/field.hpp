@@ -33,6 +33,7 @@ enum eFldType {
 /// There is no Unicode support.
 class cTextField : public cControl {
 public:
+	std::string parse(ticpp::Element& who, std::string fname);
 	void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported);
 	/// @copydoc cControl::attachFocusHandler()
 	/// For text fields, this is triggered when it loses or gains the input focus.
@@ -54,7 +55,7 @@ public:
 	sf::Color getColour() throw(xUnsupportedProp);
 	/// Create a new editable text field.
 	/// @param parent The parent dialog.
-	explicit cTextField(cDialog* parent);
+	explicit cTextField(cDialog& parent);
 	bool isClickable();
 	virtual ~cTextField();
 	void draw();

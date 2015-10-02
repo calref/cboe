@@ -25,6 +25,7 @@ class cPict : public cControl {
 public:
 	/// @copydoc cDialog::init()
 	static void init();
+	std::string parse(ticpp::Element& who, std::string fname);
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
 	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);

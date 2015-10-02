@@ -22,6 +22,7 @@
 /// This class can also create a frame for grouping controls or a clickable area.
 class cTextMsg : public cControl {
 public:
+	std::string parse(ticpp::Element& who, std::string fname);
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
 	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);

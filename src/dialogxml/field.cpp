@@ -197,8 +197,8 @@ bool cTextField::hasFocus() {
 	return haveFocus;
 }
 
-cTextField::cTextField(cDialog* parent) :
-		cControl(CTRL_FIELD,*parent),
+cTextField::cTextField(cDialog& parent) :
+		cControl(CTRL_FIELD,parent),
 		color(sf::Color::Black),
 		insertionPoint(-1),
 		selectionPoint(0),
@@ -628,6 +628,63 @@ void cTextField::handleInput(cKey key) {
 	setText(contents);
 	insertionPoint = ip;
 	selectionPoint = sp;
+}
+
+std::string cTextField::parse(ticpp::Element& who, std::string fname) {
+	using namespace ticpp;
+	Iterator<Attribute> attr;
+	Iterator<Node> node;
+	std::string name, id;
+	int width = 0, height = 0;
+	bool foundTop = false, foundLeft = false; // requireds
+	rectangle frame;
+	for(attr = attr.begin(&who); attr != attr.end(); attr++){
+		attr->GetName(&name);
+		if(name == "name")
+			attr->GetValue(&id);
+		else if(name == "type"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "int")
+				setInputType(FLD_INT);
+			else if(val == "uint")
+				setInputType(FLD_UINT);
+			else if(val == "real")
+				setInputType(FLD_REAL);
+			else if(val == "text")
+				setInputType(FLD_TEXT);
+			else throw xBadVal("field",name,val,attr->Row(),attr->Column(),fname);
+		}else if(name == "top"){
+			attr->GetValue(&frame.top), foundTop = true;
+		}else if(name == "left"){
+			attr->GetValue(&frame.left), foundLeft = true;
+		}else if(name == "width"){
+			attr->GetValue(&width);
+		}else if(name == "height"){
+			attr->GetValue(&height);
+		}else if(name == "tab-order"){
+			attr->GetValue(&tabOrder);
+		}else throw xBadAttr("field",name,attr->Row(),attr->Column(),fname);
+	}
+	if(!foundTop) throw xMissingAttr("field","top",attr->Row(),attr->Column(),fname);
+	if(!foundLeft) throw xMissingAttr("field","left",attr->Row(),attr->Column(),fname);
+	frame.right = frame.left + width;
+	frame.bottom = frame.top + height;
+	setBounds(frame);
+	std::string content;
+	for(node = node.begin(&who); node != node.end(); node++){
+		std::string val;
+		int type = node->Type();
+		node->GetValue(&val);
+		if(type == TiXmlNode::TEXT)
+			content += dlogStringFilter(val);
+		else if(type != TiXmlNode::COMMENT) {
+			val = '<' + val + '>';
+			throw xBadVal("field",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
+		}
+	}
+	setText(content);
+	return id;
 }
 
 aTextInsert::aTextInsert(cTextField& in, int at, std::string text) : cAction("insert text"), in(in), at(at), text(text) {}

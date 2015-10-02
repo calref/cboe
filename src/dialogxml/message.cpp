@@ -73,6 +73,99 @@ short cTextMsg::getFormat(eFormat prop) throw(xUnsupportedProp){
 	return 0;
 }
 
+std::string cTextMsg::parse(ticpp::Element& who, std::string fname) {
+	using namespace ticpp;
+	Iterator<Attribute> attr;
+	Iterator<Node> node;
+	std::string name, id;
+	int width = 0, height = 0;
+	bool foundTop = false, foundLeft = false; // top and left are required attributes
+	rectangle frame;
+	if(parent->getBg() == cDialog::BG_DARK)
+		setColour(sf::Color::White);
+	for(attr = attr.begin(&who); attr != attr.end(); attr++){
+		attr->GetName(&name);
+		if(name == "name")
+			attr->GetValue(&id);
+		else if(name == "framed"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true") setFormat(TXT_FRAME, true);
+		}else if(name == "font"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "dungeon")
+				setFormat(TXT_FONT, FONT_DUNGEON);
+			else if(val == "plain")
+				setFormat(TXT_FONT, FONT_PLAIN);
+			else if(val == "bold")
+				setFormat(TXT_FONT, FONT_BOLD);
+			else if(val == "maidenword")
+				setFormat(TXT_FONT, FONT_MAIDWORD);
+			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
+		}else if(name == "size"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "large")
+				setFormat(TXT_SIZE, 12);
+			else if(val == "small")
+				setFormat(TXT_SIZE, 10);
+			else if(val == "title")
+				setFormat(TXT_SIZE, 18);
+			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
+		}else if(name == "color" || name == "colour"){
+			std::string val;
+			attr->GetValue(&val);
+			sf::Color clr;
+			try{
+				clr = parseColor(val);
+			}catch(int){
+				throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
+			}
+			setColour(clr);
+		}else if(name == "def-key"){
+			std::string val;
+			attr->GetValue(&val);
+			try{
+				attachKey(parseKey(val));
+			}catch(int){
+				throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
+			}
+		}else if(name == "top"){
+			attr->GetValue(&frame.top), foundTop = true;
+		}else if(name == "left"){
+			attr->GetValue(&frame.left), foundLeft = true;
+		}else if(name == "width"){
+			attr->GetValue(&width);
+		}else if(name == "height"){
+			attr->GetValue(&height);
+//		}else if(name == "fromlist"){
+//			attr->GetValue(&p.second->fromList);
+		}else throw xBadAttr("text",name,attr->Row(),attr->Column(),fname);
+	}
+	if(!foundTop) throw xMissingAttr("text","top",who.Row(),who.Column(),fname);
+	if(!foundLeft) throw xMissingAttr("text","left",who.Row(),who.Column(),fname);
+	frame.right = frame.left + width;
+	frame.bottom = frame.top + height;
+	setBounds(frame);
+	std::string content;
+	for(node = node.begin(&who); node != node.end(); node++){
+		std::string val;
+		int type = node->Type();
+		node->GetValue(&val);
+		// TODO: De-magic the | character
+		if(type == TiXmlNode::ELEMENT && val == "br") content += '|'; // because vertical bar is replaced by a newline when drawing strings
+		else if(type == TiXmlNode::TEXT)
+			content += dlogStringFilter(val);
+		else if(type != TiXmlNode::COMMENT) {
+			val = '<' + val + '>';
+			throw xBadVal("text",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
+		}
+	}
+	setText(content);
+	return id;
+}
+
 cTextMsg::cTextMsg(cDialog& parent) :
 	cControl(CTRL_TEXT,parent),
 	drawFramed(false),

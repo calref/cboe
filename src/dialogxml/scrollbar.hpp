@@ -32,6 +32,7 @@ class cScrollbar : public cControl {
 public:
 	/// @copydoc cDialog::init()
 	static void init();
+	std::string parse(ticpp::Element& who, std::string fname);
 	/// Create a new scrollbar without a parent dialog.
 	/// @param parent The parent window.
 	explicit cScrollbar(sf::RenderWindow& parent);

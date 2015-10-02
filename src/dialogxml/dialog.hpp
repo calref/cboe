@@ -39,12 +39,10 @@ class cDialog {
 	std::map<std::string,cControl*> controls;
 	short bg;
 	sf::Color defTextClr;
-	template<class T> std::pair<std::string,T*> parse(ticpp::Element& who);
-	sf::Color parseColor(std::string what);
-	cKey parseKey(std::string what);
 	sf::RenderWindow win;
 	std::string currentFocus;
 	cDialog* parent;
+	std::string generateRandomString();
 	void loadFromFile(std::string path);
 	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
@@ -188,6 +186,22 @@ public:
 	static bool sendInput(cKey key);
 	/// Sets whether to animate graphics in dialogs.
 	static bool doAnimations;
+	/// Adds a new control described by the passed XML element.
+	/// @tparam Ctrl The type of control to add.
+	/// @param who The XML element describing the control.
+	/// @note It is up to the caller to ensure that that the element
+	/// passed describes the type of control being requested.
+	template<class Ctrl> std::pair<std::string,Ctrl*> parse(ticpp::Element& who) {
+		std::pair<std::string,Ctrl*> p;
+		p.second = new Ctrl(*this);
+		p.first = p.second->parse(who, fname);
+		if(p.first == ""){
+			do{
+				p.first = generateRandomString();
+			}while(controls.find(p.first) != controls.end());
+		}
+		return p;
+	}
 	cDialog& operator=(cDialog& other) = delete;
 	cDialog(cDialog& other) = delete;
 private:

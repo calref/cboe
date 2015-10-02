@@ -8,6 +8,9 @@
 
 #include "stack.hpp"
 #include "field.hpp"
+#include "button.hpp"
+#include "message.hpp"
+#include "pict.hpp"
 
 void cStack::attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) {
 	onClick = f;
@@ -150,4 +153,60 @@ void cStack::fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& reve
 }
 
 cStack::cStack(cDialog& parent) : cControl(CTRL_STACK, parent), curPage(0), nPages(0) {}
+
+std::string cStack::parse(ticpp::Element& who, std::string fname) {
+	using namespace ticpp;
+	Iterator<Attribute> attr;
+	Iterator<Element> node;
+	std::string name, id;
+	for(attr = attr.begin(&who); attr != attr.end(); attr++) {
+		attr->GetName(&name);
+		if(name == "name")
+			attr->GetValue(&id);
+		else if(name == "pages") {
+			size_t val;
+			attr->GetValue(&val);
+			setPageCount(val);
+		} else throw xBadAttr("stack",name,attr->Row(),attr->Column(),fname);
+	}
+	std::vector<std::string> stack;
+	for(node = node.begin(&who); node != node.end(); node++) {
+		std::string val;
+		int type = node->Type();
+		node->GetValue(&val);
+		if(type == TiXmlNode::ELEMENT) {
+			if(val == "field") {
+				auto field = parent->parse<cTextField>(*node);
+				parent->add(field.second, field.second->getBounds(), field.first);
+				stack.push_back(field.first);
+				// TODO: Add field to tab order
+				//tabOrder.push_back(field);
+			} else if(val == "text") {
+				auto text = parent->parse<cTextMsg>(*node);
+				parent->add(text.second, text.second->getBounds(), text.first);
+				stack.push_back(text.first);
+			} else if(val == "pict") {
+				auto pict = parent->parse<cPict>(*node);
+				parent->add(pict.second, pict.second->getBounds(), pict.first);
+				stack.push_back(pict.first);
+			} else if(val == "button") {
+				auto button = parent->parse<cButton>(*node);
+				parent->add(button.second, button.second->getBounds(), button.first);
+				stack.push_back(button.first);
+			} else if(val == "led") {
+				auto led = parent->parse<cLed>(*node);
+				parent->add(led.second, led.second->getBounds(), led.first);
+				stack.push_back(led.first);
+			} else if(val == "group") {
+				auto group = parent->parse<cLedGroup>(*node);
+				parent->add(group.second, group.second->getBounds(), group.first);
+				stack.push_back(group.first);
+			} else throw xBadNode(val,node->Row(),node->Column(),fname);
+		} else if(type != TiXmlNode::COMMENT)
+			throw xBadVal("stack",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
+	}
+	controls = stack;
+	recalcRect();
+	return id;
+}
 

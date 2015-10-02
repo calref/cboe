@@ -50,6 +50,7 @@ class cButton : public cControl {
 public:
 	/// @copydoc cDialog::init()
 	static void init();
+	std::string parse(ticpp::Element& who, std::string fname);
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
 	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
@@ -83,7 +84,7 @@ protected:
 	/// Construct a new button.
 	/// @param parent The parent dialog.
 	/// @param t The type of control. Should be either CTRL_LED or CTRL_BTN.
-	cButton(cDialog* parent,eControlType t);
+	cButton(cDialog& parent,eControlType t);
 private:
 	bool labelWithKey;
 	std::string fromList;
@@ -111,6 +112,7 @@ public:
 	/// default toggle-selected action of an LED.
 	/// @return true to indicate the event should continue.
 	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
+	std::string parse(ticpp::Element& who, std::string fname);
 	void attachClickHandler(click_callback_t f) throw();
 	void attachFocusHandler(focus_callback_t f) throw();
 	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
@@ -121,7 +123,7 @@ public:
 	void restore(storage_t to);
 	/// Create a new LED button.
 	/// @param parent The parent dialog.
-	explicit cLed(cDialog* parent);
+	explicit cLed(cDialog& parent);
 	virtual ~cLed();
 	/// Set the LED's current state,.
 	/// @param to The new state.
@@ -169,6 +171,7 @@ class cLedGroup : public cControl {
 	cLedGroup& operator=(cLedGroup& other) = delete;
 	cLedGroup(cLedGroup& other) = delete;
 public:
+	std::string parse(ticpp::Element& who, std::string fname);
 	/// @copydoc cControl::attachClickHandler()
 	///
 	/// The click handler is called whenever an LED in the group is clicked, even if it's the currently selected LED.
@@ -209,7 +212,7 @@ public:
 	sf::Color getColour() throw(xUnsupportedProp);
 	/// Create a new LED group.
 	/// @param parent The parent dialog.
-	explicit cLedGroup(cDialog* parent);
+	explicit cLedGroup(cDialog& parent);
 	bool isClickable();
 	bool handleClick(location where);
 	virtual ~cLedGroup();

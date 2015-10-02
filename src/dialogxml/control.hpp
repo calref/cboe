@@ -86,9 +86,14 @@ public:
 /// to be drawn, handleClick() when a mousedown event is received within the control's bounding rect, and
 /// triggerClickHandler() if a click occurs, either because handleClick() returns true or because
 /// a keyboard event is received that should trigger the control.
+///
+/// All control subclasses must have a constructor that takes a single cDialog& parameter,
+/// in order for the parsing template to work.
 class cControl {
 public:
 	using storage_t = std::map<std::string, boost::any>;
+	/// Parses the control from an XML element
+	virtual std::string parse(ticpp::Element& who, std::string fname) = 0;
 	/// Attach a keyboard shortcut to a control. Pressing the keyboard shortcut is equivalent to clicking the control.
 	/// @param key The desired keyboard shortcut.
 	void attachKey(cKey key);
@@ -226,6 +231,16 @@ public:
 	cControl& operator=(cControl& other) = delete;
 	cControl(cControl& other) = delete;
 protected:
+	/// Parses an HTML colour code.
+	/// Recognizes three-digit hex, six-digit hex, and HTML colour names.
+	/// @param code The colour code to parse.
+	static sf::Color parseColor(std::string code);
+	/// Parses a key code.
+	/// @param what The code to parse.
+	static cKey parseKey(std::string what);
+	/// Filters newlines and tabs from a string, leaving spaces intact.
+	/// @param toFilter The string to filter.
+	static std::string dlogStringFilter(std::string toFilter);
 	/// The parent dialog of the control.
 	/// May be null, if the control was created via cControl(eControlType,sf::RenderWindow&).
 	cDialog* parent;
@@ -253,6 +268,7 @@ protected:
 	/// Intended to be called from handleClick(), where there is usually a minor event loop happening.
 	void redraw();
 private:
+	friend class cDialog; // TODO: This is only so it can access parseColour... hack!
 	eControlType type;
 };
 

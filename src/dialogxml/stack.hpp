@@ -42,6 +42,7 @@ class cStack : public cControl {
 	std::vector<std::string> controls;
 	click_callback_t onClick;
 public:
+	std::string parse(ticpp::Element& who, std::string fname);
 	void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported);
 	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
 	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);

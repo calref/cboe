@@ -50,8 +50,8 @@ cButton::cButton(cDialog& parent) :
 	textClr(parent.getDefTextClr()),
 	fromList("none") {}
 
-cButton::cButton(cDialog* parent,eControlType t) :
-	cControl(t,*parent),
+cButton::cButton(cDialog& parent,eControlType t) :
+	cControl(t,parent),
 	fromList("none"),
 	wrapLabel(false) {/* This constructor is only called for LEDs. */}
 
@@ -114,6 +114,162 @@ void cButton::setColour(sf::Color clr) throw(xUnsupportedProp) {
 
 sf::Color cButton::getColour() throw(xUnsupportedProp) {
 	return textClr;
+}
+
+std::string cButton::parse(ticpp::Element& who, std::string fname) {
+	using namespace ticpp;
+	Iterator<Attribute> attr;
+	Iterator<Node> node;
+	std::string name, id;
+	int width = 0, height = 0;
+	bool foundType = false, foundTop = false, foundLeft = false; // required attributes
+	bool foundKey = false;
+	std::string keyMod, keyMain;
+	int keyModRow, keyModCol, keyMainRow, keyMainCol;
+	rectangle frame;
+	for(attr = attr.begin(&who); attr != attr.end(); attr++){
+		attr->GetName(&name);
+		if(name == "name")
+			attr->GetValue(&id);
+		else if(name == "wrap"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true") setFormat(TXT_WRAP, true);
+		}else if(name == "type"){
+			std::string val;
+			foundType = true;
+			attr->GetValue(&val);
+			if(val == "small")
+				setBtnType(BTN_SM);
+			else if(val == "regular")
+				setBtnType(BTN_REG);
+			else if(val == "large")
+				setBtnType(BTN_LG);
+			else if(val == "help")
+				setBtnType(BTN_HELP);
+			else if(val == "left")
+				setBtnType(BTN_LEFT);
+			else if(val == "right")
+				setBtnType(BTN_RIGHT);
+			else if(val == "up")
+				setBtnType(BTN_UP);
+			else if(val == "down")
+				setBtnType(BTN_DOWN);
+			else if(val == "tiny")
+				setBtnType(BTN_TINY);
+			else if(val == "done")
+				setBtnType(BTN_DONE);
+			else if(val == "tall")
+				setBtnType(BTN_TALL);
+			else if(val == "trait")
+				setBtnType(BTN_TRAIT);
+			else if(val == "push")
+				setBtnType(BTN_PUSH);
+		}else if(name == "color" || name == "colour"){
+			std::string val;
+			attr->GetValue(&val);
+			sf::Color clr;
+			try{
+				clr = parseColor(val);
+			}catch(int){
+				throw xBadVal("button",name,val,attr->Row(),attr->Column(),fname);
+			}
+			setColour(clr);
+		}else if(name == "def-key"){
+			attr->GetValue(&keyMain);
+			foundKey = true;
+			keyMainRow = attr->Row();
+			keyMainCol = attr->Column();
+		}else if(name == "key-mod"){
+			attr->GetValue(&keyMod);
+			foundKey = true;
+			keyModRow = attr->Row();
+			keyModCol = attr->Column();
+			//		}else if(name == "fromlist"){
+			//			attr->GetValue(&fromList);
+		}else if(name == "top"){
+			attr->GetValue(&frame.top), foundTop = true;
+		}else if(name == "left"){
+			attr->GetValue(&frame.left), foundLeft = true;
+		}else if(name == "width"){
+			attr->GetValue(&width);
+		}else if(name == "height"){
+			attr->GetValue(&height);
+		}else throw xBadAttr("button",name,attr->Row(),attr->Column(),fname);
+	}
+	if(parent->getBg() == cDialog::BG_DARK && getBtnType() == BTN_TINY)
+		setColour(sf::Color::White);
+	if(!foundType) throw xMissingAttr("button","type",who.Row(),who.Column(),fname);
+	if(!foundTop) throw xMissingAttr("button","top",who.Row(),who.Column(),fname);
+	if(!foundLeft) throw xMissingAttr("button","left",who.Row(),who.Column(),fname);
+	if(foundKey) {
+		cKey theKey;
+		try{
+			theKey = parseKey(keyMod + " " + keyMain);
+		}catch(int){
+			try {
+				theKey = parseKey(keyMain);
+			}catch(int){
+				throw xBadVal("button","def-key",keyMain,keyMainRow,keyMainCol,fname);
+			}
+			throw xBadVal("button","key-mod",keyMod,keyModRow,keyModCol,fname);
+		}
+		attachKey(theKey);
+	}
+	switch(getBtnType()){
+		case BTN_SM:
+			frame.right = frame.left + 23;
+			frame.bottom = frame.top + 23;
+			break;
+		case BTN_LG:
+			frame.right = frame.left + 102;
+			frame.bottom = frame.top + 23;
+			break;
+		case BTN_HELP:
+			frame.right = frame.left + 16;
+			frame.bottom = frame.top + 13;
+			break;
+		case BTN_TINY:
+		case BTN_LED: // this should never happen
+			frame.right = frame.left + 14;
+			frame.bottom = frame.top + 10;
+			break;
+		case BTN_TALL:
+		case BTN_TRAIT:
+			frame.right = frame.left + 63;
+			frame.bottom = frame.top + 40;
+			break;
+		case BTN_PUSH:
+			frame.right = frame.left + 30;
+			frame.bottom = frame.top + 30;
+			break;
+		default:
+			frame.right = frame.left + 63;
+			frame.bottom = frame.top + 23;
+	}
+	if(width > 0)
+		frame.right = frame.left + width;
+	if(height > 0)
+		frame.bottom = frame.top + height;
+	setBounds(frame);
+	std::string content;
+	for(node = node.begin(&who); node != node.end(); node++){
+		std::string val;
+		int type = node->Type();
+		node->GetValue(&val);
+		if(type == TiXmlNode::ELEMENT && val == "key"){
+			// TODO: There's surely a better way to do this
+			if(content.length() > 0) throw xBadVal("button",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
+			//			labelWithKey = true;
+		}else if(type == TiXmlNode::TEXT)
+			content += dlogStringFilter(val);
+		else if(type != TiXmlNode::COMMENT) {
+			val = '<' + val + '>';
+			throw xBadVal("button",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
+		}
+	}
+	setText(content);
+	return id;
 }
 
 // Indices within the buttons array.
@@ -190,7 +346,7 @@ void cLed::init(){
 		}
 }
 
-cLed::cLed(cDialog* parent) :
+cLed::cLed(cDialog& parent) :
 	cButton(parent,CTRL_LED),
 	state(led_off),
 	textFont(FONT_BOLD),
@@ -282,8 +438,8 @@ void cLed::restore(storage_t to) {
 	else setState(led_off);
 }
 
-cLedGroup::cLedGroup(cDialog* parent) :
-	cControl(CTRL_GROUP,*parent),
+cLedGroup::cLedGroup(cDialog& parent) :
+	cControl(CTRL_GROUP,parent),
 	fromList("none") {}
 
 cButton::~cButton() {}
@@ -330,6 +486,106 @@ void cLed::setState(eLedState to){
 
 eLedState cLed::getState(){
 	return state;
+}
+
+std::string cLed::parse(ticpp::Element& who, std::string fname) {
+	using namespace ticpp;
+	Iterator<Attribute> attr;
+	Iterator<Node> node;
+	std::string name, id;
+	int width = 0, height = 0;
+	bool foundTop = false, foundLeft = false; // requireds
+	rectangle frame;
+	if(parent->getBg() == cDialog::BG_DARK)
+		setColour(sf::Color::White);
+	for(attr = attr.begin(&who); attr != attr.end(); attr++){
+		attr->GetName(&name);
+		if(name == "name")
+			attr->GetValue(&id);
+		else if(name == "state"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "red") setState(led_red);
+			else if(val == "green") setState(led_green);
+			else if(val == "off") setState(led_off);
+			else throw xBadVal("led",name,val,attr->Row(),attr->Column(),fname);
+			//		}else if(name == "fromlist"){
+			//			attr->GetValue(&fromList);
+		}else if(name == "font"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "dungeon")
+				setFormat(TXT_FONT, FONT_DUNGEON);
+			else if(val == "plain")
+				setFormat(TXT_FONT, FONT_PLAIN);
+			else if(val == "bold")
+				setFormat(TXT_FONT, FONT_BOLD);
+			else if(val == "maidenword")
+				setFormat(TXT_FONT, FONT_MAIDWORD);
+			else throw xBadVal("led",name,val,attr->Row(),attr->Column(),fname);
+		}else if(name == "size"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "large")
+				setFormat(TXT_SIZE, 12);
+			else if(val == "small")
+				setFormat(TXT_SIZE, 10);
+			else if(val == "title")
+				setFormat(TXT_SIZE, 18);
+			else throw xBadVal("led",name,val,attr->Row(),attr->Column(),fname);
+		}else if(name == "color" || name == "colour"){
+			std::string val;
+			attr->GetValue(&val);
+			sf::Color clr;
+			try{
+				clr = parseColor(val);
+			}catch(int){
+				throw xBadVal("led",name,val,attr->Row(),attr->Column(),fname);
+			}
+			setColour(clr);
+		} else if(name == "wrap") {
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true")
+				setFormat(TXT_WRAP, true);
+			else setFormat(TXT_WRAP, false);
+		}else if(name == "top"){
+			attr->GetValue(&frame.top), foundTop = true;
+		}else if(name == "left"){
+			attr->GetValue(&frame.left), foundLeft = true;
+		}else if(name == "width"){
+			attr->GetValue(&width);
+		}else if(name == "height"){
+			attr->GetValue(&height);
+		}else throw xBadAttr("led",name,attr->Row(),attr->Column(),fname);
+	}
+	if(!foundTop) throw xMissingAttr("led","top",who.Row(),who.Column(),fname);
+	if(!foundLeft) throw xMissingAttr("led","left",who.Row(),who.Column(),fname);
+	if(width > 0) {
+		frame.right = frame.left + width;
+	}else{
+		frame.right = frame.left + 14;
+	}
+	if(height > 0) {
+		frame.bottom = frame.top + height;
+	}else{
+		frame.bottom = frame.top + 10;
+	}
+	setBounds(frame);
+	std::string content;
+	for(node = node.begin(&who); node != node.end(); node++){
+		std::string val;
+		int type = node->Type();
+		node->GetValue(&val);
+		if(type == TiXmlNode::TEXT)
+			content += dlogStringFilter(val);
+		else if(type != TiXmlNode::COMMENT) {
+			val = '<' + val + '>';
+			throw xBadVal("led",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
+		}
+	}
+	setText(content);
+	return id;
 }
 
 void cLedGroup::addChoice(cLed* ctrl, std::string key) {
@@ -552,4 +808,33 @@ void cLedGroup::restore(storage_t to) {
 	if(to.find("led-select") != to.end())
 		setSelected(boost::any_cast<std::string>(to["led-select"]));
 	else setSelected("");
+}
+
+std::string cLedGroup::parse(ticpp::Element& who, std::string fname) {
+	using namespace ticpp;
+	Iterator<Attribute> attr;
+	Iterator<Element> node;
+	std::string name, id;
+	for(attr = attr.begin(&who); attr != attr.end(); attr++){
+		attr->GetName(&name);
+		if(name == "name")
+			attr->GetValue(&id);
+//		else if(name == "fromlist")
+//			attr->GetValue(&fromList);
+		else throw xBadAttr("group",name,attr->Row(),attr->Column(),fname);
+	}
+	for(node = node.begin(&who); node != node.end(); node++){
+		std::string val;
+		int type = node->Type();
+		node->GetValue(&val);
+		if(type == TiXmlNode::ELEMENT && val == "led"){
+			auto led = parent->parse<cLed>(*node);
+			addChoice(led.second, led.first);
+		}else if(type != TiXmlNode::COMMENT) {
+			val = '<' + val + '>';
+			throw xBadVal("group",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
+		}
+	}
+	recalcRect();
+	return id;
 }

@@ -201,6 +201,12 @@ void cScrollbar::draw() {
 	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
 }
 
+std::string cScrollbar::parse(ticpp::Element& who, std::string fname) {
+	using namespace ticpp;
+	// TODO: Parse scrollbars
+	return "";
+}
+
 cControl::storage_t cScrollbar::store() {
 	storage_t storage = cControl::store();
 	storage["scroll-pos"] = pos;

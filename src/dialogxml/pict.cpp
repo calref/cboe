@@ -443,6 +443,137 @@ void cPict::advanceAnim() {
 	if(animFrame >= 256) animFrame = 0;
 }
 
+std::string cPict::parse(ticpp::Element& who, std::string fname) {
+	using namespace ticpp;
+	Iterator<Attribute> attr;
+	std::string name, id;
+	ePicType type;
+	bool wide = false, tall = false, custom = false, tiny = false;
+	bool foundTop = false, foundLeft = false, foundType = false, foundNum = false; // required attributes
+	rectangle frame;
+	int width = 0, height = 0;
+	for(attr = attr.begin(&who); attr != attr.end(); attr++){
+		attr->GetName(&name);
+		if(name == "name")
+			attr->GetValue(&id);
+		else if(name == "type"){
+			std::string val;
+			foundType = true;
+			attr->GetValue(&val);
+			if(val == "blank"){
+				setPict(cPict::BLANK, PIC_TER);
+				foundNum = true;
+				continue;
+			}else if(val == "ter")
+				type = PIC_TER;
+			else if(val == "teranim")
+				type = PIC_TER_ANIM;
+			else if(val == "monst")
+				type = PIC_MONST;
+			else if(val == "dlog")
+				type = PIC_DLOG;
+			else if(val == "talk")
+				type = PIC_TALK;
+			else if(val == "scen")
+				type = PIC_SCEN;
+			else if(val == "item")
+				type = PIC_ITEM;
+			else if(val == "pc")
+				type = PIC_PC;
+			else if(val == "field")
+				type = PIC_FIELD;
+			else if(val == "boom")
+				type = PIC_BOOM;
+			else if(val == "missile")
+				type = PIC_MISSILE;
+			else if(val == "full")
+				type = PIC_FULL;
+			else if(val == "map")
+				type = PIC_TER_MAP;
+			else if(val == "status")
+				type = PIC_STATUS;
+			else throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
+			if(foundNum) {
+				pic_num_t wasPic = getPicNum();
+				setPict(wasPic, type);
+			}
+		}else if(name == "custom"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true") custom = true;
+		}else if(name == "scaled"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true") setFormat(TXT_WRAP, false);
+		}else if(name == "size"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "wide") wide = true;
+			else if(val == "tall") tall = true;
+			else if(val == "large") wide = tall = true;
+			else if(val == "small") tiny = true;
+			else throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
+		}else if(name == "def-key"){
+			std::string val;
+			attr->GetValue(&val);
+			// TODO: The modifiers are now in key-mod, so this needs to be updated
+			try{
+				attachKey(parseKey(val));
+			}catch(int){
+				throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
+			}
+		}else if(name == "num"){
+			pic_num_t newPic;
+			attr->GetValue(&newPic), foundNum = true;
+			if(foundType) setPict(newPic, type);
+			else setPict(newPic);
+		}else if(name == "top"){
+			attr->GetValue(&frame.top), foundTop = true;
+		}else if(name == "left"){
+			attr->GetValue(&frame.left), foundLeft = true;
+		}else if(name == "width"){
+			attr->GetValue(&width);
+		}else if(name == "height"){
+			attr->GetValue(&height);
+		}else if(name == "framed"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true") setFormat(TXT_FRAME, true);
+			else setFormat(TXT_FRAME, false);
+		}else throw xBadAttr("pict",name,attr->Row(),attr->Column(),fname);
+	}
+	if(!foundType) throw xMissingAttr("pict","type",who.Row(),who.Column(),fname);
+	if(!foundNum) throw xMissingAttr("pict","num",who.Row(),who.Column(),fname);
+	if(!foundTop) throw xMissingAttr("pict","top",who.Row(),who.Column(),fname);
+	if(!foundLeft) throw xMissingAttr("pict","left",who.Row(),who.Column(),fname);
+	if(wide || tall) {
+		pic_num_t wasPic = getPicNum();
+		if(wide && !tall && getPicType() == PIC_MONST) setPict(wasPic, PIC_MONST_WIDE);
+		else if(!wide && tall && getPicType() == PIC_MONST) setPict(wasPic, PIC_MONST_TALL);
+		else if(wide && tall){
+			if(getPicType() == PIC_MONST) setPict(wasPic, PIC_MONST_LG);
+			else if(getPicType() == PIC_SCEN) setPict(wasPic, PIC_SCEN_LG);
+			else if(getPicType() == PIC_DLOG) setPict(wasPic, PIC_DLOG_LG);
+		}
+	} else if(tiny && type == PIC_ITEM) {
+		pic_num_t wasPic = getPicNum();
+		setPict(wasPic, PIC_TINY_ITEM);
+	}
+	frame.right = frame.left;
+	frame.bottom = frame.top;
+	if(width > 0 || height > 0 || getPicType() == PIC_FULL){
+		frame.right = frame.left + width;
+		frame.bottom = frame.top + height;
+	}
+	setBounds(frame);
+	pic_num_t wasPic = getPicNum();
+	if(custom) {
+		setPict(wasPic, getPicType() + PIC_CUSTOM);
+	} else setPict(wasPic, getPicType());
+	// The above line also sets the graphic's bounding rect, if necessary
+	return id;
+}
+
 void cPict::recalcRect() {
 	rectangle bounds = getBounds();
 	switch(picType) {
