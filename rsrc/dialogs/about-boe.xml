@@ -10,7 +10,7 @@
 		  Copyright 1997-2015, Spiderweb Software, Inc., All rights reserved.
 	</text>
 	<pane top='42' left='50' width='400' height='67'>
-		<text size='large' top='42' left='150' width='300' height='10'>------      CREDITS      ------</text>
+		<text size='large' top='42' left='150' width='300' height='17'>------      CREDITS      ------</text>
 		<!-- TODO: Get a proper right-aligned text setting so that I don't have to use this hack of weird numbers of spaces -->
 		<!-- The height of this text needs to be 10 times the number of lines. -->
 		<text top='52' left='50' width='400' height='210'>
