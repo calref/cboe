@@ -67,6 +67,8 @@ struct rectangle {
 	rectangle(sf::Vector2<T> size) : rectangle(0, 0, size.y, size.x) {}
 	rectangle_size_delegate width();
 	rectangle_size_delegate height();
+	const rectangle_size_delegate width() const;
+	const rectangle_size_delegate height() const;
 	location centre();
 	location topLeft();
 	location topRight();

@@ -153,6 +153,14 @@ rectangle_size_delegate rectangle::height() {
 	return rectangle_size_delegate(*this, &rectangle::top, &rectangle::bottom);
 }
 
+const rectangle_size_delegate rectangle::width() const {
+	return rectangle_size_delegate(*const_cast<rectangle*>(this), &rectangle::left, &rectangle::right);
+}
+
+const rectangle_size_delegate rectangle::height() const {
+	return rectangle_size_delegate(*const_cast<rectangle*>(this), &rectangle::top, &rectangle::bottom);
+}
+
 location rectangle::centre() {
 	return location((left + right) / 2, (top + bottom) / 2);
 }

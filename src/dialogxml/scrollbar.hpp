@@ -15,6 +15,12 @@
 #include "control.hpp"
 #include "graphtool.hpp"
 
+/// Specifies the style of a scrollbar.
+enum eScrollStyle {
+	SCROLL_WHITE, ///< The white scrollbar, matching the help and PC buttons.
+	SCROLL_LED, ///< A dark scrollbar matching the LEDs and dialog buttons
+};
+
 /// A simple vertical scrollbar.
 /// This has no coupling with scrollable data; that must be handled externally by
 /// using the methods to get the scrollbar's position.
@@ -22,6 +28,12 @@
 class cScrollbar : public cControl {
 	int pos, max, pgsz;
 	std::string link;
+	// Make sure this is equal to the number of constants in eScrollStyle
+	static const int NUM_STYLES = 2;
+	// Constants to index the rect arrays
+	enum {
+		VERT, VERT_PRESSED, HORZ, HORZ_PRESSED
+	};
 	// Note: For horizontal scrollbars, up is left and down is right.
 	enum {
 		PART_UP,
@@ -30,10 +42,11 @@ class cScrollbar : public cControl {
 		PART_PGDN,
 		PART_DOWN,
 	} pressedPart;
+	eScrollStyle style = SCROLL_WHITE;
 	bool vert = true;
 	click_callback_t onClick;
-	static sf::Texture scroll_gw;
-	static const rectangle up_rect[4], down_rect[4], bar_rect[4], thumb_rect[4];
+	static sf::Texture scroll_gw[NUM_STYLES];
+	static const rectangle up_rect[NUM_STYLES][4], down_rect[NUM_STYLES][4], bar_rect[NUM_STYLES][4], thumb_rect[NUM_STYLES][4];
 	void draw_vertical(), draw_horizontal();
 public:
 	/// @copydoc cDialog::init()
@@ -77,6 +90,9 @@ public:
 	/// value as its text.
 	/// @return The ID of the linked control, or an empty string if none.
 	std::string getLink();
+	/// Get the scrollbar style.
+	/// @return The style
+	eScrollStyle getStyle();
 	/// Set the scrollbar thumb's current position.
 	/// @param to The new position.
 	void setPosition(long to);
@@ -98,6 +114,9 @@ public:
 	/// value as its text.
 	/// @param l The ID of the linked control, or an empty string if none.
 	void setLink(std::string l);
+	/// Set the scrollbar style.
+	/// @param newStyle The new style.
+	void setStyle(eScrollStyle newStyle);
 	void draw();
 	cScrollbar& operator=(cScrollbar& other) = delete;
 	cScrollbar(cScrollbar& other) = delete;

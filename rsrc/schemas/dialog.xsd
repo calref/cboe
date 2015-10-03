@@ -114,6 +114,12 @@
       </xs:simpleType>
     </xs:list>
   </xs:simpleType>
+  <xs:simpleType name="scrollStyle">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="white"/>
+      <xs:enumeration value="led"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:attributeGroup name="rect-size">
     <xs:attribute name="top" use="required" type="xs:integer"/>
     <xs:attribute name="left" use="required" type="xs:integer"/>
@@ -251,6 +257,7 @@
       <xs:attribute name="page-size" type="xs:integer" default="10"/>
       <xs:attribute name="vertical" type="bool" default="true"/>
       <xs:attribute name="link" type="xs:token"/>
+      <xs:attribute name="style" type="scrollStyle" default="led"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
   </xs:element>
@@ -291,6 +298,7 @@
       </xs:choice>
       <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="framed" default="true" type="bool"/>
+      <xs:attribute name="style" type="scrollStyle" default="led"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
   </xs:element>

@@ -212,6 +212,8 @@ The `<slider>` tag defines a slider control (presented with a scrollbar).
 
 The `<slider>` tag accepts the following attributes:
 
+* `style` - Specifies the slider style. Can be either `white` or `led`;
+defaults to `led`.
 * `vertical` - Specifies whether the slider should be shown horizontally
 or vertically. Usually defaults to true, but if `width` is provided and
 `height` is not, then it will default to false.
@@ -245,6 +247,7 @@ The `<pane>` tag accepts the following attributes:
 
 * `framed` - Specifies whether a frame is drawn around the pane. Can
 be either `true` or `false`; defaults to `true`.
+* `style` - Same as for `<slider>`, see above. Applies to the pane's scrollbar.
 
 Keyboard Shortcuts
 ------------------

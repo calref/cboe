@@ -54,6 +54,12 @@ public:
 	/// Set the pane's current scroll position.
 	/// @param to The new position.
 	void setPosition(long to);
+	/// Get the scrollbar style.
+	/// @return The style
+	eScrollStyle getStyle();
+	/// Set the scrollbar style.
+	/// @param newStyle The new style.
+	void setStyle(eScrollStyle newStyle);
 	void draw();
 	cScrollPane& operator=(cScrollPane& other) = delete;
 	cScrollPane(cScrollPane& other) = delete;

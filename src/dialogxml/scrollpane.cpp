@@ -126,6 +126,14 @@ void cScrollPane::setPosition(long to) {
 	scroll.setPosition(to);
 }
 
+eScrollStyle cScrollPane::getStyle() {
+	return scroll.getStyle();
+}
+
+void cScrollPane::setStyle(eScrollStyle style) {
+	scroll.setStyle(style);
+}
+
 bool cScrollPane::hasChild(std::string id) {
 	return contents.find(id) != contents.end();
 }
@@ -166,6 +174,7 @@ std::string cScrollPane::parse(ticpp::Element& who, std::string fname) {
 	rectangle frame;
 	int width = 0, height = 0;
 	bool foundTop = false, foundLeft = false;
+	scroll.setStyle(SCROLL_LED);
 	for(attr = attr.begin(&who); attr != attr.end(); attr++) {
 		attr->GetName(&name);
 		if(name == "name")
@@ -183,6 +192,12 @@ std::string cScrollPane::parse(ticpp::Element& who, std::string fname) {
 			attr->GetValue(&val);
 			if(val == "true") setFormat(TXT_FRAME, true);
 			else setFormat(TXT_FRAME, false);
+		}else if(name == "style"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "white") setStyle(SCROLL_WHITE);
+			else if(val == "led") setStyle(SCROLL_LED);
+			else throw xBadVal("slider", name, val, attr->Row(), attr->Column(), fname);
 		} else throw xBadAttr("pane",name,attr->Row(),attr->Column(),fname);
 	}
 	if(!foundTop) throw xMissingAttr("pane","top",who.Row(),who.Column(),fname);
