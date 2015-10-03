@@ -6,5 +6,5 @@
 		This item will be gone forever. Still drop it?
 	</text>
 	<button name='cancel' type='regular' def-key='esc' top='42' left='238'>Cancel</button>
-	<button name='okay' type='regular' def-key='enter' top='42' left='169'>OK</button>
+	<button name='okay' type='regular' top='42' left='169'>OK</button>
 </dialog>

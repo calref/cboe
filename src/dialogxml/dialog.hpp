@@ -116,11 +116,6 @@ public:
 	/// Set the default text colour applied to new dialogs when loading from a file.
 	/// @param clr The text colour.
 	void setDefTextClr(sf::Color clr);
-	/// Set the default button, which will be drawn outlined and respond to the enter key.
-	/// @param defBtn The unique key of the default button.
-	///
-	/// This function does not check that the default button exists and is a button.
-	void setDefBtn(std::string defBtn);
 	/// Get the default text colour applied to new dialogs when loading from a file.
 	/// @return The text colour.
 	sf::Color getDefTextClr();
@@ -214,7 +209,6 @@ private:
 	std::string process_click(location where);
 	bool dialogNotToast, didAccept;
 	rectangle winRect;
-	std::string defaultButton;
 	boost::any result;
 	std::string fname;
 	sf::Clock animTimer, paintTimer;

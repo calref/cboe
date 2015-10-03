@@ -174,6 +174,7 @@ cDialog::cDialog(std::string path, cDialog* p) : parent(p) {
 
 extern fs::path progDir;
 void cDialog::loadFromFile(std::string path){
+	static const cKey enterKey = {true, key_enter};
 	bg = defaultBackground;
 	fname = path;
 	fs::path cPath = progDir/"data"/"dialogs"/path;
@@ -184,7 +185,7 @@ void cDialog::loadFromFile(std::string path){
 		
 		Iterator<Attribute> attr;
 		Iterator<Element> node;
-		string type, name, val;
+		string type, name, val, defaultButton;
 		
 		xml.FirstChildElement()->GetValue(&type);
 		if(type != "dialog") throw xBadNode(type,xml.FirstChildElement()->Row(),xml.FirstChildElement()->Column(),fname);
@@ -251,6 +252,11 @@ void cDialog::loadFromFile(std::string path){
 				//parsed.second->fillTabOrder(specificTabs, reverseTabs);
 			} else throw xBadNode(type,node->Row(),node->Column(),fname);
 		}
+		
+		// Set the default button.
+		if(hasControl(defaultButton))
+			getControl(defaultButton).attachKey(enterKey);
+		
 		// Sort by tab order
 		// First, fill any gaps that might have been left, using ones that had no specific tab order
 		// Of course, if there are not enough without a specific tab order, there could still be gaps
@@ -299,6 +305,9 @@ void cDialog::loadFromFile(std::string path){
 		std::cerr << x.what();
 		throw;
 	} catch(xMissingAttr& x){ // Invalid element
+		std::cerr << x.what();
+		throw;
+	} catch(std::exception& x){ // Other uncaught exception
 		std::cerr << x.what();
 		throw;
 	}
@@ -601,10 +610,6 @@ short cDialog::getBg() {
 	return bg;
 }
 
-void cDialog::setDefBtn(std::string defBtn) {
-	defaultButton = defBtn;
-}
-
 void cDialog::setDefTextClr(sf::Color clr){
 	defTextClr = clr;
 }
@@ -736,9 +741,6 @@ std::string cDialog::process_keystroke(cKey keyHit){
 		keyHit.k = key_enter;
 		return process_keystroke(keyHit);
 	}
-	// If nothing was hit and the key was enter, return the default button (if any)
-	if(keyHit.spec && keyHit.k == key_enter)
-		return defaultButton;
 	return "";
 }
 

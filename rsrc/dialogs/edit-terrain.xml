@@ -100,7 +100,7 @@
 	<field name='map' top='62' left='495' width='80' height='16'/>
 	<button name='pickmap' type='regular' top='86' left='495'>Choose</button>
 	<text top='110' left='431' height='32' width='157'>(Enter -1 to scale down the large picture)</text>
-	<button name='done' type='regular' def-key='enter' top='455' left='517'>OK</button>
+	<button name='done' type='regular' top='455' left='517'>OK</button>
 	<button name='cancel' type='regular' def-key='esc' top='455' left='451'>Cancel</button>
 	<button name='left' type='left' top='455' left='11'/>
 	<button name='right' type='right' top='455' left='74'/>

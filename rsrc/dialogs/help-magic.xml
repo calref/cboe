@@ -52,5 +52,5 @@
 		Press the number of the character to cast, the button by the spell,
 		and then the target button by the PC to cast the spell on (if needed).
 	</text>
-	<button name='okay' type='regular' top='391' left='441' def-key='enter'>OK</button>
+	<button name='okay' type='regular' top='391' left='441'>OK</button>
 </dialog>

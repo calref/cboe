@@ -33,5 +33,5 @@
 	 TODO: Originally had width=340 and height=100; if it doesn't work right in-game, try reverting to that.
 	 -->
 	<pict type='full' num='1402' top='87' left='107' width='320' height='125'/>
-	<button name='okay' type='regular' top='388' left='432' def-key='enter'>OK</button>
+	<button name='okay' type='regular' top='388' left='432'>OK</button>
 </dialog>

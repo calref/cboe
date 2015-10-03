@@ -3,5 +3,5 @@
 <dialog defbtn='okay'>
 	<pict name='ter' type='ter' num='0' top='10' left='9'/>
 	<text name='sign' framed='true' top='9' left='47' width='273' height='77'>Fred</text>
-	<button name='okay' type='done' def-key='enter' top='93' left='260'/>
+	<button name='okay' type='done' top='93' left='260'/>
 </dialog>

@@ -78,5 +78,5 @@
 		Very dangerous.
 	</text>
 	<pict type='field' num='14' top='265' left='250'/>
-	<button name='okay' type='regular' top='391' left='441' def-key='enter'>OK</button>
+	<button name='okay' type='regular' top='391' left='441'>OK</button>
 </dialog>

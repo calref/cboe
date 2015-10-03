@@ -21,7 +21,7 @@ size_t available_btns[53] = {
 
 /// A list of preset button types. Many of these are unused.
 bbtt basic_buttons[] = {
-	{BTN_DONE, " ", {false,0,mod_none}}, // Formerly DLG_BTN_REG with "Done " as the string
+	{BTN_DONE, " ", {false,key_enter,mod_none}}, // Formerly DLG_BTN_REG with "Done " as the string
 	{BTN_REG, "Ask", {false,0,mod_none}},
 	{BTN_LEFT, " ", {true,key_left,mod_none}},
 	{BTN_RIGHT, " ", {true,key_right,mod_none}},
@@ -30,7 +30,7 @@ bbtt basic_buttons[] = {
 	{BTN_SM, "+", {false,0,mod_none}},
 	{BTN_SM, "-", {false,0,mod_none}},
 	{BTN_REG, "Buy", {false,0,mod_none}},
-	{BTN_REG, "Leave", {false,0,mod_none}},
+	{BTN_REG, "Leave", {false,key_enter,mod_none}},
 	//10
 	{BTN_REG, "Get", {false,'g',mod_none}},
 	{BTN_REG, "1", {false,'1',mod_none}},
@@ -87,10 +87,10 @@ bbtt basic_buttons[] = {
 	{BTN_LG, "Bash Door", {false,0,mod_none}},
 	{BTN_LG, "Pick Lock", {false,0,mod_none}},
 	//60
-	{BTN_REG, "Leave", {false,0,mod_none}}, // dupe
+	{BTN_REG, "Leave", {false,key_enter,mod_none}}, // dupe
 	{BTN_REG, "Steal", {false,0,mod_none}},
 	{BTN_REG, "Attack", {false,0,mod_none}},
-	{BTN_REG, "OK", {false,0,mod_none}},
+	{BTN_REG, "OK", {false,key_enter,mod_none}},
 	{BTN_REG, "Yes", {false,'y',mod_none}},
 	{BTN_REG, "No", {false,'n',mod_none}},
 	{BTN_LG, "Step In", {false,0,mod_none}},

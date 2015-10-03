@@ -31,5 +31,5 @@
 		When you register, the documentation comes with a hint book
 		for the 3 Blades of Exile scenarios!
 	</text>
-	<button name='okay' type='regular' top='242' left='471' def-key='enter'>OK</button>
+	<button name='okay' type='regular' top='242' left='471'>OK</button>
 </dialog>
