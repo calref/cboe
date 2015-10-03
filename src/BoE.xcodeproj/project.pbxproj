@@ -101,6 +101,7 @@
 		9153C79E1A994A0D00D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		9153C79F1A994A1300D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		9153C7A01A994A1700D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
 		9169C3211B3B23530041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
 		9169C3231B3B235A0041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
 		9169C3241B3B23610041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
@@ -141,9 +142,6 @@
 		919B13A21BBCDF14009905A4 /* monst_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A11BBCDE18009905A4 /* monst_legacy.cpp */; };
 		919B13A41BBD8854009905A4 /* item_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A31BBD8849009905A4 /* item_legacy.cpp */; };
 		919B13A61BBDE986009905A4 /* spec_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A51BBDE985009905A4 /* spec_legacy.cpp */; };
-		919B13AA1BBE2B71009905A4 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
-		919B13AB1BBE2B71009905A4 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
-		919B13AC1BBE2B71009905A4 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
 		919CC2481B3772F300273FDA /* creatlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* creatlist.cpp */; };
 		919CC2491B3772FB00273FDA /* creature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FE1A747C4500F20F5E /* creature.cpp */; };
 		919CC24B1B37730300273FDA /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
@@ -1740,7 +1738,6 @@
 				912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */,
 				919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */,
 				915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */,
-				919B13AC1BBE2B71009905A4 /* scrollpane.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1809,6 +1806,7 @@
 				919CC27E1B37743B00273FDA /* undo.cpp in Sources */,
 				919CC27F1B37744000273FDA /* winutil.mac.mm in Sources */,
 				91960ED41BB6157A008AF8F4 /* restypes.cpp in Sources */,
+				915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1822,7 +1820,6 @@
 				91C6864A0FD5EEFD000F6D01 /* pc.graphics.cpp in Sources */,
 				91FCC8DC18FE2CE8007026CE /* pc.menus.mac.mm in Sources */,
 				91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */,
-				919B13AB1BBE2B71009905A4 /* scrollpane.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1840,7 +1837,6 @@
 				91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */,
 				914CA45819074E0100B6ADD1 /* scen.menus.mac.mm in Sources */,
 				91034D211B225E4A008F01C1 /* scen.appleevents.mm in Sources */,
-				919B13AA1BBE2B71009905A4 /* scrollpane.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

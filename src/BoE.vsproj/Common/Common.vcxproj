@@ -42,6 +42,7 @@
     <ClInclude Include="..\..\dialogxml\message.hpp" />
     <ClInclude Include="..\..\dialogxml\pict.hpp" />
     <ClInclude Include="..\..\dialogxml\scrollbar.hpp" />
+    <ClInclude Include="..\..\dialogxml\scrollpane.hpp" />
     <ClInclude Include="..\..\dialogxml\stack.hpp" />
     <ClInclude Include="..\..\dialogxml\xml-parser\ticpp.h" />
     <ClInclude Include="..\..\dialogxml\xml-parser\ticpprc.h" />
@@ -97,6 +98,7 @@
     <ClCompile Include="..\..\dialogxml\message.cpp" />
     <ClCompile Include="..\..\dialogxml\pict.cpp" />
     <ClCompile Include="..\..\dialogxml\scrollbar.cpp" />
+    <ClCompile Include="..\..\dialogxml\scrollpane.cpp" />
     <ClCompile Include="..\..\dialogxml\stack.cpp" />
     <ClCompile Include="..\..\dialogxml\xml-parser\ticpp.cpp" />
     <ClCompile Include="..\..\dialogxml\xml-parser\tinystr.cpp" />

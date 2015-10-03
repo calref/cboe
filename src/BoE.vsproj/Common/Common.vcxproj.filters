@@ -148,6 +148,9 @@
     <ClInclude Include="..\..\dialogxml\scrollbar.hpp">
       <Filter>DialogXML\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\dialogxml\scrollpane.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\dialogxml\stack.hpp">
       <Filter>DialogXML\Header Files</Filter>
     </ClInclude>
@@ -310,6 +313,9 @@
       <Filter>DialogXML\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dialogxml\scrollbar.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\scrollpane.cpp">
       <Filter>DialogXML\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dialogxml\stack.cpp">
