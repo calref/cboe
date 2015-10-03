@@ -855,13 +855,6 @@ void fill_region(sf::RenderWindow& target, Region& region, sf::Color colour) {
 	undo_clip(target);
 }
 
-void frame_region(sf::RenderWindow& target, Region& region, sf::Color colour) {
-	// TODO: Uh, actually, this won't do what it says. Eh, I'll fix it if I ever use it.
-	clip_region(target, region);
-	frame_rect(target, rectangle(target), colour);
-	undo_clip(target);
-}
-
 void Region::addEllipse(rectangle frame) {
 	EllipseShape* ellipse = new EllipseShape(sf::Vector2f(frame.width(), frame.height()));
 	ellipse->setFillColor(sf::Color::Black);

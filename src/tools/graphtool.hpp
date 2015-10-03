@@ -129,7 +129,6 @@ void frame_circle(sf::RenderTarget& target, rectangle rect, sf::Color colour);
 void fill_roundrect(sf::RenderTarget& target, rectangle rect, int rad, sf::Color colour);
 void frame_roundrect(sf::RenderTarget& target, rectangle rect, int rad, sf::Color colour);
 void fill_region(sf::RenderWindow& target, Region& region, sf::Color colour);
-void frame_region(sf::RenderWindow& target, Region& region, sf::Color colour);
 void draw_line(sf::RenderTarget& target, location from, location to, int thickness, sf::Color colour, sf::BlendMode mode = sf::BlendNone);
 
 void clip_rect(sf::RenderTarget& where, rectangle rect);
