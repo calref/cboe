@@ -912,14 +912,29 @@ cControl& cDialog::getControl(std::string id) {
 	iter = controls.begin();
 	while(iter != controls.end()){
 		if(iter->second->isContainer()){
-			try{
-				cContainer* tmp = (cContainer*) (iter->second);
+			cContainer* tmp = dynamic_cast<cContainer*>(iter->second);
+			if(tmp->hasChild(id))
 				return tmp->getChild(id);
-			}catch(std::invalid_argument) {}
 		}
 		iter++;
 	}
 	throw std::invalid_argument(id + " does not exist in dialog " + fname);
+}
+
+bool cDialog::hasControl(std::string id) {
+	ctrlIter iter = controls.find(id);
+	if(iter != controls.end()) return true;
+	
+	iter = controls.begin();
+	while(iter != controls.end()){
+		if(iter->second->isContainer()){
+			cContainer* tmp = dynamic_cast<cContainer*>(iter->second);
+			if(tmp->hasChild(id))
+				return true;
+		}
+		iter++;
+	}
+	return false;
 }
 
 const char*const xBadVal::CONTENT = "<content>";

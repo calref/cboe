@@ -215,11 +215,12 @@ public:
 	bool isClickable();
 	bool handleClick(location where);
 	virtual ~cLedGroup();
-	/// Get one of the LED's in this group.
+	/// Get one of the LEDs in this group.
 	/// @param id The unique key of the choice.
 	/// @return A reference to the LED object.
 	/// @throw std::invalid_argument if the choice does not exist in the group.
 	cLed& getChild(std::string id);
+	bool hasChild(std::string id);
 	/// Set the currently selected LED in this group.
 	/// @param id The unique key of the choice.
 	/// @throw std::invalid_argument if the choice does not exist in the group.

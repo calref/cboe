@@ -152,6 +152,10 @@ public:
 	/// Determine how the dialog exited.
 	/// @return the argument passed to toast() when the dialog was closed
 	bool accepted();
+	/// Check if a control exists with a given ID.
+	/// @param id The unique key of the control.
+	/// @return true if it exists.
+	bool hasControl(std::string id);
 	/// Get a reference to a control.
 	/// @param id The unique key of the control.
 	/// @throw std::invalid_argument if the control does not exist.

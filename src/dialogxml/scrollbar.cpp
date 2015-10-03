@@ -42,6 +42,10 @@ void cScrollbar::setVertical(bool is) {
 	vert = is;
 }
 
+void cScrollbar::setLink(std::string l) {
+	link = l;
+}
+
 long cScrollbar::getPosition() {
 	return pos;
 }
@@ -56,6 +60,10 @@ long cScrollbar::getPageSize() {
 
 bool cScrollbar::isVertical() {
 	return vert;
+}
+
+std::string cScrollbar::getLink() {
+	return link;
 }
 
 void cScrollbar::attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) {
@@ -136,6 +144,8 @@ bool cScrollbar::handleClick(location where) {
 			if(pressedPart != PART_THUMB && !frame.contains(e.mouseMove.x, e.mouseMove.y)) depressed = false;
 		}
 		pos = minmax(0,max,pos);
+		if(parent && !link.empty())
+			parent->getControl(link).setTextToNum(pos);
 		thumbPos = bar_start;
 		thumbPos += btn_size + pos * (bar_size - btn_size) / max;
 		thumbPos = minmax(mousePos,bar_end - btn_size * 2,thumbPos);
@@ -305,6 +315,8 @@ std::string cScrollbar::parse(ticpp::Element& who, std::string fname) {
 			if(val == "true") vert = true;
 			else vert = false;
 			foundVertical = true;
+		}else if(name == "link"){
+			attr->GetValue(&link);
 		}else if(name == "initial"){
 			attr->GetValue(&pos);
 		}else if(name == "max"){
@@ -345,6 +357,8 @@ std::string cScrollbar::parse(ticpp::Element& who, std::string fname) {
 		else frame.height() = thickness;
 	}
 	setBounds(frame);
+	if(parent->hasControl(link))
+		parent->getControl(link).setTextToNum(pos);
 	return id;
 }
 

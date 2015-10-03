@@ -33,6 +33,7 @@ public:
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
 	sf::Color getColour() throw(xUnsupportedProp);
+	bool hasChild(std::string id);
 	cControl& getChild(std::string id);
 	storage_t store();
 	void restore(storage_t to);

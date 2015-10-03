@@ -250,6 +250,7 @@
       <xs:attribute name="initial" type="xs:integer" default="0"/>
       <xs:attribute name="page-size" type="xs:integer" default="10"/>
       <xs:attribute name="vertical" type="bool" default="true"/>
+      <xs:attribute name="link" type="xs:token"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
   </xs:element>
@@ -326,5 +327,9 @@
       <xs:selector xpath='*'/>
       <xs:field xpath='@name'/>
     </xs:unique>
+    <xs:keyref name="sliderLink" refer="uniqueID">
+      <xs:selector xpath="slider"/>
+      <xs:field xpath="@link"/>
+    </xs:keyref>
   </xs:element>
 </xs:schema>

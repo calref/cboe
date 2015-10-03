@@ -220,6 +220,9 @@ from 0 to `max` inclusive. Defaults to 0.
 * `max` - Specifies the maximum value of the slider. This attribute is required.
 * `page-size` - Specifies how much the slider should scroll when clicking
 between the thumb and the arrow button. Defaults to 10.
+* `link` - If present, the control with this ID will have its text set
+to the slider's value whenever it changes. It works best if the referenced
+control appears before the slider control in the definition.
 
 The `<stack>` tag
 -----------------

@@ -21,6 +21,7 @@
 /// Alternatively, it can be used as a slider control.
 class cScrollbar : public cControl {
 	int pos, max, pgsz;
+	std::string link;
 	// Note: For horizontal scrollbars, up is left and down is right.
 	enum {
 		PART_UP,
@@ -70,6 +71,12 @@ public:
 	/// Check whether the scrollbar is vertical.
 	/// @return True if it is vertical, false if it is horizontal.
 	bool isVertical();
+	/// Get the linked control.
+	///
+	/// A linked control is one that always reflect's the scrollbar's current
+	/// value as its text.
+	/// @return The ID of the linked control, or an empty string if none.
+	std::string getLink();
 	/// Set the scrollbar thumb's current position.
 	/// @param to The new position.
 	void setPosition(long to);
@@ -85,6 +92,12 @@ public:
 	/// Set whether the scrollbar is vertical.
 	/// @param is True to make it vertical, false to make it horizontal.
 	void setVertical(bool is);
+	/// Set the linked control.
+	///
+	/// A linked control is one that always reflect's the scrollbar's current
+	/// value as its text.
+	/// @param l The ID of the linked control, or an empty string if none.
+	void setLink(std::string l);
 	void draw();
 	cScrollbar& operator=(cScrollbar& other) = delete;
 	cScrollbar(cScrollbar& other) = delete;

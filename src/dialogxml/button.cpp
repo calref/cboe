@@ -691,6 +691,10 @@ bool cLedGroup::isClickable(){
 	return true;
 }
 
+bool cLedGroup::hasChild(std::string id) {
+	return choices.find(id) != choices.end();
+}
+
 cLed& cLedGroup::getChild(std::string id){
 	ledIter iter = choices.find(id);
 	if(iter == choices.end()) throw std::invalid_argument(id + " does not exist in the ledgroup.");

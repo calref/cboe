@@ -286,6 +286,10 @@ public:
 	/// @param t The type of the control.
 	/// @param p The parent dialog.
 	cContainer(eControlType t, cDialog& p) : cControl(t, p) {}
+	/// Check if a control exists with a given ID.
+	/// @param id The unique key of the control.
+	/// @return true if it exists.
+	virtual bool hasChild(std::string id) = 0;
 	/// Get a reference to a child control.
 	/// @param id The unique key of the control.
 	/// @throw std::invalid_argument if the control does not exist.

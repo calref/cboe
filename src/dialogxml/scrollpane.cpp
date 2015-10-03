@@ -126,6 +126,10 @@ void cScrollPane::setPosition(long to) {
 	scroll.setPosition(to);
 }
 
+bool cScrollPane::hasChild(std::string id) {
+	return contents.find(id) != contents.end();
+}
+
 cControl& cScrollPane::getChild(std::string id) {
 	auto iter = contents.find(id);
 	if(iter == contents.end()) throw std::invalid_argument(id + " does not exist in the scroll pane.");
