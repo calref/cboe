@@ -37,7 +37,7 @@ void cTextMsg::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 			drawFramed = val;
 			break;
 		case TXT_FRAMESTYLE:
-			frameStyle = val;
+			frameStyle = eFrameStyle(val);
 			break;
 		case TXT_SIZE:
 			textSize = val;
@@ -91,6 +91,13 @@ std::string cTextMsg::parse(ticpp::Element& who, std::string fname) {
 			std::string val;
 			attr->GetValue(&val);
 			if(val == "true") setFormat(TXT_FRAME, true);
+		}else if(name == "outline") {
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "solid") setFormat(TXT_FRAMESTYLE, FRM_SOLID);
+			else if(val == "inset") setFormat(TXT_FRAMESTYLE, FRM_INSET);
+			else if(val == "outset") setFormat(TXT_FRAMESTYLE, FRM_OUTSET);
+			else if(val == "double") setFormat(TXT_FRAMESTYLE, FRM_DOUBLE);
 		}else if(name == "font"){
 			std::string val;
 			attr->GetValue(&val);

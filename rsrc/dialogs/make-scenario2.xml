@@ -7,11 +7,11 @@
 	<field name='town-l' type='uint' top='242' left='312' width='75' height='16'>0</field>
 	<field name='town-m' type='uint' top='269' left='312' width='75' height='16'>1</field>
 	<field name='town-s' type='uint' top='295' left='312' width='75' height='16'>0</field>
-	<text framed='true' top='28' left='55' width='405' height='124'/>
-	<text framed='true' top='159' left='55' width='405' height='157'/>
-	<text framed='true' top='323' left='55' width='405' height='107'/>
-	<button name='cancel' type='regular' top='436' left='334' def-key='esc'>Cancel</button>
-	<button name='okay' type='regular' top='436' left='400'>OK</button>
+	<text framed='true' outline='double' top='28' left='55' width='405' height='124'/>
+	<text framed='true' outline='double' top='159' left='55' width='405' height='157'/>
+	<text framed='true' outline='double' top='323' left='55' width='405' height='107'/>
+	<button name='cancel' type='regular' top='438' left='334' def-key='esc'>Cancel</button>
+	<button name='okay' type='regular' top='438' left='400'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='52' width='278' height='17'>How big is your scenario?</text>
 	<text size='large' top='32' left='59' width='158' height='18'>Size of Outdoors:</text>

@@ -72,7 +72,7 @@ void cScrollPane::recalcRect() {
 
 void cScrollPane::setFormat(eFormat prop, short val) throw(xUnsupportedProp) {
 	if(prop == TXT_FRAME) framed = val;
-	else if(prop == TXT_FRAMESTYLE) frameStyle = val;
+	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
 	else throw xUnsupportedProp(prop);
 }
 
@@ -163,7 +163,7 @@ void cScrollPane::draw() {
 	undo_clip(*inWindow);
 	scroll.draw();
 	if(framed)
-		drawFrame(4, getFormat(TXT_FRAMESTYLE));
+		drawFrame(4, frameStyle);
 }
 
 std::string cScrollPane::parse(ticpp::Element& who, std::string fname) {
@@ -192,6 +192,13 @@ std::string cScrollPane::parse(ticpp::Element& who, std::string fname) {
 			attr->GetValue(&val);
 			if(val == "true") setFormat(TXT_FRAME, true);
 			else setFormat(TXT_FRAME, false);
+		}else if(name == "outline") {
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "solid") setFormat(TXT_FRAMESTYLE, FRM_SOLID);
+			else if(val == "inset") setFormat(TXT_FRAMESTYLE, FRM_INSET);
+			else if(val == "outset") setFormat(TXT_FRAMESTYLE, FRM_OUTSET);
+			else if(val == "double") setFormat(TXT_FRAMESTYLE, FRM_DOUBLE);
 		}else if(name == "style"){
 			std::string val;
 			attr->GetValue(&val);

@@ -19,7 +19,6 @@ class cScrollPane : public cContainer {
 	cScrollbar scroll;
 	std::map<std::string, cControl*> contents;
 	rectangle globalFrame;
-	bool frameStyle;
 	bool framed = false;
 public:
 	/// Create a new scroll pane

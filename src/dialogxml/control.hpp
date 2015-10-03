@@ -33,7 +33,15 @@ enum eFormat {
 	TXT_FONT,	///< The control's text font. Should be one of the constants FONT_PLAIN, FONT_BOLD, FONT_DUNGEON, FONT_MAIDEN.
 	TXT_SIZE,	///< The control's text size. Should be an integer indicating point size.
 	TXT_WRAP,	///< Whether the control should wrap. Should be a boolean (true or false).
-	TXT_FRAMESTYLE, ///< The control's frame style. Should be a boolean (true or false). @see cControl::drawFrame()
+	TXT_FRAMESTYLE, ///< The control's frame style. Should be an enum from @a eFrameStyle.
+};
+
+/// Frame styles
+enum eFrameStyle {
+	FRM_INSET,	///< An outline style that makes it look like the interior is slightly depressed.
+	FRM_OUTSET,	///< An outline style that makes it look like the interior is slightly raise.
+	FRM_SOLID,	///< A solid outline.
+	FRM_DOUBLE,	///< A solid double outline.
 };
 
 /// Specifies the type of a control.
@@ -260,14 +268,14 @@ protected:
 	/// The control's bounding rect.
 	rectangle frame;
 	/// The control's frame style.
-	int frameStyle;
+	eFrameStyle frameStyle;
 	/// The control's attached key.
 	cKey key;
 	/// Draw a frame around the control.
 	/// @param amt How much to offset the frame from the control's bounding rect.
 	/// @param med_or_lt true to use a darker colour for the frame.
 	/// @note The TXT_FRAMESTYLE formatting property is normally used for the second parameter.
-	void drawFrame(short amt, bool med_or_lt);
+	void drawFrame(short amt, eFrameStyle frameStyle);
 	/// Redraws the parent dialog, if any.
 	/// Intended to be called from handleClick(), where there is usually a minor event loop happening.
 	void redraw();

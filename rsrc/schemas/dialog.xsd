@@ -63,6 +63,14 @@
       <xs:enumeration value="led"/>
     </xs:restriction>
   </xs:simpleType>
+  <xs:simpleType name="frameStyle">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="solid"/>
+      <xs:enumeration value="inset"/>
+      <xs:enumeration value="outset"/>
+      <xs:enumeration value="double"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:attributeGroup name="rect-size">
     <xs:attribute name="top" use="required" type="xs:integer"/>
     <xs:attribute name="left" use="required" type="xs:integer"/>
@@ -123,6 +131,7 @@
       </xs:sequence>
       <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="framed" default="false" type="bool"/>
+      <xs:attribute name="outline" default="inset" type="frameStyle"/>
       <xs:attributeGroup ref="font"/>
       <xs:attribute ref="def-key"/>
       <xs:attribute name="clickable" default="false" type="bool"/>
@@ -137,6 +146,7 @@
       <xs:attribute name="custom" default="false" type="bool"/>
       <xs:attribute name="scaled" default="false" type="bool"/>
       <xs:attribute name="framed" default="true" type="bool"/>
+      <xs:attribute name="outline" default="inset" type="frameStyle"/>
       <xs:attribute name="size">
         <xs:simpleType>
           <xs:restriction base="xs:token">
@@ -238,6 +248,7 @@
       </xs:choice>
       <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="framed" default="true" type="bool"/>
+      <xs:attribute name="outline" default="inset" type="frameStyle"/>
       <xs:attribute name="style" type="scrollStyle" default="led"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>

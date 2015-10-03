@@ -264,9 +264,9 @@ void cControl::detachKey(){
 	this->key.c = 0;
 }
 
-cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), type(t), visible(true), key({false, 0, mod_none}), frameStyle(0) {}
+cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), type(t), visible(true), key({false, 0, mod_none}), frameStyle(FRM_INSET) {}
 
-cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(nullptr), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}), frameStyle(0) {}
+cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(nullptr), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}), frameStyle(FRM_INSET) {}
 
 bool cControl::triggerClickHandler(cDialog&, std::string, eKeyMod){
 	return true;
@@ -276,7 +276,7 @@ bool cControl::triggerFocusHandler(cDialog&, std::string, bool){
 	return true;
 }
 
-void cControl::drawFrame(short amt, bool){
+void cControl::drawFrame(short amt, eFrameStyle frameStyle){
 	// dk_gray had a 0..65535 component of 12287, and med_gray had a 0..65535 component of 24574
 	static sf::Color lt_gray = {224,224,224},dk_gray = {48,48,48};
 	rectangle rect = frame, ul_rect;
@@ -285,13 +285,24 @@ void cControl::drawFrame(short amt, bool){
 	
 	rect.inset(-amt,-amt);
 	ul_rect = rect;
-	ul_rect.right -= 1;
-	ul_rect.bottom -= 1;
 	
-	frame_rect(*inWindow, rect, lt_gray);
-	clip_rect(*inWindow, ul_rect);
+	if(frameStyle == FRM_OUTSET) {
+		ul_rect.right -= 1;
+		ul_rect.bottom -= 1;
+	} else if(frameStyle == FRM_INSET) {
+		ul_rect.top += 1;
+		ul_rect.left += 1;
+	}
+	
 	frame_rect(*inWindow, rect, dk_gray);
-	undo_clip(*inWindow);
+	if(frameStyle == FRM_OUTSET || frameStyle == FRM_INSET) {
+		clip_rect(*inWindow, ul_rect);
+		frame_rect(*inWindow, rect, lt_gray);
+		undo_clip(*inWindow);
+	} else if(frameStyle == FRM_DOUBLE) {
+		rect.inset(-amt, -amt);
+		frame_rect(*inWindow, rect, dk_gray);
+	}
 }
 
 cControl::~cControl() {}

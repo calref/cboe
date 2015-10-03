@@ -38,6 +38,11 @@ refer to it from the code. If omitted, the code will generate a random
 identifier. All controls support this attribute.
 * `fromlist` - Currently unused, but the intended use is to look up the
 control's text value in a string list (in _rsrc/strings_)
+* `framed` - Specifies whether the control should be drawn with a frame
+around it, and what type of frame. Can be either `true` or `false`
+* `outline` - Sets the type of frame to use for this control. Must be one
+of `solid`, `inset`, `outset`, `double`. It defaults to `inset` and is
+meaningless if `framed` is `false`.
 
 The `<dialog>` tag
 ------------------
@@ -65,8 +70,8 @@ of the intended whitespace collapsing behaviour.
 
 The `<text>` tag accepts the following attributes:
 
-* `framed` - Specifies whether a frame is drawn around the text. Can be
-either `true` or `false`; defaults to `false`.
+* `framed` - See **Common Attributes** above. Defaults to `false`.
+* `outline` - See **Common Attributes** above.
 * `clickable` - Specifies that the text is clickable. This attribute is
 useless, as clickability is determined solely by having a click handler
 set in the code.
@@ -158,10 +163,16 @@ is useless, as clickability is determined solely by having a click
 handler set in the code.
 * `custom` - Specifies whether the picture is custom or preset. Can be
 either `true` or `false`; defaults to `false`.
-* `framed` - Specifies whether a frame is drawn around the picture. Can
-be either `true` or `false`; defaults to `true`.
+* `framed` - See **Common Attributes** above. Defaults to `true`.
+* `outline` - See **Common Attributes** above.
 * `size` - For certain types of graphics, this provides an additional
-hint. Can be one of `small`, `wide`, `tall`, or `large`.
+hint. Can be one of `small`, `wide`, `tall`, or `large`. See the list of
+types below to determine if this attribute is relevant.
+* `scaled` - For certain larger types of graphics, this determines
+whether it should be scaled to fit within the provided bounds. It only
+has an effect for types `full`, `dlog`, and `scen`, and the latter two
+only if `size` is `large`. Can be either `true` or `false`, defaults to
+`false`.
 * `def-key` - See **Common Attributes** above.
 
 The possible values for the `type` attribute are:
@@ -176,7 +187,8 @@ default) or `large`.
 * `talk` - A conversation graphic.
 * `scen` - A scenario icon. The `size` attribute can be `small` (the
 default) or `large`.
-* `item` - An item graphic.
+* `item` - An item graphic. The `size` attribute can be `large` (the
+default) or `small`.
 * `pc` - A PC graphic.
 * `field` - A field graphic.
 * `boom` - A boom graphic.
@@ -245,8 +257,8 @@ It can contain any elements except for nested `<stack>` or `<pane>` elements.
 
 The `<pane>` tag accepts the following attributes:
 
-* `framed` - Specifies whether a frame is drawn around the pane. Can
-be either `true` or `false`; defaults to `true`.
+* `framed` - See **Common Attributes** above. Defaults to `false`.
+* `outline` - See **Common Attributes** above.
 * `style` - Same as for `<slider>`, see above. Applies to the pane's scrollbar.
 
 Keyboard Shortcuts

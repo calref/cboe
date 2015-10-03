@@ -91,7 +91,7 @@ bool cPict::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 
 void cPict::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	if(prop == TXT_FRAME) drawFramed = val;
-	else if(prop == TXT_FRAMESTYLE) frameStyle = val;
+	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
 	else if(prop == TXT_WRAP) drawScaled = !val;
 	else throw xUnsupportedProp(prop);
 }
@@ -539,6 +539,13 @@ std::string cPict::parse(ticpp::Element& who, std::string fname) {
 			attr->GetValue(&val);
 			if(val == "true") setFormat(TXT_FRAME, true);
 			else setFormat(TXT_FRAME, false);
+		}else if(name == "outline") {
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "solid") setFormat(TXT_FRAMESTYLE, FRM_SOLID);
+			else if(val == "inset") setFormat(TXT_FRAMESTYLE, FRM_INSET);
+			else if(val == "outset") setFormat(TXT_FRAMESTYLE, FRM_OUTSET);
+			else if(val == "double") setFormat(TXT_FRAMESTYLE, FRM_DOUBLE);
 		}else throw xBadAttr("pict",name,attr->Row(),attr->Column(),fname);
 	}
 	if(!foundType) throw xMissingAttr("pict","type",who.Row(),who.Column(),fname);

@@ -98,7 +98,7 @@ void cButton::draw(){
 
 void cButton::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	if(prop == TXT_WRAP) wrapLabel = val;
-	else if(prop == TXT_FRAMESTYLE) frameStyle = val;
+	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
 	else throw xUnsupportedProp(prop);
 }
 
