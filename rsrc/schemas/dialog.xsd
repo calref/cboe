@@ -243,6 +243,16 @@
       </xs:simpleContent>
     </xs:complexType>
   </xs:element>
+  <xs:element name="slider">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:token"/>
+      <xs:attribute name="max" type="xs:integer" use="required"/>
+      <xs:attribute name="initial" type="xs:integer" default="0"/>
+      <xs:attribute name="page-size" type="xs:integer" default="10"/>
+      <xs:attribute name="vertical" type="bool" default="true"/>
+      <xs:attributeGroup ref="rect-size"/>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="group">
     <xs:complexType>
       <xs:sequence>
@@ -261,6 +271,7 @@
         <xs:element ref="button"/>
         <xs:element ref="led"/>
         <xs:element ref="group"/>
+        <xs:element ref="slider"/>
       </xs:choice>
       <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="pages" type="xs:integer"/>
@@ -275,6 +286,7 @@
         <xs:element ref="button"/>
         <xs:element ref="led"/>
         <xs:element ref="group"/>
+        <xs:element ref="slider"/>
       </xs:choice>
       <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="framed" default="true" type="bool"/>
@@ -290,6 +302,7 @@
         <xs:element ref="button"/>
         <xs:element ref="led"/>
         <xs:element ref="group"/>
+        <xs:element ref="slider"/>
         <xs:element ref="stack"/>
         <xs:element ref="pane"/>
       </xs:choice>

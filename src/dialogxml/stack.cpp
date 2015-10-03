@@ -11,6 +11,7 @@
 #include "button.hpp"
 #include "message.hpp"
 #include "pict.hpp"
+#include "scrollbar.hpp"
 
 void cStack::attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) {
 	onClick = f;
@@ -189,6 +190,10 @@ std::string cStack::parse(ticpp::Element& who, std::string fname) {
 				auto pict = parent->parse<cPict>(*node);
 				parent->add(pict.second, pict.second->getBounds(), pict.first);
 				stack.push_back(pict.first);
+			} else if(val == "slider") {
+				auto slide = parent->parse<cScrollbar>(*node);
+				parent->add(slide.second, slide.second->getBounds(), slide.first);
+				stack.push_back(slide.first);
 			} else if(val == "button") {
 				auto button = parent->parse<cButton>(*node);
 				parent->add(button.second, button.second->getBounds(), button.first);

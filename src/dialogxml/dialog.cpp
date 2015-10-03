@@ -231,6 +231,8 @@ void cDialog::loadFromFile(std::string path){
 				controls.insert(parse<cTextMsg>(*node));
 			else if(type == "pict")
 				controls.insert(parse<cPict>(*node));
+			else if(type == "slider")
+				controls.insert(parse<cScrollbar>(*node));
 			else if(type == "button")
 				controls.insert(parse<cButton>(*node));
 			else if(type == "led")

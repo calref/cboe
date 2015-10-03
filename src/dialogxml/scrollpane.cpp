@@ -210,6 +210,9 @@ std::string cScrollPane::parse(ticpp::Element& who, std::string fname) {
 			} else if(val == "pict") {
 				auto pict = parent->parse<cPict>(*node);
 				contents.insert(pict);
+			} else if(val == "slider") {
+				auto slide = parent->parse<cScrollbar>(*node);
+				contents.insert(slide);
 			} else if(val == "button") {
 				auto button = parent->parse<cButton>(*node);
 				contents.insert(button);

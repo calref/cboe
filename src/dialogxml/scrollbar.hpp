@@ -18,8 +18,10 @@
 /// A simple vertical scrollbar.
 /// This has no coupling with scrollable data; that must be handled externally by
 /// using the methods to get the scrollbar's position.
+/// Alternatively, it can be used as a slider control.
 class cScrollbar : public cControl {
 	int pos, max, pgsz;
+	// Note: For horizontal scrollbars, up is left and down is right.
 	enum {
 		PART_UP,
 		PART_PGUP,
@@ -27,8 +29,11 @@ class cScrollbar : public cControl {
 		PART_PGDN,
 		PART_DOWN,
 	} pressedPart;
+	bool vert = true;
 	click_callback_t onClick;
 	static sf::Texture scroll_gw;
+	static const rectangle up_rect[4], down_rect[4], bar_rect[4], thumb_rect[4];
+	void draw_vertical(), draw_horizontal();
 public:
 	/// @copydoc cDialog::init()
 	static void init();
@@ -62,6 +67,9 @@ public:
 	/// The page size is the number of steps scrolled when a click is received
 	/// in the area between the arrow buttons and the scrollbar thumb.
 	long getPageSize();
+	/// Check whether the scrollbar is vertical.
+	/// @return True if it is vertical, false if it is horizontal.
+	bool isVertical();
 	/// Set the scrollbar thumb's current position.
 	/// @param to The new position.
 	void setPosition(long to);
@@ -74,6 +82,9 @@ public:
 	/// The page size is the number of steps scrolled when a click is received
 	/// in the area between the arrow buttons and the scrollbar thumb.
 	void setPageSize(long to);
+	/// Set whether the scrollbar is vertical.
+	/// @param is True to make it vertical, false to make it horizontal.
+	void setVertical(bool is);
 	void draw();
 	cScrollbar& operator=(cScrollbar& other) = delete;
 	cScrollbar(cScrollbar& other) = delete;

@@ -205,6 +205,22 @@ The `<field>` tag accepts the following attributes:
 * `tab-order` - Specifies the tab order of the field. This must be an
 integer that is unique in the dialog.
 
+The `<slider>` tag
+------------------
+
+The `<slider>` tag defines a slider control (presented with a scrollbar).
+
+The `<slider>` tag accepts the following attributes:
+
+* `vertical` - Specifies whether the slider should be shown horizontally
+or vertically. Usually defaults to true, but if `width` is provided and
+`height` is not, then it will default to false.
+* `initial` - Specifies the initial value of the slider. Must be a value
+from 0 to `max` inclusive. Defaults to 0.
+* `max` - Specifies the maximum value of the slider. This attribute is required.
+* `page-size` - Specifies how much the slider should scroll when clicking
+between the thumb and the arrow button. Defaults to 10.
+
 The `<stack>` tag
 -----------------
 
