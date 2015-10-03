@@ -335,6 +335,10 @@
       <xs:selector xpath='*'/>
       <xs:field xpath='@name'/>
     </xs:unique>
+    <xs:keyref name="defaultButton" refer="uniqueID">
+      <xs:selector xpath="."/>
+      <xs:field xpath="@defbtn"/>
+    </xs:keyref>
     <xs:keyref name="sliderLink" refer="uniqueID">
       <xs:selector xpath="slider"/>
       <xs:field xpath="@link"/>
