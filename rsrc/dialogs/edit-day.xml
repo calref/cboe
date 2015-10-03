@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='okay'>
+<dialog defbtn='okay'>
 	<field name="number" type='uint' top='36' left='133' width='75' height='16'/>
 	<pict type='dlog' num='2' top='8' left='8'/>
 	<text name='prompt' size='large' top='8' left='49' width='255' height='16'>What day would you like it to be?</text>

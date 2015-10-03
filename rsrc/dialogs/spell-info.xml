@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='done'>
+<dialog defbtn='done'>
 	<!-- Unknown offscreen PICT element -->
 	<pict name='icon' type='dlog' num='24' top='8' left='8'/>
 	<text name='type' framed='true' top='27' left='55' width='182' height='16'/>

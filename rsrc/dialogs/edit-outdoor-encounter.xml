@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='light' defbtn='okay'>
+<dialog defbtn='okay'>
 	<!-- OK button -->
 	<field name='onmeet' top='216' left='361' width='46' height='16'/>
 	<field name='onwin' top='259' left='361' width='46' height='16'/>

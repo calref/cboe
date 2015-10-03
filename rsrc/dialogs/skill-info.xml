@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='done'>
+<dialog defbtn='done'>
 	<pict type='dlog' num='24' top='8' left='8'/>
 	<text name='name' framed='true' top='30' left='106' width='156' height='16'/>
 	<text name='skp' framed='true' top='57' left='133' width='29' height='15'/>

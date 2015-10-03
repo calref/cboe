@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='cancel'>
+<dialog defbtn='cancel'>
 	<text top='190' left='11' width='184' height='18'>Hit a button or type '1'-'6'.</text>
 	<pict type='dlog' num='6' top='8' left='8'/>
 	<button name='pick1' type='regular' def-key='1' top='31' left='69'>1</button>

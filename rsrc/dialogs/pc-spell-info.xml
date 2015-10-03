@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='done'>
+<dialog defbtn='done'>
 	<!--
 	 TODO: Add width attributes to the LEDs
 	 -->

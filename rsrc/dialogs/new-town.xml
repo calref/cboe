@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='light' defbtn='okay'>
+<dialog defbtn='okay'>
 	<!-- OK Button -->
 	<field name='name' top='85' left='140' width='152' height='16'>Town name</field>
 	<button name='okay' type='regular' top='221' left='264'>OK</button>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='okay'>
+<dialog defbtn='okay'>
 	<pict name='ter' type='ter' num='0' top='10' left='9'/>
 	<text name='sign' framed='true' top='9' left='47' width='273' height='77'>Fred</text>
 	<button name='okay' type='done' def-key='enter' top='93' left='260'/>

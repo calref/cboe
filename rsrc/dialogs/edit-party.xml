@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='done'>
+<dialog defbtn='done'>
 	<!--
 	 TODO: This file is very disorganized; rearrange things to be in logical order
 	 TODO: Some things appear to overlap in this dialog, based on the XSLT rendering; I'm not sure if that's a fault of the XSLT rendering or of the dialog itself.

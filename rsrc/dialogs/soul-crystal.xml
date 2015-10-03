@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='cancel'>
+<dialog defbtn='cancel'>
 	<button name='cancel' type='regular' def-key='esc' top='145' left='238'>Cancel</button>
 	<!--
 	 TODO: What about showing the monster's graphic?

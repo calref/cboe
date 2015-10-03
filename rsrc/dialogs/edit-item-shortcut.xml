@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='light' defbtn='okay'>
+<dialog defbtn='okay'>
 	<field name='item1' type='uint' top='188' left='73' width='39' height='16'/>
 	<field name='item2' type='uint' top='216' left='73' width='39' height='16'/>
 	<field name='item3' type='uint' top='244' left='73' width='39' height='16'/>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='cancel'>
+<dialog defbtn='cancel'>
 	<button name='cancel' type='regular' top='91' left='234'>Cancel</button>
 	<button name='save' type='large' top='91' left='128'>Save First</button>
 	<pict type='dlog' num='16' top='6' left='6'/>

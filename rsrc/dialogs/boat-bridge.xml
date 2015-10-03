@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='under'>
+<dialog defbtn='under'>
 	<button name='under' type='regular' top='46' left='246'>Under</button>
 	<button name='land' type='regular' top='46' left='177'>Land</button>
 	<text top='3' left='50' width='254' height='32'>

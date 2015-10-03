@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='okay'>
+<dialog defbtn='okay'>
 	<button name='okay' type='regular' top='50' left='246'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text top='3' left='50' width='254' height='45'>

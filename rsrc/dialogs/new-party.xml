@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='okay'>
+<dialog defbtn='okay'>
 	<button name='okay' type='regular' top='161' left='248'>Create</button>
 	<button name='cancel' type='regular' def-key='esc' top='161' left='51'>Cancel</button>
 	<pict type='dlog' num='7' top='8' left='8'/>

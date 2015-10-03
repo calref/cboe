@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='cancel'>
+<dialog defbtn='cancel'>
 	<button name='cancel' type='regular' top='293' left='311'>Cancel</button>
 	<text size='large' top='9' left='130' width='126' height='17'>Start a Scenario:</text>
 	<pict type='scen' size='large' num='0' top='42' left='10'/>

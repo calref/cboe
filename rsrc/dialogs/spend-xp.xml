@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark'>
+<dialog>
 	<!--
 	 TODO: The default button might be cancel?
 	 TODO: This dialog is very disorganized.

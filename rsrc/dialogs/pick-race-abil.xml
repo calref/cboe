@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='done'>
+<dialog defbtn='done'>
 	<text size='large' top='9' left='55' width='181' height='16'>Special Characteristics:</text>
 	<pict type='dlog' num='7' top='6' left='6'/>
 	<button name='done' type='done' top='349' left='423'/>

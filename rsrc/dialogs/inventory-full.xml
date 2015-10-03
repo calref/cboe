@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark'>
+<dialog>
 	<pict type='dlog' num='2' left='8' top='8'/>
 	<text left='52' top='4' width='255' height='18'>No room in your inventory.</text>
 	<button name='okay' type='regular' def-key='enter' left='249' top='30'>OK</button>

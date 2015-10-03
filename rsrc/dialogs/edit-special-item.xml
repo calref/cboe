@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='light' defbtn='okay'>
+<dialog defbtn='okay'>
 	<field name='name' top='57' left='195' width='252' height='16'/>
 	<field name='descr' top='84' left='195' width='252' height='104'/>
 	<field name='spec' type='int' top='249' left='268' width='87' height='16'/>

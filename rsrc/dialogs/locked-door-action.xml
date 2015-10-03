@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='leave'>
+<dialog defbtn='leave'>
 	<button name='leave' type='regular' top='36' left='271'>Leave</button>
 	<button name='pick' type='large' top='36' left='161'>Pick Lock</button>
 	<button name='bash' type='large' top='36' left='50'>Bash Door</button>

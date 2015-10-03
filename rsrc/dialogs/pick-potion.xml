@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='cancel'>
+<dialog defbtn='cancel'>
 	<button name='cancel' type='regular' def-key='esc' top='303' left='415'>Cancel</button>
 	<text size='large' top='8' left='53' width='71' height='16'>Alchemy:</text>
 	<text size='large' top='29' left='53' width='32' height='16'>For:</text>
