@@ -218,11 +218,19 @@ void redraw_screen() {
 }
 
 static void frame_dlog_rect(sf::RenderWindow& target, rectangle rect) {
-	cTextMsg text(target);
-	text.setFormat(TXT_FRAME, true);
-	text.setFormat(TXT_FRAMESTYLE, 1);
-	text.setBounds(rect);
-	text.draw();
+	// dk_gray had a 0..65535 component of 12287, and med_gray had a 0..65535 component of 24574
+	static sf::Color dk_gray = {48,48,48},med_gray = {96,96,96};
+	rectangle ul_rect = rect;
+	
+	rect.inset(-2,-2);
+	ul_rect = rect;
+	ul_rect.right -= 1;
+	ul_rect.bottom -= 1;
+	
+	frame_rect(target, rect, med_gray);
+	clip_rect(target, ul_rect);
+	frame_rect(target, rect, dk_gray);
+	undo_clip(target);
 }
 
 void draw_main_screen() {

@@ -276,19 +276,19 @@ bool cControl::triggerFocusHandler(cDialog&, std::string, bool){
 	return true;
 }
 
-void cControl::drawFrame(short amt, bool med_or_lt){
+void cControl::drawFrame(short amt, bool){
 	// dk_gray had a 0..65535 component of 12287, and med_gray had a 0..65535 component of 24574
-	static sf::Color lt_gray = {224,224,224},dk_gray = {48,48,48},med_gray = {96,96,96};
+	static sf::Color lt_gray = {224,224,224},dk_gray = {48,48,48};
 	rectangle rect = frame, ul_rect;
 	
 	inWindow->setActive();
 	
 	rect.inset(-amt,-amt);
 	ul_rect = rect;
-	ul_rect.left -= 1;
-	ul_rect.top -= 1;
+	ul_rect.right -= 1;
+	ul_rect.bottom -= 1;
 	
-	frame_rect(*inWindow, rect, med_or_lt ? med_gray : lt_gray);
+	frame_rect(*inWindow, rect, lt_gray);
 	clip_rect(*inWindow, ul_rect);
 	frame_rect(*inWindow, rect, dk_gray);
 	undo_clip(*inWindow);
