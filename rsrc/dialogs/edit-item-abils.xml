@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='light' defbtn='okay' debug='true'>
+<dialog skin='light' defbtn='okay'>
 	<button name='okay' type='regular' top='281' left='471'>OK</button>
 	<button name='cancel' type='regular' top='281' left='405' def-key='esc'>Cancel</button>
 	<text name='use-title' top='140' left='8' width='135' height='13'>Item use properties</text>

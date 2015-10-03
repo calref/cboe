@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay' debug='true'>
+<dialog defbtn='okay'>
 	<field name='text' type='text' top='40' left='55' width='293' height='98'/>
 	<button name='left' type='left' top='147' left='6'/>
 	<button name='right' type='right' top='147' left='69'/>

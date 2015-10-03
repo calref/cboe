@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay' debug='true'>
+<dialog defbtn='okay'>
 	<field name='str1' top='55' left='57' width='545' height='48'/>
 	<field name='str2' top='111' left='57' width='545' height='48'/>
 	<field name='str3' top='167' left='57' width='545' height='48'/>

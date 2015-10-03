@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='light' defbtn='okay' debug='true'>
+<dialog skin='light' defbtn='okay'>
 	<!-- OK button -->
 	<field name='time1' top='122' left='146' width='67' height='16'/>
 	<field name='time2' top='150' left='146' width='67' height='16'/>

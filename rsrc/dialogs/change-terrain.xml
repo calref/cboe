@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='light' defbtn='okay' debug='true'>
+<dialog skin='light' defbtn='okay'>
 	<!-- OK button -->
 	<field name='from' type='uint' top='99' left='205' width='64' height='17'>0</field>
 	<field name='to' type='uint' top='125' left='205' width='64' height='17'>0</field>

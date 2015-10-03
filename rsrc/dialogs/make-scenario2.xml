@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='light' defbtn='okay' debug='true'>
+<dialog skin='light' defbtn='okay'>
 	<!-- OK Button -->
 	<field name='out-w' type='uint' top='99' left='309' width='75' height='16'>1</field>
 	<field name='out-h' type='uint' top='125' left='309' width='75' height='16'>1</field>

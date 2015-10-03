@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='light' defbtn='okay' debug='true'>
+<dialog skin='light' defbtn='okay'>
 	<field name='town1' type='int' top='100' left='214' width='67' height='16'/>
 	<field name='town2' type='int' top='128' left='214' width='67' height='16'/>
 	<field name='town3' type='int' top='156' left='214' width='67' height='16'/>

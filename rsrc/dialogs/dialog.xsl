@@ -71,6 +71,7 @@
 
 <xsl:template match='pict'>
 	<div>
+	
 	<xsl:attribute name='class'>
 		pict
 		<xsl:if test='@framed = "true" or not(@framed)'>framed </xsl:if>
@@ -86,13 +87,13 @@
 	<xsl:choose>
 		<xsl:when test='@type = "full"'>
 			<xsl:attribute name='style'>
-			background-image: url('img/other/<xsl:value-of select='./@num'/>.png');
+				background-image: url('img/other/<xsl:value-of select='./@num'/>.png');
 				<xsl:call-template name='set-bounds'/>
 			</xsl:attribute>
 		</xsl:when>
 		<xsl:when test='@type = "blank"'>
 			<xsl:attribute name='style'>
-			background-color: black;
+				background-color: black;
 				<xsl:call-template name='set-bounds'>
 					<xsl:with-param name='setHeight'>false</xsl:with-param>
 					<xsl:with-param name='setWidth'>false</xsl:with-param>
@@ -101,7 +102,7 @@
 		</xsl:when>
 		<xsl:when test='@size = "large" and @type != "monst"'>
 			<xsl:attribute name='style'>
-			background-image: url('img/<xsl:value-of select='./@type'/>/large<xsl:value-of select='./@num'/>.png');
+				background-image: url('img/<xsl:value-of select='./@type'/>/large<xsl:value-of select='./@num'/>.png');
 				<xsl:call-template name='set-bounds'>
 					<xsl:with-param name='setHeight'>false</xsl:with-param>
 					<xsl:with-param name='setWidth'>false</xsl:with-param>
@@ -110,7 +111,7 @@
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:attribute name='style'>
-			background-image: url('img/<xsl:value-of select='./@type'/>/<xsl:value-of select='./@num'/>.png');
+				background-image: url('img/<xsl:value-of select='./@type'/>/<xsl:value-of select='./@num'/>.png');
 				<xsl:call-template name='set-bounds'>
 					<xsl:with-param name='setHeight'>false</xsl:with-param>
 					<xsl:with-param name='setWidth'>false</xsl:with-param>
@@ -118,11 +119,13 @@
 			</xsl:attribute>
 		</xsl:otherwise>
 	</xsl:choose>
+	
 	</div>
 </xsl:template>
 
 <xsl:template match='button'>
 	<div>
+	
 	<xsl:attribute name='class'>
 		<xsl:if test='/dialog/@debug = "true" and @type = "tiny"'>debug</xsl:if>
 		button <xsl:value-of select='./@type'/>
@@ -145,11 +148,13 @@
 		</xsl:if>
 	</xsl:attribute>
 	<xsl:value-of select='.'/>
+	
 	</div>
 </xsl:template>
 
 <xsl:template match='led'>
 	<div>
+	
 	<xsl:attribute name='class'>
 		led 
 		<xsl:if test='/dialog/@debug = "true"'>debug</xsl:if>
@@ -174,11 +179,13 @@
 		<xsl:call-template name='set-bounds'/>
 	</xsl:attribute>
 	<xsl:value-of select='.'/>
+	
 	</div>
 </xsl:template>
 
 <xsl:template match='group/led'>
 	<div>
+	
 	<xsl:attribute name='class'>
 		led 
 		<xsl:if test='/dialog/@debug = "true"'>debug</xsl:if>
@@ -203,11 +210,13 @@
 		<xsl:call-template name='set-bounds'/>
 	</xsl:attribute>
 	<xsl:value-of select='.'/>
+	
 	</div>
 </xsl:template>
 
 <xsl:template match='text'>
 	<div>
+	
 	<xsl:attribute name='class'>
 		text
 		<xsl:if test='@framed = "true"'>framed </xsl:if>
@@ -235,27 +244,33 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:for-each>
+	
 	</div>
 </xsl:template>
 
 <xsl:template match='field'>
 	<div class='tfield'>
+	
 	<xsl:attribute name='style'>
 		<xsl:call-template name='set-bounds'/>
 	</xsl:attribute>
+	
 	<div class='tfield-inner'>
+	
 	<xsl:attribute name='style'>
 		width: <xsl:value-of select='./@width'/>px; height: <xsl:value-of select='./@height'/>px;
 		font-family: 'DejaVu Sans', Geneva;
 		font-size: 12px;
 	</xsl:attribute>
 	(<xsl:value-of select='@name'/>)
+	
 	</div>
 	</div>
 </xsl:template>
 
 <xsl:template match='stack'>
 	<div class='stack'>
+	
 	<xsl:attribute name='style'>
 		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;
 		font-family: <xsl:value-of select='./@font'/>;
@@ -269,6 +284,7 @@
 
 <xsl:template match='pane'>
 	<div>
+	
 	<xsl:attribute name='class'>
 		pane
 		<xsl:if test='@framed = "true"'>framed </xsl:if>

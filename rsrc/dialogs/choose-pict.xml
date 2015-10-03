@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done' debug='true'>
+<dialog defbtn='done'>
 	<pict name='mainpic' type='dlog' num='16' top='6' left='6'/>
 	<text name='prompt' size='large' top='6' left='50' width='248' height='14'>Select a graphic:</text>
 	<group name='group'>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='light' defbtn='okay' debug='true'>
+<dialog skin='light' defbtn='okay'>
 	<field name='name' top='34' left='351' width='125' height='32'>Scenario name</field>
 	<field name='author' top='96' left='351' width='125' height='16'>Your name</field>
 	<button name='okay' type='regular' top='205' left='424'>OK</button>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog skin='dark' defbtn='cast' debug='true'>
+<dialog skin='dark' defbtn='cast'>
 	<!-- Unexpected button control -->
 	<pict name='pic' type='dlog' num='12' top='9' left='9'/>
 	<text size='large' top='6' left='54' width='139' height='18'>Select a Spell:</text>
