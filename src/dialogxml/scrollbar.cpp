@@ -232,7 +232,18 @@ void cScrollbar::draw_horizontal() {
 		int left = draw_rect.right, right = frame.right - btn_size;
 		if(depressed && pressedPart == PART_PGDN)
 			from_rect = bar_rect[style][HORZ_PRESSED];
-		draw_rect.left = left;
+		// Make sure the pattern lines up the same on both sides of the thumb
+		int diff = left % btn_size - frame.left % btn_size;
+		if(diff < 0) diff += btn_size;
+		draw_rect.left = left - diff;
+		draw_rect.right = draw_rect.left + btn_size;
+		rectangle clip_rec = frame;
+		clip_rec.left = left;
+		clip_rec.right = draw_rect.right;
+		clip_rect(*inWindow, clip_rec);
+		rect_draw_some_item(scroll_gw[style], from_rect, *inWindow, draw_rect);
+		undo_clip(*inWindow);
+		draw_rect.left += btn_size;
 		while(draw_rect.left < right) {
 			draw_rect.right = draw_rect.left + btn_size;
 			rect_draw_some_item(scroll_gw[style], from_rect, *inWindow, draw_rect);
@@ -283,7 +294,18 @@ void cScrollbar::draw_vertical() {
 		int top = draw_rect.bottom, bottom = frame.bottom - btn_size;
 		if(depressed && pressedPart == PART_PGDN)
 			from_rect = bar_rect[style][VERT_PRESSED];
-		draw_rect.top = top;
+		// Make sure the pattern lines up the same on both sides of the thumb
+		int diff = top % btn_size - frame.top % btn_size;
+		if(diff < 0) diff += btn_size;
+		draw_rect.top = top - diff;
+		draw_rect.bottom = draw_rect.top + btn_size;
+		rectangle clip_rec = frame;
+		clip_rec.top = top;
+		clip_rec.bottom = draw_rect.bottom;
+		clip_rect(*inWindow, clip_rec);
+		rect_draw_some_item(scroll_gw[style], from_rect, *inWindow, draw_rect);
+		undo_clip(*inWindow);
+		draw_rect.top += btn_size;
 		while(draw_rect.top < bottom) {
 			draw_rect.bottom = draw_rect.top + btn_size;
 			rect_draw_some_item(scroll_gw[style], from_rect, *inWindow, draw_rect);
