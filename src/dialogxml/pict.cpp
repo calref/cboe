@@ -516,7 +516,6 @@ std::string cPict::parse(ticpp::Element& who, std::string fname) {
 		}else if(name == "def-key"){
 			std::string val;
 			attr->GetValue(&val);
-			// TODO: The modifiers are now in key-mod, so this needs to be updated
 			try{
 				attachKey(parseKey(val));
 			}catch(int){

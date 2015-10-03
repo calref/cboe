@@ -13,12 +13,12 @@
 	<!--
 	 TODO: Use the <key/> element here.
 	 -->
-	<button name='target1' type='small' def-key='1' key-mod='shift' top='82' left='235'>!</button>
-	<button name='target2' type='small' def-key='2' key-mod='shift' top='106' left='235'>@</button>
-	<button name='target3' type='small' def-key='3' key-mod='shift' top='130' left='235'>#</button>
-	<button name='target4' type='small' def-key='4' key-mod='shift' top='154' left='235'>$</button>
-	<button name='target5' type='small' def-key='5' key-mod='shift' top='178' left='235'>%</button>
-	<button name='target6' type='small' def-key='6' key-mod='shift' top='202' left='235'>^</button>
+	<button name='target1' type='small' def-key='shift 1' top='82' left='235'>!</button>
+	<button name='target2' type='small' def-key='shift 2' top='106' left='235'>@</button>
+	<button name='target3' type='small' def-key='shift 3' top='130' left='235'>#</button>
+	<button name='target4' type='small' def-key='shift 4' top='154' left='235'>$</button>
+	<button name='target5' type='small' def-key='shift 5' top='178' left='235'>%</button>
+	<button name='target6' type='small' def-key='shift 6' top='202' left='235'>^</button>
 	<button name='cancel' type='regular' def-key='esc' top='394' left='479'>Cancel</button>
 	<button name='cast' type='regular' top='394' left='549'>Cast</button>
 	<text name='pc1' top='84' left='88' width='122' height='16'/>
@@ -92,7 +92,7 @@
 		key by spell to cast spell.
 		Option-click spell name for description.
 	</text>
-	<button name='help' type='help' def-key='/' key-mod='shift' top='6' left='596'/>
+	<button name='help' type='help' def-key='help' top='6' left='596'/>
 	<text name='col1' top='227' left='10' width='100' height='16'/>
 	<text name='col2' top='227' left='162' width='100' height='16'/>
 	<text name='col3' top='227' left='326' width='100' height='16'/>

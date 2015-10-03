@@ -105,5 +105,5 @@
 	<button name='left' type='left' top='455' left='11'/>
 	<button name='right' type='right' top='455' left='74'/>
 	<text top='7' left='431' height='50' width='157'>Enter properties for this terrain type. For a detailed description of the fields, see the documentation.</text>
-	<button name='help' type='help' def-key='/' key-mod='shift' top='5' left='588'/>
+	<button name='help' type='help' def-key='help' top='5' left='588'/>
 </dialog>

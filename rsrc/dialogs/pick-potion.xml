@@ -55,5 +55,5 @@
 	<text name='label19' framed='true' top='259' left='311' width='160' height='16'/>
 	<button name='potion20' type='small' top='280' left='278'>20</button>
 	<text name='label20' framed='true' top='282' left='311' width='160' height='16'/>
-	<button name='help' type='help' top='8' left='448'/>
+	<button name='help' type='help' def-key='help' top='8' left='448'/>
 </dialog>

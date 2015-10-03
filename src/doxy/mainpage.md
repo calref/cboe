@@ -28,7 +28,7 @@ rect of the control within the dialog. All non-container controls
 support these attributes, and in fact the `top` and `left` attributes
 are required. Some controls may ignore the `width` and `height`
 attributes.
-* `def-key`, `key-mod` - Specifies the default keyboard shortcut for the
+* `def-key` - Specifies the default keyboard shortcut for the
 control. See **Keyboard Shortcuts** below for more information on the
 format of these attributes.
 * `font`, `size`, `color`, `colour` - Specifies text attributes of the
@@ -70,7 +70,7 @@ either `true` or `false`; defaults to `false`.
 * `clickable` - Specifies that the text is clickable. This attribute is
 useless, as clickability is determined solely by having a click handler
 set in the code.
-* `fromlist`, `font`, `size`, `color`, `colour`, `def-key`, `key-mod` -
+* `fromlist`, `font`, `size`, `color`, `colour`, `def-key` -
 See **Common Attributes** above.
 
 The `<button>` tag
@@ -89,7 +89,7 @@ The `<button>` tag accepts the following attributes:
 * `type` - Specifies the type of button. This attribute is required.
 * `wrap` - Specifies whether to wrap the text on the button. Can be
 either `true` or `false`; defaults to `false`.
-* `fromlist`, `def-key`, `key-mod` - See **Common Attributes** above.
+* `fromlist`, `def-key` - See **Common Attributes** above.
 
 The possible values for the `type` attribute are:
 
@@ -162,7 +162,7 @@ either `true` or `false`; defaults to `false`.
 be either `true` or `false`; defaults to `true`.
 * `size` - For certain types of graphics, this provides an additional
 hint. Can be one of `small`, `wide`, `tall`, or `large`.
-* `def-key`, `key-mod` - See **Common Attributes** above.
+* `def-key` - See **Common Attributes** above.
 
 The possible values for the `type` attribute are:
 
@@ -252,10 +252,10 @@ be either `true` or `false`; defaults to `true`.
 Keyboard Shortcuts
 ------------------
 
-Keyboard shortcuts are specified with a pair of attributes.
+Keyboard shortcuts are specified with the `def-key` attribute.
 
-The `def-key` attribute specifies the main key that triggers the
-control. It can take any of the following values:
+The `def-key` attribute is a space separated list of values. The final value in this list
+specifies the main key that triggers the control. It can be any of the following values:
 
 * A single digit
 * A lowercase letter
@@ -274,14 +274,17 @@ is implemented though.)
 * `tab` - The tab key.
 * `help` - The help key (on keyboards that have one) or the F1 key.
 * `space` - The space key.
-* `none` - No key shortcut (the default).
 
-The `key-mod` attribute contains a space-separated list of any of the
-following values:
+Preceding values in the `def-key` attribute specify the modifiers to be used with the key.
+Any of the following values is allowed:
 
 * `ctrl` - The primary accelerator key (either control or command).
 * `shift` - The shift key
 * `alt` - The alt or option key
+
+The following special value is also allowed for the `def-key` attribute:
+
+* `none` - No key shortcut (the default).
 
 Text Formatting
 ---------------

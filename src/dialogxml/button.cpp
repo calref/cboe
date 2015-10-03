@@ -123,9 +123,6 @@ std::string cButton::parse(ticpp::Element& who, std::string fname) {
 	std::string name, id;
 	int width = 0, height = 0;
 	bool foundType = false, foundTop = false, foundLeft = false; // required attributes
-	bool foundKey = false;
-	std::string keyMod, keyMain;
-	int keyModRow, keyModCol, keyMainRow, keyMainCol;
 	rectangle frame;
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		attr->GetName(&name);
@@ -176,15 +173,13 @@ std::string cButton::parse(ticpp::Element& who, std::string fname) {
 			}
 			setColour(clr);
 		}else if(name == "def-key"){
-			attr->GetValue(&keyMain);
-			foundKey = true;
-			keyMainRow = attr->Row();
-			keyMainCol = attr->Column();
-		}else if(name == "key-mod"){
-			attr->GetValue(&keyMod);
-			foundKey = true;
-			keyModRow = attr->Row();
-			keyModCol = attr->Column();
+			std::string val;
+			attr->GetValue(&val);
+			try{
+				attachKey(parseKey(val));
+			}catch(int){
+				throw xBadVal("button",name,val,attr->Row(),attr->Column(),fname);
+			}
 //		}else if(name == "fromlist"){
 //			attr->GetValue(&fromList);
 		}else if(name == "top"){
@@ -202,20 +197,6 @@ std::string cButton::parse(ticpp::Element& who, std::string fname) {
 	if(!foundType) throw xMissingAttr("button","type",who.Row(),who.Column(),fname);
 	if(!foundTop) throw xMissingAttr("button","top",who.Row(),who.Column(),fname);
 	if(!foundLeft) throw xMissingAttr("button","left",who.Row(),who.Column(),fname);
-	if(foundKey) {
-		cKey theKey;
-		try{
-			theKey = parseKey(keyMod + " " + keyMain);
-		}catch(int){
-			try {
-				theKey = parseKey(keyMain);
-			}catch(int){
-				throw xBadVal("button","def-key",keyMain,keyMainRow,keyMainCol,fname);
-			}
-			throw xBadVal("button","key-mod",keyMod,keyModRow,keyModCol,fname);
-		}
-		attachKey(theKey);
-	}
 	switch(getBtnType()){
 		case BTN_SM:
 			frame.right = frame.left + 23;

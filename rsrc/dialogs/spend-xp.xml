@@ -89,5 +89,5 @@
 	<text top='365' left='6' width='382' height='16'>Cost: (Skill pts./Gold)    Option-click for description</text>
 	<text top='344' left='71' width='68' height='16'>Skill Pts.:</text>
 	<text top='344' left='252' width='42' height='16'>Gold:</text>
-	<button name='help' type='help' def-key='/' key-mod='shift' top='6' left='506'/>
+	<button name='help' type='help' def-key='help' top='6' left='506'/>
 </dialog>

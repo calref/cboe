@@ -45,7 +45,7 @@
 	<button name='pic4' type='tall' top='185' left='455'>Graphic</button>
 	<button name='pic5' type='tall' top='230' left='455'>Graphic</button>
 	<button name='pic6' type='tall' top='275' left='455'>Graphic</button>
-	<button name='help' type='help' def-key='/' key-mod='shift' top='4' left='498'/>
+	<button name='help' type='help' def-key='help' top='4' left='498'/>
 	<pict name='pc1' type='pc' num='0' top='52' left='12'/>
 	<pict name='pc2' type='pc' num='0' top='97' left='12'/>
 	<pict name='pc3' type='pc' num='0' top='142' left='12'/>

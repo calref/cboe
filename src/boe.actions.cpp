@@ -1722,6 +1722,9 @@ bool handle_keystroke(sf::Event& event){
 	}
 	
 	char chr = keyToChar(chr2, event.key.shift);
+	// F1 should bring up help.
+	// TODO: So should the help key, if it exists (but SFML doesn't support the help key)
+	if(chr2 == kb::F1) chr = '?';
 	
 	switch(chr) {
 			

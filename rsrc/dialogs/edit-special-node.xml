@@ -24,7 +24,7 @@
 	
 	<text size='large' top='28' left='50' width='158' height='16'>Special Type:</text>
 	<text name='type' framed='true' top='28' left='214' width='187' height='16'/>
-	<button name='node-help' type='help' top='28' left='410'/>
+	<button name='node-help' type='help' def-key='help' top='28' left='410'/>
 	
 	
 	<text size='large' top='102' left='8' width='158' height='16'>Stuff Done Flags:</text>

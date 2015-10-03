@@ -41,64 +41,7 @@
     <xs:union>
       <xs:simpleType>
         <xs:restriction base="xs:string">
-          <xs:enumeration value="0"/>
-          <xs:enumeration value="1"/>
-          <xs:enumeration value="2"/>
-          <xs:enumeration value="3"/>
-          <xs:enumeration value="4"/>
-          <xs:enumeration value="5"/>
-          <xs:enumeration value="6"/>
-          <xs:enumeration value="7"/>
-          <xs:enumeration value="8"/>
-          <xs:enumeration value="9"/>
-          <xs:enumeration value="a"/>
-          <xs:enumeration value="b"/>
-          <xs:enumeration value="c"/>
-          <xs:enumeration value="d"/>
-          <xs:enumeration value="e"/>
-          <xs:enumeration value="f"/>
-          <xs:enumeration value="g"/>
-          <xs:enumeration value="h"/>
-          <xs:enumeration value="i"/>
-          <xs:enumeration value="j"/>
-          <xs:enumeration value="k"/>
-          <xs:enumeration value="l"/>
-          <xs:enumeration value="m"/>
-          <xs:enumeration value="n"/>
-          <xs:enumeration value="o"/>
-          <xs:enumeration value="p"/>
-          <xs:enumeration value="q"/>
-          <xs:enumeration value="r"/>
-          <xs:enumeration value="s"/>
-          <xs:enumeration value="t"/>
-          <xs:enumeration value="u"/>
-          <xs:enumeration value="v"/>
-          <xs:enumeration value="w"/>
-          <xs:enumeration value="x"/>
-          <xs:enumeration value="y"/>
-          <xs:enumeration value="z"/>
-          <xs:enumeration value="`"/>
-          <xs:enumeration value="-"/>
-          <xs:enumeration value="="/>
-          <xs:enumeration value="["/>
-          <xs:enumeration value="]"/>
-          <xs:enumeration value="\"/>
-          <xs:enumeration value=";"/>
-          <xs:enumeration value="'"/>
-          <xs:enumeration value=","/>
-          <xs:enumeration value="."/>
-          <xs:enumeration value="/"/>
-          <xs:enumeration value="left"/>
-          <xs:enumeration value="right"/>
-	      <xs:enumeration value="up"/>
-          <xs:enumeration value="down"/>
-          <xs:enumeration value="esc"/>
-          <xs:enumeration value="enter"/>
-          <xs:enumeration value="return"/>
-          <xs:enumeration value="tab"/>
-          <xs:enumeration value="help"/>
-          <xs:enumeration value="space"/>
-          <xs:enumeration value="none"/>
+          <xs:pattern value="(ctrl +|alt +|shift +)*(\d|[a-z`=;',./-]|\[|\]|\\|left|right|up|down|esc|enter|return|tab|help|space)|none"/>
         </xs:restriction>
       </xs:simpleType>
     </xs:union>
@@ -126,10 +69,7 @@
     <xs:attribute name="width" type="xs:integer"/>
     <xs:attribute name="height" type="xs:integer"/>
   </xs:attributeGroup>
-  <xs:attributeGroup name="keys">
-    <xs:attribute name="def-key" type="key"/>
-    <xs:attribute name="key-mod" type="mod"/>
-  </xs:attributeGroup>
+  <xs:attribute name="def-key" type="key"/>
   <xs:attributeGroup name="font">
     <xs:attribute name="font" default="bold">
       <xs:simpleType>
@@ -184,7 +124,7 @@
       <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="framed" default="false" type="bool"/>
       <xs:attributeGroup ref="font"/>
-      <xs:attributeGroup ref="keys"/>
+      <xs:attribute ref="def-key"/>
       <xs:attribute name="clickable" default="false" type="bool"/>
       <xs:attribute name="fromlist" default="none" type="xs:string"/>
       <xs:attributeGroup ref="rect-size"/>
@@ -207,7 +147,7 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
-      <xs:attributeGroup ref="keys"/>
+      <xs:attribute ref="def-key"/>
       <xs:attribute name="clickable" default="false" type="bool"/>
       <xs:attribute name="num" use="required" type="xs:integer"/>
       <xs:attributeGroup ref="rect-size"/>
@@ -223,7 +163,7 @@
       <xs:attribute name="name" use="required" type="xs:token"/>
       <xs:attribute name="type" use="required" type="btntype"/>
       <xs:attribute name="wrap" default="false" type="bool"/>
-      <xs:attributeGroup ref="keys"/>
+      <xs:attribute ref="def-key"/>
       <xs:attribute name="fromlist" default="none" type="xs:string"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
