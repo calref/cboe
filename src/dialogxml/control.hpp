@@ -64,7 +64,7 @@ typedef std::function<bool(cDialog&,std::string,eKeyMod)> click_callback_t;
 typedef std::function<bool(cDialog&,std::string,bool)> focus_callback_t;
 
 /// Thrown when you try to set a handler that the control does not support.
-class xHandlerNotSupported : std::exception {
+class xHandlerNotSupported : public std::exception {
 	static const char* focusMsg;
 	static const char* clickMsg;
 	bool isFocus;
@@ -73,20 +73,20 @@ public:
 	/// @param isFocus true to indicate a focus event, false for a click event.
 	xHandlerNotSupported(bool isFocus);
 	/// @return The error message.
-	const char* what();
+	const char* what() const throw();
 };
 
 /// Thrown when you try to set or retrieve a formatting property that the control does not support.
-class xUnsupportedProp : std::exception {
+class xUnsupportedProp : public std::exception {
 	eFormat whichProp;
-	char* msg;
+	mutable char* msg;
 public:
 	/// Construct a new exception.
 	/// @param prop The unsupported format property.
 	xUnsupportedProp(eFormat prop) throw();
 	~xUnsupportedProp() throw();
 	/// @return The error message.
-	const char* what() throw();
+	const char* what() const throw();
 };
 
 /// The superclass of all dialog controls.

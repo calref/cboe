@@ -163,6 +163,7 @@ private:
 class cLedGroup : public cContainer {
 	click_callback_t onClick;
 	focus_callback_t onFocus;
+	bool drawFramed;
 	std::map<std::string,cLed*> choices;
 	std::string fromList;
 	std::string curSelect, prevSelect;

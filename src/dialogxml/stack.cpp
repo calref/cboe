@@ -13,6 +13,15 @@
 #include "pict.hpp"
 #include "scrollbar.hpp"
 
+bool cStack::hasChild(std::string id) {
+	return controls.find(id) != controls.end();
+}
+
+cControl& cStack::getChild(std::string id) {
+	if(!hasChild(id)) throw std::invalid_argument(id + " was not found in the stack");
+	return *controls[id];
+}
+
 void cStack::attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) {
 	onClick = f;
 }
@@ -21,23 +30,21 @@ void cStack::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported) {
 	throw xHandlerNotSupported(true);
 }
 
-// TODO: The only reason the handleClick and delegation here is needed is because the engine currently has no concept of layering.
-// This means a stack hides any of its controls that happen to end up underneath it.
 bool cStack::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods) {
 	std::string which_clicked = clicking;
 	clicking = "";
 	
 	if(onClick) onClick(me, id, mods);
-	return parent->getControl(which_clicked).triggerClickHandler(me, id, mods);
+	return controls[which_clicked]->triggerClickHandler(me, which_clicked, mods);
 }
 
 bool cStack::handleClick(location where) {
 	std::string which_clicked;
 	auto iter = controls.begin();
 	while(iter != controls.end()){
-		if(parent->getControl(*iter).isVisible() && where.in(parent->getControl(*iter).getBounds())){
-			if(parent->getControl(*iter).handleClick(where)) {
-				which_clicked = *iter;
+		if(iter->second->isVisible() && where.in(iter->second->getBounds())){
+			if(iter->second->handleClick(where)) {
+				which_clicked = iter->first;
 				break;
 			}
 		}
@@ -50,11 +57,15 @@ bool cStack::handleClick(location where) {
 	return true;
 }
 
-void cStack::setFormat(eFormat prop, short) throw(xUnsupportedProp) {
-	throw xUnsupportedProp(prop);
+void cStack::setFormat(eFormat prop, short val) throw(xUnsupportedProp) {
+	if(prop == TXT_FRAME) drawFramed = val;
+	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
+	else throw xUnsupportedProp(prop);
 }
 
 short cStack::getFormat(eFormat prop) throw(xUnsupportedProp) {
+	if(prop == TXT_FRAME) return drawFramed;
+	else if(prop == TXT_FRAMESTYLE) return frameStyle;
 	throw xUnsupportedProp(prop);
 }
 
@@ -71,15 +82,22 @@ bool cStack::isClickable() {
 	return true;
 }
 
-void cStack::draw() {}
+void cStack::draw() {
+	if(!isVisible()) return;
+	for(auto& p : controls) {
+		p.second->draw();
+	}
+	if(drawFramed) drawFrame(2, frameStyle);
+}
 
 bool cStack::setPage(size_t n) {
 	if(n >= nPages) return false;
 	if(n == curPage) return true;
 	cTextField* focus = parent->getFocus();
 	bool failed = false;
-	for(auto id : controls) {
-		cControl& ctrl = parent->getControl(id);
+	for(auto p : controls) {
+		const std::string& id = p.first;
+		cControl& ctrl = *p.second;
 		storage[curPage][id] = ctrl.store();
 		if(!ctrl.triggerFocusHandler(*parent, id, true))
 			failed = true;
@@ -119,7 +137,7 @@ void cStack::recalcRect() {
 	auto iter = controls.begin();
 	frame = {INT_MAX, INT_MAX, 0, 0};
 	while(iter != controls.end()){
-		cControl& ctrl = parent->getControl(*iter);
+		cControl& ctrl = *iter->second;
 		rectangle otherFrame = ctrl.getBounds();
 		if(otherFrame.right > frame.right)
 			frame.right = otherFrame.right;
@@ -134,15 +152,9 @@ void cStack::recalcRect() {
 	frame.inset(-6,-6);
 }
 
-cControl& cStack::operator[](std::string id) {
-	auto iter = std::find(controls.begin(), controls.end(), id);
-	if(iter == controls.end()) throw std::invalid_argument(id + " does not exist in the stack.");
-	return parent->getControl(id);
-}
-
 void cStack::fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& reverseTabs) {
-	for(auto id : controls) {
-		cControl& ctrl = parent->getControl(id);
+	for(auto p : controls) {
+		cControl& ctrl = *p.second;
 		if(ctrl.getType() == CTRL_FIELD) {
 			cTextField& field = dynamic_cast<cTextField&>(ctrl);
 			if(field.tabOrder > 0)
@@ -153,7 +165,7 @@ void cStack::fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& reve
 	}
 }
 
-cStack::cStack(cDialog& parent) : cControl(CTRL_STACK, parent), curPage(0), nPages(0) {}
+cStack::cStack(cDialog& parent) : cContainer(CTRL_STACK, parent), curPage(0), nPages(0) {}
 
 std::string cStack::parse(ticpp::Element& who, std::string fname) {
 	using namespace ticpp;
@@ -168,9 +180,19 @@ std::string cStack::parse(ticpp::Element& who, std::string fname) {
 			size_t val;
 			attr->GetValue(&val);
 			setPageCount(val);
+		}else if(name == "framed"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true") setFormat(TXT_FRAME, true);
+		}else if(name == "outline") {
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "solid") setFormat(TXT_FRAMESTYLE, FRM_SOLID);
+			else if(val == "inset") setFormat(TXT_FRAMESTYLE, FRM_INSET);
+			else if(val == "outset") setFormat(TXT_FRAMESTYLE, FRM_OUTSET);
+			else if(val == "double") setFormat(TXT_FRAMESTYLE, FRM_DOUBLE);
 		} else throw xBadAttr("stack",name,attr->Row(),attr->Column(),fname);
 	}
-	std::vector<std::string> stack;
 	for(node = node.begin(&who); node != node.end(); node++) {
 		std::string val;
 		int type = node->Type();
@@ -178,39 +200,31 @@ std::string cStack::parse(ticpp::Element& who, std::string fname) {
 		if(type == TiXmlNode::ELEMENT) {
 			if(val == "field") {
 				auto field = parent->parse<cTextField>(*node);
-				parent->add(field.second, field.second->getBounds(), field.first);
-				stack.push_back(field.first);
+				controls.insert(field);
 				// TODO: Add field to tab order
 				//tabOrder.push_back(field);
 			} else if(val == "text") {
 				auto text = parent->parse<cTextMsg>(*node);
-				parent->add(text.second, text.second->getBounds(), text.first);
-				stack.push_back(text.first);
+				controls.insert(text);
 			} else if(val == "pict") {
 				auto pict = parent->parse<cPict>(*node);
-				parent->add(pict.second, pict.second->getBounds(), pict.first);
-				stack.push_back(pict.first);
+				controls.insert(pict);
 			} else if(val == "slider") {
 				auto slide = parent->parse<cScrollbar>(*node);
-				parent->add(slide.second, slide.second->getBounds(), slide.first);
-				stack.push_back(slide.first);
+				controls.insert(slide);
 			} else if(val == "button") {
 				auto button = parent->parse<cButton>(*node);
-				parent->add(button.second, button.second->getBounds(), button.first);
-				stack.push_back(button.first);
+				controls.insert(button);
 			} else if(val == "led") {
 				auto led = parent->parse<cLed>(*node);
-				parent->add(led.second, led.second->getBounds(), led.first);
-				stack.push_back(led.first);
+				controls.insert(led);
 			} else if(val == "group") {
 				auto group = parent->parse<cLedGroup>(*node);
-				parent->add(group.second, group.second->getBounds(), group.first);
-				stack.push_back(group.first);
+				controls.insert(group);
 			} else throw xBadNode(val,node->Row(),node->Column(),fname);
 		} else if(type != TiXmlNode::COMMENT)
 			throw xBadVal("stack",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
 	}
-	controls = stack;
 	recalcRect();
 	return id;
 }

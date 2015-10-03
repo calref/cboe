@@ -77,6 +77,10 @@
     <xs:attribute name="width" type="xs:integer"/>
     <xs:attribute name="height" type="xs:integer"/>
   </xs:attributeGroup>
+  <xs:attributeGroup name="frame">
+    <xs:attribute name="framed" default="false" type="bool"/>
+    <xs:attribute name="outline" default="inset" type="frameStyle"/>
+  </xs:attributeGroup>
   <xs:attribute name="def-key" type="key"/>
   <xs:attributeGroup name="font">
     <xs:attribute name="font" default="bold">
@@ -130,8 +134,7 @@
         </xs:element>
       </xs:sequence>
       <xs:attribute name="name" type="xs:token"/>
-      <xs:attribute name="framed" default="false" type="bool"/>
-      <xs:attribute name="outline" default="inset" type="frameStyle"/>
+      <xs:attributeGroup ref="frame"/>
       <xs:attributeGroup ref="font"/>
       <xs:attribute ref="def-key"/>
       <xs:attribute name="clickable" default="false" type="bool"/>
@@ -217,6 +220,7 @@
         <xs:element maxOccurs="unbounded" ref="led"/>
       </xs:sequence>
       <xs:attribute name="name" type="xs:token"/>
+      <xs:attributeGroup ref="frame"/>
       <xs:attribute name="fromlist" default="none" type="xs:string"/>
     </xs:complexType>
   </xs:element>
@@ -232,6 +236,7 @@
         <xs:element ref="slider"/>
       </xs:choice>
       <xs:attribute name="name" type="xs:token"/>
+      <xs:attributeGroup ref="frame"/>
       <xs:attribute name="pages" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
@@ -247,8 +252,7 @@
         <xs:element ref="slider"/>
       </xs:choice>
       <xs:attribute name="name" type="xs:token"/>
-      <xs:attribute name="framed" default="true" type="bool"/>
-      <xs:attribute name="outline" default="inset" type="frameStyle"/>
+      <xs:attributeGroup ref="frame"/>
       <xs:attribute name="style" type="scrollStyle" default="led"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>

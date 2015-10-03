@@ -651,11 +651,15 @@ void cLedGroup::hide(std::string id){
 	choices[id]->hide();
 }
 
-void cLedGroup::setFormat(eFormat prop, short) throw(xUnsupportedProp) {
-	throw xUnsupportedProp(prop);
+void cLedGroup::setFormat(eFormat prop, short val) throw(xUnsupportedProp) {
+	if(prop == TXT_FRAME) drawFramed = val;
+	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
+	else throw xUnsupportedProp(prop);
 }
 
 short cLedGroup::getFormat(eFormat prop) throw(xUnsupportedProp) {
+	if(prop == TXT_FRAME) return drawFramed;
+	else if(prop == TXT_FRAMESTYLE) return frameStyle;
 	throw xUnsupportedProp(prop);
 }
 
@@ -737,6 +741,7 @@ void cLedGroup::draw(){
 		iter->second->draw();
 		iter++;
 	}
+	if(drawFramed) drawFrame(2, frameStyle);
 }
 
 void cButton::setBtnType(eBtnType newType){
@@ -806,7 +811,18 @@ std::string cLedGroup::parse(ticpp::Element& who, std::string fname) {
 			attr->GetValue(&id);
 //		else if(name == "fromlist")
 //			attr->GetValue(&fromList);
-		else throw xBadAttr("group",name,attr->Row(),attr->Column(),fname);
+		else if(name == "framed"){
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "true") setFormat(TXT_FRAME, true);
+		}else if(name == "outline") {
+			std::string val;
+			attr->GetValue(&val);
+			if(val == "solid") setFormat(TXT_FRAMESTYLE, FRM_SOLID);
+			else if(val == "inset") setFormat(TXT_FRAMESTYLE, FRM_INSET);
+			else if(val == "outset") setFormat(TXT_FRAMESTYLE, FRM_OUTSET);
+			else if(val == "double") setFormat(TXT_FRAMESTYLE, FRM_DOUBLE);
+		}else throw xBadAttr("group",name,attr->Row(),attr->Column(),fname);
 	}
 	for(node = node.begin(&who); node != node.end(); node++){
 		std::string val;

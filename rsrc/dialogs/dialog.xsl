@@ -175,7 +175,6 @@
 		<xsl:if test='./@state'>
 			background-image: url('img/button/led-<xsl:value-of select='./@state'/>.png');
 		</xsl:if>
-		background-position: left top;
 		<xsl:call-template name='set-bounds'/>
 	</xsl:attribute>
 	<xsl:value-of select='.'/>
@@ -183,33 +182,16 @@
 	</div>
 </xsl:template>
 
-<xsl:template match='group/led'>
+<xsl:template match='group'>
 	<div>
 	
 	<xsl:attribute name='class'>
-		led 
+		group 
 		<xsl:if test='/dialog/@debug = "true"'>debug</xsl:if>
+		<xsl:if test='@framed = "true"'>framed </xsl:if>
 	</xsl:attribute>
-	<xsl:if test='/dialog/@debug = "true" and @name'>
-		<xsl:attribute name='title'>
-			<xsl:value-of select='./@name'/>
-		</xsl:attribute>
-	</xsl:if>
-	<xsl:attribute name='style'>
-		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;
-		font-family:
-		<xsl:choose>
-			<xsl:when test='@font = "plain"'>'DejaVu Sans', Geneva</xsl:when>
-			<xsl:when test='@font = "bold"'>Capriola, Silom</xsl:when>
-			<xsl:otherwise><xsl:value-of select='./@font'/></xsl:otherwise>
-		</xsl:choose>;
-		border-color: red;
-		<xsl:if test='./@state'>
-			background-image: url('img/button/led-<xsl:value-of select='./@state'/>.png');
-		</xsl:if>
-		<xsl:call-template name='set-bounds'/>
-	</xsl:attribute>
-	<xsl:value-of select='.'/>
+	
+	<xsl:apply-templates select='led'/>
 	
 	</div>
 </xsl:template>
@@ -269,7 +251,12 @@
 </xsl:template>
 
 <xsl:template match='stack'>
-	<div class='stack'>
+	<div>
+	
+	<xsl:attribute name='class'>
+		stack
+		<xsl:if test='@framed = "true"'>framed </xsl:if>
+	</xsl:attribute>
 	
 	<xsl:attribute name='style'>
 		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;

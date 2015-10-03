@@ -43,7 +43,7 @@ const char* xHandlerNotSupported::clickMsg = "This control cannot handle click e
 xHandlerNotSupported::xHandlerNotSupported(bool isFocus){
 	this->isFocus = isFocus;
 }
-const char* xHandlerNotSupported::what(){
+const char* xHandlerNotSupported::what() const throw() {
 	if(isFocus) return focusMsg;
 	else return clickMsg;
 }
@@ -55,7 +55,7 @@ xUnsupportedProp::xUnsupportedProp(eFormat prop) throw(){
 xUnsupportedProp::~xUnsupportedProp() throw(){
 	if(msg != nullptr) delete msg;
 }
-const char* xUnsupportedProp::what() throw(){
+const char* xUnsupportedProp::what() const throw(){
 	if(msg == nullptr){
 		msg = new char[62];
 		std::string s;

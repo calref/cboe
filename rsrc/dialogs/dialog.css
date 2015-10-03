@@ -107,6 +107,11 @@ title {
 
 .led {
 	background-image: url('img/button/led-off.png');
+	background-position: left top;
+}
+
+.group .led {
+	border-color: red;
 }
 
 .button.small {
