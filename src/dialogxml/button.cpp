@@ -185,8 +185,8 @@ std::string cButton::parse(ticpp::Element& who, std::string fname) {
 			foundKey = true;
 			keyModRow = attr->Row();
 			keyModCol = attr->Column();
-			//		}else if(name == "fromlist"){
-			//			attr->GetValue(&fromList);
+//		}else if(name == "fromlist"){
+//			attr->GetValue(&fromList);
 		}else if(name == "top"){
 			attr->GetValue(&frame.top), foundTop = true;
 		}else if(name == "left"){
@@ -260,7 +260,7 @@ std::string cButton::parse(ticpp::Element& who, std::string fname) {
 		if(type == TiXmlNode::ELEMENT && val == "key"){
 			// TODO: There's surely a better way to do this
 			if(content.length() > 0) throw xBadVal("button",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
-			//			labelWithKey = true;
+//			labelWithKey = true;
 		}else if(type == TiXmlNode::TEXT)
 			content += dlogStringFilter(val);
 		else if(type != TiXmlNode::COMMENT) {
@@ -509,8 +509,8 @@ std::string cLed::parse(ticpp::Element& who, std::string fname) {
 			else if(val == "green") setState(led_green);
 			else if(val == "off") setState(led_off);
 			else throw xBadVal("led",name,val,attr->Row(),attr->Column(),fname);
-			//		}else if(name == "fromlist"){
-			//			attr->GetValue(&fromList);
+//		}else if(name == "fromlist"){
+//			attr->GetValue(&fromList);
 		}else if(name == "font"){
 			std::string val;
 			attr->GetValue(&val);
