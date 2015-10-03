@@ -26,9 +26,6 @@ public:
 	/// @copydoc cDialog::init()
 	static void init();
 	std::string parse(ticpp::Element& who, std::string fname);
-	void attachClickHandler(click_callback_t f) throw();
-	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
@@ -66,6 +63,8 @@ public:
 	/// @param parent The parent window.
 	explicit cPict(sf::RenderWindow& parent);
 	bool isClickable();
+	bool isFocusable();
+	bool isScrollable();
 	/// Advance the current animation frame.
 	/// Should be called at predictable intervals if the dialog might contain an animated graphic.
 	static void advanceAnim();
@@ -81,6 +80,12 @@ public:
 	/// A convenience constant that can be passed as the pic number to setPict(pic_num_t num).
 	/// It sets the icon to nothing, showing as just black.
 	static const pic_num_t BLANK;
+	/// @copydoc cControl::getSupportedHandlers
+	///
+	/// @todo Document possible handlers
+	const std::set<eDlogEvt> getSupportedHandlers() const {
+		return {EVT_CLICK};
+	}
 	cPict& operator=(cPict& other) = delete;
 	cPict(cPict& other) = delete;
 private:
@@ -88,7 +93,7 @@ private:
 	static short animFrame;
 	pic_num_t picNum;
 	ePicType picType;
-	bool clickable, drawFramed, drawScaled;
+	bool drawFramed, drawScaled;
 	void drawPresetTer(short num, rectangle to_rect);
 	void drawPresetTerAnim(short num, rectangle to_rect);
 	void drawPresetMonstSm(short num, rectangle to_rect);
@@ -131,7 +136,6 @@ private:
 	void drawPartyItem(short num, rectangle to_rect);
 	void drawPartyPc(short num, rectangle to_rect);
 	static std::map<ePicType,void(cPict::*)(short,rectangle)>& drawPict();
-	click_callback_t onClick;
 };
 
 #endif

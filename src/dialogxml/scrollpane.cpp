@@ -17,27 +17,25 @@ cScrollPane::cScrollPane(cDialog& parent) : cContainer(CTRL_PANE, parent), scrol
 	recalcRect();
 }
 
-void cScrollPane::attachClickHandler(click_callback_t) throw(xHandlerNotSupported) {
-	throw xHandlerNotSupported(false);
-}
-
-void cScrollPane::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported) {
-	throw xHandlerNotSupported(true);
-}
-
-bool cScrollPane::triggerClickHandler(cDialog&, std::string, eKeyMod) {
-	return true;
-}
-
 bool cScrollPane::handleClick(location where) {
 	if(scroll.getBounds().contains(where))
 		return scroll.handleClick(where);
 	where.y += scroll.getPosition();
-	for(auto& ctrl : contents) {
-		if(ctrl.second->isClickable() && ctrl.second->getBounds().contains(where))
-			return ctrl.second->handleClick(where);
-	}
-	return false;
+	return cContainer::handleClick(where);
+}
+
+bool cContainer::handleClick(location where) {
+	std::string which_clicked;
+	bool success = false;
+	forEach([&](std::string id, cControl& ctrl) {
+		if(ctrl.isClickable() && ctrl.getBounds().contains(where)) {
+			success = ctrl.handleClick(where);
+			which_clicked = id;
+		}
+	});
+	if(!which_clicked.empty())
+		clicking = which_clicked;
+	return success;
 }
 
 void cScrollPane::recalcRect() {
@@ -114,6 +112,14 @@ bool cScrollPane::isClickable() {
 	return true;
 }
 
+bool cScrollPane::isFocusable() {
+	return false;
+}
+
+bool cScrollPane::isScrollable() {
+	return true;
+}
+
 long cScrollPane::getPosition() {
 	return scroll.getPosition();
 }
@@ -164,6 +170,11 @@ void cScrollPane::draw() {
 	scroll.draw();
 	if(framed)
 		drawFrame(4, frameStyle);
+}
+
+void cScrollPane::forEach(std::function<void(std::string,cControl&)> callback) {
+	for(auto ctrl : contents)
+		callback(ctrl.first, *ctrl.second);
 }
 
 std::string cScrollPane::parse(ticpp::Element& who, std::string fname) {

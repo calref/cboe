@@ -44,7 +44,6 @@ class cScrollbar : public cControl {
 	} pressedPart;
 	eScrollStyle style = SCROLL_WHITE;
 	bool vert = true;
-	click_callback_t onClick;
 	static sf::Texture scroll_gw[NUM_STYLES];
 	static const rectangle up_rect[NUM_STYLES][4], down_rect[NUM_STYLES][4], bar_rect[NUM_STYLES][4], thumb_rect[NUM_STYLES][4];
 	void draw_vertical(), draw_horizontal();
@@ -58,9 +57,6 @@ public:
 	/// Create a new scrollbar.
 	/// @param parent The parent dialog.
 	explicit cScrollbar(cDialog& parent);
-	void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported);
-	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	bool handleClick(location where);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
@@ -69,6 +65,8 @@ public:
 	storage_t store();
 	void restore(storage_t to);
 	bool isClickable();
+	bool isFocusable();
+	bool isScrollable();
 	/// Get the scrollbar thumb's current position.
 	/// @return The current position.
 	long getPosition();
@@ -118,6 +116,12 @@ public:
 	/// @param newStyle The new style.
 	void setStyle(eScrollStyle newStyle);
 	void draw();
+	/// @copydoc cControl::getSupportedHandlers
+	///
+	/// @todo Document possible handlers
+	const std::set<eDlogEvt> getSupportedHandlers() const {
+		return {EVT_CLICK, EVT_SCROLL};
+	}
 	cScrollbar& operator=(cScrollbar& other) = delete;
 	cScrollbar(cScrollbar& other) = delete;
 };

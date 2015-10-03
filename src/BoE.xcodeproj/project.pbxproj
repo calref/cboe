@@ -638,6 +638,7 @@
 		915325181A2E37EE000A9A1C /* specials_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = specials_parse.cpp; sourceTree = "<group>"; };
 		91597A6C1A3BED2D00BE7BF9 /* spell.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = spell.hpp; sourceTree = "<group>"; };
 		91597A6E1A3BEDC700BE7BF9 /* spell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spell.cpp; sourceTree = "<group>"; };
+		915AF9E91BC04171008AEF49 /* dlogevt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dlogevt.hpp; sourceTree = "<group>"; };
 		915E09071A316D6A008BDF00 /* map_parse.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = map_parse.hpp; sourceTree = "<group>"; };
 		915E09081A316D89008BDF00 /* map_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = map_parse.cpp; sourceTree = "<group>"; };
 		9169C31B1B37A5D50041002B /* Blades of Exile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -935,6 +936,7 @@
 				910BBA3B0FB8DA8E001E34EA /* control.hpp */,
 				910BBA170FB8BECA001E34EA /* dialog.hpp */,
 				918D59A718EA513900735B66 /* dialog.keys.hpp */,
+				915AF9E91BC04171008AEF49 /* dlogevt.hpp */,
 				91A32BD10FDB797B00C4E957 /* dlogutil.buttons.hpp */,
 				910BBAD90FB91D2A001E34EA /* dlogutil.hpp */,
 				910BBAB40FB91A26001E34EA /* field.hpp */,

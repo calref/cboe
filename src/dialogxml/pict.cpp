@@ -70,25 +70,6 @@ std::map<ePicType,void(cPict::*)(short,rectangle)>& cPict::drawPict(){
 	return f;
 }
 
-void cPict::attachClickHandler(click_callback_t f) throw(){
-	if(f == nullptr){
-		onClick = nullptr;
-		clickable = false;
-	}else{
-		onClick = f;
-		clickable = true;
-	}
-}
-
-void cPict::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported){
-	throw xHandlerNotSupported(true);
-}
-
-bool cPict::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
-	if(onClick != nullptr) return onClick(me,id,mods);
-	else return false;
-}
-
 void cPict::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	if(prop == TXT_FRAME) drawFramed = val;
 	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
@@ -148,16 +129,22 @@ ePicType cPict::getPicType(){
 
 cPict::cPict(cDialog& parent) :
 	cControl(CTRL_PICT,parent),
-	drawFramed(true), 
-	clickable(false) {}
+	drawFramed(true) {}
 
 cPict::cPict(sf::RenderWindow& parent) :
 	cControl(CTRL_PICT, parent),
-	drawFramed(true),
-	clickable(false) {}
+	drawFramed(true) {}
 
 bool cPict::isClickable(){
-	return clickable;
+	return haveHandler(EVT_CLICK);
+}
+
+bool cPict::isFocusable(){
+	return false;
+}
+
+bool cPict::isScrollable(){
+	return false;
 }
 
 ePicType operator+ (ePicType lhs, ePicTypeMod rhs){

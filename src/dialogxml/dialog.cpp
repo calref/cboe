@@ -508,9 +508,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 					key.mod += mod_ctrl;
 				if(currentEvent.key.shift) key.mod += mod_shift;
 				if(currentEvent.key.alt) key.mod += mod_alt;
-				itemHit = process_keystroke(key);
-				if(!itemHit.empty())
-					where = controls[itemHit]->getBounds().centre();
+				process_keystroke(key);
 				// Now check for focused fields.
 				if(currentFocus.empty()) break;
 				// If it's a tab, handle tab order
@@ -547,7 +545,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 				if(kb::isKeyPressed(kb::LShift)) key.mod += mod_shift;
 				if(kb::isKeyPressed(kb::RShift)) key.mod += mod_shift;
 				where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
-				itemHit = process_click(where);
+				process_click(where, key.mod);
 				break;
 			default: // To silence warning of unhandled enum values
 				break;
@@ -564,11 +562,6 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 				if(!inField) set_cursor(sword_curs);
 				break;
 		}
-		if(itemHit.empty()) continue;;
-		ctrlIter ctrl = controls.find(itemHit);
-		// TODO: Should it do something with the boolean return value?
-		if(ctrl != controls.end()) ctrl->second->triggerClickHandler(*this,itemHit,key.mod);
-		itemHit.clear();
 	}
 	win.setVisible(false);
 	while(parentWin->pollEvent(currentEvent));
@@ -589,7 +582,7 @@ template<typename Iter> void cDialog::handleTabOrder(string& itemHit, Iter begin
 	while(iter != cur){
 		// If tab order is explicitly specified for all fields, gaps are possible
 		if(iter->second == nullptr) continue;
-		if(iter->second->getType() == CTRL_FIELD && iter->second->isVisible()){
+		if(iter->second->isFocusable() && iter->second->isVisible()){
 			if(iter->second->triggerFocusHandler(*this,iter->first,false)){
 				currentFocus = iter->first;
 			}
@@ -660,14 +653,14 @@ cTextField* cDialog::getFocus() {
 	return dynamic_cast<cTextField*>(iter->second);
 }
 
-void cDialog::attachClickHandlers(click_callback_t handler, std::vector<std::string> controls) {
+void cDialog::attachClickHandlers(std::function<bool(cDialog&,std::string,eKeyMod)> handler, std::vector<std::string> controls) {
 	cDialog& me = *this;
 	for(std::string control : controls) {
 		me[control].attachClickHandler(handler);
 	}
 }
 
-void cDialog::attachFocusHandlers(focus_callback_t handler, std::vector<std::string> controls) {
+void cDialog::attachFocusHandlers(std::function<bool(cDialog&,std::string,bool)> handler, std::vector<std::string> controls) {
 	cDialog& me = *this;
 	for(std::string control : controls) {
 		me[control].attachFocusHandler(handler);
@@ -716,7 +709,7 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 	return add(labelCtrl, labelRect, key);
 }
 
-std::string cDialog::process_keystroke(cKey keyHit){
+void cDialog::process_keystroke(cKey keyHit){
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
 		if(iter->second->isVisible() && iter->second->isClickable() && iter->second->getAttachedKey() == keyHit){
@@ -732,31 +725,32 @@ std::string cDialog::process_keystroke(cKey keyHit){
 			iter->second->setActive(false);
 			draw();
 			sf::sleep(sf::milliseconds(8));
-			return iter->first;
+			iter->second->triggerClickHandler(*this,iter->first,mod_none);
+			return;
 		}
 		iter++;
 	}
 	// If you get an escape and it isn't processed, make it an enter.
 	if(keyHit.spec && keyHit.k == key_esc){
 		keyHit.k = key_enter;
-		return process_keystroke(keyHit);
+		process_keystroke(keyHit);
 	}
-	return "";
 }
 
-std::string cDialog::process_click(location where){
+void cDialog::process_click(location where, eKeyMod mods){
 	// TODO: Return list of all controls whose bounding rect contains the clicked point.
 	// Then the return value of the click handler can mean "Don't pass this event on to other things below me".
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
 		if(iter->second->isVisible() && iter->second->isClickable() && where.in(iter->second->getBounds())){
 			if(iter->second->handleClick(where))
-				return iter->first;
-			else return "";
+				break;
+			else return;
 		}
 		iter++;
 	}
-	return "";
+	if(iter != controls.end())
+		iter->second->triggerClickHandler(*this,iter->first,mods);
 }
 
 xBadNode::xBadNode(std::string t, int r, int c, std::string dlg) throw() :

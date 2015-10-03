@@ -26,6 +26,14 @@ bool cScrollbar::isClickable(){
 	return true;
 }
 
+bool cScrollbar::isFocusable(){
+	return false;
+}
+
+bool cScrollbar::isScrollable(){
+	return true;
+}
+
 void cScrollbar::setPosition(long newPos) {
 	pos = minmax(0,max,newPos);
 }
@@ -73,20 +81,6 @@ std::string cScrollbar::getLink() {
 
 eScrollStyle cScrollbar::getStyle() {
 	return style;
-}
-
-void cScrollbar::attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) {
-	onClick = f;
-}
-
-void cScrollbar::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported) {
-	throw xHandlerNotSupported(true);
-}
-
-bool cScrollbar::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods) {
-	// TODO: Implement detection of scrolling stuff, maybe even dragging the thumb
-	if(onClick != nullptr) return onClick(me,id,mods);
-	return false;
 }
 
 bool cScrollbar::handleClick(location where) {

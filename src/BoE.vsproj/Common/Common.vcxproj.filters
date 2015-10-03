@@ -130,6 +130,9 @@
     <ClInclude Include="..\..\dialogxml\dialog.keys.hpp">
       <Filter>DialogXML\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\dialogxml\dlogevt.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\dialogxml\dlogutil.buttons.hpp">
       <Filter>DialogXML\Header Files</Filter>
     </ClInclude>

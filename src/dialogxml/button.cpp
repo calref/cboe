@@ -23,19 +23,6 @@
 
 extern sf::Texture bg_gworld;
 
-void cButton::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported){
-	throw xHandlerNotSupported(true);
-}
-
-void cButton::attachClickHandler(click_callback_t f) throw(){
-	onClick = f;
-}
-
-bool cButton::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
-	if(onClick) return onClick(me,id,mods);
-	return false;
-}
-
 cButton::cButton(sf::RenderWindow& parent) :
 	cControl(CTRL_BTN,parent),
 	wrapLabel(false),
@@ -57,6 +44,14 @@ cButton::cButton(cDialog& parent,eControlType t) :
 
 bool cButton::isClickable(){
 	return true;
+}
+
+bool cButton::isFocusable(){
+	return false;
+}
+
+bool cButton::isScrollable(){
+	return false;
 }
 
 void cButton::draw(){
@@ -333,41 +328,28 @@ cLed::cLed(cDialog& parent) :
 	textFont(FONT_BOLD),
 	textSize(10) {
 	type = BTN_LED;
+	using namespace std::placeholders;
+	attachEventHandler<EVT_CLICK>(std::bind(&cLed::defaultClickHandler, this, _1, _2, _3));
 }
 
-void cLed::attachClickHandler(click_callback_t f) throw(){
-	onClick = f;
-}
-
-void cLed::attachFocusHandler(focus_callback_t f) throw(){
-	onFocus = f;
-}
-
-bool cLed::triggerFocusHandler(cDialog& me, std::string id, bool losing){
-	if(onFocus != nullptr) return onFocus(me,id,losing);
-	return true;
-}
-
-bool cLed::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
-	bool result;
-	eLedState oldState = state;
-	if(onClick != nullptr) result = onClick(me,id,mods);
-	else{ // simple state toggle
-		switch(state){
-			case led_red:
-			case led_green:
-				state = led_off;
-				break;
-			case led_off:
-				state = led_red;
-		}
-		result = true;
+void cLed::defaultClickHandler(cDialog&, std::string, eKeyMod) {
+	// simple state toggle
+	switch(state){
+		case led_red:
+		case led_green:
+			state = led_off;
+			break;
+		case led_off:
+			state = led_red;
 	}
+}
+
+void cLed::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) {
+	eLedState oldState = state;
+	if(onClick) onClick(me,id,mods);
 	if(!triggerFocusHandler(me,id, oldState != led_off)){
-		result = false;
 		state = oldState;
 	}
-	return result;
 }
 
 void cLed::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
@@ -451,14 +433,6 @@ void cLedGroup::recalcRect(){
 		iter++;
 	}
 	frame.inset(-6,-6);
-}
-
-void cLedGroup::attachClickHandler(click_callback_t f) throw() {
-	onClick = f;
-}
-
-void cLedGroup::attachFocusHandler(focus_callback_t f) throw() {
-	onFocus = f;
 }
 
 void cLed::setState(eLedState to){
@@ -594,17 +568,17 @@ bool cLedGroup::handleClick(location where) {
 	return true;
 }
 
-bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
+void cLedGroup::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) {
 	std::string which_clicked = clicking;
 	clicking = "";
 	
 	if(choices[which_clicked]->triggerClickHandler(me,which_clicked,mods)){
-		if(onClick && !onClick(me,id,mods)) return false;
+		if(onClick) onClick(me,id,mods);
 		if(!curSelect.empty()) {
 			choices[curSelect]->setState(led_off);
 			if(!choices[curSelect]->triggerFocusHandler(me,curSelect,true)){
 				choices[curSelect]->setState(led_red);
-				return false;
+				return;
 			}
 		}
 		choices[which_clicked]->setState(led_red);
@@ -612,9 +586,9 @@ bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 			if(!curSelect.empty())
 				choices[curSelect]->setState(led_red);
 			choices[which_clicked]->setState(led_off);
-			return false;
+			return;
 		}
-	}else return false;
+	}else return;
 	
 	std::string savePrevSelect = prevSelect;
 	prevSelect = curSelect;
@@ -625,14 +599,20 @@ bool cLedGroup::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
 		choices[which_clicked]->setState(led_off);
 		curSelect = prevSelect;
 		prevSelect = savePrevSelect;
-		return false;
+		return;
 	}
-	return true;
+	return;
 }
 
-bool cLedGroup::triggerFocusHandler(cDialog& me, std::string id, bool losingFocus){
-	if(onFocus != nullptr) return onFocus(me,id,losingFocus);
-	return true;
+void cLedGroup::attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) throw(xHandlerNotSupported) {
+	if(!f) {
+		attachEventHandler<EVT_FOCUS>(nullptr);
+		return;
+	}
+	using namespace std::placeholders;
+	attachEventHandler<EVT_FOCUS>([f](cDialog& me, std::string id) {
+		f(me, id, false);
+	});
 }
 
 void cLedGroup::disable(std::string /*id*/) {
@@ -674,6 +654,14 @@ sf::Color cLedGroup::getColour() throw(xUnsupportedProp) {
 
 bool cLedGroup::isClickable(){
 	return true;
+}
+
+bool cLedGroup::isScrollable(){
+	return false;
+}
+
+bool cLedGroup::isFocusable(){
+	return false;
 }
 
 bool cLedGroup::hasChild(std::string id) {
@@ -798,6 +786,11 @@ void cLedGroup::restore(storage_t to) {
 	if(to.find("led-select") != to.end())
 		setSelected(boost::any_cast<std::string>(to["led-select"]));
 	else setSelected("");
+}
+
+void cLedGroup::forEach(std::function<void(std::string,cControl&)> callback) {
+	for(auto ctrl : choices)
+		callback(ctrl.first, *ctrl.second);
 }
 
 std::string cLedGroup::parse(ticpp::Element& who, std::string fname) {

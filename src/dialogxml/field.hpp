@@ -34,11 +34,13 @@ enum eFldType {
 class cTextField : public cControl {
 public:
 	std::string parse(ticpp::Element& who, std::string fname);
-	void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported);
-	/// @copydoc cControl::attachFocusHandler()
 	/// For text fields, this is triggered when it loses or gains the input focus.
-	void attachFocusHandler(focus_callback_t f) throw();
-	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
+	/// @copydoc cControl::getSupportedHandlers
+	///
+	/// @todo Document possible handlers
+	const std::set<eDlogEvt> getSupportedHandlers() const {
+		return {EVT_FOCUS, EVT_DEFOCUS};
+	}
 	bool handleClick(location where);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
@@ -57,6 +59,8 @@ public:
 	/// @param parent The parent dialog.
 	explicit cTextField(cDialog& parent);
 	bool isClickable();
+	bool isFocusable();
+	bool isScrollable();
 	virtual ~cTextField();
 	void draw();
 	/// Check if this text field currently has input focus.
@@ -70,11 +74,12 @@ public:
 	/// This field is only used by cDialog during the loading process. Changing it will have no effect.
 	long tabOrder = 0;
 private:
+	void callHandler(event_fcn<EVT_FOCUS>::type onFocus, cDialog& me, std::string id) override;
+	bool callHandler(event_fcn<EVT_DEFOCUS>::type onFocus, cDialog& me, std::string id) override;
 	void set_ip(location clickLoc, int cTextField::* insertionPoint);
 	cUndoList history;
 	action_ptr current_action;
 	eFldType field_type;
-	focus_callback_t onFocus;
 	bool haveFocus;
 	int insertionPoint;
 	int selectionPoint;

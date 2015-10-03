@@ -13,20 +13,6 @@
 
 extern sf::Texture bg_gworld;
 
-void cTextMsg::attachClickHandler(click_callback_t f) throw(){
-	onClick = f;
-	clickable = onClick != nullptr;
-}
-
-void cTextMsg::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported){
-	throw xHandlerNotSupported(true);
-}
-
-bool cTextMsg::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods){
-	if(onClick != nullptr) return onClick(me,id,mods);
-	return false;
-}
-
 void cTextMsg::setColour(sf::Color clr) throw(xUnsupportedProp) {
 	color = clr;
 }
@@ -179,7 +165,6 @@ cTextMsg::cTextMsg(cDialog& parent) :
 	textFont(FONT_BOLD),
 	textSize(10),
 	color(parent.getDefTextClr()),
-	clickable(false),
 	fromList("none") {}
 
 cTextMsg::cTextMsg(sf::RenderWindow& parent) :
@@ -188,11 +173,18 @@ cTextMsg::cTextMsg(sf::RenderWindow& parent) :
 	textFont(FONT_BOLD),
 	textSize(10),
 	color(cDialog::defaultBackground == cDialog::BG_DARK ? sf::Color::White : sf::Color::Black),
-	clickable(false),
 	fromList("none") {}
 
 bool cTextMsg::isClickable(){
-	return clickable;
+	return haveHandler(EVT_CLICK);
+}
+
+bool cTextMsg::isFocusable(){
+	return false;
+}
+
+bool cTextMsg::isScrollable(){
+	return false;
 }
 
 void cTextMsg::draw(){
@@ -206,7 +198,7 @@ void cTextMsg::draw(){
 		style.pointSize = textSize;
 		if(drawFramed) drawFrame(2,frameStyle);
 		sf::Color draw_color = color;
-		if(clickable && depressed){
+		if(depressed){
 			draw_color.r = 256 - draw_color.r;
 			draw_color.g = 256 - draw_color.g;
 			draw_color.b = 256 - draw_color.b;

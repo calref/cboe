@@ -51,10 +51,6 @@ public:
 	/// @copydoc cDialog::init()
 	static void init();
 	std::string parse(ticpp::Element& who, std::string fname);
-	void attachClickHandler(click_callback_t f) throw();
-	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
-	//virtual void setPict(short pict, short type) = 0;
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
@@ -72,15 +68,21 @@ public:
 	/// @param parent The parent window
 	explicit cButton(sf::RenderWindow& parent);
 	bool isClickable();
+	bool isFocusable();
+	bool isScrollable();
 	virtual ~cButton();
 	void draw();
+	/// @copydoc cControl::getSupportedHandlers
+	///
+	/// @todo Document possible handlers
+	const std::set<eDlogEvt> getSupportedHandlers() const {
+		return {EVT_CLICK};
+	}
 	cButton& operator=(cButton& other) = delete;
 	cButton(cButton& other) = delete;
 protected:
 	/// The type of button.
 	eBtnType type;
-	/// The click handler.
-	click_callback_t onClick;
 	/// Construct a new button.
 	/// @param parent The parent dialog.
 	/// @param t The type of control. Should be either CTRL_LED or CTRL_BTN.
@@ -113,10 +115,6 @@ public:
 	/// @return true to indicate the event should continue.
 	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
 	std::string parse(ticpp::Element& who, std::string fname);
-	void attachClickHandler(click_callback_t f) throw();
-	void attachFocusHandler(focus_callback_t f) throw();
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
-	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	storage_t store();
@@ -132,14 +130,21 @@ public:
 	/// @return The current state.
 	eLedState getState();
 	void draw();
+	/// @copydoc cControl::getSupportedHandlers
+	///
+	/// @todo Document possible handlers
+	const std::set<eDlogEvt> getSupportedHandlers() const {
+		return {EVT_CLICK, EVT_FOCUS, EVT_DEFOCUS};
+	}
 	cLed& operator=(cLed& other) = delete;
 	cLed(cLed& other) = delete;
 private:
+	void defaultClickHandler(cDialog&, std::string, eKeyMod);
+	void callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) override;
 	eLedState state;
 	eFont textFont;
 	short textSize;
 	static rectangle ledRects[3][2];
-	focus_callback_t onFocus;
 };
 
 /// A group of LED buttons that behave like radio buttons.
@@ -161,30 +166,29 @@ private:
 /// However, when the focus handler of the LED group is called, the selection _has_ been updated.,
 /// so getSelected() will return the new selection. (This is the reason for the getPreviousSelection() method.)
 class cLedGroup : public cContainer {
-	click_callback_t onClick;
-	focus_callback_t onFocus;
-	bool drawFramed;
+	bool drawFramed = false;
 	std::map<std::string,cLed*> choices;
 	std::string fromList;
 	std::string curSelect, prevSelect;
 	std::string clicking;
+	void callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) override;
 	cLedGroup& operator=(cLedGroup& other) = delete;
 	cLedGroup(cLedGroup& other) = delete;
 public:
+	/// @deprecated in favour of @ref attachEventHandler
+	void attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) throw(xHandlerNotSupported);
 	std::string parse(ticpp::Element& who, std::string fname);
 	/// @copydoc cControl::attachClickHandler()
 	///
 	/// The click handler is called whenever an LED in the group is clicked, even if it's the currently selected LED.
-	void attachClickHandler(click_callback_t f) throw();
-	/// @copydoc cControl::attachFocusHandler()
 	///
 	/// An LED group triggers focus handlers when a choice other than the currently selected one is clicked.
 	/// The third parameter is always false for an LED group's focus handler.
 	/// You can determine what changed using getPrevSelection() and getSelected(), and can do whatever post-processing
 	/// you want, including selecting a completely different option.
-	void attachFocusHandler(focus_callback_t f) throw();
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
-	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
+	const std::set<eDlogEvt> getSupportedHandlers() const {
+		return {EVT_CLICK, EVT_FOCUS};
+	}
 	storage_t store();
 	void restore(storage_t to);
 	/// Add a new LED to this group.
@@ -214,6 +218,8 @@ public:
 	/// @param parent The parent dialog.
 	explicit cLedGroup(cDialog& parent);
 	bool isClickable();
+	bool isFocusable();
+	bool isScrollable();
 	bool handleClick(location where);
 	virtual ~cLedGroup();
 	/// Get one of the LEDs in this group.
@@ -239,6 +245,7 @@ public:
 	/// Call this after adding choices to the group to ensure that the choice is within the bounding rect.
 	/// If a choice is not within the bounding rect, it will not respond to clicks.
 	void recalcRect();
+	void forEach(std::function<void(std::string,cControl&)> callback) override;
 	/// A convenience type for making an iterator into the choice map.
 	typedef std::map<std::string,cLed*>::iterator ledIter;
 	void draw();

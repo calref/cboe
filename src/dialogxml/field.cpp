@@ -17,16 +17,8 @@
 #include "winutil.hpp"
 #include "cursors.hpp"
 
-void cTextField::attachClickHandler(click_callback_t) throw(xHandlerNotSupported){
-	throw xHandlerNotSupported(false);
-}
-
-void cTextField::attachFocusHandler(focus_callback_t f) throw(){
-	onFocus = f;
-}
-
-bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFocus){
-	if(losingFocus && field_type != FLD_TEXT) {
+bool cTextField::callHandler(event_fcn<EVT_DEFOCUS>::type onFocus, cDialog& me, std::string id) {
+	if(field_type != FLD_TEXT) {
 		try {
 			std::string contents = getText();
 			switch(field_type) {
@@ -52,11 +44,18 @@ bool cTextField::triggerFocusHandler(cDialog& me, std::string id, bool losingFoc
 		}
 	}
 	bool passed = true;
-	if(onFocus != nullptr) passed = onFocus(me,id,losingFocus);
-	if(passed) haveFocus = !losingFocus;
+	if(onFocus) passed = onFocus(me,id);
+	if(passed) haveFocus = false;
 	if(haveFocus && insertionPoint < 0)
 		insertionPoint = getText().length();
 	return passed;
+}
+
+void cTextField::callHandler(event_fcn<EVT_FOCUS>::type onFocus, cDialog& me, std::string id) {
+	if(onFocus) onFocus(me,id);
+	haveFocus = true;
+	if(insertionPoint < 0)
+		insertionPoint = getText().length();
 }
 
 void cTextField::setText(std::string to) {
@@ -191,6 +190,14 @@ void cTextField::setInputType(eFldType type) {
 
 bool cTextField::isClickable(){
 	return true;
+}
+
+bool cTextField::isFocusable(){
+	return true;
+}
+
+bool cTextField::isScrollable(){
+	return false;
 }
 
 bool cTextField::hasFocus() {

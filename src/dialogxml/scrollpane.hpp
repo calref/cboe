@@ -24,9 +24,6 @@ public:
 	/// Create a new scroll pane
 	explicit cScrollPane(cDialog& parent);
 	std::string parse(ticpp::Element& who, std::string fname);
-	void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported);
-	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	bool handleClick(location where);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
@@ -37,6 +34,8 @@ public:
 	storage_t store();
 	void restore(storage_t to);
 	bool isClickable();
+	bool isFocusable();
+	bool isScrollable();
 	/// Add a new control to this pane.
 	/// @param ctrl A pointer to the control, which should already be constructed.
 	/// @param key A key to be used to look up the control later.
@@ -60,6 +59,13 @@ public:
 	/// @param newStyle The new style.
 	void setStyle(eScrollStyle newStyle);
 	void draw();
+	/// @copydoc cControl::getSupportedHandlers
+	///
+	/// @todo Document possible handlers
+	const std::set<eDlogEvt> getSupportedHandlers() const {
+		return {EVT_CLICK, EVT_SCROLL, EVT_FOCUS, EVT_DEFOCUS};
+	}
+	void forEach(std::function<void(std::string,cControl&)> callback) override;
 	cScrollPane& operator=(cScrollPane& other) = delete;
 	cScrollPane(cScrollPane& other) = delete;
 };

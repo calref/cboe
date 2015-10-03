@@ -36,19 +36,16 @@ class cStack : public cContainer {
 	std::string clicking;
 	std::vector<std::map<std::string,storage_t>> storage;
 	std::map<std::string,cControl*> controls;
-	click_callback_t onClick;
-	bool drawFramed;
+	bool drawFramed = false;
 public:
 	std::string parse(ticpp::Element& who, std::string fname);
-	void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported);
-	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
-	bool handleClick(location where);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
 	sf::Color getColour() throw(xUnsupportedProp);
 	bool isClickable();
+	bool isFocusable();
+	bool isScrollable();
 	void draw();
 	bool hasChild(std::string id);
 	cControl& getChild(std::string id);
@@ -79,6 +76,13 @@ public:
 	/// Create a new stack
 	/// @param parent The parent dialog.
 	cStack(cDialog& parent);
+	/// @copydoc cControl::getSupportedHandlers
+	///
+	/// @todo Document possible handlers
+	const std::set<eDlogEvt> getSupportedHandlers() const {
+		return {EVT_CLICK, EVT_FOCUS, EVT_DEFOCUS};
+	}
+	void forEach(std::function<void(std::string,cControl&)> callback) override;
 	cStack& operator=(cStack& other) = delete;
 	cStack(cStack& other) = delete;
 };

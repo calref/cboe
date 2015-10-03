@@ -22,6 +22,7 @@
 
 #include "ticpp.h"
 #include "dialog.keys.hpp"
+#include "dlogevt.hpp"
 #include "location.hpp"
 #include <boost/any.hpp>
 
@@ -161,6 +162,12 @@ public:
 	/// Recalculate the dialog's bounding rect.
 	/// Call this after adding controls to the dialog to ensure that the control is within the bounding rect.
 	void recalcRect();
+	/// Attach the same handler for a given event to several controls.
+	/// @tparam t The type of event to attach handlers for.
+	/// @param controls A list of control IDs to attach the handlers to.
+	/// @throw xHandlerNotSupported if any of the controls do not support this event type.
+	/// In this event, any subsequent controls in the list will not have had the handlers attached.
+	template<eDlogEvt t> void attachEventHandlers(typename event_fcn<t>::type handler, const std::vector<std::string>& controls);
 	// TODO: It seems like a bad thing for these two to not use the typedefs...
 	/// Attach the same click handler to several controls.
 	/// @param handler The handler to attach.
@@ -168,6 +175,7 @@ public:
 	/// @throw xHandlerNotSupported if any of the controls do not support click handlers.
 	/// @throw std::invalid_argument if any of the controls do not exist.
 	/// @see cControl::attachClickHandler()
+	/// @deprecated in favour of @ref attachEventHandlers
 	void attachClickHandlers(std::function<bool(cDialog&,std::string,eKeyMod)> handler, std::vector<std::string> controls);
 	/// Attach the same focus handler to several controls.
 	/// @param handler The handler to attach.
@@ -175,6 +183,7 @@ public:
 	/// @throw xHandlerNotSupported if any of the controls do not support focus handlers.
 	/// @throw std::invalid_argument if any of the controls do not exist.
 	/// @see cControl::attachFocusHandler()
+	/// @deprecated in favour of @ref attachEventHandlers
 	void attachFocusHandlers(std::function<bool(cDialog&,std::string,bool)> handler, std::vector<std::string> controls);
 	/// Get the bounding rect of the dialog.
 	/// @return The dialog's bounding rect.
@@ -205,8 +214,8 @@ public:
 	cDialog(cDialog& other) = delete;
 private:
 	void draw();
-	std::string process_keystroke(cKey keyHit);
-	std::string process_click(location where);
+	void process_keystroke(cKey keyHit);
+	void process_click(location where, eKeyMod mods);
 	bool dialogNotToast, didAccept;
 	rectangle winRect;
 	boost::any result;

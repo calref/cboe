@@ -17,15 +17,11 @@
 #include <string>
 #include <exception>
 #include <functional>
+#include <set>
 #include <boost/any.hpp>
 #include "dialog.hpp"
 
 #include "location.hpp"
-
-//struct cPict {
-//	short pict;
-//	short type;
-//};
 
 /// Formatting properties
 enum eFormat {
@@ -33,7 +29,7 @@ enum eFormat {
 	TXT_FONT,	///< The control's text font. Should be one of the constants FONT_PLAIN, FONT_BOLD, FONT_DUNGEON, FONT_MAIDEN.
 	TXT_SIZE,	///< The control's text size. Should be an integer indicating point size.
 	TXT_WRAP,	///< Whether the control should wrap. Should be a boolean (true or false).
-	TXT_FRAMESTYLE, ///< The control's frame style. Should be an enum from @a eFrameStyle.
+	TXT_FRAMESTYLE, ///< The control's frame style. Should be an enum from @ref eFrameStyle.
 };
 
 /// Frame styles
@@ -58,20 +54,14 @@ enum eControlType {
 	CTRL_PANE,	///< A scroll pane
 };
 
-/// The signature of a click handler.
-typedef std::function<bool(cDialog&,std::string,eKeyMod)> click_callback_t;
-/// The signature of a focus handler.
-typedef std::function<bool(cDialog&,std::string,bool)> focus_callback_t;
-
 /// Thrown when you try to set a handler that the control does not support.
 class xHandlerNotSupported : public std::exception {
-	static const char* focusMsg;
-	static const char* clickMsg;
-	bool isFocus;
+	static const char* msg[4];
+	eDlogEvt evt;
 public:
 	/// Construct a new exception.
-	/// @param isFocus true to indicate a focus event, false for a click event.
-	xHandlerNotSupported(bool isFocus);
+	/// @param t The type of event.
+	xHandlerNotSupported(eDlogEvt t);
 	/// @return The error message.
 	const char* what() const throw();
 };
@@ -117,37 +107,72 @@ public:
 	/// @return the currently-assigned keyboard shortcut.
 	/// @note You should first check that a shortcut is assigned using hasKey().
 	cKey getAttachedKey();
+	/// Attach an event handler to this control.
+	/// @tparam t The type of event to attach.
+	/// @param handler The event handler function or functor. Its signature depends on the event type.
+	/// @return The previous handler that has been overridden, if any.
+	/// @throw xHandlerNotSupported if the event type is not supported by this control.
+	/// @note Only one handler can be set at a time for any given event. To remove a handler, set it to nullptr.
+	template<eDlogEvt t> typename event_fcn<t>::type attachEventHandler(typename event_fcn<t>::type handler) {
+		if(getSupportedHandlers().count(t) == 0) throw xHandlerNotSupported(t);
+		auto old_handler = event_handlers[t];
+		if(handler) event_handlers[t] = handler;
+		else event_handlers[t].clear();
+		if(old_handler.empty()) return nullptr;
+		return boost::any_cast<typename event_fcn<t>::type>(old_handler);
+	}
 	/// Attach a click handler to this control.
 	/// @param f The click handler to attach.
 	/// @throw xHandlerNotSupported if this control does not support click handlers. Most controls do support click handlers.
+	/// @deprecated in favour of @ref attachEventHandler
 	/// @note Only one click handler can be set at a time. To remove the click handler, set it to null.
 	///
 	/// A click handler must be able to accept three parameters: a reference to the containing dialog, the unique key of the
 	/// clicked item, and a representation of any modifier keys that are currently held.
-	virtual void attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) = 0;
+	virtual void attachClickHandler(std::function<bool(cDialog&,std::string,eKeyMod)> f) throw(xHandlerNotSupported);
 	/// Attach a focus handler to this control.
 	/// @param f The focus handler to attach.
 	/// @throw xHandlerNotSupported if this control does not support focus handlers. Most controls do not support focus handlers.
+	/// @deprecated in favour of @ref attachEventHandler
 	/// @note Only one focus handler can be set at a time. To remove the focus handler, set it to null.
 	///
 	/// A focus handler must be able to accept three parameters: a reference to the containing dialog, the unique key of the
 	/// clicked item, and a boolean indicating whether focus is being lost or gained; a value of true indicates that
 	/// focus is being lost, while false indicates it's being gained. Most handlers will only need to act when the
 	/// third parameter is true. If the handler returns false, the focus change is cancelled.
-	virtual void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported) = 0;
+	virtual void attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) throw(xHandlerNotSupported);
+	/// Trigger an event on this control.
+	/// @tparam t The type of event to trigger.
+	/// @tparam Params Additional parameters, depending on the event type.
+	/// @param dlg The parent dialog of this control.
+	/// @param args Additional arguments, depending on the event type.
+	/// @return The result of the event handler. If there was no handler, and the handler would've returned a bool,
+	/// then true is returned. This also applies if the event type is not supported by the control.
+	template<eDlogEvt t, typename... Params> typename event_fcn<t>::type::result_type triggerEvent(cDialog& dlg, Params... args) {
+		using fcn_t = typename event_fcn<t>::type;
+		if(event_handlers[t].empty())
+			return callHandler(fcn_t(), dlg, args...);
+		auto handler = boost::any_cast<fcn_t>(event_handlers[t]);
+		return callHandler(handler, dlg, args...);
+	}
+	/// Check if a handler is assigned for a given event.
+	/// @param t The type of event to check for.
+	/// @return True if one is assigned, false otherwise.
+	bool haveHandler(eDlogEvt t) {
+		return !event_handlers[t].empty();
+	}
 	/// Trigger the click handler for this control.
 	/// @param me A reference to the current dialog.
 	/// @param id The unique key of this control.
 	/// @param mods The currently-held keyboard modifiers.
 	/// @return true if the event should continue, false if it should be cancelled.
-	virtual bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
+	virtual bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods) final;
 	/// Trigger the focus handler for this control.
 	/// @param me A reference to the current dialog.
 	/// @param id The unique key of this control.
 	/// @param losingFocus true if this control is losing focus, false if it is gaining focus.
 	/// @return true if the event should continue, false if it should be cancelled.
-	virtual bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
-	//virtual void setPict(short pict, short type) = 0;
+	virtual bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus) final;
 	/// Make this control visible.
 	virtual void show(); // cd_activate_item true
 	/// Make this control invisible.
@@ -157,6 +182,8 @@ public:
 	bool isVisible(); // cd_get_active
 	/// Check if this control is a container which contains other controls.
 	/// @return true if it's a container
+	/// @note Generally you shouldn't override this. If you need a container, then
+	/// extend @ref cContainer instead of cControl.
 	virtual bool isContainer() {return false;}
 	/// Set if this control is active. A control is normally active when the mouse button is held down within its bounding rect.
 	/// @param active true if it should be active, false if not
@@ -209,6 +236,14 @@ public:
 	/// In fact, some controls return true only if a click handler is assigned.
 	/// Others, like editable text fields, are clickable but do not support click handlers.
 	virtual bool isClickable() = 0;
+	/// Check if the control is focusable.
+	/// @return true if it's focusable.
+	/// @note This does not indicate whether the control supports focus and defocus handlers.
+	virtual bool isFocusable() = 0;
+	/// Check if the control is scrollable.
+	/// @return true if it's scrollable.
+	/// @note This does not indicate whether the control supports scroll handlers.
+	virtual bool isScrollable() = 0;
 	/// Handles the action of clicking this control.
 	/// @param where The exact location at which the mouse was pressed, relative to the dialog.
 	/// @return true if the click was successful; false if it was cancelled.
@@ -243,6 +278,54 @@ public:
 	cControl& operator=(cControl& other) = delete;
 	cControl(cControl& other) = delete;
 protected:
+	/// Returns a list of event handlers that this control supports.
+	/// @return The list of handlers as a std::set.
+	///
+	/// See the documentation of this method in subclasses for explanations of what handlers
+	/// each control supports and how those handlers work for that control.
+	virtual const std::set<eDlogEvt> getSupportedHandlers() const = 0;
+	/// Called when a click event is triggered on this control. Override this to
+	/// customize the behaviour of clicks on the control. Note that, if you override it, you are
+	/// responsible for calling the passed handler, if it exists. (Test for existance with operator!.)
+	/// @param handler The handler that should be triggered as a result of this click.
+	/// @param dlg The dialog in which the event was triggered; intended to be passed to the handler.
+	/// @param id The ID of the control that triggered the event; intended to be passed to the handler.
+	/// @param mods The key modifiers currently pressed; intended to be passed to the handler.
+	virtual void callHandler(event_fcn<EVT_CLICK>::type handler, cDialog& dlg, std::string id, eKeyMod mods) {
+		if(handler) handler(dlg, id, mods);
+	}
+	/// Called when a focus event is triggered on this control. Override this to
+	/// customize the behaviour of focusing on the control. Note that, if you override it, you are
+	/// responsible for calling the passed handler, if it exists. (Test for existance with operator!.)
+	/// @param handler The handler that should be triggered as a result of this focus.
+	/// @param dlg The dialog in which the event was triggered; intended to be passed to the handler.
+	/// @param id The ID of the control that triggered the event; intended to be passed to the handler.
+	virtual void callHandler(event_fcn<EVT_FOCUS>::type handler, cDialog& dlg, std::string id) {
+		if(handler) handler(dlg, id);
+	}
+	/// Called when a defocus event is triggered on this control. Override this to
+	/// customize the behaviour of defocusing on the control. Note that, if you override it, you are
+	/// responsible for calling the passed handler, if it exists. (Test for existance with operator!.)
+	/// @param handler The handler that should be triggered as a result of this defocus.
+	/// @param dlg The dialog in which the event was triggered; intended to be passed to the handler.
+	/// @param id The ID of the control that triggered the event; intended to be passed to the handler.
+	/// @return Whether the defocus should be allowed to happen.
+	virtual bool callHandler(event_fcn<EVT_DEFOCUS>::type handler, cDialog& dlg, std::string id) {
+		if(handler) return handler(dlg, id);
+		return true;
+	}
+	/// Called when a scroll event is triggered on this control. Override this to
+	/// customize the behaviour of scrolling on the control. Note that, if you override it, you are
+	/// responsible for calling the passed handler, if it exists. (Test for existance with operator!.)
+	/// @param handler The handler that should be triggered as a result of this scroll.
+	/// @param dlg The dialog in which the event was triggered; intended to be passed to the handler.
+	/// @param id The ID of the control that triggered the event; intended to be passed to the handler.
+	/// @param newVal The new value of the scrollbar.
+	/// @return Whether the scrollbar should be allowed to scroll to this point.
+	virtual bool callHandler(event_fcn<EVT_SCROLL>::type handler, cDialog& dlg, std::string id, int newVal) {
+		if(handler) return handler(dlg, id, newVal);
+		return true;
+	}
 	/// Parses an HTML colour code.
 	/// Recognizes three-digit hex, six-digit hex, and HTML colour names.
 	/// @param code The colour code to parse.
@@ -282,9 +365,13 @@ protected:
 private:
 	friend class cDialog; // TODO: This is only so it can access parseColour... hack!
 	eControlType type;
+	std::map<eDlogEvt, boost::any> event_handlers;
 };
 
+/// A superclass to represent a control that contains other controls.
 class cContainer : public cControl {
+	void callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) override;
+	std::string clicking;
 public:
 	/// Create a new container control attached to an arbitrary window, rather than a dialog.
 	/// @param t The type of the control.
@@ -303,9 +390,23 @@ public:
 	/// @throw std::invalid_argument if the control does not exist.
 	/// @return a reference to the requested control.
 	virtual cControl& getChild(std::string id) = 0;
+	/// Executes a function for every control in this container.
+	/// @param callback A function taking a string as its first argument
+	/// and a control reference as its second argument.
+	virtual void forEach(std::function<void(std::string,cControl&)> callback) = 0;
 	/// @copydoc getChild()
 	cControl& operator[](std::string id) {return getChild(id);}
 	bool isContainer() {return true;}
+	bool handleClick(location where);
 };
+
+// This is defined here instead of in dialog.hpp because it needs cControl to be complete.
+/// @note You need to include control.hpp to use this.
+template<eDlogEvt t> void cDialog::attachEventHandlers(typename event_fcn<t>::type handler, const std::vector<std::string>& controls) {
+	cDialog& me = *this;
+	for(std::string control : controls) {
+		me[control].attachEventHandler<t>(handler);
+	}
+}
 
 #endif

@@ -36,6 +36,7 @@
     <ClInclude Include="..\..\dialogxml\control.hpp" />
     <ClInclude Include="..\..\dialogxml\dialog.hpp" />
     <ClInclude Include="..\..\dialogxml\dialog.keys.hpp" />
+    <ClInclude Include="..\..\dialogxml\dlogevt.hpp" />
     <ClInclude Include="..\..\dialogxml\dlogutil.buttons.hpp" />
     <ClInclude Include="..\..\dialogxml\dlogutil.hpp" />
     <ClInclude Include="..\..\dialogxml\field.hpp" />

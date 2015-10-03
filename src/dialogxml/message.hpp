@@ -23,9 +23,6 @@
 class cTextMsg : public cControl {
 public:
 	std::string parse(ticpp::Element& who, std::string fname);
-	void attachClickHandler(click_callback_t f) throw();
-	void attachFocusHandler(focus_callback_t f) throw(xHandlerNotSupported);
-	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
 	short getFormat(eFormat prop) throw(xUnsupportedProp);
 	void setColour(sf::Color clr) throw(xUnsupportedProp);
@@ -37,16 +34,23 @@ public:
 	/// @param parent The parent window.
 	explicit cTextMsg(sf::RenderWindow& parent);
 	bool isClickable();
+	bool isFocusable();
+	bool isScrollable();
 	virtual ~cTextMsg();
 	void draw();
+	/// @copydoc cControl::getSupportedHandlers
+	///
+	/// @todo Document possible handlers
+	const std::set<eDlogEvt> getSupportedHandlers() const {
+		return {EVT_CLICK};
+	}
 	cTextMsg& operator=(cTextMsg& other) = delete;
 	cTextMsg(cTextMsg& other) = delete;
 private:
-	bool drawFramed, clickable;
+	bool drawFramed;
 	short textSize;
 	eFont textFont;
 	sf::Color color;
 	std::string fromList;
-	click_callback_t onClick;
 };
 #endif

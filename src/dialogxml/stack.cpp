@@ -22,39 +22,13 @@ cControl& cStack::getChild(std::string id) {
 	return *controls[id];
 }
 
-void cStack::attachClickHandler(click_callback_t f) throw(xHandlerNotSupported) {
-	onClick = f;
-}
-
-void cStack::attachFocusHandler(focus_callback_t) throw(xHandlerNotSupported) {
-	throw xHandlerNotSupported(true);
-}
-
-bool cStack::triggerClickHandler(cDialog& me, std::string id, eKeyMod mods) {
+void cContainer::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) {
 	std::string which_clicked = clicking;
 	clicking = "";
 	
 	if(onClick) onClick(me, id, mods);
-	return controls[which_clicked]->triggerClickHandler(me, which_clicked, mods);
-}
-
-bool cStack::handleClick(location where) {
-	std::string which_clicked;
-	auto iter = controls.begin();
-	while(iter != controls.end()){
-		if(iter->second->isVisible() && where.in(iter->second->getBounds())){
-			if(iter->second->handleClick(where)) {
-				which_clicked = iter->first;
-				break;
-			}
-		}
-		iter++;
-	}
-	
-	if(which_clicked == "") return false;
-	
-	clicking = which_clicked;
-	return true;
+	if(!which_clicked.empty())
+		getChild(which_clicked).triggerClickHandler(me, which_clicked, mods);
 }
 
 void cStack::setFormat(eFormat prop, short val) throw(xUnsupportedProp) {
@@ -80,6 +54,14 @@ sf::Color cStack::getColour() throw(xUnsupportedProp) {
 
 bool cStack::isClickable() {
 	return true;
+}
+
+bool cStack::isFocusable() {
+	return false;
+}
+
+bool cStack::isScrollable() {
+	return false;
 }
 
 void cStack::draw() {
@@ -166,6 +148,11 @@ void cStack::fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& reve
 }
 
 cStack::cStack(cDialog& parent) : cContainer(CTRL_STACK, parent), curPage(0), nPages(0) {}
+
+void cStack::forEach(std::function<void(std::string,cControl&)> callback) {
+	for(auto ctrl : controls)
+		callback(ctrl.first, *ctrl.second);
+}
 
 std::string cStack::parse(ticpp::Element& who, std::string fname) {
 	using namespace ticpp;

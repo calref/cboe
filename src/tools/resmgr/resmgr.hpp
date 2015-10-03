@@ -23,7 +23,7 @@
 /// Resources include sounds, images, fonts, and cursors.
 ///
 /// To implement a new resource type, all you have to do is specialize
-/// @a ResMgr::resLoader::operator() and declare @a ResMgr::resLoader::file_ext
+/// @ref ResMgr::resLoader::operator()() and declare @ref ResMgr::resLoader::file_ext
 /// for the desired resource type. The operator() receives the
 /// full file path with the extension already applied.
 namespace ResMgr {

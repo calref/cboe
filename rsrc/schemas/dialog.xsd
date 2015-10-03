@@ -137,7 +137,6 @@
       <xs:attributeGroup ref="frame"/>
       <xs:attributeGroup ref="font"/>
       <xs:attribute ref="def-key"/>
-      <xs:attribute name="clickable" default="false" type="bool"/>
       <xs:attribute name="fromlist" default="none" type="xs:string"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
@@ -161,7 +160,6 @@
         </xs:simpleType>
       </xs:attribute>
       <xs:attribute ref="def-key"/>
-      <xs:attribute name="clickable" default="false" type="bool"/>
       <xs:attribute name="num" use="required" type="xs:integer"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>

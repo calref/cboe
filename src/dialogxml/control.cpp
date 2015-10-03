@@ -37,15 +37,19 @@ void cControl::relocate(location to) {
 	frame.offset(to.x - frame.left, to.y - frame.top);
 }
 
-const char* xHandlerNotSupported::focusMsg = "This control cannot handle focus events.\n";
-const char* xHandlerNotSupported::clickMsg = "This control cannot handle click events.\n";
+const char* xHandlerNotSupported::msg[4] = {
+	"This control cannot handle click events.\n",
+	"This control cannot handle focus events.\n",
+	"This control cannot handle defocus events.\n",
+	"This control cannot handle scroll events.\n",
+};
 
-xHandlerNotSupported::xHandlerNotSupported(bool isFocus){
-	this->isFocus = isFocus;
+xHandlerNotSupported::xHandlerNotSupported(eDlogEvt t){
+	this->evt = t;
 }
 const char* xHandlerNotSupported::what() const throw() {
-	if(isFocus) return focusMsg;
-	else return clickMsg;
+	assert("A handler not supported message is missing!" && evt < 4);
+	return msg[evt];
 }
 
 xUnsupportedProp::xUnsupportedProp(eFormat prop) throw(){
@@ -268,11 +272,38 @@ cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), t
 
 cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(nullptr), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}), frameStyle(FRM_INSET) {}
 
-bool cControl::triggerClickHandler(cDialog&, std::string, eKeyMod){
+
+void cControl::attachClickHandler(std::function<bool(cDialog&,std::string,eKeyMod)> f) throw(xHandlerNotSupported) {
+	if(!f) {
+		attachEventHandler<EVT_CLICK>(nullptr);
+		return;
+	}
+	attachEventHandler<EVT_CLICK>([f](cDialog& me, std::string id, eKeyMod mods) {
+		f(me, id, mods);
+	});
+}
+
+void cControl::attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) throw(xHandlerNotSupported) {
+	if(!f) {
+		attachEventHandler<EVT_FOCUS>(nullptr);
+		attachEventHandler<EVT_DEFOCUS>(nullptr);
+		return;
+	}
+	using namespace std::placeholders;
+	attachEventHandler<EVT_FOCUS>([f](cDialog& me, std::string id) {
+		f(me, id, false);
+	});
+	attachEventHandler<EVT_DEFOCUS>(std::bind(f, _1, _2, true));
+}
+
+bool cControl::triggerClickHandler(cDialog& dlg, std::string id, eKeyMod mods){
+	triggerEvent<EVT_CLICK>(dlg, id, mods);
 	return true;
 }
 
-bool cControl::triggerFocusHandler(cDialog&, std::string, bool){
+bool cControl::triggerFocusHandler(cDialog& dlg, std::string id, bool losing){
+	if(losing) return triggerEvent<EVT_DEFOCUS>(dlg, id);
+	triggerEvent<EVT_FOCUS>(dlg, id);
 	return true;
 }
 

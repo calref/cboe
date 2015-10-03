@@ -30,7 +30,7 @@ are required. Some controls may ignore the `width` and `height`
 attributes.
 * `def-key` - Specifies the default keyboard shortcut for the
 control. See **Keyboard Shortcuts** below for more information on the
-format of these attributes.
+format of this attribute.
 * `font`, `size`, `color`, `colour` - Specifies text attributes of the
 control. See **Text Formatting** below for details on accepted values.
 * `name` - Give the control a unique identifier which you can use to
@@ -72,9 +72,6 @@ The `<text>` tag accepts the following attributes:
 
 * `framed` - See **Common Attributes** above. Defaults to `false`.
 * `outline` - See **Common Attributes** above.
-* `clickable` - Specifies that the text is clickable. This attribute is
-useless, as clickability is determined solely by having a click handler
-set in the code.
 * `fromlist`, `font`, `size`, `color`, `colour`, `def-key` -
 See **Common Attributes** above.
 
@@ -106,19 +103,20 @@ The possible values for the `type` attribute are:
 * `right` - A normal-sized 63x23 button with a right-pointing arrow.
 * `up` - A normal-sized 63x23 button with an up-pointing arrow.
 * `down` - A normal-sized 63x23 button with a down-pointing arrow.
-* `tiny` - A tiny 14x10 button, same size as an LED.
+* `tiny` - A tiny 14x10 button, same size as an LED and with the same
+label behaviour.
 * `done` - A normal-sized 63x23 button with "Done" on it.
 * `tall` - A tall 63x40 button.
 * `trait` - A tall 63x40 button with "Race Good/Bad Traits" on it.
 * `push` - A round red 30x30 push button.
 
-(Naturally, they correspond perfectly with the values of the eBtnType
+(Naturally, they correspond perfectly with the values of the @ref eBtnType
 enumeration.)
 
 The `<led>` tag
 ---------------
 
-The `<led>` tag descripts an LED button. It can contain label text,
+The `<led>` tag describes an LED button. It can contain label text,
 which is drawn to the right of the button graphic. This differs from
 normal practice in the original Blades of Exile dialog engine, where LED
 labels were typically left-aligned to the _left_ of their associated
@@ -158,9 +156,6 @@ The `<pict>` tag accepts the following attributes:
 
 * `type` - Specifies the type of graphic. This attribute is required.
 * `num` - Specifies the graphic number. This attribute is required.
-* `clickable` - Specifies that the picture is clickable. This attribute
-is useless, as clickability is determined solely by having a click
-handler set in the code.
 * `custom` - Specifies whether the picture is custom or preset. Can be
 either `true` or `false`; defaults to `false`.
 * `framed` - See **Common Attributes** above. Defaults to `true`.
