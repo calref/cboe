@@ -23,7 +23,53 @@
 	<xsl:attribute name='class'>dark</xsl:attribute>
 </xsl:if>
 <div class='dialog'>
-<xsl:for-each select='dialog/pict | dialog/stack/pict'>
+
+<xsl:apply-templates select='*'/>
+
+</div>
+</body>
+</html>
+
+</xsl:template>
+
+<xsl:template name='set-bounds'>
+	<!-- To be called within a style attribute -->
+	<xsl:param name='setHeight'>true</xsl:param>
+	<xsl:param name='setWidth'>true</xsl:param>
+	
+	<xsl:variable name='top'>	
+		<xsl:choose>
+			<xsl:when test='../@top'>
+				<xsl:value-of select='./@top - ../@top'/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select='./@top'/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+	<xsl:variable name='left'>	
+		<xsl:choose>
+			<xsl:when test='../@left'>
+				<xsl:value-of select='./@left - ../@left'/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select='./@left'/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+	left: <xsl:value-of select='$left'/>px;
+	top: <xsl:value-of select='$top'/>px;
+	<xsl:if test='$setWidth = "true" and ./@width &gt; 0'>
+		width: <xsl:value-of select='./@width'/>px;
+	</xsl:if>
+	<xsl:if test='$setHeight = "true" and ./@height &gt; 0'>
+		height: <xsl:value-of select='./@height'/>px;
+	</xsl:if>
+</xsl:template>
+
+<xsl:template match='pict'>
 	<div>
 	<xsl:attribute name='class'>
 		pict
@@ -41,33 +87,41 @@
 		<xsl:when test='@type = "full"'>
 			<xsl:attribute name='style'>
 			background-image: url('img/other/<xsl:value-of select='./@num'/>.png');
-			left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
-			width: <xsl:value-of select='./@width'/>px; height: <xsl:value-of select='./@height'/>px;
+				<xsl:call-template name='set-bounds'/>
 			</xsl:attribute>
 		</xsl:when>
 		<xsl:when test='@type = "blank"'>
 			<xsl:attribute name='style'>
 			background-color: black;
-			left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
+				<xsl:call-template name='set-bounds'>
+					<xsl:with-param name='setHeight'>false</xsl:with-param>
+					<xsl:with-param name='setWidth'>false</xsl:with-param>
+				</xsl:call-template>
 			</xsl:attribute>
 		</xsl:when>
 		<xsl:when test='@size = "large" and @type != "monst"'>
 			<xsl:attribute name='style'>
 			background-image: url('img/<xsl:value-of select='./@type'/>/large<xsl:value-of select='./@num'/>.png');
-			left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
+				<xsl:call-template name='set-bounds'>
+					<xsl:with-param name='setHeight'>false</xsl:with-param>
+					<xsl:with-param name='setWidth'>false</xsl:with-param>
+				</xsl:call-template>
 			</xsl:attribute>
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:attribute name='style'>
 			background-image: url('img/<xsl:value-of select='./@type'/>/<xsl:value-of select='./@num'/>.png');
-			left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
+				<xsl:call-template name='set-bounds'>
+					<xsl:with-param name='setHeight'>false</xsl:with-param>
+					<xsl:with-param name='setWidth'>false</xsl:with-param>
+				</xsl:call-template>
 			</xsl:attribute>
 		</xsl:otherwise>
 	</xsl:choose>
 	</div>
-</xsl:for-each>
+</xsl:template>
 
-<xsl:for-each select='dialog/button | dialog/stack/button'>
+<xsl:template match='button'>
 	<div>
 	<xsl:attribute name='class'>
 		<xsl:if test='/dialog/@debug = "true" and @type = "tiny"'>debug</xsl:if>
@@ -75,8 +129,12 @@
 	</xsl:attribute>
 	<xsl:attribute name='style'>
 		background-image: url('img/button/<xsl:value-of select='./@type'/>.png');
-		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
-		<xsl:if test='@type = "push" or @type = "tiny"'>width: <xsl:value-of select='./@width'/>px;</xsl:if>
+		<xsl:call-template name='set-bounds'>
+			<xsl:with-param name='setHeight'>false</xsl:with-param>
+			<xsl:with-param name='setWidth'>
+				<xsl:if test='@type = "push" or @type = "tiny"'>true</xsl:if>
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:attribute>
 	<xsl:attribute name='title'>
 		<xsl:if test='/dialog/@debug = "true" and @name'>
@@ -88,9 +146,9 @@
 	</xsl:attribute>
 	<xsl:value-of select='.'/>
 	</div>
-</xsl:for-each>
+</xsl:template>
 
-<xsl:for-each select='dialog/led | dialog/stack/led'>
+<xsl:template match='led'>
 	<div>
 	<xsl:attribute name='class'>
 		led 
@@ -113,15 +171,13 @@
 			background-image: url('img/button/led-<xsl:value-of select='./@state'/>.png');
 		</xsl:if>
 		background-position: left top;
-		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
-		width: <xsl:value-of select='./@width'/>px;
-		height: <xsl:value-of select='./@height'/>px;
+		<xsl:call-template name='set-bounds'/>
 	</xsl:attribute>
 	<xsl:value-of select='.'/>
 	</div>
-</xsl:for-each>
+</xsl:template>
 
-<xsl:for-each select='dialog/group/led | dialog/stack/group/led'>
+<xsl:template match='group/led'>
 	<div>
 	<xsl:attribute name='class'>
 		led 
@@ -144,14 +200,13 @@
 		<xsl:if test='./@state'>
 			background-image: url('img/button/led-<xsl:value-of select='./@state'/>.png');
 		</xsl:if>
-		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
-		width: <xsl:value-of select='./@width'/>px;
+		<xsl:call-template name='set-bounds'/>
 	</xsl:attribute>
 	<xsl:value-of select='.'/>
 	</div>
-</xsl:for-each>
+</xsl:template>
 
-<xsl:for-each select='dialog/text | dialog/stack/text'>
+<xsl:template match='text'>
 	<div>
 	<xsl:attribute name='class'>
 		text
@@ -168,8 +223,7 @@
 	<xsl:attribute name='style'>
 		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;
 		font-family: <xsl:value-of select='./@font'/>;
-		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
-		width: <xsl:value-of select='./@width'/>px; height: <xsl:value-of select='./@height'/>px;
+		<xsl:call-template name='set-bounds'/>
 	</xsl:attribute>
 	<xsl:for-each select='./child::node()'>
 		<xsl:choose>
@@ -182,13 +236,12 @@
 		</xsl:choose>
 	</xsl:for-each>
 	</div>
-</xsl:for-each>
+</xsl:template>
 
-<xsl:for-each select='dialog/field | dialog/stack/field'>
+<xsl:template match='field'>
 	<div class='tfield'>
 	<xsl:attribute name='style'>
-		left: <xsl:value-of select='./@left'/>px; top: <xsl:value-of select='./@top'/>px;
-		width: <xsl:value-of select='./@width'/>px; height: <xsl:value-of select='./@height'/>px;
+		<xsl:call-template name='set-bounds'/>
 	</xsl:attribute>
 	<div class='tfield-inner'>
 	<xsl:attribute name='style'>
@@ -199,11 +252,38 @@
 	(<xsl:value-of select='@name'/>)
 	</div>
 	</div>
-</xsl:for-each>
-</div>
-</body>
-</html>
+</xsl:template>
 
+<xsl:template match='stack'>
+	<div class='stack'>
+	<xsl:attribute name='style'>
+		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;
+		font-family: <xsl:value-of select='./@font'/>;
+		<xsl:call-template name='set-bounds'/>
+	</xsl:attribute>
+	
+	<xsl:apply-templates select='*'/>
+	
+	</div>
+</xsl:template>
+
+<xsl:template match='pane'>
+	<div>
+	<xsl:attribute name='class'>
+		pane
+		<xsl:if test='@framed = "true"'>framed </xsl:if>
+	</xsl:attribute>
+	<xsl:attribute name='style'>
+		overflow-x: hidden;
+		overflow-y: scroll;
+		color: <xsl:value-of select='./@color'/> <xsl:value-of select='/dialog/@fore'/>;
+		font-family: <xsl:value-of select='./@font'/>;
+		<xsl:call-template name='set-bounds'/>
+	</xsl:attribute>
+	
+	<xsl:apply-templates select='*'/>
+	
+	</div>
 </xsl:template>
 
 </xsl:stylesheet>

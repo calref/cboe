@@ -50,7 +50,6 @@ title {
 
 .pict.framed {
 	padding: 1px;
-	border: inset black thin;
 }
 
 .pict.dlog {
@@ -172,7 +171,7 @@ title {
 	line-height: 12px;
 }
 
-.text.framed {
+.framed {
 	padding: 2px;
 	border: inset thin black;
 }
