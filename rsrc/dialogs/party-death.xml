@@ -4,9 +4,9 @@
 	<!--
 	 TODO: This dialog should use a pict of type=dlog and size=large
 	 -->
-	<button name='load' type='regular' top='125' left='278'>Restore</button>
-	<button name='new' type='regular' top='125' left='210'>Restart</button>
-	<button name='quit' type='regular' top='125' left='141'>Quit</button>
+	<button name='load' type='regular' def-key='ctrl o' top='125' left='278'>Restore</button>
+	<button name='new' type='regular' def-key='ctrl n' top='125' left='210'>Restart</button>
+	<button name='quit' type='regular' def-key='ctrl q' top='125' left='141'>Quit</button>
 	<pict framed='false' type='dlog' num='32' top='6' left='6'/>
 	<text top='77' left='85' width='252' height='44'>
 		Unfortunately, the latter fate is the one that just befell you.
