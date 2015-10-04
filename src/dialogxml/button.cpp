@@ -79,15 +79,14 @@ void cButton::draw(){
 			to_rect.left += 18;
 			style.colour = textClr;
 		} else if(type == BTN_PUSH) {
-			to_rect.top += 34;
+			to_rect.top += 42;
+			style.colour = textClr;
+			int w = string_length(lbl, style);
+			to_rect.inset((w - 30) / -2,0);
 		}
 		win_draw_string(*inWindow,to_rect,lbl,textMode,style);
-		// TODO: Adjust string location as appropriate
-		// Tiny button string location should be shifted right 20 pixels (or possibly 18)
-		// Push button string should be centred below the button
-		// Others may need adjustments too, not sure
-		// TODO: How is it supposed to know it's a default button when this fact is stored in the dialog, not the button?
-		if(key.spec && key.k == key_enter) drawFrame(2,frameStyle); // frame default button, to provide a visual cue that it's the default
+		// frame default button, to provide a visual cue that it's the default
+		if(key.spec && key.k == key_enter) drawFrame(2,frameStyle);
 	}
 }
 
@@ -187,7 +186,7 @@ std::string cButton::parse(ticpp::Element& who, std::string fname) {
 			attr->GetValue(&height);
 		}else throw xBadAttr("button",name,attr->Row(),attr->Column(),fname);
 	}
-	if(parent->getBg() == cDialog::BG_DARK && getBtnType() == BTN_TINY)
+	if(parent->getBg() == cDialog::BG_DARK && (getBtnType() == BTN_TINY || getBtnType() == BTN_PUSH))
 		setColour(sf::Color::White);
 	if(!foundType) throw xMissingAttr("button","type",who.Row(),who.Column(),fname);
 	if(!foundTop) throw xMissingAttr("button","top",who.Row(),who.Column(),fname);
@@ -294,7 +293,7 @@ void cButton::init(){
 	btnRects[BTN_TALL][0] = {0,0,40,63};
 	btnRects[BTN_TRAIT][0] = {40,0,80,63};
 	btnRects[BTN_PUSH][0] = {0,0,30,30};
-	for(int j = 0; j < 12; j++)
+	for(int j = 0; j <= 12; j++)
 		btnRects[j][1] = btnRects[j][0];
 	btnRects[BTN_SM][1].offset(23,0);
 	btnRects[BTN_REG][1].offset(63,0);

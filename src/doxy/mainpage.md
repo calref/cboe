@@ -108,7 +108,7 @@ label behaviour.
 * `done` - A normal-sized 63x23 button with "Done" on it.
 * `tall` - A tall 63x40 button.
 * `trait` - A tall 63x40 button with "Race Good/Bad Traits" on it.
-* `push` - A round red 30x30 push button.
+* `push` - A round red 30x30 push button. The label is centred below it.
 
 (Naturally, they correspond perfectly with the values of the @ref eBtnType
 enumeration.)
