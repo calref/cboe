@@ -837,7 +837,7 @@ cPlayer::cPlayer(cParty& party) : party(party) {
 	cur_sp = 0;
 	max_sp = 0;
 	experience = 0;
-	skill_pts = 60;
+	skill_pts = 65;
 	level = 1;
 	for(i = 0; i < 24; i++)
 		items[i] = cItem();
