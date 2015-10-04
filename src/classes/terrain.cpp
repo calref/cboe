@@ -221,7 +221,8 @@ void cTerrain::append(legacy::terrain_type_type& old){
 		case 15:
 			special = eTerSpec::WATERFALL_CAVE;
 			flag1 = DIR_S;
-			flag3 = 0;
+			flag2 = 5;
+			flag3 = 90;
 			break;
 		case 16:
 			special = eTerSpec::CONVEYOR;

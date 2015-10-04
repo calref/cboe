@@ -2802,15 +2802,14 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		print_buf();
 		if(wilderness_lore_present(coord_to_ter(x - dir_x_dif[dir], y - dir_y_dif[dir]) > 0) && get_ran(1,0,1) == 0)
 			add_string_to_buf("  (No supplies lost.)");
-		else if(univ.party.food > 1800){
-			// TODO: Shouldn't this check n instead of univ.party.food?
-			add_string_to_buf("  (Many supplies lost.)");
-			univ.party.food -= 50;
-		}
 		else {
-			int n = univ.party.food;
-			univ.party.food = (univ.party.food * 19) / 20;
-			add_string_to_buf("  (" + std::to_string(n - univ.party.food) + " supplies lost.)");
+			cTerrain& ter = univ.scenario.ter_types[coord_to_ter(x, y)];
+			int lost = univ.party.food * ter.flag2 / 100;
+			if(lost >= ter.flag3) {
+				lost = ter.flag3;
+				add_string_to_buf("  (Many supplies lost.)");
+			} else add_string_to_buf("  (" + std::to_string(lost) + " supplies lost.)");
+			univ.party.food -= lost;
 		}
 		put_pc_screen();
 		play_sound(28);

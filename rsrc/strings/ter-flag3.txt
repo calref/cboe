@@ -15,8 +15,8 @@ Unused
 Unused
 Unused
 Unused
-Unused
-Unused
+Max food lost
+Max food lost
 Unused
 Unused
 Unused
