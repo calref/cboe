@@ -1171,7 +1171,7 @@ void use_item(short pc,short item) {
 			case eItemAbil::EXPLODING_WEAPON: case eItemAbil::FREE_ACTION: case eItemAbil::FULL_PROTECTION: case eItemAbil::WILL:
 			case eItemAbil::GIANT_STRENGTH: case eItemAbil::GRAYMOLD: case eItemAbil::HEALING_WEAPON: case eItemAbil::HEAVIER_OBJECT:
 			case eItemAbil::HIT_CALL_SPECIAL: case eItemAbil::HOLLY: case eItemAbil::LIFE_SAVING: case eItemAbil::LIGHTER_OBJECT:
-			case eItemAbil::LOCKPICKS: case eItemAbil::MANDRAKE: case eItemAbil::MARTYRS_SHIELD: case eItemAbil::UNUSED2:
+			case eItemAbil::LOCKPICKS: case eItemAbil::MANDRAKE: case eItemAbil::MARTYRS_SHIELD: case eItemAbil::MAGERY:
 			case eItemAbil::NETTLE: case eItemAbil::NONE: case eItemAbil::OCCASIONAL_STATUS: case eItemAbil::POISON_AUGMENT:
 			case eItemAbil::PROTECT_FROM_PETRIFY: case eItemAbil::PROTECT_FROM_SPECIES: case eItemAbil::RADIANT:
 			case eItemAbil::REGENERATE: case eItemAbil::RESURRECTION_BALM: case eItemAbil::RETURNING_MISSILE: case eItemAbil::SAPPHIRE:

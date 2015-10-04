@@ -29,7 +29,7 @@ Call special when attacking
 
 Protection from damage type
 Full protection
-Unused
+Magery
 Evasion
 Martyr's shield
 Awkward weapon

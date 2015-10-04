@@ -11,7 +11,7 @@
 		<led name='race1' top='53' left='55' width='90'>Human (0%)</led>
 		<led name='race2' top='53' left='170' width='90'>Nephilim (12%)</led>
 		<led name='race3' top='53' left='285' width='90'>Slithzerikai (20%)</led>
-		<led name='race4' top='53' left='400' width='90'>Vahnatai (-5%)</led>
+		<led name='race4' top='53' left='400' width='90'>Vahnatai (18%)</led>
 	</group>
 	<text size='large' top='74' left='55' width='126' height='16'>Advantages:</text>
 	<led name='good1' top='95' left='55' width='126'>Toughness (10%)</led>

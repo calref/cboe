@@ -62,7 +62,7 @@ void cPlayer::append(legacy::pc_record_type old){
 short cPlayer::get_tnl(){
 	short tnl = 100,store_per = 100;
 	// Omitting a race from this list gives it a value of 0, thanks to the defaulting implementation of operator[]
-	static std::map<const eRace, const int> rp = {{eRace::NEPHIL,12},{eRace::SLITH,20},{eRace::VAHNATAI,-5}};
+	static std::map<const eRace, const int> rp = {{eRace::NEPHIL,12},{eRace::SLITH,20},{eRace::VAHNATAI,18}};
 	static std::map<const eTrait, const short> ap = {
 		{eTrait::TOUGHNESS,10}, {eTrait::MAGICALLY_APT,20}, {eTrait::AMBIDEXTROUS,8}, {eTrait::NIMBLE,10}, {eTrait::CAVE_LORE,4},
 		{eTrait::WOODSMAN,6}, {eTrait::GOOD_CONST,10}, {eTrait::HIGHLY_ALERT,7}, {eTrait::STRENGTH,12}, {eTrait::RECUPERATION,15},
@@ -789,6 +789,7 @@ void cPlayer::finish_create() {
 			items[1] = cItem('helm');
 			break;
 		case eRace::VAHNATAI:
+			// TODO: Should they have a robe instead of a knife?
 			items[0] = cItem('nife');
 			items[1] = cItem('rdsk');
 			break;

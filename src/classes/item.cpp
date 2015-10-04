@@ -965,7 +965,7 @@ std::string cItem::getAbilName() const {
 	bool party = abil_group();
 	std::ostringstream sout;
 	switch(ability) {
-		case eItemAbil::UNUSED: case eItemAbil::UNUSED2: break; // Invalid
+		case eItemAbil::UNUSED: break; // Invalid
 		case eItemAbil::NONE: sout << "No ability"; break;
 		case eItemAbil::HEALING_WEAPON: sout << "Heals target"; break;
 		case eItemAbil::RETURNING_MISSILE: sout << "Returning missile"; break;
@@ -986,6 +986,7 @@ std::string cItem::getAbilName() const {
 		case eItemAbil::BOOST_MAGIC: sout << "Mage's Mantle"; break;
 		case eItemAbil::ACCURACY: sout << "Accuracy"; break;
 		case eItemAbil::THIEVING: sout << "Thieving"; break;
+		case eItemAbil::MAGERY: sout << "Magery"; break;
 		case eItemAbil::GIANT_STRENGTH: sout << "Giant Strength"; break;
 		case eItemAbil::LIGHTER_OBJECT: sout << "Lighter Object"; break;
 		case eItemAbil::HEAVIER_OBJECT: sout << "Heavier Object"; break;

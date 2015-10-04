@@ -712,7 +712,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 	
 	adj = freebie ? 1 : univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.party[pc_num].level;
-	if(!freebie && univ.party[pc_num].race == eRace::VAHNATAI)
+	if(!freebie && (*spell_num).level <= univ.party[pc_num].get_prot_level(eItemAbil::MAGERY))
 		level++;
 	
 	switch(spell_num) {
@@ -1340,7 +1340,7 @@ void cast_town_spell(location where) {
 	ter = univ.town->terrain(where.x,where.y);
 	short adj = spell_freebie ? 1 : univ.party[who_cast].stat_adj(eSkill::INTELLIGENCE);
 	short level = spell_freebie ? store_item_spell_level : univ.party[who_cast].level;
-	if(!spell_freebie && univ.party[who_cast].race == eRace::VAHNATAI && !(*town_spell).is_priest())
+	if(!spell_freebie && (*town_spell).level <= univ.party[who_cast].get_prot_level(eItemAbil::MAGERY) && !(*town_spell).is_priest())
 		level++;
 	if(!spell_freebie && univ.party[who_cast].traits[eTrait::ANAMA] && (*town_spell).is_priest())
 		level++;

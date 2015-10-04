@@ -1039,7 +1039,7 @@ void do_combat_cast(location target) {
 	else {
 		level = 1 + caster.level / 2;
 		bonus = caster.stat_adj(eSkill::INTELLIGENCE);
-		if(caster.race == eRace::VAHNATAI && !(*spell_being_cast).is_priest())
+		if((*spell_being_cast).level <= caster.get_prot_level(eItemAbil::MAGERY))
 			level++;
 		if(caster.traits[eTrait::ANAMA] && (*spell_being_cast).is_priest())
 			level++;
@@ -4785,7 +4785,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 	miss_num_t store_m_type = 0;
 	short bonus = freebie ? 1 : univ.party[current_pc].stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.party[current_pc].level;
-	if(!freebie && univ.party[current_pc].race == eRace::VAHNATAI)
+	if(!freebie && (*spell_num).level <= univ.party[current_pc].get_prot_level(eItemAbil::MAGERY))
 		level++;
 	cCreature* which_m;
 	start_missile_anim();
