@@ -293,7 +293,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			break;
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			alter_space(where_check.x,where_check.y,ter_flag1);
-			if(ter_flag2 < 200) {
+			if(ter_flag2 >= 0) {
 				play_sound(-1 * ter_flag2);
 			}
 			give_help(47,65);
@@ -1256,7 +1256,8 @@ bool use_space(location where) {
 		}
 		add_string_to_buf("  OK.");
 		alter_space(where.x,where.y,univ.scenario.ter_types[ter].flag1);
-		play_sound(univ.scenario.ter_types[ter].flag2);
+		if(univ.scenario.ter_types[ter].flag2 >= 0)
+			play_sound(univ.scenario.ter_types[ter].flag2);
 		return true;
 	} else if(univ.scenario.ter_types[ter].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
 		short spec_type = 0;

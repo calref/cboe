@@ -162,6 +162,7 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			break;
 		case 1:
 			special = eTerSpec::CHANGE_WHEN_STEP_ON;
+			if(flag2 == 200) flag2 = -1;
 			flag3 = 0;
 			break;
 		case 2:
@@ -186,7 +187,7 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			break;
 		case 7:
 			special = eTerSpec::CRUMBLING;
-			flag2 = 1; // destroyed by Move Mountains but not by quickfire; 0 = both, 2 = quickfire only
+			flag2 = 0; // destroyed by Move Mountains but not by quickfire; 1 = both, 2 = quickfire only
 			break;
 		case 8:
 			special = eTerSpec::LOCKABLE;
@@ -254,7 +255,6 @@ void cTerrain::append(legacy::terrain_type_type& old){
 			break;
 		case 22:
 			special = eTerSpec::CHANGE_WHEN_USED;
-			flag2 = 59;
 			flag3 = 0;
 			break;
 		case 23:

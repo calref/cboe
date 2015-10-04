@@ -17,15 +17,11 @@
 
 const short cCreature::charm_odds[21] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0, 0};
 
-cCreature::cCreature(){
-	number = active = 0;
-	attitude = start_attitude = eAttitude::DOCILE;
-	start_loc.x = start_loc.y = cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;
-	mobility = 1;
-	summon_time  = 0;
-	time_flag = eMonstTime::ALWAYS;
-	spec1 = spec2 = spec_enc_code = time_code = monster_time = 0;
-	personality = special_on_kill = facial_pic = -1;
+cCreature::cCreature() {
+	active = 0;
+	attitude = eAttitude::DOCILE;
+	cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;
+	summon_time = 0;
 	target = 6;
 }
 

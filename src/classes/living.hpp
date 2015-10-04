@@ -19,8 +19,8 @@ class iLiving {
 public:
 	// HACK: This is only really marked mutable so that I can use operator[] from const methods
 	mutable std::map<eStatus,short> status;
-	short ap;
-	eDirection direction;
+	short ap = 0;
+	eDirection direction = DIR_HERE;
 	short marked_damage = 0; // for use during animations
 	
 	virtual bool is_alive() const = 0;

@@ -11,7 +11,7 @@
 
 #include <SFML/Audio.hpp>
 
-typedef unsigned short snd_num_t;
+typedef signed int snd_num_t;
 void init_snd_tool();
 bool sound_going(snd_num_t which_s);
 void play_sound(short which, short how_many_times = 1);

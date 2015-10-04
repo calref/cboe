@@ -146,14 +146,9 @@ TEST_CASE("Saving monster types") {
 		CHECK(scen.scen_monsters[1].resist[eDamageType::SPECIAL] == 100);
 	}
 	SECTION("With attacks") {
-		scen.scen_monsters[1].a[0].dice = 1;
-		scen.scen_monsters[1].a[0].sides = 4;
-		scen.scen_monsters[1].a[1].dice = 2;
-		scen.scen_monsters[1].a[1].sides = 6;
-		scen.scen_monsters[1].a[1].type = eMonstMelee::STAB;
-		scen.scen_monsters[1].a[2].sides = 3;
-		scen.scen_monsters[1].a[2].dice = 8;
-		scen.scen_monsters[1].a[2].type = eMonstMelee::SLIME;
+		scen.scen_monsters[1].addAttack(1, 4);
+		scen.scen_monsters[1].addAttack(2, 6, eMonstMelee::STAB);
+		scen.scen_monsters[1].addAttack(3, 8, eMonstMelee::SLIME);
 		in_and_out("attacks", scen);
 		CHECK(scen.scen_monsters[1].a[0].dice == 1);
 		CHECK(scen.scen_monsters[1].a[0].sides == 4);
@@ -161,8 +156,8 @@ TEST_CASE("Saving monster types") {
 		CHECK(scen.scen_monsters[1].a[1].dice == 2);
 		CHECK(scen.scen_monsters[1].a[1].sides == 6);
 		CHECK(scen.scen_monsters[1].a[1].type == eMonstMelee::STAB);
-		CHECK(scen.scen_monsters[1].a[2].sides == 3);
-		CHECK(scen.scen_monsters[1].a[2].dice == 8);
+		CHECK(scen.scen_monsters[1].a[2].dice == 3);
+		CHECK(scen.scen_monsters[1].a[2].sides == 8);
 		CHECK(scen.scen_monsters[1].a[2].type == eMonstMelee::SLIME);
 	}
 	SECTION("With an ability of every type") {

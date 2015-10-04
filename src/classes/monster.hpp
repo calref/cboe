@@ -120,6 +120,7 @@ public:
 	spec_num_t see_spec;
 	
 	std::map<eMonstAbil,uAbility>::iterator addAbil(eMonstAbilTemplate what, int param = 0);
+	int addAttack(unsigned short dice, unsigned short sides, eMonstMelee type = eMonstMelee::SWING);
 	
 	void append(legacy::monster_record_type& old);
 	cMonster();

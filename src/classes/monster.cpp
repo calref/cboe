@@ -138,6 +138,17 @@ void cMonster::append(legacy::monster_record_type& old){
 	see_spec = -1;
 }
 
+int cMonster::addAttack(unsigned short dice, unsigned short sides, eMonstMelee type) {
+	int which = 0;
+	while(which < 3 && a[which].dice > 0 && a[which].sides > 0)
+		which++;
+	if(which >= 3) return -1;
+	a[which].dice = dice;
+	a[which].sides = sides;
+	a[which].type = type;
+	return which;
+}
+
 std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate what, int param) {
 	switch(what) {
 		// Missiles: {true, type, missile pic, dice, sides, skill, range, odds}
@@ -415,6 +426,8 @@ cTownperson::cTownperson() {
 	personality = -1;
 	special_on_kill = -1;
 	special_on_talk = -1;
+	facial_pic = -1;
+	start_attitude = eAttitude::DOCILE;
 }
 
 cTownperson::cTownperson(location loc, mon_num_t num, const cMonster& monst) : cTownperson() {
