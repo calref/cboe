@@ -21,7 +21,7 @@
 namespace fs = boost::filesystem;
 
 #define LINES_IN_TEXT_WIN	11
-#define NUM_TER_SHEETS		12
+#define NUM_TER_SHEETS		14
 #define NUM_MONST_SHEETS	10
 
 struct m_pic_index_t {

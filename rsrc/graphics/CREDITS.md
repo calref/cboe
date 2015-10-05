@@ -69,7 +69,7 @@ are by ADoS, and the rest are by Mistb0rn.
 - ter9.png is entirely by ADoS (some based on original BoE graphics).
 - On ter10.png, the base ice tiles (graphics 1 and 2) are by Mistb0rn and the rest is by
 ADoS (based on those tiles and original BoE graphics) with some tweaks by Celtic Minstrel.
-- ter11.png and ter12.png are entirely by ADoS.
+- ter11.png, ter12.png, ter13.png, and ter14.png are entirely by ADoS.
 - On teranim.png, graphic 15 is by Mistb0rn and graphic 16 is by ADoS.
 - termap.png currently just contains directly shrunken versions of the other sheets.
 
