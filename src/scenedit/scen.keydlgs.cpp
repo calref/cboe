@@ -354,8 +354,8 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			strings = *ResMgr::get<StringRsrc>("shop-specials");
 			break;
 		case STRT_BUTTON:
-			for(int btn : available_btns) {
-				strings.push_back(basic_buttons[btn].label);
+			for(auto btn : basic_buttons) {
+				strings.push_back(btn.name.empty() ? btn.label : btn.name);
 			}
 			break;
 		case STRT_CMP:

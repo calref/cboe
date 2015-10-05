@@ -171,6 +171,12 @@ void cSpecial::append(legacy::special_node_type& old){
 			if(old.type == 55) type = eSpecType::ONCE_DIALOG;
 			else if(old.type == 58) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
 			else type = eSpecType::TOWN_PORTAL;
+			if(type == eSpecType::TOWN_PORTAL) break;
+			// Duplicate Leave button
+			if(old.ex1a == 20)
+				ex1a = 9;
+			if(old.ex2a == 20)
+				ex2a = 9;
 			break;
 		case 57: case 60: // Large dialogs with monster graphics
 			if(pic >= 400 && pic < 1000)
@@ -181,6 +187,11 @@ void cSpecial::append(legacy::special_node_type& old){
 			m2 = -1;
 			if(old.type == 57) type = eSpecType::ONCE_DIALOG;
 			else if(old.type == 60) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
+			// Duplicate Leave button
+			if(old.ex1a == 20)
+				ex1a = 9;
+			if(old.ex2a == 20)
+				ex2a = 9;
 			break;
 		case 56: case 59: case 188: // Large dialogs with terrain graphics
 			pictype = PIC_TER;
@@ -189,6 +200,12 @@ void cSpecial::append(legacy::special_node_type& old){
 			if(old.type == 56) type = eSpecType::ONCE_DIALOG;
 			else if(old.type == 59) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
 			else type = eSpecType::TOWN_LEVER;
+			if(type == eSpecType::TOWN_LEVER) break;
+			// Duplicate Leave button
+			if(old.ex1a == 20)
+				ex1a = 9;
+			if(old.ex2a == 20)
+				ex2a = 9;
 			break;
 		case 190: // Large stairway dialog
 			type = eSpecType::TOWN_STAIR;

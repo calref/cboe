@@ -615,7 +615,7 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	std::string item_hit = customDialog.show();
 	
 	for(int i = 0; i < 3; i++) {
-		auto& btn = basic_buttons[available_btns[buttons[i]]];
+		auto& btn = basic_buttons[buttons[i]];
 		if(item_hit == btn.label)
 			return i + 1;
 	}

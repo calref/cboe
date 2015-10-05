@@ -343,7 +343,7 @@ cThreeChoice::cThreeChoice
 	int i = 0;
 	for(short j : buttons) {
 		if(j < 0) buttonDefs[i++] = null_btn;
-		else buttonDefs[i++] = basic_buttons[available_btns[j]];
+		else buttonDefs[i++] = basic_buttons[j];
 	}
 	init_buttons(buttonDefs[0], buttonDefs[1], buttonDefs[2]);
 	init_pict(pic);

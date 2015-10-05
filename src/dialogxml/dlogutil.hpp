@@ -103,6 +103,7 @@ struct bbtt {
 	eBtnType type;		///< The type of the preset button.
 	std::string label;	///< The preset button's label, if any.
 	cKey defaultKey;	///< The preset button's default key shortcut, if any.
+	std::string name;	///< (optional) A more descriptive name for the button.
 };
 
 /// Represents a preset button for use with cThreeChoice.
@@ -110,8 +111,7 @@ typedef boost::optional<bbtt> cBasicButtonType;
 
 namespace {cBasicButtonType null_btn = boost::none;}
 #ifndef BTNS_DEFINED
-extern bbtt basic_buttons[];
-extern size_t available_btns[53];
+extern bbtt basic_buttons[71];
 #endif
 
 /// A choice dialog with several strings and up to three buttons.
