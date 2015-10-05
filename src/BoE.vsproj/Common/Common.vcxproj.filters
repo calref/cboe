@@ -133,12 +133,6 @@
     <ClInclude Include="..\..\dialogxml\dlogevt.hpp">
       <Filter>DialogXML\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dialogxml\dlogutil.buttons.hpp">
-      <Filter>DialogXML\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dialogxml\dlogutil.hpp">
-      <Filter>DialogXML\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\dialogxml\field.hpp">
       <Filter>DialogXML\Header Files</Filter>
     </ClInclude>
@@ -216,6 +210,21 @@
     </ClInclude>
     <ClInclude Include="..\..\tools\menu_accel.win.hpp">
       <Filter>Tools\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\pictchoice.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\strchoice.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\strdlog.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\3choice.hpp">
+      <Filter>DialogXML\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dialogxml\choicedlog.hpp">
+      <Filter>DialogXML\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -303,9 +312,6 @@
     <ClCompile Include="..\..\dialogxml\dialog.cpp">
       <Filter>DialogXML\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dialogxml\dlogutil.cpp">
-      <Filter>DialogXML\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dialogxml\field.cpp">
       <Filter>DialogXML\Source Files</Filter>
     </ClCompile>
@@ -383,6 +389,24 @@
     </ClCompile>
     <ClCompile Include="..\..\tools\menu_accel.win.cpp">
       <Filter>Tools\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\3choice.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\basicbtns.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\choicedlog.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\pictchoice.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\strchoice.cpp">
+      <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dialogxml\strdlog.cpp">
+      <Filter>DialogXML\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
