@@ -7,7 +7,9 @@
 #include "dialog.hpp"
 #include "control.hpp"
 #include "button.hpp"
-#include "dlogutil.hpp"
+#include "pict.hpp"
+#include "strdlog.hpp"
+#include "choicedlog.hpp"
 #include "winutil.hpp"
 #include <boost/lexical_cast.hpp>
 

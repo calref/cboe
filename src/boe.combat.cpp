@@ -19,7 +19,7 @@
 #include "boe.graphutil.hpp"
 #include "boe.main.hpp"
 #include "mathutil.hpp"
-#include "dlogutil.hpp"
+#include "choicedlog.hpp"
 #include "boe.menus.hpp"
 #include "spell.hpp"
 

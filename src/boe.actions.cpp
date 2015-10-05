@@ -26,7 +26,7 @@
 #include "boe.main.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
-#include "dlogutil.hpp"
+#include "choicedlog.hpp"
 #include "dialog.hpp"
 #include "scrollbar.hpp"
 #include "boe.menus.hpp"

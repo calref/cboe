@@ -7,7 +7,6 @@
 #include "pc.action.hpp"
 #include "soundtool.hpp"
 #include "graphtool.hpp"
-#include "dlogutil.hpp"
 #include "restypes.hpp"
 #include "message.hpp"
 #include "mathutil.hpp"

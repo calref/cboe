@@ -10,7 +10,6 @@
 #include "soundtool.hpp"
 #include "pc.editors.hpp"
 #include "mathutil.hpp"
-#include "dlogutil.hpp"
 #include "restypes.hpp"
 #include "fileio.hpp"
 

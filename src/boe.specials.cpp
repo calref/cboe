@@ -26,7 +26,8 @@
 #include "boe.dlgutil.hpp"
 #include "mathutil.hpp"
 #include "boe.main.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
+#include "choicedlog.hpp"
 #include "fileio.hpp"
 #include <array>
 #include "spell.hpp"

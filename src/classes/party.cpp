@@ -16,7 +16,7 @@
 
 #include "scenario.hpp"
 #include "universe.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
 #include "oldstructs.hpp"
 #include "fileio.hpp"
 #include "mathutil.hpp"

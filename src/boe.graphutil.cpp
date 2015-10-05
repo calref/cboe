@@ -17,7 +17,7 @@
 #include "soundtool.hpp"
 #include "graphtool.hpp"
 #include "mathutil.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern rectangle	windRect;

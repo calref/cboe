@@ -13,7 +13,7 @@
 #include <map>
 #include <sstream>
 
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
 #include "oldstructs.hpp"
 #include "scenario.hpp"
 

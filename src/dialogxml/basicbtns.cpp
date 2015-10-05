@@ -7,7 +7,7 @@
  */
 
 #define BTNS_DEFINED
-#include "dlogutil.hpp"
+#include "3choice.hpp"
 
 /// @file
 /// Preset button specifications for cThreeChoice

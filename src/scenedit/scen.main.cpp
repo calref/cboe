@@ -20,7 +20,8 @@
 #include "scrollbar.hpp"
 #include "winutil.hpp"
 #include "cursors.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
+#include "choicedlog.hpp"
 #include "scen.menus.hpp"
 #include "restypes.hpp"
 

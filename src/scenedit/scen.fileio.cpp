@@ -14,7 +14,6 @@
 #include "mathutil.hpp"
 #include "oldstructs.hpp"
 #include "fileio.hpp"
-#include "dlogutil.hpp"
 #include "tarball.hpp"
 #include "gzstream.h"
 #include "tinyprint.h"

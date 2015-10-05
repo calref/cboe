@@ -10,9 +10,10 @@
 #include <Cocoa/Cocoa.h>
 #include <memory>
 #include <algorithm>
+#include <iostream>
 #include "fileio.hpp"
 #include "boe.global.hpp"
-#include "dlogutil.hpp"
+#include "choicedlog.hpp"
 
 extern void finish_load_party();
 extern void end_startup();

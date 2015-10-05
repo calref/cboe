@@ -24,7 +24,7 @@
 #include "mathutil.hpp"
 #include "boe.main.hpp"
 #include "graphtool.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
 #include "fileio.hpp"
 #include "winutil.hpp"
 

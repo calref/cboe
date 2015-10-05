@@ -14,7 +14,7 @@
 #include <sstream>
 
 #include "scenario.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
 #include "oldstructs.hpp"
 #include "fileio.hpp"
 

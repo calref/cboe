@@ -11,7 +11,7 @@
 #include <fstream>
 #include <boost/filesystem/operations.hpp>
 
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
 #include "gzstream.h"
 
 #include "universe.hpp"

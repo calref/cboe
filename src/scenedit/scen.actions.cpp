@@ -21,7 +21,8 @@
 #include "winutil.hpp"
 #include "cursors.hpp"
 #include "scrollbar.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
+#include "choicedlog.hpp"
 #include "gitrev.hpp"
 
 #include "scen.btnmg.hpp"

@@ -14,7 +14,7 @@
 #include "boe.main.hpp"
 #include "soundtool.hpp"
 #include "fileio.hpp"
-#include "dlogutil.hpp"
+#include "choicedlog.hpp"
 #include "winutil.hpp"
 #include "boe.menus.hpp"
 #include "mathutil.hpp"

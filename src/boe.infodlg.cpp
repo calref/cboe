@@ -19,7 +19,8 @@
 #include "boe.fileio.hpp"
 #include "boe.main.hpp"
 #include "mathutil.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
+#include "button.hpp"
 #include "fileio.hpp"
 #include "restypes.hpp"
 #include <boost/lexical_cast.hpp>

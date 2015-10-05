@@ -15,10 +15,13 @@
 
 #include <cstdint>
 #include <memory>
+#include <boost/filesystem/path.hpp>
 
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
 #include "porting.hpp"
 #include "location.hpp"
+
+namespace fs = boost::filesystem;
 
 static int16_t extract_word(char* ptr) {
 	int16_t s = *(int16_t*) ptr;

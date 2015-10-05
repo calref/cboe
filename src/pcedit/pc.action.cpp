@@ -10,7 +10,8 @@
 #include "graphtool.hpp"
 #include "soundtool.hpp"
 #include "mathutil.hpp"
-#include "dlogutil.hpp"
+#include "dialog.hpp"
+#include "control.hpp"
 #include <boost/lexical_cast.hpp>
 
 extern cUniverse univ;

@@ -13,8 +13,9 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
 #include "oldstructs.hpp"
+#include "graphtool.hpp"
 
 cSpecial::cSpecial(){
 	type = eSpecType::NONE;

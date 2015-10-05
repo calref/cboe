@@ -173,7 +173,6 @@
 		919CC2681B3773C200273FDA /* control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA3C0FB8DA8E001E34EA /* control.cpp */; };
 		919CC2691B3773C700273FDA /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA890FB8EC57001E34EA /* button.cpp */; };
 		919CC26A1B3773CD00273FDA /* dialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBA180FB8BECA001E34EA /* dialog.cpp */; };
-		919CC26B1B3773D300273FDA /* dlogutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBADA0FB91D2A001E34EA /* dlogutil.cpp */; };
 		919CC26C1B3773D600273FDA /* field.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB50FB91A26001E34EA /* field.cpp */; };
 		919CC26D1B3773DB00273FDA /* message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAB90FB91ADB001E34EA /* message.cpp */; };
 		919CC26E1B3773E000273FDA /* pict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910BBAA90FB8F733001E34EA /* pict.cpp */; };
@@ -265,6 +264,11 @@
 		91E128E41BC1624700C8BE1D /* ter_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E128E31BC1624700C8BE1D /* ter_legacy.cpp */; };
 		91E128E61BC19DA400C8BE1D /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E128E51BC19DA400C8BE1D /* init.cpp */; };
 		91E128E71BC1E6DD00C8BE1D /* basicbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91A32BD10FDB797B00C4E957 /* basicbtns.cpp */; };
+		91E128ED1BC2076B00C8BE1D /* 3choice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E128E81BC2076B00C8BE1D /* 3choice.cpp */; };
+		91E128EE1BC2076B00C8BE1D /* choicedlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E128E91BC2076B00C8BE1D /* choicedlog.cpp */; };
+		91E128EF1BC2076B00C8BE1D /* pictchoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E128EA1BC2076B00C8BE1D /* pictchoice.cpp */; };
+		91E128F01BC2076B00C8BE1D /* strchoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E128EB1BC2076B00C8BE1D /* strchoice.cpp */; };
+		91E128F11BC2076B00C8BE1D /* strdlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E128EC1BC2076B00C8BE1D /* strdlog.cpp */; };
 		91E381461B97673700F69B81 /* town_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E381451B97671E00F69B81 /* town_write.cpp */; };
 		91E381481B97677900F69B81 /* talk_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E381471B97675900F69B81 /* talk_write.cpp */; };
 		91E3814A1B97679800F69B81 /* out_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E381491B97678D00F69B81 /* out_write.cpp */; };
@@ -585,8 +589,6 @@
 		910BBAB50FB91A26001E34EA /* field.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = field.cpp; sourceTree = "<group>"; };
 		910BBAB80FB91ADB001E34EA /* message.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = message.hpp; sourceTree = "<group>"; };
 		910BBAB90FB91ADB001E34EA /* message.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = message.cpp; sourceTree = "<group>"; };
-		910BBAD90FB91D2A001E34EA /* dlogutil.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dlogutil.hpp; sourceTree = "<group>"; };
-		910BBADA0FB91D2A001E34EA /* dlogutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlogutil.cpp; sourceTree = "<group>"; };
 		910D9CA31B36439100414B17 /* libboost_thread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_thread.dylib; path = ../../../../../../usr/local/lib/libboost_thread.dylib; sourceTree = "<group>"; };
 		911F2D981B98F43B00E3102E /* libCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCommon.a; path = lib/libCommon.a; sourceTree = "<group>"; };
 		911F2D9D1B98F44700E3102E /* libCommon-Party.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libCommon-Party.a"; path = "lib/libCommon-Party.a"; sourceTree = "<group>"; };
@@ -755,6 +757,16 @@
 		91D635AF0F90E7B500674AB3 /* zakhazi.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.meg; sourceTree = "<group>"; };
 		91E128E31BC1624700C8BE1D /* ter_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ter_legacy.cpp; sourceTree = "<group>"; };
 		91E128E51BC19DA400C8BE1D /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
+		91E128E81BC2076B00C8BE1D /* 3choice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3choice.cpp; sourceTree = "<group>"; };
+		91E128E91BC2076B00C8BE1D /* choicedlog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = choicedlog.cpp; sourceTree = "<group>"; };
+		91E128EA1BC2076B00C8BE1D /* pictchoice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pictchoice.cpp; sourceTree = "<group>"; };
+		91E128EB1BC2076B00C8BE1D /* strchoice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = strchoice.cpp; sourceTree = "<group>"; };
+		91E128EC1BC2076B00C8BE1D /* strdlog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = strdlog.cpp; sourceTree = "<group>"; };
+		91E128F21BC2077600C8BE1D /* 3choice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = 3choice.hpp; sourceTree = "<group>"; };
+		91E128F31BC2077700C8BE1D /* choicedlog.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = choicedlog.hpp; sourceTree = "<group>"; };
+		91E128F41BC2077700C8BE1D /* pictchoice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pictchoice.hpp; sourceTree = "<group>"; };
+		91E128F51BC2077700C8BE1D /* strchoice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = strchoice.hpp; sourceTree = "<group>"; };
+		91E128F61BC2077700C8BE1D /* strdlog.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = strdlog.hpp; sourceTree = "<group>"; };
 		91E1862B1B2B2AC0006A99EA /* estreams.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = estreams.cpp; sourceTree = "<group>"; };
 		91E30F2A1A74819B0057C54A /* fileio_party.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileio_party.cpp; sourceTree = "<group>"; };
 		91E30F2D1A7481C20057C54A /* fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileio.cpp; sourceTree = "<group>"; };
@@ -937,19 +949,23 @@
 		910BBA140FB8BE7D001E34EA /* headers */ = {
 			isa = PBXGroup;
 			children = (
+				91E128F21BC2077600C8BE1D /* 3choice.hpp */,
 				910BBA880FB8EC57001E34EA /* button.hpp */,
+				91E128F31BC2077700C8BE1D /* choicedlog.hpp */,
 				910BBA3B0FB8DA8E001E34EA /* control.hpp */,
 				910BBA170FB8BECA001E34EA /* dialog.hpp */,
 				918D59A718EA513900735B66 /* dialog.keys.hpp */,
 				915AF9E91BC04171008AEF49 /* dlogevt.hpp */,
-				910BBAD90FB91D2A001E34EA /* dlogutil.hpp */,
 				910BBAB40FB91A26001E34EA /* field.hpp */,
 				910BBAB80FB91ADB001E34EA /* message.hpp */,
 				910BBAA80FB8F733001E34EA /* pict.hpp */,
+				91E128F41BC2077700C8BE1D /* pictchoice.hpp */,
 				913FB40A1A5C90840067B9D2 /* pictypes.hpp */,
 				919145FD18E3C750005CF3A4 /* scrollbar.hpp */,
 				919B13A71BBE297B009905A4 /* scrollpane.hpp */,
 				9179A4631A4867E200FEF872 /* stack.hpp */,
+				91E128F51BC2077700C8BE1D /* strchoice.hpp */,
+				91E128F61BC2077700C8BE1D /* strdlog.hpp */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -957,17 +973,21 @@
 		910BBA150FB8BE88001E34EA /* src */ = {
 			isa = PBXGroup;
 			children = (
+				91E128E81BC2076B00C8BE1D /* 3choice.cpp */,
 				91A32BD10FDB797B00C4E957 /* basicbtns.cpp */,
 				910BBA890FB8EC57001E34EA /* button.cpp */,
+				91E128E91BC2076B00C8BE1D /* choicedlog.cpp */,
 				910BBA3C0FB8DA8E001E34EA /* control.cpp */,
 				910BBA180FB8BECA001E34EA /* dialog.cpp */,
-				910BBADA0FB91D2A001E34EA /* dlogutil.cpp */,
 				910BBAB50FB91A26001E34EA /* field.cpp */,
 				910BBAB90FB91ADB001E34EA /* message.cpp */,
 				910BBAA90FB8F733001E34EA /* pict.cpp */,
+				91E128EA1BC2076B00C8BE1D /* pictchoice.cpp */,
 				9191460018E63D8E005CF3A4 /* scrollbar.cpp */,
 				919B13A81BBE2B54009905A4 /* scrollpane.cpp */,
 				9179A4641A48681800FEF872 /* stack.cpp */,
+				91E128EB1BC2076B00C8BE1D /* strchoice.cpp */,
+				91E128EC1BC2076B00C8BE1D /* strdlog.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1794,7 +1814,6 @@
 				919CC2681B3773C200273FDA /* control.cpp in Sources */,
 				919CC2691B3773C700273FDA /* button.cpp in Sources */,
 				919CC26A1B3773CD00273FDA /* dialog.cpp in Sources */,
-				919CC26B1B3773D300273FDA /* dlogutil.cpp in Sources */,
 				919CC26C1B3773D600273FDA /* field.cpp in Sources */,
 				919CC26D1B3773DB00273FDA /* message.cpp in Sources */,
 				919CC26E1B3773E000273FDA /* pict.cpp in Sources */,
@@ -1817,6 +1836,11 @@
 				91960ED41BB6157A008AF8F4 /* restypes.cpp in Sources */,
 				915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */,
 				91E128E71BC1E6DD00C8BE1D /* basicbtns.cpp in Sources */,
+				91E128ED1BC2076B00C8BE1D /* 3choice.cpp in Sources */,
+				91E128EE1BC2076B00C8BE1D /* choicedlog.cpp in Sources */,
+				91E128EF1BC2076B00C8BE1D /* pictchoice.cpp in Sources */,
+				91E128F01BC2076B00C8BE1D /* strchoice.cpp in Sources */,
+				91E128F11BC2076B00C8BE1D /* strdlog.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

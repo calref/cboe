@@ -20,7 +20,8 @@
 #include "boe.main.hpp"
 #include "graphtool.hpp"
 #include "mathutil.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
+#include "3choice.hpp"
 #include "restypes.hpp"
 #include "message.hpp"
 #include <array>

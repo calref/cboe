@@ -14,7 +14,8 @@
 #include "boe.townspec.hpp"
 #include "soundtool.hpp"
 #include "mathutil.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
+#include "choicedlog.hpp"
 #include "winutil.hpp"
 #include "boe.menus.hpp"
 

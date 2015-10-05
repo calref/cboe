@@ -17,7 +17,7 @@
 #include "graphtool.hpp"
 #include "soundtool.hpp"
 #include "mathutil.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
 #include "fileio.hpp"
 #include <boost/filesystem.hpp>
 #include "restypes.hpp"

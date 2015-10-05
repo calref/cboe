@@ -12,7 +12,7 @@
 #include <numeric>
 #include <boost/lexical_cast.hpp>
 #include "dialog.hpp"
-#include "dlogutil.hpp"
+#include "strdlog.hpp"
 #include "graphtool.hpp"
 #include "winutil.hpp"
 #include "cursors.hpp"
