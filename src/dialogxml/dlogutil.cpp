@@ -5,7 +5,6 @@
  *  Created by Celtic Minstrel on 11/05/09.
  *
  */
-#define BTNS_DEFINED
 
 #include <sstream>
 #include <algorithm>
@@ -18,9 +17,6 @@
 #include "mathutil.hpp"
 #include <array>
 #include "message.hpp"
-
-// TODO: This should probably be a source file instead of a header
-#include "dlogutil.buttons.hpp" // must be included here and only here
 
 cPictChoice::cPictChoice(const std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : cPictChoice(pics.begin(), pics.end(), t, parent) {}
 

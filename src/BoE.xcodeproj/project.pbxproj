@@ -264,6 +264,7 @@
 		91D634560F8FD77800674AB3 /* BoE.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2B8F435C0C0973680012E4A8 /* BoE.icns */; };
 		91E128E41BC1624700C8BE1D /* ter_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E128E31BC1624700C8BE1D /* ter_legacy.cpp */; };
 		91E128E61BC19DA400C8BE1D /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E128E51BC19DA400C8BE1D /* init.cpp */; };
+		91E128E71BC1E6DD00C8BE1D /* basicbtns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91A32BD10FDB797B00C4E957 /* basicbtns.cpp */; };
 		91E381461B97673700F69B81 /* town_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E381451B97671E00F69B81 /* town_write.cpp */; };
 		91E381481B97677900F69B81 /* talk_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E381471B97675900F69B81 /* talk_write.cpp */; };
 		91E3814A1B97679800F69B81 /* out_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E381491B97678D00F69B81 /* out_write.cpp */; };
@@ -675,7 +676,7 @@
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
 		91A0B15A1900F73E00EF438F /* mask.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.frag; sourceTree = "<group>"; };
-		91A32BD10FDB797B00C4E957 /* dlogutil.buttons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dlogutil.buttons.hpp; sourceTree = "<group>"; };
+		91A32BD10FDB797B00C4E957 /* basicbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basicbtns.cpp; sourceTree = "<group>"; };
 		91AC607E0FA26A3B00EEAE67 /* regtown.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = regtown.hpp; sourceTree = "<group>"; };
 		91AC607F0FA26A3B00EEAE67 /* regtown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regtown.cpp; sourceTree = "<group>"; };
 		91AC60A60FA26C1B00EEAE67 /* tmpltown.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tmpltown.hpp; sourceTree = "<group>"; };
@@ -941,7 +942,6 @@
 				910BBA170FB8BECA001E34EA /* dialog.hpp */,
 				918D59A718EA513900735B66 /* dialog.keys.hpp */,
 				915AF9E91BC04171008AEF49 /* dlogevt.hpp */,
-				91A32BD10FDB797B00C4E957 /* dlogutil.buttons.hpp */,
 				910BBAD90FB91D2A001E34EA /* dlogutil.hpp */,
 				910BBAB40FB91A26001E34EA /* field.hpp */,
 				910BBAB80FB91ADB001E34EA /* message.hpp */,
@@ -957,6 +957,7 @@
 		910BBA150FB8BE88001E34EA /* src */ = {
 			isa = PBXGroup;
 			children = (
+				91A32BD10FDB797B00C4E957 /* basicbtns.cpp */,
 				910BBA890FB8EC57001E34EA /* button.cpp */,
 				910BBA3C0FB8DA8E001E34EA /* control.cpp */,
 				910BBA180FB8BECA001E34EA /* dialog.cpp */,
@@ -1815,6 +1816,7 @@
 				919CC27F1B37744000273FDA /* winutil.mac.mm in Sources */,
 				91960ED41BB6157A008AF8F4 /* restypes.cpp in Sources */,
 				915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */,
+				91E128E71BC1E6DD00C8BE1D /* basicbtns.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
