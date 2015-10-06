@@ -64,8 +64,7 @@
 			<xs:enumeration value="harm-all"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="item">
-		<xs:complexType>
+		<xs:complexType name="item">
 			<xs:all>
 				<xs:element name="variety" type="itemVariety"/>
 				<xs:element name="level" type="xs:integer"/>
@@ -115,11 +114,10 @@
 			</xs:all>
 			<xs:attribute name="id" type="xs:integer" use="required"/>
 		</xs:complexType>
-	</xs:element>
 	<xs:element name="items">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="item" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="item" type="item" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="boes" type="xs:string" use="required"/>
 		</xs:complexType>

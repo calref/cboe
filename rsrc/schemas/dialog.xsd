@@ -105,8 +105,7 @@
     <xs:attribute name="color"/>
     <xs:attribute name="colour"/>
   </xs:attributeGroup>
-  <xs:element name="field">
-    <xs:complexType>
+    <xs:complexType name="field">
       <xs:simpleContent>
         <xs:extension base="xs:string">
           <xs:attribute name="name" type="xs:token"/>
@@ -125,9 +124,7 @@
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="text">
-    <xs:complexType mixed="true">
+    <xs:complexType mixed="true" name="message">
       <xs:sequence>
         <xs:element name="br" minOccurs="0" maxOccurs="unbounded">
           <xs:complexType/>
@@ -140,9 +137,7 @@
       <xs:attribute name="fromlist" default="none" type="xs:string"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="pict">
-    <xs:complexType>
+    <xs:complexType name="pict">
       <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="type" use="required" type="picttype"/>
       <xs:attribute name="custom" default="false" type="bool"/>
@@ -163,9 +158,7 @@
       <xs:attribute name="num" use="required" type="xs:integer"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="button">
-    <xs:complexType mixed="true">
+    <xs:complexType mixed="true" name="button">
       <xs:sequence>
         <xs:element name="key" minOccurs="0" maxOccurs="unbounded">
           <xs:complexType/>
@@ -178,9 +171,7 @@
       <xs:attribute name="fromlist" default="none" type="xs:string"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="led">
-    <xs:complexType>
+    <xs:complexType name="led">
       <xs:simpleContent>
         <xs:extension base="xs:string">
           <xs:attribute name="name" use="required" type="xs:token"/>
@@ -199,9 +190,7 @@
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="slider">
-    <xs:complexType>
+    <xs:complexType name="slider">
       <xs:attribute name="name" type="xs:token"/>
       <xs:attribute name="max" type="xs:integer" use="required"/>
       <xs:attribute name="initial" type="xs:integer" default="0"/>
@@ -211,62 +200,55 @@
       <xs:attribute name="style" type="scrollStyle" default="led"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="group">
-    <xs:complexType>
+    <xs:complexType name="ledGroup">
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="led"/>
+		  <xs:element maxOccurs="unbounded" name="led" type="led"/>
       </xs:sequence>
       <xs:attribute name="name" type="xs:token"/>
       <xs:attributeGroup ref="frame"/>
       <xs:attribute name="fromlist" default="none" type="xs:string"/>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="stack">
-    <xs:complexType>
+    <xs:complexType name="stack">
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="field"/>
-        <xs:element ref="text"/>
-        <xs:element ref="pict"/>
-        <xs:element ref="button"/>
-        <xs:element ref="led"/>
-        <xs:element ref="group"/>
-        <xs:element ref="slider"/>
+        <xs:element name="field" type="field"/>
+        <xs:element name="text" type="message"/>
+        <xs:element name="pict" type="pict"/>
+        <xs:element name="button" type="button"/>
+        <xs:element name="led" type="led"/>
+        <xs:element name="group" type="ledGroup"/>
+        <xs:element name="slider" type="slider"/>
       </xs:choice>
       <xs:attribute name="name" type="xs:token"/>
       <xs:attributeGroup ref="frame"/>
       <xs:attribute name="pages" type="xs:integer"/>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="pane">
-    <xs:complexType>
+    <xs:complexType name="scrollPane">
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="field"/>
-        <xs:element ref="text"/>
-        <xs:element ref="pict"/>
-        <xs:element ref="button"/>
-        <xs:element ref="led"/>
-        <xs:element ref="group"/>
-        <xs:element ref="slider"/>
+        <xs:element name="field" type="field"/>
+        <xs:element name="text" type="message"/>
+        <xs:element name="pict" type="pict"/>
+        <xs:element name="button" type="button"/>
+        <xs:element name="led" type="led"/>
+        <xs:element name="group" type="ledGroup"/>
+        <xs:element name="slider" type="slider"/>
       </xs:choice>
       <xs:attribute name="name" type="xs:token"/>
       <xs:attributeGroup ref="frame"/>
       <xs:attribute name="style" type="scrollStyle" default="led"/>
       <xs:attributeGroup ref="rect-size"/>
     </xs:complexType>
-  </xs:element>
   <xs:element name="dialog">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="field"/>
-        <xs:element ref="text"/>
-        <xs:element ref="pict"/>
-        <xs:element ref="button"/>
-        <xs:element ref="led"/>
-        <xs:element ref="group"/>
-        <xs:element ref="slider"/>
-        <xs:element ref="stack"/>
-        <xs:element ref="pane"/>
+        <xs:element name="field" type="field"/>
+        <xs:element name="text" type="message"/>
+        <xs:element name="pict" type="pict"/>
+        <xs:element name="button" type="button"/>
+        <xs:element name="led" type="led"/>
+        <xs:element name="group" type="ledGroup"/>
+        <xs:element name="slider" type="slider"/>
+        <xs:element name="stack" type="stack"/>
+        <xs:element name="pane" type="scrollPane"/>
       </xs:choice>
       <xs:attribute name="skin" default="dark">
         <xs:simpleType>

@@ -80,8 +80,7 @@
 			<xs:enumeration value="none"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="editor">
-		<xs:complexType>
+		<xs:complexType name="editorData">
 			<xs:all>
 				<xs:element name="shortcut" minOccurs="0" type="key"/>
 				<xs:element name="frill" minOccurs="0">
@@ -104,9 +103,7 @@
 				</xs:element>
 			</xs:all>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="terrain">
-		<xs:complexType>
+		<xs:complexType name="terrain">
 			<xs:all>
 				<xs:element name="name" type="xs:string"/>
 				<xs:element name="pic" type="xs:integer"/>
@@ -137,15 +134,14 @@
 				<xs:element name="arena" type="xs:integer"/>
 				<xs:element name="ground" minOccurs="0" type="xs:integer"/>
 				<xs:element name="trim-for" minOccurs="0" type="xs:integer"/>
-				<xs:element ref="editor" minOccurs="0"/>
+				<xs:element name="editor" type="editorData" minOccurs="0"/>
 			</xs:all>
 			<xs:attribute name="id" type="xs:integer" use="required"/>
 		</xs:complexType>
-	</xs:element>
 	<xs:element name="terrains">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="terrain" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="terrain" type="terrain" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="boes" type="xs:string" use="required"/>
 		</xs:complexType>

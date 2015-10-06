@@ -10,34 +10,26 @@
 			</xs:simpleType>
 		</xs:union>
 	</xs:simpleType>
-	<xs:element name="icon">
-		<xs:complexType mixed="true">
+		<xs:complexType mixed="true" name="scenIcon">
 			<xs:attribute name="custom" type="bool" default="false"/>
 			<xs:attribute name="split" type="bool" default="false"/>
 			<xs:attribute name="row" type="xs:integer" default="0"/>
 			<xs:attribute name="col" type="xs:integer" default="0"/>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="version" type="xs:string"/>
-	<xs:element name="author">
-		<xs:complexType>
+		<xs:complexType name="author">
 			<xs:sequence>
 				<xs:element name="name" type="xs:string"/>
 				<xs:element name="email" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="text">
-		<xs:complexType>
+		<xs:complexType name="scenText">
 			<xs:sequence>
 				<xs:element name="teaser" minOccurs="0" maxOccurs="2" type="xs:string"/>
-				<xs:element ref="icon" minOccurs="0"/>
+				<xs:element name="icon" type="scenIcon" minOccurs="0"/>
 				<xs:element name="intro-msg" minOccurs="0" maxOccurs="6" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="ratings">
-		<xs:complexType>
+		<xs:complexType name="ratings">
 			<xs:all>
 				<xs:element name="content">
 					<xs:simpleType>
@@ -59,27 +51,21 @@
 				</xs:element>
 			</xs:all>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="flags">
-		<xs:complexType>
+		<xs:complexType name="scenFlags">
 			<xs:sequence>
 				<xs:element name="adjust-difficulty" type="bool"/>
 				<xs:element name="legacy" type="xs:string"/>
 				<xs:element name="custom-graphics" type="bool"/>
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="creator">
-		<xs:complexType>
+		<xs:complexType name="creator">
 			<xs:sequence>
 				<xs:element name="type" type="xs:string"/>
-				<xs:element ref="version"/>
+				<xs:element name="version" type="xs:string"/>
 				<xs:element name="os" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name='entries'>
-		<xs:complexType>
+		<xs:complexType name="shopEntries">
 			<xs:choice minOccurs='0' maxOccurs='30'>
 				<xs:element name='item'>
 					<xs:complexType><xs:simpleContent>
@@ -159,9 +145,7 @@
 				</xs:element>
 			</xs:choice>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="game">
-		<xs:complexType>
+		<xs:complexType name="gameData">
 			<xs:sequence>
 				<xs:element name="num-towns" type="xs:integer"/>
 				<xs:element name="out-width" type="xs:integer"/>
@@ -260,7 +244,7 @@
 								</xs:simpleType>
 							</xs:element>
 							<xs:element name='face' type='xs:integer'/>
-							<xs:element ref='entries'/>
+							<xs:element name='entries' type="shopEntries"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -285,9 +269,7 @@
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="editor">
-		<xs:complexType>
+		<xs:complexType name="editorData">
 			<xs:sequence>
 				<xs:element name="default-ground" type="xs:integer"/>
 				<xs:element name="last-out-section">
@@ -345,22 +327,21 @@
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
 	<xs:element name="scenario">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="title" type="xs:string"/>
-				<xs:element ref="icon"/>
+				<xs:element name="icon" type="scenIcon"/>
 				<xs:element name="id" type="xs:string"/>
-				<xs:element ref="version"/>
+				<xs:element name="version" type="xs:string"/>
 				<xs:element name="language" type="xs:language"/>
-				<xs:element ref="author"/>
-				<xs:element ref="text"/>
-				<xs:element ref="ratings"/>
-				<xs:element ref="flags"/>
-				<xs:element ref="creator"/>
-				<xs:element ref="game"/>
-				<xs:element ref="editor"/>
+				<xs:element name="author" type="author"/>
+				<xs:element name="text" type="scenText"/>
+				<xs:element name="ratings" type="ratings"/>
+				<xs:element name="flags" type="scenFlags"/>
+				<xs:element name="creator" type="creator"/>
+				<xs:element name="game" type="gameData"/>
+				<xs:element name="editor" type="editorData"/>
 			</xs:sequence>
 			<xs:attribute name="boes" type="xs:string" use="required"/>
 		</xs:complexType>

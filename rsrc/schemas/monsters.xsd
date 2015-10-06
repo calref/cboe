@@ -59,8 +59,7 @@
 			<xs:minInclusive value="0"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="general">
-		<xs:complexType>
+		<xs:complexType name="generalAbil">
 			<xs:all>
 				<xs:element name="type">
 					<xs:simpleType>
@@ -156,9 +155,7 @@
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="missile">
-		<xs:complexType>
+		<xs:complexType name="missileAbil">
 			<xs:all>
 				<xs:element name="type">
 					<xs:simpleType>
@@ -190,9 +187,7 @@
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="summon">
-		<xs:complexType>
+		<xs:complexType name="summonAbil">
 			<xs:sequence>
 				<xs:choice minOccurs="1" maxOccurs="1">
 					<xs:element name="type" type="xs:integer"/>
@@ -212,9 +207,7 @@
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="radiate">
-		<xs:complexType>
+		<xs:complexType name="radiateAbil">
 			<xs:all>
 				<xs:element name="type">
 					<xs:simpleType>
@@ -258,9 +251,7 @@
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="special">
-		<xs:complexType>
+		<xs:complexType name="specialAbil">
 			<xs:sequence>
 				<xs:element name="param" type="xs:integer" minOccurs="0" maxOccurs="3"/>
 			</xs:sequence>
@@ -279,9 +270,7 @@
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="attack">
-		<xs:complexType>
+		<xs:complexType name="attack">
 			<xs:simpleContent>
 				<xs:extension base="dice">
 					<xs:attribute name="type" use="required">
@@ -303,9 +292,7 @@
 				</xs:extension>
 			</xs:simpleContent>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="monster">
-		<xs:complexType>
+		<xs:complexType name="monster">
 			<xs:all>
 				<xs:element name="name" type="xs:string"/>
 				<xs:element name="level" type="xs:integer"/>
@@ -323,11 +310,11 @@
 							<xs:element name="invisible" minOccurs="0"/>
 							<xs:element name="guard" minOccurs="0"/>
 							<xs:choice maxOccurs="unbounded">
-								<xs:element ref="general" minOccurs="0" maxOccurs="unbounded"/>
-								<xs:element ref="missile" minOccurs="0" maxOccurs="unbounded"/>
-								<xs:element ref="summon" minOccurs="0" maxOccurs="unbounded"/>
-								<xs:element ref="radiate" minOccurs="0" maxOccurs="unbounded"/>
-								<xs:element ref="special" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element name="general" type="generalAbil" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element name="missile" type="missileAbil" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element name="summon" type="summonAbil" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element name="radiate" type="radiateAbil" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element name="special" type="specialAbil" minOccurs="0" maxOccurs="unbounded"/>
 							</xs:choice>
 						</xs:sequence>
 					</xs:complexType>
@@ -339,7 +326,7 @@
 				<xs:element name="attacks">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element ref="attack" maxOccurs="3"/>
+							<xs:element name="attack" type="attack" maxOccurs="3"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -387,11 +374,10 @@
 			</xs:all>
 			<xs:attribute name="id" type="xs:integer" use="required"/>
 		</xs:complexType>
-	</xs:element>
 	<xs:element name="monsters">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="monster" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="monster" type="monster" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="boes" type="xs:string" use="required"/>
 		</xs:complexType>

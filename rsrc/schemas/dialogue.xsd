@@ -7,9 +7,7 @@
 			<xs:maxInclusive value="6"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="text" type="xs:string"/>
-	<xs:element name="personality">
-		<xs:complexType>
+		<xs:complexType name="personality">
 			<xs:sequence>
 				<xs:element name='title' type='xs:string'/>
 				<xs:element name="look" type="xs:string"/>
@@ -19,9 +17,7 @@
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:integer" use="required"/>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="node">
-		<xs:complexType>
+		<xs:complexType name="talkNode">
 			<xs:sequence>
 				<xs:element name="keyword" minOccurs="1" maxOccurs="2" type="xs:string"/>
 				<xs:element name="type">
@@ -36,12 +32,11 @@
 			</xs:sequence>
 			<xs:attribute name="for" type="xs:integer" use="required"/>
 		</xs:complexType>
-	</xs:element>
 	<xs:element name="dialogue">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="personality" minOccurs="0" maxOccurs="10"/>
-				<xs:element ref="node" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="personality" type="personality" minOccurs="0" maxOccurs="10"/>
+				<xs:element name="node" type="talkNode" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="boes" type="xs:string" use="required"/>
 		</xs:complexType>
