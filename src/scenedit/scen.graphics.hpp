@@ -14,7 +14,6 @@ void draw_rb_slot (short which,short mode) ;
 void set_up_terrain_buttons(bool reset);
 void draw_terrain();
 void draw_monsts();
-rectangle get_item_template_rect (short type_wanted);
 void draw_items();
 void force_tiny_redraw();
 void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw);

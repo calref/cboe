@@ -59,9 +59,6 @@ extern fs::path progDir;
 
 cCustomGraphics spec_scen_g;
 
-extern bool pc_gworld_loaded;
-extern sf::Texture pc_gworld;
-
 void finish_load_party(){
 	bool town_restore = univ.town.num < 200;
 	bool in_scen = univ.party.scen_name.length() > 0;
@@ -76,10 +73,6 @@ void finish_load_party(){
 		if(overall_mode != MODE_STARTUP) {
 			reload_startup();
 			draw_startup(0);
-		}
-		if(!pc_gworld_loaded) {
-			pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
-			pc_gworld_loaded = true;
 		}
 		overall_mode = MODE_STARTUP;
 		return;

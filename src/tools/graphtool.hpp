@@ -21,8 +21,6 @@
 namespace fs = boost::filesystem;
 
 #define LINES_IN_TEXT_WIN	11
-#define NUM_TER_SHEETS		14
-#define NUM_MONST_SHEETS	10
 
 struct m_pic_index_t {
 	unsigned char i, x, y;
@@ -118,7 +116,6 @@ void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::stri
 size_t string_length(std::string str, TextStyle style, short* height = nullptr);
 rectangle calc_rect(short i, short j);
 void setActiveRenderTarget(sf::RenderTarget& where);
-void flushTessels(sf::Texture& alteredImg);
 tessel_ref_t prepareForTiling(sf::Texture& srcImg, rectangle srcRect);
 void tileImage(sf::RenderTarget& target, rectangle area, tessel_ref_t tessel, sf::BlendMode mode = sf::BlendNone);
 void tileImage(sf::RenderWindow& target, Region& rgn, tessel_ref_t tessel, sf::BlendMode mode = sf::BlendNone);

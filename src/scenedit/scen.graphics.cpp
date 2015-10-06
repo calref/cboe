@@ -59,26 +59,9 @@ extern ter_num_t current_ground;
 
 short num_ir[3] = {12,10,4};
 
-sf::Texture monst_gworld[NUM_MONST_SHEETS];
-sf::Texture terrain_gworld[NUM_TER_SHEETS];
-sf::Texture editor_mixed;
 sf::RenderTexture terrain_buttons_gworld;
-sf::Texture anim_gworld;
-sf::Texture fields_gworld;
-sf::Texture dialog_gworld;
-sf::Texture items_gworld;
-sf::Texture tiny_obj_gworld;
-sf::Texture small_ter_gworld;
-sf::Texture boom_gworld;
 cCustomGraphics spec_scen_g;
-sf::Texture vehicle_gworld;
 sf::RenderTexture ter_draw_gworld;
-sf::Texture dlogpics_gworld;
-sf::Texture talkfaces_gworld;
-sf::Texture roads_gworld;
-sf::Texture missiles_gworld;
-sf::Texture status_gworld;
-sf::Texture pc_gworld;
 const sf::Color hilite_colour = {0xff, 0x00, 0x80, 0x40};
 
 // begin new stuff
@@ -375,8 +358,7 @@ void Set_up_win () {
 
 void run_startup_g() {
 	sf::Event event;
-	sf::Texture pict_to_draw;
-	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("edsplash"));
+	sf::Texture& pict_to_draw = *ResMgr::get<ImageRsrc>("edsplash");
 	rectangle dest_rect = rectangle(pict_to_draw);
 	
 	play_sound(-95);
@@ -394,31 +376,13 @@ void run_startup_g() {
 }
 
 void load_graphics(){
-	int i;
-	
-	for(i = 0; i < NUM_MONST_SHEETS; i++){
-		std::ostringstream sout;
-		sout << "monst" << i + 1;
-		monst_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
-	}
-	for(i = 0; i < NUM_TER_SHEETS; i++){
-		std::ostringstream sout;
-		sout << "ter" << i + 1;
-		terrain_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
-	}
-	editor_mixed.loadFromImage(*ResMgr::get<ImageRsrc>("edbuttons"));
-	anim_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("teranim"));
-	fields_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("fields"));
-	roads_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("trim"));
-	talkfaces_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("talkportraits"));
-	items_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("objects"));
-	tiny_obj_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("tinyobj"));
-	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
-	small_ter_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("termap"));
-	vehicle_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("vehicle"));
-	missiles_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("missiles"));
-	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
-	pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
+	// Preload the main editor interface graphics
+	ResMgr::get<ImageRsrc>("edbuttons");
+	ResMgr::get<ImageRsrc>("teranim");
+	ResMgr::get<ImageRsrc>("fields");
+	ResMgr::get<ImageRsrc>("objects");
+	ResMgr::get<ImageRsrc>("tinyobj");
+	ResMgr::get<ImageRsrc>("termap");
 }
 
 void load_main_screen() {
@@ -493,7 +457,7 @@ void draw_lb_slot (short which,short mode)  {
 		from_rect = blue_button_from;
 		if(mode > 0)
 			from_rect.offset(0,from_rect.height());
-		rect_draw_some_item(editor_mixed,from_rect,left_buttons[which][1],location{0,0});
+		rect_draw_some_item(*ResMgr::get<ImageRsrc>("edbuttons"),from_rect,left_buttons[which][1],location{0,0});
 	}
 	if(left_button_status[which].mode == LB_INDENT)
 		text_rect.left += 16;
@@ -560,6 +524,7 @@ void set_up_terrain_buttons(bool reset) {
 	int end = min(first + 256, max);
  	
 	// first make terrain buttons
+	sf::Texture& editor_mixed = *ResMgr::get<ImageRsrc>("edbuttons");
 	for(i = first; i < end; i++) {
 		switch(draw_mode){
 			case DRAW_TERRAIN:
@@ -578,7 +543,8 @@ void set_up_terrain_buttons(bool reset) {
 				else if(pic < 960)	{
 					pic = pic % 50;
 					ter_from.offset(28 * (pic % 10), 36 * (pic / 10));
-					rect_draw_some_item(terrain_gworld[scenario.ter_types[i].picture/50],
+					int which_sheet = scenario.ter_types[i].picture / 50;
+					rect_draw_some_item(*ResMgr::get<ImageRsrc>("ter" + std::to_string(1 + which_sheet)),
 										ter_from,terrain_buttons_gworld,terrain_rects[i - first]);
 				}
 				else {
@@ -587,7 +553,7 @@ void set_up_terrain_buttons(bool reset) {
 					ter_from.right = ter_from.left + 28;
 					ter_from.top = 36 * (pic % 5);
 					ter_from.bottom = ter_from.top + 36;
-					rect_draw_some_item(anim_gworld,
+					rect_draw_some_item(*ResMgr::get<ImageRsrc>("teranim"),
 										ter_from,terrain_buttons_gworld,terrain_rects[i - first]);
 					
 				}
@@ -655,46 +621,49 @@ void set_up_terrain_buttons(bool reset) {
 				} else {
 					auto pic_info = m_pic_index[pic];
 					pic = pic_info.i;
+					auto monst_gworld = [](pic_num_t sheet_num) {
+						return *ResMgr::get<ImageRsrc>("monst" + std::to_string(1 + sheet_num));
+					};
 					if(pic_info.x == 2 && pic_info.y == 2) {
 						tiny_to.width() = tiny_to.width() / 2;
 						tiny_to.height() = tiny_to.height() / 2;
 						ter_from = calc_rect(2 * ((pic % 20) / 10), (pic % 20) % 10);
-						rect_draw_some_item(monst_gworld[pic / 20], ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
+						rect_draw_some_item(monst_gworld(pic / 20), ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
 						pic++;
 						tiny_to.offset(tiny_to.width(), 0);
 						ter_from = calc_rect(2 * ((pic % 20) / 10), (pic % 20) % 10);
-						rect_draw_some_item(monst_gworld[pic / 20], ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
+						rect_draw_some_item(monst_gworld(pic / 20), ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
 						pic++;
 						tiny_to.offset(-tiny_to.width(), tiny_to.height());
 						ter_from = calc_rect(2 * ((pic % 20) / 10), (pic % 20) % 10);
-						rect_draw_some_item(monst_gworld[pic / 20], ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
+						rect_draw_some_item(monst_gworld(pic / 20), ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
 						pic++;
 						tiny_to.offset(tiny_to.width(), 0);
 						ter_from = calc_rect(2 * ((pic % 20) / 10), (pic % 20) % 10);
-						rect_draw_some_item(monst_gworld[pic / 20], ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
+						rect_draw_some_item(monst_gworld(pic / 20), ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
 					} else if(pic_info.y == 2) {
 						tiny_to.width() = tiny_to.width() / 2;
 						tiny_to.height() = tiny_to.height() / 2;
 						tiny_to.offset(tiny_to.width() / 2, 0);
 						ter_from = calc_rect(2 * ((pic % 20) / 10), (pic % 20) % 10);
-						rect_draw_some_item(monst_gworld[pic / 20], ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
+						rect_draw_some_item(monst_gworld(pic / 20), ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
 						pic++;
 						tiny_to.offset(0, tiny_to.height());
 						ter_from = calc_rect(2 * ((pic % 20) / 10), (pic % 20) % 10);
-						rect_draw_some_item(monst_gworld[pic / 20], ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
+						rect_draw_some_item(monst_gworld(pic / 20), ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
 					} else if(pic_info.x == 2) {
 						tiny_to.width() = tiny_to.width() / 2;
 						tiny_to.height() = tiny_to.height() / 2;
 						tiny_to.offset(0, tiny_to.height() / 2);
 						ter_from = calc_rect(2 * ((pic % 20) / 10), (pic % 20) % 10);
-						rect_draw_some_item(monst_gworld[pic / 20], ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
+						rect_draw_some_item(monst_gworld(pic / 20), ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
 						pic++;
 						tiny_to.offset(tiny_to.width(), 0);
 						ter_from = calc_rect(2 * ((pic % 20) / 10), (pic % 20) % 10);
-						rect_draw_some_item(monst_gworld[pic / 20], ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
+						rect_draw_some_item(monst_gworld(pic / 20), ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
 					} else {
 						ter_from = calc_rect(2 * ((pic % 20) / 10), (pic % 20) % 10);
-						rect_draw_some_item(monst_gworld[pic / 20], ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
+						rect_draw_some_item(monst_gworld(pic / 20), ter_from, terrain_buttons_gworld, tiny_to, sf::BlendAlpha);
 					}
 				}
 				break;
@@ -709,7 +678,7 @@ void set_up_terrain_buttons(bool reset) {
 				} else {
 					tiny_from = {0,0,18,18};
 					tiny_from.offset((pic % 10) * 18,(pic / 10) * 18);
-					rect_draw_some_item(tiny_obj_gworld,tiny_from,terrain_buttons_gworld,tiny_to,sf::BlendAlpha);
+					rect_draw_some_item(*ResMgr::get<ImageRsrc>("tinyobj"),tiny_from,terrain_buttons_gworld,tiny_to,sf::BlendAlpha);
 				}
 				break;
 		}
@@ -805,6 +774,9 @@ void draw_terrain(){
 				destrec.top = 8 + BITMAP_HEIGHT * where_draw.y;
 				destrec.bottom = destrec.top + BITMAP_HEIGHT;
 				
+				sf::Texture& fields_gworld = *ResMgr::get<ImageRsrc>("fields");
+				sf::Texture& vehicle_gworld = *ResMgr::get<ImageRsrc>("vehicle");
+				
 				if(is_road(cen_x + q - 4,cen_y + r - 4))
 					rect_draw_some_item(fields_gworld, calc_rect(0, 2), ter_draw_gworld, destrec, sf::BlendAlpha);
 				if(is_spot(cen_x + q - 4,cen_y + r - 4))
@@ -861,7 +833,7 @@ void draw_terrain(){
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FIRE)) {
 						from_rect = calc_rect(8,4);
-						rect_draw_some_item(anim_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
+						rect_draw_some_item(*ResMgr::get<ImageRsrc>("teranim"),from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_QUICKFIRE)) {
 						from_rect = calc_rect(7,1);
@@ -869,7 +841,7 @@ void draw_terrain(){
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FORCE)) {
 						from_rect = calc_rect(10,4);
-						rect_draw_some_item(anim_gworld,from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
+						rect_draw_some_item(*ResMgr::get<ImageRsrc>("teranim"),from_rect,ter_draw_gworld,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_BLOCK)) {
 						from_rect = calc_rect(3,0);
@@ -897,6 +869,7 @@ void draw_terrain(){
 				if(!icons.empty()) {
 					bool has_start = icons[0] == -1;
 					rectangle tiny_from_base = {120, 0, 127, 7};
+					sf::Texture& editor_mixed = *ResMgr::get<ImageRsrc>("edbuttons");
 					for(short icon : icons) {
 						rectangle tiny_from = tiny_from_base;
 						if(icon == -1) {
@@ -1061,7 +1034,8 @@ void draw_monsts() {
 				}
 				else if(scenario.scen_monsters[town->creatures[i].number].picture_num < 1000) {
 					m_start_pic = m_pic_index[scenario.scen_monsters[town->creatures[i].number].picture_num].i + k;
-					from_gworld = &monst_gworld[m_start_pic / 20];
+					int which_sheet = m_start_pic / 20;
+					from_gworld = ResMgr::get<ImageRsrc>("monst" + std::to_string(1 + which_sheet)).get();
 					m_start_pic = m_start_pic % 20;
 					source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
 					store_loc.x += k % width;
@@ -1087,8 +1061,7 @@ void draw_monsts() {
 
 // Returns rect for drawing an item, if num < 25, rect is in big item template,
 // otherwise in small item template
-// TODO: I have another function that does the same thing but also returns the texture containing the item along with the rectangle
-rectangle get_item_template_rect (short type_wanted) {
+static rectangle get_item_template_rect (short type_wanted) {
 	rectangle store_rect;
 	
 	if(type_wanted < 45) {
@@ -1138,7 +1111,7 @@ void draw_items() {
 						dest_rect.left += 5;
 						dest_rect.right -= 5;
 					}
-					rect_draw_some_item((pic_num < 55) ? items_gworld : tiny_obj_gworld,
+					rect_draw_some_item(*ResMgr::get<ImageRsrc>((pic_num < 55) ? "objects" : "tinyobj"),
 										source_rect, ter_draw_gworld, dest_rect,sf::BlendAlpha);
 				}
 			}
@@ -1173,7 +1146,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 	}
 	else if(picture_wanted >= 960)	{
-		source_gworld = &anim_gworld;
+		source_gworld = ResMgr::get<ImageRsrc>("teranim").get();
 		picture_wanted -= 960;
 		source_rect.left = 112 * (picture_wanted / 5);
 		source_rect.right = source_rect.left + 28;
@@ -1182,7 +1155,8 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	}
 	else {
 		source_rect = get_template_rect(terrain_to_draw);
-		source_gworld = &terrain_gworld[picture_wanted / 50];
+		int which_sheet = picture_wanted / 50;
+		source_gworld = ResMgr::get<ImageRsrc>("ter" + std::to_string(1 + which_sheet)).get();
 	}
 	
 	rectangle destrec;
@@ -1211,10 +1185,11 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 		if(picture_wanted >= 1000)	{
 			graf_pos_ref(source_gworld, from_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 		} else if(picture_wanted >= 960) {
-			source_gworld = &anim_gworld;
+			source_gworld = ResMgr::get<ImageRsrc>("teranim").get();
 			from_rect = calc_rect(4 * ((picture_wanted - 960) / 5),(picture_wanted - 960) % 5);
 		} else {
-			source_gworld = &terrain_gworld[picture_wanted / 50];
+			int which_sheet = picture_wanted / 50;
+			source_gworld = ResMgr::get<ImageRsrc>("ter" + std::to_string(1 + which_sheet)).get();
 			picture_wanted %= 50;
 			from_rect = calc_rect(picture_wanted % 10, picture_wanted / 10);
 		}
@@ -1228,20 +1203,23 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 			picture_wanted /= 1000; picture_wanted--;
 			from_rect.offset((picture_wanted / 3) * 12, (picture_wanted % 3) * 12);
 			rect_draw_some_item(*from_gw, from_rect, ter_draw_gworld, dest_rect);
-		} else if(picture_wanted >= 960) {
-			picture_wanted -= 960;
-			from_rect.offset(12 * 20, (picture_wanted - 960) * 12);
-			rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
 		} else {
-			from_rect.offset((picture_wanted % 20) * 12,(picture_wanted / 20) * 12);
-			rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
+			sf::Texture& small_ter_gworld = *ResMgr::get<ImageRsrc>("termap");
+			if(picture_wanted >= 960) {
+				picture_wanted -= 960;
+				from_rect.offset(12 * 20, (picture_wanted - 960) * 12);
+				rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
+			} else {
+				from_rect.offset((picture_wanted % 20) * 12,(picture_wanted / 20) * 12);
+				rect_draw_some_item(small_ter_gworld, from_rect, ter_draw_gworld, dest_rect);
+			}
 		}
 	}
 	if(road) {
 		rectangle road_rect = dest_rect;
 		int border = (size - 4) / 2;
 		road_rect.inset(border,border);
-		rect_draw_some_item(editor_mixed, {120, 231, 124, 235}, ter_draw_gworld, road_rect);
+		rect_draw_some_item(*ResMgr::get<ImageRsrc>("edbuttons"), {120, 231, 124, 235}, ter_draw_gworld, road_rect);
 	}
 	if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 		location where_draw(i,j);
@@ -1330,11 +1308,13 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 		source_rect.right = source_rect.left + 28;
 		source_rect.top = 36 * (picture_wanted % 5);
 		source_rect.bottom = source_rect.top + 36;
-		rect_draw_some_item(anim_gworld,source_rect,terrain_buttons_gworld,draw_rect);
+		rect_draw_some_item(*ResMgr::get<ImageRsrc>("teranim"),source_rect,terrain_buttons_gworld,draw_rect);
 	}
 	else {
 		source_rect = get_template_rect(ter);
-		rect_draw_some_item(terrain_gworld[picture_wanted / 50],source_rect,
+		int which_sheet = picture_wanted / 50;
+		sf::Texture& terrain_gworld = *ResMgr::get<ImageRsrc>("ter" + std::to_string(1 + which_sheet));
+		rect_draw_some_item(terrain_gworld,source_rect,
 							terrain_buttons_gworld,draw_rect);
 	}
 	short small_i = get_small_icon(ter);
@@ -1344,7 +1324,7 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	rectangle tiny_from = base_small_button_from;
 	tiny_from.offset(7 * (small_i % 30),7 * (small_i / 30));
 	if(small_i >= 0 && small_i < 255)
-		rect_draw_some_item(editor_mixed,tiny_from,terrain_buttons_gworld,tiny_to);
+		rect_draw_some_item(*ResMgr::get<ImageRsrc>("edbuttons"),tiny_from,terrain_buttons_gworld,tiny_to);
 }
 
 void place_location() {
@@ -1405,6 +1385,7 @@ void place_location() {
 	if(overall_mode < MODE_MAIN_SCREEN) {
 		place_selected_terrain(current_terrain_type, draw_rect);
 		extern short mode_count;
+		bool draw_field = false;
 		if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE) {
 			rectangle to_rect = draw_rect;
 			picture_wanted = scenario.scen_monsters[mode_count].picture_num;
@@ -1459,46 +1440,49 @@ void place_location() {
 			} else {
 				auto pic_info = m_pic_index[picture_wanted];
 				picture_wanted = pic_info.i;
+				auto monst_gworld = [](pic_num_t sheet_num) {
+					return *ResMgr::get<ImageRsrc>("monst" + std::to_string(1 + sheet_num));
+				};
 				if(pic_info.x == 2 && pic_info.y == 2) {
 					to_rect.width() = to_rect.width() / 2;
 					to_rect.height() = to_rect.height() / 2;
 					source_rect = calc_rect(2 * ((picture_wanted % 20) / 10), (picture_wanted % 20) % 10);
-					rect_draw_some_item(monst_gworld[picture_wanted / 20], source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
+					rect_draw_some_item(monst_gworld(picture_wanted / 20), source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
 					picture_wanted++;
 					to_rect.offset(to_rect.width(), 0);
 					source_rect = calc_rect(2 * ((picture_wanted % 20) / 10), (picture_wanted % 20) % 10);
-					rect_draw_some_item(monst_gworld[picture_wanted / 20], source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
+					rect_draw_some_item(monst_gworld(picture_wanted / 20), source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
 					picture_wanted++;
 					to_rect.offset(-to_rect.width(), to_rect.height());
 					source_rect = calc_rect(2 * ((picture_wanted % 20) / 10), (picture_wanted % 20) % 10);
-					rect_draw_some_item(monst_gworld[picture_wanted / 20], source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
+					rect_draw_some_item(monst_gworld(picture_wanted / 20), source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
 					picture_wanted++;
 					to_rect.offset(to_rect.width(), 0);
 					source_rect = calc_rect(2 * ((picture_wanted % 20) / 10), (picture_wanted % 20) % 10);
-					rect_draw_some_item(monst_gworld[picture_wanted / 20], source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
+					rect_draw_some_item(monst_gworld(picture_wanted / 20), source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
 				} else if(pic_info.y == 2) {
 					to_rect.width() = to_rect.width() / 2;
 					to_rect.height() = to_rect.height() / 2;
 					to_rect.offset(to_rect.width() / 2, 0);
 					source_rect = calc_rect(2 * ((picture_wanted % 20) / 10), (picture_wanted % 20) % 10);
-					rect_draw_some_item(monst_gworld[picture_wanted / 20], source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
+					rect_draw_some_item(monst_gworld(picture_wanted / 20), source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
 					picture_wanted++;
 					to_rect.offset(0, to_rect.height());
 					source_rect = calc_rect(2 * ((picture_wanted % 20) / 10), (picture_wanted % 20) % 10);
-					rect_draw_some_item(monst_gworld[picture_wanted / 20], source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
+					rect_draw_some_item(monst_gworld(picture_wanted / 20), source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
 				} else if(pic_info.x == 2) {
 					to_rect.width() = to_rect.width() / 2;
 					to_rect.height() = to_rect.height() / 2;
 					to_rect.offset(0, to_rect.height() / 2);
 					source_rect = calc_rect(2 * ((picture_wanted % 20) / 10), (picture_wanted % 20) % 10);
-					rect_draw_some_item(monst_gworld[picture_wanted / 20], source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
+					rect_draw_some_item(monst_gworld(picture_wanted / 20), source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
 					picture_wanted++;
 					to_rect.offset(to_rect.width(), 0);
 					source_rect = calc_rect(2 * ((picture_wanted % 20) / 10), (picture_wanted % 20) % 10);
-					rect_draw_some_item(monst_gworld[picture_wanted / 20], source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
+					rect_draw_some_item(monst_gworld(picture_wanted / 20), source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
 				} else {
 					source_rect = calc_rect(2 * ((picture_wanted % 20) / 10), (picture_wanted % 20) % 10);
-					rect_draw_some_item(monst_gworld[picture_wanted / 20], source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
+					rect_draw_some_item(monst_gworld(picture_wanted / 20), source_rect, terrain_buttons_gworld, to_rect, sf::BlendAlpha);
 				}
 			}
 		} else if(overall_mode == MODE_PLACE_ITEM || overall_mode == MODE_PLACE_SAME_ITEM) {
@@ -1509,42 +1493,46 @@ void place_location() {
 				rect_draw_some_item(*source_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 			} else if(picture_wanted < 50) {
 				source_rect = calc_rect(picture_wanted % 5,picture_wanted / 5);
-				rect_draw_some_item(items_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+				rect_draw_some_item(*ResMgr::get<ImageRsrc>("objects"),source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 			} else {
 				draw_rect.inset(5, 9);
 				rectangle tiny_from = {0,0,18,18};
 				tiny_from.offset((picture_wanted % 10) * 18,(picture_wanted / 10) * 18);
-				rect_draw_some_item(tiny_obj_gworld,tiny_from,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+				rect_draw_some_item(*ResMgr::get<ImageRsrc>("tinyobj"),tiny_from,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 			}
 		} else if(overall_mode == MODE_TOGGLE_SPECIAL_DOT) {
+			draw_field = true;
 			source_rect = calc_rect(4, 0);
-			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_FORCECAGE) {
+			draw_field = true;
 			source_rect = calc_rect(0, 0);
-			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_WEB) {
+			draw_field = true;
 			source_rect = calc_rect(5, 0);
-			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_CRATE) {
+			draw_field = true;
 			source_rect = calc_rect(6, 0);
-			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_BARREL) {
+			draw_field = true;
 			source_rect = calc_rect(7, 0);
-			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_FIRE_BARRIER) {
 			source_rect = calc_rect(8, 4);
-			rect_draw_some_item(anim_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+			rect_draw_some_item(*ResMgr::get<ImageRsrc>("teranim"),source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_FORCE_BARRIER) {
 			source_rect = calc_rect(8, 4);
-			rect_draw_some_item(anim_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
+			rect_draw_some_item(*ResMgr::get<ImageRsrc>("teranim"),source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_QUICKFIRE) {
+			draw_field = true;
 			source_rect = calc_rect(7, 1);
-			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_STONE_BLOCK) {
+			draw_field = true;
 			source_rect = calc_rect(3, 0);
-			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_SFX) {
+			draw_field = true;
 			source_rect = calc_rect(mode_count, 3);
+		}
+		if(draw_field) {
+			sf::Texture& fields_gworld = *ResMgr::get<ImageRsrc>("fields");
 			rect_draw_some_item(fields_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 		}
 		draw_rect.offset(0,40);

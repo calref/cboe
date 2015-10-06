@@ -318,7 +318,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 #include "boe.actions.hpp"
 #include "boe.fileio.hpp"
 
-extern bool ae_loading, finished_init, startup_loaded;
+extern bool ae_loading, finished_init;
 void set_up_apple_events(int argc, char* argv[]) {
 	if(argc > 1) {
 		if(!load_party(argv[1], univ))
@@ -328,7 +328,7 @@ void set_up_apple_events(int argc, char* argv[]) {
 			ae_loading = true;
 			overall_mode = MODE_STARTUP;
 		} else finish_load_party();
-		if(overall_mode != MODE_STARTUP && startup_loaded)
+		if(overall_mode != MODE_STARTUP)
 			end_startup();
 		if(overall_mode != MODE_STARTUP)
 			post_load();

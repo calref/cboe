@@ -44,7 +44,7 @@ class cScrollbar : public cControl {
 	} pressedPart;
 	eScrollStyle style = SCROLL_WHITE;
 	bool vert = true;
-	static sf::Texture scroll_gw[NUM_STYLES];
+	static std::string scroll_textures[NUM_STYLES];
 	static const rectangle up_rect[NUM_STYLES][4], down_rect[NUM_STYLES][4], bar_rect[NUM_STYLES][4], thumb_rect[NUM_STYLES][4];
 	void draw_vertical(), draw_horizontal();
 public:

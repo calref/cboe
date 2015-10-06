@@ -530,9 +530,6 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 	return true;
 }
 
-// TODO: Move this to a more appropriate place
-bool pc_gworld_loaded = false;
-
 // Returns true if a theft committed
 //pc_num;  // < 6 - this pc only  6 - any pc
 //short mode; // 0 - adjacent  1 - all in sight
@@ -573,9 +570,6 @@ bool display_item(location from_loc,short /*pc_num*/,short mode, bool check_cont
 bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short pc_getting, bool overload) {
 	using namespace std::placeholders;
 	size_t first_item = 0;
-	
-	if(!pc_gworld_loaded)
-		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
 	
 	cDialog itemDialog("get-items");
 	auto handler = std::bind(display_item_event_filter, _1, _2, std::ref(first_item), std::ref(pc_getting), std::ref(itemRefs), overload);

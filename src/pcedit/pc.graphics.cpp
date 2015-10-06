@@ -19,11 +19,8 @@ extern bool play_sounds,party_in_scen,scen_items_loaded;
 extern fs::path file_in_mem;
 
 extern short store_flags[3];
-extern sf::Texture button_num_gworld,bg_gworld;
 extern short current_active_pc;
 
-sf::Texture title_gworld,icon_gworld,pc_gworld,dlogpics_gworld;
-sf::Texture buttons_gworld,invenbtn_gworld,status_gworld;
 rectangle whole_win_rect = {0,0,440,590};
 extern rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
@@ -49,10 +46,7 @@ short store_page_on,store_num_i;
 rectangle ed_buttons_from[2] = {{0,0,57,57},{0,57,57,114}};
 short current_pressed_button = -1;
 cCustomGraphics spec_scen_g; // not actually needed; just here to silence compiler because it's referenced in fileio.h
-// (actually, it WILL be needed eventually; the same is true about most of the rest of these.)
-sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
-sf::Texture monst_gworld[NUM_MONST_SHEETS],terrain_gworld[NUM_TER_SHEETS],anim_gworld,talkfaces_gworld;
-sf::Texture vehicle_gworld, small_ter_gworld;
+// (actually, it WILL be needed eventually)
 
 void init_main_buttons() {
 	
@@ -191,23 +185,19 @@ void init_main_buttons() {
 }
 
 void Set_up_win () {
-	title_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcedtitle"));
-	icon_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("icon"));
-	invenbtn_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("invenbtns"));
-	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
-	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
-	buttons_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcedbuttons"));
-	pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
-	for(int i = 0; i < NUM_MONST_SHEETS; i++) {
-		std::string id = "monst" + std::to_string(i + 1);
-		monst_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(id));
-	}
+	// Preload the main PC editor interface images
+	ResMgr::get<ImageRsrc>("pcedtitle");
+	ResMgr::get<ImageRsrc>("icon");
+	ResMgr::get<ImageRsrc>("invenbtns");
+	ResMgr::get<ImageRsrc>("staticons");
+	ResMgr::get<ImageRsrc>("dlogpics");
+	ResMgr::get<ImageRsrc>("pcedbuttons");
+	ResMgr::get<ImageRsrc>("pcs");
 }
 
 static void draw_main_screen();
 static void display_party();
 static void draw_items();
-
 
 void redraw_screen() {
 	draw_main_screen();
@@ -238,10 +228,12 @@ void draw_main_screen() {
 	
 	tileImage(mainPtr,whole_win_rect,bg[12]); // fill whole window with background texture
 	
+	sf::Texture& icon_gworld = *ResMgr::get<ImageRsrc>("icon");
 	dest_rec = source_rect = rectangle(icon_gworld);
 	dest_rec.offset(23, 16);
 	rect_draw_some_item(icon_gworld,source_rect,mainPtr,dest_rec);
-
+	
+	sf::Texture& title_gworld = *ResMgr::get<ImageRsrc>("pcedtitle");
 	dest_rec = source_rect = rectangle(title_gworld);
 	dest_rec.offset(66, 0);
 	rect_draw_some_item(title_gworld,source_rect,mainPtr,dest_rec,sf::BlendAlpha);
@@ -340,6 +332,7 @@ void draw_items() {
 		frame_dlog_rect(mainPtr,name_rect); // draw the frame
 		return; // If PC is dead, it has no items
 	}
+	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
 	for(i = 0; i < 24; i++) // Loop through items and draw each
 		if(univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) { // i.e. does item exist
 			std::string to_draw = std::to_string(i + 1) + ". ";
@@ -381,6 +374,7 @@ void display_party() {
 		win_draw_string(mainPtr,no_party_rect,"No party loaded.",eTextMode::WRAP,style);
 	}
 	else {
+		sf::Texture& buttons_gworld = *ResMgr::get<ImageRsrc>("pcedbuttons");
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 11;
 		if(!party_in_scen)
@@ -410,10 +404,11 @@ void display_party() {
 					pic_num_t need_pic = pic - 100;
 					pic_num_t picture_wanted = m_pic_index[need_pic].i % 20;
 					from_rect = calc_rect(2 * (picture_wanted / 10), picture_wanted % 10);
-					from_gw = &monst_gworld[m_pic_index[need_pic].i / 20];
+					int which_sheet = m_pic_index[need_pic].i / 20;
+					from_gw = ResMgr::get<ImageRsrc>("monst" + std::to_string(1 + which_sheet)).get();
 				} else {
 					from_rect = calc_rect(2 * (pic / 8), pic % 8);
-					from_gw = &pc_gworld;
+					from_gw = ResMgr::get<ImageRsrc>("pcs").get();
 				}
 				rect_draw_some_item(*from_gw,from_rect,mainPtr,pc_area_buttons[i][1],sf::BlendAlpha);
 				

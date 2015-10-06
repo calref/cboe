@@ -98,8 +98,8 @@ protected:
 	sf::Color textClr;
 	/// The index in buttons of the texture for each button type.
 	static size_t btnGW[14];
-	/// The textures that hold the graphics for the buttons.
-	static sf::Texture buttons[7];
+	/// The names of the textures that hold the graphics for the buttons.
+	static std::string buttons[7];
 };
 
 /// A LED button that can be either on or off.

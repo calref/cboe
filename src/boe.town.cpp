@@ -27,6 +27,7 @@
 #include "strdlog.hpp"
 #include "fileio.hpp"
 #include "winutil.hpp"
+#include "restypes.hpp"
 
 extern short stat_window,store_spell_target,which_combat_type,current_pc,combat_active_pc;
 extern eGameMode overall_mode;
@@ -43,12 +44,9 @@ extern location hor_vert_place[14];
 extern location diag_place[14];
 extern location golem_m_locs[16];
 extern cUniverse univ;
-extern sf::Texture anim_gworld;
-extern sf::Texture terrain_gworld[NUM_TER_SHEETS];
 extern cCustomGraphics spec_scen_g;
 bool need_map_full_refresh = true,forcing_map_button_redraw = false;
 extern sf::RenderTexture map_gworld;
-extern sf::Texture small_ter_gworld;
 // In the 0..65535 range, this colour was {65535,65535,52428}
 sf::Color parchment = {255,255,205};
 
@@ -1422,6 +1420,7 @@ void draw_map(bool need_refresh) {
 		else out_mode = false;
 		
 		// TODO: It could be possible to draw the entire map here and then only refresh if a spot actually changes terrain type
+		sf::Texture& small_ter_gworld = *ResMgr::get<ImageRsrc>("termap");
 		for(where.x = redraw_rect.left; where.x < redraw_rect.right; where.x++)
 			for(where.y = redraw_rect.top; where.y < redraw_rect.bottom; where.y++) {
 				draw_rect = orig_draw_rect;
@@ -1464,9 +1463,10 @@ void draw_map(bool need_refresh) {
 					} else if(drawLargeIcon) {
 						if(pic >= 960) {
 							custom_from = calc_rect(4 * ((pic - 960) / 5),(pic - 960) % 5);
-							rect_draw_some_item(anim_gworld, custom_from, map_gworld, draw_rect);
+							rect_draw_some_item(*ResMgr::get<ImageRsrc>("teranim"), custom_from, map_gworld, draw_rect);
 						} else {
-							sf::Texture* src_gw = &terrain_gworld[pic / 50];
+							int which_sheet = pic / 50;
+							sf::Texture* src_gw = ResMgr::get<ImageRsrc>("ter" + std::to_string(1 + which_sheet)).get();
 							pic %= 50;
 							custom_from = calc_rect(pic % 10, pic / 10);
 							rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
@@ -1481,9 +1481,8 @@ void draw_map(bool need_refresh) {
 					}
 					
 					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
-						extern sf::Texture roads_gworld;
 						draw_rect.inset(1,1);
-						rect_draw_some_item(roads_gworld,{8,112,12,116},map_gworld,draw_rect);
+						rect_draw_some_item(*ResMgr::get<ImageRsrc>("trim"),{8,112,12,116},map_gworld,draw_rect);
 					}
 				}
 			}

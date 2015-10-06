@@ -35,7 +35,7 @@ extern short stat_window;
 extern bool give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range;
-extern bool anim_onscreen,play_sounds,frills_on,startup_loaded,party_in_memory;
+extern bool anim_onscreen,play_sounds,frills_on,party_in_memory;
 extern bool flushingInput;
 extern bool cartoon_happening, fog_lifted;
 extern short anim_step;
@@ -90,36 +90,12 @@ char light_area[13][13];
 char unexplored_area[13][13];
 
 // Declare the graphics
-sf::Texture status_gworld;
-sf::Texture invenbtn_gworld;
-sf::Texture vehicle_gworld;
 sf::RenderTexture pc_stats_gworld;
 sf::RenderTexture item_stats_gworld;
 sf::RenderTexture text_area_gworld;
 sf::RenderTexture terrain_screen_gworld;
 sf::RenderTexture text_bar_gworld;
-sf::Texture orig_text_bar_gworld, orig_item_stats_gworld, orig_pc_stats_gworld;
-sf::Texture buttons_gworld;
-sf::Texture items_gworld;
-sf::Texture tiny_obj_gworld;
-sf::Texture fields_gworld;
-sf::Texture boom_gworld;
-sf::Texture roads_gworld;
 sf::RenderTexture map_gworld;
-sf::Texture small_ter_gworld;
-sf::Texture missiles_gworld;
-sf::Texture dlogpics_gworld;
-sf::Texture anim_gworld;
-sf::Texture talkfaces_gworld;
-sf::Texture pc_gworld;
-sf::Texture monst_gworld[NUM_MONST_SHEETS];
-sf::Texture terrain_gworld[NUM_TER_SHEETS];
-
-// Startup graphics, will die when play starts
-// TODO: The way this is done now, they won't; fix this
-sf::Texture startup_gworld;
-sf::Texture startup_button_orig;
-sf::Texture anim_mess;
 
 bool has_run_anim = false,currently_loading_graphics = false;
 
@@ -195,10 +171,10 @@ void adjust_window_mode() {
 }
 
 void init_startup() {
-	startup_loaded = true;
-	startup_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("startup"));
-	startup_button_orig.loadFromImage(*ResMgr::get<ImageRsrc>("startbut"));
-	anim_mess.loadFromImage(*ResMgr::get<ImageRsrc>("startanim"));
+	// Preload the main startup images
+	ResMgr::get<ImageRsrc>("startup");
+	ResMgr::get<ImageRsrc>("startbut");
+	ResMgr::get<ImageRsrc>("startanim");
 }
 
 void draw_startup(short but_type) {
@@ -207,9 +183,7 @@ void draw_startup(short but_type) {
 	r4 = {-1000,579,1000,2500};
 	short i;
 	
-	if(!startup_loaded)
-		return;
-	
+	sf::Texture& startup_gworld = *ResMgr::get<ImageRsrc>("startup");
 	to_rect = startup_from[0];
 	to_rect.offset(-13,5);
 	rect_draw_some_item(startup_gworld,startup_from[0],to_rect,ul);
@@ -233,9 +207,9 @@ void draw_startup_anim(bool advance) {
 	anim_from = anim_to;
 	anim_from.offset(-1,-4 + startup_anim_pos);
 	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
-	rect_draw_some_item(startup_button_orig,anim_size,startup_button[5],ul);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startbut"),anim_size,startup_button[5],ul);
 	anim_to.offset(startup_button[5].left, startup_button[5].top);
-	rect_draw_some_item(anim_mess,anim_from,anim_to,ul,sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startanim"),anim_from,anim_to,ul,sf::BlendAlpha);
 }
 
 void draw_startup_stats() {
@@ -286,9 +260,12 @@ void draw_startup_stats() {
 					// Note that we assume it's a 1x1 graphic.
 					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
 					from_rect = get_monster_template_rect(pic, 0, 0);
-					rect_draw_some_item(monst_gworld[m_pic_index[pic].i / 20],from_rect,to_rect,ul,sf::BlendAlpha);
+					int which_sheet = m_pic_index[pic].i / 20;
+					sf::Texture& monst_gworld = *ResMgr::get<ImageRsrc>("monst" + std::to_string(1 + which_sheet));
+					rect_draw_some_item(monst_gworld,from_rect,to_rect,ul,sf::BlendAlpha);
 				} else {
 					from_rect = calc_rect(2 * (pic / 8), pic % 8);
+					sf::Texture& pc_gworld = *ResMgr::get<ImageRsrc>("pcs");
 					rect_draw_some_item(pc_gworld,from_rect,to_rect,ul,sf::BlendAlpha);
 				}
 				
@@ -387,7 +364,7 @@ void draw_start_button(short which_position,short which_button) {
 	to_rect.left += 4; to_rect.top += 4;
 	to_rect.right = to_rect.left + 40;
 	to_rect.bottom = to_rect.top + 40;
-	rect_draw_some_item(startup_gworld,from_rect,to_rect,ul);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startup"),from_rect,to_rect,ul);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -434,15 +411,10 @@ void arrow_button_click(rectangle button_rect) {
 
 
 void reload_startup() {
-	if(startup_loaded)
-		return;
-	
 	mini_map.setVisible(false);
 	map_visible = false;
 	mainPtr.setActive();
 	init_startup();
-	
-	startup_loaded = true;
 	
 	text_sbar->hide();
 	item_sbar->hide();
@@ -452,14 +424,6 @@ void reload_startup() {
 }
 
 void end_startup() {
-	if(!startup_loaded)
-		return;
-	
-	startup_gworld.create(1,1);
-	startup_button_orig.create(1,1);
-	anim_mess.create(1,1);
-	
-	startup_loaded = false;
 	load_main_screen();
 	
 	text_sbar->show();
@@ -467,8 +431,7 @@ void end_startup() {
 }
 
 static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
-	sf::Texture temp_gworld;
-	temp_gworld.loadFromImage(*ResMgr::get<ImageRsrc>(imgName));
+	sf::Texture& temp_gworld = *ResMgr::get<ImageRsrc>(imgName);
 	rectangle texrect(temp_gworld);
 	tex.create(texrect.width(), texrect.height());
 	rect_draw_some_item(temp_gworld, texrect, tex, texrect, sf::BlendNone);
@@ -497,19 +460,14 @@ void Set_up_win () {
 }
 
 void load_main_screen() {
-	if(invenbtn_gworld.getSize().x > 0)
-		return;
-	
-	invenbtn_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("invenbtns"));
+	// Preload the main game interface images
+	ResMgr::get<ImageRsrc>("invenbtns");
 	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
 	loadImageToRenderTexture(pc_stats_gworld, "statarea");
 	loadImageToRenderTexture(item_stats_gworld, "inventory");
 	loadImageToRenderTexture(text_area_gworld, "transcript");
 	loadImageToRenderTexture(text_bar_gworld, "textbar");
-	orig_pc_stats_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("statarea"));
-	orig_item_stats_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("inventory"));
-	orig_text_bar_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("textbar"));
-	buttons_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("buttons"));
+	ResMgr::get<ImageRsrc>("buttons");
 }
 
 void redraw_screen(int refresh) {
@@ -616,6 +574,7 @@ void draw_buttons(short mode) {
 		button_gw.create(266,38);
 	}
 	
+	sf::Texture& buttons_gworld = *ResMgr::get<ImageRsrc>("buttons");
 	dest_rec = lg_rect;
 	
 	bool bottom_half = false;
@@ -711,7 +670,7 @@ void draw_text_bar() {
 
 void put_text_bar(std::string str) {
 	text_bar_gworld.setActive();
-	rect_draw_some_item(orig_text_bar_gworld, win_from_rects[4], text_bar_gworld, win_from_rects[4]);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("textbar"), win_from_rects[4], text_bar_gworld, win_from_rects[4]);
 	TextStyle style;
 	style.colour = sf::Color::White;
 	style.font = FONT_BOLD;
@@ -723,6 +682,7 @@ void put_text_bar(std::string str) {
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
 	if(!monsters_going) {
+		sf::Texture& status_gworld = *ResMgr::get<ImageRsrc>("staticons");
 		to_rect.top -= 2;
 		to_rect.left = to_rect.right - 15;
 		to_rect.width() = 12;
@@ -990,7 +950,7 @@ void draw_terrain(short	mode) {
 	// Draw top half of forcecages (this list is populated by draw_fields)
 	// TODO: Move into the above loop to eliminate global variable
 	for(location fc_loc : forcecage_locs)
-		Draw_Some_Item(fields_gworld,calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
+		Draw_Some_Item(*ResMgr::get<ImageRsrc>("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
 	// Draw any posted labels, then clear them out
 	clip_rect(terrain_screen_gworld, {13, 13, 337, 265});
 	for(text_label_t lbl : posted_labels)
@@ -1157,7 +1117,7 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 	std::tie(dest_rect.top, dest_rect.bottom) = std::make_tuple(36 - dest_rect.top, 36 - dest_rect.bottom);
 	render.create(28, 36);
 	render.clear(sf::Color::White);
-	rect_draw_some_item(roads_gworld, src_rect, render, dest_rect);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("trim"), src_rect, render, dest_rect);
 	render.display();
 	mask.reset(new sf::Texture);
 	mask->create(28, 36);
@@ -1218,11 +1178,12 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	
 	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
 	if(pic < 960){
-		from_gworld = &terrain_gworld[pic / 50];
+		int which_sheet = pic / 50;
+		from_gworld = ResMgr::get<ImageRsrc>("ter" + std::to_string(1 + which_sheet)).get();
 		pic %= 50;
 		from_rect.offset(28 * (pic % 10), 36 * (pic / 10));
 	}else if(pic < 1000){
-		from_gworld = &anim_gworld;
+		from_gworld = ResMgr::get<ImageRsrc>("teranim").get();
 		pic -= 960;
 		from_rect.offset(112 * (pic / 5),36 * (pic % 5));
 	}else{
@@ -1303,6 +1264,8 @@ void place_road(short q,short r,location where,bool here) {
 		{16,0,20,28},	// right + left
 		{16,12,20,16},	// central spot
 	};
+	
+	sf::Texture& roads_gworld = *ResMgr::get<ImageRsrc>("trim");
 	
 	if(here){
 		to_rect = road_dest_rects[6];
@@ -1479,7 +1442,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	dest_rect.offset(win_to_rects[0].left,win_to_rects[0].top);
 	
 	source_rect.offset(-store_rect.left + 28 * type,-store_rect.top);
-	rect_draw_some_item(boom_gworld,source_rect,dest_rect,ul,sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("booms"),source_rect,dest_rect,ul,sf::BlendAlpha);
 	
 	if(damage > 0 && dest_rect.right - dest_rect.left >= 28 && dest_rect.bottom - dest_rect.top >= 36) {
 		TextStyle style;
@@ -1558,10 +1521,11 @@ void draw_targets(location center) {
 	if(!univ.party.is_alive())
 		return;
 	
+	sf::Texture& src_gworld = *ResMgr::get<ImageRsrc>("trim");
 	for(i = 0; i < 8; i++)
 		if((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]))) {
 			dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
-			rect_draw_some_item(roads_gworld,calc_rect(6,0),dest_rect,ul,sf::BlendAlpha);
+			rect_draw_some_item(src_gworld,calc_rect(6,0),dest_rect,ul,sf::BlendAlpha);
 		}
 }
 

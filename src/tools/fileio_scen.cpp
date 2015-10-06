@@ -27,15 +27,11 @@
 #include "restypes.hpp"
 
 bool cur_scen_is_mac = true;
-extern sf::Texture items_gworld,tiny_obj_gworld,fields_gworld,roads_gworld,boom_gworld,missiles_gworld;
-extern sf::Texture dlogpics_gworld,monst_gworld[],terrain_gworld[],anim_gworld,talkfaces_gworld,pc_gworld;
-extern sf::Texture status_gworld, vehicle_gworld, small_ter_gworld;
 extern cCustomGraphics spec_scen_g;
 extern fs::path tempDir;
 
 void load_spec_graphics_v1(fs::path scen_file);
 void load_spec_graphics_v2(int num_sheets);
-void reload_core_graphics();
 // Load old scenarios (town talk is handled by the town loading function)
 static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_header);
 static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario);
@@ -2434,7 +2430,6 @@ void load_spec_graphics_v1(fs::path scen_file) {
 			}
 		}
 	}
-	reload_core_graphics();
 }
 
 void load_spec_graphics_v2(int num_sheets) {
@@ -2446,37 +2441,6 @@ void load_spec_graphics_v2(int num_sheets) {
 	while(num_sheets-- > 0) {
 		std::string name = "sheet" + std::to_string(num_sheets);
 		ResMgr::free<ImageRsrc>(name);
-		spec_scen_g.sheets[num_sheets].loadFromImage(*ResMgr::get<ImageRsrc>(name));
+		spec_scen_g.sheets[num_sheets] = *ResMgr::get<ImageRsrc>(name);
 	}
-	reload_core_graphics();
-}
-
-void reload_core_graphics() {
-	// TODO: This should really reload ALL textures...
-	// Now load regular graphics
-	items_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("objects"));
-	tiny_obj_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("tinyobj"));
-	fields_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("fields"));
-	roads_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("trim"));
-	boom_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("booms"));
-	missiles_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("missiles"));
-	dlogpics_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("dlogpics"));
-	status_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("staticons"));
-	
-	for(int i = 0; i < NUM_MONST_SHEETS; i++){
-		std::ostringstream sout;
-		sout << "monst" << i + 1;
-		monst_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
-	}
-	for(int i = 0; i < NUM_TER_SHEETS; i++){
-		std::ostringstream sout;
-		sout << "ter" << i + 1;
-		terrain_gworld[i].loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
-	}
-	anim_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("teranim"));
-	talkfaces_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("talkportraits"));
-	pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
-	vehicle_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("vehicle"));
-	small_ter_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("termap"));
-	// TODO: Scenario icons ...
 }

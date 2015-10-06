@@ -19,7 +19,7 @@ extern void finish_load_party();
 extern void end_startup();
 extern void post_load();
 
-extern bool ae_loading, startup_loaded, All_Done, party_in_memory, finished_init;
+extern bool ae_loading, All_Done, party_in_memory, finished_init;
 extern eGameMode overall_mode;
 extern cUniverse univ;
 
@@ -60,7 +60,7 @@ void set_up_apple_events(int, char*[]) {
 		ae_loading = true;
 		overall_mode = MODE_STARTUP;
 	} else finish_load_party();
-	if(overall_mode != MODE_STARTUP && startup_loaded)
+	if(overall_mode != MODE_STARTUP)
 		end_startup();
 	if(overall_mode != MODE_STARTUP)
 		post_load();

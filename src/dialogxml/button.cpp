@@ -70,7 +70,7 @@ void cButton::draw(){
 			to_rect.right = to_rect.left + 14;
 			to_rect.bottom = to_rect.top + 10;
 		}
-		rect_draw_some_item(buttons[btnGW[type]],from_rect,*inWindow,to_rect,sf::BlendAlpha);
+		rect_draw_some_item(*ResMgr::get<ImageRsrc>(buttons[btnGW[type]]),from_rect,*inWindow,to_rect,sf::BlendAlpha);
 		style.colour = sf::Color::Black;
 		style.lineHeight = 8;
 		eTextMode textMode = eTextMode::CENTRE;
@@ -265,21 +265,18 @@ size_t cButton::btnGW[14] = {
 	5, // BTN_LED
 };
 
-sf::Texture cButton::buttons[7];
 rectangle cButton::btnRects[13][2];
+std::string cButton::buttons[7] {
+	"dlogbtnsm",
+	"dlogbtnmed",
+	"dlogbtnlg",
+	"dlogbtntall",
+	"dlogbtnhelp",
+	"dlogbtnled",
+	"dlgbtnred",
+};
 
 void cButton::init(){
-	static const char*const buttonFiles[7] = {
-		"dlogbtnsm",
-		"dlogbtnmed",
-		"dlogbtnlg",
-		"dlogbtntall",
-		"dlogbtnhelp",
-		"dlogbtnled",
-		"dlgbtnred"
-	};
-	for(int i = 0; i < 7; i++)
-		buttons[i].loadFromImage(*ResMgr::get<ImageRsrc>(buttonFiles[i]));
 	btnRects[BTN_SM][0] = {0,0,23,23};
 	btnRects[BTN_REG][0] = {0,0,23,63};
 	btnRects[BTN_LEFT][0] = {23,0,46,63};
@@ -379,7 +376,7 @@ void cLed::draw(){
 		to_rect = frame;
 		to_rect.right = to_rect.left + 14;
 		to_rect.bottom = to_rect.top + 10;
-		rect_draw_some_item(buttons[btnGW[BTN_LED]],from_rect,*inWindow,to_rect);
+		rect_draw_some_item(*ResMgr::get<ImageRsrc>(buttons[btnGW[BTN_LED]]),from_rect,*inWindow,to_rect);
 		style.colour = textClr;
 		to_rect.right = frame.right;
 		to_rect.left = frame.left + 18; // Possibly could be 20

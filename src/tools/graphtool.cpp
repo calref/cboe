@@ -33,7 +33,6 @@ using boost::math::constants::pi;
 rectangle bg_rects[21];
 tessel_ref_t bg[21];
 tessel_ref_t bw_pats[6];
-sf::Texture bg_gworld, bw_gworld;
 bool use_win_graphics = false;
 sf::Shader maskShader;
 extern fs::path progDir;
@@ -108,8 +107,6 @@ void init_graph_tool(){
 	bg_rects[18].top += 32;
 	bg_rects[7].left += 32;
 	bg_rects[7].top += 32;
-	bg_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pixpats"));
-	bw_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("bwpats"));
 	register_main_patterns();
 }
 
@@ -391,13 +388,17 @@ rectangle calc_rect(short i, short j){
 	return base_rect;
 }
 
-extern sf::Texture fields_gworld;
 graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
-	static graf_pos dummy = {&fields_gworld, {72,140,108,28}};
-	if(party && !party_sheet) return dummy;
+	bool valid = true;
+	if(party && !party_sheet) valid = false;
 	else if(!party && !is_old && (which_rect / 100) >= numSheets)
-		return dummy;
-	else if(numSheets == 0) return dummy;
+		valid = false;
+	else if(numSheets == 0) valid = false;
+	if(!valid) {
+	INVALID:
+		sf::Texture* blank = ResMgr::get<ImageRsrc>("blank").get();
+		return {blank, {0,0,36,28}};
+	}
 	short sheet = which_rect / 100;
 	if(is_old || party) sheet = 0;
 	else which_rect %= 100;
@@ -406,7 +407,7 @@ graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
 	sf::Texture* the_sheet = party ? party_sheet.get() : &sheets[sheet];
 	rectangle test(*the_sheet);
-	if((store_rect & test) != store_rect) return dummy;
+	if((store_rect & test) != store_rect) goto INVALID; // FIXME: HACK
 	return std::make_pair(the_sheet,store_rect);
 }
 
@@ -989,20 +990,11 @@ tessel_ref_t prepareForTiling(sf::Texture& srcImg, rectangle srcRect) {
 	return ref;
 }
 
-void flushTessels(sf::Texture& alteredImg) {
-	erase_if(tiling_reservoir, [&alteredImg](std::pair<const tessel_ref_t,tessel_t>& kv) -> bool {
-		if(kv.second.img == &alteredImg) {
-			delete kv.second.tessel;
-			return true;
-		}
-		return false;
-	});
-	if(&alteredImg == &bg_gworld)
-		register_main_patterns();
-}
 
 static void register_main_patterns() {
 	rectangle bw_rect = {0,0,8,8};
+	sf::Texture& bg_gworld = *ResMgr::get<ImageRsrc>("pixpats");
+	sf::Texture& bw_gworld = *ResMgr::get<ImageRsrc>("bwpats");
 	for(int i = 0; i < 21; i++) {
 		if(i < 6) {
 			bw_pats[i] = prepareForTiling(bw_gworld, bw_rect);

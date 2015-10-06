@@ -633,16 +633,12 @@ std::shared_ptr<sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 		case NUM_SHEET_TYPES:
 			break;
 		case SHEET_TER:
-			if(n >= NUM_TER_SHEETS)
-				return nullptr;
 			sout << "ter" << n + 1;
 			break;
 		case SHEET_TER_ANIM:
 			sout << "teranim";
 			break;
 		case SHEET_MONST:
-			if(n >= NUM_MONST_SHEETS)
-				return nullptr;
 			sout << "monst" << n + 1;
 			break;
 		case SHEET_DLOG:
@@ -715,9 +711,7 @@ std::shared_ptr<sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 					sout << "sheet" << n;
 			}
 	}
-	std::shared_ptr<sf::Texture> sheet(new sf::Texture);
-	sheet->loadFromImage(*ResMgr::get<ImageRsrc>(sout.str()));
-	return sheet;
+	return ResMgr::get<ImageRsrc>(sout.str());
 }
 
 void cPict::draw(){

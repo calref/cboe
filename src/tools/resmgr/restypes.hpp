@@ -22,7 +22,7 @@
 #include "cursors.hpp"
 #include "location.hpp"
 
-using ImageRsrc = sf::Image;
+using ImageRsrc = sf::Texture;
 using CursorRsrc = Cursor;
 using FontRsrc = sf::Font;
 using StringRsrc = std::vector<std::string>;

@@ -1325,16 +1325,8 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 	return true;
 }
 
-extern bool pc_gworld_loaded;
 void edit_party() {
-	bool munch_pc_graphic = false;
-	
 	make_cursor_sword();
-	
-	if(!pc_gworld_loaded) {
-		munch_pc_graphic = true;
-		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
-	}
 	
 	cDialog pcDialog("edit-party");
 	std::vector<std::string> buttons = {"done", "help"};

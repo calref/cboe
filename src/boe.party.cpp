@@ -2299,20 +2299,13 @@ eAlchemy alch_choice(short pc_num) {
 	return chooseAlchemy.getResult<eAlchemy>();
 }
 
-extern bool pc_gworld_loaded;
 // mode ... 0 - create  1 - created
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent) {
-	bool munch_pc_graphic = false;
-	
 	store_graphic_pc_num = pc_num;
 	store_graphic_mode = mode;
 	
 	make_cursor_sword();
 	
-	if(!pc_gworld_loaded) {
-		munch_pc_graphic = true;
-		pc_gworld.loadFromImage(*ResMgr::get<ImageRsrc>("pcs"));
-	}
 	cPictChoice pcPic(0,35,PIC_PC,parent);
 	// Customize it for this special case of choosing a PC graphic
 	dynamic_cast<cPict&>(pcPic->getControl("mainpic")).setPict(7);

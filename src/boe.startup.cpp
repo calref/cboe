@@ -142,8 +142,6 @@ void handle_splash_events() {
 }
 
 void show_logo() {
-	sf::Texture pict_to_draw;
-	
 	rectangle whole_window,from_rect;
 	rectangle logo_from = {0,0,350,350};
 	
@@ -152,7 +150,7 @@ void show_logo() {
 	
 	whole_window = rectangle(mainPtr);
 	logo_from.offset((whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
-	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("spidlogo"));
+	sf::Texture& pict_to_draw = *ResMgr::get<ImageRsrc>("spidlogo");
 	from_rect = rectangle(pict_to_draw);
 	
 	play_sound(-95);
@@ -170,13 +168,12 @@ void show_logo() {
 }
 
 void plop_fancy_startup() {
-	sf::Texture pict_to_draw;
 	rectangle whole_window,from_rect;
 	rectangle intro_from = {0,0,480,640};
 	whole_window = rectangle(mainPtr);
 	sf::Time delay = time_in_ticks(220);
 	intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
-	pict_to_draw.loadFromImage(*ResMgr::get<ImageRsrc>("startsplash"));
+	sf::Texture& pict_to_draw = *ResMgr::get<ImageRsrc>("startsplash");
 	
 	play_sound(-22);
 	sf::Clock timer;

@@ -10,13 +10,22 @@
 #define BOE_RESMGR_H
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <stack>
 #include <exception>
 #include <memory>
 #include <boost/filesystem.hpp>
+#include <boost/functional/hash.hpp>
 #include <functional>
 #include <iostream>
+
+namespace std {
+    template<> struct hash<boost::filesystem::path> {
+        size_t operator()(const boost::filesystem::path& p) const {
+            return boost::filesystem::hash_value(p);
+        }
+    };
+}
 
 /// A simple resource manager.
 /// Handles loading, retaining, and releasing of resources as necessary.
@@ -35,8 +44,8 @@ namespace ResMgr {
 	/// @tparam type The type of resource that this pool manages.
 	template<typename type> struct resPool {
 		/// Get the map of all currently-loaded resources from this resource pool.
-		static std::map<std::string,std::shared_ptr<type> >& resources() {
-			static std::map<std::string,std::shared_ptr<type> > data;
+		static std::unordered_map<std::string,std::shared_ptr<type> >& resources() {
+			static std::unordered_map<std::string,std::shared_ptr<type> > data;
 			return data;
 		}
 		/// Get the current search path stack for this resource pool.
@@ -51,8 +60,8 @@ namespace ResMgr {
 		}
 		/// Get the map of past path resolutions.
 		/// @return A map of relative paths to the absolute path they most recently resolved to.
-		static std::map<fs::path,fs::path>& pathFound() {
-			static std::map<fs::path,fs::path> data;
+		static std::unordered_map<fs::path,fs::path>& pathFound() {
+			static std::unordered_map<fs::path,fs::path> data;
 			return data;
 		}
 		/// Convert a relative path to an absolute path by checking the current search path stack.

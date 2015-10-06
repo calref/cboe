@@ -53,9 +53,7 @@ extern location source_locs[6];
 extern location dest_locs[40] ;
 extern location center;
 
-extern sf::Texture tiny_obj_gworld,invenbtn_gworld,status_gworld,orig_item_stats_gworld,orig_pc_stats_gworld;
 extern cCustomGraphics spec_scen_g;
-extern sf::Texture pc_gworld, monst_gworld[NUM_MONST_SHEETS];
 extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
 extern sf::RenderTexture terrain_screen_gworld;
 
@@ -80,7 +78,6 @@ extern short store_selling_values[8];
 extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
 extern bool supressing_some_spaces;
 extern location ok_space[4];
-extern sf::Texture bg_gworld;
 extern std::map<eStatus, std::pair<short, short>> statIcons;
 
 // Draws the pc area in upper right
@@ -97,7 +94,8 @@ void put_pc_screen() {
 	pc_stats_gworld.setActive();
 	
 	// First clean up gworld with pretty patterns
-	rect_draw_some_item(orig_pc_stats_gworld, rectangle(orig_pc_stats_gworld), pc_stats_gworld, rectangle(pc_stats_gworld));
+	sf::Texture& orig = *ResMgr::get<ImageRsrc>("statarea");
+	rect_draw_some_item(orig, rectangle(orig), pc_stats_gworld, rectangle(pc_stats_gworld));
 	tileImage(pc_stats_gworld, erase_rect,bg[6]);
 	
 	TextStyle style;
@@ -120,6 +118,7 @@ void put_pc_screen() {
 	win_draw_string(pc_stats_gworld,day_rect[0],std::to_string(univ.party.calc_day()),eTextMode::WRAP,style);
 	style.colour = sf::Color::Black;
 	
+	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
 	for(i = 0; i < 6; i++) {
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			for(j = 0; j < 5; j++)
@@ -230,7 +229,8 @@ void put_item_screen(short screen_num) {
 	item_stats_gworld.setActive();
 	
 	// First clean up gworld with pretty patterns
-	rect_draw_some_item(orig_item_stats_gworld, rectangle(orig_item_stats_gworld), item_stats_gworld, rectangle(item_stats_gworld));
+	sf::Texture& orig = *ResMgr::get<ImageRsrc>("inventory");
+	rect_draw_some_item(orig, rectangle(orig), item_stats_gworld, rectangle(item_stats_gworld));
 	tileImage(item_stats_gworld, erase_rect,bg[6]);
 	
 	// Draw buttons at bottom
@@ -431,6 +431,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			return;
 	}
 	if(item_area_button_active[position][5]) {
+		sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
 		store_selling_values[position] = val_to_place;
 		dest_rect = item_buttons[position][5];
 		dest_rect.right = dest_rect.left + 30;
@@ -467,9 +468,10 @@ void place_item_button(short which_button_to_put,short which_slot,short which_bu
 			graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(extra_val - 1000);
 			rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
 		}
-		else rect_draw_some_item(tiny_obj_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+		else rect_draw_some_item(*ResMgr::get<ImageRsrc>("tinyobj"), from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 		return;
 	}
+	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
 	if(which_button_to_put < 4) { // this means put a regular item button
 		item_area_button_active[which_slot][which_button_position] = true;
 		rect_draw_some_item(invenbtn_gworld, item_buttons_from[which_button_to_put], item_stats_gworld, item_buttons[which_slot][which_button_position], sf::BlendAlpha);
@@ -508,6 +510,7 @@ void place_item_bottom_buttons() {
 	style.font = FONT_BOLD;
 	style.colour = sf::Color::Yellow;
 	
+	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
 	for(i = 0; i < 6; i++) {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 		 	item_bottom_button_active[i] = true;
@@ -525,10 +528,11 @@ void place_item_bottom_buttons() {
 				pic_num_t need_pic = pic - 100;
 				int mode = 0;
 				pc_from_rect = get_monster_template_rect(need_pic, mode, 0);
-				from_gw = &monst_gworld[m_pic_index[need_pic].i / 20];
+				int which_sheet = m_pic_index[need_pic].i / 20;
+				from_gw = ResMgr::get<ImageRsrc>("monst" + std::to_string(1 + which_sheet)).get();
 			} else {
 				pc_from_rect = calc_rect(2 * (pic / 8), pic % 8);
-				from_gw = &pc_gworld;
+				from_gw = ResMgr::get<ImageRsrc>("pcs").get();
 			}
 			to_rect.inset(2,2);
 			rect_draw_some_item(*from_gw, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
@@ -661,6 +665,7 @@ void draw_pc_effects(short pc) {
 		return;
 	
 	univ.party[pc].status[eStatus::HASTE_SLOW]; // This just makes sure it exists in the map, without changing its value if it does
+	sf::Texture& status_gworld = *ResMgr::get<ImageRsrc>("staticons");
 	for(auto next : univ.party[pc].status) {
 		short placedIcon = -1;
 		if(next.first == eStatus::POISON && next.second > 4) placedIcon = 1;

@@ -23,6 +23,7 @@
 #include "shop.hpp"
 #include "spell.hpp"
 #include "button.hpp"
+#include "restypes.hpp"
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,
@@ -52,10 +53,7 @@ extern sf::RenderWindow mainPtr;
 extern short which_combat_type;
 extern eGameMode overall_mode;
 extern bool play_sounds,boom_anim_active;
-extern sf::Texture fields_gworld,boom_gworld,missiles_gworld,invenbtn_gworld;
-extern sf::Texture tiny_obj_gworld, items_gworld, talkfaces_gworld;
 extern sf::RenderTexture terrain_screen_gworld;
-extern sf::Texture bg_gworld;
 extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
@@ -412,7 +410,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	play_sound(-1 * sound_num);
 	
-	
+	sf::Texture& missiles_gworld = *ResMgr::get<ImageRsrc>("missiles");
 	// Now, at last, launch missile
 	for(t = 0; t < num_steps; t++) {
 		draw_terrain();
@@ -581,6 +579,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 		play_sound(-1 * snd_num);
 	}
 	
+	sf::Texture& boom_gworld = *ResMgr::get<ImageRsrc>("booms");
 	// Now, at last, do explosion
 	for(t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
 		draw_terrain();
@@ -638,13 +637,14 @@ void click_shop_rect(rectangle area_rect) {
 	
 }
 
-static graf_pos calc_item_rect(int num,rectangle& to_rect) {
+graf_pos calc_item_rect(int num,rectangle& to_rect) {
 	rectangle from_rect = {0,0,18,18};
-	sf::Texture *from_gw = &tiny_obj_gworld;
+	sf::Texture *from_gw;
 	if(num < 55) {
-		from_gw = &items_gworld;
+		from_gw = ResMgr::get<ImageRsrc>("objects").get();
 		from_rect = calc_rect(num % 5, num / 5);
 	}else{
+		from_gw = ResMgr::get<ImageRsrc>("tinyobj").get();
 		to_rect.inset(5,9);
 		from_rect.offset(18 * (num % 10), 18 * (num / 10));
 	}
@@ -702,7 +702,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		i = active_shop.getFace();
 		rectangle from_rect = {0,0,32,32};
 		from_rect.offset(32 * (i % 10),32 * (i / 10));
-		rect_draw_some_item(talkfaces_gworld, from_rect, talk_gworld, face_rect);
+		rect_draw_some_item(*ResMgr::get<ImageRsrc>("talkportraits"), from_rect, talk_gworld, face_rect);
 	}
 	
 	
@@ -750,6 +750,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		style.colour = c[4];
 	else style.colour = sf::Color::Black;
 	
+	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
 	// Place all the items
 	for(i = 0; i < 8; i++) {
 		current_pos = i + shop_sbar->getPosition();
