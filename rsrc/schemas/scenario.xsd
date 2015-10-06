@@ -10,323 +10,323 @@
 			</xs:simpleType>
 		</xs:union>
 	</xs:simpleType>
-		<xs:complexType mixed="true" name="scenIcon">
-			<xs:attribute name="custom" type="bool" default="false"/>
-			<xs:attribute name="split" type="bool" default="false"/>
-			<xs:attribute name="row" type="xs:integer" default="0"/>
-			<xs:attribute name="col" type="xs:integer" default="0"/>
-		</xs:complexType>
-		<xs:complexType name="author">
-			<xs:sequence>
-				<xs:element name="name" type="xs:string"/>
-				<xs:element name="email" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-		<xs:complexType name="scenText">
-			<xs:sequence>
-				<xs:element name="teaser" minOccurs="0" maxOccurs="2" type="xs:string"/>
-				<xs:element name="icon" type="scenIcon" minOccurs="0"/>
-				<xs:element name="intro-msg" minOccurs="0" maxOccurs="6" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-		<xs:complexType name="ratings">
-			<xs:all>
-				<xs:element name="content">
-					<xs:simpleType>
-						<xs:restriction base="xs:token">
-							<xs:enumeration value="G"/>
-							<xs:enumeration value="PG"/>
-							<xs:enumeration value="R"/>
-							<xs:enumeration value="NC-17"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name="difficulty">
-					<xs:simpleType>
-						<xs:restriction base="xs:integer">
-							<xs:minInclusive value="1"/>
-							<xs:maxInclusive value="4"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-			</xs:all>
-		</xs:complexType>
-		<xs:complexType name="scenFlags">
-			<xs:sequence>
-				<xs:element name="adjust-difficulty" type="bool"/>
-				<xs:element name="legacy" type="xs:string"/>
-				<xs:element name="custom-graphics" type="bool"/>
-			</xs:sequence>
-		</xs:complexType>
-		<xs:complexType name="creator">
-			<xs:sequence>
-				<xs:element name="type" type="xs:string"/>
-				<xs:element name="version" type="xs:string"/>
-				<xs:element name="os" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-		<xs:complexType name="shopEntries">
-			<xs:choice minOccurs='0' maxOccurs='30'>
-				<xs:element name='item'>
-					<xs:complexType><xs:simpleContent>
-						<xs:extension base='xs:integer'>
-							<xs:attribute name='quantity' type='shop-amount' default='0'/>
-							<xs:attribute name='chance' type='xs:integer' default='100'/>
+	<xs:complexType mixed="true" name="scenIcon">
+		<xs:attribute name="custom" type="bool" default="false"/>
+		<xs:attribute name="split" type="bool" default="false"/>
+		<xs:attribute name="row" type="xs:integer" default="0"/>
+		<xs:attribute name="col" type="xs:integer" default="0"/>
+	</xs:complexType>
+	<xs:complexType name="author">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="email" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="scenText">
+		<xs:sequence>
+			<xs:element name="teaser" minOccurs="0" maxOccurs="2" type="xs:string"/>
+			<xs:element name="icon" type="scenIcon" minOccurs="0"/>
+			<xs:element name="intro-msg" minOccurs="0" maxOccurs="6" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ratings">
+		<xs:all>
+			<xs:element name="content">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="G"/>
+						<xs:enumeration value="PG"/>
+						<xs:enumeration value="R"/>
+						<xs:enumeration value="NC-17"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="difficulty">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="scenFlags">
+		<xs:sequence>
+			<xs:element name="adjust-difficulty" type="bool"/>
+			<xs:element name="legacy" type="xs:string"/>
+			<xs:element name="custom-graphics" type="bool"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="creator">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string"/>
+			<xs:element name="version" type="xs:string"/>
+			<xs:element name="os" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="shopEntries">
+		<xs:choice minOccurs='0' maxOccurs='30'>
+			<xs:element name='item'>
+				<xs:complexType><xs:simpleContent>
+					<xs:extension base='xs:integer'>
+						<xs:attribute name='quantity' type='shop-amount' default='0'/>
+						<xs:attribute name='chance' type='xs:integer' default='100'/>
+					</xs:extension>
+				</xs:simpleContent></xs:complexType>
+			</xs:element>
+			<xs:element name='mage-spell'>
+				<xs:simpleType>
+					<xs:restriction base='xs:integer'>
+						<xs:minInclusive value='0'/>
+						<xs:maxInclusive value='61'/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name='priest-spell'>
+				<xs:simpleType>
+					<xs:restriction base='xs:integer'>
+						<xs:minInclusive value='0'/>
+						<xs:maxInclusive value='61'/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name='recipe'>
+				<xs:simpleType>
+					<xs:restriction base='xs:integer'>
+						<xs:minInclusive value='0'/>
+						<xs:maxInclusive value='19'/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name='skill'>
+				<xs:simpleType>
+					<xs:restriction base='xs:integer'>
+						<xs:minInclusive value='0'/>
+						<xs:maxInclusive value='20'/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name='treasure'>
+				<xs:simpleType>
+					<xs:restriction base='xs:integer'>
+						<xs:minInclusive value='0'/>
+						<xs:maxInclusive value='4'/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name='class'>
+				<xs:simpleType>
+					<xs:restriction base='xs:integer'>
+						<xs:minInclusive value='1'/>
+						<xs:maxInclusive value='100'/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name='heal'>
+				<xs:simpleType>
+					<xs:restriction base='xs:integer'>
+						<xs:minInclusive value='0'/>
+						<xs:maxInclusive value='9'/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name='special'>
+				<xs:complexType>
+					<xs:all>
+						<xs:element name='name' type='xs:string'/>
+						<xs:element name='description' type='xs:string'/>
+						<xs:element name='node' type='xs:integer'/>
+						<xs:element name='quantity' type='shop-amount'/>
+						<xs:element name='cost' type='xs:integer'/>
+						<xs:element name='icon' type='xs:integer'/>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="gameData">
+		<xs:sequence>
+			<xs:element name="num-towns" type="xs:integer"/>
+			<xs:element name="out-width" type="xs:integer"/>
+			<xs:element name="out-height" type="xs:integer"/>
+			<xs:element name="on-init" type="xs:integer" minOccurs="0"/>
+			<xs:element name="start-town" type="xs:integer"/>
+			<xs:element name="town-start">
+				<xs:complexType>
+					<xs:attributeGroup ref="point"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="outdoor-start">
+				<xs:complexType>
+					<xs:attributeGroup ref="point"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="sector-start">
+				<xs:complexType>
+					<xs:attributeGroup ref="point"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="store-items" minOccurs="0" maxOccurs="3">
+				<xs:complexType>
+					<xs:attributeGroup ref="rect"/>
+					<xs:attribute name="town" type="xs:integer" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="town-flag" minOccurs="0" maxOccurs="10">
+				<xs:complexType>
+					<xs:attribute name="town" type="xs:integer" use="required"/>
+					<xs:attribute name="add-x" type="xs:integer" use="required"/>
+					<xs:attribute name="add-y" type="xs:integer" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="special-item" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="name" type="xs:string"/>
+						<xs:element name="description" type="xs:string"/>
+					</xs:sequence>
+					<xs:attribute name="special" type="xs:integer"/>
+					<xs:attribute name="start-with" type="bool"/>
+					<xs:attribute name="useable" type="bool"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="quest" minOccurs='0' maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name='deadline' minOccurs='0'>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base='xs:integer'>
+										<xs:attribute name="relative" type="bool"/>
+										<xs:attribute name='waive-if' type='xs:integer'/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name='reward' minOccurs='0'>
+							<xs:complexType>
+								<xs:attribute name='xp' type='xs:integer'/>
+								<xs:attribute name='gold' type='xs:integer'/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name='bank' type='xs:integer' minOccurs='0' maxOccurs='2'/>
+						<xs:element name="name" type="xs:string"/>
+						<xs:element name="description" type="xs:string"/>
+					</xs:sequence>
+					<xs:attribute name="start-with" type="bool"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="shop" minOccurs='0' maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name='name' type='xs:string'/>
+						<xs:element name='type'>
+							<xs:simpleType>
+								<xs:restriction base='xs:string'>
+									<xs:enumeration value='live'/>
+									<xs:enumeration value='dead'/>
+									<xs:enumeration value='rand'/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name='prompt'>
+							<xs:simpleType>
+								<xs:restriction base='xs:string'>
+									<xs:enumeration value='shop'/>
+									<xs:enumeration value='heal'/>
+									<xs:enumeration value='mage'/>
+									<xs:enumeration value='priest'/>
+									<xs:enumeration value='spell'/>
+									<xs:enumeration value='alch'/>
+									<xs:enumeration value='train'/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name='face' type='xs:integer'/>
+						<xs:element name='entries' type="shopEntries"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="timer" type="timer" minOccurs="0" maxOccurs="20"/>
+			<xs:element name="string" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="id" type="xs:integer" use="required"/>
 						</xs:extension>
-					</xs:simpleContent></xs:complexType>
-				</xs:element>
-				<xs:element name='mage-spell'>
-					<xs:simpleType>
-						<xs:restriction base='xs:integer'>
-							<xs:minInclusive value='0'/>
-							<xs:maxInclusive value='61'/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name='priest-spell'>
-					<xs:simpleType>
-						<xs:restriction base='xs:integer'>
-							<xs:minInclusive value='0'/>
-							<xs:maxInclusive value='61'/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name='recipe'>
-					<xs:simpleType>
-						<xs:restriction base='xs:integer'>
-							<xs:minInclusive value='0'/>
-							<xs:maxInclusive value='19'/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name='skill'>
-					<xs:simpleType>
-						<xs:restriction base='xs:integer'>
-							<xs:minInclusive value='0'/>
-							<xs:maxInclusive value='20'/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name='treasure'>
-					<xs:simpleType>
-						<xs:restriction base='xs:integer'>
-							<xs:minInclusive value='0'/>
-							<xs:maxInclusive value='4'/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name='class'>
-					<xs:simpleType>
-						<xs:restriction base='xs:integer'>
-							<xs:minInclusive value='1'/>
-							<xs:maxInclusive value='100'/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name='heal'>
-					<xs:simpleType>
-						<xs:restriction base='xs:integer'>
-							<xs:minInclusive value='0'/>
-							<xs:maxInclusive value='9'/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name='special'>
-					<xs:complexType>
-						<xs:all>
-							<xs:element name='name' type='xs:string'/>
-							<xs:element name='description' type='xs:string'/>
-							<xs:element name='node' type='xs:integer'/>
-							<xs:element name='quantity' type='shop-amount'/>
-							<xs:element name='cost' type='xs:integer'/>
-							<xs:element name='icon' type='xs:integer'/>
-						</xs:all>
-					</xs:complexType>
-				</xs:element>
-			</xs:choice>
-		</xs:complexType>
-		<xs:complexType name="gameData">
-			<xs:sequence>
-				<xs:element name="num-towns" type="xs:integer"/>
-				<xs:element name="out-width" type="xs:integer"/>
-				<xs:element name="out-height" type="xs:integer"/>
-				<xs:element name="on-init" type="xs:integer" minOccurs="0"/>
-				<xs:element name="start-town" type="xs:integer"/>
-				<xs:element name="town-start">
-					<xs:complexType>
-						<xs:attributeGroup ref="point"/>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="outdoor-start">
-					<xs:complexType>
-						<xs:attributeGroup ref="point"/>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="sector-start">
-					<xs:complexType>
-						<xs:attributeGroup ref="point"/>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="store-items" minOccurs="0" maxOccurs="3">
-					<xs:complexType>
-						<xs:attributeGroup ref="rect"/>
-						<xs:attribute name="town" type="xs:integer" use="required"/>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="town-flag" minOccurs="0" maxOccurs="10">
-					<xs:complexType>
-						<xs:attribute name="town" type="xs:integer" use="required"/>
-						<xs:attribute name="add-x" type="xs:integer" use="required"/>
-						<xs:attribute name="add-y" type="xs:integer" use="required"/>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="special-item" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="name" type="xs:string"/>
-							<xs:element name="description" type="xs:string"/>
-						</xs:sequence>
-						<xs:attribute name="special" type="xs:integer"/>
-						<xs:attribute name="start-with" type="bool"/>
-						<xs:attribute name="useable" type="bool"/>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="quest" minOccurs='0' maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name='deadline' minOccurs='0'>
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base='xs:integer'>
-											<xs:attribute name="relative" type="bool"/>
-											<xs:attribute name='waive-if' type='xs:integer'/>
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
-							<xs:element name='reward' minOccurs='0'>
-								<xs:complexType>
-									<xs:attribute name='xp' type='xs:integer'/>
-									<xs:attribute name='gold' type='xs:integer'/>
-								</xs:complexType>
-							</xs:element>
-							<xs:element name='bank' type='xs:integer' minOccurs='0' maxOccurs='2'/>
-							<xs:element name="name" type="xs:string"/>
-							<xs:element name="description" type="xs:string"/>
-						</xs:sequence>
-						<xs:attribute name="start-with" type="bool"/>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="shop" minOccurs='0' maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name='name' type='xs:string'/>
-							<xs:element name='type'>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="journal" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="id" type="xs:integer" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="editorData">
+		<xs:sequence>
+			<xs:element name="default-ground" type="xs:integer"/>
+			<xs:element name="last-out-section">
+				<xs:complexType>
+					<xs:attributeGroup ref="point"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="last-town" type="xs:integer"/>
+			<xs:element name="graphics" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="pic" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:integer">
+										<xs:attribute name="index" type="xs:integer" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="storage" minOccurs="0" maxOccurs="10">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="on-terrain" type="xs:integer"/>
+						<xs:element name="is-property" type="bool"/>
+						<xs:element name="item" minOccurs="0" maxOccurs="10">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:integer">
+										<xs:attribute name="chance" type="xs:integer" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="sound" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="id" use="required">
 								<xs:simpleType>
-									<xs:restriction base='xs:string'>
-										<xs:enumeration value='live'/>
-										<xs:enumeration value='dead'/>
-										<xs:enumeration value='rand'/>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="100"/>
 									</xs:restriction>
 								</xs:simpleType>
-							</xs:element>
-							<xs:element name='prompt'>
-								<xs:simpleType>
-									<xs:restriction base='xs:string'>
-										<xs:enumeration value='shop'/>
-										<xs:enumeration value='heal'/>
-										<xs:enumeration value='mage'/>
-										<xs:enumeration value='priest'/>
-										<xs:enumeration value='spell'/>
-										<xs:enumeration value='alch'/>
-										<xs:enumeration value='train'/>
-									</xs:restriction>
-								</xs:simpleType>
-							</xs:element>
-							<xs:element name='face' type='xs:integer'/>
-							<xs:element name='entries' type="shopEntries"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="timer" type="timer" minOccurs="0" maxOccurs="20"/>
-				<xs:element name="string" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="id" type="xs:integer" use="required"/>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="journal" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="id" type="xs:integer" use="required"/>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-			</xs:sequence>
-		</xs:complexType>
-		<xs:complexType name="editorData">
-			<xs:sequence>
-				<xs:element name="default-ground" type="xs:integer"/>
-				<xs:element name="last-out-section">
-					<xs:complexType>
-						<xs:attributeGroup ref="point"/>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="last-town" type="xs:integer"/>
-				<xs:element name="graphics" minOccurs="0">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="pic" maxOccurs="unbounded">
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:integer">
-											<xs:attribute name="index" type="xs:integer" use="required"/>
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="storage" minOccurs="0" maxOccurs="10">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="on-terrain" type="xs:integer"/>
-							<xs:element name="is-property" type="bool"/>
-							<xs:element name="item" minOccurs="0" maxOccurs="10">
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:integer">
-											<xs:attribute name="chance" type="xs:integer" use="required"/>
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="sound" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="id" use="required">
-									<xs:simpleType>
-										<xs:restriction base="xs:integer">
-											<xs:minInclusive value="100"/>
-										</xs:restriction>
-									</xs:simpleType>
-								</xs:attribute>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-			</xs:sequence>
-		</xs:complexType>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:element name="scenario">
 		<xs:complexType>
 			<xs:sequence>

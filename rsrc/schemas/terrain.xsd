@@ -80,64 +80,64 @@
 			<xs:enumeration value="none"/>
 		</xs:restriction>
 	</xs:simpleType>
-		<xs:complexType name="editorData">
-			<xs:all>
-				<xs:element name="shortcut" minOccurs="0" type="key"/>
-				<xs:element name="frill" minOccurs="0">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:integer">
-								<xs:attribute name="chance" type="xs:integer" use="optional" default="10"/>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="object" minOccurs="0">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="num" type="xs:integer"/>
-							<xs:element name="pos" type="point"/>
-							<xs:element name="size" type="point"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-			</xs:all>
-		</xs:complexType>
-		<xs:complexType name="terrain">
-			<xs:all>
-				<xs:element name="name" type="xs:string"/>
-				<xs:element name="pic" type="xs:integer"/>
-				<xs:element name="map" type="xs:integer"/>
-				<xs:element name="blockage" type="blockage"/>
-				<xs:element name="special">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="type">
-								<xs:simpleType>
-									<xs:restriction base="xs:string">
-										<xs:pattern value="[a-z-]+"/>
-									</xs:restriction>
-								</xs:simpleType>
-							</xs:element>
-							<xs:element name="flag" minOccurs="0" maxOccurs="3" type="xs:string"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="transform" minOccurs="0" type="xs:integer"/>
-				<xs:element name="fly" minOccurs="0" type="bool"/>
-				<xs:element name="boat" minOccurs="0"  type="bool"/>
-				<xs:element name="ride" minOccurs="0" type="bool"/>
-				<xs:element name="archetype" minOccurs="0" type="bool"/>
-				<xs:element name="light" minOccurs="0" type="xs:integer"/>
-				<xs:element name="step-sound" minOccurs="0" type="stepSound"/>
-				<xs:element name="trim" type="terTrim"/>
-				<xs:element name="arena" type="xs:integer"/>
-				<xs:element name="ground" minOccurs="0" type="xs:integer"/>
-				<xs:element name="trim-for" minOccurs="0" type="xs:integer"/>
-				<xs:element name="editor" type="editorData" minOccurs="0"/>
-			</xs:all>
-			<xs:attribute name="id" type="xs:integer" use="required"/>
-		</xs:complexType>
+	<xs:complexType name="editorData">
+		<xs:all>
+			<xs:element name="shortcut" minOccurs="0" type="key"/>
+			<xs:element name="frill" minOccurs="0">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:integer">
+							<xs:attribute name="chance" type="xs:integer" use="optional" default="10"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="object" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="num" type="xs:integer"/>
+						<xs:element name="pos" type="point"/>
+						<xs:element name="size" type="point"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="terrain">
+		<xs:all>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="pic" type="xs:integer"/>
+			<xs:element name="map" type="xs:integer"/>
+			<xs:element name="blockage" type="blockage"/>
+			<xs:element name="special">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="type">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:pattern value="[a-z-]+"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="flag" minOccurs="0" maxOccurs="3" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="transform" minOccurs="0" type="xs:integer"/>
+			<xs:element name="fly" minOccurs="0" type="bool"/>
+			<xs:element name="boat" minOccurs="0"  type="bool"/>
+			<xs:element name="ride" minOccurs="0" type="bool"/>
+			<xs:element name="archetype" minOccurs="0" type="bool"/>
+			<xs:element name="light" minOccurs="0" type="xs:integer"/>
+			<xs:element name="step-sound" minOccurs="0" type="stepSound"/>
+			<xs:element name="trim" type="terTrim"/>
+			<xs:element name="arena" type="xs:integer"/>
+			<xs:element name="ground" minOccurs="0" type="xs:integer"/>
+			<xs:element name="trim-for" minOccurs="0" type="xs:integer"/>
+			<xs:element name="editor" type="editorData" minOccurs="0"/>
+		</xs:all>
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+	</xs:complexType>
 	<xs:element name="terrains">
 		<xs:complexType>
 			<xs:sequence>

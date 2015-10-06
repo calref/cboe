@@ -64,56 +64,56 @@
 			<xs:enumeration value="harm-all"/>
 		</xs:restriction>
 	</xs:simpleType>
-		<xs:complexType name="item">
-			<xs:all>
-				<xs:element name="variety" type="itemVariety"/>
-				<xs:element name="level" type="xs:integer"/>
-				<xs:element name="awkward" type="xs:integer" minOccurs="0"/>
-				<xs:element name="bonus" type="xs:integer" minOccurs="0"/>
-				<xs:element name="protection" type="xs:integer" minOccurs="0"/>
-				<xs:element name="charges" type="xs:integer" minOccurs="0"/>
-				<xs:element name="weapon-type" type="weaponType" minOccurs="0"/>
-				<xs:element name="missile-type" type="xs:integer" minOccurs="0"/>
-				<xs:element name="pic" type="xs:integer"/>
-				<xs:element name="flag" type="xs:integer" minOccurs="0"/>
-				<xs:element name="value" type="xs:integer"/>
-				<xs:element name="weight" type="xs:integer"/>
-				<xs:element name="class" type="xs:integer" minOccurs="0"/>
-				<xs:element name="name" type="xs:string"/>
-				<xs:element name="full-name" type="xs:string"/>
-				<xs:element name="treasure" type="xs:integer" minOccurs="0"/>
-				<xs:element name="ability" minOccurs="0">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="type">
-								<xs:simpleType>
-									<xs:restriction base="xs:string">
-										<xs:pattern value="[a-z-]+"/>
-									</xs:restriction>
-								</xs:simpleType>
-							</xs:element>
-							<xs:element name="strength" type="xs:integer"/>
-							<xs:element name="data" type="xs:integer"/>
-							<xs:element name="use-flag" type="useFlag" minOccurs="0"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="properties" minOccurs="0">
-					<xs:complexType>
-						<xs:all>
-							<xs:element name="identified" type="bool" minOccurs="0"/>
-							<xs:element name="magic" type="bool" minOccurs="0"/>
-							<xs:element name="cursed" type="bool" minOccurs="0"/>
-							<xs:element name="concealed" type="bool" minOccurs="0"/>
-							<xs:element name="enchanted" type="bool" minOccurs="0"/>
-							<xs:element name="unsellable" type="bool" minOccurs="0"/>
-						</xs:all>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="description" type="xs:string" minOccurs="0"/>
-			</xs:all>
-			<xs:attribute name="id" type="xs:integer" use="required"/>
-		</xs:complexType>
+	<xs:complexType name="item">
+		<xs:all>
+			<xs:element name="variety" type="itemVariety"/>
+			<xs:element name="level" type="xs:integer"/>
+			<xs:element name="awkward" type="xs:integer" minOccurs="0"/>
+			<xs:element name="bonus" type="xs:integer" minOccurs="0"/>
+			<xs:element name="protection" type="xs:integer" minOccurs="0"/>
+			<xs:element name="charges" type="xs:integer" minOccurs="0"/>
+			<xs:element name="weapon-type" type="weaponType" minOccurs="0"/>
+			<xs:element name="missile-type" type="xs:integer" minOccurs="0"/>
+			<xs:element name="pic" type="xs:integer"/>
+			<xs:element name="flag" type="xs:integer" minOccurs="0"/>
+			<xs:element name="value" type="xs:integer"/>
+			<xs:element name="weight" type="xs:integer"/>
+			<xs:element name="class" type="xs:integer" minOccurs="0"/>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="full-name" type="xs:string"/>
+			<xs:element name="treasure" type="xs:integer" minOccurs="0"/>
+			<xs:element name="ability" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="type">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:pattern value="[a-z-]+"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="strength" type="xs:integer"/>
+						<xs:element name="data" type="xs:integer"/>
+						<xs:element name="use-flag" type="useFlag" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="properties" minOccurs="0">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="identified" type="bool" minOccurs="0"/>
+						<xs:element name="magic" type="bool" minOccurs="0"/>
+						<xs:element name="cursed" type="bool" minOccurs="0"/>
+						<xs:element name="concealed" type="bool" minOccurs="0"/>
+						<xs:element name="enchanted" type="bool" minOccurs="0"/>
+						<xs:element name="unsellable" type="bool" minOccurs="0"/>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+		</xs:all>
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+	</xs:complexType>
 	<xs:element name="items">
 		<xs:complexType>
 			<xs:sequence>

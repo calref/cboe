@@ -105,138 +105,138 @@
 		<xs:attribute name="color"/>
 		<xs:attribute name="colour"/>
 	</xs:attributeGroup>
-		<xs:complexType name="field">
-			<xs:simpleContent>
-				<xs:extension base="xs:string">
-					<xs:attribute name="name" type="xs:token"/>
-					<xs:attribute name="type" default="text">
-						<xs:simpleType>
-							<xs:restriction base="xs:token">
-								<xs:enumeration value="int"/>
-					<xs:enumeration value="uint"/>
-								<xs:enumeration value="real"/>
-								<xs:enumeration value="text"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-					<xs:attribute name="tab-order" type="xs:integer"/>
-					<xs:attributeGroup ref="rect-size"/>
-				</xs:extension>
-			</xs:simpleContent>
-		</xs:complexType>
-		<xs:complexType mixed="true" name="message">
-			<xs:sequence>
-				<xs:element name="br" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType/>
-				</xs:element>
-			</xs:sequence>
-			<xs:attribute name="name" type="xs:token"/>
-			<xs:attributeGroup ref="frame"/>
-			<xs:attributeGroup ref="font"/>
-			<xs:attribute ref="def-key"/>
-			<xs:attribute name="fromlist" default="none" type="xs:string"/>
-			<xs:attributeGroup ref="rect-size"/>
-		</xs:complexType>
-		<xs:complexType name="pict">
-			<xs:attribute name="name" type="xs:token"/>
-			<xs:attribute name="type" use="required" type="picttype"/>
-			<xs:attribute name="custom" default="false" type="bool"/>
-			<xs:attribute name="scaled" default="false" type="bool"/>
-			<xs:attribute name="framed" default="true" type="bool"/>
-			<xs:attribute name="outline" default="inset" type="frameStyle"/>
-			<xs:attribute name="size">
-				<xs:simpleType>
-					<xs:restriction base="xs:token">
-						<xs:enumeration value="small"/>
-						<xs:enumeration value="wide"/>
-						<xs:enumeration value="tall"/>
-						<xs:enumeration value="large"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-			<xs:attribute ref="def-key"/>
-			<xs:attribute name="num" use="required" type="xs:integer"/>
-			<xs:attributeGroup ref="rect-size"/>
-		</xs:complexType>
-		<xs:complexType mixed="true" name="button">
-			<xs:sequence>
-				<xs:element name="key" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType/>
-				</xs:element>
-			</xs:sequence>
-			<xs:attribute name="name" use="required" type="xs:token"/>
-			<xs:attribute name="type" use="required" type="btntype"/>
-			<xs:attribute name="wrap" default="false" type="bool"/>
-			<xs:attribute ref="def-key"/>
-			<xs:attribute name="fromlist" default="none" type="xs:string"/>
-			<xs:attributeGroup ref="rect-size"/>
-		</xs:complexType>
-		<xs:complexType name="led">
-			<xs:simpleContent>
-				<xs:extension base="xs:string">
-					<xs:attribute name="name" use="required" type="xs:token"/>
-					<xs:attribute name="state" default="off">
-						<xs:simpleType>
-							<xs:restriction base="xs:token">
-								<xs:enumeration value="red"/>
-								<xs:enumeration value="green"/>
-								<xs:enumeration value="off"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-					<xs:attributeGroup ref="rect-size"/>
-					<xs:attributeGroup ref="font"/>
-					<xs:attribute name="wrap" default="false" type="bool"/>
-				</xs:extension>
-			</xs:simpleContent>
-		</xs:complexType>
-		<xs:complexType name="slider">
-			<xs:attribute name="name" type="xs:token"/>
-			<xs:attribute name="max" type="xs:integer" use="required"/>
-			<xs:attribute name="initial" type="xs:integer" default="0"/>
-			<xs:attribute name="page-size" type="xs:integer" default="10"/>
-			<xs:attribute name="vertical" type="bool" default="true"/>
-			<xs:attribute name="link" type="xs:token"/>
-			<xs:attribute name="style" type="scrollStyle" default="led"/>
-			<xs:attributeGroup ref="rect-size"/>
-		</xs:complexType>
-		<xs:complexType name="ledGroup">
-			<xs:sequence>
+	<xs:complexType name="field">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="name" type="xs:token"/>
+				<xs:attribute name="type" default="text">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:enumeration value="int"/>
+							<xs:enumeration value="uint"/>
+							<xs:enumeration value="real"/>
+							<xs:enumeration value="text"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="tab-order" type="xs:integer"/>
+				<xs:attributeGroup ref="rect-size"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType mixed="true" name="message">
+		<xs:sequence>
+			<xs:element name="br" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType/>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:token"/>
+		<xs:attributeGroup ref="frame"/>
+		<xs:attributeGroup ref="font"/>
+		<xs:attribute ref="def-key"/>
+		<xs:attribute name="fromlist" default="none" type="xs:string"/>
+		<xs:attributeGroup ref="rect-size"/>
+	</xs:complexType>
+	<xs:complexType name="pict">
+		<xs:attribute name="name" type="xs:token"/>
+		<xs:attribute name="type" use="required" type="picttype"/>
+		<xs:attribute name="custom" default="false" type="bool"/>
+		<xs:attribute name="scaled" default="false" type="bool"/>
+		<xs:attribute name="framed" default="true" type="bool"/>
+		<xs:attribute name="outline" default="inset" type="frameStyle"/>
+		<xs:attribute name="size">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="small"/>
+					<xs:enumeration value="wide"/>
+					<xs:enumeration value="tall"/>
+					<xs:enumeration value="large"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute ref="def-key"/>
+		<xs:attribute name="num" use="required" type="xs:integer"/>
+		<xs:attributeGroup ref="rect-size"/>
+	</xs:complexType>
+	<xs:complexType mixed="true" name="button">
+		<xs:sequence>
+			<xs:element name="key" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType/>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" use="required" type="xs:token"/>
+		<xs:attribute name="type" use="required" type="btntype"/>
+		<xs:attribute name="wrap" default="false" type="bool"/>
+		<xs:attribute ref="def-key"/>
+		<xs:attribute name="fromlist" default="none" type="xs:string"/>
+		<xs:attributeGroup ref="rect-size"/>
+	</xs:complexType>
+	<xs:complexType name="led">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="name" use="required" type="xs:token"/>
+				<xs:attribute name="state" default="off">
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:enumeration value="red"/>
+							<xs:enumeration value="green"/>
+							<xs:enumeration value="off"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attributeGroup ref="rect-size"/>
+				<xs:attributeGroup ref="font"/>
+				<xs:attribute name="wrap" default="false" type="bool"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="slider">
+		<xs:attribute name="name" type="xs:token"/>
+		<xs:attribute name="max" type="xs:integer" use="required"/>
+		<xs:attribute name="initial" type="xs:integer" default="0"/>
+		<xs:attribute name="page-size" type="xs:integer" default="10"/>
+		<xs:attribute name="vertical" type="bool" default="true"/>
+		<xs:attribute name="link" type="xs:token"/>
+		<xs:attribute name="style" type="scrollStyle" default="led"/>
+		<xs:attributeGroup ref="rect-size"/>
+	</xs:complexType>
+	<xs:complexType name="ledGroup">
+		<xs:sequence>
 			<xs:element maxOccurs="unbounded" name="led" type="led"/>
-			</xs:sequence>
-			<xs:attribute name="name" type="xs:token"/>
-			<xs:attributeGroup ref="frame"/>
-			<xs:attribute name="fromlist" default="none" type="xs:string"/>
-		</xs:complexType>
-		<xs:complexType name="stack">
-			<xs:choice minOccurs="0" maxOccurs="unbounded">
-				<xs:element name="field" type="field"/>
-				<xs:element name="text" type="message"/>
-				<xs:element name="pict" type="pict"/>
-				<xs:element name="button" type="button"/>
-				<xs:element name="led" type="led"/>
-				<xs:element name="group" type="ledGroup"/>
-				<xs:element name="slider" type="slider"/>
-			</xs:choice>
-			<xs:attribute name="name" type="xs:token"/>
-			<xs:attributeGroup ref="frame"/>
-			<xs:attribute name="pages" type="xs:integer"/>
-		</xs:complexType>
-		<xs:complexType name="scrollPane">
-			<xs:choice minOccurs="0" maxOccurs="unbounded">
-				<xs:element name="field" type="field"/>
-				<xs:element name="text" type="message"/>
-				<xs:element name="pict" type="pict"/>
-				<xs:element name="button" type="button"/>
-				<xs:element name="led" type="led"/>
-				<xs:element name="group" type="ledGroup"/>
-				<xs:element name="slider" type="slider"/>
-			</xs:choice>
-			<xs:attribute name="name" type="xs:token"/>
-			<xs:attributeGroup ref="frame"/>
-			<xs:attribute name="style" type="scrollStyle" default="led"/>
-			<xs:attributeGroup ref="rect-size"/>
-		</xs:complexType>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:token"/>
+		<xs:attributeGroup ref="frame"/>
+		<xs:attribute name="fromlist" default="none" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="stack">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="field" type="field"/>
+			<xs:element name="text" type="message"/>
+			<xs:element name="pict" type="pict"/>
+			<xs:element name="button" type="button"/>
+			<xs:element name="led" type="led"/>
+			<xs:element name="group" type="ledGroup"/>
+			<xs:element name="slider" type="slider"/>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:token"/>
+		<xs:attributeGroup ref="frame"/>
+		<xs:attribute name="pages" type="xs:integer"/>
+	</xs:complexType>
+	<xs:complexType name="scrollPane">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="field" type="field"/>
+			<xs:element name="text" type="message"/>
+			<xs:element name="pict" type="pict"/>
+			<xs:element name="button" type="button"/>
+			<xs:element name="led" type="led"/>
+			<xs:element name="group" type="ledGroup"/>
+			<xs:element name="slider" type="slider"/>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:token"/>
+		<xs:attributeGroup ref="frame"/>
+		<xs:attribute name="style" type="scrollStyle" default="led"/>
+		<xs:attributeGroup ref="rect-size"/>
+	</xs:complexType>
 	<xs:element name="dialog">
 		<xs:complexType>
 			<xs:choice minOccurs="0" maxOccurs="unbounded">

@@ -59,321 +59,321 @@
 			<xs:minInclusive value="0"/>
 		</xs:restriction>
 	</xs:simpleType>
-		<xs:complexType name="generalAbil">
-			<xs:all>
-				<xs:element name="type">
-					<xs:simpleType>
-						<xs:restriction base="xs:string">
-							<xs:enumeration value="ray"/>
-							<xs:enumeration value="touch"/>
-							<xs:enumeration value="gaze"/>
-							<xs:enumeration value="breath"/>
-							<xs:enumeration value="spit"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name="missile" type="xs:integer" minOccurs="0"/>
-				<xs:element name="strength" type="xs:integer"/>
-				<xs:element name="range" type="xs:integer" minOccurs="0"/>
-				<xs:element name="chance" type="permille"/>
-				<xs:element name="extra" minOccurs="0">
-					<xs:simpleType>
-						<xs:restriction base="xs:string">
-							<!-- Status effects -->
-							<xs:enumeration value="poison-weap"/>
-							<xs:enumeration value="bless-curse"/>
-							<xs:enumeration value="poison"/>
-							<xs:enumeration value="haste-slow"/>
-							<xs:enumeration value="invuln"/>
-							<xs:enumeration value="magic"/>
-							<xs:enumeration value="web"/>
-							<xs:enumeration value="disease"/>
-							<xs:enumeration value="invis"/>
-							<xs:enumeration value="dumb-smart"/>
-							<xs:enumeration value="martyr"/>
-							<xs:enumeration value="sleep"/>
-							<xs:enumeration value="paralysis"/>
-							<xs:enumeration value="acid"/>
-							<xs:enumeration value="cage"/>
-							<xs:enumeration value="charm"/>
-							<!-- Fields -->
-							<xs:enumeration value="wall-force"/>
-							<xs:enumeration value="wall-fire"/>
-							<xs:enumeration value="field-antimagic"/>
-							<xs:enumeration value="cloud-stink"/>
-							<xs:enumeration value="wall-ice"/>
-							<xs:enumeration value="wall-blades"/>
-							<xs:enumeration value="cloud-sleep"/>
-							<xs:enumeration value="obj-block"/>
-							<xs:enumeration value="field-web"/>
-							<xs:enumeration value="obj-crate"/>
-							<xs:enumeration value="obj-barrel"/>
-							<xs:enumeration value="barr-fire"/>
-							<xs:enumeration value="barr-force"/>
-							<xs:enumeration value="field-quickfire"/>
-							<xs:enumeration value="sfx-sm-bld"/>
-							<xs:enumeration value="sfx-med-bld"/>
-							<xs:enumeration value="sfx-lg-bld"/>
-							<xs:enumeration value="sfx-sm-slm"/>
-							<xs:enumeration value="sfx-lg-slm"/>
-							<xs:enumeration value="sfx-ash"/>
-							<xs:enumeration value="sfx-bone"/>
-							<xs:enumeration value="sfx-rock"/>
-							<xs:enumeration value="barr-cage"/>
-							<xs:enumeration value="dispel"/>
-							<xs:enumeration value="smash"/>
-							<!-- Damage types -->
-							<xs:enumeration value="weap"/>
-							<xs:enumeration value="fire"/>
-							<xs:enumeration value="poison"/>
-							<xs:enumeration value="magic"/>
-							<xs:enumeration value="weird"/>
-							<xs:enumeration value="cold"/>
-							<xs:enumeration value="undead"/>
-							<xs:enumeration value="demon"/>
-							<xs:enumeration value="spec"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-			</xs:all>
-			<xs:attribute name="type" use="required">
+	<xs:complexType name="generalAbil">
+		<xs:all>
+			<xs:element name="type">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
-						<xs:enumeration value="dmg"/>
-						<xs:enumeration value="dmg2"/>
-						<xs:enumeration value="status"/>
-						<xs:enumeration value="status2"/>
-						<xs:enumeration value="field"/>
-						<xs:enumeration value="petrify"/>
-						<xs:enumeration value="drain-sp"/>
-						<xs:enumeration value="drain-xp"/>
-						<xs:enumeration value="steal-food"/>
-						<xs:enumeration value="steal-gold"/>
-						<xs:enumeration value="kill"/>
-						<xs:enumeration value="stun"/>
+						<xs:enumeration value="ray"/>
+						<xs:enumeration value="touch"/>
+						<xs:enumeration value="gaze"/>
+						<xs:enumeration value="breath"/>
+						<xs:enumeration value="spit"/>
 					</xs:restriction>
 				</xs:simpleType>
-			</xs:attribute>
-		</xs:complexType>
-		<xs:complexType name="missileAbil">
-			<xs:all>
-				<xs:element name="type">
-					<xs:simpleType>
-						<xs:restriction base="xs:string">
-							<xs:enumeration value="arrow"/>
-							<xs:enumeration value="arrow++"/>
-							<xs:enumeration value="dart"/>
-							<xs:enumeration value="spear"/>
-							<xs:enumeration value="stone"/>
-							<xs:enumeration value="star"/>
-							<xs:enumeration value="spine"/>
-							<xs:enumeration value="knife"/>
-							<xs:enumeration value="bolt"/>
-							<xs:enumeration value="boulder"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name="missile" type="xs:integer"/>
-				<xs:element name="strength" type="dice"/>
-				<xs:element name="skill" type="xs:integer"/>
-				<xs:element name="range" type="xs:integer"/>
-				<xs:element name="chance" type="permille"/>
-			</xs:all>
-			<xs:attribute name="type" use="required">
+			</xs:element>
+			<xs:element name="missile" type="xs:integer" minOccurs="0"/>
+			<xs:element name="strength" type="xs:integer"/>
+			<xs:element name="range" type="xs:integer" minOccurs="0"/>
+			<xs:element name="chance" type="permille"/>
+			<xs:element name="extra" minOccurs="0">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
-						<xs:enumeration value="missile"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-		</xs:complexType>
-		<xs:complexType name="summonAbil">
-			<xs:sequence>
-				<xs:choice minOccurs="1" maxOccurs="1">
-					<xs:element name="type" type="xs:integer"/>
-					<xs:element name="lvl" type="xs:integer"/>
-					<xs:element name="race" type="species"/>
-				</xs:choice>
-				<xs:element name="min" type="xs:integer"/>
-				<xs:element name="max" type="xs:integer"/>
-				<xs:element name="duration" type="xs:integer"/>
-				<xs:element name="chance" type="permille"/>
-			</xs:sequence>
-			<xs:attribute name="type" use="required">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="summon"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-		</xs:complexType>
-		<xs:complexType name="radiateAbil">
-			<xs:all>
-				<xs:element name="type">
-					<xs:simpleType>
-						<xs:restriction base="xs:string">
-							<xs:enumeration value="wall-force"/>
-							<xs:enumeration value="wall-fire"/>
-							<xs:enumeration value="field-antimagic"/>
-							<xs:enumeration value="cloud-stink"/>
-							<xs:enumeration value="wall-ice"/>
-							<xs:enumeration value="wall-blades"/>
-							<xs:enumeration value="cloud-sleep"/>
-							<xs:enumeration value="obj-block"/>
-							<xs:enumeration value="field-web"/>
-							<xs:enumeration value="obj-crate"/>
-							<xs:enumeration value="obj-barrel"/>
-							<xs:enumeration value="barr-fire"/>
-							<xs:enumeration value="barr-force"/>
-							<xs:enumeration value="field-quickfire"/>
-							<xs:enumeration value="sfx-sm-bld"/>
-							<xs:enumeration value="sfx-med-bld"/>
-							<xs:enumeration value="sfx-lg-bld"/>
-							<xs:enumeration value="sfx-sm-slm"/>
-							<xs:enumeration value="sfx-lg-slm"/>
-							<xs:enumeration value="sfx-ash"/>
-							<xs:enumeration value="sfx-bone"/>
-							<xs:enumeration value="sfx-rock"/>
-							<xs:enumeration value="barr-cage"/>
-							<xs:enumeration value="dispel"/>
-							<xs:enumeration value="smash"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name="pattern" type="spellPattern" minOccurs="0"/>
-				<xs:element name="chance" type="permille"/>
-			</xs:all>
-			<xs:attribute name="type" use="required">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="radiate"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-		</xs:complexType>
-		<xs:complexType name="specialAbil">
-			<xs:sequence>
-				<xs:element name="param" type="xs:integer" minOccurs="0" maxOccurs="3"/>
-			</xs:sequence>
-			<xs:attribute name="type" use="required">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="splits"/>
+						<!-- Status effects -->
+						<xs:enumeration value="poison-weap"/>
+						<xs:enumeration value="bless-curse"/>
+						<xs:enumeration value="poison"/>
+						<xs:enumeration value="haste-slow"/>
+						<xs:enumeration value="invuln"/>
+						<xs:enumeration value="magic"/>
+						<xs:enumeration value="web"/>
+						<xs:enumeration value="disease"/>
+						<xs:enumeration value="invis"/>
+						<xs:enumeration value="dumb-smart"/>
 						<xs:enumeration value="martyr"/>
-						<xs:enumeration value="absorb"/>
-						<xs:enumeration value="old-web"/>
-						<xs:enumeration value="old-heat"/>
-						<xs:enumeration value="spec-act"/>
-						<xs:enumeration value="spec-hit"/>
-						<xs:enumeration value="spec-death"/>
+						<xs:enumeration value="sleep"/>
+						<xs:enumeration value="paralysis"/>
+						<xs:enumeration value="acid"/>
+						<xs:enumeration value="cage"/>
+						<xs:enumeration value="charm"/>
+						<!-- Fields -->
+						<xs:enumeration value="wall-force"/>
+						<xs:enumeration value="wall-fire"/>
+						<xs:enumeration value="field-antimagic"/>
+						<xs:enumeration value="cloud-stink"/>
+						<xs:enumeration value="wall-ice"/>
+						<xs:enumeration value="wall-blades"/>
+						<xs:enumeration value="cloud-sleep"/>
+						<xs:enumeration value="obj-block"/>
+						<xs:enumeration value="field-web"/>
+						<xs:enumeration value="obj-crate"/>
+						<xs:enumeration value="obj-barrel"/>
+						<xs:enumeration value="barr-fire"/>
+						<xs:enumeration value="barr-force"/>
+						<xs:enumeration value="field-quickfire"/>
+						<xs:enumeration value="sfx-sm-bld"/>
+						<xs:enumeration value="sfx-med-bld"/>
+						<xs:enumeration value="sfx-lg-bld"/>
+						<xs:enumeration value="sfx-sm-slm"/>
+						<xs:enumeration value="sfx-lg-slm"/>
+						<xs:enumeration value="sfx-ash"/>
+						<xs:enumeration value="sfx-bone"/>
+						<xs:enumeration value="sfx-rock"/>
+						<xs:enumeration value="barr-cage"/>
+						<xs:enumeration value="dispel"/>
+						<xs:enumeration value="smash"/>
+						<!-- Damage types -->
+						<xs:enumeration value="weap"/>
+						<xs:enumeration value="fire"/>
+						<xs:enumeration value="poison"/>
+						<xs:enumeration value="magic"/>
+						<xs:enumeration value="weird"/>
+						<xs:enumeration value="cold"/>
+						<xs:enumeration value="undead"/>
+						<xs:enumeration value="demon"/>
+						<xs:enumeration value="spec"/>
 					</xs:restriction>
 				</xs:simpleType>
-			</xs:attribute>
-		</xs:complexType>
-		<xs:complexType name="attack">
-			<xs:simpleContent>
-				<xs:extension base="dice">
-					<xs:attribute name="type" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:enumeration value="swing"/>
-								<xs:enumeration value="claw"/>
-								<xs:enumeration value="bite"/>
-								<xs:enumeration value="slime"/>
-								<xs:enumeration value="punch"/>
-								<xs:enumeration value="sting"/>
-								<xs:enumeration value="club"/>
-								<xs:enumeration value="burn"/>
-								<xs:enumeration value="harm"/>
-								<xs:enumeration value="stab"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:extension>
-			</xs:simpleContent>
-		</xs:complexType>
-		<xs:complexType name="monster">
-			<xs:all>
-				<xs:element name="name" type="xs:string"/>
-				<xs:element name="level" type="xs:integer"/>
-				<xs:element name="armor" type="xs:integer"/>
-				<xs:element name="skill" type="xs:integer"/>
-				<xs:element name="hp" type="xs:integer"/>
-				<xs:element name="speed" type="xs:integer"/>
-				<xs:element name="treasure" minOccurs="0" type="xs:integer"/>
-				<xs:element name="mage" minOccurs="0" type="xs:integer"/>
-				<xs:element name="priest" minOccurs="0" type="xs:integer"/>
+			</xs:element>
+		</xs:all>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="dmg"/>
+					<xs:enumeration value="dmg2"/>
+					<xs:enumeration value="status"/>
+					<xs:enumeration value="status2"/>
+					<xs:enumeration value="field"/>
+					<xs:enumeration value="petrify"/>
+					<xs:enumeration value="drain-sp"/>
+					<xs:enumeration value="drain-xp"/>
+					<xs:enumeration value="steal-food"/>
+					<xs:enumeration value="steal-gold"/>
+					<xs:enumeration value="kill"/>
+					<xs:enumeration value="stun"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="missileAbil">
+		<xs:all>
+			<xs:element name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="arrow"/>
+						<xs:enumeration value="arrow++"/>
+						<xs:enumeration value="dart"/>
+						<xs:enumeration value="spear"/>
+						<xs:enumeration value="stone"/>
+						<xs:enumeration value="star"/>
+						<xs:enumeration value="spine"/>
+						<xs:enumeration value="knife"/>
+						<xs:enumeration value="bolt"/>
+						<xs:enumeration value="boulder"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="missile" type="xs:integer"/>
+			<xs:element name="strength" type="dice"/>
+			<xs:element name="skill" type="xs:integer"/>
+			<xs:element name="range" type="xs:integer"/>
+			<xs:element name="chance" type="permille"/>
+		</xs:all>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="missile"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="summonAbil">
+		<xs:sequence>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="type" type="xs:integer"/>
+				<xs:element name="lvl" type="xs:integer"/>
 				<xs:element name="race" type="species"/>
-				<xs:element name="abilities" minOccurs="0">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="invisible" minOccurs="0"/>
-							<xs:element name="guard" minOccurs="0"/>
-							<xs:choice maxOccurs="unbounded">
-								<xs:element name="general" type="generalAbil" minOccurs="0" maxOccurs="unbounded"/>
-								<xs:element name="missile" type="missileAbil" minOccurs="0" maxOccurs="unbounded"/>
-								<xs:element name="summon" type="summonAbil" minOccurs="0" maxOccurs="unbounded"/>
-								<xs:element name="radiate" type="radiateAbil" minOccurs="0" maxOccurs="unbounded"/>
-								<xs:element name="special" type="specialAbil" minOccurs="0" maxOccurs="unbounded"/>
-							</xs:choice>
-						</xs:sequence>
-					</xs:complexType>
-					<xs:unique name="abilsPerMonst">
-						<xs:selector xpath="general|missile|summon|radiate|special"/>
-						<xs:field xpath="@type"/>
-					</xs:unique>
-				</xs:element>
-				<xs:element name="attacks">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="attack" type="attack" maxOccurs="3"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="pic">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:integer">
-								<xs:attribute name="w" type="xs:integer" use="required"/>
-								<xs:attribute name="h" type="xs:integer" use="required"/>
-								<xs:attribute name="custom" type="bool" default="false"/>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="default-face" minOccurs="0" type="xs:integer"/>
-				<xs:element name="onsight" minOccurs="0" type="xs:integer"/>
-				<xs:element name="voice" minOccurs="0" type="xs:integer"/>
-				<xs:element name="summon" minOccurs="0" type="xs:integer"/>
-				<xs:element name="attitude" type="monsterAttitude"/>
-				<xs:element name="immunity">
-					<xs:complexType>
-						<xs:all>
-							<xs:element name="fire" type="xs:integer" minOccurs="0"/>
-							<xs:element name="cold" type="xs:integer" minOccurs="0"/>
-							<xs:element name="poison" type="xs:integer" minOccurs="0"/>
-							<xs:element name="magic" type="xs:integer" minOccurs="0"/>
-							<xs:element name="weap" type="xs:integer" minOccurs="0"/>
-							<xs:element name="weird" type="xs:integer" minOccurs="0"/>
-							<xs:element name="undead" type="xs:integer" minOccurs="0"/>
-							<xs:element name="demon" type="xs:integer" minOccurs="0"/>
-							<xs:element name="all" type="bool" minOccurs="0"/>
-							<xs:element name="fear" type="bool" minOccurs="0"/>
-							<xs:element name="assassinate" type="bool" minOccurs="0"/>
-						</xs:all>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="loot" minOccurs="0">
-					<xs:complexType>
-						<xs:all>
-							<xs:element name="type" type="xs:integer"/>
-							<xs:element name="chance" type="xs:integer"/>
-						</xs:all>
-					</xs:complexType>
-				</xs:element>
-			</xs:all>
-			<xs:attribute name="id" type="xs:integer" use="required"/>
-		</xs:complexType>
+			</xs:choice>
+			<xs:element name="min" type="xs:integer"/>
+			<xs:element name="max" type="xs:integer"/>
+			<xs:element name="duration" type="xs:integer"/>
+			<xs:element name="chance" type="permille"/>
+		</xs:sequence>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="summon"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="radiateAbil">
+		<xs:all>
+			<xs:element name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="wall-force"/>
+						<xs:enumeration value="wall-fire"/>
+						<xs:enumeration value="field-antimagic"/>
+						<xs:enumeration value="cloud-stink"/>
+						<xs:enumeration value="wall-ice"/>
+						<xs:enumeration value="wall-blades"/>
+						<xs:enumeration value="cloud-sleep"/>
+						<xs:enumeration value="obj-block"/>
+						<xs:enumeration value="field-web"/>
+						<xs:enumeration value="obj-crate"/>
+						<xs:enumeration value="obj-barrel"/>
+						<xs:enumeration value="barr-fire"/>
+						<xs:enumeration value="barr-force"/>
+						<xs:enumeration value="field-quickfire"/>
+						<xs:enumeration value="sfx-sm-bld"/>
+						<xs:enumeration value="sfx-med-bld"/>
+						<xs:enumeration value="sfx-lg-bld"/>
+						<xs:enumeration value="sfx-sm-slm"/>
+						<xs:enumeration value="sfx-lg-slm"/>
+						<xs:enumeration value="sfx-ash"/>
+						<xs:enumeration value="sfx-bone"/>
+						<xs:enumeration value="sfx-rock"/>
+						<xs:enumeration value="barr-cage"/>
+						<xs:enumeration value="dispel"/>
+						<xs:enumeration value="smash"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="pattern" type="spellPattern" minOccurs="0"/>
+			<xs:element name="chance" type="permille"/>
+		</xs:all>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="radiate"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="specialAbil">
+		<xs:sequence>
+			<xs:element name="param" type="xs:integer" minOccurs="0" maxOccurs="3"/>
+		</xs:sequence>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="splits"/>
+					<xs:enumeration value="martyr"/>
+					<xs:enumeration value="absorb"/>
+					<xs:enumeration value="old-web"/>
+					<xs:enumeration value="old-heat"/>
+					<xs:enumeration value="spec-act"/>
+					<xs:enumeration value="spec-hit"/>
+					<xs:enumeration value="spec-death"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="attack">
+		<xs:simpleContent>
+			<xs:extension base="dice">
+				<xs:attribute name="type" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="swing"/>
+							<xs:enumeration value="claw"/>
+							<xs:enumeration value="bite"/>
+							<xs:enumeration value="slime"/>
+							<xs:enumeration value="punch"/>
+							<xs:enumeration value="sting"/>
+							<xs:enumeration value="club"/>
+							<xs:enumeration value="burn"/>
+							<xs:enumeration value="harm"/>
+							<xs:enumeration value="stab"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="monster">
+		<xs:all>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="level" type="xs:integer"/>
+			<xs:element name="armor" type="xs:integer"/>
+			<xs:element name="skill" type="xs:integer"/>
+			<xs:element name="hp" type="xs:integer"/>
+			<xs:element name="speed" type="xs:integer"/>
+			<xs:element name="treasure" minOccurs="0" type="xs:integer"/>
+			<xs:element name="mage" minOccurs="0" type="xs:integer"/>
+			<xs:element name="priest" minOccurs="0" type="xs:integer"/>
+			<xs:element name="race" type="species"/>
+			<xs:element name="abilities" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="invisible" minOccurs="0"/>
+						<xs:element name="guard" minOccurs="0"/>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element name="general" type="generalAbil" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="missile" type="missileAbil" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="summon" type="summonAbil" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="radiate" type="radiateAbil" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="special" type="specialAbil" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:choice>
+					</xs:sequence>
+				</xs:complexType>
+				<xs:unique name="abilsPerMonst">
+					<xs:selector xpath="general|missile|summon|radiate|special"/>
+					<xs:field xpath="@type"/>
+				</xs:unique>
+			</xs:element>
+			<xs:element name="attacks">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="attack" type="attack" maxOccurs="3"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="pic">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:integer">
+							<xs:attribute name="w" type="xs:integer" use="required"/>
+							<xs:attribute name="h" type="xs:integer" use="required"/>
+							<xs:attribute name="custom" type="bool" default="false"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="default-face" minOccurs="0" type="xs:integer"/>
+			<xs:element name="onsight" minOccurs="0" type="xs:integer"/>
+			<xs:element name="voice" minOccurs="0" type="xs:integer"/>
+			<xs:element name="summon" minOccurs="0" type="xs:integer"/>
+			<xs:element name="attitude" type="monsterAttitude"/>
+			<xs:element name="immunity">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="fire" type="xs:integer" minOccurs="0"/>
+						<xs:element name="cold" type="xs:integer" minOccurs="0"/>
+						<xs:element name="poison" type="xs:integer" minOccurs="0"/>
+						<xs:element name="magic" type="xs:integer" minOccurs="0"/>
+						<xs:element name="weap" type="xs:integer" minOccurs="0"/>
+						<xs:element name="weird" type="xs:integer" minOccurs="0"/>
+						<xs:element name="undead" type="xs:integer" minOccurs="0"/>
+						<xs:element name="demon" type="xs:integer" minOccurs="0"/>
+						<xs:element name="all" type="bool" minOccurs="0"/>
+						<xs:element name="fear" type="bool" minOccurs="0"/>
+						<xs:element name="assassinate" type="bool" minOccurs="0"/>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="loot" minOccurs="0">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="type" type="xs:integer"/>
+						<xs:element name="chance" type="xs:integer"/>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+		</xs:all>
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+	</xs:complexType>
 	<xs:element name="monsters">
 		<xs:complexType>
 			<xs:sequence>

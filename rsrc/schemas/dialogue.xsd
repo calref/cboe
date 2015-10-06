@@ -7,31 +7,31 @@
 			<xs:maxInclusive value="6"/>
 		</xs:restriction>
 	</xs:simpleType>
-		<xs:complexType name="personality">
-			<xs:sequence>
-				<xs:element name='title' type='xs:string'/>
-				<xs:element name="look" type="xs:string"/>
-				<xs:element name="name" type="xs:string"/>
-				<xs:element name="job" type="xs:string"/>
-				<xs:element name="unknown" type="xs:string" minOccurs="0"/>
-			</xs:sequence>
-			<xs:attribute name="id" type="xs:integer" use="required"/>
-		</xs:complexType>
-		<xs:complexType name="talkNode">
-			<xs:sequence>
-				<xs:element name="keyword" minOccurs="1" maxOccurs="2" type="xs:string"/>
-				<xs:element name="type">
-					<xs:simpleType>
-						<xs:restriction base="xs:string">
-							<xs:pattern value="[a-z-]+"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name="param" minOccurs="0" maxOccurs="4" type="xs:integer"/>
-				<xs:element name="text" minOccurs="1" maxOccurs="2" type="xs:string"/>
-			</xs:sequence>
-			<xs:attribute name="for" type="xs:integer" use="required"/>
-		</xs:complexType>
+	<xs:complexType name="personality">
+		<xs:sequence>
+			<xs:element name='title' type='xs:string'/>
+			<xs:element name="look" type="xs:string"/>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="job" type="xs:string"/>
+			<xs:element name="unknown" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="talkNode">
+		<xs:sequence>
+			<xs:element name="keyword" minOccurs="1" maxOccurs="2" type="xs:string"/>
+			<xs:element name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[a-z-]+"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="param" minOccurs="0" maxOccurs="4" type="xs:integer"/>
+			<xs:element name="text" minOccurs="1" maxOccurs="2" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="for" type="xs:integer" use="required"/>
+	</xs:complexType>
 	<xs:element name="dialogue">
 		<xs:complexType>
 			<xs:sequence>
