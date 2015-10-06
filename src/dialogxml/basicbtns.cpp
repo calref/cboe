@@ -14,8 +14,8 @@
 
 /// A list of preset button types.
 bbtt basic_buttons[71] = {
-	{BTN_DONE, " ", {false,key_enter,mod_none}, "Done"},
-	{BTN_REG, "OK", {false,key_enter,mod_none}},
+	{BTN_DONE, " ", {true,key_enter,mod_none}, "Done"},
+	{BTN_REG, "OK", {true,key_enter,mod_none}},
 	{BTN_REG, "Yes", {false,'y',mod_none}},
 	{BTN_REG, "No", {false,'n',mod_none}},
 	{BTN_REG, "Ask", {false,0,mod_none}},
@@ -23,7 +23,7 @@ bbtt basic_buttons[71] = {
 	{BTN_REG, "Cancel", {true,key_esc,mod_none}},
 	{BTN_REG, "Buy", {false,0,mod_none}},
 	{BTN_REG, "Enter", {false,0,mod_none}},
-	{BTN_REG, "Leave", {false,key_enter,mod_none}},
+	{BTN_REG, "Leave", {true,key_enter,mod_none}},
 	{BTN_REG, "Get", {false,'g',mod_none}},
 	{BTN_REG, "1", {false,'1',mod_none}},
 	{BTN_REG, "2", {false,'2',mod_none}},
@@ -34,7 +34,7 @@ bbtt basic_buttons[71] = {
 	{BTN_REG, "Cast", {false,0,mod_none}},
 	{BTN_REG, "Save", {false,0,mod_none}},
 	{BTN_REG, "Take", {false,0,mod_none}},
-	{BTN_REG, "Stay", {false,key_enter,mod_none}},
+	{BTN_REG, "Stay", {true,key_enter,mod_none}},
 	{BTN_REG, "Steal", {false,0,mod_none}},
 	{BTN_REG, "Attack", {false,0,mod_none}},
 	{BTN_LG, "Step In", {false,0,mod_none}},
