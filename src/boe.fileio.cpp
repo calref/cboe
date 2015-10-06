@@ -25,9 +25,8 @@
 #define	DONE_BUTTON_ITEM	1
 
 extern eStatMode stat_screen_mode;
-extern bool give_delays;
 extern eGameMode overall_mode;
-extern bool play_sounds,sys_7_avail,party_in_memory,in_scen_debug,ghost_mode,node_step_through;
+extern bool party_in_memory,in_scen_debug,ghost_mode,node_step_through;
 extern location center;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
@@ -131,13 +130,6 @@ void finish_load_party(){
 	store_file_reply = file_to_load;
 	
 	add_string_to_buf("Load: Game loaded.");
-	
-	// Set sounds, map saving, and speed
-	if(((play_sounds) && (PSD[SDF_NO_SOUNDS] == 1)) ||
-		(!play_sounds && (PSD[SDF_NO_SOUNDS] == 0))) {
-		flip_sound();
-	}
-	give_delays = PSD[SDF_NO_FRILLS];
 	
 	in_scen_debug = false;
 }

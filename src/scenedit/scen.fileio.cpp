@@ -19,6 +19,7 @@
 #include "tinyprint.h"
 #include "map_parse.hpp"
 #include "winutil.hpp"
+#include "choicedlog.hpp"
 
 #define	DONE_BUTTON_ITEM	1
 
@@ -959,6 +960,9 @@ void save_scenario(bool rename) {
 		toFile = nav_put_scenario(def);
 		if(toFile.empty()) return;
 	}
+	
+	if(scenario.is_legacy && cChoiceDlog("save-legacy-scen", {"update", "cancel"}).show() == "update")
+		scenario.is_legacy = false;
 	
 	scenario.reset_version();
 	tarball scen_file;

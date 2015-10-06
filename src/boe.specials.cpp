@@ -212,7 +212,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
 				if(univ.town->specials[spec_num].type == eSpecType::CANT_ENTER)
 					runSpecial = true;
-				if(!PSD[SDF_NO_BOAT_SPECIALS] && univ.party.in_boat >= 0 && univ.scenario.ter_types[ter].boat_over)
+				if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && univ.scenario.ter_types[ter].boat_over)
 					runSpecial = true;
 				if(runSpecial) {
 					give_help(54,0);
@@ -1559,7 +1559,7 @@ bool damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType 
 	}
 	
 	if(victim.is_friendly() && who_hit < 7 &&
-		((!processing_fields && !monsters_going) || (processing_fields && !PSD[SDF_HOSTILES_PRESENT]))) {
+		((!processing_fields && !monsters_going) || (processing_fields && !univ.party.hostiles_present))) {
 		add_string_to_buf("Damaged an innocent.");
 		victim.attitude = eAttitude::HOSTILE_A;
 		make_town_hostile();
@@ -1976,7 +1976,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		case eSpecCtx::DROP_ITEM: case eSpecCtx::SHOPPING: case eSpecCtx::STARTUP:
 			// Default behaviour - select entire party, or active member if split or in combat
 			// We also have a legacy flag - originally, it always defaulted to whole party
-			if(is_combat() && !PSD[SDF_COMBAT_SELECT_PARTY])
+			if(is_combat() && !univ.scenario.is_legacy)
 				current_pc_picked_in_spec_enc = &univ.party[current_pc];
 			else {
 				if(univ.party.is_split() && cur_node.type != eSpecType::AFFECT_DEADNESS)

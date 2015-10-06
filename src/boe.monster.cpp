@@ -167,7 +167,7 @@ void set_up_monst(eAttitude mode,mon_num_t m_num) {
 	short which = univ.town.monst.size();
 	
 	cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
-	univ.town.monst.assign(which, cCreature(m_num), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+	univ.town.monst.assign(which, cCreature(m_num), monst, univ.party.easy_mode, univ.difficulty_adjust());
 	univ.town.monst[which].active = 2;
 	univ.town.monst[which].summon_time = 0;
 	univ.town.monst[which].attitude = mode;
@@ -779,7 +779,7 @@ bool town_move_monster(short num,location dest) {
 
 bool monster_placid(short m_num) {
 	if(univ.town.monst[m_num].attitude == eAttitude::DOCILE ||
-	   (univ.town.monst[m_num].attitude == eAttitude::FRIENDLY && PSD[SDF_HOSTILES_PRESENT] == 0)) {
+	   (univ.town.monst[m_num].attitude == eAttitude::FRIENDLY && univ.party.hostiles_present == 0)) {
 		return true;
 	} else {
 		return false;
@@ -1105,7 +1105,7 @@ short place_monster(mon_num_t which,location where,bool forced) {
 	
 	// 10000 or more means an exported summon saved with the party
 	cMonster& monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
-	univ.town.monst.assign(i, cCreature(which), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+	univ.town.monst.assign(i, cCreature(which), monst, univ.party.easy_mode, univ.difficulty_adjust());
 	// TODO: Should this static_cast assignment be happening?
 	// One effect is resetting max health to ignore difficulty_adjust()
 	static_cast<cMonster&>(univ.town.monst[i]) = monst;
@@ -1177,7 +1177,7 @@ void activate_monsters(short code,short /*attitude*/) {
 	for(i = 0; i < univ.town->creatures.size(); i++)
 		if(univ.town->creatures[i].spec_enc_code == code) {
 			cTownperson& monst = univ.town->creatures[i];
-			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], univ.party.easy_mode, univ.difficulty_adjust());
 			univ.town.monst[i].spec_enc_code = 0;
 			univ.town.monst[i].active = 2;
 			

@@ -130,8 +130,6 @@ void cParty::append(legacy::party_record_type& old){
 			cConvers t;
 			t.append(old.talk_save[i], univ.scenario);
 			talk_save.push_back(t);
-			if(old.help_received[i])
-				help_received.insert(i);
 		}
 	}
 	direction = eDirection(old.direction);
@@ -549,6 +547,9 @@ void cParty::writeTo(std::ostream& file) const {
 	file << "GOLD " << gold << '\n';
 	file << "FOOD " << food << '\n';
 	file << "NEXTID " << next_pc_id << '\n';
+	file << "HOSTILES " << int(hostiles_present)  << '\n';
+	file << "EASY " << int(easy_mode) << '\n';
+	file << "LESSWM " << int(less_wm) << '\n';
 	for(int i = 0; i < 310; i++)
 		for(int j = 0; j < 50; j++)
 			if(stuff_done[i][j] > 0)
@@ -603,8 +604,6 @@ void cParty::writeTo(std::ostream& file) const {
 		file << "EVENT " << key.first << ' ' << key.second << '\n';
 	for(int i : spec_items)
 		file << "ITEM " << i << '\n';
-	for(int i : help_received)
-		file << "HELP " << i << '\n';
 	for(int i = 0; i < 200; i++)
 		if(m_killed[i] > 0)
 			file << "TOWNSLAUGHTER " << i << ' ' << m_killed[i] << '\n';
@@ -756,6 +755,18 @@ void cParty::readFrom(std::istream& file){
 			unsigned int n;
 			sin >> i >> j >> n;
 			stuff_done[i][j] = n;
+		} else if(cur == "HOSTILES") {
+			int n;
+			sin >> n;
+			hostiles_present = n;
+		} else if(cur == "EASY") {
+			int n;
+			sin >> n;
+			easy_mode = n;
+		} else if(cur == "LESSWM") {
+			int n;
+			sin >> n;
+			less_wm = n;
 		} else if(cur == "CREATEVERSION") {
 			unsigned long long version;
 			sin >> std::hex >> version >> std::dec;
@@ -838,10 +849,6 @@ void cParty::readFrom(std::istream& file){
 			int i;
 			sin >> i;
 			spec_items.insert(i);
-		}else if(cur == "HELP"){
-			int i;
-			sin >> i;
-			help_received.insert(i);
 		}else if(cur == "TOWNSLAUGHTER"){
 			int i;
 			sin >> i;
@@ -1112,7 +1119,7 @@ iLiving& cParty::pc_present() const {
 
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
 bool cParty::sd_legit(short a, short b) {
-	if((minmax(0,299,a) == a) && (minmax(0,49,b) == b))
+	if((minmax(0,349,a) == a) && (minmax(0,49,b) == b))
 		return true;
 	return false;
 }

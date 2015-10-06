@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='update'>
+	<pict type='dlog' num='16' top='6' left='6'/>
+	<text top='6' left='49' width='384' height='80'>
+		This scenario is currently set as a legacy scenario, meaning that certain mechanics are changed.
+		If you have updated the scenario to account for these changes, then click the Update button
+		to remove the legacy flag. If you have not yet updated the scenario, then click the Leave
+		button to keep the legacy flag.
+	</text>
+	<!--
+	 TODO: I want to use font='plain' here but that makes it about 300% laggier
+	 -->
+	<text top='80' left='49' width='384' height='200'>
+		The following details need to be accounted for before clearing the legacy flag (the presence
+		of the flag disables these changes):<br/><br/>
+		 ~ The Resurrect spell now requires Resurrection Balm to cast. If this scenario is for
+		high level parties, you should make sure that Resurrection Balm is available.<br/>
+		 ~ Specials are now called while boating through town. This was automatically fixed when
+		you first converted the scenario, but you may want to review any town specials set on
+		water just in case.<br/>
+		 ~ When special nodes are called in combat, the currently active PC is now selected by default.
+		This means that any Affect PC nodes will affect only that PC instead of the whole party.
+		You will need to add an explicit Select Target node to select the whole party if you want the
+		old behaviour.<br/>
+		 ~ Timed events can now be called when the party is resting. If the scenario relied on this not
+		happening, it may need to be updated.<br/>
+	</text>
+	<button name='update' type='regular' top='300' left='368'>Update</button>
+	<button name='cancel' type='regular' def-key='esc' top='300' left='302'>Leave</button>
+</dialog>

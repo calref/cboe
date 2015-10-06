@@ -16,13 +16,13 @@
 
 #include "restypes.hpp"
 #include "mathutil.hpp"
+#include "prefs.hpp"
 
 std::shared_ptr<sf::Sound> chan[4];
 const int numchannel = 4;
 int channel;
 short snd_played[4];
 
-bool play_sounds = true;
 short last_played;
 std::unordered_set<int> always_async = {
 	6,24,25,34,37,
@@ -63,7 +63,7 @@ void init_snd_tool(){
 	atexit(exit_snd_tool);
 }
 
-void play_sound(short which, short how_many_times) { // if < 0, play asynch
+void play_sound(short which, sf::Time delay) { // if < 0, play asynch
 	static bool inited = false;
 	if(!inited) {
 		inited = true;
@@ -71,7 +71,11 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	}
 	
 	std::shared_ptr<sf::SoundBuffer> sndhandle;
-	if(!play_sounds || how_many_times == 0) return;
+	if(!get_bool_pref("PlaySounds", true)) {
+		if(which >= 0)
+			sf::sleep(delay);
+		return;
+	}
 	
 	if(abs(which) >= 100 && !ResMgr::have<SoundRsrc>(abs(which))) {
 		std::cerr << "Error: Sound #" << abs(which) << " does not exist." << std::endl;
@@ -100,8 +104,6 @@ void play_sound(short which, short how_many_times) { // if < 0, play asynch
 	}
 	if(which < 0)
 		sf::sleep(time_in_ticks(sound_delay[-1 * which]));
-	if(how_many_times > 1)
-		play_sound(which, how_many_times - 1);
 }
 
 void one_sound(short which) {
@@ -113,9 +115,5 @@ void one_sound(short which) {
 
 void clear_sound_memory(){
 	last_played = 100;
-}
-
-void flip_sound() {
-	play_sounds = (play_sounds) ? false : true;
 }
 

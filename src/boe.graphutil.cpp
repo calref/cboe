@@ -23,11 +23,10 @@
 extern sf::RenderWindow mainPtr;
 extern rectangle	windRect;
 extern short stat_window;
-extern bool give_delays;
 extern bool cartoon_happening;
 extern eGameMode overall_mode;
 extern short current_spell_range;
-extern bool anim_onscreen,play_sounds,frills_on;
+extern bool anim_onscreen,frills_on;
 extern cUniverse univ;
 extern effect_pat_type current_pat;
 extern sf::RenderWindow mini_map;
@@ -43,7 +42,6 @@ extern bool monsters_going,anim_onscreen;
 
 extern short num_targets_left;
 extern location spell_targets[8];
-extern short display_mode;
 
 extern long anim_ticks;
 

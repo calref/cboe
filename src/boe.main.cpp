@@ -38,7 +38,6 @@ bool All_Done = false;
 sf::Event event;
 sf::RenderWindow mainPtr;
 short had_text_freeze = 0,num_fonts;
-bool skip_boom_delay = false;
 bool first_startup_update = true;
 bool diff_depth_ok = false,first_sound_played = false,spell_forced = false;
 bool party_in_memory = false;
@@ -61,10 +60,7 @@ signed char dir_x_dif[9] = {0,1,1,1,0,-1,-1,-1,0};
 signed char dir_y_dif[9] = {-1,-1,0,1,1,1,0,-1,0};
 
 extern bool map_visible;
-bool game_run_before = false;
-bool give_intro_hint = true;
 bool in_scen_debug = false;
-bool show_startup_splash = true;
 bool belt_present = false;
 std::string scenario_temp_dir_name = "scenario";
 
@@ -77,12 +73,11 @@ eGameMode overall_mode = MODE_STARTUP;
 bool first_update = true,anim_onscreen = false,frills_on = true,changed_display_mode = false;
 short stat_window = 0,store_modifier;
 bool monsters_going = false,boom_anim_active = false;
-bool give_delays = false, finished_init = false;
+bool finished_init = false;
 
 sf::RenderWindow mini_map;
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
 location ul = {28,10};
-short display_mode = 0; // 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
 long stored_key;
 short pixel_depth,old_depth = 8;
 short current_ground = 0;
@@ -117,11 +112,11 @@ int main(int argc, char* argv[]) {
 	try{
 		init_boe(argc, argv);
 		
-		if(!game_run_before)
+		if(!get_bool_pref("GameRunBefore"))
 			cChoiceDlog("welcome").show();
-		else if(give_intro_hint)
+		else if(get_bool_pref("GiveIntroHint", true))
 			tip_of_day();
-		game_run_before = true;
+		set_pref("GameRunBefore", true);
 		finished_init = true;
 		
 		if(ae_loading) {
@@ -167,7 +162,6 @@ void init_boe(int argc, char* argv[]) {
 	init_directories(argv[0]);
 	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 	sync_prefs();
-	load_prefs();
 	init_graph_tool();
 	init_snd_tool();
 	
@@ -194,7 +188,7 @@ void init_boe(int argc, char* argv[]) {
 		flushingInput = true;
 	});
 	show_logo();
-	if(show_startup_splash)
+	if(get_bool_pref("ShowStartupSplash", true))
 		plop_fancy_startup();
 	init_thread.join();
 	
@@ -216,7 +210,7 @@ void Handle_One_Event() {
 	Handle_Update();
 	
 	//(cur_time - last_anim_time > 42)
-	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen) && (PSD[SDF_NO_TER_ANIM] == 0)
+	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen) && get_bool_pref("DrawTerrainAnimation", true)
 	   && (!gInBackground)) {
 		animTimer.restart();
 		draw_terrain();
@@ -747,6 +741,6 @@ void pause(short length) {
 	// Before pausing, make sure the screen is updated.
 	redraw_screen(REFRESH_NONE);
 	
-	if(give_delays)
+	if(get_bool_pref("DrawTerrainFrills", true))
 		sf::sleep(time_in_ticks(len));
 }

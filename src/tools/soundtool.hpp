@@ -14,10 +14,9 @@
 typedef signed int snd_num_t;
 void init_snd_tool();
 bool sound_going(snd_num_t which_s);
-void play_sound(short which, short how_many_times = 1);
+void play_sound(short which, sf::Time delay = sf::Time());
 void one_sound(short which);
 
 void clear_sound_memory();
-void flip_sound();
 
 #endif

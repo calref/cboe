@@ -19,11 +19,12 @@
 #include "boe.menus.hpp"
 #include "mathutil.hpp"
 #include "restypes.hpp"
+#include "prefs.hpp"
 
 #include <vector>
 using std::vector;
 
-extern bool play_sounds,party_in_memory;
+extern bool party_in_memory;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
 extern location ul;
@@ -47,9 +48,7 @@ bool handle_startup_press(location the_point) {
 		if(the_point.in(startup_button[i])) {
 			draw_start_button(i,5);
 			mainPtr.display(); // TODO: I suspect this won't work
-			if(play_sounds)
-				play_sound(37);
-			else sf::sleep(time_in_ticks(5));
+			play_sound(3, time_in_ticks(5));
 			draw_start_button(i,0);
 			switch(i) {
 				case STARTBTN_LOAD:
@@ -131,9 +130,6 @@ bool handle_startup_press(location the_point) {
 	return false;
 }
 
-extern short display_mode;
-extern bool show_startup_splash;
-
 void handle_splash_events() {
 	extern sf::Event event;
 	if(!mainPtr.pollEvent(event)) return;
@@ -145,7 +141,7 @@ void show_logo() {
 	rectangle whole_window,from_rect;
 	rectangle logo_from = {0,0,350,350};
 	
-	if(display_mode != 5)
+	if(get_int_pref("DisplayMode") != 5)
 		hideMenuBar();
 	
 	whole_window = rectangle(mainPtr);
@@ -159,7 +155,7 @@ void show_logo() {
 		draw_splash(pict_to_draw, mainPtr, logo_from);
 		handle_splash_events();
 	}
-	if(!show_startup_splash) {
+	if(!get_int_pref("ShowStartupSplash", true)) {
 		sf::Time delay = time_in_ticks(60);
 		sf::Clock timer;
 		while(timer.getElapsedTime() < delay)

@@ -24,6 +24,7 @@
 #include "spell.hpp"
 #include "button.hpp"
 #include "restypes.hpp"
+#include "prefs.hpp"
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,
@@ -52,7 +53,7 @@ extern tessel_ref_t bg[];
 extern sf::RenderWindow mainPtr;
 extern short which_combat_type;
 extern eGameMode overall_mode;
-extern bool play_sounds,boom_anim_active;
+extern bool boom_anim_active;
 extern sf::RenderTexture terrain_screen_gworld;
 extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
@@ -119,7 +120,7 @@ void apply_unseen_mask() {
 	short i,j;
 	bool need_bother = false;
 	
-	if(PSD[SDF_NO_FRILLS] > 0 || fog_lifted)
+	if(!get_bool_pref("DrawTerrainFrills", true) || fog_lifted)
 		return;
 	
 	if((is_combat()) && (which_combat_type == 0))
@@ -151,7 +152,7 @@ void apply_light_mask(bool onWindow) {
 	rectangle big_to = {13,13,337,265};
 	short i,j;
 	bool same_mask = true;
-	if(PSD[SDF_NO_FRILLS] > 0 || fog_lifted)
+	if(!get_bool_pref("DrawTerrainFrills", true) > 0 || fog_lifted)
 		return;
 	if(is_out() || overall_mode == MODE_RESTING)
 		return;
@@ -257,7 +258,7 @@ void add_missile(location dest,miss_num_t missile_type,short path_type,short x_a
 	
 	if(!boom_anim_active)
 		return;
-	if(PSD[SDF_NO_FRILLS] > 0)
+	if(!get_bool_pref("DrawTerrainFrills", true))
 		return;
 	// lose redundant missiles
 	for(i = 0; i < 30; i++)
@@ -310,7 +311,7 @@ void mondo_boom(location l,short type,short snd) {
 void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj) {
 	short i;
 	
-	if(PSD[SDF_NO_FRILLS] > 0)
+	if(!get_bool_pref("DrawTerrainFrills", true))
 		return;
 	if(!boom_anim_active)
 		return;
@@ -457,8 +458,8 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				}
 			}
 		mainPtr.display();
-		if((PSD[SDF_GAME_SPEED] == 3) || ((PSD[SDF_GAME_SPEED] == 1) && (t % 4 == 0)) ||
-			((PSD[SDF_GAME_SPEED] == 2) && (t % 3 == 0)))
+		int speed = get_int_pref("GameSpeed");
+		if(speed == 3 || (speed == 1 && t % 4 == 0) || (speed == 2 && t % 3 == 0))
 			sf::sleep(time_in_ticks(1));
 	}
 	
@@ -617,7 +618,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 			}
 		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
 		mainPtr.display();
-		sf::sleep(time_in_ticks(2 * (1 + PSD[SDF_GAME_SPEED])));
+		sf::sleep(time_in_ticks(2 * (1 + get_int_pref("GameSpeed"))));
 	}
 	
 	// Exit gracefully, and clean up screen
@@ -630,9 +631,7 @@ void click_shop_rect(rectangle area_rect) {
 	
 	draw_shop_graphics(1,area_rect);
 	mainPtr.display();
-	if(play_sounds)
-		play_sound(37);
-	else sf::sleep(time_in_ticks(5));
+	play_sound(37, time_in_ticks(5));
 	draw_shop_graphics(0,area_rect);
 	
 }
@@ -871,8 +870,7 @@ void click_talk_rect(word_rect_t word) {
 	win_draw_string(mainPtr, wordRect, word.word, eTextMode::LEFT_TOP, style);
 	place_talk_face();
 	mainPtr.display();
-	if(play_sounds) play_sound(37);
-	else sf::sleep(time_in_ticks(5));
+	play_sound(37, time_in_ticks(5));
 	rect_draw_some_item(talk_gworld.getTexture(),talkRect,talk_area_rect,ul);
 	place_talk_face();
 }

@@ -24,30 +24,6 @@
 #define NUM_OF_BOATS		30
 #define NUM_OF_HORSES		30
 
-/* stuff done flags */
-#define SDF_COMBAT_SELECT_PARTY	305][3
-#define SDF_SKIP_STARTUP		305][4 // preferably deprecated
-#define SDF_LESS_SOUND			305][5
-#define SDF_NO_TARGET_LINE		305][6
-#define SDF_NO_BOAT_SPECIALS	305][7
-#define SDF_RESURRECT_NO_BALM	305][8
-#define SDF_HOSTILES_PRESENT	305][9
-#define SDF_NO_SOUNDS			306][1
-#define SDF_NO_FRILLS			306][2
-#define SDF_ROOM_DESCS_AGAIN	306][3
-#define SDF_NO_INSTANT_HELP		306][4 // boolean
-#define SDF_NO_SHORE_FRILLS		306][5
-#define SDF_GAME_SPEED			306][6
-#define SDF_EASY_MODE			306][7
-#define SDF_LESS_WANDER_ENC		306][8
-#define SDF_NO_TER_ANIM			306][9
-#define SDF_TIMERS_DURING_REST	307][0
-/*
- [305]
- [6] is No targeting line (use if getting crashes)
- [5] is Fewer sounds (use if getting crashes)
- */
-
 /* overall mode; some seem to be missing */
 enum eGameMode {
 	MODE_OUTDOORS = 0,

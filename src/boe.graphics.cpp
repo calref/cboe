@@ -28,14 +28,14 @@
 #include "restypes.hpp"
 #include "boe.menus.hpp"
 #include "winutil.hpp"
+#include "prefs.hpp"
 #include "gitrev.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern short stat_window;
-extern bool give_delays;
 extern eGameMode overall_mode;
 extern short current_spell_range;
-extern bool anim_onscreen,play_sounds,frills_on,party_in_memory;
+extern bool anim_onscreen,frills_on,party_in_memory;
 extern bool flushingInput;
 extern bool cartoon_happening, fog_lifted;
 extern short anim_step;
@@ -43,12 +43,11 @@ extern effect_pat_type current_pat;
 extern location ul;
 extern location center;
 extern short which_combat_type,current_pc;
-extern bool monsters_going,boom_anim_active,skip_boom_delay;
+extern bool monsters_going,boom_anim_active;
 extern sf::Image spell_pict;
 extern short current_ground;
 extern short num_targets_left;
 extern location spell_targets[8];
-extern short display_mode;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
 extern sf::Texture bg_gworld;
@@ -63,7 +62,6 @@ extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
 extern sf::RenderWindow mini_map;
 bool map_visible = false;
-extern bool show_startup_splash;
 extern std::string save_talk_str1, save_talk_str2;
 
 rectangle		menuBarRect;
@@ -134,7 +132,8 @@ void adjust_window_mode() {
 	bool firstTime = !mainPtr.isOpen();
 	
 	// TODO: Make display_mode an enum
-	if(display_mode == 5) {
+	// 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
+	if(get_int_pref("DisplayMode") == 5) {
 		ul.x = 14; ul.y = 2;
 		int height = 430 + menubarHeight;
 		mainPtr.create(sf::VideoMode(605, height, 32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
@@ -145,7 +144,7 @@ void adjust_window_mode() {
 		mainPtr.create(desktop, "Blades of Exile", sf::Style::None, winSettings);
 		mainPtr.setPosition({0,0});
 		rectangle windRect(mainPtr);
-		switch(display_mode) {
+		switch(get_int_pref("DisplayMode")) {
 			case 0: ul.x = (windRect.right - 560) / 2; ul.y = (windRect.bottom - 422) / 2 + 14; break;
 			case 1:	ul.x = 10; ul.y = 28; break;
 			case 2: ul.x = windRect.right - 570 - 6; ul.y = 28;	break; // was 560. not 570
@@ -387,9 +386,7 @@ void main_button_click(int which_button) {
 	
 	draw_buttons(which_button);
 	mainPtr.display();
-	if(play_sounds)
-		play_sound(37);
-	else sf::sleep(time_in_ticks(5));
+	play_sound(37, time_in_ticks(5));
 	draw_buttons(-1);
 	undo_clip(mainPtr);
 }
@@ -402,9 +399,7 @@ void arrow_button_click(rectangle button_rect) {
 	
 	refresh_stat_areas(1);
 	mainPtr.display();
-	if(play_sounds)
-		play_sound(37);
-	else sf::sleep(time_in_ticks(5));
+	play_sound(37, time_in_ticks(5));
 	undo_clip(mainPtr);
 	refresh_stat_areas(0);
 }
@@ -450,8 +445,8 @@ void Set_up_win () {
 	
 	// Create and initialize map gworld
 	if(!map_gworld.create(map_rect.width(), map_rect.height())) {
-		play_sound(2,3);
-		exit(1);
+		play_sound(2);
+		throw std::string("Failed to initialized automap!");
 	} else {
 		map_world_rect = rectangle(map_gworld);
 		fill_rect(map_gworld, map_world_rect, sf::Color::White);
@@ -989,7 +984,7 @@ void place_trim(short q,short r,location where,ter_num_t ter_type) {
 	// FIrst quick check ... if a pit or barrier in outdoor combat, no trim
 	if((is_combat()) && (which_combat_type == 0) && (ter_type == 90))
 		return;
-	if(PSD[SDF_NO_SHORE_FRILLS] > 0)
+	if(!get_bool_pref("DrawTerrainShoreFrills", true))
 		return;
 	
 	targ.x = q;
@@ -1399,7 +1394,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		return;
 	if((boom_anim_active) && (type != 3))
 		return;
-	if((PSD[SDF_NO_FRILLS] > 0) && fast_bang)
+	if(!get_bool_pref("DrawTerrainFrills", true) && fast_bang)
 		return;
 	if(is_out())
 		return;
@@ -1462,14 +1457,15 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style,ul);
 	}
 	mainPtr.display();
+	bool skip_boom_delay = get_bool_pref("SkipBoomDelay");
 	play_sound((skip_boom_delay?-1:1)*sound_to_play);
 	if((sound == 6) && (fast_bang == 0) && (!skip_boom_delay))
 		sf::sleep(time_in_ticks(12));
 	
 	
 	if(fast_bang == 0 && !skip_boom_delay) {
-		del_len = PSD[SDF_GAME_SPEED] * 3 + 4;
-		if(!play_sounds)
+		del_len = get_int_pref("GameSpeed") * 3 + 4;
+		if(!get_bool_pref("PlaySounds", true))
 			sf::sleep(time_in_ticks(del_len));
 	}
 	redraw_terrain();

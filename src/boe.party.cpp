@@ -112,14 +112,11 @@ short store_pc_graphic;
 static void init_party_scen_data() {
 	short i,j,k,l;
 	bool stored_item = false;
-	short store_help;
 	
 	univ.party.age = 0;
-	store_help = PSD[SDF_NO_INSTANT_HELP];
 	for(i = 0; i < 310; i++)
 		for(j = 0; j < 50; j++)
 			PSD[i][j] = 0;
-	PSD[SDF_NO_INSTANT_HELP] = store_help;
 	univ.party.light_level = 0;
 	univ.party.outdoor_corner.x = univ.scenario.out_sec_start.x;
 	univ.party.outdoor_corner.y = univ.scenario.out_sec_start.y;
@@ -332,15 +329,7 @@ void put_party_in_scen(std::string scen_name) {
 	
 	// Compatibility flags
 	if(univ.scenario.format.prog_make_ver[0] < 2){
-		PSD[SDF_RESURRECT_NO_BALM] = 1;
-		PSD[SDF_NO_BOAT_SPECIALS] = 1;
-		PSD[SDF_COMBAT_SELECT_PARTY] = 1;
-		PSD[SDF_TIMERS_DURING_REST] = 0;
-	} else {
-		PSD[SDF_RESURRECT_NO_BALM] = 0;
-		PSD[SDF_NO_BOAT_SPECIALS] = 0;
-		PSD[SDF_COMBAT_SELECT_PARTY] = 0;
-		PSD[SDF_TIMERS_DURING_REST] = 1;
+		univ.scenario.is_legacy = true;
 	}
 }
 
@@ -1206,7 +1195,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					sout.str("  Your items glow.");
 				} else {
 					
-					if(!PSD[SDF_RESURRECT_NO_BALM]) {
+					if(!univ.scenario.is_legacy) {
 						if((item = univ.party[pc_num].has_abil(eItemAbil::RESURRECTION_BALM)) == 24) {
 							add_string_to_buf("  Need resurrection balm.");
 							break;
@@ -2465,7 +2454,7 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 	
 	
 	if(damage_type != eDamageType::MARKED) {
-		if(PSD[SDF_EASY_MODE] > 0)
+		if(univ.party.easy_mode)
 			how_much -= 3;
 		// toughness
 		if(which_pc.traits[eTrait::TOUGHNESS])

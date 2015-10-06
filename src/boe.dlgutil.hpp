@@ -23,7 +23,6 @@ void put_party_stats();
 void edit_party();
 void pick_preferences();
 void save_prefs(bool resetHelp = false);
-void load_prefs();
 void tip_of_day();
 short pick_a_scen();
 short pick_prefab_scen();

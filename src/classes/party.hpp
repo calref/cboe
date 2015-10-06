@@ -71,7 +71,11 @@ public:
 	unsigned long age;
 	unsigned short gold;
 	unsigned short food;
-	unsigned char stuff_done[310][50];
+	unsigned char stuff_done[350][50];
+	// These used to be stored as magic SDFs
+	unsigned char hostiles_present;
+	bool easy_mode = false, less_wm = false;
+	// End former magic SDFs
 	std::array<unsigned char,90> magic_ptrs;
 	unsigned char item_taken[200][8];
 	short light_level;
@@ -109,7 +113,6 @@ public:
 	std::map<int,int> key_times;
 	std::vector<cTimer> party_event_timers;
 	std::set<int> spec_items;
-	std::set<int> help_received;
 	long m_killed[200]; // monsters killed per town
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	std::string scen_name;

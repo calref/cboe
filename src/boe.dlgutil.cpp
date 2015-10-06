@@ -38,22 +38,20 @@
 
 extern short stat_window;
 extern eGameMode overall_mode;
-extern bool play_sounds,give_intro_hint,show_startup_splash,changed_display_mode;
+extern bool changed_display_mode;
 extern sf::RenderWindow mainPtr;
 extern location ul;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
-extern short display_mode,current_pc;
+extern short current_pc;
 extern eStatMode stat_screen_mode;
 extern long register_flag;
 extern long ed_flag,ed_key;
-extern bool give_delays;
 extern location center;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
 extern bool map_visible;
 extern sf::RenderWindow mini_map;
-extern bool game_run_before,skip_boom_delay;
 extern cUniverse univ;
 extern sf::Texture pc_gworld;
 extern std::map<eSkill,short> skill_max;
@@ -64,6 +62,7 @@ short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
 char null_string[256] = "";
 short store_tip_page_on = 0;
+extern bool party_in_memory;
 
 // Talking vars
 eGameMode store_pre_talk_mode;
@@ -1089,45 +1088,7 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	sign.show();
 }
 
-void load_prefs(){
-	give_intro_hint = get_bool_pref("GiveIntroHint", true);
-	display_mode = get_int_pref("DisplayMode");
-	play_sounds = get_bool_pref("PlaySounds", true);
-	show_startup_splash = get_bool_pref("ShowStartupSplash", true);
-	game_run_before = get_bool_pref("GameRunBefore");
-	skip_boom_delay = get_bool_pref("SkipBoomDelay");
-	
-	PSD[SDF_NO_FRILLS] = !get_bool_pref("DrawTerrainFrills", true);
-	PSD[SDF_NO_INSTANT_HELP] = !get_bool_pref("ShowInstantHelp", true);
-	PSD[SDF_NO_TER_ANIM] = !get_bool_pref("DrawTerrainAnimation", true);
-	PSD[SDF_NO_SHORE_FRILLS] = !get_bool_pref("DrawTerrainShoreFrills", true);
-	PSD[SDF_ROOM_DESCS_AGAIN] = get_bool_pref("RepeatRoomDescriptions");
-	PSD[SDF_EASY_MODE] = get_bool_pref("EasyMode");
-	PSD[SDF_LESS_WANDER_ENC] = get_bool_pref("LessWanderingMonsters");
-	PSD[SDF_GAME_SPEED] = get_int_pref("GameSpeed");
-	
-	std::vector<int> help = get_iarray_pref("ReceivedHelp");
-	std::copy(help.begin(), help.end(), std::inserter(univ.party.help_received, univ.party.help_received.begin()));
-}
-
 void save_prefs(bool resetHelp){
-	set_pref("GiveIntroHint", give_intro_hint);
-	set_pref("DisplayMode", display_mode);
-	set_pref("PlaySounds", play_sounds);
-	set_pref("ShowStartupSplash", show_startup_splash);
-	set_pref("GameRunBefore", game_run_before);
-	set_pref("SkipBoomDelay", skip_boom_delay);
-	
-	if(overall_mode == MODE_STARTUP) {
-		set_pref("DrawTerrainFrills", !PSD[SDF_NO_FRILLS]);
-		set_pref("ShowInstantHelp", !PSD[SDF_NO_INSTANT_HELP]);
-		set_pref("DrawTerrainAnimation", !PSD[SDF_NO_TER_ANIM]);
-		set_pref("DrawTerrainShoreFrills", !PSD[SDF_NO_SHORE_FRILLS]);
-		set_pref("RepeatRoomDescriptions", bool(PSD[SDF_ROOM_DESCS_AGAIN]));
-		set_pref("EasyMode", bool(PSD[SDF_EASY_MODE]));
-		set_pref("LessWanderingMonsters", bool(PSD[SDF_LESS_WANDER_ENC]));
-		set_pref("GameSpeed", PSD[SDF_GAME_SPEED]);
-	}
 	
 	if(resetHelp) clear_pref("ReceivedHelp");
 	
@@ -1150,22 +1111,27 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	if(!did_cancel) {
 		std::string cur_display_mode = dynamic_cast<cLedGroup&>(me["display"]).getSelected();
 		// TODO: Make an enum for the display mode
-		if(cur_display_mode == "mid") display_mode = 0;
-		else if(cur_display_mode == "tl") display_mode = 1;
-		else if(cur_display_mode == "tr") display_mode = 2;
-		else if(cur_display_mode == "bl") display_mode = 3;
-		else if(cur_display_mode == "br") display_mode = 4;
-		else if(cur_display_mode == "win") display_mode = 5;
-		PSD[SDF_NO_SOUNDS] = dynamic_cast<cLed&>(me["nosound"]).getState() != led_off;
-		play_sounds = !PSD[SDF_NO_SOUNDS];
-		PSD[SDF_NO_FRILLS] = dynamic_cast<cLed&>(me["nofrills"]).getState() != led_off;
-		PSD[SDF_ROOM_DESCS_AGAIN] = dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off;
-		PSD[SDF_NO_INSTANT_HELP] = dynamic_cast<cLed&>(me["nohelp"]).getState() != led_off;
-		PSD[SDF_EASY_MODE] = dynamic_cast<cLed&>(me["easier"]).getState() != led_off;
-		PSD[SDF_LESS_WANDER_ENC] = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
-		PSD[SDF_NO_TER_ANIM] = dynamic_cast<cLed&>(me["noanim"]).getState() != led_off;
-		PSD[SDF_NO_SHORE_FRILLS] = dynamic_cast<cLed&>(me["noshore"]).getState() != led_off;
-		show_startup_splash = dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off;
+		if(cur_display_mode == "mid") set_pref("DisplayMode", 0);
+		else if(cur_display_mode == "tl") set_pref("DisplayMode", 1);
+		else if(cur_display_mode == "tr") set_pref("DisplayMode", 2);
+		else if(cur_display_mode == "bl") set_pref("DisplayMode", 3);
+		else if(cur_display_mode == "br") set_pref("DisplayMode", 4);
+		else if(cur_display_mode == "win") set_pref("DisplayMode", 5);
+		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
+		set_pref("DrawTerrainFrills", dynamic_cast<cLed&>(me["nofrills"]).getState() == led_off);
+		set_pref("RepeatRoomDescriptions", dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off);
+		set_pref("ShowInstantHelp", dynamic_cast<cLed&>(me["nohelp"]).getState() == led_off);
+		
+		if(overall_mode == MODE_STARTUP && !party_in_memory) {
+			set_pref("EasyMode", dynamic_cast<cLed&>(me["easier"]).getState() != led_off);
+			set_pref("LessWanderingMonsters", dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off);
+		} else {
+			univ.party.easy_mode = dynamic_cast<cLed&>(me["easier"]).getState() != led_off;
+			univ.party.less_wm = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
+		}
+		set_pref("DrawTerrainAnimation", dynamic_cast<cLed&>(me["noanim"]).getState() == led_off);
+		set_pref("DrawTerrainShoreFrills", dynamic_cast<cLed&>(me["noshore"]).getState() == led_off);
+		set_pref("ShowStartupSplash", dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off);
 		std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
 		/* TODO: Should I add these additional preferences from Windows?
 		party.stuff_done[SDF_NO_TARGET_LINE] = cd_get_led(1099,50);
@@ -1173,21 +1139,18 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		party.stuff_done[SDF_FASTER_BOOM_SPACES] = cd_get_led(1099,56);
 		party.stuff_done[SDF_ASK_ABOUT_TEXT_BOX] = cd_get_led(1099,60);
 		*/
-		// TODO: NO_SOUNDS and NO_MAPS preferences are stored in two different places
 		if(speed == "fast")
-			PSD[SDF_GAME_SPEED] = 0;
+			set_pref("GameSpeed", 0);
 		else if(speed == "med")
-			PSD[SDF_GAME_SPEED] = 1;
+			set_pref("GameSpeed", 1);
 		else if(speed == "slow")
-			PSD[SDF_GAME_SPEED] = 2;
+			set_pref("GameSpeed", 2);
 		else if(speed == "snail")
-			PSD[SDF_GAME_SPEED] = 3;
+			set_pref("GameSpeed", 3);
 		if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red) {
-			univ.party.help_received.clear();
 			reset_help = true;
 		}
 	}
-	give_delays = PSD[SDF_NO_FRILLS];
 	save_prefs(reset_help);
 	return true;
 }
@@ -1199,7 +1162,7 @@ void pick_preferences() {
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
 	cLedGroup& displayMode = dynamic_cast<cLedGroup&>(prefsDlog["display"]);
-	switch(display_mode) {
+	switch(get_int_pref("DisplayMode")) {
 		case 0:
 			displayMode.setSelected("mid");
 			break;
@@ -1220,17 +1183,22 @@ void pick_preferences() {
 			break;
 	}
 	
-	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(!play_sounds ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["nofrills"]).setState(PSD[SDF_NO_FRILLS] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["repeatdesc"]).setState(PSD[SDF_ROOM_DESCS_AGAIN] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["nohelp"]).setState(PSD[SDF_NO_INSTANT_HELP] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["easier"]).setState(PSD[SDF_EASY_MODE] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["lesswm"]).setState(PSD[SDF_LESS_WANDER_ENC] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["noanim"]).setState(PSD[SDF_NO_TER_ANIM] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["noshore"]).setState(PSD[SDF_NO_SHORE_FRILLS] ? led_red : led_off);
-	dynamic_cast<cLed&>(prefsDlog["skipsplash"]).setState(show_startup_splash ? led_off : led_red);
+	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
+	dynamic_cast<cLed&>(prefsDlog["nofrills"]).setState(get_bool_pref("DrawTerrainFrills", true) ? led_off : led_red);
+	dynamic_cast<cLed&>(prefsDlog["repeatdesc"]).setState(get_bool_pref("RepeatRoomDescriptions") ? led_red : led_off);
+	dynamic_cast<cLed&>(prefsDlog["nohelp"]).setState(get_bool_pref("ShowInstantHelp", true) ? led_off : led_red);
+	if(overall_mode == MODE_STARTUP && !party_in_memory) {
+		dynamic_cast<cLed&>(prefsDlog["easier"]).setState(get_bool_pref("EasyMode") ? led_red : led_off);
+		dynamic_cast<cLed&>(prefsDlog["lesswm"]).setState(get_bool_pref("LessWanderingMonsters") ? led_red : led_off);
+	} else {
+		dynamic_cast<cLed&>(prefsDlog["easier"]).setState(univ.party.easy_mode ? led_red : led_off);
+		dynamic_cast<cLed&>(prefsDlog["lesswm"]).setState(univ.party.less_wm ? led_red : led_off);
+	}
+	dynamic_cast<cLed&>(prefsDlog["noanim"]).setState(get_bool_pref("DrawTerrainAnimations", true) ? led_off : led_red);
+	dynamic_cast<cLed&>(prefsDlog["noshore"]).setState(get_bool_pref("DrawTerrainShoreFrills", true) ? led_off : led_red);
+	dynamic_cast<cLed&>(prefsDlog["skipsplash"]).setState(get_bool_pref("ShowStartupSplash", true) ? led_off : led_red);
 	cLedGroup& gameSpeed = dynamic_cast<cLedGroup&>(prefsDlog["speed"]);
-	switch(PSD[SDF_GAME_SPEED]) {
+	switch(get_int_pref("GameSpeed")) {
 		case 0:
 			gameSpeed.setSelected("fast");
 			break;
@@ -1247,10 +1215,10 @@ void pick_preferences() {
 	
 	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
-	int store_display_mode = display_mode;
+	int store_display_mode = get_int_pref("DisplayMode");
 	prefsDlog.run(std::bind(give_help, 55, 0, std::ref(prefsDlog)));
 	
-	if(display_mode != store_display_mode)
+	if(get_int_pref("DisplayMode") != store_display_mode)
 		changed_display_mode = true;
 }
 
@@ -1381,10 +1349,10 @@ void tip_of_day() {
 	tips["tip"].setText(place_str);
 	
 	cLed& showAtStart = dynamic_cast<cLed&>(tips["onstart"]);
-	showAtStart.setState(give_intro_hint ? led_red : led_off);
+	showAtStart.setState(get_bool_pref("GiveIntroHint", true) ? led_red : led_off);
 	
 	tips.run();
-	give_intro_hint = showAtStart.getState() != led_off;
+	set_pref("GiveIntroHint", showAtStart.getState() != led_off);
 	save_prefs();
 	
 }

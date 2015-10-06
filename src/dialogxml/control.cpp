@@ -14,8 +14,7 @@
 #include "graphtool.hpp"
 #include "restypes.hpp"
 #include "mathutil.hpp"
-
-extern bool play_sounds;
+#include "prefs.hpp"
 
 void cControl::setText(std::string l){
 	lbl = l;
@@ -210,7 +209,7 @@ bool cControl::handleClick(location){
 			depressed = frame.contains(e.mouseMove.x, e.mouseMove.y);
 		}
 	}
-	if(play_sounds) {
+	if(get_bool_pref("PlaySounds", true)) {
 		if(typeid(this) == typeid(cLed*))
 			play_sound(34);
 		else play_sound(37);

@@ -59,7 +59,6 @@ extern sf::RenderTexture terrain_screen_gworld;
 
 // game globals
 extern location ul;
-extern bool play_sounds;
 extern rectangle item_buttons[8][6];
 // name, use, give, drip, info, sell/id
 extern rectangle pc_buttons[6][5];
@@ -1233,7 +1232,7 @@ void make_cursor_sword() {
 bool day_reached(unsigned short which_day, unsigned short which_event) {
 	// Windows version unconditionally added 20 days for no reason at all.
 	// Instead, let's add 10 days, but only if easy mode enabled.
-	if(PSD[SDF_EASY_MODE]) which_day += 10;
+	if(univ.party.easy_mode) which_day += 10;
 	if(which_event > 0) {
 		if(univ.party.key_times.find(which_event) == univ.party.key_times.end())
 			return false;

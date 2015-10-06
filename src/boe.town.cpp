@@ -249,7 +249,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			else {
 				// First set up the values.
 				cTownperson& preset = univ.town->creatures[i];
-				univ.town.monst.assign(i, preset, univ.scenario.scen_monsters[preset.number], PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+				univ.town.monst.assign(i, preset, univ.scenario.scen_monsters[preset.number], univ.party.easy_mode, univ.difficulty_adjust());
 				
 				if(univ.town.monst[i].spec_enc_code > 0)
 					univ.town.monst[i].active = 0;
@@ -461,7 +461,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	}
 	
 	// No hostile monsters present.
-	PSD[SDF_HOSTILES_PRESENT] = 0;
+	univ.party.hostiles_present = 0;
 	
 	add_string_to_buf("Now entering:");
 	add_string_to_buf("   " + univ.town->town_name);

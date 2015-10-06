@@ -15,7 +15,7 @@
 extern cUniverse univ;
 
 extern sf::RenderWindow mainPtr;
-extern bool play_sounds,party_in_scen,scen_items_loaded;
+extern bool party_in_scen,scen_items_loaded;
 extern fs::path file_in_mem;
 
 extern short store_flags[3];

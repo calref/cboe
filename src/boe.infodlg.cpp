@@ -34,7 +34,6 @@ extern std::map<eSkill,short> skill_max;
 extern std::map<eSkill,short> skill_g_cost;
 extern const char* skill_ids[19];
 extern short cur_town_talk_loaded;
-extern bool give_intro_hint;
 extern sf::RenderWindow mainPtr;
 extern short on_monst_menu[256];
 
@@ -421,7 +420,7 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreat
 	
 	if(roster[position % 60].number != on_monst_menu[position]) {
 		cMonster& monst = univ.scenario.scen_monsters[on_monst_menu[position]];
-		roster.assign(position % 60, cCreature(on_monst_menu[position]), monst, PSD[SDF_EASY_MODE], univ.difficulty_adjust());
+		roster.assign(position % 60, cCreature(on_monst_menu[position]), monst, univ.party.easy_mode, univ.difficulty_adjust());
 		store_m = roster[position % 60];
 	}
 	put_monst_info(me, store_m);
@@ -837,11 +836,8 @@ static void give_help(short help1,short help2,cDialog* parent) {
 		help_forced = true;
 		help1 -= 200;
 	}
-	if((PSD[SDF_NO_INSTANT_HELP] > 0) && !help_forced)
+	if(!get_bool_pref("ShowInstantHelp", true) && !help_forced)
 		return;
-	if(univ.party.help_received.count(help1) > 0 && !help_forced)
-		return;
-	univ.party.help_received.insert(help1);
 	append_iarray_pref("ReceivedHelp", help1);
 	str1 = get_str("help",help1);
 	if(help2 > 0)

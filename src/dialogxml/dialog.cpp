@@ -23,13 +23,13 @@ using namespace ticpp;
 #include "winutil.hpp"
 #include "mathutil.hpp"
 #include "cursors.hpp"
+#include "prefs.hpp"
 
 // TODO: Would be nice if I could avoid depending on mainPtr
 extern sf::RenderWindow mainPtr;
 extern cursor_type current_cursor;
 
 extern sf::Texture bg_gworld;
-extern bool play_sounds;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
@@ -715,7 +715,7 @@ void cDialog::process_keystroke(cKey keyHit){
 		if(iter->second->isVisible() && iter->second->isClickable() && iter->second->getAttachedKey() == keyHit){
 			iter->second->setActive(true);
 			draw();
-			if(play_sounds) {
+			if(get_bool_pref("PlaySounds", true)) {
 				if(typeid(iter->second) == typeid(cLed*))
 					play_sound(34);
 				else play_sound(37);

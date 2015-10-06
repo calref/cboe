@@ -22,6 +22,7 @@
 #include "choicedlog.hpp"
 #include "boe.menus.hpp"
 #include "spell.hpp"
+#include "prefs.hpp"
 
 extern eGameMode overall_mode;
 extern bool ghost_mode;
@@ -747,7 +748,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 	
 	if(weap.ability == eItemAbil::EXPLODING_WEAPON) {
 		add_string_to_buf("  The weapon produces an explosion!");
-		if(PSD[SDF_GAME_SPEED] == 0)
+		if(get_int_pref("GameSpeed") == 0)
 			pause(1);
 		else pause(5);
 		play_sound(5);
@@ -1776,7 +1777,7 @@ void fire_missile(location target) {
 			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
 			univ.party[current_pc].void_sanctuary(); // TODO: Is this right?
 			add_string_to_buf("  The arrow explodes!");
-			if(PSD[SDF_GAME_SPEED] == 0)
+			if(get_int_pref("GameSpeed") == 0)
 				pause(dist(missile_firer.combat_pos,target));
 			else
 				pause(dist(missile_firer.combat_pos,target)*5);
@@ -2054,7 +2055,7 @@ void combat_run_monst() {
 	move_to_zero(univ.party.status[ePartyStatus::FIREWALK]);
 	
 	// decrease monster present counter
-	move_to_zero(PSD[SDF_HOSTILES_PRESENT]);
+	move_to_zero(univ.party.hostiles_present);
 	
 	dump_gold(1);
 	
@@ -2258,7 +2259,7 @@ void do_monster_turn() {
 		if(cur_monst->active == 2) { // Begin action loop for angry, active monsters
 			// First note that hostile monsters are around.
 			if(!cur_monst->is_friendly())
-				PSD[SDF_HOSTILES_PRESENT] = 30;
+				univ.party.hostiles_present = 30;
 			
 			// Give monster its action points
 			cur_monst->ap = cur_monst->speed;
@@ -2354,7 +2355,8 @@ void do_monster_turn() {
 				center_on_monst = true;
 				center = cur_monst->cur_loc;
 				draw_terrain(0);
-				pause((PSD[SDF_GAME_SPEED] == 3) ? 9 : PSD[SDF_GAME_SPEED]);
+				int speed = get_int_pref("GameSpeed");
+				pause(speed == 3 ? 9 : speed);
 			}
 			
 			combat_posing_monster = current_working_monster = 100 + i;

@@ -84,10 +84,9 @@ extern cShop active_shop;
 
 extern rectangle shop_frame;
 extern short cen_x, cen_y, stat_window;//,pc_moves[6];
-extern bool give_delays;
 extern eGameMode overall_mode;
 extern location	to_create;
-extern bool All_Done,play_sounds,frills_on,spell_forced,monsters_going;
+extern bool All_Done,frills_on,spell_forced,monsters_going;
 extern bool party_in_memory,in_scen_debug;
 
 // game info globals
@@ -1494,7 +1493,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 			do_monster_turn();
 		// Wand monsts
 		if(overall_mode == MODE_OUTDOORS && univ.party.is_alive() && univ.party.age % 10 == 0) {
-			if(get_ran(1,1,70 + PSD[SDF_LESS_WANDER_ENC] * 200) == 10)
+			if(get_ran(1,1,70 + univ.party.less_wm * 200) == 10)
 				create_wand_monst();
 			for(int i = 0; i < 10; i++)
 				if(univ.party.out_c[i].exists)
@@ -1513,7 +1512,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 					}
 		}
 		if(overall_mode == MODE_TOWN) {
-			if(get_ran(1,1,160 - univ.town.difficulty + PSD[SDF_LESS_WANDER_ENC] * 200) == 2)
+			if(get_ran(1,1,160 - univ.town.difficulty + univ.party.less_wm * 200) == 2)
 				create_wand_monst();
 		}
 	}
@@ -2266,7 +2265,7 @@ void do_save(short mode) {
 void do_rest(long length, int hp_restore, int mp_restore) {
 	unsigned long age_before = univ.party.age;
 	univ.party.age += length;
-	if(!PSD[SDF_TIMERS_DURING_REST]) {
+	if(univ.scenario.is_legacy) {
 		univ.party.heal(hp_restore);
 		univ.party.restore_sp(mp_restore);
 		put_pc_screen();
@@ -2353,7 +2352,7 @@ void increase_age() {
 	move_to_zero(univ.party.light_level);
 	
 	// decrease monster present counter
-	move_to_zero(PSD[SDF_HOSTILES_PRESENT]);
+	move_to_zero(univ.party.hostiles_present);
 	
 	// Party spell effects
 	if(univ.party.status[ePartyStatus::STEALTH] == 1) {
@@ -2689,9 +2688,6 @@ void start_new_game(bool force) {
 	extern cCustomGraphics spec_scen_g;
 	spec_scen_g.party_sheet.reset();
 	
-	// Don't reset instant help just because they started a new game.
-	std::vector<int> help = get_iarray_pref("ReceivedHelp");
-	std::copy(help.begin(), help.end(), std::inserter(univ.party.help_received, univ.party.help_received.begin()));
 	// The original code called build_outdoors here, but they're not even in a scenario, so I removed it.
 	// It was probably a relic of Exile III.
 	// (It also refreshed stores... with uninitialized items.)
