@@ -42,7 +42,7 @@ std::string scenario_temp_dir_name = "pc_scenario";
 short current_active_pc = 0;
 
 /* Mac stuff globals */
-bool All_Done = false,diff_depth_ok = false;
+bool All_Done = false;
 sf::Event event;
 sf::RenderWindow mainPtr;
 bool gInBackground = false;

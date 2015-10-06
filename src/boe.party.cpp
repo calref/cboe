@@ -78,7 +78,6 @@ extern location golem_m_locs[16];
 extern cUniverse univ;
 extern sf::Texture pc_gworld;
 extern std::queue<pending_special_type> special_queue;
-extern bool in_scen_debug, ghost_mode, node_step_through;
 
 // First icon is displayed for positive values, second for negative, if -1 no negative icon.
 // This omits two special cases - major poison, and normal speed; they are hard-coded.
@@ -239,9 +238,9 @@ void put_party_in_scen(std::string scen_name) {
 	bool item_took = false;
 	
 	// Drop debug mode
-	in_scen_debug = false;
-	ghost_mode = false;
-	node_step_through = false;
+	univ.debug_mode = false;
+	univ.ghost_mode = false;
+	univ.node_step_through = false;
 	
 	for(j = 0; j < 6; j++) {
 		univ.party[j].status.clear();

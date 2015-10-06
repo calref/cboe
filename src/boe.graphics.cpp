@@ -35,7 +35,7 @@ extern sf::RenderWindow mainPtr;
 extern short stat_window;
 extern eGameMode overall_mode;
 extern short current_spell_range;
-extern bool anim_onscreen,frills_on,party_in_memory;
+extern bool anim_onscreen,party_in_memory;
 extern bool flushingInput;
 extern bool cartoon_happening, fog_lifted;
 extern short anim_step;
@@ -729,6 +729,7 @@ void draw_terrain(short	mode) {
 	char can_draw;
 	ter_num_t spec_terrain;
 	bool off_terrain = false,draw_frills = true;
+	bool frills_on = get_bool_pref("DrawTerrainShoreFrills", true);
 	short i,j;
 	
 	if(overall_mode == MODE_TALKING || overall_mode == MODE_SHOPPING || overall_mode == MODE_STARTUP)
@@ -1168,7 +1169,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	}
 	sf::Color test_color = {0,0,0}, store_color;
 	
-	if(!frills_on)
+	if(!get_bool_pref("DrawTerrainShoreFrills", true))
 		return;
 	
 	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;

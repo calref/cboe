@@ -37,7 +37,7 @@ extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
 extern short which_combat_type,current_pc,stat_window;
 extern location center;
-extern bool in_scen_debug,node_step_through,belt_present,processing_fields,monsters_going,boom_anim_active;
+extern bool processing_fields,monsters_going,boom_anim_active;
 extern effect_pat_type single,t,square,radius2,radius3,small_square,open_square,field[8];
 extern effect_pat_type current_pat;
 extern cOutdoors::cWandering store_wandering_special;
@@ -1515,7 +1515,7 @@ bool damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType 
 		victim.damaged_msg(how_much,0);
 	victim.health = victim.health - how_much;
 	
-	if(in_scen_debug)
+	if(univ.debug_mode)
 		victim.health = -1;
 	
 	// splitting monsters
@@ -1611,7 +1611,7 @@ void kill_monst(cCreature& which_m,short who_killed,eMainStatus type) {
 	if(which_m.abil[eMonstAbil::DEATH_TRIGGER].active)
 		run_special(eSpecCtx::KILL_MONST,0,which_m.abil[eMonstAbil::DEATH_TRIGGER].special.extra1,which_m.cur_loc,&s1,&s2,&s3);
 	
-	if(!in_scen_debug && (which_m.summon_time == 0 || !which_m.party_summoned)) { // no xp for party-summoned monsters
+	if(!univ.debug_mode && (which_m.summon_time == 0 || !which_m.party_summoned)) { // no xp for party-summoned monsters
 		xp = which_m.level * 2;
 		if(who_killed < 6)
 			award_xp(who_killed,xp);
@@ -1626,7 +1626,7 @@ void kill_monst(cCreature& which_m,short who_killed,eMainStatus type) {
 		place_glands(l,which_m.number);
 		
 	}
-	if(!in_scen_debug && which_m.summon_time == 0)
+	if(!univ.debug_mode && which_m.summon_time == 0)
 		place_treasure(which_m.cur_loc, which_m.level / 2, which_m.treasure, 0);
 	
 	i = which_m.cur_loc.x;
@@ -1673,7 +1673,7 @@ void push_things() {
 	
 	if(is_out()) // TODO: Make these work outdoors
 		return;
-	if(!belt_present)
+	if(!univ.town.belt_present)
 		return;
 	
 	for(i = 0; i < univ.town.monst.size(); i++)
@@ -2018,7 +2018,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		next_spec = -1;
 		cur_node = get_node(cur_spec,cur_spec_type);
 		
-		if(node_step_through) {
+		if(univ.node_step_through) {
 			give_help(68,69);
 			std::string debug = "Step: ";
 			debug += (*cur_node.type).name();
@@ -2032,7 +2032,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 					break;
 			}
 			if(evt.type == sf::Event::KeyPressed && evt.key.code == sf::Keyboard::Escape)
-				node_step_through = false;
+				univ.node_step_through = false;
 		}
 		
 		// Convert pointer values to reference values
@@ -2063,7 +2063,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		}
 		switch(getNodeCategory(cur_node.type)) {
 			case eSpecCat::GENERAL:
-				if(cur_node.type == eSpecType::NONE && in_scen_debug) {
+				if(cur_node.type == eSpecType::NONE && univ.debug_mode) {
 					std::string type("???");
 					switch(cur_spec_type) {
 						case 0: type = "scenario"; break;
@@ -2348,7 +2348,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::PRINT_NUMS:
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			check_mess = false;
 			get_strs(str1,str2, cur_spec_type,cur_node.m1, cur_node.m2);
 			if(cur_node.m1 >= 0)

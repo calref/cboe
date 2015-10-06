@@ -18,7 +18,6 @@ extern cUniverse univ;
 extern sf::RenderWindow mainPtr;
 extern fs::path file_in_mem;
 extern sf::Texture pc_gworld;
-extern bool diff_depth_ok;
 
 short which_pc_displayed,store_pc_trait_mode,store_which_to_edit;
 extern short current_active_pc;

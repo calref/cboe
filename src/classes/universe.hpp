@@ -181,6 +181,7 @@ public:
 	cCurOut out;
 	unsigned char out_maps[100][6][48]; // formerly stored_outdoor_maps_type
 	fs::path file;
+	bool debug_mode, ghost_mode, node_step_through;
 	
 	void clear_stored_pcs();
 	void append(legacy::stored_town_maps_type& old);

@@ -30,14 +30,13 @@ bool  All_Done = false;
 sf::Event event;
 sf::RenderWindow mainPtr;
 cTown* town = nullptr;
-bool diff_depth_ok = false,mouse_button_held = false,editing_town = false;
+bool mouse_button_held = false,editing_town = false;
 short cur_viewing_mode = 0;
 short cen_x, cen_y;
 eScenMode overall_mode = MODE_INTRO_SCREEN;
 std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 short mode_count = 0;
 cOutdoors* current_terrain;
-short pixel_depth,old_depth = 8;
 
 std::string scenario_temp_dir_name = "ed_scenario";
 bool change_made = false, ae_loading = false;

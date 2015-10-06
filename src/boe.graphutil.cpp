@@ -26,7 +26,7 @@ extern short stat_window;
 extern bool cartoon_happening;
 extern eGameMode overall_mode;
 extern short current_spell_range;
-extern bool anim_onscreen,frills_on;
+extern bool anim_onscreen;
 extern cUniverse univ;
 extern effect_pat_type current_pat;
 extern sf::RenderWindow mini_map;

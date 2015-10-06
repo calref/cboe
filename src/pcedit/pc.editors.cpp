@@ -40,7 +40,7 @@ extern sf::RenderWindow mainPtr;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 
-extern bool diff_depth_ok,current_file_has_maps;
+extern bool current_file_has_maps;
 bool choice_active[6];
 
 extern short which_pc_displayed;

@@ -36,7 +36,7 @@ extern bool allow_junk_treasure;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 
-extern bool map_visible,diff_depth_ok;
+extern bool map_visible;
 extern sf::RenderWindow mini_map;
 extern sf::Texture pc_gworld;
 extern cUniverse univ;

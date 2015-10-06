@@ -26,7 +26,7 @@
 
 extern eStatMode stat_screen_mode;
 extern eGameMode overall_mode;
-extern bool party_in_memory,in_scen_debug,ghost_mode,node_step_through;
+extern bool party_in_memory;
 extern location center;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
@@ -63,9 +63,6 @@ void finish_load_party(){
 	bool in_scen = univ.party.scen_name.length() > 0;
 	
 	party_in_memory = true;
-	in_scen_debug = false;
-	ghost_mode = false;
-	node_step_through = false;
 	
 	// now if not in scen, this is it.
 	if(!in_scen) {
@@ -130,8 +127,6 @@ void finish_load_party(){
 	store_file_reply = file_to_load;
 	
 	add_string_to_buf("Load: Game loaded.");
-	
-	in_scen_debug = false;
 }
 
 void shift_universe_left() {

@@ -25,7 +25,6 @@
 #include "prefs.hpp"
 
 extern eGameMode overall_mode;
-extern bool ghost_mode;
 extern short which_combat_type;
 extern short stat_window;
 extern location center;
@@ -40,7 +39,6 @@ extern short store_spell_target,pc_casting,current_spell_range;
 extern effect_pat_type current_pat;
 extern short num_targets_left;
 extern location spell_targets[8];
-extern bool in_scen_debug;
 extern short fast_bang;
 extern short store_current_pc;
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
@@ -395,7 +393,7 @@ bool pc_combat_move(location destination) {
 	if(check_f)
 		forced = true;
 	
-	if(in_scen_debug && ghost_mode) forced = true;
+	if(univ.debug_mode && univ.ghost_mode) forced = true;
 	
 	if(keep_going) {
 		
@@ -2278,7 +2276,7 @@ void do_monster_turn() {
 		}
 		if(cur_monst->status[eStatus::ASLEEP] > 0 || cur_monst->status[eStatus::PARALYZED] > 0)
 			cur_monst->ap = 0;
-		if(in_scen_debug)
+		if(univ.debug_mode)
 			cur_monst->ap = 0;
 		center_on_monst = false;
 		

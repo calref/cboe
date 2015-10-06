@@ -37,7 +37,7 @@ extern short store_current_pc,current_ground;
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 extern std::queue<pending_special_type> special_queue;
 
-extern bool map_visible,diff_depth_ok;
+extern bool map_visible;
 extern sf::RenderWindow mini_map;
 
 extern location hor_vert_place[14];

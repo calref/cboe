@@ -39,7 +39,7 @@ sf::Event event;
 sf::RenderWindow mainPtr;
 short had_text_freeze = 0,num_fonts;
 bool first_startup_update = true;
-bool diff_depth_ok = false,first_sound_played = false,spell_forced = false;
+bool first_sound_played = false,spell_forced = false;
 bool party_in_memory = false;
 std::shared_ptr<cScrollbar> text_sbar, item_sbar, shop_sbar;
 std::shared_ptr<cButton> done_btn, help_btn;
@@ -60,8 +60,7 @@ signed char dir_x_dif[9] = {0,1,1,1,0,-1,-1,-1,0};
 signed char dir_y_dif[9] = {-1,-1,0,1,1,1,0,-1,0};
 
 extern bool map_visible;
-bool in_scen_debug = false;
-bool belt_present = false;
+
 std::string scenario_temp_dir_name = "scenario";
 
 /* Display globals */
@@ -70,16 +69,14 @@ short fast_bang = false; // Note: This mostly behaves as a boolean variable, but
 std::vector<int> spec_item_array;
 short current_spell_range;
 eGameMode overall_mode = MODE_STARTUP;
-bool first_update = true,anim_onscreen = false,frills_on = true,changed_display_mode = false;
-short stat_window = 0,store_modifier;
+bool anim_onscreen = false,changed_display_mode = false;
+short stat_window = 0;
 bool monsters_going = false,boom_anim_active = false;
 bool finished_init = false;
 
 sf::RenderWindow mini_map;
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
 location ul = {28,10};
-long stored_key;
-short pixel_depth,old_depth = 8;
 short current_ground = 0;
 eStatMode stat_screen_mode;
 short anim_step = -1;

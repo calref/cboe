@@ -58,13 +58,11 @@ rectangle item_buttons[8][6];
 // name, use, give, drip, info, sell/id
 rectangle pc_buttons[6][5];
 // name, hp, sp, info, trade
-short num_chirps_played = 0;
 
 extern rectangle startup_button[6];
 extern bool flushingInput;
 extern bool fog_lifted;
 extern bool cartoon_happening;
-bool ghost_mode, node_step_through;
 rectangle startup_top;
 
 bool item_area_button_active[8][6];
@@ -74,10 +72,9 @@ short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
 rectangle pc_help_button,pc_area_rect,item_area_rect;
 
 short current_terrain_type = 0,num_out_moves = 0;
-short door_pc,store_drop_item;
+short store_drop_item;
 short current_switch = 6;
 cOutdoors::cWandering store_wandering_special;
-long dummy;
 
 short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 extern cShop active_shop;
@@ -86,8 +83,8 @@ extern rectangle shop_frame;
 extern short cen_x, cen_y, stat_window;//,pc_moves[6];
 extern eGameMode overall_mode;
 extern location	to_create;
-extern bool All_Done,frills_on,spell_forced,monsters_going;
-extern bool party_in_memory,in_scen_debug;
+extern bool All_Done,spell_forced,monsters_going;
+extern bool party_in_memory;
 
 // game info globals
 extern sf::RenderWindow mainPtr;
@@ -108,7 +105,7 @@ extern short current_pc;
 extern short combat_active_pc;
 extern eStatMode stat_screen_mode;
 
-extern bool map_visible,diff_depth_ok;
+extern bool map_visible;
 extern sf::RenderWindow mini_map;
 
 extern location ul;
@@ -943,8 +940,6 @@ static void handle_victory() {
 	univ.clear_stored_pcs();
 	reload_startup();
 	overall_mode = MODE_STARTUP;
-	in_scen_debug = false;
-	ghost_mode = false;
 	draw_startup(0);
 	menu_activate();
 	univ.party.scen_name = ""; // should be harmless...
@@ -1017,8 +1012,6 @@ bool handle_action(sf::Event event) {
 		if(overall_mode != MODE_SHOPPING)
 			return false;
 	}
-	
-	num_chirps_played = 0;
 	
 	// MARK: First, figure out where party is
 	switch(overall_mode) {
@@ -1795,11 +1788,11 @@ bool handle_keystroke(sf::Event& event){
 			
 			
 		case 'D':
-			if(in_scen_debug) {
-				in_scen_debug = false;
+			if(univ.debug_mode) {
+				univ.debug_mode = false;
 				ASB("Debug mode OFF.");
 			} else {
-				in_scen_debug = true;
+				univ.debug_mode = true;
 				ASB("Debug mode ON.");
 			}
 			print_buf();
@@ -1815,7 +1808,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case '=':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
 			for(i = 0; i < 6; i++) {
@@ -1836,7 +1829,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'B':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			if(overall_mode == MODE_OUTDOORS){
 				add_string_to_buf("Debug - Leave Town: You're not in town!");
 				print_buf();
@@ -1852,7 +1845,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'C':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			univ.party.clear_bad_status();
 			add_string_to_buf("Debug: You get cleaned up!");
 			print_buf();
@@ -1860,7 +1853,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'E':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			univ.party.status[ePartyStatus::STEALTH] += 10;
 			univ.party.status[ePartyStatus::DETECT_LIFE] += 10;
 			univ.party.status[ePartyStatus::FIREWALK] += 10;
@@ -1871,7 +1864,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'F':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			if(overall_mode != MODE_OUTDOORS){
 				add_string_to_buf("Debug: Can only fly outdoors.");
 			}else{
@@ -1883,19 +1876,19 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'G':
-			if(!in_scen_debug) break;
-			if(ghost_mode){
-				ghost_mode = false;
+			if(!univ.debug_mode) break;
+			if(univ.ghost_mode){
+				univ.ghost_mode = false;
 				ASB("Debug: Ghost mode OFF.");
 			}else{
-				ghost_mode = true;
+				univ.ghost_mode = true;
 				ASB("Debug:Ghost mode ON.");
 			}
 			print_buf();
 			break;
 			
 		case 'H':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
 			for(i = 0; i < 6; i++) {
@@ -1910,7 +1903,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'K':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			for(i = 0; i < univ.town.monst.size(); i++) {
 				if(is_combat() && univ.town.monst[i].active > 0 && !univ.town.monst[i].is_friendly())
 					univ.town.monst[i].active = 0;
@@ -1926,12 +1919,12 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'N':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			handle_victory();
 			break;
 			
 		case 'O':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			if(is_town()) {
 				sout << "Debug:  You're at x " << (short) univ.town.p_loc.x << ", y " << (short) univ.town.p_loc.y
 				<< " in town " << univ.town.num << '.';
@@ -1950,7 +1943,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'I':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?");
 			j = univ.scenario.scen_items[i].ident;
 			univ.scenario.scen_items[i].ident = true;
@@ -1962,7 +1955,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'Q':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			if(overall_mode == MODE_OUTDOORS) {
 				for(i = 0; i < 96; i++)
 					for(j = 0; j < 96; j++)
@@ -1978,7 +1971,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'R':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			if(univ.party.in_boat >= 0) {
 				add_string_to_buf("  Not while in boat.");
 				break;
@@ -1998,12 +1991,12 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'S':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			edit_stuff_done();
 			break;
 			
 		case 'T':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			short find_direction_from;
             i = get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number");
             if(i >= 0 && i < univ.scenario.towns.size()) {
@@ -2016,14 +2009,14 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'W':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			refresh_store_items();
 			add_string_to_buf("Debug: Refreshed jobs/shops.");
 			print_buf();
 			break;
 			
 		case '<':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			ASB("Debug: Increase age.");
 			ASB("  It is now 1 day later.");
 			print_buf();
@@ -2031,7 +2024,7 @@ bool handle_keystroke(sf::Event& event){
 			put_pc_screen();
 			break;
 		case '>':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			ASB("DEBUG: Towns have short memory.");
 			ASB("Your deeds have been forgotten.");
 			print_buf();
@@ -2039,18 +2032,18 @@ bool handle_keystroke(sf::Event& event){
 				univ.party.creature_save[i].which_town = 200;
 			break;
 		case '!':
-			if(!in_scen_debug) break;
-			if(node_step_through) {
-				node_step_through = false;
+			if(!univ.debug_mode) break;
+			if(univ.node_step_through) {
+				univ.node_step_through = false;
 				add_string_to_buf("Debug: Step-through disabled");
 			} else {
-				node_step_through = true;
+				univ.node_step_through = true;
 				add_string_to_buf("Debug: Step-through enabled");
 			}
 			print_buf();
 			break;
 		case '/':
-			if(!in_scen_debug) break;
+			if(!univ.debug_mode) break;
 			cChoiceDlog("help-debug").show();
 			break;
 		case 'a':
@@ -2833,7 +2826,7 @@ bool outd_move_party(location destination,bool forced) {
 	keep_going = check_special_terrain(destination,eSpecCtx::OUT_MOVE,univ.party[0],&check_f);
 	if(check_f)
 		forced = true;
-	if(in_scen_debug && ghost_mode)
+	if(univ.debug_mode && univ.ghost_mode)
 		forced = keep_going = true;
 	
 	// If not blocked and not put in town by a special, process move
@@ -3034,7 +3027,7 @@ bool town_move_party(location destination,short forced) {
 		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,univ.party[0],&check_f);
 	if(check_f)
 		forced = true;
-	if(in_scen_debug && ghost_mode)
+	if(univ.debug_mode && univ.ghost_mode)
 		forced = keep_going = true;
 	
 	ter = univ.town->terrain(destination.x,destination.y);
