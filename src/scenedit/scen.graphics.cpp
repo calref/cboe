@@ -1064,7 +1064,7 @@ void draw_monsts() {
 static rectangle get_item_template_rect (short type_wanted) {
 	rectangle store_rect;
 	
-	if(type_wanted < 45) {
+	if(type_wanted < 55) {
 		store_rect.top = (type_wanted / 5) * BITMAP_HEIGHT;
 		store_rect.bottom = store_rect.top + BITMAP_HEIGHT;
 		store_rect.left = (type_wanted % 5) * BITMAP_WIDTH;
@@ -1491,7 +1491,7 @@ void place_location() {
 				sf::Texture* source_gworld;
 				graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 				rect_draw_some_item(*source_gworld,source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
-			} else if(picture_wanted < 50) {
+			} else if(picture_wanted < 55) {
 				source_rect = calc_rect(picture_wanted % 5,picture_wanted / 5);
 				rect_draw_some_item(*ResMgr::get<ImageRsrc>("objects"),source_rect,terrain_buttons_gworld,draw_rect,sf::BlendAlpha);
 			} else {
