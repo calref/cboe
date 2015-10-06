@@ -80,7 +80,7 @@
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="onoffend" minOccurs="0" type="xs:integer"/>
-				<xs:element ref="timer" minOccurs="0" maxOccurs="8"/>
+				<xs:element name="timer" type="timer" minOccurs="0" maxOccurs="8"/>
 				<xs:element name="flags">
 					<xs:complexType>
 						<xs:all>

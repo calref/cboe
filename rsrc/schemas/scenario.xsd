@@ -264,7 +264,7 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
-				<xs:element ref="timer" minOccurs="0" maxOccurs="20"/>
+				<xs:element name="timer" type="timer" minOccurs="0" maxOccurs="20"/>
 				<xs:element name="string" minOccurs="0" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:simpleContent>

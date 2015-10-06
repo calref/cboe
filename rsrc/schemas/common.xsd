@@ -16,13 +16,11 @@
 		<xs:attribute name="x" use="required" type="xs:integer"/>
 		<xs:attribute name="y" use="required" type="xs:integer"/>
 	</xs:attributeGroup>
-	<xs:element name="timer">
-		<xs:complexType>
-			<xs:simpleContent>
-				<xs:extension base="xs:integer">
-					<xs:attribute name="freq" type="xs:integer" use="required"/>
-				</xs:extension>
-			</xs:simpleContent>
-		</xs:complexType>
-	</xs:element>
+	<xs:complexType name="timer">
+		<xs:simpleContent>
+			<xs:extension base="xs:integer">
+				<xs:attribute name="freq" type="xs:integer" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
 </xs:schema>

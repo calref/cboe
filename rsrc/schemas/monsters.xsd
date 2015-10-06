@@ -193,7 +193,7 @@
 	</xs:element>
 	<xs:element name="summon">
 		<xs:complexType>
-			<xs:all>
+			<xs:sequence>
 				<xs:choice minOccurs="1" maxOccurs="1">
 					<xs:element name="type" type="xs:integer"/>
 					<xs:element name="lvl" type="xs:integer"/>
@@ -203,7 +203,7 @@
 				<xs:element name="max" type="xs:integer"/>
 				<xs:element name="duration" type="xs:integer"/>
 				<xs:element name="chance" type="permille"/>
-			</xs:all>
+			</xs:sequence>
 			<xs:attribute name="type" use="required">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">

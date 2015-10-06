@@ -85,9 +85,13 @@
 			<xs:all>
 				<xs:element name="shortcut" minOccurs="0" type="key"/>
 				<xs:element name="frill" minOccurs="0">
-					<xs:extension base="xs:integer">
-						<xs:attribute name="chance" type="xs:integer" use="optional" default="10"/>
-					</xs:extension>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:integer">
+								<xs:attribute name="chance" type="xs:integer" use="optional" default="10"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
 				</xs:element>
 				<xs:element name="object" minOccurs="0">
 					<xs:complexType>
