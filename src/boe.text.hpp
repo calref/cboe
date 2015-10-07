@@ -8,7 +8,7 @@ void set_stat_window(short new_stat);
 void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val);
 short first_active_pc();
 void refresh_stat_areas(short mode);
-short total_encumberance(short pc_num);
+short total_encumbrance(short pc_num);
 void draw_pc_effects(short pc);
 void print_party_stats() ;
 short do_look(location space);

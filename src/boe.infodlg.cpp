@@ -522,7 +522,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 		me[skill_ids[i]].setText(to_draw.str());
 		to_draw.str("");
 	}
-	store = total_encumberance(pc);
+	store = total_encumbrance(pc);
 	me["encumb"].setTextToNum(store);
 	me["name"].setText(univ.party[pc].name);
 	me["lvl"].setTextToNum(univ.party[pc].level);
@@ -544,7 +544,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 			else weap2 = i;
 		}
 	
-	hit_adj = univ.party[pc].stat_adj(eSkill::DEXTERITY) * 5 - (total_encumberance(pc)) * 5
+	hit_adj = univ.party[pc].stat_adj(eSkill::DEXTERITY) * 5 - (total_encumbrance(pc)) * 5
 		+ 5 * minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
 	if(!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2 < 24)
 		hit_adj -= 25;

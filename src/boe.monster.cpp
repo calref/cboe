@@ -531,7 +531,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 	if(is_combat())
 		for(i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[i].combat_pos,which_m) &&
-			   (get_encumberance(i) < 2))
+			   (get_encumbrance(i) < 2))
 		 		return i;
 	
 	// Check for a nice, adjacent, friendly monster and maybe attack
@@ -1189,7 +1189,7 @@ void activate_monsters(short code,short /*attitude*/) {
 		}
 }
 
-short get_encumberance(short pc_num) {
+short get_encumbrance(short pc_num) {
 	short store = 0,i,what_val;
 	
 	what_val = univ.party[pc_num].free_weight();

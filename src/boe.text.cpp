@@ -630,7 +630,7 @@ void refresh_stat_areas(short mode) {
 
 // get job info gone
 
-short total_encumberance(short pc_num) {
+short total_encumbrance(short pc_num) {
 	short store = 0,i,what_val;
 	
 	for(i = 0; i < 24; i++)

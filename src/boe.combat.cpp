@@ -537,7 +537,7 @@ void pc_attack(short who_att,iLiving* target) {
 		}
 	
 	hit_adj = (-5 * minmax(-8,8,attacker.status[eStatus::BLESS_CURSE])) + 5 * minmax(-8,8,target->status[eStatus::BLESS_CURSE])
-		- attacker.stat_adj(eSkill::DEXTERITY) * 5 + (get_encumberance(who_att)) * 5;
+		- attacker.stat_adj(eSkill::DEXTERITY) * 5 + (get_encumbrance(who_att)) * 5;
 	
 	dam_adj = minmax(-8,8,attacker.status[eStatus::BLESS_CURSE]) - minmax(-8,8,target->status[eStatus::BLESS_CURSE])
 		+ attacker.stat_adj(eSkill::STRENGTH);
@@ -4716,7 +4716,7 @@ bool combat_cast_mage_spell() {
 		add_string_to_buf("Cast: No spell points.");
 	else if(univ.party[current_pc].skill(eSkill::MAGE_SPELLS) == 0)
 		add_string_to_buf("Cast: No mage skill.");
-	else if(get_encumberance(current_pc) > 1) {
+	else if(get_encumbrance(current_pc) > 1) {
 		add_string_to_buf("Cast: Too encumbered.");
 		take_ap(6);
 		give_help(40,0);

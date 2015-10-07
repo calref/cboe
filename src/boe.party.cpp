@@ -2669,7 +2669,7 @@ void set_pc_moves() {
 			univ.party[i].ap = 0;
 		else {
 			univ.party[i].ap = univ.party[i].traits[eTrait::SLUGGISH] ? 3 : 4;
-			r = get_encumberance(i);
+			r = get_encumbrance(i);
 			univ.party[i].ap = minmax(1,8,univ.party[i].ap - (r / 3));
 			
 			if(int speed = univ.party[i].get_prot_level(eItemAbil::SPEED))
