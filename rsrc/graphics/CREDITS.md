@@ -59,8 +59,11 @@ Some sheets are entirely original:
 For terrain graphics, most are original BoE graphics, except for the following (some of
 which are based on original BoE graphics):
 
-- On ter5.png, graphics 20-23 and 33 are by Mistb0rn. Graphics 18, 19, 25 are by ADoS.
-Graphics 24 and 46-49 were monster graphics in original BoE.
+- On ter4.png, the grass hut is basically original BoE but had a shadow added by
+Celtic Minstrel.
+- On ter5.png, graphics 20-23 and 33 are by Mistb0rn. Graphics 2, 3, 18, 19, 25 are by ADoS.
+Graphics 24 and 46-49 were monster graphics in original BoE. Graphic 4 is by Celtic Minstrel
+based on original BoE graphics.
 - ter6.png is entirely by Mistb0rn.
 - ter7.png is by Mistb0rn, except the small trees (54 and 46) which are by Celtic
 Minstrel.
