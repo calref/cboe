@@ -89,7 +89,7 @@ background flooring.
 For item graphics, most are original BoE graphics, except for the following:
 
 - The last two rows of objects.png are by ADoS, as is graphic 17.
-- On tinyobj.png, graphics 17, 45-54, and 134-138 are by ADoS.
+- On tinyobj.png, graphics 17, 45-54, 69, and 134-138 are by ADoS.
 
 startanim.png has been heavily modified by ADoS with new text, but the actual pictures
 in it are still all original BoE graphics.
