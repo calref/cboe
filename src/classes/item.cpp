@@ -975,6 +975,10 @@ std::string cItem::getAbilName() const {
 		case eItemAbil::SOULSUCKER: sout << "Soulsucker"; break;
 		case eItemAbil::DRAIN_MISSILES: sout << "Drain Missiles"; break;
 		case eItemAbil::WEAK_WEAPON: sout << "Weak Weapon"; break;
+		case eItemAbil::HP_DAMAGE: sout << "Damage Linked to Health"; break;
+		case eItemAbil::HP_DAMAGE_REVERSE: sout << "Berserker's Weapon"; break;
+		case eItemAbil::SP_DAMAGE: sout << "Damage Linked to Spell Points"; break;
+		case eItemAbil::SP_DAMAGE_REVERSE: sout << "Wildmage's Weapon"; break;
 		case eItemAbil::CAUSES_FEAR: sout << "Causes Fear"; break;
 		case eItemAbil::WEAPON_CALL_SPECIAL: sout << "Unusual Attack Effect"; break;
 		case eItemAbil::FULL_PROTECTION: sout << "Full Protection"; break;

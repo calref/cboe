@@ -12,10 +12,10 @@ Unused
 Weak weapon
 Cause fear
 Call special when attacking
-
-
-
-
+Does less damage as health lost
+Does more damage as health lost
+Does less damage as SP lost
+Does more damage as SP lost
 
 
 

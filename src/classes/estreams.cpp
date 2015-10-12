@@ -152,6 +152,7 @@ template<typename E> bool readEnum(std::istream& in, E& to, cEnumLookup& tbl, E 
 cEnumLookup skill_names = {
 	"str", "dex", "int", "edged", "bashing", "pole", "thrown", "archery", "defense",
 	"mage", "priest", "mage-lore", "alchemy", "item-lore", "traps", "lockpick", "assassin", "poison", "luck",
+	"hp", "sp",
 };
 
 std::ostream& operator << (std::ostream& out, eSkill e) {
@@ -203,9 +204,9 @@ std::istream& operator >> (std::istream& in, eItemUse& e){
 
 cEnumLookup item_abils = {
 	"none", "weap-dmg", "weap-slay", "weap-heal", "weap-explode",  "weap-return", "weap-dist", "weap-seek", "weap-antimagic", "weap-status",
-	"weap-soulsuck", "", "weap-weak", "weap-fear", "spec-weap", "", "", "", "", "",
+	"weap-soulsuck", "", "weap-weak", "weap-fear", "spec-weap", "hp-dmg", "hp-dmg-rev", "sp-dmg", "sp-dmg-rev", "",
 	"", "", "", "", "", "", "", "", "", "",
-	"prot-dmg", "prot-full", "prot-melee", "evade", "martyr", "encumber", "prot-status", "skill", "boost-stat", "boost-war",
+	"prot-dmg", "prot-full", "magery", "evade", "martyr", "encumber", "prot-status", "skill", "boost-stat", "boost-war",
 	"boost-magic", "accuracy", "thief", "giant", "light", "heavy", "status", "spec-hit", "save-life", "prot-petrify",
 	"regen", "poison-aug", "radiant", "will", "freedom", "speed", "slow", "prot-race", "lockpick", "missile-drain",
 	"spec-drop", "", "", "", "", "", "", "", "", "",

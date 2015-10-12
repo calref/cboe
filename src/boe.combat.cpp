@@ -702,11 +702,16 @@ static void apply_weapon_status(eStatus status, int how_much, int dmg, iLiving& 
 void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,cItem& weap,short primary,bool do_poison) {
 	short r1, r2;
 	cPlayer& attacker = univ.party[who_att];
-	eSkill what_skill = weap.weap_type;
 	
 	// safety valve
-	if(what_skill == eSkill::INVALID)
-		what_skill = eSkill::EDGED_WEAPONS;
+	int skill;
+	if(weap.weap_type == eSkill::INVALID)
+		skill = univ.party[who_att].skill(eSkill::EDGED_WEAPONS);
+	else if(weap.weap_type == eSkill::MAX_HP)
+		skill = 20 * univ.party[who_att].cur_health / univ.party[who_att].m_health;
+	else if(weap.weap_type == eSkill::MAX_SP)
+		skill = 20 * univ.party[who_att].cur_sp / univ.party[who_att].max_sp;
+	else skill = univ.party[who_att].skill(weap.weap_type);
 	
 	std::string create_line = attacker.name + " swings.";
 	add_string_to_buf(create_line);
@@ -734,6 +739,14 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 	if(primary) r2 += 2; else r2 -= 1;
 	if(weap.ability == eItemAbil::WEAK_WEAPON)
 		r2 = (r2 * (10 - weap.abil_data[0])) / 10;
+	if(weap.ability == eItemAbil::HP_DAMAGE)
+		r2 = std::max<short>(1, double(r2) * double(attacker.cur_health) / double(attacker.max_health));
+	if(weap.ability == eItemAbil::SP_DAMAGE)
+		r2 = std::max<short>(1, double(r2) * double(attacker.cur_sp) / double(attacker.max_sp));
+	if(weap.ability == eItemAbil::HP_DAMAGE_REVERSE)
+		r2 += double(weap.abil_data[0]) * (1.0 - double(attacker.cur_health) / double(attacker.max_health));
+	if(weap.ability == eItemAbil::SP_DAMAGE_REVERSE)
+		r2 += double(weap.abil_data[0]) * (1.0 - double(attacker.cur_sp) / double(attacker.max_sp));
 	
 	if(cPlayer* pc_target = dynamic_cast<cPlayer*>(&target)) {
 		// PCs get some additional defensive perks
@@ -755,7 +768,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 		do_explosion_anim(5,0);
 		end_missile_anim();
 		handle_marked_damage();
-	} else if(r1 <= hit_chance[univ.party[who_att].skill(what_skill)]) {
+	} else if(r1 <= hit_chance[skill]) {
 		eDamageType dmg_tp = eDamageType::SPECIAL;
 		short spec_dam = calc_spec_dam(weap.ability,weap.abil_data[0],weap.abil_data[1],target,dmg_tp);
 		short bonus_dam = 0;
@@ -1714,7 +1727,13 @@ void fire_missile(location target) {
 	cItem& missile = missile_firer.items[missile_inv_slot];
 	cItem& ammo = missile_firer.items[ammo_inv_slot];
 	
-	skill = missile_firer.skill(missile.weap_type);
+	if(missile.weap_type == eSkill::INVALID)
+		skill = missile_firer.skill(eSkill::ARCHERY);
+	else if(missile.weap_type == eSkill::MAX_HP)
+		skill = 20 * missile_firer.cur_health / missile_firer.m_health;
+	else if(missile.weap_type == eSkill::MAX_SP)
+		skill = 20 * missile_firer.cur_sp / missile_firer.max_sp;
+	else skill = missile_firer.skill(missile.weap_type);
 	range = (overall_mode == MODE_FIRING) ? 12 : 8;
 	dam = ammo.item_level;
 	dam_bonus = ammo.bonus + minmax(-8,8,missile_firer.status[eStatus::BLESS_CURSE]);
@@ -1795,6 +1814,14 @@ void fire_missile(location target) {
 			r2 = get_ran(1,1,dam) + dam_bonus;
 			if(ammo.ability == eItemAbil::WEAK_WEAPON)
 				r2 = (r2 * (10 - ammo.abil_data[0])) / 10;
+			if(ammo.ability == eItemAbil::HP_DAMAGE)
+				r2 = std::max<short>(1, double(r2) * double(missile_firer.cur_health) / double(missile_firer.max_health));
+			if(ammo.ability == eItemAbil::SP_DAMAGE)
+				r2 = std::max<short>(1, double(r2) * double(missile_firer.cur_sp) / double(missile_firer.max_sp));
+			if(ammo.ability == eItemAbil::HP_DAMAGE_REVERSE)
+				r2 += double(ammo.abil_data[0]) * (1.0 - double(missile_firer.cur_health) / double(missile_firer.max_health));
+			if(ammo.ability == eItemAbil::SP_DAMAGE_REVERSE)
+				r2 += double(ammo.abil_data[0]) * (1.0 - double(missile_firer.cur_sp) / double(missile_firer.max_sp));
 			std::string create_line = missile_firer.name + " fires.";
 			add_string_to_buf(create_line);
 			

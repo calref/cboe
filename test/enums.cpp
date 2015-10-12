@@ -31,7 +31,7 @@ static void test_enum(T val, string sym, Rest... rest) {
 }
 
 TEST_CASE("Enum text conversions") {
-	test_enum(eSkill::STRENGTH, "str", eSkill::LUCK, "luck");
+	test_enum(eSkill::STRENGTH, "str", eSkill::LUCK, "luck", eSkill::MAX_SP, "sp");
 	test_enum(eItemType::NO_ITEM, "none", eItemType::QUEST, "quest");
 	test_enum(eItemUse::HARM_ALL, "harm-all", eItemUse::HELP_ALL, "help-all", eItemUse::HARM_ONE, "harm-one", eItemUse::HELP_ONE, "help-one");
 	test_enum(eItemAbil::NONE, "none", eItemAbil::SOULSUCKER, "weap-soulsuck", eItemAbil::WEAK_WEAPON, "weap-weak", eItemAbil::WEAPON_CALL_SPECIAL, "spec-weap", eItemAbil::DAMAGE_PROTECTION, "prot-dmg", eItemAbil::DRAIN_MISSILES, "missile-drain", eItemAbil::LOCKPICKS, "lockpick", eItemAbil::DROP_CALL_SPECIAL, "spec-drop", eItemAbil::POISON_WEAPON, "use-poison", eItemAbil::QUICKFIRE, "use-quickfire", eItemAbil::HOLLY, "holly", eItemAbil::RESURRECTION_BALM, "balm");

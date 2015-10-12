@@ -1894,7 +1894,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 			showError("You can only give an ability of this sort to a weapon.","",&me);
 			return true;
 		}
-		i = choose_text_res("item-abilities", 1, 14, int(item.ability), &me, "Choose Weapon Ability (inherent)");
+		i = choose_text_res("item-abilities", 1, 18, int(item.ability), &me, "Choose Weapon Ability (inherent)");
 		if(i < 0) return true;
 		eItemAbil abil = eItemAbil(i + 1);
 		if(abil >= eItemAbil::RETURNING_MISSILE && abil <= eItemAbil::SEEKING_MISSILE) {
