@@ -5,7 +5,7 @@
 	<text top='6' left='49' width='384' height='80'>
 		This scenario is currently set as a legacy scenario, meaning that certain mechanics are changed.
 		If you have updated the scenario to account for these changes, then click the Update button
-		to remove the legacy flag. If you have not yet updated the scenario, then click the Leave
+		to remove the legacy flag. If you have not yet updated the scenario, then click the Wait
 		button to keep the legacy flag.
 	</text>
 	<!--
@@ -27,5 +27,5 @@
 		happening, it may need to be updated.<br/>
 	</text>
 	<button name='update' type='regular' top='300' left='368'>Update</button>
-	<button name='cancel' type='regular' def-key='esc' top='300' left='302'>Leave</button>
+	<button name='cancel' type='regular' def-key='esc' top='300' left='302'>Wait</button>
 </dialog>
