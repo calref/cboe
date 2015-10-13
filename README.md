@@ -87,6 +87,8 @@ Helpful Links
 * [BoE Forum at Spiderweb
   Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-
   of-exile/)
+* [Official IRC channel](http://webchat.freenode.net/?channels=%23openboe) (or join
+#openexile on irc.freenode.net)
 * [Original Game
   Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where
   it all began. Warning: Terrifying code.
