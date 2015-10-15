@@ -155,7 +155,7 @@ void adjust_window_mode() {
 	}
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
 	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
-	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.copyToImage().getPixelsPtr());
 #endif
 	if(!firstTime) redraw_screen(REFRESH_NONE);
 	if(text_sbar) {

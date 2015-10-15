@@ -116,7 +116,7 @@ void init_scened(int argc, char* argv[]) {
 	mainPtr.setPosition(windRect.topLeft());
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
 	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
-	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.copyToImage().getPixelsPtr());
 #endif
 	mainPtr.clear(sf::Color::Black);
 	mainPtr.display();

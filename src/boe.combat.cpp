@@ -708,7 +708,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 	if(weap.weap_type == eSkill::INVALID)
 		skill = univ.party[who_att].skill(eSkill::EDGED_WEAPONS);
 	else if(weap.weap_type == eSkill::MAX_HP)
-		skill = 20 * univ.party[who_att].cur_health / univ.party[who_att].m_health;
+		skill = 20 * univ.party[who_att].cur_health / univ.party[who_att].max_health;
 	else if(weap.weap_type == eSkill::MAX_SP)
 		skill = 20 * univ.party[who_att].cur_sp / univ.party[who_att].max_sp;
 	else skill = univ.party[who_att].skill(weap.weap_type);
@@ -725,7 +725,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 	
 	// Forcecage penalties (reduced for pole weapons)
 	if(attacker.status[eStatus::FORCECAGE] > 0)
-		r1 += what_skill == eSkill::POLE_WEAPONS ? 1 : 3;
+		r1 += weap.weap_type == eSkill::POLE_WEAPONS ? 1 : 3;
 	if(target.status[eStatus::FORCECAGE] > 0)
 		r1 += 1;
 	
@@ -793,7 +793,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 		if(weap.ability == eItemAbil::HEALING_WEAPON) {
 			ASB("  There is a flash of light.");
 			target.heal(r2);
-		} else switch(what_skill) {
+		} else switch(weap.weap_type) {
 			case eSkill::EDGED_WEAPONS:
 				if(weap.item_level < 8)
 					dmg_snd = 1;
@@ -879,7 +879,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 		draw_terrain(2);
 		create_line = "  " + univ.party[who_att].name + " misses.";
 		add_string_to_buf(create_line);
-		if(what_skill == eSkill::POLE_WEAPONS)
+		if(weap.weap_type == eSkill::POLE_WEAPONS)
 			play_sound(19);
 		else play_sound(2);
 	}
@@ -1730,7 +1730,7 @@ void fire_missile(location target) {
 	if(missile.weap_type == eSkill::INVALID)
 		skill = missile_firer.skill(eSkill::ARCHERY);
 	else if(missile.weap_type == eSkill::MAX_HP)
-		skill = 20 * missile_firer.cur_health / missile_firer.m_health;
+		skill = 20 * missile_firer.cur_health / missile_firer.max_health;
 	else if(missile.weap_type == eSkill::MAX_SP)
 		skill = 20 * missile_firer.cur_sp / missile_firer.max_sp;
 	else skill = missile_firer.skill(missile.weap_type);
