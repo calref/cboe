@@ -64,7 +64,7 @@
 	<pict type='field' num='15' top='352' left='15'/>
 	<pict type='field' num='5' top='62' left='250'/>
 	<pict type='field' num='10' top='123' left='250'/>
-	<pict type='field' num='16' top='177' left='250'/>
+	<pict type='teranim' num='14' top='177' left='250'/>
 	<text top='309' left='86' width='411' height='28'>
 		Barrels, Crates -
 		Can be pushed around.
