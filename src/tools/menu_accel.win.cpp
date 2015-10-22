@@ -59,7 +59,7 @@ void accel_table_t::add(WORD cmd, std::string key) {
 
 void accel_table_t::build() {
 	if(handle == NULL)
-		handle = CreateAcceleratorTable(table.data(), table.size());
+		handle = CreateAcceleratorTableA(table.data(), table.size());
 }
 
 void accel_table_t::destroy() {

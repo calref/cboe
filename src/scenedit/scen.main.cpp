@@ -118,6 +118,7 @@ void init_scened(int argc, char* argv[]) {
 	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
 	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.copyToImage().getPixelsPtr());
 #endif
+	init_menubar(); // This is called twice because Windows and Mac have different ordering requirements
 	mainPtr.clear(sf::Color::Black);
 	mainPtr.display();
 	
