@@ -160,12 +160,19 @@ if str(platform) == 'darwin':
 			CPPPATH = '/opt/local/include',
 			FRAMEWORKPATH = '/opt/local/Library/Frameworks'
 		)
+
 	if subprocess.call(['which', '-s', 'fink']) == 0: # Fink
 		env.Append(
 			LIBPATH = '/sw/lib',
 			CPPPATH = '/sw/include'
 		)
-	# HomeBrew apparently creates symlinks in /usr/local, so no special handling needed?
+
+	# pretty sketchy, but should point to your boost install
+	if subprocess.call(['which', '-s', 'brew']) == 0: # HomeBrew
+		brew_boost_version = '1.58.0'
+		env.Append(
+			LIBPATH = '/usr/local/Cellar/boost/'+brew_boost_version+'/lib',
+			CPPPATH = '/usr/local/Cellar/boost/'+brew_boost_version+'/include')
 
 # Sometimes it's easier just to copy the dependencies into the repo dir
 # We try to auto-detect this.
@@ -181,7 +188,7 @@ env['CONFIGUREDIR'] = '#build/conf'
 env['CONFIGURELOG'] = '#build/conf/config.log'
 if not env.GetOption('clean'):
 	conf = Configure(env)
-	
+
 	if not conf.CheckCC() or not conf.CheckCXX():
 		print "There's a problem with your compiler!"
 		Exit(1)
