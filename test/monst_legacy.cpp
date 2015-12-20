@@ -6,7 +6,7 @@
 //
 //
 
-#include <catch.hpp>
+#include "catch.hpp"
 #include "creature.hpp"
 #include "oldstructs.hpp"
 

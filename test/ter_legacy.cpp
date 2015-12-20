@@ -6,7 +6,7 @@
 //
 //
 
-#include <catch.hpp>
+#include "catch.hpp"
 #include "terrain.hpp"
 #include "oldstructs.hpp"
 

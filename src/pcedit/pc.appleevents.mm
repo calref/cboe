@@ -54,7 +54,7 @@ void set_up_apple_events(int, char*[]) {
 -(NSApplicationTerminateReply)applicationShouldTerminate: (NSApplication*)sender {
 	(void) sender; // Suppress "unused parameter" warning
 	All_Done = verify_restore_quit("save-quit");
-	return All_Done;
+	return All_Done ? NSTerminateNow : NSTerminateCancel;
 }
 @end
 

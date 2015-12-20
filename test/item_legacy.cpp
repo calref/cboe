@@ -6,7 +6,7 @@
 //
 //
 
-#include <catch.hpp>
+#include "catch.hpp"
 #include "item.hpp"
 #include "oldstructs.hpp"
 #include "spell.hpp"

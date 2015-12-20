@@ -6,7 +6,7 @@
 //
 //
 
-#include <catch.hpp>
+#include "catch.hpp"
 #include "scenario.hpp"
 #include "creature.hpp"
 #include "creatlist.hpp"
