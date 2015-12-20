@@ -55,6 +55,9 @@ if str(platform) == "darwin":
 	}, LIBPATH=Split("""
 		/usr/lib
 		/usr/local/lib
+	"""), CPPPATH=Split("""
+		/usr/include
+		/usr/local/include
 	"""), FRAMEWORKPATH=Split("""
 		/System/Library/Frameworks
 		/Library/Frameworks
