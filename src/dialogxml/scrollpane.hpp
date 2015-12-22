@@ -23,19 +23,19 @@ class cScrollPane : public cContainer {
 public:
 	/// Create a new scroll pane
 	explicit cScrollPane(cDialog& parent);
-	std::string parse(ticpp::Element& who, std::string fname);
-	bool handleClick(location where);
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
-	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	void setColour(sf::Color clr) throw(xUnsupportedProp);
-	sf::Color getColour() throw(xUnsupportedProp);
-	bool hasChild(std::string id);
-	cControl& getChild(std::string id);
-	storage_t store();
-	void restore(storage_t to);
-	bool isClickable();
-	bool isFocusable();
-	bool isScrollable();
+	std::string parse(ticpp::Element& who, std::string fname) override;
+	bool handleClick(location where) override;
+	void setFormat(eFormat prop, short val) throw(xUnsupportedProp) override;
+	short getFormat(eFormat prop) throw(xUnsupportedProp) override;
+	void setColour(sf::Color clr) throw(xUnsupportedProp) override;
+	sf::Color getColour() throw(xUnsupportedProp) override;
+	bool hasChild(std::string id) override;
+	cControl& getChild(std::string id) override;
+	storage_t store() override;
+	void restore(storage_t to) override;
+	bool isClickable() override;
+	bool isFocusable() override;
+	bool isScrollable() override;
 	/// Add a new control to this pane.
 	/// @param ctrl A pointer to the control, which should already be constructed.
 	/// @param key A key to be used to look up the control later.
@@ -58,11 +58,11 @@ public:
 	/// Set the scrollbar style.
 	/// @param newStyle The new style.
 	void setStyle(eScrollStyle newStyle);
-	void draw();
+	void draw() override;
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const {
+	const std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK, EVT_SCROLL, EVT_FOCUS, EVT_DEFOCUS};
 	}
 	void forEach(std::function<void(std::string,cControl&)> callback) override;

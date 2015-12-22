@@ -396,8 +396,8 @@ public:
 	virtual void forEach(std::function<void(std::string,cControl&)> callback) = 0;
 	/// @copydoc getChild()
 	cControl& operator[](std::string id) {return getChild(id);}
-	bool isContainer() {return true;}
-	bool handleClick(location where);
+	bool isContainer() override {return true;}
+	bool handleClick(location where) override;
 };
 
 // This is defined here instead of in dialog.hpp because it needs cControl to be complete.

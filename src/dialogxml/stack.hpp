@@ -38,17 +38,17 @@ class cStack : public cContainer {
 	std::map<std::string,cControl*> controls;
 	bool drawFramed = false;
 public:
-	std::string parse(ticpp::Element& who, std::string fname);
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
-	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	void setColour(sf::Color clr) throw(xUnsupportedProp);
-	sf::Color getColour() throw(xUnsupportedProp);
-	bool isClickable();
-	bool isFocusable();
-	bool isScrollable();
-	void draw();
-	bool hasChild(std::string id);
-	cControl& getChild(std::string id);
+	std::string parse(ticpp::Element& who, std::string fname) override;
+	void setFormat(eFormat prop, short val) throw(xUnsupportedProp) override;
+	short getFormat(eFormat prop) throw(xUnsupportedProp) override;
+	void setColour(sf::Color clr) throw(xUnsupportedProp) override;
+	sf::Color getColour() throw(xUnsupportedProp) override;
+	bool isClickable() override;
+	bool isFocusable() override;
+	bool isScrollable() override;
+	void draw() override;
+	bool hasChild(std::string id) override;
+	cControl& getChild(std::string id) override;
 	/// Switch the stack to a particular page.
 	/// You need to do this before retrieving data from that page.
 	/// @param The new page number
@@ -79,7 +79,7 @@ public:
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const {
+	const std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK, EVT_FOCUS, EVT_DEFOCUS};
 	}
 	void forEach(std::function<void(std::string,cControl&)> callback) override;

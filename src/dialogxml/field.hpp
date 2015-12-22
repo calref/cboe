@@ -33,36 +33,36 @@ enum eFldType {
 /// There is no Unicode support.
 class cTextField : public cControl {
 public:
-	std::string parse(ticpp::Element& who, std::string fname);
+	std::string parse(ticpp::Element& who, std::string fname) override;
 	/// For text fields, this is triggered when it loses or gains the input focus.
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const {
+	const std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_FOCUS, EVT_DEFOCUS};
 	}
-	bool handleClick(location where);
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
-	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	void setColour(sf::Color clr) throw(xUnsupportedProp);
-	void setText(std::string to);
-	storage_t store();
-	void restore(storage_t to);
+	bool handleClick(location where) override;
+	void setFormat(eFormat prop, short val) throw(xUnsupportedProp) override;
+	short getFormat(eFormat prop) throw(xUnsupportedProp) override;
+	void setColour(sf::Color clr) throw(xUnsupportedProp) override;
+	void setText(std::string to) override;
+	storage_t store() override;
+	void restore(storage_t to) override;
 	/// Get the current input type of the field.
 	/// @return The input type.
 	eFldType getInputType();
 	/// Set the input type of the field.
 	/// @param newType The new input type.
 	void setInputType(eFldType newType);
-	sf::Color getColour() throw(xUnsupportedProp);
+	sf::Color getColour() throw(xUnsupportedProp) override;
 	/// Create a new editable text field.
 	/// @param parent The parent dialog.
 	explicit cTextField(cDialog& parent);
-	bool isClickable();
-	bool isFocusable();
-	bool isScrollable();
+	bool isClickable() override;
+	bool isFocusable() override;
+	bool isScrollable() override;
 	virtual ~cTextField();
-	void draw();
+	void draw() override;
 	/// Check if this text field currently has input focus.
 	/// @return true if it it is currently focused.
 	bool hasFocus();
