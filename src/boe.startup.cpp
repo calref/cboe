@@ -48,7 +48,7 @@ bool handle_startup_press(location the_point) {
 		if(the_point.in(startup_button[i])) {
 			draw_start_button(i,5);
 			mainPtr.display(); // TODO: I suspect this won't work
-			play_sound(3, time_in_ticks(5));
+			play_sound(37, time_in_ticks(5));
 			draw_start_button(i,0);
 			switch(i) {
 				case STARTBTN_LOAD:
