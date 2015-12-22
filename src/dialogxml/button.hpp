@@ -114,11 +114,11 @@ public:
 	/// default toggle-selected action of an LED.
 	/// @return true to indicate the event should continue.
 	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
-	std::string parse(ticpp::Element& who, std::string fname);
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
-	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	storage_t store();
-	void restore(storage_t to);
+	std::string parse(ticpp::Element& who, std::string fname) override;
+	void setFormat(eFormat prop, short val) throw(xUnsupportedProp) override;
+	short getFormat(eFormat prop) throw(xUnsupportedProp) override;
+	storage_t store() override;
+	void restore(storage_t to) override;
 	/// Create a new LED button.
 	/// @param parent The parent dialog.
 	explicit cLed(cDialog& parent);
@@ -129,11 +129,11 @@ public:
 	/// Get the LED's current state.
 	/// @return The current state.
 	eLedState getState();
-	void draw();
+	void draw() override;
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const {
+	const std::set<eDlogEvt> getSupportedHandlers() const  override {
 		return {EVT_CLICK, EVT_FOCUS, EVT_DEFOCUS};
 	}
 	cLed& operator=(cLed& other) = delete;
@@ -176,8 +176,8 @@ class cLedGroup : public cContainer {
 	cLedGroup(cLedGroup& other) = delete;
 public:
 	/// @deprecated in favour of @ref attachEventHandler
-	void attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) throw(xHandlerNotSupported);
-	std::string parse(ticpp::Element& who, std::string fname);
+	void attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) throw(xHandlerNotSupported) override;
+	std::string parse(ticpp::Element& who, std::string fname) override;
 	/// @copydoc cControl::attachClickHandler()
 	///
 	/// The click handler is called whenever an LED in the group is clicked, even if it's the currently selected LED.
@@ -186,11 +186,11 @@ public:
 	/// The third parameter is always false for an LED group's focus handler.
 	/// You can determine what changed using getPrevSelection() and getSelected(), and can do whatever post-processing
 	/// you want, including selecting a completely different option.
-	const std::set<eDlogEvt> getSupportedHandlers() const {
+	const std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK, EVT_FOCUS};
 	}
-	storage_t store();
-	void restore(storage_t to);
+	storage_t store() override;
+	void restore(storage_t to) override;
 	/// Add a new LED to this group.
 	/// @param ctrl A pointer to the LED, which should already be constructed.
 	/// @param key A key to be used to look up the LED later.
@@ -210,24 +210,24 @@ public:
 	/// Show one of the choices in this group.
 	/// @param id The unique key of the choice.
 	void show(std::string id);
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
-	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	void setColour(sf::Color clr) throw(xUnsupportedProp);
-	sf::Color getColour() throw(xUnsupportedProp);
+	void setFormat(eFormat prop, short val) throw(xUnsupportedProp) override;
+	short getFormat(eFormat prop) throw(xUnsupportedProp) override;
+	void setColour(sf::Color clr) throw(xUnsupportedProp) override;
+	sf::Color getColour() throw(xUnsupportedProp) override;
 	/// Create a new LED group.
 	/// @param parent The parent dialog.
 	explicit cLedGroup(cDialog& parent);
-	bool isClickable();
-	bool isFocusable();
-	bool isScrollable();
-	bool handleClick(location where);
+	bool isClickable() override;
+	bool isFocusable() override;
+	bool isScrollable() override;
+	bool handleClick(location where) override;
 	virtual ~cLedGroup();
 	/// Get one of the LEDs in this group.
 	/// @param id The unique key of the choice.
 	/// @return A reference to the LED object.
 	/// @throw std::invalid_argument if the choice does not exist in the group.
-	cLed& getChild(std::string id);
-	bool hasChild(std::string id);
+	cLed& getChild(std::string id) override;
+	bool hasChild(std::string id) override;
 	/// Set the currently selected LED in this group.
 	/// @param id The unique key of the choice.
 	/// @throw std::invalid_argument if the choice does not exist in the group.
@@ -248,6 +248,6 @@ public:
 	void forEach(std::function<void(std::string,cControl&)> callback) override;
 	/// A convenience type for making an iterator into the choice map.
 	typedef std::map<std::string,cLed*>::iterator ledIter;
-	void draw();
+	void draw() override;
 };
 #endif
