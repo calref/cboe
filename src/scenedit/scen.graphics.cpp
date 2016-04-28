@@ -373,6 +373,8 @@ void run_startup_g() {
 			break;
 	}
 	
+	// It's never needed again, so don't keep it in GPU memory
+	ResMgr::free<ImageRsrc>("edsplash");
 }
 
 void load_graphics(){
