@@ -1007,7 +1007,7 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 	// These names start at line 80 in the strings file, but the first valid ability is ID 1, so add 79.
 	me["type"].setText(get_str("monster-abilities", 79 + int(abil)));
 	// Action points
-	if(abil != eMonstAbil::RADIATE && abil != eMonstAbil::RADIATE) {
+	if(abil != eMonstAbil::RADIATE && abil != eMonstAbil::SUMMON) {
 		int ap = detail.get_ap_cost(abil);
 		if(ap == 0)
 			me["ap"].setText("0 (passive ability)");
