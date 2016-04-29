@@ -556,9 +556,6 @@ void handle_menu_choice(eMenu item_hit) {
 	redraw_screen();
 }
 
-// This is here to try and fix a major graphical bug while scrolling on WINE
-extern sf::RenderTexture terrain_buttons_gworld;
-
 static void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
 	while(!doneScrolling) {
 		sf::sleep(sf::milliseconds(10));
@@ -568,7 +565,6 @@ static void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
 			set_up_terrain_buttons(false);
 	}
 	mainPtr.setActive(false);
-	terrain_buttons_gworld.setActive(false);
 }
 
 void Mouse_Pressed() {
@@ -584,7 +580,6 @@ void Mouse_Pressed() {
 		redraw_screen(/*REFRESH_RIGHT_BAR*/);
 	} else if(pal_sbar->isVisible() && mousePos.in(pal_sbar->getBounds())) {
 		mainPtr.setActive(false);
-		terrain_buttons_gworld.setActive(false);
 		boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling)));
 		pal_sbar->handleClick(mousePos);
 		doneScrolling = true;

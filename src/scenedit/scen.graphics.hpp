@@ -4,7 +4,6 @@
 void Set_up_win ();
 void run_startup_g();
 void load_graphics();
-void load_main_screen();
 void draw_main_screen();
 void redraw_screen();
 void draw_lb();

@@ -29,8 +29,8 @@
 
 extern std::string current_string[2];
 extern short mini_map_scales[3];
+extern rectangle terrain_rect;
 extern eDrawMode draw_mode;
-rectangle world_screen;
 // border rects order: top, left, bottom, right //
 rectangle border_rect[4];
 short current_block_edited = 0;
@@ -65,7 +65,6 @@ rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
 std::array<lb_t,NLS> left_button_status;
 std::vector<rb_t> right_button_status;
 rectangle right_buttons[NRSONPAGE];
-rectangle palette_buttons_from[71];
 rectangle palette_buttons[10][6];
 short current_rs_top = 0;
 
@@ -112,7 +111,7 @@ void init_screen_locs() {
 	int i;
 	
 	for(i = 0; i < 4; i++)
-		border_rect[i] = world_screen;
+		border_rect[i] = terrain_rect;
 	border_rect[0].bottom = border_rect[0].top + 8;
 	border_rect[1].right = border_rect[1].left + 8;
 	border_rect[2].top = border_rect[2].bottom - 8;
@@ -181,7 +180,7 @@ static cursor_type get_edit_cursor() {
 }
 
 void update_mouse_spot(location the_point) {
-	rectangle terrain_rect = world_screen;
+	rectangle terrain_rect = ::terrain_rect;
 	terrain_rect.inset(8,8);
 	terrain_rect.right -= 4;
 	if(overall_mode >= MODE_MAIN_SCREEN)
@@ -1842,7 +1841,7 @@ void handle_scroll(sf::Event& event) {
 		pal_sbar->setPosition(pal_sbar->getPosition() - amount);
 		set_up_terrain_buttons(false);
 		redraw_screen();
-	} else if(overall_mode < MODE_MAIN_SCREEN && pos.in(world_screen)) {
+	} else if(overall_mode < MODE_MAIN_SCREEN && pos.in(terrain_rect)) {
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
 			cen_x = minmax(4, town->max_dim() - 5, cen_x - amount);
 		else cen_y = minmax(4, town->max_dim() - 5, cen_y - amount);
