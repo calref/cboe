@@ -84,7 +84,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;libboost_filesystem-vc120-mt-1_55.lib;libboost_system-vc120-mt-1_55.lib;libboost_thread-vc120-mt-1_55.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;libboost_filesystem-vc120-mt-*.lib;libboost_system-vc120-mt-*.lib;libboost_thread-vc120-mt-*.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <ResourceCompile>
