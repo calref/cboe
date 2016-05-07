@@ -22,7 +22,7 @@
 #include "fileio.hpp"
 
 extern short cen_x, cen_y, overall_mode;
-extern bool mouse_button_held,editing_town;
+extern bool mouse_button_held,editing_town,change_made;
 extern short cur_viewing_mode;
 extern cTown* town;
 extern short mode_count,to_create,cur_town;
@@ -1231,6 +1231,8 @@ bool new_town(short which_town) {
 						town->terrain(i,j) = 4;
 				}
 			}
+
+	change_made = true;
 	
 	return true;
 }
@@ -1240,6 +1242,7 @@ void delete_last_town() {
 	cTown* last_town = scenario.towns.back();
 	scenario.towns.pop_back();
 	delete last_town;
+	change_made = true;
 }
 
 cTown* pick_import_town() {

@@ -1029,6 +1029,8 @@ void save_scenario(bool rename) {
 		std::ostream& town_talk = scen_file.newFile("scenario/towns/talk" + std::to_string(i) + ".xml");
 		writeDialogueToXml(ticpp::Printer("talk.xml", town_talk), scenario.towns[i]->talking, i);
 	}
+
+	change_made = false;
 	
 	// Alright. At this point, check to see if the scenario was unpacked.
 	if(fs::is_directory(toFile)) {
