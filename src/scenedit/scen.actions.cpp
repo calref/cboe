@@ -1609,7 +1609,7 @@ void handle_action(location the_point,sf::Event /*event*/) {
 		
 		if(handle_terpal_action(cur_point, option_hit))
 			return;
-		cur_point2 = cur_point;
+		cur_point2 = the_point;
 		cur_point2.x -= 5;
 		cur_point2.y -= terrain_rects[255].bottom + 5;
 		if(handle_toolpal_action(cur_point2))
