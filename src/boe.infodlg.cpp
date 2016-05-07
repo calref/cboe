@@ -400,6 +400,7 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreature& store_m) {
 	// This is a bit hacky; keep a cPopulation here to handle the full roster; it's treated like a rotating buffer.
 	static cPopulation roster;
+	roster.init(60);
 	short i;
 	
 	if(item_hit == "left") {

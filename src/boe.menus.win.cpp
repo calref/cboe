@@ -298,7 +298,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	if(message == WM_COMMAND) {
 		int cmd = LOWORD(wParam);
 		if(cmd >= 1000 && cmd < 2000) {
-			handle_monster_info_menu(cmd - 1000);
+			handle_monster_info_menu(cmd - 1000 + 1);
 		} else if(cmd >= 2000 && cmd < 3000) {
 			handle_menu_spell(cSpell::fromNum(eSkill::MAGE_SPELLS, cmd - 2000));
 		} else if(cmd >= 3000 && cmd < 4000) {
