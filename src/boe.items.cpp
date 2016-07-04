@@ -39,6 +39,7 @@ extern short d_rect_index[80];
 extern bool map_visible;
 extern sf::RenderWindow mini_map;
 extern sf::Texture pc_gworld;
+extern sf::RenderTexture map_gworld;
 extern cUniverse univ;
 
 extern const std::multiset<eItemType> equippable;
@@ -691,6 +692,7 @@ void init_mini_map() {
 	mini_map.create(sf::VideoMode(296,277), "Map", sf::Style::Titlebar | sf::Style::Close);
 	mini_map.setPosition(sf::Vector2i(52,62));
 	mini_map.setVisible(false);
+	map_gworld.create(240,240);
 	setWindowFloating(mini_map, true);
 	makeFrontWindow(mainPtr);
 }
