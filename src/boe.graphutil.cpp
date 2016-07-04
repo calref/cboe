@@ -173,7 +173,6 @@ void draw_monsters() {
 		for(i = 0; i < univ.town.monst.size(); i++)
 			if(univ.town.monst[i].active != 0 && !univ.town.monst[i].invisible && univ.town.monst[i].status[eStatus::INVISIBLE] <= 0)
 				if(point_onscreen(center,univ.town.monst[i].cur_loc) && party_can_see_monst(i)) {
-					check_if_monst_seen(univ.town.monst[i].number, univ.town.monst[i].cur_loc);
 					where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
 					where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
 					get_monst_dims(univ.town.monst[i].number,&width,&height);
@@ -644,11 +643,17 @@ void check_if_monst_seen(unsigned short m_num, location at) {
 	if(m_num >= 10000)
 		sound = univ.party.summons[m_num - 10000].ambient_sound;
 	else sound = univ.scenario.scen_monsters[m_num].ambient_sound;
-	if(sound < std::numeric_limits<snd_num_t>::max() && get_ran(1,1,100) < 10)
+	if(sound > 0 && get_ran(1,1,100) < 10)
 		play_sound(-sound);
 }
 
 void play_ambient_sound(){ // TODO: Maybe add a system for in-town ambient sounds
+	if(overall_mode == MODE_TOWN) {
+		for(int i = 0; i < univ.town.monst.size(); i++) {
+			check_if_monst_seen(univ.town.monst[i].number, univ.town.monst[i].cur_loc);
+		}
+		return;
+	}
 	static const short drip[2] = {78,79}, bird[3] = {76,77,91};
 	if(overall_mode != MODE_OUTDOORS) return; // ambient sounds are outdoors only at the moment
 	if(get_ran(1,1,100) > 10) return; // 10% chance per move of playing a sound
