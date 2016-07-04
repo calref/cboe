@@ -650,7 +650,8 @@ void check_if_monst_seen(unsigned short m_num, location at) {
 void play_ambient_sound(){ // TODO: Maybe add a system for in-town ambient sounds
 	if(overall_mode == MODE_TOWN) {
 		for(int i = 0; i < univ.town.monst.size(); i++) {
-			check_if_monst_seen(univ.town.monst[i].number, univ.town.monst[i].cur_loc);
+			if(party_can_see_monst(i))
+				check_if_monst_seen(univ.town.monst[i].number, univ.town.monst[i].cur_loc);
 		}
 		return;
 	}
