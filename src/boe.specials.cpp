@@ -1988,6 +1988,10 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 		case eSpecCtx::KILL_MONST: case eSpecCtx::SEE_MONST: case eSpecCtx::MONST_SPEC_ABIL:
 		case eSpecCtx::ATTACKED_MELEE: case eSpecCtx::ATTACKING_MELEE:
 		case eSpecCtx::ATTACKED_RANGE: case eSpecCtx::ATTACKING_RANGE:
+			if(univ.scenario.is_legacy) {
+				current_pc_picked_in_spec_enc = &univ.party;
+				break;
+			}
 			// The monster/PC on the trigger space is the target
 			current_pc_picked_in_spec_enc = univ.target_there(spec_loc);
 			if(!current_pc_picked_in_spec_enc)
