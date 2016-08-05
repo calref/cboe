@@ -13,3 +13,4 @@ cCustomGraphics spec_scen_g;
 location cur_out;
 short cur_town;
 cScenario scenario;
+bool change_made;
