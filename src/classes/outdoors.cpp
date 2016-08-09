@@ -112,6 +112,7 @@ cOutdoors::cOutdoors(cScenario& scenario) : scenario(&scenario) {
 	short i,j;
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	bg_out = bg_fight = bg_town = bg_dungeon = -1;
+	out_sound = 0;
 	
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 48; j++) {

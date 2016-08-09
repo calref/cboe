@@ -65,7 +65,7 @@ public:
 	std::vector<spec_loc_t> city_locs;
 	std::vector<sign_loc_t> sign_locs;
 	std::array<cWandering,4> wandering, special_enc;
-	location wandering_locs[4];
+	std::array<location,4> wandering_locs;
 	std::vector<cSpecial> specials;
 	std::string out_name;
 	// Using std::array here so we can have .size()

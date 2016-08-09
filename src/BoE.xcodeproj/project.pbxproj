@@ -105,6 +105,7 @@
 		9169C3211B3B23530041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
 		9169C3231B3B235A0041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
 		9169C3241B3B23610041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
+		9176FEC71D550EFE006EF694 /* out_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC01D550EFC006EF694 /* out_legacy.cpp */; };
 		9176FEC81D550EFE006EF694 /* scen_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC11D550EFC006EF694 /* scen_legacy.cpp */; };
 		9178235D1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
 		9178235E1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
@@ -650,6 +651,7 @@
 		9169C31B1B37A5D50041002B /* Blades of Exile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9169C31D1B37A5D50041002B /* BoE Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9169C31F1B37A5D50041002B /* BoE Scenario Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Scenario Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9176FEC01D550EFC006EF694 /* out_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = out_legacy.cpp; sourceTree = "<group>"; };
 		9176FEC11D550EFC006EF694 /* scen_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_legacy.cpp; sourceTree = "<group>"; };
 		9178235C1B2EA0C5007F3444 /* vorbisenc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbisenc.framework; path = ../../../../../../Library/Frameworks/vorbisenc.framework; sourceTree = "<group>"; };
 		917823671B2F32DD007F3444 /* vorbisfile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbisfile.framework; path = ../../../../../../Library/Frameworks/vorbisfile.framework; sourceTree = "<group>"; };
@@ -1360,6 +1362,7 @@
 				919B13A11BBCDE18009905A4 /* monst_legacy.cpp */,
 				91EF277A1B693D6E00666469 /* monst_read.cpp */,
 				91EF277C1B693D7D00666469 /* monst_write.cpp */,
+				9176FEC01D550EFC006EF694 /* out_legacy.cpp */,
 				91C2A6ED1B8FA9FB00346948 /* out_read.cpp */,
 				91E381491B97678D00F69B81 /* out_write.cpp */,
 				9176FEC11D550EFC006EF694 /* scen_legacy.cpp */,
@@ -1905,6 +1908,7 @@
 				919B13A61BBDE986009905A4 /* spec_legacy.cpp in Sources */,
 				91E128E41BC1624700C8BE1D /* ter_legacy.cpp in Sources */,
 				91E128E61BC19DA400C8BE1D /* init.cpp in Sources */,
+				9176FEC71D550EFE006EF694 /* out_legacy.cpp in Sources */,
 				9176FEC81D550EFE006EF694 /* scen_legacy.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
