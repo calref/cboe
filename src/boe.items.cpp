@@ -602,8 +602,7 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) {
 	make_cursor_sword();
 	
-	std::vector<std::string> vec;
-	std::copy(strs.begin(), strs.end(), std::inserter(vec, vec.begin()));
+	std::vector<std::string> vec(strs.begin(), strs.end());
 	// Strip off trailing empty strings
 	while(vec.back().empty())
 		vec.pop_back();

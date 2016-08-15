@@ -83,21 +83,3 @@ TEST_CASE("Converting legacy outdoor section data") {
 		REQUIRE(sector.special_enc.size() >= 1);
 	}
 }
-
-#if 0
-struct out_wandering_type {
-	uint8_t monst[7];
-	uint8_t friendly[3];
-	int16_t spec_on_meet,spec_on_win,spec_on_flee,cant_flee;
-	int16_t end_spec1,end_spec2;
-};
-struct outdoor_record_type {
-	location	special_locs[18];
-	uint8_t		special_id[18];
-	location	exit_locs[8];
-	int8_t		exit_dests[8];
-	out_wandering_type	wandering[4],special_enc[4];
-	location	wandering_locs[4];
-	Rect info_rect[8];
-};
-#endif

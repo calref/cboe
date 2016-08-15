@@ -5547,13 +5547,7 @@ void add_new_action(short pc_num) {
 }
 
 short get_monst_sound(cCreature *attacker,short which_att) {
-	short strength;
-	eMonstMelee type;
-	
-	type = attacker->a[which_att].type;
-	strength = attacker->a[which_att].sides;
-	
-	switch(type) {
+	switch(attacker->a[which_att].type) {
 		case eMonstMelee::SLIME:
 			return 11;
 		case eMonstMelee::PUNCH:
@@ -5575,7 +5569,7 @@ short get_monst_sound(cCreature *attacker,short which_att) {
 			// TODO: These sounds don't quite seem right.
 			// They're passed to boom_space, so 0 = ouch, 1 = small sword, 2 = loud sword, 3 = pole, 4 = club
 			if(attacker->m_type == eRace::HUMAN) {
-				if(strength > 9)
+				if(attacker->a[which_att].sides > 9)
 					return 3;
 				else return 2;
 			}
