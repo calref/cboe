@@ -287,7 +287,7 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 		need_reprint = true;
 		extern eSpell town_spell;
 		if(town_spell == eSpell::NONE)
-			queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, univ.town.p_loc);
+			queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, univ.party.town_loc);
 	} else if(overall_mode == MODE_COMBAT) {
 		if(which_type == eSkill::MAGE_SPELLS) {
 			did_something = combat_cast_mage_spell();
@@ -316,7 +316,7 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 static void handle_rest(bool& need_redraw, bool& need_reprint) {
 	sf::Event dummy_evt;
 	int i = 0;
-	ter_num_t ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
+	ter_num_t ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
 	if(univ.party.in_boat >= 0)
 		add_string_to_buf("Rest:  Not in boat.");
 	else if(someone_poisoned())
@@ -384,43 +384,43 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 		if(univ.party.in_horse >= 0) {
 			if(overall_mode == MODE_OUTDOORS) {
 				univ.party.horses[univ.party.in_horse].which_town = 200;
-				univ.party.horses[univ.party.in_horse].loc_in_sec = global_to_local(univ.party.p_loc);
-				univ.party.horses[univ.party.in_horse].loc = univ.party.p_loc;
+				univ.party.horses[univ.party.in_horse].loc_in_sec = global_to_local(univ.party.out_loc);
+				univ.party.horses[univ.party.in_horse].loc = univ.party.out_loc;
 				univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 				univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 				univ.party.in_horse = -1;
 			} else if(overall_mode == MODE_TOWN){
-				univ.party.horses[univ.party.in_horse].loc = univ.town.p_loc;
-				univ.party.horses[univ.party.in_horse].which_town = univ.town.num;
+				univ.party.horses[univ.party.in_horse].loc = univ.party.town_loc;
+				univ.party.horses[univ.party.in_horse].which_town = univ.party.town_num;
 				univ.party.in_horse = -1;
 			}
 		}
 		if(univ.party.in_boat >= 0) {
 			// If you pause on a bridge or other passable terrain, leave boat.
-			if(overall_mode == MODE_OUTDOORS && !impassable(univ.out[univ.party.p_loc.x][univ.party.p_loc.y])) {
+			if(overall_mode == MODE_OUTDOORS && !impassable(univ.out[univ.party.out_loc.x][univ.party.out_loc.y])) {
 				univ.party.boats[univ.party.in_boat].which_town = 200;
-				univ.party.boats[univ.party.in_boat].loc_in_sec = global_to_local(univ.party.p_loc);
-				univ.party.boats[univ.party.in_boat].loc = univ.party.p_loc;
+				univ.party.boats[univ.party.in_boat].loc_in_sec = global_to_local(univ.party.out_loc);
+				univ.party.boats[univ.party.in_boat].loc = univ.party.out_loc;
 				univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 				univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 				univ.party.in_boat = -1;
-			} else if(overall_mode == MODE_TOWN && !impassable(univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y))) {
-				univ.party.boats[univ.party.in_boat].loc = univ.town.p_loc;
-				univ.party.boats[univ.party.in_boat].which_town = univ.town.num;
+			} else if(overall_mode == MODE_TOWN && !impassable(univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y))) {
+				univ.party.boats[univ.party.in_boat].loc = univ.party.town_loc;
+				univ.party.boats[univ.party.in_boat].which_town = univ.party.town_num;
 				univ.party.in_boat = -1;
 			}
 		} else {
 			// The above could leave you stranded in a single-tile passable area, so pausing again should re-enter the boat.
 			int boat = univ.party.boats.size();
-			if(overall_mode == MODE_OUTDOORS && (boat = out_boat_there(univ.party.p_loc)) < univ.party.boats.size())
+			if(overall_mode == MODE_OUTDOORS && (boat = out_boat_there(univ.party.out_loc)) < univ.party.boats.size())
 				univ.party.in_boat = boat;
-			else if(overall_mode == MODE_TOWN && (boat = town_boat_there(univ.town.p_loc)) < univ.party.boats.size())
+			else if(overall_mode == MODE_TOWN && (boat = town_boat_there(univ.party.town_loc)) < univ.party.boats.size())
 				univ.party.in_boat = boat;
 			if(boat < univ.party.boats.size())
 				ASB("You board the boat.");
 		}
 		put_pc_screen();
-		check_fields(univ.town.p_loc,eSpecCtx::TOWN_MOVE,univ.party[0]);
+		check_fields(univ.party.town_loc,eSpecCtx::TOWN_MOVE,univ.party[0]);
 	}
 	
 	did_something = true;
@@ -439,7 +439,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 		add_string_to_buf("You see...");
 		ter_num_t ter_looked_at = do_look(destination);
 		if(overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT)
-			if(adjacent(univ.town.p_loc,destination))
+			if(adjacent(univ.party.town_loc,destination))
 				if(adj_town_look(destination))
 					need_redraw = true;
 		// TODO: This would be the place to call OUT_LOOK special
@@ -451,8 +451,8 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 				for(int k = 0; k < univ.town->sign_locs.size(); k++) {
 					if(destination == univ.town->sign_locs[k]) {
 						need_reprint = true;
-						if(adjacent(univ.town->sign_locs[k],univ.town.p_loc))
-							do_sign(univ.town.num,k,ter_looked_at);
+						if(adjacent(univ.town->sign_locs[k],univ.party.town_loc))
+							do_sign(univ.party.town_num,k,ter_looked_at);
 						else add_string_to_buf("  Too far away to read sign.");
 					}
 				}
@@ -489,9 +489,9 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 			need_redraw = true;
 			if(town_move_party(destination,0)) {
 				did_something = true;
-				center = univ.town.p_loc;
+				center = univ.party.town_loc;
 				update_explored(destination);
-				if(loc_off_act_area(univ.town.p_loc)) {
+				if(loc_off_act_area(univ.party.town_loc)) {
 					destination = end_town_mode(0,destination);
 					town_move_done = true;
 					flushingInput = true;
@@ -506,11 +506,11 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 			center = destination;
 			need_redraw = true;
 			did_something = true;
-			update_explored(univ.party.p_loc);
+			update_explored(univ.party.out_loc);
 			menu_activate();
 		} else need_redraw = true;
 		
-		ter_num_t storage = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
+		ter_num_t storage = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
 		if(univ.scenario.ter_types[storage].special == eTerSpec::TOWN_ENTRANCE) {
 			short find_direction_from;
 			if(univ.party.direction == 0) find_direction_from = 2;
@@ -527,9 +527,9 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 						need_redraw = false;
 						i = 8;
 						if(univ.party.in_boat >= 0)
-							univ.party.boats[univ.party.in_boat].which_town = univ.town.num;
+							univ.party.boats[univ.party.in_boat].which_town = univ.party.town_num;
 						if(univ.party.in_horse >= 0)
-							univ.party.horses[univ.party.in_horse].which_town = univ.town.num;
+							univ.party.horses[univ.party.in_horse].which_town = univ.party.town_num;
 					}
 				}
 		}
@@ -597,7 +597,7 @@ static void handle_target_space(location destination, bool& did_something, bool&
 	if(overall_mode != MODE_FANCY_TARGET) {
 		did_something = true;
 		if(overall_mode == MODE_TOWN_TARGET)
-			center = univ.town.p_loc;
+			center = univ.party.town_loc;
 		else center = univ.party[current_pc].combat_pos;
 	}
 	if(overall_mode != MODE_TOWN_TARGET) pause(6);
@@ -620,7 +620,7 @@ static void handle_drop_item(location destination, bool& need_redraw) {
 		pause(6);
 		overall_mode = MODE_COMBAT;
 	} else if(overall_mode == MODE_DROP_TOWN) {
-		if(!adjacent(univ.town.p_loc,destination))
+		if(!adjacent(univ.party.town_loc,destination))
 			add_string_to_buf("Drop: must be adjacent.");
 		else if(sight_obscurity(destination.x,destination.y) == 5)
 			ASB("Drop: Space is blocked.");
@@ -633,7 +633,7 @@ static void handle_drop_item(location destination, bool& need_redraw) {
 }
 
 static void handle_use_space(location destination, bool& did_something, bool& need_redraw) {
-	if(!adjacent(destination,univ.town.p_loc))
+	if(!adjacent(destination,univ.party.town_loc))
 		add_string_to_buf("  Must be adjacent.");
 	else did_something = use_space(destination);
 	overall_mode = MODE_TOWN;
@@ -643,7 +643,7 @@ static void handle_use_space(location destination, bool& did_something, bool& ne
 }
 
 static void handle_bash_pick(location destination, bool& did_something, bool& need_redraw, bool isBash) {
-	if(!adjacent(destination,univ.town.p_loc))
+	if(!adjacent(destination,univ.party.town_loc))
 		add_string_to_buf("  Must be adjacent.");
 	else {
 		short pc = char_select_pc(0, isBash ? "Who will bash?" : "Who will pick the lock?");
@@ -754,7 +754,7 @@ static void handle_drop_item(short item_hit, bool& need_redraw) {
 	} else if(!prime_time())
 		add_string_to_buf("Drop item: Finish what you're doing first.");
 	else if(is_out())
-		drop_item(stat_window,item_hit,univ.party.p_loc);
+		drop_item(stat_window,item_hit,univ.party.out_loc);
 	else {
 		add_string_to_buf("Drop item: Click where to drop item.");
 		store_drop_item = item_hit;
@@ -871,7 +871,7 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 	} else if(overall_mode == MODE_COMBAT) {
 		if(which_combat_type == 0) {
 			if(hit_end_c_button()) {
-				end_town_mode(0,univ.town.p_loc);
+				end_town_mode(0,univ.party.town_loc);
 				play_sound(93);
 				add_string_to_buf("End combat.");
 				handle_wandering_specials(0,1);
@@ -887,7 +887,7 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 				return;
 			}
 			univ.party.direction = dir;
-			center = univ.town.p_loc;
+			center = univ.party.town_loc;
 			set_stat_window(current_pc);
 			redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT | REFRESH_STATS);
 			play_sound(93);
@@ -919,7 +919,7 @@ static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_
 	if(univ.party.in_boat >= 0)
 		add_string_to_buf("Get: Not while in boat.");
 	if(overall_mode == MODE_TOWN)
-		j = get_item(univ.town.p_loc,6,false);
+		j = get_item(univ.party.town_loc,6,false);
 	else {
 		j = get_item(univ.party[current_pc].combat_pos,current_pc,false);
 		take_ap(4);
@@ -956,21 +956,21 @@ static void handle_party_death() {
 			univ.party[i].main_status = eMainStatus::ALIVE;
 	if(is_combat() && univ.party.is_alive()) {
 		// TODO: Should this only happen in outdoor combat? Or should we allow fleeing town during combat?
-		end_town_mode(0,univ.town.p_loc);
+		end_town_mode(0,univ.party.town_loc);
 		add_string_to_buf("End combat.");
 		handle_wandering_specials(0,2);
 	}
 	if(!univ.party.is_alive() && univ.party.is_split()) {
 		univ.party.end_split(0);
-		if(univ.party.left_in == size_t(-1) || univ.town.num == univ.party.left_in) {
-			univ.town.p_loc = univ.party.left_at;
-			update_explored(univ.town.p_loc);
-			center = univ.town.p_loc;
+		if(univ.party.left_in == size_t(-1) || univ.party.town_num == univ.party.left_in) {
+			univ.party.town_loc = univ.party.left_at;
+			update_explored(univ.party.town_loc);
+			center = univ.party.town_loc;
 		} else change_level(univ.party.left_in, univ.party.left_at.x, univ.party.left_at.y);
-		update_explored(univ.town.p_loc);
-		center = univ.town.p_loc;
+		update_explored(univ.party.town_loc);
+		center = univ.party.town_loc;
 		if(is_combat()) overall_mode = MODE_TOWN;
-		center = univ.town.p_loc;
+		center = univ.party.town_loc;
 	}
 	menu_activate();
 	draw_terrain();
@@ -1016,7 +1016,7 @@ bool handle_action(sf::Event event) {
 	// MARK: First, figure out where party is
 	switch(overall_mode) {
 		case MODE_OUTDOORS: case MODE_LOOK_OUTDOORS:
-			cur_loc = univ.party.p_loc;
+			cur_loc = univ.party.out_loc;
 			for(int i = 0; i < 14; i++)
 				if(the_point.in(bottom_buttons[i])) {
 					button_hit = i;
@@ -1197,7 +1197,7 @@ bool handle_action(sf::Event event) {
 				}
 				else if(overall_mode == MODE_LOOK_TOWN) {
 					overall_mode = MODE_TOWN;
-					center = univ.town.p_loc;
+					center = univ.party.town_loc;
 					need_redraw = true;
 				}
 				else if(overall_mode == MODE_LOOK_OUTDOORS)
@@ -1464,7 +1464,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 		if(no_pcs_left()) {
 			end_combat();
 			if(which_combat_type == 0) {
-				end_town_mode(0,univ.party.p_loc);
+				end_town_mode(0,univ.party.out_loc);
 				add_string_to_buf("Fled the combat.");
 				handle_wandering_specials(0,2);
 			}
@@ -1490,7 +1490,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 				create_wand_monst();
 			for(int i = 0; i < 10; i++)
 				if(univ.party.out_c[i].exists)
-					if((adjacent(univ.party.p_loc,univ.party.out_c[i].m_loc) || univ.party.out_c[i].what_monst.forced)
+					if((adjacent(univ.party.out_loc,univ.party.out_c[i].m_loc) || univ.party.out_c[i].what_monst.forced)
 					   && univ.party.in_boat < 0 && !flying()) {
 						store_wandering_special = univ.party.out_c[i].what_monst;
 						if(handle_wandering_specials(0,0))
@@ -1584,7 +1584,7 @@ void initiate_outdoor_combat(short i) {
 	
 //	Delay((long) 100,&dummy);
 	
-	start_outdoor_combat(univ.party.out_c[i], univ.party.p_loc,count_walls(univ.party.p_loc));
+	start_outdoor_combat(univ.party.out_c[i], univ.party.out_loc,count_walls(univ.party.out_loc));
 	
 	univ.party.out_c[i].exists = false;
 	
@@ -1837,7 +1837,7 @@ bool handle_keystroke(sf::Event& event){
 			}
 			univ.party.end_split(0);
 			overall_mode = MODE_OUTDOORS;
-			position_party(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y,univ.party.p_loc.x,univ.party.p_loc.y);
+			position_party(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y,univ.party.out_loc.x,univ.party.out_loc.y);
 			clear_map();
 			add_string_to_buf("Debug: Reunite party and leave town.");
 			print_buf();
@@ -1909,7 +1909,7 @@ bool handle_keystroke(sf::Event& event){
 					univ.town.monst[i].active = 0;
 				
 				if(univ.town.monst[i].active > 0 && !univ.town.monst[i].is_friendly()
-					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 10) )
+					&& (dist(univ.town.monst[i].cur_loc,univ.party.town_loc) <= 10) )
 					damage_monst(univ.town.monst[i], 7,1000,eDamageType::SPECIAL,0);
 			}
 			// kill_monst(&univ.town.monst[i],6);
@@ -1926,11 +1926,11 @@ bool handle_keystroke(sf::Event& event){
 		case 'O':
 			if(!univ.debug_mode) break;
 			if(is_town()) {
-				sout << "Debug:  You're at x " << (short) univ.town.p_loc.x << ", y " << (short) univ.town.p_loc.y
-				<< " in town " << univ.town.num << '.';
+				sout << "Debug:  You're at x " << (short) univ.party.town_loc.x << ", y " << (short) univ.party.town_loc.y
+				<< " in town " << univ.party.town_num << '.';
 			} else if(is_out()) {
-				short x = univ.party.p_loc.x;
-				short y = univ.party.p_loc.y;
+				short x = univ.party.out_loc.x;
+				short y = univ.party.out_loc.y;
 				x += 48 * univ.party.outdoor_corner.x;
 				y += 48 * univ.party.outdoor_corner.y;
 				sout << "Debug:  You're outside at x " << x << ", y " << y << '.';
@@ -1984,7 +1984,7 @@ bool handle_keystroke(sf::Event& event){
 			start_town_mode(univ.scenario.which_town_start,9);
 			position_party(univ.scenario.out_sec_start.x,univ.scenario.out_sec_start.y,
 						   univ.scenario.out_start.x,univ.scenario.out_start.y);
-			center = univ.town.p_loc = univ.scenario.where_start;
+			center = univ.party.town_loc = univ.scenario.where_start;
 			redraw_screen(REFRESH_ALL);
 			add_string_to_buf("Debug:  You return to the start.");
 			print_buf();
@@ -2213,7 +2213,7 @@ void post_load() {
 		reset_item_max();
 	
 	if(overall_mode == MODE_OUTDOORS)
-		update_explored(univ.party.p_loc);
+		update_explored(univ.party.out_loc);
 //	if(overall_mode == MODE_TOWN) {
 //		make_town_trim(0);
 //		}
@@ -2364,7 +2364,7 @@ void increase_age() {
 	if(univ.party.status[ePartyStatus::FLIGHT] == 2)
 		add_string_to_buf("You are starting to descend.");
 	if(univ.party.status[ePartyStatus::FLIGHT] == 1) {
-		if(blocksMove(univ.scenario.ter_types[univ.out[univ.party.p_loc.x][univ.party.p_loc.y]].blockage)) {
+		if(blocksMove(univ.scenario.ter_types[univ.out[univ.party.out_loc.x][univ.party.out_loc.y]].blockage)) {
 			add_string_to_buf("  You plummet to your deaths.");
 			slay_party(eMainStatus::DEAD);
 			print_buf();
@@ -2449,7 +2449,7 @@ void increase_age() {
 			r1 = get_ran(3,1,6);
 			hit_party(r1,eDamageType::SPECIAL);
 			if(overall_mode < MODE_COMBAT)
-				boom_space(univ.party.p_loc,overall_mode,0,r1,0);
+				boom_space(univ.party.out_loc,overall_mode,0,r1,0);
 		}
 		else {
 			play_sound(6);
@@ -2563,7 +2563,7 @@ void handle_hunting() {
 		return;
 	if(flying())
 		return;
-	ter_num_t ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
+	ter_num_t ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
 	if(!wilderness_lore_present(ter))
 		return;
 	eTrait trait = eTrait::PACIFIST;
@@ -2763,11 +2763,11 @@ static eDirection find_waterfall(short x, short y, short mode){
 static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 	short x,y;
 	if(mode == 0){
-		x = univ.town.p_loc.x;
-		y = univ.town.p_loc.y;
+		x = univ.party.town_loc.x;
+		y = univ.party.town_loc.y;
 	}else{
-		x = univ.party.p_loc.x;
-		y = univ.party.p_loc.y;
+		x = univ.party.out_loc.x;
+		y = univ.party.out_loc.y;
 	}
 	eDirection dir;
 	while((dir = find_waterfall(x,y,mode)) != DIR_HERE){
@@ -2775,17 +2775,18 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		if(mode == 0){
 			x += 2 * dir_x_dif[dir];
 			y += 2 * dir_y_dif[dir];
-			univ.town.p_loc.x += 2 * dir_x_dif[dir];
-			univ.town.p_loc.y += 2 * dir_y_dif[dir];
-			update_explored(univ.party.p_loc);
+			univ.party.town_loc.x += 2 * dir_x_dif[dir];
+			univ.party.town_loc.y += 2 * dir_y_dif[dir];
+			// TODO: Why out_loc here?
+			update_explored(univ.party.out_loc);
 		}else{
 			x += 2 * dir_x_dif[dir];
 			y += 2 * dir_y_dif[dir];
-			univ.party.p_loc.x += 2 * dir_x_dif[dir];
+			univ.party.out_loc.x += 2 * dir_x_dif[dir];
 			univ.party.loc_in_sec.x += 2 * dir_x_dif[dir];
-			univ.party.p_loc.y += 2 * dir_y_dif[dir];
+			univ.party.out_loc.y += 2 * dir_y_dif[dir];
 			univ.party.loc_in_sec.y += 2 * dir_y_dif[dir];
-			update_explored(univ.party.p_loc);
+			update_explored(univ.party.out_loc);
 		}
 		draw_terrain();
 		print_buf();
@@ -2805,12 +2806,12 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		pause(8);
 	}
 	if(mode == 0){
-		univ.party.boats[univ.party.in_boat].loc = univ.town.p_loc;
-		univ.party.boats[univ.party.in_boat].which_town = univ.town.num;
+		univ.party.boats[univ.party.in_boat].loc = univ.party.town_loc;
+		univ.party.boats[univ.party.in_boat].which_town = univ.party.town_num;
 	}else{
 		univ.party.boats[univ.party.in_boat].which_town = 200;
 		univ.party.boats[univ.party.in_boat].loc_in_sec = univ.party.loc_in_sec;
-		univ.party.boats[univ.party.in_boat].loc = univ.party.p_loc;
+		univ.party.boats[univ.party.in_boat].loc = univ.party.out_loc;
 		univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 		univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 	}
@@ -2832,8 +2833,8 @@ bool outd_move_party(location destination,bool forced) {
 	// If not blocked and not put in town by a special, process move
 	if(keep_going && overall_mode == MODE_OUTDOORS) {
 		
-		real_dest.x = destination.x - univ.party.p_loc.x;
-		real_dest.y = destination.y - univ.party.p_loc.y;
+		real_dest.x = destination.x - univ.party.out_loc.x;
+		real_dest.y = destination.y - univ.party.out_loc.y;
 		
 		sector_p_in.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 		sector_p_in.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
@@ -2852,8 +2853,8 @@ bool outd_move_party(location destination,bool forced) {
 		else if(destination.y > 90 && univ.party.outdoor_corner.y < univ.scenario.outdoors.height() - 1)
 			shift_universe_down();
 		// Now stop from going off the world's edge
-		real_dest.x = univ.party.p_loc.x + real_dest.x;
-		real_dest.y =univ. party.p_loc.y + real_dest.y;
+		real_dest.x = univ.party.out_loc.x + real_dest.x;
+		real_dest.y = univ.party.out_loc.y + real_dest.y;
 		if((real_dest.x < 1 /*4*/) && (univ.party.outdoor_corner.x <= 0)) {
 			ASB("You've reached the world's edge.");
 			return false;
@@ -2889,12 +2890,12 @@ bool outd_move_party(location destination,bool forced) {
 			if(!outd_is_blocked(real_dest) //&& !outd_is_special(real_dest)
 				// not in towns
 				&& (!univ.scenario.ter_types[ter].boat_over
-					|| ((real_dest.x != univ.party.p_loc.x) && (real_dest.y != univ.party.p_loc.y)))
+					|| ((real_dest.x != univ.party.out_loc.x) && (real_dest.y != univ.party.out_loc.y)))
 				&& univ.scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
 				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
 			}
-			else if(((real_dest.x != univ.party.p_loc.x) && (real_dest.y != univ.party.p_loc.y))
+			else if(((real_dest.x != univ.party.out_loc.x) && (real_dest.y != univ.party.out_loc.y))
 					 || (!forced && (out_boat_there(destination) < 30)))
 				return false;
 			else if(!outd_is_blocked(real_dest)
@@ -2913,7 +2914,7 @@ bool outd_move_party(location destination,bool forced) {
 				forced = true;
 		}
 		
-		univ.party.direction = set_direction(univ.party.p_loc, destination);
+		univ.party.direction = set_direction(univ.party.out_loc, destination);
 		std::string dir_str = dir_string[univ.party.direction];
 		if(((boat_num = out_boat_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
 			if(flying()) {
@@ -2924,10 +2925,10 @@ bool outd_move_party(location destination,bool forced) {
 			add_string_to_buf("Move: You board the boat.");
 			univ.party.in_boat = boat_num;
 			
-			univ.party.p_loc = real_dest;
-			univ.party.i_w_c.x = (univ.party.p_loc.x > 48) ? 1 : 0;
-			univ.party.i_w_c.y = (univ.party.p_loc.y > 48) ? 1 : 0;
-			univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
+			univ.party.out_loc = real_dest;
+			univ.party.i_w_c.x = (univ.party.out_loc.x > 48) ? 1 : 0;
+			univ.party.i_w_c.y = (univ.party.out_loc.y > 48) ? 1 : 0;
+			univ.party.loc_in_sec = global_to_local(univ.party.out_loc);
 			
 			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
 				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
@@ -2946,10 +2947,10 @@ bool outd_move_party(location destination,bool forced) {
 			play_sound(84);
 			univ.party.in_horse = horse_num;
 			
-			univ.party.p_loc = real_dest;
-			univ.party.i_w_c.x = (univ.party.p_loc.x > 48) ? 1 : 0;
-			univ.party.i_w_c.y = (univ.party.p_loc.y > 48) ? 1 : 0;
-			univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
+			univ.party.out_loc = real_dest;
+			univ.party.i_w_c.x = (univ.party.out_loc.x > 48) ? 1 : 0;
+			univ.party.i_w_c.y = (univ.party.out_loc.y > 48) ? 1 : 0;
+			univ.party.loc_in_sec = global_to_local(univ.party.out_loc);
 			
 			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
 				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
@@ -2978,10 +2979,10 @@ bool outd_move_party(location destination,bool forced) {
 			}
 			
 			
-			univ.party.p_loc = real_dest;
-			univ.party.i_w_c.x = (univ.party.p_loc.x > 47) ? 1 : 0;
-			univ.party.i_w_c.y = (univ.party.p_loc.y > 47) ? 1 : 0;
-			univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
+			univ.party.out_loc = real_dest;
+			univ.party.i_w_c.x = (univ.party.out_loc.x > 47) ? 1 : 0;
+			univ.party.i_w_c.y = (univ.party.out_loc.y > 47) ? 1 : 0;
+			univ.party.loc_in_sec = global_to_local(univ.party.out_loc);
 			add_string_to_buf("Moved: " + dir_str);
 			move_sound(univ.out[real_dest.x][real_dest.y],num_out_moves);
 			num_out_moves++;
@@ -2992,7 +2993,7 @@ bool outd_move_party(location destination,bool forced) {
 			if(univ.party.in_horse >= 0) {
 				univ.party.horses[univ.party.in_horse].which_town = 200;
 				univ.party.horses[univ.party.in_horse].loc_in_sec = univ.party.loc_in_sec;
-				univ.party.horses[univ.party.in_horse].loc = univ.party.p_loc;
+				univ.party.horses[univ.party.in_horse].loc = univ.party.out_loc;
 				univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 				univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 				
@@ -3018,7 +3019,7 @@ bool town_move_party(location destination,short forced) {
 	ter_num_t ter;
 	bool check_f = false;
 	
-	if(univ.town.is_force_cage(univ.town.p_loc.x, univ.town.p_loc.y)) {
+	if(univ.town.is_force_cage(univ.party.town_loc.x, univ.party.town_loc.y)) {
 		add_string_to_buf("Move: Can't escape.");
 		return false;
 	}
@@ -3037,11 +3038,11 @@ bool town_move_party(location destination,short forced) {
 			if((!is_blocked(destination)) && (!is_special(destination))
 				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert
 				&& (!univ.scenario.ter_types[ter].boat_over
-				|| ((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y)))) {
+				|| ((destination.x != univ.party.town_loc.x) && (destination.y != univ.party.town_loc.y)))) {
 				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
 			}
-			else if((destination.x != univ.town.p_loc.x) && (destination.y != univ.town.p_loc.y))
+			else if((destination.x != univ.party.town_loc.x) && (destination.y != univ.party.town_loc.y))
 				return false;
 			// Crossing bridge: land or go through
 			else if(!is_blocked(destination) && univ.scenario.ter_types[ter].boat_over && univ.scenario.ter_types[ter].special == eTerSpec::BRIDGE) {
@@ -3062,7 +3063,7 @@ bool town_move_party(location destination,short forced) {
 				forced = true;
 		}
 		
-		univ.party.direction = set_direction(univ.town.p_loc, destination);
+		univ.party.direction = set_direction(univ.party.town_loc, destination);
 		std::string dir_str = dir_string[univ.party.direction];
 		if(((boat_there = town_boat_there(destination)) < 30) && (univ.party.in_boat < 0)) {
 			if(univ.party.boats[boat_there].property) {
@@ -3073,8 +3074,8 @@ bool town_move_party(location destination,short forced) {
 			add_string_to_buf("Move: You board the boat.");
 			univ.party.in_boat = boat_there;
 			
-			univ.town.p_loc = destination;
-			center = univ.town.p_loc;
+			univ.party.town_loc = destination;
+			center = univ.party.town_loc;
 			
 			return true;
 		}
@@ -3088,8 +3089,8 @@ bool town_move_party(location destination,short forced) {
 			play_sound(84);
 			univ.party.in_horse = horse_there;
 			
-			univ.town.p_loc = destination;
-			center = univ.town.p_loc;
+			univ.party.town_loc = destination;
+			center = univ.party.town_loc;
 			
 			return true;
 		}
@@ -3109,7 +3110,7 @@ bool town_move_party(location destination,short forced) {
 				}
 				
 			}
-			univ.town.p_loc = destination;
+			univ.party.town_loc = destination;
 			add_string_to_buf("Moved: " + dir_str);
 //			place_treasure(destination,5,3);
 			
@@ -3120,10 +3121,10 @@ bool town_move_party(location destination,short forced) {
 				run_waterfalls(0);
 			}
 			if(univ.party.in_horse >= 0) {
-				univ.party.horses[univ.party.in_horse].loc = univ.town.p_loc;
-				univ.party.horses[univ.party.in_horse].which_town = univ.town.num;
+				univ.party.horses[univ.party.in_horse].loc = univ.party.town_loc;
+				univ.party.horses[univ.party.in_horse].which_town = univ.party.town_num;
 			}
-			center = univ.town.p_loc;
+			center = univ.party.town_loc;
 			return true;
 		}
 		else {
@@ -3150,7 +3151,7 @@ short nearest_monster() {
 	
 	for(j = 0; j < 10; j++)
 		if(univ.party.out_c[j].exists) {
-			s = dist(univ.party.p_loc,univ.party.out_c[j].m_loc);
+			s = dist(univ.party.out_loc,univ.party.out_c[j].m_loc);
 			i = min(i,s);
 		}
 	return i;

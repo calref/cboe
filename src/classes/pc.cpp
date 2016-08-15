@@ -386,8 +386,8 @@ int cPlayer::get_shared_dmg(int base) const {
 }
 
 location cPlayer::get_loc() const {
-	if(combat_pos.x < 0 || combat_pos.y < 0)
-		return party.get_loc();
+	if(party && (combat_pos.x < 0 || combat_pos.y < 0))
+		return party->get_loc();
 	return combat_pos;
 }
 
@@ -443,27 +443,31 @@ bool cPlayer::give_item(cItem item, int flags) {
 	if(item.variety == eItemType::NO_ITEM)
 		return true;
 	if(item.variety == eItemType::GOLD) {
-		party.gold += item.item_level;
+		if(!party) return false;
+		party->gold += item.item_level;
 		if(do_print && print_result)
 			print_result("You get some gold.");
 		return true;
 	}
 	if(item.variety == eItemType::FOOD) {
-		party.food += item.item_level;
+		if(!party) return false;
+		party->food += item.item_level;
 		if(do_print && print_result)
 			print_result("You get some food.");
 		return true;
 	}
 	if(item.variety == eItemType::SPECIAL) {
-		party.spec_items.insert(item.item_level);
+		if(!party) return false;
+		party->spec_items.insert(item.item_level);
 		if(do_print && print_result)
 			print_result("You get a special item.");
 		return true;
 	}
 	if(item.variety == eItemType::QUEST) {
-		party.quest_status[item.item_level] = eQuestStatus::STARTED;
-		party.quest_start[item.item_level] = party.calc_day();
-		party.quest_source[item.item_level] = -1;
+		if(!party) return false;
+		party->quest_status[item.item_level] = eQuestStatus::STARTED;
+		party->quest_start[item.item_level] = party->calc_day();
+		party->quest_source[item.item_level] = -1;
 		if(do_print && print_result)
 			print_result("You get a quest.");
 		return true;
@@ -726,11 +730,12 @@ short cPlayer::skill(eSkill skill) const {
 }
 
 eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
+	if(!party) return eBuyStatus::NO_SPACE;
 	if(item.variety == eItemType::SPECIAL) {
-		if(party.spec_items.count(item.item_level))
+		if(party->spec_items.count(item.item_level))
 			return eBuyStatus::HAVE_LOTS;
 	} else if(item.variety == eItemType::QUEST) {
-		if(party.quest_status[item.item_level] != eQuestStatus::AVAILABLE)
+		if(party->quest_status[item.item_level] != eQuestStatus::AVAILABLE)
 			return eBuyStatus::HAVE_LOTS;
 	} else if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
 		for(int i = 0; i < 24; i++)
@@ -743,7 +748,7 @@ eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 	  		return eBuyStatus::TOO_HEAVY;
 		}
 	}
-	if(cost > party.gold)
+	if(cost > party->gold)
 		return eBuyStatus::NEED_GOLD;
 	return eBuyStatus::OK;
 }
@@ -824,7 +829,7 @@ void cPlayer::finish_create() {
 	}
 }
 
-cPlayer::cPlayer(cParty& party) : party(party) {
+cPlayer::cPlayer(cParty& party) : party(&party) {
 	short i;
 	main_status = eMainStatus::ABSENT;
 	name = "\n";
@@ -1127,7 +1132,8 @@ void cPlayer::readFrom(std::istream& file){
 			sin >> status[i];
 		} else if(cur == "UID") {
 			sin >> unique_id;
-			party.next_pc_id = max(unique_id + 1, party.next_pc_id);
+			if(party)
+				party->next_pc_id = max(unique_id + 1, party->next_pc_id);
 		}else if(cur == "EQUIP"){
 			int i;
 			sin >> i;

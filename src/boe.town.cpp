@@ -113,7 +113,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	overall_mode = MODE_TOWN;
 	
-	univ.town.num = town_number;
+	univ.party.town_num = town_number;
 	
 	if(play_town_sound) {
 		if(univ.town->lighting_type > 0)
@@ -128,7 +128,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	// Set up map, using stored map
 	for(i = 0; i < univ.town->max_dim(); i++)
 		for(j = 0; j < univ.town->max_dim(); j++) {
-			if(univ.town_maps[univ.town.num][i / 8][j] & (char)(1 << i % 8))
+			if(univ.town_maps[univ.party.town_num][i / 8][j] & (char)(1 << i % 8))
 				make_explored(i,j);
 			
 			if(univ.town->terrain(i,j) == 0)
@@ -219,7 +219,7 @@ void start_town_mode(short which_town, short entry_dir) {
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
 							univ.town.monst[i].active += 10;
-						else if(univ.town->is_cleaned_out(univ.party.m_killed[univ.town.num]))
+						else if(univ.town->is_cleaned_out(univ.party.m_killed[univ.party.town_num]))
 							univ.town.monst[i].active += 10;
 						else univ.town.monst[i].active = 0;
 						if(univ.town.monst[i].active >= 10)
@@ -289,7 +289,7 @@ void start_town_mode(short which_town, short entry_dir) {
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
 							univ.town.monst[i].active += 10;
-						else if(univ.town->is_cleaned_out(univ.party.m_killed[univ.town.num]))
+							else if(univ.town->is_cleaned_out(univ.party.m_killed[univ.party.town_num]))
 							univ.town.monst[i].active += 10;
 						else univ.town.monst[i].active = 0;
 						break;
@@ -318,7 +318,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	
 	// Thrash town?
-	if(univ.town->is_cleaned_out(univ.party.m_killed[univ.town.num])) {
+	if(univ.town->is_cleaned_out(univ.party.m_killed[univ.party.town_num])) {
 		town_toast = true;
 		add_string_to_buf("Area has been cleaned out.");
 	}
@@ -372,7 +372,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	for(i = 0; i < univ.town->preset_items.size(); i++)
 		if((univ.town->preset_items[i].code >= 0)
-			&& (((univ.party.item_taken[univ.town.num][i / 8] & (1 << i % 8)) == 0) ||
+			&& (((univ.party.item_taken[univ.party.town_num][i / 8] & (1 << i % 8)) == 0) ||
 			(univ.town->preset_items[i].always_there))) {
 				j = univ.town.items.size();
 				// place the preset item, if party hasn't gotten it already
@@ -442,15 +442,15 @@ void start_town_mode(short which_town, short entry_dir) {
 //	make_town_trim(0);
 	
 	
-	univ.town.p_loc = (entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc;
-	center = univ.town.p_loc;
+	univ.party.town_loc = (entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc;
+	center = univ.party.town_loc;
 	if(univ.party.in_boat >= 0) {
 		univ.party.boats[univ.party.in_boat].which_town = which_town;
-		univ.party.boats[univ.party.in_boat].loc = univ.town.p_loc;
+		univ.party.boats[univ.party.in_boat].loc = univ.party.town_loc;
 	}
 	if(univ.party.in_horse >= 0) {
 		univ.party.horses[univ.party.in_horse].which_town = which_town;
-		univ.party.horses[univ.party.in_horse].loc = univ.town.p_loc;
+		univ.party.horses[univ.party.in_horse].loc = univ.party.town_loc;
 	}
 	
 	
@@ -468,13 +468,13 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	
 	// clear entry space, and check exploration
-	univ.town.set_web(univ.town.p_loc.x,univ.town.p_loc.y,false);
-	univ.town.set_crate(univ.town.p_loc.x,univ.town.p_loc.y,false);
-	univ.town.set_barrel(univ.town.p_loc.x,univ.town.p_loc.y,false);
-	univ.town.set_fire_barr(univ.town.p_loc.x,univ.town.p_loc.y,false);
-	univ.town.set_force_barr(univ.town.p_loc.x,univ.town.p_loc.y,false);
-	univ.town.set_quickfire(univ.town.p_loc.x,univ.town.p_loc.y,false);
-	update_explored(univ.town.p_loc);
+	univ.town.set_web(univ.party.town_loc.x,univ.party.town_loc.y,false);
+	univ.town.set_crate(univ.party.town_loc.x,univ.party.town_loc.y,false);
+	univ.town.set_barrel(univ.party.town_loc.x,univ.party.town_loc.y,false);
+	univ.town.set_fire_barr(univ.party.town_loc.x,univ.party.town_loc.y,false);
+	univ.town.set_force_barr(univ.party.town_loc.x,univ.party.town_loc.y,false);
+	univ.town.set_quickfire(univ.party.town_loc.x,univ.party.town_loc.y,false);
+	update_explored(univ.party.town_loc);
 	
 	// If a PC dead, drop his items
 	for(m = 0; m < 6; m++) {
@@ -482,7 +482,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			continue;
 		for(n = 0; n < 24; n++)
 			if(univ.party[m].items[n].variety != eItemType::NO_ITEM) {
-				place_item(univ.party[m].items[n],univ.town.p_loc);
+				place_item(univ.party[m].items[n],univ.party.town_loc);
 				univ.party[m].items[n].variety = eItemType::NO_ITEM;
 			}
 	}
@@ -537,7 +537,7 @@ location end_town_mode(short switching_level,location destination) { // returns 
 	
 	if(overall_mode == MODE_TOWN) {
 		for(i = 0; i < 4; i++)
-			if(univ.party.creature_save[i].which_town == univ.town.num) {
+			if(univ.party.creature_save[i].which_town == univ.party.town_num) {
 				univ.party.creature_save[i] = univ.town.monst;
 				for(j = 0; j < univ.town->max_dim(); j++)
 					for(k = 0; k < univ.town->max_dim(); k++)
@@ -554,7 +554,7 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		// Store items, if necessary
 		for(j = 0; j < 3; j++)
-			if(univ.scenario.store_item_towns[j] == univ.town.num) {
+			if(univ.scenario.store_item_towns[j] == univ.party.town_num) {
 				univ.party.stored_items[j].clear();
 				for(i = 0; i < univ.town.items.size(); i++)
 					if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].is_special == 0 &&
@@ -570,11 +570,11 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		for(i = 0; i < univ.town->max_dim(); i++)
 			for(j = 0; j < univ.town->max_dim(); j++)
 				if(is_explored(i,j)) {
-					univ.town_maps[univ.town.num][i / 8][j] = univ.town_maps[univ.town.num][i / 8][j] |
+					univ.town_maps[univ.party.town_num][i / 8][j] = univ.town_maps[univ.party.town_num][i / 8][j] |
 					(char) (1 << i % 8);
 				}
 		
-		to_return = univ.party.p_loc;
+		to_return = univ.party.out_loc;
 		
 		erase_if(univ.party.party_event_timers, [](const cTimer& t) {
 			return t.node_type == 2;
@@ -585,36 +585,36 @@ location end_town_mode(short switching_level,location destination) { // returns 
 	
 	// Check for exit specials, if leaving town
 	if(switching_level == 0) {
-		to_return = univ.party.p_loc;
+		to_return = univ.party.out_loc;
 		
 		if(is_town()) {
 			if(destination.x <= univ.town->in_town_rect.left) {
 				if(univ.town->exit_locs[1].x > 0)
 					to_return = local_to_global(univ.town->exit_locs[1]);
 				else to_return.x--;
-				univ.party.p_loc = to_return; univ.party.p_loc.x++;
-				handle_leave_town_specials(univ.town.num, univ.town->exit_specs[1],destination) ;
+				univ.party.out_loc = to_return; univ.party.out_loc.x++;
+				handle_leave_town_specials(univ.party.town_num, univ.town->exit_specs[1],destination) ;
 			}
 			else if(destination.x >= univ.town->in_town_rect.right) {
 				if(univ.town->exit_locs[3].x > 0)
 					to_return = local_to_global(univ.town->exit_locs[3]);
 				else to_return.x++;
-				univ.party.p_loc = to_return; univ.party.p_loc.x--;
-				handle_leave_town_specials(univ.town.num, univ.town->exit_specs[3],destination) ;
+				univ.party.out_loc = to_return; univ.party.out_loc.x--;
+				handle_leave_town_specials(univ.party.town_num, univ.town->exit_specs[3],destination) ;
 			}
 			else if(destination.y <= univ.town->in_town_rect.top) {
 				if(univ.town->exit_locs[0].x > 0)
 					to_return = local_to_global(univ.town->exit_locs[0]);
 				else to_return.y--;
-				univ.party.p_loc = to_return; univ.party.p_loc.y++;
-				handle_leave_town_specials(univ.town.num, univ.town->exit_specs[0],destination) ;
+				univ.party.out_loc = to_return; univ.party.out_loc.y++;
+				handle_leave_town_specials(univ.party.town_num, univ.town->exit_specs[0],destination) ;
 			}
 			else if(destination.y >= univ.town->in_town_rect.bottom) {
 				if(univ.town->exit_locs[2].x > 0)
 					to_return = local_to_global(univ.town->exit_locs[2]);
 				else to_return.y++;
-				univ.party.p_loc = to_return; univ.party.p_loc.y--;
-				handle_leave_town_specials(univ.town.num, univ.town->exit_specs[2],destination) ;
+				univ.party.out_loc = to_return; univ.party.out_loc.y--;
+				handle_leave_town_specials(univ.party.town_num, univ.town->exit_specs[2],destination) ;
 			}
 			
 		}
@@ -647,17 +647,17 @@ location end_town_mode(short switching_level,location destination) { // returns 
 	if(!combat_end)
 		clear_map();
 	
-	univ.town.num = 200; // should be harmless...
+	univ.party.town_num = 200; // should be harmless...
 	
 	return to_return;
 }
 
 void handle_town_specials(short /*town_number*/, bool town_dead,location /*start_loc*/) {
-	queue_special(eSpecCtx::ENTER_TOWN, 2, town_dead ? univ.town->spec_on_entry_if_dead : univ.town->spec_on_entry, univ.town.p_loc);
+	queue_special(eSpecCtx::ENTER_TOWN, 2, town_dead ? univ.town->spec_on_entry_if_dead : univ.town->spec_on_entry, univ.party.town_loc);
 }
 
 void handle_leave_town_specials(short /*town_number*/, short which_spec,location /*start_loc*/) {
-	queue_special(eSpecCtx::LEAVE_TOWN, 2, which_spec, univ.party.p_loc);
+	queue_special(eSpecCtx::LEAVE_TOWN, 2, which_spec, univ.party.out_loc);
 }
 
 bool abil_exists(eItemAbil abil) { // use when outdoors
@@ -741,7 +741,7 @@ eDirection end_town_combat() {
 	r1 = get_ran(1,0,5);
 	while(univ.party[r1].main_status != eMainStatus::ALIVE && num_tries++ < 1000)
 		r1 = get_ran(1,0,5);
-	univ.town.p_loc = univ.party[r1].combat_pos;
+	univ.party.town_loc = univ.party[r1].combat_pos;
 	overall_mode = MODE_TOWN;
 	current_pc = store_current_pc;
 	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
@@ -761,7 +761,7 @@ void place_party(short direction) {
 	
 	if(in_cage) {
 		for(int n = 0; n < 6; n++)
-			univ.party[n].combat_pos = univ.town.p_loc;
+			univ.party[n].combat_pos = univ.party.town_loc;
 		return;
 	}
 	
@@ -772,7 +772,7 @@ void place_party(short direction) {
 	short x_adj,y_adj,how_many_ok = 1,where_in_a = 0,i;
 	
 	for(i = 0; i < 14; i++) {
-		check_loc = univ.town.p_loc;
+		check_loc = univ.party.town_loc;
 		if(direction % 4 < 2)
 			x_adj = ((direction % 2 == 0) ? hor_vert_place[i].x : diag_place[i].x);
 		else x_adj = ((direction % 2 == 0) ? hor_vert_place[i].y : diag_place[i].y);
@@ -790,7 +790,7 @@ void place_party(short direction) {
 		check_loc.y -= y_adj;
 		pos_locs[i] = check_loc;
 		if(!is_blocked(check_loc) && !is_special(check_loc) && sight_obscurity(check_loc.x,check_loc.y) == 0
-		   && can_see_light(univ.town.p_loc,check_loc,combat_obscurity) < 1 && !loc_off_act_area(check_loc)) {
+		   && can_see_light(univ.party.town_loc,check_loc,combat_obscurity) < 1 && !loc_off_act_area(check_loc)) {
 			spot_ok[i] = true;
 			how_many_ok += (i > 1) ? 1 : 0;
 		}
@@ -1358,16 +1358,16 @@ void draw_map(bool need_refresh) {
 		total_size = univ.town->max_dim();
 		switch(total_size) {
 			case 64:
-				view_rect.left = minmax(0,24,univ.town.p_loc.x - 20);
+				view_rect.left = minmax(0,24,univ.party.town_loc.x - 20);
 				view_rect.right = view_rect.left + 40;
-				view_rect.top = minmax(0,24,univ.town.p_loc.y - 20);
+				view_rect.top = minmax(0,24,univ.party.town_loc.y - 20);
 				view_rect.bottom = view_rect.top + 40;
 				redraw_rect = big_rect;
 				break;
 			case 48:
-				view_rect.left = minmax(0,8,univ.town.p_loc.x - 20);
+				view_rect.left = minmax(0,8,univ.party.town_loc.x - 20);
 				view_rect.right = view_rect.left + 40;
-				view_rect.top = minmax(0,8,univ.town.p_loc.y - 20);
+				view_rect.top = minmax(0,8,univ.party.town_loc.y - 20);
 				view_rect.bottom = view_rect.top + 40;
 				redraw_rect = view_rect;
 				break;
@@ -1532,7 +1532,7 @@ void draw_map(bool need_refresh) {
 							}
 					}
 			if((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
-				where = (is_town()) ? univ.town.p_loc : global_to_local(univ.party.p_loc);
+				where = (is_town()) ? univ.party.town_loc : global_to_local(univ.party.out_loc);
 				
 				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);

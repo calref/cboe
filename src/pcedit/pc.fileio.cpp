@@ -21,7 +21,7 @@ void load_base_item_defs();
 extern fs::path progDir;
 
 void leave_town() {
-	univ.town.num = 200;
+	univ.party.town_num = 200;
 }
 
 void remove_party_from_scen() {

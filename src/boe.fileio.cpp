@@ -59,7 +59,7 @@ extern fs::path progDir;
 cCustomGraphics spec_scen_g;
 
 void finish_load_party(){
-	bool town_restore = univ.town.num < 200;
+	bool town_restore = univ.party.town_num < 200;
 	bool in_scen = univ.party.scen_name.length() > 0;
 	
 	party_in_memory = true;
@@ -100,7 +100,7 @@ void finish_load_party(){
 	erase_out_specials();
 	
 	if(!town_restore) {
-		center = univ.party.p_loc;
+		center = univ.party.out_loc;
 	}
 	else {
 		for(int i = 0; i < univ.town.monst.size(); i++){
@@ -116,7 +116,7 @@ void finish_load_party(){
 				if(univ.scenario.ter_types[univ.town->terrain(j,k)].special == eTerSpec::CONVEYOR)
 					univ.town.belt_present = true;
 			}
-		center = univ.town.p_loc;
+		center = univ.party.town_loc;
 	}
 	
 	redraw_screen(REFRESH_ALL);
@@ -137,7 +137,7 @@ void shift_universe_left() {
 	save_outdoor_maps();
 	univ.party.outdoor_corner.x--;
 	univ.party.i_w_c.x++;
-	univ.party.p_loc.x += 48;
+	univ.party.out_loc.x += 48;
 	
 	for(i = 48; i < 96; i++)
 		for(j = 0; j < 96; j++)
@@ -166,7 +166,7 @@ void shift_universe_right() {
 	save_outdoor_maps();
 	univ.party.outdoor_corner.x++;
 	univ.party.i_w_c.x--;
-	univ.party.p_loc.x -= 48;
+	univ.party.out_loc.x -= 48;
 	for(i = 0; i < 48; i++)
 		for(j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = univ.out.out_e[i + 48][j];
@@ -193,7 +193,7 @@ void shift_universe_up() {
 	save_outdoor_maps();
 	univ.party.outdoor_corner.y--;
 	univ.party.i_w_c.y++;
-	univ.party.p_loc.y += 48;
+	univ.party.out_loc.y += 48;
 	
 	for(i = 0; i < 96; i++)
 		for(j = 48; j < 96; j++)
@@ -222,7 +222,7 @@ void shift_universe_down() {
 	save_outdoor_maps();
 	univ.party.outdoor_corner.y++;
 	univ.party.i_w_c.y--;
-	univ.party.p_loc.y = univ.party.p_loc.y - 48;
+	univ.party.out_loc.y = univ.party.out_loc.y - 48;
 	
 	for(i = 0; i < 96; i++)
 		for(j = 0; j < 48; j++)
@@ -254,16 +254,16 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) {
 	}
 	
 	save_outdoor_maps();
-	univ.party.p_loc.x = pc_pos_x;
-	univ.party.p_loc.y = pc_pos_y;
-	univ.party.loc_in_sec = global_to_local(univ.party.p_loc);
+	univ.party.out_loc.x = pc_pos_x;
+	univ.party.out_loc.y = pc_pos_y;
+	univ.party.loc_in_sec = global_to_local(univ.party.out_loc);
 	
 	if((univ.party.outdoor_corner.x != out_x) || (univ.party.outdoor_corner.y != out_y)) {
 		univ.party.outdoor_corner.x = out_x;
 		univ.party.outdoor_corner.y = out_y;
 	}
-	univ.party.i_w_c.x = (univ.party.p_loc.x > 47) ? 1 : 0;
-	univ.party.i_w_c.y = (univ.party.p_loc.y > 47) ? 1 : 0;
+	univ.party.i_w_c.x = (univ.party.out_loc.x > 47) ? 1 : 0;
+	univ.party.i_w_c.y = (univ.party.out_loc.y > 47) ? 1 : 0;
 	for(i = 0; i < 10; i++)
 		univ.party.out_c[i].exists = false;
 	for(i = 0; i < 96; i++)
@@ -414,9 +414,9 @@ void start_data_dump() {
 	fout << "Begin data dump:\n";
 	fout << "  Overall mode  " << overall_mode << "\n";
 	fout << "  Outdoor loc  " << univ.party.outdoor_corner.x << " " << univ.party.outdoor_corner.y;
-	fout << "  Ploc " << univ.party.p_loc.x << " " << univ.party.p_loc.y << "\n";
+	fout << "  Ploc " << univ.party.out_loc.x << " " << univ.party.out_loc.y << "\n";
 	if((is_town()) || (is_combat())) {
-		fout << "  Town num " << univ.town.num << "  Town loc  " << univ.town.p_loc.x << " " << univ.town.p_loc.y << " \n";
+		fout << "  Town num " << univ.party.town_num << "  Town loc  " << univ.party.town_loc.x << " " << univ.party.town_loc.y << " \n";
 		if(is_combat()) {
 			fout << "  Combat type " << which_combat_type << " \n";
 		}

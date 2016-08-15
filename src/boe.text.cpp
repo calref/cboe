@@ -684,7 +684,7 @@ void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
 	add_string_to_buf("  Number of kills: " + std::to_string(univ.party.total_m_killed));
 	if((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
-		add_string_to_buf("  Kills in this town: " + std::to_string(univ.party.m_killed[univ.town.num]));
+		add_string_to_buf("  Kills in this town: " + std::to_string(univ.party.m_killed[univ.party.town_num]));
 	}
 	add_string_to_buf("  Total experience: " + std::to_string(univ.party.total_xp_gained));
 	add_string_to_buf("  Total damage done: " + std::to_string(univ.party.total_dam_done));
@@ -702,8 +702,8 @@ short do_look(location space) {
 	from_where = get_cur_loc();
 	is_lit = is_out() || pt_in_light(from_where,space);
 	
-	if(((overall_mode == MODE_LOOK_OUTDOORS) && (space == univ.party.p_loc)) ||
-		((overall_mode == MODE_LOOK_TOWN) && (space == univ.town.p_loc)))
+	if((overall_mode == MODE_LOOK_OUTDOORS && space == univ.party.out_loc) ||
+		(overall_mode == MODE_LOOK_TOWN && space == univ.party.town_loc))
 		add_string_to_buf("    Your party");
 	if(overall_mode == MODE_LOOK_COMBAT)
 		for(i = 0; i < 6; i++)
@@ -854,7 +854,7 @@ short town_boat_there(location where) {
 	short i;
 	
 	for(i = 0; i < univ.party.boats.size(); i++)
-		if((univ.party.boats[i].exists) && (univ.party.boats[i].which_town == univ.town.num)
+		if(univ.party.boats[i].exists && univ.party.boats[i].which_town == univ.party.town_num
 			&& (where == univ.party.boats[i].loc))
 			return i;
 	return univ.party.boats.size();
@@ -873,7 +873,7 @@ short town_horse_there(location where) {
 	short i;
 	
 	for(i = 0; i < univ.party.horses.size(); i++)
-		if((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == univ.town.num)
+		if(univ.party.horses[i].exists && univ.party.horses[i].which_town == univ.party.town_num
 			&& (where == univ.party.horses[i].loc))
 			return i;
 	return univ.party.horses.size();

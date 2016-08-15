@@ -35,7 +35,7 @@ enum {
 class cParty;
 
 class cPlayer : public iLiving {
-	cParty& party;
+	cParty* party;
 public:
 	static void(* give_help)(short,short);
 	eMainStatus main_status;

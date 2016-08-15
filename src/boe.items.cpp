@@ -248,7 +248,7 @@ short dist_from_party(location where) {
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				store = min(store,dist(univ.party[i].combat_pos,where));
 	}
-	else store = dist(univ.town.p_loc,where);
+	else store = dist(univ.party.town_loc,where);
 	
 	return store;
 }
@@ -257,8 +257,8 @@ short dist_from_party(location where) {
 void set_item_flag(cItem* item) {
 	if((item->is_special > 0) && (item->is_special < 65)) {
 		item->is_special--;
-		univ.party.item_taken[univ.town.num][item->is_special / 8] =
-			univ.party.item_taken[univ.town.num][item->is_special / 8] | (1 << item->is_special % 8);
+		univ.party.item_taken[univ.party.town_num][item->is_special / 8] =
+			univ.party.item_taken[univ.party.town_num][item->is_special / 8] | (1 << item->is_special % 8);
 		item->is_special = 0;
 	}
 }
@@ -361,7 +361,8 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 	// In some towns, doin' this'll getcha' killed.
 	// (Or something else! Killing the party would be the responsibility of whatever special node is called.)
 	if(univ.town.monst.hostile && univ.town->spec_on_hostile >= 0)
-		run_special(eSpecCtx::TOWN_HOSTILE, 2, univ.town->spec_on_hostile, univ.party.p_loc, &a[0], &a[1], &a[2]);
+		// TODO: Why passing out_loc here?
+		run_special(eSpecCtx::TOWN_HOSTILE, 2, univ.town->spec_on_hostile, univ.party.out_loc, &a[0], &a[1], &a[2]);
 }
 
 // TODO: Set town status to "dead"? Could reuse above with magic att (eg -1), or write new function.

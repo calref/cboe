@@ -123,8 +123,8 @@ static void init_party_scen_data() {
 	univ.party.i_w_c.y = 0;
 	univ.party.loc_in_sec.x = univ.scenario.out_start.x;
 	univ.party.loc_in_sec.y = univ.scenario.out_start.y;
-	univ.party.p_loc.x = univ.scenario.out_start.x;
-	univ.party.p_loc.y = univ.scenario.out_start.y;
+	univ.party.out_loc.x = univ.scenario.out_start.x;
+	univ.party.out_loc.y = univ.scenario.out_start.y;
 	for(i = 0; i < univ.scenario.boats.size(); i++) {
 		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
 			if(!univ.party.boats[i].exists) {
@@ -583,7 +583,7 @@ bool is_poisonable_weap(short pc_num,short item) {
 void cast_spell(eSkill type) {
 	eSpell spell;
 	
-	if((is_town()) && (univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y))) {
+	if((is_town()) && (univ.town.is_antimagic(univ.party.town_loc.x,univ.party.town_loc.y))) {
 		add_string_to_buf("  Not in antimagic field.");
 		return;
 	}
@@ -695,7 +695,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 		return;
 	}
 	
-	where = univ.town.p_loc;
+	where = univ.party.town_loc;
 	play_sound(25);
 	current_spell_range = 8;
 	store_mage = spell_num;
@@ -726,7 +726,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			for(where.x = 0; where.x < 64; where.x++)
 				for(where.y = 0; where.y < 64; where.y++)
-					if(dist(where,univ.town.p_loc) <= 2)
+					if(dist(where,univ.party.town_loc) <= 2)
 						make_explored(where.x,where.y);
 			clear_map();
 			break;
@@ -904,7 +904,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	
 	short store_victim_health,store_caster_health,targ_damaged; // for symbiosis
 	
-	where = univ.town.p_loc;
+	where = univ.party.town_loc;
 	
 	adj = freebie ? 1 : univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.party[pc_num].level;
@@ -922,11 +922,11 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			
 			if(is_town()) {
-				loc = (overall_mode == MODE_OUTDOORS) ? univ.party.p_loc : univ.town.p_loc;
+				loc = (overall_mode == MODE_OUTDOORS) ? univ.party.out_loc : univ.party.town_loc;
 				loc_str <<  "  You're at: x " << loc.x << "  y " << loc.y << '.';
 			}
 			if(is_out()) {
-				loc = (overall_mode == MODE_OUTDOORS) ? univ.party.p_loc : univ.town.p_loc;
+				loc = (overall_mode == MODE_OUTDOORS) ? univ.party.out_loc : univ.party.town_loc;
 				x = loc.x; y = loc.y;
 				x += 48 * univ.party.outdoor_corner.x; y += 48 * univ.party.outdoor_corner.y;
 				loc_str << "  You're outside at: x " << x << "  y " << y << '.';
@@ -1024,7 +1024,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			for(loc.x = where.x - 1;loc.x < where.x + 2; loc.x++)
 				for(loc.y = where.y - 1;loc.y < where.y + 2; loc.y++)
 					crumble_wall(loc);
-			update_explored(univ.town.p_loc);
+			update_explored(univ.party.town_loc);
 			break;
 			
 		case eSpell::WORD_RECALL:
@@ -1050,7 +1050,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			start_town_mode(univ.scenario.which_town_start,9);
 			position_party(univ.scenario.out_sec_start.x,univ.scenario.out_sec_start.y,
 						   univ.scenario.out_start.x,univ.scenario.out_start.y);
-			center = univ.town.p_loc = univ.scenario.where_start;
+			center = univ.party.town_loc = univ.scenario.where_start;
 //			overall_mode = MODE_OUTDOORS;
 //			center = univ.party.p_loc;
 //			update_explored(univ.party.p_loc);
@@ -1324,7 +1324,7 @@ void cast_town_spell(location where) {
 		return;
 	}
 	
-	adjust = can_see_light(univ.town.p_loc,where,sight_obscurity);
+	adjust = can_see_light(univ.party.town_loc,where,sight_obscurity);
 	if(!spell_freebie)
 		univ.party[who_cast].cur_sp -= (*town_spell).cost;
 	ter = univ.town->terrain(where.x,where.y);
@@ -1379,7 +1379,7 @@ void cast_town_spell(location where) {
 		case eSpell::MOVE_MOUNTAINS_MASS:
 			add_string_to_buf("  You blast the area.");
 			place_spell_pattern(current_pat, where, FIELD_SMASH, 7);
-			update_explored(univ.town.p_loc);
+			update_explored(univ.party.town_loc);
 			break;
 		case eSpell::BARRIER_FIRE:
 			if(sight_obscurity(where.x,where.y) == 5 || univ.target_there(where, TARG_MONST)) {
@@ -1454,7 +1454,7 @@ void cast_town_spell(location where) {
 					univ.town.set_force_barr(where.x,where.y,false);
 					
 					// Now, show party new things
-					update_explored(univ.town.p_loc);
+					update_explored(univ.party.town_loc);
 				}
 				else {
 					store = get_ran(1,0,1);
@@ -2235,7 +2235,7 @@ void do_alchemy() {
 			store_i.graphic_num += get_ran(1,0,2);
 			if(!univ.party[pc_num].give_item(store_i,false)) {
 				add_string_to_buf("No room in inventory. Potion placed on floor.", 2);
-				place_item(store_i,univ.town.p_loc);
+				place_item(store_i,univ.party.town_loc);
 			}
 			else add_string_to_buf("Alchemy: Successful.");
 		}
@@ -2515,7 +2515,7 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 		else if(damage_type == eDamageType::COLD)
 			boom_type = 5;
 		if(is_town())
-			add_explosion(univ.town.p_loc,how_much,0,boom_type,0,0);
+			add_explosion(univ.party.town_loc,how_much,0,boom_type,0,0);
 		else add_explosion(which_pc.combat_pos,how_much,0,boom_type,0,0);
 		if(how_much == 0)
 			return false;
@@ -2539,8 +2539,8 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 			if(is_combat())
 				boom_space(which_pc.combat_pos,overall_mode,boom_gr[damage_type],how_much,sound_type);
 			else if(is_town())
-				boom_space(univ.town.p_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
-			else boom_space(univ.town.p_loc,100,boom_gr[damage_type],how_much,sound_type);
+				boom_space(univ.party.town_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
+			else boom_space(univ.party.town_loc,100,boom_gr[damage_type],how_much,sound_type);
 		}
 		// TODO: When outdoors it flushed only key events, not mouse events. Why?
 		flushingInput = true;
@@ -2612,7 +2612,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		for(i = 0; i < 24; i++)
 			which_pc.equip[i] = false;
 		
-		item_loc = (overall_mode >= MODE_COMBAT) ? which_pc.combat_pos : univ.town.p_loc;
+		item_loc = (overall_mode >= MODE_COMBAT) ? which_pc.combat_pos : univ.party.town_loc;
 		
 		if(!is_out()) {
 			if(type == eMainStatus::DUST)

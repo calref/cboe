@@ -48,16 +48,16 @@ void create_wand_monst() {
 	if(overall_mode == MODE_OUTDOORS) {
 		if(!univ.out->wandering[r1].isNull()) {
 			r2 = get_ran(1,0,3);
-			while(point_onscreen(univ.out->wandering_locs[r2], global_to_local(univ.party.p_loc)) && num_tries++ < 100)
+			while(point_onscreen(univ.out->wandering_locs[r2], global_to_local(univ.party.out_loc)) && num_tries++ < 100)
 				r2 = get_ran(1,0,3);
 			if(!is_blocked(univ.out->wandering_locs[r2]))
 				place_outd_wand_monst(univ.out->wandering_locs[r2], univ.out->wandering[r1],0);
 		}
 	} else if(!univ.town->wandering[r1].isNull() && univ.town.countMonsters() <= 50
-			  && !univ.town->is_cleaned_out(univ.party.m_killed[univ.town.num])) {
+			  && !univ.town->is_cleaned_out(univ.party.m_killed[univ.party.town_num])) {
 		// won't place wandering if more than 50 monsters
 		r2 = get_ran(1,0,univ.town->wandering.size() - 1);
-		while(point_onscreen(univ.town->wandering_locs[r2],univ.town.p_loc) &&
+		while(point_onscreen(univ.town->wandering_locs[r2],univ.party.town_loc) &&
 			  !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
 			r2 = get_ran(1,0,3);
 		for(i = 0; i < 4; i++) {
@@ -190,7 +190,7 @@ void do_monsters() {
 					target = monst_pick_target(i); // will return 0 if target party
 					target = switch_target_to_adjacent(i,target);
 					if(target == 0) {
-						if(dist(univ.town.monst[i].cur_loc,univ.town.p_loc) > 8)
+						if(dist(univ.town.monst[i].cur_loc,univ.party.town_loc) > 8)
 							target = 6;
 						else target = select_active_pc();
 					}
@@ -211,13 +211,13 @@ void do_monsters() {
 							if(univ.town.monst[i].is_friendly() || get_ran(1,0,1) == 0) {
 								acted_yet = rand_move(i);
 							}
-							else acted_yet = seek_party(i,univ.town.monst[i].cur_loc,univ.town.p_loc);
+							else acted_yet = seek_party(i,univ.town.monst[i].cur_loc,univ.party.town_loc);
 						}
 					}
 					if(univ.town.monst[i].attitude != eAttitude::DOCILE || univ.town.monst.hostile) {
 						if((univ.town.monst[i].mobility == 1) && (univ.town.monst[i].target != 6)) {
 							l1 = univ.town.monst[i].cur_loc;
-							l2 = (univ.town.monst[i].target <= 6) ? univ.town.p_loc : univ.town.monst[target - 100].cur_loc;
+							l2 = (univ.town.monst[i].target <= 6) ? univ.party.town_loc : univ.town.monst[target - 100].cur_loc;
 							
 							if(univ.town.monst[i].morale < 0 && !univ.town.monst[i].mindless
 							   && univ.town.monst[i].m_type != eRace::UNDEAD && univ.town.monst[i].m_type != eRace::SKELETAL)  {
@@ -237,10 +237,10 @@ void do_monsters() {
 				
 				// Make hostile monsters active
 				if(univ.town.monst[i].active == 1 && !univ.town.monst[i].is_friendly()
-					&& (dist(univ.town.monst[i].cur_loc,univ.town.p_loc) <= 8)) {
+					&& (dist(univ.town.monst[i].cur_loc,univ.party.town_loc) <= 8)) {
 					r1 = get_ran(1,1,100);
 					r1 += (univ.party.status[ePartyStatus::STEALTH] > 0) ? 46 : 0;
-					r1 += can_see_light(univ.town.monst[i].cur_loc,univ.town.p_loc,sight_obscurity) * 10;
+					r1 += can_see_light(univ.town.monst[i].cur_loc,univ.party.town_loc,sight_obscurity) * 10;
 					if(r1 < 50) {
 						univ.town.monst[i].active = 2;
 						add_string_to_buf("Monster saw you!");
@@ -261,7 +261,7 @@ void do_monsters() {
 			if(univ.party.out_c[i].exists) {
 				acted_yet = false;
 				l1 = univ.party.out_c[i].m_loc;
-				l2 = univ.party.p_loc;
+				l2 = univ.party.out_loc;
 				
 				r1 = get_ran(1,1,6);
 				if(r1 == 3)
@@ -393,7 +393,7 @@ short monst_pick_target(short which_m) {
 		if(targ_m == 6 && !cur_monst->is_friendly())
 			return 0;
 		if(dist(cur_monst->cur_loc,univ.town.monst[targ_m - 100].cur_loc) <
-			dist(cur_monst->cur_loc,univ.town.p_loc))
+			dist(cur_monst->cur_loc,univ.party.town_loc))
 			return targ_m;
 		else return 0;
 	}
@@ -513,7 +513,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 	}
 	
 	// If we get here while in town, just need to check if switch to pc
-	if((is_town()) && (monst_adjacent(univ.town.p_loc,which_m)))
+	if((is_town()) && (monst_adjacent(univ.party.town_loc,which_m)))
 		return 0;
 	if(is_town())
 		return orig_target;
@@ -730,7 +730,7 @@ location find_clear_spot(location from_where,short mode) {
 		if(!loc_off_act_area(loc) && !is_blocked(loc)
 			&& can_see_light(from_where,loc,combat_obscurity) == 0
 			&& (!is_combat() || univ.target_there(loc,TARG_PC) == nullptr)
-			&& (!(is_town()) || (loc != univ.town.p_loc))
+			&& (!(is_town()) || (loc != univ.party.town_loc))
 			&& (!(univ.town.fields[loc.x][loc.y] & blocking_fields))) {
 			if((mode == 0) || ((mode == 1) && (adjacent(from_where,loc))))
 				return loc;
@@ -753,7 +753,7 @@ location random_shift(location start) {
 bool outdoor_move_monster(short num,location dest) {
 	
 	if(!outd_is_blocked(dest) && !outd_is_special(dest) &&
-		(dest != univ.party.p_loc) &&
+		(dest != univ.party.out_loc) &&
 	   // TODO: Don't hard-code terrain types!
 		((univ.out[dest.x][dest.y] > 21) || (univ.out[dest.x][dest.y] < 5))) {
 		univ.party.out_c[num].direction =
@@ -1051,7 +1051,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	// Action may change terrain, so update what's been seen
 	if(do_look) {
 		if(is_town())
-			update_explored(univ.town.p_loc);
+			update_explored(univ.party.town_loc);
 		if(is_combat())
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE)

@@ -148,11 +148,11 @@ bool loc_off_act_area(location p1) {
 location get_cur_loc() {
 	switch(overall_mode) {
 		case MODE_OUTDOORS: case MODE_LOOK_OUTDOORS:
-			return univ.party.p_loc;
+			return univ.party.out_loc;
 			break;
 			
 		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE_TOWN: case MODE_LOOK_TOWN:
-			return univ.town.p_loc;
+			return univ.party.town_loc;
 			break;
 			
 		default:
@@ -284,7 +284,7 @@ bool is_blocked(location to_check) {
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}
-		if(to_check == univ.party.p_loc)
+		if(to_check == univ.party.out_loc)
 			return true;
 		for(i = 0; i < univ.party.out_c.size(); i++)
 			if((univ.party.out_c[i].exists))
@@ -311,7 +311,7 @@ bool is_blocked(location to_check) {
 		
 		// Party there?
 		if(is_town())
-			if(to_check == univ.town.p_loc)
+			if(to_check == univ.party.town_loc)
 				return true;
 		if(is_combat())
 			for(i = 0; i < 6; i++)
@@ -540,15 +540,15 @@ short party_can_see(location where) {
 	short i;
 	
 	if(is_out()) {
-		if((point_onscreen(univ.party.p_loc,where)) && (can_see_light(univ.party.p_loc,where,sight_obscurity) < 5))
+		if((point_onscreen(univ.party.out_loc,where)) && (can_see_light(univ.party.out_loc,where,sight_obscurity) < 5))
 			return 1;
 		else return 6;
 	}
 	if(fog_lifted)
-		return point_onscreen(univ.town.p_loc,where) ? 1 : 6;
+		return point_onscreen(univ.party.town_loc,where) ? 1 : 6;
 	if(is_town()) {
-		if( ((point_onscreen(univ.town.p_loc,where)) || (overall_mode == MODE_LOOK_TOWN)) && (pt_in_light(univ.town.p_loc,where) )
-			&& (can_see_light(univ.town.p_loc,where,sight_obscurity) < 5))
+		if( ((point_onscreen(univ.party.town_loc,where)) || (overall_mode == MODE_LOOK_TOWN)) && (pt_in_light(univ.party.town_loc,where) )
+			&& (can_see_light(univ.party.town_loc,where,sight_obscurity) < 5))
 			return 1;
 		else return 6;
 	}

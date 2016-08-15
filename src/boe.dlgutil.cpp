@@ -178,7 +178,7 @@ void end_shop_mode() {
 	if(overall_mode == MODE_TALK_TOWN)
 		overall_mode = MODE_TOWN;
 	if(overall_mode == MODE_TOWN) {
-		center = univ.town.p_loc;
+		center = univ.party.town_loc;
 		update_explored(center);
 	}
 	stat_screen_mode = MODE_INVEN;
@@ -602,7 +602,7 @@ void end_talk_mode() {
 	if(overall_mode == MODE_TALK_TOWN)
 		overall_mode = MODE_TOWN;
 	if(overall_mode == MODE_TOWN) {
-		center = univ.town.p_loc;
+		center = univ.party.town_loc;
 		update_explored(center);
 	}
 	help_btn->hide();
@@ -814,9 +814,9 @@ void handle_talk_event(location p) {
 				univ.party.gold -= a;
 				put_pc_screen();
 				do_rest(700, 30 & b, 25 * b);
-				univ.town.p_loc.x = c;
-				univ.town.p_loc.y = d;
-				center = univ.town.p_loc;
+				univ.party.town_loc.x = c;
+				univ.party.town_loc.y = d;
+				center = univ.party.town_loc;
 			}
 			save_talk_str2 = "";
 			break;
@@ -833,7 +833,7 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::DEP_ON_TOWN:
-			if(univ.town.num != a) {
+			if(univ.party.town_num != a) {
 				save_talk_str1 = save_talk_str2;
 			}
 			save_talk_str2 = "";
@@ -1037,7 +1037,7 @@ void handle_talk_event(location p) {
 			break;
 			// TODO: Strings resulting from this don't seem to be recordable; whyever not!?
 		case eTalkNode::CALL_TOWN_SPEC:
-			run_special(eSpecCtx::TALK,2,a,univ.town.p_loc,&s1,&s2,&s3);
+			run_special(eSpecCtx::TALK,2,a,univ.party.town_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
 				save_talk_str1 = s1 >= 0 ? univ.town->spec_strs[s1] : "";
@@ -1048,7 +1048,7 @@ void handle_talk_event(location p) {
 			put_item_screen(stat_window);
 			break;
 		case eTalkNode::CALL_SCEN_SPEC:
-			run_special(eSpecCtx::TALK,0,a,univ.town.p_loc,&s1,&s2,&s3);
+			run_special(eSpecCtx::TALK,0,a,univ.party.town_loc,&s1,&s2,&s3);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
 				save_talk_str1 = s1 >= 0 ? univ.scenario.spec_strs[s1] : "";

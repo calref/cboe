@@ -131,10 +131,10 @@ void draw_monsters() {
 	if(is_out())
 		for(i = 0; i < 10; i++)
 			if(univ.party.out_c[i].exists) {
-				if((point_onscreen(univ.party.p_loc, univ.party.out_c[i].m_loc)) &&
-					(can_see_light(univ.party.p_loc, univ.party.out_c[i].m_loc,sight_obscurity) < 5)) {
-					where_draw.x = univ.party.out_c[i].m_loc.x - univ.party.p_loc.x + 4;
-					where_draw.y = univ.party.out_c[i].m_loc.y - univ.party.p_loc.y + 4;
+				if((point_onscreen(univ.party.out_loc, univ.party.out_c[i].m_loc)) &&
+					(can_see_light(univ.party.out_loc, univ.party.out_c[i].m_loc,sight_obscurity) < 5)) {
+					where_draw.x = univ.party.out_c[i].m_loc.x - univ.party.out_loc.x + 4;
+					where_draw.y = univ.party.out_c[i].m_loc.y - univ.party.out_loc.y + 4;
 					
 					for(j = 0; univ.party.out_c[i].what_monst.monst[j] == 0 && j < 7; j++);
 					
@@ -347,7 +347,7 @@ void draw_town_boat(location center) {
 	sf::Texture& vehicle_gworld = *ResMgr::get<ImageRsrc>("vehicle");
 	
 	for(i = 0; i < univ.party.boats.size(); i++)
-		if((univ.party.boats[i].which_town == univ.town.num) &&
+		if((univ.party.boats[i].which_town == univ.party.town_num) &&
 			((point_onscreen(center, univ.party.boats[i].loc)) &&
 			 (can_see_light(center, univ.party.boats[i].loc,sight_obscurity) < 5) && (univ.party.in_boat != i)
 			 && (pt_in_light(center,univ.party.boats[i].loc)))) {
@@ -356,7 +356,7 @@ void draw_town_boat(location center) {
 				Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0);
 			}
 	for(i = 0; i < univ.party.horses.size(); i++)
-		if((univ.party.horses[i].which_town == univ.town.num) &&
+		if((univ.party.horses[i].which_town == univ.party.town_num) &&
 			((point_onscreen(center, univ.party.horses[i].loc)) &&
 			 (can_see_light(center, univ.party.horses[i].loc,sight_obscurity) < 5) && (univ.party.in_horse != i)
 			 && (pt_in_light(center,univ.party.horses[i].loc)))) {
@@ -437,11 +437,11 @@ void draw_party_symbol(location center) {
 		return;
 	if(!univ.party.is_alive())
 		return;
-	if((is_town()) && (univ.town.p_loc.x > 70))
+	if((is_town()) && (univ.party.town_loc.x > 70))
 		return;
 	if(overall_mode == MODE_LOOK_TOWN || cartoon_happening) {
-		target.x += univ.town.p_loc.x - center.x;
-		target.y += univ.town.p_loc.y - center.y;
+		target.x += univ.party.town_loc.x - center.x;
+		target.y += univ.party.town_loc.y - center.y;
 	}
 	
 	if((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
@@ -472,9 +472,9 @@ void draw_party_symbol(location center) {
 		}
 		ter_num_t ter = 0;
 		if(is_out())
-			ter = univ.out[univ.party.p_loc.x][univ.party.p_loc.y];
+			ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
 		else if(is_town() || is_combat())
-			ter = univ.town->terrain(univ.town.p_loc.x,univ.town.p_loc.y);
+			ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
 		// now wedge in bed graphic
 		if(is_town() && univ.scenario.ter_types[ter].special == eTerSpec::BED)
 			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + univ.scenario.ter_types[ter].flag1);

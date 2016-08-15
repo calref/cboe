@@ -21,7 +21,7 @@
 #include "fileio.hpp"
 #include "mathutil.hpp"
 
-cParty::cParty(cUniverse& univ, long party_preset) : univ(univ) {
+cParty::cParty(long party_preset) {
 	gold = 200;
 	food = 100;
 	// Note: These starting position values were in the original code and so are included here.
@@ -32,8 +32,8 @@ cParty::cParty(cUniverse& univ, long party_preset) : univ(univ) {
 	i_w_c.y = 1;
 	loc_in_sec.x = 36;
 	loc_in_sec.y = 36;
-	p_loc.x = 84;
-	p_loc.y = 84;
+	out_loc.x = 84;
+	out_loc.y = 84;
 	in_boat = -1;
 	in_horse = -1;
 	std::fill(magic_ptrs.begin(), magic_ptrs.end(), 0);
@@ -53,7 +53,7 @@ cParty::~cParty() {
 	}
 }
 
-void cParty::append(legacy::party_record_type& old){
+void cParty::append(legacy::party_record_type& old, const cScenario& scen){
 	int i,j;
 	age = old.age;
 	gold = old.gold;
@@ -77,8 +77,8 @@ void cParty::append(legacy::party_record_type& old){
 	outdoor_corner.y = old.outdoor_corner.y;
 	i_w_c.x = old.i_w_c.x;
 	i_w_c.y = old.i_w_c.y;
-	p_loc.x = old.p_loc.x;
-	p_loc.y = old.p_loc.y;
+	out_loc.x = old.p_loc.x;
+	out_loc.y = old.p_loc.y;
 	loc_in_sec.x = old.loc_in_sec.x;
 	loc_in_sec.y = old.loc_in_sec.y;
 	if(stuff_done[304][0]) {
@@ -122,13 +122,13 @@ void cParty::append(legacy::party_record_type& old){
 		for(i = 0; i < 140; i++){
 			if(old.special_notes_str[i][0] <= 0) continue;
 			cEncNote n;
-			n.append(old.special_notes_str[i], univ.scenario);
+			n.append(old.special_notes_str[i], scen);
 			special_notes.push_back(n);
 		}
 		talk_save.reserve(120);
 		for(i = 0; i < 120; i++){
 			cConvers t;
-			t.append(old.talk_save[i], univ.scenario);
+			t.append(old.talk_save[i], scen);
 			talk_save.push_back(t);
 		}
 	}
@@ -351,8 +351,8 @@ int cParty::get_magic() const {
 int cParty::get_level() const {
 	short j = 0;
 	for(int i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			j += univ.party[i].level;
+		if(adven[i]->main_status == eMainStatus::ALIVE)
+			j += adven[i]->level;
 	return j;
 }
 
@@ -442,9 +442,9 @@ void cParty::restore_sp(int how_much) {
 }
 
 location cParty::get_loc() const {
-	if(univ.town.num == 200)
-		return p_loc;
-	return univ.town.p_loc;
+	if(town_num == 200)
+		return out_loc;
+	return town_loc;
 }
 
 int cParty::calc_day() const {
@@ -461,10 +461,7 @@ bool cParty::give_item(cItem item,int flags) {
 
 // TODO: Utilize the second parameter in special node processing
 // if abil > 0, force abil, else ignore
-bool cParty::forced_give(item_num_t item_num,eItemAbil abil,short dat) {
-	if(item_num < 0 || item_num >= univ.scenario.scen_items.size())
-		return true;
-	cItem item = univ.scenario.scen_items[item_num];
+bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 	if(abil > eItemAbil::NONE) {
 		item.ability = abil;
 		item.abil_data[0] = dat / 1000;
@@ -477,7 +474,7 @@ bool cParty::forced_give(item_num_t item_num,eItemAbil abil,short dat) {
 				
 				if(print_result) {
 					std::ostringstream announce;
-					announce << "  " << univ.party[i].name << " gets ";
+					announce << "  " << adven[i]->name << " gets ";
 					if(!item.ident)
 						announce << item.name;
 					else announce << item.full_name;
@@ -569,7 +566,7 @@ void cParty::writeTo(std::ostream& file) const {
 	file << "LIGHT " << light_level << '\n';
 	file << "OUTCORNER " << outdoor_corner.x << ' ' << outdoor_corner.y << '\n';
 	file << "INWHICHCORNER " << i_w_c.x << ' ' << i_w_c.y << '\n';
-	file << "SECTOR " << p_loc.x << ' ' << p_loc.y << '\n';
+	file << "SECTOR " << out_loc.x << ' ' << out_loc.y << '\n';
 	file << "LOCINSECTOR " << loc_in_sec.x << ' ' << loc_in_sec.y << '\n';
 	file << "IN " << in_boat << ' ' << in_horse << '\n';
 	for(auto& kv : status) {
@@ -802,7 +799,7 @@ void cParty::readFrom(std::istream& file){
 		else if(cur == "INWHICHCORNER")
 			sin >> i_w_c.x >> i_w_c.y;
 		else if(cur == "SECTOR")
-			sin >> p_loc.x >> p_loc.y;
+			sin >> out_loc.x >> out_loc.y;
 		else if(cur == "LOCINSECTOR")
 			sin >> loc_in_sec.x >> loc_in_sec.y;
 		else if(cur == "SPLIT_LEFT_IN")
@@ -1050,13 +1047,6 @@ unsigned char cParty::get_ptr(unsigned short p){
 	return stuff_done[iter->second.first][iter->second.second];
 }
 
-unsigned char& cParty::cpn_flag(unsigned int x, unsigned int y, std::string id) {
-	if(id.empty()) id = univ.scenario.campaign_id;
-	if(id.empty()) id = univ.scenario.scen_name;
-	if(x >= 25 || y >= 25) throw std::range_error("Attempted to access a campaign flag out of range (0..25)");
-	return campaign_flags[id].idx[x][y];
-}
-
 bool cParty::is_split() const {
 	bool ret = false;
 	for(int i = 0; i < 6; i++)
@@ -1067,7 +1057,7 @@ bool cParty::is_split() const {
 
 bool cParty::pc_present(short i) const {
 	if(i >= 6 || i < 0) return false;
-	return !isSplit(univ.party[i].main_status);
+	return !isSplit(adven[i]->main_status);
 }
 
 extern cUniverse univ;
@@ -1078,10 +1068,10 @@ bool cParty::start_split(short x,short y,snd_num_t noise,short who) {
 	if(is_split())
 		return false;
 	// TODO: Allow splitting an arbitrary subgroup of the party
-	left_at = univ.town.p_loc;
-	left_in = univ.town.num;
-	univ.town.p_loc.x = x;
-	univ.town.p_loc.y = y;
+	left_at = town_loc;
+	left_in = town_num;
+	town_loc.x = x;
+	town_loc.y = y;
 	for(i = 0; i < 6; i++) {
 		if(i != who)
 			adven[i]->main_status += eMainStatus::SPLIT;

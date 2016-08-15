@@ -43,11 +43,8 @@ class cCurTown {
 public:
 	bool quickfire_present = false, belt_present = false;
 	// formerly current_town_type
-	size_t num; // 200 if outdoors (my addition)
 	short difficulty;
 	cPopulation monst;
-	bool in_boat; // is this really needed?
-	location p_loc;
 	
 	std::vector<cItem> items; // formerly town_item_list type
 	
@@ -172,6 +169,8 @@ public:
 	
 	std::string& get_buf() {return strbuf;}
 	void swap_buf(int newbuf) {std::swap(strbuf, extrabufs[newbuf]);}
+	
+	unsigned char& cpn_flag(unsigned int x, unsigned int y, std::string id = "");
 				
 	cScenario scenario;
 	cParty party;

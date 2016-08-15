@@ -192,7 +192,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 			
 			len = (long) sizeof(legacy::town_item_list);
 			fin.read((char*)&t_i, len);
-		}else univ.town.num = 200;
+		}else univ.party.town_num = 200;
 		
 		// LOAD STORED ITEMS
 		for(int i = 0; i < 3; i++) {
@@ -233,7 +233,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		univ.party.scen_name = "";
 	}
 	
-	univ.party.append(store_party);
+	univ.party.append(store_party, univ.scenario);
 	univ.party.append(store_setup);
 	univ.party.append(store_pc);
 	if(in_scen){
@@ -347,7 +347,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ){
 				for(int j = 0; j < 8; j++)
 					for(int k = 0; k < 64; k++)
 						univ.town_maps[i][j][k] = fin2.get();
-		} else univ.town.num = 200;
+		} else univ.party.town_num = 200;
 		
 		// Load outdoors data
 		std::istream& fin = partyIn.getFile("save/out.txt");
@@ -417,7 +417,7 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	}
 	
 	if(!univ.party.scen_name.empty()) {
-		if(univ.town.num < 200) {
+		if(univ.party.town_num < 200) {
 			// Write the current town data
 			univ.town.writeTo(partyOut.newFile("save/town.txt"));
 			

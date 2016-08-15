@@ -625,7 +625,7 @@ void draw_text_bar() {
 	short i;
 	location loc;
 	
-	loc = (is_out()) ? global_to_local(univ.party.p_loc) : univ.town.p_loc;
+	loc = (is_out()) ? global_to_local(univ.party.out_loc) : univ.party.town_loc;
 	
 	bool in_area = false;
 	if(is_out()) {
@@ -772,13 +772,13 @@ void draw_terrain(short	mode) {
 	anim_onscreen = false;
 	
 	if(is_town())
-		view_loc = univ.town.p_loc;
+		view_loc = univ.party.town_loc;
 	if(is_combat())
 		view_loc = univ.party[(current_pc < 6) ? current_pc : first_active_pc()].combat_pos;
 	
 	for(i = 0; i < 13; i++)
 		for(j = 0; j < 13; j++) {
-			where_draw =  (is_out()) ? univ.party.p_loc : center;
+			where_draw =  (is_out()) ? univ.party.out_loc : center;
 			where_draw.x += i - 6;
 			where_draw.y += j - 6;
 			if(!(is_out()))
@@ -792,7 +792,7 @@ void draw_terrain(short	mode) {
 	forcecage_locs.clear();
 	for(q = 0; q < 9; q++) {
 		for(r = 0; r < 9; r++) {
-			where_draw = (is_out()) ? univ.party.p_loc : center;
+			where_draw = (is_out()) ? univ.party.out_loc : center;
 			where_draw.x += q - 4;
 			where_draw.y += r - 4;
 			off_terrain = false;
@@ -835,7 +835,7 @@ void draw_terrain(short	mode) {
 				can_draw = is_explored(where_draw.x,where_draw.y);
 				
 				if(can_draw > 0) {
-					if(!pt_in_light(univ.town.p_loc,where_draw))
+					if(!pt_in_light(univ.party.town_loc,where_draw))
 						can_draw = 0;
 				}
 				if((overall_mode == MODE_LOOK_TOWN) && (can_draw == 0))
@@ -932,13 +932,13 @@ void draw_terrain(short	mode) {
 	// Not camping. Place misc. stuff
 	if(overall_mode != MODE_RESTING) {
 		if(is_out())
-			draw_outd_boats(univ.party.p_loc);
+			draw_outd_boats(univ.party.out_loc);
 		else if((is_town()) || (which_combat_type == 1))
 			draw_town_boat(center);
 		draw_monsters();
 	}
 	
-	if((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(univ.town.p_loc,center)))
+	if((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(univ.party.town_loc,center)))
 		|| (overall_mode == MODE_RESTING))
 		draw_party_symbol(center);
 	else if(overall_mode != MODE_LOOK_TOWN)
@@ -1564,7 +1564,7 @@ void draw_targeting_line(location where_curs) {
 	
 	if(overall_mode >= MODE_COMBAT)
 		from_loc = univ.party[current_pc].combat_pos;
-	else from_loc = univ.town.p_loc;
+	else from_loc = univ.party.town_loc;
 	if((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat.pattern[4][4] != 0))) {
 		

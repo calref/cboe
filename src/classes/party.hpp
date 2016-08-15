@@ -42,7 +42,7 @@ struct job_bank_t {
 	bool inited = false;
 };
 
-class cUniverse;
+class cItem;
 
 class cParty : public iLiving {
 public:
@@ -82,8 +82,9 @@ public:
 	location outdoor_corner;
 	location i_w_c;
 	// TODO: Does this duplicate cCurTown::p_loc? If not, why not?
-	location p_loc;
+	location out_loc, town_loc;
 	location loc_in_sec;
+	short town_num;
 	std::array<cVehicle,30> boats;
 	std::array<cVehicle,30> horses;
 	cPopulation creature_save[4];
@@ -117,7 +118,6 @@ public:
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	std::string scen_name;
 private:
-	cUniverse& univ;
 	std::array<cPlayer*,6> adven;
 public:
 	unsigned short setup[4][64][64]; // formerly setup_save_type
@@ -125,8 +125,8 @@ public:
 	
 	std::vector<cMonster> summons; // an array of monsters which can be summoned by the party's items yet don't originate from this scenario
 	unsigned short scen_won, scen_played; // numbers of scenarios won and played respectively by this party
-private:
 	std::map<std::string,campaign_flag_type> campaign_flags;
+private:
 	std::map<unsigned short,std::pair<unsigned short,unsigned char>> pointers;
 public:
 	
@@ -135,9 +135,7 @@ public:
 	void clear_ptr(unsigned short p);
 	unsigned char get_ptr(unsigned short p);
 	
-	unsigned char& cpn_flag(unsigned int x, unsigned int y, std::string id = "");
-	
-	void append(legacy::party_record_type& old);
+	void append(legacy::party_record_type& old, const cScenario& scen);
 	void append(legacy::big_tr_type& old);
 	void append(legacy::stored_items_list_type& old,short which_list);
 	void append(legacy::setup_save_type& old);
@@ -187,7 +185,7 @@ public:
 	void readFrom(std::istream& file);
 	
 	bool give_item(cItem item,int flags);
-	bool forced_give(item_num_t item_num,eItemAbil abil,short dat = -1);
+	bool forced_give(cItem item,eItemAbil abil,short dat = -1);
 	bool has_abil(eItemAbil abil, short dat = -1);
 	bool take_abil(eItemAbil abil, short dat = -1);
 	bool check_class(unsigned int item_class,bool take);
@@ -204,7 +202,7 @@ public:
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
-	cParty(cUniverse& univ, long party_preset = 'dflt');
+	cParty(long party_preset = 'dflt');
 	~cParty();
 };
 

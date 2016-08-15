@@ -2350,7 +2350,7 @@ void do_monster_turn() {
 			}
 			else {
 				if(univ.town.monst[i].target < 6)
-					targ_space = univ.town.p_loc;
+					targ_space = univ.party.town_loc;
 				else if(univ.town.monst[i].target != 6)
 					targ_space = univ.town.monst[univ.town.monst[i].target - 100].cur_loc;
 			}
@@ -2779,7 +2779,7 @@ void do_monster_turn() {
 	
 	// If in town, need to restore center
 	if(overall_mode < MODE_COMBAT)
-		center = univ.town.p_loc;
+		center = univ.party.town_loc;
 	if(had_monst)
 		put_pc_screen();
 	for(i = 0; i < 6; i++)
@@ -3507,7 +3507,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 		if(targ < 6 && univ.town.is_antimagic(univ.party[targ].combat_pos.x,univ.party[targ].combat_pos.y))
 			return false;
 	if(is_town())
-		if(targ < 6 && univ.town.is_antimagic(univ.town.p_loc.x,univ.town.p_loc.y))
+		if(targ < 6 && univ.town.is_antimagic(univ.party.town_loc.x,univ.party.town_loc.y))
 			return false;
 	if(targ >= 100 && univ.town.is_antimagic(univ.town.monst[targ - 100].cur_loc.x, univ.town.monst[targ - 100].cur_loc.y))
 		return false;
@@ -3812,7 +3812,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 	iLiving& victim = univ.get_target(targ);
 	location vict_loc = victim.get_loc();
 	if(targ < 6)
-		vict_loc = (is_town()) ? univ.town.p_loc : univ.party[targ].combat_pos;
+		vict_loc = (is_town()) ? univ.party.town_loc : univ.party[targ].combat_pos;
 	if(targ >= 100)
 		vict_loc = univ.town.monst[targ - 100].cur_loc;
 	
@@ -4093,7 +4093,7 @@ short count_levels(location where,short radius) {
 				store = store + 10;
 	}
 	if(is_town())
-		if(vdist(where,univ.town.p_loc) <= radius && can_see(where,univ.town.p_loc,sight_obscurity) < 5)
+		if(vdist(where,univ.party.town_loc) <= radius && can_see(where,univ.party.town_loc,sight_obscurity) < 5)
 			store += 20;
 	
 	return store;
@@ -4106,7 +4106,7 @@ bool pc_near(short pc_num,location where,short radius) {
 			return true;
 		else return false;
 	}
-	if(univ.party[pc_num].main_status == eMainStatus::ALIVE && vdist(univ.town.p_loc,where) <= radius)
+	if(univ.party[pc_num].main_status == eMainStatus::ALIVE && vdist(univ.party.town_loc,where) <= radius)
 		return true;
 	else return false;
 }
@@ -4252,7 +4252,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 				spot_hit.y = j;
 				if(sight_obscurity(i,j) < 5 && univ.party[k].main_status == eMainStatus::ALIVE
 					&& (((is_combat()) && (univ.party[k].combat_pos == spot_hit)) ||
-						((is_town()) && (univ.town.p_loc == spot_hit)))) {
+						((is_town()) && (univ.party.town_loc == spot_hit)))) {
 					effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 					switch(effect) {
 						case WALL_FORCE:
@@ -4475,7 +4475,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type) {
 	// TODO: Why no booms in town mode?
 	if(is_town()) {
 		for(i = 0; i < 6; i++)
-			if((dist(target,univ.town.p_loc) > 0) && (dist(target,univ.town.p_loc) <= radius)
+			if((dist(target,univ.party.town_loc) > 0) && (dist(target,univ.party.town_loc) <= radius)
 				&& univ.party[i].main_status == eMainStatus::ALIVE)
 				damage_pc(univ.party[i], dam, type,eRace::UNKNOWN,0);
 		for(i = 0; i < univ.town.monst.size(); i++)
@@ -4547,7 +4547,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 					stop_hitting = (hit_all == 1) ? false : true;
 				}
 	if(overall_mode < MODE_COMBAT)
-		if(target == univ.town.p_loc) {
+		if(target == univ.party.town_loc) {
 			fast_bang = 1;
 			hit_party(dam,type);
 			fast_bang = 0;
@@ -4655,7 +4655,7 @@ void handle_acid() {
 					move_to_zero(univ.party[i].status[eStatus::ACID]);
 				}
 		if(overall_mode < MODE_COMBAT)
-			boom_space(univ.party.p_loc,overall_mode,3,r1,8);
+			boom_space(univ.party.out_loc,overall_mode,3,r1,8);
 	}
 }
 
@@ -5485,7 +5485,7 @@ void scloud_space(short m,short n) {
 					univ.party[i].curse(get_ran(1,1,2));
 				}
 	if(overall_mode < MODE_COMBAT)
-		if(target == univ.town.p_loc) {
+		if(target == univ.party.town_loc) {
 			for(i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					univ.party[i].curse(get_ran(1,1,2));
@@ -5508,7 +5508,7 @@ void web_space(short m,short n) {
 					univ.party[i].web(3);
 				}
 	if(overall_mode < MODE_COMBAT)
-		if(target == univ.town.p_loc) {
+		if(target == univ.party.town_loc) {
 			for(i = 0; i < 6; i++)
 				univ.party[i].web(3);
 		}
@@ -5529,7 +5529,7 @@ void sleep_cloud_space(short m,short n) {
 					univ.party[i].sleep(eStatus::ASLEEP,3,0);
 				}
 	if(overall_mode < MODE_COMBAT)
-		if(target == univ.town.p_loc) {
+		if(target == univ.party.town_loc) {
 			univ.party.sleep(eStatus::ASLEEP,3,0);
 		}
 }

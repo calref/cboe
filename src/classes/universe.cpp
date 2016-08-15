@@ -26,17 +26,16 @@ void cCurOut::append(legacy::out_info_type& old){
 }
 
 void cCurTown::append(legacy::current_town_type& old){
-	num = old.town_num;
+	univ.party.town_num = old.town_num;
 	difficulty = old.difficulty;
 	record()->append(old.town);
 	for(int i = 0; i < 64; i++)
 		for(int j = 0; j < 64; j++)
 			fields[i][j] = old.explored[i][j];
 	monst.append(old.monst);
-	in_boat = old.in_boat;
-	p_loc.x = old.p_loc.x;
-	p_loc.y = old.p_loc.y;
-	cur_talk_loaded = num;
+	univ.party.town_loc.x = old.p_loc.x;
+	univ.party.town_loc.y = old.p_loc.y;
+	cur_talk_loaded = old.town_num;
 }
 
 void cCurTown::append(legacy::big_tr_type& old){
@@ -186,8 +185,8 @@ cCurTown::~cCurTown() {
 }
 
 cTown*const cCurTown::record() const {
-	if(num == 200) return arena;
-	return univ.scenario.towns[num];
+	if(univ.party.town_num == 200) return arena;
+	return univ.scenario.towns[univ.party.town_num];
 }
 
 bool cCurTown::is_explored(short x, short y) const{
@@ -786,11 +785,10 @@ void cCurOut::readFrom(std::istream& file) {
 }
 
 void cCurTown::writeTo(std::ostream& file) const {
-	file << "TOWN " << num << '\n';
+	file << "TOWN " << univ.party.town_num << '\n';
 	file << "DIFFICULTY " << difficulty << '\n';
 	if(monst.hostile) file << "HOSTILE" << '\n';
-	file << "INBOAT " << in_boat << '\n';
-	file << "AT " << p_loc.x << ' ' << p_loc.y << '\n';
+	file << "AT " << univ.party.town_loc.x << ' ' << univ.party.town_loc.y << '\n';
 	file << '\f';
 	for(size_t i = 0; i < items.size(); i++)
 		if(items[i].variety != eItemType::NO_ITEM){
@@ -826,15 +824,13 @@ void cCurTown::readFrom(std::istream& file){
 		sin.str(cur);
 		sin >> cur;
 		if(cur == "TOWN")
-			sin >> num;
+			sin >> univ.party.town_num;
 		else if(cur == "DIFFICULTY")
 			sin >> difficulty;
 		else if(cur == "HOSTILE")
 			monst.hostile = true;
-		else if(cur == "INBOAT")
-			sin >> in_boat;
 		else if(cur == "AT")
-			sin >> p_loc.x >> p_loc.y;
+			sin >> univ.party.town_loc.x >> univ.party.town_loc.y;
 		sin.clear();
 	}
 	bin.clear();
@@ -843,6 +839,7 @@ void cCurTown::readFrom(std::istream& file){
 		bin.str(cur);
 		bin >> cur;
 		if(cur == "FIELDS") {
+			int num = univ.party.town_num;
 			bin >> std::hex;
 			readArray(bin, fields, univ.scenario.towns[num]->max_dim(), univ.scenario.towns[num]->max_dim());
 			bin >> std::dec;
@@ -858,14 +855,14 @@ void cCurTown::readFrom(std::istream& file){
 			monst.readFrom(bin, i);
 			monst[i].active = true;
 		} else if(cur == "TERRAIN")
-			univ.scenario.towns[num]->readTerrainFrom(bin);
+			univ.scenario.towns[univ.party.town_num]->readTerrainFrom(bin);
 		bin.clear();
 	}
 }
 
 cCurTown::cCurTown(cUniverse& univ) : univ(univ) {
 	arena = nullptr;
-	num = 200;
+	univ.party.town_num = 200;
 	for(int i = 0; i < 64; i++)
 		for(int j = 0; j < 64; j++)
 			fields[i][j] = 0L;
@@ -896,7 +893,7 @@ bool cCurOut::is_road(int x, int y) {
 	return univ.scenario.outdoors[sector_x][sector_y]->roads[x][y];
 }
 
-cUniverse::cUniverse(long party_type) : party(*this, party_type), out(*this), town(*this) {}
+cUniverse::cUniverse(long party_type) : party(party_type), out(*this), town(*this) {}
 
 void cUniverse::check_monst(cMonster& monst) {
 	if(monst.see_spec == -2) return; // Avoid infinite recursion
@@ -1007,6 +1004,13 @@ iLiving* cUniverse::target_there(location where, eTargetType type) {
 				return &town.monst[i];
 	}
 	return nullptr;
+}
+
+unsigned char& cUniverse::cpn_flag(unsigned int x, unsigned int y, std::string id) {
+	if(id.empty()) id = scenario.campaign_id;
+	if(id.empty()) id = scenario.scen_name;
+	if(x >= 25 || y >= 25) throw std::range_error("Attempted to access a campaign flag out of range (0..25)");
+	return party.campaign_flags[id].idx[x][y];
 }
 
 extern cCustomGraphics spec_scen_g;
