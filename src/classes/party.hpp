@@ -14,6 +14,9 @@
 #include <array>
 #include <map>
 #include <set>
+
+#include <boost/iterator/indirect_iterator.hpp>
+
 #include "vehicle.hpp"
 #include "creatlist.hpp"
 #include "item.hpp"
@@ -198,6 +201,14 @@ public:
 	void swap_pcs(size_t a, size_t b);
 	
 	bool sd_legit(short a, short b);
+	
+	auto begin() -> boost::indirect_iterator<decltype(adven)::iterator> {
+		return boost::make_indirect_iterator(adven.begin());
+	}
+	
+	auto end() -> boost::indirect_iterator<decltype(adven)::iterator> {
+		return boost::make_indirect_iterator(adven.end());
+	}
 	
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;
