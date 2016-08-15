@@ -121,7 +121,7 @@ cOutdoors::cOutdoors(cScenario& scenario) : scenario(&scenario) {
 			roads[i][j] = false;
 		}
 	
-	for(i = 0; i < 4; i++) {
+	for(i = 0; i < wandering_locs.size(); i++) {
 		wandering_locs[i] = locs[i];
 	}
 	out_name = "Area name";

@@ -287,11 +287,11 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 	if(editing_town) {
 		if(scenario.ter_types[t_to_draw].light_radius > 0)
 			icons.push_back(83);
-		for(size_t i = 0; i < 4; i++)
+		for(size_t i = 0; i < town->start_locs.size(); i++)
 			if(at == town->start_locs[i]) {
 				icons.push_back(70 + i);
 			}
-		for(size_t i = 0; i < 4; i++)
+		for(size_t i = 0; i < town->wandering_locs.size(); i++)
 			if(at == town->wandering_locs[i]) {
 				icons.push_back(86);
 			}
@@ -302,7 +302,7 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 			icons.push_back(34);
 		}
 	} else {
-		for(size_t i = 0; i < 4; i++)
+		for(size_t i = 0; i < current_terrain->wandering_locs.size(); i++)
 			if(at == current_terrain->wandering_locs[i]) {
 				icons.push_back(86);
 			}
@@ -1244,13 +1244,13 @@ void draw_frames() {
 			draw_rect.left = 23 + q * 28;
 			draw_rect.right = 50 + q * 28;
 			draw_rect.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
-			for(i = 0; i < 4; i++)
+			for(i = 0; i < town->wandering_locs.size(); i++)
 				if((which_pt.x == town->wandering_locs[i].x) &&
 					(which_pt.y == town->wandering_locs[i].y)) {
 					
 					frame_rect(mainPtr, draw_rect, sf::Color::Red);
 				}
-			for(i = 0; i < 4; i++)
+			for(i = 0; i < town->start_locs.size(); i++)
 				if((which_pt.x == town->start_locs[i].x) &&
 					(which_pt.y == town->start_locs[i].y)) {
 					frame_rect(mainPtr, draw_rect, sf::Color::Magenta);

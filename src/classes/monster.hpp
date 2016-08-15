@@ -11,6 +11,7 @@
 
 #include <string>
 #include <map>
+#include <array>
 #include <iosfwd>
 
 #include "soundtool.hpp"
@@ -99,7 +100,7 @@ public:
 	short m_health;
 	unsigned int armor;
 	unsigned int skill;
-	cAttack a[3];
+	std::array<cAttack, 3> a;
 	eRace m_type;
 	unsigned int speed;
 	unsigned int mu;

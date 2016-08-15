@@ -850,8 +850,8 @@ cPlayer::cPlayer(cParty& party) : party(&party) {
 		equip[i] = false;
 	
  	for(i = 0; i < 62; i++) {
-		priest_spells[i] = (i < 30) ? true : false;
-		mage_spells[i] = (i < 30) ? true : false;
+		priest_spells[i] = i < 30;
+		mage_spells[i] = i < 30;
 	}
 	which_graphic = 0;
 	weap_poisoned = 24;
@@ -908,10 +908,8 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		for(i = 0; i < 24; i++)
 			equip[i] = false;
 		
-		for(i = 0; i < 62; i++) {
-			priest_spells[i] = true;
-			mage_spells[i] = true;
-		}
+		priest_spells.set();
+		mage_spells.set();
 		which_graphic = slot * 3 + 1;	// 1, 4, 7, 10, 13, 16
 		if(slot == 2) which_graphic++;
 		weap_poisoned = 24; // was 16, as an E2 relic
@@ -1004,8 +1002,8 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		cur_sp = pc_sp[slot];
 		max_sp = pc_sp[slot];
 		for(i = 0; i < 62; i++) {
-			priest_spells[i] = (i < 30) ? true : false;
-			mage_spells[i] = (i < 30) ? true : false;
+			priest_spells[i] = i < 30;
+			mage_spells[i] = i < 30;
 		}
 		for(i = 0; i < 15; i++) {
 			eTrait trait = eTrait(i);

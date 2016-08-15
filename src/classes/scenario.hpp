@@ -91,7 +91,7 @@ public:
 	std::string scen_name;
 	std::string who_wrote[2];
 	std::string contact_info[2];
-	std::string intro_strs[6];
+	std::array<std::string, 6> intro_strs;
 	std::vector<std::string> journal_strs;
 	std::vector<std::string> spec_strs;
 	std::vector<std::string> snd_names;

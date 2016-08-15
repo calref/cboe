@@ -239,8 +239,8 @@ void handle_menu_choice(eMenu item_hit) {
 			
 		case eMenu::RESET_TOWNS:
 			display_strings(20,7);
-			for(i = 0; i < 4; i++)
-				univ.party.creature_save[i].which_town = 200;
+			for(auto& pop : univ.party.creature_save)
+				pop.which_town = 200;
 			break;
 		case eMenu::HEAL_DAMAGE:
 			display_strings(1,15);

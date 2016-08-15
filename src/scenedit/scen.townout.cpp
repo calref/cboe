@@ -729,11 +729,11 @@ void edit_town_events() {
 
 static bool save_advanced_town(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < town->exits.size(); i++) {
 		std::string id = std::to_string(i + 1);
-		town->exit_specs[i] = me["onexit" + id].getTextAsNum();
-		town->exit_locs[i].x = me["exit" + id + "-x"].getTextAsNum();
-		town->exit_locs[i].y = me["exit" + id + "-y"].getTextAsNum();
+		town->exits[i].spec = me["onexit" + id].getTextAsNum();
+		town->exits[i].x = me["exit" + id + "-x"].getTextAsNum();
+		town->exits[i].y = me["exit" + id + "-y"].getTextAsNum();
 	}
 	town->spec_on_entry = me["onenter"].getTextAsNum();
 	town->spec_on_entry_if_dead = me["onenterdead"].getTextAsNum();
@@ -750,11 +750,11 @@ static bool save_advanced_town(cDialog& me, std::string, eKeyMod) {
 
 static void put_advanced_town_in_dlog(cDialog& me) {
 	short i;
-	for(i = 0; i < 4; i++) {
+	for(i = 0; i < town->exits.size(); i++) {
 		std::string id = std::to_string(i + 1);
-		me["onexit" + id].setTextToNum(town->exit_specs[i]);
-		me["exit" + id + "-x"].setTextToNum(town->exit_locs[i].x);
-		me["exit" + id + "-y"].setTextToNum(town->exit_locs[i].y);
+		me["onexit" + id].setTextToNum(town->exits[i].spec);
+		me["exit" + id + "-x"].setTextToNum(town->exits[i].x);
+		me["exit" + id + "-y"].setTextToNum(town->exits[i].y);
 	}
 	me["onenter"].setTextToNum(town->spec_on_entry);
 	me["onenterdead"].setTextToNum(town->spec_on_entry_if_dead);

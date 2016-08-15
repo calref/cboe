@@ -51,8 +51,8 @@ public:
 	short level;
 	std::array<cItem,24> items;
 	std::array<bool,24> equip;
-	bool priest_spells[62];
-	bool mage_spells[62];
+	std::bitset<62> priest_spells;
+	std::bitset<62> mage_spells;
 	pic_num_t which_graphic;
 	short weap_poisoned;
 	// HACK: This is only really marked mutable so that I can use operator[] from const methods

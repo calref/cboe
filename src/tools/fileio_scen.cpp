@@ -699,7 +699,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				} else if(type == "icon") {
 					info->GetText(&scenario.intro_mess_pic);
 				} else if(type == "intro-msg") {
-					if(found_intro >= 6)
+					if(found_intro >= scenario.intro_strs.size())
 						throw xBadNode(type,info->Row(),info->Column(),fname);
 					info->GetText(&scenario.intro_strs[found_intro], false);
 					found_intro++;
@@ -1385,7 +1385,7 @@ void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 				Iterator<Element> atk;
 				for(atk = atk.begin(monst.Get()); atk != atk.end(); atk++) {
 					atk->GetValue(&type);
-					if(num_attacks >= 3 || type != "attack")
+					if(num_attacks >= the_mon.a.size() || type != "attack")
 						throw xBadNode(type, atk->Row(), atk->Column(), fname);
 					cMonster::cAttack& the_atk = the_mon.a[num_attacks];
 					atk->GetText(&val);
@@ -1629,13 +1629,13 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 			size_t which = dirs.find_first_of(val);
 			if(which == std::string::npos)
 				throw xBadVal(type, "dir", val, elem->Row(), elem->Column(), fname);
-			town->exit_locs[which] = loc;
+			town->exits[which] = loc;
 		} else if(type == "onexit") {
 			elem->GetAttribute("dir", &val);
 			size_t which = dirs.find_first_of(val);
 			if(which == std::string::npos)
 				throw xBadVal(type, "dir", val, elem->Row(), elem->Column(), fname);
-			elem->GetText(&town->exit_specs[which]);
+			elem->GetText(&town->exits[which].spec);
 		} else if(type == "onoffend") {
 			elem->GetText(&town->spec_on_hostile);
 		} else if(type == "timer") {

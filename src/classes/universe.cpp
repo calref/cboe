@@ -1074,9 +1074,9 @@ void cUniverse::exportGraphics() {
 			check_item(party.stored_items[i][j]);
 		}
 	}
-	for(int i = 0; i < 4; i++) {
-		if(party.imprisoned_monst[i] != 0)
-			check_monst(scenario.scen_monsters[party.imprisoned_monst[i]]);
+	for(mon_num_t monst : party.imprisoned_monst) {
+		if(monst != 0)
+			check_monst(scenario.scen_monsters[monst]);
 	}
 	// And then, just add all the graphics, and update references to them
 	for(auto pic : update_pcs) {
@@ -1147,11 +1147,11 @@ void cUniverse::exportSummons() {
 			}
 		}
 	}
-	for(int i = 0; i < 4; i++) {
-		if(party.imprisoned_monst[i] == 0) continue;
-		if(party.imprisoned_monst[i] >= 10000)
-			used_monsters.insert(party.imprisoned_monst[i] - 10000);
-		else need_monsters.insert(party.imprisoned_monst[i]);
+	for(mon_num_t monst : party.imprisoned_monst) {
+		if(monst == 0) continue;
+		if(monst >= 10000)
+			used_monsters.insert(monst - 10000);
+		else need_monsters.insert(monst);
 	}
 	std::stack<mon_num_t> last_check;
 	for(mon_num_t m : need_monsters) last_check.push(m);
@@ -1185,9 +1185,9 @@ void cUniverse::exportSummons() {
 		else party.summons.push_back(scenario.scen_monsters[monst]);
 		for(auto& item : update_items[monst])
 			item->abil_data[1] = 10000 + dest;
-		for(int i = 0; i < 4; i++)
-			if(party.imprisoned_monst[i] == monst)
-				party.imprisoned_monst[i] = dest + 10000;
+		for(mon_num_t& sc : party.imprisoned_monst)
+			if(sc == monst)
+				sc = dest + 10000;
 	}
 }
 

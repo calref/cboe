@@ -140,9 +140,9 @@ void cMonster::append(legacy::monster_record_type& old){
 
 int cMonster::addAttack(unsigned short dice, unsigned short sides, eMonstMelee type) {
 	int which = 0;
-	while(which < 3 && a[which].dice > 0 && a[which].sides > 0)
+	while(which < a.size() && a[which].dice > 0 && a[which].sides > 0)
 		which++;
-	if(which >= 3) return -1;
+	if(which >= a.size()) return -1;
 	a[which].dice = dice;
 	a[which].sides = sides;
 	a[which].type = type;
@@ -779,7 +779,7 @@ void cMonster::writeTo(std::ostream& file) const {
 	file << "LEVEL " << int(level) << '\n';
 	file << "ARMOR " << int(armor) << '\n';
 	file << "SKILL " << int(skill) << '\n';
-	for(int i = 0; i < 3; i++)
+	for(int i = 0; i < a.size(); i++)
 		file << "ATTACK " << i + 1 << ' ' << a[i].dice << ' ' << a[i].sides << ' ' << a[i].type << '\n';
 	file << "HEALTH " << int(m_health) << '\n';
 	file << "SPEED " << int(speed) << '\n';
@@ -859,6 +859,7 @@ void cMonster::readFrom(std::istream& file) {
 		} else if(cur == "ATTACK") {
 			int which;
 			line >> which;
+			if(which < 0 || which >= a.size()) continue;
 			line >> a[which].dice >> a[which].sides >> a[which].type;
 			which--;
 		} else if(cur == "SIZE") {

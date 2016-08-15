@@ -147,8 +147,8 @@ static void init_party_scen_data() {
 	}
 	univ.party.in_boat = -1;
 	univ.party.in_horse = -1;
-	for(i = 0; i < 4; i++)
-		univ.party.creature_save[i].which_town = 200;
+	for(auto& pop : univ.party.creature_save)
+		pop.which_town = 200;
 	for(i = 0; i < 10; i++)
 		univ.party.out_c[i].exists = false;
 	for(i = 0; i < 5; i++)
@@ -167,6 +167,7 @@ static void init_party_scen_data() {
 	
 	univ.party.direction = DIR_N;
 	univ.party.at_which_save_slot = 0;
+	univ.party.can_find_town.resize(univ.scenario.towns.size());
 	for(i = 0; i < univ.scenario.towns.size(); i++)
 		univ.party.can_find_town[i] = !univ.scenario.towns[i]->is_hidden;
 	for(i = 0; i < 20; i++)
@@ -184,8 +185,8 @@ static void init_party_scen_data() {
 		}
 	}
 	
-	for(i = 0; i < 200; i++)
-		univ.party.m_killed[i] = 0;
+	univ.party.m_killed.clear();
+	univ.party.m_killed.resize(univ.scenario.towns.size());
 	
 	for(i = 0; i < 200; i++)
 		for(j = 0; j < 8; j++)
@@ -233,8 +234,6 @@ static void init_party_scen_data() {
 // party record already contains scen name
 void put_party_in_scen(std::string scen_name) {
 	short i,j;
-	std::array<std::string, 6> strs;
-	std::array<short, 3> buttons = {-1,-1,-1};
 	bool item_took = false;
 	
 	// Drop debug mode
@@ -276,8 +275,8 @@ void put_party_in_scen(std::string scen_name) {
 	if(item_took)
 		cChoiceDlog("removed-special-items").show();
 	univ.party.age = 0;
-	for(i = 0; i < 200; i++)
-		univ.party.m_killed[i] = 0;
+	univ.party.m_killed.clear();
+	univ.party.m_killed.resize(univ.scenario.towns.size());
 	univ.party.party_event_timers.clear();
 	
 	fs::path path = locate_scenario(scen_name);
@@ -314,12 +313,10 @@ void put_party_in_scen(std::string scen_name) {
 	adjust_monst_menu();
 	
 	// Throw up intro dialog
-	buttons[0] = 1;
-	for(j = 0; j < 6; j++)
+	for(j = 0; j < univ.scenario.intro_strs.size(); j++)
 		if(!univ.scenario.intro_strs[j].empty()) {
-			for(i = 0; i < 6; i++)
-				strs[i] = univ.scenario.intro_strs[i];
-			custom_choice_dialog(strs,univ.scenario.intro_mess_pic,PIC_SCEN,buttons) ;
+			std::array<short, 3> buttons = {0,-1,-1};
+			custom_choice_dialog(univ.scenario.intro_strs, univ.scenario.intro_mess_pic, PIC_SCEN, buttons);
 			j = 6;
 		}
 	short k;
@@ -1618,12 +1615,12 @@ bool pc_can_cast_spell(short pc_num,eSkill type) {
 	
 	// If they can't cast the most basic level 1 spell, let's just make sure they can't cast any spells.
 	// Find a spell they definitely know, and see if they can cast that.
-	if(type == eSkill::MAGE_SPELLS) {
+	if(type == eSkill::MAGE_SPELLS && univ.party[pc_num].mage_spells.any()) {
 		for(int i = 0; i < 62; i++)
 			if(univ.party[pc_num].mage_spells[i])
 				return pc_can_cast_spell(pc_num, eSpell(i));
 	}
-	if(type == eSkill::PRIEST_SPELLS) {
+	if(type == eSkill::PRIEST_SPELLS && univ.party[pc_num].priest_spells.any()) {
 		for(int i = 0; i < 62; i++)
 			if(univ.party[pc_num].priest_spells[i])
 				return pc_can_cast_spell(pc_num, eSpell(i + 100));
@@ -2273,7 +2270,7 @@ eAlchemy alch_choice(short pc_num) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		chooseAlchemy["label" + n].setText(get_str("magic-names", i + 200));
 		chooseAlchemy["potion" + n].attachClickHandler(alch_choice_event_filter);
-		if(univ.party[pc_num].skill(eSkill::ALCHEMY) < difficulty[i] || univ.party.alchemy[i] == 0)
+		if(univ.party[pc_num].skill(eSkill::ALCHEMY) < difficulty[i] || !univ.party.alchemy[i])
 			chooseAlchemy["potion" + n].hide();
 	}
 	std::ostringstream sout;
@@ -2345,13 +2342,12 @@ mon_num_t pick_trapped_monst() {
 	
 	cChoiceDlog soulCrystal("soul-crystal",{"cancel","pick1","pick2","pick3","pick4"});
 	
-	for(i = 0; i < 4; i++) {
+	for(mon_num_t which : univ.party.imprisoned_monst) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if(univ.party.imprisoned_monst[i] == 0) {
+		if(which == 0) {
 			soulCrystal->getControl("pick" + n).hide();
 		}
 		else {
-			mon_num_t which = univ.party.imprisoned_monst[i];
 			sp = get_m_name(which);
 			soulCrystal->getControl("slot" + n).setText(sp);
 			get_monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];

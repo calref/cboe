@@ -28,9 +28,9 @@ void cTown::append(legacy::town_record_type& old){
 	for(i = 0; i < 4; i++){
 		start_locs[i].x = old.start_locs[i].x;
 		start_locs[i].y = old.start_locs[i].y;
-		exit_locs[i].x = old.exit_locs[i].x;
-		exit_locs[i].y = old.exit_locs[i].y;
-		exit_specs[i] = old.exit_specs[i];
+		exits[i].x = old.exit_locs[i].x;
+		exits[i].y = old.exit_locs[i].y;
+		exits[i].spec = old.exit_specs[i];
 		wandering[i].append(old.wandering[i]);
 	}
 	preset_fields.clear();
@@ -88,9 +88,9 @@ cTown::cTown(cScenario& scenario) : scenario(&scenario) {
 	lighting_type = LIGHT_NORMAL;
 	for(i = 0; i < 4; i++) {
 		start_locs[i].x = 100;
-		exit_specs[i] = -1;
-		exit_locs[i].x = -1;
-		exit_locs[i].y = -1;
+		exits[i].spec = -1;
+		exits[i].x = -1;
+		exits[i].y = -1;
 	}
 	max_num_monst = 30000;
 	spec_on_entry = -1;
@@ -109,12 +109,8 @@ cTown::cTown(cScenario& scenario) : scenario(&scenario) {
 	comment[1] = "Comment 2";
 	comment[2] = "Comment 3";
 	
-	for(i = 0; i < 10; i++) {
-		talking.people[i].title = "Unused";
-		talking.people[i].look = "";
-		talking.people[i].name = "";
-		talking.people[i].job = "";
-		talking.people[i].dunno = "";
+	for(auto& who : talking.people) {
+		who.title = "Unused";
 	}
 }
 

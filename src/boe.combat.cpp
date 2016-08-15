@@ -2806,10 +2806,11 @@ void monster_attack(short who_att,iLiving* target) {
 		frame_space(target->get_loc(),1,1,1);
 	}
 	
-	
-	
-	if(attacker->a[0].dice != 0 || attacker->a[1].dice != 0 || attacker->a[2].dice != 0)
-		attacker->print_attacks(target);
+	for(const auto& att : attacker->a)
+		if(att.dice != 0) {
+			attacker->print_attacks(target);
+			break;
+		}
 			
 	// Some things depend on whether it's a player or a monster.
 	cCreature* m_target = dynamic_cast<cCreature*>(target);
@@ -2824,7 +2825,7 @@ void monster_attack(short who_att,iLiving* target) {
 		return;
 	}
 	
-	for(i = 0; i < 3; i++) {
+	for(i = 0; i < attacker->a.size(); i++) {
 		if(attacker->a[i].dice > 0 && target->is_alive()) {
 //			sprintf ((char *) create_line, "  Attacks %s.",(char *) univ.party[target].name);
 //			add_string_to_buf((char *) create_line);

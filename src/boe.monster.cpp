@@ -47,7 +47,7 @@ void create_wand_monst() {
 	r1 = get_ran(1,0,univ.out->wandering.size() - 1);
 	if(overall_mode == MODE_OUTDOORS) {
 		if(!univ.out->wandering[r1].isNull()) {
-			r2 = get_ran(1,0,3);
+			r2 = get_ran(1,0,univ.out->wandering_locs.size() - 1);
 			while(point_onscreen(univ.out->wandering_locs[r2], global_to_local(univ.party.out_loc)) && num_tries++ < 100)
 				r2 = get_ran(1,0,3);
 			if(!is_blocked(univ.out->wandering_locs[r2]))
@@ -593,7 +593,7 @@ bool rand_move(mon_num_t i) {
 		
 		if(univ.town.monst[i].targ_loc.x == 0) {
 			// maybe pick a wand loc, else juist pick a loc
-			j = get_ran(1,0,3);
+			j = get_ran(1,0,univ.town->wandering_locs.size() - 1);
 			store_loc = univ.town->wandering_locs[j];
 			
 			if(!loc_off_act_area(store_loc) && (get_ran(1,0,1) == 1))
@@ -1080,7 +1080,7 @@ void record_monst(cCreature* which_m, bool forced) {
 	}
 	else {
 		which_m->spell_note(24);
-		r1 = get_ran(1,0,3);
+		r1 = get_ran(1,0,univ.party.imprisoned_monst.size() - 1);
 		if(univ.party.imprisoned_monst[r1] == 0)
 			univ.party.imprisoned_monst[r1] = which_m->number;
 		else {

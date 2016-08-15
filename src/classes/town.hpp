@@ -66,13 +66,12 @@ public:
 	short town_chop_time,town_chop_key;
 	int bg_town, bg_fight;
 	std::array<cWandering,4> wandering;
-	location wandering_locs[4];
+	std::array<location, 4> wandering_locs;
 	std::vector<spec_loc_t> special_locs;
 	std::vector<sign_loc_t> sign_locs;
 	eLighting lighting_type;
-	location start_locs[4];
-	location exit_locs[4];
-	short exit_specs[4];
+	std::array<location, 4> start_locs;
+	std::array<spec_loc_t, 4> exits;
 	rectangle in_town_rect;
 	std::vector<cItem> preset_items;
 	std::vector<cTownperson> creatures;

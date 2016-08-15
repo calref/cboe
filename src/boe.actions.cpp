@@ -1817,11 +1817,11 @@ bool handle_keystroke(sf::Event& event){
 				univ.party[i].cur_sp = 100;
 			}
 			award_party_xp(25);
-			for(i = 0; i < 6; i++)
-				for(j = 0; j < 62; j++) {
-					univ.party[i].priest_spells[j] = 1;
-					univ.party[i].mage_spells[j] = 1;
-				}
+			for(i = 0; i < 6; i++) {
+				auto& who = univ.party[i];
+				who.priest_spells.set();
+				who.mage_spells.set();
+			}
 			refresh_store_items();
 			add_string_to_buf("Debug: Add stuff and heal.");
 			print_buf();
@@ -2028,8 +2028,8 @@ bool handle_keystroke(sf::Event& event){
 			ASB("DEBUG: Towns have short memory.");
 			ASB("Your deeds have been forgotten.");
 			print_buf();
-			for(i = 0; i < 4; i++)
-				univ.party.creature_save[i].which_town = 200;
+			for(auto& pop : univ.party.creature_save)
+				pop.which_town = 200;
 			break;
 		case '!':
 			if(!univ.debug_mode) break;

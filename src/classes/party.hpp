@@ -87,14 +87,14 @@ public:
 	short town_num;
 	std::array<cVehicle,30> boats;
 	std::array<cVehicle,30> horses;
-	cPopulation creature_save[4];
+	std::array<cPopulation,4> creature_save;
 	short in_boat;
 	short in_horse;
 	std::array<cOutdoors::cCreature,10> out_c;
 	std::map<int,std::array<cItem,30>> magic_store_items;
 	std::map<int,std::map<int,int>> store_limited_stock;
 	std::vector<job_bank_t> job_banks;
-	mon_num_t imprisoned_monst[4]; // Soul Crystal
+	std::array<mon_num_t,4> imprisoned_monst; // Soul Crystal
 	std::set<mon_num_t> m_noted; // has the monster been scried?
 	std::set<mon_num_t> m_seen; // has the monster ever been seen? (this used to have the above meaning)
 	std::vector<cJournal> journal;
@@ -109,12 +109,12 @@ public:
 	size_t left_in;
 	eDirection direction;
 	short at_which_save_slot;
-	bool alchemy[20];
-	bool can_find_town[200];
+	std::bitset<20> alchemy;
+	std::vector<bool> can_find_town;
 	std::map<int,int> key_times;
 	std::vector<cTimer> party_event_timers;
 	std::set<int> spec_items;
-	long m_killed[200]; // monsters killed per town
+	std::vector<long> m_killed;
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	std::string scen_name;
 private:

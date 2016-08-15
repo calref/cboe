@@ -1007,7 +1007,7 @@ void handle_talk_event(location p) {
 			else {
 				univ.party.gold -= a;
 				put_pc_screen();
-				univ.party.can_find_town[b] = 1;
+				univ.party.can_find_town[b] = true;
 			}
 			save_talk_str2 = "";
 			break;

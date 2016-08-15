@@ -77,10 +77,10 @@ void finish_load_party(){
 	// Saved creatures may not have had their monster attributes saved
 	// Make sure that they know what they are!
 	// Cast to cMonster base class and assign, to avoid clobbering other attributes
-	for(int i = 0; i < 4; i++) {
-		for(size_t j = 0; j < univ.party.creature_save[i].size(); j++) {
-			int number = univ.party.creature_save[i][j].number;
-			cMonster& monst = univ.party.creature_save[i][j];
+	for(auto& pop : univ.party.creature_save) {
+		for(size_t i = 0; i < pop.size(); i++) {
+			int number = pop[i].number;
+			cMonster& monst = pop[i];
 			monst = univ.scenario.scen_monsters[number];
 		}
 	}

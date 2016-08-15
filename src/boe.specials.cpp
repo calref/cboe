@@ -3166,9 +3166,9 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(pc_num < 100) break;
 			if(spec.ex1a == 0)
 				record_monst(dynamic_cast<cCreature*>(pc), spec.ex1b);
-			else for(i = 0; i < 4; i++) {
-				if(univ.party.imprisoned_monst[i] == dynamic_cast<cCreature*>(pc)->number)
-					univ.party.imprisoned_monst[i] = 0;
+			else for(mon_num_t& monst : univ.party.imprisoned_monst) {
+				if(monst == dynamic_cast<cCreature*>(pc)->number)
+					monst = 0;
 			}
 			break;
 		case eSpecType::AFFECT_PARTY_STATUS:

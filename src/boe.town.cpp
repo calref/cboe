@@ -144,9 +144,9 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	at_which_save_slot = univ.party.at_which_save_slot;
 	
-	for(i = 0; i < 4; i++)
-		if(town_number == univ.party.creature_save[i].which_town) {
-			univ.town.monst = univ.party.creature_save[i];
+	for(auto& pop : univ.party.creature_save)
+		if(town_number == pop.which_town) {
+			univ.town.monst = pop;
 			monsters_loaded = true;
 			
 			for(j = 0; j < univ.town.monst.size(); j++) {
@@ -536,9 +536,9 @@ location end_town_mode(short switching_level,location destination) { // returns 
 	}
 	
 	if(overall_mode == MODE_TOWN) {
-		for(i = 0; i < 4; i++)
-			if(univ.party.creature_save[i].which_town == univ.party.town_num) {
-				univ.party.creature_save[i] = univ.town.monst;
+		for(auto& pop : univ.party.creature_save)
+			if(pop.which_town == univ.party.town_num) {
+				pop = univ.town.monst;
 				for(j = 0; j < univ.town->max_dim(); j++)
 					for(k = 0; k < univ.town->max_dim(); k++)
 						univ.party.setup[i][j][k] = (univ.town.fields[j][k] & 0xff00) >> 8;
@@ -589,32 +589,32 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		if(is_town()) {
 			if(destination.x <= univ.town->in_town_rect.left) {
-				if(univ.town->exit_locs[1].x > 0)
-					to_return = local_to_global(univ.town->exit_locs[1]);
+				if(univ.town->exits[1].x > 0)
+					to_return = local_to_global(univ.town->exits[1]);
 				else to_return.x--;
 				univ.party.out_loc = to_return; univ.party.out_loc.x++;
-				handle_leave_town_specials(univ.party.town_num, univ.town->exit_specs[1],destination) ;
+				handle_leave_town_specials(univ.party.town_num, univ.town->exits[1].spec,destination) ;
 			}
 			else if(destination.x >= univ.town->in_town_rect.right) {
-				if(univ.town->exit_locs[3].x > 0)
-					to_return = local_to_global(univ.town->exit_locs[3]);
+				if(univ.town->exits[3].x > 0)
+					to_return = local_to_global(univ.town->exits[3]);
 				else to_return.x++;
 				univ.party.out_loc = to_return; univ.party.out_loc.x--;
-				handle_leave_town_specials(univ.party.town_num, univ.town->exit_specs[3],destination) ;
+				handle_leave_town_specials(univ.party.town_num, univ.town->exits[3].spec,destination) ;
 			}
 			else if(destination.y <= univ.town->in_town_rect.top) {
-				if(univ.town->exit_locs[0].x > 0)
-					to_return = local_to_global(univ.town->exit_locs[0]);
+				if(univ.town->exits[0].x > 0)
+					to_return = local_to_global(univ.town->exits[0]);
 				else to_return.y--;
 				univ.party.out_loc = to_return; univ.party.out_loc.y++;
-				handle_leave_town_specials(univ.party.town_num, univ.town->exit_specs[0],destination) ;
+				handle_leave_town_specials(univ.party.town_num, univ.town->exits[0].spec,destination) ;
 			}
 			else if(destination.y >= univ.town->in_town_rect.bottom) {
-				if(univ.town->exit_locs[2].x > 0)
-					to_return = local_to_global(univ.town->exit_locs[2]);
+				if(univ.town->exits[2].x > 0)
+					to_return = local_to_global(univ.town->exits[2]);
 				else to_return.y++;
 				univ.party.out_loc = to_return; univ.party.out_loc.y--;
-				handle_leave_town_specials(univ.party.town_num, univ.town->exit_specs[2],destination) ;
+				handle_leave_town_specials(univ.party.town_num, univ.town->exits[2].spec,destination) ;
 			}
 			
 		}
@@ -1273,6 +1273,8 @@ void erase_out_specials() {
 						univ.scenario.ter_types[sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y]].special == eTerSpec::TOWN_ENTRANCE &&
 					   (sector.city_locs[k].x == minmax(0,47,sector.city_locs[k].x)) &&
 					   (sector.city_locs[k].y == minmax(0,47,sector.city_locs[k].y))) {
+						if(sector.city_locs[k].spec < 0 || sector.city_locs[k].spec >= univ.scenario.towns.size())
+							continue;
 						if(!univ.party.can_find_town[sector.city_locs[k].spec]) {
 							univ.out[48 * i + sector.city_locs[k].x][48 * j + sector.city_locs[k].y] =
 								univ.scenario.ter_types[sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y]].flag1;

@@ -136,6 +136,8 @@ void cParty::append(legacy::party_record_type& old, const cScenario& scen){
 	at_which_save_slot = old.at_which_save_slot;
 	for(i = 0; i < 20 ; i++)
 		alchemy[i] = old.alchemy[i];
+	can_find_town.resize(200);
+	m_killed.resize(200);
 	for(i = 0; i < 200; i++){
 		can_find_town[i] = old.can_find_town[i];
 		m_killed[i] = old.m_killed[i];
@@ -587,22 +589,22 @@ void cParty::writeTo(std::ostream& file) const {
 			file << "SOULCRYSTAL " << i << ' ' << imprisoned_monst[i] << '\n';
 	file << "DIRECTION " << direction << '\n';
 	file << "WHICHSLOT " << at_which_save_slot << '\n';
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < creature_save.size(); i++) {
 		file << "TOWNSAVE " << i << ' ' << creature_save[i].which_town;
 		if(creature_save[i].hostile) file << " HOSTILE";
 		file << '\n';
 	}
-	for(int i = 0; i < 20; i++)
+	for(int i = 0; i < alchemy.size(); i++)
 		if(alchemy[i])
 			file << "ALCHEMY " << i << '\n';
-	for(int i = 0; i < 200; i++)
+	for(int i = 0; i < can_find_town.size(); i++)
 		if(can_find_town[i])
 			file << "TOWNVISIBLE " << i << '\n';
 	for(auto key : key_times)
 		file << "EVENT " << key.first << ' ' << key.second << '\n';
 	for(int i : spec_items)
 		file << "ITEM " << i << '\n';
-	for(int i = 0; i < 200; i++)
+	for(int i = 0; i < m_killed.size(); i++)
 		if(m_killed[i] > 0)
 			file << "TOWNSLAUGHTER " << i << ' ' << m_killed[i] << '\n';
 	file << "KILLS " << total_m_killed << '\n';
@@ -678,7 +680,7 @@ void cParty::writeTo(std::ostream& file) const {
 		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << party_event_timers[i].node_type
 			 << ' ' << party_event_timers[i].node << '\f';
 	file << '\f';
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < creature_save.size(); i++)
 		for(int j = 0; j < creature_save[i].size(); j++) {
 			if(creature_save[i][j].active > 0) {
 				file << "CREATURE " << i << ' ' << j << '\n';
@@ -820,6 +822,7 @@ void cParty::readFrom(std::istream& file){
 		}else if(cur == "SOULCRYSTAL"){
 			int i;
 			sin >> i;
+			if(i < 0 || i >= imprisoned_monst.size()) continue;
 			sin >> imprisoned_monst[i];
 		}else if(cur == "DIRECTION")
 			sin >> direction;
@@ -828,16 +831,20 @@ void cParty::readFrom(std::istream& file){
 		else if(cur == "ALCHEMY"){
 			int i;
 			sin >> i;
-			alchemy[i] = true;
+			if(i >= 0 && i < alchemy.size())
+				alchemy[i] = true;
 		} else if(cur == "TOWNSAVE") {
 			int i;
 			std::string str;
 			sin >> i;
+			if(i < 0 || i >= creature_save.size()) continue;
 			sin >> creature_save[i].which_town >> str;
 			creature_save[i].hostile = str == "HOSTILE";
 		} else if(cur == "TOWNVISIBLE") {
 			int i;
 			sin >> i;
+			if(i >= can_find_town.size())
+				can_find_town.resize(i + 1);
 			can_find_town[i] = true;
 		}else if(cur == "EVENT"){
 			int i;
@@ -850,6 +857,8 @@ void cParty::readFrom(std::istream& file){
 		}else if(cur == "TOWNSLAUGHTER"){
 			int i;
 			sin >> i;
+			if(i >= m_killed.size())
+				m_killed.resize(i + 1);
 			sin >> m_killed[i];
 		} else if(cur == "QUEST") {
 			int i;
@@ -929,6 +938,7 @@ void cParty::readFrom(std::istream& file){
 		} else if(cur == "CREATURE") {
 			int i, j;
 			bin >> i >> j;
+			if(i < 0 || i >= creature_save.size()) continue;
 			creature_save[i].init(j);
 			creature_save[i][j].readFrom(bin);
 		} else if(cur == "STORED") {

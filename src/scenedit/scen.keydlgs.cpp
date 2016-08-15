@@ -1172,7 +1172,7 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 			showError("Intro picture number is out of range.","",&me);
 			return true;
 		}
-		for(i = 0; i < 6; i++) {
+		for(i = 0; i < scenario.intro_strs.size(); i++) {
 			std::string id = "str" + std::to_string(i + 1);
 			scenario.intro_strs[i] = me[id].getText();
 		}
@@ -1197,7 +1197,7 @@ void edit_scen_intro() {
 	edit.attachClickHandlers(edit_scen_intro_event_filter, {"okay", "cancel", "choose"});
 	
 	edit["picnum"].setTextToNum(scenario.intro_pic);
-	for(i = 0; i < 6; i++) {
+	for(i = 0; i < scenario.intro_strs.size(); i++) {
 		std::string id = "str" + std::to_string(i + 1);
 		edit[id].setText(scenario.intro_strs[i]);
 	}

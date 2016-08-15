@@ -47,7 +47,7 @@ public:
 			std::fill(link2, link2 + 4, ' ');
 		}
 	};
-	cPersonality people[10];
+	std::array<cPersonality, 10> people;
 	std::vector<cNode> talk_nodes;
 	
 	void append(legacy::talking_record_type& old, std::vector<shop_info_t>& shops);

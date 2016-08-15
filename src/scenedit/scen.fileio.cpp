@@ -138,7 +138,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushElement("icon", scenario.intro_mess_pic);
 	{
 		int last = -1;
-		for(int i = 0; i < 6; i++) {
+		for(int i = 0; i < scenario.intro_strs.size(); i++) {
 			if(!scenario.intro_strs[i].empty())
 				last = i;
 		}
@@ -679,20 +679,20 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		data.PushText(town.spec_on_entry_if_dead);
 		data.CloseElement("onenter");
 	}
-	for(int i = 0; i < 4; i++) {
-		if(town.exit_locs[i].x >= 0 && town.exit_locs[i].y >= 0) {
+	for(int i = 0; i < town.exits.size(); i++) {
+		if(town.exits[i].x >= 0 && town.exits[i].y >= 0) {
 			data.OpenElement("exit");
 			data.PushAttribute("dir", directions[i]);
-			data.PushAttribute("x", town.exit_locs[i].x);
-			data.PushAttribute("y", town.exit_locs[i].y);
+			data.PushAttribute("x", town.exits[i].x);
+			data.PushAttribute("y", town.exits[i].y);
 			data.CloseElement("exit");
 		}
 	}
 	for(int i = 0; i < 4; i++) {
-		if(town.exit_specs[i] >= 0) {
+		if(town.exits[i].spec >= 0) {
 			data.OpenElement("onexit");
 			data.PushAttribute("dir", directions[i]);
-			data.PushText(town.exit_specs[i]);
+			data.PushText(town.exits[i].spec);
 			data.CloseElement("onexit");
 		}
 	}
@@ -869,7 +869,7 @@ map_data buildOutMapData(location which, cScenario& scenario) {
 		if(!sector.sign_locs[i].text.empty())
 			terrain.addFeature(sector.sign_locs[i].x, sector.sign_locs[i].y, eMapFeature::SIGN, i);
 	}
-	for(size_t i = 0; i < 4; i++) {
+	for(size_t i = 0; i < sector.wandering_locs.size(); i++) {
 		terrain.addFeature(sector.wandering_locs[i].x, sector.wandering_locs[i].y, eMapFeature::WANDERING, i);
 	}
 	for(size_t i = 0; i < scenario.boats.size(); i++) {
@@ -905,7 +905,7 @@ map_data buildTownMapData(size_t which, cScenario& scenario) {
 		if(!town.sign_locs[i].text.empty())
 			terrain.addFeature(town.sign_locs[i].x, town.sign_locs[i].y, eMapFeature::SIGN, i);
 	}
-	for(size_t i = 0; i < 4; i++) {
+	for(size_t i = 0; i < town.wandering_locs.size(); i++) {
 		terrain.addFeature(town.wandering_locs[i].x, town.wandering_locs[i].y, eMapFeature::WANDERING, i);
 	}
 	for(size_t i = 0; i < town.preset_items.size(); i++) {
@@ -1163,7 +1163,7 @@ void scen_text_dump(){
 	fout << "Who Wrote 1: " << scenario.who_wrote[0] << endl;
 	fout << "Who Wrote 2: " << scenario.who_wrote[1] << endl;
 	fout << "Contact Info: " << scenario.contact_info[0] << "    " << scenario.contact_info[1] << endl;
-	for(short i = 0; i < 6; i++)
+	for(short i = 0; i < scenario.intro_strs.size(); i++)
 		if(scenario.intro_strs[i][0] != '*')
 			fout << "  Intro Message " << i << ": " << scenario.intro_strs[i] << endl;
 	for(short i = 0; i < scenario.journal_strs.size(); i++)
