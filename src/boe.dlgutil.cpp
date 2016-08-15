@@ -1360,7 +1360,7 @@ void tip_of_day() {
 static void put_scen_info(cDialog& me) {
 	unsigned int i;
 	std::ostringstream sout;
-	const char *difficulty[] = {"Low","Medium","High","Very High"};
+	static const char *difficulty[] = {"Low","Medium","High","Very High"};
 	
 	for(i = 0; i < 3; i++) {
 		sout.clear();

@@ -3398,7 +3398,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 	bool acted = false;
 	location target,ashes_loc,l;
 	cCreature *affected;
-	const eSpell caster_array[7][18] = {
+	static const eSpell caster_array[7][18] = {
 		{
 			eSpell::SPARK, eSpell::SPARK, eSpell::SPARK, eSpell::HASTE_MINOR, eSpell::HASTE_MINOR,
 			eSpell::HASTE_MINOR, eSpell::SPARK, eSpell::STRENGTH, eSpell::CLOUD_FLAME, eSpell::CLOUD_FLAME,
@@ -3439,7 +3439,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 	// 0 - cast when slowed, 1 - don't have enough friends, 2 - lots of clustered enemies, 3 - low on health
 	// TODO: In column 3, level 1 monsters shouldn't have flame (a level 2 spell), and level 5 monsters shouldn't use haste.
 	// (The latter is because column 3 is also used if they're already hasted.)
-	eSpell emer_spells[7][4] = {
+	static const eSpell emer_spells[7][4] = {
 		{eSpell::HASTE_MINOR, eSpell::NONE, eSpell::NONE, eSpell::FLAME},
 		{eSpell::HASTE_MINOR, eSpell::SUMMON_BEAST, eSpell::CONFLAGRATION, eSpell::SLOW},
 		{eSpell::HASTE_MINOR, eSpell::SUMMON_WEAK, eSpell::FIREBALL, eSpell::SUMMON_WEAK},
@@ -3448,7 +3448,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 		{eSpell::HASTE_MAJOR, eSpell::DEMON, eSpell::FIRESTORM, eSpell::DEMON},
 		{eSpell::HASTE_MAJOR, eSpell::SUMMON_MAJOR, eSpell::FIRESTORM, eSpell::SHOCKWAVE},
 	};
-	std::set<eSpell> area_effects = {
+	static const std::set<eSpell> area_effects = {
 		eSpell::CLOUD_STINK, eSpell::CONFLAGRATION, eSpell::FIREBALL, eSpell::WEB, eSpell::FIRESTORM, eSpell::SHOCKSTORM,
 	};
 	
@@ -3735,7 +3735,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 	bool acted = false;
 	location target,l;
 	cCreature *affected;
-	eSpell caster_array[7][10] = {
+	static const eSpell caster_array[7][10] = {
 		{
 			eSpell::BLESS_MINOR, eSpell::BLESS_MINOR, eSpell::BLESS_MINOR, eSpell::BLESS_MINOR, eSpell::WRACK,
 			eSpell::WRACK, eSpell::WRACK, eSpell::GOO, eSpell::GOO, eSpell::GOO,
@@ -3760,7 +3760,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 		},
 	};
 	// 0 - cast when slowed, 1 - don't have enough friends, 2 - lots of clustered enemies, 3 - low on health
-	eSpell emer_spells[7][4] = {
+	static const eSpell emer_spells[7][4] = {
 		{eSpell::NONE, eSpell::BLESS_MINOR, eSpell::NONE, eSpell::HEAL_MINOR},
 		{eSpell::NONE, eSpell::SUMMON_SPIRIT, eSpell::NONE, eSpell::HEAL_MINOR},
 		{eSpell::NONE, eSpell::SUMMON_SPIRIT, eSpell::NONE, eSpell::HEAL},
@@ -3769,7 +3769,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 		{eSpell::NONE, eSpell::SUMMON_HOST, eSpell::FLAMESTRIKE, eSpell::HEAL_ALL},
 		{eSpell::AVATAR, eSpell::AVATAR, eSpell::DIVINE_THUD, eSpell::REVIVE_ALL},
 	};
-	std::set<eSpell> area_effects = {eSpell::FLAMESTRIKE, eSpell::DIVINE_THUD};
+	static const std::set<eSpell> area_effects = {eSpell::FLAMESTRIKE, eSpell::DIVINE_THUD};
 	location ashes_loc;
 	
 	

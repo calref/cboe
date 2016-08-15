@@ -1476,13 +1476,13 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 
 
 void draw_pointing_arrows() {
-	rectangle sources[4] = {
+	static const rectangle sources[4] = {
 		{351,28,359,36}, // up
 		{351,10,359,18}, // left
 		{351,01,359,9}, // down
 		{351,19,359,27}  // right
 	};
-	rectangle dests[8] = {
+	static const rectangle dests[8] = {
 		{7,100,15,108},{7,170,15,178},{140,7,148,15},{212,7,220,15},
 		{346,100,354,108},{346,170,354,178},{140,274,148,282},{212,274,220,282}
 	};
