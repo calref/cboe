@@ -2777,8 +2777,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 			y += 2 * dir_y_dif[dir];
 			univ.party.town_loc.x += 2 * dir_x_dif[dir];
 			univ.party.town_loc.y += 2 * dir_y_dif[dir];
-			// TODO: Why out_loc here?
-			update_explored(univ.party.out_loc);
+			update_explored(univ.party.town_loc);
 		}else{
 			x += 2 * dir_x_dif[dir];
 			y += 2 * dir_y_dif[dir];

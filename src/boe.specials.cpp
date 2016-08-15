@@ -510,9 +510,8 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 		r1 = get_ran(2,1,6);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,eDamageType::COLD,eRace::UNKNOWN,0);
-		// TODO: Why check out_loc here?
 		if(overall_mode < MODE_COMBAT)
-			boom_space(univ.party.out_loc,overall_mode,4,r1,7);
+			boom_space(univ.party.town_loc,overall_mode,4,r1,7);
 	}
 	if(univ.town.is_blade_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Blade wall!");
@@ -550,8 +549,7 @@ void use_spec_item(short item) {
 	short i,j,k;
 	location null_loc;
 	
-	// TODO: Why pass out_loc here?
-	run_special(eSpecCtx::USE_SPEC_ITEM,0,univ.scenario.special_items[item].special,univ.party.out_loc,&i,&j,&k);
+	run_special(eSpecCtx::USE_SPEC_ITEM,0,univ.scenario.special_items[item].special,univ.party.get_loc(),&i,&j,&k);
 }
 
 
@@ -1778,8 +1776,7 @@ void push_things() {
 						univ.town.set_crate(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y,false);
 						ASB("You smash the crate.");
 					}
-					// TODO: Why checking town_loc instead of combat_pos here?
-					if(univ.town.is_block(univ.party.town_loc.x,univ.party.town_loc.y)) {
+					if(univ.town.is_block(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
 						ASB("You crash into the block.");
 						damage_pc(univ.party[i],get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN,0);
 					}

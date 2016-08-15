@@ -361,8 +361,7 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 	// In some towns, doin' this'll getcha' killed.
 	// (Or something else! Killing the party would be the responsibility of whatever special node is called.)
 	if(univ.town.monst.hostile && univ.town->spec_on_hostile >= 0)
-		// TODO: Why passing out_loc here?
-		run_special(eSpecCtx::TOWN_HOSTILE, 2, univ.town->spec_on_hostile, univ.party.out_loc, &a[0], &a[1], &a[2]);
+		run_special(eSpecCtx::TOWN_HOSTILE, 2, univ.town->spec_on_hostile, univ.party.town_loc, &a[0], &a[1], &a[2]);
 }
 
 // TODO: Set town status to "dead"? Could reuse above with magic att (eg -1), or write new function.
