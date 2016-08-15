@@ -859,9 +859,9 @@ void cMonster::readFrom(std::istream& file) {
 		} else if(cur == "ATTACK") {
 			int which;
 			line >> which;
+			which--;
 			if(which < 0 || which >= a.size()) continue;
 			line >> a[which].dice >> a[which].sides >> a[which].type;
-			which--;
 		} else if(cur == "SIZE") {
 			line >> temp1 >> temp2;
 			x_width = temp1;
