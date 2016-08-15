@@ -3096,10 +3096,10 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			if(spec.ex2a == 0) {
 				dynamic_cast<cCreature*>(pc)->a[spec.ex1a].dice += spec.ex1b;
-				dynamic_cast<cCreature*>(pc)->a[spec.ex1a].dice += spec.ex1c;
+				dynamic_cast<cCreature*>(pc)->a[spec.ex1a].sides += spec.ex1c;
 			} else {
 				dynamic_cast<cCreature*>(pc)->a[spec.ex1a].dice -= spec.ex1b;
-				dynamic_cast<cCreature*>(pc)->a[spec.ex1a].dice -= spec.ex1c;
+				dynamic_cast<cCreature*>(pc)->a[spec.ex1a].sides -= spec.ex1c;
 			}
 			break;
 		case eSpecType::AFFECT_MONST_STAT:
