@@ -3253,7 +3253,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					univ.party.stuff_done[spec.sd1][spec.sd2] = univ.party[pc_num].unique_id - 1000;
 				if(spec.ex1a == 1) break;
 				who->main_status += eMainStatus::SPLIT;
-				univ.stored_pcs[who->unique_id] = who;
+				univ.stored_pcs[who->unique_id] = who->leave_party();
 				univ.party.new_pc(pc_num);
 			}
 			break;

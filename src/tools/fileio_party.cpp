@@ -319,7 +319,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ){
 			std::string fname = "save/pc~" + std::to_string(next_uid) + ".txt";
 			cPlayer* stored_pc = new cPlayer(univ.party);
 			stored_pc->readFrom(partyIn.getFile(fname));
-			univ.stored_pcs[next_uid] = stored_pc;
+			univ.stored_pcs[next_uid] = stored_pc->leave_party();
 		}
 	}
 	

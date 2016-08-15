@@ -111,6 +111,9 @@ public:
 	short stat_adj(eSkill skill) const;
 	eBuyStatus ok_to_buy(short cost,cItem item) const;
 	
+	void join_party(cParty& p) {party = &p;}
+	cPlayer* leave_party() {party = nullptr; return this;}
+	
 	void append(legacy::pc_record_type old);
 	cPlayer(cParty& party);
 	cPlayer(cParty& party,long key,short slot);

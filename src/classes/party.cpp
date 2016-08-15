@@ -232,6 +232,7 @@ void cParty::new_pc(size_t spot) {
 
 void cParty::replace_pc(size_t spot, cPlayer* with) {
 	if(spot < 6 && with != nullptr) {
+		with->join_party(*this);
 		delete adven[spot];
 		adven[spot] = with;
 	}

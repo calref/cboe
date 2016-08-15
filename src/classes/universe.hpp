@@ -171,7 +171,7 @@ public:
 	void swap_buf(int newbuf) {std::swap(strbuf, extrabufs[newbuf]);}
 	
 	unsigned char& cpn_flag(unsigned int x, unsigned int y, std::string id = "");
-				
+	
 	cScenario scenario;
 	cParty party;
 	std::map<long,cPlayer*> stored_pcs;
