@@ -208,7 +208,6 @@ void end_shop_mode() {
 }
 
 void handle_shop_event(location p) {
-	short i;
 	unsigned long store_what_picked;
 	
 	if(p.in(talk_help_rect)) {
@@ -229,7 +228,7 @@ void handle_shop_event(location p) {
 	p.x -= 5;
 	p.y -= 5;
 	
-	for(i = 0; i < 8; i++) {
+	for(short i = 0; i < 8; i++) {
 		store_what_picked = shop_array[i + shop_sbar->getPosition()];
 		if(store_what_picked >= 30) break;
 		if(active_shop.getItem(store_what_picked).type == eShopItemType::EMPTY)
@@ -675,7 +674,7 @@ static void show_job_bank(int which_bank, std::string title) {
 }
 
 void handle_talk_event(location p) {
-	short i,get_pc,s1 = -1,s2 = -1,s3 = -1;
+	short get_pc,s1 = -1,s2 = -1,s3 = -1;
 	char asked[4];
 	
 	short a,b,c,d;
@@ -921,44 +920,46 @@ void handle_talk_event(location p) {
 				save_talk_str1 = save_talk_str2;
 				save_talk_str2 = "";
 				break;
+			} else {
+				using namespace std::placeholders;
+				auto& boats = univ.party.boats;
+				b = minmax(0, boats.size() - 1, b);
+				c = minmax(0, boats.size() - b, c);
+				auto iter = std::find_if(boats.begin() + b, boats.begin() + b + c, std::bind(&cVehicle::property, _1));
+				if(iter != boats.end()) {
+					univ.party.gold -= a;
+					put_pc_screen();
+					iter->property = false;
+					save_talk_str2 = "";
+				} else {
+					save_talk_str1 = "There are no boats left.";
+					save_talk_str2 = "";
+					can_save_talk = false;
+				}
 			}
-			else {
-				for(i = b; i <= b + c; i++)
-					if((i >= 0) && (i < univ.party.boats.size()) && (univ.party.boats[i].property)) {
-						univ.party.gold -= a;
-						put_pc_screen();
-						univ.party.boats[i].property = false;
-						save_talk_str2 = "";
-						i = 1000;
-					}
-				if(i >= 1000)
-					break;
-			}
-			save_talk_str1 = "There are no boats left.";
-			save_talk_str2 = "";
-			can_save_talk = false;
 			break;
 		case eTalkNode::BUY_HORSE:
 			if(univ.party.gold < a) {
 				save_talk_str1 = save_talk_str2;
 				save_talk_str2 = "";
 				break;
+			} else {
+				using namespace std::placeholders;
+				auto& horses = univ.party.horses;
+				b = minmax(0, horses.size() - 1, b);
+				c = minmax(0, horses.size() - b, c);
+				auto iter = std::find_if(horses.begin() + b, horses.begin() + b + c, std::bind(&cVehicle::property, _1));
+				if(iter != horses.end()) {
+					univ.party.gold -= a;
+					put_pc_screen();
+					iter->property = false;
+					save_talk_str2 = "";
+				} else {
+					save_talk_str1 = "There are no horses left.";
+					save_talk_str2 = "";
+					can_save_talk = false;
+				}
 			}
-			else {
-				for(i = b; i <= b + c; i++)
-					if((i >= 0) && (i < univ.party.horses.size()) && (univ.party.horses[i].property)) {
-						univ.party.gold -= a;
-						put_pc_screen();
-						univ.party.horses[i].property = false;
-						save_talk_str2 = "";
-						i = 1000;
-					}
-				if(i >= 1000)
-					break;
-			}
-			save_talk_str1 = "There are no horses left.";
-			save_talk_str2 = "";
-			can_save_talk = false;
 			break;
 		case eTalkNode::BUY_SPEC_ITEM:
 			if(univ.party.spec_items.count(a)) {
@@ -1223,10 +1224,7 @@ void pick_preferences() {
 }
 
 static void put_party_stats(cDialog& me) {
-	short i;
-	
-	
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["name" + n].setText(univ.party[i].name);
@@ -1358,11 +1356,10 @@ void tip_of_day() {
 }
 
 static void put_scen_info(cDialog& me) {
-	unsigned int i;
 	std::ostringstream sout;
 	static const char *difficulty[] = {"Low","Medium","High","Very High"};
 	
-	for(i = 0; i < 3; i++) {
+	for(short i = 0; i < 3; i++) {
 		sout.clear();
 		sout.str("");
 		sout << i + 1;
@@ -1417,7 +1414,7 @@ short pick_a_scen() {
 	build_scen_headers();
 	
 	store_num_scen = scen_headers.size();
-//	for(i = 0; i < 25; i++)
+//	for(short i = 0; i < 25; i++)
 //		if(scen_headers[i].flag1 != 0)
 //			store_num_scen++;
 	store_scen_page_on = 0;

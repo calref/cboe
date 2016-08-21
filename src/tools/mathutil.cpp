@@ -11,12 +11,12 @@
 
 short get_ran (short times,short  min,short  max){
 	long int store;
-	short i, to_ret = 0;
+	short to_ret = 0;
 	
 	if(max < min) max = min;
 	if(max == min) return times * min;
 	
-	for(i = 1; i < times + 1; i++) {
+	for(short i = 1; i < times + 1; i++) {
 		store = rand();
 		to_ret += min + (store % (max - min + 1));
 	}

@@ -25,10 +25,9 @@ extern std::map<const eItemType, const short> excluding_types;
 extern short skill_bonus[21];
 
 void cPlayer::append(legacy::pc_record_type old){
-	int i;
 	main_status = (eMainStatus) old.main_status;
 	name = old.name;
-	for(i = 0; i < 19; i++) {
+	for(short i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
 		skills[skill] = old.skills[i];
 	}
@@ -40,16 +39,16 @@ void cPlayer::append(legacy::pc_record_type old){
 	skill_pts = old.skill_pts;
 	level = old.level;
 	// TODO: Why are advan and exp_adj commented out?
-	for(i = 0; i < 15; i++){
+	for(short i = 0; i < 15; i++){
 		status[(eStatus) i] = old.status[i];
 		eTrait trait = eTrait(i);
 		traits[trait] = old.traits[i];
 	}
-	for(i = 0; i < 24; i++){
+	for(short i = 0; i < 24; i++){
 		items[i].append(old.items[i]);
 		equip[i] = old.equip[i];
 	}
-	for(i = 0; i < 62; i++){
+	for(short i = 0; i < 62; i++){
 		priest_spells[i] = old.priest_spells[i];
 		mage_spells[i] = old.mage_spells[i];
 	}
@@ -830,7 +829,6 @@ void cPlayer::finish_create() {
 }
 
 cPlayer::cPlayer(cParty& party) : party(&party) {
-	short i;
 	main_status = eMainStatus::ABSENT;
 	name = "\n";
 	
@@ -844,12 +842,12 @@ cPlayer::cPlayer(cParty& party) : party(&party) {
 	experience = 0;
 	skill_pts = 65;
 	level = 1;
-	for(i = 0; i < 24; i++)
+	for(short i = 0; i < 24; i++)
 		items[i] = cItem();
-	for(i = 0; i < 24; i++)
+	for(short i = 0; i < 24; i++)
 		equip[i] = false;
 	
- 	for(i = 0; i < 62; i++) {
+	for(short i = 0; i < 62; i++) {
 		priest_spells[i] = i < 30;
 		mage_spells[i] = i < 30;
 	}
@@ -864,7 +862,6 @@ cPlayer::cPlayer(cParty& party) : party(&party) {
 }
 
 cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
-	short i;
 	main_status = eMainStatus::ALIVE;
 	unique_id = slot + 1000;
 	party.next_pc_id = max(unique_id + 1, party.next_pc_id);
@@ -892,7 +889,7 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		skills[eSkill::STRENGTH] = 20;
 		skills[eSkill::DEXTERITY] = 20;
 		skills[eSkill::INTELLIGENCE] = 20;
-		for(i = 3; i < 19; i++) {
+		for(short i = 3; i < 19; i++) {
 			eSkill skill = eSkill(i);
 			skills[skill] = 8;
 		}
@@ -903,9 +900,9 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		experience = 0;
 		skill_pts = 60;
 		level = 1;
-		for(i = 0; i < 24; i++)
+		for(short i = 0; i < 24; i++)
 			items[i] = cItem();
-		for(i = 0; i < 24; i++)
+		for(short i = 0; i < 24; i++)
 			equip[i] = false;
 		
 		priest_spells.set();
@@ -914,7 +911,7 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		if(slot == 2) which_graphic++;
 		weap_poisoned = 24; // was 16, as an E2 relic
 		
-		for(i = 0; i < 10; i++) {
+		for(short i = 0; i < 10; i++) {
 			eTrait trait = eTrait(i);
 			traits[trait] = true;
 		}
@@ -985,7 +982,7 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 				
 		}
 		
-		for(i = 0; i < 19; i++) {
+		for(short i = 0; i < 19; i++) {
 			eSkill skill = eSkill(i);
 			skills[skill] = pc_stats[slot][skill];
 		}
@@ -995,17 +992,17 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		skill_pts = 0;
 		level = 1;
 		
-		for(i = 0; i < 24; i++)
+		for(short i = 0; i < 24; i++)
 			items[i] = cItem();
-		for(i = 0; i < 24; i++)
+		for(short i = 0; i < 24; i++)
 			equip[i] = false;
 		cur_sp = pc_sp[slot];
 		max_sp = pc_sp[slot];
-		for(i = 0; i < 62; i++) {
+		for(short i = 0; i < 62; i++) {
 			priest_spells[i] = i < 30;
 			mage_spells[i] = i < 30;
 		}
-		for(i = 0; i < 15; i++) {
+		for(short i = 0; i < 15; i++) {
 			eTrait trait = eTrait(i);
 			traits[trait] = pc_t[slot].count(trait);
 		}

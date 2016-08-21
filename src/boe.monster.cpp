@@ -28,20 +28,20 @@ extern bool processing_fields,monsters_going;
 extern cUniverse univ;
 
 short out_enc_lev_tot(short which) {
-	short count = 0,i;
+	short count = 0;
 	short num[7] = {22,8,4,4,3,2,1};
 	
 	if(univ.party.out_c[which].what_monst.cant_flee)
 		return 10000;
 	
-	for(i = 0; i < 7; i++)
+	for(short i = 0; i < 7; i++)
 		if(univ.party.out_c[which].what_monst.monst[i] != 0)
 			count += univ.scenario.scen_monsters[univ.party.out_c[which].what_monst.monst[i]].level * num[i];
 	return count;
 }
 
 void create_wand_monst() {
-	short r1,r2,r3,i = 0,num_tries = 0;
+	short r1,r2,r3,num_tries = 0;
 	location p_loc;
 	
 	r1 = get_ran(1,0,univ.out->wandering.size() - 1);
@@ -60,7 +60,7 @@ void create_wand_monst() {
 		while(point_onscreen(univ.town->wandering_locs[r2],univ.party.town_loc) &&
 			  !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
 			r2 = get_ran(1,0,3);
-		for(i = 0; i < 4; i++) {
+		for(short i = 0; i < 4; i++) {
 			if(univ.town->wandering[r1].monst[i] != 0) { // place a monster
 				p_loc = univ.town->wandering_locs[r2];
 				p_loc.x += get_ran(1,0,4) - 2;
@@ -175,12 +175,12 @@ void set_up_monst(eAttitude mode,mon_num_t m_num) {
 }
 
 void do_monsters() {
-	short i,j,r1,target;
+	short r1,target;
 	location l1,l2;
 	bool acted_yet = false;
 	
 	if(overall_mode == MODE_TOWN)
-		for(i = 0; i < univ.town.monst.size(); i++)
+		for(short i = 0; i < univ.town.monst.size(); i++)
 			if(univ.town.monst[i].active != 0 && univ.town.monst[i].status[eStatus::ASLEEP] <= 0
 			   && univ.town.monst[i].status[eStatus::PARALYZED] <= 0) {
 				// have to pick targets
@@ -249,7 +249,7 @@ void do_monsters() {
 							play_sound(18);
 						else play_sound(46);
 					}
-					for(j = 0; j < univ.town.monst.size(); j++)
+					for(short j = 0; j < univ.town.monst.size(); j++)
 						if((univ.town.monst[j].active == 2)
 							&& ((dist(univ.town.monst[i].cur_loc,univ.town.monst[j].cur_loc) <= 5)))
 							univ.town.monst[i].active = 2;
@@ -257,7 +257,7 @@ void do_monsters() {
 				
 			}
 	if(overall_mode == MODE_OUTDOORS) {
-		for(i = 0; i < 10; i++)
+		for(short i = 0; i < 10; i++)
 			if(univ.party.out_c[i].exists) {
 				acted_yet = false;
 				l1 = univ.party.out_c[i].m_loc;
@@ -410,9 +410,9 @@ short monst_pick_target(short which_m) {
 }
 
 short monst_pick_target_monst(cCreature *which_m) {
-	short min_dist = 1000,i,cur_targ = 6;
+	short min_dist = 1000,cur_targ = 6;
 	
-	for(i = 0; i < univ.town.monst.size(); i++) {
+	for(short i = 0; i < univ.town.monst.size(); i++) {
 		if(univ.town.monst[i].active > 0 && !which_m->is_friendly(univ.town.monst[i]) && // allve + they hate each other
 			((dist(which_m->cur_loc,univ.town.monst[i].cur_loc) < min_dist) ||
 			 ((dist(which_m->cur_loc,univ.town.monst[i].cur_loc) == min_dist) && (get_ran(1,0,7) < 4))) &&
@@ -469,9 +469,9 @@ short select_active_pc() {
 }
 
 short closest_pc(location where) {
-	short how_close = 200,i,store = 6;
+	short how_close = 200,store = 6;
 	
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && dist(where,univ.party[i].combat_pos) < how_close) {
 			store = i;
 			how_close = dist(where,univ.party[i].combat_pos);
@@ -481,9 +481,9 @@ short closest_pc(location where) {
 
 //mode;  // 1 - closest hostile to PCs  2 - closest friendly to PCs
 short closest_monst(location where,bool friendly) {
-	short how_close = 200,i,store = 6;
+	short how_close = 200,store = 6;
 	
-	for(i = 0; i < univ.town.monst.size(); i++)
+	for(short i = 0; i < univ.town.monst.size(); i++)
 		if(univ.town.monst[i].is_friendly() == friendly
 			&& (dist(where,univ.town.monst[i].cur_loc) < how_close)) {
 			store = i;
@@ -494,7 +494,7 @@ short closest_monst(location where,bool friendly) {
 
 short switch_target_to_adjacent(short which_m,short orig_target) {
 	location monst_loc;
-	short i,num_adj = 0;
+	short num_adj = 0;
 	
 	monst_loc = univ.town.monst[which_m].cur_loc;
 	
@@ -504,7 +504,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 			if((univ.town.monst[orig_target - 100].active > 0) &&
 				(monst_adjacent(univ.town.monst[orig_target - 100].cur_loc,which_m)))
 				return orig_target;
-		for(i = 0; i < univ.town.monst.size(); i++)
+		for(short i = 0; i < univ.town.monst.size(); i++)
 			if((univ.town.monst[i].active > 0) &&
 				!univ.town.monst[i].is_friendly() &&
 				(monst_adjacent(univ.town.monst[i].cur_loc,which_m)))
@@ -529,13 +529,13 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 	
 	// Anyone unarmored? Heh heh heh...
 	if(is_combat())
-		for(i = 0; i < 6; i++)
+		for(short i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[i].combat_pos,which_m) &&
 			   (get_encumbrance(i) < 2))
 		 		return i;
 	
 	// Check for a nice, adjacent, friendly monster and maybe attack
-	for(i = 0; i < univ.town.monst.size(); i++)
+	for(short i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].active > 0) &&
 			univ.town.monst[i].is_friendly() &&
 			(monst_adjacent(univ.town.monst[i].cur_loc,which_m)) &&
@@ -544,14 +544,14 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 	
 	// OK. Now if this monster has PCs adjacent, pick one at randomn and hack. Otherwise,
 	// stick with orig. target.
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[i].combat_pos,which_m))
 			num_adj++;
 	
 	if(num_adj == 0)
 		return orig_target;
 	
-	i = 0;
+	short i = 0;
 	num_adj = get_ran(1,1,num_adj);
 	while(num_adj > 1 || univ.party[i].main_status != eMainStatus::ALIVE || !monst_adjacent(univ.party[i].combat_pos,which_m)) {
 		if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[i].combat_pos,which_m))
@@ -564,7 +564,6 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 
 bool rand_move(mon_num_t i) {
 	bool acted_yet = false;
-	short j;
 	location store_loc;
 	
 	// first, if outdoor, just roam.
@@ -582,7 +581,7 @@ bool rand_move(mon_num_t i) {
 	
 	if(!acted_yet) {
 		univ.town.monst[i].targ_loc.x = 0;
-		for(j = 0; j < 3; j++) {
+		for(short j = 0; j < 3; j++) {
 			store_loc = univ.town.monst[i].cur_loc;
 			store_loc.x += get_ran(1,0,24) - 12;
 			store_loc.y += get_ran(1,0,24) - 12;
@@ -593,7 +592,7 @@ bool rand_move(mon_num_t i) {
 		
 		if(univ.town.monst[i].targ_loc.x == 0) {
 			// maybe pick a wand loc, else juist pick a loc
-			j = get_ran(1,0,univ.town->wandering_locs.size() - 1);
+			short j = get_ran(1,0,univ.town->wandering_locs.size() - 1);
 			store_loc = univ.town->wandering_locs[j];
 			
 			if(!loc_off_act_area(store_loc) && (get_ran(1,0,1) == 1))
@@ -789,7 +788,7 @@ bool monster_placid(short m_num) {
 // This damages a monster by any fields it's in, and destroys any barrels or crates
 // it's stiing on.
 void monst_inflict_fields(short which_monst) {
-	short i,j,r1,k;
+	short r1;
 	location where_check;
 	cCreature *which_m;
 	
@@ -799,8 +798,8 @@ void monst_inflict_fields(short which_monst) {
 	which_m = &univ.town.monst[which_monst];
 	bool have_radiate = which_m->abil[eMonstAbil::RADIATE].active;
 	eFieldType which_radiate = which_m->abil[eMonstAbil::RADIATE].radiate.type;
-	for(i = 0; i < univ.town.monst[which_monst].x_width; i++)
-		for(j = 0; j < univ.town.monst[which_monst].y_width; j++)
+	for(short i = 0; i < univ.town.monst[which_monst].x_width; i++)
+		for(short j = 0; j < univ.town.monst[which_monst].y_width; j++)
 			if(univ.town.monst[which_monst].active > 0) {
 				where_check.x = univ.town.monst[which_monst].cur_loc.x + i;
 				where_check.y = univ.town.monst[which_monst].cur_loc.y + j;
@@ -856,13 +855,13 @@ void monst_inflict_fields(short which_monst) {
 					process_force_cage(where_check, univ.get_target_i(*which_m));
 			}
 	if(univ.town.monst[which_monst].active > 0)
-		for(i = 0; i < univ.town.monst[which_monst].x_width; i++)
-			for(j = 0; j < univ.town.monst[which_monst].y_width; j++) {
+		for(short i = 0; i < univ.town.monst[which_monst].x_width; i++)
+			for(short j = 0; j < univ.town.monst[which_monst].y_width; j++) {
 				where_check.x = univ.town.monst[which_monst].cur_loc.x + i;
 				where_check.y = univ.town.monst[which_monst].cur_loc.y + j;
 				if((univ.town.is_crate(where_check.x,where_check.y)) ||
 					(univ.town.is_barrel(where_check.x,where_check.y)) )
-					for(k = 0; k < univ.town.items.size(); k++)
+					for(short k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].contained
 						   && (univ.town.items[k].item_loc == where_check))
 							univ.town.items[k].contained = univ.town.items[k].held = false;
@@ -881,7 +880,7 @@ void monst_inflict_fields(short which_monst) {
 //mode; // 1 - town 2 - combat
 bool monst_check_special_terrain(location where_check,short mode,short which_monst) {
 	ter_num_t ter = 0;
-	short r1,i,guts = 0;
+	short r1,guts = 0;
 	bool can_enter = true,mage = false;
 	location from_loc,to_loc;
 	bool do_look = false; // If becomes true, terrain changed, so need to update what party sees
@@ -980,7 +979,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			univ.town.set_crate(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
 				univ.town.set_crate(to_loc.x,to_loc.y, true);
-			for(i = 0; i < univ.town.items.size(); i++)
+			for(short i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && univ.town.items[i].contained && univ.town.items[i].held)
 					univ.town.items[i].item_loc = to_loc;
@@ -994,7 +993,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			univ.town.set_barrel(where_check.x,where_check.y,false);
 			if(to_loc.x > 0)
 				univ.town.set_barrel(to_loc.x,to_loc.y,true);
-			for(i = 0; i < univ.town.items.size(); i++)
+			for(short i = 0; i < univ.town.items.size(); i++)
 				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
 				   && univ.town.items[i].contained && univ.town.items[i].held)
 					univ.town.items[i].item_loc = to_loc;
@@ -1053,7 +1052,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		if(is_town())
 			update_explored(univ.party.town_loc);
 		if(is_combat())
-			for(i = 0; i < 6; i++)
+			for(short i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					update_explored(univ.party[i].combat_pos);
 	}
@@ -1170,11 +1169,9 @@ bool summon_monster(mon_num_t which,location where,short duration,eAttitude give
 }
 
 void activate_monsters(short code,short /*attitude*/) {
-	short i;
-	
 	if(code == 0)
 		return;
-	for(i = 0; i < univ.town->creatures.size(); i++)
+	for(short i = 0; i < univ.town->creatures.size(); i++)
 		if(univ.town->creatures[i].spec_enc_code == code) {
 			cTownperson& monst = univ.town->creatures[i];
 			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], univ.party.easy_mode, univ.difficulty_adjust());
@@ -1190,12 +1187,12 @@ void activate_monsters(short code,short /*attitude*/) {
 }
 
 short get_encumbrance(short pc_num) {
-	short store = 0,i,what_val;
+	short store = 0,what_val;
 	
 	what_val = univ.party[pc_num].free_weight();
 	if(what_val < 0) store += what_val / -10;
 	
-	for(i = 0; i < 24; i++)
+	for(short i = 0; i < 24; i++)
 		if(univ.party[pc_num].equip[i]) {
 			what_val = univ.party[pc_num].items[i].awkward;
 			if(univ.party[pc_num].items[i].ability == eItemAbil::ENCUMBERING)
@@ -1210,10 +1207,8 @@ short get_encumbrance(short pc_num) {
 }
 
 mon_num_t get_summon_monster(short summon_class) {
-	short i,j;
-	
-	for(i = 0; i < 200; i++) {
-		j = get_ran(1,0,255);
+	for(short i = 0; i < 200; i++) {
+		short j = get_ran(1,0,255);
 		if(univ.scenario.scen_monsters[j].summon_type == summon_class) {
 			return j;
 		}

@@ -1138,19 +1138,18 @@ void save_scenario(bool rename) {
 }
 
 void start_data_dump() {
-	short i;
 	using std::endl;
 	std::string scen_name = scenario.scen_name;
 	std::ofstream fout((scenario.scen_file.parent_path()/(scen_name + " Data.txt")).string().c_str());
 	fout << "Scenario data for " << scen_name << ':' << endl << endl;
 	fout << "Terrain types for " << scen_name << ':' << endl;
-	for(i = 0; i < scenario.ter_types.size(); i++)
+	for(short i = 0; i < scenario.ter_types.size(); i++)
 		fout << "  Terrain type " << i << ": " << scenario.ter_types[i].name << endl;
 	fout << endl << "Monster types for " << scen_name << ':' << endl;
-	for(i = 0; i < scenario.scen_monsters.size(); i++)
+	for(short i = 0; i < scenario.scen_monsters.size(); i++)
 		fout << "  Monster type " << i << ": " << scenario.scen_monsters[i].m_name << endl;
 	fout << endl << "Item types for " << scen_name << ':' << endl;
-	for(i = 0; i < scenario.scen_items.size(); i++)
+	for(short i = 0; i < scenario.scen_items.size(); i++)
 		fout << "  Item type " << i << ": " << scenario.scen_items[i].full_name << endl;
 	fout.close();
 }

@@ -174,14 +174,12 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 }
 
 bool place_item(cItem item,location where,bool contained) {
-	short i;
-    
 	if(contained && !is_container(where))
 		contained = false;
 	
 	bool is_pushable_ctr = contained && (univ.town.is_barrel(where.x,where.y) || univ.town.is_crate(where.x,where.y));
 	
-	for(i = 0; i < univ.town.items.size(); i++)
+	for(short i = 0; i < univ.town.items.size(); i++)
 		if(univ.town.items[i].variety == eItemType::NO_ITEM) {
 			univ.town.items[i] = item;
 			univ.town.items[i].item_loc = where;
@@ -241,10 +239,10 @@ void give_thing(short pc_num, short item_num) {
 
 // Procedure only ready for town and outdoor
 short dist_from_party(location where) {
-	short store = 1000, i;
+	short store = 1000;
 	
 	if((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) {
-		for(i = 0; i < 6; i++)
+		for(short i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				store = min(store,dist(univ.party[i].combat_pos,where));
 	}
@@ -265,16 +263,16 @@ void set_item_flag(cItem* item) {
 
 //short pc_num; // if 6, any
 short get_item(location place,short pc_num,bool check_container) {
-	short i,taken = 0;
+	short taken = 0;
 	bool item_near = false;
 	short mass_get = 1;
 	
-	for(i = 0; i < univ.town.monst.size(); i++)
+	for(short i = 0; i < univ.town.monst.size(); i++)
 		if(univ.town.monst[i].active > 0 && !univ.town.monst[i].is_friendly()
 			&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 			mass_get = 0;
 	
-	for(i = 0; i < univ.town.items.size(); i++)
+	for(short i = 0; i < univ.town.items.size(); i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM)
 			if(((adjacent(place,univ.town.items[i].item_loc)) ||
 				 (mass_get == 1 && !check_container &&
@@ -289,7 +287,7 @@ short get_item(location place,short pc_num,bool check_container) {
 			}
 	if(item_near)
 		if(display_item(place,pc_num,mass_get,check_container)) { // if true, there was a theft
-			for(i = 0; i < univ.town.monst.size(); i++)
+			for(short i = 0; i < univ.town.monst.size(); i++)
 				if(univ.town.monst[i].active > 0 && univ.town.monst[i].is_friendly()
 					&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 					make_town_hostile();
@@ -317,7 +315,7 @@ void make_town_hostile() {
 
 // Set Attitude node adapted from *i, meant to replace make_town_hostile node
 void set_town_attitude(short lo,short hi,eAttitude att) {
-	short i,num;
+	short num;
 	short a[3] = {}; // Dummy values to pass to run_special.
 	
 	if(which_combat_type == 0)
@@ -338,7 +336,7 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 	if(hi < lo)
 		std::swap(lo, hi);
 	
-	for(i = lo; i <= hi; i++) {
+	for(short i = lo; i <= hi; i++) {
 		if(univ.town.monst[i].active > 0 && univ.town.monst[i].summon_time == 0){
 			univ.town.monst[i].attitude = att;
 			num = univ.town.monst[i].number;
@@ -368,7 +366,6 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 
 
 static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& current_getting_pc, const std::vector<cItem*>& item_array) {
-	short i;
 	cItem item;
 	char key_stash[2] = "a";
 	
@@ -379,7 +376,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	 	
 	}
 	
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		std::ostringstream sout;
 		sout << "pc" << i + 1;
 		std::string id = sout.str();
@@ -407,7 +404,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		me["down"].hide();
 	else me["down"].show();
 	
-	for(i = 0; i < 8; i++) {
+	for(short i = 0; i < 8; i++) {
 		std::ostringstream sout;
 		sout << "item" << i + 1;
 		std::string pict = sout.str() + "-g", name = sout.str() + "-name";
@@ -445,7 +442,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		me["prompt"].setText(sout.str());
 	}
 	
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			std::ostringstream sout;
 			sout << "pc" << i + 1 << "-g";
@@ -537,13 +534,12 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 bool display_item(location from_loc,short /*pc_num*/,short mode, bool check_container) {
 //	short item_array[130];
 	std::vector<cItem*> item_array;
-	short i;
 	
 	make_cursor_sword();
 	
 	short current_getting_pc = current_pc;
 	
-	for(i = 0; i < univ.town.items.size(); i++)
+	for(short i = 0; i < univ.town.items.size(); i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
 			if(((adjacent(from_loc,univ.town.items[i].item_loc)) ||
 				 (mode == 1 && !check_container &&
@@ -730,7 +726,7 @@ short item_val(cItem item) {
 void place_treasure(location where,short level,short loot,short mode) {
 	
 	cItem new_item;
-	short amt,r1,i,j;
+	short amt,r1;
 	// Make these static const because they are never changed.
 	// Saves them being initialized every time the function is called.
 	static const short treas_chart[5][6] = {
@@ -785,7 +781,7 @@ void place_treasure(location where,short level,short loot,short mode) {
 			|| ((r1 < 6) && (univ.party.get_level() < 30)) || (loot > 2) )
 			place_item(new_item,where);
 	}
-	for(j = 0; j < 5; j++) {
+	for(short j = 0; j < 5; j++) {
 		r1 = get_ran(1,1,100);
 		if((treas_chart[loot][j] >= 0) && (r1 <= treas_odds[loot][j] + check_party_stat(eSkill::LUCK, 0))) {
 			r1 = get_ran(1,0,9);
@@ -835,7 +831,7 @@ void place_treasure(location where,short level,short loot,short mode) {
 				new_item.variety = eItemType::NO_ITEM;
 			
 			if(new_item.variety != eItemType::NO_ITEM) {
-				for(i = 0; i < 6; i++)
+				for(short i = 0; i < 6; i++)
 					if((univ.party[i].main_status == eMainStatus::ALIVE)
 					   && get_ran(1,1,100) < id_odds[univ.party[i].skill(eSkill::ITEM_LORE)])
 						new_item.ident = true;
@@ -1010,7 +1006,7 @@ static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) 
 // mode determines which PCs can be picked
 // 0 - only living pcs, 1 - any pc, 2 - only dead pcs, 3 - only living pcs with inventory space
 short char_select_pc(short mode,const char *title) {
-	short item_hit,i;
+	short item_hit;
 	
 	make_cursor_sword();
 	
@@ -1019,7 +1015,7 @@ short char_select_pc(short mode,const char *title) {
 	
 	selectPc["title"].setText(title);
 	
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		bool can_pick = true;
 		if(univ.party[i].main_status == eMainStatus::ABSENT || univ.party[i].main_status == eMainStatus::FLED)

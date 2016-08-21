@@ -129,11 +129,10 @@ bool current_bash_is_bash = false;
 extern void edit_stuff_done();
 
 void init_screen_locs() {
-	short i,j,k,l;
 	rectangle startup_base = {279,5,327,306};
 	rectangle shop_base = {63,12,99,267};
 	
-	for(i = 0; i < 7; i++)
+	for(short i = 0; i < 7; i++)
 		shopping_rects[0][i] = shop_base;
 	shopping_rects[0][SHOPRECT_ACTIVE_AREA].right -= 35;
 	shopping_rects[0][SHOPRECT_GRAPHIC].right = shopping_rects[0][SHOPRECT_GRAPHIC].left + 28;
@@ -148,14 +147,14 @@ void init_screen_locs() {
 	shopping_rects[0][SHOPRECT_ITEM_HELP].bottom -= 21;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].right -= 19;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].left = shopping_rects[0][SHOPRECT_ITEM_HELP].right - 14;
-	for(i = 1; i < 8; i++)
-		for(j = 0; j < 7; j++) {
+	for(short i = 1; i < 8; i++)
+		for(short j = 0; j < 7; j++) {
 			shopping_rects[i][j] = shopping_rects[0][j];
 			shopping_rects[i][j].offset(0,i * 36);
 		}
 	
 	
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		startup_button[i] = startup_base;
 		startup_button[i].offset(301 * (i / 3)  - 18,48 * (i % 3));
 	}
@@ -164,14 +163,14 @@ void init_screen_locs() {
 	startup_top.left = 5;
 	startup_top.right = startup_button[STARTBTN_JOIN].right;
 	
-	for(i = 0; i < 200; i++)
-		for(j = 0; j < 8; j++)
-			for(k = 0; k < 64; k++)////
+	for(short i = 0; i < 200; i++)
+		for(short j = 0; j < 8; j++)
+			for(short k = 0; k < 64; k++)
 				univ.town_maps[i][j][k] = 0;
 	
-	for(i = 0; i < 100; i++)
-		for(k = 0; k < 6; k++)
-			for(l = 0; l < 48; l++)
+	for(short i = 0; i < 100; i++)
+		for(short k = 0; k < 6; k++)
+			for(short l = 0; l < 48; l++)
 				univ.out_maps[i][k][l] = 0;
 	
 	// name, use, give, drip, info, sell/id   each one 13 down
@@ -195,13 +194,13 @@ void init_screen_locs() {
 	item_buttons[0][ITEMBTN_SPEC].left = 173;
 	item_buttons[0][ITEMBTN_SPEC].right = 232;
 	item_buttons[0][ITEMBTN_NAME].top += 3;
-	for(i = 1; i < 8; i++)
-		for(j = 0; j < 6; j++) {
+	for(short i = 1; i < 8; i++)
+		for(short j = 0; j < 6; j++) {
 			item_buttons[i][j] = item_buttons[0][j];
 			item_buttons[i][j].offset(0,13 * i);
 		}
 	
-/*	for(i = 0; i < 8; i++) {
+/*	for(short i = 0; i < 8; i++) {
 		item_screen_button_rects[i] = bottom_base;
 		OffsetRect(&item_screen_button_rects[i],10 + i * 29,126);
 	}
@@ -232,8 +231,8 @@ void init_screen_locs() {
 	pc_buttons[0][PCBTN_TRADE].left = 253;
 	pc_buttons[0][PCBTN_TRADE].right = 262;
 	pc_buttons[0][PCBTN_NAME].top += 3;
-	for(i = 1; i < 6; i++)
-		for(j = 0; j < 5; j++) {
+	for(short i = 1; i < 6; i++)
+		for(short j = 0; j < 5; j++) {
 			pc_buttons[i][j] = pc_buttons[0][j];
 			pc_buttons[i][j].offset(0,13 * i);
 		}
@@ -1512,9 +1511,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 }
 
 bool someone_awake() {
-	short i;
-	
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE &&
 		   univ.party[i].status[eStatus::ASLEEP] <= 0 && univ.party[i].status[eStatus::PARALYZED] <= 0)
 			return true;
@@ -1569,7 +1566,6 @@ void handle_menu_spell(eSpell spell_picked) {
 }
 
 void initiate_outdoor_combat(short i) {
-	short m,n;
 	location to_place;
 	
 	draw_terrain();
@@ -1588,11 +1584,11 @@ void initiate_outdoor_combat(short i) {
 	
 	univ.party.out_c[i].exists = false;
 	
-	for(m = 0; m < 6; m++)
+	for(short m = 0; m < 6; m++)
 		if(univ.party[m].main_status == eMainStatus::ALIVE)
 			to_place = univ.party[m].combat_pos;
-	for(m = 0; m < 6; m++)
-		for(n = 0; n < 24; n++)
+	for(short m = 0; m < 6; m++)
+		for(short n = 0; n < 24; n++)
 			if(univ.party[m].main_status != eMainStatus::ALIVE && univ.party[m].items[n].variety != eItemType::NO_ITEM) {
 				place_item(univ.party[m].items[n],to_place);
 				univ.party[m].items[n].variety = eItemType::NO_ITEM;
@@ -1606,7 +1602,6 @@ void initiate_outdoor_combat(short i) {
 bool handle_keystroke(sf::Event& event){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
-	short i,j;
 	std::ostringstream sout;
 	using kb = sf::Keyboard;
 	using Key = sf::Keyboard::Key;
@@ -1673,7 +1668,7 @@ bool handle_keystroke(sf::Event& event){
 			chr2 = kb::D;
 		if(chr2 == kb::Space)
 			chr2 = kb::G;
-		for(i = 0; i < 9; i++)
+		for(short i = 0; i < 9; i++)
 			if(chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
 				int j = talk_end_forced ? i - 5 : i;
 				pass_point.x = talk_words[j].rect.left + 9 + ul.x;
@@ -1688,7 +1683,7 @@ bool handle_keystroke(sf::Event& event){
 			play_sound(37);
 			end_shop_mode();
 		}
-		for(i = 0; i < 8; i++)
+		for(short i = 0; i < 8; i++)
 			if(chr2 == shop_chars[i]) {
 				pass_point.x = shopping_rects[i][SHOPRECT_ACTIVE_AREA].left + 9 + ul.x;
 				pass_point.y = shopping_rects[i][SHOPRECT_ACTIVE_AREA].top + 9 + ul.y;
@@ -1697,7 +1692,7 @@ bool handle_keystroke(sf::Event& event){
 				are_done = handle_action(pass_event);
 			}
 	} else {
-		for(i = 0; i < 10; i++)
+		for(short i = 0; i < 10; i++)
 			if(chr2 == keypad[i]) {
 				if(i == 0) {
 					chr2 = kb::Z;
@@ -1811,13 +1806,13 @@ bool handle_keystroke(sf::Event& event){
 			if(!univ.debug_mode) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
-			for(i = 0; i < 6; i++) {
+			for(short i = 0; i < 6; i++) {
 				univ.party[i].main_status = eMainStatus::ALIVE;
 				univ.party[i].cur_health = univ.party[i].max_health;
 				univ.party[i].cur_sp = 100;
 			}
 			award_party_xp(25);
-			for(i = 0; i < 6; i++) {
+			for(short i = 0; i < 6; i++) {
 				auto& who = univ.party[i];
 				who.priest_spells.set();
 				who.mage_spells.set();
@@ -1891,7 +1886,7 @@ bool handle_keystroke(sf::Event& event){
 			if(!univ.debug_mode) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
-			for(i = 0; i < 6; i++) {
+			for(short i = 0; i < 6; i++) {
 				if(isDead(univ.party[i].main_status))
 					univ.party[i].main_status = eMainStatus::ALIVE;
 			}
@@ -1904,7 +1899,7 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'K':
 			if(!univ.debug_mode) break;
-			for(i = 0; i < univ.town.monst.size(); i++) {
+			for(short i = 0; i < univ.town.monst.size(); i++) {
 				if(is_combat() && univ.town.monst[i].active > 0 && !univ.town.monst[i].is_friendly())
 					univ.town.monst[i].active = 0;
 				
@@ -1943,26 +1938,27 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case 'I':
-			if(!univ.debug_mode) break;
-			i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?");
-			j = univ.scenario.scen_items[i].ident;
-			univ.scenario.scen_items[i].ident = true;
-			univ.party.give_item(univ.scenario.scen_items[i], true);
-			univ.scenario.scen_items[i].ident = j;
-			print_buf();
-			put_item_screen(stat_window);
-			put_pc_screen(); // In case the item was food or gold
+			if(univ.debug_mode) {
+				int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?");
+				int j = univ.scenario.scen_items[i].ident;
+				univ.scenario.scen_items[i].ident = true;
+				univ.party.give_item(univ.scenario.scen_items[i], true);
+				univ.scenario.scen_items[i].ident = j;
+				print_buf();
+				put_item_screen(stat_window);
+				put_pc_screen(); // In case the item was food or gold
+			}
 			break;
 			
 		case 'Q':
 			if(!univ.debug_mode) break;
 			if(overall_mode == MODE_OUTDOORS) {
-				for(i = 0; i < 96; i++)
-					for(j = 0; j < 96; j++)
+				for(short i = 0; i < 96; i++)
+					for(short j = 0; j < 96; j++)
 						make_explored(i,j);
 			} else {
-				for(i = 0; i < 64; i++)
-					for(j = 0; j < 64; j++)
+				for(short i = 0; i < 64; i++)
+					for(short j = 0; j < 64; j++)
 						make_explored(i,j);
 			}
 			clear_map();
@@ -1998,14 +1994,11 @@ bool handle_keystroke(sf::Event& event){
 		case 'T':
 			if(!univ.debug_mode) break;
 			short find_direction_from;
-            i = get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number");
-            if(i >= 0 && i < univ.scenario.towns.size()) {
-            	if(univ.party.direction == 0) find_direction_from = 2;
-				else if(univ.party.direction == 4) find_direction_from = 0;
-				else if(univ.party.direction < 4) find_direction_from = 3;
-				else find_direction_from = 1;
-				start_town_mode(i, find_direction_from);
-			}
+			if(univ.party.direction == 0) find_direction_from = 2;
+			else if(univ.party.direction == 4) find_direction_from = 0;
+			else if(univ.party.direction < 4) find_direction_from = 3;
+			else find_direction_from = 1;
+			start_town_mode(get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number"), find_direction_from);
 			break;
 			
 		case 'W':
@@ -2090,28 +2083,28 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'm': case 'p': case 'l': case 'r': case 'w': case 't': case 'd': case 'g': case 'f':
 		case 'M': case 'P': case 'A':
-			j = 50;
+			int btn = 50;
 			if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) { // cancel spell
-				if(chr == 'm') j = 0;
-				else if(chr == 'p') j = 1;
+				if(chr == 'm') btn = 0;
+				else if(chr == 'p') btn = 1;
 			}
 			// TODO: There's several weird things about this conditional. Why 'f' when the key to initiate this is 's'? Why is it checking for 't' (though that can never be true)?
 			if(chr == 'f' && (overall_mode == MODE_FIRING || overall_mode == MODE_THROWING || chr == 't')) // cancel missile
-				j = 6;
+				btn = 6;
 			if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
 				switch(chr) {
-					case 'M': spell_forced = true; j = 0; break;
-					case 'm': j = 0; break;
-					case 'P': spell_forced = true; j = 1; break;
-					case 'p': j = 1; break;
-					case 'l': j = 2; break;
+					case 'M': spell_forced = true; btn = 0; break;
+					case 'm': btn = 0; break;
+					case 'P': spell_forced = true; btn = 1; break;
+					case 'p': btn = 1; break;
+					case 'l': btn = 2; break;
 					case 'r':
 						if(overall_mode != MODE_OUTDOORS) return false;
-						j = 3;
+						btn = 3;
 						break;
 					case 't':
 						if(overall_mode == MODE_TOWN)
-							j = 3;
+							btn = 3;
 					else return false;
 						break;
 					case 'A':
@@ -2128,7 +2121,7 @@ bool handle_keystroke(sf::Event& event){
 						break;
 					case 'w':
 						if(overall_mode == MODE_COMBAT)
-							j = 5;
+							btn = 5;
 						else if(overall_mode == MODE_TOWN) {
 							pass_point.x = 1001 + ul.x;
 							pass_event.mouseButton.x = pass_point.x;
@@ -2143,21 +2136,21 @@ bool handle_keystroke(sf::Event& event){
 						break;
 					case 'd':
 						if(overall_mode != MODE_COMBAT) return false;
-						j = 3;
+						btn = 3;
 						break;
 					case 'g':
 						if(overall_mode == MODE_OUTDOORS) return false;
-						j = 4;
+						btn = 4;
 						break;
 					case 'f':
 						if(overall_mode != MODE_TOWN) return false;
-						j = 7;
+						btn = 7;
 						break;
 				}
 			}
-			if(j < 50) {
-				pass_point.x = bottom_buttons[j].left + 5;
-				pass_point.y = bottom_buttons[j].top + 5;
+			if(btn < 50) {
+				pass_point.x = bottom_buttons[btn].left + 5;
+				pass_point.y = bottom_buttons[btn].top + 5;
 				pass_event.mouseButton.x = pass_point.x + ul.x;
 				pass_event.mouseButton.y = pass_point.y + ul.y;
 				are_done = handle_action(pass_event);
@@ -2327,7 +2320,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 }
 
 void increase_age() {
-	short i,j,item,how_many_short = 0,r1;
+	short item,how_many_short = 0,r1;
 	
 	
 	// Increase age, adjust light level & stealth
@@ -2420,7 +2413,7 @@ void increase_age() {
 	}
 	
 	// Protection, etc.
-	for(i = 0; i < 6; i++) { // Process some status things, and check if stats updated
+	for(short i = 0; i < 6; i++) { // Process some status things, and check if stats updated
 		
 		if(univ.party[i].status[eStatus::INVULNERABLE] == 1 || abs(univ.party[i].status[eStatus::MAGIC_RESISTANCE]) == 1
 		   || univ.party[i].status[eStatus::INVISIBLE] == 1 || univ.party[i].status[eStatus::MARTYRS_SHIELD] == 1
@@ -2439,7 +2432,7 @@ void increase_age() {
 	
 	// Food
 	if((univ.party.age % 1000 == 0) && (overall_mode < MODE_COMBAT)) {
-		for(i = 0; i < 6; i++)
+		for(short i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				how_many_short++;
 		how_many_short = take_food (how_many_short,false);
@@ -2458,21 +2451,21 @@ void increase_age() {
 	}
 	
 	// Poison, acid, disease damage
-	for(i = 0; i < 6; i++) // Poison
+	for(short i = 0; i < 6; i++) // Poison
 		if(univ.party[i].status[eStatus::POISON] > 0) {
 			i = 6;
 			if(((overall_mode == MODE_OUTDOORS) && (univ.party.age % 50 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 20 == 0))) {
 				do_poison();
 			}
 		}
-	for(i = 0; i < 6; i++) // Disease
+	for(short i = 0; i < 6; i++) // Disease
 		if(univ.party[i].status[eStatus::DISEASE] > 0) {
 			i = 6;
 			if(((overall_mode == MODE_OUTDOORS) && (univ.party.age % 100 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 25 == 0))) {
 				handle_disease();
 			}
 		}
-	for(i = 0; i < 6; i++) // Acid
+	for(short i = 0; i < 6; i++) // Acid
 		if(univ.party[i].status[eStatus::ACID] > 0) {
 			i = 6;
 			handle_acid();
@@ -2486,7 +2479,7 @@ void increase_age() {
 	}
 	else {
 		if(univ.party.age % 50 == 0) {
-			for(i = 0; i < 6; i++)
+			for(short i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health > univ.party[i].max_health)
 					univ.party[i].cur_health--; // Bonus HP wears off
 			univ.party.heal(1);
@@ -2495,14 +2488,14 @@ void increase_age() {
 	if(is_out()) {
 		if(univ.party.age % 80 == 0) {
 			univ.party.restore_sp(2);
-			for(i = 0; i < 6; i++)
+			for(short i = 0; i < 6; i++)
 				if(univ.party[i].status[eStatus::DUMB] < 0)
 					univ.party[i].status[eStatus::DUMB]++;
 		}
 	}
 	else {
 		if(univ.party.age % 40 == 0) {
-			for(i = 0; i < 6; i++) {
+			for(short i = 0; i < 6; i++) {
 				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp > univ.party[i].max_sp)
 					univ.party[i].cur_sp--; // Bonus SP wears off
 				if(univ.party[i].status[eStatus::DUMB] < 0)
@@ -2513,7 +2506,7 @@ void increase_age() {
 	}
 	
 	// Recuperation and chronic disease disads
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if(univ.party[i].traits[eTrait::RECUPERATION] && get_ran(1,0,10) == 1 && univ.party[i].cur_health < univ.party[i].max_health) {
 				univ.party[i].heal(2);
@@ -2527,13 +2520,13 @@ void increase_age() {
 	
 	// Blessing, slowed,etc.
 	if(univ.party.age % 4 == 0)
-		for(i = 0; i < 6; i++) {
+		for(short i = 0; i < 6; i++) {
 			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
 			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
 			if((item = univ.party[i].has_abil_equip(eItemAbil::REGENERATE)) < 24
 			   && (univ.party[i].cur_health < univ.party[i].max_health)
 			   && ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
-				j = get_ran(1,0,univ.party[i].items[item].abil_data[0] / 3);
+				int j = get_ran(1,0,univ.party[i].items[item].abil_data[0] / 3);
 				if(univ.party[i].items[item].abil_data[0] / 3 == 0)
 					j = get_ran(1,0,1);
 				if(is_out()) j = j * 4;
@@ -2651,7 +2644,6 @@ void handle_death() {
 }
 
 void start_new_game(bool force) {
-	short i;
 	std::string choice;
 	using kb = sf::Keyboard;
 	
@@ -2689,15 +2681,11 @@ void start_new_game(bool force) {
 		edit_party();
 	
 	// if no PCs left, forget it
-	for(i = 0 ; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			i = 100;
-	if(i == 6)
+	if(!univ.party.is_alive())
 		return;
 	
-	
 	// everyone gets a weapon
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			univ.party[i].finish_create();
 		}
@@ -2880,7 +2868,7 @@ bool outd_move_party(location destination,bool forced) {
 		
 		
 //		if(forced)
-//			for(i = 0; i < 10; i++)
+//			for(short i = 0; i < 10; i++)
 //				if(same_point(destination,party.out_c[i].m_loc))
 //					party.out_c[i].exists = false;
 		
@@ -3137,20 +3125,18 @@ bool town_move_party(location destination,short forced) {
 
 
 bool someone_poisoned() {
-	short i;
-	
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE && (univ.party[i].status[eStatus::POISON] > 0))
 			return true;
 	return false;
 }
 
 short nearest_monster() {
-	short i = 100,j,s;
+	short i = 100;
 	
-	for(j = 0; j < 10; j++)
+	for(short j = 0; j < 10; j++)
 		if(univ.party.out_c[j].exists) {
-			s = dist(univ.party.out_loc,univ.party.out_c[j].m_loc);
+			short s = dist(univ.party.out_loc,univ.party.out_c[j].m_loc);
 			i = min(i,s);
 		}
 	return i;
@@ -3168,9 +3154,8 @@ short count_walls(location loc) { // TODO: Generalize this function
 	unsigned char walls[31] = {5,6,7,8,9, 10,11,12,13,14, 15,16,17,18,19, 20,21,22,23,24,
 		25,26,27,28,29, 30,31,32,33,34, 35};
 	short answer = 0;
-	short k = 0;
 	
-	for(k = 0; k < 31 ; k++) {
+	for(short k = 0; k < 31 ; k++) {
 		if(univ.out[loc.x + 1][loc.y] == walls[k])
 			answer++;
 		if(univ.out[loc.x - 1][loc.y] == walls[k])

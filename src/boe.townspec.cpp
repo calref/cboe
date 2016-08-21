@@ -40,7 +40,7 @@ void activate_monster_enc(short enc_num,std::string list,short str,short strsnd,
 // 7 - level drain  8 - alert  9 - big flames 10 - dumbfound 11 - disease 1
 // 12 - disease all
 bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
-	short r1,skill,i,num_hits = 1;
+	short r1,skill,num_hits = 1;
 	short trap_odds[30] = {5,30,35,42,48, 55,63,69,75,77,
 		78,80,82,84,86, 88,90,92,94,96,98,99,99,99,99,99,99,99,99,99};
 	
@@ -54,7 +54,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 	cPlayer& disarmer = univ.party[pc_num];
 	
 	if(pc_num < 6) {
-		i = disarmer.stat_adj(eSkill::DEXTERITY);
+		int i = disarmer.stat_adj(eSkill::DEXTERITY);
 		i += disarmer.get_prot_level(eItemAbil::THIEVING) / 2;
 		skill = minmax(0,20,disarmer.skill(eSkill::DISARM_TRAPS) +
 					   + disarmer.skill(eSkill::LUCK) / 2 + 1 - univ.town.difficulty + 2 * i);
@@ -74,7 +74,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 	
 	switch(trap_type) {
 		case TRAP_BLADE:
-			for(i = 0; i < num_hits; i++) {
+			for(short i = 0; i < num_hits; i++) {
 				add_string_to_buf("  A knife flies out!");
 				r1 = get_ran(2 + univ.town.difficulty / 14,1,10);
 				damage_pc(disarmer,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
@@ -96,7 +96,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			break;
 			
 		case TRAP_EXPLOSION:
-			for(i = 0; i < num_hits; i++) {
+			for(short i = 0; i < num_hits; i++) {
 				add_string_to_buf("  There is an explosion.");
 				r1 = get_ran(3 + univ.town.difficulty / 13,1,8);
 				hit_party(r1,eDamageType::FIRE);
@@ -161,9 +161,8 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 
 location get_spec_loc(short which) {
 	location where;
-	short i;
 	
-	for(i = 0; i < univ.town->special_locs.size(); i++)
+	for(short i = 0; i < univ.town->special_locs.size(); i++)
 		if(univ.town->special_locs[i].spec == which)
 			return univ.town->special_locs[i];
 	return where;

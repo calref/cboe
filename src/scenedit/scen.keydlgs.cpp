@@ -474,14 +474,12 @@ bool edit_text_str(short which_str,eStrMode mode) {
 	return dlog.accepted() || which_str != first;
 }
 
-static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, short which_str, short str_mode) {
+static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, info_rect_t& r) {
 	if(item_hit == "okay") {
 		me.setResult(true);
 		me.toast(true);
 		std::string str = me["area"].getText().substr(0,29);
-		if(str_mode == 0)
-			current_terrain->info_rect[which_str].descr = str;
-		else town->room_rect[which_str].descr = str;
+		r.descr = str;
 	} else if(item_hit == "cancel") {
 		me.setResult(false);
 		me.toast(false);
@@ -490,15 +488,13 @@ static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, short
 }
 
 // mode 0 - out 1 - town
-bool edit_area_rect_str(short which_str,short mode) {
+bool edit_area_rect_str(info_rect_t& r) {
 	using namespace std::placeholders;
 	
 	cDialog dlog("set-area-desc");
-	dlog.attachClickHandlers(std::bind(edit_area_rect_event_filter, _1, _2, which_str, mode), {"okay", "cancel"});
+	dlog.attachClickHandlers(std::bind(edit_area_rect_event_filter, _1, _2, std::ref(r)), {"okay", "cancel"});
 	
-	if(mode == 0)
-		dlog["area"].setText(current_terrain->info_rect[which_str].descr);
-	else dlog["area"].setText(town->room_rect[which_str].descr);
+	dlog["area"].setText(r.descr);
 	
 	dlog.run();
 	
@@ -1016,19 +1012,19 @@ short get_fresh_spec(short which_mode) {
 
 static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eStrMode str_mode, short* str1, short* str2) {
 	std::string str;
-	size_t i;
 	
 	if(item_hit == "okay") {
 		str = me["str1"].getText();
 		if(!str.empty()) {
 			if(*str1 < 0) {
 				size_t n = num_strs(str_mode);
-				for(i = 0; i < n; i++) {
+				for(short i = 0; i < n; i++) {
 					std::string& str = fetch_str(str_mode, i);
-					if(!str.empty() && str[0] == '*')
+					if(!str.empty() && str[0] == '*') {
+						*str1 = i;
 						break;
+					}
 				}
-				*str1 = i;
 			}
 			fetch_str(str_mode, *str1) = str;
 		}
@@ -1036,12 +1032,13 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eStrM
 		if(!str.empty()) {
 			if(*str2 < 0) {
 				size_t n = num_strs(str_mode);
-				for(i = 0; i < n; i++) {
+				for(short i = 0; i < n; i++) {
 					std::string& str = fetch_str(str_mode, i);
-					if(!str.empty() && str[0] == '*')
+					if(!str.empty() && str[0] == '*') {
+						*str2 = i;
 						break;
+					}
 				}
-				*str2 = i;
 			}
 			fetch_str(str_mode, *str2) = str;
 		}
@@ -1074,10 +1071,9 @@ void edit_spec_text(eStrMode mode,short *str1,short *str2,cDialog* parent) {
 
 static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, eStrMode str_mode, short* str1){
 	std::string str;
-	short i;
 	
 	if(item_hit == "okay") {
-		for(i = 0; i < 6; i++) {
+		for(short i = 0; i < 6; i++) {
 			std::string id = "str" + std::to_string(i + 1);
 			str = me[id].getText();
 			if(i == 0 && str.empty()) break;
@@ -1090,23 +1086,23 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, eSt
 
 // mode 0 - scen 1 - out 2 - town
 void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
-	size_t i,j;
-	
 	if(*str1 >= num_strs(mode) - 6)
 		*str1 = -1;
 	// first, assign the 6 strs for the dialog.
 	if(*str1 < 0) {
 		size_t n = num_strs(mode);
-		for(i = 0; i < n; i++) {
-			for(j = i; j < i + 6; j++) {
+		for(short i = 0; i < n; i++) {
+			short n = 0;
+			for(short j = i; j < i + 6; j++, n++) {
 				std::string str = fetch_str(mode, j);
 				if(!str.empty() && str[0] != '*')
 					break;
 			}
-			if(j == i + 6)
+			if(n == 6) {
+				*str1 = i;
 				break;
+			}
 		}
-		*str1 = i;
 		for(short i = *str1; i < *str1 + 6; i++)
 			fetch_str(mode, i).clear();
 	}
@@ -1120,7 +1116,7 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 	edit.attachClickHandlers(std::bind(edit_dialog_text_event_filter, _1, _2, mode, str1), {"okay", "cancel"});
 	
 	if(*str1 >= 0) {
-		for(i = 0; i < 6; i++) {
+		for(short i = 0; i < 6; i++) {
 			std::string id = "str" + std::to_string(i + 1);
 			edit[id].setText(fetch_str(mode, *str1 + i));
 		}
@@ -1130,7 +1126,6 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 }
 
 static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, short spec_mode) {
-	short i;
 	size_t num_specs;
 	switch(spec_mode) {
 		case 0: num_specs = scenario.scen_specials.size();
@@ -1140,7 +1135,7 @@ static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, sho
 	
 	if(item_hit == "cancel") me.setResult<short>(-1);
 	else if(item_hit == "okay") {
-		i = me["num"].getTextAsNum();
+		short i = me["num"].getTextAsNum();
 		if(i < 0 || i >= num_specs) {
 			showWarning("There is no special node with that number. The available range is 0 to " + std::to_string(num_specs - 1) + ".","The node has been set anyway. To create it, select Edit Special Nodes from the menu, scroll to the bottom, and select Create new Node.",&me);
 		}
@@ -1164,15 +1159,13 @@ short edit_special_num(short mode,short what_start) {
 }
 
 static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
-	short i;
-	
 	if(item_hit == "okay") {
 		scenario.intro_pic = me["picnum"].getTextAsNum();
 		if(scenario.intro_pic > 29) {
 			showError("Intro picture number is out of range.","",&me);
 			return true;
 		}
-		for(i = 0; i < scenario.intro_strs.size(); i++) {
+		for(short i = 0; i < scenario.intro_strs.size(); i++) {
 			std::string id = "str" + std::to_string(i + 1);
 			scenario.intro_strs[i] = me[id].getText();
 		}
@@ -1181,7 +1174,7 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 		me.toast(false);
 	} else if(item_hit == "choose") {
 		pic_num_t pic = me["picnum"].getTextAsNum();
-		i = choose_graphic(pic,PIC_SCEN,&me);
+		short i = choose_graphic(pic,PIC_SCEN,&me);
 		if(i != NO_PIC) {
 			me["picnum"].setTextToNum(i);
 			dynamic_cast<cPict&>(me["pic"]).setPict(i);
@@ -1191,13 +1184,11 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 }
 
 void edit_scen_intro() {
-	short i;
-	
 	cDialog edit("edit-intro");
 	edit.attachClickHandlers(edit_scen_intro_event_filter, {"okay", "cancel", "choose"});
 	
 	edit["picnum"].setTextToNum(scenario.intro_pic);
-	for(i = 0; i < scenario.intro_strs.size(); i++) {
+	for(short i = 0; i < scenario.intro_strs.size(); i++) {
 		std::string id = "str" + std::to_string(i + 1);
 		edit[id].setText(scenario.intro_strs[i]);
 	}

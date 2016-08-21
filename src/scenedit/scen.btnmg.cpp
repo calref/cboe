@@ -25,15 +25,13 @@ extern std::shared_ptr<cScrollbar> right_sbar;
 // for following, lb stands for left button(s)
 
 void init_lb() {
-	short i;
-	for(i = 0; i < NLS; i++) {
+	for(short i = 0; i < NLS; i++) {
 		left_button_status[i] = {LB_CLEAR, LB_NO_ACTION, ""};
 	}
 }
 
 void reset_lb() {
-	short i;
-	for(i = 0; i < NLS; i++) {
+	for(short i = 0; i < NLS; i++) {
 		left_button_status[i] = {LB_CLEAR, LB_NO_ACTION, ""};
 		draw_lb_slot(i,0);
 	}
@@ -42,16 +40,13 @@ void reset_lb() {
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
 void set_lb(short slot, eLBMode mode, eLBAction action, std::string label, bool do_draw) {
-	short i;
-	
 	if(slot < 0) {
-		for(i = 0; i < NLS; i++)
-			if(left_button_status[i].mode == LB_CLEAR) {
-				slot = i;
-				i = NLS + 5000;
-			}
-		if(i < NLS + 5000)
+		auto iter = std::find_if(left_button_status.begin(), left_button_status.end(), [](const lb_t& btn) {
+			return btn.mode == LB_CLEAR;
+		});
+		if(iter == left_button_status.end())
 			return;
+		slot = iter - left_button_status.begin();
 	}
 	left_button_status[slot].mode = mode;
 	left_button_status[slot].action = action;
@@ -78,10 +73,8 @@ void reset_rb() {
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
 void set_rb(short slot, eRBAction action, int n, std::string label, bool do_draw) {
-	short i;
-	
 	if(slot < 0) {
-		for(i = 0; i < NRS; i++)
+		for(short i = 0; i < NRS; i++)
 			if(right_button_status[i].action == RB_CLEAR) {
 				slot = i;
 				break;

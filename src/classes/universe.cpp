@@ -39,21 +39,20 @@ void cCurTown::append(legacy::current_town_type& old){
 }
 
 void cCurTown::append(legacy::big_tr_type& old){
-	int i,j;
-	for(i = 0; i < record()->max_dim(); i++)
-		for(j = 0; j < record()->max_dim(); j++)
+	for(short i = 0; i < record()->max_dim(); i++)
+		for(short j = 0; j < record()->max_dim(); j++)
 			record()->terrain(i,j) = old.terrain[i][j];
-	for(i = 0; i < 16; i++){
+	for(short i = 0; i < 16; i++){
 		record()->room_rect[i].top = old.room_rect[i].top;
 		record()->room_rect[i].left = old.room_rect[i].left;
 		record()->room_rect[i].bottom = old.room_rect[i].bottom;
 		record()->room_rect[i].right = old.room_rect[i].right;
 	}
 	record()->creatures.resize(60);
-	for(i = 0; i < 60; i++)
+	for(short i = 0; i < 60; i++)
 		record()->creatures[i].append(old.creatures[i]);
-	for(i = 0; i < record()->max_dim() / 8; i++)
-		for(j = 0; j < record()->max_dim(); j++)
+	for(short i = 0; i < record()->max_dim() / 8; i++)
+		for(short j = 0; j < record()->max_dim(); j++)
 			record()->lighting(i,j) = old.lighting[i][j];
 }
 

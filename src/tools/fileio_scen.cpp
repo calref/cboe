@@ -114,7 +114,6 @@ template<typename Container> static void port_shop_spec_node(cSpecial& spec, std
 
 static const std::string err_prefix = "Error loading Blades of Exile Scenario: ";
 bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_header){
-	short i,n;
 	bool file_ok = false;
 	long len;
 	char temp_str[256];
@@ -155,16 +154,14 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	}
 	
 	len = (long) sizeof(legacy::scenario_data_type);
-	n = fread(temp_scenario, len, 1, file_id);
-	if(n < 1){
+	if(fread(temp_scenario, len, 1, file_id) < 1) {
 		showError(err_prefix + "Failed to read scenario data.", get_file_error());
 		fclose(file_id);
 		return false;
 	}
 	port_scenario(temp_scenario);
 	len = sizeof(legacy::scen_item_data_type); // item data
-	n = fread(item_data, len, 1, file_id);
-	if(n < 1){
+	if(fread(item_data, len, 1, file_id) < 1) {
 		showError(err_prefix + "Failed to read scenario items.", get_file_error());
 		fclose(file_id);
 		return false;
@@ -177,9 +174,9 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	scenario.special_items.resize(50);
 	scenario.journal_strs.resize(50);
 	scenario.spec_strs.resize(100);
-	for(i = 0; i < 270; i++) {
+	for(short i = 0; i < 270; i++) {
 		len = (long) (temp_scenario->scen_str_len[i]);
-		n = fread(temp_str, len, 1, file_id);
+		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
 		if(i == 0) scenario.scen_name = temp_str;
 		else if(i == 1 || i == 2)
@@ -2168,20 +2165,19 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 }
 
 static long get_town_offset(short which_town, legacy::scenario_data_type& scenario){
-	int i,j;
 	long len_to_jump,store;
 	
 	len_to_jump = sizeof(scenario_header_flags);
 	len_to_jump += sizeof(legacy::scenario_data_type);
 	len_to_jump += sizeof(legacy::scen_item_data_type);
-	for(i = 0; i < 300; i++)
+	for(short i = 0; i < 300; i++)
 		len_to_jump += (long) scenario.scen_str_len[i];
 	store = 0;
-	for(i = 0; i < 100; i++)
-		for(j = 0; j < 2; j++)
+	for(short i = 0; i < 100; i++)
+		for(short j = 0; j < 2; j++)
 			store += (long) (scenario.out_data_size[i][j]);
-	for(i = 0; i < which_town; i++)
-		for(j = 0; j < 5; j++)
+	for(short i = 0; i < which_town; i++)
+		for(short j = 0; j < 5; j++)
 			store += (long) (scenario.town_data_size[i][j]);
 	len_to_jump += store;
 	
@@ -2189,7 +2185,6 @@ static long get_town_offset(short which_town, legacy::scenario_data_type& scenar
 }
 
 bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy::scenario_data_type& scenario, std::vector<shop_info_t>& shops) {
-	short i,n;
 	long len,len_to_jump = 0;
 	char temp_str[256];
 	legacy::town_record_type store_town;
@@ -2205,16 +2200,14 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	}
 	
 	len_to_jump = get_town_offset(which_town, scenario);
-	n = fseek(file_id, len_to_jump, SEEK_SET);
-	if(n != 0) {
+	if(fseek(file_id, len_to_jump, SEEK_SET) != 0) {
 		showError(err_prefix + "Failure seeking to town record.", get_file_error());
 		fclose(file_id);
 		return false;
 	}
 	
 	len = sizeof(legacy::town_record_type);
-	n = fread(&store_town, len, 1, file_id);
-	if(n < 1) {
+	if(fread(&store_town, len, 1, file_id) < 1) {
 		showError(err_prefix + "Could not read town record.", get_file_error());
 		fclose(file_id);
 		return false;
@@ -2224,7 +2217,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	switch(scenario.town_size[which_town]) {
 		case 0:
 			len = sizeof(legacy::big_tr_type);
-			n = fread(&t_d, len, 1, file_id);
+			fread(&t_d, len, 1, file_id);
 			port_t_d(&t_d);
 			the_town.append(store_town);
 			the_town.append(t_d, which_town);
@@ -2232,7 +2225,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 			
 		case 1:
 			len = sizeof(legacy::ave_tr_type);
-			n = fread(&ave_t, len, 1, file_id);
+			fread(&ave_t, len, 1, file_id);
 			port_ave_t(&ave_t);
 			the_town.append(store_town);
 			the_town.append(ave_t, which_town);
@@ -2240,7 +2233,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 			
 		case 2:
 			len = sizeof(legacy::tiny_tr_type);
-			n = fread(&tiny_t, len, 1, file_id);
+			fread(&tiny_t, len, 1, file_id);
 			port_tiny_t(&tiny_t);
 			the_town.append(store_town);
 			the_town.append(tiny_t, which_town);
@@ -2250,9 +2243,9 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	the_town.spec_strs.resize(100);
 	the_town.sign_locs.resize(20);
 	the_town.room_rect.resize(16);
-	for(i = 0; i < 140; i++) {
+	for(short i = 0; i < 140; i++) {
 		len = (long) (store_town.strlens[i]);
-		n = fread(temp_str, len, 1, file_id);
+		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
 		if(i == 0) the_town.town_name = temp_str;
 		else if(i >= 1 && i < 17)
@@ -2266,8 +2259,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	}
 	
 	len = sizeof(legacy::talking_record_type);
-	n = fread(&store_talk, len, 1, file_id);
-	if(n < 1) {
+	if(fread(&store_talk, len, 1, file_id) < 1) {
 		showError(err_prefix + "Could not read dialogue record.", get_file_error());
 		fclose(file_id);
 		return false;
@@ -2275,9 +2267,9 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	port_talk_nodes(&store_talk);
 	
 	the_town.talking.talk_nodes.resize(60);
-	for(i = 0; i < 170; i++) {
+	for(short i = 0; i < 170; i++) {
 		len = (long) (store_talk.strlens[i]);
-		n = fread(temp_str, len, 1, file_id);
+		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
 		if(i >= 0 && i < 10)
 			the_town.talking.people[i].title = temp_str;
@@ -2302,8 +2294,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	// And lastly, calculate lighting
 	the_town.set_up_lights();
 	
-	n = fclose(file_id);
-	if(n != 0) {
+	if(fclose(file_id) != 0) {
 		showError(err_prefix + "An error occurred while closing the file.", get_file_error());
 	}
 	
@@ -2311,18 +2302,18 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 }
 
 static long get_outdoors_offset(location& which_out, legacy::scenario_data_type& scenario){
-	int i,j,out_sec_num;
+	int out_sec_num;
 	long len_to_jump,store;
 	out_sec_num = scenario.out_width * which_out.y + which_out.x;
 	
 	len_to_jump = sizeof(scenario_header_flags);
 	len_to_jump += sizeof(legacy::scenario_data_type);
 	len_to_jump += sizeof(legacy::scen_item_data_type);
-	for(i = 0; i < 300; i++)
+	for(short i = 0; i < 300; i++)
 		len_to_jump += (long) scenario.scen_str_len[i];
 	store = 0;
-	for(i = 0; i < out_sec_num; i++)
-		for(j = 0; j < 2; j++)
+	for(short i = 0; i < out_sec_num; i++)
+		for(short j = 0; j < 2; j++)
 			store += (long) (scenario.out_data_size[i][j]);
 	len_to_jump += store;
 	
@@ -2331,7 +2322,6 @@ static long get_outdoors_offset(location& which_out, legacy::scenario_data_type&
 
 //mode -> 0 - primary load  1 - add to top  2 - right  3 - bottom  4 - left
 bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario){
-	short i,n;
 	long len,len_to_jump;
 	char temp_str[256];
 	legacy::outdoor_record_type store_out;
@@ -2343,16 +2333,14 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	}
 	
 	len_to_jump = get_outdoors_offset(which_out, scenario);
-	n = fseek(file_id, len_to_jump, SEEK_SET);
-	if(n != 0) {
+	if(fseek(file_id, len_to_jump, SEEK_SET) != 0) {
 		showError(err_prefix + "Failure seeking to outdoor record.", get_file_error());
 		fclose(file_id);
 		return false;
 	}
 	
 	len = sizeof(legacy::outdoor_record_type);
-	n = fread(&store_out, len, 1, file_id);
-	if(n < 1) {
+	if(fread(&store_out, len, 1, file_id) < 1) {
 		showError(err_prefix + "Could not read outdoor record.", get_file_error());
 		fclose(file_id);
 		return false;
@@ -2365,9 +2353,9 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	the_out.spec_strs.resize(90);
 	the_out.sign_locs.resize(8);
 	the_out.info_rect.resize(8);
-	for(i = 0; i < 108; i++) {
+	for(short i = 0; i < 108; i++) {
 		len = (long) (store_out.strlens[i]);
-		n = fread(temp_str, len, 1, file_id);
+		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
 		if(i == 0) the_out.out_name = temp_str;
 		else if(i == 9) the_out.comment = temp_str;
@@ -2378,8 +2366,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 			the_out.sign_locs[i-100].text = temp_str;
 	}
 	
-	n = fclose(file_id);
-	if(n != 0) {
+	if(fclose(file_id) != 0) {
 		showError(err_prefix + "Something went wrong when closing the file.", get_file_error());
 	}
 	return true;

@@ -385,7 +385,7 @@ void handle_menu_choice(eMenu item_hit) {
 				std::string choice = cChoiceDlog("restart-game",{"okay","cancel"}).show();
 				if(choice == "cancel")
 					return;
-				for(i = 0; i < 6; i++)
+				for(short i = 0; i < 6; i++)
 					univ.party[i].main_status = eMainStatus::ABSENT;
 				party_in_memory = false;
 				reload_startup();
@@ -482,7 +482,7 @@ void handle_menu_choice(eMenu item_hit) {
 				print_buf();
 				break;
 			}
-			for(i = 0; i < 6; i++)
+			for(short i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ABSENT)
 					i = 20;
 			if(i == 6) {

@@ -277,7 +277,7 @@ void update_explored(location dest) {
 
 // All purpose function to check is spot is free for travel into.
 bool is_blocked(location to_check) {
-	short i,gr;
+	short gr;
 	ter_num_t ter;
 	
 	if(is_out()) {
@@ -286,7 +286,7 @@ bool is_blocked(location to_check) {
 		}
 		if(to_check == univ.party.out_loc)
 			return true;
-		for(i = 0; i < univ.party.out_c.size(); i++)
+		for(short i = 0; i < univ.party.out_c.size(); i++)
 			if((univ.party.out_c[i].exists))
 				if(univ.party.out_c[i].m_loc == to_check)
 					return true;
@@ -314,7 +314,7 @@ bool is_blocked(location to_check) {
 			if(to_check == univ.party.town_loc)
 				return true;
 		if(is_combat())
-			for(i = 0; i < 6; i++)
+			for(short i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::ALIVE && to_check == univ.party[i].combat_pos)
 					return true;
 		
@@ -335,14 +335,13 @@ bool is_blocked(location to_check) {
 }
 
 bool monst_can_be_there(location loc,short m_num) {
-	short i,j;
 	location destination;
 	
 	// First clear monst away so it doesn't block itself
 	univ.town.monst[m_num].cur_loc.x += 100;
 	
-	for(i = 0; i < univ.town.monst[m_num].x_width; i++)
-		for(j = 0; j < univ.town.monst[m_num].y_width; j++) {
+	for(short i = 0; i < univ.town.monst[m_num].x_width; i++)
+		for(short j = 0; j < univ.town.monst[m_num].y_width; j++) {
 			destination.x = loc.x + i; destination.y = loc.y + j;
 			if((is_blocked(destination))
 				|| (loc_off_act_area(destination))) {
@@ -355,11 +354,10 @@ bool monst_can_be_there(location loc,short m_num) {
 }
 
 bool monst_adjacent(location loc,short m_num) {
-	short i,j;
 	location destination;
 	
-	for(i = 0; i < univ.town.monst[m_num].x_width; i++)
-		for(j = 0; j < univ.town.monst[m_num].y_width; j++) {
+	for(short i = 0; i < univ.town.monst[m_num].x_width; i++)
+		for(short j = 0; j < univ.town.monst[m_num].y_width; j++) {
 			destination.x = univ.town.monst[m_num].cur_loc.x + i;
 			destination.y = univ.town.monst[m_num].cur_loc.y + j;
 			if(adjacent(destination,loc))
@@ -369,11 +367,10 @@ bool monst_adjacent(location loc,short m_num) {
 }
 
 bool monst_can_see(short m_num,location l) {
-	short i,j;
 	location destination;
 	
-	for(i = 0; i < univ.town.monst[m_num].x_width; i++)
-		for(j = 0; j < univ.town.monst[m_num].y_width; j++) {
+	for(short i = 0; i < univ.town.monst[m_num].x_width; i++)
+		for(short j = 0; j < univ.town.monst[m_num].y_width; j++) {
 			destination.x = univ.town.monst[m_num].cur_loc.x + i;
 			destination.y = univ.town.monst[m_num].cur_loc.y + j;
 			if(can_see_light(destination,l,sight_obscurity) < 5)
@@ -383,11 +380,10 @@ bool monst_can_see(short m_num,location l) {
 }
 
 bool party_can_see_monst(short m_num) {
-	short i,j;
 	location destination;
 	
-	for(i = 0; i < univ.town.monst[m_num].x_width; i++)
-		for(j = 0; j < univ.town.monst[m_num].y_width; j++) {
+	for(short i = 0; i < univ.town.monst[m_num].x_width; i++)
+		for(short j = 0; j < univ.town.monst[m_num].y_width; j++) {
 			destination.x = univ.town.monst[m_num].cur_loc.x + i;
 			destination.y = univ.town.monst[m_num].cur_loc.y + j;
 			if(party_can_see(destination) < 6)
@@ -397,11 +393,10 @@ bool party_can_see_monst(short m_num) {
 }
 
 bool can_see_monst(location l,short m_num) {
-	short i,j;
 	location destination;
 	
-	for(i = 0; i < univ.town.monst[m_num].x_width; i++)
-		for(j = 0; j < univ.town.monst[m_num].y_width; j++) {
+	for(short i = 0; i < univ.town.monst[m_num].x_width; i++)
+		for(short j = 0; j < univ.town.monst[m_num].y_width; j++) {
 			destination.x = univ.town.monst[m_num].cur_loc.x + i;
 			destination.y = univ.town.monst[m_num].cur_loc.y + j;
 			if(can_see_light(l,destination,sight_obscurity) < 5)
@@ -411,13 +406,11 @@ bool can_see_monst(location l,short m_num) {
 }
 
 bool outd_is_blocked(location to_check) {
-	short i;
-	
 	if(overall_mode == MODE_OUTDOORS) {
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}
-		for(i = 0; i < 10; i++)
+		for(short i = 0; i < 10; i++)
 			if((univ.party.out_c[i].exists))
 				if(univ.party.out_c[i].m_loc == to_check)
 					return true;
@@ -472,13 +465,13 @@ short get_blockage(ter_num_t terrain_type) {
 
 
 short light_radius() {
-	short store = 1,i;
+	short store = 1;
 	short extra_levels[6] = {10,20,50,75,110,140};
 	
 	if(((which_combat_type == 0) && (is_combat()))
 		|| (is_out()) || (univ.town->lighting_type == 0))
 		return 200;
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(univ.party.light_level > extra_levels[i])
 			store++;
 	return store;
@@ -501,7 +494,7 @@ bool pt_in_light(location from_where,location to_where) { // Assumes, of course,
 }
 
 bool combat_pt_in_light(location to_where) {
-	short i,rad;
+	short rad;
 	
 	if((univ.town->lighting_type == 0) || (which_combat_type == 0))
 		return true;
@@ -512,7 +505,7 @@ bool combat_pt_in_light(location to_where) {
 		return true;
 	
 	rad = light_radius();
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if(dist(univ.party[i].combat_pos,to_where) <= rad)
 				return true;
@@ -522,9 +515,7 @@ bool combat_pt_in_light(location to_where) {
 }
 
 bool party_sees_a_monst() { // Returns true is a hostile monster is in sight.
-	short i;
-	
-	for(i = 0; i < univ.town.monst.size(); i++) {
+	for(short i = 0; i < univ.town.monst.size(); i++) {
 		if(univ.town.monst[i].active > 0)
 			if(!univ.town.monst[i].is_friendly() &&
 				(party_can_see_monst(i)))
@@ -537,8 +528,6 @@ bool party_sees_a_monst() { // Returns true is a hostile monster is in sight.
 
 // Returns 6 if can't see, O.W. returns the # of a PC that can see
 short party_can_see(location where) {
-	short i;
-	
 	if(is_out()) {
 		if((point_onscreen(univ.party.out_loc,where)) && (can_see_light(univ.party.out_loc,where,sight_obscurity) < 5))
 			return 1;
@@ -558,7 +547,7 @@ short party_can_see(location where) {
 	if((which_combat_type != 0) && !combat_pt_in_light(where))
 		return 6;
 	
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if(can_see_light(univ.party[i].combat_pos,where,sight_obscurity) < 5)
 				return i;

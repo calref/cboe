@@ -39,9 +39,7 @@ std::unordered_map<int,int> sound_delay = {
 short store_last_sound_played;
 
 bool sound_going(snd_num_t which_s) {
-	short i;
-	
-	for(i = 0; i < 4; i++)
+	for(short i = 0; i < 4; i++)
 		if(snd_played[i] == which_s)
 			return chan[i]->getStatus() == sf::Sound::Playing;
 	return false;

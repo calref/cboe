@@ -60,10 +60,9 @@ const char* skill_ids[19] = {
 };
 
 static void put_pc_spells(cDialog& me, short store_trait_mode) {
-	short i;
 	store_trait_mode %= 10;
 	
-	for(i = 0; i < 62; i++) {
+	for(short i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 		cLed& cur = dynamic_cast<cLed&>(me[id]);
 		if(((store_trait_mode == 0) && univ.party[which_pc_displayed].mage_spells[i]) ||
@@ -99,7 +98,6 @@ static bool display_pc_event_filter(cDialog& me, std::string item_hit, const sho
 
 void display_pc(short pc_num,short mode, cDialog* parent) {
 	using namespace std::placeholders;
-	short i;
 	std::string label_str;
 	
 	if(univ.party[pc_num].main_status == eMainStatus::ABSENT) {
@@ -114,7 +112,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	cDialog pcInfo("pc-spell-info", parent);
 	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
 	
-	for(i = 0; i < 62; i++) {
+	for(short i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 		label_str = get_str("magic-names", i + (mode % 10 == 0 ? 1 : 101));
 		pcInfo[id].setText(label_str);
@@ -129,18 +127,18 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 }
 
 static void display_traits_graphics(cDialog& me) {
-	short i,store;
+	short store;
 	
 	if(store_pc->race <= eRace::VAHNATAI) {
 		std::string race = "race" + boost::lexical_cast<std::string>(int(store_pc->race) + 1);
 		dynamic_cast<cLedGroup&>(me["race"]).setSelected(race);
 	}
-	for(i = 0; i < 10; i++) {
+	for(short i = 0; i < 10; i++) {
 		std::string id = "good" + boost::lexical_cast<std::string>(i + 1);
 		eTrait trait = eTrait(i);
 		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
 	}
-	for(i = 0; i < 7; i++) {
+	for(short i = 0; i < 7; i++) {
 		std::string id = "bad" + boost::lexical_cast<std::string>(i + 1);
 		eTrait trait = eTrait(i + 10);
 		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
@@ -232,13 +230,11 @@ extern const eItemAbil alch_ingred2[20] = {
 };
 
 void display_alchemy(bool allowEdit,cDialog* parent) {
-	short i;
-	
 	make_cursor_sword();
 	
 	cChoiceDlog showAlch("pc-alchemy-info", {"done"}, parent);
 	
-	for(i = 0; i < 20; i++) {
+	for(short i = 0; i < 20; i++) {
 		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);
 		std::string name = get_str("magic-names", i + 200) + " (";
 		name += std::to_string(alch_difficulty[i]);
@@ -255,7 +251,7 @@ void display_alchemy(bool allowEdit,cDialog* parent) {
 	showAlch.show();
 	if(!allowEdit) return;
 	
-	for(i = 0; i < 20; i++) {
+	for(short i = 0; i < 20; i++) {
 		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);
 		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));
 		if(led.getState() == led_red) univ.party.alchemy[i] = true;
@@ -336,9 +332,8 @@ static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 }
 
 static void draw_xp_skills(cDialog& me,xp_dlog_state& save) {
-	short i;
 	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
-	for(i = 0; i < 19; i++) {
+	for(short i = 0; i < 19; i++) {
 		cControl& cur = me[skill_ids[i]];
 		eSkill skill = eSkill(i);
 		if(can_change_skill(skill, save, true))

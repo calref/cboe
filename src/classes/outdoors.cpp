@@ -18,22 +18,21 @@
 #include "scenario.hpp"
 
 void cOutdoors::append(legacy::outdoor_record_type& old){
-	int i,j;
 	ambient_sound = AMBIENT_NONE;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
-	for(i = 0; i < 60; i++) {
+	for(short i = 0; i < 60; i++) {
 		if(old.specials[i].type == 0 && old.specials[i].jumpto == -1) {
 			// Also make sure no specials jump to it
 			bool is_free = true;
-			for(j = 0; j < 60; j++) {
+			for(short j = 0; j < 60; j++) {
 				if(old.specials[j].jumpto == i) is_free = false;
 			}
 			if(is_free) unused_special_slots.push_back(i);
 		}
 	}
-	for(i = 0; i < 48; i++)
-		for(j = 0; j < 48; j++){
+	for(short i = 0; i < 48; i++)
+		for(short j = 0; j < 48; j++){
 			terrain[i][j] = old.terrain[i][j];
 			if(scenario->ter_types[terrain[i][j]].i == 3000) // marker to indicate it used to be a special spot
 				special_spot[i][j] = true;
@@ -69,7 +68,7 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 			}
 		}
 	special_locs.resize(18);
-	for(i = 0; i < 18; i++){
+	for(short i = 0; i < 18; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
 		if(old.special_locs[i].x == 100)
@@ -79,7 +78,7 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 	city_locs.resize(8);
 	sign_locs.resize(8);
 	info_rect.resize(8);
-	for(i = 0; i < 8; i++){
+	for(short i = 0; i < 8; i++){
 		city_locs[i].x = old.exit_locs[i].x;
 		city_locs[i].y = old.exit_locs[i].y;
 		city_locs[i].spec = old.exit_dests[i];
@@ -90,14 +89,14 @@ void cOutdoors::append(legacy::outdoor_record_type& old){
 		info_rect[i].bottom = old.info_rect[i].bottom;
 		info_rect[i].right = old.info_rect[i].right;
 	}
-	for(i = 0; i < 4; i++){
+	for(short i = 0; i < 4; i++){
 		wandering[i].append(old.wandering[i]);
 		special_enc[i].append(old.special_enc[i]);
 		wandering_locs[i].x = old.wandering_locs[i].x;
 		wandering_locs[i].y = old.wandering_locs[i].y;
 	}
 	specials.resize(60);
-	for(i = 0; i < 60; i++)
+	for(short i = 0; i < 60; i++)
 		specials[i].append(old.specials[i]);
 }
 
@@ -109,19 +108,18 @@ cOutdoors::cWandering::cWandering() {
 }
 
 cOutdoors::cOutdoors(cScenario& scenario) : scenario(&scenario) {
-	short i,j;
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	bg_out = bg_fight = bg_town = bg_dungeon = -1;
 	out_sound = 0;
 	
-	for(i = 0; i < 48; i++)
-		for(j = 0; j < 48; j++) {
+	for(short i = 0; i < 48; i++)
+		for(short j = 0; j < 48; j++) {
 			terrain[i][j] = scenario.default_ground;
 			special_spot[i][j] = false;
 			roads[i][j] = false;
 		}
 	
-	for(i = 0; i < wandering_locs.size(); i++) {
+	for(short i = 0; i < wandering_locs.size(); i++) {
 		wandering_locs[i] = locs[i];
 	}
 	out_name = "Area name";

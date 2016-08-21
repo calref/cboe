@@ -163,8 +163,8 @@ static void display_strings(short nstr, pic_num_t pic) {
 }
 
 void handle_menu_choice(eMenu item_hit) {
-	int i,j,k;
 	fs::path file;
+	bool result;
 	switch(item_hit) {
 		case eMenu::NONE: break;
 		case eMenu::ABOUT:
@@ -178,11 +178,11 @@ void handle_menu_choice(eMenu item_hit) {
 			if(!file.empty()) save_party(file, univ);
 			break;
 		case eMenu::FILE_OPEN:
-			i = verify_restore_quit("save-open");
+			result = verify_restore_quit("save-open");
 		if(false)
 		case eMenu::FILE_REVERT:
-			i = cChoiceDlog("save-revert", {"okay", "cancel"}).show() == "okay";
-			if(i) {
+			result = cChoiceDlog("save-revert", {"okay", "cancel"}).show() == "okay";
+			if(result) {
 				file = item_hit == eMenu::FILE_OPEN ? nav_get_party() : file_in_mem;
 				if(!file.empty()) {
 					if(load_party(file, univ)) {
@@ -231,7 +231,7 @@ void handle_menu_choice(eMenu item_hit) {
 			}
 			cChoiceDlog("reunited").show();
 			univ.party.town_loc = univ.party.left_at;
-			for(i = 0; i < 6; i++)
+			for(short i = 0; i < 6; i++)
 				if(univ.party[i].main_status >= eMainStatus::SPLIT)
 					univ.party[i].main_status -= eMainStatus::SPLIT;
 			break;
@@ -244,17 +244,17 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::HEAL_DAMAGE:
 			display_strings(1,15);
-			for(i = 0; i < 6; i++)
+			for(short i = 0; i < 6; i++)
 				univ.party[i].cur_health = univ.party[i].max_health;
 			break;
 		case eMenu::RESTORE_MANA:
 			display_strings(2,15);
-			for(i = 0; i < 6; i++)
+			for(short i = 0; i < 6; i++)
 				univ.party[i].cur_sp = univ.party[i].max_sp;
 			break;
 		case eMenu::RAISE_DEAD:
 			display_strings(3,15);
-			for(i = 0; i < 6; i++)
+			for(short i = 0; i < 6; i++)
 				if(univ.party[i].main_status == eMainStatus::DEAD || univ.party[i].main_status == eMainStatus::DUST ||
 						univ.party[i].main_status == eMainStatus::STONE)
 					univ.party[i].main_status = eMainStatus::ALIVE;
@@ -275,9 +275,9 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::OWN_VEHICLES:
 			display_strings(6,7);
-			for(i = 0; i < univ.party.boats.size(); i++)
+			for(short i = 0; i < univ.party.boats.size(); i++)
 				univ.party.boats[i].property = false;
-			for(i = 0; i < univ.party.horses.size(); i++)
+			for(short i = 0; i < univ.party.horses.size(); i++)
 				univ.party.horses[i].property = false;
 			break;
 		case eMenu::EDIT_DAY:
@@ -285,16 +285,16 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::ADD_OUT_MAPS:
 			display_strings(13,15);
-			for(i = 0; i < 100; i++)
-				for(j = 0; j < 6; j++)
-					for(k = 0; k < 48; k++)
+			for(short i = 0; i < 100; i++)
+				for(short j = 0; j < 6; j++)
+					for(short k = 0; k < 48; k++)
 						univ.out_maps[i][j][k] = 255;
 			break;
 		case eMenu::ADD_TOWN_MAPS:
 			display_strings(14,15);
-			for(i = 0; i < 200; i++)
-				for(j = 0; j < 8; j++)
-					for(k = 0; k < 64; k++)
+			for(short i = 0; i < 200; i++)
+				for(short j = 0; j < 8; j++)
+					for(short k = 0; k < 64; k++)
 						univ.town_maps[i][j][k] = 255;
 			break;
 		case eMenu::EDIT_MAGE:

@@ -315,23 +315,22 @@ void Set_up_win() {
 	terrain_buttons_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
 	palette_button_base.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
 
-	short i,j;
-	for(i = 0; i < 10; i++)
-		for(j = 0; j < 6; j++) {
+	for(short i = 0; i < 10; i++)
+		for(short j = 0; j < 6; j++) {
 			palette_buttons[i][j] = palette_button_base;
 			palette_buttons[i][j].offset(i * 25, j * 17);
 		}
-	for(i = 0; i < 10; i++)
-		for(j = /*2*/0; j < 6; j++)
+	for(short i = 0; i < 10; i++)
+		for(short j = /*2*/0; j < 6; j++)
 			palette_buttons[i][j].offset(0, 3);
-	for(i = 0; i < 10; i++)
-		for(j = /*3*/0; j < 6; j++)
+	for(short i = 0; i < 10; i++)
+		for(short j = /*3*/0; j < 6; j++)
 			palette_buttons[i][j].offset(0, 3);
-	for(i = 0; i < 10; i++)
-		for(j = /*4*/0; j < 6; j++)
+	for(short i = 0; i < 10; i++)
+		for(short j = /*4*/0; j < 6; j++)
 			palette_buttons[i][j].offset(0, 3);
 	
-	for(i = 0; i < NLS; i++) {
+	for(short i = 0; i < NLS; i++) {
 		left_buttons[i][0] = left_button_base;
 		left_buttons[i][0].offset(0,i * 16);
 		left_buttons[i][1] = left_buttons[i][0];
@@ -344,7 +343,7 @@ void Set_up_win() {
 	right_button_base.top = RIGHT_AREA_UL_Y + 1;
 	right_button_base.bottom = right_button_base.top + 12;
 	right_button_base.right = right_button_base.left + RIGHT_AREA_WIDTH - 20;
-	for(i = 0; i < NRSONPAGE; i++) {
+	for(short i = 0; i < NRSONPAGE; i++) {
 		right_buttons[i] = right_button_base;
 		right_buttons[i].offset(0,i * 12);
 	}
@@ -421,9 +420,7 @@ void draw_main_screen() {
 }
 
 void draw_lb() {
-	short i;
-	
-	for(i = 0; i < NLS; i++)
+	for(short i = 0; i < NLS; i++)
 		draw_lb_slot(i,0);
 }
 
@@ -483,7 +480,7 @@ void draw_rb_slot (short which,short mode)  {
 }
 
 void set_up_terrain_buttons(bool reset) {
-	short i,j,pic,small_i;
+	short pic,small_i;
 	rectangle ter_from,ter_from_base = {0,0,36,28}, ter_plus_from = {148,235,164,251};
 	rectangle tiny_from,tiny_to;
 	
@@ -506,7 +503,7 @@ void set_up_terrain_buttons(bool reset) {
  	
 	// first make terrain buttons
 	sf::Texture& editor_mixed = *ResMgr::get<ImageRsrc>("edbuttons");
-	for(i = first; i < end; i++) {
+	for(short i = first; i < end; i++) {
 		rectangle draw_rect = terrain_rects[i - first];
 		draw_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
 		switch(draw_mode){
@@ -668,8 +665,8 @@ void set_up_terrain_buttons(bool reset) {
 	if(overall_mode < MODE_MAIN_SCREEN) {
 		palette_to.offset(5,terrain_rects[255].bottom + 14);
 		palette_to.right++;
-		for(i = 0; i < 10; i++){
-			for(j = 0; j < 6; j++){
+		for(short i = 0; i < 10; i++){
+			for(short j = 0; j < 6; j++){
 				auto cur_palette_buttons = editing_town ? town_buttons : out_buttons;
 				if(cur_palette_buttons[j][i] != PAL_BLANK) {
 					palette_from = palette_button_base;
@@ -686,7 +683,6 @@ void set_up_terrain_buttons(bool reset) {
 }
 
 void draw_terrain(){
-	short q,r,i;
 	location which_pt,where_draw;
 	rectangle draw_rect,clipping_rect = {8,8,332,260};
 	ter_num_t t_to_draw;
@@ -701,8 +697,8 @@ void draw_terrain(){
 	if(cur_viewing_mode == 0) {
 		tileImage(mainPtr,terrain_rect,bg[17]);
 		frame_rect(mainPtr, terrain_rect, sf::Color::Black);
-		for(q = 0; q < 9; q++)
-			for(r = 0; r < 9; r++) {
+		for(short q = 0; q < 9; q++)
+			for(short r = 0; r < 9; r++) {
 				where_draw.x = q;
 				where_draw.y = r;
 				if(editing_town) {
@@ -752,14 +748,14 @@ void draw_terrain(){
 				which_pt.y =cen_y + r - 4;
 				
 				if(!editing_town) {
-					for(i = 0; i < scenario.boats.size(); i++) {
+					for(short i = 0; i < scenario.boats.size(); i++) {
 						if(scenario.boats[i].which_town == 200 &&
 						   scenario.boats[i].sector == cur_out &&
 						   scenario.boats[i].loc == which_pt)
 							rect_draw_some_item(vehicle_gworld,boat_rect,mainPtr,destrec,sf::BlendAlpha);
 						
 					}
-					for(i = 0; i < scenario.horses.size(); i++) {
+					for(short i = 0; i < scenario.horses.size(); i++) {
 						source_rect = boat_rect;
 						source_rect.offset(0,36);
 						if(scenario.horses[i].which_town == 200 &&
@@ -771,13 +767,13 @@ void draw_terrain(){
 				}
 				
 				if(editing_town) {
-					for(i = 0; i < scenario.boats.size(); i++) {
+					for(short i = 0; i < scenario.boats.size(); i++) {
 						if(scenario.boats[i].which_town == cur_town &&
 						   scenario.boats[i].loc == which_pt)
 							rect_draw_some_item(vehicle_gworld,boat_rect,mainPtr,destrec,sf::BlendAlpha);
 						
 					}
-					for(i = 0; i < scenario.horses.size(); i++) {
+					for(short i = 0; i < scenario.horses.size(); i++) {
 						source_rect = boat_rect;
 						source_rect.offset(0,36);
 						if(scenario.horses[i].which_town == cur_town &&
@@ -817,7 +813,7 @@ void draw_terrain(){
 						from_rect = calc_rect(0,0);
 						rect_draw_some_item(fields_gworld,from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
-					for(i = 0; i < 8; i++) {
+					for(short i = 0; i < 8; i++) {
 						eFieldType sfx = eFieldType(SFX_SMALL_BLOOD + i);
 						if(is_field_type(cen_x + q - 4,cen_y + r - 4,sfx)) {
 							from_rect = calc_rect(i,3);
@@ -908,7 +904,7 @@ void draw_terrain(){
 		
 		if(editing_town) {
 			// draw info rects
-			for(i = 0; i < town->room_rect.size(); i++)
+			for(short i = 0; i < town->room_rect.size(); i++)
 				if(town->room_rect[i].left > 0) {
 					draw_rect.left = 22 + 28 * (town->room_rect[i].left - cen_x + 4);
 					draw_rect.right = 22 + 28 * (town->room_rect[i].right - cen_x + 4);
@@ -929,7 +925,7 @@ void draw_terrain(){
 		}
 		if(!editing_town) {
 			// draw info rects
-			for(i = 0; i < current_terrain->info_rect.size(); i++)
+			for(short i = 0; i < current_terrain->info_rect.size(); i++)
 				if(current_terrain->info_rect[i].left > 0) {
 					draw_rect.left = 22 + 28 * (current_terrain->info_rect[i].left - cen_x + 4);
 					draw_rect.right = 22 + 28 * (current_terrain->info_rect[i].right - cen_x + 4);
@@ -964,8 +960,8 @@ void draw_terrain(){
 			yMax = cen_y + 5;
 		} else yMax = std::min(yMax, 324 / size);
 		std::cout << "Drawing map for x = " << xMin << "..." << xMax << " and y = " << yMin << "..." << yMax << std::endl;
-		for(q = xMin; q < xMax; q++)
-			for(r = yMin; r < yMax; r++) {
+		for(short q = xMin; q < xMax; q++)
+			for(short r = yMin; r < yMax; r++) {
 				if(q - xMin < 0 || q - xMin >= max_dim || r - yMin < 0 || r - yMin >= max_dim)
 					t_to_draw = 90;
 				else t_to_draw = editing_town ? town->terrain(q,r) : current_terrain->terrain[q][r];
@@ -977,19 +973,19 @@ void draw_terrain(){
 }
 
 void draw_monsts() {
-	short i,k,width,height,m_start_pic;
+	short width,height,m_start_pic;
 	sf::Texture* from_gworld;
 	rectangle source_rect;
 	location where_draw,store_loc;
 	
-	for(i = 0; i < town->creatures.size(); i++)
+	for(short i = 0; i < town->creatures.size(); i++)
 		if(town->creatures[i].number != 0) {
 			where_draw.x = town->creatures[i].start_loc.x - cen_x + 4;
 			where_draw.y = town->creatures[i].start_loc.y - cen_y + 4;
 			width = scenario.scen_monsters[town->creatures[i].number].x_width;
 			height = scenario.scen_monsters[town->creatures[i].number].y_width;
 			
-			for(k = 0; k < width * height; k++) {
+			for(short k = 0; k < width * height; k++) {
 				store_loc = where_draw;
 				if((where_draw.x == minmax(0,8,where_draw.x)) &&
 					(where_draw.y == minmax(0,8,where_draw.y)) &&
@@ -1048,12 +1044,11 @@ static rectangle get_item_template_rect (short type_wanted) {
 }
 
 void draw_items() {
-	short i;
 	rectangle source_rect,dest_rect;
 	location where_draw;
 	short pic_num;
 	
-	for(i = 0; i < town->preset_items.size(); i++) {
+	for(short i = 0; i < town->preset_items.size(); i++) {
 		if(town->preset_items[i].code >= 0) {
 			where_draw.x = town->preset_items[i].loc.x - cen_x + 4;
 			where_draw.y = town->preset_items[i].loc.y - cen_y + 4;
@@ -1088,9 +1083,8 @@ void draw_items() {
 
 
 void force_tiny_redraw() {
-//	short q,r;
-//	for(q = 0; q < 8; q++)
-//		for(r = 0; r < 64; r++)
+//	for(short q = 0; q < 8; q++)
+//		for(short r = 0; r < 64; r++)
 //			ter_changed[q][r] = 255;
 	
 }
@@ -1231,12 +1225,11 @@ rectangle get_template_rect (unsigned short type_wanted) {
 }
 
 void draw_frames() {
-	char q,r,i;
 	location which_pt;
 	rectangle draw_rect;
 	
-	for(q = 0; q < 9; q++) {
-		for(r = 0; r < 9; r++) {
+	for(short q = 0; q < 9; q++) {
+		for(short r = 0; r < 9; r++) {
 			which_pt.x = cen_x + q - 4;
 			which_pt.y = cen_y + r - 4;
 			draw_rect.top = 23 + r * 36;
@@ -1244,13 +1237,13 @@ void draw_frames() {
 			draw_rect.left = 23 + q * 28;
 			draw_rect.right = 50 + q * 28;
 			draw_rect.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
-			for(i = 0; i < town->wandering_locs.size(); i++)
+			for(short i = 0; i < town->wandering_locs.size(); i++)
 				if((which_pt.x == town->wandering_locs[i].x) &&
 					(which_pt.y == town->wandering_locs[i].y)) {
 					
 					frame_rect(mainPtr, draw_rect, sf::Color::Red);
 				}
-			for(i = 0; i < town->start_locs.size(); i++)
+			for(short i = 0; i < town->start_locs.size(); i++)
 				if((which_pt.x == town->start_locs[i].x) &&
 					(which_pt.y == town->start_locs[i].y)) {
 					frame_rect(mainPtr, draw_rect, sf::Color::Magenta);
@@ -1505,15 +1498,14 @@ void set_string(std::string string,std::string string2) {
 }
 
 bool is_special(short i,short j) {
-	short k;
 	location check(i,j);
 	
 	if(editing_town)
-		for(k = 0; k < town->special_locs.size(); k++)
+		for(short k = 0; k < town->special_locs.size(); k++)
 			if(town->special_locs[k] == check && town->special_locs[k].spec >= 0)
 				return true;
 	if(!editing_town)
-		for(k = 0; k < current_terrain->special_locs.size(); k++)
+		for(short k = 0; k < current_terrain->special_locs.size(); k++)
 			if(current_terrain->special_locs[k] == check && current_terrain->special_locs[k].spec >= 0)
 				return true;
 	
@@ -1540,9 +1532,7 @@ bool is_road(short i,short j){
 }
 
 bool is_field_type(short i,short j,eFieldType field_type) {
-	unsigned short k;
-	
-	for(k = 0; k < town->preset_fields.size(); k++)
+	for(short k = 0; k < town->preset_fields.size(); k++)
 		if((town->preset_fields[k].type == field_type) &&
 			(town->preset_fields[k].loc.x == i) &&
 			(town->preset_fields[k].loc.y == j))
@@ -1551,11 +1541,9 @@ bool is_field_type(short i,short j,eFieldType field_type) {
 }
 
 void make_field_type(short i,short j,eFieldType field_type) {
-	unsigned short k;
-	
 	if(is_field_type(i,j,field_type))
 		return;
-	for(k = 0; k < town->preset_fields.size(); k++)
+	for(short k = 0; k < town->preset_fields.size(); k++)
 		if(town->preset_fields[k].type == 0) {
 			town->preset_fields[k].loc.x = i;
 			town->preset_fields[k].loc.y = j;
@@ -1571,9 +1559,7 @@ void make_field_type(short i,short j,eFieldType field_type) {
 
 
 void take_field_type(short i,short j,eFieldType field_type) {
-	unsigned short k;
-	
-	for(k = 0; k < town->preset_fields.size(); k++)
+	for(short k = 0; k < town->preset_fields.size(); k++)
 		if((town->preset_fields[k].type == field_type) &&
 			(town->preset_fields[k].loc.x == i) &&
 			(town->preset_fields[k].loc.y == j)) {

@@ -19,24 +19,23 @@
 #include "fileio.hpp"
 
 void cTinyTown::append(legacy::tiny_tr_type& old, int){
-	int i,j;
 	cField the_field, the_road;
 	the_field.type = SPECIAL_SPOT;
 	the_road.type = SPECIAL_ROAD;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
-	for(i = 0; i < 100; i++) {
+	for(short i = 0; i < 100; i++) {
 		if(specials[i].type == eSpecType::NONE && specials[i].jumpto == -1) {
 			// Also make sure no specials jump to it
 			bool is_free = true;
-			for(j = 0; j < 100; j++) {
+			for(short j = 0; j < 100; j++) {
 				if(specials[j].jumpto == i) is_free = false;
 			}
 			if(is_free) unused_special_slots.push_back(i);
 		}
 	}
-	for(i = 0; i < 32; i++)
-		for(j = 0; j < 32; j++) {
+	for(short i = 0; i < 32; i++)
+		for(short j = 0; j < 32; j++) {
 			ter[i][j] = old.terrain[i][j];
 			light[i / 8][j] = old.lighting[i / 8][j];
 			if(scenario->ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
@@ -106,37 +105,36 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int){
 			}
 		}
 	room_rect.resize(16);
-	for(i = 0; i < 16; i++) {
+	for(short i = 0; i < 16; i++) {
 		room_rect[i].top = old.room_rect[i].top;
 		room_rect[i].left = old.room_rect[i].left;
 		room_rect[i].bottom = old.room_rect[i].bottom;
 		room_rect[i].right = old.room_rect[i].right;
 	}
 	creatures.resize(30);
-	for(i = 0; i < 30; i++) {
+	for(short i = 0; i < 30; i++) {
 		creatures[i].append(old.creatures[i]);
 	}
 }
 
 void cMedTown::append(legacy::ave_tr_type& old, int){
-	int i,j;
 	cField the_field, the_road;
 	the_field.type = SPECIAL_SPOT;
 	the_road.type = SPECIAL_ROAD;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
-	for(i = 0; i < 100; i++) {
+	for(short i = 0; i < 100; i++) {
 		if(specials[i].type == eSpecType::NONE && specials[i].jumpto == -1) {
 			// Also make sure no specials jump to it
 			bool is_free = true;
-			for(j = 0; j < 100; j++) {
+			for(short j = 0; j < 100; j++) {
 				if(specials[j].jumpto == i) is_free = false;
 			}
 			if(is_free) unused_special_slots.push_back(i);
 		}
 	}
-	for(i = 0; i < 48; i++)
-		for(j = 0; j < 48; j++) {
+	for(short i = 0; i < 48; i++)
+		for(short j = 0; j < 48; j++) {
 			ter[i][j] = old.terrain[i][j];
 			light[i / 8][j] = old.lighting[i / 8][j];
 			if(scenario->ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
@@ -206,37 +204,36 @@ void cMedTown::append(legacy::ave_tr_type& old, int){
 			}
 		}
 	room_rect.resize(16);
-	for(i = 0; i < 16; i++) {
+	for(short i = 0; i < 16; i++) {
 		room_rect[i].top = old.room_rect[i].top;
 		room_rect[i].left = old.room_rect[i].left;
 		room_rect[i].bottom = old.room_rect[i].bottom;
 		room_rect[i].right = old.room_rect[i].right;
 	}
 	creatures.resize(40);
-	for(i = 0; i < 40; i++) {
+	for(short i = 0; i < 40; i++) {
 		creatures[i].append(old.creatures[i]);
 	}
 }
 
 void cBigTown::append(legacy::big_tr_type& old, int){
-	int i,j;
 	cField the_field, the_road;
 	the_field.type = SPECIAL_SPOT;
 	the_road.type = SPECIAL_ROAD;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
-	for(i = 0; i < 100; i++) {
+	for(short i = 0; i < 100; i++) {
 		if(specials[i].type == eSpecType::NONE && specials[i].jumpto == -1) {
 			// Also make sure no specials jump to it
 			bool is_free = true;
-			for(j = 0; j < 100; j++) {
+			for(short j = 0; j < 100; j++) {
 				if(specials[j].jumpto == i) is_free = false;
 			}
 			if(is_free) unused_special_slots.push_back(i);
 		}
 	}
-	for(i = 0; i < 64; i++)
-		for(j = 0; j < 64; j++) {
+	for(short i = 0; i < 64; i++)
+		for(short j = 0; j < 64; j++) {
 			ter[i][j] = old.terrain[i][j];
 			light[i / 8][j] = old.lighting[i / 8][j];
 			if(scenario->ter_types[ter[i][j]].i == 3000) { // marker to indicate it used to be a special spot
@@ -306,14 +303,14 @@ void cBigTown::append(legacy::big_tr_type& old, int){
 			}
 		}
 	room_rect.resize(16);
-	for(i = 0; i < 16; i++) {
+	for(short i = 0; i < 16; i++) {
 		room_rect[i].top = old.room_rect[i].top;
 		room_rect[i].left = old.room_rect[i].left;
 		room_rect[i].bottom = old.room_rect[i].bottom;
 		room_rect[i].right = old.room_rect[i].right;
 	}
 	creatures.resize(60);
-	for(i = 0; i < 60; i++) {
+	for(short i = 0; i < 60; i++) {
 		creatures[i].append(old.creatures[i]);
 	}
 }

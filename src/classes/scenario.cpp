@@ -58,7 +58,6 @@ cScenario& cScenario::operator=(cScenario&& other) {
 }
 
 cScenario::cScenario() {
-	short i;
 	std::string temp_str;
 	
 	format.ver[0] = 1;
@@ -78,13 +77,13 @@ cScenario::cScenario() {
 	bg_fight = 4;
 	bg_town = 13;
 	bg_dungeon = 9;
-	for(i = 0; i < town_mods.size(); i++) {
+	for(short i = 0; i < town_mods.size(); i++) {
 		town_mods[i].spec = -1;
 	}
-	for(i = 0; i < 3; i++) {
+	for(short i = 0; i < 3; i++) {
 		store_item_towns[i] = -1;
 	}
-	for(i = 0; i < scenario_timers.size(); i++) {
+	for(short i = 0; i < scenario_timers.size(); i++) {
 		scenario_timers[i].node = -1;
 	}
 	scen_name = "Scen name";
@@ -103,7 +102,6 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 
 void cScenario::append(legacy::scenario_data_type& old){
 	is_legacy = true;
-	int i;
 	difficulty = old.difficulty;
 	intro_pic = old.intro_pic;
 	default_ground = old.default_ground * 2;
@@ -115,14 +113,14 @@ void cScenario::append(legacy::scenario_data_type& old){
 	out_start.x = old.out_start.x;
 	out_start.y = old.out_start.y;
 	which_town_start = old.which_town_start;
-	for(i = 0; i < 10; i++) {
+	for(short i = 0; i < 10; i++) {
 		town_mods[i].spec = old.town_to_add_to[i];
 		town_mods[i].x = old.flag_to_add_to_town[i][0];
 		town_mods[i].y = old.flag_to_add_to_town[i][1];
 		storage_shortcuts[i] = old.storage_shortcuts[i];
 	}
 	// TODO: Combine store_item_rects and store_item_towns into a structure
-	for(i = 0; i < 3; i++) {
+	for(short i = 0; i < 3; i++) {
 		store_item_rects[i].top = old.store_item_rects[i].top;
 		store_item_rects[i].left = old.store_item_rects[i].left;
 		store_item_rects[i].bottom = old.store_item_rects[i].bottom;
@@ -130,27 +128,27 @@ void cScenario::append(legacy::scenario_data_type& old){
 		store_item_towns[i] = old.store_item_towns[i];
 	}
 	special_items.resize(50);
-	for(i = 0; i < 50; i++) {
+	for(short i = 0; i < 50; i++) {
 		special_items[i].flags = old.special_items[i];
 		special_items[i].special = old.special_item_special[i];
 	}
 	rating = eContentRating(old.rating);
 	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
-	for(i = 0; i < 30; i++) {
+	for(short i = 0; i < 30; i++) {
 		boats[i].append(old.scen_boats[i]);
 		horses[i].append(old.scen_horses[i]);
 	}
 	ter_types.resize(256);
 	scen_specials.resize(256);
 	scen_monsters.resize(256);
-	for(i = 0; i < 256; i++){
+	for(short i = 0; i < 256; i++){
 		ter_types[i].i = i;
 		ter_types[i].append(old.ter_types[i]);
 		scen_monsters[i].append(old.scen_monsters[i]);
 		scen_specials[i].append(old.scen_specials[i]);
 	}
-	for(i = 0; i < 20; i++) {
+	for(short i = 0; i < 20; i++) {
 		scenario_timers[i].time = old.scenario_timer_times[i];
 		scenario_timers[i].node = old.scenario_timer_specs[i];
 	}
@@ -169,22 +167,21 @@ cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_stora
 }
 
 void cScenario::append(legacy::scen_item_data_type& old){
-	short i;
 	scen_items.resize(400);
-	for(i = 0; i < 400; i++)
+	for(short i = 0; i < 400; i++)
 		scen_items[i].append(old.scen_items[i]);
-	for(i = 0; i < 256; i++) {
+	for(short i = 0; i < 256; i++) {
 		scen_monsters[i].m_name = old.monst_names[i];
 		if(scen_monsters[i].m_type == eRace::UNDEAD && scen_monsters[i].m_name.find("Skeleton") != std::string::npos)
 			scen_monsters[i].m_type = eRace::SKELETAL;
 		if(scen_monsters[i].m_type == eRace::HUMANOID && scen_monsters[i].m_name.find("Goblin") != std::string::npos)
 			scen_monsters[i].m_type = eRace::GOBLIN;
 	}
-	for(i = 0; i < 256; i++)
+	for(short i = 0; i < 256; i++)
 		ter_types[i].name = old.ter_names[i];
 	// Some default shops - the five magic shops and the healing shop.
 	cShop magic_shop('junk');
-	for(i = 0; i < 5; i++)
+	for(short i = 0; i < 5; i++)
 		shops.push_back(magic_shop);
 	shops.push_back(cShop('heal'));
 }

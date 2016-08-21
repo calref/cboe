@@ -116,7 +116,6 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 }
 
 void draw_monsters() {
-	short i,j = 0,k;
 	short width,height;
 	rectangle source_rect,to_rect;
 	location where_draw,store_loc;
@@ -129,25 +128,26 @@ void draw_monsters() {
 	};
 	
 	if(is_out())
-		for(i = 0; i < 10; i++)
+		for(short i = 0; i < 10; i++)
 			if(univ.party.out_c[i].exists) {
 				if((point_onscreen(univ.party.out_loc, univ.party.out_c[i].m_loc)) &&
 					(can_see_light(univ.party.out_loc, univ.party.out_c[i].m_loc,sight_obscurity) < 5)) {
 					where_draw.x = univ.party.out_c[i].m_loc.x - univ.party.out_loc.x + 4;
 					where_draw.y = univ.party.out_c[i].m_loc.y - univ.party.out_loc.y + 4;
 					
-					for(j = 0; univ.party.out_c[i].what_monst.monst[j] == 0 && j < 7; j++);
-					
 					short picture_wanted;
-					if(j == 7) univ.party.out_c[i].exists = false; // begin watch out
-					else {
-						picture_wanted = get_monst_picnum(univ.party.out_c[i].what_monst.monst[j]);
-					} // end watch out
+					for(short j = 0; univ.party.out_c[i].what_monst.monst[j] == 0 && j < 7; j++) {
+						if(j == 7) univ.party.out_c[i].exists = false; // begin watch out
+						else {
+							picture_wanted = get_monst_picnum(univ.party.out_c[i].what_monst.monst[j]);
+							get_monst_dims(univ.party.out_c[i].what_monst.monst[j],&width,&height);
+							break;
+						} // end watch out
+					}
 					
 					if(univ.party.out_c[i].exists) {
-						get_monst_dims(univ.party.out_c[i].what_monst.monst[j],&width,&height);
 						if(picture_wanted >= 1000) {
-							for(k = 0; k < width * height; k++) {
+							for(short k = 0; k < width * height; k++) {
 								sf::Texture* src_gw;
 								graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000 +
 																							 ((univ.party.out_c[i].direction < 4) ? 0 : (width * height)) + k);
@@ -157,7 +157,7 @@ void draw_monsters() {
 							}
 						}
 						if(picture_wanted < 1000) {
-							for(k = 0; k < width * height; k++) {
+							for(short k = 0; k < width * height; k++) {
 								source_rect = get_monster_template_rect(picture_wanted,(univ.party.out_c[i].direction < 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
@@ -170,14 +170,14 @@ void draw_monsters() {
 				}
 			}
 	if(is_town() || is_combat()) {
-		for(i = 0; i < univ.town.monst.size(); i++)
+		for(short i = 0; i < univ.town.monst.size(); i++)
 			if(univ.town.monst[i].active != 0 && !univ.town.monst[i].invisible && univ.town.monst[i].status[eStatus::INVISIBLE] <= 0)
 				if(point_onscreen(center,univ.town.monst[i].cur_loc) && party_can_see_monst(i)) {
 					where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
 					where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
 					get_monst_dims(univ.town.monst[i].number,&width,&height);
 					
-					for(k = 0; k < width * height; k++) {
+					for(short k = 0; k < width * height; k++) {
 						store_loc = where_draw;
 						store_loc.x += k % width;
 						store_loc.y += k / width;
@@ -319,10 +319,9 @@ void draw_items(location where){
 void draw_outd_boats(location center) {
 	location where_draw;
 	rectangle source_rect;
-	short i;
 	sf::Texture& vehicle_gworld = *ResMgr::get<ImageRsrc>("vehicle");
 	
-	for(i = 0; i < univ.party.boats.size(); i++)
+	for(short i = 0; i < univ.party.boats.size(); i++)
 		if((point_onscreen(center, univ.party.boats[i].loc)) && (univ.party.boats[i].exists) &&
 			(univ.party.boats[i].which_town == 200) &&
 			(can_see_light(center, univ.party.boats[i].loc,sight_obscurity) < 5) && (univ.party.in_boat != i)) {
@@ -330,7 +329,7 @@ void draw_outd_boats(location center) {
 			where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
 			Draw_Some_Item(vehicle_gworld, calc_rect(0,0), terrain_screen_gworld, where_draw, 1, 0);
 		}
-	for(i = 0; i < univ.party.horses.size(); i++)
+	for(short i = 0; i < univ.party.horses.size(); i++)
 		if((point_onscreen(center, univ.party.horses[i].loc)) && (univ.party.horses[i].exists) &&
 			(univ.party.horses[i].which_town == 200) &&
 			(can_see_light(center, univ.party.horses[i].loc,sight_obscurity) < 5) && (univ.party.in_horse != i)) {
@@ -343,10 +342,9 @@ void draw_outd_boats(location center) {
 void draw_town_boat(location center) {
 	location where_draw;
 	rectangle source_rect;
-	short i;
 	sf::Texture& vehicle_gworld = *ResMgr::get<ImageRsrc>("vehicle");
 	
-	for(i = 0; i < univ.party.boats.size(); i++)
+	for(short i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].which_town == univ.party.town_num) &&
 			((point_onscreen(center, univ.party.boats[i].loc)) &&
 			 (can_see_light(center, univ.party.boats[i].loc,sight_obscurity) < 5) && (univ.party.in_boat != i)
@@ -355,7 +353,7 @@ void draw_town_boat(location center) {
 				where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
 				Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0);
 			}
-	for(i = 0; i < univ.party.horses.size(); i++)
+	for(short i = 0; i < univ.party.horses.size(); i++)
 		if((univ.party.horses[i].which_town == univ.party.town_num) &&
 			((point_onscreen(center, univ.party.horses[i].loc)) &&
 			 (can_see_light(center, univ.party.horses[i].loc,sight_obscurity) < 5) && (univ.party.in_horse != i)

@@ -22,10 +22,9 @@ void cTown::append(legacy::ave_tr_type&, int){}
 void cTown::append(legacy::tiny_tr_type&, int){}
 
 void cTown::append(legacy::town_record_type& old){
-	int i;
 	town_chop_time = old.town_chop_time;
 	town_chop_key = old.town_chop_key;
-	for(i = 0; i < 4; i++){
+	for(short i = 0; i < 4; i++){
 		start_locs[i].x = old.start_locs[i].x;
 		start_locs[i].y = old.start_locs[i].y;
 		exits[i].x = old.exit_locs[i].x;
@@ -36,7 +35,7 @@ void cTown::append(legacy::town_record_type& old){
 	preset_fields.clear();
 	preset_fields.reserve(50);
 	special_locs.resize(50);
-	for(i = 0; i < 50; i++){
+	for(short i = 0; i < 50; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
 		if(old.special_locs[i].x == 100)
@@ -47,7 +46,7 @@ void cTown::append(legacy::town_record_type& old){
 		preset_fields.push_back(temp);
 	}
 	sign_locs.resize(15);
-	for(i = 0; i < 15; i++){
+	for(short i = 0; i < 15; i++){
 		sign_locs[i].x = old.sign_locs[i].x;
 		sign_locs[i].y = old.sign_locs[i].y;
 	}
@@ -57,36 +56,35 @@ void cTown::append(legacy::town_record_type& old){
 	in_town_rect.bottom = old.in_town_rect.bottom;
 	in_town_rect.right = old.in_town_rect.right;
 	preset_items.resize(64);
-	for(i = 0; i < 64; i++){
+	for(short i = 0; i < 64; i++){
 		preset_items[i].append(old.preset_items[i]);
 	}
 	max_num_monst = old.max_num_monst;
 	spec_on_entry = old.spec_on_entry;
 	spec_on_entry_if_dead = old.spec_on_entry_if_dead;
 	spec_on_hostile = -1;
-	for(i = 0; i < 8; i++){
+	for(short i = 0; i < 8; i++){
 		timers[i].time = old.timer_spec_times[i];
 		timers[i].node = old.timer_specs[i];
 	}
 	specials.resize(100);
-	for(i = 0; i < 100; i++)
+	for(short i = 0; i < 100; i++)
 		specials[i].append(old.specials[i]);
 	difficulty = old.difficulty;
 	strong_barriers = defy_scrying = defy_mapping = false;
 }
 
 cTown::cTown(cScenario& scenario) : scenario(&scenario) {
-	short i;
 	cTown::cWandering d_wan = {0,0,0,0};
 	
 	town_chop_time = -1;
 	town_chop_key = -1;
-	for(i = 0; i < wandering.size(); i++) {
+	for(short i = 0; i < wandering.size(); i++) {
 		wandering[i] = d_wan;
 		wandering_locs[i].x = 100;
 	}
 	lighting_type = LIGHT_NORMAL;
-	for(i = 0; i < 4; i++) {
+	for(short i = 0; i < 4; i++) {
 		start_locs[i].x = 100;
 		exits[i].spec = -1;
 		exits[i].x = -1;
@@ -96,7 +94,7 @@ cTown::cTown(cScenario& scenario) : scenario(&scenario) {
 	spec_on_entry = -1;
 	spec_on_entry_if_dead = -1;
 	spec_on_hostile = -1;
-	for(i = 0; i < 8; i++) {
+	for(short i = 0; i < 8; i++) {
 		timers[i].time = 0;
 		timers[i].node = -1;
 	}

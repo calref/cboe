@@ -11,42 +11,38 @@
 extern bool cur_scen_is_mac, mac_is_intel;
 
 void port_town(legacy::town_record_type* dummy_town_ptr){
-	short i;
-	
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	flip_short(&dummy_town_ptr->town_chop_time);
 	flip_short(&dummy_town_ptr->town_chop_key);
 	flip_short(&dummy_town_ptr->lighting);
-	for(i =0 ; i < 4; i++)
+	for(short i = 0; i < 4; i++)
 		flip_short(&dummy_town_ptr->exit_specs[i]);
 	flip_rect(&dummy_town_ptr->in_town_rect);
-	for(i =0 ; i < 64; i++) {
+	for(short i = 0; i < 64; i++) {
 		flip_short(&dummy_town_ptr->preset_items[i].item_code);
 		flip_short(&dummy_town_ptr->preset_items[i].ability);
 	}
-	for(i =0 ; i < 50; i++) {
+	for(short i = 0; i < 50; i++) {
 		flip_short(&dummy_town_ptr->preset_fields[i].field_type);
 	}
 	flip_short(&dummy_town_ptr->max_num_monst);
 	flip_short(&dummy_town_ptr->spec_on_entry);
 	flip_short(&dummy_town_ptr->spec_on_entry_if_dead);
-	for(i =0 ; i < 8; i++)
+	for(short i = 0; i < 8; i++)
 		flip_short(&dummy_town_ptr->timer_spec_times[i]);
-	for(i =0 ; i < 8; i++)
+	for(short i = 0; i < 8; i++)
 		flip_short(&dummy_town_ptr->timer_specs[i]);
 	flip_short(&dummy_town_ptr->difficulty);
-	for(i =0 ; i < 100; i++)
+	for(short i = 0; i < 100; i++)
 		flip_spec_node(&dummy_town_ptr->specials[i]);
 	
 }
 
 void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr) {
-	short i;
-	
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
-	for(i = 0; i < 60; i++) {
+	for(short i = 0; i < 60; i++) {
 		flip_short(&dummy_talk_ptr->talk_nodes[i].personality);
 		flip_short(&dummy_talk_ptr->talk_nodes[i].type);
 		flip_short(&dummy_talk_ptr->talk_nodes[i].extras[0]);
@@ -57,13 +53,12 @@ void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr) {
 }
 
 void port_t_d(legacy::big_tr_type* old) {
-	short i;
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(i =0 ; i < 16; i++)
+	for(short i = 0; i < 16; i++)
 		flip_rect(&old->room_rect[i]);
-	for(i =0 ; i < 60; i++) {
+	for(short i = 0; i < 60; i++) {
 		flip_short(&old->creatures[i].spec1);
 		flip_short(&old->creatures[i].spec2);
 		flip_short(&old->creatures[i].monster_time);
@@ -74,13 +69,12 @@ void port_t_d(legacy::big_tr_type* old) {
 }
 
 void port_ave_t(legacy::ave_tr_type* old) {
-	short i;
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(i =0 ; i < 16; i++)
+	for(short i = 0; i < 16; i++)
 		flip_rect(&old->room_rect[i]);
-	for(i =0 ; i < 40; i++) {
+	for(short i = 0; i < 40; i++) {
 		flip_short(&old->creatures[i].spec1);
 		flip_short(&old->creatures[i].spec2);
 		flip_short(&old->creatures[i].monster_time);
@@ -91,13 +85,12 @@ void port_ave_t(legacy::ave_tr_type* old) {
 }
 
 void port_tiny_t(legacy::tiny_tr_type* old) {
-	short i;
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(i =0 ; i < 16; i++)
+	for(short i = 0; i < 16; i++)
 		flip_rect(&old->room_rect[i]);
-	for(i =0 ; i < 30; i++) {
+	for(short i = 0; i < 30; i++) {
 		flip_short(&old->creatures[i].spec1);
 		flip_short(&old->creatures[i].spec2);
 		flip_short(&old->creatures[i].monster_time);
@@ -108,8 +101,6 @@ void port_tiny_t(legacy::tiny_tr_type* old) {
 }
 
 void port_scenario(legacy::scenario_data_type* temp_scenario) {
-	short i,j;
-	
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	flip_short(&temp_scenario->flag_a);
@@ -124,28 +115,28 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 	flip_short(&temp_scenario->intro_mess_pic);
 	flip_short(&temp_scenario->intro_mess_len);
 	flip_short(&temp_scenario->which_town_start);
-	for(i = 0; i < 200; i++)
-		for(j = 0; j < 5; j++)
+	for(short i = 0; i < 200; i++)
+		for(short j = 0; j < 5; j++)
 			flip_short(&temp_scenario->town_data_size[i][j]);
-	for(i = 0; i < 10; i++)
+	for(short i = 0; i < 10; i++)
 		flip_short(&temp_scenario->town_to_add_to[i]);
-	for(i = 0; i < 10; i++)
-		for(j = 0; j < 2; j++)
+	for(short i = 0; i < 10; i++)
+		for(short j = 0; j < 2; j++)
 			flip_short(&temp_scenario->flag_to_add_to_town[i][j]);
-	for(i = 0; i < 100; i++)
-		for(j = 0; j < 2; j++)
+	for(short i = 0; i < 100; i++)
+		for(short j = 0; j < 2; j++)
 			flip_short(&temp_scenario->out_data_size[i][j]);
-	for(i = 0; i < 3; i++)
+	for(short i = 0; i < 3; i++)
 		flip_rect(&temp_scenario->store_item_rects[i]);
-	for(i = 0; i < 3; i++)
+	for(short i = 0; i < 3; i++)
 		flip_short(&temp_scenario->store_item_towns[i]);
-	for(i = 0; i < 50; i++)
+	for(short i = 0; i < 50; i++)
 		flip_short(&temp_scenario->special_items[i]);
-	for(i = 0; i < 50; i++)
+	for(short i = 0; i < 50; i++)
 		flip_short(&temp_scenario->special_item_special[i]);
 	flip_short(&temp_scenario->rating);
 	flip_short(&temp_scenario->uses_custom_graphics);
-	for(i = 0; i < 256; i++) {
+	for(short i = 0; i < 256; i++) {
 		flip_short(&temp_scenario->scen_monsters[i].health);
 		flip_short(&temp_scenario->scen_monsters[i].m_health);
 		flip_short(&temp_scenario->scen_monsters[i].max_mp);
@@ -160,26 +151,26 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 		flip_short(&temp_scenario->scen_monsters[i].picture_num);
 	}
 	
-	for(i = 0; i < 256; i++) {
+	for(short i = 0; i < 256; i++) {
 		flip_short(&temp_scenario->ter_types[i].picture);
 	}
-	for(i = 0; i < 30; i++) {
+	for(short i = 0; i < 30; i++) {
 		flip_short(&temp_scenario->scen_boats[i].which_town);
 	}
-	for(i = 0; i < 30; i++) {
+	for(short i = 0; i < 30; i++) {
 		flip_short(&temp_scenario->scen_horses[i].which_town);
 	}
-	for(i = 0; i < 20; i++)
+	for(short i = 0; i < 20; i++)
 		flip_short(&temp_scenario->scenario_timer_times[i]);
-	for(i = 0; i < 20; i++)
+	for(short i = 0; i < 20; i++)
 		flip_short(&temp_scenario->scenario_timer_specs[i]);
-	for(i = 0; i < 256; i++) {
+	for(short i = 0; i < 256; i++) {
 		flip_spec_node(&temp_scenario->scen_specials[i]);
 	}
-	for(i = 0; i < 10; i++)  {
+	for(short i = 0; i < 10; i++)  {
 		flip_short(&temp_scenario->storage_shortcuts[i].ter_type);
 		flip_short(&temp_scenario->storage_shortcuts[i].property);
-		for(j = 0; j < 10; j++)  {
+		for(short j = 0; j < 10; j++)  {
 			flip_short(&temp_scenario->storage_shortcuts[i].item_num[j]);
 			flip_short(&temp_scenario->storage_shortcuts[i].item_odds[j]);
 		}
@@ -189,12 +180,10 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 
 
 void port_item_list(legacy::scen_item_data_type* old){
-	short i;
-	
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(i = 0; i < 400; i++) {
+	for(short i = 0; i < 400; i++) {
 		flip_short(&(old->scen_items[i].variety));
 		flip_short(&(old->scen_items[i].item_level));
 		flip_short(&(old->scen_items[i].value));
@@ -202,12 +191,10 @@ void port_item_list(legacy::scen_item_data_type* old){
 }
 
 void port_out(legacy::outdoor_record_type *out) {
-	short i;
-	
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(i = 0; i < 4; i++) {
+	for(short i = 0; i < 4; i++) {
 		flip_short(&(out->wandering[i].spec_on_meet));
 		flip_short(&(out->wandering[i].spec_on_win));
 		flip_short(&(out->wandering[i].spec_on_flee));
@@ -221,42 +208,41 @@ void port_out(legacy::outdoor_record_type *out) {
 		flip_short(&(out->special_enc[i].end_spec1));
 		flip_short(&(out->special_enc[i].end_spec2));
 	}
-	for(i = 0; i < 8; i++)
+	for(short i = 0; i < 8; i++)
 		flip_rect(&(out->info_rect[i]));
-	for(i = 0; i < 60; i++)
+	for(short i = 0; i < 60; i++)
 		flip_spec_node(&(out->specials[i]));
 }
 
 void port_party(legacy::party_record_type* old){
-	int i,j,k;
 	flip_long(&old->age);
 	flip_short(&old->gold);
 	flip_short(&old->food);
 	flip_short(&old->light_level);
-	for(i = 0; i < 30; i++){
+	for(short i = 0; i < 30; i++){
 		flip_short(&old->boats[i].which_town);
 		flip_short(&old->horses[i].which_town);
 		flip_short(&old->party_event_timers[i]);
 		flip_short(&old->global_or_town[i]);
 		flip_short(&old->node_to_call[i]);
 	}
-	for(i = 0; i < 4; i++){
+	for(short i = 0; i < 4; i++){
 		flip_short(&old->creature_save[i].which_town);
 		flip_short(&old->creature_save[i].hostile);
-		for(j = 0; j < 60; j++){
+		for(short j = 0; j < 60; j++){
 			flip_short(&old->creature_save[i].dudes[j].active);
 			flip_short(&old->creature_save[i].dudes[j].attitude);
 			flip_short(&old->creature_save[i].dudes[j].m_d.health);
 			flip_short(&old->creature_save[i].dudes[j].m_d.m_health);
 			flip_short(&old->creature_save[i].dudes[j].m_d.mp);
 			flip_short(&old->creature_save[i].dudes[j].m_d.max_mp);
-			for(k = 0; k < 3; k++)
+			for(short k = 0; k < 3; k++)
 				flip_short(&old->creature_save[i].dudes[j].m_d.a[k]);
 			flip_short(&old->creature_save[i].dudes[j].m_d.morale);
 			flip_short(&old->creature_save[i].dudes[j].m_d.m_morale);
 			flip_short(&old->creature_save[i].dudes[j].m_d.corpse_item);
 			flip_short(&old->creature_save[i].dudes[j].m_d.corpse_item_chance);
-			for(k = 0; k < 15; k++)
+			for(short k = 0; k < 15; k++)
 				flip_short(&old->creature_save[i].dudes[j].m_d.status[k]);
 			flip_short(&old->creature_save[i].dudes[j].m_d.picture_num);
 			flip_short(&old->creature_save[i].dudes[j].summoned);
@@ -271,7 +257,7 @@ void port_party(legacy::party_record_type* old){
 	}
 	flip_short(&old->in_boat);
 	flip_short(&old->in_horse);
-	for(i = 0; i < 10; i++){
+	for(short i = 0; i < 10; i++){
 		flip_short(&old->out_c[i].direction);
 		flip_short(&old->out_c[i].what_monst.spec_on_meet);
 		flip_short(&old->out_c[i].what_monst.spec_on_win);
@@ -280,19 +266,19 @@ void port_party(legacy::party_record_type* old){
 		flip_short(&old->out_c[i].what_monst.end_spec1);
 		flip_short(&old->out_c[i].what_monst.end_spec2);
 	}
-	for(i = 0; i < 5; i++)
-		for(j = 0; j < 10; j++){
+	for(short i = 0; i < 5; i++)
+		for(short j = 0; j < 10; j++){
 			flip_short(&old->magic_store_items[i][j].variety);
 			flip_short(&old->magic_store_items[i][j].item_level);
 			flip_short(&old->magic_store_items[i][j].value);
 		}
-	for(i = 0; i < 50; i++)
+	for(short i = 0; i < 50; i++)
 		flip_short(&old->journal_day[i]);
-	for(i = 0; i < 140; i++){
+	for(short i = 0; i < 140; i++){
 		flip_short(&old->special_notes_str[i][0]);
 		flip_short(&old->special_notes_str[i][1]);
 	}
-	for(i = 0; i < 120; i++){
+	for(short i = 0; i < 120; i++){
 		flip_short(&old->talk_save[i].personality);
 		flip_short(&old->talk_save[i].town_num);
 		flip_short(&old->talk_save[i].str1);
@@ -300,9 +286,9 @@ void port_party(legacy::party_record_type* old){
 	}
 	flip_short(&old->direction);
 	flip_short(&old->at_which_save_slot);
-	for(i = 0; i < 100; i++)
+	for(short i = 0; i < 100; i++)
 		flip_short(&old->key_times[i]);
-	for(i = 0; i < 200; i++)
+	for(short i = 0; i < 200; i++)
 		flip_short(&old->m_killed[i]);
 	flip_long(&old->total_m_killed);
 	flip_long(&old->total_dam_done);
@@ -311,9 +297,8 @@ void port_party(legacy::party_record_type* old){
 }
 
 void port_pc(legacy::pc_record_type* old){
-	int i;
 	flip_short(&old->main_status);
-	for(i = 0; i < 30; i++)
+	for(short i = 0; i < 30; i++)
 		flip_short(&old->skills[i]);
 	flip_short(&old->max_health);
 	flip_short(&old->cur_health);
@@ -322,9 +307,9 @@ void port_pc(legacy::pc_record_type* old){
 	flip_short(&old->experience);
 	flip_short(&old->skill_pts);
 	flip_short(&old->level);
-	for(i = 0; i < 15; i++)
+	for(short i = 0; i < 15; i++)
 		flip_short(&old->status[i]);
-	for(i = 0; i < 10; i++){
+	for(short i = 0; i < 10; i++){
 		flip_short(&old->items[i].variety);
 		flip_short(&old->items[i].item_level);
 		flip_short(&old->items[i].value);
@@ -337,26 +322,25 @@ void port_pc(legacy::pc_record_type* old){
 }
 
 void port_c_town(legacy::current_town_type* old){
-	int i,j;
 	flip_short(&old->town_num);
 	flip_short(&old->difficulty);
 	port_town(&old->town);
 	flip_short(&old->monst.which_town);
 	flip_short(&old->monst.hostile);
-	for(j = 0; j < 60; j++){
+	for(short j = 0; j < 60; j++){
 		flip_short(&old->monst.dudes[j].active);
 		flip_short(&old->monst.dudes[j].attitude);
 		flip_short(&old->monst.dudes[j].m_d.health);
 		flip_short(&old->monst.dudes[j].m_d.m_health);
 		flip_short(&old->monst.dudes[j].m_d.mp);
 		flip_short(&old->monst.dudes[j].m_d.max_mp);
-		for(i = 0; i < 3; i++)
+		for(short i = 0; i < 3; i++)
 			flip_short(&old->monst.dudes[j].m_d.a[i]);
 		flip_short(&old->monst.dudes[j].m_d.morale);
 		flip_short(&old->monst.dudes[j].m_d.m_morale);
 		flip_short(&old->monst.dudes[j].m_d.corpse_item);
 		flip_short(&old->monst.dudes[j].m_d.corpse_item_chance);
-		for(i = 0; i < 15; i++)
+		for(short i = 0; i < 15; i++)
 			flip_short(&old->monst.dudes[j].m_d.status[i]);
 		flip_short(&old->monst.dudes[j].m_d.picture_num);
 		flip_short(&old->monst.dudes[j].summoned);

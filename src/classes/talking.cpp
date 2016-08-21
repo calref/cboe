@@ -16,11 +16,10 @@
 #include "oldstructs.hpp"
 
 void cSpeech::append(legacy::talking_record_type& old, std::vector<shop_info_t>& shops){
-	int i,j;
 	talk_nodes.resize(60);
-	for(i = 0; i < 60; i++){
+	for(short i = 0; i < 60; i++){
 		talk_nodes[i].personality = old.talk_nodes[i].personality;
-		for(j = 0; j < 4; j++){
+		for(short j = 0; j < 4; j++){
 			talk_nodes[i].link1[j] = old.talk_nodes[i].link1[j];
 			talk_nodes[i].link2[j] = old.talk_nodes[i].link2[j];
 			talk_nodes[i].extras[j] = old.talk_nodes[i].extras[j];

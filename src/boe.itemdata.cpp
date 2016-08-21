@@ -42,7 +42,7 @@ cItem get_food() {
 
 
 cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,eItemType t1, eItemType t2, eItemType t3) {
-	short i,j,val;
+	short val;
 	cItem temp_i;
 	
 	// occasionally get nice item
@@ -50,8 +50,8 @@ cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,eItemT
 		loot_max += 2;
 		max_val += 2000;
 	}
-	for(i = 0; i < 80; i++) {
-		j = get_ran(1,0,univ.scenario.scen_items.size() - 1);
+	for(short i = 0; i < 80; i++) {
+		int j = get_ran(1,0,univ.scenario.scen_items.size() - 1);
 		temp_i = get_stored_item(j);
 		if(temp_i.variety == eItemType::NO_ITEM) continue;
 		if((temp_i.variety == t1) || (temp_i.variety == t2) || (temp_i.variety == t3)) {

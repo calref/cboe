@@ -30,8 +30,6 @@ extern rectangle pc_race_rect;
 extern rectangle edit_rect[5];
 
 bool handle_action(sf::Event event) {
-	short i;
-	
 	location the_point;
 	
 	bool to_return = false;
@@ -41,14 +39,14 @@ bool handle_action(sf::Event event) {
 	if(file_in_mem.empty())
 		return false;
 	
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if((the_point.in(pc_area_buttons[i][0])) &&
 		   (univ.party[i].main_status != eMainStatus::ABSENT)) {
 			do_button_action(0,i);
 			current_active_pc = i;
 			redraw_screen();
 		}
-	for(i = 0; i < 5; i++)
+	for(short i = 0; i < 5; i++)
 		if((the_point.in(edit_rect[i])) &&
 		   (univ.party[current_active_pc].main_status != eMainStatus::ABSENT)) {
 			do_button_action(0,i + 10);
@@ -71,13 +69,13 @@ bool handle_action(sf::Event event) {
 					break;
 			}
 		}
-	for(i = 0; i < 24; i++)
+	for(short i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][1])) && // drop item
 		   univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
 			flash_rect(item_string_rects[i][1]);
 			univ.party[current_active_pc].take_item(i);
 		}
-	for(i = 0; i < 24; i++)
+	for(short i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][2])) && // identify item
 		   univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
 			flash_rect(item_string_rects[i][2]);

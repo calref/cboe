@@ -49,9 +49,6 @@ cCustomGraphics spec_scen_g; // not actually needed; just here to silence compil
 // (actually, it WILL be needed eventually)
 
 void init_main_buttons() {
-	
-	short i;
-	
 	rectangle base_rect;
 	
 	// Initialize pc_info_rect in center
@@ -69,7 +66,7 @@ void init_main_buttons() {
 	pc_area_buttons[0][0].top=pc_info_rect.top;
 	pc_area_buttons[0][0].bottom=pc_area_buttons[0][0].top + 56;
 	
-	for(i=0; i<6; i++) {
+	for(short i = 0; i < 6; i++) {
 		pc_area_buttons[i][0].left = 20;
 		pc_area_buttons[i][0].right = pc_area_buttons[0][0].left + 56;
 		pc_area_buttons[i][2].left = 20;
@@ -91,7 +88,7 @@ void init_main_buttons() {
 	}
 	// Initialize the edit_rect buttons
 	edit_rect[0].top = pc_info_rect.top;
-	for(i = 0; i < 5; i++) {
+	for(short i = 0; i < 5; i++) {
 		edit_rect[i].top = edit_rect[0].top + 66*i;
 		edit_rect[i].bottom = edit_rect[i].top + 53;
 	 	edit_rect[i].left = 510;
@@ -127,7 +124,7 @@ void init_main_buttons() {
 	base_rect.right = name_rect.right - 1;
 	base_rect.bottom = base_rect.top + (pc_info_rect.bottom - skill_rect.bottom)/30;
 	
-	for(i = 0; i < 19; i++) {
+	for(short i = 0; i < 19; i++) {
 		pc_skills_rect[i] = base_rect;
 		pc_skills_rect[i].offset((i / 10) * ((name_rect.right)-(name_rect.left)), (i % 10) * (pc_info_rect.bottom - name_rect.bottom)/30);
 	}
@@ -142,7 +139,7 @@ void init_main_buttons() {
 	base_rect.left = status_rect.left + 1;
 	base_rect.right = name_rect.right - 1;
 	base_rect.bottom = base_rect.top + (pc_info_rect.bottom - status_rect.bottom)/15;
-	for(i = 0; i < 14; i++) {
+	for(short i = 0; i < 14; i++) {
 		pc_status_rect[i] = base_rect;
 		pc_status_rect[i].offset((i / 7) * ((name_rect.right)-(name_rect.left)), (i % 7) * 9);
 	}
@@ -159,7 +156,7 @@ void init_main_buttons() {
 	base_rect.left = traits_rect.left + 1;
 	base_rect.right = name_rect.right - 1;
 	base_rect.bottom = base_rect.top + 10;
-	for(i = 0; i < 16; i++) {
+	for(short i = 0; i < 16; i++) {
 		pc_traits_rect[i] = base_rect;
 		pc_traits_rect[i].offset((i / 8) * ((name_rect.right)-(name_rect.left)), (i % 8) * 9);
 	}
@@ -170,11 +167,11 @@ void init_main_buttons() {
 	item_string_rects[0][0].left = pc_info_rect.left + (pc_info_rect.right - pc_info_rect.left)/2 + 2;
 	item_string_rects[0][0].right = pc_info_rect.right;
 	item_string_rects[0][0].bottom = item_string_rects[0][0].top + 12;
-	for(i = 1; i < 24; i++) {
+	for(short i = 1; i < 24; i++) {
 		item_string_rects[i][0] = item_string_rects[0][0];
 		item_string_rects[i][0].offset(0,13 * i);
 	}
-	for(i = 0; i < 24; i++) {
+	for(short i = 0; i < 24; i++) {
 		item_string_rects[i][1] = item_string_rects[i][0];
 		item_string_rects[i][1].right -= 14;
 		item_string_rects[i][1].left = item_string_rects[i][1].right - 14;
@@ -311,7 +308,6 @@ void do_button_action(short /*which_pc*/,short which_button) {
 
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 void draw_items() {
-	short i;
 	rectangle d_from = {12,28,24,42},i_from = {12,42,24,56},dest_rect;
 	
 	if(file_in_mem.empty())  // save file loaded
@@ -333,7 +329,7 @@ void draw_items() {
 		return; // If PC is dead, it has no items
 	}
 	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
-	for(i = 0; i < 24; i++) // Loop through items and draw each
+	for(short i = 0; i < 24; i++) // Loop through items and draw each
 		if(univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) { // i.e. does item exist
 			std::string to_draw = std::to_string(i + 1) + ". ";
 			if(!univ.party[current_active_pc].items[i].ident)
@@ -362,7 +358,7 @@ void draw_items() {
 //short mode; // 0 - 5 this pc, 6 - all
 //short clear_first; // 1 - redraw over what's already there, 0 - don't redraw over
 void display_party() {
-	short i,k,string_num, cur_rect=0;
+	short string_num, cur_rect=0;
 	rectangle from_rect,no_party_rect,temp_rect;
 	
 	TextStyle style;
@@ -381,7 +377,7 @@ void display_party() {
 			win_draw_string(mainPtr,from_rect,"Party not in a scenario.",eTextMode::WRAP,style);
 		else
 			win_draw_string(mainPtr,from_rect,"Party is in a scenario (day " + std::to_string(1 + univ.party.age / 3700) + ").",eTextMode::WRAP,style);
-		for(i = 0; i < 6; i++) {
+		for(short i = 0; i < 6; i++) {
 			if(i == current_active_pc) // active pc is drawn in blue
 				fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Blue);
 			else fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Black);
@@ -454,7 +450,7 @@ void display_party() {
 							style.font = FONT_PLAIN;
 							style.lineHeight = 9;
 							string_num=1;
-							for( k = 0; k < 19 ; ++k) {
+							for(short k = 0; k < 19 ; ++k) {
 								temp_rect = pc_skills_rect[k];
 								temp_rect.left = pc_skills_rect[k].left + 80;
 								if(k < 10) temp_rect.left += 4;
@@ -585,7 +581,7 @@ void display_party() {
 							style.pointSize = 10;
 							style.font = FONT_BOLD;
 							win_draw_string(mainPtr,traits_rect,"Traits:",eTextMode::WRAP,style);
-							//for(k = 0 ; k < 16; k++)
+							//for(short k = 0 ; k < 16; k++)
 							//frame_dlog_rect(GetWindowPort(mainPtr),pc_traits_rect[k],0);
 							style.pointSize = 9;
 							style.font = FONT_PLAIN;
@@ -743,7 +739,7 @@ void display_party() {
 		} // Closes the for i=6 loop
 		
 		style.lineHeight = 16;
-		for(i = 0; i < 5; i++) {
+		for(short i = 0; i < 5; i++) {
 			from_rect = (current_pressed_button == i + 10) ? ed_buttons_from[1] : ed_buttons_from[0];
 			rect_draw_some_item(buttons_gworld,from_rect,mainPtr,edit_rect[i]);
 			style.colour = sf::Color::White;

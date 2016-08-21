@@ -1,6 +1,7 @@
 
 #include <string>
 #include "pict.hpp" // for ePicType
+#include "location.hpp" // for info_rect_t
 class cDialog;
 
 enum eStrType {
@@ -30,7 +31,7 @@ void edit_spec_text(eStrMode mode,short *str1,short *str2,cDialog* parent);
 void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent);
 short edit_special_num(short mode,short what_start);
 void edit_scen_intro();
-bool edit_area_rect_str(short which_str,short mode);
+bool edit_area_rect_str(info_rect_t& r);
 void make_cursor_sword() ;
 size_t num_strs(eStrMode str_mode);
 

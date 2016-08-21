@@ -59,17 +59,17 @@ void showMenuBar() {
 }
 
 void adjust_monst_menu() {
-	short i,monst_pos = 0;
+	short monst_pos = 0;
 	NSMenu* monst_menu;
 	
 	if(overall_mode == MODE_STARTUP) return;
 	
 	monst_menu = [[menu_bar_handle itemWithTitle: @"Monsters"] submenu];
 	id targ = [[monst_menu itemAtIndex: 0] target];
-	for(i = 0; i < 256; i++) {
+	for(short i = 0; i < 256; i++) {
 		on_monst_menu[i] = -1;
 	}
-	for(i = 1; i < 256; i++) {
+	for(short i = 1; i < 256; i++) {
 		if(i == 1 || univ.party.m_noted.count(i) > 0) {
 			on_monst_menu[monst_pos] = i;
 			monst_pos++;
@@ -79,7 +79,7 @@ void adjust_monst_menu() {
 	while([monst_menu numberOfItems] > 2) {
 		[monst_menu removeItemAtIndex: 2];
 	}
-	for(i = 0; i < 256; i++) {
+	for(short i = 0; i < 256; i++) {
 		if(on_monst_menu[i] >= 0) {
 			std::string monst_name = univ.scenario.scen_monsters[on_monst_menu[i]].m_name;
 			NSString* str = [NSString stringWithUTF8String: monst_name.c_str()];
@@ -163,10 +163,8 @@ void init_menubar() {
 }
 
 void init_spell_menus() {
-	short i,j;
-	
-	for(i = 0; i < 2; i++)
-		for(j = 0; j < 62; j++)
+	for(short i = 0; i < 2; i++)
+		for(short j = 0; j < 62; j++)
 			on_spell_menu[i][j] = -1;
 	
 }
@@ -174,7 +172,7 @@ void init_spell_menus() {
 
 
 void adjust_spell_menus() {
-	short i,j,spell_pos = 0;
+	short spell_pos = 0;
 	NSMenu* spell_menu;
 	short old_on_spell_menu[2][62];
 	bool need_menu_change = false;
@@ -182,29 +180,29 @@ void adjust_spell_menus() {
 	if(overall_mode == MODE_STARTUP || current_pc == 6)
 		return;
 	
-	for(i = 0; i < 2; i++)
-		for(j = 0; j < 62; j++)
+	for(short i = 0; i < 2; i++)
+		for(short j = 0; j < 62; j++)
 			old_on_spell_menu[i][j] = on_spell_menu[i][j];
 	
 	spell_menu = [[menu_bar_handle itemWithTitle: @"Cast Mage"] submenu];
 	id targ = [[spell_menu itemAtIndex: 0] target];
 	
-	for(i = 0; i < 62; i++) {
+	for(short i = 0; i < 62; i++) {
 		on_spell_menu[0][i] = -1;
 	}
-	for(i = 0; i < 62; i++)
-		if(pc_can_cast_spell(current_pc,cSpell::fromNum(eSkill::MAGE_SPELLS,i))) {
+	for(short i = 0; i < 62; i++)
+		if(pc_can_cast_spell(univ.party[current_pc],cSpell::fromNum(eSkill::MAGE_SPELLS,i))) {
 			on_spell_menu[0][spell_pos] = i;
 			spell_pos++;
 		}
-	for(i = 0; i < 62; i++)
+	for(short i = 0; i < 62; i++)
 		if(on_spell_menu[0][i] != old_on_spell_menu[0][i])
 			need_menu_change = true;
 	if(need_menu_change) {
 		while([spell_menu numberOfItems] > 2) {
 			[spell_menu removeItemAtIndex: 2];
 		}
-		for(i = 0; i < 62; i++)
+		for(short i = 0; i < 62; i++)
 			if(on_spell_menu[0][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[0][i]);
 				std::ostringstream sout;
@@ -222,22 +220,22 @@ void adjust_spell_menus() {
 	
 	spell_menu = [[menu_bar_handle itemWithTitle: @"Cast Priest"] submenu];
 	
-	for(i = 0; i < 62; i++) {
+	for(short i = 0; i < 62; i++) {
 		on_spell_menu[1][i] = -1;
 	}
-	for(i = 0; i < 62; i++)
-		if(pc_can_cast_spell(current_pc,cSpell::fromNum(eSkill::PRIEST_SPELLS,i))) {
+	for(short i = 0; i < 62; i++)
+		if(pc_can_cast_spell(univ.party[current_pc],cSpell::fromNum(eSkill::PRIEST_SPELLS,i))) {
 			on_spell_menu[1][spell_pos] = i;
 			spell_pos++;
 		}
-	for(i = 0; i < 62; i++)
+	for(short i = 0; i < 62; i++)
 		if(on_spell_menu[1][i] != old_on_spell_menu[1][i])
 			need_menu_change = true;
 	if(need_menu_change) {
 		while([spell_menu numberOfItems] > 2) {
 			[spell_menu removeItemAtIndex: 2];
 		}
-		for(i = 0; i < 62; i++)
+		for(short i = 0; i < 62; i++)
 			if(on_spell_menu[1][i] >= 0) {
 				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
 				std::ostringstream sout;

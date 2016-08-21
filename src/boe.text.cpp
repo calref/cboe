@@ -81,7 +81,6 @@ extern std::map<eStatus, std::pair<short, short>> statIcons;
 
 // Draws the pc area in upper right
 void put_pc_screen() {
-	short i = 0,j;
 	rectangle erase_rect = {17,2,98,269},to_draw_rect,from_rect;
 	rectangle food_rect[2] = {{103,34,114,76}, {103,3,114,40}};
 	rectangle gold_rect[2] = {{103,106,114,147}, {103,75,114,104}};
@@ -118,9 +117,9 @@ void put_pc_screen() {
 	style.colour = sf::Color::Black;
 	
 	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
-			for(j = 0; j < 5; j++)
+			for(short j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 1;
 			if(i == current_pc) {
 				style.italic = true;
@@ -189,7 +188,7 @@ void put_pc_screen() {
 			rect_draw_some_item(invenbtn_gworld,from_rect,pc_stats_gworld,to_draw_rect,sf::BlendAlpha);
 		}
 		else {
-			for(j = 0; j < 5; j++)
+			for(short j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 0;
 		}
 	}
@@ -221,7 +220,7 @@ void put_item_screen(short screen_num) {
 	std::ostringstream sout;
 	long i_num;
 	long item_offset;
-	short i = 0,j,pc;
+	short pc;
 	rectangle erase_rect = {17,2,122,255},dest_rect;
 	rectangle upper_frame_rect = {3,3,15,268};
 	
@@ -235,8 +234,8 @@ void put_item_screen(short screen_num) {
 	// Draw buttons at bottom
 	item_offset = item_sbar->getPosition();
 	
-	for(i = 0; i < 8; i++)
-		for(j = 0; j < 6; j++)
+	for(short i = 0; i < 8; i++)
+		for(short j = 0; j < 6; j++)
 			item_area_button_active[i][j] = false;
 	
 	TextStyle style;
@@ -247,7 +246,7 @@ void put_item_screen(short screen_num) {
 		case ITEM_WIN_SPECIAL:
 			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
-			for(i = 0; i < 8; i++) {
+			for(short i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
 					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
@@ -262,7 +261,7 @@ void put_item_screen(short screen_num) {
 		case ITEM_WIN_QUESTS:
 			win_draw_string(item_stats_gworld,upper_frame_rect,"Quests/Jobs:",eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
-			for(i = 0; i < 8; i++) {
+			for(short i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
 					int which_quest = spec_item_array[i_num] % 10000;
@@ -291,7 +290,7 @@ void put_item_screen(short screen_num) {
 			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
 			
-			for(i = 0; i < 8; i++) {
+			for(short i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				sout.str("");
 				sout << i_num + 1 << '.';
@@ -356,7 +355,7 @@ void put_item_screen(short screen_num) {
 					}
 					
 				} // end of if item is there
-			} // end of for(i = 0; i < 8; i++)
+			} // end of for(short i = 0; i < 8; i++)
 			break;
 	}
 	
@@ -502,7 +501,6 @@ void place_item_bottom_buttons() {
 	rectangle pc_from_rect = {0,0,36,28},but_from_rect = {30,60,46,78},to_rect;
 	rectangle spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76};
 	// TODO: What about when the buttons are pressed?
-	short i;
 	TextStyle style;
 	style.lineHeight = 10;
 	style.pointSize = 12;
@@ -510,7 +508,7 @@ void place_item_bottom_buttons() {
 	style.colour = sf::Color::Yellow;
 	
 	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
@@ -553,7 +551,7 @@ void place_item_bottom_buttons() {
 }
 
 void set_stat_window(short new_stat) {
-	short i,array_pos = 0;
+	short array_pos = 0;
 	
 	stat_window = new_stat;
 	if(stat_window < ITEM_WIN_SPECIAL && univ.party[stat_window].main_status != eMainStatus::ALIVE)
@@ -563,7 +561,7 @@ void set_stat_window(short new_stat) {
 	switch(stat_window) {
 		case ITEM_WIN_SPECIAL:
 			std::fill(spec_item_array.begin(), spec_item_array.end(), -1);
-			for(i = 0; i < univ.scenario.special_items.size(); i++)
+			for(short i = 0; i < univ.scenario.special_items.size(); i++)
 				if(univ.party.spec_items.count(i)) {
 					spec_item_array.push_back(i);
 					array_pos++;
@@ -573,7 +571,7 @@ void set_stat_window(short new_stat) {
 			break;
 		case ITEM_WIN_QUESTS:
 			std::fill(spec_item_array.begin(), spec_item_array.end(), -1);
-			for(i = 0; i < univ.scenario.quests.size(); i++)
+			for(short i = 0; i < univ.scenario.quests.size(); i++)
 				if(univ.party.quest_status[i] == eQuestStatus::STARTED) {
 					spec_item_array.push_back(i);
 					array_pos++;
@@ -597,9 +595,7 @@ void set_stat_window(short new_stat) {
 }
 
 short first_active_pc() {
-	short i = 0;
-	
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			return i;
 	return 6;
@@ -607,7 +603,6 @@ short first_active_pc() {
 
 
 void refresh_stat_areas(short mode) {
-	short i;
 	sf::BlendMode x;
 	rectangle dest_rect,parts_of_area_to_draw[3] = {{0,0,17,271},{16,0,123,256},{123,0,144,271}};
 	
@@ -617,7 +612,7 @@ void refresh_stat_areas(short mode) {
 	if(mode == 1) x = sf::BlendAdd;
 	else x = sf::BlendNone;
 	rect_draw_some_item (pc_stats_gworld.getTexture(), oldRect, dest_rect,ul, x);
-	for(i = 0; i < 3; i++) {
+	for(short i = 0; i < 3; i++) {
 		dest_rect = parts_of_area_to_draw[i];
 		dest_rect.offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 		rect_draw_some_item(item_stats_gworld.getTexture(), parts_of_area_to_draw[i], dest_rect,ul, x);
@@ -631,9 +626,9 @@ void refresh_stat_areas(short mode) {
 // get job info gone
 
 short total_encumbrance(short pc_num) {
-	short store = 0,i,what_val;
+	short store = 0,what_val;
 	
-	for(i = 0; i < 24; i++)
+	for(short i = 0; i < 24; i++)
 		if(univ.party[pc_num].equip[i]) {
 			what_val = univ.party[pc_num].items[i].awkward;
 			store += what_val;
@@ -694,7 +689,7 @@ void print_party_stats() {
 
 
 short do_look(location space) {
-	short i,j,num_items = 0;
+	short num_items = 0;
 	bool gold_here = false, food_here = false, is_lit = true;
 	location from_where;
 	std::string msg;
@@ -706,7 +701,7 @@ short do_look(location space) {
 		(overall_mode == MODE_LOOK_TOWN && space == univ.party.town_loc))
 		add_string_to_buf("    Your party");
 	if(overall_mode == MODE_LOOK_COMBAT)
-		for(i = 0; i < 6; i++)
+		for(short i = 0; i < 6; i++)
 			if(space == univ.party[i].combat_pos && univ.party[i].main_status == eMainStatus::ALIVE
 			   && (is_lit) && (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5)) {
 				msg = "    " + univ.party[i].name;
@@ -714,7 +709,7 @@ short do_look(location space) {
 			}
 	
 	if((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
-		for(i = 0; i < univ.town.monst.size(); i++)
+		for(short i = 0; i < univ.town.monst.size(); i++)
 			if((univ.town.monst[i].active != 0) && (is_lit)
 				&& univ.town.monst[i].on_space(space) &&
 				((overall_mode == MODE_LOOK_TOWN) || (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5))
@@ -732,10 +727,10 @@ short do_look(location space) {
 			}
 	}
 	if(overall_mode == MODE_LOOK_OUTDOORS) {
-		for(i = 0; i < 10; i++) {
+		for(short i = 0; i < 10; i++) {
 			if((univ.party.out_c[i].exists)
 				&& (space == univ.party.out_c[i].m_loc)) {
-				for(j = 0; j < 7; j++)
+				for(short j = 0; j < 7; j++)
 					if(univ.party.out_c[i].what_monst.monst[j] != 0) {
 						msg = get_m_name(univ.party.out_c[i].what_monst.monst[j]);
 						msg = "    " + msg;
@@ -813,7 +808,7 @@ short do_look(location space) {
 		if(univ.town.is_rubble(space.x,space.y))
 			add_string_to_buf("    Rubble");
 		
-		for(i = 0; i < univ.town.items.size(); i++) {
+		for(short i = 0; i < univ.town.items.size(); i++) {
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && space == univ.town.items[i].item_loc
 			   && (is_lit)) {
 				if(univ.town.items[i].variety == eItemType::GOLD)
@@ -829,7 +824,7 @@ short do_look(location space) {
 			add_string_to_buf("    Food");
 		if(num_items > 8)
 			add_string_to_buf("    Many items");
-		else for(i = 0; i < univ.town.items.size(); i++) {
+		else for(short i = 0; i < univ.town.items.size(); i++) {
 			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].variety != eItemType::GOLD && univ.town.items[i].variety != eItemType::FOOD &&
 			   (space == univ.town.items[i].item_loc) && (!univ.town.items[i].contained)) {
 				if(univ.town.items[i].ident)
@@ -851,18 +846,14 @@ short do_look(location space) {
 }
 
 short town_boat_there(location where) {
-	short i;
-	
-	for(i = 0; i < univ.party.boats.size(); i++)
+	for(short i = 0; i < univ.party.boats.size(); i++)
 		if(univ.party.boats[i].exists && univ.party.boats[i].which_town == univ.party.town_num
 			&& (where == univ.party.boats[i].loc))
 			return i;
 	return univ.party.boats.size();
 }
 short out_boat_there(location where) {
-	short i;
-	
-	for(i = 0; i < univ.party.boats.size(); i++)
+	for(short i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].exists) && (where == univ.party.boats[i].loc)
 			&& (univ.party.boats[i].which_town == 200))
 			return i;
@@ -870,30 +861,25 @@ short out_boat_there(location where) {
 }
 
 short town_horse_there(location where) {
-	short i;
-	
-	for(i = 0; i < univ.party.horses.size(); i++)
+	for(short i = 0; i < univ.party.horses.size(); i++)
 		if(univ.party.horses[i].exists && univ.party.horses[i].which_town == univ.party.town_num
 			&& (where == univ.party.horses[i].loc))
 			return i;
 	return univ.party.horses.size();
 }
 short out_horse_there(location where) {
-	short i;
-	
-	for(i = 0; i < univ.party.horses.size(); i++)
+	for(short i = 0; i < univ.party.horses.size(); i++)
 		if((univ.party.horses[i].exists) && (where == univ.party.horses[i].loc)
 			&& (univ.party.horses[i].which_town == 200))
 			return i;
 	return univ.party.horses.size();
 }
 void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
-	short i;
 	std::string msg;
 	
 	add_string_to_buf("COMBAT!");
 	
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(encounter.monst[i] != 0) {
 			msg = get_m_name(encounter.monst[i]);
 			std::ostringstream sout;
@@ -1017,9 +1003,9 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 	while(text_buffer[prev_pointer].line[--last] == ' ');
 	bool is_dup = false;
 	if(last == new_last) {
-		size_t i, num_pos = 0;
+		size_t num_pos = 0;
 		enum {begin, f_space, f_lparen, f_x, f_num, f_rparen, err} state = begin;
-		for(i = last; i < 50 && text_buffer[prev_pointer].line[i]; i++) {
+		for(short i = last; i < 50 && text_buffer[prev_pointer].line[i]; i++) {
 			if(state == f_x) num_pos = i;
 			if(isdigit(text_buffer[prev_pointer].line[i]) && (state == f_x || state == f_num))
 				state = f_num;
@@ -1076,9 +1062,7 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 }
 
 void init_buf() {
-	short i;
-	
-	for(i = 0; i < TEXT_BUF_LEN; i++)
+	for(short i = 0; i < TEXT_BUF_LEN; i++)
 		sprintf((char *) text_buffer[buf_pointer].line, " ");
 }
 

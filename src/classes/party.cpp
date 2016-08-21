@@ -54,15 +54,14 @@ cParty::~cParty() {
 }
 
 void cParty::append(legacy::party_record_type& old, const cScenario& scen){
-	int i,j;
 	age = old.age;
 	gold = old.gold;
 	food = old.food;
-	for(i = 0; i < 310; i++)
-		for(j = 0; j < 10; j++)
+	for(short i = 0; i < 310; i++)
+		for(short j = 0; j < 10; j++)
 			stuff_done[i][j] = old.stuff_done[i][j];
-	for(i = 0; i < 200; i++)
-		for(j = 0; j < 8; j++)
+	for(short i = 0; i < 200; i++)
+		for(short j = 0; j < 8; j++)
 			item_taken[i][j] = old.item_taken[i][j];
 	light_level = old.light_level;
 	if(stuff_done[305][0] > 0)
@@ -86,7 +85,7 @@ void cParty::append(legacy::party_record_type& old, const cScenario& scen){
 		left_in = -1;
 	}
 	party_event_timers.reserve(30);
-	for(i = 0; i < 30; i++){
+	for(short i = 0; i < 30; i++){
 		boats[i].append(old.boats[i]);
 		horses[i].append(old.horses[i]);
 		cTimer t;
@@ -95,23 +94,23 @@ void cParty::append(legacy::party_record_type& old, const cScenario& scen){
 		t.node = old.node_to_call[i];
 		party_event_timers.push_back(t);
 	}
-	for(i = 0; i < 4; i++){
+	for(short i = 0; i < 4; i++){
 		creature_save[i].append(old.creature_save[i]);
 		imprisoned_monst[i] = old.imprisoned_monst[i];
 	}
 	in_boat = old.in_boat;
 	in_horse = old.in_horse;
-	for(i = 0; i < 10; i++){
+	for(short i = 0; i < 10; i++){
 		out_c[i].append(old.out_c[i]);
-		for(j = 0; j < 5; j++)
+		for(short j = 0; j < 5; j++)
 			magic_store_items[j][i].append(old.magic_store_items[j][i]);
 	}
-	for(i = 0; i < 256; i++)
+	for(short i = 0; i < 256; i++)
 		if(old.m_seen[i])
 			m_noted.insert(i);
 	journal.reserve(50);
 	// The journal wasn't used before, so let's not bother converting it
-//	for(i = 0; i < 50; i++){
+//	for(short i = 0; i < 50; i++){
 //		cJournal j;
 //		j.day = old.journal_day[i];
 //		journal.push_back(j);
@@ -119,14 +118,14 @@ void cParty::append(legacy::party_record_type& old, const cScenario& scen){
 //	}
 	if(!scen_name.empty()) {
 		special_notes.reserve(140);
-		for(i = 0; i < 140; i++){
+		for(short i = 0; i < 140; i++){
 			if(old.special_notes_str[i][0] <= 0) continue;
 			cEncNote n;
 			n.append(old.special_notes_str[i], scen);
 			special_notes.push_back(n);
 		}
 		talk_save.reserve(120);
-		for(i = 0; i < 120; i++){
+		for(short i = 0; i < 120; i++){
 			cConvers t;
 			t.append(old.talk_save[i], scen);
 			talk_save.push_back(t);
@@ -134,15 +133,15 @@ void cParty::append(legacy::party_record_type& old, const cScenario& scen){
 	}
 	direction = eDirection(old.direction);
 	at_which_save_slot = old.at_which_save_slot;
-	for(i = 0; i < 20 ; i++)
+	for(short i = 0; i < 20 ; i++)
 		alchemy[i] = old.alchemy[i];
 	can_find_town.resize(200);
 	m_killed.resize(200);
-	for(i = 0; i < 200; i++){
+	for(short i = 0; i < 200; i++){
 		can_find_town[i] = old.can_find_town[i];
 		m_killed[i] = old.m_killed[i];
 	}
-	for(i = 0; i < 100; i++)
+	for(short i = 0; i < 100; i++)
 		key_times[i] = old.key_times[i];
 	total_m_killed = old.total_m_killed;
 	total_dam_done = old.total_dam_done;
@@ -513,13 +512,11 @@ bool cParty::take_abil(eItemAbil abil, short dat) {
 }
 
 bool cParty::check_class(unsigned int item_class,bool take) {
-	short i,j;
-	
 	if(item_class == 0)
 		return false;
-	for(i = 0; i < 6; i++)
+	for(short i = 0; i < 6; i++)
 		if(adven[i]->main_status == eMainStatus::ALIVE)
-			for(j = 23; j >= 0; j--)
+			for(short j = 23; j >= 0; j--)
 				if(adven[i]->items[j].variety != eItemType::NO_ITEM && (adven[i]->items[j].special_class == item_class)) {
 					if(take) {
 						if(adven[i]->items[j].charges > 1)
@@ -1073,8 +1070,6 @@ bool cParty::pc_present(short i) const {
 
 extern cUniverse univ;
 bool cParty::start_split(short x,short y,snd_num_t noise,short who) {
-	short i;
-	
 	if(who >= 6 || who < 0) return false;
 	if(is_split())
 		return false;
@@ -1083,7 +1078,7 @@ bool cParty::start_split(short x,short y,snd_num_t noise,short who) {
 	left_in = town_num;
 	town_loc.x = x;
 	town_loc.y = y;
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		if(i != who)
 			adven[i]->main_status += eMainStatus::SPLIT;
 		adven[i]->status[eStatus::FORCECAGE] = 0;
@@ -1093,11 +1088,9 @@ bool cParty::start_split(short x,short y,snd_num_t noise,short who) {
 }
 
 bool cParty::end_split(snd_num_t noise) {
-	short i;
-	
 	if(!is_split())
 		return false;
-	for(i = 0; i < 6; i++){
+	for(short i = 0; i < 6; i++){
 		if(isSplit(univ.party[i].main_status))
 			univ.party[i].main_status -= eMainStatus::SPLIT;
 	}

@@ -2473,9 +2473,7 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 }
 
 static void put_save_rects_in_dlog(cDialog& me) {
-	short i;
-	
-	for(i = 0; i < 3; i++) {
+	for(short i = 0; i < 3; i++) {
 		std::string id = std::to_string(i + 1);
 		me["top" + id].setTextToNum(scenario.store_item_rects[i].top);
 		me["left" + id].setTextToNum(scenario.store_item_rects[i].left);
@@ -2487,9 +2485,7 @@ static void put_save_rects_in_dlog(cDialog& me) {
 }
 
 static bool save_save_rects(cDialog& me) {
-	short i;
-	
-	for(i = 0; i < 3; i++) {
+	for(short i = 0; i < 3; i++) {
 		std::string id = std::to_string(i + 1);
 		scenario.store_item_rects[i].top = me["top" + id].getTextAsNum();
 		scenario.store_item_rects[i].left = me["left" + id].getTextAsNum();
@@ -2538,9 +2534,7 @@ void edit_save_rects() {
 }
 
 static bool save_vehicles(cDialog& me, cVehicle* vehicles, const short page) {
-	short i;
-	
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		std::string id = std::to_string(i + 1);
 		vehicles[6 * page + i].which_town = me["town" + id].getTextAsNum();
 		if(cre(vehicles[6 * page + i].which_town,
@@ -2557,9 +2551,7 @@ static bool save_vehicles(cDialog& me, cVehicle* vehicles, const short page) {
 }
 
 static void put_vehicles_in_dlog(cDialog& me, cVehicle* vehicles, const short page) {
-	short i;
-	
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		std::string id = std::to_string(i + 1);
 		me["num" + id].setTextToNum(6 * page + i);
 		me["town" + id].setTextToNum(vehicles[6 * page + i].which_town);
@@ -2613,9 +2605,7 @@ void edit_boats() {
 }
 
 static bool save_add_town(cDialog& me) {
-	short i;
-	
-	for(i = 0; i < scenario.town_mods.size(); i++) {
+	for(short i = 0; i < scenario.town_mods.size(); i++) {
 		std::string id = std::to_string(i + 1);
 		scenario.town_mods[i].spec = me["town" + id].getTextAsNum();
 		if(cre(scenario.town_mods[i].spec,
@@ -2631,9 +2621,7 @@ static bool save_add_town(cDialog& me) {
 }
 
 static void put_add_town_in_dlog(cDialog& me) {
-	short i;
-	
-	for(i = 0; i < scenario.town_mods.size(); i++) {
+	for(short i = 0; i < scenario.town_mods.size(); i++) {
 		std::string id = std::to_string(i + 1);
 		me["town" + id].setTextToNum(scenario.town_mods[i].spec);
 		me["flag" + id + "-x"].setTextToNum(scenario.town_mods[i].x);
@@ -2661,13 +2649,11 @@ void edit_add_town() {
 }
 
 static bool save_item_placement(cDialog& me, cScenario::cItemStorage& storage, short which) {
-	short i;
-	
 	storage.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
 	storage.ter_type = me["ter"].getTextAsNum();
 	if(cre(storage.ter_type,
 			-1,255,"Terrain Type must be from 0 to 255 (or -1 for No Shortcut).","",&me)) return false;
-	for(i = 0; i < 10; i++) {
+	for(short i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		storage.item_num[i] = me["item" + id].getTextAsNum();
 		if(cre(storage.item_num[i],
@@ -2681,12 +2667,10 @@ static bool save_item_placement(cDialog& me, cScenario::cItemStorage& storage, s
 }
 
 static void put_item_placement_in_dlog(cDialog& me, const cScenario::cItemStorage& storage, short which) {
-	short i;
-	
 	me["num"].setTextToNum(which);
 	dynamic_cast<cLed&>(me["owned"]).setState(storage.property ? led_red : led_off);
 	me["ter"].setTextToNum(storage.ter_type);
-	for(i = 0; i < 10; i++) {
+	for(short i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		me["item" + id].setTextToNum(storage.item_num[i]);
 		me["odds" + id].setTextToNum(storage.item_odds[i]);
@@ -2694,8 +2678,6 @@ static void put_item_placement_in_dlog(cDialog& me, const cScenario::cItemStorag
 }
 
 static bool edit_item_placement_event_filter(cDialog& me, std::string hit, cScenario::cItemStorage& storage, short& which) {
-	short i;
-	
 	if(hit == "okay") {
 		if(save_item_placement(me, storage, which))
 			me.toast(true);
@@ -2714,7 +2696,7 @@ static bool edit_item_placement_event_filter(cDialog& me, std::string hit, cScen
 		storage = scenario.storage_shortcuts[which];
 		put_item_placement_in_dlog(me, storage, which);
 	} else if(hit == "choose-ter") {
-		i = me["ter"].getTextAsNum();
+		short i = me["ter"].getTextAsNum();
 		storage.ter_type = i;
 		i = choose_text(STRT_TER,i,&me,"Which Terrain?");
 		if(i >= 0){
@@ -2755,7 +2737,6 @@ void edit_item_placement() {
 }
 
 static bool save_scen_details(cDialog& me, std::string, eKeyMod) {
-	short i;
 	if(!me.toast(true)) return true;
 	
 	{
@@ -2771,7 +2752,7 @@ static bool save_scen_details(cDialog& me, std::string, eKeyMod) {
 		}
 	}
 	scenario.adjust_diff = dynamic_cast<cLed&>(me["adjust"]).getState() != led_red;
-	for(i = 0; i < 3; i++)
+	for(short i = 0; i < 3; i++)
 		scenario.format.ver[i] = me["ver" + std::to_string(i + 1)].getTextAsNum();
 	scenario.who_wrote[0] = me["who1"].getText().substr(0, 100);
 	scenario.who_wrote[1] = me["who2"].getText().substr(0, 100);
@@ -2921,7 +2902,6 @@ bool build_scenario() {
 	short width, height, lg, med, sm;
 	bool default_town, grass;
 	std::string author, title;
-	short i;
 	cTown* warriors_grove = nullptr;
 	std::vector<cShop> warriors_grove_shops;
 	
@@ -3100,15 +3080,15 @@ bool build_scenario() {
 		std::swap(scenario.shops, warriors_grove_shops);
 	}
 	
-	for(i = 0; i < lg; i++) {
+	for(short i = 0; i < lg; i++) {
 		scenario.addTown<cBigTown>();
 		scenario.towns.back()->town_name = "Large town " + std::to_string(i + 1);
 	}
-	for(i = 0; i < med; i++) {
+	for(short i = 0; i < med; i++) {
 		scenario.addTown<cMedTown>();
 		scenario.towns.back()->town_name = "Medium town " + std::to_string(i + 1);
 	}
-	for(i = 0; i < sm; i++) {
+	for(short i = 0; i < sm; i++) {
 		scenario.addTown<cTinyTown>();
 		scenario.towns.back()->town_name = "Small town " + std::to_string(i + 1);
 	}
@@ -3121,11 +3101,9 @@ bool build_scenario() {
 }
 
 static bool save_scenario_events(cDialog& me, std::string, eKeyMod) {
-	short i;
-	
 	if(!me.toast(true)) return true;
 	
-	for(i = 0; i < scenario.scenario_timers.size(); i++) {
+	for(short i = 0; i < scenario.scenario_timers.size(); i++) {
 		std::string id = std::to_string(i + 1);
 		scenario.scenario_timers[i].time = me["time" + id].getTextAsNum();
 		scenario.scenario_timers[i].node = me["node" + id].getTextAsNum();

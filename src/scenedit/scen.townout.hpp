@@ -1,7 +1,9 @@
 
+#include "location.hpp" // for sign_loc_t
+
 void edit_placed_monst(short which_m);
 cTownperson edit_placed_monst_adv(cTownperson monst_record, short which, class cDialog& parent);
-void edit_sign(short which_sign,short picture);
+void edit_sign(sign_loc_t& which_sign,short num,short picture);
 short pick_town_num(std::string which_dlog,short def,cScenario& scenario);
 bool change_ter(short& change_from,short& change_to,short& chance);
 void edit_out_wand(short mode);

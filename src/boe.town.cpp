@@ -67,8 +67,7 @@ void force_town_enter(short which_town,location where_start) {
 
 //short entry_dir; // if 9, go to forced
 void start_town_mode(short which_town, short entry_dir) {
-	short i,m,n;
-	short j,k,town_number;
+	short town_number;
 	short at_which_save_slot,former_town;
 	bool monsters_loaded = false,town_toast = false;
 	location loc;
@@ -88,17 +87,17 @@ void start_town_mode(short which_town, short entry_dir) {
 	}
 	
 	// Now adjust town number as necessary.
-	for(i = 0; i < univ.scenario.town_mods.size(); i++)
+	for(short i = 0; i < univ.scenario.town_mods.size(); i++)
 		if(univ.scenario.town_mods[i].spec >= 0 && univ.scenario.town_mods[i].spec < 200 &&
 			town_number == univ.scenario.town_mods[i].spec &&
 			univ.party.sd_legit(univ.scenario.town_mods[i].x,univ.scenario.town_mods[i].y)) {
 			former_town = town_number;
 			town_number += PSD[univ.scenario.town_mods[i].x][univ.scenario.town_mods[i].y];
 			// Now update horses & boats
-			for(i = 0; i < univ.party.horses.size(); i++)
+			for(short i = 0; i < univ.party.horses.size(); i++)
 				if((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == former_town))
 					univ.party.horses[i].which_town = town_number;
-			for(i = 0; i < univ.party.boats.size(); i++)
+			for(short i = 0; i < univ.party.boats.size(); i++)
 				if((univ.party.boats[i].exists) && (univ.party.boats[i].which_town == former_town))
 					univ.party.boats[i].which_town = town_number;
 		}
@@ -126,8 +125,8 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	univ.town.belt_present = false;
 	// Set up map, using stored map
-	for(i = 0; i < univ.town->max_dim(); i++)
-		for(j = 0; j < univ.town->max_dim(); j++) {
+	for(short i = 0; i < univ.town->max_dim(); i++)
+		for(short j = 0; j < univ.town->max_dim(); j++) {
 			if(univ.town_maps[univ.party.town_num][i / 8][j] & (char)(1 << i % 8))
 				make_explored(i,j);
 			
@@ -149,7 +148,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			univ.town.monst = pop;
 			monsters_loaded = true;
 			
-			for(j = 0; j < univ.town.monst.size(); j++) {
+			for(short j = 0; j < univ.town.monst.size(); j++) {
 				if(loc_off_act_area(univ.town.monst[j].cur_loc))
 					univ.town.monst[j].active = 0;
 				if(univ.town.monst[j].active == 2)
@@ -163,15 +162,15 @@ void start_town_mode(short which_town, short entry_dir) {
 					univ.town.monst[j].active = 0;
 				univ.town.monst[j].target = 6;
 				// Bonus SP and HP wear off
-				if(univ.town.monst[i].mp > univ.town.monst[i].max_mp)
-					univ.town.monst[i].mp = univ.town.monst[i].max_mp;
-				if(univ.town.monst[i].health > univ.town.monst[i].m_health)
-					univ.town.monst[i].health = univ.town.monst[i].m_health;
+				if(univ.town.monst[j].mp > univ.town.monst[j].max_mp)
+					univ.town.monst[j].mp = univ.town.monst[j].max_mp;
+				if(univ.town.monst[j].health > univ.town.monst[j].m_health)
+					univ.town.monst[j].health = univ.town.monst[j].m_health;
 			}
 			
 			// Now, travelling NPCs might have arrived. Go through and put them in.
 			// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
-			for(j = 0; j < univ.town.monst.size(); j++) {
+			for(short j = 0; j < univ.town.monst.size(); j++) {
 				switch(univ.town.monst[j].time_flag){
 					case eMonstTime::ALWAYS: break; // Nothing to do.
 					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
@@ -218,19 +217,21 @@ void start_town_mode(short which_town, short entry_dir) {
 					case eMonstTime::APPEAR_AFTER_CHOP:
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
-							univ.town.monst[i].active += 10;
+							univ.town.monst[j].active += 10;
 						else if(univ.town->is_cleaned_out(univ.party.m_killed[univ.party.town_num]))
-							univ.town.monst[i].active += 10;
-						else univ.town.monst[i].active = 0;
-						if(univ.town.monst[i].active >= 10)
-							univ.town.monst[i].time_flag = eMonstTime::ALWAYS;
+							univ.town.monst[j].active += 10;
+						else univ.town.monst[j].active = 0;
+						if(univ.town.monst[j].active >= 10)
+							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
 						break;
 				}
 			}
 			
-			for(j = 0; j < univ.town->max_dim(); j++)
-				for(k = 0; k < univ.town->max_dim(); k++) { // now load in saved setup,
+			for(short j = 0; j < univ.town->max_dim(); j++)
+				for(short k = 0; k < univ.town->max_dim(); k++) { // now load in saved setup,
 					// except that pushable things restore to orig locs
+					// TODO: THIS IS A TEMPORARY HACK TO GET i VALUE
+					int i = std::find_if(univ.party.creature_save.begin(), univ.party.creature_save.end(), [&pop](cPopulation& p) {return &p == &pop;}) - univ.party.creature_save.begin();
 					temp = univ.party.setup[i][j][k] << 8;
 					temp &= ~(OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK);
 					univ.town.fields[j][k] |= temp;
@@ -238,7 +239,7 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	
 	if(!monsters_loaded) {
-		for(i = 0; i < univ.town->creatures.size(); i++){
+		for(short i = 0; i < univ.town->creatures.size(); i++){
 			if(univ.town->creatures[i].number == 0) {
 				if(i >= univ.town.monst.size()) continue;
 				univ.town.monst[i].active = 0;
@@ -273,14 +274,14 @@ void start_town_mode(short which_town, short entry_dir) {
 						}
 						break;
 					case eMonstTime::APPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
+						if(univ.party.key_times.find(univ.town.monst[i].time_code) == univ.party.key_times.end())
 							univ.town.monst[i].active = 0; // Event hasn't happened yet
 						else if(univ.party.calc_day() < univ.party.key_times[univ.town.monst[i].time_code])
 							univ.town.monst[i].active = 0; // This would only be reached if the time was set back (or in a legacy save)
 						break;
 						
 					case eMonstTime::DISAPPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
+						if(univ.party.key_times.find(univ.town.monst[i].time_code) == univ.party.key_times.end())
 							break; // Event hasn't happened yet
 						if(univ.party.calc_day() >= univ.party.key_times[univ.town.monst[i].time_code])
 							univ.town.monst[i].active = 0;
@@ -309,7 +310,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	// Now munch all large monsters that are misplaced
 	// only large monsters, as some smaller monsters are intentionally placed
 	// where they cannot be
-	for(i = 0; i < univ.town.monst.size(); i++) {
+	for(short i = 0; i < univ.town.monst.size(); i++) {
 		if(univ.town.monst[i].active > 0)
 			if(((univ.town.monst[i].x_width > 1) || (univ.town.monst[i].y_width > 1)) &&
 				!monst_can_be_there(univ.town.monst[i].cur_loc,i))
@@ -325,7 +326,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	if(univ.town->town_chop_time > 0) {
 		if(day_reached(univ.town->town_chop_time,univ.town->town_chop_key)) {
 			add_string_to_buf("Area has been abandoned.");
-			for(i = 0; i < univ.town.monst.size(); i++)
+			for(short i = 0; i < univ.town.monst.size(); i++)
 				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].active < 10) &&
 					!univ.town.monst[i].is_friendly())
 					univ.town.monst[i].active += 10;
@@ -333,7 +334,7 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	}
 	if(town_toast) {
-		for(i = 0; i < univ.town.monst.size(); i++)
+		for(short i = 0; i < univ.town.monst.size(); i++)
 			if(univ.town.monst[i].active >= 10)
 				univ.town.monst[i].active -= 10;
 			else univ.town.monst[i].active = 0;
@@ -341,14 +342,14 @@ void start_town_mode(short which_town, short entry_dir) {
 	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
 	
 	// Flush excess doomguards and viscous goos
-	for(i = 0; i < univ.town.monst.size(); i++)
+	for(short i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].abil[eMonstAbil::SPLITS].active) &&
 			(i >= univ.town->creatures.size() || univ.town.monst[i].number != univ.town->creatures[i].number))
 			univ.town.monst[i].active = 0;
 	
 	// Set up field booleans, correct for doors
-	for(j = 0; j < univ.town->max_dim(); j++)
-		for(k = 0; k < univ.town->max_dim(); k++) {
+	for(short j = 0; j < univ.town->max_dim(); j++)
+		for(short k = 0; k < univ.town->max_dim(); k++) {
 			loc.x = j; loc.y = k;
 			if(is_door(loc)) {
 				univ.town.set_web(j,k,false);
@@ -365,30 +366,29 @@ void start_town_mode(short which_town, short entry_dir) {
 	// Set up items, maybe place items already there
 	univ.town.items.clear();
 	
-	for(j = 0; j < 3; j++)
+	for(short j = 0; j < 3; j++)
 		if(univ.scenario.store_item_towns[j] == town_number) {
 			univ.town.items = univ.party.stored_items[j];
 		}
 	
-	for(i = 0; i < univ.town->preset_items.size(); i++)
+	for(short i = 0; i < univ.town->preset_items.size(); i++)
 		if((univ.town->preset_items[i].code >= 0)
 			&& (((univ.party.item_taken[univ.party.town_num][i / 8] & (1 << i % 8)) == 0) ||
 			(univ.town->preset_items[i].always_there))) {
-				j = univ.town.items.size();
 				// place the preset item, if party hasn't gotten it already
 				univ.town.items.push_back(get_stored_item(univ.town->preset_items[i].code));
 				// Don't place special items if already in the party's possession
-				if(univ.town.items[j].variety == eItemType::SPECIAL && univ.party.spec_items.count(univ.town.items[j].item_level))
+				if(univ.town.items[i].variety == eItemType::SPECIAL && univ.party.spec_items.count(univ.town.items[i].item_level))
 					break;
 				// Don't place quest items if party already started
-				if(univ.town.items[j].variety == eItemType::QUEST && univ.party.quest_status[univ.town.items[j].item_level] != eQuestStatus::AVAILABLE)
+				if(univ.town.items[i].variety == eItemType::QUEST && univ.party.quest_status[univ.town.items[i].item_level] != eQuestStatus::AVAILABLE)
 					break;
-				univ.town.items[j].item_loc = univ.town->preset_items[i].loc;
+				univ.town.items[i].item_loc = univ.town->preset_items[i].loc;
 				
 				// Not use the items data flags, starting with forcing an ability
 				if(univ.town->preset_items[i].ability >= 0) {
 					// TODO: What other ways might there be to use this?
-					switch(univ.town.items[j].variety) {
+					switch(univ.town.items[i].variety) {
 						case eItemType::ONE_HANDED:
 						case eItemType::TWO_HANDED: {
 							if(univ.town->preset_items[i].ability > int(eEnchant::BLESSED))
@@ -396,8 +396,8 @@ void start_town_mode(short which_town, short entry_dir) {
 							// TODO: This array and accompanying calculation is now duplicated here and in place_buy_button()
 							const short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 							int ench = univ.town->preset_items[i].ability;
-							int val = max(aug_cost[ench] * 100, univ.town.items[j].value * (5 + aug_cost[ench]));
-							univ.town.items[j].enchant_weapon(eEnchant(ench), val);
+							int val = max(aug_cost[ench] * 100, univ.town.items[i].value * (5 + aug_cost[ench]));
+							univ.town.items[i].enchant_weapon(eEnchant(ench), val);
 							break;
 						}
 						default: break; // Silence compiler warning
@@ -405,34 +405,34 @@ void start_town_mode(short which_town, short entry_dir) {
 				}
 				
 				if(univ.town->preset_items[i].charges > 0) {
-					eItemType variety = univ.town.items[j].variety;
-					if(univ.town.items[j].charges > 0)
-						univ.town.items[j].charges = univ.town->preset_items[i].charges;
+					eItemType variety = univ.town.items[i].variety;
+					if(univ.town.items[i].charges > 0)
+						univ.town.items[i].charges = univ.town->preset_items[i].charges;
 					else if(variety == eItemType::GOLD || variety == eItemType::FOOD)
-						univ.town.items[j].item_level = univ.town->preset_items[i].charges;
+						univ.town.items[i].item_level = univ.town->preset_items[i].charges;
 				}
 				
 				if(town_toast)
-					univ.town.items[j].property = false;
+					univ.town.items[i].property = false;
 				else
-					univ.town.items[j].property = univ.town->preset_items[i].property;
-				univ.town.items[j].contained = univ.town->preset_items[i].contained;
-				int x = univ.town.items[j].item_loc.x, y = univ.town.items[j].item_loc.y;
-				if(univ.town.items[j].contained && (univ.town.is_barrel(x,y) || univ.town.is_crate(x,y)))
-					univ.town.items[j].held = true;
-				univ.town.items[j].is_special = i + 1;
+					univ.town.items[i].property = univ.town->preset_items[i].property;
+				univ.town.items[i].contained = univ.town->preset_items[i].contained;
+				int x = univ.town.items[i].item_loc.x, y = univ.town.items[i].item_loc.y;
+				if(univ.town.items[i].contained && (univ.town.is_barrel(x,y) || univ.town.is_crate(x,y)))
+					univ.town.items[i].held = true;
+				univ.town.items[i].is_special = i + 1;
 			}
 	
 	
-	for(i = 0; i < univ.town.monst.size(); i++)
+	for(short i = 0; i < univ.town.monst.size(); i++)
 		if(loc_off_act_area(univ.town.monst[i].cur_loc))
 			univ.town.monst[i].active = 0;
-	for(i = 0; i < univ.town.items.size(); i++)
+	for(short i = 0; i < univ.town.items.size(); i++)
 		if(loc_off_act_area(univ.town.items[i].item_loc))
 			univ.town.items[i].variety = eItemType::NO_ITEM;
 	
 	// Clean out unwanted monsters
-	for(i = 0; i < univ.town.monst.size(); i++)
+	for(short i = 0; i < univ.town.monst.size(); i++)
 		if(univ.party.sd_legit(univ.town.monst[i].spec1,univ.town.monst[i].spec2)) {
 			if(PSD[univ.town.monst[i].spec1][univ.town.monst[i].spec2] > 0)
 				univ.town.monst[i].active = 0;
@@ -477,23 +477,23 @@ void start_town_mode(short which_town, short entry_dir) {
 	update_explored(univ.party.town_loc);
 	
 	// If a PC dead, drop his items
-	for(m = 0; m < 6; m++) {
+	for(short m = 0; m < 6; m++) {
 		if(univ.party[m].main_status == eMainStatus::ALIVE || isSplit(univ.party[m].main_status))
 			continue;
-		for(n = 0; n < 24; n++)
+		for(short n = 0; n < 24; n++)
 			if(univ.party[m].items[n].variety != eItemType::NO_ITEM) {
 				place_item(univ.party[m].items[n],univ.party.town_loc);
 				univ.party[m].items[n].variety = eItemType::NO_ITEM;
 			}
 	}
 	
-	for(i = 0; i < univ.town.monst.size(); i++) {
+	for(short i = 0; i < univ.town.monst.size(); i++) {
 		univ.town.monst[i].targ_loc.x = 0;
 		univ.town.monst[i].targ_loc.y = 0;
 	}
 	
 	// check horses
-	for(i = 0; i < univ.party.boats.size(); i++) {
+	for(short i = 0; i < univ.party.boats.size(); i++) {
 		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
 			if(!univ.party.boats[i].exists) {
 				univ.party.boats[i] = univ.scenario.boats[i];
@@ -501,7 +501,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			}
 		}
 	}
-	for(i = 0; i < univ.party.horses.size(); i++) {
+	for(short i = 0; i < univ.party.horses.size(); i++) {
 		if(univ.scenario.horses[i].which_town >= 0 && univ.scenario.horses[i].loc.x >= 0) {
 			if(!univ.party.horses[i].exists) {
 				univ.party.horses[i] = univ.scenario.horses[i];
@@ -522,13 +522,12 @@ void start_town_mode(short which_town, short entry_dir) {
 location end_town_mode(short switching_level,location destination) { // returns new party location
 	location to_return;
 	bool data_saved = false,combat_end = false;
-	short i,j,k;
 	
 	if(is_combat())
 		combat_end = true;
 	
 	// Bonus SP and HP wear off
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		if(univ.party[i].cur_sp > univ.party[i].max_sp)
 			univ.party[i].cur_sp = univ.party[i].max_sp;
 		if(univ.party[i].cur_health > univ.party[i].max_health)
@@ -539,24 +538,26 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		for(auto& pop : univ.party.creature_save)
 			if(pop.which_town == univ.party.town_num) {
 				pop = univ.town.monst;
-				for(j = 0; j < univ.town->max_dim(); j++)
-					for(k = 0; k < univ.town->max_dim(); k++)
+				// TODO: THIS IS A TEMPORARY HACK TO GET i VALUE
+				int i = std::find_if(univ.party.creature_save.begin(), univ.party.creature_save.end(), [&pop](cPopulation& p) {return &p == &pop;}) - univ.party.creature_save.begin();
+				for(short j = 0; j < univ.town->max_dim(); j++)
+					for(short k = 0; k < univ.town->max_dim(); k++)
 						univ.party.setup[i][j][k] = (univ.town.fields[j][k] & 0xff00) >> 8;
 				data_saved = true;
 			}
 		if(!data_saved) {
 			univ.party.creature_save[univ.party.at_which_save_slot] = univ.town.monst;
-			for(j = 0; j < univ.town->max_dim(); j++)
-				for(k = 0; k < univ.town->max_dim(); k++)
+			for(short j = 0; j < univ.town->max_dim(); j++)
+				for(short k = 0; k < univ.town->max_dim(); k++)
 					univ.party.setup[univ.party.at_which_save_slot][j][k] = (univ.town.fields[j][k] & 0xff00) >> 8;
 			univ.party.at_which_save_slot = (univ.party.at_which_save_slot == 3) ? 0 : univ.party.at_which_save_slot + 1;
 		}
 		
 		// Store items, if necessary
-		for(j = 0; j < 3; j++)
+		for(short j = 0; j < 3; j++)
 			if(univ.scenario.store_item_towns[j] == univ.party.town_num) {
 				univ.party.stored_items[j].clear();
-				for(i = 0; i < univ.town.items.size(); i++)
+				for(short i = 0; i < univ.town.items.size(); i++)
 					if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].is_special == 0 &&
 							univ.town.items[i].item_loc.x >= univ.scenario.store_item_rects[j].left &&
 							univ.town.items[i].item_loc.x <= univ.scenario.store_item_rects[j].right &&
@@ -567,8 +568,8 @@ location end_town_mode(short switching_level,location destination) { // returns 
 			}
 		
 		// Now store map
-		for(i = 0; i < univ.town->max_dim(); i++)
-			for(j = 0; j < univ.town->max_dim(); j++)
+		for(short i = 0; i < univ.town->max_dim(); i++)
+			for(short j = 0; j < univ.town->max_dim(); j++)
 				if(is_explored(i,j)) {
 					univ.town_maps[univ.party.town_num][i / 8][j] = univ.town_maps[univ.party.town_num][i / 8][j] |
 					(char) (1 << i % 8);
@@ -628,7 +629,7 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		univ.party.status[ePartyStatus::STEALTH] = 0;
 		univ.party.status[ePartyStatus::DETECT_LIFE] = 0; // TODO: Yes? No? Maybe?
-		for(i = 0; i < 6; i++)
+		for(short i = 0; i < 6; i++)
 			erase_if(univ.party[i].status, [](std::pair<const eStatus, short> kv) -> bool {
 				if(kv.first == eStatus::POISON) return false;
 				if(kv.first == eStatus::DISEASE) return false;
@@ -661,14 +662,12 @@ void handle_leave_town_specials(short /*town_number*/, short which_spec,location
 }
 
 bool abil_exists(eItemAbil abil) { // use when outdoors
-	short i,j;
-	
-	for(i = 0; i < 6; i++)
-		for(j = 0; j < 24; j++)
+	for(short i = 0; i < 6; i++)
+		for(short j = 0; j < 24; j++)
 			if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].ability == abil)
 				return true;
-	for(i = 0; i < 3; i++)
-		for(j = 0; j < univ.town.items.size(); j++)
+	for(short i = 0; i < 3; i++)
+		for(short j = 0; j < univ.town.items.size(); j++)
 			if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM && univ.party.stored_items[i][j].ability == abil)
 				return true;
 	
@@ -679,11 +678,9 @@ bool abil_exists(eItemAbil abil) { // use when outdoors
 
 
 void start_town_combat(eDirection direction) {
-	short i;
-	
 	place_party(direction);
 	if(current_pc == 6)
-		for(i = 0; i < 6; i++)
+		for(short i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				current_pc = i;
 				break;
@@ -694,10 +691,10 @@ void start_town_combat(eDirection direction) {
 	overall_mode = MODE_COMBAT;
 	
 	combat_active_pc = 6;
-	for(i = 0; i < univ.town.monst.size(); i++)
+	for(short i = 0; i < univ.town.monst.size(); i++)
 		univ.town.monst[i].target = 6;
 	
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		univ.party[i].last_attacked = nullptr;
 		univ.party[i].parry = 0;
 		univ.party[i].direction = direction;
@@ -719,7 +716,7 @@ void start_town_combat(eDirection direction) {
 }
 
 eDirection end_town_combat() {
-	short num_tries = 0,r1,i;
+	short num_tries = 0,r1;
 	int in_cage = 0;
 	location cage_loc;
 	bool same_cage = true;
@@ -746,7 +743,7 @@ eDirection end_town_combat() {
 	current_pc = store_current_pc;
 	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
 		current_pc = first_active_pc();
-	for(i = 0; i < 6; i++) {
+	for(short i = 0; i < 6; i++) {
 		univ.party[i].parry = 0;
 		univ.party[i].combat_pos = {-1,-1};
 	}
@@ -769,9 +766,9 @@ void place_party(short direction) {
 		true,true,true,true,true,true,true};
 	location pos_locs[14];
 	location check_loc;
-	short x_adj,y_adj,how_many_ok = 1,where_in_a = 0,i;
+	short x_adj,y_adj,how_many_ok = 1,where_in_a = 0;
 	
-	for(i = 0; i < 14; i++) {
+	for(short i = 0; i < 14; i++) {
 		check_loc = univ.party.town_loc;
 		if(direction % 4 < 2)
 			x_adj = ((direction % 2 == 0) ? hor_vert_place[i].x : diag_place[i].x);
@@ -799,8 +796,7 @@ void place_party(short direction) {
 		if(i == 0)
 			spot_ok[i] = true;
 	}
-	i = 0;
-	while(i < 6) {
+	for(short i = 0; i < 6; i++) {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			if(how_many_ok == 1)
 				univ.party[i].combat_pos = pos_locs[where_in_a];
@@ -815,12 +811,11 @@ void place_party(short direction) {
 //				}
 			}
 		}
-		i++;
 	}
 }
 
 void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
-	short i,j,k,r1,arena;
+	short r1,arena;
 	static const short ter_base[20] = {
 		2,0,36,50,71,     0,0,0, 0,2,
 		2,2, 2, 0, 0,    36,0,2, 0,2,
@@ -920,8 +915,8 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 		town_bounds.right = minmax(0,town_size - 1, town_bounds.right);
 		town_bounds.top = minmax(0,town_size - 1, town_bounds.top);
 		town_bounds.bottom = minmax(0,town_size - 1, town_bounds.bottom);
-		for(i = 0; i < 48; i++)
-			for(j = 0; j < 48; j++) {
+		for(short i = 0; i < 48; i++)
+			for(short j = 0; j < 48; j++) {
 				// This test also accounts for small towns since the town boundary is never larger than the town
 				if(town_bounds.contains(i + offset, j + offset))
 					univ.town->terrain(i,j) = univ.scenario.towns[arena]->terrain(i + offset,j + offset);
@@ -935,16 +930,16 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 		return;
 	}
 	
-	for(i = 0; i < 48; i++)
-		for(j = 0; j < 48; j++) {
+	for(short i = 0; i < 48; i++)
+		for(short j = 0; j < 48; j++) {
 			univ.town.fields[i][j] = 0;
 			if((j <= 8) || (j >= 35) || (i <= 8) || (i >= 35))
 				univ.town->terrain(i,j) = 90;
 			else univ.town->terrain(i,j) = ter_base[arena];
 		}
-	for(i = 0; i < 48; i++)
-		for(j = 0; j < 48; j++)
-			for(k = 0; k < 5; k++)
+	for(short i = 0; i < 48; i++)
+		for(short j = 0; j < 48; j++)
+			for(short k = 0; k < 5; k++)
 				if((univ.town->terrain(i,j) != 90) && (get_ran(1,1,1000) < terrain_odds[arena][k * 2 + 1]))
 					univ.town->terrain(i,j) = terrain_odds[arena][k * 2];
 	
@@ -954,31 +949,31 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 	
 	if(arena == 3 || (is_road && surface_arenas.count(arena))) {
 		univ.town->terrain(0,0) = 83;
-		for(i = (is_bridge ? 15 : 19); i < (is_bridge ? 26 : 23); i++)
-			for(j = 9; j < 35; j++)
+		for(short i = (is_bridge ? 15 : 19); i < (is_bridge ? 26 : 23); i++)
+			for(short j = 9; j < 35; j++)
 				univ.town->terrain(i,j) = 83;
 	}
 	if(arena == 4 || (is_road && cave_arenas.count(arena))) {
 		univ.town->terrain(0,0) = 82;
-		for(i = (is_bridge ? 15 : 19); i < (is_bridge ? 26 : 23); i++)
-			for(j = 9; j < 35; j++)
+		for(short i = (is_bridge ? 15 : 19); i < (is_bridge ? 26 : 23); i++)
+			for(short j = 9; j < 35; j++)
 				univ.town->terrain(i,j) = 82;
 	}
 	if(arena == 18 || arena == 19) {
-		for(i = 12; i < 15; i++)
-			for(j = 9; j < 35; j++)
+		for(short i = 12; i < 15; i++)
+			for(short j = 9; j < 35; j++)
 				if(j != 17 && j != 26)
 					univ.town->terrain(i,j) = ter_type;
-		for(i = 17; i < 20; i++)
-			for(j = 9; j < 35; j++)
+		for(short i = 17; i < 20; i++)
+			for(short j = 9; j < 35; j++)
 				if(j != 17 && j != 26)
 					univ.town->terrain(i,j) = ter_type;
-		for(i = 22; i < 25; i++)
-			for(j = 9; j < 35; j++)
+		for(short i = 22; i < 25; i++)
+			for(short j = 9; j < 35; j++)
 				if(j != 17 && j != 26)
 					univ.town->terrain(i,j) = ter_type;
-		for(i = 27; i < 30; i++)
-			for(j = 9; j < 35; j++)
+		for(short i = 27; i < 30; i++)
+			for(short j = 9; j < 35; j++)
 				if(j != 17 && j != 26)
 					univ.town->terrain(i,j) = ter_type;
 	}
@@ -988,71 +983,71 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 	
 	// Now place special lakes, etc.
 	if(arena == 2 || arena == 15)
-		for(i = 0; i < 15; i++)
+		for(short i = 0; i < 15; i++)
 			if(get_ran(1,0,5) == 1) {
 				stuff_ul = special_ter_locs[i];
-				for(j = 0; j < 4; j++)
-					for(k = 0; k < 4; k++)
+				for(short j = 0; j < 4; j++)
+					for(short k = 0; k < 4; k++)
 						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = mntn_pillar[k][j];
 			}
 	if(univ.town->terrain(0,0) == 0)
-		for(i = 0; i < 15; i++)
+		for(short i = 0; i < 15; i++)
 			if(get_ran(1,0,25) == 1) {
 				stuff_ul = special_ter_locs[i];
-				for(j = 0; j < 4; j++)
-					for(k = 0; k < 4; k++)
+				for(short j = 0; j < 4; j++)
+					for(short k = 0; k < 4; k++)
 						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = cave_pillar[k][j];
 			}
 	if(univ.town->terrain(0,0) == 0)
-		for(i = 0; i < 15; i++)
+		for(short i = 0; i < 15; i++)
 			if(get_ran(1,0,40) == 1) {
 				stuff_ul = special_ter_locs[i];
-				for(j = 0; j < 4; j++)
-					for(k = 0; k < 4; k++)
+				for(short j = 0; j < 4; j++)
+					for(short k = 0; k < 4; k++)
 						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = cave_lake[k][j];
 			}
 	if(univ.town->terrain(0,0) == 2)
-		for(i = 0; i < 15; i++)
+		for(short i = 0; i < 15; i++)
 			if(get_ran(1,0,40) == 1) {
 				stuff_ul = special_ter_locs[i];
-				for(j = 0; j < 4; j++)
-					for(k = 0; k < 4; k++)
+				for(short j = 0; j < 4; j++)
+					for(short k = 0; k < 4; k++)
 						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = surf_lake[k][j];
 			}
 	if(arena == 14)
-		for(i = 0; i < 15; i++)
+		for(short i = 0; i < 15; i++)
 			if(get_ran(1,0,5) == 1) {
 				stuff_ul = special_ter_locs[i];
-				for(j = 0; j < 4; j++)
-					for(k = 0; k < 4; k++)
+				for(short j = 0; j < 4; j++)
+					for(short k = 0; k < 4; k++)
 						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = cave_fume[k][j];
 			}
 	if(arena == 15)
-		for(i = 0; i < 15; i++)
+		for(short i = 0; i < 15; i++)
 			if(get_ran(1,0,5) == 1) {
 				stuff_ul = special_ter_locs[i];
-				for(j = 0; j < 4; j++)
-					for(k = 0; k < 4; k++)
+				for(short j = 0; j < 4; j++)
+					for(short k = 0; k < 4; k++)
 						univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = surf_fume[k][j];
 			}
 	if(arena == 16) {
 		stuff_ul = loc(18,14);
-		for(j = 0; j < 4; j++)
-			for(k = 0; k < 4; k++)
+		for(short j = 0; j < 4; j++)
+			for(short k = 0; k < 4; k++)
 				univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = cave_camp[k][j];
 	}
 	if(arena == 17) {
 		stuff_ul = loc(18,14);
-		for(j = 0; j < 4; j++)
-			for(k = 0; k < 4; k++)
+		for(short j = 0; j < 4; j++)
+			for(short k = 0; k < 4; k++)
 				univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = surf_camp[k][j];
 	}
 	
 	
 	if(ter_base[ter_type] == 0) {
-		for(i = 0; i < num_walls; i++) {
+		for(short i = 0; i < num_walls; i++) {
 			r1 = get_ran(1,0,3);
-			for(j = 9; j < 35; j++)
+			for(short j = 9; j < 35; j++)
 				switch(r1) {
 					case 0:
 						univ.town->terrain(j,8) = 6;
@@ -1078,9 +1073,9 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 			univ.town->terrain(8,35) = 20;
 	}
 	if(ter_base[ter_type] == 36) {
-		for(i = 0; i < num_walls; i++) {
+		for(short i = 0; i < num_walls; i++) {
 			r1 = get_ran(1,0,3);
-			for(j = 9; j < 35; j++)
+			for(short j = 9; j < 35; j++)
 				switch(r1) {
 					case 0:
 						univ.town->terrain(j,8) = 24;
@@ -1113,12 +1108,10 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 
 
 void elim_monst(unsigned short which,short spec_a,short spec_b) {
-	short i;
-	
 	if(!univ.party.sd_legit(spec_a,spec_b))
 		return;
 	if(PSD[spec_a][spec_b] > 0) {
-		for(i = 0; i < univ.town.monst.size(); i++)
+		for(short i = 0; i < univ.town.monst.size(); i++)
 			if(univ.town.monst[i].number == which) {
 				univ.town.monst[i].active = 0;
 			}
@@ -1228,14 +1221,14 @@ void bash_door(location where,short pc_num) {
 
 void erase_specials() {
 	location where;
-	short k,sd1,sd2;
+	short sd1,sd2;
 	cSpecial sn;
 	
 	if((is_combat()) && (which_combat_type == 0))
 		return;
 	if(!is_town() && !is_combat())
 		return;
-	for(k = 0; k < univ.town->special_locs.size(); k++) {
+	for(short k = 0; k < univ.town->special_locs.size(); k++) {
 		if(univ.town->special_locs[k].spec < 0 || univ.town->special_locs[k].spec >= univ.town->specials.size())
 			continue;
 		sn = univ.town->specials[univ.town->special_locs[k].spec];
@@ -1321,7 +1314,6 @@ void clear_map() {
 
 void draw_map(bool need_refresh) {
 	if(!map_visible) return;
-	short i;
 	pic_num_t pic;
 	rectangle the_rect,map_world_rect = {0,0,384,384};
 	location where;
@@ -1517,7 +1509,7 @@ void draw_map(bool need_refresh) {
 		// Now place PCs and monsters
 		if(draw_pcs) {
 			if((is_town()) && (univ.party.status[ePartyStatus::DETECT_LIFE] > 0))
-				for(i = 0; i < univ.town.monst.size(); i++)
+				for(short i = 0; i < univ.town.monst.size(); i++)
 					if(univ.town.monst[i].active > 0) {
 						where = univ.town.monst[i].cur_loc;
 						if((is_explored(where.x,where.y)) &&

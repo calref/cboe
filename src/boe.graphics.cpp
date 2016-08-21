@@ -180,7 +180,6 @@ void draw_startup(short but_type) {
 	rectangle to_rect;
 	rectangle r1 = {-1000,-1000,5,1000},r2 = {-1000,-1000,1000,5},r3 = {418,-1000,2000,1000},
 	r4 = {-1000,579,1000,2500};
-	short i;
 	
 	sf::Texture& startup_gworld = *ResMgr::get<ImageRsrc>("startup");
 	to_rect = startup_from[0];
@@ -189,7 +188,7 @@ void draw_startup(short but_type) {
 	to_rect = startup_top;
 	to_rect.offset(ul);
 	
-	for(i = 0; i < 5; i++) {
+	for(short i = 0; i < 5; i++) {
 		rect_draw_some_item(startup_gworld,startup_from[1],startup_button[i],ul);
 		draw_start_button(i,but_type);
 	}
@@ -213,7 +212,6 @@ void draw_startup_anim(bool advance) {
 
 void draw_startup_stats() {
 	rectangle from_rect,to_rect,party_to = {0,0,36,28},pc_rect,frame_rect;
-	short i;
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -240,7 +238,7 @@ void draw_startup_stats() {
 		win_draw_string(mainPtr,to_rect,"Your party:",eTextMode::WRAP,style,ul);
 		style.pointSize = 12;
 		style.font = FONT_BOLD;
-		for(i = 0; i < 6; i++) {
+		for(short i = 0; i < 6; i++) {
 			pc_rect = startup_top;
 			pc_rect.right = pc_rect.left + 300;
 			pc_rect.bottom = pc_rect.top + 79;
@@ -622,14 +620,13 @@ void draw_buttons(short mode) {
 }
 
 void draw_text_bar() {
-	short i;
 	location loc;
 	
 	loc = (is_out()) ? global_to_local(univ.party.out_loc) : univ.party.town_loc;
 	
 	bool in_area = false;
 	if(is_out()) {
-		for(i = 0; i < univ.out->info_rect.size(); i++)
+		for(short i = 0; i < univ.out->info_rect.size(); i++)
 			if(loc.in(univ.out->info_rect[i])) {
 				put_text_bar(univ.out->info_rect[i].descr);
 				in_area = true;
@@ -639,7 +636,7 @@ void draw_text_bar() {
 		}
 	}
 	if(is_town()) {
-		for(i = 0; i < univ.town->room_rect.size(); i++)
+		for(short i = 0; i < univ.town->room_rect.size(); i++)
 			if(loc.in(univ.town->room_rect[i])) {
 				put_text_bar(univ.town->room_rect[i].descr);
 				in_area = true;
@@ -656,7 +653,7 @@ void draw_text_bar() {
 	}
 	if((is_combat()) && (monsters_going))
 		// Print bar for 1st monster with >0 ap - that is monster that is going
-		for(i = 0; i < univ.town.monst.size(); i++)
+		for(short i = 0; i < univ.town.monst.size(); i++)
 			if((univ.town.monst[i].active > 0) && (univ.town.monst[i].ap > 0)) {
 				put_text_bar(print_monster_going(univ.town.monst[i].number,univ.town.monst[i].ap));
 				i = 400;
@@ -723,14 +720,12 @@ extern std::list<text_label_t> posted_labels;
 //mode ... if 1, don't place on screen after redoing
 // if 2, only redraw over active monst
 void draw_terrain(short	mode) {
-	char q,r;
 	location where_draw;
 	location sector_p_in,view_loc;
 	char can_draw;
 	ter_num_t spec_terrain;
 	bool off_terrain = false,draw_frills = true;
 	bool frills_on = get_bool_pref("DrawTerrainShoreFrills", true);
-	short i,j;
 	
 	if(overall_mode == MODE_TALKING || overall_mode == MODE_SHOPPING || overall_mode == MODE_STARTUP)
 		return;
@@ -738,10 +733,10 @@ void draw_terrain(short	mode) {
 	if(mode == 2) {
 		if(current_working_monster < 0) return;
 		supressing_some_spaces = true;
-		for(i = 0; i < 4; i++) ok_space[i].x = -1;
+		for(short i = 0; i < 4; i++) ok_space[i].x = -1;
 		if(current_working_monster >= 100) {
-			for(i = 0; i < univ.town.monst[current_working_monster - 100].x_width; i++)
-				for(j = 0; j < univ.town.monst[current_working_monster - 100].y_width; j++) {
+			for(short i = 0; i < univ.town.monst[current_working_monster - 100].x_width; i++)
+				for(short j = 0; j < univ.town.monst[current_working_monster - 100].y_width; j++) {
 					ok_space[i + 2 * j].x = univ.town.monst[current_working_monster - 100].cur_loc.x + i;
 					ok_space[i + 2 * j].y = univ.town.monst[current_working_monster - 100].cur_loc.y + j;
 					ok_space[i + 2 * j].x = ok_space[i + 2 * j].x - center.x + 4;
@@ -758,8 +753,8 @@ void draw_terrain(short	mode) {
 	
 	mainPtr.setActive();
 	
-	for(i = 0; i < 13; i++)
-		for(j = 0; j < 13; j++) {
+	for(short i = 0; i < 13; i++)
+		for(short j = 0; j < 13; j++) {
 			light_area[i][j] = 0;
 			unexplored_area[i][j] = 0;
 		}
@@ -776,8 +771,8 @@ void draw_terrain(short	mode) {
 	if(is_combat())
 		view_loc = univ.party[(current_pc < 6) ? current_pc : first_active_pc()].combat_pos;
 	
-	for(i = 0; i < 13; i++)
-		for(j = 0; j < 13; j++) {
+	for(short i = 0; i < 13; i++)
+		for(short j = 0; j < 13; j++) {
 			where_draw =  (is_out()) ? univ.party.out_loc : center;
 			where_draw.x += i - 6;
 			where_draw.y += j - 6;
@@ -790,8 +785,8 @@ void draw_terrain(short	mode) {
 		}
 	
 	forcecage_locs.clear();
-	for(q = 0; q < 9; q++) {
-		for(r = 0; r < 9; r++) {
+	for(short q = 0; q < 9; q++) {
+		for(short r = 0; r < 9; r++) {
 			where_draw = (is_out()) ? univ.party.out_loc : center;
 			where_draw.x += q - 4;
 			where_draw.y += r - 4;
@@ -1162,9 +1157,8 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 		trim_rects[9].offset(98,0);
 		trim_rects[10].offset(84,18);
 		trim_rects[11].offset(98,18);
-		int i;
-		for(i = 0; i < 12; i++) trim_rects[i].offset(112,36);
-		for(i = 0; i < 8 ; i++) walkway_rects[i].offset((i%4)*28,(i/4)*36);
+		for(short i = 0; i < 12; i++) trim_rects[i].offset(112,36);
+		for(short i = 0; i < 8 ; i++) walkway_rects[i].offset((i%4)*28,(i/4)*36);
 		walkway_rects[8].offset(196,0);
 	}
 	sf::Color test_color = {0,0,0}, store_color;
@@ -1486,11 +1480,10 @@ void draw_pointing_arrows() {
 		{7,100,15,108},{7,170,15,178},{140,7,148,15},{212,7,220,15},
 		{346,100,354,108},{346,170,354,178},{140,274,148,282},{212,274,220,282}
 	};
-	short i;
 	
 	if(monsters_going || !scrollableModes.count(overall_mode))
 		return;
-	for(i = 0; i < 4; i++) {
+	for(short i = 0; i < 4; i++) {
 		rect_draw_some_item(terrain_screen_gworld.getTexture(),sources[i],dests[i * 2],ul,sf::BlendAlpha);
 		rect_draw_some_item(terrain_screen_gworld.getTexture(),sources[i],dests[i * 2 + 1],ul,sf::BlendAlpha);
 	}
@@ -1513,13 +1506,12 @@ void redraw_terrain() {
 
 void draw_targets(location center) {
 	rectangle source_rect = {74,36,85,47},dest_rect;
-	short i = 0;
 	
 	if(!univ.party.is_alive())
 		return;
 	
 	sf::Texture& src_gworld = *ResMgr::get<ImageRsrc>("trim");
-	for(i = 0; i < 8; i++)
+	for(short i = 0; i < 8; i++)
 		if((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]))) {
 			dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
 			rect_draw_some_item(src_gworld,calc_rect(6,0),dest_rect,ul,sf::BlendAlpha);
@@ -1557,7 +1549,6 @@ void erase_spot(short i,short j) {
 
 void draw_targeting_line(location where_curs) {
 	location which_space,store_loc;
-	short i,j,k,l;
 	rectangle redraw_rect,redraw_rect2,terrain_rect = {0,0,351,279},target_rect;
 	location from_loc;
 	rectangle on_screen_terrain_area = {23, 23, 346, 274};
@@ -1571,15 +1562,13 @@ void draw_targeting_line(location where_curs) {
 		on_screen_terrain_area.offset(ul);
 		if(where_curs.in(on_screen_terrain_area)) {
 			// && (point_onscreen(center,univ.party[current_pc].combat_pos))){
-			i = (where_curs.x - 23 - ul.x) / 28;
-			j = (where_curs.y - 23 - ul.y) / 36;
-			which_space.x = center.x + (short) i - 4;
-			which_space.y = center.y + (short) j - 4;
+			which_space.x = center.x + (where_curs.x - 23 - ul.x) / 28 - 4;
+			which_space.y = center.y + (where_curs.y - 23 - ul.y) / 36 - 4;
 			
-			k = (short) (from_loc.x - center.x + 4);
-			l = (short) (from_loc.y - center.y + 4);
-			k = (k * 28) + 32 + ul.x;
-			l = (l * 36) + 36 + ul.y;
+			int xBound = (short) (from_loc.x - center.x + 4);
+			int yBound = (short) (from_loc.y - center.y + 4);
+			xBound = (xBound * 28) + 32 + ul.x;
+			yBound = (yBound * 36) + 36 + ul.y;
 			
 			if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
 				&& (dist(from_loc,which_space) <= current_spell_range)) {
@@ -1587,16 +1576,16 @@ void draw_targeting_line(location where_curs) {
 			 	terrain_rect.offset(5 + ul.x,5 + ul.y);
 				mainPtr.setActive();
 				clip_rect(mainPtr, terrain_rect);
-				draw_line(mainPtr, where_curs, location(k, l), 2, {128,128,128}, sf::BlendAdd);
-				redraw_rect.left = min(where_curs.x,k) - 4;
-				redraw_rect.right = max(where_curs.x,k) + 4;
-				redraw_rect.top = min(where_curs.y,l) - 4;
-				redraw_rect.bottom = max(where_curs.y,l) + 4;
+				draw_line(mainPtr, where_curs, location(xBound, yBound), 2, {128,128,128}, sf::BlendAdd);
+				redraw_rect.left = min(where_curs.x,xBound) - 4;
+				redraw_rect.right = max(where_curs.x,xBound) + 4;
+				redraw_rect.top = min(where_curs.y,yBound) - 4;
+				redraw_rect.bottom = max(where_curs.y,yBound) + 4;
 				redraw_rect2 = redraw_rect & terrain_rect;
 				
 				// Now place targeting pattern
-				for(i = 0; i < 9; i++)
-					for(j = 0; j < 9; j++) {
+				for(short i = 0; i < 9; i++)
+					for(short j = 0; j < 9; j++) {
 						store_loc.x = center.x + i - 4;
 						store_loc.y = center.y + j - 4;
 						if((abs(store_loc.x - which_space.x) <= 4) &&

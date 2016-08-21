@@ -366,7 +366,7 @@ static void put_monst_info(cDialog& me, const cCreature& store_m) {
 		i++;
 	}
 	
-	for(i = 0; i < store_m.a.size(); i++) {
+	for(short i = 0; i < store_m.a.size(); i++) {
 		if(store_m.a[i].dice > 0) {
 			if(store_m.a[i].sides == 0) continue;
 			std::ostringstream sout(std::ios_base::ate);
@@ -401,12 +401,11 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreat
 	// This is a bit hacky; keep a cPopulation here to handle the full roster; it's treated like a rotating buffer.
 	static cPopulation roster;
 	roster.init(60);
-	short i;
 	
 	if(item_hit == "left") {
 		if(position == 0) {
-			for(i = 255; on_monst_menu[i] < 0 && i > 0; i--);
-			position = i;
+			for(short i = 255; on_monst_menu[i] < 0 && i > 0; i--)
+				position = i;
 		}
 		else position--;
 		
@@ -497,14 +496,11 @@ void display_alchemy() {
 }
 
 static void display_pc_info(cDialog& me, const short pc) {
-	short i,store;
 	std::ostringstream to_draw;
 	
 	short weap1 = 24,weap2 = 24,hit_adj = 0, dam_adj = 0,skill_item;
 	
-	store = univ.party[pc].cur_weight();
-	i = univ.party[pc].max_weight();
-	to_draw << univ.party[pc].name << " is carrying " << store << " stones out of " << i << '.';
+	to_draw << univ.party[pc].name << " is carrying " << univ.party[pc].cur_weight() << " stones out of " << univ.party[pc].max_weight() << '.';
 	me["weight"].setText(to_draw.str());
 	to_draw.str("");
 	
@@ -515,7 +511,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 	me["sp"].setText(to_draw.str());
 	to_draw.str("");
 	
-	for(i = 0; i < 19; i++) {
+	for(short i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
 		int bonus = univ.party[pc].get_prot_level(eItemAbil::BOOST_STAT, i);
 		to_draw << univ.party[pc].skills[skill];
@@ -523,21 +519,19 @@ static void display_pc_info(cDialog& me, const short pc) {
 		me[skill_ids[i]].setText(to_draw.str());
 		to_draw.str("");
 	}
-	store = total_encumbrance(pc);
-	me["encumb"].setTextToNum(store);
+	me["encumb"].setTextToNum(total_encumbrance(pc));
 	me["name"].setText(univ.party[pc].name);
 	me["lvl"].setTextToNum(univ.party[pc].level);
 	me["xp"].setTextToNum(univ.party[pc].experience);
 	me["skp"].setTextToNum(univ.party[pc].skill_pts);
-	store = univ.party[pc].level * univ.party[pc].get_tnl();
-	me["progress"].setTextToNum(store);
+	me["progress"].setTextToNum(univ.party[pc].level * univ.party[pc].get_tnl());
 	pic_num_t pic = univ.party[pc].which_graphic;
 	if(pic >= 100 && pic < 1000)
 		dynamic_cast<cPict&>(me["pic"]).setPict(pic - 100,PIC_MONST);
 	else dynamic_cast<cPict&>(me["pic"]).setPict(pic,PIC_PC);
 	
 	// Fight bonuses
-	for(i = 0; i < 24; i++)
+	for(short i = 0; i < 24; i++)
 		if((univ.party[pc].items[i].variety == eItemType::ONE_HANDED || univ.party[pc].items[i].variety == eItemType::TWO_HANDED) &&
 			(univ.party[pc].equip[i])) {
 			if(weap1 == 24)
@@ -622,7 +616,6 @@ static bool give_pc_extra_info(cDialog& me, std::string item_hit, const short pc
 
 void give_pc_info(short pc_num) {
 	using namespace std::placeholders;
-	short i;
 	std::string str;
 	
 	make_cursor_sword();
@@ -631,7 +624,7 @@ void give_pc_info(short pc_num) {
 	pcInfo.attachClickHandlers(std::bind(give_pc_info_event_filter, _1, _2, std::ref(pc_num)), {"done", "left", "right"});
 	pcInfo.attachClickHandlers(std::bind(give_pc_extra_info, _1, _2, std::ref(pc_num)), {"seemage", "seepriest", "trait", "seealch"});
 	
-	for(i = 0; i < 19; i++) {
+	for(short i = 0; i < 19; i++) {
 		std::string lbl= "lbl" + boost::lexical_cast<std::string>(i + 1);
 		str = get_str("skills",1 + i * 2);
 		pcInfo[lbl].setText(str);
@@ -642,8 +635,6 @@ void give_pc_info(short pc_num) {
 }
 
 static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
-	unsigned short i;
-	
 	if(item_hit == "done") me.toast(true);
 	else if(item_hit == "left") {
 		if(store_page_on == 0)
@@ -660,7 +651,7 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 		iter += which_to_delete;
 		univ.party.special_notes.erase(iter);
 	}
-	for(i = 0; i < 3; i++) {
+	for(short i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party.special_notes.size() > i) {
 			me["str" + n].setText(univ.party.special_notes[i].the_str);
@@ -669,7 +660,7 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 		else me["del" + n].hide();
 	}
 	// TODO: What's this second loop for?
-	for(i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
+	for(short i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party.special_notes.size() > i) {
 			me["str" + n].setText(univ.party.special_notes[i].the_str);
@@ -684,9 +675,6 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 }
 
 void adventure_notes() {
-	
-	unsigned short i;
-	
 	store_num_i = 0;
 	store_num_i = univ.party.special_notes.size();
 	store_page_on = 0;
@@ -701,7 +689,7 @@ void adventure_notes() {
 	cDialog encNotes("adventure-notes");
 	encNotes.attachClickHandlers(adventure_notes_event_filter, {"done", "left", "rigth", "del1", "del2", "del3"});
 	
-	for(i = 0; i < 3; i++) {
+	for(short i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party.special_notes.size() > i) {
 			encNotes["str" + n].setText(univ.party.special_notes[i].the_str);

@@ -130,8 +130,6 @@ void finish_load_party(){
 }
 
 void shift_universe_left() {
-	short i,j;
-	
 	make_cursor_watch();
 	
 	save_outdoor_maps();
@@ -139,15 +137,15 @@ void shift_universe_left() {
 	univ.party.i_w_c.x++;
 	univ.party.out_loc.x += 48;
 	
-	for(i = 48; i < 96; i++)
-		for(j = 0; j < 96; j++)
+	for(short i = 48; i < 96; i++)
+		for(short j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = univ.out.out_e[i - 48][j];
 	
-	for(i = 0; i < 48; i++)
-		for(j = 0; j < 96; j++)
+	for(short i = 0; i < 48; i++)
+		for(short j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = 0;
 	
-	for(i = 0; i < 10; i++) {
+	for(short i = 0; i < 10; i++) {
 		if(univ.party.out_c[i].m_loc.x > 48)
 			univ.party.out_c[i].exists = false;
 		if(univ.party.out_c[i].exists)
@@ -160,22 +158,20 @@ void shift_universe_left() {
 }
 
 void shift_universe_right() {
-	short i,j;
-	
 	make_cursor_watch();
 	save_outdoor_maps();
 	univ.party.outdoor_corner.x++;
 	univ.party.i_w_c.x--;
 	univ.party.out_loc.x -= 48;
-	for(i = 0; i < 48; i++)
-		for(j = 0; j < 96; j++)
+	for(short i = 0; i < 48; i++)
+		for(short j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = univ.out.out_e[i + 48][j];
-	for(i = 48; i < 96; i++)
-		for(j = 0; j < 96; j++)
+	for(short i = 48; i < 96; i++)
+		for(short j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = 0;
 	
 	
-	for(i = 0; i < 10; i++) {
+	for(short i = 0; i < 10; i++) {
 		if(univ.party.out_c[i].m_loc.x < 48)
 			univ.party.out_c[i].exists = false;
 		if(univ.party.out_c[i].exists)
@@ -187,22 +183,20 @@ void shift_universe_right() {
 }
 
 void shift_universe_up() {
-	short i,j;
-	
 	make_cursor_watch();
 	save_outdoor_maps();
 	univ.party.outdoor_corner.y--;
 	univ.party.i_w_c.y++;
 	univ.party.out_loc.y += 48;
 	
-	for(i = 0; i < 96; i++)
-		for(j = 48; j < 96; j++)
+	for(short i = 0; i < 96; i++)
+		for(short j = 48; j < 96; j++)
 			univ.out.out_e[i][j] = univ.out.out_e[i][j - 48];
-	for(i = 0; i < 96; i++)
-		for(j = 0; j < 48; j++)
+	for(short i = 0; i < 96; i++)
+		for(short j = 0; j < 48; j++)
 			univ.out.out_e[i][j] = 0;
 	
-	for(i = 0; i < 10; i++) {
+	for(short i = 0; i < 10; i++) {
 		if(univ.party.out_c[i].m_loc.y > 48)
 			univ.party.out_c[i].exists = false;
 		if(univ.party.out_c[i].exists)
@@ -215,8 +209,6 @@ void shift_universe_up() {
 }
 
 void shift_universe_down() {
-	short i,j;
-	
 	make_cursor_watch();
 	
 	save_outdoor_maps();
@@ -224,14 +216,14 @@ void shift_universe_down() {
 	univ.party.i_w_c.y--;
 	univ.party.out_loc.y = univ.party.out_loc.y - 48;
 	
-	for(i = 0; i < 96; i++)
-		for(j = 0; j < 48; j++)
+	for(short i = 0; i < 96; i++)
+		for(short j = 0; j < 48; j++)
 			univ.out.out_e[i][j] = univ.out.out_e[i][j + 48];
-	for(i = 0; i < 96; i++)
-		for(j = 48; j < 96; j++)
+	for(short i = 0; i < 96; i++)
+		for(short j = 48; j < 96; j++)
 			univ.out.out_e[i][j] = 0;
 	
-	for(i = 0; i < 10; i++) {
+	for(short i = 0; i < 10; i++) {
 		if(univ.party.out_c[i].m_loc.y < 48)
 			univ.party.out_c[i].exists = false;
 		if(univ.party.out_c[i].exists)
@@ -245,8 +237,6 @@ void shift_universe_down() {
 
 
 void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) {
-	short i,j;
-	
 	if((pc_pos_x != minmax(0,47,pc_pos_x)) || (pc_pos_y != minmax(0,47,pc_pos_y)) ||
 		(out_x != minmax(0,univ.scenario.outdoors.width() - 1,out_x)) || (out_y != minmax(0,univ.scenario.outdoors.height() - 1,out_y))) {
 		showError("The scenario has tried to place you in an out of bounds outdoor location.");
@@ -264,20 +254,19 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y) {
 	}
 	univ.party.i_w_c.x = (univ.party.out_loc.x > 47) ? 1 : 0;
 	univ.party.i_w_c.y = (univ.party.out_loc.y > 47) ? 1 : 0;
-	for(i = 0; i < 10; i++)
+	for(short i = 0; i < 10; i++)
 		univ.party.out_c[i].exists = false;
-	for(i = 0; i < 96; i++)
-		for(j = 0; j < 96; j++)
+	for(short i = 0; i < 96; i++)
+		for(short j = 0; j < 96; j++)
 			univ.out.out_e[i][j] = 0;
 	build_outdoors();
 }
 
 
 void build_outdoors() {
-	short i,j;
 	size_t x = univ.party.outdoor_corner.x, y = univ.party.outdoor_corner.y;
-	for(i = 0; i < 48; i++)
-		for(j = 0; j < 48; j++) {
+	for(short i = 0; i < 48; i++)
+		for(short j = 0; j < 48; j++) {
 			univ.out[i][j] = univ.scenario.outdoors[x][y]->terrain[i][j];
 			if(x + 1 < univ.scenario.outdoors.width())
 				univ.out[48 + i][j] = univ.scenario.outdoors[x+1][y]->terrain[i][j];
@@ -294,7 +283,7 @@ void build_outdoors() {
 	if(overall_mode != MODE_STARTUP)
 		erase_out_specials();
 	
-	for(i = 0; i < 10; i++)
+	for(short i = 0; i < 10; i++)
 		if(univ.party.out_c[i].exists)
 			if((univ.party.out_c[i].m_loc.x < 0) || (univ.party.out_c[i].m_loc.y < 0) ||
 				(univ.party.out_c[i].m_loc.x > 95) || (univ.party.out_c[i].m_loc.y > 95))
@@ -313,10 +302,8 @@ short onm(char x_sector,char y_sector) {
 
 // This adds the current outdoor map info to the saved outdoor map info
 void save_outdoor_maps() {
-	short i,j;
-	
-	for(i = 0; i < 48; i++)
-		for(j = 0; j < 48; j++) {
+	for(short i = 0; i < 48; i++)
+		for(short j = 0; j < 48; j++) {
 			if(univ.out.out_e[i][j] > 0)
 				univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] =
 					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] |
@@ -344,10 +331,8 @@ void save_outdoor_maps() {
 }
 
 void add_outdoor_maps() { // This takes the existing outdoor map info and supplements it with the saved map info
-	short i,j;
-	
-	for(i = 0; i < 48; i++)
-		for(j = 0; j < 48; j++) {
+	for(short i = 0; i < 48; i++)
+		for(short j = 0; j < 48; j++) {
 			if((univ.out.out_e[i][j] == 0) &&
 				((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] &
 				  (char) (1 << i % 8)) != 0))
@@ -377,9 +362,7 @@ void add_outdoor_maps() { // This takes the existing outdoor map info and supple
 
 
 void fix_boats() {
-	short i;
-	
-	for(i = 0; i < univ.party.boats.size(); i++)
+	for(short i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].exists) && (univ.party.boats[i].which_town == 200)) {
 			if(univ.party.boats[i].sector.x == univ.party.outdoor_corner.x)
 				univ.party.boats[i].loc.x = univ.party.boats[i].loc_in_sec.x;
@@ -392,7 +375,7 @@ void fix_boats() {
 				univ.party.boats[i].loc.y = univ.party.boats[i].loc_in_sec.y + 48;
 			else univ.party.boats[i].loc.y = 500;
 		}
-	for(i = 0; i < univ.party.horses.size(); i++)
+	for(short i = 0; i < univ.party.horses.size(); i++)
 		if((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == 200)) {
 			if(univ.party.horses[i].sector.x == univ.party.outdoor_corner.x)
 				univ.party.horses[i].loc.x = univ.party.horses[i].loc_in_sec.x;

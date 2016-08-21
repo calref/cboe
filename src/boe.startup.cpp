@@ -38,13 +38,13 @@ rectangle startup_button[6];
 bool handle_startup_press(location the_point) {
 	using kb = sf::Keyboard;
 	std::string scen_name;
-	short i,scen;
+	short scen;
 	bool force_party = false;
 	
 	the_point.x -= ul.x;
 	the_point.y -= ul.y;
 	
-	for(i = 0; i < 5; i++)
+	for(short i = 0; i < 5; i++)
 		if(the_point.in(startup_button[i])) {
 			draw_start_button(i,5);
 			mainPtr.display(); // TODO: I suspect this won't work

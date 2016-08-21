@@ -342,11 +342,9 @@ void edit_placed_item(short which_i) {
 	item_dlg.run();
 }
 
-static bool edit_sign_event_filter(cDialog& me, short which_sign) {
+static bool edit_sign_event_filter(cDialog& me, sign_loc_t& which_sign) {
 	if(!me.toast(true)) return true;
-	if(editing_town)
-		town->sign_locs[which_sign].text = me["text"].getText();
-	else current_terrain->sign_locs[which_sign].text = me["text"].getText();
+	which_sign.text = me["text"].getText();
 #if 0 // TODO: Apparently there used to be left/right buttons on this dialog.
 	if(item_hit == 3)
 		which_sign--;
@@ -359,13 +357,13 @@ static bool edit_sign_event_filter(cDialog& me, short which_sign) {
 	return true;
 }
 
-void edit_sign(short which_sign,short picture) {
+void edit_sign(sign_loc_t& which_sign,short num,short picture) {
 	using namespace std::placeholders;
 	location view_loc;
 	
 	cDialog sign_dlg("edit-sign");
 	sign_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &sign_dlg, false));
-	sign_dlg["okay"].attachClickHandler(std::bind(edit_sign_event_filter, _1, which_sign));
+	sign_dlg["okay"].attachClickHandler(std::bind(edit_sign_event_filter, _1, std::ref(which_sign)));
 	cPict& icon = dynamic_cast<cPict&>(sign_dlg["pic"]);
 	if(picture >= 960 && picture < 1000)
 		icon.setPict(picture, PIC_TER_ANIM);
@@ -373,10 +371,8 @@ void edit_sign(short which_sign,short picture) {
 		icon.setPict(picture - 2000, PIC_CUSTOM_TER_ANIM);
 	else icon.setPict(picture, PIC_TER); // automatically adjusts for custom graphics
 	
-	sign_dlg["num"].setTextToNum(which_sign);
-	if(!editing_town)
-		sign_dlg["text"].setText(current_terrain->sign_locs[which_sign].text);
-	else sign_dlg["text"].setText(town->sign_locs[which_sign].text);
+	sign_dlg["num"].setTextToNum(num);
+	sign_dlg["text"].setText(which_sign.text);
 	
 	sign_dlg.run();
 }
@@ -505,17 +501,15 @@ void outdoor_details() {
 }
 
 static void put_out_wand_in_dlog(cDialog& me, short which, const cOutdoors::cWandering& wand) {
-	short i;
-	
 	me["num"].setTextToNum(which);
-	for(i = 0; i < 7; i++) {
+	for(short i = 0; i < 7; i++) {
 		std::string id = "foe" + std::to_string(i + 1);
 		if(wand.monst[i] == 0)
 			me[id].setText("Empty");
 		// TODO: Wait a second, if 0 is no monster, does that mean it's impossible to use monster 0? Should 1 be subtracted here?
 		else me[id].setText(scenario.scen_monsters[wand.monst[i]].m_name);
 	}
-	for(i = 0; i < 3; i++) {
+	for(short i = 0; i < 3; i++) {
 		std::string id = "ally" + std::to_string(i + 1);
 		if(wand.friendly[i] == 0)
 			me[id].setText("Empty");
@@ -696,8 +690,7 @@ static bool save_town_events(cDialog& me, std::string, eKeyMod) {
 }
 
 static void put_town_events_in_dlog(cDialog& me) {
-	short i;
-	for(i = 0; i < town->timers.size(); i++) {
+	for(short i = 0; i < town->timers.size(); i++) {
 		std::string id = std::to_string(i + 1);
 		me["time" + id].setTextToNum(town->timers[i].time);
 		me["spec" + id].setTextToNum(town->timers[i].node);
@@ -749,8 +742,7 @@ static bool save_advanced_town(cDialog& me, std::string, eKeyMod) {
 }
 
 static void put_advanced_town_in_dlog(cDialog& me) {
-	short i;
-	for(i = 0; i < town->exits.size(); i++) {
+	for(short i = 0; i < town->exits.size(); i++) {
 		std::string id = std::to_string(i + 1);
 		me["onexit" + id].setTextToNum(town->exits[i].spec);
 		me["exit" + id + "-x"].setTextToNum(town->exits[i].x);
@@ -1200,8 +1192,6 @@ location pick_out(location default_loc,cScenario& scenario) {
 }
 
 bool new_town(short which_town) {
-	short i,j;
-	
 	cChoiceDlog new_dlg("new-town", {"okay", "cancel"});
 	new_dlg->getControl("num").setTextToNum(which_town);
 	if(new_dlg.show() == "cancel") return false;
@@ -1218,8 +1208,8 @@ bool new_town(short which_town) {
 	scenario.last_town_edited = cur_town;
 	town->town_name = new_dlg->getControl("name").getText().substr(0,30);
 	
-	for(i = 0; i < town->max_dim(); i++)
-		for(j = 0; j < town->max_dim(); j++)
+	for(short i = 0; i < town->max_dim(); i++)
+		for(short j = 0; j < town->max_dim(); j++)
 			if(preset == "cave") {
 				town->terrain(i,j) = 0;
 			} else {

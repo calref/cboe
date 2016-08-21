@@ -81,7 +81,6 @@ void init_graph_tool(){
 		delete[] fbuf;
 		delete[] vbuf;
 	} while(false);
-	int i;
 	static const location pat_offs[17] = {
 		{0,3}, {1,1}, {2,1}, {2,0},
 		{3,0}, {3,1}, {1,3}, {0,0},
@@ -92,7 +91,7 @@ void init_graph_tool(){
 		2, 3, 4, 5, 6, 8, 9, 10,
 		11,12,13,14,15,16,17,19,20
 	};
-	for(i = 0; i < 17; i++){
+	for(short i = 0; i < 17; i++){
 		bg_rects[pat_i[i]] = {0,0,64,64};
 		bg_rects[pat_i[i]].offset(64 * pat_offs[i].x,64 * pat_offs[i].y);
 	}
@@ -273,7 +272,7 @@ void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::stri
 	short line_height = options.style.lineHeight;
 	sf::Text str_to_draw;
 	options.style.applyTo(str_to_draw);
-	short str_len,i;
+	short str_len;
 	unsigned short last_line_break = 0,last_word_break = 0;
 	short total_width = 0;
 	short adjust_x = 0,adjust_y = 0;
@@ -308,7 +307,8 @@ void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::stri
 	
 	if(mode == eTextMode::WRAP) {
 		moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
-		for(i = 0; text_len(i) != text_len(i + 1) && i < str_len;i++) {
+		short i;
+		for(i = 0; text_len(i) != text_len(i + 1) && i < str_len; i++) {
 			if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
 				 && (last_word_break >= last_line_break)) || (str[i] == '|')) {
 				if(str[i] == '|') {
