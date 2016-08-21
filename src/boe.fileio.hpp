@@ -19,7 +19,6 @@ void position_party(short out_x,short out_y,short pc_pos_x,short pc_pos_y);
 void build_outdoors();
 void save_outdoor_maps();
 void add_outdoor_maps();
-void fix_boats();
 long do_waterfall(long flag);
 short init_data(short flag);
 void import_template_terrain();

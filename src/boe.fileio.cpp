@@ -276,7 +276,6 @@ void build_outdoors() {
 				univ.out[48 + i][48 + j] = univ.scenario.outdoors[x+1][y+1]->terrain[i][j];
 		}
 	
-	fix_boats();
 	add_outdoor_maps();
 //	make_out_trim();
 	// TODO: This might be another relic of the "demo" mode
@@ -318,37 +317,6 @@ void add_outdoor_maps() {
 				univ.out.out_e[i][j + 48] = univ.scenario.outdoors[corner.x][corner.y + 1]->maps[j][i];
 			if(corner.y + 1 < univ.scenario.outdoors.height() && corner.x + 1 < univ.scenario.outdoors.width())
 				univ.out.out_e[i + 48][j + 48] = univ.scenario.outdoors[corner.x + 1][corner.y + 1]->maps[j][i];
-		}
-}
-
-
-
-void fix_boats() {
-	for(short i = 0; i < univ.party.boats.size(); i++)
-		if((univ.party.boats[i].exists) && (univ.party.boats[i].which_town == 200)) {
-			if(univ.party.boats[i].sector.x == univ.party.outdoor_corner.x)
-				univ.party.boats[i].loc.x = univ.party.boats[i].loc_in_sec.x;
-			else if(univ.party.boats[i].sector.x == univ.party.outdoor_corner.x + 1)
-				univ.party.boats[i].loc.x = univ.party.boats[i].loc_in_sec.x + 48;
-			else univ.party.boats[i].loc.x = 500;
-			if(univ.party.boats[i].sector.y == univ.party.outdoor_corner.y)
-				univ.party.boats[i].loc.y = univ.party.boats[i].loc_in_sec.y;
-			else if(univ.party.boats[i].sector.y == univ.party.outdoor_corner.y + 1)
-				univ.party.boats[i].loc.y = univ.party.boats[i].loc_in_sec.y + 48;
-			else univ.party.boats[i].loc.y = 500;
-		}
-	for(short i = 0; i < univ.party.horses.size(); i++)
-		if((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == 200)) {
-			if(univ.party.horses[i].sector.x == univ.party.outdoor_corner.x)
-				univ.party.horses[i].loc.x = univ.party.horses[i].loc_in_sec.x;
-			else if(univ.party.horses[i].sector.x == univ.party.outdoor_corner.x + 1)
-				univ.party.horses[i].loc.x = univ.party.horses[i].loc_in_sec.x + 48;
-			else univ.party.horses[i].loc.x = 500;
-			if(univ.party.horses[i].sector.y == univ.party.outdoor_corner.y)
-				univ.party.horses[i].loc.y = univ.party.horses[i].loc_in_sec.y;
-			else if(univ.party.horses[i].sector.y == univ.party.outdoor_corner.y + 1)
-				univ.party.horses[i].loc.y = univ.party.horses[i].loc_in_sec.y + 48;
-			else univ.party.horses[i].loc.y = 500;
 		}
 }
 

@@ -16,26 +16,23 @@
 #include "oldstructs.hpp"
 
 cVehicle::cVehicle() :
-	//loc(0,0),
-	//loc_in_sec(0,0),
-	//sector(0,0),
+	loc(0,0),
+	sector(0,0),
 	which_town(-1),
-	exists(false),
-	property(false) {
-	// do nothing
-		loc.x = 0; loc.y = 0;
-		loc_in_sec.x = 0; loc_in_sec.y = 0;
-		sector.x = 0; sector.y = 0;
-}
+	property(false)
+{}
 
 void cVehicle::import_legacy(legacy::horse_record_type& old){
 	which_town = old.which_town;
 	exists = old.exists;
 	property = old.property;
-	loc.x = old.horse_loc.x;
-	loc.y = old.horse_loc.y;
-	loc_in_sec.x = old.horse_loc_in_sec.x;
-	loc_in_sec.y = old.horse_loc_in_sec.y;
+	if(which_town < 200) {
+		loc.x = old.horse_loc.x;
+		loc.y = old.horse_loc.y;
+	} else {
+		loc.x = old.horse_loc_in_sec.x;
+		loc.y = old.horse_loc_in_sec.y;
+	}
 	sector.x = old.horse_sector.x;
 	sector.y = old.horse_sector.y;
 }
@@ -44,17 +41,19 @@ void cVehicle::import_legacy(legacy::boat_record_type& old){
 	which_town = old.which_town;
 	exists = old.exists;
 	property = old.property;
-	loc.x = old.boat_loc.x;
-	loc.y = old.boat_loc.y;
-	loc_in_sec.x = old.boat_loc_in_sec.x;
-	loc_in_sec.y = old.boat_loc_in_sec.y;
+	if(which_town < 200) {
+		loc.x = old.boat_loc.x;
+		loc.y = old.boat_loc.y;
+	} else {
+		loc.x = old.boat_loc_in_sec.x;
+		loc.y = old.boat_loc_in_sec.y;
+	}
 	sector.x = old.boat_sector.x;
 	sector.y = old.boat_sector.y;
 }
 
 void cVehicle::writeTo(std::ostream& file) const {
 	file << "LOCATION " << loc.x << ' ' << loc.y << '\n';
-	file << "LOCINSECTOR " << loc_in_sec.x << ' ' << loc_in_sec.y << '\n';
 	file << "SECTOR " << sector.x << ' ' << sector.y << '\n';
 	file << "IN " << which_town << '\n';
 	if(property) file << "OWNED\n";
@@ -68,8 +67,6 @@ void cVehicle::readFrom(std::istream& file) {
 		lineIn >> cur;
 		if(cur == "LOCATION")
 			lineIn >> loc.x >> loc.y;
-		else if(cur == "LOCINSECTOR")
-			lineIn >> loc_in_sec.x >> loc_in_sec.y;
 		else if(cur == "SECTOR")
 			lineIn >> sector.x >> sector.y;
 		else if(cur == "IN")
@@ -77,4 +74,17 @@ void cVehicle::readFrom(std::istream& file) {
 		else if(cur == "OWNED")
 			property = true;
 	}
+}
+
+bool operator==(const cVehicle& a, const cVehicle& b) {
+	if(a.which_town != b.which_town)
+		return false;
+	if(a.exists != b.exists) return false;
+	if(a.which_town == 200)
+		return a.loc == b.loc && a.sector == b.sector && a.property == b.property;
+	else return a.loc == b.loc && a.property == b.property;
+}
+
+bool operator!=(const cVehicle& a, const cVehicle& b) {
+	return !(a == b);
 }

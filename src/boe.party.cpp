@@ -129,8 +129,6 @@ static void init_party_scen_data() {
 			if(!univ.party.boats[i].exists) {
 				univ.party.boats[i] = univ.scenario.boats[i];
 				univ.party.boats[i].exists = true;
-				if(univ.party.boats[i].which_town == 200)
-					univ.party.boats[i].loc_in_sec = univ.party.boats[i].loc;
 			}
 		}
 	}
@@ -139,8 +137,6 @@ static void init_party_scen_data() {
 			if(!univ.party.horses[i].exists) {
 				univ.party.horses[i] = univ.scenario.horses[i];
 				univ.party.horses[i].exists = true;
-				if(univ.party.horses[i].which_town == 200)
-					univ.party.horses[i].loc_in_sec = univ.party.horses[i].loc;
 			}
 		}
 	}

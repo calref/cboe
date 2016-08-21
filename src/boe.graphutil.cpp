@@ -320,48 +320,60 @@ void draw_outd_boats(location center) {
 	location where_draw;
 	rectangle source_rect;
 	sf::Texture& vehicle_gworld = *ResMgr::get<ImageRsrc>("vehicle");
+	cVehicle& in_boat = univ.party.boats[univ.party.in_boat];
+	cVehicle& in_horse = univ.party.horses[univ.party.in_horse];
 	
-	for(short i = 0; i < univ.party.boats.size(); i++)
-		if((point_onscreen(center, univ.party.boats[i].loc)) && (univ.party.boats[i].exists) &&
-			(univ.party.boats[i].which_town == 200) &&
-			(can_see_light(center, univ.party.boats[i].loc,sight_obscurity) < 5) && (univ.party.in_boat != i)) {
-			where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
-			where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
+	for(auto& boat : univ.party.boats) {
+		if(!boat.exists) continue;
+		if(boat.which_town != 200) continue;
+		if(boat == in_boat) continue;
+		location loc = local_to_global(boat.loc);
+		if(point_onscreen(center, loc) && can_see_light(center, loc, sight_obscurity) < 5) {
+			where_draw.x = loc.x - center.x + 4;
+			where_draw.y = loc.y - center.y + 4;
 			Draw_Some_Item(vehicle_gworld, calc_rect(0,0), terrain_screen_gworld, where_draw, 1, 0);
 		}
-	for(short i = 0; i < univ.party.horses.size(); i++)
-		if((point_onscreen(center, univ.party.horses[i].loc)) && (univ.party.horses[i].exists) &&
-			(univ.party.horses[i].which_town == 200) &&
-			(can_see_light(center, univ.party.horses[i].loc,sight_obscurity) < 5) && (univ.party.in_horse != i)) {
-			where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
-			where_draw.y = univ.party.horses[i].loc.y - center.y + 4;
+	}
+	for(auto& horse : univ.party.horses) {
+		if(!horse.exists) continue;
+		if(horse.which_town != 200) continue;
+		if(horse == in_horse) continue;
+		location loc = local_to_global(horse.loc);
+		if(point_onscreen(center, loc) && can_see_light(center, loc, sight_obscurity) < 5) {
+			where_draw.x = loc.x - center.x + 4;
+			where_draw.y = loc.y - center.y + 4;
 			Draw_Some_Item(vehicle_gworld, calc_rect(0,1), terrain_screen_gworld, where_draw, 1, 0);
 		}
+	}
 }
 
 void draw_town_boat(location center) {
 	location where_draw;
 	rectangle source_rect;
 	sf::Texture& vehicle_gworld = *ResMgr::get<ImageRsrc>("vehicle");
+	cVehicle& in_boat = univ.party.boats[univ.party.in_boat];
+	cVehicle& in_horse = univ.party.horses[univ.party.in_horse];
 	
-	for(short i = 0; i < univ.party.boats.size(); i++)
-		if((univ.party.boats[i].which_town == univ.party.town_num) &&
-			((point_onscreen(center, univ.party.boats[i].loc)) &&
-			 (can_see_light(center, univ.party.boats[i].loc,sight_obscurity) < 5) && (univ.party.in_boat != i)
-			 && (pt_in_light(center,univ.party.boats[i].loc)))) {
-				where_draw.x = univ.party.boats[i].loc.x - center.x + 4;
-				where_draw.y = univ.party.boats[i].loc.y - center.y + 4;
-				Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0);
-			}
-	for(short i = 0; i < univ.party.horses.size(); i++)
-		if((univ.party.horses[i].which_town == univ.party.town_num) &&
-			((point_onscreen(center, univ.party.horses[i].loc)) &&
-			 (can_see_light(center, univ.party.horses[i].loc,sight_obscurity) < 5) && (univ.party.in_horse != i)
-			 && (pt_in_light(center,univ.party.horses[i].loc)))) {
-				where_draw.x = univ.party.horses[i].loc.x - center.x + 4;
-				where_draw.y = univ.party.horses[i].loc.y - center.y + 4;
-				Draw_Some_Item(vehicle_gworld, calc_rect(1,1), terrain_screen_gworld, where_draw, 1, 0);
-			}
+	for(auto& boat : univ.party.boats) {
+		if(!boat.exists) continue;
+		if(boat.which_town != univ.party.town_num) continue;
+		if(boat == in_boat) continue;
+		if(point_onscreen(center, boat.loc) && can_see_light(center, boat.loc, sight_obscurity) < 5 && pt_in_light(center, boat.loc)) {
+			where_draw.x = boat.loc.x - center.x + 4;
+			where_draw.y = boat.loc.y - center.y + 4;
+			Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0);
+		}
+	}
+	for(auto& horse : univ.party.horses) {
+		if(!horse.exists) continue;
+		if(horse.which_town != univ.party.town_num) continue;
+		if(horse == in_horse) continue;
+		if(point_onscreen(center, horse.loc) && can_see_light(center, horse.loc, sight_obscurity) < 5 && pt_in_light(center, horse.loc)) {
+			where_draw.x = horse.loc.x - center.x + 4;
+			where_draw.y = horse.loc.y - center.y + 4;
+			Draw_Some_Item(vehicle_gworld, calc_rect(1,1), terrain_screen_gworld, where_draw, 1, 0);
+		}
+	}
 }
 
 extern std::vector<location> forcecage_locs;

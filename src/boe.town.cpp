@@ -621,7 +621,6 @@ location end_town_mode(short switching_level,location destination) { // returns 
 	}
 	
 	if(switching_level == 0) {
-		fix_boats();
 		overall_mode = MODE_OUTDOORS;
 		
 		erase_out_specials();

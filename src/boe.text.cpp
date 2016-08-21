@@ -853,6 +853,7 @@ short town_boat_there(location where) {
 	return univ.party.boats.size();
 }
 short out_boat_there(location where) {
+	where = global_to_local(where);
 	for(short i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].exists) && (where == univ.party.boats[i].loc)
 			&& (univ.party.boats[i].which_town == 200))
@@ -868,6 +869,7 @@ short town_horse_there(location where) {
 	return univ.party.horses.size();
 }
 short out_horse_there(location where) {
+	where = global_to_local(where);
 	for(short i = 0; i < univ.party.horses.size(); i++)
 		if((univ.party.horses[i].exists) && (where == univ.party.horses[i].loc)
 			&& (univ.party.horses[i].which_town == 200))

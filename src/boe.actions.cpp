@@ -373,8 +373,7 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 		if(univ.party.in_horse >= 0) {
 			if(overall_mode == MODE_OUTDOORS) {
 				univ.party.horses[univ.party.in_horse].which_town = 200;
-				univ.party.horses[univ.party.in_horse].loc_in_sec = global_to_local(univ.party.out_loc);
-				univ.party.horses[univ.party.in_horse].loc = univ.party.out_loc;
+				univ.party.horses[univ.party.in_horse].loc = global_to_local(univ.party.out_loc);
 				univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 				univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 				univ.party.in_horse = -1;
@@ -388,8 +387,7 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 			// If you pause on a bridge or other passable terrain, leave boat.
 			if(overall_mode == MODE_OUTDOORS && !impassable(univ.out[univ.party.out_loc.x][univ.party.out_loc.y])) {
 				univ.party.boats[univ.party.in_boat].which_town = 200;
-				univ.party.boats[univ.party.in_boat].loc_in_sec = global_to_local(univ.party.out_loc);
-				univ.party.boats[univ.party.in_boat].loc = univ.party.out_loc;
+				univ.party.boats[univ.party.in_boat].loc = global_to_local(univ.party.out_loc);
 				univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 				univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 				univ.party.in_boat = -1;
@@ -2787,7 +2785,6 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		univ.party.boats[univ.party.in_boat].which_town = univ.party.town_num;
 	}else{
 		univ.party.boats[univ.party.in_boat].which_town = 200;
-		univ.party.boats[univ.party.in_boat].loc_in_sec = univ.party.loc_in_sec;
 		univ.party.boats[univ.party.in_boat].loc = univ.party.out_loc;
 		univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 		univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
@@ -2969,7 +2966,6 @@ bool outd_move_party(location destination,bool forced) {
 			}
 			if(univ.party.in_horse >= 0) {
 				univ.party.horses[univ.party.in_horse].which_town = 200;
-				univ.party.horses[univ.party.in_horse].loc_in_sec = univ.party.loc_in_sec;
 				univ.party.horses[univ.party.in_horse].loc = univ.party.out_loc;
 				univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 				univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
