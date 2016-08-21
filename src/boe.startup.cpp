@@ -38,7 +38,6 @@ rectangle startup_button[6];
 bool handle_startup_press(location the_point) {
 	using kb = sf::Keyboard;
 	std::string scen_name;
-	short scen;
 	bool force_party = false;
 	
 	the_point.x -= ul.x;
@@ -78,19 +77,16 @@ bool handle_startup_press(location the_point) {
 							break;
 						}
 					}
-					scen = pick_prefab_scen();
-					if(scen < 0) {
-						if(force_party)
-							party_in_memory = false;
-						break;
-					}
 					
-					switch(scen) {
+					switch(pick_prefab_scen()) {
 						case 0: scen_name = "valleydy.exs"; break;
 							// if not reg, rub out
 						case 1: scen_name = "stealth.exs"; break;
 						case 2: scen_name = "zakhazi.exs"; break;
 							//case 3: sprintf(univ.party.scen_name,"busywork.exs"); break;
+						default:
+							if(force_party) party_in_memory = false;
+							break;
 					}
 					put_party_in_scen(scen_name);
 					if(force_party && scen_name != univ.party.scen_name)
@@ -108,7 +104,7 @@ bool handle_startup_press(location the_point) {
 						}
 					}
 					
-					scen = pick_a_scen();
+					int scen = pick_a_scen();
 					if(scen < 0) {
 						if(force_party)
 							party_in_memory = false;
