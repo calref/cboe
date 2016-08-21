@@ -233,7 +233,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		univ.party.scen_name = "";
 	}
 	
-	univ.party.append(store_party, univ.scenario);
+	univ.party.append(store_party, univ);
 	univ.party.append(store_setup);
 	univ.party.append(store_pc);
 	if(in_scen){
@@ -280,7 +280,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ){
 			showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
-		univ.party.readFrom(fin);
+		univ.party.readFrom(fin, univ.scenario);
 	}
 	
 	{ // Then the "setup" array
@@ -343,10 +343,9 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ){
 			
 			// Read town maps
 			std::istream& fin2 = partyIn.getFile("save/townmaps.dat");
-			for(int i = 0; i < 200; i++)
-				for(int j = 0; j < 8; j++)
-					for(int k = 0; k < 64; k++)
-						univ.town_maps[i][j][k] = fin2.get();
+			for(int i = 0; i < univ.scenario.towns.size(); i++)
+				for(int j = 0; j < 64; j++)
+					fin2 >> univ.scenario.towns[i]->maps[j];
 		} else univ.party.town_num = 200;
 		
 		// Load outdoors data
@@ -359,10 +358,10 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ){
 		
 		// Read outdoor maps
 		std::istream& fin2 = partyIn.getFile("save/outmaps.dat");
-		for(int i = 0; i < 100; i++)
-			for(int j = 0; j < 6; j++)
-				for(int k = 0; k < 48; k++)
-					univ.out_maps[i][j][k] = fin2.get();
+		for(int i = 0; i < univ.scenario.outdoors.height(); i++)
+			for(int j = 0; j < 48; j++)
+				for(int k = 0; k < univ.scenario.outdoors.width(); k++)
+					fin2 >> univ.scenario.outdoors[k][i]->maps[j];
 	} else univ.party.scen_name = "";
 	
 	if(partyIn.hasFile("save/export.png")) {
@@ -391,7 +390,7 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	tarball partyOut;
 	
 	// First, write the main party data
-	univ.party.writeTo(partyOut.newFile("save/party.txt"));
+	univ.party.writeTo(partyOut.newFile("save/party.txt"), univ.scenario);
 	{
 		std::ostream& fout = partyOut.newFile("save/setup.dat");
 		static uint16_t magic = 0x0B0E;
@@ -423,10 +422,9 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 			
 			// Write the town map data
 			std::ostream& fout = partyOut.newFile("save/townmaps.dat");
-			for(int i = 0; i < 200; i++)
-				for(int j = 0; j < 8; j++)
-					for(int k = 0; k < 64; k++)
-						fout.put(univ.town_maps[i][j][k]);
+			for(int i = 0; i < univ.scenario.towns.size(); i++)
+				for(int j = 0; j < 64; j++)
+					fout << univ.scenario.towns[i]->maps[j] << '\n';
 		}
 		
 		// Write the current outdoors data
@@ -434,10 +432,14 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 		
 		// Write the outdoors map data
 		std::ostream& fout = partyOut.newFile("save/outmaps.dat");
-		for(int i = 0; i < 100; i++)
-			for(int j = 0; j < 6; j++)
-				for(int k = 0; k < 48; k++)
-					fout.put(univ.out_maps[i][j][k]);
+		for(int i = 0; i < univ.scenario.outdoors.height(); i++) {
+			for(int j = 0; j < 48; j++) {
+				for(int k = 0; k < univ.scenario.outdoors.width(); k++)
+					fout << univ.scenario.outdoors[k][i]->maps[j] << ' ';
+				fout << '\n';
+			}
+			fout << '\n';
+		}
 	}
 	
 	if(spec_scen_g.party_sheet) {

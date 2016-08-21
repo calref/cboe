@@ -1652,7 +1652,7 @@ void kill_monst(cCreature& which_m,short who_killed,eMainStatus type) {
 	}
 	
 	if((is_town() || which_combat_type == 1) && which_m.summon_time == 0) {
-		univ.party.m_killed[univ.party.town_num]++;
+		univ.town->m_killed++;
 	}
 	
 	which_m.spec1 = 0; // make sure, if this is a spec. activated monster, it won't come back
@@ -2227,7 +2227,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			check_mess = true;
 			if(spec.ex1a != minmax(0,univ.scenario.towns.size() - 1,spec.ex1a))
 				showError("Town out of range.");
-			else univ.party.can_find_town[spec.ex1a] = spec.ex2a;
+			else univ.scenario.towns[spec.ex1a]->can_find = spec.ex2a;
 			*redraw = true;
 			break;
 		case eSpecType::MAJOR_EVENT_OCCURRED:

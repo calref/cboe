@@ -173,7 +173,7 @@ bool cTown::cWandering::isNull(){
 	return true;
 }
 
-bool cTown::is_cleaned_out(long m_killed) {
+bool cTown::is_cleaned_out() {
 	if(max_num_monst < 0) return false;
 	return m_killed >= max_num_monst;
 }

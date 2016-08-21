@@ -64,16 +64,21 @@ void cCurTown::append(legacy::town_item_list& old){
 
 void cUniverse::append(legacy::stored_town_maps_type& old){
 	for(int n = 0; n < 200; n++)
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 64; i++)
 			for(int j = 0; j < 64; j++)
-				town_maps[n][i][j] = old.town_maps[n][i][j];
+				scenario.towns[n]->maps[j][i] = old.town_maps[n][i / 8][j] & (1 << (i % 8));
+}
+
+static short onm(char x_sector,char y_sector, char w) {
+	return y_sector * w + x_sector;
 }
 
 void cUniverse::append(legacy::stored_outdoor_maps_type& old){
-	for(int n = 0; n < 100; n++)
-		for(int i = 0; i < 6; i++)
-			for(int j = 0; j < 48; j++)
-				out_maps[n][i][j] = old.outdoor_maps[n][i][j];
+	for(int x = 0; x < scenario.outdoors.width(); x++)
+		for(int y = 0; y < scenario.outdoors.height(); y++)
+			for(int i = 0; i < 48; i++)
+				for(int j = 0; j < 48; j++)
+					scenario.outdoors[x][y]->maps[i][j] = old.outdoor_maps[onm(x,y,scenario.outdoors.width())][i / 8][j] & (1 << i % 8);
 }
 
 void cCurTown::append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]){

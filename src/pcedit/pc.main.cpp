@@ -285,17 +285,15 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::ADD_OUT_MAPS:
 			display_strings(13,15);
-			for(short i = 0; i < 100; i++)
-				for(short j = 0; j < 6; j++)
-					for(short k = 0; k < 48; k++)
-						univ.out_maps[i][j][k] = 255;
+			for(auto sector : univ.scenario.outdoors)
+				for(auto& m : sector->maps)
+					m.set();
 			break;
 		case eMenu::ADD_TOWN_MAPS:
 			display_strings(14,15);
-			for(short i = 0; i < 200; i++)
-				for(short j = 0; j < 8; j++)
-					for(short k = 0; k < 64; k++)
-						univ.town_maps[i][j][k] = 255;
+			for(auto town : univ.scenario.towns)
+				for(auto& m : town->maps)
+					m.set();
 			break;
 		case eMenu::EDIT_MAGE:
 			display_pc(current_active_pc,10,0);

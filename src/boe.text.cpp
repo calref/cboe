@@ -679,7 +679,7 @@ void print_party_stats() {
 	add_string_to_buf("PARTY STATS:");
 	add_string_to_buf("  Number of kills: " + std::to_string(univ.party.total_m_killed));
 	if((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
-		add_string_to_buf("  Kills in this town: " + std::to_string(univ.party.m_killed[univ.party.town_num]));
+		add_string_to_buf("  Kills in this town: " + std::to_string(univ.town->m_killed));
 	}
 	add_string_to_buf("  Total experience: " + std::to_string(univ.party.total_xp_gained));
 	add_string_to_buf("  Total damage done: " + std::to_string(univ.party.total_dam_done));

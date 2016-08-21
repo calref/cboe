@@ -163,16 +163,6 @@ void init_screen_locs() {
 	startup_top.left = 5;
 	startup_top.right = startup_button[STARTBTN_JOIN].right;
 	
-	for(short i = 0; i < 200; i++)
-		for(short j = 0; j < 8; j++)
-			for(short k = 0; k < 64; k++)
-				univ.town_maps[i][j][k] = 0;
-	
-	for(short i = 0; i < 100; i++)
-		for(short k = 0; k < 6; k++)
-			for(short l = 0; l < 48; l++)
-				univ.out_maps[i][k][l] = 0;
-	
 	// name, use, give, drip, info, sell/id   each one 13 down
 	item_buttons[0][ITEMBTN_NAME].top = 17;
 	item_buttons[0][ITEMBTN_NAME].bottom = item_buttons[0][ITEMBTN_NAME].top + 12;

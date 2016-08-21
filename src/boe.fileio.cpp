@@ -291,71 +291,33 @@ void build_outdoors() {
 	
 }
 
-short onm(char x_sector,char y_sector) {
-	short i;
-	
-	i = y_sector * univ.scenario.outdoors.width() + x_sector;
-	return i;
-}
-
-
-
 // This adds the current outdoor map info to the saved outdoor map info
 void save_outdoor_maps() {
+	location corner = univ.party.outdoor_corner;
 	for(short i = 0; i < 48; i++)
 		for(short j = 0; j < 48; j++) {
-			if(univ.out.out_e[i][j] > 0)
-				univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] =
-					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] |
-						(char) (1 << i % 8);
-			if(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width()) {
-				if(univ.out.out_e[i + 48][j] > 0)
-					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] =
-						univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] |
-							(char) (1 << i % 8);
-			}
-			if(univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) {
-				if(univ.out.out_e[i][j + 48] > 0)
-					univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] =
-						univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] |
-							(char) (1 << i % 8);
-			}
-			if((univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) &&
-				(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width())) {
-				if(univ.out.out_e[i + 48][j + 48] > 0)
-					univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] =
-						univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] |
-							(char) (1 << i % 8);
-			}
+			univ.scenario.outdoors[corner.x][corner.y]->maps[j][i] = univ.out.out_e[i][j];
+			if(corner.x + 1 < univ.scenario.outdoors.width())
+				univ.scenario.outdoors[corner.x + 1][corner.y]->maps[j][i] = univ.out.out_e[i + 48][j];
+			if(corner.y + 1 < univ.scenario.outdoors.height())
+				univ.scenario.outdoors[corner.x][corner.y + 1]->maps[j][i] = univ.out.out_e[i][j + 48];
+			if(corner.y + 1 < univ.scenario.outdoors.height() && corner.x + 1 < univ.scenario.outdoors.width())
+				univ.scenario.outdoors[corner.x + 1][corner.y + 1]->maps[j][i] = univ.out.out_e[i + 48][j + 48];
 		}
 }
 
-void add_outdoor_maps() { // This takes the existing outdoor map info and supplements it with the saved map info
+// This takes the existing outdoor map info and supplements it with the saved map info
+void add_outdoor_maps() {
+	location corner = univ.party.outdoor_corner;
 	for(short i = 0; i < 48; i++)
 		for(short j = 0; j < 48; j++) {
-			if((univ.out.out_e[i][j] == 0) &&
-				((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y)][i / 8][j] &
-				  (char) (1 << i % 8)) != 0))
-			 	univ.out.out_e[i][j] = 1;
-			if(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width()) {
-				if((univ.out.out_e[i + 48][j] == 0) &&
-					((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y)][i / 8][j] &
-					  (char) (1 << i % 8)) != 0))
-				 	univ.out.out_e[i + 48][j] = 1;
-			}
-			if(univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) {
-				if((univ.out.out_e[i][j + 48] == 0) &&
-					((univ.out_maps[onm(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y + 1)][i / 8][j] &
-					  (char) (1 << i % 8)) != 0))
-				 	univ.out.out_e[i][j + 48] = 1;
-			}
-			if((univ.party.outdoor_corner.y + 1 < univ.scenario.outdoors.height()) &&
-				(univ.party.outdoor_corner.x + 1 < univ.scenario.outdoors.width())) {
-				if((univ.out.out_e[i + 48][j + 48] == 0) &&
-					((univ.out_maps[onm(univ.party.outdoor_corner.x + 1,univ.party.outdoor_corner.y + 1)][i / 8][j] &
-					  (char) (1 << i % 8)) != 0))
-				 	univ.out.out_e[i + 48][j + 48] = 1;
-			}
+			univ.out.out_e[i][j] = univ.scenario.outdoors[corner.x][corner.y]->maps[j][i];
+			if(corner.x + 1 < univ.scenario.outdoors.width())
+				univ.out.out_e[i + 48][j] = univ.scenario.outdoors[corner.x + 1][corner.y]->maps[j][i];
+			if(corner.y + 1 < univ.scenario.outdoors.height())
+				univ.out.out_e[i][j + 48] = univ.scenario.outdoors[corner.x][corner.y + 1]->maps[j][i];
+			if(corner.y + 1 < univ.scenario.outdoors.height() && corner.x + 1 < univ.scenario.outdoors.width())
+				univ.out.out_e[i + 48][j + 48] = univ.scenario.outdoors[corner.x + 1][corner.y + 1]->maps[j][i];
 		}
 }
 

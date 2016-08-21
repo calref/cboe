@@ -144,6 +144,13 @@ static void init_party_scen_data() {
 			}
 		}
 	}
+	for(short j = 0; j < 6; j++) {
+		univ.party[j].status.clear();
+		if(isSplit(univ.party[j].main_status))
+			univ.party[j].main_status -= eMainStatus::SPLIT;
+		univ.party[j].cur_health = univ.party[j].max_health;
+		univ.party[j].cur_sp = univ.party[j].max_sp;
+	}
 	univ.party.in_boat = -1;
 	univ.party.in_horse = -1;
 	for(auto& pop : univ.party.creature_save)
@@ -153,22 +160,20 @@ static void init_party_scen_data() {
 	for(short i = 0; i < 5; i++)
 		for(short j = 0; j < 10; j++)
 			univ.party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
-//	for(short i = 0; i < 50; i++)
-//		univ.party.journal_str[i] = -1;
-//	for(short i = 0; i < 140; i++)
-//		for(short j = 0; j < 2; j++)
-//			univ.party.special_notes_str[i][j] = 0;
-//	for(short i = 0; i < 120; i++)
-//		univ.party.talk_save[i].personality = -1;
-	// TODO: The journal at least should persist across scenarios; the special and talk notes, maybe, maybe not
+	// TODO: Now uncertain if the journal should really persist
+//	univ.party.journal.clear();
 	univ.party.special_notes.clear();
 	univ.party.talk_save.clear();
 	
 	univ.party.direction = DIR_N;
 	univ.party.at_which_save_slot = 0;
-	univ.party.can_find_town.resize(univ.scenario.towns.size());
-	for(short i = 0; i < univ.scenario.towns.size(); i++)
-		univ.party.can_find_town[i] = !univ.scenario.towns[i]->is_hidden;
+	for(auto town : univ.scenario.towns) {
+		town->can_find = !town->is_hidden;
+		town->m_killed = 0;
+		town->item_taken.reset();
+		for(auto& m : town->maps)
+			m.reset();
+	}
 	for(short i = 0; i < 20; i++)
 	 	univ.party.key_times[i] = 30000;
 	univ.party.party_event_timers.clear();
@@ -183,13 +188,6 @@ static void init_party_scen_data() {
 			univ.party.quest_source[i] = -1;
 		}
 	}
-	
-	univ.party.m_killed.clear();
-	univ.party.m_killed.resize(univ.scenario.towns.size());
-	
-	for(short i = 0; i < 200; i++)
-		for(short j = 0; j < 8; j++)
-			univ.party.item_taken[i][j] = 0;
 	
 	
 	refresh_store_items();
@@ -216,10 +214,9 @@ static void init_party_scen_data() {
 	for(short i = 0; i < 3;i++)
 		univ.party.stored_items[i].clear();
 	
-	for(short i = 0; i < 100; i++)
-		for(short k = 0; k < 6; k++)
-			for(short l = 0; l < 48; l++)
-				univ.out_maps[i][k][l] = 0;
+	for(auto sector : univ.scenario.outdoors)
+		for(auto& m : sector->maps)
+			m.reset();
 	
 }
 
@@ -234,14 +231,6 @@ void put_party_in_scen(std::string scen_name) {
 	univ.ghost_mode = false;
 	univ.node_step_through = false;
 	
-	for(short j = 0; j < 6; j++) {
-		univ.party[j].status.clear();
-		if(isSplit(univ.party[j].main_status))
-			univ.party[j].main_status -= eMainStatus::SPLIT;
-		univ.party[j].cur_health = univ.party[j].max_health;
- 		univ.party[j].cur_sp = univ.party[j].max_sp;
-	}
-	// TODO: The above probably belongs in init_party_scen_data
 	for(short j = 0; j < 6; j++)
 		for(short i = 23; i >= 0; i--) {
 			cItem& thisItem = univ.party[j].items[i];
@@ -268,10 +257,6 @@ void put_party_in_scen(std::string scen_name) {
 		}
 	if(item_took)
 		cChoiceDlog("removed-special-items").show();
-	univ.party.age = 0;
-	univ.party.m_killed.clear();
-	univ.party.m_killed.resize(univ.scenario.towns.size());
-	univ.party.party_event_timers.clear();
 	
 	fs::path path = locate_scenario(scen_name);
 	if(path.empty()) {

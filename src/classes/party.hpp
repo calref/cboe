@@ -45,6 +45,7 @@ struct job_bank_t {
 	bool inited = false;
 };
 
+class cUniverse;
 class cItem;
 
 class cParty : public iLiving {
@@ -80,7 +81,6 @@ public:
 	bool easy_mode = false, less_wm = false;
 	// End former magic SDFs
 	std::array<unsigned char,90> magic_ptrs;
-	unsigned char item_taken[200][8];
 	short light_level;
 	location outdoor_corner;
 	location i_w_c;
@@ -113,11 +113,9 @@ public:
 	eDirection direction;
 	short at_which_save_slot;
 	std::bitset<20> alchemy;
-	std::vector<bool> can_find_town;
 	std::map<int,int> key_times;
 	std::vector<cTimer> party_event_timers;
 	std::set<int> spec_items;
-	std::vector<long> m_killed;
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	std::string scen_name;
 private:
@@ -138,7 +136,7 @@ public:
 	void clear_ptr(unsigned short p);
 	unsigned char get_ptr(unsigned short p);
 	
-	void append(legacy::party_record_type& old, const cScenario& scen);
+	void append(legacy::party_record_type& old, cUniverse& univ);
 	void append(legacy::big_tr_type& old);
 	void append(legacy::stored_items_list_type& old,short which_list);
 	void append(legacy::setup_save_type& old);
@@ -184,8 +182,8 @@ public:
 	bool start_timer(short time, short node, short type);
 	cPlayer& operator[](unsigned short n);
 	const cPlayer& operator[](unsigned short n) const;
-	void writeTo(std::ostream& file) const;
-	void readFrom(std::istream& file);
+	void writeTo(std::ostream& file, const cScenario& scen) const;
+	void readFrom(std::istream& file, cScenario& scen);
 	
 	bool give_item(cItem item,int flags);
 	bool forced_give(cItem item,eItemAbil abil,short dat = -1);

@@ -999,7 +999,7 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::BUY_TOWN_LOC:
-			if(univ.party.can_find_town[b]) {
+			if(univ.scenario.towns[b]->can_find) {
 				// TODO: Uh, is something supposed to happen here?
 			}
 			else if(univ.party.gold < a) {
@@ -1008,7 +1008,7 @@ void handle_talk_event(location p) {
 			else {
 				univ.party.gold -= a;
 				put_pc_screen();
-				univ.party.can_find_town[b] = true;
+				univ.scenario.towns[b]->can_find = true;
 			}
 			save_talk_str2 = "";
 			break;

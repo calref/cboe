@@ -53,16 +53,13 @@ cParty::~cParty() {
 	}
 }
 
-void cParty::append(legacy::party_record_type& old, const cScenario& scen){
+void cParty::append(legacy::party_record_type& old, cUniverse& univ){
 	age = old.age;
 	gold = old.gold;
 	food = old.food;
 	for(short i = 0; i < 310; i++)
 		for(short j = 0; j < 10; j++)
 			stuff_done[i][j] = old.stuff_done[i][j];
-	for(short i = 0; i < 200; i++)
-		for(short j = 0; j < 8; j++)
-			item_taken[i][j] = old.item_taken[i][j];
 	light_level = old.light_level;
 	if(stuff_done[305][0] > 0)
 		status[ePartyStatus::STEALTH] = stuff_done[305][0];
@@ -108,26 +105,18 @@ void cParty::append(legacy::party_record_type& old, const cScenario& scen){
 	for(short i = 0; i < 256; i++)
 		if(old.m_seen[i])
 			m_noted.insert(i);
-	journal.reserve(50);
-	// The journal wasn't used before, so let's not bother converting it
-//	for(short i = 0; i < 50; i++){
-//		cJournal j;
-//		j.day = old.journal_day[i];
-//		journal.push_back(j);
-//		spec_items[i] = old.spec_items[i];
-//	}
 	if(!scen_name.empty()) {
 		special_notes.reserve(140);
 		for(short i = 0; i < 140; i++){
 			if(old.special_notes_str[i][0] <= 0) continue;
 			cEncNote n;
-			n.append(old.special_notes_str[i], scen);
+			n.append(old.special_notes_str[i], univ.scenario);
 			special_notes.push_back(n);
 		}
 		talk_save.reserve(120);
 		for(short i = 0; i < 120; i++){
 			cConvers t;
-			t.append(old.talk_save[i], scen);
+			t.append(old.talk_save[i], univ.scenario);
 			talk_save.push_back(t);
 		}
 	}
@@ -135,11 +124,11 @@ void cParty::append(legacy::party_record_type& old, const cScenario& scen){
 	at_which_save_slot = old.at_which_save_slot;
 	for(short i = 0; i < 20 ; i++)
 		alchemy[i] = old.alchemy[i];
-	can_find_town.resize(200);
-	m_killed.resize(200);
-	for(short i = 0; i < 200; i++){
-		can_find_town[i] = old.can_find_town[i];
-		m_killed[i] = old.m_killed[i];
+	for(short i = 0; i < univ.scenario.towns.size(); i++){
+		univ.scenario.towns[i]->can_find = old.can_find_town[i];
+		univ.scenario.towns[i]->m_killed = old.m_killed[i];
+		for(short j = 0; j < 64; j++)
+			univ.scenario.towns[i]->item_taken[j] = old.item_taken[i][j / 8] & (1 << j % 8);
 	}
 	for(short i = 0; i < 100; i++)
 		key_times[i] = old.key_times[i];
@@ -538,7 +527,7 @@ bool cParty::start_timer(short time, short node, short type){
 	return(true);
 }
 
-void cParty::writeTo(std::ostream& file) const {
+void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 	file << "CREATEVERSION " << std::hex << OBOE_CURRENT_VERSION << std::dec << '\n';
 	file << "AGE " << age << '\n';
 	file << "GOLD " << gold << '\n';
@@ -555,14 +544,6 @@ void cParty::writeTo(std::ostream& file) const {
 		file << "POINTER " << iter->first << ' ' << iter->second.first << ' ' << iter->second.second << '\n';
 	for(int i = 0; i < magic_ptrs.size(); i++)
 		file << "POINTER " << i << ' ' << int(magic_ptrs[i]) << '\n';
-	for(int i = 0; i < 200; i++)
-		if(item_taken[i][0] > 0 || item_taken[i][1] > 0 || item_taken[i][2] > 0 || item_taken[i][3] > 0 ||
-		   item_taken[i][4] > 0 || item_taken[i][5] > 0 || item_taken[i][6] > 0 || item_taken[i][7] > 0) {
-			file << "ITEMTAKEN " << i;
-			for(int j = 0; j < 8; j++)
-				file << ' ' << unsigned(item_taken[i][j]);
-			file << '\n';
-		}
 	file << "LIGHT " << light_level << '\n';
 	file << "OUTCORNER " << outdoor_corner.x << ' ' << outdoor_corner.y << '\n';
 	file << "INWHICHCORNER " << i_w_c.x << ' ' << i_w_c.y << '\n';
@@ -594,16 +575,18 @@ void cParty::writeTo(std::ostream& file) const {
 	for(int i = 0; i < alchemy.size(); i++)
 		if(alchemy[i])
 			file << "ALCHEMY " << i << '\n';
-	for(int i = 0; i < can_find_town.size(); i++)
-		if(can_find_town[i])
-			file << "TOWNVISIBLE " << i << '\n';
+	for(int i = 0; i < scen.towns.size(); i++) {
+		if(scen.towns[i]->item_taken.any())
+			file << "ITEMTAKEN " << i << ' ' << scen.towns[i]->item_taken << '\n';
+		if(scen.towns[i]->can_find == scen.towns[i]->is_hidden)
+			file << (scen.towns[i]->can_find ? "TOWNVISIBLE " : "TOWNHIDDEN ") << i << '\n';
+		if(scen.towns[i]->m_killed > 0)
+			file << "TOWNSLAUGHTER " << i << ' ' << scen.towns[i]->m_killed << '\n';
+	}
 	for(auto key : key_times)
 		file << "EVENT " << key.first << ' ' << key.second << '\n';
 	for(int i : spec_items)
 		file << "ITEM " << i << '\n';
-	for(int i = 0; i < m_killed.size(); i++)
-		if(m_killed[i] > 0)
-			file << "TOWNSLAUGHTER " << i << ' ' << m_killed[i] << '\n';
 	file << "KILLS " << total_m_killed << '\n';
 	file << "DAMAGE " << total_dam_done << '\n';
 	file << "WOUNDS " << total_dam_taken << '\n';
@@ -728,7 +711,7 @@ void cParty::writeTo(std::ostream& file) const {
 	}
 }
 
-void cParty::readFrom(std::istream& file){
+void cParty::readFrom(std::istream& file, cScenario& scen){
 	// TODO: Error-check input
 	// TODO: Don't call this sin, it's a trig function
 	std::istringstream bin;
@@ -787,11 +770,8 @@ void cParty::readFrom(std::istream& file){
 		}else if(cur == "ITEMTAKEN"){
 			int i;
 			sin >> i;
-			for(int j = 0; j < 8; j++) {
-				unsigned int n;
-				sin >> n;
-				item_taken[i][j] = n;
-			}
+			if(i >= 0 && i < scen.towns.size())
+				sin >> scen.towns[i]->item_taken;
 		}else if(cur == "LIGHT")
 			sin >> light_level;
 		else if(cur == "OUTCORNER")
@@ -840,9 +820,13 @@ void cParty::readFrom(std::istream& file){
 		} else if(cur == "TOWNVISIBLE") {
 			int i;
 			sin >> i;
-			if(i >= can_find_town.size())
-				can_find_town.resize(i + 1);
-			can_find_town[i] = true;
+			if(i >= 0 && i < scen.towns.size())
+				scen.towns[i]->can_find = true;
+		} else if(cur == "TOWNHIDDEN") {
+			int i;
+			sin >> i;
+			if(i >= 0 && i < scen.towns.size())
+				scen.towns[i]->can_find = false;
 		}else if(cur == "EVENT"){
 			int i;
 			sin >> i;
@@ -854,9 +838,8 @@ void cParty::readFrom(std::istream& file){
 		}else if(cur == "TOWNSLAUGHTER"){
 			int i;
 			sin >> i;
-			if(i >= m_killed.size())
-				m_killed.resize(i + 1);
-			sin >> m_killed[i];
+			if(i >= 0 && i < scen.towns.size())
+				sin >> scen.towns[i]->m_killed;
 		} else if(cur == "QUEST") {
 			int i;
 			sin >> i;

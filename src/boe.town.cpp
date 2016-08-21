@@ -127,7 +127,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	// Set up map, using stored map
 	for(short i = 0; i < univ.town->max_dim(); i++)
 		for(short j = 0; j < univ.town->max_dim(); j++) {
-			if(univ.town_maps[univ.party.town_num][i / 8][j] & (char)(1 << i % 8))
+			if(univ.town->maps[j][i])
 				make_explored(i,j);
 			
 			if(univ.town->terrain(i,j) == 0)
@@ -218,7 +218,7 @@ void start_town_mode(short which_town, short entry_dir) {
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
 							univ.town.monst[j].active += 10;
-						else if(univ.town->is_cleaned_out(univ.party.m_killed[univ.party.town_num]))
+						else if(univ.town->is_cleaned_out())
 							univ.town.monst[j].active += 10;
 						else univ.town.monst[j].active = 0;
 						if(univ.town.monst[j].active >= 10)
@@ -290,7 +290,7 @@ void start_town_mode(short which_town, short entry_dir) {
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
 							univ.town.monst[i].active += 10;
-							else if(univ.town->is_cleaned_out(univ.party.m_killed[univ.party.town_num]))
+							else if(univ.town->is_cleaned_out())
 							univ.town.monst[i].active += 10;
 						else univ.town.monst[i].active = 0;
 						break;
@@ -319,7 +319,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	
 	// Thrash town?
-	if(univ.town->is_cleaned_out(univ.party.m_killed[univ.party.town_num])) {
+	if(univ.town->is_cleaned_out()) {
 		town_toast = true;
 		add_string_to_buf("Area has been cleaned out.");
 	}
@@ -373,7 +373,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	for(short i = 0; i < univ.town->preset_items.size(); i++)
 		if((univ.town->preset_items[i].code >= 0)
-			&& (((univ.party.item_taken[univ.party.town_num][i / 8] & (1 << i % 8)) == 0) ||
+			&& (!univ.town->item_taken[i] ||
 			(univ.town->preset_items[i].always_there))) {
 				// place the preset item, if party hasn't gotten it already
 				univ.town.items.push_back(get_stored_item(univ.town->preset_items[i].code));
@@ -571,8 +571,7 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		for(short i = 0; i < univ.town->max_dim(); i++)
 			for(short j = 0; j < univ.town->max_dim(); j++)
 				if(is_explored(i,j)) {
-					univ.town_maps[univ.party.town_num][i / 8][j] = univ.town_maps[univ.party.town_num][i / 8][j] |
-					(char) (1 << i % 8);
+					univ.town->maps[j].set(i);
 				}
 		
 		to_return = univ.party.out_loc;
@@ -1268,11 +1267,11 @@ void erase_out_specials() {
 					   (sector.city_locs[k].y == minmax(0,47,sector.city_locs[k].y))) {
 						if(sector.city_locs[k].spec < 0 || sector.city_locs[k].spec >= univ.scenario.towns.size())
 							continue;
-						if(!univ.party.can_find_town[sector.city_locs[k].spec]) {
+						if(!univ.scenario.towns[sector.city_locs[k].spec]->can_find) {
 							univ.out[48 * i + sector.city_locs[k].x][48 * j + sector.city_locs[k].y] =
 								univ.scenario.ter_types[sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y]].flag1;
 						}
-						else if(univ.party.can_find_town[sector.city_locs[k].spec]) {
+						else if(univ.scenario.towns[sector.city_locs[k].spec]->can_find) {
 							univ.out[48 * i + sector.city_locs[k].x][48 * j + sector.city_locs[k].y] =
 								sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y];
 							

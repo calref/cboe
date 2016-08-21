@@ -251,12 +251,11 @@ short dist_from_party(location where) {
 	return store;
 }
 
-// TODO: I have no idea what is going on here, other than that it seems to have something to do items being picked up in town
+// This marks the item as taken so that it won't show up again when the party returns to this town
 void set_item_flag(cItem* item) {
 	if((item->is_special > 0) && (item->is_special < 65)) {
 		item->is_special--;
-		univ.party.item_taken[univ.party.town_num][item->is_special / 8] =
-			univ.party.item_taken[univ.party.town_num][item->is_special / 8] | (1 << item->is_special % 8);
+		univ.town->item_taken.set(item->is_special);
 		item->is_special = 0;
 	}
 }

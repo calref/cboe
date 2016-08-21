@@ -91,6 +91,11 @@ public:
 	std::array<std::string,3> comment;
 	std::vector<std::string> spec_strs;
 	cSpeech talking;
+	// Persistent data for saved games
+	std::array<std::bitset<64>, 64> maps;
+	std::bitset<64> item_taken;
+	bool can_find;
+	long m_killed;
 	
 	virtual ~cTown(){}
 	virtual void append(legacy::big_tr_type& old, int town_num);
@@ -103,7 +108,7 @@ public:
 	void init_start();
 	void set_up_lights();
 	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
-	bool is_cleaned_out(long m_killed);
+	bool is_cleaned_out();
 	
 	explicit cTown(cScenario& scenario);
 	void append(legacy::town_record_type& old);

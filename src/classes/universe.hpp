@@ -176,9 +176,7 @@ public:
 	cParty party;
 	std::map<long,cPlayer*> stored_pcs;
 	cCurTown town;
-	unsigned char town_maps[200][8][64]; // formerly stored_town_maps_type
 	cCurOut out;
-	unsigned char out_maps[100][6][48]; // formerly stored_outdoor_maps_type
 	fs::path file;
 	bool debug_mode, ghost_mode, node_step_through;
 	
