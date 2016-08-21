@@ -384,7 +384,7 @@ void cItem::enchant_weapon(eEnchant enchant_type,short new_val) {
 	full_name = store_name;
 }
 
-void cItem::append(legacy::item_record_type& old){
+void cItem::import_legacy(legacy::item_record_type& old){
 	variety = (eItemType) old.variety;
 	item_level = old.item_level;
 	awkward = old.awkward;

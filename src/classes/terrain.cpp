@@ -17,7 +17,7 @@
 #include "graphtool.hpp" // for NO_PIC
 #include "boe.consts.hpp" // TODO: Put these constants in a global file
 
-void cTerrain::append(legacy::terrain_type_type& old){
+void cTerrain::import_legacy(legacy::terrain_type_type& old){
 	static const std::set<int> archetypes = {
 		// This lists graphics that represent the archetypal terrains for each ground type
 		// One line per graphics sheet; last line is the animated sheet

@@ -18,7 +18,7 @@
 #include "oldstructs.hpp"
 #include "fileio.hpp"
 
-void cTinyTown::append(legacy::tiny_tr_type& old, int){
+void cTinyTown::import_legacy(legacy::tiny_tr_type& old, int){
 	cField the_field, the_road;
 	the_field.type = SPECIAL_SPOT;
 	the_road.type = SPECIAL_ROAD;
@@ -113,11 +113,11 @@ void cTinyTown::append(legacy::tiny_tr_type& old, int){
 	}
 	creatures.resize(30);
 	for(short i = 0; i < 30; i++) {
-		creatures[i].append(old.creatures[i]);
+		creatures[i].import_legacy(old.creatures[i]);
 	}
 }
 
-void cMedTown::append(legacy::ave_tr_type& old, int){
+void cMedTown::import_legacy(legacy::ave_tr_type& old, int){
 	cField the_field, the_road;
 	the_field.type = SPECIAL_SPOT;
 	the_road.type = SPECIAL_ROAD;
@@ -212,11 +212,11 @@ void cMedTown::append(legacy::ave_tr_type& old, int){
 	}
 	creatures.resize(40);
 	for(short i = 0; i < 40; i++) {
-		creatures[i].append(old.creatures[i]);
+		creatures[i].import_legacy(old.creatures[i]);
 	}
 }
 
-void cBigTown::append(legacy::big_tr_type& old, int){
+void cBigTown::import_legacy(legacy::big_tr_type& old, int){
 	cField the_field, the_road;
 	the_field.type = SPECIAL_SPOT;
 	the_road.type = SPECIAL_ROAD;
@@ -311,7 +311,7 @@ void cBigTown::append(legacy::big_tr_type& old, int){
 	}
 	creatures.resize(60);
 	for(short i = 0; i < 60; i++) {
-		creatures[i].append(old.creatures[i]);
+		creatures[i].import_legacy(old.creatures[i]);
 	}
 }
 

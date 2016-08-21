@@ -114,7 +114,7 @@ public:
 	void join_party(cParty& p) {party = &p;}
 	cPlayer* leave_party() {party = nullptr; return this;}
 	
-	void append(legacy::pc_record_type old);
+	void import_legacy(legacy::pc_record_type old);
 	cPlayer(cParty& party);
 	cPlayer(cParty& party,long key,short slot);
 	short get_tnl();

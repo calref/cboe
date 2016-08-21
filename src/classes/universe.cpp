@@ -19,26 +19,26 @@
 #include "mathutil.hpp"
 #include "fileio.hpp"
 
-void cCurOut::append(legacy::out_info_type& old){
+void cCurOut::import_legacy(legacy::out_info_type& old){
 	for(int i = 0; i < 96; i++)
 		for(int j = 0; j < 96; j++)
 			expl[i][j] = old.expl[i][j];
 }
 
-void cCurTown::append(legacy::current_town_type& old){
+void cCurTown::import_legacy(legacy::current_town_type& old){
 	univ.party.town_num = old.town_num;
 	difficulty = old.difficulty;
-	record()->append(old.town);
+	record()->import_legacy(old.town);
 	for(int i = 0; i < 64; i++)
 		for(int j = 0; j < 64; j++)
 			fields[i][j] = old.explored[i][j];
-	monst.append(old.monst);
+	monst.import_legacy(old.monst);
 	univ.party.town_loc.x = old.p_loc.x;
 	univ.party.town_loc.y = old.p_loc.y;
 	cur_talk_loaded = old.town_num;
 }
 
-void cCurTown::append(legacy::big_tr_type& old){
+void cCurTown::import_legacy(legacy::big_tr_type& old){
 	for(short i = 0; i < record()->max_dim(); i++)
 		for(short j = 0; j < record()->max_dim(); j++)
 			record()->terrain(i,j) = old.terrain[i][j];
@@ -50,19 +50,19 @@ void cCurTown::append(legacy::big_tr_type& old){
 	}
 	record()->creatures.resize(60);
 	for(short i = 0; i < 60; i++)
-		record()->creatures[i].append(old.creatures[i]);
+		record()->creatures[i].import_legacy(old.creatures[i]);
 	for(short i = 0; i < record()->max_dim() / 8; i++)
 		for(short j = 0; j < record()->max_dim(); j++)
 			record()->lighting(i,j) = old.lighting[i][j];
 }
 
-void cCurTown::append(legacy::town_item_list& old){
+void cCurTown::import_legacy(legacy::town_item_list& old){
 	items.resize(115);
 	for(int i = 0; i < 115; i++)
-		items[i].append(old.items[i]);
+		items[i].import_legacy(old.items[i]);
 }
 
-void cUniverse::append(legacy::stored_town_maps_type& old){
+void cUniverse::import_legacy(legacy::stored_town_maps_type& old){
 	for(int n = 0; n < 200; n++)
 		for(int i = 0; i < 64; i++)
 			for(int j = 0; j < 64; j++)
@@ -73,7 +73,7 @@ static short onm(char x_sector,char y_sector, char w) {
 	return y_sector * w + x_sector;
 }
 
-void cUniverse::append(legacy::stored_outdoor_maps_type& old){
+void cUniverse::import_legacy(legacy::stored_outdoor_maps_type& old){
 	for(int x = 0; x < scenario.outdoors.width(); x++)
 		for(int y = 0; y < scenario.outdoors.height(); y++)
 			for(int i = 0; i < 48; i++)
@@ -81,7 +81,7 @@ void cUniverse::append(legacy::stored_outdoor_maps_type& old){
 					scenario.outdoors[x][y]->maps[i][j] = old.outdoor_maps[onm(x,y,scenario.outdoors.width())][i / 8][j] & (1 << i % 8);
 }
 
-void cCurTown::append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]){
+void cCurTown::import_legacy(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]){
 	for(int i = 0; i < 64; i++)
 		for(int j = 0; j < 64; j++){
 			unsigned long tmp_sfx, tmp_misc_i;

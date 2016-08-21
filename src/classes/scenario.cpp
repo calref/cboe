@@ -100,7 +100,7 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 		item_odds[i] = 0;
 }
 
-void cScenario::append(legacy::scenario_data_type& old){
+void cScenario::import_legacy(legacy::scenario_data_type& old){
 	is_legacy = true;
 	difficulty = old.difficulty;
 	intro_pic = old.intro_pic;
@@ -136,17 +136,17 @@ void cScenario::append(legacy::scenario_data_type& old){
 	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
 	for(short i = 0; i < 30; i++) {
-		boats[i].append(old.scen_boats[i]);
-		horses[i].append(old.scen_horses[i]);
+		boats[i].import_legacy(old.scen_boats[i]);
+		horses[i].import_legacy(old.scen_horses[i]);
 	}
 	ter_types.resize(256);
 	scen_specials.resize(256);
 	scen_monsters.resize(256);
 	for(short i = 0; i < 256; i++){
 		ter_types[i].i = i;
-		ter_types[i].append(old.ter_types[i]);
-		scen_monsters[i].append(old.scen_monsters[i]);
-		scen_specials[i].append(old.scen_specials[i]);
+		ter_types[i].import_legacy(old.ter_types[i]);
+		scen_monsters[i].import_legacy(old.scen_monsters[i]);
+		scen_specials[i].import_legacy(old.scen_specials[i]);
 	}
 	for(short i = 0; i < 20; i++) {
 		scenario_timers[i].time = old.scenario_timer_times[i];
@@ -166,10 +166,10 @@ cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_stora
 	return *this;
 }
 
-void cScenario::append(legacy::scen_item_data_type& old){
+void cScenario::import_legacy(legacy::scen_item_data_type& old){
 	scen_items.resize(400);
 	for(short i = 0; i < 400; i++)
-		scen_items[i].append(old.scen_items[i]);
+		scen_items[i].import_legacy(old.scen_items[i]);
 	for(short i = 0; i < 256; i++) {
 		scen_monsters[i].m_name = old.monst_names[i];
 		if(scen_monsters[i].m_type == eRace::UNDEAD && scen_monsters[i].m_name.find("Skeleton") != std::string::npos)

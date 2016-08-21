@@ -28,7 +28,7 @@ cVehicle::cVehicle() :
 		sector.x = 0; sector.y = 0;
 }
 
-void cVehicle::append(legacy::horse_record_type& old){
+void cVehicle::import_legacy(legacy::horse_record_type& old){
 	which_town = old.which_town;
 	exists = old.exists;
 	property = old.property;
@@ -40,7 +40,7 @@ void cVehicle::append(legacy::horse_record_type& old){
 	sector.y = old.horse_sector.y;
 }
 
-void cVehicle::append(legacy::boat_record_type& old){
+void cVehicle::import_legacy(legacy::boat_record_type& old){
 	which_town = old.which_town;
 	exists = old.exists;
 	property = old.property;

@@ -15,10 +15,10 @@
 
 #include "oldstructs.hpp"
 
-void cPopulation::append(legacy::creature_list_type old){
+void cPopulation::import_legacy(legacy::creature_list_type old){
 	dudes.resize(60);
 	for(int i = 0; i < 60; i++)
-		dudes[i].append(old.dudes[i]);
+		dudes[i].import_legacy(old.dudes[i]);
 	which_town = old.which_town;
 	hostile = old.hostile;
 }

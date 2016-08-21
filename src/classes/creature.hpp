@@ -69,7 +69,7 @@ public:
 	void killed_msg();
 	bool on_space(location loc) const;
 	
-	void append(legacy::creature_data_type old);
+	void import_legacy(legacy::creature_data_type old);
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 };

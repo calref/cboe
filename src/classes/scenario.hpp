@@ -102,8 +102,8 @@ public:
 	std::vector<cTown*> towns;
 	template<typename Town> void addTown() {towns.push_back(new Town(*this));}
 	
-	void append(legacy::scenario_data_type& old);
-	void append(legacy::scen_item_data_type& old);
+	void import_legacy(legacy::scenario_data_type& old);
+	void import_legacy(legacy::scen_item_data_type& old);
 	void writeTo(std::ostream& file) const;
 	std::string format_scen_version();
 	std::string format_ed_version();

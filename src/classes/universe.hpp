@@ -50,10 +50,10 @@ public:
 	
 	unsigned long fields[64][64];
 	
-	void append(legacy::current_town_type& old);
-	void append(legacy::town_item_list& old);
-	void append(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
-	void append(legacy::big_tr_type& old);
+	void import_legacy(legacy::current_town_type& old);
+	void import_legacy(legacy::town_item_list& old);
+	void import_legacy(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
+	void import_legacy(legacy::big_tr_type& old);
 	
 	cTown* operator -> ();
 	explicit cCurTown(cUniverse& univ);
@@ -134,7 +134,7 @@ public:
 	bool is_spot(int x, int y);
 	bool is_road(int x, int y);
 	
-	void append(legacy::out_info_type& old);
+	void import_legacy(legacy::out_info_type& old);
 	
 	typedef ter_num_t arr_96[96];
 	arr_96& operator [] (size_t i);
@@ -181,8 +181,8 @@ public:
 	bool debug_mode, ghost_mode, node_step_through;
 	
 	void clear_stored_pcs();
-	void append(legacy::stored_town_maps_type& old);
-	void append(legacy::stored_outdoor_maps_type& old);
+	void import_legacy(legacy::stored_town_maps_type& old);
+	void import_legacy(legacy::stored_outdoor_maps_type& old);
 	short difficulty_adjust() const;
 	explicit cUniverse(long party_type = 'dflt');
 	~cUniverse();

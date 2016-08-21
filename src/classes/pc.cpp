@@ -24,7 +24,7 @@ extern std::map<const eItemType, const short> excluding_types;
 
 extern short skill_bonus[21];
 
-void cPlayer::append(legacy::pc_record_type old){
+void cPlayer::import_legacy(legacy::pc_record_type old){
 	main_status = (eMainStatus) old.main_status;
 	name = old.name;
 	for(short i = 0; i < 19; i++) {
@@ -45,7 +45,7 @@ void cPlayer::append(legacy::pc_record_type old){
 		traits[trait] = old.traits[i];
 	}
 	for(short i = 0; i < 24; i++){
-		items[i].append(old.items[i]);
+		items[i].import_legacy(old.items[i]);
 		equip[i] = old.equip[i];
 	}
 	for(short i = 0; i < 62; i++){

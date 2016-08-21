@@ -29,13 +29,13 @@ cCreature::cCreature(int num) : cCreature() {
 	number = num;
 }
 
-void cCreature::append(legacy::creature_data_type old){
+void cCreature::import_legacy(legacy::creature_data_type old){
 	active = old.active;
 	attitude = eAttitude(old.attitude);
 	number = old.number;
 	cur_loc.x = old.m_loc.x;
 	cur_loc.y = old.m_loc.y;
-	cMonster::append(old.m_d);
+	cMonster::import_legacy(old.m_d);
 	mobility = old.mobile;
 	summon_time = old.summoned;
 	if(summon_time >= 100) {

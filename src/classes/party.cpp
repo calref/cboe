@@ -53,7 +53,7 @@ cParty::~cParty() {
 	}
 }
 
-void cParty::append(legacy::party_record_type& old, cUniverse& univ){
+void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 	age = old.age;
 	gold = old.gold;
 	food = old.food;
@@ -83,8 +83,8 @@ void cParty::append(legacy::party_record_type& old, cUniverse& univ){
 	}
 	party_event_timers.reserve(30);
 	for(short i = 0; i < 30; i++){
-		boats[i].append(old.boats[i]);
-		horses[i].append(old.horses[i]);
+		boats[i].import_legacy(old.boats[i]);
+		horses[i].import_legacy(old.horses[i]);
 		cTimer t;
 		t.time = old.party_event_timers[i];
 		t.node_type = old.global_or_town[i];
@@ -92,15 +92,15 @@ void cParty::append(legacy::party_record_type& old, cUniverse& univ){
 		party_event_timers.push_back(t);
 	}
 	for(short i = 0; i < 4; i++){
-		creature_save[i].append(old.creature_save[i]);
+		creature_save[i].import_legacy(old.creature_save[i]);
 		imprisoned_monst[i] = old.imprisoned_monst[i];
 	}
 	in_boat = old.in_boat;
 	in_horse = old.in_horse;
 	for(short i = 0; i < 10; i++){
-		out_c[i].append(old.out_c[i]);
+		out_c[i].import_legacy(old.out_c[i]);
 		for(short j = 0; j < 5; j++)
-			magic_store_items[j][i].append(old.magic_store_items[j][i]);
+			magic_store_items[j][i].import_legacy(old.magic_store_items[j][i]);
 	}
 	for(short i = 0; i < 256; i++)
 		if(old.m_seen[i])
@@ -110,13 +110,13 @@ void cParty::append(legacy::party_record_type& old, cUniverse& univ){
 		for(short i = 0; i < 140; i++){
 			if(old.special_notes_str[i][0] <= 0) continue;
 			cEncNote n;
-			n.append(old.special_notes_str[i], univ.scenario);
+			n.import_legacy(old.special_notes_str[i], univ.scenario);
 			special_notes.push_back(n);
 		}
 		talk_save.reserve(120);
 		for(short i = 0; i < 120; i++){
 			cConvers t;
-			t.append(old.talk_save[i], univ.scenario);
+			t.import_legacy(old.talk_save[i], univ.scenario);
 			talk_save.push_back(t);
 		}
 	}
@@ -139,20 +139,20 @@ void cParty::append(legacy::party_record_type& old, cUniverse& univ){
 	scen_name = old.scen_name;
 }
 
-void cParty::append(legacy::stored_items_list_type& old,short which_list){
+void cParty::import_legacy(legacy::stored_items_list_type& old,short which_list){
 	stored_items[which_list].resize(115);
 	for(int i = 0; i < 115; i++)
-		stored_items[which_list][i].append(old.items[i]);
+		stored_items[which_list][i].import_legacy(old.items[i]);
 }
 
-void cParty::append(legacy::setup_save_type& old){
+void cParty::import_legacy(legacy::setup_save_type& old){
 	for(int n = 0; n < 4; n++)
 		for(int i = 0; i < 64; i++)
 			for(int j = 0; j < 64; j++)
 				setup[n][i][j] = old.setup[n][i][j];
 }
 
-void cParty::cConvers::append(legacy::talk_save_type old, const cScenario& scenario){
+void cParty::cConvers::import_legacy(legacy::talk_save_type old, const cScenario& scenario){
 	who_said = scenario.towns[old.personality / 10]->talking.people[old.personality % 10].title;
 	in_town = scenario.towns[old.town_num]->town_name;
 	int strnums[2] = {old.str1, old.str2};
@@ -185,7 +185,7 @@ void cParty::cConvers::append(legacy::talk_save_type old, const cScenario& scena
 	}
 }
 
-void cParty::cEncNote::append(int16_t(& old)[2], const cScenario& scenario) {
+void cParty::cEncNote::import_legacy(int16_t(& old)[2], const cScenario& scenario) {
 	in_scen = scenario.scen_name;
 	// TODO: Need to verify that I have the correct offsets here.
 	switch(old[0] / 1000) {
@@ -207,11 +207,11 @@ void cParty::cEncNote::append(int16_t(& old)[2], const cScenario& scenario) {
 	}
 }
 
-void cParty::append(legacy::pc_record_type(& old)[6]) {
+void cParty::import_legacy(legacy::pc_record_type(& old)[6]) {
 	for(int i = 0; i < 6; i++) {
 		delete adven[i];
 		adven[i] = new cPlayer(*this);
-		adven[i]->append(old[i]);
+		adven[i]->import_legacy(old[i]);
 	}
 }
 

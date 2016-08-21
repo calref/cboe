@@ -233,21 +233,21 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		univ.party.scen_name = "";
 	}
 	
-	univ.party.append(store_party, univ);
-	univ.party.append(store_setup);
-	univ.party.append(store_pc);
+	univ.party.import_legacy(store_party, univ);
+	univ.party.import_legacy(store_setup);
+	univ.party.import_legacy(store_pc);
 	if(in_scen){
-		univ.out.append(store_out_info);
+		univ.out.import_legacy(store_out_info);
 		if(town_restore){
-			univ.town.append(store_c_town);
-			univ.town.append(t_d);
-			univ.town.append(t_i);
+			univ.town.import_legacy(store_c_town);
+			univ.town.import_legacy(t_d);
+			univ.town.import_legacy(t_i);
 		}
 		for(int i = 0; i < 3; i++)
-			univ.party.append(stored_items[i],i);
-		univ.append(town_maps);
-		univ.append(o_maps);
-		univ.town.append(sfx, misc_i);
+			univ.party.import_legacy(stored_items[i],i);
+		univ.import_legacy(town_maps);
+		univ.import_legacy(o_maps);
+		univ.town.import_legacy(sfx, misc_i);
 		// Check items in crates/barrels
 		for(int i = 0; i < univ.town->max_dim(); i++) {
 			for(int j = 0; j < univ.town->max_dim(); j++) {

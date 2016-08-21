@@ -41,7 +41,7 @@ public:
 		std::array<mon_num_t,4> monst;
 		
 		bool isNull();
-		void append(legacy::wandering_type old);
+		void import_legacy(legacy::wandering_type old);
 	};
 	class cItem { // formerly preset_item_type
 	public:
@@ -50,7 +50,7 @@ public:
 		int charges = -1;
 		bool always_there = false, property = false, contained = false;
 		
-		void append(legacy::preset_item_type old);
+		void import_legacy(legacy::preset_item_type old);
 		cItem();
 		cItem(location loc, short num, ::cItem& item);
 	};
@@ -59,7 +59,7 @@ public:
 		location loc;
 		eFieldType type;
 		
-		void append(legacy::preset_field_type old);
+		void import_legacy(legacy::preset_field_type old);
 		cField() : type(FIELD_DISPEL) {}
 		cField(location l, eFieldType t) : loc(l), type(t) {}
 	};
@@ -98,9 +98,9 @@ public:
 	long m_killed;
 	
 	virtual ~cTown(){}
-	virtual void append(legacy::big_tr_type& old, int town_num);
-	virtual void append(legacy::ave_tr_type& old, int town_num);
-	virtual void append(legacy::tiny_tr_type& old, int town_num);
+	virtual void import_legacy(legacy::big_tr_type& old, int town_num);
+	virtual void import_legacy(legacy::ave_tr_type& old, int town_num);
+	virtual void import_legacy(legacy::tiny_tr_type& old, int town_num);
 	virtual ter_num_t& terrain(size_t x, size_t y) = 0;
 	virtual unsigned char& lighting(size_t i, size_t r) = 0;
 	virtual size_t max_dim() const = 0;
@@ -111,7 +111,7 @@ public:
 	bool is_cleaned_out();
 	
 	explicit cTown(cScenario& scenario);
-	void append(legacy::town_record_type& old);
+	void import_legacy(legacy::town_record_type& old);
 	void reattach(cScenario& to);
 	virtual void writeTerrainTo(std::ostream& file) = 0;
 	virtual void readTerrainFrom(std::istream& file) = 0;

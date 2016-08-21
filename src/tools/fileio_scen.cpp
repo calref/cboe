@@ -167,8 +167,8 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		return false;
 	}
 	port_item_list(item_data);
-	scenario.append(*temp_scenario);
-	scenario.append(*item_data);
+	scenario.import_legacy(*temp_scenario);
+	scenario.import_legacy(*item_data);
 	
 	// TODO: Consider skipping the fread and assignment when len is 0
 	scenario.special_items.resize(50);
@@ -2219,24 +2219,24 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 			len = sizeof(legacy::big_tr_type);
 			fread(&t_d, len, 1, file_id);
 			port_t_d(&t_d);
-			the_town.append(store_town);
-			the_town.append(t_d, which_town);
+			the_town.import_legacy(store_town);
+			the_town.import_legacy(t_d, which_town);
 			break;
 			
 		case 1:
 			len = sizeof(legacy::ave_tr_type);
 			fread(&ave_t, len, 1, file_id);
 			port_ave_t(&ave_t);
-			the_town.append(store_town);
-			the_town.append(ave_t, which_town);
+			the_town.import_legacy(store_town);
+			the_town.import_legacy(ave_t, which_town);
 			break;
 			
 		case 2:
 			len = sizeof(legacy::tiny_tr_type);
 			fread(&tiny_t, len, 1, file_id);
 			port_tiny_t(&tiny_t);
-			the_town.append(store_town);
-			the_town.append(tiny_t, which_town);
+			the_town.import_legacy(store_town);
+			the_town.import_legacy(tiny_t, which_town);
 			break;
 	}
 	
@@ -2289,7 +2289,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	}
 	
 	// Do this after strings are loaded because porting shops requires access to strings
-	the_town.talking.append(store_talk, shops);
+	the_town.talking.import_legacy(store_talk, shops);
 	
 	// And lastly, calculate lighting
 	the_town.set_up_lights();
@@ -2349,7 +2349,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	the_out.x = which_out.x;
 	the_out.y = which_out.y;
 	port_out(&store_out);
-	the_out.append(store_out);
+	the_out.import_legacy(store_out);
 	the_out.spec_strs.resize(90);
 	the_out.sign_locs.resize(8);
 	the_out.info_rect.resize(8);

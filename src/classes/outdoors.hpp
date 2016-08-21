@@ -45,7 +45,7 @@ public:
 		bool cant_flee, forced;
 		
 		bool isNull();
-		void append(legacy::out_wandering_type old);
+		void import_legacy(legacy::out_wandering_type old);
 		void writeTo(std::ostream& file, std::string prefix = "") const;
 		void readFrom(std::istream& sin);
 		cWandering();
@@ -57,7 +57,7 @@ public:
 		cWandering what_monst;
 		location which_sector,m_loc,home_sector; // home_sector is the sector it was spawned in
 		
-		void append(legacy::outdoor_creature_type old);
+		void import_legacy(legacy::outdoor_creature_type old);
 	};
 	short x,y; // Used while loading legacy scenarios.
 	ter_num_t terrain[48][48];
@@ -82,7 +82,7 @@ public:
 	std::array<std::bitset<48>, 48> maps;
 	
 	explicit cOutdoors(cScenario& scenario);
-	void append(legacy::outdoor_record_type& old);
+	void import_legacy(legacy::outdoor_record_type& old);
 	void reattach(cScenario& to);
 };
 

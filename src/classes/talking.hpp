@@ -50,7 +50,7 @@ public:
 	std::array<cPersonality, 10> people;
 	std::vector<cNode> talk_nodes;
 	
-	void append(legacy::talking_record_type& old, std::vector<shop_info_t>& shops);
+	void import_legacy(legacy::talking_record_type& old, std::vector<shop_info_t>& shops);
 	void writeTo(std::ostream& file) const;
 };
 

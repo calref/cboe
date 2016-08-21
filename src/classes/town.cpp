@@ -17,11 +17,11 @@
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
 
-void cTown::append(legacy::big_tr_type&, int){}
-void cTown::append(legacy::ave_tr_type&, int){}
-void cTown::append(legacy::tiny_tr_type&, int){}
+void cTown::import_legacy(legacy::big_tr_type&, int){}
+void cTown::import_legacy(legacy::ave_tr_type&, int){}
+void cTown::import_legacy(legacy::tiny_tr_type&, int){}
 
-void cTown::append(legacy::town_record_type& old){
+void cTown::import_legacy(legacy::town_record_type& old){
 	town_chop_time = old.town_chop_time;
 	town_chop_key = old.town_chop_key;
 	for(short i = 0; i < 4; i++){
@@ -30,7 +30,7 @@ void cTown::append(legacy::town_record_type& old){
 		exits[i].x = old.exit_locs[i].x;
 		exits[i].y = old.exit_locs[i].y;
 		exits[i].spec = old.exit_specs[i];
-		wandering[i].append(old.wandering[i]);
+		wandering[i].import_legacy(old.wandering[i]);
 	}
 	preset_fields.clear();
 	preset_fields.reserve(50);
@@ -42,7 +42,7 @@ void cTown::append(legacy::town_record_type& old){
 			special_locs[i].spec = -1;
 		else special_locs[i].spec = old.spec_id[i];
 		cField temp;
-		temp.append(old.preset_fields[i]);
+		temp.import_legacy(old.preset_fields[i]);
 		preset_fields.push_back(temp);
 	}
 	sign_locs.resize(15);
@@ -57,7 +57,7 @@ void cTown::append(legacy::town_record_type& old){
 	in_town_rect.right = old.in_town_rect.right;
 	preset_items.resize(64);
 	for(short i = 0; i < 64; i++){
-		preset_items[i].append(old.preset_items[i]);
+		preset_items[i].import_legacy(old.preset_items[i]);
 	}
 	max_num_monst = old.max_num_monst;
 	spec_on_entry = old.spec_on_entry;
@@ -69,7 +69,7 @@ void cTown::append(legacy::town_record_type& old){
 	}
 	specials.resize(100);
 	for(short i = 0; i < 100; i++)
-		specials[i].append(old.specials[i]);
+		specials[i].import_legacy(old.specials[i]);
 	difficulty = old.difficulty;
 	strong_barriers = defy_scrying = defy_mapping = false;
 }
@@ -128,14 +128,14 @@ void cTown::init_start() {
 	in_town_rect.right = s - 4;
 }
 
-void cTown::cWandering::append(legacy::wandering_type old){
+void cTown::cWandering::import_legacy(legacy::wandering_type old){
 	monst[0] = old.monst[0];
 	monst[1] = old.monst[1];
 	monst[2] = old.monst[2];
 	monst[3] = old.monst[3];
 }
 
-void cTown::cItem::append(legacy::preset_item_type old){
+void cTown::cItem::import_legacy(legacy::preset_item_type old){
 	loc.x = old.item_loc.x;
 	loc.y = old.item_loc.y;
 	code = old.item_code;
@@ -145,7 +145,7 @@ void cTown::cItem::append(legacy::preset_item_type old){
 	contained = old.contained;
 }
 
-void cTown::cField::append(legacy::preset_field_type old){
+void cTown::cField::import_legacy(legacy::preset_field_type old){
 	loc.x = old.field_loc.x;
 	loc.y = old.field_loc.y;
 	switch(old.field_type) {
