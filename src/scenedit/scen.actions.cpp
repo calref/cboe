@@ -98,15 +98,6 @@ short special_to_paste = -1;
 bool monst_on_space(location loc,short m_num);
 static bool terrain_matches(unsigned char x, unsigned char y, ter_num_t ter);
 
-void init_current_terrain() {
-//	short i,j;
-//	location d_loc(0,0);
-//	rectangle d_rect = {0,0,0,0};
-//	cTown::cWandering d_wan = {0,0,0,0};
-//	cTown::cCreature dummy_creature = {0,0,loc(),0,0,0,0,0,0,0};
-//	//city_ter_rect_type dummy_ter_rect = {{0,0,0,0},0,0};
-}
-
 void init_screen_locs() {
 	for(short i = 0; i < 4; i++)
 		border_rect[i] = terrain_rect;

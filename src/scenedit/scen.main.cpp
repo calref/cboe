@@ -124,7 +124,6 @@ void init_scened(int argc, char* argv[]) {
 	
 	set_cursor(watch_curs);
 	boost::thread init_thread([]() {
-		init_current_terrain();
 		check_for_intel();
 		srand(time(nullptr));
 		
