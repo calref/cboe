@@ -89,8 +89,8 @@ void cCurTown::import_legacy(unsigned char(& old_sfx)[64][64], unsigned char(& o
 			tmp_misc_i = old_misc_i[i][j];
 			tmp_sfx <<= 16;
 			tmp_misc_i <<= 8;
-			fields[i][j] = tmp_sfx;
-			fields[i][j] = tmp_misc_i;
+			fields[i][j] |= tmp_sfx;
+			fields[i][j] |= tmp_misc_i;
 		}
 }
 
