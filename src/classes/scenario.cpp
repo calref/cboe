@@ -135,6 +135,8 @@ void cScenario::import_legacy(legacy::scenario_data_type& old){
 	rating = eContentRating(old.rating);
 	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
+	boats.resize(30);
+	horses.resize(30);
 	for(short i = 0; i < 30; i++) {
 		boats[i].import_legacy(old.scen_boats[i]);
 		horses[i].import_legacy(old.scen_horses[i]);

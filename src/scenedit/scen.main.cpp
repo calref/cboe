@@ -375,14 +375,6 @@ void handle_menu_choice(eMenu item_hit) {
 			edit_save_rects();
 			change_made = true;
 			break;
-		case eMenu::SCEN_HORSES:
-			edit_horses();
-			change_made = true;
-			break;
-		case eMenu::SCEN_BOATS:
-			edit_boats();
-			change_made = true;
-			break;
 		case eMenu::TOWN_VARYING:
 			edit_add_town();
 			change_made = true;

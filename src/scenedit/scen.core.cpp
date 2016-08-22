@@ -2533,75 +2533,44 @@ void edit_save_rects() {
 	save_dlg.run();
 }
 
-static bool save_vehicles(cDialog& me, cVehicle* vehicles, const short page) {
-	for(short i = 0; i < 6; i++) {
-		std::string id = std::to_string(i + 1);
-		vehicles[6 * page + i].which_town = me["town" + id].getTextAsNum();
-		if(cre(vehicles[6 * page + i].which_town,
-			   -1,199,"Town number must be from 0 to 199 (or -1 for it to not exist).","",&me)) return false;
-		vehicles[6 * page + i].loc.x = me["x" + id].getTextAsNum();
-		if(cre(vehicles[6 * page + i].loc.x,
-			   0,63,"coordinates must be from 0 to 63.","",&me)) return false;
-		vehicles[6 * page + i].loc.y = me["y" + id].getTextAsNum();
-		if(cre(vehicles[6 * page + i].loc.y,
-			   0,63,"coordinates must be from 0 to 63.","",&me)) return false;
-		vehicles[6 * page + i].property = dynamic_cast<cLed&>(me["owned" + id]).getState() != led_off;
+static void put_vehicle_area(cDialog& me, const cVehicle& what) {
+	std::ostringstream sout;
+	if(what.which_town == 200) {
+		sout << "Outdoors @ " << what.sector;
+	} else {
+		sout << "Town " << what.which_town;
 	}
-	return true;
+	me["area"].setText(sout.str());
 }
 
-static void put_vehicles_in_dlog(cDialog& me, cVehicle* vehicles, const short page) {
-	for(short i = 0; i < 6; i++) {
-		std::string id = std::to_string(i + 1);
-		me["num" + id].setTextToNum(6 * page + i);
-		me["town" + id].setTextToNum(vehicles[6 * page + i].which_town);
-		me["x" + id].setTextToNum(vehicles[6 * page + i].loc.x);
-		me["y" + id].setTextToNum(vehicles[6 * page + i].loc.y);
-		dynamic_cast<cLed&>(me["owned" + id]).setState(vehicles[6 * page + i].property ? led_red : led_off);
-	}
-}
-
-static bool edit_vehicles_event_filter(cDialog& me, std::string hit, cVehicle* vehicles, size_t nVehicles, size_t& page) {
-	
-	if(hit == "okay") {
-		if(save_vehicles(me, vehicles, page))
-			me.toast(true);
-	} else if(hit == "left") {
-		if(!save_vehicles(me, vehicles, page)) return true;
-		if(page == 0) page = (nVehicles - 1) / 6;
-		else page--;
-		put_vehicles_in_dlog(me, vehicles, page);
-	} else if(hit == "right") {
-		if(!save_vehicles(me, vehicles, page)) return true;
-		page++;
-		if(page > (nVehicles - 1) / 6) page = 0;
-		put_vehicles_in_dlog(me, vehicles, page);
-	}
-	return true;
-}
-
-void edit_horses() {
+bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 	using namespace std::placeholders;
-	size_t page = 0;
+	cDialog dlg("edit-vehicle");
+	dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &dlg, true));
+	dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &dlg, false));
+	dlg["del"].attachClickHandler([](cDialog& me, std::string, eKeyMod) {
+		me.setResult(false);
+		return me.toast(false);
+	});
 	
-	cDialog horse_dlg("edit-horses");
-	horse_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.horses.data(), 30, std::ref(page)), {"okay", "left", "right"});
+	put_vehicle_area(dlg, what);
+	dlg["loc"].setText(boost::lexical_cast<std::string>(what.loc));
+	dlg["num"].setTextToNum(num);
+	dlg["title"].setText(is_boat ? "Edit Boat" : "Edit Horse");
 	
-	put_vehicles_in_dlog(horse_dlg, scenario.horses.data(), page);
+	cLed& prop = dynamic_cast<cLed&>(dlg["owned"]);
+	prop.setState(what.property ? led_red : led_off);
 	
-	horse_dlg.run();
-}
-
-void edit_boats() {
-	using namespace std::placeholders;
-	size_t page = 0;
+	dlg.setResult(true);
+	dlg.run();
+	if(!dlg.getResult<bool>())
+		return false;
 	
-	cDialog boat_dlg("edit-boats");
-	boat_dlg.attachClickHandlers(std::bind(edit_vehicles_event_filter, _1, _2, scenario.boats.data(), 30, std::ref(page)), {"okay", "left", "right"});
-	
-	put_vehicles_in_dlog(boat_dlg, scenario.boats.data(), page);
-	
-	boat_dlg.run();
+	if(dlg.accepted()) {
+		what.property = prop.getState() != led_off;
+		what.exists = true;
+	}
+	return what.exists;
 }
 
 static bool save_add_town(cDialog& me) {

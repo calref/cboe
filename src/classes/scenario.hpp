@@ -76,8 +76,8 @@ public:
 	eContentRating rating;
 	std::vector<ePicType> custom_graphics;
 	std::vector<cMonster> scen_monsters;
-	std::array<cVehicle,30> boats;
-	std::array<cVehicle,30> horses;
+	std::vector<cVehicle> boats;
+	std::vector<cVehicle> horses;
 	std::vector<cTerrain> ter_types;
 	std::array<cTimer,20> scenario_timers;
 	std::vector<cSpecial> scen_specials;

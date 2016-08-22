@@ -13,7 +13,6 @@ bool edit_spec_item(short which_item);
 bool edit_quest(size_t which_quest);
 bool edit_shop(size_t which_shop, cDialog* parent = nullptr);
 void edit_save_rects();
-void edit_horses();
 void edit_add_town();
 void edit_item_placement();
 void edit_scen_details();
@@ -21,7 +20,7 @@ bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, 
 bool edit_make_scen_1(std::string& filename,std::string& title,bool& grass);
 void edit_scenario_events();
 bool build_scenario();
-void edit_boats();
+bool edit_vehicle(class cVehicle& what, int num, bool is_boat);
 
 bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name,std::string xtra);
 bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name);
