@@ -67,7 +67,7 @@ rectangle start_button_from = {120,70,127,91};
 rectangle base_small_button_from = {120,0,127,7};
 extern rectangle palette_buttons[10][6];
 extern ePalBtn town_buttons[6][10], out_buttons[6][10];
-rectangle palette_button_base = {0,0,18,25};
+rectangle palette_button_base = {0,0,18,26};
 rectangle terrain_buttons_rect = {0,0,410,294};
 extern rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
 rectangle left_button_base = {5,5,21,280};
@@ -664,7 +664,6 @@ void set_up_terrain_buttons(bool reset) {
 	
 	if(overall_mode < MODE_MAIN_SCREEN) {
 		palette_to.offset(5,terrain_rects[255].bottom + 14);
-		palette_to.right++;
 		for(short i = 0; i < 10; i++){
 			for(short j = 0; j < 6; j++){
 				auto cur_palette_buttons = editing_town ? town_buttons : out_buttons;
