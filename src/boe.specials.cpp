@@ -12,7 +12,6 @@
 #include "boe.text.hpp"
 #include "boe.infodlg.hpp"
 #include "boe.items.hpp"
-#include "boe.itemdata.hpp"
 #include "boe.combat.hpp"
 #include "boe.monster.hpp"
 #include "boe.locutils.hpp"
@@ -2621,7 +2620,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
 			if(dlg_res == 1) {set_sd = false; *next_spec = -1;}
 			else {
-				store_i = get_stored_item(spec.ex1a);
+				store_i = univ.scenario.get_stored_item(spec.ex1a);
 				if((spec.ex1a >= 0) && (!univ.party.give_item(store_i,true))) {
 					set_sd = false; *next_spec = -1;
 				}
@@ -4089,7 +4088,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			position_party(spec.ex1a,spec.ex1b,spec.ex2a,spec.ex2b);
 			break;
 		case eSpecType::TOWN_PLACE_ITEM:
-			store_i = get_stored_item(spec.ex2a);
+			store_i = univ.scenario.get_stored_item(spec.ex2a);
 			place_item(store_i,l,spec.ex2b);
 			break;
 		case eSpecType::TOWN_SPLIT_PARTY:

@@ -10,7 +10,6 @@
 #include "boe.infodlg.hpp"
 #include "boe.locutils.hpp"
 #include "boe.text.hpp"
-#include "boe.itemdata.hpp"
 #include "boe.townspec.hpp"
 #include "soundtool.hpp"
 #include "mathutil.hpp"

@@ -11,7 +11,6 @@
 #include "boe.monster.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
-#include "boe.itemdata.hpp"
 #include "boe.locutils.hpp"
 #include "boe.text.hpp"
 #include "soundtool.hpp"

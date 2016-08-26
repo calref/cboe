@@ -1233,4 +1233,135 @@ short cCurTown::countMonsters(){
 	return to_ret;
 }
 
+void cUniverse::enter_scenario(const std::string& name) {
+	using namespace std::placeholders;
+	
+	party.age = 0;
+	memset(party.stuff_done, 0, sizeof(party.stuff_done));
+	party.light_level = 0;
+	party.outdoor_corner = scenario.out_sec_start;
+	party.i_w_c = {0, 0};
+	party.loc_in_sec = scenario.out_start;
+	party.out_loc = scenario.out_start;
+	std::copy_if(scenario.boats.begin(), scenario.boats.end(), std::back_inserter(party.boats), std::bind(&cVehicle::exists, _1));
+	std::copy_if(scenario.horses.begin(), scenario.horses.end(), std::back_inserter(party.horses), std::bind(&cVehicle::exists, _1));
+	for(auto& pc : party) {
+		pc.status.clear();
+		if(isSplit(pc.main_status))
+			pc.main_status -= eMainStatus::SPLIT;
+		pc.cur_health = pc.max_health;
+		pc.cur_sp = pc.max_sp;
+	}
+	party.in_boat = -1;
+	party.in_horse = -1;
+	for(auto& pop : party.creature_save)
+		pop.which_town = 200;
+	for(short i = 0; i < 10; i++)
+		party.out_c[i].exists = false;
+	for(short i = 0; i < 5; i++)
+		for(short j = 0; j < 10; j++)
+			party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
+	// TODO: Now uncertain if the journal should really persist
+//	univ.party.journal.clear();
+	party.special_notes.clear();
+	party.talk_save.clear();
+	
+	party.direction = DIR_N;
+	party.at_which_save_slot = 0;
+	for(auto town : scenario.towns) {
+		town->can_find = !town->is_hidden;
+		town->m_killed = 0;
+		town->item_taken.reset();
+		for(auto& m : town->maps)
+			m.reset();
+	}
+	party.key_times.clear();
+	party.party_event_timers.clear();
+	for(short i = 0; i < scenario.special_items.size(); i++) {
+		if(scenario.special_items[i].flags >= 10)
+			party.spec_items.insert(i);
+	}
+	for(short i = 0; i < scenario.quests.size(); i++) {
+		if(scenario.quests[i].flags >= 10) {
+			party.quest_status[i] = eQuestStatus::STARTED;
+			party.quest_start[i] = 1;
+			party.quest_source[i] = -1;
+		}
+	}
+	
+	refresh_store_items();
+	
+	for(short i = 0; i < 96; i++)
+		for(short j = 0; j < 96; j++)
+			out.out_e[i][j] = 0;
+	for(short i = 0; i < 3; i++)
+		party.stored_items[i].clear();
+	
+	for(auto sector : scenario.outdoors)
+		for(auto& m : sector->maps)
+			m.reset();
+	
+	party.scen_name = name;
+}
+
+void cUniverse::generate_job_bank(int which, job_bank_t& bank) {
+	std::fill(bank.jobs.begin(), bank.jobs.end(), -1);
+	bank.inited = true;
+	size_t iSlot = 0;
+	for(size_t i = 0; iSlot < 4 && i < scenario.quests.size(); i++) {
+		if(scenario.quests[i].bank1 != which && scenario.quests[i].bank2 != which)
+			continue;
+		if(party.quest_status[i] != eQuestStatus::AVAILABLE)
+			continue;
+		if(get_ran(1,1,100) <= 50 - bank.anger)
+			bank.jobs[iSlot++] = i;
+	}
+}
+
+cItem cUniverse::get_random_store_item(int loot_type, bool allow_junk_treasure) {
+	cItem item = scenario.return_treasure(loot_type, allow_junk_treasure);
+	if(item.variety == eItemType::GOLD || item.variety == eItemType::SPECIAL || item.variety == eItemType::FOOD || item.variety == eItemType::QUEST)
+		item = cItem();
+	item.ident = true;
+	return item;
+}
+
+void cUniverse::refresh_store_items() {
+	for(size_t i = 0; i < scenario.shops.size(); i++) {
+		if(scenario.shops[i].getType() != eShopType::RANDOM)
+			continue;
+		for(int j = 0; j < 30; j++) {
+			cShopItem entry = scenario.shops[i].getItem(j);
+			if(entry.type == eShopItemType::TREASURE) {
+				party.magic_store_items[i][j] = get_random_store_item(entry.item.item_level, entry.item.item_level == 0);
+				continue;
+			} else if(entry.type == eShopItemType::CLASS) {
+				std::set<int> choices;
+				for(int k = 0; k < scenario.scen_items.size(); k++) {
+					if(scenario.scen_items[k].special_class == entry.item.special_class)
+						choices.insert(k);
+				}
+				int choice = get_ran(1,0,choices.size());
+				if(choice < choices.size()) {
+					auto iter = choices.begin();
+					std::advance(iter, choice);
+					party.magic_store_items[i][j] = scenario.scen_items[*iter];
+					continue;
+				}
+			} else if(entry.type == eShopItemType::OPT_ITEM) {
+				int roll = get_ran(1,1,100);
+				if(roll <= entry.quantity / 1000) {
+					party.magic_store_items[i][j] = entry.item;
+					continue;
+				}
+			}
+			party.magic_store_items[i][j] = cItem();
+		}
+	}
+	
+	for(int i = 0; i < party.job_banks.size(); i++) {
+		generate_job_bank(i, party.job_banks[i]);
+	}
+}
+
 void(* cUniverse::print_result)(std::string) = nullptr;

@@ -46,7 +46,6 @@
 		2BF04B1C0BF51924006C0831 /* boe.combat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE60BF51924006C0831 /* boe.combat.cpp */; };
 		2BF04B1D0BF51924006C0831 /* boe.dlgutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AE80BF51924006C0831 /* boe.dlgutil.cpp */; };
 		2BF04B230BF51924006C0831 /* boe.infodlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF40BF51924006C0831 /* boe.infodlg.cpp */; };
-		2BF04B240BF51924006C0831 /* boe.itemdata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF60BF51924006C0831 /* boe.itemdata.cpp */; };
 		2BF04B250BF51924006C0831 /* boe.items.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AF80BF51924006C0831 /* boe.items.cpp */; };
 		2BF04B260BF51924006C0831 /* boe.locutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFA0BF51924006C0831 /* boe.locutils.cpp */; };
 		2BF04B270BF51924006C0831 /* boe.monster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04AFC0BF51924006C0831 /* boe.monster.cpp */; };
@@ -550,8 +549,6 @@
 		2BF04AF30BF51924006C0831 /* boe.global.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.global.hpp; sourceTree = "<group>"; };
 		2BF04AF40BF51924006C0831 /* boe.infodlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boe.infodlg.cpp; sourceTree = "<group>"; };
 		2BF04AF50BF51924006C0831 /* boe.infodlg.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.infodlg.hpp; sourceTree = "<group>"; };
-		2BF04AF60BF51924006C0831 /* boe.itemdata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boe.itemdata.cpp; sourceTree = "<group>"; };
-		2BF04AF70BF51924006C0831 /* boe.itemdata.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.itemdata.hpp; sourceTree = "<group>"; };
 		2BF04AF80BF51924006C0831 /* boe.items.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boe.items.cpp; sourceTree = "<group>"; };
 		2BF04AF90BF51924006C0831 /* boe.items.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.items.hpp; sourceTree = "<group>"; };
 		2BF04AFA0BF51924006C0831 /* boe.locutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boe.locutils.cpp; sourceTree = "<group>"; };
@@ -1391,7 +1388,6 @@
 				2BF04AD30BF51923006C0831 /* boe.graphics.cpp */,
 				2BF04ACD0BF51923006C0831 /* boe.graphutil.cpp */,
 				2BF04AF40BF51924006C0831 /* boe.infodlg.cpp */,
-				2BF04AF60BF51924006C0831 /* boe.itemdata.cpp */,
 				2BF04AF80BF51924006C0831 /* boe.items.cpp */,
 				2BF04AFA0BF51924006C0831 /* boe.locutils.cpp */,
 				2BF04ACB0BF51923006C0831 /* boe.main.cpp */,
@@ -1420,7 +1416,6 @@
 				2BF04AD40BF51923006C0831 /* boe.graphics.hpp */,
 				2BF04ACE0BF51923006C0831 /* boe.graphutil.hpp */,
 				2BF04AF50BF51924006C0831 /* boe.infodlg.hpp */,
-				2BF04AF70BF51924006C0831 /* boe.itemdata.hpp */,
 				2BF04AF90BF51924006C0831 /* boe.items.hpp */,
 				2BF04AFB0BF51924006C0831 /* boe.locutils.hpp */,
 				2BF04ACC0BF51923006C0831 /* boe.main.hpp */,
@@ -1758,7 +1753,6 @@
 				2BF04B1C0BF51924006C0831 /* boe.combat.cpp in Sources */,
 				2BF04B1D0BF51924006C0831 /* boe.dlgutil.cpp in Sources */,
 				2BF04B230BF51924006C0831 /* boe.infodlg.cpp in Sources */,
-				2BF04B240BF51924006C0831 /* boe.itemdata.cpp in Sources */,
 				2BF04B250BF51924006C0831 /* boe.items.cpp in Sources */,
 				2BF04B260BF51924006C0831 /* boe.locutils.cpp in Sources */,
 				2BF04B270BF51924006C0831 /* boe.monster.cpp in Sources */,

@@ -13,7 +13,6 @@
 #include "boe.party.hpp"
 #include "boe.locutils.hpp"
 #include "boe.newgraph.hpp"
-#include "boe.itemdata.hpp"
 #include "boe.infodlg.hpp"
 #include "soundtool.hpp"
 #include "boe.monster.hpp"
@@ -32,7 +31,6 @@ extern short stat_window,which_combat_type,current_pc;
 extern eGameMode overall_mode;
 extern sf::RenderWindow mainPtr;
 extern bool boom_anim_active;
-extern bool allow_junk_treasure;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 
@@ -49,15 +47,11 @@ extern std::map<const eItemType, const short> excluding_types;
 short selected;
 
 bool GTP(short item_num) {
-	cItem item;
-	
-	item = get_stored_item(item_num);
+	cItem item = univ.scenario.get_stored_item(item_num);
 	return univ.party.give_item(item,true);
 }
 bool silent_GTP(short item_num) {
-	cItem item;
-	
-	item = get_stored_item(item_num);
+	cItem item = univ.scenario.get_stored_item(item_num);
 	return univ.party.give_item(item,false);
 }
 void give_gold(short amount,bool print_result) {
@@ -704,7 +698,7 @@ void place_glands(location where,mon_num_t m_type) {
 	else monst = univ.scenario.scen_monsters[m_type];
 	
 	if((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,1,100) < monst.corpse_item_chance)) {
-		store_i = get_stored_item(monst.corpse_item);
+		store_i = univ.scenario.get_stored_item(monst.corpse_item);
 		place_item(store_i,where);
 	}
 }
@@ -773,7 +767,7 @@ void place_treasure(location where,short level,short loot,short mode) {
 		amt += 2;
 	
 	if(amt > 3) {
-		new_item = get_stored_item(0);
+		new_item = univ.scenario.get_stored_item(0);
 		new_item.item_level = amt;
 		r1 = get_ran(1,1,9);
 		if(((loot > 1) && (r1 < 7)) || ((loot == 1) && (r1 < 5)) || (mode == 1)
@@ -799,11 +793,11 @@ void place_treasure(location where,short level,short loot,short mode) {
 				max = 200;
 			
 			
-			new_item = return_treasure(treas_chart[loot][j]);
+			new_item = univ.scenario.return_treasure(treas_chart[loot][j]);
 			if((item_val(new_item) < min) || (item_val(new_item) > max)) {
-				new_item = return_treasure(treas_chart[loot][j]);
+				new_item = univ.scenario.return_treasure(treas_chart[loot][j]);
 				if((item_val(new_item) < min) || (item_val(new_item) > max)) {
-					new_item = return_treasure(treas_chart[loot][j]);
+					new_item = univ.scenario.return_treasure(treas_chart[loot][j]);
 					if(item_val(new_item) > max)
 						new_item.variety = eItemType::NO_ITEM;
 				}
@@ -821,7 +815,7 @@ void place_treasure(location where,short level,short loot,short mode) {
 			
 			// if forced, keep dipping until a treasure comes up
 			if((mode == 1)	&& (max >= 20)) {
-				do new_item = return_treasure(treas_chart[loot][j]);
+				do new_item = univ.scenario.return_treasure(treas_chart[loot][j]);
 				while(new_item.variety == eItemType::NO_ITEM || item_val(new_item) > max);
 			}
 			
@@ -839,109 +833,6 @@ void place_treasure(location where,short level,short loot,short mode) {
 		}
 	}
 }
-
-cItem return_treasure(short loot) {
-	cItem treas;
-	static const short which_treas_chart[48] = {
-		1,1,1,1,1,2,2,2,2,2,
-		3,3,3,3,3,2,2,2,4,4,
-		4,4,5,5,5,6,6,6,7,7,
-		7,8,8,9,9,10,11,12,12,13,
-		13,14, 9,10,11,9,10,11
-	};
-	short r1;
-	
-	treas.variety = eItemType::NO_ITEM;
-	r1 = get_ran(1,0,41);
-	if(loot >= 3)
-		r1 += 3;
-	if(loot == 4)
-		r1 += 3;
-	switch(which_treas_chart[r1]) {
-		case 1: treas = get_food(); break;
-		case 2: treas = get_weapon(loot);	break;
-		case 3: treas = get_armor(loot); break;
-		case 4: treas = get_shield(loot); break;
-		case 5: treas = get_helm(loot); break;
-		case 6: treas = get_missile(loot); break;
-		case 7: treas = get_potion(loot); break;
-		case 8: treas = get_scroll(loot); break;
-		case 9: treas = get_wand(loot); break;
-		case 10: treas = get_ring(loot); break;
-		case 11: treas = get_necklace(loot); break;
-		case 12: treas = get_poison(loot); break;
-		case 13: treas = get_gloves(loot); break;
-		case 14: treas = get_boots(loot); break;
-	}
-	if(treas.variety == eItemType::NO_ITEM)
-		treas.value = 0;
-	return treas;
-	
-}
-
-void generate_job_bank(int which, job_bank_t& bank) {
-	std::fill(bank.jobs.begin(), bank.jobs.end(), -1);
-	bank.inited = true;
-	size_t iSlot = 0;
-	for(size_t i = 0; iSlot < 4 && i < univ.scenario.quests.size(); i++) {
-		if(univ.scenario.quests[i].bank1 != which && univ.scenario.quests[i].bank2 != which)
-			continue;
-		if(univ.party.quest_status[i] != eQuestStatus::AVAILABLE)
-			continue;
-		if(get_ran(1,1,100) <= 50 - bank.anger)
-			bank.jobs[iSlot++] = i;
-	}
-}
-
-static cItem get_random_store_item(int loot_type) {
-	cItem item = return_treasure(loot_type);
-	if(item.variety == eItemType::GOLD || item.variety == eItemType::SPECIAL || item.variety == eItemType::FOOD || item.variety == eItemType::QUEST)
-		item = cItem();
-	item.ident = true;
-	return item;
-}
-
-void refresh_store_items() {
-	for(size_t i = 0; i < univ.scenario.shops.size(); i++) {
-		if(univ.scenario.shops[i].getType() != eShopType::RANDOM)
-			continue;
-		for(int j = 0; j < 30; j++) {
-			cShopItem entry = univ.scenario.shops[i].getItem(j);
-			if(entry.type == eShopItemType::TREASURE) {
-				if(entry.item.item_level == 0)
-					allow_junk_treasure = true;
-				univ.party.magic_store_items[i][j] = get_random_store_item(entry.item.item_level);
-				allow_junk_treasure = false;
-				continue;
-			} else if(entry.type == eShopItemType::CLASS) {
-				std::set<int> choices;
-				for(int k = 0; k < univ.scenario.scen_items.size(); k++) {
-					if(univ.scenario.scen_items[k].special_class == entry.item.special_class)
-						choices.insert(k);
-				}
-				int choice = get_ran(1,0,choices.size());
-				if(choice < choices.size()) {
-					auto iter = choices.begin();
-					std::advance(iter, choice);
-					univ.party.magic_store_items[i][j] = univ.scenario.scen_items[*iter];
-					continue;
-				}
-			} else if(entry.type == eShopItemType::OPT_ITEM) {
-				int roll = get_ran(1,1,100);
-				if(roll <= entry.quantity / 1000) {
-					univ.party.magic_store_items[i][j] = entry.item;
-					continue;
-				}
-			}
-			univ.party.magic_store_items[i][j] = cItem();
-		}
-	}
-	
-	for(int i = 0; i < univ.party.job_banks.size(); i++) {
-		generate_job_bank(i, univ.party.job_banks[i]);
-	}
-}
-
 
 static bool get_text_response_event_filter(cDialog& me, std::string, eKeyMod) {
 	me.toast(true);

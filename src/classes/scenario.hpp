@@ -115,6 +115,9 @@ public:
 	bool is_ter_used(ter_num_t ter);
 	bool is_monst_used(mon_num_t monst);
 	bool is_item_used(item_num_t item);
+	cItem get_stored_item(int loot);
+	cItem return_treasure(int loot, bool allow_junk_treasure = false);
+	cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,const std::vector<eItemType>& types,bool allow_junk_treasure=false);
 	
 	void reset_version();
 	cScenario& operator=(cScenario&& other);

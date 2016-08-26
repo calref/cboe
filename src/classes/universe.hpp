@@ -159,6 +159,7 @@ class cUniverse{
 	void check_item(cItem& item);
 	std::string strbuf;
 	std::map<int,std::string> extrabufs;
+	cItem get_random_store_item(int loot_type, bool allow_junk_treasure);
 public:
 	void exportSummons();
 	void exportGraphics();
@@ -183,6 +184,9 @@ public:
 	void clear_stored_pcs();
 	void import_legacy(legacy::stored_town_maps_type& old);
 	void import_legacy(legacy::stored_outdoor_maps_type& old);
+	void enter_scenario(const std::string& name);
+	void refresh_store_items();
+	void generate_job_bank(int which, job_bank_t& bank);
 	short difficulty_adjust() const;
 	explicit cUniverse(long party_type = 'dflt');
 	~cUniverse();

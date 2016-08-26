@@ -8,7 +8,6 @@
 #include "boe.dlgutil.hpp"
 #include "boe.text.hpp"
 #include "boe.town.hpp"
-#include "boe.itemdata.hpp"
 #include "boe.locutils.hpp"
 #include "boe.party.hpp"
 #include "boe.specials.hpp"
@@ -658,7 +657,7 @@ static void show_job_bank(int which_bank, std::string title) {
 	if(which_bank >= univ.party.job_banks.size())
 		univ.party.job_banks.resize(which_bank + 1);
 	if(!univ.party.job_banks[which_bank].inited)
-		generate_job_bank(which_bank, univ.party.job_banks[which_bank]);
+		univ.generate_job_bank(which_bank, univ.party.job_banks[which_bank]);
 	fill_job_bank(job_dlg, univ.party.job_banks[which_bank], title);
 	
 	int anger = univ.party.job_banks[which_bank].anger;

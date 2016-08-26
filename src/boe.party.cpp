@@ -13,7 +13,6 @@
 #include "boe.graphutil.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.specials.hpp"
-#include "boe.itemdata.hpp"
 #include "boe.infodlg.hpp"
 #include "boe.items.hpp"
 #include <cstring>
@@ -104,119 +103,7 @@ short store_graphic_pc_num ;
 short store_graphic_mode ;
 short store_pc_graphic;
 
-// This is only called after a scenario is loaded and the party is put into it.
-// Until that time, the party scen vals are uninited
-// Then, it inits the party properly for starting the scenario based
-// on the loaded scenario
-static void init_party_scen_data() {
-	bool stored_item = false;
-	
-	univ.party.age = 0;
-	for(short i = 0; i < 310; i++)
-		for(short j = 0; j < 50; j++)
-			PSD[i][j] = 0;
-	univ.party.light_level = 0;
-	univ.party.outdoor_corner.x = univ.scenario.out_sec_start.x;
-	univ.party.outdoor_corner.y = univ.scenario.out_sec_start.y;
-	univ.party.i_w_c.x = 0;
-	univ.party.i_w_c.y = 0;
-	univ.party.loc_in_sec.x = univ.scenario.out_start.x;
-	univ.party.loc_in_sec.y = univ.scenario.out_start.y;
-	univ.party.out_loc.x = univ.scenario.out_start.x;
-	univ.party.out_loc.y = univ.scenario.out_start.y;
-	for(short i = 0; i < univ.scenario.boats.size(); i++) {
-		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
-			if(!univ.party.boats[i].exists) {
-				univ.party.boats[i] = univ.scenario.boats[i];
-				univ.party.boats[i].exists = true;
-			}
-		}
-	}
-	for(short i = 0; i < univ.scenario.horses.size(); i++) {
-		if(univ.scenario.horses[i].which_town >= 0 && univ.scenario.horses[i].loc.x >= 0) {
-			if(!univ.party.horses[i].exists) {
-				univ.party.horses[i] = univ.scenario.horses[i];
-				univ.party.horses[i].exists = true;
-			}
-		}
-	}
-	for(short j = 0; j < 6; j++) {
-		univ.party[j].status.clear();
-		if(isSplit(univ.party[j].main_status))
-			univ.party[j].main_status -= eMainStatus::SPLIT;
-		univ.party[j].cur_health = univ.party[j].max_health;
-		univ.party[j].cur_sp = univ.party[j].max_sp;
-	}
-	univ.party.in_boat = -1;
-	univ.party.in_horse = -1;
-	for(auto& pop : univ.party.creature_save)
-		pop.which_town = 200;
-	for(short i = 0; i < 10; i++)
-		univ.party.out_c[i].exists = false;
-	for(short i = 0; i < 5; i++)
-		for(short j = 0; j < 10; j++)
-			univ.party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
-	// TODO: Now uncertain if the journal should really persist
-//	univ.party.journal.clear();
-	univ.party.special_notes.clear();
-	univ.party.talk_save.clear();
-	
-	univ.party.direction = DIR_N;
-	univ.party.at_which_save_slot = 0;
-	for(auto town : univ.scenario.towns) {
-		town->can_find = !town->is_hidden;
-		town->m_killed = 0;
-		town->item_taken.reset();
-		for(auto& m : town->maps)
-			m.reset();
-	}
-	for(short i = 0; i < 20; i++)
-	 	univ.party.key_times[i] = 30000;
-	univ.party.party_event_timers.clear();
-	for(short i = 0; i < univ.scenario.special_items.size(); i++) {
-		if(univ.scenario.special_items[i].flags >= 10)
-			univ.party.spec_items.insert(i);
-	}
-	for(short i = 0; i < univ.scenario.quests.size(); i++) {
-		if(univ.scenario.quests[i].flags >= 10) {
-			univ.party.quest_status[i] = eQuestStatus::STARTED;
-			univ.party.quest_start[i] = 1;
-			univ.party.quest_source[i] = -1;
-		}
-	}
-	
-	
-	refresh_store_items();
-	
-	for(short i = 0; i < 96; i++)
-		for(short j = 0; j < 96; j++)
-			univ.out.out_e[i][j] = 0;
-	
-	for(short i = 0; i < 3;i++)
-		for(short j = 0; j < univ.party.stored_items[i].size(); j++)
-			if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
-				stored_item = true;
-	if(stored_item)
-		if(cChoiceDlog("keep-stored-items", {"yes", "no"}).show() == "yes") {
-			std::vector<cItem*> saved_item_refs;
-			for(short i = 0; i < 3;i++)
-				for(short j = 0; j < univ.party.stored_items[i].size(); j++)
-					if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
-						saved_item_refs.push_back(&univ.party.stored_items[i][j]);
-			short pc = 0;
-			while(univ.party[pc].main_status != eMainStatus::ALIVE && pc < 6) pc++;
-			show_get_items("Choose stored items to keep:", saved_item_refs, pc, true);
-		}
-	for(short i = 0; i < 3;i++)
-		univ.party.stored_items[i].clear();
-	
-	for(auto sector : univ.scenario.outdoors)
-		for(auto& m : sector->maps)
-			m.reset();
-	
-}
-
-// When the party is placed into a scen from the startinbg screen, this is called to put the game into game
+// When the party is placed into a scen from the starting screen, this is called to put the game into game
 // mode and load in the scen and init the party info
 // party record already contains scen name
 void put_party_in_scen(std::string scen_name) {
@@ -263,8 +150,24 @@ void put_party_in_scen(std::string scen_name) {
 	if(!load_scenario(path, univ.scenario))
 		return;
 	
-	init_party_scen_data();
-	univ.party.scen_name = scen_name;
+	bool stored_item = false;
+	for(auto& store : univ.party.stored_items)
+		stored_item = stored_item || std::any_of(store.begin(), store.end(), [](const cItem& item) {
+			return item.variety != eItemType::NO_ITEM;
+		});
+	if(stored_item)
+		if(cChoiceDlog("keep-stored-items", {"yes", "no"}).show() == "yes") {
+			std::vector<cItem*> saved_item_refs;
+			for(short i = 0; i < 3;i++)
+				for(short j = 0; j < univ.party.stored_items[i].size(); j++)
+					if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
+						saved_item_refs.push_back(&univ.party.stored_items[i][j]);
+			short pc = 0;
+			while(univ.party[pc].main_status != eMainStatus::ALIVE && pc < 6) pc++;
+			show_get_items("Choose stored items to keep:", saved_item_refs, pc, true);
+		}
+	
+	univ.enter_scenario(scen_name);
 	
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise

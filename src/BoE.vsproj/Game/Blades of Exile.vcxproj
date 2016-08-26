@@ -104,7 +104,6 @@
     <ClInclude Include="..\..\boe.graphics.hpp" />
     <ClInclude Include="..\..\boe.graphutil.hpp" />
     <ClInclude Include="..\..\boe.infodlg.hpp" />
-    <ClInclude Include="..\..\boe.itemdata.hpp" />
     <ClInclude Include="..\..\boe.items.hpp" />
     <ClInclude Include="..\..\boe.locutils.hpp" />
     <ClInclude Include="..\..\boe.main.hpp" />
@@ -130,7 +129,6 @@
     <ClCompile Include="..\..\boe.graphics.cpp" />
     <ClCompile Include="..\..\boe.graphutil.cpp" />
     <ClCompile Include="..\..\boe.infodlg.cpp" />
-    <ClCompile Include="..\..\boe.itemdata.cpp" />
     <ClCompile Include="..\..\boe.items.cpp" />
     <ClCompile Include="..\..\boe.locutils.cpp" />
     <ClCompile Include="..\..\boe.main.cpp" />

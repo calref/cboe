@@ -11,7 +11,6 @@
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
 #include "boe.items.hpp"
-#include "boe.itemdata.hpp"
 #include "boe.monster.hpp"
 #include "boe.town.hpp"
 #include "boe.combat.hpp"
@@ -376,7 +375,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			&& (!univ.town->item_taken[i] ||
 			(univ.town->preset_items[i].always_there))) {
 				// place the preset item, if party hasn't gotten it already
-				univ.town.items.push_back(get_stored_item(univ.town->preset_items[i].code));
+				univ.town.items.push_back(univ.scenario.get_stored_item(univ.town->preset_items[i].code));
 				// Don't place special items if already in the party's possession
 				if(univ.town.items[i].variety == eItemType::SPECIAL && univ.party.spec_items.count(univ.town.items[i].item_level))
 					break;

@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include "oldstructs.hpp"
+#include "mathutil.hpp"
 
 void cScenario::reset_version() {
 	format.prog_make_ver[0] = 2;
@@ -299,4 +300,124 @@ bool cScenario::is_item_used(item_num_t item) {
 		}
 	}
 	return false;
+}
+
+cItem cScenario::get_stored_item(int loot) {
+	if(loot >= 0 && loot < scen_items.size())
+		return scen_items[loot];
+	return cItem();
+}
+
+static const short loot_min[5] = {0,0,5,50,400};
+static const short loot_max[5] = {3,8,40,800,4000};
+
+cItem cScenario::pull_item_of_type(unsigned int loot_max,short min_val,short max_val, const std::vector<eItemType>& types,bool allow_junk_treasure) {
+	// occasionally get nice item
+	if(get_ran(1,0,160) == 80) {
+		loot_max += 2;
+		max_val += 2000;
+	}
+	for(short i = 0; i < 80; i++) {
+		int j = get_ran(1,0,scen_items.size() - 1);
+		cItem temp_i = get_stored_item(j);
+		if(temp_i.variety == eItemType::NO_ITEM) continue;
+		if(std::find(types.begin(), types.end(), temp_i.variety) != types.end()) {
+			short val = (temp_i.charges > 0) ? temp_i.charges * temp_i.value : temp_i.value;
+			if(val >= min_val && val <= max_val && (temp_i.treas_class != 0 || allow_junk_treasure) && temp_i.treas_class <= loot_max)
+				return temp_i;
+		}
+	}
+	return cItem();
+}
+
+enum eTreasureType {
+	FOOD, WEAPON, ARMOR, SHIELD, HELM, MISSILE, POTION,
+	SCROLL, WAND, RING, NECKLACE, POISON, GLOVES, BOOTS,
+};
+
+cItem cScenario::return_treasure(int loot, bool allow_junk) {
+	static const std::vector<eItemType>
+		weapon = {eItemType::ONE_HANDED,eItemType::TWO_HANDED},
+		armor = {eItemType::ARMOR}, shield = {eItemType::SHIELD}, helm = {eItemType::HELM},
+		missiles1 = {eItemType::ARROW,eItemType::THROWN_MISSILE,eItemType::BOW},
+		missiles2 = {eItemType::CROSSBOW,eItemType::BOLTS,eItemType::MISSILE_NO_AMMO},
+		scroll = {eItemType::SCROLL}, wand = {eItemType::WAND}, ring = {eItemType::RING}, necklace = {eItemType::NECKLACE},
+		potion = {eItemType::POTION}, poison = {eItemType::WEAPON_POISON}, gloves = {eItemType::GLOVES}, boots = {eItemType::BOOTS};
+	
+	static const eTreasureType which_treas_chart[] = {
+		FOOD,FOOD,FOOD,FOOD,FOOD, WEAPON,WEAPON,WEAPON,WEAPON,WEAPON,
+		ARMOR,ARMOR,ARMOR,ARMOR,ARMOR, WEAPON,WEAPON,WEAPON,SHIELD,SHIELD,
+		SHIELD,SHIELD,HELM,HELM,HELM, MISSILE,MISSILE,MISSILE,POTION,POTION,
+		POTION,SCROLL,SCROLL,WAND,WAND, RING,NECKLACE,POISON,POISON,GLOVES,
+		GLOVES,BOOTS,WAND,RING,NECKLACE, WAND,RING,NECKLACE,
+	};
+	
+	cItem treas;
+	short r1 = get_ran(1,0,41);
+	if(loot >= 3)
+		r1 += 3;
+	if(loot == 4)
+		r1 += 3;
+	switch(which_treas_chart[r1]) {
+		case FOOD:
+			// food doesn't always appear
+			if(get_ran(1,0,2) == 1) {
+				treas = cItem('food');
+				treas.graphic_num += get_ran(1,0,2);
+				treas.item_level = get_ran(1,5,10);
+				if(get_ran(1,0,9) == 5)
+					treas.graphic_num = 113;
+				if(get_ran(1,0,9) == 5)
+					treas.graphic_num = 114;
+			}
+			break;
+		case WEAPON:
+			if(loot > 0)
+				treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],weapon,allow_junk);
+			break;
+		case ARMOR:
+			// For some reason the armor code calculated this but never used it
+			//r1 = get_ran(1,(loot - 1) * 5 + 124,142);
+			if(loot > 0)
+				treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],armor,allow_junk);
+			break;
+		case SHIELD:
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],shield,allow_junk);
+			break;
+		case HELM:
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],helm,allow_junk);
+			break;
+		case MISSILE:
+			if(get_ran(1,0,2) < 2)
+				treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],missiles1,allow_junk);
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],missiles2,allow_junk);
+			break;
+		case POTION:
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot] / (get_ran(1,0,80) < 20 * (4 - loot) ? 2 : 1),potion,allow_junk);
+			break;
+		case SCROLL:
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],scroll,allow_junk);
+			break;
+		case WAND:
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],wand,allow_junk);
+			break;
+		case RING:
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],ring,allow_junk);
+			break;
+		case NECKLACE:
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],necklace,allow_junk);
+			break;
+		case POISON:
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],poison,allow_junk);
+			break;
+		case GLOVES:
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],gloves,allow_junk);
+			break;
+		case BOOTS:
+			treas = pull_item_of_type(loot,loot_min[loot],loot_max[loot],boots,allow_junk);
+			break;
+	}
+	if(treas.variety == eItemType::NO_ITEM)
+		treas.value = 0;
+	return treas;
 }

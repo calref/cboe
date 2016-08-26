@@ -88,8 +88,8 @@ public:
 	location out_loc, town_loc;
 	location loc_in_sec;
 	short town_num;
-	std::array<cVehicle,30> boats;
-	std::array<cVehicle,30> horses;
+	std::vector<cVehicle> boats;
+	std::vector<cVehicle> horses;
 	std::array<cPopulation,4> creature_save;
 	short in_boat;
 	short in_horse;

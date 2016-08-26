@@ -22,7 +22,6 @@
 #include "boe.items.hpp"
 #include "soundtool.hpp"
 #include "boe.infodlg.hpp"
-#include "boe.itemdata.hpp"
 #include "boe.main.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
@@ -1805,7 +1804,7 @@ bool handle_keystroke(sf::Event& event){
 				who.priest_spells.set();
 				who.mage_spells.set();
 			}
-			refresh_store_items();
+			univ.refresh_store_items();
 			add_string_to_buf("Debug: Add stuff and heal.");
 			print_buf();
 			put_pc_screen();
@@ -1991,7 +1990,7 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'W':
 			if(!univ.debug_mode) break;
-			refresh_store_items();
+			univ.refresh_store_items();
 			add_string_to_buf("Debug: Refreshed jobs/shops.");
 			print_buf();
 			break;
@@ -2275,7 +2274,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	}
 	// Plants and magic shops
 	if(length > 4000 || age_before / 4000 < univ.party.age / 4000)
-		refresh_store_items();
+		univ.refresh_store_items();
 	// Heal party
 	univ.party.heal(hp_restore);
 	univ.party.restore_sp(mp_restore);
@@ -2397,7 +2396,7 @@ void increase_age() {
 	
 	// Plants and magic shops
 	if(univ.party.age % 4000 == 0) {
-		refresh_store_items();
+		univ.refresh_store_items();
 	}
 	
 	// Protection, etc.
