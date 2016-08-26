@@ -75,7 +75,7 @@ public:
 	std::vector<std::string> spec_strs;
 	bool special_spot[48][48];
 	bool roads[48][48];
-	eAmbientSound ambient_sound;
+	eAmbientSound ambient_sound = AMBIENT_NONE;
 	snd_num_t out_sound;
 	int bg_out, bg_fight, bg_town, bg_dungeon;
 	// Persistent data for saved games
