@@ -98,6 +98,7 @@ public:
 	bool give_item(cItem item, int flags);
 	bool equip_item(int which_item, bool do_print);
 	bool unequip_item(int which_item, bool do_print);
+	auto get_weapons() -> std::pair<decltype(items)::const_iterator, decltype(items)::const_iterator>;
 	void take_item(int which_item);
 	void remove_charge(int which_item);
 	short has_space() const;

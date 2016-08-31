@@ -512,7 +512,7 @@ void char_stand_ready() {
 }
 
 void pc_attack(short who_att,iLiving* target) {
-	short r1,r2,weap1 = 24, weap2 = 24,skill_item;
+	short r1,r2,skill_item;
 	short hit_adj, dam_adj;
 	cPlayer& attacker = univ.party[who_att];
 	
@@ -529,12 +529,8 @@ void pc_attack(short who_att,iLiving* target) {
 	
 	attacker.last_attacked = target;
 	
-	for(short i = 0; i < 24; i++)
-		if((attacker.items[i].variety == eItemType::ONE_HANDED || attacker.items[i].variety == eItemType::TWO_HANDED) && attacker.equip[i]) {
-			if(weap1 == 24)
-				weap1 = i;
-			else weap2 = i;
-		}
+	auto weapons = attacker.get_weapons();
+	auto weap1 = weapons.first, weap2 = weapons.second, no_weap = attacker.items.cend();
 	
 	hit_adj = (-5 * minmax(-8,8,attacker.status[eStatus::BLESS_CURSE])) + 5 * minmax(-8,8,target->status[eStatus::BLESS_CURSE])
 		- attacker.stat_adj(eSkill::DEXTERITY) * 5 + (get_encumbrance(who_att)) * 5;
@@ -548,11 +544,11 @@ void pc_attack(short who_att,iLiving* target) {
 	}
 	
 	// TODO: These don't stack?
-	if((skill_item = attacker.has_abil_equip(eItemAbil::SKILL)) < 24) {
+	if((skill_item = attacker.has_abil_equip(eItemAbil::SKILL)) < attacker.items.size()) {
 		hit_adj += 5 * (attacker.items[skill_item].abil_data[0] / 2 + 1);
 		dam_adj += attacker.items[skill_item].abil_data[0] / 2;
 	}
-	if((skill_item = attacker.has_abil_equip(eItemAbil::GIANT_STRENGTH)) < 24) {
+	if((skill_item = attacker.has_abil_equip(eItemAbil::GIANT_STRENGTH)) < attacker.items.size()) {
 		dam_adj += attacker.items[skill_item].abil_data[0];
 		hit_adj += attacker.items[skill_item].abil_data[0] * 2;
 	}
@@ -563,7 +559,7 @@ void pc_attack(short who_att,iLiving* target) {
 	
 	combat_posing_monster = current_working_monster = who_att;
 	
-	if(weap1 == 24) {
+	if(weap1 == no_weap) {
 		std::string create_line = univ.party[who_att].name + " punches.";
 		add_string_to_buf(create_line);
 		
@@ -605,11 +601,11 @@ void pc_attack(short who_att,iLiving* target) {
 		}
 	}
 	
-	short weap_poisoned = attacker.weap_poisoned;
-	if(weap1 < 24)
-		pc_attack_weapon(who_att, *target, hit_adj, dam_adj, attacker.items[weap1], weap2 < 24 ? 2 : 1, weap_poisoned == weap1);
-	if(weap2 < 24 && target->is_alive())
-		pc_attack_weapon(who_att, *target, hit_adj, dam_adj, attacker.items[weap2], 0, weap_poisoned == weap2);
+	auto weap_poisoned = attacker.items.begin() + attacker.weap_poisoned;
+	if(weap1 != no_weap)
+		pc_attack_weapon(who_att, *target, hit_adj, dam_adj, *weap1, 1 + (weap2 != no_weap), weap_poisoned == weap1);
+	if(weap2 != no_weap && target->is_alive())
+		pc_attack_weapon(who_att, *target, hit_adj, dam_adj, *weap2, 0, weap_poisoned == weap2);
 	move_to_zero(attacker.status[eStatus::POISONED_WEAPON]);
 	take_ap(4);
 	
@@ -699,19 +695,19 @@ static void apply_weapon_status(eStatus status, int how_much, int dmg, iLiving& 
 }
 
 // primary: 0 - secondary weapon, 1 - primary (and only) weapon, 2 - primary of two weapons
-void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,cItem& weap,short primary,bool do_poison) {
+void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,const cItem& weap,short primary,bool do_poison) {
 	short r1, r2;
 	cPlayer& attacker = univ.party[who_att];
 	
 	// safety valve
 	int skill;
 	if(weap.weap_type == eSkill::INVALID)
-		skill = univ.party[who_att].skill(eSkill::EDGED_WEAPONS);
+		skill = attacker.skill(eSkill::EDGED_WEAPONS);
 	else if(weap.weap_type == eSkill::MAX_HP)
-		skill = 20 * univ.party[who_att].cur_health / univ.party[who_att].max_health;
+		skill = 20 * attacker.cur_health / attacker.max_health;
 	else if(weap.weap_type == eSkill::MAX_SP)
-		skill = 20 * univ.party[who_att].cur_sp / univ.party[who_att].max_sp;
-	else skill = univ.party[who_att].skill(weap.weap_type);
+		skill = 20 * attacker.cur_sp / attacker.max_sp;
+	else skill = attacker.skill(weap.weap_type);
 	
 	std::string create_line = attacker.name + " swings.";
 	add_string_to_buf(create_line);
@@ -780,8 +776,8 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 				splits = who->amorphous;
 			// assassinate
 			r1 = get_ran(1,1,100);
-			int assassin = univ.party[who_att].skill(eSkill::ASSASSINATION);
-			if((univ.party[who_att].level >= target.get_level() - 1) && assassin >= target.get_level() / 2
+			int assassin = attacker.skill(eSkill::ASSASSINATION);
+			if((attacker.level >= target.get_level() - 1) && assassin >= target.get_level() / 2
 				&& !splits) // Can't assassinate splitters
 				if(r1 < hit_chance[max(assassin - target.get_level(),0)]) {
 					add_string_to_buf("  You assassinate.");
@@ -821,7 +817,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 			if(damaged)
 				monst->damaged_msg(r2, spec_dam + bonus_dam);
 		} else if(cPlayer* who = dynamic_cast<cPlayer*>(&target)) {
-			eRace race = univ.party[who_att].race;
+			eRace race = attacker.race;
 			if(dmg_snd != no_dmg)
 				damaged = damaged || damage_pc(*who, r2, eDamageType::WEAPON, race, dmg_snd, false);
 			if(spec_dam)
@@ -837,21 +833,21 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 		}
 		if(do_poison) {
 			// poison
-			if(univ.party[who_att].status[eStatus::POISONED_WEAPON] > 0) {
-				short poison_amt = univ.party[who_att].status[eStatus::POISONED_WEAPON];
-				if(univ.party[who_att].has_abil_equip(eItemAbil::POISON_AUGMENT) < 24)
+			if(attacker.status[eStatus::POISONED_WEAPON] > 0) {
+				short poison_amt = attacker.status[eStatus::POISONED_WEAPON];
+				if(attacker.has_abil_equip(eItemAbil::POISON_AUGMENT) < attacker.items.size())
 					poison_amt += 2;
 				target.poison(poison_amt);
 				if(dynamic_cast<cPlayer*>(&target))
 					put_pc_screen();
-				move_to_zero(univ.party[who_att].status[eStatus::POISONED_WEAPON]);
+				move_to_zero(attacker.status[eStatus::POISONED_WEAPON]);
 			}
 		}
 		if((weap.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
 			apply_weapon_status(eStatus(weap.abil_data[1]), weap.abil_data[0], r2 + spec_dam, target, "Blade");
 		} else if(weap.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 			add_string_to_buf("  Blade drains life.");
-			univ.party[who_att].heal(weap.abil_data[0] / 2);
+			attacker.heal(weap.abil_data[0] / 2);
 		} else if(weap.ability == eItemAbil::ANTIMAGIC_WEAPON) {
 			short before = target.get_magic();
 			int mage = 0, cleric = 0;
@@ -863,16 +859,16 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 				target.drain_sp(weap.abil_data[0]);
 			if(before > target.get_magic()) {
 				add_string_to_buf("  Blade drains energy.");
-				univ.party[who_att].restore_sp(before / 3);
+				attacker.restore_sp(before / 3);
 			}
 		} else if(weap.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
 			short s1,s2,s3;
 			univ.party.force_ptr(21, target.get_loc().x);
 			univ.party.force_ptr(22, target.get_loc().y);
 			univ.party.force_ptr(20, i_monst);
-			run_special(eSpecCtx::ATTACKING_MELEE, 0, weap.abil_data[0],univ.party[who_att].combat_pos, &s1, &s2, &s3);
+			run_special(eSpecCtx::ATTACKING_MELEE, 0, weap.abil_data[0],attacker.combat_pos, &s1, &s2, &s3);
 			if(s1 > 0)
-				univ.party[who_att].ap += 4;
+				attacker.ap += 4;
 		}
 	}
 	else {
@@ -1416,7 +1412,7 @@ void do_combat_cast(location target) {
 												add_string_to_buf("  Can't duel: no magic.");
 											else {
 												item = caster.has_abil(eItemAbil::SMOKY_CRYSTAL);
-												if(item >= 24)
+												if(item >= caster.items.size())
 													add_string_to_buf("  You need a smoky crystal.   ");
 												else {
 													caster.remove_charge(item);
@@ -1854,7 +1850,7 @@ void fire_missile(location target) {
 				// poison
 				if(missile_firer.status[eStatus::POISONED_WEAPON] > 0 && missile_firer.weap_poisoned == ammo_inv_slot) {
 					poison_amt = missile_firer.status[eStatus::POISONED_WEAPON];
-					if(missile_firer.has_abil_equip(eItemAbil::POISON_AUGMENT) < 24)
+					if(missile_firer.has_abil_equip(eItemAbil::POISON_AUGMENT) < missile_firer.items.size())
 						poison_amt++;
 					victim->poison(poison_amt);
 					if(dynamic_cast<cPlayer*>(victim))
@@ -1897,7 +1893,7 @@ void fire_missile(location target) {
 					run_special(eSpecCtx::ATTACKED_RANGE, 0, monst->abil[eMonstAbil::HIT_TRIGGER].special.extra1, missile_firer.combat_pos, &s1, &s2, &s3);
 					if(s1 > 0)
 						missile_firer.ap += (overall_mode == MODE_FIRING) ? 3 : 2;
-				} else if((pc = dynamic_cast<cPlayer*>(victim)) && (spec_item = pc->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL)) < 24) {
+				} else if((pc = dynamic_cast<cPlayer*>(victim)) && (spec_item = pc->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL)) < pc->items.size()) {
 					short s1,s2,s3;
 					univ.party.force_ptr(21, pc->combat_pos.x);
 					univ.party.force_ptr(22, pc->combat_pos.y);
@@ -1913,7 +1909,7 @@ void fire_missile(location target) {
 			if(ammo.ability != eItemAbil::RETURNING_MISSILE)
 				ammo.charges--;
 			else ammo.charges = 1;
-			if(missile_firer.has_abil_equip(eItemAbil::DRAIN_MISSILES) < 24
+			if(missile_firer.has_abil_equip(eItemAbil::DRAIN_MISSILES) < missile_firer.items.size()
 			   && ammo.ability != eItemAbil::RETURNING_MISSILE)
 				ammo.charges--;
 			if(ammo.charges <= 0)
@@ -2083,34 +2079,33 @@ void combat_run_monst() {
 	
 	univ.party.age++;
 	if(univ.party.age % 4 == 0)
-		for(short i = 0; i < 6; i++) {
-			if(univ.party[i].status[eStatus::BLESS_CURSE] != 0 || univ.party[i].status[eStatus::HASTE_SLOW] != 0)
+		for(cPlayer& pc : univ.party) {
+			if(pc.status[eStatus::BLESS_CURSE] != 0 || pc.status[eStatus::HASTE_SLOW] != 0)
 				update_stat = true;
-			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
-			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
+			move_to_zero(pc.status[eStatus::BLESS_CURSE]);
+			move_to_zero(pc.status[eStatus::HASTE_SLOW]);
 			move_to_zero(univ.party.status[ePartyStatus::STEALTH]);
-			if((item = univ.party[i].has_abil_equip(eItemAbil::REGENERATE)) < 24) {
+			if((item = pc.has_abil_equip(eItemAbil::REGENERATE)) < pc.items.size()) {
 				update_stat = true;
-				univ.party[i].heal(get_ran(1,0,univ.party[i].items[item].item_level + 1));
+				pc.heal(get_ran(1,0,pc.items[item].item_level + 1));
 			}
 		}
-	for(short i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			if(univ.party[i].status[eStatus::INVULNERABLE] != 0 || univ.party[i].status[eStatus::MAGIC_RESISTANCE] != 0
-			   || univ.party[i].status[eStatus::INVISIBLE] != 0 || univ.party[i].status[eStatus::MARTYRS_SHIELD] != 0
-			   || univ.party[i].status[eStatus::ASLEEP] != 0 || univ.party[i].status[eStatus::PARALYZED] != 0)
+	for(cPlayer& pc : univ.party)
+		if(pc.main_status == eMainStatus::ALIVE) {
+			if(pc.status[eStatus::INVULNERABLE] != 0 || pc.status[eStatus::MAGIC_RESISTANCE] != 0
+			   || pc.status[eStatus::INVISIBLE] != 0 || pc.status[eStatus::MARTYRS_SHIELD] != 0
+			   || pc.status[eStatus::ASLEEP] != 0 || pc.status[eStatus::PARALYZED] != 0)
 				update_stat = true;
 			
-			move_to_zero(univ.party[i].status[eStatus::INVULNERABLE]);
-			move_to_zero(univ.party[i].status[eStatus::MAGIC_RESISTANCE]);
-			move_to_zero(univ.party[i].status[eStatus::INVISIBLE]);
-			move_to_zero(univ.party[i].status[eStatus::MARTYRS_SHIELD]);
-			move_to_zero(univ.party[i].status[eStatus::ASLEEP]);
-			move_to_zero(univ.party[i].status[eStatus::PARALYZED]);
+			move_to_zero(pc.status[eStatus::INVULNERABLE]);
+			move_to_zero(pc.status[eStatus::MAGIC_RESISTANCE]);
+			move_to_zero(pc.status[eStatus::INVISIBLE]);
+			move_to_zero(pc.status[eStatus::MARTYRS_SHIELD]);
+			move_to_zero(pc.status[eStatus::ASLEEP]);
+			move_to_zero(pc.status[eStatus::PARALYZED]);
 			
 			// Do special items
-			for(int j = 0; j < 24; j++) {
-				cItem& item = univ.party[i].items[j];
+			for(const cItem& item : pc.items) {
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
 				if(item.abil_group()) continue; // Affects whole party, which is handled elsewhere
 				if(get_ran(1,0,10) != 5) continue;
@@ -2132,7 +2127,7 @@ void combat_run_monst() {
 						break;
 					case eStatus::POISON:
 						if(how_much > 0) add_string_to_buf("An item poisons you!");
-						else if(univ.party[i].status[eStatus::POISON] > 0)
+						else if(pc.status[eStatus::POISON] > 0)
 							add_string_to_buf("An item cures you!");
 						break;
 					case eStatus::INVULNERABLE:
@@ -2144,55 +2139,49 @@ void combat_run_monst() {
 						break;
 					case eStatus::DISEASE:
 						if(how_much > 0) add_string_to_buf("An item diseases you!");
-						else if(univ.party[i].status[eStatus::DISEASE] > 0)
+						else if(pc.status[eStatus::DISEASE] > 0)
 							add_string_to_buf("An item cures you!");
 						break;
 					case eStatus::DUMB:
 						if(how_much > 0) add_string_to_buf("An item clouds your mind!");
-						else if(univ.party[i].status[eStatus::DUMB] > 0)
+						else if(pc.status[eStatus::DUMB] > 0)
 							add_string_to_buf("An item clears your mind!");
 						else add_string_to_buf("An item enlightens you!");
 						break;
 					case eStatus::WEBS:
 						if(how_much > 0) add_string_to_buf("An item constricts you!");
-						else if(univ.party[i].status[eStatus::WEBS] > 0)
+						else if(pc.status[eStatus::WEBS] > 0)
 							add_string_to_buf("An item cleanses you!");
 						break;
 					case eStatus::ASLEEP:
 						if(how_much > 0) add_string_to_buf("An item knocks you out!");
-						else if(univ.party[i].status[eStatus::ASLEEP] > 0)
+						else if(pc.status[eStatus::ASLEEP] > 0)
 							add_string_to_buf("An item wakes you!");
 						else add_string_to_buf("An item makes you restless!");
 						break;
 					case eStatus::PARALYZED:
 						if(how_much > 0) add_string_to_buf("An item paralyzes you!");
-						else if(univ.party[i].status[eStatus::PARALYZED] > 0)
+						else if(pc.status[eStatus::PARALYZED] > 0)
 							add_string_to_buf("An item restores your movement!");
 						break;
 					case eStatus::ACID:
 						if(how_much > 0) add_string_to_buf("An item covers you in acid!");
-						else if(univ.party[i].status[eStatus::ACID] > 0)
+						else if(pc.status[eStatus::ACID] > 0)
 							add_string_to_buf("An item neutralizes the acid!");
 						break;
 					case eStatus::FORCECAGE:
 						if(how_much > 0) add_string_to_buf("An item entraps you!");
-						else if(-how_much > univ.party[i].status[eStatus::FORCECAGE])
+						else if(-how_much > pc.status[eStatus::FORCECAGE])
 							add_string_to_buf("An item frees you!");
 						else add_string_to_buf("An item weakens the barrier!");
 						break;
 					case eStatus::POISONED_WEAPON:
 						if(how_much > 0) {
-							if(univ.party[i].status[eStatus::POISONED_WEAPON] <= 0) {
+							if(pc.status[eStatus::POISONED_WEAPON] <= 0) {
 								// Need to figure out which weapon to apply to.
-								int weap = 24;
-								for(int k = 0; k < 24; k++) {
-									if(is_poisonable_weap(i, k)) {
-										weap = k;
-										break;
-									}
-								}
-								if(weap < 24)
-									univ.party[i].weap_poisoned = weap;
+								auto weap = std::find_if(pc.items.begin(), pc.items.end(), is_poisonable_weap);
+								if(weap != pc.items.end())
+									pc.weap_poisoned = weap - pc.items.begin();
 								else continue;
 								add_string_to_buf("An item poisons your weapon!");
 							} else add_string_to_buf("An item augments your weapon poison!");
@@ -2201,7 +2190,7 @@ void combat_run_monst() {
 				}
 				// Note: Since this is an item you're wearing, it bypasses any resistance you might have to the status effect.
 				// Thus we just call apply_status instead of all the various status-specific calls.
-				univ.party[i].apply_status(status, how_much);
+				pc.apply_status(status, how_much);
 				update_stat = true;
 			}
 		}
@@ -2977,7 +2966,7 @@ void monster_attack(short who_att,iLiving* target) {
 					}
 					
 					int spec_item;
-					if(pc_target != nullptr && (spec_item = pc_target->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL)) < 24) {
+					if(pc_target != nullptr && (spec_item = pc_target->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL)) < pc_target->items.size()) {
 						short s1,s2,s3;
 						univ.party.force_ptr(21, target->get_loc().x);
 						univ.party.force_ptr(22, target->get_loc().y);
@@ -3118,7 +3107,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 		}
 		if(pc_target != nullptr) {
 			int spec_item = pc_target->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL);
-			if(spec_item < 24) {
+			if(spec_item < pc_target->items.size()) {
 				short s1,s2,s3;
 				// TODO: This force_ptr...run_special code is almost duplicated in several places; maybe make a call_attack_spec subroutine!
 				univ.party.force_ptr(21, target->get_loc().x);
@@ -3238,7 +3227,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			handle_marked_damage();
 			break;
 		case eMonstAbil::STUN:
-			if(pc_target != nullptr && pc_target->has_abil_equip(eItemAbil::LIFE_SAVING) < 24)
+			if(pc_target != nullptr && pc_target->has_abil_equip(eItemAbil::LIFE_SAVING) < pc_target->items.size())
 				break;
 		case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
 			switch(abil.second.gen.stat) {
@@ -3311,8 +3300,8 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 		case eMonstAbil::DRAIN_XP:
 			if(pc_target != nullptr) {
 				i = univ.get_target_i(*target);
-				if(pc_target->has_abil_equip(eItemAbil::LIFE_SAVING) < 24) break;
-				drain_pc(i, univ.town.monst[m_num].level * abil.second.gen.strength / 100);
+				if(pc_target->has_abil_equip(eItemAbil::LIFE_SAVING) < pc_target->items.size()) break;
+				drain_pc(*pc_target, univ.town.monst[m_num].level * abil.second.gen.strength / 100);
 			}
 			break;
 		case eMonstAbil::KILL:
@@ -4582,45 +4571,42 @@ void do_poison() {
 
 void handle_disease() {
 	short r1 = 0;
-	bool disease = false;
-	
-	for(short i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			if(univ.party[i].status[eStatus::DISEASE] > 0)
-				disease = true;
+	bool disease = std::any_of(univ.party.begin(), univ.party.end(), [](const cPlayer& pc) {
+		return pc.main_status == eMainStatus::ALIVE && pc.status[eStatus::DISEASE] > 0;
+	});
 	
 	if(disease) {
 		add_string_to_buf("Disease:");
-		for(short i = 0; i < 6; i++)
-			if(univ.party[i].main_status == eMainStatus::ALIVE)
-				if(univ.party[i].status[eStatus::DISEASE] > 0) {
+		for(cPlayer& pc : univ.party)
+			if(pc.main_status == eMainStatus::ALIVE)
+				if(pc.status[eStatus::DISEASE] > 0) {
 					r1 = get_ran(1,1,10);
 					switch(r1) {
 						case 1: case 2:
-							univ.party[i].poison(2);
+							pc.poison(2);
 							break;
 						case 3: case 4:
-							univ.party[i].slow(2);
+							pc.slow(2);
 							break;
 						case 5:
-							drain_pc(i,5);
+							drain_pc(pc,5);
 							break;
 						case 6: case 7:
-							univ.party[i].curse(3);
+							pc.curse(3);
 							break;
 						case 8:
-							univ.party[i].dumbfound(3);
+							pc.dumbfound(3);
 							adjust_spell_menus();
 							break;
 						case 9: case 10:
-							add_string_to_buf("  " + univ.party[i].name + " unaffected.");
+							add_string_to_buf("  " + pc.name + " unaffected.");
 							break;
 					}
 					r1 = get_ran(1,0,7);
-					if(univ.party[i].traits[eTrait::GOOD_CONST])
+					if(pc.traits[eTrait::GOOD_CONST])
 						r1 -= 2;
-					if(r1 <= 0 || univ.party[i].has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE)) < 24)
-						move_to_zero(univ.party[i].status[eStatus::DISEASE]);
+					if(r1 <= 0 || pc.has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::DISEASE)) < pc.items.size())
+						move_to_zero(pc.status[eStatus::DISEASE]);
 				}
 		put_pc_screen();
 	}

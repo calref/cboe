@@ -11,10 +11,10 @@ bool take_sp(short pc_num,short amt);
 void increase_light(short amt);
 void award_party_xp(short amt);
 void award_xp(short pc_num,short amt,bool force = false);
-void drain_pc(short which_pc,short how_much);
+void drain_pc(cPlayer& who,short how_much); // TODO: Move to a member function
 short check_party_stat(eSkill which_stat, short mode);
 bool poison_weapon( short pc_num, short how_much,bool safe);
-bool is_poisonable_weap(short pc_num,short item);
+bool is_poisonable_weap(class cItem& weap);
 void cast_spell(eSkill type);
 bool repeat_cast_ok(eSkill type);
 void give_party_spell(short which);

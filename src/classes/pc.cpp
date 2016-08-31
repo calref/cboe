@@ -159,7 +159,7 @@ void cPlayer::curse(int how_much) {
 void cPlayer::dumbfound(int how_much) {
 	if(!is_alive()) return;
 	short r1 = get_ran(1,0,90);
-	if(has_abil_equip(eItemAbil::WILL) < 24) {
+	if(has_abil_equip(eItemAbil::WILL) < items.size()) {
 		if(print_result)
 			print_result("  Ring of Will glows.");
 		r1 -= 10;
@@ -285,7 +285,7 @@ void cPlayer::web(int how_much) {
 
 void cPlayer::acid(int how_much) {
 	if(!is_alive()) return;
-	if(has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::ACID)) < 24) {
+	if(has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::ACID)) < items.size()) {
 		if(print_result)
 			print_result("  " + name + " resists acid.");
 		return;
@@ -340,7 +340,7 @@ short cPlayer::stat_adj(eSkill which) const {
 			tr -= 2;
 	}
 	// TODO: Use ability strength?
-	if(has_abil_equip(eItemAbil::BOOST_STAT,int(which)) < 24)
+	if(has_abil_equip(eItemAbil::BOOST_STAT,int(which)) < items.size())
 		tr++;
 	return tr;
 }
@@ -479,7 +479,7 @@ bool cPlayer::give_item(cItem item, int flags) {
 		return false;
 	}
 	free_space = has_space();
-	if(free_space == 24 || main_status != eMainStatus::ALIVE)
+	if(free_space == items.size() || main_status != eMainStatus::ALIVE)
 		return false;
 	else {
 		item.property = false;
@@ -503,8 +503,8 @@ bool cPlayer::give_item(cItem item, int flags) {
 				if(num_hands_to_use.count(item.variety))
 					exclude = 100;
 				else exclude = excluding_types[item.variety];
-				int rem1 = 24, rem2 = 24;
-				for(int i = 0; i < 24; i++) {
+				int rem1 = items.size(), rem2 = items.size();
+				for(int i = 0; i < items.size(); i++) {
 					if(i == free_space) continue;
 					if(!equip[i]) continue;
 					int check_exclude = 0;
@@ -515,20 +515,20 @@ bool cPlayer::give_item(cItem item, int flags) {
 					if(exclude == 0 && item.variety != items[i].variety)
 						continue;
 					if(exclude == 100) {
-						if(rem1 == 24) {
-							if(item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED || rem2 < 24)
+						if(rem1 == items.size()) {
+							if(item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED || rem2 < items.size())
 								rem1 = i;
-							if(rem1 < 24) continue;
+							if(rem1 < items.size()) continue;
 						}
-						if(rem2 == 24) {
-							if(item.variety == eItemType::SHIELD || item.variety == eItemType::SHIELD_2 || rem1 < 24)
+						if(rem2 == items.size()) {
+							if(item.variety == eItemType::SHIELD || item.variety == eItemType::SHIELD_2 || rem1 < items.size())
 								rem2 = i;
 						}
-					} else if(rem1 < 24)
+					} else if(rem1 < items.size())
 						rem1 = i;
 				}
-				bool can_rem1 = rem1 < 24 && (!items[rem1].cursed || equip_type == GIVE_EQUIP_FORCE);
-				bool can_rem2 = rem2 < 24 && (!items[rem2].cursed || equip_type == GIVE_EQUIP_FORCE);
+				bool can_rem1 = rem1 < items.size() && (!items[rem1].cursed || equip_type == GIVE_EQUIP_FORCE);
+				bool can_rem2 = rem2 < items.size() && (!items[rem2].cursed || equip_type == GIVE_EQUIP_FORCE);
 				if(exclude == 100) {
 					if(item.variety == eItemType::TWO_HANDED) {
 						if(can_rem1) equip[rem1] = false;
@@ -564,7 +564,7 @@ bool cPlayer::equip_item(int which_item, bool do_print) {
 		return false;
 	}
 	unsigned short num_this_type = 0, hands_occupied = 0;
-	for(int i = 0; i < 24; i++)
+	for(int i = 0; i < items.size(); i++)
 		if(equip[i]) {
 			if(items[i].variety == items[which_item].variety)
 				num_this_type++;
@@ -575,7 +575,7 @@ bool cPlayer::equip_item(int which_item, bool do_print) {
 	short equip_item_type = excluding_types[items[which_item].variety];
 	// Now if missile is already equipped, no more missiles
 	if(equip_item_type > 0) {
-		for(int i = 0; i < 24; i++)
+		for(int i = 0; i < items.size(); i++)
 			if(equip[i] && excluding_types[items[i].variety] == equip_item_type) {
 				if(do_print && print_result) {
 					print_result("Equip: You have something of this type");
@@ -623,6 +623,32 @@ bool cPlayer::unequip_item(int which_item, bool do_print) {
 	return true;
 }
 
+auto cPlayer::get_weapons() -> std::pair<decltype(items)::const_iterator, decltype(items)::const_iterator> {
+	using iter_t = decltype(items)::const_iterator;
+	iter_t beg = items.begin(), end = items.end();
+	std::pair<iter_t, iter_t> result = {beg, beg};
+	auto is_weapon = [](const cItem& item) {
+		return item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED;
+	};
+	auto is_equipped = [this](iter_t item) {
+		if(item == items.end()) return true; // Treat a non-existent item as equipped to avoid incrementing an end iterator
+		return equip[item - items.begin()];
+	};
+	
+	do {
+		result.first = std::find_if(result.first, end, is_weapon);
+		if(!is_equipped(result.first)) result.first++;
+	} while(result.first != end);
+	if(result.first != end && result.first + 1 != end) {
+		result.second = result.first + 1;
+		do {
+			result.second = std::find_if(result.second, end, is_weapon);
+			if(!is_equipped(result.second)) result.second++;
+		} while(result.second != end);
+	}
+	return result;
+}
+
 short cPlayer::max_weight() const {
 	return 100 + (15 * min(skill(eSkill::STRENGTH),20)) + (traits[eTrait::STRENGTH] * 30)
 		+ (traits[eTrait::BAD_BACK] * -50) + (race == eRace::VAHNATAI) * -25;
@@ -632,7 +658,7 @@ short cPlayer::cur_weight() const {
 	short weight = 0;
 	bool airy = false,heavy = false;
 	
-	for(int i = 0; i < 24; i++)
+	for(int i = 0; i < items.size(); i++)
 		if(items[i].variety != eItemType::NO_ITEM) {
 			weight += items[i].item_weight();
 			if(items[i].ability == eItemAbil::LIGHTER_OBJECT)
@@ -654,17 +680,17 @@ short cPlayer::free_weight() const {
 }
 
 short cPlayer::has_space() const {
-	for(int i = 0; i < 24; i++) {
+	for(int i = 0; i < items.size(); i++) {
 		if(items[i].variety == eItemType::NO_ITEM)
 			return i;
 	}
-	return 24;
+	return items.size();
 }
 
 void cPlayer::combine_things() {
-	for(int i = 0; i < 24; i++) {
+	for(int i = 0; i < items.size(); i++) {
 		if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag > 0 && items[i].ident) {
-			for(int j = i + 1; j < 24; j++)
+			for(int j = i + 1; j < items.size(); j++)
 				if(items[j].variety != eItemType::NO_ITEM && items[j].type_flag == items[i].type_flag && items[j].ident) {
 					if(print_result) print_result("(items combined)");
 					short test = items[i].charges + items[j].charges;
@@ -687,7 +713,7 @@ void cPlayer::combine_things() {
 
 short cPlayer::get_prot_level(eItemAbil abil, short dat) const {
 	int sum = 0;
-	for(int i = 0; i < 24; i++) {
+	for(int i = 0; i < items.size(); i++) {
 		if(items[i].variety == eItemType::NO_ITEM) continue;
 		if(items[i].ability != abil) continue;
 		if(!equip[i]) continue;
@@ -699,24 +725,24 @@ short cPlayer::get_prot_level(eItemAbil abil, short dat) const {
 }
 
 short cPlayer::has_abil_equip(eItemAbil abil,short dat) const {
-	for(short i = 0; i < 24; i++) {
+	for(short i = 0; i < items.size(); i++) {
 		if(items[i].variety == eItemType::NO_ITEM) continue;
 		if(items[i].ability != abil) continue;
 		if(!equip[i]) continue;
 		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
 		return i;
 	}
-	return 24;
+	return items.size();
 }
 
 short cPlayer::has_abil(eItemAbil abil,short dat) const {
-	for(short i = 0; i < 24; i++) {
+	for(short i = 0; i < items.size(); i++) {
 		if(items[i].variety == eItemType::NO_ITEM) continue;
 		if(items[i].ability != abil) continue;
 		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
 		return i;
 	}
-	return 24;
+	return items.size();
 }
 
 short cPlayer::skill(eSkill skill) const {
@@ -737,11 +763,11 @@ eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 		if(party->quest_status[item.item_level] != eQuestStatus::AVAILABLE)
 			return eBuyStatus::HAVE_LOTS;
 	} else if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
-		for(int i = 0; i < 24; i++)
+		for(int i = 0; i < items.size(); i++)
 			if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag == item.type_flag && items[i].charges > 123)
 				return eBuyStatus::HAVE_LOTS;
 		
-		if(has_space() == 24)
+		if(has_space() == items.size())
 			return eBuyStatus::NO_SPACE;
 		if(item.item_weight() > free_weight()) {
 	  		return eBuyStatus::TOO_HEAVY;
@@ -842,17 +868,15 @@ cPlayer::cPlayer(cParty& party) : party(&party) {
 	experience = 0;
 	skill_pts = 65;
 	level = 1;
-	for(short i = 0; i < 24; i++)
-		items[i] = cItem();
-	for(short i = 0; i < 24; i++)
-		equip[i] = false;
+	std::fill(items.begin(), items.end(), cItem());
+	std::fill(equip.begin(), equip.end(), false);
 	
 	for(short i = 0; i < 62; i++) {
 		priest_spells[i] = i < 30;
 		mage_spells[i] = i < 30;
 	}
 	which_graphic = 0;
-	weap_poisoned = 24;
+	weap_poisoned = items.size();
 	
 	race = eRace::HUMAN;
 	direction = DIR_N;
@@ -900,16 +924,14 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		experience = 0;
 		skill_pts = 60;
 		level = 1;
-		for(short i = 0; i < 24; i++)
-			items[i] = cItem();
-		for(short i = 0; i < 24; i++)
-			equip[i] = false;
+		std::fill(items.begin(), items.end(), cItem());
+		std::fill(equip.begin(), equip.end(), false);
 		
 		priest_spells.set();
 		mage_spells.set();
 		which_graphic = slot * 3 + 1;	// 1, 4, 7, 10, 13, 16
 		if(slot == 2) which_graphic++;
-		weap_poisoned = 24; // was 16, as an E2 relic
+		weap_poisoned = items.size();
 		
 		for(short i = 0; i < 10; i++) {
 			eTrait trait = eTrait(i);
@@ -992,10 +1014,8 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		skill_pts = 0;
 		level = 1;
 		
-		for(short i = 0; i < 24; i++)
-			items[i] = cItem();
-		for(short i = 0; i < 24; i++)
-			equip[i] = false;
+		std::fill(items.begin(), items.end(), cItem());
+		std::fill(equip.begin(), equip.end(), false);
 		cur_sp = pc_sp[slot];
 		max_sp = pc_sp[slot];
 		for(short i = 0; i < 62; i++) {
@@ -1049,7 +1069,7 @@ void cPlayer::writeTo(std::ostream& file) const {
 		if(status[stat] != 0)
 			file << "STATUS " << i << ' ' << status.at(stat) << '\n';
 	}
-	for(int i = 0; i < 24; i++)
+	for(int i = 0; i < equip.size(); i++)
 		if(equip[i])
 			file << "EQUIP " << i << '\n';
 	for(int i = 0; i < 62; i++)
@@ -1069,7 +1089,7 @@ void cPlayer::writeTo(std::ostream& file) const {
 	file << "DIRECTION " << direction << '\n';
 	file << "POISON " << weap_poisoned << '\n';
 	file << '\f';
-	for(int i = 0; i < 24; i++)
+	for(int i = 0; i < items.size(); i++)
 		if(items[i].variety != eItemType::NO_ITEM){
 			file << "ITEM " << i << '\n';
 			items[i].writeTo(file);

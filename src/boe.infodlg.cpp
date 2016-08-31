@@ -498,7 +498,7 @@ void display_alchemy() {
 static void display_pc_info(cDialog& me, const short pc) {
 	std::ostringstream to_draw;
 	
-	short weap1 = 24,weap2 = 24,hit_adj = 0, dam_adj = 0,skill_item;
+	short hit_adj = 0, dam_adj = 0,skill_item;
 	
 	to_draw << univ.party[pc].name << " is carrying " << univ.party[pc].cur_weight() << " stones out of " << univ.party[pc].max_weight() << '.';
 	me["weight"].setText(to_draw.str());
@@ -531,26 +531,21 @@ static void display_pc_info(cDialog& me, const short pc) {
 	else dynamic_cast<cPict&>(me["pic"]).setPict(pic,PIC_PC);
 	
 	// Fight bonuses
-	for(short i = 0; i < 24; i++)
-		if((univ.party[pc].items[i].variety == eItemType::ONE_HANDED || univ.party[pc].items[i].variety == eItemType::TWO_HANDED) &&
-			(univ.party[pc].equip[i])) {
-			if(weap1 == 24)
-				weap1 = i;
-			else weap2 = i;
-		}
+	decltype(univ.party[pc].items)::const_iterator weap1, weap2, no_weap = univ.party[pc].items.end();
+	std::tie(weap1, weap2) = univ.party[pc].get_weapons();
 	
 	hit_adj = univ.party[pc].stat_adj(eSkill::DEXTERITY) * 5 - (total_encumbrance(pc)) * 5
 		+ 5 * minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
-	if(!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2 < 24)
+	if(!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2 != no_weap)
 		hit_adj -= 25;
 	
 	// TODO: Perhaps dam_adj and hit_adj calculation should be moved into a function somewhere?
 	dam_adj = univ.party[pc].stat_adj(eSkill::STRENGTH) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
-	if((skill_item = univ.party[pc].has_abil_equip(eItemAbil::SKILL)) < 24) {
+	if((skill_item = univ.party[pc].has_abil_equip(eItemAbil::SKILL)) < univ.party[pc].items.size()) {
 		hit_adj += 5 * (univ.party[pc].items[skill_item].abil_data[0] / 2 + 1);
 		dam_adj += univ.party[pc].items[skill_item].abil_data[0] / 2;
 	}
-	if((skill_item = univ.party[pc].has_abil_equip(eItemAbil::GIANT_STRENGTH)) < 24) {
+	if((skill_item = univ.party[pc].has_abil_equip(eItemAbil::GIANT_STRENGTH)) < univ.party[pc].items.size()) {
 		dam_adj += univ.party[pc].items[skill_item].abil_data[0];
 		hit_adj += univ.party[pc].items[skill_item].abil_data[0] * 2;
 	}
@@ -559,31 +554,31 @@ static void display_pc_info(cDialog& me, const short pc) {
 	me["weap1b"].setText("");
 	me["weap2a"].setText("No weapon.");
 	me["weap2b"].setText("");
-	if(weap1 < 24) {
-		if(!univ.party[pc].items[weap1].ident)
+	if(weap1 != no_weap) {
+		if(!weap1->ident)
 			me["weap1a"].setText("Not identified.");
 		else {
 			// TODO: What's with always putting the percent sign in front?
-			if(hit_adj + 5 * univ.party[pc].items[weap1].bonus < 0)
-				to_draw << "Penalty to hit: %" << hit_adj + 5 * univ.party[pc].items[weap1].bonus;
-			else to_draw << "Bonus to hit: +%" << hit_adj + 5 * univ.party[pc].items[weap1].bonus;
+			if(hit_adj + 5 * weap1->bonus < 0)
+				to_draw << "Penalty to hit: %" << hit_adj + 5 * weap1->bonus;
+			else to_draw << "Bonus to hit: +%" << hit_adj + 5 * weap1->bonus;
 			me["weap1a"].setText(to_draw.str());
 			to_draw.str("");
-			to_draw << "Damage: (1-" << univ.party[pc].items[weap1].item_level << ") + " << dam_adj + univ.party[pc].items[weap1].bonus;
+			to_draw << "Damage: (1-" << weap1->item_level << ") + " << dam_adj + weap1->bonus;
 			me["weap1b"].setText(to_draw.str());
 			to_draw.str("");
 		}
 	}
-	if(weap2 < 24) {
-		if(!univ.party[pc].items[weap2].ident)
+	if(weap2 != no_weap) {
+		if(!weap2->ident)
 			me["weap2a"].setText("Not identified.");
 		else {
-			if(hit_adj + 5 * univ.party[pc].items[weap2].bonus < 0)
-				to_draw << "Penalty to hit: %" << hit_adj + 5 * univ.party[pc].items[weap2].bonus;
-			else to_draw << "Bonus to hit: +%" << hit_adj + 5 * univ.party[pc].items[weap2].bonus;
+			if(hit_adj + 5 * weap2->bonus < 0)
+				to_draw << "Penalty to hit: %" << hit_adj + 5 * weap2->bonus;
+			else to_draw << "Bonus to hit: +%" << hit_adj + 5 * weap2->bonus;
 			me["weap2a"].setText(to_draw.str());
 			to_draw.str("");
-			to_draw << "Damage: (1-" << univ.party[pc].items[weap2].item_level << ") + " << dam_adj + univ.party[pc].items[weap2].bonus;
+			to_draw << "Damage: (1-" << weap2->item_level << ") + " << dam_adj + weap2->bonus;
 			me["weap2b"].setText(to_draw.str());
 			to_draw.str("");
 		}

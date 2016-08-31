@@ -329,7 +329,7 @@ void draw_items() {
 		return; // If PC is dead, it has no items
 	}
 	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
-	for(short i = 0; i < 24; i++) // Loop through items and draw each
+	for(short i = 0; i < univ.party[current_active_pc].items.size(); i++) // Loop through items and draw each
 		if(univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) { // i.e. does item exist
 			std::string to_draw = std::to_string(i + 1) + ". ";
 			if(!univ.party[current_active_pc].items[i].ident)

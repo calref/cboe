@@ -348,10 +348,10 @@ void award_xp(short pc_num,short amt,bool force) {
 	}
 }
 
-void drain_pc(short which_pc,short how_much) {
-	if(univ.party[which_pc].main_status == eMainStatus::ALIVE) {
-		univ.party[which_pc].experience = max(univ.party[which_pc].experience - how_much,0);
-		add_string_to_buf("  " + univ.party[which_pc].name + " drained.");
+void drain_pc(cPlayer& which_pc,short how_much) {
+	if(which_pc.main_status == eMainStatus::ALIVE) {
+		which_pc.experience = max(which_pc.experience - how_much,0);
+		add_string_to_buf("  " + which_pc.name + " drained.");
 	}
 }
 
@@ -401,22 +401,21 @@ short check_party_stat(eSkill which_stat, short mode) {
 }
 
 bool poison_weapon(short pc_num, short how_much,bool safe) {
-	short weap = 24,p_level,r1;
+	short p_level,r1;
 	short p_chance[21] = {
 		40,72,81,85,88,89,90,
 		91,92,93,94,94,95,95,96,97,98,100,100,100,100};
 	// TODO: This doesn't allow you to choose between poisoning a melee weapon and poisoning arrows, except by temporarily dequipping one
 	
-	for(short i = 0; i < 24; i++)
-		if((univ.party[pc_num].equip[i]) && (is_poisonable_weap(pc_num,i))) {
-			weap = i;
-			i = 30;
+	auto weap = univ.party[pc_num].items.begin();
+	do {
+		weap = std::find_if(weap, univ.party[pc_num].items.end(), is_poisonable_weap);
+		
+		if(!univ.party[pc_num].equip[weap - univ.party[pc_num].items.begin()]) {
+			weap++;
+			continue;
 		}
-	if(weap == 24) {
-		add_string_to_buf("  No weapon equipped.");
-		return false;
-	}
-	else {
+		
 		p_level = how_much;
 		add_string_to_buf("  You poison your weapon.");
 		r1 = get_ran(1,1,100);
@@ -434,18 +433,19 @@ bool poison_weapon(short pc_num, short how_much,bool safe) {
 		}
 		if(!safe)
 			play_sound(55);
-		univ.party[pc_num].weap_poisoned = weap;
+		univ.party[pc_num].weap_poisoned = weap - univ.party[pc_num].items.end();
 		univ.party[pc_num].status[eStatus::POISONED_WEAPON] = max(univ.party[pc_num].status[eStatus::POISONED_WEAPON], p_level);
 		
 		return true;
-	}
+	} while(weap != univ.party[pc_num].items.end());
+	
+	add_string_to_buf("  No weapon equipped.");
+	return false;
 }
 
-bool is_poisonable_weap(short pc_num,short item) {
-	if((univ.party[pc_num].items[item].variety  == eItemType::ONE_HANDED) ||
-		(univ.party[pc_num].items[item].variety  == eItemType::TWO_HANDED) ||
-		(univ.party[pc_num].items[item].variety  == eItemType::ARROW) ||
-		(univ.party[pc_num].items[item].variety  == eItemType::BOLTS))
+bool is_poisonable_weap(cItem& weap) {
+	if(weap.variety == eItemType::ONE_HANDED || weap.variety == eItemType::TWO_HANDED ||
+		weap.variety == eItemType::ARROW || weap.variety == eItemType::BOLTS)
 		return true;
 	else return false;
 	
@@ -587,9 +587,9 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			ASB("All of your items are identified.");
-			for(short i = 0; i < 6; i++)
-				for(short j = 0; j < 24; j++)
-					univ.party[i].items[j].ident = true;
+			for(cPlayer& pc : univ.party)
+				for(cItem& item : pc.items)
+					item.ident = true;
 			break;
 			
 		case eSpell::TRUE_SIGHT:
@@ -683,7 +683,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			
 		case eSpell::MAGIC_MAP:
 			item = univ.party[pc_num].has_abil(eItemAbil::SAPPHIRE);
-			if(item == 24 && !freebie)
+			if(item == univ.party[pc_num].items.size() && !freebie)
 				add_string_to_buf("  You need a sapphire.");
 			else if(univ.town->defy_scrying || univ.town->defy_mapping)
 				add_string_to_buf("  The spell fails.");
@@ -1051,11 +1051,11 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					}
 					else sout << " wasn't stoned.";
 				} else if(spell_num == eSpell::CURSE_REMOVE) {
-					for(int i = 0; i < 24; i++)
-						if(univ.party[target].items[i].cursed){
+					for(cItem& item : univ.party[target].items)
+						if(item.cursed){
 							r1 = get_ran(1,0,200) - 10 * adj;
 							if(r1 < 60) {
-								univ.party[target].items[i].cursed = univ.party[target].items[i].unsellable = false;
+								item.cursed = item.unsellable = false;
 							}
 						}
 					play_sound(52);
@@ -1063,7 +1063,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 				} else {
 					
 					if(!univ.scenario.is_legacy) {
-						if((item = univ.party[pc_num].has_abil(eItemAbil::RESURRECTION_BALM)) == 24) {
+						if((item = univ.party[pc_num].has_abil(eItemAbil::RESURRECTION_BALM)) == univ.party[pc_num].items.size()) {
 							add_string_to_buf("  Need resurrection balm.");
 							break;
 						}
@@ -2054,18 +2054,18 @@ void do_alchemy() {
 	// TODO: Remove need for this cast by changing the above data to either std::maps or an unary operator*
 	int which_p = int(potion);
 	if(potion != eAlchemy::NONE) {
-		if(univ.party[pc_num].has_space() == 24) {
+		if(univ.party[pc_num].has_space() == univ.party[pc_num].items.size()) {
 			add_string_to_buf("Alchemy: Can't carry another item.");
 			return;
 		}
 		
-		if((which_item = univ.party[pc_num].has_abil(alch_ingred1[which_p])) == 24) {
+		if((which_item = univ.party[pc_num].has_abil(alch_ingred1[which_p])) == univ.party[pc_num].items.size()) {
 			add_string_to_buf("Alchemy: Don't have ingredients.");
 			return;
 		}
 		
 		if(alch_ingred2[which_p] != eItemAbil::NONE) {
-			if(univ.party[pc_num].has_abil(alch_ingred2[which_p]) == 24) {
+			if(univ.party[pc_num].has_abil(alch_ingred2[which_p]) == univ.party[pc_num].items.size()) {
 				add_string_to_buf("Alchemy: Don't have ingredients.");
 				return;
 			}
@@ -2268,7 +2268,7 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 	// armor
 	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
 		how_much -= minmax(-5,5,which_pc.status[eStatus::BLESS_CURSE]);
-		for(short i = 0; i < 24; i++) {
+		for(short i = 0; i < which_pc.items.size(); i++) {
 			if((which_pc.items[i].variety != eItemType::NO_ITEM) && (which_pc.equip[i])) {
 				if(isArmourType(which_pc.items[i].variety)) {
 					r1 = get_ran(1,1,which_pc.items[i].item_level);
@@ -2427,7 +2427,7 @@ void petrify_pc(cPlayer& which_pc,int strength) {
 	r1 += which_pc.status[eStatus::BLESS_CURSE];
 	r1 -= strength;
 	
-	if(which_pc.has_abil_equip(eItemAbil::PROTECT_FROM_PETRIFY) < 24)
+	if(which_pc.has_abil_equip(eItemAbil::PROTECT_FROM_PETRIFY) < which_pc.items.size())
 		r1 = 20;
 	
 	if(r1 > 14) {
@@ -2440,7 +2440,7 @@ void petrify_pc(cPlayer& which_pc,int strength) {
 }
 
 void kill_pc(cPlayer& which_pc,eMainStatus type) {
-	short i_weap = 24;
+	short i_weap = which_pc.items.size();
 	bool dummy,no_save = false;
 	location item_loc;
 	
@@ -2457,12 +2457,11 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 	   get_ran(1,1,100) < hit_chance[luck]) {
 		add_string_to_buf("  But you luck out!");
 		which_pc.cur_health = 0;
-	}
-	else if(i_weap == 24 || type == eMainStatus::ABSENT) {
+	} else if(i_weap == which_pc.items.size() || type == eMainStatus::ABSENT) {
 		if(combat_active_pc < 6 && &which_pc == &univ.party[combat_active_pc])
 			combat_active_pc = 6;
 		
-		for(short i = 0; i < 24; i++)
+		for(short i = 0; i < which_pc.items.size(); i++)
 			which_pc.equip[i] = false;
 		
 		item_loc = (overall_mode >= MODE_COMBAT) ? which_pc.combat_pos : univ.party.town_loc;
@@ -2493,10 +2492,10 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		}
 		
 		if(overall_mode != MODE_OUTDOORS)
-			for(short i = 0; i < 24; i++)
-				if(which_pc.items[i].variety != eItemType::NO_ITEM) {
-					dummy = place_item(which_pc.items[i],item_loc);
-					which_pc.items[i].variety = eItemType::NO_ITEM;
+			for(cItem& item : which_pc.items)
+				if(item.variety != eItemType::NO_ITEM) {
+					dummy = place_item(item,item_loc);
+					item.variety = eItemType::NO_ITEM;
 				}
 		if(type == eMainStatus::DEAD || type == eMainStatus::DUST)
 			play_sound(21);

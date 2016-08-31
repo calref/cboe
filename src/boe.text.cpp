@@ -628,7 +628,7 @@ void refresh_stat_areas(short mode) {
 short total_encumbrance(short pc_num) {
 	short store = 0,what_val;
 	
-	for(short i = 0; i < 24; i++)
+	for(short i = 0; i < univ.party[pc_num].items.size(); i++)
 		if(univ.party[pc_num].equip[i]) {
 			what_val = univ.party[pc_num].items[i].awkward;
 			store += what_val;

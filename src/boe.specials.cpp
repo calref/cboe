@@ -890,7 +890,7 @@ void use_item(short pc,short item) {
 						break;
 					case eItemUse::HARM_ONE:
 						ASB("  You feel terrible.");
-						drain_pc(pc,str * 5);
+						drain_pc(univ.party[pc],str * 5);
 						damage_pc(univ.party[pc],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
 						univ.party[pc].disease(2 * str);
 						univ.party[pc].dumbfound(2 * str);
@@ -903,7 +903,7 @@ void use_item(short pc,short item) {
 					case eItemUse::HARM_ALL:
 						ASB("  You all feel terrible.");
 						for(short i = 0; i < 6; i++) {
-							drain_pc(i,str * 5);
+							drain_pc(univ.party[i],str * 5);
 							damage_pc(univ.party[i],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
 							univ.party[i].disease(2 * str);
 							univ.party[i].dumbfound(2 * str);
@@ -921,7 +921,7 @@ void use_item(short pc,short item) {
 						break;
 					case eItemUse::HARM_ONE:
 						ASB("  You feel forgetful.");
-						drain_pc(pc,str * 5);
+						drain_pc(univ.party[pc],str * 5);
 						break;
 					case eItemUse::HELP_ALL:
 						ASB("  You all feel much smarter.");
@@ -930,7 +930,7 @@ void use_item(short pc,short item) {
 					case eItemUse::HARM_ALL:
 						ASB("  You all feel forgetful.");
 						for(short i = 0; i < 6; i++)
-							drain_pc(i,str * 5);
+							drain_pc(univ.party[i],str * 5);
 						break;
 				}
 				break;
@@ -2754,7 +2754,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						can_pick = false;
 					else if(spec.ex1a == 3 && univ.party[pc].main_status == eMainStatus::ALIVE)
 						can_pick = false;
-					else if(spec.ex1a == 4 && univ.party[pc].has_space() == 24)
+					else if(spec.ex1a == 4 && univ.party[pc].has_space() == univ.party[pc].items.size())
 						can_pick = false;
 				} else if(pc >= 100 && pc < univ.town.monst.size() + 100) {
 					short monst = pc - 100;
@@ -2791,7 +2791,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							can_pick = false;
 						else if(spec.ex1a == 3 && found->main_status == eMainStatus::ALIVE)
 							can_pick = false;
-						else if(spec.ex1a == 4 && found->has_space() == 24)
+						else if(spec.ex1a == 4 && found->has_space() == found->items.size())
 							can_pick = false;
 					}
 					if(can_pick)
@@ -2817,7 +2817,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							can_pick = false;
 						else if(spec.ex1a == 3 && univ.party[i].main_status == eMainStatus::ALIVE)
 							can_pick = false;
-						else if(spec.ex1a == 4 && univ.party[i].has_space() == 24)
+						else if(spec.ex1a == 4 && univ.party[i].has_space() == univ.party[i].items.size())
 							can_pick = false;
 						tries++;
 					}
@@ -2866,7 +2866,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					if(spec.ex1a < 0)
 						univ.party[i].experience = univ.party[i].level * univ.party[i].get_tnl();
 					else if(spec.ex1b == 0) award_xp(i,spec.ex1a,true);
-					else drain_pc(i,spec.ex1a);
+					else drain_pc(univ.party[i],spec.ex1a);
 				}
 			break;
 		case eSpecType::AFFECT_SKILL_PTS:
@@ -3406,16 +3406,16 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				*next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_EQUIP_ITEM_CLASS:
-			for(short i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE)
-					for(short j = 0; j < 24; j++)
-						if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].special_class == (unsigned)spec.ex1a
-						   && univ.party[i].equip[j]) {
+			for(cPlayer& pc : univ.party)
+				if(pc.main_status == eMainStatus::ALIVE)
+					for(short j = 0; j < pc.items.size(); j++)
+						if(pc.items[j].variety != eItemType::NO_ITEM && pc.items[j].special_class == (unsigned)spec.ex1a
+						   && pc.equip[j]) {
 							*next_spec = spec.ex1b;
 							if(spec.ex2a > 0) {
 								*redraw = 1;
-								univ.party[i].take_item(j);
-								if(i == stat_window)
+								pc.take_item(j);
+								if(&pc == &univ.party[stat_window])
 									put_item_screen(stat_window);
 							}
 						}

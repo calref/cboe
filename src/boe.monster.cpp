@@ -1192,7 +1192,7 @@ short get_encumbrance(short pc_num) {
 	what_val = univ.party[pc_num].free_weight();
 	if(what_val < 0) store += what_val / -10;
 	
-	for(short i = 0; i < 24; i++)
+	for(short i = 0; i < univ.party[pc_num].items.size(); i++)
 		if(univ.party[pc_num].equip[i]) {
 			what_val = univ.party[pc_num].items[i].awkward;
 			if(univ.party[pc_num].items[i].ability == eItemAbil::ENCUMBERING)

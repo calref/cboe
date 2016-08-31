@@ -1571,14 +1571,13 @@ void initiate_outdoor_combat(short i) {
 	
 	univ.party.out_c[i].exists = false;
 	
-	for(short m = 0; m < 6; m++)
-		if(univ.party[m].main_status == eMainStatus::ALIVE)
-			to_place = univ.party[m].combat_pos;
-	for(short m = 0; m < 6; m++)
-		for(short n = 0; n < 24; n++)
-			if(univ.party[m].main_status != eMainStatus::ALIVE && univ.party[m].items[n].variety != eItemType::NO_ITEM) {
-				place_item(univ.party[m].items[n],to_place);
-				univ.party[m].items[n].variety = eItemType::NO_ITEM;
+	for(cPlayer& pc : univ.party)
+		if(pc.main_status == eMainStatus::ALIVE)
+			to_place = pc.combat_pos;
+		else for(cItem& item : pc.items)
+			if(item.variety != eItemType::NO_ITEM) {
+				place_item(item,to_place);
+				item.variety = eItemType::NO_ITEM;
 			}
 	
 	overall_mode = MODE_COMBAT;
@@ -2258,9 +2257,8 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	// Specials countdowns
 	if((length > 500 || age_before / 500 < univ.party.age / 500) && univ.party.has_abil(eItemAbil::OCCASIONAL_STATUS)) {
 		// TODO: There used to be a "display strings" here; should we hook in a special node call?
-		for(int i = 0; i < 6; i++)
-			for(int j = 0; j < 24; j++) {
-				cItem& item = univ.party[i].items[j];
+		for(cPlayer& pc : univ.party)
+			for(const cItem& item : pc.items) {
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
 				if(item.abil_data[1] > 15) continue;
 				if(!item.abil_group()) continue;
@@ -2279,27 +2277,27 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	univ.party.heal(hp_restore);
 	univ.party.restore_sp(mp_restore);
 	// Recuperation and chronic disease disads
-	for(int i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			if(univ.party[i].traits[eTrait::RECUPERATION] && univ.party[i].cur_health < univ.party[i].max_health) {
-				univ.party[i].heal(hp_restore / 5);
+	for(cPlayer& pc : univ.party)
+		if(pc.main_status == eMainStatus::ALIVE) {
+			if(pc.traits[eTrait::RECUPERATION] && pc.cur_health < pc.max_health) {
+				pc.heal(hp_restore / 5);
 			}
-			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
-				univ.party[i].disease(6);
+			if(pc.traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
+				pc.disease(6);
 			}
-			short item = univ.party[i].has_abil_equip(eItemAbil::REGENERATE);
-			if(item < 24 && univ.party[i].cur_health < univ.party[i].max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)){
-				int j = get_ran(1,0,univ.party[i].items[item].abil_data[0] / 3);
-				if(univ.party[i].items[item].abil_data[0] / 3 == 0)
+			short item = pc.has_abil_equip(eItemAbil::REGENERATE);
+			if(item < pc.items.size() && pc.cur_health < pc.max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)){
+				int j = get_ran(1,0,pc.items[item].abil_data[0] / 3);
+				if(pc.items[item].abil_data[0] / 3 == 0)
 					j = get_ran(1,0,1);
 				if(is_out()) j = j * 4;
-				univ.party[i].heal(j);
+				pc.heal(j);
 			}
 			// Bonus SP and HP wear off
-			if(univ.party[i].cur_sp > univ.party[i].max_sp)
-				univ.party[i].cur_sp = univ.party[i].max_sp;
-			if(univ.party[i].cur_health > univ.party[i].max_health)
-				univ.party[i].cur_health = univ.party[i].max_health;
+			if(pc.cur_sp > pc.max_sp)
+				pc.cur_sp = pc.max_sp;
+			if(pc.cur_health > pc.max_health)
+				pc.cur_health = pc.max_health;
 		}
 	special_increase_age(length, true);
 	put_pc_screen();
@@ -2377,9 +2375,8 @@ void increase_age() {
 	// Specials countdowns
 	if(univ.party.age % 500 == 0 && univ.party.has_abil(eItemAbil::OCCASIONAL_STATUS)) {
 		// TODO: There used to be a "display strings" here; should we hook in a special node call?
-		for(int i = 0; i < 6; i++)
-			for(int j = 0; j < 24; j++) {
-				cItem& item = univ.party[i].items[j];
+		for(cPlayer& pc : univ.party)
+			for(const cItem& item : pc.items) {
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
 				if(item.abil_data[1] > 15) continue;
 				if(!item.abil_group()) continue;
@@ -2507,17 +2504,16 @@ void increase_age() {
 	
 	// Blessing, slowed,etc.
 	if(univ.party.age % 4 == 0)
-		for(short i = 0; i < 6; i++) {
-			move_to_zero(univ.party[i].status[eStatus::BLESS_CURSE]);
-			move_to_zero(univ.party[i].status[eStatus::HASTE_SLOW]);
-			if((item = univ.party[i].has_abil_equip(eItemAbil::REGENERATE)) < 24
-			   && (univ.party[i].cur_health < univ.party[i].max_health)
+		for(cPlayer& pc : univ.party) {
+			move_to_zero(pc.status[eStatus::BLESS_CURSE]);
+			move_to_zero(pc.status[eStatus::HASTE_SLOW]);
+			if((item = pc.has_abil_equip(eItemAbil::REGENERATE)) < pc.items.size() && (pc.cur_health < pc.max_health)
 			   && ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
-				int j = get_ran(1,0,univ.party[i].items[item].abil_data[0] / 3);
-				if(univ.party[i].items[item].abil_data[0] / 3 == 0)
+				int j = get_ran(1,0,pc.items[item].abil_data[0] / 3);
+				if(pc.items[item].abil_data[0] / 3 == 0)
 					j = get_ran(1,0,1);
 				if(is_out()) j = j * 4;
-				univ.party[i].heal(j);
+				pc.heal(j);
 			}
 		}
 	

@@ -476,13 +476,13 @@ void start_town_mode(short which_town, short entry_dir) {
 	update_explored(univ.party.town_loc);
 	
 	// If a PC dead, drop his items
-	for(short m = 0; m < 6; m++) {
-		if(univ.party[m].main_status == eMainStatus::ALIVE || isSplit(univ.party[m].main_status))
+	for(cPlayer& pc : univ.party) {
+		if(pc.main_status == eMainStatus::ALIVE || isSplit(pc.main_status))
 			continue;
-		for(short n = 0; n < 24; n++)
-			if(univ.party[m].items[n].variety != eItemType::NO_ITEM) {
-				place_item(univ.party[m].items[n],univ.party.town_loc);
-				univ.party[m].items[n].variety = eItemType::NO_ITEM;
+		for(cItem& item : pc.items)
+			if(item.variety != eItemType::NO_ITEM) {
+				place_item(item,univ.party.town_loc);
+				item.variety = eItemType::NO_ITEM;
 			}
 	}
 	
@@ -659,9 +659,9 @@ void handle_leave_town_specials(short /*town_number*/, short which_spec,location
 }
 
 bool abil_exists(eItemAbil abil) { // use when outdoors
-	for(short i = 0; i < 6; i++)
-		for(short j = 0; j < 24; j++)
-			if(univ.party[i].items[j].variety != eItemType::NO_ITEM && univ.party[i].items[j].ability == abil)
+	for(const cPlayer& pc : univ.party)
+		for(const cItem& item : pc.items)
+			if(item.variety != eItemType::NO_ITEM && item.ability == abil)
 				return true;
 	for(short i = 0; i < 3; i++)
 		for(short j = 0; j < univ.town.items.size(); j++)
@@ -1149,7 +1149,7 @@ void pick_lock(location where,short pc_num) {
 	
 	terrain = univ.town->terrain(where.x,where.y);
 	which_item = univ.party[pc_num].has_abil_equip(eItemAbil::LOCKPICKS);
-	if(which_item == 24) {
+	if(which_item == univ.party[pc_num].items.size()) {
 		add_string_to_buf("  Need lockpick equipped.");
 		return;
 	}
@@ -1166,7 +1166,7 @@ void pick_lock(location where,short pc_num) {
 	if(univ.party[pc_num].traits[eTrait::NIMBLE])
 		r1 -= 8;
 	
-	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING) < 24)
+	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING) < univ.party[pc_num].items.size())
 		r1 = r1 - 12;
 	
 	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {

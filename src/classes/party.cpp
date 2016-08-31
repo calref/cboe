@@ -458,22 +458,23 @@ bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 		item.abil_data[0] = dat / 1000;
 		item.abil_data[1] = dat % 1000;
 	}
-	for(int i = 0; i < 6; i++)
-		for(int j = 0; j < 24; j++)
-			if(adven[i]->main_status == eMainStatus::ALIVE && adven[i]->items[j].variety == eItemType::NO_ITEM) {
-				adven[i]->items[j] = item;
+	// TODO: It's strange to check main_status in the inner loop here rather than the outer loop
+	for(cPlayer& pc : *this)
+		for(cItem& slot : pc.items)
+			if(pc.main_status == eMainStatus::ALIVE && slot.variety == eItemType::NO_ITEM) {
+				slot = item;
 				
 				if(print_result) {
 					std::ostringstream announce;
-					announce << "  " << adven[i]->name << " gets ";
+					announce << "  " << pc.name << " gets ";
 					if(!item.ident)
 						announce << item.name;
 					else announce << item.full_name;
 					announce << '.';
 					print_result(announce.str());
 				}
-				adven[i]->combine_things();
-				adven[i]->sort_items();
+				pc.combine_things();
+				pc.sort_items();
 				return true;
 			}
 	return false;
@@ -482,7 +483,7 @@ bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 bool cParty::has_abil(eItemAbil abil, short dat) {
 	for(int i = 0; i < 6; i++)
 		if(adven[i]->main_status == eMainStatus::ALIVE)
-			if(adven[i]->has_abil(abil,dat) < 24)
+			if(adven[i]->has_abil(abil,dat) < adven[i]->items.size())
 				return true;
 	return false;
 }
@@ -491,7 +492,7 @@ bool cParty::take_abil(eItemAbil abil, short dat) {
 	short item;
 	for(int i = 0; i < 6; i++)
 		if(adven[i]->main_status == eMainStatus::ALIVE)
-			if((item = adven[i]->has_abil(abil,dat)) < 24) {
+			if((item = adven[i]->has_abil(abil,dat)) < adven[i]->items.size()) {
 				if(adven[i]->items[item].charges > 1)
 					adven[i]->items[item].charges--;
 				else adven[i]->take_item(item);

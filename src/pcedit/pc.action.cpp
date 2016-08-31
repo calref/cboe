@@ -69,18 +69,18 @@ bool handle_action(sf::Event event) {
 					break;
 			}
 		}
-	for(short i = 0; i < 24; i++)
+	for(short i = 0; i < univ.party[current_active_pc].items.size(); i++) {
 		if((the_point.in(item_string_rects[i][1])) && // drop item
 		   univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
 			flash_rect(item_string_rects[i][1]);
 			univ.party[current_active_pc].take_item(i);
 		}
-	for(short i = 0; i < 24; i++)
 		if((the_point.in(item_string_rects[i][2])) && // identify item
 		   univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
 			flash_rect(item_string_rects[i][2]);
 			univ.party[current_active_pc].items[i].ident = true;
 		}
+	}
 	
 	return to_return;
 }
