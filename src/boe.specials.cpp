@@ -3409,14 +3409,14 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			for(cPlayer& pc : univ.party)
 				if(pc.main_status == eMainStatus::ALIVE)
 					if(cInvenSlot item = pc.has_class_equip(spec.ex1a)) {
-							*next_spec = spec.ex1b;
-							if(spec.ex2a > 0) {
-								*redraw = 1;
-								pc.take_item(item.slot);
-								if(&pc == &univ.party[stat_window])
-									put_item_screen(stat_window);
-							}
+						*next_spec = spec.ex1b;
+						if(spec.ex2a > 0) {
+							*redraw = 1;
+							pc.take_item(item.slot);
+							if(&pc == &univ.party[stat_window])
+								put_item_screen(stat_window);
 						}
+					}
 			break;
 		case eSpecType::IF_DAY_REACHED:
 			if(univ.party.calc_day() >= spec.ex1a)

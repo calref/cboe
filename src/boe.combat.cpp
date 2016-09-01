@@ -1871,13 +1871,13 @@ void fire_missile(location target) {
 					}
 				} else if(cPlayer* pc = dynamic_cast<cPlayer*>(victim)) {
 					if(cInvenSlot spec_item = pc->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL)) {
-					short s1,s2,s3;
-					univ.party.force_ptr(21, pc->combat_pos.x);
-					univ.party.force_ptr(22, pc->combat_pos.y);
-					univ.party.force_ptr(20, univ.get_target_i(*pc));
-					run_special(eSpecCtx::ATTACKED_RANGE, 0, spec_item->abil_data[0], missile_firer.combat_pos, &s1, &s2, &s3);
-					if(s1 > 0)
-						missile_firer.ap += (overall_mode == MODE_FIRING) ? 3 : 2;
+						short s1,s2,s3;
+						univ.party.force_ptr(21, pc->combat_pos.x);
+						univ.party.force_ptr(22, pc->combat_pos.y);
+						univ.party.force_ptr(20, univ.get_target_i(*pc));
+						run_special(eSpecCtx::ATTACKED_RANGE, 0, spec_item->abil_data[0], missile_firer.combat_pos, &s1, &s2, &s3);
+						if(s1 > 0)
+							missile_firer.ap += (overall_mode == MODE_FIRING) ? 3 : 2;
 					}
 				}
 			}
@@ -2943,13 +2943,13 @@ void monster_attack(short who_att,iLiving* target) {
 					
 					if(pc_target != nullptr) {
 						if(cInvenSlot spec_item = pc_target->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL)) {
-						short s1,s2,s3;
-						univ.party.force_ptr(21, target->get_loc().x);
-						univ.party.force_ptr(22, target->get_loc().y);
-						univ.party.force_ptr(20, i_monst);
-						run_special(eSpecCtx::ATTACKED_MELEE, 0, spec_item->abil_data[0], attacker->cur_loc, &s1, &s2, &s3);
-						if(s1 > 0)
-							attacker->ap += 4;
+							short s1,s2,s3;
+							univ.party.force_ptr(21, target->get_loc().x);
+							univ.party.force_ptr(22, target->get_loc().y);
+							univ.party.force_ptr(20, i_monst);
+							run_special(eSpecCtx::ATTACKED_MELEE, 0, spec_item->abil_data[0], attacker->cur_loc, &s1, &s2, &s3);
+							if(s1 > 0)
+								attacker->ap += 4;
 						}
 					} else if(m_target != nullptr && m_target->abil[eMonstAbil::HIT_TRIGGER].active) {
 						short s1,s2,s3;
