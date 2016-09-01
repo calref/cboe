@@ -34,7 +34,7 @@
 
 extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
-extern short which_combat_type,current_pc,stat_window;
+extern short which_combat_type,stat_window;
 extern location center;
 extern bool processing_fields,monsters_going,boom_anim_active;
 extern effect_pat_type single,t,square,radius2,radius3,small_square,open_square,field[8];
@@ -142,7 +142,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			break;
 		case eSpecCtx::COMBAT_MOVE:
 			ter = univ.town->terrain(where_check.x,where_check.y);
-			from_loc = univ.party[current_pc].combat_pos;
+			from_loc = univ.current_pc().combat_pos;
 			break;
 		default:
 			// No movement happened, so just return false.
@@ -238,7 +238,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	if((!is_out()) && (overall_mode < MODE_TALKING)) {
 		check_fields(where_check,mode,which_pc);
 		
-		if(univ.town.is_web(where_check.x,where_check.y) && univ.party[current_pc].race != eRace::BUG) {
+		if(univ.town.is_web(where_check.x,where_check.y) && univ.current_pc().race != eRace::BUG) {
 			add_string_to_buf("  Webs!");
 			if(mode != eSpecCtx::COMBAT_MOVE) {
 				for(short i = 0; i < 6; i++) {
@@ -246,7 +246,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 					univ.party[i].web(r1);
 				}
 			}
-			else univ.party[current_pc].web(get_ran(1,2,3));
+			else univ.current_pc().web(get_ran(1,2,3));
 			put_pc_screen();
 			univ.town.set_web(where_check.x,where_check.y,false);
 		}
@@ -473,7 +473,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	if(is_town())
 		update_explored(univ.party.town_loc);
 	if(is_combat())
-		update_explored(univ.party[current_pc].combat_pos);
+		update_explored(univ.current_pc().combat_pos);
 	
 	return can_enter;
 }
@@ -598,7 +598,7 @@ void use_item(short pc,short item) {
 	if(is_town())
 		user_loc = univ.party.town_loc;
 	if(is_combat())
-		user_loc = univ.party[current_pc].combat_pos;
+		user_loc = univ.current_pc().combat_pos;
 	
 	if(item_use_code == 0) {
 		add_string_to_buf("Use: Can't use this item.");
@@ -1116,8 +1116,8 @@ void use_item(short pc,short item) {
 					bool priest = (*spell).is_priest();
 					switch((*spell).refer) {
 						case REFER_YES:
-							if(priest) do_priest_spell(current_pc, spell, true);
-							else do_mage_spell(current_pc, spell, true);
+							if(priest) do_priest_spell(univ.cur_pc, spell, true);
+							else do_mage_spell(univ.cur_pc, spell, true);
 							break;
 						case REFER_TARGET:
 							start_spell_targeting(spell, true);
@@ -1126,13 +1126,13 @@ void use_item(short pc,short item) {
 							start_fancy_spell_targeting(spell, true);
 							break;
 						case REFER_IMMED:
-							if(priest) combat_immed_priest_cast(current_pc, spell, true);
-							else combat_immed_mage_cast(current_pc, spell, true);
+							if(priest) combat_immed_priest_cast(univ.cur_pc, spell, true);
+							else combat_immed_mage_cast(univ.cur_pc, spell, true);
 							break;
 					}
 				} else if((*spell).is_priest())
-					do_priest_spell(current_pc, spell, true);
-				else do_mage_spell(current_pc, spell, true);
+					do_priest_spell(univ.cur_pc, spell, true);
+				else do_mage_spell(univ.cur_pc, spell, true);
 				break;
 			case eItemAbil::SUMMONING:
 				if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,str,eAttitude::FRIENDLY,true))
@@ -1357,8 +1357,8 @@ void teleport_party(short x,short y,short mode) {
 	}
 	center.x = x; center.y = y;
 	if(is_combat()) {
-		univ.party[current_pc].combat_pos.x = x;
-		univ.party[current_pc].combat_pos.y = y;
+		univ.current_pc().combat_pos.x = x;
+		univ.current_pc().combat_pos.y = y;
 	}
 	l.x = x; l.y = y;
 	univ.party.town_loc.x = x;
@@ -1971,7 +1971,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 			// Default behaviour - select entire party, or active member if split or in combat
 			// We also have a legacy flag - originally, it always defaulted to whole party
 			if(is_combat() && !univ.scenario.is_legacy)
-				current_pc_picked_in_spec_enc = &univ.party[current_pc];
+				current_pc_picked_in_spec_enc = &univ.current_pc();
 			else {
 				if(univ.party.is_split() && cur_node.type != eSpecType::AFFECT_DEADNESS)
 					current_pc_picked_in_spec_enc = &univ.party.pc_present();
@@ -2672,7 +2672,7 @@ void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						*a = 1;
 						set_sd = false;
 					}
-				} else dlg_res = current_pc;
+				} else dlg_res = univ.cur_pc;
 				bool disarmed = run_trap(dlg_res,eTrapType(spec.ex1a),spec.ex1b,spec.ex2a);
 				if(!disarmed && spec.ex1a == TRAP_CUSTOM) {
 					if(spec.jumpto >= 0)
@@ -3958,7 +3958,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							*next_spec = -1;
 							break;
 						} else {
-							was_active = current_pc;
+							was_active = univ.cur_pc;
 							eDirection dir = end_town_combat();
 							if(dir == DIR_HERE) {
 								ASB("Can't change level now.");
@@ -3971,7 +3971,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					change_level(spec.ex2a,l.x,l.y);
 					if(was_in_combat) {
 						start_town_combat(univ.party.direction);
-						current_pc = was_active;
+						univ.cur_pc = was_active;
 					}
 				} else *next_spec = -1;
 			}
@@ -4071,7 +4071,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							*next_spec = -1;
 							break;
 						} else {
-							was_active = current_pc;
+							was_active = univ.cur_pc;
 							univ.party.direction = end_town_combat();
 						}
 					}
@@ -4079,7 +4079,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					change_level(spec.ex2a,l.x,l.y);
 					if(was_in_combat) {
 						start_town_combat(univ.party.direction);
-						current_pc = was_active;
+						univ.cur_pc = was_active;
 					}
 				}
 			}
@@ -4114,7 +4114,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			if(which_mode == eSpecCtx::OUT_MOVE || which_mode == eSpecCtx::TOWN_MOVE || which_mode == eSpecCtx::COMBAT_MOVE)
 				*a = 1;
 			if(r1 != 6) {
-				current_pc = r1;
+				univ.cur_pc = r1;
 				*next_spec = -1;
 				if(!univ.party.start_split(spec.ex1a,spec.ex1b,spec.ex2a,r1))
 					ASB("Party already split!");
@@ -4212,7 +4212,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::TOWN_SET_CENTER:
 			if(l.x >= 0 && l.y >= 0) center = l;
-			else center = is_combat() ? univ.party[current_pc].combat_pos : univ.party.town_loc;
+			else center = is_combat() ? univ.current_pc().combat_pos : univ.party.town_loc;
 			start_cartoon();
 			redraw_screen(REFRESH_TERRAIN);
 			break;

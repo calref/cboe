@@ -91,7 +91,6 @@ location spell_targets[8];
 /* Combat globals */
 short which_combat_type;
 location center;
-short current_pc;
 short combat_active_pc;
 effect_pat_type current_pat;
 short missile_firer,current_monst_tactic;

@@ -100,7 +100,6 @@ extern bool talk_end_forced;
 
 extern short which_combat_type,num_targets_left;
 extern location center;
-extern short current_pc;
 extern short combat_active_pc;
 extern eStatMode stat_screen_mode;
 
@@ -290,12 +289,12 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 	} else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET) {
 		add_string_to_buf("  Cancelled.");
 		overall_mode = MODE_COMBAT;
-		center = univ.party[current_pc].combat_pos;
+		center = univ.current_pc().combat_pos;
 		pause(10);
 		need_redraw = true;
 		extern eSpell spell_being_cast;
 		if(spell_being_cast == eSpell::NONE)
-			queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, univ.party[current_pc].combat_pos);
+			queue_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, univ.current_pc().combat_pos);
 	}
 	put_pc_screen();
 	put_item_screen(stat_window);
@@ -354,13 +353,13 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 	if(overall_mode == MODE_COMBAT) {
 		char_stand_ready();
 		add_string_to_buf("Stand ready.");
-		if(univ.party[current_pc].status[eStatus::WEBS] > 0) {
+		if(univ.current_pc().status[eStatus::WEBS] > 0) {
 			add_string_to_buf("You clean webs.");
-			move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
-			move_to_zero(univ.party[current_pc].status[eStatus::WEBS]);
+			move_to_zero(univ.current_pc().status[eStatus::WEBS]);
+			move_to_zero(univ.current_pc().status[eStatus::WEBS]);
 			put_pc_screen();
 		}
-		check_fields(univ.party[current_pc].combat_pos,eSpecCtx::COMBAT_MOVE,univ.party[current_pc]);
+		check_fields(univ.current_pc().combat_pos,eSpecCtx::COMBAT_MOVE,univ.current_pc());
 	} else {
 		add_string_to_buf("Pause.");
 		for(int k = 0; k < 6; k++)
@@ -419,7 +418,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 //	if(can_see(cur_loc,destination) >= 4 || (overall_mode != MODE_LOOK_OUTDOORS && loc_off_world(destination)))
 	if(overall_mode != MODE_LOOK_COMBAT && party_can_see(destination) == 6)
 		add_string_to_buf("  Can't see space.");
-	else if(overall_mode == MODE_LOOK_COMBAT && can_see_light(univ.party[current_pc].combat_pos,destination,sight_obscurity) >= 4)
+	else if(overall_mode == MODE_LOOK_COMBAT && can_see_light(univ.current_pc().combat_pos,destination,sight_obscurity) >= 4)
 		add_string_to_buf("  Can't see space.");
 	else {
 		add_string_to_buf("You see...");
@@ -460,7 +459,7 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 	bool town_move_done = false;
 	if(overall_mode == MODE_COMBAT) {
 		if(pc_combat_move(destination)) {
-			center = univ.party[current_pc].combat_pos;
+			center = univ.current_pc().combat_pos;
 			did_something = true;
 			update_explored(destination);
 		}
@@ -584,7 +583,7 @@ static void handle_target_space(location destination, bool& did_something, bool&
 		did_something = true;
 		if(overall_mode == MODE_TOWN_TARGET)
 			center = univ.party.town_loc;
-		else center = univ.party[current_pc].combat_pos;
+		else center = univ.current_pc().combat_pos;
 	}
 	if(overall_mode != MODE_TOWN_TARGET) pause(6);
 	need_redraw = true;
@@ -597,10 +596,10 @@ static void handle_target_space(location destination, bool& did_something, bool&
 
 static void handle_drop_item(location destination, bool& need_redraw) {
 	if(overall_mode == MODE_DROP_COMBAT) {
-		if(!adjacent(univ.party[current_pc].combat_pos,destination))
+		if(!adjacent(univ.current_pc().combat_pos,destination))
 			add_string_to_buf("Drop: must be adjacent.");
 		else {
-			drop_item(current_pc,store_drop_item,destination);
+			drop_item(univ.cur_pc,store_drop_item,destination);
 			take_ap(1);
 		}
 		pause(6);
@@ -610,7 +609,7 @@ static void handle_drop_item(location destination, bool& need_redraw) {
 			add_string_to_buf("Drop: must be adjacent.");
 		else if(sight_obscurity(destination.x,destination.y) == 5)
 			ASB("Drop: Space is blocked.");
-		else drop_item(current_pc,store_drop_item,destination);
+		else drop_item(univ.cur_pc,store_drop_item,destination);
 		overall_mode = MODE_TOWN;
 	}
 	need_redraw = true;
@@ -655,15 +654,15 @@ static void handle_switch_pc(short which_pc, bool& need_redraw) {
 	else if(is_combat()) {
 		if(univ.party[which_pc].ap > 0) {
 			draw_terrain();
-			current_pc = which_pc;
+			univ.cur_pc = which_pc;
 			combat_next_step();
-			set_stat_window(current_pc);
+			set_stat_window(univ.cur_pc);
 			put_pc_screen();
 		} else add_string_to_buf("Set active: PC has no APs.");
 	} else if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
 		add_string_to_buf("Set active: PC must be here & active.");
 	else {
-		current_pc = which_pc;
+		univ.cur_pc = which_pc;
 		set_stat_window(which_pc);
 		add_string_to_buf("Now " + std::string(overall_mode == MODE_SHOPPING ? "shopping" : "active") + ": " + univ.party[which_pc].name);
 		adjust_spell_menus();
@@ -679,7 +678,7 @@ static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 			if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
 				add_string_to_buf("Set active: PC must be here & active.");
 			else {
-				current_pc = which_pc;
+				univ.cur_pc = which_pc;
 				add_string_to_buf("Now active: " + univ.party[which_pc].name);
 				adjust_spell_menus();
 				need_redraw = true;
@@ -850,7 +849,8 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 			need_reprint = true;
 			start_town_combat(univ.party.direction);
 			need_redraw = true;
-			current_pc = 6;
+			// TODO: It's not good for current_pc to be 6
+			univ.cur_pc = 6;
 			did_something = true;
 			put_pc_screen();
 		}
@@ -863,7 +863,7 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 				handle_wandering_specials(0,1);
 				menu_activate();
 				put_pc_screen();
-				set_stat_window(current_pc);
+				set_stat_window(univ.cur_pc);
 			} else add_string_to_buf("Can't end combat yet.");
 		} else {
 			eDirection dir = end_town_combat();
@@ -874,7 +874,7 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 			}
 			univ.party.direction = dir;
 			center = univ.party.town_loc;
-			set_stat_window(current_pc);
+			set_stat_window(univ.cur_pc);
 			redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT | REFRESH_STATS);
 			play_sound(93);
 			need_reprint = true;
@@ -893,7 +893,7 @@ static void handle_missile(bool& need_redraw, bool& need_reprint) {
 		redraw_terrain();
 	} else if(overall_mode == MODE_FIRING || overall_mode == MODE_THROWING) {
 		add_string_to_buf("  Cancelled.");
-		center = univ.party[current_pc].combat_pos;
+		center = univ.current_pc().combat_pos;
 		pause(10);
 		need_redraw = true;
 		overall_mode = MODE_COMBAT;
@@ -907,7 +907,7 @@ static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_
 	if(overall_mode == MODE_TOWN)
 		j = get_item(univ.party.town_loc,6,false);
 	else {
-		j = get_item(univ.party[current_pc].combat_pos,current_pc,false);
+		j = get_item(univ.current_pc().combat_pos,univ.cur_pc,false);
 		take_ap(4);
 	}
 	if(j > 0) {
@@ -1116,10 +1116,10 @@ bool handle_action(sf::Event event) {
 				if(overall_mode == MODE_COMBAT) {
 					if(combat_active_pc == 6) {
 						add_string_to_buf("This PC now active.");
-						combat_active_pc = current_pc;
+						combat_active_pc = univ.cur_pc;
 					} else {
 						add_string_to_buf("All PC's now active.");
-						current_pc = combat_active_pc;
+						univ.cur_pc = combat_active_pc;
 						combat_active_pc = 6;
 					}
 					need_reprint = true;
@@ -1177,7 +1177,7 @@ bool handle_action(sf::Event event) {
 				if(right_button) overall_mode = previous_mode;
 				else if(overall_mode == MODE_LOOK_COMBAT) {
 					overall_mode = MODE_COMBAT;
-					center = univ.party[current_pc].combat_pos;
+					center = univ.current_pc().combat_pos;
 					pause(5);
 					need_redraw = true;
 				}
@@ -1402,9 +1402,9 @@ bool handle_action(sf::Event event) {
  	if(pc_delayed) {
  		draw_terrain();
 		//pause(2);
-		current_pc++;
+		univ.cur_pc++;
 		combat_next_step();
-		set_stat_window(current_pc);
+		set_stat_window(univ.cur_pc);
 		put_pc_screen();
 	}
  	
@@ -1517,8 +1517,8 @@ void handle_menu_spell(eSpell spell_picked) {
 	sf::Event event;
 	
 	spell_forced = true;
-	pc_casting = current_pc;
-	univ.party[current_pc].last_cast[spell_type] = spell_picked;
+	pc_casting = univ.cur_pc;
+	univ.current_pc().last_cast[spell_type] = spell_picked;
 	if(spell_type == eSkill::MAGE_SPELLS)
 		store_mage = spell_picked;
 	else store_priest = spell_picked;
@@ -1581,7 +1581,7 @@ void initiate_outdoor_combat(short i) {
 			}
 	
 	overall_mode = MODE_COMBAT;
-	center = univ.party[current_pc].combat_pos;
+	center = univ.current_pc().combat_pos;
 	draw_terrain();
 }
 
@@ -1780,7 +1780,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 		case 'z':
 			if(((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT)) {
-				set_stat_window(current_pc);
+				set_stat_window(univ.cur_pc);
 				put_item_screen(stat_window);
 			} else {
 				set_stat_window(0);
@@ -1916,7 +1916,7 @@ bool handle_keystroke(sf::Event& event){
 				y += 48 * univ.party.outdoor_corner.y;
 				sout << "Debug:  You're outside at x " << x << ", y " << y << '.';
 			} else if(is_combat()) {
-				location loc = univ.party[current_pc].combat_pos;
+				location loc = univ.current_pc().combat_pos;
 				sout << "Debug:  You're in combat at x " << loc.x << ", y " << loc.y << '.';
 			}
 			add_string_to_buf(sout.str());
@@ -2564,11 +2564,11 @@ void switch_pc(short which) {
 		if(current_switch != which) {
 			add_string_to_buf("Switch: OK.");
 			univ.party.swap_pcs(which, current_switch);
-			if(current_pc == current_switch)
-				current_pc = which;
-			else if(current_pc == which)
-				current_pc = current_switch;
-			set_stat_window(current_pc);
+			if(univ.cur_pc == current_switch)
+				univ.cur_pc = which;
+			else if(univ.cur_pc == which)
+				univ.cur_pc = current_switch;
+			set_stat_window(univ.cur_pc);
 		} else ASB("Switch: Not with self.");
 		current_switch = 6;
 	}

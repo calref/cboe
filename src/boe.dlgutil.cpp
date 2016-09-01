@@ -42,7 +42,6 @@ extern sf::RenderWindow mainPtr;
 extern location ul;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
-extern short current_pc;
 extern eStatMode stat_screen_mode;
 extern long register_flag;
 extern long ed_flag,ed_key;
@@ -256,11 +255,11 @@ void handle_sale(cShopItem item, int i) {
 		case eShopItemType::CLASS: break; // Also invalid
 		case eShopItemType::OPT_ITEM: break; // Also invalid
 		case eShopItemType::ITEM:
-			switch(univ.party[current_pc].ok_to_buy(cost,base_item)) {
+			switch(univ.current_pc().ok_to_buy(cost,base_item)) {
 				case eBuyStatus::OK:
 					play_sound(-38);
 					take_gold(cost,true);
-					univ.party[current_pc].give_item(base_item,true);
+					univ.current_pc().give_item(base_item,true);
 					// Magic shops have limited stock
 					active_shop.takeOne(i);
 					break;
@@ -297,31 +296,32 @@ void handle_sale(cShopItem item, int i) {
 				play_sound(68);
 				switch(item.type) {
 					case eShopItemType::HEAL_WOUNDS:
-						univ.party[current_pc].cur_health = univ.party[current_pc].max_health;
+						univ.current_pc().cur_health = univ.current_pc().max_health;
 						break;
 					case eShopItemType::CURE_POISON:
-						univ.party[current_pc].status[eStatus::POISON] = 0;
+						univ.current_pc().status[eStatus::POISON] = 0;
 						break;
 					case eShopItemType::CURE_DISEASE:
-						univ.party[current_pc].status[eStatus::DISEASE] = 0;
+						univ.current_pc().status[eStatus::DISEASE] = 0;
 						break;
 					case eShopItemType::CURE_ACID:
-						univ.party[current_pc].status[eStatus::ACID] = 0;
+						univ.current_pc().status[eStatus::ACID] = 0;
 						break;
 					case eShopItemType::CURE_PARALYSIS:
-						univ.party[current_pc].status[eStatus::PARALYZED] = 0;
+						univ.current_pc().status[eStatus::PARALYZED] = 0;
 						break;
 					case eShopItemType::REMOVE_CURSE:
-						for(int i = 0; i < univ.party[current_pc].items.size(); i++)
-							if((univ.party[current_pc].equip[i]) &&
-								(univ.party[current_pc].items[i].cursed))
-								univ.party[current_pc].items[i].cursed = univ.party[current_pc].items[i].unsellable = false;
+						for(int i = 0; i < univ.current_pc().items.size(); i++)
+							if((univ.current_pc().equip[i]) &&
+								(univ.current_pc().items[i].cursed))
+								univ.current_pc().items[i].cursed = univ.current_pc().items[i].unsellable = false;
 						break;
 					case eShopItemType::DESTONE: case eShopItemType::RAISE_DEAD: case eShopItemType::RESURRECT:
-						univ.party[current_pc].main_status = eMainStatus::ALIVE;
+						univ.current_pc().main_status = eMainStatus::ALIVE;
 						break;
 					case eShopItemType::CURE_DUMBFOUNDING:
-						univ.party[current_pc].status[eStatus::DUMB] = 0;
+						// TODO: Don't cure anti-dumbfounding!
+						univ.current_pc().status[eStatus::DUMB] = 0;
 						break;
 					default: break; // Silence compiler warning
 				}
@@ -333,7 +333,7 @@ void handle_sale(cShopItem item, int i) {
 				showError("The scenario tried to sell you an invalid mage spell!");
 				break;
 			}
-			if(univ.party[current_pc].mage_spells[base_item.item_level])
+			if(univ.current_pc().mage_spells[base_item.item_level])
 				ASB("You already have this spell.");
 			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
@@ -341,7 +341,7 @@ void handle_sale(cShopItem item, int i) {
 				// TODO: This seems like the wrong sound
 				play_sound(62);
 				ASB("You buy a spell.");
-				univ.party[current_pc].mage_spells[base_item.item_level] = true;
+				univ.current_pc().mage_spells[base_item.item_level] = true;
 				give_help(41,0);
 			}
 			break;
@@ -351,7 +351,7 @@ void handle_sale(cShopItem item, int i) {
 				showError("The scenario tried to sell you an invalid priest spell!");
 				break;
 			}
-			if(univ.party[current_pc].priest_spells[base_item.item_level])
+			if(univ.current_pc().priest_spells[base_item.item_level])
 				ASB("You already have this spell.");
 			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
@@ -359,7 +359,7 @@ void handle_sale(cShopItem item, int i) {
 				// TODO: This seems like the wrong sound
 				play_sound(62);
 				ASB("You buy a spell.");
-				univ.party[current_pc].priest_spells[base_item.item_level] = true;
+				univ.current_pc().priest_spells[base_item.item_level] = true;
 				give_help(41,0);
 			}
 			break;
@@ -382,7 +382,7 @@ void handle_sale(cShopItem item, int i) {
 				break;
 			}
 			eSkill skill = eSkill(base_item.item_level);
-			if(univ.party[current_pc].skills[skill] >= skill_max[skill])
+			if(univ.current_pc().skills[skill] >= skill_max[skill])
 				ASB("You're already an expert in this skill.");
 			else if(!take_gold(cost, false))
 				ASB("Not enough gold.");
@@ -393,7 +393,7 @@ void handle_sale(cShopItem item, int i) {
 				active_shop.takeOne(i);
 				if(active_shop.size() != size_before)
 					shop_sbar->setMaximum(shop_sbar->getMaximum() - 1);
-				univ.party[current_pc].skills[skill]++;
+				univ.current_pc().skills[skill]++;
 			}
 			break;
 	}
@@ -486,44 +486,44 @@ void set_up_shop_array() {
 				shop_array[i++] = j;
 				break;
 			case eShopItemType::HEAL_WOUNDS:
-				if(univ.party[current_pc].cur_health < univ.party[current_pc].max_health)
+				if(univ.current_pc().cur_health < univ.current_pc().max_health)
 					shop_array[i++] = j;
 				break;
 			case eShopItemType::CURE_POISON:
-				if(univ.party[current_pc].status[eStatus::POISON] > 0)
+				if(univ.current_pc().status[eStatus::POISON] > 0)
 					shop_array[i++] = j;
 				break;
 			case eShopItemType::CURE_DISEASE:
-				if(univ.party[current_pc].status[eStatus::DISEASE] > 0)
+				if(univ.current_pc().status[eStatus::DISEASE] > 0)
 					shop_array[i++] = j;
 				break;
 			case eShopItemType::CURE_ACID:
-				if(univ.party[current_pc].status[eStatus::ACID] > 0)
+				if(univ.current_pc().status[eStatus::ACID] > 0)
 					shop_array[i++] = j;
 				break;
 			case eShopItemType::CURE_PARALYSIS:
-				if(univ.party[current_pc].status[eStatus::PARALYZED] > 0)
+				if(univ.current_pc().status[eStatus::PARALYZED] > 0)
 					shop_array[i++] = j;
 				break;
 			case eShopItemType::CURE_DUMBFOUNDING:
-				if(univ.party[current_pc].status[eStatus::DUMB] > 0)
+				if(univ.current_pc().status[eStatus::DUMB] > 0)
 					shop_array[i++] = j;
 				break;
 			case eShopItemType::DESTONE:
-				if(univ.party[current_pc].main_status == eMainStatus::STONE)
+				if(univ.current_pc().main_status == eMainStatus::STONE)
 					shop_array[i++] = j;
 				break;
 			case eShopItemType::RAISE_DEAD:
-				if(univ.party[current_pc].main_status == eMainStatus::DEAD)
+				if(univ.current_pc().main_status == eMainStatus::DEAD)
 					shop_array[i++] = j;
 				break;
 			case eShopItemType::RESURRECT:
-				if(univ.party[current_pc].main_status == eMainStatus::DUST)
+				if(univ.current_pc().main_status == eMainStatus::DUST)
 					shop_array[i++] = j;
 				break;
 			case eShopItemType::REMOVE_CURSE:
-				for(int i = 0; i < univ.party[current_pc].items.size(); i++) {
-					if((univ.party[current_pc].equip[i]) && (univ.party[current_pc].items[i].cursed)) {
+				for(int i = 0; i < univ.current_pc().items.size(); i++) {
+					if((univ.current_pc().equip[i]) && (univ.current_pc().items[i].cursed)) {
 						shop_array[i++] = j;
 						break;
 					}
@@ -1311,8 +1311,8 @@ void edit_party() {
 	
 	pcDialog.run(std::bind(give_help, 22, 23, std::ref(pcDialog)));
 	
-	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
-		current_pc = first_active_pc();
+	if(univ.current_pc().main_status != eMainStatus::ALIVE)
+		univ.cur_pc = first_active_pc();
 	
 	
 }

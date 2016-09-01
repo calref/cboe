@@ -173,6 +173,9 @@ public:
 	
 	unsigned char& cpn_flag(unsigned int x, unsigned int y, std::string id = "");
 	
+	short cur_pc = 0;
+	cPlayer& current_pc();
+	
 	cScenario scenario;
 	cParty party;
 	std::map<long,cPlayer*> stored_pcs;

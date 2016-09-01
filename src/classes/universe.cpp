@@ -1364,4 +1364,8 @@ void cUniverse::refresh_store_items() {
 	}
 }
 
+cPlayer& cUniverse::current_pc() {
+	return party[cur_pc];
+}
+
 void(* cUniverse::print_result)(std::string) = nullptr;

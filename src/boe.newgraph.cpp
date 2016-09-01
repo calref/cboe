@@ -73,7 +73,7 @@ extern const eItemAbil alch_ingred2[20];
 
 // Talk vars
 extern eGameMode store_pre_talk_mode;
-extern short store_personality,store_personality_graphic,current_pc;
+extern short store_personality,store_personality_graphic;
 extern sf::RenderTexture talk_gworld;
 extern bool talk_end_forced;
 extern std::string old_str1,old_str2,one_back1,one_back2;
@@ -706,25 +706,25 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	std::ostringstream title;
 	switch(active_shop.getPrompt()) {
 		case eShopPrompt::HEALING:
-			title << "Healing for " << univ.party[current_pc].name << '.';
+			title << "Healing for " << univ.current_pc().name << '.';
 			break;
 		case eShopPrompt::MAGE:
-			title << "Mage Spells for " << univ.party[current_pc].name << '.';
+			title << "Mage Spells for " << univ.current_pc().name << '.';
 			break;
 		case eShopPrompt::PRIEST:
-			title << "Priest Spells for " << univ.party[current_pc].name << '.';
+			title << "Priest Spells for " << univ.current_pc().name << '.';
 			break;
 		case eShopPrompt::SPELLS:
-			title << "Spells for " << univ.party[current_pc].name << '.';
+			title << "Spells for " << univ.current_pc().name << '.';
 			break;
 		case eShopPrompt::TRAINING:
-			title << "Training for " << univ.party[current_pc].name << '.';
+			title << "Training for " << univ.current_pc().name << '.';
 			break;
 		case eShopPrompt::ALCHEMY:
 			title << "Buying Alchemy.";
 			break;
 		case eShopPrompt::SHOPPING:
-			title << "Shopping for " << univ.party[current_pc].name << '.';
+			title << "Shopping for " << univ.current_pc().name << '.';
 			break;
 	}
 	win_draw_string(talk_gworld,shopper_name,title.str(),eTextMode::LEFT_TOP,style);

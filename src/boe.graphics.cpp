@@ -42,7 +42,7 @@ extern short anim_step;
 extern effect_pat_type current_pat;
 extern location ul;
 extern location center;
-extern short which_combat_type,current_pc;
+extern short which_combat_type;
 extern bool monsters_going,boom_anim_active;
 extern sf::Image spell_pict;
 extern short current_ground;
@@ -493,7 +493,7 @@ void redraw_screen(int refresh) {
 			break;
 	}
 	if(overall_mode == MODE_COMBAT)
-		draw_pcs(univ.party[current_pc].combat_pos,1);
+		frame_active_pc(univ.current_pc().combat_pos);
 	if(overall_mode == MODE_FANCY_TARGET)
 		draw_targets(center);
 	if(overall_mode != MODE_STARTUP) {
@@ -646,9 +646,9 @@ void draw_text_bar() {
 		}
 		
 	}
-	if((is_combat()) && (current_pc < 6) && !monsters_going) {
+	if((is_combat()) && (univ.cur_pc < 6) && !monsters_going) {
 		std::ostringstream sout;
-		sout << univ.party[current_pc].name << " (ap: " << univ.party[current_pc].ap << ')';
+		sout << univ.current_pc().name << " (ap: " << univ.current_pc().ap << ')';
 		put_text_bar(sout.str());
 	}
 	if((is_combat()) && (monsters_going))
@@ -769,7 +769,7 @@ void draw_terrain(short	mode) {
 	if(is_town())
 		view_loc = univ.party.town_loc;
 	if(is_combat())
-		view_loc = univ.party[(current_pc < 6) ? current_pc : first_active_pc()].combat_pos;
+		view_loc = univ.party[(univ.cur_pc < 6) ? univ.cur_pc : first_active_pc()].combat_pos;
 	
 	for(short i = 0; i < 13; i++)
 		for(short j = 0; j < 13; j++) {
@@ -937,7 +937,7 @@ void draw_terrain(short	mode) {
 		|| (overall_mode == MODE_RESTING))
 		draw_party_symbol(center);
 	else if(overall_mode != MODE_LOOK_TOWN)
-		draw_pcs(center,0);
+		draw_pcs(center);
 	// Draw top half of forcecages (this list is populated by draw_fields)
 	// TODO: Move into the above loop to eliminate global variable
 	for(location fc_loc : forcecage_locs)
@@ -959,7 +959,7 @@ void draw_terrain(short	mode) {
 		redraw_terrain();
 		draw_text_bar();
 		if((overall_mode >= MODE_COMBAT) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
-			draw_pcs(center,1);
+			frame_active_pc(center);
 		if(overall_mode == MODE_FANCY_TARGET)
 			draw_targets(center);
 	}
@@ -1465,7 +1465,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	}
 	redraw_terrain();
 	if((overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
-		draw_pcs(center,1);
+		frame_active_pc(center);
 }
 
 
@@ -1554,7 +1554,7 @@ void draw_targeting_line(location where_curs) {
 	rectangle on_screen_terrain_area = {23, 23, 346, 274};
 	
 	if(overall_mode >= MODE_COMBAT)
-		from_loc = univ.party[current_pc].combat_pos;
+		from_loc = univ.current_pc().combat_pos;
 	else from_loc = univ.party.town_loc;
 	if((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat.pattern[4][4] != 0))) {

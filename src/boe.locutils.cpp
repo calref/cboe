@@ -11,7 +11,7 @@ bool combat_pt_in_light();
 location obs_sec;
 location which_party_sec;
 
-extern short which_combat_type,current_pc;
+extern short which_combat_type;
 extern eGameMode overall_mode;
 extern eGameMode store_pre_shop_mode, store_pre_talk_mode;
 extern location center;
@@ -156,7 +156,7 @@ location get_cur_loc() {
 			break;
 			
 		default:
-			return univ.party[current_pc].combat_pos;
+			return univ.current_pc().combat_pos;
 			break;
 	}
 }

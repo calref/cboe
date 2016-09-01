@@ -10,7 +10,9 @@
 void draw_one_terrain_spot (short i,short j,short terrain_to_draw);
 void draw_monsters();
 void play_see_monster_str(unsigned short m, location monst_loc);
-void draw_pcs(location center,short mode);
+void draw_combat_pc(class cPlayer& who, location center, bool attacking);
+void frame_active_pc(location center);
+void draw_pcs(location center);
 void draw_outd_boats(location center);
 void draw_town_boat(location center) ;
 void draw_party_symbol(location center);

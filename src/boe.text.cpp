@@ -71,7 +71,6 @@ extern std::map<eItemAbil, short> abil_chart;
 // combat globals
 extern short item_bottom_button_active[9];
 extern cUniverse univ;
-extern short current_pc;
 extern short shop_identify_cost;
 extern short store_selling_values[8];
 extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
@@ -121,7 +120,7 @@ void put_pc_screen() {
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			for(short j = 0; j < 5; j++)
 				pc_area_button_active[i][j] = 1;
-			if(i == current_pc) {
+			if(i == univ.cur_pc) {
 				style.italic = true;
 				style.colour = sf::Color::Blue;
 			}
@@ -201,8 +200,8 @@ void put_pc_screen() {
 	
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
-	if(current_pc < 6 && univ.party[current_pc].main_status != eMainStatus::ALIVE && stat_window == current_pc) {
-		set_stat_window(current_pc);
+	if(univ.cur_pc < 6 && univ.current_pc().main_status != eMainStatus::ALIVE && stat_window == univ.cur_pc) {
+		set_stat_window(univ.cur_pc);
 	}
 }
 
@@ -332,7 +331,7 @@ void put_item_screen(short screen_num) {
 					// this is kludgy, awkwark, and has redundant code. Done this way to
 					// make go faster, and I got lazy.
 					if((stat_screen_mode == MODE_SHOP) &&
-						((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+						((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
 						place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic
 						if(abil_chart[univ.party[pc].items[i_num].ability]) // place use if can
 							place_item_button(ITEMBTN_NORM,i,1,0);
@@ -342,7 +341,7 @@ void put_item_screen(short screen_num) {
 						place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic
 						place_item_button(3,i,4,0); // info button
 						if((stat_screen_mode == MODE_INVEN) &&
-							((is_town()) || (is_out()) || ((is_combat()) && (pc == current_pc)))) { // place give and drop and use
+							((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
 							place_item_button(1,i,2,0);
 							place_item_button(2,i,3,0);
 							if(abil_chart[univ.party[pc].items[i_num].ability]) // place use if can
@@ -703,7 +702,7 @@ short do_look(location space) {
 	if(overall_mode == MODE_LOOK_COMBAT)
 		for(short i = 0; i < 6; i++)
 			if(space == univ.party[i].combat_pos && univ.party[i].main_status == eMainStatus::ALIVE
-			   && (is_lit) && (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5)) {
+			   && (is_lit) && (can_see_light(univ.current_pc().combat_pos,space,sight_obscurity) < 5)) {
 				msg = "    " + univ.party[i].name;
 				add_string_to_buf(msg);
 			}
@@ -712,7 +711,7 @@ short do_look(location space) {
 		for(short i = 0; i < univ.town.monst.size(); i++)
 			if((univ.town.monst[i].active != 0) && (is_lit)
 				&& univ.town.monst[i].on_space(space) &&
-				((overall_mode == MODE_LOOK_TOWN) || (can_see_light(univ.party[current_pc].combat_pos,space,sight_obscurity) < 5))
+				((overall_mode == MODE_LOOK_TOWN) || (can_see_light(univ.current_pc().combat_pos,space,sight_obscurity) < 5))
 				&& (univ.town.monst[i].picture_num != 0)) {
 				
 				

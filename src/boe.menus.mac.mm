@@ -19,7 +19,6 @@
 extern short on_spell_menu[2][62];
 extern short on_monst_menu[256];
 extern bool party_in_memory;
-extern short current_pc;
 extern cUniverse univ;
 extern eGameMode overall_mode;
 
@@ -177,7 +176,7 @@ void adjust_spell_menus() {
 	short old_on_spell_menu[2][62];
 	bool need_menu_change = false;
 	
-	if(overall_mode == MODE_STARTUP || current_pc == 6)
+	if(overall_mode == MODE_STARTUP || univ.cur_pc == 6)
 		return;
 	
 	for(short i = 0; i < 2; i++)
@@ -191,7 +190,7 @@ void adjust_spell_menus() {
 		on_spell_menu[0][i] = -1;
 	}
 	for(short i = 0; i < 62; i++)
-		if(pc_can_cast_spell(univ.party[current_pc],cSpell::fromNum(eSkill::MAGE_SPELLS,i))) {
+		if(pc_can_cast_spell(univ.current_pc(),cSpell::fromNum(eSkill::MAGE_SPELLS,i))) {
 			on_spell_menu[0][spell_pos] = i;
 			spell_pos++;
 		}
@@ -224,7 +223,7 @@ void adjust_spell_menus() {
 		on_spell_menu[1][i] = -1;
 	}
 	for(short i = 0; i < 62; i++)
-		if(pc_can_cast_spell(univ.party[current_pc],cSpell::fromNum(eSkill::PRIEST_SPELLS,i))) {
+		if(pc_can_cast_spell(univ.current_pc(),cSpell::fromNum(eSkill::PRIEST_SPELLS,i))) {
 			on_spell_menu[1][spell_pos] = i;
 			spell_pos++;
 		}

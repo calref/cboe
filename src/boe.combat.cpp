@@ -28,7 +28,6 @@ extern eGameMode overall_mode;
 extern short which_combat_type;
 extern short stat_window;
 extern location center;
-extern short current_pc;
 extern short combat_active_pc;
 extern bool monsters_going,spell_forced;
 extern bool flushingInput;
@@ -357,14 +356,14 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 	
 	univ.town.items.clear();
 	
-	store_current_pc = current_pc;
-	current_pc = 0;
+	store_current_pc = univ.cur_pc;
+	univ.cur_pc = 0;
 	set_pc_moves();
 	pick_next_pc();
-	center = univ.party[current_pc].combat_pos;
+	center = univ.current_pc().combat_pos;
 	draw_buttons(0);
 	put_pc_screen();
-	set_stat_window(current_pc);
+	set_stat_window(univ.cur_pc);
 	
 	adjust_spell_menus();
 	
@@ -382,14 +381,14 @@ bool pc_combat_move(location destination) {
 	
 	iLiving* monst_hit = univ.target_there(destination, TARG_MONST);
 	
-	if(monst_hit == nullptr && univ.party[current_pc].status[eStatus::FORCECAGE] > 0) {
+	if(monst_hit == nullptr && univ.current_pc().status[eStatus::FORCECAGE] > 0) {
 		add_string_to_buf("Move: Can't escape.");
 		add_string_to_buf("  (Try doing something else.)");
 		return false;
 	}
 	
 	if(monst_hit == nullptr)
-		keep_going = check_special_terrain(destination,eSpecCtx::COMBAT_MOVE,univ.party[current_pc],&check_f);
+		keep_going = check_special_terrain(destination,eSpecCtx::COMBAT_MOVE,univ.current_pc(),&check_f);
 	if(check_f)
 		forced = true;
 	
@@ -397,7 +396,7 @@ bool pc_combat_move(location destination) {
 	
 	if(keep_going) {
 		
-		dir = set_direction(univ.party[current_pc].combat_pos, destination);
+		dir = set_direction(univ.current_pc().combat_pos, destination);
 		
 		if((loc_off_act_area(destination)) && (which_combat_type == 1)) {
 			add_string_to_buf("Move: Can't leave town during combat.");
@@ -406,11 +405,11 @@ bool pc_combat_move(location destination) {
 		}
 		else if(univ.town->terrain(destination.x,destination.y) == 90 && which_combat_type == 0) {
 			if(get_ran(1,1,10) < 3) {
-				univ.party[current_pc].main_status = eMainStatus::FLED;
-				if(combat_active_pc == current_pc)
+				univ.current_pc().main_status = eMainStatus::FLED;
+				if(combat_active_pc == univ.cur_pc)
 					combat_active_pc = 6;
 				create_line = "Moved: Fled.";
-				univ.party[current_pc].ap = 0;
+				univ.current_pc().ap = 0;
 			}
 			else {
 				take_ap(1);
@@ -430,8 +429,8 @@ bool pc_combat_move(location destination) {
 			if(s2 == 2 && monst_hit->is_friendly())
 				make_town_hostile();
 			if(s2 == 2) {
-				univ.party[current_pc].last_attacked = monst_hit;
-				pc_attack(current_pc,monst_hit);
+				univ.current_pc().last_attacked = monst_hit;
+				pc_attack(univ.cur_pc,monst_hit);
 				return true;
 			}
 		}
@@ -444,13 +443,13 @@ bool pc_combat_move(location destination) {
 			else monst_hit->ap--;
 			cPlayer& switch_pc = *dynamic_cast<cPlayer*>(monst_hit);
 			add_string_to_buf("Move: Switch places.");
-			store_loc = univ.party[current_pc].combat_pos;
-			univ.party[current_pc].combat_pos = destination;
+			store_loc = univ.current_pc().combat_pos;
+			univ.current_pc().combat_pos = destination;
 			switch_pc.combat_pos = store_loc;
-			univ.party[current_pc].direction = dir;
+			univ.current_pc().direction = dir;
 			take_ap(1);
 			check_special_terrain(store_loc,eSpecCtx::COMBAT_MOVE,switch_pc,&check_f);
-			move_sound(univ.town->terrain(destination.x,destination.y),univ.party[current_pc].ap);
+			move_sound(univ.town->terrain(destination.x,destination.y),univ.current_pc().ap);
 			return true;
 		}
 		else if(forced || (!impassable(univ.town->terrain(destination.x,destination.y)) && monst_hit == nullptr)) {
@@ -461,30 +460,30 @@ bool pc_combat_move(location destination) {
 				monst_loc = univ.town.monst[i].cur_loc;
 				monst_exist = univ.town.monst[i].active;
 				
-				s1 = current_pc;
-				if((monst_exist > 0) && (monst_adjacent(univ.party[current_pc].combat_pos,i))
+				s1 = univ.cur_pc;
+				if((monst_exist > 0) && (monst_adjacent(univ.current_pc().combat_pos,i))
 					&& !monst_adjacent(destination,i) &&
 					!univ.town.monst[i].is_friendly() &&
 					univ.town.monst[i].status[eStatus::ASLEEP] <= 0 &&
 					univ.town.monst[i].status[eStatus::PARALYZED] <= 0) {
 					combat_posing_monster = current_working_monster = 100 + i;
-					monster_attack(i,&univ.party[current_pc]);
+					monster_attack(i,&univ.current_pc());
 					combat_posing_monster = current_working_monster = -1;
 					draw_terrain(0);
 				}
-				if(s1 != current_pc)
+				if(s1 != univ.cur_pc)
 					return true;
 			}
 			
 			// move if still alive
-			if(univ.party[current_pc].main_status == eMainStatus::ALIVE) {
-				univ.party[current_pc].combat_pos = destination;
-				univ.party[current_pc].direction = dir;
+			if(univ.current_pc().main_status == eMainStatus::ALIVE) {
+				univ.current_pc().combat_pos = destination;
+				univ.current_pc().direction = dir;
 				take_ap(1);
 				create_line += "Moved: ";
 				create_line += d_string[dir];
 				add_string_to_buf(create_line);
-				move_sound(univ.town->terrain(destination.x,destination.y),univ.party[current_pc].ap);
+				move_sound(univ.town->terrain(destination.x,destination.y),univ.current_pc().ap);
 				
 			}
 			else return false;
@@ -501,14 +500,14 @@ bool pc_combat_move(location destination) {
 }
 
 void char_parry() {
-	cPlayer& who = univ.party[current_pc];
+	cPlayer& who = univ.current_pc();
 	who.parry = (who.ap / 4) * (2 + who.stat_adj(eSkill::DEXTERITY) + who.skill(eSkill::DEFENSE));
 	who.ap = 0;
 }
 
 void char_stand_ready() {
-	univ.party[current_pc].parry = 100;
-	univ.party[current_pc].ap = 0;
+	univ.current_pc().parry = 100;
+	univ.current_pc().ap = 0;
 }
 
 void pc_attack(short who_att,iLiving* target) {
@@ -564,8 +563,8 @@ void pc_attack(short who_att,iLiving* target) {
 		add_string_to_buf(create_line);
 		
 		r1 = get_ran(1,1,100) + hit_adj - 20;
-		r1 += 5 * (univ.party[current_pc].status[eStatus::WEBS] / 3);
-		if(univ.party[current_pc].status[eStatus::FORCECAGE] > 0)
+		r1 += 5 * (univ.current_pc().status[eStatus::WEBS] / 3);
+		if(univ.current_pc().status[eStatus::FORCECAGE] > 0)
 			r1 += 3;
 		if(target->status[eStatus::FORCECAGE] > 0)
 			r1 += 1;
@@ -967,11 +966,11 @@ void place_target(location target) {
 			add_string_to_buf("  Space not in town.");
 			return;
 		}
-		if(can_see_light(univ.party[current_pc].combat_pos,target,sight_obscurity) > 4) {
+		if(can_see_light(univ.current_pc().combat_pos,target,sight_obscurity) > 4) {
 			add_string_to_buf("  Can't see target.");
 			return;
 		}
-		if(dist(univ.party[current_pc].combat_pos,target) > current_spell_range)  {
+		if(dist(univ.current_pc().combat_pos,target) > current_spell_range)  {
 			add_string_to_buf("  Target out of range.");
 			return;
 		}
@@ -1024,7 +1023,7 @@ void do_combat_cast(location target) {
 	};
 	mon_num_t summon;
 	iLiving* victim;
-	cPlayer& caster = univ.party[current_pc];
+	cPlayer& caster = univ.current_pc();
 	bool allow_obstructed = false, allow_antimagic = false;
 	if(spell_being_cast == eSpell::DISPEL_BARRIER || (spell_being_cast == eSpell::NONE && spec_target_options % 10 == 1))
 		allow_obstructed = true;
@@ -1062,7 +1061,7 @@ void do_combat_cast(location target) {
 	}
 	
 	if(spell_being_cast != eSpell::NONE)
-		spell_caster = current_pc;
+		spell_caster = univ.cur_pc;
 	
 	// assign monster summoned, if summoning
 	if(spell_being_cast == eSpell::SUMMON_BEAST || spell_being_cast == eSpell::SUMMON_WEAK) {
@@ -1072,7 +1071,7 @@ void do_combat_cast(location target) {
 	} else if(spell_being_cast == eSpell::SUMMON_MAJOR || spell_being_cast == eSpell::SUMMON_AID_MAJOR) {
 		summon = get_summon_monster(3);
 	}
-	combat_posing_monster = current_working_monster = current_pc;
+	combat_posing_monster = current_working_monster = univ.cur_pc;
 	
 	for(short i = 0; i < num_targets; i++)
 		if(spell_targets[i].x != 120) {
@@ -1127,38 +1126,38 @@ void do_combat_cast(location target) {
 						if(r2 > 0) redraw_screen(REFRESH_ALL);
 						break;
 					case eSpell::GOO: case eSpell::WEB: case eSpell::GOO_BOMB:
-						place_spell_pattern(current_pat,target,FIELD_WEB,current_pc);
+						place_spell_pattern(current_pat,target,FIELD_WEB,univ.cur_pc);
 						break;
 					case eSpell::CLOUD_FLAME: case eSpell::CONFLAGRATION:
-						place_spell_pattern(current_pat,target,WALL_FIRE,current_pc);
+						place_spell_pattern(current_pat,target,WALL_FIRE,univ.cur_pc);
 						break;
 					case eSpell::CLOUD_STINK: case eSpell::FOUL_VAPOR:
-						place_spell_pattern(current_pat,target,CLOUD_STINK,current_pc);
+						place_spell_pattern(current_pat,target,CLOUD_STINK,univ.cur_pc);
 						break;
 					case eSpell::WALL_FORCE: case eSpell::SHOCKSTORM: case eSpell::FORCEFIELD:
-						place_spell_pattern(current_pat,target,WALL_FORCE,current_pc);
+						place_spell_pattern(current_pat,target,WALL_FORCE,univ.cur_pc);
 						break;
 					case eSpell::WALL_ICE: case eSpell::WALL_ICE_BALL:
-						place_spell_pattern(current_pat,target,WALL_ICE,current_pc);
+						place_spell_pattern(current_pat,target,WALL_ICE,univ.cur_pc);
 						break;
 					case eSpell::ANTIMAGIC:
-						place_spell_pattern(current_pat,target,FIELD_ANTIMAGIC,current_pc);
+						place_spell_pattern(current_pat,target,FIELD_ANTIMAGIC,univ.cur_pc);
 						break;
 					case eSpell::CLOUD_SLEEP: case eSpell::CLOUD_SLEEP_LARGE:
-						place_spell_pattern(current_pat,target,CLOUD_SLEEP,current_pc);
+						place_spell_pattern(current_pat,target,CLOUD_SLEEP,univ.cur_pc);
 						break;
 					case eSpell::QUICKFIRE:
 						univ.town.set_quickfire(target.x,target.y,true);
 						break;
 					case eSpell::SPRAY_FIELDS:
 						r1 = get_ran(1,0,14);
-						place_spell_pattern(current_pat,target,spray_type_array[r1],current_pc);
+						place_spell_pattern(current_pat,target,spray_type_array[r1],univ.cur_pc);
 						break;
 					case eSpell::WALL_BLADES:
-						place_spell_pattern(current_pat,target,WALL_BLADES,current_pc);
+						place_spell_pattern(current_pat,target,WALL_BLADES,univ.cur_pc);
 						break;
 					case eSpell::DISPEL_FIELD: case eSpell::DISPEL_SPHERE: case eSpell::DISPEL_SQUARE:
-						place_spell_pattern(current_pat,target,FIELD_DISPEL,current_pc);
+						place_spell_pattern(current_pat,target,FIELD_DISPEL,univ.cur_pc);
 						break;
 					case eSpell::BARRIER_FIRE:
 						play_sound(68);
@@ -1187,7 +1186,7 @@ void do_combat_cast(location target) {
 								add_missile(target,9,1,0,0);
 								store_sound = 11;
 								r1 = min(18,(level * 7) / 10 + 2 * bonus);
-								place_spell_pattern(radius2,target,eDamageType::MAGIC,r1,current_pc);
+								place_spell_pattern(radius2,target,eDamageType::MAGIC,r1,univ.cur_pc);
 								ashes_loc = target;
 								break;
 								
@@ -1235,7 +1234,7 @@ void do_combat_cast(location target) {
 									r1 = (r1 * 14) / 10;
 								else if(r1 > 10) r1 = (r1 * 8) / 10;
 								if(r1 <= 0) r1 = 1;
-								place_spell_pattern(square,target,eDamageType::FIRE,r1,current_pc);
+								place_spell_pattern(square,target,eDamageType::FIRE,r1,univ.cur_pc);
 								ashes_loc = target;
 								break;
 							case eSpell::FIRESTORM: case eSpell::ICY_RAIN:
@@ -1248,8 +1247,8 @@ void do_combat_cast(location target) {
 								if(r1 > 20)
 									r1 = (r1 * 8) / 10;
 								if(spell_being_cast == eSpell::FIRESTORM)
-									place_spell_pattern(radius2,target,eDamageType::FIRE,r1,current_pc);
-								else place_spell_pattern(radius2,target,eDamageType::COLD,r1,current_pc);
+									place_spell_pattern(radius2,target,eDamageType::FIRE,r1,univ.cur_pc);
+								else place_spell_pattern(radius2,target,eDamageType::COLD,r1,univ.cur_pc);
 								ashes_loc = target;
 								break;
 							case eSpell::KILL:
@@ -1274,7 +1273,7 @@ void do_combat_cast(location target) {
 							case eSpell::SUMMON_AID: case eSpell::SUMMON_AID_MAJOR:
 							case eSpell::FLASH_STEP:
 								add_missile(target,8,1,0,0);
-								do_missile_anim(50,univ.party[current_pc].combat_pos,61);
+								do_missile_anim(50,univ.current_pc().combat_pos,61);
 								switch(spell_being_cast) {
 									case eSpell::SIMULACRUM:
 										r2 = get_ran(3,1,4) + caster.stat_adj(eSkill::INTELLIGENCE);
@@ -1413,9 +1412,9 @@ void do_combat_cast(location target) {
 											else {
 												if(cInvenSlot item = caster.has_abil(eItemAbil::SMOKY_CRYSTAL)) {
 													caster.remove_charge(item.slot);
-													if(stat_window == current_pc)
+													if(stat_window == univ.cur_pc)
 														put_item_screen(stat_window);
-													do_mindduel(current_pc,cur_monst);
+													do_mindduel(univ.cur_pc,cur_monst);
 												} else add_string_to_buf("  You need a smoky crystal.   ");
 											}
 											store_sound = 24;
@@ -1524,7 +1523,7 @@ void do_combat_cast(location target) {
 												if(univ.party[spell_caster].traits[eTrait::ANAMA])
 													r1 += 15;
 												if(cur_monst != nullptr)
-													damage_monst(*cur_monst, current_pc, r1, eDamageType::UNBLOCKABLE, 0);
+													damage_monst(*cur_monst, univ.cur_pc, r1, eDamageType::UNBLOCKABLE, 0);
 												else if(cPlayer* who = dynamic_cast<cPlayer*>(victim))
 													damage_pc(*who, r1, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
 											}
@@ -1553,7 +1552,7 @@ void do_combat_cast(location target) {
 												else if(univ.party[spell_caster].traits[eTrait::ANAMA])
 													r1 += 25;
 												if(cur_monst != nullptr)
-													damage_monst(*cur_monst, current_pc, r1, eDamageType::UNBLOCKABLE, 0);
+													damage_monst(*cur_monst, univ.cur_pc, r1, eDamageType::UNBLOCKABLE, 0);
 												else if(cPlayer* who = dynamic_cast<cPlayer*>(victim))
 													damage_pc(*who, r1, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
 											}
@@ -1608,7 +1607,7 @@ void handle_marked_damage() {
 		}
 	for(short i = 0; i < univ.town.monst.size(); i++)
 		if(univ.town.monst[i].marked_damage > 0) {
-			damage_monst(univ.town.monst[i], current_pc, univ.town.monst[i].marked_damage, eDamageType::MARKED,0);
+			damage_monst(univ.town.monst[i], univ.cur_pc, univ.town.monst[i].marked_damage, eDamageType::MARKED,0);
 			
 			univ.town.monst[i].marked_damage = 0;
 		}
@@ -1617,29 +1616,29 @@ void handle_marked_damage() {
 void load_missile() {
 	short bow = 24,arrow = 24,thrown = 24,crossbow = 24,bolts = 24,no_ammo = 24;
 	
-	if(univ.party[current_pc].traits[eTrait::PACIFIST]) {
+	if(univ.current_pc().traits[eTrait::PACIFIST]) {
 		add_string_to_buf("Shoot: You're a pacifist!");
 		return;
 	}
 	
 	for(short i = 0; i < 24; i++) {
-		if((univ.party[current_pc].equip[i]) &&
-			(univ.party[current_pc].items[i].variety == eItemType::THROWN_MISSILE))
+		if((univ.current_pc().equip[i]) &&
+			(univ.current_pc().items[i].variety == eItemType::THROWN_MISSILE))
 			thrown = i;
-		if((univ.party[current_pc].equip[i]) &&
-			(univ.party[current_pc].items[i].variety == eItemType::BOW))
+		if((univ.current_pc().equip[i]) &&
+			(univ.current_pc().items[i].variety == eItemType::BOW))
 			bow = i;
-		if((univ.party[current_pc].equip[i]) &&
-			(univ.party[current_pc].items[i].variety == eItemType::ARROW))
+		if((univ.current_pc().equip[i]) &&
+			(univ.current_pc().items[i].variety == eItemType::ARROW))
 			arrow = i;
-		if((univ.party[current_pc].equip[i]) &&
-			(univ.party[current_pc].items[i].variety == eItemType::CROSSBOW))
+		if((univ.current_pc().equip[i]) &&
+			(univ.current_pc().items[i].variety == eItemType::CROSSBOW))
 			crossbow = i;
-		if((univ.party[current_pc].equip[i]) &&
-			(univ.party[current_pc].items[i].variety == eItemType::BOLTS))
+		if((univ.current_pc().equip[i]) &&
+			(univ.current_pc().items[i].variety == eItemType::BOLTS))
 			bolts = i;
-		if((univ.party[current_pc].equip[i]) &&
-			(univ.party[current_pc].items[i].variety == eItemType::MISSILE_NO_AMMO))
+		if((univ.current_pc().equip[i]) &&
+			(univ.current_pc().items[i].variety == eItemType::MISSILE_NO_AMMO))
 			no_ammo = i;
 	}
 	
@@ -1650,9 +1649,9 @@ void load_missile() {
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		overall_mode = MODE_THROWING;
 		current_spell_range = 8;
-		if(univ.party[current_pc].items[thrown].ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += univ.party[current_pc].items[thrown].abil_data[0];
-		if(univ.party[current_pc].items[thrown].ability == eItemAbil::EXPLODING_WEAPON)
+		if(univ.current_pc().items[thrown].ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += univ.current_pc().items[thrown].abil_data[0];
+		if(univ.current_pc().items[thrown].ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
 	}
@@ -1672,9 +1671,9 @@ void load_missile() {
 		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
-		if(univ.party[current_pc].items[arrow].ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += univ.party[current_pc].items[arrow].abil_data[0];
-		if(univ.party[current_pc].items[arrow].ability == eItemAbil::EXPLODING_WEAPON)
+		if(univ.current_pc().items[arrow].ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += univ.current_pc().items[arrow].abil_data[0];
+		if(univ.current_pc().items[arrow].ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
 	}
@@ -1685,9 +1684,9 @@ void load_missile() {
 		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
-		if(univ.party[current_pc].items[bolts].ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += univ.party[current_pc].items[bolts].abil_data[0];
-		if(univ.party[current_pc].items[bolts].ability == eItemAbil::EXPLODING_WEAPON)
+		if(univ.current_pc().items[bolts].ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += univ.current_pc().items[bolts].abil_data[0];
+		if(univ.current_pc().items[bolts].ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
 	}
@@ -1698,9 +1697,9 @@ void load_missile() {
 		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
-		if(univ.party[current_pc].items[no_ammo].ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += univ.party[current_pc].items[no_ammo].abil_data[0];
-		if(univ.party[current_pc].items[no_ammo].ability == eItemAbil::EXPLODING_WEAPON)
+		if(univ.current_pc().items[no_ammo].ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += univ.current_pc().items[no_ammo].abil_data[0];
+		if(univ.current_pc().items[no_ammo].ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
 	}
@@ -1708,12 +1707,12 @@ void load_missile() {
 }
 
 void fire_missile(location target) {
-	missile_firer = current_pc; // This may be used by monsters to help pick a target
+	missile_firer = univ.cur_pc; // This may be used by monsters to help pick a target
 	short r1, r2, skill, dam, dam_bonus, hit_bonus = 0, range, spec_dam = 0,poison_amt = 0;
 	short skill_item;
 	iLiving* victim;
 	bool exploding = false;
-	cPlayer& missile_firer = univ.party[current_pc];
+	cPlayer& missile_firer = univ.current_pc();
 	cItem& missile = missile_firer.items[missile_inv_slot];
 	cItem& ammo = missile_firer.items[ammo_inv_slot];
 	
@@ -1782,7 +1781,7 @@ void fire_missile(location target) {
 		// First, some missiles do special things
 		if(exploding) {
 			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
-			univ.party[current_pc].void_sanctuary(); // TODO: Is this right?
+			missile_firer.void_sanctuary(); // TODO: Is this right?
 			add_string_to_buf("  The arrow explodes!");
 			if(get_int_pref("GameSpeed") == 0)
 				pause(dist(missile_firer.combat_pos,target));
@@ -1790,12 +1789,12 @@ void fire_missile(location target) {
 				pause(dist(missile_firer.combat_pos,target)*5);
 			run_a_missile(missile_firer.combat_pos,target,2,1,5,0,0,100);
 			start_missile_anim();
-			place_spell_pattern(radius2,target, eDamageType(ammo.abil_data[1]),ammo.abil_data[0] * 2, current_pc);
+			place_spell_pattern(radius2,target, eDamageType(ammo.abil_data[1]),ammo.abil_data[0] * 2, univ.cur_pc);
 			do_explosion_anim(5,0);
 			end_missile_anim();
 			handle_marked_damage();
 		} else {
-			combat_posing_monster = current_working_monster = current_pc;
+			combat_posing_monster = current_working_monster = univ.cur_pc;
 			draw_terrain(2);
 			missile_firer.void_sanctuary();
 			take_ap((overall_mode == MODE_FIRING) ? 3 : 2);
@@ -1828,9 +1827,9 @@ void fire_missile(location target) {
 					ASB("  There is a flash of light.");
 					victim->heal(r2);
 				} else if(cCreature* monst = dynamic_cast<cCreature*>(victim)) {
-					bool damaged = damage_monst(*monst, current_pc, r2, eDamageType::WEAPON,13,false);
+					bool damaged = damage_monst(*monst, univ.cur_pc, r2, eDamageType::WEAPON,13,false);
 					if(spec_dam > 0)
-						damaged = damaged || damage_monst(*monst, current_pc, spec_dam, dmg_tp, 0,false);
+						damaged = damaged || damage_monst(*monst, univ.cur_pc, spec_dam, dmg_tp, 0,false);
 					if(damaged) monst->damaged_msg(r2, spec_dam);
 				} else if(cPlayer* who = dynamic_cast<cPlayer*>(victim)) {
 					// TODO: Should the race really be included here? Maybe it's meant for melee attacks only.
@@ -1913,7 +1912,7 @@ void fire_missile(location target) {
 				ammo.charges--;
 			if(ammo.charges <= 0)
 				missile_firer.take_item(ammo_inv_slot);
-			if(current_pc == stat_window)
+			if(univ.cur_pc == stat_window)
 				put_item_screen(stat_window);
 		}
 	}
@@ -1963,7 +1962,7 @@ bool combat_next_step() {
 	
 	to_return = sync_force_cages();
 	
-	store_pc = current_pc;
+	store_pc = univ.cur_pc;
 	while(pick_next_pc()) {
 		combat_run_monst();
 		set_pc_moves();
@@ -1977,9 +1976,9 @@ bool combat_next_step() {
 			return true;
 	}
 	pick_next_pc();
-	if(current_pc != store_pc)
+	if(univ.cur_pc != store_pc)
 		to_return = true;
-	center = univ.party[current_pc].combat_pos;
+	center = univ.current_pc().combat_pos;
 	
 	adjust_spell_menus();
 	
@@ -1991,50 +1990,50 @@ bool combat_next_step() {
 		pick_next_pc();
 	center = univ.party[current_pc].combat_pos;		*/
 	
-	if((combat_active_pc == 6) && (current_pc != store_pc)) {
+	if((combat_active_pc == 6) && (univ.cur_pc != store_pc)) {
 		std::ostringstream create_line;
-		create_line << "Active:  " << univ.party[current_pc].name;
-		create_line << " (#" << current_pc + 1 << ", " << univ.party[current_pc].ap << " ap.)";
+		create_line << "Active:  " << univ.current_pc().name;
+		create_line << " (#" << univ.cur_pc + 1 << ", " << univ.current_pc().ap << " ap.)";
 		add_string_to_buf(create_line.str());
 		print_buf();
 	}
-	if((current_pc != store_pc) || (to_return)) {
+	if((univ.cur_pc != store_pc) || (to_return)) {
 		put_pc_screen();
-		set_stat_window(current_pc);
+		set_stat_window(univ.cur_pc);
 	}
 	return to_return;
 }
 
-// Find next active PC, return true is monsters need running, and run monsters is slow spells
-// active
+// Find next active PC, return true if monsters need running
 bool pick_next_pc() {
 	bool store = false;
 	
-	if(current_pc == 6)
-		current_pc = 0;
+	// TODO: cur_pc should never be 6
+	if(univ.cur_pc == 6)
+		univ.cur_pc = 0;
 	
 	// If current pc isn't active, fry its moves
-	if((combat_active_pc < 6) && (combat_active_pc != current_pc))
-		univ.party[current_pc].ap = 0;
+	if((combat_active_pc < 6) && (combat_active_pc != univ.cur_pc))
+		univ.current_pc().ap = 0;
 	
 	// Find next PC with moves
-	while((univ.party[current_pc].ap <= 0) && (current_pc < 6)) {
-		current_pc++;
-		if((combat_active_pc < 6) && (combat_active_pc != current_pc))
-			univ.party[current_pc].ap = 0;
+	while((univ.current_pc().ap <= 0) && (univ.cur_pc < 6)) {
+		univ.cur_pc++;
+		if((combat_active_pc < 6) && (combat_active_pc != univ.cur_pc))
+			univ.current_pc().ap = 0;
 	}
 	
 	// If run out of PC's, return to start and try again
-	if(current_pc == 6) {
-		current_pc = 0;
-		while((univ.party[current_pc].ap <= 0) && (current_pc < 6)) {
-			current_pc++;
-			if((combat_active_pc < 6) && (combat_active_pc != current_pc))
-				univ.party[current_pc].ap = 0;
+	if(univ.cur_pc == 6) {
+		univ.cur_pc = 0;
+		while((univ.current_pc().ap <= 0) && (univ.cur_pc < 6)) {
+			univ.cur_pc++;
+			if((combat_active_pc < 6) && (combat_active_pc != univ.cur_pc))
+				univ.current_pc().ap = 0;
 		}
-		if(current_pc == 6) {
+		if(univ.cur_pc == 6) {
 			store = true;
-			current_pc = 0;
+			univ.cur_pc = 0;
 		}
 	}
 	
@@ -4443,7 +4442,7 @@ void do_shockwave(location target) {
 		if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) < 11)
 			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
-			damage_monst(univ.town.monst[i],current_pc,get_ran(2 + dist(target,univ.town.monst[i].cur_loc) / 2,1,6),eDamageType::UNBLOCKABLE,0);
+			damage_monst(univ.town.monst[i],univ.cur_pc,get_ran(2 + dist(target,univ.town.monst[i].cur_loc) / 2,1,6),eDamageType::UNBLOCKABLE,0);
 	do_explosion_anim(5,0);
 	end_missile_anim();
 	handle_marked_damage();
@@ -4460,7 +4459,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type) {
 			if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 				&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
 				&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
-				damage_monst(univ.town.monst[i], current_pc, dam, type,0);
+				damage_monst(univ.town.monst[i], univ.cur_pc, dam, type,0);
 		return;
 	}
 	
@@ -4473,7 +4472,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type) {
 		if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
 			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
-			damage_monst(univ.town.monst[i], current_pc, dam, type,0);
+			damage_monst(univ.town.monst[i], univ.cur_pc, dam, type,0);
 	do_explosion_anim(5,0);
 	end_missile_anim();
 	handle_marked_damage();
@@ -4512,7 +4511,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 			if(univ.town.monst[i].on_space(target)) {
 				if(processing_fields)
 					damage_monst(univ.town.monst[i], 6, dam, type,0);
-				else damage_monst(univ.town.monst[i], (monsters_going) ? 7 : current_pc, dam, type,0);
+				else damage_monst(univ.town.monst[i], (monsters_going) ? 7 : univ.cur_pc, dam, type,0);
 				stop_hitting = (hit_all == 1) ? false : true;
 			}
 	
@@ -4686,9 +4685,9 @@ void end_combat() {
 		overall_mode = MODE_OUTDOORS;
 	}
 	combat_active_pc = 6;
-	current_pc = store_current_pc;
-	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
-		current_pc = first_active_pc();
+	univ.cur_pc = store_current_pc;
+	if(univ.current_pc().main_status != eMainStatus::ALIVE)
+		univ.cur_pc = first_active_pc();
 	put_item_screen(stat_window);
 	draw_buttons(0);
 }
@@ -4699,21 +4698,21 @@ bool combat_cast_mage_spell() {
 	eSpell spell_num;
 	cMonster get_monst;
 	
-	if(univ.party[current_pc].traits[eTrait::ANAMA]) {
+	if(univ.current_pc().traits[eTrait::ANAMA]) {
 		add_string_to_buf("Cast: You're an Anama!");
 		return false;
 	}
 	
-	if(univ.town.is_antimagic(univ.party[current_pc].combat_pos.x,univ.party[current_pc].combat_pos.y)) {
+	if(univ.town.is_antimagic(univ.current_pc().combat_pos.x,univ.current_pc().combat_pos.y)) {
 		add_string_to_buf("  Not in antimagic field.");
 		return false;
 	}
-	store_sp = univ.party[current_pc].cur_sp;
-	if(univ.party[current_pc].cur_sp == 0)
+	store_sp = univ.current_pc().cur_sp;
+	if(univ.current_pc().cur_sp == 0)
 		add_string_to_buf("Cast: No spell points.");
-	else if(univ.party[current_pc].skill(eSkill::MAGE_SPELLS) == 0)
+	else if(univ.current_pc().skill(eSkill::MAGE_SPELLS) == 0)
 		add_string_to_buf("Cast: No mage skill.");
-	else if(get_encumbrance(current_pc) > 1) {
+	else if(get_encumbrance(univ.cur_pc) > 1) {
 		add_string_to_buf("Cast: Too encumbered.");
 		take_ap(6);
 		give_help(40,0);
@@ -4723,14 +4722,14 @@ bool combat_cast_mage_spell() {
 		
 		
 		if(!spell_forced)
-			spell_num = pick_spell(current_pc,eSkill::MAGE_SPELLS);
+			spell_num = pick_spell(univ.cur_pc,eSkill::MAGE_SPELLS);
 		else {
 			if(!repeat_cast_ok(eSkill::MAGE_SPELLS))
 				return false;
-			spell_num = univ.party[current_pc].last_cast[eSkill::MAGE_SPELLS];
+			spell_num = univ.current_pc().last_cast[eSkill::MAGE_SPELLS];
 		}
 		
-		if(univ.party[current_pc].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+		if(univ.current_pc().traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
 			add_string_to_buf("Cast: You're a pacifist!");
 			return false;
 		}
@@ -4747,13 +4746,13 @@ bool combat_cast_mage_spell() {
 			store_sum_monst_cost = get_monst.level;
 		}
 		
-		combat_posing_monster = current_working_monster = current_pc;
+		combat_posing_monster = current_working_monster = univ.cur_pc;
 		if(spell_num == eSpell::NONE) return false;
 		print_spell_cast(spell_num,eSkill::MAGE_SPELLS);
 		if((*spell_num).refer == REFER_YES) {
 			take_ap(6);
 			draw_terrain(2);
-			do_mage_spell(current_pc,spell_num);
+			do_mage_spell(univ.cur_pc,spell_num);
 			combat_posing_monster = current_working_monster = -1;
 		}
 		else if((*spell_num).refer == REFER_TARGET) {
@@ -4765,13 +4764,13 @@ bool combat_cast_mage_spell() {
 		else {
 			take_ap(6);
 			draw_terrain(2);
-			combat_immed_mage_cast(current_pc,spell_num);
+			combat_immed_mage_cast(univ.cur_pc,spell_num);
 		}
 		put_pc_screen();
 	}
 	combat_posing_monster = current_working_monster = -1;
 	// Did anything actually get cast?
-	if(store_sp == univ.party[current_pc].cur_sp)
+	if(store_sp == univ.current_pc().cur_sp)
 		return false;
 	else return true;
 }
@@ -4928,42 +4927,42 @@ bool combat_cast_priest_spell() {
 	short store_sp;
 	eSpell spell_num;
 	
-	if(univ.town.is_antimagic(univ.party[current_pc].combat_pos.x,univ.party[current_pc].combat_pos.y)) {
+	if(univ.town.is_antimagic(univ.current_pc().combat_pos.x,univ.current_pc().combat_pos.y)) {
 		add_string_to_buf("  Not in antimagic field.");
 		return false;
 	}
 	if(!spell_forced)
-		spell_num = pick_spell(current_pc,eSkill::PRIEST_SPELLS);
+		spell_num = pick_spell(univ.cur_pc,eSkill::PRIEST_SPELLS);
 	else {
 		if(!repeat_cast_ok(eSkill::PRIEST_SPELLS))
 			return false;
-		spell_num = univ.party[current_pc].last_cast[eSkill::PRIEST_SPELLS];
+		spell_num = univ.current_pc().last_cast[eSkill::PRIEST_SPELLS];
 	}
 	
-	store_sp = univ.party[current_pc].cur_sp;
-	if(univ.party[current_pc].cur_sp == 0) {
+	store_sp = univ.current_pc().cur_sp;
+	if(univ.current_pc().cur_sp == 0) {
 		add_string_to_buf("Cast: No spell points.");
 		return false;
-	} else if(univ.party[current_pc].skill(eSkill::PRIEST_SPELLS) == 0) {
+	} else if(univ.current_pc().skill(eSkill::PRIEST_SPELLS) == 0) {
 		add_string_to_buf("Cast: No priest skill.");
 		return false;
 	}
 	
-	if(univ.party[current_pc].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+	if(univ.current_pc().traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
 		add_string_to_buf("Cast: You're a pacifist!");
 		return false;
 	}
 	
 	if(spell_num == eSpell::NONE) return false;
 	
-	combat_posing_monster = current_working_monster = current_pc;
+	combat_posing_monster = current_working_monster = univ.cur_pc;
 	
 	if(spell_num != eSpell::NONE) {
 		print_spell_cast(spell_num,eSkill::PRIEST_SPELLS);
 		if((*spell_num).refer == REFER_YES) {
 			take_ap(5);
 			draw_terrain(2);
-			do_priest_spell(current_pc,spell_num);
+			do_priest_spell(univ.cur_pc,spell_num);
 		}
 		else if((*spell_num).refer == REFER_TARGET) {
 			start_spell_targeting(spell_num);
@@ -4974,14 +4973,14 @@ bool combat_cast_priest_spell() {
 		else {
 			take_ap(5);
 			draw_terrain(2);
-			combat_immed_priest_cast(current_pc, spell_num);
+			combat_immed_priest_cast(univ.cur_pc, spell_num);
 		}
 		put_pc_screen();
 	}
 	
 	combat_posing_monster = current_working_monster = -1;
 	// Did anything actually get cast?
-	if(store_sp == univ.party[current_pc].cur_sp)
+	if(store_sp == univ.current_pc().cur_sp)
 		return false;
 	else return true;
 }
@@ -5186,8 +5185,8 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 	overall_mode = MODE_FANCY_TARGET;
 	current_pat = single;
 	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
-	short bonus = univ.party[current_pc].stat_adj(eSkill::INTELLIGENCE);
-	short level = freebie ? store_item_spell_level : univ.party[current_pc].level;
+	short bonus = univ.current_pc().stat_adj(eSkill::INTELLIGENCE);
+	short level = freebie ? store_item_spell_level : univ.current_pc().level;
 	
 	switch(num) { // Assign special targeting shapes and number of targets
 		case eSpell::SMITE:

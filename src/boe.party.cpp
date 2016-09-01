@@ -56,7 +56,7 @@ bool spell_button_active[90];
 
 extern short fast_bang;
 extern bool flushingInput;
-extern short stat_window,current_pc;
+extern short stat_window;
 extern eGameMode overall_mode;
 extern fs::path progDir;
 extern location center;
@@ -177,7 +177,7 @@ void put_party_in_scen(std::string scen_name) {
 	build_outdoors();
 	erase_out_specials();
 	
-	current_pc = first_active_pc();
+	univ.cur_pc = first_active_pc();
 	force_town_enter(univ.scenario.which_town_start,univ.scenario.where_start);
 	start_town_mode(univ.scenario.which_town_start,9);
 	while(!special_queue.empty())
@@ -484,7 +484,7 @@ bool repeat_cast_ok(eSkill type) {
 	eSpell what_spell;
 	
 	if(overall_mode == MODE_COMBAT)
-		who_would_cast = current_pc;
+		who_would_cast = univ.cur_pc;
 	else if(overall_mode < MODE_TALK_TOWN)
 		who_would_cast = pc_casting;
 	else return false;
@@ -778,7 +778,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	
 	adj = freebie ? 1 : univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.party[pc_num].level;
-	if(!freebie && univ.party[current_pc].traits[eTrait::ANAMA])
+	if(!freebie && univ.current_pc().traits[eTrait::ANAMA])
 		level++;
 	
 	play_sound(24);
@@ -1900,7 +1900,7 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	pc_casting = type == eSkill::MAGE_SPELLS ? store_last_cast_mage : store_last_cast_priest;
 	if(pc_casting == 6)
-		pc_casting = current_pc;
+		pc_casting = univ.cur_pc;
 	
 	if(type == eSkill::MAGE_SPELLS && univ.party[pc_casting].traits[eTrait::ANAMA]) {
 		add_string_to_buf("Cast: You're an Anama!");
@@ -2516,10 +2516,10 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		which_pc.take_item(weap.slot);
 		which_pc.heal(200);
 	}
-	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
-		current_pc = first_active_pc();
+	if(univ.current_pc().main_status != eMainStatus::ALIVE)
+		univ.cur_pc = first_active_pc();
 	put_pc_screen();
-	set_stat_window(current_pc);
+	set_stat_window(univ.cur_pc);
 }
 
 void set_pc_moves() {
@@ -2556,7 +2556,7 @@ void set_pc_moves() {
 }
 
 void take_ap(short num) {
-	univ.party[current_pc].ap = max(0,univ.party[current_pc].ap - num);
+	univ.current_pc().ap = max(0,univ.current_pc().ap - num);
 }
 
 short trait_present(eTrait which_trait) {

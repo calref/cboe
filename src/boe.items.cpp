@@ -27,7 +27,7 @@
 #include <boost/lexical_cast.hpp>
 #include "winutil.hpp"
 
-extern short stat_window,which_combat_type,current_pc;
+extern short stat_window,which_combat_type;
 extern eGameMode overall_mode;
 extern sf::RenderWindow mainPtr;
 extern bool boom_anim_active;
@@ -374,7 +374,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		sout << "pc" << i + 1;
 		std::string id = sout.str();
 		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].has_space()
-		   && ((!is_combat()) || (current_pc == i))) {
+		   && ((!is_combat()) || (univ.cur_pc == i))) {
 			if(current_getting_pc == 6)
 				current_getting_pc = i;
 			me[id].show();
@@ -530,7 +530,7 @@ bool display_item(location from_loc,short /*pc_num*/,short mode, bool check_cont
 	
 	make_cursor_sword();
 	
-	short current_getting_pc = current_pc;
+	short current_getting_pc = univ.cur_pc;
 	
 	for(short i = 0; i < univ.town.items.size(); i++)
 		if(univ.town.items[i].variety != eItemType::NO_ITEM) {

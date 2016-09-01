@@ -30,7 +30,6 @@ extern bool party_in_memory;
 extern location center;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
-extern short current_pc;
 extern bool map_visible;
 extern sf::RenderWindow mini_map;
 extern short which_combat_type;
@@ -120,7 +119,7 @@ void finish_load_party(){
 	}
 	
 	redraw_screen(REFRESH_ALL);
-	current_pc = first_active_pc();
+	univ.cur_pc = first_active_pc();
 	loaded_yet = true;
 	
 	last_load_file = file_to_load.filename().string();

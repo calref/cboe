@@ -19,7 +19,7 @@
 #include "boe.menus.hpp"
 
 extern eGameMode overall_mode;
-extern short current_pc,stat_window;
+extern short stat_window;
 extern location center;
 extern sf::RenderWindow mainPtr;
 extern cUniverse univ;

@@ -28,7 +28,7 @@
 #include "winutil.hpp"
 #include "restypes.hpp"
 
-extern short stat_window,store_spell_target,which_combat_type,current_pc,combat_active_pc;
+extern short stat_window,store_spell_target,which_combat_type,combat_active_pc;
 extern eGameMode overall_mode;
 extern location center;
 extern sf::RenderWindow mainPtr;
@@ -676,13 +676,13 @@ bool abil_exists(eItemAbil abil) { // use when outdoors
 
 void start_town_combat(eDirection direction) {
 	place_party(direction);
-	if(current_pc == 6)
+	if(univ.cur_pc == 6)
 		for(short i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
-				current_pc = i;
+				univ.cur_pc = i;
 				break;
 			}
-	center = univ.party[current_pc].combat_pos;
+	center = univ.current_pc().combat_pos;
 	
 	which_combat_type = 1;
 	overall_mode = MODE_COMBAT;
@@ -695,19 +695,19 @@ void start_town_combat(eDirection direction) {
 		univ.party[i].last_attacked = nullptr;
 		univ.party[i].parry = 0;
 		univ.party[i].direction = direction;
-		univ.party[current_pc].direction = direction;
+		univ.current_pc().direction = direction;
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
 			update_explored(univ.party[i].combat_pos);
 	}
 	
-	store_current_pc = current_pc;
-	current_pc = 0;
+	store_current_pc = univ.cur_pc;
+	univ.cur_pc = 0;
 	set_pc_moves();
 	pick_next_pc();
-	center = univ.party[current_pc].combat_pos;
+	center = univ.current_pc().combat_pos;
 	draw_buttons(0);
 	put_pc_screen();
-	set_stat_window(current_pc);
+	set_stat_window(univ.cur_pc);
 	give_help(48,49);
 	
 }
@@ -737,9 +737,9 @@ eDirection end_town_combat() {
 		r1 = get_ran(1,0,5);
 	univ.party.town_loc = univ.party[r1].combat_pos;
 	overall_mode = MODE_TOWN;
-	current_pc = store_current_pc;
-	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)
-		current_pc = first_active_pc();
+	univ.cur_pc = store_current_pc;
+	if(univ.current_pc().main_status != eMainStatus::ALIVE)
+		univ.cur_pc = first_active_pc();
 	for(short i = 0; i < 6; i++) {
 		univ.party[i].parry = 0;
 		univ.party[i].combat_pos = {-1,-1};
