@@ -45,12 +45,21 @@ struct cInvenSlot {
 	const cItem* operator->() const;
 	cItem& operator*();
 	const cItem& operator*() const;
+	friend bool operator==(const cInvenSlot& a, const cInvenSlot& b) {
+		return &a.owner == &b.owner && a.slot == b.slot;
+	}
 private:
 	cPlayer& owner;
 };
 
+inline bool operator!=(const cInvenSlot& a, const cInvenSlot& b) {
+	return !(a == b);
+}
+
 class cPlayer : public iLiving {
 	cParty* party;
+	template<typename Fcn>
+	cInvenSlot find_item_matching(Fcn fcn);
 public:
 	static void(* give_help)(short,short);
 	eMainStatus main_status;
@@ -113,7 +122,7 @@ public:
 	bool give_item(cItem item, int flags);
 	bool equip_item(int which_item, bool do_print);
 	bool unequip_item(int which_item, bool do_print);
-	auto get_weapons() -> std::pair<decltype(items)::const_iterator, decltype(items)::const_iterator>;
+	std::pair<cInvenSlot, cInvenSlot> get_weapons();
 	void take_item(int which_item);
 	void remove_charge(int which_item);
 	const cInvenSlot has_space() const;
@@ -122,10 +131,20 @@ public:
 	short cur_weight() const;
 	short free_weight() const;
 	short get_prot_level(eItemAbil abil, short dat = -1) const;
+	
 	const cInvenSlot has_abil_equip(eItemAbil abil, short dat = -1) const;
 	cInvenSlot has_abil_equip(eItemAbil abil, short dat = -1);
 	const cInvenSlot has_abil(eItemAbil abil, short dat = -1) const;
 	cInvenSlot has_abil(eItemAbil abil, short dat = -1);
+	const cInvenSlot has_type_equip(eItemType type) const;
+	cInvenSlot has_type_equip(eItemType type);
+	const cInvenSlot has_type(eItemType type) const;
+	cInvenSlot has_type(eItemType type);
+	const cInvenSlot has_class_equip(unsigned int item_class) const;
+	cInvenSlot has_class_equip(unsigned int item_class);
+	const cInvenSlot has_class(unsigned int item_class) const;
+	cInvenSlot has_class(unsigned int item_class);
+	
 	short skill(eSkill skill) const;
 	short stat_adj(eSkill skill) const;
 	eBuyStatus ok_to_buy(short cost,cItem item) const;

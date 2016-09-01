@@ -505,12 +505,11 @@ bool cParty::check_class(unsigned int item_class,bool take) {
 		return false;
 	for(auto& pc : *this)
 		if(pc.main_status == eMainStatus::ALIVE)
-			for(short i = 0; i < pc.items.size(); i++)
-				if(pc.items[i].variety != eItemType::NO_ITEM && pc.items[i].special_class == item_class) {
+			if(cInvenSlot item = pc.has_class(item_class)) {
 					if(take) {
-						if(pc.items[i].charges > 1)
-							pc.items[i].charges--;
-						else pc.take_item(i);
+						if(item->charges > 1)
+							item->charges--;
+						else pc.take_item(item.slot);
 					}
 					return true;
 				}

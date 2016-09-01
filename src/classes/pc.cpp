@@ -622,30 +622,17 @@ bool cPlayer::unequip_item(int which_item, bool do_print) {
 	return true;
 }
 
-auto cPlayer::get_weapons() -> std::pair<decltype(items)::const_iterator, decltype(items)::const_iterator> {
-	using iter_t = decltype(items)::const_iterator;
-	iter_t beg = items.begin(), end = items.end();
-	std::pair<iter_t, iter_t> result = {beg, beg};
-	auto is_weapon = [](const cItem& item) {
-		return item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED;
-	};
-	auto is_equipped = [this](iter_t item) {
-		if(item == items.end()) return true; // Treat a non-existent item as equipped to avoid incrementing an end iterator
-		return equip[item - items.begin()];
-	};
-	
-	do {
-		result.first = std::find_if(result.first, end, is_weapon);
-		if(!is_equipped(result.first)) result.first++;
-	} while(result.first != end);
-	if(result.first != end && result.first + 1 != end) {
-		result.second = result.first + 1;
-		do {
-			result.second = std::find_if(result.second, end, is_weapon);
-			if(!is_equipped(result.second)) result.second++;
-		} while(result.second != end);
+std::pair<cInvenSlot, cInvenSlot> cPlayer::get_weapons() {
+	cInvenSlot weap1 = has_type_equip(eItemType::ONE_HANDED);
+	if(weap1) {
+		equip[weap1.slot] = false;
+		cInvenSlot weap2 = has_type_equip(eItemType::ONE_HANDED);
+		equip[weap1.slot] = true;
+		return std::make_pair(weap1, weap2);
+	} else {
+		cInvenSlot weap2 = has_type_equip(eItemType::TWO_HANDED);
+		return std::make_pair(weap2, weap1);
 	}
-	return result;
 }
 
 short cPlayer::max_weight() const {
@@ -726,15 +713,22 @@ short cPlayer::get_prot_level(eItemAbil abil, short dat) const {
 	return sum; // TODO: Should we return -1 if the sum is 0?
 }
 
-cInvenSlot cPlayer::has_abil_equip(eItemAbil abil,short dat) {
-	for(short i = 0; i < items.size(); i++) {
-		if(items[i].variety == eItemType::NO_ITEM) continue;
-		if(items[i].ability != abil) continue;
-		if(!equip[i]) continue;
-		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
-		return cInvenSlot(*this, i);
-	}
+template<typename Fcn>
+cInvenSlot cPlayer::find_item_matching(Fcn fcn) {
+	for(short i = 0; i < items.size(); i++)
+		if(items[i].variety != eItemType::NO_ITEM && fcn(i, items[i]))
+			return cInvenSlot(*this, i);
 	return cInvenSlot(*this);
+}
+
+cInvenSlot cPlayer::has_abil_equip(eItemAbil abil,short dat) {
+	return find_item_matching([this,abil,dat](int i, const cItem& item) {
+		if(item.variety == eItemType::NO_ITEM) return false;
+		if(item.ability != abil) return false;
+		if(!equip[i]) return false;
+		if(dat >= 0 && dat != item.abil_data[1]) return false;
+		return true;
+	});
 }
 
 const cInvenSlot cPlayer::has_abil_equip(eItemAbil abil,short dat) const {
@@ -742,17 +736,56 @@ const cInvenSlot cPlayer::has_abil_equip(eItemAbil abil,short dat) const {
 }
 
 cInvenSlot cPlayer::has_abil(eItemAbil abil,short dat) {
-	for(short i = 0; i < items.size(); i++) {
-		if(items[i].variety == eItemType::NO_ITEM) continue;
-		if(items[i].ability != abil) continue;
-		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
-		return cInvenSlot(*this, i);
-	}
-	return cInvenSlot(*this);
+	return find_item_matching([this,abil,dat](int, const cItem& item) {
+		if(item.variety == eItemType::NO_ITEM) return false;
+		if(item.ability != abil) return false;
+		if(dat >= 0 && dat != item.abil_data[1]) return false;
+		return true;
+	});
 }
 
 const cInvenSlot cPlayer::has_abil(eItemAbil abil,short dat) const {
 	return const_cast<cPlayer*>(this)->has_abil(abil,dat);
+}
+
+cInvenSlot cPlayer::has_type_equip(eItemType type) {
+	return find_item_matching([this,type](int i, const cItem& item) {
+		return equip[i] && item.variety == type;
+	});
+}
+
+const cInvenSlot cPlayer::has_type_equip(eItemType type) const {
+	return const_cast<cPlayer*>(this)->has_type_equip(type);
+}
+
+cInvenSlot cPlayer::has_type(eItemType type) {
+	return find_item_matching([type](int, const cItem& item) {
+		return item.variety == type;
+	});
+}
+
+const cInvenSlot cPlayer::has_type(eItemType type) const {
+	return const_cast<cPlayer*>(this)->has_type(type);
+}
+
+cInvenSlot cPlayer::has_class_equip(unsigned int item_class) {
+	return find_item_matching([this,item_class](int i, const cItem& item) {
+		return equip[i] && item.special_class == item_class;
+	});
+}
+
+const cInvenSlot cPlayer::has_class_equip(unsigned int item_class) const {
+	return const_cast<cPlayer*>(this)->has_class_equip(item_class);
+}
+
+cInvenSlot cPlayer::has_class(unsigned int item_class) {
+	return find_item_matching([item_class](int, const cItem& item) {
+		return item.special_class == item_class;
+	});
+}
+
+const cInvenSlot cPlayer::has_class(unsigned int item_class) const {
+	return const_cast<cPlayer*>(this)->has_class(item_class);
 }
 
 cInvenSlot::operator bool() const {

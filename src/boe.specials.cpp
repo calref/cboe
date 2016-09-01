@@ -3408,13 +3408,11 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		case eSpecType::IF_EQUIP_ITEM_CLASS:
 			for(cPlayer& pc : univ.party)
 				if(pc.main_status == eMainStatus::ALIVE)
-					for(short j = 0; j < pc.items.size(); j++)
-						if(pc.items[j].variety != eItemType::NO_ITEM && pc.items[j].special_class == (unsigned)spec.ex1a
-						   && pc.equip[j]) {
+					if(cInvenSlot item = pc.has_class_equip(spec.ex1a)) {
 							*next_spec = spec.ex1b;
 							if(spec.ex2a > 0) {
 								*redraw = 1;
-								pc.take_item(j);
+								pc.take_item(item.slot);
 								if(&pc == &univ.party[stat_window])
 									put_item_screen(stat_window);
 							}

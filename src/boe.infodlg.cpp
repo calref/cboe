@@ -531,12 +531,13 @@ static void display_pc_info(cDialog& me, const short pc) {
 	else dynamic_cast<cPict&>(me["pic"]).setPict(pic,PIC_PC);
 	
 	// Fight bonuses
-	decltype(univ.party[pc].items)::const_iterator weap1, weap2, no_weap = univ.party[pc].items.end();
-	std::tie(weap1, weap2) = univ.party[pc].get_weapons();
+	auto weapons = univ.party[pc].get_weapons();
+	auto& weap1 = weapons.first;
+	auto& weap2 = weapons.second;
 	
 	hit_adj = univ.party[pc].stat_adj(eSkill::DEXTERITY) * 5 - (total_encumbrance(pc)) * 5
 		+ 5 * minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
-	if(!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2 != no_weap)
+	if(!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2)
 		hit_adj -= 25;
 	
 	// TODO: Perhaps dam_adj and hit_adj calculation should be moved into a function somewhere?
@@ -554,7 +555,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 	me["weap1b"].setText("");
 	me["weap2a"].setText("No weapon.");
 	me["weap2b"].setText("");
-	if(weap1 != no_weap) {
+	if(weap1) {
 		if(!weap1->ident)
 			me["weap1a"].setText("Not identified.");
 		else {
@@ -569,7 +570,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 			to_draw.str("");
 		}
 	}
-	if(weap2 != no_weap) {
+	if(weap2) {
 		if(!weap2->ident)
 			me["weap2a"].setText("Not identified.");
 		else {

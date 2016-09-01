@@ -529,7 +529,8 @@ void pc_attack(short who_att,iLiving* target) {
 	attacker.last_attacked = target;
 	
 	auto weapons = attacker.get_weapons();
-	auto weap1 = weapons.first, weap2 = weapons.second, no_weap = attacker.items.cend();
+	auto& weap1 = weapons.first;
+	auto& weap2 = weapons.second;
 	
 	hit_adj = (-5 * minmax(-8,8,attacker.status[eStatus::BLESS_CURSE])) + 5 * minmax(-8,8,target->status[eStatus::BLESS_CURSE])
 		- attacker.stat_adj(eSkill::DEXTERITY) * 5 + (get_encumbrance(who_att)) * 5;
@@ -558,7 +559,7 @@ void pc_attack(short who_att,iLiving* target) {
 	
 	combat_posing_monster = current_working_monster = who_att;
 	
-	if(weap1 == no_weap) {
+	if(!weap1) {
 		std::string create_line = univ.party[who_att].name + " punches.";
 		add_string_to_buf(create_line);
 		
@@ -600,11 +601,10 @@ void pc_attack(short who_att,iLiving* target) {
 		}
 	}
 	
-	auto weap_poisoned = attacker.items.begin() + attacker.weap_poisoned.slot;
-	if(weap1 != no_weap)
-		pc_attack_weapon(who_att, *target, hit_adj, dam_adj, *weap1, 1 + (weap2 != no_weap), weap_poisoned == weap1);
-	if(weap2 != no_weap && target->is_alive())
-		pc_attack_weapon(who_att, *target, hit_adj, dam_adj, *weap2, 0, weap_poisoned == weap2);
+	if(weap1)
+		pc_attack_weapon(who_att, *target, hit_adj, dam_adj, *weap1, 1 + bool(weap2), attacker.weap_poisoned == weap1);
+	if(weap2 && target->is_alive())
+		pc_attack_weapon(who_att, *target, hit_adj, dam_adj, *weap2, 0, attacker.weap_poisoned == weap2);
 	move_to_zero(attacker.status[eStatus::POISONED_WEAPON]);
 	take_ap(4);
 	
@@ -1614,92 +1614,71 @@ void handle_marked_damage() {
 }
 
 void load_missile() {
-	short bow = 24,arrow = 24,thrown = 24,crossbow = 24,bolts = 24,no_ammo = 24;
-	
 	if(univ.current_pc().traits[eTrait::PACIFIST]) {
 		add_string_to_buf("Shoot: You're a pacifist!");
 		return;
 	}
 	
-	for(short i = 0; i < 24; i++) {
-		if((univ.current_pc().equip[i]) &&
-			(univ.current_pc().items[i].variety == eItemType::THROWN_MISSILE))
-			thrown = i;
-		if((univ.current_pc().equip[i]) &&
-			(univ.current_pc().items[i].variety == eItemType::BOW))
-			bow = i;
-		if((univ.current_pc().equip[i]) &&
-			(univ.current_pc().items[i].variety == eItemType::ARROW))
-			arrow = i;
-		if((univ.current_pc().equip[i]) &&
-			(univ.current_pc().items[i].variety == eItemType::CROSSBOW))
-			crossbow = i;
-		if((univ.current_pc().equip[i]) &&
-			(univ.current_pc().items[i].variety == eItemType::BOLTS))
-			bolts = i;
-		if((univ.current_pc().equip[i]) &&
-			(univ.current_pc().items[i].variety == eItemType::MISSILE_NO_AMMO))
-			no_ammo = i;
-	}
+	cInvenSlot
+		thrown = univ.current_pc().has_type_equip(eItemType::THROWN_MISSILE),
+		bow = univ.current_pc().has_type_equip(eItemType::BOW),
+		arrow = univ.current_pc().has_type_equip(eItemType::ARROW),
+		crossbow = univ.current_pc().has_type_equip(eItemType::CROSSBOW),
+		bolts = univ.current_pc().has_type_equip(eItemType::BOLTS),
+		no_ammo = univ.current_pc().has_type_equip(eItemType::MISSILE_NO_AMMO);
 	
-	if(thrown < 24) {
-		missile_inv_slot = thrown;
-		ammo_inv_slot = thrown;
+	if(thrown) {
+		missile_inv_slot = thrown.slot;
+		ammo_inv_slot = thrown.slot;
 		add_string_to_buf("Throw: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		overall_mode = MODE_THROWING;
 		current_spell_range = 8;
-		if(univ.current_pc().items[thrown].ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += univ.current_pc().items[thrown].abil_data[0];
-		if(univ.current_pc().items[thrown].ability == eItemAbil::EXPLODING_WEAPON)
+		if(thrown->ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += thrown->abil_data[0];
+		if(thrown->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
-	}
-	else if(((bolts < 24) && (bow < 24)) || ((arrow < 24) && (crossbow < 24)))  {
+	} else if((bow && bolts) || (crossbow && arrow))  {
 		add_string_to_buf("Fire: Wrong ammunition.");
-	}
-	else if((arrow == 24) && (bow < 24)) {
+	} else if(bow && !arrow) {
 		add_string_to_buf("Fire: Equip some arrows.");
-	}
-	else if(crossbow == 24 && bolts < 24) {
+	} else if(crossbow && !bolts) {
 		add_string_to_buf("Fire: Equip some bolts.");
-	}
-	else if((arrow < 24) && (bow < 24)) {
-		missile_inv_slot = bow;
-		ammo_inv_slot = arrow;
+	} else if(bow && arrow) {
+		missile_inv_slot = bow.slot;
+		ammo_inv_slot = arrow.slot;
 		overall_mode = MODE_FIRING;
 		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
-		if(univ.current_pc().items[arrow].ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += univ.current_pc().items[arrow].abil_data[0];
-		if(univ.current_pc().items[arrow].ability == eItemAbil::EXPLODING_WEAPON)
+		if(arrow->ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += arrow->abil_data[0];
+		if(arrow->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
-	}
-	else if((bolts < 24) && (crossbow < 24)) {
-		missile_inv_slot = crossbow;
-		ammo_inv_slot = bolts;
+	} else if(crossbow && bolts) {
+		missile_inv_slot = crossbow.slot;
+		ammo_inv_slot = bolts.slot;
 		overall_mode = MODE_FIRING;
 		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
-		if(univ.current_pc().items[bolts].ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += univ.current_pc().items[bolts].abil_data[0];
-		if(univ.current_pc().items[bolts].ability == eItemAbil::EXPLODING_WEAPON)
+		if(bolts->ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += bolts->abil_data[0];
+		if(bolts->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
-	}
-	else if(no_ammo < 24) {
-		missile_inv_slot = no_ammo;
-		ammo_inv_slot = no_ammo;
+	} else if(no_ammo) {
+		missile_inv_slot = no_ammo.slot;
+		ammo_inv_slot = no_ammo.slot;
 		overall_mode = MODE_FIRING;
 		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
-		if(univ.current_pc().items[no_ammo].ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += univ.current_pc().items[no_ammo].abil_data[0];
-		if(univ.current_pc().items[no_ammo].ability == eItemAbil::EXPLODING_WEAPON)
+		if(no_ammo->ability == eItemAbil::DISTANCE_MISSILE)
+			current_spell_range += no_ammo->abil_data[0];
+		if(no_ammo->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
 	}
