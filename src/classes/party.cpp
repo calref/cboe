@@ -483,19 +483,18 @@ bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 bool cParty::has_abil(eItemAbil abil, short dat) {
 	for(int i = 0; i < 6; i++)
 		if(adven[i]->main_status == eMainStatus::ALIVE)
-			if(adven[i]->has_abil(abil,dat) < adven[i]->items.size())
+			if(adven[i]->has_abil(abil,dat))
 				return true;
 	return false;
 }
 
 bool cParty::take_abil(eItemAbil abil, short dat) {
-	short item;
 	for(int i = 0; i < 6; i++)
 		if(adven[i]->main_status == eMainStatus::ALIVE)
-			if((item = adven[i]->has_abil(abil,dat)) < adven[i]->items.size()) {
-				if(adven[i]->items[item].charges > 1)
-					adven[i]->items[item].charges--;
-				else adven[i]->take_item(item);
+			if(cInvenSlot item = adven[i]->has_abil(abil,dat)) {
+				if(item->charges > 1)
+					item->charges--;
+				else adven[i]->take_item(item.slot);
 				return true;
 			}
 	return false;

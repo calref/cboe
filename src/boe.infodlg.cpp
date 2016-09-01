@@ -498,7 +498,7 @@ void display_alchemy() {
 static void display_pc_info(cDialog& me, const short pc) {
 	std::ostringstream to_draw;
 	
-	short hit_adj = 0, dam_adj = 0,skill_item;
+	short hit_adj = 0, dam_adj = 0;
 	
 	to_draw << univ.party[pc].name << " is carrying " << univ.party[pc].cur_weight() << " stones out of " << univ.party[pc].max_weight() << '.';
 	me["weight"].setText(to_draw.str());
@@ -541,13 +541,13 @@ static void display_pc_info(cDialog& me, const short pc) {
 	
 	// TODO: Perhaps dam_adj and hit_adj calculation should be moved into a function somewhere?
 	dam_adj = univ.party[pc].stat_adj(eSkill::STRENGTH) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
-	if((skill_item = univ.party[pc].has_abil_equip(eItemAbil::SKILL)) < univ.party[pc].items.size()) {
-		hit_adj += 5 * (univ.party[pc].items[skill_item].abil_data[0] / 2 + 1);
-		dam_adj += univ.party[pc].items[skill_item].abil_data[0] / 2;
+	if(cInvenSlot skill_item = univ.party[pc].has_abil_equip(eItemAbil::SKILL)) {
+		hit_adj += 5 * (skill_item->abil_data[0] / 2 + 1);
+		dam_adj += skill_item->abil_data[0] / 2;
 	}
-	if((skill_item = univ.party[pc].has_abil_equip(eItemAbil::GIANT_STRENGTH)) < univ.party[pc].items.size()) {
-		dam_adj += univ.party[pc].items[skill_item].abil_data[0];
-		hit_adj += univ.party[pc].items[skill_item].abil_data[0] * 2;
+	if(cInvenSlot skill_item = univ.party[pc].has_abil_equip(eItemAbil::GIANT_STRENGTH)) {
+		dam_adj += skill_item->abil_data[0];
+		hit_adj += skill_item->abil_data[0] * 2;
 	}
 	
 	me["weap1a"].setText("No weapon.");

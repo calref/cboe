@@ -433,7 +433,7 @@ bool poison_weapon(short pc_num, short how_much,bool safe) {
 		}
 		if(!safe)
 			play_sound(55);
-		univ.party[pc_num].weap_poisoned = weap - univ.party[pc_num].items.end();
+		univ.party[pc_num].weap_poisoned.slot = weap - univ.party[pc_num].items.end();
 		univ.party[pc_num].status[eStatus::POISONED_WEAPON] = max(univ.party[pc_num].status[eStatus::POISONED_WEAPON], p_level);
 		
 		return true;
@@ -554,7 +554,7 @@ void give_party_spell(short which) {
 }
 
 void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
-	short item,target,r1,adj,store;
+	short target,r1,adj,store;
 	location where;
 	
 	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
@@ -682,15 +682,16 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::MAGIC_MAP:
-			item = univ.party[pc_num].has_abil(eItemAbil::SAPPHIRE);
-			if(item == univ.party[pc_num].items.size() && !freebie)
+		{
+			cInvenSlot item = univ.party[pc_num].has_abil(eItemAbil::SAPPHIRE);
+			if(!item && !freebie)
 				add_string_to_buf("  You need a sapphire.");
 			else if(univ.town->defy_scrying || univ.town->defy_mapping)
 				add_string_to_buf("  The spell fails.");
 			else {
 				if(freebie) add_string_to_buf("  You have a vision.");
 				else {
-					univ.party[pc_num].remove_charge(item);
+					univ.party[pc_num].remove_charge(item.slot);
 					if(stat_window == pc_num)
 						put_item_screen(stat_window);
 					univ.party[pc_num].cur_sp -= (*spell_num).cost;
@@ -702,6 +703,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				clear_map();
 			}
 			break;
+		}
 			
 			
 		case eSpell::STEALTH:
@@ -761,7 +763,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 }
 
 void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
-	short r1,r2, target,item,store,adj,x,y;
+	short r1,r2, target,store,adj,x,y;
 	location loc;
 	location where;
 	
@@ -1063,11 +1065,12 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 				} else {
 					
 					if(!univ.scenario.is_legacy) {
-						if((item = univ.party[pc_num].has_abil(eItemAbil::RESURRECTION_BALM)) == univ.party[pc_num].items.size()) {
+						if(cInvenSlot item = univ.party[pc_num].has_abil(eItemAbil::RESURRECTION_BALM)) {
+							univ.party[pc_num].take_item(item.slot);
+						} else {
 							add_string_to_buf("  Need resurrection balm.");
 							break;
 						}
-						else univ.party[pc_num].take_item(item);
 					}
 					if(spell_num == eSpell::RAISE_DEAD) {
 						if(univ.party[target].main_status == eMainStatus::DEAD)
@@ -2043,7 +2046,7 @@ void do_alchemy() {
 		0,0,0,0,0,
 		0,0,0,0,0
 	};
-	short which_item,which_item2,r1;
+	short r1;
 	short pc_num;
 	
 	pc_num = select_pc(0);
@@ -2054,26 +2057,32 @@ void do_alchemy() {
 	// TODO: Remove need for this cast by changing the above data to either std::maps or an unary operator*
 	int which_p = int(potion);
 	if(potion != eAlchemy::NONE) {
-		if(univ.party[pc_num].has_space() == univ.party[pc_num].items.size()) {
+		if(!univ.party[pc_num].has_space()) {
 			add_string_to_buf("Alchemy: Can't carry another item.");
 			return;
 		}
 		
-		if((which_item = univ.party[pc_num].has_abil(alch_ingred1[which_p])) == univ.party[pc_num].items.size()) {
+		cInvenSlot which_item = univ.party[pc_num].has_abil(alch_ingred1[which_p]);
+		if(!which_item) {
 			add_string_to_buf("Alchemy: Don't have ingredients.");
 			return;
 		}
 		
 		if(alch_ingred2[which_p] != eItemAbil::NONE) {
-			if(univ.party[pc_num].has_abil(alch_ingred2[which_p]) == univ.party[pc_num].items.size()) {
+			cInvenSlot which_item2 = univ.party[pc_num].has_abil(alch_ingred2[which_p]);
+			if(!which_item2) {
 				add_string_to_buf("Alchemy: Don't have ingredients.");
 				return;
 			}
-			univ.party[pc_num].remove_charge(which_item);
-			// We call this twice because remove_charge might move the item and change its index
-			which_item2 = univ.party[pc_num].has_abil(alch_ingred2[which_p]);
-			univ.party[pc_num].remove_charge(which_item2);
-		} else univ.party[pc_num].remove_charge(which_item);
+			// Take care with the order of removal so that remove_charge does not change the index of the second item removed
+			if(which_item.slot < which_item2.slot) {
+				univ.party[pc_num].remove_charge(which_item2.slot);
+				univ.party[pc_num].remove_charge(which_item.slot);
+			} else {
+				univ.party[pc_num].remove_charge(which_item.slot);
+				univ.party[pc_num].remove_charge(which_item2.slot);
+			}
+		} else univ.party[pc_num].remove_charge(which_item.slot);
 		
 		play_sound(8);
 		
@@ -2427,7 +2436,7 @@ void petrify_pc(cPlayer& which_pc,int strength) {
 	r1 += which_pc.status[eStatus::BLESS_CURSE];
 	r1 -= strength;
 	
-	if(which_pc.has_abil_equip(eItemAbil::PROTECT_FROM_PETRIFY) < which_pc.items.size())
+	if(which_pc.has_abil_equip(eItemAbil::PROTECT_FROM_PETRIFY))
 		r1 = 20;
 	
 	if(r1 > 14) {
@@ -2440,7 +2449,6 @@ void petrify_pc(cPlayer& which_pc,int strength) {
 }
 
 void kill_pc(cPlayer& which_pc,eMainStatus type) {
-	short i_weap = which_pc.items.size();
 	bool dummy,no_save = false;
 	location item_loc;
 	
@@ -2449,15 +2457,16 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		no_save = true;
 	}
 	
-	if(type != eMainStatus::STONE)
-		i_weap = which_pc.has_abil_equip(eItemAbil::LIFE_SAVING);
+	cInvenSlot weap = type == eMainStatus::STONE
+		? cInvenSlot(which_pc) // Life-saving doesn't protect from petrification
+		: which_pc.has_abil_equip(eItemAbil::LIFE_SAVING);
 	
 	int luck = which_pc.skill(eSkill::LUCK);
 	if(!no_save && type != eMainStatus::ABSENT && luck > 0 &&
 	   get_ran(1,1,100) < hit_chance[luck]) {
 		add_string_to_buf("  But you luck out!");
 		which_pc.cur_health = 0;
-	} else if(i_weap == which_pc.items.size() || type == eMainStatus::ABSENT) {
+	} else if(!weap || type == eMainStatus::ABSENT) {
 		if(combat_active_pc < 6 && &which_pc == &univ.party[combat_active_pc])
 			combat_active_pc = 6;
 		
@@ -2504,7 +2513,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 	}
 	else {
 		add_string_to_buf("  Life saved!");
-		which_pc.take_item(i_weap);
+		which_pc.take_item(weap.slot);
 		which_pc.heal(200);
 	}
 	if(univ.party[current_pc].main_status != eMainStatus::ALIVE)

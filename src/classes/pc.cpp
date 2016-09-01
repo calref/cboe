@@ -53,7 +53,7 @@ void cPlayer::import_legacy(legacy::pc_record_type old){
 		mage_spells[i] = old.mage_spells[i];
 	}
 	which_graphic = old.which_graphic;
-	weap_poisoned = old.weap_poisoned;
+	weap_poisoned.slot = old.weap_poisoned;
 	race = (eRace) old.race;
 	direction = eDirection(old.direction);
 }
@@ -159,7 +159,7 @@ void cPlayer::curse(int how_much) {
 void cPlayer::dumbfound(int how_much) {
 	if(!is_alive()) return;
 	short r1 = get_ran(1,0,90);
-	if(has_abil_equip(eItemAbil::WILL) < items.size()) {
+	if(has_abil_equip(eItemAbil::WILL)) {
 		if(print_result)
 			print_result("  Ring of Will glows.");
 		r1 -= 10;
@@ -285,7 +285,7 @@ void cPlayer::web(int how_much) {
 
 void cPlayer::acid(int how_much) {
 	if(!is_alive()) return;
-	if(has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::ACID)) < items.size()) {
+	if(has_abil_equip(eItemAbil::STATUS_PROTECTION,int(eStatus::ACID))) {
 		if(print_result)
 			print_result("  " + name + " resists acid.");
 		return;
@@ -340,7 +340,7 @@ short cPlayer::stat_adj(eSkill which) const {
 			tr -= 2;
 	}
 	// TODO: Use ability strength?
-	if(has_abil_equip(eItemAbil::BOOST_STAT,int(which)) < items.size())
+	if(has_abil_equip(eItemAbil::BOOST_STAT,int(which)))
 		tr++;
 	return tr;
 }
@@ -422,10 +422,10 @@ void cPlayer::sort_items() {
 			  	no_swaps = false;
 				std::swap(items[i + 1], items[i]);
 				std::swap(equip[i + 1], equip[i]);
-				if(weap_poisoned == i + 1)
-					weap_poisoned--;
-				else if(weap_poisoned == i)
-					weap_poisoned++;
+				if(weap_poisoned.slot == i + 1)
+					weap_poisoned.slot--;
+				else if(weap_poisoned.slot == i)
+					weap_poisoned.slot++;
 			}
 	}
 }
@@ -434,7 +434,6 @@ bool cPlayer::give_item(cItem item, int flags) {
 	if(main_status != eMainStatus::ALIVE)
 		return false;
 	
-	short free_space;
 	bool do_print = flags & GIVE_DO_PRINT;
 	bool allow_overload = flags & GIVE_ALLOW_OVERLOAD;
 	int equip_type = flags & GIVE_EQUIP_FORCE;
@@ -478,14 +477,14 @@ bool cPlayer::give_item(cItem item, int flags) {
 		}
 		return false;
 	}
-	free_space = has_space();
-	if(free_space == items.size() || main_status != eMainStatus::ALIVE)
+	cInvenSlot free_space = has_space();
+	if(!free_space || main_status != eMainStatus::ALIVE)
 		return false;
 	else {
 		item.property = false;
 		item.contained = false;
 		item.held = false;
-		items[free_space] = item;
+		*free_space = item;
 		
 		if(do_print && print_result) {
 			std::ostringstream announce;
@@ -498,14 +497,14 @@ bool cPlayer::give_item(cItem item, int flags) {
 		}
 		
 		if(equip_type != 0 && equippable.count(item.variety)) {
-			if(!equip_item(free_space, false) && equip_type != GIVE_EQUIP_SOFT) {
+			if(!equip_item(free_space.slot, false) && equip_type != GIVE_EQUIP_SOFT) {
 				int exclude = 0;
 				if(num_hands_to_use.count(item.variety))
 					exclude = 100;
 				else exclude = excluding_types[item.variety];
 				int rem1 = items.size(), rem2 = items.size();
 				for(int i = 0; i < items.size(); i++) {
-					if(i == free_space) continue;
+					if(i == free_space.slot) continue;
 					if(!equip[i]) continue;
 					int check_exclude = 0;
 					if(num_hands_to_use.count(items[i].variety))
@@ -542,11 +541,11 @@ bool cPlayer::give_item(cItem item, int flags) {
 						else if(can_rem1 && items[rem1].variety != item.variety)
 							equip[rem1] = false;
 					}
-					if((rem1 == weap_poisoned && !equip[rem1]) || (rem2 == weap_poisoned && !equip[rem2]))
+					if((rem1 == weap_poisoned.slot && !equip[rem1]) || (rem2 == weap_poisoned.slot && !equip[rem2]))
 						status[eStatus::POISONED_WEAPON] = 0;
 				} else if(can_rem1)
 					equip[rem1] = false;
-				equip_item(free_space, false);
+				equip_item(free_space.slot, false);
 			}
 		}
 		
@@ -615,7 +614,7 @@ bool cPlayer::unequip_item(int which_item, bool do_print) {
 	equip[which_item] = false;
 	if(do_print && print_result)
 		print_result("Equip: Unequipped");
-	if(weap_poisoned == which_item && status[eStatus::POISONED_WEAPON] > 0) {
+	if(weap_poisoned.slot == which_item && status[eStatus::POISONED_WEAPON] > 0) {
 		if(do_print && print_result)
 			print_result("  Poison lost.");
 		status[eStatus::POISONED_WEAPON] = 0;
@@ -679,12 +678,16 @@ short cPlayer::free_weight() const {
 	return max_weight() - cur_weight();
 }
 
-short cPlayer::has_space() const {
+cInvenSlot cPlayer::has_space() {
 	for(int i = 0; i < items.size(); i++) {
 		if(items[i].variety == eItemType::NO_ITEM)
-			return i;
+			return cInvenSlot(*this, i);
 	}
-	return items.size();
+	return cInvenSlot(*this);
+}
+
+const cInvenSlot cPlayer::has_space() const {
+	return const_cast<cPlayer*>(this)->has_space();
 }
 
 void cPlayer::combine_things() {
@@ -721,28 +724,59 @@ short cPlayer::get_prot_level(eItemAbil abil, short dat) const {
 		sum += items[i].abil_data[0];
 	}
 	return sum; // TODO: Should we return -1 if the sum is 0?
-	
 }
 
-short cPlayer::has_abil_equip(eItemAbil abil,short dat) const {
+cInvenSlot cPlayer::has_abil_equip(eItemAbil abil,short dat) {
 	for(short i = 0; i < items.size(); i++) {
 		if(items[i].variety == eItemType::NO_ITEM) continue;
 		if(items[i].ability != abil) continue;
 		if(!equip[i]) continue;
 		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
-		return i;
+		return cInvenSlot(*this, i);
 	}
-	return items.size();
+	return cInvenSlot(*this);
 }
 
-short cPlayer::has_abil(eItemAbil abil,short dat) const {
+const cInvenSlot cPlayer::has_abil_equip(eItemAbil abil,short dat) const {
+	return const_cast<cPlayer*>(this)->has_abil_equip(abil,dat);
+}
+
+cInvenSlot cPlayer::has_abil(eItemAbil abil,short dat) {
 	for(short i = 0; i < items.size(); i++) {
 		if(items[i].variety == eItemType::NO_ITEM) continue;
 		if(items[i].ability != abil) continue;
 		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
-		return i;
+		return cInvenSlot(*this, i);
 	}
-	return items.size();
+	return cInvenSlot(*this);
+}
+
+const cInvenSlot cPlayer::has_abil(eItemAbil abil,short dat) const {
+	return const_cast<cPlayer*>(this)->has_abil(abil,dat);
+}
+
+cInvenSlot::operator bool() const {
+	return slot < owner.items.size();
+}
+
+bool cInvenSlot::operator !() const {
+	return slot >= owner.items.size();
+}
+
+cItem* cInvenSlot::operator->() {
+	return &owner.items[slot];
+}
+
+const cItem* cInvenSlot::operator->() const {
+	return &owner.items[slot];
+}
+
+cItem& cInvenSlot::operator*() {
+	return owner.items[slot];
+}
+
+const cItem& cInvenSlot::operator*() const {
+	return owner.items[slot];
 }
 
 short cPlayer::skill(eSkill skill) const {
@@ -767,7 +801,7 @@ eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 			if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag == item.type_flag && items[i].charges > 123)
 				return eBuyStatus::HAVE_LOTS;
 		
-		if(has_space() == items.size())
+		if(!has_space())
 			return eBuyStatus::NO_SPACE;
 		if(item.item_weight() > free_weight()) {
 	  		return eBuyStatus::TOO_HEAVY;
@@ -779,12 +813,12 @@ eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 }
 
 void cPlayer::take_item(int which_item) {
-	if(weap_poisoned == which_item && status[eStatus::POISONED_WEAPON] > 0) {
+	if(weap_poisoned.slot == which_item && status[eStatus::POISONED_WEAPON] > 0) {
 		if(print_result) print_result("  Poison lost.");
 		status[eStatus::POISONED_WEAPON] = 0;
 	}
-	if(weap_poisoned > which_item && status[eStatus::POISONED_WEAPON] > 0)
-		weap_poisoned--;
+	if(weap_poisoned.slot > which_item && status[eStatus::POISONED_WEAPON] > 0)
+		weap_poisoned.slot--;
 	
 	for(int i = which_item; i < 23; i++) {
 		items[i] = items[i + 1];
@@ -854,7 +888,7 @@ void cPlayer::finish_create() {
 	}
 }
 
-cPlayer::cPlayer(cParty& party) : party(&party) {
+cPlayer::cPlayer(cParty& party) : party(&party), weap_poisoned(*this) {
 	main_status = eMainStatus::ABSENT;
 	name = "\n";
 	
@@ -876,7 +910,6 @@ cPlayer::cPlayer(cParty& party) : party(&party) {
 		mage_spells[i] = i < 30;
 	}
 	which_graphic = 0;
-	weap_poisoned = items.size();
 	
 	race = eRace::HUMAN;
 	direction = DIR_N;
@@ -931,7 +964,6 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		mage_spells.set();
 		which_graphic = slot * 3 + 1;	// 1, 4, 7, 10, 13, 16
 		if(slot == 2) which_graphic++;
-		weap_poisoned = items.size();
 		
 		for(short i = 0; i < 10; i++) {
 			eTrait trait = eTrait(i);
@@ -1087,7 +1119,8 @@ void cPlayer::writeTo(std::ostream& file) const {
 	file << "ICON " <<  which_graphic << '\n';
 	file << "RACE " << race << '\n';
 	file << "DIRECTION " << direction << '\n';
-	file << "POISON " << weap_poisoned << '\n';
+	if(weap_poisoned)
+		file << "POISON " << weap_poisoned.slot << '\n';
 	file << '\f';
 	for(int i = 0; i < items.size(); i++)
 		if(items[i].variety != eItemType::NO_ITEM){
@@ -1174,7 +1207,7 @@ void cPlayer::readFrom(std::istream& file){
 		else if(cur == "RACE")
 			sin >> race;
 		else if(cur == "POISON")
-			sin >> weap_poisoned;
+			sin >> weap_poisoned.slot;
 		sin.clear();
 	}
 	bin.clear();

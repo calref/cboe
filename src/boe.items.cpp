@@ -221,7 +221,7 @@ void give_thing(short pc_num, short item_num) {
 					univ.party[pc_num].take_item(item_num);
 			}
 			else {
-				if(univ.party[who_to].has_space() == univ.party[who_to].items.size())
+				if(!univ.party[who_to].has_space())
 					ASB("Can't give: PC has max. # of items.");
 				else ASB("Can't give: PC carrying too much.");
 				if(how_many > 0)
@@ -364,7 +364,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	
 	// First make sure all arrays for who can get stuff are in order.
 	if(current_getting_pc < 6 && (univ.party[current_getting_pc].main_status != eMainStatus::ALIVE
-			|| univ.party[current_getting_pc].has_space() == univ.party[current_getting_pc].items.size())) {
+			|| !univ.party[current_getting_pc].has_space())) {
 	 	current_getting_pc = 6;
 	 	
 	}
@@ -373,7 +373,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		std::ostringstream sout;
 		sout << "pc" << i + 1;
 		std::string id = sout.str();
-		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].has_space() < univ.party[i].items.size()
+		if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].has_space()
 		   && ((!is_combat()) || (current_pc == i))) {
 			if(current_getting_pc == 6)
 				current_getting_pc = i;
@@ -912,8 +912,9 @@ short char_select_pc(short mode,const char *title) {
 			can_pick = false;
 		else switch(mode) {
 			case 3:
-				if(univ.party[i].has_space() == univ.party[i].items.size())
+				if(!univ.party[i].has_space())
 					can_pick = false;
+				// Fallthrough intentional
 			case 0:
 				if(univ.party[i].main_status != eMainStatus::ALIVE)
 					can_pick = false;

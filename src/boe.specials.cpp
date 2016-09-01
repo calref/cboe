@@ -2754,7 +2754,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 						can_pick = false;
 					else if(spec.ex1a == 3 && univ.party[pc].main_status == eMainStatus::ALIVE)
 						can_pick = false;
-					else if(spec.ex1a == 4 && univ.party[pc].has_space() == univ.party[pc].items.size())
+					else if(spec.ex1a == 4 && !univ.party[pc].has_space())
 						can_pick = false;
 				} else if(pc >= 100 && pc < univ.town.monst.size() + 100) {
 					short monst = pc - 100;
@@ -2791,7 +2791,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							can_pick = false;
 						else if(spec.ex1a == 3 && found->main_status == eMainStatus::ALIVE)
 							can_pick = false;
-						else if(spec.ex1a == 4 && found->has_space() == found->items.size())
+						else if(spec.ex1a == 4 && !found->has_space())
 							can_pick = false;
 					}
 					if(can_pick)
@@ -2817,7 +2817,7 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 							can_pick = false;
 						else if(spec.ex1a == 3 && univ.party[i].main_status == eMainStatus::ALIVE)
 							can_pick = false;
-						else if(spec.ex1a == 4 && univ.party[i].has_space() == univ.party[i].items.size())
+						else if(spec.ex1a == 4 && !univ.party[i].has_space())
 							can_pick = false;
 						tries++;
 					}

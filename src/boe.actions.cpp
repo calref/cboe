@@ -2285,10 +2285,10 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 			if(pc.traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
 				pc.disease(6);
 			}
-			short item = pc.has_abil_equip(eItemAbil::REGENERATE);
-			if(item < pc.items.size() && pc.cur_health < pc.max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)){
-				int j = get_ran(1,0,pc.items[item].abil_data[0] / 3);
-				if(pc.items[item].abil_data[0] / 3 == 0)
+			cInvenSlot item = pc.has_abil_equip(eItemAbil::REGENERATE);
+			if(item && pc.cur_health < pc.max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)){
+				int j = get_ran(1,0,item->abil_data[0] / 3);
+				if(item->abil_data[0] / 3 == 0)
 					j = get_ran(1,0,1);
 				if(is_out()) j = j * 4;
 				pc.heal(j);
@@ -2305,7 +2305,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 }
 
 void increase_age() {
-	short item,how_many_short = 0,r1;
+	short how_many_short = 0,r1;
 	
 	
 	// Increase age, adjust light level & stealth
@@ -2507,13 +2507,14 @@ void increase_age() {
 		for(cPlayer& pc : univ.party) {
 			move_to_zero(pc.status[eStatus::BLESS_CURSE]);
 			move_to_zero(pc.status[eStatus::HASTE_SLOW]);
-			if((item = pc.has_abil_equip(eItemAbil::REGENERATE)) < pc.items.size() && (pc.cur_health < pc.max_health)
-			   && ((overall_mode > MODE_OUTDOORS) || (get_ran(1,0,10) == 5))){
-				int j = get_ran(1,0,pc.items[item].abil_data[0] / 3);
-				if(pc.items[item].abil_data[0] / 3 == 0)
-					j = get_ran(1,0,1);
-				if(is_out()) j = j * 4;
-				pc.heal(j);
+			if(cInvenSlot item = pc.has_abil_equip(eItemAbil::REGENERATE)) {
+				if(pc.cur_health < pc.max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)) {
+					int j = get_ran(1,0,item->abil_data[0] / 3);
+					if(item->abil_data[0] / 3 == 0)
+						j = get_ran(1,0,1);
+					if(is_out()) j = j * 4;
+					pc.heal(j);
+				}
 			}
 		}
 	

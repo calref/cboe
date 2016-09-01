@@ -1143,30 +1143,30 @@ void dump_gold(short print_mes) {
 
 void pick_lock(location where,short pc_num) {
 	ter_num_t terrain;
-	short r1,which_item;
+	short r1;
 	bool will_break = false;
 	short unlock_adjust;
 	
 	terrain = univ.town->terrain(where.x,where.y);
-	which_item = univ.party[pc_num].has_abil_equip(eItemAbil::LOCKPICKS);
-	if(which_item == univ.party[pc_num].items.size()) {
+	cInvenSlot which_item = univ.party[pc_num].has_abil_equip(eItemAbil::LOCKPICKS);
+	if(!which_item) {
 		add_string_to_buf("  Need lockpick equipped.");
 		return;
 	}
 	
-	r1 = get_ran(1,1,100) + univ.party[pc_num].items[which_item].abil_data[0] * 7;
+	r1 = get_ran(1,1,100) + which_item->abil_data[0] * 7;
 	
 	if(r1 < 75)
 		will_break = true;
 	
 	r1 = get_ran(1,1,100) - 5 * univ.party[pc_num].stat_adj(eSkill::DEXTERITY) + univ.town.difficulty * 7
-		- 5 * univ.party[pc_num].skill(eSkill::LOCKPICKING) - univ.party[pc_num].items[which_item].abil_data[0] * 7;
+		- 5 * univ.party[pc_num].skill(eSkill::LOCKPICKING) - which_item->abil_data[0] * 7;
 	
 	// Nimble?
 	if(univ.party[pc_num].traits[eTrait::NIMBLE])
 		r1 -= 8;
 	
-	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING) < univ.party[pc_num].items.size())
+	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING))
 		r1 = r1 - 12;
 	
 	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
@@ -1178,7 +1178,7 @@ void pick_lock(location where,short pc_num) {
 		add_string_to_buf("  Didn't work.");
 		if(will_break) {
 			add_string_to_buf("  Pick breaks.");
-			univ.party[pc_num].remove_charge(which_item);
+			univ.party[pc_num].remove_charge(which_item.slot);
 			if(stat_window == pc_num)
 				put_item_screen(stat_window);
 		}

@@ -33,6 +33,21 @@ enum {
 };
 
 class cParty;
+class cPlayer;
+
+struct cInvenSlot {
+	unsigned int slot;
+	explicit cInvenSlot(cPlayer& owner) : slot(std::numeric_limits<unsigned int>::max()), owner(owner) {}
+	cInvenSlot(cPlayer& owner, int slot) : slot(slot), owner(owner) {}
+	explicit operator bool() const;
+	bool operator !() const;
+	cItem* operator->();
+	const cItem* operator->() const;
+	cItem& operator*();
+	const cItem& operator*() const;
+private:
+	cPlayer& owner;
+};
 
 class cPlayer : public iLiving {
 	cParty* party;
@@ -54,7 +69,7 @@ public:
 	std::bitset<62> priest_spells;
 	std::bitset<62> mage_spells;
 	pic_num_t which_graphic;
-	short weap_poisoned;
+	cInvenSlot weap_poisoned;
 	// HACK: This is only really marked mutable so that I can use operator[] from const methods
 	mutable std::map<eTrait,bool> traits;
 	eRace race;
@@ -101,13 +116,16 @@ public:
 	auto get_weapons() -> std::pair<decltype(items)::const_iterator, decltype(items)::const_iterator>;
 	void take_item(int which_item);
 	void remove_charge(int which_item);
-	short has_space() const;
+	const cInvenSlot has_space() const;
+	cInvenSlot has_space();
 	short max_weight() const;
 	short cur_weight() const;
 	short free_weight() const;
 	short get_prot_level(eItemAbil abil, short dat = -1) const;
-	short has_abil_equip(eItemAbil abil, short dat = -1) const;
-	short has_abil(eItemAbil abil, short dat = -1) const;
+	const cInvenSlot has_abil_equip(eItemAbil abil, short dat = -1) const;
+	cInvenSlot has_abil_equip(eItemAbil abil, short dat = -1);
+	const cInvenSlot has_abil(eItemAbil abil, short dat = -1) const;
+	cInvenSlot has_abil(eItemAbil abil, short dat = -1);
 	short skill(eSkill skill) const;
 	short stat_adj(eSkill skill) const;
 	eBuyStatus ok_to_buy(short cost,cItem item) const;
