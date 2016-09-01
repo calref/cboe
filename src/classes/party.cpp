@@ -503,14 +503,14 @@ bool cParty::take_abil(eItemAbil abil, short dat) {
 bool cParty::check_class(unsigned int item_class,bool take) {
 	if(item_class == 0)
 		return false;
-	for(short i = 0; i < 6; i++)
-		if(adven[i]->main_status == eMainStatus::ALIVE)
-			for(short j = 23; j >= 0; j--)
-				if(adven[i]->items[j].variety != eItemType::NO_ITEM && (adven[i]->items[j].special_class == item_class)) {
+	for(auto& pc : *this)
+		if(pc.main_status == eMainStatus::ALIVE)
+			for(short i = 0; i < pc.items.size(); i++)
+				if(pc.items[i].variety != eItemType::NO_ITEM && pc.items[i].special_class == item_class) {
 					if(take) {
-						if(adven[i]->items[j].charges > 1)
-							adven[i]->items[j].charges--;
-						else adven[i]->take_item(j);
+						if(pc.items[i].charges > 1)
+							pc.items[i].charges--;
+						else pc.take_item(i);
 					}
 					return true;
 				}
