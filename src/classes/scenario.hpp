@@ -57,7 +57,6 @@ public:
 		cItemStorage();
 		cItemStorage& operator = (legacy::item_storage_shortcut_type& old);
 	};
-	cScenario& operator=(const cScenario& other) = default;
 	void destroy_terrain();
 public:
 	unsigned short difficulty,intro_pic,default_ground;
@@ -120,10 +119,13 @@ public:
 	cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,const std::vector<eItemType>& types,bool allow_junk_treasure=false);
 	
 	void reset_version();
-	cScenario& operator=(cScenario&& other);
-	cScenario(cScenario&) = delete;
 	explicit cScenario();
 	~cScenario();
+	// Copy-and-swap
+	void swap(cScenario& other);
+	cScenario(const cScenario& other);
+	cScenario(cScenario&& other);
+	cScenario& operator=(cScenario other);
 };
 
 std::istream& operator>> (std::istream& in, eContentRating& rating);

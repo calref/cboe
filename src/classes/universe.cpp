@@ -899,6 +899,87 @@ bool cCurOut::is_road(int x, int y) {
 
 cUniverse::cUniverse(long party_type) : party(party_type), out(*this), town(*this) {}
 
+cUniverse::cUniverse(const cUniverse& other)
+	: strbuf(other.strbuf)
+	, extrabufs(other.extrabufs)
+	, cur_pc(other.cur_pc)
+	, scenario(other.scenario)
+	, party(other.party)
+	, stored_pcs(other.stored_pcs)
+	, town(*this)
+	, out(*this)
+	, file(other.file)
+	, debug_mode(other.debug_mode)
+	, ghost_mode(other.ghost_mode)
+	, node_step_through(other.node_step_through)
+{
+	for(auto& p : stored_pcs) {
+		p.second = new cPlayer(*p.second);
+	}
+	town.copy(other.town);
+	out.copy(other.out);
+}
+
+cUniverse::cUniverse(cUniverse&& other) : town(*this), out(*this) {
+	swap(other);
+}
+
+cUniverse& cUniverse::operator=(cUniverse other) {
+	swap(other);
+	return *this;
+}
+
+void cUniverse::swap(cUniverse& other) {
+	party.swap(other.party);
+	town.swap(other.town);
+	out.swap(other.out);
+	scenario.swap(other.scenario);
+	std::swap(stored_pcs, other.stored_pcs);
+	std::swap(file, other.file);
+	std::swap(debug_mode, other.debug_mode);
+	std::swap(ghost_mode, other.ghost_mode);
+	std::swap(node_step_through, other.node_step_through);
+	std::swap(cur_pc, other.cur_pc);
+	std::swap(strbuf, other.strbuf);
+	std::swap(extrabufs, other.extrabufs);
+}
+
+void cCurOut::copy(const cCurOut& other) {
+	memcpy(expl, other.expl, sizeof(expl));
+	memcpy(out, other.out, sizeof(out));
+	memcpy(out_e, other.out_e, sizeof(out_e));
+}
+
+void cCurOut::swap(cCurOut& other) {
+	cCurOut temp(univ);
+	temp.copy(other);
+	other.copy(*this);
+	copy(temp);
+}
+
+void cCurTown::copy(const cCurTown& other) {
+	cur_talk_loaded = other.cur_talk_loaded;
+	quickfire_present = other.quickfire_present;
+	belt_present = other.belt_present;
+	difficulty = other.difficulty;
+	monst = other.monst;
+	items = other.items;
+	memcpy(fields, other.fields, sizeof(fields));
+}
+
+void cCurTown::swap(cCurTown& other) {
+	std::swap(cur_talk_loaded, other.cur_talk_loaded);
+	std::swap(quickfire_present, other.quickfire_present);
+	std::swap(belt_present, other.belt_present);
+	std::swap(difficulty, other.difficulty);
+	monst.swap(other.monst);
+	std::swap(items, other.items);
+	unsigned long temp[64][64];
+	memcpy(temp, other.fields, sizeof(fields));
+	memcpy(other.fields, fields, sizeof(fields));
+	memcpy(fields, temp, sizeof(fields));
+}
+
 void cUniverse::check_monst(cMonster& monst) {
 	if(monst.see_spec == -2) return; // Avoid infinite recursion
 	monst.see_spec = -2;

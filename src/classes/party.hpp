@@ -213,6 +213,11 @@ public:
 	typedef std::vector<cConvers>::iterator talkIter;
 	cParty(long party_preset = 'dflt');
 	~cParty();
+	// Copy-and-swap
+	void swap(cParty& other);
+	cParty(const cParty& other);
+	cParty(cParty&& other);
+	cParty& operator=(cParty other);
 };
 
 bool operator==(const cParty::cConvers& one, const cParty::cConvers& two);

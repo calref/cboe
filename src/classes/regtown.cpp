@@ -390,6 +390,84 @@ cTinyTown::cTinyTown(cScenario& scenario) : cTown(scenario) {
 	init_start();
 }
 
+cBigTown::cBigTown(const cBigTown& other) : cTown(other) {
+	memcpy(ter, other.ter, sizeof(ter));
+	memcpy(light, other.light, sizeof(light));
+}
+
+cBigTown::cBigTown(cBigTown&& other) : cTown(*other.scenario) {
+	swap(other);
+}
+
+cMedTown::cMedTown(const cMedTown& other) : cTown(other) {
+	memcpy(ter, other.ter, sizeof(ter));
+	memcpy(light, other.light, sizeof(light));
+}
+
+cMedTown::cMedTown(cMedTown&& other) : cTown(*other.scenario) {
+	swap(other);
+}
+
+cTinyTown::cTinyTown(const cTinyTown& other) : cTown(other) {
+	memcpy(ter, other.ter, sizeof(ter));
+	memcpy(light, other.light, sizeof(light));
+}
+
+cTinyTown::cTinyTown(cTinyTown&& other) : cTown(*other.scenario) {
+	swap(other);
+}
+
+void cBigTown::swap(cTown& with) {
+	cTown::swap(with);
+	cBigTown& other = dynamic_cast<cBigTown&>(with);
+	ter_num_t temp_ter[64][64];
+	memcpy(temp_ter, ter, sizeof(ter));
+	memcpy(ter, other.ter, sizeof(ter));
+	memcpy(other.ter, temp_ter, sizeof(ter));
+	unsigned char temp_light[8][64];
+	memcpy(temp_light, light, sizeof(light));
+	memcpy(light, other.light, sizeof(light));
+	memcpy(other.light, temp_light, sizeof(light));
+}
+
+void cMedTown::swap(cTown& with) {
+	cTown::swap(with);
+	cMedTown& other = dynamic_cast<cMedTown&>(with);
+	ter_num_t temp_ter[48][48];
+	memcpy(temp_ter, ter, sizeof(ter));
+	memcpy(ter, other.ter, sizeof(ter));
+	memcpy(other.ter, temp_ter, sizeof(ter));
+	unsigned char temp_light[6][48];
+	memcpy(temp_light, light, sizeof(light));
+	memcpy(light, other.light, sizeof(light));
+	memcpy(other.light, temp_light, sizeof(light));
+}
+
+void cTinyTown::swap(cTown& with) {
+	cTown::swap(with);
+	cTinyTown& other = dynamic_cast<cTinyTown&>(with);
+	ter_num_t temp_ter[32][32];
+	memcpy(temp_ter, ter, sizeof(ter));
+	memcpy(ter, other.ter, sizeof(ter));
+	memcpy(other.ter, temp_ter, sizeof(ter));
+	unsigned char temp_light[4][32];
+	memcpy(temp_light, light, sizeof(light));
+	memcpy(light, other.light, sizeof(light));
+	memcpy(other.light, temp_light, sizeof(light));
+}
+
+cBigTown* cBigTown::clone() {
+	return new cBigTown(*this);
+}
+
+cMedTown* cMedTown::clone() {
+	return new cMedTown(*this);
+}
+
+cTinyTown* cTinyTown::clone() {
+	return new cTinyTown(*this);
+}
+
 size_t cBigTown::max_dim() const {
 	return 64;
 }

@@ -115,6 +115,13 @@ public:
 	void reattach(cScenario& to);
 	virtual void writeTerrainTo(std::ostream& file) = 0;
 	virtual void readTerrainFrom(std::istream& file) = 0;
+	virtual cTown* clone() = 0;
+	// Copy-and-swap
+	// However, it's protected so that it can only be used by the clone implementations
+protected:
+	virtual void swap(cTown& other);
+	cTown(const cTown& other);
+	cTown(cTown&& other);
 };
 
 std::ostream& operator<< (std::ostream& out, eLighting light);

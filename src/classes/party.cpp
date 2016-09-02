@@ -53,6 +53,144 @@ cParty::~cParty() {
 	}
 }
 
+cParty::cParty(const cParty& other)
+	: iLiving(other)
+	, next_pc_id(other.next_pc_id)
+	, age(other.age)
+	, gold(other.gold)
+	, food(other.food)
+	, hostiles_present(other.hostiles_present)
+	, easy_mode(other.easy_mode)
+	, less_wm(other.less_wm)
+	, magic_ptrs(other.magic_ptrs)
+	, light_level(other.light_level)
+	, outdoor_corner(other.outdoor_corner)
+	, i_w_c(other.i_w_c)
+	, out_loc(other.out_loc)
+	, town_loc(other.town_loc)
+	, loc_in_sec(other.loc_in_sec)
+	, town_num(other.town_num)
+	, boats(other.boats)
+	, horses(other.horses)
+	, creature_save(other.creature_save)
+	, in_boat(other.in_boat)
+	, in_horse(other.in_horse)
+	, out_c(other.out_c)
+	, magic_store_items(other.magic_store_items)
+	, store_limited_stock(other.store_limited_stock)
+	, job_banks(other.job_banks)
+	, imprisoned_monst(other.imprisoned_monst)
+	, m_noted(other.m_noted)
+	, m_seen(other.m_seen)
+	, journal(other.journal)
+	, special_notes(other.special_notes)
+	, talk_save(other.talk_save)
+	, status(other.status)
+	, quest_status(other.quest_status)
+	, quest_start(other.quest_start)
+	, quest_source(other.quest_source)
+	, left_at(other.left_at)
+	, left_in(other.left_in)
+	, direction(other.direction)
+	, at_which_save_slot(other.at_which_save_slot)
+	, alchemy(other.alchemy)
+	, key_times(other.key_times)
+	, party_event_timers(other.party_event_timers)
+	, spec_items(other.spec_items)
+	, total_m_killed(other.total_m_killed)
+	, total_dam_done(other.total_dam_done)
+	, total_xp_gained(other.total_xp_gained)
+	, total_dam_taken(other.total_dam_taken)
+	, scen_name(other.scen_name)
+	, stored_items(other.stored_items)
+	, summons(other.summons)
+	, scen_won(other.scen_won)
+	, scen_played(other.scen_played)
+	, campaign_flags(other.campaign_flags)
+	, pointers(other.pointers)
+{
+	memcpy(stuff_done, other.stuff_done, sizeof(stuff_done));
+	memcpy(setup, other.setup, sizeof(setup));
+	for(int i = 0; i < 6; i++) {
+		adven[i] = new cPlayer(*other.adven[i]);
+		adven[i]->join_party(*this);
+	}
+}
+
+cParty::cParty(cParty&& other) : cParty() {
+	swap(other);
+}
+
+cParty& cParty::operator=(cParty other) {
+	swap(other);
+	return *this;
+}
+
+void cParty::swap(cParty& other) {
+	std::swap(next_pc_id, other.next_pc_id);
+	std::swap(age, other.age);
+	std::swap(gold, other.gold);
+	std::swap(food, other.food);
+	std::swap(hostiles_present, other.hostiles_present);
+	std::swap(easy_mode, other.easy_mode);
+	std::swap(less_wm, other.less_wm);
+	std::swap(magic_ptrs, other.magic_ptrs);
+	std::swap(light_level, other.light_level);
+	std::swap(outdoor_corner, other.outdoor_corner);
+	std::swap(i_w_c, other.i_w_c);
+	std::swap(out_loc, other.out_loc);
+	std::swap(town_loc, other.town_loc);
+	std::swap(loc_in_sec, other.loc_in_sec);
+	std::swap(town_num, other.town_num);
+	std::swap(boats, other.boats);
+	std::swap(horses, other.horses);
+	std::swap(creature_save, other.creature_save);
+	std::swap(in_boat, other.in_boat);
+	std::swap(in_horse, other.in_horse);
+	std::swap(out_c, other.out_c);
+	std::swap(magic_store_items, other.magic_store_items);
+	std::swap(store_limited_stock, other.store_limited_stock);
+	std::swap(job_banks, other.job_banks);
+	std::swap(imprisoned_monst, other.imprisoned_monst);
+	std::swap(m_noted, other.m_noted);
+	std::swap(m_seen, other.m_seen);
+	std::swap(journal, other.journal);
+	std::swap(special_notes, other.special_notes);
+	std::swap(talk_save, other.talk_save);
+	std::swap(status, other.status);
+	std::swap(quest_status, other.quest_status);
+	std::swap(quest_start, other.quest_start);
+	std::swap(quest_source, other.quest_source);
+	std::swap(left_at, other.left_at);
+	std::swap(left_in, other.left_in);
+	std::swap(direction, other.direction);
+	std::swap(at_which_save_slot, other.at_which_save_slot);
+	std::swap(alchemy, other.alchemy);
+	std::swap(key_times, other.key_times);
+	std::swap(party_event_timers, other.party_event_timers);
+	std::swap(spec_items, other.spec_items);
+	std::swap(total_m_killed, other.total_m_killed);
+	std::swap(total_dam_done, other.total_dam_done);
+	std::swap(total_xp_gained, other.total_xp_gained);
+	std::swap(total_dam_taken, other.total_dam_taken);
+	std::swap(scen_name, other.scen_name);
+	std::swap(adven, other.adven);
+	std::swap(stored_items, other.stored_items);
+	std::swap(summons, other.summons);
+	std::swap(scen_won, other.scen_won);
+	std::swap(scen_played, other.scen_played);
+	std::swap(campaign_flags, other.campaign_flags);
+	std::swap(pointers, other.pointers);
+	unsigned char temp_sdf[350][50];
+	memcpy(temp_sdf, stuff_done, sizeof(stuff_done));
+	memcpy(stuff_done, other.stuff_done, sizeof(stuff_done));
+	memcpy(other.stuff_done, temp_sdf, sizeof(stuff_done));
+	unsigned short temp_setup[4][64][64];
+	memcpy(temp_setup, setup, sizeof(setup));
+	memcpy(setup, other.setup, sizeof(setup));
+	memcpy(other.setup, temp_setup, sizeof(setup));
+}
+
 void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 	age = old.age;
 	gold = old.gold;

@@ -159,6 +159,12 @@ public:
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 	virtual ~cPlayer() = default;
+	// Copy-and-swap
+	void swap(cPlayer& other);
+	cPlayer(const cPlayer& other);
+	cPlayer(cPlayer&& other);
+	// For now, not assignable because of an issue of how to handle the unique_id
+	cPlayer& operator=(cPlayer other) = delete;
 };
 
 void operator += (eMainStatus& stat, eMainStatus othr);

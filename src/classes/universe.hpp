@@ -121,6 +121,16 @@ public:
 	void readFrom(std::istream& file);
 	
 	~cCurTown();
+	// It's not directly copyable due to the cUniverse reference, which must always point to the cUniverse that contains it.
+	// The cUniverse copy constructor is thus responsible for performing the copy.
+	cCurTown(const cCurTown&) = delete;
+	cCurTown& operator=(const cCurTown&) = delete;
+	// Not movable for similar reasons
+	cCurTown(const cCurTown&& other) = delete;
+	cCurTown& operator=(const cCurTown&& other) = delete;
+	// This implements the actual copy/move.
+	void copy(const cCurTown& other);
+	void swap(cCurTown& other);
 };
 
 class cCurOut {
@@ -143,12 +153,23 @@ public:
 	void readFrom(std::istream& file);
 	cOutdoors* operator->();
 	explicit cCurOut(cUniverse& univ);
+	// It's not directly copyable due to the cUniverse reference, which must always point to the cUniverse that contains it.
+	// The cUniverse copy constructor is thus responsible for performing the copy.
+	cCurOut(const cCurOut&) = delete;
+	cCurOut& operator=(const cCurOut&) = delete;
+	// Not movable for similar reasons
+	cCurOut(const cCurOut&& other) = delete;
+	cCurOut& operator=(const cCurOut&& other) = delete;
+	// This implements the actual copy/move.
+	void copy(const cCurOut& other);
+	void swap(cCurOut& other);
 };
 
 enum eTargetType {TARG_ANY, TARG_PC, TARG_MONST};
 
 class cUniverse{
 	template<typename T> using update_info = std::set<T*>;
+	// All these maps are transient data that doesn't need to be saved
 	std::map<pic_num_t, update_info<cItem>> update_items;
 	std::map<pic_num_t, update_info<cMonster>> update_monsters;
 	std::map<pic_num_t, update_info<cPlayer>> update_pcs;
@@ -157,6 +178,7 @@ class cUniverse{
 	pic_num_t addGraphic(pic_num_t pic, ePicType type);
 	void check_monst(cMonster& monst);
 	void check_item(cItem& item);
+	// The string buffer currently isn't saved
 	std::string strbuf;
 	std::map<int,std::string> extrabufs;
 	cItem get_random_store_item(int loot_type, bool allow_junk_treasure);
@@ -193,6 +215,11 @@ public:
 	short difficulty_adjust() const;
 	explicit cUniverse(long party_type = 'dflt');
 	~cUniverse();
+	// Copy-and-swap
+	void swap(cUniverse& other);
+	cUniverse(const cUniverse& other);
+	cUniverse(cUniverse&& other);
+	cUniverse& operator=(cUniverse other);
 	static void(* print_result)(std::string);
 };
 

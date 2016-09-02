@@ -35,6 +35,7 @@ public:
 	cPopulation() : which_town(200) {}
 	// Apparently Visual Studio needs this to work
 	cPopulation& operator=(const cPopulation& other) = default;
+	void swap(cPopulation& other);
 };
 
 #endif

@@ -46,18 +46,6 @@ void cScenario::destroy_terrain() {
 	}
 }
 
-cScenario& cScenario::operator=(cScenario&& other) {
-	// If self-assignment, do nothing.
-	if(this == &other) return *this;
-	// First, free any held pointers.
-	destroy_terrain();
-	// Resize the outdoors to ensure the assigned outdoors fits
-	outdoors.resize(other.outdoors.width(), other.outdoors.height());
-	// Then forward to the default assignment operator.
-	// Use const_cast to ensure the right overload is selected.
-	return *this = const_cast<const cScenario&>(other);
-}
-
 cScenario::cScenario() {
 	std::string temp_str;
 	
@@ -92,6 +80,122 @@ cScenario::cScenario() {
 	who_wrote[1] = "Who wrote 2";
 	contact_info[0] = "Name not given";
 	contact_info[1] = "Contact info";
+}
+
+cScenario::cScenario(const cScenario& other)
+	: difficulty(other.difficulty)
+	, intro_pic(other.intro_pic)
+	, default_ground(other.default_ground)
+	, bg_out(other.bg_out)
+	, bg_fight(other.bg_fight)
+	, bg_town(other.bg_town)
+	, bg_dungeon(other.bg_dungeon)
+	, intro_mess_pic(other.intro_mess_pic)
+	, where_start(other.where_start)
+	, out_sec_start(other.out_sec_start)
+	, out_start(other.out_start)
+	, which_town_start(other.which_town_start)
+	, init_spec(other.init_spec)
+	, town_mods(other.town_mods)
+	, store_item_rects(other.store_item_rects)
+	, store_item_towns(other.store_item_towns)
+	, special_items(other.special_items)
+	, quests(other.quests)
+	, shops(other.shops)
+	, uses_custom_graphics(other.uses_custom_graphics)
+	, rating(other.rating)
+	, custom_graphics(other.custom_graphics)
+	, scen_monsters(other.scen_monsters)
+	, boats(other.boats)
+	, horses(other.horses)
+	, ter_types(other.ter_types)
+	, scenario_timers(other.scenario_timers)
+	, scen_specials(other.scen_specials)
+	, storage_shortcuts(other.storage_shortcuts)
+	, last_out_edited(other.last_out_edited)
+	, last_town_edited(other.last_town_edited)
+	, format(other.format)
+	, campaign_id(other.campaign_id)
+	, scen_items(other.scen_items)
+	, scen_name(other.scen_name)
+	, who_wrote{other.who_wrote[0], other.who_wrote[1]}
+	, contact_info{other.contact_info[0], other.contact_info[1]}
+	, intro_strs(other.intro_strs)
+	, journal_strs(other.journal_strs)
+	, spec_strs(other.spec_strs)
+	, snd_names(other.snd_names)
+	, adjust_diff(other.adjust_diff)
+	, is_legacy(other.is_legacy)
+	, scen_file(other.scen_file)
+	, towns(other.towns.size())
+	, outdoors(other.outdoors.width(), other.outdoors.height())
+{
+	// Copy towns and sectors
+	for(size_t i = 0; i < towns.size(); i++)
+		towns[i] = other.towns[i]->clone();
+	for(size_t i = 0; i < outdoors.width(); i++)
+		for(size_t j = 0; j < outdoors.height(); j++)
+			outdoors[i][j] = new cOutdoors(*other.outdoors[i][j]);
+}
+
+cScenario::cScenario(cScenario&& other) {
+	swap(other);
+}
+
+cScenario& cScenario::operator=(cScenario other) {
+	swap(other);
+	return *this;
+}
+
+void cScenario::swap(cScenario& other) {
+	std::swap(difficulty, other.difficulty);
+	std::swap(intro_pic, other.intro_pic);
+	std::swap(default_ground, other.default_ground);
+	std::swap(bg_out, other.bg_out);
+	std::swap(bg_fight, other.bg_fight);
+	std::swap(bg_town, other.bg_town);
+	std::swap(bg_dungeon, other.bg_dungeon);
+	std::swap(intro_mess_pic, other.intro_mess_pic);
+	std::swap(where_start, other.where_start);
+	std::swap(out_sec_start, other.out_sec_start);
+	std::swap(out_start, other.out_start);
+	std::swap(which_town_start, other.which_town_start);
+	std::swap(init_spec, other.init_spec);
+	std::swap(town_mods, other.town_mods);
+	std::swap(store_item_rects, other.store_item_rects);
+	std::swap(store_item_towns, other.store_item_towns);
+	std::swap(special_items, other.special_items);
+	std::swap(quests, other.quests);
+	std::swap(shops, other.shops);
+	std::swap(uses_custom_graphics, other.uses_custom_graphics);
+	std::swap(rating, other.rating);
+	std::swap(custom_graphics, other.custom_graphics);
+	std::swap(scen_monsters, other.scen_monsters);
+	std::swap(boats, other.boats);
+	std::swap(horses, other.horses);
+	std::swap(ter_types, other.ter_types);
+	std::swap(scenario_timers, other.scenario_timers);
+	std::swap(scen_specials, other.scen_specials);
+	std::swap(storage_shortcuts, other.storage_shortcuts);
+	std::swap(last_out_edited, other.last_out_edited);
+	std::swap(last_town_edited, other.last_town_edited);
+	std::swap(format, other.format);
+	std::swap(campaign_id, other.campaign_id);
+	std::swap(scen_items, other.scen_items);
+	std::swap(scen_name, other.scen_name);
+	std::swap(who_wrote[0], other.who_wrote[0]);
+	std::swap(who_wrote[1], other.who_wrote[1]);
+	std::swap(contact_info[0], other.contact_info[0]);
+	std::swap(contact_info[1], other.contact_info[1]);
+	std::swap(intro_strs, other.intro_strs);
+	std::swap(journal_strs, other.journal_strs);
+	std::swap(spec_strs, other.spec_strs);
+	std::swap(snd_names, other.snd_names);
+	std::swap(adjust_diff, other.adjust_diff);
+	std::swap(is_legacy, other.is_legacy);
+	std::swap(scen_file, other.scen_file);
+	std::swap(outdoors, other.outdoors);
+	std::swap(towns, other.towns);
 }
 
 cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {

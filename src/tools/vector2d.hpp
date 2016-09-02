@@ -162,6 +162,7 @@ public:
 		return data.empty();
 	}
 	vector2d() : w(0), h(0) {}
+	vector2d(size_t w, size_t h) : w(w), h(h) {}
 };
 
 #endif

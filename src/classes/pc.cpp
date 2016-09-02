@@ -1099,6 +1099,65 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 	}
 }
 
+cPlayer::cPlayer(const cPlayer& other)
+	: iLiving(other)
+	, party(other.party)
+	, main_status(other.main_status)
+	, name(other.name)
+	, skills(other.skills)
+	, max_health(other.max_health)
+	, cur_health(other.cur_health)
+	, max_sp(other.max_sp)
+	, cur_sp(other.cur_sp)
+	, experience(other.experience)
+	, skill_pts(other.skill_pts)
+	, level(other.level)
+	, items(other.items)
+	, equip(other.equip)
+	, priest_spells(other.priest_spells)
+	, mage_spells(other.mage_spells)
+	, which_graphic(other.which_graphic)
+	, weap_poisoned(*this, other.weap_poisoned.slot)
+	, traits(other.traits)
+	, race(other.race)
+	, unique_id(party->next_pc_id++)
+	, last_cast(other.last_cast)
+	, combat_pos(other.combat_pos)
+	, parry(other.parry)
+	, last_attacked(nullptr)
+{}
+
+cPlayer::cPlayer(cPlayer&& other) : weap_poisoned(*this, other.weap_poisoned.slot) {
+	swap(other);
+}
+
+void cPlayer::swap(cPlayer& other) {
+	std::swap(party, other.party);
+	std::swap(main_status, other.main_status);
+	std::swap(name, other.name);
+	std::swap(skills, other.skills);
+	std::swap(max_health, other.max_health);
+	std::swap(cur_health, other.cur_health);
+	std::swap(max_sp, other.max_sp);
+	std::swap(cur_sp, other.cur_sp);
+	std::swap(experience, other.experience);
+	std::swap(skill_pts, other.skill_pts);
+	std::swap(level, other.level);
+	std::swap(items, other.items);
+	std::swap(equip, other.equip);
+	std::swap(priest_spells, other.priest_spells);
+	std::swap(mage_spells, other.mage_spells);
+	std::swap(which_graphic, other.which_graphic);
+	std::swap(weap_poisoned.slot, other.weap_poisoned.slot);
+	std::swap(traits, other.traits);
+	std::swap(race, other.race);
+	std::swap(unique_id, other.unique_id);
+	std::swap(last_cast, other.last_cast);
+	std::swap(combat_pos, other.combat_pos);
+	std::swap(parry, other.parry);
+	std::swap(last_attacked, other.last_attacked);
+}
+
 void operator += (eMainStatus& stat, eMainStatus othr){
 	if(othr == eMainStatus::SPLIT)
 		stat = (eMainStatus) (10 + (int)stat);

@@ -67,6 +67,12 @@ void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& bas
 	dudes[n].summon_time = 0;
 }
 
+void cPopulation::swap(cPopulation& other) {
+	std::swap(dudes, other.dudes);
+	std::swap(which_town, other.which_town);
+	std::swap(hostile, other.hostile);
+}
+
 void cPopulation::readFrom(std::istream& in, size_t n) {
 	if(n >= dudes.size()) dudes.resize(n + 1);
 	dudes[n].readFrom(in);

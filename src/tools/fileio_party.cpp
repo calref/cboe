@@ -131,7 +131,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	return true;
 }
 
-bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool must_port){
+bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restore, bool in_scen, bool maps_there, bool must_port){
 	std::ifstream fin(file_to_load.c_str(), std::ios_base::binary);
 	fin.seekg(3*sizeof(short),std::ios_base::beg); // skip the header, which is 6 bytes in the old format
 	
@@ -192,7 +192,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 			
 			len = (long) sizeof(legacy::town_item_list);
 			fin.read((char*)&t_i, len);
-		}else univ.party.town_num = 200;
+		}
 		
 		// LOAD STORED ITEMS
 		for(int i = 0; i < 3; i++) {
@@ -219,8 +219,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 	
 	fin.close();
 	
-	univ.~cUniverse();
-	new(&univ) cUniverse('    ');
+	cUniverse univ;
 	
 	if(in_scen){
 		fs::path path;
@@ -248,6 +247,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		univ.import_legacy(town_maps);
 		univ.import_legacy(o_maps);
 		univ.town.import_legacy(sfx, misc_i);
+		if(!town_restore) univ.party.town_num = 200;
 		// Check items in crates/barrels
 		for(int i = 0; i < univ.town->max_dim(); i++) {
 			for(int j = 0; j < univ.town->max_dim(); j++) {
@@ -261,18 +261,18 @@ bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bo
 		}
 	}
 	
+	real_univ = std::move(univ);
 	return true;
 }
 
 extern fs::path scenDir;
-bool load_party_v2(fs::path file_to_load, cUniverse& univ){
+bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 	igzstream zin(file_to_load.string().c_str());
 	tarball partyIn;
 	partyIn.readFrom(zin);
 	zin.close();
 	
-	univ.~cUniverse();
-	new(&univ) cUniverse('    ');
+	cUniverse univ;
 	
 	{ // Load main party data first
 		std::istream& fin = partyIn.getFile("save/party.txt");
@@ -375,6 +375,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& univ){
 		} else showWarning("There was an error loading the party custom graphics.");
 	}
 	
+	real_univ = std::move(univ);
 	return true;
 }
 

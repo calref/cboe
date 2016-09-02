@@ -34,6 +34,11 @@ public:
 	explicit cBigTown(cScenario& scenario);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
+	// Copy-and-swap
+	cBigTown* clone() override;
+	void swap(cTown& other) override;
+	cBigTown(const cBigTown& other);
+	cBigTown(cBigTown&& other);
 };
 
 class cMedTown : public virtual cTown { // formerly ave_tr_type
@@ -48,6 +53,11 @@ public:
 	explicit cMedTown(cScenario& scenario);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
+	// Copy-and-swap
+	cMedTown* clone() override;
+	void swap(cTown& other) override;
+	cMedTown(const cMedTown& other);
+	cMedTown(cMedTown&& other);
 };
 
 class cTinyTown : public virtual cTown { // formerly tiny_tr_type
@@ -62,6 +72,11 @@ public:
 	explicit cTinyTown(cScenario& scenario);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
+	// Copy-and-swap
+	cTinyTown* clone() override;
+	void swap(cTown& other) override;
+	cTinyTown(const cTinyTown& other);
+	cTinyTown(cTinyTown&& other);
 };
 
 #endif

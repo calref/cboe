@@ -112,6 +112,88 @@ cTown::cTown(cScenario& scenario) : scenario(&scenario) {
 	}
 }
 
+cTown::cTown(const cTown& other)
+	: town_chop_time(other.town_chop_time)
+	, town_chop_key(other.town_chop_key)
+	, bg_town(other.bg_town)
+	, bg_fight(other.bg_fight)
+	, wandering(other.wandering)
+	, wandering_locs(other.wandering_locs)
+	, special_locs(other.special_locs)
+	, sign_locs(other.sign_locs)
+	, lighting_type(other.lighting_type)
+	, start_locs(other.start_locs)
+	, exits(other.exits)
+	, in_town_rect(other.in_town_rect)
+	, preset_items(other.preset_items)
+	, creatures(other.creatures)
+	, max_num_monst(other.max_num_monst)
+	, preset_fields(other.preset_fields)
+	, spec_on_entry(other.spec_on_entry)
+	, spec_on_entry_if_dead(other.spec_on_entry_if_dead)
+	, spec_on_hostile(other.spec_on_hostile)
+	, timers(other.timers)
+	, specials(other.specials)
+	, strong_barriers(other.strong_barriers)
+	, defy_mapping(other.defy_mapping)
+	, defy_scrying(other.defy_scrying)
+	, is_hidden(other.is_hidden)
+	, has_tavern(other.has_tavern)
+	, difficulty(other.difficulty)
+	, town_name(other.town_name)
+	, room_rect(other.room_rect)
+	, comment(other.comment)
+	, spec_strs(other.spec_strs)
+	, talking(other.talking)
+	, maps(other.maps)
+	, item_taken(other.item_taken)
+	, can_find(other.can_find)
+	, m_killed(other.m_killed)
+{}
+
+cTown::cTown(cTown&& other) {
+	swap(other);
+}
+
+void cTown::swap(cTown& other) {
+	std::swap(town_chop_time, other.town_chop_time);
+	std::swap(town_chop_key, other.town_chop_key);
+	std::swap(bg_town, other.bg_town);
+	std::swap(bg_fight, other.bg_fight);
+	std::swap(wandering, other.wandering);
+	std::swap(wandering_locs, other.wandering_locs);
+	std::swap(special_locs, other.special_locs);
+	std::swap(sign_locs, other.sign_locs);
+	std::swap(lighting_type, other.lighting_type);
+	std::swap(start_locs, other.start_locs);
+	std::swap(exits, other.exits);
+	std::swap(in_town_rect, other.in_town_rect);
+	std::swap(preset_items, other.preset_items);
+	std::swap(creatures, other.creatures);
+	std::swap(max_num_monst, other.max_num_monst);
+	std::swap(preset_fields, other.preset_fields);
+	std::swap(spec_on_entry, other.spec_on_entry);
+	std::swap(spec_on_entry_if_dead, other.spec_on_entry_if_dead);
+	std::swap(spec_on_hostile, other.spec_on_hostile);
+	std::swap(timers, other.timers);
+	std::swap(specials, other.specials);
+	std::swap(strong_barriers, other.strong_barriers);
+	std::swap(defy_mapping, other.defy_mapping);
+	std::swap(defy_scrying, other.defy_scrying);
+	std::swap(is_hidden, other.is_hidden);
+	std::swap(has_tavern, other.has_tavern);
+	std::swap(difficulty, other.difficulty);
+	std::swap(town_name, other.town_name);
+	std::swap(room_rect, other.room_rect);
+	std::swap(comment, other.comment);
+	std::swap(spec_strs, other.spec_strs);
+	std::swap(talking, other.talking);
+	std::swap(maps, other.maps);
+	std::swap(item_taken, other.item_taken);
+	std::swap(can_find, other.can_find);
+	std::swap(m_killed, other.m_killed);
+}
+
 void cTown::init_start() {
 	short s = this->max_dim();
 	start_locs[0].x = s / 2;
