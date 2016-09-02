@@ -223,7 +223,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	
 	if(in_scen){
 		fs::path path;
-		path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
+		path = progDir/"Blades of Exile Scenarios"/store_party.scen_name;
 		
 		if(!load_scenario(path, univ.scenario))
 			return false;
@@ -247,18 +247,18 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 		univ.import_legacy(town_maps);
 		univ.import_legacy(o_maps);
 		univ.town.import_legacy(sfx, misc_i);
-		if(!town_restore) univ.party.town_num = 200;
-		// Check items in crates/barrels
-		for(int i = 0; i < univ.town->max_dim(); i++) {
-			for(int j = 0; j < univ.town->max_dim(); j++) {
-				if(univ.town.is_barrel(i,j) || univ.town.is_crate(i,j)) {
-					for(cItem item : univ.town.items) {
-						if(item.item_loc == loc(i,j) && item.contained)
-							item.held = true;
+		if(town_restore) // Check items in crates/barrels
+			for(int i = 0; i < univ.town->max_dim(); i++) {
+				for(int j = 0; j < univ.town->max_dim(); j++) {
+					if(univ.town.is_barrel(i,j) || univ.town.is_crate(i,j)) {
+						for(cItem item : univ.town.items) {
+							if(item.item_loc == loc(i,j) && item.contained)
+								item.held = true;
+						}
 					}
 				}
 			}
-		}
+		else univ.party.town_num = 200;
 	}
 	
 	real_univ = std::move(univ);

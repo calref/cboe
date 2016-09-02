@@ -192,6 +192,7 @@ void cParty::swap(cParty& other) {
 }
 
 void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
+	scen_name = old.scen_name;
 	age = old.age;
 	gold = old.gold;
 	food = old.food;
@@ -220,6 +221,8 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 		left_in = -1;
 	}
 	party_event_timers.reserve(30);
+	boats.resize(30);
+	horses.resize(30);
 	for(short i = 0; i < 30; i++){
 		boats[i].import_legacy(old.boats[i]);
 		horses[i].import_legacy(old.horses[i]);
@@ -274,7 +277,6 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 	total_dam_done = old.total_dam_done;
 	total_xp_gained = old.total_xp_gained;
 	total_dam_taken = old.total_dam_taken;
-	scen_name = old.scen_name;
 }
 
 void cParty::import_legacy(legacy::stored_items_list_type& old,short which_list){

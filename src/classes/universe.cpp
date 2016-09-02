@@ -63,7 +63,7 @@ void cCurTown::import_legacy(legacy::town_item_list& old){
 }
 
 void cUniverse::import_legacy(legacy::stored_town_maps_type& old){
-	for(int n = 0; n < 200; n++)
+	for(int n = 0; n < scenario.towns.size(); n++)
 		for(int i = 0; i < 64; i++)
 			for(int j = 0; j < 64; j++)
 				scenario.towns[n]->maps[j][i] = old.town_maps[n][i / 8][j] & (1 << (i % 8));
