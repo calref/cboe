@@ -27,6 +27,8 @@ void cTown::import_legacy(legacy::town_record_type& old){
 		exits[i].x = old.exit_locs[i].x;
 		exits[i].y = old.exit_locs[i].y;
 		exits[i].spec = old.exit_specs[i];
+		wandering_locs[i].x = old.wandering_locs[i].x;
+		wandering_locs[i].y = old.wandering_locs[i].y;
 		wandering[i].import_legacy(old.wandering[i]);
 	}
 	preset_fields.clear();
