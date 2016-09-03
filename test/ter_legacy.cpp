@@ -18,7 +18,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 		true, 17, 3, 'c', 0, 0, 0,
 	};
 	SECTION("Basic information") {
-		new_ter.append(old_ter);
+		new_ter.import_legacy(old_ter);
 		CHECK(new_ter.picture == 26);
 		CHECK(new_ter.blockage == eTerObstruct::BLOCK_MONSTERS);
 		CHECK(new_ter.trans_to_what == 12);
@@ -44,7 +44,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 			old_ter.special = 1;
 			old_ter.flag1 = 20;
 			old_ter.flag2 = 200;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::CHANGE_WHEN_STEP_ON);
 			CHECK(new_ter.flag1 == 20);
 			CHECK(new_ter.flag2 == -1);
@@ -53,7 +53,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 			old_ter.special = 2;
 			old_ter.flag1 = 3;
 			old_ter.flag2 = 6;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::DAMAGING);
 			CHECK(new_ter.flag1 == 3);
 			CHECK(new_ter.flag2 == 6);
@@ -63,7 +63,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 			old_ter.special = 3;
 			old_ter.flag1 = 3;
 			old_ter.flag2 = 6;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::DAMAGING);
 			CHECK(new_ter.flag1 == 3);
 			CHECK(new_ter.flag2 == 6);
@@ -73,7 +73,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 			old_ter.special = 4;
 			old_ter.flag1 = 3;
 			old_ter.flag2 = 6;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::DAMAGING);
 			CHECK(new_ter.flag1 == 3);
 			CHECK(new_ter.flag2 == 6);
@@ -83,7 +83,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 			old_ter.special = 5;
 			old_ter.flag1 = 8;
 			old_ter.flag2 = 75;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::DANGEROUS);
 			CHECK(new_ter.flag1 == 8);
 			CHECK(new_ter.flag2 == 75);
@@ -93,7 +93,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 			old_ter.special = 6;
 			old_ter.flag1 = 8;
 			old_ter.flag2 = 75;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::DANGEROUS);
 			CHECK(new_ter.flag1 == 8);
 			CHECK(new_ter.flag2 == 75);
@@ -101,7 +101,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 		}
 		SECTION("Crumbling") {
 			old_ter.special = 7;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::CRUMBLING);
 			CHECK(new_ter.flag1 == 0);
 			CHECK(new_ter.flag2 == 0);
@@ -109,7 +109,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 		SECTION("Lockable") {
 			old_ter.special = 8;
 			old_ter.flag1 = 20;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::LOCKABLE);
 			CHECK(new_ter.flag1 == 20);
 		}
@@ -117,7 +117,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 			old_ter.special = 9;
 			old_ter.flag1 = 20;
 			old_ter.flag2 = 10;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::UNLOCKABLE);
 			CHECK(new_ter.flag1 == 20);
 			CHECK(new_ter.flag2 == 10);
@@ -127,7 +127,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 			old_ter.special = 10;
 			old_ter.flag1 = 20;
 			old_ter.flag2 = 10;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::UNLOCKABLE);
 			CHECK(new_ter.flag1 == 20);
 			CHECK(new_ter.flag2 == 10);
@@ -135,13 +135,13 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 		}
 		SECTION("Sign") {
 			old_ter.special = 11;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::IS_A_SIGN);
 		}
 		SECTION("Call local special") {
 			old_ter.special = 12;
 			old_ter.flag1 = 20;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::CALL_SPECIAL);
 			CHECK(new_ter.flag1 == 20);
 			CHECK(new_ter.flag2 == 1);
@@ -149,19 +149,19 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 		SECTION("Call global special") {
 			old_ter.special = 13;
 			old_ter.flag1 = 20;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::CALL_SPECIAL);
 			CHECK(new_ter.flag1 == 20);
 			CHECK(new_ter.flag2 == 0);
 		}
 		SECTION("Container") {
 			old_ter.special = 14;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::IS_A_CONTAINER);
 		}
 		SECTION("Waterfall") {
 			old_ter.special = 15;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::WATERFALL_CAVE);
 			CHECK(new_ter.flag1 == DIR_S);
 			CHECK(new_ter.flag2 == 5);
@@ -169,37 +169,37 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 		}
 		SECTION("Conveyor belt (north)") {
 			old_ter.special = 16;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::CONVEYOR);
 			CHECK(new_ter.flag1 == DIR_N);
 		}
 		SECTION("Conveyor belt (east)") {
 			old_ter.special = 17;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::CONVEYOR);
 			CHECK(new_ter.flag1 == DIR_E);
 		}
 		SECTION("Conveyor belt (south)") {
 			old_ter.special = 18;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::CONVEYOR);
 			CHECK(new_ter.flag1 == DIR_S);
 		}
 		SECTION("Conveyor belt (west)") {
 			old_ter.special = 19;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::CONVEYOR);
 			CHECK(new_ter.flag1 == DIR_W);
 		}
 		SECTION("Blocked to monsters") {
 			old_ter.special = 20;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::BLOCKED_TO_MONSTERS);
 		}
 		SECTION("Town entrance") {
 			old_ter.special = 21;
 			old_ter.flag1 = 20;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::TOWN_ENTRANCE);
 			CHECK(new_ter.flag1 == 20);
 		}
@@ -207,7 +207,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 			old_ter.special = 22;
 			old_ter.flag1 = 20;
 			old_ter.flag2 = 200;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::CHANGE_WHEN_USED);
 			CHECK(new_ter.flag1 == 20);
 			// Unlike change when step, this didn't originally have special allowance for no sound
@@ -216,7 +216,7 @@ TEST_CASE("Converting terrain types from legacy scenarios") {
 		SECTION("Call scenario special when used") {
 			old_ter.special = 23;
 			old_ter.flag1 = 20;
-			new_ter.append(old_ter);
+			new_ter.import_legacy(old_ter);
 			CHECK(new_ter.special == eTerSpec::CALL_SPECIAL_WHEN_USED);
 			CHECK(new_ter.flag1 == 20);
 			CHECK(new_ter.flag2 == 0);

@@ -43,10 +43,10 @@ static void in_and_out(string name, cOutdoors& out, cScenario& scen) {
 TEST_CASE("Saving an outdoors sector") {
 	cScenario scen;
 	cOutdoors out(scen);
-	out.out_name = "The Outdoors Test";
+	out.name = "The Outdoors Test";
 	SECTION("With the minimal required information") {
 		in_and_out("basic", out, scen);
-		CHECK(out.out_name == "The Outdoors Test");
+		CHECK(out.name == "The Outdoors Test");
 	}
 	SECTION("With some optional information") {
 		out.comment = "Let's make a comment about comments.";

@@ -10,7 +10,7 @@
 #include "catch.hpp"
 #include "map_parse.hpp"
 #include "scenario.hpp"
-#include "regtown.hpp"
+#include "town.hpp"
 
 using namespace std;
 ostream& operator<< (ostream& out, eMapFeature feat);
@@ -162,7 +162,7 @@ TEST_CASE("Interpreting loaded map data") {
 	cScenario scen;
 	scen.outdoors.resize(1,1);
 	scen.outdoors[0][0] = new cOutdoors(scen);
-	scen.addTown<cTinyTown>();
+	scen.addTown(AREA_TINY);
 	scen.ter_types.resize(50);
 	
 	SECTION("Basic") {

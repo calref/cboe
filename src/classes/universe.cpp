@@ -42,6 +42,7 @@ void cCurTown::import_legacy(legacy::big_tr_type& old){
 	for(short i = 0; i < record()->max_dim; i++)
 		for(short j = 0; j < record()->max_dim; j++)
 			record()->terrain(i,j) = old.terrain[i][j];
+	record()->area_desc.resize(16);
 	for(short i = 0; i < 16; i++){
 		record()->area_desc[i].top = old.room_rect[i].top;
 		record()->area_desc[i].left = old.room_rect[i].left;

@@ -55,7 +55,7 @@ TEST_CASE("Converting legacy scenario data") {
 		2
 	};
 	cScenario scen;
-	scen.append(old_scen);
+	scen.import_legacy(old_scen);
 	
 	SECTION("Basic header data") {
 		CHECK(scen.adjust_diff);
@@ -86,7 +86,8 @@ TEST_CASE("Converting legacy scenario data") {
 		REQUIRE(scen.boats.size() >= 1);
 		CHECK(scen.boats[0].exists);
 		CHECK(scen.boats[0].loc == loc(33,33));
-		CHECK(scen.boats[0].loc_in_sec == loc(22,22));
+		// TODO: This field is meaningless in legacy scenario boats but matters in legacy svaed game boats.
+//		CHECK(scen.boats[0].loc_in_sec == loc(22,22));
 		CHECK(scen.boats[0].property);
 		CHECK(scen.boats[0].sector == loc(1,1));
 		CHECK(scen.boats[0].which_town == 2);

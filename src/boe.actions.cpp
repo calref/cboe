@@ -396,12 +396,12 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 			}
 		} else {
 			// The above could leave you stranded in a single-tile passable area, so pausing again should re-enter the boat.
-			int boat = univ.party.boats.size();
-			if(overall_mode == MODE_OUTDOORS && (boat = out_boat_there(univ.party.out_loc)) < univ.party.boats.size())
-				univ.party.in_boat = boat;
-			else if(overall_mode == MODE_TOWN && (boat = town_boat_there(univ.party.town_loc)) < univ.party.boats.size())
-				univ.party.in_boat = boat;
-			if(boat < univ.party.boats.size())
+			cVehicle* boat = nullptr;
+			if(overall_mode == MODE_OUTDOORS && (boat = out_boat_there(univ.party.out_loc)))
+				univ.party.in_boat = boat - &univ.party.boats[0];
+			else if(overall_mode == MODE_TOWN && (boat = town_boat_there(univ.party.town_loc)))
+				univ.party.in_boat = boat - &univ.party.boats[0];
+			if(boat)
 				ASB("You board the boat.");
 		}
 		put_pc_screen();
@@ -2788,7 +2788,6 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 }
 
 bool outd_move_party(location destination,bool forced) {
-	short boat_num,horse_num;
 	location real_dest, sector_p_in;
 	bool keep_going = true,check_f;
 	location store_corner,store_iwc;
@@ -2866,7 +2865,7 @@ bool outd_move_party(location destination,bool forced) {
 				univ.party.in_boat = -1;
 			}
 			else if(((real_dest.x != univ.party.out_loc.x) && (real_dest.y != univ.party.out_loc.y))
-					 || (!forced && (out_boat_there(destination) < 30)))
+					 || (!forced && out_boat_there(destination)))
 				return false;
 			else if(!outd_is_blocked(real_dest)
 					 && univ.scenario.ter_types[ter].boat_over
@@ -2886,14 +2885,15 @@ bool outd_move_party(location destination,bool forced) {
 		
 		univ.party.direction = set_direction(univ.party.out_loc, destination);
 		std::string dir_str = dir_string[univ.party.direction];
-		if(((boat_num = out_boat_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
+		cVehicle* enter;
+		if((enter = out_boat_there(real_dest)) && univ.party.in_boat < 0 && univ.party.in_horse < 0) {
 			if(flying()) {
 				add_string_to_buf("You land first.");
 				univ.party.status[ePartyStatus::FLIGHT] = 0;
 			}
 			give_help(61,0);
 			add_string_to_buf("Move: You board the boat.");
-			univ.party.in_boat = boat_num;
+			univ.party.in_boat = enter - &univ.party.boats[0];
 			
 			univ.party.out_loc = real_dest;
 			univ.party.i_w_c.x = (univ.party.out_loc.x > 48) ? 1 : 0;
@@ -2906,7 +2906,7 @@ bool outd_move_party(location destination,bool forced) {
 			
 			return true;
 		}
-		else if(((horse_num = out_horse_there(real_dest)) < 30) && (univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
+		else if((enter = out_horse_there(real_dest)) && univ.party.in_boat < 0 && univ.party.in_horse < 0) {
 			if(flying()) {
 				add_string_to_buf("Land before mounting horses.");
 				return false;
@@ -2915,7 +2915,7 @@ bool outd_move_party(location destination,bool forced) {
 			give_help(60,0);
 			add_string_to_buf("Move: You mount the horses.");
 			play_sound(84);
-			univ.party.in_horse = horse_num;
+			univ.party.in_horse = enter - &univ.party.horses[0];
 			
 			univ.party.out_loc = real_dest;
 			univ.party.i_w_c.x = (univ.party.out_loc.x > 48) ? 1 : 0;
@@ -2984,7 +2984,6 @@ bool outd_move_party(location destination,bool forced) {
 
 bool town_move_party(location destination,short forced) {
 	bool keep_going = true;
-	short boat_there,horse_there;
 	ter_num_t ter;
 	bool check_f = false;
 	
@@ -3023,7 +3022,7 @@ bool town_move_party(location destination,short forced) {
 				}
 			}
 			// boat in destination
-			else if(town_boat_there(destination) < 30) {
+			else if(town_boat_there(destination)) {
 				add_string_to_buf("  Boat there already.");
 				return false;
 			}
@@ -3034,29 +3033,30 @@ bool town_move_party(location destination,short forced) {
 		
 		univ.party.direction = set_direction(univ.party.town_loc, destination);
 		std::string dir_str = dir_string[univ.party.direction];
-		if(((boat_there = town_boat_there(destination)) < 30) && (univ.party.in_boat < 0)) {
-			if(univ.party.boats[boat_there].property) {
+		cVehicle* there;
+		if((there = town_boat_there(destination)) && univ.party.in_boat < 0 && univ.party.in_horse < 0) {
+			if(there->property) {
 				add_string_to_buf("  Not your boat.");
 				return false;
 			}
 			give_help(61,0);
 			add_string_to_buf("Move: You board the boat.");
-			univ.party.in_boat = boat_there;
+			univ.party.in_boat = there - &univ.party.boats[0];
 			
 			univ.party.town_loc = destination;
 			center = univ.party.town_loc;
 			
 			return true;
 		}
-		else if(((horse_there = town_horse_there(destination)) < 30) && (univ.party.in_horse < 0)) {
-			if(univ.party.horses[horse_there].property) {
+		else if((there = town_horse_there(destination)) && univ.party.in_boat < 0 && univ.party.in_horse < 0) {
+			if(there->property) {
 				add_string_to_buf("  Not your horses.");
 				return false;
 			}
 			give_help(60,0);
 			add_string_to_buf("Move: You mount the horses.");
 			play_sound(84);
-			univ.party.in_horse = horse_there;
+			univ.party.in_horse = there - &univ.party.horses[0];
 			
 			univ.party.town_loc = destination;
 			center = univ.party.town_loc;

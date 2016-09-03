@@ -10,7 +10,7 @@
 #include "catch.hpp"
 #include "tinyprint.h"
 #include "scenario.hpp"
-#include "regtown.hpp"
+#include "town.hpp"
 
 using namespace std;
 using namespace ticpp;
@@ -38,15 +38,15 @@ static void in_and_out(string name, cTown*& town, cScenario& scen) {
 
 TEST_CASE("Saving a town") {
 	cScenario scen;
-	cTown* town = new cTinyTown(scen);
-	town->town_name = "Test Town";
+	cTown* town = new cTown(scen, AREA_SMALL);
+	town->name = "Test Town";
 	town->in_town_rect = {2,3,30,29};
 	town->difficulty = 1;
 	town->lighting_type = LIGHT_NONE;
 	SECTION("With the minimal required information") {
 		in_and_out("basic", town, scen);
 		CHECK(town->max_dim == 32);
-		CHECK(town->town_name == "Test Town");
+		CHECK(town->name == "Test Town");
 		CHECK(town->in_town_rect == rect(2,3,30,29));
 		CHECK(town->difficulty == 1);
 		CHECK(town->lighting_type == LIGHT_NONE);
@@ -58,8 +58,8 @@ TEST_CASE("Saving a town") {
 		town->spec_on_entry = 42;
 		town->spec_on_entry_if_dead = 19;
 		town->spec_on_hostile = 47;
-		town->exit_specs[0] = 16;
-		town->exit_locs[0] = {24,2};
+		town->exits[0] = {24,2};
+		town->exits[0].spec = 16;
 		town->town_chop_time = 25;
 		town->town_chop_key = 6;
 		town->max_num_monst = 100000;
@@ -79,8 +79,8 @@ TEST_CASE("Saving a town") {
 		CHECK(town->spec_on_entry == 42);
 		CHECK(town->spec_on_entry_if_dead == 19);
 		CHECK(town->spec_on_hostile == 47);
-		CHECK(town->exit_specs[0] == 16);
-		CHECK(town->exit_locs[0] == loc(24,2));
+		CHECK(town->exits[0].spec == 16);
+		CHECK(town->exits[0] == loc(24,2));
 		CHECK(town->town_chop_time == 25);
 		CHECK(town->town_chop_key == 6);
 		CHECK(town->max_num_monst == 100000);

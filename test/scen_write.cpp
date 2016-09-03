@@ -5,7 +5,7 @@
 #include "dialog.hpp"
 #include "catch.hpp"
 #include "scenario.hpp"
-#include "regtown.hpp"
+#include "town.hpp"
 #include "restypes.hpp"
 
 using namespace std;
@@ -81,9 +81,9 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.out_start == loc(12,21));
 	}
 	SECTION("With some towns and sectors") {
-		scen.addTown<cTinyTown>();
-		scen.addTown<cMedTown>();
-		scen.addTown<cBigTown>();
+		scen.addTown(AREA_SMALL);
+		scen.addTown(AREA_MEDIUM);
+		scen.addTown(AREA_LARGE);
 		scen.outdoors.resize(2,5);
 		in_and_out("town&sector", scen);
 		CHECK(scen.towns.size() == 3);

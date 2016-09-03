@@ -28,7 +28,7 @@ TEST_CASE("When converting legacy special nodes (general)") {
 		oldSpec.m1 = 2; oldSpec.m2 = 3;
 		oldSpec.sd1 = 4; oldSpec.sd2 = 5;
 		oldSpec.ex1a = 6;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::SET_SDF);
 		CHECK(newSpec.m1 == 2); CHECK(newSpec.m2 == 3);
 		CHECK(newSpec.sd1 == 4); CHECK(newSpec.sd2 == 5);
@@ -37,7 +37,7 @@ TEST_CASE("When converting legacy special nodes (general)") {
 	}
 	SECTION("Secret Passage") {
 		oldSpec.type = 4;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::CANT_ENTER);
 		CHECK(newSpec.ex1a == 0);
 		CHECK(newSpec.ex2a == 1);
@@ -47,7 +47,7 @@ TEST_CASE("When converting legacy special nodes (general)") {
 		oldSpec.type = 7;
 		oldSpec.m1 = 4; oldSpec.m2 = 5;
 		oldSpec.ex1a = 1;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::IF_CONTEXT);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
 		CHECK(newSpec.ex1a == int(eSpecCtx::OUT_MOVE));
@@ -58,7 +58,7 @@ TEST_CASE("When converting legacy special nodes (general)") {
 		oldSpec.type = 8;
 		oldSpec.m1 = 4; oldSpec.m2 = 5;
 		oldSpec.ex1a = 1;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::IF_CONTEXT);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
 		CHECK(newSpec.ex1a == int(eSpecCtx::TOWN_MOVE));
@@ -69,7 +69,7 @@ TEST_CASE("When converting legacy special nodes (general)") {
 		oldSpec.type = 9;
 		oldSpec.m1 = 4; oldSpec.m2 = 5;
 		oldSpec.ex1a = 1;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::IF_CONTEXT);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
 		CHECK(newSpec.ex1a == int(eSpecCtx::COMBAT_MOVE));
@@ -79,7 +79,7 @@ TEST_CASE("When converting legacy special nodes (general)") {
 	SECTION("Looking Block") {
 		oldSpec.type = 10;
 		oldSpec.m1 = 4; oldSpec.m2 = 5;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::IF_LOOKING);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
 		CHECK(newSpec.jumpto == 12);
@@ -104,7 +104,7 @@ TEST_CASE("When converting legacy special nodes (one-shot)") {
 		oldSpec.ex1b = 2500;
 		oldSpec.ex2a = 1500;
 		oldSpec.ex2b = 10;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::ONCE_GIVE_ITEM);
 		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
@@ -131,7 +131,7 @@ TEST_CASE("When converting legacy special nodes (affect)") {
 		oldSpec.type = 80;
 		oldSpec.ex1a = 1;
 		oldSpec.ex1b = 10;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::SELECT_TARGET);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
 		CHECK(newSpec.ex1a == 1);
@@ -157,7 +157,7 @@ TEST_CASE("When converting legacy special nodes (if-then)") {
 		oldSpec.ex1b = 10;
 		oldSpec.ex2a = 9;
 		oldSpec.ex2b = 13;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::IF_SDF);
 		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
 		CHECK(newSpec.ex1a == 1);
@@ -181,7 +181,7 @@ TEST_CASE("When converting legacy special nodes (town)") {
 	SECTION("Town Hostile") {
 		oldSpec.type = 170;
 		oldSpec.jumpto = 12;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::MAKE_TOWN_HOSTILE);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
 		CHECK(newSpec.jumpto == 12);
@@ -207,7 +207,7 @@ TEST_CASE("When converting legacy special nodes (rect)") {
 		oldSpec.m1 = 4; oldSpec.m2 = 5;
 		oldSpec.pic = 1;
 		oldSpec.sd1 = 75;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
 		CHECK(newSpec.pic == 1);
@@ -233,7 +233,7 @@ TEST_CASE("When converting legacy special nodes (outdoors)") {
 	oldSpec.jumpto = 12;
 	SECTION("Make Outdoor Wandering") {
 		oldSpec.type = 225;
-		newSpec.append(oldSpec);
+		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::OUT_MAKE_WANDER);
 		CHECK(newSpec.jumpto == 12);
 	}

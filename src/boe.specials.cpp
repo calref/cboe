@@ -227,7 +227,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	}
 	
 	// TODO: Just verify that yes, it works with this and doesn't work without it.
-	if(mode == eSpecCtx::COMBAT_MOVE && town_boat_there(where_check) < 3) {
+	if(mode == eSpecCtx::COMBAT_MOVE && town_boat_there(where_check)) {
 		add_string_to_buf("Blocked: Can't enter boats in combat");
 		can_enter = false;
 	}
@@ -304,9 +304,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			// if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
 			if(flying() || univ.party.in_boat >= 0)
 				break;
-			if(mode == eSpecCtx::TOWN_MOVE && town_boat_there(where_check) < 30)
+			if(mode == eSpecCtx::TOWN_MOVE && town_boat_there(where_check))
 				break;
-			if(mode == eSpecCtx::OUT_MOVE && out_boat_there(where_check) < 30)
+			if(mode == eSpecCtx::OUT_MOVE && out_boat_there(where_check))
 				break;
 			if(ter_flag3 > 0 && ter_flag3 < 8)
 				dam_type = (eDamageType) ter_flag3;
@@ -363,9 +363,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			// if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
 			if(flying() || univ.party.in_boat >= 0)
 				break;
-			if(mode == eSpecCtx::TOWN_MOVE && town_boat_there(where_check) < 30)
+			if(mode == eSpecCtx::TOWN_MOVE && town_boat_there(where_check))
 				break;
-			if(mode == eSpecCtx::OUT_MOVE && out_boat_there(where_check) < 30)
+			if(mode == eSpecCtx::OUT_MOVE && out_boat_there(where_check))
 				break;
 			//one_sound(17);
 			for(short i = mode == eSpecCtx::COMBAT_MOVE ? univ.get_target_i(which_pc) : 0 ; i < 6; i++)

@@ -743,9 +743,9 @@ short do_look(location space) {
 		
 		if(univ.out->roads[space.x][space.y])
 			add_string_to_buf("    Road");
-		if(out_boat_there(space) < 30)
+		if(out_boat_there(space))
 			add_string_to_buf("    Boat");
-		if(out_horse_there(space) < 30)
+		if(out_horse_there(space))
 			add_string_to_buf("    Horse");
 		if(univ.out->special_spot[space.x][space.y])
 			add_string_to_buf("    Special Encounter");
@@ -754,9 +754,9 @@ short do_look(location space) {
 	if((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 		if(univ.town.is_road(space.x,space.y))
 			add_string_to_buf("    Track");
-		if(town_boat_there(space) < 30)
+		if(town_boat_there(space))
 			add_string_to_buf("    Boat");
-		if(town_horse_there(space) < 30)
+		if(town_horse_there(space))
 			add_string_to_buf("    Horse");
 		
 		if(univ.town.is_web(space.x,space.y))
@@ -844,36 +844,36 @@ short do_look(location space) {
 	return print_terrain(space);
 }
 
-short town_boat_there(location where) {
+cVehicle* town_boat_there(location where) {
 	for(short i = 0; i < univ.party.boats.size(); i++)
 		if(univ.party.boats[i].exists && univ.party.boats[i].which_town == univ.party.town_num
 			&& (where == univ.party.boats[i].loc))
-			return i;
-	return univ.party.boats.size();
+			return &univ.party.boats[i];
+	return nullptr;
 }
-short out_boat_there(location where) {
+cVehicle* out_boat_there(location where) {
 	where = global_to_local(where);
 	for(short i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].exists) && (where == univ.party.boats[i].loc)
 			&& (univ.party.boats[i].which_town == 200))
-			return i;
-	return univ.party.boats.size();
+			return &univ.party.boats[i];
+	return nullptr;
 }
 
-short town_horse_there(location where) {
+cVehicle* town_horse_there(location where) {
 	for(short i = 0; i < univ.party.horses.size(); i++)
 		if(univ.party.horses[i].exists && univ.party.horses[i].which_town == univ.party.town_num
 			&& (where == univ.party.horses[i].loc))
-			return i;
-	return univ.party.horses.size();
+			return &univ.party.horses[i];
+	return nullptr;
 }
-short out_horse_there(location where) {
+cVehicle* out_horse_there(location where) {
 	where = global_to_local(where);
 	for(short i = 0; i < univ.party.horses.size(); i++)
 		if((univ.party.horses[i].exists) && (where == univ.party.horses[i].loc)
 			&& (univ.party.horses[i].which_town == 200))
-			return i;
-	return univ.party.horses.size();
+			return &univ.party.horses[i];
+	return nullptr;
 }
 void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
 	std::string msg;

@@ -1896,6 +1896,7 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 					case eMapFeature::BOAT:
 						is_boat = true;
 					case eMapFeature::HORSE:
+						(is_boat ? scen.boats : scen.horses).resize(abs(feat.second));
 						what = &(is_boat ? scen.boats : scen.horses)[abs(feat.second) - 1];
 						what->which_town = 200;
 						what->sector = which;
@@ -1943,6 +1944,7 @@ void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 					case eMapFeature::BOAT:
 						is_boat = true;
 					case eMapFeature::HORSE:
+						(is_boat ? scen.boats : scen.horses).resize(abs(feat.second));
 						what = &(is_boat ? scen.boats : scen.horses)[abs(feat.second) - 1];
 						what->which_town = which;
 						what->loc = loc(x,y);

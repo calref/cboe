@@ -18,11 +18,8 @@
 const short cCreature::charm_odds[21] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0, 0};
 
 cCreature::cCreature() {
-	active = 0;
 	attitude = eAttitude::DOCILE;
 	cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;
-	summon_time = 0;
-	target = 6;
 }
 
 cCreature::cCreature(int num) : cCreature() {

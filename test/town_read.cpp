@@ -131,7 +131,7 @@ TEST_CASE("Loading a town definition") {
 		doc = xmlDocFromStream(fin, "minimal.xml");
 		REQUIRE_NOTHROW(readTownFromXml(move(doc), town, scen));
 		CHECK(town->max_dim == 32);
-		CHECK(town->town_name == "Test Town");
+		CHECK(town->name == "Test Town");
 		CHECK(town->in_town_rect == rect(4, 4, 28, 28));
 		CHECK(town->difficulty == 1);
 		CHECK(town->lighting_type == LIGHT_NORMAL);
@@ -143,8 +143,8 @@ TEST_CASE("Loading a town definition") {
 		CHECK(town->comment[0] == "This is a silly little comment.");
 		CHECK(town->spec_on_entry == 12);
 		CHECK(town->spec_on_entry_if_dead == 13);
-		CHECK(town->exit_locs[0] == loc(4,16));
-		CHECK(town->exit_specs[0] == 52);
+		CHECK(town->exits[0] == loc(4,16));
+		CHECK(town->exits[0].spec == 52);
 		CHECK(town->spec_on_hostile == 42);
 		CHECK(town->town_chop_time == 18);
 		CHECK(town->town_chop_key == 4);

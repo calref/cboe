@@ -10,7 +10,7 @@
 #include "catch.hpp"
 #include "map_parse.hpp"
 #include "scenario.hpp"
-#include "regtown.hpp"
+#include "town.hpp"
 
 using namespace std;
 
@@ -45,7 +45,7 @@ static void in_and_out(cScenario& scen, bool town) {
 	scen.ter_types.resize(50);
 	if(town) {
 		// Reconstruct the town, to ensure that it doesn't just pass due to old data still being around
-		scen.addTown<cTinyTown>();
+		scen.addTown(AREA_TINY);
 		loadTownMapData(move(map), 0, scen);
 	} else {
 		// Reconstruct the sector, to ensure that it doesn't just pass due to old data still being around
@@ -163,7 +163,7 @@ TEST_CASE("Building map data") {
 	cScenario scen;
 	scen.outdoors.resize(1,1);
 	scen.outdoors[0][0] = new cOutdoors(scen);
-	scen.addTown<cTinyTown>();
+	scen.addTown(AREA_TINY);
 	scen.ter_types.resize(50);
 	
 	for(int x = 0; x < 5; x++)
@@ -186,10 +186,12 @@ TEST_CASE("Building map data") {
 		}
 	}
 	SECTION("With vehicles") {
+		scen.boats.resize(2);
 		scen.boats[0].property = true;
 		scen.boats[0].loc = {1,1};
 		scen.boats[1].property = false;
 		scen.boats[1].loc = {2,2};
+		scen.horses.resize(2);
 		scen.horses[0].property = true;
 		scen.horses[0].loc = {3,3};
 		scen.horses[1].property = false;
@@ -200,6 +202,8 @@ TEST_CASE("Building map data") {
 			scen.boats[0].sector = scen.horses[0].sector = {0,0};
 			scen.boats[1].sector = scen.horses[1].sector = {0,0};
 			in_and_out(scen, false);
+			REQUIRE(scen.boats.size() >= 2);
+			REQUIRE(scen.horses.size() >= 2);
 			CHECK(scen.boats[0].property);
 			CHECK(scen.boats[0].loc == loc(1,1));
 			CHECK(scen.boats[0].which_town == 200);
@@ -221,6 +225,8 @@ TEST_CASE("Building map data") {
 			scen.boats[0].which_town = scen.horses[0].which_town = 0;
 			scen.boats[1].which_town = scen.horses[1].which_town = 0;
 			in_and_out(scen, true);
+			REQUIRE(scen.boats.size() >= 2);
+			REQUIRE(scen.horses.size() >= 2);
 			CHECK(scen.boats[0].property);
 			CHECK(scen.boats[0].loc == loc(1,1));
 			CHECK(scen.boats[0].which_town == 0);

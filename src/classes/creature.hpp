@@ -18,17 +18,17 @@
 class cCreature : public cMonster, public cTownperson, public iLiving {
 public:
 	static const short charm_odds[21];
-	short active;
+	short active = 0;
 	eAttitude attitude;
 	location cur_loc;
-	short summon_time;
+	short summon_time = 0;
 	bool party_summoned;
-	short target;
+	short target = 6;
 	location targ_loc;
-	short health;
-	short mp;
-	short max_mp;
-	short morale,m_morale; // these are calculated in-game based on the level
+	short health = 0;
+	short mp = 0;
+	short max_mp = 0;
+	short morale = 0,m_morale = 0; // these are calculated in-game based on the level
 	
 	cCreature();
 	cCreature(int num);

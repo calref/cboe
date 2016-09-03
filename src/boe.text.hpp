@@ -1,5 +1,7 @@
 #include <string>
 
+class cVehicle;
+
 void put_pc_screen();
 void place_buy_button(short position,short pc_num,short item_num);
 void put_item_screen(short screen_num);
@@ -12,10 +14,10 @@ short total_encumbrance(short pc_num);
 void draw_pc_effects(short pc);
 void print_party_stats() ;
 short do_look(location space);
-short town_boat_there(location where);
-short out_boat_there(location where);
-short town_horse_there(location where);
-short out_horse_there(location where);
+cVehicle* town_boat_there(location where);
+cVehicle* out_boat_there(location where);
+cVehicle* town_horse_there(location where);
+cVehicle* out_horse_there(location where);
 void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) ;
 std::string get_m_name(mon_num_t num);
 std::string get_ter_name(ter_num_t num);

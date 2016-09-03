@@ -31,7 +31,7 @@ TEST_CASE("Converting legacy outdoor section data") {
 	cScenario scen;
 	scen.ter_types.resize(1);
 	cOutdoors sector(scen);
-	sector.append(old_sector);
+	sector.import_legacy(old_sector);
 	
 	SECTION("General Data") {
 		CHECK(sector.ambient_sound == AMBIENT_NONE);

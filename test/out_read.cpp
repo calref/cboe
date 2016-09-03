@@ -88,7 +88,7 @@ TEST_CASE("Loading an outdoor section definition") {
 		fin.open("files/outdoor/minimal.xml");
 		doc = xmlDocFromStream(fin, "minimal.xml");
 		REQUIRE_NOTHROW(readOutdoorsFromXml(move(doc), sector));
-		CHECK(sector.out_name == "Test Sector");
+		CHECK(sector.name == "Test Sector");
 	}
 	SECTION("With an arbitrary ambient sound") {
 		fin.open("files/outdoor/sound.xml");

@@ -29,7 +29,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 	cMonster new_monst;
 	
 	SECTION("Basic monster") {
-		new_monst.append(old_monst);
+		new_monst.import_legacy(old_monst);
 		CHECK(new_monst.level == 5);
 		CHECK(new_monst.m_name == "Test Monster");
 		CHECK(new_monst.m_health == 50);
@@ -81,7 +81,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		old_monst.breath = 12;
 		SECTION("Fire") {
 			old_monst.breath_type = 0;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::DAMAGE2].active);
 			CHECK(new_monst.abil[eMonstAbil::DAMAGE2].gen.type == eMonstGen::BREATH);
@@ -93,7 +93,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Cold") {
 			old_monst.breath_type = 1;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::DAMAGE2].active);
 			CHECK(new_monst.abil[eMonstAbil::DAMAGE2].gen.type == eMonstGen::BREATH);
@@ -105,7 +105,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Electricity") {
 			old_monst.breath_type = 2;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::DAMAGE2].active);
 			CHECK(new_monst.abil[eMonstAbil::DAMAGE2].gen.type == eMonstGen::BREATH);
@@ -117,7 +117,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Darkness") {
 			old_monst.breath_type = 3;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::DAMAGE2].active);
 			CHECK(new_monst.abil[eMonstAbil::DAMAGE2].gen.type == eMonstGen::BREATH);
@@ -130,7 +130,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 	}
 	SECTION("With poison") {
 		old_monst.poison = 8;
-		new_monst.append(old_monst);
+		new_monst.import_legacy(old_monst);
 		REQUIRE(new_monst.abil.size() == 1);
 		REQUIRE(new_monst.abil[eMonstAbil::STATUS2].active);
 		CHECK(new_monst.abil[eMonstAbil::STATUS2].gen.type == eMonstGen::TOUCH);
@@ -141,7 +141,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 	SECTION("With primary abilities") {
 		SECTION("Throws Darts") {
 			old_monst.spec_skill = 1;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MISSILE].active);
 			CHECK(new_monst.abil[eMonstAbil::MISSILE].missile.type == eMonstMissile::DART);
@@ -154,7 +154,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Shoots Arrows") {
 			old_monst.spec_skill = 2;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MISSILE].active);
 			CHECK(new_monst.abil[eMonstAbil::MISSILE].missile.type == eMonstMissile::ARROW);
@@ -167,7 +167,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Throws Spears") {
 			old_monst.spec_skill = 3;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MISSILE].active);
 			CHECK(new_monst.abil[eMonstAbil::MISSILE].missile.type == eMonstMissile::SPEAR);
@@ -180,7 +180,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Throws Rocks 4-24") {
 			old_monst.spec_skill = 4;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MISSILE].active);
 			CHECK(new_monst.abil[eMonstAbil::MISSILE].missile.type == eMonstMissile::BOULDER);
@@ -193,7 +193,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Throws Rocks 5-30") {
 			old_monst.spec_skill = 5;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MISSILE].active);
 			CHECK(new_monst.abil[eMonstAbil::MISSILE].missile.type == eMonstMissile::BOULDER);
@@ -206,7 +206,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Throws Rocks 6-36") {
 			old_monst.spec_skill = 6;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MISSILE].active);
 			CHECK(new_monst.abil[eMonstAbil::MISSILE].missile.type == eMonstMissile::BOULDER);
@@ -219,7 +219,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Throws Razordisks") {
 			old_monst.spec_skill = 7;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MISSILE].active);
 			CHECK(new_monst.abil[eMonstAbil::MISSILE].missile.type == eMonstMissile::RAZORDISK);
@@ -232,7 +232,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Petrification Ray") {
 			old_monst.spec_skill = 8;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::PETRIFY].active);
 			CHECK(new_monst.abil[eMonstAbil::PETRIFY].gen.type == eMonstGen::GAZE);
@@ -242,7 +242,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Spell Point Drain Ray") {
 			old_monst.spec_skill = 9;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::DRAIN_SP].active);
 			CHECK(new_monst.abil[eMonstAbil::DRAIN_SP].gen.type == eMonstGen::GAZE);
@@ -252,7 +252,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Heat Ray") {
 			old_monst.spec_skill = 10;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::RAY_HEAT].active);
 			CHECK(new_monst.abil[eMonstAbil::RAY_HEAT].special.extra1 == 6);
@@ -261,13 +261,13 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Invisible") {
 			old_monst.spec_skill = 11;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.abil.size() == 0);
 			CHECK(new_monst.invisible);
 		}
 		SECTION("Splits When Hit") {
 			old_monst.spec_skill = 12;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::SPLITS].active);
 			CHECK(new_monst.abil[eMonstAbil::SPLITS].special.extra1 == 1000);
@@ -275,13 +275,13 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Mindless") {
 			old_monst.spec_skill = 13;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.abil.size() == 0);
 			CHECK(new_monst.mindless);
 		}
 		SECTION("Breathes Stinking Clouds") {
 			old_monst.spec_skill = 14;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::FIELD].active);
 			CHECK(new_monst.abil[eMonstAbil::FIELD].gen.type == eMonstGen::BREATH);
@@ -293,7 +293,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Icy Touch") {
 			old_monst.spec_skill = 15;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::DAMAGE].active);
 			CHECK(new_monst.abil[eMonstAbil::DAMAGE].gen.type == eMonstGen::TOUCH);
@@ -303,7 +303,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Experience Draining Touch") {
 			old_monst.spec_skill = 16;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::DRAIN_XP].active);
 			CHECK(new_monst.abil[eMonstAbil::DRAIN_XP].gen.type == eMonstGen::TOUCH);
@@ -312,7 +312,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Icy and Draining Touch") {
 			old_monst.spec_skill = 17;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 2);
 			REQUIRE(new_monst.abil[eMonstAbil::DAMAGE].active);
 			CHECK(new_monst.abil[eMonstAbil::DAMAGE].gen.type == eMonstGen::TOUCH);
@@ -326,7 +326,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Slowing Touch") {
 			old_monst.spec_skill = 18;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::STUN].active);
 			CHECK(new_monst.abil[eMonstAbil::STUN].gen.type == eMonstGen::TOUCH);
@@ -336,7 +336,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Shoots Web") {
 			old_monst.spec_skill = 19;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MISSILE_WEB].active);
 			CHECK(new_monst.abil[eMonstAbil::MISSILE_WEB].special.extra1 == 4);
@@ -344,7 +344,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Good Archer") {
 			old_monst.spec_skill = 20;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MISSILE].active);
 			CHECK(new_monst.abil[eMonstAbil::MISSILE].missile.type == eMonstMissile::RAPID_ARROW);
@@ -357,7 +357,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Steals Food") {
 			old_monst.spec_skill = 21;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::STEAL_FOOD].active);
 			CHECK(new_monst.abil[eMonstAbil::STEAL_FOOD].gen.type == eMonstGen::TOUCH);
@@ -366,7 +366,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Permanent Martyr's Shield") {
 			old_monst.spec_skill = 22;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MARTYRS_SHIELD].active);
 			CHECK(new_monst.abil[eMonstAbil::MARTYRS_SHIELD].special.extra1 == 1000);
@@ -374,7 +374,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Paralysis Ray") {
 			old_monst.spec_skill = 23;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::STATUS].active);
 			CHECK(new_monst.abil[eMonstAbil::STATUS].gen.type == eMonstGen::RAY);
@@ -385,7 +385,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Dumbfounding Touch") {
 			old_monst.spec_skill = 24;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::STATUS].active);
 			CHECK(new_monst.abil[eMonstAbil::STATUS].gen.type == eMonstGen::TOUCH);
@@ -395,7 +395,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Disease Touch") {
 			old_monst.spec_skill = 25;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::STATUS].active);
 			CHECK(new_monst.abil[eMonstAbil::STATUS].gen.type == eMonstGen::TOUCH);
@@ -405,7 +405,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Absorbs Spells") {
 			old_monst.spec_skill = 26;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::ABSORB_SPELLS].active);
 			CHECK(new_monst.abil[eMonstAbil::ABSORB_SPELLS].special.extra1 == 1000);
@@ -413,7 +413,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Web Touch") {
 			old_monst.spec_skill = 27;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::STATUS].active);
 			CHECK(new_monst.abil[eMonstAbil::STATUS].gen.type == eMonstGen::TOUCH);
@@ -423,7 +423,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Sleep Touch") {
 			old_monst.spec_skill = 28;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::STATUS].active);
 			CHECK(new_monst.abil[eMonstAbil::STATUS].gen.type == eMonstGen::TOUCH);
@@ -433,7 +433,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Paralysis Touch") {
 			old_monst.spec_skill = 29;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::STATUS].active);
 			CHECK(new_monst.abil[eMonstAbil::STATUS].gen.type == eMonstGen::TOUCH);
@@ -443,7 +443,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Petrification Touch") {
 			old_monst.spec_skill = 30;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::PETRIFY].active);
 			CHECK(new_monst.abil[eMonstAbil::PETRIFY].gen.type == eMonstGen::TOUCH);
@@ -452,7 +452,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Acid Touch") {
 			old_monst.spec_skill = 31;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::STATUS].active);
 			CHECK(new_monst.abil[eMonstAbil::STATUS].gen.type == eMonstGen::TOUCH);
@@ -462,7 +462,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Breathes Sleep Clouds") {
 			old_monst.spec_skill = 32;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::FIELD].active);
 			CHECK(new_monst.abil[eMonstAbil::FIELD].gen.type == eMonstGen::BREATH);
@@ -474,7 +474,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Acid Spit") {
 			old_monst.spec_skill = 33;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::STATUS].active);
 			CHECK(new_monst.abil[eMonstAbil::STATUS].gen.type == eMonstGen::SPIT);
@@ -486,7 +486,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Shoots Spines") {
 			old_monst.spec_skill = 34;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::MISSILE].active);
 			CHECK(new_monst.abil[eMonstAbil::MISSILE].missile.type == eMonstMissile::SPINE);
@@ -499,7 +499,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Death Touch") {
 			old_monst.spec_skill = 35;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::KILL].active);
 			CHECK(new_monst.abil[eMonstAbil::KILL].gen.type == eMonstGen::TOUCH);
@@ -508,13 +508,13 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Invulnerable") {
 			old_monst.spec_skill = 36;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.abil.size() == 0);
 			CHECK(new_monst.invuln);
 		}
 		SECTION("Guard") {
 			old_monst.spec_skill = 37;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.abil.size() == 0);
 			CHECK(new_monst.guard);
 		}
@@ -523,7 +523,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		old_monst.radiate_2 = 50;
 		SECTION("Radiate Fire Fields") {
 			old_monst.radiate_1 = 1;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::RADIATE].active);
 			CHECK(new_monst.abil[eMonstAbil::RADIATE].radiate.type == WALL_FIRE);
@@ -532,7 +532,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Radiate Ice Fields") {
 			old_monst.radiate_1 = 2;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::RADIATE].active);
 			CHECK(new_monst.abil[eMonstAbil::RADIATE].radiate.type == WALL_ICE);
@@ -541,7 +541,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Radiate Shock Fields") {
 			old_monst.radiate_1 = 3;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::RADIATE].active);
 			CHECK(new_monst.abil[eMonstAbil::RADIATE].radiate.type == WALL_FORCE);
@@ -550,7 +550,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Radiate Antimagic Fields") {
 			old_monst.radiate_1 = 4;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::RADIATE].active);
 			CHECK(new_monst.abil[eMonstAbil::RADIATE].radiate.type == FIELD_ANTIMAGIC);
@@ -559,7 +559,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Radiate Sleep Fields") {
 			old_monst.radiate_1 = 5;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::RADIATE].active);
 			CHECK(new_monst.abil[eMonstAbil::RADIATE].radiate.type == CLOUD_SLEEP);
@@ -568,7 +568,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Radiate Stink Fields") {
 			old_monst.radiate_1 = 6;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::RADIATE].active);
 			CHECK(new_monst.abil[eMonstAbil::RADIATE].radiate.type == CLOUD_STINK);
@@ -577,7 +577,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Summon 5% chance") {
 			old_monst.radiate_1 = 10;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::SUMMON].active);
 			CHECK(new_monst.abil[eMonstAbil::SUMMON].summon.type == eMonstSummon::TYPE);
@@ -589,7 +589,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Summon 20% chance") {
 			old_monst.radiate_1 = 11;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::SUMMON].active);
 			CHECK(new_monst.abil[eMonstAbil::SUMMON].summon.type == eMonstSummon::TYPE);
@@ -601,7 +601,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Summon 50% chance") {
 			old_monst.radiate_1 = 12;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::SUMMON].active);
 			CHECK(new_monst.abil[eMonstAbil::SUMMON].summon.type == eMonstSummon::TYPE);
@@ -613,7 +613,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		}
 		SECTION("Death Triggers Scenario Special") {
 			old_monst.radiate_1 = 15;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 1);
 			REQUIRE(new_monst.abil[eMonstAbil::DEATH_TRIGGER].active);
 			CHECK(new_monst.abil[eMonstAbil::DEATH_TRIGGER].special.extra1 == 50);
@@ -623,7 +623,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		SECTION("Poison and acid touch") {
 			old_monst.poison = 8;
 			old_monst.spec_skill = 31;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 2);
 			CHECK(new_monst.abil[eMonstAbil::STATUS].active);
 			CHECK(new_monst.abil[eMonstAbil::STATUS2].active);
@@ -631,7 +631,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		SECTION("Poison and stun") {
 			old_monst.poison = 8;
 			old_monst.spec_skill = 18;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 2);
 			CHECK(new_monst.abil[eMonstAbil::STATUS2].active);
 			CHECK(new_monst.abil[eMonstAbil::STUN].active);
@@ -640,7 +640,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 			old_monst.breath = 8;
 			old_monst.breath_type = 1;
 			old_monst.spec_skill = 17;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			REQUIRE(new_monst.abil.size() == 3);
 			CHECK(new_monst.abil[eMonstAbil::DAMAGE].active);
 			CHECK(new_monst.abil[eMonstAbil::DAMAGE2].active);
@@ -654,7 +654,7 @@ TEST_CASE("Converting placed monsters from legacy scenarios") {
 	cTownperson new_monst;
 	
 	SECTION("Basic info") {
-		new_monst.append(old_monst);
+		new_monst.import_legacy(old_monst);
 		CHECK(new_monst.number == 12);
 		CHECK(new_monst.start_attitude == eAttitude::HOSTILE_A);
 		CHECK(new_monst.start_loc == loc(4,4));
@@ -671,37 +671,37 @@ TEST_CASE("Converting placed monsters from legacy scenarios") {
 		old_monst.time_code = 19;
 		SECTION("Appear on day") {
 			old_monst.time_flag = 1;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.time_flag == eMonstTime::APPEAR_ON_DAY);
 		}
 		SECTION("Disappear on day") {
 			old_monst.time_flag = 2;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.time_flag == eMonstTime::DISAPPEAR_ON_DAY);
 		}
 		SECTION("Sometimes A") {
 			old_monst.time_flag = 4;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.time_flag == eMonstTime::SOMETIMES_A);
 		}
 		SECTION("Sometimes B") {
 			old_monst.time_flag = 5;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.time_flag == eMonstTime::SOMETIMES_B);
 		}
 		SECTION("Sometimes C") {
 			old_monst.time_flag = 6;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.time_flag == eMonstTime::SOMETIMES_C);
 		}
 		SECTION("Appear when event") {
 			old_monst.time_flag = 7;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.time_flag == eMonstTime::APPEAR_WHEN_EVENT);
 		}
 		SECTION("Disappear when event") {
 			old_monst.time_flag = 8;
-			new_monst.append(old_monst);
+			new_monst.import_legacy(old_monst);
 			CHECK(new_monst.time_flag == eMonstTime::DISAPPEAR_WHEN_EVENT);
 		}
 		CHECK(new_monst.monster_time == 17);
@@ -728,7 +728,7 @@ TEST_CASE("Converting monsters from legacy saves") {
 	cCreature new_monst;
 	
 	SECTION("Basic info") {
-		new_monst.append(old_monst);
+		new_monst.import_legacy(old_monst);
 		CHECK(new_monst.m_name == "Test Monster");
 		CHECK(new_monst.health == 45);
 		CHECK(new_monst.m_health == 50);
@@ -748,13 +748,13 @@ TEST_CASE("Converting monsters from legacy saves") {
 	}
 	SECTION("Summoned by party") {
 		old_monst.summoned = 20;
-		new_monst.append(old_monst);
+		new_monst.import_legacy(old_monst);
 		CHECK(new_monst.summon_time == 20);
 		CHECK(new_monst.party_summoned);
 	}
 	SECTION("Summoned by monster") {
 		old_monst.summoned = 120;
-		new_monst.append(old_monst);
+		new_monst.import_legacy(old_monst);
 		CHECK(new_monst.summon_time == 20);
 		CHECK_FALSE(new_monst.party_summoned);
 	}
