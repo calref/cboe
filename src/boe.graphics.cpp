@@ -626,23 +626,23 @@ void draw_text_bar() {
 	
 	bool in_area = false;
 	if(is_out()) {
-		for(short i = 0; i < univ.out->info_rect.size(); i++)
-			if(loc.in(univ.out->info_rect[i])) {
-				put_text_bar(univ.out->info_rect[i].descr);
+		for(short i = 0; i < univ.out->area_desc.size(); i++)
+			if(loc.in(univ.out->area_desc[i])) {
+				put_text_bar(univ.out->area_desc[i].descr);
 				in_area = true;
 			}
 		if(!in_area) {
-			put_text_bar(univ.out->out_name);
+			put_text_bar(univ.out->name);
 		}
 	}
 	if(is_town()) {
-		for(short i = 0; i < univ.town->room_rect.size(); i++)
-			if(loc.in(univ.town->room_rect[i])) {
-				put_text_bar(univ.town->room_rect[i].descr);
+		for(short i = 0; i < univ.town->area_desc.size(); i++)
+			if(loc.in(univ.town->area_desc[i])) {
+				put_text_bar(univ.town->area_desc[i].descr);
 				in_area = true;
 			}
 		if(!in_area) {
-			put_text_bar(univ.town->town_name);
+			put_text_bar(univ.town->name);
 		}
 		
 	}
@@ -778,8 +778,8 @@ void draw_terrain(short	mode) {
 			where_draw.y += j - 6;
 			if(!(is_out()))
 				light_area[i][j] = (is_town()) ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
-			if(!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim() - 1)
-								|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1)))
+			if(!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim - 1)
+								|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim - 1)))
 				unexplored_area[i][j] = 0;
 			else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
 		}
@@ -793,18 +793,18 @@ void draw_terrain(short	mode) {
 			off_terrain = false;
 			
 			draw_frills = true;
-			if(!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim() - 1)
-								|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim() - 1))) {
+			if(!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim - 1)
+								|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim - 1))) {
 				draw_frills = false;
 				// Warning - this section changes where_draw
 				if(where_draw.x < 0)
 					where_draw.x = -1;
-				if(where_draw.x > univ.town->max_dim() - 1)
-					where_draw.x = univ.town->max_dim();
+				if(where_draw.x > univ.town->max_dim - 1)
+					where_draw.x = univ.town->max_dim;
 				if(where_draw.y < 0)
 					where_draw.y = -1;
-				if(where_draw.y > univ.town->max_dim() - 1)
-					where_draw.y = univ.town->max_dim();
+				if(where_draw.y > univ.town->max_dim - 1)
+					where_draw.y = univ.town->max_dim;
 				if(can_see_light(view_loc,where_draw,sight_obscurity) < 5)
 					can_draw = 1;
 				else can_draw = 0;
@@ -1002,9 +1002,9 @@ void place_trim(short q,short r,location where,ter_num_t ter_type) {
 	}
 	else {
 		// TODO: Shouldn't we subtract one here?
-		if(where.x == univ.town->max_dim())
+		if(where.x == univ.town->max_dim)
 			at_right = true;
-		if(where.y == univ.town->max_dim())
+		if(where.y == univ.town->max_dim)
 			at_bot = true;
 	}
 	
@@ -1268,14 +1268,14 @@ void place_road(short q,short r,location where,bool here) {
 			rect_draw_some_item (roads_gworld, road_rects[1], terrain_screen_gworld, to_rect);
 		}
 		
-		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1))
+		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim - 1))
 			|| extend_road_terrain(where.x + 1, where.y)) {
 			to_rect = road_dest_rects[1];
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld, to_rect);
 		}
 		
-		if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1))
+		if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim - 1))
 			|| extend_road_terrain(where.x, where.y + 1)) {
 			to_rect = road_dest_rects[2];
 			to_rect.offset(13 + q * 28,13 + r * 36);
@@ -1301,20 +1301,20 @@ void place_road(short q,short r,location where,bool here) {
 		else if((vertTrim == eTrimType::S && trim == eTrimType::N) || (vertTrim == eTrimType::N && trim == eTrimType::S))
 			vert = can_build_roads_on(ref);
 		
-		if(((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim() - 1)))
+		if(((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim - 1)))
 			ter = coord_to_ter(where.x + 1,where.y);
 		eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
-		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim() - 1))
+		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim - 1))
 			|| connect_roads(ter))
 			horz = can_build_roads_on(ref);
 		else if((horzTrim == eTrimType::W && trim == eTrimType::E) || (horzTrim == eTrimType::E && trim == eTrimType::W))
 			horz = can_build_roads_on(ref);
 		
 		if(vert){
-			if(((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim() - 1)))
+			if(((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim - 1)))
 				ter = coord_to_ter(where.x,where.y + 1);
 			eTrimType vertTrim = univ.scenario.ter_types[ter].trim_type;
-			if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim() - 1))
+			if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim - 1))
 				|| connect_roads(ter))
 				vert = can_build_roads_on(ref);
 			else if((vertTrim == eTrimType::S && trim == eTrimType::N) || (vertTrim == eTrimType::N && trim == eTrimType::S))

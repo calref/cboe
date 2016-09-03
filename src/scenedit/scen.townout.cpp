@@ -5,7 +5,7 @@
 #include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
 #include "scenario.hpp"
-#include "regtown.hpp"
+#include "town.hpp"
 #include "graphtool.hpp"
 #include "scen.graphics.hpp"
 #include "scen.townout.hpp"
@@ -444,7 +444,7 @@ bool change_ter(short& change_from,short& change_to,short& chance) {
 
 static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
-	current_terrain->out_name = me["name"].getText();
+	current_terrain->name = me["name"].getText();
 	current_terrain->comment = me["comment"].getText();
 	current_terrain->bg_out = me["bg-out"].getTextAsNum();
 	current_terrain->bg_fight = me["bg-fight"].getTextAsNum();
@@ -460,7 +460,7 @@ void outdoor_details() {
 	str_out << "X = " << cur_out.x << ", Y = " << cur_out.y;
 	out_dlg["loc"].setText(str_out.str());
 	out_dlg["comment"].setText(current_terrain->comment);
-	out_dlg["name"].setText(current_terrain->out_name);
+	out_dlg["name"].setText(current_terrain->name);
 	out_dlg["bg-out"].setTextToNum(current_terrain->bg_out);
 	out_dlg["bg-fight"].setTextToNum(current_terrain->bg_fight);
 	out_dlg["bg-town"].setTextToNum(current_terrain->bg_town);
@@ -622,7 +622,7 @@ void edit_out_wand(short mode) {
 
 static bool save_town_details(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
-	town->town_name = me["name"].getText();
+	town->name = me["name"].getText();
 	town->town_chop_time = me["chop"].getTextAsNum();
 	town->town_chop_key = me["key"].getTextAsNum();
 	town->max_num_monst = me["population"].getTextAsNum();
@@ -641,7 +641,7 @@ static bool save_town_details(cDialog& me, std::string, eKeyMod) {
 }
 
 static void put_town_details_in_dlog(cDialog& me) {
-	me["name"].setText(town->town_name);
+	me["name"].setText(town->name);
 	me["chop"].setTextToNum(town->town_chop_time);
 	me["key"].setTextToNum(town->town_chop_key);
 	me["population"].setTextToNum(town->max_num_monst);
@@ -1133,7 +1133,7 @@ static void put_out_loc_in_dlog(cDialog& me, location cur_loc, cScenario& scenar
 	str.str("");
 	str << "Y = " << cur_loc.y;
 	me["y"].setText(str.str());
-	me["title"].setText(scenario.outdoors[cur_loc.x][cur_loc.y]->out_name);
+	me["title"].setText(scenario.outdoors[cur_loc.x][cur_loc.y]->name);
 }
 
 static bool pick_out_event_filter(cDialog& me, std::string item_hit, location& cur_loc, cScenario& scenario) {
@@ -1199,17 +1199,17 @@ bool new_town(short which_town) {
 	std::string size = dynamic_cast<cLedGroup&>(new_dlg->getControl("size")).getSelected();
 	std::string preset = dynamic_cast<cLedGroup&>(new_dlg->getControl("preset")).getSelected();
 	
-	if(size == "lg") scenario.towns.push_back(new cBigTown(scenario));
-	else if(size == "med") scenario.towns.push_back(new cMedTown(scenario));
-	else if(size == "sm") scenario.towns.push_back(new cTinyTown(scenario));
+	if(size == "lg") scenario.towns.push_back(new cTown(scenario, AREA_LARGE));
+	else if(size == "med") scenario.towns.push_back(new cTown(scenario, AREA_MEDIUM));
+	else if(size == "sm") scenario.towns.push_back(new cTown(scenario, AREA_SMALL));
 	
 	cur_town = which_town;
 	town = scenario.towns[cur_town];
 	scenario.last_town_edited = cur_town;
-	town->town_name = new_dlg->getControl("name").getText().substr(0,30);
+	town->name = new_dlg->getControl("name").getText().substr(0,30);
 	
-	for(short i = 0; i < town->max_dim(); i++)
-		for(short j = 0; j < town->max_dim(); j++)
+	for(short i = 0; i < town->max_dim; i++)
+		for(short j = 0; j < town->max_dim; j++)
 			if(preset == "cave") {
 				town->terrain(i,j) = 0;
 			} else {
@@ -1286,7 +1286,7 @@ static void fill_resize_outdoors(cDialog& me, int top, int left, int right, int 
 		auto txtHeight = txtBounds.height();
 		txtHeight = 0;
 		for(location l : del) {
-			list << '(' << l.x << ", " << l.y << ") " << scenario.outdoors[l.x][l.y]->out_name << '|';
+			list << '(' << l.x << ", " << l.y << ") " << scenario.outdoors[l.x][l.y]->name << '|';
 			txtHeight += 10;
 		}
 		me["delete"].setText(list.str());

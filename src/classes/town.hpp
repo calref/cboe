@@ -18,6 +18,7 @@
 #include "monster.hpp"
 #include "talking.hpp"
 #include "item.hpp"
+#include "area.hpp"
 
 namespace legacy {
 	struct town_record_type;
@@ -32,7 +33,7 @@ namespace legacy {
 
 class cScenario;
 
-class cTown { // formerly town_record_type
+class cTown : public cArea { // formerly town_record_type
 protected:
 	cScenario* scenario;
 public:
@@ -67,9 +68,8 @@ public:
 	int bg_town, bg_fight;
 	std::array<cWandering,4> wandering;
 	std::array<location, 4> wandering_locs;
-	std::vector<spec_loc_t> special_locs;
-	std::vector<sign_loc_t> sign_locs;
 	eLighting lighting_type;
+	std::vector<boost::dynamic_bitset<>> lighting;
 	std::array<location, 4> start_locs;
 	std::array<spec_loc_t, 4> exits;
 	rectangle in_town_rect;
@@ -84,44 +84,28 @@ public:
 	bool strong_barriers, defy_mapping, defy_scrying;
 	bool is_hidden, has_tavern;
 	short difficulty;
-	std::string town_name;
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.
-	std::vector<info_rect_t> room_rect;
 	std::array<std::string,3> comment;
 	std::vector<std::string> spec_strs;
 	cSpeech talking;
 	// Persistent data for saved games
-	std::array<std::bitset<64>, 64> maps;
 	std::bitset<64> item_taken;
 	bool can_find;
 	long m_killed;
 	
-	virtual ~cTown(){}
-	virtual void import_legacy(legacy::big_tr_type& old, int town_num);
-	virtual void import_legacy(legacy::ave_tr_type& old, int town_num);
-	virtual void import_legacy(legacy::tiny_tr_type& old, int town_num);
-	virtual ter_num_t& terrain(size_t x, size_t y) = 0;
-	virtual unsigned char& lighting(size_t i, size_t r) = 0;
-	virtual size_t max_dim() const = 0;
-	virtual bool is_templated() const {return false;}
+	template<typename T>
+	void import_legacy(T& old, int town_num);
 	void init_start();
 	void set_up_lights();
 	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
 	bool is_cleaned_out();
 	
-	explicit cTown(cScenario& scenario);
+	explicit cTown(cScenario& scenario, size_t dim);
 	void import_legacy(legacy::town_record_type& old);
 	void reattach(cScenario& to);
-	virtual void writeTerrainTo(std::ostream& file) = 0;
-	virtual void readTerrainFrom(std::istream& file) = 0;
-	virtual cTown* clone() = 0;
-	// Copy-and-swap
-	// However, it's protected so that it can only be used by the clone implementations
-protected:
-	virtual void swap(cTown& other);
-	cTown(const cTown& other);
-	cTown(cTown&& other);
+	void writeTerrainTo(std::ostream& file);
+	void readTerrainFrom(std::istream& file);
 };
 
 std::ostream& operator<< (std::ostream& out, eLighting light);

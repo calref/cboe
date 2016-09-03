@@ -40,8 +40,8 @@ TEST_CASE("Converting legacy outdoor section data") {
 		CHECK(sector.bg_out == -1);
 		CHECK(sector.bg_town == -1);
 		CHECK(sector.out_sound == 0);
-		REQUIRE(sector.info_rect.size() >= 1);
-		CHECK(sector.info_rect[0] == rect(106,110,222,180));
+		REQUIRE(sector.area_desc.size() >= 1);
+		CHECK(sector.area_desc[0] == rect(106,110,222,180));
 		REQUIRE(sector.sign_locs.size() >= 1);
 		CHECK(sector.sign_locs[0] == loc(21,25));
 		REQUIRE(sector.wandering_locs.size() >= 4);

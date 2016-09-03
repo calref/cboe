@@ -130,7 +130,7 @@ TEST_CASE("Loading a town definition") {
 		fin.open("files/town/minimal.xml");
 		doc = xmlDocFromStream(fin, "minimal.xml");
 		REQUIRE_NOTHROW(readTownFromXml(move(doc), town, scen));
-		CHECK(town->max_dim() == 32);
+		CHECK(town->max_dim == 32);
 		CHECK(town->town_name == "Test Town");
 		CHECK(town->in_town_rect == rect(4, 4, 28, 28));
 		CHECK(town->difficulty == 1);
@@ -188,8 +188,8 @@ TEST_CASE("Loading a town definition") {
 		CHECK(town->creatures[12].personality == 1);
 		CHECK(town->creatures[12].special_on_kill == 80);
 		CHECK(town->creatures[12].special_on_talk == 81);
-		REQUIRE(town->room_rect.size() >= 1);
-		CHECK(town->room_rect[0].descr == "This  is  a  sample  area  description.");
+		REQUIRE(town->area_desc.size() >= 1);
+		CHECK(town->area_desc[0].descr == "This  is  a  sample  area  description.");
 	}
 	
 	delete town;

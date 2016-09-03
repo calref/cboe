@@ -132,7 +132,7 @@ cScenario::cScenario(const cScenario& other)
 {
 	// Copy towns and sectors
 	for(size_t i = 0; i < towns.size(); i++)
-		towns[i] = other.towns[i]->clone();
+		towns[i] = new cTown(*other.towns[i]);
 	for(size_t i = 0; i < outdoors.width(); i++)
 		for(size_t j = 0; j < outdoors.height(); j++)
 			outdoors[i][j] = new cOutdoors(*other.outdoors[i][j]);
@@ -350,8 +350,8 @@ bool cScenario::is_ter_used(ter_num_t ter) {
 		}
 	}
 	for(int i = 0; i < towns.size(); i++) {
-		for(int x = 0; x < towns[i]->max_dim(); x++) {
-			for(int y = 0; y < towns[i]->max_dim(); y++) {
+		for(int x = 0; x < towns[i]->max_dim; x++) {
+			for(int y = 0; y < towns[i]->max_dim; y++) {
 				if(towns[i]->terrain(x,y) == ter)
 					return true;
 			}

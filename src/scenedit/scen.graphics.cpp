@@ -903,12 +903,12 @@ void draw_terrain(){
 		
 		if(editing_town) {
 			// draw info rects
-			for(short i = 0; i < town->room_rect.size(); i++)
-				if(town->room_rect[i].left > 0) {
-					draw_rect.left = 22 + 28 * (town->room_rect[i].left - cen_x + 4);
-					draw_rect.right = 22 + 28 * (town->room_rect[i].right - cen_x + 4);
-					draw_rect.top = 24 + 36 * (town->room_rect[i].top - cen_y + 4);
-					draw_rect.bottom = 24 + 36 * (town->room_rect[i].bottom - cen_y + 4);
+			for(short i = 0; i < town->area_desc.size(); i++)
+				if(town->area_desc[i].left > 0) {
+					draw_rect.left = 22 + 28 * (town->area_desc[i].left - cen_x + 4);
+					draw_rect.right = 22 + 28 * (town->area_desc[i].right - cen_x + 4);
+					draw_rect.top = 24 + 36 * (town->area_desc[i].top - cen_y + 4);
+					draw_rect.bottom = 24 + 36 * (town->area_desc[i].bottom - cen_y + 4);
 					draw_rect.inset(-10, -13);
 					draw_rect.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
 					frame_rect(mainPtr, draw_rect, sf::Color::Red);
@@ -924,12 +924,12 @@ void draw_terrain(){
 		}
 		if(!editing_town) {
 			// draw info rects
-			for(short i = 0; i < current_terrain->info_rect.size(); i++)
-				if(current_terrain->info_rect[i].left > 0) {
-					draw_rect.left = 22 + 28 * (current_terrain->info_rect[i].left - cen_x + 4);
-					draw_rect.right = 22 + 28 * (current_terrain->info_rect[i].right - cen_x + 4);
-					draw_rect.top = 24 + 36 * (current_terrain->info_rect[i].top - cen_y + 4);
-					draw_rect.bottom = 24 + 36 * (current_terrain->info_rect[i].bottom - cen_y + 4);
+			for(short i = 0; i < current_terrain->area_desc.size(); i++)
+				if(current_terrain->area_desc[i].left > 0) {
+					draw_rect.left = 22 + 28 * (current_terrain->area_desc[i].left - cen_x + 4);
+					draw_rect.right = 22 + 28 * (current_terrain->area_desc[i].right - cen_x + 4);
+					draw_rect.top = 24 + 36 * (current_terrain->area_desc[i].top - cen_y + 4);
+					draw_rect.bottom = 24 + 36 * (current_terrain->area_desc[i].bottom - cen_y + 4);
 					draw_rect.inset(-10, -13);
 					draw_rect.offset(TER_RECT_UL_X, TER_RECT_UL_Y);
 					frame_rect(mainPtr, draw_rect, sf::Color::Red);
@@ -948,7 +948,7 @@ void draw_terrain(){
 		// Width available:  64 4x4 tiles, 42 6x6 tiles, or 21 12x12 tiles -- 256 pixels
 		// Height available: 81 4x4 tiles, 54 6x6 tiles, or 27 12x12 tiles -- 324 pixels
 		short size = mini_map_scales[cur_viewing_mode - 1];
-		int max_dim = (editing_town ? town->max_dim() : 48);
+		int max_dim = (editing_town ? town->max_dim : 48);
 		int xMin = 0, yMin = 0, xMax = max_dim, yMax = max_dim;
 		if(cen_x + 5 > 256 / size) {
 			xMin = cen_x + 5 - (256 / size);

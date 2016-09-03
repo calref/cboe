@@ -133,7 +133,7 @@ location local_to_global(location local) {
 	return global;
 }
 bool loc_off_world(location p1) {
-	if((p1.x < 0) || (p1.x > univ.town->max_dim()) || (p1.y < 0) || (p1.y > univ.town->max_dim()))
+	if((p1.x < 0) || (p1.x > univ.town->max_dim) || (p1.y < 0) || (p1.y > univ.town->max_dim))
 		return true;
 	else return false;
 }
@@ -266,8 +266,8 @@ void update_explored(location dest) {
 	
 	if(overall_mode > MODE_OUTDOORS) {
 		make_explored(dest.x,dest.y);
-		for(look2.x = max(0,dest.x - 4); look2.x < min(univ.town->max_dim(),dest.x + 5); look2.x++)
-			for(look2.y = max(0,dest.y - 4); look2.y < min(univ.town->max_dim(),dest.y + 5); look2.y++)
+		for(look2.x = max(0,dest.x - 4); look2.x < min(univ.town->max_dim,dest.x + 5); look2.x++)
+			for(look2.y = max(0,dest.y - 4); look2.y < min(univ.town->max_dim,dest.y + 5); look2.y++)
 				if(!is_explored(look2.x,look2.y))
 					if((can_see_light(dest, look2,sight_obscurity) < 5) && (pt_in_light(dest,look2)))
 						make_explored(look2.x,look2.y);
@@ -481,10 +481,10 @@ bool pt_in_light(location from_where,location to_where) { // Assumes, of course,
 	
 	if(univ.town->lighting_type == 0)
 		return true;
-	if((to_where.x < 0) || (to_where.x >= univ.town->max_dim())
-		|| (to_where.y < 0) || (to_where.y >= univ.town->max_dim()))
+	if((to_where.x < 0) || (to_where.x >= univ.town->max_dim)
+		|| (to_where.y < 0) || (to_where.y >= univ.town->max_dim))
 		return true;
-	if(univ.town->lighting(to_where.x / 8,to_where.y) & (char) (1 << to_where.x % 8))
+	if(univ.town->lighting[to_where.x][to_where.y])
 		return true;
 	
 	if(dist(from_where,to_where) <= light_radius())
@@ -498,10 +498,10 @@ bool combat_pt_in_light(location to_where) {
 	
 	if((univ.town->lighting_type == 0) || (which_combat_type == 0))
 		return true;
-	if((to_where.x < 0) || (to_where.x >= univ.town->max_dim())
-		|| (to_where.y < 0) || (to_where.y >= univ.town->max_dim()))
+	if((to_where.x < 0) || (to_where.x >= univ.town->max_dim)
+		|| (to_where.y < 0) || (to_where.y >= univ.town->max_dim))
 		return true;
-	if(univ.town->lighting(to_where.x / 8,to_where.y) & (char) (1 << to_where.x % 8))
+	if(univ.town->lighting[to_where.x][to_where.y])
 		return true;
 	
 	rad = light_radius();

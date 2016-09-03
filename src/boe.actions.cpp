@@ -1241,11 +1241,11 @@ bool handle_action(sf::Event event) {
 			center.x--;
 			need_redraw = true;
 		}
-		if(the_point.in(border_rect[2]) && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim() - 5) {
+		if(the_point.in(border_rect[2]) && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim - 5) {
 			center.y++;
 			need_redraw = true;
 		}
-		if(the_point.in(border_rect[3]) && center.x < univ.town->in_town_rect.right && center.x < univ.town->max_dim() - 5) {
+		if(the_point.in(border_rect[3]) && center.x < univ.town->in_town_rect.right && center.x < univ.town->max_dim - 5) {
 			center.x++;
 			need_redraw = true;
 		}
@@ -2167,8 +2167,8 @@ bool handle_scroll(sf::Event& event) {
 		redraw_screen(REFRESH_DLOG);
 	} else if(scrollableModes.count(overall_mode) && pos.in(world_screen)) {
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
-			center.x = minmax(4, univ.town->max_dim() - 5, center.x - amount);
-		else center.y = minmax(4, univ.town->max_dim() - 5, center.y - amount);
+			center.x = minmax(4, univ.town->max_dim - 5, center.x - amount);
+		else center.y = minmax(4, univ.town->max_dim - 5, center.y - amount);
 		redraw_screen(REFRESH_TERRAIN);
 	}
 	return true;

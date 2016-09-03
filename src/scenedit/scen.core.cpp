@@ -8,7 +8,7 @@
 #include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
 #include "scenario.hpp"
-#include "regtown.hpp"
+#include "town.hpp"
 #include "graphtool.hpp"
 #include "scen.graphics.hpp"
 #include "scen.core.hpp"
@@ -2906,8 +2906,8 @@ bool build_scenario() {
 		if(!grass) {
 			// Go through and replace all surface terrains with similar cave terrains
 			// Note that this assumes the default terrain set is unchanged.
-			for(int x = 0; x < warriors_grove->max_dim(); x++) {
-				for(int y = 0; y < warriors_grove->max_dim(); y++) {
+			for(int x = 0; x < warriors_grove->max_dim; x++) {
+				for(int y = 0; y < warriors_grove->max_dim; y++) {
 					ter_num_t ter_there = warriors_grove->terrain(x,y);
 					if(ter_there >= 36 && ter_there <= 49 && ter_there != 37) // Hills
 						ter_there = 0;
@@ -3050,16 +3050,16 @@ bool build_scenario() {
 	}
 	
 	for(short i = 0; i < lg; i++) {
-		scenario.addTown<cBigTown>();
-		scenario.towns.back()->town_name = "Large town " + std::to_string(i + 1);
+		scenario.addTown(AREA_LARGE);
+		scenario.towns.back()->name = "Large town " + std::to_string(i + 1);
 	}
 	for(short i = 0; i < med; i++) {
-		scenario.addTown<cMedTown>();
-		scenario.towns.back()->town_name = "Medium town " + std::to_string(i + 1);
+		scenario.addTown(AREA_MEDIUM);
+		scenario.towns.back()->name = "Medium town " + std::to_string(i + 1);
 	}
 	for(short i = 0; i < sm; i++) {
-		scenario.addTown<cTinyTown>();
-		scenario.towns.back()->town_name = "Small town " + std::to_string(i + 1);
+		scenario.addTown(AREA_SMALL);
+		scenario.towns.back()->name = "Small town " + std::to_string(i + 1);
 	}
 	cur_town = 0;
 	town = scenario.towns[0];

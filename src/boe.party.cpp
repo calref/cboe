@@ -1281,8 +1281,8 @@ void cast_town_spell(location where) {
 			
 		case eSpell::ANTIMAGIC:
 			add_string_to_buf("  You create an antimagic cloud.");
-			for(loc.x = 0; loc.x < univ.town->max_dim(); loc.x++)
-				for(loc.y = 0; loc.y < univ.town->max_dim(); loc.y++)
+			for(loc.x = 0; loc.x < univ.town->max_dim; loc.x++)
+				for(loc.y = 0; loc.y < univ.town->max_dim; loc.y++)
 					if(dist(where,loc) <= 2 && can_see(where,loc,sight_obscurity) < 5 &&
 					   ((abs(loc.x - where.x) < 2) || (abs(loc.y - where.y) < 2)))
 						univ.town.set_antimagic(loc.x,loc.y,true);

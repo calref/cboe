@@ -22,6 +22,7 @@ template<typename Type, typename Alloc = std::allocator<Type>> class vector2d {
 	std::vector<Type, Alloc> data;
 	size_t w, h;
 public:
+	using value_type = Type;
 	class row_ref {
 		friend class vector2d<Type, Alloc>;
 		vector2d<Type, Alloc>& ref;
@@ -120,6 +121,12 @@ public:
 	const_row_ref row(size_t x) const {
 		return const_row_ref(*this, x);
 	}
+	Type& operator()(size_t x, size_t y) {
+		return (*this)[x][y];
+	}
+	const Type& operator()(size_t x, size_t y) const {
+		return (*this)[x][y];
+	}
 	size_t width() const {
 		return w;
 	}
@@ -162,7 +169,9 @@ public:
 		return data.empty();
 	}
 	vector2d() : w(0), h(0) {}
-	vector2d(size_t w, size_t h) : w(w), h(h) {}
+	vector2d(size_t w, size_t h) : w(w), h(h) {
+		resize(w,h);
+	}
 };
 
 #endif

@@ -14,7 +14,7 @@
 #include <sstream>
 #include <stack>
 
-#include "regtown.hpp"
+#include "town.hpp"
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
@@ -39,21 +39,22 @@ void cCurTown::import_legacy(legacy::current_town_type& old){
 }
 
 void cCurTown::import_legacy(legacy::big_tr_type& old){
-	for(short i = 0; i < record()->max_dim(); i++)
-		for(short j = 0; j < record()->max_dim(); j++)
+	for(short i = 0; i < record()->max_dim; i++)
+		for(short j = 0; j < record()->max_dim; j++)
 			record()->terrain(i,j) = old.terrain[i][j];
 	for(short i = 0; i < 16; i++){
-		record()->room_rect[i].top = old.room_rect[i].top;
-		record()->room_rect[i].left = old.room_rect[i].left;
-		record()->room_rect[i].bottom = old.room_rect[i].bottom;
-		record()->room_rect[i].right = old.room_rect[i].right;
+		record()->area_desc[i].top = old.room_rect[i].top;
+		record()->area_desc[i].left = old.room_rect[i].left;
+		record()->area_desc[i].bottom = old.room_rect[i].bottom;
+		record()->area_desc[i].right = old.room_rect[i].right;
 	}
 	record()->creatures.resize(60);
 	for(short i = 0; i < 60; i++)
 		record()->creatures[i].import_legacy(old.creatures[i]);
-	for(short i = 0; i < record()->max_dim() / 8; i++)
-		for(short j = 0; j < record()->max_dim(); j++)
-			record()->lighting(i,j) = old.lighting[i][j];
+	for(short i = 0; i < record()->max_dim; i++)
+		for(short j = 0; j < record()->max_dim; j++) {
+			record()->lighting[i][j] = old.lighting[i / 8][j] & (1 << (i % 8));
+		}
 }
 
 void cCurTown::import_legacy(legacy::town_item_list& old){
@@ -181,7 +182,7 @@ bool cCurTown::prep_talk(short which) {
 
 void cCurTown::prep_arena() {
 	if(arena != nullptr) delete arena;
-	arena = new cMedTown(univ.scenario);
+	arena = new cTown(univ.scenario, AREA_MEDIUM);
 }
 
 cCurTown::~cCurTown() {
@@ -194,47 +195,47 @@ cTown*const cCurTown::record() const {
 }
 
 bool cCurTown::is_explored(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & SPECIAL_EXPLORED;
 }
 
 bool cCurTown::is_force_wall(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & WALL_FORCE;
 }
 
 bool cCurTown::is_fire_wall(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & WALL_FIRE;
 }
 
 bool cCurTown::is_antimagic(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & FIELD_ANTIMAGIC;
 }
 
 bool cCurTown::is_scloud(short x, short y) const{ // stinking cloud
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & CLOUD_STINK;
 }
 
 bool cCurTown::is_ice_wall(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & WALL_ICE;
 }
 
 bool cCurTown::is_blade_wall(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & WALL_BLADES;
 }
 
 bool cCurTown::is_sleep_cloud(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & CLOUD_SLEEP;
 }
 
 bool cCurTown::is_block(short x, short y) const{ // currently unused
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & OBJECT_BLOCK;
 }
 
@@ -247,7 +248,7 @@ bool cCurTown::is_road(short x, short y) const{
 }
 
 bool cCurTown::is_special(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	location check(x,y);
 	for(int i = 0; i < record()->special_locs.size(); i++)
 		if(check == record()->special_locs[i] && record()->special_locs[i].spec >= 0)
@@ -256,89 +257,89 @@ bool cCurTown::is_special(short x, short y) const{
 }
 
 bool cCurTown::is_web(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & FIELD_WEB;
 }
 
 bool cCurTown::is_crate(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & OBJECT_CRATE;
 }
 
 bool cCurTown::is_barrel(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & OBJECT_BARREL;
 }
 
 bool cCurTown::is_fire_barr(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & BARRIER_FIRE;
 }
 
 bool cCurTown::is_force_barr(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & BARRIER_FORCE;
 }
 
 bool cCurTown::is_quickfire(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & FIELD_QUICKFIRE;
 }
 
 bool cCurTown::is_sm_blood(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & SFX_SMALL_BLOOD;
 }
 
 bool cCurTown::is_med_blood(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & SFX_MEDIUM_BLOOD;
 }
 
 bool cCurTown::is_lg_blood(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & SFX_LARGE_BLOOD;
 }
 
 bool cCurTown::is_sm_slime(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & SFX_SMALL_SLIME;
 }
 
 bool cCurTown::is_lg_slime(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & SFX_LARGE_SLIME;
 }
 
 bool cCurTown::is_ash(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & SFX_ASH;
 }
 
 bool cCurTown::is_bones(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & SFX_BONES;
 }
 
 bool cCurTown::is_rubble(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & SFX_RUBBLE;
 }
 
 bool cCurTown::is_force_cage(short x, short y) const{
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	return fields[x][y] & BARRIER_CAGE;
 }
 
 bool cCurTown::set_explored(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b) fields[x][y] |=  SPECIAL_EXPLORED;
 	else  fields[x][y] &= ~SPECIAL_EXPLORED;
 	return true;
 }
 
 bool cCurTown::set_force_wall(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on space, there's no room for field.
 		if(is_impassable(x,y))
 			return false;
@@ -355,7 +356,7 @@ bool cCurTown::set_force_wall(short x, short y, bool b){
 }
 
 bool cCurTown::set_fire_wall(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on space, there's no room for field.
 		if(is_impassable(x,y))
 			return false;
@@ -374,7 +375,7 @@ bool cCurTown::set_fire_wall(short x, short y, bool b){
 }
 
 bool cCurTown::set_antimagic(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on space, there's no room for a field.
 		if(is_impassable(x,y))
 			return false;
@@ -394,7 +395,7 @@ bool cCurTown::set_antimagic(short x, short y, bool b){
 }
 
 bool cCurTown::set_scloud(short x, short y, bool b){ // stinking cloud
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on space, there's no room for cloud.
 		if(is_impassable(x,y))
 			return false;
@@ -411,7 +412,7 @@ bool cCurTown::set_scloud(short x, short y, bool b){ // stinking cloud
 }
 
 bool cCurTown::set_ice_wall(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on space, ther's no room for a field.
 		if(is_impassable(x,y))
 			return false;
@@ -430,7 +431,7 @@ bool cCurTown::set_ice_wall(short x, short y, bool b){
 }
 
 bool cCurTown::set_blade_wall(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // if certain things are on space, there's no room for a field.
 		if(is_impassable(x,y))
 			return false;
@@ -445,7 +446,7 @@ bool cCurTown::set_blade_wall(short x, short y, bool b){
 }
 
 bool cCurTown::set_sleep_cloud(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // if certain things are on space, there's no room for cloud.
 		if(is_impassable(x,y))
 			return false;
@@ -460,28 +461,28 @@ bool cCurTown::set_sleep_cloud(short x, short y, bool b){
 }
 
 bool cCurTown::set_block(short x, short y, bool b){ // currently unused
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b) fields[x][y] |=  OBJECT_BLOCK;
 	else  fields[x][y] &= ~OBJECT_BLOCK;
 	return true;
 }
 
 bool cCurTown::set_spot(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b) fields[x][y] |=  SPECIAL_SPOT;
 	else  fields[x][y] &= ~SPECIAL_SPOT;
 	return true;
 }
 
 bool cCurTown::set_road(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b) fields[x][y] |=  SPECIAL_ROAD;
 	else  fields[x][y] &= ~SPECIAL_ROAD;
 	return true;
 }
 
 bool cCurTown::set_web(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on the space, there's no room for webs
 		if(is_impassable(x,y))
 			return false;
@@ -498,7 +499,7 @@ bool cCurTown::set_web(short x, short y, bool b){
 }
 
 bool cCurTown::set_crate(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on the space, there's no room for a crate.
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_barrel(x,y))
 			return false;
@@ -509,7 +510,7 @@ bool cCurTown::set_crate(short x, short y, bool b){
 }
 
 bool cCurTown::set_barrel(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on the space, there's no room for a crate.
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_crate(x,y))
 			return false;
@@ -520,7 +521,7 @@ bool cCurTown::set_barrel(short x, short y, bool b){
 }
 
 bool cCurTown::set_fire_barr(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on the space, there's no room for a barrier.
 		if(is_barrel(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_crate(x,y))
 			return false;
@@ -542,7 +543,7 @@ bool cCurTown::set_fire_barr(short x, short y, bool b){
 }
 
 bool cCurTown::set_force_barr(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on the space, there's no room for a barrier.
 		if(is_fire_barr(x,y) || is_barrel(x,y) || is_quickfire(x,y) || is_crate(x,y))
 			return false;
@@ -564,7 +565,7 @@ bool cCurTown::set_force_barr(short x, short y, bool b){
 }
 
 bool cCurTown::set_quickfire(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on space, there's no room for quickfire.
 		ter_num_t ter = record()->terrain(x,y);
 		if(univ.scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_SIGHT)
@@ -604,7 +605,7 @@ bool cCurTown::free_for_sfx(short x, short y) {
 }
 
 bool cCurTown::set_sm_blood(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
 		if(is_med_blood(x,y) || is_lg_blood(x,y))
@@ -621,7 +622,7 @@ bool cCurTown::set_sm_blood(short x, short y, bool b){
 }
 
 bool cCurTown::set_med_blood(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
 		if(is_lg_blood(x,y))
@@ -639,7 +640,7 @@ bool cCurTown::set_med_blood(short x, short y, bool b){
 }
 
 bool cCurTown::set_lg_blood(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
 		set_sm_blood(x,y,false);
@@ -673,7 +674,7 @@ bool cCurTown::set_sm_slime(short x, short y, bool b){
 }
 
 bool cCurTown::set_lg_slime(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
 		set_sm_blood(x,y,false);
@@ -690,7 +691,7 @@ bool cCurTown::set_lg_slime(short x, short y, bool b){
 }
 
 bool cCurTown::set_ash(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
 		set_sm_blood(x,y,false);
@@ -707,7 +708,7 @@ bool cCurTown::set_ash(short x, short y, bool b){
 }
 
 bool cCurTown::set_bones(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
 		set_sm_blood(x,y,false);
@@ -724,7 +725,7 @@ bool cCurTown::set_bones(short x, short y, bool b){
 }
 
 bool cCurTown::set_rubble(short x, short y, bool b){
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){
 		if(!free_for_sfx(x,y)) return false;
 		set_sm_blood(x,y,false);
@@ -743,7 +744,7 @@ bool cCurTown::set_rubble(short x, short y, bool b){
 bool cCurTown::set_force_cage(short x, short y, bool b){
 	// TODO: Consider whether placing a forcecage should erase anything already present, or fail due to something already present
 	// TODO: Also consider checking for forcecage in some of the other placement functions.
-	if(x > record()->max_dim() || y > record()->max_dim()) return false;
+	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b) fields[x][y] |=  BARRIER_CAGE;
 	else  fields[x][y] &= ~BARRIER_CAGE;
 	return true;
@@ -811,7 +812,7 @@ void cCurTown::writeTo(std::ostream& file) const {
 	file << '\f';
 	file << "FIELDS\n";
 	file << std::hex;
-	writeArray(file, fields, record()->max_dim(), record()->max_dim());
+	writeArray(file, fields, record()->max_dim, record()->max_dim);
 	file << std::dec;
 	file << "TERRAIN\n";
 	record()->writeTerrainTo(file);
@@ -845,7 +846,7 @@ void cCurTown::readFrom(std::istream& file){
 		if(cur == "FIELDS") {
 			int num = univ.party.town_num;
 			bin >> std::hex;
-			readArray(bin, fields, univ.scenario.towns[num]->max_dim(), univ.scenario.towns[num]->max_dim());
+			readArray(bin, fields, univ.scenario.towns[num]->max_dim, univ.scenario.towns[num]->max_dim);
 			bin >> std::dec;
 		} else if(cur == "ITEM") {
 			int i;

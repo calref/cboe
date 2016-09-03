@@ -108,8 +108,8 @@ void finish_load_party(){
 		}
 		
 		// Set up field booleans
-		for(int j = 0; j < univ.town->max_dim(); j++)
-			for(int k = 0; k < univ.town->max_dim(); k++) {
+		for(int j = 0; j < univ.town->max_dim; j++)
+			for(int k = 0; k < univ.town->max_dim; k++) {
 				if(univ.town.is_quickfire(j,k))
 					univ.town.quickfire_present = true;
 				if(univ.scenario.ter_types[univ.town->terrain(j,k)].special == eTerSpec::CONVEYOR)

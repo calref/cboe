@@ -77,17 +77,17 @@ void cOutdoors::import_legacy(legacy::outdoor_record_type& old){
 	}
 	city_locs.resize(8);
 	sign_locs.resize(8);
-	info_rect.resize(8);
+	area_desc.resize(8);
 	for(short i = 0; i < 8; i++){
 		city_locs[i].x = old.exit_locs[i].x;
 		city_locs[i].y = old.exit_locs[i].y;
 		city_locs[i].spec = old.exit_dests[i];
 		sign_locs[i].x = old.sign_locs[i].x;
 		sign_locs[i].y = old.sign_locs[i].y;
-		info_rect[i].top = old.info_rect[i].top;
-		info_rect[i].left = old.info_rect[i].left;
-		info_rect[i].bottom = old.info_rect[i].bottom;
-		info_rect[i].right = old.info_rect[i].right;
+		area_desc[i].top = old.info_rect[i].top;
+		area_desc[i].left = old.info_rect[i].left;
+		area_desc[i].bottom = old.info_rect[i].bottom;
+		area_desc[i].right = old.info_rect[i].right;
 	}
 	for(short i = 0; i < 4; i++){
 		wandering[i].import_legacy(old.wandering[i]);
@@ -107,13 +107,13 @@ cOutdoors::cWandering::cWandering() {
 	std::fill(friendly.begin(), friendly.end(), 0);
 }
 
-cOutdoors::cOutdoors(cScenario& scenario) : scenario(&scenario) {
+cOutdoors::cOutdoors(cScenario& scenario) : cArea(AREA_MEDIUM), scenario(&scenario) {
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	bg_out = bg_fight = bg_town = bg_dungeon = -1;
 	out_sound = 0;
 	
-	for(short i = 0; i < 48; i++)
-		for(short j = 0; j < 48; j++) {
+	for(short i = 0; i < max_dim; i++)
+		for(short j = 0; j < max_dim; j++) {
 			terrain[i][j] = scenario.default_ground;
 			special_spot[i][j] = false;
 			roads[i][j] = false;
@@ -122,7 +122,7 @@ cOutdoors::cOutdoors(cScenario& scenario) : scenario(&scenario) {
 	for(short i = 0; i < wandering_locs.size(); i++) {
 		wandering_locs[i] = locs[i];
 	}
-	out_name = "Area name";
+	name = "Area name";
 	comment = "Comment";
 }
 

@@ -616,7 +616,7 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 	data.OpenElement("sector");
 	data.PushAttribute("boes", scenario.format_ed_version());
-	data.PushElement("name", sector.out_name);
+	data.PushElement("name", sector.name);
 	if(!sector.comment.empty())
 		data.PushElement("comment", sector.comment);
 	switch(sector.ambient_sound) {
@@ -640,7 +640,7 @@ void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 		data.PushText(sector.sign_locs[i].text, true);
 		data.CloseElement("sign");
 	}
-	for(auto& area : sector.info_rect) {
+	for(auto& area : sector.area_desc) {
 		if(!area.descr.empty() && area.top < area.bottom && area.left < area.right)
 			data.PushElement("area", area);
 	}
@@ -658,8 +658,8 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 	static const char directions[] = {'n', 'w', 's', 'e'};
 	data.OpenElement("town");
 	data.PushAttribute("boes", scenario.format_ed_version());
-	data.PushElement("size", town.max_dim());
-	data.PushElement("name", town.town_name);
+	data.PushElement("size", town.max_dim);
+	data.PushElement("name", town.name);
 	for(size_t i = 0; i < town.comment.size(); i++) {
 		if(!town.comment[i].empty())
 			data.PushElement("comment", town.comment[i]);
@@ -777,7 +777,7 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		}
 		data.CloseElement("creature");
 	}
-	for(auto& area : town.room_rect) {
+	for(auto& area : town.area_desc) {
 		if(!area.descr.empty() && area.top < area.bottom && area.left < area.right)
 			data.PushElement("area", area);
 	}
@@ -892,8 +892,8 @@ map_data buildOutMapData(location which, cScenario& scenario) {
 map_data buildTownMapData(size_t which, cScenario& scenario) {
 	cTown& town = *scenario.towns[which];
 	map_data terrain;
-	for(size_t x = 0; x < town.max_dim(); x++) {
-		for(size_t y = 0; y < town.max_dim(); y++) {
+	for(size_t x = 0; x < town.max_dim; x++) {
+		for(size_t y = 0; y < town.max_dim; y++) {
 			terrain.set(x, y, town.terrain(x,y));
 		}
 	}
@@ -1202,11 +1202,11 @@ void scen_text_dump(){
 	for(short x = 0; x < scenario.outdoors.width(); x++) {
 		for(short y = 0; y < scenario.outdoors.height(); y++) {
 			fout << "  Section (x = " << x << ", y = " << y << "):" << endl;
-			fout << "    Name: " << scenario.outdoors[x][y]->out_name << endl;
+			fout << "    Name: " << scenario.outdoors[x][y]->name << endl;
 			fout << "    Comment: " << scenario.outdoors[x][y]->comment << endl;
-			for(short i = 0; i < scenario.outdoors[x][y]->info_rect.size(); i++)
-				if(scenario.outdoors[x][y]->info_rect[i].descr[0] != '*')
-					fout << "    Area Rectangle " << i << ": " << scenario.outdoors[x][y]->info_rect[i].descr << endl;
+			for(short i = 0; i < scenario.outdoors[x][y]->area_desc.size(); i++)
+				if(scenario.outdoors[x][y]->area_desc[i].descr[0] != '*')
+					fout << "    Area Rectangle " << i << ": " << scenario.outdoors[x][y]->area_desc[i].descr << endl;
 			for(short i = 0; i < scenario.outdoors[x][y]->spec_strs.size(); i++)
 				if(scenario.outdoors[x][y]->spec_strs[i][0] != '*')
 					fout << "    Message " << i << ": " << scenario.outdoors[x][y]->spec_strs[i] << endl;
@@ -1219,14 +1219,14 @@ void scen_text_dump(){
 	fout << "Town Text:" << endl << endl;
 	for(short j = 0; j < scenario.towns.size(); j++) {
 		fout << "  Town " << j << ':' << endl;
-		fout << "    Name: " << scenario.towns[j]->town_name << endl;
+		fout << "    Name: " << scenario.towns[j]->name << endl;
 		for(short i = 0; i < 3; i++)
 			if(scenario.towns[j]->comment[i][0] != '*')
 				fout << "    Comment: " << scenario.towns[j]->comment[i] << endl;
 		fout << "  Town Messages:" << endl;
-		for(short i = 0; i < scenario.towns[j]->room_rect.size(); i++)
-			if(scenario.towns[j]->room_rect[i].descr[0] != '*')
-				fout << "    Area Rectangle " << i << ": " << scenario.towns[j]->room_rect[i].descr << endl;
+		for(short i = 0; i < scenario.towns[j]->area_desc.size(); i++)
+			if(scenario.towns[j]->area_desc[i].descr[0] != '*')
+				fout << "    Area Rectangle " << i << ": " << scenario.towns[j]->area_desc[i].descr << endl;
 		for(short i = 0; i < scenario.towns[j]->spec_strs.size(); i++)
 			if(scenario.towns[j]->spec_strs[i][0] != '*')
 				fout << "    Message " << i << ": " << scenario.towns[j]->spec_strs[i] << endl;

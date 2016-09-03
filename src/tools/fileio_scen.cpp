@@ -15,7 +15,7 @@
 #include "strdlog.hpp"
 
 #include "scenario.hpp"
-#include "regtown.hpp"
+#include "town.hpp"
 #include "map_parse.hpp"
 #include "special_parse.hpp"
 #include "graphtool.hpp"
@@ -25,6 +25,10 @@
 
 #include "porting.hpp"
 #include "restypes.hpp"
+
+// Because the full template definition needs to be visible in this file
+// Also, for some reason, it's not found in the include paths, so use a relative path
+#include "../classes/town_import.tpp"
 
 bool cur_scen_is_mac = true;
 extern cCustomGraphics spec_scen_g;
@@ -218,9 +222,9 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	scenario.towns.resize(scenario.format.num_towns);
 	for(int i = 0; i < scenario.format.num_towns; i++) {
 		switch(temp_scenario->town_size[i]) {
-			case 0: scenario.towns[i] = new cBigTown(scenario); break;
-			case 1: scenario.towns[i] = new cMedTown(scenario); break;
-			case 2: scenario.towns[i] = new cTinyTown(scenario); break;
+			case 0: scenario.towns[i] = new cTown(scenario, AREA_LARGE); break;
+			case 1: scenario.towns[i] = new cTown(scenario, AREA_MEDIUM); break;
+			case 2: scenario.towns[i] = new cTown(scenario, AREA_SMALL); break;
 		}
 		load_town_v1(scenario.scen_file, i, *scenario.towns[i], *temp_scenario, shops);
 	}
@@ -1478,7 +1482,7 @@ void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
 	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
 		elem->GetValue(&type);
 		if(type == "name") {
-			elem->GetText(&out.out_name, false);
+			elem->GetText(&out.name, false);
 			found_name = true;
 		} else if(type == "comment") {
 			elem->GetText(&out.comment, false);
@@ -1555,10 +1559,10 @@ void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
 				out.sign_locs.resize(sign + 1);
 			elem->GetText(&out.sign_locs[sign].text, false);
 		} else if(type == "area") {
-			if(num_rects >= out.info_rect.size())
-				out.info_rect.resize(num_rects + 1);
-			static_cast<rectangle&>(out.info_rect[num_rects]) = readRectFromXml(*elem);
-			elem->GetText(&out.info_rect[num_rects].descr, false);
+			if(num_rects >= out.area_desc.size())
+				out.area_desc.resize(num_rects + 1);
+			static_cast<rectangle&>(out.area_desc[num_rects]) = readRectFromXml(*elem);
+			elem->GetText(&out.area_desc[num_rects].descr, false);
 			num_rects++;
 		} else if(type == "string") {
 			int str;
@@ -1588,19 +1592,16 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 		elem->GetValue(&type);
 		reqs.erase(type);
 		if(type == "size") {
-			elem->GetText(&val);
-			if(val == "32") {
-				town = new cTinyTown(scen);
-			} else if(val == "48") {
-				town = new cMedTown(scen);
-			} else if(val == "64") {
-				town = new cBigTown(scen);
-			} else throw xBadVal(type, xBadVal::CONTENT, val, elem->Row(), elem->Column(), fname);
+			size_t dim;
+			elem->GetText(&dim);
+			if(dim < 24)
+				throw xBadVal(type, xBadVal::CONTENT, val, elem->Row(), elem->Column(), fname);
+			else town = new cTown(scen, dim);
 			found_size = true;
 		} else if(!found_size) {
 			throw xBadNode(type, elem->Row(), elem->Column(), fname);
 		} else if(type == "name") {
-			elem->GetText(&town->town_name, false);
+			elem->GetText(&town->name, false);
 		} else if(type == "comment") {
 			if(num_cmt >= 3)
 				throw xBadNode(type, elem->Row(), elem->Column(), fname);
@@ -1771,10 +1772,10 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 			if(!reqs.empty())
 				throw xMissingElem("creature", *reqs.begin(), elem->Row(), elem->Column(), fname);
 		} else if(type == "area") {
-			if(num_rects >= town->room_rect.size())
-				town->room_rect.resize(num_rects + 1);
-			static_cast<rectangle&>(town->room_rect[num_rects]) = readRectFromXml(*elem);
-			elem->GetText(&town->room_rect[num_rects].descr, false);
+			if(num_rects >= town->area_desc.size())
+				town->area_desc.resize(num_rects + 1);
+			static_cast<rectangle&>(town->area_desc[num_rects]) = readRectFromXml(*elem);
+			elem->GetText(&town->area_desc[num_rects].descr, false);
 			num_rects++;
 		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
 	}
@@ -1926,8 +1927,8 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 
 void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 	cTown& town = *scen.towns[which];
-	for(int x = 0; x < town.max_dim(); x++) {
-		for(int y = 0; y < town.max_dim(); y++) {
+	for(int x = 0; x < town.max_dim; x++) {
+		for(int y = 0; y < town.max_dim; y++) {
 			town.terrain(x,y) = data.get(x,y);
 			auto features = data.getFeatures(x,y);
 			for(auto feat : features) {
@@ -2242,14 +2243,14 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 	
 	the_town.spec_strs.resize(100);
 	the_town.sign_locs.resize(20);
-	the_town.room_rect.resize(16);
+	the_town.area_desc.resize(16);
 	for(short i = 0; i < 140; i++) {
 		len = (long) (store_town.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) the_town.town_name = temp_str;
+		if(i == 0) the_town.name = temp_str;
 		else if(i >= 1 && i < 17)
-			the_town.room_rect[i-1].descr = temp_str;
+			the_town.area_desc[i-1].descr = temp_str;
 		else if(i >= 17 && i < 20)
 			the_town.comment[i-17] = temp_str;
 		else if(i >= 20 && i < 120)
@@ -2352,14 +2353,14 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	the_out.import_legacy(store_out);
 	the_out.spec_strs.resize(90);
 	the_out.sign_locs.resize(8);
-	the_out.info_rect.resize(8);
+	the_out.area_desc.resize(8);
 	for(short i = 0; i < 108; i++) {
 		len = (long) (store_out.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) the_out.out_name = temp_str;
+		if(i == 0) the_out.name = temp_str;
 		else if(i == 9) the_out.comment = temp_str;
-		else if(i < 9) the_out.info_rect[i-1].descr = temp_str;
+		else if(i < 9) the_out.area_desc[i-1].descr = temp_str;
 		else if(i >= 10 && i < 100)
 			the_out.spec_strs[i-10] = temp_str;
 		else if(i >= 100 && i < 108)

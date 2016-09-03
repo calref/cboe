@@ -609,40 +609,40 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					right_sbar->setPosition(pos_before);
 					break;
 				case RB_OUT_RECT:
-					size_before = current_terrain->info_rect.size();
+					size_before = current_terrain->area_desc.size();
 					if(option_hit) {
 						if(j == size_before - 1)
-							current_terrain->info_rect.pop_back();
+							current_terrain->area_desc.pop_back();
 						else if(j == size_before)
 							break;
-						else current_terrain->info_rect[j] = {0, 0, 0, 0, "*"};
+						else current_terrain->area_desc[j] = {0, 0, 0, 0, "*"};
 					} else {
 						if(j == size_before)
-							current_terrain->info_rect.emplace_back(0,0,0,0,"*");
-						if(!edit_text_str(j,STRS_OUT_RECT) && j == size_before && current_terrain->info_rect[j].descr == "*")
-							current_terrain->info_rect.pop_back();
+							current_terrain->area_desc.emplace_back(0,0,0,0,"*");
+						if(!edit_text_str(j,STRS_OUT_RECT) && j == size_before && current_terrain->area_desc[j].descr == "*")
+							current_terrain->area_desc.pop_back();
 					}
-					start_string_editing(STRS_OUT_RECT,size_before == current_terrain->info_rect.size());
-					if(size_before > current_terrain->info_rect.size())
+					start_string_editing(STRS_OUT_RECT,size_before == current_terrain->area_desc.size());
+					if(size_before > current_terrain->area_desc.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
 					break;
 				case RB_TOWN_RECT:
-					size_before = town->room_rect.size();
+					size_before = town->area_desc.size();
 					if(option_hit) {
 						if(j == size_before - 1)
-							town->room_rect.pop_back();
+							town->area_desc.pop_back();
 						else if(j == size_before)
 							break;
-						else town->room_rect[j] = {0, 0, 0, 0, "*"};
+						else town->area_desc[j] = {0, 0, 0, 0, "*"};
 					} else {
 						if(j == size_before)
-							town->room_rect.emplace_back(0,0,0,0,"*");
-						if(!edit_text_str(j,STRS_TOWN_RECT) && j == size_before && town->room_rect[j].descr == "*")
-							town->room_rect.pop_back();
+							town->area_desc.emplace_back(0,0,0,0,"*");
+						if(!edit_text_str(j,STRS_TOWN_RECT) && j == size_before && town->area_desc[j].descr == "*")
+							town->area_desc.pop_back();
 					}
-					start_string_editing(STRS_TOWN_RECT,size_before == town->room_rect.size());
-					if(size_before > town->room_rect.size())
+					start_string_editing(STRS_TOWN_RECT,size_before == town->area_desc.size());
+					if(size_before > town->area_desc.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
 					break;
@@ -720,8 +720,8 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		eScenMode old_mode = overall_mode;
 		change_made = true;
 		
-		if((spot_hit.x < 0) || (spot_hit.x > ((editing_town) ? town->max_dim() - 1 : 47)) ||
-		   (spot_hit.y < 0) || (spot_hit.y > ((editing_town) ? town->max_dim() - 1 : 47))) ;
+		if((spot_hit.x < 0) || (spot_hit.x > ((editing_town) ? town->max_dim - 1 : 47)) ||
+		   (spot_hit.y < 0) || (spot_hit.y > ((editing_town) ? town->max_dim - 1 : 47))) ;
 		else switch(overall_mode) {
 			case MODE_DRAWING:
 				if((!mouse_button_held && terrain_matches(spot_hit.x,spot_hit.y,current_terrain_type)) ||
@@ -762,19 +762,19 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					change_made = true;
 				}
 				else { // MODE_ROOM_RECT
-					auto& room_rects = editing_town ? town->room_rect : current_terrain->info_rect;
-					auto iter = std::find_if(room_rects.begin(), room_rects.end(), [](const info_rect_t& r) {
+					auto& area_descs = editing_town ? town->area_desc : current_terrain->area_desc;
+					auto iter = std::find_if(area_descs.begin(), area_descs.end(), [](const info_rect_t& r) {
 						return r.right == 0;
 					});
-					if(iter != room_rects.end()) {
+					if(iter != area_descs.end()) {
 						static_cast<rectangle&>(*iter) = working_rect;
 						iter->descr = "";
 						if(!edit_area_rect_str(*iter))
 							iter->right = 0;
 					} else {
-						room_rects.emplace_back(working_rect);
-						if(!edit_area_rect_str(room_rects.back()))
-							room_rects.pop_back();
+						area_descs.emplace_back(working_rect);
+						if(!edit_area_rect_str(area_descs.back()))
+							area_descs.pop_back();
 					}
 					change_made = true;
 				}
@@ -1174,17 +1174,17 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		need_redraw = true;
 		mouse_button_held = true;
 	}
-	if((the_point.in(border_rect[2])) & (cen_y < (editing_town ? town->max_dim() - 5 : 44))) {
+	if((the_point.in(border_rect[2])) & (cen_y < (editing_town ? town->max_dim - 5 : 44))) {
 		cen_y++;
 		if(ctrl_hit)
-			cen_y = (editing_town) ? town->max_dim() - 5 : 44;
+			cen_y = (editing_town) ? town->max_dim - 5 : 44;
 		need_redraw = true;
 		mouse_button_held = true;
 	}
-	if((the_point.in(border_rect[3])) & (cen_x < (editing_town ? town->max_dim() - 5 : 44))) {
+	if((the_point.in(border_rect[3])) & (cen_x < (editing_town ? town->max_dim - 5 : 44))) {
 		cen_x++;
 		if(ctrl_hit)
-			cen_x = (editing_town) ? town->max_dim() - 5 : 44;
+			cen_x = (editing_town) ? town->max_dim - 5 : 44;
 		need_redraw = true;
 		mouse_button_held = true;
 	}
@@ -1597,8 +1597,8 @@ void swap_terrain() {
 	
 	if(!change_ter(a,b,c)) return;
 	
-	for(short i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
-		for(short j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
+	for(short i = 0; i < ((editing_town) ? town->max_dim : 48); i++)
+		for(short j = 0; j < ((editing_town) ? town->max_dim : 48); j++) {
 			ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 			if((ter == a) && (get_ran(1,1,100) <= c)) {
 				if(editing_town)
@@ -1804,8 +1804,8 @@ void handle_scroll(sf::Event& event) {
 		redraw_screen();
 	} else if(overall_mode < MODE_MAIN_SCREEN && pos.in(terrain_rect)) {
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
-			cen_x = minmax(4, town->max_dim() - 5, cen_x - amount);
-		else cen_y = minmax(4, town->max_dim() - 5, cen_y - amount);
+			cen_x = minmax(4, town->max_dim - 5, cen_x - amount);
+		else cen_y = minmax(4, town->max_dim - 5, cen_y - amount);
 		redraw_screen();
 	}
 }
@@ -1814,8 +1814,8 @@ void change_circle_terrain(location center,short radius,ter_num_t terrain_type,s
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
 	
-	for(short i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
-		for(short j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
+	for(short i = 0; i < ((editing_town) ? town->max_dim : 48); i++)
+		for(short j = 0; j < ((editing_town) ? town->max_dim : 48); j++) {
 			l.x = i;
 			l.y = j;
 			if((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability))
@@ -1827,8 +1827,8 @@ void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bo
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
 	
-	for(short i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
-		for(short j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
+	for(short i = 0; i < ((editing_town) ? town->max_dim : 48); i++)
+		for(short j = 0; j < ((editing_town) ? town->max_dim : 48); j++) {
 			l.x = i;
 			l.y = j;
 			if((i >= r.left) && (i <= r.right) && (j >= r.top) && (j <= r.bottom)
@@ -1867,8 +1867,8 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 void frill_up_terrain() {
 	ter_num_t terrain_type;
 	
-	for(short i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
-		for(short j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
+	for(short i = 0; i < ((editing_town) ? town->max_dim : 48); i++)
+		for(short j = 0; j < ((editing_town) ? town->max_dim : 48); j++) {
 			terrain_type = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 			
 			for(size_t k = 0; k < scenario.ter_types.size(); k++) {
@@ -1888,8 +1888,8 @@ void frill_up_terrain() {
 void unfrill_terrain() {
 	ter_num_t terrain_type;
 	
-	for(short i = 0; i < ((editing_town) ? town->max_dim() : 48); i++)
-		for(short j = 0; j < ((editing_town) ? town->max_dim() : 48); j++) {
+	for(short i = 0; i < ((editing_town) ? town->max_dim : 48); i++)
+		for(short j = 0; j < ((editing_town) ? town->max_dim : 48); j++) {
 			terrain_type = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
 			cTerrain& ter = scenario.ter_types[terrain_type];
 			
@@ -1942,7 +1942,7 @@ static const std::array<location,5> trim_diffs = {{
 void set_terrain(location l,ter_num_t terrain_type) {
 	location l2;
 	
-	if((editing_town) && ((l.x < 0) || (l.x > town->max_dim() - 1) || (l.y < 0) || (l.y > town->max_dim() - 1)))
+	if((editing_town) && ((l.x < 0) || (l.x > town->max_dim - 1) || (l.y < 0) || (l.y > town->max_dim - 1)))
 		return ;
 	if(!editing_town && ((l.x < 0) || (l.x > 47) || (l.y < 0) || (l.y > 47)))
 		return ;
@@ -2032,11 +2032,11 @@ void adjust_space(location l) {
 	
 	i = l.x;
 	j = l.y;
-	if((editing_town) && ((i < 0) || (i > town->max_dim() - 1) || (j < 0) || (j > town->max_dim() - 1)))
+	if((editing_town) && ((i < 0) || (i > town->max_dim - 1) || (j < 0) || (j > town->max_dim - 1)))
 		return ;
 	if(!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return ;
-	size_t size = editing_town ? town->max_dim() : 48;
+	size_t size = editing_town ? town->max_dim : 48;
 	ter_num_t off_map = -1;
 	
 	ter_num_t store_ter[3][3];
@@ -2157,8 +2157,8 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 
 void place_items_in_town() {
 	location l;
-	for(short i = 0; i < town->max_dim(); i++)
-		for(short j = 0; j < town->max_dim(); j++) {
+	for(short i = 0; i < town->max_dim; i++)
+		for(short j = 0; j < town->max_dim; j++) {
 			l.x = i;
 			l.y = j;
 			
@@ -2325,7 +2325,7 @@ void set_up_main_screen() {
 	set_lb(-1,LB_TEXT,LB_NO_ACTION,"",0);
 	set_lb(-1,LB_TEXT,LB_NO_ACTION,"Town/Dungeon Options");
 	strb.str("");
-	strb << "  Town " << cur_town << ": " << town->town_name;
+	strb << "  Town " << cur_town << ": " << town->name;
 	set_lb(-1,LB_TEXT,LB_NO_ACTION, strb.str());
 	set_lb(-1,LB_TEXT,LB_LOAD_TOWN,"Load Another Town");
 	set_lb(-1,LB_TEXT,LB_EDIT_TOWN,"Edit Town Terrain");
@@ -2344,12 +2344,12 @@ void set_up_main_screen() {
 void start_town_edit() {
 	std::ostringstream strb;
 	small_any_drawn = false;
-	cen_x = town->max_dim() / 2;
-	cen_y = town->max_dim() / 2;
+	cen_x = town->max_dim / 2;
+	cen_y = town->max_dim / 2;
 	reset_lb();
 	strb << "Editing Town " << cur_town;
 	set_lb(0,LB_TITLE,LB_NO_ACTION,strb.str());
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,town->town_name);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,town->name);
 	set_lb(NLS - 2,LB_TEXT,LB_RETURN,"Back to Main Menu");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
 	overall_mode = MODE_DRAWING;
@@ -2362,8 +2362,8 @@ void start_town_edit() {
 	set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
 	place_location();
 	copied_spec = -1;
-	for(short i = 0; i < town->max_dim(); i++)
-		for(short j = 0; j < town->max_dim(); j++)
+	for(short i = 0; i < town->max_dim; i++)
+		for(short j = 0; j < town->max_dim; j++)
 			if(town->terrain(i,j) == 0)
 				current_ground = 0;
 			else if(town->terrain(i,j) == 2)
@@ -2379,7 +2379,7 @@ void start_out_edit() {
 	reset_lb();
 	strb << "Editing outdoors (" << cur_out.x << ',' << cur_out.y << ")";
 	set_lb(0,LB_TITLE,LB_NO_ACTION,strb.str());
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,current_terrain->out_name);
+	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,current_terrain->name);
 	set_lb(NLS - 2,LB_TEXT,LB_RETURN,"Back to Main Menu");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
 	overall_mode = MODE_DRAWING;
@@ -2593,11 +2593,11 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 				set_rb(i,RB_TOWN_SIGN, i,str.str());
 				break;
 			case 6:
-				str << i << " - " << current_terrain->info_rect[i].descr.substr(0,30);
+				str << i << " - " << current_terrain->area_desc[i].descr.substr(0,30);
 				set_rb(i,RB_OUT_RECT, i,str.str());
 				break;
 			case 7:
-				str << i << " - " << town->room_rect[i].descr.substr(0,30);
+				str << i << " - " << town->area_desc[i].descr.substr(0,30);
 				set_rb(i,RB_TOWN_RECT, i,str.str());
 				break;
 		}

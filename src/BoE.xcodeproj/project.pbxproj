@@ -152,7 +152,6 @@
 		919CC24F1B37731800273FDA /* outdoors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C79D0F9F60FA00C21460 /* outdoors.cpp */; };
 		919CC2501B37731D00273FDA /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
 		919CC2511B37732100273FDA /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
-		919CC2521B37732500273FDA /* regtown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC607F0FA26A3B00EEAE67 /* regtown.cpp */; };
 		919CC2531B37732C00273FDA /* scenario.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C580F9D1253007B0D52 /* scenario.cpp */; };
 		919CC2561B37733E00273FDA /* shop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FDB5791A4E774E00DE5983 /* shop.cpp */; };
 		919CC2571B37734000273FDA /* special.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279CC60F9D1A02007B0D52 /* special.cpp */; };
@@ -160,7 +159,6 @@
 		919CC2591B37734C00273FDA /* talking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7B70F9F619D00C21460 /* talking.cpp */; };
 		919CC25A1B37735100273FDA /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C660F9D12D6007B0D52 /* terrain.cpp */; };
 		919CC25C1B37735C00273FDA /* town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E5C7980F9F60EC00C21460 /* town.cpp */; };
-		919CC25D1B37736500273FDA /* tmpltown.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC60A70FA26C1B00EEAE67 /* tmpltown.cpp */; };
 		919CC25E1B37736900273FDA /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		919CC25F1B37736E00273FDA /* vehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279C750F9D15E5007B0D52 /* vehicle.cpp */; };
 		919CC2601B37737200273FDA /* estreams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E1862B1B2B2AC0006A99EA /* estreams.cpp */; };
@@ -680,10 +678,8 @@
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
 		91A0B15A1900F73E00EF438F /* mask.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.frag; sourceTree = "<group>"; };
 		91A32BD10FDB797B00C4E957 /* basicbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basicbtns.cpp; sourceTree = "<group>"; };
-		91AC607E0FA26A3B00EEAE67 /* regtown.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = regtown.hpp; sourceTree = "<group>"; };
-		91AC607F0FA26A3B00EEAE67 /* regtown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regtown.cpp; sourceTree = "<group>"; };
-		91AC60A60FA26C1B00EEAE67 /* tmpltown.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tmpltown.hpp; sourceTree = "<group>"; };
-		91AC60A70FA26C1B00EEAE67 /* tmpltown.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tmpltown.cpp; sourceTree = "<group>"; };
+		91AC607E0FA26A3B00EEAE67 /* area.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = area.hpp; sourceTree = "<group>"; };
+		91AC607F0FA26A3B00EEAE67 /* town_import.tpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = town_import.tpp; sourceTree = "<group>"; };
 		91AC61C40FA2729900EEAE67 /* universe.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = universe.hpp; sourceTree = "<group>"; };
 		91AC61C50FA2729900EEAE67 /* universe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = universe.cpp; sourceTree = "<group>"; };
 		91AC62090FA2853700EEAE67 /* creatlist.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = creatlist.hpp; sourceTree = "<group>"; };
@@ -1058,14 +1054,13 @@
 				91E5C79D0F9F60FA00C21460 /* outdoors.cpp */,
 				913D05B50FA1E9E300184C18 /* party.cpp */,
 				913D05BB0FA1EA0A00184C18 /* pc.cpp */,
-				91AC607F0FA26A3B00EEAE67 /* regtown.cpp */,
+				91AC607F0FA26A3B00EEAE67 /* town_import.tpp */,
 				91279C580F9D1253007B0D52 /* scenario.cpp */,
 				91FDB5791A4E774E00DE5983 /* shop.cpp */,
 				91279CC60F9D1A02007B0D52 /* special.cpp */,
 				91597A6E1A3BEDC700BE7BF9 /* spell.cpp */,
 				91E5C7B70F9F619D00C21460 /* talking.cpp */,
 				91279C660F9D12D6007B0D52 /* terrain.cpp */,
-				91AC60A70FA26C1B00EEAE67 /* tmpltown.cpp */,
 				91E5C7980F9F60EC00C21460 /* town.cpp */,
 				91AC61C50FA2729900EEAE67 /* universe.cpp */,
 				91279C750F9D15E5007B0D52 /* vehicle.cpp */,
@@ -1076,6 +1071,7 @@
 		913D03330FA0FFE800184C18 /* headers */ = {
 			isa = PBXGroup;
 			children = (
+				91AC607E0FA26A3B00EEAE67 /* area.hpp */,
 				91AC62090FA2853700EEAE67 /* creatlist.hpp */,
 				914698FD1A747BED00F20F5E /* creature.hpp */,
 				91279D3C0F9D1D6A007B0D52 /* item.hpp */,
@@ -1085,7 +1081,6 @@
 				91E5C79C0F9F60FA00C21460 /* outdoors.hpp */,
 				913D05B40FA1E9E200184C18 /* party.hpp */,
 				913D05BA0FA1EA0A00184C18 /* pc.hpp */,
-				91AC607E0FA26A3B00EEAE67 /* regtown.hpp */,
 				91279C570F9D1253007B0D52 /* scenario.hpp */,
 				91FDB5771A4E71A900DE5983 /* shop.hpp */,
 				912287850FD41A2300B21642 /* simpletypes.hpp */,
@@ -1093,7 +1088,6 @@
 				91597A6C1A3BED2D00BE7BF9 /* spell.hpp */,
 				91E5C7B60F9F619D00C21460 /* talking.hpp */,
 				91279C650F9D12D6007B0D52 /* terrain.hpp */,
-				91AC60A60FA26C1B00EEAE67 /* tmpltown.hpp */,
 				91E5C7970F9F60EC00C21460 /* town.hpp */,
 				91AC61C40FA2729900EEAE67 /* universe.hpp */,
 				91279C740F9D15E4007B0D52 /* vehicle.hpp */,
@@ -1793,7 +1787,6 @@
 				919CC24D1B37730E00273FDA /* location.cpp in Sources */,
 				919CC24E1B37731400273FDA /* monster.cpp in Sources */,
 				919CC24F1B37731800273FDA /* outdoors.cpp in Sources */,
-				919CC2521B37732500273FDA /* regtown.cpp in Sources */,
 				919CC2531B37732C00273FDA /* scenario.cpp in Sources */,
 				919CC2561B37733E00273FDA /* shop.cpp in Sources */,
 				919CC2571B37734000273FDA /* special.cpp in Sources */,
@@ -1801,7 +1794,6 @@
 				919CC2591B37734C00273FDA /* talking.cpp in Sources */,
 				919CC25A1B37735100273FDA /* terrain.cpp in Sources */,
 				919CC25C1B37735C00273FDA /* town.cpp in Sources */,
-				919CC25D1B37736500273FDA /* tmpltown.cpp in Sources */,
 				919CC25F1B37736E00273FDA /* vehicle.cpp in Sources */,
 				919CC2601B37737200273FDA /* estreams.cpp in Sources */,
 				919CC2611B37738100273FDA /* gzstream.cpp in Sources */,

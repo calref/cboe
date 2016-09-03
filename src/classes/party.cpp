@@ -294,7 +294,7 @@ void cParty::import_legacy(legacy::setup_save_type& old){
 
 void cParty::cConvers::import_legacy(legacy::talk_save_type old, const cScenario& scenario){
 	who_said = scenario.towns[old.personality / 10]->talking.people[old.personality % 10].title;
-	in_town = scenario.towns[old.town_num]->town_name;
+	in_town = scenario.towns[old.town_num]->name;
 	int strnums[2] = {old.str1, old.str2};
 	std::string* strs[2] = {&the_str1, &the_str2};
 	for(int i = 0; i < 2; i++) {
@@ -336,12 +336,12 @@ void cParty::cEncNote::import_legacy(int16_t(& old)[2], const cScenario& scenari
 			break;
 		case 1:
 			the_str = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->spec_strs[old[0] - 1010];
-			where = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->out_name;
+			where = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->name;
 			type = NOTE_OUT;
 			break;
 		case 2:
 			the_str = scenario.towns[old[1]]->spec_strs[old[0] - 2020];
-			where = scenario.towns[old[1]]->town_name;
+			where = scenario.towns[old[1]]->name;
 			type= NOTE_TOWN;
 			break;
 	}

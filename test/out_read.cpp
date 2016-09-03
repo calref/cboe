@@ -117,8 +117,8 @@ TEST_CASE("Loading an outdoor section definition") {
 		CHECK(sector.wandering[0] == refEncounter);
 		REQUIRE(sector.sign_locs.size() >= 8);
 		CHECK(sector.sign_locs[7].text == "The best sign ever!");
-		REQUIRE(sector.info_rect.size() >= 1);
-		CHECK(sector.info_rect[0].descr == "Some random area       Amazing!");
+		REQUIRE(sector.area_desc.size() >= 1);
+		CHECK(sector.area_desc[0].descr == "Some random area       Amazing!");
 		REQUIRE(sector.spec_strs.size() >= 10);
 		CHECK(sector.spec_strs[9] == "A random special string");
 	}

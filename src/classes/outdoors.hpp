@@ -17,6 +17,7 @@
 #include "special.hpp"
 #include "simpletypes.hpp"
 #include "monster.hpp"
+#include "area.hpp"
 
 namespace legacy {
 	struct out_wandering_type;
@@ -33,7 +34,7 @@ enum eAmbientSound {
 	AMBIENT_CUSTOM,
 };
 
-class cOutdoors {
+class cOutdoors : public cArea {
 	cScenario* scenario;
 public:
 	class cWandering { // formerly out_wandering_type
@@ -60,17 +61,10 @@ public:
 		void import_legacy(legacy::outdoor_creature_type old);
 	};
 	short x,y; // Used while loading legacy scenarios.
-	ter_num_t terrain[48][48];
-	std::vector<spec_loc_t> special_locs;
 	std::vector<spec_loc_t> city_locs;
-	std::vector<sign_loc_t> sign_locs;
 	std::array<cWandering,4> wandering, special_enc;
 	std::array<location,4> wandering_locs;
 	std::vector<cSpecial> specials;
-	std::string out_name;
-	// Using std::array here so we can have .size()
-	// This'll make the transition smoother once it becomes a vector.
-	std::vector<info_rect_t> info_rect;
 	std::string comment;
 	std::vector<std::string> spec_strs;
 	bool special_spot[48][48];
@@ -78,8 +72,6 @@ public:
 	eAmbientSound ambient_sound = AMBIENT_NONE;
 	snd_num_t out_sound;
 	int bg_out, bg_fight, bg_town, bg_dungeon;
-	// Persistent data for saved games
-	std::array<std::bitset<48>, 48> maps;
 	
 	explicit cOutdoors(cScenario& scenario);
 	void import_legacy(legacy::outdoor_record_type& old);

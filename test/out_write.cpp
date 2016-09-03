@@ -52,15 +52,15 @@ TEST_CASE("Saving an outdoors sector") {
 		out.comment = "Let's make a comment about comments.";
 		out.ambient_sound = AMBIENT_DRIP;
 		out.sign_locs.emplace_back(0,0,"Guantanamo  -  14 mi.");
-		out.info_rect.emplace_back(0,0,1,1,"The heart of the wilderness");
+		out.area_desc.emplace_back(0,0,1,1,"The heart of the wilderness");
 		out.spec_strs.emplace_back("Something happened!");
 		in_and_out("optional", out, scen);
 		CHECK(out.comment == "Let's make a comment about comments.");
 		CHECK(out.ambient_sound == AMBIENT_DRIP);
 		REQUIRE(out.sign_locs.size() >= 1);
 		CHECK(out.sign_locs[0].text == "Guantanamo  -  14 mi.");
-		REQUIRE(out.info_rect.size() >= 1);
-		CHECK(out.info_rect[0].descr == "The heart of the wilderness");
+		REQUIRE(out.area_desc.size() >= 1);
+		CHECK(out.area_desc[0].descr == "The heart of the wilderness");
 		REQUIRE(out.spec_strs.size() >= 1);
 		CHECK(out.spec_strs[0] == "Something happened!");
 	}

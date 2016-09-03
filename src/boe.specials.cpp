@@ -3428,8 +3428,8 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				showError("Scenario tried to check for invalid field type (1...24)");
 			} else {
 				int i = 0;
-				for(short j = spec.ex1b; j < min(spec.ex2b, univ.town->max_dim()); j++)
-					for(short k = spec.ex1a; k < min(spec.ex2a, univ.town->max_dim()); k++) {
+				for(short j = spec.ex1b; j < min(spec.ex2b, univ.town->max_dim); j++)
+					for(short k = spec.ex1a; k < min(spec.ex2a, univ.town->max_dim); k++) {
 						switch(eFieldType(spec.m1)) {
 							// These values are not allowed
 							case SPECIAL_EXPLORED: case SPECIAL_SPOT: case SPECIAL_ROAD:
@@ -4310,7 +4310,7 @@ void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 									if(x == 0 && y == 0)
 										continue;
 									location next(l.x+x,l.y+y);
-									if(next.x < 0 || next.y < 0 || next.x >= univ.town->max_dim() || next.y >= univ.town->max_dim())
+									if(next.x < 0 || next.y < 0 || next.x >= univ.town->max_dim || next.y >= univ.town->max_dim)
 										continue;
 									if(!checked.count(next))
 										to_check.push(next);
@@ -4620,7 +4620,7 @@ void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,s
 	get_strs(str1, str2, cur_type, mess1, mess2);
 	where1 = is_out() ? univ.party.outdoor_corner.x + univ.party.i_w_c.x : univ.party.town_num;
 	where2 = is_out() ? univ.party.outdoor_corner.y + univ.party.i_w_c.y : univ.party.town_num;
-	std::string placename = is_out() ? univ.out->out_name : univ.town->town_name;
+	std::string placename = is_out() ? univ.out->name : univ.town->name;
 	cStrDlog display_strings(str1.c_str(), str2.c_str(),title,pic,pt,0);
 	display_strings.setSound(57);
 	display_strings.setRecordHandler(cStringRecorder(note_type).string1(mess1).string2(mess2).from(where1,where2).at(placename));

@@ -99,7 +99,9 @@ public:
 	fs::path scen_file; // transient
 	vector2d<cOutdoors*> outdoors;
 	std::vector<cTown*> towns;
-	template<typename Town> void addTown() {towns.push_back(new Town(*this));}
+	void addTown(size_t dim) {
+		towns.push_back(new cTown(*this, dim));
+	}
 	
 	void import_legacy(legacy::scenario_data_type& old);
 	void import_legacy(legacy::scen_item_data_type& old);

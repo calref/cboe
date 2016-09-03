@@ -16,10 +16,7 @@
 #include "scenario.hpp"
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
-
-void cTown::import_legacy(legacy::big_tr_type&, int){}
-void cTown::import_legacy(legacy::ave_tr_type&, int){}
-void cTown::import_legacy(legacy::tiny_tr_type&, int){}
+#include "fileio.hpp"
 
 void cTown::import_legacy(legacy::town_record_type& old){
 	town_chop_time = old.town_chop_time;
@@ -74,7 +71,7 @@ void cTown::import_legacy(legacy::town_record_type& old){
 	strong_barriers = defy_scrying = defy_mapping = false;
 }
 
-cTown::cTown(cScenario& scenario) : scenario(&scenario) {
+cTown::cTown(cScenario& scenario, size_t dim) : cArea(dim), scenario(&scenario), lighting(dim, boost::dynamic_bitset<>(dim)) {
 	cTown::cWandering d_wan = {0,0,0,0};
 	
 	town_chop_time = -1;
@@ -102,7 +99,7 @@ cTown::cTown(cScenario& scenario) : scenario(&scenario) {
 	bg_town = bg_fight = -1;
 	strong_barriers = defy_scrying = defy_mapping = is_hidden = has_tavern = false;
 	
-	town_name = "Town name";
+	name = "Town name";
 	comment[0] = "Comment 1";
 	comment[1] = "Comment 2";
 	comment[2] = "Comment 3";
@@ -112,90 +109,8 @@ cTown::cTown(cScenario& scenario) : scenario(&scenario) {
 	}
 }
 
-cTown::cTown(const cTown& other)
-	: town_chop_time(other.town_chop_time)
-	, town_chop_key(other.town_chop_key)
-	, bg_town(other.bg_town)
-	, bg_fight(other.bg_fight)
-	, wandering(other.wandering)
-	, wandering_locs(other.wandering_locs)
-	, special_locs(other.special_locs)
-	, sign_locs(other.sign_locs)
-	, lighting_type(other.lighting_type)
-	, start_locs(other.start_locs)
-	, exits(other.exits)
-	, in_town_rect(other.in_town_rect)
-	, preset_items(other.preset_items)
-	, creatures(other.creatures)
-	, max_num_monst(other.max_num_monst)
-	, preset_fields(other.preset_fields)
-	, spec_on_entry(other.spec_on_entry)
-	, spec_on_entry_if_dead(other.spec_on_entry_if_dead)
-	, spec_on_hostile(other.spec_on_hostile)
-	, timers(other.timers)
-	, specials(other.specials)
-	, strong_barriers(other.strong_barriers)
-	, defy_mapping(other.defy_mapping)
-	, defy_scrying(other.defy_scrying)
-	, is_hidden(other.is_hidden)
-	, has_tavern(other.has_tavern)
-	, difficulty(other.difficulty)
-	, town_name(other.town_name)
-	, room_rect(other.room_rect)
-	, comment(other.comment)
-	, spec_strs(other.spec_strs)
-	, talking(other.talking)
-	, maps(other.maps)
-	, item_taken(other.item_taken)
-	, can_find(other.can_find)
-	, m_killed(other.m_killed)
-{}
-
-cTown::cTown(cTown&& other) {
-	swap(other);
-}
-
-void cTown::swap(cTown& other) {
-	std::swap(town_chop_time, other.town_chop_time);
-	std::swap(town_chop_key, other.town_chop_key);
-	std::swap(bg_town, other.bg_town);
-	std::swap(bg_fight, other.bg_fight);
-	std::swap(wandering, other.wandering);
-	std::swap(wandering_locs, other.wandering_locs);
-	std::swap(special_locs, other.special_locs);
-	std::swap(sign_locs, other.sign_locs);
-	std::swap(lighting_type, other.lighting_type);
-	std::swap(start_locs, other.start_locs);
-	std::swap(exits, other.exits);
-	std::swap(in_town_rect, other.in_town_rect);
-	std::swap(preset_items, other.preset_items);
-	std::swap(creatures, other.creatures);
-	std::swap(max_num_monst, other.max_num_monst);
-	std::swap(preset_fields, other.preset_fields);
-	std::swap(spec_on_entry, other.spec_on_entry);
-	std::swap(spec_on_entry_if_dead, other.spec_on_entry_if_dead);
-	std::swap(spec_on_hostile, other.spec_on_hostile);
-	std::swap(timers, other.timers);
-	std::swap(specials, other.specials);
-	std::swap(strong_barriers, other.strong_barriers);
-	std::swap(defy_mapping, other.defy_mapping);
-	std::swap(defy_scrying, other.defy_scrying);
-	std::swap(is_hidden, other.is_hidden);
-	std::swap(has_tavern, other.has_tavern);
-	std::swap(difficulty, other.difficulty);
-	std::swap(town_name, other.town_name);
-	std::swap(room_rect, other.room_rect);
-	std::swap(comment, other.comment);
-	std::swap(spec_strs, other.spec_strs);
-	std::swap(talking, other.talking);
-	std::swap(maps, other.maps);
-	std::swap(item_taken, other.item_taken);
-	std::swap(can_find, other.can_find);
-	std::swap(m_killed, other.m_killed);
-}
-
 void cTown::init_start() {
-	short s = this->max_dim();
+	short s = this->max_dim;
 	start_locs[0].x = s / 2;
 	start_locs[0].y = 4;
 	start_locs[2].x = s / 2;
@@ -264,29 +179,23 @@ void cTown::set_up_lights() {
 	using namespace std::placeholders;
 	short rad;
 	location where,l;
-	bool where_lit[64][64] = {0};
 	auto get_obscurity = std::bind(&cTown::light_obscurity, this, _1, _2);
 	
+	// First clear the lighting
+	lighting[0].reset();
+	std::fill(lighting.begin() + 1, lighting.end(), lighting[0]);
+	
 	// Find bonfires, braziers, etc.
-	for(short i = 0; i < this->max_dim(); i++)
-		for(short j = 0; j < this->max_dim(); j++) {
+	for(short i = 0; i < this->max_dim; i++)
+		for(short j = 0; j < this->max_dim; j++) {
 			l.x = i;
 			l.y = j;
 			rad = scenario->ter_types[this->terrain(i,j)].light_radius;
 			if(rad > 0) {
-				for(where.x = std::max(0,i - rad); where.x < min(this->max_dim(),short(i + rad + 1)); where.x++)
-					for(where.y = std::max(0,j - rad); where.y < min(this->max_dim(),short(j + rad + 1)); where.y++)
-						if(!where_lit[where.x][where.y] && dist(where,l) <= rad && can_see(l,where,get_obscurity) < 5)
-							where_lit[where.x][where.y] = true;
-			}
-		}
-	for(short i = 0; i < this->max_dim() / 8; i++)
-		for(short j = 0; j < this->max_dim(); j++)
-			this->lighting(i,j) = 0;
-	for(where.x = 0; where.x < this->max_dim(); where.x++)
-		for(where.y = 0; where.y < this->max_dim(); where.y++) {
-			if(where_lit[where.x][where.y]) {
-				this->lighting(where.x / 8,where.y) = this->lighting(where.x / 8,where.y) | (1 << (where.x % 8));
+				for(where.x = std::max(0,i - rad); where.x < min(this->max_dim,short(i + rad + 1)); where.x++)
+					for(where.y = std::max(0,j - rad); where.y < min(this->max_dim,short(j + rad + 1)); where.y++)
+						if(!lighting[where.x][where.y] && dist(where,l) <= rad && can_see(l,where,get_obscurity) < 5)
+							lighting[where.x].set(where.y);
 			}
 		}
 }
@@ -324,4 +233,12 @@ cTown::cItem::cItem(location loc, short num, ::cItem& item) : cItem() {
 
 void cTown::reattach(cScenario& scen) {
 	scenario = &scen;
+}
+
+void cTown::writeTerrainTo(std::ostream& file) {
+	writeArray(file, terrain, max_dim, max_dim);
+}
+
+void cTown::readTerrainFrom(std::istream& file) {
+	readArray(file, terrain, max_dim, max_dim);
 }

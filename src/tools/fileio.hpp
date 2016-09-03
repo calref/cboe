@@ -6,6 +6,9 @@
  *
  */
 
+#ifndef BOE_FILEIO_HPP
+#define BOE_FILEIO_HPP
+
 #include <string>
 #include <vector>
 #include <sstream>
@@ -28,9 +31,19 @@ void check_for_intel();
 std::string read_maybe_quoted_string(std::istream& from);
 std::string maybe_quote_string(std::string which);
 
-template<typename T, int D>
-void writeArray(std::ostream& to, const T(* array)[D], int width, int height) {
-	using int_type = decltype(T() + 1);
+template<typename T>
+struct array_value_type{
+	using type = typename T::value_type;
+};
+
+template<typename T, int D1, int D2>
+struct array_value_type<T[D1][D2]> {
+	using type = T;
+};
+
+template<typename T>
+void writeArray(std::ostream& to, const T& array, int width, int height) {
+	using int_type = decltype(typename array_value_type<T>::type() + 1);
 	for(int y = 0; y < height; y++) {
 		to << array[0][y];
 		for(int x = 1; x < width; x++)
@@ -40,9 +53,9 @@ void writeArray(std::ostream& to, const T(* array)[D], int width, int height) {
 	to << '\f';
 }
 
-template<typename T, int D>
-void readArray(std::istream& from, T(* array)[D], int width, int height) {
-	using int_type = decltype(T() + 1);
+template<typename T>
+void readArray(std::istream& from, T& array, int width, int height) {
+	using int_type = decltype(typename array_value_type<T>::type() + 1);
 	from >> std::ws;
 	std::string arrayContents;
 	getline(from, arrayContents, '\f');
@@ -88,3 +101,5 @@ public:
 		return pos;
 	}
 };
+
+#endif

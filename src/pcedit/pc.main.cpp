@@ -225,7 +225,7 @@ void handle_menu_choice(eMenu item_hit) {
 				break;
 			}
 			if(univ.party.left_in != size_t(-1) && univ.party.left_in != univ.party.town_num) {
-				std::string need_town = univ.scenario.towns[univ.party.left_in]->town_name;
+				std::string need_town = univ.scenario.towns[univ.party.left_in]->name;
 				showError("You can't reunite your party when you're in a different town than you split up in.", "Return to the following town in-game and then try again: " + need_town);
 				break;
 			}

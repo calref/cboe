@@ -4013,8 +4013,8 @@ location find_fireball_loc(location where,short radius,short mode,short *m) {
 	location check_loc,cast_loc(120,0);
 	short cur_lev,level_max = 10;
 	
-	for(check_loc.x = 1; check_loc.x < univ.town->max_dim() - 1; check_loc.x ++)
-		for(check_loc.y = 1; check_loc.y < univ.town->max_dim() - 1; check_loc.y ++)
+	for(check_loc.x = 1; check_loc.x < univ.town->max_dim - 1; check_loc.x ++)
+		for(check_loc.y = 1; check_loc.y < univ.town->max_dim - 1; check_loc.y ++)
 			if(dist(where,check_loc) <= 8 && can_see(where,check_loc,sight_obscurity) < 5 && sight_obscurity(check_loc.x,check_loc.y) < 5) {
 				cur_lev = count_levels(check_loc,radius);
 				if(mode == 1)
@@ -4119,8 +4119,8 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 	
 	
 	// First actually make barriers, then draw them, then inflict damaging effects.
-	for(short i = minmax(0,univ.town->max_dim() - 1,center.x - 4); i <= minmax(0,univ.town->max_dim() - 1,center.x + 4); i++)
-		for(short j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++) {
+	for(short i = minmax(0,univ.town->max_dim - 1,center.x - 4); i <= minmax(0,univ.town->max_dim - 1,center.x + 4); i++)
+		for(short j = minmax(0,univ.town->max_dim - 1,center.y - 4); j <= minmax(0,univ.town->max_dim - 1,center.y + 4); j++) {
 			effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 			if(effect == FIELD_SMASH || sight_obscurity(i,j) < 5) {
 				switch(effect) {
@@ -4208,8 +4208,8 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 	
 	// Damage to pcs
 	for(short k = 0; k < 6; k++)
-		for(short i = minmax(0,univ.town->max_dim() - 1,center.x - 4); i <= minmax(0,univ.town->max_dim() - 1,center.x + 4); i++)
-			for(short j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++) {
+		for(short i = minmax(0,univ.town->max_dim - 1,center.x - 4); i <= minmax(0,univ.town->max_dim - 1,center.x + 4); i++)
+			for(short j = minmax(0,univ.town->max_dim - 1,center.y - 4); j <= minmax(0,univ.town->max_dim - 1,center.y + 4); j++) {
 				spot_hit.x = i;
 				spot_hit.y = j;
 				if(sight_obscurity(i,j) < 5 && univ.party[k].main_status == eMainStatus::ALIVE
@@ -4285,8 +4285,8 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 		if((univ.town.monst[k].active > 0) && (dist(center,univ.town.monst[k].cur_loc) <= 5)) {
 			monster_hit = false;
 			// First actually make barriers, then draw them, then inflict damaging effects.
-			for(short i = minmax(0,univ.town->max_dim() - 1,center.x - 4); i <= minmax(0,univ.town->max_dim() - 1,center.x + 4); i++)
-				for(short j = minmax(0,univ.town->max_dim() - 1,center.y - 4); j <= minmax(0,univ.town->max_dim() - 1,center.y + 4); j++) {
+			for(short i = minmax(0,univ.town->max_dim - 1,center.x - 4); i <= minmax(0,univ.town->max_dim - 1,center.x + 4); i++)
+				for(short j = minmax(0,univ.town->max_dim - 1,center.y - 4); j <= minmax(0,univ.town->max_dim - 1,center.y + 4); j++) {
 					spot_hit.x = i;
 					spot_hit.y = j;
 					
@@ -5293,8 +5293,8 @@ void process_fields() {
 	
 	if(univ.town.quickfire_present) {
 		r = univ.town->in_town_rect;
-		for(short i = 0; i < univ.town->max_dim(); i++)
-			for(short j = 0; j < univ.town->max_dim(); j++)
+		for(short i = 0; i < univ.town->max_dim; i++)
+			for(short j = 0; j < univ.town->max_dim; j++)
 				qf[i][j] = (univ.town.is_quickfire(i,j)) ? 2 : 0;
 		for(short k = 0; k < ((is_combat()) ? 4 : 1); k++) {
 			for(short i = r.left + 1; i < r.right ; i++)
@@ -5331,8 +5331,8 @@ void process_fields() {
 	
 	// First fry PCs, then call to handle damage to monsters
 	processing_fields = true; // this, in hit_space, makes damage considered to come from whole party
-	for(short i = 0; i < univ.town->max_dim(); i++)
-		for(short j = 0; j < univ.town->max_dim(); j++) {
+	for(short i = 0; i < univ.town->max_dim; i++)
+		for(short j = 0; j < univ.town->max_dim; j++) {
 			if(univ.town.is_force_wall(i,j)) {
 				r1 = get_ran(3,1,6);
 				loc.x = i; loc.y = j;
@@ -5402,8 +5402,8 @@ void process_fields() {
 	monsters_going = true; // this changes who the damage is considered to come from in hit_space
 	
 	if(univ.town.quickfire_present) {
-		for(short i = 0; i < univ.town->max_dim(); i++)
-			for(short j = 0; j < univ.town->max_dim(); j++)
+		for(short i = 0; i < univ.town->max_dim; i++)
+			for(short j = 0; j < univ.town->max_dim; j++)
 				if(univ.town.is_quickfire(i,j)) {
 					loc.x = i; loc.y = j;
 					r1 = get_ran(2,1,8);

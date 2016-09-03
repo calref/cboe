@@ -581,9 +581,9 @@ char get_fluid_trim(location where,ter_num_t ter_type) {
 			at_bot = true;
 	}
 	else {
-		if(where.x == univ.town->max_dim() - 1)
+		if(where.x == univ.town->max_dim - 1)
 			at_right = true;
-		if(where.y == univ.town->max_dim() - 1)
+		if(where.y == univ.town->max_dim - 1)
 			at_bot = true;
 	}
 	

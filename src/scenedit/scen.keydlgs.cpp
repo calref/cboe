@@ -42,8 +42,8 @@ size_t num_strs(eStrMode str_mode) {
 		case 3: return scenario.journal_strs.size();
 		case 4: return current_terrain->sign_locs.size();
 		case 5: return town->sign_locs.size();
-		case 6: return current_terrain->info_rect.size();
-		case 7: return town->room_rect.size();
+		case 6: return current_terrain->area_desc.size();
+		case 7: return town->area_desc.size();
 	}
 	return 0;
 }
@@ -57,8 +57,8 @@ static void ensure_str(eStrMode str_mode, size_t which) {
 			case 3: scenario.journal_strs.resize(which + 1, "*"); break;
 			case 4: current_terrain->sign_locs.resize(which + 1, {-1, -1, "*"}); break;
 			case 5: town->sign_locs.resize(which + 1, {-1, -1, "*"}); break;
-			case 6: current_terrain->info_rect.resize(which + 1, {-1, -1, -1, -1, "*"}); break;
-			case 7: town->room_rect.resize(which + 1, {-1, -1, -1, -1, "*"}); break;
+			case 6: current_terrain->area_desc.resize(which + 1, {-1, -1, -1, -1, "*"}); break;
+			case 7: town->area_desc.resize(which + 1, {-1, -1, -1, -1, "*"}); break;
 		}
 	}
 }
@@ -72,8 +72,8 @@ static std::string& fetch_str(eStrMode str_mode, size_t which) {
 		case 3: return scenario.journal_strs[which];
 		case 4: return current_terrain->sign_locs[which].text;
 		case 5: return town->sign_locs[which].text;
-		case 6: return current_terrain->info_rect[which].descr;
-		case 7: return town->room_rect[which].descr;
+		case 6: return current_terrain->area_desc[which].descr;
+		case 7: return town->area_desc[which].descr;
 	}
 	throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-5)";
 }
@@ -94,16 +94,16 @@ static std::string str_info(eStrMode str_mode, size_t which) {
 			sout << ", " << town->sign_locs[which].y << ")";
 			break;
 		case 6:
-			sout << "(" << current_terrain->info_rect[which].left;
-			sout << ", " << current_terrain->info_rect[which].top;
-			sout << ")|(" << current_terrain->info_rect[which].right;
-			sout << ", " << current_terrain->info_rect[which].bottom << ")";
+			sout << "(" << current_terrain->area_desc[which].left;
+			sout << ", " << current_terrain->area_desc[which].top;
+			sout << ")|(" << current_terrain->area_desc[which].right;
+			sout << ", " << current_terrain->area_desc[which].bottom << ")";
 			break;
 		case 7:
-			sout << "(" << town->room_rect[which].left;
-			sout << ", " << town->room_rect[which].top;
-			sout << ")|(" << town->room_rect[which].right;
-			sout << ", " << town->room_rect[which].bottom << ")";
+			sout << "(" << town->area_desc[which].left;
+			sout << ", " << town->area_desc[which].top;
+			sout << ")|(" << town->area_desc[which].right;
+			sout << ", " << town->area_desc[which].bottom << ")";
 			break;
 	}
 	return sout.str();
@@ -305,7 +305,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			break;
 		case STRT_TOWN:
 			for(cTown* town : scenario.towns) {
-				strings.push_back(town->town_name);
+				strings.push_back(town->name);
 			}
 			break;
 		case STRT_SECTOR:
@@ -313,7 +313,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 				for(size_t j = 0; j < scenario.outdoors.height(); j++) {
 					std::ostringstream name;
 					name << '[' << i << ',' << j << ']';
-					name << ' ' << scenario.outdoors[i][j]->out_name;
+					name << ' ' << scenario.outdoors[i][j]->name;
 					strings.push_back(name.str());
 				}
 			}
@@ -410,7 +410,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 		case STRT_TALK:
 			for(cTown* town : scenario.towns) {
 				for(cPersonality who : town->talking.people) {
-					strings.push_back(who.title + " (in " + town->town_name + ")");
+					strings.push_back(who.title + " (in " + town->name + ")");
 				}
 			}
 			break;

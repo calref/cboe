@@ -45,7 +45,7 @@ TEST_CASE("Saving a town") {
 	town->lighting_type = LIGHT_NONE;
 	SECTION("With the minimal required information") {
 		in_and_out("basic", town, scen);
-		CHECK(town->max_dim() == 32);
+		CHECK(town->max_dim == 32);
 		CHECK(town->town_name == "Test Town");
 		CHECK(town->in_town_rect == rect(2,3,30,29));
 		CHECK(town->difficulty == 1);
@@ -73,7 +73,7 @@ TEST_CASE("Saving a town") {
 		town->wandering[0].monst = {7,8,9,10};
 		town->sign_locs.emplace_back(0,0,"Sign #4279816");
 		town->spec_strs.emplace_back("Something!    With extra spaces!");
-		town->room_rect.emplace_back(0,0,1,1,"Unknown Area . . .");
+		town->area_desc.emplace_back(0,0,1,1,"Unknown Area . . .");
 		in_and_out("optional", town, scen);
 		CHECK(town->comment[2] == "Try a comment!");
 		CHECK(town->spec_on_entry == 42);
@@ -102,8 +102,8 @@ TEST_CASE("Saving a town") {
 		CHECK(town->sign_locs[0].text == "Sign #4279816");
 		REQUIRE(town->spec_strs.size() >= 1);
 		CHECK(town->spec_strs[0] == "Something!    With extra spaces!");
-		REQUIRE(town->room_rect.size() >= 1);
-		CHECK(town->room_rect[0].descr == "Unknown Area . . .");
+		REQUIRE(town->area_desc.size() >= 1);
+		CHECK(town->area_desc[0].descr == "Unknown Area . . .");
 	}
 	SECTION("With a preset item") {
 		town->preset_items.emplace_back();
