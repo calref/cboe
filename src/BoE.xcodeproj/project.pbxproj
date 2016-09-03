@@ -1054,7 +1054,6 @@
 				91E5C79D0F9F60FA00C21460 /* outdoors.cpp */,
 				913D05B50FA1E9E300184C18 /* party.cpp */,
 				913D05BB0FA1EA0A00184C18 /* pc.cpp */,
-				91AC607F0FA26A3B00EEAE67 /* town_import.tpp */,
 				91279C580F9D1253007B0D52 /* scenario.cpp */,
 				91FDB5791A4E774E00DE5983 /* shop.cpp */,
 				91279CC60F9D1A02007B0D52 /* special.cpp */,
@@ -1062,6 +1061,7 @@
 				91E5C7B70F9F619D00C21460 /* talking.cpp */,
 				91279C660F9D12D6007B0D52 /* terrain.cpp */,
 				91E5C7980F9F60EC00C21460 /* town.cpp */,
+				91AC607F0FA26A3B00EEAE67 /* town_import.tpp */,
 				91AC61C50FA2729900EEAE67 /* universe.cpp */,
 				91279C750F9D15E5007B0D52 /* vehicle.cpp */,
 			);
