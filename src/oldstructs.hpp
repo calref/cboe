@@ -168,26 +168,6 @@ namespace legacy {
 		uint8_t lighting[4][32];
 	};
 	
-	struct city_block_type {
-		int16_t block_type;
-		int16_t block_destroy_time;
-		int8_t block_alignment;
-		int8_t block_key_time;
-		location block_loc;
-	};
-	
-	struct city_ter_rect_type {
-		Rect what_rect;
-		uint8_t ter_type;
-		uint8_t hollow;
-	};
-	
-	struct template_town_type {
-		creature_start_type creatures[30];
-		city_block_type city_block[15];
-		city_ter_rect_type city_ter_rect[10];
-	};
-	
 	struct scen_item_data_type {
 		item_record_type scen_items[400];
 		char monst_names[256][20];
@@ -374,16 +354,6 @@ namespace legacy {
 	struct out_info_type {
 		int8_t expl[96][96];
 	};
-	
-//	struct piles_of_stuff_dumping_type {
-//		int8_t strings_ls[NLS][40];
-//		int8_t strings_rs[NRS][40];
-//		int8_t town_strs[180][256];
-//		int8_t out_strs[120][256];
-//		int8_t scen_strs[270][256];
-//		int8_t talk_strs[170][256];
-//		scen_item_data_type scen_item_list;
-//	};
 #pragma pack(pop)
 };
 
