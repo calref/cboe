@@ -94,12 +94,12 @@ the value in C, the character responds with the text in Text 1. Otherwise,the ch
 responds with the text in Text 2.</p>
 <p>Example: Suppose A is 58, B is 3, and C is 2. If the Stuff Done flag (58,3) is 1, the
 response is Text 1. If Stuff Done flag (58,3) is 5, the response is Text 2.</p>
-<p><b>Node Type 2 - Set to One </b>The character responds with the text in the Text 1 and
-Text 2 fields. In addition, the Stuff Done flag (A,B) is set to 1.</p>
+<p><b>Node Type 2 - Set Flag </b>The character responds with the text in the Text 1 and
+Text 2 fields. In addition, the Stuff Done flag (A,B) is set to C.</p>
 <p>Example: You want Stuff Done flag (100,2) to be set to 1 when the party knows that
-theres a treasure hidden in a tree. Old Man McGee tells them that its there when asked
+theres a treasure hidden in a tree. Old Man McGee tells them that it's there when asked
 about tree. When Old Man McGee is asked about tree use a talking node of this type as a
-response, with A set to 100 and B set to 2.</p>
+response, with A set to 100, B set to 2, and C set to 1.</p>
 <p><b>Node Type 3 - Inn</b> If the party can afford it, conversation ends, and the party
 is moved to a different place and healed. Field A is the cost of the inn, and field B is
 the quality of the inn (Range 0 ... 3). If the party can afford it, the character says

@@ -34,6 +34,7 @@ void cSpeech::import_legacy(legacy::talking_record_type& old, std::vector<shop_i
 				break;
 			case 2: // set SDF
 				talk_nodes[i].type = eTalkNode::SET_SDF;
+				talk_nodes[i].extras[2] = 1;
 				break;
 			case 3: // inn
 				talk_nodes[i].type = eTalkNode::INN;

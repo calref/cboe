@@ -801,7 +801,7 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::SET_SDF:
-			PSD[a][b] = 1;
+			PSD[a][b] = c;
 			break;
 		case eTalkNode::INN:
 			if(univ.party.gold < a) {
