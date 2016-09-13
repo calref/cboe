@@ -36,6 +36,7 @@ cSpecial::cSpecial(){
 }
 
 void cSpecial::writeTo(std::ostream& file, int n) const {
+	// TODO: Output only the needed values somehow
 	file << '@' << (*type).opcode() << " = " << n << '\n';
 	file << "\tsdf " << sd1 << ", " << sd2 << '\n';
 	file << "\tmsg " << m1 << ", " << m2 << ", " << m3 << '\n';
@@ -66,7 +67,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 		case 5: type = eSpecType::DISPLAY_SM_MSG; break;
 		case 6: type = eSpecType::FLIP_SDF; break;
 			// 7, 8, 9, 10 were out/town/combat/look block
-		case 11: type = eSpecType::CANT_ENTER; break;
+			// 11 was "can't enter", handled with secret passage
 		case 12: type = eSpecType::CHANGE_TIME; break;
 		case 13: type = eSpecType::SCEN_TIMER_START; break;
 		case 14: type = eSpecType::PLAY_SOUND; break;
@@ -81,7 +82,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 		case 23: type = eSpecType::COPY_SDF; break;
 			// 24 was ritual of sanctification
 		case 25: type = eSpecType::REST; break;
-		case 26: type = eSpecType::CANT_ENTER; break; // originally wandering will fight
+			// 26 was originally wandering will fight, handled with can't enter
 		case 27: type = eSpecType::END_SCENARIO; break;
 			// 28-49 were undefined
 		case 50: type = eSpecType::ONCE_GIVE_ITEM; break;
@@ -229,8 +230,8 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			type = eSpecType::IF_CONTEXT;
 			ex1c = jumpto;
 			jumpto = ex1b;
-			ex1a = (int) eSpecCtx::TARGET;
-			ex1b = 108; // Spell ID for ritual of sanctification, as seen in cast_town_spell()
+			ex1a = int(eSpecCtx::TARGET);
+			ex1b = int(eSpell::RITUAL_SANCTIFY);
 			break;
 		case 99: case 100: // Add mage/priest spell TODO: Merge these by adding 100 if it's a priest spell
 			if(old.type == 99) type = eSpecType::AFFECT_MAGE_SPELL;
@@ -281,9 +282,11 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 				ex1a += 30;
 			break;
 		case 4: // Secret passage
+		case 11: // Can't enter
+		case 26: // Wandering will fight
 			type = eSpecType::CANT_ENTER;
 			ex1a = 0;
-			ex2a = 1;
+			ex2a = (old.type == 4);
 			break;
 		case 171: case 226: // Change terrain (town/outdoor)
 			type = eSpecType::CHANGE_TER;
