@@ -20,7 +20,6 @@
     <ClInclude Include="..\..\classes\outdoors.hpp" />
     <ClInclude Include="..\..\classes\party.hpp" />
     <ClInclude Include="..\..\classes\pc.hpp" />
-    <ClInclude Include="..\..\classes\regtown.hpp" />
     <ClInclude Include="..\..\classes\scenario.hpp" />
     <ClInclude Include="..\..\classes\shop.hpp" />
     <ClInclude Include="..\..\classes\simpletypes.hpp" />
@@ -28,7 +27,6 @@
     <ClInclude Include="..\..\classes\spell.hpp" />
     <ClInclude Include="..\..\classes\talking.hpp" />
     <ClInclude Include="..\..\classes\terrain.hpp" />
-    <ClInclude Include="..\..\classes\tmpltown.hpp" />
     <ClInclude Include="..\..\classes\town.hpp" />
     <ClInclude Include="..\..\classes\universe.hpp" />
     <ClInclude Include="..\..\classes\vehicle.hpp" />
@@ -83,14 +81,12 @@
     <ClCompile Include="..\..\classes\outdoors.cpp" />
     <ClCompile Include="..\..\classes\party.cpp" />
     <ClCompile Include="..\..\classes\pc.cpp" />
-    <ClCompile Include="..\..\classes\regtown.cpp" />
     <ClCompile Include="..\..\classes\scenario.cpp" />
     <ClCompile Include="..\..\classes\shop.cpp" />
     <ClCompile Include="..\..\classes\special.cpp" />
     <ClCompile Include="..\..\classes\spell.cpp" />
     <ClCompile Include="..\..\classes\talking.cpp" />
     <ClCompile Include="..\..\classes\terrain.cpp" />
-    <ClCompile Include="..\..\classes\tmpltown.cpp" />
     <ClCompile Include="..\..\classes\town.cpp" />
     <ClCompile Include="..\..\classes\universe.cpp" />
     <ClCompile Include="..\..\classes\vehicle.cpp" />

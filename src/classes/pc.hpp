@@ -13,6 +13,7 @@
 #include <map>
 #include <iosfwd>
 #include <array>
+#include <bitset>
 
 #include "simpletypes.hpp"
 #include "item.hpp"

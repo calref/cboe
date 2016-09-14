@@ -118,8 +118,6 @@ cScenario::cScenario(const cScenario& other)
 	, campaign_id(other.campaign_id)
 	, scen_items(other.scen_items)
 	, scen_name(other.scen_name)
-	, who_wrote{other.who_wrote[0], other.who_wrote[1]}
-	, contact_info{other.contact_info[0], other.contact_info[1]}
 	, intro_strs(other.intro_strs)
 	, journal_strs(other.journal_strs)
 	, spec_strs(other.spec_strs)
@@ -130,6 +128,11 @@ cScenario::cScenario(const cScenario& other)
 	, towns(other.towns.size())
 	, outdoors(other.outdoors.width(), other.outdoors.height())
 {
+	// MSVC 12 doesn't like arrays in the initializer list. :(
+	who_wrote[0] = other.who_wrote[0];
+	who_wrote[1] = other.who_wrote[1];
+	contact_info[0] = other.contact_info[0];
+	contact_info[1] = other.contact_info[1];
 	// Copy towns and sectors
 	for(size_t i = 0; i < towns.size(); i++)
 		towns[i] = new cTown(*other.towns[i]);

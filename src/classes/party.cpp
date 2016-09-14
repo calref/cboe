@@ -1190,7 +1190,6 @@ bool cParty::pc_present(short i) const {
 	return !isSplit(adven[i]->main_status);
 }
 
-extern cUniverse univ;
 bool cParty::start_split(short x,short y,snd_num_t noise,short who) {
 	if(who >= 6 || who < 0) return false;
 	if(is_split())
@@ -1213,8 +1212,8 @@ bool cParty::end_split(snd_num_t noise) {
 	if(!is_split())
 		return false;
 	for(short i = 0; i < 6; i++){
-		if(isSplit(univ.party[i].main_status))
-			univ.party[i].main_status -= eMainStatus::SPLIT;
+		if(isSplit(adven[i]->main_status))
+			adven[i]->main_status -= eMainStatus::SPLIT;
 	}
 	play_sound(noise);
 	return true;

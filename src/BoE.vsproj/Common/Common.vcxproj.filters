@@ -67,9 +67,6 @@
     <ClInclude Include="..\..\classes\pc.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\classes\regtown.hpp">
-      <Filter>Classes\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\classes\scenario.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
@@ -89,9 +86,6 @@
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\classes\terrain.hpp">
-      <Filter>Classes\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\classes\tmpltown.hpp">
       <Filter>Classes\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\classes\town.hpp">
@@ -252,9 +246,6 @@
     <ClCompile Include="..\..\classes\pc.cpp">
       <Filter>Classes\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\classes\regtown.cpp">
-      <Filter>Classes\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\classes\scenario.cpp">
       <Filter>Classes\Source Files</Filter>
     </ClCompile>
@@ -271,9 +262,6 @@
       <Filter>Classes\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\classes\terrain.cpp">
-      <Filter>Classes\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\classes\tmpltown.cpp">
       <Filter>Classes\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\classes\town.cpp">

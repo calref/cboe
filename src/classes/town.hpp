@@ -12,6 +12,7 @@
 #include <vector>
 #include <iosfwd>
 #include <array>
+#include <bitset>
 #include "simpletypes.hpp"
 #include "location.hpp"
 #include "special.hpp"
