@@ -4965,7 +4965,7 @@ bool combat_cast_priest_spell() {
 }
 
 void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) {
-	short target = store_spell_target,i,num_opp = 0;
+	short target = store_spell_target,num_opp = 0;
 	snd_num_t store_sound = 0;
 	miss_num_t store_m_type = 0;
 	short bonus = freebie ? 1 : univ.party[current_pc].stat_adj(eSkill::INTELLIGENCE);
@@ -5063,14 +5063,14 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 		case eSpell::AUGMENTATION:
 			if(target < 6) {
 				add_string_to_buf("  Health augmented!");
-				i = get_ran(3,1,6);
+				int i = get_ran(3,1,6);
 				univ.party[target].cur_health += i;
 			}
 			break;
 		case eSpell::NIRVANA:
 			if(target < 6) {
 				add_string_to_buf("  Enlightened!");
-				i = get_ran(3,1,6);
+				int i = get_ran(3,1,6);
 				univ.party[target].apply_status(eStatus::DUMB, i / -3);
 				univ.party[target].cur_sp += i * 2;
 				adjust_spell_menus();

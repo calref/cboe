@@ -366,7 +366,7 @@ extern fs::path progDir;
 void handle_menu_choice(eMenu item_hit) {
 	std::string dialogToShow;
 	sf::Event dummyEvent = {sf::Event::KeyPressed};
-	short i, choice;
+	short choice;
 	
 	switch(item_hit) {
 		case eMenu::NONE: break;
@@ -481,10 +481,7 @@ void handle_menu_choice(eMenu item_hit) {
 				print_buf();
 				break;
 			}
-			for(short i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ABSENT)
-					i = 20;
-			if(i == 6) {
+			if(univ.party.free_space() == 6) {
 				ASB("Add PC: You already have 6 PCs.");
 				print_buf();
 				break;

@@ -2148,7 +2148,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 				  short *next_spec,short *next_spec_type,short *a,short *b,short *redraw) {
 	bool check_mess = false;
 	std::string str1,str2;
-	short store_val = 0,i,j;
+	short store_val = 0;
 	cSpecial spec;
 	
 	spec = cur_node;
@@ -2325,10 +2325,10 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 		 */
 		case eSpecType::SDF_ADD: case eSpecType::SDF_DIFF:
 		case eSpecType::SDF_TIMES: case eSpecType::SDF_POWER:
-		case eSpecType::SDF_DIVIDE:
+		case eSpecType::SDF_DIVIDE: {
 			check_mess = true;
-			i = spec.ex1b == -1 ? spec.ex1a : PSD[spec.ex1a][spec.ex1b];
-			j = spec.ex2b == -1 ? spec.ex2a : PSD[spec.ex2a][spec.ex2b];
+			int i = spec.ex1b == -1 ? spec.ex1a : PSD[spec.ex1a][spec.ex1b];
+			int j = spec.ex2b == -1 ? spec.ex2a : PSD[spec.ex2a][spec.ex2b];
 			switch(spec.type) {
 				case eSpecType::SDF_ADD: setsd(spec.sd1, spec.sd2, i + j); break;
 				case eSpecType::SDF_DIFF: setsd(spec.sd1, spec.sd2, i - j); break;
@@ -2347,6 +2347,7 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 					break;
 			}
 			break;
+		}
 		case eSpecType::PRINT_NUMS:
 			if(!univ.debug_mode) break;
 			check_mess = false;
@@ -2451,13 +2452,14 @@ void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			redraw_screen(REFRESH_TERRAIN | REFRESH_STATS);
 			sf::sleep(sf::milliseconds(spec.ex1a));
 			break;
-		case eSpecType::START_TALK:
-			i = univ.get_target_i(*current_pc_picked_in_spec_enc);
+		case eSpecType::START_TALK: {
+			int i = univ.get_target_i(*current_pc_picked_in_spec_enc);
 			if(i >= 100) i -= 100;
 			else i = -1;
 			start_talk_mode(i, spec.ex1a, spec.ex1b, spec.pic);
 			*next_spec = -1;
 			break;
+		}
 		case eSpecType::UPDATE_QUEST:
 			check_mess = true;
 			if(spec.ex1a < 0 || spec.ex1a >= univ.scenario.quests.size()) {
