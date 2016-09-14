@@ -33,7 +33,7 @@
 #include <boost/lexical_cast.hpp>
 #include "prefs.hpp"
 #include "shop.hpp"
-#define	NUM_HINTS	30
+#include "restypes.hpp"
 
 extern short stat_window;
 extern eGameMode overall_mode;
@@ -59,7 +59,6 @@ extern std::vector<scen_header_type> scen_headers;
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
 char null_string[256] = "";
-short store_tip_page_on = 0;
 extern bool party_in_memory;
 
 // Talking vars
@@ -95,8 +94,6 @@ rectangle shop_name_str = {44,6,56,200};
 rectangle shop_frame = {62,10,352,269};
 rectangle shop_done_rect = {388,212,411,275};
 short shop_array[30];
-
-short store_scen_page_on,store_num_scen;
 
 cShop active_shop;
 short active_shop_num;
@@ -1317,33 +1314,32 @@ void edit_party() {
 	
 }
 
-static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, short& page) {
 	std::string place_str;
 	
 	if(item_hit == "done") {
 		me.toast(true);
 	} else if(item_hit == "next") {
-		store_tip_page_on++;
-		if(store_tip_page_on == NUM_HINTS)
-			store_tip_page_on = 0;
-		place_str = get_str("tips",50 + store_tip_page_on);
+		page++;
+		if(page == ResMgr::get<StringRsrc>("tips")->size() - 50)
+			page = 0;
+		place_str = get_str("tips",50 + page);
 		me["tip"].setText(place_str);
 	}
 	return true;
 }
 
 void tip_of_day() {
-	std::string place_str;
+	using namespace std::placeholders;
 	
-	store_tip_page_on = get_ran(1,0,NUM_HINTS - 1);
+	short page = get_ran(1,0,ResMgr::get<StringRsrc>("tips")->size() - 51);
 	
 	make_cursor_sword();
 	
 	cDialog tips("tip-of-day");
-	tips.attachClickHandlers(&tip_of_day_event_filter,{"done","next"});
+	tips.attachClickHandlers(std::bind(tip_of_day_event_filter, _1, _2, std::ref(page)),{"done","next"});
 	
-	place_str = get_str("tips",50 + store_tip_page_on);
-	tips["tip"].setText(place_str);
+	tips["tip"].setText(get_str("tips",50 + page));
 	
 	cLed& showAtStart = dynamic_cast<cLed&>(tips["onstart"]);
 	showAtStart.setState(get_bool_pref("GiveIntroHint", true) ? led_red : led_off);
@@ -1354,7 +1350,7 @@ void tip_of_day() {
 	
 }
 
-static void put_scen_info(cDialog& me) {
+static void put_scen_info(cDialog& me, short page) {
 	std::ostringstream sout;
 	static const char *difficulty[] = {"Low","Medium","High","Very High"};
 	
@@ -1363,18 +1359,18 @@ static void put_scen_info(cDialog& me) {
 		sout.str("");
 		sout << i + 1;
 		std::string n = sout.str();
-		if(scen_headers.size() > (store_scen_page_on * 3 + i)) {
+		if(scen_headers.size() > (page * 3 + i)) {
 			me["pic" + n].show();
-			dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers[store_scen_page_on * 3 + i].intro_pic);
+			dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers[page * 3 + i].intro_pic);
 			sout.str("");
-			sout << scen_headers[store_scen_page_on * 3 + i].name;
-			sout << " v" << int(scen_headers[store_scen_page_on * 3 + i].ver[0]);
-			sout << '.' << int(scen_headers[store_scen_page_on * 3 + i].ver[1]);
-			sout << '.' << int(scen_headers[store_scen_page_on * 3 + i].ver[2]);
-			sout << " - |  Difficulty: " << difficulty[scen_headers[store_scen_page_on * 3 + i].difficulty];
-			sout << ", Rating: " << scen_headers[store_scen_page_on * 3 + i].rating;
-			sout << " |" << scen_headers[store_scen_page_on * 3 + i].who1;
-			sout << " |" << scen_headers[store_scen_page_on * 3 + i].who2;
+			sout << scen_headers[page * 3 + i].name;
+			sout << " v" << int(scen_headers[page * 3 + i].ver[0]);
+			sout << '.' << int(scen_headers[page * 3 + i].ver[1]);
+			sout << '.' << int(scen_headers[page * 3 + i].ver[2]);
+			sout << " - |  Difficulty: " << difficulty[scen_headers[page * 3 + i].difficulty];
+			sout << ", Rating: " << scen_headers[page * 3 + i].rating;
+			sout << " |" << scen_headers[page * 3 + i].who1;
+			sout << " |" << scen_headers[page * 3 + i].who2;
 			me["desc" + n].setText(sout.str());
 			me["start" + n].show();
 		}
@@ -1386,50 +1382,46 @@ static void put_scen_info(cDialog& me) {
 	}
 }
 
-static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, short& page) {
 	if(item_hit == "cancel") {
 		me.setResult<short>(-1);
 		me.toast(false);
 	} else if(item_hit == "next") {
-		if(store_scen_page_on == 0)
-			store_scen_page_on = (store_num_scen - 1) / 3;
-		else store_scen_page_on--;
-		put_scen_info(me);
+		if(page == 0)
+			page = (scen_headers.size() - 1) / 3;
+		else page--;
+		put_scen_info(me, page);
 	} else if(item_hit == "prev") {
-		if(store_scen_page_on == (store_num_scen - 1) / 3)
-			store_scen_page_on = 0;
-		else store_scen_page_on++;
-		put_scen_info(me);
+		if(page == (scen_headers.size() - 1) / 3)
+			page = 0;
+		else page++;
+		put_scen_info(me, page);
 	} else if(item_hit.substr(0,item_hit.length()-1) == "start") {
 		int scen_hit = item_hit[item_hit.length()-1] - '1';
-		me.setResult<short>(scen_hit + store_scen_page_on * 3);
+		me.setResult<short>(scen_hit + page * 3);
 		me.toast(true);
 	}
 	return true;
 }
 
 short pick_a_scen() {
-	
+	using namespace std::placeholders;
+	// TODO: Add a button to jump to the scenarios folder
 	build_scen_headers();
 	
-	store_num_scen = scen_headers.size();
-//	for(short i = 0; i < 25; i++)
-//		if(scen_headers[i].flag1 != 0)
-//			store_num_scen++;
-	store_scen_page_on = 0;
-	
-	if(store_num_scen == 0) {
+	if(scen_headers.empty()) {
 		cChoiceDlog("no-scenarios").show();
 		return -1;
 	}
 	make_cursor_sword();
 	
 	cDialog pickScen("pick-scenario");
-	pickScen.attachClickHandlers(pick_a_scen_event_filter, {"cancel", "next", "prev", "start1", "start2", "start3"});
+	short page = 0;
+	pickScen.attachClickHandlers(std::bind(pick_a_scen_event_filter, _1, _2, std::ref(page)), {"cancel", "next", "prev", "start1", "start2", "start3"});
 	
-	put_scen_info(pickScen);
+	put_scen_info(pickScen, 0);
 	
-	if(store_num_scen <= 3) {
+	if(scen_headers.size() <= 3) {
 		pickScen["next"].hide();
 		pickScen["prev"].hide();
 	}
