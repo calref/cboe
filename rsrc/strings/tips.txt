@@ -48,28 +48,28 @@ Although it costs no gold, hold off on buying this until your level is high. Luc
 
 
 Drinking many, many cups of espresso  often greatly heightens one's Blades of Exile experience. The author recommends a nice iced latte. Double tall.
-Be sure to look for Exile: Escape From the Pit, Exile II: Crystal Souls and Exile III: Ruined World: the hit award-winning trilogy that spawned Blades of Exile. http://www.spidweb.com.
-Need a hint? Run the Blades of Exile Instructions program. It has a full hint book for the first scenario.
-Low on gold? Read the Blades of Exile documentation. The Hints on Getting Started section has a plethora of hints for finding loot.
+Be sure to look for Exile: Escape From the Pit, Exile II: Crystal Souls and Exile III: Ruined World: the hit award-winning trilogy that spawned Blades of Exile. http://www.spidweb.com/productsOld.html
+Need a hint? See the Blades of Exile Help (Help menu). It has a full hint book for the first scenario.
+Low on gold? Read the Blades of Exile Help. The Hints on Getting Started section has a plethora of hints for finding loot.
 Having trouble reaching somewhere? Walk into the walls/barriers/trees/whatever is in your way. Some things have secret doors or entrances.
 Casting repeated blesses multiplies the effect. Two bless spells on somebody are more than twice as powerful as one.
 Want more adventures? Go to www.spidweb.com, and download a new Blades of Exile scenario!
 It's all fun and games until someone loses an eye.
 To play a customized scenario, copy it into your Blades of Exile Scenarios folder, run the game, and click Custom Scenario on the title screen. You can find new scenarios at www.spidweb.com.
 Some scenarios have horses in them. Buy some, if possible. Traveling outdoors is slow, and you'll use up a lot less food when you don't travel on foot.
-Items need to be identified before you can sell them. In the first scenario, Axel (in Sweetgrove) will identify items cheaply. Also, there are people in plenty of other towns who will perform this service.
+Items need to be identified before you can sell them. In Valley of Dying Things, Axel (in Sweetgrove) will identify items cheaply. Also, there are people in plenty of other towns who will perform this service.
 Move Mountains and Dispel Barrier are very useful spells. Haste will save your party from many a nasty fight.
 Can't cast a mage spell you've learned? Make sure your Mage Spells skill is up to at least the level of the spell. Then make sure you're not dumbfounded (Restore Mind cures this). Then make sure you have enough spell points.
-The Blades of Exile Editor can help you out in a lot of nasty situations, even when it's unregistered. Take a look!
+The Blades of Exile Editor can help you out in a lot of nasty situations. Take a look!
 Someone important not there? The friendly people in the town suddenly mad at you and you're not sure why? You may have clipped them with Mass Charm or Shockwave. Visit a few other towns and return, and you'll have been forgiven.
-Low on gold? Look around for side adventurers. For example, Valley of Dying Things has several other dungeons.
-Trapped in a scenario? You can often leave it by returning to the town you started in. If you're trapped, run the Blades of Exile character editor. It can pull you out of a scenario (even when unregistered).
+Low on gold? Look around for side adventures. For example, Valley of Dying Things has several other dungeons.
+Trapped in a scenario? You can often leave it by returning to the town you started in. If you're trapped, run the Blades of Exile character editor. It can pull you out of a scenario.
 Be sure to talk to everyone in town. This is often your only route to important tips. For example, in Valley of Dying Things, Avizo, in the first town, knows something very important. You just have to find out what to ask him.
-Have a tip, bug report, question, or comment? Send it to SpidWeb@spidweb.com.
+Have a tip, bug report, question, or comment? Sign up for the forums at spiderwebforums.ipbhost.com.
 Make sure everyone has a strength of at least 3. Make sure mages have plenty of intelligence. Make sure everyone who does a lot of melee combat has a high dexterity.
 Some dungeon trips are long, and require lots of healing and endurance. It is at these times that Alchemy can be very useful.
 If you get lost, be sure to use the automap. It can tell you where you have and haven't been.
-If you need a hint, look in the online documentation. There's a full hint guide for Valley of Dying Things. When you register, you get a full hint book for Blades of Exile.
+If you need a hint, look in the documentation. There's a full hint guide for Valley of Dying Things, A Small Rebellion, and Za-Khazi Run.
 To cast spells quickly, click on his/her name on the upper right, and select the spell from the Mage Spells or Priest Spells menu.
 To make a character active (and see its inventory) quickly, type '1'-'6'.
 Sometimes you'll find a place where you know there's a dungeon, but you can't see or enter it. That's because someone somewhere else needs to tell you where it is. Go talk to people in towns.
@@ -77,10 +77,3 @@ One nice shortcut: typing capital 'M' has whoever cast your last mage spell cast
 Beware when using the Long Rest feature in dungeons. Monsters are taking advantage of those pauses to get reinforcements.
 Game too slow? Look in the Preferences menu. There are several options to speed things up.
 Have to go through a dungeon, but you keep getting killed? Stock up on potions. Buy scrolls. Learn alchemy. Go in, kill a bunch of monsters, and leave to rest (if you can).
-One nice shortcut: typing capital 'M' has whoever cast your last mage spell cast it again. 'P' works the same way for priest spells.
-Beware when using the Long Rest feature in dungeons. Monsters are taking advantage of those pauses to get reinforcements.
-When launching Exile III, you can hold the space bar down to do a limited launch. This eliminates the opening fades and music, and sometimes makes the game go faster. 
-
-
-
-
