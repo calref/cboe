@@ -541,8 +541,10 @@ bool cPlayer::give_item(cItem item, int flags) {
 						else if(can_rem1 && items[rem1].variety != item.variety)
 							equip[rem1] = false;
 					}
-					if((rem1 == weap_poisoned.slot && !equip[rem1]) || (rem2 == weap_poisoned.slot && !equip[rem2]))
+					if((rem1 == weap_poisoned.slot && !equip[rem1]) || (rem2 == weap_poisoned.slot && !equip[rem2])) {
 						status[eStatus::POISONED_WEAPON] = 0;
+						weap_poisoned.clear();
+					}
 				} else if(can_rem1)
 					equip[rem1] = false;
 				equip_item(free_space.slot, false);
@@ -618,6 +620,7 @@ bool cPlayer::unequip_item(int which_item, bool do_print) {
 		if(do_print && print_result)
 			print_result("  Poison lost.");
 		status[eStatus::POISONED_WEAPON] = 0;
+		weap_poisoned.clear();
 	}
 	return true;
 }
@@ -849,6 +852,7 @@ void cPlayer::take_item(int which_item) {
 	if(weap_poisoned.slot == which_item && status[eStatus::POISONED_WEAPON] > 0) {
 		if(print_result) print_result("  Poison lost.");
 		status[eStatus::POISONED_WEAPON] = 0;
+		weap_poisoned.clear();
 	}
 	if(weap_poisoned.slot > which_item && status[eStatus::POISONED_WEAPON] > 0)
 		weap_poisoned.slot--;

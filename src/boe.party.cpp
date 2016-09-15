@@ -433,7 +433,7 @@ bool poison_weapon(short pc_num, short how_much,bool safe) {
 		}
 		if(!safe)
 			play_sound(55);
-		univ.party[pc_num].weap_poisoned.slot = weap - univ.party[pc_num].items.end();
+		univ.party[pc_num].weap_poisoned.slot = weap - univ.party[pc_num].items.begin();
 		univ.party[pc_num].status[eStatus::POISONED_WEAPON] = max(univ.party[pc_num].status[eStatus::POISONED_WEAPON], p_level);
 		
 		return true;

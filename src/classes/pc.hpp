@@ -40,6 +40,9 @@ struct cInvenSlot {
 	unsigned int slot;
 	explicit cInvenSlot(cPlayer& owner) : slot(std::numeric_limits<unsigned int>::max()), owner(owner) {}
 	cInvenSlot(cPlayer& owner, int slot) : slot(slot), owner(owner) {}
+	void clear() {
+		slot = std::numeric_limits<unsigned int>::max();
+	}
 	explicit operator bool() const;
 	bool operator !() const;
 	cItem* operator->();
