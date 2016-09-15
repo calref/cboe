@@ -23,6 +23,8 @@ extern const std::multiset<eItemType> num_hands_to_use;
 extern std::map<const eItemType, const short> excluding_types;
 
 extern short skill_bonus[21];
+// A nice convenient bitset with just the low 30 bits set, for initializing spells
+const uint32_t cPlayer::basic_spells = std::numeric_limits<uint32_t>::max() >> 2;
 
 void cPlayer::import_legacy(legacy::pc_record_type old){
 	main_status = (eMainStatus) old.main_status;
@@ -940,12 +942,10 @@ cPlayer::cPlayer(cParty& party) : party(&party), weap_poisoned(*this) {
 	skill_pts = 65;
 	level = 1;
 	std::fill(items.begin(), items.end(), cItem());
-	std::fill(equip.begin(), equip.end(), false);
+	equip.reset();
 	
-	for(short i = 0; i < 62; i++) {
-		priest_spells[i] = i < 30;
-		mage_spells[i] = i < 30;
-	}
+	priest_spells = basic_spells;
+	mage_spells = basic_spells;
 	which_graphic = 0;
 	
 	race = eRace::HUMAN;
@@ -995,7 +995,7 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		skill_pts = 60;
 		level = 1;
 		std::fill(items.begin(), items.end(), cItem());
-		std::fill(equip.begin(), equip.end(), false);
+		equip.reset();
 		
 		priest_spells.set();
 		mage_spells.set();
@@ -1084,13 +1084,9 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		level = 1;
 		
 		std::fill(items.begin(), items.end(), cItem());
-		std::fill(equip.begin(), equip.end(), false);
+		equip.reset();
 		cur_sp = pc_sp[slot];
 		max_sp = pc_sp[slot];
-		for(short i = 0; i < 62; i++) {
-			priest_spells[i] = i < 30;
-			mage_spells[i] = i < 30;
-		}
 		for(short i = 0; i < 15; i++) {
 			eTrait trait = eTrait(i);
 			traits[trait] = pc_t[slot].count(trait);
@@ -1180,14 +1176,16 @@ void cPlayer::writeTo(std::ostream& file) const {
 	file << "UID " << unique_id << '\n';
 	file << "STATUS -1 " << main_status << '\n';
 	file << "NAME " << maybe_quote_string(name) << '\n';
-	file << "SKILL 19 " << max_health << '\n';
-	file << "SKILL 20 " << max_sp << '\n';
+	file << "SKILL " << eSkill::MAX_HP << ' ' << max_health << '\n';
+	if(max_sp > 0)
+		file << "SKILL " << eSkill::MAX_SP << ' ' << max_sp << '\n';
 	for(auto p : skills) {
 		if(p.second > 0)
 			file << "SKILL " << int(p.first) << ' ' << p.second << '\n';
 	}
 	file << "HEALTH " << cur_health << '\n';
-	file << "MANA " << cur_sp << '\n';
+	if(cur_sp != max_sp)
+		file << "MANA " << cur_sp << '\n';
 	file << "EXPERIENCE " << experience << '\n';
 	file << "SKILLPTS " << skill_pts << '\n';
 	file << "LEVEL " << level << '\n';
@@ -1231,7 +1229,17 @@ void cPlayer::readFrom(std::istream& file){
 	std::string cur;
 	getline(file, cur, '\f');
 	bin.str(cur);
-	std::fill(equip.begin(), equip.end(), false);
+	
+	// Clear some data that is not always present
+	equip.reset();
+	mage_spells.reset();
+	priest_spells.reset();
+	weap_poisoned.clear();
+	status.clear();
+	traits.clear();
+	skills.clear();
+	cur_sp = max_sp = ap = 0;
+	
 	while(bin) { // continue as long as no error, such as eof, occurs
 		getline(bin, cur);
 		sin.str(cur);
@@ -1244,20 +1252,30 @@ void cPlayer::readFrom(std::istream& file){
 		}else if(cur == "NAME")
 			name = read_maybe_quoted_string(sin);
 		else if(cur == "SKILL"){
-			int i;
-			sin >> i;
-			switch(i){
-				case -1:
-				case 20:
-					sin >> max_sp;
-					break;
-				case -2:
-				case 19:
+			eSkill skill;
+			sin >> skill;
+			switch(skill) {
+				case eSkill::MAX_HP:
 					sin >> max_health;
 					break;
+				case eSkill::MAX_SP:
+					sin >> max_sp;
+					break;
+				case eSkill::CUR_HP:
+					sin >> cur_health;
+					break;
+				case eSkill::CUR_SP:
+					sin >> cur_sp;
+					break;
+				case eSkill::CUR_XP:
+					sin >> experience;
+					break;
+				case eSkill::CUR_SKILL:
+					break;
+				case eSkill::CUR_LEVEL:
+					sin >> level;
+					break;
 				default:
-					if(i < 0 || i >= 19) break;
-					eSkill skill = eSkill(i);
 					sin >> skills[skill];
 			}
 		}else if(cur == "HEALTH")
@@ -1291,10 +1309,8 @@ void cPlayer::readFrom(std::istream& file){
 			sin >> i;
 			priest_spells[i] = true;
 		}else if(cur == "TRAIT"){
-			int i;
-			sin >> i;
-			if(i < 0 || i > 15) continue;
-			eTrait trait = eTrait(i);
+			eTrait trait;
+			sin >> trait;
 			traits[trait] = true;
 		}else if(cur == "ICON")
 			sin >> which_graphic;

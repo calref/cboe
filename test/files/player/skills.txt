@@ -1,0 +1,9 @@
+SKILL str 5
+SKILL dex 6
+SKILL int 3
+SKILL hp 20
+SKILL edged 3
+SKILL traps 2
+SKILL item-lore 1
+SKILL lockpick 2
+SKILL luck 1

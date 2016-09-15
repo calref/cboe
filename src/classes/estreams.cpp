@@ -166,6 +166,24 @@ std::istream& operator >> (std::istream& in, eSkill& e){
 	return in;
 }
 
+// MARK: eTrait
+
+cEnumLookup trait_names = {
+	"tough", "magic-apt", "ambidex", "nimble", "cave-lore", "wood-lore", "const", "alert",
+	"strong", "regen", "slow", "magic-inept", "frail", "sickly", "bad-back", "pacifist", "anama"
+};
+
+std::ostream& operator << (std::ostream& out, eTrait e) {
+	writeEnum(out, e, trait_names, "tough");
+	return out;
+}
+
+std::istream& operator >> (std::istream& in, eTrait& e){
+	if(!readEnum(in, e, trait_names, eTrait::TOUGHNESS))
+		in.setstate(std::ios::failbit);
+	return in;
+}
+
 // MARK: eItemType
 
 cEnumLookup item_types = {

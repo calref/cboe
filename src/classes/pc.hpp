@@ -64,7 +64,10 @@ class cPlayer : public iLiving {
 	cParty* party;
 	template<typename Fcn>
 	cInvenSlot find_item_matching(Fcn fcn);
+	static const int INVENTORY_SIZE = 24;
 public:
+	// A nice convenient bitset with just the low 30 bits set, for initializing spells
+	static const uint32_t basic_spells;
 	static void(* give_help)(short,short);
 	eMainStatus main_status;
 	std::string name;
@@ -77,8 +80,8 @@ public:
 	unsigned short experience;
 	short skill_pts;
 	short level;
-	std::array<cItem,24> items;
-	std::array<bool,24> equip;
+	std::array<cItem,INVENTORY_SIZE> items;
+	std::bitset<INVENTORY_SIZE> equip;
 	std::bitset<62> priest_spells;
 	std::bitset<62> mage_spells;
 	pic_num_t which_graphic;
@@ -90,7 +93,7 @@ public:
 	// transient stuff
 	std::map<eSkill,eSpell> last_cast;
 	location combat_pos;
-	short parry;
+	short parry = 0;
 	iLiving* last_attacked = nullptr; // Note: Currently this is assigned but never read
 	
 	bool is_alive() const;
@@ -175,5 +178,7 @@ void operator += (eMainStatus& stat, eMainStatus othr);
 void operator -= (eMainStatus& stat, eMainStatus othr);
 std::ostream& operator << (std::ostream& out, eMainStatus e);
 std::istream& operator >> (std::istream& in, eMainStatus& e);
+std::ostream& operator << (std::ostream& out, eTrait e);
+std::istream& operator >> (std::istream& in, eTrait& e);
 
 #endif

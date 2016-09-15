@@ -10,6 +10,8 @@
 #include "scenario.hpp"
 #include "creature.hpp"
 #include "creatlist.hpp"
+#include "pc.hpp"
+#include "party.hpp"
 
 TEST_CASE("Initialization sanity test for terrain") {
 	cTerrain ter;
@@ -219,5 +221,53 @@ TEST_CASE("Construction sanity test for monster") {
 		REQUIRE(pop.size() == 1);
 		CHECK(pop[0].m_morale == 800);
 		CHECK(pop[0].morale == 800);
+	}
+}
+
+TEST_CASE("Construction sanity test for player character") {
+	cParty party;
+	cPlayer pc(party);
+	SECTION("Living base class") {
+		iLiving& base = pc;
+		CHECK(base.status.empty());
+		CHECK(base.ap == 0);
+		CHECK(base.direction == DIR_N);
+		CHECK(base.marked_damage == 0);
+	}
+	SECTION("Main player class") {
+		CHECK(pc.main_status == eMainStatus::ABSENT);
+		CHECK(pc.name == "\n");
+		CHECK(pc.skills.size() == 3);
+		CHECK(pc.skills[eSkill::STRENGTH] == 1);
+		CHECK(pc.skills[eSkill::DEXTERITY] == 1);
+		CHECK(pc.skills[eSkill::INTELLIGENCE] == 1);
+		CHECK(pc.max_health == 6);
+		CHECK(pc.cur_health == 6);
+		CHECK(pc.max_sp == 0);
+		CHECK(pc.cur_sp == 0);
+		CHECK(pc.experience == 0);
+		CHECK(pc.skill_pts == 65);
+		CHECK(pc.level == 1);
+		CHECK(pc.items[0].variety == eItemType::NO_ITEM);
+		CHECK_FALSE(pc.equip.any());
+		CHECK(pc.priest_spells == cPlayer::basic_spells);
+		CHECK(pc.mage_spells == cPlayer::basic_spells);
+		CHECK(pc.which_graphic == 0);
+		using weap_slot_t = decltype(pc.weap_poisoned.slot);
+		CHECK(pc.weap_poisoned.slot == std::numeric_limits<weap_slot_t>::max());
+		CHECK(pc.traits.empty());
+		CHECK(pc.race == eRace::HUMAN);
+		// Skip unique_id since it's non-deterministic
+		CHECK(pc.last_cast.empty());
+		CHECK(pc.combat_pos == loc(-1,-1));
+		CHECK(pc.parry == 0);
+		CHECK(pc.last_attacked == nullptr);
+	}
+	SECTION("Player spells") {
+		// This is more just a bitset sanity test
+		for(int i = 0; i < 62; i++) {
+			CHECK(pc.priest_spells[i] == (i < 30));
+			CHECK(pc.mage_spells[i] == (i < 30));
+		}
 	}
 }

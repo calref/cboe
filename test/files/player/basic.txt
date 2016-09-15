@@ -1,0 +1,15 @@
+UID 3
+STATUS -1 alive
+NAME "Freddy O'Hara"
+SKILL hp 20
+HEALTH 18
+EXPERIENCE 12
+SKILLPTS 3
+LEVEL 2
+STATUS web 3
+TRAIT ambidex
+TRAIT nimble
+TRAIT bad-back
+ICON 3
+RACE human
+DIRECTION e
