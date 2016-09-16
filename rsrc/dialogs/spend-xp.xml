@@ -17,32 +17,32 @@
 	<button name='dex-p' type='small' top='141' left='256'>+</button>
 	<button name='int-m' type='small' top='163' left='231'>-</button>
 	<button name='int-p' type='small' top='163' left='256'>+</button>
-	<button name='edge-m' type='small' top='204' left='231'>-</button>
-	<button name='edge-p' type='small' top='204' left='256'>+</button>
-	<button name='bash-m' type='small' top='226' left='231'>-</button>
-	<button name='bash-p' type='small' top='226' left='256'>+</button>
+	<button name='edged-m' type='small' top='204' left='231'>-</button>
+	<button name='edged-p' type='small' top='204' left='256'>+</button>
+	<button name='bashing-m' type='small' top='226' left='231'>-</button>
+	<button name='bashing-p' type='small' top='226' left='256'>+</button>
 	<button name='pole-m' type='small' top='248' left='231'>-</button>
 	<button name='pole-p' type='small' top='248' left='256'>+</button>
 	<button name='thrown-m' type='small' top='270' left='231'>-</button>
 	<button name='thrown-p' type='small' top='270' left='256'>+</button>
-	<button name='bow-m' type='small' top='292' left='231'>-</button>
-	<button name='bow-p' type='small' top='292' left='256'>+</button>
-	<button name='def-m' type='small' top='314' left='231'>-</button>
-	<button name='def-p' type='small' top='314' left='256'>+</button>
+	<button name='archery-m' type='small' top='292' left='231'>-</button>
+	<button name='archery-p' type='small' top='292' left='256'>+</button>
+	<button name='defense-m' type='small' top='314' left='231'>-</button>
+	<button name='defense-p' type='small' top='314' left='256'>+</button>
 	<button name='mage-m' type='small' top='74' left='472'>-</button>
 	<button name='mage-p' type='small' top='74' left='497'>+</button>
 	<button name='priest-m' type='small' top='96' left='472'>-</button>
 	<button name='priest-p' type='small' top='96' left='497'>+</button>
-	<button name='lore-m' type='small' top='118' left='472'>-</button>
-	<button name='lore-p' type='small' top='118' left='497'>+</button>
-	<button name='alch-m' type='small' top='140' left='472'>-</button>
-	<button name='alch-p' type='small' top='140' left='497'>+</button>
-	<button name='item-m' type='small' top='162' left='472'>-</button>
-	<button name='item-p' type='small' top='162' left='497'>+</button>
-	<button name='trap-m' type='small' top='206' left='472'>-</button>
-	<button name='trap-p' type='small' top='206' left='497'>+</button>
-	<button name='lock-m' type='small' top='228' left='472'>-</button>
-	<button name='lock-p' type='small' top='228' left='497'>+</button>
+	<button name='mage-lore-m' type='small' top='118' left='472'>-</button>
+	<button name='mage-lore-p' type='small' top='118' left='497'>+</button>
+	<button name='alchemy-m' type='small' top='140' left='472'>-</button>
+	<button name='alchemy-p' type='small' top='140' left='497'>+</button>
+	<button name='item-lore-m' type='small' top='162' left='472'>-</button>
+	<button name='item-lore-p' type='small' top='162' left='497'>+</button>
+	<button name='traps-m' type='small' top='206' left='472'>-</button>
+	<button name='traps-p' type='small' top='206' left='497'>+</button>
+	<button name='lockpick-m' type='small' top='228' left='472'>-</button>
+	<button name='lockpick-p' type='small' top='228' left='497'>+</button>
 	<button name='assassin-m' type='small' top='250' left='472'>-</button>
 	<button name='assassin-p' type='small' top='250' left='497'>+</button>
 	<button name='poison-m' type='small' top='272' left='472'>-</button>
@@ -61,19 +61,19 @@
 	<text name='str' framed='true' top='121' left='194' width='28' height='16'/>
 	<text name='dex' framed='true' top='143' left='194' width='28' height='16'/>
 	<text name='int' framed='true' top='165' left='194' width='28' height='16'/>
-	<text name='edge' framed='true' top='207' left='194' width='28' height='16'/>
-	<text name='bash' framed='true' top='229' left='194' width='28' height='16'/>
+	<text name='edged' framed='true' top='207' left='194' width='28' height='16'/>
+	<text name='bashing' framed='true' top='229' left='194' width='28' height='16'/>
 	<text name='pole' framed='true' top='251' left='194' width='28' height='16'/>
 	<text name='thrown' framed='true' top='272' left='194' width='28' height='16'/>
-	<text name='bow' framed='true' top='294' left='194' width='28' height='16'/>
-	<text name='def' framed='true' top='316' left='194' width='28' height='16'/>
+	<text name='archery' framed='true' top='294' left='194' width='28' height='16'/>
+	<text name='defense' framed='true' top='316' left='194' width='28' height='16'/>
 	<text name='mage' framed='true' top='76' left='435' width='28' height='16'/>
 	<text name='priest' framed='true' top='98' left='435' width='29' height='16'/>
-	<text name='lore' framed='true' top='121' left='435' width='29' height='16'/>
-	<text name='alch' framed='true' top='142' left='435' width='29' height='16'/>
-	<text name='item' framed='true' top='164' left='435' width='29' height='16'/>
-	<text name='trap' framed='true' top='208' left='434' width='29' height='16'/>
-	<text name='lock' framed='true' top='230' left='434' width='29' height='16'/>
+	<text name='mage-lore' framed='true' top='121' left='435' width='29' height='16'/>
+	<text name='alchemy' framed='true' top='142' left='435' width='29' height='16'/>
+	<text name='item-lore' framed='true' top='164' left='435' width='29' height='16'/>
+	<text name='traps' framed='true' top='208' left='434' width='29' height='16'/>
+	<text name='lockpick' framed='true' top='230' left='434' width='29' height='16'/>
 	<text name='assassin' framed='true' top='252' left='434' width='29' height='16'/>
 	<text name='poison' framed='true' top='274' left='434' width='29' height='16'/>
 	<text name='luck' framed='true' top='296' left='434' width='29' height='16'/>
@@ -83,10 +83,7 @@
 	<text size='large' top='185' left='38' width='133' height='17'>Warrior Skills:</text>
 	<text size='large' top='53' left='292' width='133' height='17'>Magic Skills:</text>
 	<text size='large' top='185' left='292' width='133' height='17'>Other Skills:</text>
-	<!--
-	 TODO: Change this to say alt instead of option
-	 -->
-	<text top='365' left='6' width='382' height='16'>Cost: (Skill pts./Gold)    Option-click for description</text>
+	<text top='365' left='6' width='382' height='16'>Cost: (Skill pts./Gold)    Alt-click for description</text>
 	<text top='344' left='71' width='68' height='16'>Skill Pts.:</text>
 	<text top='344' left='252' width='42' height='16'>Gold:</text>
 	<button name='help' type='help' def-key='help' top='6' left='506'/>

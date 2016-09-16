@@ -32,7 +32,6 @@ short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 extern std::map<eSkill,short> skill_cost;
 extern std::map<eSkill,short> skill_max;
 extern std::map<eSkill,short> skill_g_cost;
-extern const char* skill_ids[19];
 extern short cur_town_talk_loaded;
 extern sf::RenderWindow mainPtr;
 extern short on_monst_menu[256];
@@ -516,7 +515,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 		int bonus = univ.party[pc].get_prot_level(eItemAbil::BOOST_STAT, i);
 		to_draw << univ.party[pc].skills[skill];
 		if(bonus > 0) to_draw << '+' << bonus;
-		me[skill_ids[i]].setText(to_draw.str());
+		me[boost::lexical_cast<std::string>(skill)].setText(to_draw.str());
 		to_draw.str("");
 	}
 	me["encumb"].setTextToNum(total_encumbrance(pc));

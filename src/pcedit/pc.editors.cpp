@@ -51,14 +51,6 @@ extern std::map<eSkill,short> skill_cost;
 extern std::map<eSkill,short> skill_max;
 extern std::map<eSkill,short> skill_g_cost;
 
-// These are the IDs used to refer to the skills in the dialog
-const char* skill_ids[19] = {
-	"str","dex","int",
-	"edge","bash","pole","thrown","bow","def",
-	"mage","priest","lore","alch","item",
-	"trap","lock","assassin","poison","luck"
-};
-
 static void put_pc_spells(cDialog& me, short store_trait_mode) {
 	store_trait_mode %= 10;
 	
@@ -333,25 +325,16 @@ static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 
 static void draw_xp_skills(cDialog& me,xp_dlog_state& save) {
 	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
-	for(short i = 0; i < 19; i++) {
-		cControl& cur = me[skill_ids[i]];
+	for(short i = 0; i <= 20; i++) {
 		eSkill skill = eSkill(i);
+		cControl& cur = me[boost::lexical_cast<std::string>(skill)];
 		if(can_change_skill(skill, save, true))
 			cur.setColour(sf::Color::Red);
 		else cur.setColour(me.getDefTextClr());
-		cur.setTextToNum(save.skills[skill]);
+		if(i < 19)
+			cur.setTextToNum(save.skills[skill]);
+		else cur.setTextToNum(skill == eSkill::MAX_HP ? save.hp : save.sp);
 	}
-	
-	cControl& sp = me["sp"];
-	cControl& hp = me["hp"];
-	if(can_change_skill(eSkill::MAX_HP, save, true))
-		hp.setColour(sf::Color::Red);
-	else hp.setColour(me.getDefTextClr());
-	hp.setTextToNum(save.hp);
-	if(can_change_skill(eSkill::MAX_SP, save, true))
-		sp.setColour(sf::Color::Red);
-	else sp.setColour(me.getDefTextClr());
-	sp.setTextToNum(save.sp);
 }
 
 static void update_gold_skills(cDialog& me, xp_dlog_state& save) {
@@ -489,10 +472,11 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 		draw_xp_skills(me,save);
 	} else {
 		eSkill which_skill = eSkill::INVALID;
-		for(int i = 0; i < 19; i++) {
-			size_t n = strlen(skill_ids[i]);
-			if(item_hit.length() < n + 2) continue;
-			if(item_hit.substr(0, item_hit.length() - 2) == skill_ids[i]) {
+		// TODO: Even though it includes 19 and 20, these will never match since they're handled separately above
+		for(int i = 0; i <= 20; i++) {
+			std::string id_base = boost::lexical_cast<std::string>(eSkill(i));
+			if(item_hit.length() < id_base.length() + 2) continue;
+			if(id_base.compare(0, id_base.length(), item_hit)) {
 				which_skill = eSkill(i);
 				break;
 			}
@@ -533,7 +517,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 			}
 			
 			update_gold_skills(me, save);
-			me[skill_ids[int(which_skill)]].setTextToNum(save.skills[which_skill]);
+			me[boost::lexical_cast<std::string>(which_skill)].setTextToNum(save.skills[which_skill]);
 			draw_xp_skills(me,save);
 		}
 	}
@@ -558,15 +542,16 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	xpDlog.addLabelFor("hp","Health (1/10)",LABEL_LEFT,75,true);
 	xpDlog.addLabelFor("sp","Spell Pts. (1/15)",LABEL_LEFT,75,true);
 	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(save));
-	std::string minus = "-m", plus = "-p";
+	static const std::string minus = "-m", plus = "-p";
 	for(int i = 54; i < 73; i++) {
 		std::ostringstream sout;
 		eSkill skill = eSkill(i - 54);
+		std::string id = boost::lexical_cast<std::string>(skill);
 		sout << get_str("skills",1 + 2 * (i - 54)) << ' ' << '(';
 		sout << skill_cost[skill] << '/' << skill_g_cost[skill] << ')';
-		xpDlog.addLabelFor(skill_ids[i - 54],sout.str(),LABEL_LEFT,(i < 63) ? 75 : 69,true);
-		xpDlog[skill_ids[i - 54] + minus].attachClickHandler(spend_xp_filter);
-		xpDlog[skill_ids[i - 54] + plus].attachClickHandler(spend_xp_filter);
+		xpDlog.addLabelFor(id,sout.str(),LABEL_LEFT,(i < 63) ? 75 : 69,true);
+		xpDlog[id + minus].attachClickHandler(spend_xp_filter);
+		xpDlog[id + plus].attachClickHandler(spend_xp_filter);
 	}
 	do_xp_draw(xpDlog,save);
 	

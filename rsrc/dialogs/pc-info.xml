@@ -24,31 +24,31 @@
 	<text name='lbl3' top='106' left='24' width='97' height='16'/>
 	<text name='int' top='106' left='128' width='38' height='16'/>
 	<text name='lbl4' top='129' left='24' width='97' height='16'/>
-	<text name='edge' top='129' left='128' width='38' height='16'/>
+	<text name='edged' top='129' left='128' width='38' height='16'/>
 	<text name='lbl5' top='147' left='24' width='97' height='16'/>
-	<text name='bash' top='147' left='128' width='38' height='16'/>
+	<text name='bashing' top='147' left='128' width='38' height='16'/>
 	<text name='lbl6' top='165' left='24' width='97' height='16'/>
 	<text name='pole' top='165' left='128' width='38' height='16'/>
 	<text name='lbl7' top='183' left='24' width='97' height='16'/>
 	<text name='thrown' top='183' left='128' width='38' height='16'/>
 	<text name='lbl8' top='201' left='24' width='97' height='16'/>
-	<text name='bow' top='201' left='128' width='38' height='16'/>
+	<text name='archery' top='201' left='128' width='38' height='16'/>
 	<text name='lbl9' top='219' left='24' width='97' height='16'/>
-	<text name='def' top='219' left='128' width='38' height='16'/>
+	<text name='defense' top='219' left='128' width='38' height='16'/>
 	<text name='lbl10' top='70' left='171' width='92' height='16'/>
 	<text name='mage' top='70' left='266' width='38' height='16'/>
 	<text name='lbl11' top='88' left='171' width='92' height='16'/>
 	<text name='priest' top='88' left='266' width='38' height='16'/>
 	<text name='lbl12' top='106' left='171' width='92' height='16'/>
-	<text name='lore' top='106' left='266' width='38' height='16'/>
+	<text name='mage-lore' top='106' left='266' width='38' height='16'/>
 	<text name='lbl13' top='124' left='171' width='92' height='16'/>
-	<text name='alch' top='124' left='266' width='38' height='16'/>
+	<text name='alchemy' top='124' left='266' width='38' height='16'/>
 	<text name='lbl14' top='142' left='171' width='92' height='16'/>
-	<text name='item' top='142' left='266' width='38' height='16'/>
+	<text name='item-lore' top='142' left='266' width='38' height='16'/>
 	<text name='lbl15' top='165' left='171' width='92' height='16'/>
-	<text name='trap' top='165' left='266' width='38' height='16'/>
+	<text name='traps' top='165' left='266' width='38' height='16'/>
 	<text name='lbl16' top='183' left='171' width='92' height='16'/>
-	<text name='lock' top='183' left='266' width='38' height='16'/>
+	<text name='lockpick' top='183' left='266' width='38' height='16'/>
 	<text name='lbl17' top='201' left='171' width='92' height='16'/>
 	<text name='assassin' top='201' left='266' width='38' height='16'/>
 	<text name='lbl18' top='219' left='171' width='92' height='16'/>
