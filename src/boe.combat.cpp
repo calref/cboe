@@ -2881,12 +2881,12 @@ void monster_attack(short who_att,iLiving* target) {
 							case eMonstAbil::DRAIN_XP: add_string_to_buf("  Drains life!"); break;
 							case eMonstAbil::KILL: add_string_to_buf("  Killing touch!"); break;
 							case eMonstAbil::STEAL_FOOD:
-								if(pc_target != nullptr) continue; // Can't use this against other monsters.
+								if(pc_target == nullptr) continue; // Can't use this against other monsters.
 								add_string_to_buf("  Steals food!");
 								snd = 26;
 								break;
 							case eMonstAbil::STEAL_GOLD:
-								if(pc_target != nullptr) continue; // Can't use this against other monsters.
+								if(pc_target == nullptr) continue; // Can't use this against other monsters.
 								add_string_to_buf("  Steals gold!");
 								break; // TODO: Pick a sound
 							case eMonstAbil::FIELD: break; // TODO: Invent messages?

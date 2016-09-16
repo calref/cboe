@@ -238,15 +238,9 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	
 	if(!monsters_loaded) {
+		univ.town.monst.clear();
 		for(short i = 0; i < univ.town->creatures.size(); i++){
-			if(univ.town->creatures[i].number == 0) {
-				if(i >= univ.town.monst.size()) continue;
-				univ.town.monst[i].active = 0;
-				univ.town.monst[i].number = 0;
-				univ.town.monst[i].time_flag = eMonstTime::ALWAYS;
-				univ.town.monst[i].cur_loc.x = 80;
-			}
-			else {
+			if(univ.town->creatures[i].number > 0) {
 				// First set up the values.
 				cTownperson& preset = univ.town->creatures[i];
 				univ.town.monst.assign(i, preset, univ.scenario.scen_monsters[preset.number], univ.party.easy_mode, univ.difficulty_adjust());

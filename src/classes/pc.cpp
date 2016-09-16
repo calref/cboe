@@ -183,7 +183,7 @@ void cPlayer::dumbfound(int how_much) {
 }
 
 void cPlayer::disease(int how_much) {
-	if(is_alive()) return;
+	if(!is_alive()) return;
 	short r1 = get_ran(1,1,100);
 	if(r1 < level * 2)
 		how_much -= 2;

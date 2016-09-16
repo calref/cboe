@@ -31,7 +31,7 @@ std::map<eSkill,short> skill_max = {
 	{eSkill::LUCK,20},
 };
 std::map<eSkill,short> skill_g_cost = {
-	{eSkill::STRENGTH,50}, {eSkill::DEXTERITY,503}, {eSkill::INTELLIGENCE,50},
+	{eSkill::STRENGTH,50}, {eSkill::DEXTERITY,50}, {eSkill::INTELLIGENCE,50},
 	{eSkill::EDGED_WEAPONS,40}, {eSkill::BASHING_WEAPONS,40}, {eSkill::POLE_WEAPONS,40},
 	{eSkill::THROWN_MISSILES,30}, {eSkill::ARCHERY,50}, {eSkill::DEFENSE,40},
 	{eSkill::MAGE_SPELLS,250}, {eSkill::PRIEST_SPELLS,250}, {eSkill::MAGE_LORE,25},
