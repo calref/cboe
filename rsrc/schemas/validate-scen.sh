@@ -24,31 +24,35 @@ function check-file {
 	xmllint --nonet --noout --schema "$BOE_SCHEMAS_DIR/$1.xsd" "$2"
 }
 
-check-file scenario "$SCEN_PATH/scenario.xml"
-check-file terrain "$SCEN_PATH/terrain.xml"
-check-file items "$SCEN_PATH/items.xml"
-check-file monsters "$SCEN_PATH/monsters.xml"
+cd "$SCEN_PATH"
+
+check-file scenario "scenario.xml"
+check-file terrain "terrain.xml"
+check-file items "items.xml"
+check-file monsters "monsters.xml"
 
 shopt -s nullglob
 
-for sector in $SCEN_PATH/out/out*.xml; do
+for sector in out/out*.xml; do
 	check-file outdoor "$sector"
 done
 
-for town in $SCEN_PATH/towns/town*.xml; do
+for town in towns/town*.xml; do
 	check-file town "$town"
 done
 
-for speech in $SCEN_PATH/towns/talk*.xml; do
+for speech in towns/talk*.xml; do
 	check-file dialogue "$speech"
 done
 
-if [[ -d $SCEN_PATH/dialogs/ ]]; then
-	for dlog in $SCEN_PATH/dialogs/*.xml; do
+if [[ -d dialogs/ ]]; then
+	for dlog in dialogs/*.xml; do
 		check-file dialog "$dlog"
 	done
 fi
 
-if [[ $SCEN_PATH = scenario ]]; then
+cd ..
+
+if [[ $SCEN_PATH = scenario && ${1##*/} != scenario ]]; then
 	rm -rf scenario
 fi
