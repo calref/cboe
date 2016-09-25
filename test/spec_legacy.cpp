@@ -10,6 +10,7 @@
 #include "oldstructs.hpp"
 #include "special.hpp"
 #include "restypes.hpp"
+#include "pictypes.hpp"
 
 using namespace std;
 
@@ -312,6 +313,162 @@ TEST_CASE("When converting legacy special nodes (one-shot)") {
 		CHECK(newSpec.ex1b == 2500);
 		CHECK(newSpec.ex2a == 1500);
 		CHECK(newSpec.ex2b == 10);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Give Special Item") {
+		oldSpec.type = 51;
+		oldSpec.ex1a = 15;
+		oldSpec.ex1b = 16;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_GIVE_SPEC_ITEM);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 15);
+		CHECK(newSpec.ex1b == 16);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Do Nothing") {
+		oldSpec.type = 52;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_NULL);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Set SDF") {
+		oldSpec.type = 53;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_SET_SDF);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Message") {
+		oldSpec.type = 54;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_DISPLAY_MSG);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Dialog") {
+		oldSpec.type = 55;
+		oldSpec.pic = 42;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 18;
+		oldSpec.ex2a = 19; oldSpec.ex2b = 17;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_DIALOG);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.pictype == PIC_DLOG); CHECK(newSpec.pic == 42);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
+		CHECK(newSpec.ex1a == 9); CHECK(newSpec.ex1b == 18);
+		CHECK(newSpec.ex2a == 19); CHECK(newSpec.ex2b == 17);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Dialog (terrain)") {
+		oldSpec.type = 56;
+		oldSpec.pic = 42;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 18;
+		oldSpec.ex2a = 19; oldSpec.ex2b = 17;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_DIALOG);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.pictype == PIC_TER); CHECK(newSpec.pic == 42);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
+		CHECK(newSpec.ex1a == 9); CHECK(newSpec.ex1b == 18);
+		CHECK(newSpec.ex2a == 19); CHECK(newSpec.ex2b == 17);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Dialog (monster)") {
+		oldSpec.type = 57;
+		oldSpec.pic = 42;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 18;
+		oldSpec.ex2a = 19; oldSpec.ex2b = 17;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_DIALOG);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.pictype == PIC_MONST); CHECK(newSpec.pic == 42);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
+		CHECK(newSpec.ex1a == 9); CHECK(newSpec.ex1b == 18);
+		CHECK(newSpec.ex2a == 19); CHECK(newSpec.ex2b == 17);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Give Item") {
+		oldSpec.type = 58;
+		oldSpec.pic = 42;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 18;
+		oldSpec.ex2a = 19; oldSpec.ex2b = 17;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_GIVE_ITEM_DIALOG);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.pictype == PIC_DLOG); CHECK(newSpec.pic == 42);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 18);
+		CHECK(newSpec.ex2a == 19); CHECK(newSpec.ex2b == 17);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Give Item (terrain)") {
+		oldSpec.type = 59;
+		oldSpec.pic = 42;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 18;
+		oldSpec.ex2a = 19; oldSpec.ex2b = 17;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_GIVE_ITEM_DIALOG);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.pictype == PIC_TER); CHECK(newSpec.pic == 42);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 18);
+		CHECK(newSpec.ex2a == 19); CHECK(newSpec.ex2b == 17);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Give Item (monster)") {
+		oldSpec.type = 60;
+		oldSpec.pic = 42;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 18;
+		oldSpec.ex2a = 19; oldSpec.ex2b = 17;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_GIVE_ITEM_DIALOG);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.pictype == PIC_MONST); CHECK(newSpec.pic == 42);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 18);
+		CHECK(newSpec.ex2a == 19); CHECK(newSpec.ex2b == 17);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Outdoor Encounter") {
+		oldSpec.type = 61;
+		oldSpec.ex1a = 2;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_OUT_ENCOUNTER);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Town Encounter") {
+		oldSpec.type = 62;
+		oldSpec.ex1a = 7;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_TOWN_ENCOUNTER);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Trap") {
+		oldSpec.type = 63;
+		oldSpec.pic = 7;
+		oldSpec.ex1a = 14;
+		oldSpec.ex1b = 15;
+		oldSpec.ex2a = 16;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ONCE_TRAP);
+		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
+		CHECK(newSpec.pictype == PIC_DLOG); CHECK(newSpec.pic == 27);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 14);
+		CHECK(newSpec.ex1b == 15);
+		CHECK(newSpec.ex2a == 16);
 		CHECK(newSpec.jumpto == 12);
 	}
 	// Clean up after ourselves

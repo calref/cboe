@@ -87,7 +87,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			// 28-49 were undefined
 		case 50: type = eSpecType::ONCE_GIVE_ITEM; break;
 		case 51: type = eSpecType::ONCE_GIVE_SPEC_ITEM; break;
-		case 52: type = eSpecType::ONCE_NULL;
+		case 52: type = eSpecType::ONCE_NULL; break;
 		case 53: type = eSpecType::ONCE_SET_SDF; break;
 		case 54: type = eSpecType::ONCE_DISPLAY_MSG; break;
 			// 55,56,57 were standard dialogs
@@ -173,7 +173,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			if(old.type == 55) type = eSpecType::ONCE_DIALOG;
 			else if(old.type == 58) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
 			else type = eSpecType::TOWN_PORTAL;
-			if(type == eSpecType::TOWN_PORTAL) break;
+			if(type != eSpecType::ONCE_DIALOG) break;
 			// Duplicate Leave button
 			if(old.ex1a == 20)
 				ex1a = 9;
@@ -189,6 +189,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			m2 = -1;
 			if(old.type == 57) type = eSpecType::ONCE_DIALOG;
 			else if(old.type == 60) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
+			if(type != eSpecType::ONCE_DIALOG) break;
 			// Duplicate Leave button
 			if(old.ex1a == 20)
 				ex1a = 9;
@@ -202,7 +203,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			if(old.type == 56) type = eSpecType::ONCE_DIALOG;
 			else if(old.type == 59) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
 			else type = eSpecType::TOWN_LEVER;
-			if(type == eSpecType::TOWN_LEVER) break;
+			if(type != eSpecType::ONCE_DIALOG) break;
 			// Duplicate Leave button
 			if(old.ex1a == 20)
 				ex1a = 9;
