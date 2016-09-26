@@ -105,7 +105,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 		case 86: type = eSpecType::AFFECT_DEADNESS; break;
 			// 87-97 were various "affect status" nodes
 		case 98: type = eSpecType::AFFECT_STAT; break;
-			// 99 and 199 were "affect mage/priest spell"
+			// 99 and 100 were "affect mage/priest spell"
 		case 101: type = eSpecType::AFFECT_GOLD; break;
 		case 102: type = eSpecType::AFFECT_FOOD; break;
 		case 103: type = eSpecType::AFFECT_ALCHEMY; break;
@@ -333,17 +333,17 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			break;
 			// Party statuses (three nodes collapsed into one)
 		case 104:
-			type = eSpecType::AFFECT_STATUS;
+			type = eSpecType::AFFECT_PARTY_STATUS;
 			ex1b = 0;
 			ex2a = int(ePartyStatus::STEALTH);
 			break;
 		case 105:
-			type = eSpecType::AFFECT_STATUS;
+			type = eSpecType::AFFECT_PARTY_STATUS;
 			ex1b = 0;
 			ex2a = int(ePartyStatus::FIREWALK);
 			break;
 		case 106:
-			type = eSpecType::AFFECT_STATUS;
+			type = eSpecType::AFFECT_PARTY_STATUS;
 			ex1b = 0;
 			ex2a = int(ePartyStatus::FLIGHT);
 			break;

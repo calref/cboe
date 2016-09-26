@@ -495,6 +495,262 @@ TEST_CASE("When converting legacy special nodes (affect)") {
 		CHECK(newSpec.ex1b == 10);
 		CHECK(newSpec.jumpto == 12);
 	}
+	SECTION("Do Damage") {
+		oldSpec.type = 81;
+		oldSpec.pic = 1;
+		oldSpec.ex1a = 2; oldSpec.ex1b = 6;
+		oldSpec.ex2a = 3; oldSpec.ex2b = 6;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::DAMAGE);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 2); CHECK(newSpec.ex1b == 6);
+		CHECK(newSpec.ex2a == 3); CHECK(newSpec.ex2b == int(eDamageType::UNDEAD));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Health") {
+		oldSpec.type = 82;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_HP);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Spell Points") {
+		oldSpec.type = 83;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_SP);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Experience") {
+		oldSpec.type = 84;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_XP);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Skill Points") {
+		oldSpec.type = 85;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_SKILL_PTS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Deadness") {
+		oldSpec.type = 86;
+		oldSpec.ex1a = 2; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_DEADNESS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 2); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Poison") {
+		oldSpec.type = 87;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::POISON));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Slow/Haste") {
+		oldSpec.type = 88;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::HASTE_SLOW));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Invulnerability") {
+		oldSpec.type = 89;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::INVULNERABLE));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Magic Resistance") {
+		oldSpec.type = 90;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::MAGIC_RESISTANCE));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Webs") {
+		oldSpec.type = 91;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::WEBS));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Disease") {
+		oldSpec.type = 92;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::DISEASE));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Sanctuary") {
+		oldSpec.type = 93;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::INVISIBLE));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Curse/Bless") {
+		oldSpec.type = 94;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::BLESS_CURSE));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Dumbfounding") {
+		oldSpec.type = 95;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::DUMB));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Sleep") {
+		oldSpec.type = 96;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::ASLEEP));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Paralysis") {
+		oldSpec.type = 97;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex1c == int(eStatus::PARALYZED));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Statistic") {
+		oldSpec.type = 98;
+		oldSpec.pic = 50;
+		oldSpec.ex1a = 10; oldSpec.ex1b = 1;
+		oldSpec.ex2a = 12;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_STAT);
+		CHECK(newSpec.pic == 50);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 10); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.ex2a == int(eSkill::ALCHEMY));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Mage Spell") {
+		oldSpec.type = 99;
+		oldSpec.ex1a = 30;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_MAGE_SPELL);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 60); CHECK(newSpec.ex1b == 0);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Priest Spell") {
+		oldSpec.type = 100;
+		oldSpec.ex1a = 30;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_PRIEST_SPELL);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 60); CHECK(newSpec.ex1b == 0);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Gold") {
+		oldSpec.type = 101;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_GOLD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Food") {
+		oldSpec.type = 102;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_FOOD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Alchemy") {
+		oldSpec.type = 103;
+		oldSpec.ex1a = 16;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_ALCHEMY);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 16);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Stealth") {
+		oldSpec.type = 104;
+		oldSpec.ex1a = 30;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_PARTY_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 30); CHECK(newSpec.ex1b == 0);
+		CHECK(newSpec.ex2a == int(ePartyStatus::STEALTH));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Firewalk") {
+		oldSpec.type = 105;
+		oldSpec.ex1a = 30;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_PARTY_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 30); CHECK(newSpec.ex1b == 0);
+		CHECK(newSpec.ex2a == int(ePartyStatus::FIREWALK));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Affect Flying") {
+		oldSpec.type = 106;
+		oldSpec.ex1a = 30;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::AFFECT_PARTY_STATUS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 30); CHECK(newSpec.ex1b == 0);
+		CHECK(newSpec.ex2a == int(ePartyStatus::FLIGHT));
+		CHECK(newSpec.jumpto == 12);
+	}
 	// Clean up after ourselves
 	ResMgr::popPath<StringRsrc>();
 }
