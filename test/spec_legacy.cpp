@@ -535,12 +535,269 @@ TEST_CASE("When converting legacy special nodes (town)") {
 	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
 	
 	oldSpec.m1 = 4; oldSpec.m2 = 5;
+	oldSpec.jumpto = 12;
 	SECTION("Town Hostile") {
 		oldSpec.type = 170;
-		oldSpec.jumpto = 12;
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::MAKE_TOWN_HOSTILE);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Change Terrain") {
+		oldSpec.type = 171;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 9;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::CHANGE_TER);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 9);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Swap Terrain") {
+		oldSpec.type = 172;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 9; oldSpec.ex2b = 10;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::SWAP_TER);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 9); CHECK(newSpec.ex2b == 10);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Transform Terrain") {
+		oldSpec.type = 173;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TRANS_TER);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Move Party") {
+		oldSpec.type = 174;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 2;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_MOVE_PARTY);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 2);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Hit Space") {
+		oldSpec.type = 175;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 9; oldSpec.ex2b = 5;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_HIT_SPACE);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 9); CHECK(newSpec.ex2b == int(eDamageType::COLD));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Explode Space") {
+		oldSpec.type = 176;
+		oldSpec.pic = 30;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 9; oldSpec.ex2b = 3;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_EXPLODE_SPACE);
+		CHECK(newSpec.pic == 30);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 9); CHECK(newSpec.ex2b == int(eDamageType::MAGIC));
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Lock space") {
+		oldSpec.type = 177;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_LOCK_SPACE);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Unlock space") {
+		oldSpec.type = 178;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_UNLOCK_SPACE);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("SFX Burst") {
+		oldSpec.type = 179;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 2;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_SFX_BURST);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 2);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Make Wandering Monster") {
+		oldSpec.type = 180;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_CREATE_WANDERING);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Monster") {
+		oldSpec.type = 181;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 40; oldSpec.ex2b = 100;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_PLACE_MONST);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 40); CHECK(newSpec.ex2b == 100);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Destroy Monsters") {
+		oldSpec.type = 182;
+		oldSpec.ex1a = 50;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_NUKE_MONSTS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 50);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Destroy All Monsters") {
+		oldSpec.type = 183;
+		oldSpec.ex1a = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_NUKE_MONSTS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == -1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Generic Lever") {
+		oldSpec.type = 184;
+		oldSpec.ex1b = 12;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_GENERIC_LEVER);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1b == 12);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Generic Portal") {
+		oldSpec.type = 185;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_GENERIC_PORTAL);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Generic Button") {
+		oldSpec.type = 186;
+		oldSpec.ex1b = 12;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_GENERIC_BUTTON);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1b == 12);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Generic Stairway") {
+		oldSpec.type = 187;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 12; oldSpec.ex2b = 5;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_GENERIC_STAIR);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 12); CHECK(newSpec.ex2b == 5);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Lever") {
+		oldSpec.type = 188;
+		oldSpec.pic = 12;
+		oldSpec.ex1b = 15;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_LEVER);
+		CHECK(newSpec.pictype == PIC_TER); CHECK(newSpec.pic == 12);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
+		CHECK(newSpec.ex1b == 15);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Portal") {
+		oldSpec.type = 189;
+		oldSpec.pic = 12;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_PORTAL);
+		CHECK(newSpec.pictype == PIC_DLOG); CHECK(newSpec.pic == 12);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Stairway") {
+		oldSpec.type = 190;
+		oldSpec.pic = 12;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 15; oldSpec.ex2b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_STAIR);
+		CHECK(newSpec.pictype == PIC_DLOG); CHECK(newSpec.pic == 12);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 15); CHECK(newSpec.ex2b == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Relocate Outdoors") {
+		oldSpec.type = 191;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 9; oldSpec.ex2b = 10;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_RELOCATE);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 9); CHECK(newSpec.ex2b == 10);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Item") {
+		oldSpec.type = 192;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 50;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_PLACE_ITEM);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(oldSpec.ex2a == 50);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Split Party") {
+		oldSpec.type = 193;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 10;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_SPLIT_PARTY);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 10);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Reunite Party") {
+		oldSpec.type = 194;
+		oldSpec.ex1a = 10;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_REUNITE_PARTY);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 10);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Start Timer") {
+		oldSpec.type = 195;
+		oldSpec.ex1a = 7;
+		oldSpec.ex2b = 8;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_TIMER_START);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7);
+		CHECK(newSpec.ex2b == 8);
 		CHECK(newSpec.jumpto == 12);
 	}
 	// Clean up after ourselves

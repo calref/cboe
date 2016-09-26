@@ -164,7 +164,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 		case 228: type = eSpecType::OUT_MOVE_PARTY; break;
 			// 229 was outdoor shop
 			// 230-255 were undefined
-		case 55: case 58: case 189: // Large dialogs with 36x36 dialog graphics
+		case 55: case 58: case 189: case 190: // Large dialogs with 36x36 dialog graphics
 			if(pic >= 700 && pic < 1000)
 				pic -= 700;
 			pictype = PIC_DLOG;
@@ -172,6 +172,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			m2 = -1;
 			if(old.type == 55) type = eSpecType::ONCE_DIALOG;
 			else if(old.type == 58) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
+			else if(old.type == 190) type = eSpecType::TOWN_STAIR;
 			else type = eSpecType::TOWN_PORTAL;
 			if(type != eSpecType::ONCE_DIALOG) break;
 			// Duplicate Leave button
@@ -209,13 +210,6 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 				ex1a = 9;
 			if(old.ex2a == 20)
 				ex2a = 9;
-			break;
-		case 190: // Large stairway dialog
-			type = eSpecType::TOWN_STAIR;
-			pic = 19;
-			pictype = PIC_DLOG;
-			m3 = m2;
-			m2 = -1;
 			break;
 			// TODO: Originally the block nodes supported messages; the new version doesn't.
 			// (Will probably need to make special nodes a dynamic vector before fixing this.)
