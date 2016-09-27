@@ -3743,6 +3743,7 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::IF_CONTEXT:
 			// TODO: Test this. In particular, test that the legacy behaviour is correct.
+			if(univ.scenario.is_legacy) check_mess = true;
 			if(which_mode == eSpecCtx(spec.ex1a)) {
 				if(which_mode <= eSpecCtx::COMBAT_MOVE) {
 					*a = bool(spec.ex1b); // Should block move? 1 = yes, 0 = no

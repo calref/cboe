@@ -1360,6 +1360,7 @@ void cUniverse::enter_scenario(const std::string& name) {
 	}
 	party.key_times.clear();
 	party.party_event_timers.clear();
+	party.spec_items.clear();
 	for(short i = 0; i < scenario.special_items.size(); i++) {
 		if(scenario.special_items[i].flags >= 10)
 			party.spec_items.insert(i);

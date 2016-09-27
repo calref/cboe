@@ -875,7 +875,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					if(num_storage >= 10)
 						throw xBadNode(type, edit->Row(), edit->Column(), fname);
 					int num_items = 0;
-					std::set<std::string> reqs = {"on-terrain", "is-property", "item"};
+					std::set<std::string> reqs = {"on-terrain", "is-property"};
 					Iterator<Element> store;
 					for(store = store.begin(edit.Get()); store != store.end(); store++) {
 						store->GetValue(&type);

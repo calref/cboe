@@ -391,6 +391,7 @@ void cParty::swap_pcs(size_t a, size_t b) {
 bool cParty::save_talk(const std::string& who, const std::string& where, const std::string& str1, const std::string& str2){
 	if(talk_save.size() == talk_save.max_size()) return false; // This is extremely unlikely
 	cConvers talk;
+	talk.filled = true; // TODO: Remove this member
 	talk.who_said = who;
 	talk.in_town = where;
 	talk.the_str1 = str1;

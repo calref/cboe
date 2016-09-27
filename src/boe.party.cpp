@@ -1735,9 +1735,9 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 			if(spell_index[i] < 90) {
 				name << get_str("magic-names", spell_index[i] + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
 				name << " (";
-				if((*cSpell::fromNum(store_situation,i)).cost < 0) {
+				if((*cSpell::fromNum(store_situation,spell_index[i])).cost < 0) {
 					name << '?';
-				} else name << (*cSpell::fromNum(store_situation,i)).cost;
+				} else name << (*cSpell::fromNum(store_situation,spell_index[i])).cost;
 				name << ")";
 				me[id].setText(name.str());
 			}

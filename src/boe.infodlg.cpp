@@ -682,7 +682,7 @@ void adventure_notes() {
 	make_cursor_sword();
 	
 	cDialog encNotes("adventure-notes");
-	encNotes.attachClickHandlers(adventure_notes_event_filter, {"done", "left", "rigth", "del1", "del2", "del3"});
+	encNotes.attachClickHandlers(adventure_notes_event_filter, {"done", "left", "right", "del1", "del2", "del3"});
 	
 	for(short i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
