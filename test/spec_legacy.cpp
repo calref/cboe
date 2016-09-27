@@ -779,6 +779,252 @@ TEST_CASE("When converting legacy special nodes (if-then)") {
 		CHECK(newSpec.ex2b == 13);
 		CHECK(newSpec.jumpto == 12);
 	}
+	SECTION("Town Number?") {
+		oldSpec.type = 131;
+		oldSpec.ex1a = 12; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_TOWN_NUM);
+		CHECK(newSpec.ex1a == 12); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Random Number?") {
+		oldSpec.type = 132;
+		oldSpec.ex1a = 100; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_RANDOM);
+		CHECK(newSpec.ex1a == 100); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Have Special Item?") {
+		oldSpec.type = 133;
+		oldSpec.ex1a = 17; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_HAVE_SPECIAL_ITEM);
+		CHECK(newSpec.ex1a == 17); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Stuff Done Compare?") {
+		oldSpec.type = 134;
+		oldSpec.sd1 = 4; oldSpec.sd2 = 5;
+		oldSpec.ex1a = 6; oldSpec.ex1b = 7;
+		oldSpec.ex2b = 8;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_SDF_COMPARE);
+		CHECK(newSpec.sd1 == 4); CHECK(newSpec.sd2 == 5);
+		CHECK(newSpec.ex1a == 6); CHECK(newSpec.ex1b == 7);
+		CHECK(newSpec.ex2b == 8);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Town Terrain This Type?") {
+		oldSpec.type = 135;
+		oldSpec.ex1a = 13; oldSpec.ex1b = 14;
+		oldSpec.ex2a = 15; oldSpec.ex2b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_TER_TYPE);
+		CHECK(newSpec.ex1a == 13); CHECK(newSpec.ex1b == 14);
+		CHECK(newSpec.ex2a == 15); CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Outdoor Terrain This Type?") {
+		oldSpec.type = 136;
+		oldSpec.ex1a = 13; oldSpec.ex1b = 14;
+		oldSpec.ex2a = 15; oldSpec.ex2b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_TER_TYPE);
+		CHECK(newSpec.ex1a == 13); CHECK(newSpec.ex1b == 14);
+		CHECK(newSpec.ex2a == 15); CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Has Gold?") {
+		oldSpec.type = 137;
+		oldSpec.ex1a = 100; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_HAS_GOLD);
+		CHECK(newSpec.ex1a == 100); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == 0);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Has Food?") {
+		oldSpec.type = 138;
+		oldSpec.ex1a = 100; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_HAS_FOOD);
+		CHECK(newSpec.ex1a == 100); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == 0);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Item Class on Space?") {
+		oldSpec.type = 139;
+		oldSpec.ex1a = 15; oldSpec.ex1b = 16;
+		oldSpec.ex2a = 100; oldSpec.ex2b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_ITEM_CLASS_ON_SPACE);
+		CHECK(newSpec.ex1a == 15); CHECK(newSpec.ex1b == 16);
+		CHECK(newSpec.ex2a == 100); CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.ex2c == 0);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Have Item with Class?") {
+		oldSpec.type = 140;
+		oldSpec.ex1a = 100; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_HAVE_ITEM_CLASS);
+		CHECK(newSpec.ex1a == 100); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == 0);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Equipped Item with Class?") {
+		oldSpec.type = 141;
+		oldSpec.ex1a = 100; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_EQUIP_ITEM_CLASS);
+		CHECK(newSpec.ex1a == 100); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == 0);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Has Gold? (and take)") {
+		oldSpec.type = 142;
+		oldSpec.ex1a = 100; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_HAS_GOLD);
+		CHECK(newSpec.ex1a == 100); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Has Food? (and take)") {
+		oldSpec.type = 143;
+		oldSpec.ex1a = 100; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_HAS_FOOD);
+		CHECK(newSpec.ex1a == 100); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Item Class on Space? (and take)") {
+		oldSpec.type = 144;
+		oldSpec.ex1a = 15; oldSpec.ex1b = 16;
+		oldSpec.ex2a = 100; oldSpec.ex2b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_ITEM_CLASS_ON_SPACE);
+		CHECK(newSpec.ex1a == 15); CHECK(newSpec.ex1b == 16);
+		CHECK(newSpec.ex2a == 100); CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.ex2c == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Have Item with Class? (and take)") {
+		oldSpec.type = 145;
+		oldSpec.ex1a = 100; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_HAVE_ITEM_CLASS);
+		CHECK(newSpec.ex1a == 100); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Equipped Item with Class? (and take)") {
+		oldSpec.type = 146;
+		oldSpec.ex1a = 100; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_EQUIP_ITEM_CLASS);
+		CHECK(newSpec.ex1a == 100); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Day Reached?") {
+		oldSpec.type = 147;
+		oldSpec.ex1a = 25; oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_DAY_REACHED);
+		CHECK(newSpec.ex1a == 25); CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Any Barrels?") {
+		oldSpec.type = 148;
+		oldSpec.ex1b = 13;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_FIELDS);
+		CHECK(newSpec.sd1 == 1); CHECK(newSpec.sd2 >= 64 * 64);
+		CHECK(newSpec.m1 == int(OBJECT_BARREL)); CHECK(newSpec.m2 == 13);
+		CHECK(newSpec.ex1a == 0); CHECK(newSpec.ex1b == 0);
+		CHECK(newSpec.ex2a == 64); CHECK(newSpec.ex2b == 64);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Any Crates?") {
+		oldSpec.type = 149;
+		oldSpec.ex1b = 13;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_FIELDS);
+		CHECK(newSpec.sd1 == 1); CHECK(newSpec.sd2 >= 64 * 64);
+		CHECK(newSpec.m1 == int(OBJECT_CRATE)); CHECK(newSpec.m2 == 13);
+		CHECK(newSpec.ex1a == 0); CHECK(newSpec.ex1b == 0);
+		CHECK(newSpec.ex2a == 64); CHECK(newSpec.ex2b == 64);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Special Thing Happened?") {
+		oldSpec.type = 150;
+		oldSpec.ex1a = 15; oldSpec.ex1b = 13;
+		oldSpec.ex2b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_EVENT_OCCURRED);
+		CHECK(newSpec.ex1a == 15); CHECK(newSpec.ex1b == 13);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Has Cave Lore?") {
+		oldSpec.type = 151;
+		oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_TRAIT);
+		CHECK(newSpec.ex1a == int(eTrait::CAVE_LORE));
+		CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == 1); // need one PC ...
+		CHECK(newSpec.ex2b == 2); // ... or more
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Has Woodsman?") {
+		oldSpec.type = 152;
+		oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_TRAIT);
+		CHECK(newSpec.ex1a == int(eTrait::WOODSMAN));
+		CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == 1); // need one PC ...
+		CHECK(newSpec.ex2b == 2); // ... or more
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Has Enough Mage Lore?") {
+		oldSpec.type = 153;
+		oldSpec.ex1a = 20;
+		oldSpec.ex1b = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_STATISTIC);
+		CHECK(newSpec.ex1a == 20);
+		CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == int(eSkill::MAGE_LORE));
+		CHECK(newSpec.ex2b == 0); // cumulative check
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Text Response?") {
+		oldSpec.type = 154;
+		oldSpec.pic = 10;
+		oldSpec.ex1a = 167; oldSpec.ex1b = 12;
+		oldSpec.ex2a = 169; oldSpec.ex2b = 15;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_TEXT_RESPONSE);
+		CHECK(newSpec.pic == 10);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 12);
+		CHECK(newSpec.ex2a == 9); CHECK(newSpec.ex2b == 15);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Stuff Done Equal?") {
+		oldSpec.type = 155;
+		oldSpec.sd1 = 5; oldSpec.sd2 = 6;
+		oldSpec.ex1a = 13; oldSpec.ex1b = 14;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_SDF_EQ);
+		CHECK(newSpec.sd1 == 5); CHECK(newSpec.sd2 == 6);
+		CHECK(newSpec.ex1a == 13); CHECK(newSpec.ex1b == 14);
+		CHECK(newSpec.jumpto == 12);
+	}
 	// Clean up after ourselves
 	ResMgr::popPath<StringRsrc>();
 }

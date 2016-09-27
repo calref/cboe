@@ -246,6 +246,9 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 		case 151: case 152: // if has cave lore or woodsman
 			type = eSpecType::IF_TRAIT;
 			ex1a = old.type - 147;
+			// Set it to require at least 1 PC:
+			ex2a = 1;
+			ex2b = 2;
 			break;
 		case 63: // Trap used to force a specific picture
 			type = eSpecType::ONCE_TRAP;
@@ -264,12 +267,13 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 					case 24: ex2a = 103; break; // Skill points
 					case 25: ex2a = 104; break; // Level
 				}
-			} else ex2a = 11;
+			} else ex2a = int(eSkill::MAGE_LORE);
 			ex2b = 0;
 			break;
 		case 154: // text response
 			type = eSpecType::IF_TEXT_RESPONSE;
 			ex1a -= 160;
+			ex2a -= 160;
 			break;
 		case 229: // Outdoor store - fix spell IDs
 			type = eSpecType::ENTER_SHOP;
@@ -313,7 +317,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			break;
 		case 141: case 146: // If equip item class (and maybe take)
 			type = eSpecType::IF_EQUIP_ITEM_CLASS;
-			ex2a = (old.type - 131) / 5;
+			ex2a = (old.type - 141) / 5;
 			break;
 		case 182: // Destroy all monsters of particular type
 			type = eSpecType::TOWN_NUKE_MONSTS;
