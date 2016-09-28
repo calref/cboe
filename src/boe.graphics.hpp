@@ -28,7 +28,6 @@ void draw_start_button(short which_position,short which_button);
 void main_button_click(int which_button);
 void arrow_button_click(rectangle button_rect);
 void end_startup();
-void Set_up_win ();
 void load_main_screen();
 void redraw_screen(int refresh);
 void put_background();

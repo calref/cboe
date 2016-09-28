@@ -430,28 +430,6 @@ static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName
 	rect_draw_some_item(temp_gworld, texrect, tex, texrect, sf::BlendNone);
 }
 
-// This loads the graphics at the top of the game.
-void Set_up_win () {
-	rectangle temp_rect = {0,0,0,280},map_world_rect;
-	rectangle map_rect = {0,0,384,384};
-	rectangle pc_rect = {0,0,216,113};
-	rectangle r;
-	
-	win_to_rects[5].offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
-	win_to_rects[2].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
-	win_to_rects[3].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-	
-	// Create and initialize map gworld
-	if(!map_gworld.create(map_rect.width(), map_rect.height())) {
-		play_sound(2);
-		throw std::string("Failed to initialized automap!");
-	} else {
-		map_world_rect = rectangle(map_gworld);
-		fill_rect(map_gworld, map_world_rect, sf::Color::White);
-	}
-	
-}
-
 void load_main_screen() {
 	// Preload the main game interface images
 	ResMgr::get<ImageRsrc>("invenbtns");

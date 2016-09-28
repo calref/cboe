@@ -680,9 +680,16 @@ void init_mini_map() {
 	mini_map.create(sf::VideoMode(296,277), "Map", sf::Style::Titlebar | sf::Style::Close);
 	mini_map.setPosition(sf::Vector2i(52,62));
 	mini_map.setVisible(false);
-	map_gworld.create(240,240);
 	setWindowFloating(mini_map, true);
 	makeFrontWindow(mainPtr);
+	
+	// Create and initialize map gworld
+	if(!map_gworld.create(384, 384)) {
+		play_sound(2);
+		throw std::string("Failed to initialized automap!");
+	} else {
+		map_gworld.clear(sf::Color::White);
+	}
 }
 
 void make_cursor_watch() {

@@ -179,7 +179,6 @@ void init_boe(int argc, char* argv[]) {
 		check_for_intel();
 		srand(time(nullptr));
 		init_screen_locs();
-		Set_up_win();
 		init_startup();
 		flushingInput = true;
 	});

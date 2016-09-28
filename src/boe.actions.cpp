@@ -237,6 +237,11 @@ void init_screen_locs() {
 	item_area_rect.left = ITEM_WIN_UL_X;
 	item_area_rect.bottom = ITEM_WIN_UL_Y + 143;
 	item_area_rect.right = ITEM_WIN_UL_X + 271;
+	
+	extern rectangle win_to_rects[6];
+	win_to_rects[5].offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
+	win_to_rects[2].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
+	win_to_rects[3].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 }
 
 bool prime_time() {
