@@ -156,10 +156,9 @@ ePicType get_monst_pictype(mon_num_t monst) {
 	return type;
 }
 
-void get_monst_dims(mon_num_t monst,short *width, short *height) {
+std::pair<short,short> get_monst_dims(mon_num_t monst) {
 	cMonster& the_monst = monst >= 10000 ? univ.party.summons[monst - 10000] : univ.scenario.scen_monsters[monst];
-	*width = the_monst.x_width;
-	*height = the_monst.y_width;
+	return std::make_pair(the_monst.x_width, the_monst.y_width);
 }
 
 // Used to set up monsters for outdoor wandering encounters.

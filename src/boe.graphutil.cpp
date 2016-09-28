@@ -128,29 +128,27 @@ void draw_monsters() {
 	};
 	
 	if(is_out())
-		for(short i = 0; i < 10; i++)
-			if(univ.party.out_c[i].exists) {
-				if((point_onscreen(univ.party.out_loc, univ.party.out_c[i].m_loc)) &&
-					(can_see_light(univ.party.out_loc, univ.party.out_c[i].m_loc,sight_obscurity) < 5)) {
-					where_draw.x = univ.party.out_c[i].m_loc.x - univ.party.out_loc.x + 4;
-					where_draw.y = univ.party.out_c[i].m_loc.y - univ.party.out_loc.y + 4;
+		for(auto& enc : univ.party.out_c)
+			if(enc.exists) {
+				if(point_onscreen(univ.party.out_loc,enc.m_loc) && can_see_light(univ.party.out_loc,enc.m_loc,sight_obscurity) < 5) {
+					where_draw.x = enc.m_loc.x - univ.party.out_loc.x + 4;
+					where_draw.y = enc.m_loc.y - univ.party.out_loc.y + 4;
 					
-					short picture_wanted;
-					for(short j = 0; univ.party.out_c[i].what_monst.monst[j] == 0 && j < 7; j++) {
-						if(j == 7) univ.party.out_c[i].exists = false; // begin watch out
-						else {
-							picture_wanted = get_monst_picnum(univ.party.out_c[i].what_monst.monst[j]);
-							get_monst_dims(univ.party.out_c[i].what_monst.monst[j],&width,&height);
+					short picture_wanted = -1;
+					for(mon_num_t i : enc.what_monst.monst) {
+						if(i > 0) {
+							picture_wanted = get_monst_picnum(i);
+							std::tie(width, height) = get_monst_dims(i);
 							break;
-						} // end watch out
+						}
 					}
 					
-					if(univ.party.out_c[i].exists) {
+					if(picture_wanted >= 0) {
 						if(picture_wanted >= 1000) {
 							for(short k = 0; k < width * height; k++) {
 								sf::Texture* src_gw;
 								graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000 +
-																							 ((univ.party.out_c[i].direction < 4) ? 0 : (width * height)) + k);
+																							 ((enc.direction < 4) ? 0 : (width * height)) + k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								rect_draw_some_item(*src_gw, source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
@@ -158,7 +156,7 @@ void draw_monsters() {
 						}
 						if(picture_wanted < 1000) {
 							for(short k = 0; k < width * height; k++) {
-								source_rect = get_monster_template_rect(picture_wanted,(univ.party.out_c[i].direction < 4) ? 0 : 1,k);
+								source_rect = get_monster_template_rect(picture_wanted,(enc.direction < 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								int which_sheet = m_pic_index[picture_wanted].i / 20;
@@ -166,39 +164,40 @@ void draw_monsters() {
 								rect_draw_some_item(monst_gworld, source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
 							}
 						}
-					}
+					} else enc.exists = false;
 				}
 			}
 	if(is_town() || is_combat()) {
-		for(short i = 0; i < univ.town.monst.size(); i++)
-			if(univ.town.monst[i].active != 0 && !univ.town.monst[i].invisible && univ.town.monst[i].status[eStatus::INVISIBLE] <= 0)
-				if(point_onscreen(center,univ.town.monst[i].cur_loc) && party_can_see_monst(i)) {
-					where_draw.x = univ.town.monst[i].cur_loc.x - center.x + 4;
-					where_draw.y = univ.town.monst[i].cur_loc.y - center.y + 4;
-					get_monst_dims(univ.town.monst[i].number,&width,&height);
+		for(short i = 0; i < univ.town.monst.size(); i++) {
+			const cCreature& monst = univ.town.monst[i];
+			if(monst.active != 0 && !monst.invisible && monst.status[eStatus::INVISIBLE] <= 0)
+				if(point_onscreen(center,monst.cur_loc) && party_can_see_monst(i)) {
+					where_draw.x = monst.cur_loc.x - center.x + 4;
+					where_draw.y = monst.cur_loc.y - center.y + 4;
+					std::tie(width, height) = get_monst_dims(monst.number);
 					
 					for(short k = 0; k < width * height; k++) {
 						store_loc = where_draw;
 						store_loc.x += k % width;
 						store_loc.y += k / width;
-						ter = univ.town->terrain(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y);
+						ter = univ.town->terrain(monst.cur_loc.x,monst.cur_loc.y);
 						// in bed?
 						if(store_loc.x >= 0 && store_loc.x < 9 && store_loc.y >= 0 && store_loc.y < 9 &&
-						   (univ.scenario.ter_types[ter].special == eTerSpec::BED) && isHumanoid(univ.town.monst[i].m_type)
-						   && (univ.town.monst[i].active == 1 || univ.town.monst[i].target == 6) &&
+						   (univ.scenario.ter_types[ter].special == eTerSpec::BED) && isHumanoid(monst.m_type)
+						   && (monst.active == 1 || monst.target == 6) &&
 						   width == 1 && height == 1)
 							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1);
-						else if(univ.town.monst[i].picture_num >= 1000) {
-							bool isParty = univ.town.monst[i].picture_num >= 10000;
+						else if(monst.picture_num >= 1000) {
+							bool isParty = monst.picture_num >= 10000;
 							sf::Texture* src_gw;
-							pic_num_t need_pic = (univ.town.monst[i].picture_num % 1000) + k;
-							if(univ.town.monst[i].direction >= 4) need_pic += width * height;
+							pic_num_t need_pic = (monst.picture_num % 1000) + k;
+							if(monst.direction >= 4) need_pic += width * height;
 							if(combat_posing_monster == i + 100) need_pic += (2 * width * height);
 							graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
 							Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						} else {
-							pic_num_t this_monst = univ.town.monst[i].picture_num;
-							int pic_mode = (univ.town.monst[i].direction) < 4 ? 0 : 1;
+							pic_num_t this_monst = monst.picture_num;
+							int pic_mode = (monst.direction) < 4 ? 0 : 1;
 							pic_mode += (combat_posing_monster == i + 100) ? 10 : 0;
 							source_rect = get_monster_template_rect(this_monst, pic_mode, k);
 							int which_sheet = m_pic_index[this_monst].i / 20;
@@ -207,6 +206,7 @@ void draw_monsters() {
 						}
 					}
 				}
+		}
 	}
 }
 
