@@ -9,7 +9,6 @@ game_sources = Split("""
 	boe.graphics.cpp
 	boe.graphutil.cpp
 	boe.infodlg.cpp
-	boe.itemdata.cpp
 	boe.items.cpp
 	boe.locutils.cpp
 	boe.main.cpp

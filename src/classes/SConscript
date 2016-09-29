@@ -7,14 +7,12 @@ common_classes = Split("""
 	location.cpp
 	monster.cpp
 	outdoors.cpp
-	regtown.cpp
 	scenario.cpp
 	shop.cpp
 	special.cpp
 	spell.cpp
 	talking.cpp
 	terrain.cpp
-	tmpltown.cpp
 	town.cpp
 	vehicle.cpp
 """)
