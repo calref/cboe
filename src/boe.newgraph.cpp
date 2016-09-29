@@ -622,6 +622,7 @@ void click_shop_rect(rectangle area_rect) {
 }
 
 graf_pos calc_item_rect(int num,rectangle& to_rect) {
+	if(num >= 1000) return spec_scen_g.find_graphic(num - 1000);
 	rectangle from_rect = {0,0,18,18};
 	sf::Texture *from_gw;
 	if(num < 55) {
@@ -682,10 +683,16 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	
 	// Place store icon
 	if(!pressed) {
-		int i = active_shop.getFace();
 		rectangle from_rect = {0,0,32,32};
-		from_rect.offset(32 * (i % 10),32 * (i / 10));
-		rect_draw_some_item(*ResMgr::get<ImageRsrc>("talkportraits"), from_rect, talk_gworld, face_rect);
+		sf::Texture* from_gw;
+		int i = std::max<int>(0, active_shop.getFace());
+		if(i >= 1000) {
+			graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(i - 1000);
+		} else {
+			from_rect.offset(32 * (i % 10),32 * (i / 10));
+			from_gw = ResMgr::get<ImageRsrc>("talkportraits").get();
+		}
+		rect_draw_some_item(*from_gw, from_rect, talk_gworld, face_rect);
 	}
 	
 	

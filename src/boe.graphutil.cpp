@@ -307,8 +307,6 @@ void draw_items(location where){
 			to_rect = coord_to_rect(where_draw.x,where_draw.y);
 			if(univ.town.items[i].graphic_num >= 10000){
 				graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(univ.town.items[i].graphic_num - 10000, true);
-			}else if(univ.town.items[i].graphic_num >= 1000){
-				graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(univ.town.items[i].graphic_num - 1000);
 			}else{
 				graf_pos_ref(src_gw, from_rect) = calc_item_rect(univ.town.items[i].graphic_num, to_rect);
 			}
