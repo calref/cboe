@@ -1235,7 +1235,7 @@ iLiving& cParty::pc_present() const {
 
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
 bool cParty::sd_legit(short a, short b) {
-	if((minmax(0,349,a) == a) && (minmax(0,49,b) == b))
+	if((minmax(0,sdx_max,a) == a) && (minmax(0,sdy_max,b) == b))
 		return true;
 	return false;
 }

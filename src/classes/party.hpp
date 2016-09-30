@@ -129,7 +129,10 @@ public:
 	std::map<std::string,campaign_flag_type> campaign_flags;
 private:
 	std::map<unsigned short,std::pair<unsigned short,unsigned char>> pointers;
+	using sd_array = decltype(stuff_done);
 public:
+	static const int sdx_max = std::extent<sd_array, 0>::value - 1;
+	static const int sdy_max = std::extent<sd_array, 1>::value - 1;
 	
 	void set_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy);
 	void force_ptr(unsigned short p, unsigned short val);

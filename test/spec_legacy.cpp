@@ -16,6 +16,8 @@ using namespace std;
 
 ostream& operator<< (ostream& out, eSpecType spec);
 
+// TODO: Replace these with behavioral tests - ie, actually run the node and verify correct results.
+
 TEST_CASE("When converting legacy special nodes (general)") {
 	cSpecial newSpec;
 	legacy::special_node_type oldSpec = {0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1};
@@ -275,7 +277,7 @@ TEST_CASE("When converting legacy special nodes (general)") {
 		oldSpec.ex1a = 1;
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::CANT_ENTER);
-		CHECK(newSpec.ex1a == 1);
+		CHECK(newSpec.ex1a == 0);
 		CHECK(newSpec.ex2a == 0);
 		CHECK(newSpec.jumpto == 12);
 	}
@@ -1313,6 +1315,8 @@ TEST_CASE("When converting legacy special nodes (rect)") {
 	// Here we fetch them from the rsrc dir, rather than the data dir
 	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
 	
+	oldSpec.m1 = 4; oldSpec.m2 = 5;
+	oldSpec.pic = 1;
 	oldSpec.ex1a = 2;
 	oldSpec.ex1b = 10;
 	oldSpec.ex2a = 4;
@@ -1320,8 +1324,6 @@ TEST_CASE("When converting legacy special nodes (rect)") {
 	oldSpec.jumpto = 12;
 	SECTION("Place Fire Wall") {
 		oldSpec.type = 200;
-		oldSpec.m1 = 4; oldSpec.m2 = 5;
-		oldSpec.pic = 1;
 		oldSpec.sd1 = 75;
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
@@ -1329,6 +1331,269 @@ TEST_CASE("When converting legacy special nodes (rect)") {
 		CHECK(newSpec.pic == 1);
 		CHECK(newSpec.sd1 == 75);
 		CHECK(newSpec.sd2 == WALL_FIRE);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Force Wall") {
+		oldSpec.type = 201;
+		oldSpec.sd1 = 75;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == WALL_FORCE);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Ice Wall") {
+		oldSpec.type = 202;
+		oldSpec.sd1 = 75;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == WALL_ICE);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Blade Wall") {
+		oldSpec.type = 203;
+		oldSpec.sd1 = 75;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == WALL_BLADES);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Stinking Cloud") {
+		oldSpec.type = 204;
+		oldSpec.sd1 = 75;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == CLOUD_STINK);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Sleep Cloud") {
+		oldSpec.type = 205;
+		oldSpec.sd1 = 75;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == CLOUD_SLEEP);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Quickfire") {
+		oldSpec.type = 206;
+		oldSpec.sd1 = 75;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == FIELD_QUICKFIRE);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Fire Barrier") {
+		oldSpec.type = 207;
+		oldSpec.sd1 = 75;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == BARRIER_FIRE);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Force Barrier") {
+		oldSpec.type = 208;
+		oldSpec.sd1 = 75;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == BARRIER_FORCE);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Cleanse") {
+		oldSpec.type = 209;
+		oldSpec.sd1 = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 1);
+		CHECK(newSpec.sd2 == FIELD_DISPEL);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Special Effects") {
+		oldSpec.type = 210;
+		oldSpec.sd1 = 75;
+		oldSpec.sd2 = 4;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == SFX_LARGE_SLIME);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Permanent Effects") {
+		oldSpec.type = 211;
+		oldSpec.sd1 = 75;
+		oldSpec.sd2 = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_PLACE_FIELD);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == OBJECT_BARREL);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Move Items") {
+		oldSpec.type = 212;
+		oldSpec.sd1 = 25;
+		oldSpec.sd2 = 26;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_MOVE_ITEMS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 25);
+		CHECK(newSpec.sd2 == 26);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Destroy Items") {
+		oldSpec.type = 213;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_DESTROY_ITEMS);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Change Terrain") {
+		oldSpec.type = 214;
+		oldSpec.sd1 = 75;
+		oldSpec.sd2 = 80;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_CHANGE_TER);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == 80);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Swap Terrain") {
+		oldSpec.type = 215;
+		oldSpec.sd1 = 75;
+		oldSpec.sd2 = 80;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_SWAP_TER);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.sd1 == 75);
+		CHECK(newSpec.sd2 == 80);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Transform Terrain") {
+		oldSpec.type = 216;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_TRANS_TER);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Lock Terrain") {
+		oldSpec.type = 217;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_LOCK);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
+		CHECK(newSpec.ex1a == 2);
+		CHECK(newSpec.ex1b == 10);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 20);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Unlock Terrain") {
+		oldSpec.type = 218;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::RECT_UNLOCK);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.pic == 1);
 		CHECK(newSpec.ex1a == 2);
 		CHECK(newSpec.ex1b == 10);
 		CHECK(newSpec.ex2a == 4);
@@ -1351,6 +1616,124 @@ TEST_CASE("When converting legacy special nodes (outdoors)") {
 		oldSpec.type = 225;
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::OUT_MAKE_WANDER);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Change Terrain") {
+		oldSpec.type = 226;
+		oldSpec.m1 = 4; oldSpec.m2 = 5;
+		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
+		oldSpec.ex2a = 9;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::CHANGE_TER);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
+		CHECK(newSpec.ex2a == 9);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Place Outdoor Encounter") {
+		oldSpec.type = 227;
+		oldSpec.m1 = 4; oldSpec.m2 = 5;
+		oldSpec.ex1a = 3;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::OUT_PLACE_ENCOUNTER);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 3);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Move Party") {
+		oldSpec.type = 228;
+		oldSpec.m1 = 4; oldSpec.m2 = 5;
+		oldSpec.ex1a = 25; oldSpec.ex1b = 26;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::OUT_MOVE_PARTY);
+		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == 5);
+		CHECK(newSpec.ex1a == 25); CHECK(newSpec.ex1b == 26);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Outdoor Store") {
+		oldSpec.type = 229;
+		oldSpec.m1 = 8;
+		oldSpec.ex1a = 1; oldSpec.ex1b = 2;
+		oldSpec.ex2a = 5; oldSpec.ex2b = 4;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::ENTER_SHOP);
+		CHECK(newSpec.m1 == 8);
+		CHECK(newSpec.ex1a == 31);
+		CHECK(newSpec.ex1b == 2);
+		CHECK(newSpec.ex2a == 5);
+		CHECK(newSpec.ex2b == 4);
+	}
+	// Clean up after ourselves
+	ResMgr::popPath<StringRsrc>();
+}
+
+TEST_CASE("When converting classic special nodes") {
+	cSpecial newSpec;
+	legacy::special_node_type oldSpec = {0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1};
+	// Fetching opcodes requires strings to be available
+	// Here we fetch them from the rsrc dir, rather than the data dir
+	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+	
+	oldSpec.jumpto = 12;
+	SECTION("If Statistic") {
+		oldSpec.type = 153;
+		oldSpec.ex1a = 20;
+		oldSpec.ex1b = 20;
+		oldSpec.ex2a = 20;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_STATISTIC);
+		CHECK(newSpec.ex1a == 20);
+		CHECK(newSpec.ex1b == 20);
+		CHECK(newSpec.ex2a == int(eSkill::MAX_HP));
+		CHECK(newSpec.ex2b == 0); // cumulative check
+		CHECK(newSpec.jumpto == 12);
+	}
+	/* Disabled for now since it shows a dialog
+	SECTION("Display Picture") {
+		oldSpec.type = 28;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::DISPLAY_PICTURE);
+		CHECK(newSpec.ex1a == 0);
+		CHECK(newSpec.jumpto == 12);
+	}
+	*/
+	SECTION("Random") {
+		oldSpec.type = 29;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::SDF_RANDOM);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("If Species") {
+		oldSpec.type = 156;
+		oldSpec.ex1a = 2; oldSpec.ex1b = 50;
+		oldSpec.ex2a = 4; oldSpec.ex2b = 0;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::IF_SPECIES);
+		CHECK(newSpec.ex1a == int(eRace::SLITH));
+		CHECK(newSpec.ex1b == 50);
+		CHECK(newSpec.ex2a == 4);
+		CHECK(newSpec.ex2b == 0);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Town Change Lighting") {
+		oldSpec.type = 196;
+		oldSpec.ex1a = 2;
+		oldSpec.ex2a = 15;
+		oldSpec.ex2b = 1;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_CHANGE_LIGHTING);
+		CHECK(newSpec.ex1a == LIGHT_DRAINS);
+		CHECK(newSpec.ex2a == 15);
+		CHECK(newSpec.ex2b == 1);
+		CHECK(newSpec.jumpto == 12);
+	}
+	SECTION("Town Set Attitude") {
+		oldSpec.type = 197;
+		oldSpec.ex1a = 20; oldSpec.ex1b = 2;
+		newSpec.import_legacy(oldSpec);
+		CHECK(newSpec.type == eSpecType::TOWN_SET_ATTITUDE);
+		CHECK(newSpec.ex1a == 20);
+		CHECK(newSpec.ex1b == int(eAttitude::FRIENDLY));
 		CHECK(newSpec.jumpto == 12);
 	}
 	// Clean up after ourselves
