@@ -20,6 +20,10 @@ elif str(platform) == "win32":
 		pc.menus.win.cpp
 	"""))
 	pced_sources.append(env.RES('#rsrc/menus/CharEditor.rc'))
+elif str(platform) == "posix":
+	pced_sources.extend(Split("""
+		pc.menus.linux.cpp
+	"""))
 
 pced = env.Program("#build/bin/BoE Character Editor", pced_sources + common_sources + party_classes)
 

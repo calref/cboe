@@ -23,6 +23,11 @@ elif str(platform) == "win32":
 	"""))
 	scened_sources.extend(env.RES('#rsrc/menus/ScenEditor.rc'))
 
+elif str(platform) == "posix":
+	scened_sources.extend(Split("""
+		scen.menus.linux.cpp
+	"""))
+
 scened = env.Program("#build/bin/BoE Scenario Editor", scened_sources + common_sources)
 
 if str(platform) == "darwin":
