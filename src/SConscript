@@ -35,7 +35,7 @@ elif str(platform) == "win32":
 	"""))
 	game_sources.append(env.RES('#build/obj/BladesOfExile.res', '#rsrc/menus/BladesOfExile.rc'))
 
-boe = env.Program("#build/bin/Blades of Exile", common_sources + party_classes + game_sources)
+boe = env.Program("#build/bin/Blades of Exile", game_sources + common_sources + party_classes)
 
 if str(platform) == "darwin":
 	boe_info = {
@@ -44,7 +44,7 @@ if str(platform) == "darwin":
 		'creator': 'blx!',
 		'icons': 'BoE boegraphics boeresources boesave boesounds',
 	}
-elif str(platform) == "win32":
+else:
 	boe_info = {}
 
 env.Package(boe, install_dir, boe_info)

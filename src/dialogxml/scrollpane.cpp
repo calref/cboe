@@ -12,6 +12,7 @@
 #include "button.hpp"
 #include "pict.hpp"
 #include "stack.hpp"
+#include <climits>
 
 cScrollPane::cScrollPane(cDialog& parent) : cContainer(CTRL_PANE, parent), scroll(parent) {
 	recalcRect();

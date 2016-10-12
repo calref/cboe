@@ -20,7 +20,7 @@ env.Install(path.join(data_dir, "shaders"), Glob("#src/tools/mask.*"))
 
 if str(platform) == "darwin":
 	scen_gfx = Glob("Blades of Exile Scenarios/*.meg")
-elif str(platform) == "win32":
+else:
 	scen_gfx = Glob("Blades of Exile Scenarios/*.BMP")
 
 env.Install(path.join(install_dir, "Blades of Exile Scenarios"), Glob("Blades of Exile Scenarios/*.exs") + scen_gfx)

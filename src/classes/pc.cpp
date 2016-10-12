@@ -12,6 +12,8 @@
 #include <set>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
+#include <utility>
 
 #include "universe.hpp"
 #include "oldstructs.hpp"
@@ -422,8 +424,12 @@ void cPlayer::sort_items() {
 			if(item_priority[items[i + 1].variety] <
 			   item_priority[items[i].variety]) {
 			  	no_swaps = false;
-				std::swap(items[i + 1], items[i]);
-				std::swap(equip[i + 1], equip[i]);
+                                std::swap(items[i + 1], items[i]);
+				// we can't use std::swap here, the fact VS accepted it was due to a bug https://connect.microsoft.com/VisualStudio/feedback/details/775818/vc11-non-const-lvalue-reference-incorrectly-binds-to-rvalue
+				// std::swap(equip[i + 1], equip[i]);
+				bool tempEquip = equip[i+1];
+				equip[i+1] = equip[i];
+				equip[i] = tempEquip;
 				if(weap_poisoned.slot == i + 1)
 					weap_poisoned.slot--;
 				else if(weap_poisoned.slot == i)

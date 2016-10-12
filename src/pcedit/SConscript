@@ -21,7 +21,7 @@ elif str(platform) == "win32":
 	"""))
 	pced_sources.append(env.RES('#rsrc/menus/CharEditor.rc'))
 
-pced = env.Program("#build/bin/BoE Character Editor", common_sources + party_classes + pced_sources)
+pced = env.Program("#build/bin/BoE Character Editor", pced_sources + common_sources + party_classes)
 
 if str(platform) == "darwin":
 	pced_info = {
@@ -30,7 +30,7 @@ if str(platform) == "darwin":
 		'creator': 'blxe',
 		'icons': 'BoECharEd',
 	}
-elif str(platform) == "win32":
+else:
 	pced_info = {}
 
 env.Package(pced, install_dir, pced_info)

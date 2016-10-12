@@ -5,11 +5,11 @@ import subprocess
 
 platform = ARGUMENTS.get('OS', Platform())
 
-if str(platform) not in ("darwin", "win32"):
+if str(platform) not in ("darwin", "win32", "posix"):
 	print "Sorry, your platform is not supported."
 	print "Platform is:", platform
 	print "Specify OS=<your-platform> if you believe this is incorrect."
-	print "(Supported platforms are: darwin, win32)"
+	print "(Supported platforms are: darwin, win32, posix)"
 	Exit(1)
 
 print 'Building for:', platform
@@ -42,6 +42,10 @@ else:
 		echo -e "\n#define GIT_REVISION \"\"\n#define GIT_TAG \"\"\n#define GIT_TAG_REVISION \"\"\n" > #TARGET
 	""")
 
+if str(platform) == "posix":
+	env.Append(CXXFLAGS="-std=c++11")
+	env["CC"] = 'clang'
+	env["CXX"] = 'clang++'
 if str(platform) == "darwin":
 	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++", RPATH='../Frameworks')
 	env["CC"] = 'clang'
@@ -144,6 +148,9 @@ elif str(platform) == "win32":
 				odbccp32
 			""")
 		)
+	def build_app_package(env, source, build_dir, info):
+		env.Install(build_dir, source)
+elif str(platform) == "posix":
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 
@@ -274,9 +281,13 @@ if str(platform) == "darwin":
 		OpenGL
 		Cocoa
 	"""))
-else:
+elif str(platform) == "win32":
 	env.Append(LIBS=Split("""
 		opengl32
+	"""))
+elif str(platform) == "posix":
+	env.Append(LIBS=Split("""
+		GL
 	"""))
 
 Export("env platform")
