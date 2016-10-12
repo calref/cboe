@@ -302,7 +302,7 @@ Export("env platform")
 common_classes, party_classes = SConscript("build/obj/classes/SConscript")
 tools = SConscript("build/obj/tools/SConscript")
 dlog_util = SConscript("build/obj/dialogxml/SConscript")
-common_sources = common_classes + dlog_util + tools
+common_sources = dlog_util + tools + common_classes
 install_dir = "#build/Blades of Exile"
 Export("install_dir party_classes common_sources")
 

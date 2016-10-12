@@ -2,6 +2,7 @@
 from __future__ import print_function
 import os.path as path
 import subprocess
+import os
 
 Import("env platform data_dir install_dir")
 
@@ -30,7 +31,9 @@ env.Install(path.join(install_dir, "Blades of Exile Base"), Glob("Blades of Exil
 
 have_xmllint = False
 
-if ((str(platform) != "win32" and subprocess.call(['which', '-s', 'xmllint']) == 0) or
+nulldev = open(os.devnull, 'w')
+
+if ((str(platform) != "win32" and subprocess.call(['which', 'xmllint'], stdout=nulldev, stderr=nulldev) == 0) or
 		(str(platform) == "win32" and subprocess.call(['where', '/Q', 'xmllint'])) == 0):
 	have_xmllint = True
 	xmllint_command = ('xmllint', '--nonet', '--noout', '--schema', '../schemas/dialog.xsd')
