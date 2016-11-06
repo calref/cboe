@@ -6,10 +6,6 @@ script: scons
 compiler:
  - clang
 
-os:
- - linux
- - osx
-
 matrix:
  allow_failures:
   - os: linux
