@@ -1,0 +1,18 @@
+
+language: cpp
+
+script: scons
+
+compiler:
+ - clang
+
+sudo: required
+dist: trusty
+
+install:
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq libsfml-dev libboost-dev
+
+branches:
+ except:
+  - legacy-win32
