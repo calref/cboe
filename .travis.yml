@@ -3,7 +3,7 @@ language: cpp
 sudo: required
 services: ['docker']
 
-script: scons
+script: travis_wait scons --jobs=2
 
 compiler:
  - clang
