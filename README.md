@@ -90,9 +90,6 @@ Helpful Links
 * [Original Game
   Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where
   it all began. Warning: Terrifying code.
-* [Ormus's Code](http://info.wsisiz.edu.pl/~kowalsg0/) - The basis for
-  most, if not all, of the older Win32 work (prior to the SFML port).
-  However, the current Win32 code is not based on it anymore.
 * [Experimental Builds](http://celmin.pwcsite.com/oboe/?C=M;O=D) - will be put
   up whenever Celtic Minstrel feels like it.
 * [Blades File Dump](https://blades.calref.net/) - A spot to quickly add
