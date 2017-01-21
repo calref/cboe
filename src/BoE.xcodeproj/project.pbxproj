@@ -13,7 +13,7 @@
 			buildPhases = (
 				91A0B15F1900FFDA00EF438F /* Copy Shaders */,
 				912CF3560FE4494C0063B614 /* Copy Scenarios */,
-				91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */,
+				91B0D5CA1E331910002BE4DA /* Pack Scenarios */,
 				914B2BB718E8BF99007B6799 /* Validate Dialog Definitions */,
 				914B2B9518E8008A007B6799 /* Copy Data Files */,
 				91C2A6E01B823C7B00346948 /* Generate Git Revision Information */,
@@ -208,7 +208,6 @@
 		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		91A0B1601900FFE500EF438F /* mask.frag in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91A0B15A1900F73E00EF438F /* mask.frag */; };
-		91ACCE6418FFB61A00FAEF8B /* bladbase.exs in Copy Base Scenarios */ = {isa = PBXBuildFile; fileRef = 91B3EF250F969CE300BF5B67 /* bladbase.exs */; };
 		91ACCE7619002E5F00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91ACCE7719002E5F00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
 		91ACCE7919002E5F00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
@@ -442,17 +441,6 @@
 				91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */,
 			);
 			name = "Copy Shaders";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "Blades of Exile Base";
-			dstSubfolderSpec = 16;
-			files = (
-				91ACCE6418FFB61A00FAEF8B /* bladbase.exs in Copy Base Scenarios */,
-			);
-			name = "Copy Base Scenarios";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		91ACCE7319002E4700FAEF8B /* Copy Libraries and Frameworks */ = {
@@ -691,6 +679,7 @@
 		91AC62090FA2853700EEAE67 /* creatlist.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = creatlist.hpp; sourceTree = "<group>"; };
 		91AC620A0FA2853700EEAE67 /* creatlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creatlist.cpp; sourceTree = "<group>"; };
 		91ACCE82190032E000FAEF8B /* fix_dylibs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = fix_dylibs.sh; sourceTree = "<group>"; };
+		91B0D5CB1E33E579002BE4DA /* bladbase */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bladbase; path = "../Blades of Exile Bases/bladbase"; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.consts.hpp; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoEScenEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoEScenEd-Info.plist"; path = "scenedit/BoEScenEd-Info.plist"; sourceTree = SOURCE_ROOT; };
 		91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoEScenEd.icns; path = icons/mac/BoEScenEd.icns; sourceTree = "<group>"; };
@@ -722,7 +711,6 @@
 		91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.graphics.cpp; sourceTree = "<group>"; };
 		91B3EF110F969BD300BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoECharEd.icns; path = icons/mac/BoECharEd.icns; sourceTree = "<group>"; };
 		91B3EF130F969BD300BF5B67 /* BoECharEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoECharEd-Info.plist"; path = "pcedit/BoECharEd-Info.plist"; sourceTree = SOURCE_ROOT; };
-		91B3EF250F969CE300BF5B67 /* bladbase.exs */ = {isa = PBXFileReference; lastKnownFileType = file; name = bladbase.exs; path = "../rsrc/Blades of Exile Bases/bladbase.exs"; sourceTree = "<group>"; };
 		91B3F1090F9779C300BF5B67 /* graphtool.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = graphtool.hpp; sourceTree = "<group>"; };
 		91B3F10A0F9779C300BF5B67 /* graphtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphtool.cpp; sourceTree = "<group>"; };
 		91B3F10E0F9779D000BF5B67 /* soundtool.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = soundtool.hpp; sourceTree = "<group>"; };
@@ -1287,8 +1275,7 @@
 				911F2DA21B98FF2300E3102E /* cursors */,
 				911F2DA31B98FF2300E3102E /* graphics */,
 				911F2DA41B98FF2300E3102E /* sounds */,
-				91B3EF250F969CE300BF5B67 /* bladbase.exs */,
-				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
+				91D635A90F90E7B500674AB3 /* Scenarios and Bases */,
 				914B2BB518E892AA007B6799 /* dialog-converting.txt */,
 			);
 			name = rsrc;
@@ -1450,9 +1437,10 @@
 			path = ../rsrc;
 			sourceTree = SOURCE_ROOT;
 		};
-		91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */ = {
+		91D635A90F90E7B500674AB3 /* Scenarios and Bases */ = {
 			isa = PBXGroup;
 			children = (
+				91B0D5CB1E33E579002BE4DA /* bladbase */,
 				9122832D0FCF6C7200B21642 /* busywork.exs */,
 				91D635AA0F90E7B500674AB3 /* stealth.exs */,
 				91D635AB0F90E7B500674AB3 /* stealth.meg */,
@@ -1461,6 +1449,7 @@
 				91D635AE0F90E7B500674AB3 /* zakhazi.exs */,
 				91D635AF0F90E7B500674AB3 /* zakhazi.meg */,
 			);
+			name = "Scenarios and Bases";
 			path = "Blades of Exile Scenarios";
 			sourceTree = "<group>";
 		};
@@ -1727,6 +1716,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = ./fix_dylibs.sh;
+		};
+		91B0D5CA1E331910002BE4DA /* Pack Scenarios */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../rsrc/Blades of Exile Bases/bladbase",
+			);
+			name = "Pack Scenarios";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Base/bladbase.boes",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "test $SCRIPT_INPUT_FILE_COUNT -eq $SCRIPT_OUTPUT_FILE_COUNT || exit 1\nfor((i = 0; i < $SCRIPT_INPUT_FILE_COUNT; i++)); do\n\teval in=\\$SCRIPT_INPUT_FILE_$i\n\teval out=\\$SCRIPT_OUTPUT_FILE_$i\n\trm -f \"$out\"\n\tcd \"$in/..\"\n\tmv \"$in\" scenario\n\ttar -czf \"$out\" scenario\n\tmv scenario \"$in\"\ndone";
 		};
 		91C2A6E01B823C7B00346948 /* Generate Git Revision Information */ = {
 			isa = PBXShellScriptBuildPhase;
