@@ -1958,7 +1958,7 @@
         <missile-type>10</missile-type>
         <pic>55</pic>
         <flag>4</flag>
-        <name>Throwing Knive</name>
+        <name>Throwing Knives</name>
         <full-name>Throwing Knives</full-name>
         <treasure>1</treasure>
         <value>2</value>
@@ -1979,7 +1979,7 @@
         <missile-type>10</missile-type>
         <pic>55</pic>
         <flag>5</flag>
-        <name>Throwing Knive</name>
+        <name>Throwing Knives</name>
         <full-name>Iron Throwing Knives</full-name>
         <treasure>1</treasure>
         <value>6</value>
