@@ -80,13 +80,6 @@
 		91279BB60F9D03B7007B0D52 /* boesave.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB30F9D03B6007B0D52 /* boesave.icns */; };
 		91279BB70F9D03B7007B0D52 /* boesounds.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB40F9D03B7007B0D52 /* boesounds.icns */; };
 		91279BB80F9D03B7007B0D52 /* boegraphics.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB50F9D03B7007B0D52 /* boegraphics.icns */; };
-		912CF3600FE449900063B614 /* busywork.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 9122832D0FCF6C7200B21642 /* busywork.exs */; };
-		912CF3610FE449900063B614 /* stealth.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AA0F90E7B500674AB3 /* stealth.exs */; };
-		912CF3620FE449900063B614 /* stealth.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AB0F90E7B500674AB3 /* stealth.meg */; };
-		912CF3630FE449900063B614 /* valleydy.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AC0F90E7B500674AB3 /* valleydy.exs */; };
-		912CF3640FE449900063B614 /* valleydy.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AD0F90E7B500674AB3 /* valleydy.meg */; };
-		912CF3650FE449900063B614 /* zakhazi.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AE0F90E7B500674AB3 /* zakhazi.exs */; };
-		912CF3660FE449900063B614 /* zakhazi.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
 		912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 912DFE8E18E2872300B00D75 /* boe.menus.mac.mm */; };
 		913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */ = {isa = PBXBuildFile; fileRef = 913D6C040FC57A8E00E12527 /* boeresources.icns */; };
 		914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
@@ -404,13 +397,6 @@
 			dstPath = "Blades of Exile Scenarios";
 			dstSubfolderSpec = 16;
 			files = (
-				912CF3600FE449900063B614 /* busywork.exs in Copy Scenarios */,
-				912CF3610FE449900063B614 /* stealth.exs in Copy Scenarios */,
-				912CF3620FE449900063B614 /* stealth.meg in Copy Scenarios */,
-				912CF3630FE449900063B614 /* valleydy.exs in Copy Scenarios */,
-				912CF3640FE449900063B614 /* valleydy.meg in Copy Scenarios */,
-				912CF3650FE449900063B614 /* zakhazi.exs in Copy Scenarios */,
-				912CF3660FE449900063B614 /* zakhazi.meg in Copy Scenarios */,
 			);
 			name = "Copy Scenarios";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -585,7 +571,6 @@
 		911F2DA31B98FF2300E3102E /* graphics */ = {isa = PBXFileReference; lastKnownFileType = folder; path = graphics; sourceTree = "<group>"; };
 		911F2DA41B98FF2300E3102E /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
 		911F2DA51B98FF2700E3102E /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
-		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
 		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = undo.cpp; sourceTree = "<group>"; };
 		912287850FD41A2300B21642 /* simpletypes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = simpletypes.hpp; sourceTree = "<group>"; };
 		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boescenario.icns; path = ../rsrc/icons/mac/boescenario.icns; sourceTree = SOURCE_ROOT; };
@@ -680,6 +665,10 @@
 		91AC620A0FA2853700EEAE67 /* creatlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creatlist.cpp; sourceTree = "<group>"; };
 		91ACCE82190032E000FAEF8B /* fix_dylibs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = fix_dylibs.sh; sourceTree = "<group>"; };
 		91B0D5CB1E33E579002BE4DA /* bladbase */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bladbase; path = "../Blades of Exile Bases/bladbase"; sourceTree = "<group>"; };
+		91B0D5CC1E3408AB002BE4DA /* busywork */ = {isa = PBXFileReference; lastKnownFileType = folder; path = busywork; sourceTree = "<group>"; };
+		91B0D5CD1E3408AB002BE4DA /* stealth */ = {isa = PBXFileReference; lastKnownFileType = folder; path = stealth; sourceTree = "<group>"; };
+		91B0D5CE1E3408AB002BE4DA /* valleydy */ = {isa = PBXFileReference; lastKnownFileType = folder; path = valleydy; sourceTree = "<group>"; };
+		91B0D5CF1E3408AB002BE4DA /* zakhazi */ = {isa = PBXFileReference; lastKnownFileType = folder; path = zakhazi; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.consts.hpp; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoEScenEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoEScenEd-Info.plist"; path = "scenedit/BoEScenEd-Info.plist"; sourceTree = SOURCE_ROOT; };
 		91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoEScenEd.icns; path = icons/mac/BoEScenEd.icns; sourceTree = "<group>"; };
@@ -741,12 +730,6 @@
 		91CC173A1B421CA0003D9A69 /* scen_read.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_read.cpp; sourceTree = "<group>"; };
 		91CC173B1B421CA0003D9A69 /* scen_write.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_write.cpp; sourceTree = "<group>"; };
 		91CC173F1B421CAA003D9A69 /* catch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = catch.hpp; sourceTree = "<group>"; };
-		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
-		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
-		91D635AC0F90E7B500674AB3 /* valleydy.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.exs; sourceTree = "<group>"; };
-		91D635AD0F90E7B500674AB3 /* valleydy.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.meg; sourceTree = "<group>"; };
-		91D635AE0F90E7B500674AB3 /* zakhazi.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.exs; sourceTree = "<group>"; };
-		91D635AF0F90E7B500674AB3 /* zakhazi.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.meg; sourceTree = "<group>"; };
 		91E128E31BC1624700C8BE1D /* ter_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ter_legacy.cpp; sourceTree = "<group>"; };
 		91E128E51BC19DA400C8BE1D /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
 		91E128E81BC2076B00C8BE1D /* 3choice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3choice.cpp; sourceTree = "<group>"; };
@@ -1440,14 +1423,11 @@
 		91D635A90F90E7B500674AB3 /* Scenarios and Bases */ = {
 			isa = PBXGroup;
 			children = (
+				91B0D5CC1E3408AB002BE4DA /* busywork */,
+				91B0D5CD1E3408AB002BE4DA /* stealth */,
+				91B0D5CE1E3408AB002BE4DA /* valleydy */,
+				91B0D5CF1E3408AB002BE4DA /* zakhazi */,
 				91B0D5CB1E33E579002BE4DA /* bladbase */,
-				9122832D0FCF6C7200B21642 /* busywork.exs */,
-				91D635AA0F90E7B500674AB3 /* stealth.exs */,
-				91D635AB0F90E7B500674AB3 /* stealth.meg */,
-				91D635AC0F90E7B500674AB3 /* valleydy.exs */,
-				91D635AD0F90E7B500674AB3 /* valleydy.meg */,
-				91D635AE0F90E7B500674AB3 /* zakhazi.exs */,
-				91D635AF0F90E7B500674AB3 /* zakhazi.meg */,
 			);
 			name = "Scenarios and Bases";
 			path = "Blades of Exile Scenarios";
@@ -1724,10 +1704,18 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/../rsrc/Blades of Exile Bases/bladbase",
+				"$(SRCROOT)/../rsrc/Blades of Exile Scenarios/busywork",
+				"$(SRCROOT)/../rsrc/Blades of Exile Scenarios/valleydy",
+				"$(SRCROOT)/../rsrc/Blades of Exile Scenarios/stealth",
+				"$(SRCROOT)/../rsrc/Blades of Exile Scenarios/zakhazi",
 			);
 			name = "Pack Scenarios";
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Base/bladbase.boes",
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/busywork.boes",
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/valleydy.boes",
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/stealth.boes",
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/zakhazi.boes",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
