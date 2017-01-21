@@ -8465,7 +8465,7 @@
         <weight>18</weight>
         <properties />
         <description>
-            <![CDATA[This is a simple wooden staff, made from a long, straight stick. It may have some ornamentation but it's nothing special or magical.]]>
+            <![CDATA[This is a simple wooden staff, made from a long, straight stick. It may have some ornamentation but it's nothing special or magical. A proficient wielder can hit things with it and even block blows.]]>
         </description>
     </item>
     <item id="384">
@@ -8483,7 +8483,7 @@
         <weight>18</weight>
         <properties />
         <description>
-            <![CDATA[This is a simple wooden staff, made from a long, straight stick. It's a little tougher and more rugged than usual, but it's not magical.]]>
+            <![CDATA[This is a simple wooden staff, made from a long, straight stick. It's a little tougher and more rugged than usual, but it's not magical. A proficient wielder can hit things with it and even block blows.]]>
         </description>
     </item>
     <item id="385">
@@ -8833,7 +8833,7 @@
             <use-flag>help-one</use-flag>
         </ability>
         <description>
-            <![CDATA[This is the horn of a bull or ram, hollowed, with the tip cut off to blow into and make a loud sound. There is a strong magical vibration when you blow into this one. If you blew it hard enough, you might shatter fragile things around you.]]>
+            <![CDATA[This is the horn of a bull or ram, hollowed, with the tip cut off to blow into and make a loud sound. There is a strong magical vibration when you blow into this one. If you blew it hard enough, you might be able to shatter fragile things nearby.]]>
         </description>
     </item>
     <item id="399">
@@ -8860,7 +8860,7 @@
             <use-flag>help-one</use-flag>
         </ability>
         <description>
-            <![CDATA[These pipes are made from reeds and held together with a cloth band. Each reed is of a different length, and each will produce a different note when blown into. This particular set is clearly magical.]]>
+            <![CDATA[These pipes are made from reeds and held together with a cloth band. Each reed is of a different length, and  will produce a different note when blown across. This particular set is clearly magical.]]>
         </description>
     </item>
     <item id="400">
@@ -8899,7 +8899,7 @@
         <weapon-type>mage-lore</weapon-type>
         <pic>135</pic>
         <name>Lyre</name>
-        <full-name>Lyre of Lullabyes</full-name>
+        <full-name>Lyre of Lullabies</full-name>
         <treasure>4</treasure>
         <value>1200</value>
         <weight>10</weight>
@@ -8993,7 +8993,7 @@
             <use-flag>help-one</use-flag>
         </ability>
         <description>
-            <![CDATA[The sound of this coronet is lovely. Maybe too lovely... It looks like it boosts the morale your foes instead of your allies, and it appears to be cursed.]]>
+            <![CDATA[The sound of this coronet is lovely. Maybe too lovely... It looks like it boosts the morale of your foes instead of your allies, and it appears to be cursed.]]>
         </description>
     </item>
     <item id="405">
