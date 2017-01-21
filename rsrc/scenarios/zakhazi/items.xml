@@ -3638,7 +3638,7 @@
             <magic>true</magic>
         </properties>
         <ability>
-            <type>use-sp</type>
+            <type>use-skillpt</type>
             <strength>2</strength>
             <data>0</data>
             <use-flag>help-one</use-flag>
@@ -3898,7 +3898,7 @@
         <protection>0</protection>
         <pic>97</pic>
         <name>Metal Bar</name>
-        <full-name>Platinum bar</full-name>
+        <full-name>Platinum Bar</full-name>
         <treasure>3</treasure>
         <value>1000</value>
         <weight>18</weight>
@@ -6124,7 +6124,7 @@
         <protection>0</protection>
         <pic>82</pic>
         <name>Necklace</name>
-        <full-name>Gold necklace</full-name>
+        <full-name>Gold Necklace</full-name>
         <treasure>2</treasure>
         <value>400</value>
         <weight>3</weight>
@@ -6240,7 +6240,7 @@
         <protection>0</protection>
         <pic>84</pic>
         <name>Necklace</name>
-        <full-name>Silver necklace</full-name>
+        <full-name>Silver Necklace</full-name>
         <treasure>2</treasure>
         <value>150</value>
         <weight>3</weight>
@@ -6254,7 +6254,7 @@
         <protection>0</protection>
         <pic>97</pic>
         <name>Metal Bar</name>
-        <full-name>Uranium bar</full-name>
+        <full-name>Uranium Bar</full-name>
         <treasure>2</treasure>
         <value>200</value>
         <weight>20</weight>
@@ -6274,7 +6274,7 @@
         <protection>0</protection>
         <pic>122</pic>
         <name>Metal Bar</name>
-        <full-name>Gold bar</full-name>
+        <full-name>Gold Bar</full-name>
         <treasure>2</treasure>
         <value>750</value>
         <weight>20</weight>
@@ -6860,11 +6860,12 @@
         </ability>
     </item>
     <item id="361">
-        <variety>shield</variety>
+        <variety>weapon-1hand</variety>
         <level>8</level>
         <awkward>0</awkward>
         <bonus>0</bonus>
         <protection>3</protection>
+        <weapon-type>bashing</weapon-type>
         <pic>2</pic>
         <name>Mace</name>
         <full-name>Shield Mace</full-name>
