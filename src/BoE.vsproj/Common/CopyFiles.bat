@@ -38,8 +38,11 @@ call %ResourceDir%\..\pkg\win\build-scen.bat bladbase bladbase.boes
 xcopy %ResourceDir%\"Blades of Exile Bases"\*.boes %TargetDir%\"Blades of Exile Base" /s /y /i /d
 
 @echo Copying scenario files...
-xcopy %ResourceDir%\"Blades of Exile Scenarios"\*.exs %TargetDir%\"Blades of Exile Scenarios" /s /y /i /d
-xcopy %ResourceDir%\"Blades of Exile Scenarios"\*.bmp %TargetDir%\"Blades of Exile Scenarios" /s /y /i /d
+call %ResourceDir%\..\pkg\win\build-scen.bat busywork busywork.boes
+call %ResourceDir%\..\pkg\win\build-scen.bat valleydy valleydy.boes
+call %ResourceDir%\..\pkg\win\build-scen.bat stealth stealth.boes
+call %ResourceDir%\..\pkg\win\build-scen.bat zakhazi zakhazi.boes
+xcopy %ResourceDir%\"Blades of Exile Scenarios"\*.boes %TargetDir%\"Blades of Exile Scenarios" /s /y /i /d
 
 @echo Copying required DLLs...
 if %Config% == "Debug" (
