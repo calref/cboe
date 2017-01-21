@@ -296,6 +296,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 }
 
 ticpp::Document xmlDocFromStream(std::istream& stream, std::string name) {
+	if(!stream) throw std::string("Error loading scenario file: ") + name;
 	std::string contents;
 	stream.seekg(0, std::ios::end);
 	contents.reserve(stream.tellg());

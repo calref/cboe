@@ -4,7 +4,6 @@ echo Copying files...
 set SolutionDir=%1
 set Config=%2
 set VCDir=%~f3
-set Zip="C:\Program Files\7-Zip\7z.exe"
 
 
 set ResourceDir=%SolutionDir%%Config%\..\..\..\rsrc
@@ -35,7 +34,7 @@ xcopy %ResourceDir%\..\src\tools\mask.* %TargetDir%\data\shaders /s /y /i /d
 
 @echo Copying base scenarios...
 cd %ResourceDir%\"Blades of Exile Bases"
-%Zip% a -ttar -so bladbase.tar bladbase | %Zip% a -tgzip -si bladbase.boes
+%ResourceDir%\..\pkg\win\build-scen.bat bladbase bladbase.boes
 xcopy %ResourceDir%\"Blades of Exile Bases"\*.boes %TargetDir%\"Blades of Exile Base" /s /y /i /d
 
 @echo Copying scenario files...
