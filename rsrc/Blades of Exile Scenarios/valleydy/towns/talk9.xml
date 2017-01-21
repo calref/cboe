@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="90">
+        <title>Spider</title>
+        <look>
+            <![CDATA[A giant spider walks boldly up to you, holding itself erect with arachnid poise and dignity. Then it scratches itself with one of its legs, spoiling the effect.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Spider," it says proudly.]]>
+        </name>
+        <job>
+            <![CDATA["I'm the chief spider! I'm the leader!"]]>
+        </job>
+        <unknown>
+            <![CDATA["You're silly!"]]>
+        </unknown>
+    </personality>
+    <personality id="91">
+        <title>Spider</title>
+        <look>
+            <![CDATA[This spider had his multitude of eyes fixed on you in fascination.  It takes a break from its web weaving to come over and speak with you.]]>
+        </look>
+        <name>
+            <![CDATA["Hi! My name's spider!"]]>
+        </name>
+        <job>
+            <![CDATA["Why, hmmm. I guess I make webs. And eat gnats. And think a bunch!"]]>
+        </job>
+        <unknown>
+            <![CDATA["You're silly!"]]>
+        </unknown>
+    </personality>
+    <personality id="92">
+        <title>Spider</title>
+        <look>
+            <![CDATA[A stern sentinel spider stands guard in this corridor. It doesn't seem inclined to let you pass.]]>
+        </look>
+        <name>
+            <![CDATA["I'm the guard spider. My name's Spider!"]]>
+        </name>
+        <job>
+            <![CDATA["I'm a guard!"]]>
+        </job>
+        <unknown>
+            <![CDATA["You're silly!"]]>
+        </unknown>
+    </personality>
+    <personality id="93">
+        <title>Spider</title>
+        <look>
+            <![CDATA[This giant spider is a lot smaller than normal, only about the size of a large cat. It seems to find you fascinating.]]>
+        </look>
+        <name>
+            <![CDATA["I'm spider! Hi!"]]>
+        </name>
+        <job>
+            <![CDATA["I don't have a job. I'm just a baby, silly!"]]>
+        </job>
+        <unknown>
+            <![CDATA["You're silly!"]]>
+        </unknown>
+    </personality>
+    <personality id="94">
+        <title>Spider</title>
+        <look>
+            <![CDATA[You meet a spider with bad posture. It slouches through the caves in what you can only describe as a grumpy sort of way.]]>
+        </look>
+        <name>
+            <![CDATA[It isn't quite as happy to see you as the other spiders. "I'm Spider."]]>
+        </name>
+        <job>
+            <![CDATA[It makes a sort of a grumpy, high-pitched, squeaky, uncomfortable, cute sort of sound. "I walk around these caves and eat bugs. Whatever."]]>
+        </job>
+        <unknown>
+            <![CDATA["You're silly," it says grumpily.]]>
+        </unknown>
+    </personality>
+    <personality id="95">
+        <title>Spider</title>
+        <look>
+            <![CDATA[You see a visibly agitated spider. It's very shy, and looks very nervous.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Spider," it says in a quiet squeak.]]>
+        </name>
+        <job>
+            <![CDATA[It shivers. "I'm a scared spider."]]>
+        </job>
+        <unknown>
+            <![CDATA[It shivers nervously.]]>
+        </unknown>
+    </personality>
+    <personality id="96">
+        <title>Spider</title>
+        <look>
+            <![CDATA[This spider is walking around, looking for a good place to set up a web. It stops to talk to you, but seems to be in a hurry.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Spider," it says, while continuing to search.]]>
+        </name>
+        <job>
+            <![CDATA["I'm trying to make some webs. I'm hungry!"]]>
+        </job>
+        <unknown>
+            <![CDATA["You're silly!"]]>
+        </unknown>
+    </personality>
+    <personality id="97">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="98">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="99">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="-2">
+        <keyword>spid</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["What?"]]>
+        </text>
+    </node>
+    <node for="90">
+        <keyword>chie</keyword>
+        <keyword>lead</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I provide guidance and wisdom to all the other spiders."]]>
+        </text>
+    </node>
+    <node for="90">
+        <keyword>guid</keyword>
+        <keyword>wisd</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It thinks for a while. "Hmm. Wisdom! Like, ummm ... don't eat each other. Make strong webs. Eat lots of yummy gnats. Don't play with evil things. That sort of thing."]]>
+        </text>
+    </node>
+    <node for="-2">
+        <keyword>webs</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Webs are neat!"]]>
+        </text>
+    </node>
+    <node for="90">
+        <keyword>yumm</keyword>
+        <keyword>gnat</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["There's a bunch of gnats near here! They're yummy! They're mean and tough, though."]]>
+        </text>
+    </node>
+    <node for="90">
+        <keyword>mean</keyword>
+        <keyword>toug</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It looks at you nervously. "I'm not gonna' tell you that, silly! You'll eat our gnats, and we'll be all hungry and sad."]]>
+        </text>
+    </node>
+    <node for="90">
+        <keyword>pret</keyword>
+        <keyword>rock</keyword>
+        <type>call-local</type>
+        <param>38</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It strains its little spider brain trying to think what you're talking about. Finally, it remembers. "Oh, yeah! We had a pretty rock, but we lost it." It thinks. "Hey! I'll make a deal with you! If you get us some gnat eggs, we can help you out!"]]>
+        </text>
+        <text>
+            <![CDATA["If you get them, we'll help you find the stone. First, though, you'll need the password to get to the gnats." ]]>
+        </text>
+    </node>
+    <node for="90">
+        <keyword>deal</keyword>
+        <keyword>eggs</keyword>
+        <type>call-local</type>
+        <param>38</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It strains its little spider brain trying to think what you're talking about. Finally, it remembers. "Oh, yeah! We had a pretty rock, but we lost it." It thinks. "Hey! I'll make a deal with you! If you get us some gnat eggs, we can help you out!"]]>
+        </text>
+        <text>
+            <![CDATA["If you get them, we'll help you find the stone. First, though, you'll need the password to get to the gnats." ]]>
+        </text>
+    </node>
+    <node for="90">
+        <keyword>evil</keyword>
+        <keyword>thin</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Like the evil undead things to the west? They're nasty. They don't want to play or frolic or catch bugs or anything. They only want to hit us. How mean!"]]>
+        </text>
+    </node>
+    <node for="92">
+        <keyword>gnat</keyword>
+        <keyword>xxxx</keyword>
+        <type>end-die</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah, that's the password! You can go by." It skitters away.]]>
+        </text>
+    </node>
+    <node for="91">
+        <keyword>thin</keyword>
+        <keyword>bunc</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I'm the one who tells the Great Story of our History! Or, if you don't want to hear it, we can discuss more personal things."]]>
+        </text>
+    </node>
+    <node for="91">
+        <keyword>pers</keyword>
+        <keyword>thin</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It sidles up close to you. "Has anyone ever told you how cute you are?"]]>
+        </text>
+    </node>
+    <node for="91">
+        <keyword>cute</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It gives you a quick little kiss on the shin, and leers at you in an arachnid sort of way.]]>
+        </text>
+    </node>
+    <node for="91">
+        <keyword>stor</keyword>
+        <keyword>hist</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Once upon a time, there were many smart humans in these caves. They held us here and talked to us a lot and prodded us and thought we were really interesting!"]]>
+        </text>
+    </node>
+    <node for="91">
+        <keyword>real</keyword>
+        <keyword>inte</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["They gave us bugs, but not very yummy ones, and didn't let us build big webs, and kept us in small rooms and stuff. But then they all went away."]]>
+        </text>
+    </node>
+    <node for="91">
+        <keyword>went</keyword>
+        <keyword>away</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["They didn't know what to do with us, so they just opened our cells and left us to ourselves. So we got out and did a little happy dance." He demonstrates. "Then we can down here and were happy. Sort of. The end."]]>
+        </text>
+        <text>
+            <![CDATA[It thinks. "And you're cute."]]>
+        </text>
+    </node>
+    <node for="92">
+        <keyword>guar</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yup! I keep people from reaching and eating our big, yummy bugs! To get by me, you have to give me the password."]]>
+        </text>
+    </node>
+    <node for="92">
+        <keyword>bugs</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Bugs are yummy!"]]>
+        </text>
+    </node>
+    <node for="92">
+        <keyword>pass</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah! The password! Did you forget it? It's ... " It stops. "Wait! You were trying to trick me! I'm not going to tell you what it is, silly!"]]>
+        </text>
+    </node>
+    <node for="-2">
+        <keyword>gnat</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yum!"]]>
+        </text>
+    </node>
+    <node for="90">
+        <keyword>pass</keyword>
+        <keyword>need</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The password to get to the gnats is ..." It stops and looks around to make sure nobody is listening, and then move very close to you and whispers "Gnats."]]>
+        </text>
+    </node>
+    <node for="-2">
+        <keyword>sill</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You're silly! But then, so are a lot of things, I guess."]]>
+        </text>
+    </node>
+    <node for="93">
+        <keyword>baby</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yup. I'm all small and stuff. I can't even hunt my own food yet!"]]>
+        </text>
+    </node>
+    <node for="93">
+        <keyword>hunt</keyword>
+        <keyword>food</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Soon I'll be all big and fierce, and can hunt!" It bares its fangs to you, which are currently a fairly impressive six inches long. "And I'll be able to pounce."]]>
+        </text>
+    </node>
+    <node for="93">
+        <keyword>poun</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I'm pounce fiercely. Want to watch me practice?"]]>
+        </text>
+    </node>
+    <node for="93">
+        <keyword>watc</keyword>
+        <keyword>prac</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It leaps forward about six feet, bounces off your shin, rolls backwards, accidentally sprays web all over itself, gets tangled, struggles to escape, gets itself more stuck, and finally rolls off down the corridor, a big round mass of goo and waving legs.]]>
+        </text>
+        <text>
+            <![CDATA[You sort of feel that its pounce needs work.]]>
+        </text>
+    </node>
+    <node for="94">
+        <keyword>bugs</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. Bugs. It's what spiders eat. Silly." When this spider says you're silly, it doesn't seem as nice as when the other spiders do it.]]>
+        </text>
+    </node>
+    <node for="94">
+        <keyword>cave</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. Caves. That's all we ever are in. All the other spiders are so goofy, they never even try to see the outside."]]>
+        </text>
+    </node>
+    <node for="94">
+        <keyword>goof</keyword>
+        <keyword>outs</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We are spiders! We should be finding our way outside, where we can eat all sorts of bugs, and bask in the sun, and build webs in the wind, and be happy. But the spiders are happy in their little caves, with bad, nasty undead around. It makes me angry."]]>
+        </text>
+        <text>
+            <![CDATA["All they talk about is how cute things are."]]>
+        </text>
+    </node>
+    <node for="94">
+        <keyword>cute</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Well," it admits, "you are very cute. But that's besides the point."]]>
+        </text>
+    </node>
+    <node for="94">
+        <keyword>angr</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yup. Let me show you." It waves its pedipalps in an agitated fashion, as a way of demonstrating its anger.]]>
+        </text>
+    </node>
+    <node for="95">
+        <keyword>scar</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["A big nasty thing scared me!"]]>
+        </text>
+    </node>
+    <node for="95">
+        <keyword>nast</keyword>
+        <keyword>thin</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. I was looking around around where the bad undead things are looking for neat stuff, and a big evil lizard ran by."]]>
+        </text>
+    </node>
+    <node for="95">
+        <keyword>evil</keyword>
+        <keyword>liza</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. It was huge. And green. And it seemed really mad. It came by, and roared a lot, and ate a zombie, and was just really scary! So I came back here. I'm hiding."]]>
+        </text>
+    </node>
+    <node for="95">
+        <keyword>hidi</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You should hide too. It was really, really big!"]]>
+        </text>
+    </node>
+    <node for="96">
+        <keyword>webs</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Webs are really, really tough to build. I wish we didn't have to make them, but that's the only way to catch those little, fast flying gnats. And those are the tasty ones!"]]>
+        </text>
+    </node>
+    <node for="96">
+        <keyword>hung</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. When we get hungry, we have to wait for gnats to fly in from the north and then try to catch them before they fly away. It's really tough, and there's not much time to flirt with all the other neat, cute spiders."]]>
+        </text>
+    </node>
+    <node for="96">
+        <keyword>flir</keyword>
+        <keyword>cute</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Being a spider is very complicated. We have to make webs and find mates and raise little spiders. Plus we have all these legs to keep track of. It's tough!"]]>
+        </text>
+    </node>
+</dialogue>

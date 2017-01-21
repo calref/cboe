@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="110">
+        <title>Sunde</title>
+        <look>
+            <![CDATA[You meet the proprietor of Fahl's only surviving business: The Inn of the Fallen Trees. He seems to be keeping busy by cleaning up the dust that drifts in from the ruins of the town.]]>
+        </look>
+        <name>
+            <![CDATA["Ah! Customers! Welcome! I am Sunde."]]>
+        </name>
+        <job>
+            <![CDATA[He looks out the window at the burned building across the street, and sighs. "Oh, I just cope with the difficulties I face, and provide what meager services I still can."]]>
+        </job>
+        <unknown>
+            <![CDATA["Eh?"]]>
+        </unknown>
+    </personality>
+    <personality id="111">
+        <title>Caroline</title>
+        <look>
+            <![CDATA[You meet a beautiful young woman with sharp eyes and a finely polished yew longbow. She paces back and forth through the inn's common room, watching out the windows for wild animals.]]>
+        </look>
+        <name>
+            <![CDATA["Welcome to our Inn, strangers. I'm Caroline."]]>
+        </name>
+        <job>
+            <![CDATA["I help my father by guarding this inn. It was a lucky break, getting my captain to station me here."]]>
+        </job>
+    </personality>
+    <personality id="112">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="113">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="114">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="115">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="116">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="117">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="118">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="119">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="110">
+        <keyword>diff</keyword>
+        <keyword>face</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Well, Fahl has been destroyed, as you have no doubt seen. I should have left, but I wanted to keep my inn safe from the animals. The rebels haven't bothered me."]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>fahl</keyword>
+        <keyword>dest</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yes. This was a peaceful town, interested only in hard work and fighting the wilderness. Then the rebels came."]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>rebe</keyword>
+        <keyword>both</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He spits. "Damn the Hill Runners! Damn them all to hell! Look what they have done to this beautiful city. Almost a hundred people died when Fahl was destroyed, and the rest had to flee their homes."]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>flee</keyword>
+        <keyword>home</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["One day this city will be rebuilt and the people can return. Hopefully then the rebels won't come and wipe us out again."]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>safe</keyword>
+        <keyword>anim</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["After the town was abandoned, the animals moved in. Bears and wolves, mostly. Fortunately, I have Caroline to scare them away, and they keep off looters."]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>caro</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My daughter, and guardian. Couldn't do without her."]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>loot</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Where there's a body, there's maggots. Some valuable stuff got left behind. The owner of the alchemy shop in the northwest corner, for example, couldn't get all the potions away. The bears up there keep the goods safe though, thank goodness."]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>hill</keyword>
+        <keyword>runn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That's what the rebels call themselves. I call them scum."]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["A meal or a room?"]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>meag</keyword>
+        <keyword>serv</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I can give you a good meal for 5 gold. No booze left, but I have a nice room for the bargain rate of 6 gold."]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>good</keyword>
+        <keyword>meal</keyword>
+        <type>call-local</type>
+        <param>2</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He shakes his head. "No charity out here, friend. Five gold it is."]]>
+        </text>
+    </node>
+    <node for="110">
+        <keyword>room</keyword>
+        <keyword>xxxx</keyword>
+        <type>inn</type>
+        <param>6</param>
+        <param>3</param>
+        <param>38</param>
+        <param>38</param>
+        <text>
+            <![CDATA[You pay the 6 gold, and are shown to the finest room in the hotel. It's chilly, and slightly creepy, but the bed is very comfortable, and the next morning Sunde serves you breakfast.]]>
+        </text>
+        <text>
+            <![CDATA[He shakes his head. "No charity out here, friend. Five gold it is."]]>
+        </text>
+    </node>
+    <node for="111">
+        <keyword>fath</keyword>
+        <keyword>prot</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My father is Sunde. This is his inn. It was doing very well, until the Hill Runners attacked the town."]]>
+        </text>
+    </node>
+    <node for="111">
+        <keyword>capt</keyword>
+        <keyword>stat</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I'm supposed to be out on patrol, hunting Hill Runners. Fortunately, I was able to convince my captain that I would be of more use hiding here and watching for them."]]>
+        </text>
+    </node>
+    <node for="111">
+        <keyword>hill</keyword>
+        <keyword>runn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Curse the Hill Runners for what they did to Fahl! They haven't come back here yet, but they've done us plenty of harm already."]]>
+        </text>
+    </node>
+    <node for="111">
+        <keyword>fahl</keyword>
+        <keyword>harm</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Have you seen the north wall? One day, we were a peaceful village, minding our own business. Then, in a moment, massive explosions shatter the walls. The next day, the raids started. Without walls, the defense was hopeless, so Fahl was abandoned."]]>
+        </text>
+        <text>
+            <![CDATA["We still don't know what sort of explosive spell the rebels have created."]]>
+        </text>
+    </node>
+    <node for="111">
+        <keyword>expl</keyword>
+        <keyword>spel</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Imagine that. Somehow, the rebels have created a way to make fireballs that even shatter walls and buildings! Now, granted, Fahl's walls were wooden, and weak. But what if the spell became stronger? What would happen then?"]]>
+        </text>
+    </node>
+    <node for="111">
+        <keyword>happ</keyword>
+        <keyword>then</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I shudder to think." She takes a quick, wary look out the window. "Sorry. You never know when a wild animal will walk by."]]>
+        </text>
+    </node>
+    <node for="111">
+        <keyword>wild</keyword>
+        <keyword>anim</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Bears. Wolves. You know. Keep an eye open."]]>
+        </text>
+    </node>
+</dialogue>

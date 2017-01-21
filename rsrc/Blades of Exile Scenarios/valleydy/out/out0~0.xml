@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Northwestern Vale</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>38</monster>
+        <monster>0</monster>
+        <monster>39</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>45</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>39</monster>
+        <monster>116</monster>
+        <monster>45</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>5</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>117</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>38</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>39</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>39</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>116</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>45</monster>
+        <monster>115</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[Wurning - Goblinz valy STAY WAY OR DIE!!!!!]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Marralis - 2 mi. south|Blinlock - 30 mi. east]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[WARNING! GOBLIN INFESTATION!|Official Empire Notification GoblBISCK129]]>
+    </sign>
+    <area top="4" left="6" bottom="18" right="22">Goblin Valley                </area>
+    <area top="33" left="30" bottom="36" right="33">Near Marralis                </area>
+    <string id="0">
+        <![CDATA[At the end of the peaceful forest path, you find that a druid has set herself up a small, pleasant grove. She is kneeling outside, busily planting a small row of comfrey root. Deer graze happily around her.]]>
+    </string>
+    <string id="1">
+        <![CDATA[As you approach, she sees you and waves. For whatever reason, she seems to want to talk to you.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You back away. She shrugs sadly, and returns to her work, as birds and squirrels play and frolic around her.]]>
+    </string>
+    <string id="7">
+        <![CDATA[The druid stands up and greets you. As she does, bluebirds land on her shoulders and chirp a happy song. Deer walk up and nuzzle against her. It's all a bit much, really.]]>
+    </string>
+    <string id="8">
+        <![CDATA[She says "Welcome, bold saviors. I am Athia, guardian of the Vale. Alas, sadly, my efforts to end the curse afflicting us have been in vain." A chipmunk runs up and sits on her foot.]]>
+    </string>
+    <string id="9">
+        <![CDATA["Fortunately, you have come. I wish to help you if I can. I know how to create some herbal concoctions that you may be able to use in your travels. Do you wish to learn how to make them?"]]>
+    </string>
+    <string id="13">
+        <![CDATA[Athia's Concoctions]]>
+    </string>
+    <string id="14">
+        <![CDATA[You survey the carnage around you. For a moment, it's hard to believe you survived. You finish looting the temple. There's not much there, just a few coins and bits of silver. You help yourself.]]>
+    </string>
+    <string id="15">
+        <![CDATA[At the far end of the goblin's valley, you find what looks like a temple. Of course, it's goblin architecture, so it also strongly resembles a huge pile of random rocks, prone to fall over at any moment.]]>
+    </string>
+    <string id="21">
+        <![CDATA[You work your way in, quite reasonably afraid that the whole structure will collapse in on you. The building is about 30 feet long and 20 feet wide, and, fortunately, currently bereft of goblins.]]>
+    </string>
+    <string id="22">
+        <![CDATA[At the far end, you find the standard evil altar, with the standard disturbing brown stains on it. There is also a gold necklace, probably left as some sort of sacrifice. There's nothing stopping you from helping yourself.]]>
+    </string>
+    <string id="27">
+        <![CDATA[When you pick up the gold necklace, you hear a loud, shrill keening. At first, you think that some sort of foul demon has been summoned. No such luck.]]>
+    </string>
+    <string id="28">
+        <![CDATA[It was a crude alarm system. You run to the entrance to the temple and see a bunch of shrieking, evil monsters running up to punish you for your theft.]]>
+    </string>
+    <string id="29">
+        <![CDATA[The hills become more jagged, the animals become scarcer, and the air becomes even more acrid. Shards of bone crunch underfoot. You seem to be approaching one of the Vale's less welcoming areas.]]>
+    </string>
+    <string id="30">
+        <![CDATA[You reach the entrance to a smaller, more remote valley. You detect the smells of cooking fires and hear rhythmic grunting echoing in the distance. Goblins. It can only be goblins.]]>
+    </string>
+    <string id="31">
+        <![CDATA[As if to punctuate this realization, a band of goblins comes up from behind you, on the way back from an unsuccessful hunting trip. Unsuccessful, until now ...]]>
+    </string>
+    <string id="32">
+        <![CDATA[The valley ends at a small, highly active hot spring.]]>
+    </string>
+    <string id="33">
+        <![CDATA[As you cross the bridge, mist from the river below settles on your skin. It burns your eyes and gives you rashes. You shudder to think what effect drinking it must have.]]>
+    </string>
+    <string id="34">
+        <![CDATA[The water is also eating away at the bridge supports. Another year or two, and this bridge will be gone.]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

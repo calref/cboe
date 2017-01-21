@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Small Cave</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="28" right="28" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <flags />
+    <item id="0">
+        <type>20</type>
+    </item>
+    <item id="1">
+        <type>21</type>
+    </item>
+    <item id="2">
+        <type>24</type>
+    </item>
+    <item id="3">
+        <type>98</type>
+    </item>
+    <item id="4">
+        <type>19</type>
+    </item>
+    <item id="5">
+        <type>0</type>
+        <charges>224</charges>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>45</type>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>53</type>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>173</type>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>170</type>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>2</type>
+        <charges>4</charges>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>3</type>
+        <charges>5</charges>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>0</type>
+        <charges>93</charges>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>32</type>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>33</type>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>20</type>
+    </item>
+    <item id="16">
+        <type>22</type>
+    </item>
+    <item id="17">
+        <type>19</type>
+    </item>
+    <item id="18">
+        <type>13</type>
+    </item>
+    <item id="19">
+        <type>16</type>
+    </item>
+    <item id="20">
+        <type>31</type>
+    </item>
+    <item id="21">
+        <type>385</type>
+        <charges>6</charges>
+    </item>
+    <item id="22">
+        <type>-1</type>
+    </item>
+    <item id="23">
+        <type>-1</type>
+    </item>
+    <item id="24">
+        <type>-1</type>
+    </item>
+    <item id="25">
+        <type>-1</type>
+    </item>
+    <item id="26">
+        <type>-1</type>
+    </item>
+    <item id="27">
+        <type>-1</type>
+    </item>
+    <item id="28">
+        <type>-1</type>
+    </item>
+    <item id="29">
+        <type>-1</type>
+    </item>
+    <item id="30">
+        <type>-1</type>
+    </item>
+    <item id="31">
+        <type>-1</type>
+    </item>
+    <item id="32">
+        <type>-1</type>
+    </item>
+    <item id="33">
+        <type>-1</type>
+    </item>
+    <item id="34">
+        <type>-1</type>
+    </item>
+    <item id="35">
+        <type>-1</type>
+    </item>
+    <item id="36">
+        <type>-1</type>
+    </item>
+    <item id="37">
+        <type>-1</type>
+    </item>
+    <item id="38">
+        <type>-1</type>
+    </item>
+    <item id="39">
+        <type>-1</type>
+    </item>
+    <item id="40">
+        <type>-1</type>
+    </item>
+    <item id="41">
+        <type>-1</type>
+    </item>
+    <item id="42">
+        <type>-1</type>
+    </item>
+    <item id="43">
+        <type>-1</type>
+    </item>
+    <item id="44">
+        <type>-1</type>
+    </item>
+    <item id="45">
+        <type>-1</type>
+    </item>
+    <item id="46">
+        <type>-1</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
+    </item>
+    <creature id="0">
+        <type>150</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>50</face>
+        <sdf x="19" y="1" />
+    </creature>
+    <creature id="1">
+        <type>150</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>50</face>
+        <sdf x="19" y="2" />
+    </creature>
+    <creature id="2">
+        <type>150</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>50</face>
+        <sdf x="19" y="3" />
+    </creature>
+    <creature id="3">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="4">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="5">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="6">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="7">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="8">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="9">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="10">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="11">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="12">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="13">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="14">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="15">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="16">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="17">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="18">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="19">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="20">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="21">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="22">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="23">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="24">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="25">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="26">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="27">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="28">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="29">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <area top="5" left="10" bottom="10" right="17">Troglodyte Lair              </area>
+    <area top="9" left="4" bottom="12" right="7">Trash Pit                    </area>
+    <string id="0">
+        <![CDATA[You doubtthat  the troglodytes would leave a treasure chest here without some sort of nice, nasty trap on it ...]]>
+    </string>
+    <string id="1">
+        <![CDATA[This tunnel was a lot longer than it seemed at first ... it wound uphill for what must have been at least a mile. Fortunately, the School's magical lights were placed at frequent intervals along the path.]]>
+    </string>
+    <string id="2">
+        <![CDATA[At last, you've reached the far end of it, and see light ahead. The air also seems fresher ... this must be the School's back exit.]]>
+    </string>
+    <string id="3">
+        <![CDATA[The passage to the east slopes downward for quite a long way. The School's magical lights are placed at frequent intervals. Wherever the corridor leads, it's not near here.]]>
+    </string>
+    <string id="4">
+        <![CDATA[*]]>
+    </string>
+    <string id="5">
+        <![CDATA[*]]>
+    </string>
+    <string id="6">
+        <![CDATA[*]]>
+    </string>
+    <string id="7">
+        <![CDATA[*]]>
+    </string>
+    <string id="8">
+        <![CDATA[*]]>
+    </string>
+    <string id="9">
+        <![CDATA[*]]>
+    </string>
+    <string id="10">
+        <![CDATA[*]]>
+    </string>
+    <string id="11">
+        <![CDATA[*]]>
+    </string>
+    <string id="12">
+        <![CDATA[*]]>
+    </string>
+    <string id="13">
+        <![CDATA[*]]>
+    </string>
+    <string id="14">
+        <![CDATA[*]]>
+    </string>
+    <string id="15">
+        <![CDATA[*]]>
+    </string>
+    <string id="16">
+        <![CDATA[*]]>
+    </string>
+    <string id="17">
+        <![CDATA[*]]>
+    </string>
+    <string id="18">
+        <![CDATA[*]]>
+    </string>
+    <string id="19">
+        <![CDATA[*]]>
+    </string>
+    <string id="20">
+        <![CDATA[*]]>
+    </string>
+    <string id="21">
+        <![CDATA[*]]>
+    </string>
+    <string id="22">
+        <![CDATA[*]]>
+    </string>
+    <string id="23">
+        <![CDATA[*]]>
+    </string>
+    <string id="24">
+        <![CDATA[*]]>
+    </string>
+    <string id="25">
+        <![CDATA[*]]>
+    </string>
+    <string id="26">
+        <![CDATA[*]]>
+    </string>
+    <string id="27">
+        <![CDATA[*]]>
+    </string>
+    <string id="28">
+        <![CDATA[*]]>
+    </string>
+    <string id="29">
+        <![CDATA[*]]>
+    </string>
+    <string id="30">
+        <![CDATA[*]]>
+    </string>
+    <string id="31">
+        <![CDATA[*]]>
+    </string>
+    <string id="32">
+        <![CDATA[*]]>
+    </string>
+    <string id="33">
+        <![CDATA[*]]>
+    </string>
+    <string id="34">
+        <![CDATA[*]]>
+    </string>
+    <string id="35">
+        <![CDATA[*]]>
+    </string>
+    <string id="36">
+        <![CDATA[*]]>
+    </string>
+    <string id="37">
+        <![CDATA[*]]>
+    </string>
+    <string id="38">
+        <![CDATA[*]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
+    </string>
+</town>

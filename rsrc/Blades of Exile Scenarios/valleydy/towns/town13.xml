@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Libraries                    </name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="47" right="47" />
+    <difficulty>2</difficulty>
+    <lighting>dark</lighting>
+    <timer freq="3">41</timer>
+    <flags />
+    <item id="0">
+        <type>182</type>
+    </item>
+    <item id="1">
+        <type>182</type>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>8</type>
+    </item>
+    <item id="3">
+        <type>17</type>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>17</type>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>17</type>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>7</type>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>7</type>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>292</type>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>309</type>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>376</type>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>366</type>
+    </item>
+    <item id="15">
+        <type>365</type>
+    </item>
+    <item id="16">
+        <type>18</type>
+    </item>
+    <item id="17">
+        <type>-1</type>
+    </item>
+    <item id="18">
+        <type>-1</type>
+    </item>
+    <item id="19">
+        <type>-1</type>
+    </item>
+    <item id="20">
+        <type>-1</type>
+    </item>
+    <item id="21">
+        <type>-1</type>
+    </item>
+    <item id="22">
+        <type>-1</type>
+    </item>
+    <item id="23">
+        <type>-1</type>
+    </item>
+    <item id="24">
+        <type>-1</type>
+    </item>
+    <item id="25">
+        <type>-1</type>
+    </item>
+    <item id="26">
+        <type>-1</type>
+    </item>
+    <item id="27">
+        <type>-1</type>
+    </item>
+    <item id="28">
+        <type>-1</type>
+    </item>
+    <item id="29">
+        <type>-1</type>
+    </item>
+    <item id="30">
+        <type>-1</type>
+    </item>
+    <item id="31">
+        <type>-1</type>
+    </item>
+    <item id="32">
+        <type>-1</type>
+    </item>
+    <item id="33">
+        <type>-1</type>
+    </item>
+    <item id="34">
+        <type>-1</type>
+    </item>
+    <item id="35">
+        <type>-1</type>
+    </item>
+    <item id="36">
+        <type>-1</type>
+    </item>
+    <item id="37">
+        <type>-1</type>
+    </item>
+    <item id="38">
+        <type>-1</type>
+    </item>
+    <item id="39">
+        <type>-1</type>
+    </item>
+    <item id="40">
+        <type>-1</type>
+    </item>
+    <item id="41">
+        <type>-1</type>
+    </item>
+    <item id="42">
+        <type>-1</type>
+    </item>
+    <item id="43">
+        <type>-1</type>
+    </item>
+    <item id="44">
+        <type>-1</type>
+    </item>
+    <item id="45">
+        <type>-1</type>
+    </item>
+    <item id="46">
+        <type>-1</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
+    </item>
+    <creature id="0">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="6">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="13">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="14">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="15">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="16">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="17">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="18">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="19">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="20">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="21">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="22">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="23">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="24">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="25">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="26">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="27">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="28">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="29">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="30">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="31">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="32">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="33">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="34">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="35">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="36">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="37">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="38">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="39">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <area top="42" left="1" bottom="46" right="29">Reading Rooms                </area>
+    <area top="42" left="30" bottom="46" right="43">Study Carrels                </area>
+    <sign id="0">
+        <![CDATA[THE SCHOOL OF MAGERY LIBRARY|"Free your mind, so that wisdom may enter."]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[NO TALKING|NO FOOD OR DRINK|NO REMOVAL FROM THIS LEVEL]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[INDEXING]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[ADVANCED AND RARE SPELLBOOKS]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[LIBRARIAN OFFICE]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[STUDY CARRELS]]>
+    </sign>
+    <string id="0">
+        <![CDATA[You walk up to this strange machine. It's about 12 feet high, is made of shiny bronze and iron, and beeps and buzzes. You spend a few minutes looking for controls, instructions, or some hint of what it does.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Eventually, you find a small, magical, glowing display. It reads: "School Tome Dispenser. Please Select. Available: 1 - Mining Arts, 2 - Woodcarving Arts. Please Make A Selection."]]>
+    </string>
+    <string id="2">
+        <![CDATA[Below the display are two buttons, labeled '1' and '2'. Do you press one of them, or leave?]]>
+    </string>
+    <string id="6">
+        <![CDATA[You press the buttons. The machine squeals and beeps, and a small tablet of stone slides out into a nearby hopper. Unfortunately, some smoke and sparks come out with it. The machine display goes dark. You get the tablet.]]>
+    </string>
+    <string id="7">
+        <![CDATA[You press the buttons. The machine squeals and beeps, and a small tablet of stone slides out into a nearby hopper. Unfortunately, some smoke and sparks come out with it. The machine display goes dark. You get the tablet.]]>
+    </string>
+    <string id="8">
+        <![CDATA[This chamber is where all of the school's rarest and most valuable spell books were stored. They're gone now. There's nothing but several rows of bare pedestals and this official looking proclamation, pinned to the wall:]]>
+    </string>
+    <string id="9">
+        <![CDATA["BY THE ORDER OF EMPEROR STEWART, MOST HIGH RULER OF THE EMPIRE.]]>
+    </string>
+    <string id="10">
+        <![CDATA[It is now officially decreed that the School of Magery, located in Skylark Vale, cease operations immediately. The deadline for ceasing of operations is one week from receipt of this proclamation.]]>
+    </string>
+    <string id="11">
+        <![CDATA[The school is to be sealed, and all magical texts returned to Empire custody or destroyed. The School is to be permanently sealed, and all students and faculty are to return to Empire custody.]]>
+    </string>
+    <string id="12">
+        <![CDATA[Anyone interfering with the carrying out of this order will be disciplined in the most severe way. A similar fate will await those entering the School later than one week from now. That is all."]]>
+    </string>
+    <string id="13">
+        <![CDATA[The proclamation is dated 130 years ago. Emperor Stewart has been dead for a century.]]>
+    </string>
+    <string id="14">
+        <![CDATA[The index card and files for the library were in this room. Well, they still are, but someone has gone through, dumped them out, and mixed them up. In this state of disarray, they'll be useless for finding your way around the library.]]>
+    </string>
+    <string id="15">
+        <![CDATA[You find the body of a murdered mage. She was barricaded up here behind several force barriers, and left to starve. Ugly business.]]>
+    </string>
+    <string id="16">
+        <![CDATA[When you step inside this small chamber, a cloud of blue mist appears in the northwest corner. It soon fades, and a big, nasty lizard is left in its place. Looks like someone's left a nice magical trap behind for you.]]>
+    </string>
+    <string id="17">
+        <![CDATA[You find an interesting, thin book on something called a Piercing Crystal. It's a magical item which can dispel any magical barrier it's thrown at. Useful thing to have around.]]>
+    </string>
+    <string id="18">
+        <![CDATA[You find a book on "library sprites." They're magical creature created in many libraries (such as this one) to keep things clean and looked after automatically.]]>
+    </string>
+    <string id="19">
+        <![CDATA[The book makes a note that library sprites shouldn't be left unguided for too long. They are, in a limited way, sentient, and will become very unstable when left alone.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You find a book describing the spell Move Mountains. You can already cast this spell, so the tome isn't very interesting to you. All it really does is go on at great length on what use this spell can be to destroy weak walls.]]>
+    </string>
+    <string id="21">
+        <![CDATA[You open an interesting looking book. The first page has a large, painted rune inside the front cover. You recognize what it is too late. The book explodes, burning you badly ...]]>
+    </string>
+    <string id="22">
+        <![CDATA[Suddenly, a shower of books rains down from above onto your heads. Bruised, you look up, but you can't figure out what caused the books to fall.]]>
+    </string>
+    <string id="23">
+        <![CDATA[You find another room which was destroyed before the School was closed. You have little doubt that plenty of invaluable magical texts were destroyed.]]>
+    </string>
+    <string id="24">
+        <![CDATA[You step into the library of the School of Magery. The air is cool, musty, and still, and the smell of books and leather bindings fill the air.]]>
+    </string>
+    <string id="25">
+        <![CDATA[Down the hallways, you see many shelves of books and scrolls, thick and thin, bound in paper and leather. Strangely, there is a visible lack of dust and decay. Things seem to have been kept in good order. Someone's been looking after the place.]]>
+    </string>
+    <string id="30">
+        <![CDATA[Out of the corner of your eye, you'd swear you see two of the books on a nearby shelf switch places. You look closer but see nobody there. Must have been your imagination.]]>
+    </string>
+    <string id="31">
+        <![CDATA[You stand at the entrance to a small room with a lone pedestal, which has nothing resting on it. As you look at it, you hear a voice whispering in your ear. "On the pedestal. The green book. We miss the green book."]]>
+    </string>
+    <string id="32">
+        <![CDATA[You turn quickly, but nobody is there. It's still and quiet.]]>
+    </string>
+    <string id="33">
+        <![CDATA[You hear a whispered message in your ear. "Green books. We miss the green books. Stolen. Want. Want. Back here to us." You turn to see who spoke to you, but there's nobody there.]]>
+    </string>
+    <string id="34">
+        <![CDATA[You hear a soft voice whispering in your ear. It says "The pedestal. To the pedestal. On the pedestal." You turn to see who spoke, but there's nobody there.]]>
+    </string>
+    <string id="35">
+        <![CDATA[You find a thick tome, bound in thick, green dyed leather. Strange runes and symbols are etched in the cover.]]>
+    </string>
+    <string id="41">
+        <![CDATA[You peruse the book, but just can't make any sense of the words inside. The magical dialect is just too complicated for you. Maybe if you studied more Mage Lore ...]]>
+    </string>
+    <string id="42">
+        <![CDATA[It's a book of alchemical recipes! While instructions for making hair restoratives and magically augmented laxatives aren't interesting to you, you find a good recipe for a powerful poison.]]>
+    </string>
+    <string id="43">
+        <![CDATA[It requires wormgrass to make, but isn't very difficult and doesn't require much Alchemy skill.]]>
+    </string>
+    <string id="44">
+        <![CDATA[You find a thick tome, bound in thick, black leather. Strange runes and symbols are etched in the cover, and strips of onyx are set into the spine. It's cold to the touch.]]>
+    </string>
+    <string id="50">
+        <![CDATA[It's a book on necromancy and the dark arts, describing rituals so dark and horrifying they chill your soul, and yet so eerily compelling that you can't stop reading.]]>
+    </string>
+    <string id="51">
+        <![CDATA[When you can finally stumble away, you feel numb. Your brain feels dull and lost.]]>
+    </string>
+    <string id="52">
+        <![CDATA[You find a thick tome, bound in thick, red dyed leather. Strange runes and symbols are etched in the cover. The cover is soft and warm to the touch.]]>
+    </string>
+    <string id="58">
+        <![CDATA[This is a book on the healing arts. While the recipes for acne treatment, extreme chafing and hangnail removal don't interest you (well, maybe the chafing one), the recipe for a healing potion does.]]>
+    </string>
+    <string id="59">
+        <![CDATA[The recipe calls for Glowing Nettle, an alchemical ingredient. With it, you could make all the healing potions you wanted.]]>
+    </string>
+    <string id="60">
+        <![CDATA[The air around you is suddenly filled with whispering voices: "Thank you. Book. Thank ... Book. Thank you. Reward. Book. Thank you." You feel a strange tugging around your pocket.]]>
+    </string>
+    <string id="61">
+        <![CDATA[You look in your pocket and find that, somehow, a large brass key has ended up there. Interesting.]]>
+    </string>
+    <string id="62">
+        <![CDATA[You find a tunnel leading out of the School. It looks recently dug, as if someone burrowed into here recently. The tunnel slopes sharply downward. It's steep, but you should be able to climb it.]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
+    </string>
+</town>

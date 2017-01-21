@@ -1,0 +1,971 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<scenario boes="2.0.0">
+    <title>The Za-Khazi Run</title>
+    <icon>17</icon>
+    <id></id>
+    <version>1.0.1</version>
+    <language>en-US</language>
+    <author>
+        <name>Name not given</name>
+        <email>Spiderweb Software, (206)789-4438, spidweb@spidweb.com</email>
+    </author>
+    <text>
+        <teaser>Get supplies to a besieged fort, or else.</teaser>
+        <teaser>By Jeff Vogel, C. 1997, All Rights Reserved</teaser>
+        <intro-msg>
+            <![CDATA[The history of Exile is a history of wars, large and small, against humans and bizarre creatures. They were all long and bloody, and all fought purely for survival.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[Not all Exiles returned to the surface when the Empire gave them a country of their own. Some stayed in the caves and tunnels they had adopted as their homes. Alas a new threat awaited them.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[The Slithzerikai, the strange subterranean lizard men that fought Exile for much of their existence, have attacked again. Several huge, barbarian tribes of the creatures are attacking Exile, and have had great success against its troops.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[Now all in Exile watch the siege at Fort Cavalier, the key defensive outpost between the sliths and the heart of Exile. The fort has held out for months, but it grows weaker with every passing day.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[You have been contacted by the people of Exile and sent here with news of a highly lucrative mission, having something to do with Fort Cavalier. You have just arrived at Fort Goodling to meet with Commander Yale.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[She will tell you what your mission is, should you choose to accept it. All you know is that the stakes are incredibly high, and time is of the essence ...]]>
+        </intro-msg>
+    </text>
+    <ratings>
+        <content>G</content>
+        <difficulty>3</difficulty>
+    </ratings>
+    <flags>
+        <adjust-difficulty>true</adjust-difficulty>
+        <legacy>false</legacy>
+        <custom-graphics>false</custom-graphics>
+    </flags>
+    <creator>
+        <type>oboe</type>
+        <version>2.0.0</version>
+        <os>Apple Mac OS X Version 10.7.5 (Build 11G63)</os>
+    </creator>
+    <game>
+        <num-towns>23</num-towns>
+        <out-width>1</out-width>
+        <out-height>15</out-height>
+        <start-town>0</start-town>
+        <town-start x="13" y="27" />
+        <outdoor-start x="0" y="14" />
+        <sector-start x="18" y="39" />
+        <town-flag town="21" add-x="100" add-y="0" />
+        <special-item start-with="false" useable="true" special="0">
+            <name>Bundle of Wands</name>
+            <description>
+                <![CDATA[This is the magically sealed bundle of wands which was given to you in Fort Goodling. You are to take it to Fort Cavalier within 21 days.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Crystal of Purity</name>
+            <description>
+                <![CDATA[This crystal is about a foot high and perfectly clear. It is so clear, in fact, that light seems brighter coming out than going in. Remarkably beautiful object.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Melora Opal</name>
+            <description>
+                <![CDATA[This is a nearly flawless opal about the size of your fist. Get it back to civilization, and it would be worth quite a lot of money.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Scroll of Dragons</name>
+            <description>
+                <![CDATA[This long vellum scroll contains a list of ancient dragons, the lineages, and the feats they performed. This wouldn't be interesting to anyone but the most fanatical student of dragonkind.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Slith Statuette</name>
+            <description>
+                <![CDATA[This is a small, delicate statue of some ancient slith warrior.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Horn Charm</name>
+            <description>
+                <![CDATA[The unicorn Aetherius gave you this charm to help you find his mate's horn. The charm will let you know when you're near it.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Gray Stones</name>
+            <description>
+                <![CDATA[These are three large, chalky stones, which supposedly have some powerful, esoteric magical use.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unicorn Charm</name>
+            <description>
+                <![CDATA[You were given this charm by the unicorns as a reward for services rendered. It will get you past the Unicorn Gate.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unicorn Horn</name>
+            <description>
+                <![CDATA[This is the horn of the unicorn Aessoforus, who was slain by the Blood Glee Clan of giants. The unicorns you have met really want it back.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Drake Key</name>
+            <description>
+                <![CDATA[You found this key in the remote lair of a family of ice drakes.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Morog&apos;s Shrooms</name>
+            <description>
+                <![CDATA[These small mushrooms with red spots were found in caverns far, far below the Castle of Morog.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Mushroom Talisman</name>
+            <description>
+                <![CDATA[Morog gave you this talisman as a reward. This onyx mushroom is supposed to provide protection from something called a Spore Shroom.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Malachite Statue</name>
+            <description>
+                <![CDATA[With great difficulty, you managed to steal this statuette from a strange cave filled with hostile, slimy monsters.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[End special item descs]]>
+            </description>
+        </special-item>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Healing</name>
+            <type>dead</type>
+            <prompt>heal</prompt>
+            <face>41</face>
+            <entries>
+                <heal>0</heal>
+                <heal>1</heal>
+                <heal>2</heal>
+                <heal>4</heal>
+                <heal>9</heal>
+                <heal>5</heal>
+                <heal>6</heal>
+                <heal>7</heal>
+                <heal>8</heal>
+            </entries>
+        </shop>
+        <shop>
+            <name>Halgas</name>
+            <type>live</type>
+            <prompt>mage</prompt>
+            <face>43</face>
+            <entries>
+                <mage-spell>30</mage-spell>
+                <mage-spell>31</mage-spell>
+                <mage-spell>32</mage-spell>
+                <mage-spell>33</mage-spell>
+                <mage-spell>34</mage-spell>
+                <mage-spell>35</mage-spell>
+                <mage-spell>36</mage-spell>
+                <mage-spell>37</mage-spell>
+                <mage-spell>38</mage-spell>
+                <mage-spell>39</mage-spell>
+                <mage-spell>40</mage-spell>
+                <mage-spell>41</mage-spell>
+                <mage-spell>42</mage-spell>
+                <mage-spell>43</mage-spell>
+                <mage-spell>44</mage-spell>
+                <mage-spell>45</mage-spell>
+                <mage-spell>46</mage-spell>
+                <mage-spell>47</mage-spell>
+                <mage-spell>48</mage-spell>
+                <mage-spell>49</mage-spell>
+                <mage-spell>50</mage-spell>
+                <mage-spell>51</mage-spell>
+                <mage-spell>52</mage-spell>
+                <mage-spell>53</mage-spell>
+            </entries>
+        </shop>
+        <shop>
+            <name>Ocampo&apos;s Spells</name>
+            <type>live</type>
+            <prompt>priest</prompt>
+            <face>43</face>
+            <entries>
+                <priest-spell>30</priest-spell>
+                <priest-spell>31</priest-spell>
+                <priest-spell>32</priest-spell>
+                <priest-spell>33</priest-spell>
+                <priest-spell>34</priest-spell>
+                <priest-spell>35</priest-spell>
+                <priest-spell>36</priest-spell>
+                <priest-spell>37</priest-spell>
+                <priest-spell>38</priest-spell>
+                <priest-spell>39</priest-spell>
+                <priest-spell>40</priest-spell>
+                <priest-spell>41</priest-spell>
+                <priest-spell>42</priest-spell>
+                <priest-spell>43</priest-spell>
+                <priest-spell>44</priest-spell>
+                <priest-spell>45</priest-spell>
+                <priest-spell>46</priest-spell>
+                <priest-spell>47</priest-spell>
+                <priest-spell>48</priest-spell>
+                <priest-spell>49</priest-spell>
+                <priest-spell>50</priest-spell>
+                <priest-spell>51</priest-spell>
+                <priest-spell>52</priest-spell>
+                <priest-spell>53</priest-spell>
+            </entries>
+        </shop>
+        <shop>
+            <name>Ocampo&apos;s Recipes</name>
+            <type>dead</type>
+            <prompt>alch</prompt>
+            <face>43</face>
+            <entries>
+                <recipe>7</recipe>
+                <recipe>8</recipe>
+                <recipe>9</recipe>
+                <recipe>10</recipe>
+                <recipe>11</recipe>
+                <recipe>12</recipe>
+            </entries>
+        </shop>
+        <shop>
+            <name>Proth&apos;s Missiles</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">96</item>
+                <item quantity="infinite">97</item>
+                <item quantity="infinite">98</item>
+                <item quantity="infinite">99</item>
+                <item quantity="infinite">100</item>
+                <item quantity="infinite">101</item>
+                <item quantity="infinite">102</item>
+                <item quantity="infinite">103</item>
+                <item quantity="infinite">104</item>
+                <item quantity="infinite">105</item>
+                <item quantity="infinite">106</item>
+                <item quantity="infinite">107</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Proth&apos;s Weapons</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">51</item>
+                <item quantity="infinite">52</item>
+                <item quantity="infinite">53</item>
+                <item quantity="infinite">54</item>
+                <item quantity="infinite">55</item>
+                <item quantity="infinite">56</item>
+                <item quantity="infinite">57</item>
+                <item quantity="infinite">58</item>
+                <item quantity="infinite">59</item>
+                <item quantity="infinite">60</item>
+                <item quantity="infinite">61</item>
+                <item quantity="infinite">62</item>
+                <item quantity="infinite">63</item>
+                <item quantity="infinite">64</item>
+                <item quantity="infinite">65</item>
+                <item quantity="infinite">66</item>
+                <item quantity="infinite">67</item>
+                <item quantity="infinite">68</item>
+                <item quantity="infinite">69</item>
+                <item quantity="infinite">70</item>
+                <item quantity="infinite">71</item>
+                <item quantity="infinite">72</item>
+                <item quantity="infinite">73</item>
+                <item quantity="infinite">74</item>
+                <item quantity="infinite">75</item>
+                <item quantity="infinite">76</item>
+                <item quantity="infinite">77</item>
+                <item quantity="infinite">78</item>
+                <item quantity="infinite">79</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Proth&apos;s Armor</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">122</item>
+                <item quantity="infinite">123</item>
+                <item quantity="infinite">124</item>
+                <item quantity="infinite">125</item>
+                <item quantity="infinite">126</item>
+                <item quantity="infinite">127</item>
+                <item quantity="infinite">128</item>
+                <item quantity="infinite">129</item>
+                <item quantity="infinite">130</item>
+                <item quantity="infinite">131</item>
+                <item quantity="infinite">132</item>
+                <item quantity="infinite">133</item>
+                <item quantity="infinite">134</item>
+                <item quantity="infinite">135</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Proth&apos;s Tools</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">169</item>
+                <item quantity="infinite">170</item>
+                <item quantity="infinite">171</item>
+                <item quantity="infinite">172</item>
+                <item quantity="infinite">173</item>
+                <item quantity="infinite">174</item>
+                <item quantity="infinite">175</item>
+                <item quantity="infinite">176</item>
+                <item quantity="infinite">177</item>
+                <item quantity="infinite">178</item>
+                <item quantity="infinite">179</item>
+                <item quantity="infinite">180</item>
+                <item quantity="infinite">181</item>
+                <item quantity="infinite">182</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Proth&apos;s Potions</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">253</item>
+                <item quantity="infinite">254</item>
+                <item quantity="infinite">255</item>
+                <item quantity="infinite">256</item>
+                <item quantity="infinite">257</item>
+                <item quantity="infinite">258</item>
+                <item quantity="infinite">259</item>
+                <item quantity="infinite">260</item>
+                <item quantity="infinite">261</item>
+                <item quantity="infinite">262</item>
+                <item quantity="infinite">263</item>
+                <item quantity="infinite">264</item>
+                <item quantity="infinite">265</item>
+                <item quantity="infinite">266</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Vmok&apos;s Meals</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>42</face>
+            <entries>
+                <item quantity="infinite">386</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Kimzahn&apos;s Forge</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">71</item>
+                <item quantity="infinite">72</item>
+                <item quantity="infinite">73</item>
+                <item quantity="infinite">74</item>
+                <item quantity="infinite">75</item>
+                <item quantity="infinite">76</item>
+                <item quantity="infinite">77</item>
+                <item quantity="infinite">78</item>
+                <item quantity="infinite">79</item>
+                <item quantity="infinite">80</item>
+                <item quantity="infinite">81</item>
+                <item quantity="infinite">82</item>
+                <item quantity="infinite">83</item>
+                <item quantity="infinite">84</item>
+            </entries>
+        </shop>
+        <timer freq="1000">5</timer>
+        <string id="0">
+            <![CDATA[You try to open the bundle, but the wards the Tower of Magic put on it are too strong. It won't come open until you reach Fort Cavalier.]]>
+        </string>
+        <string id="1">
+            <![CDATA[The rubble is very heavy.]]>
+        </string>
+        <string id="2">
+            <![CDATA[It takes a while to pass it.]]>
+        </string>
+        <string id="3">
+            <![CDATA[As you walk through these mushrooms, clouds of gray spores rise from them. Inhaling them makes you feel very drowsy. You wobble for a bit and then fall over.]]>
+        </string>
+        <string id="4">
+            <![CDATA[You wake up a few hours later. More time has been lost.]]>
+        </string>
+        <string id="5">
+            <![CDATA[Three weeks have passed since your arrival at Fort Goodling. When you arrived, people guessed that Fort Cavalier had three weeks left before it fell.]]>
+        </string>
+        <string id="6">
+            <![CDATA[The third week has just passed.]]>
+        </string>
+        <string id="11">
+            <![CDATA[You were only given three weeks to reach Fort Cavalier. You're very close to running out of time. If you don't complete the Za-Khazi run in the next day or two, all may be lost. Best hurry ...]]>
+        </string>
+        <string id="12">
+            <![CDATA[When you arrived at Fort Goodling, you were told that they estimated you had three weeks until Fort Cavalier fell. Half of that time has elapsed.]]>
+        </string>
+        <string id="13">
+            <![CDATA[The mighty tentacled slime beast falls. The acid in its body immediately starts to burrow a tunnel in the ground. You hope there aren't too many more of these terrors around.]]>
+        </string>
+        <string id="20">
+            <![CDATA[calamity]]>
+        </string>
+        <string id="21">
+            <![CDATA[Morog nods. "Fine. Take the scroll." You do. "It will serve you well in the caverns far to the north, whether you know it or not. Good luck to you."]]>
+        </string>
+        <string id="22">
+            <![CDATA[Morog eagerly grabs the mushrooms and places them securely in a pocket of her robes. "Excellent. Now, as I gave my word, I will produce a reward."]]>
+        </string>
+        <string id="23">
+            <![CDATA[She extends a skeletal hand and mutters a few powerful words. A huge scroll appears in front of you, floating in midair. "This scroll is very old, and tells the history of many ancient dragons. It's a rare, highly valuable piece of scholarship."]]>
+        </string>
+        <string id="24">
+            <![CDATA["Of course, as interesting as this item can be, there are many other things I can do for you. If you wish, instead of the scroll, I can tell you the location of a priceless gemstone, which can easily buy you passage through the northern caverns."]]>
+        </string>
+        <string id="25">
+            <![CDATA["Would you like this information instead of the scroll?"]]>
+        </string>
+        <string id="28">
+            <![CDATA[The scroll disappears. "Excellent," Morog says. "There is a tunnel to the east of my fortress, which leads to an outpost of stranded Empire soldiers."]]>
+        </string>
+        <string id="29">
+            <![CDATA["In that outpost is the Melora Opal, a massive, priceless stone that will serve you very well in trying to leave these caverns to the north. That is all. You may go."]]>
+        </string>
+        <string id="30">
+            <![CDATA[Morog thinks. "All right then. How about this, instead of the scroll. There is a huge cavern to the north, which is filled with fungi sometimes called Poppy Shrooms."]]>
+        </string>
+        <string id="31">
+            <![CDATA["These continuously emit soporific spores. Trying to get through this cavern would take you days, considering how disorienting the spores can be. That is, if you get through the cavern at all."]]>
+        </string>
+        <string id="32">
+            <![CDATA["If you wish, I can give you an item which will protect you from the spores. These mushrooms are not uncommon. This item will serve you well. Would you like it?"]]>
+        </string>
+        <string id="37">
+            <![CDATA[She mutters a spell. The scroll disappears, and an onyx mushroom talisman appears in its place. "Wise choice," she says. "Spore Shrooms are a real threat."]]>
+        </string>
+        <string id="38">
+            <![CDATA["That is all. Thank you for your assistance. Good day to you."]]>
+        </string>
+        <string id="40">
+            <![CDATA[She thinks. "Oh, and I think I would move on if I were you. At this point, I have no hunger for the flesh of humans. That can always change."]]>
+        </string>
+        <string id="41">
+            <![CDATA[As you walk through these mushrooms, you accidentally step on one. A huge cloud of soporific spores sprays out, covering you. The spores make you feel woozy and light headed. You also start to giggle uncontrollably.]]>
+        </string>
+        <string id="42">
+            <![CDATA[Amazingly, however, you stay somewhat awake and moderately alert. Instead of stopping you in your tracks, the spores just slow you down a little. Something must be protecting you.]]>
+        </string>
+        <string id="43">
+            <![CDATA[As soon as you can, you try to sell the Melora opal. As expected, it's quite a prize. You get 2500 gold for it.]]>
+        </string>
+        <string id="44">
+            <![CDATA[You make an effort to sell the Crystal of Purity. Most people have little interest in it, sages included. Fortunately, you find a traveling mage who sees how useful an item it could be. He gives you 1000 gold for it.]]>
+        </string>
+        <string id="45">
+            <![CDATA[The malachite statue from the Wurm Pit turns out to have had some unpleasant, malevolent spells placed upon it. Fortunately, this makes it of great interest to some local mages. They give you 1000 gold for it.]]>
+        </string>
+        <string id="46">
+            <![CDATA[*]]>
+        </string>
+        <string id="47">
+            <![CDATA[*]]>
+        </string>
+        <string id="48">
+            <![CDATA[*]]>
+        </string>
+        <string id="49">
+            <![CDATA[*]]>
+        </string>
+        <string id="50">
+            <![CDATA[*]]>
+        </string>
+        <string id="51">
+            <![CDATA[*]]>
+        </string>
+        <string id="52">
+            <![CDATA[*]]>
+        </string>
+        <string id="53">
+            <![CDATA[*]]>
+        </string>
+        <string id="54">
+            <![CDATA[*]]>
+        </string>
+        <string id="55">
+            <![CDATA[*]]>
+        </string>
+        <string id="56">
+            <![CDATA[*]]>
+        </string>
+        <string id="57">
+            <![CDATA[*]]>
+        </string>
+        <string id="58">
+            <![CDATA[*]]>
+        </string>
+        <string id="59">
+            <![CDATA[*]]>
+        </string>
+        <string id="60">
+            <![CDATA[*]]>
+        </string>
+        <string id="61">
+            <![CDATA[*]]>
+        </string>
+        <string id="62">
+            <![CDATA[*]]>
+        </string>
+        <string id="63">
+            <![CDATA[*]]>
+        </string>
+        <string id="64">
+            <![CDATA[*]]>
+        </string>
+        <string id="65">
+            <![CDATA[*]]>
+        </string>
+        <string id="66">
+            <![CDATA[*]]>
+        </string>
+        <string id="67">
+            <![CDATA[*]]>
+        </string>
+        <string id="68">
+            <![CDATA[*]]>
+        </string>
+        <string id="69">
+            <![CDATA[*]]>
+        </string>
+        <string id="70">
+            <![CDATA[*]]>
+        </string>
+        <string id="71">
+            <![CDATA[*]]>
+        </string>
+        <string id="72">
+            <![CDATA[*]]>
+        </string>
+        <string id="73">
+            <![CDATA[*]]>
+        </string>
+        <string id="74">
+            <![CDATA[*]]>
+        </string>
+        <string id="75">
+            <![CDATA[*]]>
+        </string>
+        <string id="76">
+            <![CDATA[*]]>
+        </string>
+        <string id="77">
+            <![CDATA[*]]>
+        </string>
+        <string id="78">
+            <![CDATA[*]]>
+        </string>
+        <string id="79">
+            <![CDATA[*]]>
+        </string>
+        <string id="80">
+            <![CDATA[*]]>
+        </string>
+        <string id="81">
+            <![CDATA[*]]>
+        </string>
+        <string id="82">
+            <![CDATA[*]]>
+        </string>
+        <string id="83">
+            <![CDATA[*]]>
+        </string>
+        <string id="84">
+            <![CDATA[*]]>
+        </string>
+        <string id="85">
+            <![CDATA[*]]>
+        </string>
+        <string id="86">
+            <![CDATA[*]]>
+        </string>
+        <string id="87">
+            <![CDATA[*]]>
+        </string>
+        <string id="88">
+            <![CDATA[*]]>
+        </string>
+        <string id="89">
+            <![CDATA[*]]>
+        </string>
+        <string id="90">
+            <![CDATA[*]]>
+        </string>
+        <string id="91">
+            <![CDATA[*]]>
+        </string>
+        <string id="92">
+            <![CDATA[*]]>
+        </string>
+        <string id="93">
+            <![CDATA[*]]>
+        </string>
+        <string id="94">
+            <![CDATA[*]]>
+        </string>
+        <string id="95">
+            <![CDATA[*]]>
+        </string>
+        <string id="96">
+            <![CDATA[*]]>
+        </string>
+        <string id="97">
+            <![CDATA[*]]>
+        </string>
+        <string id="98">
+            <![CDATA[*]]>
+        </string>
+        <string id="99">
+            <![CDATA[*End special strs]]>
+        </string>
+        <journal id="0">
+            <![CDATA[Begin journal strs]]>
+        </journal>
+        <journal id="49">
+            <![CDATA[End journal strs]]>
+        </journal>
+    </game>
+    <editor>
+        <default-ground>2</default-ground>
+        <last-out-section x="0" y="0" />
+        <last-town>1</last-town>
+        <storage>
+            <on-terrain>201</on-terrain>
+            <is-property>false</is-property>
+            <item chance="9">3</item>
+            <item chance="9">4</item>
+            <item chance="9">5</item>
+            <item chance="9">6</item>
+            <item chance="9">7</item>
+            <item chance="9">8</item>
+            <item chance="9">16</item>
+            <item chance="9">17</item>
+            <item chance="9">18</item>
+        </storage>
+    </editor>
+</scenario>

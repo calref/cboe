@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Northern Vale                 </name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>124</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>9</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>72</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>10</onmeet>
+        <onwin>11</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>73</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>72</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="201" y="2" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>18</monster>
+        <monster>0</monster>
+        <monster>19</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>124</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[Blinlock - 5 mi. n.|SweetGrove - 30 mi. se.|Marralis - 25 mi. w.]]>
+    </sign>
+    <area top="25" left="17" bottom="28" right="22">Near Blinlock                </area>
+    <area top="21" left="20" bottom="23" right="25">Lizard Valley                </area>
+    <string id="0">
+        <![CDATA[This small bridge spans a river flowing from the large hill to the northeast. Interestingly, you notice that the water from this river lacks the bitter reek of the water to the southwest.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Soon, you walk back out of the shrine. After a few minutes, you look back, and see that it's disappeared! You feel relaxed, knowing you've once again avoided serious danger.]]>
+    </string>
+    <string id="2">
+        <![CDATA[Exploring the small island, you notice a small stone circle on a promontory on the west end. It looks very old and harmless, so you go to investigate.]]>
+    </string>
+    <string id="3">
+        <![CDATA[Stepping inside, you find a small, polished altar. Although the stone pillars are clearly ancient and crumbled, the altar looks brand new. There is a kneeling stone in front of it - one of you can pray if you wish.]]>
+    </string>
+    <string id="8">
+        <![CDATA[As you kneel, a serene feeling sweeps over you. As you stare into the polished stone of the altar, your mind is filled with an incredible sense of clarity. Distractions are lost, and your thoughts float freely.]]>
+    </string>
+    <string id="9">
+        <![CDATA[The feeling soon fades, but that brief moment of pure mental clarity made you realize many useful things. You feel more experienced.]]>
+    </string>
+    <string id="10">
+        <![CDATA[You meet a pack of giant lizards on the hunt. The mindless, rapacious creatures lumber towards you. Better be careful - odds are there's a lair of them around here somewhere.]]>
+    </string>
+    <string id="11">
+        <![CDATA[This foul, stagnant fen has attracted several horrid beasts, who have set up a cozy lair here. They regard you as a fortunate source of tasty meat and rush you, tendrils wiggling.]]>
+    </string>
+    <string id="17">
+        <![CDATA[Searching their lair, you find that these creatures have had some success waylaying travelers. Most of the victim's goods have rotted or rusted away. However, one ring managed to survive.]]>
+    </string>
+    <string id="18">
+        <![CDATA[This lair was more heavily populated than you suspected. A large extended family of giant lizards comes out to greet you.]]>
+    </string>
+    <string id="19">
+        <![CDATA[You've done quite a good deed for the Vale. Now that these lizards are gone, traveling nearby will hopefully be much safer. You search the lizards' lair, hoping for a reward for your good deeds.]]>
+    </string>
+    <string id="20">
+        <![CDATA[Alas, your pickings are meager. You find some coins, some tasty lizard meat, and a small flask. Little else is still useful.]]>
+    </string>
+    <string id="21">
+        <![CDATA[The long valley ends at a wide, dark cave entrance. Between the many claw marks on the ground and the thousands of shedded scales, you have no trouble figuring out what creatures lurk here.]]>
+    </string>
+    <string id="22">
+        <![CDATA[One of the lizards inside walks to the entrance, sees you, and runs back inside, startled. Maybe there aren't too many of them here, and you can wipe the nest out with little trouble.]]>
+    </string>
+    <string id="27">
+        <![CDATA[You reach an isolated clearing, far up the jagged northern wall of Skylark Vale. It's more interesting than you suspected. As you enter, you are startled by the massive skeleton which dominates the open area.]]>
+    </string>
+    <string id="28">
+        <![CDATA[It was a Drake Lord, one of the massive and powerful lords of lizardkind. Fortunately, it is no longer a threat to you. It has been dead for many years, as the dry and bleached bones mutely testify.]]>
+    </string>
+    <string id="29">
+        <![CDATA[As you look over the skeleton, you notice one interesting detail. One of the creature's massive fangs remains in its skull. Drake fangs are reputed to have interesting magical uses. Do you take this one with you?]]>
+    </string>
+    <string id="33">
+        <![CDATA[With difficulty, you rip the tooth out of the creature's skull. Hopefully no curse will befall you because of the callous act.]]>
+    </string>
+    <string id="34">
+        <![CDATA[As you enter this valley, several large lizards emerge from the rocks to trap you inside. You're in danger of becoming something's meal.]]>
+    </string>
+    <string id="35">
+        <![CDATA[*]]>
+    </string>
+    <string id="36">
+        <![CDATA[*]]>
+    </string>
+    <string id="37">
+        <![CDATA[*]]>
+    </string>
+    <string id="38">
+        <![CDATA[*]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

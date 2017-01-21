@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Northwest Morrow&apos;s Isle</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>173</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <sign id="0">
+        <![CDATA[Zaskiva Ferry - 5 miles nw]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Zaskiva Ferry|10 gold]]>
+    </sign>
+    <area top="8" left="21" bottom="11" right="23">Near Zaskiva                 </area>
+    <area top="3" left="7" bottom="25" right="38">Zaskiva Isle                 </area>
+    <area top="24" left="38" bottom="27" right="41">Near Zaskiva Ferry           </area>
+    <string id="0">
+        <![CDATA[This is the ferry to the Zaskiva Isle, a smaller island to the northeast, where the capital of Morrow's Isle sits, secure and protected. There are a good number of guards, checking to make sure that nobody unwelcome manages to use the ferry.]]>
+    </string>
+    <string id="1">
+        <![CDATA[When you identify yourselves, they shake their heads. "No offense, but we can't let you through to the island. Sorry."]]>
+    </string>
+    <string id="2">
+        <![CDATA[When you try to take the ferry to Zaskiva Isle again, grim faced guards stop you. "Sorry, but we aren't letting anyone through. Since Lord Volpe's assassination, the isle is cut off from all visitors."]]>
+    </string>
+    <string id="3">
+        <![CDATA[There's nothing you can say to change his mind. You turn back.]]>
+    </string>
+    <string id="4">
+        <![CDATA[You reach the ferry to Zaskiva Isle. The city of Zaskiva, capital of Morrow's Isle, is well protected. Guards check you over thoroughly before they let you near the ferry.]]>
+    </string>
+    <string id="5">
+        <![CDATA[The ride across is 10 gold. Do you go?]]>
+    </string>
+    <string id="10">
+        <![CDATA[The ferry ride is quick and uneventful. They aren't letting many people go to Zaskiva these days, what with the rebel activity and all. You're practically the only people on the ferry. Soon, you land.]]>
+    </string>
+    <string id="11">
+        <![CDATA[When you're almost to the ferry, you notice that a large group of woodsmen has caught up with you and now surrounds you on all sides. One of them gets close to you and hisses, "What are you doing? Do you want to get killed? Come with us!"]]>
+    </string>
+    <string id="12">
+        <![CDATA[When you hesitate, she says, "They're questioning anybody trying to leave. Hard! This isle has been closed off. Lord Volpe is dead. We're with the Hill Runners. Come with us, and we'll get you off the isle."]]>
+    </string>
+    <string id="13">
+        <![CDATA[You look at the dock. Sure enough, it does look like the guards are interrogating a group of terrified merchants. Still, it could be a trap. Do you go with them instead of going to the isle?]]>
+    </string>
+    <string id="17">
+        <![CDATA[Escaping the woodsmen, you move on to the docks. Unfortunately, the guards have a description of you as "suspicious people seen placing a box near the explosion." They don't even ask you any questions before they seize you and start the beatings.]]>
+    </string>
+    <string id="18">
+        <![CDATA[Unfortunately, by the time Jaen finds out where you are and what's happening to you, it's too late. In rational times, you might have been held for questioning and put on trial. These are not, alas, rational times.]]>
+    </string>
+    <string id="19">
+        <![CDATA[The rebels take you north, to a concealed, leaky rowboat. From there, two of them row you across the water to an isolated beach north of the ferry dock, and, without a word, head back.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You look around with relief. It's hard to believe, but you managed to escape Zaskiva Isle with your lives after all.]]>
+    </string>
+    <string id="21">
+        <![CDATA[This is the ferry back to Morrow's Isle. Only 10 gold. Do you go?]]>
+    </string>
+    <string id="27">
+        <![CDATA[You don't have the 10 gold. They shake their heads, and tell you to leave the dock.]]>
+    </string>
+    <string id="28">
+        <![CDATA[The ferry ride is fast and uneventful.]]>
+    </string>
+    <string id="29">
+        <![CDATA[You stumble across a pitiful campsite, occupied by a single ragged outcast. Or hermit. Or brigand. You aren't sure. He sure is a mess, though.]]>
+    </string>
+    <string id="30">
+        <![CDATA[When he sees you aren't going to butcher him, he scuttles up to you. "Welcome to my humble camp," he rasps. "I am Bartholomew, a traveler down on his luck. I would offer to share my food, but I have no food to give. I have something else, though."]]>
+    </string>
+    <string id="31">
+        <![CDATA[Taking the bait, you ask what he has. He removes a small, wooden wand from his rags. "This is my only possession, but a valuable item it is. It's a wand of massive, searing fireballs! It can be yours for only 500 gold."]]>
+    </string>
+    <string id="32">
+        <![CDATA["Have pity on me, please! I am poor, bereft of all help. Will you not buy this wand, so I may get a roof over my head?"]]>
+    </string>
+    <string id="33">
+        <![CDATA[You examine the wand. It's hot to the touch. Clearly magical. Still, this guy might be a con artist. Do you buy it?]]>
+    </string>
+    <string id="35">
+        <![CDATA[The man watches you sadly as you go. The last you see of him, he's gnawing a dry chicken bone.]]>
+    </string>
+    <string id="36">
+        <![CDATA[Ecstatic, the man takes your money and runs off through the woods (giving you the wand first, of course). The wand is a beautiful piece of finely carved wood. You hope it's worth what you paid.]]>
+    </string>
+    <string id="37">
+        <![CDATA[The man shakes his head. "I am sorry, but this wand is all I own of value in the world. I can give it for its fair price, no less."]]>
+    </string>
+    <string id="38">
+        <![CDATA[With all the political chaos and random patrols roving everywhere, it's only natural that some of the few monsters left in Valorim would gravitate here. One of them has just ambushed you, hoping for an easy (and large) meal ...]]>
+    </string>
+    <string id="39">
+        <![CDATA[After the explosion in Zaskiva, there's no way the people living in these farmhouses are even going to pretend to be friendly to you. They slam shut and lock their doors when they see you coming.]]>
+    </string>
+    <string id="40">
+        <![CDATA[People on Zaskiva Isle are a bit friendlier than people on the mainland. The extra security on the Isle makes them feel a bit more secure.]]>
+    </string>
+    <string id="41">
+        <![CDATA[That's why, when they see you approaching, they don't hesitate to come out, welcome you, and invite you in for pie. They ask you for news from the rest of the isle - not many people come out here now, so they take what they can get.]]>
+    </string>
+    <string id="42">
+        <![CDATA[After a while, you get up to depart. Before you go, they ask if you'd like to buy some rations.]]>
+    </string>
+    <string id="46">
+        <![CDATA[Friendly Farmers]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

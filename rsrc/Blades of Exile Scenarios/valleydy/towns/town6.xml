@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Visitors&apos; Quarters           </name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="47" right="47" />
+    <difficulty>2</difficulty>
+    <lighting>dark</lighting>
+    <flags />
+    <wandering>
+        <monster>38</monster>
+        <monster>38</monster>
+        <monster>38</monster>
+    </wandering>
+    <wandering>
+        <monster>38</monster>
+        <monster>38</monster>
+        <monster>40</monster>
+    </wandering>
+    <wandering>
+        <monster>39</monster>
+        <monster>115</monster>
+    </wandering>
+    <item id="0">
+        <type>24</type>
+    </item>
+    <item id="1">
+        <type>24</type>
+    </item>
+    <item id="2">
+        <type>24</type>
+    </item>
+    <item id="3">
+        <type>24</type>
+    </item>
+    <item id="4">
+        <type>24</type>
+    </item>
+    <item id="5">
+        <type>24</type>
+    </item>
+    <item id="6">
+        <type>223</type>
+    </item>
+    <item id="7">
+        <type>383</type>
+    </item>
+    <item id="8">
+        <type>8</type>
+    </item>
+    <item id="9">
+        <type>37</type>
+    </item>
+    <item id="10">
+        <type>20</type>
+    </item>
+    <item id="11">
+        <type>20</type>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>7</type>
+    </item>
+    <item id="13">
+        <type>10</type>
+    </item>
+    <item id="14">
+        <type>33</type>
+    </item>
+    <item id="15">
+        <type>262</type>
+    </item>
+    <item id="16">
+        <type>261</type>
+    </item>
+    <item id="17">
+        <type>0</type>
+        <charges>80</charges>
+    </item>
+    <item id="18">
+        <type>41</type>
+    </item>
+    <item id="19">
+        <type>0</type>
+        <charges>60</charges>
+    </item>
+    <item id="20">
+        <type>196</type>
+        <contained>true</contained>
+    </item>
+    <item id="21">
+        <type>196</type>
+        <contained>true</contained>
+    </item>
+    <item id="22">
+        <type>201</type>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>19</type>
+    </item>
+    <item id="24">
+        <type>19</type>
+    </item>
+    <item id="25">
+        <type>0</type>
+        <charges>62</charges>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>202</type>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>0</type>
+        <charges>55</charges>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>166</type>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>264</type>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>20</type>
+    </item>
+    <item id="31">
+        <type>20</type>
+    </item>
+    <item id="32">
+        <type>20</type>
+    </item>
+    <item id="33">
+        <type>20</type>
+    </item>
+    <item id="34">
+        <type>22</type>
+    </item>
+    <item id="35">
+        <type>23</type>
+    </item>
+    <item id="36">
+        <type>0</type>
+        <charges>6</charges>
+    </item>
+    <item id="37">
+        <type>1</type>
+        <charges>4</charges>
+    </item>
+    <item id="38">
+        <type>31</type>
+        <contained>true</contained>
+    </item>
+    <item id="39">
+        <type>3</type>
+        <charges>5</charges>
+        <always>true</always>
+    </item>
+    <item id="40">
+        <type>3</type>
+        <charges>4</charges>
+        <always>true</always>
+    </item>
+    <item id="41">
+        <type>3</type>
+        <charges>6</charges>
+    </item>
+    <item id="42">
+        <type>3</type>
+        <charges>5</charges>
+    </item>
+    <item id="43">
+        <type>172</type>
+    </item>
+    <item id="44">
+        <type>0</type>
+        <charges>250</charges>
+        <contained>true</contained>
+    </item>
+    <item id="45">
+        <type>-1</type>
+    </item>
+    <item id="46">
+        <type>-1</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
+    </item>
+    <creature id="0">
+        <type>187</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="6" y="0" />
+    </creature>
+    <creature id="1">
+        <type>41</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>44</face>
+    </creature>
+    <creature id="2">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>39</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="4">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>41</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>44</face>
+    </creature>
+    <creature id="7">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>65</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="12">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="13">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="14">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="15">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="16">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="17">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="18">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="19">
+        <type>40</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="20">
+        <type>40</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>44</face>
+    </creature>
+    <creature id="21">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="22">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="23">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="24">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="25">
+        <type>39</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="26">
+        <type>39</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="27">
+        <type>39</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="28">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="29">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="30">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="31">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="32">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="33">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="34">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="35">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="36">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="37">
+        <type>40</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>44</face>
+    </creature>
+    <creature id="38">
+        <type>40</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>44</face>
+    </creature>
+    <creature id="39">
+        <type>40</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>44</face>
+    </creature>
+    <area top="42" left="9" bottom="46" right="18">Goblin Meat Storage          </area>
+    <area top="35" left="12" bottom="40" right="18">Goblin Mushroom Farm         </area>
+    <area top="4" left="20" bottom="15" right="30">Goblin Temple                </area>
+    <area top="17" left="38" bottom="25" right="44">Goblin Eater Lair            </area>
+    <area top="17" left="20" bottom="23" right="30">Burial Chamber               </area>
+    <area top="35" left="1" bottom="46" right="7">Goblin&apos;s Mess Hall           </area>
+    <area top="35" left="20" bottom="46" right="30">Hall of Audience             </area>
+    <sign id="0">
+        <![CDATA[AND HEER WE MAKE SHRINE, AND DREEM OF DAY GATES OPEN AN WEE GO OUT TO BE ON SERFACE AGIN!]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[WURNING - No go heer - badbadbad]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[SACRUD HISTRY OF GULZUS TRIBE IN MEMRY OF DEAD AND LOZT ]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[WE SEE BAD MAGUZ LEEV CAVES AND GO IN CAVES TO GET NEW GRATE HOME TO LIV IN!]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[DEN WE GO IN BUT GATEZ CLOZ BEHIND US AND WE IS STUCK AND MAGES LAUGH AT US AND SAY PLACE CLOSED FOREVER AND WE STAY HERE AND LIVE AS WELL WE CAN]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[AND HEER WE MAKE SHRINE FOR OWN SACRUD PLACE THE PIT TO MORE MONSTERZ AND ONE DAY WEZ GOIN TO TOP AND SEE SUN AGAIN AND BE FREEE AND FIND DA BAD MAGEZ AND EET THEM - THE END]]>
+    </sign>
+    <sign id="6">
+        <![CDATA[Palhatis]]>
+    </sign>
+    <sign id="7">
+        <![CDATA[Vinnia]]>
+    </sign>
+    <sign id="8">
+        <![CDATA[Pergaltho]]>
+    </sign>
+    <sign id="9">
+        <![CDATA[Common Quarters|(Scratched below)|WARNUNG - BAD CREETUR FROM BELOW]]>
+    </sign>
+    <sign id="10">
+        <![CDATA[Whatever was written on this sign has been scratched out, and replaced with:|Bad monsturr did way, stay back or it eeet!!!]]>
+    </sign>
+    <sign id="11">
+        <![CDATA[HALL OF AUDIENCE]]>
+    </sign>
+    <string id="0">
+        <![CDATA[You peek inside the dresser and find, much to your surprise, a small piece of paper. It looks like it was torn out of a book. A quick inspection reveals it to be a page from the journal of someone named Palhatis:]]>
+    </string>
+    <string id="1">
+        <![CDATA["Curse that Vinnia! It is bad enough that we are being shut down. Must she also force us to abdicate all responsibility? I must do all I can to prevent the disaster I expect. If she finds out, though ..."]]>
+    </string>
+    <string id="2">
+        <![CDATA["It is clear that she listens to the Empire and no one else. She works against us as well. I know that she speaks against me. I can hear her now. 'Palhatis schemes against us. Palhatis is a traitor. Palhatis spreads rumors.'"]]>
+    </string>
+    <string id="3">
+        <![CDATA["I don't know what she plans against me, but my speaking out against the evacuation and what we're leaving behind have only made me enemies. I wonder what is to become of me."]]>
+    </string>
+    <string id="4">
+        <![CDATA[That's all that was written on the page.]]>
+    </string>
+    <string id="6">
+        <![CDATA[Two bodies are slumped against the wall of this cavern. They must have been mages. Their traditional robes still bear not only the insignia of Empire mages, but the dark blood stains of their owners. These two were stabbed to death.]]>
+    </string>
+    <string id="7">
+        <![CDATA[They've been here for quite some time. Only bones remain, leaving you to wonder: for what offense were these two mages brought here to be murdered?]]>
+    </string>
+    <string id="8">
+        <![CDATA[This desk was quite thoroughly cleaned out.]]>
+    </string>
+    <string id="9">
+        <![CDATA[What few books were left on these shelves have long since rotted away.]]>
+    </string>
+    <string id="10">
+        <![CDATA[It's impossible to mistake the meaning of the rune etched on the latch. This chest is clearly magically trapped. You may be able to disarm it, but it'll be tricky.]]>
+    </string>
+    <string id="11">
+        <![CDATA[Documents of a sensitive nature were once stored in this case. Most of them are gone now. Of the papers that remain, only one makes much sense. It refers to a new exciting development in the levels below: "A pair of magical pants."]]>
+    </string>
+    <string id="12">
+        <![CDATA[There is a rough map on the wall here, titled "The Upper Half of the School." The map was a mosaic of pretty stones, set into the wall. Most of the stones have been pried out by goblins, but you can make out some of what remains. ]]>
+    </string>
+    <string id="13">
+        <![CDATA[The upper half of the school has five levels: The Entry Hall, the Visitor's Quarters (where you are now), the Holding Cells, the Storage Level, and Administration.]]>
+    </string>
+    <string id="14">
+        <![CDATA[The Holding Cells and Storage Level are just below you, and are both reached by stairways on this level. From there, they both lead down to Administration. The map doesn't make clear what is below Administration.]]>
+    </string>
+    <string id="18">
+        <![CDATA[Not surprisingly, this shrine has been violated by the goblins in a very thorough and disgusting way. You clean it up a little bit, but it doesn't do much good.]]>
+    </string>
+    <string id="24">
+        <![CDATA[Goblins are not skilled in the area of trap design. The gas trap on this chest is pretty obvious and shouldn't be too difficult to disarm.]]>
+    </string>
+    <string id="25">
+        <![CDATA[You stumble into a goblin kitchen. They seem to be in the process of making a savory toadstool and giant rat stew. You decide to pass.]]>
+    </string>
+    <string id="26">
+        <![CDATA[This is very interesting ... the goblins seems to have painstakingly torn up the floor and walls in this area, and constructed their own faux caves walls in their place. It's like a simulated goblin cave environment.]]>
+    </string>
+    <string id="27">
+        <![CDATA[Totems are everywhere, as are goblin bones, carvings, and bits of graffiti. This must be some sort of temple or burial ground or sacred place or wherever goblins go to get serious.]]>
+    </string>
+    <string id="28">
+        <![CDATA[Considering the care and reverence with which the goblin bones in the hall have been laid out, you can only suppose that this is where their most valued and respected heroes have been laid to rest.]]>
+    </string>
+    <string id="29">
+        <![CDATA[You also see the passage down to the next level. It doesn't look like many goblins have gone down it.]]>
+    </string>
+    <string id="30">
+        <![CDATA[Once upon a time, a goblin tried to run through a fire barrier to see what was on the other side. It didn't quite make it.]]>
+    </string>
+    <string id="31">
+        <![CDATA[Not much left of its body. The gem it had in its pocket, however, still managed to survive.]]>
+    </string>
+    <string id="36">
+        <![CDATA[The audience hall of the School of Magery is dominated by a huge, intricately carved throne, no less impressive for the thick layer of dust that covers it. It almost seems to glow with its own light.]]>
+    </string>
+    <string id="37">
+        <![CDATA[Do you dare to sit in it?]]>
+    </string>
+    <string id="42">
+        <![CDATA[The moment you sit down, a flash of light erupts from the empty air in front of you. At first, you think you're done for! Then, you realize the only thing that's happened is that an insubstantial shade has appeared. It doesn't look hostile.]]>
+    </string>
+    <string id="43">
+        <![CDATA[It stands before you, staring vacantly at the throne. It's the ghost of a female mage, tall and imposing, with grim mien and piercing gaze. After a suitably dramatic pause, it speaks:]]>
+    </string>
+    <string id="44">
+        <![CDATA["I was Vinnia, last administration of the School of Magery. I regret to announce that the School has been closed at the direct order of the Emperor. It is considered officially Forbidden."]]>
+    </string>
+    <string id="45">
+        <![CDATA["That you are hearing this means you are here illegally. Not leaving immediately may result in the receiving of 30 years of probably fatal hard labor. Therefore, I strongly suggest you depart. Thank you."]]>
+    </string>
+    <string id="46">
+        <![CDATA[The shade disappears, and the throne loses its glow. The chamber is quiet once more.]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
+    </string>
+</town>

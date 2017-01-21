@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="150">
+        <title>Dylan</title>
+        <look>
+            <![CDATA[There is an Empire soldier standing here and watching you. he looks uncomfortable.]]>
+        </look>
+        <name>
+            <![CDATA["My name's Dylan."]]>
+        </name>
+        <job>
+            <![CDATA["Ummm ... I'm a soldier. I'm not sure how you got here, but this place is secret."]]>
+        </job>
+    </personality>
+    <personality id="151">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="152">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="153">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="154">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="155">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="156">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="157">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="158">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="159">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="150">
+        <keyword>sold</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah."]]>
+        </text>
+    </node>
+    <node for="150">
+        <keyword>plac</keyword>
+        <keyword>secr</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Umm, yeah. We didn't kill you because you're listed as working for us still. We got lists, you see. But you should leave."]]>
+        </text>
+    </node>
+    <node for="150">
+        <keyword>shou</keyword>
+        <keyword>leav</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We're keeping this place secret. So you should go. Now." That seems to be the end of the conversation.]]>
+        </text>
+    </node>
+</dialogue>

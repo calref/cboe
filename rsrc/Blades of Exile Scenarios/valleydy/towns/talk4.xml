@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="40">
+        <title>Pangle</title>
+        <look>
+            <![CDATA[You meet the owner of this farm, who is clearly upset about your intrusion into his home. He watches you stoically, clearly unwilling to speak. ]]>
+        </look>
+        <name>
+            <![CDATA[He grants you one word. "Pangle."]]>
+        </name>
+        <job>
+            <![CDATA[He stares at you quietly.]]>
+        </job>
+        <unknown>
+            <![CDATA[He doesn't seem to feel you're worth his time.]]>
+        </unknown>
+    </personality>
+    <personality id="41">
+        <title>Rover</title>
+        <look>
+            <![CDATA[Pangle's dog runs up to you and frolics around your feet.]]>
+        </look>
+        <name>
+            <![CDATA[To your great surprise, he says "Woof. I'm Rover. For what it's worth. Woof."]]>
+        </name>
+        <job>
+            <![CDATA["Well, I keep that worthless ball of wool in line."]]>
+        </job>
+        <unknown>
+            <![CDATA["Hmm. Bark."]]>
+        </unknown>
+    </personality>
+    <personality id="42">
+        <title>Grazer</title>
+        <look>
+            <![CDATA[You see a sheep. It's been recently shorn, and looks unhappy about its lot.]]>
+        </look>
+        <name>
+            <![CDATA[It looks dolefully up at you. "Baaa. Master calls me Grazer. Baa." Odd. This sheep seems to be talking.]]>
+        </name>
+        <job>
+            <![CDATA["Baaaa. I grow nice fur, to keep me warm and happy, and then that foul hound chases me and master cuts it all off. Baaa. It's a crime, I tell you."]]>
+        </job>
+        <unknown>
+            <![CDATA["Baaa?"]]>
+        </unknown>
+    </personality>
+    <personality id="43">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="44">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="45">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="46">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="47">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="48">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="49">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="40">
+        <keyword>kevi</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks surprised. "Oh ... you're Kevin's friend. Well, I suppose that's all right. You can waste some of my time."]]>
+        </text>
+    </node>
+    <node for="40">
+        <keyword>wast</keyword>
+        <keyword>time</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I was afraid you were one of the people from the Vale, bugging me and looking for charity."]]>
+        </text>
+    </node>
+    <node for="40">
+        <keyword>bugg</keyword>
+        <keyword>char</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You tell them that I hardly have enough to feed myself. I have enough problems. I can't spend my time helping them."]]>
+        </text>
+    </node>
+    <node for="40">
+        <keyword>prob</keyword>
+        <keyword>char</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Well, first, there's my arguing livestock. Then, there's running this farm by myself. And I'm a poor old man on top of it. I certainly have nothing of interest for adventurers such as yourselves."]]>
+        </text>
+    </node>
+    <node for="40">
+        <keyword>argu</keyword>
+        <keyword>live</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. Let's just say this. Don't talk to my dog or my sheep, unless you want to get your ear talked off. They've been arguing at each other for weeks. I can't get a moment's peace."]]>
+        </text>
+    </node>
+    <node for="40">
+        <keyword>farm</keyword>
+        <keyword>myse</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Just because the curse doesn't affect me doesn't mean my farm runs itself. It's a lot of work for an old man!"]]>
+        </text>
+    </node>
+    <node for="40">
+        <keyword>curs</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He anticipates your question. "No, I don't know why the curse isn't affecting me. It just doesn't. OK?"]]>
+        </text>
+    </node>
+    <node for="40">
+        <keyword>inte</keyword>
+        <keyword>adve</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He thinks. "Well, actually, I do have something that might interest you, for what it's worth. When I was younger, I was up hiking to the northeast, and I found a scroll tube. It has these papers in it, about the School of Magery."]]>
+        </text>
+    </node>
+    <node for="40">
+        <keyword>scho</keyword>
+        <keyword>mage</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He thinks. "I don't know nothin' about that. All I have is these old papers I found. If you want them, you can buy them. I'll give them to you. Just give me 500 gold, and the papers are yours."]]>
+        </text>
+    </node>
+    <node for="40">
+        <keyword>give</keyword>
+        <keyword>pape</keyword>
+        <type>buy-sdf</type>
+        <param>500</param>
+        <param>4</param>
+        <param>2</param>
+        <param>1</param>
+        <text>
+            <![CDATA[You pay the 500 gold. He counts it, and says "The scroll is out in the shed, in the south chest. Look there. And a pleasure doing business with ye'."]]>
+        </text>
+        <text>
+            <![CDATA[He frowns. "I'm a poor old man. You don't give me the gold, I won't give you the scroll."]]>
+        </text>
+    </node>
+    <node for="42">
+        <keyword>mast</keyword>
+        <keyword>crim</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Master takes my fur. Baaa. Later, he'll probably take my meat. Baaa. This is no kind of life, I can tell you."]]>
+        </text>
+    </node>
+    <node for="41">
+        <keyword>ball</keyword>
+        <keyword>wool</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Wonderful, wise master calls it Grazer. I call it Dummy."]]>
+        </text>
+    </node>
+    <node for="41">
+        <keyword>graz</keyword>
+        <keyword>dumm</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I'm supposed to keep it quiet and in line, so master can cut its fur off. Woof. When master is not around, though, it bugs me all the time. Bark. Do me a favor?"]]>
+        </text>
+    </node>
+    <node for="41">
+        <keyword>favo</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It sniffs you briefly, and thinks. "Go call it dummy for me. If I do it, master will hit me. You can do it, just fine."]]>
+        </text>
+    </node>
+    <node for="42">
+        <keyword>life</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Grazing on a mountainside, covered in a nice thick lair of my own fur. Baaa. That would be great. Baaa!"]]>
+        </text>
+    </node>
+    <node for="42">
+        <keyword>baaa</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It sniffs. "No. You have the inflection all wrong. Try this. Baaaa. Baaaaaaa. See? Put your heart into it."]]>
+        </text>
+    </node>
+    <node for="42">
+        <keyword>dumm</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It rears back in sheeply offense. "You're been talking to the dog, haven't you? Baaa!" It thinks. "Well, you tell him he's smelly. See how he likes that."]]>
+        </text>
+    </node>
+    <node for="41">
+        <keyword>smel</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He growls. "That worthless hunk of mutton! Woof! Tell him that! He's mutton! See what he says about that!"]]>
+        </text>
+    </node>
+    <node for="42">
+        <keyword>mutt</keyword>
+        <keyword>xxxx</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[The sheep looks more offended than you'd previously thought possible. "Baaa. That is a cruel thing to call a sheep! Well, let me tell you this. Rover hides all his bones and such under a rock in the trees. That will show him!"]]>
+        </text>
+        <text>
+            <![CDATA[The sheep turns away angrily.]]>
+        </text>
+    </node>
+</dialogue>

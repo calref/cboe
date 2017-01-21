@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Za-Khazi Run, North</name>
+    <comment>Comment</comment>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>171</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>173</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <area top="3" left="3" bottom="14" right="12">Unstable Caves               </area>
+    <area top="28" left="36" bottom="45" right="46">Unstable Caves               </area>
+    <area top="33" left="29" bottom="46" right="40">Unstable Caves               </area>
+    <string id="0">
+        <![CDATA[At the end of this passage, you find the wall is covered with massive clumps of lichen. You almost give it up as a dead end and turn back, until you notice a peculiar design on one exposed section of wall.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Looking closer, you see that there's more here than just wall and lichen. There's a door! It's mostly concealed by lichen, but it's a door nonetheless. The design you saw was a carving of a dragon. The door is covered with them.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You try to open the door, but it's locked. You find a handle and a keyhole, choked with lichen. Unfortunately, you don't have the key. Your best efforts don't budge the door. You leave.]]>
+    </string>
+    <string id="7">
+        <![CDATA[The door is locked. Just on a hunch, you try your keys. The key you recovered from the ice drakes unlocks the door!]]>
+    </string>
+    <string id="8">
+        <![CDATA[You open the door and find a small treasure cache. It's mostly silver and copper coins, many of them very old. There's also a flask and a beautiful old spear. While stealing a dragon's horde is a risky proposition, it's also awfully tempting ...]]>
+    </string>
+    <string id="13">
+        <![CDATA[Your keen eye and knowledge of Cave Lore tips you off that the ceiling in this area is very unstable. You pass through carefully, and avoid harm.]]>
+    </string>
+    <string id="14">
+        <![CDATA[The ceiling in this passage is very loose and unstable. As you pass, a few chunks of it obligingly fall on you. You try to spot signs of other loose rocks, but you don't know what to look for.]]>
+    </string>
+    <string id="15">
+        <![CDATA[When you reach the end of this cavern, a small cavequake hits! As stone starts flying and stone dust covers you, you hit the ground. When it passes, you are unharmed. However, the tunnel you came down to get here has caved in.]]>
+    </string>
+    <string id="16">
+        <![CDATA[At first, you think you're doomed. Then, upon inspection, you see that it wasn't as bad as it looks. You eventually dig your way out. However, it costs you over twelve hours of precious time.]]>
+    </string>
+    <string id="17">
+        <![CDATA[*]]>
+    </string>
+    <string id="18">
+        <![CDATA[*]]>
+    </string>
+    <string id="19">
+        <![CDATA[*]]>
+    </string>
+    <string id="20">
+        <![CDATA[*]]>
+    </string>
+    <string id="21">
+        <![CDATA[*]]>
+    </string>
+    <string id="22">
+        <![CDATA[*]]>
+    </string>
+    <string id="23">
+        <![CDATA[*]]>
+    </string>
+    <string id="24">
+        <![CDATA[*]]>
+    </string>
+    <string id="25">
+        <![CDATA[*]]>
+    </string>
+    <string id="26">
+        <![CDATA[*]]>
+    </string>
+    <string id="27">
+        <![CDATA[*]]>
+    </string>
+    <string id="28">
+        <![CDATA[*]]>
+    </string>
+    <string id="29">
+        <![CDATA[*]]>
+    </string>
+    <string id="30">
+        <![CDATA[*]]>
+    </string>
+    <string id="31">
+        <![CDATA[*]]>
+    </string>
+    <string id="32">
+        <![CDATA[*]]>
+    </string>
+    <string id="33">
+        <![CDATA[*]]>
+    </string>
+    <string id="34">
+        <![CDATA[*]]>
+    </string>
+    <string id="35">
+        <![CDATA[*]]>
+    </string>
+    <string id="36">
+        <![CDATA[*]]>
+    </string>
+    <string id="37">
+        <![CDATA[*]]>
+    </string>
+    <string id="38">
+        <![CDATA[*]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

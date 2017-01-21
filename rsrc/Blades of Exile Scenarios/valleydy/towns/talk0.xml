@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="0">
+        <title>Cmd. Terrance</title>
+        <look>
+            <![CDATA[You meet the commander for Fort Talrus. He looks like he was once a dashing, razor sharp soldier of the sort the Empire prides itself on. What ground him down into the weary bureaucrat you see before you you can only guess at.]]>
+        </look>
+        <name>
+            <![CDATA[He doesn't get up to introduce himself. He simply says, in a weary voice, "I am Terrance, commander of Fort Talrus."]]>
+        </name>
+        <job>
+            <![CDATA["I run Fort Talrus. Or I do so as well as I am allowed."]]>
+        </job>
+        <unknown>
+            <![CDATA[He looks confused.]]>
+        </unknown>
+    </personality>
+    <personality id="1">
+        <title>Maria</title>
+        <look>
+            <![CDATA[This woman looks like she's enjoyed a life of good health and ceaseless vigor. However, something is clearly chipping away at the edges of her vitality, and she isn't at all happy about it.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Maria. Welcome to my kitchen, honey. What can I do for you?"]]>
+        </name>
+        <job>
+            <![CDATA["I cook for the troops, and do what I can for the unfortunates who need help."]]>
+        </job>
+    </personality>
+    <personality id="2">
+        <title>Penelope</title>
+        <look>
+            <![CDATA[This woman has clearly spent a lot of time out in the sun, and a lot of time working with dirt. A trowel hangs from her belt.]]>
+        </look>
+        <name>
+            <![CDATA["I am Penelope. Greetings."]]>
+        </name>
+        <job>
+            <![CDATA["Well, I grow crops at the fort. It's sort of an unusual arrangement."]]>
+        </job>
+    </personality>
+    <personality id="3">
+        <title>Avizo</title>
+        <look>
+            <![CDATA[You meet a young magician, dressed in traveling clothes. However, you doubt he'll be doing any traveling any time soon. He is clearly quite ill. He doesn't look like he wants to talk with you.]]>
+        </look>
+        <name>
+            <![CDATA[He coughs, and gasps slightly. "I'm Avizo."]]>
+        </name>
+        <job>
+            <![CDATA["I am trying to flee the Vale. What is it to you?"]]>
+        </job>
+        <unknown>
+            <![CDATA[He coughs.]]>
+        </unknown>
+    </personality>
+    <personality id="4">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="5">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="6">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="7">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="8">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="9">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="0">
+        <keyword>fort</keyword>
+        <keyword>terr</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[For a moment, you see the flickers of fury in his eyes. His loss of composure only lasts a moment. "Fort Talrus, proud defender of Skylark Vale." His voice drips with irony.]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>skyl</keyword>
+        <keyword>vale</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Just look outside. Look at the valley. See how well we protected it. The disaster started years ago. Yet, despite my pleas, you're the first help we've received."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>help</keyword>
+        <keyword>allo</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You are the first, the only help the Empire has deigned to send us since the disaster began. And forgive me, but I strongly doubt you're sufficient for the task."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>doub</keyword>
+        <keyword>suff</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The disaster is of such a magnitude, I doubt a few scrubs such as yourself can handle it. However, you are help, and I won't waste you. I will assist you as best I can."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>wast</keyword>
+        <keyword>assi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Needless to say, we are granted few supplies. The Empire sends little to a 'Peaceful Area' such as this one." He clearly only keeps from shouting with great difficulty. "However, anything in the main storeroom you'd like you're welcome to."]]>
+        </text>
+        <text>
+            <![CDATA["Also, rest in your room whenever you want. Finally, I know where you can get more information."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>scru</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It means amateur, or inexperienced soldier. Not a strong insult, but not terribly friendly either.]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>disa</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It started six years ago. Slowly at first, barely noticeable. A bitter taste in the water. Then the taste got worse, like poison. Then the illness began."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>illn</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Actually, we've been spared it up here, unlike the valley below. The animals have sickened. The adults felt constantly ill. The worst fate, however, fell on the children."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>fate</keyword>
+        <keyword>chil</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He shakes his head, sadly. "They got sick. They died. Most of them, anyway. Everyone started moving away. Those who didn't, well, they're fools. And that's the story. Not much more assistance I can give you."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>stor</keyword>
+        <keyword>info</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Mayor Crouch, in Sweetgrove, to the north. She knows pretty much everyone in the Vale. Someone might have a clue to what caused the disaster. I can only hope so."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>coug</keyword>
+        <keyword>gasp</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[His wheezes have a distinctly tubercular sound to them.]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>flee</keyword>
+        <keyword>vale</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Leaving Skylark Vale. How could anyone stay?"]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>grea</keyword>
+        <keyword>valu</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He doesn't care to talk about it. His eyes start to tear up, and he bows his head and turns away.]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>rune</keyword>
+        <keyword>ston</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[His eyes widen. "Why do you wish to know of that? I had thought all thought my quest was futile."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>ques</keyword>
+        <keyword>futi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He is wracked by a coughing spasm. When he straightens up again, his lips are flecked with red. "I'm not doing well. Someone should know. There are caves north of Sweetgrove. I was trying to explore them."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>swee</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Town. North of here. Living hell."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>cave</keyword>
+        <keyword>expl</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["A lot of people know about them, but nobody really knows why they're there. There are locked doors there. Some people think mages lived there, or something. Anyway, I started to think they might have something to do with the curse."]]>
+        </text>
+        <text>
+            <![CDATA["So, I tried to open one of the doors."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>curs</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The valley's affliction. Why wouldn't the caves have something to do with it? After all, the illnesses came out of nowhere. Might not the cause be similarly bizarre?"]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>open</keyword>
+        <keyword>door</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I searched them, and found a round stone. It had runes on it, and matched a depression on one of the doors. I put the stone in, and it glowed briefly, but nothing else happened. It terrified me, so I fled."]]>
+        </text>
+        <text>
+            <![CDATA[He sighs. "Then I got sick. No more exploring for me. I stored the object back in Sweetgrove."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>stor</keyword>
+        <keyword>obje</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Go to Sweetgrove. It's in Avizo's Supplies. I was leaving as fast as I could - the stone got left behind. I think it rolled behind one of my plants."]]>
+        </text>
+        <text>
+            <![CDATA[He shakes his head. "I should have left much sooner. Now I've lost everything."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>lost</keyword>
+        <keyword>ever</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He suddenly bursts into tears. Whatever he just remembered, he doesn't want to discuss it. He turns away.]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>troo</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["There are still some soldiers here, though they feel pretty useless, poor lambs. What assails this valley, steel can't defeat."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>unfo</keyword>
+        <keyword>help</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["There are two types of crops in the Skylark Vale: meager and dead. Though it's against the rules, those worst off sometimes come up here so I can feed them some of the Empire rations."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>assa</keyword>
+        <keyword>vall</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[The look on her face is balanced evenly between pity and fear. "No need to ask me. Just go into Sweetgrove and look around. It'll break your heart."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>meag</keyword>
+        <keyword>dead</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Dead's more common."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>empi</keyword>
+        <keyword>rati</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The Empire has saved many lives." She frowns. "Against its will."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>skyl</keyword>
+        <keyword>vale</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The Vale has three towns in it. People from all of them have come for our help. There's Sweetgrove, Blinlock, and Marralis."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>swee</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Just north of here. The largest town in the Vale."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>blin</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It's a mining town to the northwest."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>marr</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That's the worst case. It was a thriving farming village, well downriver to the west. Now?" She shakes her head sadly. "Awful. It's just awful."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>grow</keyword>
+        <keyword>crop</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She shrugs and picks dirt out from under her fingernails. "It's pretty unusual, I know, for an Empire fort to have a live-in farmer. The curse has caused some arrangements to be made."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>unus</keyword>
+        <keyword>arra</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["This is one of the few areas around unaffected by the curse. Or at least, not that affected. We grow some crops here, to help out the unfortunates below."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>curs</keyword>
+        <keyword>unfo</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Commander Terrance will probably want to speak to you about it, but all you really need to know you can find out by drinking the river water. That was the first thing that went wrong."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>comm</keyword>
+        <keyword>terr</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["He's in the office in the southwest corner." She looks sad. "It's a shame ... he blames himself a lot for being unable to deal with the curse. It's really worn him down."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>rive</keyword>
+        <keyword>wate</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It burns. It makes your tongue feel like it's been out in the sun for hours. That's why I grow crops here ... they get rain water, not river water."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>went</keyword>
+        <keyword>wron</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It all started five or six years ago. Terrance will tell you more."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>anyo</keyword>
+        <keyword>stay</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It's just too dangerous. And I had to leave things of great value behind, as well." This clearly upsets him.]]>
+        </text>
+    </node>
+</dialogue>

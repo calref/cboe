@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<scenario boes="2.0.0">
+    <title>Bandit Busywork</title>
+    <icon>4</icon>
+    <id></id>
+    <version>1.0.0</version>
+    <language>en-US</language>
+    <author>
+        <name>Name not given</name>
+        <email>Spiderweb Software, Inc. PO Box 85659, Seattle, WA 98145, (206) 789-4438.</email>
+    </author>
+    <text>
+        <teaser>Save a small village from mysterious bandits.</teaser>
+        <teaser>By Jeff Vogel, C. 1997, All Rights Reserved</teaser>
+        <intro-msg>
+            <![CDATA[Adventurers have to do a lot more than just save the world. There are never any shortages of stray monsters, small uprisings, and other difficulties that require the violent touch of a small band of heroes.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[This is one of those cases. You were contacted by the commander of the Empire city of Krizsan and asked to travel to the city of Cavala in nearby Mrrnah Hollow. A number of caravans have been attacked by bandits there.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[You are to find the bandit hideout and wipe the vermin out. This may be difficult, however. Nobody has yet been able to figure out where the bandits live. You may have to do a bit of investigating first.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[Mrrnah Hollow is only a two day's march from Krizsan, and you arrive there without difficulty. After resting for the night in an abandoned home at the entrance to the valley, you wake up, refreshed and ready to begin your investigation.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[The town of Cavala is a day's march to the north. It might be a good place to begin.]]>
+        </intro-msg>
+    </text>
+    <ratings>
+        <content>G</content>
+        <difficulty>1</difficulty>
+    </ratings>
+    <flags>
+        <adjust-difficulty>true</adjust-difficulty>
+        <legacy>false</legacy>
+        <custom-graphics>false</custom-graphics>
+    </flags>
+    <creator>
+        <type>oboe</type>
+        <version>2.0.0</version>
+        <os>Apple Mac OS X Version 10.7.5 (Build 11G63)</os>
+    </creator>
+    <game>
+        <num-towns>4</num-towns>
+        <out-width>1</out-width>
+        <out-height>3</out-height>
+        <start-town>1</start-town>
+        <town-start x="16" y="16" />
+        <outdoor-start x="0" y="2" />
+        <sector-start x="29" y="29" />
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[End special item descs]]>
+            </description>
+        </special-item>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Healing</name>
+            <type>dead</type>
+            <prompt>heal</prompt>
+            <face>41</face>
+            <entries>
+                <heal>0</heal>
+                <heal>1</heal>
+                <heal>2</heal>
+                <heal>4</heal>
+                <heal>9</heal>
+                <heal>5</heal>
+                <heal>6</heal>
+                <heal>7</heal>
+                <heal>8</heal>
+            </entries>
+        </shop>
+        <shop>
+            <name>Winslet&apos;s Spells</name>
+            <type>live</type>
+            <prompt>priest</prompt>
+            <face>43</face>
+            <entries>
+                <priest-spell>30</priest-spell>
+                <priest-spell>31</priest-spell>
+                <priest-spell>32</priest-spell>
+                <priest-spell>33</priest-spell>
+                <priest-spell>34</priest-spell>
+                <priest-spell>35</priest-spell>
+                <priest-spell>36</priest-spell>
+                <priest-spell>37</priest-spell>
+            </entries>
+        </shop>
+        <shop>
+            <name>Cameron&apos;s Weapons</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">37</item>
+                <item quantity="infinite">38</item>
+                <item quantity="infinite">39</item>
+                <item quantity="infinite">40</item>
+                <item quantity="infinite">41</item>
+                <item quantity="infinite">42</item>
+                <item quantity="infinite">43</item>
+                <item quantity="infinite">44</item>
+                <item quantity="infinite">45</item>
+                <item quantity="infinite">46</item>
+                <item quantity="infinite">47</item>
+                <item quantity="infinite">48</item>
+                <item quantity="infinite">49</item>
+                <item quantity="infinite">50</item>
+                <item quantity="infinite">51</item>
+                <item quantity="infinite">52</item>
+            </entries>
+        </shop>
+        <string id="0">
+            <![CDATA[*Begin special strs]]>
+        </string>
+        <string id="1">
+            <![CDATA[*]]>
+        </string>
+        <string id="2">
+            <![CDATA[*]]>
+        </string>
+        <string id="3">
+            <![CDATA[*]]>
+        </string>
+        <string id="4">
+            <![CDATA[*]]>
+        </string>
+        <string id="5">
+            <![CDATA[*]]>
+        </string>
+        <string id="6">
+            <![CDATA[*]]>
+        </string>
+        <string id="7">
+            <![CDATA[*]]>
+        </string>
+        <string id="8">
+            <![CDATA[*]]>
+        </string>
+        <string id="9">
+            <![CDATA[*]]>
+        </string>
+        <string id="10">
+            <![CDATA[*]]>
+        </string>
+        <string id="11">
+            <![CDATA[*]]>
+        </string>
+        <string id="12">
+            <![CDATA[*]]>
+        </string>
+        <string id="13">
+            <![CDATA[*]]>
+        </string>
+        <string id="14">
+            <![CDATA[*]]>
+        </string>
+        <string id="15">
+            <![CDATA[*]]>
+        </string>
+        <string id="16">
+            <![CDATA[*]]>
+        </string>
+        <string id="17">
+            <![CDATA[*]]>
+        </string>
+        <string id="18">
+            <![CDATA[*]]>
+        </string>
+        <string id="19">
+            <![CDATA[*]]>
+        </string>
+        <string id="20">
+            <![CDATA[*]]>
+        </string>
+        <string id="21">
+            <![CDATA[*]]>
+        </string>
+        <string id="22">
+            <![CDATA[*]]>
+        </string>
+        <string id="23">
+            <![CDATA[*]]>
+        </string>
+        <string id="24">
+            <![CDATA[*]]>
+        </string>
+        <string id="25">
+            <![CDATA[*]]>
+        </string>
+        <string id="26">
+            <![CDATA[*]]>
+        </string>
+        <string id="27">
+            <![CDATA[*]]>
+        </string>
+        <string id="28">
+            <![CDATA[*]]>
+        </string>
+        <string id="29">
+            <![CDATA[*]]>
+        </string>
+        <string id="30">
+            <![CDATA[*]]>
+        </string>
+        <string id="31">
+            <![CDATA[*]]>
+        </string>
+        <string id="32">
+            <![CDATA[*]]>
+        </string>
+        <string id="33">
+            <![CDATA[*]]>
+        </string>
+        <string id="34">
+            <![CDATA[*]]>
+        </string>
+        <string id="35">
+            <![CDATA[*]]>
+        </string>
+        <string id="36">
+            <![CDATA[*]]>
+        </string>
+        <string id="37">
+            <![CDATA[*]]>
+        </string>
+        <string id="38">
+            <![CDATA[*]]>
+        </string>
+        <string id="39">
+            <![CDATA[*]]>
+        </string>
+        <string id="40">
+            <![CDATA[*]]>
+        </string>
+        <string id="41">
+            <![CDATA[*]]>
+        </string>
+        <string id="42">
+            <![CDATA[*]]>
+        </string>
+        <string id="43">
+            <![CDATA[*]]>
+        </string>
+        <string id="44">
+            <![CDATA[*]]>
+        </string>
+        <string id="45">
+            <![CDATA[*]]>
+        </string>
+        <string id="46">
+            <![CDATA[*]]>
+        </string>
+        <string id="47">
+            <![CDATA[*]]>
+        </string>
+        <string id="48">
+            <![CDATA[*]]>
+        </string>
+        <string id="49">
+            <![CDATA[*]]>
+        </string>
+        <string id="50">
+            <![CDATA[*]]>
+        </string>
+        <string id="51">
+            <![CDATA[*]]>
+        </string>
+        <string id="52">
+            <![CDATA[*]]>
+        </string>
+        <string id="53">
+            <![CDATA[*]]>
+        </string>
+        <string id="54">
+            <![CDATA[*]]>
+        </string>
+        <string id="55">
+            <![CDATA[*]]>
+        </string>
+        <string id="56">
+            <![CDATA[*]]>
+        </string>
+        <string id="57">
+            <![CDATA[*]]>
+        </string>
+        <string id="58">
+            <![CDATA[*]]>
+        </string>
+        <string id="59">
+            <![CDATA[*]]>
+        </string>
+        <string id="60">
+            <![CDATA[*]]>
+        </string>
+        <string id="61">
+            <![CDATA[*]]>
+        </string>
+        <string id="62">
+            <![CDATA[*]]>
+        </string>
+        <string id="63">
+            <![CDATA[*]]>
+        </string>
+        <string id="64">
+            <![CDATA[*]]>
+        </string>
+        <string id="65">
+            <![CDATA[*]]>
+        </string>
+        <string id="66">
+            <![CDATA[*]]>
+        </string>
+        <string id="67">
+            <![CDATA[*]]>
+        </string>
+        <string id="68">
+            <![CDATA[*]]>
+        </string>
+        <string id="69">
+            <![CDATA[*]]>
+        </string>
+        <string id="70">
+            <![CDATA[*]]>
+        </string>
+        <string id="71">
+            <![CDATA[*]]>
+        </string>
+        <string id="72">
+            <![CDATA[*]]>
+        </string>
+        <string id="73">
+            <![CDATA[*]]>
+        </string>
+        <string id="74">
+            <![CDATA[*]]>
+        </string>
+        <string id="75">
+            <![CDATA[*]]>
+        </string>
+        <string id="76">
+            <![CDATA[*]]>
+        </string>
+        <string id="77">
+            <![CDATA[*]]>
+        </string>
+        <string id="78">
+            <![CDATA[*]]>
+        </string>
+        <string id="79">
+            <![CDATA[*]]>
+        </string>
+        <string id="80">
+            <![CDATA[*]]>
+        </string>
+        <string id="81">
+            <![CDATA[*]]>
+        </string>
+        <string id="82">
+            <![CDATA[*]]>
+        </string>
+        <string id="83">
+            <![CDATA[*]]>
+        </string>
+        <string id="84">
+            <![CDATA[*]]>
+        </string>
+        <string id="85">
+            <![CDATA[*]]>
+        </string>
+        <string id="86">
+            <![CDATA[*]]>
+        </string>
+        <string id="87">
+            <![CDATA[*]]>
+        </string>
+        <string id="88">
+            <![CDATA[*]]>
+        </string>
+        <string id="89">
+            <![CDATA[*]]>
+        </string>
+        <string id="90">
+            <![CDATA[*]]>
+        </string>
+        <string id="91">
+            <![CDATA[*]]>
+        </string>
+        <string id="92">
+            <![CDATA[*]]>
+        </string>
+        <string id="93">
+            <![CDATA[*]]>
+        </string>
+        <string id="94">
+            <![CDATA[*]]>
+        </string>
+        <string id="95">
+            <![CDATA[*]]>
+        </string>
+        <string id="96">
+            <![CDATA[*]]>
+        </string>
+        <string id="97">
+            <![CDATA[*]]>
+        </string>
+        <string id="98">
+            <![CDATA[*]]>
+        </string>
+        <string id="99">
+            <![CDATA[*End special strs]]>
+        </string>
+        <journal id="0">
+            <![CDATA[Begin journal strs]]>
+        </journal>
+        <journal id="49">
+            <![CDATA[End journal strs]]>
+        </journal>
+    </game>
+    <editor>
+        <default-ground>2</default-ground>
+        <last-out-section x="0" y="0" />
+        <last-town>0</last-town>
+    </editor>
+</scenario>

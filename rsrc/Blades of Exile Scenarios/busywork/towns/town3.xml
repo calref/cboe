@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Bandit Hideout               </name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="47" right="44" />
+    <difficulty>3</difficulty>
+    <lighting>dark</lighting>
+    <flags />
+    <wandering>
+        <monster>18</monster>
+        <monster>18</monster>
+        <monster>18</monster>
+    </wandering>
+    <wandering>
+        <monster>19</monster>
+    </wandering>
+    <item id="0">
+        <type>383</type>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>383</type>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>383</type>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>383</type>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>383</type>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>38</type>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>139</type>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>139</type>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>139</type>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>139</type>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>99</type>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>2</type>
+        <charges>60</charges>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>15</type>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>16</type>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>1</type>
+        <charges>18</charges>
+        <contained>true</contained>
+    </item>
+    <item id="18">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="19">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="20">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="21">
+        <type>6</type>
+        <contained>true</contained>
+    </item>
+    <item id="22">
+        <type>6</type>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>7</type>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>7</type>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>383</type>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>37</type>
+    </item>
+    <item id="27">
+        <type>16</type>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>16</type>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>16</type>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>2</type>
+        <charges>5</charges>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>1</type>
+        <charges>4</charges>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>128</type>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>56</type>
+        <contained>true</contained>
+    </item>
+    <item id="34">
+        <type>112</type>
+    </item>
+    <item id="35">
+        <type>115</type>
+    </item>
+    <item id="36">
+        <type>13</type>
+    </item>
+    <item id="37">
+        <type>39</type>
+    </item>
+    <item id="38">
+        <type>40</type>
+    </item>
+    <item id="39">
+        <type>139</type>
+    </item>
+    <item id="40">
+        <type>144</type>
+    </item>
+    <item id="41">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="42">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="43">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="44">
+        <type>201</type>
+        <contained>true</contained>
+    </item>
+    <item id="45">
+        <type>45</type>
+    </item>
+    <item id="46">
+        <type>45</type>
+    </item>
+    <item id="47">
+        <type>40</type>
+    </item>
+    <item id="48">
+        <type>40</type>
+    </item>
+    <item id="49">
+        <type>41</type>
+    </item>
+    <item id="50">
+        <type>41</type>
+    </item>
+    <item id="51">
+        <type>49</type>
+    </item>
+    <item id="52">
+        <type>4</type>
+        <contained>true</contained>
+    </item>
+    <item id="53">
+        <type>20</type>
+    </item>
+    <item id="54">
+        <type>383</type>
+        <contained>true</contained>
+    </item>
+    <item id="55">
+        <type>0</type>
+        <charges>143</charges>
+        <contained>true</contained>
+    </item>
+    <item id="56">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="57">
+        <type>6</type>
+        <contained>true</contained>
+    </item>
+    <item id="58">
+        <type>125</type>
+        <contained>true</contained>
+    </item>
+    <item id="59">
+        <type>0</type>
+        <charges>315</charges>
+        <contained>true</contained>
+    </item>
+    <item id="60">
+        <type>218</type>
+        <contained>true</contained>
+    </item>
+    <item id="61">
+        <type>337</type>
+        <contained>true</contained>
+    </item>
+    <item id="62">
+        <type>307</type>
+        <contained>true</contained>
+    </item>
+    <item id="63">
+        <type>378</type>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="1">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="2">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="3">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="4">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="5">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="6">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="7">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="8">
+        <type>19</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="9">
+        <type>19</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="10">
+        <type>27</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>18</face>
+    </creature>
+    <creature id="11">
+        <type>19</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="12">
+        <type>19</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="13">
+        <type>19</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="14">
+        <type>19</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="15">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="16">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="17">
+        <type>45</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="18">
+        <type>66</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="19">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="20">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="21">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="22">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="23">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="24">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="25">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="26">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="27">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="28">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="29">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="30">
+        <type>188</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>80</face>
+        <sdf x="3" y="5" />
+        <onkill>9</onkill>
+    </creature>
+    <creature id="31">
+        <type>19</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="32">
+        <type>19</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="33">
+        <type>27</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>18</face>
+    </creature>
+    <creature id="34">
+        <type>73</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="35">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="36">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="37">
+        <type>116</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="38">
+        <type>171</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="39">
+        <type>171</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <area top="40" left="22" bottom="42" right="28">Throg&apos;s Lair                 </area>
+    <area top="28" left="32" bottom="45" right="40">Totem Caverns                </area>
+    <area top="1" left="36" bottom="8" right="44">Worm Lair                    </area>
+    <area top="1" left="1" bottom="11" right="13">Bandit Cavern                </area>
+    <area top="30" left="1" bottom="32" right="17">Hall of Archers              </area>
+    <area top="40" left="22" bottom="42" right="29">Ogre Lair                    </area>
+    <area top="21" left="25" bottom="28" right="31">Cameron&apos;s Chambers           </area>
+    <area top="33" left="9" bottom="39" right="16">Training Room                </area>
+    <area top="34" left="1" bottom="46" right="7">Dining Hall                  </area>
+    <string id="0">
+        <![CDATA[You finally make your way into the Bandit's Hideout. It was well concealed ... mounds of brush were heaped in front of the entrance, and dirt was piles onto the brush. You were only able to see it from right outside.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Once you're in, you're greeted by a grim, stomach turning sight. The cavern is filled with grisly totems, weapons and bones taken from the merchants killed while trying to leave Mrrnah Hollow. They must be trying to scare off anyone who gets that far.]]>
+    </string>
+    <string id="2">
+        <![CDATA[They didn't count on you, though ...]]>
+    </string>
+    <string id="6">
+        <![CDATA[Watching the floor carefully, you can see the signs of many passing feet. The bandits must have been marching in and out of here for months, carrying supplies and building their lair.]]>
+    </string>
+    <string id="7">
+        <![CDATA[Interesting ... you notice that the signs of people passing stop abruptly here. It doesn't look like anyone has walked down this corridor for a while.]]>
+    </string>
+    <string id="8">
+        <![CDATA[As you search this bunch of stalagmites, one of them moves slightly when your hand brushes against it. You push the loose stalagmite, and find that it moves like a lever.]]>
+    </string>
+    <string id="9">
+        <![CDATA[You puch it until it stops. When it does, you hear a loud click, followed by a grinding noise from the west.]]>
+    </string>
+    <string id="10">
+        <![CDATA[This is a storeroom, filled with new, well oiled weapons. You recognize them ... they were clearly made in Cameron's smithy back in Cavala. Now you know why he was working so hard.]]>
+    </string>
+    <string id="11">
+        <![CDATA[When you move the dried ogre head, you hear a clicking noise.]]>
+    </string>
+    <string id="12">
+        <![CDATA[With a final, decisive blow, Cameron, leader of the bandits and traitor of Cavala, dies. With him dies the bandits' dominance in Mrrnah Hollow.]]>
+    </string>
+    <string id="13">
+        <![CDATA[With this victory, your mission here is completed. Thanks to you Cavala will be able to grow and prosper once again.]]>
+    </string>
+    <string id="18">
+        <![CDATA[*]]>
+    </string>
+    <string id="19">
+        <![CDATA[*]]>
+    </string>
+    <string id="20">
+        <![CDATA[*]]>
+    </string>
+    <string id="21">
+        <![CDATA[*]]>
+    </string>
+    <string id="22">
+        <![CDATA[*]]>
+    </string>
+    <string id="23">
+        <![CDATA[*]]>
+    </string>
+    <string id="24">
+        <![CDATA[*]]>
+    </string>
+    <string id="25">
+        <![CDATA[*]]>
+    </string>
+    <string id="26">
+        <![CDATA[*]]>
+    </string>
+    <string id="27">
+        <![CDATA[*]]>
+    </string>
+    <string id="28">
+        <![CDATA[*]]>
+    </string>
+    <string id="29">
+        <![CDATA[*]]>
+    </string>
+    <string id="30">
+        <![CDATA[*]]>
+    </string>
+    <string id="31">
+        <![CDATA[*]]>
+    </string>
+    <string id="32">
+        <![CDATA[*]]>
+    </string>
+    <string id="33">
+        <![CDATA[*]]>
+    </string>
+    <string id="34">
+        <![CDATA[*]]>
+    </string>
+    <string id="35">
+        <![CDATA[*]]>
+    </string>
+    <string id="36">
+        <![CDATA[*]]>
+    </string>
+    <string id="37">
+        <![CDATA[*]]>
+    </string>
+    <string id="38">
+        <![CDATA[*]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
+    </string>
+</town>

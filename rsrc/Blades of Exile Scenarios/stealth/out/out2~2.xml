@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Southern Morrow&apos;s Isle</name>
+    <comment>Comment</comment>
+    <sign id="0">
+        <![CDATA[Morrow Marshes - east]]>
+    </sign>
+    <area top="26" left="0" bottom="31" right="4">Near Willow                  </area>
+    <area top="23" left="34" bottom="28" right="38">Near Liam                    </area>
+    <area top="26" left="1" bottom="31" right="4">Near Willow                  </area>
+    <area top="19" left="1" bottom="37" right="16">Farmlands                    </area>
+    <area top="20" left="28" bottom="34" right="42">Farmlands                    </area>
+    <string id="0">
+        <![CDATA[Although much of Morrow's Isle seems to be run feudally, these farmers, at least, own their own farms. They're arranged in a neat, tight clusters, and surrounded by a small number of moderately armed guards.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Neither the guards nor the farmers seem pleased to see you.]]>
+    </string>
+    <string id="6">
+        <![CDATA[When you get close to the walls, halberds start appearing along the walls, some held by guards, some by edgy farmers. They don't even bother to say anything to you. They watch grimly and wait until you go away.]]>
+    </string>
+    <string id="7">
+        <![CDATA[Although much of Morrow's Isle seems to be run feudally, these farmers, at least, own their own farms. They're arranged in neat, tight clusters and surrounded by a small number of moderately armed guards.]]>
+    </string>
+    <string id="8">
+        <![CDATA[When you get close, several of the farmers come to the walls, and watch you nervously. At least they aren't attacking.]]>
+    </string>
+    <string id="13">
+        <![CDATA[You walk up slowly and carefully, weapons sheathed and hands out. After a few minutes of whispered discussion, one of the farmers comes out to see you. He has a sword in one hand and a pie in the other. ]]>
+    </string>
+    <string id="14">
+        <![CDATA[When you don't attack, he puts the sword away, and you can settle down to talk and eat. He introduces himself. "I'm Charmo, head of this homestead."]]>
+    </string>
+    <string id="15">
+        <![CDATA["My apologies for the cold welcome. In these days of the rebels, the hospitality of these parts has suffered of late. Can't blame us, though, considering what happened in Fahl."]]>
+    </string>
+    <string id="16">
+        <![CDATA[You ask about it. "It was just a peaceful logging village, up in the forests to the north. Those damned rebels, those Hill Runners, they leveled the place. Killed everyone. Burned the place to the ground. No survivors."]]>
+    </string>
+    <string id="17">
+        <![CDATA["Anyone who could do something like that isn't human. Nobody here wants to be the next. That's for sure." He stands. "Well, sorry to be so short, but we have crops that need tending."]]>
+    </string>
+    <string id="18">
+        <![CDATA[You thank him for the snack, and depart.]]>
+    </string>
+    <string id="19">
+        <![CDATA[The farmers here recognize you, and wave. They don't want to talk, however, and don't bring you pie. Oh well.]]>
+    </string>
+    <string id="20">
+        <![CDATA[The clusters of farmhouses in these parts are newer than elsewhere, only built a few years before. Farmers work hard among their neat rows. When you get close, however, all work stops, and people watch your approach nervously.]]>
+    </string>
+    <string id="26">
+        <![CDATA[When you get close, the farmers struggle to decide between giving in to their natural hospitality and succumbing to caution and common sense. Caution wins.]]>
+    </string>
+    <string id="27">
+        <![CDATA[Before you get close, they shout out that perhaps it would increase the happiness of all concerned if you just turned back. Since there's not much else for you to do here, you leave.]]>
+    </string>
+    <string id="28">
+        <![CDATA[The clusters of farmhouses in these parts are newer than elsewhere, only built a few years before. Farmers work hard among their neat rows. When you get close, however, all work stops, and people watch your approach nervously.]]>
+    </string>
+    <string id="34">
+        <![CDATA[When the farmers see that you're adventurers, they launch into a spirited debate. You hear the arguments going on for several minutes. Finally, one of them, a middle aged woman, walks briskly out to greet you.]]>
+    </string>
+    <string id="35">
+        <![CDATA["I'm Bella," she says quickly. "The others don't approve of this, but hell with them. This is important. They're worried about rebels, but we have a worse problem. Our farms have been raided by hill giants lately."]]>
+    </string>
+    <string id="36">
+        <![CDATA["That's right. Hill giants. They aren't all dead. There's a band of them in the forest to the north, and we can pay well anyone who wipes them out. They live at the south end of the woods, at a path with two boulders by it."]]>
+    </string>
+    <string id="37">
+        <![CDATA["Kill them and return, and we'll pay you. Now I have to return. Sorry I can't offer some pie. Bye." She walks back the way she came.]]>
+    </string>
+    <string id="40">
+        <![CDATA[Bella comes out and speaks with you. When she finds out you haven't killed the giants, the conversation comes to an abrupt end.]]>
+    </string>
+    <string id="41">
+        <![CDATA[When they recognize you as their helpers, one of them comes out, greets you, and gives you a pie. It's tasty.]]>
+    </string>
+    <string id="42">
+        <![CDATA[You return to the farms, bringing news of your victory against the giants. Their worries about you gone, they invite you in for a traditional, hearty welcome dinner, complete with folk songs and homemade pies.]]>
+    </string>
+    <string id="43">
+        <![CDATA[At the end of the meal, after all the speeches of gratitude, Bella brings you a reward: a beautiful silver ring. "This heirloom has been in my family for many years."]]>
+    </string>
+    <string id="44">
+        <![CDATA["It hurts to give it away, but that pain is nothing compared to that I felt when the giants burnt down my farm. Thank you for your help, and good luck to you in your adventures."]]>
+    </string>
+    <string id="45">
+        <![CDATA[After they weigh you down with leftovers, you depart. They wave to you until you're out of sight.]]>
+    </string>
+    <string id="48">
+        <![CDATA[You reach the end of the path Bella described to you, and, indeed, you find a place which was, up until recently, settled by giants. The flattened earth and toppled trees are evidence enough of that.]]>
+    </string>
+    <string id="49">
+        <![CDATA[However, the tribe has packed up and moved on to somewhere else. The massive tracks lead off to the north.]]>
+    </string>
+    <string id="50">
+        <![CDATA[At the end of the path, you find a patch of holly. It's a powerful (and fast growing) alchemical ingredient.]]>
+    </string>
+    <string id="56">
+        <![CDATA[Someone boating down this river had an unfortunate accident. You find his body by his gutted boat. His neck was broken. His clothes were torn, but his axe is still intact.]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

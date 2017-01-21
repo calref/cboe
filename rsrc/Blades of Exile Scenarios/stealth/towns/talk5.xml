@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="50">
+        <title>O&apos;Grady</title>
+        <look>
+            <![CDATA[There is an enormous man sitting behind the desk, signing orders and looking over troop reports. He is wearing the armor of an Empire Dervish, the highest honor the Empire can bestow on one of its soldiers.]]>
+        </look>
+        <name>
+            <![CDATA[He looks up at you, unconvinced that you're worth his time. "I'm Dervish O'Grady."]]>
+        </name>
+        <job>
+            <![CDATA["I'm the commander for Muck. Can I help you?"]]>
+        </job>
+        <unknown>
+            <![CDATA[He shakes his head.]]>
+        </unknown>
+    </personality>
+    <personality id="51">
+        <title>Brosterman</title>
+        <look>
+            <![CDATA[You find a weary old man, sitting slumped over in a crude wooden chair. His clothes were once luxurious and expensive, but he's been wearing them for a long time. He watches you nervously when you enter.]]>
+        </look>
+        <name>
+            <![CDATA[He stands and bows to you. "I am Lord Brosterman."]]>
+        </name>
+        <job>
+            <![CDATA[He sighs and shakes his head slowly. "I was the administrator of this isle, before Lord Volpe."]]>
+        </job>
+        <unknown>
+            <![CDATA[He shakes his head.]]>
+        </unknown>
+    </personality>
+    <personality id="52">
+        <title>Laserson</title>
+        <look>
+            <![CDATA[The town priest and healer greets you with a wide smile and open arms. Of course, you can't entirely ignore the huge mace hanging at his belt.]]>
+        </look>
+        <name>
+            <![CDATA["I am Laserson, priest of Muck."]]>
+        </name>
+        <job>
+            <![CDATA["I am the town healer. Unfortunately, there is a serious need for my services. Sometimes, I must act as a priest as well."]]>
+        </job>
+    </personality>
+    <personality id="53">
+        <title>Hilty</title>
+        <look>
+            <![CDATA[This woman can barely keep upright in her seat. Her face is almost green, and she coughs constantly. She has the callouses and muscles of a laborer. She must have been working in the swamps.]]>
+        </look>
+        <name>
+            <![CDATA[She is shaken by a long, ragged coughing fit. She eventually manages to say "I'm Hilty."]]>
+        </name>
+        <job>
+            <![CDATA["I work in the swamps. When I'm capable. I hope I'm recovered soon."]]>
+        </job>
+    </personality>
+    <personality id="54">
+        <title>Crouch</title>
+        <look>
+            <![CDATA[This man is unusually brawny for a resident of this sickly village. However, he walks around with his head bowed and his expression servile.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Crouch, sir."]]>
+        </name>
+        <job>
+            <![CDATA["Well, sir, I'm just workin' here. Keepin' things straight."]]>
+        </job>
+        <unknown>
+            <![CDATA["Wouldn't know of that, sir."]]>
+        </unknown>
+    </personality>
+    <personality id="55">
+        <title>Jenette</title>
+        <look>
+            <![CDATA[On this isle of serfs and rulers, there's no mistaking what side this woman is on. Even shuffling papers around, her face is confident and her moves precise. ]]>
+        </look>
+        <name>
+            <![CDATA[She smiles professionally, although she's not sure why she's being visited by adventurers. "I am Jenette, head of Jenette and Volpe Alchemical Products. How may I assist you?"]]>
+        </name>
+        <job>
+            <![CDATA["Why, I run the most profitable business on Morrow's Isle. Though, I might add, I owe it all to Lord Volpe."]]>
+        </job>
+    </personality>
+    <personality id="56">
+        <title>Drex</title>
+        <look>
+            <![CDATA[That's funny. This shop is hidden. You wonder what the small, shifty looking man sitting here is selling.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Drex. Hi."]]>
+        </name>
+        <job>
+            <![CDATA["Well, we have poison, tools, and light sources. And we have other services as well."]]>
+        </job>
+    </personality>
+    <personality id="57">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="58">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="59">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="50">
+        <keyword>comm</keyword>
+        <keyword>muck</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I watch over the serfs of this town, and keep them as safe as I can."]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>serf</keyword>
+        <keyword>town</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks uncomfortable. "This town has a good number of serfs working in it. I am supposed to keep them safe from the threats of the swamp."]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>safe</keyword>
+        <keyword>thre</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["There's no shortage of monsters about, always hunting for our townsfolk."]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>mons</keyword>
+        <keyword>hunt</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Giant slugs. Spore beasts. Ogres. Nothing they'd like better than eating some of our townsfolk. So we keep them away."]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>rebe</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-sdf</type>
+        <param>100</param>
+        <param>6</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[When you say the password, O' Grady shakes his head. "Not yet. You haven't proved yourself to Canizares yet."]]>
+        </text>
+        <text>
+            <![CDATA[When you say the password, O' Grady looks around to make sure nobody is listening in. "Oh. It's you. They tell me you want to join the Hill Runners. I'm supposed to guide you through your next test."]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>hill</keyword>
+        <keyword>runn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks grim. "Yes. You are trying to join a sacred and important band of heroes. Which, lately, seems to want anyone."]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>want</keyword>
+        <keyword>anyo</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I fought for years for our band. I gave my blood. Even betrayed my position. And now we're bending over backwards and taking risks to suck in any band of wanderers we can find."]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>band</keyword>
+        <keyword>wand</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Listen to me. I betrayed my position to gain a high post in the Hill Runners. Now, after you went on one little raid, we're giving you all kinds of trust and work. It's wrong. But, they say we're to give you this next test, and I'll obey."]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>sacr</keyword>
+        <keyword>hero</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You cannot imagine how important the Hill Runners are to the lives of the people on Morrow's Isle. You couldn't understand. You only just arrived. All I can say is that I am an Empire Dervish, and yet I betrayed my position to join them."]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>betr</keyword>
+        <keyword>posi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I came from this isle. I joined the Empire army. I fought and bled and almost died for the glory of the Empire. For my services in the Exile war, I was declared a Dervish. Then I requested to be posted back home, to protect my family and friends."]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>fami</keyword>
+        <keyword>frie</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["After all those years, I returned here, and what did I find? My family had been made serfs! To enrich the corrupt lords here, all those I loved were dying slowly working in the swamps. And the Empire? Its corruption made it possible!"]]>
+        </text>
+        <text>
+            <![CDATA["This is why I fight, and what I have lost. How can you possibly compare?"]]>
+        </text>
+    </node>
+    <node for="50">
+        <keyword>next</keyword>
+        <keyword>test</keyword>
+        <type>call-local</type>
+        <param>3</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You have not even completed the first test. Go back to Canizares."]]>
+        </text>
+    </node>
+    <node for="51">
+        <keyword>admi</keyword>
+        <keyword>isla</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I have many regrets. This island was recently settled, and, like most new settlements, it was set up as a feudal state, which I was to rule. It's a hard life for the people, but, and this I swear, it was meant to be temporary."]]>
+        </text>
+    </node>
+    <node for="51">
+        <keyword>mean</keyword>
+        <keyword>temp</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I swear it. Only temporary. This island is too rich for the people to not be able to work it freely. They would no longer be serfs, but for Lord Volpe."]]>
+        </text>
+    </node>
+    <node for="51">
+        <keyword>lord</keyword>
+        <keyword>volp</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Ah, yes. Corrupt Lord Volpe. The reason I am here in hiding. He saw this rich isle, and decided its wealth would be best used to enrich him and his cronies. Back in the capital, he convinced them to let him take my place."]]>
+        </text>
+        <text>
+            <![CDATA["And thus I hide here, he fattens himself, and the people suffer. I hope he suffers some dark fate."]]>
+        </text>
+    </node>
+    <node for="51">
+        <keyword>here</keyword>
+        <keyword>hidi</keyword>
+        <type>set-sdf</type>
+        <param>5</param>
+        <param>5</param>
+        <param>1</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I will be moving soon. Volpe would love to capture me, and give me a harsh punishment for my words against him."]]>
+        </text>
+    </node>
+    <node for="51">
+        <keyword>dark</keyword>
+        <keyword>fate</keyword>
+        <type>if-sdf</type>
+        <param>101</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It is not kind of me to wish it. But I do nonetheless."]]>
+        </text>
+        <text>
+            <![CDATA[You tell him of what happened to Lord Volpe in Zaskiva. He nods in approval. "Maybe now the serfs will receive justice at last."]]>
+        </text>
+    </node>
+    <node for="51">
+        <keyword>feud</keyword>
+        <keyword>stat</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Harsh, but efficient. Fortunately, feudal states are an anachronism in most of the Empire."]]>
+        </text>
+    </node>
+    <node for="51">
+        <keyword>rich</keyword>
+        <keyword>isle</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Wood, rich farmlands, mines. And most of the profits going to Volpe. It's simply wrong."]]>
+        </text>
+    </node>
+    <node for="52">
+        <keyword>heal</keyword>
+        <keyword>purc</keyword>
+        <type>shop</type>
+        <param>2</param>
+        <param>5</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Laserson]]>
+        </text>
+    </node>
+    <node for="52">
+        <keyword>need</keyword>
+        <keyword>serv</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Most of the people here work in the swamp. It's a dangerous place, rife with disease and monsters. Still, they bear up to the challenge well."]]>
+        </text>
+        <text>
+            <![CDATA["Come to think of it, I know some recipes using the herbs they recover, if you're interested."]]>
+        </text>
+    </node>
+    <node for="52">
+        <keyword>chal</keyword>
+        <keyword>well</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Most of the serfs are loyal to their rightful rulers, and accept their lot with strength and good cheer. Not like those dirty rebels." He shakes his head disapprovingly.]]>
+        </text>
+    </node>
+    <node for="52">
+        <keyword>rebe</keyword>
+        <keyword>prie</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He pats the mace at his side. "Sometimes, I must go out with the soldiers and fight against rebel raiders. The rebels are cruel, but with courage, we will defeat them."]]>
+        </text>
+    </node>
+    <node for="52">
+        <keyword>huge</keyword>
+        <keyword>mace</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Sometimes kind words are less necessary than a strong blow. Sad, but true."]]>
+        </text>
+    </node>
+    <node for="52">
+        <keyword>reci</keyword>
+        <keyword>herb</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>18</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Laserson]]>
+        </text>
+    </node>
+    <node for="53">
+        <keyword>work</keyword>
+        <keyword>swam</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She lowers her eyes. "I hope you don't mind me complaining, but I don't like working in the swamps. It's hard to stay well out there."]]>
+        </text>
+    </node>
+    <node for="53">
+        <keyword>capa</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She coughs again, much harder. "I can almost walk now, and I can use my hands still. I'll be able to go out again soon. If you've come from Jenette, tell her that."]]>
+        </text>
+    </node>
+    <node for="53">
+        <keyword>reco</keyword>
+        <keyword>soon</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Tell Jenette not to fire me. Ask her about me ... she knows I'm a fine worker! I'll be back out soon. I'll make my quota."]]>
+        </text>
+    </node>
+    <node for="53">
+        <keyword>jene</keyword>
+        <keyword>quot</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Jenette's in charge, and her quotas for us are tough. I'll make mine yet." She suddenly looks terrified. "I don't want to go in the cells!"]]>
+        </text>
+    </node>
+    <node for="53">
+        <keyword>cell</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[The mere mention of the cells fills her with terror. "I'll be good! I'll make quota! I promise!"]]>
+        </text>
+    </node>
+    <node for="54">
+        <keyword>thin</keyword>
+        <keyword>stra</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I look after the office here. This is where people come to get outfitted and go out to the swamps. It's tricky maneuvering out there, but we manage."]]>
+        </text>
+    </node>
+    <node for="54">
+        <keyword>outf</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Our bosses are awful generous, sir. They give every worker a pair of boots and a pair of gloves. More than enough to handle the diseases of the swamp, I tell you."]]>
+        </text>
+    </node>
+    <node for="54">
+        <keyword>dise</keyword>
+        <keyword>swam</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Why yes, sir. Some people think the swamps are a big pit full of diseases, which are killing the townspeople off here faster than anything, so we can go and get herbs for our bosses to sell and get rich. Some people have stated that opinion."]]>
+        </text>
+    </node>
+    <node for="54">
+        <keyword>stat</keyword>
+        <keyword>opin</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks up at you. "Some people have stated it. But some people don't agree. And I thank you for that, sirs." He shuffles away. As he does, you notice for the first time that he walks with a distinct limp.]]>
+        </text>
+    </node>
+    <node for="55">
+        <keyword>prof</keyword>
+        <keyword>busi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The serfs under my control hunt the swamps for alchemical herbs, bring them here, and clean and bundle them. I find buyers and ship them all over Valorim. It's a wonderful arrangement."]]>
+        </text>
+    </node>
+    <node for="55">
+        <keyword>serf</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She shakes her head. "Of course, no business is perfect. Being adventurers, I'm sure you have no idea how irritable and obstinate the peasants can be. Still, we have techniques for controlling them."]]>
+        </text>
+    </node>
+    <node for="55">
+        <keyword>tech</keyword>
+        <keyword>cont</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Why, that's hardly your worry now, isn't it?" she says, smiling sweetly.]]>
+        </text>
+    </node>
+    <node for="55">
+        <keyword>wond</keyword>
+        <keyword>arra</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["And, as I said, all due to Lord Volpe."]]>
+        </text>
+    </node>
+    <node for="55">
+        <keyword>lord</keyword>
+        <keyword>volp</keyword>
+        <type>if-sdf</type>
+        <param>101</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["He brought me here when he took control of this Isle. He planned to make it incredibly efficient and profitable, and he succeeded. He's my partner, in fact."]]>
+        </text>
+        <text>
+            <![CDATA["Of course, my poor partner Lord Volpe is quite dead now. I guess I'll just have to run things here on my own for now." This thought makes her quite happy.]]>
+        </text>
+    </node>
+    <node for="55">
+        <keyword>part</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-sdf</type>
+        <param>101</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yes, like he's the partner in most new businesses on this Isle. It's what we owe him for our success, after all. Perfectly just." Is that smile on her face entirely sincere?]]>
+        </text>
+        <text>
+            <![CDATA["He was my partner, like he was the partner in most new businesses on this Isle. Where things go from here, nobody is sure yet."]]>
+        </text>
+    </node>
+    <node for="56">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Poison, tools, or light sources?"]]>
+        </text>
+    </node>
+    <node for="56">
+        <keyword>pois</keyword>
+        <keyword>tool</keyword>
+        <type>shop</type>
+        <param>5</param>
+        <param>19</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Poison & Tools]]>
+        </text>
+    </node>
+    <node for="56">
+        <keyword>ligh</keyword>
+        <keyword>sour</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>20</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Light Sources]]>
+        </text>
+    </node>
+    <node for="56">
+        <keyword>othe</keyword>
+        <keyword>serv</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I can identify items, and you can sell me stuff too."]]>
+        </text>
+    </node>
+    <node for="56">
+        <keyword>iden</keyword>
+        <keyword>xxxx</keyword>
+        <type>id</type>
+        <param>10</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks over your inventory with a careful, appraiser's eye. Finally, he says "OK. Ten gold per item."]]>
+        </text>
+    </node>
+    <node for="56">
+        <keyword>sell</keyword>
+        <keyword>xxxx</keyword>
+        <type>sell-any</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks over your stuff, and makes an offer for each identified item. Not surprisingly, he doesn't seem too picky about where you got the stuff from.]]>
+        </text>
+    </node>
+    <node for="54">
+        <keyword>tric</keyword>
+        <keyword>mane</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Fortunately, you can ford the rivers out there just where they meet the ocean. Look for where the little islands are. You can walk right across!"]]>
+        </text>
+    </node>
+    <node for="55">
+        <keyword>hilt</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She's confused at first. For a moment, she doesn't recognize the name. "Oh yes! Derelict worker. She's been absent for one day. She may have to be ... dealt with." You mention Hilty is in the shrine, sick.]]>
+        </text>
+        <text>
+            <![CDATA["Oh. Well. The serfs are always getting sick from one thing or another. I suppose I can give her an extra day or two to get better."]]>
+        </text>
+    </node>
+</dialogue>

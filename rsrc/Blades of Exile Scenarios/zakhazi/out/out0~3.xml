@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Za-Khazi Run, North</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>135</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>7</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <area top="10" left="8" bottom="20" right="12">Island of Shadows            </area>
+    <area top="36" left="5" bottom="39" right="8">Near Spiraling Crypt         </area>
+    <string id="0">
+        <![CDATA[After a long, arduous trip over land, you finally reach another part of the river you began your journey on. Unfortunately, your boat is still many miles behind you.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Unless either the path continues or you find another boat, your rescue mission is about to come to an abrupt end.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You get a sinking feeling as you look north. There was a path alongside the river up until very recently. Then it was destroyed, probably by a cave quake. You can't go any farther north on foot.]]>
+    </string>
+    <string id="7">
+        <![CDATA[At first, you though it was a natural basalt spire, perched on the shore of this subterranean river. As you got closer, however, you came to realize that it was man-made.]]>
+    </string>
+    <string id="8">
+        <![CDATA[It's a black, windowless tower, about fifty feet high, jutting out slightly into the river. The stone is dark, cracked, and mottled by mold and lichen. It's a dark, quiet building, and it doesn't look like anyone has visited it for some time.]]>
+    </string>
+    <string id="9">
+        <![CDATA[As you row your barge into this underground lake, darkness envelops you. Snaky tentacles of shadow slide up the sides of your craft and envelop you. It's as if the darkness is a palpable living thing, so persistent is its advance.]]>
+    </string>
+    <string id="10">
+        <![CDATA[As you stare down into this massive chasm, you notice that a crude stairway has been hewn into its side, spiraling down far beyond the range of your lights into the darkness. ]]>
+    </string>
+    <string id="11">
+        <![CDATA[You toss a pebble over the side and count seconds until you hear it hit the bottom. The sound never comes. This might be a long stairway.]]>
+    </string>
+    <string id="16">
+        <![CDATA[You climb down, hoping to find a shortcut to Fort Cavalier or, failing that, an interesting encounter. Instead, you just keep climbing. The stairway continues downward, not ending and never coming in sight of the end.]]>
+    </string>
+    <string id="17">
+        <![CDATA[After a few hours, you turn back. As intrigued as you are by this stairway, you don't have enough time to explore it.]]>
+    </string>
+    <string id="18">
+        <![CDATA[As you walk down the path, you meet travelers coming the other way. They look tired and bedraggled by their journey. However, they aren't human.]]>
+    </string>
+    <string id="19">
+        <![CDATA[They're humanoids, but their heads and hands are feline. Their fur is matted and scruffy, and they look very hungry. They quickly decide that you would make a good meal for them.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You aren't sure where they were heading, but you have a guess of why. One of them was carrying a chest filled with gold and edible delicacies, as well as several potions.]]>
+    </string>
+    <string id="21">
+        <![CDATA[They must have been going to trade with someone. Fortunately, their wealth has ended up in better hands. Yours.]]>
+    </string>
+    <string id="22">
+        <![CDATA[*]]>
+    </string>
+    <string id="23">
+        <![CDATA[*]]>
+    </string>
+    <string id="24">
+        <![CDATA[*]]>
+    </string>
+    <string id="25">
+        <![CDATA[*]]>
+    </string>
+    <string id="26">
+        <![CDATA[*]]>
+    </string>
+    <string id="27">
+        <![CDATA[*]]>
+    </string>
+    <string id="28">
+        <![CDATA[*]]>
+    </string>
+    <string id="29">
+        <![CDATA[*]]>
+    </string>
+    <string id="30">
+        <![CDATA[*]]>
+    </string>
+    <string id="31">
+        <![CDATA[*]]>
+    </string>
+    <string id="32">
+        <![CDATA[*]]>
+    </string>
+    <string id="33">
+        <![CDATA[*]]>
+    </string>
+    <string id="34">
+        <![CDATA[*]]>
+    </string>
+    <string id="35">
+        <![CDATA[*]]>
+    </string>
+    <string id="36">
+        <![CDATA[*]]>
+    </string>
+    <string id="37">
+        <![CDATA[*]]>
+    </string>
+    <string id="38">
+        <![CDATA[*]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

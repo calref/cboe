@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Northeastern Vale</name>
+    <comment>Comment</comment>
+    <encounter can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>62</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>63</monster>
+        <monster>65</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>16</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>18</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>18</monster>
+        <monster>19</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[Ford River Here|Watch your step!]]>
+    </sign>
+    <area top="10" left="30" bottom="18" right="38">River Headwaters             </area>
+    <area top="27" left="10" bottom="40" right="22">Near Round Hill              </area>
+    <area top="4" left="24" bottom="10" right="33">Ghoulish Valley              </area>
+    <string id="0">
+        <![CDATA[As you walk along the river, you find a small, comfortable beach. The river flows to the south, and the water flowing by looks very tempting. Do you drink some?]]>
+    </string>
+    <string id="6">
+        <![CDATA[You kneel down and drink the water. It tastes incredibly unpleasant and acrid, and your tongue and lips burn as you sip it. At first, it seems like the stuff isn't having any other effect. Than you start to feel ill ...]]>
+    </string>
+    <string id="7">
+        <![CDATA[As you walk along the river, you find a small, comfortable beach. The river flows by to the southwest, and the water flowing by looks very tempting. Do you drink some?]]>
+    </string>
+    <string id="13">
+        <![CDATA[The water is very pleasant. It's cool and refreshing, so much so that it's hard to believe that the Vale has been having any troubles at all.]]>
+    </string>
+    <string id="14">
+        <![CDATA[You walk up a remote pathway, leading up and away from the river headwaters. As you climb, you notice a chill forming in the air. You pass stones covered with strange markings, worn and unreadable.]]>
+    </string>
+    <string id="15">
+        <![CDATA[You pull the crypt open and hear a thin, hideous moaning coming from inside. You try to push the stone back into place, but you aren't fast enough. Undead creatures come shambling out ...]]>
+    </string>
+    <string id="16">
+        <![CDATA[At the end of the path you find, worn away by recent rains, a crypt door. It's a stone slab, rolled over a tunnel into the hillside. With a little effort, you could easily work your way inside.]]>
+    </string>
+    <string id="22">
+        <![CDATA[At the end of the path you find, worn away by recent rains, a crypt door. It's a stone slab, rolled over a tunnel into the hillside. With a little effort, you could easily work your way inside.]]>
+    </string>
+    <string id="28">
+        <![CDATA[At the end of the path you find, worn away by recent rains, a crypt door. It's a stone slab, rolled over a tunnel into the hillside. With a little effort, you could easily work your way inside.]]>
+    </string>
+    <string id="34">
+        <![CDATA[The undead finally put to rest, you are free to search their crypt. Fortunately, the creatures were buried with a variety of trinkets. You leave mildly richer.]]>
+    </string>
+    <string id="35">
+        <![CDATA[You wouldn't have noticed it if you weren't right on top of it. For reasons unknown, someone left a small buckler here, barely concealed behind a large rock.]]>
+    </string>
+    <string id="36">
+        <![CDATA[Finders keepers, losers weepers ...]]>
+    </string>
+    <string id="41">
+        <![CDATA[Interesting. Someone left a skull balanced on a rock here, for no reason you can determine.]]>
+    </string>
+    <string id="47">
+        <![CDATA[As you walk along this path, you notice that a bit of the river splits off into a smaller channel, which then flows under the hill to the south, You wonder where the water goes.]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

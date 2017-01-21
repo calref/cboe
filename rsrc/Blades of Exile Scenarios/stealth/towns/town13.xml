@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Under Buzzard                </name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="31" right="31" />
+    <difficulty>0</difficulty>
+    <lighting>dark</lighting>
+    <flags />
+    <item id="0">
+        <type>99</type>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>104</type>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>-1</type>
+    </item>
+    <item id="3">
+        <type>116</type>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>-1</type>
+    </item>
+    <item id="5">
+        <type>-1</type>
+    </item>
+    <item id="6">
+        <type>-1</type>
+    </item>
+    <item id="7">
+        <type>-1</type>
+    </item>
+    <item id="8">
+        <type>-1</type>
+    </item>
+    <item id="9">
+        <type>-1</type>
+    </item>
+    <item id="10">
+        <type>-1</type>
+    </item>
+    <item id="11">
+        <type>-1</type>
+    </item>
+    <item id="12">
+        <type>-1</type>
+    </item>
+    <item id="13">
+        <type>-1</type>
+    </item>
+    <item id="14">
+        <type>-1</type>
+    </item>
+    <item id="15">
+        <type>-1</type>
+    </item>
+    <item id="16">
+        <type>-1</type>
+    </item>
+    <item id="17">
+        <type>-1</type>
+    </item>
+    <item id="18">
+        <type>-1</type>
+    </item>
+    <item id="19">
+        <type>-1</type>
+    </item>
+    <item id="20">
+        <type>-1</type>
+    </item>
+    <item id="21">
+        <type>-1</type>
+    </item>
+    <item id="22">
+        <type>-1</type>
+    </item>
+    <item id="23">
+        <type>-1</type>
+    </item>
+    <item id="24">
+        <type>-1</type>
+    </item>
+    <item id="25">
+        <type>-1</type>
+    </item>
+    <item id="26">
+        <type>-1</type>
+    </item>
+    <item id="27">
+        <type>-1</type>
+    </item>
+    <item id="28">
+        <type>-1</type>
+    </item>
+    <item id="29">
+        <type>-1</type>
+    </item>
+    <item id="30">
+        <type>-1</type>
+    </item>
+    <item id="31">
+        <type>-1</type>
+    </item>
+    <item id="32">
+        <type>-1</type>
+    </item>
+    <item id="33">
+        <type>-1</type>
+    </item>
+    <item id="34">
+        <type>-1</type>
+    </item>
+    <item id="35">
+        <type>-1</type>
+    </item>
+    <item id="36">
+        <type>-1</type>
+    </item>
+    <item id="37">
+        <type>-1</type>
+    </item>
+    <item id="38">
+        <type>-1</type>
+    </item>
+    <item id="39">
+        <type>-1</type>
+    </item>
+    <item id="40">
+        <type>-1</type>
+    </item>
+    <item id="41">
+        <type>-1</type>
+    </item>
+    <item id="42">
+        <type>-1</type>
+    </item>
+    <item id="43">
+        <type>-1</type>
+    </item>
+    <item id="44">
+        <type>-1</type>
+    </item>
+    <item id="45">
+        <type>-1</type>
+    </item>
+    <item id="46">
+        <type>-1</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
+    </item>
+    <creature id="0">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="1">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="2">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="3">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="4">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="5">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="6">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="7">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="8">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="9">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="10">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="11">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="12">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="13">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="14">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="15">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="16">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="17">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="18">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="19">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="20">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="21">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="22">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="23">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="24">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="25">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="26">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="27">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="28">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="29">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <area top="3" left="23" bottom="17" right="28">Storage Cave                 </area>
+    <area top="21" left="8" bottom="29" right="19">Old Rebel Barracks           </area>
+    <string id="0">
+        <![CDATA[Back when the rebels were still underground, this was where a good number of them hid out. To the south, you see pallets on the floor. To the north are a number of storage boxes. ]]>
+    </string>
+    <string id="1">
+        <![CDATA[Now that it isn't needed, these chambers are cold, dark, and empty, with one exception. You see a dim red glow down the passage to the northwest.]]>
+    </string>
+    <string id="2">
+        <![CDATA[All of this seems rather familiar. Eerily familiar, in fact. It's a dim underground room, with a large throne set in the middle of it, facing a wall.]]>
+    </string>
+    <string id="8">
+        <![CDATA[When you sit in the throne, the light from the braziers dims, and a voice speaks. The voice is softer and more natural than the voice in the chamber under Willow, but still has a disjointed, recorded quality.]]>
+    </string>
+    <string id="9">
+        <![CDATA["Hello, adventurers. I am Stalker, leader of the Hill Runners, planner of our just war against the Empire. You have done great good for us so far. One more test, and we will truly let you into our inner circle."]]>
+    </string>
+    <string id="10">
+        <![CDATA["In the south side of these mountains, to the southeast, there is a hidden Empire fort. It is well defended, and we have had trouble infiltrating it. We believe that you can succeed."]]>
+    </string>
+    <string id="11">
+        <![CDATA["Go there, break in, and kill the Empire commander there, and we will be convinced of your loyalty to our cause. We will bring you in, and give you power in our organization."]]>
+    </string>
+    <string id="12">
+        <![CDATA["When you have completed this mission, or should you have other questions, return here. That is all." The speech ends, and the lights rise.]]>
+    </string>
+    <string id="14">
+        <![CDATA[The lights dim, and the voice speaks. "You have done well. While we suspected you were working for the Empire, our suspicions have been alleviated. With the outpost you attacked gone, our operations can expand to the south."]]>
+    </string>
+    <string id="15">
+        <![CDATA["I wish to meet you personally, to speak with you and reward you. Come to me. Leave Buzzard, and follow the mountain path to the east (or north). You will arrive at my fortress before long."]]>
+    </string>
+    <string id="16">
+        <![CDATA["I eagerly await your presence. That is all." The lights return.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You sit, and the voice says "As you do not wish to assault the outpost to the southeast, as we said before, we will grant you an audience with Stalker. First, leave these mountains."]]>
+    </string>
+    <string id="21">
+        <![CDATA["Go to the southeast side of the mountains, and follow the path up along the sea. From there, the path to Stalker will be made clear."]]>
+    </string>
+    <string id="26">
+        <![CDATA[You sit, and the lights dim. The voice says "You have returned. You have not yet gone to the Empire outpost burrowed into the outside of our mountain chain to the southeast. You have not killed their commander."]]>
+    </string>
+    <string id="27">
+        <![CDATA["Are you having difficulties? Do you have any questions?" Your Empire superiors told you that you should insist on being taken to meet Stalker first. Do you?]]>
+    </string>
+    <string id="32">
+        <![CDATA[You say you have no questions. The voice says "Fine then. Time is always short. Go now, and complete your mission." You stand, and the lights rise.]]>
+    </string>
+    <string id="33">
+        <![CDATA[You say "We will do what you ask, but only if we can be sure you are who you say you are. We'll only do it if we can meet Stalker first."]]>
+    </string>
+    <string id="34">
+        <![CDATA[There is a long pause. You sit nervously in the shadow, waiting. Finally, the voice speaks.]]>
+    </string>
+    <string id="35">
+        <![CDATA["Very well. This is unusual, but, considering the exceptionality of your aid so far, it can be allowed. There is a back entrance to Stalker's Fortress. We will direct you there."]]>
+    </string>
+    <string id="36">
+        <![CDATA["Leave this mountain range. Go to the east, to where the mountains meet the sea, and walk north along the path between mountains and sea. From there, the way to Stalker will be made clear to you."]]>
+    </string>
+    <string id="37">
+        <![CDATA["Remember - a great trust is being placed upon you. In the name of justice, to not betray it. That is all." The lights go up again.]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
+    </string>
+</town>

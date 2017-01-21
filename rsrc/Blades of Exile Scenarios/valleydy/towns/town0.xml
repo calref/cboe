@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Fort Talrus</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="0" bottom="44" right="47" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <timer freq="0">0</timer>
+    <timer freq="0">0</timer>
+    <timer freq="0">0</timer>
+    <timer freq="0">0</timer>
+    <timer freq="0">0</timer>
+    <timer freq="0">0</timer>
+    <timer freq="0">0</timer>
+    <timer freq="0">0</timer>
+    <flags>
+        <tavern>true</tavern>
+    </flags>
+    <item id="0">
+        <type>160</type>
+        <property>true</property>
+    </item>
+    <item id="1">
+        <type>15</type>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>0</type>
+        <charges>30</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>98</type>
+        <charges>3</charges>
+    </item>
+    <item id="4">
+        <type>13</type>
+    </item>
+    <item id="5">
+        <type>14</type>
+    </item>
+    <item id="6">
+        <type>15</type>
+    </item>
+    <item id="7">
+        <type>9</type>
+    </item>
+    <item id="8">
+        <type>9</type>
+    </item>
+    <item id="9">
+        <type>12</type>
+    </item>
+    <item id="10">
+        <type>12</type>
+    </item>
+    <item id="11">
+        <type>12</type>
+    </item>
+    <item id="12">
+        <type>11</type>
+    </item>
+    <item id="13">
+        <type>11</type>
+    </item>
+    <item id="14">
+        <type>123</type>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>123</type>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>122</type>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>122</type>
+        <contained>true</contained>
+    </item>
+    <item id="18">
+        <type>165</type>
+    </item>
+    <item id="19">
+        <type>155</type>
+    </item>
+    <item id="20">
+        <type>-1</type>
+        <always>true</always>
+        <property>true</property>
+    </item>
+    <item id="21">
+        <type>-1</type>
+        <always>true</always>
+        <property>true</property>
+    </item>
+    <item id="22">
+        <type>20</type>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>26</type>
+        <charges>1</charges>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>196</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>198</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>0</type>
+        <charges>80</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>51</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>142</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>2</type>
+        <charges>6</charges>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>1</type>
+        <charges>5</charges>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>7</type>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>24</type>
+    </item>
+    <item id="34">
+        <type>254</type>
+        <charges>4</charges>
+    </item>
+    <item id="35">
+        <type>0</type>
+        <charges>200</charges>
+        <contained>true</contained>
+    </item>
+    <item id="36">
+        <type>3</type>
+        <charges>25</charges>
+        <contained>true</contained>
+    </item>
+    <item id="37">
+        <type>18</type>
+    </item>
+    <item id="38">
+        <type>223</type>
+    </item>
+    <item id="39">
+        <type>144</type>
+    </item>
+    <item id="40">
+        <type>144</type>
+    </item>
+    <item id="41">
+        <type>144</type>
+    </item>
+    <item id="42">
+        <type>144</type>
+    </item>
+    <item id="43">
+        <type>32</type>
+    </item>
+    <item id="44">
+        <type>32</type>
+    </item>
+    <item id="45">
+        <type>40</type>
+    </item>
+    <item id="46">
+        <type>40</type>
+    </item>
+    <item id="47">
+        <type>108</type>
+    </item>
+    <item id="48">
+        <type>103</type>
+        <charges>25</charges>
+    </item>
+    <item id="49">
+        <type>169</type>
+    </item>
+    <item id="50">
+        <type>171</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+        <property>true</property>
+    </item>
+    <item id="52">
+        <type>165</type>
+        <property>true</property>
+    </item>
+    <item id="53">
+        <type>170</type>
+        <property>true</property>
+    </item>
+    <item id="54">
+        <type>172</type>
+        <property>true</property>
+    </item>
+    <item id="55">
+        <type>25</type>
+        <property>true</property>
+    </item>
+    <item id="56">
+        <type>13</type>
+    </item>
+    <item id="57">
+        <type>31</type>
+    </item>
+    <item id="58">
+        <type>1</type>
+        <charges>4</charges>
+    </item>
+    <item id="59">
+        <type>2</type>
+        <charges>6</charges>
+    </item>
+    <item id="60">
+        <type>3</type>
+        <charges>6</charges>
+    </item>
+    <item id="61">
+        <type>21</type>
+    </item>
+    <item id="62">
+        <type>22</type>
+    </item>
+    <item id="63">
+        <type>106</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="1">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="2">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="3">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="4">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="5">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="6">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="7">
+        <type>15</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>0</personality>
+        <face>31</face>
+    </creature>
+    <creature id="8">
+        <type>6</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>1</personality>
+        <face>17</face>
+    </creature>
+    <creature id="9">
+        <type>5</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>2</personality>
+        <face>4</face>
+    </creature>
+    <creature id="10">
+        <type>27</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>3</personality>
+        <face>13</face>
+    </creature>
+    <creature id="11">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="13">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="14">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="15">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+    </creature>
+    <creature id="16">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+    </creature>
+    <creature id="17">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+    </creature>
+    <creature id="18">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+    </creature>
+    <creature id="19">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="20">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="21">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="22">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="23">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="24">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="25">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="26">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="27">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="28">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="29">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="30">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="31">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="32">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="33">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="34">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="35">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="36">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="37">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="38">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="39">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <area top="31" left="14" bottom="38" right="18">Abandoned Barracks           </area>
+    <area top="34" left="6" bottom="38" right="10">Commander&apos;s Office           </area>
+    <area top="6" left="7" bottom="13" right="10">Guest Quarters               </area>
+    <area top="6" left="14" bottom="16" right="18">Storeroom                    </area>
+    <area top="28" left="23" bottom="34" right="33">Dining Hall                  </area>
+    <area top="28" left="35" bottom="34" right="41">Somewhat Used Barracks       </area>
+    <area top="5" left="2" bottom="18" right="5">Rat lair                     </area>
+    <sign id="0">
+        <![CDATA[Commander's Office|Cmd. Terrance, Acting Officer]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Empire Liaison |(On a note pinned underneath)|Currently Vacant]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[Emergency Water Supply|Keep Clean!]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[Storeroom]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[Auxiliary Storage|No entry!]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[Dining Hall]]>
+    </sign>
+    <string id="0">
+        <![CDATA[This is your room, a haven thoughtfully provided by the commander of Fort Talrus. It's dusty, but reasonable.]]>
+    </string>
+    <string id="1">
+        <![CDATA[If you wish, you can take a quick rest before journeying onward.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You squeeze into the narrow bunks and sleep (somewhat) comfortably. Soon, you're rested, healed, and ready to resume your lives of adventure, danger, and romance.]]>
+    </string>
+    <string id="7">
+        <![CDATA[You leave your quarters, keeping an eye open for the office of Commander Terrance. As you leave, you notice a note which someone has rolled up and tucked between the doorknob and door jamb.]]>
+    </string>
+    <string id="8">
+        <![CDATA[It reads: "Feel free to leave your excess items in your chambers. We'll keep them safe. - T."]]>
+    </string>
+    <string id="9">
+        <![CDATA[You smell decay and hear squeaking. Your keen adventurer's senses are telling you that perhaps something unpleasant has taken up residence back here, away from the soldiers.]]>
+    </string>
+    <string id="10">
+        <![CDATA[Empire forts are legendary for their cleanliness, efficiency, and ritual attention to order. Why, then, is this room clearly disused? For that matter, why hasn't anyone even bothered to clean up the cobwebs?]]>
+    </string>
+    <string id="11">
+        <![CDATA[The commander clearly doesn't want anyone going through his things. The trap is easy to find. Disarming it may be another matter.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You stare out through the gate at the land beyond. The plants beyond the Vale are healthy, the animals content. You can't help but be tempted by the chance to escape, to leave this place of death and never return.]]>
+    </string>
+    <string id="13">
+        <![CDATA[Do you wish to leave the scenario?]]>
+    </string>
+    <string id="18">
+        <![CDATA[You step through the gate and away from the fortress. You feel disappointed that you weren't able to reap the rewards and fame saving the valley would provide.]]>
+    </string>
+    <string id="19">
+        <![CDATA[On the other hand, you're safe, and you're alive as well. It's not the happiest possible ending, but it's an ending you can walk away from.|  The End]]>
+    </string>
+    <string id="20">
+        <![CDATA[*]]>
+    </string>
+    <string id="21">
+        <![CDATA[*]]>
+    </string>
+    <string id="22">
+        <![CDATA[*]]>
+    </string>
+    <string id="23">
+        <![CDATA[*]]>
+    </string>
+    <string id="24">
+        <![CDATA[*]]>
+    </string>
+    <string id="25">
+        <![CDATA[*]]>
+    </string>
+    <string id="26">
+        <![CDATA[*]]>
+    </string>
+    <string id="27">
+        <![CDATA[*]]>
+    </string>
+    <string id="28">
+        <![CDATA[*]]>
+    </string>
+    <string id="29">
+        <![CDATA[*]]>
+    </string>
+    <string id="30">
+        <![CDATA[*]]>
+    </string>
+    <string id="31">
+        <![CDATA[*]]>
+    </string>
+    <string id="32">
+        <![CDATA[*]]>
+    </string>
+    <string id="33">
+        <![CDATA[*]]>
+    </string>
+    <string id="34">
+        <![CDATA[*]]>
+    </string>
+    <string id="35">
+        <![CDATA[*]]>
+    </string>
+    <string id="36">
+        <![CDATA[*]]>
+    </string>
+    <string id="37">
+        <![CDATA[*]]>
+    </string>
+    <string id="38">
+        <![CDATA[*]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
+    </string>
+</town>
