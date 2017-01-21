@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="0">
+        <title>Vastro</title>
+        <look>
+            <![CDATA[You meet a massive, alarmingly muscled man, wearing polished armor. He appraises you carefully as you approach.]]>
+        </look>
+        <name>
+            <![CDATA["I am Vastro, head trainer for Warrior's Grove."]]>
+        </name>
+        <job>
+            <![CDATA["I am the trainer for the Grove. I trach people skills so they can survive in the surrounding lands."]]>
+        </job>
+        <unknown>
+            <![CDATA[He shakes his head.]]>
+        </unknown>
+    </personality>
+    <personality id="1">
+        <title>Rippel</title>
+        <look>
+            <![CDATA[A lovely woman with delicate features sits behind the counter. She is gluing bright blue feathers on the shafts of iron-tipped arrows.]]>
+        </look>
+        <name>
+            <![CDATA["I am known as Rippel the fletcher. Welcome to my shop."]]>
+        </name>
+        <job>
+            <![CDATA["I perform the same job I have performed in many strange lands. I create missile weapons of the finest quality. You may purchase them if you like."]]>
+        </job>
+        <unknown>
+            <![CDATA["I know not of which you speak."]]>
+        </unknown>
+    </personality>
+    <personality id="2">
+        <title>Walner</title>
+        <look>
+            <![CDATA[A heavy set man sits behind the counter, wearing the traidition blue robes of an apprentice mage. The robes show a bit of wear and tear, as if he's been travelling for some time.]]>
+        </look>
+        <name>
+            <![CDATA[He nods in greeting. "I am called Walner."]]>
+        </name>
+        <job>
+            <![CDATA["I am, I'm quite proud to say, a sage with no small experience. Whether in the fields of alchemy or identification, I can be of great assistance to you."]]>
+        </job>
+        <unknown>
+            <![CDATA[He looks confused.]]>
+        </unknown>
+    </personality>
+    <personality id="3">
+        <title>Marian</title>
+        <look>
+            <![CDATA[You interrupt a priestess. She concludes her chanting, turns, and bows to you. The ankh around her neck indicates some proficiency in the healing arts.]]>
+        </look>
+        <name>
+            <![CDATA["I am Marian. Welcome to the Shrine of Divine Health."]]>
+        </name>
+        <job>
+            <![CDATA["The Shrine of Divine Health is dedicated to all of the healing arts. It certainly comes in handy here in Warrior's Grove."]]>
+        </job>
+        <unknown>
+            <![CDATA[She doesn't understand.]]>
+        </unknown>
+    </personality>
+    <personality id="4">
+        <title>Gonski</title>
+        <look>
+            <![CDATA[You meet the shop proprietor, a scarred, withered old man. His leathery skin shows the signs of many years under the sun, and his arms have the thin pale lines left by many old wounds.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Gonski," he grunts.]]>
+        </name>
+        <job>
+            <![CDATA[He pats a nearby greatsword. "We got armor. We got weapons. We got shields. You can sell me your old stuff too."]]>
+        </job>
+        <unknown>
+            <![CDATA["Huh?"]]>
+        </unknown>
+    </personality>
+    <personality id="5">
+        <title>Ella</title>
+        <look>
+            <![CDATA[You walk up to the innkeeper. She doesn't seem surprised in the least to see big, beefy adventurers in her bar.]]>
+        </look>
+        <name>
+            <![CDATA[She smiles. "I'm Ella, owner of the Warrior's Arms. How may I help you?"]]>
+        </name>
+        <job>
+            <![CDATA["We have all the things adventurers need. We can give you a room to rest in for the night, for only 5 gold. We have cheap rations available. And, of course, a tankard of beer is only a gold piece."]]>
+        </job>
+        <unknown>
+            <![CDATA[She smiles an shakes her head. "You'll have to make more sense than that."]]>
+        </unknown>
+    </personality>
+    <personality id="6">
+        <title></title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="7">
+        <title></title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="8">
+        <title></title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="9">
+        <title></title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="0">
+        <keyword>trai</keyword>
+        <keyword>skil</keyword>
+        <type>train</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text />
+    </node>
+    <node for="0">
+        <keyword>warr</keyword>
+        <keyword>grov</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That's where you are now."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>surr</keyword>
+        <keyword>land</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I know not what you will find in the lands surrounding Warrior's Grove. You may rest assured, however, that they are filled with adventure, treasure, and direst peril."]]>
+        </text>
+        <text>
+            <![CDATA["Perhaps you would like some training to help you survive?"]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>stra</keyword>
+        <keyword>land</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She sighs. "Before I came to Warrior's Grove, I practiced my trade in many cities, both on the surface and in Exile."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>surf</keyword>
+        <keyword>exil</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I can hardly remember all the cities I have worked in. All I know is that there wll surely be many more."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>weap</keyword>
+        <keyword>purc</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>6</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Rippel's Fletching]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>sage</keyword>
+        <keyword>expe</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Adventures. Wars. Hordes of rampaging demons. I've seen it all."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>iden</keyword>
+        <keyword>xxxx</keyword>
+        <type>id</type>
+        <param>10</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks over your items with a practiced eye. It only takes a moment to figure out what each one is. With a smile, he says "No problem. Each identification will be a mere 10 gold."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>alch</keyword>
+        <keyword>poti</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>7</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Walner's potions]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Are you interested in identification or potions?"]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>grea</keyword>
+        <keyword>assi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He coughs modestly. "Why, my identification skills alone make me invaluable to adventurers."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>heal</keyword>
+        <keyword>purc</keyword>
+        <type>shop</type>
+        <param>2</param>
+        <param>5</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Marian the Healer]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>shri</keyword>
+        <keyword>divi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We priests and priestesses of healing dedicate ourselves to the restoration of those who fall ill, break bones, are gnawed on by monsters, that sort of thing."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>warr</keyword>
+        <keyword>grov</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I don't know what's going on outside these walls. However, considering the number of mutilated people that have been coming back lately, it must be something unpleasant."]]>
+        </text>
+    </node>
+    <node for="4">
+        <keyword>near</keyword>
+        <keyword>grea</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We got all sorts of weapons here. You'll need to be well equipped when you leave town."]]>
+        </text>
+    </node>
+    <node for="4">
+        <keyword>equi</keyword>
+        <keyword>town</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["There's plenty of monsters out there." He snorts. "Probably too much for the likes of you. But itf you want to have a chance, you want some of my weapons."]]>
+        </text>
+    </node>
+    <node for="4">
+        <keyword>weap</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>8</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Fine Weapons]]>
+        </text>
+    </node>
+    <node for="4">
+        <keyword>armo</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>9</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Fine Armor]]>
+        </text>
+    </node>
+    <node for="4">
+        <keyword>shie</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>10</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Fine Shields]]>
+        </text>
+    </node>
+    <node for="4">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Weapons, armor, or shields?"]]>
+        </text>
+    </node>
+    <node for="4">
+        <keyword>sell</keyword>
+        <keyword>xxxx</keyword>
+        <type>sell-any</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks over your surplus goods. "A pretty sorry lot. Still, I might be able to offer you a little for it." He makes an offer for all of your identified items.]]>
+        </text>
+    </node>
+    <node for="5">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["A room, rations, or beer?"]]>
+        </text>
+    </node>
+    <node for="5">
+        <keyword>room</keyword>
+        <keyword>rest</keyword>
+        <type>inn</type>
+        <param>5</param>
+        <param>3</param>
+        <param>31</param>
+        <param>38</param>
+        <text>
+            <![CDATA[She shows you to your room, and wishes you a pleasant night.]]>
+        </text>
+        <text>
+            <![CDATA[She shakes her head. "Sorry, but that's 5 gold."]]>
+        </text>
+    </node>
+    <node for="5">
+        <keyword>chea</keyword>
+        <keyword>rati</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>11</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Fine Rations]]>
+        </text>
+    </node>
+    <node for="5">
+        <keyword>tank</keyword>
+        <keyword>beer</keyword>
+        <type>buy-info</type>
+        <param>1</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She serves up the beer. It's refreshing, in a nasty sort of way.]]>
+        </text>
+        <text>
+            <![CDATA[She looks pityingly upon you. "Not a gold piece to your name. How sad."]]>
+        </text>
+    </node>
+    <node for="5">
+        <keyword>adve</keyword>
+        <keyword>need</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yes. Oh, and please bandage your wounds before going to your room. It's a great pain to clean the blood out of the blankets."]]>
+        </text>
+    </node>
+</dialogue>
