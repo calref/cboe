@@ -2683,7 +2683,7 @@
         <skill>12</skill>
         <hp>40</hp>
         <speed>4</speed>
-        <attitude>docile</attitude>
+        <attitude>hostile-a</attitude>
         <summon>0</summon>
         <treasure>0</treasure>
         <attacks>
