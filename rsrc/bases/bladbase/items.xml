@@ -3581,7 +3581,7 @@
         <ability>
             <type>use-spell</type>
             <strength>1</strength>
-            <data>132</data>
+            <data>155</data>
             <use-flag>help-one</use-flag>
         </ability>
     </item>
@@ -3604,7 +3604,7 @@
         <ability>
             <type>use-spell</type>
             <strength>1</strength>
-            <data>155</data>
+            <data>132</data>
             <use-flag>help-one</use-flag>
         </ability>
     </item>
@@ -3625,7 +3625,7 @@
             <magic>true</magic>
         </properties>
         <ability>
-            <type>use-sp</type>
+            <type>use-skillpt</type>
             <strength>2</strength>
             <data>0</data>
             <use-flag>help-one</use-flag>
@@ -3686,7 +3686,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Brew of Lethe</full-name>
+        <full-name>Brew of Lethe (delete)</full-name>
         <treasure>2</treasure>
         <value>500</value>
         <weight>1</weight>
@@ -3813,9 +3813,9 @@
             <magic>true</magic>
         </properties>
         <ability>
-            <type>speed</type>
-            <strength>1</strength>
-            <data>0</data>
+            <type>status</type>
+            <strength>3</strength>
+            <data>3</data>
             <use-flag>help-one</use-flag>
         </ability>
     </item>
@@ -3885,7 +3885,7 @@
         <protection>0</protection>
         <pic>97</pic>
         <name>Metal Bar</name>
-        <full-name>Platinum bar</full-name>
+        <full-name>Platinum Bar</full-name>
         <treasure>3</treasure>
         <value>1000</value>
         <weight>18</weight>
@@ -4988,7 +4988,7 @@
         </properties>
         <ability>
             <type>weap-dmg</type>
-            <strength>20</strength>
+            <strength>5</strength>
             <data>1</data>
             <use-flag>help-one</use-flag>
         </ability>
@@ -5108,7 +5108,7 @@
         </properties>
         <ability>
             <type>weap-explode</type>
-            <strength>25</strength>
+            <strength>5</strength>
             <data>1</data>
             <use-flag>help-one</use-flag>
         </ability>
@@ -6111,7 +6111,7 @@
         <protection>0</protection>
         <pic>82</pic>
         <name>Necklace</name>
-        <full-name>Gold necklace</full-name>
+        <full-name>Gold Necklace</full-name>
         <treasure>2</treasure>
         <value>400</value>
         <weight>3</weight>
@@ -6157,9 +6157,9 @@
             <magic>true</magic>
         </properties>
         <ability>
-            <type>use-summon</type>
-            <strength>50</strength>
-            <data>0</data>
+            <type>use-summon-mass</type>
+            <strength>6</strength>
+            <data>72</data>
             <use-flag>help-one</use-flag>
         </ability>
     </item>
@@ -6180,7 +6180,7 @@
         </properties>
         <ability>
             <type>prot-status</type>
-            <strength>0</strength>
+            <strength>4</strength>
             <data>2</data>
             <use-flag>help-one</use-flag>
         </ability>
@@ -6227,7 +6227,7 @@
         <protection>0</protection>
         <pic>84</pic>
         <name>Necklace</name>
-        <full-name>Silver necklace</full-name>
+        <full-name>Silver Necklace</full-name>
         <treasure>2</treasure>
         <value>150</value>
         <weight>3</weight>
@@ -6241,7 +6241,7 @@
         <protection>0</protection>
         <pic>97</pic>
         <name>Metal Bar</name>
-        <full-name>Uranium bar</full-name>
+        <full-name>Uranium Bar</full-name>
         <treasure>2</treasure>
         <value>200</value>
         <weight>20</weight>
@@ -6261,7 +6261,7 @@
         <protection>0</protection>
         <pic>122</pic>
         <name>Metal Bar</name>
-        <full-name>Gold bar</full-name>
+        <full-name>Gold Bar</full-name>
         <treasure>2</treasure>
         <value>750</value>
         <weight>20</weight>
@@ -6431,6 +6431,12 @@
         <properties>
             <magic>true</magic>
         </properties>
+        <ability>
+            <type>weap-status</type>
+            <strength>3</strength>
+            <data>2</data>
+            <use-flag>help-one</use-flag>
+        </ability>
     </item>
     <item id="343">
         <variety>weapon-2hand</variety>
@@ -6847,11 +6853,12 @@
         </ability>
     </item>
     <item id="361">
-        <variety>shield</variety>
+        <variety>weapon-1hand</variety>
         <level>8</level>
         <awkward>0</awkward>
         <bonus>0</bonus>
         <protection>3</protection>
+        <weapon-type>bashing</weapon-type>
         <pic>2</pic>
         <name>Mace</name>
         <full-name>Shield Mace</full-name>
