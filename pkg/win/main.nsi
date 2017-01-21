@@ -109,7 +109,7 @@ Section "Scenario Editor" Section3
 	SetOutPath "$INSTDIR\"
 	File "${RELEASE_DIR}\BoE Scenario Editor.exe"
 	SetOutPath "$INSTDIR\Blades of Exile Base\"
-	File "${RELEASE_DIR}\Blades of Exile Base\bladbase.exs"
+	File "${RELEASE_DIR}\Blades of Exile Base\bladbase.boes"
 	SetShellVarContext all
 	CreateShortCut "$SMPROGRAMS\Blades of Exile\Scenario Editor.lnk" "$INSTDIR\BoE Scenario Editor.exe"
 
