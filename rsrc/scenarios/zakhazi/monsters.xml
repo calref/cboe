@@ -2526,7 +2526,7 @@
     <monster id="108">
         <name>Lizard</name>
         <pic w="1" h="1">93</pic>
-        <race>beast</race>
+        <race>reptile</race>
         <level>1</level>
         <armor>1</armor>
         <skill>1</skill>
@@ -2651,7 +2651,7 @@
         <skill>5</skill>
         <hp>15</hp>
         <speed>4</speed>
-        <attitude>docile</attitude>
+        <attitude>hostile-a</attitude>
         <summon>1</summon>
         <treasure>0</treasure>
         <attacks>
@@ -2668,7 +2668,7 @@
         <skill>9</skill>
         <hp>35</hp>
         <speed>4</speed>
-        <attitude>docile</attitude>
+        <attitude>hostile-a</attitude>
         <summon>2</summon>
         <treasure>0</treasure>
         <attacks>
@@ -2784,7 +2784,7 @@
     </monster>
     <monster id="121">
         <name>Black Shade</name>
-        <pic w="1" h="1">149</pic>
+        <pic w="1" h="1">56</pic>
         <race>beast</race>
         <level>12</level>
         <armor>6</armor>
@@ -3173,7 +3173,7 @@
     <monster id="135">
         <name>Rakshasa</name>
         <pic w="1" h="1">111</pic>
-        <race>beast</race>
+        <race>humanoid</race>
         <level>25</level>
         <armor>20</armor>
         <skill>4</skill>
@@ -3269,10 +3269,11 @@
                 <chance>37.5</chance>
                 <extra>fire</extra>
             </general>
-            <special type="martyr">
-                <param>1000</param>
-                <param>100</param>
-            </special>
+            <radiate type="radiate">
+                <type>wall-fire</type>
+                <pattern>square</pattern>
+                <chance>90</chance>
+            </radiate>
         </abilities>
     </monster>
     <monster id="138">
@@ -3366,7 +3367,7 @@
         <hp>10</hp>
         <speed>3</speed>
         <attitude>hostile-a</attitude>
-        <summon>3</summon>
+        <summon>1</summon>
         <treasure>0</treasure>
         <mage>1</mage>
         <priest>1</priest>
@@ -4034,7 +4035,7 @@
     </monster>
     <monster id="166">
         <name>Alien Beast</name>
-        <pic w="2" h="154">137</pic>
+        <pic w="1" h="1">136</pic>
         <race>beast</race>
         <level>20</level>
         <armor>20</armor>
@@ -4166,7 +4167,7 @@
     <monster id="171">
         <name>Spiny Worm</name>
         <pic w="2" h="1">141</pic>
-        <race>beast</race>
+        <race>bug</race>
         <level>15</level>
         <armor>6</armor>
         <skill>18</skill>
@@ -4214,7 +4215,7 @@
     <monster id="173">
         <name>Gorgon</name>
         <pic w="1" h="2">143</pic>
-        <race>beast</race>
+        <race>giant</race>
         <level>18</level>
         <armor>14</armor>
         <skill>17</skill>
@@ -4584,7 +4585,7 @@
         <name>Blood Beast</name>
         <pic w="1" h="1">171</pic>
         <race>demon</race>
-        <level>0</level>
+        <level>30</level>
         <armor>12</armor>
         <skill>18</skill>
         <hp>150</hp>
