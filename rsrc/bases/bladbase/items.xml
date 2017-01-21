@@ -2421,8 +2421,8 @@
         <bonus>0</bonus>
         <protection>1</protection>
         <pic>16</pic>
-        <name>Plate</name>
-        <full-name>Bronze Plate</full-name>
+        <name>Plate Armor</name>
+        <full-name>Bronze Plate Armor</full-name>
         <treasure>2</treasure>
         <value>350</value>
         <weight>130</weight>
@@ -2489,8 +2489,8 @@
         <bonus>0</bonus>
         <protection>2</protection>
         <pic>16</pic>
-        <name>Plate</name>
-        <full-name>Iron Plate</full-name>
+        <name>Plate Armor</name>
+        <full-name>Iron Plate Armor</full-name>
         <treasure>3</treasure>
         <value>1200</value>
         <weight>140</weight>
@@ -2557,8 +2557,8 @@
         <bonus>0</bonus>
         <protection>3</protection>
         <pic>16</pic>
-        <name>Plate</name>
-        <full-name>Steel Plate</full-name>
+        <name>Plate Armor</name>
+        <full-name>Steel Plate Armor</full-name>
         <treasure>3</treasure>
         <value>2000</value>
         <weight>140</weight>
@@ -5060,7 +5060,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Strong Curing P.</full-name>
+        <full-name>Str. Curing Potion</full-name>
         <treasure>2</treasure>
         <value>350</value>
         <weight>5</weight>
@@ -5086,7 +5086,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Strong Healing P.</full-name>
+        <full-name>Str. Healing Potion</full-name>
         <treasure>2</treasure>
         <value>350</value>
         <weight>5</weight>
@@ -5112,7 +5112,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Strong Energy P.</full-name>
+        <full-name>Str. Energy Potion</full-name>
         <treasure>2</treasure>
         <value>600</value>
         <weight>5</weight>
@@ -5138,7 +5138,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Strong Strength P.</full-name>
+        <full-name>Str. Strength Potion</full-name>
         <treasure>2</treasure>
         <value>160</value>
         <weight>5</weight>
@@ -5164,7 +5164,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Strong Speed P.</full-name>
+        <full-name>Str. Speed Potion</full-name>
         <treasure>2</treasure>
         <value>200</value>
         <weight>5</weight>
@@ -5190,7 +5190,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Strong Invuln. P.</full-name>
+        <full-name>Str. Invuln. Potion</full-name>
         <treasure>2</treasure>
         <value>600</value>
         <weight>5</weight>
@@ -5216,7 +5216,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Strong Skill P.</full-name>
+        <full-name>Str. Skill Potion</full-name>
         <treasure>3</treasure>
         <value>1600</value>
         <weight>5</weight>
@@ -5242,7 +5242,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Medium Curing P.</full-name>
+        <full-name>Med. Curing Potion</full-name>
         <treasure>2</treasure>
         <value>120</value>
         <weight>5</weight>
@@ -5268,7 +5268,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Medium Healing P.</full-name>
+        <full-name>Med. Healing Potion</full-name>
         <treasure>2</treasure>
         <value>180</value>
         <weight>5</weight>
@@ -5294,7 +5294,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Medium Energy P.</full-name>
+        <full-name>Med. Energy Potion</full-name>
         <treasure>2</treasure>
         <value>300</value>
         <weight>5</weight>
@@ -5320,7 +5320,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Medium Strength P.</full-name>
+        <full-name>Med. Strength Potion</full-name>
         <treasure>1</treasure>
         <value>80</value>
         <weight>5</weight>
@@ -5346,7 +5346,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Medium Speed P.</full-name>
+        <full-name>Med. Speed Potion</full-name>
         <treasure>2</treasure>
         <value>100</value>
         <weight>5</weight>
@@ -5372,7 +5372,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Medium Invuln. P.</full-name>
+        <full-name>Med. Invuln. Potion</full-name>
         <treasure>2</treasure>
         <value>300</value>
         <weight>5</weight>
@@ -5398,7 +5398,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Medium Skill P.</full-name>
+        <full-name>Med. Skill Potion</full-name>
         <treasure>2</treasure>
         <value>800</value>
         <weight>5</weight>
@@ -5424,7 +5424,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Weak Curing P.</full-name>
+        <full-name>Weak Curing Potion</full-name>
         <treasure>1</treasure>
         <value>40</value>
         <weight>5</weight>
@@ -5450,7 +5450,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Weak Healing P.</full-name>
+        <full-name>Weak Healing Potion</full-name>
         <treasure>1</treasure>
         <value>60</value>
         <weight>5</weight>
@@ -5476,7 +5476,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Weak Energy P.</full-name>
+        <full-name>Weak Energy Potion</full-name>
         <treasure>2</treasure>
         <value>100</value>
         <weight>5</weight>
@@ -5502,7 +5502,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Weak Strength P.</full-name>
+        <full-name>Weak Strength Potion</full-name>
         <treasure>1</treasure>
         <value>40</value>
         <weight>5</weight>
@@ -5528,7 +5528,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Weak Speed P.</full-name>
+        <full-name>Weak Speed Potion</full-name>
         <treasure>1</treasure>
         <value>50</value>
         <weight>5</weight>
@@ -5554,7 +5554,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Weak Invuln. P.</full-name>
+        <full-name>Weak Invuln. Potion</full-name>
         <treasure>2</treasure>
         <value>150</value>
         <weight>5</weight>
@@ -5580,7 +5580,7 @@
         <charges>1</charges>
         <pic>60</pic>
         <name>Potion</name>
-        <full-name>Weak Skill P.</full-name>
+        <full-name>Weak Skill Potion</full-name>
         <treasure>2</treasure>
         <value>400</value>
         <weight>5</weight>
