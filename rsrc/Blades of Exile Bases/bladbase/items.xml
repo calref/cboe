@@ -3829,12 +3829,13 @@
         </description>
     </item>
     <item id="195">
-        <variety>potion</variety>
-        <level>0</level>
+        <variety>weapon-1hand</variety>
+        <level>2</level>
         <awkward>0</awkward>
         <bonus>0</bonus>
         <protection>0</protection>
         <charges>5</charges>
+        <weapon-type>mage-lore</weapon-type>
         <pic>95</pic>
         <name>Horn</name>
         <full-name>Horn of Warriors</full-name>
